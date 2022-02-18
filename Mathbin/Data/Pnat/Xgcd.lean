@@ -42,14 +42,14 @@ structure xgcd_type where
 
 namespace XgcdType
 
-variable (u : xgcd_type)
+variable (u : XgcdType)
 
-instance : SizeOf xgcd_type :=
+instance : SizeOf XgcdType :=
   ⟨fun u => u.bp⟩
 
 /-- The has_repr instance converts terms to strings in a way that
  reflects the matrix/vector interpretation as above. -/
-instance : HasRepr xgcd_type :=
+instance : HasRepr XgcdType :=
   ⟨fun u =>
     "[[[" ++ reprₓ (u.wp + 1) ++ ", " ++ reprₓ u.x ++ "], [" ++ reprₓ u.y ++ ", " ++ reprₓ (u.zp + 1) ++ "]], [" ++
             reprₓ (u.ap + 1) ++
@@ -57,20 +57,20 @@ instance : HasRepr xgcd_type :=
         reprₓ (u.bp + 1) ++
       "]]"⟩
 
-def mk' (w : ℕ+) (x : ℕ) (y : ℕ) (z : ℕ+) (a : ℕ+) (b : ℕ+) : xgcd_type :=
+def mk' (w : ℕ+) (x : ℕ) (y : ℕ) (z : ℕ+) (a : ℕ+) (b : ℕ+) : XgcdType :=
   mk w.val.pred x y z.val.pred a.val.pred b.val.pred
 
 def w : ℕ+ :=
-  succ_pnat u.wp
+  succPnat u.wp
 
 def z : ℕ+ :=
-  succ_pnat u.zp
+  succPnat u.zp
 
 def a : ℕ+ :=
-  succ_pnat u.ap
+  succPnat u.ap
 
 def b : ℕ+ :=
-  succ_pnat u.bp
+  succPnat u.bp
 
 def r : ℕ :=
   (u.ap + 1) % (u.bp + 1)
@@ -95,7 +95,7 @@ def v : ℕ × ℕ :=
 def succ₂ (t : ℕ × ℕ) : ℕ × ℕ :=
   ⟨t.1.succ, t.2.succ⟩
 
-theorem v_eq_succ_vp : u.v = succ₂ u.vp := by
+theorem v_eq_succ_vp : u.V = succ₂ u.vp := by
   ext <;>
     dsimp [v, vp, w, z, a, b, succ₂] <;>
       repeat'
@@ -107,9 +107,9 @@ def is_special : Prop :=
   u.wp + u.zp + u.wp * u.zp = u.x * u.y
 
 def is_special' : Prop :=
-  u.w * u.z = succ_pnat (u.x * u.y)
+  u.w * u.z = succPnat (u.x * u.y)
 
-theorem is_special_iff : u.is_special ↔ u.is_special' := by
+theorem is_special_iff : u.IsSpecial ↔ u.IsSpecial' := by
   dsimp [is_special, is_special']
   constructor <;> intro h
   · apply Eq
@@ -140,10 +140,10 @@ def is_reduced : Prop :=
 def is_reduced' : Prop :=
   u.a = u.b
 
-theorem is_reduced_iff : u.is_reduced ↔ u.is_reduced' :=
-  ⟨congr_argₓ succ_pnat, succ_pnat_inj⟩
+theorem is_reduced_iff : u.IsReduced ↔ u.IsReduced' :=
+  ⟨congr_argₓ succPnat, succ_pnat_inj⟩
 
-def flip : xgcd_type where
+def flip : XgcdType where
   wp := u.zp
   x := u.y
   y := u.x
@@ -175,15 +175,15 @@ theorem flip_a : (flip u).a = u.b :=
 theorem flip_b : (flip u).b = u.a :=
   rfl
 
-theorem flip_is_reduced : (flip u).IsReduced ↔ u.is_reduced := by
+theorem flip_is_reduced : (flip u).IsReduced ↔ u.IsReduced := by
   dsimp [is_reduced, flip]
   constructor <;> intro h <;> exact h.symm
 
-theorem flip_is_special : (flip u).IsSpecial ↔ u.is_special := by
+theorem flip_is_special : (flip u).IsSpecial ↔ u.IsSpecial := by
   dsimp [is_special, flip]
   rw [mul_comm u.x, mul_comm u.zp, add_commₓ u.zp]
 
-theorem flip_v : (flip u).V = u.v.swap := by
+theorem flip_v : (flip u).V = u.V.swap := by
   dsimp [v]
   ext
   · simp only
@@ -194,10 +194,10 @@ theorem flip_v : (flip u).V = u.v.swap := by
     
 
 /-- Properties of division with remainder for a / b.  -/
-theorem rq_eq : u.r + (u.bp + 1) * u.q = u.ap + 1 :=
+theorem rq_eq : u.R + (u.bp + 1) * u.q = u.ap + 1 :=
   Nat.mod_add_divₓ (u.ap + 1) (u.bp + 1)
 
-theorem qp_eq (hr : u.r = 0) : u.q = u.qp + 1 := by
+theorem qp_eq (hr : u.R = 0) : u.q = u.qp + 1 := by
   by_cases' hq : u.q = 0
   · let h := u.rq_eq
     rw [hr, hq, mul_zero, add_zeroₓ] at h
@@ -211,7 +211,7 @@ theorem qp_eq (hr : u.r = 0) : u.q = u.qp + 1 := by
  to it, which will produce a system satisfying is_reduced.
  The gcd can be read off from this final system.
 -/
-def start (a b : ℕ+) : xgcd_type :=
+def start (a b : ℕ+) : XgcdType :=
   ⟨0, 0, 0, 0, a - 1, b - 1⟩
 
 theorem start_is_special (a b : ℕ+) : (start a b).IsSpecial := by
@@ -224,19 +224,19 @@ theorem start_v (a b : ℕ+) : (start a b).V = ⟨a, b⟩ := by
   rw [← Nat.pred_eq_sub_one, ← Nat.pred_eq_sub_one]
   rw [Nat.succ_pred_eq_of_posₓ a.pos, Nat.succ_pred_eq_of_posₓ b.pos]
 
-def finish : xgcd_type :=
-  xgcd_type.mk u.wp ((u.wp + 1) * u.qp + u.x) u.y (u.y * u.qp + u.zp) u.bp u.bp
+def finish : XgcdType :=
+  XgcdType.mk u.wp ((u.wp + 1) * u.qp + u.x) u.y (u.y * u.qp + u.zp) u.bp u.bp
 
-theorem finish_is_reduced : u.finish.is_reduced := by
+theorem finish_is_reduced : u.finish.IsReduced := by
   dsimp [is_reduced]
   rfl
 
-theorem finish_is_special (hs : u.is_special) : u.finish.is_special := by
+theorem finish_is_special (hs : u.IsSpecial) : u.finish.IsSpecial := by
   dsimp [is_special, finish]  at hs⊢
   rw [add_mulₓ _ _ u.y, add_commₓ _ (u.x * u.y), ← hs]
   ring
 
-theorem finish_v (hr : u.r = 0) : u.finish.v = u.v := by
+theorem finish_v (hr : u.R = 0) : u.finish.V = u.V := by
   let ha : u.r + u.b * u.q = u.a := u.rq_eq
   rw [hr, zero_addₓ] at ha
   ext
@@ -252,25 +252,25 @@ theorem finish_v (hr : u.r = 0) : u.finish.v = u.v := by
 
 /-- This is the main reduction step, which is used when u.r ≠ 0, or
  equivalently b does not divide a. -/
-def step : xgcd_type :=
-  xgcd_type.mk (u.y * u.q + u.zp) u.y ((u.wp + 1) * u.q + u.x) u.wp u.bp (u.r - 1)
+def step : XgcdType :=
+  XgcdType.mk (u.y * u.q + u.zp) u.y ((u.wp + 1) * u.q + u.x) u.wp u.bp (u.R - 1)
 
 /-- We will apply the above step recursively.  The following result
  is used to ensure that the process terminates. -/
-theorem step_wf (hr : u.r ≠ 0) : sizeof u.step < sizeof u := by
+theorem step_wf (hr : u.R ≠ 0) : sizeof u.step < sizeof u := by
   change u.r - 1 < u.bp
   have h₀ : u.r - 1 + 1 = u.r := Nat.succ_pred_eq_of_posₓ (Nat.pos_of_ne_zeroₓ hr)
   have h₁ : u.r < u.bp + 1 := Nat.mod_ltₓ (u.ap + 1) u.bp.succ_pos
   rw [← h₀] at h₁
   exact lt_of_succ_lt_succ h₁
 
-theorem step_is_special (hs : u.is_special) : u.step.is_special := by
+theorem step_is_special (hs : u.IsSpecial) : u.step.IsSpecial := by
   dsimp [is_special, step]  at hs⊢
   rw [mul_addₓ, mul_comm u.y u.x, ← hs]
   ring
 
 /-- The reduction step does not change the product vector. -/
-theorem step_v (hr : u.r ≠ 0) : u.step.v = u.v.swap := by
+theorem step_v (hr : u.R ≠ 0) : u.step.V = u.V.swap := by
   let ha : u.r + u.b * u.q = u.a := u.rq_eq
   let hr : u.r - 1 + 1 = u.r := (add_commₓ _ 1).trans (add_tsub_cancel_of_le (Nat.pos_of_ne_zeroₓ hr))
   ext
@@ -290,25 +290,25 @@ theorem step_v (hr : u.r ≠ 0) : u.step.v = u.v.swap := by
  definition in terms of well-founded recursion.  The same fact
  needs to be introduced in all the inductive proofs of properties
  given below. -/
-def reduce : xgcd_type → xgcd_type
+def reduce : XgcdType → XgcdType
   | u =>
-    dite (u.r = 0) (fun h => u.finish) fun h =>
+    dite (u.R = 0) (fun h => u.finish) fun h =>
       have : sizeof u.step < sizeof u := u.step_wf h
       flip (reduce u.step)
 
-theorem reduce_a {u : xgcd_type} (h : u.r = 0) : u.reduce = u.finish := by
+theorem reduce_a {u : XgcdType} (h : u.R = 0) : u.reduce = u.finish := by
   rw [reduce]
   simp only
   rw [if_pos h]
 
-theorem reduce_b {u : xgcd_type} (h : u.r ≠ 0) : u.reduce = u.step.reduce.flip := by
+theorem reduce_b {u : XgcdType} (h : u.R ≠ 0) : u.reduce = u.step.reduce.flip := by
   rw [reduce]
   simp only
   rw [if_neg h, step]
 
-theorem reduce_reduced : ∀ u : xgcd_type, u.reduce.is_reduced
+theorem reduce_reduced : ∀ u : XgcdType, u.reduce.IsReduced
   | u =>
-    dite (u.r = 0)
+    dite (u.R = 0)
       (fun h => by
         rw [reduce_a h]
         exact u.finish_is_reduced)
@@ -317,12 +317,12 @@ theorem reduce_reduced : ∀ u : xgcd_type, u.reduce.is_reduced
       rw [reduce_b h, flip_is_reduced]
       apply reduce_reduced
 
-theorem reduce_reduced' (u : xgcd_type) : u.reduce.is_reduced' :=
+theorem reduce_reduced' (u : XgcdType) : u.reduce.IsReduced' :=
   (is_reduced_iff _).mp u.reduce_reduced
 
-theorem reduce_special : ∀ u : xgcd_type, u.is_special → u.reduce.is_special
+theorem reduce_special : ∀ u : XgcdType, u.IsSpecial → u.reduce.IsSpecial
   | u =>
-    dite (u.r = 0)
+    dite (u.R = 0)
       (fun h hs => by
         rw [reduce_a h]
         exact u.finish_is_special hs)
@@ -331,12 +331,12 @@ theorem reduce_special : ∀ u : xgcd_type, u.is_special → u.reduce.is_special
       rw [reduce_b h]
       exact (flip_is_special _).mpr (reduce_special _ (u.step_is_special hs))
 
-theorem reduce_special' (u : xgcd_type) (hs : u.is_special) : u.reduce.is_special' :=
+theorem reduce_special' (u : XgcdType) (hs : u.IsSpecial) : u.reduce.IsSpecial' :=
   (is_special_iff _).mp (u.reduce_special hs)
 
-theorem reduce_v : ∀ u : xgcd_type, u.reduce.v = u.v
+theorem reduce_v : ∀ u : XgcdType, u.reduce.V = u.V
   | u =>
-    dite (u.r = 0)
+    dite (u.R = 0)
       (fun h => by
         rw [reduce_a h, finish_v u h])
       fun h => by
@@ -349,8 +349,8 @@ section Gcd
 
 variable (a b : ℕ+)
 
-def xgcd : xgcd_type :=
-  (xgcd_type.start a b).reduce
+def xgcd : XgcdType :=
+  (XgcdType.start a b).reduce
 
 def gcd_d : ℕ+ :=
   (xgcd a b).a
@@ -368,32 +368,31 @@ def gcd_z : ℕ+ :=
   (xgcd a b).z
 
 def gcd_a' : ℕ+ :=
-  succ_pnat ((xgcd a b).wp + (xgcd a b).x)
+  succPnat ((xgcd a b).wp + (xgcd a b).x)
 
 def gcd_b' : ℕ+ :=
-  succ_pnat ((xgcd a b).y + (xgcd a b).zp)
+  succPnat ((xgcd a b).y + (xgcd a b).zp)
 
-theorem gcd_a'_coe : (gcd_a' a b : ℕ) = gcd_w a b + gcd_x a b := by
+theorem gcd_a'_coe : (gcdA' a b : ℕ) = gcdW a b + gcdX a b := by
   dsimp [gcd_a', gcd_x, gcd_w, xgcd_type.w]
   rw [Nat.succ_eq_add_one, Nat.succ_eq_add_one, add_right_commₓ]
 
-theorem gcd_b'_coe : (gcd_b' a b : ℕ) = gcd_y a b + gcd_z a b := by
+theorem gcd_b'_coe : (gcdB' a b : ℕ) = gcdY a b + gcdZ a b := by
   dsimp [gcd_b', gcd_y, gcd_z, xgcd_type.z]
   rw [Nat.succ_eq_add_one, Nat.succ_eq_add_one, add_assocₓ]
 
 theorem gcd_props :
-    let d := gcd_d a b
-    let w := gcd_w a b
-    let x := gcd_x a b
-    let y := gcd_y a b
-    let z := gcd_z a b
-    let a' := gcd_a' a b
-    let b' := gcd_b' a b
-    w * z = succ_pnat (x * y) ∧
+    let d := gcdD a b
+    let w := gcdW a b
+    let x := gcdX a b
+    let y := gcdY a b
+    let z := gcdZ a b
+    let a' := gcdA' a b
+    let b' := gcdB' a b
+    w * z = succPnat (x * y) ∧
       a = a' * d ∧
         b = b' * d ∧
-          z * a' = succ_pnat (x * b') ∧
-            w * b' = succ_pnat (y * a') ∧ (z * a : ℕ) = x * b + d ∧ (w * b : ℕ) = y * a + d :=
+          z * a' = succPnat (x * b') ∧ w * b' = succPnat (y * a') ∧ (z * a : ℕ) = x * b + d ∧ (w * b : ℕ) = y * a + d :=
   by
   intros
   let u := xgcd_type.start a b
@@ -436,7 +435,7 @@ theorem gcd_props :
   rw [hza', hwb']
   constructor <;> ring
 
-theorem gcd_eq : gcd_d a b = gcd a b := by
+theorem gcd_eq : gcdD a b = gcd a b := by
   rcases gcd_props a b with ⟨h₀, h₁, h₂, h₃, h₄, h₅, h₆⟩
   apply dvd_antisymm
   · apply dvd_gcd
@@ -450,25 +449,25 @@ theorem gcd_eq : gcd_d a b = gcd a b := by
     exact (Nat.dvd_add_iff_right h₈).mpr h₇
     
 
-theorem gcd_det_eq : gcd_w a b * gcd_z a b = succ_pnat (gcd_x a b * gcd_y a b) :=
+theorem gcd_det_eq : gcdW a b * gcdZ a b = succPnat (gcdX a b * gcdY a b) :=
   (gcd_props a b).1
 
-theorem gcd_a_eq : a = gcd_a' a b * gcd a b :=
+theorem gcd_a_eq : a = gcdA' a b * gcd a b :=
   gcd_eq a b ▸ (gcd_props a b).2.1
 
-theorem gcd_b_eq : b = gcd_b' a b * gcd a b :=
+theorem gcd_b_eq : b = gcdB' a b * gcd a b :=
   gcd_eq a b ▸ (gcd_props a b).2.2.1
 
-theorem gcd_rel_left' : gcd_z a b * gcd_a' a b = succ_pnat (gcd_x a b * gcd_b' a b) :=
+theorem gcd_rel_left' : gcdZ a b * gcdA' a b = succPnat (gcdX a b * gcdB' a b) :=
   (gcd_props a b).2.2.2.1
 
-theorem gcd_rel_right' : gcd_w a b * gcd_b' a b = succ_pnat (gcd_y a b * gcd_a' a b) :=
+theorem gcd_rel_right' : gcdW a b * gcdB' a b = succPnat (gcdY a b * gcdA' a b) :=
   (gcd_props a b).2.2.2.2.1
 
-theorem gcd_rel_left : (gcd_z a b * a : ℕ) = gcd_x a b * b + gcd a b :=
+theorem gcd_rel_left : (gcdZ a b * a : ℕ) = gcdX a b * b + gcd a b :=
   gcd_eq a b ▸ (gcd_props a b).2.2.2.2.2.1
 
-theorem gcd_rel_right : (gcd_w a b * b : ℕ) = gcd_y a b * a + gcd a b :=
+theorem gcd_rel_right : (gcdW a b * b : ℕ) = gcdY a b * a + gcd a b :=
   gcd_eq a b ▸ (gcd_props a b).2.2.2.2.2.2
 
 end Gcd

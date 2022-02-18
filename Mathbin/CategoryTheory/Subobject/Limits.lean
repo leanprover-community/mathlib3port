@@ -19,7 +19,7 @@ noncomputable section
 
 open CategoryTheory CategoryTheory.Category CategoryTheory.Limits CategoryTheory.Subobject
 
-variable {C : Type u} [category.{v} C] {X Y Z : C}
+variable {C : Type u} [Category.{v} C] {X Y Z : C}
 
 namespace CategoryTheory
 
@@ -27,36 +27,36 @@ namespace Limits
 
 section Equalizer
 
-variable (f g : X ⟶ Y) [has_equalizer f g]
+variable (f g : X ⟶ Y) [HasEqualizer f g]
 
 /-- The equalizer of morphisms `f g : X ⟶ Y` as a `subobject X`. -/
-abbrev equalizer_subobject : subobject X :=
-  subobject.mk (equalizer.ι f g)
+abbrev equalizer_subobject : Subobject X :=
+  Subobject.mk (equalizer.ι f g)
 
 /-- The underlying object of `equalizer_subobject f g` is (up to isomorphism!)
 the same as the chosen object `equalizer f g`. -/
-def equalizer_subobject_iso : (equalizer_subobject f g : C) ≅ equalizer f g :=
-  subobject.underlying_iso (equalizer.ι f g)
+def equalizer_subobject_iso : (equalizerSubobject f g : C) ≅ equalizer f g :=
+  Subobject.underlyingIso (equalizer.ι f g)
 
 @[simp, reassoc]
 theorem equalizer_subobject_arrow :
-    (equalizer_subobject_iso f g).Hom ≫ equalizer.ι f g = (equalizer_subobject f g).arrow := by
+    (equalizerSubobjectIso f g).Hom ≫ equalizer.ι f g = (equalizerSubobject f g).arrow := by
   simp [equalizer_subobject_iso]
 
 @[simp, reassoc]
 theorem equalizer_subobject_arrow' :
-    (equalizer_subobject_iso f g).inv ≫ (equalizer_subobject f g).arrow = equalizer.ι f g := by
+    (equalizerSubobjectIso f g).inv ≫ (equalizerSubobject f g).arrow = equalizer.ι f g := by
   simp [equalizer_subobject_iso]
 
 @[reassoc]
-theorem equalizer_subobject_arrow_comp : (equalizer_subobject f g).arrow ≫ f = (equalizer_subobject f g).arrow ≫ g := by
+theorem equalizer_subobject_arrow_comp : (equalizerSubobject f g).arrow ≫ f = (equalizerSubobject f g).arrow ≫ g := by
   rw [← equalizer_subobject_arrow, category.assoc, category.assoc, equalizer.condition]
 
-theorem equalizer_subobject_factors {W : C} (h : W ⟶ X) (w : h ≫ f = h ≫ g) : (equalizer_subobject f g).Factors h :=
+theorem equalizer_subobject_factors {W : C} (h : W ⟶ X) (w : h ≫ f = h ≫ g) : (equalizerSubobject f g).Factors h :=
   ⟨equalizer.lift h w, by
     simp ⟩
 
-theorem equalizer_subobject_factors_iff {W : C} (h : W ⟶ X) : (equalizer_subobject f g).Factors h ↔ h ≫ f = h ≫ g :=
+theorem equalizer_subobject_factors_iff {W : C} (h : W ⟶ X) : (equalizerSubobject f g).Factors h ↔ h ≫ f = h ≫ g :=
   ⟨fun w => by
     rw [← subobject.factor_thru_arrow _ _ w, category.assoc, equalizer_subobject_arrow_comp, category.assoc],
     equalizer_subobject_factors f g h⟩
@@ -65,129 +65,129 @@ end Equalizer
 
 section Kernel
 
-variable [has_zero_morphisms C] (f : X ⟶ Y) [has_kernel f]
+variable [HasZeroMorphisms C] (f : X ⟶ Y) [HasKernel f]
 
 /-- The kernel of a morphism `f : X ⟶ Y` as a `subobject X`. -/
-abbrev kernel_subobject : subobject X :=
-  subobject.mk (kernel.ι f)
+abbrev kernel_subobject : Subobject X :=
+  Subobject.mk (kernel.ι f)
 
 /-- The underlying object of `kernel_subobject f` is (up to isomorphism!)
 the same as the chosen object `kernel f`. -/
-def kernel_subobject_iso : (kernel_subobject f : C) ≅ kernel f :=
-  subobject.underlying_iso (kernel.ι f)
+def kernel_subobject_iso : (kernelSubobject f : C) ≅ kernel f :=
+  Subobject.underlyingIso (kernel.ι f)
 
 @[simp, reassoc]
-theorem kernel_subobject_arrow : (kernel_subobject_iso f).Hom ≫ kernel.ι f = (kernel_subobject f).arrow := by
+theorem kernel_subobject_arrow : (kernelSubobjectIso f).Hom ≫ kernel.ι f = (kernelSubobject f).arrow := by
   simp [kernel_subobject_iso]
 
 @[simp, reassoc]
-theorem kernel_subobject_arrow' : (kernel_subobject_iso f).inv ≫ (kernel_subobject f).arrow = kernel.ι f := by
+theorem kernel_subobject_arrow' : (kernelSubobjectIso f).inv ≫ (kernelSubobject f).arrow = kernel.ι f := by
   simp [kernel_subobject_iso]
 
 @[simp, reassoc]
-theorem kernel_subobject_arrow_comp : (kernel_subobject f).arrow ≫ f = 0 := by
+theorem kernel_subobject_arrow_comp : (kernelSubobject f).arrow ≫ f = 0 := by
   rw [← kernel_subobject_arrow]
   simp only [category.assoc, kernel.condition, comp_zero]
 
-theorem kernel_subobject_factors {W : C} (h : W ⟶ X) (w : h ≫ f = 0) : (kernel_subobject f).Factors h :=
+theorem kernel_subobject_factors {W : C} (h : W ⟶ X) (w : h ≫ f = 0) : (kernelSubobject f).Factors h :=
   ⟨kernel.lift _ h w, by
     simp ⟩
 
-theorem kernel_subobject_factors_iff {W : C} (h : W ⟶ X) : (kernel_subobject f).Factors h ↔ h ≫ f = 0 :=
+theorem kernel_subobject_factors_iff {W : C} (h : W ⟶ X) : (kernelSubobject f).Factors h ↔ h ≫ f = 0 :=
   ⟨fun w => by
     rw [← subobject.factor_thru_arrow _ _ w, category.assoc, kernel_subobject_arrow_comp, comp_zero],
     kernel_subobject_factors f h⟩
 
 /-- A factorisation of `h : W ⟶ X` through `kernel_subobject f`, assuming `h ≫ f = 0`. -/
-def factor_thru_kernel_subobject {W : C} (h : W ⟶ X) (w : h ≫ f = 0) : W ⟶ kernel_subobject f :=
-  (kernel_subobject f).factorThru h (kernel_subobject_factors f h w)
+def factor_thru_kernel_subobject {W : C} (h : W ⟶ X) (w : h ≫ f = 0) : W ⟶ kernelSubobject f :=
+  (kernelSubobject f).factorThru h (kernel_subobject_factors f h w)
 
 @[simp]
 theorem factor_thru_kernel_subobject_comp_arrow {W : C} (h : W ⟶ X) (w : h ≫ f = 0) :
-    factor_thru_kernel_subobject f h w ≫ (kernel_subobject f).arrow = h := by
+    factorThruKernelSubobject f h w ≫ (kernelSubobject f).arrow = h := by
   dsimp [factor_thru_kernel_subobject]
   simp
 
 @[simp]
 theorem factor_thru_kernel_subobject_comp_kernel_subobject_iso {W : C} (h : W ⟶ X) (w : h ≫ f = 0) :
-    factor_thru_kernel_subobject f h w ≫ (kernel_subobject_iso f).Hom = kernel.lift f h w :=
+    factorThruKernelSubobject f h w ≫ (kernelSubobjectIso f).Hom = kernel.lift f h w :=
   (cancel_mono (kernel.ι f)).1 <| by
     simp
 
 section
 
-variable {f} {X' Y' : C} {f' : X' ⟶ Y'} [has_kernel f']
+variable {f} {X' Y' : C} {f' : X' ⟶ Y'} [HasKernel f']
 
 /-- A commuting square induces a morphism between the kernel subobjects. -/
-def kernel_subobject_map (sq : arrow.mk f ⟶ arrow.mk f') : (kernel_subobject f : C) ⟶ (kernel_subobject f' : C) :=
-  subobject.factor_thru _ ((kernel_subobject f).arrow ≫ sq.left)
+def kernel_subobject_map (sq : Arrow.mk f ⟶ Arrow.mk f') : (kernelSubobject f : C) ⟶ (kernelSubobject f' : C) :=
+  Subobject.factorThru _ ((kernelSubobject f).arrow ≫ sq.left)
     (kernel_subobject_factors _ _
       (by
         simp [sq.w]))
 
 @[simp, reassoc]
-theorem kernel_subobject_map_arrow (sq : arrow.mk f ⟶ arrow.mk f') :
-    kernel_subobject_map sq ≫ (kernel_subobject f').arrow = (kernel_subobject f).arrow ≫ sq.left := by
+theorem kernel_subobject_map_arrow (sq : Arrow.mk f ⟶ Arrow.mk f') :
+    kernelSubobjectMap sq ≫ (kernelSubobject f').arrow = (kernelSubobject f).arrow ≫ sq.left := by
   simp [kernel_subobject_map]
 
 @[simp]
-theorem kernel_subobject_map_id : kernel_subobject_map (𝟙 (arrow.mk f)) = 𝟙 _ := by
+theorem kernel_subobject_map_id : kernelSubobjectMap (𝟙 (Arrow.mk f)) = 𝟙 _ := by
   ext
   simp
   dsimp
   simp
 
 @[simp]
-theorem kernel_subobject_map_comp {X'' Y'' : C} {f'' : X'' ⟶ Y''} [has_kernel f''] (sq : arrow.mk f ⟶ arrow.mk f')
-    (sq' : arrow.mk f' ⟶ arrow.mk f'') :
-    kernel_subobject_map (sq ≫ sq') = kernel_subobject_map sq ≫ kernel_subobject_map sq' := by
+theorem kernel_subobject_map_comp {X'' Y'' : C} {f'' : X'' ⟶ Y''} [HasKernel f''] (sq : Arrow.mk f ⟶ Arrow.mk f')
+    (sq' : Arrow.mk f' ⟶ Arrow.mk f'') :
+    kernelSubobjectMap (sq ≫ sq') = kernelSubobjectMap sq ≫ kernelSubobjectMap sq' := by
   ext
   simp
 
 end
 
 @[simp]
-theorem kernel_subobject_zero {A B : C} : kernel_subobject (0 : A ⟶ B) = ⊤ :=
+theorem kernel_subobject_zero {A B : C} : kernelSubobject (0 : A ⟶ B) = ⊤ :=
   (is_iso_iff_mk_eq_top _).mp
     (by
       infer_instance)
 
-instance is_iso_kernel_subobject_zero_arrow : is_iso (kernel_subobject (0 : X ⟶ Y)).arrow :=
+instance is_iso_kernel_subobject_zero_arrow : IsIso (kernelSubobject (0 : X ⟶ Y)).arrow :=
   (is_iso_arrow_iff_eq_top _).mpr kernel_subobject_zero
 
-theorem le_kernel_subobject (A : subobject X) (h : A.arrow ≫ f = 0) : A ≤ kernel_subobject f :=
-  subobject.le_mk_of_comm (kernel.lift f A.arrow h)
+theorem le_kernel_subobject (A : Subobject X) (h : A.arrow ≫ f = 0) : A ≤ kernelSubobject f :=
+  Subobject.le_mk_of_comm (kernel.lift f A.arrow h)
     (by
       simp )
 
 /-- The isomorphism between the kernel of `f ≫ g` and the kernel of `g`,
 when `f` is an isomorphism.
 -/
-def kernel_subobject_iso_comp {X' : C} (f : X' ⟶ X) [is_iso f] (g : X ⟶ Y) [has_kernel g] :
-    (kernel_subobject (f ≫ g) : C) ≅ (kernel_subobject g : C) :=
-  kernel_subobject_iso _ ≪≫ kernel_is_iso_comp f g ≪≫ (kernel_subobject_iso _).symm
+def kernel_subobject_iso_comp {X' : C} (f : X' ⟶ X) [IsIso f] (g : X ⟶ Y) [HasKernel g] :
+    (kernelSubobject (f ≫ g) : C) ≅ (kernelSubobject g : C) :=
+  kernelSubobjectIso _ ≪≫ kernelIsIsoComp f g ≪≫ (kernelSubobjectIso _).symm
 
 @[simp]
-theorem kernel_subobject_iso_comp_hom_arrow {X' : C} (f : X' ⟶ X) [is_iso f] (g : X ⟶ Y) [has_kernel g] :
-    (kernel_subobject_iso_comp f g).Hom ≫ (kernel_subobject g).arrow = (kernel_subobject (f ≫ g)).arrow ≫ f := by
+theorem kernel_subobject_iso_comp_hom_arrow {X' : C} (f : X' ⟶ X) [IsIso f] (g : X ⟶ Y) [HasKernel g] :
+    (kernelSubobjectIsoComp f g).Hom ≫ (kernelSubobject g).arrow = (kernelSubobject (f ≫ g)).arrow ≫ f := by
   simp [kernel_subobject_iso_comp]
 
 @[simp]
-theorem kernel_subobject_iso_comp_inv_arrow {X' : C} (f : X' ⟶ X) [is_iso f] (g : X ⟶ Y) [has_kernel g] :
-    (kernel_subobject_iso_comp f g).inv ≫ (kernel_subobject (f ≫ g)).arrow = (kernel_subobject g).arrow ≫ inv f := by
+theorem kernel_subobject_iso_comp_inv_arrow {X' : C} (f : X' ⟶ X) [IsIso f] (g : X ⟶ Y) [HasKernel g] :
+    (kernelSubobjectIsoComp f g).inv ≫ (kernelSubobject (f ≫ g)).arrow = (kernelSubobject g).arrow ≫ inv f := by
   simp [kernel_subobject_iso_comp]
 
 /-- The kernel of `f` is always a smaller subobject than the kernel of `f ≫ h`. -/
-theorem kernel_subobject_comp_le (f : X ⟶ Y) [has_kernel f] {Z : C} (h : Y ⟶ Z) [has_kernel (f ≫ h)] :
-    kernel_subobject f ≤ kernel_subobject (f ≫ h) :=
+theorem kernel_subobject_comp_le (f : X ⟶ Y) [HasKernel f] {Z : C} (h : Y ⟶ Z) [HasKernel (f ≫ h)] :
+    kernelSubobject f ≤ kernelSubobject (f ≫ h) :=
   le_kernel_subobject _ _
     (by
       simp )
 
 /-- Postcomposing by an monomorphism does not change the kernel subobject. -/
 @[simp]
-theorem kernel_subobject_comp_mono (f : X ⟶ Y) [has_kernel f] {Z : C} (h : Y ⟶ Z) [mono h] :
-    kernel_subobject (f ≫ h) = kernel_subobject f :=
+theorem kernel_subobject_comp_mono (f : X ⟶ Y) [HasKernel f] {Z : C} (h : Y ⟶ Z) [Mono h] :
+    kernelSubobject (f ≫ h) = kernelSubobject f :=
   le_antisymmₓ
     (le_kernel_subobject _ _
       ((cancel_mono h).mp
@@ -195,8 +195,8 @@ theorem kernel_subobject_comp_mono (f : X ⟶ Y) [has_kernel f] {Z : C} (h : Y �
           simp )))
     (kernel_subobject_comp_le f h)
 
-instance kernel_subobject_comp_mono_is_iso (f : X ⟶ Y) [has_kernel f] {Z : C} (h : Y ⟶ Z) [mono h] :
-    is_iso (subobject.of_le _ _ (kernel_subobject_comp_le f h)) := by
+instance kernel_subobject_comp_mono_is_iso (f : X ⟶ Y) [HasKernel f] {Z : C} (h : Y ⟶ Z) [Mono h] :
+    IsIso (Subobject.ofLe _ _ (kernel_subobject_comp_le f h)) := by
   rw [of_le_mk_le_mk_of_comm (kernel_comp_mono f h).inv]
   · infer_instance
     
@@ -207,62 +207,62 @@ end Kernel
 
 section Image
 
-variable (f : X ⟶ Y) [has_image f]
+variable (f : X ⟶ Y) [HasImage f]
 
 /-- The image of a morphism `f g : X ⟶ Y` as a `subobject Y`. -/
-abbrev image_subobject : subobject Y :=
-  subobject.mk (image.ι f)
+abbrev image_subobject : Subobject Y :=
+  Subobject.mk (image.ι f)
 
 /-- The underlying object of `image_subobject f` is (up to isomorphism!)
 the same as the chosen object `image f`. -/
-def image_subobject_iso : (image_subobject f : C) ≅ image f :=
-  subobject.underlying_iso (image.ι f)
+def image_subobject_iso : (imageSubobject f : C) ≅ image f :=
+  Subobject.underlyingIso (image.ι f)
 
 @[simp, reassoc]
-theorem image_subobject_arrow : (image_subobject_iso f).Hom ≫ image.ι f = (image_subobject f).arrow := by
+theorem image_subobject_arrow : (imageSubobjectIso f).Hom ≫ image.ι f = (imageSubobject f).arrow := by
   simp [image_subobject_iso]
 
 @[simp, reassoc]
-theorem image_subobject_arrow' : (image_subobject_iso f).inv ≫ (image_subobject f).arrow = image.ι f := by
+theorem image_subobject_arrow' : (imageSubobjectIso f).inv ≫ (imageSubobject f).arrow = image.ι f := by
   simp [image_subobject_iso]
 
 /-- A factorisation of `f : X ⟶ Y` through `image_subobject f`. -/
-def factor_thru_image_subobject : X ⟶ image_subobject f :=
-  factor_thru_image f ≫ (image_subobject_iso f).inv
+def factor_thru_image_subobject : X ⟶ imageSubobject f :=
+  factorThruImage f ≫ (imageSubobjectIso f).inv
 
-instance [has_equalizers C] : epi (factor_thru_image_subobject f) := by
+instance [HasEqualizers C] : Epi (factorThruImageSubobject f) := by
   dsimp [factor_thru_image_subobject]
   apply epi_comp
 
 @[simp, reassoc]
-theorem image_subobject_arrow_comp : factor_thru_image_subobject f ≫ (image_subobject f).arrow = f := by
+theorem image_subobject_arrow_comp : factorThruImageSubobject f ≫ (imageSubobject f).arrow = f := by
   simp [factor_thru_image_subobject, image_subobject_arrow]
 
-theorem image_subobject_arrow_comp_eq_zero [has_zero_morphisms C] {X Y Z : C} {f : X ⟶ Y} {g : Y ⟶ Z} [has_image f]
-    [epi (factor_thru_image_subobject f)] (h : f ≫ g = 0) : (image_subobject f).arrow ≫ g = 0 :=
-  zero_of_epi_comp (factor_thru_image_subobject f) <| by
+theorem image_subobject_arrow_comp_eq_zero [HasZeroMorphisms C] {X Y Z : C} {f : X ⟶ Y} {g : Y ⟶ Z} [HasImage f]
+    [Epi (factorThruImageSubobject f)] (h : f ≫ g = 0) : (imageSubobject f).arrow ≫ g = 0 :=
+  zero_of_epi_comp (factorThruImageSubobject f) <| by
     simp [h]
 
-theorem image_subobject_factors_comp_self {W : C} (k : W ⟶ X) : (image_subobject f).Factors (k ≫ f) :=
-  ⟨k ≫ factor_thru_image f, by
+theorem image_subobject_factors_comp_self {W : C} (k : W ⟶ X) : (imageSubobject f).Factors (k ≫ f) :=
+  ⟨k ≫ factorThruImage f, by
     simp ⟩
 
 @[simp]
 theorem factor_thru_image_subobject_comp_self {W : C} (k : W ⟶ X) h :
-    (image_subobject f).factorThru (k ≫ f) h = k ≫ factor_thru_image_subobject f := by
+    (imageSubobject f).factorThru (k ≫ f) h = k ≫ factorThruImageSubobject f := by
   ext
   simp
 
 @[simp]
 theorem factor_thru_image_subobject_comp_self_assoc {W W' : C} (k : W ⟶ W') (k' : W' ⟶ X) h :
-    (image_subobject f).factorThru (k ≫ k' ≫ f) h = k ≫ k' ≫ factor_thru_image_subobject f := by
+    (imageSubobject f).factorThru (k ≫ k' ≫ f) h = k ≫ k' ≫ factorThruImageSubobject f := by
   ext
   simp
 
 /-- The image of `h ≫ f` is always a smaller subobject than the image of `f`. -/
-theorem image_subobject_comp_le {X' : C} (h : X' ⟶ X) (f : X ⟶ Y) [has_image f] [has_image (h ≫ f)] :
-    image_subobject (h ≫ f) ≤ image_subobject f :=
-  subobject.mk_le_mk_of_comm (image.pre_comp h f)
+theorem image_subobject_comp_le {X' : C} (h : X' ⟶ X) (f : X ⟶ Y) [HasImage f] [HasImage (h ≫ f)] :
+    imageSubobject (h ≫ f) ≤ imageSubobject f :=
+  Subobject.mk_le_mk_of_comm (image.preComp h f)
     (by
       simp )
 
@@ -270,16 +270,16 @@ section
 
 open_locale ZeroObject
 
-variable [has_zero_morphisms C] [has_zero_object C]
+variable [HasZeroMorphisms C] [HasZeroObject C]
 
 @[simp]
-theorem image_subobject_zero_arrow : (image_subobject (0 : X ⟶ Y)).arrow = 0 := by
+theorem image_subobject_zero_arrow : (imageSubobject (0 : X ⟶ Y)).arrow = 0 := by
   rw [← image_subobject_arrow]
   simp
 
 @[simp]
-theorem image_subobject_zero {A B : C} : image_subobject (0 : A ⟶ B) = ⊥ :=
-  subobject.eq_of_comm (image_subobject_iso _ ≪≫ image_zero ≪≫ subobject.bot_coe_iso_zero.symm)
+theorem image_subobject_zero {A B : C} : imageSubobject (0 : A ⟶ B) = ⊥ :=
+  Subobject.eq_of_comm (imageSubobjectIso _ ≪≫ image_zero ≪≫ Subobject.botCoeIsoZero.symm)
     (by
       simp )
 
@@ -287,7 +287,7 @@ end
 
 section
 
-variable [has_equalizers C]
+variable [HasEqualizers C]
 
 attribute [local instance] epi_comp
 
@@ -296,8 +296,8 @@ is an epimorphism when `h` is an epimorphism.
 In general this does not imply that `image_subobject (h ≫ f) = image_subobject f`,
 although it will when the ambient category is abelian.
  -/
-instance image_subobject_comp_le_epi_of_epi {X' : C} (h : X' ⟶ X) [epi h] (f : X ⟶ Y) [has_image f]
-    [has_image (h ≫ f)] : epi (subobject.of_le _ _ (image_subobject_comp_le h f)) := by
+instance image_subobject_comp_le_epi_of_epi {X' : C} (h : X' ⟶ X) [Epi h] (f : X ⟶ Y) [HasImage f] [HasImage (h ≫ f)] :
+    Epi (Subobject.ofLe _ _ (image_subobject_comp_le h f)) := by
   rw [of_le_mk_le_mk_of_comm (image.pre_comp h f)]
   · infer_instance
     
@@ -308,55 +308,55 @@ end
 
 section
 
-variable [has_equalizers C]
+variable [HasEqualizers C]
 
 /-- Postcomposing by an isomorphism gives an isomorphism between image subobjects. -/
-def image_subobject_comp_iso (f : X ⟶ Y) [has_image f] {Y' : C} (h : Y ⟶ Y') [is_iso h] :
-    (image_subobject (f ≫ h) : C) ≅ (image_subobject f : C) :=
-  image_subobject_iso _ ≪≫ (image.comp_iso _ _).symm ≪≫ (image_subobject_iso _).symm
+def image_subobject_comp_iso (f : X ⟶ Y) [HasImage f] {Y' : C} (h : Y ⟶ Y') [IsIso h] :
+    (imageSubobject (f ≫ h) : C) ≅ (imageSubobject f : C) :=
+  imageSubobjectIso _ ≪≫ (image.compIso _ _).symm ≪≫ (imageSubobjectIso _).symm
 
 @[simp, reassoc]
-theorem image_subobject_comp_iso_hom_arrow (f : X ⟶ Y) [has_image f] {Y' : C} (h : Y ⟶ Y') [is_iso h] :
-    (image_subobject_comp_iso f h).Hom ≫ (image_subobject f).arrow = (image_subobject (f ≫ h)).arrow ≫ inv h := by
+theorem image_subobject_comp_iso_hom_arrow (f : X ⟶ Y) [HasImage f] {Y' : C} (h : Y ⟶ Y') [IsIso h] :
+    (imageSubobjectCompIso f h).Hom ≫ (imageSubobject f).arrow = (imageSubobject (f ≫ h)).arrow ≫ inv h := by
   simp [image_subobject_comp_iso]
 
 @[simp, reassoc]
-theorem image_subobject_comp_iso_inv_arrow (f : X ⟶ Y) [has_image f] {Y' : C} (h : Y ⟶ Y') [is_iso h] :
-    (image_subobject_comp_iso f h).inv ≫ (image_subobject (f ≫ h)).arrow = (image_subobject f).arrow ≫ h := by
+theorem image_subobject_comp_iso_inv_arrow (f : X ⟶ Y) [HasImage f] {Y' : C} (h : Y ⟶ Y') [IsIso h] :
+    (imageSubobjectCompIso f h).inv ≫ (imageSubobject (f ≫ h)).arrow = (imageSubobject f).arrow ≫ h := by
   simp [image_subobject_comp_iso]
 
 end
 
 /-- Precomposing by an isomorphism does not change the image subobject. -/
-theorem image_subobject_iso_comp [has_equalizers C] {X' : C} (h : X' ⟶ X) [is_iso h] (f : X ⟶ Y) [has_image f] :
-    image_subobject (h ≫ f) = image_subobject f :=
+theorem image_subobject_iso_comp [HasEqualizers C] {X' : C} (h : X' ⟶ X) [IsIso h] (f : X ⟶ Y) [HasImage f] :
+    imageSubobject (h ≫ f) = imageSubobject f :=
   le_antisymmₓ (image_subobject_comp_le h f)
-    (subobject.mk_le_mk_of_comm (inv (image.pre_comp h f))
+    (Subobject.mk_le_mk_of_comm (inv (image.preComp h f))
       (by
         simp ))
 
-theorem image_subobject_le {A B : C} {X : subobject B} (f : A ⟶ B) [has_image f] (h : A ⟶ X) (w : h ≫ X.arrow = f) :
-    image_subobject f ≤ X :=
-  subobject.le_of_comm ((image_subobject_iso f).Hom ≫ image.lift { i := (X : C), e := h, m := X.arrow })
+theorem image_subobject_le {A B : C} {X : Subobject B} (f : A ⟶ B) [HasImage f] (h : A ⟶ X) (w : h ≫ X.arrow = f) :
+    imageSubobject f ≤ X :=
+  Subobject.le_of_comm ((imageSubobjectIso f).Hom ≫ image.lift { i := (X : C), e := h, m := X.arrow })
     (by
       simp )
 
-theorem image_subobject_le_mk {A B : C} {X : C} (g : X ⟶ B) [mono g] (f : A ⟶ B) [has_image f] (h : A ⟶ X)
-    (w : h ≫ g = f) : image_subobject f ≤ subobject.mk g :=
-  image_subobject_le f (h ≫ (subobject.underlying_iso g).inv)
+theorem image_subobject_le_mk {A B : C} {X : C} (g : X ⟶ B) [Mono g] (f : A ⟶ B) [HasImage f] (h : A ⟶ X)
+    (w : h ≫ g = f) : imageSubobject f ≤ Subobject.mk g :=
+  image_subobject_le f (h ≫ (Subobject.underlyingIso g).inv)
     (by
       simp [w])
 
 /-- Given a commutative square between morphisms `f` and `g`,
 we have a morphism in the category from `image_subobject f` to `image_subobject g`. -/
-def image_subobject_map {W X Y Z : C} {f : W ⟶ X} [has_image f] {g : Y ⟶ Z} [has_image g] (sq : arrow.mk f ⟶ arrow.mk g)
-    [has_image_map sq] : (image_subobject f : C) ⟶ (image_subobject g : C) :=
-  (image_subobject_iso f).Hom ≫ image.map sq ≫ (image_subobject_iso g).inv
+def image_subobject_map {W X Y Z : C} {f : W ⟶ X} [HasImage f] {g : Y ⟶ Z} [HasImage g] (sq : Arrow.mk f ⟶ Arrow.mk g)
+    [HasImageMap sq] : (imageSubobject f : C) ⟶ (imageSubobject g : C) :=
+  (imageSubobjectIso f).Hom ≫ image.map sq ≫ (imageSubobjectIso g).inv
 
 @[simp, reassoc]
-theorem image_subobject_map_arrow {W X Y Z : C} {f : W ⟶ X} [has_image f] {g : Y ⟶ Z} [has_image g]
-    (sq : arrow.mk f ⟶ arrow.mk g) [has_image_map sq] :
-    image_subobject_map sq ≫ (image_subobject g).arrow = (image_subobject f).arrow ≫ sq.right := by
+theorem image_subobject_map_arrow {W X Y Z : C} {f : W ⟶ X} [HasImage f] {g : Y ⟶ Z} [HasImage g]
+    (sq : Arrow.mk f ⟶ Arrow.mk g) [HasImageMap sq] :
+    imageSubobjectMap sq ≫ (imageSubobject g).arrow = (imageSubobject f).arrow ≫ sq.right := by
   simp only [image_subobject_map, category.assoc, image_subobject_arrow']
   erw [image.map_ι, ← category.assoc, image_subobject_arrow]
 

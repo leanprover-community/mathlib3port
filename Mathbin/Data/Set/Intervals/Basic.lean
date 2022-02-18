@@ -1,6 +1,5 @@
 import Mathbin.Algebra.Order.Group
 import Mathbin.Order.RelIso
-import Mathbin.Order.OrderDual
 
 /-!
 # Intervals
@@ -161,35 +160,35 @@ theorem right_mem_Iic : a ∈ Iic a := by
   simp
 
 @[simp]
-theorem dual_Ici : Ici (to_dual a) = of_dual ⁻¹' Iic a :=
+theorem dual_Ici : Ici (toDual a) = of_dual ⁻¹' Iic a :=
   rfl
 
 @[simp]
-theorem dual_Iic : Iic (to_dual a) = of_dual ⁻¹' Ici a :=
+theorem dual_Iic : Iic (toDual a) = of_dual ⁻¹' Ici a :=
   rfl
 
 @[simp]
-theorem dual_Ioi : Ioi (to_dual a) = of_dual ⁻¹' Iio a :=
+theorem dual_Ioi : Ioi (toDual a) = of_dual ⁻¹' Iio a :=
   rfl
 
 @[simp]
-theorem dual_Iio : Iio (to_dual a) = of_dual ⁻¹' Ioi a :=
+theorem dual_Iio : Iio (toDual a) = of_dual ⁻¹' Ioi a :=
   rfl
 
 @[simp]
-theorem dual_Icc : Icc (to_dual a) (to_dual b) = of_dual ⁻¹' Icc b a :=
+theorem dual_Icc : Icc (toDual a) (toDual b) = of_dual ⁻¹' Icc b a :=
   Set.ext fun x => and_comm _ _
 
 @[simp]
-theorem dual_Ioc : Ioc (to_dual a) (to_dual b) = of_dual ⁻¹' Ico b a :=
+theorem dual_Ioc : Ioc (toDual a) (toDual b) = of_dual ⁻¹' Ico b a :=
   Set.ext fun x => and_comm _ _
 
 @[simp]
-theorem dual_Ico : Ico (to_dual a) (to_dual b) = of_dual ⁻¹' Ioc b a :=
+theorem dual_Ico : Ico (toDual a) (toDual b) = of_dual ⁻¹' Ioc b a :=
   Set.ext fun x => and_comm _ _
 
 @[simp]
-theorem dual_Ioo : Ioo (to_dual a) (to_dual b) = of_dual ⁻¹' Ioo b a :=
+theorem dual_Ioo : Ioo (toDual a) (toDual b) = of_dual ⁻¹' Ioo b a :=
   Set.ext fun x => and_comm _ _
 
 @[simp]
@@ -225,32 +224,32 @@ theorem nonempty_Iio [NoMinOrder α] : (Iio a).Nonempty :=
   exists_lt a
 
 theorem nonempty_Icc_subtype (h : a ≤ b) : Nonempty (Icc a b) :=
-  nonempty.to_subtype (nonempty_Icc.mpr h)
+  Nonempty.to_subtype (nonempty_Icc.mpr h)
 
 theorem nonempty_Ico_subtype (h : a < b) : Nonempty (Ico a b) :=
-  nonempty.to_subtype (nonempty_Ico.mpr h)
+  Nonempty.to_subtype (nonempty_Ico.mpr h)
 
 theorem nonempty_Ioc_subtype (h : a < b) : Nonempty (Ioc a b) :=
-  nonempty.to_subtype (nonempty_Ioc.mpr h)
+  Nonempty.to_subtype (nonempty_Ioc.mpr h)
 
 /-- An interval `Ici a` is nonempty. -/
 instance nonempty_Ici_subtype : Nonempty (Ici a) :=
-  nonempty.to_subtype nonempty_Ici
+  Nonempty.to_subtype nonempty_Ici
 
 /-- An interval `Iic a` is nonempty. -/
 instance nonempty_Iic_subtype : Nonempty (Iic a) :=
-  nonempty.to_subtype nonempty_Iic
+  Nonempty.to_subtype nonempty_Iic
 
 theorem nonempty_Ioo_subtype [DenselyOrdered α] (h : a < b) : Nonempty (Ioo a b) :=
-  nonempty.to_subtype (nonempty_Ioo.mpr h)
+  Nonempty.to_subtype (nonempty_Ioo.mpr h)
 
 /-- In an order without maximal elements, the intervals `Ioi` are nonempty. -/
 instance nonempty_Ioi_subtype [NoMaxOrder α] : Nonempty (Ioi a) :=
-  nonempty.to_subtype nonempty_Ioi
+  Nonempty.to_subtype nonempty_Ioi
 
 /-- In an order without minimal elements, the intervals `Iio` are nonempty. -/
 instance nonempty_Iio_subtype [NoMinOrder α] : Nonempty (Iio a) :=
-  nonempty.to_subtype nonempty_Iio
+  Nonempty.to_subtype nonempty_Iio
 
 @[simp]
 theorem Icc_eq_empty (h : ¬a ≤ b) : Icc a b = ∅ :=
@@ -368,7 +367,7 @@ theorem Ico_subset_Icc_self : Ico a b ⊆ Icc a b := fun x => And.imp_right le_o
 theorem Ioc_subset_Icc_self : Ioc a b ⊆ Icc a b := fun x => And.imp_left le_of_ltₓ
 
 theorem Ioo_subset_Icc_self : Ioo a b ⊆ Icc a b :=
-  subset.trans Ioo_subset_Ico_self Ico_subset_Icc_self
+  Subset.trans Ioo_subset_Ico_self Ico_subset_Icc_self
 
 theorem Ico_subset_Iio_self : Ico a b ⊆ Iio b := fun x => And.right
 
@@ -423,7 +422,7 @@ theorem Ioi_subset_Ioi (h : a ≤ b) : Ioi b ⊆ Ioi a := fun x hx => h.trans_lt
 /-- If `a ≤ b`, then `(b, +∞) ⊆ [a, +∞)`. In preorders, this is just an implication. If you need
 the equivalence in dense linear orders, use `Ioi_subset_Ici_iff`. -/
 theorem Ioi_subset_Ici (h : a ≤ b) : Ioi b ⊆ Ici a :=
-  subset.trans (Ioi_subset_Ioi h) Ioi_subset_Ici_self
+  Subset.trans (Ioi_subset_Ioi h) Ioi_subset_Ici_self
 
 /-- If `a ≤ b`, then `(-∞, a) ⊆ (-∞, b)`. In preorders, this is just an implication. If you need
 the equivalence in linear orders, use `Iio_subset_Iio_iff`. -/
@@ -432,7 +431,7 @@ theorem Iio_subset_Iio (h : a ≤ b) : Iio a ⊆ Iio b := fun x hx => lt_of_lt_o
 /-- If `a ≤ b`, then `(-∞, a) ⊆ (-∞, b]`. In preorders, this is just an implication. If you need
 the equivalence in dense linear orders, use `Iio_subset_Iic_iff`. -/
 theorem Iio_subset_Iic (h : a ≤ b) : Iio a ⊆ Iic b :=
-  subset.trans (Iio_subset_Iio h) Iio_subset_Iic_self
+  Subset.trans (Iio_subset_Iio h) Iio_subset_Iic_self
 
 theorem Ici_inter_Iic : Ici a ∩ Iic b = Icc a b :=
   rfl
@@ -485,11 +484,11 @@ theorem _root_.is_top.Iic_eq (h : IsTop a) : Iic a = univ :=
 theorem _root_.is_bot.Ici_eq (h : IsBot a) : Ici a = univ :=
   eq_univ_of_forall h
 
-theorem _root_.is_top.Ioi_eq (h : IsTop a) : Ioi a = ∅ :=
-  eq_empty_of_subset_empty fun b hb => (h b).not_lt hb
+theorem _root_.is_max.Ioi_eq (h : IsMax a) : Ioi a = ∅ :=
+  eq_empty_of_subset_empty fun b => h.not_lt
 
-theorem _root_.is_bot.Iio_eq (h : IsBot a) : Iio a = ∅ :=
-  eq_empty_of_subset_empty fun b hb => (h b).not_lt hb
+theorem _root_.is_min.Iio_eq (h : IsMin a) : Iio a = ∅ :=
+  eq_empty_of_subset_empty fun b => h.not_lt
 
 end Preorderₓ
 
@@ -601,9 +600,9 @@ theorem mem_Ici_Ioi_of_subset_of_subset {s : Set α} (ho : Ioi a ⊆ s) (hc : s 
   Classical.by_cases
     (fun h : a ∈ s =>
       Or.inl <|
-        subset.antisymm hc <| by
+        Subset.antisymm hc <| by
           rw [← Ioi_union_left, union_subset_iff] <;> simp [*])
-    fun h => Or.inr <| subset.antisymm (fun x hx => lt_of_le_of_neₓ (hc hx) fun heq => h <| HEq.symm ▸ hx) ho
+    fun h => Or.inr <| Subset.antisymm (fun x hx => lt_of_le_of_neₓ (hc hx) fun heq => h <| HEq.symm ▸ hx) ho
 
 theorem mem_Iic_Iio_of_subset_of_subset {s : Set α} (ho : Iio a ⊆ s) (hc : s ⊆ Iic a) :
     s ∈ ({Iic a, Iio a} : Set (Set α)) :=
@@ -659,11 +658,11 @@ theorem mem_Ioo_or_eq_right_of_mem_Ioc {x : α} (hmem : x ∈ Ioc a b) : x = b �
   rw [dual_Ioo, dual_Ico] at this
   exact this hmem
 
-theorem _root_.is_top.Ici_eq (h : IsTop a) : Ici a = {a} :=
-  eq_singleton_iff_unique_mem.2 ⟨left_mem_Ici, fun x => (h x).antisymm⟩
+theorem _root_.is_max.Ici_eq (h : IsMax a) : Ici a = {a} :=
+  eq_singleton_iff_unique_mem.2 ⟨left_mem_Ici, fun b => h.eq_of_ge⟩
 
-theorem _root_.is_bot.Iic_eq (h : IsBot a) : Iic a = {a} :=
-  h.to_dual.Ici_eq
+theorem _root_.is_min.Iic_eq (h : IsMin a) : Iic a = {a} :=
+  h.toDual.Ici_eq
 
 theorem Iic_inter_Ioc_of_le (h : a ≤ c) : Iic a ∩ Ioc b c = Ioc b a :=
   ext fun x => ⟨fun H => ⟨H.2.1, H.1⟩, fun H => ⟨H.2, H.1, H.2.trans h⟩⟩
@@ -674,13 +673,13 @@ section OrderTop
 
 @[simp]
 theorem Ici_top {α : Type u} [PartialOrderₓ α] [OrderTop α] : Ici (⊤ : α) = {⊤} :=
-  is_top_top.Ici_eq
+  is_max_top.Ici_eq
 
 variable {α : Type u} [Preorderₓ α] [OrderTop α] {a : α}
 
 @[simp]
 theorem Ioi_top : Ioi (⊤ : α) = ∅ :=
-  is_top_top.Ioi_eq
+  is_max_top.Ioi_eq
 
 @[simp]
 theorem Iic_top : Iic (⊤ : α) = univ :=
@@ -700,13 +699,13 @@ section OrderBot
 
 @[simp]
 theorem Iic_bot {α : Type u} [PartialOrderₓ α] [OrderBot α] : Iic (⊥ : α) = {⊥} :=
-  is_bot_bot.Iic_eq
+  is_min_bot.Iic_eq
 
 variable {α : Type u} [Preorderₓ α] [OrderBot α] {a : α}
 
 @[simp]
 theorem Iio_bot : Iio (⊥ : α) = ∅ :=
-  is_bot_bot.Iio_eq
+  is_min_bot.Iio_eq
 
 @[simp]
 theorem Ici_bot : Ici (⊥ : α) = univ :=
@@ -910,14 +909,14 @@ theorem Ioi_subset_Ioo_union_Ici : Ioi a ⊆ Ioo a b ∪ Ici b := fun x hx =>
 
 @[simp]
 theorem Ioo_union_Ici_eq_Ioi (h : a < b) : Ioo a b ∪ Ici b = Ioi a :=
-  subset.antisymm (fun x hx => hx.elim And.left h.trans_le) Ioi_subset_Ioo_union_Ici
+  Subset.antisymm (fun x hx => hx.elim And.left h.trans_le) Ioi_subset_Ioo_union_Ici
 
 theorem Ici_subset_Ico_union_Ici : Ici a ⊆ Ico a b ∪ Ici b := fun x hx =>
   (lt_or_leₓ x b).elim (fun hxb => Or.inl ⟨hx, hxb⟩) fun hxb => Or.inr hxb
 
 @[simp]
 theorem Ico_union_Ici_eq_Ici (h : a ≤ b) : Ico a b ∪ Ici b = Ici a :=
-  subset.antisymm (fun x hx => hx.elim And.left h.trans) Ici_subset_Ico_union_Ici
+  Subset.antisymm (fun x hx => hx.elim And.left h.trans) Ici_subset_Ico_union_Ici
 
 theorem Ico_union_Ici' (h₁ : c ≤ b) : Ico a b ∪ Ici c = Ici (min a c) := by
   ext1 x
@@ -941,7 +940,7 @@ theorem Ioi_subset_Ioc_union_Ioi : Ioi a ⊆ Ioc a b ∪ Ioi b := fun x hx =>
 
 @[simp]
 theorem Ioc_union_Ioi_eq_Ioi (h : a ≤ b) : Ioc a b ∪ Ioi b = Ioi a :=
-  subset.antisymm (fun x hx => hx.elim And.left h.trans_lt) Ioi_subset_Ioc_union_Ioi
+  Subset.antisymm (fun x hx => hx.elim And.left h.trans_lt) Ioi_subset_Ioc_union_Ioi
 
 theorem Ioc_union_Ioi' (h₁ : c ≤ b) : Ioc a b ∪ Ioi c = Ioi (min a c) := by
   ext1 x
@@ -965,21 +964,21 @@ theorem Ici_subset_Icc_union_Ioi : Ici a ⊆ Icc a b ∪ Ioi b := fun x hx =>
 
 @[simp]
 theorem Icc_union_Ioi_eq_Ici (h : a ≤ b) : Icc a b ∪ Ioi b = Ici a :=
-  subset.antisymm (fun x hx => (hx.elim And.left) fun hx' => h.trans <| le_of_ltₓ hx') Ici_subset_Icc_union_Ioi
+  Subset.antisymm (fun x hx => (hx.elim And.left) fun hx' => h.trans <| le_of_ltₓ hx') Ici_subset_Icc_union_Ioi
 
 theorem Ioi_subset_Ioc_union_Ici : Ioi a ⊆ Ioc a b ∪ Ici b :=
-  subset.trans Ioi_subset_Ioo_union_Ici (union_subset_union_left _ Ioo_subset_Ioc_self)
+  Subset.trans Ioi_subset_Ioo_union_Ici (union_subset_union_left _ Ioo_subset_Ioc_self)
 
 @[simp]
 theorem Ioc_union_Ici_eq_Ioi (h : a < b) : Ioc a b ∪ Ici b = Ioi a :=
-  subset.antisymm (fun x hx => hx.elim And.left h.trans_le) Ioi_subset_Ioc_union_Ici
+  Subset.antisymm (fun x hx => hx.elim And.left h.trans_le) Ioi_subset_Ioc_union_Ici
 
 theorem Ici_subset_Icc_union_Ici : Ici a ⊆ Icc a b ∪ Ici b :=
-  subset.trans Ici_subset_Ico_union_Ici (union_subset_union_left _ Ico_subset_Icc_self)
+  Subset.trans Ici_subset_Ico_union_Ici (union_subset_union_left _ Ico_subset_Icc_self)
 
 @[simp]
 theorem Icc_union_Ici_eq_Ici (h : a ≤ b) : Icc a b ∪ Ici b = Ici a :=
-  subset.antisymm (fun x hx => hx.elim And.left h.trans) Ici_subset_Icc_union_Ici
+  Subset.antisymm (fun x hx => hx.elim And.left h.trans) Ici_subset_Icc_union_Ici
 
 theorem Icc_union_Ici' (h₁ : c ≤ b) : Icc a b ∪ Ici c = Ici (min a c) := by
   ext1 x
@@ -1011,14 +1010,14 @@ theorem Iic_subset_Iio_union_Icc : Iic b ⊆ Iio a ∪ Icc a b := fun x hx =>
 
 @[simp]
 theorem Iio_union_Icc_eq_Iic (h : a ≤ b) : Iio a ∪ Icc a b = Iic b :=
-  subset.antisymm (fun x hx => hx.elim (fun hx => (le_of_ltₓ hx).trans h) And.right) Iic_subset_Iio_union_Icc
+  Subset.antisymm (fun x hx => hx.elim (fun hx => (le_of_ltₓ hx).trans h) And.right) Iic_subset_Iio_union_Icc
 
 theorem Iio_subset_Iio_union_Ico : Iio b ⊆ Iio a ∪ Ico a b := fun x hx =>
   (lt_or_leₓ x a).elim (fun hxa => Or.inl hxa) fun hxa => Or.inr ⟨hxa, hx⟩
 
 @[simp]
 theorem Iio_union_Ico_eq_Iio (h : a ≤ b) : Iio a ∪ Ico a b = Iio b :=
-  subset.antisymm (fun x hx => hx.elim (fun hx' => lt_of_lt_of_leₓ hx' h) And.right) Iio_subset_Iio_union_Ico
+  Subset.antisymm (fun x hx => hx.elim (fun hx' => lt_of_lt_of_leₓ hx' h) And.right) Iio_subset_Iio_union_Ico
 
 theorem Iio_union_Ico' (h₁ : c ≤ b) : Iio b ∪ Ico c d = Iio (max b d) := by
   ext1 x
@@ -1042,7 +1041,7 @@ theorem Iic_subset_Iic_union_Ioc : Iic b ⊆ Iic a ∪ Ioc a b := fun x hx =>
 
 @[simp]
 theorem Iic_union_Ioc_eq_Iic (h : a ≤ b) : Iic a ∪ Ioc a b = Iic b :=
-  subset.antisymm (fun x hx => hx.elim (fun hx' => le_transₓ hx' h) And.right) Iic_subset_Iic_union_Ioc
+  Subset.antisymm (fun x hx => hx.elim (fun hx' => le_transₓ hx' h) And.right) Iic_subset_Iic_union_Ioc
 
 theorem Iic_union_Ioc' (h₁ : c < b) : Iic b ∪ Ioc c d = Iic (max b d) := by
   ext1 x
@@ -1067,7 +1066,7 @@ theorem Iio_subset_Iic_union_Ioo : Iio b ⊆ Iic a ∪ Ioo a b := fun x hx =>
 
 @[simp]
 theorem Iic_union_Ioo_eq_Iio (h : a < b) : Iic a ∪ Ioo a b = Iio b :=
-  subset.antisymm (fun x hx => hx.elim (fun hx' => lt_of_le_of_ltₓ hx' h) And.right) Iio_subset_Iic_union_Ioo
+  Subset.antisymm (fun x hx => hx.elim (fun hx' => lt_of_le_of_ltₓ hx' h) And.right) Iio_subset_Iic_union_Ioo
 
 theorem Iio_union_Ioo' (h₁ : c < b) : Iio b ∪ Ioo c d = Iio (max b d) := by
   ext x
@@ -1088,11 +1087,11 @@ theorem Iio_union_Ioo (h : min c d < b) : Iio b ∪ Ioo c d = Iio (max b d) := b
     
 
 theorem Iic_subset_Iic_union_Icc : Iic b ⊆ Iic a ∪ Icc a b :=
-  subset.trans Iic_subset_Iic_union_Ioc (union_subset_union_right _ Ioc_subset_Icc_self)
+  Subset.trans Iic_subset_Iic_union_Ioc (union_subset_union_right _ Ioc_subset_Icc_self)
 
 @[simp]
 theorem Iic_union_Icc_eq_Iic (h : a ≤ b) : Iic a ∪ Icc a b = Iic b :=
-  subset.antisymm (fun x hx => hx.elim (fun hx' => le_transₓ hx' h) And.right) Iic_subset_Iic_union_Icc
+  Subset.antisymm (fun x hx => hx.elim (fun hx' => le_transₓ hx' h) And.right) Iic_subset_Iic_union_Icc
 
 theorem Iic_union_Icc' (h₁ : c ≤ b) : Iic b ∪ Icc c d = Iic (max b d) := by
   ext1 x
@@ -1117,11 +1116,11 @@ theorem Iic_union_Icc (h : min c d ≤ b) : Iic b ∪ Icc c d = Iic (max b d) :=
     
 
 theorem Iio_subset_Iic_union_Ico : Iio b ⊆ Iic a ∪ Ico a b :=
-  subset.trans Iio_subset_Iic_union_Ioo (union_subset_union_right _ Ioo_subset_Ico_self)
+  Subset.trans Iio_subset_Iic_union_Ioo (union_subset_union_right _ Ioo_subset_Ico_self)
 
 @[simp]
 theorem Iic_union_Ico_eq_Iio (h : a < b) : Iic a ∪ Ico a b = Iio b :=
-  subset.antisymm (fun x hx => hx.elim (fun hx' => lt_of_le_of_ltₓ hx' h) And.right) Iio_subset_Iic_union_Ico
+  Subset.antisymm (fun x hx => hx.elim (fun hx' => lt_of_le_of_ltₓ hx' h) And.right) Iio_subset_Iic_union_Ico
 
 /-! #### Two finite intervals, `I?o` and `Ic?` -/
 
@@ -1131,7 +1130,7 @@ theorem Ioo_subset_Ioo_union_Ico : Ioo a c ⊆ Ioo a b ∪ Ico b c := fun x hx =
 
 @[simp]
 theorem Ioo_union_Ico_eq_Ioo (h₁ : a < b) (h₂ : b ≤ c) : Ioo a b ∪ Ico b c = Ioo a c :=
-  subset.antisymm (fun x hx => hx.elim (fun hx => ⟨hx.1, hx.2.trans_le h₂⟩) fun hx => ⟨h₁.trans_le hx.1, hx.2⟩)
+  Subset.antisymm (fun x hx => hx.elim (fun hx => ⟨hx.1, hx.2.trans_le h₂⟩) fun hx => ⟨h₁.trans_le hx.1, hx.2⟩)
     Ioo_subset_Ioo_union_Ico
 
 theorem Ico_subset_Ico_union_Ico : Ico a c ⊆ Ico a b ∪ Ico b c := fun x hx =>
@@ -1139,7 +1138,7 @@ theorem Ico_subset_Ico_union_Ico : Ico a c ⊆ Ico a b ∪ Ico b c := fun x hx =
 
 @[simp]
 theorem Ico_union_Ico_eq_Ico (h₁ : a ≤ b) (h₂ : b ≤ c) : Ico a b ∪ Ico b c = Ico a c :=
-  subset.antisymm (fun x hx => hx.elim (fun hx => ⟨hx.1, hx.2.trans_le h₂⟩) fun hx => ⟨h₁.trans hx.1, hx.2⟩)
+  Subset.antisymm (fun x hx => hx.elim (fun hx => ⟨hx.1, hx.2.trans_le h₂⟩) fun hx => ⟨h₁.trans hx.1, hx.2⟩)
     Ico_subset_Ico_union_Ico
 
 theorem Ico_union_Ico' (h₁ : c ≤ b) (h₂ : a ≤ d) : Ico a b ∪ Ico c d = Ico (min a c) (max b d) := by
@@ -1170,7 +1169,7 @@ theorem Icc_subset_Ico_union_Icc : Icc a c ⊆ Ico a b ∪ Icc b c := fun x hx =
 
 @[simp]
 theorem Ico_union_Icc_eq_Icc (h₁ : a ≤ b) (h₂ : b ≤ c) : Ico a b ∪ Icc b c = Icc a c :=
-  subset.antisymm (fun x hx => hx.elim (fun hx => ⟨hx.1, hx.2.le.trans h₂⟩) fun hx => ⟨h₁.trans hx.1, hx.2⟩)
+  Subset.antisymm (fun x hx => hx.elim (fun hx => ⟨hx.1, hx.2.le.trans h₂⟩) fun hx => ⟨h₁.trans hx.1, hx.2⟩)
     Icc_subset_Ico_union_Icc
 
 theorem Ioc_subset_Ioo_union_Icc : Ioc a c ⊆ Ioo a b ∪ Icc b c := fun x hx =>
@@ -1178,7 +1177,7 @@ theorem Ioc_subset_Ioo_union_Icc : Ioc a c ⊆ Ioo a b ∪ Icc b c := fun x hx =
 
 @[simp]
 theorem Ioo_union_Icc_eq_Ioc (h₁ : a < b) (h₂ : b ≤ c) : Ioo a b ∪ Icc b c = Ioc a c :=
-  subset.antisymm (fun x hx => hx.elim (fun hx => ⟨hx.1, hx.2.le.trans h₂⟩) fun hx => ⟨h₁.trans_le hx.1, hx.2⟩)
+  Subset.antisymm (fun x hx => hx.elim (fun hx => ⟨hx.1, hx.2.le.trans h₂⟩) fun hx => ⟨h₁.trans_le hx.1, hx.2⟩)
     Ioc_subset_Ioo_union_Icc
 
 /-! #### Two finite intervals, `I?c` and `Io?` -/
@@ -1189,7 +1188,7 @@ theorem Ioo_subset_Ioc_union_Ioo : Ioo a c ⊆ Ioc a b ∪ Ioo b c := fun x hx =
 
 @[simp]
 theorem Ioc_union_Ioo_eq_Ioo (h₁ : a ≤ b) (h₂ : b < c) : Ioc a b ∪ Ioo b c = Ioo a c :=
-  subset.antisymm (fun x hx => hx.elim (fun hx => ⟨hx.1, hx.2.trans_lt h₂⟩) fun hx => ⟨h₁.trans_lt hx.1, hx.2⟩)
+  Subset.antisymm (fun x hx => hx.elim (fun hx => ⟨hx.1, hx.2.trans_lt h₂⟩) fun hx => ⟨h₁.trans_lt hx.1, hx.2⟩)
     Ioo_subset_Ioc_union_Ioo
 
 theorem Ico_subset_Icc_union_Ioo : Ico a c ⊆ Icc a b ∪ Ioo b c := fun x hx =>
@@ -1197,7 +1196,7 @@ theorem Ico_subset_Icc_union_Ioo : Ico a c ⊆ Icc a b ∪ Ioo b c := fun x hx =
 
 @[simp]
 theorem Icc_union_Ioo_eq_Ico (h₁ : a ≤ b) (h₂ : b < c) : Icc a b ∪ Ioo b c = Ico a c :=
-  subset.antisymm (fun x hx => hx.elim (fun hx => ⟨hx.1, hx.2.trans_lt h₂⟩) fun hx => ⟨h₁.trans hx.1.le, hx.2⟩)
+  Subset.antisymm (fun x hx => hx.elim (fun hx => ⟨hx.1, hx.2.trans_lt h₂⟩) fun hx => ⟨h₁.trans hx.1.le, hx.2⟩)
     Ico_subset_Icc_union_Ioo
 
 theorem Icc_subset_Icc_union_Ioc : Icc a c ⊆ Icc a b ∪ Ioc b c := fun x hx =>
@@ -1205,7 +1204,7 @@ theorem Icc_subset_Icc_union_Ioc : Icc a c ⊆ Icc a b ∪ Ioc b c := fun x hx =
 
 @[simp]
 theorem Icc_union_Ioc_eq_Icc (h₁ : a ≤ b) (h₂ : b ≤ c) : Icc a b ∪ Ioc b c = Icc a c :=
-  subset.antisymm (fun x hx => hx.elim (fun hx => ⟨hx.1, hx.2.trans h₂⟩) fun hx => ⟨h₁.trans hx.1.le, hx.2⟩)
+  Subset.antisymm (fun x hx => hx.elim (fun hx => ⟨hx.1, hx.2.trans h₂⟩) fun hx => ⟨h₁.trans hx.1.le, hx.2⟩)
     Icc_subset_Icc_union_Ioc
 
 theorem Ioc_subset_Ioc_union_Ioc : Ioc a c ⊆ Ioc a b ∪ Ioc b c := fun x hx =>
@@ -1213,7 +1212,7 @@ theorem Ioc_subset_Ioc_union_Ioc : Ioc a c ⊆ Ioc a b ∪ Ioc b c := fun x hx =
 
 @[simp]
 theorem Ioc_union_Ioc_eq_Ioc (h₁ : a ≤ b) (h₂ : b ≤ c) : Ioc a b ∪ Ioc b c = Ioc a c :=
-  subset.antisymm (fun x hx => hx.elim (fun hx => ⟨hx.1, hx.2.trans h₂⟩) fun hx => ⟨h₁.trans_lt hx.1, hx.2⟩)
+  Subset.antisymm (fun x hx => hx.elim (fun hx => ⟨hx.1, hx.2.trans h₂⟩) fun hx => ⟨h₁.trans_lt hx.1, hx.2⟩)
     Ioc_subset_Ioc_union_Ioc
 
 theorem Ioc_union_Ioc' (h₁ : c ≤ b) (h₂ : a ≤ d) : Ioc a b ∪ Ioc c d = Ioc (min a c) (max b d) := by
@@ -1243,27 +1242,27 @@ theorem Ioc_union_Ioc (h₁ : min a b ≤ max c d) (h₂ : min c d ≤ max a b) 
 
 
 theorem Ioo_subset_Ioc_union_Ico : Ioo a c ⊆ Ioc a b ∪ Ico b c :=
-  subset.trans Ioo_subset_Ioc_union_Ioo (union_subset_union_right _ Ioo_subset_Ico_self)
+  Subset.trans Ioo_subset_Ioc_union_Ioo (union_subset_union_right _ Ioo_subset_Ico_self)
 
 @[simp]
 theorem Ioc_union_Ico_eq_Ioo (h₁ : a < b) (h₂ : b < c) : Ioc a b ∪ Ico b c = Ioo a c :=
-  subset.antisymm (fun x hx => hx.elim (fun hx' => ⟨hx'.1, hx'.2.trans_lt h₂⟩) fun hx' => ⟨h₁.trans_le hx'.1, hx'.2⟩)
+  Subset.antisymm (fun x hx => hx.elim (fun hx' => ⟨hx'.1, hx'.2.trans_lt h₂⟩) fun hx' => ⟨h₁.trans_le hx'.1, hx'.2⟩)
     Ioo_subset_Ioc_union_Ico
 
 theorem Ico_subset_Icc_union_Ico : Ico a c ⊆ Icc a b ∪ Ico b c :=
-  subset.trans Ico_subset_Icc_union_Ioo (union_subset_union_right _ Ioo_subset_Ico_self)
+  Subset.trans Ico_subset_Icc_union_Ioo (union_subset_union_right _ Ioo_subset_Ico_self)
 
 @[simp]
 theorem Icc_union_Ico_eq_Ico (h₁ : a ≤ b) (h₂ : b < c) : Icc a b ∪ Ico b c = Ico a c :=
-  subset.antisymm (fun x hx => hx.elim (fun hx => ⟨hx.1, hx.2.trans_lt h₂⟩) fun hx => ⟨h₁.trans hx.1, hx.2⟩)
+  Subset.antisymm (fun x hx => hx.elim (fun hx => ⟨hx.1, hx.2.trans_lt h₂⟩) fun hx => ⟨h₁.trans hx.1, hx.2⟩)
     Ico_subset_Icc_union_Ico
 
 theorem Icc_subset_Icc_union_Icc : Icc a c ⊆ Icc a b ∪ Icc b c :=
-  subset.trans Icc_subset_Icc_union_Ioc (union_subset_union_right _ Ioc_subset_Icc_self)
+  Subset.trans Icc_subset_Icc_union_Ioc (union_subset_union_right _ Ioc_subset_Icc_self)
 
 @[simp]
 theorem Icc_union_Icc_eq_Icc (h₁ : a ≤ b) (h₂ : b ≤ c) : Icc a b ∪ Icc b c = Icc a c :=
-  subset.antisymm (fun x hx => hx.elim (fun hx => ⟨hx.1, hx.2.trans h₂⟩) fun hx => ⟨h₁.trans hx.1, hx.2⟩)
+  Subset.antisymm (fun x hx => hx.elim (fun hx => ⟨hx.1, hx.2.trans h₂⟩) fun hx => ⟨h₁.trans hx.1, hx.2⟩)
     Icc_subset_Icc_union_Icc
 
 theorem Icc_union_Icc' (h₁ : c ≤ b) (h₂ : a ≤ d) : Icc a b ∪ Icc c d = Icc (min a c) (max b d) := by
@@ -1296,11 +1295,11 @@ theorem Icc_union_Icc (h₁ : min a b < max c d) (h₂ : min c d < max a b) : Ic
     simp [*, min_eq_left_of_ltₓ, max_eq_left_of_ltₓ, min_eq_right_of_ltₓ, max_eq_right_of_ltₓ]
 
 theorem Ioc_subset_Ioc_union_Icc : Ioc a c ⊆ Ioc a b ∪ Icc b c :=
-  subset.trans Ioc_subset_Ioc_union_Ioc (union_subset_union_right _ Ioc_subset_Icc_self)
+  Subset.trans Ioc_subset_Ioc_union_Ioc (union_subset_union_right _ Ioc_subset_Icc_self)
 
 @[simp]
 theorem Ioc_union_Icc_eq_Ioc (h₁ : a < b) (h₂ : b ≤ c) : Ioc a b ∪ Icc b c = Ioc a c :=
-  subset.antisymm (fun x hx => hx.elim (fun hx => ⟨hx.1, hx.2.trans h₂⟩) fun hx => ⟨h₁.trans_le hx.1, hx.2⟩)
+  Subset.antisymm (fun x hx => hx.elim (fun hx => ⟨hx.1, hx.2.trans h₂⟩) fun hx => ⟨h₁.trans_le hx.1, hx.2⟩)
     Ioc_subset_Ioc_union_Icc
 
 theorem Ioo_union_Ioo' (h₁ : c < b) (h₂ : a < d) : Ioo a b ∪ Ioo c d = Ioo (min a c) (max b d) := by

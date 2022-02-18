@@ -11,7 +11,7 @@ unsafe instance : HasMonadLift tactic old_conv :=
   ⟨fun α => lift_tactic⟩
 
 unsafe instance (α : Type) : Coe (tactic α) (old_conv α) :=
-  ⟨monad_lift⟩
+  ⟨monadLift⟩
 
 unsafe def current_relation : old_conv Name := fun r lhs => return ⟨r, lhs, none⟩
 
@@ -31,7 +31,7 @@ unsafe def congr_rule (congr : expr) (cs : List (List expr → old_conv Unit)) :
     solve_aux t do
         apply congr
         focus <|
-            cs.map fun c => do
+            cs fun c => do
               let xs ← intros
               conversion (head_beta >> c xs)
         done
@@ -89,34 +89,34 @@ unsafe def binder_eq_elim.check_eq (b : binder_eq_elim) (x : expr) : expr → ta
 
 unsafe def binder_eq_elim.pull (b : binder_eq_elim) (x : expr) : old_conv Unit := do
   let (β, f) ← lhs >>= lift_tactic ∘ b.match_binder
-  guardₓ ¬x.occurs β <|>
-      b.check_eq x β <|> do
-        b.apply_congr fun x => binder_eq_elim.pull
-        b.apply_comm
+  guardₓ ¬x β <|>
+      b x β <|> do
+        b fun x => binder_eq_elim.pull
+        b
 
 unsafe def binder_eq_elim.push (b : binder_eq_elim) : old_conv Unit :=
   b.apply_elim_eq <|>
     (do
-        b.apply_comm
-        b.apply_congr fun x => binder_eq_elim.push) <|>
+        b
+        b fun x => binder_eq_elim.push) <|>
       do
-      b.apply_congr <| b.pull
+      b <| b
       binder_eq_elim.push
 
 unsafe def binder_eq_elim.check (b : binder_eq_elim) (x : expr) : expr → tactic Unit
   | e => do
     let (β, f) ← b.match_binder e
-    b.check_eq x β <|> do
+    b x β <|> do
         let lam n bi d bd ← return f
         let x ← mk_local' n bi d
-        binder_eq_elim.check <| bd.instantiate_var x
+        binder_eq_elim.check <| bd x
 
 unsafe def binder_eq_elim.old_conv (b : binder_eq_elim) : old_conv Unit := do
   let (β, f) ← lhs >>= lift_tactic ∘ b.match_binder
   let lam n bi d bd ← return f
   let x ← mk_local' n bi d
-  b.check x (bd.instantiate_var x)
-  b.adapt_rel b.push
+  b x (bd x)
+  b b
 
 theorem exists_elim_eq_left.{u, v} {α : Sort u} (a : α) (p : ∀ a' : α, a' = a → Prop) :
     (∃ (a' : α)(h : a' = a), p a' h) ↔ p a rfl :=
@@ -197,12 +197,12 @@ section
 
 variable [CompleteLattice α]
 
-example {s : Set β} {f : β → α} : Inf (Set.Image f s) = ⨅ a ∈ s, f a := by
+example {s : Set β} {f : β → α} : inf (Set.Image f s) = ⨅ a ∈ s, f a := by
   simp [Inf_eq_infi, infi_and]
   run_tac
     conversion infi_eq_elim.old_conv
 
-example {s : Set β} {f : β → α} : Sup (Set.Image f s) = ⨆ a ∈ s, f a := by
+example {s : Set β} {f : β → α} : sup (Set.Image f s) = ⨆ a ∈ s, f a := by
   simp [Sup_eq_supr, supr_and]
   run_tac
     conversion supr_eq_elim.old_conv

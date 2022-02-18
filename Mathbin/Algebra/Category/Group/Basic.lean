@@ -20,7 +20,7 @@ open CategoryTheory
 /-- The category of groups and group morphisms. -/
 @[to_additive AddGroupₓₓ]
 def Groupₓₓ : Type (u + 1) :=
-  bundled Groupₓ
+  Bundled Groupₓ
 
 /-- The category of additive groups and group morphisms -/
 add_decl_doc AddGroupₓₓ
@@ -28,10 +28,10 @@ add_decl_doc AddGroupₓₓ
 namespace Groupₓₓ
 
 @[to_additive]
-instance : bundled_hom.parent_projection Groupₓ.toMonoid :=
+instance : BundledHom.ParentProjection Groupₓ.toMonoid :=
   ⟨⟩
 
-deriving instance large_category, concrete_category for Groupₓₓ
+deriving instance LargeCategory, ConcreteCategory for Groupₓₓ
 
 attribute [to_additive] Groupₓₓ.largeCategory Groupₓₓ.concreteCategory
 
@@ -42,7 +42,7 @@ instance : CoeSort Groupₓₓ (Type _) :=
 /-- Construct a bundled `Group` from the underlying type and typeclass. -/
 @[to_additive]
 def of (X : Type u) [Groupₓ X] : Groupₓₓ :=
-  bundled.of X
+  Bundled.of X
 
 /-- Construct a bundled `AddGroup` from the underlying type and typeclass. -/
 add_decl_doc AddGroupₓₓ.of
@@ -88,15 +88,15 @@ theorem ext (G H : Groupₓₓ) (f₁ f₂ : G ⟶ H) (w : ∀ x, f₁ x = f₂ 
   apply w
 
 @[to_additive has_forget_to_AddMon]
-instance has_forget_to_Mon : has_forget₂ Groupₓₓ Mon :=
-  bundled_hom.forget₂ _ _
+instance has_forget_to_Mon : HasForget₂ Groupₓₓ Mon :=
+  BundledHom.forget₂ _ _
 
 end Groupₓₓ
 
 /-- The category of commutative groups and group morphisms. -/
 @[to_additive AddCommGroupₓₓ]
 def CommGroupₓₓ : Type (u + 1) :=
-  bundled CommGroupₓ
+  Bundled CommGroupₓ
 
 /-- The category of additive commutative groups and group morphisms. -/
 add_decl_doc AddCommGroupₓₓ
@@ -108,10 +108,10 @@ abbrev Ab :=
 namespace CommGroupₓₓ
 
 @[to_additive]
-instance : bundled_hom.parent_projection CommGroupₓ.toGroup :=
+instance : BundledHom.ParentProjection CommGroupₓ.toGroup :=
   ⟨⟩
 
-deriving instance large_category, concrete_category for CommGroupₓₓ
+deriving instance LargeCategory, ConcreteCategory for CommGroupₓₓ
 
 attribute [to_additive] CommGroupₓₓ.largeCategory CommGroupₓₓ.concreteCategory
 
@@ -122,7 +122,7 @@ instance : CoeSort CommGroupₓₓ (Type _) :=
 /-- Construct a bundled `CommGroup` from the underlying type and typeclass. -/
 @[to_additive]
 def of (G : Type u) [CommGroupₓ G] : CommGroupₓₓ :=
-  bundled.of G
+  Bundled.of G
 
 /-- Construct a bundled `AddCommGroup` from the underlying type and typeclass. -/
 add_decl_doc AddCommGroupₓₓ.of
@@ -168,12 +168,12 @@ theorem ext (G H : CommGroupₓₓ) (f₁ f₂ : G ⟶ H) (w : ∀ x, f₁ x = f
   apply w
 
 @[to_additive has_forget_to_AddGroup]
-instance has_forget_to_Group : has_forget₂ CommGroupₓₓ Groupₓₓ :=
-  bundled_hom.forget₂ _ _
+instance has_forget_to_Group : HasForget₂ CommGroupₓₓ Groupₓₓ :=
+  BundledHom.forget₂ _ _
 
 @[to_additive has_forget_to_AddCommMon]
-instance has_forget_to_CommMon : has_forget₂ CommGroupₓₓ CommMon :=
-  induced_category.has_forget₂ fun G : CommGroupₓₓ => CommMon.of G
+instance has_forget_to_CommMon : HasForget₂ CommGroupₓₓ CommMon :=
+  InducedCategory.hasForget₂ fun G : CommGroupₓₓ => CommMon.of G
 
 end CommGroupₓₓ
 
@@ -189,17 +189,17 @@ def as_hom {G : AddCommGroupₓₓ.{0}} (g : G) : AddCommGroupₓₓ.of ℤ ⟶ 
   zmultiplesHom G g
 
 @[simp]
-theorem as_hom_apply {G : AddCommGroupₓₓ.{0}} (g : G) (i : ℤ) : (as_hom g) i = i • g :=
+theorem as_hom_apply {G : AddCommGroupₓₓ.{0}} (g : G) (i : ℤ) : (asHom g) i = i • g :=
   rfl
 
-theorem as_hom_injective {G : AddCommGroupₓₓ.{0}} : Function.Injective (@as_hom G) := fun h k w => by
+theorem as_hom_injective {G : AddCommGroupₓₓ.{0}} : Function.Injective (@asHom G) := fun h k w => by
   convert congr_argₓ (fun k : AddCommGroupₓₓ.of ℤ ⟶ G => (k : ℤ → G) (1 : ℤ)) w <;> simp
 
 @[ext]
 theorem int_hom_ext {G : AddCommGroupₓₓ.{0}} (f g : AddCommGroupₓₓ.of ℤ ⟶ G) (w : f (1 : ℤ) = g (1 : ℤ)) : f = g :=
   AddMonoidHom.ext_int w
 
-theorem injective_of_mono {G H : AddCommGroupₓₓ.{0}} (f : G ⟶ H) [mono f] : Function.Injective f := fun g₁ g₂ h => by
+theorem injective_of_mono {G H : AddCommGroupₓₓ.{0}} (f : G ⟶ H) [Mono f] : Function.Injective f := fun g₁ g₂ h => by
   have t0 : as_hom g₁ ≫ f = as_hom g₂ ≫ f := by
     ext
     simpa [as_hom_apply] using h
@@ -213,8 +213,8 @@ variable {X Y : Type u}
 /-- Build an isomorphism in the category `Group` from a `mul_equiv` between `group`s. -/
 @[to_additive AddEquiv.toAddGroupIso, simps]
 def MulEquiv.toGroupIso [Groupₓ X] [Groupₓ Y] (e : X ≃* Y) : Groupₓₓ.of X ≅ Groupₓₓ.of Y where
-  Hom := e.to_monoid_hom
-  inv := e.symm.to_monoid_hom
+  Hom := e.toMonoidHom
+  inv := e.symm.toMonoidHom
 
 /-- Build an isomorphism in the category `AddGroup` from an `add_equiv` between `add_group`s. -/
 add_decl_doc AddEquiv.toAddGroupIso
@@ -222,8 +222,8 @@ add_decl_doc AddEquiv.toAddGroupIso
 /-- Build an isomorphism in the category `CommGroup` from a `mul_equiv` between `comm_group`s. -/
 @[to_additive AddEquiv.toAddCommGroupIso, simps]
 def MulEquiv.toCommGroupIso [CommGroupₓ X] [CommGroupₓ Y] (e : X ≃* Y) : CommGroupₓₓ.of X ≅ CommGroupₓₓ.of Y where
-  Hom := e.to_monoid_hom
-  inv := e.symm.to_monoid_hom
+  Hom := e.toMonoidHom
+  inv := e.symm.toMonoidHom
 
 /-- Build an isomorphism in the category `AddCommGroup` from a `add_equiv` between
 `add_comm_group`s. -/
@@ -234,13 +234,13 @@ namespace CategoryTheory.Iso
 /-- Build a `mul_equiv` from an isomorphism in the category `Group`. -/
 @[to_additive AddGroup_iso_to_add_equiv "Build an `add_equiv` from an isomorphism in the category\n`AddGroup`.", simps]
 def Group_iso_to_mul_equiv {X Y : Groupₓₓ} (i : X ≅ Y) : X ≃* Y :=
-  i.hom.to_mul_equiv i.inv i.hom_inv_id i.inv_hom_id
+  i.Hom.toMulEquiv i.inv i.hom_inv_id i.inv_hom_id
 
 /-- Build a `mul_equiv` from an isomorphism in the category `CommGroup`. -/
 @[to_additive AddCommGroup_iso_to_add_equiv "Build an `add_equiv` from an isomorphism\nin the category `AddCommGroup`.",
   simps]
 def CommGroup_iso_to_mul_equiv {X Y : CommGroupₓₓ} (i : X ≅ Y) : X ≃* Y :=
-  i.hom.to_mul_equiv i.inv i.hom_inv_id i.inv_hom_id
+  i.Hom.toMulEquiv i.inv i.hom_inv_id i.inv_hom_id
 
 end CategoryTheory.Iso
 
@@ -249,8 +249,8 @@ in `Group` -/
 @[to_additive addEquivIsoAddGroupIso
       "additive equivalences between `add_group`s are the same\nas (isomorphic to) isomorphisms in `AddGroup`"]
 def mulEquivIsoGroupIso {X Y : Type u} [Groupₓ X] [Groupₓ Y] : X ≃* Y ≅ Groupₓₓ.of X ≅ Groupₓₓ.of Y where
-  Hom := fun e => e.to_Group_iso
-  inv := fun i => i.Group_iso_to_mul_equiv
+  Hom := fun e => e.toGroupIso
+  inv := fun i => i.groupIsoToMulEquiv
 
 /-- multiplicative equivalences between `comm_group`s are the same as (isomorphic to) isomorphisms
 in `CommGroup` -/
@@ -258,8 +258,8 @@ in `CommGroup` -/
       "additive equivalences between `add_comm_group`s are\nthe same as (isomorphic to) isomorphisms in `AddCommGroup`"]
 def mulEquivIsoCommGroupIso {X Y : Type u} [CommGroupₓ X] [CommGroupₓ Y] :
     X ≃* Y ≅ CommGroupₓₓ.of X ≅ CommGroupₓₓ.of Y where
-  Hom := fun e => e.to_CommGroup_iso
-  inv := fun i => i.CommGroup_iso_to_mul_equiv
+  Hom := fun e => e.toCommGroupIso
+  inv := fun i => i.commGroupIsoToMulEquiv
 
 namespace CategoryTheory.Aut
 
@@ -267,23 +267,23 @@ namespace CategoryTheory.Aut
 of permutations. -/
 def iso_perm {α : Type u} : Groupₓₓ.of (Aut α) ≅ Groupₓₓ.of (Equivₓ.Perm α) where
   Hom :=
-    ⟨fun g => g.to_equiv, by
+    ⟨fun g => g.toEquiv, by
       tidy, by
       tidy⟩
   inv :=
-    ⟨fun g => g.to_iso, by
+    ⟨fun g => g.toIso, by
       tidy, by
       tidy⟩
 
 /-- The (unbundled) group of automorphisms of a type is `mul_equiv` to the (unbundled) group
 of permutations. -/
 def mul_equiv_perm {α : Type u} : Aut α ≃* Equivₓ.Perm α :=
-  iso_perm.groupIsoToMulEquiv
+  isoPerm.groupIsoToMulEquiv
 
 end CategoryTheory.Aut
 
 @[to_additive]
-instance Groupₓₓ.forget_reflects_isos : reflects_isomorphisms (forget Groupₓₓ.{u}) where
+instance Groupₓₓ.forget_reflects_isos : ReflectsIsomorphisms (forget Groupₓₓ.{u}) where
   reflects := fun X Y f _ => by
     skip
     let i := as_iso ((forget Groupₓₓ).map f)
@@ -291,7 +291,7 @@ instance Groupₓₓ.forget_reflects_isos : reflects_isomorphisms (forget Group�
     exact ⟨(is_iso.of_iso e.to_Group_iso).1⟩
 
 @[to_additive]
-instance CommGroupₓₓ.forget_reflects_isos : reflects_isomorphisms (forget CommGroupₓₓ.{u}) where
+instance CommGroupₓₓ.forget_reflects_isos : ReflectsIsomorphisms (forget CommGroupₓₓ.{u}) where
   reflects := fun X Y f _ => by
     skip
     let i := as_iso ((forget CommGroupₓₓ).map f)

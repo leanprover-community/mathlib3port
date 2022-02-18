@@ -23,17 +23,17 @@ on derangements: `remove_none.fiber_none` and `remove_none.fiber_some`.
 open Equivₓ Function
 
 /-- A permutation is a derangement if it has no fixed points. -/
-def Derangements (α : Type _) : Set (perm α) :=
-  { f : perm α | ∀ x : α, f x ≠ x }
+def Derangements (α : Type _) : Set (Perm α) :=
+  { f : Perm α | ∀ x : α, f x ≠ x }
 
 variable {α β : Type _}
 
-theorem mem_derangements_iff_fixed_points_eq_empty {f : perm α} : f ∈ Derangements α ↔ fixed_points f = ∅ :=
+theorem mem_derangements_iff_fixed_points_eq_empty {f : Perm α} : f ∈ Derangements α ↔ FixedPoints f = ∅ :=
   Set.eq_empty_iff_forall_not_mem.symm
 
 /-- If `α` is equivalent to `β`, then `derangements α` is equivalent to `derangements β`. -/
 def Equivₓ.derangementsCongr (e : α ≃ β) : Derangements α ≃ Derangements β :=
-  e.perm_congr.subtype_equiv fun f =>
+  e.permCongr.subtypeEquiv fun f =>
     e.forall_congr <| by
       simp
 
@@ -42,10 +42,10 @@ namespace Derangements
 /-- Derangements on a subtype are equivalent to permutations on the original type where points are
 fixed iff they are not in the subtype. -/
 protected def subtype_equiv (p : α → Prop) [DecidablePred p] :
-    Derangements (Subtype p) ≃ { f : perm α // ∀ a, ¬p a ↔ a ∈ fixed_points f } :=
+    Derangements (Subtype p) ≃ { f : Perm α // ∀ a, ¬p a ↔ a ∈ FixedPoints f } :=
   calc
     Derangements (Subtype p) ≃
-        { f : { f : perm α // ∀ a, ¬p a → a ∈ fixed_points f } // ∀ a, a ∈ fixed_points f → ¬p a } :=
+        { f : { f : Perm α // ∀ a, ¬p a → a ∈ FixedPoints f } // ∀ a, a ∈ FixedPoints f → ¬p a } :=
       by
       refine' (perm.subtype_equiv_subtype_perm p).subtypeEquiv fun f => ⟨fun hf a hfa ha => _, _⟩
       · refine' hf ⟨a, ha⟩ (Subtype.ext _)
@@ -56,10 +56,10 @@ protected def subtype_equiv (p : α → Prop) [DecidablePred p] :
       refine' hf _ _ ha
       change perm.subtype_equiv_subtype_perm p f a = a
       rw [perm.subtype_equiv_subtype_perm_apply_of_mem f ha, hfa, Subtype.coe_mk]
-    _ ≃ { f : perm α // ∃ h : ∀ a, ¬p a → a ∈ fixed_points f, ∀ a, a ∈ fixed_points f → ¬p a } :=
-      subtype_subtype_equiv_subtype_exists _ _
-    _ ≃ { f : perm α // ∀ a, ¬p a ↔ a ∈ fixed_points f } :=
-      subtype_equiv_right fun f => by
+    _ ≃ { f : Perm α // ∃ h : ∀ a, ¬p a → a ∈ FixedPoints f, ∀ a, a ∈ FixedPoints f → ¬p a } :=
+      subtypeSubtypeEquivSubtypeExists _ _
+    _ ≃ { f : Perm α // ∀ a, ¬p a ↔ a ∈ FixedPoints f } :=
+      subtypeEquivRight fun f => by
         simp_rw [exists_prop, ← forall_and_distrib, ← iff_iff_implies_and_implies]
     
 
@@ -67,22 +67,22 @@ protected def subtype_equiv (p : α → Prop) [DecidablePred p] :
     - derangements on `α`
     - derangements on `α` minus `a`. -/
 def at_most_one_fixed_point_equiv_sum_derangements [DecidableEq α] (a : α) :
-    { f : perm α // fixed_points f ⊆ {a} } ≃ Sum (Derangements ({a}ᶜ : Set α)) (Derangements α) :=
+    { f : Perm α // FixedPoints f ⊆ {a} } ≃ Sum (Derangements ({a}ᶜ : Set α)) (Derangements α) :=
   calc
-    { f : perm α // fixed_points f ⊆ {a} } ≃
-        Sum { f : { f : perm α // fixed_points f ⊆ {a} } // a ∈ fixed_points f }
-          { f : { f : perm α // fixed_points f ⊆ {a} } // a ∉ fixed_points f } :=
+    { f : Perm α // FixedPoints f ⊆ {a} } ≃
+        Sum { f : { f : Perm α // FixedPoints f ⊆ {a} } // a ∈ FixedPoints f }
+          { f : { f : Perm α // FixedPoints f ⊆ {a} } // a ∉ FixedPoints f } :=
       (Equivₓ.sumCompl _).symm
     _ ≃
-        Sum { f : perm α // fixed_points f ⊆ {a} ∧ a ∈ fixed_points f }
-          { f : perm α // fixed_points f ⊆ {a} ∧ a ∉ fixed_points f } :=
+        Sum { f : Perm α // FixedPoints f ⊆ {a} ∧ a ∈ FixedPoints f }
+          { f : Perm α // FixedPoints f ⊆ {a} ∧ a ∉ FixedPoints f } :=
       by
       refine' Equivₓ.sumCongr _ _ <;>
         · convert subtype_subtype_equiv_subtype_inter _ _
           ext f
           rfl
           
-    _ ≃ Sum { f : perm α // fixed_points f = {a} } { f : perm α // fixed_points f = ∅ } := by
+    _ ≃ Sum { f : Perm α // FixedPoints f = {a} } { f : Perm α // FixedPoints f = ∅ } := by
       refine' Equivₓ.sumCongr (subtype_equiv_right fun f => _) (subtype_equiv_right fun f => _)
       · rw [Set.eq_singleton_iff_unique_mem, and_comm]
         rfl
@@ -104,14 +104,14 @@ variable [DecidableEq α]
 
 /-- The set of permutations `f` such that the preimage of `(a, f)` under
     `equiv.perm.decompose_option` is a derangement. -/
-def remove_none.fiber (a : Option α) : Set (perm α) :=
-  { f : perm α | (a, f) ∈ Equivₓ.Perm.decomposeOption '' Derangements (Option α) }
+def remove_none.fiber (a : Option α) : Set (Perm α) :=
+  { f : Perm α | (a, f) ∈ Equivₓ.Perm.decomposeOption '' Derangements (Option α) }
 
-theorem remove_none.mem_fiber (a : Option α) (f : perm α) :
-    f ∈ remove_none.fiber a ↔ ∃ F : perm (Option α), F ∈ Derangements (Option α) ∧ F none = a ∧ remove_none F = f := by
+theorem remove_none.mem_fiber (a : Option α) (f : Perm α) :
+    f ∈ RemoveNone.Fiber a ↔ ∃ F : Perm (Option α), F ∈ Derangements (Option α) ∧ F none = a ∧ removeNone F = f := by
   simp [remove_none.fiber, Derangements]
 
-theorem remove_none.fiber_none : remove_none.fiber (@none α) = ∅ := by
+theorem remove_none.fiber_none : RemoveNone.Fiber (@none α) = ∅ := by
   rw [Set.eq_empty_iff_forall_not_mem]
   intro f hyp
   rw [remove_none.mem_fiber] at hyp
@@ -120,7 +120,7 @@ theorem remove_none.fiber_none : remove_none.fiber (@none α) = ∅ := by
 
 /-- For any `a : α`, the fiber over `some a` is the set of permutations
     where `a` is the only possible fixed point. -/
-theorem remove_none.fiber_some (a : α) : remove_none.fiber (some a) = { f : perm α | fixed_points f ⊆ {a} } := by
+theorem remove_none.fiber_some (a : α) : RemoveNone.Fiber (some a) = { f : Perm α | FixedPoints f ⊆ {a} } := by
   ext f
   constructor
   · rw [remove_none.mem_fiber]
@@ -168,7 +168,7 @@ variable [DecidableEq α]
 /-- The set of derangements on `option α` is equivalent to the union over `a : α`
     of "permutations with `a` the only possible fixed point". -/
 def derangements_option_equiv_sigma_at_most_one_fixed_point :
-    Derangements (Option α) ≃ Σ a : α, { f : perm α | fixed_points f ⊆ {a} } := by
+    Derangements (Option α) ≃ Σ a : α, { f : Perm α | FixedPoints f ⊆ {a} } := by
   have fiber_none_is_false : equiv.remove_none.fiber (@none α) → False := by
     rw [equiv.remove_none.fiber_none]
     exact IsEmpty.false
@@ -182,8 +182,7 @@ def derangements_option_equiv_sigma_at_most_one_fixed_point :
     "derangements on `α` ⊕ derangements on `{a}ᶜ`". -/
 def derangements_recursion_equiv :
     Derangements (Option α) ≃ Σ a : α, Sum (Derangements (({a}ᶜ : Set α) : Type _)) (Derangements α) :=
-  derangements_option_equiv_sigma_at_most_one_fixed_point.trans
-    (sigma_congr_right at_most_one_fixed_point_equiv_sum_derangements)
+  derangementsOptionEquivSigmaAtMostOneFixedPoint.trans (sigmaCongrRight atMostOneFixedPointEquivSumDerangements)
 
 end Option
 

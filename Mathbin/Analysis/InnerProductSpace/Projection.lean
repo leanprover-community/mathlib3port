@@ -61,7 +61,7 @@ local notation "absR" => HasAbs.abs
 Let `u` be a point in a real inner product space, and let `K` be a nonempty complete convex subset.
 Then there exists a (unique) `v` in `K` that minimizes the distance `∥u - v∥` to `u`.
  -/
-theorem exists_norm_eq_infi_of_complete_convex {K : Set F} (ne : K.nonempty) (h₁ : IsComplete K) (h₂ : Convex ℝ K) :
+theorem exists_norm_eq_infi_of_complete_convex {K : Set F} (ne : K.Nonempty) (h₁ : IsComplete K) (h₂ : Convex ℝ K) :
     ∀ u : F, ∃ v ∈ K, ∥u - v∥ = ⨅ w : K, ∥u - w∥ := fun u => by
   let δ := ⨅ w : K, ∥u - w∥
   let this' : Nonempty K := ne.to_subtype
@@ -69,7 +69,7 @@ theorem exists_norm_eq_infi_of_complete_convex {K : Set F} (ne : K.nonempty) (h�
   have δ_le : ∀ w : K, δ ≤ ∥u - w∥ := cinfi_le ⟨0, Set.forall_range_iff.2 fun _ => norm_nonneg _⟩
   have δ_le' : ∀, ∀ w ∈ K, ∀, δ ≤ ∥u - w∥ := fun w hw => δ_le ⟨w, hw⟩
   have exists_seq : ∃ w : ℕ → K, ∀ n, ∥u - w n∥ < δ + 1 / (n + 1) := by
-    have hδ : ∀ n : ℕ, δ < δ + 1 / (n + 1) := fun n => lt_add_of_le_of_pos (le_reflₓ _) Nat.one_div_pos_of_nat
+    have hδ : ∀ n : ℕ, δ < δ + 1 / (n + 1) := fun n => lt_add_of_le_of_pos le_rfl Nat.one_div_pos_of_nat
     have h := fun n => exists_lt_of_cinfi_lt (hδ n)
     let w : ℕ → K := fun n => Classical.some (h n)
     exact ⟨w, fun n => Classical.some_spec (h n)⟩
@@ -537,7 +537,7 @@ theorem orthogonal_projection_eq_self_iff {v : E} : (orthogonalProjection K v : 
 
 theorem LinearIsometry.map_orthogonal_projection {E E' : Type _} [InnerProductSpace 𝕜 E] [InnerProductSpace 𝕜 E']
     (f : E →ₗᵢ[𝕜] E') (p : Submodule 𝕜 E) [CompleteSpace p] (x : E) :
-    f (orthogonalProjection p x) = orthogonalProjection (p.map f.to_linear_map) (f x) := by
+    f (orthogonalProjection p x) = orthogonalProjection (p.map f.toLinearMap) (f x) := by
   refine' ((eq_orthogonal_projection_of_mem_of_inner_eq_zero (Submodule.apply_coe_mem_map _ _)) fun y hy => _).symm
   rcases hy with ⟨x', hx', rfl : f x' = y⟩
   rw [f.coe_to_linear_map, ← f.map_sub, f.inner_map_map, orthogonal_projection_inner_eq_zero x x' hx']
@@ -545,7 +545,7 @@ theorem LinearIsometry.map_orthogonal_projection {E E' : Type _} [InnerProductSp
 /-- Orthogonal projection onto the `submodule.map` of a subspace. -/
 theorem orthogonal_projection_map_apply {E E' : Type _} [InnerProductSpace 𝕜 E] [InnerProductSpace 𝕜 E']
     (f : E ≃ₗᵢ[𝕜] E') (p : Submodule 𝕜 E) [CompleteSpace p] (x : E') :
-    (orthogonalProjection (p.map (f.to_linear_equiv : E →ₗ[𝕜] E')) x : E') = f (orthogonalProjection p (f.symm x)) := by
+    (orthogonalProjection (p.map (f.toLinearEquiv : E →ₗ[𝕜] E')) x : E') = f (orthogonalProjection p (f.symm x)) := by
   simpa only [f.coe_to_linear_isometry, f.apply_symm_apply] using
     (f.to_linear_isometry.map_orthogonal_projection p (f.symm x)).symm
 
@@ -611,7 +611,7 @@ variable {𝕜} (K) [CompleteSpace K]
 
 /-- Auxiliary definition for `reflection`: the reflection as a linear equivalence. -/
 def reflectionLinearEquiv : E ≃ₗ[𝕜] E :=
-  LinearEquiv.ofInvolutive (bit0 (K.subtype.comp (orthogonalProjection K).toLinearMap) - LinearMap.id) fun x => by
+  LinearEquiv.ofInvolutive (bit0 (K.Subtype.comp (orthogonalProjection K).toLinearMap) - LinearMap.id) fun x => by
     simp [bit0]
 
 /-- Reflection in a complete subspace of an inner product space.  The word "reflection" is
@@ -687,13 +687,13 @@ theorem reflection_mem_subspace_eq_self {x : E} (hx : x ∈ K) : reflection K x 
 /-- Reflection in the `submodule.map` of a subspace. -/
 theorem reflection_map_apply {E E' : Type _} [InnerProductSpace 𝕜 E] [InnerProductSpace 𝕜 E'] (f : E ≃ₗᵢ[𝕜] E')
     (K : Submodule 𝕜 E) [CompleteSpace K] (x : E') :
-    reflection (K.map (f.to_linear_equiv : E →ₗ[𝕜] E')) x = f (reflection K (f.symm x)) := by
+    reflection (K.map (f.toLinearEquiv : E →ₗ[𝕜] E')) x = f (reflection K (f.symm x)) := by
   simp [bit0, reflection_apply, orthogonal_projection_map_apply f K x]
 
 /-- Reflection in the `submodule.map` of a subspace. -/
 theorem reflection_map {E E' : Type _} [InnerProductSpace 𝕜 E] [InnerProductSpace 𝕜 E'] (f : E ≃ₗᵢ[𝕜] E')
     (K : Submodule 𝕜 E) [CompleteSpace K] :
-    reflection (K.map (f.to_linear_equiv : E →ₗ[𝕜] E')) = f.symm.trans ((reflection K).trans f) :=
+    reflection (K.map (f.toLinearEquiv : E →ₗ[𝕜] E')) = f.symm.trans ((reflection K).trans f) :=
   LinearIsometryEquiv.ext <| reflection_map_apply f K
 
 /-- Reflection through the trivial subspace {0} is just negation. -/
@@ -753,7 +753,7 @@ theorem Submodule.orthogonal_orthogonal [CompleteSpace K] : Kᗮᗮ = K := by
     exact hw v hv
     
 
-theorem Submodule.orthogonal_orthogonal_eq_closure [CompleteSpace E] : Kᗮᗮ = K.topological_closure := by
+theorem Submodule.orthogonal_orthogonal_eq_closure [CompleteSpace E] : Kᗮᗮ = K.topologicalClosure := by
   refine' le_antisymmₓ _ _
   · convert Submodule.orthogonal_orthogonal_monotone K.submodule_topological_closure
     have : CompleteSpace K.topological_closure := K.is_closed_topological_closure.complete_space_coe
@@ -929,7 +929,7 @@ theorem finrank_orthogonal_span_singleton {n : ℕ} [_i : Fact (finrank 𝕜 E =
 specifically at most as many reflections as the dimension of the complement of the fixed subspace
 of `φ`. -/
 theorem LinearIsometryEquiv.reflections_generate_dim_aux [FiniteDimensional ℝ F] {n : ℕ} (φ : F ≃ₗᵢ[ℝ] F)
-    (hn : finrank ℝ (ContinuousLinearMap.id ℝ F - φ.to_continuous_linear_equiv).kerᗮ ≤ n) :
+    (hn : finrank ℝ (ContinuousLinearMap.id ℝ F - φ.toContinuousLinearEquiv).kerᗮ ≤ n) :
     ∃ l : List F, l.length ≤ n ∧ φ = (l.map fun v => reflection (ℝ∙v)ᗮ).Prod := by
   induction' n with n IH generalizing φ
   · refine' ⟨[], rfl.le, show φ = 1 from _⟩
@@ -1187,30 +1187,30 @@ section SubordinateOrthonormalBasis
 open DirectSum
 
 variable {n : ℕ} (hn : finrank 𝕜 E = n) {ι : Type _} [Fintype ι] [DecidableEq ι] {V : ι → Submodule 𝕜 E}
-  (hV : submodule_is_internal V)
+  (hV : SubmoduleIsInternal V)
 
 /-- Exhibit a bijection between `fin n` and the index set of a certain basis of an `n`-dimensional
 inner product space `E`.  This should not be accessed directly, but only via the subsequent API. -/
 irreducible_def DirectSum.SubmoduleIsInternal.sigmaOrthonormalBasisIndexEquiv :
   (Σ i, OrthonormalBasisIndex 𝕜 (V i)) ≃ Finₓ n :=
-  let b := hV.collected_basis fun i => orthonormalBasis 𝕜 (V i)
+  let b := hV.collectedBasis fun i => orthonormalBasis 𝕜 (V i)
   Fintype.equivFinOfCardEq <| (FiniteDimensional.finrank_eq_card_basis b).symm.trans hn
 
 /-- An `n`-dimensional `inner_product_space` equipped with a decomposition as an internal direct
 sum has an orthonormal basis indexed by `fin n` and subordinate to that direct sum. -/
 irreducible_def DirectSum.SubmoduleIsInternal.subordinateOrthonormalBasis : Basis (Finₓ n) 𝕜 E :=
-  (hV.collected_basis fun i => orthonormalBasis 𝕜 (V i)).reindex (hV.sigma_orthonormal_basis_index_equiv hn)
+  (hV.collectedBasis fun i => orthonormalBasis 𝕜 (V i)).reindex (hV.sigmaOrthonormalBasisIndexEquiv hn)
 
 /-- An `n`-dimensional `inner_product_space` equipped with a decomposition as an internal direct
 sum has an orthonormal basis indexed by `fin n` and subordinate to that direct sum. This function
 provides the mapping by which it is subordinate. -/
 def DirectSum.SubmoduleIsInternal.subordinateOrthonormalBasisIndex (a : Finₓ n) : ι :=
-  ((hV.sigma_orthonormal_basis_index_equiv hn).symm a).1
+  ((hV.sigmaOrthonormalBasisIndexEquiv hn).symm a).1
 
 /-- The basis constructed in `orthogonal_family.subordinate_orthonormal_basis` is orthonormal. -/
 theorem DirectSum.SubmoduleIsInternal.subordinate_orthonormal_basis_orthonormal
     (hV' : @OrthogonalFamily 𝕜 _ _ _ _ (fun i => V i) _ fun i => (V i).subtypeₗᵢ) :
-    Orthonormal 𝕜 (hV.subordinate_orthonormal_basis hn) := by
+    Orthonormal 𝕜 (hV.subordinateOrthonormalBasis hn) := by
   simp only [DirectSum.SubmoduleIsInternal.subordinateOrthonormalBasis, Basis.coe_reindex]
   have : Orthonormal 𝕜 (hV.collected_basis fun i => orthonormalBasis 𝕜 (V i)) :=
     hV.collected_basis_orthonormal hV' fun i => orthonormal_basis_orthonormal 𝕜 (V i)
@@ -1219,7 +1219,7 @@ theorem DirectSum.SubmoduleIsInternal.subordinate_orthonormal_basis_orthonormal
 /-- The basis constructed in `orthogonal_family.subordinate_orthonormal_basis` is subordinate to
 the `orthogonal_family` in question. -/
 theorem DirectSum.SubmoduleIsInternal.subordinate_orthonormal_basis_subordinate (a : Finₓ n) :
-    hV.subordinate_orthonormal_basis hn a ∈ V (hV.subordinate_orthonormal_basis_index hn a) := by
+    hV.subordinateOrthonormalBasis hn a ∈ V (hV.subordinateOrthonormalBasisIndex hn a) := by
   simpa only [DirectSum.SubmoduleIsInternal.subordinateOrthonormalBasis, Basis.coe_reindex] using
     hV.collected_basis_mem (fun i => orthonormalBasis 𝕜 (V i)) ((hV.sigma_orthonormal_basis_index_equiv hn).symm a)
 

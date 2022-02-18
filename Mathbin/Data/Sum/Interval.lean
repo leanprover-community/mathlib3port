@@ -27,15 +27,15 @@ variable (f f₁ g₁ : α₁ → β₁ → Finset γ₁) (g f₂ g₂ : α₂ �
 make sure to keep computability and universe polymorphism. -/
 @[simp]
 def sum_lift₂ : ∀ a : Sum α₁ α₂ b : Sum β₁ β₂, Finset (Sum γ₁ γ₂)
-  | inl a, inl b => (f a b).map embedding.inl
+  | inl a, inl b => (f a b).map Embedding.inl
   | inl a, inr b => ∅
   | inr a, inl b => ∅
-  | inr a, inr b => (g a b).map embedding.inr
+  | inr a, inr b => (g a b).map Embedding.inr
 
 variable {f f₁ g₁ g f₂ g₂} {a : Sum α₁ α₂} {b : Sum β₁ β₂} {c : Sum γ₁ γ₂}
 
 theorem mem_sum_lift₂ :
-    c ∈ sum_lift₂ f g a b ↔
+    c ∈ sumLift₂ f g a b ↔
       (∃ a₁ b₁ c₁, a = inl a₁ ∧ b = inl b₁ ∧ c = inl c₁ ∧ c₁ ∈ f a₁ b₁) ∨
         ∃ a₂ b₂ c₂, a = inr a₂ ∧ b = inr b₂ ∧ c = inr c₂ ∧ c₂ ∈ g a₂ b₂ :=
   by
@@ -57,20 +57,20 @@ theorem mem_sum_lift₂ :
   · rintro (⟨a, b, c, rfl, rfl, rfl, h⟩ | ⟨a, b, c, rfl, rfl, rfl, h⟩) <;> exact mem_map_of_mem _ h
     
 
-theorem inl_mem_sum_lift₂ {c₁ : γ₁} : inl c₁ ∈ sum_lift₂ f g a b ↔ ∃ a₁ b₁, a = inl a₁ ∧ b = inl b₁ ∧ c₁ ∈ f a₁ b₁ := by
+theorem inl_mem_sum_lift₂ {c₁ : γ₁} : inl c₁ ∈ sumLift₂ f g a b ↔ ∃ a₁ b₁, a = inl a₁ ∧ b = inl b₁ ∧ c₁ ∈ f a₁ b₁ := by
   rw [mem_sum_lift₂, or_iff_left]
   simp only [exists_and_distrib_left, exists_eq_left']
   rintro ⟨_, _, c₂, _, _, h, _⟩
   exact inl_ne_inr h
 
-theorem inr_mem_sum_lift₂ {c₂ : γ₂} : inr c₂ ∈ sum_lift₂ f g a b ↔ ∃ a₂ b₂, a = inr a₂ ∧ b = inr b₂ ∧ c₂ ∈ g a₂ b₂ := by
+theorem inr_mem_sum_lift₂ {c₂ : γ₂} : inr c₂ ∈ sumLift₂ f g a b ↔ ∃ a₂ b₂, a = inr a₂ ∧ b = inr b₂ ∧ c₂ ∈ g a₂ b₂ := by
   rw [mem_sum_lift₂, or_iff_right]
   simp only [exists_and_distrib_left, exists_eq_left']
   rintro ⟨_, _, c₂, _, _, h, _⟩
   exact inr_ne_inl h
 
 theorem sum_lift₂_eq_empty :
-    sum_lift₂ f g a b = ∅ ↔
+    sumLift₂ f g a b = ∅ ↔
       (∀ a₁ b₁, a = inl a₁ → b = inl b₁ → f a₁ b₁ = ∅) ∧ ∀ a₂ b₂, a = inr a₂ → b = inr b₂ → g a₂ b₂ = ∅ :=
   by
   refine' ⟨fun h => _, fun h => _⟩
@@ -90,16 +90,16 @@ theorem sum_lift₂_eq_empty :
     
 
 theorem sum_lift₂_nonempty :
-    (sum_lift₂ f g a b).Nonempty ↔
+    (sumLift₂ f g a b).Nonempty ↔
       (∃ a₁ b₁, a = inl a₁ ∧ b = inl b₁ ∧ (f a₁ b₁).Nonempty) ∨ ∃ a₂ b₂, a = inr a₂ ∧ b = inr b₂ ∧ (g a₂ b₂).Nonempty :=
   by
   simp [nonempty_iff_ne_empty, sum_lift₂_eq_empty, not_and_distrib]
 
 theorem sum_lift₂_mono (h₁ : ∀ a b, f₁ a b ⊆ g₁ a b) (h₂ : ∀ a b, f₂ a b ⊆ g₂ a b) :
-    ∀ a b, sum_lift₂ f₁ f₂ a b ⊆ sum_lift₂ g₁ g₂ a b
+    ∀ a b, sumLift₂ f₁ f₂ a b ⊆ sumLift₂ g₁ g₂ a b
   | inl a, inl b => map_subset_map.2 (h₁ _ _)
-  | inl a, inr b => subset.rfl
-  | inr a, inl b => subset.rfl
+  | inl a, inr b => Subset.rfl
+  | inr a, inl b => Subset.rfl
   | inr a, inr b => map_subset_map.2 (h₂ _ _)
 
 end SumLift₂
@@ -120,10 +120,10 @@ section Disjoint
 variable [Preorderₓ α] [Preorderₓ β] [LocallyFiniteOrder α] [LocallyFiniteOrder β]
 
 instance : LocallyFiniteOrder (Sum α β) where
-  finsetIcc := sum_lift₂ Icc Icc
-  finsetIco := sum_lift₂ Ico Ico
-  finsetIoc := sum_lift₂ Ioc Ioc
-  finsetIoo := sum_lift₂ Ioo Ioo
+  finsetIcc := sumLift₂ icc icc
+  finsetIco := sumLift₂ ico ico
+  finsetIoc := sumLift₂ ioc ioc
+  finsetIoo := sumLift₂ ioo ioo
   finset_mem_Icc := by
     rintro (a | a) (b | b) (x | x) <;> simp
   finset_mem_Ico := by
@@ -135,60 +135,60 @@ instance : LocallyFiniteOrder (Sum α β) where
 
 variable (a₁ a₂ : α) (b₁ b₂ : β) (a b : Sum α β)
 
-theorem Icc_inl_inl : Icc (inl a₁ : Sum α β) (inl a₂) = (Icc a₁ a₂).map embedding.inl :=
+theorem Icc_inl_inl : icc (inl a₁ : Sum α β) (inl a₂) = (icc a₁ a₂).map Embedding.inl :=
   rfl
 
-theorem Ico_inl_inl : Ico (inl a₁ : Sum α β) (inl a₂) = (Ico a₁ a₂).map embedding.inl :=
+theorem Ico_inl_inl : ico (inl a₁ : Sum α β) (inl a₂) = (ico a₁ a₂).map Embedding.inl :=
   rfl
 
-theorem Ioc_inl_inl : Ioc (inl a₁ : Sum α β) (inl a₂) = (Ioc a₁ a₂).map embedding.inl :=
+theorem Ioc_inl_inl : ioc (inl a₁ : Sum α β) (inl a₂) = (ioc a₁ a₂).map Embedding.inl :=
   rfl
 
-theorem Ioo_inl_inl : Ioo (inl a₁ : Sum α β) (inl a₂) = (Ioo a₁ a₂).map embedding.inl :=
-  rfl
-
-@[simp]
-theorem Icc_inl_inr : Icc (inl a₁) (inr b₂) = ∅ :=
+theorem Ioo_inl_inl : ioo (inl a₁ : Sum α β) (inl a₂) = (ioo a₁ a₂).map Embedding.inl :=
   rfl
 
 @[simp]
-theorem Ico_inl_inr : Ico (inl a₁) (inr b₂) = ∅ :=
+theorem Icc_inl_inr : icc (inl a₁) (inr b₂) = ∅ :=
   rfl
 
 @[simp]
-theorem Ioc_inl_inr : Ioc (inl a₁) (inr b₂) = ∅ :=
+theorem Ico_inl_inr : ico (inl a₁) (inr b₂) = ∅ :=
   rfl
 
 @[simp]
-theorem Ioo_inl_inr : Ioo (inl a₁) (inr b₂) = ∅ :=
+theorem Ioc_inl_inr : ioc (inl a₁) (inr b₂) = ∅ :=
   rfl
 
 @[simp]
-theorem Icc_inr_inl : Icc (inr b₁) (inl a₂) = ∅ :=
+theorem Ioo_inl_inr : ioo (inl a₁) (inr b₂) = ∅ :=
   rfl
 
 @[simp]
-theorem Ico_inr_inl : Ico (inr b₁) (inl a₂) = ∅ :=
+theorem Icc_inr_inl : icc (inr b₁) (inl a₂) = ∅ :=
   rfl
 
 @[simp]
-theorem Ioc_inr_inl : Ioc (inr b₁) (inl a₂) = ∅ :=
+theorem Ico_inr_inl : ico (inr b₁) (inl a₂) = ∅ :=
   rfl
 
 @[simp]
-theorem Ioo_inr_inl : Ioo (inr b₁) (inl a₂) = ∅ :=
+theorem Ioc_inr_inl : ioc (inr b₁) (inl a₂) = ∅ :=
   rfl
 
-theorem Icc_inr_inr : Icc (inr b₁ : Sum α β) (inr b₂) = (Icc b₁ b₂).map embedding.inr :=
+@[simp]
+theorem Ioo_inr_inl : ioo (inr b₁) (inl a₂) = ∅ :=
   rfl
 
-theorem Ico_inr_inr : Ico (inr b₁ : Sum α β) (inr b₂) = (Ico b₁ b₂).map embedding.inr :=
+theorem Icc_inr_inr : icc (inr b₁ : Sum α β) (inr b₂) = (icc b₁ b₂).map Embedding.inr :=
   rfl
 
-theorem Ioc_inr_inr : Ioc (inr b₁ : Sum α β) (inr b₂) = (Ioc b₁ b₂).map embedding.inr :=
+theorem Ico_inr_inr : ico (inr b₁ : Sum α β) (inr b₂) = (ico b₁ b₂).map Embedding.inr :=
   rfl
 
-theorem Ioo_inr_inr : Ioo (inr b₁ : Sum α β) (inr b₂) = (Ioo b₁ b₂).map embedding.inr :=
+theorem Ioc_inr_inr : ioc (inr b₁ : Sum α β) (inr b₂) = (ioc b₁ b₂).map Embedding.inr :=
+  rfl
+
+theorem Ioo_inr_inr : ioo (inr b₁ : Sum α β) (inr b₂) = (ioo b₁ b₂).map Embedding.inr :=
   rfl
 
 end Disjoint

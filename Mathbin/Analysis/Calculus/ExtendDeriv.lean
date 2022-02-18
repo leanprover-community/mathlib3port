@@ -28,7 +28,7 @@ derivative converges to a limit `f'` at a point on the boundary, then `f` is dif
 with derivative `f'`. -/
 theorem has_fderiv_at_boundary_of_tendsto_fderiv {f : E → F} {s : Set E} {x : E} {f' : E →L[ℝ] F}
     (f_diff : DifferentiableOn ℝ f s) (s_conv : Convex ℝ s) (s_open : IsOpen s)
-    (f_cont : ∀, ∀ y ∈ Closure s, ∀, ContinuousWithinAt f s y) (h : tendsto (fun y => fderiv ℝ f y) (𝓝[s] x) (𝓝 f')) :
+    (f_cont : ∀, ∀ y ∈ Closure s, ∀, ContinuousWithinAt f s y) (h : Tendsto (fun y => fderiv ℝ f y) (𝓝[s] x) (𝓝 f')) :
     HasFderivWithinAt f f' (Closure s) x := by
   classical
   by_cases' hx : x ∉ Closure s
@@ -93,7 +93,7 @@ theorem has_fderiv_at_boundary_of_tendsto_fderiv {f : E → F} {s : Set E} {x : 
 its derivative also converges at `a`, then `f` is differentiable on the right at `a`. -/
 theorem has_deriv_at_interval_left_endpoint_of_tendsto_deriv {s : Set ℝ} {e : E} {a : ℝ} {f : ℝ → E}
     (f_diff : DifferentiableOn ℝ f s) (f_lim : ContinuousWithinAt f s a) (hs : s ∈ 𝓝[>] a)
-    (f_lim' : tendsto (fun x => deriv f x) (𝓝[>] a) (𝓝 e)) : HasDerivWithinAt f e (Ici a) a := by
+    (f_lim' : Tendsto (fun x => deriv f x) (𝓝[>] a) (𝓝 e)) : HasDerivWithinAt f e (Ici a) a := by
   obtain ⟨b, ab : a < b, sab : Ioc a b ⊆ s⟩ := mem_nhds_within_Ioi_iff_exists_Ioc_subset.1 hs
   let t := Ioo a b
   have ts : t ⊆ s := subset.trans Ioo_subset_Ioc_self sab
@@ -124,7 +124,7 @@ theorem has_deriv_at_interval_left_endpoint_of_tendsto_deriv {s : Set ℝ} {e : 
 its derivative also converges at `a`, then `f` is differentiable on the left at `a`. -/
 theorem has_deriv_at_interval_right_endpoint_of_tendsto_deriv {s : Set ℝ} {e : E} {a : ℝ} {f : ℝ → E}
     (f_diff : DifferentiableOn ℝ f s) (f_lim : ContinuousWithinAt f s a) (hs : s ∈ 𝓝[<] a)
-    (f_lim' : tendsto (fun x => deriv f x) (𝓝[<] a) (𝓝 e)) : HasDerivWithinAt f e (Iic a) a := by
+    (f_lim' : Tendsto (fun x => deriv f x) (𝓝[<] a) (𝓝 e)) : HasDerivWithinAt f e (Iic a) a := by
   obtain ⟨b, ba, sab⟩ : ∃ b ∈ Iio a, Ico b a ⊆ s := mem_nhds_within_Iio_iff_exists_Ico_subset.1 hs
   let t := Ioo b a
   have ts : t ⊆ s := subset.trans Ioo_subset_Ico_self sab

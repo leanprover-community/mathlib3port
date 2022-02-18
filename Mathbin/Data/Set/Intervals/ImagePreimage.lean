@@ -32,7 +32,7 @@ TODO : move as much as possible in this file to the setting of this weaker typec
 
 variable {α : Type u} [OrderedCancelAddCommMonoid α] [HasExistsAddOfLe α] (a b d : α)
 
-theorem Icc_add_bij : bij_on (· + d) (Icc a b) (Icc (a + d) (b + d)) := by
+theorem Icc_add_bij : BijOn (· + d) (Icc a b) (Icc (a + d) (b + d)) := by
   refine'
     ⟨fun _ h => ⟨add_le_add_right h.1 _, add_le_add_right h.2 _⟩, fun _ _ _ _ h => add_right_cancelₓ h, fun _ h => _⟩
   obtain ⟨c, rfl⟩ := exists_add_of_le h.1
@@ -41,7 +41,7 @@ theorem Icc_add_bij : bij_on (· + d) (Icc a b) (Icc (a + d) (b + d)) := by
     ⟨a + c, h, by
       rw [add_right_commₓ]⟩
 
-theorem Ioo_add_bij : bij_on (· + d) (Ioo a b) (Ioo (a + d) (b + d)) := by
+theorem Ioo_add_bij : BijOn (· + d) (Ioo a b) (Ioo (a + d) (b + d)) := by
   refine'
     ⟨fun _ h => ⟨add_lt_add_right h.1 _, add_lt_add_right h.2 _⟩, fun _ _ _ _ h => add_right_cancelₓ h, fun _ h => _⟩
   obtain ⟨c, rfl⟩ := exists_add_of_le h.1.le
@@ -50,7 +50,7 @@ theorem Ioo_add_bij : bij_on (· + d) (Ioo a b) (Ioo (a + d) (b + d)) := by
     ⟨a + c, h, by
       rw [add_right_commₓ]⟩
 
-theorem Ioc_add_bij : bij_on (· + d) (Ioc a b) (Ioc (a + d) (b + d)) := by
+theorem Ioc_add_bij : BijOn (· + d) (Ioc a b) (Ioc (a + d) (b + d)) := by
   refine'
     ⟨fun _ h => ⟨add_lt_add_right h.1 _, add_le_add_right h.2 _⟩, fun _ _ _ _ h => add_right_cancelₓ h, fun _ h => _⟩
   obtain ⟨c, rfl⟩ := exists_add_of_le h.1.le
@@ -59,7 +59,7 @@ theorem Ioc_add_bij : bij_on (· + d) (Ioc a b) (Ioc (a + d) (b + d)) := by
     ⟨a + c, h, by
       rw [add_right_commₓ]⟩
 
-theorem Ico_add_bij : bij_on (· + d) (Ico a b) (Ico (a + d) (b + d)) := by
+theorem Ico_add_bij : BijOn (· + d) (Ico a b) (Ico (a + d) (b + d)) := by
   refine'
     ⟨fun _ h => ⟨add_le_add_right h.1 _, add_lt_add_right h.2 _⟩, fun _ _ _ _ h => add_right_cancelₓ h, fun _ h => _⟩
   obtain ⟨c, rfl⟩ := exists_add_of_le h.1
@@ -68,7 +68,7 @@ theorem Ico_add_bij : bij_on (· + d) (Ico a b) (Ico (a + d) (b + d)) := by
     ⟨a + c, h, by
       rw [add_right_commₓ]⟩
 
-theorem Ici_add_bij : bij_on (· + d) (Ici a) (Ici (a + d)) := by
+theorem Ici_add_bij : BijOn (· + d) (Ici a) (Ici (a + d)) := by
   refine' ⟨fun x h => add_le_add_right (mem_Ici.mp h) _, fun _ _ _ _ h => add_right_cancelₓ h, fun _ h => _⟩
   obtain ⟨c, rfl⟩ := exists_add_of_le (mem_Ici.mp h)
   rw [mem_Ici, add_right_commₓ, add_le_add_iff_right] at h
@@ -76,7 +76,7 @@ theorem Ici_add_bij : bij_on (· + d) (Ici a) (Ici (a + d)) := by
     ⟨a + c, h, by
       rw [add_right_commₓ]⟩
 
-theorem Ioi_add_bij : bij_on (· + d) (Ioi a) (Ioi (a + d)) := by
+theorem Ioi_add_bij : BijOn (· + d) (Ioi a) (Ioi (a + d)) := by
   refine' ⟨fun x h => add_lt_add_right (mem_Ioi.mp h) _, fun _ _ _ _ h => add_right_cancelₓ h, fun _ h => _⟩
   obtain ⟨c, rfl⟩ := exists_add_of_le (mem_Ioi.mp h).le
   rw [mem_Ioi, add_right_commₓ, add_lt_add_iff_right] at h
@@ -457,11 +457,11 @@ theorem image_sub_const_Ioo : (fun x => x - a) '' Ioo b c = Ioo (b - a) (c - a) 
 -/
 
 
-theorem Iic_add_bij : bij_on (· + a) (Iic b) (Iic (b + a)) := by
+theorem Iic_add_bij : BijOn (· + a) (Iic b) (Iic (b + a)) := by
   refine' ⟨fun x h => add_le_add_right (mem_Iic.mp h) _, fun _ _ _ _ h => add_right_cancelₓ h, fun _ h => _⟩
   simpa [add_commₓ a] using h
 
-theorem Iio_add_bij : bij_on (· + a) (Iio b) (Iio (b + a)) := by
+theorem Iio_add_bij : BijOn (· + a) (Iio b) (Iio (b + a)) := by
   refine' ⟨fun x h => add_lt_add_right (mem_Iio.mp h) _, fun _ _ _ _ h => add_right_cancelₓ h, fun _ h => _⟩
   simpa [add_commₓ a] using h
 
@@ -640,7 +640,7 @@ theorem image_inv_Ioo_0_left {a : k} (ha : 0 < a) : Inv.inv '' Ioo 0 a = Ioi a�
   ext x
   exact
     ⟨fun ⟨y, ⟨hy0, hya⟩, hyx⟩ => hyx ▸ (inv_lt_inv ha hy0).2 hya, fun h =>
-      ⟨x⁻¹, ⟨inv_pos.2 (lt_transₓ (inv_pos.2 ha) h), (inv_lt ha (lt_transₓ (inv_pos.2 ha) h)).1 h⟩, inv_inv₀ x⟩⟩
+      ⟨x⁻¹, ⟨inv_pos.2 (lt_transₓ (inv_pos.2 ha) h), (inv_lt ha (lt_transₓ (inv_pos.2 ha) h)).1 h⟩, inv_invₓ x⟩⟩
 
 /-!
 ### Images under `x ↦ a * x + b`

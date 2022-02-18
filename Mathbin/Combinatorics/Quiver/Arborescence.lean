@@ -33,14 +33,14 @@ namespace Quiver
     to every other vertex. -/
 class arborescence (V : Type u) [Quiver.{v} V] : Type max u v where
   root : V
-  uniquePath : ∀ b : V, Unique (path root b)
+  uniquePath : ∀ b : V, Unique (Path root b)
 
 /-- The root of an arborescence. -/
-def root (V : Type u) [Quiver V] [arborescence V] : V :=
+def root (V : Type u) [Quiver V] [Arborescence V] : V :=
   arborescence.root
 
-instance {V : Type u} [Quiver V] [arborescence V] (b : V) : Unique (path (root V) b) :=
-  arborescence.unique_path b
+instance {V : Type u} [Quiver V] [Arborescence V] (b : V) : Unique (Path (root V) b) :=
+  Arborescence.uniquePath b
 
 /-- To show that `[quiver V]` is an arborescence with root `r : V`, it suffices to
   - provide a height function `V → ℕ` such that every arrow goes from a
@@ -50,7 +50,7 @@ instance {V : Type u} [Quiver V] [arborescence V] (b : V) : Unique (path (root V
 noncomputable def arborescence_mk {V : Type u} [Quiver V] (r : V) (height : V → ℕ)
     (height_lt : ∀ ⦃a b⦄, (a ⟶ b) → height a < height b)
     (unique_arrow : ∀ ⦃a b c : V⦄ e : a ⟶ c f : b ⟶ c, a = b ∧ HEq e f)
-    (root_or_arrow : ∀ b, b = r ∨ ∃ a, Nonempty (a ⟶ b)) : arborescence V where
+    (root_or_arrow : ∀ b, b = r ∨ ∃ a, Nonempty (a ⟶ b)) : Arborescence V where
   root := r
   uniquePath := fun b =>
     ⟨Classical.inhabitedOfNonempty
@@ -88,27 +88,27 @@ noncomputable def arborescence_mk {V : Type u} [Quiver V] (r : V) (height : V �
 
 /-- `rooted_connected r` means that there is a path from `r` to any other vertex. -/
 class rooted_connected {V : Type u} [Quiver V] (r : V) : Prop where
-  nonempty_path : ∀ b : V, Nonempty (path r b)
+  nonempty_path : ∀ b : V, Nonempty (Path r b)
 
 attribute [instance] rooted_connected.nonempty_path
 
 section GeodesicSubtree
 
-variable {V : Type u} [Quiver.{v + 1} V] (r : V) [rooted_connected r]
+variable {V : Type u} [Quiver.{v + 1} V] (r : V) [RootedConnected r]
 
 /-- A path from `r` of minimal length. -/
-noncomputable def shortest_path (b : V) : path r b :=
-  WellFounded.min (measure_wf path.length) Set.Univ Set.univ_nonempty
+noncomputable def shortest_path (b : V) : Path r b :=
+  WellFounded.min (measure_wf Path.length) Set.Univ Set.univ_nonempty
 
 /-- The length of a path is at least the length of the shortest path -/
-theorem shortest_path_spec {a : V} (p : path r a) : (shortest_path r a).length ≤ p.length :=
+theorem shortest_path_spec {a : V} (p : Path r a) : (shortestPath r a).length ≤ p.length :=
   not_ltₓ.mp (WellFounded.not_lt_min (measure_wf _) Set.Univ _ trivialₓ)
 
 /-- A subquiver which by construction is an arborescence. -/
-def geodesic_subtree : WideSubquiver V := fun a b => { e | ∃ p : path r a, shortest_path r b = p.cons e }
+def geodesic_subtree : WideSubquiver V := fun a b => { e | ∃ p : Path r a, shortestPath r b = p.cons e }
 
-noncomputable instance geodesic_arborescence : arborescence (geodesic_subtree r) :=
-  arborescence_mk r (fun a => (shortest_path r a).length)
+noncomputable instance geodesic_arborescence : Arborescence (GeodesicSubtree r) :=
+  arborescenceMk r (fun a => (shortestPath r a).length)
     (by
       rintro a b ⟨e, p, h⟩
       rw [h, path.length_cons, Nat.lt_succ_iffₓ]

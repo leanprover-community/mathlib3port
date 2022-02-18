@@ -33,7 +33,7 @@ and the identifications given by the morphisms in the diagram.
 -/
 
 
-variable {J : Type v} [small_category J] (F : J ⥤ AddCommGroupₓₓ.{v})
+variable {J : Type v} [SmallCategory J] (F : J ⥤ AddCommGroupₓₓ.{v})
 
 /-- An inductive type representing all group expressions (without relations)
 on a collection of types indexed by the objects of `J`.
@@ -44,8 +44,8 @@ inductive prequotient
   | neg : prequotient → prequotient
   | add : prequotient → prequotient → prequotient
 
-instance : Inhabited (prequotient F) :=
-  ⟨prequotient.zero⟩
+instance : Inhabited (Prequotient F) :=
+  ⟨Prequotient.zero⟩
 
 open Prequotient
 
@@ -53,7 +53,7 @@ open Prequotient
 because of the abelian group laws, or
 because one element is mapped to another by a morphism in the diagram.
 -/
-inductive relation : prequotient F → prequotient F → Prop
+inductive relation : Prequotient F → Prequotient F → Prop
   | refl : ∀ x, relation x x
   | symm : ∀ x y h : relation x y, relation y x
   | trans : ∀ x y z h : relation x y k : relation y z, relation x z
@@ -72,18 +72,18 @@ inductive relation : prequotient F → prequotient F → Prop
 
 /-- The setoid corresponding to group expressions modulo abelian group relations and identifications.
 -/
-def colimit_setoid : Setoidₓ (prequotient F) where
-  R := relation F
-  iseqv := ⟨relation.refl, relation.symm, relation.trans⟩
+def colimit_setoid : Setoidₓ (Prequotient F) where
+  R := Relation F
+  iseqv := ⟨Relation.refl, Relation.symm, Relation.trans⟩
 
 attribute [instance] colimit_setoid
 
 /-- The underlying type of the colimit of a diagram in `AddCommGroup`.
 -/
 def colimit_type : Type v :=
-  Quotientₓ (colimit_setoid F)deriving Inhabited
+  Quotientₓ (colimitSetoid F)deriving Inhabited
 
-instance : AddCommGroupₓ (colimit_type F) where
+instance : AddCommGroupₓ (ColimitType F) where
   zero := Quot.mk _ zero
   neg := by
     fapply @Quot.lift
@@ -154,62 +154,62 @@ instance : AddCommGroupₓ (colimit_type F) where
     rfl
 
 @[simp]
-theorem quot_zero : Quot.mk Setoidₓ.R zero = (0 : colimit_type F) :=
+theorem quot_zero : Quot.mk Setoidₓ.R zero = (0 : ColimitType F) :=
   rfl
 
 @[simp]
-theorem quot_neg x : Quot.mk Setoidₓ.R (neg x) = (-Quot.mk Setoidₓ.R x : colimit_type F) :=
+theorem quot_neg x : Quot.mk Setoidₓ.R (neg x) = (-Quot.mk Setoidₓ.R x : ColimitType F) :=
   rfl
 
 @[simp]
-theorem quot_add x y : Quot.mk Setoidₓ.R (add x y) = (Quot.mk Setoidₓ.R x + Quot.mk Setoidₓ.R y : colimit_type F) :=
+theorem quot_add x y : Quot.mk Setoidₓ.R (add x y) = (Quot.mk Setoidₓ.R x + Quot.mk Setoidₓ.R y : ColimitType F) :=
   rfl
 
 /-- The bundled abelian group giving the colimit of a diagram. -/
 def colimit : AddCommGroupₓₓ :=
-  AddCommGroupₓₓ.of (colimit_type F)
+  AddCommGroupₓₓ.of (ColimitType F)
 
 /-- The function from a given abelian group in the diagram to the colimit abelian group. -/
-def cocone_fun (j : J) (x : F.obj j) : colimit_type F :=
+def cocone_fun (j : J) (x : F.obj j) : ColimitType F :=
   Quot.mk _ (of j x)
 
 /-- The group homomorphism from a given abelian group in the diagram to the colimit abelian
 group. -/
 def cocone_morphism (j : J) : F.obj j ⟶ colimit F where
-  toFun := cocone_fun F j
+  toFun := coconeFun F j
   map_zero' := by
     apply Quot.sound <;> apply relation.zero
   map_add' := by
     intros <;> apply Quot.sound <;> apply relation.add
 
 @[simp]
-theorem cocone_naturality {j j' : J} (f : j ⟶ j') : F.map f ≫ cocone_morphism F j' = cocone_morphism F j := by
+theorem cocone_naturality {j j' : J} (f : j ⟶ j') : F.map f ≫ coconeMorphism F j' = coconeMorphism F j := by
   ext
   apply Quot.sound
   apply Relation.Map
 
 @[simp]
 theorem cocone_naturality_components (j j' : J) (f : j ⟶ j') (x : F.obj j) :
-    (cocone_morphism F j') (F.map f x) = (cocone_morphism F j) x := by
+    (coconeMorphism F j') (F.map f x) = (coconeMorphism F j) x := by
   rw [← cocone_naturality F f]
   rfl
 
 /-- The cocone over the proposed colimit abelian group. -/
-def colimit_cocone : cocone F where
+def colimit_cocone : Cocone F where
   x := colimit F
-  ι := { app := cocone_morphism F }
+  ι := { app := coconeMorphism F }
 
 /-- The function from the free abelian group on the diagram to the cone point of any other
 cocone. -/
 @[simp]
-def desc_fun_lift (s : cocone F) : prequotient F → s.X
+def desc_fun_lift (s : Cocone F) : Prequotient F → s.x
   | of j x => (s.ι.app j) x
   | zero => 0
   | neg x => -desc_fun_lift x
   | add x y => desc_fun_lift x + desc_fun_lift y
 
 /-- The function from the colimit abelian group to the cone point of any other cocone. -/
-def desc_fun (s : cocone F) : colimit_type F → s.X := by
+def desc_fun (s : Cocone F) : ColimitType F → s.x := by
   fapply Quot.lift
   · exact desc_fun_lift F s
     
@@ -250,15 +250,15 @@ def desc_fun (s : cocone F) : colimit_type F → s.X := by
     
 
 /-- The group homomorphism from the colimit abelian group to the cone point of any other cocone. -/
-def desc_morphism (s : cocone F) : colimit F ⟶ s.X where
-  toFun := desc_fun F s
+def desc_morphism (s : Cocone F) : colimit F ⟶ s.x where
+  toFun := descFun F s
   map_zero' := rfl
   map_add' := fun x y => by
     induction x <;> induction y <;> rfl
 
 /-- Evidence that the proposed colimit is the colimit. -/
-def colimit_cocone_is_colimit : is_colimit (colimit_cocone F) where
-  desc := fun s => desc_morphism F s
+def colimit_cocone_is_colimit : IsColimit (colimitCocone F) where
+  desc := fun s => descMorphism F s
   uniq' := fun s m w => by
     ext
     induction x
@@ -275,7 +275,7 @@ def colimit_cocone_is_colimit : is_colimit (colimit_cocone F) where
       
     rfl
 
-instance has_colimits_AddCommGroup : has_colimits AddCommGroupₓₓ where
+instance has_colimits_AddCommGroup : HasColimits AddCommGroupₓₓ where
   HasColimitsOfShape := fun J 𝒥 =>
     { HasColimit := fun F => has_colimit.mk { Cocone := colimit_cocone F, IsColimit := colimit_cocone_is_colimit F } }
 

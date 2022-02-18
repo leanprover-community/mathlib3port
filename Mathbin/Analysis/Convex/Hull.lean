@@ -57,7 +57,7 @@ theorem Convex.convex_hull_eq {s : Set E} (hs : Convex 𝕜 s) : convexHull 𝕜
   ClosureOperator.mem_mk₃_closed hs
 
 @[simp]
-theorem convex_hull_univ : convexHull 𝕜 (univ : Set E) = univ :=
+theorem convex_hull_univ : convexHull 𝕜 (Univ : Set E) = univ :=
   ClosureOperator.closure_top (convexHull 𝕜)
 
 @[simp]
@@ -76,7 +76,7 @@ theorem convex_hull_empty_iff : convexHull 𝕜 s = ∅ ↔ s = ∅ := by
     
 
 @[simp]
-theorem convex_hull_nonempty_iff : (convexHull 𝕜 s).Nonempty ↔ s.nonempty := by
+theorem convex_hull_nonempty_iff : (convexHull 𝕜 s).Nonempty ↔ s.Nonempty := by
   rw [← ne_empty_iff_nonempty, ← ne_empty_iff_nonempty, Ne.def, Ne.def]
   exact not_congr convex_hull_empty_iff
 

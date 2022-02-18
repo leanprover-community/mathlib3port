@@ -33,7 +33,7 @@ universe u
 
 namespace CategoryTheory
 
-variable {C D : Type _} [category C] [category D]
+variable {C D : Type _} [Category C] [Category D]
 
 variable (F : C ⥤ Cat)
 
@@ -56,14 +56,14 @@ variable {F}
 /-- A morphism in the Grothendieck category `F : C ⥤ Cat` consists of
 `base : X.base ⟶ Y.base` and `f.fiber : (F.map base).obj X.fiber ⟶ Y.fiber`.
 -/
-structure hom (X Y : grothendieck F) where
+structure hom (X Y : Grothendieck F) where
   base : X.base ⟶ Y.base
   fiber : (F.map base).obj X.fiber ⟶ Y.fiber
 
 @[ext]
-theorem ext {X Y : grothendieck F} (f g : hom X Y) (w_base : f.base = g.base)
+theorem ext {X Y : Grothendieck F} (f g : Hom X Y) (w_base : f.base = g.base)
     (w_fiber :
-      eq_to_hom
+      eqToHom
             (by
               rw [w_base]) ≫
           f.fiber =
@@ -81,31 +81,31 @@ theorem ext {X Y : grothendieck F} (f g : hom X Y) (w_base : f.base = g.base)
 /-- The identity morphism in the Grothendieck category.
 -/
 @[simps]
-def id (X : grothendieck F) : hom X X where
+def id (X : Grothendieck F) : Hom X X where
   base := 𝟙 X.base
   fiber :=
-    eq_to_hom
+    eqToHom
       (by
         erw [CategoryTheory.Functor.map_id, functor.id_obj X.fiber])
 
-instance (X : grothendieck F) : Inhabited (hom X X) :=
+instance (X : Grothendieck F) : Inhabited (Hom X X) :=
   ⟨id X⟩
 
 /-- Composition of morphisms in the Grothendieck category.
 -/
 @[simps]
-def comp {X Y Z : grothendieck F} (f : hom X Y) (g : hom Y Z) : hom X Z where
+def comp {X Y Z : Grothendieck F} (f : Hom X Y) (g : Hom Y Z) : Hom X Z where
   base := f.base ≫ g.base
   fiber :=
-    eq_to_hom
+    eqToHom
         (by
           erw [functor.map_comp, functor.comp_obj]) ≫
       (F.map g.base).map f.fiber ≫ g.fiber
 
-instance : category (grothendieck F) where
-  Hom := fun X Y => grothendieck.hom X Y
-  id := fun X => grothendieck.id X
-  comp := fun X Y Z f g => grothendieck.comp f g
+instance : Category (Grothendieck F) where
+  Hom := fun X Y => Grothendieck.Hom X Y
+  id := fun X => Grothendieck.id X
+  comp := fun X Y Z f g => Grothendieck.comp f g
   comp_id' := fun X Y f => by
     ext
     · dsimp
@@ -129,16 +129,16 @@ instance : category (grothendieck F) where
       
 
 @[simp]
-theorem id_fiber' (X : grothendieck F) :
-    hom.fiber (𝟙 X) =
-      eq_to_hom
+theorem id_fiber' (X : Grothendieck F) :
+    Hom.fiber (𝟙 X) =
+      eqToHom
         (by
           erw [CategoryTheory.Functor.map_id, functor.id_obj X.fiber]) :=
   id_fiber X
 
-theorem congr {X Y : grothendieck F} {f g : X ⟶ Y} (h : f = g) :
+theorem congr {X Y : Grothendieck F} {f g : X ⟶ Y} (h : f = g) :
     f.fiber =
-      eq_to_hom
+      eqToHom
           (by
             subst h) ≫
         g.fiber :=
@@ -153,7 +153,7 @@ variable (F)
 
 /-- The forgetful functor from `grothendieck F` to the source category. -/
 @[simps]
-def forget : grothendieck F ⥤ C where
+def forget : Grothendieck F ⥤ C where
   obj := fun X => X.1
   map := fun X Y f => f.1
 
@@ -165,13 +165,13 @@ variable (G : C ⥤ Type w)
 
 /-- Auxiliary definition for `grothendieck_Type_to_Cat`, to speed up elaboration. -/
 @[simps]
-def grothendieck_Type_to_Cat_functor : grothendieck (G ⋙ Type_to_Cat) ⥤ G.elements where
+def grothendieck_Type_to_Cat_functor : Grothendieck (G ⋙ Type_to_Cat) ⥤ G.Elements where
   obj := fun X => ⟨X.1, X.2⟩
   map := fun X Y f => ⟨f.1, f.2.1.1⟩
 
 /-- Auxiliary definition for `grothendieck_Type_to_Cat`, to speed up elaboration. -/
 @[simps]
-def grothendieck_Type_to_Cat_inverse : G.elements ⥤ grothendieck (G ⋙ Type_to_Cat) where
+def grothendieck_Type_to_Cat_inverse : G.Elements ⥤ Grothendieck (G ⋙ Type_to_Cat) where
   obj := fun X => ⟨X.1, X.2⟩
   map := fun X Y f => ⟨f.1, ⟨⟨f.2⟩⟩⟩
 
@@ -180,11 +180,11 @@ def grothendieck_Type_to_Cat_inverse : G.elements ⥤ grothendieck (G ⋙ Type_t
 is the same as the 'category of elements' construction.
 -/
 @[simps]
-def grothendieck_Type_to_Cat : grothendieck (G ⋙ Type_to_Cat) ≌ G.elements where
-  Functor := grothendieck_Type_to_Cat_functor G
-  inverse := grothendieck_Type_to_Cat_inverse G
+def grothendieck_Type_to_Cat : Grothendieck (G ⋙ Type_to_Cat) ≌ G.Elements where
+  Functor := grothendieckTypeToCatFunctor G
+  inverse := grothendieckTypeToCatInverse G
   unitIso :=
-    nat_iso.of_components
+    NatIso.ofComponents
       (fun X => by
         cases X
         exact iso.refl _)
@@ -195,7 +195,7 @@ def grothendieck_Type_to_Cat : grothendieck (G ⋙ Type_to_Cat) ≌ G.elements w
         ext
         simp )
   counitIso :=
-    nat_iso.of_components
+    NatIso.ofComponents
       (fun X => by
         cases X
         exact iso.refl _)

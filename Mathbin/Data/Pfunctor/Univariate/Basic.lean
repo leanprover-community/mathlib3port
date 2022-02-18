@@ -34,31 +34,31 @@ def obj (α : Type _) :=
   Σ x : P.A, P.B x → α
 
 /-- Applying `P` to a morphism of `Type` -/
-def map {α β : Type _} (f : α → β) : P.obj α → P.obj β := fun ⟨a, g⟩ => ⟨a, f ∘ g⟩
+def map {α β : Type _} (f : α → β) : P.Obj α → P.Obj β := fun ⟨a, g⟩ => ⟨a, f ∘ g⟩
 
-instance obj.inhabited [Inhabited P.A] [Inhabited α] : Inhabited (P.obj α) :=
+instance obj.inhabited [Inhabited P.A] [Inhabited α] : Inhabited (P.Obj α) :=
   ⟨⟨default, fun _ => default⟩⟩
 
-instance : Functor P.obj where
+instance : Functor P.Obj where
   map := @map P
 
 protected theorem map_eq {α β : Type _} (f : α → β) (a : P.A) (g : P.B a → α) :
-    @Functor.map P.obj _ _ _ f ⟨a, g⟩ = ⟨a, f ∘ g⟩ :=
+    @Functor.map P.Obj _ _ _ f ⟨a, g⟩ = ⟨a, f ∘ g⟩ :=
   rfl
 
-protected theorem id_map {α : Type _} : ∀ x : P.obj α, id <$> x = id x := fun ⟨a, b⟩ => rfl
+protected theorem id_map {α : Type _} : ∀ x : P.Obj α, id <$> x = id x := fun ⟨a, b⟩ => rfl
 
-protected theorem comp_map {α β γ : Type _} (f : α → β) (g : β → γ) : ∀ x : P.obj α, (g ∘ f) <$> x = g <$> f <$> x :=
+protected theorem comp_map {α β γ : Type _} (f : α → β) (g : β → γ) : ∀ x : P.Obj α, (g ∘ f) <$> x = g <$> f <$> x :=
   fun ⟨a, b⟩ => rfl
 
-instance : IsLawfulFunctor P.obj where
+instance : IsLawfulFunctor P.Obj where
   id_map := @Pfunctor.id_map P
   comp_map := @Pfunctor.comp_map P
 
 /-- re-export existing definition of W-types and
 adapt it to a packaged definition of polynomial functor -/
 def W :=
-  _root_.W_type P.B
+  WType P.B
 
 attribute [nolint has_inhabited_instance] W
 
@@ -73,15 +73,15 @@ def W.children : ∀ x : W P, P.B (W.head x) → W P
   | ⟨a, f⟩ => f
 
 /-- destructor for W-types -/
-def W.dest : W P → P.obj (W P)
+def W.dest : W P → P.Obj (W P)
   | ⟨a, f⟩ => ⟨a, f⟩
 
 /-- constructor for W-types -/
-def W.mk : P.obj (W P) → W P
+def W.mk : P.Obj (W P) → W P
   | ⟨a, f⟩ => ⟨a, f⟩
 
 @[simp]
-theorem W.dest_mk (p : P.obj (W P)) : W.dest (W.mk p) = p := by
+theorem W.dest_mk (p : P.Obj (W P)) : W.dest (W.mk p) = p := by
   cases p <;> rfl
 
 @[simp]
@@ -103,15 +103,15 @@ variable {P}
 
 /-- `x.iget i` takes the component of `x` designated by `i` if any is or returns
 a default value -/
-def obj.iget [DecidableEq P.A] {α} [Inhabited α] (x : P.obj α) (i : P.Idx) : α :=
+def obj.iget [DecidableEq P.A] {α} [Inhabited α] (x : P.Obj α) (i : P.Idx) : α :=
   if h : i.1 = x.1 then x.2 (cast (congr_argₓ _ h) i.2) else default
 
 @[simp]
-theorem fst_map {α β : Type u} (x : P.obj α) (f : α → β) : (f <$> x).1 = x.1 := by
+theorem fst_map {α β : Type u} (x : P.Obj α) (f : α → β) : (f <$> x).1 = x.1 := by
   cases x <;> rfl
 
 @[simp]
-theorem iget_map [DecidableEq P.A] {α β : Type u} [Inhabited α] [Inhabited β] (x : P.obj α) (f : α → β) (i : P.Idx)
+theorem iget_map [DecidableEq P.A] {α β : Type u} [Inhabited α] [Inhabited β] (x : P.Obj α) (f : α → β) (i : P.Idx)
     (h : i.1 = x.1) : (f <$> x).iget i = f (x.iget i) := by
   simp only [obj.iget, fst_map, *, dif_pos, eq_self_iff_true]
   cases x
@@ -126,11 +126,11 @@ def comp (P₂ P₁ : Pfunctor.{u}) : Pfunctor.{u} :=
   ⟨Σ a₂ : P₂.1, P₂.2 a₂ → P₁.1, fun a₂a₁ => Σ u : P₂.2 a₂a₁.1, P₁.2 (a₂a₁.2 u)⟩
 
 /-- constructor for composition -/
-def comp.mk (P₂ P₁ : Pfunctor.{u}) {α : Type} (x : P₂.obj (P₁.obj α)) : (comp P₂ P₁).Obj α :=
+def comp.mk (P₂ P₁ : Pfunctor.{u}) {α : Type} (x : P₂.Obj (P₁.Obj α)) : (comp P₂ P₁).Obj α :=
   ⟨⟨x.1, Sigma.fst ∘ x.2⟩, fun a₂a₁ => (x.2 a₂a₁.1).2 a₂a₁.2⟩
 
 /-- destructor for composition -/
-def comp.get (P₂ P₁ : Pfunctor.{u}) {α : Type} (x : (comp P₂ P₁).Obj α) : P₂.obj (P₁.obj α) :=
+def comp.get (P₂ P₁ : Pfunctor.{u}) {α : Type} (x : (comp P₂ P₁).Obj α) : P₂.Obj (P₁.Obj α) :=
   ⟨x.1.1, fun a₂ => ⟨x.1.2 a₂, fun a₁ => x.2 ⟨a₂, a₁⟩⟩⟩
 
 end Pfunctor
@@ -141,7 +141,7 @@ variable {P : Pfunctor.{u}}
 
 open Functor
 
-theorem liftp_iff {α : Type u} (p : α → Prop) (x : P.obj α) : liftp p x ↔ ∃ a f, x = ⟨a, f⟩ ∧ ∀ i, p (f i) := by
+theorem liftp_iff {α : Type u} (p : α → Prop) (x : P.Obj α) : Liftp p x ↔ ∃ a f, x = ⟨a, f⟩ ∧ ∀ i, p (f i) := by
   constructor
   · rintro ⟨y, hy⟩
     cases' h : y with a f
@@ -154,7 +154,7 @@ theorem liftp_iff {α : Type u} (p : α → Prop) (x : P.obj α) : liftp p x ↔
   rfl
 
 theorem liftp_iff' {α : Type u} (p : α → Prop) (a : P.A) (f : P.B a → α) :
-    @liftp.{u} P.obj _ α p ⟨a, f⟩ ↔ ∀ i, p (f i) := by
+    @Liftp.{u} P.Obj _ α p ⟨a, f⟩ ↔ ∀ i, p (f i) := by
   simp only [liftp_iff, Sigma.mk.inj_iff] <;> constructor <;> intro
   · casesm* Exists _, _ ∧ _
     subst_vars
@@ -165,8 +165,8 @@ theorem liftp_iff' {α : Type u} (p : α → Prop) (a : P.A) (f : P.B a → α) 
       constructor|
       assumption
 
-theorem liftr_iff {α : Type u} (r : α → α → Prop) (x y : P.obj α) :
-    liftr r x y ↔ ∃ a f₀ f₁, x = ⟨a, f₀⟩ ∧ y = ⟨a, f₁⟩ ∧ ∀ i, r (f₀ i) (f₁ i) := by
+theorem liftr_iff {α : Type u} (r : α → α → Prop) (x y : P.Obj α) :
+    Liftr r x y ↔ ∃ a f₀ f₁, x = ⟨a, f₀⟩ ∧ y = ⟨a, f₁⟩ ∧ ∀ i, r (f₀ i) (f₁ i) := by
   constructor
   · rintro ⟨u, xeq, yeq⟩
     cases' h : u with a f
@@ -193,7 +193,7 @@ theorem liftr_iff {α : Type u} (r : α → α → Prop) (x y : P.obj α) :
 
 open Set
 
-theorem supp_eq {α : Type u} (a : P.A) (f : P.B a → α) : @supp.{u} P.obj _ α (⟨a, f⟩ : P.obj α) = f '' univ := by
+theorem supp_eq {α : Type u} (a : P.A) (f : P.B a → α) : @Supp.{u} P.Obj _ α (⟨a, f⟩ : P.Obj α) = f '' univ := by
   ext
   simp only [supp, image_univ, mem_range, mem_set_of_eq]
   constructor <;> intro h

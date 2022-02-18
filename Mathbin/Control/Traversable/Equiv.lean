@@ -56,10 +56,8 @@ protected theorem comp_map {α β γ : Type u} (g : α → β) (h : β → γ) (
 protected theorem IsLawfulFunctor : @IsLawfulFunctor _ Equivₓ.functor :=
   { id_map := @Equivₓ.id_map _ _, comp_map := @Equivₓ.comp_map _ _ }
 
-protected theorem is_lawful_functor' [F : _root_.functor t']
-    (h₀ : ∀ {α β} f : α → β, _root_.functor.map f = Equivₓ.map f)
-    (h₁ : ∀ {α β} f : β, _root_.functor.map_const f = (Equivₓ.map ∘ Function.const α) f) :
-    _root_.is_lawful_functor t' := by
+protected theorem is_lawful_functor' [F : Functor t'] (h₀ : ∀ {α β} f : α → β, Functor.map f = Equivₓ.map f)
+    (h₁ : ∀ {α β} f : β, Functor.mapConst f = (Equivₓ.map ∘ Function.const α) f) : IsLawfulFunctor t' := by
   have : F = Equivₓ.functor := by
     cases' F
     dsimp [Equivₓ.functor]
@@ -122,7 +120,7 @@ protected theorem traverse_eq_map_id (f : α → β) (x : t' α) :
   simp' [Equivₓ.traverse, traverse_eq_map_id] with functor_norm <;> rfl
 
 protected theorem comp_traverse (f : β → F γ) (g : α → G β) (x : t' α) :
-    Equivₓ.traverse eqv (comp.mk ∘ Functor.map f ∘ g) x = comp.mk (Equivₓ.traverse eqv f <$> Equivₓ.traverse eqv g x) :=
+    Equivₓ.traverse eqv (comp.mk ∘ Functor.map f ∘ g) x = Comp.mk (Equivₓ.traverse eqv f <$> Equivₓ.traverse eqv g x) :=
   by
   simp' [Equivₓ.traverse, comp_traverse] with functor_norm <;> congr <;> ext <;> simp
 
@@ -146,11 +144,11 @@ carrying the traversable functor structure from `t` over the
 equivalences, then the fact that `t` is a lawful traversable functor
 carries over as well. -/
 protected def is_lawful_traversable' [_i : Traversable t'] (h₀ : ∀ {α β} f : α → β, map f = Equivₓ.map eqv f)
-    (h₁ : ∀ {α β} f : β, map_const f = (Equivₓ.map eqv ∘ Function.const α) f)
+    (h₁ : ∀ {α β} f : β, mapConst f = (Equivₓ.map eqv ∘ Function.const α) f)
     (h₂ :
       ∀ {F : Type u → Type u} [Applicativeₓ F],
         ∀ [IsLawfulApplicative F] {α β} f : α → F β, traverse f = Equivₓ.traverse eqv f) :
-    _root_.is_lawful_traversable t' := by
+    IsLawfulTraversable t' := by
   refine' { to_is_lawful_functor := Equivₓ.is_lawful_functor' eqv @h₀ @h₁, .. } <;> intros
   · rw [h₂, Equivₓ.id_traverse]
     infer_instance

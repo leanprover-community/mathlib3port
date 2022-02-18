@@ -93,16 +93,16 @@ theorem closed_embedding_coe_real : ClosedEmbedding (coe : ℤ → ℝ) :=
 instance : MetricSpace ℤ :=
   Int.uniform_embedding_coe_real.comapMetricSpace _
 
-theorem preimage_ball (x : ℤ) (r : ℝ) : coe ⁻¹' ball (x : ℝ) r = ball x r :=
+theorem preimage_ball (x : ℤ) (r : ℝ) : coe ⁻¹' Ball (x : ℝ) r = Ball x r :=
   rfl
 
-theorem preimage_closed_ball (x : ℤ) (r : ℝ) : coe ⁻¹' closed_ball (x : ℝ) r = closed_ball x r :=
+theorem preimage_closed_ball (x : ℤ) (r : ℝ) : coe ⁻¹' ClosedBall (x : ℝ) r = ClosedBall x r :=
   rfl
 
-theorem ball_eq_Ioo (x : ℤ) (r : ℝ) : ball x r = Ioo ⌊↑x - r⌋ ⌈↑x + r⌉ := by
+theorem ball_eq_Ioo (x : ℤ) (r : ℝ) : Ball x r = Ioo ⌊↑x - r⌋ ⌈↑x + r⌉ := by
   rw [← preimage_ball, Real.ball_eq_Ioo, preimage_Ioo]
 
-theorem closed_ball_eq_Icc (x : ℤ) (r : ℝ) : closed_ball x r = Icc ⌈↑x - r⌉ ⌊↑x + r⌋ := by
+theorem closed_ball_eq_Icc (x : ℤ) (r : ℝ) : ClosedBall x r = Icc ⌈↑x - r⌉ ⌊↑x + r⌋ := by
   rw [← preimage_closed_ball, Real.closed_ball_eq_Icc, preimage_Icc]
 
 instance : ProperSpace ℤ :=
@@ -116,11 +116,86 @@ theorem cocompact_eq : cocompact ℤ = at_bot⊔at_top := by
   simp only [← comap_dist_right_at_top_eq_cocompact (0 : ℤ), dist_eq, sub_zero, cast_zero, ← cast_abs, ←
     @comap_comap _ _ _ _ abs, Int.comap_coe_at_top, comap_abs_at_top]
 
-instance : NoncompactSpace ℤ :=
+@[simp]
+theorem cofinite_eq : (cofinite : Filter ℤ) = at_bot⊔at_top := by
+  rw [← cocompact_eq_cofinite, cocompact_eq]
+
+end Int
+
+namespace Nat
+
+instance : HasDist ℕ :=
+  ⟨fun x y => dist (x : ℝ) y⟩
+
+theorem dist_eq (x y : ℕ) : dist x y = abs (x - y) :=
+  rfl
+
+theorem dist_coe_int (x y : ℕ) : dist (x : ℤ) (y : ℤ) = dist x y :=
+  rfl
+
+@[norm_cast, simp]
+theorem dist_cast_real (x y : ℕ) : dist (x : ℝ) y = dist x y :=
+  rfl
+
+@[norm_cast, simp]
+theorem dist_cast_rat (x y : ℕ) : dist (x : ℚ) y = dist x y := by
+  rw [← Nat.dist_cast_real, ← Rat.dist_cast] <;> congr 1 <;> norm_cast
+
+theorem pairwise_one_le_dist : Pairwise fun m n : ℕ => 1 ≤ dist m n := by
+  intro m n hne
+  rw [← dist_coe_int]
+  apply Int.pairwise_one_le_dist
+  exact_mod_cast hne
+
+theorem uniform_embedding_coe_rat : UniformEmbedding (coe : ℕ → ℚ) :=
+  uniform_embedding_bot_of_pairwise_le_dist zero_lt_one <| by
+    simpa using pairwise_one_le_dist
+
+theorem closed_embedding_coe_rat : ClosedEmbedding (coe : ℕ → ℚ) :=
+  closed_embedding_of_pairwise_le_dist zero_lt_one <| by
+    simpa using pairwise_one_le_dist
+
+theorem uniform_embedding_coe_real : UniformEmbedding (coe : ℕ → ℝ) :=
+  uniform_embedding_bot_of_pairwise_le_dist zero_lt_one pairwise_one_le_dist
+
+theorem closed_embedding_coe_real : ClosedEmbedding (coe : ℕ → ℝ) :=
+  closed_embedding_of_pairwise_le_dist zero_lt_one pairwise_one_le_dist
+
+instance : MetricSpace ℕ :=
+  Nat.uniform_embedding_coe_real.comapMetricSpace _
+
+theorem preimage_ball (x : ℕ) (r : ℝ) : coe ⁻¹' Ball (x : ℝ) r = Ball x r :=
+  rfl
+
+theorem preimage_closed_ball (x : ℕ) (r : ℝ) : coe ⁻¹' ClosedBall (x : ℝ) r = ClosedBall x r :=
+  rfl
+
+theorem closed_ball_eq_Icc (x : ℕ) (r : ℝ) : ClosedBall x r = Icc ⌈↑x - r⌉₊ ⌊↑x + r⌋₊ := by
+  rcases le_or_ltₓ 0 r with (hr | hr)
+  · rw [← preimage_closed_ball, Real.closed_ball_eq_Icc, preimage_Icc]
+    exact add_nonneg (cast_nonneg x) hr
+    
+  · rw [closed_ball_eq_empty.2 hr]
+    apply (Icc_eq_empty _).symm
+    rw [not_leₓ]
+    calc ⌊(x : ℝ) + r⌋₊ ≤ ⌊(x : ℝ)⌋₊ := by
+        apply floor_mono
+        linarith _ < ⌈↑x - r⌉₊ := by
+        rw [floor_coe, Nat.lt_ceil]
+        linarith
+    
+
+instance : ProperSpace ℕ :=
+  ⟨by
+    intro x r
+    rw [closed_ball_eq_Icc]
+    exact (Set.finite_Icc _ _).IsCompact⟩
+
+instance : NoncompactSpace ℕ :=
   noncompact_space_of_ne_bot <| by
     simp [at_top_ne_bot]
 
-end Int
+end Nat
 
 instance : NoncompactSpace ℚ :=
   Int.closed_embedding_coe_rat.NoncompactSpace
@@ -170,11 +245,11 @@ instance : ProperSpace ℝ where
     rw [Real.closed_ball_eq_Icc]
     apply is_compact_Icc
 
-instance : second_countable_topology ℝ :=
+instance : SecondCountableTopology ℝ :=
   second_countable_of_proper
 
--- ././Mathport/Syntax/Translate/Basic.lean:626:6: warning: expanding binder group (a b)
-theorem Real.is_topological_basis_Ioo_rat : @is_topological_basis ℝ _ (⋃ (a : ℚ) (b : ℚ) (h : a < b), {Ioo a b}) :=
+-- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (a b)
+theorem Real.is_topological_basis_Ioo_rat : @IsTopologicalBasis ℝ _ (⋃ (a : ℚ) (b : ℚ) (h : a < b), {Ioo a b}) :=
   is_topological_basis_of_open_of_nhds
     (by
       simp (config := { contextual := true })[is_open_Ioo])
@@ -211,7 +286,7 @@ theorem Rat.uniform_continuous_abs : UniformContinuous (abs : ℚ → ℚ) :=
           simpa [Rat.dist_eq] using abs_abs_sub_abs_le_abs_sub _ _)
         h⟩
 
-theorem Real.tendsto_inv {r : ℝ} (r0 : r ≠ 0) : tendsto (fun q => q⁻¹) (𝓝 r) (𝓝 r⁻¹) := by
+theorem Real.tendsto_inv {r : ℝ} (r0 : r ≠ 0) : Tendsto (fun q => q⁻¹) (𝓝 r) (𝓝 r⁻¹) := by
   rw [← abs_pos] at r0 <;>
     exact
       tendsto_of_uniform_continuous_subtype
@@ -220,7 +295,7 @@ theorem Real.tendsto_inv {r : ℝ} (r0 : r ≠ 0) : tendsto (fun q => q⁻¹) (�
 
 theorem Real.continuous_inv : Continuous fun a : { r : ℝ // r ≠ 0 } => a.val⁻¹ :=
   continuous_iff_continuous_at.mpr fun ⟨r, hr⟩ =>
-    tendsto.comp (Real.tendsto_inv hr) (continuous_iff_continuous_at.mp continuous_subtype_val _)
+    Tendsto.comp (Real.tendsto_inv hr) (continuous_iff_continuous_at.mp continuous_subtype_val _)
 
 theorem Real.Continuous.inv [TopologicalSpace α] {f : α → ℝ} (h : ∀ a, f a ≠ 0) (hf : Continuous f) :
     Continuous fun a => (f a)⁻¹ :=
@@ -271,7 +346,7 @@ instance : CompleteSpace ℝ := by
   simp only [mem_map, mem_at_top_sets, mem_set_of_eq]
   refine' this.imp fun N hN n hn => hε (hN n hn)
 
-theorem Real.totally_bounded_ball (x ε : ℝ) : TotallyBounded (ball x ε) := by
+theorem Real.totally_bounded_ball (x ε : ℝ) : TotallyBounded (Ball x ε) := by
   rw [Real.ball_eq_Ioo] <;> apply totally_bounded_Ioo
 
 theorem Rat.totally_bounded_Icc (a b : ℚ) : TotallyBounded (Icc a b) := by
@@ -282,7 +357,7 @@ theorem Rat.totally_bounded_Icc (a b : ℚ) : TotallyBounded (Icc a b) := by
 section
 
 theorem closure_of_rat_image_lt {q : ℚ} : Closure ((coe : ℚ → ℝ) '' { x | q < x }) = { r | ↑q ≤ r } :=
-  (subset.antisymm
+  (Subset.antisymm
       ((is_closed_ge' _).closure_subset_iff.2 (image_subset_iff.2 fun p h => le_of_ltₓ <| (@Rat.cast_lt ℝ _ _ _).2 h)))
     fun x hx =>
     mem_closure_iff_nhds.2 fun t ht =>
@@ -294,14 +369,14 @@ theorem closure_of_rat_image_lt {q : ℚ} : Closure ((coe : ℚ → ℝ) '' { x 
             rwa [abs_of_nonneg (le_of_ltₓ <| sub_pos.2 h₁), sub_lt_iff_lt_add']),
         p, Rat.cast_lt.1 (@lt_of_le_of_ltₓ ℝ _ _ _ _ hx h₁), rfl⟩
 
-theorem Real.bounded_iff_bdd_below_bdd_above {s : Set ℝ} : bounded s ↔ BddBelow s ∧ BddAbove s :=
+theorem Real.bounded_iff_bdd_below_bdd_above {s : Set ℝ} : Bounded s ↔ BddBelow s ∧ BddAbove s :=
   ⟨by
     intro bdd
     rcases(bounded_iff_subset_ball 0).1 bdd with ⟨r, hr⟩
     rw [Real.closed_ball_eq_Icc] at hr
     exact ⟨bdd_below_Icc.mono hr, bdd_above_Icc.mono hr⟩, fun h => bounded_of_bdd_above_of_bdd_below h.2 h.1⟩
 
-theorem Real.subset_Icc_Inf_Sup_of_bounded {s : Set ℝ} (h : bounded s) : s ⊆ Icc (Inf s) (Sup s) :=
+theorem Real.subset_Icc_Inf_Sup_of_bounded {s : Set ℝ} (h : Bounded s) : s ⊆ Icc (inf s) (sup s) :=
   subset_Icc_cInf_cSup (Real.bounded_iff_bdd_below_bdd_above.1 h).1 (Real.bounded_iff_bdd_below_bdd_above.1 h).2
 
 end
@@ -310,8 +385,8 @@ section Periodic
 
 namespace Function
 
-theorem periodic.compact_of_continuous' [TopologicalSpace α] {f : ℝ → α} {c : ℝ} (hp : periodic f c) (hc : 0 < c)
-    (hf : Continuous f) : IsCompact (range f) := by
+theorem periodic.compact_of_continuous' [TopologicalSpace α] {f : ℝ → α} {c : ℝ} (hp : Periodic f c) (hc : 0 < c)
+    (hf : Continuous f) : IsCompact (Range f) := by
   convert is_compact_Icc.image hf
   ext x
   refine' ⟨_, mem_range_of_mem_image f (Icc 0 c)⟩
@@ -320,14 +395,14 @@ theorem periodic.compact_of_continuous' [TopologicalSpace α] {f : ℝ → α} {
   exact ⟨z, mem_Icc_of_Ico hz, h2.symm.trans h1⟩
 
 /-- A continuous, periodic function has compact range. -/
-theorem periodic.compact_of_continuous [TopologicalSpace α] {f : ℝ → α} {c : ℝ} (hp : periodic f c) (hc : c ≠ 0)
-    (hf : Continuous f) : IsCompact (range f) := by
+theorem periodic.compact_of_continuous [TopologicalSpace α] {f : ℝ → α} {c : ℝ} (hp : Periodic f c) (hc : c ≠ 0)
+    (hf : Continuous f) : IsCompact (Range f) := by
   cases' lt_or_gt_of_neₓ hc with hneg hpos
   exacts[hp.neg.compact_of_continuous' (neg_pos.mpr hneg) hf, hp.compact_of_continuous' hpos hf]
 
 /-- A continuous, periodic function is bounded. -/
-theorem periodic.bounded_of_continuous [PseudoMetricSpace α] {f : ℝ → α} {c : ℝ} (hp : periodic f c) (hc : c ≠ 0)
-    (hf : Continuous f) : bounded (range f) :=
+theorem periodic.bounded_of_continuous [PseudoMetricSpace α] {f : ℝ → α} {c : ℝ} (hp : Periodic f c) (hc : c ≠ 0)
+    (hf : Continuous f) : Bounded (Range f) :=
   (hp.compact_of_continuous hc hf).Bounded
 
 end Function

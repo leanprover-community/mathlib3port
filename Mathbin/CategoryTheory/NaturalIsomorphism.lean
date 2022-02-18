@@ -34,7 +34,7 @@ namespace CategoryTheory
 
 open NatTrans
 
-variable {C : Type u₁} [category.{v₁} C] {D : Type u₂} [category.{v₂} D] {E : Type u₃} [category.{v₃} E]
+variable {C : Type u₁} [Category.{v₁} C] {D : Type u₂} [Category.{v₂} D] {E : Type u₃} [Category.{v₃} E]
 
 namespace Iso
 
@@ -42,7 +42,7 @@ namespace Iso
 namespace, so that we can use `α.app` -/
 @[simps]
 def app {F G : C ⥤ D} (α : F ≅ G) (X : C) : F.obj X ≅ G.obj X where
-  Hom := α.hom.app X
+  Hom := α.Hom.app X
   inv := α.inv.app X
   hom_inv_id' := by
     rw [← comp_app, iso.hom_inv_id]
@@ -52,12 +52,12 @@ def app {F G : C ⥤ D} (α : F ≅ G) (X : C) : F.obj X ≅ G.obj X where
     rfl
 
 @[simp, reassoc]
-theorem hom_inv_id_app {F G : C ⥤ D} (α : F ≅ G) (X : C) : α.hom.app X ≫ α.inv.app X = 𝟙 (F.obj X) :=
-  congr_funₓ (congr_argₓ nat_trans.app α.hom_inv_id) X
+theorem hom_inv_id_app {F G : C ⥤ D} (α : F ≅ G) (X : C) : α.Hom.app X ≫ α.inv.app X = 𝟙 (F.obj X) :=
+  congr_funₓ (congr_argₓ NatTrans.app α.hom_inv_id) X
 
 @[simp, reassoc]
-theorem inv_hom_id_app {F G : C ⥤ D} (α : F ≅ G) (X : C) : α.inv.app X ≫ α.hom.app X = 𝟙 (G.obj X) :=
-  congr_funₓ (congr_argₓ nat_trans.app α.inv_hom_id) X
+theorem inv_hom_id_app {F G : C ⥤ D} (α : F ≅ G) (X : C) : α.inv.app X ≫ α.Hom.app X = 𝟙 (G.obj X) :=
+  congr_funₓ (congr_argₓ NatTrans.app α.inv_hom_id) X
 
 end Iso
 
@@ -69,7 +69,7 @@ open CategoryTheory.Category CategoryTheory.Functor
 theorem trans_app {F G H : C ⥤ D} (α : F ≅ G) (β : G ≅ H) (X : C) : (α ≪≫ β).app X = α.app X ≪≫ β.app X :=
   rfl
 
-theorem app_hom {F G : C ⥤ D} (α : F ≅ G) (X : C) : (α.app X).Hom = α.hom.app X :=
+theorem app_hom {F G : C ⥤ D} (α : F ≅ G) (X : C) : (α.app X).Hom = α.Hom.app X :=
   rfl
 
 theorem app_inv {F G : C ⥤ D} (α : F ≅ G) (X : C) : (α.app X).inv = α.inv.app X :=
@@ -77,14 +77,14 @@ theorem app_inv {F G : C ⥤ D} (α : F ≅ G) (X : C) : (α.app X).inv = α.inv
 
 variable {F G : C ⥤ D}
 
-instance hom_app_is_iso (α : F ≅ G) (X : C) : is_iso (α.hom.app X) :=
+instance hom_app_is_iso (α : F ≅ G) (X : C) : IsIso (α.Hom.app X) :=
   ⟨⟨α.inv.app X,
       ⟨by
         rw [← comp_app, iso.hom_inv_id, ← id_app], by
         rw [← comp_app, iso.inv_hom_id, ← id_app]⟩⟩⟩
 
-instance inv_app_is_iso (α : F ≅ G) (X : C) : is_iso (α.inv.app X) :=
-  ⟨⟨α.hom.app X,
+instance inv_app_is_iso (α : F ≅ G) (X : C) : IsIso (α.inv.app X) :=
+  ⟨⟨α.Hom.app X,
       ⟨by
         rw [← comp_app, iso.inv_hom_id, ← id_app], by
         rw [← comp_app, iso.hom_inv_id, ← id_app]⟩⟩⟩
@@ -106,7 +106,7 @@ but for now it breaks too many proofs.
 variable (α : F ≅ G)
 
 @[simp]
-theorem cancel_nat_iso_hom_left {X : C} {Z : D} (g g' : G.obj X ⟶ Z) : α.hom.app X ≫ g = α.hom.app X ≫ g' ↔ g = g' := by
+theorem cancel_nat_iso_hom_left {X : C} {Z : D} (g g' : G.obj X ⟶ Z) : α.Hom.app X ≫ g = α.Hom.app X ≫ g' ↔ g = g' := by
   simp only [cancel_epi]
 
 @[simp]
@@ -114,7 +114,7 @@ theorem cancel_nat_iso_inv_left {X : C} {Z : D} (g g' : F.obj X ⟶ Z) : α.inv.
   simp only [cancel_epi]
 
 @[simp]
-theorem cancel_nat_iso_hom_right {X : D} {Y : C} (f f' : X ⟶ F.obj Y) : f ≫ α.hom.app Y = f' ≫ α.hom.app Y ↔ f = f' :=
+theorem cancel_nat_iso_hom_right {X : D} {Y : C} (f f' : X ⟶ F.obj Y) : f ≫ α.Hom.app Y = f' ≫ α.Hom.app Y ↔ f = f' :=
   by
   simp only [cancel_mono]
 
@@ -125,7 +125,7 @@ theorem cancel_nat_iso_inv_right {X : D} {Y : C} (f f' : X ⟶ G.obj Y) : f ≫ 
 
 @[simp]
 theorem cancel_nat_iso_hom_right_assoc {W X X' : D} {Y : C} (f : W ⟶ X) (g : X ⟶ F.obj Y) (f' : W ⟶ X')
-    (g' : X' ⟶ F.obj Y) : f ≫ g ≫ α.hom.app Y = f' ≫ g' ≫ α.hom.app Y ↔ f ≫ g = f' ≫ g' := by
+    (g' : X' ⟶ F.obj Y) : f ≫ g ≫ α.Hom.app Y = f' ≫ g' ≫ α.Hom.app Y ↔ f ≫ g = f' ≫ g' := by
   simp only [← category.assoc, cancel_mono]
 
 @[simp]
@@ -134,7 +134,7 @@ theorem cancel_nat_iso_inv_right_assoc {W X X' : D} {Y : C} (f : W ⟶ X) (g : X
   simp only [← category.assoc, cancel_mono]
 
 @[simp]
-theorem inv_inv_app {F G : C ⥤ D} (e : F ≅ G) (X : C) : inv (e.inv.app X) = e.hom.app X := by
+theorem inv_inv_app {F G : C ⥤ D} (e : F ≅ G) (X : C) : inv (e.inv.app X) = e.Hom.app X := by
   ext
   simp
 
@@ -142,21 +142,21 @@ end
 
 variable {X Y : C}
 
-theorem naturality_1 (α : F ≅ G) (f : X ⟶ Y) : α.inv.app X ≫ F.map f ≫ α.hom.app Y = G.map f := by
+theorem naturality_1 (α : F ≅ G) (f : X ⟶ Y) : α.inv.app X ≫ F.map f ≫ α.Hom.app Y = G.map f := by
   rw [naturality, ← category.assoc, ← nat_trans.comp_app, α.inv_hom_id, id_app, category.id_comp]
 
-theorem naturality_2 (α : F ≅ G) (f : X ⟶ Y) : α.hom.app X ≫ G.map f ≫ α.inv.app Y = F.map f := by
+theorem naturality_2 (α : F ≅ G) (f : X ⟶ Y) : α.Hom.app X ≫ G.map f ≫ α.inv.app Y = F.map f := by
   rw [naturality, ← category.assoc, ← nat_trans.comp_app, α.hom_inv_id, id_app, category.id_comp]
 
 /-- The components of a natural isomorphism are isomorphisms.
 -/
-instance is_iso_app_of_is_iso (α : F ⟶ G) [is_iso α] X : is_iso (α.app X) :=
+instance is_iso_app_of_is_iso (α : F ⟶ G) [IsIso α] X : IsIso (α.app X) :=
   ⟨⟨(inv α).app X,
-      ⟨congr_funₓ (congr_argₓ nat_trans.app (is_iso.hom_inv_id α)) X,
-        congr_funₓ (congr_argₓ nat_trans.app (is_iso.inv_hom_id α)) X⟩⟩⟩
+      ⟨congr_funₓ (congr_argₓ NatTrans.app (IsIso.hom_inv_id α)) X,
+        congr_funₓ (congr_argₓ NatTrans.app (IsIso.inv_hom_id α)) X⟩⟩⟩
 
 @[simp]
-theorem is_iso_inv_app (α : F ⟶ G) [is_iso α] X : (inv α).app X = inv (α.app X) := by
+theorem is_iso_inv_app (α : F ⟶ G) [IsIso α] X : (inv α).app X = inv (α.app X) := by
   ext
   rw [← nat_trans.comp_app]
   simp
@@ -176,24 +176,24 @@ def of_components (app : ∀ X : C, F.obj X ≅ G.obj X)
 
 @[simp]
 theorem of_components.app (app' : ∀ X : C, F.obj X ≅ G.obj X) naturality X :
-    (of_components app' naturality).app X = app' X := by
+    (ofComponents app' naturality).app X = app' X := by
   tidy
 
 @[simp]
 theorem of_components.hom_app (app : ∀ X : C, F.obj X ≅ G.obj X) naturality X :
-    (of_components app naturality).Hom.app X = (app X).Hom :=
+    (ofComponents app naturality).Hom.app X = (app X).Hom :=
   rfl
 
 @[simp]
 theorem of_components.inv_app (app : ∀ X : C, F.obj X ≅ G.obj X) naturality X :
-    (of_components app naturality).inv.app X = (app X).inv := by
+    (ofComponents app naturality).inv.app X = (app X).inv := by
   simp [of_components]
 
 /-- A natural transformation is an isomorphism if all its components are isomorphisms.
 -/
-theorem is_iso_of_is_iso_app (α : F ⟶ G) [∀ X : C, is_iso (α.app X)] : is_iso α :=
-  ⟨(is_iso.of_iso
-        (of_components (fun X => as_iso (α.app X))
+theorem is_iso_of_is_iso_app (α : F ⟶ G) [∀ X : C, IsIso (α.app X)] : IsIso α :=
+  ⟨(IsIso.of_iso
+        (ofComponents (fun X => asIso (α.app X))
           (by
             tidy))).1⟩
 

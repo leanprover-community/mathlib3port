@@ -44,20 +44,20 @@ universe v u
 
 namespace CategoryTheory
 
-variable {C : Type u} [category.{v} C]
+variable {C : Type u} [Category.{v} C]
 
-variable (J₁ J₂ : grothendieck_topology C)
+variable (J₁ J₂ : GrothendieckTopology C)
 
 namespace GrothendieckTopology
 
 /-- The `J`-closure of a sieve is the collection of arrows which it covers. -/
 @[simps]
-def close {X : C} (S : sieve X) : sieve X where
-  Arrows := fun Y f => J₁.covers S f
+def close {X : C} (S : Sieve X) : Sieve X where
+  Arrows := fun Y f => J₁.Covers S f
   downward_closed' := fun Y Z f hS => J₁.arrow_stable _ _ hS
 
 /-- Any sieve is smaller than its closure. -/
-theorem le_close {X : C} (S : sieve X) : S ≤ J₁.close S := fun Y g hg =>
+theorem le_close {X : C} (S : Sieve X) : S ≤ J₁.close S := fun Y g hg =>
   J₁.covering_of_eq_top (S.pullback_eq_top_of_mem hg)
 
 /-- A sieve is closed for the Grothendieck topology if it contains every arrow it covers.
@@ -66,15 +66,15 @@ every open set which it covers.
 
 Note this has no relation to a closed subset of a topological space.
 -/
-def is_closed {X : C} (S : sieve X) : Prop :=
-  ∀ ⦃Y : C⦄ f : Y ⟶ X, J₁.covers S f → S f
+def is_closed {X : C} (S : Sieve X) : Prop :=
+  ∀ ⦃Y : C⦄ f : Y ⟶ X, J₁.Covers S f → S f
 
 /-- If `S` is `J₁`-closed, then `S` covers exactly the arrows it contains. -/
-theorem covers_iff_mem_of_closed {X : C} {S : sieve X} (h : J₁.is_closed S) {Y : C} (f : Y ⟶ X) : J₁.covers S f ↔ S f :=
+theorem covers_iff_mem_of_closed {X : C} {S : Sieve X} (h : J₁.IsClosed S) {Y : C} (f : Y ⟶ X) : J₁.Covers S f ↔ S f :=
   ⟨h _, J₁.arrow_max _ _⟩
 
 /-- Being `J`-closed is stable under pullback. -/
-theorem is_closed_pullback {X Y : C} (f : Y ⟶ X) (S : sieve X) : J₁.is_closed S → J₁.is_closed (S.pullback f) :=
+theorem is_closed_pullback {X Y : C} (f : Y ⟶ X) (S : Sieve X) : J₁.IsClosed S → J₁.IsClosed (S.pullback f) :=
   fun hS Z g hg =>
   hS (g ≫ f)
     (by
@@ -83,15 +83,15 @@ theorem is_closed_pullback {X Y : C} (f : Y ⟶ X) (S : sieve X) : J₁.is_close
 /-- The closure of a sieve `S` is the largest closed sieve which contains `S` (justifying the name
 "closure").
 -/
-theorem le_close_of_is_closed {X : C} {S T : sieve X} (h : S ≤ T) (hT : J₁.is_closed T) : J₁.close S ≤ T :=
-  fun Y f hf => hT _ (J₁.superset_covering (sieve.pullback_monotone f h) hf)
+theorem le_close_of_is_closed {X : C} {S T : Sieve X} (h : S ≤ T) (hT : J₁.IsClosed T) : J₁.close S ≤ T := fun Y f hf =>
+  hT _ (J₁.superset_covering (Sieve.pullback_monotone f h) hf)
 
 /-- The closure of a sieve is closed. -/
-theorem close_is_closed {X : C} (S : sieve X) : J₁.is_closed (J₁.close S) := fun Y g hg =>
+theorem close_is_closed {X : C} (S : Sieve X) : J₁.IsClosed (J₁.close S) := fun Y g hg =>
   J₁.arrow_trans g _ S hg fun Z h hS => hS
 
 /-- The sieve `S` is closed iff its closure is equal to itself. -/
-theorem is_closed_iff_close_eq_self {X : C} (S : sieve X) : J₁.is_closed S ↔ J₁.close S = S := by
+theorem is_closed_iff_close_eq_self {X : C} (S : Sieve X) : J₁.IsClosed S ↔ J₁.close S = S := by
   constructor
   · intro h
     apply le_antisymmₓ
@@ -107,11 +107,11 @@ theorem is_closed_iff_close_eq_self {X : C} (S : sieve X) : J₁.is_closed S ↔
     apply J₁.close_is_closed
     
 
-theorem close_eq_self_of_is_closed {X : C} {S : sieve X} (hS : J₁.is_closed S) : J₁.close S = S :=
+theorem close_eq_self_of_is_closed {X : C} {S : Sieve X} (hS : J₁.IsClosed S) : J₁.close S = S :=
   (J₁.is_closed_iff_close_eq_self S).1 hS
 
 /-- Closing under `J` is stable under pullback. -/
-theorem pullback_close {X Y : C} (f : Y ⟶ X) (S : sieve X) : J₁.close (S.pullback f) = (J₁.close S).pullback f := by
+theorem pullback_close {X Y : C} (f : Y ⟶ X) (S : Sieve X) : J₁.close (S.pullback f) = (J₁.close S).pullback f := by
   apply le_antisymmₓ
   · refine' J₁.le_close_of_is_closed (sieve.pullback_monotone _ (J₁.le_close S)) _
     apply J₁.is_closed_pullback _ _ (J₁.close_is_closed _)
@@ -123,17 +123,17 @@ theorem pullback_close {X Y : C} (f : Y ⟶ X) (S : sieve X) : J₁.close (S.pul
     
 
 @[mono]
-theorem monotone_close {X : C} : Monotone (J₁.close : sieve X → sieve X) := fun S₁ S₂ h =>
+theorem monotone_close {X : C} : Monotone (J₁.close : Sieve X → Sieve X) := fun S₁ S₂ h =>
   J₁.le_close_of_is_closed (h.trans (J₁.le_close _)) (J₁.close_is_closed S₂)
 
 @[simp]
-theorem close_close {X : C} (S : sieve X) : J₁.close (J₁.close S) = J₁.close S :=
-  le_antisymmₓ (J₁.le_close_of_is_closed (le_reflₓ _) (J₁.close_is_closed S)) (J₁.monotone_close (J₁.le_close _))
+theorem close_close {X : C} (S : Sieve X) : J₁.close (J₁.close S) = J₁.close S :=
+  le_antisymmₓ (J₁.le_close_of_is_closed le_rfl (J₁.close_is_closed S)) (J₁.monotone_close (J₁.le_close _))
 
 /-- The sieve `S` is in the topology iff its closure is the maximal sieve. This shows that the closure
 operator determines the topology.
 -/
-theorem close_eq_top_iff_mem {X : C} (S : sieve X) : J₁.close S = ⊤ ↔ S ∈ J₁ X := by
+theorem close_eq_top_iff_mem {X : C} (S : Sieve X) : J₁.close S = ⊤ ↔ S ∈ J₁ X := by
   constructor
   · intro h
     apply J₁.transitive (J₁.top_mem X)
@@ -149,13 +149,13 @@ theorem close_eq_top_iff_mem {X : C} (S : sieve X) : J₁.close S = ⊤ ↔ S �
 
 /-- A Grothendieck topology induces a natural family of closure operators on sieves. -/
 @[simps (config := { rhsMd := semireducible })]
-def ClosureOperator (X : C) : ClosureOperator (sieve X) :=
+def ClosureOperator (X : C) : ClosureOperator (Sieve X) :=
   ClosureOperator.mk' J₁.close
     (fun S₁ S₂ h => J₁.le_close_of_is_closed (h.trans (J₁.le_close _)) (J₁.close_is_closed S₂)) J₁.le_close fun S =>
-    J₁.le_close_of_is_closed (le_reflₓ _) (J₁.close_is_closed S)
+    J₁.le_close_of_is_closed le_rfl (J₁.close_is_closed S)
 
 @[simp]
-theorem closed_iff_closed {X : C} (S : sieve X) : S ∈ (J₁.closure_operator X).closed ↔ J₁.is_closed S :=
+theorem closed_iff_closed {X : C} (S : Sieve X) : S ∈ (J₁.ClosureOperator X).closed ↔ J₁.IsClosed S :=
   (J₁.is_closed_iff_close_eq_self S).symm
 
 end GrothendieckTopology
@@ -165,13 +165,13 @@ end GrothendieckTopology
 -/
 @[simps]
 def functor.closed_sieves : Cᵒᵖ ⥤ Type max v u where
-  obj := fun X => { S : sieve X.unop // J₁.is_closed S }
+  obj := fun X => { S : Sieve X.unop // J₁.IsClosed S }
   map := fun X Y f S => ⟨S.1.pullback f.unop, J₁.is_closed_pullback f.unop _ S.2⟩
 
 /-- The presheaf of `J`-closed sieves is a `J`-sheaf.
 The proof of this is adapted from [MM92], Chatper III, Section 7, Lemma 1.
 -/
-theorem classifier_is_sheaf : presieve.is_sheaf J₁ (functor.closed_sieves J₁) := by
+theorem classifier_is_sheaf : Presieve.IsSheaf J₁ (Functor.closedSieves J₁) := by
   intro X S hS
   rw [← presieve.is_separated_for_and_exists_is_amalgamation_iff_sheaf_for]
   refine' ⟨_, _⟩
@@ -222,15 +222,15 @@ theorem classifier_is_sheaf : presieve.is_sheaf J₁ (functor.closed_sieves J₁
       ext1
       dsimp
       rw [← J₁.pullback_close, this _ hf]
-      apply le_antisymmₓ (J₁.le_close_of_is_closed (le_reflₓ _) (x f hf).2) (J₁.le_close _)
+      apply le_antisymmₓ (J₁.le_close_of_is_closed le_rfl (x f hf).2) (J₁.le_close _)
       
     
 
 /-- If presheaf of `J₁`-closed sieves is a `J₂`-sheaf then `J₁ ≤ J₂`. Note the converse is true by
 `classifier_is_sheaf` and `is_sheaf_of_le`.
 -/
-theorem le_topology_of_closed_sieves_is_sheaf {J₁ J₂ : grothendieck_topology C}
-    (h : presieve.is_sheaf J₁ (functor.closed_sieves J₂)) : J₁ ≤ J₂ := fun X S hS => by
+theorem le_topology_of_closed_sieves_is_sheaf {J₁ J₂ : GrothendieckTopology C}
+    (h : Presieve.IsSheaf J₁ (Functor.closedSieves J₂)) : J₁ ≤ J₂ := fun X S hS => by
   rw [← J₂.close_eq_top_iff_mem]
   have : J₂.is_closed (⊤ : sieve X) := by
     intro Y f hf
@@ -247,8 +247,8 @@ theorem le_topology_of_closed_sieves_is_sheaf {J₁ J₂ : grothendieck_topology
     
 
 /-- If being a sheaf for `J₁` is equivalent to being a sheaf for `J₂`, then `J₁ = J₂`. -/
-theorem topology_eq_iff_same_sheaves {J₁ J₂ : grothendieck_topology C} :
-    J₁ = J₂ ↔ ∀ P : Cᵒᵖ ⥤ Type max v u, presieve.is_sheaf J₁ P ↔ presieve.is_sheaf J₂ P := by
+theorem topology_eq_iff_same_sheaves {J₁ J₂ : GrothendieckTopology C} :
+    J₁ = J₂ ↔ ∀ P : Cᵒᵖ ⥤ Type max v u, Presieve.IsSheaf J₁ P ↔ Presieve.IsSheaf J₂ P := by
   constructor
   · rintro rfl
     intro P
@@ -271,8 +271,8 @@ induces a Grothendieck topology.
 In fact, such operations are in bijection with Grothendieck topologies.
 -/
 @[simps]
-def topology_of_closure_operator (c : ∀ X : C, ClosureOperator (sieve X))
-    (hc : ∀ ⦃X Y : C⦄ f : Y ⟶ X S : sieve X, c _ (S.pullback f) = (c _ S).pullback f) : grothendieck_topology C where
+def topology_of_closure_operator (c : ∀ X : C, ClosureOperator (Sieve X))
+    (hc : ∀ ⦃X Y : C⦄ f : Y ⟶ X S : Sieve X, c _ (S.pullback f) = (c _ S).pullback f) : GrothendieckTopology C where
   Sieves := fun X => { S | c X S = ⊤ }
   top_mem' := fun X => top_unique ((c X).le_closure _)
   pullback_stable' := fun X Y S f hS => by
@@ -288,13 +288,13 @@ def topology_of_closure_operator (c : ∀ X : C, ClosureOperator (sieve X))
 /-- The topology given by the closure operator `J.close` on a Grothendieck topology is the same as `J`.
 -/
 theorem topology_of_closure_operator_self :
-    (topology_of_closure_operator J₁.closure_operator fun X Y => J₁.pullback_close) = J₁ := by
+    (topologyOfClosureOperator J₁.ClosureOperator fun X Y => J₁.pullback_close) = J₁ := by
   ext X S
   apply grothendieck_topology.close_eq_top_iff_mem
 
-theorem topology_of_closure_operator_close (c : ∀ X : C, ClosureOperator (sieve X))
-    (pb : ∀ ⦃X Y : C⦄ f : Y ⟶ X S : sieve X, c Y (S.pullback f) = (c X S).pullback f) (X : C) (S : sieve X) :
-    (topology_of_closure_operator c pb).close S = c X S := by
+theorem topology_of_closure_operator_close (c : ∀ X : C, ClosureOperator (Sieve X))
+    (pb : ∀ ⦃X Y : C⦄ f : Y ⟶ X S : Sieve X, c Y (S.pullback f) = (c X S).pullback f) (X : C) (S : Sieve X) :
+    (topologyOfClosureOperator c pb).close S = c X S := by
   ext
   change c _ (sieve.pullback f S) = ⊤ ↔ c _ S f
   rw [pb, sieve.pullback_eq_top_iff_mem]

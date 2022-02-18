@@ -46,7 +46,7 @@ def to_matrix [DecidableEq n] [Zero α] [One α] (f : m ≃. n) : Matrix m n α
   | i, j => if j ∈ f i then 1 else 0
 
 theorem mul_matrix_apply [Fintype m] [DecidableEq m] [Semiringₓ α] (f : l ≃. m) (M : Matrix m n α) i j :
-    (f.to_matrix ⬝ M) i j = Option.casesOn (f i) 0 fun fi => M fi j := by
+    (f.toMatrix ⬝ M) i j = Option.casesOn (f i) 0 fun fi => M fi j := by
   dsimp [to_matrix, Matrix.mul_apply]
   cases' h : f i with fi
   · simp [h]
@@ -55,7 +55,7 @@ theorem mul_matrix_apply [Fintype m] [DecidableEq m] [Semiringₓ α] (f : l ≃
     
 
 theorem to_matrix_symm [DecidableEq m] [DecidableEq n] [Zero α] [One α] (f : m ≃. n) :
-    (f.symm.to_matrix : Matrix n m α) = (f.to_matrix)ᵀ := by
+    (f.symm.toMatrix : Matrix n m α) = (f.toMatrix)ᵀ := by
   ext <;> simp only [transpose, mem_iff_mem f, to_matrix] <;> congr
 
 @[simp]
@@ -63,7 +63,7 @@ theorem to_matrix_refl [DecidableEq n] [Zero α] [One α] : ((Pequiv.refl n).toM
   ext <;> simp [to_matrix, one_apply] <;> congr
 
 theorem matrix_mul_apply [Fintype m] [Semiringₓ α] [DecidableEq n] (M : Matrix l m α) (f : m ≃. n) i j :
-    (M ⬝ f.to_matrix) i j = Option.casesOn (f.symm j) 0 fun fj => M i fj := by
+    (M ⬝ f.toMatrix) i j = Option.casesOn (f.symm j) 0 fun fj => M i fj := by
   dsimp [to_matrix, Matrix.mul_apply]
   cases' h : f.symm j with fj
   · simp [h, ← f.eq_some_iff]
@@ -79,12 +79,12 @@ theorem matrix_mul_apply [Fintype m] [Semiringₓ α] [DecidableEq n] (M : Matri
     
 
 theorem to_pequiv_mul_matrix [Fintype m] [DecidableEq m] [Semiringₓ α] (f : m ≃ m) (M : Matrix m n α) :
-    f.to_pequiv.to_matrix ⬝ M = fun i => M (f i) := by
+    f.toPequiv.toMatrix ⬝ M = fun i => M (f i) := by
   ext i j
   rw [mul_matrix_apply, Equivₓ.to_pequiv_apply]
 
 theorem to_matrix_trans [Fintype m] [DecidableEq m] [DecidableEq n] [Semiringₓ α] (f : l ≃. m) (g : m ≃. n) :
-    ((f.trans g).toMatrix : Matrix l n α) = f.to_matrix ⬝ g.to_matrix := by
+    ((f.trans g).toMatrix : Matrix l n α) = f.toMatrix ⬝ g.toMatrix := by
   ext i j
   rw [mul_matrix_apply]
   dsimp [to_matrix, Pequiv.trans]
@@ -95,7 +95,7 @@ theorem to_matrix_bot [DecidableEq n] [Zero α] [One α] : ((⊥ : Pequiv m n).t
   rfl
 
 theorem to_matrix_injective [DecidableEq n] [MonoidWithZeroₓ α] [Nontrivial α] :
-    Function.Injective (@to_matrix m n α _ _ _) := by
+    Function.Injective (@toMatrixₓ m n α _ _ _) := by
   classical
   intro f g
   refine' not_imp_not.1 _
@@ -142,7 +142,7 @@ theorem single_mul_single_right [Fintype n] [Fintype k] [DecidableEq n] [Decidab
 
 /-- We can also define permutation matrices by permuting the rows of the identity matrix. -/
 theorem equiv_to_pequiv_to_matrix [DecidableEq n] [Zero α] [One α] (σ : Equivₓ n n) (i j : n) :
-    σ.to_pequiv.to_matrix i j = (1 : Matrix n n α) (σ i) j :=
+    σ.toPequiv.toMatrix i j = (1 : Matrix n n α) (σ i) j :=
   if_congr Option.some_inj rfl rfl
 
 end Pequiv

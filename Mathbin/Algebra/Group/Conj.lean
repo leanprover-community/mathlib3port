@@ -229,17 +229,17 @@ attribute [local instance] IsConj.setoid
 def carrier : ConjClasses α → Set α :=
   Quotientₓ.lift ConjugatesOf fun a : α b ab => IsConj.conjugates_of_eq ab
 
-theorem mem_carrier_mk {a : α} : a ∈ carrier (ConjClasses.mk a) :=
+theorem mem_carrier_mk {a : α} : a ∈ Carrier (ConjClasses.mk a) :=
   IsConj.refl _
 
-theorem mem_carrier_iff_mk_eq {a : α} {b : ConjClasses α} : a ∈ carrier b ↔ ConjClasses.mk a = b := by
+theorem mem_carrier_iff_mk_eq {a : α} {b : ConjClasses α} : a ∈ Carrier b ↔ ConjClasses.mk a = b := by
   revert b
   rw [forall_is_conj]
   intro b
   rw [carrier, eq_comm, mk_eq_mk_iff_is_conj, ← quotient_mk_eq_mk, Quotientₓ.lift_mk]
   rfl
 
-theorem carrier_eq_preimage_mk {a : ConjClasses α} : a.carrier = ConjClasses.mk ⁻¹' {a} :=
+theorem carrier_eq_preimage_mk {a : ConjClasses α} : a.Carrier = ConjClasses.mk ⁻¹' {a} :=
   Set.ext fun x => mem_carrier_iff_mk_eq
 
 end ConjClasses

@@ -61,7 +61,7 @@ variable {s : Set R}
 
 attribute [local reducible] closure
 
-theorem exists_list_of_mem_closure {a : R} (h : a ∈ closure s) :
+theorem exists_list_of_mem_closure {a : R} (h : a ∈ Closure s) :
     ∃ L : List (List R), (∀, ∀ l ∈ L, ∀, ∀, ∀ x ∈ l, ∀, x ∈ s ∨ x = (-1 : R)) ∧ (L.map List.prod).Sum = a :=
   AddGroupₓ.InClosure.rec_on h
     (fun x hx =>
@@ -86,7 +86,7 @@ theorem exists_list_of_mem_closure {a : R} (h : a ∈ closure s) :
         rw [List.map_append, List.sum_append]⟩
 
 @[elab_as_eliminator]
-protected theorem in_closure.rec_on {C : R → Prop} {x : R} (hx : x ∈ closure s) (h1 : C 1) (hneg1 : C (-1))
+protected theorem in_closure.rec_on {C : R → Prop} {x : R} (hx : x ∈ Closure s) (h1 : C 1) (hneg1 : C (-1))
     (hs : ∀, ∀ z ∈ s, ∀, ∀ n, C n → C (z * n)) (ha : ∀ {x y}, C x → C y → C (x + y)) : C x := by
   have h0 : C 0 := add_neg_selfₓ (1 : R) ▸ ha h1 hneg1
   rcases exists_list_of_mem_closure hx with ⟨L, HL, rfl⟩
@@ -145,7 +145,7 @@ protected theorem in_closure.rec_on {C : R → Prop} {x : R} (hx : x ∈ closure
           rw [List.prod_cons, hhd, HP, neg_one_mul, neg_negₓ]⟩
     
 
-theorem closure.is_subring : IsSubring (closure s) :=
+theorem closure.is_subring : IsSubring (Closure s) :=
   { AddGroupₓ.Closure.is_add_subgroup _ with
     one_mem := AddGroupₓ.mem_closure <| IsSubmonoid.one_mem <| Monoidₓ.Closure.is_submonoid _,
     mul_mem := fun a b ha hb =>
@@ -154,28 +154,28 @@ theorem closure.is_subring : IsSubring (closure s) :=
           AddGroupₓ.InClosure.rec_on ha
             (fun d hd => AddGroupₓ.subset_closure ((Monoidₓ.Closure.is_submonoid _).mul_mem hd hc))
             ((zero_mul c).symm ▸ (AddGroupₓ.Closure.is_add_subgroup _).zero_mem)
-            (fun d hd hdc => neg_mul_eq_neg_mul d c ▸ (AddGroupₓ.Closure.is_add_subgroup _).neg_mem hdc)
+            (fun d hd hdc => neg_mul_eq_neg_mulₓ d c ▸ (AddGroupₓ.Closure.is_add_subgroup _).neg_mem hdc)
             fun d e hd he hdc hec => (add_mulₓ d e c).symm ▸ (AddGroupₓ.Closure.is_add_subgroup _).add_mem hdc hec)
         ((mul_zero a).symm ▸ (AddGroupₓ.Closure.is_add_subgroup _).zero_mem)
         (fun c hc hac => neg_mul_eq_mul_neg a c ▸ (AddGroupₓ.Closure.is_add_subgroup _).neg_mem hac)
         fun c d hc hd hac had => (mul_addₓ a c d).symm ▸ (AddGroupₓ.Closure.is_add_subgroup _).add_mem hac had }
 
-theorem mem_closure {a : R} : a ∈ s → a ∈ closure s :=
+theorem mem_closure {a : R} : a ∈ s → a ∈ Closure s :=
   AddGroupₓ.mem_closure ∘ @Monoidₓ.subset_closure _ _ _ _
 
-theorem subset_closure : s ⊆ closure s := fun _ => mem_closure
+theorem subset_closure : s ⊆ Closure s := fun _ => mem_closure
 
-theorem closure_subset {t : Set R} (ht : IsSubring t) : s ⊆ t → closure s ⊆ t :=
+theorem closure_subset {t : Set R} (ht : IsSubring t) : s ⊆ t → Closure s ⊆ t :=
   AddGroupₓ.closure_subset ht.to_is_add_subgroup ∘ Monoidₓ.closure_subset ht.to_is_submonoid
 
-theorem closure_subset_iff {s t : Set R} (ht : IsSubring t) : closure s ⊆ t ↔ s ⊆ t :=
+theorem closure_subset_iff {s t : Set R} (ht : IsSubring t) : Closure s ⊆ t ↔ s ⊆ t :=
   (AddGroupₓ.closure_subset_iff ht.to_is_add_subgroup).trans
     ⟨Set.Subset.trans Monoidₓ.subset_closure, Monoidₓ.closure_subset ht.to_is_submonoid⟩
 
-theorem closure_mono {s t : Set R} (H : s ⊆ t) : closure s ⊆ closure t :=
-  closure_subset closure.is_subring <| Set.Subset.trans H subset_closure
+theorem closure_mono {s t : Set R} (H : s ⊆ t) : Closure s ⊆ Closure t :=
+  closure_subset Closure.is_subring <| Set.Subset.trans H subset_closure
 
-theorem image_closure {S : Type _} [Ringₓ S] (f : R →+* S) (s : Set R) : f '' closure s = closure (f '' s) :=
+theorem image_closure {S : Type _} [Ringₓ S] (f : R →+* S) (s : Set R) : f '' Closure s = Closure (f '' s) :=
   le_antisymmₓ
     (by
       rintro _ ⟨x, hx, rfl⟩
@@ -194,7 +194,7 @@ theorem image_closure {S : Type _} [Ringₓ S] (f : R →+* S) (s : Set R) : f '
         apply closure.is_subring.to_is_add_submonoid.add_mem
         assumption'
         )
-    (closure_subset (RingHom.is_subring_image _ closure.is_subring) <| Set.image_subset _ subset_closure)
+    (closure_subset (RingHom.is_subring_image _ Closure.is_subring) <| Set.image_subset _ subset_closure)
 
 end Ringₓ
 

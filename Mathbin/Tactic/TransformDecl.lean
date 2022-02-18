@@ -10,7 +10,7 @@ unsafe def copy_attribute' (attr_name : Name) (src : Name) (tgt : Name) (p : Opt
   get_decl tgt <|> throwError "unknown declaration {← tgt}"
   mwhen (succeeds (has_attribute attr_name src)) <| do
       let (p', prio) ← has_attribute attr_name src
-      let p := p.get_or_else p'
+      let p := p p'
       let s ← try_or_report_error (set_basic_attribute attr_name tgt p prio)
       let Sum.inr msg ← return s | skip
       if msg = (f! "set_basic_attribute tactic failed, '{attr_name}' is not a basic attribute").toString then do
@@ -28,20 +28,20 @@ open Expr
 /-- Auxilliary function for `additive_test`. The bool argument *only* matters when applied
 to exactly a constant. -/
 unsafe def additive_test_aux (f : Name → Option Name) (ignore : name_map <| List ℕ) : Bool → expr → Bool
-  | b, var n => tt
-  | b, sort l => tt
+  | b, var n => true
+  | b, sort l => true
   | b, const n ls => b || (f n).isSome
-  | b, mvar n m t => tt
-  | b, local_const n m bi t => tt
+  | b, mvar n m t => true
+  | b, local_const n m bi t => true
   | b, app e f =>
-    additive_test_aux tt e &&
+    additive_test_aux true e &&
       match ignore.find e.get_app_fn.const_name with
-      | some l => if e.get_app_num_args + 1 ∈ l then tt else additive_test_aux ff f
-      | none => additive_test_aux ff f
-  | b, lam n bi e t => additive_test_aux ff t
-  | b, pi n bi e t => additive_test_aux ff t
-  | b, elet n g e f => additive_test_aux ff e && additive_test_aux ff f
-  | b, macro d args => tt
+      | some l => if e.get_app_num_args + 1 ∈ l then true else additive_test_aux false f
+      | none => additive_test_aux false f
+  | b, lam n bi e t => additive_test_aux false t
+  | b, pi n bi e t => additive_test_aux false t
+  | b, elet n g e f => additive_test_aux false e && additive_test_aux false f
+  | b, macro d args => true
 
 /-- `additive_test f replace_all ignore e` tests whether the expression `e` contains no constant
 `nm` that is not applied to any arguments, and such that `f nm = none`.
@@ -55,7 +55,7 @@ If `replace_all` is `tt` the test always return `tt`.
 -/
 unsafe def additive_test (f : Name → Option Name) (replace_all : Bool) (ignore : name_map <| List ℕ) (e : expr) :
     Bool :=
-  if replace_all then tt else additive_test_aux f ignore ff e
+  if replace_all then true else additive_test_aux f ignore false e
 
 /-- transform the declaration `src` and all declarations `pre._proof_i` occurring in `src`
 using the dictionary `f`.
@@ -75,11 +75,11 @@ unsafe def transform_decl_with_prefix_fun_aux (f : Name → Option Name) (replac
             pre)}, but does not have the `@[to_additive]` attribute. This is not supported. Workaround: move {←
             src} to a different namespace."
   let env ← get_env
-  let tgt := src.map_prefix fun n => if n = pre then some tgt_pre else none
+  let tgt := src.mapPrefix fun n => if n = pre then some tgt_pre else none
   let ff ← return <| env.contains tgt | skip
   let decl ← get_decl src
-  (decl.type.list_names_with_prefix pre).mfold () fun n _ => transform_decl_with_prefix_fun_aux n
-  (decl.value.list_names_with_prefix pre).mfold () fun n _ => transform_decl_with_prefix_fun_aux n
+  (decl pre).mfold () fun n _ => transform_decl_with_prefix_fun_aux n
+  (decl pre).mfold () fun n _ => transform_decl_with_prefix_fun_aux n
   let decl := decl.update_with_fun env (Name.mapPrefix f) (additive_test f replace_all ignore) relevant reorder tgt
   let pp_decl ← pp decl
   when trace <|
@@ -95,8 +95,8 @@ unsafe def transform_decl_with_prefix_fun_aux (f : Name → Option Name) (replac
             Nested error message:
             ").toString <|
       do
-      if env.is_protected src then add_protected_decl decl else add_decl decl
-      decorate_error "proof doesn't type-check. " <| type_check decl.value
+      if env src then add_protected_decl decl else add_decl decl
+      decorate_error "proof doesn't type-check. " <| type_check decl
 
 /-- Make a new copy of a declaration,
 replacing fragments of the names of identifiers in the type and the body using the function `f`.
@@ -105,16 +105,16 @@ This is used to implement `@[to_additive]`.
 unsafe def transform_decl_with_prefix_fun (f : Name → Option Name) (replace_all trace : Bool) (relevant : name_map ℕ)
     (ignore reorder : name_map <| List ℕ) (src tgt : Name) (attrs : List Name) : Tactic Unit := do
   transform_decl_with_prefix_fun_aux f replace_all trace relevant ignore reorder src tgt src
-  let ls ← get_eqn_lemmas_for tt src
-  ls.mmap' <| transform_decl_with_prefix_fun_aux f replace_all trace relevant ignore reorder src tgt
-  ls.mmap' fun src_eqn => do
-      let tgt_eqn := src_eqn.map_prefix fun n => if n = src then some tgt else none
-      attrs.mmap' fun n => copy_attribute' n src_eqn tgt_eqn
-  ls.mmap' fun src_eqn => do
+  let ls ← get_eqn_lemmas_for true src
+  ls <| transform_decl_with_prefix_fun_aux f replace_all trace relevant ignore reorder src tgt
+  ls fun src_eqn => do
+      let tgt_eqn := src_eqn fun n => if n = src then some tgt else none
+      attrs fun n => copy_attribute' n src_eqn tgt_eqn
+  ls fun src_eqn => do
       let e ← get_env
-      let tgt_eqn := src_eqn.map_prefix fun n => if n = src then some tgt else none
-      set_env (e.add_eqn_lemma tgt_eqn)
-  attrs.mmap' fun n => copy_attribute' n src tgt
+      let tgt_eqn := src_eqn fun n => if n = src then some tgt else none
+      set_env (e tgt_eqn)
+  attrs fun n => copy_attribute' n src tgt
 
 /-- Make a new copy of a declaration, replacing fragments of the names of identifiers in the type and
 the body using the dictionary `dict`.

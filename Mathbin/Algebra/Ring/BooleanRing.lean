@@ -195,7 +195,7 @@ The data is defined so that:
 * `a \ b` unfolds to `a * (1 + b)`
 -/
 def to_boolean_algebra : BooleanAlgebra α :=
-  { Lattice.mk' sup_comm sup_assoc inf_comm inf_assoc sup_inf_self inf_sup_self, HasSdiff, HasBot with
+  { Lattice.mk' sup_comm sup_assoc inf_comm inf_assoc sup_inf_self inf_sup_self, hasSdiff, hasBot with
     le_sup_inf := le_sup_inf, top := 1,
     le_top := fun a =>
       show a + 1 + a * 1 = 1 by

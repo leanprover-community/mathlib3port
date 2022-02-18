@@ -136,7 +136,7 @@ variable {K : Type _} [Field K] [Valued K]
 
 open Valued UniformSpace
 
-local notation "hat " => completion
+local notation "hat " => Completion
 
 /-- A valued field is completable. -/
 instance (priority := 100) Valued.completable : CompletableTopField K :=
@@ -196,7 +196,7 @@ attribute [local instance] LinearOrderedCommGroupWithZero.topologicalSpace
 
 /-- The extension of the valuation of a valued field to the completion of the field. -/
 noncomputable def Valued.extension : hat K → Γ₀ K :=
-  completion.dense_inducing_coe.extend (v : K → Γ₀ K)
+  Completion.dense_inducing_coe.extend (v : K → Γ₀ K)
 
 -- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (x y «expr ∈ » V')
 theorem Valued.continuous_extension : Continuous (Valued.extension : hat K → Γ₀ K) := by
@@ -307,7 +307,7 @@ noncomputable def Valued.extensionValuation : Valuation (hat K) (Γ₀ K) where
       norm_cast
       exact Valuation.map_mul _ _ _
       
-  map_add' := fun x y => by
+  map_add_le_max' := fun x y => by
     rw [le_max_iff]
     apply completion.induction_on₂ x y
     · have cont : Continuous (Valued.extension : hat K → Γ₀ K) := Valued.continuous_extension

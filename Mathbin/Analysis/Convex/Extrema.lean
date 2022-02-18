@@ -18,12 +18,12 @@ open Set Filter
 
 open_locale Classical
 
+-- ././Mathport/Syntax/Translate/Basic.lean:418:16: unsupported tactic `by_contra'
 /-- Helper lemma for the more general case: `is_min_on.of_is_local_min_on_of_convex_on`.
 -/
 theorem IsMinOn.of_is_local_min_on_of_convex_on_Icc {f : ℝ → β} {a b : ℝ} (a_lt_b : a < b)
     (h_local_min : IsLocalMinOn f (Icc a b) a) (h_conv : ConvexOn ℝ (Icc a b) f) : ∀, ∀ x ∈ Icc a b, ∀, f a ≤ f x := by
-  by_contra H_cont
-  push_neg  at H_cont
+  "././Mathport/Syntax/Translate/Basic.lean:418:16: unsupported tactic `by_contra'"
   rcases H_cont with ⟨x, ⟨h_ax, h_xb⟩, fx_lt_fa⟩
   obtain ⟨z, hz, ge_on_nhd⟩ : ∃ z > a, ∀, ∀ y ∈ Icc a z, ∀, f y ≥ f a := by
     rcases eventually_iff_exists_mem.mp h_local_min with ⟨U, U_in_nhds_within, fy_ge_fa⟩
@@ -50,12 +50,12 @@ theorem IsMinOn.of_is_local_min_on_of_convex_on_Icc {f : ℝ → β} {a b : ℝ}
     exact not_lt_of_geₓ (ge_on_nhd z h₂) (lt_on_nhd z h₁)
     
 
+-- ././Mathport/Syntax/Translate/Basic.lean:418:16: unsupported tactic `by_contra'
 /-- A local minimum of a convex function is a global minimum, restricted to a set `s`.
 -/
 theorem IsMinOn.of_is_local_min_on_of_convex_on {f : E → β} {a : E} (a_in_s : a ∈ s) (h_localmin : IsLocalMinOn f s a)
     (h_conv : ConvexOn ℝ s f) : ∀, ∀ x ∈ s, ∀, f a ≤ f x := by
-  by_contra H_cont
-  push_neg  at H_cont
+  "././Mathport/Syntax/Translate/Basic.lean:418:16: unsupported tactic `by_contra'"
   rcases H_cont with ⟨x, ⟨x_in_s, fx_lt_fa⟩⟩
   let g : ℝ →ᵃ[ℝ] E := AffineMap.lineMap a x
   have hg0 : g 0 = a := AffineMap.line_map_apply_zero a x
@@ -99,11 +99,11 @@ theorem IsMaxOn.of_is_local_max_on_of_concave_on {f : E → β} {a : E} (a_in_s 
 
 /-- A local minimum of a convex function is a global minimum. -/
 theorem IsMinOn.of_is_local_min_of_convex_univ {f : E → β} {a : E} (h_local_min : IsLocalMin f a)
-    (h_conv : ConvexOn ℝ univ f) : ∀ x, f a ≤ f x := fun x =>
-  (IsMinOn.of_is_local_min_on_of_convex_on (mem_univ a) (IsLocalMin.on h_local_min univ) h_conv) x (mem_univ x)
+    (h_conv : ConvexOn ℝ Univ f) : ∀ x, f a ≤ f x := fun x =>
+  (IsMinOn.of_is_local_min_on_of_convex_on (mem_univ a) (IsLocalMin.on h_local_min Univ) h_conv) x (mem_univ x)
 
 /-- A local maximum of a concave function is a global maximum. -/
 theorem IsMaxOn.of_is_local_max_of_convex_univ {f : E → β} {a : E} (h_local_max : IsLocalMax f a)
-    (h_conc : ConcaveOn ℝ univ f) : ∀ x, f x ≤ f a :=
+    (h_conc : ConcaveOn ℝ Univ f) : ∀ x, f x ≤ f a :=
   @IsMinOn.of_is_local_min_of_convex_univ _ (OrderDual β) _ _ _ _ _ _ _ _ f a h_local_max h_conc
 

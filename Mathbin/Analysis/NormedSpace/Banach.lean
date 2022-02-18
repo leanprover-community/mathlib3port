@@ -31,15 +31,14 @@ structure nonlinear_right_inverse where
   bound' : ∀ y, ∥to_fun y∥ ≤ nnnorm * ∥y∥
   right_inv' : ∀ y, f (to_fun y) = y
 
-instance : CoeFun (nonlinear_right_inverse f) fun _ => F → E :=
-  ⟨fun fsymm => fsymm.to_fun⟩
+instance : CoeFun (NonlinearRightInverse f) fun _ => F → E :=
+  ⟨fun fsymm => fsymm.toFun⟩
 
 @[simp]
-theorem nonlinear_right_inverse.right_inv {f : E →L[𝕜] F} (fsymm : nonlinear_right_inverse f) (y : F) :
-    f (fsymm y) = y :=
+theorem nonlinear_right_inverse.right_inv {f : E →L[𝕜] F} (fsymm : NonlinearRightInverse f) (y : F) : f (fsymm y) = y :=
   fsymm.right_inv' y
 
-theorem nonlinear_right_inverse.bound {f : E →L[𝕜] F} (fsymm : nonlinear_right_inverse f) (y : F) :
+theorem nonlinear_right_inverse.bound {f : E →L[𝕜] F} (fsymm : NonlinearRightInverse f) (y : F) :
     ∥fsymm y∥ ≤ fsymm.nnnorm * ∥y∥ :=
   fsymm.bound' y
 
@@ -49,13 +48,13 @@ end ContinuousLinearMap
 `nonlinear_right_inverse` (which turns out to be linear). -/
 noncomputable def ContinuousLinearEquiv.toNonlinearRightInverse (f : E ≃L[𝕜] F) :
     ContinuousLinearMap.NonlinearRightInverse (f : E →L[𝕜] F) where
-  toFun := f.inv_fun
+  toFun := f.invFun
   nnnorm := nnnorm (f.symm : F →L[𝕜] E)
   bound' := fun y => ContinuousLinearMap.le_op_norm (f.symm : F →L[𝕜] E) _
   right_inv' := f.apply_symm_apply
 
 noncomputable instance (f : E ≃L[𝕜] F) : Inhabited (ContinuousLinearMap.NonlinearRightInverse (f : E →L[𝕜] F)) :=
-  ⟨f.to_nonlinear_right_inverse⟩
+  ⟨f.toNonlinearRightInverse⟩
 
 /-! ### Proof of the Banach open mapping theorem -/
 
@@ -70,7 +69,7 @@ Rescaling everything, it follows that any `y ∈ F` is arbitrarily well approach
 images of elements of norm at most `C * ∥y∥`.
 For further use, we will only need such an element whose image
 is within distance `∥y∥/2` of `y`, to apply an iterative process. -/
-theorem exists_approx_preimage_norm_le (surj : surjective f) :
+theorem exists_approx_preimage_norm_le (surj : Surjective f) :
     ∃ C ≥ 0, ∀ y, ∃ x, dist (f x) y ≤ 1 / 2 * ∥y∥ ∧ ∥x∥ ≤ C * ∥y∥ := by
   have A : (⋃ n : ℕ, Closure (f '' ball 0 n)) = univ := by
     refine' subset.antisymm (subset_univ _) fun y hy => _
@@ -182,7 +181,7 @@ variable [CompleteSpace E]
 
 /-- The Banach open mapping theorem: if a bounded linear map between Banach spaces is onto, then
 any point has a preimage with controlled norm. -/
-theorem exists_preimage_norm_le (surj : surjective f) : ∃ C > 0, ∀ y, ∃ x, f x = y ∧ ∥x∥ ≤ C * ∥y∥ := by
+theorem exists_preimage_norm_le (surj : Surjective f) : ∃ C > 0, ∀ y, ∃ x, f x = y ∧ ∥x∥ ≤ C * ∥y∥ := by
   obtain ⟨C, C0, hC⟩ := exists_approx_preimage_norm_le f surj
   choose g hg using hC
   let h := fun y => y - f (g y)
@@ -256,7 +255,7 @@ theorem exists_preimage_norm_le (surj : surjective f) : ∃ C > 0, ∀ y, ∃ x,
 
 /-- The Banach open mapping theorem: a surjective bounded linear map between Banach spaces is
 open. -/
-protected theorem IsOpenMap (surj : surjective f) : IsOpenMap f := by
+protected theorem IsOpenMap (surj : Surjective f) : IsOpenMap f := by
   intro s hs
   rcases exists_preimage_norm_le f surj with ⟨C, Cpos, hC⟩
   refine' is_open_iff.2 fun y yfs => _
@@ -280,11 +279,11 @@ protected theorem IsOpenMap (surj : surjective f) : IsOpenMap f := by
       
   exact Set.mem_image_of_mem _ (hε this)
 
-protected theorem QuotientMap (surj : surjective f) : QuotientMap f :=
-  (f.is_open_map surj).to_quotient_map f.continuous surj
+protected theorem QuotientMap (surj : Surjective f) : QuotientMap f :=
+  (f.IsOpenMap surj).to_quotient_map f.Continuous surj
 
 theorem _root_.affine_map.is_open_map {P Q : Type _} [MetricSpace P] [NormedAddTorsor E P] [MetricSpace Q]
-    [NormedAddTorsor F Q] (f : P →ᵃ[𝕜] Q) (hf : Continuous f) (surj : surjective f) : IsOpenMap f :=
+    [NormedAddTorsor F Q] (f : P →ᵃ[𝕜] Q) (hf : Continuous f) (surj : Surjective f) : IsOpenMap f :=
   AffineMap.is_open_map_linear_iff.mp <|
     ContinuousLinearMap.is_open_map { f.linear with cont := AffineMap.continuous_linear_iff.mpr hf }
       (f.surjective_iff_linear_surjective.mpr surj)
@@ -292,17 +291,17 @@ theorem _root_.affine_map.is_open_map {P Q : Type _} [MetricSpace P] [NormedAddT
 /-! ### Applications of the Banach open mapping theorem -/
 
 
-theorem interior_preimage (hsurj : surjective f) (s : Set F) : Interior (f ⁻¹' s) = f ⁻¹' Interior s :=
-  ((f.is_open_map hsurj).preimage_interior_eq_interior_preimage f.continuous s).symm
+theorem interior_preimage (hsurj : Surjective f) (s : Set F) : Interior (f ⁻¹' s) = f ⁻¹' Interior s :=
+  ((f.IsOpenMap hsurj).preimage_interior_eq_interior_preimage f.Continuous s).symm
 
-theorem closure_preimage (hsurj : surjective f) (s : Set F) : Closure (f ⁻¹' s) = f ⁻¹' Closure s :=
-  ((f.is_open_map hsurj).preimage_closure_eq_closure_preimage f.continuous s).symm
+theorem closure_preimage (hsurj : Surjective f) (s : Set F) : Closure (f ⁻¹' s) = f ⁻¹' Closure s :=
+  ((f.IsOpenMap hsurj).preimage_closure_eq_closure_preimage f.Continuous s).symm
 
-theorem frontier_preimage (hsurj : surjective f) (s : Set F) : Frontier (f ⁻¹' s) = f ⁻¹' Frontier s :=
-  ((f.is_open_map hsurj).preimage_frontier_eq_frontier_preimage f.continuous s).symm
+theorem frontier_preimage (hsurj : Surjective f) (s : Set F) : Frontier (f ⁻¹' s) = f ⁻¹' Frontier s :=
+  ((f.IsOpenMap hsurj).preimage_frontier_eq_frontier_preimage f.Continuous s).symm
 
 theorem exists_nonlinear_right_inverse_of_surjective (f : E →L[𝕜] F) (hsurj : f.range = ⊤) :
-    ∃ fsymm : nonlinear_right_inverse f, 0 < fsymm.nnnorm := by
+    ∃ fsymm : NonlinearRightInverse f, 0 < fsymm.nnnorm := by
   choose C hC fsymm h using exists_preimage_norm_le _ (linear_map.range_eq_top.mp hsurj)
   use { toFun := fsymm, nnnorm := ⟨C, hC.lt.le⟩, bound' := fun y => (h y).2, right_inv' := fun y => (h y).1 }
   exact hC
@@ -312,11 +311,11 @@ controlled right inverse. In general, it is not possible to ensure that such a r
 is linear (take for instance the map from `E` to `E/F` where `F` is a closed subspace of `E`
 without a closed complement. Then it doesn't have a continuous linear right inverse.) -/
 noncomputable irreducible_def nonlinear_right_inverse_of_surjective (f : E →L[𝕜] F) (hsurj : f.range = ⊤) :
-  nonlinear_right_inverse f :=
+  NonlinearRightInverse f :=
   Classical.some (exists_nonlinear_right_inverse_of_surjective f hsurj)
 
 theorem nonlinear_right_inverse_of_surjective_nnnorm_pos (f : E →L[𝕜] F) (hsurj : f.range = ⊤) :
-    0 < (nonlinear_right_inverse_of_surjective f hsurj).nnnorm := by
+    0 < (nonlinearRightInverseOfSurjective f hsurj).nnnorm := by
   rw [nonlinear_right_inverse_of_surjective]
   exact Classical.some_spec (exists_nonlinear_right_inverse_of_surjective f hsurj)
 
@@ -343,12 +342,12 @@ def to_continuous_linear_equiv_of_continuous (e : E ≃ₗ[𝕜] F) (h : Continu
 
 @[simp]
 theorem coe_fn_to_continuous_linear_equiv_of_continuous (e : E ≃ₗ[𝕜] F) (h : Continuous e) :
-    ⇑e.to_continuous_linear_equiv_of_continuous h = e :=
+    ⇑e.toContinuousLinearEquivOfContinuous h = e :=
   rfl
 
 @[simp]
 theorem coe_fn_to_continuous_linear_equiv_of_continuous_symm (e : E ≃ₗ[𝕜] F) (h : Continuous e) :
-    ⇑(e.to_continuous_linear_equiv_of_continuous h).symm = e.symm :=
+    ⇑(e.toContinuousLinearEquivOfContinuous h).symm = e.symm :=
   rfl
 
 end LinearEquiv
@@ -362,26 +361,26 @@ to a continuous linear equivalence. -/
 noncomputable def of_bijective (f : E →L[𝕜] F) (hinj : f.ker = ⊥) (hsurj : f.range = ⊤) : E ≃L[𝕜] F :=
   (LinearEquiv.ofBijective (↑f) (LinearMap.ker_eq_bot.mp hinj)
         (LinearMap.range_eq_top.mp hsurj)).toContinuousLinearEquivOfContinuous
-    f.continuous
+    f.Continuous
 
 @[simp]
-theorem coe_fn_of_bijective (f : E →L[𝕜] F) (hinj : f.ker = ⊥) (hsurj : f.range = ⊤) : ⇑of_bijective f hinj hsurj = f :=
+theorem coe_fn_of_bijective (f : E →L[𝕜] F) (hinj : f.ker = ⊥) (hsurj : f.range = ⊤) : ⇑ofBijective f hinj hsurj = f :=
   rfl
 
-theorem coe_of_bijective (f : E →L[𝕜] F) (hinj : f.ker = ⊥) (hsurj : f.range = ⊤) : ↑(of_bijective f hinj hsurj) = f :=
+theorem coe_of_bijective (f : E →L[𝕜] F) (hinj : f.ker = ⊥) (hsurj : f.range = ⊤) : ↑(ofBijective f hinj hsurj) = f :=
   by
   ext
   rfl
 
 @[simp]
 theorem of_bijective_symm_apply_apply (f : E →L[𝕜] F) (hinj : f.ker = ⊥) (hsurj : f.range = ⊤) (x : E) :
-    (of_bijective f hinj hsurj).symm (f x) = x :=
-  (of_bijective f hinj hsurj).symm_apply_apply x
+    (ofBijective f hinj hsurj).symm (f x) = x :=
+  (ofBijective f hinj hsurj).symm_apply_apply x
 
 @[simp]
 theorem of_bijective_apply_symm_apply (f : E →L[𝕜] F) (hinj : f.ker = ⊥) (hsurj : f.range = ⊤) (y : F) :
-    f ((of_bijective f hinj hsurj).symm y) = y :=
-  (of_bijective f hinj hsurj).apply_symm_apply y
+    f ((ofBijective f hinj hsurj).symm y) = y :=
+  (ofBijective f hinj hsurj).apply_symm_apply y
 
 end ContinuousLinearEquiv
 
@@ -409,7 +408,7 @@ noncomputable def coprod_subtypeL_equiv_of_is_compl (f : E →L[𝕜] F) {G : Su
 theorem range_eq_map_coprod_subtypeL_equiv_of_is_compl (f : E →L[𝕜] F) {G : Submodule 𝕜 F} (h : IsCompl f.range G)
     [CompleteSpace G] (hker : f.ker = ⊥) :
     f.range =
-      ((⊤ : Submodule 𝕜 E).Prod (⊥ : Submodule 𝕜 G)).map (f.coprod_subtypeL_equiv_of_is_compl h hker : E × G →ₗ[𝕜] F) :=
+      ((⊤ : Submodule 𝕜 E).Prod (⊥ : Submodule 𝕜 G)).map (f.coprodSubtypeLEquivOfIsCompl h hker : E × G →ₗ[𝕜] F) :=
   by
   rw [coprod_subtypeL_equiv_of_is_compl, _root_.coe_coe, ContinuousLinearEquiv.coe_of_bijective, coe_coprod,
     LinearMap.coprod_map_prod, Submodule.map_bot, sup_bot_eq, Submodule.map_top, range]

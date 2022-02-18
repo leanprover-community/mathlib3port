@@ -84,11 +84,11 @@ def to_order_hom {a b : SimplexCategory.{u}} (f : SimplexCategory.Hom a b) : Fin
   Ulift.down f
 
 @[ext]
-theorem ext {a b : SimplexCategory.{u}} (f g : SimplexCategory.Hom a b) : f.to_order_hom = g.to_order_hom → f = g :=
+theorem ext {a b : SimplexCategory.{u}} (f g : SimplexCategory.Hom a b) : f.toOrderHom = g.toOrderHom → f = g :=
   Ulift.ext _ _
 
 @[simp]
-theorem mk_to_order_hom {a b : SimplexCategory.{u}} (f : SimplexCategory.Hom a b) : mk f.to_order_hom = f := by
+theorem mk_to_order_hom {a b : SimplexCategory.{u}} (f : SimplexCategory.Hom a b) : mk f.toOrderHom = f := by
   cases f
   rfl
 
@@ -110,12 +110,12 @@ def id (a : SimplexCategory.{u}) : SimplexCategory.Hom a a :=
 @[simp]
 def comp {a b c : SimplexCategory.{u}} (f : SimplexCategory.Hom b c) (g : SimplexCategory.Hom a b) :
     SimplexCategory.Hom a c :=
-  mk <| f.to_order_hom.comp g.to_order_hom
+  mk <| f.toOrderHom.comp g.toOrderHom
 
 end Hom
 
 @[simps]
-instance small_category : small_category.{u} SimplexCategory where
+instance small_category : SmallCategory.{u} SimplexCategory where
   Hom := fun n m => SimplexCategory.Hom n m
   id := fun m => SimplexCategory.Hom.id _
   comp := fun _ _ _ f g => SimplexCategory.Hom.comp g f
@@ -128,7 +128,7 @@ def const (x : SimplexCategory.{u}) (i : Finₓ (x.len + 1)) : [0] ⟶ x :=
 
 @[simp]
 theorem const_comp (x y : SimplexCategory.{u}) (i : Finₓ (x.len + 1)) (f : x ⟶ y) :
-    const x i ≫ f = const y (f.to_order_hom i) :=
+    const x i ≫ f = const y (f.toOrderHom i) :=
   rfl
 
 /-- Make a morphism `[n] ⟶ [m]` from a monotone map between fin's.
@@ -160,11 +160,11 @@ one given by the following generators and relations.
 
 /-- The `i`-th face map from `[n]` to `[n+1]` -/
 def δ {n} (i : Finₓ (n + 2)) : [n] ⟶ [n + 1] :=
-  mk_hom (Finₓ.succAbove i).toOrderHom
+  mkHom (Finₓ.succAbove i).toOrderHom
 
 /-- The `i`-th degeneracy map from `[n+1]` to `[n]` -/
 def σ {n} (i : Finₓ (n + 1)) : [n + 1] ⟶ [n] :=
-  mk_hom { toFun := Finₓ.predAbove i, monotone' := Finₓ.pred_above_right_monotone i }
+  mkHom { toFun := Finₓ.predAbove i, monotone' := Finₓ.pred_above_right_monotone i }
 
 /-- The generic case of the first simplicial identity -/
 theorem δ_comp_δ {n} {i j : Finₓ (n + 2)} (H : i ≤ j) : δ i ≫ δ j.succ = δ j ≫ δ i.cast_succ := by
@@ -214,10 +214,10 @@ theorem δ_comp_σ_of_le {n} {i : Finₓ (n + 2)} {j : Finₓ (n + 1)} (H : i �
   dsimp
   simp only [if_congr, Subtype.mk_lt_mk, dif_ctx_congr]
   split_ifs
-  swap 8
+  pick_goal 8
   · exact (Nat.succ_pred_eq_of_posₓ (lt_of_le_of_ltₓ (zero_le _) ‹_›)).symm
     
-  swap 7
+  pick_goal 7
   · have : k ≤ i := Nat.le_of_pred_lt ‹_›
     linarith
     
@@ -269,7 +269,7 @@ theorem δ_comp_σ_of_gt {n} {i : Finₓ (n + 2)} {j : Finₓ (n + 1)} (H : j.ca
   suffices ite (_ < ite (k < i + 1) _ _) _ _ = ite _ (ite (j < k) (k - 1) k) (ite (j < k) (k - 1) k + 1) by
     simpa [apply_dite Finₓ.castSucc, Finₓ.predAbove] with push_cast
   split_ifs
-  swap 2
+  swap
   · simp only [Subtype.mk_lt_mk] at h_1
     simp only [not_ltₓ] at h_2
     simp only [self_eq_add_rightₓ, one_ne_zero]
@@ -278,14 +278,14 @@ theorem δ_comp_σ_of_gt {n} {i : Finₓ (n + 2)} {j : Finₓ (n + 1)} (H : j.ca
         (lt_of_lt_of_leₓ (Nat.pred_ltₓ (ne_of_ltₓ (lt_of_le_of_ltₓ (zero_le _) h_1)).symm)
           (le_transₓ (Nat.le_of_lt_succₓ h) h_2))
     
-  swap 4
+  pick_goal 4
   · simp only [Subtype.mk_lt_mk] at h_1
     simp only [not_ltₓ] at h
     simp only [Nat.add_succ_sub_one, add_zeroₓ]
     exfalso
     exact lt_irreflₓ _ (lt_of_le_of_ltₓ (Nat.le_pred_of_lt (Nat.lt_of_succ_leₓ h)) h_3)
     
-  swap 4
+  pick_goal 4
   · simp only [Subtype.mk_lt_mk] at h_1
     simp only [not_ltₓ] at h_3
     simp only [Nat.add_succ_sub_one, add_zeroₓ]
@@ -307,7 +307,7 @@ theorem σ_comp_σ {n} {i j : Finₓ (n + 1)} (H : i ≤ j) : σ i.cast_succ ≫
   suffices ite (_ < dite (i < k) _ _) _ _ = ite (_ < dite (j + 1 < k) _ _) _ _ by
     simpa [Finₓ.predAbove] with push_cast
   split_ifs
-  swap 3
+  pick_goal 3
   · simp only [not_ltₓ] at h_2
     exact
       False.elim
@@ -315,7 +315,7 @@ theorem σ_comp_σ {n} {i j : Finₓ (n + 1)} (H : i ≤ j) : σ i.cast_succ ≫
           (lt_of_lt_of_leₓ (Nat.pred_ltₓ (id (ne_of_ltₓ (lt_of_le_of_ltₓ (zero_le i) h)).symm))
             (le_transₓ h_2 (Nat.succ_le_of_ltₓ h_1))))
     
-  swap 3
+  pick_goal 3
   · simp only [Subtype.mk_lt_mk, not_ltₓ] at h_1
     exact False.elim (lt_irreflₓ j (lt_of_lt_of_leₓ (Nat.pred_lt_predₓ (Nat.succ_ne_zero j) h_2) h_1))
     
@@ -331,7 +331,7 @@ of `NonemptyFinLinOrd` -/
 @[simps obj map]
 def skeletal_functor : SimplexCategory.{u} ⥤ NonemptyFinLinOrdₓ.{v} where
   obj := fun a => NonemptyFinLinOrdₓ.of <| Ulift (Finₓ (a.len + 1))
-  map := fun a b f => ⟨fun i => Ulift.up (f.to_order_hom i.down), fun i j h => f.to_order_hom.monotone h⟩
+  map := fun a b f => ⟨fun i => Ulift.up (f.toOrderHom i.down), fun i j h => f.toOrderHom.Monotone h⟩
   map_id' := fun a => by
     ext
     simp
@@ -339,7 +339,7 @@ def skeletal_functor : SimplexCategory.{u} ⥤ NonemptyFinLinOrdₓ.{v} where
     ext
     simp
 
-theorem skeletal : skeletal SimplexCategory.{u} := fun X Y ⟨I⟩ => by
+theorem skeletal : Skeletal SimplexCategory.{u} := fun X Y ⟨I⟩ => by
   suffices Fintype.card (Finₓ (X.len + 1)) = Fintype.card (Finₓ (Y.len + 1)) by
     ext
     simpa
@@ -350,8 +350,8 @@ theorem skeletal : skeletal SimplexCategory.{u} := fun X Y ⟨I⟩ => by
 
 namespace SkeletalFunctor
 
-instance : full skeletal_functor.{u, v} where
-  Preimage := fun a b f => SimplexCategory.Hom.mk ⟨fun i => (f (Ulift.up i)).down, fun i j h => f.monotone h⟩
+instance : Full skeletalFunctor.{u, v} where
+  Preimage := fun a b f => SimplexCategory.Hom.mk ⟨fun i => (f (Ulift.up i)).down, fun i j h => f.Monotone h⟩
   witness' := by
     intro m n f
     dsimp  at *
@@ -361,7 +361,7 @@ instance : full skeletal_functor.{u, v} where
     cases x
     simp
 
-instance : faithful skeletal_functor.{u, v} where
+instance : Faithful skeletalFunctor.{u, v} where
   map_injective' := fun m n f g h => by
     ext1
     ext1
@@ -370,7 +370,7 @@ instance : faithful skeletal_functor.{u, v} where
     change (skeletal_functor.map f) ⟨i⟩ = (skeletal_functor.map g) ⟨i⟩
     rw [h]
 
-instance : ess_surj skeletal_functor.{u, v} where
+instance : EssSurj skeletalFunctor.{u, v} where
   mem_ess_image := fun X =>
     ⟨mk (Fintype.card X - 1 : ℕ),
       ⟨by
@@ -399,31 +399,31 @@ instance : ess_surj skeletal_functor.{u, v} where
           exact f.apply_symm_apply i
           ⟩⟩
 
-noncomputable instance is_equivalence : is_equivalence skeletal_functor.{u, v} :=
-  equivalence.of_fully_faithfully_ess_surj skeletal_functor
+noncomputable instance is_equivalence : IsEquivalence skeletalFunctor.{u, v} :=
+  Equivalence.ofFullyFaithfullyEssSurj skeletalFunctor
 
 end SkeletalFunctor
 
 /-- The equivalence that exhibits `simplex_category` as skeleton
 of `NonemptyFinLinOrd` -/
 noncomputable def skeletal_equivalence : SimplexCategory.{u} ≌ NonemptyFinLinOrdₓ.{v} :=
-  functor.as_equivalence skeletal_functor
+  Functor.asEquivalence skeletalFunctor
 
 end Skeleton
 
 /-- `simplex_category` is a skeleton of `NonemptyFinLinOrd`.
 -/
-noncomputable def is_skeleton_of : is_skeleton_of NonemptyFinLinOrdₓ SimplexCategory skeletal_functor.{u, v} where
+noncomputable def is_skeleton_of : IsSkeletonOf NonemptyFinLinOrdₓ SimplexCategory skeletalFunctor.{u, v} where
   skel := skeletal
-  eqv := skeletal_functor.is_equivalence
+  eqv := skeletalFunctor.isEquivalence
 
 /-- The truncated simplex category. -/
 def truncated (n : ℕ) :=
-  { a : SimplexCategory.{u} // a.len ≤ n }deriving small_category
+  { a : SimplexCategory.{u} // a.len ≤ n }deriving SmallCategory
 
 namespace Truncated
 
-instance {n} : Inhabited (truncated n) :=
+instance {n} : Inhabited (Truncated n) :=
   ⟨⟨[0], by
       simp ⟩⟩
 
@@ -431,14 +431,14 @@ instance {n} : Inhabited (truncated n) :=
 simplex category.
 -/
 def inclusion {n : ℕ} : SimplexCategory.Truncated.{u} n ⥤ SimplexCategory.{u} :=
-  full_subcategory_inclusion _ deriving full, faithful
+  fullSubcategoryInclusion _ deriving Full, Faithful
 
 end Truncated
 
 section Concrete
 
-instance : concrete_category.{0} SimplexCategory.{u} where
-  forget := { obj := fun i => Finₓ (i.len + 1), map := fun i j f => f.to_order_hom }
+instance : ConcreteCategory.{0} SimplexCategory.{u} where
+  forget := { obj := fun i => Finₓ (i.len + 1), map := fun i j f => f.toOrderHom }
   forget_faithful := {  }
 
 end Concrete
@@ -447,7 +447,7 @@ section EpiMono
 
 /-- A morphism in `simplex_category` is a monomorphism precisely when it is an injective function
 -/
-theorem mono_iff_injective {n m : SimplexCategory.{u}} {f : n ⟶ m} : mono f ↔ Function.Injective f.to_order_hom := by
+theorem mono_iff_injective {n m : SimplexCategory.{u}} {f : n ⟶ m} : Mono f ↔ Function.Injective f.toOrderHom := by
   constructor
   · intros m x y h
     have H : const n x ≫ f = const n y ≫ f := by
@@ -460,17 +460,17 @@ theorem mono_iff_injective {n m : SimplexCategory.{u}} {f : n ⟶ m} : mono f �
   · exact concrete_category.mono_of_injective f
     
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:57:31: expecting tactic arg
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:57:31: expecting tactic arg
+-- ././Mathport/Syntax/Translate/Basic.lean:418:16: unsupported tactic `by_contra'
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:50: missing argument
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:59:31: expecting tactic arg
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:50: missing argument
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:59:31: expecting tactic arg
 /-- A morphism in `simplex_category` is an epimorphism if and only if it is a surjective function
 -/
-theorem epi_iff_surjective {n m : SimplexCategory.{u}} {f : n ⟶ m} : epi f ↔ Function.Surjective f.to_order_hom := by
+theorem epi_iff_surjective {n m : SimplexCategory.{u}} {f : n ⟶ m} : Epi f ↔ Function.Surjective f.toOrderHom := by
   constructor
   · intros hyp_f_epi x
-    by_contra h_ab
-    rw [not_exists] at h_ab
+    "././Mathport/Syntax/Translate/Basic.lean:418:16: unsupported tactic `by_contra'"
     set chi_1 : m ⟶ [1] :=
       hom.mk
         ⟨fun u => if u ≤ x then 0 else 1, by
@@ -501,7 +501,7 @@ theorem epi_iff_surjective {n m : SimplexCategory.{u}} {f : n ⟶ m} : epi f ↔
       simp [le_iff_lt_or_eqₓ, h_ab x_1]
     rw [CategoryTheory.cancel_epi f] at f_comp_chi_i
     rename' f_comp_chi_i => eq_chi_i
-    apply_fun fun e => e.to_order_hom x  at eq_chi_i
+    apply_fun fun e => e.toOrderHom x  at eq_chi_i
     suffices (0 : Finₓ 2) = 1 by
       exact bot_ne_top this
     simpa using eq_chi_i
@@ -510,7 +510,7 @@ theorem epi_iff_surjective {n m : SimplexCategory.{u}} {f : n ⟶ m} : epi f ↔
     
 
 /-- A monomorphism in `simplex_category` must increase lengths-/
-theorem len_le_of_mono {x y : SimplexCategory.{u}} {f : x ⟶ y} : mono f → x.len ≤ y.len := by
+theorem len_le_of_mono {x y : SimplexCategory.{u}} {f : x ⟶ y} : Mono f → x.len ≤ y.len := by
   intro hyp_f_mono
   have f_inj : Function.Injective f.to_order_hom.to_fun := mono_iff_injective.elim_left hyp_f_mono
   simpa using Fintype.card_le_of_injective f.to_order_hom.to_fun f_inj
@@ -519,12 +519,12 @@ theorem le_of_mono {n m : ℕ} {f : [n] ⟶ [m]} : CategoryTheory.Mono f → n �
   len_le_of_mono
 
 /-- An epimorphism in `simplex_category` must decrease lengths-/
-theorem len_le_of_epi {x y : SimplexCategory.{u}} {f : x ⟶ y} : epi f → y.len ≤ x.len := by
+theorem len_le_of_epi {x y : SimplexCategory.{u}} {f : x ⟶ y} : Epi f → y.len ≤ x.len := by
   intro hyp_f_epi
   have f_surj : Function.Surjective f.to_order_hom.to_fun := epi_iff_surjective.elim_left hyp_f_epi
   simpa using Fintype.card_le_of_surjective f.to_order_hom.to_fun f_surj
 
-theorem le_of_epi {n m : ℕ} {f : [n] ⟶ [m]} : epi f → m ≤ n :=
+theorem le_of_epi {n m : ℕ} {f : [n] ⟶ [m]} : Epi f → m ≤ n :=
   len_le_of_epi
 
 end EpiMono

@@ -53,8 +53,8 @@ theorem antidiagonal_zero : antidiagonal 0 = [(0, 0)] :=
   rfl
 
 /-- The antidiagonal of `n` does not contain duplicate entries. -/
-theorem nodup_antidiagonal (n : ℕ) : nodup (antidiagonal n) :=
-  nodup_map ((@left_inverse.injective ℕ (ℕ × ℕ) Prod.fst fun i => (i, n - i)) fun i => rfl) (nodup_range _)
+theorem nodup_antidiagonal (n : ℕ) : Nodupₓ (antidiagonal n) :=
+  nodup_map ((@LeftInverse.injective ℕ (ℕ × ℕ) Prod.fst fun i => (i, n - i)) fun i => rfl) (nodup_range _)
 
 @[simp]
 theorem antidiagonal_succ {n : ℕ} : antidiagonal (n + 1) = (0, n + 1) :: (antidiagonal n).map (Prod.map Nat.succ id) :=
@@ -63,6 +63,24 @@ theorem antidiagonal_succ {n : ℕ} : antidiagonal (n + 1) = (0, n + 1) :: (anti
     eq_self_iff_true, tsub_zero, map_map, Prod.map_mkₓ]
   apply congr (congr rfl _) rfl
   ext <;> simp
+
+theorem antidiagonal_succ' {n : ℕ} :
+    antidiagonal (n + 1) = (antidiagonal n).map (Prod.map id Nat.succ) ++ [(n + 1, 0)] := by
+  simp only [antidiagonal, range_succ, add_tsub_cancel_left, map_append, append_assoc, tsub_self, singleton_append,
+    map_map, map]
+  congr 1
+  apply map_congr
+  simp (config := { contextual := true })[le_of_ltₓ, Nat.succ_eq_add_one, Nat.sub_add_commₓ]
+
+theorem antidiagonal_succ_succ' {n : ℕ} :
+    antidiagonal (n + 2) = (0, n + 2) :: (antidiagonal n).map (Prod.map Nat.succ Nat.succ) ++ [(n + 2, 0)] := by
+  rw [antidiagonal_succ']
+  simpa
+
+theorem map_swap_antidiagonal {n : ℕ} : (antidiagonal n).map Prod.swap = (antidiagonal n).reverse := by
+  rw [antidiagonal, map_map, Prod.swap, ← List.map_reverse, range_eq_range', reverse_range', ← range_eq_range', map_map]
+  apply map_congr
+  simp (config := { contextual := true })[Nat.sub_sub_selfₓ, lt_succ_iff]
 
 end Nat
 

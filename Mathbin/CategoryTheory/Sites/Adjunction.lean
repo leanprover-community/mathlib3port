@@ -21,26 +21,26 @@ open Opposite
 
 universe w₁ w₂ v u
 
-variable {C : Type u} [category.{v} C] (J : grothendieck_topology C)
+variable {C : Type u} [Category.{v} C] (J : GrothendieckTopology C)
 
-variable {D : Type w₁} [category.{max v u} D]
+variable {D : Type w₁} [Category.{max v u} D]
 
-variable {E : Type w₂} [category.{max v u} E]
+variable {E : Type w₂} [Category.{max v u} E]
 
 variable {F : D ⥤ E} {G : E ⥤ D}
 
-variable [∀ X : C S : J.cover X P : Cᵒᵖ ⥤ D, preserves_limit (S.index P).multicospan F]
+variable [∀ X : C S : J.cover X P : Cᵒᵖ ⥤ D, PreservesLimit (S.index P).multicospan F]
 
-variable [concrete_category.{max v u} D] [preserves_limits (forget D)]
+variable [ConcreteCategory.{max v u} D] [PreservesLimits (forget D)]
 
 /-- The forgetful functor from `Sheaf J D` to sheaves of types, for a concrete category `D`
 whose forgetful functor preserves the correct limits. -/
 abbrev Sheaf_forget : Sheaf J D ⥤ SheafOfTypes J :=
-  Sheaf_compose J (forget D) ⋙ (Sheaf_equiv_SheafOfTypes J).Functor
+  sheafCompose J (forget D) ⋙ (sheafEquivSheafOfTypes J).Functor
 
-variable [∀ P : Cᵒᵖ ⥤ D X : C S : J.cover X, has_multiequalizer (S.index P)]
-  [∀ X : C, has_colimits_of_shape (J.cover Xᵒᵖ) D] [∀ X : C, preserves_colimits_of_shape (J.cover Xᵒᵖ) (forget D)]
-  [reflects_isomorphisms (forget D)]
+variable [∀ P : Cᵒᵖ ⥤ D X : C S : J.cover X, HasMultiequalizer (S.index P)]
+  [∀ X : C, HasColimitsOfShape (J.cover Xᵒᵖ) D] [∀ X : C, PreservesColimitsOfShape (J.cover Xᵒᵖ) (forget D)]
+  [ReflectsIsomorphisms (forget D)]
 
 namespace Sheaf
 
@@ -49,15 +49,15 @@ noncomputable section
 /-- This is the functor sending a sheaf `X : Sheaf J E` to the sheafification
 of `X ⋙ G`. -/
 abbrev compose_and_sheafify (G : E ⥤ D) : Sheaf J E ⥤ Sheaf J D :=
-  Sheaf_to_presheaf J E ⋙ (whiskering_right _ _ _).obj G ⋙ presheaf_to_Sheaf J D
+  sheafToPresheaf J E ⋙ (whiskeringRight _ _ _).obj G ⋙ presheafToSheaf J D
 
 /-- An auxiliary definition to be used in defining `category_theory.Sheaf.adjunction` below. -/
 @[simps]
 def compose_equiv (adj : G ⊣ F) (X : Sheaf J E) (Y : Sheaf J D) :
-    ((compose_and_sheafify J G).obj X ⟶ Y) ≃ (X ⟶ (Sheaf_compose J F).obj Y) :=
-  let A := adj.whisker_right (Cᵒᵖ)
-  { toFun := fun η => ⟨A.hom_equiv _ _ (J.to_sheafify _ ≫ η.val)⟩,
-    invFun := fun γ => ⟨J.sheafify_lift ((A.hom_equiv _ _).symm ((Sheaf_to_presheaf _ _).map γ)) Y.2⟩,
+    ((composeAndSheafify J G).obj X ⟶ Y) ≃ (X ⟶ (sheafCompose J F).obj Y) :=
+  let A := adj.whiskerRight (Cᵒᵖ)
+  { toFun := fun η => ⟨A.homEquiv _ _ (J.toSheafify _ ≫ η.val)⟩,
+    invFun := fun γ => ⟨J.sheafifyLift ((A.homEquiv _ _).symm ((sheafToPresheaf _ _).map γ)) Y.2⟩,
     left_inv := by
       intro η
       ext1
@@ -75,9 +75,9 @@ def compose_equiv (adj : G ⊣ F) (X : Sheaf J E) (Y : Sheaf J D) :
 between `Sheaf J D` and `Sheaf J E`, in contexts where one can sheafify `D`-valued presheaves,
 and `F` preserves the correct limits. -/
 @[simps unit_app_val counit_app_val]
-def adjunction (adj : G ⊣ F) : compose_and_sheafify J G ⊣ Sheaf_compose J F :=
-  adjunction.mk_of_hom_equiv
-    { homEquiv := compose_equiv J adj,
+def adjunction (adj : G ⊣ F) : composeAndSheafify J G ⊣ sheafCompose J F :=
+  Adjunction.mkOfHomEquiv
+    { homEquiv := composeEquiv J adj,
       hom_equiv_naturality_left_symm' := fun X' X Y f g => by
         ext1
         dsimp
@@ -87,34 +87,32 @@ def adjunction (adj : G ⊣ F) : compose_and_sheafify J G ⊣ Sheaf_compose J F 
         dsimp
         simp }
 
-instance [is_right_adjoint F] : is_right_adjoint (Sheaf_compose J F) :=
-  ⟨_, adjunction J (adjunction.of_right_adjoint F)⟩
+instance [IsRightAdjoint F] : IsRightAdjoint (sheafCompose J F) :=
+  ⟨_, adjunction J (Adjunction.ofRightAdjoint F)⟩
 
 section ForgetToType
 
 /-- This is the functor sending a sheaf of types `X` to the sheafification of `X ⋙ G`. -/
 abbrev compose_and_sheafify_from_types (G : Type max v u ⥤ D) : SheafOfTypes J ⥤ Sheaf J D :=
-  (Sheaf_equiv_SheafOfTypes J).inverse ⋙ compose_and_sheafify _ G
+  (sheafEquivSheafOfTypes J).inverse ⋙ composeAndSheafify _ G
 
 /-- A variant of the adjunction between sheaf categories, in the case where the right adjoint
 is the forgetful functor to sheaves of types. -/
-def adjunction_to_types {G : Type max v u ⥤ D} (adj : G ⊣ forget D) :
-    compose_and_sheafify_from_types J G ⊣ Sheaf_forget J :=
-  adjunction.comp _ _ (Sheaf_equiv_SheafOfTypes J).symm.toAdjunction (adjunction J adj)
+def adjunction_to_types {G : Type max v u ⥤ D} (adj : G ⊣ forget D) : composeAndSheafifyFromTypes J G ⊣ sheafForget J :=
+  Adjunction.comp _ _ (sheafEquivSheafOfTypes J).symm.toAdjunction (adjunction J adj)
 
 @[simp]
 theorem adjunction_to_types_unit_app_val {G : Type max v u ⥤ D} (adj : G ⊣ forget D) (Y : SheafOfTypes J) :
-    ((adjunction_to_types J adj).Unit.app Y).val =
-      (adj.whisker_right _).Unit.app ((SheafOfTypes_to_presheaf J).obj Y) ≫
-        whisker_right (J.to_sheafify _) (forget D) :=
+    ((adjunctionToTypes J adj).Unit.app Y).val =
+      (adj.whiskerRight _).Unit.app ((sheafOfTypesToPresheaf J).obj Y) ≫ whiskerRight (J.toSheafify _) (forget D) :=
   by
   dsimp [adjunction_to_types, adjunction.comp]
   simpa
 
 @[simp]
 theorem adjunction_to_types_counit_app_val {G : Type max v u ⥤ D} (adj : G ⊣ forget D) (X : Sheaf J D) :
-    ((adjunction_to_types J adj).counit.app X).val =
-      J.sheafify_lift ((functor.associator _ _ _).Hom ≫ (adj.whisker_right _).counit.app _) X.2 :=
+    ((adjunctionToTypes J adj).counit.app X).val =
+      J.sheafifyLift ((Functor.associator _ _ _).Hom ≫ (adj.whiskerRight _).counit.app _) X.2 :=
   by
   dsimp [adjunction_to_types, adjunction.comp, adjunction.whisker_right]
   rw [category.id_comp]
@@ -124,8 +122,8 @@ theorem adjunction_to_types_counit_app_val {G : Type max v u ⥤ D} (adj : G ⊣
   dsimp [Sheaf_equiv_SheafOfTypes, equivalence.symm, equivalence.to_adjunction, nat_iso.of_components]
   simp
 
-instance [is_right_adjoint (forget D)] : is_right_adjoint (Sheaf_forget J) :=
-  ⟨_, adjunction_to_types J (adjunction.of_right_adjoint (forget D))⟩
+instance [IsRightAdjoint (forget D)] : IsRightAdjoint (sheafForget J) :=
+  ⟨_, adjunctionToTypes J (Adjunction.ofRightAdjoint (forget D))⟩
 
 end ForgetToType
 

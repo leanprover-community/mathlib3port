@@ -28,7 +28,7 @@ The axiom `map_id` expresses preservation of identities, and
 
 See https://stacks.math.columbia.edu/tag/001B.
 -/
-structure Functor (C : Type u₁) [category.{v₁} C] (D : Type u₂) [category.{v₂} D] extends Prefunctor C D :
+structure Functor (C : Type u₁) [Category.{v₁} C] (D : Type u₂) [Category.{v₂} D] extends Prefunctor C D :
   Type max v₁ v₂ u₁ u₂ where
   map_id' : ∀ X : C, map (𝟙 X) = 𝟙 (obj X) := by
     run_tac
@@ -56,17 +56,17 @@ namespace Functor
 
 section
 
-variable (C : Type u₁) [category.{v₁} C]
+variable (C : Type u₁) [Category.{v₁} C]
 
 /-- `𝟭 C` is the identity functor on a category `C`. -/
 protected def id : C ⥤ C where
   obj := fun X => X
   map := fun _ _ f => f
 
-notation "𝟭" => functor.id
+notation "𝟭" => Functor.id
 
 instance : Inhabited (C ⥤ C) :=
-  ⟨functor.id C⟩
+  ⟨Functor.id C⟩
 
 variable {C}
 
@@ -82,7 +82,7 @@ end
 
 section
 
-variable {C : Type u₁} [category.{v₁} C] {D : Type u₂} [category.{v₂} D] {E : Type u₃} [category.{v₃} E]
+variable {C : Type u₁} [Category.{v₁} C] {D : Type u₂} [Category.{v₂} D] {E : Type u₃} [Category.{v₃} E]
 
 /-- `F ⋙ G` is the composition of a functor `F` and a functor `G` (`F` first, then `G`).
 -/

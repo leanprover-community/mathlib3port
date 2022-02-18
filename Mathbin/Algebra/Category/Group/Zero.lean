@@ -18,7 +18,7 @@ universe u
 namespace Groupₓₓ
 
 @[to_additive AddGroupₓₓ.hasZeroObject]
-instance : has_zero_object Groupₓₓ where
+instance : HasZeroObject Groupₓₓ where
   zero := 1
   uniqueTo := fun X =>
     ⟨⟨1⟩, fun f => by
@@ -35,7 +35,7 @@ end Groupₓₓ
 namespace CommGroupₓₓ
 
 @[to_additive AddCommGroupₓₓ.hasZeroObject]
-instance : has_zero_object CommGroupₓₓ where
+instance : HasZeroObject CommGroupₓₓ where
   zero := 1
   uniqueTo := fun X =>
     ⟨⟨1⟩, fun f => by

@@ -54,19 +54,33 @@ theorem antidiagonal_succ {n : ℕ} :
     apply Nat.succ_ne_zero a h2.1
     
 
+theorem antidiagonal_succ' {n : ℕ} :
+    antidiagonal (n + 1) =
+      insert (n + 1, 0)
+        ((antidiagonal n).map
+          (Function.Embedding.prodMap (Function.Embedding.refl _) ⟨Nat.succ, Nat.succ_injective⟩)) :=
+  by
+  apply eq_of_veq
+  rw [insert_val_of_not_mem, map_val]
+  · apply Multiset.Nat.antidiagonal_succ'
+    
+  · simp
+    
+
+theorem antidiagonal_succ_succ' {n : ℕ} :
+    antidiagonal (n + 2) =
+      insert (0, n + 2)
+        (insert (n + 2, 0)
+          ((antidiagonal n).map
+            (Function.Embedding.prodMap ⟨Nat.succ, Nat.succ_injective⟩ ⟨Nat.succ, Nat.succ_injective⟩))) :=
+  by
+  rw [antidiagonal_succ, antidiagonal_succ', map_insert, map_map]
+  rfl
+
 theorem map_swap_antidiagonal {n : ℕ} :
-    (antidiagonal n).map ⟨Prod.swap, Prod.swap_right_inverseₓ.Injective⟩ = antidiagonal n := by
-  ext
-  simp only [exists_prop, mem_map, mem_antidiagonal, Prod.exists]
-  rw [add_commₓ]
-  constructor
-  · rintro ⟨b, c, ⟨rfl, rfl⟩⟩
-    simp
-    
-  · rintro rfl
-    use a.snd, a.fst
-    simp
-    
+    (antidiagonal n).map ⟨Prod.swap, Prod.swap_right_inverse.Injective⟩ = antidiagonal n :=
+  eq_of_veq <| by
+    simp [antidiagonal, Multiset.Nat.map_swap_antidiagonal]
 
 /-- A point in the antidiagonal is determined by its first co-ordinate. -/
 theorem antidiagonal_congr {n : ℕ} {p q : ℕ × ℕ} (hp : p ∈ antidiagonal n) (hq : q ∈ antidiagonal n) :
@@ -84,6 +98,26 @@ theorem antidiagonal.snd_le {n : ℕ} {kl : ℕ × ℕ} (hlk : kl ∈ antidiagon
   rw [le_iff_exists_add]
   use kl.1
   rwa [mem_antidiagonal, eq_comm, add_commₓ] at hlk
+
+theorem filter_fst_eq_antidiagonal (n m : ℕ) :
+    filter (fun x : ℕ × ℕ => x.fst = m) (antidiagonal n) = if m ≤ n then {(m, n - m)} else ∅ := by
+  ext ⟨x, y⟩
+  simp only [mem_filter, nat.mem_antidiagonal]
+  split_ifs with h h
+  · simp (config := { contextual := true })[and_comm, eq_tsub_iff_add_eq_of_le h, add_commₓ]
+    
+  · rw [not_leₓ] at h
+    simp only [not_mem_empty, iff_falseₓ, not_and]
+    exact fun hn => ne_of_ltₓ (lt_of_le_of_ltₓ (le_self_add.trans hn.le) h)
+    
+
+theorem filter_snd_eq_antidiagonal (n m : ℕ) :
+    filter (fun x : ℕ × ℕ => x.snd = m) (antidiagonal n) = if m ≤ n then {(n - m, m)} else ∅ := by
+  have : (fun x : ℕ × ℕ => x.snd = m) ∘ Prod.swap = fun x : ℕ × ℕ => x.fst = m := by
+    ext
+    simp
+  rw [← map_swap_antidiagonal]
+  simp [map_filter, this, filter_fst_eq_antidiagonal, apply_ite (Finset.map _)]
 
 section EquivProd
 

@@ -88,7 +88,7 @@ private unsafe def transform_negation_step (e : expr) : tactic (Option (expr × 
               | _ => tactic.fail "Unexpected failure negating ∃"
           return (some (e, pr))
         | pi n bi d p =>
-          if p.has_var then do
+          if p then do
             let pr ← mk_app `` not_forall_eq [lam n bi d p]
             let body ← mk_app `` Not [p]
             let e ← mk_app `` Exists [lam n bi d body]
@@ -117,7 +117,7 @@ unsafe def normalize_negations (t : expr) : tactic (expr × expr) := do
             | none => do
               let pr ← mk_eq_refl e
               return ((), e, pr))
-        t { eta := ff }
+        t { eta := false }
   return (e, pr)
 
 unsafe def push_neg_at_hyp (h : Name) : tactic Unit := do
@@ -148,8 +148,8 @@ local postfix:9001 "*" => many
 
 open PushNeg
 
--- ././Mathport/Syntax/Translate/Basic.lean:794:4: warning: unsupported (TODO): `[tacs]
--- ././Mathport/Syntax/Translate/Basic.lean:794:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
 /-- Push negations in the goal of some assumption.
 
 For instance, a hypothesis `h : ¬ ∀ x, ∃ y, x ≤ y` will be transformed by `push_neg at h` into
@@ -195,7 +195,7 @@ theorem imp_of_not_imp_not (P Q : Prop) : (¬Q → ¬P) → P → Q := fun h hP 
 
 /-- Matches either an identifier "h" or a pair of identifiers "h with k" -/
 unsafe def name_with_opt : lean.parser (Name × Option Name) :=
-  Prod.mk <$> ident <*> (some <$> (tk "with" >> ident) <|> return none)
+  Prod.mk <$> ident <*> (some <$> (tk "with" *> ident) <|> return none)
 
 /-- Transforms the goal into its contrapositive.
 
@@ -207,14 +207,13 @@ unsafe def name_with_opt : lean.parser (Name × Option Name) :=
 * `contrapose h with new_h` uses the name `new_h` for the introduced hypothesis
 -/
 unsafe def tactic.interactive.contrapose (push : parse (tk "!")?) : parse (name_with_opt)? → tactic Unit
-  | some (h, h') =>
-    (((get_local h >>= revert) >> tactic.interactive.contrapose none) >> intro (h'.get_or_else h)) >> skip
+  | some (h, h') => (((get_local h >>= revert) >> tactic.interactive.contrapose none) >> intro (h'.getOrElse h)) >> skip
   | none => do
     let quote.1 ((%%ₓP) → %%ₓQ) ← target | fail "The goal is not an implication, and you didn't specify an assumption"
     let cp ←
       mk_mapp `` imp_of_not_imp_not [P, Q] <|> fail "contrapose only applies to nondependent arrows between props"
     apply cp
-    when push.is_some <| try (tactic.interactive.push_neg (loc.ns [none]))
+    when push <| try (tactic.interactive.push_neg (loc.ns [none]))
 
 add_tactic_doc
   { Name := "contrapose", category := DocCategory.tactic, declNames := [`tactic.interactive.contrapose],

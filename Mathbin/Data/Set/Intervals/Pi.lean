@@ -19,17 +19,17 @@ section PiPreorder
 variable [∀ i, Preorderₓ (α i)] (x y : ∀ i, α i)
 
 @[simp]
-theorem pi_univ_Ici : (pi univ fun i => Ici (x i)) = Ici x :=
+theorem pi_univ_Ici : (Pi Univ fun i => Ici (x i)) = Ici x :=
   ext fun y => by
     simp [Pi.le_def]
 
 @[simp]
-theorem pi_univ_Iic : (pi univ fun i => Iic (x i)) = Iic x :=
+theorem pi_univ_Iic : (Pi Univ fun i => Iic (x i)) = Iic x :=
   ext fun y => by
     simp [Pi.le_def]
 
 @[simp]
-theorem pi_univ_Icc : (pi univ fun i => Icc (x i) (y i)) = Icc x y :=
+theorem pi_univ_Icc : (Pi Univ fun i => Icc (x i) (y i)) = Icc x y :=
   ext fun y => by
     simp [Pi.le_def, forall_and_distrib]
 
@@ -48,19 +48,19 @@ section Nonempty
 
 variable [Nonempty ι]
 
-theorem pi_univ_Ioi_subset : (pi univ fun i => Ioi (x i)) ⊆ Ioi x := fun z hz =>
+theorem pi_univ_Ioi_subset : (Pi Univ fun i => Ioi (x i)) ⊆ Ioi x := fun z hz =>
   ⟨fun i => le_of_ltₓ <| hz i trivialₓ, fun h => (Nonempty.elimₓ ‹Nonempty ι›) fun i => (h i).not_lt (hz i trivialₓ)⟩
 
-theorem pi_univ_Iio_subset : (pi univ fun i => Iio (x i)) ⊆ Iio x :=
+theorem pi_univ_Iio_subset : (Pi Univ fun i => Iio (x i)) ⊆ Iio x :=
   @pi_univ_Ioi_subset ι (fun i => OrderDual (α i)) _ x _
 
-theorem pi_univ_Ioo_subset : (pi univ fun i => Ioo (x i) (y i)) ⊆ Ioo x y := fun x hx =>
+theorem pi_univ_Ioo_subset : (Pi Univ fun i => Ioo (x i) (y i)) ⊆ Ioo x y := fun x hx =>
   ⟨(pi_univ_Ioi_subset _) fun i hi => (hx i hi).1, (pi_univ_Iio_subset _) fun i hi => (hx i hi).2⟩
 
-theorem pi_univ_Ioc_subset : (pi univ fun i => Ioc (x i) (y i)) ⊆ Ioc x y := fun x hx =>
+theorem pi_univ_Ioc_subset : (Pi Univ fun i => Ioc (x i) (y i)) ⊆ Ioc x y := fun x hx =>
   ⟨(pi_univ_Ioi_subset _) fun i hi => (hx i hi).1, fun i => (hx i trivialₓ).2⟩
 
-theorem pi_univ_Ico_subset : (pi univ fun i => Ico (x i) (y i)) ⊆ Ico x y := fun x hx =>
+theorem pi_univ_Ico_subset : (Pi Univ fun i => Ico (x i) (y i)) ⊆ Ico x y := fun x hx =>
   ⟨fun i => (hx i trivialₓ).1, (pi_univ_Iio_subset _) fun i hi => (hx i hi).2⟩
 
 end Nonempty
@@ -70,7 +70,7 @@ variable [DecidableEq ι]
 open function (update)
 
 theorem pi_univ_Ioc_update_left {x y : ∀ i, α i} {i₀ : ι} {m : α i₀} (hm : x i₀ ≤ m) :
-    (pi univ fun i => Ioc (update x i₀ m i) (y i)) = { z | m < z i₀ } ∩ pi univ fun i => Ioc (x i) (y i) := by
+    (Pi Univ fun i => Ioc (update x i₀ m i) (y i)) = { z | m < z i₀ } ∩ Pi Univ fun i => Ioc (x i) (y i) := by
   have : Ioc m (y i₀) = Ioi m ∩ Ioc (x i₀) (y i₀) := by
     rw [← Ioi_inter_Iic, ← Ioi_inter_Iic, ← inter_assoc, inter_eq_self_of_subset_left (Ioi_subset_Ioi hm)]
   simp_rw [univ_pi_update i₀ _ _ fun i z => Ioc z (y i), ← pi_inter_compl ({i₀} : Set ι), singleton_pi', ← inter_assoc,
@@ -78,7 +78,7 @@ theorem pi_univ_Ioc_update_left {x y : ∀ i, α i} {i₀ : ι} {m : α i₀} (h
   rfl
 
 theorem pi_univ_Ioc_update_right {x y : ∀ i, α i} {i₀ : ι} {m : α i₀} (hm : m ≤ y i₀) :
-    (pi univ fun i => Ioc (x i) (update y i₀ m i)) = { z | z i₀ ≤ m } ∩ pi univ fun i => Ioc (x i) (y i) := by
+    (Pi Univ fun i => Ioc (x i) (update y i₀ m i)) = { z | z i₀ ≤ m } ∩ Pi Univ fun i => Ioc (x i) (y i) := by
   have : Ioc (x i₀) m = Iic m ∩ Ioc (x i₀) (y i₀) := by
     rw [← Ioi_inter_Iic, ← Ioi_inter_Iic, inter_left_comm, inter_eq_self_of_subset_left (Iic_subset_Iic.2 hm)]
   simp_rw [univ_pi_update i₀ y m fun i z => Ioc (x i) z, ← pi_inter_compl ({i₀} : Set ι), singleton_pi', ← inter_assoc,
@@ -86,7 +86,7 @@ theorem pi_univ_Ioc_update_right {x y : ∀ i, α i} {i₀ : ι} {m : α i₀} (
   rfl
 
 theorem disjoint_pi_univ_Ioc_update_left_right {x y : ∀ i, α i} {i₀ : ι} {m : α i₀} :
-    Disjoint (pi univ fun i => Ioc (x i) (update y i₀ m i)) (pi univ fun i => Ioc (update x i₀ m i) (y i)) := by
+    Disjoint (Pi Univ fun i => Ioc (x i) (update y i₀ m i)) (Pi Univ fun i => Ioc (update x i₀ m i) (y i)) := by
   rintro z ⟨h₁, h₂⟩
   refine' (h₁ i₀ (mem_univ _)).2.not_lt _
   simpa only [Function.update_same] using (h₂ i₀ (mem_univ _)).1
@@ -98,8 +98,8 @@ variable [DecidableEq ι] [∀ i, LinearOrderₓ (α i)]
 open function (update)
 
 theorem pi_univ_Ioc_update_union (x y : ∀ i, α i) (i₀ : ι) (m : α i₀) (hm : m ∈ Icc (x i₀) (y i₀)) :
-    ((pi univ fun i => Ioc (x i) (update y i₀ m i)) ∪ pi univ fun i => Ioc (update x i₀ m i) (y i)) =
-      pi univ fun i => Ioc (x i) (y i) :=
+    ((Pi Univ fun i => Ioc (x i) (update y i₀ m i)) ∪ Pi Univ fun i => Ioc (update x i₀ m i) (y i)) =
+      Pi Univ fun i => Ioc (x i) (y i) :=
   by
   simp_rw [pi_univ_Ioc_update_left hm.1, pi_univ_Ioc_update_right hm.2, ← union_inter_distrib_right, ← set_of_or,
     le_or_ltₓ, set_of_true, univ_inter]
@@ -113,7 +113,7 @@ E.g., if `x' = x` and `y' = y`, then this lemma states that the difference betwe
 `[x, y]` and the corresponding open box `{z | ∀ i, x i < z i < y i}` is covered by the union
 of the faces of `[x, y]`. -/
 theorem Icc_diff_pi_univ_Ioo_subset (x y x' y' : ∀ i, α i) :
-    (Icc x y \ pi univ fun i => Ioo (x' i) (y' i)) ⊆
+    (Icc x y \ Pi Univ fun i => Ioo (x' i) (y' i)) ⊆
       (⋃ i : ι, Icc x (update y i (x' i))) ∪ ⋃ i : ι, Icc (update x i (y' i)) y :=
   by
   rintro a ⟨⟨hxa, hay⟩, ha'⟩
@@ -127,7 +127,7 @@ E.g., if `x = y`, then this lemma states that the difference between a closed bo
 `[x, y]` and the product of half-open intervals `{z | ∀ i, x i < z i ≤ y i}` is covered by the union
 of the faces of `[x, y]` adjacent to `x`. -/
 theorem Icc_diff_pi_univ_Ioc_subset (x y z : ∀ i, α i) :
-    (Icc x z \ pi univ fun i => Ioc (y i) (z i)) ⊆ ⋃ i : ι, Icc x (update z i (y i)) := by
+    (Icc x z \ Pi Univ fun i => Ioc (y i) (z i)) ⊆ ⋃ i : ι, Icc x (update z i (y i)) := by
   rintro a ⟨⟨hax, haz⟩, hay⟩
   simpa [not_and_distrib, hax, le_update_iff, haz _] using hay
 

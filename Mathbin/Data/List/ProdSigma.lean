@@ -52,23 +52,23 @@ theorem nil_sigma (l : ∀ a, List (σ a)) : (@nil α).Sigma l = [] :=
 
 @[simp]
 theorem sigma_cons (a : α) (l₁ : List α) (l₂ : ∀ a, List (σ a)) :
-    (a :: l₁).Sigma l₂ = map (Sigma.mk a) (l₂ a) ++ l₁.sigma l₂ :=
+    (a :: l₁).Sigma l₂ = map (Sigma.mk a) (l₂ a) ++ l₁.Sigma l₂ :=
   rfl
 
 @[simp]
-theorem sigma_nil : ∀ l : List α, (l.sigma fun a => @nil (σ a)) = []
+theorem sigma_nil : ∀ l : List α, (l.Sigma fun a => @nil (σ a)) = []
   | [] => rfl
   | a :: l => by
     rw [sigma_cons, sigma_nil] <;> rfl
 
 @[simp]
 theorem mem_sigma {l₁ : List α} {l₂ : ∀ a, List (σ a)} {a : α} {b : σ a} :
-    Sigma.mk a b ∈ l₁.sigma l₂ ↔ a ∈ l₁ ∧ b ∈ l₂ a := by
+    Sigma.mk a b ∈ l₁.Sigma l₂ ↔ a ∈ l₁ ∧ b ∈ l₂ a := by
   simp only [List.sigma, mem_bind, mem_map, exists_prop, exists_and_distrib_left, And.left_comm, exists_eq_left,
     heq_iff_eq, exists_eq_right]
 
 theorem length_sigma (l₁ : List α) (l₂ : ∀ a, List (σ a)) :
-    length (l₁.sigma l₂) = (l₁.map fun a => length (l₂ a)).Sum := by
+    length (l₁.Sigma l₂) = (l₁.map fun a => length (l₂ a)).Sum := by
   induction' l₁ with x l₁ IH <;> [rfl, simp only [map, sigma_cons, length_append, length_map, IH, sum_cons]]
 
 end List

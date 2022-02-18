@@ -24,9 +24,9 @@ variable {R : Type u} [Ringₓ R] (M : ModuleCat.{v} R)
 
 /-- The categorical subobjects of a module `M` are in one-to-one correspondence with its
     submodules.-/
-noncomputable def subobject_Module : subobject M ≃o Submodule R M :=
+noncomputable def subobject_Module : Subobject M ≃o Submodule R M :=
   OrderIso.symm
-    { invFun := fun S => S.arrow.range, toFun := fun N => subobject.mk (↾N.subtype),
+    { invFun := fun S => S.arrow.range, toFun := fun N => Subobject.mk (↾N.Subtype),
       right_inv := fun S =>
         Eq.symm
           (by
@@ -67,8 +67,8 @@ noncomputable def subobject_Module : subobject M ≃o Submodule R M :=
         · exact (Submodule.range_subtype _).symm
            }
 
-instance well_powered_Module : well_powered (ModuleCat.{v} R) :=
-  ⟨fun M => ⟨⟨_, ⟨(subobject_Module M).toEquiv⟩⟩⟩⟩
+instance well_powered_Module : WellPowered (ModuleCat.{v} R) :=
+  ⟨fun M => ⟨⟨_, ⟨(subobjectModule M).toEquiv⟩⟩⟩⟩
 
 end ModuleCat
 

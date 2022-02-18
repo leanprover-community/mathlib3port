@@ -42,8 +42,8 @@ variable (X : RingedSpace.{v})
 /-- If the germ of a section `f` is a unit in the stalk at `x`, then `f` must be a unit on some small
 neighborhood around `x`.
 -/
-theorem is_unit_res_of_is_unit_germ (U : opens X) (f : X.presheaf.obj (op U)) (x : U)
-    (h : IsUnit (X.presheaf.germ x f)) : ∃ (V : opens X)(i : V ⟶ U)(hxV : x.1 ∈ V), IsUnit (X.presheaf.map i.op f) := by
+theorem is_unit_res_of_is_unit_germ (U : Opens X) (f : X.Presheaf.obj (op U)) (x : U)
+    (h : IsUnit (X.Presheaf.germ x f)) : ∃ (V : Opens X)(i : V ⟶ U)(hxV : x.1 ∈ V), IsUnit (X.Presheaf.map i.op f) := by
   obtain ⟨g', heq⟩ := h.exists_right_inv
   obtain ⟨V, hxV, g, rfl⟩ := X.presheaf.germ_exist x.1 g'
   let W := U⊓V
@@ -57,7 +57,7 @@ theorem is_unit_res_of_is_unit_germ (U : opens X) (f : X.presheaf.obj (op U)) (x
   exact is_unit_of_mul_eq_one _ _ heq'
 
 /-- If a section `f` is a unit in each stalk, `f` must be a unit. -/
-theorem is_unit_of_is_unit_germ (U : opens X) (f : X.presheaf.obj (op U)) (h : ∀ x : U, IsUnit (X.presheaf.germ x f)) :
+theorem is_unit_of_is_unit_germ (U : Opens X) (f : X.Presheaf.obj (op U)) (h : ∀ x : U, IsUnit (X.Presheaf.germ x f)) :
     IsUnit f := by
   choose V iVU m h_unit using fun x : U => X.is_unit_res_of_is_unit_germ U f x (h x)
   have hcover : U ≤ supr V := by
@@ -86,8 +86,8 @@ theorem is_unit_of_is_unit_germ (U : opens X) (f : X.presheaf.obj (op U)) (h : �
 /-- The basic open of a section `f` is the set of all points `x`, such that the germ of `f` at
 `x` is a unit.
 -/
-def basic_open {U : opens X} (f : X.presheaf.obj (op U)) : opens X where
-  val := coe '' { x : U | IsUnit (X.presheaf.germ x f) }
+def basic_open {U : Opens X} (f : X.Presheaf.obj (op U)) : Opens X where
+  val := coe '' { x : U | IsUnit (X.Presheaf.germ x f) }
   property := by
     rw [is_open_iff_forall_mem_open]
     rintro _ ⟨x, hx, rfl⟩
@@ -105,8 +105,8 @@ def basic_open {U : opens X} (f : X.presheaf.obj (op U)) : opens X where
       
 
 @[simp]
-theorem mem_basic_open {U : opens X} (f : X.presheaf.obj (op U)) (x : U) :
-    ↑x ∈ X.basic_open f ↔ IsUnit (X.presheaf.germ x f) := by
+theorem mem_basic_open {U : Opens X} (f : X.Presheaf.obj (op U)) (x : U) :
+    ↑x ∈ X.basicOpen f ↔ IsUnit (X.Presheaf.germ x f) := by
   constructor
   · rintro ⟨x, hx, a⟩
     cases Subtype.eq a
@@ -117,23 +117,23 @@ theorem mem_basic_open {U : opens X} (f : X.presheaf.obj (op U)) (x : U) :
     
 
 @[simp]
-theorem mem_top_basic_open (f : X.presheaf.obj (op ⊤)) (x : X) :
-    x ∈ X.basic_open f ↔
+theorem mem_top_basic_open (f : X.Presheaf.obj (op ⊤)) (x : X) :
+    x ∈ X.basicOpen f ↔
       IsUnit
-        (X.presheaf.germ
+        (X.Presheaf.germ
           ⟨x,
-            show x ∈ (⊤ : opens X) by
+            show x ∈ (⊤ : Opens X) by
               trivial⟩
           f) :=
   mem_basic_open X f ⟨x, _⟩
 
-theorem basic_open_subset {U : opens X} (f : X.presheaf.obj (op U)) : X.basic_open f ⊆ U := by
+theorem basic_open_subset {U : Opens X} (f : X.Presheaf.obj (op U)) : X.basicOpen f ⊆ U := by
   rintro _ ⟨x, hx, rfl⟩
   exact x.2
 
 /-- The restriction of a section `f` to the basic open of `f` is a unit. -/
-theorem is_unit_res_basic_open {U : opens X} (f : X.presheaf.obj (op U)) :
-    IsUnit (X.presheaf.map (@hom_of_le (opens X) _ _ _ (X.basic_open_subset f)).op f) := by
+theorem is_unit_res_basic_open {U : Opens X} (f : X.Presheaf.obj (op U)) :
+    IsUnit (X.Presheaf.map (@homOfLe (Opens X) _ _ _ (X.basic_open_subset f)).op f) := by
   apply is_unit_of_is_unit_germ
   rintro ⟨_, ⟨x, hx, rfl⟩⟩
   convert hx
@@ -141,8 +141,8 @@ theorem is_unit_res_basic_open {U : opens X} (f : X.presheaf.obj (op U)) :
   rfl
 
 @[simp]
-theorem basic_open_res {U V : opens Xᵒᵖ} (i : U ⟶ V) (f : X.presheaf.obj U) :
-    @basic_open X (unop V) (X.presheaf.map i f) = unop V ∩ @basic_open X (unop U) f := by
+theorem basic_open_res {U V : Opens Xᵒᵖ} (i : U ⟶ V) (f : X.Presheaf.obj U) :
+    @basicOpen X (unop V) (X.Presheaf.map i f) = unop V ∩ @basicOpen X (unop U) f := by
   induction U using Opposite.rec
   induction V using Opposite.rec
   let g := i.unop
@@ -167,8 +167,8 @@ theorem basic_open_res {U V : opens Xᵒᵖ} (i : U ⟶ V) (f : X.presheaf.obj U
     
 
 @[simp]
-theorem basic_open_res_eq {U V : opens Xᵒᵖ} (i : U ⟶ V) [is_iso i] (f : X.presheaf.obj U) :
-    @basic_open X (unop V) (X.presheaf.map i f) = @RingedSpace.basic_open X (unop U) f := by
+theorem basic_open_res_eq {U V : Opens Xᵒᵖ} (i : U ⟶ V) [IsIso i] (f : X.Presheaf.obj U) :
+    @basicOpen X (unop V) (X.Presheaf.map i f) = @RingedSpace.basicOpen X (unop U) f := by
   apply le_antisymmₓ
   · rw [X.basic_open_res i f]
     exact inf_le_right
@@ -180,8 +180,8 @@ theorem basic_open_res_eq {U V : opens Xᵒᵖ} (i : U ⟶ V) [is_iso i] (f : X.
     
 
 @[simp]
-theorem basic_open_mul {U : opens X} (f g : X.presheaf.obj (op U)) :
-    X.basic_open (f * g) = X.basic_open f⊓X.basic_open g := by
+theorem basic_open_mul {U : Opens X} (f g : X.Presheaf.obj (op U)) :
+    X.basicOpen (f * g) = X.basicOpen f⊓X.basicOpen g := by
   ext1
   dsimp [RingedSpace.basic_open]
   rw [Set.image_inter Subtype.coe_injective]
@@ -190,7 +190,7 @@ theorem basic_open_mul {U : opens X} (f g : X.presheaf.obj (op U)) :
   simp_rw [map_mul]
   exact IsUnit.mul_iff
 
-theorem basic_open_of_is_unit {U : opens X} {f : X.presheaf.obj (op U)} (hf : IsUnit f) : X.basic_open f = U := by
+theorem basic_open_of_is_unit {U : Opens X} {f : X.Presheaf.obj (op U)} (hf : IsUnit f) : X.basicOpen f = U := by
   apply le_antisymmₓ
   · exact X.basic_open_subset f
     

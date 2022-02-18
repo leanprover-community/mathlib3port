@@ -27,24 +27,24 @@ namespace Semiconj
 
 variable {f fab : α → β} {fbc : β → γ} {ga ga' : α → α} {gb gb' : β → β} {gc gc' : γ → γ}
 
-protected theorem comp_eq (h : semiconj f ga gb) : f ∘ ga = gb ∘ f :=
+protected theorem comp_eq (h : Semiconj f ga gb) : f ∘ ga = gb ∘ f :=
   funext h
 
-protected theorem Eq (h : semiconj f ga gb) (x : α) : f (ga x) = gb (f x) :=
+protected theorem Eq (h : Semiconj f ga gb) (x : α) : f (ga x) = gb (f x) :=
   h x
 
-theorem comp_right (h : semiconj f ga gb) (h' : semiconj f ga' gb') : semiconj f (ga ∘ ga') (gb ∘ gb') := fun x => by
+theorem comp_right (h : Semiconj f ga gb) (h' : Semiconj f ga' gb') : Semiconj f (ga ∘ ga') (gb ∘ gb') := fun x => by
   rw [comp_app, h.eq, h'.eq]
 
-theorem comp_left (hab : semiconj fab ga gb) (hbc : semiconj fbc gb gc) : semiconj (fbc ∘ fab) ga gc := fun x => by
+theorem comp_left (hab : Semiconj fab ga gb) (hbc : Semiconj fbc gb gc) : Semiconj (fbc ∘ fab) ga gc := fun x => by
   simp only [comp_app, hab.eq, hbc.eq]
 
-theorem id_right : semiconj f id id := fun _ => rfl
+theorem id_right : Semiconj f id id := fun _ => rfl
 
-theorem id_left : semiconj id ga ga := fun _ => rfl
+theorem id_left : Semiconj id ga ga := fun _ => rfl
 
-theorem inverses_right (h : semiconj f ga gb) (ha : RightInverse ga' ga) (hb : left_inverse gb' gb) :
-    semiconj f ga' gb' := fun x => by
+theorem inverses_right (h : Semiconj f ga gb) (ha : RightInverse ga' ga) (hb : LeftInverse gb' gb) :
+    Semiconj f ga' gb' := fun x => by
   rw [← hb (f (ga' x)), ← h.eq, ha x]
 
 end Semiconj
@@ -53,9 +53,9 @@ end Semiconj
 Given `h : function.commute f g` and `a : α`, we have `h a : f (g a) = g (f a)` and
 `h.comp_eq : f ∘ g = g ∘ f`. -/
 def commute (f g : α → α) : Prop :=
-  semiconj f g g
+  Semiconj f g g
 
-theorem semiconj.commute {f g : α → α} (h : semiconj f g g) : commute f g :=
+theorem semiconj.commute {f g : α → α} (h : Semiconj f g g) : Commute f g :=
   h
 
 namespace Commute
@@ -63,21 +63,21 @@ namespace Commute
 variable {f f' g g' : α → α}
 
 @[refl]
-theorem refl (f : α → α) : commute f f := fun _ => Eq.refl _
+theorem refl (f : α → α) : Commute f f := fun _ => Eq.refl _
 
 @[symm]
-theorem symm (h : commute f g) : commute g f := fun x => (h x).symm
+theorem symm (h : Commute f g) : Commute g f := fun x => (h x).symm
 
-theorem comp_right (h : commute f g) (h' : commute f g') : commute f (g ∘ g') :=
-  h.comp_right h'
+theorem comp_right (h : Commute f g) (h' : Commute f g') : Commute f (g ∘ g') :=
+  h.compRight h'
 
-theorem comp_left (h : commute f g) (h' : commute f' g) : commute (f ∘ f') g :=
-  (h.symm.comp_right h'.symm).symm
+theorem comp_left (h : Commute f g) (h' : Commute f' g) : Commute (f ∘ f') g :=
+  (h.symm.compRight h'.symm).symm
 
-theorem id_right : commute f id :=
+theorem id_right : Commute f id :=
   semiconj.id_right
 
-theorem id_left : commute id f :=
+theorem id_left : Commute id f :=
   semiconj.id_left
 
 end Commute
@@ -92,33 +92,33 @@ namespace Semiconj₂
 
 variable {f : α → β} {ga : α → α → α} {gb : β → β → β}
 
-protected theorem Eq (h : semiconj₂ f ga gb) (x y : α) : f (ga x y) = gb (f x) (f y) :=
+protected theorem Eq (h : Semiconj₂ f ga gb) (x y : α) : f (ga x y) = gb (f x) (f y) :=
   h x y
 
-protected theorem comp_eq (h : semiconj₂ f ga gb) : bicompr f ga = bicompl gb f f :=
+protected theorem comp_eq (h : Semiconj₂ f ga gb) : bicompr f ga = bicompl gb f f :=
   funext fun x => funext <| h x
 
-theorem id_left (op : α → α → α) : semiconj₂ id op op := fun _ _ => rfl
+theorem id_left (op : α → α → α) : Semiconj₂ id op op := fun _ _ => rfl
 
-theorem comp {f' : β → γ} {gc : γ → γ → γ} (hf' : semiconj₂ f' gb gc) (hf : semiconj₂ f ga gb) :
-    semiconj₂ (f' ∘ f) ga gc := fun x y => by
+theorem comp {f' : β → γ} {gc : γ → γ → γ} (hf' : Semiconj₂ f' gb gc) (hf : Semiconj₂ f ga gb) :
+    Semiconj₂ (f' ∘ f) ga gc := fun x y => by
   simp only [hf'.eq, hf.eq, comp_app]
 
-theorem is_associative_right [IsAssociative α ga] (h : semiconj₂ f ga gb) (h_surj : surjective f) :
+theorem is_associative_right [IsAssociative α ga] (h : Semiconj₂ f ga gb) (h_surj : Surjective f) :
     IsAssociative β gb :=
   ⟨h_surj.forall₃.2 fun x₁ x₂ x₃ => by
       simp only [← h.eq, @IsAssociative.assoc _ ga]⟩
 
-theorem is_associative_left [IsAssociative β gb] (h : semiconj₂ f ga gb) (h_inj : injective f) : IsAssociative α ga :=
+theorem is_associative_left [IsAssociative β gb] (h : Semiconj₂ f ga gb) (h_inj : Injective f) : IsAssociative α ga :=
   ⟨fun x₁ x₂ x₃ =>
     h_inj <| by
       simp only [h.eq, @IsAssociative.assoc _ gb]⟩
 
-theorem is_idempotent_right [IsIdempotent α ga] (h : semiconj₂ f ga gb) (h_surj : surjective f) : IsIdempotent β gb :=
+theorem is_idempotent_right [IsIdempotent α ga] (h : Semiconj₂ f ga gb) (h_surj : Surjective f) : IsIdempotent β gb :=
   ⟨h_surj.forall.2 fun x => by
       simp only [← h.eq, @IsIdempotent.idempotent _ ga]⟩
 
-theorem is_idempotent_left [IsIdempotent β gb] (h : semiconj₂ f ga gb) (h_inj : injective f) : IsIdempotent α ga :=
+theorem is_idempotent_left [IsIdempotent β gb] (h : Semiconj₂ f ga gb) (h_inj : Injective f) : IsIdempotent α ga :=
   ⟨fun x =>
     h_inj <| by
       rw [h.eq, @IsIdempotent.idempotent _ gb]⟩

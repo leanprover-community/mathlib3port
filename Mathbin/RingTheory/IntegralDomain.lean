@@ -30,10 +30,10 @@ section CancelMonoidWithZero
 
 variable {M : Type _} [CancelMonoidWithZero M] [Fintype M]
 
-theorem mul_right_bijective_of_fintype₀ {a : M} (ha : a ≠ 0) : bijective fun b => a * b :=
+theorem mul_right_bijective_of_fintype₀ {a : M} (ha : a ≠ 0) : Bijective fun b => a * b :=
   Fintype.injective_iff_bijective.1 <| mul_right_injective₀ ha
 
-theorem mul_left_bijective_of_fintype₀ {a : M} (ha : a ≠ 0) : bijective fun b => b * a :=
+theorem mul_left_bijective_of_fintype₀ {a : M} (ha : a ≠ 0) : Bijective fun b => b * a :=
   Fintype.injective_iff_bijective.1 <| mul_left_injective₀ ha
 
 /-- Every finite nontrivial cancel_monoid_with_zero is a group_with_zero. -/
@@ -66,8 +66,8 @@ end Ringₓ
 
 variable [CommRingₓ R] [IsDomain R] [Groupₓ G] [Fintype G]
 
-theorem card_nth_roots_subgroup_units (f : G →* R) (hf : injective f) {n : ℕ} (hn : 0 < n) (g₀ : G) :
-    ({ g ∈ univ | g ^ n = g₀ } : Finset G).card ≤ (nth_roots n (f g₀)).card := by
+theorem card_nth_roots_subgroup_units (f : G →* R) (hf : Injective f) {n : ℕ} (hn : 0 < n) (g₀ : G) :
+    ({ g ∈ univ | g ^ n = g₀ } : Finset G).card ≤ (nthRoots n (f g₀)).card := by
   have : DecidableEq R := Classical.decEq _
   refine' le_transₓ _ (nth_roots n (f g₀)).to_finset_card_le
   apply card_le_card_of_inj_on f
@@ -81,7 +81,7 @@ theorem card_nth_roots_subgroup_units (f : G →* R) (hf : injective f) {n : ℕ
     
 
 /-- A finite subgroup of the unit group of an integral domain is cyclic. -/
-theorem is_cyclic_of_subgroup_is_domain (f : G →* R) (hf : injective f) : IsCyclic G := by
+theorem is_cyclic_of_subgroup_is_domain (f : G →* R) (hf : Injective f) : IsCyclic G := by
   classical
   apply is_cyclic_of_card_pow_eq_one_le
   intro n hn

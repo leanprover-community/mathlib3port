@@ -58,11 +58,11 @@ theorem holder_on_with_singleton (C r : ℝ≥0 ) (f : X → Y) (x : X) : Holder
   rw [edist_self]
   exact zero_le _
 
-theorem Set.Subsingleton.holder_on_with {s : Set X} (hs : s.subsingleton) (C r : ℝ≥0 ) (f : X → Y) :
+theorem Set.Subsingleton.holder_on_with {s : Set X} (hs : s.Subsingleton) (C r : ℝ≥0 ) (f : X → Y) :
     HolderOnWith C r f s :=
   hs.induction_on (holder_on_with_empty C r f) (holder_on_with_singleton C r f)
 
-theorem holder_on_with_univ {C r : ℝ≥0 } {f : X → Y} : HolderOnWith C r f univ ↔ HolderWith C r f := by
+theorem holder_on_with_univ {C r : ℝ≥0 } {f : X → Y} : HolderOnWith C r f Univ ↔ HolderWith C r f := by
   simp only [HolderOnWith, HolderWith, mem_univ, true_implies_iff]
 
 @[simp]
@@ -96,7 +96,7 @@ theorem edist_le_of_le (h : HolderOnWith C r f s) {x y : X} (hx : x ∈ s) (hy :
   (h.edist_le hx hy).trans (mul_le_mul_left' (Ennreal.rpow_le_rpow hd r.coe_nonneg) _)
 
 theorem comp {Cg rg : ℝ≥0 } {g : Y → Z} {t : Set Y} (hg : HolderOnWith Cg rg g t) {Cf rf : ℝ≥0 } {f : X → Y}
-    (hf : HolderOnWith Cf rf f s) (hst : maps_to f s t) : HolderOnWith (Cg * Cf ^ (rg : ℝ)) (rg * rf) (g ∘ f) s := by
+    (hf : HolderOnWith Cf rf f s) (hst : MapsTo f s t) : HolderOnWith (Cg * Cf ^ (rg : ℝ)) (rg * rf) (g ∘ f) s := by
   intro x hx y hy
   rw [Ennreal.coe_mul, mul_comm rg, Nnreal.coe_mul, Ennreal.rpow_mul, mul_assoc, ←
     Ennreal.coe_rpow_of_nonneg _ rg.coe_nonneg, ← Ennreal.mul_rpow_of_nonneg _ _ rg.coe_nonneg]
@@ -104,7 +104,7 @@ theorem comp {Cg rg : ℝ≥0 } {g : Y → Z} {t : Set Y} (hg : HolderOnWith Cg 
 
 theorem comp_holder_with {Cg rg : ℝ≥0 } {g : Y → Z} {t : Set Y} (hg : HolderOnWith Cg rg g t) {Cf rf : ℝ≥0 } {f : X → Y}
     (hf : HolderWith Cf rf f) (ht : ∀ x, f x ∈ t) : HolderWith (Cg * Cf ^ (rg : ℝ)) (rg * rf) (g ∘ f) :=
-  holder_on_with_univ.mp <| hg.comp (hf.holder_on_with univ) fun x _ => ht x
+  holder_on_with_univ.mp <| hg.comp (hf.HolderOnWith Univ) fun x _ => ht x
 
 /-- A Hölder continuous function is uniformly continuous -/
 protected theorem UniformContinuousOn (hf : HolderOnWith C r f s) (h0 : 0 < r) : UniformContinuousOn f s := by
@@ -115,7 +115,7 @@ protected theorem UniformContinuousOn (hf : HolderOnWith C r f s) (h0 : 0 < r) :
   exact ⟨δ, δ0, fun x hx y hy h => (hf.edist_le hx hy).trans_lt (H h)⟩
 
 protected theorem ContinuousOn (hf : HolderOnWith C r f s) (h0 : 0 < r) : ContinuousOn f s :=
-  (hf.uniform_continuous_on h0).ContinuousOn
+  (hf.UniformContinuousOn h0).ContinuousOn
 
 protected theorem mono (hf : HolderOnWith C r f s) (ht : t ⊆ s) : HolderOnWith C r f t := fun x hx y hy =>
   hf.edist_le (ht hx) (ht hy)
@@ -154,22 +154,22 @@ theorem edist_le (h : HolderWith C r f) (x y : X) : edist (f x) (f y) ≤ C * ed
 
 theorem edist_le_of_le (h : HolderWith C r f) {x y : X} {d : ℝ≥0∞} (hd : edist x y ≤ d) :
     edist (f x) (f y) ≤ C * d ^ (r : ℝ) :=
-  (h.holder_on_with univ).edist_le_of_le trivialₓ trivialₓ hd
+  (h.HolderOnWith Univ).edist_le_of_le trivialₓ trivialₓ hd
 
 theorem comp {Cg rg : ℝ≥0 } {g : Y → Z} (hg : HolderWith Cg rg g) {Cf rf : ℝ≥0 } {f : X → Y} (hf : HolderWith Cf rf f) :
     HolderWith (Cg * Cf ^ (rg : ℝ)) (rg * rf) (g ∘ f) :=
-  (hg.holder_on_with univ).comp_holder_with hf fun _ => trivialₓ
+  (hg.HolderOnWith Univ).comp_holder_with hf fun _ => trivialₓ
 
 theorem comp_holder_on_with {Cg rg : ℝ≥0 } {g : Y → Z} (hg : HolderWith Cg rg g) {Cf rf : ℝ≥0 } {f : X → Y} {s : Set X}
     (hf : HolderOnWith Cf rf f s) : HolderOnWith (Cg * Cf ^ (rg : ℝ)) (rg * rf) (g ∘ f) s :=
-  (hg.holder_on_with univ).comp hf fun _ _ => trivialₓ
+  (hg.HolderOnWith Univ).comp hf fun _ _ => trivialₓ
 
 /-- A Hölder continuous function is uniformly continuous -/
 protected theorem UniformContinuous (hf : HolderWith C r f) (h0 : 0 < r) : UniformContinuous f :=
-  uniform_continuous_on_univ.mp <| (hf.holder_on_with univ).UniformContinuousOn h0
+  uniform_continuous_on_univ.mp <| (hf.HolderOnWith Univ).UniformContinuousOn h0
 
 protected theorem Continuous (hf : HolderWith C r f) (h0 : 0 < r) : Continuous f :=
-  (hf.uniform_continuous h0).Continuous
+  (hf.UniformContinuous h0).Continuous
 
 theorem ediam_image_le (hf : HolderWith C r f) (s : Set X) : Emetric.diam (f '' s) ≤ C * Emetric.diam s ^ (r : ℝ) :=
   Emetric.diam_image_le_iff.2 fun x hx y hy => hf.edist_le_of_le <| Emetric.edist_le_diam_of_mem hx hy

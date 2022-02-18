@@ -25,11 +25,11 @@ class unbundled_hom {c : Type u → Type u} (hom : ∀ {α β}, c α → c β �
 
 namespace UnbundledHom
 
-variable (c : Type u → Type u) (hom : ∀ ⦃α β⦄, c α → c β → (α → β) → Prop) [𝒞 : unbundled_hom hom]
+variable (c : Type u → Type u) (hom : ∀ ⦃α β⦄, c α → c β → (α → β) → Prop) [𝒞 : UnbundledHom hom]
 
 include 𝒞
 
-instance bundled_hom : bundled_hom fun α β Iα : c α Iβ : c β => Subtype (hom Iα Iβ) where
+instance bundled_hom : BundledHom fun α β Iα : c α Iβ : c β => Subtype (hom Iα Iβ) where
   toFun := fun _ _ _ _ => Subtype.val
   id := fun α Iα => ⟨id, hom_id hom Iα⟩
   id_to_fun := by
@@ -42,7 +42,7 @@ instance bundled_hom : bundled_hom fun α β Iα : c α Iβ : c β => Subtype (h
 
 section HasForget₂
 
-variable {c hom} {c' : Type u → Type u} {hom' : ∀ ⦃α β⦄, c' α → c' β → (α → β) → Prop} [𝒞' : unbundled_hom hom']
+variable {c hom} {c' : Type u → Type u} {hom' : ∀ ⦃α β⦄, c' α → c' β → (α → β) → Prop} [𝒞' : UnbundledHom hom']
 
 include 𝒞'
 
@@ -50,8 +50,8 @@ variable (obj : ∀ ⦃α⦄, c α → c' α) (map : ∀ ⦃α β Iα Iβ f⦄, 
 
 /-- A custom constructor for forgetful functor
 between concrete categories defined using `unbundled_hom`. -/
-def mk_has_forget₂ : has_forget₂ (bundled c) (bundled c') :=
-  bundled_hom.mk_has_forget₂ obj (fun X Y f => ⟨f.val, map f.property⟩) fun _ _ _ => rfl
+def mk_has_forget₂ : HasForget₂ (Bundled c) (Bundled c') :=
+  BundledHom.mkHasForget₂ obj (fun X Y f => ⟨f.val, map f.property⟩) fun _ _ _ => rfl
 
 end HasForget₂
 

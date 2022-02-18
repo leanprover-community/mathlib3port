@@ -45,7 +45,7 @@ variable {m n : Type _} [DecidableEq n] [Fintype n] [DecidableEq m] [Fintype m]
 
 variable {R : Type v} [CommRingₓ R]
 
--- ././Mathport/Syntax/Translate/Basic.lean:342:9: unsupported: advanced prec syntax
+-- ././Mathport/Syntax/Translate/Basic.lean:343:9: unsupported: advanced prec syntax
 local notation "ε" σ:999 => ((sign σ : ℤ) : R)
 
 /-- `det` is an `alternating_map` in the rows of the matrix. -/
@@ -54,16 +54,16 @@ def det_row_alternating : AlternatingMap R (n → R) R n :=
 
 /-- The determinant of a matrix given by the Leibniz formula. -/
 abbrev det (M : Matrix n n R) : R :=
-  det_row_alternating M
+  detRowAlternating M
 
-theorem det_apply (M : Matrix n n R) : M.det = ∑ σ : perm n, σ.sign • ∏ i, M (σ i) i :=
+theorem det_apply (M : Matrix n n R) : M.det = ∑ σ : Perm n, σ.sign • ∏ i, M (σ i) i :=
   MultilinearMap.alternatization_apply _ M
 
-theorem det_apply' (M : Matrix n n R) : M.det = ∑ σ : perm n, ε σ * ∏ i, M (σ i) i := by
+theorem det_apply' (M : Matrix n n R) : M.det = ∑ σ : Perm n, ε σ * ∏ i, M (σ i) i := by
   simp [det_apply, Units.smul_def]
 
 @[simp]
-theorem det_diagonal {d : n → R} : det (diagonal d) = ∏ i, d i := by
+theorem det_diagonal {d : n → R} : det (diagonalₓ d) = ∏ i, d i := by
   rw [det_apply']
   refine' (Finset.sum_eq_single 1 _ _).trans _
   · intro σ h1 h2
@@ -82,7 +82,7 @@ theorem det_diagonal {d : n → R} : det (diagonal d) = ∏ i, d i := by
 
 @[simp]
 theorem det_zero (h : Nonempty n) : det (0 : Matrix n n R) = 0 :=
-  (det_row_alternating : AlternatingMap R (n → R) R n).map_zero
+  (detRowAlternating : AlternatingMap R (n → R) R n).map_zero
 
 @[simp]
 theorem det_one : det (1 : Matrix n n R) = 1 := by
@@ -116,8 +116,8 @@ theorem det_eq_elem_of_card_eq_one {A : Matrix n n R} (h : Fintype.card n = 1) (
   have : Subsingleton n := fintype.card_le_one_iff_subsingleton.mp h.le
   det_eq_elem_of_subsingleton _ _
 
-theorem det_mul_aux {M N : Matrix n n R} {p : n → n} (H : ¬bijective p) :
-    (∑ σ : perm n, ε σ * ∏ x, M (σ x) (p x) * N (p x) x) = 0 := by
+theorem det_mul_aux {M N : Matrix n n R} {p : n → n} (H : ¬Bijective p) :
+    (∑ σ : Perm n, ε σ * ∏ x, M (σ x) (p x) * N (p x) x) = 0 := by
   obtain ⟨i, j, hpij, hij⟩ : ∃ i j, p i = p j ∧ i ≠ j := by
     rw [← Fintype.injective_iff_bijective, injective] at H
     push_neg  at H
@@ -135,21 +135,21 @@ theorem det_mul_aux {M N : Matrix n n R} {p : n → n} (H : ¬bijective p) :
 @[simp]
 theorem det_mul (M N : Matrix n n R) : det (M ⬝ N) = det M * det N :=
   calc
-    det (M ⬝ N) = ∑ p : n → n, ∑ σ : perm n, ε σ * ∏ i, M (σ i) (p i) * N (p i) i := by
+    det (M ⬝ N) = ∑ p : n → n, ∑ σ : Perm n, ε σ * ∏ i, M (σ i) (p i) * N (p i) i := by
       simp only [det_apply', mul_apply, prod_univ_sum, mul_sum, Fintype.pi_finset_univ] <;> rw [Finset.sum_comm]
-    _ = ∑ p in (@univ (n → n) _).filter bijective, ∑ σ : perm n, ε σ * ∏ i, M (σ i) (p i) * N (p i) i :=
+    _ = ∑ p in (@univ (n → n) _).filter Bijective, ∑ σ : Perm n, ε σ * ∏ i, M (σ i) (p i) * N (p i) i :=
       Eq.symm <|
         sum_subset (filter_subset _ _) fun f _ hbij =>
           det_mul_aux <| by
             simpa only [true_andₓ, mem_filter, mem_univ] using hbij
-    _ = ∑ τ : perm n, ∑ σ : perm n, ε σ * ∏ i, M (σ i) (τ i) * N (τ i) i :=
+    _ = ∑ τ : Perm n, ∑ σ : Perm n, ε σ * ∏ i, M (σ i) (τ i) * N (τ i) i :=
       sum_bij (fun p h => Equivₓ.ofBijective p (mem_filter.1 h).2) (fun _ _ => mem_univ _) (fun _ _ => rfl)
         (fun _ _ _ _ h => by
           injection h)
-        fun b _ => ⟨b, mem_filter.2 ⟨mem_univ _, b.bijective⟩, coe_fn_injective rfl⟩
-    _ = ∑ σ : perm n, ∑ τ : perm n, (∏ i, N (σ i) i) * ε τ * ∏ j, M (τ j) (σ j) := by
+        fun b _ => ⟨b, mem_filter.2 ⟨mem_univ _, b.Bijective⟩, coe_fn_injective rfl⟩
+    _ = ∑ σ : Perm n, ∑ τ : Perm n, (∏ i, N (σ i) i) * ε τ * ∏ j, M (τ j) (σ j) := by
       simp only [mul_comm, mul_left_commₓ, prod_mul_distrib, mul_assoc]
-    _ = ∑ σ : perm n, ∑ τ : perm n, (∏ i, N (σ i) i) * (ε σ * ε τ) * ∏ i, M (τ i) i :=
+    _ = ∑ σ : Perm n, ∑ τ : Perm n, (∏ i, N (σ i) i) * (ε σ * ε τ) * ∏ i, M (τ i) i :=
       sum_congr rfl fun σ _ =>
         Fintype.sum_equiv (Equivₓ.mulRight σ⁻¹) _ _ fun τ => by
           have : (∏ j, M (τ j) (σ j)) = ∏ j, M ((τ * σ⁻¹) j) j := by
@@ -176,7 +176,7 @@ def det_monoid_hom : Matrix n n R →* R where
   map_mul' := det_mul
 
 @[simp]
-theorem coe_det_monoid_hom : (det_monoid_hom : Matrix n n R → R) = det :=
+theorem coe_det_monoid_hom : (detMonoidHom : Matrix n n R → R) = det :=
   rfl
 
 /-- On square matrices, `mul_comm` applies under `det`. -/
@@ -210,8 +210,8 @@ theorem det_transpose (M : Matrix n n R) : (M)ᵀ.det = M.det := by
   simp
 
 /-- Permuting the columns changes the sign of the determinant. -/
-theorem det_permute (σ : perm n) (M : Matrix n n R) : (Matrix.det fun i => M (σ i)) = σ.sign * M.det :=
-  ((det_row_alternating : AlternatingMap R (n → R) R n).map_perm M σ).trans
+theorem det_permute (σ : Perm n) (M : Matrix n n R) : (Matrix.det fun i => M (σ i)) = σ.sign * M.det :=
+  ((detRowAlternating : AlternatingMap R (n → R) R n).map_perm M σ).trans
     (by
       simp [Units.smul_def])
 
@@ -237,16 +237,16 @@ theorem det_reindex_self (e : m ≃ n) (A : Matrix m m R) : det (reindex e e A) 
 
 /-- The determinant of a permutation matrix equals its sign. -/
 @[simp]
-theorem det_permutation (σ : perm n) : Matrix.det (σ.to_pequiv.to_matrix : Matrix n n R) = σ.sign := by
+theorem det_permutation (σ : Perm n) : Matrix.det (σ.toPequiv.toMatrix : Matrix n n R) = σ.sign := by
   rw [← Matrix.mul_one (σ.to_pequiv.to_matrix : Matrix n n R), Pequiv.to_pequiv_mul_matrix, det_permute, det_one,
     mul_oneₓ]
 
 @[simp]
 theorem det_smul (A : Matrix n n R) (c : R) : det (c • A) = c ^ Fintype.card n * det A :=
   calc
-    det (c • A) = det (Matrix.mul (diagonal fun _ => c) A) := by
+    det (c • A) = det (Matrix.mul (diagonalₓ fun _ => c) A) := by
       rw [smul_eq_diagonal_mul]
-    _ = det (diagonal fun _ => c) * det A := det_mul _ _
+    _ = det (diagonalₓ fun _ => c) * det A := det_mul _ _
     _ = c ^ Fintype.card n * det A := by
       simp [card_univ]
     
@@ -255,7 +255,7 @@ theorem det_smul (A : Matrix n n R) (c : R) : det (c • A) = c ^ Fintype.card n
 the product of the `v`s. -/
 theorem det_mul_row (v : n → R) (A : Matrix n n R) : (det fun i j => v j * A i j) = (∏ i, v i) * det A :=
   calc
-    (det fun i j => v j * A i j) = det (A ⬝ diagonal v) :=
+    (det fun i j => v j * A i j) = det (A ⬝ diagonalₓ v) :=
       congr_argₓ det <| by
         ext
         simp [mul_comm]
@@ -270,25 +270,25 @@ theorem det_mul_column (v : n → R) (A : Matrix n n R) : (det fun i j => v i * 
 
 @[simp]
 theorem det_pow (M : Matrix m m R) (n : ℕ) : det (M ^ n) = det M ^ n :=
-  (det_monoid_hom : Matrix m m R →* R).map_pow M n
+  (detMonoidHom : Matrix m m R →* R).map_pow M n
 
 section HomMap
 
 variable {S : Type w} [CommRingₓ S]
 
-theorem _root_.ring_hom.map_det (f : R →+* S) (M : Matrix n n R) : f M.det = Matrix.det (f.map_matrix M) := by
+theorem _root_.ring_hom.map_det (f : R →+* S) (M : Matrix n n R) : f M.det = Matrix.det (f.mapMatrix M) := by
   simp [Matrix.det_apply', f.map_sum, f.map_prod]
 
-theorem _root_.ring_equiv.map_det (f : R ≃+* S) (M : Matrix n n R) : f M.det = Matrix.det (f.map_matrix M) :=
-  f.to_ring_hom.map_det _
+theorem _root_.ring_equiv.map_det (f : R ≃+* S) (M : Matrix n n R) : f M.det = Matrix.det (f.mapMatrix M) :=
+  f.toRingHom.map_det _
 
 theorem _root_.alg_hom.map_det [Algebra R S] {T : Type z} [CommRingₓ T] [Algebra R T] (f : S →ₐ[R] T)
-    (M : Matrix n n S) : f M.det = Matrix.det (f.map_matrix M) :=
-  f.to_ring_hom.map_det _
+    (M : Matrix n n S) : f M.det = Matrix.det (f.mapMatrix M) :=
+  f.toRingHom.map_det _
 
 theorem _root_.alg_equiv.map_det [Algebra R S] {T : Type z} [CommRingₓ T] [Algebra R T] (f : S ≃ₐ[R] T)
-    (M : Matrix n n S) : f M.det = Matrix.det (f.map_matrix M) :=
-  f.to_alg_hom.map_det _
+    (M : Matrix n n S) : f M.det = Matrix.det (f.mapMatrix M) :=
+  f.toAlgHom.map_det _
 
 end HomMap
 
@@ -306,7 +306,7 @@ Prove that a matrix with a repeated column has determinant equal to zero.
 
 
 theorem det_eq_zero_of_row_eq_zero {A : Matrix n n R} (i : n) (h : ∀ j, A i j = 0) : det A = 0 :=
-  (det_row_alternating : AlternatingMap R (n → R) R n).map_coord_zero i (funext h)
+  (detRowAlternating : AlternatingMap R (n → R) R n).map_coord_zero i (funext h)
 
 theorem det_eq_zero_of_column_eq_zero {A : Matrix n n R} (j : n) (h : ∀ i, A i j = 0) : det A = 0 := by
   rw [← det_transpose]
@@ -316,7 +316,7 @@ variable {M : Matrix n n R} {i j : n}
 
 /-- If a matrix has a repeated row, the determinant will be zero. -/
 theorem det_zero_of_row_eq (i_ne_j : i ≠ j) (hij : M i = M j) : M.det = 0 :=
-  (det_row_alternating : AlternatingMap R (n → R) R n).map_eq_zero_of_eq M hij i_ne_j
+  (detRowAlternating : AlternatingMap R (n → R) R n).map_eq_zero_of_eq M hij i_ne_j
 
 /-- If a matrix has a repeated column, the determinant will be zero. -/
 theorem det_zero_of_column_eq (i_ne_j : i ≠ j) (hij : ∀ k, M k i = M k j) : M.det = 0 := by
@@ -326,29 +326,29 @@ theorem det_zero_of_column_eq (i_ne_j : i ≠ j) (hij : ∀ k, M k i = M k j) : 
 end DetZero
 
 theorem det_update_row_add (M : Matrix n n R) (j : n) (u v : n → R) :
-    det (update_row M j <| u + v) = det (update_row M j u) + det (update_row M j v) :=
-  (det_row_alternating : AlternatingMap R (n → R) R n).map_add M j u v
+    det (updateRow M j <| u + v) = det (updateRow M j u) + det (updateRow M j v) :=
+  (detRowAlternating : AlternatingMap R (n → R) R n).map_add M j u v
 
 theorem det_update_column_add (M : Matrix n n R) (j : n) (u v : n → R) :
-    det (update_column M j <| u + v) = det (update_column M j u) + det (update_column M j v) := by
+    det (updateColumn M j <| u + v) = det (updateColumn M j u) + det (updateColumn M j v) := by
   rw [← det_transpose, ← update_row_transpose, det_update_row_add]
   simp [update_row_transpose, det_transpose]
 
 theorem det_update_row_smul (M : Matrix n n R) (j : n) (s : R) (u : n → R) :
-    det (update_row M j <| s • u) = s * det (update_row M j u) :=
-  (det_row_alternating : AlternatingMap R (n → R) R n).map_smul M j s u
+    det (updateRow M j <| s • u) = s * det (updateRow M j u) :=
+  (detRowAlternating : AlternatingMap R (n → R) R n).map_smul M j s u
 
 theorem det_update_column_smul (M : Matrix n n R) (j : n) (s : R) (u : n → R) :
-    det (update_column M j <| s • u) = s * det (update_column M j u) := by
+    det (updateColumn M j <| s • u) = s * det (updateColumn M j u) := by
   rw [← det_transpose, ← update_row_transpose, det_update_row_smul]
   simp [update_row_transpose, det_transpose]
 
 theorem det_update_row_smul' (M : Matrix n n R) (j : n) (s : R) (u : n → R) :
-    det (update_row (s • M) j u) = s ^ (Fintype.card n - 1) * det (update_row M j u) :=
+    det (updateRow (s • M) j u) = s ^ (Fintype.card n - 1) * det (updateRow M j u) :=
   MultilinearMap.map_update_smul _ M j s u
 
 theorem det_update_column_smul' (M : Matrix n n R) (j : n) (s : R) (u : n → R) :
-    det (update_column (s • M) j u) = s ^ (Fintype.card n - 1) * det (update_column M j u) := by
+    det (updateColumn (s • M) j u) = s ^ (Fintype.card n - 1) * det (updateColumn M j u) := by
   rw [← det_transpose, ← update_row_transpose, transpose_smul, det_update_row_smul']
   simp [update_row_transpose, det_transpose]
 
@@ -378,22 +378,22 @@ theorem det_eq_of_eq_det_one_mul {A B : Matrix n n R} (C : Matrix n n R) (hC : d
       rw [hC, one_mulₓ]
     
 
-theorem det_update_row_add_self (A : Matrix n n R) {i j : n} (hij : i ≠ j) : det (update_row A i (A i + A j)) = det A :=
+theorem det_update_row_add_self (A : Matrix n n R) {i j : n} (hij : i ≠ j) : det (updateRow A i (A i + A j)) = det A :=
   by
   simp [det_update_row_add, det_zero_of_row_eq hij (update_row_self.trans (update_row_ne hij.symm).symm)]
 
 theorem det_update_column_add_self (A : Matrix n n R) {i j : n} (hij : i ≠ j) :
-    det (update_column A i fun k => A k i + A k j) = det A := by
+    det (updateColumn A i fun k => A k i + A k j) = det A := by
   rw [← det_transpose, ← update_row_transpose, ← det_transpose A]
   exact det_update_row_add_self (A)ᵀ hij
 
 theorem det_update_row_add_smul_self (A : Matrix n n R) {i j : n} (hij : i ≠ j) (c : R) :
-    det (update_row A i (A i + c • A j)) = det A := by
+    det (updateRow A i (A i + c • A j)) = det A := by
   simp [det_update_row_add, det_update_row_smul,
     det_zero_of_row_eq hij (update_row_self.trans (update_row_ne hij.symm).symm)]
 
 theorem det_update_column_add_smul_self (A : Matrix n n R) {i j : n} (hij : i ≠ j) (c : R) :
-    det (update_column A i fun k => A k i + c • A k j) = det A := by
+    det (updateColumn A i fun k => A k i + c • A k j) = det A := by
   rw [← det_transpose, ← update_row_transpose, ← det_transpose A]
   exact det_update_row_add_smul_self (A)ᵀ hij c
 
@@ -506,7 +506,7 @@ end DetEq
 
 @[simp]
 theorem det_block_diagonal {o : Type _} [Fintype o] [DecidableEq o] (M : o → Matrix n n R) :
-    (block_diagonal M).det = ∏ k, (M k).det := by
+    (blockDiagonal M).det = ∏ k, (M k).det := by
   simp_rw [det_apply']
   rw [Finset.prod_sum]
   simp_rw [Finset.mem_univ, Finset.prod_attach_univ, Finset.univ_pi_univ]
@@ -652,7 +652,7 @@ theorem upper_two_block_triangular_det (A : Matrix m m R) (B : Matrix m n R) (D 
 
 /-- Laplacian expansion of the determinant of an `n+1 × n+1` matrix along column 0. -/
 theorem det_succ_column_zero {n : ℕ} (A : Matrix (Finₓ n.succ) (Finₓ n.succ) R) :
-    det A = ∑ i : Finₓ n.succ, -1 ^ (i : ℕ) * A i 0 * det (A.minor i.succ_above Finₓ.succ) := by
+    det A = ∑ i : Finₓ n.succ, -1 ^ (i : ℕ) * A i 0 * det (A.minor i.succAbove Finₓ.succ) := by
   rw [Matrix.det_apply, Finset.univ_perm_fin_succ, ← Finset.univ_product_univ]
   simp only [Finset.sum_map, Equivₓ.to_embedding_apply, Finset.sum_product, Matrix.minor]
   refine' Finset.sum_congr rfl fun i _ => Finₓ.cases _ (fun i => _) i
@@ -676,12 +676,12 @@ theorem det_succ_column_zero {n : ℕ} (A : Matrix (Finₓ n.succ) (Finₓ n.suc
         -1 *
           (A (Finₓ.succ i) 0 * (σ.sign : ℤ) • ∏ i', A ((Finₓ.succ i).succAbove (Finₓ.cycleRange i (σ i'))) i'.succ) :=
       by
-      simp only [mul_assoc, mul_comm, neg_mul_eq_neg_mul_symm, one_mulₓ, zsmul_eq_mul, neg_inj, neg_smul,
+      simp only [mul_assoc, mul_comm, _root_.neg_mul, one_mulₓ, zsmul_eq_mul, neg_inj, neg_smul,
         Finₓ.succ_above_cycle_range]
 
 /-- Laplacian expansion of the determinant of an `n+1 × n+1` matrix along row 0. -/
 theorem det_succ_row_zero {n : ℕ} (A : Matrix (Finₓ n.succ) (Finₓ n.succ) R) :
-    det A = ∑ j : Finₓ n.succ, -1 ^ (j : ℕ) * A 0 j * det (A.minor Finₓ.succ j.succ_above) := by
+    det A = ∑ j : Finₓ n.succ, -1 ^ (j : ℕ) * A 0 j * det (A.minor Finₓ.succ j.succAbove) := by
   rw [← det_transpose A, det_succ_column_zero]
   refine' Finset.sum_congr rfl fun i _ => _
   rw [← det_transpose]
@@ -689,7 +689,7 @@ theorem det_succ_row_zero {n : ℕ} (A : Matrix (Finₓ n.succ) (Finₓ n.succ) 
 
 /-- Laplacian expansion of the determinant of an `n+1 × n+1` matrix along row `i`. -/
 theorem det_succ_row {n : ℕ} (A : Matrix (Finₓ n.succ) (Finₓ n.succ) R) (i : Finₓ n.succ) :
-    det A = ∑ j : Finₓ n.succ, -1 ^ (i + j : ℕ) * A i j * det (A.minor i.succ_above j.succ_above) := by
+    det A = ∑ j : Finₓ n.succ, -1 ^ (i + j : ℕ) * A i j * det (A.minor i.succAbove j.succAbove) := by
   simp_rw [pow_addₓ, mul_assoc, ← mul_sum]
   have : det A = (-1 : R) ^ (i : ℕ) * i.cycle_range⁻¹.sign * det A := by
     calc det A = ↑((-1 : (ℤ)ˣ) ^ (i : ℕ) * (-1 : (ℤ)ˣ) ^ (i : ℕ) : (ℤ)ˣ) * det A := by
@@ -709,7 +709,7 @@ theorem det_succ_row {n : ℕ} (A : Matrix (Finₓ n.succ) (Finₓ n.succ) R) (i
 
 /-- Laplacian expansion of the determinant of an `n+1 × n+1` matrix along column `j`. -/
 theorem det_succ_column {n : ℕ} (A : Matrix (Finₓ n.succ) (Finₓ n.succ) R) (j : Finₓ n.succ) :
-    det A = ∑ i : Finₓ n.succ, -1 ^ (i + j : ℕ) * A i j * det (A.minor i.succ_above j.succ_above) := by
+    det A = ∑ i : Finₓ n.succ, -1 ^ (i + j : ℕ) * A i j * det (A.minor i.succAbove j.succAbove) := by
   rw [← det_transpose, det_succ_row _ j]
   refine' Finset.sum_congr rfl fun i _ => _
   rw [add_commₓ, ← det_transpose, transpose_apply, transpose_minor, transpose_transpose]

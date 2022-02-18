@@ -21,14 +21,14 @@ namespace Completion
 
 variable (E : Type _)
 
-instance [UniformSpace E] [HasNorm E] : HasNorm (completion E) where
-  norm := completion.extension HasNorm.norm
+instance [UniformSpace E] [HasNorm E] : HasNorm (Completion E) where
+  norm := Completion.extension HasNorm.norm
 
 @[simp]
-theorem norm_coe {E} [SemiNormedGroup E] (x : E) : ∥(x : completion E)∥ = ∥x∥ :=
-  completion.extension_coe uniform_continuous_norm x
+theorem norm_coe {E} [SemiNormedGroup E] (x : E) : ∥(x : Completion E)∥ = ∥x∥ :=
+  Completion.extension_coe uniform_continuous_norm x
 
-instance [SemiNormedGroup E] : NormedGroup (completion E) :=
+instance [SemiNormedGroup E] : NormedGroup (Completion E) :=
   { UniformSpace.Completion.addCommGroup, Metric.Completion.metricSpace with
     dist_eq := by
       intro x y

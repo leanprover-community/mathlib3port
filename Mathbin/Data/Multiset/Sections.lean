@@ -46,21 +46,21 @@ theorem sections_add (s t : Multiset (Multiset α)) :
     fun a s ih => by
     simp [ih, bind_assoc, map_bind, bind_map, -add_commₓ]
 
-theorem mem_sections {s : Multiset (Multiset α)} : ∀ {a}, a ∈ sections s ↔ s.rel (fun s a => a ∈ s) a :=
+theorem mem_sections {s : Multiset (Multiset α)} : ∀ {a}, a ∈ sections s ↔ s.Rel (fun s a => a ∈ s) a :=
   Multiset.induction_on s
     (by
       simp )
     fun a s ih a' => by
     simp [ih, rel_cons_left, -exists_and_distrib_left, exists_and_distrib_left.symm, eq_comm]
 
-theorem card_sections {s : Multiset (Multiset α)} : card (sections s) = Prod (s.map card) :=
+theorem card_sections {s : Multiset (Multiset α)} : card (sections s) = prod (s.map card) :=
   Multiset.induction_on s
     (by
       simp )
     (by
       simp (config := { contextual := true }))
 
-theorem prod_map_sum [CommSemiringₓ α] {s : Multiset (Multiset α)} : Prod (s.map Sum) = Sum ((sections s).map Prod) :=
+theorem prod_map_sum [CommSemiringₓ α] {s : Multiset (Multiset α)} : prod (s.map sum) = sum ((sections s).map prod) :=
   Multiset.induction_on s
     (by
       simp )

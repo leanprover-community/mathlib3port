@@ -7,8 +7,8 @@ open Expr
 namespace NthRewrite
 
 /-- Configuration options for nth_rewrite. -/
-unsafe structure cfg extends rewrite_cfg where
-  try_simp : Bool := ff
+unsafe structure cfg extends RewriteCfg where
+  try_simp : Bool := false
   discharger : tactic Unit := skip
   simplifier : expr → tactic (expr × expr) := fun e => failed
 
@@ -26,7 +26,7 @@ namespace TrackedRewrite
 of a rewritten expression and a proof witness of the rewrite. -/
 unsafe def eval (rw : tracked_rewrite) : tactic (expr × expr) := do
   let prf ← rw.proof
-  return (rw.exp, prf)
+  return (rw, prf)
 
 end TrackedRewrite
 

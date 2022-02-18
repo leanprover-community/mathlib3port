@@ -9,9 +9,9 @@ import Mathbin.Data.Real.Cardinality
 /-!
 # Cauchy integral formula
 
-In this file we prove Cauchy theorem and Cauchy integral formula for integrals over circles. Most
-results are formulated for a function `f : ℂ → E` that takes values in a complex Banach space with
-second countable topology.
+In this file we prove the Cauchy-Goursat theorem and the Cauchy integral formula for integrals over
+circles. Most results are formulated for a function `f : ℂ → E` that takes values in a complex
+Banach space with second countable topology.
 
 ## Main statements
 
@@ -61,6 +61,10 @@ differentiability at all but countably many points of the set mentioned below.
   on a neighborhood of a point, then it is analytic at this point. In particular, if `f : ℂ → E`
   is differentiable on the whole `ℂ`, then it is analytic at every point `z : ℂ`.
 
+* `differentiable.has_power_series_on_ball`: If `f : ℂ → E` is differentiable everywhere then the
+  `cauchy_power_series f z R` is a formal power series representing `f` at `z` with infinite
+  radius of convergence (this holds for any choice of `0 < R`).
+
 ## Implementation details
 
 The proof of the Cauchy integral formula in this file is based on a very general version of the
@@ -81,7 +85,7 @@ First, we reformulate the theorem for a *real*-differentiable map `ℂ → E`, a
 of `f` over the boundary of a rectangle in `ℂ` to the integral of the derivative
 $\frac{\partial f}{\partial \bar z}$ over the interior of this box. In particular, for a *complex*
 differentiable function, the latter derivative is zero, hence the integral over the boundary of a
-rectangle is zero. Thus we get Cauchy theorem for a rectangle in `ℂ`.
+rectangle is zero. Thus we get the Cauchy-Goursat theorem for a rectangle in `ℂ`.
 
 Next, we apply the this theorem to the function $F(z)=f(c+e^{z})$ on the rectangle
 $[\ln r, \ln R]\times [0, 2\pi]$ to prove that
@@ -129,7 +133,7 @@ function is analytic on the open ball.
 
 ## Tags
 
-Cauchy theorem, Cauchy integral formula
+Cauchy-Goursat theorem, Cauchy integral formula
 -/
 
 
@@ -141,19 +145,19 @@ noncomputable section
 
 universe u
 
-variable {E : Type u} [NormedGroup E] [NormedSpace ℂ E] [MeasurableSpace E] [BorelSpace E] [second_countable_topology E]
+variable {E : Type u} [NormedGroup E] [NormedSpace ℂ E] [MeasurableSpace E] [BorelSpace E] [SecondCountableTopology E]
   [CompleteSpace E]
 
 namespace Complex
 
--- ././Mathport/Syntax/Translate/Basic.lean:694:47: unsupported (impossible)
--- ././Mathport/Syntax/Translate/Basic.lean:694:47: unsupported (impossible)
--- ././Mathport/Syntax/Translate/Basic.lean:694:47: unsupported (impossible)
--- ././Mathport/Syntax/Translate/Basic.lean:694:47: unsupported (impossible)
--- ././Mathport/Syntax/Translate/Basic.lean:694:47: unsupported (impossible)
--- ././Mathport/Syntax/Translate/Basic.lean:694:47: unsupported (impossible)
--- ././Mathport/Syntax/Translate/Basic.lean:694:47: unsupported (impossible)
--- ././Mathport/Syntax/Translate/Basic.lean:694:47: unsupported (impossible)
+-- ././Mathport/Syntax/Translate/Basic.lean:696:47: unsupported (impossible)
+-- ././Mathport/Syntax/Translate/Basic.lean:696:47: unsupported (impossible)
+-- ././Mathport/Syntax/Translate/Basic.lean:696:47: unsupported (impossible)
+-- ././Mathport/Syntax/Translate/Basic.lean:696:47: unsupported (impossible)
+-- ././Mathport/Syntax/Translate/Basic.lean:696:47: unsupported (impossible)
+-- ././Mathport/Syntax/Translate/Basic.lean:696:47: unsupported (impossible)
+-- ././Mathport/Syntax/Translate/Basic.lean:696:47: unsupported (impossible)
+-- ././Mathport/Syntax/Translate/Basic.lean:696:47: unsupported (impossible)
 /-- Suppose that a function `f : ℂ → E` is continuous on a closed rectangle with opposite corners at
 `z w : ℂ`, is *real* differentiable at all but countably many points of the corresponding open
 rectangle, and $\frac{\partial f}{\partial \bar z}$ is integrable on this rectangle. Then the
@@ -161,23 +165,22 @@ integral of `f` over the boundary of the rectangle is equal to the integral of
 $2i\frac{\partial f}{\partial \bar z}=i\frac{\partial f}{\partial x}-\frac{\partial f}{\partial y}$
 over the rectangle. -/
 theorem integral_boundary_rect_of_has_fderiv_at_real_off_countable (f : ℂ → E) (f' : ℂ → ℂ →L[ℝ] E) (z w : ℂ)
-    (s : Set ℂ) (hs : countable s)
+    (s : Set ℂ) (hs : Countable s)
     (Hc :
       ContinuousOn f
-        (re ⁻¹' "././Mathport/Syntax/Translate/Basic.lean:694:47: unsupported (impossible)" ∩
-          im ⁻¹' "././Mathport/Syntax/Translate/Basic.lean:694:47: unsupported (impossible)"))
+        ("././Mathport/Syntax/Translate/Basic.lean:696:47: unsupported (impossible)" ×ℂ
+          "././Mathport/Syntax/Translate/Basic.lean:696:47: unsupported (impossible)"))
     (Hd :
       ∀,
-        ∀ x ∈ (re ⁻¹' Ioo (min z.re w.re) (max z.re w.re) ∩ im ⁻¹' Ioo (min z.im w.im) (max z.im w.im)) \ s,
-          ∀, HasFderivAt f (f' x) x)
+        ∀ x ∈ Ioo (min z.re w.re) (max z.re w.re) ×ℂ Ioo (min z.im w.im) (max z.im w.im) \ s, ∀, HasFderivAt f (f' x) x)
     (Hi :
-      integrable_on (fun z => I • f' z 1 - f' z I)
-        (re ⁻¹' "././Mathport/Syntax/Translate/Basic.lean:694:47: unsupported (impossible)" ∩
-          im ⁻¹' "././Mathport/Syntax/Translate/Basic.lean:694:47: unsupported (impossible)")) :
+      IntegrableOn (fun z => I • f' z 1 - f' z i)
+        ("././Mathport/Syntax/Translate/Basic.lean:696:47: unsupported (impossible)" ×ℂ
+          "././Mathport/Syntax/Translate/Basic.lean:696:47: unsupported (impossible)")) :
     ((((∫ x : ℝ in z.re..w.re, f (x + z.im * I)) - ∫ x : ℝ in z.re..w.re, f (x + w.im * I)) +
           I • ∫ y : ℝ in z.im..w.im, f (re w + y * I)) -
         I • ∫ y : ℝ in z.im..w.im, f (re z + y * I)) =
-      ∫ x : ℝ in z.re..w.re, ∫ y : ℝ in z.im..w.im, I • f' (x + y * I) 1 - f' (x + y * I) I :=
+      ∫ x : ℝ in z.re..w.re, ∫ y : ℝ in z.im..w.im, I • f' (x + y * I) 1 - f' (x + y * I) i :=
   by
   set e : (ℝ × ℝ) ≃L[ℝ] ℂ := equiv_real_prodₗ.symm
   have he : ∀ x y : ℝ, ↑x + ↑y * I = e (x, y) := fun x y => (mk_eq_add_mul_I x y).symm
@@ -190,15 +193,15 @@ theorem integral_boundary_rect_of_has_fderiv_at_real_off_countable (f : ℂ → 
     rintro ⟨x, y⟩
     simp [F', he₁, he₂, ← sub_eq_neg_add]
   set R : Set (ℝ × ℝ) :=
-    "././Mathport/Syntax/Translate/Basic.lean:694:47: unsupported (impossible)" ×ˢ
-      "././Mathport/Syntax/Translate/Basic.lean:694:47: unsupported (impossible)"
+    "././Mathport/Syntax/Translate/Basic.lean:696:47: unsupported (impossible)" ×ˢ
+      "././Mathport/Syntax/Translate/Basic.lean:696:47: unsupported (impossible)"
   set t : Set (ℝ × ℝ) := e ⁻¹' s
   rw [interval_swap z.im] at Hc Hi
   rw [min_commₓ z.im, max_commₓ z.im] at Hd
   have hR :
     e ⁻¹'
-        (re ⁻¹' "././Mathport/Syntax/Translate/Basic.lean:694:47: unsupported (impossible)" ∩
-          im ⁻¹' "././Mathport/Syntax/Translate/Basic.lean:694:47: unsupported (impossible)") =
+        ("././Mathport/Syntax/Translate/Basic.lean:696:47: unsupported (impossible)" ×ℂ
+          "././Mathport/Syntax/Translate/Basic.lean:696:47: unsupported (impossible)") =
       R :=
     rfl
   have htc : ContinuousOn F R := Hc.comp e.continuous_on hR.ge
@@ -216,10 +219,10 @@ theorem integral_boundary_rect_of_has_fderiv_at_real_off_countable (f : ℂ → 
     Hi
   simpa only [hF'] using Hi.neg
 
--- ././Mathport/Syntax/Translate/Basic.lean:694:47: unsupported (impossible)
--- ././Mathport/Syntax/Translate/Basic.lean:694:47: unsupported (impossible)
--- ././Mathport/Syntax/Translate/Basic.lean:694:47: unsupported (impossible)
--- ././Mathport/Syntax/Translate/Basic.lean:694:47: unsupported (impossible)
+-- ././Mathport/Syntax/Translate/Basic.lean:696:47: unsupported (impossible)
+-- ././Mathport/Syntax/Translate/Basic.lean:696:47: unsupported (impossible)
+-- ././Mathport/Syntax/Translate/Basic.lean:696:47: unsupported (impossible)
+-- ././Mathport/Syntax/Translate/Basic.lean:696:47: unsupported (impossible)
 /-- Suppose that a function `f : ℂ → E` is continuous on a closed rectangle with opposite corners at
 `z w : ℂ`, is *real* differentiable on the corresponding open rectangle, and
 $\frac{\partial f}{\partial \bar z}$ is integrable on this rectangle. Then the integral of `f` over
@@ -229,26 +232,24 @@ over the rectangle. -/
 theorem integral_boundary_rect_of_continuous_on_of_has_fderiv_at_real (f : ℂ → E) (f' : ℂ → ℂ →L[ℝ] E) (z w : ℂ)
     (Hc :
       ContinuousOn f
-        (re ⁻¹' "././Mathport/Syntax/Translate/Basic.lean:694:47: unsupported (impossible)" ∩
-          im ⁻¹' "././Mathport/Syntax/Translate/Basic.lean:694:47: unsupported (impossible)"))
+        ("././Mathport/Syntax/Translate/Basic.lean:696:47: unsupported (impossible)" ×ℂ
+          "././Mathport/Syntax/Translate/Basic.lean:696:47: unsupported (impossible)"))
     (Hd :
-      ∀,
-        ∀ x ∈ re ⁻¹' Ioo (min z.re w.re) (max z.re w.re) ∩ im ⁻¹' Ioo (min z.im w.im) (max z.im w.im),
-          ∀, HasFderivAt f (f' x) x)
+      ∀, ∀ x ∈ Ioo (min z.re w.re) (max z.re w.re) ×ℂ Ioo (min z.im w.im) (max z.im w.im), ∀, HasFderivAt f (f' x) x)
     (Hi :
-      integrable_on (fun z => I • f' z 1 - f' z I)
-        (re ⁻¹' "././Mathport/Syntax/Translate/Basic.lean:694:47: unsupported (impossible)" ∩
-          im ⁻¹' "././Mathport/Syntax/Translate/Basic.lean:694:47: unsupported (impossible)")) :
+      IntegrableOn (fun z => I • f' z 1 - f' z i)
+        ("././Mathport/Syntax/Translate/Basic.lean:696:47: unsupported (impossible)" ×ℂ
+          "././Mathport/Syntax/Translate/Basic.lean:696:47: unsupported (impossible)")) :
     ((((∫ x : ℝ in z.re..w.re, f (x + z.im * I)) - ∫ x : ℝ in z.re..w.re, f (x + w.im * I)) +
           I • ∫ y : ℝ in z.im..w.im, f (re w + y * I)) -
         I • ∫ y : ℝ in z.im..w.im, f (re z + y * I)) =
-      ∫ x : ℝ in z.re..w.re, ∫ y : ℝ in z.im..w.im, I • f' (x + y * I) 1 - f' (x + y * I) I :=
+      ∫ x : ℝ in z.re..w.re, ∫ y : ℝ in z.im..w.im, I • f' (x + y * I) 1 - f' (x + y * I) i :=
   integral_boundary_rect_of_has_fderiv_at_real_off_countable f f' z w ∅ countable_empty Hc (fun x hx => Hd x hx.1) Hi
 
--- ././Mathport/Syntax/Translate/Basic.lean:694:47: unsupported (impossible)
--- ././Mathport/Syntax/Translate/Basic.lean:694:47: unsupported (impossible)
--- ././Mathport/Syntax/Translate/Basic.lean:694:47: unsupported (impossible)
--- ././Mathport/Syntax/Translate/Basic.lean:694:47: unsupported (impossible)
+-- ././Mathport/Syntax/Translate/Basic.lean:696:47: unsupported (impossible)
+-- ././Mathport/Syntax/Translate/Basic.lean:696:47: unsupported (impossible)
+-- ././Mathport/Syntax/Translate/Basic.lean:696:47: unsupported (impossible)
+-- ././Mathport/Syntax/Translate/Basic.lean:696:47: unsupported (impossible)
 /-- Suppose that a function `f : ℂ → E` is *real* differentiable on a closed rectangle with opposite
 corners at `z w : ℂ` and $\frac{\partial f}{\partial \bar z}$ is integrable on this rectangle. Then
 the integral of `f` over the boundary of the rectangle is equal to the integral of
@@ -257,38 +258,37 @@ over the rectangle. -/
 theorem integral_boundary_rect_of_differentiable_on_real (f : ℂ → E) (z w : ℂ)
     (Hd :
       DifferentiableOn ℝ f
-        (re ⁻¹' "././Mathport/Syntax/Translate/Basic.lean:694:47: unsupported (impossible)" ∩
-          im ⁻¹' "././Mathport/Syntax/Translate/Basic.lean:694:47: unsupported (impossible)"))
+        ("././Mathport/Syntax/Translate/Basic.lean:696:47: unsupported (impossible)" ×ℂ
+          "././Mathport/Syntax/Translate/Basic.lean:696:47: unsupported (impossible)"))
     (Hi :
-      integrable_on (fun z => I • fderiv ℝ f z 1 - fderiv ℝ f z I)
-        (re ⁻¹' "././Mathport/Syntax/Translate/Basic.lean:694:47: unsupported (impossible)" ∩
-          im ⁻¹' "././Mathport/Syntax/Translate/Basic.lean:694:47: unsupported (impossible)")) :
+      IntegrableOn (fun z => I • fderiv ℝ f z 1 - fderiv ℝ f z i)
+        ("././Mathport/Syntax/Translate/Basic.lean:696:47: unsupported (impossible)" ×ℂ
+          "././Mathport/Syntax/Translate/Basic.lean:696:47: unsupported (impossible)")) :
     ((((∫ x : ℝ in z.re..w.re, f (x + z.im * I)) - ∫ x : ℝ in z.re..w.re, f (x + w.im * I)) +
           I • ∫ y : ℝ in z.im..w.im, f (re w + y * I)) -
         I • ∫ y : ℝ in z.im..w.im, f (re z + y * I)) =
-      ∫ x : ℝ in z.re..w.re, ∫ y : ℝ in z.im..w.im, I • fderiv ℝ f (x + y * I) 1 - fderiv ℝ f (x + y * I) I :=
-  integral_boundary_rect_of_has_fderiv_at_real_off_countable f (fderiv ℝ f) z w ∅ countable_empty Hd.continuous_on
+      ∫ x : ℝ in z.re..w.re, ∫ y : ℝ in z.im..w.im, I • fderiv ℝ f (x + y * I) 1 - fderiv ℝ f (x + y * I) i :=
+  integral_boundary_rect_of_has_fderiv_at_real_off_countable f (fderiv ℝ f) z w ∅ countable_empty Hd.ContinuousOn
     (fun x hx =>
-      Hd.has_fderiv_at <| by
-        simpa only [← mem_interior_iff_mem_nhds, interior_preimage_re_inter_preimage_im, interval, interior_Icc] using
-          hx.1)
+      Hd.HasFderivAt <| by
+        simpa only [← mem_interior_iff_mem_nhds, interior_re_prod_im, interval, interior_Icc] using hx.1)
     Hi
 
--- ././Mathport/Syntax/Translate/Basic.lean:694:47: unsupported (impossible)
--- ././Mathport/Syntax/Translate/Basic.lean:694:47: unsupported (impossible)
-/-- **Cauchy theorem**: the integral of a complex differentiable function over the boundary of a
-rectangle equals zero. More precisely, if `f` is continuous on a closed rectangle and is complex
-differentiable at all but countably many points of the corresponding open rectangle, then its
-integral over the boundary of the rectangle equals zero. -/
+-- ././Mathport/Syntax/Translate/Basic.lean:696:47: unsupported (impossible)
+-- ././Mathport/Syntax/Translate/Basic.lean:696:47: unsupported (impossible)
+/-- **Cauchy-Goursat theorem** for a rectangle: the integral of a complex differentiable function
+over the boundary of a rectangle equals zero. More precisely, if `f` is continuous on a closed
+rectangle and is complex differentiable at all but countably many points of the corresponding open
+rectangle, then its integral over the boundary of the rectangle equals zero. -/
 theorem integral_boundary_rect_eq_zero_of_differentiable_on_off_countable (f : ℂ → E) (z w : ℂ) (s : Set ℂ)
-    (hs : countable s)
+    (hs : Countable s)
     (Hc :
       ContinuousOn f
-        (re ⁻¹' "././Mathport/Syntax/Translate/Basic.lean:694:47: unsupported (impossible)" ∩
-          im ⁻¹' "././Mathport/Syntax/Translate/Basic.lean:694:47: unsupported (impossible)"))
+        ("././Mathport/Syntax/Translate/Basic.lean:696:47: unsupported (impossible)" ×ℂ
+          "././Mathport/Syntax/Translate/Basic.lean:696:47: unsupported (impossible)"))
     (Hd :
       ∀,
-        ∀ x ∈ (re ⁻¹' Ioo (min z.re w.re) (max z.re w.re) ∩ im ⁻¹' Ioo (min z.im w.im) (max z.im w.im)) \ s,
+        ∀ x ∈ Ioo (min z.re w.re) (max z.re w.re) ×ℂ Ioo (min z.im w.im) (max z.im w.im) \ s,
           ∀, DifferentiableAt ℂ f x) :
     ((((∫ x : ℝ in z.re..w.re, f (x + z.im * I)) - ∫ x : ℝ in z.re..w.re, f (x + w.im * I)) +
           I • ∫ y : ℝ in z.im..w.im, f (re w + y * I)) -
@@ -301,52 +301,51 @@ theorem integral_boundary_rect_eq_zero_of_differentiable_on_off_countable (f : �
         _ <;>
     simp [← ContinuousLinearMap.map_smul]
 
--- ././Mathport/Syntax/Translate/Basic.lean:694:47: unsupported (impossible)
--- ././Mathport/Syntax/Translate/Basic.lean:694:47: unsupported (impossible)
-/-- **Cauchy theorem**: the integral of a complex differentiable function over the boundary of a
-rectangle equals zero. More precisely, if `f` is continuous on a closed rectangle and is complex
-differentiable on the corresponding open rectangle, then its integral over the boundary of the
-rectangle equals zero. -/
+-- ././Mathport/Syntax/Translate/Basic.lean:696:47: unsupported (impossible)
+-- ././Mathport/Syntax/Translate/Basic.lean:696:47: unsupported (impossible)
+/-- **Cauchy-Goursat theorem for a rectangle**: the integral of a complex differentiable function
+over the boundary of a rectangle equals zero. More precisely, if `f` is continuous on a closed
+rectangle and is complex differentiable on the corresponding open rectangle, then its integral over
+the boundary of the rectangle equals zero. -/
 theorem integral_boundary_rect_eq_zero_of_continuous_on_of_differentiable_on (f : ℂ → E) (z w : ℂ)
     (Hc :
       ContinuousOn f
-        (re ⁻¹' "././Mathport/Syntax/Translate/Basic.lean:694:47: unsupported (impossible)" ∩
-          im ⁻¹' "././Mathport/Syntax/Translate/Basic.lean:694:47: unsupported (impossible)"))
-    (Hd :
-      DifferentiableOn ℂ f (re ⁻¹' Ioo (min z.re w.re) (max z.re w.re) ∩ im ⁻¹' Ioo (min z.im w.im) (max z.im w.im))) :
+        ("././Mathport/Syntax/Translate/Basic.lean:696:47: unsupported (impossible)" ×ℂ
+          "././Mathport/Syntax/Translate/Basic.lean:696:47: unsupported (impossible)"))
+    (Hd : DifferentiableOn ℂ f (Ioo (min z.re w.re) (max z.re w.re) ×ℂ Ioo (min z.im w.im) (max z.im w.im))) :
     ((((∫ x : ℝ in z.re..w.re, f (x + z.im * I)) - ∫ x : ℝ in z.re..w.re, f (x + w.im * I)) +
           I • ∫ y : ℝ in z.im..w.im, f (re w + y * I)) -
         I • ∫ y : ℝ in z.im..w.im, f (re z + y * I)) =
       0 :=
   (integral_boundary_rect_eq_zero_of_differentiable_on_off_countable f z w ∅ countable_empty Hc) fun x hx =>
-    Hd.differentiable_at <| (is_open_Ioo.re_prod_im is_open_Ioo).mem_nhds hx.1
+    Hd.DifferentiableAt <| (is_open_Ioo.ReProdIm is_open_Ioo).mem_nhds hx.1
 
--- ././Mathport/Syntax/Translate/Basic.lean:694:47: unsupported (impossible)
--- ././Mathport/Syntax/Translate/Basic.lean:694:47: unsupported (impossible)
-/-- **Cauchy theorem**: the integral of a complex differentiable function over the boundary of a
-rectangle equals zero. More precisely, if `f` is complex differentiable on a closed rectangle, then
-its integral over the boundary of the rectangle equals zero. -/
+-- ././Mathport/Syntax/Translate/Basic.lean:696:47: unsupported (impossible)
+-- ././Mathport/Syntax/Translate/Basic.lean:696:47: unsupported (impossible)
+/-- **Cauchy-Goursat theorem** for a rectangle: the integral of a complex differentiable function
+over the boundary of a rectangle equals zero. More precisely, if `f` is complex differentiable on a
+closed rectangle, then its integral over the boundary of the rectangle equals zero. -/
 theorem integral_boundary_rect_eq_zero_of_differentiable_on (f : ℂ → E) (z w : ℂ)
     (H :
       DifferentiableOn ℂ f
-        (re ⁻¹' "././Mathport/Syntax/Translate/Basic.lean:694:47: unsupported (impossible)" ∩
-          im ⁻¹' "././Mathport/Syntax/Translate/Basic.lean:694:47: unsupported (impossible)")) :
+        ("././Mathport/Syntax/Translate/Basic.lean:696:47: unsupported (impossible)" ×ℂ
+          "././Mathport/Syntax/Translate/Basic.lean:696:47: unsupported (impossible)")) :
     ((((∫ x : ℝ in z.re..w.re, f (x + z.im * I)) - ∫ x : ℝ in z.re..w.re, f (x + w.im * I)) +
           I • ∫ y : ℝ in z.im..w.im, f (re w + y * I)) -
         I • ∫ y : ℝ in z.im..w.im, f (re z + y * I)) =
       0 :=
-  integral_boundary_rect_eq_zero_of_continuous_on_of_differentiable_on f z w H.continuous_on <|
+  integral_boundary_rect_eq_zero_of_continuous_on_of_differentiable_on f z w H.ContinuousOn <|
     H.mono <| inter_subset_inter (preimage_mono Ioo_subset_Icc_self) (preimage_mono Ioo_subset_Icc_self)
 
--- ././Mathport/Syntax/Translate/Basic.lean:694:47: unsupported (impossible)
--- ././Mathport/Syntax/Translate/Basic.lean:694:47: unsupported (impossible)
+-- ././Mathport/Syntax/Translate/Basic.lean:696:47: unsupported (impossible)
+-- ././Mathport/Syntax/Translate/Basic.lean:696:47: unsupported (impossible)
 /-- If `f : ℂ → E` is continuous the closed annulus `r ≤ ∥z - c∥ ≤ R`, `0 < r ≤ R`, and is complex
 differentiable at all but countably many points of its interior, then the integrals of
 `f z / (z - c)` (formally, `(z - c)⁻¹ • f z`) over the circles `∥z - c∥ = r` and `∥z - c∥ = R` are
 equal to each other. -/
 theorem circle_integral_sub_center_inv_smul_eq_of_differentiable_on_annulus_off_countable {c : ℂ} {r R : ℝ} (h0 : 0 < r)
-    (hle : r ≤ R) {f : ℂ → E} {s : Set ℂ} (hs : countable s) (hc : ContinuousOn f (closed_ball c R \ ball c r))
-    (hd : ∀, ∀ z ∈ (ball c R \ closed_ball c r) \ s, ∀, DifferentiableAt ℂ f z) :
+    (hle : r ≤ R) {f : ℂ → E} {s : Set ℂ} (hs : Countable s) (hc : ContinuousOn f (ClosedBall c R \ Ball c r))
+    (hd : ∀, ∀ z ∈ (Ball c R \ ClosedBall c r) \ s, ∀, DifferentiableAt ℂ f z) :
     (∮ z in C(c, R), (z - c)⁻¹ • f z) = ∮ z in C(c, r), (z - c)⁻¹ • f z := by
   set A := closed_ball c R \ ball c r
   obtain ⟨a, rfl⟩ : ∃ a, Real.exp a = r
@@ -359,8 +358,8 @@ theorem circle_integral_sub_center_inv_smul_eq_of_differentiable_on_annulus_off_
     simpa only [circleIntegral, add_sub_cancel', of_real_exp, ← exp_add, smul_smul, ← div_eq_mul_inv,
       mul_div_cancel_left _ (circle_map_ne_center (Real.exp_pos _).ne'), circle_map_sub_center, deriv_circle_map]
   set R :=
-    re ⁻¹' "././Mathport/Syntax/Translate/Basic.lean:694:47: unsupported (impossible)" ∩
-      im ⁻¹' "././Mathport/Syntax/Translate/Basic.lean:694:47: unsupported (impossible)"
+    "././Mathport/Syntax/Translate/Basic.lean:696:47: unsupported (impossible)" ×ℂ
+      "././Mathport/Syntax/Translate/Basic.lean:696:47: unsupported (impossible)"
   set g : ℂ → ℂ := (· + ·) c ∘ exp
   have hdg : Differentiable ℂ g := differentiable_exp.const_add _
   replace hs : countable (g ⁻¹' s) := (hs.preimage (add_right_injective c)).preimage_cexp
@@ -370,22 +369,38 @@ theorem circle_integral_sub_center_inv_smul_eq_of_differentiable_on_annulus_off_
   replace hc : ContinuousOn (f ∘ g) R
   exact hc.comp hdg.continuous.continuous_on h_maps
   replace hd :
-    ∀,
-      ∀ z ∈ (re ⁻¹' Ioo (min a b) (max a b) ∩ im ⁻¹' Ioo (min 0 (2 * π)) (max 0 (2 * π))) \ g ⁻¹' s,
-        ∀, DifferentiableAt ℂ (f ∘ g) z
+    ∀, ∀ z ∈ Ioo (min a b) (max a b) ×ℂ Ioo (min 0 (2 * π)) (max 0 (2 * π)) \ g ⁻¹' s, ∀, DifferentiableAt ℂ (f ∘ g) z
   · refine' fun z hz => (hd (g z) ⟨_, hz.2⟩).comp z (hdg _)
     simpa [g, dist_eq, abs_exp, hle, And.comm] using hz.1.1
     
   simpa [g, circleMap, exp_periodic _, sub_eq_zero, ← exp_add] using
     integral_boundary_rect_eq_zero_of_differentiable_on_off_countable _ ⟨a, 0⟩ ⟨b, 2 * π⟩ _ hs hc hd
 
+/-- **Cauchy-Goursat theorem** for an annulus. If `f : ℂ → E` is continuous on the closed annulus
+`r ≤ ∥z - c∥ ≤ R`, `0 < r ≤ R`, and is complex differentiable at all but countably many points of
+its interior, then the integrals of `f` over the circles `∥z - c∥ = r` and `∥z - c∥ = R` are equal
+to each other. -/
+theorem circle_integral_eq_of_differentiable_on_annulus_off_countable {c : ℂ} {r R : ℝ} (h0 : 0 < r) (hle : r ≤ R)
+    {f : ℂ → E} {s : Set ℂ} (hs : Countable s) (hc : ContinuousOn f (ClosedBall c R \ Ball c r))
+    (hd : ∀, ∀ z ∈ (Ball c R \ ClosedBall c r) \ s, ∀, DifferentiableAt ℂ f z) :
+    (∮ z in C(c, R), f z) = ∮ z in C(c, r), f z :=
+  calc
+    (∮ z in C(c, R), f z) = ∮ z in C(c, R), (z - c)⁻¹ • (z - c) • f z :=
+      (circleIntegral.integral_sub_inv_smul_sub_smul _ _ _ _).symm
+    _ = ∮ z in C(c, r), (z - c)⁻¹ • (z - c) • f z :=
+      circle_integral_sub_center_inv_smul_eq_of_differentiable_on_annulus_off_countable h0 hle hs
+        ((continuous_on_id.sub continuous_on_const).smul hc) fun z hz =>
+        (differentiable_at_id.sub_const _).smul (hd z hz)
+    _ = ∮ z in C(c, r), f z := circleIntegral.integral_sub_inv_smul_sub_smul _ _ _ _
+    
+
 /-- **Cauchy integral formula** for the value at the center of a disc. If `f` is continuous on a
 punctured closed disc of radius `R`, is differentiable at all but countably many points of the
 interior of this disc, and has a limit `y` at the center of the disc, then the integral
 $\oint_{∥z-c∥=R} \frac{f(z)}{z-c}\,dz$ is equal to $2πiy`. -/
 theorem circle_integral_sub_center_inv_smul_of_differentiable_on_off_countable_of_tendsto {c : ℂ} {R : ℝ} (h0 : 0 < R)
-    {f : ℂ → E} {y : E} {s : Set ℂ} (hs : countable s) (hc : ContinuousOn f (closed_ball c R \ {c}))
-    (hd : ∀, ∀ z ∈ (ball c R \ {c}) \ s, ∀, DifferentiableAt ℂ f z) (hy : tendsto f (𝓝[{c}ᶜ] c) (𝓝 y)) :
+    {f : ℂ → E} {y : E} {s : Set ℂ} (hs : Countable s) (hc : ContinuousOn f (ClosedBall c R \ {c}))
+    (hd : ∀, ∀ z ∈ (Ball c R \ {c}) \ s, ∀, DifferentiableAt ℂ f z) (hy : Tendsto f (𝓝[{c}ᶜ] c) (𝓝 y)) :
     (∮ z in C(c, R), (z - c)⁻¹ • f z) = (2 * π * I : ℂ) • y := by
   rw [← sub_eq_zero, ← norm_le_zero_iff]
   refine' le_of_forall_le_of_dense fun ε ε0 => _
@@ -434,25 +449,23 @@ theorem circle_integral_sub_center_inv_smul_of_differentiable_on_off_countable_o
 on a closed disc of radius `R` and is complex differentiable at all but countably many points of its
 interior, then the integral $\oint_{|z-c|=R} \frac{f(z)}{z-c}\,dz$ is equal to $2πiy`. -/
 theorem circle_integral_sub_center_inv_smul_of_differentiable_on_off_countable {R : ℝ} (h0 : 0 < R) {f : ℂ → E} {c : ℂ}
-    {s : Set ℂ} (hs : countable s) (hc : ContinuousOn f (closed_ball c R))
-    (hd : ∀, ∀ z ∈ ball c R \ s, ∀, DifferentiableAt ℂ f z) :
+    {s : Set ℂ} (hs : Countable s) (hc : ContinuousOn f (ClosedBall c R))
+    (hd : ∀, ∀ z ∈ Ball c R \ s, ∀, DifferentiableAt ℂ f z) :
     (∮ z in C(c, R), (z - c)⁻¹ • f z) = (2 * π * I : ℂ) • f c :=
   circle_integral_sub_center_inv_smul_of_differentiable_on_off_countable_of_tendsto h0 hs (hc.mono <| diff_subset _ _)
-    (fun z hz => hd z ⟨hz.1.1, hz.2⟩) (hc.continuous_at <| closed_ball_mem_nhds _ h0).ContinuousWithinAt
+    (fun z hz => hd z ⟨hz.1.1, hz.2⟩) (hc.ContinuousAt <| closed_ball_mem_nhds _ h0).ContinuousWithinAt
 
-/-- **Cauchy theorem**: if `f : ℂ → E` is continuous on a closed ball `{z | ∥z - c∥ ≤ R}` and is
-complex differentiable at all but countably many points of its interior, then the integral
-$\oint_{|z-c|=R}f(z)\,dz$ equals zero. -/
+/-- **Cauchy-Goursat theorem** for a disk: if `f : ℂ → E` is continuous on a closed disk
+`{z | ∥z - c∥ ≤ R}` and is complex differentiable at all but countably many points of its interior,
+then the integral $\oint_{|z-c|=R}f(z)\,dz$ equals zero. -/
 theorem circle_integral_eq_zero_of_differentiable_on_off_countable {R : ℝ} (h0 : 0 ≤ R) {f : ℂ → E} {c : ℂ} {s : Set ℂ}
-    (hs : countable s) (hc : ContinuousOn f (closed_ball c R)) (hd : ∀, ∀ z ∈ ball c R \ s, ∀, DifferentiableAt ℂ f z) :
+    (hs : Countable s) (hc : ContinuousOn f (ClosedBall c R)) (hd : ∀, ∀ z ∈ Ball c R \ s, ∀, DifferentiableAt ℂ f z) :
     (∮ z in C(c, R), f z) = 0 := by
   rcases h0.eq_or_lt with (rfl | h0)
   · apply circleIntegral.integral_radius_zero
     
-  calc (∮ z in C(c, R), f z) = ∮ z in C(c, R), (z - c)⁻¹ • (z - c) • f z := by
-      refine' circleIntegral.integral_congr h0.le fun z hz => (inv_smul_smul₀ (fun h₀ => _) _).symm
-      rw [mem_sphere, dist_eq, h₀, abs_zero] at hz
-      exact h0.ne hz _ = (2 * ↑π * I : ℂ) • (c - c) • f c :=
+  calc (∮ z in C(c, R), f z) = ∮ z in C(c, R), (z - c)⁻¹ • (z - c) • f z :=
+      (circleIntegral.integral_sub_inv_smul_sub_smul _ _ _ _).symm _ = (2 * ↑π * I : ℂ) • (c - c) • f c :=
       circle_integral_sub_center_inv_smul_of_differentiable_on_off_countable h0 hs
         ((continuous_on_id.sub continuous_on_const).smul hc) fun z hz =>
         (differentiable_at_id.sub_const _).smul (hd z hz)_ = 0 :=
@@ -463,8 +476,8 @@ theorem circle_integral_eq_zero_of_differentiable_on_off_countable {R : ℝ} (h0
 `complex.circle_integral_sub_inv_smul_of_differentiable_on_off_countable`. This lemma assumes
 `w ∉ s` while the main lemma drops this assumption. -/
 theorem circle_integral_sub_inv_smul_of_differentiable_on_off_countable_aux {R : ℝ} {c w : ℂ} {f : ℂ → E} {s : Set ℂ}
-    (hs : countable s) (hw : w ∈ ball c R \ s) (hc : ContinuousOn f (closed_ball c R))
-    (hd : ∀, ∀ x ∈ ball c R \ s, ∀, DifferentiableAt ℂ f x) :
+    (hs : Countable s) (hw : w ∈ Ball c R \ s) (hc : ContinuousOn f (ClosedBall c R))
+    (hd : ∀, ∀ x ∈ Ball c R \ s, ∀, DifferentiableAt ℂ f x) :
     (∮ z in C(c, R), (z - w)⁻¹ • f z) = (2 * π * I : ℂ) • f w := by
   have hR : 0 < R := dist_nonneg.trans_lt hw.1
   set F : ℂ → E := dslope f w
@@ -493,8 +506,8 @@ complex differentiable at all but countably many points of its interior, then fo
 interior we have $\frac{1}{2πi}\oint_{|z-c|=R}(z-w)^{-1}f(z)\,dz=f(w)$.
 -/
 theorem two_pi_I_inv_smul_circle_integral_sub_inv_smul_of_differentiable_on_off_countable {R : ℝ} {c w : ℂ} {f : ℂ → E}
-    {s : Set ℂ} (hs : countable s) (hw : w ∈ ball c R) (hc : ContinuousOn f (closed_ball c R))
-    (hd : ∀, ∀ x ∈ ball c R \ s, ∀, DifferentiableAt ℂ f x) :
+    {s : Set ℂ} (hs : Countable s) (hw : w ∈ Ball c R) (hc : ContinuousOn f (ClosedBall c R))
+    (hd : ∀, ∀ x ∈ Ball c R \ s, ∀, DifferentiableAt ℂ f x) :
     ((2 * π * I : ℂ)⁻¹ • ∮ z in C(c, R), (z - w)⁻¹ • f z) = f w := by
   have hR : 0 < R := dist_nonneg.trans_lt hw
   suffices w ∈ Closure (ball c R \ s) by
@@ -525,8 +538,8 @@ complex differentiable at all but countably many points of its interior, then fo
 interior we have $\oint_{|z-c|=R}(z-w)^{-1}f(z)\,dz=2πif(w)$.
 -/
 theorem circle_integral_sub_inv_smul_of_differentiable_on_off_countable {R : ℝ} {c w : ℂ} {f : ℂ → E} {s : Set ℂ}
-    (hs : countable s) (hw : w ∈ ball c R) (hc : ContinuousOn f (closed_ball c R))
-    (hd : ∀, ∀ x ∈ ball c R \ s, ∀, DifferentiableAt ℂ f x) :
+    (hs : Countable s) (hw : w ∈ Ball c R) (hc : ContinuousOn f (ClosedBall c R))
+    (hd : ∀, ∀ x ∈ Ball c R \ s, ∀, DifferentiableAt ℂ f x) :
     (∮ z in C(c, R), (z - w)⁻¹ • f z) = (2 * π * I : ℂ) • f w := by
   rw [← two_pi_I_inv_smul_circle_integral_sub_inv_smul_of_differentiable_on_off_countable hs hw hc hd, smul_inv_smul₀]
   simp [Real.pi_ne_zero, I_ne_zero]
@@ -536,25 +549,25 @@ complex differentiable on its interior, then for any `w` in this interior we hav
 $\oint_{|z-c|=R}(z-w)^{-1}f(z)\,dz=2πif(w)$.
 -/
 theorem circle_integral_sub_inv_smul_of_continuous_on_of_differentiable_on {R : ℝ} {c w : ℂ} {f : ℂ → E}
-    (hw : w ∈ ball c R) (hc : ContinuousOn f (closed_ball c R)) (hd : DifferentiableOn ℂ f (ball c R)) :
+    (hw : w ∈ Ball c R) (hc : ContinuousOn f (ClosedBall c R)) (hd : DifferentiableOn ℂ f (Ball c R)) :
     (∮ z in C(c, R), (z - w)⁻¹ • f z) = (2 * π * I : ℂ) • f w :=
   (circle_integral_sub_inv_smul_of_differentiable_on_off_countable countable_empty hw hc) fun z hz =>
-    hd.differentiable_at (is_open_ball.mem_nhds hz.1)
+    hd.DifferentiableAt (is_open_ball.mem_nhds hz.1)
 
 /-- **Cauchy integral formula**: if `f : ℂ → E` is complex differentiable on a closed disc of radius
 `R`, then for any `w` in its interior we have $\oint_{|z-c|=R}(z-w)^{-1}f(z)\,dz=2πif(w)$. -/
-theorem circle_integral_sub_inv_smul_of_differentiable_on {R : ℝ} {c w : ℂ} {f : ℂ → E} (hw : w ∈ ball c R)
-    (hd : DifferentiableOn ℂ f (closed_ball c R)) : (∮ z in C(c, R), (z - w)⁻¹ • f z) = (2 * π * I : ℂ) • f w :=
-  circle_integral_sub_inv_smul_of_continuous_on_of_differentiable_on hw hd.continuous_on <|
+theorem circle_integral_sub_inv_smul_of_differentiable_on {R : ℝ} {c w : ℂ} {f : ℂ → E} (hw : w ∈ Ball c R)
+    (hd : DifferentiableOn ℂ f (ClosedBall c R)) : (∮ z in C(c, R), (z - w)⁻¹ • f z) = (2 * π * I : ℂ) • f w :=
+  circle_integral_sub_inv_smul_of_continuous_on_of_differentiable_on hw hd.ContinuousOn <|
     hd.mono <| ball_subset_closed_ball
 
 /-- **Cauchy integral formula**: if `f : ℂ → ℂ` is continuous on a closed disc of radius `R` and is
 complex differentiable at all but countably many points of its interior, then for any `w` in this
 interior we have $\oint_{|z-c|=R}\frac{f(z)}{z-w}dz=2\pi i\,f(w)$.
 -/
-theorem circle_integral_div_sub_of_differentiable_on_off_countable {R : ℝ} {c w : ℂ} {s : Set ℂ} (hs : countable s)
-    (hw : w ∈ ball c R) {f : ℂ → ℂ} (hc : ContinuousOn f (closed_ball c R))
-    (hd : ∀, ∀ z ∈ ball c R \ s, ∀, DifferentiableAt ℂ f z) : (∮ z in C(c, R), f z / (z - w)) = 2 * π * I * f w := by
+theorem circle_integral_div_sub_of_differentiable_on_off_countable {R : ℝ} {c w : ℂ} {s : Set ℂ} (hs : Countable s)
+    (hw : w ∈ Ball c R) {f : ℂ → ℂ} (hc : ContinuousOn f (ClosedBall c R))
+    (hd : ∀, ∀ z ∈ Ball c R \ s, ∀, DifferentiableAt ℂ f z) : (∮ z in C(c, R), f z / (z - w)) = 2 * π * I * f w := by
   simpa only [smul_eq_mul, div_eq_inv_mul] using
     circle_integral_sub_inv_smul_of_differentiable_on_off_countable hs hw hc hd
 
@@ -562,7 +575,7 @@ theorem circle_integral_div_sub_of_differentiable_on_off_countable {R : ℝ} {c 
 but countably many points of the corresponding open ball, then it is analytic on the open ball with
 coefficients of the power series given by Cauchy integral formulas. -/
 theorem has_fpower_series_on_ball_of_differentiable_off_countable {R : ℝ≥0 } {c : ℂ} {f : ℂ → E} {s : Set ℂ}
-    (hs : countable s) (hc : ContinuousOn f (closed_ball c R)) (hd : ∀, ∀ z ∈ ball c R \ s, ∀, DifferentiableAt ℂ f z)
+    (hs : Countable s) (hc : ContinuousOn f (ClosedBall c R)) (hd : ∀, ∀ z ∈ Ball c R \ s, ∀, DifferentiableAt ℂ f z)
     (hR : 0 < R) : HasFpowerSeriesOnBall f (cauchyPowerSeries f c R) c R :=
   { r_le := le_radius_cauchy_power_series _ _ _, r_pos := Ennreal.coe_pos.2 hR,
     HasSum := fun w hw => by
@@ -577,10 +590,10 @@ theorem has_fpower_series_on_ball_of_differentiable_off_countable {R : ℝ≥0 }
 on its interior, then it is analytic on the open ball with coefficients of the power series given by
 Cauchy integral formulas. -/
 theorem has_fpower_series_on_ball_of_continuous_on_of_differentiable_on {R : ℝ≥0 } {c : ℂ} {f : ℂ → E}
-    (hc : ContinuousOn f (closed_ball c R)) (hd : DifferentiableOn ℂ f (ball c R)) (hR : 0 < R) :
+    (hc : ContinuousOn f (ClosedBall c R)) (hd : DifferentiableOn ℂ f (Ball c R)) (hR : 0 < R) :
     HasFpowerSeriesOnBall f (cauchyPowerSeries f c R) c R :=
   has_fpower_series_on_ball_of_differentiable_off_countable countable_empty hc
-    (fun z hz => hd.differentiable_at <| is_open_ball.mem_nhds hz.1) hR
+    (fun z hz => hd.DifferentiableAt <| is_open_ball.mem_nhds hz.1) hR
 
 /-- If `f : ℂ → E` is complex differentiable on a closed disc of positive radius, then it is
 analytic on the corresponding open disc, and the coefficients of the power series are given by
@@ -588,9 +601,8 @@ Cauchy integral formulas. See also
 `complex.has_fpower_series_on_ball_of_differentiable_off_countable` for a version of this lemma with
 weaker assumptions. -/
 protected theorem _root_.differentiable_on.has_fpower_series_on_ball {R : ℝ≥0 } {c : ℂ} {f : ℂ → E}
-    (hd : DifferentiableOn ℂ f (closed_ball c R)) (hR : 0 < R) :
-    HasFpowerSeriesOnBall f (cauchyPowerSeries f c R) c R :=
-  has_fpower_series_on_ball_of_continuous_on_of_differentiable_on hd.continuous_on (hd.mono ball_subset_closed_ball) hR
+    (hd : DifferentiableOn ℂ f (ClosedBall c R)) (hR : 0 < R) : HasFpowerSeriesOnBall f (cauchyPowerSeries f c R) c R :=
+  has_fpower_series_on_ball_of_continuous_on_of_differentiable_on hd.ContinuousOn (hd.mono ball_subset_closed_ball) hR
 
 /-- If `f : ℂ → E` is complex differentiable on some set `s`, then it is analytic at any point `z`
 such that `s ∈ 𝓝 z` (equivalently, `z ∈ interior s`). -/
@@ -602,7 +614,14 @@ protected theorem _root_.differentiable_on.analytic_at {s : Set ℂ} {f : ℂ �
 
 /-- A complex differentiable function `f : ℂ → E` is analytic at every point. -/
 protected theorem _root_.differentiable.analytic_at {f : ℂ → E} (hf : Differentiable ℂ f) (z : ℂ) : AnalyticAt ℂ f z :=
-  hf.differentiable_on.analytic_at univ_mem
+  hf.DifferentiableOn.AnalyticAt univ_mem
+
+/-- When `f : ℂ → E` is differentiable, the `cauchy_power_series f z R` represents `f` as a power
+series centered at `z` in the entirety of `ℂ`, regardless of `R : ℝ≥0`, with  `0 < R`. -/
+protected theorem _root_.differentiable.has_fpower_series_on_ball {f : ℂ → E} (h : Differentiable ℂ f) (z : ℂ)
+    {R : ℝ≥0 } (hR : 0 < R) : HasFpowerSeriesOnBall f (cauchyPowerSeries f z R) z ∞ :=
+  (h.DifferentiableOn.HasFpowerSeriesOnBall hR).r_eq_top_of_exists fun r hr =>
+    ⟨_, h.DifferentiableOn.HasFpowerSeriesOnBall hr⟩
 
 end Complex
 

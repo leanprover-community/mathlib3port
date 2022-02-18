@@ -19,11 +19,11 @@ private unsafe def collect_proofs_in : expr → List expr → List Name × List 
       mcond (is_prop t)
           (do
             first
-                  (hs.map fun h => do
+                  (hs fun h => do
                     let t' ← infer_type h
                     is_def_eq t t'
                     let g ← target
-                    change <| g.replace fun a n => if a = e then some h else none
+                    change <| g fun a n => if a = e then some h else none
                     return (ns, hs)) <|>
                 (let (n, ns) :=
                     (match ns with

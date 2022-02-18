@@ -44,7 +44,7 @@ universe u v
 
 variable {n : Type u} [DecidableEq n] [Fintype n] {α : Type v} [CommRingₓ α]
 
-open_locale Matrix BigOperators
+open_locale Matrix BigOperators Polynomial
 
 open Equivₓ Equivₓ.Perm Finset
 
@@ -68,12 +68,12 @@ variable (A : Matrix n n α) (b : n → α)
   Otherwise, the outcome of `cramer_map` is well-defined but not necessarily useful.
 -/
 def cramer_map (i : n) : α :=
-  (A.update_column i b).det
+  (A.updateColumn i b).det
 
-theorem cramer_map_is_linear (i : n) : IsLinearMap α fun b => cramer_map A b i :=
+theorem cramer_map_is_linear (i : n) : IsLinearMap α fun b => cramerMap A b i :=
   { map_add := det_update_column_add _ _, map_smul := det_update_column_smul _ _ }
 
-theorem cramer_is_linear : IsLinearMap α (cramer_map A) := by
+theorem cramer_is_linear : IsLinearMap α (cramerMap A) := by
   constructor <;> intros <;> ext i
   · apply (cramer_map_is_linear A i).1
     
@@ -87,12 +87,12 @@ theorem cramer_is_linear : IsLinearMap α (cramer_map A) := by
   Otherwise, the outcome of `cramer` is well-defined but not necessarily useful.
  -/
 def cramer (A : Matrix n n α) : (n → α) →ₗ[α] n → α :=
-  IsLinearMap.mk' (cramer_map A) (cramer_is_linear A)
+  IsLinearMap.mk' (cramerMap A) (cramer_is_linear A)
 
-theorem cramer_apply (i : n) : cramer A b i = (A.update_column i b).det :=
+theorem cramer_apply (i : n) : cramer A b i = (A.updateColumn i b).det :=
   rfl
 
-theorem cramer_transpose_apply (i : n) : cramer (A)ᵀ b i = (A.update_row i b).det := by
+theorem cramer_transpose_apply (i : n) : cramer (A)ᵀ b i = (A.updateRow i b).det := by
   rw [cramer_apply, update_column_transpose, det_transpose]
 
 theorem cramer_transpose_row_self (i : n) : (A)ᵀ.cramer (A i) = Pi.single i A.det := by
@@ -176,7 +176,7 @@ def adjugate (A : Matrix n n α) : Matrix n n α := fun i => cramer (A)ᵀ (Pi.s
 theorem adjugate_def (A : Matrix n n α) : adjugate A = fun i => cramer (A)ᵀ (Pi.single i 1) :=
   rfl
 
-theorem adjugate_apply (A : Matrix n n α) (i j : n) : adjugate A i j = (A.update_row j (Pi.single i 1)).det := by
+theorem adjugate_apply (A : Matrix n n α) (i j : n) : adjugate A i j = (A.updateRow j (Pi.single i 1)).det := by
   rw [adjugate_def]
   simp only
   rw [cramer_apply, update_column_transpose, det_transpose]
@@ -211,7 +211,7 @@ theorem adjugate_transpose (A : Matrix n n α) : (adjugate A)ᵀ = adjugate (A)�
 
 /-- Since the map `b ↦ cramer A b` is linear in `b`, it must be multiplication by some matrix. This
 matrix is `A.adjugate`. -/
-theorem cramer_eq_adjugate_mul_vec (A : Matrix n n α) (b : n → α) : cramer A b = A.adjugate.mul_vec b := by
+theorem cramer_eq_adjugate_mul_vec (A : Matrix n n α) (b : n → α) : cramer A b = A.adjugate.mulVec b := by
   nth_rw 1[← A.transpose_transpose]
   rw [← adjugate_transpose, adjugate_def]
   have : b = ∑ i, b i • Pi.single i 1 := by
@@ -247,7 +247,7 @@ theorem adjugate_smul (r : α) (A : Matrix n n α) : adjugate (r • A) = r ^ (F
 if the determinant is not a unit. A sufficient (but still not necessary) condition is that `A.det`
 divides `b`. -/
 @[simp]
-theorem mul_vec_cramer (A : Matrix n n α) (b : n → α) : A.mul_vec (cramer A b) = A.det • b := by
+theorem mul_vec_cramer (A : Matrix n n α) (b : n → α) : A.mulVec (cramer A b) = A.det • b := by
   rw [cramer_eq_adjugate_mul_vec, mul_vec_mul_vec, mul_adjugate, smul_mul_vec_assoc, one_mul_vec]
 
 theorem adjugate_subsingleton [Subsingleton n] (A : Matrix n n α) : adjugate A = 1 := by
@@ -272,7 +272,7 @@ theorem adjugate_one : adjugate (1 : Matrix n n α) = 1 := by
   simp [adjugate_def, Matrix.one_apply, Pi.single_apply, eq_comm]
 
 theorem _root_.ring_hom.map_adjugate {R S : Type _} [CommRingₓ R] [CommRingₓ S] (f : R →+* S) (M : Matrix n n R) :
-    f.map_matrix M.adjugate = Matrix.adjugate (f.map_matrix M) := by
+    f.mapMatrix M.adjugate = Matrix.adjugate (f.mapMatrix M) := by
   ext i k
   have : Pi.single i (1 : S) = f ∘ Pi.single i 1 := by
     rw [← f.map_one]
@@ -281,8 +281,8 @@ theorem _root_.ring_hom.map_adjugate {R S : Type _} [CommRingₓ R] [CommRingₓ
     RingHom.map_matrix_apply, ← RingHom.map_det, ← adjugate_apply]
 
 theorem _root_.alg_hom.map_adjugate {R A B : Type _} [CommSemiringₓ R] [CommRingₓ A] [CommRingₓ B] [Algebra R A]
-    [Algebra R B] (f : A →ₐ[R] B) (M : Matrix n n A) : f.map_matrix M.adjugate = Matrix.adjugate (f.map_matrix M) :=
-  f.to_ring_hom.map_adjugate _
+    [Algebra R B] (f : A →ₐ[R] B) (M : Matrix n n A) : f.mapMatrix M.adjugate = Matrix.adjugate (f.mapMatrix M) :=
+  f.toRingHom.map_adjugate _
 
 theorem det_adjugate (A : Matrix n n α) : (adjugate A).det = A.det ^ (Fintype.card n - 1) := by
   cases' (Fintype.card n).eq_zero_or_pos with h_card h_card
@@ -309,10 +309,10 @@ theorem adjugate_fin_one (A : Matrix (Finₓ 1) (Finₓ 1) α) : adjugate A = 1 
 
 -- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
 -- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
--- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»
 theorem adjugate_fin_two (A : Matrix (Finₓ 2) (Finₓ 2) α) :
-    adjugate A = «expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr![ , ]»" :=
+    adjugate A = «expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»" :=
   by
   ext i j
   rw [adjugate_apply, det_fin_two]
@@ -322,14 +322,14 @@ theorem adjugate_fin_two (A : Matrix (Finₓ 2) (Finₓ 2) α) :
         sub_zero, Pi.single_eq_of_ne, Ne.def, not_false_iff, update_row_self, update_row_ne, cons_val_zero, mul_zero,
         mul_oneₓ, zero_sub, cons_val_one, head_cons]
 
--- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»
 @[simp]
 theorem adjugate_fin_two' (a b c d : α) :
-    adjugate («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr![ , ]»") =
-      «expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr![ , ]»" :=
+    adjugate («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»") =
+      «expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»" :=
   adjugate_fin_two _
 
 theorem adjugate_conj_transpose [StarRing α] (A : Matrix n n α) : (A.adjugate)ᴴ = adjugate (A)ᴴ := by
@@ -363,8 +363,8 @@ theorem adjugate_mul_distrib_aux (A B : Matrix n n α) (hA : IsLeftRegular A.det
 /-- Proof follows from "The trace Cayley-Hamilton theorem" by Darij Grinberg, Section 5.3
 -/
 theorem adjugate_mul_distrib (A B : Matrix n n α) : adjugate (A ⬝ B) = adjugate B ⬝ adjugate A := by
-  let g : Matrix n n α → Matrix n n (Polynomial α) := fun M => M.map Polynomial.c + (Polynomial.x : Polynomial α) • 1
-  let f' : Matrix n n (Polynomial α) →+* Matrix n n α := (Polynomial.evalRingHom 0).mapMatrix
+  let g : Matrix n n α → Matrix n n α[X] := fun M => M.map Polynomial.c + (Polynomial.x : α[X]) • 1
+  let f' : Matrix n n α[X] →+* Matrix n n α := (Polynomial.evalRingHom 0).mapMatrix
   have f'_inv : ∀ M, f' (g M) = M := by
     intro
     ext

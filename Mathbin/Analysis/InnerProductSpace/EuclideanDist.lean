@@ -42,53 +42,53 @@ def closed_ball (x : E) (r : ℝ) : Set E :=
 def ball (x : E) (r : ℝ) : Set E :=
   { y | dist y x < r }
 
-theorem ball_eq_preimage (x : E) (r : ℝ) : ball x r = toEuclidean ⁻¹' Metric.Ball (toEuclidean x) r :=
+theorem ball_eq_preimage (x : E) (r : ℝ) : Ball x r = toEuclidean ⁻¹' Metric.Ball (toEuclidean x) r :=
   rfl
 
 theorem closed_ball_eq_preimage (x : E) (r : ℝ) :
-    closed_ball x r = toEuclidean ⁻¹' Metric.ClosedBall (toEuclidean x) r :=
+    ClosedBall x r = toEuclidean ⁻¹' Metric.ClosedBall (toEuclidean x) r :=
   rfl
 
-theorem ball_subset_closed_ball {x : E} {r : ℝ} : ball x r ⊆ closed_ball x r := fun y hy : _ < _ => le_of_ltₓ hy
+theorem ball_subset_closed_ball {x : E} {r : ℝ} : Ball x r ⊆ ClosedBall x r := fun y hy : _ < _ => le_of_ltₓ hy
 
-theorem is_open_ball {x : E} {r : ℝ} : IsOpen (ball x r) :=
+theorem is_open_ball {x : E} {r : ℝ} : IsOpen (Ball x r) :=
   Metric.is_open_ball.Preimage toEuclidean.Continuous
 
-theorem mem_ball_self {x : E} {r : ℝ} (hr : 0 < r) : x ∈ ball x r :=
+theorem mem_ball_self {x : E} {r : ℝ} (hr : 0 < r) : x ∈ Ball x r :=
   Metric.mem_ball_self hr
 
 theorem closed_ball_eq_image (x : E) (r : ℝ) :
-    closed_ball x r = toEuclidean.symm '' Metric.ClosedBall (toEuclidean x) r := by
+    ClosedBall x r = toEuclidean.symm '' Metric.ClosedBall (toEuclidean x) r := by
   rw [to_euclidean.image_symm_eq_preimage, closed_ball_eq_preimage]
 
-theorem is_compact_closed_ball {x : E} {r : ℝ} : IsCompact (closed_ball x r) := by
+theorem is_compact_closed_ball {x : E} {r : ℝ} : IsCompact (ClosedBall x r) := by
   rw [closed_ball_eq_image]
   exact (is_compact_closed_ball _ _).Image to_euclidean.symm.continuous
 
-theorem is_closed_closed_ball {x : E} {r : ℝ} : IsClosed (closed_ball x r) :=
+theorem is_closed_closed_ball {x : E} {r : ℝ} : IsClosed (ClosedBall x r) :=
   is_compact_closed_ball.IsClosed
 
-theorem closure_ball (x : E) {r : ℝ} (h : 0 < r) : Closure (ball x r) = closed_ball x r := by
+theorem closure_ball (x : E) {r : ℝ} (h : 0 < r) : Closure (Ball x r) = ClosedBall x r := by
   rw [ball_eq_preimage, ← to_euclidean.preimage_closure, closure_ball (toEuclidean x) h, closed_ball_eq_preimage]
 
-theorem exists_pos_lt_subset_ball {R : ℝ} {s : Set E} {x : E} (hR : 0 < R) (hs : IsClosed s) (h : s ⊆ ball x R) :
-    ∃ r ∈ Ioo 0 R, s ⊆ ball x r := by
+theorem exists_pos_lt_subset_ball {R : ℝ} {s : Set E} {x : E} (hR : 0 < R) (hs : IsClosed s) (h : s ⊆ Ball x R) :
+    ∃ r ∈ Ioo 0 R, s ⊆ Ball x r := by
   rw [ball_eq_preimage, ← image_subset_iff] at h
   rcases exists_pos_lt_subset_ball hR (to_euclidean.is_closed_image.2 hs) h with ⟨r, hr, hsr⟩
   exact ⟨r, hr, image_subset_iff.1 hsr⟩
 
-theorem nhds_basis_closed_ball {x : E} : (𝓝 x).HasBasis (fun r : ℝ => 0 < r) (closed_ball x) := by
+theorem nhds_basis_closed_ball {x : E} : (𝓝 x).HasBasis (fun r : ℝ => 0 < r) (ClosedBall x) := by
   rw [to_euclidean.to_homeomorph.nhds_eq_comap]
   exact metric.nhds_basis_closed_ball.comap _
 
-theorem closed_ball_mem_nhds {x : E} {r : ℝ} (hr : 0 < r) : closed_ball x r ∈ 𝓝 x :=
+theorem closed_ball_mem_nhds {x : E} {r : ℝ} (hr : 0 < r) : ClosedBall x r ∈ 𝓝 x :=
   nhds_basis_closed_ball.mem_of_mem hr
 
-theorem nhds_basis_ball {x : E} : (𝓝 x).HasBasis (fun r : ℝ => 0 < r) (ball x) := by
+theorem nhds_basis_ball {x : E} : (𝓝 x).HasBasis (fun r : ℝ => 0 < r) (Ball x) := by
   rw [to_euclidean.to_homeomorph.nhds_eq_comap]
   exact metric.nhds_basis_ball.comap _
 
-theorem ball_mem_nhds {x : E} {r : ℝ} (hr : 0 < r) : ball x r ∈ 𝓝 x :=
+theorem ball_mem_nhds {x : E} {r : ℝ} (hr : 0 < r) : Ball x r ∈ 𝓝 x :=
   nhds_basis_ball.mem_of_mem hr
 
 end Euclidean

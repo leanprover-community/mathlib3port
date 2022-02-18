@@ -192,7 +192,7 @@ theorem Commute.mul_neg_geom_sum₂ [Ringₓ α] {x y : α} (h : Commute x y) (n
 
 theorem Commute.mul_geom_sum₂ [Ringₓ α] {x y : α} (h : Commute x y) (n : ℕ) :
     (x - y) * geomSum₂ x y n = x ^ n - y ^ n := by
-  rw [← neg_sub (y ^ n), ← h.mul_neg_geom_sum₂, ← neg_mul_eq_neg_mul_symm, neg_sub]
+  rw [← neg_sub (y ^ n), ← h.mul_neg_geom_sum₂, ← neg_mul, neg_sub]
 
 theorem geom_sum₂_mul [CommRingₓ α] (x y : α) (n : ℕ) : geomSum₂ x y n * (x - y) = x ^ n - y ^ n :=
   (Commute.all x y).geom_sum₂_mul n
@@ -208,7 +208,7 @@ theorem mul_geom_sum [Ringₓ α] (x : α) (n : ℕ) : (x - 1) * geomSum x n = x
 
 theorem geom_sum_mul_neg [Ringₓ α] (x : α) (n : ℕ) : geomSum x n * (1 - x) = 1 - x ^ n := by
   have := congr_argₓ Neg.neg (geom_sum_mul x n)
-  rw [neg_sub, ← mul_neg_eq_neg_mul_symm, neg_sub] at this
+  rw [neg_sub, ← mul_neg, neg_sub] at this
   exact this
 
 theorem mul_neg_geom_sum [Ringₓ α] (x : α) (n : ℕ) : (1 - x) * geomSum x n = 1 - x ^ n :=
@@ -356,7 +356,7 @@ theorem Nat.geom_sum_le {b : ℕ} (hb : 2 ≤ b) (a n : ℕ) : (∑ i in range n
   rw [mul_comm]
   exact (Nat.pred_mul_geom_sum_le a b n).trans tsub_le_self
 
-theorem Nat.geom_sum_Ico_le {b : ℕ} (hb : 2 ≤ b) (a n : ℕ) : (∑ i in Ico 1 n, a / b ^ i) ≤ a / (b - 1) := by
+theorem Nat.geom_sum_Ico_le {b : ℕ} (hb : 2 ≤ b) (a n : ℕ) : (∑ i in ico 1 n, a / b ^ i) ≤ a / (b - 1) := by
   cases n
   · rw [Ico_eq_empty_of_le zero_le_one, sum_empty]
     exact Nat.zero_leₓ _
@@ -390,7 +390,7 @@ theorem geom_sum_pos_and_lt_one [OrderedRing α] (hx : x < 0) (hx' : 0 < x + 1) 
     
   clear hn n
   intro n hn ihn
-  rw [geom_sum_succ, add_lt_iff_neg_right, ← neg_lt_iff_pos_add', neg_mul_eq_neg_mul]
+  rw [geom_sum_succ, add_lt_iff_neg_right, ← neg_lt_iff_pos_add', neg_mul_eq_neg_mulₓ]
   exact
     ⟨mul_lt_one_of_nonneg_of_lt_one_left (neg_nonneg.2 hx.le) (neg_lt_iff_pos_add'.2 hx') ihn.2.le,
       mul_neg_of_neg_of_pos hx ihn.1⟩

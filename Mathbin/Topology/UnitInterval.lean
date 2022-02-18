@@ -165,19 +165,19 @@ theorem two_mul_sub_one_mem_iff {t : ℝ} : 2 * t - 1 ∈ I ↔ t ∈ Set.Icc (1
 end UnitInterval
 
 @[simp]
-theorem proj_Icc_eq_zero {x : ℝ} : proj_Icc (0 : ℝ) 1 zero_le_one x = 0 ↔ x ≤ 0 :=
+theorem proj_Icc_eq_zero {x : ℝ} : projIcc (0 : ℝ) 1 zero_le_one x = 0 ↔ x ≤ 0 :=
   proj_Icc_eq_left zero_lt_one
 
 @[simp]
-theorem proj_Icc_eq_one {x : ℝ} : proj_Icc (0 : ℝ) 1 zero_le_one x = 1 ↔ 1 ≤ x :=
+theorem proj_Icc_eq_one {x : ℝ} : projIcc (0 : ℝ) 1 zero_le_one x = 1 ↔ 1 ≤ x :=
   proj_Icc_eq_right zero_lt_one
 
 namespace Tactic.Interactive
 
--- ././Mathport/Syntax/Translate/Basic.lean:794:4: warning: unsupported (TODO): `[tacs]
--- ././Mathport/Syntax/Translate/Basic.lean:794:4: warning: unsupported (TODO): `[tacs]
--- ././Mathport/Syntax/Translate/Basic.lean:794:4: warning: unsupported (TODO): `[tacs]
--- ././Mathport/Syntax/Translate/Basic.lean:794:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
 /-- A tactic that solves `0 ≤ ↑x`, `0 ≤ 1 - ↑x`, `↑x ≤ 1`, and `1 - ↑x ≤ 1` for `x : I`. -/
 unsafe def UnitInterval : tactic Unit :=
   sorry <|> sorry <|> sorry <|> sorry
@@ -191,7 +191,7 @@ variable {𝕜 : Type _} [LinearOrderedField 𝕜] [TopologicalSpace 𝕜] [Topo
 /-- The image of `[0,1]` under the homeomorphism `λ x, a * x + b` is `[b, a+b]`.
 -/
 theorem affine_homeomorph_image_I (a b : 𝕜) (h : 0 < a) :
-    affineHomeomorph a b h.ne.symm '' Set.Icc 0 1 = Set.Icc b (a + b) := by
+    affineHomeomorph a b h.Ne.symm '' Set.Icc 0 1 = Set.Icc b (a + b) := by
   simp [h]
 
 /-- The affine homeomorphism from a nontrivial interval `[a,b]` to `[0,1]`.

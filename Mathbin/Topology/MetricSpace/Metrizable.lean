@@ -18,7 +18,7 @@ open_locale BoundedContinuousFunction Filter TopologicalSpace
 
 namespace TopologicalSpace
 
-variable (X : Type _) [TopologicalSpace X] [NormalSpace X] [second_countable_topology X]
+variable (X : Type _) [TopologicalSpace X] [NormalSpace X] [SecondCountableTopology X]
 
 /-- A normal topological space with second countable topology can be embedded into `l^∞ = ℕ →ᵇ ℝ`.
 -/

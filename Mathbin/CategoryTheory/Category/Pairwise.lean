@@ -52,17 +52,17 @@ inductive hom : Pairwise ι → Pairwise ι → Type v
 
 open Hom
 
-instance hom_inhabited [Inhabited ι] : Inhabited (hom (single (default : ι)) (single default)) :=
+instance hom_inhabited [Inhabited ι] : Inhabited (Hom (single (default : ι)) (single default)) :=
   ⟨id_single default⟩
 
 /-- The identity morphism in `pairwise ι`.
 -/
-def id : ∀ o : Pairwise ι, hom o o
+def id : ∀ o : Pairwise ι, Hom o o
   | single i => id_single i
   | pair i j => id_pair i j
 
 /-- Composition of morphisms in `pairwise ι`. -/
-def comp : ∀ {o₁ o₂ o₃ : Pairwise ι} f : hom o₁ o₂ g : hom o₂ o₃, hom o₁ o₃
+def comp : ∀ {o₁ o₂ o₃ : Pairwise ι} f : Hom o₁ o₂ g : Hom o₂ o₃, Hom o₁ o₃
   | _, _, _, id_single i, g => g
   | _, _, _, id_pair i j, g => g
   | _, _, _, left i j, id_single _ => left i j
@@ -72,8 +72,8 @@ section
 
 attribute [local tidy] tactic.case_bash
 
-instance : category (Pairwise ι) where
-  Hom := hom
+instance : Category (Pairwise ι) where
+  Hom := Hom
   id := id
   comp := fun X Y Z f g => comp f g
 
@@ -93,11 +93,11 @@ def diagram_obj : Pairwise ι → α
 
 /-- Auxiliary definition for `diagram`. -/
 @[simp]
-def diagram_map : ∀ {o₁ o₂ : Pairwise ι} f : o₁ ⟶ o₂, diagram_obj U o₁ ⟶ diagram_obj U o₂
+def diagram_map : ∀ {o₁ o₂ : Pairwise ι} f : o₁ ⟶ o₂, diagramObj U o₁ ⟶ diagramObj U o₂
   | _, _, id_single i => 𝟙 _
   | _, _, id_pair i j => 𝟙 _
-  | _, _, left i j => hom_of_le inf_le_left
-  | _, _, right i j => hom_of_le inf_le_right
+  | _, _, left i j => homOfLe inf_le_left
+  | _, _, right i j => homOfLe inf_le_right
 
 /-- Given a function `U : ι → α` for `[semilattice_inf α]`, we obtain a functor `pairwise ι ⥤ α`,
 sending `single i` to `U i` and `pair i j` to `U i ⊓ U j`,
@@ -105,8 +105,8 @@ and the morphisms to the obvious inequalities.
 -/
 @[simps]
 def diagram : Pairwise ι ⥤ α where
-  obj := diagram_obj U
-  map := fun X Y f => diagram_map U f
+  obj := diagramObj U
+  map := fun X Y f => diagramMap U f
 
 end
 
@@ -115,24 +115,24 @@ section
 variable [CompleteLattice α]
 
 /-- Auxiliary definition for `cocone`. -/
-def cocone_ι_app : ∀ o : Pairwise ι, diagram_obj U o ⟶ supr U
-  | single i => hom_of_le (le_supr U i)
-  | pair i j => hom_of_le inf_le_left ≫ hom_of_le (le_supr U i)
+def cocone_ι_app : ∀ o : Pairwise ι, diagramObj U o ⟶ supr U
+  | single i => homOfLe (le_supr U i)
+  | pair i j => homOfLe inf_le_left ≫ homOfLe (le_supr U i)
 
 /-- Given a function `U : ι → α` for `[complete_lattice α]`,
 `supr U` provides a cocone over `diagram U`.
 -/
 @[simps]
-def cocone : cocone (diagram U) where
+def cocone : Cocone (diagram U) where
   x := supr U
-  ι := { app := cocone_ι_app U }
+  ι := { app := coconeιApp U }
 
 /-- Given a function `U : ι → α` for `[complete_lattice α]`,
 `infi U` provides a limit cone over `diagram U`.
 -/
-def cocone_is_colimit : is_colimit (cocone U) where
+def cocone_is_colimit : IsColimit (cocone U) where
   desc := fun s =>
-    hom_of_le
+    homOfLe
       (by
         apply CompleteLattice.Sup_le
         rintro _ ⟨j, rfl⟩

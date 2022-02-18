@@ -30,8 +30,8 @@ for the binary operation `m : X → X → X`. -/
 structure is_unital (m : X → X → X) (e : X) extends IsLeftId _ m e, IsRightId _ m e : Prop
 
 @[to_additive EckmannHilton.AddZeroClass.is_unital]
-theorem mul_one_class.is_unital [G : MulOneClass X] : is_unital (· * ·) (1 : X) :=
-  is_unital.mk
+theorem mul_one_class.is_unital [G : MulOneClassₓ X] : IsUnital (· * ·) (1 : X) :=
+  IsUnital.mk
     (by
       infer_instance)
     (by
@@ -39,7 +39,7 @@ theorem mul_one_class.is_unital [G : MulOneClass X] : is_unital (· * ·) (1 : X
 
 variable {m₁ m₂ : X → X → X} {e₁ e₂ : X}
 
-variable (h₁ : is_unital m₁ e₁) (h₂ : is_unital m₂ e₂)
+variable (h₁ : IsUnital m₁ e₁) (h₂ : IsUnital m₂ e₂)
 
 variable (distrib : ∀ a b c d, ((a<m₂>b)<m₁>c<m₂>d) = (a<m₁>c)<m₂>b<m₁>d)
 
@@ -85,9 +85,9 @@ omit h₁ h₂ distrib
 operations, then the magma structure is a commutative monoid. -/
 @[to_additive
       "If a type carries a unital additive magma structure that distributes over a\nunital binary operations, then the additive magma structure is a commutative additive monoid."]
-def CommMonoidₓ [h : MulOneClass X] (distrib : ∀ a b c d, ((a * b)<m₁>c * d) = (a<m₁>c) * b<m₁>d) : CommMonoidₓ X :=
-  { h with mul := · * ·, one := 1, mul_comm := (mul_comm h₁ mul_one_class.is_unital distrib).comm,
-    mul_assoc := (mul_assoc h₁ mul_one_class.is_unital distrib).assoc }
+def CommMonoidₓ [h : MulOneClassₓ X] (distrib : ∀ a b c d, ((a * b)<m₁>c * d) = (a<m₁>c) * b<m₁>d) : CommMonoidₓ X :=
+  { h with mul := · * ·, one := 1, mul_comm := (mul_comm h₁ MulOneClass.is_unital distrib).comm,
+    mul_assoc := (mul_assoc h₁ MulOneClass.is_unital distrib).assoc }
 
 /-- If a type carries a group structure that distributes over a unital binary operation,
 then the group is commutative. -/

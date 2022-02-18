@@ -57,7 +57,7 @@ theorem irrational_nrt_of_notint_nrt {x : ℝ} (n : ℕ) (m : ℤ) (hxr : x ^ n 
 
 /-- If `x^n = m` is an integer and `n` does not divide the `multiplicity p m`, then `x`
 is irrational. -/
-theorem irrational_nrt_of_n_not_dvd_multiplicity {x : ℝ} (n : ℕ) {m : ℤ} (hm : m ≠ 0) (p : ℕ) [hp : Fact p.prime]
+theorem irrational_nrt_of_n_not_dvd_multiplicity {x : ℝ} (n : ℕ) {m : ℤ} (hm : m ≠ 0) (p : ℕ) [hp : Fact p.Prime]
     (hxr : x ^ n = m) (hv : (multiplicity (p : ℤ) m).get (finite_int_iff.2 ⟨hp.1.ne_one, hm⟩) % n ≠ 0) : Irrational x :=
   by
   rcases Nat.eq_zero_or_posₓ n with (rfl | hnpos)
@@ -77,7 +77,7 @@ theorem irrational_nrt_of_n_not_dvd_multiplicity {x : ℝ} (n : ℕ) {m : ℤ} (
     hv
   exact hv rfl
 
-theorem irrational_sqrt_of_multiplicity_odd (m : ℤ) (hm : 0 < m) (p : ℕ) [hp : Fact p.prime]
+theorem irrational_sqrt_of_multiplicity_odd (m : ℤ) (hm : 0 < m) (p : ℕ) [hp : Fact p.Prime]
     (Hpv : (multiplicity (p : ℤ) m).get (finite_int_iff.2 ⟨hp.1.ne_one, (ne_of_ltₓ hm).symm⟩) % 2 = 1) :
     Irrational (sqrt m) :=
   @irrational_nrt_of_n_not_dvd_multiplicity _ 2 _ (Ne.symm (ne_of_ltₓ hm)) p hp
@@ -86,7 +86,7 @@ theorem irrational_sqrt_of_multiplicity_odd (m : ℤ) (hm : 0 < m) (p : ℕ) [hp
       rw [Hpv] <;> exact one_ne_zero)
 
 theorem Nat.Prime.irrational_sqrt {p : ℕ} (hp : Nat.Prime p) : Irrational (sqrt p) :=
-  @irrational_sqrt_of_multiplicity_odd p (Int.coe_nat_pos.2 hp.pos) p ⟨hp⟩ <| by
+  @irrational_sqrt_of_multiplicity_odd p (Int.coe_nat_pos.2 hp.Pos) p ⟨hp⟩ <| by
     simp [multiplicity_self (mt is_unit_iff_dvd_one.1 (mt Int.coe_nat_dvd.1 hp.not_dvd_one) : _)] <;> rfl
 
 /-- **Irrationality of the Square Root of 2** -/
@@ -150,7 +150,7 @@ theorem ne_zero (h : Irrational x) : x ≠ 0 :=
   h.ne_nat 0
 
 theorem ne_one (h : Irrational x) : x ≠ 1 := by
-  simpa only [Nat.cast_one] using h.ne_nat 1
+  simpa only [Nat.cast_oneₓ] using h.ne_nat 1
 
 end Irrational
 
@@ -180,7 +180,7 @@ theorem add_cases : Irrational (x + y) → Irrational x ∨ Irrational y := by
   exact ⟨rx + ry, cast_add rx ry⟩
 
 theorem of_rat_add (h : Irrational (q + x)) : Irrational x :=
-  h.add_cases.resolve_left q.not_irrational
+  h.addCases.resolve_left q.not_irrational
 
 theorem rat_add (h : Irrational x) : Irrational (q + x) :=
   of_rat_add (-q) <| by
@@ -340,7 +340,7 @@ theorem of_inv (h : Irrational x⁻¹) : Irrational x := fun ⟨q, hq⟩ => h <|
 
 protected theorem inv (h : Irrational x) : Irrational x⁻¹ :=
   of_inv <| by
-    rwa [inv_inv₀]
+    rwa [inv_invₓ]
 
 /-!
 #### Division
@@ -425,7 +425,7 @@ open Polynomial
 variable (x : ℝ) (p : Polynomial ℤ)
 
 theorem one_lt_nat_degree_of_irrational_root (hx : Irrational x) (p_nonzero : p ≠ 0) (x_is_root : aeval x p = 0) :
-    1 < p.nat_degree := by
+    1 < p.natDegree := by
   by_contra rid
   rcases exists_eq_X_add_C_of_nat_degree_le_one (not_ltₓ.1 rid) with ⟨a, b, rfl⟩
   clear rid
@@ -465,7 +465,7 @@ theorem irrational_int_add_iff : Irrational (m + x) ↔ Irrational x :=
 
 @[simp]
 theorem irrational_nat_add_iff : Irrational (n + x) ↔ Irrational x :=
-  ⟨of_nat_add n, fun h => h.nat_add n⟩
+  ⟨of_nat_add n, fun h => h.natAdd n⟩
 
 @[simp]
 theorem irrational_add_rat_iff : Irrational (x + q) ↔ Irrational x :=
@@ -477,7 +477,7 @@ theorem irrational_add_int_iff : Irrational (x + m) ↔ Irrational x :=
 
 @[simp]
 theorem irrational_add_nat_iff : Irrational (x + n) ↔ Irrational x :=
-  ⟨of_add_nat n, fun h => h.add_nat n⟩
+  ⟨of_add_nat n, fun h => h.addNat n⟩
 
 @[simp]
 theorem irrational_rat_sub_iff : Irrational (q - x) ↔ Irrational x :=
@@ -501,7 +501,7 @@ theorem irrational_sub_int_iff : Irrational (x - m) ↔ Irrational x :=
 
 @[simp]
 theorem irrational_sub_nat_iff : Irrational (x - n) ↔ Irrational x :=
-  ⟨of_sub_nat n, fun h => h.sub_nat n⟩
+  ⟨of_sub_nat n, fun h => h.subNat n⟩
 
 @[simp]
 theorem irrational_neg_iff : Irrational (-x) ↔ Irrational x :=

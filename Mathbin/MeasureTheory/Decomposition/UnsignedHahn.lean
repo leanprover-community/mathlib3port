@@ -23,13 +23,13 @@ open_locale Classical TopologicalSpace Ennreal
 
 namespace MeasureTheory
 
-variable {α : Type _} [MeasurableSpace α] {μ ν : Measureₓ α}
+variable {α : Type _} [MeasurableSpace α] {μ ν : Measure α}
 
 private theorem aux {m : ℕ} {γ d : ℝ} (h : γ - (1 / 2) ^ m < d) : γ - 2 * (1 / 2) ^ m + (1 / 2) ^ m ≤ d := by
   linarith
 
 /-- **Hahn decomposition theorem** -/
-theorem hahn_decomposition [is_finite_measure μ] [is_finite_measure ν] :
+theorem hahn_decomposition [IsFiniteMeasure μ] [IsFiniteMeasure ν] :
     ∃ s, MeasurableSet s ∧ (∀ t, MeasurableSet t → t ⊆ s → ν t ≤ μ t) ∧ ∀ t, MeasurableSet t → t ⊆ sᶜ → μ t ≤ ν t := by
   let d : Set α → ℝ := fun s => ((μ s).toNnreal : ℝ) - (ν s).toNnreal
   let c : Set ℝ := d '' { s | MeasurableSet s }
@@ -48,12 +48,10 @@ theorem hahn_decomposition [is_finite_measure μ] [is_finite_measure ν] :
       Ennreal.to_nnreal_add (hν _) (hν _), Nnreal.coe_add, Nnreal.coe_add]
     simp only [sub_eq_add_neg, neg_add]
     ac_rfl
-  have d_Union :
-    ∀ s : ℕ → Set α, (∀ n, MeasurableSet (s n)) → Monotone s → tendsto (fun n => d (s n)) at_top (𝓝 (d (⋃ n, s n))) :=
-    by
-    intro s hs hm
+  have d_Union : ∀ s : ℕ → Set α, Monotone s → tendsto (fun n => d (s n)) at_top (𝓝 (d (⋃ n, s n))) := by
+    intro s hm
     refine' tendsto.sub _ _ <;>
-      refine' Nnreal.tendsto_coe.2 <| (Ennreal.tendsto_to_nnreal _).comp <| tendsto_measure_Union hs hm
+      refine' Nnreal.tendsto_coe.2 <| (Ennreal.tendsto_to_nnreal _).comp <| tendsto_measure_Union hm
     exact hμ _
     exact hν _
   have d_Inter :
@@ -135,12 +133,8 @@ theorem hahn_decomposition [is_finite_measure μ] [is_finite_measure ν] :
           tendsto_const_nhds.mul <|
             tendsto_pow_at_top_nhds_0_of_lt_1 (le_of_ltₓ <| half_pos <| zero_lt_one) (half_lt_self zero_lt_one)
     have hd : tendsto (fun m => d (⋂ n, f m n)) at_top (𝓝 (d (⋃ m, ⋂ n, f m n))) := by
-      refine' d_Union _ _ _
-      · intro n
-        exact MeasurableSet.Inter fun m => hf _ _
-        
-      · exact fun n m hnm => subset_Inter fun i => subset.trans (Inter_subset (f n) i) <| f_subset_f hnm <| le_reflₓ _
-        
+      refine' d_Union _ _
+      exact fun n m hnm => subset_Inter fun i => subset.trans (Inter_subset (f n) i) <| f_subset_f hnm <| le_rfl
     refine' le_of_tendsto_of_tendsto' hγ hd fun m => _
     have : tendsto (fun n => d (f m n)) at_top (𝓝 (d (⋂ n, f m n))) := by
       refine' d_Inter _ _ _
@@ -148,12 +142,12 @@ theorem hahn_decomposition [is_finite_measure μ] [is_finite_measure ν] :
         exact hf _ _
         
       · intro n m hnm
-        exact f_subset_f (le_reflₓ _) hnm
+        exact f_subset_f le_rfl hnm
         
     refine' ge_of_tendsto this (eventually_at_top.2 ⟨m, fun n hmn => _⟩)
     change γ - 2 * (1 / 2) ^ m ≤ d (f m n)
     refine' le_transₓ _ (le_d_f _ _ hmn)
-    exact le_add_of_le_of_nonneg (le_reflₓ _) (pow_nonneg (le_of_ltₓ <| half_pos <| zero_lt_one) _)
+    exact le_add_of_le_of_nonneg le_rfl (pow_nonneg (le_of_ltₓ <| half_pos <| zero_lt_one) _)
   have hs : MeasurableSet s := MeasurableSet.Union fun n => MeasurableSet.Inter fun m => hf _ _
   refine' ⟨s, hs, _, _⟩
   · intro t ht hts
@@ -164,7 +158,7 @@ theorem hahn_decomposition [is_finite_measure μ] [is_finite_measure ν] :
             rw [add_zeroₓ] <;> exact γ_le_d_s
           _ = d (s \ t) + d t := by
             rw [d_split _ _ hs ht, inter_eq_self_of_subset_right hts]
-          _ ≤ γ + d t := add_le_add (d_le_γ _ (hs.diff ht)) (le_reflₓ _)
+          _ ≤ γ + d t := add_le_add (d_le_γ _ (hs.diff ht)) le_rfl
           
     rw [← to_nnreal_μ, ← to_nnreal_ν, Ennreal.coe_le_coe, ← Nnreal.coe_le_coe]
     simpa only [d, le_sub_iff_add_le, zero_addₓ] using this
@@ -173,7 +167,7 @@ theorem hahn_decomposition [is_finite_measure μ] [is_finite_measure ν] :
     have : d t ≤ 0 :=
       (add_le_add_iff_left γ).1 <|
         calc
-          γ + d t ≤ d s + d t := add_le_add γ_le_d_s (le_reflₓ _)
+          γ + d t ≤ d s + d t := add_le_add γ_le_d_s le_rfl
           _ = d (s ∪ t) := by
             rw [d_split _ _ (hs.union ht) ht, union_diff_right, union_inter_cancel_right, diff_eq_self.2]
             exact fun a ⟨hat, has⟩ => hts hat has

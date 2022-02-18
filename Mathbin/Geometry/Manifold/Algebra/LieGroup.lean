@@ -106,7 +106,7 @@ instance {𝕜 : Type _} [NondiscreteNormedField 𝕜] {H : Type _} [Topological
     [NormedSpace 𝕜 E] {I : ModelWithCorners 𝕜 E H} {G : Type _} [TopologicalSpace G] [ChartedSpace H G] [Groupₓ G]
     [LieGroup I G] {E' : Type _} [NormedGroup E'] [NormedSpace 𝕜 E'] {H' : Type _} [TopologicalSpace H']
     {I' : ModelWithCorners 𝕜 E' H'} {G' : Type _} [TopologicalSpace G'] [ChartedSpace H' G'] [Groupₓ G']
-    [LieGroup I' G'] : LieGroup (I.prod I') (G × G') :=
+    [LieGroup I' G'] : LieGroup (I.Prod I') (G × G') :=
   { HasSmoothMul.prod _ _ _ _ with smooth_inv := smooth_fst.inv.prod_mk smooth_snd.inv }
 
 end ProdLieGroup

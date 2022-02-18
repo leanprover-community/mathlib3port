@@ -25,7 +25,7 @@ open_locale BigOperators
 namespace Fintype
 
 @[to_additive]
-theorem prod_bool [CommMonoidₓ α] (f : Bool → α) : (∏ b, f b) = f tt * f ff := by
+theorem prod_bool [CommMonoidₓ α] (f : Bool → α) : (∏ b, f b) = f true * f false := by
   simp
 
 theorem card_eq_sum_ones {α} [Fintype α] : Fintype.card α = ∑ a : α, 1 :=
@@ -99,9 +99,9 @@ theorem Finset.prod_range [CommMonoidₓ β] {n : ℕ} (f : ℕ → β) : (∏ i
   exact fun k w =>
     ⟨k, by
       simpa using w⟩
-  swap 3
+  pick_goal 3
   exact fun a m => a
-  swap 3
+  pick_goal 3
   exact fun a m => by
     simpa using a.2
   all_goals
@@ -120,7 +120,7 @@ theorem Finₓ.prod_univ_zero [CommMonoidₓ β] (f : Finₓ 0 → β) : (∏ i,
 is the product of `f x`, for some `x : fin (n + 1)` times the remaining product -/
 @[to_additive]
 theorem Finₓ.prod_univ_succ_above [CommMonoidₓ β] {n : ℕ} (f : Finₓ (n + 1) → β) (x : Finₓ (n + 1)) :
-    (∏ i, f i) = f x * ∏ i : Finₓ n, f (x.succ_above i) := by
+    (∏ i, f i) = f x * ∏ i : Finₓ n, f (x.succAbove i) := by
   rw [Fintype.prod_eq_mul_prod_compl x, ← Finₓ.image_succ_above_univ, prod_image]
   exact fun _ _ _ _ h => x.succ_above.injective h
 
@@ -236,7 +236,7 @@ theorem Function.Bijective.prod_comp [Fintype α] [Fintype β] [CommMonoidₓ γ
 
 @[to_additive]
 theorem Equivₓ.prod_comp [Fintype α] [Fintype β] [CommMonoidₓ γ] (e : α ≃ β) (f : β → γ) : (∏ i, f (e i)) = ∏ i, f i :=
-  e.bijective.prod_comp f
+  e.Bijective.prod_comp f
 
 /-- It is equivalent to sum a function over `fin n` or `finset.range n`. -/
 @[to_additive]
@@ -305,7 +305,7 @@ namespace List
 
 @[to_additive]
 theorem prod_take_of_fn [CommMonoidₓ α] {n : ℕ} (f : Finₓ n → α) (i : ℕ) :
-    ((of_fn f).take i).Prod = ∏ j in Finset.univ.filter fun j : Finₓ n => j.val < i, f j := by
+    ((ofFnₓ f).take i).Prod = ∏ j in Finset.univ.filter fun j : Finₓ n => j.val < i, f j := by
   have A : ∀ j : Finₓ n, ¬(j : ℕ) < 0 := fun j => not_lt_bot
   induction' i with i IH
   · simp [A]
@@ -338,7 +338,7 @@ theorem prod_take_of_fn [CommMonoidₓ α] {n : ℕ} (f : Finₓ n → α) (i : 
     
 
 @[to_additive]
-theorem prod_of_fn [CommMonoidₓ α] {n : ℕ} {f : Finₓ n → α} : (of_fn f).Prod = ∏ i, f i := by
+theorem prod_of_fn [CommMonoidₓ α] {n : ℕ} {f : Finₓ n → α} : (ofFnₓ f).Prod = ∏ i, f i := by
   convert prod_take_of_fn f n
   · rw [take_all_of_le (le_of_eqₓ (length_of_fn f))]
     
@@ -347,7 +347,7 @@ theorem prod_of_fn [CommMonoidₓ α] {n : ℕ} {f : Finₓ n → α} : (of_fn f
     
 
 theorem alternating_sum_eq_finset_sum {G : Type _} [AddCommGroupₓ G] :
-    ∀ L : List G, alternating_sum L = ∑ i : Finₓ L.length, (-1 : ℤ) ^ (i : ℕ) • L.nth_le i i.is_lt
+    ∀ L : List G, alternatingSum L = ∑ i : Finₓ L.length, (-1 : ℤ) ^ (i : ℕ) • L.nthLe i i.is_lt
   | [] => by
     rw [alternating_sum, Finset.sum_eq_zero]
     rintro ⟨i, ⟨⟩⟩
@@ -357,7 +357,7 @@ theorem alternating_sum_eq_finset_sum {G : Type _} [AddCommGroupₓ G] :
     simp
   | g :: h :: L =>
     calc
-      g + -h + L.alternating_sum = g + -h + ∑ i : Finₓ L.length, (-1 : ℤ) ^ (i : ℕ) • L.nth_le i i.2 :=
+      g + -h + L.alternatingSum = g + -h + ∑ i : Finₓ L.length, (-1 : ℤ) ^ (i : ℕ) • L.nthLe i i.2 :=
         congr_argₓ _ (alternating_sum_eq_finset_sum _)
       _ = ∑ i : Finₓ (L.length + 2), (-1 : ℤ) ^ (i : ℕ) • List.nthLe (g :: h :: L) i _ := by
         rw [Finₓ.sum_univ_succ, Finₓ.sum_univ_succ, add_assocₓ]
@@ -368,7 +368,7 @@ theorem alternating_sum_eq_finset_sum {G : Type _} [AddCommGroupₓ G] :
 
 @[to_additive]
 theorem alternating_prod_eq_finset_prod {G : Type _} [CommGroupₓ G] :
-    ∀ L : List G, alternating_prod L = ∏ i : Finₓ L.length, L.nth_le i i.2 ^ (-1 : ℤ) ^ (i : ℕ)
+    ∀ L : List G, alternatingProd L = ∏ i : Finₓ L.length, L.nthLe i i.2 ^ (-1 : ℤ) ^ (i : ℕ)
   | [] => by
     rw [alternating_prod, Finset.prod_eq_one]
     rintro ⟨i, ⟨⟩⟩
@@ -378,7 +378,7 @@ theorem alternating_prod_eq_finset_prod {G : Type _} [CommGroupₓ G] :
     simp
   | g :: h :: L =>
     calc
-      g * h⁻¹ * L.alternating_prod = g * h⁻¹ * ∏ i : Finₓ L.length, L.nth_le i i.2 ^ (-1 : ℤ) ^ (i : ℕ) :=
+      g * h⁻¹ * L.alternatingProd = g * h⁻¹ * ∏ i : Finₓ L.length, L.nthLe i i.2 ^ (-1 : ℤ) ^ (i : ℕ) :=
         congr_argₓ _ (alternating_prod_eq_finset_prod _)
       _ = ∏ i : Finₓ (L.length + 2), List.nthLe (g :: h :: L) i _ ^ (-1 : ℤ) ^ (i : ℕ) := by
         rw [Finₓ.prod_univ_succ, Finₓ.prod_univ_succ, mul_assoc]

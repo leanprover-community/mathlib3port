@@ -109,7 +109,7 @@ protected theorem Ge [Preorderₓ α] {x y : α} (h : x = y) : y ≤ x :=
 theorem trans_le [Preorderₓ α] {x y z : α} (h1 : x = y) (h2 : y ≤ z) : x ≤ z :=
   h1.le.trans h2
 
-theorem not_ltₓ [PartialOrderₓ α] {x y : α} (h : x = y) : ¬x < y := fun h' => h'.ne h
+theorem not_ltₓ [PartialOrderₓ α] {x y : α} (h : x = y) : ¬x < y := fun h' => h'.Ne h
 
 theorem not_gt [PartialOrderₓ α] {x y : α} (h : x = y) : ¬y < x :=
   h.symm.not_lt
@@ -126,7 +126,7 @@ theorem trans_eq [Preorderₓ α] {x y z : α} (h1 : x ≤ y) (h2 : y = z) : x �
   h1.trans h2.le
 
 theorem lt_iff_ne [PartialOrderₓ α] {x y : α} (h : x ≤ y) : x < y ↔ x ≠ y :=
-  ⟨fun h => h.ne, h.lt_of_ne⟩
+  ⟨fun h => h.Ne, h.lt_of_ne⟩
 
 theorem le_iff_eq [PartialOrderₓ α] {x y : α} (h : x ≤ y) : y ≤ x ↔ y = x :=
   ⟨fun h' => h'.antisymm h, Eq.le⟩
@@ -152,7 +152,7 @@ protected theorem False [Preorderₓ α] {x : α} : x < x → False :=
   lt_irreflₓ x
 
 theorem ne' [Preorderₓ α] {x y : α} (h : x < y) : y ≠ x :=
-  h.ne.symm
+  h.Ne.symm
 
 theorem lt_or_lt [LinearOrderₓ α] {x y : α} (h : x < y) (z : α) : x < z ∨ z < y :=
   (lt_or_geₓ z y).elim Or.inr fun hz => Or.inl <| h.trans_le hz
@@ -169,7 +169,7 @@ protected theorem Gt.lt [LT α] {x y : α} (h : x > y) : y < x :=
 
 @[nolint ge_or_gt]
 theorem ge_of_eq [Preorderₓ α] {a b : α} (h : a = b) : a ≥ b :=
-  h.ge
+  h.Ge
 
 @[simp, nolint ge_or_gt]
 theorem ge_iff_le [Preorderₓ α] {a b : α} : a ≥ b ↔ b ≤ a :=
@@ -212,9 +212,14 @@ theorem eq_iff_le_not_lt [PartialOrderₓ α] {a b : α} : a = b ↔ a ≤ b ∧
 theorem eq_or_lt_of_le [PartialOrderₓ α] {a b : α} (h : a ≤ b) : a = b ∨ a < b :=
   h.lt_or_eq.symm
 
+theorem eq_or_gt_of_le [PartialOrderₓ α] {a b : α} (h : a ≤ b) : b = a ∨ a < b :=
+  h.lt_or_eq.symm.imp Eq.symm id
+
 alias Decidable.eq_or_lt_of_leₓ ← LE.le.eq_or_lt_dec
 
 alias eq_or_lt_of_le ← LE.le.eq_or_lt
+
+alias eq_or_gt_of_le ← LE.le.eq_or_gt
 
 attribute [nolint decidable_classical] LE.le.eq_or_lt_dec
 
@@ -492,13 +497,13 @@ def Preorderₓ.lift {α β} [Preorderₓ β] (f : α → β) : Preorderₓ α w
 /-- Transfer a `partial_order` on `β` to a `partial_order` on `α` using an injective
 function `f : α → β`. See note [reducible non-instances]. -/
 @[reducible]
-def PartialOrderₓ.lift {α β} [PartialOrderₓ β] (f : α → β) (inj : injective f) : PartialOrderₓ α :=
+def PartialOrderₓ.lift {α β} [PartialOrderₓ β] (f : α → β) (inj : Injective f) : PartialOrderₓ α :=
   { Preorderₓ.lift f with le_antisymm := fun a b h₁ h₂ => inj (h₁.antisymm h₂) }
 
 /-- Transfer a `linear_order` on `β` to a `linear_order` on `α` using an injective
 function `f : α → β`. See note [reducible non-instances]. -/
 @[reducible]
-def LinearOrderₓ.lift {α β} [LinearOrderₓ β] (f : α → β) (inj : injective f) : LinearOrderₓ α :=
+def LinearOrderₓ.lift {α β} [LinearOrderₓ β] (f : α → β) (inj : Injective f) : LinearOrderₓ α :=
   { PartialOrderₓ.lift f inj with le_total := fun x y => le_totalₓ (f x) (f y),
     decidableLe := fun x y => (inferInstance : Decidable (f x ≤ f y)),
     decidableLt := fun x y => (inferInstance : Decidable (f x < f y)),

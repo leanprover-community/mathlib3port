@@ -254,7 +254,7 @@ theorem gcd_val (a b : R) : gcd a b = gcd (b % a) a := by
   split_ifs <;> [simp only [h, mod_zero, gcd_zero_right], rfl]
 
 theorem gcd_dvd (a b : R) : gcd a b ∣ a ∧ gcd a b ∣ b :=
-  gcd.induction a b
+  Gcd.induction a b
     (fun b => by
       rw [gcd_zero_left]
       exact ⟨dvd_zero _, dvd_rfl⟩)
@@ -275,7 +275,7 @@ protected theorem gcd_eq_zero_iff {a b : R} : gcd a b = 0 ↔ a = 0 ∧ b = 0 :=
     exact gcd_zero_right _⟩
 
 theorem dvd_gcd {a b c : R} : c ∣ a → c ∣ b → c ∣ gcd a b :=
-  gcd.induction a b
+  Gcd.induction a b
     (fun _ _ H => by
       simpa only [gcd_zero_left] using H)
     fun a b a0 IH ca cb => by
@@ -314,19 +314,19 @@ def xgcd_aux : R → R → R → R → R → R → R × R × R
       xgcd_aux (r' % r) (s' - q * s) (t' - q * t) r s t
 
 @[simp]
-theorem xgcd_zero_left {s t r' s' t' : R} : xgcd_aux 0 s t r' s' t' = (r', s', t') := by
+theorem xgcd_zero_left {s t r' s' t' : R} : xgcdAux 0 s t r' s' t' = (r', s', t') := by
   unfold xgcd_aux
   exact if_pos rfl
 
 theorem xgcd_aux_rec {r s t r' s' t' : R} (h : r ≠ 0) :
-    xgcd_aux r s t r' s' t' = xgcd_aux (r' % r) (s' - r' / r * s) (t' - r' / r * t) r s t := by
+    xgcdAux r s t r' s' t' = xgcdAux (r' % r) (s' - r' / r * s) (t' - r' / r * t) r s t := by
   conv => lhs rw [xgcd_aux]
   exact if_neg h
 
 /-- Use the extended GCD algorithm to generate the `a` and `b` values
   satisfying `gcd x y = x * a + y * b`. -/
 def xgcd (x y : R) : R × R :=
-  (xgcd_aux x 1 0 y 0 1).2
+  (xgcdAux x 1 0 y 0 1).2
 
 /-- The extended GCD `a` value in the equation `gcd x y = x * a + y * b`. -/
 def gcd_a (x y : R) : R :=
@@ -337,18 +337,18 @@ def gcd_b (x y : R) : R :=
   (xgcd x y).2
 
 @[simp]
-theorem gcd_a_zero_left {s : R} : gcd_a 0 s = 0 := by
+theorem gcd_a_zero_left {s : R} : gcdA 0 s = 0 := by
   unfold gcd_a
   rw [xgcd, xgcd_zero_left]
 
 @[simp]
-theorem gcd_b_zero_left {s : R} : gcd_b 0 s = 1 := by
+theorem gcd_b_zero_left {s : R} : gcdB 0 s = 1 := by
   unfold gcd_b
   rw [xgcd, xgcd_zero_left]
 
 @[simp]
-theorem xgcd_aux_fst (x y : R) : ∀ s t s' t', (xgcd_aux x s t y s' t').1 = gcd x y :=
-  gcd.induction x y
+theorem xgcd_aux_fst (x y : R) : ∀ s t s' t', (xgcdAux x s t y s' t').1 = gcd x y :=
+  Gcd.induction x y
     (by
       intros
       rw [xgcd_zero_left, gcd_zero_left])
@@ -356,18 +356,18 @@ theorem xgcd_aux_fst (x y : R) : ∀ s t s' t', (xgcd_aux x s t y s' t').1 = gcd
     simp only [xgcd_aux_rec h, if_neg h, IH]
     rw [← gcd_val]
 
-theorem xgcd_aux_val (x y : R) : xgcd_aux x 1 0 y 0 1 = (gcd x y, xgcd x y) := by
+theorem xgcd_aux_val (x y : R) : xgcdAux x 1 0 y 0 1 = (gcd x y, xgcd x y) := by
   rw [xgcd, ← xgcd_aux_fst x y 1 0 0 1, Prod.mk.eta]
 
-theorem xgcd_val (x y : R) : xgcd x y = (gcd_a x y, gcd_b x y) :=
+theorem xgcd_val (x y : R) : xgcd x y = (gcdA x y, gcdB x y) :=
   Prod.mk.eta.symm
 
 private def P (a b : R) : R × R × R → Prop
   | (r, s, t) => (r : R) = a * s + b * t
 
 theorem xgcd_aux_P (a b : R) {r r' : R} :
-    ∀ {s t s' t'}, P a b (r, s, t) → P a b (r', s', t') → P a b (xgcd_aux r s t r' s' t') :=
-  (gcd.induction r r'
+    ∀ {s t s' t'}, Pₓ a b (r, s, t) → Pₓ a b (r', s', t') → Pₓ a b (xgcdAux r s t r' s' t') :=
+  (Gcd.induction r r'
       (by
         intros
         simpa only [xgcd_zero_left]))
@@ -379,7 +379,7 @@ theorem xgcd_aux_P (a b : R) {r r' : R} :
       mul_assoc, ← add_mulₓ, ← p, mod_eq_sub_mul_div]
 
 /-- An explicit version of **Bézout's lemma** for Euclidean domains. -/
-theorem gcd_eq_gcd_ab (a b : R) : (gcd a b : R) = a * gcd_a a b + b * gcd_b a b := by
+theorem gcd_eq_gcd_ab (a b : R) : (gcd a b : R) = a * gcdA a b + b * gcdB a b := by
   have :=
     @xgcd_aux_P _ _ _ a b a b 1 0 0 1
       (by
@@ -523,7 +523,7 @@ end EuclideanDomain
 instance Int.euclideanDomain : EuclideanDomain ℤ :=
   { Int.commRing, Int.nontrivial with add := · + ·, mul := · * ·, one := 1, zero := 0, neg := Neg.neg,
     Quotient := · / ·, quotient_zero := Int.div_zero, remainder := · % ·,
-    quotient_mul_add_remainder_eq := fun a b => Int.div_add_mod _ _, R := fun a b => a.nat_abs < b.nat_abs,
+    quotient_mul_add_remainder_eq := fun a b => Int.div_add_mod _ _, R := fun a b => a.natAbs < b.natAbs,
     r_well_founded := measure_wf fun a => Int.natAbs a,
     remainder_lt := fun a b b0 =>
       Int.coe_nat_lt.1 <| by

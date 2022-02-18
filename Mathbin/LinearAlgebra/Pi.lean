@@ -1,5 +1,4 @@
 import Mathbin.LinearAlgebra.Basic
-import Mathbin.LinearAlgebra.BilinearMap
 import Mathbin.Data.Equiv.Fin
 
 /-!
@@ -90,7 +89,7 @@ theorem infi_ker_proj : (⨅ i, ker (proj i) : Submodule R (∀ i, φ i)) = ⊥ 
 between `M₂` and `M₃`. -/
 @[simps]
 protected def comp_left (f : M₂ →ₗ[R] M₃) (I : Type _) : (I → M₂) →ₗ[R] I → M₃ :=
-  { f.to_add_monoid_hom.comp_left I with toFun := fun h => f ∘ h,
+  { f.toAddMonoidHom.compLeft I with toFun := fun h => f ∘ h,
     map_smul' := fun c h => by
       ext x
       exact f.map_smul' c (h x) }
@@ -287,16 +286,16 @@ def Pi_congr_right (e : ∀ i, φ i ≃ₗ[R] ψ i) : (∀ i, φ i) ≃ₗ[R] �
       simp }
 
 @[simp]
-theorem Pi_congr_right_refl : (Pi_congr_right fun j => refl R (φ j)) = refl _ _ :=
+theorem Pi_congr_right_refl : (piCongrRight fun j => refl R (φ j)) = refl _ _ :=
   rfl
 
 @[simp]
-theorem Pi_congr_right_symm (e : ∀ i, φ i ≃ₗ[R] ψ i) : (Pi_congr_right e).symm = Pi_congr_right fun i => (e i).symm :=
+theorem Pi_congr_right_symm (e : ∀ i, φ i ≃ₗ[R] ψ i) : (piCongrRight e).symm = Pi_congr_right fun i => (e i).symm :=
   rfl
 
 @[simp]
 theorem Pi_congr_right_trans (e : ∀ i, φ i ≃ₗ[R] ψ i) (f : ∀ i, ψ i ≃ₗ[R] χ i) :
-    (Pi_congr_right e).trans (Pi_congr_right f) = Pi_congr_right fun i => (e i).trans (f i) :=
+    (piCongrRight e).trans (piCongrRight f) = Pi_congr_right fun i => (e i).trans (f i) :=
   rfl
 
 variable (R φ)
@@ -304,7 +303,7 @@ variable (R φ)
 /-- Transport dependent functions through an equivalence of the base space.
 
 This is `equiv.Pi_congr_left'` as a `linear_equiv`. -/
-@[simps (config := { simpRhs := tt })]
+@[simps (config := { simpRhs := true })]
 def Pi_congr_left' (e : ι ≃ ι') : (∀ i', φ i') ≃ₗ[R] ∀ i, φ <| e.symm i :=
   { Equivₓ.piCongrLeft' φ e with map_add' := fun x y => rfl, map_smul' := fun x y => rfl }
 
@@ -313,7 +312,7 @@ expressed as a "simplification".
 
 This is `equiv.Pi_congr_left` as a `linear_equiv` -/
 def Pi_congr_left (e : ι' ≃ ι) : (∀ i', φ (e i')) ≃ₗ[R] ∀ i, φ i :=
-  (Pi_congr_left' R φ e.symm).symm
+  (piCongrLeft' R φ e.symm).symm
 
 /-- This is `equiv.pi_option_equiv_prod` as a `linear_equiv` -/
 def pi_option_equiv_prod {ι : Type _} {M : Option ι → Type _} [∀ i, AddCommGroupₓ (M i)] [∀ i, Module R (M i)] :
@@ -340,11 +339,11 @@ def pi_ring : ((ι → R) →ₗ[R] M) ≃ₗ[S] ι → M :=
 variable {ι R M}
 
 @[simp]
-theorem pi_ring_apply (f : (ι → R) →ₗ[R] M) (i : ι) : pi_ring R M ι S f i = f (Pi.single i 1) :=
+theorem pi_ring_apply (f : (ι → R) →ₗ[R] M) (i : ι) : piRing R M ι S f i = f (Pi.single i 1) :=
   rfl
 
 @[simp]
-theorem pi_ring_symm_apply (f : ι → M) (g : ι → R) : (pi_ring R M ι S).symm f g = ∑ i, g i • f i := by
+theorem pi_ring_symm_apply (f : ι → M) (g : ι → R) : (piRing R M ι S).symm f g = ∑ i, g i • f i := by
   simp [pi_ring, LinearMap.lsum]
 
 /-- `equiv.sum_arrow_equiv_prod_arrow` as a linear equivalence.
@@ -361,40 +360,40 @@ def sum_arrow_lequiv_prod_arrow (α β R M : Type _) [Semiringₓ R] [AddCommMon
 
 @[simp]
 theorem sum_arrow_lequiv_prod_arrow_apply_fst {α β} (f : Sum α β → M) (a : α) :
-    (sum_arrow_lequiv_prod_arrow α β R M f).1 a = f (Sum.inl a) :=
+    (sumArrowLequivProdArrow α β R M f).1 a = f (Sum.inl a) :=
   rfl
 
 @[simp]
 theorem sum_arrow_lequiv_prod_arrow_apply_snd {α β} (f : Sum α β → M) (b : β) :
-    (sum_arrow_lequiv_prod_arrow α β R M f).2 b = f (Sum.inr b) :=
+    (sumArrowLequivProdArrow α β R M f).2 b = f (Sum.inr b) :=
   rfl
 
 @[simp]
 theorem sum_arrow_lequiv_prod_arrow_symm_apply_inl {α β} (f : α → M) (g : β → M) (a : α) :
-    ((sum_arrow_lequiv_prod_arrow α β R M).symm (f, g)) (Sum.inl a) = f a :=
+    ((sumArrowLequivProdArrow α β R M).symm (f, g)) (Sum.inl a) = f a :=
   rfl
 
 @[simp]
 theorem sum_arrow_lequiv_prod_arrow_symm_apply_inr {α β} (f : α → M) (g : β → M) (b : β) :
-    ((sum_arrow_lequiv_prod_arrow α β R M).symm (f, g)) (Sum.inr b) = g b :=
+    ((sumArrowLequivProdArrow α β R M).symm (f, g)) (Sum.inr b) = g b :=
   rfl
 
 /-- If `ι` has a unique element, then `ι → M` is linearly equivalent to `M`. -/
-@[simps (config := { simpRhs := tt, fullyApplied := ff })]
+@[simps (config := { simpRhs := true, fullyApplied := false })]
 def fun_unique (ι R M : Type _) [Unique ι] [Semiringₓ R] [AddCommMonoidₓ M] [Module R M] : (ι → M) ≃ₗ[R] M :=
   { Equivₓ.funUnique ι M with map_add' := fun f g => rfl, map_smul' := fun c f => rfl }
 
 variable (R M)
 
 /-- Linear equivalence between dependent functions `Π i : fin 2, M i` and `M 0 × M 1`. -/
-@[simps (config := { simpRhs := tt, fullyApplied := ff })]
+@[simps (config := { simpRhs := true, fullyApplied := false })]
 def pi_fin_two (M : Finₓ 2 → Type v) [∀ i, AddCommMonoidₓ (M i)] [∀ i, Module R (M i)] : (∀ i, M i) ≃ₗ[R] M 0 × M 1 :=
   { piFinTwoEquiv M with map_add' := fun f g => rfl, map_smul' := fun c f => rfl }
 
 /-- Linear equivalence between vectors in `M² = fin 2 → M` and `M × M`. -/
-@[simps (config := { simpRhs := tt, fullyApplied := ff })]
+@[simps (config := { simpRhs := true, fullyApplied := false })]
 def fin_two_arrow : (Finₓ 2 → M) ≃ₗ[R] M × M :=
-  { finTwoArrowEquiv M, pi_fin_two R fun _ => M with }
+  { finTwoArrowEquiv M, piFinTwo R fun _ => M with }
 
 end LinearEquiv
 
@@ -439,12 +438,12 @@ def LinearMap.vecEmpty : M →ₗ[R] Finₓ 0 → M₃ where
   map_add' := fun x y => Subsingleton.elimₓ _ _
   map_smul' := fun r x => Subsingleton.elimₓ _ _
 
--- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»
 @[simp]
 theorem LinearMap.vec_empty_apply (m : M) :
     (LinearMap.vecEmpty : M →ₗ[R] Finₓ 0 → M₃) m =
-      «expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr![ , ]»" :=
+      «expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»" :=
   rfl
 
 /-- A linear map into `fin n.succ → M₃` can be built out of a map into `M₃` and a map into
@@ -458,7 +457,7 @@ def LinearMap.vecCons {n} (f : M →ₗ[R] M₂) (g : M →ₗ[R] Finₓ n → M
 
 @[simp]
 theorem LinearMap.vec_cons_apply {n} (f : M →ₗ[R] M₂) (g : M →ₗ[R] Finₓ n → M₂) (m : M) :
-    f.vec_cons g m = Matrix.vecCons (f m) (g m) :=
+    f.vecCons g m = Matrix.vecCons (f m) (g m) :=
   rfl
 
 end Semiringₓ

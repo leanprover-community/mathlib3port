@@ -19,34 +19,33 @@ open CategoryTheory CategoryTheory.Category
 
 namespace CategoryTheory.Limits
 
-variable {C : Type u} [category.{v} C] [has_binary_products C] [has_pullbacks C]
+variable {C : Type u} [Category.{v} C] [HasBinaryProducts C] [HasPullbacks C]
 
 namespace HasEqualizersOfPullbacksAndBinaryProducts
 
 /-- Define the equalizing object -/
 @[reducible]
 def construct_equalizer (F : walking_parallel_pair ⥤ C) : C :=
-  pullback (prod.lift (𝟙 _) (F.map walking_parallel_pair_hom.left))
-    (prod.lift (𝟙 _) (F.map walking_parallel_pair_hom.right))
+  pullback (prod.lift (𝟙 _) (F.map WalkingParallelPairHom.left)) (prod.lift (𝟙 _) (F.map WalkingParallelPairHom.right))
 
 /-- Define the equalizing morphism -/
-abbrev pullback_fst (F : walking_parallel_pair ⥤ C) : construct_equalizer F ⟶ F.obj walking_parallel_pair.zero :=
+abbrev pullback_fst (F : walking_parallel_pair ⥤ C) : constructEqualizer F ⟶ F.obj WalkingParallelPair.zero :=
   pullback.fst
 
-theorem pullback_fst_eq_pullback_snd (F : walking_parallel_pair ⥤ C) : pullback_fst F = pullback.snd := by
+theorem pullback_fst_eq_pullback_snd (F : walking_parallel_pair ⥤ C) : pullbackFst F = pullback.snd := by
   convert pullback.condition =≫ limits.prod.fst <;> simp
 
 /-- Define the equalizing cone -/
 @[reducible]
-def equalizer_cone (F : walking_parallel_pair ⥤ C) : cone F :=
-  cone.of_fork
-    (fork.of_ι (pullback_fst F)
+def equalizer_cone (F : walking_parallel_pair ⥤ C) : Cone F :=
+  Cone.ofFork
+    (Fork.ofι (pullbackFst F)
       (by
         conv_rhs => rw [pullback_fst_eq_pullback_snd]
         convert pullback.condition =≫ limits.prod.snd using 1 <;> simp ))
 
 /-- Show the equalizing cone is a limit -/
-def equalizer_cone_is_limit (F : walking_parallel_pair ⥤ C) : is_limit (equalizer_cone F) where
+def equalizer_cone_is_limit (F : walking_parallel_pair ⥤ C) : IsLimit (equalizerCone F) where
   lift := by
     intro c
     apply pullback.lift (c.π.app _) (c.π.app _)
@@ -69,8 +68,8 @@ end HasEqualizersOfPullbacksAndBinaryProducts
 open HasEqualizersOfPullbacksAndBinaryProducts
 
 /-- Any category with pullbacks and binary products, has equalizers. -/
-theorem has_equalizers_of_pullbacks_and_binary_products : has_equalizers C :=
-  { HasLimit := fun F => has_limit.mk { Cone := equalizer_cone F, IsLimit := equalizer_cone_is_limit F } }
+theorem has_equalizers_of_pullbacks_and_binary_products : HasEqualizers C :=
+  { HasLimit := fun F => HasLimit.mk { Cone := equalizerCone F, IsLimit := equalizerConeIsLimit F } }
 
 end CategoryTheory.Limits
 

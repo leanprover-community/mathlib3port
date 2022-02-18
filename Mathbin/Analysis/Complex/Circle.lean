@@ -34,7 +34,7 @@ open_locale ComplexConjugate
 
 /-- The unit circle in `ℂ`, here given the structure of a submonoid of `ℂ`. -/
 def circle : Submonoid ℂ where
-  Carrier := sphere (0 : ℂ) 1
+  Carrier := Sphere (0 : ℂ) 1
   one_mem' := by
     simp
   mul_mem' := fun a b => by
@@ -53,11 +53,11 @@ theorem circle_def : ↑circle = { z : ℂ | abs z = 1 } :=
 theorem abs_coe_circle (z : circle) : abs z = 1 :=
   mem_circle_iff_abs.mp z.2
 
-theorem mem_circle_iff_norm_sq {z : ℂ} : z ∈ circle ↔ norm_sq z = 1 := by
+theorem mem_circle_iff_norm_sq {z : ℂ} : z ∈ circle ↔ normSq z = 1 := by
   rw [mem_circle_iff_abs, Complex.abs, Real.sqrt_eq_one]
 
 @[simp]
-theorem norm_sq_eq_of_mem_circle (z : circle) : norm_sq z = 1 := by
+theorem norm_sq_eq_of_mem_circle (z : circle) : normSq z = 1 := by
   simp [norm_sq_eq_abs]
 
 theorem ne_zero_of_mem_circle (z : circle) : (z : ℂ) ≠ 0 :=
@@ -134,4 +134,8 @@ def expMapCircleHom : ℝ →+ Additive circle where
 @[simp]
 theorem exp_map_circle_sub (x y : ℝ) : expMapCircle (x - y) = expMapCircle x / expMapCircle y :=
   expMapCircleHom.map_sub x y
+
+@[simp]
+theorem exp_map_circle_neg (x : ℝ) : expMapCircle (-x) = (expMapCircle x)⁻¹ :=
+  expMapCircleHom.map_neg x
 

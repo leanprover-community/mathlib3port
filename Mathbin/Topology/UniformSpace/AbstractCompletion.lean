@@ -63,41 +63,43 @@ namespace AbstractCompletion
 
 variable {α : Type _} [UniformSpace α] (pkg : AbstractCompletion α)
 
-local notation "hatα" => pkg.space
+local notation "hatα" => pkg.Space
 
 local notation "ι" => pkg.coe
 
-theorem closure_range : Closure (range ι) = univ :=
+theorem closure_range : Closure (Range ι) = univ :=
   pkg.dense.closure_range
 
 theorem DenseInducing : DenseInducing ι :=
-  ⟨pkg.uniform_inducing.inducing, pkg.dense⟩
+  ⟨pkg.UniformInducing.Inducing, pkg.dense⟩
 
 theorem uniform_continuous_coe : UniformContinuous ι :=
-  UniformInducing.uniform_continuous pkg.uniform_inducing
+  UniformInducing.uniform_continuous pkg.UniformInducing
 
 theorem continuous_coe : Continuous ι :=
-  pkg.uniform_continuous_coe.continuous
+  pkg.uniform_continuous_coe.Continuous
 
 @[elab_as_eliminator]
 theorem induction_on {p : hatα → Prop} (a : hatα) (hp : IsClosed { a | p a }) (ih : ∀ a, p (ι a)) : p a :=
   is_closed_property pkg.dense hp ih a
 
-variable {β : Type _} [UniformSpace β]
+variable {β : Type _}
 
-protected theorem funext [T2Space β] {f g : hatα → β} (hf : Continuous f) (hg : Continuous g)
+protected theorem funext [TopologicalSpace β] [T2Space β] {f g : hatα → β} (hf : Continuous f) (hg : Continuous g)
     (h : ∀ a, f (ι a) = g (ι a)) : f = g :=
   funext fun a => pkg.induction_on a (is_closed_eq hf hg) h
+
+variable [UniformSpace β]
 
 section Extend
 
 /-- Extension of maps to completions -/
 protected def extend (f : α → β) : hatα → β :=
-  if UniformContinuous f then pkg.dense_inducing.extend f else fun x => f (pkg.dense.some x)
+  if UniformContinuous f then pkg.DenseInducing.extend f else fun x => f (pkg.dense.some x)
 
 variable {f : α → β}
 
-theorem extend_def (hf : UniformContinuous f) : pkg.extend f = pkg.dense_inducing.extend f :=
+theorem extend_def (hf : UniformContinuous f) : pkg.extend f = pkg.DenseInducing.extend f :=
   if_pos hf
 
 theorem extend_coe [T2Space β] (hf : UniformContinuous f) (a : α) : (pkg.extend f) (ι a) = f a := by
@@ -119,7 +121,7 @@ theorem uniform_continuous_extend : UniformContinuous (pkg.extend f) := by
     
 
 theorem continuous_extend : Continuous (pkg.extend f) :=
-  pkg.uniform_continuous_extend.continuous
+  pkg.uniform_continuous_extend.Continuous
 
 variable [SeparatedSpace β]
 
@@ -131,7 +133,7 @@ theorem extend_unique (hf : UniformContinuous f) {g : hatα → β} (hg : Unifor
 @[simp]
 theorem extend_comp_coe {f : hatα → β} (hf : UniformContinuous f) : pkg.extend (f ∘ ι) = f :=
   funext fun x =>
-    pkg.induction_on x (is_closed_eq pkg.continuous_extend hf.continuous) fun y =>
+    pkg.induction_on x (is_closed_eq pkg.continuous_extend hf.Continuous) fun y =>
       pkg.extend_coe (hf.comp <| pkg.uniform_continuous_coe) y
 
 end Extend
@@ -140,7 +142,7 @@ section MapSec
 
 variable (pkg' : AbstractCompletion β)
 
-local notation "hatβ" => pkg'.space
+local notation "hatβ" => pkg'.Space
 
 local notation "ι'" => pkg'.coe
 
@@ -165,7 +167,7 @@ theorem map_coe (hf : UniformContinuous f) (a : α) : map f (ι a) = ι' (f a) :
   pkg.extend_coe (pkg'.uniform_continuous_coe.comp hf) a
 
 theorem map_unique {f : α → β} {g : hatα → hatβ} (hg : UniformContinuous g) (h : ∀ a, ι' (f a) = g (ι a)) : map f = g :=
-  pkg.funext (pkg.continuous_map _ _) hg.continuous <| by
+  pkg.funext (pkg.continuous_map _ _) hg.Continuous <| by
     intro a
     change pkg.extend (ι' ∘ f) _ = _
     simp only [· ∘ ·, h]
@@ -195,7 +197,7 @@ section Compare
 variable (pkg' : AbstractCompletion α)
 
 /-- The comparison map between two completions of the same uniform space. -/
-def compare : pkg.space → pkg'.space :=
+def compare : pkg.Space → pkg'.Space :=
   pkg.extend pkg'.coe
 
 theorem uniform_continuous_compare : UniformContinuous (pkg.compare pkg') :=
@@ -213,16 +215,16 @@ theorem inverse_compare : pkg.compare pkg' ∘ pkg'.compare pkg = id := by
   rfl
 
 /-- The bijection between two completions of the same uniform space. -/
-def compare_equiv : pkg.space ≃ pkg'.space where
+def compare_equiv : pkg.Space ≃ pkg'.Space where
   toFun := pkg.compare pkg'
   invFun := pkg'.compare pkg
   left_inv := congr_funₓ (pkg'.inverse_compare pkg)
   right_inv := congr_funₓ (pkg.inverse_compare pkg')
 
-theorem uniform_continuous_compare_equiv : UniformContinuous (pkg.compare_equiv pkg') :=
+theorem uniform_continuous_compare_equiv : UniformContinuous (pkg.compareEquiv pkg') :=
   pkg.uniform_continuous_compare pkg'
 
-theorem uniform_continuous_compare_equiv_symm : UniformContinuous (pkg.compare_equiv pkg').symm :=
+theorem uniform_continuous_compare_equiv_symm : UniformContinuous (pkg.compareEquiv pkg').symm :=
   pkg'.uniform_continuous_compare pkg
 
 end Compare
@@ -231,7 +233,7 @@ section Prod
 
 variable (pkg' : AbstractCompletion β)
 
-local notation "hatβ" => pkg'.space
+local notation "hatβ" => pkg'.Space
 
 local notation "ι'" => pkg'.coe
 
@@ -244,7 +246,7 @@ protected def Prod : AbstractCompletion (α × β) where
     infer_instance
   separation := by
     infer_instance
-  UniformInducing := UniformInducing.prod pkg.uniform_inducing pkg'.uniform_inducing
+  UniformInducing := UniformInducing.prod pkg.UniformInducing pkg'.UniformInducing
   dense := pkg.dense.prod_map pkg'.dense
 
 end Prod
@@ -253,7 +255,7 @@ section Extension₂
 
 variable (pkg' : AbstractCompletion β)
 
-local notation "hatβ" => pkg'.space
+local notation "hatβ" => pkg'.Space
 
 local notation "ι'" => pkg'.coe
 
@@ -263,7 +265,7 @@ open Function
 
 /-- Extend two variable map to completions. -/
 protected def extend₂ (f : α → β → γ) : hatα → hatβ → γ :=
-  curry <| (pkg.prod pkg').extend (uncurry f)
+  curry <| (pkg.Prod pkg').extend (uncurry f)
 
 section SeparatedSpace
 
@@ -271,8 +273,8 @@ variable [SeparatedSpace γ] {f : α → β → γ}
 
 theorem extension₂_coe_coe (hf : UniformContinuous <| uncurry f) (a : α) (b : β) :
     pkg.extend₂ pkg' f (ι a) (ι' b) = f a b :=
-  show (pkg.prod pkg').extend (uncurry f) ((pkg.prod pkg').coe (a, b)) = uncurry f (a, b) from
-    (pkg.prod pkg').extend_coe hf _
+  show (pkg.Prod pkg').extend (uncurry f) ((pkg.Prod pkg').coe (a, b)) = uncurry f (a, b) from
+    (pkg.Prod pkg').extend_coe hf _
 
 end SeparatedSpace
 
@@ -290,13 +292,13 @@ section Map₂
 
 variable (pkg' : AbstractCompletion β)
 
-local notation "hatβ" => pkg'.space
+local notation "hatβ" => pkg'.Space
 
 local notation "ι'" => pkg'.coe
 
 variable {γ : Type _} [UniformSpace γ] (pkg'' : AbstractCompletion γ)
 
-local notation "hatγ" => pkg''.space
+local notation "hatγ" => pkg''.Space
 
 local notation "ι''" => pkg''.coe
 

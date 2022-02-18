@@ -8,15 +8,14 @@ import Mathbin.RingTheory.Polynomial.Basic
 
 * `lagrange.basis s x` where `s : finset F` and `x : F`: the Lagrange basis polynomial
   that evaluates to `1` at `x` and `0` at other elements of `s`.
-* `lagrange.interpolate s f` where `s : finset F` and `f : s → F`: the Lagrange interpolant
+* `lagrange.interpolate s f` where `s : finset F` and `f : F → F`: the Lagrange interpolant
   that evaluates to `f x` at `x` for `x ∈ s`.
-
 -/
 
 
 noncomputable section
 
-open_locale BigOperators Classical
+open_locale BigOperators Classical Polynomial
 
 universe u
 
@@ -29,12 +28,16 @@ variable {F' : Type u} [Field F'] (s' : Finset F')
 open Polynomial
 
 /-- Lagrange basis polynomials that evaluate to 1 at `x` and 0 at other elements of `s`. -/
-def basis (x : F) : Polynomial F :=
-  ∏ y in s.erase x, C (x - y)⁻¹ * (X - C y)
+def basis (x : F) : F[X] :=
+  ∏ y in s.erase x, c (x - y)⁻¹ * (X - c y)
 
 @[simp]
 theorem basis_empty (x : F) : basis ∅ x = 1 :=
   rfl
+
+@[simp]
+theorem basis_singleton_self (x : F) : basis {x} x = 1 := by
+  rw [basis, Finset.erase_singleton, Finset.prod_empty]
 
 @[simp]
 theorem eval_basis_self (x : F) : (basis s x).eval x = 1 := by
@@ -87,37 +90,37 @@ theorem nat_degree_basis (x : F) (hx : x ∈ s) : (basis s x).natDegree = s.card
     · rw [← C_0, C_inj, inv_eq_zero, sub_eq_zero] at hz
       exact hx.2 (hz.symm ▸ hzs)
       
-    · rw [← pow_oneₓ (X : Polynomial F)] at hz
+    · rw [← pow_oneₓ (X : F[X])] at hz
       exact X_pow_sub_C_ne_zero zero_lt_one _ hz
       
     
 
-variable (f : s → F)
+variable (f : F → F)
 
-/-- Lagrange interpolation: given a finset `s` and a function `f : s → F`,
+/-- Lagrange interpolation: given a finset `s` and a function `f : F → F`,
 `interpolate s f` is the unique polynomial of degree `< s.card`
 that takes value `f x` on all `x` in `s`. -/
-def interpolate : Polynomial F :=
-  ∑ x in s.attach, C (f x) * basis s x
+def interpolate : F[X] :=
+  ∑ x in s, c (f x) * basis s x
 
 @[simp]
 theorem interpolate_empty f : interpolate (∅ : Finset F) f = 0 :=
   rfl
 
 @[simp]
-theorem eval_interpolate x (H : x ∈ s) : eval x (interpolate s f) = f ⟨x, H⟩ := by
-  rw [interpolate, ← coe_eval_ring_hom, (eval_ring_hom x).map_sum, coe_eval_ring_hom,
-    Finset.sum_eq_single (⟨x, H⟩ : { x // x ∈ s })]
-  · rw [eval_mul, eval_C, Subtype.coe_mk, eval_basis_self, mul_oneₓ]
+theorem interpolate_singleton f (x : F) : interpolate {x} f = c (f x) := by
+  rw [interpolate, Finset.sum_singleton, basis_singleton_self, mul_oneₓ]
+
+@[simp]
+theorem eval_interpolate x (H : x ∈ s) : eval x (interpolate s f) = f x := by
+  rw [interpolate, ← coe_eval_ring_hom, RingHom.map_sum, coe_eval_ring_hom, Finset.sum_eq_single x]
+  · simp
     
-  · rintro ⟨y, hy⟩ _ hyx
-    rw [eval_mul, Subtype.coe_mk, eval_basis_ne s y x H, mul_zero]
-    · rintro rfl
-      exact hyx rfl
-      
+  · intro y hy hxy
+    simp [eval_basis_ne s y x H hxy.symm]
     
   · intro h
-    exact absurd (Finset.mem_attach _ _) h
+    exact (h H).elim
     
 
 theorem degree_interpolate_lt : (interpolate s f).degree < s.card :=
@@ -129,17 +132,27 @@ theorem degree_interpolate_lt : (interpolate s f).degree < s.card :=
     (degree_sum_le _ _).trans_lt <|
       (Finset.sup_lt_iff <| WithBot.bot_lt_coe s.card).2 fun b _ =>
         calc
-          (C (f b) * basis s b).degree ≤ (C (f b)).degree + (basis s b).degree := degree_mul_le _ _
+          (c (f b) * basis s b).degree ≤ (c (f b)).degree + (basis s b).degree := degree_mul_le _ _
           _ ≤ 0 + (basis s b).degree := add_le_add_right degree_C_le _
           _ = (basis s b).degree := zero_addₓ _
           _ ≤ (basis s b).natDegree := degree_le_nat_degree
           _ = (s.card - 1 : ℕ) := by
-            rw [nat_degree_basis s b b.2]
+            rwa [nat_degree_basis]
           _ < s.card := WithBot.coe_lt_coe.2 (Nat.pred_ltₓ <| mt Finset.card_eq_zero.1 H)
           
 
+theorem degree_interpolate_erase {x} (hx : x ∈ s) : (interpolate (s.erase x) f).degree < (s.card - 1 : ℕ) := by
+  convert degree_interpolate_lt (s.erase x) f
+  rw [Finset.card_erase_of_mem hx]
+
+theorem interpolate_eq_of_eval_eq (f g : F → F) {s : Finset F} (hs : ∀, ∀ x ∈ s, ∀, f x = g x) :
+    interpolate s f = interpolate s g := by
+  rw [interpolate, interpolate]
+  refine' Finset.sum_congr rfl fun x hx => _
+  rw [hs x hx]
+
 /-- Linear version of `interpolate`. -/
-def linterpolate : (s → F) →ₗ[F] Polynomial F where
+def linterpolate : (F → F) →ₗ[F] Polynomial F where
   toFun := interpolate s
   map_add' := fun f g => by
     simp_rw [interpolate, ← Finset.sum_add_distrib, ← add_mulₓ, ← C_add]
@@ -168,40 +181,84 @@ theorem interpolate_sub f g : interpolate s (f - g) = interpolate s f - interpol
 theorem interpolate_smul (c : F) f : interpolate s (c • f) = c • interpolate s f :=
   (linterpolate s).map_smul c f
 
-theorem eq_zero_of_eval_eq_zero {f : Polynomial F'} (hf1 : f.degree < s'.card) (hf2 : ∀, ∀ x ∈ s', ∀, f.eval x = 0) :
-    f = 0 :=
+theorem eq_zero_of_eval_eq_zero {f : F'[X]} (hf1 : f.degree < s'.card) (hf2 : ∀, ∀ x ∈ s', ∀, f.eval x = 0) : f = 0 :=
   by_contradiction fun hf3 =>
     not_le_of_lt hf1 <|
       calc
-        (s'.card : WithBot ℕ) ≤ f.roots.to_finset.card :=
+        (s'.card : WithBot ℕ) ≤ f.roots.toFinset.card :=
           WithBot.coe_le_coe.2 <|
             Finset.card_le_of_subset fun x hx => Multiset.mem_to_finset.mpr <| (mem_roots hf3).2 <| hf2 x hx
         _ ≤ f.roots.card := WithBot.coe_le_coe.2 <| f.roots.to_finset_card_le
         _ ≤ f.degree := card_roots hf3
         
 
-theorem eq_of_eval_eq {f g : Polynomial F'} (hf : f.degree < s'.card) (hg : g.degree < s'.card)
+theorem eq_of_eval_eq {f g : F'[X]} (hf : f.degree < s'.card) (hg : g.degree < s'.card)
     (hfg : ∀, ∀ x ∈ s', ∀, f.eval x = g.eval x) : f = g :=
   eq_of_sub_eq_zero <|
     eq_zero_of_eval_eq_zero s' (lt_of_le_of_ltₓ (degree_sub_le f g) <| max_ltₓ hf hg) fun x hx => by
       rw [eval_sub, hfg x hx, sub_self]
 
-theorem eq_interpolate (f : Polynomial F) (hf : f.degree < s.card) : (interpolate s fun x => f.eval x) = f :=
+theorem eq_interpolate_of_eval_eq {g : F[X]} (hg : g.degree < s.card) (hgf : ∀, ∀ x ∈ s, ∀, g.eval x = f x) :
+    interpolate s f = g :=
+  (eq_of_eval_eq s (degree_interpolate_lt _ _) hg) fun x hx => by
+    rw [hgf x hx]
+    exact eval_interpolate _ _ _ hx
+
+theorem eq_interpolate (f : F[X]) (hf : f.degree < s.card) : (interpolate s fun x => f.eval x) = f :=
   (eq_of_eval_eq s (degree_interpolate_lt s _) hf) fun x hx => eval_interpolate s _ x hx
 
 /-- Lagrange interpolation induces isomorphism between functions from `s` and polynomials
 of degree less than `s.card`. -/
-def fun_equiv_degree_lt : degree_lt F s.card ≃ₗ[F] s → F where
+def fun_equiv_degree_lt : degreeLt F s.card ≃ₗ[F] s → F where
   toFun := fun f x => f.1.eval x
   map_add' := fun f g => funext fun x => eval_add
   map_smul' := fun c f =>
-    funext fun x => by
-      change eval (↑x) (c • f).val = (c • fun x : s => eval (↑x) f.val) x
-      rw [Pi.smul_apply, smul_eq_mul, ← @eval_C F c _ x, ← eval_mul, eval_C, C_mul']
-      rfl
-  invFun := fun f => ⟨interpolate s f, mem_degree_lt.2 <| degree_interpolate_lt s f⟩
-  left_inv := fun f => Subtype.eq <| eq_interpolate s f <| mem_degree_lt.1 f.2
-  right_inv := fun f => funext fun ⟨x, hx⟩ => eval_interpolate s f x hx
+    funext <| by
+      simp
+  invFun := fun f =>
+    ⟨interpolate s fun x => if hx : x ∈ s then f ⟨x, hx⟩ else 0, mem_degree_lt.2 <| degree_interpolate_lt _ _⟩
+  left_inv := fun f => by
+    apply Subtype.eq
+    simp only [Subtype.coe_mk, Subtype.val_eq_coe, dite_eq_ite]
+    convert eq_interpolate s f (mem_degree_lt.1 f.2) using 1
+    rw [interpolate_eq_of_eval_eq]
+    intro x hx
+    rw [if_pos hx]
+  right_inv := fun f =>
+    funext fun ⟨x, hx⟩ => by
+      convert eval_interpolate s _ x hx
+      simp_rw [dif_pos hx]
+
+theorem interpolate_eq_interpolate_erase_add {x y : F} (hx : x ∈ s) (hy : y ∈ s) (hxy : x ≠ y) :
+    interpolate s f = c (y - x)⁻¹ * ((X - c x) * interpolate (s.erase x) f + (c y - X) * interpolate (s.erase y) f) :=
+  by
+  refine' eq_interpolate_of_eval_eq _ _ _ fun z hz => _
+  · rw [degree_mul, degree_C (inv_ne_zero (sub_ne_zero.2 hxy.symm)), zero_addₓ]
+    refine' lt_of_le_of_ltₓ (degree_add_le _ _) (max_ltₓ _ _)
+    · rw [degree_mul, degree_X_sub_C]
+      convert (WithBot.add_lt_add_iff_left (WithBot.coe_ne_bot _)).2 (degree_interpolate_erase s f hx)
+      simp [Nat.one_add, Nat.sub_one, Nat.succ_pred_eq_of_posₓ (Finset.card_pos.2 ⟨x, hx⟩)]
+      
+    · rw [degree_mul, ← neg_sub, degree_neg, degree_X_sub_C]
+      convert (WithBot.add_lt_add_iff_left (WithBot.coe_ne_bot _)).2 (degree_interpolate_erase s f hy)
+      simp [Nat.one_add, Nat.sub_one, Nat.succ_pred_eq_of_posₓ (Finset.card_pos.2 ⟨y, hy⟩)]
+      
+    
+  · by_cases' hzx : z = x
+    · simp [hzx, eval_interpolate (s.erase y) f x (Finset.mem_erase_of_ne_of_mem hxy hx),
+        inv_mul_eq_iff_eq_mul₀ (sub_ne_zero_of_ne hxy.symm)]
+      
+    · by_cases' hzy : z = y
+      · simp [hzy, eval_interpolate (s.erase x) f y (Finset.mem_erase_of_ne_of_mem hxy.symm hy),
+          inv_mul_eq_iff_eq_mul₀ (sub_ne_zero_of_ne hxy.symm)]
+        
+      · simp only [eval_interpolate (s.erase x) f z (Finset.mem_erase_of_ne_of_mem hzx hz),
+          eval_interpolate (s.erase y) f z (Finset.mem_erase_of_ne_of_mem hzy hz),
+          inv_mul_eq_iff_eq_mul₀ (sub_ne_zero_of_ne hxy.symm), eval_mul, eval_C, eval_add, eval_sub, eval_X]
+        ring
+        
+      
+    
 
 end Lagrange
 

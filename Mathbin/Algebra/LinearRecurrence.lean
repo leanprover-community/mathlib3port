@@ -35,7 +35,7 @@ noncomputable section
 
 open Finset
 
-open_locale BigOperators
+open_locale BigOperators Polynomial
 
 /-- A "linear recurrence relation" over a commutative semiring is given by its
   order `n` and `n` coefficients. -/
@@ -74,18 +74,18 @@ def mk_sol (init : Finₓ E.order → α) : ℕ → α
         E.coeffs k * mk_sol (n - E.order + k)
 
 /-- `E.mk_sol` indeed gives solutions to `E`. -/
-theorem is_sol_mk_sol (init : Finₓ E.order → α) : E.is_solution (E.mk_sol init) := fun n => by
+theorem is_sol_mk_sol (init : Finₓ E.order → α) : E.IsSolution (E.mkSol init) := fun n => by
   rw [mk_sol] <;> simp
 
 /-- `E.mk_sol init`'s first `E.order` terms are `init`. -/
-theorem mk_sol_eq_init (init : Finₓ E.order → α) : ∀ n : Finₓ E.order, E.mk_sol init n = init n := fun n => by
+theorem mk_sol_eq_init (init : Finₓ E.order → α) : ∀ n : Finₓ E.order, E.mkSol init n = init n := fun n => by
   rw [mk_sol]
   simp only [n.is_lt, dif_pos, Finₓ.mk_coe, Finₓ.eta]
 
 /-- If `u` is a solution to `E` and `init` designates its first `E.order` values,
   then `∀ n, u n = E.mk_sol init n`. -/
-theorem eq_mk_of_is_sol_of_eq_init {u : ℕ → α} {init : Finₓ E.order → α} (h : E.is_solution u)
-    (heq : ∀ n : Finₓ E.order, u n = init n) : ∀ n, u n = E.mk_sol init n
+theorem eq_mk_of_is_sol_of_eq_init {u : ℕ → α} {init : Finₓ E.order → α} (h : E.IsSolution u)
+    (heq : ∀ n : Finₓ E.order, u n = init n) : ∀ n, u n = E.mkSol init n
   | n =>
     if h' : n < E.order then by
       rw [mk_sol] <;> simp only [h', dif_pos] <;> exact_mod_cast HEq ⟨n, h'⟩
@@ -106,13 +106,13 @@ theorem eq_mk_of_is_sol_of_eq_init {u : ℕ → α} {init : Finₓ E.order → �
 /-- If `u` is a solution to `E` and `init` designates its first `E.order` values,
   then `u = E.mk_sol init`. This proves that `E.mk_sol init` is the only solution
   of `E` whose first `E.order` values are given by `init`. -/
-theorem eq_mk_of_is_sol_of_eq_init' {u : ℕ → α} {init : Finₓ E.order → α} (h : E.is_solution u)
-    (heq : ∀ n : Finₓ E.order, u n = init n) : u = E.mk_sol init :=
+theorem eq_mk_of_is_sol_of_eq_init' {u : ℕ → α} {init : Finₓ E.order → α} (h : E.IsSolution u)
+    (heq : ∀ n : Finₓ E.order, u n = init n) : u = E.mkSol init :=
   funext (E.eq_mk_of_is_sol_of_eq_init h HEq)
 
 /-- The space of solutions of `E`, as a `submodule` over `α` of the module `ℕ → α`. -/
 def sol_space : Submodule α (ℕ → α) where
-  Carrier := { u | E.is_solution u }
+  Carrier := { u | E.IsSolution u }
   zero_mem' := fun n => by
     simp
   add_mem' := fun u v hu hv n => by
@@ -122,12 +122,12 @@ def sol_space : Submodule α (ℕ → α) where
 
 /-- Defining property of the solution space : `u` is a solution
   iff it belongs to the solution space. -/
-theorem is_sol_iff_mem_sol_space (u : ℕ → α) : E.is_solution u ↔ u ∈ E.sol_space :=
+theorem is_sol_iff_mem_sol_space (u : ℕ → α) : E.IsSolution u ↔ u ∈ E.solSpace :=
   Iff.rfl
 
 /-- The function that maps a solution `u` of `E` to its first
   `E.order` terms as a `linear_equiv`. -/
-def to_init : E.sol_space ≃ₗ[α] Finₓ E.order → α where
+def to_init : E.solSpace ≃ₗ[α] Finₓ E.order → α where
   toFun := fun u x => (u : ℕ → α) x
   map_add' := fun u v => by
     ext
@@ -135,13 +135,13 @@ def to_init : E.sol_space ≃ₗ[α] Finₓ E.order → α where
   map_smul' := fun a u => by
     ext
     simp
-  invFun := fun u => ⟨E.mk_sol u, E.is_sol_mk_sol u⟩
+  invFun := fun u => ⟨E.mkSol u, E.is_sol_mk_sol u⟩
   left_inv := fun u => by
     ext n <;> symm <;> apply E.eq_mk_of_is_sol_of_eq_init u.2 <;> intro k <;> rfl
   right_inv := fun u => Function.funext_iffₓ.mpr fun n => E.mk_sol_eq_init u n
 
 /-- Two solutions are equal iff they are equal on `range E.order`. -/
-theorem sol_eq_of_eq_init (u v : ℕ → α) (hu : E.is_solution u) (hv : E.is_solution v) :
+theorem sol_eq_of_eq_init (u v : ℕ → α) (hu : E.IsSolution u) (hv : E.IsSolution v) :
     u = v ↔ Set.EqOn u v ↑(range E.order) := by
   refine' Iff.intro (fun h x hx => h ▸ rfl) _
   intro h
@@ -180,8 +180,8 @@ section Field
 variable {α : Type _} [Field α] (E : LinearRecurrence α)
 
 /-- The dimension of `E.sol_space` is `E.order`. -/
-theorem sol_space_dim : Module.rank α E.sol_space = E.order :=
-  @dim_fin_fun α _ E.order ▸ E.to_init.dim_eq
+theorem sol_space_dim : Module.rank α E.solSpace = E.order :=
+  @dim_fin_fun α _ E.order ▸ E.toInit.dim_eq
 
 end Field
 
@@ -191,12 +191,12 @@ variable {α : Type _} [CommRingₓ α] (E : LinearRecurrence α)
 
 /-- The characteristic polynomial of `E` is
 `X ^ E.order - ∑ i : fin E.order, (E.coeffs i) * X ^ i`. -/
-def char_poly : Polynomial α :=
+def char_poly : α[X] :=
   Polynomial.monomial E.order 1 - ∑ i : Finₓ E.order, Polynomial.monomial i (E.coeffs i)
 
 /-- The geometric sequence `q^n` is a solution of `E` iff
   `q` is a root of `E`'s characteristic polynomial. -/
-theorem geom_sol_iff_root_char_poly (q : α) : (E.is_solution fun n => q ^ n) ↔ E.char_poly.is_root q := by
+theorem geom_sol_iff_root_char_poly (q : α) : (E.IsSolution fun n => q ^ n) ↔ E.charPoly.IsRoot q := by
   rw [char_poly, Polynomial.IsRoot.def, Polynomial.eval]
   simp only [Polynomial.eval₂_finset_sum, one_mulₓ, RingHom.id_apply, Polynomial.eval₂_monomial, Polynomial.eval₂_sub]
   constructor

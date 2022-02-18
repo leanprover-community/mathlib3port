@@ -51,7 +51,7 @@ open CategoryTheory.Limits
 
 universe v u
 
-variable {V : Type u} [category.{v} V] [abelian V]
+variable {V : Type u} [Category.{v} V] [Abelian V]
 
 attribute [local instance] preadditive.has_equalizers_of_has_kernels
 
@@ -73,7 +73,7 @@ include comm₁ comm₂ comm₃
 
 section
 
-variable [exact f g] [exact g h] [exact f' g']
+variable [Exact f g] [Exact g h] [Exact f' g']
 
 /-- The four lemma, mono version. For names of objects and morphisms, refer to the following
     diagram:
@@ -87,7 +87,7 @@ v         v         v         v
 A' --f'-> B' --g'-> C' --h'-> D'
 ```
 -/
-theorem mono_of_epi_of_mono_of_mono (hα : epi α) (hβ : mono β) (hδ : mono δ) : mono γ :=
+theorem mono_of_epi_of_mono_of_mono (hα : Epi α) (hβ : Mono β) (hδ : Mono δ) : Mono γ :=
   (mono_of_zero_of_map_zero _) fun c hc =>
     have : h c = 0 :=
       suffices δ (h c) = 0 from zero_of_map_zero _ (pseudo_injective_of_mono _) _ this
@@ -129,7 +129,7 @@ end
 
 section
 
-variable [exact g h] [exact f' g'] [exact g' h']
+variable [Exact g h] [Exact f' g'] [Exact g' h']
 
 /-- The four lemma, epi version. For names of objects and morphisms, refer to the following
     diagram:
@@ -143,20 +143,20 @@ v         v         v         v
 A' --f'-> B' --g'-> C' --h'-> D'
 ```
 -/
-theorem epi_of_epi_of_epi_of_mono (hα : epi α) (hγ : epi γ) (hδ : mono δ) : epi β :=
-  (preadditive.epi_of_cancel_zero _) fun R r hβr =>
+theorem epi_of_epi_of_epi_of_mono (hα : Epi α) (hγ : Epi γ) (hδ : Mono δ) : Epi β :=
+  (Preadditive.epi_of_cancel_zero _) fun R r hβr =>
     have hf'r : f' ≫ r = 0 :=
-      limits.zero_of_epi_comp α <|
+      Limits.zero_of_epi_comp α <|
         calc
           α ≫ f' ≫ r = f ≫ β ≫ r := by
             rw [reassoc_of comm₁]
           _ = f ≫ 0 := by
             rw [hβr]
-          _ = 0 := has_zero_morphisms.comp_zero _ _
+          _ = 0 := HasZeroMorphisms.comp_zero _ _
           
     let y : R ⟶ pushout r g' := pushout.inl
     let z : C' ⟶ pushout r g' := pushout.inr
-    have : mono y :=
+    have : Mono y :=
       mono_inl_of_factor_thru_epi_mono_factorization r g' (cokernel.π f')
         (cokernel.desc f' g'
           (by
@@ -166,7 +166,7 @@ theorem epi_of_epi_of_epi_of_mono (hα : epi α) (hγ : epi γ) (hδ : mono δ) 
         (cokernel.desc f' r hf'r)
         (by
           simp )
-        _ (colimit.is_colimit _)
+        _ (colimit.isColimit _)
     have hz : g ≫ γ ≫ z = 0 :=
       calc
         g ≫ γ ≫ z = β ≫ g' ≫ z := by
@@ -175,11 +175,11 @@ theorem epi_of_epi_of_epi_of_mono (hα : epi α) (hγ : epi γ) (hδ : mono δ) 
           rw [← pushout.condition]
         _ = 0 ≫ y := by
           rw [reassoc_of hβr]
-        _ = 0 := has_zero_morphisms.zero_comp _ _
+        _ = 0 := HasZeroMorphisms.zero_comp _ _
         
     let v : pushout r g' ⟶ pushout (γ ≫ z) (h ≫ δ) := pushout.inl
     let w : D' ⟶ pushout (γ ≫ z) (h ≫ δ) := pushout.inr
-    have : mono v :=
+    have : Mono v :=
       mono_inl_of_factor_thru_epi_mono_factorization _ _ (cokernel.π g)
         (cokernel.desc g h
             (by
@@ -190,7 +190,7 @@ theorem epi_of_epi_of_epi_of_mono (hα : epi α) (hγ : epi γ) (hδ : mono δ) 
         (cokernel.desc _ _ hz)
         (by
           simp )
-        _ (colimit.is_colimit _)
+        _ (colimit.isColimit _)
     have hzv : z ≫ v = h' ≫ w :=
       (cancel_epi γ).1 <|
         calc
@@ -205,8 +205,8 @@ theorem epi_of_epi_of_epi_of_mono (hα : epi α) (hγ : epi γ) (hδ : mono δ) 
         rw [pushout.condition, category.assoc]
       _ = g' ≫ h' ≫ w := by
         rw [hzv]
-      _ = 0 ≫ w := exact.w_assoc _
-      _ = 0 := has_zero_morphisms.zero_comp _ _
+      _ = 0 ≫ w := Exact.w_assoc _
+      _ = 0 := HasZeroMorphisms.zero_comp _ _
       
 
 end
@@ -215,9 +215,9 @@ section Five
 
 variable {E E' : V} {i : D ⟶ E} {i' : D' ⟶ E'} {ε : E ⟶ E'} (comm₄ : δ ≫ i' = i ≫ ε)
 
-variable [exact f g] [exact g h] [exact h i] [exact f' g'] [exact g' h'] [exact h' i']
+variable [Exact f g] [Exact g h] [Exact h i] [Exact f' g'] [Exact g' h'] [Exact h' i']
 
-variable [is_iso α] [is_iso β] [is_iso δ] [is_iso ε]
+variable [IsIso α] [IsIso β] [IsIso δ] [IsIso ε]
 
 include comm₄
 
@@ -232,10 +232,10 @@ v         v         v         v         v
 A' --f'-> B' --g'-> C' --h'-> D' --i'-> E'
 ```
 -/
-theorem is_iso_of_is_iso_of_is_iso_of_is_iso_of_is_iso : is_iso γ :=
-  have : mono γ := by
+theorem is_iso_of_is_iso_of_is_iso_of_is_iso_of_is_iso : IsIso γ :=
+  have : Mono γ := by
     apply mono_of_epi_of_mono_of_mono comm₁ comm₂ comm₃ <;> infer_instance
-  have : epi γ := by
+  have : Epi γ := by
     apply epi_of_epi_of_epi_of_mono comm₂ comm₃ comm₄ <;> infer_instance
   is_iso_of_mono_of_epi _
 

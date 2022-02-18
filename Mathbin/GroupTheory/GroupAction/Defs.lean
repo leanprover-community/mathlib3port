@@ -77,13 +77,13 @@ theorem smul_eq_mul (α : Type _) [Mul α] {a a' : α} : a • a' = a * a' :=
   rfl
 
 /-- Type class for additive monoid actions. -/
-@[protect_proj]
+@[ext, protect_proj]
 class AddAction (G : Type _) (P : Type _) [AddMonoidₓ G] extends HasVadd G P where
   zero_vadd : ∀ p : P, (0 : G) +ᵥ p = p
   add_vadd : ∀ g₁ g₂ : G p : P, g₁ + g₂ +ᵥ p = g₁ +ᵥ (g₂ +ᵥ p)
 
 /-- Typeclass for multiplicative actions by monoids. This generalizes group actions. -/
-@[protect_proj, to_additive]
+@[ext, protect_proj, to_additive]
 class MulAction (α : Type _) (β : Type _) [Monoidₓ α] extends HasScalar α β where
   one_smul : ∀ b : β, (1 : α) • b = b
   mul_smul : ∀ x y : α b : β, (x * y) • b = x • y • b
@@ -114,19 +114,19 @@ class MulAction.IsPretransitive (M α : Type _) [HasScalar M α] : Prop where
 
 namespace MulAction
 
-variable (M) {α} [HasScalar M α] [is_pretransitive M α]
+variable (M) {α} [HasScalar M α] [IsPretransitive M α]
 
 @[to_additive]
 theorem exists_smul_eq (x y : α) : ∃ m : M, m • x = y :=
-  is_pretransitive.exists_smul_eq x y
+  IsPretransitive.exists_smul_eq x y
 
 @[to_additive]
-theorem surjective_smul (x : α) : surjective fun c : M => c • x :=
+theorem surjective_smul (x : α) : Surjective fun c : M => c • x :=
   exists_smul_eq M x
 
 /-- The regular action of a group on itself is transitive. -/
 @[to_additive]
-instance regular.is_pretransitive [Groupₓ G] : is_pretransitive G G :=
+instance regular.is_pretransitive [Groupₓ G] : IsPretransitive G G :=
   ⟨fun x y => ⟨y * x⁻¹, inv_mul_cancel_right _ _⟩⟩
 
 end MulAction
@@ -153,7 +153,8 @@ export SmulCommClass (smul_comm)
 
 export VaddCommClass (vadd_comm)
 
-/-- Frequently, we find ourselves wanting to express a bilinear map `M →ₗ[R] N →ₗ[R] P` or an
+library_note "bundled maps over different rings"/--
+Frequently, we find ourselves wanting to express a bilinear map `M →ₗ[R] N →ₗ[R] P` or an
 equivalence between maps `(M →ₗ[R] N) ≃ₗ[R] (M' →ₗ[R] N')` where the maps have an associated ring
 `R`. Unfortunately, using definitions like these requires that `R` satisfy `comm_semiring R`, and
 not just `semiring R`. Using `M →ₗ[R] N →+ P` and `(M →ₗ[R] N) ≃+ (M' →ₗ[R] N')` avoids this
@@ -168,7 +169,7 @@ the typeclass, which is still sufficient to recover a `≃+` or `→+` structure
 
 An example of where this is used is `linear_map.prod_equiv`.
 -/
-library_note "bundled maps over different rings"
+
 
 /-- Commutativity of actions is a symmetric relation. This lemma can't be an instance because this
 would cause a loop in the instance search graph. -/
@@ -313,12 +314,22 @@ variable (M)
 theorem one_smul (b : α) : (1 : M) • b = b :=
   MulAction.one_smul _
 
+/-- `has_scalar` version of `one_mul_eq_id` -/
+@[to_additive]
+theorem one_smul_eq_id : ((· • ·) (1 : M) : α → α) = id :=
+  funext <| one_smul _
+
+/-- `has_scalar` version of `comp_mul_left` -/
+@[to_additive]
+theorem comp_smul_left (a₁ a₂ : M) : (· • ·) a₁ ∘ (· • ·) a₂ = ((· • ·) (a₁ * a₂) : α → α) :=
+  funext fun _ => (mul_smul _ _ _).symm
+
 variable {M}
 
 /-- Pullback a multiplicative action along an injective map respecting `•`.
 See note [reducible non-instances]. -/
 @[reducible, to_additive "Pullback an additive action along an injective map respecting `+ᵥ`."]
-protected def Function.Injective.mulAction [HasScalar M β] (f : β → α) (hf : injective f)
+protected def Function.Injective.mulAction [HasScalar M β] (f : β → α) (hf : Injective f)
     (smul : ∀ c : M x, f (c • x) = c • f x) : MulAction M β where
   smul := · • ·
   one_smul := fun x => hf <| (smul _ _).trans <| one_smul _ (f x)
@@ -329,7 +340,7 @@ protected def Function.Injective.mulAction [HasScalar M β] (f : β → α) (hf 
 /-- Pushforward a multiplicative action along a surjective map respecting `•`.
 See note [reducible non-instances]. -/
 @[reducible, to_additive "Pushforward an additive action along a surjective map respecting `+ᵥ`."]
-protected def Function.Surjective.mulAction [HasScalar M β] (f : α → β) (hf : surjective f)
+protected def Function.Surjective.mulAction [HasScalar M β] (f : α → β) (hf : Surjective f)
     (smul : ∀ c : M x, f (c • x) = c • f x) : MulAction M β where
   smul := · • ·
   one_smul := fun y => by
@@ -350,7 +361,7 @@ def Function.Surjective.mulActionLeft {R S M : Type _} [Monoidₓ R] [MulAction 
   one_smul := fun b => by
     rw [← f.map_one, hsmul, one_smul]
   mul_smul :=
-    hf.forall₂.mpr fun a b x => by
+    hf.Forall₂.mpr fun a b x => by
       simp only [← f.map_mul, hsmul, mul_smul]
 
 section
@@ -469,6 +480,7 @@ theorem SmulCommClass.of_mul_smul_one {M N} [Monoidₓ N] [HasScalar M N] (H : �
 end CompatibleScalar
 
 /-- Typeclass for multiplicative actions on additive structures. This generalizes group modules. -/
+@[ext]
 class DistribMulAction (M : Type _) (A : Type _) [Monoidₓ M] [AddMonoidₓ A] extends MulAction M A where
   smul_add : ∀ r : M x y : A, r • (x + y) = r • x + r • y
   smul_zero : ∀ r : M, r • (0 : A) = 0
@@ -488,9 +500,9 @@ theorem smul_zero (a : M) : a • (0 : A) = 0 :=
 homomorphism.
 See note [reducible non-instances]. -/
 @[reducible]
-protected def Function.Injective.distribMulAction [AddMonoidₓ B] [HasScalar M B] (f : B →+ A) (hf : injective f)
+protected def Function.Injective.distribMulAction [AddMonoidₓ B] [HasScalar M B] (f : B →+ A) (hf : Injective f)
     (smul : ∀ c : M x, f (c • x) = c • f x) : DistribMulAction M B :=
-  { hf.mul_action f smul with smul := · • ·,
+  { hf.MulAction f smul with smul := · • ·,
     smul_add := fun c x y =>
       hf <| by
         simp only [smul, f.map_add, smul_add],
@@ -502,9 +514,9 @@ protected def Function.Injective.distribMulAction [AddMonoidₓ B] [HasScalar M 
 homomorphism.
 See note [reducible non-instances]. -/
 @[reducible]
-protected def Function.Surjective.distribMulAction [AddMonoidₓ B] [HasScalar M B] (f : A →+ B) (hf : surjective f)
+protected def Function.Surjective.distribMulAction [AddMonoidₓ B] [HasScalar M B] (f : A →+ B) (hf : Surjective f)
     (smul : ∀ c : M x, f (c • x) = c • f x) : DistribMulAction M B :=
-  { hf.mul_action f smul with smul := · • ·,
+  { hf.MulAction f smul with smul := · • ·,
     smul_add := fun c x y => by
       rcases hf x with ⟨x, rfl⟩
       rcases hf y with ⟨y, rfl⟩
@@ -520,7 +532,7 @@ See also `function.surjective.mul_action_left` and `function.surjective.module_l
 def Function.Surjective.distribMulActionLeft {R S M : Type _} [Monoidₓ R] [AddMonoidₓ M] [DistribMulAction R M]
     [Monoidₓ S] [HasScalar S M] (f : R →* S) (hf : Function.Surjective f) (hsmul : ∀ c x : M, f c • x = c • x) :
     DistribMulAction S M :=
-  { hf.mul_action_left f hsmul with smul := · • ·,
+  { hf.mulActionLeft f hsmul with smul := · • ·,
     smul_zero :=
       hf.forall.mpr fun c => by
         rw [hsmul, smul_zero],
@@ -571,6 +583,7 @@ end
 
 /-- Typeclass for multiplicative actions on multiplicative structures. This generalizes
 conjugation actions. -/
+@[ext]
 class MulDistribMulAction (M : Type _) (A : Type _) [Monoidₓ M] [Monoidₓ A] extends MulAction M A where
   smul_mul : ∀ r : M x y : A, r • (x * y) = r • x * r • y
   smul_one : ∀ r : M, r • (1 : A) = 1
@@ -588,9 +601,9 @@ theorem smul_mul' (a : M) (b₁ b₂ : A) : a • (b₁ * b₂) = a • b₁ * a
 homomorphism.
 See note [reducible non-instances]. -/
 @[reducible]
-protected def Function.Injective.mulDistribMulAction [Monoidₓ B] [HasScalar M B] (f : B →* A) (hf : injective f)
+protected def Function.Injective.mulDistribMulAction [Monoidₓ B] [HasScalar M B] (f : B →* A) (hf : Injective f)
     (smul : ∀ c : M x, f (c • x) = c • f x) : MulDistribMulAction M B :=
-  { hf.mul_action f smul with smul := · • ·,
+  { hf.MulAction f smul with smul := · • ·,
     smul_mul := fun c x y =>
       hf <| by
         simp only [smul, f.map_mul, smul_mul'],
@@ -602,9 +615,9 @@ protected def Function.Injective.mulDistribMulAction [Monoidₓ B] [HasScalar M 
 homomorphism.
 See note [reducible non-instances]. -/
 @[reducible]
-protected def Function.Surjective.mulDistribMulAction [Monoidₓ B] [HasScalar M B] (f : A →* B) (hf : surjective f)
+protected def Function.Surjective.mulDistribMulAction [Monoidₓ B] [HasScalar M B] (f : A →* B) (hf : Surjective f)
     (smul : ∀ c : M x, f (c • x) = c • f x) : MulDistribMulAction M B :=
-  { hf.mul_action f smul with smul := · • ·,
+  { hf.MulAction f smul with smul := · • ·,
     smul_mul := fun c x y => by
       rcases hf x with ⟨x, rfl⟩
       rcases hf y with ⟨y, rfl⟩

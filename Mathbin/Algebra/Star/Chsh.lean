@@ -125,7 +125,7 @@ theorem CHSH_inequality_of_comm [OrderedCommRing R] [StarOrderedRing R] [Algebra
       norm_num
       simp only [mul_comm _ (2 : R), mul_comm _ (4 : R), mul_left_commₓ _ (2 : R), mul_left_commₓ _ (4 : R)]
       abel
-      simp only [neg_mul_eq_neg_mul_symm, mul_oneₓ, Int.cast_bit0, one_mulₓ, Int.cast_one, zsmul_eq_mul, Int.cast_neg]
+      simp only [neg_mul, mul_oneₓ, Int.cast_bit0, one_mulₓ, Int.cast_one, zsmul_eq_mul, Int.cast_neg]
       simp only [← mul_assoc, ← add_assocₓ]
       norm_num
     have idem' : P = (1 / 4 : ℝ) • (P * P) := by
@@ -209,8 +209,8 @@ theorem tsirelson_inequality [OrderedRing R] [StarOrderedRing R] [Algebra ℝ R]
     simp only [← T.A₀B₀_commutes, ← T.A₀B₁_commutes, ← T.A₁B₀_commutes, ← T.A₁B₁_commutes]
     abel
     simp only [M]
-    simp only [neg_mul_eq_neg_mul_symm, Int.cast_bit0, one_mulₓ, mul_inv_cancel_of_invertible, Int.cast_one, one_smul,
-      Int.cast_neg, add_right_injₓ, neg_smul, ← add_smul]
+    simp only [neg_mul, Int.cast_bit0, one_mulₓ, mul_inv_cancel_of_invertible, Int.cast_one, one_smul, Int.cast_neg,
+      add_right_injₓ, neg_smul, ← add_smul]
     congr
     exact
       mul_left_cancel₀

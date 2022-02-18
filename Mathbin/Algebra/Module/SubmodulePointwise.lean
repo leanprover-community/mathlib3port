@@ -60,12 +60,12 @@ theorem coe_pointwise_smul (a : α) (S : Submodule R M) : ↑(a • S) = a • (
   rfl
 
 @[simp]
-theorem pointwise_smul_to_add_submonoid (a : α) (S : Submodule R M) : (a • S).toAddSubmonoid = a • S.to_add_submonoid :=
+theorem pointwise_smul_to_add_submonoid (a : α) (S : Submodule R M) : (a • S).toAddSubmonoid = a • S.toAddSubmonoid :=
   rfl
 
 @[simp]
 theorem pointwise_smul_to_add_subgroup {R M : Type _} [Ringₓ R] [AddCommGroupₓ M] [DistribMulAction α M] [Module R M]
-    [SmulCommClass α R M] (a : α) (S : Submodule R M) : (a • S).toAddSubgroup = a • S.to_add_subgroup :=
+    [SmulCommClass α R M] (a : α) (S : Submodule R M) : (a • S).toAddSubgroup = a • S.toAddSubgroup :=
   rfl
 
 theorem smul_mem_pointwise_smul (m : M) (a : α) (S : Submodule R M) : m ∈ S → a • m ∈ a • S :=

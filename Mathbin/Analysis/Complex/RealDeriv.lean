@@ -65,20 +65,20 @@ theorem TimesContDiffAt.real_of_complex {n : WithTop ℕ} (h : TimesContDiffAt �
 
 theorem TimesContDiff.real_of_complex {n : WithTop ℕ} (h : TimesContDiff ℂ n e) :
     TimesContDiff ℝ n fun x : ℝ => (e x).re :=
-  times_cont_diff_iff_times_cont_diff_at.2 fun x => h.times_cont_diff_at.real_of_complex
+  times_cont_diff_iff_times_cont_diff_at.2 fun x => h.TimesContDiffAt.real_of_complex
 
 variable {E : Type _} [NormedGroup E] [NormedSpace ℂ E]
 
 theorem HasStrictDerivAt.complex_to_real_fderiv' {f : ℂ → E} {x : ℂ} {f' : E} (h : HasStrictDerivAt f f' x) :
-    HasStrictFderivAt f (re_clm.smulRight f' + I • im_clm.smulRight f') x := by
+    HasStrictFderivAt f (reClm.smulRight f' + I • imClm.smulRight f') x := by
   simpa only [Complex.restrict_scalars_one_smul_right'] using h.has_strict_fderiv_at.restrict_scalars ℝ
 
 theorem HasDerivAt.complex_to_real_fderiv' {f : ℂ → E} {x : ℂ} {f' : E} (h : HasDerivAt f f' x) :
-    HasFderivAt f (re_clm.smulRight f' + I • im_clm.smulRight f') x := by
+    HasFderivAt f (reClm.smulRight f' + I • imClm.smulRight f') x := by
   simpa only [Complex.restrict_scalars_one_smul_right'] using h.has_fderiv_at.restrict_scalars ℝ
 
 theorem HasDerivWithinAt.complex_to_real_fderiv' {f : ℂ → E} {s : Set ℂ} {x : ℂ} {f' : E}
-    (h : HasDerivWithinAt f f' s x) : HasFderivWithinAt f (re_clm.smulRight f' + I • im_clm.smulRight f') s x := by
+    (h : HasDerivWithinAt f f' s x) : HasFderivWithinAt f (reClm.smulRight f' + I • imClm.smulRight f') s x := by
   simpa only [Complex.restrict_scalars_one_smul_right'] using h.has_fderiv_within_at.restrict_scalars ℝ
 
 theorem HasStrictDerivAt.complex_to_real_fderiv {f : ℂ → ℂ} {f' x : ℂ} (h : HasStrictDerivAt f f' x) :

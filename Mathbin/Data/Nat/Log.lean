@@ -1,4 +1,5 @@
 import Mathbin.Data.Nat.Pow
+import Mathbin.Tactic.ByContra
 
 /-!
 # Natural number logarithms
@@ -23,7 +24,7 @@ such that `b^k ≤ n`, so if `b^k = n`, it returns exactly `k`. -/
 def log (b : ℕ) : ℕ → ℕ
   | n =>
     if h : b ≤ n ∧ 1 < b then
-      have : n / b < n := div_lt_self ((zero_lt_one.trans h.2).trans_le h.1) h.2
+      have : n / b < n := div_lt_selfₓ ((zero_lt_one.trans h.2).trans_le h.1) h.2
       log (n / b) + 1
     else 0
 
@@ -41,22 +42,17 @@ theorem log_of_lt {b n : ℕ} (hnb : n < b) : log b n = 0 := by
 theorem log_of_left_le_one {b n : ℕ} (hb : b ≤ 1) : log b n = 0 := by
   rw [log, if_neg fun h : b ≤ n ∧ 1 < b => h.2.not_le hb]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:418:16: unsupported tactic `by_contra'
 theorem log_eq_zero_iff {b n : ℕ} : log b n = 0 ↔ n < b ∨ b ≤ 1 := by
-  constructor
-  · intro h_log
-    by_contra h
-    push_neg  at h
-    have := log_of_one_lt_of_le h.2 h.1
-    rw [h_log] at this
-    exact succ_ne_zero _ this.symm
-    
-  · exact log_eq_zero
-    
+  refine' ⟨fun h_log => _, log_eq_zero⟩
+  "././Mathport/Syntax/Translate/Basic.lean:418:16: unsupported tactic `by_contra'"
+  have := log_of_one_lt_of_le h.2 h.1
+  rw [h_log] at this
+  exact succ_ne_zero _ this.symm
 
 theorem log_eq_one_iff {b n : ℕ} : log b n = 1 ↔ n < b * b ∧ 1 < b ∧ b ≤ n := by
-  constructor
-  · intro h_log
-    have bound : 1 < b ∧ b ≤ n := by
+  refine' ⟨fun h_log => _, _⟩
+  · have bound : 1 < b ∧ b ≤ n := by
       contrapose h_log
       rw [not_and_distrib, not_ltₓ, not_leₓ, or_comm, ← log_eq_zero_iff] at h_log
       rw [h_log]

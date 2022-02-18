@@ -21,7 +21,7 @@ and Verschiebung is equal to multiplication by `p`.
 
 namespace WittVector
 
-variable {p : ℕ} {R : Type _} [hp : Fact p.prime] [CommRingₓ R]
+variable {p : ℕ} {R : Type _} [hp : Fact p.Prime] [CommRingₓ R]
 
 local notation "𝕎" => WittVector p
 
@@ -33,8 +33,8 @@ include hp
 
 variable (p)
 
--- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»
 /-- `witt_mul_n p n` is the family of polynomials that computes
 the coefficients of `x * n` in terms of the coefficients of the Witt vector `x`. -/
 noncomputable def witt_mul_n : ℕ → ℕ → MvPolynomial ℕ ℤ
@@ -42,17 +42,17 @@ noncomputable def witt_mul_n : ℕ → ℕ → MvPolynomial ℕ ℤ
   | n + 1 => fun k =>
     bind₁
       (Function.uncurry <|
-        «expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr![ , ]»")
-      (witt_add p k)
+        «expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»")
+      (wittAdd p k)
 
 variable {p}
 
 -- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
-theorem mul_n_coeff (n : ℕ) (x : 𝕎 R) (k : ℕ) : (x * n).coeff k = aeval x.coeff (witt_mul_n p n k) := by
+theorem mul_n_coeff (n : ℕ) (x : 𝕎 R) (k : ℕ) : (x * n).coeff k = aeval x.coeff (wittMulN p n k) := by
   induction' n with n ih generalizing k
-  · simp only [Nat.nat_zero_eq_zero, Nat.cast_zero, mul_zero, zero_coeff, witt_mul_n, AlgHom.map_zero, Pi.zero_apply]
+  · simp only [Nat.nat_zero_eq_zero, Nat.cast_zeroₓ, mul_zero, zero_coeff, witt_mul_n, AlgHom.map_zero, Pi.zero_apply]
     
-  · rw [witt_mul_n, Nat.succ_eq_add_one, Nat.cast_add, Nat.cast_one, mul_addₓ, mul_oneₓ, aeval_bind₁, add_coeff]
+  · rw [witt_mul_n, Nat.succ_eq_add_one, Nat.cast_addₓ, Nat.cast_oneₓ, mul_addₓ, mul_oneₓ, aeval_bind₁, add_coeff]
     apply eval₂_hom_congr (RingHom.ext_int _ _) _ rfl
     ext1 ⟨b, i⟩
     fin_cases b
@@ -66,19 +66,19 @@ variable (p)
 
 /-- Multiplication by `n` is a polynomial function. -/
 @[is_poly]
-theorem mul_n_is_poly (n : ℕ) : is_poly p fun R _Rcr x => x * n :=
-  ⟨⟨witt_mul_n p n, fun R _Rcr x => by
+theorem mul_n_is_poly (n : ℕ) : IsPoly p fun R _Rcr x => x * n :=
+  ⟨⟨wittMulN p n, fun R _Rcr x => by
       funext k
       exact mul_n_coeff n x k⟩⟩
 
 @[simp]
 theorem bind₁_witt_mul_n_witt_polynomial (n k : ℕ) :
-    bind₁ (witt_mul_n p n) (wittPolynomial p ℤ k) = n * wittPolynomial p ℤ k := by
+    bind₁ (wittMulN p n) (wittPolynomial p ℤ k) = n * wittPolynomial p ℤ k := by
   induction' n with n ih
-  · simp only [witt_mul_n, Nat.cast_zero, zero_mul, bind₁_zero_witt_polynomial]
+  · simp only [witt_mul_n, Nat.cast_zeroₓ, zero_mul, bind₁_zero_witt_polynomial]
     
   · rw [witt_mul_n, ← bind₁_bind₁, witt_add, witt_structure_int_prop]
-    simp only [AlgHom.map_add, Nat.cast_succ, bind₁_X_right]
+    simp only [AlgHom.map_add, Nat.cast_succₓ, bind₁_X_right]
     rw [add_mulₓ, one_mulₓ, bind₁_rename, bind₁_rename]
     simp only [ih, Function.uncurry, Function.comp, bind₁_X_left, AlgHom.id_apply, Matrix.cons_val_zero,
       Matrix.head_cons, Matrix.cons_val_one]

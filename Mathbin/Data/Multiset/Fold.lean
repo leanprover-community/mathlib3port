@@ -89,7 +89,7 @@ theorem fold_union_inter [DecidableEq α] (s₁ s₂ : Multiset α) (b₁ b₂ :
 
 @[simp]
 theorem fold_erase_dup_idem [DecidableEq α] [hi : IsIdempotent α op] (s : Multiset α) (b : α) :
-    (erase_dup s).fold op b = s.fold op b :=
+    (eraseDup s).fold op b = s.fold op b :=
   (Multiset.induction_on s
       (by
         simp ))
@@ -114,7 +114,7 @@ end Order
 
 open Nat
 
-theorem le_smul_erase_dup [DecidableEq α] (s : Multiset α) : ∃ n : ℕ, s ≤ n • erase_dup s :=
+theorem le_smul_erase_dup [DecidableEq α] (s : Multiset α) : ∃ n : ℕ, s ≤ n • eraseDup s :=
   ⟨(s.map fun a => count a s).fold max 0,
     le_iff_count.2 fun a => by
       rw [count_nsmul]

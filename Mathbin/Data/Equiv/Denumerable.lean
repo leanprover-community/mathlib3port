@@ -38,25 +38,25 @@ def of_nat α [f : Denumerable α] (n : ℕ) : α :=
   Option.getₓ (decode_is_some α n)
 
 @[simp]
-theorem decode_eq_of_nat α [Denumerable α] (n : ℕ) : decode α n = some (of_nat α n) :=
+theorem decode_eq_of_nat α [Denumerable α] (n : ℕ) : decode α n = some (ofNat α n) :=
   Option.eq_some_of_is_some _
 
 @[simp]
-theorem of_nat_of_decode {n b} (h : decode α n = some b) : of_nat α n = b :=
+theorem of_nat_of_decode {n b} (h : decode α n = some b) : ofNat α n = b :=
   Option.some.injₓ <| (decode_eq_of_nat _ _).symm.trans h
 
 @[simp]
-theorem encode_of_nat n : encode (of_nat α n) = n := by
+theorem encode_of_nat n : encode (ofNat α n) = n := by
   let ⟨a, h, e⟩ := decode_inv n
   rwa [of_nat_of_decode h]
 
 @[simp]
-theorem of_nat_encode a : of_nat α (encode a) = a :=
+theorem of_nat_encode a : ofNat α (encode a) = a :=
   of_nat_of_decode (encodek _)
 
 /-- A denumerable type is equivalent to `ℕ`. -/
 def eqv α [Denumerable α] : α ≃ ℕ :=
-  ⟨encode, of_nat α, of_nat_encode, encode_of_nat⟩
+  ⟨encode, ofNat α, of_nat_encode, encode_of_nat⟩
 
 instance (priority := 100) : Infinite α :=
   Infinite.of_surjective _ (eqv α).Surjective
@@ -76,7 +76,7 @@ def of_equiv α {β} [Denumerable α] (e : β ≃ α) : Denumerable β :=
       simp }
 
 @[simp]
-theorem of_equiv_of_nat α {β} [Denumerable α] (e : β ≃ α) n : @of_nat β (of_equiv _ e) n = e.symm (of_nat α n) := by
+theorem of_equiv_of_nat α {β} [Denumerable α] (e : β ≃ α) n : @ofNat β (ofEquiv _ e) n = e.symm (ofNat α n) := by
   apply of_nat_of_decode <;> show Option.map _ _ = _ <;> simp
 
 /-- All denumerable types are equivalent. -/
@@ -87,7 +87,7 @@ instance Nat : Denumerable ℕ :=
   ⟨fun n => ⟨_, rfl, rfl⟩⟩
 
 @[simp]
-theorem of_nat_nat n : of_nat ℕ n = n :=
+theorem of_nat_nat n : ofNat ℕ n = n :=
   rfl
 
 /-- If `α` is denumerable, then so is `option α`. -/
@@ -122,7 +122,7 @@ instance Sigma : Denumerable (Sigma γ) :=
           simp ⟩⟩
 
 @[simp]
-theorem sigma_of_nat_val (n : ℕ) : of_nat (Sigma γ) n = ⟨of_nat α (unpair n).1, of_nat (γ _) (unpair n).2⟩ :=
+theorem sigma_of_nat_val (n : ℕ) : ofNat (Sigma γ) n = ⟨ofNat α (unpair n).1, ofNat (γ _) (unpair n).2⟩ :=
   Option.some.injₓ <| by
     rw [← decode_eq_of_nat, decode_sigma_val] <;> simp <;> rfl
 
@@ -130,14 +130,14 @@ end Sigma
 
 /-- If `α` and `β` are denumerable, then so is their product. -/
 instance Prod : Denumerable (α × β) :=
-  of_equiv _ (Equivₓ.sigmaEquivProd α β).symm
+  ofEquiv _ (Equivₓ.sigmaEquivProd α β).symm
 
 @[simp]
-theorem prod_of_nat_val (n : ℕ) : of_nat (α × β) n = (of_nat α (unpair n).1, of_nat β (unpair n).2) := by
+theorem prod_of_nat_val (n : ℕ) : ofNat (α × β) n = (ofNat α (unpair n).1, ofNat β (unpair n).2) := by
   simp <;> rfl
 
 @[simp]
-theorem prod_nat_of_nat : of_nat (ℕ × ℕ) = unpair := by
+theorem prod_nat_of_nat : ofNat (ℕ × ℕ) = unpair := by
   funext <;> simp
 
 instance Int : Denumerable ℤ :=
@@ -148,11 +148,11 @@ instance Pnat : Denumerable ℕ+ :=
 
 /-- The lift of a denumerable type is denumerable. -/
 instance Ulift : Denumerable (Ulift α) :=
-  of_equiv _ Equivₓ.ulift
+  ofEquiv _ Equivₓ.ulift
 
 /-- The lift of a denumerable type is denumerable. -/
 instance Plift : Denumerable (Plift α) :=
-  of_equiv _ Equivₓ.plift
+  ofEquiv _ Equivₓ.plift
 
 /-- If `α` is denumerable, then `α × α` and `α` are equivalent. -/
 def pair : α × α ≃ α :=
@@ -229,7 +229,7 @@ def of_nat (s : Set ℕ) [DecidablePred (· ∈ s)] [Infinite s] : ℕ → s
   | 0 => ⊥
   | n + 1 => succ (of_nat n)
 
-theorem of_nat_surjective_aux : ∀ {x : ℕ} hx : x ∈ s, ∃ n, of_nat s n = ⟨x, hx⟩
+theorem of_nat_surjective_aux : ∀ {x : ℕ} hx : x ∈ s, ∃ n, ofNat s n = ⟨x, hx⟩
   | x => fun hx => by
     let t : List s :=
       ((List.range x).filter fun y => y ∈ s).pmap (fun y : ℕ hy : y ∈ s => ⟨y, hy⟩)
@@ -263,36 +263,35 @@ theorem of_nat_surjective_aux : ∀ {x : ℕ} hx : x ∈ s, ∃ n, of_nat s n = 
               le_succ_of_forall_lt_le fun z hz => by
                 rw [ha] <;> cases m <;> exact List.le_maximum_of_mem (hmt.2 hz) hmax⟩
 
-theorem of_nat_surjective : surjective (of_nat s) := fun ⟨x, hx⟩ => of_nat_surjective_aux hx
+theorem of_nat_surjective : Surjective (ofNat s) := fun ⟨x, hx⟩ => of_nat_surjective_aux hx
 
 @[simp]
-theorem of_nat_range : Set.Range (of_nat s) = Set.Univ :=
+theorem of_nat_range : Set.Range (ofNat s) = Set.Univ :=
   of_nat_surjective.range_eq
 
 @[simp]
-theorem coe_comp_of_nat_range : Set.Range (coe ∘ of_nat s : ℕ → ℕ) = s := by
+theorem coe_comp_of_nat_range : Set.Range (coe ∘ ofNat s : ℕ → ℕ) = s := by
   rw [Set.range_comp coe, of_nat_range, Set.image_univ, Subtype.range_coe]
 
 private def to_fun_aux (x : s) : ℕ :=
   (List.range x).countp (· ∈ s)
 
-private theorem to_fun_aux_eq (x : s) : to_fun_aux x = ((Finset.range x).filter (· ∈ s)).card := by
+private theorem to_fun_aux_eq (x : s) : toFunAux x = ((Finset.range x).filter (· ∈ s)).card := by
   rw [to_fun_aux, List.countp_eq_length_filter] <;> rfl
 
 open Finset
 
-private theorem right_inverse_aux : ∀ n, to_fun_aux (of_nat s n) = n
+private theorem right_inverse_aux : ∀ n, toFunAux (ofNat s n) = n
   | 0 => by
     rw [to_fun_aux_eq, card_eq_zero, eq_empty_iff_forall_not_mem]
     rintro n hn
     rw [mem_filter, of_nat, mem_range] at hn
     exact bot_le.not_lt (show (⟨n, hn.2⟩ : s) < ⊥ from hn.1)
   | n + 1 => by
-    have ih : to_fun_aux (of_nat s n) = n := right_inverse_aux n
-    have h₁ : (of_nat s n : ℕ) ∉ (range (of_nat s n)).filter (· ∈ s) := by
+    have ih : toFunAux (ofNat s n) = n := right_inverse_aux n
+    have h₁ : (ofNat s n : ℕ) ∉ (range (ofNat s n)).filter (· ∈ s) := by
       simp
-    have h₂ : (range (succ (of_nat s n))).filter (· ∈ s) = insert (of_nat s n) ((range (of_nat s n)).filter (· ∈ s)) :=
-      by
+    have h₂ : (range (succ (ofNat s n))).filter (· ∈ s) = insert (ofNat s n) ((range (ofNat s n)).filter (· ∈ s)) := by
       simp only [Finset.ext_iff, mem_insert, mem_range, mem_filter]
       exact fun m =>
         ⟨fun h => by
@@ -305,7 +304,7 @@ private theorem right_inverse_aux : ∀ n, to_fun_aux (of_nat s n) = n
 /-- Any infinite set of naturals is denumerable. -/
 def Denumerable (s : Set ℕ) [DecidablePred (· ∈ s)] [Infinite s] : Denumerable s :=
   Denumerable.ofEquiv ℕ
-    { toFun := to_fun_aux, invFun := of_nat s,
+    { toFun := toFunAux, invFun := ofNat s,
       left_inv := left_inverse_of_surjective_of_right_inverse of_nat_surjective right_inverse_aux,
       right_inv := right_inverse_aux }
 

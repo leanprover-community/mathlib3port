@@ -22,7 +22,7 @@ open Polynomial Real
 
 open_locale Nat Real
 
-theorem is_primitive_root_exp_of_coprime (i n : ℕ) (h0 : n ≠ 0) (hi : i.coprime n) :
+theorem is_primitive_root_exp_of_coprime (i n : ℕ) (h0 : n ≠ 0) (hi : i.Coprime n) :
     IsPrimitiveRoot (exp (2 * π * I * (i / n))) n := by
   rw [IsPrimitiveRoot.iff_def]
   simp only [← exp_nat_mul, exp_eq_one_iff]
@@ -43,10 +43,10 @@ theorem is_primitive_root_exp_of_coprime (i n : ℕ) (h0 : n ≠ 0) (hi : i.copr
     
 
 theorem is_primitive_root_exp (n : ℕ) (h0 : n ≠ 0) : IsPrimitiveRoot (exp (2 * π * I / n)) n := by
-  simpa only [Nat.cast_one, one_div] using is_primitive_root_exp_of_coprime 1 n h0 n.coprime_one_left
+  simpa only [Nat.cast_oneₓ, one_div] using is_primitive_root_exp_of_coprime 1 n h0 n.coprime_one_left
 
 theorem is_primitive_root_iff (ζ : ℂ) (n : ℕ) (hn : n ≠ 0) :
-    IsPrimitiveRoot ζ n ↔ ∃ i < (n : ℕ), ∃ hi : i.coprime n, exp (2 * π * I * (i / n)) = ζ := by
+    IsPrimitiveRoot ζ n ↔ ∃ i < (n : ℕ), ∃ hi : i.Coprime n, exp (2 * π * I * (i / n)) = ζ := by
   have hn0 : (n : ℂ) ≠ 0 := by
     exact_mod_cast hn
   constructor

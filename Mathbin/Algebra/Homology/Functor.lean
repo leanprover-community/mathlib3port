@@ -20,15 +20,15 @@ open CategoryTheory.Limits
 
 namespace HomologicalComplex
 
-variable {V : Type u} [category.{v} V] [has_zero_morphisms V]
+variable {V : Type u} [Category.{v} V] [HasZeroMorphisms V]
 
 variable {ι : Type _} {c : ComplexShape ι}
 
 /-- A complex of functors gives a functor to complexes. -/
 @[simps obj map]
-def as_functor {T : Type _} [category T] (C : HomologicalComplex (T ⥤ V) c) : T ⥤ HomologicalComplex V c where
+def as_functor {T : Type _} [Category T] (C : HomologicalComplex (T ⥤ V) c) : T ⥤ HomologicalComplex V c where
   obj := fun t =>
-    { x := fun i => (C.X i).obj t, d := fun i j => (C.d i j).app t,
+    { x := fun i => (C.x i).obj t, d := fun i j => (C.d i j).app t,
       d_comp_d' := fun i j k hij hjk => by
         have := C.d_comp_d i j k
         rw [nat_trans.ext_iff, Function.funext_iffₓ] at this
@@ -37,7 +37,7 @@ def as_functor {T : Type _} [category T] (C : HomologicalComplex (T ⥤ V) c) : 
         have := C.shape _ _ h
         rw [nat_trans.ext_iff, Function.funext_iffₓ] at this
         exact this t }
-  map := fun t₁ t₂ h => { f := fun i => (C.X i).map h, comm' := fun i j hij => nat_trans.naturality _ _ }
+  map := fun t₁ t₂ h => { f := fun i => (C.x i).map h, comm' := fun i j hij => NatTrans.naturality _ _ }
   map_id' := fun t => by
     ext i
     dsimp
@@ -49,11 +49,11 @@ def as_functor {T : Type _} [category T] (C : HomologicalComplex (T ⥤ V) c) : 
 
 /-- The functorial version of `homological_complex.as_functor`. -/
 @[simps]
-def complex_of_functors_to_functor_to_complex {T : Type _} [category T] :
+def complex_of_functors_to_functor_to_complex {T : Type _} [Category T] :
     HomologicalComplex (T ⥤ V) c ⥤ T ⥤ HomologicalComplex V c where
-  obj := fun C => C.as_functor
+  obj := fun C => C.asFunctor
   map := fun C D f =>
-    { app := fun t => { f := fun i => (f.f i).app t, comm' := fun i j w => nat_trans.congr_app (f.comm i j) t },
+    { app := fun t => { f := fun i => (f.f i).app t, comm' := fun i j w => NatTrans.congr_app (f.comm i j) t },
       naturality' := fun t t' g => by
         ext i
         exact (f.f i).naturality g }

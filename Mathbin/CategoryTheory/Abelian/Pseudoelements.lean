@@ -78,40 +78,40 @@ universe v u
 
 namespace CategoryTheory.Abelian
 
-variable {C : Type u} [category.{v} C]
+variable {C : Type u} [Category.{v} C]
 
 attribute [local instance] over.coe_from_hom
 
 /-- This is just composition of morphisms in `C`. Another way to express this would be
     `(over.map f).obj a`, but our definition has nicer definitional properties. -/
-def app {P Q : C} (f : P ⟶ Q) (a : over P) : over Q :=
-  a.hom ≫ f
+def app {P Q : C} (f : P ⟶ Q) (a : Over P) : Over Q :=
+  a.Hom ≫ f
 
 @[simp]
-theorem app_hom {P Q : C} (f : P ⟶ Q) (a : over P) : (app f a).Hom = a.hom ≫ f :=
+theorem app_hom {P Q : C} (f : P ⟶ Q) (a : Over P) : (app f a).Hom = a.Hom ≫ f :=
   rfl
 
 /-- Two arrows `f : X ⟶ P` and `g : Y ⟶ P` are called pseudo-equal if there is some object
     `R` and epimorphisms `p : R ⟶ X` and `q : R ⟶ Y` such that `p ≫ f = q ≫ g`. -/
-def pseudo_equal (P : C) (f g : over P) : Prop :=
-  ∃ (R : C)(p : R ⟶ f.1)(q : R ⟶ g.1)(_ : epi p)(_ : epi q), p ≫ f.hom = q ≫ g.hom
+def pseudo_equal (P : C) (f g : Over P) : Prop :=
+  ∃ (R : C)(p : R ⟶ f.1)(q : R ⟶ g.1)(_ : Epi p)(_ : Epi q), p ≫ f.Hom = q ≫ g.Hom
 
-theorem pseudo_equal_refl {P : C} : Reflexive (pseudo_equal P) := fun f =>
+theorem pseudo_equal_refl {P : C} : Reflexive (PseudoEqual P) := fun f =>
   ⟨f.1, 𝟙 f.1, 𝟙 f.1, by
     infer_instance, by
     infer_instance, by
     simp ⟩
 
-theorem pseudo_equal_symm {P : C} : Symmetric (pseudo_equal P) := fun f g ⟨R, p, q, ep, Eq, comm⟩ =>
+theorem pseudo_equal_symm {P : C} : Symmetric (PseudoEqual P) := fun f g ⟨R, p, q, ep, Eq, comm⟩ =>
   ⟨R, q, p, Eq, ep, comm.symm⟩
 
-variable [abelian.{v} C]
+variable [Abelian.{v} C]
 
 section
 
 /-- Pseudoequality is transitive: Just take the pullback. The pullback morphisms will
     be epimorphisms since in an abelian category, pullbacks of epimorphisms are epimorphisms. -/
-theorem pseudo_equal_trans {P : C} : Transitive (pseudo_equal P) :=
+theorem pseudo_equal_trans {P : C} : Transitive (PseudoEqual P) :=
   fun f g h ⟨R, p, q, ep, Eq, comm⟩ ⟨R', p', q', ep', eq', comm'⟩ => by
   refine' ⟨pullback q p', pullback.fst ≫ p, pullback.snd ≫ q', _, _, _⟩
   · skip
@@ -126,7 +126,7 @@ theorem pseudo_equal_trans {P : C} : Transitive (pseudo_equal P) :=
 end
 
 /-- The arrows with codomain `P` equipped with the equivalence relation of being pseudo-equal. -/
-def pseudoelement.setoid (P : C) : Setoidₓ (over P) :=
+def pseudoelement.setoid (P : C) : Setoidₓ (Over P) :=
   ⟨_, ⟨pseudo_equal_refl, pseudo_equal_symm, pseudo_equal_trans⟩⟩
 
 attribute [local instance] pseudoelement.setoid
@@ -134,47 +134,47 @@ attribute [local instance] pseudoelement.setoid
 /-- A `pseudoelement` of `P` is just an equivalence class of arrows ending in `P` by being
     pseudo-equal. -/
 def pseudoelement (P : C) : Type max u v :=
-  Quotientₓ (pseudoelement.setoid P)
+  Quotientₓ (Pseudoelement.setoid P)
 
 namespace Pseudoelement
 
 /-- A coercion from an object of an abelian category to its pseudoelements. -/
 def object_to_sort : CoeSort C (Type max u v) :=
-  ⟨fun P => pseudoelement P⟩
+  ⟨fun P => Pseudoelement P⟩
 
 attribute [local instance] object_to_sort
 
 localized [Pseudoelement] attribute [instance] CategoryTheory.Abelian.Pseudoelement.objectToSort
 
 /-- A coercion from an arrow with codomain `P` to its associated pseudoelement. -/
-def over_to_sort {P : C} : Coe (over P) (pseudoelement P) :=
-  ⟨Quot.mk (pseudo_equal P)⟩
+def over_to_sort {P : C} : Coe (Over P) (Pseudoelement P) :=
+  ⟨Quot.mk (PseudoEqual P)⟩
 
 attribute [local instance] over_to_sort
 
-theorem over_coe_def {P Q : C} (a : Q ⟶ P) : (a : pseudoelement P) = ⟦a⟧ :=
+theorem over_coe_def {P Q : C} (a : Q ⟶ P) : (a : Pseudoelement P) = ⟦a⟧ :=
   rfl
 
 /-- If two elements are pseudo-equal, then their composition with a morphism is, too. -/
-theorem pseudo_apply_aux {P Q : C} (f : P ⟶ Q) (a b : over P) : a ≈ b → app f a ≈ app f b :=
+theorem pseudo_apply_aux {P Q : C} (f : P ⟶ Q) (a b : Over P) : a ≈ b → app f a ≈ app f b :=
   fun ⟨R, p, q, ep, Eq, comm⟩ =>
   ⟨R, p, q, ep, Eq,
-    show p ≫ a.hom ≫ f = q ≫ b.hom ≫ f by
+    show p ≫ a.Hom ≫ f = q ≫ b.Hom ≫ f by
       rw [reassoc_of comm]⟩
 
 /-- A morphism `f` induces a function `pseudo_apply f` on pseudoelements. -/
 def pseudo_apply {P Q : C} (f : P ⟶ Q) : P → Q :=
-  Quotientₓ.map (fun g : over P => app f g) (pseudo_apply_aux f)
+  Quotientₓ.map (fun g : Over P => app f g) (pseudo_apply_aux f)
 
 /-- A coercion from morphisms to functions on pseudoelements -/
 def hom_to_fun {P Q : C} : CoeFun (P ⟶ Q) fun _ => P → Q :=
-  ⟨pseudo_apply⟩
+  ⟨pseudoApply⟩
 
 attribute [local instance] hom_to_fun
 
 localized [Pseudoelement] attribute [instance] CategoryTheory.Abelian.Pseudoelement.homToFun
 
-theorem pseudo_apply_mk {P Q : C} (f : P ⟶ Q) (a : over P) : f (⟦a⟧) = ⟦a.hom ≫ f⟧ :=
+theorem pseudo_apply_mk {P Q : C} (f : P ⟶ Q) (a : Over P) : f (⟦a⟧) = ⟦a.Hom ≫ f⟧ :=
   rfl
 
 /-- Applying a pseudoelement to a composition of morphisms is the same as composing
@@ -204,7 +204,7 @@ section
 attribute [local instance] has_binary_biproducts.of_has_binary_products
 
 /-- The arrows pseudo-equal to a zero morphism are precisely the zero morphisms -/
-theorem pseudo_zero_aux {P : C} (Q : C) (f : over P) : f ≈ (0 : Q ⟶ P) ↔ f.hom = 0 :=
+theorem pseudo_zero_aux {P : C} (Q : C) (f : Over P) : f ≈ (0 : Q ⟶ P) ↔ f.Hom = 0 :=
   ⟨fun ⟨R, p, q, ep, Eq, comm⟩ =>
     zero_of_epi_comp p
       (by
@@ -217,7 +217,7 @@ theorem pseudo_zero_aux {P : C} (Q : C) (f : over P) : f ≈ (0 : Q ⟶ P) ↔ f
 
 end
 
-theorem zero_eq_zero' {P Q R : C} : ⟦((0 : Q ⟶ P) : over P)⟧ = ⟦((0 : R ⟶ P) : over P)⟧ :=
+theorem zero_eq_zero' {P Q R : C} : ⟦((0 : Q ⟶ P) : Over P)⟧ = ⟦((0 : R ⟶ P) : Over P)⟧ :=
   Quotientₓ.sound <| (pseudo_zero_aux R _).2 rfl
 
 /-- The zero pseudoelement is the class of a zero morphism -/
@@ -229,22 +229,22 @@ as it would trigger on any type class search for `has_zero` applied to a `coe_so
 This would be too expensive.
 -/
 def Zero {P : C} : Zero P :=
-  ⟨pseudo_zero⟩
+  ⟨pseudoZero⟩
 
 localized [Pseudoelement] attribute [instance] CategoryTheory.Abelian.Pseudoelement.hasZero
 
-instance {P : C} : Inhabited (pseudoelement P) :=
+instance {P : C} : Inhabited (Pseudoelement P) :=
   ⟨0⟩
 
-theorem pseudo_zero_def {P : C} : (0 : pseudoelement P) = ⟦(0 : P ⟶ P)⟧ :=
+theorem pseudo_zero_def {P : C} : (0 : Pseudoelement P) = ⟦(0 : P ⟶ P)⟧ :=
   rfl
 
 @[simp]
-theorem zero_eq_zero {P Q : C} : ⟦((0 : Q ⟶ P) : over P)⟧ = (0 : pseudoelement P) :=
+theorem zero_eq_zero {P Q : C} : ⟦((0 : Q ⟶ P) : Over P)⟧ = (0 : Pseudoelement P) :=
   zero_eq_zero'
 
 /-- The pseudoelement induced by an arrow is zero precisely when that arrow is zero -/
-theorem pseudo_zero_iff {P : C} (a : over P) : (a : P) = 0 ↔ a.hom = 0 := by
+theorem pseudo_zero_iff {P : C} (a : Over P) : (a : P) = 0 ↔ a.Hom = 0 := by
   rw [← pseudo_zero_aux P a]
   exact Quotientₓ.eq
 
@@ -282,10 +282,10 @@ theorem eq_zero_iff {P Q : C} (f : P ⟶ Q) : f = 0 ↔ ∀ a, f a = 0 :=
     simp [h], zero_morphism_ext _⟩
 
 /-- A monomorphism is injective on pseudoelements. -/
-theorem pseudo_injective_of_mono {P Q : C} (f : P ⟶ Q) [mono f] : Function.Injective f := fun abar abar' =>
+theorem pseudo_injective_of_mono {P Q : C} (f : P ⟶ Q) [Mono f] : Function.Injective f := fun abar abar' =>
   (Quotientₓ.induction_on₂ abar abar') fun a a' ha =>
     Quotientₓ.sound <|
-      have : ⟦(a.hom ≫ f : over Q)⟧ = ⟦a'.hom ≫ f⟧ := by
+      have : ⟦(a.Hom ≫ f : Over Q)⟧ = ⟦a'.Hom ≫ f⟧ := by
         convert ha
       match Quotientₓ.exact this with
       | ⟨R, p, q, ep, Eq, comm⟩ =>
@@ -300,18 +300,18 @@ theorem zero_of_map_zero {P Q : C} (f : P ⟶ Q) : Function.Injective f → ∀ 
   exact h ha
 
 /-- A morphism that only maps the zero pseudoelement to zero is a monomorphism. -/
-theorem mono_of_zero_of_map_zero {P Q : C} (f : P ⟶ Q) : (∀ a, f a = 0 → a = 0) → mono f := fun h =>
+theorem mono_of_zero_of_map_zero {P Q : C} (f : P ⟶ Q) : (∀ a, f a = 0 → a = 0) → Mono f := fun h =>
   (mono_iff_cancel_zero _).2 fun R g hg =>
-    (pseudo_zero_iff (g : over P)).1 <| h _ <| show f g = 0 from (pseudo_zero_iff (g ≫ f : over Q)).2 hg
+    (pseudo_zero_iff (g : Over P)).1 <| h _ <| show f g = 0 from (pseudo_zero_iff (g ≫ f : Over Q)).2 hg
 
 section
 
 /-- An epimorphism is surjective on pseudoelements. -/
-theorem pseudo_surjective_of_epi {P Q : C} (f : P ⟶ Q) [epi f] : Function.Surjective f := fun qbar =>
+theorem pseudo_surjective_of_epi {P Q : C} (f : P ⟶ Q) [Epi f] : Function.Surjective f := fun qbar =>
   (Quotientₓ.induction_on qbar) fun q =>
-    ⟨((pullback.fst : pullback f q.hom ⟶ P) : over P),
+    ⟨((pullback.fst : pullback f q.Hom ⟶ P) : Over P),
       Quotientₓ.sound <|
-        ⟨pullback f q.hom, 𝟙 (pullback f q.hom), pullback.snd, by
+        ⟨pullback f q.Hom, 𝟙 (pullback f q.Hom), pullback.snd, by
           infer_instance, by
           infer_instance, by
           rw [category.id_comp, ← pullback.condition, app_hom, over.coe_hom]⟩⟩
@@ -319,17 +319,17 @@ theorem pseudo_surjective_of_epi {P Q : C} (f : P ⟶ Q) [epi f] : Function.Surj
 end
 
 /-- A morphism that is surjective on pseudoelements is an epimorphism. -/
-theorem epi_of_pseudo_surjective {P Q : C} (f : P ⟶ Q) : Function.Surjective f → epi f := fun h =>
+theorem epi_of_pseudo_surjective {P Q : C} (f : P ⟶ Q) : Function.Surjective f → Epi f := fun h =>
   match h (𝟙 Q) with
   | ⟨pbar, hpbar⟩ =>
     match Quotientₓ.exists_rep pbar with
     | ⟨p, hp⟩ =>
-      have : ⟦(p.hom ≫ f : over Q)⟧ = ⟦𝟙 Q⟧ := by
+      have : ⟦(p.Hom ≫ f : Over Q)⟧ = ⟦𝟙 Q⟧ := by
         rw [← hp] at hpbar
         exact hpbar
       match Quotientₓ.exact this with
       | ⟨R, x, y, ex, ey, comm⟩ =>
-        @epi_of_epi_fac _ _ _ _ _ (x ≫ p.hom) f y ey <| by
+        @epi_of_epi_fac _ _ _ _ _ (x ≫ p.Hom) f y ey <| by
           dsimp  at comm
           rw [category.assoc, comm]
           apply category.comp_id
@@ -337,13 +337,13 @@ theorem epi_of_pseudo_surjective {P Q : C} (f : P ⟶ Q) : Function.Surjective f
 section
 
 /-- Two morphisms in an exact sequence are exact on pseudoelements. -/
-theorem pseudo_exact_of_exact {P Q R : C} {f : P ⟶ Q} {g : Q ⟶ R} [exact f g] :
+theorem pseudo_exact_of_exact {P Q R : C} {f : P ⟶ Q} {g : Q ⟶ R} [Exact f g] :
     (∀ a, g (f a) = 0) ∧ ∀ b, g b = 0 → ∃ a, f a = b :=
   ⟨fun a => by
     rw [← comp_apply, exact.w]
     exact zero_apply _ _, fun b' =>
     (Quotientₓ.induction_on b') fun b hb => by
-      have hb' : b.hom ≫ g = 0 := (pseudo_zero_iff _).1 hb
+      have hb' : b.Hom ≫ g = 0 := (pseudo_zero_iff _).1 hb
       obtain ⟨c, hc⟩ := kernel_fork.is_limit.lift' (is_limit_image f g) _ hb'
       use (pullback.fst : pullback (images.factor_thru_image f) c ⟶ P)
       apply Quotientₓ.sound
@@ -367,8 +367,8 @@ section
 
 /-- If two morphisms are exact on pseudoelements, they are exact. -/
 theorem exact_of_pseudo_exact {P Q R : C} (f : P ⟶ Q) (g : Q ⟶ R) :
-    ((∀ a, g (f a) = 0) ∧ ∀ b, g b = 0 → ∃ a, f a = b) → exact f g := fun ⟨h₁, h₂⟩ =>
-  (abelian.exact_iff _ _).2
+    ((∀ a, g (f a) = 0) ∧ ∀ b, g b = 0 → ∃ a, f a = b) → Exact f g := fun ⟨h₁, h₂⟩ =>
+  (Abelian.exact_iff _ _).2
     ⟨(zero_morphism_ext _) fun a => by
         rw [comp_apply, h₁ a],
       by
@@ -398,9 +398,9 @@ theorem sub_of_eq_image {P Q : C} (f : P ⟶ Q) (x y : P) :
   (Quotientₓ.induction_on₂ x y) fun a a' h =>
     match Quotientₓ.exact h with
     | ⟨R, p, q, ep, Eq, comm⟩ =>
-      let a'' : R ⟶ P := p ≫ a.hom - q ≫ a'.hom
+      let a'' : R ⟶ P := p ≫ a.Hom - q ≫ a'.Hom
       ⟨a'',
-        ⟨show ⟦((p ≫ a.hom - q ≫ a'.hom) ≫ f : over Q)⟧ = ⟦(0 : Q ⟶ Q)⟧ by
+        ⟨show ⟦((p ≫ a.Hom - q ≫ a'.Hom) ≫ f : Over Q)⟧ = ⟦(0 : Q ⟶ Q)⟧ by
             dsimp  at comm
             simp [sub_eq_zero.2 comm],
           fun Z g hh => by
@@ -415,7 +415,7 @@ theorem sub_of_eq_image {P Q : C} (f : P ⟶ Q) (x y : P) :
               infer_instance, ep, by
               simp [sub_eq_add_neg, this]⟩⟩⟩
 
-variable [limits.has_pullbacks C]
+variable [Limits.HasPullbacks C]
 
 /-- If `f : P ⟶ R` and `g : Q ⟶ R` are morphisms and `p : P` and `q : Q` are pseudoelements such
     that `f p = g q`, then there is some `s : pullback f g` such that `fst s = p` and `snd s = q`.

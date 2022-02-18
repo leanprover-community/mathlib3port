@@ -66,9 +66,10 @@ theorem coe_inv (S : Submonoid G) : ↑S⁻¹ = (S : Set G)⁻¹ :=
 theorem mem_inv {g : G} {S : Submonoid G} : g ∈ S⁻¹ ↔ g⁻¹ ∈ S :=
   Iff.rfl
 
-@[simp, to_additive]
-protected theorem inv_invₓ (S : Submonoid G) : S⁻¹⁻¹ = S :=
-  SetLike.coe_injective Set.inv_inv
+@[to_additive]
+instance : HasInvolutiveInv (Submonoid G) where
+  inv := Inv.inv
+  inv_inv := fun S => SetLike.coe_injective <| inv_invₓ _
 
 @[simp, to_additive]
 theorem inv_le_inv (S T : Submonoid G) : S⁻¹ ≤ T⁻¹ ↔ S ≤ T :=
@@ -81,16 +82,13 @@ theorem inv_le (S T : Submonoid G) : S⁻¹ ≤ T ↔ S ≤ T⁻¹ :=
 /-- `submonoid.has_inv` as an order isomorphism. -/
 @[to_additive " `add_submonoid.has_neg` as an order isomorphism ", simps]
 def inv_order_iso : Submonoid G ≃o Submonoid G where
-  toFun := Inv.inv
-  invFun := Inv.inv
-  left_inv := Submonoid.inv_inv
-  right_inv := Submonoid.inv_inv
+  toEquiv := Equivₓ.inv _
   map_rel_iff' := inv_le_inv
 
 @[to_additive]
 theorem closure_inv (s : Set G) : closure s⁻¹ = (closure s)⁻¹ := by
   apply le_antisymmₓ
-  · rw [closure_le, coe_inv, ← Set.inv_subset, Set.inv_inv]
+  · rw [closure_le, coe_inv, ← Set.inv_subset, inv_invₓ]
     exact subset_closure
     
   · rw [inv_le, closure_le, coe_inv, ← Set.inv_subset]
@@ -103,7 +101,7 @@ theorem inv_inf (S T : Submonoid G) : (S⊓T)⁻¹ = S⁻¹⊓T⁻¹ :=
 
 @[simp, to_additive]
 theorem inv_sup (S T : Submonoid G) : (S⊔T)⁻¹ = S⁻¹⊔T⁻¹ :=
-  (inv_order_iso : Submonoid G ≃o Submonoid G).map_sup S T
+  (invOrderIso : Submonoid G ≃o Submonoid G).map_sup S T
 
 @[simp, to_additive]
 theorem inv_bot : (⊥ : Submonoid G)⁻¹ = ⊥ :=
@@ -115,11 +113,11 @@ theorem inv_top : (⊤ : Submonoid G)⁻¹ = ⊤ :=
 
 @[simp, to_additive]
 theorem inv_infi {ι : Sort _} (S : ι → Submonoid G) : (⨅ i, S i)⁻¹ = ⨅ i, (S i)⁻¹ :=
-  (inv_order_iso : Submonoid G ≃o Submonoid G).map_infi _
+  (invOrderIso : Submonoid G ≃o Submonoid G).map_infi _
 
 @[simp, to_additive]
 theorem inv_supr {ι : Sort _} (S : ι → Submonoid G) : (⨆ i, S i)⁻¹ = ⨆ i, (S i)⁻¹ :=
-  (inv_order_iso : Submonoid G ≃o Submonoid G).map_supr _
+  (invOrderIso : Submonoid G ≃o Submonoid G).map_supr _
 
 end Submonoid
 
@@ -325,7 +323,7 @@ usually more useful. -/
 
 namespace AddSubmonoid
 
-variable [NonUnitalNonAssocSemiring R]
+variable [NonUnitalNonAssocSemiringₓ R]
 
 /-- Multiplication of additive submonoids of a semiring R. The additive submonoid `S * T` is the
 smallest R-submodule of `R` containing the elements `s * t` for `s ∈ S` and `t ∈ T`. -/
@@ -356,10 +354,10 @@ theorem closure_mul_closure (S T : Set R) : closure S * closure T = closure (S *
   · rw [mul_le]
     intro a ha b hb
     apply closure_induction ha
-    work_on_goal 0
+    on_goal 0 =>
       intros
       apply closure_induction hb
-      work_on_goal 0
+      on_goal 0 =>
         intros
         exact subset_closure ⟨_, _, ‹_›, ‹_›, rfl⟩
     all_goals

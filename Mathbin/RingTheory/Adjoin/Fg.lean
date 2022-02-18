@@ -90,25 +90,25 @@ def fg (S : Subalgebra R A) : Prop :=
 theorem fg_adjoin_finset (s : Finset A) : (Algebra.adjoin R (↑s : Set A)).Fg :=
   ⟨s, rfl⟩
 
-theorem fg_def {S : Subalgebra R A} : S.fg ↔ ∃ t : Set A, Set.Finite t ∧ Algebra.adjoin R t = S :=
+theorem fg_def {S : Subalgebra R A} : S.Fg ↔ ∃ t : Set A, Set.Finite t ∧ Algebra.adjoin R t = S :=
   ⟨fun ⟨t, ht⟩ => ⟨↑t, Set.finite_mem_finset t, ht⟩, fun ⟨t, ht1, ht2⟩ =>
-    ⟨ht1.to_finset, by
+    ⟨ht1.toFinset, by
       rwa [Set.Finite.coe_to_finset]⟩⟩
 
 theorem fg_bot : (⊥ : Subalgebra R A).Fg :=
   ⟨∅, Algebra.adjoin_empty R A⟩
 
-theorem fg_of_fg_to_submodule {S : Subalgebra R A} : S.to_submodule.fg → S.fg := fun ⟨t, ht⟩ =>
+theorem fg_of_fg_to_submodule {S : Subalgebra R A} : S.toSubmodule.Fg → S.Fg := fun ⟨t, ht⟩ =>
   ⟨t,
-    le_antisymmₓ (Algebra.adjoin_le fun x hx => show x ∈ S.to_submodule from ht ▸ subset_span hx) <|
-      show S.to_submodule ≤ (Algebra.adjoin R ↑t).toSubmodule from fun x hx =>
+    le_antisymmₓ (Algebra.adjoin_le fun x hx => show x ∈ S.toSubmodule from ht ▸ subset_span hx) <|
+      show S.toSubmodule ≤ (Algebra.adjoin R ↑t).toSubmodule from fun x hx =>
         span_le.mpr (fun x hx => Algebra.subset_adjoin hx)
           (show x ∈ span R ↑t by
             rw [ht]
             exact hx)⟩
 
-theorem fg_of_noetherian [IsNoetherian R A] (S : Subalgebra R A) : S.fg :=
-  fg_of_fg_to_submodule (IsNoetherian.noetherian S.to_submodule)
+theorem fg_of_noetherian [IsNoetherian R A] (S : Subalgebra R A) : S.Fg :=
+  fg_of_fg_to_submodule (IsNoetherian.noetherian S.toSubmodule)
 
 theorem fg_of_submodule_fg (h : (⊤ : Submodule R A).Fg) : (⊤ : Subalgebra R A).Fg :=
   let ⟨s, hs⟩ := h
@@ -117,7 +117,7 @@ theorem fg_of_submodule_fg (h : (⊤ : Submodule R A).Fg) : (⊤ : Subalgebra R 
       rw [Algebra.top_to_submodule, eq_top_iff, ← hs, span_le]
       exact Algebra.subset_adjoin⟩
 
-theorem fg_prod {S : Subalgebra R A} {T : Subalgebra R B} (hS : S.fg) (hT : T.fg) : (S.prod T).Fg := by
+theorem fg_prod {S : Subalgebra R A} {T : Subalgebra R B} (hS : S.Fg) (hT : T.Fg) : (S.Prod T).Fg := by
   obtain ⟨s, hs⟩ := fg_def.1 hS
   obtain ⟨t, ht⟩ := fg_def.1 hT
   rw [← hs.2, ← ht.2]
@@ -132,22 +132,22 @@ section
 
 open_locale Classical
 
-theorem fg_map (S : Subalgebra R A) (f : A →ₐ[R] B) (hs : S.fg) : (S.map f).Fg :=
+theorem fg_map (S : Subalgebra R A) (f : A →ₐ[R] B) (hs : S.Fg) : (S.map f).Fg :=
   let ⟨s, hs⟩ := hs
-  ⟨s.image f, by
+  ⟨s.Image f, by
     rw [Finset.coe_image, Algebra.adjoin_image, hs]⟩
 
 end
 
-theorem fg_of_fg_map (S : Subalgebra R A) (f : A →ₐ[R] B) (hf : Function.Injective f) (hs : (S.map f).Fg) : S.fg :=
+theorem fg_of_fg_map (S : Subalgebra R A) (f : A →ₐ[R] B) (hf : Function.Injective f) (hs : (S.map f).Fg) : S.Fg :=
   let ⟨s, hs⟩ := hs
-  ⟨(s.preimage f) fun _ _ _ _ h => hf h,
+  ⟨(s.Preimage f) fun _ _ _ _ h => hf h,
     map_injective f hf <| by
       rw [← Algebra.adjoin_image, Finset.coe_preimage, Set.image_preimage_eq_of_subset, hs]
       rw [← AlgHom.coe_range, ← Algebra.adjoin_le_iff, hs, ← Algebra.map_top]
       exact map_mono le_top⟩
 
-theorem fg_top (S : Subalgebra R A) : (⊤ : Subalgebra R S).Fg ↔ S.fg :=
+theorem fg_top (S : Subalgebra R A) : (⊤ : Subalgebra R S).Fg ↔ S.Fg :=
   ⟨fun h => by
     rw [← S.range_val, ← Algebra.map_top]
     exact fg_map _ _ h, fun h =>
@@ -176,7 +176,7 @@ variable [CommSemiringₓ R] [CommRingₓ A] [CommRingₓ B] [Algebra R A] [Alge
 
 /-- The image of a Noetherian R-algebra under an R-algebra map is a Noetherian ring. -/
 instance AlgHom.is_noetherian_ring_range (f : A →ₐ[R] B) [IsNoetherianRing A] : IsNoetherianRing f.range :=
-  is_noetherian_ring_range f.to_ring_hom
+  is_noetherian_ring_range f.toRingHom
 
 end Semiringₓ
 
@@ -186,14 +186,14 @@ variable {R : Type u} {A : Type v} {B : Type w}
 
 variable [CommRingₓ R] [CommRingₓ A] [CommRingₓ B] [Algebra R A] [Algebra R B]
 
-theorem is_noetherian_ring_of_fg {S : Subalgebra R A} (HS : S.fg) [IsNoetherianRing R] : IsNoetherianRing S :=
+theorem is_noetherian_ring_of_fg {S : Subalgebra R A} (HS : S.Fg) [IsNoetherianRing R] : IsNoetherianRing S :=
   let ⟨t, ht⟩ := HS
   ht ▸
     (Algebra.adjoin_eq_range R (↑t : Set A)).symm ▸ by
       have : IsNoetherianRing (MvPolynomial (↑t : Set A) R) := MvPolynomial.is_noetherian_ring <;>
         convert AlgHom.is_noetherian_ring_range _ <;> infer_instance
 
-theorem is_noetherian_subring_closure (s : Set R) (hs : s.finite) : IsNoetherianRing (Subring.closure s) :=
+theorem is_noetherian_subring_closure (s : Set R) (hs : s.Finite) : IsNoetherianRing (Subring.closure s) :=
   show IsNoetherianRing (subalgebraOfSubring (Subring.closure s)) from
     Algebra.adjoin_int s ▸ is_noetherian_ring_of_fg (Subalgebra.fg_def.2 ⟨s, hs, rfl⟩)
 

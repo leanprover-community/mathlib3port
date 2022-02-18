@@ -44,7 +44,7 @@ structure IsRegular (c : R) : Prop where
 
 protected theorem MulLeCancellable.is_left_regular [PartialOrderₓ R] {a : R} (ha : MulLeCancellable a) :
     IsLeftRegular a :=
-  ha.injective
+  ha.Injective
 
 end Mul
 
@@ -107,9 +107,9 @@ theorem IsRegular.and_of_mul_of_mul (ab : IsRegular (a * b)) (ba : IsRegular (b 
 
 end Semigroupₓ
 
-section MulZeroClass
+section MulZeroClassₓ
 
-variable [MulZeroClass R]
+variable [MulZeroClassₓ R]
 
 /-- The element `0` is left-regular if and only if `R` is trivial. -/
 theorem IsLeftRegular.subsingleton (h : IsLeftRegular (0 : R)) : Subsingleton R :=
@@ -121,11 +121,11 @@ theorem IsRightRegular.subsingleton (h : IsRightRegular (0 : R)) : Subsingleton 
 
 /-- The element `0` is regular if and only if `R` is trivial. -/
 theorem IsRegular.subsingleton (h : IsRegular (0 : R)) : Subsingleton R :=
-  h.left.subsingleton
+  h.left.Subsingleton
 
 /-- The element `0` is left-regular if and only if `R` is trivial. -/
 theorem is_left_regular_zero_iff_subsingleton : IsLeftRegular (0 : R) ↔ Subsingleton R := by
-  refine' ⟨fun h => h.subsingleton, _⟩
+  refine' ⟨fun h => h.Subsingleton, _⟩
   intro H a b h
   exact @Subsingleton.elimₓ _ H a b
 
@@ -137,7 +137,7 @@ theorem not_is_left_regular_zero_iff : ¬IsLeftRegular (0 : R) ↔ Nontrivial R 
 
 /-- The element `0` is right-regular if and only if `R` is trivial. -/
 theorem is_right_regular_zero_iff_subsingleton : IsRightRegular (0 : R) ↔ Subsingleton R := by
-  refine' ⟨fun h => h.subsingleton, _⟩
+  refine' ⟨fun h => h.Subsingleton, _⟩
   intro H a b h
   exact @Subsingleton.elimₓ _ H a b
 
@@ -149,7 +149,7 @@ theorem not_is_right_regular_zero_iff : ¬IsRightRegular (0 : R) ↔ Nontrivial 
 
 /-- The element `0` is regular if and only if `R` is trivial. -/
 theorem is_regular_iff_subsingleton : IsRegular (0 : R) ↔ Subsingleton R :=
-  ⟨fun h => h.left.subsingleton, fun h =>
+  ⟨fun h => h.left.Subsingleton, fun h =>
     ⟨is_left_regular_zero_iff_subsingleton.mpr h, is_right_regular_zero_iff_subsingleton.mpr h⟩⟩
 
 /-- A left-regular element of a `nontrivial` `mul_zero_class` is non-zero. -/
@@ -181,7 +181,7 @@ theorem not_is_right_regular_zero [nR : Nontrivial R] : ¬IsRightRegular (0 : R)
 /-- In a non-trivial ring, the element `0` is not regular -- with typeclasses. -/
 theorem not_is_regular_zero [Nontrivial R] : ¬IsRegular (0 : R) := fun h => IsRegular.ne_zero h rfl
 
-end MulZeroClass
+end MulZeroClassₓ
 
 section CommSemigroupₓ
 

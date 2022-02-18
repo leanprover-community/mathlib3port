@@ -26,6 +26,12 @@ section GcdMonoid
 
 variable {R : Type _} [EuclideanDomain R] [GcdMonoid R]
 
+theorem gcd_ne_zero_of_left (p q : R) (hp : p ≠ 0) : GcdMonoid.gcd p q ≠ 0 := fun h =>
+  hp <| eq_zero_of_zero_dvd (h ▸ gcd_dvd_left p q)
+
+theorem gcd_ne_zero_of_right (p q : R) (hp : q ≠ 0) : GcdMonoid.gcd p q ≠ 0 := fun h =>
+  hp <| eq_zero_of_zero_dvd (h ▸ gcd_dvd_right p q)
+
 -- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:98:4: warning: unsupported: rw with cfg: { occs := occurrences.pos «expr[ , ]»([1]) }
 theorem left_div_gcd_ne_zero {p q : R} (hp : p ≠ 0) : p / GcdMonoid.gcd p q ≠ 0 := by
   obtain ⟨r, hr⟩ := GcdMonoid.gcd_dvd_left p q

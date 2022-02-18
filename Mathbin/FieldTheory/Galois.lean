@@ -27,9 +27,7 @@ Together, these two result prove the Galois correspondence
 -/
 
 
-noncomputable section
-
-open_locale Classical
+open_locale Polynomial
 
 open FiniteDimensional AlgEquiv
 
@@ -74,54 +72,54 @@ instance of_fixed_field (G : Type _) [Groupₓ G] [Fintype G] [MulSemiringAction
     IsGalois (FixedPoints.subfield G E) E :=
   ⟨⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr ⟮ , ⟯»
--- ././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr ⟮ , ⟯»
--- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr ⟮ , ⟯»
--- ././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr ⟮ , ⟯»
--- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr ⟮ , ⟯»
--- ././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr ⟮ , ⟯»
--- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr ⟮ , ⟯»
--- ././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr ⟮ , ⟯»
--- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr ⟮ , ⟯»
--- ././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr ⟮ , ⟯»
--- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr ⟮ , ⟯»
--- ././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr ⟮ , ⟯»
--- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr ⟮ , ⟯»
--- ././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr ⟮ , ⟯»
 theorem intermediate_field.adjoin_simple.card_aut_eq_finrank [FiniteDimensional F E] {α : E} (hα : IsIntegral F α)
     (h_sep : (minpoly F α).Separable)
     (h_splits :
       (minpoly F α).Splits
         (algebraMap F
-          («expr ⟮ , ⟯» F "././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr ⟮ , ⟯»"))) :
+          («expr ⟮ , ⟯» F "././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr ⟮ , ⟯»"))) :
     Fintype.card
-        («expr ⟮ , ⟯» F "././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr ⟮ , ⟯»" ≃ₐ[F]
-          «expr ⟮ , ⟯» F "././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr ⟮ , ⟯»") =
+        («expr ⟮ , ⟯» F "././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr ⟮ , ⟯»" ≃ₐ[F]
+          «expr ⟮ , ⟯» F "././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr ⟮ , ⟯»") =
       finrank F
-        («expr ⟮ , ⟯» F "././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr ⟮ , ⟯»") :=
+        («expr ⟮ , ⟯» F "././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr ⟮ , ⟯»") :=
   by
   let this' :
     Fintype
-      («expr ⟮ , ⟯» F "././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr ⟮ , ⟯»" →ₐ[F]
-        «expr ⟮ , ⟯» F "././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr ⟮ , ⟯»") :=
+      («expr ⟮ , ⟯» F "././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr ⟮ , ⟯»" →ₐ[F]
+        «expr ⟮ , ⟯» F "././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr ⟮ , ⟯»") :=
     IntermediateField.fintypeOfAlgHomAdjoinIntegral F hα
   rw [IntermediateField.adjoin.finrank hα]
   rw [← IntermediateField.card_alg_hom_adjoin_integral F hα h_sep h_splits]
   exact
     Fintype.card_congr
       (algEquivEquivAlgHom F
-        («expr ⟮ , ⟯» F "././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr ⟮ , ⟯»"))
+        («expr ⟮ , ⟯» F "././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr ⟮ , ⟯»"))
 
--- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr ⟮ , ⟯»
--- ././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr ⟮ , ⟯»
--- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr ⟮ , ⟯»
--- ././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr ⟮ , ⟯»
--- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr ⟮ , ⟯»
--- ././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr ⟮ , ⟯»
 theorem card_aut_eq_finrank [FiniteDimensional F E] [IsGalois F E] : Fintype.card (E ≃ₐ[F] E) = finrank F E := by
   cases' Field.exists_primitive_element F E with α hα
   let iso :
-    «expr ⟮ , ⟯» F "././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr ⟮ , ⟯»" ≃ₐ[F] E :=
+    «expr ⟮ , ⟯» F "././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr ⟮ , ⟯»" ≃ₐ[F] E :=
     { toFun := fun e => e.val,
       invFun := fun e =>
         ⟨e, by
@@ -137,12 +135,12 @@ theorem card_aut_eq_finrank [FiniteDimensional F E] [IsGalois F E] : Fintype.car
   replace h_splits :
     Polynomial.Splits
       (algebraMap F
-        («expr ⟮ , ⟯» F "././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr ⟮ , ⟯»"))
+        («expr ⟮ , ⟯» F "././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr ⟮ , ⟯»"))
       (minpoly F α)
   · have p :
       iso.symm.to_alg_hom.to_ring_hom.comp (algebraMap F E) =
         algebraMap F
-          (↥«expr ⟮ , ⟯» F "././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr ⟮ , ⟯»") :=
+          (↥«expr ⟮ , ⟯» F "././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr ⟮ , ⟯»") :=
       by
       ext
       simp
@@ -209,43 +207,50 @@ variable {F : Type _} [Field F] {E : Type _} [Field E] [Algebra F E]
 
 variable (H : Subgroup (E ≃ₐ[F] E)) (K : IntermediateField F E)
 
+/-- The intermediate field of fixed points fixed by a monoid action that commutes with the
+`F`-action on `E`. -/
+def FixedPoints.intermediateField (M : Type _) [Monoidₓ M] [MulSemiringAction M E] [SmulCommClass M F E] :
+    IntermediateField F E :=
+  { FixedPoints.subfield M E with Carrier := MulAction.FixedPoints M E,
+    algebra_map_mem' := fun a g => by
+      rw [Algebra.algebra_map_eq_smul_one, smul_comm, smul_one] }
+
+/-- The submonoid fixing a set under a `mul_action`. -/
+@[to_additive " The additive submonoid fixing a set under an `add_action`. "]
+def fixingSubmonoid (M : Type _) {α} [Monoidₓ M] [MulAction M α] (s : Set α) : Submonoid M where
+  Carrier := { ϕ : M | ∀ x : s, ϕ • (x : α) = x }
+  one_mem' := fun _ => one_smul _ _
+  mul_mem' := fun x y hx hy z => by
+    rw [mul_smul, hy z, hx z]
+
+/-- The subgroup fixing a set under a `mul_action`. -/
+@[to_additive " The additive subgroup fixing a set under an `add_action`. "]
+def fixingSubgroup (M : Type _) {α} [Groupₓ M] [MulAction M α] (s : Set α) : Subgroup M :=
+  { fixingSubmonoid M s with
+    inv_mem' := fun _ hx z => by
+      rw [inv_smul_eq_iff, hx z] }
+
 namespace IntermediateField
 
 /-- The intermediate_field fixed by a subgroup -/
-def fixed_field : IntermediateField F E where
-  Carrier := MulAction.FixedPoints H E
-  zero_mem' := fun g => smul_zero g
-  add_mem' := fun a b hx hy g => by
-    rw [smul_add g a b, hx, hy]
-  neg_mem' := fun a hx g => by
-    rw [smul_neg g a, hx]
-  one_mem' := fun g => smul_one g
-  mul_mem' := fun a b hx hy g => by
-    rw [smul_mul' g a b, hx, hy]
-  inv_mem' := fun a hx g => by
-    rw [smul_inv'' g a, hx]
-  algebra_map_mem' := fun a g => commutes g a
+def fixed_field : IntermediateField F E :=
+  FixedPoints.intermediateField H
 
-theorem finrank_fixed_field_eq_card [FiniteDimensional F E] : finrank (fixed_field H) E = Fintype.card H :=
+theorem finrank_fixed_field_eq_card [FiniteDimensional F E] [DecidablePred (· ∈ H)] :
+    finrank (fixedField H) E = Fintype.card H :=
   FixedPoints.finrank_eq_card H E
 
 /-- The subgroup fixing an intermediate_field -/
-def fixing_subgroup : Subgroup (E ≃ₐ[F] E) where
-  Carrier := fun ϕ => ∀ x : K, ϕ x = x
-  one_mem' := fun _ => rfl
-  mul_mem' := fun _ _ hx hy _ => (congr_argₓ _ (hy _)).trans (hx _)
-  inv_mem' := fun _ hx _ => (Equivₓ.symm_apply_eq (to_equiv _)).mpr (hx _).symm
+def fixingSubgroup : Subgroup (E ≃ₐ[F] E) :=
+  fixingSubgroup (E ≃ₐ[F] E) (K : Set E)
 
-theorem le_iff_le : K ≤ fixed_field H ↔ H ≤ fixing_subgroup K :=
+theorem le_iff_le : K ≤ fixedField H ↔ H ≤ fixingSubgroup K :=
   ⟨fun h g hg x => h (Subtype.mem x) ⟨g, hg⟩, fun h x hx g => h (Subtype.mem g) ⟨x, hx⟩⟩
 
 /-- The fixing_subgroup of `K : intermediate_field F E` is isomorphic to `E ≃ₐ[K] E` -/
-def fixing_subgroup_equiv : fixing_subgroup K ≃* E ≃ₐ[K] E where
-  toFun := fun ϕ => of_bijective (AlgHom.mk ϕ (map_one ϕ) (map_mul ϕ) (map_zero ϕ) (map_add ϕ) ϕ.mem) (bijective ϕ)
-  invFun := fun ϕ =>
-    ⟨of_bijective (AlgHom.mk ϕ ϕ.map_one ϕ.map_mul ϕ.map_zero ϕ.map_add fun r => ϕ.commutes (algebraMap F K r))
-        ϕ.bijective,
-      ϕ.commutes⟩
+def fixing_subgroup_equiv : fixingSubgroup K ≃* E ≃ₐ[K] E where
+  toFun := fun ϕ => { AlgEquiv.toRingEquiv ↑ϕ with commutes' := ϕ.Mem }
+  invFun := fun ϕ => ⟨ϕ.restrictScalars _, ϕ.commutes⟩
   left_inv := fun _ => by
     ext
     rfl
@@ -256,9 +261,10 @@ def fixing_subgroup_equiv : fixing_subgroup K ≃* E ≃ₐ[K] E where
     ext
     rfl
 
-theorem fixing_subgroup_fixed_field [FiniteDimensional F E] : fixing_subgroup (fixed_field H) = H := by
-  have H_le : H ≤ fixing_subgroup (fixed_field H) := (le_iff_le _ _).mp (le_reflₓ _)
-  suffices Fintype.card H = Fintype.card (fixing_subgroup (fixed_field H)) by
+theorem fixing_subgroup_fixed_field [FiniteDimensional F E] : fixingSubgroup (fixedField H) = H := by
+  have H_le : H ≤ fixingSubgroup (fixed_field H) := (le_iff_le _ _).mp le_rfl
+  classical
+  suffices Fintype.card H = Fintype.card (fixingSubgroup (fixed_field H)) by
     exact
       SetLike.coe_injective
         (Set.eq_of_inclusion_surjective
@@ -269,7 +275,7 @@ theorem fixing_subgroup_fixed_field [FiniteDimensional F E] : fixing_subgroup (f
   refine' (algEquivEquivAlgHom (fixed_field H) E).symm.trans _
   exact (fixing_subgroup_equiv (fixed_field H)).toEquiv.symm
 
-instance fixed_field.algebra : Algebra K (fixed_field (fixing_subgroup K)) where
+instance fixed_field.algebra : Algebra K (fixedField (fixingSubgroup K)) where
   smul := fun x y =>
     ⟨x * y, fun ϕ => by
       rw [smul_mul', show ϕ • ↑x = ↑x from Subtype.mem ϕ x, show ϕ • ↑y = ↑y from Subtype.mem y ϕ]⟩
@@ -281,7 +287,7 @@ instance fixed_field.algebra : Algebra K (fixed_field (fixing_subgroup K)) where
   commutes' := fun _ _ => mul_comm _ _
   smul_def' := fun _ _ => rfl
 
-instance fixed_field.is_scalar_tower : IsScalarTower K (fixed_field (fixing_subgroup K)) E :=
+instance fixed_field.is_scalar_tower : IsScalarTower K (fixedField (fixingSubgroup K)) E :=
   ⟨fun _ _ _ => mul_assoc _ _ _⟩
 
 end IntermediateField
@@ -291,15 +297,16 @@ namespace IsGalois
 theorem fixed_field_fixing_subgroup [FiniteDimensional F E] [h : IsGalois F E] :
     IntermediateField.fixedField (IntermediateField.fixingSubgroup K) = K := by
   have K_le : K ≤ IntermediateField.fixedField (IntermediateField.fixingSubgroup K) :=
-    (IntermediateField.le_iff_le _ _).mpr (le_reflₓ _)
+    (IntermediateField.le_iff_le _ _).mpr le_rfl
   suffices finrank K E = finrank (IntermediateField.fixedField (IntermediateField.fixingSubgroup K)) E by
     exact (IntermediateField.eq_of_le_of_finrank_eq' K_le this).symm
+  classical
   rw [IntermediateField.finrank_fixed_field_eq_card,
     Fintype.card_congr (IntermediateField.fixingSubgroupEquiv K).toEquiv]
   exact (card_aut_eq_finrank K E).symm
 
-theorem card_fixing_subgroup_eq_finrank [FiniteDimensional F E] [IsGalois F E] :
-    Fintype.card (IntermediateField.fixingSubgroup K) = finrank K E := by
+theorem card_fixing_subgroup_eq_finrank [DecidablePred (· ∈ IntermediateField.fixingSubgroup K)] [FiniteDimensional F E]
+    [IsGalois F E] : Fintype.card (IntermediateField.fixingSubgroup K) = finrank K E := by
   conv => rhs rw [← fixed_field_fixing_subgroup K, IntermediateField.finrank_fixed_field_eq_card]
 
 /-- The Galois correspondence from intermediate fields to subgroups -/
@@ -345,7 +352,7 @@ variable (F : Type _) [Field F] (E : Type _) [Field E] [Algebra F E]
 namespace IsGalois
 
 theorem is_separable_splitting_field [FiniteDimensional F E] [IsGalois F E] :
-    ∃ p : Polynomial F, p.separable ∧ p.is_splitting_field F E := by
+    ∃ p : F[X], p.Separable ∧ p.IsSplittingField F E := by
   cases' Field.exists_primitive_element F E with α h1
   use minpoly F α, separable F α, IsGalois.splits F α
   rw [eq_top_iff, ← IntermediateField.top_to_subalgebra, ← h1]
@@ -362,11 +369,13 @@ theorem is_separable_splitting_field [FiniteDimensional F E] [IsGalois F E] :
 theorem of_fixed_field_eq_bot [FiniteDimensional F E]
     (h : IntermediateField.fixedField (⊤ : Subgroup (E ≃ₐ[F] E)) = ⊥) : IsGalois F E := by
   rw [← is_galois_iff_is_galois_bot, ← h]
+  classical
   exact IsGalois.of_fixed_field E (⊤ : Subgroup (E ≃ₐ[F] E))
 
 theorem of_card_aut_eq_finrank [FiniteDimensional F E] (h : Fintype.card (E ≃ₐ[F] E) = finrank F E) : IsGalois F E := by
   apply of_fixed_field_eq_bot
   have p : 0 < finrank (IntermediateField.fixedField (⊤ : Subgroup (E ≃ₐ[F] E))) E := finrank_pos
+  classical
   rw [← IntermediateField.finrank_eq_one_iff, ← mul_left_inj' (ne_of_ltₓ p).symm, finrank_mul_finrank, ← h, one_mulₓ,
     IntermediateField.finrank_fixed_field_eq_card]
   apply Fintype.card_congr
@@ -376,29 +385,29 @@ theorem of_card_aut_eq_finrank [FiniteDimensional F E] (h : Fintype.card (E ≃�
         ext
         rfl }
 
-variable {F} {E} {p : Polynomial F}
+variable {F} {E} {p : F[X]}
 
--- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr ⟮ , ⟯»
--- ././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr ⟮ , ⟯»
--- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr ⟮ , ⟯»
--- ././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr ⟮ , ⟯»
--- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr ⟮ , ⟯»
--- ././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr ⟮ , ⟯»
--- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr ⟮ , ⟯»
--- ././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr ⟮ , ⟯»
--- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr ⟮ , ⟯»
--- ././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr ⟮ , ⟯»
--- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr ⟮ , ⟯»
--- ././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr ⟮ , ⟯»
-theorem of_separable_splitting_field_aux [hFE : FiniteDimensional F E] [sp : p.is_splitting_field F E]
-    (hp : p.separable) (K : IntermediateField F E) {x : E} (hx : x ∈ (p.map (algebraMap F E)).roots) :
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr ⟮ , ⟯»
+theorem of_separable_splitting_field_aux [hFE : FiniteDimensional F E] [sp : p.IsSplittingField F E] (hp : p.Separable)
+    (K : IntermediateField F E) {x : E} (hx : x ∈ (p.map (algebraMap F E)).roots) :
     Fintype.card
-        ((↑(«expr ⟮ , ⟯» K "././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr ⟮ , ⟯»") :
+        ((↑(«expr ⟮ , ⟯» K "././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr ⟮ , ⟯»") :
             IntermediateField F E) →ₐ[F]
           E) =
       Fintype.card (K →ₐ[F] E) *
         finrank K
-          («expr ⟮ , ⟯» K "././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr ⟮ , ⟯»") :=
+          («expr ⟮ , ⟯» K "././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr ⟮ , ⟯»") :=
   by
   have h : IsIntegral K x := is_integral_of_is_scalar_tower x (is_integral_of_noetherian (IsNoetherian.iff_fg.2 hFE) x)
   have h1 : p ≠ 0 := fun hp => by
@@ -408,23 +417,23 @@ theorem of_separable_splitting_field_aux [hFE : FiniteDimensional F E] [sp : p.i
     rw [Polynomial.aeval_def, Polynomial.eval₂_map, ← Polynomial.eval_map]
     exact (Polynomial.mem_roots (Polynomial.map_ne_zero h1)).mp hx
   let key_equiv :
-    ((↑(«expr ⟮ , ⟯» K "././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr ⟮ , ⟯»") :
+    ((↑(«expr ⟮ , ⟯» K "././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr ⟮ , ⟯»") :
           IntermediateField F E) →ₐ[F]
         E) ≃
       Σ f : K →ₐ[F] E,
-        @AlgHom K («expr ⟮ , ⟯» K "././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr ⟮ , ⟯»")
+        @AlgHom K («expr ⟮ , ⟯» K "././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr ⟮ , ⟯»")
           E _ _ _ _ (RingHom.toAlgebra f) :=
     Equivₓ.trans
       (AlgEquiv.arrowCongr
         (IntermediateField.lift2AlgEquiv
-          («expr ⟮ , ⟯» K "././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr ⟮ , ⟯»"))
+          («expr ⟮ , ⟯» K "././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr ⟮ , ⟯»"))
         AlgEquiv.refl)
       algHomEquivSigma
   have :
     ∀ f : K →ₐ[F] E,
       Fintype
         (@AlgHom K
-          («expr ⟮ , ⟯» K "././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr ⟮ , ⟯»") E _ _ _
+          («expr ⟮ , ⟯» K "././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr ⟮ , ⟯»") E _ _ _
           _ (RingHom.toAlgebra f)) :=
     fun f => by
     apply Fintype.ofInjective (Sigma.mk f) fun _ _ H => eq_of_heq (Sigma.mk.inj H).2
@@ -443,10 +452,11 @@ theorem of_separable_splitting_field_aux [hFE : FiniteDimensional F E] [sp : p.i
     exact sp.splits
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr ⟮ , ⟯»
--- ././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr ⟮ , ⟯»
-theorem of_separable_splitting_field [sp : p.is_splitting_field F E] (hp : p.separable) : IsGalois F E := by
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr ⟮ , ⟯»
+theorem of_separable_splitting_field [sp : p.IsSplittingField F E] (hp : p.Separable) : IsGalois F E := by
   have hFE : FiniteDimensional F E := Polynomial.IsSplittingField.finite_dimensional E p
+  let this' := Classical.decEq E
   let s := (p.map (algebraMap F E)).roots.toFinset
   have adjoin_root : IntermediateField.adjoin F ↑s = ⊤ := by
     apply IntermediateField.to_subalgebra_injective
@@ -476,13 +486,13 @@ theorem of_separable_splitting_field [sp : p.is_splitting_field F E] (hp : p.sep
     (LinearEquiv.finrank_eq
         (IntermediateField.lift2AlgEquiv
             («expr ⟮ , ⟯» K
-              "././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr ⟮ , ⟯»")).toLinearEquiv).symm
+              "././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr ⟮ , ⟯»")).toLinearEquiv).symm
 
 /-- Equivalent characterizations of a Galois extension of finite degree-/
 theorem tfae [FiniteDimensional F E] :
-    tfae
+    Tfae
       [IsGalois F E, IntermediateField.fixedField (⊤ : Subgroup (E ≃ₐ[F] E)) = ⊥,
-        Fintype.card (E ≃ₐ[F] E) = finrank F E, ∃ p : Polynomial F, p.separable ∧ p.is_splitting_field F E] :=
+        Fintype.card (E ≃ₐ[F] E) = finrank F E, ∃ p : F[X], p.Separable ∧ p.IsSplittingField F E] :=
   by
   tfae_have 1 → 2
   · exact fun h => OrderIso.map_bot (@intermediate_field_equiv_subgroup F _ E _ _ _ h).symm

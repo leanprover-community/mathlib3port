@@ -37,13 +37,13 @@ localized [Omega.Nat] notation t " -* " s => Omega.Nat.Preterm.sub t s
 
 namespace Preterm
 
--- ././Mathport/Syntax/Translate/Basic.lean:794:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
 /-- Helper tactic for proof by induction over preterms -/
 unsafe def induce (tac : tactic Unit := tactic.skip) : tactic Unit :=
   sorry
 
 /-- Preterm evaluation -/
-def val (v : Nat → Nat) : preterm → Nat
+def val (v : Nat → Nat) : Preterm → Nat
   | &i => i
   | i ** n => if i = 1 then v n else v n * i
   | t1 +* t2 => t1.val + t2.val
@@ -61,23 +61,23 @@ theorem val_var {v : Nat → Nat} {m n : Nat} : (m ** n).val v = m * v n := by
   rw [if_neg h1, mul_comm]
 
 @[simp]
-theorem val_add {v : Nat → Nat} {t s : preterm} : (t +* s).val v = t.val v + s.val v :=
+theorem val_add {v : Nat → Nat} {t s : Preterm} : (t +* s).val v = t.val v + s.val v :=
   rfl
 
 @[simp]
-theorem val_sub {v : Nat → Nat} {t s : preterm} : (t -* s).val v = t.val v - s.val v :=
+theorem val_sub {v : Nat → Nat} {t s : Preterm} : (t -* s).val v = t.val v - s.val v :=
   rfl
 
 /-- Fresh de Brujin index not used by any variable in argument -/
-def fresh_index : preterm → Nat
+def fresh_index : Preterm → Nat
   | &_ => 0
   | i ** n => n + 1
-  | t1 +* t2 => max t1.fresh_index t2.fresh_index
-  | t1 -* t2 => max t1.fresh_index t2.fresh_index
+  | t1 +* t2 => max t1.freshIndex t2.freshIndex
+  | t1 -* t2 => max t1.freshIndex t2.freshIndex
 
 /-- If variable assignments `v` and `w` agree on all variables that occur
 in term `t`, the value of `t` under `v` and `w` are identical. -/
-theorem val_constant (v w : Nat → Nat) : ∀ t : preterm, (∀, ∀ x < t.fresh_index, ∀, v x = w x) → t.val v = t.val w
+theorem val_constant (v w : Nat → Nat) : ∀ t : Preterm, (∀, ∀ x < t.freshIndex, ∀, v x = w x) → t.val v = t.val w
   | &n, h1 => rfl
   | m ** n, h1 => by
     simp only [val_var]
@@ -94,21 +94,21 @@ theorem val_constant (v w : Nat → Nat) : ∀ t : preterm, (∀, ∀ x < t.fres
     have hs := val_constant s fun x hx => h1 _ (lt_of_lt_of_leₓ hx (le_max_rightₓ _ _))
     rw [ht, hs]
 
-def reprₓ : preterm → Stringₓ
+def reprₓ : Preterm → Stringₓ
   | &i => i.repr
   | i ** n => i.repr ++ "*x" ++ n.repr
   | t1 +* t2 => "(" ++ t1.repr ++ " + " ++ t2.repr ++ ")"
   | t1 -* t2 => "(" ++ t1.repr ++ " - " ++ t2.repr ++ ")"
 
 @[simp]
-def add_one (t : preterm) : preterm :=
+def add_one (t : Preterm) : Preterm :=
   t +* &1
 
 /-- Preterm is free of subtractions -/
-def sub_free : preterm → Prop
+def sub_free : Preterm → Prop
   | &m => True
   | m ** n => True
-  | t +* s => t.sub_free ∧ s.sub_free
+  | t +* s => t.SubFree ∧ s.SubFree
   | _ -* _ => False
 
 end Preterm
@@ -118,14 +118,14 @@ open_locale List.Func
 /-- Return a term (which is in canonical form by definition)
     that is equivalent to the input preterm -/
 @[simp]
-def canonize : preterm → term
+def canonize : Preterm → Term
   | &m => ⟨↑m, []⟩
   | m ** n => ⟨0, [] {n ↦ ↑m}⟩
-  | t +* s => term.add (canonize t) (canonize s)
+  | t +* s => Term.add (canonize t) (canonize s)
   | _ -* _ => ⟨0, []⟩
 
 @[simp]
-theorem val_canonize {v : Nat → Nat} : ∀ {t : preterm}, t.sub_free → ((canonize t).val fun x => ↑(v x)) = t.val v
+theorem val_canonize {v : Nat → Nat} : ∀ {t : Preterm}, t.SubFree → ((canonize t).val fun x => ↑(v x)) = t.val v
   | &i, h1 => by
     simp only [canonize, preterm.val_const, term.val, coeffs.val_nil, add_zeroₓ]
   | i ** n, h1 => by

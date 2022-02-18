@@ -38,8 +38,8 @@ namespace Matrix
 
 theorem det_to_block (M : Matrix m m R) (p : m → Prop) [DecidablePred p] :
     M.det =
-      (Matrix.fromBlocks (to_block M p p) (to_block M p fun j => ¬p j) (to_block M (fun j => ¬p j) p)
-          (to_block M (fun j => ¬p j) fun j => ¬p j)).det :=
+      (Matrix.fromBlocks (toBlock M p p) (toBlock M p fun j => ¬p j) (toBlock M (fun j => ¬p j) p)
+          (toBlock M (fun j => ¬p j) fun j => ¬p j)).det :=
   by
   rw [← Matrix.det_reindex_self (Equivₓ.sumCompl p).symm M]
   rw [det_apply', det_apply']
@@ -55,16 +55,16 @@ theorem det_to_block (M : Matrix m m R) (p : m → Prop) [DecidablePred p] :
         Matrix.minor_apply]
 
 theorem det_to_square_block (M : Matrix m m R) {n : Nat} (b : m → Finₓ n) (k : Finₓ n) :
-    (to_square_block M b k).det = (to_square_block_prop M fun i => b i = k).det := by
+    (toSquareBlock M b k).det = (toSquareBlockProp M fun i => b i = k).det := by
   simp
 
 theorem det_to_square_block' (M : Matrix m m R) (b : m → ℕ) (k : ℕ) :
-    (to_square_block' M b k).det = (to_square_block_prop M fun i => b i = k).det := by
+    (toSquareBlock' M b k).det = (toSquareBlockProp M fun i => b i = k).det := by
   simp
 
 theorem two_block_triangular_det (M : Matrix m m R) (p : m → Prop) [DecidablePred p]
     (h : ∀ i h1 : ¬p i j h2 : p j, M i j = 0) :
-    M.det = (to_square_block_prop M p).det * (to_square_block_prop M fun i => ¬p i).det := by
+    M.det = (toSquareBlockProp M p).det * (toSquareBlockProp M fun i => ¬p i).det := by
   rw [det_to_block M p]
   convert
     upper_two_block_triangular_det (to_block M p p) (to_block M p fun j => ¬p j)
@@ -73,11 +73,11 @@ theorem two_block_triangular_det (M : Matrix m m R) (p : m → Prop) [DecidableP
   exact h (↑i) i.2 (↑j) j.2
 
 theorem equiv_block_det (M : Matrix m m R) {p q : m → Prop} [DecidablePred p] [DecidablePred q] (e : ∀ x, q x ↔ p x) :
-    (to_square_block_prop M p).det = (to_square_block_prop M q).det := by
+    (toSquareBlockProp M p).det = (toSquareBlockProp M q).det := by
   convert Matrix.det_reindex_self (Equivₓ.subtypeEquivRight e) (to_square_block_prop M q)
 
 theorem to_square_block_det'' (M : Matrix m m R) {n : Nat} (b : m → Finₓ n) (k : Finₓ n) :
-    (to_square_block M b k).det = (to_square_block' M (fun i => ↑(b i)) ↑k).det := by
+    (toSquareBlock M b k).det = (toSquareBlock' M (fun i => ↑(b i)) ↑k).det := by
   rw [to_square_block_def', to_square_block_def]
   apply equiv_block_det
   intro x
@@ -91,7 +91,7 @@ def block_triangular_matrix' {o : Type _} (M : Matrix o o R) {n : ℕ} (b : o �
 -- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
 -- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
 theorem upper_two_block_triangular' {m n : Type _} (A : Matrix m m R) (B : Matrix m n R) (D : Matrix n n R) :
-    block_triangular_matrix' (from_blocks A B 0 D) (Sum.elim (fun i => (0 : Finₓ 2)) fun j => 1) := by
+    BlockTriangularMatrix' (fromBlocks A B 0 D) (Sum.elim (fun i => (0 : Finₓ 2)) fun j => 1) := by
   intro k1 k2 hk12
   have h0 : ∀ k : Sum m n, Sum.elim (fun i => (0 : Finₓ 2)) (fun j => 1) k = 0 → ∃ i, k = Sum.inl i := by
     simp
@@ -123,7 +123,7 @@ def block_triangular_matrix {o : Type _} (M : Matrix o o R) (b : o → ℕ) : Pr
   ∀ i j, b j < b i → M i j = 0
 
 theorem upper_two_block_triangular {m n : Type _} (A : Matrix m m R) (B : Matrix m n R) (D : Matrix n n R) :
-    block_triangular_matrix (from_blocks A B 0 D) (Sum.elim (fun i => 0) fun j => 1) := by
+    BlockTriangularMatrix (fromBlocks A B 0 D) (Sum.elim (fun i => 0) fun j => 1) := by
   intro k1 k2 hk12
   have h01 : ∀ k : Sum m n, Sum.elim (fun i => 0) (fun j => 1) k = 0 ∨ Sum.elim (fun i => 0) (fun j => 1) k = 1 := by
     simp
@@ -144,8 +144,8 @@ theorem upper_two_block_triangular {m n : Type _} (A : Matrix m m R) (B : Matrix
   · exact absurd hk12 (irrefl 1)
     
 
-theorem det_of_block_triangular_matrix (M : Matrix m m R) (b : m → ℕ) (h : block_triangular_matrix M b) :
-    ∀ n : ℕ hn : ∀ i, b i < n, M.det = ∏ k in Finset.range n, (to_square_block' M b k).det := by
+theorem det_of_block_triangular_matrix (M : Matrix m m R) (b : m → ℕ) (h : BlockTriangularMatrix M b) :
+    ∀ n : ℕ hn : ∀ i, b i < n, M.det = ∏ k in Finset.range n, (toSquareBlock' M b k).det := by
   intro n hn
   induction' n with n hi generalizing m M b
   · rw [Finset.prod_range_zero]
@@ -196,8 +196,8 @@ theorem det_of_block_triangular_matrix (M : Matrix m m R) (b : m → ℕ) (h : b
       
     
 
-theorem det_of_block_triangular_matrix'' (M : Matrix m m R) (b : m → ℕ) (h : block_triangular_matrix M b) :
-    M.det = ∏ k in Finset.image b Finset.univ, (to_square_block' M b k).det := by
+theorem det_of_block_triangular_matrix'' (M : Matrix m m R) (b : m → ℕ) (h : BlockTriangularMatrix M b) :
+    M.det = ∏ k in Finset.image b Finset.univ, (toSquareBlock' M b k).det := by
   let n : ℕ := (Sup (Finset.image b Finset.univ : Set ℕ)).succ
   have hn : ∀ i, b i < n := by
     have hbi : ∀ i, b i ∈ Finset.image b Finset.univ := by
@@ -226,8 +226,8 @@ theorem det_of_block_triangular_matrix'' (M : Matrix m m R) (b : m → ℕ) (h :
     exact ⟨Finset.mem_univ a, hba⟩
     
 
-theorem det_of_block_triangular_matrix' (M : Matrix m m R) {n : ℕ} (b : m → Finₓ n) (h : block_triangular_matrix' M b) :
-    M.det = ∏ k : Finₓ n, (to_square_block M b k).det := by
+theorem det_of_block_triangular_matrix' (M : Matrix m m R) {n : ℕ} (b : m → Finₓ n) (h : BlockTriangularMatrix' M b) :
+    M.det = ∏ k : Finₓ n, (toSquareBlock M b k).det := by
   let b2 : m → ℕ := fun i => ↑(b i)
   simp_rw [to_square_block_det'']
   rw [Finₓ.prod_univ_eq_prod_range (fun k : ℕ => (M.to_square_block' b2 k).det) n]

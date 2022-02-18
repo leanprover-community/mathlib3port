@@ -48,7 +48,7 @@ The second value returned by `choose1` is the result of nondep elimination:
 unsafe def choose1 (nondep : Bool) (h : expr) (data : Name) (spec : Name) : tactic (expr × Option (Option expr)) := do
   let t ← infer_type h
   let (ctxt, t) ← whnf t >>= open_pis
-  let t ← whnf t transparency.all
+  let t ← whnf t Transparency.all
   match t with
     | quote.1 (@Exists (%%ₓα) (%%ₓp)) => do
       let α_t ← infer_type α
@@ -62,29 +62,29 @@ unsafe def choose1 (nondep : Bool) (h : expr) (data : Name) (spec : Name) : tact
                     retrieve' do
                       let m ← mk_meta_var Ne
                       set_goals [m]
-                      ctxt.mmap' fun e => do
+                      ctxt fun e => do
                           let b ← is_proof e
                           Monadₓ.unlessb b <| (mk_app `` Nonempty.intro [e] >>= note_anon none) $> ()
-                      unfreeze_local_instances >> apply_instance
+                      reset_instance_cache
+                      apply_instance
                       instantiate_mvars m)
-            pure (some (Option.guard (fun _ => nonemp.is_none) Ne), nonemp)
+            pure (some (Option.guard (fun _ => nonemp) Ne), nonemp)
           else pure (none, none)
-      let ctxt' ← if nonemp.is_some then ctxt.mfilter fun e => bnot <$> is_proof e else pure ctxt
-      let value ← mk_local_def data (α.pis ctxt')
-      let t' ← head_beta (p.app (value.mk_app ctxt'))
-      let spec ← mk_local_def spec (t'.pis ctxt)
+      let ctxt' ← if nonemp then ctxt fun e => bnot <$> is_proof e else pure ctxt
+      let value ← mk_local_def data (α ctxt')
+      let t' ← head_beta (p (value ctxt'))
+      let spec ← mk_local_def spec (t' ctxt)
       let (value_proof, spec_proof) ←
-        nonemp.elim pure (fun nonemp => mk_sometimes u α nonemp p ctxt)
-            (expr.const `` Classical.some [u] α p (h.mk_app ctxt),
-              expr.const `` Classical.some_spec [u] α p (h.mk_app ctxt))
-      dependent_pose_core [(value, value_proof.lambdas ctxt'), (spec, spec_proof.lambdas ctxt)]
+        nonemp pure (fun nonemp => mk_sometimes u α nonemp p ctxt)
+            (expr.const `` Classical.some [u] α p (h ctxt), expr.const `` Classical.some_spec [u] α p (h ctxt))
+      dependent_pose_core [(value, value_proof ctxt'), (spec, spec_proof ctxt)]
       try (tactic.clear h)
       intro1
       let e ← intro1
       pure (e, ne_fail)
     | quote.1 ((%%ₓp) ∧ %%ₓq) => do
-      mk_app `` And.elim_left [h.mk_app ctxt] >>= lambdas ctxt >>= note data none
-      let hq ← mk_app `` And.elim_right [h.mk_app ctxt] >>= lambdas ctxt >>= note spec none
+      mk_app `` And.elim_left [h ctxt] >>= lambdas ctxt >>= note data none
+      let hq ← mk_app `` And.elim_right [h ctxt] >>= lambdas ctxt >>= note spec none
       try (tactic.clear h)
       pure (hq, none)
     | _ => fail "expected a term of the shape `∀xs, ∃a, p xs a` or `∀xs, p xs ∧ q xs`"
@@ -122,9 +122,9 @@ namespace Interactive
 
 setup_tactic_parser
 
--- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr ?»
--- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr *»
--- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr ?»
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr ?»
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr *»
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr ?»
 /-- `choose a b h h' using hyp` takes an hypothesis `hyp` of the form
 `∀ (x : X) (y : Y), ∃ (a : A) (b : B), P x y a b ∧ Q x y a b`
 for some `P Q : X → Y → A → B → Prop` and outputs
@@ -169,7 +169,7 @@ unsafe def choose (nondep : parse («expr ?» (tk "!"))) (first : parse ident) (
     match tgt with
       | none => get_local `this
       | some e => tactic.i_to_expr_strict e
-  tactic.choose nondep.is_some tgt (first :: names)
+  tactic.choose nondep tgt (first :: names)
   try (interactive.simp none none tt [simp_arg_type.expr (pquote.1 exists_prop)] [] (loc.ns <| some <$> names))
   try (tactic.clear tgt)
 

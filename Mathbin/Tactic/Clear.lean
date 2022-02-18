@@ -32,15 +32,15 @@ but depend on one of the `hyps`, what we do depends on `clear_dependent`. If it
 is true, `H` is implicitly also cleared. If it is false, `clear'` fails. -/
 unsafe def tactic.clear' (clear_dependent : Bool) (hyps : List expr) : tactic Unit := do
   let tgt ← target
-  hyps.mmap' fun h => do
+  hyps fun h => do
       let dep ← kdepends_on tgt h
       when dep <| fail <| f! "Cannot clear hypothesis {h} since the target depends on it."
   let n ← revert_lst hyps
-  when (!clear_dependent && n ≠ hyps.length) <|
+  when (!clear_dependent && n ≠ hyps) <|
       fail <|
         format.join
           ["Some of the following hypotheses cannot be cleared because other ",
-            "hypotheses depend on (some of) them:\n", format.intercalate ", " (hyps.map to_fmt)]
+            "hypotheses depend on (some of) them:\n", format.intercalate ", " (hyps to_fmt)]
   let v ← mk_meta_var tgt
   intron n
   exact v

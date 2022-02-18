@@ -69,9 +69,8 @@ root of `f`, `ε` is small, `M` is a bound on the Lipschitz constant of `f` near
 the degree of the polynomial `f`.
 -/
 theorem exists_one_le_pow_mul_dist {Z N R : Type _} [MetricSpace R] {d : N → ℝ} {j : Z → N → R} {f : R → R} {α : R}
-    {ε M : ℝ} (d0 : ∀ a : N, 1 ≤ d a) (e0 : 0 < ε)
-    (B : ∀ ⦃y : R⦄, y ∈ closed_ball α ε → dist (f α) (f y) ≤ dist α y * M)
-    (L : ∀ ⦃z : Z⦄, ∀ ⦃a : N⦄, j z a ∈ closed_ball α ε → 1 ≤ d a * dist (f α) (f (j z a))) :
+    {ε M : ℝ} (d0 : ∀ a : N, 1 ≤ d a) (e0 : 0 < ε) (B : ∀ ⦃y : R⦄, y ∈ ClosedBall α ε → dist (f α) (f y) ≤ dist α y * M)
+    (L : ∀ ⦃z : Z⦄, ∀ ⦃a : N⦄, j z a ∈ ClosedBall α ε → 1 ≤ d a * dist (f α) (f (j z a))) :
     ∃ A : ℝ, 0 < A ∧ ∀ z : Z, ∀ a : N, 1 ≤ d a * (dist α (j z a) * A) := by
   have me0 : 0 < max (1 / ε) M := lt_max_iff.mpr (Or.inl (one_div_pos.mpr e0))
   refine' ⟨max (1 / ε) M, me0, fun z a => _⟩
@@ -88,7 +87,7 @@ theorem exists_one_le_pow_mul_dist {Z N R : Type _} [MetricSpace R] {d : N → �
 
 theorem exists_pos_real_of_irrational_root {α : ℝ} (ha : Irrational α) {f : Polynomial ℤ} (f0 : f ≠ 0)
     (fa : eval α (map (algebraMap ℤ ℝ) f) = 0) :
-    ∃ A : ℝ, 0 < A ∧ ∀ a : ℤ, ∀ b : ℕ, (1 : ℝ) ≤ (b + 1) ^ f.nat_degree * (abs (α - a / (b + 1)) * A) := by
+    ∃ A : ℝ, 0 < A ∧ ∀ a : ℤ, ∀ b : ℕ, (1 : ℝ) ≤ (b + 1) ^ f.natDegree * (abs (α - a / (b + 1)) * A) := by
   set fR : Polynomial ℝ := map (algebraMap ℤ ℝ) f
   obtain fR0 : fR ≠ 0 := fun fR0 =>
     (map_injective (algebraMap ℤ ℝ) fun _ _ A => int.cast_inj.mp A).Ne f0 (fR0.trans (Polynomial.map_zero _).symm)

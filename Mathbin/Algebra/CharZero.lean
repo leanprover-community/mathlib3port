@@ -39,7 +39,7 @@ theorem char_zero_of_inj_zero {R : Type _} [AddLeftCancelMonoid R] [One R] (H : 
     intro h
     wlog hle : m ≤ n
     rcases Nat.Le.dest hle with ⟨k, rfl⟩
-    rw [Nat.cast_add, eq_comm, add_right_eq_selfₓ] at h
+    rw [Nat.cast_addₓ, eq_comm, add_right_eq_selfₓ] at h
     rw [H k h, add_zeroₓ]⟩
 
 /-- Note this is not an instance as `char_zero` implies `nontrivial`,

@@ -70,7 +70,7 @@ theorem Pilex.le_of_forall_le [LinearOrderₓ ι] (wf : WellFounded (· < · : �
 instance [LinearOrderₓ ι] [∀ a, OrderedCommGroup (β a)] : OrderedCommGroup (Pilex ι β) :=
   { Pilex.partialOrder, Pi.commGroup with
     mul_le_mul_left := fun x y hxy z =>
-      hxy.elim (fun hxyz => hxyz ▸ le_reflₓ _) fun ⟨i, hi⟩ =>
+      hxy.elim (fun hxyz => hxyz ▸ le_rfl) fun ⟨i, hi⟩ =>
         Or.inr
           ⟨i, fun j hji =>
             show z j * x j = z j * y j by

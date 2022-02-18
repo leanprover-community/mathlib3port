@@ -37,3 +37,6 @@ theorem cast_ne_zero [AddGroupₓ α] [One α] [CharZero α] {n : ℤ} : (n : α
 
 end Int
 
+theorem RingHom.injective_int {α : Type _} [Ringₓ α] (f : ℤ →+* α) [CharZero α] : Function.Injective f :=
+  Subsingleton.elimₓ (Int.castRingHom _) f ▸ Int.cast_injective
+

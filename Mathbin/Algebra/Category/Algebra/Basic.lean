@@ -34,19 +34,19 @@ namespace AlgebraCat
 instance : CoeSort (AlgebraCat R) (Type v) :=
   ⟨AlgebraCat.Carrier⟩
 
-instance : category (AlgebraCat.{v} R) where
+instance : Category (AlgebraCat.{v} R) where
   hom := fun A B => A →ₐ[R] B
   id := fun A => AlgHom.id R A
   comp := fun A B C f g => g.comp f
 
-instance : concrete_category.{v} (AlgebraCat.{v} R) where
+instance : ConcreteCategory.{v} (AlgebraCat.{v} R) where
   forget := { obj := fun R => R, map := fun R S f => (f : R → S) }
   forget_faithful := {  }
 
-instance has_forget_to_Ring : has_forget₂ (AlgebraCat.{v} R) Ringₓₓ.{v} where
+instance has_forget_to_Ring : HasForget₂ (AlgebraCat.{v} R) Ringₓₓ.{v} where
   forget₂ := { obj := fun A => Ringₓₓ.of A, map := fun A₁ A₂ f => AlgHom.toRingHom f }
 
-instance has_forget_to_Module : has_forget₂ (AlgebraCat.{v} R) (ModuleCat.{v} R) where
+instance has_forget_to_Module : HasForget₂ (AlgebraCat.{v} R) (ModuleCat.{v} R) where
   forget₂ := { obj := fun M => ModuleCat.of R M, map := fun M₁ M₂ f => AlgHom.toLinearMap f }
 
 /-- The object in the category of R-algebras associated to a type equipped with the appropriate
@@ -106,7 +106,7 @@ def free : Type u ⥤ AlgebraCat.{u} R where
 
 /-- The free/forget adjunction for `R`-algebras. -/
 def adj : free.{u} R ⊣ forget (AlgebraCat.{u} R) :=
-  adjunction.mk_of_hom_equiv
+  Adjunction.mkOfHomEquiv
     { homEquiv := fun X A => (FreeAlgebra.lift _).symm,
       hom_equiv_naturality_left_symm' := by
         intros
@@ -119,7 +119,7 @@ def adj : free.{u} R ⊣ forget (AlgebraCat.{u} R) :=
         simp only [forget_map_eq_coe, CategoryTheory.coe_comp, Function.comp_app, FreeAlgebra.lift_symm_apply,
           types_comp_apply] }
 
-instance : is_right_adjoint (forget (AlgebraCat.{u} R)) :=
+instance : IsRightAdjoint (forget (AlgebraCat.{u} R)) :=
   ⟨_, adj R⟩
 
 end AlgebraCat
@@ -166,13 +166,13 @@ end CategoryTheory.Iso
 @[simps]
 def algEquivIsoAlgebraIso {X Y : Type u} [Ringₓ X] [Ringₓ Y] [Algebra R X] [Algebra R Y] :
     (X ≃ₐ[R] Y) ≅ AlgebraCat.of R X ≅ AlgebraCat.of R Y where
-  hom := fun e => e.to_Algebra_iso
-  inv := fun i => i.to_alg_equiv
+  hom := fun e => e.toAlgebraIso
+  inv := fun i => i.toAlgEquiv
 
 instance (X : Type u) [Ringₓ X] [Algebra R X] : Coe (Subalgebra R X) (AlgebraCat R) :=
   ⟨fun N => AlgebraCat.of R N⟩
 
-instance AlgebraCat.forget_reflects_isos : reflects_isomorphisms (forget (AlgebraCat.{u} R)) where
+instance AlgebraCat.forget_reflects_isos : ReflectsIsomorphisms (forget (AlgebraCat.{u} R)) where
   reflects := fun X Y f _ => by
     skip
     let i := as_iso ((forget (AlgebraCat.{u} R)).map f)

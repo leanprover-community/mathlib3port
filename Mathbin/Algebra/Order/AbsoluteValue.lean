@@ -33,10 +33,10 @@ section OrderedSemiring
 variable {R S : Type _} [Semiringₓ R] [OrderedSemiring S] (abv : AbsoluteValue R S)
 
 instance : CoeFun (AbsoluteValue R S) fun f => R → S :=
-  ⟨fun f => f.to_fun⟩
+  ⟨fun f => f.toFun⟩
 
 @[simp]
-theorem coe_to_mul_hom : ⇑abv.to_mul_hom = abv :=
+theorem coe_to_mul_hom : ⇑abv.toMulHom = abv :=
   rfl
 
 protected theorem nonneg (x : R) : 0 ≤ abv x :=
@@ -54,14 +54,14 @@ protected theorem map_mul (x y : R) : abv (x * y) = abv x * abv y :=
   abv.map_mul' x y
 
 protected theorem Pos {x : R} (hx : x ≠ 0) : 0 < abv x :=
-  lt_of_le_of_neₓ (abv.nonneg x) (Ne.symm <| mt abv.eq_zero.mp hx)
+  lt_of_le_of_neₓ (abv.Nonneg x) (Ne.symm <| mt abv.eq_zero.mp hx)
 
 @[simp]
 protected theorem pos_iff {x : R} : 0 < abv x ↔ x ≠ 0 :=
-  ⟨fun h₁ => mt abv.eq_zero.mpr h₁.ne', abv.pos⟩
+  ⟨fun h₁ => mt abv.eq_zero.mpr h₁.ne', abv.Pos⟩
 
 protected theorem ne_zero {x : R} (hx : x ≠ 0) : abv x ≠ 0 :=
-  (abv.pos hx).ne'
+  (abv.Pos hx).ne'
 
 @[simp]
 protected theorem map_zero : abv 0 = 0 :=
@@ -114,7 +114,7 @@ def to_monoid_with_zero_hom : R →*₀ S :=
   { abv with toFun := abv, map_zero' := abv.map_zero, map_one' := abv.map_one }
 
 @[simp]
-theorem coe_to_monoid_with_zero_hom : ⇑abv.to_monoid_with_zero_hom = abv :=
+theorem coe_to_monoid_with_zero_hom : ⇑abv.toMonoidWithZeroHom = abv :=
   rfl
 
 /-- Absolute values from a nontrivial `R` to a linear ordered ring preserve `*` and `1`. -/
@@ -122,12 +122,12 @@ def to_monoid_hom : MonoidHom R S :=
   { abv with toFun := abv, map_one' := abv.map_one }
 
 @[simp]
-theorem coe_to_monoid_hom : ⇑abv.to_monoid_hom = abv :=
+theorem coe_to_monoid_hom : ⇑abv.toMonoidHom = abv :=
   rfl
 
 @[simp]
 protected theorem map_pow (a : R) (n : ℕ) : abv (a ^ n) = abv a ^ n :=
-  abv.to_monoid_hom.map_pow a n
+  abv.toMonoidHom.map_pow a n
 
 end LinearOrderedRing
 
@@ -169,11 +169,11 @@ variable {R S : Type _} [DivisionRing R] [LinearOrderedField S] (abv : AbsoluteV
 
 @[simp]
 protected theorem map_inv (a : R) : abv a⁻¹ = (abv a)⁻¹ :=
-  abv.to_monoid_with_zero_hom.map_inv a
+  abv.toMonoidWithZeroHom.map_inv a
 
 @[simp]
 protected theorem map_div (a b : R) : abv (a / b) = abv a / abv b :=
-  abv.to_monoid_with_zero_hom.map_div a b
+  abv.toMonoidWithZeroHom.map_div a b
 
 end Field
 
@@ -204,7 +204,7 @@ variable {R : Type _} [Semiringₓ R] (abv : R → S) [IsAbsoluteValue abv]
 
 /-- A bundled absolute value is an absolute value. -/
 instance absolute_value.is_absolute_value (abv : AbsoluteValue R S) : IsAbsoluteValue abv where
-  abv_nonneg := abv.nonneg
+  abv_nonneg := abv.Nonneg
   abv_eq_zero := fun _ => abv.eq_zero
   abv_add := abv.add_le
   abv_mul := abv.map_mul
@@ -257,7 +257,7 @@ def abv_hom [Nontrivial R] : R →*₀ S :=
   ⟨abv, abv_zero abv, abv_one abv, abv_mul abv⟩
 
 theorem abv_pow [Nontrivial R] (abv : R → S) [IsAbsoluteValue abv] (a : R) (n : ℕ) : abv (a ^ n) = abv a ^ n :=
-  (abv_hom abv).toMonoidHom.map_pow a n
+  (abvHom abv).toMonoidHom.map_pow a n
 
 end Semiringₓ
 
@@ -296,10 +296,10 @@ section Field
 variable {R : Type _} [DivisionRing R] (abv : R → S) [IsAbsoluteValue abv]
 
 theorem abv_inv (a : R) : abv a⁻¹ = (abv a)⁻¹ :=
-  (abv_hom abv).map_inv a
+  (abvHom abv).map_inv a
 
 theorem abv_div (a b : R) : abv (a / b) = abv a / abv b :=
-  (abv_hom abv).map_div a b
+  (abvHom abv).map_div a b
 
 end Field
 

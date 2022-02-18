@@ -73,21 +73,51 @@ class OrderTop (α : Type u) [LE α] extends HasTop α where
 
 section OrderTop
 
-variable [PartialOrderₓ α] [OrderTop α] {a b : α}
+section LE
+
+variable [LE α] [OrderTop α] {a : α}
 
 @[simp]
-theorem le_top {α : Type u} [LE α] [OrderTop α] {a : α} : a ≤ ⊤ :=
+theorem le_top : a ≤ ⊤ :=
   OrderTop.le_top a
 
 @[simp]
-theorem not_top_lt {α : Type u} [Preorderₓ α] [OrderTop α] {a : α} : ¬⊤ < a :=
-  le_top.not_lt
+theorem is_top_top : IsTop (⊤ : α) := fun _ => le_top
 
-theorem is_top_top {α : Type u} [LE α] [OrderTop α] : IsTop (⊤ : α) := fun _ => le_top
+end LE
+
+section Preorderₓ
+
+variable [Preorderₓ α] [OrderTop α] {a b : α}
+
+@[simp]
+theorem is_max_top : IsMax (⊤ : α) :=
+  is_top_top.IsMax
+
+@[simp]
+theorem not_top_lt : ¬⊤ < a :=
+  is_max_top.not_lt
+
+theorem ne_top_of_lt (h : a < b) : a ≠ ⊤ :=
+  (h.trans_le le_top).Ne
+
+alias ne_top_of_lt ← LT.lt.ne_top
+
+end Preorderₓ
+
+variable [PartialOrderₓ α] [OrderTop α] {a b : α}
+
+@[simp]
+theorem is_max_iff_eq_top : IsMax a ↔ a = ⊤ :=
+  ⟨fun h => h.eq_of_le le_top, fun h b _ => h.symm ▸ le_top⟩
 
 @[simp]
 theorem is_top_iff_eq_top : IsTop a ↔ a = ⊤ :=
-  ⟨fun h => h.unique le_top, fun h b => h.symm ▸ le_top⟩
+  ⟨fun h => h.IsMax.eq_of_le le_top, fun h b => h.symm ▸ le_top⟩
+
+alias is_max_iff_eq_top ↔ _ IsMax.eq_top
+
+alias is_top_iff_eq_top ↔ _ IsTop.eq_top
 
 @[simp]
 theorem top_le_iff : ⊤ ≤ a ↔ a = ⊤ :=
@@ -108,9 +138,6 @@ theorem lt_top_iff_ne_top : a < ⊤ ↔ a ≠ ⊤ :=
 theorem eq_top_or_lt_top (a : α) : a = ⊤ ∨ a < ⊤ :=
   le_top.eq_or_lt
 
-theorem ne_top_of_lt (h : a < b) : a ≠ ⊤ :=
-  (h.trans_le le_top).Ne
-
 theorem Ne.lt_top (h : a ≠ ⊤) : a < ⊤ :=
   lt_top_iff_ne_top.mpr h
 
@@ -119,8 +146,6 @@ theorem Ne.lt_top' (h : ⊤ ≠ a) : a < ⊤ :=
 
 theorem ne_top_of_le_ne_top (hb : b ≠ ⊤) (hab : a ≤ b) : a ≠ ⊤ :=
   (hab.trans_lt hb.lt_top).Ne
-
-alias ne_top_of_lt ← LT.lt.ne_top
 
 theorem eq_top_of_maximal (h : ∀ b, ¬a < b) : a = ⊤ :=
   Or.elim (lt_or_eq_of_leₓ le_top) (fun hlt => absurd hlt (h ⊤)) fun he => he
@@ -163,21 +188,51 @@ class OrderBot (α : Type u) [LE α] extends HasBot α where
 
 section OrderBot
 
+section LE
+
+variable [LE α] [OrderBot α] {a : α}
+
+@[simp]
+theorem bot_le : ⊥ ≤ a :=
+  OrderBot.bot_le a
+
+@[simp]
+theorem is_bot_bot : IsBot (⊥ : α) := fun _ => bot_le
+
+end LE
+
+section Preorderₓ
+
+variable [Preorderₓ α] [OrderBot α] {a b : α}
+
+@[simp]
+theorem is_min_bot : IsMin (⊥ : α) :=
+  is_bot_bot.IsMin
+
+@[simp]
+theorem not_lt_bot : ¬a < ⊥ :=
+  is_min_bot.not_lt
+
+theorem ne_bot_of_gt (h : a < b) : b ≠ ⊥ :=
+  (bot_le.trans_lt h).ne'
+
+alias ne_bot_of_gt ← LT.lt.ne_bot
+
+end Preorderₓ
+
 variable [PartialOrderₓ α] [OrderBot α] {a b : α}
 
 @[simp]
-theorem bot_le {α : Type u} [LE α] [OrderBot α] {a : α} : ⊥ ≤ a :=
-  OrderBot.bot_le a
-
-theorem is_bot_bot {α : Type u} [LE α] [OrderBot α] : IsBot (⊥ : α) := fun _ => bot_le
-
-@[simp]
-theorem not_lt_bot {α : Type u} [Preorderₓ α] [OrderBot α] {a : α} : ¬a < ⊥ :=
-  bot_le.not_lt
+theorem is_min_iff_eq_bot : IsMin a ↔ a = ⊥ :=
+  ⟨fun h => h.eq_of_ge bot_le, fun h b _ => h.symm ▸ bot_le⟩
 
 @[simp]
 theorem is_bot_iff_eq_bot : IsBot a ↔ a = ⊥ :=
-  ⟨fun h => h.unique bot_le, fun h b => h.symm ▸ bot_le⟩
+  ⟨fun h => h.IsMin.eq_of_ge bot_le, fun h b => h.symm ▸ bot_le⟩
+
+alias is_min_iff_eq_bot ↔ _ IsMin.eq_bot
+
+alias is_bot_iff_eq_bot ↔ _ IsBot.eq_bot
 
 @[simp]
 theorem le_bot_iff : a ≤ ⊥ ↔ a = ⊥ :=
@@ -196,10 +251,7 @@ theorem bot_lt_iff_ne_bot : ⊥ < a ↔ a ≠ ⊥ :=
   bot_le.lt_iff_ne.trans ne_comm
 
 theorem eq_bot_or_bot_lt (a : α) : a = ⊥ ∨ ⊥ < a :=
-  bot_le.eq_or_lt.imp_left Eq.symm
-
-theorem ne_bot_of_gt (h : a < b) : b ≠ ⊥ :=
-  (bot_le.trans_lt h).ne'
+  bot_le.eq_or_gt
 
 theorem eq_bot_of_minimal (h : ∀ b, ¬b < a) : a = ⊥ :=
   (eq_bot_or_bot_lt a).resolve_right (h ⊥)
@@ -212,8 +264,6 @@ theorem Ne.bot_lt' (h : ⊥ ≠ a) : ⊥ < a :=
 
 theorem ne_bot_of_le_ne_bot (hb : b ≠ ⊥) (hab : b ≤ a) : a ≠ ⊥ :=
   (hb.bot_lt.trans_le hab).ne'
-
-alias ne_bot_of_gt ← LT.lt.ne_bot
 
 end OrderBot
 
@@ -376,6 +426,13 @@ theorem inf_Prop_eq : ·⊓· = (· ∧ ·) :=
 
 section Logic
 
+/-!
+#### In this section we prove some properties about monotone and antitone operations on `Prop`
+-/
+
+
+section Preorderₓ
+
 variable [Preorderₓ α]
 
 theorem monotone_and {p q : α → Prop} (m_p : Monotone p) (m_q : Monotone q) : Monotone fun x => p x ∧ q x :=
@@ -383,6 +440,46 @@ theorem monotone_and {p q : α → Prop} (m_p : Monotone p) (m_q : Monotone q) :
 
 theorem monotone_or {p q : α → Prop} (m_p : Monotone p) (m_q : Monotone q) : Monotone fun x => p x ∨ q x := fun a b h =>
   Or.imp (m_p h) (m_q h)
+
+theorem monotone_le {x : α} : Monotone ((· ≤ ·) x) := fun y z h' h => h.trans h'
+
+theorem monotone_lt {x : α} : Monotone ((· < ·) x) := fun y z h' h => h.trans_le h'
+
+theorem antitone_le {x : α} : Antitone (· ≤ x) := fun y z h' h => h'.trans h
+
+theorem antitone_lt {x : α} : Antitone (· < x) := fun y z h' h => h'.trans_lt h
+
+theorem Monotone.forall {P : β → α → Prop} (hP : ∀ x, Monotone (P x)) : Monotone fun y => ∀ x, P x y :=
+  fun y y' hy h x => hP x hy <| h x
+
+theorem Antitone.forall {P : β → α → Prop} (hP : ∀ x, Antitone (P x)) : Antitone fun y => ∀ x, P x y :=
+  fun y y' hy h x => hP x hy (h x)
+
+theorem Monotone.ball {P : β → α → Prop} {s : Set β} (hP : ∀, ∀ x ∈ s, ∀, Monotone (P x)) :
+    Monotone fun y => ∀, ∀ x ∈ s, ∀, P x y := fun y y' hy h x hx => hP x hx hy (h x hx)
+
+theorem Antitone.ball {P : β → α → Prop} {s : Set β} (hP : ∀, ∀ x ∈ s, ∀, Antitone (P x)) :
+    Antitone fun y => ∀, ∀ x ∈ s, ∀, P x y := fun y y' hy h x hx => hP x hx hy (h x hx)
+
+end Preorderₓ
+
+section SemilatticeSup
+
+variable [SemilatticeSup α]
+
+theorem exists_ge_and_iff_exists {P : α → Prop} {x₀ : α} (hP : Monotone P) : (∃ x, x₀ ≤ x ∧ P x) ↔ ∃ x, P x :=
+  ⟨fun h => h.imp fun x h => h.2, fun ⟨x, hx⟩ => ⟨x⊔x₀, le_sup_right, hP le_sup_left hx⟩⟩
+
+end SemilatticeSup
+
+section SemilatticeInf
+
+variable [SemilatticeInf α]
+
+theorem exists_le_and_iff_exists {P : α → Prop} {x₀ : α} (hP : Antitone P) : (∃ x, x ≤ x₀ ∧ P x) ↔ ∃ x, P x :=
+  exists_ge_and_iff_exists hP.dual_left
+
+end SemilatticeInf
 
 end Logic
 
@@ -538,7 +635,7 @@ instance [Preorderₓ α] : Preorderₓ (WithBot α) where
   lt := · < ·
   lt_iff_le_not_le := by
     intros <;> cases a <;> cases b <;> simp [lt_iff_le_not_leₓ] <;> simp [· ≤ ·, · < ·] <;> constructor <;> rfl
-  le_refl := fun o a ha => ⟨a, ha, le_reflₓ _⟩
+  le_refl := fun o a ha => ⟨a, ha, le_rfl⟩
   le_trans := fun o₁ o₂ o₃ h₁ h₂ a ha =>
     let ⟨b, hb, ab⟩ := h₁ a ha
     let ⟨c, hc, bc⟩ := h₂ b hb
@@ -577,7 +674,7 @@ theorem coe_le [LE α] {a b : α} : ∀ {o : Option α}, b ∈ o → ((a : WithB
 theorem coe_lt_coe [LT α] {a b : α} : (a : WithBot α) < b ↔ a < b :=
   some_lt_some
 
-theorem le_coe_get_or_else [Preorderₓ α] : ∀ a : WithBot α b : α, a ≤ a.get_or_else b
+theorem le_coe_get_or_else [Preorderₓ α] : ∀ a : WithBot α b : α, a ≤ a.getOrElse b
   | some a, b => le_reflₓ a
   | none, b => fun _ h => Option.noConfusion h
 
@@ -585,13 +682,13 @@ theorem le_coe_get_or_else [Preorderₓ α] : ∀ a : WithBot α b : α, a ≤ a
 theorem get_or_else_bot (a : α) : Option.getOrElse (⊥ : WithBot α) a = a :=
   rfl
 
-theorem get_or_else_bot_le_iff [LE α] [OrderBot α] {a : WithBot α} {b : α} : a.get_or_else ⊥ ≤ b ↔ a ≤ b := by
+theorem get_or_else_bot_le_iff [LE α] [OrderBot α] {a : WithBot α} {b : α} : a.getOrElse ⊥ ≤ b ↔ a ≤ b := by
   cases a <;> simp [none_eq_bot, some_eq_coe]
 
 instance decidable_le [LE α] [@DecidableRel α (· ≤ ·)] : @DecidableRel (WithBot α) (· ≤ ·)
   | none, x => is_true fun a h => Option.noConfusion h
   | some x, some y =>
-    if h : x ≤ y then is_true (some_le_some.2 h)
+    if h : x ≤ y then isTrue (some_le_some.2 h)
     else
       is_false <| by
         simp [*]
@@ -829,7 +926,7 @@ instance [Preorderₓ α] : Preorderₓ (WithTop α) where
   lt := · < ·
   lt_iff_le_not_le := by
     intros <;> cases a <;> cases b <;> simp [lt_iff_le_not_leₓ] <;> simp [· < ·, · ≤ ·]
-  le_refl := fun o a ha => ⟨a, ha, le_reflₓ _⟩
+  le_refl := fun o a ha => ⟨a, ha, le_rfl⟩
   le_trans := fun o₁ o₂ o₃ h₁ h₂ c hc =>
     let ⟨b, hb, bc⟩ := h₂ c hc
     let ⟨a, ha, ab⟩ := h₁ b hb
@@ -1129,10 +1226,10 @@ theorem Disjoint.mono {a b c d : α} (h₁ : a ≤ b) (h₂ : c ≤ d) : Disjoin
   le_transₓ (inf_le_inf h₁ h₂)
 
 theorem Disjoint.mono_left {a b c : α} (h : a ≤ b) : Disjoint b c → Disjoint a c :=
-  Disjoint.mono h (le_reflₓ _)
+  Disjoint.mono h le_rfl
 
 theorem Disjoint.mono_right {a b c : α} (h : b ≤ c) : Disjoint a c → Disjoint a b :=
-  Disjoint.mono (le_reflₓ _) h
+  Disjoint.mono le_rfl h
 
 @[simp]
 theorem disjoint_self {a : α} : Disjoint a a ↔ a = ⊥ := by
@@ -1319,14 +1416,14 @@ theorem of_eq (h₁ : x⊓y = ⊥) (h₂ : x⊔y = ⊤) : IsCompl x y :=
   ⟨le_of_eqₓ h₁, le_of_eqₓ h₂.symm⟩
 
 theorem inf_eq_bot (h : IsCompl x y) : x⊓y = ⊥ :=
-  h.disjoint.eq_bot
+  h.Disjoint.eq_bot
 
 theorem sup_eq_top (h : IsCompl x y) : x⊔y = ⊤ :=
   top_unique h.top_le_sup
 
 open order_dual (toDual)
 
-theorem to_order_dual (h : IsCompl x y) : IsCompl (to_dual x) (to_dual y) :=
+theorem to_order_dual (h : IsCompl x y) : IsCompl (toDual x) (toDual y) :=
   ⟨h.2, h.1⟩
 
 end BoundedOrder
@@ -1374,10 +1471,10 @@ protected theorem Antitone {x' y'} (h : IsCompl x y) (h' : IsCompl x' y') (hx : 
   h'.right_le_iff.2 <| le_transₓ h.symm.top_le_sup (sup_le_sup_left hx _)
 
 theorem right_unique (hxy : IsCompl x y) (hxz : IsCompl x z) : y = z :=
-  le_antisymmₓ (hxz.antitone hxy <| le_reflₓ x) (hxy.antitone hxz <| le_reflₓ x)
+  le_antisymmₓ (hxz.Antitone hxy <| le_reflₓ x) (hxy.Antitone hxz <| le_reflₓ x)
 
 theorem left_unique (hxz : IsCompl x z) (hyz : IsCompl y z) : x = y :=
-  hxz.symm.right_unique hyz.symm
+  hxz.symm.RightUnique hyz.symm
 
 theorem sup_inf {x' y'} (h : IsCompl x y) (h' : IsCompl x' y') : IsCompl (x⊔x') (y⊓y') :=
   of_eq
@@ -1443,16 +1540,19 @@ variable [PartialOrderₓ α] [BoundedOrder α] [Nontrivial α]
 theorem bot_ne_top : (⊥ : α) ≠ ⊤ := fun H => not_nontrivial_iff_subsingleton.mpr (subsingleton_of_bot_eq_top H) ‹_›
 
 theorem top_ne_bot : (⊤ : α) ≠ ⊥ :=
-  Ne.symm bot_ne_top
+  bot_ne_top.symm
+
+theorem bot_lt_top : (⊥ : α) < ⊤ :=
+  lt_top_iff_ne_top.2 bot_ne_top
 
 end Nontrivial
 
 namespace Bool
 
 instance : BoundedOrder Bool where
-  top := tt
+  top := true
   le_top := fun x => le_tt
-  bot := ff
+  bot := false
   bot_le := fun x => ff_le
 
 end Bool

@@ -7,7 +7,7 @@ import Mathbin.GroupTheory.Subgroup.Basic
 
 This file defines semidirect products of groups, and the canonical maps in and out of the
 semidirect product. The semidirect product of `N` and `G` given a hom `φ` from
-`φ` from `G` to the automorphism group of `N` is the product of sets with the group
+`G` to the automorphism group of `N` is the product of sets with the group
 `⟨n₁, g₁⟩ * ⟨n₂, g₂⟩ = ⟨n₁ * φ g₁ n₂, g₁ * g₂⟩`
 
 ## Key definitions
@@ -55,22 +55,22 @@ private def inv_aux (a : N ⋊[φ] G) : N ⋊[φ] G :=
   let i := a.2⁻¹
   ⟨φ i a.1⁻¹, i⟩
 
-private theorem mul_assoc_aux (a b c : N ⋊[φ] G) : mul_aux (mul_aux a b) c = mul_aux a (mul_aux b c) := by
+private theorem mul_assoc_aux (a b c : N ⋊[φ] G) : mulAux (mulAux a b) c = mulAux a (mulAux b c) := by
   simp [mul_aux, mul_assoc, MulEquiv.map_mul]
 
-private theorem mul_one_aux (a : N ⋊[φ] G) : mul_aux a one_aux = a := by
+private theorem mul_one_aux (a : N ⋊[φ] G) : mulAux a oneAux = a := by
   cases a <;> simp [mul_aux, one_aux]
 
-private theorem one_mul_aux (a : N ⋊[φ] G) : mul_aux one_aux a = a := by
+private theorem one_mul_aux (a : N ⋊[φ] G) : mulAux oneAux a = a := by
   cases a <;> simp [mul_aux, one_aux]
 
-private theorem mul_left_inv_aux (a : N ⋊[φ] G) : mul_aux (inv_aux a) a = one_aux := by
+private theorem mul_left_inv_aux (a : N ⋊[φ] G) : mulAux (invAux a) a = one_aux := by
   simp only [mul_aux, inv_aux, one_aux, ← MulEquiv.map_mul, mul_left_invₓ] <;> simp
 
 instance : Groupₓ (N ⋊[φ] G) where
-  one := one_aux
-  inv := inv_aux
-  mul := mul_aux
+  one := oneAux
+  inv := invAux
+  mul := mulAux
   mul_assoc := mul_assoc_aux
   one_mul := one_mul_aux
   mul_one := mul_one_aux
@@ -168,29 +168,29 @@ def right_hom : N ⋊[φ] G →* G where
   map_mul' := fun _ _ => rfl
 
 @[simp]
-theorem right_hom_eq_right : (right_hom : N ⋊[φ] G → G) = right :=
+theorem right_hom_eq_right : (rightHom : N ⋊[φ] G → G) = right :=
   rfl
 
 @[simp]
-theorem right_hom_comp_inl : (right_hom : N ⋊[φ] G →* G).comp inl = 1 := by
+theorem right_hom_comp_inl : (rightHom : N ⋊[φ] G →* G).comp inl = 1 := by
   ext <;> simp [right_hom]
 
 @[simp]
-theorem right_hom_comp_inr : (right_hom : N ⋊[φ] G →* G).comp inr = MonoidHom.id _ := by
+theorem right_hom_comp_inr : (rightHom : N ⋊[φ] G →* G).comp inr = MonoidHom.id _ := by
   ext <;> simp [right_hom]
 
 @[simp]
-theorem right_hom_inl (n : N) : right_hom (inl n : N ⋊[φ] G) = 1 := by
+theorem right_hom_inl (n : N) : rightHom (inl n : N ⋊[φ] G) = 1 := by
   simp [right_hom]
 
 @[simp]
-theorem right_hom_inr (g : G) : right_hom (inr g : N ⋊[φ] G) = g := by
+theorem right_hom_inr (g : G) : rightHom (inr g : N ⋊[φ] G) = g := by
   simp [right_hom]
 
-theorem right_hom_surjective : Function.Surjective (right_hom : N ⋊[φ] G → G) :=
+theorem right_hom_surjective : Function.Surjective (rightHom : N ⋊[φ] G → G) :=
   Function.surjective_iff_has_right_inverse.2 ⟨inr, right_hom_inr⟩
 
-theorem range_inl_eq_ker_right_hom : (inl : N →* N ⋊[φ] G).range = right_hom.ker :=
+theorem range_inl_eq_ker_right_hom : (inl : N →* N ⋊[φ] G).range = rightHom.ker :=
   le_antisymmₓ
     (fun _ => by
       simp (config := { contextual := true })[MonoidHom.mem_ker, eq_comm])
@@ -272,7 +272,7 @@ theorem map_right (g : N ⋊[φ] G) : (map f₁ f₂ h g).right = f₂ g.right :
   rfl
 
 @[simp]
-theorem right_hom_comp_map : right_hom.comp (map f₁ f₂ h) = f₂.comp right_hom :=
+theorem right_hom_comp_map : rightHom.comp (map f₁ f₂ h) = f₂.comp rightHom :=
   rfl
 
 @[simp]

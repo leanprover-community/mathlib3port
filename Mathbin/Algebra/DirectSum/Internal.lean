@@ -1,4 +1,5 @@
 import Mathbin.Algebra.Algebra.Operations
+import Mathbin.Algebra.Algebra.Subalgebra
 import Mathbin.Algebra.DirectSum.Algebra
 
 /-!
@@ -168,6 +169,13 @@ end Submodule
 def DirectSum.submoduleCoeAlgHom [AddMonoidₓ ι] [CommSemiringₓ S] [Semiringₓ R] [Algebra S R] (A : ι → Submodule S R)
     [h : SetLike.GradedMonoid A] : (⨁ i, A i) →ₐ[S] R :=
   DirectSum.toAlgebra S _ (fun i => (A i).Subtype) rfl (fun _ _ _ _ => rfl) fun _ => rfl
+
+/-- The supremum of submodules that form a graded monoid is a subalgebra, and equal to the range of
+`direct_sum.submodule_coe_alg_hom`. -/
+theorem Submodule.supr_eq_to_submodule_range [AddMonoidₓ ι] [CommSemiringₓ S] [Semiringₓ R] [Algebra S R]
+    (A : ι → Submodule S R) [SetLike.GradedMonoid A] :
+    (⨆ i, A i) = (DirectSum.submoduleCoeAlgHom A).range.toSubmodule :=
+  (Submodule.supr_eq_range_dfinsupp_lsum A).trans <| SetLike.coe_injective rfl
 
 @[simp]
 theorem DirectSum.submodule_coe_alg_hom_of [AddMonoidₓ ι] [CommSemiringₓ S] [Semiringₓ R] [Algebra S R]

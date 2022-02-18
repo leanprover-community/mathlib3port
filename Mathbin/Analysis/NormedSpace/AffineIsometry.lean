@@ -12,7 +12,7 @@ We also prove basic lemmas and provide convenience constructors.  The choice of 
 constructors is closely modelled on those for the `linear_isometry` and `affine_map` theories.
 
 Since many elementary properties don't require `∥x∥ = 0 → x = 0` we initially set up the theory for
-`semi_normed_add_torsor` and specialize to `normed_add_torsor` only when needed.
+`semi_normed_group` and specialize to `normed_group` only when needed.
 
 ## Notation
 
@@ -28,10 +28,10 @@ algebra-homomorphisms.)
 open Function Set
 
 variable (𝕜 : Type _) {V V₁ V₂ V₃ V₄ : Type _} {P₁ : Type _} (P P₂ : Type _) {P₃ P₄ : Type _} [NormedField 𝕜]
-  [SemiNormedGroup V] [NormedGroup V₁] [SemiNormedGroup V₂] [SemiNormedGroup V₃] [SemiNormedGroup V₄] [NormedSpace 𝕜 V]
-  [NormedSpace 𝕜 V₁] [NormedSpace 𝕜 V₂] [NormedSpace 𝕜 V₃] [NormedSpace 𝕜 V₄] [PseudoMetricSpace P] [MetricSpace P₁]
-  [PseudoMetricSpace P₂] [PseudoMetricSpace P₃] [PseudoMetricSpace P₄] [SemiNormedAddTorsor V P] [NormedAddTorsor V₁ P₁]
-  [SemiNormedAddTorsor V₂ P₂] [SemiNormedAddTorsor V₃ P₃] [SemiNormedAddTorsor V₄ P₄]
+  [SemiNormedGroup V] [SemiNormedGroup V₁] [SemiNormedGroup V₂] [SemiNormedGroup V₃] [SemiNormedGroup V₄]
+  [NormedSpace 𝕜 V] [NormedSpace 𝕜 V₁] [NormedSpace 𝕜 V₂] [NormedSpace 𝕜 V₃] [NormedSpace 𝕜 V₄] [PseudoMetricSpace P]
+  [MetricSpace P₁] [PseudoMetricSpace P₂] [PseudoMetricSpace P₃] [PseudoMetricSpace P₄] [NormedAddTorsor V P]
+  [NormedAddTorsor V₁ P₁] [NormedAddTorsor V₂ P₂] [NormedAddTorsor V₃ P₃] [NormedAddTorsor V₄ P₄]
 
 include V V₂
 
@@ -55,27 +55,27 @@ protected def LinearIsometry : V →ₗᵢ[𝕜] V₂ :=
   { f.linear with norm_map' := f.norm_map }
 
 @[simp]
-theorem linear_eq_linear_isometry : f.linear = f.linear_isometry.to_linear_map := by
+theorem linear_eq_linear_isometry : f.linear = f.LinearIsometry.toLinearMap := by
   ext
   rfl
 
 include V V₂
 
 instance : CoeFun (P →ᵃⁱ[𝕜] P₂) fun _ => P → P₂ :=
-  ⟨fun f => f.to_fun⟩
+  ⟨fun f => f.toFun⟩
 
 omit V V₂
 
 @[simp]
-theorem coe_to_affine_map : ⇑f.to_affine_map = f :=
+theorem coe_to_affine_map : ⇑f.toAffineMap = f :=
   rfl
 
 include V V₂
 
-theorem to_affine_map_injective : injective (to_affine_map : (P →ᵃⁱ[𝕜] P₂) → P →ᵃ[𝕜] P₂)
+theorem to_affine_map_injective : Injective (toAffineMap : (P →ᵃⁱ[𝕜] P₂) → P →ᵃ[𝕜] P₂)
   | ⟨f, _⟩, ⟨g, _⟩, rfl => rfl
 
-theorem coe_fn_injective : @injective (P →ᵃⁱ[𝕜] P₂) (P → P₂) coeFn :=
+theorem coe_fn_injective : @Injective (P →ᵃⁱ[𝕜] P₂) (P → P₂) coeFn :=
   AffineMap.coe_fn_injective.comp to_affine_map_injective
 
 @[ext]
@@ -92,19 +92,19 @@ variable (f : V →ₗᵢ[𝕜] V₂)
 
 /-- Reinterpret a linear isometry as an affine isometry. -/
 def to_affine_isometry : V →ᵃⁱ[𝕜] V₂ :=
-  { f.to_linear_map.to_affine_map with norm_map := f.norm_map }
+  { f.toLinearMap.toAffineMap with norm_map := f.norm_map }
 
 @[simp]
-theorem coe_to_affine_isometry : ⇑(f.to_affine_isometry : V →ᵃⁱ[𝕜] V₂) = f :=
+theorem coe_to_affine_isometry : ⇑(f.toAffineIsometry : V →ᵃⁱ[𝕜] V₂) = f :=
   rfl
 
 @[simp]
-theorem to_affine_isometry_linear_isometry : f.to_affine_isometry.linear_isometry = f := by
+theorem to_affine_isometry_linear_isometry : f.toAffineIsometry.LinearIsometry = f := by
   ext
   rfl
 
 @[simp]
-theorem to_affine_isometry_to_affine_map : f.to_affine_isometry.to_affine_map = f.to_linear_map.to_affine_map :=
+theorem to_affine_isometry_to_affine_map : f.toAffineIsometry.toAffineMap = f.toLinearMap.toAffineMap :=
   rfl
 
 end LinearIsometry
@@ -114,12 +114,12 @@ namespace AffineIsometry
 variable (f : P →ᵃⁱ[𝕜] P₂) (f₁ : P₁ →ᵃⁱ[𝕜] P₂)
 
 @[simp]
-theorem map_vadd (p : P) (v : V) : f (v +ᵥ p) = f.linear_isometry v +ᵥ f p :=
-  f.to_affine_map.map_vadd p v
+theorem map_vadd (p : P) (v : V) : f (v +ᵥ p) = f.LinearIsometry v +ᵥ f p :=
+  f.toAffineMap.map_vadd p v
 
 @[simp]
-theorem map_vsub (p1 p2 : P) : f.linear_isometry (p1 -ᵥ p2) = f p1 -ᵥ f p2 :=
-  f.to_affine_map.linear_map_vsub p1 p2
+theorem map_vsub (p1 p2 : P) : f.LinearIsometry (p1 -ᵥ p2) = f p1 -ᵥ f p2 :=
+  f.toAffineMap.linear_map_vsub p1 p2
 
 @[simp]
 theorem dist_map (x y : P) : dist (f x) (f y) = dist x y := by
@@ -136,41 +136,41 @@ theorem edist_map (x y : P) : edist (f x) (f y) = edist x y := by
 protected theorem Isometry : Isometry f :=
   f.edist_map
 
-protected theorem injective : injective f₁ :=
-  f₁.isometry.injective
+protected theorem injective : Injective f₁ :=
+  f₁.Isometry.Injective
 
 @[simp]
 theorem map_eq_iff {x y : P₁} : f₁ x = f₁ y ↔ x = y :=
-  f₁.injective.eq_iff
+  f₁.Injective.eq_iff
 
 theorem map_ne {x y : P₁} (h : x ≠ y) : f₁ x ≠ f₁ y :=
-  f₁.injective.ne h
+  f₁.Injective.Ne h
 
 protected theorem lipschitz : LipschitzWith 1 f :=
-  f.isometry.lipschitz
+  f.Isometry.lipschitz
 
 protected theorem antilipschitz : AntilipschitzWith 1 f :=
-  f.isometry.antilipschitz
+  f.Isometry.antilipschitz
 
 @[continuity]
 protected theorem Continuous : Continuous f :=
-  f.isometry.continuous
+  f.Isometry.Continuous
 
 theorem ediam_image (s : Set P) : Emetric.diam (f '' s) = Emetric.diam s :=
-  f.isometry.ediam_image s
+  f.Isometry.ediam_image s
 
-theorem ediam_range : Emetric.diam (range f) = Emetric.diam (univ : Set P) :=
-  f.isometry.ediam_range
+theorem ediam_range : Emetric.diam (Range f) = Emetric.diam (Univ : Set P) :=
+  f.Isometry.ediam_range
 
 theorem diam_image (s : Set P) : Metric.diam (f '' s) = Metric.diam s :=
-  f.isometry.diam_image s
+  f.Isometry.diam_image s
 
-theorem diam_range : Metric.diam (range f) = Metric.diam (univ : Set P) :=
-  f.isometry.diam_range
+theorem diam_range : Metric.diam (Range f) = Metric.diam (Univ : Set P) :=
+  f.Isometry.diam_range
 
 @[simp]
 theorem comp_continuous_iff {α : Type _} [TopologicalSpace α] {g : α → P} : Continuous (f ∘ g) ↔ Continuous g :=
-  f.isometry.comp_continuous_iff
+  f.Isometry.comp_continuous_iff
 
 include V
 
@@ -197,7 +197,7 @@ include V₂ V₃
 
 /-- Composition of affine isometries. -/
 def comp (g : P₂ →ᵃⁱ[𝕜] P₃) (f : P →ᵃⁱ[𝕜] P₂) : P →ᵃⁱ[𝕜] P₃ :=
-  ⟨g.to_affine_map.comp f.to_affine_map, fun x => (g.norm_map _).trans (f.norm_map _)⟩
+  ⟨g.toAffineMap.comp f.toAffineMap, fun x => (g.norm_map _).trans (f.norm_map _)⟩
 
 @[simp]
 theorem coe_comp (g : P₂ →ᵃⁱ[𝕜] P₃) (f : P →ᵃⁱ[𝕜] P₂) : ⇑g.comp f = g ∘ f :=
@@ -260,24 +260,24 @@ protected def LinearIsometryEquiv : V ≃ₗᵢ[𝕜] V₂ :=
   { e.linear with norm_map' := e.norm_map }
 
 @[simp]
-theorem linear_eq_linear_isometry : e.linear = e.linear_isometry_equiv.to_linear_equiv := by
+theorem linear_eq_linear_isometry : e.linear = e.LinearIsometryEquiv.toLinearEquiv := by
   ext
   rfl
 
 include V V₂
 
 instance : CoeFun (P ≃ᵃⁱ[𝕜] P₂) fun _ => P → P₂ :=
-  ⟨fun f => f.to_fun⟩
+  ⟨fun f => f.toFun⟩
 
 @[simp]
 theorem coe_mk (e : P ≃ᵃ[𝕜] P₂) (he : ∀ x, ∥e.linear x∥ = ∥x∥) : ⇑mk e he = e :=
   rfl
 
 @[simp]
-theorem coe_to_affine_equiv (e : P ≃ᵃⁱ[𝕜] P₂) : ⇑e.to_affine_equiv = e :=
+theorem coe_to_affine_equiv (e : P ≃ᵃⁱ[𝕜] P₂) : ⇑e.toAffineEquiv = e :=
   rfl
 
-theorem to_affine_equiv_injective : injective (to_affine_equiv : (P ≃ᵃⁱ[𝕜] P₂) → P ≃ᵃ[𝕜] P₂)
+theorem to_affine_equiv_injective : Injective (toAffineEquiv : (P ≃ᵃⁱ[𝕜] P₂) → P ≃ᵃ[𝕜] P₂)
   | ⟨e, _⟩, ⟨_, _⟩, rfl => rfl
 
 @[ext]
@@ -291,7 +291,7 @@ def to_affine_isometry : P →ᵃⁱ[𝕜] P₂ :=
   ⟨e.1.toAffineMap, e.2⟩
 
 @[simp]
-theorem coe_to_affine_isometry : ⇑e.to_affine_isometry = e :=
+theorem coe_to_affine_isometry : ⇑e.toAffineIsometry = e :=
   rfl
 
 /-- Construct an affine isometry equivalence by verifying the relation between the map and its
@@ -299,7 +299,7 @@ linear part at one base point. Namely, this function takes a map `e : P₁ → P
 equivalence `e' : V₁ ≃ᵢₗ[k] V₂`, and a point `p` such that for any other point `p'` we have
 `e p' = e' (p' -ᵥ p) +ᵥ e p`. -/
 def mk' (e : P₁ → P₂) (e' : V₁ ≃ₗᵢ[𝕜] V₂) (p : P₁) (h : ∀ p' : P₁, e p' = e' (p' -ᵥ p) +ᵥ e p) : P₁ ≃ᵃⁱ[𝕜] P₂ :=
-  { AffineEquiv.mk' e e'.to_linear_equiv p h with norm_map := e'.norm_map }
+  { AffineEquiv.mk' e e'.toLinearEquiv p h with norm_map := e'.norm_map }
 
 @[simp]
 theorem coe_mk' (e : P₁ → P₂) (e' : V₁ ≃ₗᵢ[𝕜] V₂) p h : ⇑mk' e e' p h = e :=
@@ -318,25 +318,25 @@ variable (e : V ≃ₗᵢ[𝕜] V₂)
 
 /-- Reinterpret a linear isometry equiv as an affine isometry equiv. -/
 def to_affine_isometry_equiv : V ≃ᵃⁱ[𝕜] V₂ :=
-  { e.to_linear_equiv.to_affine_equiv with norm_map := e.norm_map }
+  { e.toLinearEquiv.toAffineEquiv with norm_map := e.norm_map }
 
 @[simp]
-theorem coe_to_affine_isometry_equiv : ⇑(e.to_affine_isometry_equiv : V ≃ᵃⁱ[𝕜] V₂) = e :=
+theorem coe_to_affine_isometry_equiv : ⇑(e.toAffineIsometryEquiv : V ≃ᵃⁱ[𝕜] V₂) = e :=
   rfl
 
 @[simp]
-theorem to_affine_isometry_equiv_linear_isometry_equiv : e.to_affine_isometry_equiv.linear_isometry_equiv = e := by
+theorem to_affine_isometry_equiv_linear_isometry_equiv : e.toAffineIsometryEquiv.LinearIsometryEquiv = e := by
   ext
   rfl
 
 @[simp]
 theorem to_affine_isometry_equiv_to_affine_equiv :
-    e.to_affine_isometry_equiv.to_affine_equiv = e.to_linear_equiv.to_affine_equiv :=
+    e.toAffineIsometryEquiv.toAffineEquiv = e.toLinearEquiv.toAffineEquiv :=
   rfl
 
 @[simp]
 theorem to_affine_isometry_equiv_to_affine_isometry :
-    e.to_affine_isometry_equiv.to_affine_isometry = e.to_linear_isometry.to_affine_isometry :=
+    e.toAffineIsometryEquiv.toAffineIsometry = e.toLinearIsometry.toAffineIsometry :=
   rfl
 
 end LinearIsometryEquiv
@@ -346,14 +346,14 @@ namespace AffineIsometryEquiv
 variable (e : P ≃ᵃⁱ[𝕜] P₂)
 
 protected theorem Isometry : Isometry e :=
-  e.to_affine_isometry.isometry
+  e.toAffineIsometry.Isometry
 
 /-- Reinterpret a `affine_isometry_equiv` as an `isometric`. -/
 def to_isometric : P ≃ᵢ P₂ :=
-  ⟨e.to_affine_equiv.to_equiv, e.isometry⟩
+  ⟨e.toAffineEquiv.toEquiv, e.Isometry⟩
 
 @[simp]
-theorem coe_to_isometric : ⇑e.to_isometric = e :=
+theorem coe_to_isometric : ⇑e.toIsometric = e :=
   rfl
 
 include V V₂
@@ -366,23 +366,23 @@ omit V V₂
 
 /-- Reinterpret a `affine_isometry_equiv` as an `homeomorph`. -/
 def to_homeomorph : P ≃ₜ P₂ :=
-  e.to_isometric.to_homeomorph
+  e.toIsometric.toHomeomorph
 
 @[simp]
-theorem coe_to_homeomorph : ⇑e.to_homeomorph = e :=
+theorem coe_to_homeomorph : ⇑e.toHomeomorph = e :=
   rfl
 
 protected theorem Continuous : Continuous e :=
-  e.isometry.continuous
+  e.Isometry.Continuous
 
 protected theorem ContinuousAt {x} : ContinuousAt e x :=
-  e.continuous.continuous_at
+  e.Continuous.ContinuousAt
 
 protected theorem ContinuousOn {s} : ContinuousOn e s :=
-  e.continuous.continuous_on
+  e.Continuous.ContinuousOn
 
 protected theorem ContinuousWithinAt {s x} : ContinuousWithinAt e s x :=
-  e.continuous.continuous_within_at
+  e.Continuous.ContinuousWithinAt
 
 variable (𝕜 P)
 
@@ -417,37 +417,37 @@ omit V
 
 /-- The inverse `affine_isometry_equiv`. -/
 def symm : P₂ ≃ᵃⁱ[𝕜] P :=
-  { e.to_affine_equiv.symm with norm_map := e.linear_isometry_equiv.symm.norm_map }
+  { e.toAffineEquiv.symm with norm_map := e.LinearIsometryEquiv.symm.norm_map }
 
 @[simp]
 theorem apply_symm_apply (x : P₂) : e (e.symm x) = x :=
-  e.to_affine_equiv.apply_symm_apply x
+  e.toAffineEquiv.apply_symm_apply x
 
 @[simp]
 theorem symm_apply_apply (x : P) : e.symm (e x) = x :=
-  e.to_affine_equiv.symm_apply_apply x
+  e.toAffineEquiv.symm_apply_apply x
 
 @[simp]
 theorem symm_symm : e.symm.symm = e :=
   ext fun x => rfl
 
 @[simp]
-theorem to_affine_equiv_symm : e.to_affine_equiv.symm = e.symm.to_affine_equiv :=
+theorem to_affine_equiv_symm : e.toAffineEquiv.symm = e.symm.toAffineEquiv :=
   rfl
 
 @[simp]
-theorem to_isometric_symm : e.to_isometric.symm = e.symm.to_isometric :=
+theorem to_isometric_symm : e.toIsometric.symm = e.symm.toIsometric :=
   rfl
 
 @[simp]
-theorem to_homeomorph_symm : e.to_homeomorph.symm = e.symm.to_homeomorph :=
+theorem to_homeomorph_symm : e.toHomeomorph.symm = e.symm.toHomeomorph :=
   rfl
 
 include V₃
 
 /-- Composition of `affine_isometry_equiv`s as a `affine_isometry_equiv`. -/
 def trans (e' : P₂ ≃ᵃⁱ[𝕜] P₃) : P ≃ᵃⁱ[𝕜] P₃ :=
-  ⟨e.to_affine_equiv.trans e'.to_affine_equiv, fun x => (e'.norm_map _).trans (e.norm_map _)⟩
+  ⟨e.toAffineEquiv.trans e'.toAffineEquiv, fun x => (e'.norm_map _).trans (e.norm_map _)⟩
 
 include V V₂
 
@@ -512,60 +512,60 @@ theorem coe_inv (e : P ≃ᵃⁱ[𝕜] P) : ⇑e⁻¹ = e.symm :=
 omit V
 
 @[simp]
-theorem map_vadd (p : P) (v : V) : e (v +ᵥ p) = e.linear_isometry_equiv v +ᵥ e p :=
-  e.to_affine_isometry.map_vadd p v
+theorem map_vadd (p : P) (v : V) : e (v +ᵥ p) = e.LinearIsometryEquiv v +ᵥ e p :=
+  e.toAffineIsometry.map_vadd p v
 
 @[simp]
-theorem map_vsub (p1 p2 : P) : e.linear_isometry_equiv (p1 -ᵥ p2) = e p1 -ᵥ e p2 :=
-  e.to_affine_isometry.map_vsub p1 p2
+theorem map_vsub (p1 p2 : P) : e.LinearIsometryEquiv (p1 -ᵥ p2) = e p1 -ᵥ e p2 :=
+  e.toAffineIsometry.map_vsub p1 p2
 
 @[simp]
 theorem dist_map (x y : P) : dist (e x) (e y) = dist x y :=
-  e.to_affine_isometry.dist_map x y
+  e.toAffineIsometry.dist_map x y
 
 @[simp]
 theorem edist_map (x y : P) : edist (e x) (e y) = edist x y :=
-  e.to_affine_isometry.edist_map x y
+  e.toAffineIsometry.edist_map x y
 
-protected theorem bijective : bijective e :=
+protected theorem bijective : Bijective e :=
   e.1.Bijective
 
-protected theorem injective : injective e :=
+protected theorem injective : Injective e :=
   e.1.Injective
 
-protected theorem surjective : surjective e :=
+protected theorem surjective : Surjective e :=
   e.1.Surjective
 
 @[simp]
 theorem map_eq_iff {x y : P} : e x = e y ↔ x = y :=
-  e.injective.eq_iff
+  e.Injective.eq_iff
 
 theorem map_ne {x y : P} (h : x ≠ y) : e x ≠ e y :=
-  e.injective.ne h
+  e.Injective.Ne h
 
 protected theorem lipschitz : LipschitzWith 1 e :=
-  e.isometry.lipschitz
+  e.Isometry.lipschitz
 
 protected theorem antilipschitz : AntilipschitzWith 1 e :=
-  e.isometry.antilipschitz
+  e.Isometry.antilipschitz
 
 @[simp]
 theorem ediam_image (s : Set P) : Emetric.diam (e '' s) = Emetric.diam s :=
-  e.isometry.ediam_image s
+  e.Isometry.ediam_image s
 
 @[simp]
 theorem diam_image (s : Set P) : Metric.diam (e '' s) = Metric.diam s :=
-  e.isometry.diam_image s
+  e.Isometry.diam_image s
 
 variable {α : Type _} [TopologicalSpace α]
 
 @[simp]
 theorem comp_continuous_on_iff {f : α → P} {s : Set α} : ContinuousOn (e ∘ f) s ↔ ContinuousOn f s :=
-  e.isometry.comp_continuous_on_iff
+  e.Isometry.comp_continuous_on_iff
 
 @[simp]
 theorem comp_continuous_iff {f : α → P} : Continuous (e ∘ f) ↔ Continuous f :=
-  e.isometry.comp_continuous_iff
+  e.Isometry.comp_continuous_iff
 
 section Constructions
 
@@ -580,15 +580,15 @@ variable {𝕜}
 include V
 
 @[simp]
-theorem coe_vadd_const (p : P) : ⇑vadd_const 𝕜 p = fun v => v +ᵥ p :=
+theorem coe_vadd_const (p : P) : ⇑vaddConst 𝕜 p = fun v => v +ᵥ p :=
   rfl
 
 @[simp]
-theorem coe_vadd_const_symm (p : P) : ⇑(vadd_const 𝕜 p).symm = fun p' => p' -ᵥ p :=
+theorem coe_vadd_const_symm (p : P) : ⇑(vaddConst 𝕜 p).symm = fun p' => p' -ᵥ p :=
   rfl
 
 @[simp]
-theorem vadd_const_to_affine_equiv (p : P) : (vadd_const 𝕜 p).toAffineEquiv = AffineEquiv.vaddConst 𝕜 p :=
+theorem vadd_const_to_affine_equiv (p : P) : (vaddConst 𝕜 p).toAffineEquiv = AffineEquiv.vaddConst 𝕜 p :=
   rfl
 
 omit V
@@ -604,12 +604,12 @@ variable {𝕜}
 include V
 
 @[simp]
-theorem coe_const_vsub (p : P) : ⇑const_vsub 𝕜 p = (· -ᵥ ·) p :=
+theorem coe_const_vsub (p : P) : ⇑constVsub 𝕜 p = (· -ᵥ ·) p :=
   rfl
 
 @[simp]
 theorem symm_const_vsub (p : P) :
-    (const_vsub 𝕜 p).symm = (LinearIsometryEquiv.neg 𝕜).toAffineIsometryEquiv.trans (vadd_const 𝕜 p) := by
+    (constVsub 𝕜 p).symm = (LinearIsometryEquiv.neg 𝕜).toAffineIsometryEquiv.trans (vaddConst 𝕜 p) := by
   ext
   rfl
 
@@ -625,11 +625,11 @@ def const_vadd (v : V) : P ≃ᵃⁱ[𝕜] P :=
 variable {𝕜 P}
 
 @[simp]
-theorem coe_const_vadd (v : V) : ⇑(const_vadd 𝕜 P v : P ≃ᵃⁱ[𝕜] P) = (· +ᵥ ·) v :=
+theorem coe_const_vadd (v : V) : ⇑(constVadd 𝕜 P v : P ≃ᵃⁱ[𝕜] P) = (· +ᵥ ·) v :=
   rfl
 
 @[simp]
-theorem const_vadd_zero : const_vadd 𝕜 P (0 : V) = refl 𝕜 P :=
+theorem const_vadd_zero : constVadd 𝕜 P (0 : V) = refl 𝕜 P :=
   ext <| zero_vadd V
 
 include 𝕜 V
@@ -647,53 +647,53 @@ variable (𝕜)
 
 /-- Point reflection in `x` as an affine isometric automorphism. -/
 def point_reflection (x : P) : P ≃ᵃⁱ[𝕜] P :=
-  (const_vsub 𝕜 x).trans (vadd_const 𝕜 x)
+  (constVsub 𝕜 x).trans (vaddConst 𝕜 x)
 
 variable {𝕜}
 
-theorem point_reflection_apply (x y : P) : (point_reflection 𝕜 x) y = x -ᵥ y +ᵥ x :=
+theorem point_reflection_apply (x y : P) : (pointReflection 𝕜 x) y = x -ᵥ y +ᵥ x :=
   rfl
 
 @[simp]
 theorem point_reflection_to_affine_equiv (x : P) :
-    (point_reflection 𝕜 x).toAffineEquiv = AffineEquiv.pointReflection 𝕜 x :=
+    (pointReflection 𝕜 x).toAffineEquiv = AffineEquiv.pointReflection 𝕜 x :=
   rfl
 
 @[simp]
-theorem point_reflection_self (x : P) : point_reflection 𝕜 x x = x :=
+theorem point_reflection_self (x : P) : pointReflection 𝕜 x x = x :=
   AffineEquiv.point_reflection_self 𝕜 x
 
-theorem point_reflection_involutive (x : P) : Function.Involutive (point_reflection 𝕜 x) :=
+theorem point_reflection_involutive (x : P) : Function.Involutive (pointReflection 𝕜 x) :=
   Equivₓ.point_reflection_involutive x
 
 @[simp]
-theorem point_reflection_symm (x : P) : (point_reflection 𝕜 x).symm = point_reflection 𝕜 x :=
+theorem point_reflection_symm (x : P) : (pointReflection 𝕜 x).symm = pointReflection 𝕜 x :=
   to_affine_equiv_injective <| AffineEquiv.point_reflection_symm 𝕜 x
 
 @[simp]
-theorem dist_point_reflection_fixed (x y : P) : dist (point_reflection 𝕜 x y) x = dist y x := by
+theorem dist_point_reflection_fixed (x y : P) : dist (pointReflection 𝕜 x y) x = dist y x := by
   rw [← (point_reflection 𝕜 x).dist_map y x, point_reflection_self]
 
-theorem dist_point_reflection_self' (x y : P) : dist (point_reflection 𝕜 x y) y = ∥bit0 (x -ᵥ y)∥ := by
+theorem dist_point_reflection_self' (x y : P) : dist (pointReflection 𝕜 x y) y = ∥bit0 (x -ᵥ y)∥ := by
   rw [point_reflection_apply, dist_eq_norm_vsub V, vadd_vsub_assoc, bit0]
 
-theorem dist_point_reflection_self (x y : P) : dist (point_reflection 𝕜 x y) y = ∥(2 : 𝕜)∥ * dist x y := by
+theorem dist_point_reflection_self (x y : P) : dist (pointReflection 𝕜 x y) y = ∥(2 : 𝕜)∥ * dist x y := by
   rw [dist_point_reflection_self', ← two_smul' 𝕜 (x -ᵥ y), norm_smul, ← dist_eq_norm_vsub V]
 
-theorem point_reflection_fixed_iff [Invertible (2 : 𝕜)] {x y : P} : point_reflection 𝕜 x y = y ↔ y = x :=
+theorem point_reflection_fixed_iff [Invertible (2 : 𝕜)] {x y : P} : pointReflection 𝕜 x y = y ↔ y = x :=
   AffineEquiv.point_reflection_fixed_iff_of_module 𝕜
 
 variable [NormedSpace ℝ V]
 
-theorem dist_point_reflection_self_real (x y : P) : dist (point_reflection ℝ x y) y = 2 * dist x y := by
+theorem dist_point_reflection_self_real (x y : P) : dist (pointReflection ℝ x y) y = 2 * dist x y := by
   rw [dist_point_reflection_self, Real.norm_two]
 
 @[simp]
-theorem point_reflection_midpoint_left (x y : P) : point_reflection ℝ (midpoint ℝ x y) x = y :=
+theorem point_reflection_midpoint_left (x y : P) : pointReflection ℝ (midpoint ℝ x y) x = y :=
   AffineEquiv.point_reflection_midpoint_left x y
 
 @[simp]
-theorem point_reflection_midpoint_right (x y : P) : point_reflection ℝ (midpoint ℝ x y) y = x :=
+theorem point_reflection_midpoint_right (x y : P) : pointReflection ℝ (midpoint ℝ x y) y = x :=
   AffineEquiv.point_reflection_midpoint_right x y
 
 end Constructions

@@ -188,10 +188,10 @@ theorem sup_le_sup (h₁ : a ≤ b) (h₂ : c ≤ d) : a⊔c ≤ b⊔d :=
   sup_le (le_sup_of_le_left h₁) (le_sup_of_le_right h₂)
 
 theorem sup_le_sup_left (h₁ : a ≤ b) c : c⊔a ≤ c⊔b :=
-  sup_le_sup (le_reflₓ _) h₁
+  sup_le_sup le_rfl h₁
 
 theorem sup_le_sup_right (h₁ : a ≤ b) c : a⊔c ≤ b⊔c :=
-  sup_le_sup h₁ (le_reflₓ _)
+  sup_le_sup h₁ le_rfl
 
 theorem le_of_sup_eq (h : a⊔b = b) : a ≤ b := by
   rw [← h]
@@ -410,10 +410,10 @@ theorem inf_le_inf (h₁ : a ≤ b) (h₂ : c ≤ d) : a⊓c ≤ b⊓d :=
   le_inf (inf_le_of_left_le h₁) (inf_le_of_right_le h₂)
 
 theorem inf_le_inf_right (a : α) {b c : α} (h : b ≤ c) : b⊓a ≤ c⊓a :=
-  inf_le_inf h (le_reflₓ _)
+  inf_le_inf h le_rfl
 
 theorem inf_le_inf_left (a : α) {b c : α} (h : b ≤ c) : a⊓b ≤ a⊓c :=
-  inf_le_inf (le_reflₓ _) h
+  inf_le_inf le_rfl h
 
 theorem le_of_inf_eq (h : a⊓b = a) : a ≤ b := by
   rw [← h]
@@ -994,7 +994,7 @@ See note [reducible non-instances]. -/
 @[reducible]
 protected def Function.Injective.lattice [HasSup α] [HasInf α] [Lattice β] (f : α → β) (hf_inj : Function.Injective f)
     (map_sup : ∀ a b, f (a⊔b) = f a⊔f b) (map_inf : ∀ a b, f (a⊓b) = f a⊓f b) : Lattice α :=
-  { hf_inj.semilattice_sup f map_sup, hf_inj.semilattice_inf f map_inf with }
+  { hf_inj.SemilatticeSup f map_sup, hf_inj.SemilatticeInf f map_inf with }
 
 /-- A type endowed with `⊔` and `⊓` is a `distrib_lattice`, if it admits an injective map that
 preserves `⊔` and `⊓` to a `distrib_lattice`.
@@ -1003,11 +1003,14 @@ See note [reducible non-instances]. -/
 protected def Function.Injective.distribLattice [HasSup α] [HasInf α] [DistribLattice β] (f : α → β)
     (hf_inj : Function.Injective f) (map_sup : ∀ a b, f (a⊔b) = f a⊔f b) (map_inf : ∀ a b, f (a⊓b) = f a⊓f b) :
     DistribLattice α :=
-  { hf_inj.lattice f map_sup map_inf with
+  { hf_inj.Lattice f map_sup map_inf with
     le_sup_inf := fun a b c => by
       change f ((a⊔b)⊓(a⊔c)) ≤ f (a⊔b⊓c)
       rw [map_inf, map_sup, map_sup, map_sup, map_inf]
       exact le_sup_inf }
 
 end lift
+
+instance : DistribLattice Bool :=
+  LinearOrderₓ.toDistribLattice
 

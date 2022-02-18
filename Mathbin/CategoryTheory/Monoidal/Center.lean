@@ -34,7 +34,7 @@ noncomputable section
 
 namespace CategoryTheory
 
-variable {C : Type u₁} [category.{v₁} C] [monoidal_category C]
+variable {C : Type u₁} [Category.{v₁} C] [MonoidalCategory C]
 
 /-- A half-braiding on `X : C` is a family of isomorphisms `X ⊗ U ≅ U ⊗ X`,
 monoidally natural in `U : C`.
@@ -71,7 +71,7 @@ and `b` is a half-braiding on `X`.
 -/
 @[nolint has_inhabited_instance]
 def center :=
-  Σ X : C, half_braiding X
+  Σ X : C, HalfBraiding X
 
 namespace Center
 
@@ -79,7 +79,7 @@ variable {C}
 
 /-- A morphism in the Drinfeld center of `C`. -/
 @[ext, nolint has_inhabited_instance]
-structure hom (X Y : center C) where
+structure hom (X Y : Center C) where
   f : X.1 ⟶ Y.1
   comm' : ∀ U, (f ⊗ 𝟙 U) ≫ (Y.2.β U).Hom = (X.2.β U).Hom ≫ (𝟙 U ⊗ f) := by
     run_tac
@@ -89,21 +89,21 @@ restate_axiom hom.comm'
 
 attribute [simp, reassoc] hom.comm
 
-instance : category (center C) where
-  Hom := hom
+instance : Category (Center C) where
+  Hom := Hom
   id := fun X => { f := 𝟙 X.1 }
   comp := fun X Y Z f g => { f := f.f ≫ g.f }
 
 @[simp]
-theorem id_f (X : center C) : hom.f (𝟙 X) = 𝟙 X.1 :=
+theorem id_f (X : Center C) : Hom.f (𝟙 X) = 𝟙 X.1 :=
   rfl
 
 @[simp]
-theorem comp_f {X Y Z : center C} (f : X ⟶ Y) (g : Y ⟶ Z) : (f ≫ g).f = f.f ≫ g.f :=
+theorem comp_f {X Y Z : Center C} (f : X ⟶ Y) (g : Y ⟶ Z) : (f ≫ g).f = f.f ≫ g.f :=
   rfl
 
 @[ext]
-theorem ext {X Y : center C} (f g : X ⟶ Y) (w : f.f = g.f) : f = g := by
+theorem ext {X Y : Center C} (f g : X ⟶ Y) (w : f.f = g.f) : f = g := by
   cases f
   cases g
   congr
@@ -113,21 +113,21 @@ theorem ext {X Y : center C} (f g : X ⟶ Y) (w : f.f = g.f) : f = g := by
 a morphism whose underlying morphism is an isomorphism.
 -/
 @[simps]
-def iso_mk {X Y : center C} (f : X ⟶ Y) [is_iso f.f] : X ≅ Y where
+def iso_mk {X Y : Center C} (f : X ⟶ Y) [IsIso f.f] : X ≅ Y where
   Hom := f
   inv :=
     ⟨inv f.f, fun U => by
       simp [← cancel_epi (f.f ⊗ 𝟙 U), ← comp_tensor_id_assoc, ← id_tensor_comp]⟩
 
-instance is_iso_of_f_is_iso {X Y : center C} (f : X ⟶ Y) [is_iso f.f] : is_iso f := by
+instance is_iso_of_f_is_iso {X Y : Center C} (f : X ⟶ Y) [IsIso f.f] : IsIso f := by
   change is_iso (iso_mk f).Hom
   infer_instance
 
 /-- Auxiliary definition for the `monoidal_category` instance on `center C`. -/
 @[simps]
-def tensor_obj (X Y : center C) : center C :=
+def tensor_obj (X Y : Center C) : Center C :=
   ⟨X.1 ⊗ Y.1,
-    { β := fun U => α_ _ _ _ ≪≫ (iso.refl X.1 ⊗ Y.2.β U) ≪≫ (α_ _ _ _).symm ≪≫ (X.2.β U ⊗ iso.refl Y.1) ≪≫ α_ _ _ _,
+    { β := fun U => α_ _ _ _ ≪≫ (Iso.refl X.1 ⊗ Y.2.β U) ≪≫ (α_ _ _ _).symm ≪≫ (X.2.β U ⊗ Iso.refl Y.1) ≪≫ α_ _ _ _,
       monoidal' := fun U U' => by
         dsimp
         simp only [comp_tensor_id, id_tensor_comp, category.assoc, half_braiding.monoidal]
@@ -149,7 +149,7 @@ def tensor_obj (X Y : center C) : center C :=
 
 /-- Auxiliary definition for the `monoidal_category` instance on `center C`. -/
 @[simps]
-def tensor_hom {X₁ Y₁ X₂ Y₂ : center C} (f : X₁ ⟶ Y₁) (g : X₂ ⟶ Y₂) : tensor_obj X₁ X₂ ⟶ tensor_obj Y₁ Y₂ where
+def tensor_hom {X₁ Y₁ X₂ Y₂ : Center C} (f : X₁ ⟶ Y₁) (g : X₂ ⟶ Y₂) : tensorObj X₁ X₂ ⟶ tensorObj Y₁ Y₂ where
   f := f.f ⊗ g.f
   comm' := fun U => by
     dsimp
@@ -162,7 +162,7 @@ def tensor_hom {X₁ Y₁ X₂ Y₂ : center C} (f : X₁ ⟶ Y₁) (g : X₂ �
 
 /-- Auxiliary definition for the `monoidal_category` instance on `center C`. -/
 @[simps]
-def tensor_unit : center C :=
+def tensor_unit : Center C :=
   ⟨𝟙_ C,
     { β := fun U => λ_ U ≪≫ (ρ_ U).symm,
       monoidal' := fun U U' => by
@@ -172,8 +172,8 @@ def tensor_unit : center C :=
         rw [left_unitor_naturality_assoc, right_unitor_inv_naturality, category.assoc] }⟩
 
 /-- Auxiliary definition for the `monoidal_category` instance on `center C`. -/
-def associator (X Y Z : center C) : tensor_obj (tensor_obj X Y) Z ≅ tensor_obj X (tensor_obj Y Z) :=
-  iso_mk
+def associator (X Y Z : Center C) : tensorObj (tensorObj X Y) Z ≅ tensorObj X (tensorObj Y Z) :=
+  isoMk
     ⟨(α_ X.1 Y.1 Z.1).Hom, fun U => by
       dsimp
       simp only [category.assoc, comp_tensor_id, id_tensor_comp]
@@ -183,8 +183,8 @@ def associator (X Y Z : center C) : tensor_obj (tensor_obj X Y) Z ≅ tensor_obj
         is_iso.iso.inv_inv, pentagon_assoc, iso.hom_inv_id_assoc, ← tensor_id, ← associator_naturality_assoc]⟩
 
 /-- Auxiliary definition for the `monoidal_category` instance on `center C`. -/
-def left_unitor (X : center C) : tensor_obj tensor_unit X ≅ X :=
-  iso_mk
+def left_unitor (X : Center C) : tensorObj tensorUnit X ≅ X :=
+  isoMk
     ⟨(λ_ X.1).Hom, fun U => by
       dsimp
       simp only [category.comp_id, category.assoc, tensor_inv_hom_id, comp_tensor_id, tensor_id_comp_id_tensor,
@@ -192,8 +192,8 @@ def left_unitor (X : center C) : tensor_obj tensor_unit X ≅ X :=
       rw [← left_unitor_tensor, left_unitor_naturality, left_unitor_tensor'_assoc]⟩
 
 /-- Auxiliary definition for the `monoidal_category` instance on `center C`. -/
-def right_unitor (X : center C) : tensor_obj X tensor_unit ≅ X :=
-  iso_mk
+def right_unitor (X : Center C) : tensorObj X tensorUnit ≅ X :=
+  isoMk
     ⟨(ρ_ X.1).Hom, fun U => by
       dsimp
       simp only [tensor_id_comp_id_tensor_assoc, triangle_assoc, id_tensor_comp, category.assoc]
@@ -207,57 +207,57 @@ attribute [local simp] associator_naturality left_unitor_naturality right_unitor
 
 attribute [local simp] center.associator center.left_unitor center.right_unitor
 
-instance : monoidal_category (center C) where
-  tensorObj := fun X Y => tensor_obj X Y
-  tensorHom := fun X₁ Y₁ X₂ Y₂ f g => tensor_hom f g
-  tensorUnit := tensor_unit
+instance : MonoidalCategory (Center C) where
+  tensorObj := fun X Y => tensorObj X Y
+  tensorHom := fun X₁ Y₁ X₂ Y₂ f g => tensorHom f g
+  tensorUnit := tensorUnit
   associator := associator
-  leftUnitor := left_unitor
-  rightUnitor := right_unitor
+  leftUnitor := leftUnitor
+  rightUnitor := rightUnitor
 
 @[simp]
-theorem tensor_fst (X Y : center C) : (X ⊗ Y).1 = X.1 ⊗ Y.1 :=
+theorem tensor_fst (X Y : Center C) : (X ⊗ Y).1 = X.1 ⊗ Y.1 :=
   rfl
 
 @[simp]
-theorem tensor_β (X Y : center C) (U : C) :
-    (X ⊗ Y).2.β U = α_ _ _ _ ≪≫ (iso.refl X.1 ⊗ Y.2.β U) ≪≫ (α_ _ _ _).symm ≪≫ (X.2.β U ⊗ iso.refl Y.1) ≪≫ α_ _ _ _ :=
+theorem tensor_β (X Y : Center C) (U : C) :
+    (X ⊗ Y).2.β U = α_ _ _ _ ≪≫ (Iso.refl X.1 ⊗ Y.2.β U) ≪≫ (α_ _ _ _).symm ≪≫ (X.2.β U ⊗ Iso.refl Y.1) ≪≫ α_ _ _ _ :=
   rfl
 
 @[simp]
-theorem tensor_f {X₁ Y₁ X₂ Y₂ : center C} (f : X₁ ⟶ Y₁) (g : X₂ ⟶ Y₂) : (f ⊗ g).f = f.f ⊗ g.f :=
+theorem tensor_f {X₁ Y₁ X₂ Y₂ : Center C} (f : X₁ ⟶ Y₁) (g : X₂ ⟶ Y₂) : (f ⊗ g).f = f.f ⊗ g.f :=
   rfl
 
 @[simp]
-theorem tensor_unit_β (U : C) : (𝟙_ (center C)).2.β U = λ_ U ≪≫ (ρ_ U).symm :=
+theorem tensor_unit_β (U : C) : (𝟙_ (Center C)).2.β U = λ_ U ≪≫ (ρ_ U).symm :=
   rfl
 
 @[simp]
-theorem associator_hom_f (X Y Z : center C) : hom.f (α_ X Y Z).Hom = (α_ X.1 Y.1 Z.1).Hom :=
+theorem associator_hom_f (X Y Z : Center C) : Hom.f (α_ X Y Z).Hom = (α_ X.1 Y.1 Z.1).Hom :=
   rfl
 
 @[simp]
-theorem associator_inv_f (X Y Z : center C) : hom.f (α_ X Y Z).inv = (α_ X.1 Y.1 Z.1).inv := by
+theorem associator_inv_f (X Y Z : Center C) : Hom.f (α_ X Y Z).inv = (α_ X.1 Y.1 Z.1).inv := by
   ext
   rw [← associator_hom_f, ← comp_f, iso.hom_inv_id]
   rfl
 
 @[simp]
-theorem left_unitor_hom_f (X : center C) : hom.f (λ_ X).Hom = (λ_ X.1).Hom :=
+theorem left_unitor_hom_f (X : Center C) : Hom.f (λ_ X).Hom = (λ_ X.1).Hom :=
   rfl
 
 @[simp]
-theorem left_unitor_inv_f (X : center C) : hom.f (λ_ X).inv = (λ_ X.1).inv := by
+theorem left_unitor_inv_f (X : Center C) : Hom.f (λ_ X).inv = (λ_ X.1).inv := by
   ext
   rw [← left_unitor_hom_f, ← comp_f, iso.hom_inv_id]
   rfl
 
 @[simp]
-theorem right_unitor_hom_f (X : center C) : hom.f (ρ_ X).Hom = (ρ_ X.1).Hom :=
+theorem right_unitor_hom_f (X : Center C) : Hom.f (ρ_ X).Hom = (ρ_ X.1).Hom :=
   rfl
 
 @[simp]
-theorem right_unitor_inv_f (X : center C) : hom.f (ρ_ X).inv = (ρ_ X.1).inv := by
+theorem right_unitor_inv_f (X : Center C) : Hom.f (ρ_ X).inv = (ρ_ X.1).inv := by
   ext
   rw [← right_unitor_hom_f, ← comp_f, iso.hom_inv_id]
   rfl
@@ -270,13 +270,13 @@ variable (C)
 
 /-- The forgetful monoidal functor from the Drinfeld center to the original category. -/
 @[simps]
-def forget : monoidal_functor (center C) C where
+def forget : MonoidalFunctor (Center C) C where
   obj := fun X => X.1
   map := fun X Y f => f.f
   ε := 𝟙 (𝟙_ C)
   μ := fun X Y => 𝟙 (X.1 ⊗ Y.1)
 
-instance : reflects_isomorphisms (forget C).toFunctor where
+instance : ReflectsIsomorphisms (forget C).toFunctor where
   reflects := fun A B f i => by
     dsimp  at i
     skip
@@ -287,8 +287,8 @@ end
 
 /-- Auxiliary definition for the `braided_category` instance on `center C`. -/
 @[simps]
-def braiding (X Y : center C) : X ⊗ Y ≅ Y ⊗ X :=
-  iso_mk
+def braiding (X Y : Center C) : X ⊗ Y ≅ Y ⊗ X :=
+  isoMk
     ⟨(X.2.β Y.1).Hom, fun U => by
       dsimp
       simp only [category.assoc]
@@ -296,7 +296,7 @@ def braiding (X Y : center C) : X ⊗ Y ≅ Y ⊗ X :=
         half_braiding.monoidal]
       simp ⟩
 
-instance braided_category_center : braided_category (center C) where
+instance braided_category_center : BraidedCategory (Center C) where
   braiding := braiding
   braiding_naturality' := fun X Y X' Y' f g => by
     ext
@@ -305,13 +305,13 @@ instance braided_category_center : braided_category (center C) where
 
 section
 
-variable [braided_category C]
+variable [BraidedCategory C]
 
 open BraidedCategory
 
 /-- Auxiliary construction for `of_braided`. -/
 @[simps]
-def of_braided_obj (X : C) : center C :=
+def of_braided_obj (X : C) : Center C :=
   ⟨X,
     { β := fun Y => β_ X Y,
       monoidal' := fun U U' => by
@@ -323,8 +323,8 @@ variable (C)
 /-- The functor lifting a braided category to its center, using the braiding as the half-braiding.
 -/
 @[simps]
-def of_braided : monoidal_functor C (center C) where
-  obj := of_braided_obj
+def of_braided : MonoidalFunctor C (Center C) where
+  obj := ofBraidedObj
   map := fun X X' f => { f, comm' := fun U => braiding_naturality _ _ }
   ε :=
     { f := 𝟙 _,

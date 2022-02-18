@@ -1,7 +1,6 @@
-import Mathbin.Topology.UrysohnsBounded
-import Mathbin.Topology.Algebra.Ordered.MonotoneContinuity
-import Mathbin.Data.Set.Intervals.Disjoint
 import Mathbin.Data.Set.Intervals.Monotone
+import Mathbin.Topology.Algebra.Order.MonotoneContinuity
+import Mathbin.Topology.UrysohnsBounded
 
 /-!
 # Tietze extension theorem
@@ -302,8 +301,8 @@ a nonempty convex set of real numbers (we use `ord_connected` instead of `convex
 deduce this argument by typeclass search) such that `f x ∈ t` for all `x`. Then there exists
 a bounded continuous real-valued function `g : Y →ᵇ ℝ` such that `g y ∈ t` for all `y` and
 `g ∘ e = f`. -/
-theorem exists_extension_forall_mem_of_closed_embedding (f : X →ᵇ ℝ) {t : Set ℝ} {e : X → Y} [hs : ord_connected t]
-    (hf : ∀ x, f x ∈ t) (hne : t.nonempty) (he : ClosedEmbedding e) : ∃ g : Y →ᵇ ℝ, (∀ y, g y ∈ t) ∧ g ∘ e = f := by
+theorem exists_extension_forall_mem_of_closed_embedding (f : X →ᵇ ℝ) {t : Set ℝ} {e : X → Y} [hs : OrdConnected t]
+    (hf : ∀ x, f x ∈ t) (hne : t.Nonempty) (he : ClosedEmbedding e) : ∃ g : Y →ᵇ ℝ, (∀ y, g y ∈ t) ∧ g ∘ e = f := by
   cases' is_empty_or_nonempty X
   · rcases hne with ⟨c, hc⟩
     refine' ⟨const Y c, fun y => hc, funext fun x => isEmptyElim x⟩
@@ -319,8 +318,8 @@ real-valued function on `s`. Let `t` be a nonempty convex set of real numbers (w
 `ord_connected` instead of `convex` to automatically deduce this argument by typeclass search) such
 that `f x ∈ t` for all `x : s`. Then there exists a bounded continuous real-valued function
 `g : Y →ᵇ ℝ` such that `g y ∈ t` for all `y` and `g.restrict s = f`. -/
-theorem exists_forall_mem_restrict_eq_of_closed {s : Set Y} (f : s →ᵇ ℝ) (hs : IsClosed s) {t : Set ℝ} [ord_connected t]
-    (hf : ∀ x, f x ∈ t) (hne : t.nonempty) : ∃ g : Y →ᵇ ℝ, (∀ y, g y ∈ t) ∧ g.restrict s = f := by
+theorem exists_forall_mem_restrict_eq_of_closed {s : Set Y} (f : s →ᵇ ℝ) (hs : IsClosed s) {t : Set ℝ} [OrdConnected t]
+    (hf : ∀ x, f x ∈ t) (hne : t.Nonempty) : ∃ g : Y →ᵇ ℝ, (∀ y, g y ∈ t) ∧ g.restrict s = f := by
   rcases exists_extension_forall_mem_of_closed_embedding f hf hne (closed_embedding_subtype_coe hs) with ⟨g, hg, hgf⟩
   exact ⟨g, hg, coe_injective hgf⟩
 
@@ -334,8 +333,8 @@ topological space `Y`. Let `f` be a continuous real-valued function on `X`. Let 
 convex set of real numbers (we use `ord_connected` instead of `convex` to automatically deduce this
 argument by typeclass search) such that `f x ∈ t` for all `x`. Then there exists a continuous
 real-valued function `g : C(Y, ℝ)` such that `g y ∈ t` for all `y` and `g ∘ e = f`. -/
-theorem exists_extension_forall_mem_of_closed_embedding (f : C(X, ℝ)) {t : Set ℝ} {e : X → Y} [hs : ord_connected t]
-    (hf : ∀ x, f x ∈ t) (hne : t.nonempty) (he : ClosedEmbedding e) : ∃ g : C(Y, ℝ), (∀ y, g y ∈ t) ∧ g ∘ e = f := by
+theorem exists_extension_forall_mem_of_closed_embedding (f : C(X, ℝ)) {t : Set ℝ} {e : X → Y} [hs : OrdConnected t]
+    (hf : ∀ x, f x ∈ t) (hne : t.Nonempty) (he : ClosedEmbedding e) : ∃ g : C(Y, ℝ), (∀ y, g y ∈ t) ∧ g ∘ e = f := by
   have h : ℝ ≃o Ioo (-1 : ℝ) 1 := orderIsoIooNegOneOne ℝ
   set F : X →ᵇ ℝ :=
     { toFun := coe ∘ h ∘ f, continuous_to_fun := continuous_subtype_coe.comp (h.continuous.comp f.continuous),
@@ -378,10 +377,10 @@ on `s`. Let `t` be a nonempty convex set of real numbers (we use `ord_connected`
 to automatically deduce this argument by typeclass search) such that `f x ∈ t` for all `x : s`. Then
 there exists a continuous real-valued function `g : C(Y, ℝ)` such that `g y ∈ t` for all `y` and
 `g.restrict s = f`. -/
-theorem exists_restrict_eq_forall_mem_of_closed {s : Set Y} (f : C(s, ℝ)) {t : Set ℝ} [ord_connected t]
-    (ht : ∀ x, f x ∈ t) (hne : t.nonempty) (hs : IsClosed s) : ∃ g : C(Y, ℝ), (∀ y, g y ∈ t) ∧ g.restrict s = f :=
+theorem exists_restrict_eq_forall_mem_of_closed {s : Set Y} (f : C(s, ℝ)) {t : Set ℝ} [OrdConnected t]
+    (ht : ∀ x, f x ∈ t) (hne : t.Nonempty) (hs : IsClosed s) : ∃ g : C(Y, ℝ), (∀ y, g y ∈ t) ∧ g.restrict s = f :=
   let ⟨g, hgt, hgf⟩ := exists_extension_forall_mem_of_closed_embedding f ht hne (closed_embedding_subtype_coe hs)
-  ⟨g, hgt, coe_inj hgf⟩
+  ⟨g, hgt, coe_injective hgf⟩
 
 /-- **Tietze extension theorem** for real-valued continuous maps, a version for a closed set. Let
 `s` be a closed set in a normal topological space `Y`. Let `f` be a continuous real-valued function

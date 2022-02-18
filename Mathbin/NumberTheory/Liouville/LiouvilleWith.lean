@@ -106,7 +106,7 @@ theorem mul_rat (h : LiouvilleWith p x) (hr : r ≠ 0) : LiouvilleWith p (x * r)
     simp [hne, hr]
     
   · rw [A, ← sub_mul, abs_mul]
-    simp only [smul_eq_mul, id.def, Nat.cast_mul]
+    simp only [smul_eq_mul, id.def, Nat.cast_mulₓ]
     refine' (mul_lt_mul_of_pos_right hlt <| abs_pos.2 <| Rat.cast_ne_zero.2 hr).trans_le _
     rw [mul_rpow, mul_div_mul_left, mul_comm, mul_div_assoc]
     exacts[(rpow_pos_of_pos (Nat.cast_pos.2 r.pos) _).ne', Nat.cast_nonneg _, Nat.cast_nonneg _]

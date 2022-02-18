@@ -83,7 +83,7 @@ variable (𝕜 : Type _) [TopologicalSpace 𝕜] [Semiringₓ 𝕜]
 
 variable (E : Type _) [TopologicalSpace E] [AddCommMonoidₓ E] [Module 𝕜 E]
 
--- ././Mathport/Syntax/Translate/Basic.lean:857:9: unsupported derive handler λ α, has_coe_to_fun α (λ _, E → 𝕜)
+-- ././Mathport/Syntax/Translate/Basic.lean:859:9: unsupported derive handler λ α, has_coe_to_fun α (λ _, E → 𝕜)
 /-- The weak dual of a topological module `E` over a topological semiring `𝕜` consists of
 continuous linear functionals from `E` to scalars `𝕜`. It is a type synonym with the usual dual
 (when the latter is defined), but will be equipped with a different topology. -/
@@ -117,7 +117,7 @@ theorem continuous_of_continuous_eval {α : Type u} [TopologicalSpace α] {g : �
   continuous_induced_rng (continuous_pi_iff.mpr h)
 
 theorem tendsto_iff_forall_eval_tendsto {γ : Type u} {F : Filter γ} {ψs : γ → WeakDual 𝕜 E} {ψ : WeakDual 𝕜 E} :
-    tendsto ψs F (𝓝 ψ) ↔ ∀ z : E, tendsto (fun i => ψs i z) F (𝓝 (ψ z)) := by
+    Tendsto ψs F (𝓝 ψ) ↔ ∀ z : E, Tendsto (fun i => ψs i z) F (𝓝 (ψ z)) := by
   rw [← tendsto_pi_nhds, (coe_fn_embedding 𝕜 E).tendsto_nhds_iff]
 
 /-- Addition in `weak_dual 𝕜 E` is continuous. -/

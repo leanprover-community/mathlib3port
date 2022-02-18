@@ -13,7 +13,7 @@ universe v₁ v₂ v₃ u₁ u₂ u₃
 
 variable {C : Type u₁} {D : Type u₂} {E : Type u₃}
 
-variable [category.{v₁} C] [category.{v₂} D] [category.{v₃} E]
+variable [Category.{v₁} C] [Category.{v₂} D] [Category.{v₃} E]
 
 @[simp]
 theorem map_id (F : C × D ⥤ E) (X : C) (Y : D) : F.map ((𝟙 X, 𝟙 Y) : (X, Y) ⟶ (X, Y)) = 𝟙 (F.obj (X, Y)) :=

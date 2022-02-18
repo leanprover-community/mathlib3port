@@ -69,10 +69,10 @@ def PiLp {ι : Type _} (p : ℝ) (α : ι → Type _) : Type _ :=
 instance {ι : Type _} (p : ℝ) (α : ι → Type _) [∀ i, Inhabited (α i)] : Inhabited (PiLp p α) :=
   ⟨fun i => default⟩
 
-theorem fact_one_le_one_real : Fact ((1 : ℝ) ≤ 1) :=
+instance fact_one_le_one_real : Fact ((1 : ℝ) ≤ 1) :=
   ⟨rfl.le⟩
 
-theorem fact_one_le_two_real : Fact ((1 : ℝ) ≤ 2) :=
+instance fact_one_le_two_real : Fact ((1 : ℝ) ≤ 2) :=
   ⟨one_le_two⟩
 
 namespace PiLp
@@ -136,7 +136,7 @@ space instance, we will show that the uniform structure is equal (but not defeq)
 one, and then register an instance in which we replace the uniform structure by the product one
 using this emetric space and `emetric_space.replace_uniformity`. -/
 def emetric_aux : EmetricSpace (PiLp p α) :=
-  { pseudo_emetric_aux p α with
+  { pseudoEmetricAux p α with
     eq_of_edist_eq_zero := fun f g hfg => by
       have pos : 0 < p := lt_of_lt_of_leₓ zero_lt_one fact_one_le_p.out
       let h := pseudo_emetric_aux p α
@@ -201,12 +201,12 @@ include fact_one_le_p
 /-- pseudoemetric space instance on the product of finitely many pseudoemetric spaces, using the
 `L^p` pseudoedistance, and having as uniformity the product uniformity. -/
 instance [∀ i, PseudoEmetricSpace (β i)] : PseudoEmetricSpace (PiLp p β) :=
-  (pseudo_emetric_aux p β).replaceUniformity (aux_uniformity_eq p β).symm
+  (pseudoEmetricAux p β).replaceUniformity (aux_uniformity_eq p β).symm
 
 /-- emetric space instance on the product of finitely many emetric spaces, using the `L^p`
 edistance, and having as uniformity the product uniformity. -/
 instance [∀ i, EmetricSpace (α i)] : EmetricSpace (PiLp p α) :=
-  (emetric_aux p α).replaceUniformity (aux_uniformity_eq p α).symm
+  (emetricAux p α).replaceUniformity (aux_uniformity_eq p α).symm
 
 omit fact_one_le_p
 

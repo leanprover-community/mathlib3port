@@ -1,5 +1,5 @@
 import Mathbin.Data.Int.Basic
-import Mathbin.Order.SuccPred
+import Mathbin.Order.SuccPred.Basic
 
 /-!
 # Successors and predecessors of integers
@@ -17,10 +17,10 @@ instance : SuccOrder ℤ :=
 @[reducible]
 instance : PredOrder ℤ where
   pred := pred
-  pred_le := fun a => (sub_one_lt_of_le le_rfl).le
-  minimal_of_le_pred := fun a ha => ((sub_one_lt_of_le le_rfl).not_le ha).elim
-  le_pred_of_lt := fun a b => le_sub_one_of_lt
-  le_of_pred_lt := fun a b => le_of_sub_one_lt
+  pred_le := fun a => (sub_one_lt_of_leₓ le_rfl).le
+  minimal_of_le_pred := fun a ha => ((sub_one_lt_of_leₓ le_rfl).not_le ha).elim
+  le_pred_of_lt := fun a b => le_sub_one_of_ltₓ
+  le_of_pred_lt := fun a b => le_of_sub_one_ltₓ
 
 theorem Int.succ_iterate (a : ℤ) : ∀ n, (succ^[n]) a = a + n
   | 0 => (add_zeroₓ a).symm

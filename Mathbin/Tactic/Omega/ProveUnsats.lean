@@ -20,15 +20,15 @@ unsafe def prove_forall_mem_eq_zero (is : List Int) : tactic expr :=
 
 /-- Return expr of proof that the combination of linear constraints
     represented by ks and ts is unsatisfiable -/
-unsafe def prove_unsat_lin_comb (ks : List Nat) (ts : List term) : tactic expr :=
-  let ⟨b, as⟩ := lin_comb ks ts
+unsafe def prove_unsat_lin_comb (ks : List Nat) (ts : List Term) : tactic expr :=
+  let ⟨b, as⟩ := linComb ks ts
   do
   let x1 ← prove_neg b
   let x2 ← prove_forall_mem_eq_zero as
   to_expr (pquote.1 (unsat_lin_comb_of (%%ₓquote.1 ks) (%%ₓquote.1 ts) (%%ₓx1) (%%ₓx2)))
 
 /-- Given a (([],les) : clause), return the expr of a term (t : clause.unsat ([],les)). -/
-unsafe def prove_unsat_ef : clause → tactic expr
+unsafe def prove_unsat_ef : Clause → tactic expr
   | (_ :: _, _) => failed
   | ([], les) => do
     let ks ← find_scalars les
@@ -36,18 +36,18 @@ unsafe def prove_unsat_ef : clause → tactic expr
     return (quote.1 (unsat_of_unsat_lin_comb (%%ₓquote.1 ks) (%%ₓquote.1 les) (%%ₓx)))
 
 /-- Given a (c : clause), return the expr of a term (t : clause.unsat c)  -/
-unsafe def prove_unsat (c : clause) : tactic expr := do
+unsafe def prove_unsat (c : Clause) : tactic expr := do
   let ee ← find_ees c
-  let x ← prove_unsat_ef (eq_elim ee c)
+  let x ← prove_unsat_ef (eqElim ee c)
   return (quote.1 (unsat_of_unsat_eq_elim (%%ₓquote.1 ee) (%%ₓquote.1 c) (%%ₓx)))
 
 /-- Given a (cs : list clause), return the expr of a term (t : clauses.unsat cs)  -/
-unsafe def prove_unsats : List clause → tactic expr
-  | [] => return (quote.1 clauses.unsat_nil)
+unsafe def prove_unsats : List Clause → tactic expr
+  | [] => return (quote.1 Clauses.unsat_nil)
   | p :: ps => do
     let x ← prove_unsat p
     let xs ← prove_unsats ps
-    to_expr (pquote.1 (clauses.unsat_cons (%%ₓquote.1 p) (%%ₓquote.1 ps) (%%ₓx) (%%ₓxs)))
+    to_expr (pquote.1 (Clauses.unsat_cons (%%ₓquote.1 p) (%%ₓquote.1 ps) (%%ₓx) (%%ₓxs)))
 
 end Omega
 

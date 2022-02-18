@@ -71,9 +71,7 @@ unsafe def mk_exists_lst (args : List expr) (inner : expr) : tactic expr :=
     (fun arg i : expr => do
       let t ← infer_type arg
       let sort l ← infer_type t
-      return <|
-          if arg.occurs i ∨ l ≠ level.zero then (const `Exists [l] : expr) t (i.lambdas [arg])
-          else (const `and [] : expr) t i)
+      return <| if arg i ∨ l ≠ level.zero then (const `Exists [l] : expr) t (i [arg]) else (const `and [] : expr) t i)
     inner
 
 /-- `traverse f e` applies the monadic function `f` to the direct descendants of `e`. -/
@@ -99,9 +97,9 @@ unsafe def mfoldl {α : Type} {m} [Monadₓ m] (f : α → expr → m α) : α �
 with `new`. The occurrences of `old` in `e` are determined using keyed matching
 with transparency `md`; see `kabstract` for details. If `unify` is true,
 we may assign metavariables in `e` as we match subterms of `e` against `old`. -/
-unsafe def kreplace (e old new : expr) (md := semireducible) (unify := tt) : tactic expr := do
+unsafe def kreplace (e old new : expr) (md := semireducible) (unify := true) : tactic expr := do
   let e ← kabstract e old md unify
-  pure <| e.instantiate_var new
+  pure <| e new
 
 end Expr
 
@@ -114,8 +112,8 @@ unsafe def contains_sorry_aux (pre : Name) : Name → tactic Bool
   | nm => do
     let env ← get_env
     let decl ← get_decl nm
-    let ff ← return decl.value.contains_sorry | return tt
-    ((decl.value.list_names_with_prefix pre).mfold ff) fun n b => if b then return tt else n.contains_sorry_aux
+    let ff ← return decl.value.contains_sorry | return true
+    ((decl pre).mfold ff) fun n b => if b then return tt else n
 
 /-- `nm.contains_sorry` checks whether `sorry` occurs in the value of the declaration `nm` or
   in any declarations `nm._proof_i` (or to be more precise: any declaration in namespace `nm`).
@@ -202,11 +200,11 @@ export InteractionMonad (get_state set_state run_with_state)
 private unsafe def add_local_consts_as_local_hyps_aux : List (expr × expr) → List expr → tactic (List (expr × expr))
   | mappings, [] => return mappings
   | mappings, var :: rest => do
-    let is_dependent := (var.local_type.fold ff) fun e n b => if b then b else e ∈ rest
+    let is_dependent := (var.local_type.fold false) fun e n b => if b then b else e ∈ rest
     if is_dependent then add_local_consts_as_local_hyps_aux mappings (rest ++ [var])
       else do
-        let new_type := var.local_type.replace_subexprs mappings
-        let hyp ← assertv var.local_pp_name new_type (var.local_const_set_type new_type)
+        let new_type := var mappings
+        let hyp ← assertv var new_type (var new_type)
         add_local_consts_as_local_hyps_aux ((var, hyp) :: mappings) rest
 
 /-- `add_local_consts_as_local_hyps vars` add the given list `vars` of `expr.local_const`s to the
@@ -221,7 +219,7 @@ private unsafe def add_local_consts_as_local_hyps_aux : List (expr × expr) → 
     If the list of passed local constants have types which depend on one another (which can only
     happen by hand-crafting the `expr`s manually), this function will loop forever. -/
 unsafe def add_local_consts_as_local_hyps (vars : List expr) : tactic (List (expr × expr)) :=
-  add_local_consts_as_local_hyps_aux [] vars.reverse.erase_dup
+  add_local_consts_as_local_hyps_aux [] vars.reverse.eraseDup
 
 private unsafe def get_expl_pi_arity_aux : expr → tactic Nat
   | expr.pi n bi d b => do
@@ -240,7 +238,7 @@ unsafe def get_expl_pi_arity (type : expr) : tactic Nat :=
 unsafe def get_expl_arity (fn : expr) : tactic Nat :=
   infer_type fn >>= get_expl_pi_arity
 
-private unsafe def get_app_fn_args_whnf_aux (md : transparency) (unfold_ginductive : Bool) :
+private unsafe def get_app_fn_args_whnf_aux (md : Transparency) (unfold_ginductive : Bool) :
     List expr → expr → tactic (expr × List expr) := fun args e => do
   let e ← whnf e md unfold_ginductive
   match e with
@@ -256,7 +254,7 @@ get_app_fn_args_whnf `(let f := g x in f y) = (`(g), [`(x), `(y)])
 
 The returned expression is in whnf, but the arguments are generally not.
 -/
-unsafe def get_app_fn_args_whnf (e : expr) (md := semireducible) (unfold_ginductive := tt) :
+unsafe def get_app_fn_args_whnf (e : expr) (md := semireducible) (unfold_ginductive := true) :
     tactic (expr × List expr) :=
   get_app_fn_args_whnf_aux md unfold_ginductive [] e
 
@@ -265,7 +263,7 @@ normalised as necessary (with transparency `md`). `unfold_ginductive` controls
 whether constructors of generalised inductive types are unfolded. The returned
 expression is in whnf.
 -/
-unsafe def get_app_fn_whnf : expr → optParam _ semireducible → optParam _ tt → tactic expr
+unsafe def get_app_fn_whnf : expr → optParam _ semireducible → optParam _ true → tactic expr
   | e, md, unfold_ginductive => do
     let e ← whnf e md unfold_ginductive
     match e with
@@ -277,7 +275,7 @@ where `C` is a constant, after normalisation with transparency `md`. If so, the
 name of `C` is returned. Otherwise the tactic fails. `unfold_ginductive`
 controls whether constructors of generalised inductive types are unfolded.
 -/
-unsafe def get_app_fn_const_whnf (e : expr) (md := semireducible) (unfold_ginductive := tt) : tactic Name := do
+unsafe def get_app_fn_const_whnf (e : expr) (md := semireducible) (unfold_ginductive := true) : tactic Name := do
   let f ← get_app_fn_whnf e md unfold_ginductive
   match f with
     | expr.const n _ => pure n
@@ -291,7 +289,7 @@ is normalised as necessary (with transparency `md`). `unfold_ginductive`
 controls whether constructors of generalised inductive types are unfolded. The
 returned expressions are not necessarily in whnf.
 -/
-unsafe def get_app_args_whnf (e : expr) (md := semireducible) (unfold_ginductive := tt) : tactic (List expr) :=
+unsafe def get_app_args_whnf (e : expr) (md := semireducible) (unfold_ginductive := true) : tactic (List expr) :=
   Prod.snd <$> get_app_fn_args_whnf e md unfold_ginductive
 
 /-- `pis loc_consts f` is used to create a pi expression whose body is `f`.
@@ -333,7 +331,7 @@ unsafe def add_theorem_by (n : Name) (ls : List Name) (type : expr) (tac : tacti
   let ((), body) ← solve_aux type tac
   let body ← instantiate_mvars body
   add_decl <| mk_theorem n ls type body
-  return <| expr.const n <| ls.map level.param
+  return <| expr.const n <| ls level.param
 
 /-- `eval_expr' α e` attempts to evaluate the expression `e` in the type `α`.
 This is a variant of `eval_expr` in core. Due to unexplained behavior in the VM, in rare
@@ -349,7 +347,7 @@ names which are usable by tactic programs.
 The returned name has four components which are all strings. -/
 unsafe def mk_user_fresh_name : tactic Name := do
   let nm ← mk_fresh_name
-  return <| `user__ ++ nm.pop_prefix.sanitize_name ++ `user__
+  return <| `user__ ++ nm ++ `user__
 
 /-- `has_attribute' attr_name decl_name` checks
 whether `decl_name` exists and has attribute `attr_name`. -/
@@ -388,7 +386,7 @@ better yet, if Lean exposed its path information.
 unsafe def get_decls_from (fs : List (Option Stringₓ)) : tactic (name_map declaration) := do
   let root ← unsafe_run_io <| Io.Env.getCwd
   let fs := fs.map (Option.map fun path => root ++ "/" ++ path)
-  let err ← unsafe_run_io <| (fs.filter_map id).mfilter <| (· <$> ·) bnot ∘ Io.Fs.fileExists
+  let err ← unsafe_run_io <| (fs.filterMap id).mfilter <| (· <$> ·) bnot ∘ Io.Fs.fileExists
   guardₓ (err = []) <|> fail f! "File not found: {err}"
   let e ← tactic.get_env
   let xs :=
@@ -400,7 +398,7 @@ unsafe def get_decls_from (fs : List (Option Stringₓ)) : tactic (name_map decl
 /-- If `{nm}_{n}` doesn't exist in the environment, returns that, otherwise tries `{nm}_{n+1}` -/
 unsafe def get_unused_decl_name_aux (e : environment) (nm : Name) : ℕ → tactic Name
   | n =>
-    let nm' := nm.append_suffix ("_" ++ toString n)
+    let nm' := nm.appendSuffix ("_" ++ toString n)
     if e.contains nm' then get_unused_decl_name_aux (n + 1) else return nm'
 
 /-- Return a name which doesn't already exist in the environment. If `nm` doesn't exist, it
@@ -422,14 +420,14 @@ but is hopefully faster.
 unsafe def decl_mk_const (d : declaration) : tactic (expr × expr) := do
   let subst ← d.univ_params.mmap fun u => Prod.mk u <$> mk_meta_univ
   let e : expr := expr.const d.to_name (Prod.snd <$> subst)
-  return (e, d.type.instantiate_univ_params subst)
+  return (e, d subst)
 
 /-- Replace every universe metavariable in an expression with a universe parameter.
 
 (This is useful when making new declarations.)
 -/
 unsafe def replace_univ_metas_with_univ_params (e : expr) : tactic expr := do
-  e.list_univ_meta_vars.enum.mmap fun n => do
+  e fun n => do
       let n' := `u.appendSuffix ("_" ++ toString (n.1 + 1))
       unify (expr.sort (level.mvar n.2)) (expr.sort (level.param n'))
   instantiate_mvars e
@@ -476,10 +474,10 @@ unsafe def elim_gen_prod : Nat → expr → List expr → List Name → tactic (
   | 0, e, hs, ns => return (hs.reverse, e, ns)
   | n + 1, e, hs, ns => do
     let t ← infer_type e
-    if t.is_app_of `eq then return (hs.reverse, e, ns)
+    if t `eq then return (hs, e, ns)
       else do
-        let [(_, [h, h'], _)] ← cases_core e (ns.take 1)
-        elim_gen_prod n h' (h :: hs) (ns.drop 1)
+        let [(_, [h, h'], _)] ← cases_core e (ns 1)
+        elim_gen_prod n h' (h :: hs) (ns 1)
 
 private unsafe def elim_gen_sum_aux : Nat → expr → List expr → tactic (List expr × expr)
   | 0, e, hs => return (hs, e)
@@ -494,8 +492,8 @@ type is a (nested) sum `⊕`. Returns the list of local constants representing t
 unsafe def elim_gen_sum (n : Nat) (e : expr) : tactic (List expr) := do
   let (hs, h') ← elim_gen_sum_aux n e []
   let gs ← get_goals
-  set_goals <| (gs.take (n + 1)).reverse ++ gs.drop (n + 1)
-  return <| hs.reverse ++ [h']
+  set_goals <| (gs (n + 1)).reverse ++ gs (n + 1)
+  return <| hs ++ [h']
 
 /-- Given `elab_def`, a tactic to solve the current goal,
 `extract_def n trusted elab_def` will create an auxiliary definition named `n` and use it
@@ -511,7 +509,7 @@ unsafe def extract_def (n : Name) (trusted : Bool) (elab_def : tactic Unit) : ta
   add_decl <| declaration.defn n univ t' d' (ReducibilityHints.regular 1 tt) trusted
   applyc n
 
--- ././Mathport/Syntax/Translate/Basic.lean:794:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
 /-- Attempts to close the goal with `dec_trivial`. -/
 unsafe def exact_dec_trivial : tactic Unit :=
   sorry
@@ -549,21 +547,21 @@ unsafe def replace_at (tac : expr → tactic (expr × expr)) (hs : List expr) (t
         let h_type ← infer_type h
         succeeds <| do
             let (new_h_type, pr) ← tac h_type
-            assert h.local_pp_name new_h_type
+            assert h new_h_type
             mk_eq_mp pr h >>= tactic.exact
   let goal_simplified ←
     succeeds <| do
         guardₓ tgt
         let (new_t, pr) ← target >>= tac
         replace_target new_t pr
-  to_remove.mmap' fun h => try (clear h)
-  return (¬to_remove.empty ∨ goal_simplified)
+  to_remove fun h => try (clear h)
+  return (¬to_remove ∨ goal_simplified)
 
 /-- `revert_after e` reverts all local constants after local constant `e`. -/
 unsafe def revert_after (e : expr) : tactic ℕ := do
   let l ← local_context
-  let [Pos] ← return <| l.indexes_of e | pp e >>= fun s => fail f! "No such local constant {s}"
-  let l := l.drop pos.succ
+  let [Pos] ← return <| l.indexesOf e | pp e >>= fun s => fail f! "No such local constant {s}"
+  let l := l.drop Pos.succ
   revert_lst l
 
 /-- `revert_target_deps` reverts all local constants on which the target depends (recursively).
@@ -599,7 +597,7 @@ unsafe def intron_no_renames : ℕ → tactic Unit
     intron_no_renames n
 
 /-- `get_univ_level t` returns the universe level of a type `t` -/
-unsafe def get_univ_level (t : expr) (md := semireducible) (unfold_ginductive := tt) : tactic level := do
+unsafe def get_univ_level (t : expr) (md := semireducible) (unfold_ginductive := true) : tactic level := do
   let expr.sort u ← infer_type t >>= fun s => whnf s md unfold_ginductive |
     fail "get_univ_level: argument is not a type"
   return u
@@ -628,7 +626,7 @@ unsafe def local_def_value (e : expr) : tactic expr :=
 unsafe def is_local_def (e : expr) : tactic Unit := do
   let ctx ← unsafe.type_context.get_local_context.run
   let some decl ← pure <| ctx.get_local_decl e.local_uniq_name | fail f! "is_local_def: {e} is not a local constant"
-  when decl.value.is_none <| fail f! "is_local_def: {e} is not a local definition"
+  when decl <| fail f! "is_local_def: {e} is not a local definition"
 
 /-- Returns the local definitions from the context. A local definition is a
 local constant of the form `e : α := t`. The local definitions are returned in
@@ -636,10 +634,9 @@ the order in which they appear in the context. -/
 unsafe def local_defs : tactic (List expr) := do
   let ctx ← unsafe.type_context.get_local_context.run
   let ctx' ← local_context
-  ctx'.mfilter fun h => do
-      let some decl ← pure <| ctx.get_local_decl h.local_uniq_name |
-        fail f! "local_defs: local {h} not found in the local context"
-      pure decl.value.is_some
+  ctx' fun h => do
+      let some decl ← pure <| ctx h | fail f! "local_defs: local {h} not found in the local context"
+      pure decl
 
 /-- like `split_on_p p xs`, `partition_local_deps_aux vs xs acc` searches for matches in `xs`
 (using membership to `vs` instead of a predicate) and breaks `xs` when matches are found.
@@ -647,9 +644,9 @@ whereas `split_on_p p xs` removes the matches, `partition_local_deps_aux vs xs a
 them in the following partition. Also, `partition_local_deps_aux vs xs acc` discards the partition
 running up to the first match. -/
 private def partition_local_deps_aux {α} [DecidableEq α] (vs : List α) : List α → List α → List (List α)
-  | [], Acc => [acc.reverse]
+  | [], Acc => [Acc.reverse]
   | l :: ls, Acc =>
-    if l ∈ vs then acc.reverse :: partition_local_deps_aux ls [l] else partition_local_deps_aux ls (l :: Acc)
+    if l ∈ vs then Acc.reverse :: partition_local_deps_aux ls [l] else partition_local_deps_aux ls (l :: Acc)
 
 /-- `partition_local_deps vs`, with `vs` a list of local constants,
 reorders `vs` in the order they appear in the local context together
@@ -666,33 +663,33 @@ locals `e₀`, `e₁`, `e₂` does not matter as a permutation will be chosen so
 correctness. This tactic is called `clearbody` in Coq. -/
 unsafe def clear_value (vs : List expr) : tactic Unit := do
   let ls ← partition_local_deps vs
-  ls.mmap' fun vs => do
+  ls fun vs => do
       revert_lst vs
-      let expr.elet v t d b ← target | fail f! "Cannot clear the body of {vs.head}. It is not a local definition."
+      let expr.elet v t d b ← target | fail f! "Cannot clear the body of {vs}. It is not a local definition."
       let e := expr.pi v BinderInfo.default t b
-      type_check e <|> fail f! "Cannot clear the body of {vs.head}. The resulting goal is not type correct."
+      type_check e <|> fail f! "Cannot clear the body of {vs}. The resulting goal is not type correct."
       let g ← mk_meta_var e
       let h ← note `h none g
       tactic.exact <| h d
       let gs ← get_goals
       set_goals <| g :: gs
-  ls.reverse.mmap' fun vs => intro_lst <| vs.map expr.local_pp_name
+  ls fun vs => intro_lst <| vs expr.local_pp_name
 
 /-- `context_has_local_def` is true iff there is at least one local definition in
 the context.
 -/
 unsafe def context_has_local_def : tactic Bool := do
   let ctx ← local_context
-  ctx.many (succeeds ∘ local_def_value)
+  ctx (succeeds ∘ local_def_value)
 
 /-- `context_upto_hyp_has_local_def h` is true iff any of the hypotheses in the
 context up to and including `h` is a local definition.
 -/
 unsafe def context_upto_hyp_has_local_def (h : expr) : tactic Bool := do
-  let ff ← succeeds (local_def_value h) | pure tt
+  let ff ← succeeds (local_def_value h) | pure true
   let ctx ← local_context
-  let ctx := ctx.take_while (· ≠ h)
-  ctx.many (succeeds ∘ local_def_value)
+  let ctx := ctx.takeWhile (· ≠ h)
+  ctx (succeeds ∘ local_def_value)
 
 /-- If the expression `h` is a local variable with type `x = t` or `t = x`, where `x` is a local
 constant, `tactic.subst' h` substitutes `x` by `t` everywhere in the main goal and then clears `h`.
@@ -707,23 +704,23 @@ unsafe def subst' (h : expr) : tactic Unit := do
     do
       let t ← infer_type h
       let (f, args) := t.get_app_fn_args
-      if f.const_name = `eq ∨ f.const_name = `heq then do
-          let lhs := args.inth 1
-          let rhs := args.ilast
-          if rhs.is_local_constant then return rhs
+      if f = `eq ∨ f = `heq then do
+          let lhs := args 1
+          let rhs := args
+          if rhs then return rhs
             else
-              if lhs.is_local_constant then return lhs
+              if lhs then return lhs
               else fail "subst tactic failed, hypothesis '{h.local_pp_name}' is not of the form (x = t) or (t = x)."
         else return h
   success_if_fail (is_local_def e) <|>
       fail
-        f! "Cannot substitute variable {e.local_pp_name}, it is a local definition. If you really want to do this, use `clear_value` first."
+        f! "Cannot substitute variable {e}, it is a local definition. If you really want to do this, use `clear_value` first."
   subst h
 
 /-- A variant of `simplify_bottom_up`. Given a tactic `post` for rewriting subexpressions,
 `simp_bottom_up post e` tries to rewrite `e` starting at the leaf nodes. Returns the resulting
 expression and a proof of equality. -/
-unsafe def simp_bottom_up' (post : expr → tactic (expr × expr)) (e : expr) (cfg : simp_config := {  }) :
+unsafe def simp_bottom_up' (post : expr → tactic (expr × expr)) (e : expr) (cfg : SimpConfig := {  }) :
     tactic (expr × expr) :=
   Prod.snd <$> simplify_bottom_up () (fun _ => (· <$> ·) (Prod.mk ()) ∘ post) e cfg
 
@@ -750,7 +747,7 @@ unsafe def get (c : instance_cache) (n : Name) : tactic (instance_cache × expr)
   | some i => return (c, i)
   | none => do
     let e ← mk_app n [c.α] >>= mk_instance
-    return (⟨c.α, c.univ, c.inst.insert n e⟩, e)
+    return (⟨c, c, c n e⟩, e)
 
 open Expr
 
@@ -767,7 +764,7 @@ unsafe def append_typeclasses : expr → instance_cache → List expr → tactic
 unsafe def mk_app (c : instance_cache) (n : Name) (l : List expr) : tactic (instance_cache × expr) := do
   let d ← get_decl n
   let (c, l) ← append_typeclasses d.type.binding_body c l
-  return (c, (expr.const n [c.univ]).mk_app (c.α :: l))
+  return (c, (expr.const n [c]).mk_app (c :: l))
 
 /-- `c.of_nat n` creates the `c.α`-valued numeral expression corresponding to `n`. -/
 protected unsafe def of_nat (c : instance_cache) (n : ℕ) : tactic (instance_cache × expr) :=
@@ -778,19 +775,17 @@ protected unsafe def of_nat (c : instance_cache) (n : ℕ) : tactic (instance_ca
     let (c, one) ← c.mk_app `` One.one []
     return
         (c,
-          (n.binary_rec one) fun b n e =>
+          (n one) fun b n e =>
             if n = 0 then one
-            else
-              cond b ((expr.const `` bit1 [c.univ]).mk_app [c.α, oi, ai, e])
-                ((expr.const `` bit0 [c.univ]).mk_app [c.α, ai, e]))
+            else cond b ((expr.const `` bit1 [c]).mk_app [c, oi, ai, e]) ((expr.const `` bit0 [c]).mk_app [c, ai, e]))
 
 /-- `c.of_int n` creates the `c.α`-valued numeral expression corresponding to `n`.
 The output is either a numeral or the negation of a numeral. -/
 protected unsafe def of_int (c : instance_cache) : ℤ → tactic (instance_cache × expr)
-  | (n : ℕ) => c.of_nat n
+  | (n : ℕ) => c.ofNat n
   | -[1+ n] => do
-    let (c, e) ← c.of_nat (n + 1)
-    c.mk_app `` Neg.neg [e]
+    let (c, e) ← c.ofNat (n + 1)
+    c `` Neg.neg [e]
 
 end InstanceCache
 
@@ -839,16 +834,16 @@ unsafe def subobject_names (struct_n : Name) : tactic (List Name × List Name) :
       | _ => fail "too many constructors"
   let vs ← var_names <$> (mk_const c >>= infer_type)
   let fields ← env.structure_fields struct_n
-  return <| fields.partition fun fn => ↑("_" ++ fn.to_string) ∈ vs
+  return <| fields fun fn => ↑("_" ++ fn) ∈ vs
 
 private unsafe def expanded_field_list' : Name → tactic (Dlist <| Name × Name)
   | struct_n => do
     let (so, fs) ← subobject_names struct_n
     let ts ←
       so.mmap fun n => do
-          let (_, e) ← mk_const (n.update_prefix struct_n) >>= infer_type >>= open_pis
-          expanded_field_list' <| e.get_app_fn.const_name
-    return <| Dlist.join ts ++ Dlist.ofList (fs.map <| Prod.mk struct_n)
+          let (_, e) ← mk_const (n.updatePrefix struct_n) >>= infer_type >>= open_pis
+          expanded_field_list' <| e
+    return <| Dlist.join ts ++ Dlist.ofList (fs <| Prod.mk struct_n)
 
 open Functor Function
 
@@ -928,7 +923,7 @@ unsafe def lock_tactic_state {α} (t : tactic α) : tactic α
 tries to apply the lemmas generated by the tactics in `l` on the first goal, and
 fail if none succeeds.
 -/
-unsafe def apply_list_expr (opt : apply_cfg) : List (tactic expr) → tactic Unit
+unsafe def apply_list_expr (opt : ApplyCfg) : List (tactic expr) → tactic Unit
   | [] => fail "no matching rule"
   | h :: t =>
     (do
@@ -951,8 +946,8 @@ unsafe def build_list_expr_for_apply : List pexpr → tactic (List (tactic expr)
     let a ← i_to_expr_for_apply h
     (do
           let l ← attribute.get_instances (expr.const_name a)
-          let m ← l.mmap fun n => _root_.to_pexpr <$> mk_const n
-          build_list_expr_for_apply (m.reverse ++ t)) <|>
+          let m ← l fun n => _root_.to_pexpr <$> mk_const n
+          build_list_expr_for_apply (m ++ t)) <|>
         return (i_to_expr_for_apply h :: tail)
 
 /-- `apply_rules hs n`: apply the list of rules `hs` (given as pexpr) and `assumption` on the
@@ -961,7 +956,7 @@ first goal and the resulting subgoals, iteratively, at most `n` times.
 Unlike `solve_by_elim`, `apply_rules` does not do any backtracking, and just greedily applies
 a lemma from the list until it can't.
  -/
-unsafe def apply_rules (hs : List pexpr) (n : Nat) (opt : apply_cfg) : tactic Unit := do
+unsafe def apply_rules (hs : List pexpr) (n : Nat) (opt : ApplyCfg) : tactic Unit := do
   let l ← lock_tactic_state <| build_list_expr_for_apply hs
   iterate_at_most_on_subgoals n (assumption <|> apply_list_expr opt l)
 
@@ -980,7 +975,7 @@ or `` `iff.mpr``. If the passed expression is an iterated function type eventual
 implication, as requested. -/
 unsafe def mk_iff_mp_app (iffmp : Name) : expr → (Nat → expr) → Option expr
   | expr.pi n bi e t, f => expr.lam n bi e <$> mk_iff_mp_app t fun n => f (n + 1) (expr.var n)
-  | quote.1 ((%%ₓa) ↔ %%ₓb), f => some <| @expr.const tt iffmp [] a b (f 0)
+  | quote.1 ((%%ₓa) ↔ %%ₓb), f => some <| @expr.const true iffmp [] a b (f 0)
   | _, f => none
 
 /-- `iff_mp_core e ty` assumes that `ty` is the type of `e`.
@@ -1009,7 +1004,7 @@ unsafe def iff_mpr (e : expr) : tactic expr := do
 try applying both directions separately.
 -/
 unsafe def apply_iff (e : expr) : tactic (List (Name × expr)) :=
-  let ap e := tactic.apply e { NewGoals := new_goals.non_dep_only }
+  let ap e := tactic.apply e { NewGoals := NewGoals.non_dep_only }
   ap e <|> iff_mp e >>= ap <|> iff_mpr e >>= ap
 
 /-- Configuration options for `apply_any`:
@@ -1017,9 +1012,9 @@ unsafe def apply_iff (e : expr) : tactic (List (Name × expr)) :=
 * `use_exfalso`: if `apply_any` fails to apply any lemma, call `exfalso` and try again.
 * `apply`: specify an alternative to `tactic.apply`; usually `apply := tactic.eapply`.
 -/
-unsafe structure apply_any_opt extends apply_cfg where
-  use_symmetry : Bool := tt
-  use_exfalso : Bool := tt
+unsafe structure apply_any_opt extends ApplyCfg where
+  use_symmetry : Bool := true
+  use_exfalso : Bool := true
 
 /-- This is a version of `apply_any` that takes a list of `tactic expr`s instead of `expr`s,
 and evaluates these as thunks before trying to apply them.
@@ -1029,11 +1024,11 @@ We need to do this to avoid metavariables getting stuck during subsequent rounds
 unsafe def apply_any_thunk (lemmas : List (tactic expr)) (opt : apply_any_opt := {  }) (tac : tactic Unit := skip)
     (on_success : expr → tactic Unit := fun _ => skip) (on_failure : tactic Unit := skip) : tactic Unit := do
   let modes := ([skip] ++ if opt.use_symmetry then [symmetry] else []) ++ if opt.use_exfalso then [exfalso] else []
-  (modes.any_of fun m => do
+  (modes fun m => do
         m
-        lemmas.any_of fun H =>
+        lemmas fun H =>
             H >>= fun e => do
-              apply e opt.to_apply_cfg
+              apply e opt
               on_success e
               tac) <|>
       on_failure >> fail "apply_any tactic failed; no lemma could be applied"
@@ -1091,7 +1086,7 @@ and fail otherwise.
 -/
 unsafe def sorry_if_contains_sorry : tactic Unit := do
   let g ← target
-  guardₓ g.contains_sorry <|> fail "goal does not contain `sorry`"
+  guardₓ g <|> fail "goal does not contain `sorry`"
   tactic.admit
 
 /-- Fail if the target contains a metavariable. -/
@@ -1119,11 +1114,10 @@ unsafe def terminal_goal : tactic Unit :=
     subsingleton_goal <|> do
       let g₀ :: _ ← get_goals
       let mvars ← (fun L => List.eraseₓ L g₀) <$> metavariables
-      mvars.mmap' fun g => do
+      mvars fun g => do
           let t ← infer_type g >>= instantiate_mvars
           let d ← kdepends_on t g₀
-          Monadₓ.whenb d <|
-              pp t >>= fun s => fail ("The current goal is not terminal: " ++ s.to_string ++ " depends on it.")
+          Monadₓ.whenb d <| pp t >>= fun s => fail ("The current goal is not terminal: " ++ s ++ " depends on it.")
 
 /-- Succeeds only if the current goal is "independent", in the sense
 that no other goals depend on it, even through shared meta-variables.
@@ -1222,12 +1216,13 @@ add_tactic_doc
   { Name := "fsplit", category := DocCategory.tactic, declNames := [`tactic.interactive.fsplit],
     tags := ["logic", "goal management"] }
 
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `results
 /-- Calls `injection` on each hypothesis, and then, for each hypothesis on which `injection`
 succeeds, clears the old hypothesis. -/
 unsafe def injections_and_clear : tactic Unit := do
   let l ← local_context
   let results ← successes <| l.map fun e => injection e >> clear e
-  when results.empty (fail "could not use `injection` then `clear` on any hypothesis")
+  when (results results.empty) (fail "could not use `injection` then `clear` on any hypothesis")
 
 run_cmd
   add_interactive [`injections_and_clear]
@@ -1236,12 +1231,13 @@ add_tactic_doc
   { Name := "injections_and_clear", category := DocCategory.tactic,
     declNames := [`tactic.interactive.injections_and_clear], tags := ["context management"] }
 
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `r
 /-- Calls `cases` on every local hypothesis, succeeding if
 it succeeds on at least one hypothesis. -/
 unsafe def case_bash : tactic Unit := do
   let l ← local_context
   let r ← successes (l.reverse.map fun h => cases h >> skip)
-  when r.empty failed
+  when (r r.empty) failed
 
 /-- `note_anon t v`, given a proof `v : t`,
 adds `h : t` to the current context, where the name `h` is fresh.
@@ -1266,7 +1262,7 @@ unsafe def dependent_pose_core (l : List (expr × expr)) : tactic Unit := do
   let t ← infer_type old
   let new_goal ← mk_meta_var (t.pis lc)
   set_goals (old :: new_goal :: other_goals)
-  exact ((new_goal.mk_app lc).instantiate_locals lm)
+  exact ((new_goal lc).instantiate_locals lm)
   return ()
 
 /-- Instantiates metavariables that appear in the current goal.
@@ -1282,7 +1278,7 @@ unsafe def instantiate_mvars_in_goals : tactic Unit :=
 /-- Protect the declaration `n` -/
 unsafe def mk_protected (n : Name) : tactic Unit := do
   let env ← get_env
-  set_env (env.mk_protected n)
+  set_env (env n)
 
 end Tactic
 
@@ -1327,7 +1323,7 @@ unsafe def get_current_namespace : lean.parser Name := do
   let n ← tactic.mk_user_fresh_name
   emit_code_here <| s! "def {n} := ()"
   let nfull ← tactic.resolve_constant n
-  return <| nfull.get_nth_prefix n.components.length
+  return <| nfull n
 
 /-- `get_variables` returns a list of existing variable names, along with their types and binder
 info. -/
@@ -1355,7 +1351,7 @@ unsafe def synthesize_tactic_state_with_variables_as_hyps (es : List pexpr) :
     lean.parser.of_tactic <|
         lock_tactic_state <| do
           add_local_consts_as_local_hyps vars
-          es.mmap to_expr
+          es to_expr
   let included_vars ← list_include_var_names
   let referenced_vars := List.join <| fake_es.map fun e => e.list_local_consts.map expr.local_pp_name
   let directly_included_vars :=
@@ -1436,7 +1432,7 @@ private unsafe def strip_prefix' (n : Name) : List Stringₓ → Name → tactic
 unsafe def strip_prefix : Name → tactic Name
   | n@(Name.mk_string a a_1) =>
     if `_private.isPrefixOf n then
-      let n' := n.update_prefix Name.anonymous
+      let n' := n.updatePrefix Name.anonymous
       n' <$ resolve_name' n' <|> pure n
     else strip_prefix' n [a] a_1
   | n => pure n
@@ -1446,18 +1442,18 @@ unsafe def mk_patterns (t : expr) : tactic (List format) := do
   let cl := t.get_app_fn.const_name
   let env ← get_env
   let fs := env.constructors_of cl
-  fs.mmap fun f => do
+  fs fun f => do
       let (vs, _) ← mk_const f >>= infer_type >>= open_pis
-      let vs := vs.filter fun v => v.is_default_local
+      let vs := vs fun v => v
       let vs ←
-        vs.mmap fun v => do
-            let v' ← get_unused_name v.local_pp_name
+        vs fun v => do
+            let v' ← get_unused_name v
             pose v' none (quote.1 ())
             pure v'
-      vs.mmap' fun v => get_local v >>= clear
-      let args := List.intersperse (" " : format) <| vs.map to_fmt
+      vs fun v => get_local v >>= clear
+      let args := List.intersperse (" " : format) <| vs to_fmt
       let f ← strip_prefix f
-      if args.empty then
+      if args then
           pure <|
             f! "| {f} := _
               "
@@ -1576,7 +1572,7 @@ unsafe def eqn_stub : hole_command where
     let fs ← mk_patterns t'
     let t ← pp t
     let out :=
-      if es.empty then
+      if es.Empty then
         format.to_string
           f! "-- do not forget to erase `:=`!!
             {format.join fs}"
@@ -1660,7 +1656,7 @@ unsafe def mk_comp (v : expr) : expr → tactic expr
   | app f e =>
     if e = v then pure f
     else do
-      guardₓ ¬v.occurs f <|> fail "bad guard"
+      guardₓ ¬v f <|> fail "bad guard"
       let e' ← mk_comp e >>= instantiate_mvars
       let f ← instantiate_mvars f
       mk_mapp `` Function.comp [none, none, none, f, e']
@@ -1681,7 +1677,7 @@ unsafe def mk_higher_order_type : expr → tactic expr
   | pi n bi d b@(pi _ _ _ _) => do
     let v ← mk_local_def n d
     let b' := b.instantiate_var v
-    (pi n bi d ∘ flip abstract_local v.local_uniq_name) <$> mk_higher_order_type b'
+    (pi n bi d ∘ flip abstract_local v) <$> mk_higher_order_type b'
   | pi n bi d b => do
     let v ← mk_local_def n d
     let b' := b.instantiate_var v
@@ -1719,7 +1715,7 @@ unsafe def higher_order_attr : user_attribute Unit (Option Name) where
             andthen (applyc lmm) assumption
       let pr ← instantiate_mvars pr
       let lmm' ← higher_order_attr.get_param lmm
-      let lmm' ← flip Name.updatePrefix lmm.get_prefix <$> lmm' <|> pure lmm.add_prime
+      let lmm' ← flip Name.updatePrefix lmm.getPrefix <$> lmm' <|> pure lmm.add_prime
       add_decl <| declaration.thm lmm' lvls t' (pure pr)
       copy_attribute `simp lmm lmm'
       copy_attribute `functor_norm lmm lmm'
@@ -1782,7 +1778,7 @@ local context. -/
 unsafe def clear_aux_decl_aux : List expr → tactic Unit
   | [] => skip
   | e :: l => do
-    cond e.is_aux_decl (tactic.clear e) skip
+    cond e (tactic.clear e) skip
     clear_aux_decl_aux l
 
 /-- `clear_aux_decl` clears all expressions from the local context that represent aux decls. -/
@@ -1795,7 +1791,7 @@ unsafe def apply_at_aux (arg t : expr) : List expr → expr → expr → tactic 
   | vs, e, pi n bi d b =>
     (do
         let v ← mk_meta_var d
-        apply_at_aux (v :: vs) (e v) (b.instantiate_var v)) <|>
+        apply_at_aux (v :: vs) (e v) (b v)) <|>
       (e arg, vs) <$ unify d t
   | vs, e, _ => failed
 
@@ -1804,7 +1800,7 @@ unsafe def apply_at (e h : expr) : tactic Unit := do
   let ht ← infer_type h
   let et ← infer_type e
   let (h', gs') ← apply_at_aux h ht [] e et
-  note h.local_pp_name none h'
+  note h none h'
   clear h
   let gs' ← gs'.mfilter is_assigned
   let g :: gs ← get_goals
@@ -1815,7 +1811,7 @@ unsafe def symmetry_hyp (h : expr) (md := semireducible) : tactic Unit := do
   let tgt ← infer_type h
   let env ← get_env
   let r := get_app_fn tgt
-  match env.symm_for (const_name r) with
+  match env (const_name r) with
     | some symm => do
       let s ← mk_const symm
       apply_at s h
@@ -1930,7 +1926,7 @@ unsafe def tactic_statement (g : expr) : tactic Stringₓ := do
   let g ← instantiate_mvars g
   let g ← head_beta g
   let r ← pp (replace_mvars g)
-  if g.has_meta_var then return s! "Try this: refine {r}" else return s! "Try this: exact {r}"
+  if g then return s! "Try this: refine {r}" else return s! "Try this: exact {r}"
 
 /-- `with_local_goals gs tac` runs `tac` on the goals `gs` and then restores the
 initial goals and returns the goals `tac` ended on. -/
@@ -1982,7 +1978,7 @@ unsafe def get_packaged_goal : tactic packaged_goal := do
   let ls ← local_context
   let tgt ← target >>= instantiate_mvars
   let tgt ← pis ls tgt
-  pure (ls.length, tgt)
+  pure (ls, tgt)
 
 /-- `goal_of_mvar g`, with `g` a meta variable, creates a
 `packaged_goal` corresponding to `g` interpretted as a proof goal -/
@@ -2023,10 +2019,10 @@ the equality or difference of meta variables that encode the same goal.
 -/
 unsafe def get_proof_state : tactic proof_state := do
   let gs ← get_goals
-  gs.mmap fun g => do
+  gs fun g => do
       let ⟨n, g⟩ ← goal_of_mvar g
       let g ←
-        gs.mfoldl
+        gs
             (fun g v => do
               let g ← kabstract g v reducible ff
               pure <| pi `goal BinderInfo.default (quote.1 True) g)
@@ -2069,11 +2065,11 @@ private unsafe def parse_pformat : Stringₓ → List Charₓ → parser pexpr
     pure (pquote.1 (to_pfmt (%%ₓreflect Acc) ++ pformat.mk format.line ++ %%ₓf))
   | Acc, '{' :: '{' :: s => parse_pformat (Acc ++ "{") s
   | Acc, '{' :: s => do
-    let (e, s) ← with_input (lean.parser.pexpr 0) s.as_string
-    let '}' :: s ← return s.to_list | fail "'}' expected"
+    let (e, s) ← with_input (lean.parser.pexpr 0) s.asString
+    let '}' :: s ← return s.toList | fail "'}' expected"
     let f ← parse_pformat "" s
     pure (pquote.1 (to_pfmt (%%ₓreflect Acc) ++ to_pfmt (%%ₓe) ++ %%ₓf))
-  | Acc, c :: s => parse_pformat (acc.str c) s
+  | Acc, c :: s => parse_pformat (Acc.str c) s
 
 /-- See `format!` in `init/meta/interactive_base.lean`.
 
@@ -2099,7 +2095,7 @@ See also: `trace!` and `fail!`
 -/
 @[user_notation]
 unsafe def pformat_macro (_ : parse <| tk "pformat!") (s : Stringₓ) : parser pexpr := do
-  let e ← parse_pformat "" s.to_list
+  let e ← parse_pformat "" s.toList
   return (pquote.1 (%%ₓe : pformat))
 
 /-- The combination of `pformat` and `fail`.
@@ -2126,7 +2122,7 @@ unsafe def get_project_dir (n : Name) (k : ℕ) : tactic Stringₓ := do
   let s ←
     e.decl_olean n <|>
         throwError "Did not find declaration {(← n)}. This command does not work in the file where {← n} is declared."
-  return <| s.popn_back k
+  return <| s k
 
 /-- A hackish way to get the `src` directory of mathlib. -/
 unsafe def get_mathlib_dir : tactic Stringₓ :=
@@ -2138,7 +2134,7 @@ since it is expensive to execute `get_mathlib_dir` many times. -/
 unsafe def is_in_mathlib (n : Name) : tactic Bool := do
   let ml ← get_mathlib_dir
   let e ← get_env
-  return <| e.is_prefix_of_file ml n
+  return <| e ml n
 
 /-- Runs a tactic by name.
 If it is a `tactic string`, return whatever string it returns.
@@ -2158,7 +2154,7 @@ unsafe def name_to_tactic (n : Name) : tactic Stringₓ := do
 /-- auxiliary function for `apply_under_n_pis` -/
 private unsafe def apply_under_n_pis_aux (func arg : pexpr) : ℕ → ℕ → expr → pexpr
   | n, 0, _ =>
-    let vars := (List.range n).reverse.map (@expr.var ff)
+    let vars := (List.range n).reverse.map (@expr.var false)
     let bd := vars.foldl expr.app arg.mk_explicit
     func bd
   | n, k + 1, expr.pi nm bi tp bd => expr.pi nm bi (pexpr.of_expr tp) (apply_under_n_pis_aux (n + 1) k bd)
@@ -2204,16 +2200,16 @@ unsafe def find_private_decl (n : Name) (fr : Option Name) : tactic Name := do
     OptionTₓ.run do
         let fr ← OptionTₓ.mk (return fr)
         let d ← monad_lift <| get_decl fr
-        OptionTₓ.mk (return <| env.decl_olean d.to_name)
+        OptionTₓ.mk (return <| env d)
   let p : Stringₓ → Bool :=
     match fn with
     | some fn => fun x => fn = x
-    | none => fun _ => tt
+    | none => fun _ => true
   let xs :=
     env.decl_filter_map fun d => do
       let fn ← env.decl_olean d.to_name
-      guardₓ (`_private.isPrefixOf d.to_name ∧ p fn ∧ d.to_name.update_prefix Name.anonymous = n)
-      pure d.to_name
+      guardₓ (`_private.isPrefixOf d ∧ p fn ∧ d Name.anonymous = n)
+      pure d
   match xs with
     | [n] => pure n
     | [] => fail "no such private found"
@@ -2235,10 +2231,10 @@ unsafe def import_private_cmd (_ : parse <| tk "import_private") : lean.parser U
   let n ← find_private_decl n fr
   let c ← resolve_constant n
   let d ← get_decl n
-  let c := @expr.const tt c d.univ_levels
+  let c := @expr.const true c d.univ_levels
   let new_n ← new_aux_decl_name
-  add_decl <| declaration.defn new_n d.univ_params d.type c ReducibilityHints.abbrev d.is_trusted
-  let new_not := s!"local notation `{(n.update_prefix Name.anonymous)}` := {new_n}"
+  add_decl <| declaration.defn new_n d d c ReducibilityHints.abbrev d
+  let new_not := s!"local notation `{(n.updatePrefix Name.anonymous)}` := {new_n}"
   emit_command_here <| new_not
   skip
 
@@ -2269,7 +2265,7 @@ unsafe def mk_simp_attribute_cmd (_ : parse <| tk "mk_simp_attribute") : lean.pa
   let descr ← eval_expr (Option Stringₓ) d
   let with_list ← tk "with" *> many ident <|> return []
   mk_simp_attr n with_list
-  add_doc_string (name.append `simp_attr n) <| descr.get_or_else <| "simp set for " ++ toString n
+  add_doc_string (name.append `simp_attr n) <| descr <| "simp set for " ++ toString n
 
 add_tactic_doc
   { Name := "mk_simp_attribute", category := DocCategory.cmd, declNames := [`tactic.mk_simp_attribute_cmd],
@@ -2281,9 +2277,9 @@ Fails if there is no user attribute with this name.
 Example: ``get_user_attribute_name `norm_cast`` returns `` `norm_cast.norm_cast_attr`` -/
 unsafe def get_user_attribute_name (attr_name : Name) : tactic Name := do
   let ns ← attribute.get_instances `user_attribute
-  (ns.mfirst fun nm => do
+  (ns fun nm => do
         let d ← get_decl nm
-        let e ← mk_app `user_attribute.name [d.value]
+        let e ← mk_app `user_attribute.name [d]
         let attr_nm ← eval_expr Name e
         guardₓ <| attr_nm = attr_name
         return nm) <|>
@@ -2292,7 +2288,7 @@ unsafe def get_user_attribute_name (attr_name : Name) : tactic Name := do
 /-- A tactic to set either a basic attribute or a user attribute.
   If the user attribute has a parameter, the default value will be used.
   This tactic raises an error if there is no `inhabited` instance for the parameter type. -/
-unsafe def set_attribute (attr_name : Name) (c_name : Name) (persistent := tt) (prio : Option Nat := none) :
+unsafe def set_attribute (attr_name : Name) (c_name : Name) (persistent := true) (prio : Option Nat := none) :
     tactic Unit := do
   get_decl c_name <|> throwError "unknown declaration {← c_name}"
   let s ← try_or_report_error (set_basic_attribute attr_name c_name persistent prio)

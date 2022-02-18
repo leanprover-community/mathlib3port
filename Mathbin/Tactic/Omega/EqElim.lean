@@ -44,17 +44,17 @@ constraint set after equality elimination. -/
 def sgm (v : Nat → Int) (b : Int) (as : List Int) (n : Nat) :=
   let a_n : Int := get n as
   let m : Int := a_n + 1
-  (symmod b m + coeffs.val v (as.map fun x => symmod x m)) / m
+  (symmod b m + Coeffs.val v (as.map fun x => symmod x m)) / m
 
 open_locale List.Func
 
-def rhs : Nat → Int → List Int → term
+def rhs : Nat → Int → List Int → Term
   | n, b, as =>
     let m := get n as + 1
     ⟨symmod b m, (as.map fun x => symmod x m) {n ↦ -m}⟩
 
 theorem rhs_correct_aux {v : Nat → Int} {m : Int} {as : List Int} :
-    ∀ {k}, ∃ d, m * d + coeffs.val_between v (as.map fun x : ℤ => symmod x m) 0 k = coeffs.val_between v as 0 k
+    ∀ {k}, ∃ d, m * d + Coeffs.valBetween v (as.map fun x : ℤ => symmod x m) 0 k = Coeffs.valBetween v as 0 k
   | 0 => by
     exists (0 : Int)
     simp only [add_zeroₓ, mul_zero, coeffs.val_between]
@@ -79,7 +79,7 @@ theorem rhs_correct_aux {v : Nat → Int} {m : Int} {as : List Int} :
 open_locale Omega
 
 theorem rhs_correct {v : Nat → Int} {b : Int} {as : List Int} (n : Nat) :
-    0 < get n as → 0 = term.val v (b, as) → v n = term.val (v ⟨n ↦ sgm v b as n⟩) (rhs n b as) := by
+    0 < get n as → 0 = Term.val v (b, as) → v n = Term.val (v ⟨n ↦ sgm v b as n⟩) (rhs n b as) := by
   intro h0 h1
   let a_n := get n as
   let m := a_n + 1
@@ -138,14 +138,14 @@ theorem rhs_correct {v : Nat → Int} {b : Int} {as : List Int} (n : Nat) :
 def sym_sym (m b : Int) : Int :=
   symdiv b m + symmod b m
 
-def coeffs_reduce : Nat → Int → List Int → term
+def coeffs_reduce : Nat → Int → List Int → Term
   | n, b, as =>
     let a := get n as
     let m := a + 1
-    (sym_sym m b, as.map (sym_sym m) {n ↦ -a})
+    (symSym m b, as.map (symSym m) {n ↦ -a})
 
 theorem coeffs_reduce_correct {v : Nat → Int} {b : Int} {as : List Int} {n : Nat} :
-    0 < get n as → 0 = term.val v (b, as) → 0 = term.val (v ⟨n ↦ sgm v b as n⟩) (coeffs_reduce n b as) := by
+    0 < get n as → 0 = Term.val v (b, as) → 0 = Term.val (v ⟨n ↦ sgm v b as n⟩) (coeffsReduce n b as) := by
   intro h1 h2
   let a_n := get n as
   let m := a_n + 1
@@ -242,14 +242,14 @@ theorem coeffs_reduce_correct {v : Nat → Int} {b : Int} {as : List Int} {n : N
       
   rw [← Int.mul_div_cancel (term.val _ _) h3, ← h4, Int.zero_div]
 
-def cancel (m : Nat) (t1 t2 : term) : term :=
-  term.add (t1.mul (-get m t2.snd)) t2
+def cancel (m : Nat) (t1 t2 : Term) : Term :=
+  Term.add (t1.mul (-get m t2.snd)) t2
 
-def subst (n : Nat) (t1 t2 : term) : term :=
-  term.add (t1.mul (get n t2.snd)) (t2.fst, t2.snd {n ↦ 0})
+def subst (n : Nat) (t1 t2 : Term) : Term :=
+  Term.add (t1.mul (get n t2.snd)) (t2.fst, t2.snd {n ↦ 0})
 
-theorem subst_correct {v : Nat → Int} {b : Int} {as : List Int} {t : term} {n : Nat} :
-    0 < get n as → 0 = term.val v (b, as) → term.val v t = term.val (v ⟨n ↦ sgm v b as n⟩) (subst n (rhs n b as) t) :=
+theorem subst_correct {v : Nat → Int} {b : Int} {as : List Int} {t : Term} {n : Nat} :
+    0 < get n as → 0 = Term.val v (b, as) → Term.val v t = Term.val (v ⟨n ↦ sgm v b as n⟩) (subst n (rhs n b as) t) :=
   by
   intro h1 h2
   simp only [subst, term.val, term.val_add, term.val_mul]
@@ -273,7 +273,7 @@ inductive ee : Type
 
 namespace Ee
 
-def reprₓ : ee → Stringₓ
+def reprₓ : Ee → Stringₓ
   | drop => "↓"
   | nondiv i => i.repr ++ "∤"
   | factor i => "/" ++ i.repr
@@ -281,27 +281,27 @@ def reprₓ : ee → Stringₓ
   | reduce n => "≻" ++ n.repr
   | cancel n => "+" ++ n.repr
 
-instance HasRepr : HasRepr ee :=
-  ⟨reprₓ⟩
+instance HasRepr : HasRepr Ee :=
+  ⟨repr⟩
 
-unsafe instance has_to_format : has_to_format ee :=
+unsafe instance has_to_format : has_to_format Ee :=
   ⟨fun x => x.repr⟩
 
 end Ee
 
 /-- Apply a given sequence of equality elimination steps to a clause. -/
-def eq_elim : List ee → clause → clause
+def eq_elim : List Ee → Clause → Clause
   | [], ([], les) => ([], les)
   | [], (_ :: _, les) => ([], [])
   | _ :: _, ([], les) => ([], [])
   | ee.drop :: es, (Eq :: eqs, les) => eq_elim es (eqs, les)
-  | ee.neg :: es, (Eq :: eqs, les) => eq_elim es (eq.neg :: eqs, les)
+  | ee.neg :: es, (Eq :: eqs, les) => eq_elim es (Eq.neg :: eqs, les)
   | ee.nondiv i :: es, ((b, as) :: eqs, les) => if ¬i ∣ b ∧ ∀, ∀ x ∈ as, ∀, i ∣ x then ([], [⟨-1, []⟩]) else ([], [])
   | ee.factor i :: es, ((b, as) :: eqs, les) =>
-    if i ∣ b ∧ ∀, ∀ x ∈ as, ∀, i ∣ x then eq_elim es (term.div i (b, as) :: eqs, les) else ([], [])
+    if i ∣ b ∧ ∀, ∀ x ∈ as, ∀, i ∣ x then eq_elim es (Term.div i (b, as) :: eqs, les) else ([], [])
   | ee.reduce n :: es, ((b, as) :: eqs, les) =>
     if 0 < get n as then
-      let eq' := coeffs_reduce n b as
+      let eq' := coeffsReduce n b as
       let r := rhs n b as
       let eqs' := eqs.map (subst n r)
       let les' := les.map (subst n r)
@@ -311,13 +311,13 @@ def eq_elim : List ee → clause → clause
 
 open Tactic
 
-theorem sat_empty : clause.sat ([], []) :=
+theorem sat_empty : Clause.Sat ([], []) :=
   ⟨fun _ => 0,
     ⟨by
       decide, by
       decide⟩⟩
 
-theorem sat_eq_elim : ∀ {es : List ee} {c : clause}, c.sat → (eq_elim es c).sat
+theorem sat_eq_elim : ∀ {es : List Ee} {c : Clause}, c.sat → (eqElim es c).sat
   | [], ([], les), h => h
   | e :: _, ([], les), h => by
     cases e <;> simp only [eq_elim] <;> apply sat_empty
@@ -424,7 +424,7 @@ theorem sat_eq_elim : ∀ {es : List ee} {c : clause}, c.sat → (eq_elim es c).
       
 
 /-- If the result of equality elimination is unsatisfiable, the original clause is unsatisfiable. -/
-theorem unsat_of_unsat_eq_elim (ee : List ee) (c : clause) : (eq_elim ee c).Unsat → c.unsat := by
+theorem unsat_of_unsat_eq_elim (ee : List Ee) (c : Clause) : (eqElim ee c).Unsat → c.Unsat := by
   intro h1 h2
   apply h1
   apply sat_eq_elim h2

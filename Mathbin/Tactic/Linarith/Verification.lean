@@ -43,7 +43,7 @@ unsafe def add_exprs : List pexpr → pexpr
 `ineq_const_nm R1 R2` produces the strength of the inequality in the sum `R`,
 along with the name of a lemma to apply in order to conclude `t1 + t2 R 0`.
 -/
-unsafe def ineq_const_nm : ineq → ineq → Name × ineq
+unsafe def ineq_const_nm : Ineq → Ineq → Name × ineq
   | Eq, Eq => (`` eq_of_eq_of_eq, Eq)
   | Eq, le => (`` le_of_eq_of_le, le)
   | Eq, lt => (`` lt_of_eq_of_lt, lt)
@@ -58,7 +58,7 @@ unsafe def ineq_const_nm : ineq → ineq → Name × ineq
 of `t2 R2 0`. It uses `mk_single_comp_zero_pf` to prove `t1 + coeff*t2 R 0`, and returns `R`
 along with this proof.
 -/
-unsafe def mk_lt_zero_pf_aux (c : ineq) (pf npf : expr) (coeff : ℕ) : tactic (ineq × expr) := do
+unsafe def mk_lt_zero_pf_aux (c : Ineq) (pf npf : expr) (coeff : ℕ) : tactic (ineq × expr) := do
   let (iq, h') ← mk_single_comp_zero_pf coeff npf
   let (nm, niq) := ineq_const_nm c iq
   Prod.mk niq <$> mk_app nm [pf, h']
@@ -72,7 +72,7 @@ unsafe def mk_lt_zero_pf : List (expr × ℕ) → tactic expr
   | [(h, c)] => Prod.snd <$> mk_single_comp_zero_pf c h
   | (h, c) :: t => do
     let (iq, h') ← mk_single_comp_zero_pf c h
-    Prod.snd <$> t.mfoldl (fun pr ce => mk_lt_zero_pf_aux pr.1 pr.2 ce.1 ce.2) (iq, h')
+    Prod.snd <$> t (fun pr ce => mk_lt_zero_pf_aux pr.1 pr.2 ce.1 ce.2) (iq, h')
 
 /-- If `prf` is a proof of `t R s`, `term_of_ineq_prf prf` returns `t`. -/
 unsafe def term_of_ineq_prf (prf : expr) : tactic expr :=
@@ -146,13 +146,13 @@ unsafe def prove_false_by_linarith (cfg : linarith_config) : List expr → tacti
     let l' ← add_neg_eq_pfs l
     let hz ← ineq_prf_tp h >>= mk_neg_one_lt_zero_pf
     let inputs := hz :: l'
-    let (comps, max_var) ← linear_forms_and_max_var cfg.transparency inputs
+    let (comps, max_var) ← linear_forms_and_max_var cfg.Transparency inputs
     let certificate ←
-      cfg.oracle.get_or_else fourier_motzkin.produce_certificate comps max_var <|>
+      cfg.oracle.getOrElse fourier_motzkin.produce_certificate comps max_var <|>
           fail "linarith failed to find a contradiction"
     linarith_trace "linarith has found a contradiction"
     let enum_inputs := inputs.enum
-    let zip := enum_inputs.filter_map fun ⟨n, e⟩ => Prod.mk e <$> certificate.find n
+    let zip := enum_inputs.filterMap fun ⟨n, e⟩ => Prod.mk e <$> certificate.find n
     let mls ←
       zip.mmap fun ⟨e, n⟩ => do
           let e ← term_of_ineq_prf e

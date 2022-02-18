@@ -37,7 +37,7 @@ namespace MonoidHom
 
 section
 
-variable [MulOneClass M] [MulOneClass N]
+variable [MulOneClassₓ M] [MulOneClassₓ N]
 
 @[simp, to_additive]
 theorem iterate_map_one (f : M →* M) (n : ℕ) : (f^[n]) 1 = 1 :=
@@ -45,7 +45,7 @@ theorem iterate_map_one (f : M →* M) (n : ℕ) : (f^[n]) 1 = 1 :=
 
 @[simp, to_additive]
 theorem iterate_map_mul (f : M →* M) (n : ℕ) x y : (f^[n]) (x * y) = (f^[n]) x * (f^[n]) y :=
-  semiconj₂.iterate f.map_mul n x y
+  Semiconj₂.iterate f.map_mul n x y
 
 end
 
@@ -53,17 +53,17 @@ variable [Monoidₓ M] [Monoidₓ N] [Groupₓ G] [Groupₓ H]
 
 @[simp, to_additive]
 theorem iterate_map_inv (f : G →* G) (n : ℕ) x : (f^[n]) x⁻¹ = ((f^[n]) x)⁻¹ :=
-  commute.iterate_left f.map_inv n x
+  Commute.iterate_left f.map_inv n x
 
 @[simp, to_additive]
 theorem iterate_map_div (f : G →* G) (n : ℕ) x y : (f^[n]) (x / y) = (f^[n]) x / (f^[n]) y :=
-  semiconj₂.iterate f.map_div n x y
+  Semiconj₂.iterate f.map_div n x y
 
 theorem iterate_map_pow (f : M →* M) (n : ℕ) a (m : ℕ) : (f^[n]) (a ^ m) = (f^[n]) a ^ m :=
-  commute.iterate_left (fun x => f.map_pow x m) n a
+  Commute.iterate_left (fun x => f.map_pow x m) n a
 
 theorem iterate_map_zpow (f : G →* G) (n : ℕ) a (m : ℤ) : (f^[n]) (a ^ m) = (f^[n]) a ^ m :=
-  commute.iterate_left (fun x => f.map_zpow x m) n a
+  Commute.iterate_left (fun x => f.map_zpow x m) n a
 
 theorem coe_pow {M} [CommMonoidₓ M] (f : Monoidₓ.End M) (n : ℕ) : ⇑(f ^ n) = f^[n] :=
   hom_coe_pow _ rfl (fun f g => rfl) _ _
@@ -78,12 +78,12 @@ namespace AddMonoidHom
 variable [AddMonoidₓ M] [AddGroupₓ G]
 
 theorem iterate_map_smul (f : M →+ M) (n m : ℕ) (x : M) : (f^[n]) (m • x) = m • (f^[n]) x :=
-  f.to_multiplicative.iterate_map_pow n x m
+  f.toMultiplicative.iterate_map_pow n x m
 
 attribute [to_additive iterate_map_smul, to_additive_reorder 5] MonoidHom.iterate_map_pow
 
 theorem iterate_map_zsmul (f : G →+ G) (n : ℕ) (m : ℤ) (x : G) : (f^[n]) (m • x) = m • (f^[n]) x :=
-  f.to_multiplicative.iterate_map_zpow n x m
+  f.toMultiplicative.iterate_map_zpow n x m
 
 attribute [to_additive, to_additive_reorder 5] MonoidHom.iterate_map_zpow
 
@@ -102,35 +102,35 @@ theorem coe_pow (n : ℕ) : ⇑(f ^ n) = f^[n] :=
   hom_coe_pow _ rfl (fun f g => rfl) f n
 
 theorem iterate_map_one : (f^[n]) 1 = 1 :=
-  f.to_monoid_hom.iterate_map_one n
+  f.toMonoidHom.iterate_map_one n
 
 theorem iterate_map_zero : (f^[n]) 0 = 0 :=
-  f.to_add_monoid_hom.iterate_map_zero n
+  f.toAddMonoidHom.iterate_map_zero n
 
 theorem iterate_map_add : (f^[n]) (x + y) = (f^[n]) x + (f^[n]) y :=
-  f.to_add_monoid_hom.iterate_map_add n x y
+  f.toAddMonoidHom.iterate_map_add n x y
 
 theorem iterate_map_mul : (f^[n]) (x * y) = (f^[n]) x * (f^[n]) y :=
-  f.to_monoid_hom.iterate_map_mul n x y
+  f.toMonoidHom.iterate_map_mul n x y
 
 theorem iterate_map_pow a (n m : ℕ) : (f^[n]) (a ^ m) = (f^[n]) a ^ m :=
-  f.to_monoid_hom.iterate_map_pow n a m
+  f.toMonoidHom.iterate_map_pow n a m
 
 theorem iterate_map_smul (n m : ℕ) (x : R) : (f^[n]) (m • x) = m • (f^[n]) x :=
-  f.to_add_monoid_hom.iterate_map_smul n m x
+  f.toAddMonoidHom.iterate_map_smul n m x
 
 end Semiringₓ
 
 variable {R : Type _} [Ringₓ R] (f : R →+* R) (n : ℕ) (x y : R)
 
 theorem iterate_map_sub : (f^[n]) (x - y) = (f^[n]) x - (f^[n]) y :=
-  f.to_add_monoid_hom.iterate_map_sub n x y
+  f.toAddMonoidHom.iterate_map_sub n x y
 
 theorem iterate_map_neg : (f^[n]) (-x) = -(f^[n]) x :=
-  f.to_add_monoid_hom.iterate_map_neg n x
+  f.toAddMonoidHom.iterate_map_neg n x
 
 theorem iterate_map_zsmul (n : ℕ) (m : ℤ) (x : R) : (f^[n]) (m • x) = m • (f^[n]) x :=
-  f.to_add_monoid_hom.iterate_map_zsmul n m x
+  f.toAddMonoidHom.iterate_map_zsmul n m x
 
 end RingHom
 

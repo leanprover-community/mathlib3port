@@ -77,7 +77,7 @@ def compress (u v a : α) : α :=
 /-- To UV-compress a set family, we compress each of its elements, except that we don't want to
 reduce the cardinality, so we keep all elements whose compression is already present. -/
 def compression (u v : α) (s : Finset α) :=
-  (s.filter fun a => compress u v a ∈ s) ∪ (s.image <| compress u v).filter fun a => a ∉ s
+  (s.filter fun a => compress u v a ∈ s) ∪ (s.Image <| compress u v).filter fun a => a ∉ s
 
 localized [FinsetFamily] notation "𝓒 " => Uv.compression
 
@@ -116,11 +116,11 @@ theorem compression_self (u : α) (s : Finset α) : 𝓒 u u s = s := by
     
 
 /-- Any family is compressed along two identical elements. -/
-theorem is_compressed_self (u : α) (s : Finset α) : is_compressed u u s :=
+theorem is_compressed_self (u : α) (s : Finset α) : IsCompressed u u s :=
   compression_self u s
 
 theorem compress_disjoint (u v : α) :
-    Disjoint (s.filter fun a => compress u v a ∈ s) ((s.image <| compress u v).filter fun a => a ∉ s) :=
+    Disjoint (s.filter fun a => compress u v a ∈ s) ((s.Image <| compress u v).filter fun a => a ∉ s) :=
   disjoint_left.2 fun a ha₁ ha₂ => (mem_filter.1 ha₂).2 (mem_filter.1 ha₁).1
 
 /-- Compressing an element is idempotent. -/

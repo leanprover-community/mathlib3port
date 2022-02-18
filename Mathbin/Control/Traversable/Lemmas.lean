@@ -55,7 +55,7 @@ def pure_transformation : ApplicativeTransformation id F where
     rfl
 
 @[simp]
-theorem pure_transformation_apply {α} (x : id α) : pure_transformation F x = pure x :=
+theorem pure_transformation_apply {α} (x : id α) : pureTransformation F x = pure x :=
   rfl
 
 variable {F G} (x : t β)
@@ -82,7 +82,7 @@ theorem pure_traverse (x : t α) : traverse pure x = (pure x : F (t α)) := by
 theorem id_sequence (x : t α) : sequence (id.mk <$> x) = id.mk x := by
   simp [sequence, traverse_map, id_traverse] <;> rfl
 
-theorem comp_sequence (x : t (F (G α))) : sequence (comp.mk <$> x) = comp.mk (sequence <$> sequence x) := by
+theorem comp_sequence (x : t (F (G α))) : sequence (comp.mk <$> x) = Comp.mk (sequence <$> sequence x) := by
   simp [sequence, traverse_map] <;> rw [← comp_traverse] <;> simp [map_id]
 
 theorem naturality' (η : ApplicativeTransformation F G) (x : t (F α)) : η (sequence x) = sequence (@η _ <$> x) := by
@@ -95,7 +95,7 @@ theorem traverse_id : traverse id.mk = (id.mk : t α → id (t α)) := by
 
 @[functor_norm]
 theorem traverse_comp (g : α → F β) (h : β → G γ) :
-    traverse (comp.mk ∘ map h ∘ g) = (comp.mk ∘ map (traverse h) ∘ traverse g : t α → comp F G (t γ)) := by
+    traverse (comp.mk ∘ map h ∘ g) = (comp.mk ∘ map (traverse h) ∘ traverse g : t α → Comp F G (t γ)) := by
   ext
   exact comp_traverse _ _ _
 

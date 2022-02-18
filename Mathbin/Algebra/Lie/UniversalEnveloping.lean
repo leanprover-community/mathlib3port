@@ -49,7 +49,7 @@ inductive rel : TensorAlgebra R L → TensorAlgebra R L → Prop
 
 end UniversalEnvelopingAlgebra
 
--- ././Mathport/Syntax/Translate/Basic.lean:857:9: unsupported derive handler algebra R
+-- ././Mathport/Syntax/Translate/Basic.lean:859:9: unsupported derive handler algebra R
 /-- The universal enveloping algebra of a Lie algebra. -/
 def UniversalEnvelopingAlgebra :=
   RingQuot (UniversalEnvelopingAlgebra.Rel R L)deriving Inhabited, Ringₓ, [anonymous]
@@ -59,13 +59,13 @@ namespace UniversalEnvelopingAlgebra
 /-- The quotient map from the tensor algebra to the universal enveloping algebra as a morphism of
 associative algebras. -/
 def mk_alg_hom : TensorAlgebra R L →ₐ[R] UniversalEnvelopingAlgebra R L :=
-  RingQuot.mkAlgHom R (rel R L)
+  RingQuot.mkAlgHom R (Rel R L)
 
 variable {L}
 
 /-- The natural Lie algebra morphism from a Lie algebra to its universal enveloping algebra. -/
 def ι : L →ₗ⁅R⁆ UniversalEnvelopingAlgebra R L :=
-  { (mk_alg_hom R L).toLinearMap.comp ιₜ with
+  { (mkAlgHom R L).toLinearMap.comp ιₜ with
     map_lie' := fun x y => by
       suffices mk_alg_hom R L (ιₜ ⁅x,y⁆ + ιₜ y * ιₜ x) = mk_alg_hom R L (ιₜ x * ιₜ y) by
         rw [AlgHom.map_mul] at this

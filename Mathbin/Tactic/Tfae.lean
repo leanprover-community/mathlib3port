@@ -21,12 +21,12 @@ inductive arrow : Type
   | left : arrow
   deriving has_reflect, Inhabited
 
-unsafe def mk_implication : ∀ re : arrow e₁ e₂ : expr, pexpr
+unsafe def mk_implication : ∀ re : Arrow e₁ e₂ : expr, pexpr
   | arrow.right, e₁, e₂ => pquote.1 ((%%ₓe₁) → %%ₓe₂)
   | arrow.left_right, e₁, e₂ => pquote.1 ((%%ₓe₁) ↔ %%ₓe₂)
   | arrow.left, e₁, e₂ => pquote.1 ((%%ₓe₂) → %%ₓe₁)
 
-unsafe def mk_name : ∀ re : arrow i₁ i₂ : Nat, Name
+unsafe def mk_name : ∀ re : Arrow i₁ i₂ : Nat, Name
   | arrow.right, i₁, i₂ => ("tfae_" ++ toString i₁ ++ "_to_" ++ toString i₂ : Stringₓ)
   | arrow.left_right, i₁, i₂ => ("tfae_" ++ toString i₁ ++ "_iff_" ++ toString i₂ : Stringₓ)
   | arrow.left, i₁, i₂ => ("tfae_" ++ toString i₂ ++ "_to_" ++ toString i₁ : Stringₓ)
@@ -52,15 +52,15 @@ also provide a label for the assertion, as with `have`: `tfae_have h : i ↔ j`.
 unsafe def tfae_have (h : parse <| optionalₓ ident <* tk ":") (i₁ : parse (with_desc "i" small_nat))
     (re :
       parse
-        ((tk "→" <|> tk "->") *> return arrow.right <|>
-          (tk "↔" <|> tk "<->") *> return arrow.left_right <|> (tk "←" <|> tk "<-") *> return arrow.left))
+        ((tk "→" <|> tk "->") *> return Arrow.right <|>
+          (tk "↔" <|> tk "<->") *> return Arrow.left_right <|> (tk "←" <|> tk "<-") *> return Arrow.left))
     (i₂ : parse (with_desc "j" small_nat)) : tactic Unit := do
-  let quote.1 (tfae (%%ₓl)) ← target
+  let quote.1 (Tfae (%%ₓl)) ← target
   let l ← parse_list l
   let e₁ ← List.nth l (i₁ - 1) <|> fail f! "index {i₁ } is not between 1 and {l.length}"
   let e₂ ← List.nth l (i₂ - 1) <|> fail f! "index {i₂ } is not between 1 and {l.length}"
   let type ← to_expr (tfae.mk_implication re e₁ e₂)
-  let h := h.get_or_else (mk_name re i₁ i₂)
+  let h := h.getOrElse (mk_name re i₁ i₂)
   tactic.assert h type
   return ()
 
@@ -71,15 +71,15 @@ unsafe def tfae_finish : tactic Unit :=
   applyc `` tfae_nil <|>
     closure.with_new_closure fun cl => do
       impl_graph.mk_scc cl
-      let quote.1 (tfae (%%ₓl)) ← target
+      let quote.1 (Tfae (%%ₓl)) ← target
       let l ← parse_list l
       let (_, r, _) ← cl.root l.head
       refine (pquote.1 (tfae_of_forall (%%ₓr) _ _))
       let thm ← mk_const `` forall_mem_cons
-      l.mmap' fun e => do
+      l fun e => do
           rewrite_target thm
           split
-          let (_, r', p) ← cl.root e
+          let (_, r', p) ← cl e
           tactic.exact p
       applyc `` forall_mem_nil
       pure ()

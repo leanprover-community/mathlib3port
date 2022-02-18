@@ -24,9 +24,9 @@ open Limits
 
 variable {C : Type u₁}
 
-variable [category.{v₁} C]
+variable [Category.{v₁} C]
 
-variable {T : Monadₓ C} (X : algebra T)
+variable {T : Monad C} (X : Algebra T)
 
 /-!
 Show that any algebra is a coequalizer of free algebras.
@@ -35,26 +35,26 @@ Show that any algebra is a coequalizer of free algebras.
 
 /-- The top map in the coequalizer diagram we will construct. -/
 @[simps]
-def free_coequalizer.top_map : (monad.free T).obj (T.obj X.A) ⟶ (monad.free T).obj X.A :=
-  (monad.free T).map X.a
+def free_coequalizer.top_map : (Monad.free T).obj (T.obj X.A) ⟶ (Monad.free T).obj X.A :=
+  (Monad.free T).map X.a
 
 /-- The bottom map in the coequalizer diagram we will construct. -/
 @[simps]
-def free_coequalizer.bottom_map : (monad.free T).obj (T.obj X.A) ⟶ (monad.free T).obj X.A where
+def free_coequalizer.bottom_map : (Monad.free T).obj (T.obj X.A) ⟶ (Monad.free T).obj X.A where
   f := T.μ.app X.A
   h' := T.assoc X.A
 
 /-- The cofork map in the coequalizer diagram we will construct. -/
 @[simps]
-def free_coequalizer.π : (monad.free T).obj X.A ⟶ X where
+def free_coequalizer.π : (Monad.free T).obj X.A ⟶ X where
   f := X.a
   h' := X.assoc.symm
 
 theorem free_coequalizer.condition :
-    free_coequalizer.top_map X ≫ free_coequalizer.π X = free_coequalizer.bottom_map X ≫ free_coequalizer.π X :=
-  algebra.hom.ext _ _ X.assoc.symm
+    FreeCoequalizer.topMap X ≫ FreeCoequalizer.π X = FreeCoequalizer.bottomMap X ≫ FreeCoequalizer.π X :=
+  Algebra.Hom.ext _ _ X.assoc.symm
 
-instance : is_reflexive_pair (free_coequalizer.top_map X) (free_coequalizer.bottom_map X) := by
+instance : IsReflexivePair (FreeCoequalizer.topMap X) (FreeCoequalizer.bottomMap X) := by
   apply is_reflexive_pair.mk' _ _ _
   apply (free T).map (T.η.app X.A)
   · ext
@@ -69,14 +69,14 @@ instance : is_reflexive_pair (free_coequalizer.top_map X) (free_coequalizer.bott
 coequalizer.
 -/
 @[simps]
-def beck_algebra_cofork : cofork (free_coequalizer.top_map X) (free_coequalizer.bottom_map X) :=
-  cofork.of_π _ (free_coequalizer.condition X)
+def beck_algebra_cofork : Cofork (FreeCoequalizer.topMap X) (FreeCoequalizer.bottomMap X) :=
+  Cofork.ofπ _ (FreeCoequalizer.condition X)
 
 /-- The cofork constructed is a colimit. This shows that any algebra is a (reflexive) coequalizer of
 free algebras.
 -/
-def beck_algebra_coequalizer : is_colimit (beck_algebra_cofork X) :=
-  (cofork.is_colimit.mk' _) fun s => by
+def beck_algebra_coequalizer : IsColimit (beckAlgebraCofork X) :=
+  (Cofork.IsColimit.mk' _) fun s => by
     have h₁ : (T : C ⥤ C).map X.a ≫ s.π.f = T.μ.app X.A ≫ s.π.f := congr_argₓ monad.algebra.hom.f s.condition
     have h₂ : (T : C ⥤ C).map s.π.f ≫ s.X.a = T.μ.app X.A ≫ s.π.f := s.π.h
     refine' ⟨⟨T.η.app _ ≫ s.π.f, _⟩, _, _⟩
@@ -95,17 +95,17 @@ def beck_algebra_coequalizer : is_colimit (beck_algebra_cofork X) :=
       
 
 /-- The Beck cofork is a split coequalizer. -/
-def beck_split_coequalizer : is_split_coequalizer (T.map X.a) (T.μ.app _) X.a :=
-  ⟨T.η.app _, T.η.app _, X.assoc.symm, X.unit, T.left_unit _, (T.η.naturality _).symm⟩
+def beck_split_coequalizer : IsSplitCoequalizer (T.map X.a) (T.μ.app _) X.a :=
+  ⟨T.η.app _, T.η.app _, X.assoc.symm, X.Unit, T.left_unit _, (T.η.naturality _).symm⟩
 
 /-- This is the Beck cofork. It is a split coequalizer, in particular a coequalizer. -/
 @[simps]
-def beck_cofork : cofork (T.map X.a) (T.μ.app _) :=
-  (beck_split_coequalizer X).asCofork
+def beck_cofork : Cofork (T.map X.a) (T.μ.app _) :=
+  (beckSplitCoequalizer X).asCofork
 
 /-- The Beck cofork is a coequalizer. -/
-def beck_coequalizer : is_colimit (beck_cofork X) :=
-  (beck_split_coequalizer X).isCoequalizer
+def beck_coequalizer : IsColimit (beckCofork X) :=
+  (beckSplitCoequalizer X).isCoequalizer
 
 end Monadₓ
 

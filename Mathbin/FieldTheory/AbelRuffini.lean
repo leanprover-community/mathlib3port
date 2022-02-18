@@ -21,7 +21,7 @@ that is solvable by radicals has a solvable Galois group.
 
 noncomputable section
 
-open_locale Classical
+open_locale Classical Polynomial
 
 open Polynomial IntermediateField
 
@@ -29,30 +29,28 @@ section AbelRuffini
 
 variable {F : Type _} [Field F] {E : Type _} [Field E] [Algebra F E]
 
-theorem gal_zero_is_solvable : IsSolvable (0 : Polynomial F).Gal := by
+theorem gal_zero_is_solvable : IsSolvable (0 : F[X]).Gal := by
   infer_instance
 
-theorem gal_one_is_solvable : IsSolvable (1 : Polynomial F).Gal := by
+theorem gal_one_is_solvable : IsSolvable (1 : F[X]).Gal := by
   infer_instance
 
-theorem gal_C_is_solvable (x : F) : IsSolvable (C x).Gal := by
+theorem gal_C_is_solvable (x : F) : IsSolvable (c x).Gal := by
   infer_instance
 
-theorem gal_X_is_solvable : IsSolvable (X : Polynomial F).Gal := by
+theorem gal_X_is_solvable : IsSolvable (x : F[X]).Gal := by
   infer_instance
 
-theorem gal_X_sub_C_is_solvable (x : F) : IsSolvable (X - C x).Gal := by
+theorem gal_X_sub_C_is_solvable (x : F) : IsSolvable (X - c x).Gal := by
   infer_instance
 
-theorem gal_X_pow_is_solvable (n : ℕ) : IsSolvable (X ^ n : Polynomial F).Gal := by
+theorem gal_X_pow_is_solvable (n : ℕ) : IsSolvable (X ^ n : F[X]).Gal := by
   infer_instance
 
-theorem gal_mul_is_solvable {p q : Polynomial F} (hp : IsSolvable p.gal) (hq : IsSolvable q.gal) :
-    IsSolvable (p * q).Gal :=
-  solvable_of_solvable_injective (gal.restrict_prod_injective p q)
+theorem gal_mul_is_solvable {p q : F[X]} (hp : IsSolvable p.Gal) (hq : IsSolvable q.Gal) : IsSolvable (p * q).Gal :=
+  solvable_of_solvable_injective (Gal.restrict_prod_injective p q)
 
-theorem gal_prod_is_solvable {s : Multiset (Polynomial F)} (hs : ∀, ∀ p ∈ s, ∀, IsSolvable (gal p)) :
-    IsSolvable s.prod.gal := by
+theorem gal_prod_is_solvable {s : Multiset F[X]} (hs : ∀, ∀ p ∈ s, ∀, IsSolvable (Gal p)) : IsSolvable s.Prod.Gal := by
   apply Multiset.induction_on' s
   · exact gal_one_is_solvable
     
@@ -61,13 +59,13 @@ theorem gal_prod_is_solvable {s : Multiset (Polynomial F)} (hs : ∀, ∀ p ∈ 
     exact gal_mul_is_solvable (hs p hps) ht
     
 
-theorem gal_is_solvable_of_splits {p q : Polynomial F} (hpq : Fact (p.splits (algebraMap F q.splitting_field)))
-    (hq : IsSolvable q.gal) : IsSolvable p.gal :=
+theorem gal_is_solvable_of_splits {p q : F[X]} (hpq : Fact (p.Splits (algebraMap F q.SplittingField)))
+    (hq : IsSolvable q.Gal) : IsSolvable p.Gal :=
   have : IsSolvable (q.splitting_field ≃ₐ[F] q.splitting_field) := hq
   solvable_of_surjective (AlgEquiv.restrict_normal_hom_surjective q.splitting_field)
 
-theorem gal_is_solvable_tower (p q : Polynomial F) (hpq : p.splits (algebraMap F q.splitting_field))
-    (hp : IsSolvable p.gal) (hq : IsSolvable (q.map (algebraMap F p.splitting_field)).Gal) : IsSolvable q.gal := by
+theorem gal_is_solvable_tower (p q : F[X]) (hpq : p.Splits (algebraMap F q.SplittingField)) (hp : IsSolvable p.Gal)
+    (hq : IsSolvable (q.map (algebraMap F p.SplittingField)).Gal) : IsSolvable q.Gal := by
   let K := p.splitting_field
   let L := q.splitting_field
   have : Fact (p.splits (algebraMap F L)) := ⟨hpq⟩
@@ -80,35 +78,33 @@ theorem gal_is_solvable_tower (p q : Polynomial F) (hpq : p.splits (algebraMap F
 
 section GalXPowSubC
 
-theorem gal_X_pow_sub_one_is_solvable (n : ℕ) : IsSolvable (X ^ n - 1 : Polynomial F).Gal := by
+theorem gal_X_pow_sub_one_is_solvable (n : ℕ) : IsSolvable (X ^ n - 1 : F[X]).Gal := by
   by_cases' hn : n = 0
   · rw [hn, pow_zeroₓ, sub_self]
     exact gal_zero_is_solvable
     
   have hn' : 0 < n := pos_iff_ne_zero.mpr hn
-  have hn'' : (X ^ n - 1 : Polynomial F) ≠ 0 := fun h =>
+  have hn'' : (X ^ n - 1 : F[X]) ≠ 0 := fun h =>
     one_ne_zero ((leading_coeff_X_pow_sub_one hn').symm.trans (congr_argₓ leading_coeff h))
   apply is_solvable_of_comm
   intro σ τ
   ext a ha
   rw [mem_root_set hn'', AlgHom.map_sub, aeval_X_pow, aeval_one, sub_eq_zero] at ha
-  have key : ∀ σ : (X ^ n - 1 : Polynomial F).Gal, ∃ m : ℕ, σ a = a ^ m := by
+  have key : ∀ σ : (X ^ n - 1 : F[X]).Gal, ∃ m : ℕ, σ a = a ^ m := by
     intro σ
     obtain ⟨m, hm⟩ :=
-      σ.to_alg_hom.to_ring_hom.map_root_of_unity_eq_pow_self
+      map_root_of_unity_eq_pow_self σ.to_alg_hom
         ⟨IsUnit.unit (is_unit_of_pow_eq_one a n ha hn'), by
           ext
           rwa [Units.coe_pow, IsUnit.unit_spec, Subtype.coe_mk n hn']⟩
     use m
     convert hm
-    all_goals
-      exact (IsUnit.unit_spec _).symm
   obtain ⟨c, hc⟩ := key σ
   obtain ⟨d, hd⟩ := key τ
   rw [σ.mul_apply, τ.mul_apply, hc, τ.map_pow, hd, σ.map_pow, hc, ← pow_mulₓ, pow_mul']
 
-theorem gal_X_pow_sub_C_is_solvable_aux (n : ℕ) (a : F) (h : (X ^ n - 1 : Polynomial F).Splits (RingHom.id F)) :
-    IsSolvable (X ^ n - C a).Gal := by
+theorem gal_X_pow_sub_C_is_solvable_aux (n : ℕ) (a : F) (h : (X ^ n - 1 : F[X]).Splits (RingHom.id F)) :
+    IsSolvable (X ^ n - c a).Gal := by
   by_cases' ha : a = 0
   · rw [ha, C_0, sub_zero]
     exact gal_X_pow_is_solvable n
@@ -122,7 +118,7 @@ theorem gal_X_pow_sub_C_is_solvable_aux (n : ℕ) (a : F) (h : (X ^ n - 1 : Poly
   have hn' : 0 < n := pos_iff_ne_zero.mpr hn
   have hn'' : X ^ n - C a ≠ 0 := fun h =>
     one_ne_zero ((leading_coeff_X_pow_sub_C hn').symm.trans (congr_argₓ leading_coeff h))
-  have hn''' : (X ^ n - 1 : Polynomial F) ≠ 0 := fun h =>
+  have hn''' : (X ^ n - 1 : F[X]) ≠ 0 := fun h =>
     one_ne_zero ((leading_coeff_X_pow_sub_one hn').symm.trans (congr_argₓ leading_coeff h))
   have mem_range : ∀ {c}, c ^ n = 1 → ∃ d, algebraMap F (X ^ n - C a).SplittingField d = c := fun c hc =>
     ring_hom.mem_range.mp
@@ -152,7 +148,7 @@ theorem gal_X_pow_sub_C_is_solvable_aux (n : ℕ) (a : F) (h : (X ^ n - 1 : Poly
   rw [mul_assoc, mul_assoc, mul_right_inj' hb', mul_comm]
 
 theorem splits_X_pow_sub_one_of_X_pow_sub_C {F : Type _} [Field F] {E : Type _} [Field E] (i : F →+* E) (n : ℕ) {a : F}
-    (ha : a ≠ 0) (h : (X ^ n - C a).Splits i) : (X ^ n - 1).Splits i := by
+    (ha : a ≠ 0) (h : (X ^ n - c a).Splits i) : (X ^ n - 1).Splits i := by
   have ha' : i a ≠ 0 := mt (i.injective_iff.mp i.injective a) ha
   by_cases' hn : n = 0
   · rw [hn, pow_zeroₓ, sub_self]
@@ -177,8 +173,7 @@ theorem splits_X_pow_sub_one_of_X_pow_sub_C {F : Type _} [Field F] {E : Type _} 
   have key1 : (X ^ n - 1).map i = C (i a⁻¹) * ((X ^ n - C a).map i).comp (C b * X) := by
     rw [Polynomial.map_sub, Polynomial.map_sub, Polynomial.map_pow, map_X, map_C, Polynomial.map_one, sub_comp,
       pow_comp, X_comp, C_comp, mul_powₓ, ← C_pow, hb, mul_sub, ← mul_assoc, C_mul_C, one_mulₓ]
-  have key2 :
-    ((fun q : Polynomial E => q.comp (C b * X)) ∘ fun c : E => X - C c) = fun c : E => C b * (X - C (c / b)) := by
+  have key2 : ((fun q : E[X] => q.comp (C b * X)) ∘ fun c : E => X - C c) = fun c : E => C b * (X - C (c / b)) := by
     ext1 c
     change (X - C c).comp (C b * X) = C b * (X - C (c / b))
     rw [sub_comp, X_comp, C_comp, mul_sub, ← C_mul, mul_div_cancel' c hb']
@@ -187,7 +182,7 @@ theorem splits_X_pow_sub_one_of_X_pow_sub_C {F : Type _} [Field F] {E : Type _} 
   all_goals
     exact Field.to_nontrivial F
 
-theorem gal_X_pow_sub_C_is_solvable (n : ℕ) (x : F) : IsSolvable (X ^ n - C x).Gal := by
+theorem gal_X_pow_sub_C_is_solvable (n : ℕ) (x : F) : IsSolvable (X ^ n - c x).Gal := by
   by_cases' hx : x = 0
   · rw [hx, C_0, sub_zero]
     exact gal_X_pow_is_solvable n
@@ -199,7 +194,7 @@ theorem gal_X_pow_sub_C_is_solvable (n : ℕ) (x : F) : IsSolvable (X ^ n - C x)
     
   · rw [Polynomial.map_sub, Polynomial.map_pow, map_X, map_C]
     apply gal_X_pow_sub_C_is_solvable_aux
-    have key := splitting_field.splits (X ^ n - 1 : Polynomial F)
+    have key := splitting_field.splits (X ^ n - 1 : F[X])
     rwa [← splits_id_iff_splits, Polynomial.map_sub, Polynomial.map_pow, map_X, Polynomial.map_one] at key
     
 
@@ -298,13 +293,12 @@ theorem IsIntegral (α : solvableByRad F E) : IsIntegral F α := by
     
   · exact fun α hα =>
       Subalgebra.inv_mem_of_algebraic (integralClosure F (solvableByRad F E))
-        (show IsAlgebraic F ↑(⟨α, hα⟩ : integralClosure F (solvableByRad F E)) from
-          (is_algebraic_iff_is_integral F).mpr hα)
+        (show IsAlgebraic F ↑(⟨α, hα⟩ : integralClosure F (solvableByRad F E)) from is_algebraic_iff_is_integral.mpr hα)
     
   · intro α n hn hα
-    obtain ⟨p, h1, h2⟩ := (is_algebraic_iff_is_integral F).mpr hα
+    obtain ⟨p, h1, h2⟩ := is_algebraic_iff_is_integral.mpr hα
     refine'
-      (is_algebraic_iff_is_integral F).mp
+      is_algebraic_iff_is_integral.mp
         ⟨p.comp (X ^ n),
           ⟨fun h => h1 (leading_coeff_eq_zero.mp _), by
             rw [aeval_comp, aeval_X_pow, h2]⟩⟩
@@ -357,17 +351,17 @@ theorem induction3 {α : solvableByRad F E} {n : ℕ} (hn : n ≠ 0) (hα : P (�
       
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr ⟮ , ⟯»
--- ././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr ⟮ , ⟯»
--- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr ⟮ , ⟯»
--- ././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr ⟮ , ⟯»
--- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr ⟮ , ⟯»
--- ././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr ⟮ , ⟯»
--- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr ⟮ , ⟯»
--- ././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr ⟮ , ⟯»
 /-- An auxiliary induction lemma, which is generalized by `solvable_by_rad.is_solvable`. -/
 theorem induction2 {α β γ : solvableByRad F E}
-    (hγ : γ ∈ «expr ⟮ , ⟯» F "././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr ⟮ , ⟯»")
+    (hγ : γ ∈ «expr ⟮ , ⟯» F "././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr ⟮ , ⟯»")
     (hα : P α) (hβ : P β) : P γ := by
   let p := minpoly F α
   let q := minpoly F β
@@ -375,7 +369,7 @@ theorem induction2 {α β γ : solvableByRad F E}
     Polynomial.splits_of_splits_mul _ (mul_ne_zero (minpoly.ne_zero (IsIntegral α)) (minpoly.ne_zero (IsIntegral β)))
       (splitting_field.splits (p * q))
   let f :
-    «expr ⟮ , ⟯» F "././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr ⟮ , ⟯»" →ₐ[F]
+    «expr ⟮ , ⟯» F "././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr ⟮ , ⟯»" →ₐ[F]
       (p * q).SplittingField :=
     Classical.choice
       (alg_hom_mk_adjoin_splits
@@ -392,14 +386,14 @@ theorem induction2 {α β γ : solvableByRad F E}
         suffices
           aeval
               (⟨γ, hγ⟩ :
-                «expr ⟮ , ⟯» F "././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr ⟮ , ⟯»")
+                «expr ⟮ , ⟯» F "././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr ⟮ , ⟯»")
               (minpoly F γ) =
             0
           by
           rw [aeval_alg_hom_apply, this, AlgHom.map_zero]
         apply
           (algebraMap
-              («expr ⟮ , ⟯» F "././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr ⟮ , ⟯»")
+              («expr ⟮ , ⟯» F "././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr ⟮ , ⟯»")
               (solvableByRad F E)).Injective
         rw [RingHom.map_zero, IsScalarTower.algebra_map_aeval]
         exact minpoly.aeval F γ)
@@ -407,11 +401,11 @@ theorem induction2 {α β γ : solvableByRad F E}
   rw [P, key]
   exact gal_is_solvable_of_splits ⟨Normal.splits (splitting_field.normal _) _⟩ (gal_mul_is_solvable hα hβ)
 
--- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr ⟮ , ⟯»
--- ././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr ⟮ , ⟯»
 /-- An auxiliary induction lemma, which is generalized by `solvable_by_rad.is_solvable`. -/
 theorem induction1 {α β : solvableByRad F E}
-    (hβ : β ∈ «expr ⟮ , ⟯» F "././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr ⟮ , ⟯»")
+    (hβ : β ∈ «expr ⟮ , ⟯» F "././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr ⟮ , ⟯»")
     (hα : P α) : P β :=
   induction2 (adjoin.mono F _ _ (ge_of_eq (Set.pair_eq_singleton α)) hβ) hα hα
 
@@ -441,8 +435,8 @@ theorem IsSolvable (α : solvableByRad F E) : IsSolvable (minpoly F α).Gal := b
 
 /-- **Abel-Ruffini Theorem** (one direction): An irreducible polynomial with an
 `is_solvable_by_rad` root has solvable Galois group -/
-theorem is_solvable' {α : E} {q : Polynomial F} (q_irred : Irreducible q) (q_aeval : aeval α q = 0)
-    (hα : IsSolvableByRad F α) : _root_.is_solvable q.gal := by
+theorem is_solvable' {α : E} {q : F[X]} (q_irred : Irreducible q) (q_aeval : aeval α q = 0) (hα : IsSolvableByRad F α) :
+    IsSolvable q.Gal := by
   have : _root_.is_solvable (q * C q.leading_coeff⁻¹).Gal := by
     rw [minpoly.eq_of_irreducible q_irred q_aeval, ←
       show minpoly F (⟨α, hα⟩ : solvableByRad F E) = minpoly F α from

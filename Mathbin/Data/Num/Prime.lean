@@ -32,7 +32,7 @@ def min_fac_aux (n : PosNum) : ℕ → PosNum → PosNum
   | fuel + 1, k => if h : n < k.bit1 * k.bit1 then n else if k.bit1 ∣ n then k.bit1 else min_fac_aux fuel k.succ
 
 theorem min_fac_aux_to_nat {fuel : ℕ} {n k : PosNum} (h : Nat.sqrt n < fuel + k.bit1) :
-    (min_fac_aux n fuel k : ℕ) = Nat.minFacAux n k.bit1 := by
+    (minFacAux n fuel k : ℕ) = Nat.minFacAux n k.bit1 := by
   induction' fuel with fuel ih generalizing k <;> rw [min_fac_aux, Nat.minFacAux]
   · rw [if_pos]
     rwa [zero_addₓ, Nat.sqrt_lt] at h
@@ -47,10 +47,10 @@ theorem min_fac_aux_to_nat {fuel : ℕ} {n k : PosNum} (h : Nat.sqrt n < fuel + 
 def min_fac : PosNum → PosNum
   | 1 => 1
   | bit0 n => 2
-  | bit1 n => min_fac_aux (bit1 n) n 1
+  | bit1 n => minFacAux (bit1 n) n 1
 
 @[simp]
-theorem min_fac_to_nat (n : PosNum) : (min_fac n : ℕ) = Nat.minFac n := by
+theorem min_fac_to_nat (n : PosNum) : (minFac n : ℕ) = Nat.minFac n := by
   cases n
   · rfl
     
@@ -92,7 +92,7 @@ instance decidable_prime : DecidablePred PosNum.Prime
         rw [← min_fac_to_nat, to_nat_inj]
         exact ⟨bit0.inj, congr_argₓ _⟩)
   | bit1 n =>
-    decidableOfIff' (min_fac_aux (bit1 n) n 1 = bit1 n)
+    decidableOfIff' (minFacAux (bit1 n) n 1 = bit1 n)
       (by
         refine' nat.prime_def_min_fac.trans ((and_iff_right _).trans _)
         · exact Nat.bit0_le_bit1_iff.2 (to_nat_pos _)
@@ -107,10 +107,10 @@ namespace Num
 /-- Returns the smallest prime factor of `n ≠ 1`. -/
 def min_fac : Num → PosNum
   | 0 => 2
-  | Pos n => n.min_fac
+  | Pos n => n.minFac
 
 @[simp]
-theorem min_fac_to_nat : ∀ n : Num, (min_fac n : ℕ) = Nat.minFac n
+theorem min_fac_to_nat : ∀ n : Num, (minFac n : ℕ) = Nat.minFac n
   | 0 => rfl
   | Pos n => PosNum.min_fac_to_nat _
 

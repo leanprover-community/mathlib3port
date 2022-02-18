@@ -90,7 +90,7 @@ instance : AddCommSemigroupₓ Nat := by
 instance : AddSemigroupₓ Nat := by
   infer_instance
 
-instance : Distrib Nat := by
+instance : Distribₓ Nat := by
   infer_instance
 
 instance : Semiringₓ Nat := by
@@ -170,13 +170,13 @@ section Set
 
 open Set
 
-theorem zero_union_range_succ : {0} ∪ range succ = univ := by
+theorem zero_union_range_succ : {0} ∪ Range succ = univ := by
   ext n
   cases n <;> simp
 
 variable {α : Type _}
 
-theorem range_of_succ (f : ℕ → α) : {f 0} ∪ range (f ∘ succ) = range f := by
+theorem range_of_succ (f : ℕ → α) : {f 0} ∪ Range (f ∘ succ) = Range f := by
   rw [← image_singleton, range_comp, ← image_union, zero_union_range_succ, image_univ]
 
 theorem range_rec {α : Type _} (x : α) (f : ℕ → α → α) :
@@ -312,29 +312,29 @@ theorem eq_one_of_mul_eq_one_left {m n : ℕ} (H : m * n = 1) : n = 1 :=
 
 
 theorem _root_.has_lt.lt.nat_succ_le {n m : ℕ} (h : n < m) : succ n ≤ m :=
-  succ_le_of_lt h
+  succ_le_of_ltₓ h
 
 theorem succ_eq_one_add (n : ℕ) : n.succ = 1 + n := by
   rw [Nat.succ_eq_add_one, Nat.add_comm]
 
 theorem eq_of_lt_succ_of_not_lt {a b : ℕ} (h1 : a < b + 1) (h2 : ¬a < b) : a = b :=
-  have h3 : a ≤ b := le_of_lt_succ h1
+  have h3 : a ≤ b := le_of_lt_succₓ h1
   Or.elim (eq_or_lt_of_not_ltₓ h2) (fun h => h) fun h => absurd h (not_lt_of_geₓ h3)
 
 theorem eq_of_le_of_lt_succ {n m : ℕ} (h₁ : n ≤ m) (h₂ : m < n + 1) : m = n :=
-  Nat.le_antisymmₓ (le_of_succ_le_succ h₂) h₁
+  Nat.le_antisymmₓ (le_of_succ_le_succₓ h₂) h₁
 
 theorem one_add (n : ℕ) : 1 + n = succ n := by
   simp [add_commₓ]
 
 @[simp]
 theorem succ_pos' {n : ℕ} : 0 < succ n :=
-  succ_pos n
+  succ_posₓ n
 
 theorem succ_inj' {n m : ℕ} : succ n = succ m ↔ n = m :=
-  ⟨succ.inj, congr_argₓ _⟩
+  ⟨succ.injₓ, congr_argₓ _⟩
 
-theorem succ_injective : Function.Injective Nat.succ := fun x y => succ.inj
+theorem succ_injective : Function.Injective Nat.succ := fun x y => succ.injₓ
 
 theorem succ_ne_succ {n m : ℕ} : succ n ≠ succ m ↔ n ≠ m :=
   succ_injective.ne_iff
@@ -345,10 +345,10 @@ theorem succ_succ_ne_one (n : ℕ) : n.succ.succ ≠ 1 :=
 
 @[simp]
 theorem one_lt_succ_succ (n : ℕ) : 1 < n.succ.succ :=
-  succ_lt_succ <| succ_pos n
+  succ_lt_succ <| succ_posₓ n
 
 theorem succ_le_succ_iff {m n : ℕ} : succ m ≤ succ n ↔ m ≤ n :=
-  ⟨le_of_succ_le_succ, succ_le_succ⟩
+  ⟨le_of_succ_le_succₓ, succ_le_succₓ⟩
 
 theorem max_succ_succ {m n : ℕ} : max (succ m) (succ n) = succ (max m n) := by
   by_cases' h1 : m ≤ n
@@ -362,10 +362,10 @@ theorem not_succ_lt_self {n : ℕ} : ¬succ n < n :=
   not_lt_of_geₓ (Nat.le_succₓ _)
 
 theorem lt_succ_iff {m n : ℕ} : m < succ n ↔ m ≤ n :=
-  ⟨le_of_lt_succ, lt_succ_of_le⟩
+  ⟨le_of_lt_succₓ, lt_succ_of_leₓ⟩
 
 theorem succ_le_iff {m n : ℕ} : succ m ≤ n ↔ m < n :=
-  ⟨lt_of_succ_le, succ_le_of_lt⟩
+  ⟨lt_of_succ_leₓ, succ_le_of_ltₓ⟩
 
 theorem lt_iff_add_one_le {m n : ℕ} : m < n ↔ m + 1 ≤ n := by
   rw [succ_le_iff]
@@ -383,14 +383,14 @@ theorem one_add_le_iff {a b : ℕ} : 1 + a ≤ b ↔ a < b := by
   simp only [add_commₓ, add_one_le_iff]
 
 theorem of_le_succ {n m : ℕ} (H : n ≤ m.succ) : n ≤ m ∨ n = m.succ :=
-  H.lt_or_eq_dec.imp le_of_lt_succ id
+  H.lt_or_eq_dec.imp le_of_lt_succₓ id
 
 theorem succ_lt_succ_iff {m n : ℕ} : succ m < succ n ↔ m < n :=
-  ⟨lt_of_succ_lt_succ, succ_lt_succ⟩
+  ⟨lt_of_succ_lt_succₓ, succ_lt_succₓ⟩
 
 @[simp]
 theorem lt_one_iff {n : ℕ} : n < 1 ↔ n = 0 :=
-  lt_succ_iff.trans le_zero_iff
+  lt_succ_iffₓ.trans le_zero_iffₓ
 
 theorem div_le_iff_le_mul_add_pred {m n k : ℕ} (n0 : 0 < n) : m / n ≤ k ↔ m ≤ n * k + (n - 1) := by
   rw [← lt_succ_iff, div_lt_iff_lt_mul _ _ n0, succ_mul, mul_comm]
@@ -544,7 +544,7 @@ theorem pred_one_add (n : ℕ) : pred (1 + n) = n := by
   rw [add_commₓ, add_one, pred_succ]
 
 theorem pred_le_iff {n m : ℕ} : pred n ≤ m ↔ n ≤ succ m :=
-  ⟨le_succ_of_pred_le, by
+  ⟨le_succ_of_pred_leₓ, by
     cases n
     · exact fun h => zero_le m
       
@@ -568,7 +568,7 @@ theorem lt_pred_iff {n m : ℕ} : n < pred m ↔ succ n < m :=
   show n < m - 1 ↔ n + 1 < m from lt_tsub_iff_right
 
 theorem lt_of_lt_pred {a b : ℕ} (h : a < b - 1) : a < b :=
-  lt_of_succ_lt (lt_pred_iff.1 h)
+  lt_of_succ_ltₓ (lt_pred_iff.1 h)
 
 theorem le_or_le_of_add_eq_add_pred {a b c d : ℕ} (h : c + d = a + b - 1) : a ≤ c ∨ b ≤ d := by
   cases' le_or_ltₓ a c with h' h' <;> [left, right]
@@ -592,14 +592,14 @@ theorem sub_succ' (a b : ℕ) : a - b.succ = a - b - 1 :=
 
 
 theorem succ_mul_pos (m : ℕ) (hn : 0 < n) : 0 < succ m * n :=
-  mul_pos (succ_pos m) hn
+  mul_pos (succ_posₓ m) hn
 
 theorem mul_self_le_mul_self {n m : ℕ} (h : n ≤ m) : n * n ≤ m * m :=
   Decidable.mul_le_mul h h (zero_le _) (zero_le _)
 
 theorem mul_self_lt_mul_self : ∀ {n m : ℕ}, n < m → n * n < m * m
   | 0, m, h => mul_pos h h
-  | succ n, m, h => Decidable.mul_lt_mul h (le_of_ltₓ h) (succ_pos _) (zero_le _)
+  | succ n, m, h => Decidable.mul_lt_mul h (le_of_ltₓ h) (succ_posₓ _) (zero_le _)
 
 theorem mul_self_le_mul_self_iff {n m : ℕ} : n ≤ m ↔ n * n ≤ m * m :=
   ⟨mul_self_le_mul_self, le_imp_le_of_lt_imp_ltₓ mul_self_lt_mul_self⟩
@@ -608,9 +608,9 @@ theorem mul_self_lt_mul_self_iff {n m : ℕ} : n < m ↔ n * n < m * m :=
   le_iff_le_iff_lt_iff_lt.1 mul_self_le_mul_self_iff
 
 theorem le_mul_self : ∀ n : ℕ, n ≤ n * n
-  | 0 => le_reflₓ _
+  | 0 => le_rfl
   | n + 1 => by
-    let t := Nat.mul_le_mul_leftₓ (n + 1) (succ_pos n)
+    let t := Nat.mul_le_mul_leftₓ (n + 1) (succ_posₓ n)
     simp at t <;> exact t
 
 theorem le_mul_of_pos_left {m n : ℕ} (h : 0 < n) : m ≤ n * m := by
@@ -658,7 +658,7 @@ protected theorem mul_right_injₓ {a b c : ℕ} (ha : 0 < a) : a * b = a * c �
   ⟨Nat.eq_of_mul_eq_mul_leftₓ ha, fun e => e ▸ rfl⟩
 
 theorem mul_left_injective {a : ℕ} (ha : 0 < a) : Function.Injective fun x => x * a := fun _ _ =>
-  eq_of_mul_eq_mul_right ha
+  eq_of_mul_eq_mul_rightₓ ha
 
 theorem mul_right_injective {a : ℕ} (ha : 0 < a) : Function.Injective fun x => a * x := fun _ _ =>
   Nat.eq_of_mul_eq_mul_leftₓ ha
@@ -678,7 +678,7 @@ theorem mul_left_eq_self_iff {a b : ℕ} (hb : 0 < b) : a * b = b ↔ a = 1 := b
   rw [mul_comm, Nat.mul_right_eq_self_iff hb]
 
 theorem lt_succ_iff_lt_or_eq {n i : ℕ} : n < i.succ ↔ n < i ∨ n = i :=
-  lt_succ_iff.trans Decidable.le_iff_lt_or_eqₓ
+  lt_succ_iffₓ.trans Decidable.le_iff_lt_or_eqₓ
 
 theorem mul_self_inj {n m : ℕ} : n * n = m * m ↔ n = m :=
   le_antisymm_iffₓ.trans (le_antisymm_iffₓ.trans (and_congr mul_self_le_mul_self_iff mul_self_le_mul_self_iff)).symm
@@ -709,30 +709,30 @@ def le_rec_on {C : ℕ → Sort u} {n : ℕ} : ∀ {m : ℕ}, n ≤ m → (∀ {
   | m + 1, H, next, x =>
     Or.byCases (of_le_succ H) (fun h : n ≤ m => next <| le_rec_on h (@next) x) fun h : n = m + 1 => Eq.recOnₓ h x
 
-theorem le_rec_on_self {C : ℕ → Sort u} {n} {h : n ≤ n} {next} (x : C n) : (le_rec_on h next x : C n) = x := by
+theorem le_rec_on_self {C : ℕ → Sort u} {n} {h : n ≤ n} {next} (x : C n) : (leRecOn h next x : C n) = x := by
   cases n <;> unfold le_rec_on Or.byCases <;> rw [dif_neg n.not_succ_le_self, dif_pos rfl]
 
 theorem le_rec_on_succ {C : ℕ → Sort u} {n m} (h1 : n ≤ m) {h2 : n ≤ m + 1} {next} (x : C n) :
-    (le_rec_on h2 (@next) x : C (m + 1)) = next (le_rec_on h1 (@next) x : C m) := by
+    (leRecOn h2 (@next) x : C (m + 1)) = next (leRecOn h1 (@next) x : C m) := by
   conv => lhs rw [le_rec_on, Or.byCases, dif_pos h1]
 
 theorem le_rec_on_succ' {C : ℕ → Sort u} {n} {h : n ≤ n + 1} {next} (x : C n) :
-    (le_rec_on h next x : C (n + 1)) = next x := by
+    (leRecOn h next x : C (n + 1)) = next x := by
   rw [le_rec_on_succ (le_reflₓ n), le_rec_on_self]
 
 theorem le_rec_on_trans {C : ℕ → Sort u} {n m k} (hnm : n ≤ m) (hmk : m ≤ k) {next} (x : C n) :
-    (le_rec_on (le_transₓ hnm hmk) (@next) x : C k) = le_rec_on hmk (@next) (le_rec_on hnm (@next) x) := by
+    (leRecOn (le_transₓ hnm hmk) (@next) x : C k) = leRecOn hmk (@next) (leRecOn hnm (@next) x) := by
   induction' hmk with k hmk ih
   · rw [le_rec_on_self]
     
   rw [le_rec_on_succ (le_transₓ hnm hmk), ih, le_rec_on_succ]
 
 theorem le_rec_on_succ_left {C : ℕ → Sort u} {n m} (h1 : n ≤ m) (h2 : n + 1 ≤ m) {next : ∀ ⦃k⦄, C k → C (k + 1)}
-    (x : C n) : (le_rec_on h2 next (next x) : C m) = (le_rec_on h1 next x : C m) := by
+    (x : C n) : (leRecOn h2 next (next x) : C m) = (leRecOn h1 next x : C m) := by
   rw [Subsingleton.elimₓ h1 (le_transₓ (le_succ n) h2), le_rec_on_trans (le_succ n) h2, le_rec_on_succ']
 
 theorem le_rec_on_injective {C : ℕ → Sort u} {n m} (hnm : n ≤ m) (next : ∀ n, C n → C (n + 1))
-    (Hnext : ∀ n, Function.Injective (next n)) : Function.Injective (le_rec_on hnm next) := by
+    (Hnext : ∀ n, Function.Injective (next n)) : Function.Injective (leRecOn hnm next) := by
   induction' hnm with m hnm ih
   · intro x y H
     rwa [le_rec_on_self, le_rec_on_self] at H
@@ -742,7 +742,7 @@ theorem le_rec_on_injective {C : ℕ → Sort u} {n m} (hnm : n ≤ m) (next : �
   exact ih (Hnext _ H)
 
 theorem le_rec_on_surjective {C : ℕ → Sort u} {n m} (hnm : n ≤ m) (next : ∀ n, C n → C (n + 1))
-    (Hnext : ∀ n, Function.Surjective (next n)) : Function.Surjective (le_rec_on hnm next) := by
+    (Hnext : ∀ n, Function.Surjective (next n)) : Function.Surjective (leRecOn hnm next) := by
   induction' hnm with m hnm ih
   · intro x
     use x
@@ -765,7 +765,7 @@ def strong_rec_on' {P : ℕ → Sort _} (n : ℕ) (h : ∀ n, (∀ m, m < n → 
   Nat.strongRec' h n
 
 theorem strong_rec_on_beta' {P : ℕ → Sort _} {h} {n : ℕ} :
-    (strong_rec_on' n h : P n) = h n fun m hmn => (strong_rec_on' m h : P m) := by
+    (strongRecOn' n h : P n) = h n fun m hmn => (strongRecOn' m h : P m) := by
   simp only [strong_rec_on']
   rw [Nat.strongRec']
 
@@ -779,34 +779,34 @@ Also works for functions to `Sort*`. For a version assuming only the assumption 
 `decreasing_induction'`. -/
 @[elab_as_eliminator]
 def decreasing_induction {P : ℕ → Sort _} (h : ∀ n, P (n + 1) → P n) {m n : ℕ} (mn : m ≤ n) (hP : P n) : P m :=
-  le_rec_on mn (fun k ih hsk => ih <| h k hsk) (fun h => h) hP
+  leRecOn mn (fun k ih hsk => ih <| h k hsk) (fun h => h) hP
 
 @[simp]
 theorem decreasing_induction_self {P : ℕ → Sort _} (h : ∀ n, P (n + 1) → P n) {n : ℕ} (nn : n ≤ n) (hP : P n) :
-    (decreasing_induction h nn hP : P n) = hP := by
+    (decreasingInduction h nn hP : P n) = hP := by
   dunfold decreasing_induction
   rw [le_rec_on_self]
 
 theorem decreasing_induction_succ {P : ℕ → Sort _} (h : ∀ n, P (n + 1) → P n) {m n : ℕ} (mn : m ≤ n) (msn : m ≤ n + 1)
-    (hP : P (n + 1)) : (decreasing_induction h msn hP : P m) = decreasing_induction h mn (h n hP) := by
+    (hP : P (n + 1)) : (decreasingInduction h msn hP : P m) = decreasingInduction h mn (h n hP) := by
   dunfold decreasing_induction
   rw [le_rec_on_succ]
 
 @[simp]
 theorem decreasing_induction_succ' {P : ℕ → Sort _} (h : ∀ n, P (n + 1) → P n) {m : ℕ} (msm : m ≤ m + 1)
-    (hP : P (m + 1)) : (decreasing_induction h msm hP : P m) = h m hP := by
+    (hP : P (m + 1)) : (decreasingInduction h msm hP : P m) = h m hP := by
   dunfold decreasing_induction
   rw [le_rec_on_succ']
 
 theorem decreasing_induction_trans {P : ℕ → Sort _} (h : ∀ n, P (n + 1) → P n) {m n k : ℕ} (mn : m ≤ n) (nk : n ≤ k)
     (hP : P k) :
-    (decreasing_induction h (le_transₓ mn nk) hP : P m) = decreasing_induction h mn (decreasing_induction h nk hP) := by
+    (decreasingInduction h (le_transₓ mn nk) hP : P m) = decreasingInduction h mn (decreasingInduction h nk hP) := by
   induction' nk with k nk ih
   rw [decreasing_induction_self]
   rw [decreasing_induction_succ h (le_transₓ mn nk), ih, decreasing_induction_succ]
 
 theorem decreasing_induction_succ_left {P : ℕ → Sort _} (h : ∀ n, P (n + 1) → P n) {m n : ℕ} (smn : m + 1 ≤ n)
-    (mn : m ≤ n) (hP : P n) : (decreasing_induction h mn hP : P m) = h m (decreasing_induction h smn hP) := by
+    (mn : m ≤ n) (hP : P n) : (decreasingInduction h mn hP : P m) = h m (decreasingInduction h smn hP) := by
   rw [Subsingleton.elimₓ mn (le_transₓ (le_succ m) smn), decreasing_induction_trans, decreasing_induction_succ']
 
 /-- Recursion starting at a non-zero number: given a map `C k → C (k+1)` for each `k ≥ n`,
@@ -837,7 +837,7 @@ def decreasing_induction' {P : ℕ → Sort _} {m n : ℕ} (h : ∀, ∀ k < n, 
 /-- A subset of `ℕ` containing `b : ℕ` and closed under `nat.succ` contains every `n ≥ b`. -/
 theorem set_induction_bounded {b : ℕ} {S : Set ℕ} (hb : b ∈ S) (h_ind : ∀ k : ℕ, k ∈ S → k + 1 ∈ S) {n : ℕ}
     (hbn : b ≤ n) : n ∈ S :=
-  @le_rec_on (fun n => n ∈ S) b n hbn h_ind hb
+  @leRecOn (fun n => n ∈ S) b n hbn h_ind hb
 
 /-- A subset of `ℕ` containing zero and closed under `nat.succ` contains all of `ℕ`. -/
 theorem set_induction {S : Set ℕ} (hb : 0 ∈ S) (h_ind : ∀ k : ℕ, k ∈ S → k + 1 ∈ S) (n : ℕ) : n ∈ S :=
@@ -857,10 +857,10 @@ protected theorem div_le_of_le_mul' {m n : ℕ} {k} (h : m ≤ k * n) : m / k �
     (fun k0 => by
       rw [k0, Nat.div_zeroₓ] <;> apply zero_le)
     fun k0 =>
-    (_root_.mul_le_mul_left k0).1 <|
+    (mul_le_mul_left k0).1 <|
       calc
         k * (m / k) ≤ m % k + k * (m / k) := Nat.le_add_leftₓ _ _
-        _ = m := mod_add_div _ _
+        _ = m := mod_add_divₓ _ _
         _ ≤ k * n := h
         
 
@@ -880,7 +880,7 @@ theorem div_lt_self' (n b : ℕ) : (n + 1) / (b + 2) < n + 1 :=
   Nat.div_lt_selfₓ (Nat.succ_posₓ n) (Nat.succ_lt_succₓ (Nat.succ_posₓ _))
 
 theorem le_div_iff_mul_le' {x y : ℕ} {k : ℕ} (k0 : 0 < k) : x ≤ y / k ↔ x * k ≤ y :=
-  le_div_iff_mul_le x y k0
+  le_div_iff_mul_leₓ x y k0
 
 theorem div_lt_iff_lt_mul' {x y : ℕ} {k : ℕ} (k0 : 0 < k) : x / k < y ↔ x < y * k :=
   lt_iff_lt_of_le_iff_le <| le_div_iff_mul_le' k0
@@ -907,7 +907,7 @@ protected theorem div_lt_of_lt_mul {m n k : ℕ} (h : m < n * k) : m / n < k :=
   lt_of_mul_lt_mul_left
     (calc
       n * (m / n) ≤ m % n + n * (m / n) := Nat.le_add_leftₓ _ _
-      _ = m := mod_add_div _ _
+      _ = m := mod_add_divₓ _ _
       _ < n * k := h
       )
     (Nat.zero_leₓ n)
@@ -956,7 +956,7 @@ theorem div_mul_div_le_div (a b c : ℕ) : a / c * b / a ≤ b / c :=
       
 
 theorem eq_zero_of_le_half {a : ℕ} (h : a ≤ a / 2) : a = 0 :=
-  eq_zero_of_le_div (le_reflₓ _) h
+  eq_zero_of_le_div le_rfl h
 
 protected theorem eq_mul_of_div_eq_right {a b c : ℕ} (H1 : b ∣ a) (H2 : a / b = c) : a = b * c := by
   rw [← H2, Nat.mul_div_cancel'ₓ H1]
@@ -988,7 +988,7 @@ theorem lt_div_mul_add {a b : ℕ} (hb : 0 < b) : a < a / b * b + b := by
 
 
 theorem div_add_mod (m k : ℕ) : k * (m / k) + m % k = m :=
-  (Nat.add_comm _ _).trans (mod_add_div _ _)
+  (Nat.add_comm _ _).trans (mod_add_divₓ _ _)
 
 theorem mod_add_div' (m k : ℕ) : m % k + m / k * k = m := by
   rw [mul_comm]
@@ -999,7 +999,7 @@ theorem div_add_mod' (m k : ℕ) : m / k * k + m % k = m := by
   exact div_add_mod _ _
 
 protected theorem div_mod_unique {n k m d : ℕ} (h : 0 < k) : n / k = d ∧ n % k = m ↔ m + k * d = n ∧ m < k :=
-  ⟨fun ⟨e₁, e₂⟩ => e₁ ▸ e₂ ▸ ⟨mod_add_div _ _, mod_lt _ h⟩, fun ⟨h₁, h₂⟩ =>
+  ⟨fun ⟨e₁, e₂⟩ => e₁ ▸ e₂ ▸ ⟨mod_add_divₓ _ _, mod_ltₓ _ h⟩, fun ⟨h₁, h₂⟩ =>
     h₁ ▸ by
       rw [add_mul_div_left _ _ h, add_mul_mod_self_left] <;> simp [div_eq_of_lt, mod_eq_of_lt, h₂]⟩
 
@@ -1017,7 +1017,7 @@ protected theorem div_div_self : ∀ {a b : ℕ}, b ∣ a → 0 < a → a / (a /
       (by
         decide)
   | a + 1, b + 1, h₁, h₂ =>
-    (Nat.mul_left_inj (Nat.div_pos (le_of_dvd (succ_pos a) h₁) (succ_pos b))).1 <| by
+    (Nat.mul_left_inj (Nat.div_pos (le_of_dvdₓ (succ_posₓ a) h₁) (succ_posₓ b))).1 <| by
       rw [Nat.div_mul_cancelₓ (div_dvd_of_dvd h₁), Nat.mul_div_cancel'ₓ h₁]
 
 theorem mod_mul_right_div_self (a b c : ℕ) : a % (b * c) / b = a / b % c := by
@@ -1127,7 +1127,7 @@ theorem dvd_iff_div_mul_eq (n d : ℕ) : d ∣ n ↔ n / d * d = n :=
   ⟨fun h => Nat.div_mul_cancelₓ h, fun h => Dvd.intro_left (n / d) h⟩
 
 theorem dvd_iff_le_div_mul (n d : ℕ) : d ∣ n ↔ n ≤ n / d * d :=
-  ((dvd_iff_div_mul_eq _ _).trans le_antisymm_iffₓ).trans (and_iff_right (div_mul_le_self n d))
+  ((dvd_iff_div_mul_eq _ _).trans le_antisymm_iffₓ).trans (and_iff_right (div_mul_le_selfₓ n d))
 
 theorem dvd_iff_dvd_dvd (n d : ℕ) : d ∣ n ↔ ∀ k : ℕ, k ∣ d → k ∣ n :=
   ⟨fun h k hkd => dvd_trans hkd h, fun h => h _ dvd_rfl⟩
@@ -1143,7 +1143,7 @@ theorem mod_mod (a n : ℕ) : a % n % n = a % n :=
   (Nat.eq_zero_or_posₓ n).elim
     (fun n0 => by
       simp [n0])
-    fun npos => mod_eq_of_lt (mod_lt _ npos)
+    fun npos => mod_eq_of_ltₓ (mod_ltₓ _ npos)
 
 /-- If `a` and `b` are equal mod `c`, `a - b` is zero mod `c`. -/
 theorem sub_mod_eq_zero_of_mod_eq {a b c : ℕ} (h : a % c = b % c) : (a - b) % c = 0 := by
@@ -1270,7 +1270,7 @@ theorem eq_zero_of_dvd_of_lt {a b : ℕ} (w : a ∣ b) (h : b < a) : b = 0 :=
   Nat.eq_zero_of_dvd_of_div_eq_zero w ((Nat.div_eq_zero_iff (lt_of_le_of_ltₓ (zero_le b) h)).elim_right h)
 
 theorem div_le_div_left {a b c : ℕ} (h₁ : c ≤ b) (h₂ : 0 < c) : a / b ≤ a / c :=
-  (Nat.le_div_iff_mul_leₓ _ _ h₂).2 <| le_transₓ (Nat.mul_le_mul_leftₓ _ h₁) (div_mul_le_self _ _)
+  (Nat.le_div_iff_mul_leₓ _ _ h₂).2 <| le_transₓ (Nat.mul_le_mul_leftₓ _ h₁) (div_mul_le_selfₓ _ _)
 
 theorem div_eq_self {a b : ℕ} : a / b = a ↔ a = 0 ∨ b = 1 := by
   constructor
@@ -1298,7 +1298,7 @@ theorem div_eq_self {a b : ℕ} : a / b = a ↔ a = 0 ∨ b = 1 := by
     
 
 theorem lt_iff_le_pred : ∀ {m n : ℕ}, 0 < n → (m < n ↔ m ≤ n - 1)
-  | m, n + 1, _ => lt_succ_iff
+  | m, n + 1, _ => lt_succ_iffₓ
 
 -- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:98:4: warning: unsupported: rw with cfg: { occs := occurrences.pos «expr[ , ]»([2]) }
 theorem div_eq_sub_mod_div {m n : ℕ} : m / n = (m - m % n) / n := by
@@ -1459,7 +1459,7 @@ theorem find_greatest_eq_iff : Nat.findGreatest P b = m ↔ m ≤ b ∧ (m ≠ 0
   · rw [eq_comm, Iff.comm]
     simp only [nonpos_iff_eq_zero, Ne.def, and_iff_left_iff_imp, find_greatest_zero]
     rintro rfl
-    exact ⟨fun h => (h rfl).elim, fun n hlt heq => (hlt.ne HEq.symm).elim⟩
+    exact ⟨fun h => (h rfl).elim, fun n hlt heq => (hlt.Ne HEq.symm).elim⟩
     
   · by_cases' hb : P (b + 1)
     · rw [find_greatest_eq hb]
@@ -1543,24 +1543,24 @@ end FindGreatest
 
 
 @[simp]
-theorem bodd_div2_eq (n : ℕ) : bodd_div2 n = (bodd n, div2 n) := by
+theorem bodd_div2_eq (n : ℕ) : boddDiv2 n = (bodd n, div2 n) := by
   unfold bodd div2 <;> cases bodd_div2 n <;> rfl
 
 @[simp]
 theorem bodd_bit0 n : bodd (bit0 n) = ff :=
-  bodd_bit ff n
+  bodd_bit false n
 
 @[simp]
 theorem bodd_bit1 n : bodd (bit1 n) = tt :=
-  bodd_bit tt n
+  bodd_bit true n
 
 @[simp]
 theorem div2_bit0 n : div2 (bit0 n) = n :=
-  div2_bit ff n
+  div2_bit false n
 
 @[simp]
 theorem div2_bit1 n : div2 (bit1 n) = n :=
-  div2_bit tt n
+  div2_bit true n
 
 /-! ### `bit0` and `bit1` -/
 
@@ -1589,7 +1589,7 @@ protected theorem bit0_le {n m : ℕ} (h : n ≤ m) : bit0 n ≤ bit0 m :=
   add_le_add h h
 
 protected theorem bit1_le {n m : ℕ} (h : n ≤ m) : bit1 n ≤ bit1 m :=
-  succ_le_succ (add_le_add h h)
+  succ_le_succₓ (add_le_add h h)
 
 theorem bit_le : ∀ b : Bool {n m : ℕ}, n ≤ m → bit b n ≤ bit b m
   | tt, n, m, h => Nat.bit1_le h
@@ -1611,7 +1611,7 @@ theorem bit_lt_bit0 : ∀ b {n m : ℕ}, n < m → bit b n < bit0 m
   | ff, n, m, h => Nat.bit0_lt h
 
 theorem bit_lt_bit a b {n m : ℕ} (h : n < m) : bit a n < bit b m :=
-  lt_of_lt_of_leₓ (bit_lt_bit0 _ h) (bit0_le_bit _ (le_reflₓ _))
+  lt_of_lt_of_leₓ (bit_lt_bit0 _ h) (bit0_le_bit _ le_rfl)
 
 @[simp]
 theorem bit0_le_bit1_iff : bit0 k ≤ bit1 n ↔ k ≤ n :=
@@ -1707,7 +1707,7 @@ instance decidable_forall_fin {n : ℕ} (P : Finₓ n → Prop) [H : DecidablePr
 
 instance decidable_ball_le (n : ℕ) (P : ∀, ∀ k ≤ n, ∀, Prop) [H : ∀ n h, Decidable (P n h)] :
     Decidable (∀ n h, P n h) :=
-  decidableOfIff (∀ k h : k < succ n, P k (le_of_lt_succ h)) ⟨fun a k h => a k (lt_succ_of_le h), fun a k h => a k _⟩
+  decidableOfIff (∀ k h : k < succ n, P k (le_of_lt_succₓ h)) ⟨fun a k h => a k (lt_succ_of_leₓ h), fun a k h => a k _⟩
 
 instance decidable_lo_hi (lo hi : ℕ) (P : ℕ → Prop) [H : DecidablePred P] : Decidable (∀ x, lo ≤ x → x < hi → P x) :=
   decidableOfIff (∀, ∀ x < hi - lo, ∀, P (lo + x))
@@ -1716,11 +1716,11 @@ instance decidable_lo_hi (lo hi : ℕ) (P : ℕ → Prop) [H : DecidablePred P] 
       rwa [add_tsub_cancel_of_le hl] at this, fun al x h => al _ (Nat.le_add_rightₓ _ _) (lt_tsub_iff_left.mp h)⟩
 
 instance decidable_lo_hi_le (lo hi : ℕ) (P : ℕ → Prop) [H : DecidablePred P] : Decidable (∀ x, lo ≤ x → x ≤ hi → P x) :=
-  decidableOfIff (∀ x, lo ≤ x → x < hi + 1 → P x) <| ball_congr fun x hl => imp_congr lt_succ_iff Iff.rfl
+  decidableOfIff (∀ x, lo ≤ x → x < hi + 1 → P x) <| ball_congr fun x hl => imp_congr lt_succ_iffₓ Iff.rfl
 
 instance decidable_exists_lt {P : ℕ → Prop} [h : DecidablePred P] : DecidablePred fun n => ∃ m : ℕ, m < n ∧ P m
   | 0 =>
-    is_false
+    isFalse
       (by
         simp )
   | n + 1 =>
@@ -1729,7 +1729,7 @@ instance decidable_exists_lt {P : ℕ → Prop} [h : DecidablePred P] : Decidabl
         simp only [lt_succ_iff_lt_or_eq, or_and_distrib_right, exists_or_distrib, exists_eq_left])
 
 instance decidable_exists_le {P : ℕ → Prop} [h : DecidablePred P] : DecidablePred fun n => ∃ m : ℕ, m ≤ n ∧ P m :=
-  fun n => decidableOfIff (∃ m, m < n + 1 ∧ P m) (exists_congr fun x => and_congr_left' lt_succ_iff)
+  fun n => decidableOfIff (∃ m, m < n + 1 ∧ P m) (exists_congr fun x => and_congr_left' lt_succ_iffₓ)
 
 end Nat
 

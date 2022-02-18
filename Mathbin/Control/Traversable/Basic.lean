@@ -140,7 +140,7 @@ def id_transformation : ApplicativeTransformation F F where
     simp
 
 instance : Inhabited (ApplicativeTransformation F F) :=
-  ⟨id_transformation⟩
+  ⟨idTransformation⟩
 
 universe s t
 
@@ -165,11 +165,11 @@ theorem comp_assoc {I : Type u → Type t} [Applicativeₓ I] [IsLawfulApplicati
   rfl
 
 @[simp]
-theorem comp_id (η : ApplicativeTransformation F G) : η.comp id_transformation = η :=
+theorem comp_id (η : ApplicativeTransformation F G) : η.comp idTransformation = η :=
   ext fun α x => rfl
 
 @[simp]
-theorem id_comp (η : ApplicativeTransformation F G) : id_transformation.comp η = η :=
+theorem id_comp (η : ApplicativeTransformation F G) : idTransformation.comp η = η :=
   ext fun α x => rfl
 
 end ApplicativeTransformation
@@ -214,7 +214,7 @@ class IsLawfulTraversable (t : Type u → Type u) [Traversable t] extends IsLawf
   id_traverse : ∀ {α} x : t α, traverse id.mk x = x
   comp_traverse :
     ∀ {F G} [Applicativeₓ F] [Applicativeₓ G] [IsLawfulApplicative F] [IsLawfulApplicative G] {α β γ} f : β → F γ g :
-      α → G β x : t α, traverse (comp.mk ∘ map f ∘ g) x = comp.mk (map (traverse f) (traverse g x))
+      α → G β x : t α, traverse (comp.mk ∘ map f ∘ g) x = Comp.mk (map (traverse f) (traverse g x))
   traverse_eq_map_id : ∀ {α β} f : α → β x : t α, traverse (id.mk ∘ f) x = id.mk (f <$> x)
   naturality :
     ∀ {F G} [Applicativeₓ F] [Applicativeₓ G] [IsLawfulApplicative F] [IsLawfulApplicative G] η :

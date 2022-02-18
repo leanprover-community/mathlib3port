@@ -67,7 +67,7 @@ theorem is_nilpotent_iff_eq_zero [MonoidWithZeroₓ R] [IsReduced R] : IsNilpote
   ⟨fun h => h.eq_zero, fun h => h.symm ▸ IsNilpotent.zero⟩
 
 theorem is_reduced_of_injective [MonoidWithZeroₓ R] [MonoidWithZeroₓ S] {F : Type _} [MonoidWithZeroHomClass F R S]
-    (f : F) (hf : Function.Injective f) [_root_.is_reduced S] : _root_.is_reduced R := by
+    (f : F) (hf : Function.Injective f) [IsReduced S] : IsReduced R := by
   constructor
   intro x hx
   apply hf
@@ -135,15 +135,15 @@ def nilradical (R : Type _) [CommSemiringₓ R] : Ideal R :=
 theorem mem_nilradical : x ∈ nilradical R ↔ IsNilpotent x :=
   Iff.rfl
 
-theorem nilradical_eq_Inf (R : Type _) [CommSemiringₓ R] : nilradical R = Inf { J : Ideal R | J.is_prime } := by
+theorem nilradical_eq_Inf (R : Type _) [CommSemiringₓ R] : nilradical R = inf { J : Ideal R | J.IsPrime } := by
   convert Ideal.radical_eq_Inf 0
   simp
 
-theorem nilpotent_iff_mem_prime : IsNilpotent x ↔ ∀ J : Ideal R, J.is_prime → x ∈ J := by
+theorem nilpotent_iff_mem_prime : IsNilpotent x ↔ ∀ J : Ideal R, J.IsPrime → x ∈ J := by
   rw [← mem_nilradical, nilradical_eq_Inf, Submodule.mem_Inf]
   rfl
 
-theorem nilradical_le_prime (J : Ideal R) [H : J.is_prime] : nilradical R ≤ J :=
+theorem nilradical_le_prime (J : Ideal R) [H : J.IsPrime] : nilradical R ≤ J :=
   (nilradical_eq_Inf R).symm ▸ Inf_le H
 
 @[simp]
@@ -157,12 +157,25 @@ namespace Algebra
 variable (R) {A : Type v} [CommSemiringₓ R] [Semiringₓ A] [Algebra R A]
 
 @[simp]
-theorem is_nilpotent_lmul_left_iff (a : A) : IsNilpotent (lmul_left R a) ↔ IsNilpotent a := by
+theorem is_nilpotent_lmul_left_iff (a : A) : IsNilpotent (lmulLeft R a) ↔ IsNilpotent a := by
   constructor <;> rintro ⟨n, hn⟩ <;> use n <;> simp only [lmul_left_eq_zero_iff, pow_lmul_left] at hn⊢ <;> exact hn
 
 @[simp]
-theorem is_nilpotent_lmul_right_iff (a : A) : IsNilpotent (lmul_right R a) ↔ IsNilpotent a := by
+theorem is_nilpotent_lmul_right_iff (a : A) : IsNilpotent (lmulRight R a) ↔ IsNilpotent a := by
   constructor <;> rintro ⟨n, hn⟩ <;> use n <;> simp only [lmul_right_eq_zero_iff, pow_lmul_right] at hn⊢ <;> exact hn
 
 end Algebra
+
+namespace Module.End
+
+variable {M : Type v} [Ringₓ R] [AddCommGroupₓ M] [Module R M]
+
+variable {f : Module.End R M} {p : Submodule R M} (hp : p ≤ p.comap f)
+
+theorem is_nilpotent.mapq (hnp : IsNilpotent f) : IsNilpotent (p.mapq p f hp) := by
+  obtain ⟨k, hk⟩ := hnp
+  use k
+  simp [← p.mapq_pow, hk]
+
+end Module.End
 

@@ -73,10 +73,10 @@ variable (R : Type u) [Ringₓ R]
     implies `n ≤ m`. -/
 @[mk_iff]
 class StrongRankCondition : Prop where
-  le_of_fin_injective : ∀ {n m : ℕ} f : (Finₓ n → R) →ₗ[R] Finₓ m → R, injective f → n ≤ m
+  le_of_fin_injective : ∀ {n m : ℕ} f : (Finₓ n → R) →ₗ[R] Finₓ m → R, Injective f → n ≤ m
 
 theorem le_of_fin_injective [StrongRankCondition R] {n m : ℕ} (f : (Finₓ n → R) →ₗ[R] Finₓ m → R) :
-    injective f → n ≤ m :=
+    Injective f → n ≤ m :=
   StrongRankCondition.le_of_fin_injective f
 
 /-- A ring satisfies the strong rank condition if and only if, for all `n : ℕ`, any linear map
@@ -94,7 +94,7 @@ theorem strong_rank_condition_iff_succ :
     
 
 theorem card_le_of_injective [StrongRankCondition R] {α β : Type _} [Fintype α] [Fintype β] (f : (α → R) →ₗ[R] β → R)
-    (i : injective f) : Fintype.card α ≤ Fintype.card β := by
+    (i : Injective f) : Fintype.card α ≤ Fintype.card β := by
   let P := LinearEquiv.funCongrLeft R R (Fintype.equivFin α)
   let Q := LinearEquiv.funCongrLeft R R (Fintype.equivFin β)
   exact
@@ -102,7 +102,7 @@ theorem card_le_of_injective [StrongRankCondition R] {α β : Type _} [Fintype �
       (((LinearEquiv.symm Q).Injective.comp i).comp (LinearEquiv.injective P))
 
 theorem card_le_of_injective' [StrongRankCondition R] {α β : Type _} [Fintype α] [Fintype β] (f : (α →₀ R) →ₗ[R] β →₀ R)
-    (i : injective f) : Fintype.card α ≤ Fintype.card β := by
+    (i : Injective f) : Fintype.card α ≤ Fintype.card β := by
   let P := Finsupp.linearEquivFunOnFintype R R β
   let Q := (Finsupp.linearEquivFunOnFintype R R α).symm
   exact card_le_of_injective R ((P.to_linear_map.comp f).comp Q.to_linear_map) ((P.injective.comp i).comp Q.injective)
@@ -110,13 +110,13 @@ theorem card_le_of_injective' [StrongRankCondition R] {α β : Type _} [Fintype 
 /-- We say that `R` satisfies the rank condition if `(fin n → R) →ₗ[R] (fin m → R)` surjective
     implies `m ≤ n`. -/
 class RankCondition : Prop where
-  le_of_fin_surjective : ∀ {n m : ℕ} f : (Finₓ n → R) →ₗ[R] Finₓ m → R, surjective f → m ≤ n
+  le_of_fin_surjective : ∀ {n m : ℕ} f : (Finₓ n → R) →ₗ[R] Finₓ m → R, Surjective f → m ≤ n
 
-theorem le_of_fin_surjective [RankCondition R] {n m : ℕ} (f : (Finₓ n → R) →ₗ[R] Finₓ m → R) : surjective f → m ≤ n :=
+theorem le_of_fin_surjective [RankCondition R] {n m : ℕ} (f : (Finₓ n → R) →ₗ[R] Finₓ m → R) : Surjective f → m ≤ n :=
   RankCondition.le_of_fin_surjective f
 
 theorem card_le_of_surjective [RankCondition R] {α β : Type _} [Fintype α] [Fintype β] (f : (α → R) →ₗ[R] β → R)
-    (i : surjective f) : Fintype.card β ≤ Fintype.card α := by
+    (i : Surjective f) : Fintype.card β ≤ Fintype.card α := by
   let P := LinearEquiv.funCongrLeft R R (Fintype.equivFin α)
   let Q := LinearEquiv.funCongrLeft R R (Fintype.equivFin β)
   exact
@@ -124,7 +124,7 @@ theorem card_le_of_surjective [RankCondition R] {α β : Type _} [Fintype α] [F
       (((LinearEquiv.symm Q).Surjective.comp i).comp (LinearEquiv.surjective P))
 
 theorem card_le_of_surjective' [RankCondition R] {α β : Type _} [Fintype α] [Fintype β] (f : (α →₀ R) →ₗ[R] β →₀ R)
-    (i : surjective f) : Fintype.card β ≤ Fintype.card α := by
+    (i : Surjective f) : Fintype.card β ≤ Fintype.card α := by
   let P := Finsupp.linearEquivFunOnFintype R R β
   let Q := (Finsupp.linearEquivFunOnFintype R R α).symm
   exact
@@ -145,8 +145,8 @@ class InvariantBasisNumber : Prop where
 
 instance (priority := 100) invariant_basis_number_of_rank_condition [RankCondition R] : InvariantBasisNumber R where
   eq_of_fin_equiv := fun n m e =>
-    le_antisymmₓ (le_of_fin_surjective R e.symm.to_linear_map e.symm.surjective)
-      (le_of_fin_surjective R e.to_linear_map e.surjective)
+    le_antisymmₓ (le_of_fin_surjective R e.symm.toLinearMap e.symm.Surjective)
+      (le_of_fin_surjective R e.toLinearMap e.Surjective)
 
 end
 

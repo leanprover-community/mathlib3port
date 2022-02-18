@@ -212,12 +212,12 @@ theorem init_def {n : ℕ} {α : Finₓ (n + 1) → Type _} {q : ∀ i, α i} :
 `cons` (i.e., adding an element to the left of a tuple) read in reverse order. -/
 def snoc (p : ∀ i : Finₓ n, α i.cast_succ) (x : α (last n)) (i : Finₓ (n + 1)) : α i :=
   if h : i.val < n then
-    _root_.cast
+    cast
       (by
         rw [Finₓ.cast_succ_cast_lt i h])
-      (p (cast_lt i h))
+      (p (castLt i h))
   else
-    _root_.cast
+    cast
       (by
         rw [eq_last_of_not_lt h])
       x
@@ -380,7 +380,7 @@ variable {α : Finₓ (n + 1) → Type u} {β : Type v}
 propositions, see also `fin.insert_nth` for a version without an `@[elab_as_eliminator]`
 attribute. -/
 @[elab_as_eliminator]
-def succ_above_cases {α : Finₓ (n + 1) → Sort u} (i : Finₓ (n + 1)) (x : α i) (p : ∀ j : Finₓ n, α (i.succ_above j))
+def succ_above_cases {α : Finₓ (n + 1) → Sort u} (i : Finₓ (n + 1)) (x : α i) (p : ∀ j : Finₓ n, α (i.succAbove j))
     (j : Finₓ (n + 1)) : α j :=
   if hj : j = i then Eq.ndrec x hj.symm
   else
@@ -388,22 +388,22 @@ def succ_above_cases {α : Finₓ (n + 1) → Sort u} (i : Finₓ (n + 1)) (x : 
     else Eq.recOnₓ (succ_above_pred <| (Ne.lt_or_lt hj).resolve_left hlt) (p _)
 
 theorem forall_iff_succ_above {p : Finₓ (n + 1) → Prop} (i : Finₓ (n + 1)) :
-    (∀ j, p j) ↔ p i ∧ ∀ j, p (i.succ_above j) :=
-  ⟨fun h => ⟨h _, fun j => h _⟩, fun h => succ_above_cases i h.1 h.2⟩
+    (∀ j, p j) ↔ p i ∧ ∀ j, p (i.succAbove j) :=
+  ⟨fun h => ⟨h _, fun j => h _⟩, fun h => succAboveCases i h.1 h.2⟩
 
 /-- Insert an element into a tuple at a given position. For `i = 0` see `fin.cons`,
 for `i = fin.last n` see `fin.snoc`. See also `fin.succ_above_cases` for a version elaborated
 as an eliminator. -/
-def insert_nth (i : Finₓ (n + 1)) (x : α i) (p : ∀ j : Finₓ n, α (i.succ_above j)) (j : Finₓ (n + 1)) : α j :=
-  succ_above_cases i x p j
+def insert_nth (i : Finₓ (n + 1)) (x : α i) (p : ∀ j : Finₓ n, α (i.succAbove j)) (j : Finₓ (n + 1)) : α j :=
+  succAboveCases i x p j
 
 @[simp]
-theorem insert_nth_apply_same (i : Finₓ (n + 1)) (x : α i) (p : ∀ j, α (i.succ_above j)) : insert_nth i x p i = x := by
+theorem insert_nth_apply_same (i : Finₓ (n + 1)) (x : α i) (p : ∀ j, α (i.succAbove j)) : insertNth i x p i = x := by
   simp [insert_nth, succ_above_cases]
 
 @[simp]
-theorem insert_nth_apply_succ_above (i : Finₓ (n + 1)) (x : α i) (p : ∀ j, α (i.succ_above j)) (j : Finₓ n) :
-    insert_nth i x p (i.succ_above j) = p j := by
+theorem insert_nth_apply_succ_above (i : Finₓ (n + 1)) (x : α i) (p : ∀ j, α (i.succAbove j)) (j : Finₓ n) :
+    insertNth i x p (i.succAbove j) = p j := by
   simp only [insert_nth, succ_above_cases, dif_neg (succ_above_ne _ _)]
   by_cases' hlt : j.cast_succ < i
   · rw [dif_pos ((succ_above_lt_iff _ _).2 hlt)]
@@ -416,31 +416,31 @@ theorem insert_nth_apply_succ_above (i : Finₓ (n + 1)) (x : α i) (p : ∀ j, 
     
 
 @[simp]
-theorem succ_above_cases_eq_insert_nth : @succ_above_cases.{u + 1} = @insert_nth.{u} :=
+theorem succ_above_cases_eq_insert_nth : @succAboveCases.{u + 1} = @insertNth.{u} :=
   rfl
 
 @[simp]
-theorem insert_nth_comp_succ_above (i : Finₓ (n + 1)) (x : β) (p : Finₓ n → β) : insert_nth i x p ∘ i.succ_above = p :=
+theorem insert_nth_comp_succ_above (i : Finₓ (n + 1)) (x : β) (p : Finₓ n → β) : insertNth i x p ∘ i.succAbove = p :=
   funext <| insert_nth_apply_succ_above i x p
 
-theorem insert_nth_eq_iff {i : Finₓ (n + 1)} {x : α i} {p : ∀ j, α (i.succ_above j)} {q : ∀ j, α j} :
-    i.insert_nth x p = q ↔ q i = x ∧ p = fun j => q (i.succ_above j) := by
+theorem insert_nth_eq_iff {i : Finₓ (n + 1)} {x : α i} {p : ∀ j, α (i.succAbove j)} {q : ∀ j, α j} :
+    i.insertNth x p = q ↔ q i = x ∧ p = fun j => q (i.succAbove j) := by
   simp [funext_iff, forall_iff_succ_above i, eq_comm]
 
-theorem eq_insert_nth_iff {i : Finₓ (n + 1)} {x : α i} {p : ∀ j, α (i.succ_above j)} {q : ∀ j, α j} :
-    q = i.insert_nth x p ↔ q i = x ∧ p = fun j => q (i.succ_above j) :=
+theorem eq_insert_nth_iff {i : Finₓ (n + 1)} {x : α i} {p : ∀ j, α (i.succAbove j)} {q : ∀ j, α j} :
+    q = i.insertNth x p ↔ q i = x ∧ p = fun j => q (i.succAbove j) :=
   eq_comm.trans insert_nth_eq_iff
 
-theorem insert_nth_apply_below {i j : Finₓ (n + 1)} (h : j < i) (x : α i) (p : ∀ k, α (i.succ_above k)) :
-    i.insert_nth x p j = Eq.recOnₓ (succ_above_cast_lt h) (p <| j.cast_lt _) := by
+theorem insert_nth_apply_below {i j : Finₓ (n + 1)} (h : j < i) (x : α i) (p : ∀ k, α (i.succAbove k)) :
+    i.insertNth x p j = Eq.recOnₓ (succ_above_cast_lt h) (p <| j.cast_lt _) := by
   rw [insert_nth, succ_above_cases, dif_neg h.ne, dif_pos h]
 
-theorem insert_nth_apply_above {i j : Finₓ (n + 1)} (h : i < j) (x : α i) (p : ∀ k, α (i.succ_above k)) :
-    i.insert_nth x p j = Eq.recOnₓ (succ_above_pred h) (p <| j.pred _) := by
+theorem insert_nth_apply_above {i j : Finₓ (n + 1)} (h : i < j) (x : α i) (p : ∀ k, α (i.succAbove k)) :
+    i.insertNth x p j = Eq.recOnₓ (succ_above_pred h) (p <| j.pred _) := by
   rw [insert_nth, succ_above_cases, dif_neg h.ne', dif_neg h.not_lt]
 
-theorem insert_nth_zero (x : α 0) (p : ∀ j : Finₓ n, α (succ_above 0 j)) :
-    insert_nth 0 x p = cons x fun j => _root_.cast (congr_argₓ α (congr_funₓ succ_above_zero j)) (p j) := by
+theorem insert_nth_zero (x : α 0) (p : ∀ j : Finₓ n, α (succAbove 0 j)) :
+    insertNth 0 x p = cons x fun j => cast (congr_argₓ α (congr_funₓ succ_above_zero j)) (p j) := by
   refine'
     insert_nth_eq_iff.2
       ⟨by
@@ -449,11 +449,11 @@ theorem insert_nth_zero (x : α 0) (p : ∀ j : Finₓ n, α (succ_above 0 j)) :
   convert (cons_succ _ _ _).symm
 
 @[simp]
-theorem insert_nth_zero' (x : β) (p : Finₓ n → β) : @insert_nth _ (fun _ => β) 0 x p = cons x p := by
+theorem insert_nth_zero' (x : β) (p : Finₓ n → β) : @insertNth _ (fun _ => β) 0 x p = cons x p := by
   simp [insert_nth_zero]
 
 theorem insert_nth_last (x : α (last n)) (p : ∀ j : Finₓ n, α ((last n).succAbove j)) :
-    insert_nth (last n) x p = snoc (fun j => _root_.cast (congr_argₓ α (succ_above_last_apply j)) (p j)) x := by
+    insertNth (last n) x p = snoc (fun j => cast (congr_argₓ α (succ_above_last_apply j)) (p j)) x := by
   refine'
     insert_nth_eq_iff.2
       ⟨by
@@ -469,69 +469,69 @@ theorem insert_nth_last (x : α (last n)) (p : ∀ j : Finₓ n, α ((last n).su
     
 
 @[simp]
-theorem insert_nth_last' (x : β) (p : Finₓ n → β) : @insert_nth _ (fun _ => β) (last n) x p = snoc p x := by
+theorem insert_nth_last' (x : β) (p : Finₓ n → β) : @insertNth _ (fun _ => β) (last n) x p = snoc p x := by
   simp [insert_nth_last]
 
 @[simp]
-theorem insert_nth_zero_right [∀ j, Zero (α j)] (i : Finₓ (n + 1)) (x : α i) : i.insert_nth x 0 = Pi.single i x :=
+theorem insert_nth_zero_right [∀ j, Zero (α j)] (i : Finₓ (n + 1)) (x : α i) : i.insertNth x 0 = Pi.single i x :=
   insert_nth_eq_iff.2 <| by
     simp [succ_above_ne, Pi.zero_def]
 
-theorem insert_nth_binop (op : ∀ j, α j → α j → α j) (i : Finₓ (n + 1)) (x y : α i) (p q : ∀ j, α (i.succ_above j)) :
-    (i.insert_nth (op i x y) fun j => op _ (p j) (q j)) = fun j => op j (i.insert_nth x p j) (i.insert_nth y q j) :=
+theorem insert_nth_binop (op : ∀ j, α j → α j → α j) (i : Finₓ (n + 1)) (x y : α i) (p q : ∀ j, α (i.succAbove j)) :
+    (i.insertNth (op i x y) fun j => op _ (p j) (q j)) = fun j => op j (i.insertNth x p j) (i.insertNth y q j) :=
   insert_nth_eq_iff.2 <| by
     simp
 
 @[simp]
-theorem insert_nth_mul [∀ j, Mul (α j)] (i : Finₓ (n + 1)) (x y : α i) (p q : ∀ j, α (i.succ_above j)) :
-    i.insert_nth (x * y) (p * q) = i.insert_nth x p * i.insert_nth y q :=
+theorem insert_nth_mul [∀ j, Mul (α j)] (i : Finₓ (n + 1)) (x y : α i) (p q : ∀ j, α (i.succAbove j)) :
+    i.insertNth (x * y) (p * q) = i.insertNth x p * i.insertNth y q :=
   insert_nth_binop (fun _ => · * ·) i x y p q
 
 @[simp]
-theorem insert_nth_add [∀ j, Add (α j)] (i : Finₓ (n + 1)) (x y : α i) (p q : ∀ j, α (i.succ_above j)) :
-    i.insert_nth (x + y) (p + q) = i.insert_nth x p + i.insert_nth y q :=
+theorem insert_nth_add [∀ j, Add (α j)] (i : Finₓ (n + 1)) (x y : α i) (p q : ∀ j, α (i.succAbove j)) :
+    i.insertNth (x + y) (p + q) = i.insertNth x p + i.insertNth y q :=
   insert_nth_binop (fun _ => · + ·) i x y p q
 
 @[simp]
-theorem insert_nth_div [∀ j, Div (α j)] (i : Finₓ (n + 1)) (x y : α i) (p q : ∀ j, α (i.succ_above j)) :
-    i.insert_nth (x / y) (p / q) = i.insert_nth x p / i.insert_nth y q :=
+theorem insert_nth_div [∀ j, Div (α j)] (i : Finₓ (n + 1)) (x y : α i) (p q : ∀ j, α (i.succAbove j)) :
+    i.insertNth (x / y) (p / q) = i.insertNth x p / i.insertNth y q :=
   insert_nth_binop (fun _ => · / ·) i x y p q
 
 @[simp]
-theorem insert_nth_sub [∀ j, Sub (α j)] (i : Finₓ (n + 1)) (x y : α i) (p q : ∀ j, α (i.succ_above j)) :
-    i.insert_nth (x - y) (p - q) = i.insert_nth x p - i.insert_nth y q :=
+theorem insert_nth_sub [∀ j, Sub (α j)] (i : Finₓ (n + 1)) (x y : α i) (p q : ∀ j, α (i.succAbove j)) :
+    i.insertNth (x - y) (p - q) = i.insertNth x p - i.insertNth y q :=
   insert_nth_binop (fun _ => Sub.sub) i x y p q
 
 @[simp]
-theorem insert_nth_sub_same [∀ j, AddGroupₓ (α j)] (i : Finₓ (n + 1)) (x y : α i) (p : ∀ j, α (i.succ_above j)) :
-    i.insert_nth x p - i.insert_nth y p = Pi.single i (x - y) := by
+theorem insert_nth_sub_same [∀ j, AddGroupₓ (α j)] (i : Finₓ (n + 1)) (x y : α i) (p : ∀ j, α (i.succAbove j)) :
+    i.insertNth x p - i.insertNth y p = Pi.single i (x - y) := by
   simp_rw [← insert_nth_sub, ← insert_nth_zero_right, Pi.sub_def, sub_self, Pi.zero_def]
 
 variable [∀ i, Preorderₓ (α i)]
 
-theorem insert_nth_le_iff {i : Finₓ (n + 1)} {x : α i} {p : ∀ j, α (i.succ_above j)} {q : ∀ j, α j} :
-    i.insert_nth x p ≤ q ↔ x ≤ q i ∧ p ≤ fun j => q (i.succ_above j) := by
+theorem insert_nth_le_iff {i : Finₓ (n + 1)} {x : α i} {p : ∀ j, α (i.succAbove j)} {q : ∀ j, α j} :
+    i.insertNth x p ≤ q ↔ x ≤ q i ∧ p ≤ fun j => q (i.succAbove j) := by
   simp [Pi.le_def, forall_iff_succ_above i]
 
-theorem le_insert_nth_iff {i : Finₓ (n + 1)} {x : α i} {p : ∀ j, α (i.succ_above j)} {q : ∀ j, α j} :
-    q ≤ i.insert_nth x p ↔ q i ≤ x ∧ (fun j => q (i.succ_above j)) ≤ p := by
+theorem le_insert_nth_iff {i : Finₓ (n + 1)} {x : α i} {p : ∀ j, α (i.succAbove j)} {q : ∀ j, α j} :
+    q ≤ i.insertNth x p ↔ q i ≤ x ∧ (fun j => q (i.succAbove j)) ≤ p := by
   simp [Pi.le_def, forall_iff_succ_above i]
 
 open Set
 
-theorem insert_nth_mem_Icc {i : Finₓ (n + 1)} {x : α i} {p : ∀ j, α (i.succ_above j)} {q₁ q₂ : ∀ j, α j} :
-    i.insert_nth x p ∈ Icc q₁ q₂ ↔
-      x ∈ Icc (q₁ i) (q₂ i) ∧ p ∈ Icc (fun j => q₁ (i.succ_above j)) fun j => q₂ (i.succ_above j) :=
+theorem insert_nth_mem_Icc {i : Finₓ (n + 1)} {x : α i} {p : ∀ j, α (i.succAbove j)} {q₁ q₂ : ∀ j, α j} :
+    i.insertNth x p ∈ Icc q₁ q₂ ↔
+      x ∈ Icc (q₁ i) (q₂ i) ∧ p ∈ Icc (fun j => q₁ (i.succAbove j)) fun j => q₂ (i.succAbove j) :=
   by
   simp only [mem_Icc, insert_nth_le_iff, le_insert_nth_iff, And.assoc, And.left_comm]
 
 theorem preimage_insert_nth_Icc_of_mem {i : Finₓ (n + 1)} {x : α i} {q₁ q₂ : ∀ j, α j} (hx : x ∈ Icc (q₁ i) (q₂ i)) :
-    i.insert_nth x ⁻¹' Icc q₁ q₂ = Icc (fun j => q₁ (i.succ_above j)) fun j => q₂ (i.succ_above j) :=
+    i.insertNth x ⁻¹' Icc q₁ q₂ = Icc (fun j => q₁ (i.succAbove j)) fun j => q₂ (i.succAbove j) :=
   Set.ext fun p => by
     simp only [mem_preimage, insert_nth_mem_Icc, hx, true_andₓ]
 
 theorem preimage_insert_nth_Icc_of_not_mem {i : Finₓ (n + 1)} {x : α i} {q₁ q₂ : ∀ j, α j}
-    (hx : x ∉ Icc (q₁ i) (q₂ i)) : i.insert_nth x ⁻¹' Icc q₁ q₂ = ∅ :=
+    (hx : x ∉ Icc (q₁ i) (q₂ i)) : i.insertNth x ⁻¹' Icc q₁ q₂ = ∅ :=
   Set.ext fun p => by
     simp only [mem_preimage, insert_nth_mem_Icc, hx, false_andₓ, mem_empty_eq]
 

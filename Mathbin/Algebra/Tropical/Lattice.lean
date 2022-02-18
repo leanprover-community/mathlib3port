@@ -42,16 +42,16 @@ instance [Lattice R] : Lattice (Tropical R) :=
   { Tropical.semilatticeInf, Tropical.semilatticeSup with }
 
 instance [HasSupₓ R] : HasSupₓ (Tropical R) where
-  sup := fun s => trop (Sup (untrop '' s))
+  sup := fun s => trop (sup (untrop '' s))
 
 instance [HasInfₓ R] : HasInfₓ (Tropical R) where
-  inf := fun s => trop (Inf (untrop '' s))
+  inf := fun s => trop (inf (untrop '' s))
 
 instance [ConditionallyCompleteLattice R] : ConditionallyCompleteLattice (Tropical R) :=
   { Tropical.hasSupₓ, Tropical.hasInfₓ, Tropical.lattice with
     le_cSup := fun s x hs hx => le_cSup (untrop_monotone.map_bdd_above hs) (Set.mem_image_of_mem untrop hx),
-    cSup_le := fun s x hs hx => cSup_le (hs.image untrop) (untrop_monotone.mem_upper_bounds_image hx),
-    le_cInf := fun s x hs hx => le_cInf (hs.image untrop) (untrop_monotone.mem_lower_bounds_image hx),
+    cSup_le := fun s x hs hx => cSup_le (hs.Image untrop) (untrop_monotone.mem_upper_bounds_image hx),
+    le_cInf := fun s x hs hx => le_cInf (hs.Image untrop) (untrop_monotone.mem_lower_bounds_image hx),
     cInf_le := fun s x hs hx => cInf_le (untrop_monotone.map_bdd_below hs) (Set.mem_image_of_mem untrop hx) }
 
 instance [ConditionallyCompleteLinearOrder R] : ConditionallyCompleteLinearOrder (Tropical R) :=

@@ -17,7 +17,7 @@ open_locale BigOperators
 open_locale TopologicalSpace
 
 theorem num_derangements_tendsto_inv_e :
-    tendsto (fun n => (numDerangements n : ℝ) / n.factorial) at_top (𝓝 (Real.exp (-1))) := by
+    Tendsto (fun n => (numDerangements n : ℝ) / n.factorial) atTop (𝓝 (Real.exp (-1))) := by
   let s : ℕ → ℝ := fun n => ∑ k in Finset.range n, (-1 : ℝ) ^ k / k.factorial
   suffices ∀ n : ℕ, (numDerangements n : ℝ) / n.factorial = s (n + 1) by
     simp_rw [this]

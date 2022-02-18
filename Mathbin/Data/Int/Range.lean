@@ -19,7 +19,7 @@ attribute [local semireducible] Int.Nonneg
 
 /-- List enumerating `[m, n)`. This is the ℤ variant of `list.Ico`. -/
 def range (m n : ℤ) : List ℤ :=
-  (List.range (to_nat (n - m))).map fun r => m + r
+  (List.range (toNat (n - m))).map fun r => m + r
 
 theorem mem_range_iff {m n r : ℤ} : r ∈ range m n ↔ m ≤ r ∧ r < n :=
   ⟨fun H =>
@@ -32,7 +32,7 @@ theorem mem_range_iff {m n r : ℤ} : r ∈ range m n ↔ m ≤ r ∧ r < n :=
             rwa [List.mem_range, to_nat_coe_nat, ← coe_nat_lt] at h1⟩,
     fun ⟨h1, h2⟩ =>
     List.mem_mapₓ.2
-      ⟨to_nat (r - m),
+      ⟨toNat (r - m),
         List.mem_range.2 <| by
           rw [← coe_nat_lt, to_nat_of_nonneg (sub_nonneg_of_le h1),
               to_nat_of_nonneg (sub_nonneg_of_le (le_of_ltₓ (lt_of_le_of_ltₓ h1 h2)))] <;>

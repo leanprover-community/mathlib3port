@@ -16,7 +16,7 @@ unsafe def select_domain (t s : tactic (Option Bool)) : tactic (Option Bool) := 
     | _, _ => failed
 
 unsafe def type_domain (x : expr) : tactic (Option Bool) :=
-  if x = quote.1 Int then return (some tt) else if x = quote.1 Nat then return (some ff) else failed
+  if x = quote.1 Int then return (some true) else if x = quote.1 Nat then return (some false) else failed
 
 /-- Detects domain of a formula from its expr.
 * Returns none, if domain can be either ℤ or ℕ
@@ -29,7 +29,7 @@ unsafe def form_domain : expr → tactic (Option Bool)
   | quote.1 ((%%ₓpx) ∧ %%ₓqx) => select_domain (form_domain px) (form_domain qx)
   | quote.1 ((%%ₓpx) ↔ %%ₓqx) => select_domain (form_domain px) (form_domain qx)
   | quote.1 (%%ₓexpr.pi _ _ px qx) =>
-    Monadₓ.cond (if expr.has_var px then return tt else is_prop px) (select_domain (form_domain px) (form_domain qx))
+    Monadₓ.cond (if expr.has_var px then return true else is_prop px) (select_domain (form_domain px) (form_domain qx))
       (select_domain (type_domain px) (form_domain qx))
   | quote.1 (@LT.lt (%%ₓdx) (%%ₓh) _ _) => type_domain dx
   | quote.1 (@LE.le (%%ₓdx) (%%ₓh) _ _) => type_domain dx
@@ -42,7 +42,7 @@ unsafe def form_domain : expr → tactic (Option Bool)
   | x => failed
 
 unsafe def goal_domain_aux (x : expr) : tactic Bool :=
-  omega.int.wff x >> return tt <|> omega.nat.wff x >> return ff
+  omega.int.wff x >> return true <|> omega.nat.wff x >> return false
 
 /-- Use the current goal to determine.
     Return tt if the domain is ℤ, and return ff if it is ℕ -/
@@ -53,7 +53,7 @@ unsafe def goal_domain : tactic Bool := do
 
 /-- Return tt if the domain is ℤ, and return ff if it is ℕ -/
 unsafe def determine_domain (opt : List Name) : tactic Bool :=
-  if `int ∈ opt then return tt else if `nat ∈ opt then return ff else goal_domain
+  if `int ∈ opt then return true else if `nat ∈ opt then return false else goal_domain
 
 end Omega
 
@@ -68,7 +68,7 @@ Use `omega manual` to disable automatic reverts, and `omega int` or
 -/
 unsafe def tactic.interactive.omega (opt : parse (many ident)) : tactic Unit := do
   let is_int ← determine_domain opt
-  let is_manual : Bool := if `manual ∈ opt then tt else ff
+  let is_manual : Bool := if `manual ∈ opt then true else false
   if is_int then omega_int is_manual else omega_nat is_manual
 
 add_hint_tactic omega

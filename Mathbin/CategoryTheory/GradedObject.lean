@@ -32,7 +32,7 @@ universe w v u
 def graded_object (β : Type w) (C : Type u) : Type max w u :=
   β → C
 
-instance inhabited_graded_object (β : Type w) (C : Type u) [Inhabited C] : Inhabited (graded_object β C) :=
+instance inhabited_graded_object (β : Type w) (C : Type u) [Inhabited C] : Inhabited (GradedObject β C) :=
   ⟨fun b => Inhabited.default⟩
 
 /-- A type synonym for `β → C`, used for `β`-graded objects in a category `C`
@@ -40,18 +40,18 @@ with a shift functor given by translation by `s`.
 -/
 @[nolint unused_arguments]
 abbrev graded_object_with_shift {β : Type w} [AddCommGroupₓ β] (s : β) (C : Type u) : Type max w u :=
-  graded_object β C
+  GradedObject β C
 
 namespace GradedObject
 
-variable {C : Type u} [category.{v} C]
+variable {C : Type u} [Category.{v} C]
 
-instance category_of_graded_objects (β : Type w) : category.{max w v} (graded_object β C) :=
+instance category_of_graded_objects (β : Type w) : Category.{max w v} (GradedObject β C) :=
   CategoryTheory.pi fun _ => C
 
 /-- The projection of a graded object to its `i`-th component. -/
 @[simps]
-def eval {β : Type w} (b : β) : graded_object β C ⥤ C where
+def eval {β : Type w} (b : β) : GradedObject β C ⥤ C where
   obj := fun X => X b
   map := fun X Y f => f b
 
@@ -66,29 +66,29 @@ pulling back along two propositionally equal functions.
 def comap_eq {β γ : Type w} {f g : β → γ} (h : f = g) : comap (fun _ => C) f ≅ comap (fun _ => C) g where
   Hom :=
     { app := fun X b =>
-        eq_to_hom
+        eqToHom
           (by
             dsimp [comap]
             subst h) }
   inv :=
     { app := fun X b =>
-        eq_to_hom
+        eqToHom
           (by
             dsimp [comap]
             subst h) }
 
-theorem comap_eq_symm {β γ : Type w} {f g : β → γ} (h : f = g) : comap_eq C h.symm = (comap_eq C h).symm := by
+theorem comap_eq_symm {β γ : Type w} {f g : β → γ} (h : f = g) : comapEq C h.symm = (comapEq C h).symm := by
   tidy
 
 theorem comap_eq_trans {β γ : Type w} {f g h : β → γ} (k : f = g) (l : g = h) :
-    comap_eq C (k.trans l) = comap_eq C k ≪≫ comap_eq C l := by
+    comapEq C (k.trans l) = comapEq C k ≪≫ comapEq C l := by
   ext X b
   simp
 
 @[simp]
 theorem eq_to_hom_apply {β : Type w} {X Y : ∀ b : β, C} (h : X = Y) (b : β) :
-    (eq_to_hom h : X ⟶ Y) b =
-      eq_to_hom
+    (eqToHom h : X ⟶ Y) b =
+      eqToHom
         (by
           subst h) :=
   by
@@ -99,21 +99,21 @@ theorem eq_to_hom_apply {β : Type w} {X Y : ∀ b : β, C} (h : X = Y) (b : β)
 given an equivalence between β and γ.
 -/
 @[simps]
-def comap_equiv {β γ : Type w} (e : β ≃ γ) : graded_object β C ≌ graded_object γ C where
+def comap_equiv {β γ : Type w} (e : β ≃ γ) : GradedObject β C ≌ GradedObject γ C where
   Functor := comap (fun _ => C) (e.symm : γ → β)
   inverse := comap (fun _ => C) (e : β → γ)
   counitIso :=
-    (comap_comp (fun _ => C) _ _).trans
-      (comap_eq C
+    (comapComp (fun _ => C) _ _).trans
+      (comapEq C
         (by
           ext
           simp ))
   unitIso :=
-    (comap_eq C
+    (comapEq C
           (by
             ext
             simp )).trans
-      (comap_comp _ _ _).symm
+      (comapComp _ _ _).symm
   functor_unit_iso_comp' := fun X => by
     ext b
     dsimp
@@ -123,18 +123,18 @@ end
 
 attribute [local reducible, local instance] endofunctor_monoidal_category Discrete.addMonoidal
 
-instance has_shift {β : Type _} [AddCommGroupₓ β] (s : β) : has_shift (graded_object_with_shift s C) ℤ :=
-  has_shift_mk _ _
+instance has_shift {β : Type _} [AddCommGroupₓ β] (s : β) : HasShift (GradedObjectWithShift s C) ℤ :=
+  hasShiftMk _ _
     { f := fun n => (comap fun _ => C) fun b : β => b + n • s,
       ε :=
-        (comap_id β fun _ => C).symm ≪≫
-          comap_eq C
+        (comapId β fun _ => C).symm ≪≫
+          comapEq C
             (by
               ext
               simp ),
       μ := fun m n =>
-        comap_comp _ _ _ ≪≫
-          comap_eq C
+        comapComp _ _ _ ≪≫
+          comapEq C
             (by
               ext
               simp [add_zsmul, add_commₓ]),
@@ -156,27 +156,27 @@ instance has_shift {β : Type _} [AddCommGroupₓ β] (s : β) : has_shift (grad
 
 @[simp]
 theorem shift_functor_obj_apply {β : Type _} [AddCommGroupₓ β] (s : β) (X : β → C) (t : β) (n : ℤ) :
-    (shift_functor (graded_object_with_shift s C) n).obj X t = X (t + n • s) :=
+    (shiftFunctor (GradedObjectWithShift s C) n).obj X t = X (t + n • s) :=
   rfl
 
 @[simp]
-theorem shift_functor_map_apply {β : Type _} [AddCommGroupₓ β] (s : β) {X Y : graded_object_with_shift s C} (f : X ⟶ Y)
-    (t : β) (n : ℤ) : (shift_functor (graded_object_with_shift s C) n).map f t = f (t + n • s) :=
+theorem shift_functor_map_apply {β : Type _} [AddCommGroupₓ β] (s : β) {X Y : GradedObjectWithShift s C} (f : X ⟶ Y)
+    (t : β) (n : ℤ) : (shiftFunctor (GradedObjectWithShift s C) n).map f t = f (t + n • s) :=
   rfl
 
-instance has_zero_morphisms [has_zero_morphisms C] (β : Type w) : has_zero_morphisms.{max w v} (graded_object β C) where
+instance has_zero_morphisms [HasZeroMorphisms C] (β : Type w) : HasZeroMorphisms.{max w v} (GradedObject β C) where
   HasZero := fun X Y => { zero := fun b => 0 }
 
 @[simp]
-theorem zero_apply [has_zero_morphisms C] (β : Type w) (X Y : graded_object β C) (b : β) : (0 : X ⟶ Y) b = 0 :=
+theorem zero_apply [HasZeroMorphisms C] (β : Type w) (X Y : GradedObject β C) (b : β) : (0 : X ⟶ Y) b = 0 :=
   rfl
 
 section
 
 open_locale ZeroObject
 
-instance has_zero_object [has_zero_object C] [has_zero_morphisms C] (β : Type w) :
-    has_zero_object.{max w v} (graded_object β C) where
+instance has_zero_object [HasZeroObject C] [HasZeroMorphisms C] (β : Type w) :
+    HasZeroObject.{max w v} (GradedObject β C) where
   zero := fun b => (0 : C)
   uniqueTo := fun X =>
     ⟨⟨fun b => 0⟩, fun f => by
@@ -193,23 +193,23 @@ namespace GradedObject
 
 variable (β : Type)
 
-variable (C : Type u) [category.{v} C]
+variable (C : Type u) [Category.{v} C]
 
-variable [has_coproducts C]
+variable [HasCoproducts C]
 
 /-- The total object of a graded object is the coproduct of the graded components.
 -/
-noncomputable def Total : graded_object β C ⥤ C where
+noncomputable def Total : GradedObject β C ⥤ C where
   obj := fun X => ∐ fun i : Ulift.{v} β => X i.down
-  map := fun X Y f => limits.sigma.map fun i => f i.down
+  map := fun X Y f => Limits.Sigma.map fun i => f i.down
 
-variable [has_zero_morphisms C]
+variable [HasZeroMorphisms C]
 
 /-- The `total` functor taking a graded object to the coproduct of its graded components is faithful.
 To prove this, we need to know that the coprojections into the coproduct are monomorphisms,
 which follows from the fact we have zero morphisms and decidable equality for the grading.
 -/
-instance : faithful (Total β C) where
+instance : Faithful (total β C) where
   map_injective' := fun X Y f g w => by
     classical
     ext i
@@ -225,13 +225,13 @@ noncomputable section
 
 variable (β : Type)
 
-variable (C : Type (u + 1)) [large_category C] [concrete_category C] [has_coproducts C] [has_zero_morphisms C]
+variable (C : Type (u + 1)) [LargeCategory C] [ConcreteCategory C] [HasCoproducts C] [HasZeroMorphisms C]
 
-instance : concrete_category (graded_object β C) where
-  forget := Total β C ⋙ forget C
+instance : ConcreteCategory (GradedObject β C) where
+  forget := total β C ⋙ forget C
 
-instance : has_forget₂ (graded_object β C) C where
-  forget₂ := Total β C
+instance : HasForget₂ (GradedObject β C) C where
+  forget₂ := total β C
 
 end GradedObject
 

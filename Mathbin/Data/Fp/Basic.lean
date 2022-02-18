@@ -21,7 +21,7 @@ class float_cfg where
   prec_pos : 0 < prec
   prec_max : prec ≤ emax
 
-variable [C : float_cfg]
+variable [C : FloatCfg]
 
 include C
 
@@ -37,25 +37,25 @@ def emin : ℤ :=
 def valid_finite (e : ℤ) (m : ℕ) : Prop :=
   emin ≤ e + prec - 1 ∧ e + prec - 1 ≤ emax ∧ e = max (e + m.size - prec) emin
 
-instance dec_valid_finite e m : Decidable (valid_finite e m) := by
+instance dec_valid_finite e m : Decidable (ValidFinite e m) := by
   unfold valid_finite <;> infer_instance
 
 inductive float
   | inf : Bool → float
   | nan : float
-  | finite : Bool → ∀ e m, valid_finite e m → float
+  | finite : Bool → ∀ e m, ValidFinite e m → float
 
-def float.is_finite : float → Bool
-  | float.finite s e m f => tt
-  | _ => ff
+def float.is_finite : Float → Bool
+  | float.finite s e m f => true
+  | _ => false
 
-def to_rat : ∀ f : float, f.is_finite → ℚ
+def to_rat : ∀ f : Float, f.isFinite → ℚ
   | float.finite s e m f, _ =>
     let (n, d) := Int.shift2 m 1 e
     let r := Rat.mkNat n d
     if s then -r else r
 
-theorem float.zero.valid : valid_finite emin 0 :=
+theorem float.zero.valid : ValidFinite emin 0 :=
   ⟨by
     rw [add_sub_assoc]
     apply le_add_of_nonneg_right
@@ -75,30 +75,30 @@ theorem float.zero.valid : valid_finite emin 0 :=
     by
     rw [max_eq_rightₓ] <;> simp [sub_eq_add_neg]⟩
 
-def float.zero (s : Bool) : float :=
-  float.finite s emin 0 float.zero.valid
+def float.zero (s : Bool) : Float :=
+  Float.finite s emin 0 Float.Zero.valid
 
-instance : Inhabited float :=
-  ⟨float.zero tt⟩
+instance : Inhabited Float :=
+  ⟨Float.zero true⟩
 
-protected def float.sign' : float → Semiquot Bool
+protected def float.sign' : Float → Semiquot Bool
   | float.inf s => pure s
   | float.nan => ⊤
   | float.finite s e m f => pure s
 
-protected def float.sign : float → Bool
+protected def float.sign : Float → Bool
   | float.inf s => s
-  | float.nan => ff
+  | float.nan => false
   | float.finite s e m f => s
 
-protected def float.is_zero : float → Bool
-  | float.finite s e 0 f => tt
-  | _ => ff
+protected def float.is_zero : Float → Bool
+  | float.finite s e 0 f => true
+  | _ => false
 
-protected def float.neg : float → float
-  | float.inf s => float.inf (bnot s)
-  | float.nan => float.nan
-  | float.finite s e m f => float.finite (bnot s) e m f
+protected def float.neg : Float → Float
+  | float.inf s => Float.inf (bnot s)
+  | float.nan => Float.nan
+  | float.finite s e m f => Float.finite (bnot s) e m f
 
 def div_nat_lt_two_pow (n d : ℕ) : ℤ → Bool
   | Int.ofNat e => n < d.shiftl e
@@ -116,67 +116,67 @@ unsafe def of_pos_rat_dn (n : ℕ+) (d : ℕ+) : float × Bool := by
   · exact undefined
     
 
-unsafe def next_up_pos e m (v : valid_finite e m) : float :=
+unsafe def next_up_pos e m (v : ValidFinite e m) : Float :=
   let m' := m.succ
   if ss : m'.size = m.size then
-    float.finite ff e m'
+    Float.finite false e m'
       (by
         unfold valid_finite  at * <;> rw [ss] <;> exact v)
-  else if h : e = emax then float.inf ff else float.finite ff e.succ (Nat.div2 m') undefined
+  else if h : e = emax then Float.inf false else Float.finite false e.succ (Nat.div2 m') undefined
 
-unsafe def next_dn_pos e m (v : valid_finite e m) : float :=
+unsafe def next_dn_pos e m (v : ValidFinite e m) : Float :=
   match m with
-  | 0 => next_up_pos _ _ float.zero.valid
+  | 0 => next_up_pos _ _ Float.Zero.valid
   | Nat.succ m' =>
     if ss : m'.size = m.size then
-      float.finite ff e m'
+      Float.finite false e m'
         (by
           unfold valid_finite  at * <;> rw [ss] <;> exact v)
-    else if h : e = emin then float.finite ff emin m' undefined else float.finite ff e.pred (bit1 m') undefined
+    else if h : e = emin then Float.finite false emin m' undefined else Float.finite false e.pred (bit1 m') undefined
 
-unsafe def next_up : float → float
+unsafe def next_up : Float → Float
   | float.finite ff e m f => next_up_pos e m f
   | float.finite tt e m f => float.neg <| next_dn_pos e m f
   | f => f
 
-unsafe def next_dn : float → float
+unsafe def next_dn : Float → Float
   | float.finite ff e m f => next_dn_pos e m f
   | float.finite tt e m f => float.neg <| next_up_pos e m f
   | f => f
 
-unsafe def of_rat_up : ℚ → float
-  | ⟨0, _, _, _⟩ => float.zero ff
+unsafe def of_rat_up : ℚ → Float
+  | ⟨0, _, _, _⟩ => Float.zero false
   | ⟨Nat.succ n, d, h, _⟩ =>
-    let (f, exact) := of_pos_rat_dn n.succ_pnat ⟨d, h⟩
+    let (f, exact) := of_pos_rat_dn n.succPnat ⟨d, h⟩
     if exact then f else next_up f
-  | ⟨-[1+ n], d, h, _⟩ => float.neg (of_pos_rat_dn n.succ_pnat ⟨d, h⟩).1
+  | ⟨-[1+ n], d, h, _⟩ => Float.neg (of_pos_rat_dn n.succPnat ⟨d, h⟩).1
 
-unsafe def of_rat_dn (r : ℚ) : float :=
+unsafe def of_rat_dn (r : ℚ) : Float :=
   float.neg <| of_rat_up (-r)
 
-unsafe def of_rat : rmode → ℚ → float
+unsafe def of_rat : Rmode → ℚ → Float
   | rmode.NE, r =>
     let low := of_rat_dn r
     let high := of_rat_up r
-    if hf : high.is_finite then
-      if r = to_rat _ hf then high
+    if hf : high.isFinite then
+      if r = toRat _ hf then high
       else
-        if lf : low.is_finite then
-          if r - to_rat _ lf > to_rat _ hf - r then high
+        if lf : low.isFinite then
+          if r - toRat _ lf > toRat _ hf - r then high
           else
-            if r - to_rat _ lf < to_rat _ hf - r then low
+            if r - toRat _ lf < toRat _ hf - r then low
             else
               match low, lf with
               | float.finite s e m f, _ => if 2 ∣ m then low else high
-        else float.inf tt
-    else float.inf ff
+        else Float.inf true
+    else Float.inf false
 
 namespace Float
 
-instance : Neg float :=
-  ⟨float.neg⟩
+instance : Neg Float :=
+  ⟨Float.neg⟩
 
-unsafe def add (mode : rmode) : float → float → float
+unsafe def add (mode : Rmode) : Float → Float → Float
   | nan, _ => nan
   | _, nan => nan
   | inf tt, inf ff => nan
@@ -186,28 +186,28 @@ unsafe def add (mode : rmode) : float → float → float
   | finite s₁ e₁ m₁ v₁, finite s₂ e₂ m₂ v₂ =>
     let f₁ := finite s₁ e₁ m₁ v₁
     let f₂ := finite s₂ e₂ m₂ v₂
-    of_rat mode (to_rat f₁ rfl + to_rat f₂ rfl)
+    of_rat mode (toRat f₁ rfl + toRat f₂ rfl)
 
-unsafe instance : Add float :=
-  ⟨float.add rmode.NE⟩
+unsafe instance : Add Float :=
+  ⟨float.add Rmode.NE⟩
 
-unsafe def sub (mode : rmode) (f1 f2 : float) : float :=
+unsafe def sub (mode : Rmode) (f1 f2 : Float) : Float :=
   add mode f1 (-f2)
 
-unsafe instance : Sub float :=
-  ⟨float.sub rmode.NE⟩
+unsafe instance : Sub Float :=
+  ⟨float.sub Rmode.NE⟩
 
-unsafe def mul (mode : rmode) : float → float → float
+unsafe def mul (mode : Rmode) : Float → Float → Float
   | nan, _ => nan
   | _, nan => nan
-  | inf s₁, f₂ => if f₂.is_zero then nan else inf (bxor s₁ f₂.sign)
-  | f₁, inf s₂ => if f₁.is_zero then nan else inf (bxor f₁.sign s₂)
+  | inf s₁, f₂ => if f₂.isZero then nan else inf (bxor s₁ f₂.sign)
+  | f₁, inf s₂ => if f₁.isZero then nan else inf (bxor f₁.sign s₂)
   | finite s₁ e₁ m₁ v₁, finite s₂ e₂ m₂ v₂ =>
     let f₁ := finite s₁ e₁ m₁ v₁
     let f₂ := finite s₂ e₂ m₂ v₂
-    of_rat mode (to_rat f₁ rfl * to_rat f₂ rfl)
+    of_rat mode (toRat f₁ rfl * toRat f₂ rfl)
 
-unsafe def div (mode : rmode) : float → float → float
+unsafe def div (mode : Rmode) : Float → Float → Float
   | nan, _ => nan
   | _, nan => nan
   | inf s₁, inf s₂ => nan
@@ -216,7 +216,7 @@ unsafe def div (mode : rmode) : float → float → float
   | finite s₁ e₁ m₁ v₁, finite s₂ e₂ m₂ v₂ =>
     let f₁ := finite s₁ e₁ m₁ v₁
     let f₂ := finite s₂ e₂ m₂ v₂
-    if f₂.is_zero then inf (bxor s₁ s₂) else of_rat mode (to_rat f₁ rfl / to_rat f₂ rfl)
+    if f₂.isZero then inf (bxor s₁ s₂) else of_rat mode (toRat f₁ rfl / toRat f₂ rfl)
 
 end Float
 

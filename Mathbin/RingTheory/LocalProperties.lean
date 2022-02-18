@@ -55,7 +55,7 @@ def LocalizationPreserves : Prop :=
 /-- A property `P` of comm rings satisfies `of_localization_maximal` if
   if `P` holds for `R` whenever `P` holds for `Rₘ` for all maximal ideal `m`. -/
 def OfLocalizationMaximal : Prop :=
-  ∀ R : Type u [CommRingₓ R], (∀ J : Ideal R hJ : J.is_maximal, P (Localization.AtPrime J)) → P R
+  ∀ R : Type u [CommRingₓ R], (∀ J : Ideal R hJ : J.IsMaximal, P (Localization.AtPrime J)) → P R
 
 end CommRingₓ
 
@@ -103,7 +103,7 @@ theorem RingHom.of_localization_span_iff_finite : RingHom.OfLocalizationSpan @P 
     
   · intro h s hs hs'
     obtain ⟨s', h₁, h₂⟩ := (Ideal.span_eq_top_iff_finite s).mp hs
-    exact h s' h₂ fun x => hs' ⟨_, h₁ x.prop⟩
+    exact h s' h₂ fun x => hs' ⟨_, h₁ x.Prop⟩
     
 
 variable {P f R' S'}
@@ -124,7 +124,7 @@ section Ideal
 
 /-- An ideal is trivial if its localization at every maximal ideal is trivial. -/
 theorem ideal_eq_zero_of_localization (I : Ideal R)
-    (h : ∀ J : Ideal R hJ : J.is_maximal, IsLocalization.coeSubmodule (Localization.AtPrime J) I = 0) : I = 0 := by
+    (h : ∀ J : Ideal R hJ : J.IsMaximal, IsLocalization.coeSubmodule (Localization.AtPrime J) I = 0) : I = 0 := by
   by_contra hI
   obtain ⟨x, hx, hx'⟩ := Set.exists_of_ssubset (bot_lt_iff_ne_bot.mpr hI)
   rw [Submodule.bot_coe, Set.mem_singleton_iff] at hx'
@@ -150,7 +150,7 @@ theorem ideal_eq_zero_of_localization (I : Ideal R)
   rwa [mul_comm] at hm
 
 theorem eq_zero_of_localization (r : R)
-    (h : ∀ J : Ideal R hJ : J.is_maximal, algebraMap R (Localization.AtPrime J) r = 0) : r = 0 := by
+    (h : ∀ J : Ideal R hJ : J.IsMaximal, algebraMap R (Localization.AtPrime J) r = 0) : r = 0 := by
   rw [← Ideal.span_singleton_eq_bot]
   apply ideal_eq_zero_of_localization
   intro J hJ
@@ -233,7 +233,7 @@ theorem localization_finite : RingHom.LocalizationPreserves @RingHom.Finite := b
   rw [map_one]
   rfl
 
-theorem localization_away_map_finite (r : R) [IsLocalization.Away r R'] [IsLocalization.Away (f r) S'] (hf : f.finite) :
+theorem localization_away_map_finite (r : R) [IsLocalization.Away r R'] [IsLocalization.Away (f r) S'] (hf : f.Finite) :
     (IsLocalization.Away.map R' S' f r).Finite :=
   RingHom.localization_away_of_localization_preserves (@localization_finite) hf
 
@@ -389,7 +389,7 @@ theorem localization_finite_type : RingHom.LocalizationPreserves @RingHom.Finite
   rfl
 
 theorem localization_away_map_finite_type (r : R) [IsLocalization.Away r R'] [IsLocalization.Away (f r) S']
-    (hf : f.finite_type) : (IsLocalization.Away.map R' S' f r).FiniteType :=
+    (hf : f.FiniteType) : (IsLocalization.Away.map R' S' f r).FiniteType :=
   RingHom.localization_away_of_localization_preserves (@localization_finite_type) hf
 
 /-- Let `S` be an `R`-algebra, `M` an submonoid of `R`, and `S' = M⁻¹S`.

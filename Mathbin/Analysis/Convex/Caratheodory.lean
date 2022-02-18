@@ -110,22 +110,22 @@ noncomputable def min_card_finset_of_mem_convex_hull : Finset E :=
     (by
       simpa only [convex_hull_eq_union_convex_hull_finite_subsets s, exists_prop, mem_Union] using hx)
 
-theorem min_card_finset_of_mem_convex_hull_subseteq : ↑(min_card_finset_of_mem_convex_hull hx) ⊆ s :=
+theorem min_card_finset_of_mem_convex_hull_subseteq : ↑(minCardFinsetOfMemConvexHull hx) ⊆ s :=
   (Function.argmin_on_mem _ _ { t : Finset E | ↑t ⊆ s ∧ x ∈ convexHull 𝕜 (t : Set E) } _).1
 
-theorem mem_min_card_finset_of_mem_convex_hull : x ∈ convexHull 𝕜 (min_card_finset_of_mem_convex_hull hx : Set E) :=
+theorem mem_min_card_finset_of_mem_convex_hull : x ∈ convexHull 𝕜 (minCardFinsetOfMemConvexHull hx : Set E) :=
   (Function.argmin_on_mem _ _ { t : Finset E | ↑t ⊆ s ∧ x ∈ convexHull 𝕜 (t : Set E) } _).2
 
-theorem min_card_finset_of_mem_convex_hull_nonempty : (min_card_finset_of_mem_convex_hull hx).Nonempty := by
+theorem min_card_finset_of_mem_convex_hull_nonempty : (minCardFinsetOfMemConvexHull hx).Nonempty := by
   rw [← Finset.coe_nonempty, ← @convex_hull_nonempty_iff 𝕜]
   exact ⟨x, mem_min_card_finset_of_mem_convex_hull hx⟩
 
 theorem min_card_finset_of_mem_convex_hull_card_le_card {t : Finset E} (ht₁ : ↑t ⊆ s)
-    (ht₂ : x ∈ convexHull 𝕜 (t : Set E)) : (min_card_finset_of_mem_convex_hull hx).card ≤ t.card :=
+    (ht₂ : x ∈ convexHull 𝕜 (t : Set E)) : (minCardFinsetOfMemConvexHull hx).card ≤ t.card :=
   Function.argmin_on_le _ _ _ ⟨ht₁, ht₂⟩
 
 theorem affine_independent_min_card_finset_of_mem_convex_hull :
-    AffineIndependent 𝕜 (coe : min_card_finset_of_mem_convex_hull hx → E) := by
+    AffineIndependent 𝕜 (coe : minCardFinsetOfMemConvexHull hx → E) := by
   let k := (min_card_finset_of_mem_convex_hull hx).card - 1
   have hk : (min_card_finset_of_mem_convex_hull hx).card = k + 1 :=
     (Nat.succ_pred_eq_of_posₓ (finset.card_pos.mpr (min_card_finset_of_mem_convex_hull_nonempty hx))).symm

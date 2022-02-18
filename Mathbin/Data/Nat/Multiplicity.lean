@@ -48,7 +48,7 @@ divides `n`. This set is expressed by filtering `Ico 1 b` where `b` is any bound
 theorem multiplicity_eq_card_pow_dvd {m n b : ℕ} (hm : m ≠ 1) (hn : 0 < n) (hb : log m n < b) :
     multiplicity m n = ↑((Finset.ico 1 b).filter fun i => m ^ i ∣ n).card :=
   calc
-    multiplicity m n = ↑(Ico 1 <| (multiplicity m n).get (finite_nat_iff.2 ⟨hm, hn⟩) + 1).card := by
+    multiplicity m n = ↑(ico 1 <| (multiplicity m n).get (finite_nat_iff.2 ⟨hm, hn⟩) + 1).card := by
       simp
     _ = ↑((Finset.ico 1 b).filter fun i => m ^ i ∣ n).card :=
       congr_argₓ coe <|
@@ -71,46 +71,46 @@ theorem multiplicity_eq_card_pow_dvd {m n b : ℕ} (hm : m ≠ 1) (hn : 0 < n) (
 
 namespace Prime
 
-theorem multiplicity_one {p : ℕ} (hp : p.prime) : multiplicity p 1 = 0 :=
+theorem multiplicity_one {p : ℕ} (hp : p.Prime) : multiplicity p 1 = 0 :=
   multiplicity.one_right (prime_iff.mp hp).not_unit
 
-theorem multiplicity_mul {p m n : ℕ} (hp : p.prime) : multiplicity p (m * n) = multiplicity p m + multiplicity p n :=
+theorem multiplicity_mul {p m n : ℕ} (hp : p.Prime) : multiplicity p (m * n) = multiplicity p m + multiplicity p n :=
   multiplicity.mul <| prime_iff.mp hp
 
-theorem multiplicity_pow {p m n : ℕ} (hp : p.prime) : multiplicity p (m ^ n) = n • multiplicity p m :=
+theorem multiplicity_pow {p m n : ℕ} (hp : p.Prime) : multiplicity p (m ^ n) = n • multiplicity p m :=
   multiplicity.pow <| prime_iff.mp hp
 
-theorem multiplicity_self {p : ℕ} (hp : p.prime) : multiplicity p p = 1 :=
+theorem multiplicity_self {p : ℕ} (hp : p.Prime) : multiplicity p p = 1 :=
   multiplicity_self (prime_iff.mp hp).not_unit hp.ne_zero
 
-theorem multiplicity_pow_self {p n : ℕ} (hp : p.prime) : multiplicity p (p ^ n) = n :=
+theorem multiplicity_pow_self {p n : ℕ} (hp : p.Prime) : multiplicity p (p ^ n) = n :=
   multiplicity_pow_self hp.ne_zero (prime_iff.mp hp).not_unit n
 
 /-- **Legendre's Theorem**
 
 The multiplicity of a prime in `n!` is the sum of the quotients `n / p ^ i`. This sum is expressed
 over the finset `Ico 1 b` where `b` is any bound greater than `log p n`. -/
-theorem multiplicity_factorial {p : ℕ} (hp : p.prime) :
-    ∀ {n b : ℕ}, log p n < b → multiplicity p n ! = (∑ i in Ico 1 b, n / p ^ i : ℕ)
+theorem multiplicity_factorial {p : ℕ} (hp : p.Prime) :
+    ∀ {n b : ℕ}, log p n < b → multiplicity p n ! = (∑ i in ico 1 b, n / p ^ i : ℕ)
   | 0, b, hb => by
     simp [Ico, hp.multiplicity_one]
   | n + 1, b, hb =>
     calc
       multiplicity p (n + 1)! = multiplicity p n ! + multiplicity p (n + 1) := by
         rw [factorial_succ, hp.multiplicity_mul, add_commₓ]
-      _ = (∑ i in Ico 1 b, n / p ^ i : ℕ) + ((Finset.ico 1 b).filter fun i => p ^ i ∣ n + 1).card := by
+      _ = (∑ i in ico 1 b, n / p ^ i : ℕ) + ((Finset.ico 1 b).filter fun i => p ^ i ∣ n + 1).card := by
         rw [multiplicity_factorial ((log_le_log_of_le <| le_succ _).trans_lt hb), ←
           multiplicity_eq_card_pow_dvd hp.ne_one (succ_pos _) hb]
-      _ = (∑ i in Ico 1 b, n / p ^ i + if p ^ i ∣ n + 1 then 1 else 0 : ℕ) := by
+      _ = (∑ i in ico 1 b, n / p ^ i + if p ^ i ∣ n + 1 then 1 else 0 : ℕ) := by
         rw [sum_add_distrib, sum_boole]
         simp
-      _ = (∑ i in Ico 1 b, (n + 1) / p ^ i : ℕ) :=
+      _ = (∑ i in ico 1 b, (n + 1) / p ^ i : ℕ) :=
         congr_argₓ coe <| (Finset.sum_congr rfl) fun _ _ => (succ_div _ _).symm
       
 
 /-- The multiplicity of `p` in `(p * (n + 1))!` is one more than the sum
   of the multiplicities of `p` in `(p * n)!` and `n + 1`. -/
-theorem multiplicity_factorial_mul_succ {n p : ℕ} (hp : p.prime) :
+theorem multiplicity_factorial_mul_succ {n p : ℕ} (hp : p.Prime) :
     multiplicity p (p * (n + 1))! = multiplicity p (p * n)! + multiplicity p (n + 1) + 1 := by
   have hp' := prime_iff.mp hp
   have h0 : 2 ≤ p := hp.two_le
@@ -135,27 +135,27 @@ theorem multiplicity_factorial_mul_succ {n p : ℕ} (hp : p.prime) :
     sum_const_zero, zero_addₓ, add_commₓ (1 : Enat)]
 
 /-- The multiplicity of `p` in `(p * n)!` is `n` more than that of `n!`. -/
-theorem multiplicity_factorial_mul {n p : ℕ} (hp : p.prime) : multiplicity p (p * n)! = multiplicity p n ! + n := by
+theorem multiplicity_factorial_mul {n p : ℕ} (hp : p.Prime) : multiplicity p (p * n)! = multiplicity p n ! + n := by
   induction' n with n ih
   · simp
     
   · simp only [succ_eq_add_one, multiplicity.mul, hp, prime_iff.mp hp, ih, multiplicity_factorial_mul_succ, ←
-      add_assocₓ, Nat.cast_one, Nat.cast_add, factorial_succ]
+      add_assocₓ, Nat.cast_oneₓ, Nat.cast_addₓ, factorial_succ]
     congr 1
     rw [add_commₓ, add_assocₓ]
     
 
 /-- A prime power divides `n!` iff it is at most the sum of the quotients `n / p ^ i`.
   This sum is expressed over the set `Ico 1 b` where `b` is any bound greater than `log p n` -/
-theorem pow_dvd_factorial_iff {p : ℕ} {n r b : ℕ} (hp : p.prime) (hbn : log p n < b) :
-    p ^ r ∣ n ! ↔ r ≤ ∑ i in Ico 1 b, n / p ^ i := by
+theorem pow_dvd_factorial_iff {p : ℕ} {n r b : ℕ} (hp : p.Prime) (hbn : log p n < b) :
+    p ^ r ∣ n ! ↔ r ≤ ∑ i in ico 1 b, n / p ^ i := by
   rw [← Enat.coe_le_coe, ← hp.multiplicity_factorial hbn, ← pow_dvd_iff_le_multiplicity]
 
-theorem multiplicity_factorial_le_div_pred {p : ℕ} (hp : p.prime) (n : ℕ) : multiplicity p n ! ≤ (n / (p - 1) : ℕ) := by
+theorem multiplicity_factorial_le_div_pred {p : ℕ} (hp : p.Prime) (n : ℕ) : multiplicity p n ! ≤ (n / (p - 1) : ℕ) := by
   rw [hp.multiplicity_factorial (lt_succ_self _), Enat.coe_le_coe]
   exact Nat.geom_sum_Ico_le hp.two_le _ _
 
-theorem multiplicity_choose_aux {p n b k : ℕ} (hp : p.prime) (hkn : k ≤ n) :
+theorem multiplicity_choose_aux {p n b k : ℕ} (hp : p.Prime) (hkn : k ≤ n) :
     (∑ i in Finset.ico 1 b, n / p ^ i) =
       ((∑ i in Finset.ico 1 b, k / p ^ i) + ∑ i in Finset.ico 1 b, (n - k) / p ^ i) +
         ((Finset.ico 1 b).filter fun i => p ^ i ≤ k % p ^ i + (n - k) % p ^ i).card :=
@@ -171,8 +171,8 @@ theorem multiplicity_choose_aux {p n b k : ℕ} (hp : p.prime) (hkn : k ≤ n) :
 /-- The multiplicity of `p` in `choose n k` is the number of carries when `k` and `n - k`
   are added in base `p`. The set is expressed by filtering `Ico 1 b` where `b`
   is any bound greater than `log p n`. -/
-theorem multiplicity_choose {p n k b : ℕ} (hp : p.prime) (hkn : k ≤ n) (hnb : log p n < b) :
-    multiplicity p (choose n k) = ((Ico 1 b).filter fun i => p ^ i ≤ k % p ^ i + (n - k) % p ^ i).card :=
+theorem multiplicity_choose {p n k b : ℕ} (hp : p.Prime) (hkn : k ≤ n) (hnb : log p n < b) :
+    multiplicity p (choose n k) = ((ico 1 b).filter fun i => p ^ i ≤ k % p ^ i + (n - k) % p ^ i).card :=
   have h₁ :
     multiplicity p (choose n k) + multiplicity p (k ! * (n - k)!) =
       ((Finset.ico 1 b).filter fun i => p ^ i ≤ k % p ^ i + (n - k) % p ^ i).card + multiplicity p (k ! * (n - k)!) :=
@@ -187,7 +187,7 @@ theorem multiplicity_choose {p n k b : ℕ} (hp : p.prime) (hkn : k ≤ n) (hnb 
     h₁
 
 /-- A lower bound on the multiplicity of `p` in `choose n k`. -/
-theorem multiplicity_le_multiplicity_choose_add {p : ℕ} (hp : p.prime) (n k : ℕ) :
+theorem multiplicity_le_multiplicity_choose_add {p : ℕ} (hp : p.Prime) (n k : ℕ) :
     multiplicity p n ≤ multiplicity p (choose n k) + multiplicity p k :=
   if hkn : n < k then by
     simp [choose_eq_zero_of_lt hkn]
@@ -201,8 +201,8 @@ theorem multiplicity_le_multiplicity_choose_add {p : ℕ} (hp : p.prime) (n k : 
         rw [multiplicity_choose hp (le_of_not_gtₓ hkn) (lt_succ_self _),
           multiplicity_eq_card_pow_dvd (ne_of_gtₓ hp.one_lt) (Nat.pos_of_ne_zeroₓ hk0)
             (lt_succ_of_le (log_le_log_of_le (le_of_not_gtₓ hkn))),
-          multiplicity_eq_card_pow_dvd (ne_of_gtₓ hp.one_lt) (Nat.pos_of_ne_zeroₓ hn0) (lt_succ_self _), ← Nat.cast_add,
-          Enat.coe_le_coe]
+          multiplicity_eq_card_pow_dvd (ne_of_gtₓ hp.one_lt) (Nat.pos_of_ne_zeroₓ hn0) (lt_succ_self _), ←
+          Nat.cast_addₓ, Enat.coe_le_coe]
         calc
           ((Ico 1 (log p n).succ).filter fun i => p ^ i ∣ n).card ≤
               (((Ico 1 (log p n).succ).filter fun i => p ^ i ≤ k % p ^ i + (n - k) % p ^ i) ∪
@@ -215,18 +215,18 @@ theorem multiplicity_le_multiplicity_choose_add {p : ℕ} (hp : p.prime) (n k : 
                 ((Ico 1 (log p n).succ).filter fun i => p ^ i ∣ k).card :=
             card_union_le _ _
 
-theorem multiplicity_choose_prime_pow {p n k : ℕ} (hp : p.prime) (hkn : k ≤ p ^ n) (hk0 : 0 < k) :
+theorem multiplicity_choose_prime_pow {p n k : ℕ} (hp : p.Prime) (hkn : k ≤ p ^ n) (hk0 : 0 < k) :
     multiplicity p (choose (p ^ n) k) + multiplicity p k = n :=
   le_antisymmₓ
     (by
       have hdisj :
-        Disjoint ((Ico 1 n.succ).filter fun i => p ^ i ≤ k % p ^ i + (p ^ n - k) % p ^ i)
-          ((Ico 1 n.succ).filter fun i => p ^ i ∣ k) :=
+        Disjoint ((ico 1 n.succ).filter fun i => p ^ i ≤ k % p ^ i + (p ^ n - k) % p ^ i)
+          ((ico 1 n.succ).filter fun i => p ^ i ∣ k) :=
         by
         simp (config := { contextual := true })[disjoint_right, *, dvd_iff_mod_eq_zero,
           Nat.mod_ltₓ _ (pow_pos hp.pos _)]
       rw [multiplicity_choose hp hkn (lt_succ_self _),
-        multiplicity_eq_card_pow_dvd (ne_of_gtₓ hp.one_lt) hk0 (lt_succ_of_le (log_le_log_of_le hkn)), ← Nat.cast_add,
+        multiplicity_eq_card_pow_dvd (ne_of_gtₓ hp.one_lt) hk0 (lt_succ_of_le (log_le_log_of_le hkn)), ← Nat.cast_addₓ,
         Enat.coe_le_coe, log_pow hp.one_lt, ← card_disjoint_union hdisj, filter_union_right]
       have filter_le_Ico := (Ico 1 n.succ).card_filter_le _
       rwa [card_Ico 1 n.succ] at filter_le_Ico)

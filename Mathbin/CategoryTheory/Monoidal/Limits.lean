@@ -23,21 +23,21 @@ universe v u
 
 noncomputable section
 
-variable {J : Type v} [small_category J]
+variable {J : Type v} [SmallCategory J]
 
-variable {C : Type u} [category.{v} C] [has_limits C]
+variable {C : Type u} [Category.{v} C] [HasLimits C]
 
-instance limit_functorial : functorial fun F : J ⥤ C => limit F :=
-  { limits.lim with }
+instance limit_functorial : Functorial fun F : J ⥤ C => limit F :=
+  { Limits.lim with }
 
 @[simp]
-theorem limit_functorial_map {F G : J ⥤ C} (α : F ⟶ G) : map (fun F : J ⥤ C => limit F) α = limits.lim.map α :=
+theorem limit_functorial_map {F G : J ⥤ C} (α : F ⟶ G) : map (fun F : J ⥤ C => limit F) α = Limits.lim.map α :=
   rfl
 
-variable [monoidal_category.{v} C]
+variable [MonoidalCategory.{v} C]
 
 @[simps]
-instance limit_lax_monoidal : lax_monoidal fun F : J ⥤ C => limit F where
+instance limit_lax_monoidal : LaxMonoidal fun F : J ⥤ C => limit F where
   ε := limit.lift _ { x := _, π := { app := fun j => 𝟙 _ } }
   μ := fun F G =>
     limit.lift (F ⊗ G)
@@ -83,27 +83,27 @@ instance limit_lax_monoidal : lax_monoidal fun F : J ⥤ C => limit F where
     simp
 
 /-- The limit functor `F ↦ limit F` bundled as a lax monoidal functor. -/
-def lim_lax : lax_monoidal_functor (J ⥤ C) C :=
-  lax_monoidal_functor.of fun F : J ⥤ C => limit F
+def lim_lax : LaxMonoidalFunctor (J ⥤ C) C :=
+  LaxMonoidalFunctor.of fun F : J ⥤ C => limit F
 
 @[simp]
-theorem lim_lax_obj (F : J ⥤ C) : lim_lax.obj F = limit F :=
+theorem lim_lax_obj (F : J ⥤ C) : limLax.obj F = limit F :=
   rfl
 
-theorem lim_lax_obj' (F : J ⥤ C) : lim_lax.obj F = lim.obj F :=
-  rfl
-
-@[simp]
-theorem lim_lax_map {F G : J ⥤ C} (α : F ⟶ G) : lim_lax.map α = lim.map α :=
+theorem lim_lax_obj' (F : J ⥤ C) : limLax.obj F = lim.obj F :=
   rfl
 
 @[simp]
-theorem lim_lax_ε : (@lim_lax J _ C _ _ _).ε = limit.lift _ { x := _, π := { app := fun j => 𝟙 _ } } :=
+theorem lim_lax_map {F G : J ⥤ C} (α : F ⟶ G) : limLax.map α = lim.map α :=
+  rfl
+
+@[simp]
+theorem lim_lax_ε : (@limLax J _ C _ _ _).ε = limit.lift _ { x := _, π := { app := fun j => 𝟙 _ } } :=
   rfl
 
 @[simp]
 theorem lim_lax_μ (F G : J ⥤ C) :
-    (@lim_lax J _ C _ _ _).μ F G =
+    (@limLax J _ C _ _ _).μ F G =
       limit.lift (F ⊗ G)
         { x := limit F ⊗ limit G,
           π :=

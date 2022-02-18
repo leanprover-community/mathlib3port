@@ -28,11 +28,11 @@ theorem Iic_disjoint_Ioi (h : a ≤ b) : Disjoint (Iic a) (Ioi b) := fun x ⟨ha
 
 @[simp]
 theorem Iic_disjoint_Ioc (h : a ≤ b) : Disjoint (Iic a) (Ioc b c) :=
-  (Iic_disjoint_Ioi h).mono (le_reflₓ _) fun _ => And.left
+  (Iic_disjoint_Ioi h).mono le_rfl fun _ => And.left
 
 @[simp]
 theorem Ioc_disjoint_Ioc_same {a b c : α} : Disjoint (Ioc a b) (Ioc b c) :=
-  (Iic_disjoint_Ioc (le_reflₓ b)).mono (fun _ => And.right) (le_reflₓ _)
+  (Iic_disjoint_Ioc (le_reflₓ b)).mono (fun _ => And.right) le_rfl
 
 @[simp]
 theorem Ico_disjoint_Ico_same {a b c : α} : Disjoint (Ico a b) (Ico b c) := fun x hx => not_le_of_lt hx.1.2 hx.2.1
@@ -57,7 +57,7 @@ theorem Ico_disjoint_Ico : Disjoint (Ico a₁ a₂) (Ico b₁ b₂) ↔ min a₂
 
 @[simp]
 theorem Ioc_disjoint_Ioc : Disjoint (Ioc a₁ a₂) (Ioc b₁ b₂) ↔ min a₂ b₂ ≤ max a₁ b₁ := by
-  have h : _ ↔ min (to_dual a₁) (to_dual b₁) ≤ max (to_dual a₂) (to_dual b₂) := Ico_disjoint_Ico
+  have h : _ ↔ min (toDual a₁) (toDual b₁) ≤ max (toDual a₂) (toDual b₂) := Ico_disjoint_Ico
   simpa only [dual_Ico] using h
 
 /-- If two half-open intervals are disjoint and the endpoint of one lies in the other,
@@ -102,13 +102,13 @@ theorem IsGlb.bUnion_Ioi_eq (h : IsGlb s a) : (⋃ x ∈ s, Ioi x) = Ioi a := by
     exact mem_bUnion hys hyx
     
 
-theorem IsGlb.Union_Ioi_eq (h : IsGlb (range f) a) : (⋃ x, Ioi (f x)) = Ioi a :=
+theorem IsGlb.Union_Ioi_eq (h : IsGlb (Range f) a) : (⋃ x, Ioi (f x)) = Ioi a :=
   bUnion_range.symm.trans h.bUnion_Ioi_eq
 
 theorem IsLub.bUnion_Iio_eq (h : IsLub s a) : (⋃ x ∈ s, Iio x) = Iio a :=
   h.dual.bUnion_Ioi_eq
 
-theorem IsLub.Union_Iio_eq (h : IsLub (range f) a) : (⋃ x, Iio (f x)) = Iio a :=
+theorem IsLub.Union_Iio_eq (h : IsLub (Range f) a) : (⋃ x, Iio (f x)) = Iio a :=
   h.dual.Union_Ioi_eq
 
 end UnionIxx

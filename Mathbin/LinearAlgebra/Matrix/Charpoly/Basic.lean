@@ -26,7 +26,7 @@ universe u v w
 
 open Polynomial Matrix
 
-open_locale BigOperators
+open_locale BigOperators Polynomial
 
 variable {R : Type u} [CommRingₓ R]
 
@@ -37,20 +37,20 @@ open Finset
 /-- The "characteristic matrix" of `M : matrix n n R` is the matrix of polynomials $t I - M$.
 The determinant of this matrix is the characteristic polynomial.
 -/
-def charmatrix (M : Matrix n n R) : Matrix n n (Polynomial R) :=
-  Matrix.scalar n (X : Polynomial R) - (C : R →+* Polynomial R).mapMatrix M
+def charmatrix (M : Matrix n n R) : Matrix n n R[X] :=
+  Matrix.scalar n (x : R[X]) - (c : R →+* R[X]).mapMatrix M
 
 @[simp]
-theorem charmatrix_apply_eq (M : Matrix n n R) (i : n) : charmatrix M i i = (X : Polynomial R) - C (M i i) := by
+theorem charmatrix_apply_eq (M : Matrix n n R) (i : n) : charmatrix M i i = (x : R[X]) - c (M i i) := by
   simp only [charmatrix, sub_left_inj, Pi.sub_apply, scalar_apply_eq, RingHom.map_matrix_apply, map_apply,
     Dmatrix.sub_apply]
 
 @[simp]
-theorem charmatrix_apply_ne (M : Matrix n n R) (i j : n) (h : i ≠ j) : charmatrix M i j = -C (M i j) := by
+theorem charmatrix_apply_ne (M : Matrix n n R) (i j : n) (h : i ≠ j) : charmatrix M i j = -c (M i j) := by
   simp only [charmatrix, Pi.sub_apply, scalar_apply_ne _ _ _ h, zero_sub, RingHom.map_matrix_apply, map_apply,
     Dmatrix.sub_apply]
 
-theorem mat_poly_equiv_charmatrix (M : Matrix n n R) : matPolyEquiv (charmatrix M) = X - C M := by
+theorem mat_poly_equiv_charmatrix (M : Matrix n n R) : matPolyEquiv (charmatrix M) = X - c M := by
   ext k i j
   simp only [mat_poly_equiv_coeff_apply, coeff_sub, Pi.sub_apply]
   by_cases' h : i = j
@@ -72,7 +72,7 @@ theorem charmatrix_reindex {m : Type v} [DecidableEq m] [Fintype m] (e : n ≃ m
 
 /-- The characteristic polynomial of a matrix `M` is given by $\det (t I - M)$.
 -/
-def Matrix.charpoly (M : Matrix n n R) : Polynomial R :=
+def Matrix.charpoly (M : Matrix n n R) : R[X] :=
   (charmatrix M).det
 
 theorem Matrix.charpoly_reindex {m : Type v} [DecidableEq m] [Fintype m] (e : n ≃ m) (M : Matrix n n R) :
@@ -86,8 +86,7 @@ applied to the matrix itself, is zero.
 This holds over any commutative ring.
 -/
 theorem Matrix.aeval_self_charpoly (M : Matrix n n R) : aeval M M.charpoly = 0 := by
-  have h : M.charpoly • (1 : Matrix n n (Polynomial R)) = adjugate (charmatrix M) * charmatrix M :=
-    (adjugate_mul _).symm
+  have h : M.charpoly • (1 : Matrix n n R[X]) = adjugate (charmatrix M) * charmatrix M := (adjugate_mul _).symm
   apply_fun matPolyEquiv  at h
   simp only [mat_poly_equiv.map_mul, mat_poly_equiv_charmatrix] at h
   apply_fun fun p => p.eval M  at h

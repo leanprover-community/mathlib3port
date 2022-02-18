@@ -94,11 +94,11 @@ subordinate to `U`, see `smooth_bump_covering.exists_is_subordinate`.
 This covering can be used, e.g., to construct a partition of unity and to prove the weak
 Whitney embedding theorem. -/
 @[nolint has_inhabited_instance]
-structure SmoothBumpCovering (s : Set M := univ) where
+structure SmoothBumpCovering (s : Set M := Univ) where
   c : ι → M
   toFun : ∀ i, SmoothBumpFunction I (c i)
   c_mem' : ∀ i, c i ∈ s
-  locally_finite' : LocallyFinite fun i => support (to_fun i)
+  locally_finite' : LocallyFinite fun i => Support (to_fun i)
   eventually_eq_one' : ∀, ∀ x ∈ s, ∀, ∃ i, to_fun i =ᶠ[𝓝 x] 1
 
 /-- We say that that a collection of functions form a smooth partition of unity on a set `s` if
@@ -107,9 +107,9 @@ structure SmoothBumpCovering (s : Set M := univ) where
 * the family `λ i, support (f i)` is locally finite;
 * for all `x ∈ s` the sum `∑ᶠ i, f i x` equals one;
 * for all `x`, the sum `∑ᶠ i, f i x` is less than or equal to one. -/
-structure SmoothPartitionOfUnity (s : Set M := univ) where
+structure SmoothPartitionOfUnity (s : Set M := Univ) where
   toFun : ι → C^∞⟮I, M; 𝓘(ℝ), ℝ⟯
-  locally_finite' : LocallyFinite fun i => support (to_fun i)
+  locally_finite' : LocallyFinite fun i => Support (to_fun i)
   nonneg' : ∀ i x, 0 ≤ to_fun i x
   sum_eq_one' : ∀, ∀ x ∈ s, ∀, (∑ᶠ i, to_fun i x) = 1
   sum_le_one' : ∀ x, (∑ᶠ i, to_fun i x) ≤ 1
@@ -123,7 +123,7 @@ variable {s : Set M} (f : SmoothPartitionOfUnity ι I M s)
 instance {s : Set M} : CoeFun (SmoothPartitionOfUnity ι I M s) fun _ => ι → C^∞⟮I, M; 𝓘(ℝ), ℝ⟯ :=
   ⟨SmoothPartitionOfUnity.toFun⟩
 
-protected theorem LocallyFinite : LocallyFinite fun i => support (f i) :=
+protected theorem LocallyFinite : LocallyFinite fun i => Support (f i) :=
   f.locally_finite'
 
 theorem nonneg (i : ι) (x : M) : 0 ≤ f i x :=
@@ -140,22 +140,22 @@ def to_partition_of_unity : PartitionOfUnity ι M s :=
   { f with toFun := fun i => f i }
 
 theorem smooth_sum : Smooth I 𝓘(ℝ) fun x => ∑ᶠ i, f i x :=
-  smooth_finsum (fun i => (f i).Smooth) f.locally_finite
+  smooth_finsum (fun i => (f i).Smooth) f.LocallyFinite
 
 theorem le_one (i : ι) (x : M) : f i x ≤ 1 :=
-  f.to_partition_of_unity.le_one i x
+  f.toPartitionOfUnity.le_one i x
 
 theorem sum_nonneg (x : M) : 0 ≤ ∑ᶠ i, f i x :=
-  f.to_partition_of_unity.sum_nonneg x
+  f.toPartitionOfUnity.sum_nonneg x
 
 /-- A smooth partition of unity `f i` is subordinate to a family of sets `U i` indexed by the same
 type if for each `i` the closure of the support of `f i` is a subset of `U i`. -/
 def is_subordinate (f : SmoothPartitionOfUnity ι I M s) (U : ι → Set M) :=
-  ∀ i, Closure (support (f i)) ⊆ U i
+  ∀ i, Closure (Support (f i)) ⊆ U i
 
 @[simp]
 theorem is_subordinate_to_partition_of_unity {f : SmoothPartitionOfUnity ι I M s} {U : ι → Set M} :
-    f.to_partition_of_unity.is_subordinate U ↔ f.is_subordinate U :=
+    f.toPartitionOfUnity.IsSubordinate U ↔ f.IsSubordinate U :=
   Iff.rfl
 
 alias is_subordinate_to_partition_of_unity ↔ _ SmoothPartitionOfUnity.IsSubordinate.to_partition_of_unity
@@ -166,7 +166,7 @@ namespace BumpCovering
 
 theorem smooth_to_partition_of_unity {E : Type uE} [NormedGroup E] [NormedSpace ℝ E] {H : Type uH} [TopologicalSpace H]
     {I : ModelWithCorners ℝ E H} {M : Type uM} [TopologicalSpace M] [ChartedSpace H M] {s : Set M}
-    (f : BumpCovering ι M s) (hf : ∀ i, Smooth I 𝓘(ℝ) (f i)) (i : ι) : Smooth I 𝓘(ℝ) (f.to_partition_of_unity i) :=
+    (f : BumpCovering ι M s) (hf : ∀ i, Smooth I 𝓘(ℝ) (f i)) (i : ι) : Smooth I 𝓘(ℝ) (f.toPartitionOfUnity i) :=
   (hf i).mul <|
     (smooth_finprod_cond fun j _ => smooth_const.sub (hf j)) <| by
       simp only [mul_support_one_sub]
@@ -183,21 +183,21 @@ In our formalization, not every `f : bump_covering ι M s` with smooth functions
 in `smooth_bump_covering.to_smooth_partition_of_unity`. -/
 def to_smooth_partition_of_unity (f : BumpCovering ι M s) (hf : ∀ i, Smooth I 𝓘(ℝ) (f i)) :
     SmoothPartitionOfUnity ι I M s :=
-  { f.to_partition_of_unity with toFun := fun i => ⟨f.to_partition_of_unity i, f.smooth_to_partition_of_unity hf i⟩ }
+  { f.toPartitionOfUnity with toFun := fun i => ⟨f.toPartitionOfUnity i, f.smooth_to_partition_of_unity hf i⟩ }
 
 @[simp]
 theorem to_smooth_partition_of_unity_to_partition_of_unity (f : BumpCovering ι M s) (hf : ∀ i, Smooth I 𝓘(ℝ) (f i)) :
-    (f.to_smooth_partition_of_unity hf).toPartitionOfUnity = f.to_partition_of_unity :=
+    (f.toSmoothPartitionOfUnity hf).toPartitionOfUnity = f.toPartitionOfUnity :=
   rfl
 
 @[simp]
 theorem coe_to_smooth_partition_of_unity (f : BumpCovering ι M s) (hf : ∀ i, Smooth I 𝓘(ℝ) (f i)) (i : ι) :
-    ⇑f.to_smooth_partition_of_unity hf i = f.to_partition_of_unity i :=
+    ⇑f.toSmoothPartitionOfUnity hf i = f.toPartitionOfUnity i :=
   rfl
 
-theorem is_subordinate.to_smooth_partition_of_unity {f : BumpCovering ι M s} {U : ι → Set M} (h : f.is_subordinate U)
-    (hf : ∀ i, Smooth I 𝓘(ℝ) (f i)) : (f.to_smooth_partition_of_unity hf).IsSubordinate U :=
-  h.to_partition_of_unity
+theorem is_subordinate.to_smooth_partition_of_unity {f : BumpCovering ι M s} {U : ι → Set M} (h : f.IsSubordinate U)
+    (hf : ∀ i, Smooth I 𝓘(ℝ) (f i)) : (f.toSmoothPartitionOfUnity hf).IsSubordinate U :=
+  h.toPartitionOfUnity
 
 end BumpCovering
 
@@ -206,7 +206,7 @@ namespace SmoothBumpCovering
 variable {s : Set M} {U : M → Set M} (fs : SmoothBumpCovering ι I M s) {I}
 
 instance : CoeFun (SmoothBumpCovering ι I M s) fun x => ∀ i : ι, SmoothBumpFunction I (x.c i) :=
-  ⟨to_fun⟩
+  ⟨toFun⟩
 
 @[simp]
 theorem coe_mk (c : ι → M) (to_fun : ∀ i, SmoothBumpFunction I (c i)) h₁ h₂ h₃ :
@@ -221,9 +221,9 @@ depends on `x`.
 def is_subordinate {s : Set M} (f : SmoothBumpCovering ι I M s) (U : M → Set M) :=
   ∀ i, Closure (support <| f i) ⊆ U (f.c i)
 
-theorem is_subordinate.support_subset {fs : SmoothBumpCovering ι I M s} {U : M → Set M} (h : fs.is_subordinate U)
-    (i : ι) : support (fs i) ⊆ U (fs.c i) :=
-  subset.trans subset_closure (h i)
+theorem is_subordinate.support_subset {fs : SmoothBumpCovering ι I M s} {U : M → Set M} (h : fs.IsSubordinate U)
+    (i : ι) : Support (fs i) ⊆ U (fs.c i) :=
+  Subset.trans subset_closure (h i)
 
 variable (I)
 
@@ -232,7 +232,7 @@ Suppose also that `M` is a Hausdorff `σ`-compact topological space. Let `s` be 
 in `M` and `U : M → set M` be a collection of sets such that `U x ∈ 𝓝 x` for every `x ∈ s`.
 Then there exists a smooth bump covering of `s` that is subordinate to `U`. -/
 theorem exists_is_subordinate [T2Space M] [SigmaCompactSpace M] (hs : IsClosed s) (hU : ∀, ∀ x ∈ s, ∀, U x ∈ 𝓝 x) :
-    ∃ (ι : Type uM)(f : SmoothBumpCovering ι I M s), f.is_subordinate U := by
+    ∃ (ι : Type uM)(f : SmoothBumpCovering ι I M s), f.IsSubordinate U := by
   have : LocallyCompactSpace H := I.locally_compact
   have : LocallyCompactSpace M := ChartedSpace.locally_compact H
   have : NormalSpace M := normal_of_paracompact_t2
@@ -253,13 +253,13 @@ theorem exists_is_subordinate [T2Space M] [SigmaCompactSpace M] (hs : IsClosed s
 
 variable {I M}
 
-protected theorem LocallyFinite : LocallyFinite fun i => support (fs i) :=
+protected theorem LocallyFinite : LocallyFinite fun i => Support (fs i) :=
   fs.locally_finite'
 
 protected theorem point_finite (x : M) : { i | fs i x ≠ 0 }.Finite :=
-  fs.locally_finite.point_finite x
+  fs.LocallyFinite.point_finite x
 
-theorem mem_chart_at_source_of_eq_one {i : ι} {x : M} (h : fs i x = 1) : x ∈ (chart_at H (fs.c i)).Source :=
+theorem mem_chart_at_source_of_eq_one {i : ι} {x : M} (h : fs i x = 1) : x ∈ (chartAt H (fs.c i)).Source :=
   (fs i).support_subset_source <| by
     simp [h]
 
@@ -277,10 +277,10 @@ theorem eventually_eq_one (x : M) (hx : x ∈ s) : fs (fs.ind x hx) =ᶠ[𝓝 x]
 theorem apply_ind (x : M) (hx : x ∈ s) : fs (fs.ind x hx) x = 1 :=
   (fs.eventually_eq_one x hx).eq_of_nhds
 
-theorem mem_support_ind (x : M) (hx : x ∈ s) : x ∈ support (fs <| fs.ind x hx) := by
+theorem mem_support_ind (x : M) (hx : x ∈ s) : x ∈ Support (fs <| fs.ind x hx) := by
   simp [fs.apply_ind x hx]
 
-theorem mem_chart_at_ind_source (x : M) (hx : x ∈ s) : x ∈ (chart_at H (fs.c (fs.ind x hx))).Source :=
+theorem mem_chart_at_ind_source (x : M) (hx : x ∈ s) : x ∈ (chartAt H (fs.c (fs.ind x hx))).Source :=
   fs.mem_chart_at_source_of_eq_one (fs.apply_ind x hx)
 
 theorem mem_ext_chart_at_ind_source (x : M) (hx : x ∈ s) : x ∈ (extChartAt I (fs.c (fs.ind x hx))).Source :=
@@ -288,7 +288,7 @@ theorem mem_ext_chart_at_ind_source (x : M) (hx : x ∈ s) : x ∈ (extChartAt I
 
 /-- The index type of a `smooth_bump_covering` of a compact manifold is finite. -/
 protected def Fintype [CompactSpace M] : Fintype ι :=
-  fs.locally_finite.fintype_of_compact fun i => (fs i).nonempty_support
+  fs.LocallyFinite.fintypeOfCompact fun i => (fs i).nonempty_support
 
 variable [T2Space M]
 
@@ -296,51 +296,50 @@ variable [T2Space M]
 `f : bump_covering ι M s` with smooth functions `f i` is a `smooth_bump_covering`. -/
 def to_bump_covering : BumpCovering ι M s where
   toFun := fun i => ⟨fs i, (fs i).Continuous⟩
-  locally_finite' := fs.locally_finite
+  locally_finite' := fs.LocallyFinite
   nonneg' := fun i x => (fs i).Nonneg
   le_one' := fun i x => (fs i).le_one
   eventually_eq_one' := fs.eventually_eq_one'
 
 @[simp]
 theorem is_subordinate_to_bump_covering {f : SmoothBumpCovering ι I M s} {U : M → Set M} :
-    (f.to_bump_covering.is_subordinate fun i => U (f.c i)) ↔ f.is_subordinate U :=
+    (f.toBumpCovering.IsSubordinate fun i => U (f.c i)) ↔ f.IsSubordinate U :=
   Iff.rfl
 
 alias is_subordinate_to_bump_covering ↔ _ SmoothBumpCovering.IsSubordinate.to_bump_covering
 
 /-- Every `smooth_bump_covering` defines a smooth partition of unity. -/
 def to_smooth_partition_of_unity : SmoothPartitionOfUnity ι I M s :=
-  fs.to_bump_covering.to_smooth_partition_of_unity fun i => (fs i).Smooth
+  fs.toBumpCovering.toSmoothPartitionOfUnity fun i => (fs i).Smooth
 
 theorem to_smooth_partition_of_unity_apply (i : ι) (x : M) :
-    fs.to_smooth_partition_of_unity i x = fs i x * ∏ᶠ (j) (hj : WellOrderingRel j i), 1 - fs j x :=
+    fs.toSmoothPartitionOfUnity i x = fs i x * ∏ᶠ (j) (hj : WellOrderingRel j i), 1 - fs j x :=
   rfl
 
 theorem to_smooth_partition_of_unity_eq_mul_prod (i : ι) (x : M) (t : Finset ι)
     (ht : ∀ j, WellOrderingRel j i → fs j x ≠ 0 → j ∈ t) :
-    fs.to_smooth_partition_of_unity i x = fs i x * ∏ j in t.filter fun j => WellOrderingRel j i, 1 - fs j x :=
-  fs.to_bump_covering.to_partition_of_unity_eq_mul_prod i x t ht
+    fs.toSmoothPartitionOfUnity i x = fs i x * ∏ j in t.filter fun j => WellOrderingRel j i, 1 - fs j x :=
+  fs.toBumpCovering.to_partition_of_unity_eq_mul_prod i x t ht
 
 theorem exists_finset_to_smooth_partition_of_unity_eventually_eq (i : ι) (x : M) :
     ∃ t : Finset ι,
-      fs.to_smooth_partition_of_unity i =ᶠ[𝓝 x] fs i * ∏ j in t.filter fun j => WellOrderingRel j i, 1 - fs j :=
-  fs.to_bump_covering.exists_finset_to_partition_of_unity_eventually_eq i x
+      fs.toSmoothPartitionOfUnity i =ᶠ[𝓝 x] fs i * ∏ j in t.filter fun j => WellOrderingRel j i, 1 - fs j :=
+  fs.toBumpCovering.exists_finset_to_partition_of_unity_eventually_eq i x
 
 theorem to_smooth_partition_of_unity_zero_of_zero {i : ι} {x : M} (h : fs i x = 0) :
-    fs.to_smooth_partition_of_unity i x = 0 :=
-  fs.to_bump_covering.to_partition_of_unity_zero_of_zero h
+    fs.toSmoothPartitionOfUnity i x = 0 :=
+  fs.toBumpCovering.to_partition_of_unity_zero_of_zero h
 
 theorem support_to_smooth_partition_of_unity_subset (i : ι) :
-    support (fs.to_smooth_partition_of_unity i) ⊆ support (fs i) :=
-  fs.to_bump_covering.support_to_partition_of_unity_subset i
+    Support (fs.toSmoothPartitionOfUnity i) ⊆ Support (fs i) :=
+  fs.toBumpCovering.support_to_partition_of_unity_subset i
 
 theorem is_subordinate.to_smooth_partition_of_unity {f : SmoothBumpCovering ι I M s} {U : M → Set M}
-    (h : f.is_subordinate U) : f.to_smooth_partition_of_unity.is_subordinate fun i => U (f.c i) :=
-  h.to_bump_covering.to_partition_of_unity
+    (h : f.IsSubordinate U) : f.toSmoothPartitionOfUnity.IsSubordinate fun i => U (f.c i) :=
+  h.toBumpCovering.toPartitionOfUnity
 
-theorem sum_to_smooth_partition_of_unity_eq (x : M) :
-    (∑ᶠ i, fs.to_smooth_partition_of_unity i x) = 1 - ∏ᶠ i, 1 - fs i x :=
-  fs.to_bump_covering.sum_to_partition_of_unity_eq x
+theorem sum_to_smooth_partition_of_unity_eq (x : M) : (∑ᶠ i, fs.toSmoothPartitionOfUnity i x) = 1 - ∏ᶠ i, 1 - fs i x :=
+  fs.toBumpCovering.sum_to_partition_of_unity_eq x
 
 end SmoothBumpCovering
 
@@ -351,7 +350,7 @@ exists an infinitely smooth function that is equal to `0` on one of them and is 
 other. -/
 theorem exists_smooth_zero_one_of_closed [T2Space M] [SigmaCompactSpace M] {s t : Set M} (hs : IsClosed s)
     (ht : IsClosed t) (hd : Disjoint s t) :
-    ∃ f : C^∞⟮I, M; 𝓘(ℝ), ℝ⟯, eq_on f 0 s ∧ eq_on f 1 t ∧ ∀ x, f x ∈ Icc (0 : ℝ) 1 := by
+    ∃ f : C^∞⟮I, M; 𝓘(ℝ), ℝ⟯, EqOn f 0 s ∧ EqOn f 1 t ∧ ∀ x, f x ∈ Icc (0 : ℝ) 1 := by
   have : ∀, ∀ x ∈ t, ∀, sᶜ ∈ 𝓝 x := fun x hx => hs.is_open_compl.mem_nhds (disjoint_right.1 hd hx)
   rcases SmoothBumpCovering.exists_is_subordinate I ht this with ⟨ι, f, hf⟩
   set g := f.to_smooth_partition_of_unity
@@ -383,7 +382,7 @@ variable [T2Space M] [SigmaCompactSpace M]
 /-- If `X` is a paracompact normal topological space and `U` is an open covering of a closed set
 `s`, then there exists a `bump_covering ι X s` that is subordinate to `U`. -/
 theorem exists_is_subordinate {s : Set M} (hs : IsClosed s) (U : ι → Set M) (ho : ∀ i, IsOpen (U i))
-    (hU : s ⊆ ⋃ i, U i) : ∃ f : SmoothPartitionOfUnity ι I M s, f.is_subordinate U := by
+    (hU : s ⊆ ⋃ i, U i) : ∃ f : SmoothPartitionOfUnity ι I M s, f.IsSubordinate U := by
   have : LocallyCompactSpace H := I.locally_compact
   have : LocallyCompactSpace M := ChartedSpace.locally_compact H
   have : NormalSpace M := normal_of_paracompact_t2

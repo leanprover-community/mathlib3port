@@ -22,8 +22,8 @@ mk_simp_attribute transport_simps :=
 attribute [transport_simps]
   eq_rec_constant eq_mp_eq_cast cast_eq Equivₓ.to_fun_as_coe Equivₓ.arrow_congr'_apply Equivₓ.symm_apply_apply Equivₓ.apply_eq_iff_eq_symm_apply
 
--- ././Mathport/Syntax/Translate/Basic.lean:794:4: warning: unsupported (TODO): `[tacs]
--- ././Mathport/Syntax/Translate/Basic.lean:794:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
 /-- Given `s : S α` for some structure `S` depending on a type `α`,
 and an equivalence `e : α ≃ β`,
 try to produce an `S β`,
@@ -85,9 +85,9 @@ unsafe def transport (s : parse (texpr)?) (e : parse <| tk "using" *> texpr) : i
             let t ← target
             let n := t.get_app_fn.const_name
             let ctx ← local_context
-            ctx.any_of fun e => do
+            ctx fun e => do
                 let t ← infer_type e
-                guardₓ (t.get_app_fn.const_name = n)
+                guardₓ (t = n)
                 return e) <|>
           fail "`transport` could not find an appropriate source object. Try `transport s using e`."
   let e ← to_expr e

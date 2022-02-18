@@ -1,3 +1,4 @@
+import Mathbin.Tactic.ByContra
 import Mathbin.Data.Set.Basic
 
 /-!
@@ -18,27 +19,27 @@ namespace WellFounded
 
 /-- If `r` is a well-founded relation, then any nonempty set has a minimal element
 with respect to `r`. -/
-theorem has_min {α} {r : α → α → Prop} (H : WellFounded r) (s : Set α) : s.nonempty → ∃ a ∈ s, ∀, ∀ x ∈ s, ∀, ¬r x a
+theorem has_min {α} {r : α → α → Prop} (H : WellFounded r) (s : Set α) : s.Nonempty → ∃ a ∈ s, ∀, ∀ x ∈ s, ∀, ¬r x a
   | ⟨a, ha⟩ =>
     ((Acc.recOnₓ (H.apply a)) fun x _ IH =>
         not_imp_not.1 fun hne hx => hne <| ⟨x, hx, fun y hy hyx => hne <| IH y hyx hy⟩)
       ha
 
 /-- A minimal element of a nonempty set in a well-founded order -/
-noncomputable def min {α} {r : α → α → Prop} (H : WellFounded r) (p : Set α) (h : p.nonempty) : α :=
+noncomputable def min {α} {r : α → α → Prop} (H : WellFounded r) (p : Set α) (h : p.Nonempty) : α :=
   Classical.some (H.has_min p h)
 
-theorem min_mem {α} {r : α → α → Prop} (H : WellFounded r) (p : Set α) (h : p.nonempty) : H.min p h ∈ p :=
+theorem min_mem {α} {r : α → α → Prop} (H : WellFounded r) (p : Set α) (h : p.Nonempty) : H.min p h ∈ p :=
   let ⟨h, _⟩ := Classical.some_spec (H.has_min p h)
   h
 
-theorem not_lt_min {α} {r : α → α → Prop} (H : WellFounded r) (p : Set α) (h : p.nonempty) {x} (xp : x ∈ p) :
+theorem not_lt_min {α} {r : α → α → Prop} (H : WellFounded r) (p : Set α) (h : p.Nonempty) {x} (xp : x ∈ p) :
     ¬r x (H.min p h) :=
   let ⟨_, h'⟩ := Classical.some_spec (H.has_min p h)
   h' _ xp
 
 theorem well_founded_iff_has_min {α} {r : α → α → Prop} :
-    WellFounded r ↔ ∀ p : Set α, p.nonempty → ∃ m ∈ p, ∀, ∀ x ∈ p, ∀, ¬r x m := by
+    WellFounded r ↔ ∀ p : Set α, p.Nonempty → ∃ m ∈ p, ∀, ∀ x ∈ p, ∀, ¬r x m := by
   classical
   constructor
   · exact has_min
@@ -67,20 +68,20 @@ theorem eq_iff_not_lt_of_le {α} [PartialOrderₓ α] {x y : α} : x ≤ y → y
     
 
 theorem well_founded_iff_has_max' [PartialOrderₓ α] :
-    WellFounded (· > · : α → α → Prop) ↔ ∀ p : Set α, p.nonempty → ∃ m ∈ p, ∀, ∀ x ∈ p, ∀, m ≤ x → x = m := by
+    WellFounded (· > · : α → α → Prop) ↔ ∀ p : Set α, p.Nonempty → ∃ m ∈ p, ∀, ∀ x ∈ p, ∀, m ≤ x → x = m := by
   simp only [eq_iff_not_lt_of_le, well_founded_iff_has_min]
 
 theorem well_founded_iff_has_min' [PartialOrderₓ α] :
-    WellFounded (LT.lt : α → α → Prop) ↔ ∀ p : Set α, p.nonempty → ∃ m ∈ p, ∀, ∀ x ∈ p, ∀, x ≤ m → x = m :=
+    WellFounded (LT.lt : α → α → Prop) ↔ ∀ p : Set α, p.Nonempty → ∃ m ∈ p, ∀, ∀ x ∈ p, ∀, x ≤ m → x = m :=
   @well_founded_iff_has_max' (OrderDual α) _
 
 open Set
 
 /-- The supremum of a bounded, well-founded order -/
-protected noncomputable def sup {α} {r : α → α → Prop} (wf : WellFounded r) (s : Set α) (h : bounded r s) : α :=
+protected noncomputable def sup {α} {r : α → α → Prop} (wf : WellFounded r) (s : Set α) (h : Bounded r s) : α :=
   wf.min { x | ∀, ∀ a ∈ s, ∀, r a x } h
 
-protected theorem lt_sup {α} {r : α → α → Prop} (wf : WellFounded r) {s : Set α} (h : bounded r s) {x} (hx : x ∈ s) :
+protected theorem lt_sup {α} {r : α → α → Prop} (wf : WellFounded r) {s : Set α} (h : Bounded r s) {x} (hx : x ∈ s) :
     r x (wf.sup s h) :=
   min_mem wf { x | ∀, ∀ a ∈ s, ∀, r a x } h x hx
 
@@ -119,6 +120,44 @@ protected theorem lt_succ_iff {α} {r : α → α → Prop} [wo : IsWellOrder α
   exact trans hy (wo.wf.lt_succ h)
   exact wo.wf.lt_succ h
 
+section LinearOrderₓ
+
+variable {β : Type _} [LinearOrderₓ β] (h : WellFounded (· < · : β → β → Prop)) {γ : Type _} [PartialOrderₓ γ]
+
+private theorem eq_strict_mono_iff_eq_range_aux {f g : β → γ} (hf : StrictMono f) (hg : StrictMono g)
+    (hfg : Set.Range f = Set.Range g) {b : β} (H : ∀, ∀ a < b, ∀, f a = g a) : f b ≤ g b := by
+  obtain ⟨c, hc⟩ : g b ∈ Set.Range f := by
+    rw [hfg]
+    exact Set.mem_range_self b
+  cases' lt_or_leₓ c b with hcb hbc
+  · rw [H c hcb] at hc
+    rw [hg.injective hc] at hcb
+    exact hcb.false.elim
+    
+  · rw [← hc]
+    exact hf.monotone hbc
+    
+
+include h
+
+theorem eq_strict_mono_iff_eq_range {f g : β → γ} (hf : StrictMono f) (hg : StrictMono g) :
+    Set.Range f = Set.Range g ↔ f = g :=
+  ⟨fun hfg => by
+    funext a
+    apply h.induction a
+    exact fun b H =>
+      le_antisymmₓ (eq_strict_mono_iff_eq_range_aux hf hg hfg H)
+        (eq_strict_mono_iff_eq_range_aux hg hf hfg.symm fun a hab => (H a hab).symm),
+    congr_argₓ _⟩
+
+-- ././Mathport/Syntax/Translate/Basic.lean:418:16: unsupported tactic `by_contra'
+theorem self_le_of_strict_mono {φ : β → β} (hφ : StrictMono φ) : ∀ n, n ≤ φ n := by
+  "././Mathport/Syntax/Translate/Basic.lean:418:16: unsupported tactic `by_contra'"
+  have h₂ := h.min_mem _ h₁
+  exact h.not_lt_min _ h₁ (hφ h₂) h₂
+
+end LinearOrderₓ
+
 end WellFounded
 
 namespace Function
@@ -140,16 +179,16 @@ theorem not_lt_argmin [Nonempty α] (a : α) : ¬f a < f (argmin f h) :=
 /-- Given a function `f : α → β` where `β` carries a well-founded `<`, and a non-empty subset `s`
 of `α`, this is an element of `s` whose image under `f` is minimal in the sense of
 `function.not_lt_argmin_on`. -/
-noncomputable def argmin_on (s : Set α) (hs : s.nonempty) : α :=
+noncomputable def argmin_on (s : Set α) (hs : s.Nonempty) : α :=
   WellFounded.min (InvImage.wfₓ f h) s hs
 
 @[simp]
-theorem argmin_on_mem (s : Set α) (hs : s.nonempty) : argmin_on f h s hs ∈ s :=
+theorem argmin_on_mem (s : Set α) (hs : s.Nonempty) : argminOn f h s hs ∈ s :=
   WellFounded.min_mem _ _ _
 
 @[simp]
-theorem not_lt_argmin_on (s : Set α) {a : α} (ha : a ∈ s) (hs : s.nonempty := Set.nonempty_of_mem ha) :
-    ¬f a < f (argmin_on f h s hs) :=
+theorem not_lt_argmin_on (s : Set α) {a : α} (ha : a ∈ s) (hs : s.Nonempty := Set.nonempty_of_mem ha) :
+    ¬f a < f (argminOn f h s hs) :=
   WellFounded.not_lt_min (InvImage.wfₓ f h) s hs ha
 
 end LT
@@ -163,16 +202,9 @@ theorem argmin_le (a : α) [Nonempty α] : f (argmin f h) ≤ f a :=
   not_ltₓ.mp <| not_lt_argmin f h a
 
 @[simp]
-theorem argmin_on_le (s : Set α) {a : α} (ha : a ∈ s) (hs : s.nonempty := Set.nonempty_of_mem ha) :
-    f (argmin_on f h s hs) ≤ f a :=
+theorem argmin_on_le (s : Set α) {a : α} (ha : a ∈ s) (hs : s.Nonempty := Set.nonempty_of_mem ha) :
+    f (argminOn f h s hs) ≤ f a :=
   not_ltₓ.mp <| not_lt_argmin_on f h s ha hs
-
-include h
-
-theorem well_founded.self_le_of_strict_mono {φ : β → β} (hφ : StrictMono φ) : ∀ n, n ≤ φ n := by
-  by_contra h'
-  push_neg  at h'
-  exact h.not_lt_min _ h' (@hφ _ (h.min _ h') (h.min_mem _ h')) (h.min_mem _ h')
 
 end LinearOrderₓ
 

@@ -18,7 +18,7 @@ strings are carefully converted into a call to `string.join`.
 /-- Splits a string into chunks of at most `size` characters.
 -/
 unsafe def string.to_chunks (size : ℕ) : Stringₓ → optParam (List Stringₓ) [] → List Stringₓ
-  | s, Acc => if s.length ≤ size then s :: Acc else string.to_chunks (s.popn_back size) (s.backn size :: Acc)
+  | s, Acc => if s.length ≤ size then s :: Acc else string.to_chunks (s.popnBack size) (s.backn size :: Acc)
 
 section
 

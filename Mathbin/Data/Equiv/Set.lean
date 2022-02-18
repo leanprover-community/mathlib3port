@@ -27,7 +27,7 @@ namespace Equivₓ
 
 @[simp]
 theorem range_eq_univ {α : Type _} {β : Type _} (e : α ≃ β) : Set.Range e = Set.Univ :=
-  Set.eq_univ_of_forall e.surjective
+  Set.eq_univ_of_forall e.Surjective
 
 protected theorem image_eq_preimage {α β} (e : α ≃ β) (s : Set α) : e '' s = e.symm ⁻¹' s :=
   Set.ext fun x => Set.mem_image_iff_of_inverse e.left_inv e.right_inv
@@ -61,7 +61,7 @@ theorem symm_image_image {α β} (e : α ≃ β) (s : Set α) : e.symm '' (e '' 
   e.left_inverse_symm.image_image s
 
 theorem eq_image_iff_symm_image_eq {α β} (e : α ≃ β) (s : Set α) (t : Set β) : t = e '' s ↔ e.symm '' t = s :=
-  (e.symm.injective.image_injective.eq_iff' (e.symm_image_image s)).symm
+  (e.symm.Injective.image_injective.eq_iff' (e.symm_image_image s)).symm
 
 @[simp]
 theorem image_symm_image {α β} (e : α ≃ β) (s : Set β) : e '' (e.symm '' s) = s :=
@@ -69,14 +69,14 @@ theorem image_symm_image {α β} (e : α ≃ β) (s : Set β) : e '' (e.symm '' 
 
 @[simp]
 theorem image_preimage {α β} (e : α ≃ β) (s : Set β) : e '' (e ⁻¹' s) = s :=
-  e.surjective.image_preimage s
+  e.Surjective.image_preimage s
 
 @[simp]
 theorem preimage_image {α β} (e : α ≃ β) (s : Set α) : e ⁻¹' (e '' s) = s :=
-  e.injective.preimage_image s
+  e.Injective.preimage_image s
 
 protected theorem image_compl {α β} (f : Equivₓ α β) (s : Set α) : f '' sᶜ = (f '' s)ᶜ :=
-  Set.image_compl_eq f.bijective
+  Set.image_compl_eq f.Bijective
 
 @[simp]
 theorem symm_preimage_preimage {α β} (e : α ≃ β) (s : Set β) : e.symm ⁻¹' (e ⁻¹' s) = s :=
@@ -88,26 +88,48 @@ theorem preimage_symm_preimage {α β} (e : α ≃ β) (s : Set α) : e ⁻¹' (
 
 @[simp]
 theorem preimage_subset {α β} (e : α ≃ β) (s t : Set β) : e ⁻¹' s ⊆ e ⁻¹' t ↔ s ⊆ t :=
-  e.surjective.preimage_subset_preimage_iff
+  e.Surjective.preimage_subset_preimage_iff
 
 @[simp]
 theorem image_subset {α β} (e : α ≃ β) (s t : Set α) : e '' s ⊆ e '' t ↔ s ⊆ t :=
-  Set.image_subset_image_iff e.injective
+  Set.image_subset_image_iff e.Injective
 
 @[simp]
 theorem image_eq_iff_eq {α β} (e : α ≃ β) (s t : Set α) : e '' s = e '' t ↔ s = t :=
-  Set.image_eq_image e.injective
+  Set.image_eq_image e.Injective
 
 theorem preimage_eq_iff_eq_image {α β} (e : α ≃ β) s t : e ⁻¹' s = t ↔ s = e '' t :=
-  Set.preimage_eq_iff_eq_image e.bijective
+  Set.preimage_eq_iff_eq_image e.Bijective
 
 theorem eq_preimage_iff_image_eq {α β} (e : α ≃ β) s t : s = e ⁻¹' t ↔ e '' s = t :=
-  Set.eq_preimage_iff_image_eq e.bijective
+  Set.eq_preimage_iff_image_eq e.Bijective
 
+@[simp]
+theorem prod_comm_preimage {α β} {s : Set α} {t : Set β} : Equivₓ.prodComm α β ⁻¹' (t ×ˢ s) = s ×ˢ t :=
+  Set.preimage_swap_prod
+
+theorem prod_comm_image {α β} {s : Set α} {t : Set β} : Equivₓ.prodComm α β '' (s ×ˢ t) = t ×ˢ s :=
+  Set.image_swap_prod
+
+@[simp]
 theorem prod_assoc_preimage {α β γ} {s : Set α} {t : Set β} {u : Set γ} :
     Equivₓ.prodAssoc α β γ ⁻¹' (s ×ˢ (t ×ˢ u)) = s ×ˢ t ×ˢ u := by
   ext
   simp [and_assoc]
+
+@[simp]
+theorem prod_assoc_symm_preimage {α β γ} {s : Set α} {t : Set β} {u : Set γ} :
+    (Equivₓ.prodAssoc α β γ).symm ⁻¹' (s ×ˢ t ×ˢ u) = s ×ˢ (t ×ˢ u) := by
+  ext
+  simp [and_assoc]
+
+theorem prod_assoc_image {α β γ} {s : Set α} {t : Set β} {u : Set γ} :
+    Equivₓ.prodAssoc α β γ '' (s ×ˢ t ×ˢ u) = s ×ˢ (t ×ˢ u) := by
+  simpa only [Equivₓ.image_eq_preimage] using prod_assoc_symm_preimage
+
+theorem prod_assoc_symm_image {α β γ} {s : Set α} {t : Set β} {u : Set γ} :
+    (Equivₓ.prodAssoc α β γ).symm '' (s ×ˢ (t ×ˢ u)) = s ×ˢ t ×ˢ u := by
+  simpa only [Equivₓ.image_eq_preimage] using prod_assoc_preimage
 
 /-- A set `s` in `α × β` is equivalent to the sigma-type `Σ x, {y | (x, y) ∈ s}`. -/
 def set_prod_equiv_sigma {α β : Type _} (s : Set (α × β)) : s ≃ Σ x : α, { y | (x, y) ∈ s } where
@@ -121,7 +143,7 @@ def set_prod_equiv_sigma {α β : Type _} (s : Set (α × β)) : s ≃ Σ x : α
 /-- The subtypes corresponding to equal sets are equivalent. -/
 @[simps apply]
 def set_congr {α : Type _} {s t : Set α} (h : s = t) : s ≃ t :=
-  subtype_equiv_prop h
+  subtypeEquivProp h
 
 /-- A set is equivalent to its image under an equivalence.
 -/
@@ -145,16 +167,16 @@ namespace Set
 
 /-- `univ α` is equivalent to `α`. -/
 @[simps apply symmApply]
-protected def univ α : @univ α ≃ α :=
+protected def univ α : @Univ α ≃ α :=
   ⟨coe, fun a => ⟨a, trivialₓ⟩, fun ⟨a, _⟩ => rfl, fun a => rfl⟩
 
 /-- An empty set is equivalent to the `empty` type. -/
 protected def Empty α : (∅ : Set α) ≃ Empty :=
-  equiv_empty _
+  equivEmpty _
 
 /-- An empty set is equivalent to a `pempty` type. -/
 protected def Pempty α : (∅ : Set α) ≃ Pempty :=
-  equiv_pempty _
+  equivPempty _
 
 /-- If sets `s` and `t` are separated by a decidable predicate, then `s ∪ t` is equivalent to
 `s ⊕ t`. -/
@@ -174,7 +196,7 @@ protected def union' {α} {s t : Set α} (p : α → Prop) [DecidablePred p] (hs
 
 /-- If sets `s` and `t` are disjoint, then `s ∪ t` is equivalent to `s ⊕ t`. -/
 protected def union {α} {s t : Set α} [DecidablePred fun x => x ∈ s] (H : s ∩ t ⊆ ∅) : (s ∪ t : Set α) ≃ Sum s t :=
-  set.union' (fun x => x ∈ s) (fun _ => id) fun x xt xs => H ⟨xs, xt⟩
+  Set.union' (fun x => x ∈ s) (fun _ => id) fun x xt xs => H ⟨xs, xt⟩
 
 theorem union_apply_left {α} {s t : Set α} [DecidablePred fun x => x ∈ s] (H : s ∩ t ⊆ ∅) {a : (s ∪ t : Set α)}
     (ha : ↑a ∈ s) : Equivₓ.Set.union H a = Sum.inl ⟨a, ha⟩ :=
@@ -219,7 +241,7 @@ protected def insert {α} {s : Set.{u} α} [DecidablePred (· ∈ s)] {a : α} (
     _ ≃ Sum s ({a} : Set α) :=
       Equivₓ.Set.union fun x ⟨hx, hx'⟩ => by
         simp_all
-    _ ≃ Sum s PUnit.{u + 1} := sum_congr (Equivₓ.refl _) (Equivₓ.Set.singleton _)
+    _ ≃ Sum s PUnit.{u + 1} := sumCongr (Equivₓ.refl _) (Equivₓ.Set.singleton _)
     
 
 @[simp]
@@ -249,7 +271,7 @@ protected def sum_compl {α} (s : Set α) [DecidablePred (· ∈ s)] : Sum s (s�
       (Equivₓ.Set.union
           (by
             simp [Set.ext_iff])).symm
-    _ ≃ @univ α :=
+    _ ≃ @Univ α :=
       Equivₓ.Set.ofEq
         (by
           simp )
@@ -332,10 +354,10 @@ protected def union_sum_inter {α : Type u} (s t : Set α) [DecidablePred (· �
     Sum (s ∪ t : Set α) (s ∩ t : Set α) ≃ Sum (s ∪ t \ s : Set α) (s ∩ t : Set α) := by
       rw [union_diff_self]
     _ ≃ Sum (Sum s (t \ s : Set α)) (s ∩ t : Set α) :=
-      sum_congr (Set.Union <| subset_empty_iff.2 (inter_diff_self _ _)) (Equivₓ.refl _)
-    _ ≃ Sum s (Sum (t \ s : Set α) (s ∩ t : Set α)) := sum_assoc _ _ _
+      sumCongr (Set.Union <| subset_empty_iff.2 (inter_diff_self _ _)) (Equivₓ.refl _)
+    _ ≃ Sum s (Sum (t \ s : Set α) (s ∩ t : Set α)) := sumAssoc _ _ _
     _ ≃ Sum s (t \ s ∪ s ∩ t : Set α) :=
-      sum_congr (Equivₓ.refl _)
+      sumCongr (Equivₓ.refl _)
         (by
           refine' (set.union' (· ∉ s) _ _).symm
           exacts[fun x hx => hx.2, fun x hx => not_not_intro hx.1])
@@ -350,18 +372,18 @@ between `sᶜ` and `tᶜ`. -/
 protected def compl {α : Type u} {β : Type v} {s : Set α} {t : Set β} [DecidablePred (· ∈ s)] [DecidablePred (· ∈ t)]
     (e₀ : s ≃ t) : { e : α ≃ β // ∀ x : s, e x = e₀ x } ≃ ((sᶜ : Set α) ≃ (tᶜ : Set β)) where
   toFun := fun e =>
-    subtype_equiv e fun a =>
+    subtypeEquiv e fun a =>
       not_congr <|
         Iff.symm <|
-          maps_to.mem_iff (maps_to_iff_exists_map_subtype.2 ⟨e₀, e.2⟩)
-            (surj_on.maps_to_compl (surj_on_iff_exists_map_subtype.2 ⟨t, e₀, subset.refl t, e₀.surjective, e.2⟩)
+          MapsTo.mem_iff (maps_to_iff_exists_map_subtype.2 ⟨e₀, e.2⟩)
+            (SurjOn.maps_to_compl (surj_on_iff_exists_map_subtype.2 ⟨t, e₀, Subset.refl t, e₀.Surjective, e.2⟩)
               e.1.Injective)
   invFun := fun e₁ =>
     Subtype.mk
       (calc
-        α ≃ Sum s (sᶜ : Set α) := (set.sum_compl s).symm
-        _ ≃ Sum t (tᶜ : Set β) := e₀.sum_congr e₁
-        _ ≃ β := set.sum_compl t
+        α ≃ Sum s (sᶜ : Set α) := (Set.sumCompl s).symm
+        _ ≃ Sum t (tᶜ : Set β) := e₀.sumCongr e₁
+        _ ≃ β := Set.sumCompl t
         )
       fun x => by
       simp only [Sum.map_inl, trans_apply, sum_congr_apply, set.sum_compl_apply_inl, set.sum_compl_symm_apply]
@@ -381,27 +403,27 @@ protected def compl {α : Type u} {β : Type v} {s : Set α} {t : Set β} [Decid
 
 /-- The set product of two sets is equivalent to the type product of their coercions to types. -/
 protected def Prod {α β} (s : Set α) (t : Set β) : ↥(s ×ˢ t) ≃ s × t :=
-  @subtype_prod_equiv_prod α β s t
+  @subtypeProdEquivProd α β s t
 
 /-- If a function `f` is injective on a set `s`, then `s` is equivalent to `f '' s`. -/
-protected noncomputable def image_of_inj_on {α β} (f : α → β) (s : Set α) (H : inj_on f s) : s ≃ f '' s :=
+protected noncomputable def image_of_inj_on {α β} (f : α → β) (s : Set α) (H : InjOn f s) : s ≃ f '' s :=
   ⟨fun p => ⟨f p, mem_image_of_mem f p.2⟩, fun p => ⟨Classical.some p.2, (Classical.some_spec p.2).1⟩, fun ⟨x, h⟩ =>
     Subtype.eq (H (Classical.some_spec (mem_image_of_mem f h)).1 h (Classical.some_spec (mem_image_of_mem f h)).2),
     fun ⟨y, h⟩ => Subtype.eq (Classical.some_spec h).2⟩
 
 /-- If `f` is an injective function, then `s` is equivalent to `f '' s`. -/
 @[simps apply]
-protected noncomputable def image {α β} (f : α → β) (s : Set α) (H : injective f) : s ≃ f '' s :=
-  Equivₓ.Set.imageOfInjOn f s (H.inj_on s)
+protected noncomputable def image {α β} (f : α → β) (s : Set α) (H : Injective f) : s ≃ f '' s :=
+  Equivₓ.Set.imageOfInjOn f s (H.InjOn s)
 
 @[simp]
-protected theorem image_symm_apply {α β} (f : α → β) (s : Set α) (H : injective f) (x : α) (h : x ∈ s) :
-    (Set.Image f s H).symm ⟨f x, ⟨x, ⟨h, rfl⟩⟩⟩ = ⟨x, h⟩ := by
+protected theorem image_symm_apply {α β} (f : α → β) (s : Set α) (H : Injective f) (x : α) (h : x ∈ s) :
+    (Set.image f s H).symm ⟨f x, ⟨x, ⟨h, rfl⟩⟩⟩ = ⟨x, h⟩ := by
   apply (Set.Image f s H).Injective
   simp [(Set.Image f s H).apply_symm_apply]
 
-theorem image_symm_preimage {α β} {f : α → β} (hf : injective f) (u s : Set α) :
-    (fun x => (Set.Image f s hf).symm x : f '' s → α) ⁻¹' u = coe ⁻¹' (f '' u) := by
+theorem image_symm_preimage {α β} {f : α → β} (hf : Injective f) (u s : Set α) :
+    (fun x => (Set.image f s hf).symm x : f '' s → α) ⁻¹' u = coe ⁻¹' (f '' u) := by
   ext ⟨b, a, has, rfl⟩
   have : ∀ h : ∃ a', a' ∈ s ∧ a' = a, Classical.some h = a := fun h => (Classical.some_spec h).2
   simp [Equivₓ.Set.image, Equivₓ.Set.imageOfInjOn, hf.eq_iff, this]
@@ -430,15 +452,15 @@ protected def powerset {α} (S : Set α) : 𝒫 S ≃ Set S where
 then its image under `range_splitting f` is in bijection (via `f`) with `s`.
 -/
 @[simps]
-noncomputable def range_splitting_image_equiv {α β : Type _} (f : α → β) (s : Set (range f)) :
-    range_splitting f '' s ≃ s where
+noncomputable def range_splitting_image_equiv {α β : Type _} (f : α → β) (s : Set (Range f)) :
+    rangeSplitting f '' s ≃ s where
   toFun := fun x =>
     ⟨⟨f x, by
         simp ⟩,
       by
       rcases x with ⟨x, ⟨y, ⟨m, rfl⟩⟩⟩
       simpa [apply_range_splitting f] using m⟩
-  invFun := fun x => ⟨range_splitting f x, ⟨x, ⟨x.2, rfl⟩⟩⟩
+  invFun := fun x => ⟨rangeSplitting f x, ⟨x, ⟨x.2, rfl⟩⟩⟩
   left_inv := fun x => by
     rcases x with ⟨x, ⟨y, ⟨m, rfl⟩⟩⟩
     simp [apply_range_splitting f]
@@ -456,7 +478,7 @@ empty too. This hypothesis is absent on analogous definitions on stronger `equiv
 are already sufficient to ensure non-emptiness. -/
 @[simps]
 def of_left_inverse {α β : Sort _} (f : α → β) (f_inv : Nonempty α → β → α)
-    (hf : ∀ h : Nonempty α, left_inverse (f_inv h) f) : α ≃ Set.Range f where
+    (hf : ∀ h : Nonempty α, LeftInverse (f_inv h) f) : α ≃ Set.Range f where
   toFun := fun a => ⟨f a, a, rfl⟩
   invFun := fun b => f_inv (nonempty_of_exists b.2) b
   left_inv := fun a => hf ⟨a⟩ a
@@ -466,38 +488,38 @@ def of_left_inverse {α β : Sort _} (f : α → β) (f_inv : Nonempty α → β
 
 Note that if `α` is empty, no such `f_inv` exists and so this definition can't be used, unlike
 the stronger but less convenient `of_left_inverse`. -/
-abbrev of_left_inverse' {α β : Sort _} (f : α → β) (f_inv : β → α) (hf : left_inverse f_inv f) : α ≃ Set.Range f :=
-  of_left_inverse f (fun _ => f_inv) fun _ => hf
+abbrev of_left_inverse' {α β : Sort _} (f : α → β) (f_inv : β → α) (hf : LeftInverse f_inv f) : α ≃ Set.Range f :=
+  ofLeftInverse f (fun _ => f_inv) fun _ => hf
 
 /-- If `f : α → β` is an injective function, then domain `α` is equivalent to the range of `f`. -/
 @[simps apply]
-noncomputable def of_injective {α β} (f : α → β) (hf : injective f) : α ≃ Set.Range f :=
+noncomputable def of_injective {α β} (f : α → β) (hf : Injective f) : α ≃ Set.Range f :=
   Equivₓ.ofLeftInverse f (fun h => Function.invFun f) fun h => Function.left_inverse_inv_funₓ hf
 
-theorem apply_of_injective_symm {α β} {f : α → β} (hf : injective f) (b : Set.Range f) :
-    f ((of_injective f hf).symm b) = b :=
-  Subtype.ext_iff.1 <| (of_injective f hf).apply_symm_apply b
+theorem apply_of_injective_symm {α β} {f : α → β} (hf : Injective f) (b : Set.Range f) :
+    f ((ofInjective f hf).symm b) = b :=
+  Subtype.ext_iff.1 <| (ofInjective f hf).apply_symm_apply b
 
 @[simp]
-theorem of_injective_symm_apply {α β} {f : α → β} (hf : injective f) (a : α) :
-    (of_injective f hf).symm ⟨f a, ⟨a, rfl⟩⟩ = a := by
+theorem of_injective_symm_apply {α β} {f : α → β} (hf : Injective f) (a : α) :
+    (ofInjective f hf).symm ⟨f a, ⟨a, rfl⟩⟩ = a := by
   apply (of_injective f hf).Injective
   simp [apply_of_injective_symm hf]
 
-theorem coe_of_injective_symm {α β} {f : α → β} (hf : injective f) :
-    ((of_injective f hf).symm : range f → α) = range_splitting f := by
+theorem coe_of_injective_symm {α β} {f : α → β} (hf : Injective f) :
+    ((ofInjective f hf).symm : Range f → α) = rangeSplitting f := by
   ext ⟨y, x, rfl⟩
   apply hf
   simp [apply_range_splitting f]
 
 @[simp]
-theorem self_comp_of_injective_symm {α β} {f : α → β} (hf : injective f) : f ∘ (of_injective f hf).symm = coe :=
+theorem self_comp_of_injective_symm {α β} {f : α → β} (hf : Injective f) : f ∘ (ofInjective f hf).symm = coe :=
   funext fun x => apply_of_injective_symm hf x
 
 theorem of_left_inverse_eq_of_injective {α β : Type _} (f : α → β) (f_inv : Nonempty α → β → α)
-    (hf : ∀ h : Nonempty α, left_inverse (f_inv h) f) :
-    of_left_inverse f f_inv hf =
-      of_injective f
+    (hf : ∀ h : Nonempty α, LeftInverse (f_inv h) f) :
+    ofLeftInverse f f_inv hf =
+      ofInjective f
         ((em (Nonempty α)).elim (fun h => (hf h).Injective) fun h _ _ _ => by
           have : Subsingleton α := subsingleton_of_not_nonempty h
           simp ) :=
@@ -505,15 +527,15 @@ theorem of_left_inverse_eq_of_injective {α β : Type _} (f : α → β) (f_inv 
   ext
   simp
 
-theorem of_left_inverse'_eq_of_injective {α β : Type _} (f : α → β) (f_inv : β → α) (hf : left_inverse f_inv f) :
-    of_left_inverse' f f_inv hf = of_injective f hf.injective := by
+theorem of_left_inverse'_eq_of_injective {α β : Type _} (f : α → β) (f_inv : β → α) (hf : LeftInverse f_inv f) :
+    ofLeftInverse' f f_inv hf = ofInjective f hf.Injective := by
   ext
   simp
 
 protected theorem set_forall_iff {α β} (e : α ≃ β) {p : Set α → Prop} : (∀ a, p a) ↔ ∀ a, p (e ⁻¹' a) := by
   simpa [Equivₓ.image_eq_preimage] using (Equivₓ.Set.congr e).forall_congr_left'
 
-protected theorem preimage_sUnion {α β} (f : α ≃ β) {s : Set (Set β)} : f ⁻¹' ⋃₀s = ⋃₀(_root_.set.image f ⁻¹' s) := by
+protected theorem preimage_sUnion {α β} (f : α ≃ β) {s : Set (Set β)} : f ⁻¹' ⋃₀s = ⋃₀(Set.Image f ⁻¹' s) := by
   ext x
   simp [(Equivₓ.Set.congr f).symm.exists_congr_left]
 
@@ -523,7 +545,7 @@ end Equivₓ
 equivalence between the types `↥s` and `↥t`. -/
 noncomputable def Set.BijOn.equiv {α : Type _} {β : Type _} {s : Set α} {t : Set β} (f : α → β) (h : Set.BijOn f s t) :
     s ≃ t :=
-  Equivₓ.ofBijective _ h.bijective
+  Equivₓ.ofBijective _ h.Bijective
 
 /-- The composition of an updated function with an equiv on a subset can be expressed as an
 updated function. -/

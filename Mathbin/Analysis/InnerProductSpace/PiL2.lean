@@ -31,15 +31,17 @@ open Real Set Filter IsROrC
 
 open_locale BigOperators uniformity TopologicalSpace Nnreal Ennreal ComplexConjugate DirectSum
 
-attribute [local instance] fact_one_le_two_real
-
-attribute [local instance] fact_one_le_two_real
-
 noncomputable section
 
 variable {ι : Type _}
 
 variable {𝕜 : Type _} [IsROrC 𝕜] {E : Type _} [InnerProductSpace 𝕜 E]
+
+variable {E' : Type _} [InnerProductSpace 𝕜 E']
+
+variable {F : Type _} [InnerProductSpace ℝ F]
+
+variable {F' : Type _} [InnerProductSpace ℝ F']
 
 local notation "⟪" x ", " y "⟫" => @inner 𝕜 _ _ x y
 
@@ -134,7 +136,7 @@ def DirectSum.SubmoduleIsInternal.isometryL2OfOrthogonalFamily [DecidableEq ι] 
 theorem DirectSum.SubmoduleIsInternal.isometry_L2_of_orthogonal_family_symm_apply [DecidableEq ι]
     {V : ι → Submodule 𝕜 E} (hV : DirectSum.SubmoduleIsInternal V)
     (hV' : @OrthogonalFamily 𝕜 _ _ _ _ (fun i => V i) _ fun i => (V i).subtypeₗᵢ) (w : PiLp 2 fun i => V i) :
-    (hV.isometry_L2_of_orthogonal_family hV').symm w = ∑ i, (w i : E) := by
+    (hV.isometryL2OfOrthogonalFamily hV').symm w = ∑ i, (w i : E) := by
   classical
   let e₁ := DirectSum.linearEquivFunOnFintype 𝕜 ι fun i => V i
   let e₂ := LinearEquiv.ofBijective _ hV.injective hV.surjective
@@ -146,7 +148,7 @@ theorem DirectSum.SubmoduleIsInternal.isometry_L2_of_orthogonal_family_symm_appl
 /-- An orthonormal basis on a fintype `ι` for an inner product space induces an isometry with
 `euclidean_space 𝕜 ι`. -/
 def Basis.isometryEuclideanOfOrthonormal (v : Basis ι 𝕜 E) (hv : Orthonormal 𝕜 v) : E ≃ₗᵢ[𝕜] EuclideanSpace 𝕜 ι :=
-  v.equiv_fun.isometry_of_inner
+  v.equivFun.isometryOfInner
     (by
       intro x y
       let p : EuclideanSpace 𝕜 ι := v.equiv_fun x
@@ -161,13 +163,23 @@ def Basis.isometryEuclideanOfOrthonormal (v : Basis ι 𝕜 E) (hv : Orthonormal
 
 @[simp]
 theorem Basis.coe_isometry_euclidean_of_orthonormal (v : Basis ι 𝕜 E) (hv : Orthonormal 𝕜 v) :
-    (v.isometry_euclidean_of_orthonormal hv : E → EuclideanSpace 𝕜 ι) = v.equiv_fun :=
+    (v.isometryEuclideanOfOrthonormal hv : E → EuclideanSpace 𝕜 ι) = v.equivFun :=
   rfl
 
 @[simp]
 theorem Basis.coe_isometry_euclidean_of_orthonormal_symm (v : Basis ι 𝕜 E) (hv : Orthonormal 𝕜 v) :
-    ((v.isometry_euclidean_of_orthonormal hv).symm : EuclideanSpace 𝕜 ι → E) = v.equiv_fun.symm :=
+    ((v.isometryEuclideanOfOrthonormal hv).symm : EuclideanSpace 𝕜 ι → E) = v.equivFun.symm :=
   rfl
+
+/-- If `f : E ≃ₗᵢ[𝕜] E'` is a linear isometry of inner product spaces then an orthonormal basis `v`
+of `E` determines a linear isometry `e : E' ≃ₗᵢ[𝕜] euclidean_space 𝕜 ι`. This result states that
+`e` may be obtained either by transporting `v` to `E'` or by composing with the linear isometry
+`E ≃ₗᵢ[𝕜] euclidean_space 𝕜 ι` provided by `v`. -/
+@[simp]
+theorem Basis.map_isometry_euclidean_of_orthonormal (v : Basis ι 𝕜 E) (hv : Orthonormal 𝕜 v) (f : E ≃ₗᵢ[𝕜] E') :
+    (v.map f.toLinearEquiv).isometryEuclideanOfOrthonormal (hv.map_linear_isometry_equiv f) =
+      f.symm.trans (v.isometryEuclideanOfOrthonormal hv) :=
+  LinearIsometryEquiv.to_linear_equiv_injective <| v.map_equiv_fun _
 
 end
 
@@ -191,7 +203,7 @@ theorem Complex.isometry_euclidean_symm_apply (x : EuclideanSpace ℝ (Finₓ 2)
     
 
 theorem Complex.isometry_euclidean_proj_eq_self (z : ℂ) :
-    ↑(Complex.isometryEuclidean z 0) + ↑(Complex.isometryEuclidean z 1) * (I : ℂ) = z := by
+    ↑(Complex.isometryEuclidean z 0) + ↑(Complex.isometryEuclidean z 1) * (i : ℂ) = z := by
   rw [← Complex.isometry_euclidean_symm_apply (Complex.isometryEuclidean z),
     complex.isometry_euclidean.symm_apply_apply z]
 
@@ -204,6 +216,25 @@ theorem Complex.isometry_euclidean_apply_zero (z : ℂ) : Complex.isometryEuclid
 theorem Complex.isometry_euclidean_apply_one (z : ℂ) : Complex.isometryEuclidean z 1 = z.im := by
   conv_rhs => rw [← Complex.isometry_euclidean_proj_eq_self z]
   simp
+
+/-- The isometry between `ℂ` and a two-dimensional real inner product space given by a basis. -/
+def Complex.isometryOfOrthonormal {v : Basis (Finₓ 2) ℝ F} (hv : Orthonormal ℝ v) : ℂ ≃ₗᵢ[ℝ] F :=
+  Complex.isometryEuclidean.trans (v.isometryEuclideanOfOrthonormal hv).symm
+
+@[simp]
+theorem Complex.map_isometry_of_orthonormal {v : Basis (Finₓ 2) ℝ F} (hv : Orthonormal ℝ v) (f : F ≃ₗᵢ[ℝ] F') :
+    Complex.isometryOfOrthonormal (hv.map_linear_isometry_equiv f) = (Complex.isometryOfOrthonormal hv).trans f := by
+  simp [Complex.isometryOfOrthonormal, LinearIsometryEquiv.trans_assoc]
+
+theorem Complex.isometry_of_orthonormal_symm_apply {v : Basis (Finₓ 2) ℝ F} (hv : Orthonormal ℝ v) (f : F) :
+    (Complex.isometryOfOrthonormal hv).symm f = (v.Coord 0 f : ℂ) + (v.Coord 1 f : ℂ) * I := by
+  simp [Complex.isometryOfOrthonormal]
+
+theorem Complex.isometry_of_orthonormal_apply {v : Basis (Finₓ 2) ℝ F} (hv : Orthonormal ℝ v) (z : ℂ) :
+    Complex.isometryOfOrthonormal hv z = z.re • v 0 + z.im • v 1 := by
+  simp [Complex.isometryOfOrthonormal,
+    (by
+      decide : (Finset.univ : Finset (Finₓ 2)) = {0, 1})]
 
 open FiniteDimensional
 

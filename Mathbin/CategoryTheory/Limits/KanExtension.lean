@@ -34,7 +34,7 @@ universe v v₁ v₂ v₃ u₁ u₂ u₃
 
 variable {S : Type u₁} {L : Type u₂} {D : Type u₃}
 
-variable [category.{v₁} S] [category.{v₂} L] [category.{v₃} D]
+variable [Category.{v₁} S] [Category.{v₂} L] [Category.{v₃} D]
 
 variable (ι : S ⥤ L)
 
@@ -43,17 +43,17 @@ namespace Ran
 attribute [local simp] structured_arrow.proj
 
 /-- The diagram indexed by `Ran.index ι x` used to define `Ran`. -/
-abbrev diagram (F : S ⥤ D) (x : L) : structured_arrow x ι ⥤ D :=
-  structured_arrow.proj x ι ⋙ F
+abbrev diagram (F : S ⥤ D) (x : L) : StructuredArrow x ι ⥤ D :=
+  StructuredArrow.proj x ι ⋙ F
 
 variable {ι}
 
 /-- A cone over `Ran.diagram ι F x` used to define `Ran`. -/
 @[simp]
-def cone {F : S ⥤ D} {G : L ⥤ D} (x : L) (f : ι ⋙ G ⟶ F) : cone (diagram ι F x) where
+def cone {F : S ⥤ D} {G : L ⥤ D} (x : L) (f : ι ⋙ G ⟶ F) : Cone (diagram ι F x) where
   x := G.obj x
   π :=
-    { app := fun i => G.map i.hom ≫ f.app i.right,
+    { app := fun i => G.map i.Hom ≫ f.app i.right,
       naturality' := by
         rintro ⟨⟨il⟩, ir, i⟩ ⟨⟨jl⟩, jr, j⟩ ⟨⟨⟨fl⟩⟩, fr, ff⟩
         dsimp  at *
@@ -66,9 +66,9 @@ variable (ι)
 
 /-- An auxiliary definition used to define `Ran`. -/
 @[simps]
-def loc (F : S ⥤ D) [∀ x, has_limit (diagram ι F x)] : L ⥤ D where
+def loc (F : S ⥤ D) [∀ x, HasLimit (diagram ι F x)] : L ⥤ D where
   obj := fun x => limit (diagram ι F x)
-  map := fun x y f => limit.pre (diagram _ _ _) (structured_arrow.map f : structured_arrow _ ι ⥤ _)
+  map := fun x y f => limit.pre (diagram _ _ _) (StructuredArrow.map f : StructuredArrow _ ι ⥤ _)
   map_id' := by
     intro l
     ext j
@@ -84,10 +84,10 @@ def loc (F : S ⥤ D) [∀ x, has_limit (diagram ι F x)] : L ⥤ D where
 
 /-- An auxiliary definition used to define `Ran` and `Ran.adjunction`. -/
 @[simps]
-def Equivₓ (F : S ⥤ D) [∀ x, has_limit (diagram ι F x)] (G : L ⥤ D) :
-    (G ⟶ loc ι F) ≃ (((whiskering_left _ _ _).obj ι).obj G ⟶ F) where
+def Equivₓ (F : S ⥤ D) [∀ x, HasLimit (diagram ι F x)] (G : L ⥤ D) :
+    (G ⟶ loc ι F) ≃ (((whiskeringLeft _ _ _).obj ι).obj G ⟶ F) where
   toFun := fun f =>
-    { app := fun x => f.app _ ≫ limit.π (diagram ι F (ι.obj x)) (structured_arrow.mk (𝟙 _)),
+    { app := fun x => f.app _ ≫ limit.π (diagram ι F (ι.obj x)) (StructuredArrow.mk (𝟙 _)),
       naturality' := by
         intro x y ff
         dsimp only [whiskering_left]
@@ -121,8 +121,8 @@ end Ran
 
 /-- The right Kan extension of a functor. -/
 @[simps]
-def Ran [∀ X, has_limits_of_shape (structured_arrow X ι) D] : (S ⥤ D) ⥤ L ⥤ D :=
-  adjunction.right_adjoint_of_equiv (fun F G => (Ran.equiv ι G F).symm)
+def Ran [∀ X, HasLimitsOfShape (StructuredArrow X ι) D] : (S ⥤ D) ⥤ L ⥤ D :=
+  Adjunction.rightAdjointOfEquiv (fun F G => (Ran.equiv ι G F).symm)
     (by
       tidy)
 
@@ -131,11 +131,11 @@ namespace Ran
 variable (D)
 
 /-- The adjunction associated to `Ran`. -/
-def adjunction [∀ X, has_limits_of_shape (structured_arrow X ι) D] : (whiskering_left _ _ D).obj ι ⊣ Ran ι :=
-  adjunction.adjunction_of_equiv_right _ _
+def adjunction [∀ X, HasLimitsOfShape (StructuredArrow X ι) D] : (whiskeringLeft _ _ D).obj ι ⊣ ran ι :=
+  Adjunction.adjunctionOfEquivRight _ _
 
-theorem reflective [full ι] [faithful ι] [∀ X, has_limits_of_shape (structured_arrow X ι) D] :
-    is_iso (adjunction D ι).counit := by
+theorem reflective [Full ι] [Faithful ι] [∀ X, HasLimitsOfShape (StructuredArrow X ι) D] :
+    IsIso (adjunction D ι).counit := by
   apply nat_iso.is_iso_of_is_iso_app _
   intro F
   apply nat_iso.is_iso_of_is_iso_app _
@@ -153,17 +153,17 @@ namespace Lan
 attribute [local simp] costructured_arrow.proj
 
 /-- The diagram indexed by `Ran.index ι x` used to define `Ran`. -/
-abbrev diagram (F : S ⥤ D) (x : L) : costructured_arrow ι x ⥤ D :=
-  costructured_arrow.proj ι x ⋙ F
+abbrev diagram (F : S ⥤ D) (x : L) : CostructuredArrow ι x ⥤ D :=
+  CostructuredArrow.proj ι x ⋙ F
 
 variable {ι}
 
 /-- A cocone over `Lan.diagram ι F x` used to define `Lan`. -/
 @[simp]
-def cocone {F : S ⥤ D} {G : L ⥤ D} (x : L) (f : F ⟶ ι ⋙ G) : cocone (diagram ι F x) where
+def cocone {F : S ⥤ D} {G : L ⥤ D} (x : L) (f : F ⟶ ι ⋙ G) : Cocone (diagram ι F x) where
   x := G.obj x
   ι :=
-    { app := fun i => f.app i.left ≫ G.map i.hom,
+    { app := fun i => f.app i.left ≫ G.map i.Hom,
       naturality' := by
         rintro ⟨ir, ⟨il⟩, i⟩ ⟨jl, ⟨jr⟩, j⟩ ⟨fl, ⟨⟨fl⟩⟩, ff⟩
         dsimp  at *
@@ -175,9 +175,9 @@ variable (ι)
 
 /-- An auxiliary definition used to define `Lan`. -/
 @[simps]
-def loc (F : S ⥤ D) [I : ∀ x, has_colimit (diagram ι F x)] : L ⥤ D where
+def loc (F : S ⥤ D) [I : ∀ x, HasColimit (diagram ι F x)] : L ⥤ D where
   obj := fun x => colimit (diagram ι F x)
-  map := fun x y f => colimit.pre (diagram _ _ _) (costructured_arrow.map f : costructured_arrow ι _ ⥤ _)
+  map := fun x y f => colimit.pre (diagram _ _ _) (CostructuredArrow.map f : CostructuredArrow ι _ ⥤ _)
   map_id' := by
     intro l
     ext j
@@ -200,8 +200,8 @@ def loc (F : S ⥤ D) [I : ∀ x, has_colimit (diagram ι F x)] : L ⥤ D where
 
 /-- An auxiliary definition used to define `Lan` and `Lan.adjunction`. -/
 @[simps]
-def Equivₓ (F : S ⥤ D) [I : ∀ x, has_colimit (diagram ι F x)] (G : L ⥤ D) :
-    (loc ι F ⟶ G) ≃ (F ⟶ ((whiskering_left _ _ _).obj ι).obj G) where
+def Equivₓ (F : S ⥤ D) [I : ∀ x, HasColimit (diagram ι F x)] (G : L ⥤ D) :
+    (loc ι F ⟶ G) ≃ (F ⟶ ((whiskeringLeft _ _ _).obj ι).obj G) where
   toFun := fun f =>
     { app := fun x => by
         apply colimit.ι (diagram ι F (ι.obj x)) (costructured_arrow.mk (𝟙 _)) ≫ f.app _,
@@ -249,8 +249,8 @@ end Lan
 
 /-- The left Kan extension of a functor. -/
 @[simps]
-def Lan [∀ X, has_colimits_of_shape (costructured_arrow ι X) D] : (S ⥤ D) ⥤ L ⥤ D :=
-  adjunction.left_adjoint_of_equiv (fun F G => Lan.equiv ι F G)
+def Lan [∀ X, HasColimitsOfShape (CostructuredArrow ι X) D] : (S ⥤ D) ⥤ L ⥤ D :=
+  Adjunction.leftAdjointOfEquiv (fun F G => Lan.equiv ι F G)
     (by
       tidy)
 
@@ -259,11 +259,11 @@ namespace Lan
 variable (D)
 
 /-- The adjunction associated to `Lan`. -/
-def adjunction [∀ X, has_colimits_of_shape (costructured_arrow ι X) D] : Lan ι ⊣ (whiskering_left _ _ D).obj ι :=
-  adjunction.adjunction_of_equiv_left _ _
+def adjunction [∀ X, HasColimitsOfShape (CostructuredArrow ι X) D] : lan ι ⊣ (whiskeringLeft _ _ D).obj ι :=
+  Adjunction.adjunctionOfEquivLeft _ _
 
-theorem coreflective [full ι] [faithful ι] [∀ X, has_colimits_of_shape (costructured_arrow ι X) D] :
-    is_iso (adjunction D ι).Unit := by
+theorem coreflective [Full ι] [Faithful ι] [∀ X, HasColimitsOfShape (CostructuredArrow ι X) D] :
+    IsIso (adjunction D ι).Unit := by
   apply nat_iso.is_iso_of_is_iso_app _
   intro F
   apply nat_iso.is_iso_of_is_iso_app _

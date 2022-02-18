@@ -85,11 +85,11 @@ theorem DirectSum.to_add_monoid_algebra_of (i : ι) (m : M) :
 
 @[simp]
 theorem AddMonoidAlgebra.to_direct_sum_to_add_monoid_algebra (f : AddMonoidAlgebra M ι) :
-    f.to_direct_sum.to_add_monoid_algebra = f :=
+    f.toDirectSum.toAddMonoidAlgebra = f :=
   Finsupp.to_dfinsupp_to_finsupp f
 
 @[simp]
-theorem DirectSum.to_add_monoid_algebra_to_direct_sum (f : ⨁ i : ι, M) : f.to_add_monoid_algebra.to_direct_sum = f :=
+theorem DirectSum.to_add_monoid_algebra_to_direct_sum (f : ⨁ i : ι, M) : f.toAddMonoidAlgebra.toDirectSum = f :=
   Dfinsupp.to_finsupp_to_dfinsupp f
 
 end
@@ -109,12 +109,12 @@ theorem to_direct_sum_zero [Semiringₓ M] : (0 : AddMonoidAlgebra M ι).toDirec
 
 @[simp]
 theorem to_direct_sum_add [Semiringₓ M] (f g : AddMonoidAlgebra M ι) :
-    (f + g).toDirectSum = f.to_direct_sum + g.to_direct_sum :=
+    (f + g).toDirectSum = f.toDirectSum + g.toDirectSum :=
   Finsupp.to_dfinsupp_add _ _
 
 @[simp]
 theorem to_direct_sum_mul [DecidableEq ι] [AddMonoidₓ ι] [Semiringₓ M] (f g : AddMonoidAlgebra M ι) :
-    (f * g).toDirectSum = f.to_direct_sum * g.to_direct_sum := by
+    (f * g).toDirectSum = f.toDirectSum * g.toDirectSum := by
   let to_hom : AddMonoidAlgebra M ι →+ ⨁ i : ι, M := ⟨to_direct_sum, to_direct_sum_zero, to_direct_sum_add⟩
   show to_hom (f * g) = to_hom f * to_hom g
   revert f g
@@ -133,17 +133,17 @@ variable [DecidableEq ι]
 
 @[simp]
 theorem to_add_monoid_algebra_zero [Semiringₓ M] [∀ m : M, Decidable (m ≠ 0)] :
-    to_add_monoid_algebra 0 = (0 : AddMonoidAlgebra M ι) :=
+    toAddMonoidAlgebra 0 = (0 : AddMonoidAlgebra M ι) :=
   Dfinsupp.to_finsupp_zero
 
 @[simp]
 theorem to_add_monoid_algebra_add [Semiringₓ M] [∀ m : M, Decidable (m ≠ 0)] (f g : ⨁ i : ι, M) :
-    (f + g).toAddMonoidAlgebra = to_add_monoid_algebra f + to_add_monoid_algebra g :=
+    (f + g).toAddMonoidAlgebra = toAddMonoidAlgebra f + toAddMonoidAlgebra g :=
   Dfinsupp.to_finsupp_add _ _
 
 @[simp]
 theorem to_add_monoid_algebra_mul [AddMonoidₓ ι] [Semiringₓ M] [∀ m : M, Decidable (m ≠ 0)] (f g : ⨁ i : ι, M) :
-    (f * g).toAddMonoidAlgebra = to_add_monoid_algebra f * to_add_monoid_algebra g := by
+    (f * g).toAddMonoidAlgebra = toAddMonoidAlgebra f * toAddMonoidAlgebra g := by
   apply_fun AddMonoidAlgebra.toDirectSum
   · simp
     
@@ -162,14 +162,14 @@ section Equivs
 
 /-- `add_monoid_algebra.to_direct_sum` and `direct_sum.to_add_monoid_algebra` together form an
 equiv. -/
-@[simps (config := { fullyApplied := ff })]
+@[simps (config := { fullyApplied := false })]
 def addMonoidAlgebraEquivDirectSum [DecidableEq ι] [Semiringₓ M] [∀ m : M, Decidable (m ≠ 0)] :
     AddMonoidAlgebra M ι ≃ ⨁ i : ι, M :=
   { finsuppEquivDfinsupp with toFun := AddMonoidAlgebra.toDirectSum, invFun := DirectSum.toAddMonoidAlgebra }
 
 /-- The additive version of `add_monoid_algebra.to_add_monoid_algebra`. Note that this is
 `noncomputable` because `add_monoid_algebra.has_add` is noncomputable. -/
-@[simps (config := { fullyApplied := ff })]
+@[simps (config := { fullyApplied := false })]
 noncomputable def addMonoidAlgebraAddEquivDirectSum [DecidableEq ι] [Semiringₓ M] [∀ m : M, Decidable (m ≠ 0)] :
     AddMonoidAlgebra M ι ≃+ ⨁ i : ι, M :=
   { addMonoidAlgebraEquivDirectSum with toFun := AddMonoidAlgebra.toDirectSum, invFun := DirectSum.toAddMonoidAlgebra,
@@ -177,7 +177,7 @@ noncomputable def addMonoidAlgebraAddEquivDirectSum [DecidableEq ι] [Semiring�
 
 /-- The ring version of `add_monoid_algebra.to_add_monoid_algebra`. Note that this is
 `noncomputable` because `add_monoid_algebra.has_add` is noncomputable. -/
-@[simps (config := { fullyApplied := ff })]
+@[simps (config := { fullyApplied := false })]
 noncomputable def addMonoidAlgebraRingEquivDirectSum [DecidableEq ι] [AddMonoidₓ ι] [Semiringₓ M]
     [∀ m : M, Decidable (m ≠ 0)] : AddMonoidAlgebra M ι ≃+* ⨁ i : ι, M :=
   { (addMonoidAlgebraAddEquivDirectSum : AddMonoidAlgebra M ι ≃+ ⨁ i : ι, M) with toFun := AddMonoidAlgebra.toDirectSum,
@@ -185,7 +185,7 @@ noncomputable def addMonoidAlgebraRingEquivDirectSum [DecidableEq ι] [AddMonoid
 
 /-- The algebra version of `add_monoid_algebra.to_add_monoid_algebra`. Note that this is
 `noncomputable` because `add_monoid_algebra.has_add` is noncomputable. -/
-@[simps (config := { fullyApplied := ff })]
+@[simps (config := { fullyApplied := false })]
 noncomputable def addMonoidAlgebraAlgEquivDirectSum [DecidableEq ι] [AddMonoidₓ ι] [CommSemiringₓ R] [Semiringₓ A]
     [Algebra R A] [∀ m : A, Decidable (m ≠ 0)] : AddMonoidAlgebra A ι ≃ₐ[R] ⨁ i : ι, A :=
   { (addMonoidAlgebraRingEquivDirectSum : AddMonoidAlgebra A ι ≃+* ⨁ i : ι, A) with

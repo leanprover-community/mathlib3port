@@ -20,7 +20,7 @@ def HomRel C [Quiver C] :=
 
 namespace CategoryTheory
 
-variable {C : Type _} [category C] (r : HomRel C)
+variable {C : Type _} [Category C] (r : HomRel C)
 
 include r
 
@@ -38,7 +38,7 @@ attribute [instance] congruence.is_equiv
 structure Quotientₓ where
   as : C
 
-instance [Inhabited C] : Inhabited (Quotientₓ r) :=
+instance [Inhabited C] : Inhabited (Quotient r) :=
   ⟨{ as := default }⟩
 
 namespace Quotientₓ
@@ -47,63 +47,63 @@ namespace Quotientₓ
 inductive comp_closure ⦃s t : C⦄ : (s ⟶ t) → (s ⟶ t) → Prop
   | intro {a b} (f : s ⟶ a) (m₁ m₂ : a ⟶ b) (g : b ⟶ t) (h : r m₁ m₂) : comp_closure (f ≫ m₁ ≫ g) (f ≫ m₂ ≫ g)
 
-theorem comp_left {a b c : C} (f : a ⟶ b) : ∀ g₁ g₂ : b ⟶ c h : comp_closure r g₁ g₂, comp_closure r (f ≫ g₁) (f ≫ g₂)
+theorem comp_left {a b c : C} (f : a ⟶ b) : ∀ g₁ g₂ : b ⟶ c h : CompClosure r g₁ g₂, CompClosure r (f ≫ g₁) (f ≫ g₂)
   | _, _, ⟨x, m₁, m₂, y, h⟩ => by
     simpa using comp_closure.intro (f ≫ x) m₁ m₂ y h
 
-theorem comp_right {a b c : C} (g : b ⟶ c) : ∀ f₁ f₂ : a ⟶ b h : comp_closure r f₁ f₂, comp_closure r (f₁ ≫ g) (f₂ ≫ g)
+theorem comp_right {a b c : C} (g : b ⟶ c) : ∀ f₁ f₂ : a ⟶ b h : CompClosure r f₁ f₂, CompClosure r (f₁ ≫ g) (f₂ ≫ g)
   | _, _, ⟨x, m₁, m₂, y, h⟩ => by
     simpa using comp_closure.intro x m₁ m₂ (y ≫ g) h
 
 /-- Hom-sets of the quotient category. -/
-def hom (s t : Quotientₓ r) :=
-  Quot <| @comp_closure C _ r s.as t.as
+def hom (s t : Quotient r) :=
+  Quot <| @CompClosure C _ r s.as t.as
 
-instance (a : Quotientₓ r) : Inhabited (hom r a a) :=
+instance (a : Quotient r) : Inhabited (Hom r a a) :=
   ⟨Quot.mk _ (𝟙 a.as)⟩
 
 /-- Composition in the quotient category. -/
-def comp ⦃a b c : Quotientₓ r⦄ : hom r a b → hom r b c → hom r a c := fun hf hg =>
+def comp ⦃a b c : Quotient r⦄ : Hom r a b → Hom r b c → Hom r a c := fun hf hg =>
   Quot.liftOn hf
     (fun f => Quot.liftOn hg (fun g => Quot.mk _ (f ≫ g)) fun g₁ g₂ h => Quot.sound <| comp_left r f g₁ g₂ h)
     fun f₁ f₂ h => (Quot.induction_on hg) fun g => Quot.sound <| comp_right r g f₁ f₂ h
 
 @[simp]
-theorem comp_mk {a b c : Quotientₓ r} (f : a.as ⟶ b.as) (g : b.as ⟶ c.as) :
+theorem comp_mk {a b c : Quotient r} (f : a.as ⟶ b.as) (g : b.as ⟶ c.as) :
     comp r (Quot.mk _ f) (Quot.mk _ g) = Quot.mk _ (f ≫ g) :=
   rfl
 
-instance category : category (Quotientₓ r) where
-  Hom := hom r
+instance category : Category (Quotient r) where
+  Hom := Hom r
   id := fun a => Quot.mk _ (𝟙 a.as)
   comp := comp r
 
 /-- The functor from a category to its quotient. -/
 @[simps]
-def Functor : C ⥤ Quotientₓ r where
+def Functor : C ⥤ Quotient r where
   obj := fun a => { as := a }
   map := fun _ _ f => Quot.mk _ f
 
-noncomputable instance : full (Functor r) where
+noncomputable instance : Full (functor r) where
   Preimage := fun X Y f => Quot.out f
 
-instance : ess_surj (Functor r) where
+instance : EssSurj (functor r) where
   mem_ess_image := fun Y =>
     ⟨Y.as,
-      ⟨eq_to_iso
+      ⟨eqToIso
           (by
             ext
             rfl)⟩⟩
 
-protected theorem induction {P : ∀ {a b : Quotientₓ r}, (a ⟶ b) → Prop}
-    (h : ∀ {x y : C} f : x ⟶ y, P ((Functor r).map f)) : ∀ {a b : Quotientₓ r} f : a ⟶ b, P f := by
+protected theorem induction {P : ∀ {a b : Quotient r}, (a ⟶ b) → Prop}
+    (h : ∀ {x y : C} f : x ⟶ y, P ((functor r).map f)) : ∀ {a b : Quotient r} f : a ⟶ b, P f := by
   rintro ⟨x⟩ ⟨y⟩ ⟨f⟩
   exact h f
 
-protected theorem sound {a b : C} {f₁ f₂ : a ⟶ b} (h : r f₁ f₂) : (Functor r).map f₁ = (Functor r).map f₂ := by
+protected theorem sound {a b : C} {f₁ f₂ : a ⟶ b} (h : r f₁ f₂) : (functor r).map f₁ = (functor r).map f₂ := by
   simpa using Quot.sound (comp_closure.intro (𝟙 a) f₁ f₂ (𝟙 b) h)
 
-theorem functor_map_eq_iff [congruence r] {X Y : C} (f f' : X ⟶ Y) : (Functor r).map f = (Functor r).map f' ↔ r f f' :=
+theorem functor_map_eq_iff [Congruence r] {X Y : C} (f f' : X ⟶ Y) : (functor r).map f = (functor r).map f' ↔ r f f' :=
   by
   constructor
   · erw [Quot.eq]
@@ -125,13 +125,13 @@ theorem functor_map_eq_iff [congruence r] {X Y : C} (f f' : X ⟶ Y) : (Functor 
   · apply Quotientₓ.sound
     
 
-variable {D : Type _} [category D] (F : C ⥤ D) (H : ∀ x y : C f₁ f₂ : x ⟶ y, r f₁ f₂ → F.map f₁ = F.map f₂)
+variable {D : Type _} [Category D] (F : C ⥤ D) (H : ∀ x y : C f₁ f₂ : x ⟶ y, r f₁ f₂ → F.map f₁ = F.map f₂)
 
 include H
 
 /-- The induced functor on the quotient category. -/
 @[simps]
-def lift : Quotientₓ r ⥤ D where
+def lift : Quotient r ⥤ D where
   obj := fun a => F.obj a.as
   map := fun a b hf =>
     Quot.liftOn hf (fun f => F.map f)
@@ -144,20 +144,20 @@ def lift : Quotientₓ r ⥤ D where
     exact F.map_comp f g
 
 /-- The original functor factors through the induced functor. -/
-def lift.is_lift : Functor r ⋙ lift r F H ≅ F :=
-  nat_iso.of_components (fun X => iso.refl _)
+def lift.is_lift : functor r ⋙ lift r F H ≅ F :=
+  NatIso.ofComponents (fun X => Iso.refl _)
     (by
       tidy)
 
 @[simp]
-theorem lift.is_lift_hom (X : C) : (lift.is_lift r F H).Hom.app X = 𝟙 (F.obj X) :=
+theorem lift.is_lift_hom (X : C) : (lift.isLift r F H).Hom.app X = 𝟙 (F.obj X) :=
   rfl
 
 @[simp]
-theorem lift.is_lift_inv (X : C) : (lift.is_lift r F H).inv.app X = 𝟙 (F.obj X) :=
+theorem lift.is_lift_inv (X : C) : (lift.isLift r F H).inv.app X = 𝟙 (F.obj X) :=
   rfl
 
-theorem lift_map_functor_map {X Y : C} (f : X ⟶ Y) : (lift r F H).map ((Functor r).map f) = F.map f := by
+theorem lift_map_functor_map {X Y : C} (f : X ⟶ Y) : (lift r F H).map ((functor r).map f) = F.map f := by
   rw [← nat_iso.naturality_1 (lift.is_lift r F H)]
   dsimp
   simp

@@ -51,13 +51,13 @@ variable {τ : Type _} {S : Type _}
 /-- A `mv_polynomial φ` is symmetric if it is invariant under
 permutations of its variables by the  `rename` operation -/
 def is_symmetric [CommSemiringₓ R] (φ : MvPolynomial σ R) : Prop :=
-  ∀ e : perm σ, rename e φ = φ
+  ∀ e : Perm σ, rename e φ = φ
 
 variable (σ R)
 
 /-- The subalgebra of symmetric `mv_polynomial`s. -/
 def symmetric_subalgebra [CommSemiringₓ R] : Subalgebra R (MvPolynomial σ R) where
-  Carrier := SetOf is_symmetric
+  Carrier := SetOf IsSymmetric
   algebra_map_mem' := fun r e => rename_C e r
   mul_mem' := fun a b ha hb e => by
     rw [AlgHom.map_mul, ha, hb]
@@ -68,7 +68,7 @@ variable {σ R}
 
 @[simp]
 theorem mem_symmetric_subalgebra [CommSemiringₓ R] (p : MvPolynomial σ R) :
-    p ∈ symmetric_subalgebra σ R ↔ p.is_symmetric :=
+    p ∈ symmetricSubalgebra σ R ↔ p.IsSymmetric :=
   Iff.rfl
 
 namespace IsSymmetric
@@ -78,28 +78,28 @@ section CommSemiringₓ
 variable [CommSemiringₓ R] [CommSemiringₓ S] {φ ψ : MvPolynomial σ R}
 
 @[simp]
-theorem C (r : R) : is_symmetric (C r : MvPolynomial σ R) :=
-  (symmetric_subalgebra σ R).algebra_map_mem r
+theorem C (r : R) : IsSymmetric (c r : MvPolynomial σ R) :=
+  (symmetricSubalgebra σ R).algebra_map_mem r
 
 @[simp]
-theorem zero : is_symmetric (0 : MvPolynomial σ R) :=
-  (symmetric_subalgebra σ R).zero_mem
+theorem zero : IsSymmetric (0 : MvPolynomial σ R) :=
+  (symmetricSubalgebra σ R).zero_mem
 
 @[simp]
-theorem one : is_symmetric (1 : MvPolynomial σ R) :=
-  (symmetric_subalgebra σ R).one_mem
+theorem one : IsSymmetric (1 : MvPolynomial σ R) :=
+  (symmetricSubalgebra σ R).one_mem
 
-theorem add (hφ : is_symmetric φ) (hψ : is_symmetric ψ) : is_symmetric (φ + ψ) :=
-  (symmetric_subalgebra σ R).add_mem hφ hψ
+theorem add (hφ : IsSymmetric φ) (hψ : IsSymmetric ψ) : IsSymmetric (φ + ψ) :=
+  (symmetricSubalgebra σ R).add_mem hφ hψ
 
-theorem mul (hφ : is_symmetric φ) (hψ : is_symmetric ψ) : is_symmetric (φ * ψ) :=
-  (symmetric_subalgebra σ R).mul_mem hφ hψ
+theorem mul (hφ : IsSymmetric φ) (hψ : IsSymmetric ψ) : IsSymmetric (φ * ψ) :=
+  (symmetricSubalgebra σ R).mul_mem hφ hψ
 
-theorem smul (r : R) (hφ : is_symmetric φ) : is_symmetric (r • φ) :=
-  (symmetric_subalgebra σ R).smul_mem hφ r
+theorem smul (r : R) (hφ : IsSymmetric φ) : IsSymmetric (r • φ) :=
+  (symmetricSubalgebra σ R).smul_mem hφ r
 
 @[simp]
-theorem map (hφ : is_symmetric φ) (f : R →+* S) : is_symmetric (map f φ) := fun e => by
+theorem map (hφ : IsSymmetric φ) (f : R →+* S) : IsSymmetric (map f φ) := fun e => by
   rw [← map_rename, hφ]
 
 end CommSemiringₓ
@@ -108,11 +108,11 @@ section CommRingₓ
 
 variable [CommRingₓ R] {φ ψ : MvPolynomial σ R}
 
-theorem neg (hφ : is_symmetric φ) : is_symmetric (-φ) :=
-  (symmetric_subalgebra σ R).neg_mem hφ
+theorem neg (hφ : IsSymmetric φ) : IsSymmetric (-φ) :=
+  (symmetricSubalgebra σ R).neg_mem hφ
 
-theorem sub (hφ : is_symmetric φ) (hψ : is_symmetric ψ) : is_symmetric (φ - ψ) :=
-  (symmetric_subalgebra σ R).sub_mem hφ hψ
+theorem sub (hφ : IsSymmetric φ) (hψ : IsSymmetric ψ) : IsSymmetric (φ - ψ) :=
+  (symmetricSubalgebra σ R).sub_mem hφ hψ
 
 end CommRingₓ
 
@@ -126,10 +126,10 @@ variable (σ R) [CommSemiringₓ R] [CommSemiringₓ S] [Fintype σ] [Fintype τ
 
 /-- The `n`th elementary symmetric `mv_polynomial σ R`. -/
 def esymm (n : ℕ) : MvPolynomial σ R :=
-  ∑ t in powerset_len n univ, ∏ i in t, X i
+  ∑ t in powersetLen n univ, ∏ i in t, x i
 
 /-- We can define `esymm σ R n` by summing over a subtype instead of over `powerset_len`. -/
-theorem esymm_eq_sum_subtype (n : ℕ) : esymm σ R n = ∑ t : { s : Finset σ // s.card = n }, ∏ i in (t : Finset σ), X i :=
+theorem esymm_eq_sum_subtype (n : ℕ) : esymm σ R n = ∑ t : { s : Finset σ // s.card = n }, ∏ i in (t : Finset σ), x i :=
   by
   rw [esymm]
   let i : ∀ a : Finset σ, a ∈ powerset_len n univ → { s : Finset σ // s.card = n } := fun a ha =>
@@ -147,7 +147,7 @@ theorem esymm_eq_sum_subtype (n : ℕ) : esymm σ R n = ∑ t : { s : Finset σ 
 
 /-- We can define `esymm σ R n` as a sum over explicit monomials -/
 theorem esymm_eq_sum_monomial (n : ℕ) :
-    esymm σ R n = ∑ t in powerset_len n univ, monomial (∑ i in t, Finsupp.single i 1) 1 := by
+    esymm σ R n = ∑ t in powersetLen n univ, monomial (∑ i in t, Finsupp.single i 1) 1 := by
   refine' sum_congr rfl fun x hx => _
   rw [monic_monomial_eq]
   rw [Finsupp.prod_pow]
@@ -194,13 +194,13 @@ theorem rename_esymm (n : ℕ) (e : σ ≃ τ) : rename e (esymm σ R n) = esymm
   intros
   simp
 
-theorem esymm_is_symmetric (n : ℕ) : is_symmetric (esymm σ R n) := by
+theorem esymm_is_symmetric (n : ℕ) : IsSymmetric (esymm σ R n) := by
   intro
   rw [rename_esymm]
 
 theorem support_esymm'' (n : ℕ) [DecidableEq σ] [Nontrivial R] :
     (esymm σ R n).support =
-      (powerset_len n (univ : Finset σ)).bUnion fun t =>
+      (powersetLen n (univ : Finset σ)).bUnion fun t =>
         (Finsupp.single (∑ i : σ in t, Finsupp.single i 1) (1 : R)).support :=
   by
   rw [esymm_eq_sum_monomial]
@@ -219,14 +219,14 @@ theorem support_esymm'' (n : ℕ) [DecidableEq σ] [Nontrivial R] :
     simp [Finsupp.support_single_disjoint]
 
 theorem support_esymm' (n : ℕ) [DecidableEq σ] [Nontrivial R] :
-    (esymm σ R n).support = (powerset_len n (univ : Finset σ)).bUnion fun t => {∑ i : σ in t, Finsupp.single i 1} := by
+    (esymm σ R n).support = (powersetLen n (univ : Finset σ)).bUnion fun t => {∑ i : σ in t, Finsupp.single i 1} := by
   rw [support_esymm'']
   congr
   funext
   exact Finsupp.support_single_ne_zero one_ne_zero
 
 theorem support_esymm (n : ℕ) [DecidableEq σ] [Nontrivial R] :
-    (esymm σ R n).support = (powerset_len n (univ : Finset σ)).Image fun t => ∑ i : σ in t, Finsupp.single i 1 := by
+    (esymm σ R n).support = (powersetLen n (univ : Finset σ)).Image fun t => ∑ i : σ in t, Finsupp.single i 1 := by
   rw [support_esymm']
   exact bUnion_singleton
 

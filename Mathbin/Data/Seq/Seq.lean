@@ -14,7 +14,7 @@ def Streamₓ.IsSeq {α : Type u} (s : Streamₓ (Option α)) : Prop :=
   It is encoded as an infinite stream of options such that if `f n = none`, then
   `f m = none` for all `m ≥ n`. -/
 def Seqₓₓ (α : Type u) : Type u :=
-  { f : Streamₓ (Option α) // f.is_seq }
+  { f : Streamₓ (Option α) // f.IsSeq }
 
 /-- `seq1 α` is the type of nonempty sequences. -/
 def Seq1 α :=
@@ -48,13 +48,13 @@ def terminated_at (s : Seqₓₓ α) (n : ℕ) : Prop :=
   s.nth n = none
 
 /-- It is decidable whether a sequence terminates at a given position. -/
-instance terminated_at_decidable (s : Seqₓₓ α) (n : ℕ) : Decidable (s.terminated_at n) :=
+instance terminated_at_decidable (s : Seqₓₓ α) (n : ℕ) : Decidable (s.TerminatedAt n) :=
   decidableOfIff' (s.nth n).isNone <| by
     unfold terminated_at <;> cases s.nth n <;> simp
 
 /-- A sequence terminates if there is some position `n` at which it has terminated. -/
 def terminates (s : Seqₓₓ α) : Prop :=
-  ∃ n : ℕ, s.terminated_at n
+  ∃ n : ℕ, s.TerminatedAt n
 
 /-- Functorial action of the functor `option (α × _)` -/
 @[simp]
@@ -82,8 +82,8 @@ theorem le_stable (s : Seqₓₓ α) {m n} (h : m ≤ n) : s.nth m = none → s.
   exacts[id, fun h2 => al (IH h2)]
 
 /-- If a sequence terminated at position `n`, it also terminated at `m ≥ n `. -/
-theorem terminated_stable (s : Seqₓₓ α) {m n : ℕ} (m_le_n : m ≤ n) (terminated_at_m : s.terminated_at m) :
-    s.terminated_at n :=
+theorem terminated_stable (s : Seqₓₓ α) {m n : ℕ} (m_le_n : m ≤ n) (terminated_at_m : s.TerminatedAt m) :
+    s.TerminatedAt n :=
   le_stable s m_le_n terminated_at_m
 
 /-- If `s.nth n = some aₙ` for some value `aₙ`, then there is also some value `aₘ` such
@@ -279,7 +279,7 @@ def of_list (l : List α) : Seqₓₓ α :=
       ⟩
 
 instance coe_list : Coe (List α) (Seqₓₓ α) :=
-  ⟨of_list⟩
+  ⟨ofList⟩
 
 section Bisim
 
@@ -295,9 +295,9 @@ def bisim_o : Option (Seq1 α) → Option (Seq1 α) → Prop
 attribute [simp] bisim_o
 
 def is_bisimulation :=
-  ∀ ⦃s₁ s₂⦄, s₁ ~ s₂ → bisim_o R (destruct s₁) (destruct s₂)
+  ∀ ⦃s₁ s₂⦄, s₁ ~ s₂ → BisimO R (destruct s₁) (destruct s₂)
 
-theorem eq_of_bisim (bisim : is_bisimulation R) {s₁ s₂} (r : s₁ ~ s₂) : s₁ = s₂ := by
+theorem eq_of_bisim (bisim : IsBisimulation R) {s₁ s₂} (r : s₁ ~ s₂) : s₁ = s₂ := by
   apply Subtype.eq
   apply Streamₓ.eq_of_bisim fun x y => ∃ s s' : Seqₓₓ α, s.1 = x ∧ s'.1 = y ∧ R s s'
   dsimp [Streamₓ.IsBisimulation]
@@ -342,7 +342,7 @@ theorem coinduction :
   | ⟨f₁, a₁⟩, ⟨f₂, a₂⟩, hh, ht => Subtype.eq (Streamₓ.coinduction hh fun β fr => ht β fun s => fr s.1)
 
 theorem coinduction2 s (f g : Seqₓₓ α → Seqₓₓ β)
-    (H : ∀ s, bisim_o (fun s1 s2 : Seqₓₓ β => ∃ s : Seqₓₓ α, s1 = f s ∧ s2 = g s) (destruct (f s)) (destruct (g s))) :
+    (H : ∀ s, BisimO (fun s1 s2 : Seqₓₓ β => ∃ s : Seqₓₓ α, s1 = f s ∧ s2 = g s) (destruct (f s)) (destruct (g s))) :
     f s = g s := by
   refine' eq_of_bisim (fun s1 s2 => ∃ s, s1 = f s ∧ s2 = g s) _ ⟨s, rfl, rfl⟩
   intro s1 s2 h
@@ -356,7 +356,7 @@ def of_stream (s : Streamₓ α) : Seqₓₓ α :=
     contradiction⟩
 
 instance coe_stream : Coe (Streamₓ α) (Seqₓₓ α) :=
-  ⟨of_stream⟩
+  ⟨ofStream⟩
 
 /-- Embed a `lazy_list α` as a sequence. Note that even though this
   is non-meta, it will produce infinite sequences if used with
@@ -368,7 +368,7 @@ def of_lazy_list : LazyList α → Seqₓₓ α :=
     | LazyList.cons a l' => some (a, l' ())
 
 instance coe_lazy_list : Coe (LazyList α) (Seqₓₓ α) :=
-  ⟨of_lazy_list⟩
+  ⟨ofLazyList⟩
 
 /-- Translate a sequence into a `lazy_list`. Since `lazy_list` and `list`
   are isomorphic as non-meta types, this function is necessarily meta. -/
@@ -480,20 +480,20 @@ def zip_with (f : α → β → γ) : Seqₓₓ α → Seqₓₓ β → Seqₓ�
 variable {s : Seqₓₓ α} {s' : Seqₓₓ β} {n : ℕ}
 
 theorem zip_with_nth_some {a : α} {b : β} (s_nth_eq_some : s.nth n = some a) (s_nth_eq_some' : s'.nth n = some b)
-    (f : α → β → γ) : (zip_with f s s').nth n = some (f a b) := by
+    (f : α → β → γ) : (zipWith f s s').nth n = some (f a b) := by
   cases' s with st
   have : st n = some a := s_nth_eq_some
   cases' s' with st'
   have : st' n = some b := s_nth_eq_some'
   simp only [zip_with, Seqₓₓ.nth, *]
 
-theorem zip_with_nth_none (s_nth_eq_none : s.nth n = none) (f : α → β → γ) : (zip_with f s s').nth n = none := by
+theorem zip_with_nth_none (s_nth_eq_none : s.nth n = none) (f : α → β → γ) : (zipWith f s s').nth n = none := by
   cases' s with st
   have : st n = none := s_nth_eq_none
   cases' s' with st'
   cases st'_nth_eq : st' n <;> simp only [zip_with, Seqₓₓ.nth, *]
 
-theorem zip_with_nth_none' (s'_nth_eq_none : s'.nth n = none) (f : α → β → γ) : (zip_with f s s').nth n = none := by
+theorem zip_with_nth_none' (s'_nth_eq_none : s'.nth n = none) (f : α → β → γ) : (zipWith f s s').nth n = none := by
   cases' s' with st'
   have : st' n = none := s'_nth_eq_none
   cases' s with st
@@ -503,7 +503,7 @@ end ZipWith
 
 /-- Pair two sequences into a sequence of pairs -/
 def zip : Seqₓₓ α → Seqₓₓ β → Seqₓₓ (α × β) :=
-  zip_with Prod.mk
+  zipWith Prod.mk
 
 /-- Separate a sequence of pairs into two sequences -/
 def unzip (s : Seqₓₓ (α × β)) : Seqₓₓ α × Seqₓₓ β :=
@@ -520,8 +520,8 @@ def to_stream (s : Seqₓₓ α) (h : ∀ n, (nth s n).isSome) : Streamₓ α :=
   it is finite or infinite. (Without decidability of the infiniteness predicate,
   this is not constructively possible.) -/
 def to_list_or_stream (s : Seqₓₓ α) [Decidable (∃ n, ¬(nth s n).isSome)] : Sum (List α) (Streamₓ α) :=
-  if h : ∃ n, ¬(nth s n).isSome then Sum.inl (to_list s h)
-  else Sum.inr (to_stream s fun n => Decidable.by_contradiction fun hn => h ⟨n, hn⟩)
+  if h : ∃ n, ¬(nth s n).isSome then Sum.inl (toList s h)
+  else Sum.inr (toStream s fun n => Decidable.by_contradiction fun hn => h ⟨n, hn⟩)
 
 @[simp]
 theorem nil_append (s : Seqₓₓ α) : append nil s = s := by
@@ -711,23 +711,23 @@ theorem join_append (S T : Seqₓₓ (Seq1 α)) : join (append S T) = append (jo
     
 
 @[simp]
-theorem of_list_nil : of_list [] = (nil : Seqₓₓ α) :=
+theorem of_list_nil : ofList [] = (nil : Seqₓₓ α) :=
   rfl
 
 @[simp]
-theorem of_list_cons (a : α) l : of_list (a :: l) = cons a (of_list l) := by
+theorem of_list_cons (a : α) l : ofList (a :: l) = cons a (ofList l) := by
   ext (_ | n) : 2 <;> simp [of_list, cons, Streamₓ.nth, Streamₓ.cons]
 
 @[simp]
-theorem of_stream_cons (a : α) s : of_stream (a :: s) = cons a (of_stream s) := by
+theorem of_stream_cons (a : α) s : ofStream (a :: s) = cons a (ofStream s) := by
   apply Subtype.eq <;> simp [of_stream, cons] <;> rw [Streamₓ.map_cons]
 
 @[simp]
-theorem of_list_append (l l' : List α) : of_list (l ++ l') = append (of_list l) (of_list l') := by
+theorem of_list_append (l l' : List α) : ofList (l ++ l') = append (ofList l) (ofList l') := by
   induction l <;> simp [*]
 
 @[simp]
-theorem of_stream_append (l : List α) (s : Streamₓ α) : of_stream (l++ₛs) = append (of_list l) (of_stream s) := by
+theorem of_stream_append (l : List α) (s : Streamₓ α) : ofStream (l++ₛs) = append (ofList l) (ofStream s) := by
   induction l <;> simp [*, Streamₓ.nil_append_stream, Streamₓ.cons_append_stream]
 
 /-- Convert a sequence into a list, embedded in a computation to allow for
@@ -831,7 +831,7 @@ def to_seq : Seq1 α → Seqₓₓ α
   | (a, s) => cons a s
 
 instance coe_seq : Coe (Seq1 α) (Seqₓₓ α) :=
-  ⟨to_seq⟩
+  ⟨toSeq⟩
 
 /-- Map a function on a `seq1` -/
 def map (f : α → β) : Seq1 α → Seq1 β

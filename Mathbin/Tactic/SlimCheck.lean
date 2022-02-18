@@ -128,11 +128,11 @@ and the proposition that they test. -/
 unsafe def summarize_instance : expr → tactic instance_tree
   | lam n bi d b => do
     let v ← mk_local' n bi d
-    summarize_instance <| b.instantiate_var v
+    summarize_instance <| b v
   | e@(app f x) => do
-    let quote.1 (testable (%%ₓp)) ← infer_type e
-    let xs ← e.get_app_args.mmap_filter (try_core ∘ summarize_instance)
-    pure <| instance_tree.node e.get_app_fn.const_name p xs
+    let quote.1 (Testable (%%ₓp)) ← infer_type e
+    let xs ← e.get_app_args.mmapFilter (try_core ∘ summarize_instance)
+    pure <| instance_tree.node e p xs
   | e => do
     failed
 
@@ -199,14 +199,14 @@ Options:
   the proposition
 * `set_option trace.slim_check.success true`: print the tested samples that satisfy a property
 -/
-unsafe def slim_check (cfg : slim_check_cfg := {  }) : tactic Unit := do
+unsafe def slim_check (cfg : SlimCheckCfg := {  }) : tactic Unit := do
   let tgt ← retrieve <| tactic.revert_all >> target
   let tgt' := tactic.add_decorations tgt
   let cfg :=
-    { cfg with traceDiscarded := cfg.trace_discarded || is_trace_enabled_for `slim_check.discarded,
-      traceShrink := cfg.trace_shrink || is_trace_enabled_for `slim_check.shrink.steps,
-      traceShrinkCandidates := cfg.trace_shrink_candidates || is_trace_enabled_for `slim_check.shrink.candidates,
-      traceSuccess := cfg.trace_success || is_trace_enabled_for `slim_check.success }
+    { cfg with traceDiscarded := cfg.traceDiscarded || is_trace_enabled_for `slim_check.discarded,
+      traceShrink := cfg.traceShrink || is_trace_enabled_for `slim_check.shrink.steps,
+      traceShrinkCandidates := cfg.traceShrinkCandidates || is_trace_enabled_for `slim_check.shrink.candidates,
+      traceSuccess := cfg.traceSuccess || is_trace_enabled_for `slim_check.success }
   let inst ←
     mk_app `` testable [tgt'] >>= mk_instance <|>
         throwError "Failed to create a `testable` instance for `{(← tgt)}`.

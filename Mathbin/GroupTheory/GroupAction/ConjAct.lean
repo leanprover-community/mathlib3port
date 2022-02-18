@@ -63,60 +63,60 @@ def of_conj_act : ConjAct G ≃* G :=
 
 /-- Reinterpret `g : G` as an element of `conj_act G`. -/
 def to_conj_act : G ≃* ConjAct G :=
-  of_conj_act.symm
+  ofConjAct.symm
 
 /-- A recursor for `conj_act`, for use as `induction x using conj_act.rec` when `x : conj_act G`. -/
-protected def rec {C : ConjAct G → Sort _} (h : ∀ g, C (to_conj_act g)) : ∀ g, C g :=
+protected def rec {C : ConjAct G → Sort _} (h : ∀ g, C (toConjAct g)) : ∀ g, C g :=
   h
 
 @[simp]
-theorem of_mul_symm_eq : (@of_conj_act G _).symm = to_conj_act :=
+theorem of_mul_symm_eq : (@ofConjAct G _).symm = to_conj_act :=
   rfl
 
 @[simp]
-theorem to_mul_symm_eq : (@to_conj_act G _).symm = of_conj_act :=
+theorem to_mul_symm_eq : (@toConjAct G _).symm = of_conj_act :=
   rfl
 
 @[simp]
-theorem to_conj_act_of_conj_act (x : ConjAct G) : to_conj_act (of_conj_act x) = x :=
+theorem to_conj_act_of_conj_act (x : ConjAct G) : toConjAct (ofConjAct x) = x :=
   rfl
 
 @[simp]
-theorem of_conj_act_to_conj_act (x : G) : of_conj_act (to_conj_act x) = x :=
+theorem of_conj_act_to_conj_act (x : G) : ofConjAct (toConjAct x) = x :=
   rfl
 
 @[simp]
-theorem of_conj_act_one : of_conj_act (1 : ConjAct G) = 1 :=
+theorem of_conj_act_one : ofConjAct (1 : ConjAct G) = 1 :=
   rfl
 
 @[simp]
-theorem to_conj_act_one : to_conj_act (1 : G) = 1 :=
+theorem to_conj_act_one : toConjAct (1 : G) = 1 :=
   rfl
 
 @[simp]
-theorem of_conj_act_inv (x : ConjAct G) : of_conj_act x⁻¹ = (of_conj_act x)⁻¹ :=
+theorem of_conj_act_inv (x : ConjAct G) : ofConjAct x⁻¹ = (ofConjAct x)⁻¹ :=
   rfl
 
 @[simp]
-theorem to_conj_act_inv (x : G) : to_conj_act x⁻¹ = (to_conj_act x)⁻¹ :=
+theorem to_conj_act_inv (x : G) : toConjAct x⁻¹ = (toConjAct x)⁻¹ :=
   rfl
 
 @[simp]
-theorem of_conj_act_mul (x y : ConjAct G) : of_conj_act (x * y) = of_conj_act x * of_conj_act y :=
+theorem of_conj_act_mul (x y : ConjAct G) : ofConjAct (x * y) = ofConjAct x * ofConjAct y :=
   rfl
 
 @[simp]
-theorem to_conj_act_mul (x y : G) : to_conj_act (x * y) = to_conj_act x * to_conj_act y :=
+theorem to_conj_act_mul (x y : G) : toConjAct (x * y) = toConjAct x * toConjAct y :=
   rfl
 
 instance : HasScalar (ConjAct G) G where
-  smul := fun g h => of_conj_act g * h * (of_conj_act g)⁻¹
+  smul := fun g h => ofConjAct g * h * (ofConjAct g)⁻¹
 
-theorem smul_def (g : ConjAct G) (h : G) : g • h = of_conj_act g * h * (of_conj_act g)⁻¹ :=
+theorem smul_def (g : ConjAct G) (h : G) : g • h = ofConjAct g * h * (ofConjAct g)⁻¹ :=
   rfl
 
 @[simp]
-theorem forall (p : ConjAct G → Prop) : (∀ x : ConjAct G, p x) ↔ ∀ x : G, p (to_conj_act x) :=
+theorem forall (p : ConjAct G → Prop) : (∀ x : ConjAct G, p x) ↔ ∀ x : G, p (toConjAct x) :=
   Iff.rfl
 
 end DivInvMonoidₓ
@@ -126,11 +126,11 @@ section GroupWithZeroₓ
 variable [GroupWithZeroₓ G]
 
 @[simp]
-theorem of_conj_act_zero : of_conj_act (0 : ConjAct G) = 0 :=
+theorem of_conj_act_zero : ofConjAct (0 : ConjAct G) = 0 :=
   rfl
 
 @[simp]
-theorem to_conj_act_zero : to_conj_act (0 : G) = 0 :=
+theorem to_conj_act_zero : toConjAct (0 : G) = 0 :=
   rfl
 
 instance : MulAction (ConjAct G) G where
@@ -155,51 +155,51 @@ instance : MulDistribMulAction (ConjAct G) G where
   mul_smul := by
     simp [smul_def, mul_assoc]
 
-theorem smul_eq_mul_aut_conj (g : ConjAct G) (h : G) : g • h = MulAut.conj (of_conj_act g) h :=
+theorem smul_eq_mul_aut_conj (g : ConjAct G) (h : G) : g • h = MulAut.conj (ofConjAct g) h :=
   rfl
 
 /-- The set of fixed points of the conjugation action of `G` on itself is the center of `G`. -/
-theorem fixed_points_eq_center : fixed_points (ConjAct G) G = center G := by
+theorem fixed_points_eq_center : FixedPoints (ConjAct G) G = center G := by
   ext x
   simp [mem_center_iff, smul_def, mul_inv_eq_iff_eq_mul]
 
 /-- As normal subgroups are closed under conjugation, they inherit the conjugation action
   of the underlying group. -/
-instance subgroup.conj_action {H : Subgroup G} [hH : H.normal] : HasScalar (ConjAct G) H :=
-  ⟨fun g h => ⟨g • h, hH.conj_mem h.1 h.2 (of_conj_act g)⟩⟩
+instance subgroup.conj_action {H : Subgroup G} [hH : H.Normal] : HasScalar (ConjAct G) H :=
+  ⟨fun g h => ⟨g • h, hH.conj_mem h.1 h.2 (ofConjAct g)⟩⟩
 
-theorem subgroup.coe_conj_smul {H : Subgroup G} [hH : H.normal] (g : ConjAct G) (h : H) : ↑(g • h) = g • (h : G) :=
+theorem subgroup.coe_conj_smul {H : Subgroup G} [hH : H.Normal] (g : ConjAct G) (h : H) : ↑(g • h) = g • (h : G) :=
   rfl
 
-instance subgroup.conj_mul_distrib_mul_action {H : Subgroup G} [hH : H.normal] : MulDistribMulAction (ConjAct G) H :=
-  Subtype.coe_injective.MulDistribMulAction H.subtype subgroup.coe_conj_smul
+instance subgroup.conj_mul_distrib_mul_action {H : Subgroup G} [hH : H.Normal] : MulDistribMulAction (ConjAct G) H :=
+  Subtype.coe_injective.MulDistribMulAction H.Subtype Subgroup.coe_conj_smul
 
 /-- Group conjugation on a normal subgroup. Analogous to `mul_aut.conj`. -/
-def _root_.mul_aut.conj_normal {H : Subgroup G} [hH : H.normal] : G →* MulAut H :=
-  (MulDistribMulAction.toMulAut (ConjAct G) H).comp to_conj_act.toMonoidHom
+def _root_.mul_aut.conj_normal {H : Subgroup G} [hH : H.Normal] : G →* MulAut H :=
+  (MulDistribMulAction.toMulAut (ConjAct G) H).comp toConjAct.toMonoidHom
 
 @[simp]
-theorem _root_.mul_aut.conj_normal_apply {H : Subgroup G} [H.normal] (g : G) (h : H) :
+theorem _root_.mul_aut.conj_normal_apply {H : Subgroup G} [H.Normal] (g : G) (h : H) :
     ↑(MulAut.conjNormal g h) = g * h * g⁻¹ :=
   rfl
 
 @[simp]
-theorem _root_.mul_aut.conj_normal_symm_apply {H : Subgroup G} [H.normal] (g : G) (h : H) :
+theorem _root_.mul_aut.conj_normal_symm_apply {H : Subgroup G} [H.Normal] (g : G) (h : H) :
     ↑((MulAut.conjNormal g).symm h) = g⁻¹ * h * g := by
   change _ * _⁻¹⁻¹ = _
   rw [inv_invₓ]
   rfl
 
 @[simp]
-theorem _root_.mul_aut.conj_normal_inv_apply {H : Subgroup G} [H.normal] (g : G) (h : H) :
+theorem _root_.mul_aut.conj_normal_inv_apply {H : Subgroup G} [H.Normal] (g : G) (h : H) :
     ↑((MulAut.conjNormal g)⁻¹ h) = g⁻¹ * h * g :=
   MulAut.conj_normal_symm_apply g h
 
-theorem _root_.mul_aut.conj_normal_coe {H : Subgroup G} [H.normal] {h : H} : MulAut.conjNormal ↑h = MulAut.conj h :=
+theorem _root_.mul_aut.conj_normal_coe {H : Subgroup G} [H.Normal] {h : H} : MulAut.conjNormal ↑h = MulAut.conj h :=
   MulEquiv.ext fun x => rfl
 
-instance normal_of_characteristic_of_normal {H : Subgroup G} [hH : H.normal] {K : Subgroup H} [h : K.characteristic] :
-    (K.map H.subtype).Normal :=
+instance normal_of_characteristic_of_normal {H : Subgroup G} [hH : H.Normal] {K : Subgroup H} [h : K.Characteristic] :
+    (K.map H.Subtype).Normal :=
   ⟨fun a ha b => by
     obtain ⟨a, ha, rfl⟩ := ha
     exact K.apply_coe_mem_map H.subtype ⟨_, (set_like.ext_iff.mp (h.fixed (MulAut.conjNormal b)) a).mpr ha⟩⟩

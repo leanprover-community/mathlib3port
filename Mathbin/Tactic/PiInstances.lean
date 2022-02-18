@@ -23,7 +23,7 @@ unsafe def pi_instance_derive_field : tactic Unit := do
       try (() <$ ext1 [rcases_patt.one xn] <|> () <$ intro xn)
       let xv ← Option.iget <$> try_core (get_local xn)
       applyc field
-      hs.mmap fun h =>
+      hs fun h =>
           try <|
             () <$ (to_expr (pquote.1 (congr_funₓ (%%ₓh) (%%ₓxv))) >>= apply) <|>
               () <$ apply (h xv) <|>
@@ -35,8 +35,7 @@ unsafe def pi_instance_derive_field : tactic Unit := do
         let xs ← (List.iota expl_arity).mmap fun _ => intro1
         let x ← intro1
         applyc field
-        (xs.mmap' fun h =>
-              try <| () <$ (apply (h x) <|> apply h) <|> refine (pquote.1 (Set.Image (· <| %%ₓx) (%%ₓh)))) <|>
+        (xs fun h => try <| () <$ (apply (h x) <|> apply h) <|> refine (pquote.1 (Set.Image (· <| %%ₓx) (%%ₓh)))) <|>
             fail "args"
         return ()
 

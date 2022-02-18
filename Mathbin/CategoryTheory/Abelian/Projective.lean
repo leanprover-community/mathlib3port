@@ -22,16 +22,16 @@ namespace CategoryTheory
 
 open CategoryTheory.Projective
 
-variable {C : Type u} [category.{v} C]
+variable {C : Type u} [Category.{v} C]
 
 section
 
-variable [enough_projectives C] [abelian C]
+variable [EnoughProjectives C] [Abelian C]
 
 /-- When `C` is abelian, `projective.d f` and `f` are exact.
 -/
-theorem exact_d_f {X Y : C} (f : X ⟶ Y) : exact (d f) f :=
-  (abelian.exact_iff _ _).2 <|
+theorem exact_d_f {X Y : C} (f : X ⟶ Y) : Exact (d f) f :=
+  (Abelian.exact_iff _ _).2 <|
     ⟨by
       simp ,
       zero_of_epi_comp (π _) <| by
@@ -51,21 +51,21 @@ and the map to the `n`-th object as `projective.d`.
 -/
 
 
-variable [abelian C] [enough_projectives C]
+variable [Abelian C] [EnoughProjectives C]
 
 /-- Auxiliary definition for `ProjectiveResolution.of`. -/
 @[simps]
 def of_complex (Z : C) : ChainComplex C ℕ :=
-  ChainComplex.mk' (projective.over Z) (projective.syzygies (projective.π Z)) (projective.d (projective.π Z))
-    fun ⟨X, Y, f⟩ => ⟨projective.syzygies f, projective.d f, (exact_d_f f).w⟩
+  ChainComplex.mk' (Projective.over Z) (Projective.syzygies (Projective.π Z)) (Projective.d (Projective.π Z))
+    fun ⟨X, Y, f⟩ => ⟨Projective.syzygies f, Projective.d f, (exact_d_f f).w⟩
 
 /-- In any abelian category with enough projectives,
 `ProjectiveResolution.of Z` constructs a projection resolution of the object `Z`.
 -/
 irreducible_def of (Z : C) : ProjectiveResolution Z :=
-  { complex := of_complex Z,
+  { complex := ofComplex Z,
     π :=
-      ChainComplex.mkHom _ _ (projective.π Z) 0
+      ChainComplex.mkHom _ _ (Projective.π Z) 0
         (by
           simp
           exact (exact_d_f (projective.π Z)).w.symm)
@@ -81,12 +81,12 @@ irreducible_def of (Z : C) : ProjectiveResolution Z :=
         · simp
           apply exact_d_f
           ,
-    Epi := projective.π_epi Z }
+    Epi := Projective.π_epi Z }
 
-instance (priority := 100) (Z : C) : has_projective_resolution Z where
+instance (priority := 100) (Z : C) : HasProjectiveResolution Z where
   out := ⟨of Z⟩
 
-instance (priority := 100) : has_projective_resolutions C where
+instance (priority := 100) : HasProjectiveResolutions C where
   out := fun Z => by
     infer_instance
 

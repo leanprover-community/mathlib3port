@@ -120,7 +120,7 @@ instance {ω : Type u} {m : Type u → Type v} [Monadₓ m] : MonadWriter ω (Wr
   pass := fun α => WriterT.pass
 
 instance {ω ρ : Type u} {m : Type u → Type v} [Monadₓ m] [MonadWriter ω m] : MonadWriter ω (ReaderTₓ ρ m) where
-  tell := fun x => monad_lift (tell x : m PUnit)
+  tell := fun x => monadLift (tell x : m PUnit)
   listen := fun α ⟨cmd⟩ => ⟨fun r => listen (cmd r)⟩
   pass := fun α ⟨cmd⟩ => ⟨fun r => pass (cmd r)⟩
 
@@ -128,7 +128,7 @@ def swapRight {α β γ} : (α × β) × γ → (α × γ) × β
   | ⟨⟨x, y⟩, z⟩ => ((x, z), y)
 
 instance {ω σ : Type u} {m : Type u → Type v} [Monadₓ m] [MonadWriter ω m] : MonadWriter ω (StateTₓ σ m) where
-  tell := fun x => monad_lift (tell x : m PUnit)
+  tell := fun x => monadLift (tell x : m PUnit)
   listen := fun α ⟨cmd⟩ => ⟨fun r => swapRight <$> listen (cmd r)⟩
   pass := fun α ⟨cmd⟩ => ⟨fun r => pass (swapRight <$> cmd r)⟩
 
@@ -139,7 +139,7 @@ def ExceptTₓ.passAux {ε α ω} : Except ε (α × (ω → ω)) → Except ε 
   | Except.ok (x, y) => (Except.ok x, y)
 
 instance {ω ε : Type u} {m : Type u → Type v} [Monadₓ m] [MonadWriter ω m] : MonadWriter ω (ExceptTₓ ε m) where
-  tell := fun x => monad_lift (tell x : m PUnit)
+  tell := fun x => monadLift (tell x : m PUnit)
   listen := fun α ⟨cmd⟩ => ⟨(uncurry fun x y => flip Prod.mk y <$> x) <$> listen cmd⟩
   pass := fun α ⟨cmd⟩ => ⟨pass (ExceptTₓ.passAux <$> cmd)⟩
 
@@ -148,7 +148,7 @@ def OptionTₓ.passAux {α ω} : Option (α × (ω → ω)) → Option α × (ω
   | some (x, y) => (some x, y)
 
 instance {ω : Type u} {m : Type u → Type v} [Monadₓ m] [MonadWriter ω m] : MonadWriter ω (OptionTₓ m) where
-  tell := fun x => monad_lift (tell x : m PUnit)
+  tell := fun x => monadLift (tell x : m PUnit)
   listen := fun α ⟨cmd⟩ => ⟨(uncurry fun x y => flip Prod.mk y <$> x) <$> listen cmd⟩
   pass := fun α ⟨cmd⟩ => ⟨pass (OptionTₓ.passAux <$> cmd)⟩
 
@@ -186,7 +186,7 @@ see Note [lower instance priority] -/
 @[nolint dangerous_instance]
 instance (priority := 100) monadWriterAdapterTrans {n n' : Type u → Type v} [MonadWriterAdapter ω ω' m m']
     [MonadFunctorₓ m m' n n'] : MonadWriterAdapter ω ω' n n' :=
-  ⟨fun α f => monad_map fun α => (adapt_writer f : m α → m' α)⟩
+  ⟨fun α f => monadMap fun α => (adaptWriter f : m α → m' α)⟩
 
 instance [Monadₓ m] : MonadWriterAdapter ω ω' (WriterT ω m) (WriterT ω' m) :=
   ⟨fun α => WriterT.adapt⟩

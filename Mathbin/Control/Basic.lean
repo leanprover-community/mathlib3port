@@ -145,7 +145,7 @@ section Alternativeₓ
 variable {F : Type → Type v} [Alternativeₓ F]
 
 def succeeds {α} (x : F α) : F Bool :=
-  x $> tt <|> pure ff
+  x $> tt <|> pure false
 
 def mtry {α} (x : F α) : F Unit :=
   x $> () <|> pure ()

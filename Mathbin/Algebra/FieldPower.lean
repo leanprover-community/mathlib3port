@@ -15,12 +15,12 @@ universe u
 @[simp]
 theorem RingHom.map_zpow {K L : Type _} [DivisionRing K] [DivisionRing L] (f : K →+* L) :
     ∀ a : K n : ℤ, f (a ^ n) = f a ^ n :=
-  f.to_monoid_with_zero_hom.map_zpow
+  f.toMonoidWithZeroHom.map_zpow
 
 @[simp]
 theorem RingEquiv.map_zpow {K L : Type _} [DivisionRing K] [DivisionRing L] (f : K ≃+* L) :
     ∀ a : K n : ℤ, f (a ^ n) = f a ^ n :=
-  f.to_ring_hom.map_zpow
+  f.toRingHom.map_zpow
 
 @[simp]
 theorem zpow_bit0_neg {K : Type _} [DivisionRing K] (x : K) (n : ℤ) : -x ^ bit0 n = x ^ bit0 n := by

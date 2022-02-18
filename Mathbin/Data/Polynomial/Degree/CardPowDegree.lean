@@ -26,15 +26,15 @@ variable {Fq : Type _} [Field Fq] [Fintype Fq]
 
 open AbsoluteValue
 
-open_locale Classical
+open_locale Classical Polynomial
 
 /-- `card_pow_degree` is the absolute value on `𝔽_q[t]` sending `f` to `q ^ degree f`.
 
 `card_pow_degree 0` is defined to be `0`. -/
-noncomputable def card_pow_degree : AbsoluteValue (Polynomial Fq) ℤ :=
+noncomputable def card_pow_degree : AbsoluteValue Fq[X] ℤ :=
   have card_pos : 0 < Fintype.card Fq := Fintype.card_pos_iff.mpr inferInstance
   have pow_pos : ∀ n, 0 < (Fintype.card Fq : ℤ) ^ n := fun n => pow_pos (Int.coe_nat_pos.mpr card_pos) n
-  { toFun := fun p => if p = 0 then 0 else Fintype.card Fq ^ p.nat_degree,
+  { toFun := fun p => if p = 0 then 0 else Fintype.card Fq ^ p.natDegree,
     nonneg' := fun p => by
       dsimp
       split_ifs
@@ -92,19 +92,18 @@ noncomputable def card_pow_degree : AbsoluteValue (Polynomial Fq) ℤ :=
       have hpq : p * q ≠ 0 := mul_ne_zero hp hq
       simp only [hpq, hp, hq, eq_self_iff_true, if_true, if_false, Polynomial.nat_degree_mul hp hq, pow_addₓ] }
 
-theorem card_pow_degree_apply (p : Polynomial Fq) :
-    card_pow_degree p = if p = 0 then 0 else Fintype.card Fq ^ nat_degree p :=
+theorem card_pow_degree_apply (p : Fq[X]) : cardPowDegree p = if p = 0 then 0 else Fintype.card Fq ^ natDegree p :=
   rfl
 
 @[simp]
-theorem card_pow_degree_zero : card_pow_degree (0 : Polynomial Fq) = 0 :=
+theorem card_pow_degree_zero : cardPowDegree (0 : Fq[X]) = 0 :=
   if_pos rfl
 
 @[simp]
-theorem card_pow_degree_nonzero (p : Polynomial Fq) (hp : p ≠ 0) : card_pow_degree p = Fintype.card Fq ^ p.nat_degree :=
+theorem card_pow_degree_nonzero (p : Fq[X]) (hp : p ≠ 0) : cardPowDegree p = Fintype.card Fq ^ p.natDegree :=
   if_neg hp
 
-theorem card_pow_degree_is_euclidean : is_euclidean (card_pow_degree : AbsoluteValue (Polynomial Fq) ℤ) :=
+theorem card_pow_degree_is_euclidean : IsEuclidean (cardPowDegree : AbsoluteValue Fq[X] ℤ) :=
   have card_pos : 0 < Fintype.card Fq := Fintype.card_pos_iff.mpr inferInstance
   have pow_pos : ∀ n, 0 < (Fintype.card Fq : ℤ) ^ n := fun n => pow_pos (Int.coe_nat_pos.mpr card_pos) n
   { map_lt_map_iff' := fun p q => by

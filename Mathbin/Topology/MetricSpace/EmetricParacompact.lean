@@ -25,6 +25,7 @@ open Set
 
 namespace Emetric
 
+-- ././Mathport/Syntax/Translate/Basic.lean:418:16: unsupported tactic `by_contra'
 /-- A `pseudo_emetric_space` is always a paracompact space. Formalization is based
 on [MR0236876]. -/
 instance (priority := 100) [PseudoEmetricSpace α] : ParacompactSpace α := by
@@ -71,8 +72,7 @@ instance (priority := 100) [PseudoEmetricSpace α] : ParacompactSpace α := by
       rcases Ennreal.exists_inv_two_pow_lt this.ne' with ⟨n, hn⟩
       refine' ⟨n, subset.trans (ball_subset_ball _) hε⟩
       simpa only [div_eq_mul_inv, mul_comm] using (Ennreal.mul_lt_of_lt_div hn).le
-    by_contra h
-    push_neg  at h
+    "././Mathport/Syntax/Translate/Basic.lean:418:16: unsupported tactic `by_contra'"
     apply h n (ind x)
     exact memD.2 ⟨x, rfl, hn, fun _ _ _ => h _ _, mem_ball_self (pow_pos _)⟩
   have Dopen : ∀ n i, IsOpen (D n i) := by

@@ -49,7 +49,7 @@ theorem partial_sups_succ (f : ℕ → α) (n : ℕ) : partialSups f (n + 1) = p
 theorem le_partial_sups_of_le (f : ℕ → α) {m n : ℕ} (h : m ≤ n) : f m ≤ partialSups f n := by
   induction' n with n ih
   · cases h
-    apply le_reflₓ
+    exact le_rfl
     
   · cases' h with h h
     · exact le_sup_right

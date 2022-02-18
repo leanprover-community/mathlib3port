@@ -42,7 +42,7 @@ noncomputable def index : ℕ :=
 @[to_additive
       "The relative index of a subgroup as a natural number,\n  and returns 0 if the relative index is infinite."]
 noncomputable def relindex : ℕ :=
-  (H.subgroup_of K).index
+  (H.subgroupOf K).index
 
 @[to_additive]
 theorem index_comap_of_surjective {G' : Type _} [Groupₓ G'] {f : G' →* G} (hf : Function.Surjective f) :
@@ -71,22 +71,22 @@ theorem index_comap {G' : Type _} [Groupₓ G'] (f : G' →* G) : (H.comap f).in
     (congr_argₓ index
       (by
         rfl))
-    ((H.subgroup_of f.range).index_comap_of_surjective f.range_restrict_surjective)
+    ((H.subgroupOf f.range).index_comap_of_surjective f.range_restrict_surjective)
 
 variable {H K L}
 
 @[to_additive]
 theorem relindex_mul_index (h : H ≤ K) : H.relindex K * K.index = H.index :=
   ((mul_comm _ _).trans (Cardinal.to_nat_mul _ _).symm).trans
-    (congr_argₓ Cardinal.toNat (Equivₓ.cardinal_eq (quotient_equiv_prod_of_le h))).symm
+    (congr_argₓ Cardinal.toNat (Equivₓ.cardinal_eq (quotientEquivProdOfLe h))).symm
 
 @[to_additive]
 theorem index_dvd_of_le (h : H ≤ K) : K.index ∣ H.index :=
   dvd_of_mul_left_eq (H.relindex K) (relindex_mul_index h)
 
 @[to_additive]
-theorem relindex_subgroup_of (hKL : K ≤ L) : (H.subgroup_of L).relindex (K.subgroup_of L) = H.relindex K :=
-  ((index_comap (H.subgroup_of L) (inclusion hKL)).trans (congr_argₓ _ (inclusion_range hKL))).symm
+theorem relindex_subgroup_of (hKL : K ≤ L) : (H.subgroupOf L).relindex (K.subgroupOf L) = H.relindex K :=
+  ((index_comap (H.subgroupOf L) (inclusion hKL)).trans (congr_argₓ _ (inclusion_range hKL))).symm
 
 variable (H K L)
 
@@ -106,10 +106,10 @@ theorem relindex_inf_mul_relindex : H.relindex (K⊓L) * K.relindex L = (H⊓K).
   rw [← inf_relindex_right H (K⊓L), ← inf_relindex_right K L, ← inf_relindex_right (H⊓K) L, inf_assoc,
     relindex_mul_relindex (H⊓(K⊓L)) (K⊓L) L inf_le_right inf_le_right]
 
-theorem inf_relindex_eq_relindex_sup [K.normal] : (H⊓K).relindex H = K.relindex (H⊔K) :=
+theorem inf_relindex_eq_relindex_sup [K.Normal] : (H⊓K).relindex H = K.relindex (H⊔K) :=
   Cardinal.to_nat_congr (QuotientGroup.quotientInfEquivProdNormalQuotient H K).toEquiv
 
-theorem relindex_eq_relindex_sup [K.normal] : K.relindex H = K.relindex (H⊔K) := by
+theorem relindex_eq_relindex_sup [K.Normal] : K.relindex H = K.relindex (H⊔K) := by
   rw [← inf_relindex_left, inf_relindex_eq_relindex_sup]
 
 variable {H K}
@@ -206,7 +206,7 @@ theorem relindex_eq_zero_of_le_right (hKL : K ≤ L) (hHK : H.relindex K = 0) : 
     (le_transₓ
       (le_of_not_ltₓ fun h =>
         Cardinal.mk_ne_zero _ ((Cardinal.cast_to_nat_of_lt_omega h).symm.trans (Cardinal.nat_cast_inj.mpr hHK)))
-      (quotient_subgroup_of_embedding_of_le H hKL).cardinal_le)
+      (quotientSubgroupOfEmbeddingOfLe H hKL).cardinal_le)
 
 theorem relindex_ne_zero_trans (hHK : H.relindex K ≠ 0) (hKL : K.relindex L ≠ 0) : H.relindex L ≠ 0 := fun h =>
   mul_ne_zero (mt (relindex_eq_zero_of_le_right (show K⊓L ≤ K from inf_le_left)) hHK) hKL

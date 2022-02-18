@@ -414,7 +414,7 @@ theorem Units.is_unit_mul_units [Monoidₓ M] (a : M) (u : (M)ˣ) : IsUnit (a * 
       have : IsUnit (a * ↑u * ↑u⁻¹) := by
         exists v * u⁻¹ <;> rw [← hv, Units.coe_mul]
       rwa [mul_assoc, Units.mul_inv, mul_oneₓ] at this)
-    fun v => v.mul u.is_unit
+    fun v => v.mul u.IsUnit
 
 /-- Multiplication by a `u : Mˣ` on the left doesn't affect `is_unit`. -/
 @[simp,
@@ -425,7 +425,7 @@ theorem Units.is_unit_units_mul {M : Type _} [Monoidₓ M] (u : (M)ˣ) (a : M) :
       have : IsUnit (↑u⁻¹ * (↑u * a)) := by
         exists u⁻¹ * v <;> rw [← hv, Units.coe_mul]
       rwa [← mul_assoc, Units.inv_mul, one_mulₓ] at this)
-    u.is_unit.mul
+    u.IsUnit.mul
 
 @[to_additive is_add_unit_of_add_is_add_unit_left]
 theorem is_unit_of_mul_is_unit_left [CommMonoidₓ M] {x y : M} (hu : IsUnit (x * y)) : IsUnit x :=
@@ -458,15 +458,15 @@ noncomputable def IsUnit.unit [Monoidₓ M] {a : M} (h : IsUnit a) : (M)ˣ :=
   (Classical.some h).copy a (Classical.some_spec h).symm _ rfl
 
 @[to_additive]
-theorem IsUnit.unit_spec [Monoidₓ M] {a : M} (h : IsUnit a) : ↑h.unit = a :=
+theorem IsUnit.unit_spec [Monoidₓ M] {a : M} (h : IsUnit a) : ↑h.Unit = a :=
   rfl
 
 @[to_additive]
-theorem IsUnit.coe_inv_mul [Monoidₓ M] {a : M} (h : IsUnit a) : ↑h.unit⁻¹ * a = 1 :=
+theorem IsUnit.coe_inv_mul [Monoidₓ M] {a : M} (h : IsUnit a) : ↑h.Unit⁻¹ * a = 1 :=
   Units.mul_inv _
 
 @[to_additive]
-theorem IsUnit.mul_coe_inv [Monoidₓ M] {a : M} (h : IsUnit a) : a * ↑h.unit⁻¹ = 1 := by
+theorem IsUnit.mul_coe_inv [Monoidₓ M] {a : M} (h : IsUnit a) : a * ↑h.Unit⁻¹ = 1 := by
   convert Units.mul_inv _
   simp [h.unit_spec]
 

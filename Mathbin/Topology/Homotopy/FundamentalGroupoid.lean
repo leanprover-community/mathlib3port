@@ -34,7 +34,7 @@ def refl_trans_symm_aux (x : I × I) : ℝ :=
   if (x.2 : ℝ) ≤ 1 / 2 then x.1 * 2 * x.2 else x.1 * (2 - 2 * x.2)
 
 @[continuity]
-theorem continuous_refl_trans_symm_aux : Continuous refl_trans_symm_aux := by
+theorem continuous_refl_trans_symm_aux : Continuous reflTransSymmAux := by
   refine' continuous_if_le _ _ (Continuous.continuous_on _) (Continuous.continuous_on _) _
   · continuity
     
@@ -47,7 +47,7 @@ theorem continuous_refl_trans_symm_aux : Continuous refl_trans_symm_aux := by
   intro x hx
   norm_num [hx, mul_assoc]
 
-theorem refl_trans_symm_aux_mem_I (x : I × I) : refl_trans_symm_aux x ∈ I := by
+theorem refl_trans_symm_aux_mem_I (x : I × I) : reflTransSymmAux x ∈ I := by
   dsimp only [refl_trans_symm_aux]
   split_ifs
   · constructor
@@ -93,8 +93,8 @@ theorem refl_trans_symm_aux_mem_I (x : I × I) : refl_trans_symm_aux x ∈ I := 
 
 /-- For any path `p` from `x₀` to `x₁`, we have a homotopy from the constant path based at `x₀` to
   `p.trans p.symm`. -/
-def refl_trans_symm (p : Path x₀ x₁) : homotopy (Path.refl x₀) (p.trans p.symm) where
-  toFun := fun x => p ⟨refl_trans_symm_aux x, refl_trans_symm_aux_mem_I x⟩
+def refl_trans_symm (p : Path x₀ x₁) : Homotopy (Path.refl x₀) (p.trans p.symm) where
+  toFun := fun x => p ⟨reflTransSymmAux x, refl_trans_symm_aux_mem_I x⟩
   continuous_to_fun := by
     continuity
   to_fun_zero := by
@@ -131,8 +131,8 @@ def refl_trans_symm (p : Path x₀ x₁) : homotopy (Path.refl x₀) (p.trans p.
 
 /-- For any path `p` from `x₀` to `x₁`, we have a homotopy from the constant path based at `x₁` to
   `p.symm.trans p`. -/
-def refl_symm_trans (p : Path x₀ x₁) : homotopy (Path.refl x₁) (p.symm.trans p) :=
-  (refl_trans_symm p.symm).cast rfl <| congr_argₓ _ Path.symm_symm
+def refl_symm_trans (p : Path x₀ x₁) : Homotopy (Path.refl x₁) (p.symm.trans p) :=
+  (reflTransSymm p.symm).cast rfl <| congr_argₓ _ Path.symm_symm
 
 end
 
@@ -143,25 +143,25 @@ def trans_refl_reparam_aux (t : I) : ℝ :=
   if (t : ℝ) ≤ 1 / 2 then 2 * t else 1
 
 @[continuity]
-theorem continuous_trans_refl_reparam_aux : Continuous trans_refl_reparam_aux := by
+theorem continuous_trans_refl_reparam_aux : Continuous transReflReparamAux := by
   refine' continuous_if_le _ _ (Continuous.continuous_on _) (Continuous.continuous_on _) _ <;> [continuity, continuity,
     continuity, continuity, skip]
   intro x hx
   norm_num [hx]
 
-theorem trans_refl_reparam_aux_mem_I (t : I) : trans_refl_reparam_aux t ∈ I := by
+theorem trans_refl_reparam_aux_mem_I (t : I) : transReflReparamAux t ∈ I := by
   unfold trans_refl_reparam_aux
   split_ifs <;> constructor <;> linarith [UnitInterval.le_one t, UnitInterval.nonneg t]
 
-theorem trans_refl_reparam_aux_zero : trans_refl_reparam_aux 0 = 0 := by
+theorem trans_refl_reparam_aux_zero : transReflReparamAux 0 = 0 := by
   norm_num [trans_refl_reparam_aux]
 
-theorem trans_refl_reparam_aux_one : trans_refl_reparam_aux 1 = 1 := by
+theorem trans_refl_reparam_aux_one : transReflReparamAux 1 = 1 := by
   norm_num [trans_refl_reparam_aux]
 
 theorem trans_refl_reparam (p : Path x₀ x₁) :
     p.trans (Path.refl x₁) =
-      p.reparam (fun t => ⟨trans_refl_reparam_aux t, trans_refl_reparam_aux_mem_I t⟩)
+      p.reparam (fun t => ⟨transReflReparamAux t, trans_refl_reparam_aux_mem_I t⟩)
         (by
           continuity)
         (Subtype.ext trans_refl_reparam_aux_zero) (Subtype.ext trans_refl_reparam_aux_one) :=
@@ -177,8 +177,8 @@ theorem trans_refl_reparam (p : Path x₀ x₁) :
 
 /-- For any path `p` from `x₀` to `x₁`, we have a homotopy from `p.trans (path.refl x₁)` to `p`.
 -/
-def trans_refl (p : Path x₀ x₁) : homotopy (p.trans (Path.refl x₁)) p :=
-  ((homotopy.reparam p (fun t => ⟨trans_refl_reparam_aux t, trans_refl_reparam_aux_mem_I t⟩)
+def trans_refl (p : Path x₀ x₁) : Homotopy (p.trans (Path.refl x₁)) p :=
+  ((Homotopy.reparam p (fun t => ⟨transReflReparamAux t, trans_refl_reparam_aux_mem_I t⟩)
           (by
             continuity)
           (Subtype.ext trans_refl_reparam_aux_zero) (Subtype.ext trans_refl_reparam_aux_one)).cast
@@ -186,8 +186,8 @@ def trans_refl (p : Path x₀ x₁) : homotopy (p.trans (Path.refl x₁)) p :=
 
 /-- For any path `p` from `x₀` to `x₁`, we have a homotopy from `(path.refl x₀).trans p` to `p`.
 -/
-def refl_trans (p : Path x₀ x₁) : homotopy ((Path.refl x₀).trans p) p :=
-  (trans_refl p.symm).symm₂.cast
+def refl_trans (p : Path x₀ x₁) : Homotopy ((Path.refl x₀).trans p) p :=
+  (transRefl p.symm).symm₂.cast
     (by
       simp )
     (by
@@ -202,7 +202,7 @@ def trans_assoc_reparam_aux (t : I) : ℝ :=
   if (t : ℝ) ≤ 1 / 4 then 2 * t else if (t : ℝ) ≤ 1 / 2 then t + 1 / 4 else 1 / 2 * (t + 1)
 
 @[continuity]
-theorem continuous_trans_assoc_reparam_aux : Continuous trans_assoc_reparam_aux := by
+theorem continuous_trans_assoc_reparam_aux : Continuous transAssocReparamAux := by
   refine'
         continuous_if_le _ _ (Continuous.continuous_on _)
           (continuous_if_le _ _ (Continuous.continuous_on _) (Continuous.continuous_on _) _).ContinuousOn _ <;>
@@ -211,19 +211,19 @@ theorem continuous_trans_assoc_reparam_aux : Continuous trans_assoc_reparam_aux 
       norm_num [hx]
       
 
-theorem trans_assoc_reparam_aux_mem_I (t : I) : trans_assoc_reparam_aux t ∈ I := by
+theorem trans_assoc_reparam_aux_mem_I (t : I) : transAssocReparamAux t ∈ I := by
   unfold trans_assoc_reparam_aux
   split_ifs <;> constructor <;> linarith [UnitInterval.le_one t, UnitInterval.nonneg t]
 
-theorem trans_assoc_reparam_aux_zero : trans_assoc_reparam_aux 0 = 0 := by
+theorem trans_assoc_reparam_aux_zero : transAssocReparamAux 0 = 0 := by
   norm_num [trans_assoc_reparam_aux]
 
-theorem trans_assoc_reparam_aux_one : trans_assoc_reparam_aux 1 = 1 := by
+theorem trans_assoc_reparam_aux_one : transAssocReparamAux 1 = 1 := by
   norm_num [trans_assoc_reparam_aux]
 
 theorem trans_assoc_reparam {x₀ x₁ x₂ x₃ : X} (p : Path x₀ x₁) (q : Path x₁ x₂) (r : Path x₂ x₃) :
     (p.trans q).trans r =
-      (p.trans (q.trans r)).reparam (fun t => ⟨trans_assoc_reparam_aux t, trans_assoc_reparam_aux_mem_I t⟩)
+      (p.trans (q.trans r)).reparam (fun t => ⟨transAssocReparamAux t, trans_assoc_reparam_aux_mem_I t⟩)
         (by
           continuity)
         (Subtype.ext trans_assoc_reparam_aux_zero) (Subtype.ext trans_assoc_reparam_aux_one) :=
@@ -263,8 +263,8 @@ theorem trans_assoc_reparam {x₀ x₁ x₂ x₃ : X} (p : Path x₀ x₁) (q : 
 /-- For paths `p q r`, we have a homotopy from `(p.trans q).trans r` to `p.trans (q.trans r)`.
 -/
 def trans_assoc {x₀ x₁ x₂ x₃ : X} (p : Path x₀ x₁) (q : Path x₁ x₂) (r : Path x₂ x₃) :
-    homotopy ((p.trans q).trans r) (p.trans (q.trans r)) :=
-  ((homotopy.reparam (p.trans (q.trans r)) (fun t => ⟨trans_assoc_reparam_aux t, trans_assoc_reparam_aux_mem_I t⟩)
+    Homotopy ((p.trans q).trans r) (p.trans (q.trans r)) :=
+  ((Homotopy.reparam (p.trans (q.trans r)) (fun t => ⟨transAssocReparamAux t, trans_assoc_reparam_aux_mem_I t⟩)
           (by
             continuity)
           (Subtype.ext trans_assoc_reparam_aux_zero) (Subtype.ext trans_assoc_reparam_aux_one)).cast
@@ -321,12 +321,15 @@ instance : CategoryTheory.Groupoid (FundamentalGroupoid X) where
 theorem comp_eq (x y z : FundamentalGroupoid X) (p : x ⟶ y) (q : y ⟶ z) : p ≫ q = p.comp q :=
   rfl
 
+theorem id_eq_path_refl (x : FundamentalGroupoid X) : 𝟙 x = ⟦Path.refl x⟧ :=
+  rfl
+
 /-- The functor sending a topological space `X` to its fundamental groupoid.
 -/
 def fundamental_groupoid_functor : Top ⥤ CategoryTheory.Groupoidₓ where
   obj := fun X => { α := FundamentalGroupoid X }
   map := fun X Y f =>
-    { obj := f, map := fun x y p => p.map_fn f, map_id' := fun X => rfl,
+    { obj := f, map := fun x y p => p.mapFn f, map_id' := fun X => rfl,
       map_comp' := fun x y z p q =>
         (Quotientₓ.induction_on₂ p q) fun a b => by
           simp [comp_eq, ← Path.Homotopic.map_lift, ← Path.Homotopic.comp_lift] }
@@ -346,6 +349,36 @@ def fundamental_groupoid_functor : Top ⥤ CategoryTheory.Groupoidₓ where
     refine' Quotientₓ.induction_on p fun q => _
     simp only [Quotientₓ.map_mk, Path.map_map, Quotientₓ.eq]
     rfl
+
+localized [FundamentalGroupoid] notation "π" => FundamentalGroupoid.fundamentalGroupoidFunctor
+
+localized [FundamentalGroupoid] notation "πₓ" => FundamentalGroupoid.fundamentalGroupoidFunctor.obj
+
+localized [FundamentalGroupoid] notation "πₘ" => FundamentalGroupoid.fundamentalGroupoidFunctor.map
+
+/-- Help the typechecker by converting a point in a groupoid back to a point in
+the underlying topological space. -/
+@[reducible]
+def to_top {X : Top} (x : (πₓ X).α) : X :=
+  x
+
+/-- Help the typechecker by converting a point in a topological space to a
+point in the fundamental groupoid of that space -/
+@[reducible]
+def from_top {X : Top} (x : X) : (πₓ X).α :=
+  x
+
+/-- Help the typechecker by converting an arrow in the fundamental groupoid of
+a topological space back to a path in that space (i.e., `path.homotopic.quotient`). -/
+@[reducible]
+def to_path {X : Top} {x₀ x₁ : (πₓ X).α} (p : x₀ ⟶ x₁) : Path.Homotopic.Quotient x₀ x₁ :=
+  p
+
+/-- Help the typechecker by convering a path in a topological space to an arrow in the
+fundamental groupoid of that space. -/
+@[reducible]
+def from_path {X : Top} {x₀ x₁ : X} (p : Path.Homotopic.Quotient x₀ x₁) : x₀ ⟶ x₁ :=
+  p
 
 end FundamentalGroupoid
 

@@ -32,7 +32,7 @@ variable (A : Matrix m n K)
 
 /-- The rank of a matrix is the rank of its image. -/
 noncomputable def rank : ℕ :=
-  finrank K A.to_lin'.range
+  finrank K A.toLin'.range
 
 @[simp]
 theorem rank_one : rank (1 : Matrix n n K) = Fintype.card n := by
@@ -66,7 +66,7 @@ theorem rank_of_is_unit (A : Matrix n n K) (h : IsUnit A) : A.rank = Fintype.car
 include m_fin
 
 theorem rank_eq_finrank_range_to_lin {M₁ M₂ : Type _} [AddCommGroupₓ M₁] [AddCommGroupₓ M₂] [Module K M₁] [Module K M₂]
-    (v₁ : Basis m K M₁) (v₂ : Basis n K M₂) : A.rank = finrank K (to_lin v₂ v₁ A).range := by
+    (v₁ : Basis m K M₁) (v₂ : Basis n K M₂) : A.rank = finrank K (toLin v₂ v₁ A).range := by
   let e₁ := (Pi.basisFun K m).Equiv v₁ (Equivₓ.refl _)
   let e₂ := (Pi.basisFun K n).Equiv v₂ (Equivₓ.refl _)
   have range_e₂ : (e₂ : (n → K) →ₗ[K] M₂).range = ⊤ := by

@@ -37,7 +37,7 @@ theorem subset_adjoin : s ⊆ adjoin R s :=
 theorem adjoin_le {S : Subalgebra R A} (H : s ⊆ S) : adjoin R s ≤ S :=
   Algebra.gc.l_le H
 
-theorem adjoin_eq_Inf : adjoin R s = Inf { p | s ⊆ p } :=
+theorem adjoin_eq_Inf : adjoin R s = inf { p | s ⊆ p } :=
   le_antisymmₓ (le_Inf fun _ h => adjoin_le h) (Inf_le subset_adjoin)
 
 theorem adjoin_le_iff {S : Subalgebra R A} : adjoin R s ≤ S ↔ s ⊆ S :=
@@ -233,7 +233,7 @@ theorem pow_smul_mem_adjoin_smul (r : R) (s : Set A) {x : A} (hx : x ∈ adjoin 
   change x ∈ (adjoin R s).toSubmodule at hx
   rw [adjoin_eq_span, Finsupp.mem_span_iff_total] at hx
   rcases hx with ⟨l, rfl : (l.sum fun i : Submonoid.closure s c : R => c • ↑i) = x⟩
-  choose n₁ n₂ using fun x : Submonoid.closure s => Submonoid.pow_smul_mem_closure_smul r s x.prop
+  choose n₁ n₂ using fun x : Submonoid.closure s => Submonoid.pow_smul_mem_closure_smul r s x.Prop
   use l.support.sup n₁
   intro n hn
   rw [Finsupp.smul_sum]
@@ -283,10 +283,10 @@ variable [CommSemiringₓ R] [Semiringₓ A] [Semiringₓ B] [Algebra R A] [Alge
 theorem map_adjoin (φ : A →ₐ[R] B) (s : Set A) : (adjoin R s).map φ = adjoin R (φ '' s) :=
   (adjoin_image _ _ _).symm
 
-theorem adjoin_le_equalizer (φ₁ φ₂ : A →ₐ[R] B) {s : Set A} (h : s.eq_on φ₁ φ₂) : adjoin R s ≤ φ₁.equalizer φ₂ :=
+theorem adjoin_le_equalizer (φ₁ φ₂ : A →ₐ[R] B) {s : Set A} (h : s.EqOn φ₁ φ₂) : adjoin R s ≤ φ₁.equalizer φ₂ :=
   adjoin_le h
 
-theorem ext_of_adjoin_eq_top {s : Set A} (h : adjoin R s = ⊤) ⦃φ₁ φ₂ : A →ₐ[R] B⦄ (hs : s.eq_on φ₁ φ₂) : φ₁ = φ₂ :=
+theorem ext_of_adjoin_eq_top {s : Set A} (h : adjoin R s = ⊤) ⦃φ₁ φ₂ : A →ₐ[R] B⦄ (hs : s.EqOn φ₁ φ₂) : φ₁ = φ₂ :=
   ext fun x => adjoin_le_equalizer φ₁ φ₂ hs <| h.symm ▸ trivialₓ
 
 end AlgHom

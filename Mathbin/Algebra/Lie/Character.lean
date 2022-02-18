@@ -33,11 +33,10 @@ abbrev lie_character :=
 variable {R L}
 
 @[simp]
-theorem lie_character_apply_lie (χ : lie_character R L) (x y : L) : χ ⁅x,y⁆ = 0 := by
+theorem lie_character_apply_lie (χ : LieCharacter R L) (x y : L) : χ ⁅x,y⁆ = 0 := by
   rw [LieHom.map_lie, LieRing.of_associative_ring_bracket, mul_comm, sub_self]
 
-theorem lie_character_apply_of_mem_derived (χ : lie_character R L) {x : L} (h : x ∈ derived_series R L 1) : χ x = 0 :=
-  by
+theorem lie_character_apply_of_mem_derived (χ : LieCharacter R L) {x : L} (h : x ∈ derivedSeries R L 1) : χ x = 0 := by
   rw [derived_series_def, derived_series_of_ideal_succ, derived_series_of_ideal_zero, ← LieSubmodule.mem_coe_submodule,
     LieSubmodule.lie_ideal_oper_eq_linear_span] at h
   apply Submodule.span_induction h
@@ -55,7 +54,7 @@ theorem lie_character_apply_of_mem_derived (χ : lie_character R L) {x : L} (h :
 
 /-- For an Abelian Lie algebra, characters are just linear forms. -/
 @[simps]
-def lie_character_equiv_linear_dual [IsLieAbelian L] : lie_character R L ≃ Module.Dual R L where
+def lie_character_equiv_linear_dual [IsLieAbelian L] : LieCharacter R L ≃ Module.Dual R L where
   toFun := fun χ => (χ : L →ₗ[R] R)
   invFun := fun ψ =>
     { ψ with

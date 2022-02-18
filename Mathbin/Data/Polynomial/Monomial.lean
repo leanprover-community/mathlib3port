@@ -11,20 +11,22 @@ noncomputable section
 
 namespace Polynomial
 
+open_locale Polynomial
+
 universe u
 
 variable {R : Type u} {a b : R} {m n : ℕ}
 
-variable [Semiringₓ R] {p q r : Polynomial R}
+variable [Semiringₓ R] {p q r : R[X]}
 
-theorem monomial_one_eq_iff [Nontrivial R] {i j : ℕ} : (monomial i 1 : Polynomial R) = monomial j 1 ↔ i = j := by
+theorem monomial_one_eq_iff [Nontrivial R] {i j : ℕ} : (monomial i 1 : R[X]) = monomial j 1 ↔ i = j := by
   simp [monomial, monomial_fun, Finsupp.single_eq_single_iff]
 
-instance [Nontrivial R] : Infinite (Polynomial R) :=
+instance [Nontrivial R] : Infinite R[X] :=
   (Infinite.of_injective fun i => monomial i 1) fun m n h => by
     simpa [monomial_one_eq_iff] using h
 
-theorem card_support_le_one_iff_monomial {f : Polynomial R} : Finset.card f.support ≤ 1 ↔ ∃ n a, f = monomial n a := by
+theorem card_support_le_one_iff_monomial {f : R[X]} : Finset.card f.Support ≤ 1 ↔ ∃ n a, f = monomial n a := by
   constructor
   · intro H
     rw [Finset.card_le_one_iff_subset_singleton] at H
@@ -46,8 +48,7 @@ theorem card_support_le_one_iff_monomial {f : Polynomial R} : Finset.card f.supp
     exact support_monomial' _ _
     
 
-theorem ring_hom_ext {S} [Semiringₓ S] {f g : Polynomial R →+* S} (h₁ : ∀ a, f (C a) = g (C a)) (h₂ : f X = g X) :
-    f = g := by
+theorem ring_hom_ext {S} [Semiringₓ S] {f g : R[X] →+* S} (h₁ : ∀ a, f (c a) = g (c a)) (h₂ : f x = g x) : f = g := by
   set f' := f.comp (to_finsupp_iso R).symm.toRingHom with hf'
   set g' := g.comp (to_finsupp_iso R).symm.toRingHom with hg'
   have A : f' = g' := by
@@ -69,8 +70,7 @@ theorem ring_hom_ext {S} [Semiringₓ S] {f g : Polynomial R →+* S} (h₁ : �
   rw [B, C, A]
 
 @[ext]
-theorem ring_hom_ext' {S} [Semiringₓ S] {f g : Polynomial R →+* S} (h₁ : f.comp C = g.comp C) (h₂ : f X = g X) :
-    f = g :=
+theorem ring_hom_ext' {S} [Semiringₓ S] {f g : R[X] →+* S} (h₁ : f.comp c = g.comp c) (h₂ : f x = g x) : f = g :=
   ring_hom_ext (RingHom.congr_fun h₁) h₂
 
 end Polynomial

@@ -49,9 +49,9 @@ open TopologicalSpace.Opens
 
 namespace Top
 
-variable {C : Type u} [category.{v} C] [has_products C]
+variable {C : Type u} [Category.{v} C] [HasProducts C]
 
-variable {X : Top.{v}} (F : presheaf C X) {ι : Type v} (U : ι → opens X)
+variable {X : Top.{v}} (F : Presheaf C X) {ι : Type v} (U : ι → Opens X)
 
 namespace Presheaf
 
@@ -62,20 +62,20 @@ open SheafConditionEqualizerProducts
 is the equalizer of the two morphisms
 `∏ F.obj (U i) ⟶ ∏ F.obj (U i) ⊓ (U j)`.
 -/
-def is_sheaf (F : presheaf C X) : Prop :=
-  ∀ ⦃ι : Type v⦄ U : ι → opens X, Nonempty (is_limit (sheaf_condition_equalizer_products.fork F U))
+def is_sheaf (F : Presheaf C X) : Prop :=
+  ∀ ⦃ι : Type v⦄ U : ι → Opens X, Nonempty (IsLimit (SheafConditionEqualizerProducts.fork F U))
 
 /-- The presheaf valued in `punit` over any topological space is a sheaf.
 -/
-theorem is_sheaf_punit (F : presheaf (CategoryTheory.Discrete PUnit) X) : F.is_sheaf := fun ι U => ⟨punit_cone_is_limit⟩
+theorem is_sheaf_punit (F : Presheaf (CategoryTheory.Discrete PUnit) X) : F.IsSheaf := fun ι U => ⟨punitConeIsLimit⟩
 
 /-- Transfer the sheaf condition across an isomorphism of presheaves.
 -/
-theorem is_sheaf_of_iso {F G : presheaf C X} (α : F ≅ G) (h : F.is_sheaf) : G.is_sheaf := fun ι U =>
-  ⟨is_limit.of_iso_limit ((is_limit.postcompose_inv_equiv _ _).symm (h U).some)
-      (sheaf_condition_equalizer_products.fork.iso_of_iso U α.symm).symm⟩
+theorem is_sheaf_of_iso {F G : Presheaf C X} (α : F ≅ G) (h : F.IsSheaf) : G.IsSheaf := fun ι U =>
+  ⟨IsLimit.ofIsoLimit ((IsLimit.postcomposeInvEquiv _ _).symm (h U).some)
+      (SheafConditionEqualizerProducts.fork.isoOfIso U α.symm).symm⟩
 
-theorem is_sheaf_iso_iff {F G : presheaf C X} (α : F ≅ G) : F.is_sheaf ↔ G.is_sheaf :=
+theorem is_sheaf_iso_iff {F G : Presheaf C X} (α : F ≅ G) : F.IsSheaf ↔ G.IsSheaf :=
   ⟨fun h => is_sheaf_of_iso α h, fun h => is_sheaf_of_iso α.symm h⟩
 
 end Presheaf
@@ -86,24 +86,24 @@ variable (C X)
 satisfying the sheaf condition.
 -/
 def sheaf : Type max u v :=
-  { F : presheaf C X // F.is_sheaf }deriving category
+  { F : Presheaf C X // F.IsSheaf }deriving Category
 
-instance sheaf_inhabited : Inhabited (sheaf (CategoryTheory.Discrete PUnit) X) :=
-  ⟨⟨functor.star _, presheaf.is_sheaf_punit _⟩⟩
+instance sheaf_inhabited : Inhabited (Sheaf (CategoryTheory.Discrete PUnit) X) :=
+  ⟨⟨Functor.star _, Presheaf.is_sheaf_punit _⟩⟩
 
 namespace Sheaf
 
 /-- The forgetful functor from sheaves to presheaves.
 -/
 def forget : Top.Sheaf C X ⥤ Top.Presheaf C X :=
-  full_subcategory_inclusion presheaf.is_sheaf deriving full, faithful
+  fullSubcategoryInclusion Presheaf.IsSheaf deriving Full, Faithful
 
 @[simp]
-theorem id_app (F : sheaf C X) t : (𝟙 F : F ⟶ F).app t = 𝟙 _ :=
+theorem id_app (F : Sheaf C X) t : (𝟙 F : F ⟶ F).app t = 𝟙 _ :=
   rfl
 
 @[simp]
-theorem comp_app {F G H : sheaf C X} (f : F ⟶ G) (g : G ⟶ H) t : (f ≫ g).app t = f.app t ≫ g.app t :=
+theorem comp_app {F G H : Sheaf C X} (f : F ⟶ G) (g : G ⟶ H) t : (f ≫ g).app t = f.app t ≫ g.app t :=
   rfl
 
 end Sheaf

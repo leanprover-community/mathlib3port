@@ -58,10 +58,10 @@ def to_group : PresentedGroup rels →* G :=
   QuotientGroup.lift (Subgroup.normalClosure rels) F (to_group_eq_one_of_mem_closure h)
 
 @[simp]
-theorem to_group.of {x : α} : to_group h (of x) = f x :=
+theorem to_group.of {x : α} : toGroup h (of x) = f x :=
   FreeGroup.lift.of
 
-theorem to_group.unique (g : PresentedGroup rels →* G) (hg : ∀ x : α, g (of x) = f x) : ∀ {x}, g x = to_group h x :=
+theorem to_group.unique (g : PresentedGroup rels →* G) (hg : ∀ x : α, g (of x) = f x) : ∀ {x}, g x = toGroup h x :=
   fun x => QuotientGroup.induction_on x fun _ => FreeGroup.lift.unique (g.comp (QuotientGroup.mk' _)) hg
 
 end ToGroup

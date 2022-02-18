@@ -23,15 +23,15 @@ namespace Nat
 
 /-- `nat.card α` is the cardinality of `α` as a natural number.
   If `α` is infinite, `nat.card α = 0`. -/
-def card (α : Type _) : ℕ :=
+protected def card (α : Type _) : ℕ :=
   (mk α).toNat
 
 @[simp]
-theorem card_eq_fintype_card [Fintype α] : card α = Fintype.card α :=
+theorem card_eq_fintype_card [Fintype α] : Nat.card α = Fintype.card α :=
   mk_to_nat_eq_card
 
 @[simp]
-theorem card_eq_zero_of_infinite [Infinite α] : card α = 0 :=
+theorem card_eq_zero_of_infinite [Infinite α] : Nat.card α = 0 :=
   mk_to_nat_of_infinite
 
 end Nat

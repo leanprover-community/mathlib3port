@@ -40,7 +40,7 @@ open Tactic
 to each declaration named in the list `to`. -/
 unsafe def tactic.copy_doc_string (fr : Name) (to : List Name) : tactic Unit := do
   let fr_ds ← doc_string fr
-  to.mmap' fun tgt => add_doc_string tgt fr_ds
+  to fun tgt => add_doc_string tgt fr_ds
 
 open Lean Lean.Parser Interactive
 
@@ -131,16 +131,16 @@ unsafe instance : has_to_format DocCategory :=
 structure TacticDocEntry where
   Name : Stringₓ
   category : DocCategory
-  declNames : List _root_.name
+  declNames : List Name
   tags : List Stringₓ := []
   description : Stringₓ := ""
-  inheritDescriptionFrom : Option _root_.name := none
+  inheritDescriptionFrom : Option Name := none
   deriving has_reflect
 
 /-- Turns a `tactic_doc_entry` into a JSON representation. -/
 unsafe def tactic_doc_entry.to_json (d : TacticDocEntry) : json :=
   json.object
-    [("name", d.name), ("category", d.category.to_string), ("decl_names", d.decl_names.map (json.of_string ∘ toString)),
+    [("name", d.Name), ("category", d.category.toString), ("decl_names", d.declNames.map (json.of_string ∘ toString)),
       ("tags", d.tags.map json.of_string), ("description", d.description)]
 
 unsafe instance : HasToString TacticDocEntry :=
@@ -159,7 +159,7 @@ unsafe def tactic_doc_entry.update_description_from (tde : TacticDocEntry) (inh_
 
 If neither of these conditions are met, it returns `tde`. -/
 unsafe def tactic_doc_entry.update_description (tde : TacticDocEntry) : tactic TacticDocEntry :=
-  match tde.inherit_description_from, tde.decl_names with
+  match tde.inheritDescriptionFrom, tde.declNames with
   | some inh_id, _ => tde.update_description_from inh_id
   | none, [inh_id] => tde.update_description_from inh_id
   | none, _ => return tde
@@ -182,11 +182,11 @@ attribute. If `tde.decl_names` has exactly one entry `` `decl`` and
 if `tde.description` is the empty string, `add_tactic_doc` uses the doc
 string of `decl` as the description. -/
 unsafe def tactic.add_tactic_doc (tde : TacticDocEntry) : tactic Unit := do
-  when (tde.description = "" ∧ tde.inherit_description_from.is_none ∧ tde.decl_names.length ≠ 1) <|
+  when (tde = "" ∧ tde ∧ tde ≠ 1) <|
       fail
         "A tactic doc entry must either:\n 1. have a description written as a doc-string for the `add_tactic_doc` invocation, or\n 2. have a single declaration in the `decl_names` field, to inherit a description from, or\n 3. explicitly indicate the declaration to inherit the description from using\n    `inherit_description_from`."
   let tde ← if tde.description = "" then tde.update_description else return tde
-  let decl_name := (tde.name ++ tde.category.to_string).mk_hashed_name `tactic_doc
+  let decl_name := (tde.Name ++ tde.category.toString).mk_hashed_name `tactic_doc
   add_decl <| mk_definition decl_name [] (quote.1 TacticDocEntry) (reflect tde)
   tactic_doc_entry_attr decl_name () tt none
 

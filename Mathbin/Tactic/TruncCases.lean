@@ -14,16 +14,16 @@ private unsafe def trunc_cases_nondependent (e : expr) (ids : List Name) : tacti
   tactic.clear e
   let e ← tactic.intro e.local_pp_name
   tactic.swap
-  match ids.nth 1 with
+  match ids 1 with
     | some n => tactic.intro n
     | none => tactic.intro1
-  match ids.nth 2 with
+  match ids 2 with
     | some n => tactic.intro n
     | none => tactic.intro1
   tactic.swap
   return e
 
--- ././Mathport/Syntax/Translate/Basic.lean:794:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
 /-- Auxiliary tactic for `trunc_cases`. -/
 private unsafe def trunc_cases_dependent (e : expr) (ids : List Name) : tactic expr := do
   let [(_, [e], _), (_, [e_a, e_b, e_p], _)] ← tactic.induction e ids

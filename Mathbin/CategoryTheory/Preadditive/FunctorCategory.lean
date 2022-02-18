@@ -15,9 +15,9 @@ namespace CategoryTheory
 
 open CategoryTheory.Limits Preadditive
 
-variable {C D : Type _} [category C] [category D] [preadditive D]
+variable {C D : Type _} [Category C] [Category D] [Preadditive D]
 
-instance : preadditive (C ⥤ D) where
+instance : Preadditive (C ⥤ D) where
   homGroup := fun F G =>
     { add := fun α β =>
         { app := fun X => α.app X + β.app X,
@@ -102,11 +102,11 @@ theorem app_neg (X : C) (α : F ⟶ G) : (-α).app X = -α.app X :=
 
 @[simp]
 theorem app_nsmul (X : C) (α : F ⟶ G) (n : ℕ) : (n • α).app X = n • α.app X :=
-  (app_hom X).map_nsmul α n
+  (appHom X).map_nsmul α n
 
 @[simp]
 theorem app_zsmul (X : C) (α : F ⟶ G) (n : ℤ) : (n • α).app X = n • α.app X :=
-  (app_hom X).map_zsmul α n
+  (appHom X).map_zsmul α n
 
 @[simp]
 theorem app_sum {ι : Type _} (s : Finset ι) (X : C) (α : ι → (F ⟶ G)) : (∑ i in s, α i).app X = ∑ i in s, (α i).app X :=

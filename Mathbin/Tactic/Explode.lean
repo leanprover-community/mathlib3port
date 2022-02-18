@@ -33,15 +33,15 @@ unsafe inductive thm : Type
 /-- Turn a thm into a string.
 -/
 unsafe def thm.to_string : thm → Stringₓ
-  | thm.expr e => e.to_string
-  | thm.name n => n.to_string
+  | thm.expr e => e.toString
+  | thm.name n => n.toString
   | thm.string s => s
 
 unsafe structure entry : Type where
   expr : expr
   line : Nat
   depth : Nat
-  Status : status
+  Status : Status
   thm : thm
   deps : List Nat
 
@@ -72,14 +72,14 @@ unsafe def format_aux : List Stringₓ → List Stringₓ → List Stringₓ →
       do
         let margin := Stringₓ.join (List.repeat " │" en.depth)
         let margin :=
-          match en.status with
+          match en.Status with
           | status.sintro => " ├" ++ margin
           | status.intro => " │" ++ margin ++ " ┌"
           | status.reg => " │" ++ margin ++ ""
           | status.lam => " │" ++ margin ++ ""
         let p ← infer_type en.expr >>= pp
         let lhs := line ++ "│" ++ dep ++ "│ " ++ thm ++ margin ++ " "
-        return <| format.of_string lhs ++ (p.nest lhs.length).group ++ format.line
+        return <| format.of_string lhs ++ (p lhs).group ++ format.line
     (· ++ fmt) <$> format_aux lines deps thms es
   | _, _, _, _ => return format.nil
 
@@ -93,13 +93,13 @@ unsafe instance : has_to_tactic_format entries :=
 unsafe def append_dep (filter : expr → tactic Unit) (es : entries) (e : expr) (deps : List Nat) : tactic (List Nat) :=
   (do
       let ei ← es.find e
-      filter ei.expr
-      return (ei.line :: deps)) <|>
+      filter ei
+      return (ei :: deps)) <|>
     return deps
 
 unsafe def may_be_proof (e : expr) : tactic Bool := do
   let expr.sort u ← infer_type e >>= infer_type
-  return <| bnot u.nonzero
+  return <| bnot u
 
 end Explode
 
@@ -112,16 +112,16 @@ mutual
       let l := local_const m n bi d
       let b' := instantiate_var b l
       if si then
-          let en : entry := ⟨l, es.size, depth, status.sintro, thm.name n, []⟩
+          let en : entry := ⟨l, es, depth, status.sintro, thm.name n, []⟩
           do
-          let es' ← explode.core b' si depth (es.add en)
-          return <| es'.add ⟨e, es'.size, depth, status.lam, thm.string "∀I", [es.size, es'.size - 1]⟩
+          let es' ← explode.core b' si depth (es en)
+          return <| es' ⟨e, es', depth, status.lam, thm.string "∀I", [es, es' - 1]⟩
         else do
-          let en : entry := ⟨l, es.size, depth, status.intro, thm.name n, []⟩
-          let es' ← explode.core b' si (depth + 1) (es.add en)
-          let deps' ← explode.append_dep filter es' b'.erase_annotations []
+          let en : entry := ⟨l, es, depth, status.intro, thm.name n, []⟩
+          let es' ← explode.core b' si (depth + 1) (es en)
+          let deps' ← explode.append_dep filter es' b' []
           let deps' ← explode.append_dep filter es' l deps'
-          return <| es'.add ⟨e, es'.size, depth, status.lam, thm.string "∀I", deps'⟩
+          return <| es' ⟨e, es', depth, status.lam, thm.string "∀I", deps'⟩
     | e@(elet n t a b), si, depth, es => explode.core (reduce_lets e) si depth es
     | e@(macro n l), si, depth, es => explode.core l.head si depth es
     | e, si, depth, es =>
@@ -129,24 +129,24 @@ mutual
         match get_app_fn_args e with
         | (nm@(const n _), args) => explode.args e args depth es (thm.expr nm) []
         | (fn, []) => do
-          let en : entry := ⟨fn, es.size, depth, status.reg, thm.expr fn, []⟩
-          return (es.add en)
+          let en : entry := ⟨fn, es.size, depth, Status.reg, thm.expr fn, []⟩
+          return (es en)
         | (fn, args) => do
-          let es' ← explode.core fn ff depth es
+          let es' ← explode.core fn false depth es
           let deps ← explode.append_dep filter es' fn.erase_annotations []
           explode.args e args depth es' (thm.string "∀E") deps
   unsafe def explode.args (filter : expr → tactic Unit) :
       expr → List expr → Nat → entries → thm → List Nat → tactic entries
     | e, arg :: args, depth, es, thm, deps => do
-      let es' ← explode.core arg ff depth es <|> return es
+      let es' ← explode.core arg false depth es <|> return es
       let deps' ← explode.append_dep filter es' arg deps
       explode.args e args depth es' thm deps'
-    | e, [], depth, es, thm, deps => return (es.add ⟨e, es.size, depth, status.reg, thm, deps.reverse⟩)
+    | e, [], depth, es, thm, deps => return (es.add ⟨e, es.size, depth, Status.reg, thm, deps.reverse⟩)
 end
 
-unsafe def explode_expr (e : expr) (hide_non_prop := tt) : tactic entries :=
+unsafe def explode_expr (e : expr) (hide_non_prop := true) : tactic entries :=
   let filter := if hide_non_prop then fun e => may_be_proof e >>= guardb else fun _ => skip
-  tactic.explode.core filter e tt 0 default
+  tactic.explode.core filter e true 0 default
 
 unsafe def explode (n : Name) : tactic Unit := do
   let const n _ ← resolve_name n | fail "cannot resolve name"

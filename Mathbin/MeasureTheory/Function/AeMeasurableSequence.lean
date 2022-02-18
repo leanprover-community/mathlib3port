@@ -26,7 +26,7 @@ variable {α β γ ι : Type _} [MeasurableSpace α] [MeasurableSpace β] {f : �
 whose complement has measure 0 such that for all `x ∈ ae_seq_set`, `f i x` is equal to
 `(hf i).mk (f i) x` for all `i` and we have the pointwise property `p x (λ n, f n x)`. -/
 def AeSeqSet (hf : ∀ i, AeMeasurable (f i) μ) (p : α → (ι → β) → Prop) : Set α :=
-  to_measurable μ ({ x | (∀ i, f i x = (hf i).mk (f i) x) ∧ p x fun n => f n x }ᶜ)ᶜ
+  ToMeasurable μ ({ x | (∀ i, f i x = (hf i).mk (f i) x) ∧ p x fun n => f n x }ᶜ)ᶜ
 
 /-- A sequence of measurable functions that are equal to `f` and verify property `p` on the
 measurable set `ae_seq_set hf p`. -/

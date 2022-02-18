@@ -53,7 +53,7 @@ unsafe def intercept_result {α} (m : expr → tactic expr) (t : tactic α) : ta
   let gs' ← gs.mmap fun g => infer_type g >>= mk_meta_var
   set_goals gs'
   let a ← t
-  (gs.zip gs').mmap fun ⟨g, g'⟩ => do
+  (gs gs').mmap fun ⟨g, g'⟩ => do
       let g' ← instantiate_mvars g'
       let g'' ← with_local_goals' gs <| m g'
       unsafe.type_context.run <| unsafe.type_context.assign g g''
@@ -65,7 +65,7 @@ intercepts any results it assigns to the goals,
 and runs `dsimp` on those results
 before assigning the simplified values to the original goals.
 -/
-unsafe def dsimp_result {α} (t : tactic α) (cfg : dsimp_config := { failIfUnchanged := ff }) (no_defaults := ff)
+unsafe def dsimp_result {α} (t : tactic α) (cfg : DsimpConfig := { failIfUnchanged := false }) (no_defaults := false)
     (attr_names : List Name := []) (hs : List simp_arg_type := []) : tactic α :=
   intercept_result (fun g => g.dsimp cfg no_defaults attr_names hs) t
 
@@ -75,8 +75,8 @@ intercepts any results `t` assigns to the goals,
 and runs `simp` on those results
 before assigning the simplified values to the original goals.
 -/
-unsafe def simp_result {α} (t : tactic α) (cfg : simp_config := { failIfUnchanged := ff })
-    (discharger : tactic Unit := failed) (no_defaults := ff) (attr_names : List Name := [])
+unsafe def simp_result {α} (t : tactic α) (cfg : SimpConfig := { failIfUnchanged := false })
+    (discharger : tactic Unit := failed) (no_defaults := false) (attr_names : List Name := [])
     (hs : List simp_arg_type := []) : tactic α :=
   intercept_result (fun g => Prod.fst <$> g.simp cfg discharger no_defaults attr_names hs) t
 
@@ -95,7 +95,7 @@ You can use the usual interactive syntax for `dsimp`, e.g.
 -/
 unsafe def dsimp_result (no_defaults : parse only_flag) (hs : parse simp_arg_list) (attr_names : parse with_ident_list)
     (t : itactic) : itactic :=
-  tactic.dsimp_result t { failIfUnchanged := ff } no_defaults attr_names hs
+  tactic.dsimp_result t { failIfUnchanged := false } no_defaults attr_names hs
 
 /-- `simp_result { tac }`
 attempts to run a tactic block `tac`,
@@ -108,7 +108,7 @@ You can use the usual interactive syntax for `simp`, e.g.
 -/
 unsafe def simp_result (no_defaults : parse only_flag) (hs : parse simp_arg_list) (attr_names : parse with_ident_list)
     (t : itactic) : itactic :=
-  tactic.simp_result t { failIfUnchanged := ff } failed no_defaults attr_names hs
+  tactic.simp_result t { failIfUnchanged := false } failed no_defaults attr_names hs
 
 /-- `simp_result { tac }`
 attempts to run a tactic block `tac`,

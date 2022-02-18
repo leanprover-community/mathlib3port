@@ -314,11 +314,11 @@ def vadd_const (p : P) : G ≃ P where
   right_inv := fun p' => vsub_vadd _ _
 
 @[simp]
-theorem coe_vadd_const (p : P) : ⇑vadd_const p = fun v => v +ᵥ p :=
+theorem coe_vadd_const (p : P) : ⇑vaddConst p = fun v => v +ᵥ p :=
   rfl
 
 @[simp]
-theorem coe_vadd_const_symm (p : P) : ⇑(vadd_const p).symm = fun p' => p' -ᵥ p :=
+theorem coe_vadd_const_symm (p : P) : ⇑(vaddConst p).symm = fun p' => p' -ᵥ p :=
   rfl
 
 /-- `p' ↦ p -ᵥ p'` as an equivalence. -/
@@ -331,11 +331,11 @@ def const_vsub (p : P) : P ≃ G where
     simp [vsub_vadd_eq_vsub_sub]
 
 @[simp]
-theorem coe_const_vsub (p : P) : ⇑const_vsub p = (· -ᵥ ·) p :=
+theorem coe_const_vsub (p : P) : ⇑constVsub p = (· -ᵥ ·) p :=
   rfl
 
 @[simp]
-theorem coe_const_vsub_symm (p : P) : ⇑(const_vsub p).symm = fun v => -v +ᵥ p :=
+theorem coe_const_vsub_symm (p : P) : ⇑(constVsub p).symm = fun v => -v +ᵥ p :=
   rfl
 
 variable (P)
@@ -350,24 +350,24 @@ def const_vadd (v : G) : Equivₓ.Perm P where
     simp [vadd_vadd]
 
 @[simp]
-theorem coe_const_vadd (v : G) : ⇑const_vadd P v = (· +ᵥ ·) v :=
+theorem coe_const_vadd (v : G) : ⇑constVadd P v = (· +ᵥ ·) v :=
   rfl
 
 variable (G)
 
 @[simp]
-theorem const_vadd_zero : const_vadd P (0 : G) = 1 :=
+theorem const_vadd_zero : constVadd P (0 : G) = 1 :=
   ext <| zero_vadd G
 
 variable {G}
 
 @[simp]
-theorem const_vadd_add (v₁ v₂ : G) : const_vadd P (v₁ + v₂) = const_vadd P v₁ * const_vadd P v₂ :=
+theorem const_vadd_add (v₁ v₂ : G) : constVadd P (v₁ + v₂) = constVadd P v₁ * constVadd P v₂ :=
   ext <| add_vadd v₁ v₂
 
 /-- `equiv.const_vadd` as a homomorphism from `multiplicative G` to `equiv.perm P` -/
 def const_vadd_hom : Multiplicative G →* Equivₓ.Perm P where
-  toFun := fun v => const_vadd P v.to_add
+  toFun := fun v => constVadd P v.toAdd
   map_one' := const_vadd_zero G P
   map_mul' := const_vadd_add P
 
@@ -376,37 +376,37 @@ variable {P}
 open Function
 
 /-- Point reflection in `x` as a permutation. -/
-def point_reflection (x : P) : perm P :=
-  (const_vsub x).trans (vadd_const x)
+def point_reflection (x : P) : Perm P :=
+  (constVsub x).trans (vaddConst x)
 
-theorem point_reflection_apply (x y : P) : point_reflection x y = x -ᵥ y +ᵥ x :=
+theorem point_reflection_apply (x y : P) : pointReflection x y = x -ᵥ y +ᵥ x :=
   rfl
 
 @[simp]
-theorem point_reflection_symm (x : P) : (point_reflection x).symm = point_reflection x :=
+theorem point_reflection_symm (x : P) : (pointReflection x).symm = pointReflection x :=
   ext <| by
     simp [point_reflection]
 
 @[simp]
-theorem point_reflection_self (x : P) : point_reflection x x = x :=
+theorem point_reflection_self (x : P) : pointReflection x x = x :=
   vsub_vadd _ _
 
-theorem point_reflection_involutive (x : P) : involutive (point_reflection x : P → P) := fun y =>
+theorem point_reflection_involutive (x : P) : Involutive (pointReflection x : P → P) := fun y =>
   (Equivₓ.apply_eq_iff_eq_symm_apply _).2 <| by
     rw [point_reflection_symm]
 
 /-- `x` is the only fixed point of `point_reflection x`. This lemma requires
 `x + x = y + y ↔ x = y`. There is no typeclass to use here, so we add it as an explicit argument. -/
-theorem point_reflection_fixed_iff_of_injective_bit0 {x y : P} (h : injective (bit0 : G → G)) :
-    point_reflection x y = y ↔ y = x := by
+theorem point_reflection_fixed_iff_of_injective_bit0 {x y : P} (h : Injective (bit0 : G → G)) :
+    pointReflection x y = y ↔ y = x := by
   rw [point_reflection_apply, eq_comm, eq_vadd_iff_vsub_eq, ← neg_vsub_eq_vsub_rev, neg_eq_iff_add_eq_zero, ← bit0, ←
     bit0_zero, h.eq_iff, vsub_eq_zero_iff_eq, eq_comm]
 
 omit G
 
 theorem injective_point_reflection_left_of_injective_bit0 {G P : Type _} [AddCommGroupₓ G] [AddTorsor G P]
-    (h : injective (bit0 : G → G)) (y : P) : injective fun x : P => point_reflection x y :=
-  fun x₁ x₂ hy : point_reflection x₁ y = point_reflection x₂ y => by
+    (h : Injective (bit0 : G → G)) (y : P) : Injective fun x : P => pointReflection x y :=
+  fun x₁ x₂ hy : pointReflection x₁ y = pointReflection x₂ y => by
   rwa [point_reflection_apply, point_reflection_apply, vadd_eq_vadd_iff_sub_eq_vsub, vsub_sub_vsub_cancel_right, ←
     neg_vsub_eq_vsub_rev, neg_eq_iff_add_eq_zero, ← bit0, ← bit0_zero, h.eq_iff, vsub_eq_zero_iff_eq] at hy
 

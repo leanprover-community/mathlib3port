@@ -31,13 +31,13 @@ open CategoryTheory.Limits.Types.FilteredColimit
 
 namespace CategoryTheory.Limits
 
-variable {J K : Type v} [small_category J] [small_category K]
+variable {J K : Type v} [SmallCategory J] [SmallCategory K]
 
 variable (F : J × K ⥤ Type v)
 
 open CategoryTheory.prod
 
-variable [is_filtered K]
+variable [IsFiltered K]
 
 section
 
@@ -49,13 +49,13 @@ only that there are finitely many objects.
 
 variable [Fintype J]
 
--- ././Mathport/Syntax/Translate/Basic.lean:626:6: warning: expanding binder group (X Y)
--- ././Mathport/Syntax/Translate/Basic.lean:626:6: warning: expanding binder group (X Y)
--- ././Mathport/Syntax/Translate/Basic.lean:626:6: warning: expanding binder group (X Y)
+-- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (X Y)
+-- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (X Y)
+-- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (X Y)
 /-- This follows this proof from
 * Borceux, Handbook of categorical algebra 1, Theorem 2.13.4
 -/
-theorem colimit_limit_to_limit_colimit_injective : Function.Injective (colimit_limit_to_limit_colimit F) := by
+theorem colimit_limit_to_limit_colimit_injective : Function.Injective (colimitLimitToLimitColimit F) := by
   classical
   intro x y h
   obtain ⟨kx, x, rfl⟩ := jointly_surjective' x
@@ -128,14 +128,14 @@ theorem colimit_limit_to_limit_colimit_injective : Function.Injective (colimit_l
 
 end
 
-variable [fin_category J]
+variable [FinCategory J]
 
--- ././Mathport/Syntax/Translate/Basic.lean:626:6: warning: expanding binder group (X Y)
+-- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (X Y)
 /-- This follows this proof from
 * Borceux, Handbook of categorical algebra 1, Theorem 2.13.4
 although with different names.
 -/
-theorem colimit_limit_to_limit_colimit_surjective : Function.Surjective (colimit_limit_to_limit_colimit F) := by
+theorem colimit_limit_to_limit_colimit_surjective : Function.Surjective (colimitLimitToLimitColimit F) := by
   classical
   intro x
   have z := fun j => jointly_surjective' (limit.π (curry.obj F ⋙ limits.colim) j x)
@@ -199,9 +199,9 @@ theorem colimit_limit_to_limit_colimit_surjective : Function.Surjective (colimit
   have s : ∀ {j₁ j₂ j₃ j₄} f : j₁ ⟶ j₂ f' : j₃ ⟶ j₄, gf f ≫ i f = hf f' ≫ i f' := by
     intros
     rw [s', s']
-    swap 2
+    swap
     exact k'O
-    swap 2
+    swap
     · rw [Finset.mem_bUnion]
       refine' ⟨j₁, Finset.mem_univ _, _⟩
       rw [Finset.mem_bUnion]
@@ -258,18 +258,17 @@ theorem colimit_limit_to_limit_colimit_surjective : Function.Surjective (colimit
     simp only [bifunctor.map_id_comp, types_comp_apply, bifunctor.map_id, types_id_apply]
     
 
-instance colimit_limit_to_limit_colimit_is_iso : is_iso (colimit_limit_to_limit_colimit F) :=
+instance colimit_limit_to_limit_colimit_is_iso : IsIso (colimitLimitToLimitColimit F) :=
   (is_iso_iff_bijective _).mpr ⟨colimit_limit_to_limit_colimit_injective F, colimit_limit_to_limit_colimit_surjective F⟩
 
-instance colimit_limit_to_limit_colimit_cone_iso (F : J ⥤ K ⥤ Type v) :
-    is_iso (colimit_limit_to_limit_colimit_cone F) := by
+instance colimit_limit_to_limit_colimit_cone_iso (F : J ⥤ K ⥤ Type v) : IsIso (colimitLimitToLimitColimitCone F) := by
   have : is_iso (colimit_limit_to_limit_colimit_cone F).Hom := by
     dsimp only [colimit_limit_to_limit_colimit_cone]
     infer_instance
   apply cones.cone_iso_of_hom_iso
 
 noncomputable instance filtered_colim_preserves_finite_limits_of_types :
-    preserves_finite_limits (colim : (K ⥤ Type v) ⥤ _) :=
+    PreservesFiniteLimits (colim : (K ⥤ Type v) ⥤ _) :=
   ⟨fun J _ _ =>
     ⟨fun F =>
       ⟨fun c hc => by
@@ -279,17 +278,17 @@ noncomputable instance filtered_colim_preserves_finite_limits_of_types :
         exact functor.map_iso _ (hc.unique_up_to_iso (limit.is_limit F))
         exact as_iso (colimit_limit_to_limit_colimit_cone F)⟩⟩⟩
 
-variable {C : Type u} [category.{v} C] [concrete_category.{v} C]
+variable {C : Type u} [Category.{v} C] [ConcreteCategory.{v} C]
 
 section
 
-variable [has_limits_of_shape J C] [has_colimits_of_shape K C]
+variable [HasLimitsOfShape J C] [HasColimitsOfShape K C]
 
-variable [reflects_limits_of_shape J (forget C)] [preserves_colimits_of_shape K (forget C)]
+variable [ReflectsLimitsOfShape J (forget C)] [PreservesColimitsOfShape K (forget C)]
 
-variable [preserves_limits_of_shape J (forget C)]
+variable [PreservesLimitsOfShape J (forget C)]
 
-noncomputable instance filtered_colim_preserves_finite_limits : preserves_limits_of_shape J (colim : (K ⥤ C) ⥤ _) :=
+noncomputable instance filtered_colim_preserves_finite_limits : PreservesLimitsOfShape J (colim : (K ⥤ C) ⥤ _) :=
   have : preserves_limits_of_shape J ((colim : (K ⥤ C) ⥤ _) ⋙ forget C) :=
     preserves_limits_of_shape_of_nat_iso (preserves_colimit_nat_iso _).symm
   preserves_limits_of_shape_of_reflects_of_preserves _ (forget C)
@@ -298,27 +297,26 @@ end
 
 attribute [local instance] reflects_limits_of_shape_of_reflects_isomorphisms
 
-noncomputable instance [preserves_finite_limits (forget C)] [preserves_filtered_colimits (forget C)]
-    [has_finite_limits C] [has_colimits_of_shape K C] [reflects_isomorphisms (forget C)] :
-    preserves_finite_limits (colim : (K ⥤ C) ⥤ _) :=
+noncomputable instance [PreservesFiniteLimits (forget C)] [PreservesFilteredColimits (forget C)] [HasFiniteLimits C]
+    [HasColimitsOfShape K C] [ReflectsIsomorphisms (forget C)] : PreservesFiniteLimits (colim : (K ⥤ C) ⥤ _) :=
   ⟨fun _ _ _ => CategoryTheory.Limits.filteredColimPreservesFiniteLimits⟩
 
 section
 
-variable [has_limits_of_shape J C] [has_colimits_of_shape K C]
+variable [HasLimitsOfShape J C] [HasColimitsOfShape K C]
 
-variable [reflects_limits_of_shape J (forget C)] [preserves_colimits_of_shape K (forget C)]
+variable [ReflectsLimitsOfShape J (forget C)] [PreservesColimitsOfShape K (forget C)]
 
-variable [preserves_limits_of_shape J (forget C)]
+variable [PreservesLimitsOfShape J (forget C)]
 
 /-- A curried version of the fact that filtered colimits commute with finite limits. -/
 noncomputable def colimit_limit_iso (F : J ⥤ K ⥤ C) : colimit (limit F) ≅ limit (colimit F.flip) :=
-  (is_limit_of_preserves colim (limit.is_limit _)).conePointUniqueUpToIso (limit.is_limit _) ≪≫
-    has_limit.iso_of_nat_iso (colimit_flip_iso_comp_colim _).symm
+  (isLimitOfPreserves colim (limit.isLimit _)).conePointUniqueUpToIso (limit.isLimit _) ≪≫
+    HasLimit.isoOfNatIso (colimitFlipIsoCompColim _).symm
 
 @[simp, reassoc]
 theorem ι_colimit_limit_iso_limit_π (F : J ⥤ K ⥤ C) a b :
-    colimit.ι (limit F) a ≫ (colimit_limit_iso F).Hom ≫ limit.π (colimit F.flip) b =
+    colimit.ι (limit F) a ≫ (colimitLimitIso F).Hom ≫ limit.π (colimit F.flip) b =
       (limit.π F b).app a ≫ (colimit.ι F.flip a).app b :=
   by
   dsimp [colimit_limit_iso]

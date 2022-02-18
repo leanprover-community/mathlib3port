@@ -61,7 +61,7 @@ instance : TopologicalRing ℝ≥0 where
     continuous_subtype_mk _ <|
       (continuous_subtype_val.comp continuous_fst).add (continuous_subtype_val.comp continuous_snd)
 
-instance : second_countable_topology ℝ≥0 :=
+instance : SecondCountableTopology ℝ≥0 :=
   TopologicalSpace.Subtype.second_countable_topology _ _
 
 instance : OrderTopology ℝ≥0 :=
@@ -81,34 +81,34 @@ theorem continuous_coe : Continuous (coe : ℝ≥0 → ℝ) :=
 
 @[simp, norm_cast]
 theorem tendsto_coe {f : Filter α} {m : α → ℝ≥0 } {x : ℝ≥0 } :
-    tendsto (fun a => (m a : ℝ)) f (𝓝 (x : ℝ)) ↔ tendsto m f (𝓝 x) :=
+    Tendsto (fun a => (m a : ℝ)) f (𝓝 (x : ℝ)) ↔ Tendsto m f (𝓝 x) :=
   tendsto_subtype_rng.symm
 
-theorem tendsto_coe' {f : Filter α} [ne_bot f] {m : α → ℝ≥0 } {x : ℝ} :
-    tendsto (fun a => m a : α → ℝ) f (𝓝 x) ↔ ∃ hx : 0 ≤ x, tendsto m f (𝓝 ⟨x, hx⟩) :=
+theorem tendsto_coe' {f : Filter α} [NeBot f] {m : α → ℝ≥0 } {x : ℝ} :
+    Tendsto (fun a => m a : α → ℝ) f (𝓝 x) ↔ ∃ hx : 0 ≤ x, Tendsto m f (𝓝 ⟨x, hx⟩) :=
   ⟨fun h => ⟨ge_of_tendsto' h fun c => (m c).2, tendsto_coe.1 h⟩, fun ⟨hx, hm⟩ => tendsto_coe.2 hm⟩
 
 @[simp]
-theorem map_coe_at_top : map (coe : ℝ≥0 → ℝ) at_top = at_top :=
+theorem map_coe_at_top : map (coe : ℝ≥0 → ℝ) atTop = at_top :=
   map_coe_Ici_at_top 0
 
-theorem comap_coe_at_top : comap (coe : ℝ≥0 → ℝ) at_top = at_top :=
+theorem comap_coe_at_top : comap (coe : ℝ≥0 → ℝ) atTop = at_top :=
   (at_top_Ici_eq 0).symm
 
 @[simp, norm_cast]
-theorem tendsto_coe_at_top {f : Filter α} {m : α → ℝ≥0 } : tendsto (fun a => (m a : ℝ)) f at_top ↔ tendsto m f at_top :=
+theorem tendsto_coe_at_top {f : Filter α} {m : α → ℝ≥0 } : Tendsto (fun a => (m a : ℝ)) f atTop ↔ Tendsto m f atTop :=
   tendsto_Ici_at_top.symm
 
-theorem tendsto_of_real {f : Filter α} {m : α → ℝ} {x : ℝ} (h : tendsto m f (𝓝 x)) :
-    tendsto (fun a => Real.toNnreal (m a)) f (𝓝 (Real.toNnreal x)) :=
+theorem tendsto_of_real {f : Filter α} {m : α → ℝ} {x : ℝ} (h : Tendsto m f (𝓝 x)) :
+    Tendsto (fun a => Real.toNnreal (m a)) f (𝓝 (Real.toNnreal x)) :=
   (continuous_of_real.Tendsto _).comp h
 
 -- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (a «expr ≠ » 0)
-theorem nhds_zero : 𝓝 (0 : ℝ≥0 ) = ⨅ (a) (_ : a ≠ 0), 𝓟 (Iio a) :=
+theorem nhds_zero : 𝓝 (0 : ℝ≥0 ) = ⨅ (a) (_ : a ≠ 0), 𝓟 (iio a) :=
   nhds_bot_order.trans <| by
     simp [bot_lt_iff_ne_bot]
 
-theorem nhds_zero_basis : (𝓝 (0 : ℝ≥0 )).HasBasis (fun a : ℝ≥0 => 0 < a) fun a => Iio a :=
+theorem nhds_zero_basis : (𝓝 (0 : ℝ≥0 )).HasBasis (fun a : ℝ≥0 => 0 < a) fun a => iio a :=
   nhds_bot_basis
 
 instance : HasContinuousSub ℝ≥0 :=
@@ -149,7 +149,7 @@ open_locale Classical
 
 @[norm_cast]
 theorem coe_tsum {f : α → ℝ≥0 } : ↑(∑' a, f a) = ∑' a, (f a : ℝ) :=
-  if hf : Summable f then Eq.symm <| (has_sum_coe.2 <| hf.has_sum).tsum_eq
+  if hf : Summable f then Eq.symm <| (has_sum_coe.2 <| hf.HasSum).tsum_eq
   else by
     simp [tsum, hf, mt summable_coe.1 hf]
 
@@ -192,19 +192,19 @@ theorem infi_real_pos_eq_infi_nnreal_pos [CompleteLattice α] {f : ℝ → α} :
 
 end coe
 
-theorem tendsto_cofinite_zero_of_summable {α} {f : α → ℝ≥0 } (hf : Summable f) : tendsto f cofinite (𝓝 0) := by
+theorem tendsto_cofinite_zero_of_summable {α} {f : α → ℝ≥0 } (hf : Summable f) : Tendsto f cofinite (𝓝 0) := by
   have h_f_coe : f = fun n => Real.toNnreal (f n : ℝ) := funext fun n => real.to_nnreal_coe.symm
   rw [h_f_coe, ← @Real.to_nnreal_coe 0]
   exact tendsto_of_real (summable_coe.mpr hf).tendsto_cofinite_zero
 
-theorem tendsto_at_top_zero_of_summable {f : ℕ → ℝ≥0 } (hf : Summable f) : tendsto f at_top (𝓝 0) := by
+theorem tendsto_at_top_zero_of_summable {f : ℕ → ℝ≥0 } (hf : Summable f) : Tendsto f atTop (𝓝 0) := by
   rw [← Nat.cofinite_eq_at_top]
   exact tendsto_cofinite_zero_of_summable hf
 
 /-- The sum over the complement of a finset tends to `0` when the finset grows to cover the whole
 space. This does not need a summability assumption, as otherwise all sums are zero. -/
 theorem tendsto_tsum_compl_at_top_zero {α : Type _} (f : α → ℝ≥0 ) :
-    tendsto (fun s : Finset α => ∑' b : { x // x ∉ s }, f b) at_top (𝓝 0) := by
+    Tendsto (fun s : Finset α => ∑' b : { x // x ∉ s }, f b) atTop (𝓝 0) := by
   simp_rw [← tendsto_coe, coe_tsum, Nnreal.coe_zero]
   exact tendsto_tsum_compl_at_top_zero fun a : α => (f a : ℝ)
 

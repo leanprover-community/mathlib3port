@@ -1,5 +1,5 @@
+import Mathbin.Topology.Algebra.Order.MonotoneContinuity
 import Mathbin.Topology.Instances.Nnreal
-import Mathbin.Topology.Algebra.Ordered.MonotoneContinuity
 
 /-!
 # Square root of a real number
@@ -96,10 +96,10 @@ noncomputable def sqrt_hom : ℝ≥0 →*₀ ℝ≥0 :=
   ⟨sqrt, sqrt_zero, sqrt_one, sqrt_mul⟩
 
 theorem sqrt_inv (x : ℝ≥0 ) : sqrt x⁻¹ = (sqrt x)⁻¹ :=
-  sqrt_hom.map_inv x
+  sqrtHom.map_inv x
 
 theorem sqrt_div (x y : ℝ≥0 ) : sqrt (x / y) = sqrt x / sqrt y :=
-  sqrt_hom.map_div x y
+  sqrtHom.map_div x y
 
 theorem continuous_sqrt : Continuous sqrt :=
   sqrt.Continuous
@@ -116,7 +116,7 @@ def sqrt_aux (f : CauSeq ℚ abs) : ℕ → ℚ
     let s := sqrt_aux n
     max 0 <| (s + f (n + 1) / s) / 2
 
-theorem sqrt_aux_nonneg (f : CauSeq ℚ abs) : ∀ i : ℕ, 0 ≤ sqrt_aux f i
+theorem sqrt_aux_nonneg (f : CauSeq ℚ abs) : ∀ i : ℕ, 0 ≤ sqrtAux f i
   | 0 => by
     rw [sqrt_aux, Rat.mk_nat_eq, Rat.mk_eq_div] <;> apply div_nonneg <;> exact Int.cast_nonneg.2 (Int.of_nat_nonneg _)
   | n + 1 => le_max_leftₓ _ _
@@ -261,7 +261,7 @@ theorem sqrt_inj (hx : 0 ≤ x) (hy : 0 ≤ y) : sqrt x = sqrt y ↔ x = y := by
 
 @[simp]
 theorem sqrt_eq_zero (h : 0 ≤ x) : sqrt x = 0 ↔ x = 0 := by
-  simpa using sqrt_inj h (le_reflₓ _)
+  simpa using sqrt_inj h le_rfl
 
 theorem sqrt_eq_zero' : sqrt x = 0 ↔ x ≤ 0 := by
   rw [sqrt, Nnreal.coe_eq_zero, Nnreal.sqrt_eq_zero, Real.to_nnreal_eq_zero]
@@ -345,8 +345,8 @@ open Real
 
 variable {α : Type _}
 
-theorem Filter.Tendsto.sqrt {f : α → ℝ} {l : Filter α} {x : ℝ} (h : tendsto f l (𝓝 x)) :
-    tendsto (fun x => sqrt (f x)) l (𝓝 (sqrt x)) :=
+theorem Filter.Tendsto.sqrt {f : α → ℝ} {l : Filter α} {x : ℝ} (h : Tendsto f l (𝓝 x)) :
+    Tendsto (fun x => sqrt (f x)) l (𝓝 (sqrt x)) :=
   (continuous_sqrt.Tendsto _).comp h
 
 variable [TopologicalSpace α] {f : α → ℝ} {s : Set α} {x : α}

@@ -63,7 +63,7 @@ variable {𝕜 : Type _} [NondiscreteNormedField 𝕜] {E : Type _} [NormedGroup
 when read in the model vector space. This property will be lifted to manifolds to define smooth
 functions between manifolds. -/
 def TimesContDiffWithinAtProp (n : WithTop ℕ) f s x : Prop :=
-  TimesContDiffWithinAt 𝕜 n (I' ∘ f ∘ I.symm) (range I ∩ I.symm ⁻¹' s) (I x)
+  TimesContDiffWithinAt 𝕜 n (I' ∘ f ∘ I.symm) (Range I ∩ I.symm ⁻¹' s) (I x)
 
 /-- Being `Cⁿ` in the model space is a local property, invariant under smooth maps. Therefore,
 it will lift nicely to manifolds. -/
@@ -125,7 +125,7 @@ theorem times_cont_diff_within_at_local_invariant_prop_mono (n : WithTop ℕ) �
   simp' only with mfld_simps  at hy
   simp' only [hy, hts _] with mfld_simps
 
-theorem times_cont_diff_within_at_local_invariant_prop_id (x : H) : TimesContDiffWithinAtProp I I ∞ id univ x := by
+theorem times_cont_diff_within_at_local_invariant_prop_id (x : H) : TimesContDiffWithinAtProp I I ∞ id Univ x := by
   simp [TimesContDiffWithinAtProp]
   have : TimesContDiffWithinAt 𝕜 ∞ id (range I) (I x) := times_cont_diff_id.times_cont_diff_at.times_cont_diff_within_at
   apply this.congr fun y hy => _
@@ -138,7 +138,7 @@ theorem times_cont_diff_within_at_local_invariant_prop_id (x : H) : TimesContDif
 it is continuous and it is `n` times continuously differentiable in this set around this point, when
 read in the preferred chart at this point. -/
 def TimesContMdiffWithinAt (n : WithTop ℕ) (f : M → M') (s : Set M) (x : M) :=
-  lift_prop_within_at (TimesContDiffWithinAtProp I I' n) f s x
+  LiftPropWithinAt (TimesContDiffWithinAtProp I I' n) f s x
 
 /-- Abbreviation for `times_cont_mdiff_within_at I I' ⊤ f s x`. See also documentation for `smooth`.
 -/
@@ -150,7 +150,7 @@ def SmoothWithinAt (f : M → M') (s : Set M) (x : M) :=
 it is continuous and it is `n` times continuously differentiable around this point, when
 read in the preferred chart at this point. -/
 def TimesContMdiffAt (n : WithTop ℕ) (f : M → M') (x : M) :=
-  TimesContMdiffWithinAt I I' n f univ x
+  TimesContMdiffWithinAt I I' n f Univ x
 
 /-- Abbreviation for `times_cont_mdiff_at I I' ⊤ f x`. See also documentation for `smooth`. -/
 @[reducible]
@@ -221,16 +221,16 @@ theorem TimesContMdiff.times_cont_mdiff_at (h : TimesContMdiff I I' n f) : Times
 theorem Smooth.smooth_at (h : Smooth I I' f) : SmoothAt I I' f x :=
   TimesContMdiff.times_cont_mdiff_at h
 
-theorem times_cont_mdiff_within_at_univ : TimesContMdiffWithinAt I I' n f univ x ↔ TimesContMdiffAt I I' n f x :=
+theorem times_cont_mdiff_within_at_univ : TimesContMdiffWithinAt I I' n f Univ x ↔ TimesContMdiffAt I I' n f x :=
   Iff.rfl
 
-theorem smooth_at_univ : SmoothWithinAt I I' f univ x ↔ SmoothAt I I' f x :=
+theorem smooth_at_univ : SmoothWithinAt I I' f Univ x ↔ SmoothAt I I' f x :=
   times_cont_mdiff_within_at_univ
 
-theorem times_cont_mdiff_on_univ : TimesContMdiffOn I I' n f univ ↔ TimesContMdiff I I' n f := by
+theorem times_cont_mdiff_on_univ : TimesContMdiffOn I I' n f Univ ↔ TimesContMdiff I I' n f := by
   simp only [TimesContMdiffOn, TimesContMdiff, times_cont_mdiff_within_at_univ, forall_prop_of_true, mem_univ]
 
-theorem smooth_on_univ : SmoothOn I I' f univ ↔ Smooth I I' f :=
+theorem smooth_on_univ : SmoothOn I I' f Univ ↔ Smooth I I' f :=
   times_cont_mdiff_on_univ
 
 /-- One can reformulate smoothness within a set at a point as continuity within this set at this
@@ -257,7 +257,7 @@ using `times_cont_mdiff_within_at_iff` in the goal. -/
 theorem times_cont_mdiff_within_at_iff'' :
     TimesContMdiffWithinAt I I' n f s x ↔
       ContinuousWithinAt f s x ∧
-        TimesContDiffWithinAt 𝕜 n (writtenInExtChartAt I I' x f) ((extChartAt I x).symm ⁻¹' s ∩ range I)
+        TimesContDiffWithinAt 𝕜 n (writtenInExtChartAt I I' x f) ((extChartAt I x).symm ⁻¹' s ∩ Range I)
           (extChartAt I x x) :=
   by
   rw [times_cont_mdiff_within_at_iff, And.congr_right_iff]
@@ -312,8 +312,8 @@ include Is I's
 
 /-- One can reformulate smoothness within a set at a point as continuity within this set at this
 point, and smoothness in the corresponding extended chart. -/
-theorem times_cont_mdiff_within_at_iff' {x' : M} {y : M'} (hx : x' ∈ (chart_at H x).Source)
-    (hy : f x' ∈ (chart_at H' y).Source) :
+theorem times_cont_mdiff_within_at_iff' {x' : M} {y : M'} (hx : x' ∈ (chartAt H x).Source)
+    (hy : f x' ∈ (chartAt H' y).Source) :
     TimesContMdiffWithinAt I I' n f s x' ↔
       ContinuousWithinAt f s x' ∧
         TimesContDiffWithinAt 𝕜 n (extChartAt I' y ∘ f ∘ (extChartAt I x).symm)
@@ -330,7 +330,7 @@ theorem times_cont_mdiff_within_at_iff' {x' : M} {y : M'} (hx : x' ∈ (chart_at
 
 omit I's
 
-theorem times_cont_mdiff_at_ext_chart_at' {x' : M} (h : x' ∈ (chart_at H x).Source) :
+theorem times_cont_mdiff_at_ext_chart_at' {x' : M} (h : x' ∈ (chartAt H x).Source) :
     TimesContMdiffAt I 𝓘(𝕜, E) n (extChartAt I x) x' := by
   refine' (times_cont_mdiff_within_at_iff' h (mem_chart_source _ _)).2 _
   refine' ⟨(ext_chart_at_continuous_at' _ _ _).ContinuousWithinAt, _⟩
@@ -528,10 +528,10 @@ theorem Smooth.mdifferentiable (hf : Smooth I I' f) : Mdifferentiable I I' f :=
   TimesContMdiff.mdifferentiable hf le_top
 
 theorem Smooth.mdifferentiable_at (hf : Smooth I I' f) : MdifferentiableAt I I' f x :=
-  hf.mdifferentiable x
+  hf.Mdifferentiable x
 
 theorem Smooth.mdifferentiable_within_at (hf : Smooth I I' f) : MdifferentiableWithinAt I I' f s x :=
-  hf.mdifferentiable_at.mdifferentiable_within_at
+  hf.MdifferentiableAt.MdifferentiableWithinAt
 
 /-! ### `C^∞` smoothness -/
 
@@ -555,7 +555,7 @@ theorem times_cont_mdiff_within_at_iff_nat :
   cases n
   · exact times_cont_mdiff_within_at_top.2 fun n => h n le_top
     
-  · exact h n (le_reflₓ _)
+  · exact h n le_rfl
     
 
 /-! ### Restriction to a smaller set -/
@@ -599,7 +599,7 @@ theorem SmoothWithinAt.smooth_at (h : SmoothWithinAt I I' f s x) (ht : s ∈ �
 
 include Is
 
-theorem times_cont_mdiff_on_ext_chart_at : TimesContMdiffOn I 𝓘(𝕜, E) n (extChartAt I x) (chart_at H x).Source :=
+theorem times_cont_mdiff_on_ext_chart_at : TimesContMdiffOn I 𝓘(𝕜, E) n (extChartAt I x) (chartAt H x).Source :=
   fun x' hx' => (times_cont_mdiff_at_ext_chart_at' hx').TimesContMdiffWithinAt
 
 include I's
@@ -626,7 +626,7 @@ theorem times_cont_mdiff_within_at_iff_times_cont_mdiff_on_nhds {n : ℕ} :
         
     have h' : TimesContMdiffWithinAt I I' n f (s ∩ o) x := h.mono (inter_subset_left _ _)
     simp only [TimesContMdiffWithinAt, lift_prop_within_at, TimesContDiffWithinAtProp] at h'
-    rcases h.2.TimesContDiffOn (le_reflₓ _) with ⟨u, u_nhds, u_subset, hu⟩
+    rcases h.2.TimesContDiffOn le_rfl with ⟨u, u_nhds, u_subset, hu⟩
     let v := insert x s ∩ o ∩ extChartAt I x ⁻¹' u
     have v_incl : v ⊆ (chart_at H x).Source := fun y hy => ho hy.1.2
     have v_incl' : ∀, ∀ y ∈ v, ∀, f y ∈ (chart_at H' (f x)).Source := by
@@ -761,7 +761,7 @@ variable {E'' : Type _} [NormedGroup E''] [NormedSpace 𝕜 E''] {H'' : Type _} 
 
 /-- The composition of `C^n` functions within domains at points is `C^n`. -/
 theorem TimesContMdiffWithinAt.comp {t : Set M'} {g : M' → M''} (x : M) (hg : TimesContMdiffWithinAt I' I'' n g t (f x))
-    (hf : TimesContMdiffWithinAt I I' n f s x) (st : maps_to f s t) : TimesContMdiffWithinAt I I'' n (g ∘ f) s x := by
+    (hf : TimesContMdiffWithinAt I I' n f s x) (st : MapsTo f s t) : TimesContMdiffWithinAt I I'' n (g ∘ f) s x := by
   rw [times_cont_mdiff_within_at_iff''] at hg hf⊢
   refine' ⟨hg.1.comp hf.1 st, _⟩
   set e := extChartAt I x
@@ -831,11 +831,11 @@ theorem TimesContMdiffAt.comp {g : M' → M''} (x : M) (hg : TimesContMdiffAt I'
 
 theorem TimesContMdiff.comp_times_cont_mdiff_on {f : M → M'} {g : M' → M''} {s : Set M} (hg : TimesContMdiff I' I'' n g)
     (hf : TimesContMdiffOn I I' n f s) : TimesContMdiffOn I I'' n (g ∘ f) s :=
-  hg.times_cont_mdiff_on.comp hf Set.subset_preimage_univ
+  hg.TimesContMdiffOn.comp hf Set.subset_preimage_univ
 
 theorem Smooth.comp_smooth_on {f : M → M'} {g : M' → M''} {s : Set M} (hg : Smooth I' I'' g) (hf : SmoothOn I I' f s) :
     SmoothOn I I'' (g ∘ f) s :=
-  hg.smooth_on.comp hf Set.subset_preimage_univ
+  hg.SmoothOn.comp hf Set.subset_preimage_univ
 
 end Composition
 
@@ -849,24 +849,24 @@ variable {e : LocalHomeomorph M H}
 include Is
 
 /-- An atlas member is `C^n` for any `n`. -/
-theorem times_cont_mdiff_on_of_mem_maximal_atlas (h : e ∈ maximal_atlas I M) : TimesContMdiffOn I I n e e.source :=
+theorem times_cont_mdiff_on_of_mem_maximal_atlas (h : e ∈ MaximalAtlas I M) : TimesContMdiffOn I I n e e.Source :=
   TimesContMdiffOn.of_le
     ((times_cont_diff_within_at_local_invariant_prop I I ∞).lift_prop_on_of_mem_maximal_atlas
       (times_cont_diff_within_at_local_invariant_prop_id I) h)
     le_top
 
 /-- The inverse of an atlas member is `C^n` for any `n`. -/
-theorem times_cont_mdiff_on_symm_of_mem_maximal_atlas (h : e ∈ maximal_atlas I M) :
-    TimesContMdiffOn I I n e.symm e.target :=
+theorem times_cont_mdiff_on_symm_of_mem_maximal_atlas (h : e ∈ MaximalAtlas I M) :
+    TimesContMdiffOn I I n e.symm e.Target :=
   TimesContMdiffOn.of_le
     ((times_cont_diff_within_at_local_invariant_prop I I ∞).lift_prop_on_symm_of_mem_maximal_atlas
       (times_cont_diff_within_at_local_invariant_prop_id I) h)
     le_top
 
-theorem times_cont_mdiff_on_chart : TimesContMdiffOn I I n (chart_at H x) (chart_at H x).Source :=
+theorem times_cont_mdiff_on_chart : TimesContMdiffOn I I n (chartAt H x) (chartAt H x).Source :=
   times_cont_mdiff_on_of_mem_maximal_atlas ((timesContDiffGroupoid ⊤ I).chart_mem_maximal_atlas x)
 
-theorem times_cont_mdiff_on_chart_symm : TimesContMdiffOn I I n (chart_at H x).symm (chart_at H x).Target :=
+theorem times_cont_mdiff_on_chart_symm : TimesContMdiffOn I I n (chartAt H x).symm (chartAt H x).Target :=
   times_cont_mdiff_on_symm_of_mem_maximal_atlas ((timesContDiffGroupoid ⊤ I).chart_mem_maximal_atlas x)
 
 end Atlas
@@ -974,7 +974,7 @@ theorem smooth_within_at_one [One M'] : SmoothWithinAt I I' (1 : M → M') s x :
 end id
 
 theorem times_cont_mdiff_of_support {f : M → F}
-    (hf : ∀, ∀ x ∈ Closure (support f), ∀, TimesContMdiffAt I 𝓘(𝕜, F) n f x) : TimesContMdiff I 𝓘(𝕜, F) n f := by
+    (hf : ∀, ∀ x ∈ Closure (Support f), ∀, TimesContMdiffAt I 𝓘(𝕜, F) n f x) : TimesContMdiff I 𝓘(𝕜, F) n f := by
   intro x
   by_cases' hx : x ∈ Closure (support f)
   · exact hf x hx
@@ -1372,7 +1372,7 @@ namespace BasicSmoothBundleCore
 
 variable (Z : BasicSmoothBundleCore I M E')
 
-theorem times_cont_mdiff_proj : TimesContMdiff (I.prod 𝓘(𝕜, E')) I n Z.to_topological_fiber_bundle_core.proj := by
+theorem times_cont_mdiff_proj : TimesContMdiff (I.Prod 𝓘(𝕜, E')) I n Z.toTopologicalFiberBundleCore.proj := by
   intro x
   rw [TimesContMdiffAt, times_cont_mdiff_within_at_iff]
   refine' ⟨Z.to_topological_fiber_bundle_core.continuous_proj.continuous_at.continuous_within_at, _⟩
@@ -1385,33 +1385,33 @@ theorem times_cont_mdiff_proj : TimesContMdiff (I.prod 𝓘(𝕜, E')) I n Z.to_
   · simp' only with mfld_simps
     
 
-theorem smooth_proj : Smooth (I.prod 𝓘(𝕜, E')) I Z.to_topological_fiber_bundle_core.proj :=
+theorem smooth_proj : Smooth (I.Prod 𝓘(𝕜, E')) I Z.toTopologicalFiberBundleCore.proj :=
   times_cont_mdiff_proj Z
 
-theorem times_cont_mdiff_on_proj {s : Set Z.to_topological_fiber_bundle_core.total_space} :
-    TimesContMdiffOn (I.prod 𝓘(𝕜, E')) I n Z.to_topological_fiber_bundle_core.proj s :=
-  Z.times_cont_mdiff_proj.times_cont_mdiff_on
+theorem times_cont_mdiff_on_proj {s : Set Z.toTopologicalFiberBundleCore.TotalSpace} :
+    TimesContMdiffOn (I.Prod 𝓘(𝕜, E')) I n Z.toTopologicalFiberBundleCore.proj s :=
+  Z.times_cont_mdiff_proj.TimesContMdiffOn
 
-theorem smooth_on_proj {s : Set Z.to_topological_fiber_bundle_core.total_space} :
-    SmoothOn (I.prod 𝓘(𝕜, E')) I Z.to_topological_fiber_bundle_core.proj s :=
+theorem smooth_on_proj {s : Set Z.toTopologicalFiberBundleCore.TotalSpace} :
+    SmoothOn (I.Prod 𝓘(𝕜, E')) I Z.toTopologicalFiberBundleCore.proj s :=
   times_cont_mdiff_on_proj Z
 
-theorem times_cont_mdiff_at_proj {p : Z.to_topological_fiber_bundle_core.total_space} :
-    TimesContMdiffAt (I.prod 𝓘(𝕜, E')) I n Z.to_topological_fiber_bundle_core.proj p :=
-  Z.times_cont_mdiff_proj.times_cont_mdiff_at
+theorem times_cont_mdiff_at_proj {p : Z.toTopologicalFiberBundleCore.TotalSpace} :
+    TimesContMdiffAt (I.Prod 𝓘(𝕜, E')) I n Z.toTopologicalFiberBundleCore.proj p :=
+  Z.times_cont_mdiff_proj.TimesContMdiffAt
 
-theorem smooth_at_proj {p : Z.to_topological_fiber_bundle_core.total_space} :
-    SmoothAt (I.prod 𝓘(𝕜, E')) I Z.to_topological_fiber_bundle_core.proj p :=
+theorem smooth_at_proj {p : Z.toTopologicalFiberBundleCore.TotalSpace} :
+    SmoothAt (I.Prod 𝓘(𝕜, E')) I Z.toTopologicalFiberBundleCore.proj p :=
   Z.times_cont_mdiff_at_proj
 
-theorem times_cont_mdiff_within_at_proj {s : Set Z.to_topological_fiber_bundle_core.total_space}
-    {p : Z.to_topological_fiber_bundle_core.total_space} :
-    TimesContMdiffWithinAt (I.prod 𝓘(𝕜, E')) I n Z.to_topological_fiber_bundle_core.proj s p :=
-  Z.times_cont_mdiff_at_proj.times_cont_mdiff_within_at
+theorem times_cont_mdiff_within_at_proj {s : Set Z.toTopologicalFiberBundleCore.TotalSpace}
+    {p : Z.toTopologicalFiberBundleCore.TotalSpace} :
+    TimesContMdiffWithinAt (I.Prod 𝓘(𝕜, E')) I n Z.toTopologicalFiberBundleCore.proj s p :=
+  Z.times_cont_mdiff_at_proj.TimesContMdiffWithinAt
 
-theorem smooth_within_at_proj {s : Set Z.to_topological_fiber_bundle_core.total_space}
-    {p : Z.to_topological_fiber_bundle_core.total_space} :
-    SmoothWithinAt (I.prod 𝓘(𝕜, E')) I Z.to_topological_fiber_bundle_core.proj s p :=
+theorem smooth_within_at_proj {s : Set Z.toTopologicalFiberBundleCore.TotalSpace}
+    {p : Z.toTopologicalFiberBundleCore.TotalSpace} :
+    SmoothWithinAt (I.Prod 𝓘(𝕜, E')) I Z.toTopologicalFiberBundleCore.proj s p :=
   Z.times_cont_mdiff_within_at_proj
 
 /-- If an element of `E'` is invariant under all coordinate changes, then one can define a
@@ -1419,8 +1419,8 @@ corresponding section of the fiber bundle, which is smooth. This applies in part
 zero section of a vector bundle. Another example (not yet defined) would be the identity
 section of the endomorphism bundle of a vector bundle. -/
 theorem smooth_const_section (v : E')
-    (h : ∀ i j : atlas H M, ∀, ∀ x ∈ i.1.Source ∩ j.1.Source, ∀, Z.coord_change i j (i.1 x) v = v) :
-    Smooth I (I.prod 𝓘(𝕜, E')) (show M → Z.to_topological_fiber_bundle_core.total_space from fun x => ⟨x, v⟩) := by
+    (h : ∀ i j : Atlas H M, ∀, ∀ x ∈ i.1.Source ∩ j.1.Source, ∀, Z.coordChange i j (i.1 x) v = v) :
+    Smooth I (I.Prod 𝓘(𝕜, E')) (show M → Z.toTopologicalFiberBundleCore.TotalSpace from fun x => ⟨x, v⟩) := by
   intro x
   rw [TimesContMdiffAt, times_cont_mdiff_within_at_iff]
   constructor
@@ -1485,7 +1485,7 @@ def zero_section : M → TangentBundle I M := fun x => ⟨x, 0⟩
 
 variable {I M}
 
-theorem smooth_zero_section : Smooth I I.tangent (zero_section I M) := by
+theorem smooth_zero_section : Smooth I I.tangent (zeroSection I M) := by
   apply BasicSmoothBundleCore.smooth_const_section (tangentBundleCore I M) 0
   intro i j x hx
   simp' only [tangentBundleCore, ContinuousLinearMap.map_zero] with mfld_simps
@@ -1549,7 +1549,7 @@ end TangentBundle
 section ProdMk
 
 theorem TimesContMdiffWithinAt.prod_mk {f : M → M'} {g : M → N'} (hf : TimesContMdiffWithinAt I I' n f s x)
-    (hg : TimesContMdiffWithinAt I J' n g s x) : TimesContMdiffWithinAt I (I'.prod J') n (fun x => (f x, g x)) s x := by
+    (hg : TimesContMdiffWithinAt I J' n g s x) : TimesContMdiffWithinAt I (I'.Prod J') n (fun x => (f x, g x)) s x := by
   rw [times_cont_mdiff_within_at_iff''] at *
   exact ⟨hf.1.Prod hg.1, hf.2.Prod hg.2⟩
 
@@ -1560,7 +1560,7 @@ theorem TimesContMdiffWithinAt.prod_mk_space {f : M → E'} {g : M → F'} (hf :
   exact ⟨hf.1.Prod hg.1, hf.2.Prod hg.2⟩
 
 theorem TimesContMdiffAt.prod_mk {f : M → M'} {g : M → N'} (hf : TimesContMdiffAt I I' n f x)
-    (hg : TimesContMdiffAt I J' n g x) : TimesContMdiffAt I (I'.prod J') n (fun x => (f x, g x)) x :=
+    (hg : TimesContMdiffAt I J' n g x) : TimesContMdiffAt I (I'.Prod J') n (fun x => (f x, g x)) x :=
   hf.prod_mk hg
 
 theorem TimesContMdiffAt.prod_mk_space {f : M → E'} {g : M → F'} (hf : TimesContMdiffAt I 𝓘(𝕜, E') n f x)
@@ -1568,7 +1568,7 @@ theorem TimesContMdiffAt.prod_mk_space {f : M → E'} {g : M → F'} (hf : Times
   hf.prod_mk_space hg
 
 theorem TimesContMdiffOn.prod_mk {f : M → M'} {g : M → N'} (hf : TimesContMdiffOn I I' n f s)
-    (hg : TimesContMdiffOn I J' n g s) : TimesContMdiffOn I (I'.prod J') n (fun x => (f x, g x)) s := fun x hx =>
+    (hg : TimesContMdiffOn I J' n g s) : TimesContMdiffOn I (I'.Prod J') n (fun x => (f x, g x)) s := fun x hx =>
   (hf x hx).prod_mk (hg x hx)
 
 theorem TimesContMdiffOn.prod_mk_space {f : M → E'} {g : M → F'} (hf : TimesContMdiffOn I 𝓘(𝕜, E') n f s)
@@ -1576,14 +1576,14 @@ theorem TimesContMdiffOn.prod_mk_space {f : M → E'} {g : M → F'} (hf : Times
   (hf x hx).prod_mk_space (hg x hx)
 
 theorem TimesContMdiff.prod_mk {f : M → M'} {g : M → N'} (hf : TimesContMdiff I I' n f) (hg : TimesContMdiff I J' n g) :
-    TimesContMdiff I (I'.prod J') n fun x => (f x, g x) := fun x => (hf x).prod_mk (hg x)
+    TimesContMdiff I (I'.Prod J') n fun x => (f x, g x) := fun x => (hf x).prod_mk (hg x)
 
 theorem TimesContMdiff.prod_mk_space {f : M → E'} {g : M → F'} (hf : TimesContMdiff I 𝓘(𝕜, E') n f)
     (hg : TimesContMdiff I 𝓘(𝕜, F') n g) : TimesContMdiff I 𝓘(𝕜, E' × F') n fun x => (f x, g x) := fun x =>
   (hf x).prod_mk_space (hg x)
 
 theorem SmoothWithinAt.prod_mk {f : M → M'} {g : M → N'} (hf : SmoothWithinAt I I' f s x)
-    (hg : SmoothWithinAt I J' g s x) : SmoothWithinAt I (I'.prod J') (fun x => (f x, g x)) s x :=
+    (hg : SmoothWithinAt I J' g s x) : SmoothWithinAt I (I'.Prod J') (fun x => (f x, g x)) s x :=
   hf.prod_mk hg
 
 theorem SmoothWithinAt.prod_mk_space {f : M → E'} {g : M → F'} (hf : SmoothWithinAt I 𝓘(𝕜, E') f s x)
@@ -1591,7 +1591,7 @@ theorem SmoothWithinAt.prod_mk_space {f : M → E'} {g : M → F'} (hf : SmoothW
   hf.prod_mk_space hg
 
 theorem SmoothAt.prod_mk {f : M → M'} {g : M → N'} (hf : SmoothAt I I' f x) (hg : SmoothAt I J' g x) :
-    SmoothAt I (I'.prod J') (fun x => (f x, g x)) x :=
+    SmoothAt I (I'.Prod J') (fun x => (f x, g x)) x :=
   hf.prod_mk hg
 
 theorem SmoothAt.prod_mk_space {f : M → E'} {g : M → F'} (hf : SmoothAt I 𝓘(𝕜, E') f x) (hg : SmoothAt I 𝓘(𝕜, F') g x) :
@@ -1599,7 +1599,7 @@ theorem SmoothAt.prod_mk_space {f : M → E'} {g : M → F'} (hf : SmoothAt I �
   hf.prod_mk_space hg
 
 theorem SmoothOn.prod_mk {f : M → M'} {g : M → N'} (hf : SmoothOn I I' f s) (hg : SmoothOn I J' g s) :
-    SmoothOn I (I'.prod J') (fun x => (f x, g x)) s :=
+    SmoothOn I (I'.Prod J') (fun x => (f x, g x)) s :=
   hf.prod_mk hg
 
 theorem SmoothOn.prod_mk_space {f : M → E'} {g : M → F'} (hf : SmoothOn I 𝓘(𝕜, E') f s) (hg : SmoothOn I 𝓘(𝕜, F') g s) :
@@ -1607,7 +1607,7 @@ theorem SmoothOn.prod_mk_space {f : M → E'} {g : M → F'} (hf : SmoothOn I �
   hf.prod_mk_space hg
 
 theorem Smooth.prod_mk {f : M → M'} {g : M → N'} (hf : Smooth I I' f) (hg : Smooth I J' g) :
-    Smooth I (I'.prod J') fun x => (f x, g x) :=
+    Smooth I (I'.Prod J') fun x => (f x, g x) :=
   hf.prod_mk hg
 
 theorem Smooth.prod_mk_space {f : M → E'} {g : M → F'} (hf : Smooth I 𝓘(𝕜, E') f) (hg : Smooth I 𝓘(𝕜, F') g) :
@@ -1619,7 +1619,7 @@ end ProdMk
 section Projections
 
 theorem times_cont_mdiff_within_at_fst {s : Set (M × N)} {p : M × N} :
-    TimesContMdiffWithinAt (I.prod J) I n Prod.fst s p := by
+    TimesContMdiffWithinAt (I.Prod J) I n Prod.fst s p := by
   rw [times_cont_mdiff_within_at_iff]
   refine' ⟨continuous_within_at_fst, _⟩
   refine' times_cont_diff_within_at_fst.congr (fun y hy => _) _
@@ -1629,28 +1629,28 @@ theorem times_cont_mdiff_within_at_fst {s : Set (M × N)} {p : M × N} :
   · simp' only with mfld_simps
     
 
-theorem times_cont_mdiff_at_fst {p : M × N} : TimesContMdiffAt (I.prod J) I n Prod.fst p :=
+theorem times_cont_mdiff_at_fst {p : M × N} : TimesContMdiffAt (I.Prod J) I n Prod.fst p :=
   times_cont_mdiff_within_at_fst
 
-theorem times_cont_mdiff_on_fst {s : Set (M × N)} : TimesContMdiffOn (I.prod J) I n Prod.fst s := fun x hx =>
+theorem times_cont_mdiff_on_fst {s : Set (M × N)} : TimesContMdiffOn (I.Prod J) I n Prod.fst s := fun x hx =>
   times_cont_mdiff_within_at_fst
 
-theorem times_cont_mdiff_fst : TimesContMdiff (I.prod J) I n (@Prod.fst M N) := fun x => times_cont_mdiff_at_fst
+theorem times_cont_mdiff_fst : TimesContMdiff (I.Prod J) I n (@Prod.fst M N) := fun x => times_cont_mdiff_at_fst
 
-theorem smooth_within_at_fst {s : Set (M × N)} {p : M × N} : SmoothWithinAt (I.prod J) I Prod.fst s p :=
+theorem smooth_within_at_fst {s : Set (M × N)} {p : M × N} : SmoothWithinAt (I.Prod J) I Prod.fst s p :=
   times_cont_mdiff_within_at_fst
 
-theorem smooth_at_fst {p : M × N} : SmoothAt (I.prod J) I Prod.fst p :=
+theorem smooth_at_fst {p : M × N} : SmoothAt (I.Prod J) I Prod.fst p :=
   times_cont_mdiff_at_fst
 
-theorem smooth_on_fst {s : Set (M × N)} : SmoothOn (I.prod J) I Prod.fst s :=
+theorem smooth_on_fst {s : Set (M × N)} : SmoothOn (I.Prod J) I Prod.fst s :=
   times_cont_mdiff_on_fst
 
-theorem smooth_fst : Smooth (I.prod J) I (@Prod.fst M N) :=
+theorem smooth_fst : Smooth (I.Prod J) I (@Prod.fst M N) :=
   times_cont_mdiff_fst
 
 theorem times_cont_mdiff_within_at_snd {s : Set (M × N)} {p : M × N} :
-    TimesContMdiffWithinAt (I.prod J) J n Prod.snd s p := by
+    TimesContMdiffWithinAt (I.Prod J) J n Prod.snd s p := by
   rw [times_cont_mdiff_within_at_iff]
   refine' ⟨continuous_within_at_snd, _⟩
   refine' times_cont_diff_within_at_snd.congr (fun y hy => _) _
@@ -1660,28 +1660,28 @@ theorem times_cont_mdiff_within_at_snd {s : Set (M × N)} {p : M × N} :
   · simp' only with mfld_simps
     
 
-theorem times_cont_mdiff_at_snd {p : M × N} : TimesContMdiffAt (I.prod J) J n Prod.snd p :=
+theorem times_cont_mdiff_at_snd {p : M × N} : TimesContMdiffAt (I.Prod J) J n Prod.snd p :=
   times_cont_mdiff_within_at_snd
 
-theorem times_cont_mdiff_on_snd {s : Set (M × N)} : TimesContMdiffOn (I.prod J) J n Prod.snd s := fun x hx =>
+theorem times_cont_mdiff_on_snd {s : Set (M × N)} : TimesContMdiffOn (I.Prod J) J n Prod.snd s := fun x hx =>
   times_cont_mdiff_within_at_snd
 
-theorem times_cont_mdiff_snd : TimesContMdiff (I.prod J) J n (@Prod.snd M N) := fun x => times_cont_mdiff_at_snd
+theorem times_cont_mdiff_snd : TimesContMdiff (I.Prod J) J n (@Prod.snd M N) := fun x => times_cont_mdiff_at_snd
 
-theorem smooth_within_at_snd {s : Set (M × N)} {p : M × N} : SmoothWithinAt (I.prod J) J Prod.snd s p :=
+theorem smooth_within_at_snd {s : Set (M × N)} {p : M × N} : SmoothWithinAt (I.Prod J) J Prod.snd s p :=
   times_cont_mdiff_within_at_snd
 
-theorem smooth_at_snd {p : M × N} : SmoothAt (I.prod J) J Prod.snd p :=
+theorem smooth_at_snd {p : M × N} : SmoothAt (I.Prod J) J Prod.snd p :=
   times_cont_mdiff_at_snd
 
-theorem smooth_on_snd {s : Set (M × N)} : SmoothOn (I.prod J) J Prod.snd s :=
+theorem smooth_on_snd {s : Set (M × N)} : SmoothOn (I.Prod J) J Prod.snd s :=
   times_cont_mdiff_on_snd
 
-theorem smooth_snd : Smooth (I.prod J) J (@Prod.snd M N) :=
+theorem smooth_snd : Smooth (I.Prod J) J (@Prod.snd M N) :=
   times_cont_mdiff_snd
 
 theorem smooth_iff_proj_smooth {f : M → M' × N'} :
-    Smooth I (I'.prod J') f ↔ Smooth I I' (Prod.fst ∘ f) ∧ Smooth I J' (Prod.snd ∘ f) := by
+    Smooth I (I'.Prod J') f ↔ Smooth I I' (Prod.fst ∘ f) ∧ Smooth I J' (Prod.snd ∘ f) := by
   constructor
   · intro h
     exact ⟨smooth_fst.comp h, smooth_snd.comp h⟩
@@ -1700,49 +1700,49 @@ variable {g : N → N'} {r : Set N} {y : N}
 within the product set at the product point. -/
 theorem TimesContMdiffWithinAt.prod_map' {p : M × N} (hf : TimesContMdiffWithinAt I I' n f s p.1)
     (hg : TimesContMdiffWithinAt J J' n g r p.2) :
-    TimesContMdiffWithinAt (I.prod J) (I'.prod J') n (Prod.map f g) (s ×ˢ r) p :=
+    TimesContMdiffWithinAt (I.Prod J) (I'.Prod J') n (Prod.map f g) (s ×ˢ r) p :=
   (hf.comp p times_cont_mdiff_within_at_fst (prod_subset_preimage_fst _ _)).prod_mk <|
     hg.comp p times_cont_mdiff_within_at_snd (prod_subset_preimage_snd _ _)
 
 theorem TimesContMdiffWithinAt.prod_map (hf : TimesContMdiffWithinAt I I' n f s x)
     (hg : TimesContMdiffWithinAt J J' n g r y) :
-    TimesContMdiffWithinAt (I.prod J) (I'.prod J') n (Prod.map f g) (s ×ˢ r) (x, y) :=
+    TimesContMdiffWithinAt (I.Prod J) (I'.Prod J') n (Prod.map f g) (s ×ˢ r) (x, y) :=
   TimesContMdiffWithinAt.prod_map' hf hg
 
 theorem TimesContMdiffAt.prod_map (hf : TimesContMdiffAt I I' n f x) (hg : TimesContMdiffAt J J' n g y) :
-    TimesContMdiffAt (I.prod J) (I'.prod J') n (Prod.map f g) (x, y) := by
+    TimesContMdiffAt (I.Prod J) (I'.Prod J') n (Prod.map f g) (x, y) := by
   rw [← times_cont_mdiff_within_at_univ] at *
   convert hf.prod_map hg
   exact univ_prod_univ.symm
 
 theorem TimesContMdiffAt.prod_map' {p : M × N} (hf : TimesContMdiffAt I I' n f p.1)
-    (hg : TimesContMdiffAt J J' n g p.2) : TimesContMdiffAt (I.prod J) (I'.prod J') n (Prod.map f g) p := by
+    (hg : TimesContMdiffAt J J' n g p.2) : TimesContMdiffAt (I.Prod J) (I'.Prod J') n (Prod.map f g) p := by
   rcases p with ⟨⟩
   exact hf.prod_map hg
 
 theorem TimesContMdiffOn.prod_map (hf : TimesContMdiffOn I I' n f s) (hg : TimesContMdiffOn J J' n g r) :
-    TimesContMdiffOn (I.prod J) (I'.prod J') n (Prod.map f g) (s ×ˢ r) :=
+    TimesContMdiffOn (I.Prod J) (I'.Prod J') n (Prod.map f g) (s ×ˢ r) :=
   (hf.comp times_cont_mdiff_on_fst (prod_subset_preimage_fst _ _)).prod_mk <|
     hg.comp times_cont_mdiff_on_snd (prod_subset_preimage_snd _ _)
 
 theorem TimesContMdiff.prod_map (hf : TimesContMdiff I I' n f) (hg : TimesContMdiff J J' n g) :
-    TimesContMdiff (I.prod J) (I'.prod J') n (Prod.map f g) := by
+    TimesContMdiff (I.Prod J) (I'.Prod J') n (Prod.map f g) := by
   intro p
   exact (hf p.1).prod_map' (hg p.2)
 
 theorem SmoothWithinAt.prod_map (hf : SmoothWithinAt I I' f s x) (hg : SmoothWithinAt J J' g r y) :
-    SmoothWithinAt (I.prod J) (I'.prod J') (Prod.map f g) (s ×ˢ r) (x, y) :=
+    SmoothWithinAt (I.Prod J) (I'.Prod J') (Prod.map f g) (s ×ˢ r) (x, y) :=
   hf.prod_map hg
 
 theorem SmoothAt.prod_map (hf : SmoothAt I I' f x) (hg : SmoothAt J J' g y) :
-    SmoothAt (I.prod J) (I'.prod J') (Prod.map f g) (x, y) :=
+    SmoothAt (I.Prod J) (I'.Prod J') (Prod.map f g) (x, y) :=
   hf.prod_map hg
 
 theorem SmoothOn.prod_map (hf : SmoothOn I I' f s) (hg : SmoothOn J J' g r) :
-    SmoothOn (I.prod J) (I'.prod J') (Prod.map f g) (s ×ˢ r) :=
+    SmoothOn (I.Prod J) (I'.Prod J') (Prod.map f g) (s ×ˢ r) :=
   hf.prod_map hg
 
-theorem Smooth.prod_map (hf : Smooth I I' f) (hg : Smooth J J' g) : Smooth (I.prod J) (I'.prod J') (Prod.map f g) :=
+theorem Smooth.prod_map (hf : Smooth I I' f) (hg : Smooth J J' g) : Smooth (I.Prod J) (I'.Prod J') (Prod.map f g) :=
   hf.prod_map hg
 
 end prod_mapₓ
@@ -1799,7 +1799,7 @@ end PiSpace
 
 
 theorem ContinuousLinearMap.times_cont_mdiff (L : E →L[𝕜] F) : TimesContMdiff 𝓘(𝕜, E) 𝓘(𝕜, F) n L :=
-  L.times_cont_diff.times_cont_mdiff
+  L.TimesContDiff.TimesContMdiff
 
 /-! ### Smoothness of standard operations -/
 

@@ -82,7 +82,7 @@ structure CU (X : Type _) [TopologicalSpace X] where
   Subset : C ⊆ U
 
 instance : Inhabited (CU X) :=
-  ⟨⟨∅, univ, is_closed_empty, is_open_univ, empty_subset _⟩⟩
+  ⟨⟨∅, Univ, is_closed_empty, is_open_univ, empty_subset _⟩⟩
 
 variable [NormalSpace X]
 
@@ -92,30 +92,30 @@ namespace CU
 such chat `c.C ⊆ u` and `closure u ⊆ c.U`. `c.left` is the pair `(c.C, u)`. -/
 @[simps c]
 def left (c : CU X) : CU X where
-  c := c.C
-  U := (normal_exists_closure_subset c.closed_C c.open_U c.subset).some
+  c := c.c
+  U := (normal_exists_closure_subset c.closed_C c.open_U c.Subset).some
   closed_C := c.closed_C
-  open_U := (normal_exists_closure_subset c.closed_C c.open_U c.subset).some_spec.1
-  Subset := (normal_exists_closure_subset c.closed_C c.open_U c.subset).some_spec.2.1
+  open_U := (normal_exists_closure_subset c.closed_C c.open_U c.Subset).some_spec.1
+  Subset := (normal_exists_closure_subset c.closed_C c.open_U c.Subset).some_spec.2.1
 
 /-- Due to `normal_exists_closure_subset`, for each `c : CU X` there exists an open set `u`
 such chat `c.C ⊆ u` and `closure u ⊆ c.U`. `c.right` is the pair `(closure u, c.U)`. -/
 @[simps U]
 def right (c : CU X) : CU X where
-  c := Closure (normal_exists_closure_subset c.closed_C c.open_U c.subset).some
+  c := Closure (normal_exists_closure_subset c.closed_C c.open_U c.Subset).some
   U := c.U
   closed_C := is_closed_closure
   open_U := c.open_U
-  Subset := (normal_exists_closure_subset c.closed_C c.open_U c.subset).some_spec.2.2
+  Subset := (normal_exists_closure_subset c.closed_C c.open_U c.Subset).some_spec.2.2
 
-theorem left_U_subset_right_C (c : CU X) : c.left.U ⊆ c.right.C :=
+theorem left_U_subset_right_C (c : CU X) : c.left.U ⊆ c.right.c :=
   subset_closure
 
 theorem left_U_subset (c : CU X) : c.left.U ⊆ c.U :=
-  subset.trans c.left_U_subset_right_C c.right.subset
+  Subset.trans c.left_U_subset_right_C c.right.Subset
 
-theorem subset_right_C (c : CU X) : c.C ⊆ c.right.C :=
-  subset.trans c.left.subset c.left_U_subset_right_C
+theorem subset_right_C (c : CU X) : c.c ⊆ c.right.c :=
+  Subset.trans c.left.Subset c.left_U_subset_right_C
 
 /-- `n`-th approximation to a continuous function `f : X → ℝ` such that `f = 0` on `c.C` and `f = 1`
 outside of `c.U`. -/
@@ -123,7 +123,7 @@ noncomputable def approx : ℕ → CU X → X → ℝ
   | 0, c, x => indicator (c.Uᶜ) 1 x
   | n + 1, c, x => midpoint ℝ (approx n c.left x) (approx n c.right x)
 
-theorem approx_of_mem_C (c : CU X) (n : ℕ) {x : X} (hx : x ∈ c.C) : c.approx n x = 0 := by
+theorem approx_of_mem_C (c : CU X) (n : ℕ) {x : X} (hx : x ∈ c.c) : c.approx n x = 0 := by
   induction' n with n ihn generalizing c
   · exact indicator_of_not_mem (fun hU => hU <| c.subset hx) _
     
@@ -160,7 +160,7 @@ theorem approx_le_one (c : CU X) (n : ℕ) (x : X) : c.approx n x ≤ 1 := by
 theorem bdd_above_range_approx (c : CU X) (x : X) : BddAbove (range fun n => c.approx n x) :=
   ⟨1, fun y ⟨n, hn⟩ => hn ▸ c.approx_le_one n x⟩
 
-theorem approx_le_approx_of_U_sub_C {c₁ c₂ : CU X} (h : c₁.U ⊆ c₂.C) (n₁ n₂ : ℕ) (x : X) :
+theorem approx_le_approx_of_U_sub_C {c₁ c₂ : CU X} (h : c₁.U ⊆ c₂.c) (n₁ n₂ : ℕ) (x : X) :
     c₂.approx n₂ x ≤ c₁.approx n₁ x := by
   by_cases' hx : x ∈ c₁.U
   · calc approx n₂ c₂ x = 0 := approx_of_mem_C _ _ (h hx)_ ≤ approx n₁ c₁ x := approx_nonneg _ _ _
@@ -198,10 +198,10 @@ theorem approx_mono (c : CU X) (x : X) : Monotone fun n => c.approx n x :=
 protected noncomputable def limₓ (c : CU X) (x : X) : ℝ :=
   ⨆ n, c.approx n x
 
-theorem tendsto_approx_at_top (c : CU X) (x : X) : tendsto (fun n => c.approx n x) at_top (𝓝 <| c.lim x) :=
+theorem tendsto_approx_at_top (c : CU X) (x : X) : Tendsto (fun n => c.approx n x) atTop (𝓝 <| c.lim x) :=
   tendsto_at_top_csupr (c.approx_mono x) ⟨1, fun x ⟨n, hn⟩ => hn ▸ c.approx_le_one _ _⟩
 
-theorem lim_of_mem_C (c : CU X) (x : X) (h : x ∈ c.C) : c.lim x = 0 := by
+theorem lim_of_mem_C (c : CU X) (x : X) (h : x ∈ c.c) : c.lim x = 0 := by
   simp only [CU.lim, approx_of_mem_C, h, csupr_const]
 
 theorem lim_of_nmem_U (c : CU X) (x : X) (h : x ∉ c.U) : c.lim x = 1 := by
@@ -282,7 +282,7 @@ then there exists a continuous function `f : X → ℝ` such that
 * `0 ≤ f x ≤ 1` for all `x`.
 -/
 theorem exists_continuous_zero_one_of_closed {s t : Set X} (hs : IsClosed s) (ht : IsClosed t) (hd : Disjoint s t) :
-    ∃ f : C(X, ℝ), eq_on f 0 s ∧ eq_on f 1 t ∧ ∀ x, f x ∈ Icc (0 : ℝ) 1 := by
+    ∃ f : C(X, ℝ), EqOn f 0 s ∧ EqOn f 1 t ∧ ∀ x, f x ∈ Icc (0 : ℝ) 1 := by
   set c : Urysohns.CU X := ⟨s, tᶜ, hs, ht.is_open_compl, fun _ => disjoint_left.1 hd⟩
   exact ⟨⟨c.lim, c.continuous_lim⟩, c.lim_of_mem_C, fun x hx => c.lim_of_nmem_U _ fun h => h hx, c.lim_mem_Icc⟩
 

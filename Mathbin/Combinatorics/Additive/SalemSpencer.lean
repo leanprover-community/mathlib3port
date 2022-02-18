@@ -64,7 +64,7 @@ theorem MulSalemSpencer.mono (h : t ⊆ s) (hs : MulSalemSpencer s) : MulSalemSp
 theorem mul_salem_spencer_empty : MulSalemSpencer (∅ : Set α) := fun a _ _ ha => ha.elim
 
 @[to_additive]
-theorem Set.Subsingleton.mul_salem_spencer (hs : s.subsingleton) : MulSalemSpencer s := fun a b _ ha hb _ _ => hs ha hb
+theorem Set.Subsingleton.mul_salem_spencer (hs : s.Subsingleton) : MulSalemSpencer s := fun a b _ ha hb _ _ => hs ha hb
 
 @[simp, to_additive]
 theorem mul_salem_spencer_singleton (a : α) : MulSalemSpencer ({a} : Set α) :=
@@ -189,14 +189,14 @@ theorem mul_salem_spencer_mul_left_iff₀ (ha : a ≠ 0) : MulSalemSpencer ((· 
     mul_left_cancel₀ ha
       (hs (Set.mem_image_of_mem _ hb) (Set.mem_image_of_mem _ hc) (Set.mem_image_of_mem _ hd) <| by
         rw [mul_mul_mul_commₓ, h, mul_mul_mul_commₓ]),
-    fun hs => hs.mul_left₀ ha⟩
+    fun hs => hs.mulLeft₀ ha⟩
 
 theorem mul_salem_spencer_mul_right_iff₀ (ha : a ≠ 0) : MulSalemSpencer ((· * a) '' s) ↔ MulSalemSpencer s :=
   ⟨fun hs b c d hb hc hd h =>
     mul_right_cancel₀ ha
       (hs (Set.mem_image_of_mem _ hb) (Set.mem_image_of_mem _ hc) (Set.mem_image_of_mem _ hd) <| by
         rw [mul_mul_mul_commₓ, h, mul_mul_mul_commₓ]),
-    fun hs => hs.mul_right₀ ha⟩
+    fun hs => hs.mulRight₀ ha⟩
 
 end CancelCommMonoidWithZero
 
@@ -256,7 +256,7 @@ theorem MulSalemSpencer.le_mul_roth_number (hs : MulSalemSpencer (s : Set α)) (
 
 @[to_additive]
 theorem MulSalemSpencer.roth_number_eq (hs : MulSalemSpencer (s : Set α)) : mulRothNumber s = s.card :=
-  (mul_roth_number_le _).antisymm <| hs.le_mul_roth_number <| subset.refl _
+  (mul_roth_number_le _).antisymm <| hs.le_mul_roth_number <| Subset.refl _
 
 @[simp, to_additive]
 theorem mul_roth_number_empty : mulRothNumber (∅ : Finset α) = 0 :=
@@ -293,7 +293,7 @@ theorem le_mul_roth_number_product (s : Finset α) (t : Finset β) :
 
 @[to_additive]
 theorem mul_roth_number_lt_of_forall_not_mul_salem_spencer
-    (h : ∀, ∀ t ∈ powerset_len n s, ∀, ¬MulSalemSpencer ((t : Finset α) : Set α)) : mulRothNumber s < n := by
+    (h : ∀, ∀ t ∈ powersetLen n s, ∀, ¬MulSalemSpencer ((t : Finset α) : Set α)) : mulRothNumber s < n := by
   obtain ⟨t, hts, hcard, ht⟩ := mul_roth_number_spec s
   rw [← hcard, ← not_leₓ]
   intro hn
@@ -361,7 +361,7 @@ theorem roth_number_nat_spec (n : ℕ) :
 practice. -/
 theorem AddSalemSpencer.le_roth_number_nat (s : Finset ℕ) (hs : AddSalemSpencer (s : Set ℕ))
     (hsn : ∀, ∀ x ∈ s, ∀, x < n) (hsk : s.card = k) : k ≤ rothNumberNat n :=
-  hsk.ge.trans <| hs.le_add_roth_number fun x hx => mem_range.2 <| hsn x hx
+  hsk.Ge.trans <| hs.le_add_roth_number fun x hx => mem_range.2 <| hsn x hx
 
 /-- The Roth number is a subadditive function. Note that by Fekete's lemma this shows that
 the limit `roth_number N / N` exists, but Roth's theorem gives the stronger result that this
@@ -375,7 +375,7 @@ theorem roth_number_nat_add_le (M N : ℕ) : rothNumberNat (M + N) ≤ rothNumbe
 theorem roth_number_nat_zero : rothNumberNat 0 = 0 :=
   rfl
 
-theorem add_roth_number_Ico (a b : ℕ) : addRothNumber (Ico a b) = rothNumberNat (b - a) := by
+theorem add_roth_number_Ico (a b : ℕ) : addRothNumber (ico a b) = rothNumberNat (b - a) := by
   obtain h | h := le_totalₓ b a
   · rw [tsub_eq_zero_of_le h, Ico_eq_empty_of_le h, roth_number_nat_zero, add_roth_number_empty]
     
@@ -386,12 +386,12 @@ theorem add_roth_number_Ico (a b : ℕ) : addRothNumber (Ico a b) = rothNumberNa
 
 open Asymptotics Filter
 
-theorem roth_number_nat_is_O_with_id : is_O_with 1 (fun N => (rothNumberNat N : ℝ)) (fun N => (N : ℝ)) at_top :=
+theorem roth_number_nat_is_O_with_id : IsOWith 1 (fun N => (rothNumberNat N : ℝ)) (fun N => (N : ℝ)) atTop :=
   is_O_with.of_bound <| by
     simpa only [one_mulₓ, Real.norm_coe_nat, Nat.cast_le] using eventually_of_forall roth_number_nat_le
 
 /-- The Roth number has the trivial bound `roth_number N = O(N)`. -/
-theorem roth_number_nat_is_O_id : is_O (fun N => (rothNumberNat N : ℝ)) (fun N => (N : ℝ)) at_top :=
+theorem roth_number_nat_is_O_id : IsO (fun N => (rothNumberNat N : ℝ)) (fun N => (N : ℝ)) atTop :=
   roth_number_nat_is_O_with_id.IsO
 
 end rothNumberNat

@@ -48,17 +48,18 @@ unsafe def auto_cases_at (hyp : expr) : tactic Stringₓ := do
   let t ← infer_type hyp >>= whnf
   match auto_cases.find_tac t with
     | some atac => do
-      atac.tac hyp
+      atac hyp
       let pp ← pp hyp
-      return s! "{atac.name } {pp}"
+      return s! "{atac } {pp}"
     | none => fail "hypothesis type unsupported"
 
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `results
 /-- Applies `cases` or `induction` on certain hypotheses. -/
 @[hint_tactic]
 unsafe def auto_cases : tactic Stringₓ := do
   let l ← local_context
   let results ← successes <| l.reverse.map auto_cases_at
-  when results.empty <| fail "`auto_cases` did not find any hypotheses to apply `cases` or `induction` to"
+  when (results results.empty) <| fail "`auto_cases` did not find any hypotheses to apply `cases` or `induction` to"
   return (Stringₓ.intercalate ", " results)
 
 end Tactic

@@ -38,10 +38,10 @@ we have `f J = ∑ Ji in π.boxes, f Ji`. A function is called box additive on s
 if the same property holds for `J ≤ I`. We formalize these two notions in the same definition
 using `I : with_bot (box ι)`: the value `I = ⊤` corresponds to functions box additive on the whole
 space.  -/
-structure box_additive_map (ι M : Type _) [AddCommMonoidₓ M] (I : WithTop (box ι)) where
-  toFun : box ι → M
+structure box_additive_map (ι M : Type _) [AddCommMonoidₓ M] (I : WithTop (Box ι)) where
+  toFun : Box ι → M
   sum_partition_boxes' :
-    ∀ J : box ι, ↑J ≤ I → ∀ π : prepartition J, π.is_partition → (∑ Ji in π.boxes, to_fun Ji) = to_fun J
+    ∀ J : Box ι, ↑J ≤ I → ∀ π : Prepartition J, π.IsPartition → (∑ Ji in π.boxes, to_fun Ji) = to_fun J
 
 localized [BoxIntegral] notation:25 ι " →ᵇᵃ " M => BoxIntegral.BoxAdditiveMap ι M ⊤
 
@@ -51,34 +51,34 @@ namespace BoxAdditiveMap
 
 open Box Prepartition Finset
 
-variable {N : Type _} [AddCommMonoidₓ M] [AddCommMonoidₓ N] {I₀ : WithTop (box ι)} {I J : box ι} {i : ι}
+variable {N : Type _} [AddCommMonoidₓ M] [AddCommMonoidₓ N] {I₀ : WithTop (Box ι)} {I J : Box ι} {i : ι}
 
-instance : CoeFun (ι →ᵇᵃ[I₀] M) fun _ => box ι → M :=
-  ⟨to_fun⟩
+instance : CoeFun (ι →ᵇᵃ[I₀] M) fun _ => Box ι → M :=
+  ⟨toFun⟩
 
 initialize_simps_projections box_integral.box_additive_map (toFun → apply)
 
 @[simp]
-theorem to_fun_eq_coe (f : ι →ᵇᵃ[I₀] M) : f.to_fun = f :=
+theorem to_fun_eq_coe (f : ι →ᵇᵃ[I₀] M) : f.toFun = f :=
   rfl
 
 @[simp]
 theorem coe_mk f h : ⇑(mk f h : ι →ᵇᵃ[I₀] M) = f :=
   rfl
 
-theorem coe_injective : injective fun f : ι →ᵇᵃ[I₀] M x => f x := by
+theorem coe_injective : Injective fun f : ι →ᵇᵃ[I₀] M x => f x := by
   rintro ⟨f, hf⟩ ⟨g, hg⟩ (rfl : f = g)
   rfl
 
 @[simp]
-theorem coe_inj {f g : ι →ᵇᵃ[I₀] M} : (f : box ι → M) = g ↔ f = g :=
+theorem coe_inj {f g : ι →ᵇᵃ[I₀] M} : (f : Box ι → M) = g ↔ f = g :=
   coe_injective.eq_iff
 
-theorem sum_partition_boxes (f : ι →ᵇᵃ[I₀] M) (hI : ↑I ≤ I₀) {π : prepartition I} (h : π.is_partition) :
+theorem sum_partition_boxes (f : ι →ᵇᵃ[I₀] M) (hI : ↑I ≤ I₀) {π : Prepartition I} (h : π.IsPartition) :
     (∑ J in π.boxes, f J) = f I :=
   f.sum_partition_boxes' I hI π h
 
-@[simps (config := { fullyApplied := ff })]
+@[simps (config := { fullyApplied := false })]
 instance : Zero (ι →ᵇᵃ[I₀] M) :=
   ⟨⟨0, fun I hI π hπ => sum_const_zero⟩⟩
 
@@ -95,23 +95,22 @@ instance : AddCommMonoidₓ (ι →ᵇᵃ[I₀] M) :=
 
 @[simp]
 theorem map_split_add (f : ι →ᵇᵃ[I₀] M) (hI : ↑I ≤ I₀) (i : ι) (x : ℝ) :
-    (I.split_lower i x).elim 0 f + (I.split_upper i x).elim 0 f = f I := by
+    (I.splitLower i x).elim 0 f + (I.splitUpper i x).elim 0 f = f I := by
   rw [← f.sum_partition_boxes hI (is_partition_split I i x), sum_split_boxes]
 
 /-- If `f` is box-additive on subboxes of `I₀`, then it is box-additive on subboxes of any
 `I ≤ I₀`. -/
 @[simps]
-def restrict (f : ι →ᵇᵃ[I₀] M) (I : WithTop (box ι)) (hI : I ≤ I₀) : ι →ᵇᵃ[I] M :=
+def restrict (f : ι →ᵇᵃ[I₀] M) (I : WithTop (Box ι)) (hI : I ≤ I₀) : ι →ᵇᵃ[I] M :=
   ⟨f, fun J hJ => f.2 J (hJ.trans hI)⟩
 
 /-- If `f : box ι → M` is box additive on partitions of the form `split I i x`, then it is box
 additive. -/
-def of_map_split_add [Fintype ι] (f : box ι → M) (I₀ : WithTop (box ι))
+def of_map_split_add [Fintype ι] (f : Box ι → M) (I₀ : WithTop (Box ι))
     (hf :
-      ∀ I : box ι,
+      ∀ I : Box ι,
         ↑I ≤ I₀ →
-          ∀ {i x},
-            x ∈ Ioo (I.lower i) (I.upper i) → (I.split_lower i x).elim 0 f + (I.split_upper i x).elim 0 f = f I) :
+          ∀ {i x}, x ∈ ioo (I.lower i) (I.upper i) → (I.splitLower i x).elim 0 f + (I.splitUpper i x).elim 0 f = f I) :
     ι →ᵇᵃ[I₀] M := by
   refine' ⟨f, _⟩
   replace hf : ∀ I : box ι, ↑I ≤ I₀ → ∀ s, (∑ J in (split_many I s).boxes, f J) = f I
@@ -136,7 +135,7 @@ def of_map_split_add [Fintype ι] (f : box ι → M) (I₀ : WithTop (box ι))
 
 /-- If `g : M → N` is an additive map and `f` is a box additive map, then `g ∘ f` is a box additive
 map. -/
-@[simps (config := { fullyApplied := ff })]
+@[simps (config := { fullyApplied := false })]
 def map (f : ι →ᵇᵃ[I₀] M) (g : M →+ N) : ι →ᵇᵃ[I₀] N where
   toFun := g ∘ f
   sum_partition_boxes' := fun I hI π hπ => by
@@ -144,7 +143,7 @@ def map (f : ι →ᵇᵃ[I₀] M) (g : M →+ N) : ι →ᵇᵃ[I₀] N where
 
 /-- If `f` is a box additive function on subboxes of `I` and `π₁`, `π₂` are two prepartitions of
 `I` that cover the same part of `I`, then `∑ J in π₁.boxes, f J = ∑ J in π₂.boxes, f J`. -/
-theorem sum_boxes_congr [Fintype ι] (f : ι →ᵇᵃ[I₀] M) (hI : ↑I ≤ I₀) {π₁ π₂ : prepartition I}
+theorem sum_boxes_congr [Fintype ι] (f : ι →ᵇᵃ[I₀] M) (hI : ↑I ≤ I₀) {π₁ π₂ : Prepartition I}
     (h : π₁.Union = π₂.Union) : (∑ J in π₁.boxes, f J) = ∑ J in π₂.boxes, f J := by
   rcases exists_split_many_inf_eq_filter_of_finite {π₁, π₂} ((finite_singleton _).insert _) with ⟨s, hs⟩
   simp only [inf_split_many] at hs
@@ -171,7 +170,7 @@ def to_smul (f : ι →ᵇᵃ[I₀] ℝ) : ι →ᵇᵃ[I₀] E →L[ℝ] E :=
   f.map (ContinuousLinearMap.lsmul ℝ ℝ).toLinearMap.toAddMonoidHom
 
 @[simp]
-theorem to_smul_apply (f : ι →ᵇᵃ[I₀] ℝ) (I : box ι) (x : E) : f.to_smul I x = f I • x :=
+theorem to_smul_apply (f : ι →ᵇᵃ[I₀] ℝ) (I : Box ι) (x : E) : f.toSmul I x = f I • x :=
   rfl
 
 end ToSmul
@@ -181,10 +180,10 @@ end ToSmul
 `I₀`, then `λ J, f (J.upper i) (J.face i) - f (J.lower i) (J.face i)` is box-additive on subboxes of
 `I₀`. -/
 @[simps]
-def upper_sub_lower.{u} {G : Type u} [AddCommGroupₓ G] (I₀ : box (Finₓ (n + 1))) (i : Finₓ (n + 1))
-    (f : ℝ → box (Finₓ n) → G) (fb : Icc (I₀.lower i) (I₀.upper i) → Finₓ n →ᵇᵃ[I₀.face i] G)
-    (hf : ∀ x hx : x ∈ Icc (I₀.lower i) (I₀.upper i) J, f x J = fb ⟨x, hx⟩ J) : Finₓ (n + 1) →ᵇᵃ[I₀] G :=
-  of_map_split_add (fun J : box (Finₓ (n + 1)) => f (J.upper i) (J.face i) - f (J.lower i) (J.face i)) I₀
+def upper_sub_lower.{u} {G : Type u} [AddCommGroupₓ G] (I₀ : Box (Finₓ (n + 1))) (i : Finₓ (n + 1))
+    (f : ℝ → Box (Finₓ n) → G) (fb : icc (I₀.lower i) (I₀.upper i) → Finₓ n →ᵇᵃ[I₀.face i] G)
+    (hf : ∀ x hx : x ∈ icc (I₀.lower i) (I₀.upper i) J, f x J = fb ⟨x, hx⟩ J) : Finₓ (n + 1) →ᵇᵃ[I₀] G :=
+  ofMapSplitAdd (fun J : Box (Finₓ (n + 1)) => f (J.upper i) (J.face i) - f (J.lower i) (J.face i)) I₀
     (by
       intro J hJ j
       rw [WithTop.coe_le_coe] at hJ

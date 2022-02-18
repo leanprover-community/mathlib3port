@@ -11,16 +11,15 @@ of `#R` and `ω`.
 
 universe u
 
-open_locale Cardinal
+open_locale Cardinal Polynomial
 
 open Cardinal
 
 namespace Polynomial
 
-theorem cardinal_mk_le_max {R : Type u} [CommSemiringₓ R] : # (Polynomial R) ≤ max (# R) ω :=
+theorem cardinal_mk_le_max {R : Type u} [CommSemiringₓ R] : # R[X] ≤ max (# R) ω :=
   calc
-    # (Polynomial R) = # (MvPolynomial PUnit.{u + 1} R) :=
-      Cardinal.eq.2 ⟨(MvPolynomial.punitAlgEquiv.{u, u} R).toEquiv.symm⟩
+    # R[X] = # (MvPolynomial PUnit.{u + 1} R) := Cardinal.eq.2 ⟨(MvPolynomial.punitAlgEquiv.{u, u} R).toEquiv.symm⟩
     _ ≤ _ := MvPolynomial.cardinal_mk_le_max
     _ ≤ _ := by
       have : # PUnit.{u + 1} ≤ ω := le_of_ltₓ (lt_omega_iff_fintype.2 ⟨inferInstance⟩)

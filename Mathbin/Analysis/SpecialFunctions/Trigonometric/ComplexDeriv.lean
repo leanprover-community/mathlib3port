@@ -26,7 +26,7 @@ theorem has_deriv_at_tan {x : ℂ} (h : cos x ≠ 0) : HasDerivAt tan (1 / cos x
 
 open_locale TopologicalSpace
 
-theorem tendsto_abs_tan_of_cos_eq_zero {x : ℂ} (hx : cos x = 0) : tendsto (fun x => abs (tan x)) (𝓝[≠] x) at_top := by
+theorem tendsto_abs_tan_of_cos_eq_zero {x : ℂ} (hx : cos x = 0) : Tendsto (fun x => abs (tan x)) (𝓝[≠] x) atTop := by
   simp only [tan_eq_sin_div_cos, ← norm_eq_abs, NormedField.norm_div]
   have A : sin x ≠ 0 := fun h => by
     simpa [*, sq] using sin_sq_add_cos_sq x
@@ -35,7 +35,7 @@ theorem tendsto_abs_tan_of_cos_eq_zero {x : ℂ} (hx : cos x = 0) : tendsto (fun
     continuous_sin.continuous_within_at.norm.mul_at_top (norm_pos_iff.2 A)
       (tendsto_norm_nhds_within_zero.comp B).inv_tendsto_zero
 
-theorem tendsto_abs_tan_at_top (k : ℤ) : tendsto (fun x => abs (tan x)) (𝓝[≠] ((2 * k + 1) * π / 2)) at_top :=
+theorem tendsto_abs_tan_at_top (k : ℤ) : Tendsto (fun x => abs (tan x)) (𝓝[≠] ((2 * k + 1) * π / 2)) atTop :=
   tendsto_abs_tan_of_cos_eq_zero <| cos_eq_zero_iff.2 ⟨k, rfl⟩
 
 @[simp]
@@ -45,7 +45,7 @@ theorem continuous_at_tan {x : ℂ} : ContinuousAt tan x ↔ cos x ≠ 0 := by
 
 @[simp]
 theorem differentiable_at_tan {x : ℂ} : DifferentiableAt ℂ tan x ↔ cos x ≠ 0 :=
-  ⟨fun h => continuous_at_tan.1 h.continuous_at, fun h => (has_deriv_at_tan h).DifferentiableAt⟩
+  ⟨fun h => continuous_at_tan.1 h.ContinuousAt, fun h => (has_deriv_at_tan h).DifferentiableAt⟩
 
 @[simp]
 theorem deriv_tan (x : ℂ) : deriv tan x = 1 / cos x ^ 2 :=
@@ -56,7 +56,7 @@ theorem deriv_tan (x : ℂ) : deriv tan x = 1 / cos x ^ 2 :=
 
 @[simp]
 theorem times_cont_diff_at_tan {x : ℂ} {n : WithTop ℕ} : TimesContDiffAt ℂ n tan x ↔ cos x ≠ 0 :=
-  ⟨fun h => continuous_at_tan.1 h.continuous_at,
+  ⟨fun h => continuous_at_tan.1 h.ContinuousAt,
     times_cont_diff_sin.TimesContDiffAt.div times_cont_diff_cos.TimesContDiffAt⟩
 
 end Complex

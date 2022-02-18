@@ -54,29 +54,29 @@ variable [CompleteSpace E] [CompleteSpace G]
 definition for the main definition `adjoint`, where this is bundled as a conjugate-linear isometric
 equivalence. -/
 def adjoint_aux : (E →L[𝕜] F) →L⋆[𝕜] F →L[𝕜] E :=
-  (ContinuousLinearMap.compSL _ _ _ _ _ ((to_dual 𝕜 E).symm : NormedSpace.Dual 𝕜 E →L⋆[𝕜] E)).comp
-    (to_sesq_form : (E →L[𝕜] F) →L[𝕜] F →L⋆[𝕜] NormedSpace.Dual 𝕜 E)
+  (ContinuousLinearMap.compSL _ _ _ _ _ ((toDual 𝕜 E).symm : NormedSpace.Dual 𝕜 E →L⋆[𝕜] E)).comp
+    (toSesqForm : (E →L[𝕜] F) →L[𝕜] F →L⋆[𝕜] NormedSpace.Dual 𝕜 E)
 
 @[simp]
 theorem adjoint_aux_apply (A : E →L[𝕜] F) (x : F) :
-    adjoint_aux A x = ((to_dual 𝕜 E).symm : NormedSpace.Dual 𝕜 E → E) ((to_sesq_form A) x) :=
+    adjointAux A x = ((toDual 𝕜 E).symm : NormedSpace.Dual 𝕜 E → E) ((toSesqForm A) x) :=
   rfl
 
-theorem adjoint_aux_inner_left (A : E →L[𝕜] F) (x : E) (y : F) : ⟪adjoint_aux A y, x⟫ = ⟪y, A x⟫ := by
+theorem adjoint_aux_inner_left (A : E →L[𝕜] F) (x : E) (y : F) : ⟪adjointAux A y, x⟫ = ⟪y, A x⟫ := by
   simp only [adjoint_aux_apply, to_dual_symm_apply, to_sesq_form_apply_coe, coe_comp', innerSL_apply_coe]
 
-theorem adjoint_aux_inner_right (A : E →L[𝕜] F) (x : E) (y : F) : ⟪x, adjoint_aux A y⟫ = ⟪A x, y⟫ := by
+theorem adjoint_aux_inner_right (A : E →L[𝕜] F) (x : E) (y : F) : ⟪x, adjointAux A y⟫ = ⟪A x, y⟫ := by
   rw [← inner_conj_sym, adjoint_aux_inner_left, inner_conj_sym]
 
 variable [CompleteSpace F]
 
-theorem adjoint_aux_adjoint_aux (A : E →L[𝕜] F) : adjoint_aux (adjoint_aux A) = A := by
+theorem adjoint_aux_adjoint_aux (A : E →L[𝕜] F) : adjointAux (adjointAux A) = A := by
   ext v
   refine' ext_inner_left 𝕜 fun w => _
   rw [adjoint_aux_inner_right, adjoint_aux_inner_left]
 
 @[simp]
-theorem adjoint_aux_norm (A : E →L[𝕜] F) : ∥adjoint_aux A∥ = ∥A∥ := by
+theorem adjoint_aux_norm (A : E →L[𝕜] F) : ∥adjointAux A∥ = ∥A∥ := by
   refine' le_antisymmₓ _ _
   · refine' ContinuousLinearMap.op_norm_le_bound _ (norm_nonneg _) fun x => _
     rw [adjoint_aux_apply, LinearIsometryEquiv.norm_map]
@@ -90,8 +90,8 @@ theorem adjoint_aux_norm (A : E →L[𝕜] F) : ∥adjoint_aux A∥ = ∥A∥ :=
 
 /-- The adjoint of a bounded operator from Hilbert space E to Hilbert space F. -/
 def adjoint : (E →L[𝕜] F) ≃ₗᵢ⋆[𝕜] F →L[𝕜] E :=
-  LinearIsometryEquiv.ofSurjective { adjoint_aux with norm_map' := adjoint_aux_norm } fun A =>
-    ⟨adjoint_aux A, adjoint_aux_adjoint_aux A⟩
+  LinearIsometryEquiv.ofSurjective { adjointAux with norm_map' := adjoint_aux_norm } fun A =>
+    ⟨adjointAux A, adjoint_aux_adjoint_aux A⟩
 
 localized [InnerProduct] postfix:1000 "†" => adjoint
 
@@ -213,10 +213,10 @@ def adjoint : (E →ₗ[𝕜] F) ≃ₗ⋆[𝕜] F →ₗ[𝕜] E :=
     LinearMap.toContinuousLinearMap.symm
 
 theorem adjoint_to_continuous_linear_map (A : E →ₗ[𝕜] F) :
-    A.adjoint.to_continuous_linear_map = A.to_continuous_linear_map.adjoint :=
+    A.adjoint.toContinuousLinearMap = A.toContinuousLinearMap.adjoint :=
   rfl
 
-theorem adjoint_eq_to_clm_adjoint (A : E →ₗ[𝕜] F) : A.adjoint = A.to_continuous_linear_map.adjoint :=
+theorem adjoint_eq_to_clm_adjoint (A : E →ₗ[𝕜] F) : A.adjoint = A.toContinuousLinearMap.adjoint :=
   rfl
 
 /-- The fundamental property of the adjoint. -/
@@ -286,6 +286,9 @@ theorem eq_adjoint_iff_basis_right {ι : Type _} (b : Basis ι 𝕜 F) (A : E �
     ext_inner_right_basis b fun i => by
       simp only [h i, adjoint_inner_left]
 
+theorem is_self_adjoint_iff_eq_adjoint (A : E →ₗ[𝕜] E) : IsSelfAdjoint A ↔ A = A.adjoint := by
+  rw [is_self_adjoint, ← LinearMap.eq_adjoint_iff]
+
 /-- `E →ₗ[𝕜] E` is a star algebra with the adjoint as the star operation. -/
 instance : HasStar (E →ₗ[𝕜] E) :=
   ⟨adjoint⟩
@@ -330,8 +333,7 @@ open_locale ComplexConjugate
 /-- The adjoint of the linear map associated to a matrix is the linear map associated to the
 conjugate transpose of that matrix. -/
 theorem conj_transpose_eq_adjoint (A : Matrix m n 𝕜) :
-    to_lin' A.conj_transpose = @LinearMap.adjoint _ (EuclideanSpace 𝕜 n) (EuclideanSpace 𝕜 m) _ _ _ _ _ (to_lin' A) :=
-  by
+    toLin' A.conjTranspose = @LinearMap.adjoint _ (EuclideanSpace 𝕜 n) (EuclideanSpace 𝕜 m) _ _ _ _ _ (toLin' A) := by
   rw [@LinearMap.eq_adjoint_iff _ (EuclideanSpace 𝕜 m) (EuclideanSpace 𝕜 n)]
   intro x y
   convert dot_product_assoc (conj ∘ (id x : m → 𝕜)) y A using 1

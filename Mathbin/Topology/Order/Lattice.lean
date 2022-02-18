@@ -1,6 +1,5 @@
-import Mathbin.Topology.Basic
+import Mathbin.Topology.Algebra.Order.Basic
 import Mathbin.Topology.Constructions
-import Mathbin.Topology.Algebra.Ordered.Basic
 
 /-!
 # Topological lattices
@@ -18,6 +17,10 @@ and `has_continuous_sup`.
 topological, lattice
 -/
 
+
+open Filter
+
+open_locale TopologicalSpace
 
 /-- Let `L` be a topological space and let `L×L` be equipped with the product topology and let
 `⊓:L×L → L` be an infimum. Then `L` is said to have *(jointly) continuous infimum* if the map
@@ -71,4 +74,22 @@ theorem continuous_sup [HasSup L] [HasContinuousSup L] : Continuous fun p : L ×
 theorem Continuous.sup [HasSup L] [HasContinuousSup L] {f g : X → L} (hf : Continuous f) (hg : Continuous g) :
     Continuous fun x => f x⊔g x :=
   continuous_sup.comp (hf.prod_mk hg : _)
+
+theorem Filter.Tendsto.sup_right_nhds' {ι β} [TopologicalSpace β] [HasSup β] [HasContinuousSup β] {l : Filter ι}
+    {f g : ι → β} {x y : β} (hf : Tendsto f l (𝓝 x)) (hg : Tendsto g l (𝓝 y)) : Tendsto (f⊔g) l (𝓝 (x⊔y)) :=
+  (continuous_sup.Tendsto _).comp (Tendsto.prod_mk_nhds hf hg)
+
+theorem Filter.Tendsto.sup_right_nhds {ι β} [TopologicalSpace β] [HasSup β] [HasContinuousSup β] {l : Filter ι}
+    {f g : ι → β} {x y : β} (hf : Tendsto f l (𝓝 x)) (hg : Tendsto g l (𝓝 y)) :
+    Tendsto (fun i => f i⊔g i) l (𝓝 (x⊔y)) :=
+  hf.sup_right_nhds' hg
+
+theorem Filter.Tendsto.inf_right_nhds' {ι β} [TopologicalSpace β] [HasInf β] [HasContinuousInf β] {l : Filter ι}
+    {f g : ι → β} {x y : β} (hf : Tendsto f l (𝓝 x)) (hg : Tendsto g l (𝓝 y)) : Tendsto (f⊓g) l (𝓝 (x⊓y)) :=
+  (continuous_inf.Tendsto _).comp (Tendsto.prod_mk_nhds hf hg)
+
+theorem Filter.Tendsto.inf_right_nhds {ι β} [TopologicalSpace β] [HasInf β] [HasContinuousInf β] {l : Filter ι}
+    {f g : ι → β} {x y : β} (hf : Tendsto f l (𝓝 x)) (hg : Tendsto g l (𝓝 y)) :
+    Tendsto (fun i => f i⊓g i) l (𝓝 (x⊓y)) :=
+  hf.inf_right_nhds' hg
 

@@ -83,7 +83,7 @@ theorem lcm_eq_zero_iff [Nontrivial α] (s : Multiset α) : s.lcm = 0 ↔ (0 : �
 variable [DecidableEq α]
 
 @[simp]
-theorem lcm_erase_dup (s : Multiset α) : (erase_dup s).lcm = s.lcm :=
+theorem lcm_erase_dup (s : Multiset α) : (eraseDup s).lcm = s.lcm :=
   (Multiset.induction_on s
       (by
         simp ))
@@ -176,7 +176,7 @@ theorem gcd_eq_zero_iff (s : Multiset α) : s.gcd = 0 ↔ ∀ x : α, x ∈ s �
 variable [DecidableEq α]
 
 @[simp]
-theorem gcd_erase_dup (s : Multiset α) : (erase_dup s).gcd = s.gcd :=
+theorem gcd_erase_dup (s : Multiset α) : (eraseDup s).gcd = s.gcd :=
   (Multiset.induction_on s
       (by
         simp ))

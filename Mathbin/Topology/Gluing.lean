@@ -75,15 +75,15 @@ Most of the times it would be easier to use the constructor `Top.glue_data.mk'` 
 are stated in a less categorical way.
 -/
 @[nolint has_inhabited_instance]
-structure glue_data extends glue_data Top where
+structure glue_data extends GlueData Top where
   f_open : ∀ i j, OpenEmbedding (f i j)
   f_mono := fun i j => (Top.mono_iff_injective _).mpr (f_open i j).toEmbedding.inj
 
 namespace GlueData
 
-variable (D : glue_data.{u})
+variable (D : GlueData.{u})
 
-local notation "𝖣" => D.to_glue_data
+local notation "𝖣" => D.toGlueData
 
 theorem π_surjective : Function.Surjective 𝖣.π :=
   (Top.epi_iff_surjective 𝖣.π).mp inferInstance
@@ -104,7 +104,7 @@ See `Top.glue_data.ι_eq_iff_rel`.
 def Rel (a b : Σ i, ((D.U i : Top) : Type _)) : Prop :=
   a = b ∨ ∃ x : D.V (a.1, b.1), D.f _ _ x = a.2 ∧ D.f _ _ (D.t _ _ x) = b.2
 
-theorem rel_equiv : Equivalenceₓ D.rel :=
+theorem rel_equiv : Equivalenceₓ D.Rel :=
   ⟨fun x => Or.inl (refl x), by
     rintro a b (⟨⟨⟩⟩ | ⟨x, e₁, e₂⟩)
     exacts[Or.inl rfl,
@@ -139,7 +139,7 @@ theorem rel_equiv : Equivalenceₓ D.rel :=
 open CategoryTheory.Limits.WalkingParallelPair
 
 theorem eqv_gen_of_π_eq {x y : ∐ D.U} (h : 𝖣.π x = 𝖣.π y) :
-    EqvGen (types.coequalizer_rel 𝖣.diagram.fstSigmaMap 𝖣.diagram.sndSigmaMap) x y := by
+    EqvGen (Types.CoequalizerRel 𝖣.diagram.fstSigmaMap 𝖣.diagram.sndSigmaMap) x y := by
   delta' glue_data.π multicoequalizer.sigma_π  at h
   simp_rw [comp_app]  at h
   replace h := (Top.mono_iff_injective (multicoequalizer.iso_coequalizer 𝖣.diagram).inv).mp _ h
@@ -160,7 +160,7 @@ theorem eqv_gen_of_π_eq {x y : ∐ D.U} (h : 𝖣.π x = 𝖣.π y) :
   exact Quot.eq.1 this
   infer_instance
 
-theorem ι_eq_iff_rel (i j : D.J) (x : D.U i) (y : D.U j) : 𝖣.ι i x = 𝖣.ι j y ↔ D.rel ⟨i, x⟩ ⟨j, y⟩ := by
+theorem ι_eq_iff_rel (i j : D.J) (x : D.U i) (y : D.U j) : 𝖣.ι i x = 𝖣.ι j y ↔ D.Rel ⟨i, x⟩ ⟨j, y⟩ := by
   constructor
   · delta' glue_data.ι
     simp_rw [← multicoequalizer.ι_sigma_π]
@@ -205,7 +205,7 @@ theorem ι_injective (i : D.J) : Function.Injective (𝖣.ι i) := by
     simp
     
 
-instance ι_mono (i : D.J) : mono (𝖣.ι i) :=
+instance ι_mono (i : D.J) : Mono (𝖣.ι i) :=
   (Top.mono_iff_injective _).mpr (D.ι_injective _)
 
 theorem image_inter (i j : D.J) : Set.Range (𝖣.ι i) ∩ Set.Range (𝖣.ι j) = Set.Range (D.f i j ≫ 𝖣.ι _) := by
@@ -259,7 +259,7 @@ theorem preimage_image_eq_image' (i j : D.J) (U : Set (𝖣.U i)) :
   rw [← is_iso_iff_bijective]
   apply (forget Top).map_is_iso
 
-theorem open_image_open (i : D.J) (U : opens (𝖣.U i)) : IsOpen (𝖣.ι i '' U) := by
+theorem open_image_open (i : D.J) (U : Opens (𝖣.U i)) : IsOpen (𝖣.ι i '' U) := by
   rw [is_open_iff]
   intro j
   rw [preimage_image_eq_image]
@@ -288,8 +288,8 @@ We can then glue the topological spaces `U i` together by identifying `V i j` wi
 structure mk_core where
   {J : Type u}
   U : J → Top.{u}
-  V : ∀ i, J → opens (U i)
-  t : ∀ i j, (opens.to_Top _).obj (V i j) ⟶ (opens.to_Top _).obj (V j i)
+  V : ∀ i, J → Opens (U i)
+  t : ∀ i j, (Opens.toTop _).obj (V i j) ⟶ (Opens.toTop _).obj (V j i)
   V_id : ∀ i, V i i = ⊤
   t_id : ∀ i, ⇑t i i = id
   t_inter : ∀ ⦃i j⦄ k x : V i j, ↑x ∈ V i k → @coe (V j i) (U j) _ (t i j x) ∈ V j k
@@ -297,7 +297,7 @@ structure mk_core where
     ∀ i j k x : V i j h : ↑x ∈ V i k,
       @coe (V k j) (U k) _ (t j k ⟨↑(t i j x), t_inter k x h⟩) = @coe (V k i) (U k) _ (t i k ⟨x, h⟩)
 
-theorem mk_core.t_inv (h : mk_core) (i j : h.J) (x : h.V j i) : h.t i j ((h.t j i) x) = x := by
+theorem mk_core.t_inv (h : MkCore) (i j : h.J) (x : h.V j i) : h.t i j ((h.t j i) x) = x := by
   have := h.cocycle j i j x _
   rw [h.t_id] at this
   convert Subtype.eq this
@@ -308,13 +308,13 @@ theorem mk_core.t_inv (h : mk_core) (i j : h.J) (x : h.V j i) : h.t i j ((h.t j 
     rw [h.V_id]
     trivial
 
-instance (h : mk_core.{u}) (i j : h.J) : is_iso (h.t i j) := by
+instance (h : MkCore.{u}) (i j : h.J) : IsIso (h.t i j) := by
   use h.t j i
   constructor <;> ext1
   exacts[h.t_inv _ _ _, h.t_inv _ _ _]
 
 /-- (Implementation) the restricted transition map to be fed into `glue_data`. -/
-def mk_core.t' (h : mk_core.{u}) (i j k : h.J) :
+def mk_core.t' (h : MkCore.{u}) (i j k : h.J) :
     pullback (h.V i j).inclusion (h.V i k).inclusion ⟶ pullback (h.V j k).inclusion (h.V j i).inclusion := by
   refine' (pullback_iso_prod_subtype _ _).Hom ≫ ⟨_, _⟩ ≫ (pullback_iso_prod_subtype _ _).inv
   · intro x
@@ -327,12 +327,12 @@ def mk_core.t' (h : mk_core.{u}) (i j k : h.J) :
 /-- This is a constructor of `Top.glue_data` whose arguments are in terms of elements and
 intersections rather than subobjects and pullbacks. Please refer to `Top.glue_data.mk_core` for
 details. -/
-def mk' (h : mk_core.{u}) : Top.GlueData where
+def mk' (h : MkCore.{u}) : Top.GlueData where
   J := h.J
   U := h.U
-  V := fun i => (opens.to_Top _).obj (h.V i.1 i.2)
+  V := fun i => (Opens.toTop _).obj (h.V i.1 i.2)
   f := fun i j => (h.V i j).inclusion
-  f_id := fun i => (h.V_id i).symm ▸ is_iso.of_iso (opens.inclusion_top_iso (h.U i))
+  f_id := fun i => (h.V_id i).symm ▸ IsIso.of_iso (Opens.inclusionTopIso (h.U i))
   f_open := fun i j : h.J => (h.V i j).OpenEmbedding
   t := h.t
   t_id := fun i => by
@@ -359,7 +359,7 @@ def mk' (h : mk_core.{u}) : Top.GlueData where
     ext
     exact h.cocycle i j k ⟨x, hx⟩ hx'
 
-variable {α : Type u} [TopologicalSpace α] {J : Type u} (U : J → opens α)
+variable {α : Type u} [TopologicalSpace α] {J : Type u} (U : J → Opens α)
 
 include U
 
@@ -367,7 +367,7 @@ include U
 @[simps to_glue_data_J to_glue_data_U to_glue_data_V to_glue_data_t to_glue_data_f]
 def of_open_subsets : Top.GlueData.{u} :=
   mk'.{u}
-    { J, U := fun i => (opens.to_Top <| Top.of α).obj (U i), V := fun i j => (opens.map <| opens.inclusion _).obj (U j),
+    { J, U := fun i => (opens.to_Top <| Top.of α).obj (U i), V := fun i j => (opens.map <| Opens.inclusion _).obj (U j),
       t := fun i j =>
         ⟨fun x => ⟨⟨x.1.1, x.2⟩, x.1.2⟩, by
           continuity⟩,
@@ -384,8 +384,8 @@ def of_open_subsets : Top.GlueData.{u} :=
 This map is an open embedding (`from_open_subsets_glue_open_embedding`),
 and its range is `⋃ i, (U i : set α)` (`range_from_open_subsets_glue`).
 -/
-def from_open_subsets_glue : (of_open_subsets U).toGlueData.glued ⟶ Top.of α :=
-  multicoequalizer.desc _ _ (fun x => opens.inclusion _)
+def from_open_subsets_glue : (ofOpenSubsets U).toGlueData.glued ⟶ Top.of α :=
+  multicoequalizer.desc _ _ (fun x => Opens.inclusion _)
     (by
       rintro ⟨i, j⟩
       ext x
@@ -393,10 +393,10 @@ def from_open_subsets_glue : (of_open_subsets U).toGlueData.glued ⟶ Top.of α 
 
 @[simp, elementwise]
 theorem ι_from_open_subsets_glue (i : J) :
-    (of_open_subsets U).toGlueData.ι i ≫ from_open_subsets_glue U = opens.inclusion _ :=
+    (ofOpenSubsets U).toGlueData.ι i ≫ fromOpenSubsetsGlue U = Opens.inclusion _ :=
   multicoequalizer.π_desc _ _ _ _ _
 
-theorem from_open_subsets_glue_injective : Function.Injective (from_open_subsets_glue U) := by
+theorem from_open_subsets_glue_injective : Function.Injective (fromOpenSubsetsGlue U) := by
   intro x y e
   obtain ⟨i, ⟨x, hx⟩, rfl⟩ := (of_open_subsets U).ι_jointly_surjective x
   obtain ⟨j, ⟨y, hy⟩, rfl⟩ := (of_open_subsets U).ι_jointly_surjective y
@@ -407,7 +407,7 @@ theorem from_open_subsets_glue_injective : Function.Injective (from_open_subsets
   right
   exact ⟨⟨⟨x, hx⟩, hy⟩, rfl, rfl⟩
 
-theorem from_open_subsets_glue_is_open_map : IsOpenMap (from_open_subsets_glue U) := by
+theorem from_open_subsets_glue_is_open_map : IsOpenMap (fromOpenSubsetsGlue U) := by
   intro s hs
   rw [(of_open_subsets U).is_open_iff] at hs
   rw [is_open_iff_forall_mem_open]
@@ -428,11 +428,11 @@ theorem from_open_subsets_glue_is_open_map : IsOpenMap (from_open_subsets_glue U
     exact Set.mem_range_self _
     
 
-theorem from_open_subsets_glue_open_embedding : OpenEmbedding (from_open_subsets_glue U) :=
+theorem from_open_subsets_glue_open_embedding : OpenEmbedding (fromOpenSubsetsGlue U) :=
   open_embedding_of_continuous_injective_open (ContinuousMap.continuous_to_fun _) (from_open_subsets_glue_injective U)
     (from_open_subsets_glue_is_open_map U)
 
-theorem range_from_open_subsets_glue : Set.Range (from_open_subsets_glue U) = ⋃ i, (U i : Set α) := by
+theorem range_from_open_subsets_glue : Set.Range (fromOpenSubsetsGlue U) = ⋃ i, (U i : Set α) := by
   ext
   constructor
   · rintro ⟨x, rfl⟩
@@ -445,11 +445,11 @@ theorem range_from_open_subsets_glue : Set.Range (from_open_subsets_glue U) = �
     
 
 /-- The gluing of an open cover is homeomomorphic to the original space. -/
-def open_cover_glue_homeo (h : (⋃ i, (U i : Set α)) = Set.Univ) : (of_open_subsets U).toGlueData.glued ≃ₜ α :=
+def open_cover_glue_homeo (h : (⋃ i, (U i : Set α)) = Set.Univ) : (ofOpenSubsets U).toGlueData.glued ≃ₜ α :=
   Homeomorph.homeomorphOfContinuousOpen
-    (Equivₓ.ofBijective (from_open_subsets_glue U)
+    (Equivₓ.ofBijective (fromOpenSubsetsGlue U)
       ⟨from_open_subsets_glue_injective U, Set.range_iff_surjective.mp ((range_from_open_subsets_glue U).symm ▸ h)⟩)
-    (from_open_subsets_glue U).2 (from_open_subsets_glue_is_open_map U)
+    (fromOpenSubsetsGlue U).2 (from_open_subsets_glue_is_open_map U)
 
 end GlueData
 

@@ -15,12 +15,12 @@ variable {σ : Type _}
 
 /-- A polynomial over the integers is divisible by `n : ℕ`
 if and only if it is zero over `zmod n`. -/
-theorem C_dvd_iff_zmod (n : ℕ) (φ : MvPolynomial σ ℤ) : C (n : ℤ) ∣ φ ↔ map (Int.castRingHom (Zmod n)) φ = 0 :=
+theorem C_dvd_iff_zmod (n : ℕ) (φ : MvPolynomial σ ℤ) : c (n : ℤ) ∣ φ ↔ map (Int.castRingHom (Zmod n)) φ = 0 :=
   C_dvd_iff_map_hom_eq_zero _ _ (CharP.int_cast_eq_zero_iff (Zmod n) n) _
 
 section frobenius
 
-variable {p : ℕ} [Fact p.prime]
+variable {p : ℕ} [Fact p.Prime]
 
 theorem frobenius_zmod (f : MvPolynomial σ (Zmod p)) : frobenius _ p f = expand p f := by
   apply induction_on f
@@ -56,7 +56,7 @@ variable {K : Type _} {σ : Type _}
 variable [Field K] [Fintype K] [Fintype σ]
 
 def indicator (a : σ → K) : MvPolynomial σ K :=
-  ∏ n, 1 - (X n - C (a n)) ^ (Fintype.card K - 1)
+  ∏ n, 1 - (x n - c (a n)) ^ (Fintype.card K - 1)
 
 theorem eval_indicator_apply_eq_one (a : σ → K) : eval a (indicator a) = 1 := by
   have : 0 < Fintype.card K - 1 := by
@@ -85,7 +85,7 @@ theorem degrees_indicator (c : σ → K) : degrees (indicator c) ≤ ∑ s : σ,
   rw [degrees_C, ← bot_eq_zero, sup_bot_eq]
   exact degrees_X' _
 
-theorem indicator_mem_restrict_degree (c : σ → K) : indicator c ∈ restrict_degree σ K (Fintype.card K - 1) := by
+theorem indicator_mem_restrict_degree (c : σ → K) : indicator c ∈ restrictDegree σ K (Fintype.card K - 1) := by
   rw [mem_restrict_degree_iff_sup, indicator]
   intro n
   refine' le_transₓ (Multiset.count_le_of_le _ <| degrees_indicator _) (le_of_eqₓ _)
@@ -122,7 +122,7 @@ end
 theorem evalₗ_apply (p : MvPolynomial σ K) (e : σ → K) : evalₗ K σ p e = eval e p :=
   rfl
 
-theorem map_restrict_dom_evalₗ : (restrict_degree σ K (Fintype.card K - 1)).map (evalₗ K σ) = ⊤ := by
+theorem map_restrict_dom_evalₗ : (restrictDegree σ K (Fintype.card K - 1)).map (evalₗ K σ) = ⊤ := by
   refine' top_unique (SetLike.le_def.2 fun e _ => mem_map.2 _)
   refine' ⟨∑ n : σ → K, e n • indicator n, _, _⟩
   · exact sum_mem _ fun c _ => smul_mem _ _ (indicator_mem_restrict_degree _)
@@ -154,9 +154,9 @@ universe u
 
 variable (σ : Type u) (K : Type u) [Fintype σ] [Field K] [Fintype K]
 
--- ././Mathport/Syntax/Translate/Basic.lean:857:9: unsupported derive handler module K
+-- ././Mathport/Syntax/Translate/Basic.lean:859:9: unsupported derive handler module K
 def R : Type u :=
-  restrict_degree σ K (Fintype.card K - 1)deriving AddCommGroupₓ, [anonymous], Inhabited
+  restrictDegree σ K (Fintype.card K - 1)deriving AddCommGroupₓ, [anonymous], Inhabited
 
 noncomputable instance decidable_restrict_degree (m : ℕ) : DecidablePred (· ∈ { n : σ →₀ ℕ | ∀ i, n i ≤ m }) := by
   simp only [Set.mem_set_of_eq] <;> infer_instance
@@ -188,7 +188,7 @@ theorem finrank_R : FiniteDimensional.finrank K (R σ K) = Fintype.card (σ → 
   FiniteDimensional.finrank_eq_of_dim_eq (dim_R σ K)
 
 def evalᵢ : R σ K →ₗ[K] (σ → K) → K :=
-  (evalₗ K σ).comp (restrict_degree σ K (Fintype.card K - 1)).Subtype
+  (evalₗ K σ).comp (restrictDegree σ K (Fintype.card K - 1)).Subtype
 
 theorem range_evalᵢ : (evalᵢ σ K).range = ⊤ := by
   rw [evalᵢ, LinearMap.range_comp, range_subtype]
@@ -199,7 +199,7 @@ theorem ker_evalₗ : (evalᵢ σ K).ker = ⊥ := by
   rw [FiniteDimensional.finrank_fintype_fun_eq_card, finrank_R]
 
 theorem eq_zero_of_eval_eq_zero (p : MvPolynomial σ K) (h : ∀ v : σ → K, eval v p = 0)
-    (hp : p ∈ restrict_degree σ K (Fintype.card K - 1)) : p = 0 :=
+    (hp : p ∈ restrictDegree σ K (Fintype.card K - 1)) : p = 0 :=
   let p' : R σ K := ⟨p, hp⟩
   have : p' ∈ (evalᵢ σ K).ker := by
     rw [mem_ker]

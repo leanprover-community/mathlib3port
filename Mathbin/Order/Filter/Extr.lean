@@ -119,16 +119,16 @@ theorem is_min_on_iff : IsMinOn f s a ↔ ∀, ∀ x ∈ s, ∀, f a ≤ f x :=
 theorem is_max_on_iff : IsMaxOn f s a ↔ ∀, ∀ x ∈ s, ∀, f x ≤ f a :=
   Iff.rfl
 
-theorem is_min_on_univ_iff : IsMinOn f univ a ↔ ∀ x, f a ≤ f x :=
+theorem is_min_on_univ_iff : IsMinOn f Univ a ↔ ∀ x, f a ≤ f x :=
   univ_subset_iff.trans eq_univ_iff_forall
 
-theorem is_max_on_univ_iff : IsMaxOn f univ a ↔ ∀ x, f x ≤ f a :=
+theorem is_max_on_univ_iff : IsMaxOn f Univ a ↔ ∀ x, f x ≤ f a :=
   univ_subset_iff.trans eq_univ_iff_forall
 
-theorem IsMinFilter.tendsto_principal_Ici (h : IsMinFilter f l a) : tendsto f l (𝓟 <| Ici (f a)) :=
+theorem IsMinFilter.tendsto_principal_Ici (h : IsMinFilter f l a) : Tendsto f l (𝓟 <| Ici (f a)) :=
   tendsto_principal.2 h
 
-theorem IsMaxFilter.tendsto_principal_Iic (h : IsMaxFilter f l a) : tendsto f l (𝓟 <| Iic (f a)) :=
+theorem IsMaxFilter.tendsto_principal_Iic (h : IsMaxFilter f l a) : Tendsto f l (𝓟 <| Iic (f a)) :=
   tendsto_principal.2 h
 
 /-! ### Conversion to `is_extr_*` -/
@@ -150,10 +150,10 @@ theorem IsMaxOn.is_extr (h : IsMaxOn f s a) : IsExtrOn f s a :=
 
 
 theorem is_min_filter_const {b : β} : IsMinFilter (fun _ => b) l a :=
-  univ_mem' fun _ => le_reflₓ _
+  univ_mem' fun _ => le_rfl
 
 theorem is_max_filter_const {b : β} : IsMaxFilter (fun _ => b) l a :=
-  univ_mem' fun _ => le_reflₓ _
+  univ_mem' fun _ => le_rfl
 
 theorem is_extr_filter_const {b : β} : IsExtrFilter (fun _ => b) l a :=
   is_min_filter_const.is_extr
@@ -300,22 +300,22 @@ theorem IsMaxOn.bicomp_mono [Preorderₓ δ] {op : β → γ → δ} (hop : (· 
 
 
 theorem IsMinFilter.comp_tendsto {g : δ → α} {l' : Filter δ} {b : δ} (hf : IsMinFilter f l (g b))
-    (hg : tendsto g l' l) : IsMinFilter (f ∘ g) l' b :=
+    (hg : Tendsto g l' l) : IsMinFilter (f ∘ g) l' b :=
   hg hf
 
 theorem IsMaxFilter.comp_tendsto {g : δ → α} {l' : Filter δ} {b : δ} (hf : IsMaxFilter f l (g b))
-    (hg : tendsto g l' l) : IsMaxFilter (f ∘ g) l' b :=
+    (hg : Tendsto g l' l) : IsMaxFilter (f ∘ g) l' b :=
   hg hf
 
 theorem IsExtrFilter.comp_tendsto {g : δ → α} {l' : Filter δ} {b : δ} (hf : IsExtrFilter f l (g b))
-    (hg : tendsto g l' l) : IsExtrFilter (f ∘ g) l' b :=
+    (hg : Tendsto g l' l) : IsExtrFilter (f ∘ g) l' b :=
   hf.elim (fun hf => (hf.comp_tendsto hg).is_extr) fun hf => (hf.comp_tendsto hg).is_extr
 
 theorem IsMinOn.on_preimage (g : δ → α) {b : δ} (hf : IsMinOn f s (g b)) : IsMinOn (f ∘ g) (g ⁻¹' s) b :=
-  hf.comp_tendsto (tendsto_principal_principal.mpr <| subset.refl _)
+  hf.comp_tendsto (tendsto_principal_principal.mpr <| Subset.refl _)
 
 theorem IsMaxOn.on_preimage (g : δ → α) {b : δ} (hf : IsMaxOn f s (g b)) : IsMaxOn (f ∘ g) (g ⁻¹' s) b :=
-  hf.comp_tendsto (tendsto_principal_principal.mpr <| subset.refl _)
+  hf.comp_tendsto (tendsto_principal_principal.mpr <| Subset.refl _)
 
 theorem IsExtrOn.on_preimage (g : δ → α) {b : δ} (hf : IsExtrOn f s (g b)) : IsExtrOn (f ∘ g) (g ⁻¹' s) b :=
   hf.elim (fun hf => (hf.on_preimage g).is_extr) fun hf => (hf.on_preimage g).is_extr
@@ -471,7 +471,7 @@ theorem Filter.EventuallyLe.is_max_filter {α β : Type _} [Preorderₓ β] {f g
 
 theorem IsMaxFilter.congr {α β : Type _} [Preorderₓ β] {f g : α → β} {a : α} {l : Filter α} (h : IsMaxFilter f l a)
     (heq : f =ᶠ[l] g) (hfga : f a = g a) : IsMaxFilter g l a :=
-  heq.symm.le.is_max_filter hfga h
+  HEq.symm.le.IsMaxFilter hfga h
 
 theorem Filter.EventuallyEq.is_max_filter_iff {α β : Type _} [Preorderₓ β] {f g : α → β} {a : α} {l : Filter α}
     (heq : f =ᶠ[l] g) (hfga : f a = g a) : IsMaxFilter f l a ↔ IsMaxFilter g l a :=
@@ -483,7 +483,7 @@ theorem Filter.EventuallyLe.is_min_filter {α β : Type _} [Preorderₓ β] {f g
 
 theorem IsMinFilter.congr {α β : Type _} [Preorderₓ β] {f g : α → β} {a : α} {l : Filter α} (h : IsMinFilter f l a)
     (heq : f =ᶠ[l] g) (hfga : f a = g a) : IsMinFilter g l a :=
-  heq.le.is_min_filter hfga h
+  HEq.le.IsMinFilter hfga h
 
 theorem Filter.EventuallyEq.is_min_filter_iff {α β : Type _} [Preorderₓ β] {f g : α → β} {a : α} {l : Filter α}
     (heq : f =ᶠ[l] g) (hfga : f a = g a) : IsMinFilter f l a ↔ IsMinFilter g l a :=
@@ -509,7 +509,7 @@ variable [ConditionallyCompleteLinearOrder α] {f : β → α} {s : Set β} {x�
 
 theorem IsMaxOn.supr_eq (hx₀ : x₀ ∈ s) (h : IsMaxOn f s x₀) : (⨆ x : s, f x) = f x₀ :=
   have : Nonempty s := ⟨⟨x₀, hx₀⟩⟩
-  csupr_eq_of_forall_le_of_forall_lt_exists_gt (fun x => h x.prop) fun w hw => ⟨⟨x₀, hx₀⟩, hw⟩
+  csupr_eq_of_forall_le_of_forall_lt_exists_gt (fun x => h x.Prop) fun w hw => ⟨⟨x₀, hx₀⟩, hw⟩
 
 theorem IsMinOn.infi_eq (hx₀ : x₀ ∈ s) (h : IsMinOn f s x₀) : (⨅ x : s, f x) = f x₀ :=
   @IsMaxOn.supr_eq (OrderDual α) β _ _ _ _ hx₀ h

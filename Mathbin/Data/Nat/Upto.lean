@@ -33,15 +33,15 @@ namespace Upto
 variable {p : ℕ → Prop}
 
 /-- Lift the "greater than" relation on natural numbers to `nat.upto`. -/
-protected def Gt p (x y : upto p) : Prop :=
+protected def Gt p (x y : Upto p) : Prop :=
   x.1 > y.1
 
-instance : LT (upto p) :=
+instance : LT (Upto p) :=
   ⟨fun x y => x.1 < y.1⟩
 
 /-- The "greater than" relation on `upto p` is well founded if (and only if) there exists a value
 satisfying `p`. -/
-protected theorem wf : (∃ x, p x) → WellFounded (upto.gt p)
+protected theorem wf : (∃ x, p x) → WellFounded (Upto.Gt p)
   | ⟨x, h⟩ => by
     suffices upto.gt p = Measureₓ fun y : Nat.Upto p => x - y.val by
       rw [this]

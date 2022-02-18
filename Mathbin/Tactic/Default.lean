@@ -17,4 +17,5 @@ import Mathbin.Tactic.Zify
 import Mathbin.Tactic.Transport
 import Mathbin.Tactic.UnfoldCases
 import Mathbin.Tactic.FieldSimp
+import Mathbin.Tactic.LinearCombination
 

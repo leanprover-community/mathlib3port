@@ -33,7 +33,7 @@ universe u
 /-- `ordinal.out` and `ordinal.type_out'` are required to make the definition of nim computable.
  `ordinal.out` performs the same job as `quotient.out` but is specific to ordinals. -/
 def Ordinal.out (o : Ordinal) : WellOrder :=
-  ⟨o.out.α, fun x y => o.out.r x y, o.out.wo⟩
+  ⟨o.out.α, fun x y => o.out.R x y, o.out.wo⟩
 
 /-- This is the same as `ordinal.type_out` but defined to use `ordinal.out`. -/
 theorem Ordinal.type_out' : ∀ o : Ordinal, Ordinal.type (Ordinal.out o).R = o :=
@@ -44,19 +44,19 @@ theorem Ordinal.type_out' : ∀ o : Ordinal, Ordinal.type (Ordinal.out o).R = o 
 def nim : Ordinal → Pgame
   | O₁ =>
     ⟨O₁.out.α, O₁.out.α, fun O₂ =>
-      have hwf : Ordinal.typein O₁.out.r O₂ < O₁ := by
+      have hwf : Ordinal.typein O₁.out.R O₂ < O₁ := by
         nth_rw_rhs 0[← Ordinal.type_out' O₁]
         exact Ordinal.typein_lt_type _ _
-      nim (Ordinal.typein O₁.out.r O₂),
+      nim (Ordinal.typein O₁.out.R O₂),
       fun O₂ =>
-      have hwf : Ordinal.typein O₁.out.r O₂ < O₁ := by
+      have hwf : Ordinal.typein O₁.out.R O₂ < O₁ := by
         nth_rw_rhs 0[← Ordinal.type_out' O₁]
         exact Ordinal.typein_lt_type _ _
-      nim (Ordinal.typein O₁.out.r O₂)⟩
+      nim (Ordinal.typein O₁.out.R O₂)⟩
 
 namespace Pgame
 
-local infixl:0 " ≈ " => Equivₓ
+local infixl:0 " ≈ " => Equiv
 
 namespace nim
 
@@ -64,15 +64,15 @@ open Ordinal
 
 theorem nim_def (O : Ordinal) :
     nim O =
-      Pgame.mk O.out.α O.out.α (fun O₂ => nim (Ordinal.typein O.out.r O₂)) fun O₂ => nim (Ordinal.typein O.out.r O₂) :=
+      Pgame.mk O.out.α O.out.α (fun O₂ => nim (Ordinal.typein O.out.R O₂)) fun O₂ => nim (Ordinal.typein O.out.R O₂) :=
   by
   rw [nim]
 
-theorem nim_wf_lemma {O₁ : Ordinal} (O₂ : O₁.out.α) : Ordinal.typein O₁.out.r O₂ < O₁ := by
+theorem nim_wf_lemma {O₁ : Ordinal} (O₂ : O₁.out.α) : Ordinal.typein O₁.out.R O₂ < O₁ := by
   nth_rw_rhs 0[← Ordinal.type_out O₁]
   exact Ordinal.typein_lt_type _ _
 
-instance nim_impartial : ∀ O : Ordinal, impartial (nim O)
+instance nim_impartial : ∀ O : Ordinal, Impartial (nim O)
   | O => by
     rw [impartial_def, nim_def, neg_def]
     constructor
@@ -181,7 +181,7 @@ end nim
 def nonmoves {α : Type u} (M : α → Ordinal.{u}) : Set Ordinal.{u} :=
   { O : Ordinal | ¬∃ a : α, M a = O }
 
-theorem nonmoves_nonempty {α : Type u} (M : α → Ordinal.{u}) : ∃ O : Ordinal, O ∈ nonmoves M := by
+theorem nonmoves_nonempty {α : Type u} (M : α → Ordinal.{u}) : ∃ O : Ordinal, O ∈ Nonmoves M := by
   classical
   by_contra h
   simp only [nonmoves, not_exists, not_forall, Set.mem_set_of_eq, not_not] at h
@@ -199,17 +199,16 @@ theorem nonmoves_nonempty {α : Type u} (M : α → Ordinal.{u}) : ∃ O : Ordin
 
 /-- The Grundy value of an impartial game, the ordinal which corresponds to the game of nim that the
  game is equivalent to -/
-noncomputable def grundy_value : ∀ G : Pgame.{u} [G.impartial], Ordinal.{u}
-  | G => fun hG => Ordinal.omin (nonmoves fun i => grundy_value (G.move_left i)) (nonmoves_nonempty _)
+noncomputable def grundy_value : ∀ G : Pgame.{u} [G.Impartial], Ordinal.{u}
+  | G => fun hG => Inf (nonmoves fun i => grundy_value (G.move_left i))
 
-theorem grundy_value_def (G : Pgame) [G.impartial] :
-    grundy_value G = Ordinal.omin (nonmoves fun i => grundy_value (G.move_left i)) (nonmoves_nonempty _) := by
+theorem grundy_value_def (G : Pgame) [G.Impartial] :
+    grundyValue G = inf (Nonmoves fun i => grundyValue (G.moveLeft i)) := by
   rw [grundy_value]
-  rfl
 
 /-- The Sprague-Grundy theorem which states that every impartial game is equivalent to a game of
  nim, namely the game of nim corresponding to the games Grundy value -/
-theorem equiv_nim_grundy_value : ∀ G : Pgame.{u} [G.impartial], G ≈ nim (grundy_value G)
+theorem equiv_nim_grundy_value : ∀ G : Pgame.{u} [G.Impartial], G ≈ nim (grundy_value G)
   | G => by
     classical
     intro hG
@@ -222,7 +221,7 @@ theorem equiv_nim_grundy_value : ∀ G : Pgame.{u} [G.impartial], G ≈ nim (gru
       rw [nim.sum_first_wins_iff_neq]
       intro heq
       rw [eq_comm, grundy_value_def G] at heq
-      have h := Ordinal.omin_mem (nonmoves fun i : G.left_moves => grundy_value (G.move_left i)) (nonmoves_nonempty _)
+      have h := Inf_mem (nonmoves_nonempty _)
       rw [HEq] at h
       have hcontra :
         ∃ i' : G.left_moves,
@@ -244,11 +243,11 @@ theorem equiv_nim_grundy_value : ∀ G : Pgame.{u} [G.impartial], G ≈ nim (gru
         rw [grundy_value_def]
         intro i₂ hlt
         have hnotin :
-          Ordinal.typein (Quotientₓ.out (Ordinal.omin (nonmoves fun i => grundy_value (G.move_left i)) _)).R i₂ ∉
+          Ordinal.typein (Inf (nonmoves fun i => grundy_value (G.move_left i))).out.R i₂ ∉
             nonmoves fun i : G.left_moves => grundy_value (G.move_left i) :=
           by
           intro hin
-          have hge := Ordinal.omin_le hin
+          have hge := cInf_le' hin
           have hcontra := (le_not_le_of_ltₓ hlt).2
           contradiction
         simpa [nonmoves] using hnotin
@@ -259,7 +258,7 @@ theorem equiv_nim_grundy_value : ∀ G : Pgame.{u} [G.impartial], G ≈ nim (gru
       simpa only [hi] using impartial.add_self (nim (grundy_value (G.move_left i)))
       
 
-theorem equiv_nim_iff_grundy_value_eq (G : Pgame) [G.impartial] (O : Ordinal) : (G ≈ nim O) ↔ grundy_value G = O :=
+theorem equiv_nim_iff_grundy_value_eq (G : Pgame) [G.Impartial] (O : Ordinal) : (G ≈ nim O) ↔ grundyValue G = O :=
   ⟨by
     intro h
     rw [← nim.equiv_iff_eq]
@@ -267,20 +266,19 @@ theorem equiv_nim_iff_grundy_value_eq (G : Pgame) [G.impartial] (O : Ordinal) : 
     rintro rfl
     exact equiv_nim_grundy_value G⟩
 
-theorem nim.grundy_value (O : Ordinal.{u}) : grundy_value (nim O) = O := by
+theorem nim.grundy_value (O : Ordinal.{u}) : grundyValue (nim O) = O := by
   rw [← equiv_nim_iff_grundy_value_eq]
 
-theorem equiv_iff_grundy_value_eq (G H : Pgame) [G.impartial] [H.impartial] :
-    (G ≈ H) ↔ grundy_value G = grundy_value H :=
+theorem equiv_iff_grundy_value_eq (G H : Pgame) [G.Impartial] [H.Impartial] : (G ≈ H) ↔ grundyValue G = grundyValue H :=
   (equiv_congr_left.1 (equiv_nim_grundy_value H) _).trans <| equiv_nim_iff_grundy_value_eq _ _
 
-theorem grundy_value_zero : grundy_value 0 = 0 := by
+theorem grundy_value_zero : grundyValue 0 = 0 := by
   rw [(equiv_iff_grundy_value_eq 0 (nim 0)).1 (equiv_symm nim.zero_first_loses), nim.grundy_value]
 
-theorem equiv_zero_iff_grundy_value (G : Pgame) [G.impartial] : (G ≈ 0) ↔ grundy_value G = 0 := by
+theorem equiv_zero_iff_grundy_value (G : Pgame) [G.Impartial] : (G ≈ 0) ↔ grundyValue G = 0 := by
   rw [equiv_iff_grundy_value_eq, grundy_value_zero]
 
-theorem grundy_value_nim_add_nim (n m : ℕ) : grundy_value (nim n + nim m) = Nat.lxor n m := by
+theorem grundy_value_nim_add_nim (n m : ℕ) : grundyValue (nim n + nim m) = Nat.lxor n m := by
   induction' n using Nat.strong_induction_onₓ with n hn generalizing m
   induction' m using Nat.strong_induction_onₓ with m hm
   rw [grundy_value_def]
@@ -323,15 +321,15 @@ theorem grundy_value_nim_add_nim (n m : ℕ) : grundy_value (nim n + nim m) = Na
       simp only [hi, add_move_left_inr]
       rw [hm _ h, Nat.lxor_comm, Nat.lxor_assoc, Nat.lxor_self, Nat.lxor_zero]
       
-  apply le_antisymmₓ (Ordinal.omin_le h₀)
+  apply le_antisymmₓ (cInf_le' h₀)
   contrapose! h₁
-  exact ⟨_, ⟨h₁, Ordinal.omin_mem _ _⟩⟩
+  exact ⟨_, ⟨h₁, Inf_mem (nonmoves_nonempty _)⟩⟩
 
 theorem nim_add_nim_equiv {n m : ℕ} : nim n + nim m ≈ nim (Nat.lxor n m) := by
   rw [equiv_nim_iff_grundy_value_eq, grundy_value_nim_add_nim]
 
-theorem grundy_value_add (G H : Pgame) [G.impartial] [H.impartial] {n m : ℕ} (hG : grundy_value G = n)
-    (hH : grundy_value H = m) : grundy_value (G + H) = Nat.lxor n m := by
+theorem grundy_value_add (G H : Pgame) [G.Impartial] [H.Impartial] {n m : ℕ} (hG : grundyValue G = n)
+    (hH : grundyValue H = m) : grundyValue (G + H) = Nat.lxor n m := by
   rw [← nim.grundy_value (Nat.lxor n m), ← equiv_iff_grundy_value_eq]
   refine' equiv_trans _ nim_add_nim_equiv
   convert add_congr (equiv_nim_grundy_value G) (equiv_nim_grundy_value H) <;> simp only [hG, hH]

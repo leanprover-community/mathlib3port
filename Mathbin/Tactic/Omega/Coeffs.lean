@@ -19,7 +19,7 @@ def val_between (v : Nat → Int) (as : List Int) (l : Nat) : Nat → Int
   | o + 1 => val_between o + get (l + o) as * v (l + o)
 
 @[simp]
-theorem val_between_nil {l : Nat} : ∀ m, val_between v [] l m = 0
+theorem val_between_nil {l : Nat} : ∀ m, valBetween v [] l m = 0
   | 0 => by
     simp only [val_between]
   | m + 1 => by
@@ -27,14 +27,14 @@ theorem val_between_nil {l : Nat} : ∀ m, val_between v [] l m = 0
 
 /-- Evaluation of the nonconstant component of a normalized linear arithmetic term. -/
 def val (v : Nat → Int) (as : List Int) : Int :=
-  val_between v as 0 as.length
+  valBetween v as 0 as.length
 
 @[simp]
 theorem val_nil : val v [] = 0 :=
   rfl
 
 theorem val_between_eq_of_le {as : List Int} {l : Nat} :
-    ∀ m, as.length ≤ l + m → val_between v as l m = val_between v as l (as.length - l)
+    ∀ m, as.length ≤ l + m → valBetween v as l m = valBetween v as l (as.length - l)
   | 0, h1 => by
     rw [add_zeroₓ] at h1
     rw [tsub_eq_zero_iff_le.mpr h1]
@@ -48,7 +48,7 @@ theorem val_between_eq_of_le {as : List Int} {l : Nat} :
       apply h1
     simpa [get_eq_default_of_le _ h2, zero_mul, add_zeroₓ, val_between] using val_between_eq_of_le _ h2
 
-theorem val_eq_of_le {as : List Int} {k : Nat} : as.length ≤ k → val v as = val_between v as 0 k := by
+theorem val_eq_of_le {as : List Int} {k : Nat} : as.length ≤ k → val v as = valBetween v as 0 k := by
   intro h1
   unfold val
   rw [val_between_eq_of_le k _]
@@ -59,7 +59,7 @@ theorem val_eq_of_le {as : List Int} {k : Nat} : as.length ≤ k → val v as = 
 theorem val_between_eq_val_between {v w : Nat → Int} {as bs : List Int} {l : Nat} :
     ∀ {m},
       (∀ x, l ≤ x → x < l + m → v x = w x) →
-        (∀ x, l ≤ x → x < l + m → get x as = get x bs) → val_between v as l m = val_between w bs l m
+        (∀ x, l ≤ x → x < l + m → get x as = get x bs) → valBetween v as l m = valBetween w bs l m
   | 0, h1, h2 => rfl
   | m + 1, h1, h2 => by
     unfold val_between
@@ -76,7 +76,7 @@ theorem val_between_eq_val_between {v w : Nat → Int} {as bs : List Int} {l : N
 
 open_locale List.Func
 
-theorem val_between_set {a : Int} {l n : Nat} : ∀ {m}, l ≤ n → n < l + m → val_between v ([] {n ↦ a}) l m = a * v n
+theorem val_between_set {a : Int} {l n : Nat} : ∀ {m}, l ≤ n → n < l + m → valBetween v ([] {n ↦ a}) l m = a * v n
   | 0, h1, h2 => by
     exfalso
     apply lt_irreflₓ l (lt_of_le_of_ltₓ h1 h2)
@@ -112,11 +112,11 @@ theorem val_set {m : Nat} {a : Int} : val v ([] {m ↦ a}) = a * v m := by
   simp only [length_set, zero_addₓ, le_max_rightₓ]
   infer_instance
 
-theorem val_between_neg {as : List Int} {l : Nat} : ∀ {o}, val_between v (neg as) l o = -val_between v as l o
+theorem val_between_neg {as : List Int} {l : Nat} : ∀ {o}, valBetween v (neg as) l o = -valBetween v as l o
   | 0 => rfl
   | o + 1 => by
     unfold val_between
-    rw [neg_add, neg_mul_eq_neg_mul]
+    rw [neg_add, neg_mul_eq_neg_mulₓ]
     apply fun_mono_2
     apply val_between_neg
     apply fun_mono_2 _ rfl
@@ -127,7 +127,7 @@ theorem val_neg {as : List Int} : val v (neg as) = -val v as := by
   simpa only [val, length_neg] using val_between_neg
 
 theorem val_between_add {is js : List Int} {l : Nat} :
-    ∀ m, val_between v (add is js) l m = val_between v is l m + val_between v js l m
+    ∀ m, valBetween v (add is js) l m = valBetween v is l m + valBetween v js l m
   | 0 => rfl
   | m + 1 => by
     simp only [val_between, val_between_add m, List.Func.get, get_add]
@@ -142,7 +142,7 @@ theorem val_add {is js : List Int} : val v (add is js) = val v is + val v js := 
   apply le_max_rightₓ
 
 theorem val_between_sub {is js : List Int} {l : Nat} :
-    ∀ m, val_between v (sub is js) l m = val_between v is l m - val_between v js l m
+    ∀ m, valBetween v (sub is js) l m = valBetween v is l m - valBetween v js l m
   | 0 => rfl
   | m + 1 => by
     simp only [val_between, val_between_sub m, List.Func.get, get_sub]
@@ -160,12 +160,12 @@ theorem val_sub {is js : List Int} : val v (sub is js) = val v is - val v js := 
     obtained taking the term represented by `(0, as)` and dropping the
     subterm that includes the `k`th variable. -/
 def val_except (k : Nat) (v : Nat → Int) as :=
-  val_between v as 0 k + val_between v as (k + 1) (as.length - (k + 1))
+  valBetween v as 0 k + valBetween v as (k + 1) (as.length - (k + 1))
 
 -- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (x «expr ≠ » k)
 -- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (x «expr ≠ » k)
 theorem val_except_eq_val_except {k : Nat} {is js : List Int} {v w : Nat → Int} :
-    (∀ x _ : x ≠ k, v x = w x) → (∀ x _ : x ≠ k, get x is = get x js) → val_except k v is = val_except k w js := by
+    (∀ x _ : x ≠ k, v x = w x) → (∀ x _ : x ≠ k, get x is = get x js) → valExcept k v is = valExcept k w js := by
   intro h1 h2
   unfold val_except
   apply fun_mono_2
@@ -196,11 +196,11 @@ theorem val_except_eq_val_except {k : Nat} {is js : List Int} {v w : Nat → Int
 open_locale Omega
 
 theorem val_except_update_set {n : Nat} {as : List Int} {i j : Int} :
-    val_except n (v ⟨n ↦ i⟩) (as {n ↦ j}) = val_except n v as := by
+    valExcept n (v ⟨n ↦ i⟩) (as {n ↦ j}) = valExcept n v as := by
   apply val_except_eq_val_except update_eq_of_ne (get_set_eq_of_ne _)
 
 theorem val_between_add_val_between {as : List Int} {l m : Nat} :
-    ∀ {n}, val_between v as l m + val_between v as (l + m) n = val_between v as l (m + n)
+    ∀ {n}, valBetween v as l m + valBetween v as (l + m) n = valBetween v as l (m + n)
   | 0 => by
     simp only [val_between, add_zeroₓ]
   | n + 1 => by
@@ -210,7 +210,7 @@ theorem val_between_add_val_between {as : List Int} {l m : Nat} :
     rw [← @val_between_add_val_between n]
     ring
 
-theorem val_except_add_eq (n : Nat) {as : List Int} : val_except n v as + get n as * v n = val v as := by
+theorem val_except_add_eq (n : Nat) {as : List Int} : valExcept n v as + get n as * v n = val v as := by
   unfold val_except
   unfold val
   cases' le_totalₓ (n + 1) as.length with h1 h1
@@ -229,7 +229,7 @@ theorem val_except_add_eq (n : Nat) {as : List Int} : val_except n v as + get n 
 
 @[simp]
 theorem val_between_map_mul {i : Int} {as : List Int} {l : Nat} :
-    ∀ {m}, val_between v (List.map ((· * ·) i) as) l m = i * val_between v as l m
+    ∀ {m}, valBetween v (List.map ((· * ·) i) as) l m = i * valBetween v as l m
   | 0 => by
     simp only [val_between, mul_zero, List.map]
   | m + 1 => by
@@ -250,7 +250,7 @@ theorem forall_val_dvd_of_forall_mem_dvd {i : Int} {as : List Int} : (∀, ∀ x
     apply forall_val_of_forall_mem _ h1
     apply dvd_zero
 
-theorem dvd_val_between {i} {as : List Int} {l : Nat} : ∀ {m}, (∀, ∀ x ∈ as, ∀, i ∣ x) → i ∣ val_between v as l m
+theorem dvd_val_between {i} {as : List Int} {l : Nat} : ∀ {m}, (∀, ∀ x ∈ as, ∀, i ∣ x) → i ∣ valBetween v as l m
   | 0, h1 => dvd_zero _
   | m + 1, h1 => by
     unfold val_between
@@ -269,7 +269,7 @@ theorem dvd_val {as : List Int} {i : Int} : (∀, ∀ x ∈ as, ∀, i ∣ x) �
 
 @[simp]
 theorem val_between_map_div {as : List Int} {i : Int} {l : Nat} (h1 : ∀, ∀ x ∈ as, ∀, i ∣ x) :
-    ∀ {m}, val_between v (List.map (fun x => x / i) as) l m = val_between v as l m / i
+    ∀ {m}, valBetween v (List.map (fun x => x / i) as) l m = valBetween v as l m / i
   | 0 => by
     simp only [Int.zero_div, val_between, List.map]
   | m + 1 => by
@@ -298,7 +298,7 @@ theorem val_map_div {as : List Int} {i : Int} :
   intro h1
   simpa only [val, List.length_map] using val_between_map_div h1
 
-theorem val_between_eq_zero {is : List Int} {l : Nat} : ∀ {m}, (∀ x : Int, x ∈ is → x = 0) → val_between v is l m = 0
+theorem val_between_eq_zero {is : List Int} {l : Nat} : ∀ {m}, (∀ x : Int, x ∈ is → x = 0) → valBetween v is l m = 0
   | 0, h1 => rfl
   | m + 1, h1 => by
     have h2 := @forall_val_of_forall_mem _ _ is (fun x => x = 0) rfl h1

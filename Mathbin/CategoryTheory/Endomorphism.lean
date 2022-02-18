@@ -1,5 +1,7 @@
 import Mathbin.CategoryTheory.Groupoid
+import Mathbin.CategoryTheory.Opposites
 import Mathbin.Data.Equiv.MulAdd
+import Mathbin.GroupTheory.GroupAction.Defs
 
 /-!
 # Endomorphisms
@@ -17,14 +19,14 @@ namespace CategoryTheory
 
 /-- Endomorphisms of an object in a category. Arguments order in multiplication agrees with
 `function.comp`, not with `category.comp`. -/
-def End {C : Type u} [category_struct.{v} C] (X : C) :=
+def End {C : Type u} [CategoryStruct.{v} C] (X : C) :=
   X ⟶ X
 
 namespace End
 
 section Struct
 
-variable {C : Type u} [category_struct.{v} C] (X : C)
+variable {C : Type u} [CategoryStruct.{v} C] (X : C)
 
 instance One : One (End X) :=
   ⟨𝟙 X⟩
@@ -57,24 +59,48 @@ theorem mul_def (xs ys : End X) : xs * ys = ys ≫ xs :=
 end Struct
 
 /-- Endomorphisms of an object form a monoid -/
-instance Monoidₓ {C : Type u} [category.{v} C] {X : C} : Monoidₓ (End X) :=
-  { End.has_mul X, End.has_one X with mul_one := category.id_comp, one_mul := category.comp_id,
-    mul_assoc := fun x y z => (category.assoc z y x).symm }
+instance Monoidₓ {C : Type u} [Category.{v} C] {X : C} : Monoidₓ (End X) :=
+  { End.hasMul X, End.hasOne X with mul_one := Category.id_comp, one_mul := Category.comp_id,
+    mul_assoc := fun x y z => (Category.assoc z y x).symm }
+
+section MulAction
+
+variable {C : Type u} [Category.{v} C]
+
+open Opposite
+
+instance mul_action_right {X Y : C} : MulAction (End Y) (X ⟶ Y) where
+  smul := fun r f => f ≫ r
+  one_smul := Category.comp_id
+  mul_smul := fun r s f => Eq.symm <| Category.assoc _ _ _
+
+instance mul_action_left {X : Cᵒᵖ} {Y : C} : MulAction (End X) (unop X ⟶ Y) where
+  smul := fun r f => r.unop ≫ f
+  one_smul := Category.id_comp
+  mul_smul := fun r s f => Category.assoc _ _ _
+
+theorem smul_right {X Y : C} {r : End Y} {f : X ⟶ Y} : r • f = f ≫ r :=
+  rfl
+
+theorem smul_left {X : Cᵒᵖ} {Y : C} {r : End X} {f : unop X ⟶ Y} : r • f = r.unop ≫ f :=
+  rfl
+
+end MulAction
 
 /-- In a groupoid, endomorphisms form a group -/
-instance Groupₓ {C : Type u} [groupoid.{v} C] (X : C) : Groupₓ (End X) :=
-  { End.monoid with mul_left_inv := groupoid.comp_inv, inv := groupoid.inv }
+instance Groupₓ {C : Type u} [Groupoid.{v} C] (X : C) : Groupₓ (End X) :=
+  { End.monoid with mul_left_inv := Groupoid.comp_inv, inv := Groupoid.inv }
 
 end End
 
-theorem is_unit_iff_is_iso {C : Type u} [category.{v} C] {X : C} (f : End X) : IsUnit (f : End X) ↔ is_iso f :=
-  ⟨fun h => { out := ⟨h.unit.inv, ⟨h.unit.inv_val, h.unit.val_inv⟩⟩ }, fun h =>
+theorem is_unit_iff_is_iso {C : Type u} [Category.{v} C] {X : C} (f : End X) : IsUnit (f : End X) ↔ IsIso f :=
+  ⟨fun h => { out := ⟨h.Unit.inv, ⟨h.Unit.inv_val, h.Unit.val_inv⟩⟩ }, fun h =>
     ⟨⟨f, inv f, by
         simp , by
         simp ⟩,
       rfl⟩⟩
 
-variable {C : Type u} [category.{v} C] (X : C)
+variable {C : Type u} [Category.{v} C] (X : C)
 
 /-- Automorphisms of an object in a category.
 
@@ -89,7 +115,7 @@ attribute [ext Aut] iso.ext
 namespace Aut
 
 instance Inhabited : Inhabited (Aut X) :=
-  ⟨iso.refl X⟩
+  ⟨Iso.refl X⟩
 
 instance : Groupₓ (Aut X) := by
   refine_struct
@@ -99,7 +125,7 @@ instance : Groupₓ (Aut X) := by
     intros <;>
       try
           rfl <;>
-        ext <;> simp [flip, · * ·, Monoidₓ.mul, MulOneClass.mul, MulOneClass.one, One.one, Monoidₓ.one, Inv.inv]
+        ext <;> simp [flip, · * ·, Monoidₓ.mul, MulOneClassₓ.mul, MulOneClassₓ.one, One.one, Monoidₓ.one, Inv.inv]
 
 /-- Units in the monoid of endomorphisms of an object
 are (multiplicatively) equivalent to automorphisms of that object.
@@ -116,7 +142,7 @@ end Aut
 
 namespace Functor
 
-variable {D : Type u'} [category.{v'} D] (f : C ⥤ D) (X)
+variable {D : Type u'} [Category.{v'} D] (f : C ⥤ D) (X)
 
 /-- `f.map` as a monoid hom between endomorphism monoids. -/
 @[simps]
@@ -127,7 +153,7 @@ def map_End : End X →* End (f.obj X) where
 
 /-- `f.map_iso` as a group hom between automorphism groups. -/
 def map_Aut : Aut X →* Aut (f.obj X) where
-  toFun := f.map_iso
+  toFun := f.mapIso
   map_mul' := fun x y => f.map_iso_trans y x
   map_one' := f.map_iso_refl X
 

@@ -199,7 +199,7 @@ variable {R : Type u} [CommRingₓ R]
 
 theorem add_mul_left_left {x y : R} (h : IsCoprime x y) (z : R) : IsCoprime (x + y * z) y :=
   @of_add_mul_left_left R _ _ _ (-z) <| by
-    simpa only [mul_neg_eq_neg_mul_symm, add_neg_cancel_rightₓ] using h
+    simpa only [mul_neg, add_neg_cancel_rightₓ] using h
 
 theorem add_mul_right_left {x y : R} (h : IsCoprime x y) (z : R) : IsCoprime (x + z * y) y := by
   rw [mul_comm]

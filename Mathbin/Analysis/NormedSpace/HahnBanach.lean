@@ -73,11 +73,11 @@ theorem exists_extension_norm_eq (p : Subspace 𝕜 F) (f : p →L[𝕜] 𝕜) :
     rw [this]
     apply ext
     · simp only [add_zeroₓ, Algebra.id.smul_eq_mul, I_re, of_real_im, AddMonoidHom.map_add, zero_sub, I_im', zero_mul,
-        of_real_re, eq_self_iff_true, sub_zero, mul_neg_eq_neg_mul_symm, of_real_neg, mul_re, mul_zero, sub_neg_eq_add,
+        of_real_re, eq_self_iff_true, sub_zero, mul_neg, of_real_neg, mul_re, mul_zero, sub_neg_eq_add,
         ContinuousLinearMap.map_smul]
       
     · simp only [Algebra.id.smul_eq_mul, I_re, of_real_im, AddMonoidHom.map_add, zero_sub, I_im', zero_mul, of_real_re,
-        mul_neg_eq_neg_mul_symm, mul_im, zero_addₓ, of_real_neg, mul_re, sub_neg_eq_add, ContinuousLinearMap.map_smul]
+        mul_neg, mul_im, zero_addₓ, of_real_neg, mul_re, sub_neg_eq_add, ContinuousLinearMap.map_smul]
       
   refine' ⟨h, le_antisymmₓ _ _⟩
   · calc ∥g.extend_to_𝕜∥ ≤ ∥g∥ := g.extend_to_𝕜.op_norm_le_bound g.op_norm_nonneg (norm_bound _)_ = ∥fr∥ :=

@@ -48,11 +48,11 @@ namespace AlternatingFaceMapComplex
 -/
 
 
-variable {C : Type _} [category C] [preadditive C]
+variable {C : Type _} [Category C] [Preadditive C]
 
-variable (X : simplicial_object C)
+variable (X : SimplicialObject C)
 
-variable (Y : simplicial_object C)
+variable (Y : SimplicialObject C)
 
 /-- The differential on the alternating face map complex is the alternate
 sum of the face maps -/
@@ -62,7 +62,7 @@ def obj_d (n : ℕ) : X _[n + 1] ⟶ X _[n] :=
 
 /-- ## The chain complex relation `d ≫ d`
 -/
-theorem d_squared (n : ℕ) : obj_d X (n + 1) ≫ obj_d X n = 0 := by
+theorem d_squared (n : ℕ) : objD X (n + 1) ≫ objD X n = 0 := by
   dsimp
   rw [comp_sum]
   let d_l := fun j : Finₓ (n + 3) => (-1 : ℤ) ^ (j : ℕ) • X.δ j
@@ -88,8 +88,8 @@ theorem d_squared (n : ℕ) : obj_d X (n + 1) ≫ obj_d X n = 0 := by
     linarith
     
   · rintro ⟨i, j⟩ hij
-    simp only [term, d_l, d_r, φ, comp_zsmul, zsmul_comp, ← neg_smul, ← mul_smul, pow_addₓ, neg_mul_eq_neg_mul_symm,
-      mul_oneₓ, Finₓ.coe_cast_lt, Finₓ.coe_succ, pow_oneₓ, mul_neg_eq_neg_mul_symm, neg_negₓ]
+    simp only [term, d_l, d_r, φ, comp_zsmul, zsmul_comp, ← neg_smul, ← mul_smul, pow_addₓ, neg_mul, mul_oneₓ,
+      Finₓ.coe_cast_lt, Finₓ.coe_succ, pow_oneₓ, mul_neg, neg_negₓ]
     let jj : Finₓ (n + 2) := (φ (i, j) hij).1
     have ineq : jj ≤ i := by
       rw [← Finₓ.coe_fin_le]
@@ -125,7 +125,7 @@ theorem d_squared (n : ℕ) : obj_d X (n + 1) ≫ obj_d X n = 0 := by
 
 /-- The alternating face map complex, on objects -/
 def obj : ChainComplex C ℕ :=
-  ChainComplex.of (fun n => X _[n]) (obj_d X) (d_squared X)
+  ChainComplex.of (fun n => X _[n]) (objD X) (d_squared X)
 
 variable {X} {Y}
 
@@ -143,25 +143,25 @@ def map (f : X ⟶ Y) : obj X ⟶ obj Y :=
 
 end AlternatingFaceMapComplex
 
-variable (C : Type _) [category C] [preadditive C]
+variable (C : Type _) [Category C] [Preadditive C]
 
 /-- The alternating face map complex, as a functor -/
 @[simps]
-def alternating_face_map_complex : simplicial_object C ⥤ ChainComplex C ℕ where
-  obj := alternating_face_map_complex.obj
-  map := fun X Y f => alternating_face_map_complex.map f
+def alternating_face_map_complex : SimplicialObject C ⥤ ChainComplex C ℕ where
+  obj := AlternatingFaceMapComplex.obj
+  map := fun X Y f => AlternatingFaceMapComplex.map f
 
 /-!
 ## Construction of the natural inclusion of the normalized Moore complex
 -/
 
 
-variable {A : Type _} [category A] [abelian A]
+variable {A : Type _} [Category A] [Abelian A]
 
 /-- The inclusion map of the Moore complex in the alternating face map complex -/
-def inclusion_of_Moore_complex_map (X : simplicial_object A) :
-    (normalized_Moore_complex A).obj X ⟶ (alternating_face_map_complex A).obj X :=
-  ChainComplex.ofHom _ _ _ _ _ _ (fun n => (normalized_Moore_complex.obj_X X n).arrow) fun n => by
+def inclusion_of_Moore_complex_map (X : SimplicialObject A) :
+    (normalizedMooreComplex A).obj X ⟶ (alternatingFaceMapComplex A).obj X :=
+  ChainComplex.ofHom _ _ _ _ _ _ (fun n => (NormalizedMooreComplex.objX X n).arrow) fun n => by
     simp only [alternating_face_map_complex.obj_d]
     rw [comp_sum]
     let t := fun j : Finₓ (n + 2) => (normalized_Moore_complex.obj_X X (n + 1)).arrow ≫ ((-1 : ℤ) ^ (j : ℕ) • X.δ j)
@@ -194,8 +194,8 @@ def inclusion_of_Moore_complex_map (X : simplicial_object A) :
     cases n <;> dsimp <;> simp
 
 @[simp]
-theorem inclusion_of_Moore_complex_map_f (X : simplicial_object A) (n : ℕ) :
-    (inclusion_of_Moore_complex_map X).f n = (normalized_Moore_complex.obj_X X n).arrow :=
+theorem inclusion_of_Moore_complex_map_f (X : SimplicialObject A) (n : ℕ) :
+    (inclusionOfMooreComplexMap X).f n = (NormalizedMooreComplex.objX X n).arrow :=
   ChainComplex.of_hom_f _ _ _ _ _ _ _ _ n
 
 variable (A)
@@ -203,8 +203,8 @@ variable (A)
 /-- The inclusion map of the Moore complex in the alternating face map complex,
 as a natural transformation -/
 @[simps]
-def inclusion_of_Moore_complex : normalized_Moore_complex A ⟶ alternating_face_map_complex A where
-  app := inclusion_of_Moore_complex_map
+def inclusion_of_Moore_complex : normalizedMooreComplex A ⟶ alternatingFaceMapComplex A where
+  app := inclusionOfMooreComplexMap
 
 end AlgebraicTopology
 

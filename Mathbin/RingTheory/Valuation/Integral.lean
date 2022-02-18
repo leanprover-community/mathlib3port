@@ -20,7 +20,7 @@ section CommRingₓ
 
 variable {R : Type u} {Γ₀ : Type v} [CommRingₓ R] [LinearOrderedCommGroupWithZero Γ₀]
 
-variable {v : Valuation R Γ₀} {O : Type w} [CommRingₓ O] [Algebra O R] (hv : integers v O)
+variable {v : Valuation R Γ₀} {O : Type w} [CommRingₓ O] [Algebra O R] (hv : Integers v O)
 
 include hv
 
@@ -58,7 +58,7 @@ variable {v : Valuation K Γ₀} {O : Type w} [CommRingₓ O] [IsDomain O]
 
 variable [Algebra O K] [IsFractionRing O K]
 
-variable (hv : integers v O)
+variable (hv : Integers v O)
 
 theorem integrally_closed : IsIntegrallyClosed O :=
   (IsIntegrallyClosed.integral_closure_eq_bot_iff K).mp (Valuation.Integers.integral_closure hv)

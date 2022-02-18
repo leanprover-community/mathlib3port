@@ -24,38 +24,38 @@ namespace Nat
 def central_binom (n : ℕ) :=
   (2 * n).choose n
 
-theorem central_binom_eq_two_mul_choose (n : ℕ) : central_binom n = (2 * n).choose n :=
+theorem central_binom_eq_two_mul_choose (n : ℕ) : centralBinom n = (2 * n).choose n :=
   rfl
 
-theorem central_binom_pos (n : ℕ) : 0 < central_binom n :=
+theorem central_binom_pos (n : ℕ) : 0 < centralBinom n :=
   choose_pos (Nat.le_mul_of_pos_left zero_lt_two)
 
-theorem central_binom_ne_zero (n : ℕ) : central_binom n ≠ 0 :=
+theorem central_binom_ne_zero (n : ℕ) : centralBinom n ≠ 0 :=
   (central_binom_pos n).ne'
 
 @[simp]
-theorem central_binom_zero : central_binom 0 = 1 :=
+theorem central_binom_zero : centralBinom 0 = 1 :=
   choose_zero_right _
 
 /-- The central binomial coefficient is the largest binomial coefficient.
 -/
-theorem choose_le_central_binom (r n : ℕ) : choose (2 * n) r ≤ central_binom n :=
+theorem choose_le_central_binom (r n : ℕ) : choose (2 * n) r ≤ centralBinom n :=
   calc
     (2 * n).choose r ≤ (2 * n).choose (2 * n / 2) := choose_le_middle r (2 * n)
     _ = (2 * n).choose n := by
       rw [Nat.mul_div_cancel_leftₓ n zero_lt_two]
     
 
-theorem two_le_central_binom (n : ℕ) (n_pos : 0 < n) : 2 ≤ central_binom n :=
+theorem two_le_central_binom (n : ℕ) (n_pos : 0 < n) : 2 ≤ centralBinom n :=
   calc
     2 ≤ 2 * n := le_mul_of_pos_right n_pos
     _ = (2 * n).choose 1 := (choose_one_right (2 * n)).symm
-    _ ≤ central_binom n := choose_le_central_binom 1 n
+    _ ≤ centralBinom n := choose_le_central_binom 1 n
     
 
 /-- An inductive property of the central binomial coefficient.
 -/
-theorem succ_mul_central_binom_succ (n : ℕ) : (n + 1) * central_binom (n + 1) = 2 * (2 * n + 1) * central_binom n :=
+theorem succ_mul_central_binom_succ (n : ℕ) : (n + 1) * centralBinom (n + 1) = 2 * (2 * n + 1) * centralBinom n :=
   calc
     (n + 1) * (2 * (n + 1)).choose (n + 1) = (2 * n + 2).choose (n + 1) * (n + 1) := mul_comm _ _
     _ = (2 * n + 1).choose n * (2 * n + 2) := by
@@ -74,7 +74,7 @@ theorem succ_mul_central_binom_succ (n : ℕ) : (n + 1) * central_binom (n + 1) 
 This bound is of interest because it appears in
 [Tochiori's refinement of Erdős's proof of Bertrand's postulate](https://en.wikipedia.org/w/index.php?title=Proof_of_Bertrand%27s_postulate&oldid=859165151#Proof_by_Shigenori_Tochiori).
 -/
-theorem four_pow_lt_mul_central_binom (n : ℕ) (n_big : 4 ≤ n) : 4 ^ n < n * central_binom n := by
+theorem four_pow_lt_mul_central_binom (n : ℕ) (n_big : 4 ≤ n) : 4 ^ n < n * centralBinom n := by
   induction' n using Nat.strong_induction_onₓ with n IH
   rcases lt_trichotomyₓ n 4 with (hn | rfl | hn)
   · clear IH
@@ -94,7 +94,7 @@ theorem four_pow_lt_mul_central_binom (n : ℕ) (n_big : 4 ≤ n) : 4 ^ n < n * 
 This bound is weaker than `four_pow_n_lt_n_mul_central_binom`, but it is of historical interest
 because it appears in Erdős's proof of Bertrand's postulate.
 -/
-theorem four_pow_le_two_mul_self_mul_central_binom : ∀ n : ℕ n_pos : 0 < n, 4 ^ n ≤ 2 * n * central_binom n
+theorem four_pow_le_two_mul_self_mul_central_binom : ∀ n : ℕ n_pos : 0 < n, 4 ^ n ≤ 2 * n * centralBinom n
   | 0, pr => (Nat.not_lt_zeroₓ _ pr).elim
   | 1, pr => by
     norm_num [central_binom, choose]
@@ -104,8 +104,8 @@ theorem four_pow_le_two_mul_self_mul_central_binom : ∀ n : ℕ n_pos : 0 < n, 
     norm_num [central_binom, choose]
   | n@(m + 4), _ =>
     calc
-      4 ^ n ≤ n * central_binom n := (four_pow_lt_mul_central_binom _ le_add_self).le
-      _ ≤ 2 * n * central_binom n := by
+      4 ^ n ≤ n * centralBinom n := (four_pow_lt_mul_central_binom _ le_add_self).le
+      _ ≤ 2 * n * centralBinom n := by
         rw [mul_assoc]
         refine' le_mul_of_pos_left zero_lt_two
       

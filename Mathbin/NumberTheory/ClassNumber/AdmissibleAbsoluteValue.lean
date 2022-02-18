@@ -35,7 +35,7 @@ variable (abv : AbsoluteValue R ℤ)
 /-- An absolute value `R → ℤ` is admissible if it respects the Euclidean domain
 structure and a large enough set of elements in `R^n` will contain a pair of
 elements whose remainders are pointwise close together. -/
-structure is_admissible extends is_euclidean abv where
+structure is_admissible extends IsEuclidean abv where
   card : ℝ → ℕ
   exists_partition' :
     ∀ n : ℕ {ε : ℝ} hε : 0 < ε {b : R} hb : b ≠ 0 A : Finₓ n → R,
@@ -50,7 +50,7 @@ variable {abv}
 /-- For all `ε > 0` and finite families `A`, we can partition the remainders of `A` mod `b`
 into `abv.card ε` sets, such that all elements in each part of remainders are close together. -/
 theorem exists_partition {ι : Type _} [Fintype ι] {ε : ℝ} (hε : 0 < ε) {b : R} (hb : b ≠ 0) (A : ι → R)
-    (h : abv.is_admissible) :
+    (h : abv.IsAdmissible) :
     ∃ t : ι → Finₓ (h.card ε), ∀ i₀ i₁, t i₀ = t i₁ → (abv (A i₁ % b - A i₀ % b) : ℝ) < abv b • ε := by
   let e := Fintype.equivFin ι
   obtain ⟨t, ht⟩ := h.exists_partition' (Fintype.card ι) hε hb (A ∘ e.symm)
@@ -59,7 +59,7 @@ theorem exists_partition {ι : Type _} [Fintype ι] {ε : ℝ} (hε : 0 < ε) {b
 
 /-- Any large enough family of vectors in `R^n` has a pair of elements
 whose remainders are close together, pointwise. -/
-theorem exists_approx_aux (n : ℕ) (h : abv.is_admissible) :
+theorem exists_approx_aux (n : ℕ) (h : abv.IsAdmissible) :
     ∀ {ε : ℝ} hε : 0 < ε {b : R} hb : b ≠ 0 A : Finₓ (h.card ε ^ n).succ → Finₓ n → R,
       ∃ i₀ i₁, i₀ ≠ i₁ ∧ ∀ k, (abv (A i₁ k % b - A i₀ k % b) : ℝ) < abv b • ε :=
   by
@@ -107,7 +107,7 @@ theorem exists_approx_aux (n : ℕ) (h : abv.is_admissible) :
 
 /-- Any large enough family of vectors in `R^ι` has a pair of elements
 whose remainders are close together, pointwise. -/
-theorem exists_approx {ι : Type _} [Fintype ι] {ε : ℝ} (hε : 0 < ε) {b : R} (hb : b ≠ 0) (h : abv.is_admissible)
+theorem exists_approx {ι : Type _} [Fintype ι] {ε : ℝ} (hε : 0 < ε) {b : R} (hb : b ≠ 0) (h : abv.IsAdmissible)
     (A : Finₓ (h.card ε ^ Fintype.card ι).succ → ι → R) :
     ∃ i₀ i₁, i₀ ≠ i₁ ∧ ∀ k, (abv (A i₁ k % b - A i₀ k % b) : ℝ) < abv b • ε := by
   let e := Fintype.equivFin ι

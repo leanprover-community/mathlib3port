@@ -33,26 +33,26 @@ open Limits Opposite Presieve
 
 section
 
-variable {C : Type _} [category C] {D : Type _} [category D] {G : C ⥤ D}
+variable {C : Type _} [Category C] {D : Type _} [Category D] {G : C ⥤ D}
 
-variable {J : grothendieck_topology C} {K : grothendieck_topology D}
+variable {J : GrothendieckTopology C} {K : GrothendieckTopology D}
 
-variable (A : Type v) [category.{u} A]
+variable (A : Type v) [Category.{u} A]
 
 /-- We say that a functor `C ⥤ D` into a site is "locally dense" if
 for each covering sieve `T` in `D`, `T ∩ mor(C)` generates a covering sieve in `D`.
 -/
-def locally_cover_dense (K : grothendieck_topology D) (G : C ⥤ D) : Prop :=
-  ∀ ⦃X⦄ T : K (G.obj X), (T.val.functor_pullback G).FunctorPushforward G ∈ K (G.obj X)
+def locally_cover_dense (K : GrothendieckTopology D) (G : C ⥤ D) : Prop :=
+  ∀ ⦃X⦄ T : K (G.obj X), (T.val.FunctorPullback G).FunctorPushforward G ∈ K (G.obj X)
 
 namespace LocallyCoverDense
 
-variable [full G] [faithful G] (Hld : locally_cover_dense K G)
+variable [Full G] [Faithful G] (Hld : LocallyCoverDense K G)
 
 include Hld
 
-theorem pushforward_cover_iff_cover_pullback {X : C} (S : sieve X) :
-    K _ (S.functor_pushforward G) ↔ ∃ T : K (G.obj X), T.val.functor_pullback G = S := by
+theorem pushforward_cover_iff_cover_pullback {X : C} (S : Sieve X) :
+    K _ (S.FunctorPushforward G) ↔ ∃ T : K (G.obj X), T.val.FunctorPullback G = S := by
   constructor
   · intro hS
     exact ⟨⟨_, hS⟩, (sieve.fully_faithful_functor_galois_coinsertion G X).u_l_eq S⟩
@@ -65,8 +65,8 @@ theorem pushforward_cover_iff_cover_pullback {X : C} (S : sieve X) :
 then the set `{ T ∩ mor(C) | T ∈ K }` is a grothendieck topology of `C`.
 -/
 @[simps]
-def induced_topology : grothendieck_topology C where
-  Sieves := fun X S => K _ (S.functor_pushforward G)
+def induced_topology : GrothendieckTopology C where
+  Sieves := fun X S => K _ (S.FunctorPushforward G)
   top_mem' := fun X => by
     change K _ _
     rw [sieve.functor_pushforward_top]
@@ -92,16 +92,16 @@ def induced_topology : grothendieck_topology C where
         simp ⟩
 
 /-- `G` is cover-lifting wrt the induced topology. -/
-theorem induced_topology_cover_lifting : cover_lifting Hld.induced_topology K G :=
+theorem induced_topology_cover_lifting : CoverLifting Hld.inducedTopology K G :=
   ⟨fun _ S hS => Hld ⟨S, hS⟩⟩
 
 /-- `G` is cover-preserving wrt the induced topology. -/
-theorem induced_topology_cover_preserving : cover_preserving Hld.induced_topology K G :=
+theorem induced_topology_cover_preserving : CoverPreserving Hld.inducedTopology K G :=
   ⟨fun _ S hS => hS⟩
 
 end LocallyCoverDense
 
-theorem cover_dense.locally_cover_dense [full G] (H : cover_dense K G) : locally_cover_dense K G := by
+theorem cover_dense.locally_cover_dense [Full G] (H : CoverDense K G) : LocallyCoverDense K G := by
   intro X T
   refine' K.superset_covering _ (K.bind_covering T.property fun Y f Hf => H.is_cover Y)
   rintro Y _ ⟨Z, _, f, hf, ⟨W, g, f', rfl : _ = _⟩, rfl⟩
@@ -114,12 +114,12 @@ theorem cover_dense.locally_cover_dense [full G] (H : cover_dense K G) : locally
 
 /-- Given a fully faithful cover-dense functor `G : C ⥤ (D, K)`, we may induce a topology on `C`.
 -/
-abbrev cover_dense.induced_topology [full G] [faithful G] (H : cover_dense K G) : grothendieck_topology C :=
-  H.locally_cover_dense.induced_topology
+abbrev cover_dense.induced_topology [Full G] [Faithful G] (H : CoverDense K G) : GrothendieckTopology C :=
+  H.LocallyCoverDense.inducedTopology
 
 variable (J)
 
-theorem over_forget_locally_cover_dense (X : C) : locally_cover_dense J (over.forget X) := by
+theorem over_forget_locally_cover_dense (X : C) : LocallyCoverDense J (Over.forget X) := by
   intro Y T
   convert T.property
   ext Z f
@@ -135,21 +135,21 @@ end
 
 section SmallSite
 
-variable {C : Type v} [small_category C] {D : Type v} [small_category D] {G : C ⥤ D}
+variable {C : Type v} [SmallCategory C] {D : Type v} [SmallCategory D] {G : C ⥤ D}
 
-variable {J : grothendieck_topology C} {K : grothendieck_topology D}
+variable {J : GrothendieckTopology C} {K : GrothendieckTopology D}
 
-variable (A : Type u) [category.{v} A]
+variable (A : Type u) [Category.{v} A]
 
 /-- Cover-dense functors induces an equivalence of categories of sheaves.
 
 This is known as the comparison lemma. It requires that the sites are small and the value category
 is complete.
 -/
-noncomputable def cover_dense.Sheaf_equiv [full G] [faithful G] (H : cover_dense K G) [has_limits A] :
-    Sheaf H.induced_topology A ≌ Sheaf K A :=
-  H.Sheaf_equiv_of_cover_preserving_cover_lifting H.locally_cover_dense.induced_topology_cover_preserving
-    H.locally_cover_dense.induced_topology_cover_lifting
+noncomputable def cover_dense.Sheaf_equiv [Full G] [Faithful G] (H : CoverDense K G) [HasLimits A] :
+    Sheaf H.inducedTopology A ≌ Sheaf K A :=
+  H.sheafEquivOfCoverPreservingCoverLifting H.LocallyCoverDense.induced_topology_cover_preserving
+    H.LocallyCoverDense.induced_topology_cover_lifting
 
 end SmallSite
 

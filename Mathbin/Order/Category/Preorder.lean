@@ -2,37 +2,67 @@ import Mathbin.CategoryTheory.ConcreteCategory.BundledHom
 import Mathbin.Algebra.PunitInstances
 import Mathbin.Order.Hom.Basic
 
-/-! # Category of preorders -/
+/-!
+# Category of preorders
 
+This defines `Preorder`, the category of preorders with monotone maps.
+-/
+
+
+universe u
 
 open CategoryTheory
 
 /-- The category of preorders. -/
 def Preorderₓₓ :=
-  bundled Preorderₓ
+  Bundled Preorderₓ
 
 namespace Preorderₓₓ
 
-instance : bundled_hom @OrderHom where
+instance : BundledHom @OrderHom where
   toFun := @OrderHom.toFun
   id := @OrderHom.id
   comp := @OrderHom.comp
   hom_ext := @OrderHom.ext
 
-deriving instance large_category, concrete_category for Preorderₓₓ
+deriving instance LargeCategory, ConcreteCategory for Preorderₓₓ
 
 instance : CoeSort Preorderₓₓ (Type _) :=
   bundled.has_coe_to_sort
 
 /-- Construct a bundled Preorder from the underlying type and typeclass. -/
 def of (α : Type _) [Preorderₓ α] : Preorderₓₓ :=
-  bundled.of α
+  Bundled.of α
 
 instance : Inhabited Preorderₓₓ :=
   ⟨of PUnit⟩
 
 instance (α : Preorderₓₓ) : Preorderₓ α :=
   α.str
+
+/-- Constructs an equivalence between preorders from an order isomorphism between them. -/
+@[simps]
+def iso.mk {α β : Preorderₓₓ.{u}} (e : α ≃o β) : α ≅ β where
+  Hom := e
+  inv := e.symm
+  hom_inv_id' := by
+    ext
+    exact e.symm_apply_apply x
+  inv_hom_id' := by
+    ext
+    exact e.apply_symm_apply x
+
+/-- `order_dual` as a functor. -/
+@[simps]
+def to_dual : Preorderₓₓ ⥤ Preorderₓₓ where
+  obj := fun X => of (OrderDual X)
+  map := fun X Y => OrderHom.dual
+
+/-- The equivalence between `Preorder` and itself induced by `order_dual` both ways. -/
+@[simps Functor inverse]
+def dual_equiv : Preorderₓₓ ≌ Preorderₓₓ :=
+  Equivalence.mk toDual toDual ((NatIso.ofComponents fun X => iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
+    ((NatIso.ofComponents fun X => iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
 
 end Preorderₓₓ
 

@@ -31,12 +31,12 @@ variable [LinearOrderedField α] {a b c d e : α}
 section
 
 /-- `equiv.mul_left₀` as an order_iso. -/
-@[simps (config := { simpRhs := tt })]
+@[simps (config := { simpRhs := true })]
 def OrderIso.mulLeft₀ (a : α) (ha : 0 < a) : α ≃o α :=
   { Equivₓ.mulLeft₀ a ha.ne' with map_rel_iff' := fun _ _ => mul_le_mul_left ha }
 
 /-- `equiv.mul_right₀` as an order_iso. -/
-@[simps (config := { simpRhs := tt })]
+@[simps (config := { simpRhs := true })]
 def OrderIso.mulRight₀ (a : α) (ha : 0 < a) : α ≃o α :=
   { Equivₓ.mulRight₀ a ha.ne' with map_rel_iff' := fun _ _ => mul_le_mul_right ha }
 
@@ -49,7 +49,7 @@ end
 
 @[simp]
 theorem inv_pos : 0 < a⁻¹ ↔ 0 < a :=
-  suffices ∀ a : α, 0 < a → 0 < a⁻¹ from ⟨fun h => inv_inv₀ a ▸ this _ h, this a⟩
+  suffices ∀ a : α, 0 < a → 0 < a⁻¹ from ⟨fun h => inv_invₓ a ▸ this _ h, this a⟩
   fun a ha =>
   flip lt_of_mul_lt_mul_left ha.le <| by
     simp [ne_of_gtₓ ha, zero_lt_one]
@@ -221,7 +221,7 @@ theorem div_le_iff_of_neg' (hc : c < 0) : b / c ≤ a ↔ c * a ≤ b := by
   rw [mul_comm, div_le_iff_of_neg hc]
 
 theorem le_div_iff_of_neg (hc : c < 0) : a ≤ b / c ↔ b ≤ a * c := by
-  rw [← neg_negₓ c, mul_neg_eq_neg_mul_symm, div_neg, le_neg, div_le_iff (neg_pos.2 hc), neg_mul_eq_neg_mul_symm]
+  rw [← neg_negₓ c, mul_neg, div_neg, le_neg, div_le_iff (neg_pos.2 hc), neg_mul]
 
 theorem le_div_iff_of_neg' (hc : c < 0) : a ≤ b / c ↔ b ≤ c * a := by
   rw [mul_comm, le_div_iff_of_neg hc]
@@ -263,13 +263,13 @@ theorem inv_le_inv (ha : 0 < a) (hb : 0 < b) : a⁻¹ ≤ b⁻¹ ↔ b ≤ a := 
 /-- In a linear ordered field, for positive `a` and `b` we have `a⁻¹ ≤ b ↔ b⁻¹ ≤ a`.
 See also `inv_le_of_inv_le` for a one-sided implication with one fewer assumption. -/
 theorem inv_le (ha : 0 < a) (hb : 0 < b) : a⁻¹ ≤ b ↔ b⁻¹ ≤ a := by
-  rw [← inv_le_inv hb (inv_pos.2 ha), inv_inv₀]
+  rw [← inv_le_inv hb (inv_pos.2 ha), inv_invₓ]
 
 theorem inv_le_of_inv_le (ha : 0 < a) (h : a⁻¹ ≤ b) : b⁻¹ ≤ a :=
   (inv_le ha ((inv_pos.2 ha).trans_le h)).1 h
 
 theorem le_inv (ha : 0 < a) (hb : 0 < b) : a ≤ b⁻¹ ↔ b ≤ a⁻¹ := by
-  rw [← inv_le_inv (inv_pos.2 hb) ha, inv_inv₀]
+  rw [← inv_le_inv (inv_pos.2 hb) ha, inv_invₓ]
 
 theorem inv_lt_inv (ha : 0 < a) (hb : 0 < b) : a⁻¹ < b⁻¹ ↔ b < a :=
   lt_iff_lt_of_le_iff_le (inv_le_inv hb ha)
@@ -289,10 +289,10 @@ theorem inv_le_inv_of_neg (ha : a < 0) (hb : b < 0) : a⁻¹ ≤ b⁻¹ ↔ b �
   rw [← one_div, div_le_iff_of_neg ha, ← div_eq_inv_mul, div_le_iff_of_neg hb, one_mulₓ]
 
 theorem inv_le_of_neg (ha : a < 0) (hb : b < 0) : a⁻¹ ≤ b ↔ b⁻¹ ≤ a := by
-  rw [← inv_le_inv_of_neg hb (inv_lt_zero.2 ha), inv_inv₀]
+  rw [← inv_le_inv_of_neg hb (inv_lt_zero.2 ha), inv_invₓ]
 
 theorem le_inv_of_neg (ha : a < 0) (hb : b < 0) : a ≤ b⁻¹ ↔ b ≤ a⁻¹ := by
-  rw [← inv_le_inv_of_neg (inv_lt_zero.2 hb) ha, inv_inv₀]
+  rw [← inv_le_inv_of_neg (inv_lt_zero.2 hb) ha, inv_invₓ]
 
 theorem inv_lt_inv_of_neg (ha : a < 0) (hb : b < 0) : a⁻¹ < b⁻¹ ↔ b < a :=
   lt_iff_lt_of_le_iff_le (inv_le_inv_of_neg hb ha)
@@ -316,7 +316,7 @@ theorem one_le_inv (h₁ : 0 < a) (h₂ : a ≤ 1) : 1 ≤ a⁻¹ := by
   rwa [le_inv (@zero_lt_one α _ _) h₁, inv_one]
 
 theorem inv_lt_one_iff_of_pos (h₀ : 0 < a) : a⁻¹ < 1 ↔ 1 < a :=
-  ⟨fun h₁ => inv_inv₀ a ▸ one_lt_inv (inv_pos.2 h₀) h₁, inv_lt_one⟩
+  ⟨fun h₁ => inv_invₓ a ▸ one_lt_inv (inv_pos.2 h₀) h₁, inv_lt_one⟩
 
 theorem inv_lt_one_iff : a⁻¹ < 1 ↔ a ≤ 0 ∨ 1 < a := by
   cases' le_or_ltₓ a 0 with ha ha
@@ -326,7 +326,7 @@ theorem inv_lt_one_iff : a⁻¹ < 1 ↔ a ≤ 0 ∨ 1 < a := by
     
 
 theorem one_lt_inv_iff : 1 < a⁻¹ ↔ 0 < a ∧ a < 1 :=
-  ⟨fun h => ⟨inv_pos.1 (zero_lt_one.trans h), inv_inv₀ a ▸ inv_lt_one h⟩, and_imp.2 one_lt_inv⟩
+  ⟨fun h => ⟨inv_pos.1 (zero_lt_one.trans h), inv_invₓ a ▸ inv_lt_one h⟩, and_imp.2 one_lt_inv⟩
 
 theorem inv_le_one_iff : a⁻¹ ≤ 1 ↔ a ≤ 0 ∨ 1 ≤ a := by
   rcases em (a = 1) with (rfl | ha)
@@ -336,7 +336,7 @@ theorem inv_le_one_iff : a⁻¹ ≤ 1 ↔ a ≤ 0 ∨ 1 ≤ a := by
     
 
 theorem one_le_inv_iff : 1 ≤ a⁻¹ ↔ 0 < a ∧ a ≤ 1 :=
-  ⟨fun h => ⟨inv_pos.1 (zero_lt_one.trans_le h), inv_inv₀ a ▸ inv_le_one h⟩, and_imp.2 one_le_inv⟩
+  ⟨fun h => ⟨inv_pos.1 (zero_lt_one.trans_le h), inv_invₓ a ▸ inv_le_one h⟩, and_imp.2 one_le_inv⟩
 
 /-!
 ### Relating two divisions.
@@ -623,7 +623,7 @@ theorem add_div_two_lt_right : (a + b) / 2 < b ↔ a < b := by
 
 /-- An inequality involving `2`. -/
 theorem sub_one_div_inv_le_two (a2 : 2 ≤ a) : (1 - 1 / a)⁻¹ ≤ 2 := by
-  refine' trans (inv_le_inv_of_le (inv_pos.mpr zero_lt_two) _) (inv_inv₀ (2 : α)).le
+  refine' trans (inv_le_inv_of_le (inv_pos.mpr zero_lt_two) _) (inv_invₓ (2 : α)).le
   refine' trans (le_sub_iff_add_le.mpr (_ : _ + 2⁻¹ = _).le) ((sub_le_sub_iff_left 1).mpr _)
   · exact trans (two_mul _).symm (mul_inv_cancel two_ne_zero)
     
@@ -642,7 +642,7 @@ def Function.Injective.linearOrderedField {β : Type _} [Zero β] [One β] [Add 
     (f : β → α) (hf : Function.Injective f) (zero : f 0 = 0) (one : f 1 = 1) (add : ∀ x y, f (x + y) = f x + f y)
     (mul : ∀ x y, f (x * y) = f x * f y) (neg : ∀ x, f (-x) = -f x) (sub : ∀ x y, f (x - y) = f x - f y)
     (inv : ∀ x, f x⁻¹ = (f x)⁻¹) (div : ∀ x y, f (x / y) = f x / f y) : LinearOrderedField β :=
-  { hf.linear_ordered_ring f zero one add mul neg sub, hf.field f zero one add mul neg sub inv div with }
+  { hf.LinearOrderedRing f zero one add mul neg sub, hf.Field f zero one add mul neg sub inv div with }
 
 theorem mul_sub_mul_div_mul_neg_iff (hc : c ≠ 0) (hd : d ≠ 0) : (a * d - b * c) / (c * d) < 0 ↔ a / c < b / d := by
   rw [mul_comm b c, ← div_sub_div _ _ hc hd, sub_lt_zero]

@@ -16,6 +16,16 @@ variable {α : Type u} {β : Type v} {r : α → α → Prop} {s : β → β →
 
 open Function
 
+theorem comm [IsSymm α r] {a b : α} : r a b ↔ r b a :=
+  ⟨symm, symm⟩
+
+theorem antisymm' [IsAntisymm α r] {a b : α} : r a b → r b a → b = a := fun h h' => antisymm h' h
+
+theorem antisymm_iff [IsRefl α r] [IsAntisymm α r] {a b : α} : r a b ∧ r b a ↔ a = b :=
+  ⟨fun h => antisymm h.1 h.2, by
+    rintro rfl
+    exact ⟨refl _, refl _⟩⟩
+
 /-- A version of `antisymm` with `r` explicit.
 
 This lemma matches the lemmas from lean core in `init.algebra.classes`, but is missing there.  -/
@@ -23,8 +33,12 @@ This lemma matches the lemmas from lean core in `init.algebra.classes`, but is m
 theorem antisymm_of (r : α → α → Prop) [IsAntisymm α r] {a b : α} : r a b → r b a → a = b :=
   antisymm
 
-theorem comm [IsSymm α r] {a b : α} : r a b ↔ r b a :=
-  ⟨symm, symm⟩
+/-- A version of `antisymm'` with `r` explicit.
+
+This lemma matches the lemmas from lean core in `init.algebra.classes`, but is missing there.  -/
+@[elabWithoutExpectedType]
+theorem antisymm_of' (r : α → α → Prop) [IsAntisymm α r] {a b : α} : r a b → r b a → b = a :=
+  antisymm'
 
 /-- A version of `comm` with `r` explicit.
 
@@ -81,100 +95,10 @@ protected theorem IsTotal.is_trichotomous r [IsTotal α r] : IsTrichotomous α r
 instance (priority := 100) IsTotal.to_is_refl r [IsTotal α r] : IsRefl α r :=
   ⟨fun a => (or_selfₓ _).1 <| total_of r a a⟩
 
-instance [Preorderₓ α] : IsRefl α (· ≤ ·) :=
-  ⟨le_reflₓ⟩
-
-instance [Preorderₓ α] : IsRefl α (· ≥ ·) :=
-  IsRefl.swap _
-
-instance [Preorderₓ α] : IsTrans α (· ≤ ·) :=
-  ⟨@le_transₓ _ _⟩
-
-instance [Preorderₓ α] : IsTrans α (· ≥ ·) :=
-  IsTrans.swap _
-
-instance [Preorderₓ α] : IsPreorder α (· ≤ ·) :=
-  {  }
-
-instance [Preorderₓ α] : IsPreorder α (· ≥ ·) :=
-  {  }
-
-instance [Preorderₓ α] : IsIrrefl α (· < ·) :=
-  ⟨lt_irreflₓ⟩
-
-instance [Preorderₓ α] : IsIrrefl α (· > ·) :=
-  IsIrrefl.swap _
-
-instance [Preorderₓ α] : IsTrans α (· < ·) :=
-  ⟨@lt_transₓ _ _⟩
-
-instance [Preorderₓ α] : IsTrans α (· > ·) :=
-  IsTrans.swap _
-
-instance [Preorderₓ α] : IsAsymm α (· < ·) :=
-  ⟨@lt_asymmₓ _ _⟩
-
-instance [Preorderₓ α] : IsAsymm α (· > ·) :=
-  IsAsymm.swap _
-
-instance [Preorderₓ α] : IsAntisymm α (· < ·) :=
-  IsAsymm.is_antisymm _
-
-instance [Preorderₓ α] : IsAntisymm α (· > ·) :=
-  IsAsymm.is_antisymm _
-
-instance [Preorderₓ α] : IsStrictOrder α (· < ·) :=
-  {  }
-
-instance [Preorderₓ α] : IsStrictOrder α (· > ·) :=
-  {  }
-
-instance [PartialOrderₓ α] : IsAntisymm α (· ≤ ·) :=
-  ⟨@le_antisymmₓ _ _⟩
-
-instance [PartialOrderₓ α] : IsAntisymm α (· ≥ ·) :=
-  IsAntisymm.swap _
-
-instance [PartialOrderₓ α] : IsPartialOrder α (· ≤ ·) :=
-  {  }
-
-instance [PartialOrderₓ α] : IsPartialOrder α (· ≥ ·) :=
-  {  }
-
-instance [LinearOrderₓ α] : IsTotal α (· ≤ ·) :=
-  ⟨le_totalₓ⟩
-
-instance [LinearOrderₓ α] : IsTotal α (· ≥ ·) :=
-  IsTotal.swap _
-
-instance LinearOrderₓ.is_total_preorder [LinearOrderₓ α] : IsTotalPreorder α (· ≤ ·) := by
-  infer_instance
-
-instance [LinearOrderₓ α] : IsTotalPreorder α (· ≥ ·) :=
-  {  }
-
-instance [LinearOrderₓ α] : IsLinearOrder α (· ≤ ·) :=
-  {  }
-
-instance [LinearOrderₓ α] : IsLinearOrder α (· ≥ ·) :=
-  {  }
-
-instance [LinearOrderₓ α] : IsTrichotomous α (· < ·) :=
-  ⟨lt_trichotomyₓ⟩
-
-instance [LinearOrderₓ α] : IsTrichotomous α (· > ·) :=
-  IsTrichotomous.swap _
-
-instance [LinearOrderₓ α] : IsTrichotomous α (· ≤ ·) :=
-  IsTotal.is_trichotomous _
-
-instance [LinearOrderₓ α] : IsTrichotomous α (· ≥ ·) :=
-  IsTotal.is_trichotomous _
-
-instance OrderDual.is_total_le [LE α] [IsTotal α (· ≤ ·)] : IsTotal (OrderDual α) (· ≤ ·) :=
-  @IsTotal.swap α _ _
-
 theorem ne_of_irrefl {r} [IsIrrefl α r] : ∀ {x y : α}, r x y → x ≠ y
+  | _, _, h, rfl => irrefl _ h
+
+theorem ne_of_irrefl' {r} [IsIrrefl α r] : ∀ {x y : α}, r x y → y ≠ x
   | _, _, h, rfl => irrefl _ h
 
 theorem trans_trichotomous_left [IsTrans α r] [IsTrichotomous α r] {a b c : α} : ¬r b a → r b c → r a c := by
@@ -246,8 +170,8 @@ def linearOrderOfSTO' r [IsStrictTotalOrder' α r] [∀ x y, Decidable ¬r x y] 
 theorem IsStrictTotalOrder'.swap r [IsStrictTotalOrder' α r] : IsStrictTotalOrder' α (swap r) :=
   { IsTrichotomous.swap r, IsStrictOrder.swap r with }
 
-instance [LinearOrderₓ α] : IsStrictTotalOrder' α (· < ·) :=
-  {  }
+/-! ### Order connection -/
+
 
 /-- A connected order is one satisfying the condition `a < c → a < b ∨ b < c`.
   This is recognizable as an intuitionistic substitute for `a ≤ b ∨ b ≤ a` on
@@ -275,17 +199,8 @@ instance (priority := 100) is_strict_total_order_of_is_strict_total_order' [IsSt
     IsStrictTotalOrder α r :=
   { is_strict_weak_order_of_is_order_connected with }
 
-instance [LinearOrderₓ α] : IsStrictTotalOrder α (· < ·) := by
-  infer_instance
+/-! ### Extensional relation -/
 
-instance [LinearOrderₓ α] : IsOrderConnected α (· < ·) := by
-  infer_instance
-
-instance [LinearOrderₓ α] : IsIncompTrans α (· < ·) := by
-  infer_instance
-
-instance [LinearOrderₓ α] : IsStrictWeakOrder α (· < ·) := by
-  infer_instance
 
 /-- An extensional relation is one in which an element is determined by its set
   of predecessors. It is named for the `x ∈ y` relation in set theory, whose
@@ -297,6 +212,9 @@ class IsExtensional (α : Type u) (r : α → α → Prop) : Prop where
 instance (priority := 100) is_extensional_of_is_strict_total_order' [IsStrictTotalOrder' α r] : IsExtensional α r :=
   ⟨fun a b H =>
     ((@trichotomous _ r _ a b).resolve_left <| mt (H _).2 (irrefl a)).resolve_right <| mt (H _).1 (irrefl b)⟩
+
+/-! ### Well-order -/
+
 
 /-- A well order is a well-founded linear order. -/
 @[algebra]
@@ -334,9 +252,6 @@ instance EmptyRelation.is_well_order [Subsingleton α] : IsWellOrder α EmptyRel
   trans := fun a b c => False.elim
   wf := ⟨fun a => ⟨_, fun y => False.elim⟩⟩
 
-instance Nat.Lt.is_well_order : IsWellOrder ℕ (· < ·) :=
-  ⟨Nat.lt_wf⟩
-
 instance Prod.Lex.is_well_order [IsWellOrder α r] [IsWellOrder β s] : IsWellOrder (α × β) (Prod.Lex r s) where
   trichotomous := fun ⟨a₁, a₂⟩ ⟨b₁, b₂⟩ =>
     match @trichotomous _ r _ a₁ b₁ with
@@ -373,11 +288,11 @@ def bounded (r : α → α → Prop) (s : Set α) : Prop :=
   ∃ a, ∀, ∀ b ∈ s, ∀, r b a
 
 @[simp]
-theorem not_bounded_iff {r : α → α → Prop} (s : Set α) : ¬bounded r s ↔ unbounded r s := by
+theorem not_bounded_iff {r : α → α → Prop} (s : Set α) : ¬Bounded r s ↔ Unbounded r s := by
   simp only [bounded, unbounded, not_forall, not_exists, exists_prop, not_and, not_not]
 
 @[simp]
-theorem not_unbounded_iff {r : α → α → Prop} (s : Set α) : ¬unbounded r s ↔ bounded r s := by
+theorem not_unbounded_iff {r : α → α → Prop} (s : Set α) : ¬Unbounded r s ↔ Bounded r s := by
   rw [not_iff_comm, not_bounded_iff]
 
 end Set
@@ -397,4 +312,295 @@ instance is_trans_preimage_snd {r : α → α → Prop} [h : IsTrans α r] : IsT
   ⟨fun _ _ _ => trans_of r⟩
 
 end Prod
+
+/-! ### Strict-non strict relations -/
+
+
+/-- An unbundled relation class stating that `r` is the nonstrict relation corresponding to the
+strict relation `s`. Compare `preorder.lt_iff_le_not_le`. This is mostly meant to provide dot
+notation on `(⊆)` and `(⊂)`. -/
+class IsNonstrictStrictOrder (α : Type _) (r s : α → α → Prop) where
+  right_iff_left_not_left (a b : α) : s a b ↔ r a b ∧ ¬r b a
+
+theorem right_iff_left_not_left {r s : α → α → Prop} [IsNonstrictStrictOrder α r s] {a b : α} :
+    s a b ↔ r a b ∧ ¬r b a :=
+  IsNonstrictStrictOrder.right_iff_left_not_left _ _
+
+/-- A version of `right_iff_left_not_left` with explicit `r` and `s`. -/
+theorem right_iff_left_not_left_of (r s : α → α → Prop) [IsNonstrictStrictOrder α r s] {a b : α} :
+    s a b ↔ r a b ∧ ¬r b a :=
+  right_iff_left_not_left
+
+@[nolint dangerous_instance]
+instance (priority := 100) IsNonstrictStrictOrder.to_is_irrefl {r : α → α → Prop} {s : α → α → Prop}
+    [IsNonstrictStrictOrder α r s] : IsIrrefl α s :=
+  ⟨fun a h => ((right_iff_left_not_left_of r s).1 h).2 ((right_iff_left_not_left_of r s).1 h).1⟩
+
+/-! #### `⊆` and `⊂` -/
+
+
+section Subset
+
+variable [HasSubset α] {a b c : α}
+
+@[refl]
+theorem subset_refl [IsRefl α (· ⊆ ·)] (a : α) : a ⊆ a :=
+  refl _
+
+theorem subset_rfl [IsRefl α (· ⊆ ·)] : a ⊆ a :=
+  refl _
+
+theorem subset_of_eq [IsRefl α (· ⊆ ·)] : a = b → a ⊆ b := fun h => h ▸ subset_rfl
+
+theorem superset_of_eq [IsRefl α (· ⊆ ·)] : a = b → b ⊆ a := fun h => h ▸ subset_rfl
+
+theorem ne_of_not_subset [IsRefl α (· ⊆ ·)] : ¬a ⊆ b → a ≠ b :=
+  mt subset_of_eq
+
+theorem ne_of_not_superset [IsRefl α (· ⊆ ·)] : ¬a ⊆ b → b ≠ a :=
+  mt superset_of_eq
+
+@[trans]
+theorem subset_trans [IsTrans α (· ⊆ ·)] (h : a ⊆ b) (h' : b ⊆ c) : a ⊆ c :=
+  trans h h'
+
+theorem subset_antisymm [IsAntisymm α (· ⊆ ·)] (h : a ⊆ b) (h' : b ⊆ a) : a = b :=
+  antisymm h h'
+
+theorem superset_antisymm [IsAntisymm α (· ⊆ ·)] (h : a ⊆ b) (h' : b ⊆ a) : b = a :=
+  antisymm' h h'
+
+alias subset_of_eq ← Eq.subset'
+
+alias superset_of_eq ← Eq.superset
+
+alias subset_trans ← HasSubset.Subset.trans
+
+alias subset_antisymm ← HasSubset.Subset.antisymm
+
+alias superset_antisymm ← HasSubset.Subset.antisymm'
+
+theorem subset_antisymm_iff [IsRefl α (· ⊆ ·)] [IsAntisymm α (· ⊆ ·)] : a = b ↔ a ⊆ b ∧ b ⊆ a :=
+  ⟨fun h => ⟨h.subset', h.Superset⟩, fun h => h.1.antisymm h.2⟩
+
+theorem superset_antisymm_iff [IsRefl α (· ⊆ ·)] [IsAntisymm α (· ⊆ ·)] : a = b ↔ b ⊆ a ∧ a ⊆ b :=
+  ⟨fun h => ⟨h.Superset, h.subset'⟩, fun h => h.1.antisymm' h.2⟩
+
+end Subset
+
+section Ssubset
+
+variable [HasSsubset α]
+
+theorem ssubset_irrefl [IsIrrefl α (· ⊂ ·)] (a : α) : ¬a ⊂ a :=
+  irrefl _
+
+theorem ssubset_irrfl [IsIrrefl α (· ⊂ ·)] {a : α} : ¬a ⊂ a :=
+  irrefl _
+
+theorem ne_of_ssubset [IsIrrefl α (· ⊂ ·)] {a b : α} : a ⊂ b → a ≠ b :=
+  ne_of_irrefl
+
+theorem ne_of_ssuperset [IsIrrefl α (· ⊂ ·)] {a b : α} : a ⊂ b → b ≠ a :=
+  ne_of_irrefl'
+
+@[trans]
+theorem ssubset_trans [IsTrans α (· ⊂ ·)] {a b c : α} (h : a ⊂ b) (h' : b ⊂ c) : a ⊂ c :=
+  trans h h'
+
+theorem ssubset_asymm [IsAsymm α (· ⊂ ·)] {a b : α} (h : a ⊂ b) : ¬b ⊂ a :=
+  asymm h
+
+alias ssubset_irrfl ← HasSsubset.Ssubset.false
+
+alias ne_of_ssubset ← HasSsubset.Ssubset.ne
+
+alias ne_of_ssuperset ← HasSsubset.Ssubset.ne'
+
+alias ssubset_trans ← HasSsubset.Ssubset.trans
+
+alias ssubset_asymm ← HasSsubset.Ssubset.asymm
+
+end Ssubset
+
+section SubsetSsubset
+
+variable [HasSubset α] [HasSsubset α] [IsNonstrictStrictOrder α (· ⊆ ·) (· ⊂ ·)] {a b c : α}
+
+theorem ssubset_iff_subset_not_subset : a ⊂ b ↔ a ⊆ b ∧ ¬b ⊆ a :=
+  right_iff_left_not_left
+
+theorem subset_of_ssubset (h : a ⊂ b) : a ⊆ b :=
+  (ssubset_iff_subset_not_subset.1 h).1
+
+theorem not_subset_of_ssubset (h : a ⊂ b) : ¬b ⊆ a :=
+  (ssubset_iff_subset_not_subset.1 h).2
+
+theorem not_ssubset_of_subset (h : a ⊆ b) : ¬b ⊂ a := fun h' => not_subset_of_ssubset h' h
+
+theorem ssubset_of_subset_not_subset (h₁ : a ⊆ b) (h₂ : ¬b ⊆ a) : a ⊂ b :=
+  ssubset_iff_subset_not_subset.2 ⟨h₁, h₂⟩
+
+alias subset_of_ssubset ← HasSsubset.Ssubset.subset
+
+alias not_subset_of_ssubset ← HasSsubset.Ssubset.not_subset
+
+alias not_ssubset_of_subset ← HasSubset.Subset.not_ssubset
+
+alias ssubset_of_subset_not_subset ← HasSubset.Subset.ssubset_of_not_subset
+
+theorem ssubset_of_subset_of_ssubset [IsTrans α (· ⊆ ·)] (h₁ : a ⊆ b) (h₂ : b ⊂ c) : a ⊂ c :=
+  (h₁.trans h₂.Subset).ssubset_of_not_subset fun h => h₂.not_subset <| h.trans h₁
+
+theorem ssubset_of_ssubset_of_subset [IsTrans α (· ⊆ ·)] (h₁ : a ⊂ b) (h₂ : b ⊆ c) : a ⊂ c :=
+  (h₁.Subset.trans h₂).ssubset_of_not_subset fun h => h₁.not_subset <| h₂.trans h
+
+theorem ssubset_of_subset_of_ne [IsAntisymm α (· ⊆ ·)] (h₁ : a ⊆ b) (h₂ : a ≠ b) : a ⊂ b :=
+  h₁.ssubset_of_not_subset <| mt h₁.antisymm h₂
+
+theorem ssubset_of_ne_of_subset [IsAntisymm α (· ⊆ ·)] (h₁ : a ≠ b) (h₂ : a ⊆ b) : a ⊂ b :=
+  ssubset_of_subset_of_ne h₂ h₁
+
+theorem eq_or_ssubset_of_subset [IsAntisymm α (· ⊆ ·)] (h : a ⊆ b) : a = b ∨ a ⊂ b :=
+  (em (b ⊆ a)).imp h.antisymm h.ssubset_of_not_subset
+
+theorem ssubset_or_eq_of_subset [IsAntisymm α (· ⊆ ·)] (h : a ⊆ b) : a ⊂ b ∨ a = b :=
+  (eq_or_ssubset_of_subset h).swap
+
+alias ssubset_of_subset_of_ssubset ← HasSubset.Subset.trans_ssubset
+
+alias ssubset_of_ssubset_of_subset ← HasSsubset.Ssubset.trans_subset
+
+alias ssubset_of_subset_of_ne ← HasSubset.Subset.ssubset_of_ne
+
+alias ssubset_of_ne_of_subset ← Ne.ssubset_of_subset
+
+alias eq_or_ssubset_of_subset ← HasSubset.Subset.eq_or_ssubset
+
+alias ssubset_or_eq_of_subset ← HasSubset.Subset.ssubset_or_eq
+
+theorem ssubset_iff_subset_ne [IsAntisymm α (· ⊆ ·)] : a ⊂ b ↔ a ⊆ b ∧ a ≠ b :=
+  ⟨fun h => ⟨h.Subset, h.Ne⟩, fun h => h.1.ssubset_of_ne h.2⟩
+
+theorem subset_iff_ssubset_or_eq [IsRefl α (· ⊆ ·)] [IsAntisymm α (· ⊆ ·)] : a ⊆ b ↔ a ⊂ b ∨ a = b :=
+  ⟨fun h => h.ssubset_or_eq, fun h => h.elim subset_of_ssubset subset_of_eq⟩
+
+end SubsetSsubset
+
+/-! ### Conversion of bundled order typeclasses to unbundled relation typeclasses -/
+
+
+instance [Preorderₓ α] : IsRefl α (· ≤ ·) :=
+  ⟨le_reflₓ⟩
+
+instance [Preorderₓ α] : IsRefl α (· ≥ ·) :=
+  IsRefl.swap _
+
+instance [Preorderₓ α] : IsTrans α (· ≤ ·) :=
+  ⟨@le_transₓ _ _⟩
+
+instance [Preorderₓ α] : IsTrans α (· ≥ ·) :=
+  IsTrans.swap _
+
+instance [Preorderₓ α] : IsPreorder α (· ≤ ·) :=
+  {  }
+
+instance [Preorderₓ α] : IsPreorder α (· ≥ ·) :=
+  {  }
+
+instance [Preorderₓ α] : IsIrrefl α (· < ·) :=
+  ⟨lt_irreflₓ⟩
+
+instance [Preorderₓ α] : IsIrrefl α (· > ·) :=
+  IsIrrefl.swap _
+
+instance [Preorderₓ α] : IsTrans α (· < ·) :=
+  ⟨@lt_transₓ _ _⟩
+
+instance [Preorderₓ α] : IsTrans α (· > ·) :=
+  IsTrans.swap _
+
+instance [Preorderₓ α] : IsAsymm α (· < ·) :=
+  ⟨@lt_asymmₓ _ _⟩
+
+instance [Preorderₓ α] : IsAsymm α (· > ·) :=
+  IsAsymm.swap _
+
+instance [Preorderₓ α] : IsAntisymm α (· < ·) :=
+  IsAsymm.is_antisymm _
+
+instance [Preorderₓ α] : IsAntisymm α (· > ·) :=
+  IsAsymm.is_antisymm _
+
+instance [Preorderₓ α] : IsStrictOrder α (· < ·) :=
+  {  }
+
+instance [Preorderₓ α] : IsStrictOrder α (· > ·) :=
+  {  }
+
+instance [Preorderₓ α] : IsNonstrictStrictOrder α (· ≤ ·) (· < ·) :=
+  ⟨@lt_iff_le_not_leₓ _ _⟩
+
+instance [PartialOrderₓ α] : IsAntisymm α (· ≤ ·) :=
+  ⟨@le_antisymmₓ _ _⟩
+
+instance [PartialOrderₓ α] : IsAntisymm α (· ≥ ·) :=
+  IsAntisymm.swap _
+
+instance [PartialOrderₓ α] : IsPartialOrder α (· ≤ ·) :=
+  {  }
+
+instance [PartialOrderₓ α] : IsPartialOrder α (· ≥ ·) :=
+  {  }
+
+instance [LinearOrderₓ α] : IsTotal α (· ≤ ·) :=
+  ⟨le_totalₓ⟩
+
+instance [LinearOrderₓ α] : IsTotal α (· ≥ ·) :=
+  IsTotal.swap _
+
+instance LinearOrderₓ.is_total_preorder [LinearOrderₓ α] : IsTotalPreorder α (· ≤ ·) := by
+  infer_instance
+
+instance [LinearOrderₓ α] : IsTotalPreorder α (· ≥ ·) :=
+  {  }
+
+instance [LinearOrderₓ α] : IsLinearOrder α (· ≤ ·) :=
+  {  }
+
+instance [LinearOrderₓ α] : IsLinearOrder α (· ≥ ·) :=
+  {  }
+
+instance [LinearOrderₓ α] : IsTrichotomous α (· < ·) :=
+  ⟨lt_trichotomyₓ⟩
+
+instance [LinearOrderₓ α] : IsTrichotomous α (· > ·) :=
+  IsTrichotomous.swap _
+
+instance [LinearOrderₓ α] : IsTrichotomous α (· ≤ ·) :=
+  IsTotal.is_trichotomous _
+
+instance [LinearOrderₓ α] : IsTrichotomous α (· ≥ ·) :=
+  IsTotal.is_trichotomous _
+
+instance [LinearOrderₓ α] : IsStrictTotalOrder α (· < ·) := by
+  infer_instance
+
+instance [LinearOrderₓ α] : IsStrictTotalOrder' α (· < ·) :=
+  {  }
+
+instance [LinearOrderₓ α] : IsOrderConnected α (· < ·) := by
+  infer_instance
+
+instance [LinearOrderₓ α] : IsIncompTrans α (· < ·) := by
+  infer_instance
+
+instance [LinearOrderₓ α] : IsStrictWeakOrder α (· < ·) := by
+  infer_instance
+
+instance OrderDual.is_total_le [LE α] [IsTotal α (· ≤ ·)] : IsTotal (OrderDual α) (· ≤ ·) :=
+  @IsTotal.swap α _ _
+
+instance Nat.Lt.is_well_order : IsWellOrder ℕ (· < ·) :=
+  ⟨Nat.lt_wf⟩
 

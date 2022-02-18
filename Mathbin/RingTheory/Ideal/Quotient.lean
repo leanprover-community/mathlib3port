@@ -76,7 +76,7 @@ def mk (I : Ideal R) : R →+* R ⧸ I :=
   ⟨fun a => Submodule.Quotient.mk a, rfl, fun _ _ => rfl, rfl, fun _ _ => rfl⟩
 
 @[ext]
-theorem ring_hom_ext [NonAssocSemiring S] ⦃f g : R ⧸ I →+* S⦄ (h : f.comp (mk I) = g.comp (mk I)) : f = g :=
+theorem ring_hom_ext [NonAssocSemiringₓ S] ⦃f g : R ⧸ I →+* S⦄ (h : f.comp (mk I) = g.comp (mk I)) : f = g :=
   RingHom.ext fun x => Quotientₓ.induction_on' x <| (RingHom.congr_fun h : _)
 
 instance Inhabited : Inhabited (R ⧸ I) :=
@@ -116,13 +116,13 @@ theorem quotient_ring_saturate (I : Ideal R) (s : Set R) : mk I ⁻¹' (mk I '' 
       ⟨a, ha, by
         rw [← Eq, sub_add_eq_sub_sub_swap, sub_self, zero_sub] <;> exact I.neg_mem hi⟩⟩
 
-instance IsDomain (I : Ideal R) [hI : I.is_prime] : IsDomain (R ⧸ I) :=
-  { quotient.nontrivial hI.1 with
+instance IsDomain (I : Ideal R) [hI : I.IsPrime] : IsDomain (R ⧸ I) :=
+  { Quotient.nontrivial hI.1 with
     eq_zero_or_eq_zero_of_mul_eq_zero := fun a b =>
       (Quotientₓ.induction_on₂' a b) fun a b hab =>
         (hI.mem_or_mem (eq_zero_iff_mem.1 hab)).elim (Or.inl ∘ eq_zero_iff_mem.2) (Or.inr ∘ eq_zero_iff_mem.2) }
 
-theorem is_domain_iff_prime (I : Ideal R) : IsDomain (R ⧸ I) ↔ I.is_prime :=
+theorem is_domain_iff_prime (I : Ideal R) : IsDomain (R ⧸ I) ↔ I.IsPrime :=
   ⟨fun ⟨h1, h2⟩ =>
     ⟨zero_ne_one_iff.1 <| @zero_ne_one _ _ ⟨h2⟩, fun x y h => by
       simp only [← eq_zero_iff_mem, (mk I).map_mul] at h⊢
@@ -131,7 +131,7 @@ theorem is_domain_iff_prime (I : Ideal R) : IsDomain (R ⧸ I) ↔ I.is_prime :=
     skip
     infer_instance⟩
 
-theorem exists_inv {I : Ideal R} [hI : I.is_maximal] : ∀ {a : R ⧸ I}, a ≠ 0 → ∃ b : R ⧸ I, a * b = 1 := by
+theorem exists_inv {I : Ideal R} [hI : I.IsMaximal] : ∀ {a : R ⧸ I}, a ≠ 0 → ∃ b : R ⧸ I, a * b = 1 := by
   rintro ⟨a⟩ h
   rcases hI.exists_inv (mt eq_zero_iff_mem.2 h) with ⟨b, c, hc, abc⟩
   rw [mul_comm] at abc
@@ -146,8 +146,8 @@ open_locale Classical
 computable inverses in some applications.
 See note [reducible non-instances]. -/
 @[reducible]
-protected noncomputable def Field (I : Ideal R) [hI : I.is_maximal] : Field (R ⧸ I) :=
-  { quotient.comm_ring I, quotient.is_domain I with
+protected noncomputable def Field (I : Ideal R) [hI : I.IsMaximal] : Field (R ⧸ I) :=
+  { Quotient.commRing I, Quotient.is_domain I with
     inv := fun a => if ha : a = 0 then 0 else Classical.some (exists_inv ha),
     mul_inv_cancel := fun a ha : a ≠ 0 =>
       show a * dite _ _ _ = _ by
@@ -155,7 +155,7 @@ protected noncomputable def Field (I : Ideal R) [hI : I.is_maximal] : Field (R �
     inv_zero := dif_pos rfl }
 
 /-- If the quotient by an ideal is a field, then the ideal is maximal. -/
-theorem maximal_of_is_field (I : Ideal R) (hqf : IsField (R ⧸ I)) : I.is_maximal := by
+theorem maximal_of_is_field (I : Ideal R) (hqf : IsField (R ⧸ I)) : I.IsMaximal := by
   apply Ideal.is_maximal_iff.2
   constructor
   · intro h
@@ -169,7 +169,7 @@ theorem maximal_of_is_field (I : Ideal R) (hqf : IsField (R ⧸ I)) : I.is_maxim
     
 
 /-- The quotient of a ring by an ideal is a field iff the ideal is maximal. -/
-theorem maximal_ideal_iff_is_field_quotient (I : Ideal R) : I.is_maximal ↔ IsField (R ⧸ I) :=
+theorem maximal_ideal_iff_is_field_quotient (I : Ideal R) : I.IsMaximal ↔ IsField (R ⧸ I) :=
   ⟨fun h => @Field.to_is_field (R ⧸ I) (@Ideal.Quotient.field _ _ I h), fun h => maximal_of_is_field I h⟩
 
 variable [CommRingₓ S]
@@ -219,7 +219,7 @@ def quot_equiv_of_eq {R : Type _} [CommRingₓ R] {I J : Ideal R} (h : I = J) : 
 
 @[simp]
 theorem quot_equiv_of_eq_mk {R : Type _} [CommRingₓ R] {I J : Ideal R} (h : I = J) (x : R) :
-    quot_equiv_of_eq h (Ideal.Quotient.mk I x) = Ideal.Quotient.mk J x :=
+    quotEquivOfEq h (Ideal.Quotient.mk I x) = Ideal.Quotient.mk J x :=
   rfl
 
 section Pi
@@ -375,28 +375,28 @@ theorem exists_sub_mem [Fintype ι] {f : ι → Ideal R} (hf : ∀ i j, i ≠ j 
 /-- The homomorphism from `R/(⋂ i, f i)` to `∏ i, (R / f i)` featured in the Chinese
   Remainder Theorem. It is bijective if the ideals `f i` are comaximal. -/
 def quotient_inf_to_pi_quotient (f : ι → Ideal R) : (R ⧸ ⨅ i, f i) →+* ∀ i, R ⧸ f i :=
-  (Quotientₓ.lift (⨅ i, f i) (Pi.ringHom fun i : ι => (Quotientₓ.mk (f i) : _))) fun r hr => by
+  (Quotient.lift (⨅ i, f i) (Pi.ringHom fun i : ι => (Quotient.mk (f i) : _))) fun r hr => by
     rw [Submodule.mem_infi] at hr
     ext i
     exact quotient.eq_zero_iff_mem.2 (hr i)
 
 theorem quotient_inf_to_pi_quotient_bijective [Fintype ι] {f : ι → Ideal R} (hf : ∀ i j, i ≠ j → f i⊔f j = ⊤) :
-    Function.Bijective (quotient_inf_to_pi_quotient f) :=
+    Function.Bijective (quotientInfToPiQuotient f) :=
   ⟨fun x y =>
     (Quotientₓ.induction_on₂' x y) fun r s hrs =>
-      Quotientₓ.eq.2 <|
+      Quotient.eq.2 <|
         (Submodule.mem_infi _).2 fun i =>
-          Quotientₓ.eq.1 <|
-            show quotient_inf_to_pi_quotient f (Quotientₓ.mk' r) i = _ by
+          Quotient.eq.1 <|
+            show quotientInfToPiQuotient f (Quotientₓ.mk' r) i = _ by
               rw [hrs] <;> rfl,
     fun g =>
     let ⟨r, hr⟩ := exists_sub_mem hf fun i => Quotientₓ.out' (g i)
-    ⟨Quotientₓ.mk _ r, funext fun i => Quotientₓ.out_eq' (g i) ▸ Quotientₓ.eq.2 (hr i)⟩⟩
+    ⟨Quotient.mk _ r, funext fun i => Quotientₓ.out_eq' (g i) ▸ Quotient.eq.2 (hr i)⟩⟩
 
 /-- Chinese Remainder Theorem. Eisenbud Ex.2.6. Similar to Atiyah-Macdonald 1.10 and Stacks 00DT -/
 noncomputable def quotient_inf_ring_equiv_pi_quotient [Fintype ι] (f : ι → Ideal R) (hf : ∀ i j, i ≠ j → f i⊔f j = ⊤) :
     (R ⧸ ⨅ i, f i) ≃+* ∀ i, R ⧸ f i :=
-  { Equivₓ.ofBijective _ (quotient_inf_to_pi_quotient_bijective hf), quotient_inf_to_pi_quotient f with }
+  { Equivₓ.ofBijective _ (quotient_inf_to_pi_quotient_bijective hf), quotientInfToPiQuotient f with }
 
 end ChineseRemainder
 

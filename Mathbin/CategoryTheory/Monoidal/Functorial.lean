@@ -37,11 +37,11 @@ namespace CategoryTheory
 
 open MonoidalCategory
 
-variable {C : Type u₁} [category.{v₁} C] [monoidal_category.{v₁} C] {D : Type u₂} [category.{v₂} D]
-  [monoidal_category.{v₂} D]
+variable {C : Type u₁} [Category.{v₁} C] [MonoidalCategory.{v₁} C] {D : Type u₂} [Category.{v₂} D]
+  [MonoidalCategory.{v₂} D]
 
 /-- An unbundled description of lax monoidal functors. -/
-class lax_monoidal (F : C → D) [functorial.{v₁, v₂} F] where
+class lax_monoidal (F : C → D) [Functorial.{v₁, v₂} F] where
   ε {} : 𝟙_ D ⟶ F (𝟙_ C)
   μ {} : ∀ X Y : C, F X ⊗ F Y ⟶ F (X ⊗ Y)
   μ_natural' : ∀ {X Y X' Y' : C} f : X ⟶ Y g : X' ⟶ Y', (map F f ⊗ map F g) ≫ μ Y Y' = μ X X' ≫ map F (f ⊗ g) := by
@@ -78,17 +78,17 @@ namespace LaxMonoidalFunctor
 and `functorial` and `lax_monoidal` typeclasses.
 -/
 @[simps]
-def of (F : C → D) [I₁ : functorial.{v₁, v₂} F] [I₂ : lax_monoidal.{v₁, v₂} F] : lax_monoidal_functor.{v₁, v₂} C D :=
+def of (F : C → D) [I₁ : Functorial.{v₁, v₂} F] [I₂ : LaxMonoidal.{v₁, v₂} F] : LaxMonoidalFunctor.{v₁, v₂} C D :=
   { I₁, I₂ with obj := F }
 
 end LaxMonoidalFunctor
 
-instance (F : lax_monoidal_functor.{v₁, v₂} C D) : lax_monoidal.{v₁, v₂} F.obj :=
+instance (F : LaxMonoidalFunctor.{v₁, v₂} C D) : LaxMonoidal.{v₁, v₂} F.obj :=
   { F with }
 
 section
 
-instance lax_monoidal_id : lax_monoidal.{v₁, v₁} (id : C → C) where
+instance lax_monoidal_id : LaxMonoidal.{v₁, v₁} (id : C → C) where
   ε := 𝟙 _
   μ := fun X Y => 𝟙 _
 

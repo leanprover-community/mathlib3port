@@ -29,7 +29,7 @@ unsafe def simpa (use_iota_eqn : parse <| (tk "!")?) (trace_lemmas : parse <| (t
     (cfg : simp_config_ext := {  }) : tactic Unit :=
   let simp_at lc (close_tac : tactic Unit) :=
     focus1 <|
-      simp use_iota_eqn trace_lemmas no_dflt hs attr_names (loc.ns lc) { cfg with failIfUnchanged := ff } >>
+      simp use_iota_eqn trace_lemmas no_dflt hs attr_names (Loc.ns lc) { cfg with failIfUnchanged := false } >>
         ((close_tac <|> trivialₓ) >> done <|> fail "simpa failed")
   match tgt with
   | none => get_local `this >> simp_at [some `this, none] assumption <|> simp_at [none] assumption

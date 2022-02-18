@@ -95,10 +95,24 @@ theorem mk_eq_mk {a h a' h'} : @mk α p a h = @mk α p a' h' ↔ a = a' :=
 theorem coe_eq_iff {a : { a // p a }} {b : α} : ↑a = b ↔ ∃ h, a = ⟨b, h⟩ :=
   ⟨fun h => h ▸ ⟨a.2, (coe_eta _ _).symm⟩, fun ⟨hb, ha⟩ => ha.symm ▸ rfl⟩
 
-theorem coe_injective : injective (coe : Subtype p → α) := fun a b => Subtype.ext
+theorem coe_injective : Injective (coe : Subtype p → α) := fun a b => Subtype.ext
 
-theorem val_injective : injective (@val _ p) :=
+theorem val_injective : Injective (@val _ p) :=
   coe_injective
+
+theorem coe_inj {a b : Subtype p} : (a : α) = b ↔ a = b :=
+  coe_injective.eq_iff
+
+theorem val_inj {a b : Subtype p} : a.val = b.val ↔ a = b :=
+  coe_inj
+
+@[simp]
+theorem _root_.exists_eq_subtype_mk_iff {a : Subtype p} {b : α} : (∃ h : p b, a = Subtype.mk b h) ↔ ↑a = b :=
+  coe_eq_iff.symm
+
+@[simp]
+theorem _root_.exists_subtype_mk_eq_iff {a : Subtype p} {b : α} : (∃ h : p b, Subtype.mk b h = a) ↔ b = a := by
+  simp only [@eq_comm _ b, exists_eq_subtype_mk_iff, @eq_comm _ _ a]
 
 /-- Restrict a (dependent) function to a subtype -/
 def restrict {α} {β : α → Type _} (f : ∀ x, β x) (p : α → Prop) (x : Subtype p) : β x.1 :=
@@ -110,11 +124,11 @@ theorem restrict_apply {α} {β : α → Type _} (f : ∀ x, β x) (p : α → P
 theorem restrict_def {α β} (f : α → β) (p : α → Prop) : restrict f p = f ∘ coe := by
   rfl
 
-theorem restrict_injective {α β} {f : α → β} (p : α → Prop) (h : injective f) : injective (restrict f p) :=
+theorem restrict_injective {α β} {f : α → β} (p : α → Prop) (h : Injective f) : Injective (restrict f p) :=
   h.comp coe_injective
 
 theorem surjective_restrict {α} {β : α → Type _} [ne : ∀ a, Nonempty (β a)] (p : α → Prop) :
-    surjective fun f : ∀ x, β x => restrict f p := by
+    Surjective fun f : ∀ x, β x => restrict f p := by
   let this' := Classical.decPred p
   refine' fun f => ⟨fun x => if h : p x then f ⟨x, h⟩ else Nonempty.some (Ne x), funext <| _⟩
   rintro ⟨x, hx⟩
@@ -124,18 +138,18 @@ theorem surjective_restrict {α} {β : α → Type _} [ne : ∀ a, Nonempty (β 
 @[simps]
 def coind {α β} (f : α → β) {p : β → Prop} (h : ∀ a, p (f a)) : α → Subtype p := fun a => ⟨f a, h a⟩
 
-theorem coind_injective {α β} {f : α → β} {p : β → Prop} (h : ∀ a, p (f a)) (hf : injective f) :
-    injective (coind f h) := fun x y hxy =>
+theorem coind_injective {α β} {f : α → β} {p : β → Prop} (h : ∀ a, p (f a)) (hf : Injective f) :
+    Injective (coind f h) := fun x y hxy =>
   hf <| by
     apply congr_argₓ Subtype.val hxy
 
-theorem coind_surjective {α β} {f : α → β} {p : β → Prop} (h : ∀ a, p (f a)) (hf : surjective f) :
-    surjective (coind f h) := fun x =>
+theorem coind_surjective {α β} {f : α → β} {p : β → Prop} (h : ∀ a, p (f a)) (hf : Surjective f) :
+    Surjective (coind f h) := fun x =>
   let ⟨a, ha⟩ := hf x
   ⟨a, coe_injective ha⟩
 
-theorem coind_bijective {α β} {f : α → β} {p : β → Prop} (h : ∀ a, p (f a)) (hf : bijective f) :
-    bijective (coind f h) :=
+theorem coind_bijective {α β} {f : α → β} {p : β → Prop} (h : ∀ a, p (f a)) (hf : Bijective f) :
+    Bijective (coind f h) :=
   ⟨coind_injective h hf.1, coind_surjective h hf.2⟩
 
 /-- Restriction of a function to a function on subtypes. -/
@@ -150,11 +164,11 @@ theorem map_comp {p : α → Prop} {q : β → Prop} {r : γ → Prop} {x : Subt
 theorem map_id {p : α → Prop} {h : ∀ a, p a → p (id a)} : map (@id α) h = id :=
   funext fun ⟨v, h⟩ => rfl
 
-theorem map_injective {p : α → Prop} {q : β → Prop} {f : α → β} (h : ∀ a, p a → q (f a)) (hf : injective f) :
-    injective (map f h) :=
+theorem map_injective {p : α → Prop} {q : β → Prop} {f : α → β} (h : ∀ a, p a → q (f a)) (hf : Injective f) :
+    Injective (map f h) :=
   coind_injective _ <| hf.comp coe_injective
 
-theorem map_involutive {p : α → Prop} {f : α → α} (h : ∀ a, p a → p (f a)) (hf : involutive f) : involutive (map f h) :=
+theorem map_involutive {p : α → Prop} {f : α → α} (h : ∀ a, p a → p (f a)) (hf : Involutive f) : Involutive (map f h) :=
   fun x => Subtype.ext (hf x)
 
 instance [HasEquivₓ α] (p : α → Prop) : HasEquivₓ (Subtype p) :=
@@ -178,7 +192,7 @@ theorem Equivalenceₓ (p : α → Prop) : Equivalenceₓ (@HasEquivₓ.Equiv (S
   mk_equivalence _ Subtype.reflₓ (@Subtype.symmₓ _ p _) (@Subtype.transₓ _ p _)
 
 instance (p : α → Prop) : Setoidₓ (Subtype p) :=
-  Setoidₓ.mk (· ≈ ·) (Equivalenceₓ p)
+  Setoidₓ.mk (· ≈ ·) (equivalenceₓ p)
 
 end Subtype
 

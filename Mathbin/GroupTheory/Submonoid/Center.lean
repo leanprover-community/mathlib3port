@@ -28,18 +28,18 @@ def center [Mul M] : Set M :=
   { z | ∀ m, m * z = z * m }
 
 @[to_additive mem_add_center]
-theorem mem_center_iff [Mul M] {z : M} : z ∈ center M ↔ ∀ g, g * z = z * g :=
+theorem mem_center_iff [Mul M] {z : M} : z ∈ Center M ↔ ∀ g, g * z = z * g :=
   Iff.rfl
 
-instance decidable_mem_center [Mul M] [DecidableEq M] [Fintype M] : DecidablePred (· ∈ center M) := fun _ =>
+instance decidable_mem_center [Mul M] [DecidableEq M] [Fintype M] : DecidablePred (· ∈ Center M) := fun _ =>
   decidableOfIff' _ (mem_center_iff M)
 
 @[simp, to_additive zero_mem_add_center]
-theorem one_mem_center [MulOneClass M] : (1 : M) ∈ Set.Center M := by
+theorem one_mem_center [MulOneClassₓ M] : (1 : M) ∈ Set.Center M := by
   simp [mem_center_iff]
 
 @[simp]
-theorem zero_mem_center [MulZeroClass M] : (0 : M) ∈ Set.Center M := by
+theorem zero_mem_center [MulZeroClassₓ M] : (0 : M) ∈ Set.Center M := by
   simp [mem_center_iff]
 
 variable {M}
@@ -54,7 +54,7 @@ theorem inv_mem_center [Groupₓ M] {a : M} (ha : a ∈ Set.Center M) : a⁻¹ �
   rw [← inv_inj, mul_inv_rev, inv_invₓ, ← ha, mul_inv_rev, inv_invₓ]
 
 @[simp]
-theorem add_mem_center [Distrib M] {a b : M} (ha : a ∈ Set.Center M) (hb : b ∈ Set.Center M) : a + b ∈ Set.Center M :=
+theorem add_mem_center [Distribₓ M] {a b : M} (ha : a ∈ Set.Center M) (hb : b ∈ Set.Center M) : a + b ∈ Set.Center M :=
   fun c => by
   rw [add_mulₓ, mul_addₓ, ha c, hb c]
 
@@ -63,10 +63,10 @@ theorem neg_mem_center [Ringₓ M] {a : M} (ha : a ∈ Set.Center M) : -a ∈ Se
   rw [← neg_mul_comm, ha (-c), neg_mul_comm]
 
 @[to_additive subset_add_center_add_units]
-theorem subset_center_units [Monoidₓ M] : (coe : (M)ˣ → M) ⁻¹' center M ⊆ Set.Center (M)ˣ := fun a ha b =>
+theorem subset_center_units [Monoidₓ M] : (coe : (M)ˣ → M) ⁻¹' Center M ⊆ Set.Center (M)ˣ := fun a ha b =>
   Units.ext <| ha _
 
-theorem center_units_subset [GroupWithZeroₓ M] : Set.Center (M)ˣ ⊆ (coe : (M)ˣ → M) ⁻¹' center M := fun a ha b => by
+theorem center_units_subset [GroupWithZeroₓ M] : Set.Center (M)ˣ ⊆ (coe : (M)ˣ → M) ⁻¹' Center M := fun a ha b => by
   obtain rfl | hb := eq_or_ne b 0
   · rw [zero_mul, mul_zero]
     
@@ -74,8 +74,8 @@ theorem center_units_subset [GroupWithZeroₓ M] : Set.Center (M)ˣ ⊆ (coe : (
     
 
 /-- In a group with zero, the center of the units is the preimage of the center. -/
-theorem center_units_eq [GroupWithZeroₓ M] : Set.Center (M)ˣ = (coe : (M)ˣ → M) ⁻¹' center M :=
-  subset.antisymm center_units_subset subset_center_units
+theorem center_units_eq [GroupWithZeroₓ M] : Set.Center (M)ˣ = (coe : (M)ˣ → M) ⁻¹' Center M :=
+  Subset.antisymm center_units_subset subset_center_units
 
 @[simp]
 theorem inv_mem_center₀ [GroupWithZeroₓ M] {a : M} (ha : a ∈ Set.Center M) : a⁻¹ ∈ Set.Center M := by
@@ -101,8 +101,8 @@ theorem div_mem_center₀ [GroupWithZeroₓ M] {a b : M} (ha : a ∈ Set.Center 
 variable (M)
 
 @[simp, to_additive add_center_eq_univ]
-theorem center_eq_univ [CommSemigroupₓ M] : center M = Set.Univ :=
-  (subset.antisymm (subset_univ _)) fun x _ y => mul_comm y x
+theorem center_eq_univ [CommSemigroupₓ M] : Center M = Set.Univ :=
+  (Subset.antisymm (subset_univ _)) fun x _ y => mul_comm y x
 
 end Set
 
@@ -134,7 +134,7 @@ instance decidable_mem_center [DecidableEq M] [Fintype M] : DecidablePred (· �
 
 /-- The center of a monoid is commutative. -/
 instance : CommMonoidₓ (center M) :=
-  { (center M).toMonoid with mul_comm := fun a b => Subtype.ext <| b.prop _ }
+  { (center M).toMonoid with mul_comm := fun a b => Subtype.ext <| b.Prop _ }
 
 end
 

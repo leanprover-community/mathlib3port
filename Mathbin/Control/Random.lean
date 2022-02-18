@@ -125,7 +125,7 @@ end Rand
 namespace Io
 
 private def accum_char (w : ℕ) (c : Charₓ) : ℕ :=
-  c.to_nat + 256 * w
+  c.toNat + 256 * w
 
 /-- create and a seed a random number generator -/
 def mk_generator : Io StdGen := do
@@ -135,12 +135,12 @@ def mk_generator : Io StdGen := do
 variable {α : Type}
 
 /-- Run `cmd` using a randomly seeded random number generator -/
-def run_rand (cmd : _root_.rand α) : Io α := do
+def run_rand (cmd : Rand α) : Io α := do
   let g ← Io.mkGenerator
-  return <| (cmd.run ⟨g⟩).1
+  return <| (cmd ⟨g⟩).1
 
 /-- Run `cmd` using the provided seed. -/
-def run_rand_with (seed : ℕ) (cmd : _root_.rand α) : Io α :=
+def run_rand_with (seed : ℕ) (cmd : Rand α) : Io α :=
   return <| (cmd.run ⟨mkStdGenₓ seed⟩).1
 
 section Random
@@ -183,7 +183,7 @@ unsafe def mk_generator : tactic StdGen := do
 in the tactic monad -/
 unsafe def run_rand {α : Type u} (cmd : Rand α) : tactic α := do
   let ⟨g⟩ ← tactic.up mk_generator
-  return (cmd.run ⟨g⟩).1
+  return (cmd ⟨g⟩).1
 
 variable {α : Type u}
 
@@ -229,7 +229,7 @@ variable {n : ℕ} [Fact (0 < n)]
 
 /-- generate a `fin` randomly -/
 protected def Random : RandG g (Finₓ n) :=
-  ⟨fun ⟨g⟩ => Prod.map of_nat' up <| randNatₓ g 0 n⟩
+  ⟨fun ⟨g⟩ => Prod.map ofNat' up <| randNatₓ g 0 n⟩
 
 end Finₓ
 
@@ -239,7 +239,7 @@ instance natBoundedRandom : BoundedRandom ℕ where
   randomR := fun g inst x y hxy => do
     let z ← @Finₓ.random g inst (succ <| y - x) _
     pure
-        ⟨z.val + x, Nat.le_add_leftₓ _ _, by
+        ⟨z + x, Nat.le_add_leftₓ _ _, by
           rw [← le_tsub_iff_right hxy] <;> apply le_of_succ_le_succ z.is_lt⟩
 
 /-- This `bounded_random` interval generates integers between `x` and
@@ -263,7 +263,7 @@ instance finRandom (n : ℕ) [Fact (0 < n)] : Random (Finₓ n) where
 instance finBoundedRandom (n : ℕ) : BoundedRandom (Finₓ n) where
   randomR := fun g inst x y : Finₓ n p => do
     let ⟨r, h, h'⟩ ← @Rand.randomR ℕ g inst _ _ x.val y.val p
-    pure ⟨⟨r, lt_of_le_of_ltₓ h' y.is_lt⟩, h, h'⟩
+    pure ⟨⟨r, lt_of_le_of_ltₓ h' y⟩, h, h'⟩
 
 /-- A shortcut for creating a `random (fin n)` instance from
 a proof that `0 < n` rather than on matching on `fin (succ n)`  -/
@@ -272,7 +272,7 @@ def randomFinOfPos : ∀ {n : ℕ} h : 0 < n, Random (Finₓ n)
   | 0, h => False.elim (Nat.not_lt_zeroₓ _ h)
 
 theorem bool_of_nat_mem_Icc_of_mem_Icc_to_nat (x y : Bool) (n : ℕ) :
-    n ∈ (x.to_nat .. y.to_nat) → Bool.ofNat n ∈ (x .. y) := by
+    n ∈ (x.toNat .. y.toNat) → Bool.ofNat n ∈ (x .. y) := by
   simp only [and_imp, Set.mem_Icc]
   intro h₀ h₁
   constructor <;> [have h₂ := Bool.of_nat_le_of_nat h₀, have h₂ := Bool.of_nat_le_of_nat h₁] <;>
@@ -284,7 +284,7 @@ instance : Random Bool where
 instance : BoundedRandom Bool where
   randomR := fun g _inst x y p =>
     Subtype.map Bool.ofNat (bool_of_nat_mem_Icc_of_mem_Icc_to_nat x y) <$>
-      @BoundedRandom.randomR ℕ _ _ g _inst x.to_nat y.to_nat (Bool.to_nat_le_to_nat p)
+      @BoundedRandom.randomR ℕ _ _ g _inst x.toNat y.toNat (Bool.to_nat_le_to_nat p)
 
 open_locale FinFact
 
@@ -294,14 +294,14 @@ def Bitvec.random (n : ℕ) : RandG g (Bitvec n) :=
 
 /-- generate a random bit vector of length `n` -/
 def Bitvec.randomR {n : ℕ} (x y : Bitvec n) (h : x ≤ y) : RandG g (x .. y) :=
-  have h' : ∀ a : Finₓ (2 ^ n), a ∈ (x.to_fin .. y.to_fin) → Bitvec.ofFin a ∈ (x .. y) := by
+  have h' : ∀ a : Finₓ (2 ^ n), a ∈ (x.toFin .. y.toFin) → Bitvec.ofFin a ∈ (x .. y) := by
     simp only [and_imp, Set.mem_Icc]
     intro z h₀ h₁
     replace h₀ := Bitvec.of_fin_le_of_fin_of_le h₀
     replace h₁ := Bitvec.of_fin_le_of_fin_of_le h₁
     rw [Bitvec.of_fin_to_fin] at h₀ h₁
     constructor <;> assumption
-  Subtype.map Bitvec.ofFin h' <$> Rand.randomR x.to_fin y.to_fin (Bitvec.to_fin_le_to_fin_of_le h)
+  Subtype.map Bitvec.ofFin h' <$> Rand.randomR x.toFin y.toFin (Bitvec.to_fin_le_to_fin_of_le h)
 
 open Nat
 

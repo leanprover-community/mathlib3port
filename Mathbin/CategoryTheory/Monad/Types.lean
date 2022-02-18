@@ -18,13 +18,13 @@ section
 
 universe u
 
-variable (m : Type u → Type u) [_root_.monad m] [IsLawfulMonad m]
+variable (m : Type u → Type u) [Monadₓ m] [IsLawfulMonad m]
 
 /-- A lawful `control.monad` gives a category theory `monad` on the category of types.
 -/
 @[simps]
-def of_type_monad : Monadₓ (Type u) where
-  toFunctor := of_type_functor m
+def of_type_monad : Monad (Type u) where
+  toFunctor := ofTypeFunctor m
   η' := ⟨@pure m _, fun α β f => (IsLawfulApplicative.map_comp_pure f).symm⟩
   μ' := ⟨@mjoin m _, fun α β f : α → β => funext fun a => mjoin_map_map f a⟩
   assoc' := fun α => funext fun a => mjoin_map_mjoin a
@@ -35,7 +35,7 @@ def of_type_monad : Monadₓ (Type u) where
 category-theoretic version, provided the monad is lawful.
 -/
 @[simps]
-def Eq : Kleisli m ≌ kleisli (of_type_monad m) where
+def Eq : KleisliCat m ≌ Kleisli (of_type_monad m) where
   Functor :=
     { obj := fun X => X, map := fun X Y f => f, map_id' := fun X => rfl,
       map_comp' := fun X Y Z f g => by
@@ -55,7 +55,7 @@ def Eq : Kleisli m ≌ kleisli (of_type_monad m) where
     change f >=> pure = pure >=> f
     simp' with functor_norm
   counitIso :=
-    nat_iso.of_components (fun X => iso.refl X) fun X Y f => by
+    NatIso.ofComponents (fun X => Iso.refl X) fun X Y f => by
       tidy
 
 end

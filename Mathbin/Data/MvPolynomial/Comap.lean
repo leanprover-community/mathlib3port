@@ -27,11 +27,11 @@ variable {σ : Type _} {τ : Type _} {υ : Type _} {R : Type _} [CommSemiringₓ
 and a variable evaluation `v : τ → R`,
 `comap f v` produces a variable evaluation `σ → R`.
 -/
-noncomputable def comap (f : MvPolynomial σ R →ₐ[R] MvPolynomial τ R) : (τ → R) → σ → R := fun x i => aeval x (f (X i))
+noncomputable def comap (f : MvPolynomial σ R →ₐ[R] MvPolynomial τ R) : (τ → R) → σ → R := fun x i => aeval x (f (x i))
 
 @[simp]
 theorem comap_apply (f : MvPolynomial σ R →ₐ[R] MvPolynomial τ R) (x : τ → R) (i : σ) :
-    comap f x i = aeval x (f (X i)) :=
+    comap f x i = aeval x (f (x i)) :=
   rfl
 
 @[simp]
@@ -98,12 +98,12 @@ noncomputable def comap_equiv (f : MvPolynomial σ R ≃ₐ[R] MvPolynomial τ R
     simp only [AlgHom.id_apply, AlgEquiv.symm_comp]
 
 @[simp]
-theorem comap_equiv_coe (f : MvPolynomial σ R ≃ₐ[R] MvPolynomial τ R) : (comap_equiv f : (τ → R) → σ → R) = comap f :=
+theorem comap_equiv_coe (f : MvPolynomial σ R ≃ₐ[R] MvPolynomial τ R) : (comapEquiv f : (τ → R) → σ → R) = comap f :=
   rfl
 
 @[simp]
 theorem comap_equiv_symm_coe (f : MvPolynomial σ R ≃ₐ[R] MvPolynomial τ R) :
-    ((comap_equiv f).symm : (σ → R) → τ → R) = comap f.symm :=
+    ((comapEquiv f).symm : (σ → R) → τ → R) = comap f.symm :=
   rfl
 
 end MvPolynomial

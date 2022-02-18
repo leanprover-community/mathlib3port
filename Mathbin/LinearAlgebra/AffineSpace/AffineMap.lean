@@ -69,11 +69,11 @@ def to_affine_map : V₁ →ᵃ[k] V₂ where
   map_vadd' := fun p v => f.map_add v p
 
 @[simp]
-theorem coe_to_affine_map : ⇑f.to_affine_map = f :=
+theorem coe_to_affine_map : ⇑f.toAffineMap = f :=
   rfl
 
 @[simp]
-theorem to_affine_map_linear : f.to_affine_map.linear = f :=
+theorem to_affine_map_linear : f.toAffineMap.linear = f :=
   rfl
 
 end LinearMap
@@ -95,7 +95,7 @@ theorem coe_mk (f : P1 → P2) linear add : ((mk f linear add : P1 →ᵃ[k] P2)
 
 /-- `to_fun` is the same as the result of coercing to a function. -/
 @[simp]
-theorem to_fun_eq_coe (f : P1 →ᵃ[k] P2) : f.to_fun = ⇑f :=
+theorem to_fun_eq_coe (f : P1 →ᵃ[k] P2) : f.toFun = ⇑f :=
   rfl
 
 /-- An affine map on the result of adding a vector to a point produces
@@ -202,6 +202,17 @@ instance : AddCommGroupₓ (P1 →ᵃ[k] V2) where
   add_zero := fun f => ext fun p => add_zeroₓ (f p)
   add_comm := fun f g => ext fun p => add_commₓ (f p) (g p)
   add_left_neg := fun f => ext fun p => add_left_negₓ (f p)
+  nsmul := fun n f =>
+    ⟨n • f, n • f.linear, fun p v => by
+      simp ⟩
+  nsmul_zero' := fun f => ext fun p => AddMonoidₓ.nsmul_zero' _
+  nsmul_succ' := fun n f => ext fun p => AddMonoidₓ.nsmul_succ' _ _
+  zsmul := fun z f =>
+    ⟨z • f, z • f.linear, fun p v => by
+      simp ⟩
+  zsmul_zero' := fun f => ext fun p => SubNegMonoidₓ.zsmul_zero' _
+  zsmul_succ' := fun z f => ext fun p => SubNegMonoidₓ.zsmul_succ' _ _
+  zsmul_neg' := fun z f => ext fun p => SubNegMonoidₓ.zsmul_neg' _ _
 
 @[simp, norm_cast]
 theorem coe_zero : ⇑(0 : P1 →ᵃ[k] V2) = 0 :=
@@ -413,101 +424,101 @@ omit V2
 def line_map (p₀ p₁ : P1) : k →ᵃ[k] P1 :=
   ((LinearMap.id : k →ₗ[k] k).smulRight (p₁ -ᵥ p₀)).toAffineMap +ᵥ const k k p₀
 
-theorem coe_line_map (p₀ p₁ : P1) : (line_map p₀ p₁ : k → P1) = fun c => c • (p₁ -ᵥ p₀) +ᵥ p₀ :=
+theorem coe_line_map (p₀ p₁ : P1) : (lineMap p₀ p₁ : k → P1) = fun c => c • (p₁ -ᵥ p₀) +ᵥ p₀ :=
   rfl
 
-theorem line_map_apply (p₀ p₁ : P1) (c : k) : line_map p₀ p₁ c = c • (p₁ -ᵥ p₀) +ᵥ p₀ :=
+theorem line_map_apply (p₀ p₁ : P1) (c : k) : lineMap p₀ p₁ c = c • (p₁ -ᵥ p₀) +ᵥ p₀ :=
   rfl
 
-theorem line_map_apply_module' (p₀ p₁ : V1) (c : k) : line_map p₀ p₁ c = c • (p₁ - p₀) + p₀ :=
+theorem line_map_apply_module' (p₀ p₁ : V1) (c : k) : lineMap p₀ p₁ c = c • (p₁ - p₀) + p₀ :=
   rfl
 
-theorem line_map_apply_module (p₀ p₁ : V1) (c : k) : line_map p₀ p₁ c = (1 - c) • p₀ + c • p₁ := by
+theorem line_map_apply_module (p₀ p₁ : V1) (c : k) : lineMap p₀ p₁ c = (1 - c) • p₀ + c • p₁ := by
   simp [line_map_apply_module', smul_sub, sub_smul] <;> abel
 
 omit V1
 
-theorem line_map_apply_ring' (a b c : k) : line_map a b c = c * (b - a) + a :=
+theorem line_map_apply_ring' (a b c : k) : lineMap a b c = c * (b - a) + a :=
   rfl
 
-theorem line_map_apply_ring (a b c : k) : line_map a b c = (1 - c) * a + c * b :=
+theorem line_map_apply_ring (a b c : k) : lineMap a b c = (1 - c) * a + c * b :=
   line_map_apply_module a b c
 
 include V1
 
-theorem line_map_vadd_apply (p : P1) (v : V1) (c : k) : line_map p (v +ᵥ p) c = c • v +ᵥ p := by
+theorem line_map_vadd_apply (p : P1) (v : V1) (c : k) : lineMap p (v +ᵥ p) c = c • v +ᵥ p := by
   rw [line_map_apply, vadd_vsub]
 
 @[simp]
-theorem line_map_linear (p₀ p₁ : P1) : (line_map p₀ p₁ : k →ᵃ[k] P1).linear = LinearMap.id.smulRight (p₁ -ᵥ p₀) :=
+theorem line_map_linear (p₀ p₁ : P1) : (lineMap p₀ p₁ : k →ᵃ[k] P1).linear = LinearMap.id.smulRight (p₁ -ᵥ p₀) :=
   add_zeroₓ _
 
-theorem line_map_same_apply (p : P1) (c : k) : line_map p p c = p := by
+theorem line_map_same_apply (p : P1) (c : k) : lineMap p p c = p := by
   simp [line_map_apply]
 
 @[simp]
-theorem line_map_same (p : P1) : line_map p p = const k k p :=
+theorem line_map_same (p : P1) : lineMap p p = const k k p :=
   ext <| line_map_same_apply p
 
 @[simp]
-theorem line_map_apply_zero (p₀ p₁ : P1) : line_map p₀ p₁ (0 : k) = p₀ := by
+theorem line_map_apply_zero (p₀ p₁ : P1) : lineMap p₀ p₁ (0 : k) = p₀ := by
   simp [line_map_apply]
 
 @[simp]
-theorem line_map_apply_one (p₀ p₁ : P1) : line_map p₀ p₁ (1 : k) = p₁ := by
+theorem line_map_apply_one (p₀ p₁ : P1) : lineMap p₀ p₁ (1 : k) = p₁ := by
   simp [line_map_apply]
 
 include V2
 
 @[simp]
-theorem apply_line_map (f : P1 →ᵃ[k] P2) (p₀ p₁ : P1) (c : k) : f (line_map p₀ p₁ c) = line_map (f p₀) (f p₁) c := by
+theorem apply_line_map (f : P1 →ᵃ[k] P2) (p₀ p₁ : P1) (c : k) : f (lineMap p₀ p₁ c) = lineMap (f p₀) (f p₁) c := by
   simp [line_map_apply]
 
 @[simp]
-theorem comp_line_map (f : P1 →ᵃ[k] P2) (p₀ p₁ : P1) : f.comp (line_map p₀ p₁) = line_map (f p₀) (f p₁) :=
+theorem comp_line_map (f : P1 →ᵃ[k] P2) (p₀ p₁ : P1) : f.comp (lineMap p₀ p₁) = lineMap (f p₀) (f p₁) :=
   ext <| f.apply_line_map p₀ p₁
 
 @[simp]
-theorem fst_line_map (p₀ p₁ : P1 × P2) (c : k) : (line_map p₀ p₁ c).1 = line_map p₀.1 p₁.1 c :=
+theorem fst_line_map (p₀ p₁ : P1 × P2) (c : k) : (lineMap p₀ p₁ c).1 = lineMap p₀.1 p₁.1 c :=
   fst.apply_line_map p₀ p₁ c
 
 @[simp]
-theorem snd_line_map (p₀ p₁ : P1 × P2) (c : k) : (line_map p₀ p₁ c).2 = line_map p₀.2 p₁.2 c :=
+theorem snd_line_map (p₀ p₁ : P1 × P2) (c : k) : (lineMap p₀ p₁ c).2 = lineMap p₀.2 p₁.2 c :=
   snd.apply_line_map p₀ p₁ c
 
 omit V2
 
-theorem line_map_symm (p₀ p₁ : P1) : line_map p₀ p₁ = (line_map p₁ p₀).comp (line_map (1 : k) (0 : k)) := by
+theorem line_map_symm (p₀ p₁ : P1) : lineMap p₀ p₁ = (lineMap p₁ p₀).comp (lineMap (1 : k) (0 : k)) := by
   rw [comp_line_map]
   simp
 
-theorem line_map_apply_one_sub (p₀ p₁ : P1) (c : k) : line_map p₀ p₁ (1 - c) = line_map p₁ p₀ c := by
+theorem line_map_apply_one_sub (p₀ p₁ : P1) (c : k) : lineMap p₀ p₁ (1 - c) = lineMap p₁ p₀ c := by
   rw [line_map_symm p₀, comp_apply]
   congr
   simp [line_map_apply]
 
 @[simp]
-theorem line_map_vsub_left (p₀ p₁ : P1) (c : k) : line_map p₀ p₁ c -ᵥ p₀ = c • (p₁ -ᵥ p₀) :=
+theorem line_map_vsub_left (p₀ p₁ : P1) (c : k) : lineMap p₀ p₁ c -ᵥ p₀ = c • (p₁ -ᵥ p₀) :=
   vadd_vsub _ _
 
 @[simp]
-theorem left_vsub_line_map (p₀ p₁ : P1) (c : k) : p₀ -ᵥ line_map p₀ p₁ c = c • (p₀ -ᵥ p₁) := by
+theorem left_vsub_line_map (p₀ p₁ : P1) (c : k) : p₀ -ᵥ lineMap p₀ p₁ c = c • (p₀ -ᵥ p₁) := by
   rw [← neg_vsub_eq_vsub_rev, line_map_vsub_left, ← smul_neg, neg_vsub_eq_vsub_rev]
 
 @[simp]
-theorem line_map_vsub_right (p₀ p₁ : P1) (c : k) : line_map p₀ p₁ c -ᵥ p₁ = (1 - c) • (p₀ -ᵥ p₁) := by
+theorem line_map_vsub_right (p₀ p₁ : P1) (c : k) : lineMap p₀ p₁ c -ᵥ p₁ = (1 - c) • (p₀ -ᵥ p₁) := by
   rw [← line_map_apply_one_sub, line_map_vsub_left]
 
 @[simp]
-theorem right_vsub_line_map (p₀ p₁ : P1) (c : k) : p₁ -ᵥ line_map p₀ p₁ c = (1 - c) • (p₁ -ᵥ p₀) := by
+theorem right_vsub_line_map (p₀ p₁ : P1) (c : k) : p₁ -ᵥ lineMap p₀ p₁ c = (1 - c) • (p₁ -ᵥ p₀) := by
   rw [← line_map_apply_one_sub, left_vsub_line_map]
 
 theorem line_map_vadd_line_map (v₁ v₂ : V1) (p₁ p₂ : P1) (c : k) :
-    line_map v₁ v₂ c +ᵥ line_map p₁ p₂ c = line_map (v₁ +ᵥ p₁) (v₂ +ᵥ p₂) c :=
+    lineMap v₁ v₂ c +ᵥ lineMap p₁ p₂ c = lineMap (v₁ +ᵥ p₁) (v₂ +ᵥ p₂) c :=
   ((fst : V1 × P1 →ᵃ[k] V1) +ᵥ snd).apply_line_map (v₁, p₁) (v₂, p₂) c
 
 theorem line_map_vsub_line_map (p₁ p₂ p₃ p₄ : P1) (c : k) :
-    line_map p₁ p₂ c -ᵥ line_map p₃ p₄ c = line_map (p₁ -ᵥ p₃) (p₂ -ᵥ p₄) c := by
+    lineMap p₁ p₂ c -ᵥ lineMap p₃ p₄ c = lineMap (p₁ -ᵥ p₃) (p₂ -ᵥ p₄) c := by
   let this' : affine_space (V1 × V1) (P1 × P1) := Prod.addTorsor <;>
     exact ((fst : P1 × P1 →ᵃ[k] P1) -ᵥ (snd : P1 × P1 →ᵃ[k] P1)).apply_line_map (_, _) (_, _) c
 
@@ -557,7 +568,7 @@ theorem proj_apply (i : ι) (f : ∀ i, P i) : @proj k _ ι V P _ _ _ i f = f i 
 theorem proj_linear (i : ι) : (@proj k _ ι V P _ _ _ i).linear = @LinearMap.proj k ι _ V _ _ i :=
   rfl
 
-theorem pi_line_map_apply (f g : ∀ i, P i) (c : k) (i : ι) : line_map f g c i = line_map (f i) (g i) c :=
+theorem pi_line_map_apply (f g : ∀ i, P i) (c : k) (i : ι) : lineMap f g c i = lineMap (f i) (g i) c :=
   (proj i : (∀ i, P i) →ᵃ[k] P i).apply_line_map f g c
 
 end
@@ -566,14 +577,22 @@ end AffineMap
 
 namespace AffineMap
 
-variable {k : Type _} {V1 : Type _} {P1 : Type _} {V2 : Type _} [CommRingₓ k] [AddCommGroupₓ V1] [Module k V1]
-  [affine_space V1 P1] [AddCommGroupₓ V2] [Module k V2]
+variable {R k V1 P1 V2 : Type _}
+
+section Ringₓ
+
+variable [Ringₓ k] [AddCommGroupₓ V1] [affine_space V1 P1] [AddCommGroupₓ V2]
+
+variable [Module k V1] [Module k V2]
 
 include V1
 
-/-- If `k` is a commutative ring, then the set of affine maps with codomain in a `k`-module
-is a `k`-module. -/
-instance : Module k (P1 →ᵃ[k] V2) where
+section DistribMulAction
+
+variable [Monoidₓ R] [DistribMulAction R V2] [SmulCommClass k R V2]
+
+/-- The space of affine maps to a module inherits an `R`-action from the action on its codomain. -/
+instance : DistribMulAction R (P1 →ᵃ[k] V2) where
   smul := fun c f =>
     ⟨c • f, c • f.linear, fun p v => by
       simp [smul_add]⟩
@@ -581,22 +600,38 @@ instance : Module k (P1 →ᵃ[k] V2) where
   mul_smul := fun c₁ c₂ f => ext fun p => mul_smul _ _ _
   smul_add := fun c f g => ext fun p => smul_add _ _ _
   smul_zero := fun c => ext fun p => smul_zero _
-  add_smul := fun c₁ c₂ f => ext fun p => add_smul _ _ _
-  zero_smul := fun f => ext fun p => zero_smul _ _
 
 @[simp]
-theorem coe_smul (c : k) (f : P1 →ᵃ[k] V2) : ⇑(c • f) = c • f :=
+theorem coe_smul (c : R) (f : P1 →ᵃ[k] V2) : ⇑(c • f) = c • f :=
   rfl
 
 @[simp]
-theorem smul_linear (t : k) (f : P1 →ᵃ[k] V2) : (t • f).linear = t • f.linear :=
+theorem smul_linear (t : R) (f : P1 →ᵃ[k] V2) : (t • f).linear = t • f.linear :=
   rfl
+
+instance [DistribMulAction (Rᵐᵒᵖ) V2] [IsCentralScalar R V2] : IsCentralScalar R (P1 →ᵃ[k] V2) where
+  op_smul_eq_smul := fun r x => ext fun _ => op_smul_eq_smul _ _
+
+end DistribMulAction
+
+section Module
+
+variable [Semiringₓ R] [Module R V2] [SmulCommClass k R V2]
+
+/-- The space of affine maps taking values in an `R`-module is an `R`-module. -/
+instance : Module R (P1 →ᵃ[k] V2) :=
+  { AffineMap.distribMulAction with smul := · • ·, add_smul := fun c₁ c₂ f => ext fun p => add_smul _ _ _,
+    zero_smul := fun f => ext fun p => zero_smul _ _ }
+
+variable (R)
 
 /-- The space of affine maps between two modules is linearly equivalent to the product of the
 domain with the space of linear maps, by taking the value of the affine map at `(0 : V1)` and the
-linear part. -/
+linear part.
+
+See note [bundled maps over different rings]-/
 @[simps]
-def to_const_prod_linear_map : (V1 →ᵃ[k] V2) ≃ₗ[k] V2 × (V1 →ₗ[k] V2) where
+def to_const_prod_linear_map : (V1 →ᵃ[k] V2) ≃ₗ[R] V2 × (V1 →ₗ[k] V2) where
   toFun := fun f => ⟨f 0, f.linear⟩
   invFun := fun p => p.2.toAffineMap + const k V1 p.1
   left_inv := fun f => by
@@ -611,6 +646,18 @@ def to_const_prod_linear_map : (V1 →ᵃ[k] V2) ≃ₗ[k] V2 × (V1 →ₗ[k] V
   map_smul' := by
     simp
 
+end Module
+
+end Ringₓ
+
+section CommRingₓ
+
+variable [CommRingₓ k] [AddCommGroupₓ V1] [affine_space V1 P1] [AddCommGroupₓ V2]
+
+variable [Module k V1] [Module k V2]
+
+include V1
+
 /-- `homothety c r` is the homothety (also known as dilation) about `c` with scale factor `r`. -/
 def homothety (c : P1) (r : k) : P1 →ᵃ[k] P1 :=
   r • (id k P1 -ᵥ const k P1 c) +ᵥ const k P1 c
@@ -621,7 +668,7 @@ theorem homothety_def (c : P1) (r : k) : homothety c r = r • (id k P1 -ᵥ con
 theorem homothety_apply (c : P1) (r : k) (p : P1) : homothety c r p = r • (p -ᵥ c : V1) +ᵥ c :=
   rfl
 
-theorem homothety_eq_line_map (c : P1) (r : k) (p : P1) : homothety c r p = line_map c p r :=
+theorem homothety_eq_line_map (c : P1) (r : k) (p : P1) : homothety c r p = lineMap c p r :=
   rfl
 
 @[simp]
@@ -652,7 +699,7 @@ def homothety_hom (c : P1) : k →* P1 →ᵃ[k] P1 :=
   ⟨homothety c, homothety_one c, homothety_mul c⟩
 
 @[simp]
-theorem coe_homothety_hom (c : P1) : ⇑(homothety_hom c : k →* _) = homothety c :=
+theorem coe_homothety_hom (c : P1) : ⇑(homothetyHom c : k →* _) = homothety c :=
   rfl
 
 /-- `homothety` as an affine map. -/
@@ -660,8 +707,10 @@ def homothety_affine (c : P1) : k →ᵃ[k] P1 →ᵃ[k] P1 :=
   ⟨homothety c, (LinearMap.lsmul k _).flip (id k P1 -ᵥ const k P1 c), Function.swap (homothety_add c)⟩
 
 @[simp]
-theorem coe_homothety_affine (c : P1) : ⇑(homothety_affine c : k →ᵃ[k] _) = homothety c :=
+theorem coe_homothety_affine (c : P1) : ⇑(homothetyAffine c : k →ᵃ[k] _) = homothety c :=
   rfl
+
+end CommRingₓ
 
 end AffineMap
 

@@ -49,7 +49,7 @@ def any (p : α → Prop) (s : Streamₓ α) :=
 
 /-- `a ∈ s` means that `a = stream.nth n s` for some `n`. -/
 instance : HasMem α (Streamₓ α) :=
-  ⟨fun a s => any (fun b => a = b) s⟩
+  ⟨fun a s => Any (fun b => a = b) s⟩
 
 /-- Apply a function `f` to all elements of a stream `s`. -/
 def map (f : α → β) (s : Streamₓ α) : Streamₓ β := fun n => f (nth s n)
@@ -81,7 +81,7 @@ def unfolds (g : α → β) (f : α → α) (a : α) : Streamₓ β :=
 
 /-- Interleave two streams. -/
 def interleave (s₁ s₂ : Streamₓ α) : Streamₓ α :=
-  corec_on (s₁, s₂) (fun ⟨s₁, s₂⟩ => head s₁) fun ⟨s₁, s₂⟩ => (s₂, tail s₁)
+  corecOn (s₁, s₂) (fun ⟨s₁, s₂⟩ => head s₁) fun ⟨s₁, s₂⟩ => (s₂, tail s₁)
 
 infixl:65 "⋈" => interleave
 
@@ -98,7 +98,7 @@ def append_stream : List α → Streamₓ α → Streamₓ α
   | [], s => s
   | List.cons a l, s => a :: append_stream l s
 
-infixl:65 "++ₛ" => append_stream
+infixl:65 "++ₛ" => appendStream
 
 /-- `take n s` returns a list of the `n` first elements of stream `s` -/
 def take : ℕ → Streamₓ α → List α
@@ -125,13 +125,13 @@ def tails (s : Streamₓ α) : Streamₓ (Streamₓ α) :=
 
 /-- An auxiliary definition for `stream.inits`. -/
 def inits_core (l : List α) (s : Streamₓ α) : Streamₓ (List α) :=
-  corec_on (l, s) (fun ⟨a, b⟩ => a) fun p =>
+  corecOn (l, s) (fun ⟨a, b⟩ => a) fun p =>
     match p with
     | (l', s') => (l' ++ [head s'], tail s')
 
 /-- Nonempty initial segments of a stream. -/
 def inits (s : Streamₓ α) : Streamₓ (List α) :=
-  inits_core [head s] (tail s)
+  initsCore [head s] (tail s)
 
 /-- A constant stream, same as `stream.const`. -/
 def pure (a : α) : Streamₓ α :=

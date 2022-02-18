@@ -37,7 +37,7 @@ variable [LinearOrderedField 𝕜] [AddCommGroupₓ E] [OrderedAddCommGroup β] 
 
 /-- Convex **Jensen's inequality**, `finset.center_mass` version. -/
 theorem ConvexOn.map_center_mass_le (hf : ConvexOn 𝕜 s f) (h₀ : ∀, ∀ i ∈ t, ∀, 0 ≤ w i) (h₁ : 0 < ∑ i in t, w i)
-    (hmem : ∀, ∀ i ∈ t, ∀, p i ∈ s) : f (t.center_mass w p) ≤ t.center_mass w (f ∘ p) := by
+    (hmem : ∀, ∀ i ∈ t, ∀, p i ∈ s) : f (t.centerMass w p) ≤ t.centerMass w (f ∘ p) := by
   have hmem' : ∀, ∀ i ∈ t, ∀, (p i, (f ∘ p) i) ∈ { p : E × β | p.1 ∈ s ∧ f p.1 ≤ p.2 } := fun i hi =>
     ⟨hmem i hi, le_rfl⟩
   convert (hf.convex_epigraph.center_mass_mem h₀ h₁ hmem').2 <;>
@@ -45,7 +45,7 @@ theorem ConvexOn.map_center_mass_le (hf : ConvexOn 𝕜 s f) (h₀ : ∀, ∀ i 
 
 /-- Concave **Jensen's inequality**, `finset.center_mass` version. -/
 theorem ConcaveOn.le_map_center_mass (hf : ConcaveOn 𝕜 s f) (h₀ : ∀, ∀ i ∈ t, ∀, 0 ≤ w i) (h₁ : 0 < ∑ i in t, w i)
-    (hmem : ∀, ∀ i ∈ t, ∀, p i ∈ s) : t.center_mass w (f ∘ p) ≤ f (t.center_mass w p) :=
+    (hmem : ∀, ∀ i ∈ t, ∀, p i ∈ s) : t.centerMass w (f ∘ p) ≤ f (t.centerMass w p) :=
   @ConvexOn.map_center_mass_le 𝕜 E (OrderDual β) _ _ _ _ _ _ _ _ _ _ _ _ hf h₀ h₁ hmem
 
 /-- Convex **Jensen's inequality**, `finset.sum` version. -/
@@ -71,7 +71,7 @@ variable [LinearOrderedField 𝕜] [AddCommGroupₓ E] [LinearOrderedAddCommGrou
 /-- If a function `f` is convex on `s`, then the value it takes at some center of mass of points of
 `s` is less than the value it takes on one of those points. -/
 theorem ConvexOn.exists_ge_of_center_mass (h : ConvexOn 𝕜 s f) (hw₀ : ∀, ∀ i ∈ t, ∀, 0 ≤ w i) (hw₁ : 0 < ∑ i in t, w i)
-    (hp : ∀, ∀ i ∈ t, ∀, p i ∈ s) : ∃ i ∈ t, f (t.center_mass w p) ≤ f (p i) := by
+    (hp : ∀, ∀ i ∈ t, ∀, p i ∈ s) : ∃ i ∈ t, f (t.centerMass w p) ≤ f (p i) := by
   set y := t.center_mass w p
   suffices h : ∃ i ∈ t.filter fun i => w i ≠ 0, w i • f y ≤ w i • (f ∘ p) i
   · obtain ⟨i, hi, hfi⟩ := h
@@ -89,7 +89,7 @@ theorem ConvexOn.exists_ge_of_center_mass (h : ConvexOn 𝕜 s f) (hw₀ : ∀, 
 /-- If a function `f` is concave on `s`, then the value it takes at some center of mass of points of
 `s` is greater than the value it takes on one of those points. -/
 theorem ConcaveOn.exists_le_of_center_mass (h : ConcaveOn 𝕜 s f) (hw₀ : ∀, ∀ i ∈ t, ∀, 0 ≤ w i)
-    (hw₁ : 0 < ∑ i in t, w i) (hp : ∀, ∀ i ∈ t, ∀, p i ∈ s) : ∃ i ∈ t, f (p i) ≤ f (t.center_mass w p) :=
+    (hw₁ : 0 < ∑ i in t, w i) (hp : ∀, ∀ i ∈ t, ∀, p i ∈ s) : ∃ i ∈ t, f (p i) ≤ f (t.centerMass w p) :=
   @ConvexOn.exists_ge_of_center_mass 𝕜 E (OrderDual β) _ _ _ _ _ _ _ _ _ _ _ _ h hw₀ hw₁ hp
 
 /-- Maximum principle for convex functions. If a function `f` is convex on the convex hull of `s`,

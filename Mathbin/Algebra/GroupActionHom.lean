@@ -144,7 +144,7 @@ def to_quotient : G →[G] G ⧸ H :=
   ⟨coe, fun g x => rfl⟩
 
 @[simp]
-theorem to_quotient_apply (g : G) : to_quotient H g = g :=
+theorem to_quotient_apply (g : G) : toQuotient H g = g :=
   rfl
 
 end MulActionHom
@@ -163,18 +163,18 @@ notation:25 A " →+[" M:25 "] " B:0 => DistribMulActionHom M A B
 namespace DistribMulActionHom
 
 instance Coe : Coe (A →+[M] B) (A →+ B) :=
-  ⟨to_add_monoid_hom⟩
+  ⟨toAddMonoidHom⟩
 
 instance has_coe' : Coe (A →+[M] B) (A →[M] B) :=
-  ⟨to_mul_action_hom⟩
+  ⟨toMulActionHom⟩
 
 instance : CoeFun (A →+[M] B) fun _ => A → B :=
-  ⟨to_fun⟩
+  ⟨toFun⟩
 
 variable {M A B}
 
 @[simp]
-theorem to_fun_eq_coe (f : A →+[M] B) : f.to_fun = ⇑f :=
+theorem to_fun_eq_coe (f : A →+[M] B) : f.toFun = ⇑f :=
   rfl
 
 @[norm_cast]
@@ -317,13 +317,13 @@ notation:25 R " →+*[" M:25 "] " S:0 => MulSemiringActionHom M R S
 namespace MulSemiringActionHom
 
 instance Coe : Coe (R →+*[M] S) (R →+* S) :=
-  ⟨to_ring_hom⟩
+  ⟨toRingHom⟩
 
 instance has_coe' : Coe (R →+*[M] S) (R →+[M] S) :=
-  ⟨to_distrib_mul_action_hom⟩
+  ⟨toDistribMulActionHom⟩
 
 instance : CoeFun (R →+*[M] S) fun _ => R → S :=
-  ⟨fun c => c.to_fun⟩
+  ⟨fun c => c.toFun⟩
 
 variable {M R S}
 
@@ -411,14 +411,14 @@ variable (M) {R'} (U : Subring R') [IsInvariantSubring M U]
 
 /-- The canonical inclusion from an invariant subring. -/
 def IsInvariantSubring.subtypeHom : U →+*[M] R' :=
-  { U.subtype with map_smul' := fun m s => rfl }
+  { U.Subtype with map_smul' := fun m s => rfl }
 
 @[simp]
 theorem IsInvariantSubring.coe_subtype_hom : (IsInvariantSubring.subtypeHom M U : U → R') = coe :=
   rfl
 
 @[simp]
-theorem IsInvariantSubring.coe_subtype_hom' : (IsInvariantSubring.subtypeHom M U : U →+* R') = U.subtype :=
+theorem IsInvariantSubring.coe_subtype_hom' : (IsInvariantSubring.subtypeHom M U : U →+* R') = U.Subtype :=
   rfl
 
 end

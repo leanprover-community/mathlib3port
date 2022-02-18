@@ -22,7 +22,7 @@ namespace CategoryTheory.Triangulated
 
 open CategoryTheory.Category
 
-variable (C : Type u) [category.{v} C] [has_shift C ℤ]
+variable (C : Type u) [Category.{v} C] [HasShift C ℤ]
 
 /-- A triangle in `C` is a sextuple `(X,Y,Z,f,g,h)` where `X,Y,Z` are objects of `C`,
 and `f : X ⟶ Y`, `g : Y ⟶ Z`, `h : Z ⟶ X⟦1⟧` are morphisms in `C`.
@@ -40,7 +40,7 @@ structure triangle where mk' ::
 and `h : Z ⟶ X⟦1⟧`.
 -/
 @[simps]
-def triangle.mk {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z) (h : Z ⟶ X⟦(1 : ℤ)⟧) : triangle C where
+def triangle.mk {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z) (h : Z ⟶ X⟦(1 : ℤ)⟧) : Triangle C where
   obj₁ := X
   obj₂ := Y
   obj₃ := Z
@@ -50,18 +50,18 @@ def triangle.mk {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z) (h : Z ⟶ X⟦(1 : ℤ)
 
 section
 
-variable [has_zero_object C] [has_zero_morphisms C]
+variable [HasZeroObject C] [HasZeroMorphisms C]
 
 open_locale ZeroObject
 
-instance : Inhabited (triangle C) :=
+instance : Inhabited (Triangle C) :=
   ⟨⟨0, 0, 0, 0, 0, 0⟩⟩
 
 /-- For each object in `C`, there is a triangle of the form `(X,X,0,𝟙 X,0,0)`
 -/
 @[simps]
-def contractible_triangle (X : C) : triangle C :=
-  triangle.mk C (𝟙 X) (0 : X ⟶ 0) 0
+def contractible_triangle (X : C) : Triangle C :=
+  Triangle.mk C (𝟙 X) (0 : X ⟶ 0) 0
 
 end
 
@@ -83,7 +83,7 @@ In other words, we have a commutative diagram:
 See https://stacks.math.columbia.edu/tag/0144.
 -/
 @[ext]
-structure triangle_morphism (T₁ : triangle C) (T₂ : triangle C) where
+structure triangle_morphism (T₁ : Triangle C) (T₂ : Triangle C) where
   hom₁ : T₁.obj₁ ⟶ T₂.obj₁
   hom₂ : T₁.obj₂ ⟶ T₂.obj₂
   hom₃ : T₁.obj₃ ⟶ T₂.obj₃
@@ -108,20 +108,20 @@ attribute [simp, reassoc] triangle_morphism.comm₁ triangle_morphism.comm₂ tr
 /-- The identity triangle morphism.
 -/
 @[simps]
-def triangle_morphism_id (T : triangle C) : triangle_morphism T T where
+def triangle_morphism_id (T : Triangle C) : TriangleMorphism T T where
   hom₁ := 𝟙 T.obj₁
   hom₂ := 𝟙 T.obj₂
   hom₃ := 𝟙 T.obj₃
 
-instance (T : triangle C) : Inhabited (triangle_morphism T T) :=
-  ⟨triangle_morphism_id T⟩
+instance (T : Triangle C) : Inhabited (TriangleMorphism T T) :=
+  ⟨triangleMorphismId T⟩
 
-variable {T₁ T₂ T₃ : triangle C}
+variable {T₁ T₂ T₃ : Triangle C}
 
 /-- Composition of triangle morphisms gives a triangle morphism.
 -/
 @[simps]
-def triangle_morphism.comp (f : triangle_morphism T₁ T₂) (g : triangle_morphism T₂ T₃) : triangle_morphism T₁ T₃ where
+def triangle_morphism.comp (f : TriangleMorphism T₁ T₂) (g : TriangleMorphism T₂ T₃) : TriangleMorphism T₁ T₃ where
   hom₁ := f.hom₁ ≫ g.hom₁
   hom₂ := f.hom₂ ≫ g.hom₂
   hom₃ := f.hom₃ ≫ g.hom₃
@@ -129,9 +129,9 @@ def triangle_morphism.comp (f : triangle_morphism T₁ T₂) (g : triangle_morph
 /-- Triangles with triangle morphisms form a category.
 -/
 @[simps]
-instance triangle_category : category (triangle C) where
-  Hom := fun A B => triangle_morphism A B
-  id := fun A => triangle_morphism_id A
+instance triangle_category : Category (Triangle C) where
+  Hom := fun A B => TriangleMorphism A B
+  id := fun A => triangleMorphismId A
   comp := fun A B C f g => f.comp g
 
 end CategoryTheory.Triangulated

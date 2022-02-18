@@ -34,20 +34,20 @@ theorem HasFpowerSeriesAt.has_strict_fderiv_at (h : HasFpowerSeriesAt f p x) :
 
 theorem HasFpowerSeriesAt.has_fderiv_at (h : HasFpowerSeriesAt f p x) :
     HasFderivAt f (continuousMultilinearCurryFin1 𝕜 E F (p 1)) x :=
-  h.has_strict_fderiv_at.has_fderiv_at
+  h.HasStrictFderivAt.HasFderivAt
 
 theorem HasFpowerSeriesAt.differentiable_at (h : HasFpowerSeriesAt f p x) : DifferentiableAt 𝕜 f x :=
-  h.has_fderiv_at.differentiable_at
+  h.HasFderivAt.DifferentiableAt
 
 theorem AnalyticAt.differentiable_at : AnalyticAt 𝕜 f x → DifferentiableAt 𝕜 f x
-  | ⟨p, hp⟩ => hp.differentiable_at
+  | ⟨p, hp⟩ => hp.DifferentiableAt
 
 theorem AnalyticAt.differentiable_within_at (h : AnalyticAt 𝕜 f x) : DifferentiableWithinAt 𝕜 f s x :=
-  h.differentiable_at.differentiable_within_at
+  h.DifferentiableAt.DifferentiableWithinAt
 
 theorem HasFpowerSeriesAt.fderiv (h : HasFpowerSeriesAt f p x) :
     fderiv 𝕜 f x = continuousMultilinearCurryFin1 𝕜 E F (p 1) :=
-  h.has_fderiv_at.fderiv
+  h.HasFderivAt.fderiv
 
 theorem HasFpowerSeriesOnBall.differentiable_on [CompleteSpace F] (h : HasFpowerSeriesOnBall f p x r) :
     DifferentiableOn 𝕜 f (Emetric.Ball x r) := fun y hy => (h.analytic_at_of_mem hy).DifferentiableWithinAt
@@ -62,13 +62,13 @@ variable {f : 𝕜 → F} {x : 𝕜}
 
 protected theorem HasFpowerSeriesAt.has_strict_deriv_at (h : HasFpowerSeriesAt f p x) :
     HasStrictDerivAt f (p 1 fun _ => 1) x :=
-  h.has_strict_fderiv_at.has_strict_deriv_at
+  h.HasStrictFderivAt.HasStrictDerivAt
 
 protected theorem HasFpowerSeriesAt.has_deriv_at (h : HasFpowerSeriesAt f p x) : HasDerivAt f (p 1 fun _ => 1) x :=
-  h.has_strict_deriv_at.has_deriv_at
+  h.HasStrictDerivAt.HasDerivAt
 
 protected theorem HasFpowerSeriesAt.deriv (h : HasFpowerSeriesAt f p x) : deriv f x = p 1 fun _ => 1 :=
-  h.has_deriv_at.deriv
+  h.HasDerivAt.deriv
 
 end deriv
 

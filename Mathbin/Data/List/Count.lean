@@ -37,7 +37,7 @@ theorem length_eq_countp_add_countp l : length l = countp p l + countp (fun a =>
       simp only [countp_cons_of_pos (fun a => ¬p a) _ h, countp_cons_of_neg _ _ h, ih, length]] <;>
     ac_rfl
 
-theorem countp_eq_length_filter l : countp p l = length (filter p l) := by
+theorem countp_eq_length_filter l : countp p l = length (filterₓ p l) := by
   induction' l with x l ih <;> [rfl, by_cases' p x] <;> [simp only [filter_cons_of_pos _ h, countp, ih, if_pos h],
       simp only [countp_cons_of_neg _ _ h, ih, filter_cons_of_neg _ h]] <;>
     rfl
@@ -52,14 +52,17 @@ theorem countp_append l₁ l₂ : countp p (l₁ ++ l₂) = countp p l₁ + coun
 theorem countp_pos {l} : 0 < countp p l ↔ ∃ a ∈ l, p a := by
   simp only [countp_eq_length_filter, length_pos_iff_exists_mem, mem_filter, exists_prop]
 
-theorem length_filter_lt_length_iff_exists l : length (filter p l) < length l ↔ ∃ x ∈ l, ¬p x := by
+theorem countp_eq_length {l} : countp p l = l.length ↔ ∀, ∀ a ∈ l, ∀, p a := by
+  rw [countp_eq_length_filter, filter_length_eq_length]
+
+theorem length_filter_lt_length_iff_exists l : length (filterₓ p l) < length l ↔ ∃ x ∈ l, ¬p x := by
   rw [length_eq_countp_add_countp p l, ← countp_pos, countp_eq_length_filter, lt_add_iff_pos_right]
 
 theorem sublist.countp_le (s : l₁ <+ l₂) : countp p l₁ ≤ countp p l₂ := by
   simpa only [countp_eq_length_filter] using length_le_of_sublist (s.filter p)
 
 @[simp]
-theorem countp_filter {q} [DecidablePred q] (l : List α) : countp p (filter q l) = countp (fun a => p a ∧ q a) l := by
+theorem countp_filter {q} [DecidablePred q] (l : List α) : countp p (filterₓ q l) = countp (fun a => p a ∧ q a) l := by
   simp only [countp_eq_length_filter, filter_filter]
 
 @[simp]
@@ -125,14 +128,22 @@ theorem count_append (a : α) : ∀ l₁ l₂, count a (l₁ ++ l₂) = count a 
 theorem count_concat (a : α) (l : List α) : count a (concat l a) = succ (count a l) := by
   simp [-add_commₓ]
 
+@[simp]
 theorem count_pos {a : α} {l : List α} : 0 < count a l ↔ a ∈ l := by
   simp only [count, countp_pos, exists_prop, exists_eq_right']
+
+@[simp]
+theorem one_le_count_iff_mem {a : α} {l : List α} : 1 ≤ count a l ↔ a ∈ l :=
+  count_pos
 
 @[simp]
 theorem count_eq_zero_of_not_mem {a : α} {l : List α} (h : a ∉ l) : count a l = 0 :=
   Decidable.by_contradiction fun h' => h <| count_pos.1 (Nat.pos_of_ne_zeroₓ h')
 
 theorem not_mem_of_count_eq_zero {a : α} {l : List α} (h : count a l = 0) : a ∉ l := fun h' => (count_pos.2 h').ne' h
+
+theorem count_eq_length {a : α} {l} : count a l = l.length ↔ ∀, ∀ b ∈ l, ∀, a = b := by
+  rw [count, countp_eq_length]
 
 @[simp]
 theorem count_repeat (a : α) (n : ℕ) : count a (repeat a n) = n := by
@@ -141,7 +152,7 @@ theorem count_repeat (a : α) (n : ℕ) : count a (repeat a n) = n := by
 theorem le_count_iff_repeat_sublist {a : α} {l : List α} {n : ℕ} : n ≤ count a l ↔ repeat a n <+ l :=
   ⟨fun h =>
     ((repeat_sublist_repeat a).2 h).trans <| by
-      have : filter (Eq a) l = repeat a (count a l) :=
+      have : filterₓ (Eq a) l = repeat a (count a l) :=
         eq_repeat.2
           ⟨by
             simp only [count, countp_eq_length_filter], fun b m => (of_mem_filter m).symm⟩
@@ -154,14 +165,14 @@ theorem repeat_count_eq_of_count_eq_length {a : α} {l : List α} (h : count a l
     (Eq.trans (length_repeat a (count a l)) h)
 
 @[simp]
-theorem count_filter {p} [DecidablePred p] {a} {l : List α} (h : p a) : count a (filter p l) = count a l := by
+theorem count_filter {p} [DecidablePred p] {a} {l : List α} (h : p a) : count a (filterₓ p l) = count a l := by
   simp only [count, countp_filter,
     show (fun b => a = b ∧ p b) = Eq a by
       ext b
       constructor <;> cc]
 
 theorem count_bind {α β} [DecidableEq β] (l : List α) (f : α → List β) (x : β) :
-    count x (l.bind f) = Sum (map (count x ∘ f) l) := by
+    count x (l.bind f) = sum (map (count x ∘ f) l) := by
   induction' l with hd tl IH
   · simp
     
@@ -174,12 +185,7 @@ theorem count_map_of_injective {α β} [DecidableEq α] [DecidableEq β] (l : Li
   induction' l with y l IH generalizing x
   · simp
     
-  · rw [map_cons]
-    by_cases' h : x = y
-    · simpa [h] using IH _
-      
-    · simpa [h, hf.ne h] using IH _
-      
+  · simp [map_cons, count_cons', IH, hf.eq_iff]
     
 
 theorem count_le_count_map [DecidableEq β] (l : List α) (f : α → β) (x : α) : count x l ≤ count (f x) (map f l) := by

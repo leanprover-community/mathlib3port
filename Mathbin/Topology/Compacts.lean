@@ -27,7 +27,7 @@ def closeds :=
   { s : Set α // IsClosed s }
 
 /-- The type of closed subsets is inhabited, with default element the empty set. -/
-instance : Inhabited (closeds α) :=
+instance : Inhabited (Closeds α) :=
   ⟨⟨∅, is_closed_empty⟩⟩
 
 /-- The compact sets of a topological space. See also `nonempty_compacts`. -/
@@ -38,11 +38,11 @@ def compacts : Type _ :=
 non-emptiness will be useful in metric spaces, as we will be able to put
 a distance (and not merely an edistance) on this space. -/
 def nonempty_compacts :=
-  { s : Set α // s.nonempty ∧ IsCompact s }
+  { s : Set α // s.Nonempty ∧ IsCompact s }
 
 /-- In an inhabited space, the type of nonempty compact subsets is also inhabited, with
 default element the singleton set containing the default element. -/
-instance nonempty_compacts_inhabited [Inhabited α] : Inhabited (nonempty_compacts α) :=
+instance nonempty_compacts_inhabited [Inhabited α] : Inhabited (NonemptyCompacts α) :=
   ⟨⟨{default}, singleton_nonempty default, is_compact_singleton⟩⟩
 
 /-- The compact sets with nonempty interior of a topological space. See also `compacts` and
@@ -53,63 +53,63 @@ def positive_compacts : Type _ :=
 
 /-- In a nonempty compact space, `set.univ` is a member of `positive_compacts`, the compact sets
 with nonempty interior. -/
-def positive_compacts_univ {α : Type _} [TopologicalSpace α] [CompactSpace α] [Nonempty α] : positive_compacts α :=
+def positive_compacts_univ {α : Type _} [TopologicalSpace α] [CompactSpace α] [Nonempty α] : PositiveCompacts α :=
   ⟨Set.Univ, compact_univ, by
     simp ⟩
 
 @[simp]
 theorem positive_compacts_univ_val (α : Type _) [TopologicalSpace α] [CompactSpace α] [Nonempty α] :
-    (positive_compacts_univ : positive_compacts α).val = univ :=
+    (positiveCompactsUniv : PositiveCompacts α).val = univ :=
   rfl
 
 variable {α}
 
 namespace Compacts
 
-instance : SemilatticeSup (compacts α) :=
+instance : SemilatticeSup (Compacts α) :=
   Subtype.semilatticeSup fun K₁ K₂ => IsCompact.union
 
-instance : OrderBot (compacts α) :=
+instance : OrderBot (Compacts α) :=
   Subtype.orderBot is_compact_empty
 
-instance [T2Space α] : SemilatticeInf (compacts α) :=
+instance [T2Space α] : SemilatticeInf (Compacts α) :=
   Subtype.semilatticeInf fun K₁ K₂ => IsCompact.inter
 
-instance [T2Space α] : Lattice (compacts α) :=
+instance [T2Space α] : Lattice (Compacts α) :=
   Subtype.lattice (fun K₁ K₂ => IsCompact.union) fun K₁ K₂ => IsCompact.inter
 
 @[simp]
-theorem bot_val : (⊥ : compacts α).1 = ∅ :=
+theorem bot_val : (⊥ : Compacts α).1 = ∅ :=
   rfl
 
 @[simp]
-theorem sup_val {K₁ K₂ : compacts α} : (K₁⊔K₂).1 = K₁.1 ∪ K₂.1 :=
+theorem sup_val {K₁ K₂ : Compacts α} : (K₁⊔K₂).1 = K₁.1 ∪ K₂.1 :=
   rfl
 
 @[ext]
-protected theorem ext {K₁ K₂ : compacts α} (h : K₁.1 = K₂.1) : K₁ = K₂ :=
+protected theorem ext {K₁ K₂ : Compacts α} (h : K₁.1 = K₂.1) : K₁ = K₂ :=
   Subtype.eq h
 
 @[simp]
-theorem finset_sup_val {β} {K : β → compacts α} {s : Finset β} : (s.sup K).1 = s.sup fun x => (K x).1 :=
+theorem finset_sup_val {β} {K : β → Compacts α} {s : Finset β} : (s.sup K).1 = s.sup fun x => (K x).1 :=
   Finset.sup_coe _ _
 
-instance : Inhabited (compacts α) :=
+instance : Inhabited (Compacts α) :=
   ⟨⊥⟩
 
 /-- The image of a compact set under a continuous function. -/
-protected def map (f : α → β) (hf : Continuous f) (K : compacts α) : compacts β :=
+protected def map (f : α → β) (hf : Continuous f) (K : Compacts α) : Compacts β :=
   ⟨f '' K.1, K.2.Image hf⟩
 
 @[simp]
-theorem map_val {f : α → β} (hf : Continuous f) (K : compacts α) : (K.map f hf).1 = f '' K.1 :=
+theorem map_val {f : α → β} (hf : Continuous f) (K : Compacts α) : (K.map f hf).1 = f '' K.1 :=
   rfl
 
 /-- A homeomorphism induces an equivalence on compact sets, by taking the image. -/
 @[simp]
-protected def Equivₓ (f : α ≃ₜ β) : compacts α ≃ compacts β where
-  toFun := compacts.map f f.continuous
-  invFun := compacts.map _ f.symm.continuous
+protected def Equivₓ (f : α ≃ₜ β) : Compacts α ≃ Compacts β where
+  toFun := Compacts.map f f.Continuous
+  invFun := Compacts.map _ f.symm.Continuous
   left_inv := by
     intro K
     ext1
@@ -120,7 +120,7 @@ protected def Equivₓ (f : α ≃ₜ β) : compacts α ≃ compacts β where
     simp only [map_val, ← image_comp, f.self_comp_symm, image_id]
 
 /-- The image of a compact set under a homeomorphism can also be expressed as a preimage. -/
-theorem equiv_to_fun_val (f : α ≃ₜ β) (K : compacts α) : (compacts.equiv f K).1 = f.symm ⁻¹' K.1 :=
+theorem equiv_to_fun_val (f : α ≃ₜ β) (K : Compacts α) : (Compacts.equiv f K).1 = f.symm ⁻¹' K.1 :=
   congr_funₓ (image_eq_preimage_of_inverse f.left_inv f.right_inv) K.1
 
 end Compacts
@@ -131,14 +131,14 @@ open TopologicalSpace Set
 
 variable {α}
 
-instance nonempty_compacts.to_compact_space {p : nonempty_compacts α} : CompactSpace p.val :=
+instance nonempty_compacts.to_compact_space {p : NonemptyCompacts α} : CompactSpace p.val :=
   ⟨is_compact_iff_is_compact_univ.1 p.property.2⟩
 
-instance nonempty_compacts.to_nonempty {p : nonempty_compacts α} : Nonempty p.val :=
+instance nonempty_compacts.to_nonempty {p : NonemptyCompacts α} : Nonempty p.val :=
   p.property.1.to_subtype
 
 /-- Associate to a nonempty compact subset the corresponding closed subset -/
-def nonempty_compacts.to_closeds [T2Space α] : nonempty_compacts α → closeds α :=
+def nonempty_compacts.to_closeds [T2Space α] : NonemptyCompacts α → Closeds α :=
   Set.inclusion fun s hs => hs.2.IsClosed
 
 end NonemptyCompacts
@@ -148,7 +148,7 @@ section PositiveCompacts
 variable (α)
 
 /-- In a nonempty locally compact space, there exists a compact set with nonempty interior. -/
-instance nonempty_positive_compacts [LocallyCompactSpace α] [h : Nonempty α] : Nonempty (positive_compacts α) :=
+instance nonempty_positive_compacts [LocallyCompactSpace α] [h : Nonempty α] : Nonempty (PositiveCompacts α) :=
   let ⟨K, hK⟩ := exists_compact_subset is_open_univ <| mem_univ h.some
   ⟨⟨K, hK.1, ⟨_, hK.2.1⟩⟩⟩
 

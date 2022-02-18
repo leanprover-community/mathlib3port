@@ -84,7 +84,7 @@ protected theorem cases_on {P : WithOne α → Prop} : ∀ x : WithOne α, P 1 �
   Option.casesOn
 
 @[to_additive]
-instance [Mul α] : MulOneClass (WithOne α) where
+instance [Mul α] : MulOneClassₓ (WithOne α) where
   mul := · * ·
   one := 1
   one_mul := show ∀ x : WithOne α, 1 * x = x from (Option.lift_or_get_is_left_id _).1
@@ -113,7 +113,7 @@ end
 
 section lift
 
-variable [Mul α] {β : Type v} [MulOneClass β]
+variable [Mul α] {β : Type v} [MulOneClassₓ β]
 
 /-- Lift a semigroup homomorphism `f` to a bundled monoid homorphism. -/
 @[to_additive "Lift an add_semigroup homomorphism `f` to a bundled add_monoid homorphism."]
@@ -131,7 +131,7 @@ def lift : MulHom α β ≃ (WithOne α →* β) where
                 rw [mul_oneₓ]
                 exact (mul_oneₓ _).symm))
             fun y => f.map_mul x y }
-  invFun := fun F => F.to_mul_hom.comp coe_mul_hom
+  invFun := fun F => F.toMulHom.comp coeMulHom
   left_inv := fun f => MulHom.ext fun x => rfl
   right_inv := fun F => MonoidHom.ext fun x => (WithOne.cases_on x F.map_one.symm) fun x => rfl
 
@@ -146,7 +146,7 @@ theorem lift_one : lift f 1 = 1 :=
   rfl
 
 @[to_additive]
-theorem lift_unique (f : WithOne α →* β) : f = lift (f.to_mul_hom.comp coe_mul_hom) :=
+theorem lift_unique (f : WithOne α →* β) : f = lift (f.toMulHom.comp coeMulHom) :=
   (lift.apply_symm_apply f).symm
 
 end lift
@@ -160,7 +160,7 @@ variable {β : Type v} [Mul α] [Mul β]
 @[to_additive
       "Given an additive map from `α → β` returns an add_monoid homomorphism\n  from `with_zero α` to `with_zero β`"]
 def map (f : MulHom α β) : WithOne α →* WithOne β :=
-  lift (coe_mul_hom.comp f)
+  lift (coeMulHom.comp f)
 
 @[simp, to_additive]
 theorem map_id : map (MulHom.id α) = MonoidHom.id (WithOne α) := by
@@ -193,7 +193,7 @@ instance [one : One α] : One (WithZero α) :=
 theorem coe_one [One α] : ((1 : α) : WithZero α) = 1 :=
   rfl
 
-instance [Mul α] : MulZeroClass (WithZero α) :=
+instance [Mul α] : MulZeroClassₓ (WithZero α) :=
   { WithZero.hasZero with mul := fun o₁ o₂ => o₁.bind fun a => Option.map (fun b => a * b) o₂, zero_mul := fun a => rfl,
     mul_zero := fun a => by
       cases a <;> rfl }
@@ -210,7 +210,7 @@ theorem zero_mul {α : Type u} [Mul α] (a : WithZero α) : 0 * a = 0 :=
 theorem mul_zero {α : Type u} [Mul α] (a : WithZero α) : a * 0 = 0 := by
   cases a <;> rfl
 
-instance [Semigroupₓ α] : SemigroupWithZero (WithZero α) :=
+instance [Semigroupₓ α] : SemigroupWithZeroₓ (WithZero α) :=
   { WithZero.mulZeroClass with
     mul_assoc := fun a b c =>
       match a, b, c with
@@ -227,7 +227,7 @@ instance [CommSemigroupₓ α] : CommSemigroupₓ (WithZero α) :=
       | some a, none => rfl
       | some a, some b => congr_argₓ some (mul_comm _ _) }
 
-instance [MulOneClass α] : MulZeroOneClass (WithZero α) :=
+instance [MulOneClassₓ α] : MulZeroOneClassₓ (WithZero α) :=
   { WithZero.mulZeroClass, WithZero.hasOne with
     one_mul := fun a =>
       match a with

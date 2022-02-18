@@ -82,14 +82,14 @@ def cons_elim {C : Vector3 α (succ n) → Sort u} (H : ∀ a : α t : Vector3 �
   rw [← cons_head_tail v] <;> apply H
 
 @[simp]
-theorem cons_elim_cons {C H a t} : @cons_elim α n C H (a :: t) = H a t :=
+theorem cons_elim_cons {C H a t} : @consElim α n C H (a :: t) = H a t :=
   rfl
 
 /-- Recursion principle with the vector as first argument. -/
 @[elab_as_eliminator]
 protected def rec_on {C : ∀ {n}, Vector3 α n → Sort u} {n} (v : Vector3 α n) (H0 : C [])
     (Hs : ∀ {n} a w : Vector3 α n, C w → C (a :: w)) : C v :=
-  Nat.recOn n (fun v => v.nil_elim H0) (fun n IH v => v.cons_elim fun a t => Hs _ _ (IH _)) v
+  Nat.recOn n (fun v => v.nilElim H0) (fun n IH v => v.consElim fun a t => Hs _ _ (IH _)) v
 
 @[simp]
 theorem rec_on_nil {C H0 Hs} : @Vector3.recOn α (@C) 0 [] H0 @Hs = H0 :=
@@ -102,7 +102,7 @@ theorem rec_on_cons {C H0 Hs n a v} :
 
 /-- Append two vectors -/
 def append (v : Vector3 α m) (w : Vector3 α n) : Vector3 α (n + m) :=
-  Nat.recOn m (fun _ => w) (fun m IH v => v.cons_elim fun a t => @Fin2.cases' (n + m) (fun _ => α) a (IH t)) v
+  Nat.recOn m (fun _ => w) (fun m IH v => v.consElim fun a t => @Fin2.cases' (n + m) (fun _ => α) a (IH t)) v
 
 local infixl:65 " +-+ " => Vector3.append
 
@@ -117,21 +117,21 @@ theorem append_cons (a : α) (v : Vector3 α m) (w : Vector3 α n) : a :: v +-+ 
 @[simp]
 theorem append_left : ∀ {m} i : Fin2 m v : Vector3 α m {n} w : Vector3 α n, (v +-+ w) (left n i) = v i
   | _, @fz m, v, n, w =>
-    v.cons_elim fun a t => by
+    v.consElim fun a t => by
       simp [*, left]
   | _, @fs m i, v, n, w =>
-    v.cons_elim fun a t => by
+    v.consElim fun a t => by
       simp [*, left]
 
 @[simp]
 theorem append_add : ∀ {m} v : Vector3 α m {n} w : Vector3 α n i : Fin2 n, (v +-+ w) (add i m) = w i
   | 0, v, n, w, i => rfl
   | succ m, v, n, w, i =>
-    v.cons_elim fun a t => by
+    v.consElim fun a t => by
       simp [*, add]
 
 /-- Insert `a` into `v` at index `i`. -/
-def insert (a : α) (v : Vector3 α n) (i : Fin2 (succ n)) : Vector3 α (succ n) := fun j => (a :: v) (insert_perm i j)
+def insert (a : α) (v : Vector3 α n) (i : Fin2 (succ n)) : Vector3 α (succ n) := fun j => (a :: v) (insertPerm i j)
 
 @[simp]
 theorem insert_fz (a : α) (v : Vector3 α n) : insert a v fz = a :: v := by
@@ -192,10 +192,10 @@ theorem vector_ex_iff_exists : ∀ {n} f : Vector3 α n → Prop, VectorEx n f �
   | succ n, f => Iff.trans (exists_congr fun x => vector_ex_iff_exists _) (exists_vector_succ f).symm
 
 theorem vector_all_iff_forall : ∀ {n} f : Vector3 α n → Prop, VectorAll n f ↔ ∀ v, f v
-  | 0, f => ⟨fun f0 v => v.nil_elim f0, fun al => al []⟩
+  | 0, f => ⟨fun f0 v => v.nilElim f0, fun al => al []⟩
   | succ n, f =>
     (forall_congrₓ fun x => vector_all_iff_forall fun v => f (x :: v)).trans
-      ⟨fun al v => v.cons_elim al, fun al x v => al (x :: v)⟩
+      ⟨fun al v => v.consElim al, fun al x v => al (x :: v)⟩
 
 /-- `vector_allp p v` is equivalent to `∀ i, p (v i)`, but unfolds directly to a conjunction,
   i.e. `vector_allp p [0, 1, 2] = p 0 ∧ p 1 ∧ p 2`. -/

@@ -18,7 +18,7 @@ namespace Tactic
 private unsafe def get_unused_name_reserved_aux (n : Name) (reserved : name_set) : Option Nat → tactic Name :=
   fun suffix => do
   let n ← get_unused_name n suffix
-  if ¬reserved.contains n then pure n
+  if ¬reserved n then pure n
     else do
       let new_suffix :=
         match suffix with
@@ -57,7 +57,7 @@ variation of `n`.
 unsafe def get_unused_name_reserved (ns : List Name) (reserved : name_set) : tactic Name :=
   (first <|
       ns.map fun n => do
-        guardₓ ¬reserved.contains n
+        guardₓ ¬reserved n
         fail_if_success (resolve_name n)
         pure n) <|>
     do
@@ -126,9 +126,9 @@ unsafe def rename_fresh (renames : name_map (Sum Name (List Name))) (reserved : 
       match renames.find h.local_uniq_name with
       | none => Sum.inl h.local_pp_name
       | some new_names => new_names
-  let reserved := reserved.insert_list <| renames.filter_map Sum.getLeft
+  let reserved := reserved.insert_list <| renames.filterMap Sum.getLeft
   let new_hyps ← intro_lst_fresh_reserved renames reserved
-  pure <| reverted.zip new_hyps
+  pure <| reverted new_hyps
 
 end Tactic
 

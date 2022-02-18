@@ -77,8 +77,8 @@ namespace ContinuousLinearMap
 
 variable {𝕜 E F : Type _} [NondiscreteNormedField 𝕜] [NormedGroup E] [NormedSpace 𝕜 E] [NormedGroup F] [NormedSpace 𝕜 F]
 
-theorem measurable_apply₂ [MeasurableSpace E] [OpensMeasurableSpace E] [second_countable_topology E]
-    [second_countable_topology (E →L[𝕜] F)] [MeasurableSpace F] [BorelSpace F] :
+theorem measurable_apply₂ [MeasurableSpace E] [OpensMeasurableSpace E] [SecondCountableTopology E]
+    [SecondCountableTopology (E →L[𝕜] F)] [MeasurableSpace F] [BorelSpace F] :
     Measurable fun p : (E →L[𝕜] F) × E => p.1 p.2 :=
   is_bounded_bilinear_map_apply.Continuous.Measurable
 
@@ -99,7 +99,7 @@ namespace FderivMeasurableAux
 at scale `r` by the linear map `L`, up to an error `ε`. We tweak the definition to make sure that
 this is an open set.-/
 def A (f : E → F) (L : E →L[𝕜] F) (r ε : ℝ) : Set E :=
-  { x | ∃ r' ∈ Ioc (r / 2) r, ∀ y z _ : y ∈ ball x r' _ : z ∈ ball x r', ∥f z - f y - L (z - y)∥ ≤ ε * r }
+  { x | ∃ r' ∈ Ioc (r / 2) r, ∀ y z _ : y ∈ Ball x r' _ : z ∈ Ball x r', ∥f z - f y - L (z - y)∥ ≤ ε * r }
 
 /-- The set `B f K r s ε` is the set of points `x` around which there exists a continuous linear map
 `L` belonging to `K` (a given set of continuous linear maps) that approximates well the
@@ -133,8 +133,8 @@ theorem A_mono (L : E →L[𝕜] F) (r : ℝ) {ε δ : ℝ} (h : ε ≤ δ) : A 
   refine' ⟨r', r'r, fun y hy z hz => (hr' y hy z hz).trans (mul_le_mul_of_nonneg_right h _)⟩
   linarith [mem_ball.1 hy, r'r.2, @dist_nonneg _ _ y x]
 
-theorem le_of_mem_A {r ε : ℝ} {L : E →L[𝕜] F} {x : E} (hx : x ∈ A f L r ε) {y z : E} (hy : y ∈ closed_ball x (r / 2))
-    (hz : z ∈ closed_ball x (r / 2)) : ∥f z - f y - L (z - y)∥ ≤ ε * r := by
+theorem le_of_mem_A {r ε : ℝ} {L : E →L[𝕜] F} {x : E} (hx : x ∈ A f L r ε) {y z : E} (hy : y ∈ ClosedBall x (r / 2))
+    (hz : z ∈ ClosedBall x (r / 2)) : ∥f z - f y - L (z - y)∥ ≤ ε * r := by
   rcases hx with ⟨r', r'mem, hr'⟩
   exact hr' _ ((mem_closed_ball.1 hy).trans_lt r'mem.1) _ ((mem_closed_ball.1 hz).trans_lt r'mem.1)
 
@@ -144,7 +144,7 @@ theorem mem_A_of_differentiable {ε : ℝ} (hε : 0 < ε) {x : E} (hx : Differen
   simp only [HasFderivAt, HasFderivAtFilter, is_o_iff] at this
   rcases eventually_nhds_iff_ball.1 (this (half_pos hε)) with ⟨R, R_pos, hR⟩
   refine' ⟨R, R_pos, fun r hr => _⟩
-  have : r ∈ Ioc (r / 2) r := ⟨half_lt_self hr.1, le_reflₓ _⟩
+  have : r ∈ Ioc (r / 2) r := ⟨half_lt_self hr.1, le_rfl⟩
   refine' ⟨r, this, fun y hy z hz => _⟩
   calc
     ∥f z - f y - (fderiv 𝕜 f x) (z - y)∥ =
@@ -312,8 +312,8 @@ theorem D_subset_differentiable_set {K : Set (E →L[𝕜] F)} (hK : IsComplete 
     refine' ⟨e, fun e' he' => _⟩
     rw [dist_comm, dist_eq_norm]
     calc ∥L0 e - L0 e'∥ ≤ 12 * ∥c∥ * (1 / 2) ^ e :=
-        M _ _ _ _ _ _ (le_reflₓ _) (le_reflₓ _) (le_reflₓ _) (le_reflₓ _) he' _ < 12 * ∥c∥ * (ε / (12 * ∥c∥)) :=
-        mul_lt_mul' (le_reflₓ _) he (le_of_ltₓ P)
+        M _ _ _ _ _ _ le_rfl le_rfl le_rfl le_rfl he' _ < 12 * ∥c∥ * (ε / (12 * ∥c∥)) :=
+        mul_lt_mul' le_rfl he (le_of_ltₓ P)
           (mul_pos
             (by
               norm_num)
@@ -324,12 +324,12 @@ theorem D_subset_differentiable_set {K : Set (E →L[𝕜] F)} (hK : IsComplete 
           ne_of_gtₓ cpos]
         ring
   obtain ⟨f', f'K, hf'⟩ : ∃ f' ∈ K, tendsto L0 at_top (𝓝 f') :=
-    cauchy_seq_tendsto_of_is_complete hK (fun e => (hn e (n e) (n e) (le_reflₓ _) (le_reflₓ _)).1) this
+    cauchy_seq_tendsto_of_is_complete hK (fun e => (hn e (n e) (n e) le_rfl le_rfl).1) this
   have Lf' : ∀ e p, n e ≤ p → ∥L e (n e) p - f'∥ ≤ 12 * ∥c∥ * (1 / 2) ^ e := by
     intro e p hp
     apply le_of_tendsto (tendsto_const_nhds.sub hf').norm
     rw [eventually_at_top]
-    exact ⟨e, fun e' he' => M _ _ _ _ _ _ (le_reflₓ _) hp (le_reflₓ _) (le_reflₓ _) he'⟩
+    exact ⟨e, fun e' he' => M _ _ _ _ _ _ le_rfl hp le_rfl le_rfl he'⟩
   have : HasFderivAt f f' x := by
     simp only [has_fderiv_at_iff_is_o_nhds_zero, is_o_iff]
     intro ε εpos
@@ -381,7 +381,7 @@ theorem D_subset_differentiable_set {K : Set (E →L[𝕜] F)} (hK : IsComplete 
     have km : k = m + 1 := (Nat.succ_pred_eq_of_posₓ (lt_of_le_of_ltₓ (zero_le _) k_gt)).symm
     rw [km] at hk h'k
     have J1 : ∥f (x + y) - f x - L e (n e) m (x + y - x)∥ ≤ (1 / 2) ^ e * (1 / 2) ^ m := by
-      apply le_of_mem_A (hn e (n e) m (le_reflₓ _) m_ge).2.2
+      apply le_of_mem_A (hn e (n e) m le_rfl m_ge).2.2
       · simp only [mem_closed_ball, dist_self]
         exact div_nonneg (le_of_ltₓ P) zero_le_two
         
@@ -427,7 +427,7 @@ theorem D_subset_differentiable_set {K : Set (E →L[𝕜] F)} (hK : IsComplete 
   exact ⟨this.differentiable_at, f'K⟩
 
 theorem differentiable_set_eq_D (hK : IsComplete K) : { x | DifferentiableAt 𝕜 f x ∧ fderiv 𝕜 f x ∈ K } = D f K :=
-  subset.antisymm (differentiable_set_subset_D _) (D_subset_differentiable_set hK)
+  Subset.antisymm (differentiable_set_subset_D _) (D_subset_differentiable_set hK)
 
 end FderivMeasurableAux
 

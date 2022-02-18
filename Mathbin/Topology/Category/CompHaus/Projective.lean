@@ -28,7 +28,7 @@ open CategoryTheory Function
 
 namespace CompHaus
 
-instance projective_ultrafilter (X : Type _) : projective (of <| Ultrafilter X) where
+instance projective_ultrafilter (X : Type _) : Projective (of <| Ultrafilter X) where
   factors := fun Y Z f g hg => by
     rw [epi_iff_surjective] at hg
     obtain ⟨g', hg'⟩ := hg.has_right_inverse
@@ -43,16 +43,16 @@ instance projective_ultrafilter (X : Type _) : projective (of <| Ultrafilter X) 
 
 /-- For any compact Hausdorff space `X`,
   the natural map `ultrafilter X → X` is a projective presentation. -/
-def projective_presentation (X : CompHaus) : projective_presentation X where
+def projective_presentation (X : CompHaus) : ProjectivePresentation X where
   P := of <| Ultrafilter X
   f := ⟨_, continuous_ultrafilter_extend id⟩
   Projective := CompHaus.projective_ultrafilter X
   Epi :=
-    (concrete_category.epi_of_surjective _) fun x =>
+    (ConcreteCategory.epi_of_surjective _) fun x =>
       ⟨(pure x : Ultrafilter X), congr_funₓ (ultrafilter_extend_extends (𝟙 X)) x⟩
 
-instance : enough_projectives CompHaus where
-  presentation := fun X => ⟨projective_presentation X⟩
+instance : EnoughProjectives CompHaus where
+  presentation := fun X => ⟨projectivePresentation X⟩
 
 end CompHaus
 

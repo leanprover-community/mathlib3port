@@ -170,7 +170,7 @@ def S (f : C(I, ℝ)) (ε : ℝ) (h : 0 < ε) (n : ℕ) (x : I) : Finset (Finₓ
 
 /-- If `k ∈ S`, then `f(k/n)` is close to `f x`.
 -/
-theorem lt_of_mem_S {f : C(I, ℝ)} {ε : ℝ} {h : 0 < ε} {n : ℕ} {x : I} {k : Finₓ (n + 1)} (m : k ∈ S f ε h n x) :
+theorem lt_of_mem_S {f : C(I, ℝ)} {ε : ℝ} {h : 0 < ε} {n : ℕ} {x : I} {k : Finₓ (n + 1)} (m : k ∈ s f ε h n x) :
     abs (f (k)/ₙ - f x) < ε / 2 := by
   apply f.dist_lt_of_dist_lt_modulus (ε / 2) (half_pos h)
   simpa [S] using m
@@ -178,7 +178,7 @@ theorem lt_of_mem_S {f : C(I, ℝ)} {ε : ℝ} {h : 0 < ε} {n : ℕ} {x : I} {k
 /-- If `k ∉ S`, then as `δ ≤ |x - k/n|`, we have the inequality `1 ≤ δ^-2 * (x - k/n)^2`.
 This particular formulation will be helpful later.
 -/
-theorem le_of_mem_S_compl {f : C(I, ℝ)} {ε : ℝ} {h : 0 < ε} {n : ℕ} {x : I} {k : Finₓ (n + 1)} (m : k ∈ S f ε h n xᶜ) :
+theorem le_of_mem_S_compl {f : C(I, ℝ)} {ε : ℝ} {h : 0 < ε} {n : ℕ} {x : I} {k : Finₓ (n + 1)} (m : k ∈ s f ε h n xᶜ) :
     (1 : ℝ) ≤ δ f ε h ^ (-2 : ℤ) * (x - (k)/ₙ) ^ 2 := by
   simp only [Finset.mem_compl, not_ltₓ, Set.mem_to_finset, Set.mem_set_of_eq, S] at m
   field_simp
@@ -207,8 +207,8 @@ for a continuous function `f : C([0,1], ℝ)` converge uniformly to `f` as `n` t
 This is the proof given in [Richard Beals' *Analysis, an introduction*][beals-analysis], §7D,
 and reproduced on wikipedia.
 -/
-theorem bernstein_approximation_uniform (f : C(I, ℝ)) :
-    tendsto (fun n : ℕ => bernsteinApproximation n f) at_top (𝓝 f) := by
+theorem bernstein_approximation_uniform (f : C(I, ℝ)) : Tendsto (fun n : ℕ => bernsteinApproximation n f) atTop (𝓝 f) :=
+  by
   simp only [metric.nhds_basis_ball.tendsto_right_iff, Metric.mem_ball, dist_eq_norm]
   intro ε h
   let δ := δ f ε h
@@ -271,7 +271,7 @@ theorem bernstein_approximation_uniform (f : C(I, ℝ)) :
         (div_le_div_right npos).mpr
           (by
             apply mul_nonneg_le_one_le w₂
-            apply mul_nonneg_le_one_le w₂ (le_reflₓ _)
+            apply mul_nonneg_le_one_le w₂ le_rfl
             all_goals
               unit_interval)_ < ε / 2 :=
         nh

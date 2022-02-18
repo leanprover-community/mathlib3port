@@ -26,7 +26,7 @@ instance Semigroupₓ [∀ i, Semigroupₓ <| f i] : Semigroupₓ (∀ i : I, f 
     run_tac
       tactic.pi_instance_derive_field
 
-instance SemigroupWithZero [∀ i, SemigroupWithZero <| f i] : SemigroupWithZero (∀ i : I, f i) := by
+instance SemigroupWithZeroₓ [∀ i, SemigroupWithZeroₓ <| f i] : SemigroupWithZeroₓ (∀ i : I, f i) := by
   refine_struct { zero := (0 : ∀ i, f i), mul := · * ·, .. } <;>
     run_tac
       tactic.pi_instance_derive_field
@@ -38,7 +38,7 @@ instance CommSemigroupₓ [∀ i, CommSemigroupₓ <| f i] : CommSemigroupₓ (�
       tactic.pi_instance_derive_field
 
 @[to_additive]
-instance MulOneClass [∀ i, MulOneClass <| f i] : MulOneClass (∀ i : I, f i) := by
+instance MulOneClassₓ [∀ i, MulOneClassₓ <| f i] : MulOneClassₓ (∀ i : I, f i) := by
   refine_struct { one := (1 : ∀ i, f i), mul := · * ·, .. } <;>
     run_tac
       tactic.pi_instance_derive_field
@@ -119,12 +119,12 @@ instance CancelCommMonoid [∀ i, CancelCommMonoid <| f i] : CancelCommMonoid (�
     run_tac
       tactic.pi_instance_derive_field
 
-instance MulZeroClass [∀ i, MulZeroClass <| f i] : MulZeroClass (∀ i : I, f i) := by
+instance MulZeroClassₓ [∀ i, MulZeroClassₓ <| f i] : MulZeroClassₓ (∀ i : I, f i) := by
   refine_struct { zero := (0 : ∀ i, f i), mul := · * ·, .. } <;>
     run_tac
       tactic.pi_instance_derive_field
 
-instance MulZeroOneClass [∀ i, MulZeroOneClass <| f i] : MulZeroOneClass (∀ i : I, f i) := by
+instance MulZeroOneClassₓ [∀ i, MulZeroOneClassₓ <| f i] : MulZeroOneClassₓ (∀ i : I, f i) := by
   refine_struct { zero := (0 : ∀ i, f i), one := (1 : ∀ i, f i), mul := · * ·, .. } <;>
     run_tac
       tactic.pi_instance_derive_field
@@ -143,7 +143,7 @@ end Pi
 
 section MonoidHom
 
-variable (f) [∀ i, MulOneClass (f i)]
+variable (f) [∀ i, MulOneClassₓ (f i)]
 
 /-- Evaluation of functions into an indexed collection of monoids at a point is a monoid
 homomorphism.
@@ -158,7 +158,7 @@ def Pi.evalMonoidHom (i : I) : (∀ i, f i) →* f i where
 
 /-- `function.const` as a `monoid_hom`. -/
 @[to_additive "`function.const` as an `add_monoid_hom`.", simps]
-def Pi.constMonoidHom (α β : Type _) [MulOneClass β] : β →* α → β where
+def Pi.constMonoidHom (α β : Type _) [MulOneClassₓ β] : β →* α → β where
   toFun := Function.const α
   map_one' := rfl
   map_mul' := fun _ _ => rfl
@@ -169,7 +169,7 @@ See also `monoid_hom.eval`. -/
 @[to_additive
       "Coercion of an `add_monoid_hom` into a function is itself a `add_monoid_hom`.\n\nSee also `add_monoid_hom.eval`. ",
   simps]
-def MonoidHom.coeFn (α β : Type _) [MulOneClass α] [CommMonoidₓ β] : (α →* β) →* α → β where
+def MonoidHom.coeFn (α β : Type _) [MulOneClassₓ α] [CommMonoidₓ β] : (α →* β) →* α → β where
   toFun := fun g => g
   map_one' := rfl
   map_mul' := fun x y => rfl
@@ -179,7 +179,7 @@ homomorphism `f` between `α` and `β`. -/
 @[to_additive
       "Additive monoid homomorphism between the function spaces `I → α` and `I → β`,\ninduced by an additive monoid homomorphism `f` between `α` and `β`",
   simps]
-protected def MonoidHom.compLeft {α β : Type _} [MulOneClass α] [MulOneClass β] (f : α →* β) (I : Type _) :
+protected def MonoidHom.compLeft {α β : Type _} [MulOneClassₓ α] [MulOneClassₓ β] (f : α →* β) (I : Type _) :
     (I → α) →* I → β where
   toFun := fun h => f ∘ h
   map_one' := by
@@ -197,48 +197,57 @@ open Pi
 
 variable (f)
 
-/-- The zero-preserving homomorphism including a single value
+/-- The one-preserving homomorphism including a single value
 into a dependent family of values, as functions supported at a point.
 
-This is the `zero_hom` version of `pi.single`. -/
-@[simps]
-def ZeroHom.single [∀ i, Zero <| f i] (i : I) : ZeroHom (f i) (∀ i, f i) where
-  toFun := single i
-  map_zero' := single_zero i
+This is the `one_hom` version of `pi.mul_single`. -/
+@[to_additive ZeroHom.single
+      "The zero-preserving homomorphism including a single value\ninto a dependent family of values, as functions supported at a point.\n\nThis is the `zero_hom` version of `pi.single`.",
+  simps]
+def OneHom.single [∀ i, One <| f i] (i : I) : OneHom (f i) (∀ i, f i) where
+  toFun := mulSingle i
+  map_one' := mul_single_one i
 
-/-- The additive monoid homomorphism including a single additive monoid
-into a dependent family of additive monoids, as functions supported at a point.
+/-- The monoid homomorphism including a single monoid into a dependent family of additive monoids,
+as functions supported at a point.
 
-This is the `add_monoid_hom` version of `pi.single`. -/
-@[simps]
-def AddMonoidHom.single [∀ i, AddZeroClass <| f i] (i : I) : f i →+ ∀ i, f i :=
-  { ZeroHom.single f i with toFun := single i, map_add' := single_op₂ (fun _ => · + ·) (fun _ => zero_addₓ _) _ }
+This is the `monoid_hom` version of `pi.mul_single`. -/
+@[to_additive
+      "The additive monoid homomorphism including a single additive\nmonoid into a dependent family of additive monoids, as functions supported at a point.\n\nThis is the `add_monoid_hom` version of `pi.single`.",
+  simps]
+def MonoidHom.single [∀ i, MulOneClassₓ <| f i] (i : I) : f i →* ∀ i, f i :=
+  { OneHom.single f i with map_mul' := mul_single_op₂ (fun _ => · * ·) (fun _ => one_mulₓ _) _ }
 
 /-- The multiplicative homomorphism including a single `mul_zero_class`
 into a dependent family of `mul_zero_class`es, as functions supported at a point.
 
 This is the `mul_hom` version of `pi.single`. -/
 @[simps]
-def MulHom.single [∀ i, MulZeroClass <| f i] (i : I) : MulHom (f i) (∀ i, f i) where
+def MulHom.single [∀ i, MulZeroClassₓ <| f i] (i : I) : MulHom (f i) (∀ i, f i) where
   toFun := single i
-  map_mul' := single_op₂ (fun _ => · * ·) (fun _ => zero_mul _) _
+  map_mul' := Pi.single_op₂ (fun _ => · * ·) (fun _ => zero_mul _) _
 
 variable {f}
 
-theorem Pi.single_add [∀ i, AddZeroClass <| f i] (i : I) (x y : f i) : single i (x + y) = single i x + single i y :=
-  (AddMonoidHom.single f i).map_add x y
+@[to_additive]
+theorem Pi.mul_single_mul [∀ i, MulOneClassₓ <| f i] (i : I) (x y : f i) :
+    mulSingle i (x * y) = mulSingle i x * mulSingle i y :=
+  (MonoidHom.single f i).map_mul x y
 
-theorem Pi.single_neg [∀ i, AddGroupₓ <| f i] (i : I) (x : f i) : single i (-x) = -single i x :=
-  (AddMonoidHom.single f i).map_neg x
+@[to_additive]
+theorem Pi.mul_single_inv [∀ i, Groupₓ <| f i] (i : I) (x : f i) : mulSingle i x⁻¹ = (mulSingle i x)⁻¹ :=
+  (MonoidHom.single f i).map_inv x
 
-theorem Pi.single_sub [∀ i, AddGroupₓ <| f i] (i : I) (x y : f i) : single i (x - y) = single i x - single i y :=
-  (AddMonoidHom.single f i).map_sub x y
+@[to_additive]
+theorem Pi.single_div [∀ i, Groupₓ <| f i] (i : I) (x y : f i) : mulSingle i (x / y) = mulSingle i x / mulSingle i y :=
+  (MonoidHom.single f i).map_div x y
 
-theorem Pi.single_mul [∀ i, MulZeroClass <| f i] (i : I) (x y : f i) : single i (x * y) = single i x * single i y :=
+theorem Pi.single_mul [∀ i, MulZeroClassₓ <| f i] (i : I) (x y : f i) : single i (x * y) = single i x * single i y :=
   (MulHom.single f i).map_mul x y
 
-theorem Pi.update_eq_sub_add_single [∀ i, AddGroupₓ <| f i] (g : ∀ i : I, f i) (x : f i) :
-    Function.update g i x = g - single i (g i) + single i x := by
+@[to_additive update_eq_sub_add_single]
+theorem Pi.update_eq_div_mul_single [∀ i, Groupₓ <| f i] (g : ∀ i : I, f i) (x : f i) :
+    Function.update g i x = g / mulSingle i (g i) * mulSingle i x := by
   ext j
   rcases eq_or_ne i j with (rfl | h)
   · simp
@@ -296,7 +305,7 @@ variable {ι : Type u} {η : Type v} (R : Type w) (s : ι → η)
 
 /-- `function.extend s f 1` as a bundled hom. -/
 @[to_additive Function.ExtendByZero.hom "`function.extend s f 0` as a bundled hom.", simps]
-noncomputable def Function.ExtendByOne.hom [MulOneClass R] : (ι → R) →* η → R where
+noncomputable def Function.ExtendByOne.hom [MulOneClassₓ R] : (ι → R) →* η → R where
   toFun := fun f => Function.extendₓ s f 1
   map_one' := Function.extend_one s
   map_mul' := fun f g => by

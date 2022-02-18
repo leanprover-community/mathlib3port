@@ -33,13 +33,13 @@ open MeasureTheory
 
 namespace Box
 
-theorem measure_Icc_lt_top (I : box ι) (μ : Measureₓ (ι → ℝ)) [is_locally_finite_measure μ] : μ I.Icc < ∞ :=
+theorem measure_Icc_lt_top (I : Box ι) (μ : Measureₓ (ι → ℝ)) [IsLocallyFiniteMeasure μ] : μ I.Icc < ∞ :=
   show μ (Icc I.lower I.upper) < ∞ from I.is_compact_Icc.measure_lt_top
 
-theorem measure_coe_lt_top (I : box ι) (μ : Measureₓ (ι → ℝ)) [is_locally_finite_measure μ] : μ I < ∞ :=
+theorem measure_coe_lt_top (I : Box ι) (μ : Measureₓ (ι → ℝ)) [IsLocallyFiniteMeasure μ] : μ I < ∞ :=
   (measure_mono <| coe_subset_Icc).trans_lt (I.measure_Icc_lt_top μ)
 
-variable [Fintype ι] (I : box ι)
+variable [Fintype ι] (I : Box ι)
 
 theorem measurable_set_coe : MeasurableSet (I : Set (ι → ℝ)) := by
   rw [coe_eq_pi]
@@ -50,7 +50,7 @@ theorem measurable_set_Icc : MeasurableSet I.Icc :=
   measurable_set_Icc
 
 theorem measurable_set_Ioo : MeasurableSet I.Ioo :=
-  (measurable_set_pi (finite.of_fintype _).Countable).2 <| Or.inl fun i hi => measurable_set_Ioo
+  (measurable_set_pi (Finite.of_fintype _).Countable).2 <| Or.inl fun i hi => measurable_set_Ioo
 
 theorem coe_ae_eq_Icc : (I : Set (ι → ℝ)) =ᵐ[volume] I.Icc := by
   rw [coe_eq_pi]
@@ -61,8 +61,8 @@ theorem Ioo_ae_eq_Icc : I.Ioo =ᵐ[volume] I.Icc :=
 
 end Box
 
-theorem prepartition.measure_Union_to_real [Fintype ι] {I : box ι} (π : prepartition I) (μ : Measureₓ (ι → ℝ))
-    [is_locally_finite_measure μ] : (μ π.Union).toReal = ∑ J in π.boxes, (μ J).toReal := by
+theorem prepartition.measure_Union_to_real [Fintype ι] {I : Box ι} (π : Prepartition I) (μ : Measureₓ (ι → ℝ))
+    [IsLocallyFiniteMeasure μ] : (μ π.Union).toReal = ∑ J in π.boxes, (μ J).toReal := by
   erw [← Ennreal.to_real_sum, π.Union_def, measure_bUnion_finset π.pairwise_disjoint]
   exacts[fun J hJ => J.measurable_set_coe, fun J hJ => (J.measure_coe_lt_top μ).Ne]
 
@@ -79,7 +79,7 @@ namespace Measureₓ
 /-- If `μ` is a locally finite measure on `ℝⁿ`, then `λ J, (μ J).to_real` is a box-additive
 function. -/
 @[simps]
-def to_box_additive (μ : Measureₓ (ι → ℝ)) [is_locally_finite_measure μ] : ι →ᵇᵃ[⊤] ℝ where
+def to_box_additive (μ : Measure (ι → ℝ)) [IsLocallyFiniteMeasure μ] : ι →ᵇᵃ[⊤] ℝ where
   toFun := fun J => (μ J).toReal
   sum_partition_boxes' := fun J hJ π hπ => by
     rw [← π.measure_Union_to_real, hπ.Union_eq]
@@ -95,10 +95,10 @@ open MeasureTheory
 namespace Box
 
 @[simp]
-theorem volume_apply (I : box ι) : (volume : Measureₓ (ι → ℝ)).toBoxAdditive I = ∏ i, I.upper i - I.lower i := by
+theorem volume_apply (I : Box ι) : (volume : Measureₓ (ι → ℝ)).toBoxAdditive I = ∏ i, I.upper i - I.lower i := by
   rw [measure.to_box_additive_apply, coe_eq_pi, Real.volume_pi_Ioc_to_real I.lower_le_upper]
 
-theorem volume_face_mul {n} (i : Finₓ (n + 1)) (I : box (Finₓ (n + 1))) :
+theorem volume_face_mul {n} (i : Finₓ (n + 1)) (I : Box (Finₓ (n + 1))) :
     (∏ j, (I.face i).upper j - (I.face i).lower j) * (I.upper i - I.lower i) = ∏ j, I.upper j - I.lower j := by
   simp only [face_lower, face_upper, · ∘ ·, Finₓ.prod_univ_succ_above _ i, mul_comm]
 
@@ -111,8 +111,8 @@ namespace BoxAdditiveMap
 protected def volume {E : Type _} [NormedGroup E] [NormedSpace ℝ E] : ι →ᵇᵃ E →L[ℝ] E :=
   (volume : Measureₓ (ι → ℝ)).toBoxAdditive.toSmul
 
-theorem volume_apply {E : Type _} [NormedGroup E] [NormedSpace ℝ E] (I : box ι) (x : E) :
-    box_additive_map.volume I x = (∏ j, I.upper j - I.lower j) • x :=
+theorem volume_apply {E : Type _} [NormedGroup E] [NormedSpace ℝ E] (I : Box ι) (x : E) :
+    BoxAdditiveMap.volume I x = (∏ j, I.upper j - I.lower j) • x :=
   congr_arg2ₓ (· • ·) I.volume_apply rfl
 
 end BoxAdditiveMap

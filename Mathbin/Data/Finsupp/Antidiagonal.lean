@@ -23,12 +23,12 @@ variable {α : Type _}
 `s : α →₀ ℕ` consists of all pairs `(t₁, t₂) : (α →₀ ℕ) × (α →₀ ℕ)` such that `t₁ + t₂ = s`.
 The finitely supported function `antidiagonal s` is equal to the multiplicities of these pairs. -/
 def antidiagonal' (f : α →₀ ℕ) : (α →₀ ℕ) × (α →₀ ℕ) →₀ ℕ :=
-  (f.to_multiset.antidiagonal.map (Prod.map Multiset.toFinsupp Multiset.toFinsupp)).toFinsupp
+  (f.toMultiset.antidiagonal.map (Prod.map Multiset.toFinsupp Multiset.toFinsupp)).toFinsupp
 
 /-- The antidiagonal of `s : α →₀ ℕ` is the finset of all pairs `(t₁, t₂) : (α →₀ ℕ) × (α →₀ ℕ)`
 such that `t₁ + t₂ = s`. -/
 def antidiagonal (f : α →₀ ℕ) : Finset ((α →₀ ℕ) × (α →₀ ℕ)) :=
-  f.antidiagonal'.support
+  f.antidiagonal'.Support
 
 @[simp]
 theorem mem_antidiagonal {f : α →₀ ℕ} {p : (α →₀ ℕ) × (α →₀ ℕ)} : p ∈ antidiagonal f ↔ p.1 + p.2 = f := by
@@ -75,32 +75,7 @@ theorem antidiagonal_zero : antidiagonal (0 : α →₀ ℕ) = singleton (0, 0) 
 theorem prod_antidiagonal_swap {M : Type _} [CommMonoidₓ M] (n : α →₀ ℕ) (f : (α →₀ ℕ) → (α →₀ ℕ) → M) :
     (∏ p in antidiagonal n, f p.1 p.2) = ∏ p in antidiagonal n, f p.2 p.1 :=
   Finset.prod_bij (fun p hp => p.swap) (fun p => swap_mem_antidiagonal.2) (fun p hp => rfl)
-    (fun p₁ p₂ _ _ h => Prod.swap_injectiveₓ h) fun p hp => ⟨p.swap, swap_mem_antidiagonal.2 hp, p.swap_swap.symm⟩
-
-/-- The set `{m : α →₀ ℕ | m ≤ n}` as a `finset`. -/
-def Iic_finset (n : α →₀ ℕ) : Finset (α →₀ ℕ) :=
-  (antidiagonal n).Image Prod.fst
-
-@[simp]
-theorem mem_Iic_finset {m n : α →₀ ℕ} : m ∈ Iic_finset n ↔ m ≤ n := by
-  simp [Iic_finset, le_iff_exists_add, eq_comm]
-
-@[simp]
-theorem coe_Iic_finset (n : α →₀ ℕ) : ↑(Iic_finset n) = Set.Iic n := by
-  ext
-  simp
-
-/-- Let `n : α →₀ ℕ` be a finitely supported function.
-The set of `m : α →₀ ℕ` that are coordinatewise less than or equal to `n`,
-is a finite set. -/
-theorem finite_le_nat (n : α →₀ ℕ) : Set.Finite { m | m ≤ n } := by
-  simpa using (Iic_finset n).finite_to_set
-
-/-- Let `n : α →₀ ℕ` be a finitely supported function.
-The set of `m : α →₀ ℕ` that are coordinatewise less than or equal to `n`,
-but not equal to `n` everywhere, is a finite set. -/
-theorem finite_lt_nat (n : α →₀ ℕ) : Set.Finite { m | m < n } :=
-  (finite_le_nat n).Subset fun m => le_of_ltₓ
+    (fun p₁ p₂ _ _ h => Prod.swap_injective h) fun p hp => ⟨p.swap, swap_mem_antidiagonal.2 hp, p.swap_swap.symm⟩
 
 end Finsupp
 

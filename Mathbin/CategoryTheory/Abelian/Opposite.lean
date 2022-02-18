@@ -14,14 +14,14 @@ namespace CategoryTheory
 
 open CategoryTheory.Limits
 
-variable (C : Type _) [category C] [abelian C]
+variable (C : Type _) [Category C] [Abelian C]
 
 attribute [local instance]
   finite_limits_from_equalizers_and_finite_products finite_colimits_from_coequalizers_and_finite_coproducts has_finite_limits_opposite has_finite_colimits_opposite has_finite_products_opposite
 
-instance : abelian (Cᵒᵖ) where
-  NormalMono := fun X Y f m => normal_mono_of_normal_epi_unop _ (abelian.normal_epi f.unop)
-  NormalEpi := fun X Y f m => normal_epi_of_normal_mono_unop _ (abelian.normal_mono f.unop)
+instance : Abelian (Cᵒᵖ) where
+  normalMonoOfMono := fun X Y f m => normal_mono_of_normal_epi_unop _ (normal_epi_of_epi f.unop)
+  normalEpiOfEpi := fun X Y f m => normal_epi_of_normal_mono_unop _ (normal_mono_of_mono f.unop)
 
 section
 
@@ -72,32 +72,32 @@ def cokernel_op_unop : (cokernel f.op).unop ≅ kernel f where
 /-- The kernel of `g.unop` is the opposite of `cokernel g`. -/
 @[simps]
 def kernel_unop_op : Opposite.op (kernel g.unop) ≅ cokernel g :=
-  (cokernel_op_unop g.unop).op
+  (cokernelOpUnop g.unop).op
 
 /-- The cokernel of `g.unop` is the opposite of `kernel g`. -/
 @[simps]
 def cokernel_unop_op : Opposite.op (cokernel g.unop) ≅ kernel g :=
-  (kernel_op_unop g.unop).op
+  (kernelOpUnop g.unop).op
 
 /-- The kernel of `f.op` is the opposite of `cokernel f`. -/
 @[simps]
 def kernel_op_op : kernel f.op ≅ Opposite.op (cokernel f) :=
-  (kernel_op_unop f).op.symm
+  (kernelOpUnop f).op.symm
 
 /-- The cokernel of `f.op` is the opposite of `kernel f`. -/
 @[simps]
 def cokernel_op_op : cokernel f.op ≅ Opposite.op (kernel f) :=
-  (cokernel_op_unop f).op.symm
+  (cokernelOpUnop f).op.symm
 
 /-- The kernel of `g.unop` is the opposite of `cokernel g`. -/
 @[simps]
 def kernel_unop_unop : kernel g.unop ≅ (cokernel g).unop :=
-  (kernel_unop_op g).unop.symm
+  (kernelUnopOp g).unop.symm
 
 /-- The cokernel of `g.unop` is the opposite of `kernel g`. -/
 @[simps]
 def cokernel_unop_unop : cokernel g.unop ≅ (kernel g).unop :=
-  (cokernel_unop_op g).unop.symm
+  (cokernelUnopOp g).unop.symm
 
 end
 

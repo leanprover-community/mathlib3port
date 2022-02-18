@@ -75,28 +75,28 @@ structure line (α ι : Type _) where
 
 namespace Line
 
-instance α ι : CoeFun (line α ι) fun _ => α → ι → α :=
-  ⟨fun l x i => (l.idx_fun i).getOrElse x⟩
+instance α ι : CoeFun (Line α ι) fun _ => α → ι → α :=
+  ⟨fun l x i => (l.idxFun i).getOrElse x⟩
 
 /-- A line is monochromatic if all its points are the same color. -/
-def is_mono {α ι κ} (C : (ι → α) → κ) (l : line α ι) : Prop :=
+def is_mono {α ι κ} (C : (ι → α) → κ) (l : Line α ι) : Prop :=
   ∃ c, ∀ x, C (l x) = c
 
 /-- The diagonal line. It is the identity at every coordinate. -/
-def diagonal α ι [Nonempty ι] : line α ι where
+def diagonal α ι [Nonempty ι] : Line α ι where
   idxFun := fun _ => none
   proper := ⟨Classical.arbitrary ι, rfl⟩
 
-instance α ι [Nonempty ι] : Inhabited (line α ι) :=
+instance α ι [Nonempty ι] : Inhabited (Line α ι) :=
   ⟨diagonal α ι⟩
 
 /-- The type of lines that are only one color except possibly at their endpoints. -/
 structure almost_mono {α ι κ : Type _} (C : (ι → Option α) → κ) where
-  line : line (Option α) ι
+  line : Line (Option α) ι
   Color : κ
   has_color : ∀ x : α, C (line (some x)) = color
 
-instance {α ι κ : Type _} [Nonempty ι] [Inhabited κ] : Inhabited (almost_mono fun v : ι → Option α => (default : κ)) :=
+instance {α ι κ : Type _} [Nonempty ι] [Inhabited κ] : Inhabited (AlmostMono fun v : ι → Option α => (default : κ)) :=
   ⟨{ line := default, Color := default, has_color := fun _ => rfl }⟩
 
 /-- The type of collections of lines such that
@@ -105,75 +105,74 @@ instance {α ι κ : Type _} [Nonempty ι] [Inhabited κ] : Inhabited (almost_mo
 - the colors of the lines are distinct.
 Used in the proof `exists_mono_in_high_dimension`. -/
 structure color_focused {α ι κ : Type _} (C : (ι → Option α) → κ) where
-  lines : Multiset (almost_mono C)
+  lines : Multiset (AlmostMono C)
   focus : ι → Option α
-  is_focused : ∀, ∀ p ∈ lines, ∀, almost_mono.line p none = focus
-  distinct_colors : (lines.map almost_mono.color).Nodup
+  is_focused : ∀, ∀ p ∈ lines, ∀, AlmostMono.line p none = focus
+  distinct_colors : (lines.map AlmostMono.color).Nodup
 
-instance {α ι κ} (C : (ι → Option α) → κ) : Inhabited (color_focused C) :=
+instance {α ι κ} (C : (ι → Option α) → κ) : Inhabited (ColorFocused C) :=
   ⟨⟨0, fun _ => none, fun _ => False.elim, Multiset.nodup_zero⟩⟩
 
 /-- A function `f : α → α'` determines a function `line α ι → line α' ι`. For a coordinate `i`,
 `l.map f` is the identity at `i` if `l` is, and constantly `f y` if `l` is constantly `y` at `i`. -/
-def map {α α' ι} (f : α → α') (l : line α ι) : line α' ι where
-  idxFun := fun i => (l.idx_fun i).map f
+def map {α α' ι} (f : α → α') (l : Line α ι) : Line α' ι where
+  idxFun := fun i => (l.idxFun i).map f
   proper :=
     ⟨l.proper.some, by
       rw [l.proper.some_spec, Option.map_none'ₓ]⟩
 
 /-- A point in `ι → α` and a line in `ι' → α` determine a line in `ι ⊕ ι' → α`. -/
-def vertical {α ι ι'} (v : ι → α) (l : line α ι') : line α (Sum ι ι') where
-  idxFun := Sum.elim (some ∘ v) l.idx_fun
+def vertical {α ι ι'} (v : ι → α) (l : Line α ι') : Line α (Sum ι ι') where
+  idxFun := Sum.elim (some ∘ v) l.idxFun
   proper := ⟨Sum.inr l.proper.some, l.proper.some_spec⟩
 
 /-- A line in `ι → α` and a point in `ι' → α` determine a line in `ι ⊕ ι' → α`. -/
-def horizontal {α ι ι'} (l : line α ι) (v : ι' → α) : line α (Sum ι ι') where
-  idxFun := Sum.elim l.idx_fun (some ∘ v)
+def horizontal {α ι ι'} (l : Line α ι) (v : ι' → α) : Line α (Sum ι ι') where
+  idxFun := Sum.elim l.idxFun (some ∘ v)
   proper := ⟨Sum.inl l.proper.some, l.proper.some_spec⟩
 
 /-- One line in `ι → α` and one in `ι' → α` together determine a line in `ι ⊕ ι' → α`. -/
-def Prod {α ι ι'} (l : line α ι) (l' : line α ι') : line α (Sum ι ι') where
-  idxFun := Sum.elim l.idx_fun l'.idx_fun
+def Prod {α ι ι'} (l : Line α ι) (l' : Line α ι') : Line α (Sum ι ι') where
+  idxFun := Sum.elim l.idxFun l'.idxFun
   proper := ⟨Sum.inl l.proper.some, l.proper.some_spec⟩
 
-theorem apply {α ι} (l : line α ι) (x : α) : l x = fun i => (l.idx_fun i).getOrElse x :=
+theorem apply {α ι} (l : Line α ι) (x : α) : l x = fun i => (l.idxFun i).getOrElse x :=
   rfl
 
-theorem apply_none {α ι} (l : line α ι) (x : α) (i : ι) (h : l.idx_fun i = none) : l x i = x := by
+theorem apply_none {α ι} (l : Line α ι) (x : α) (i : ι) (h : l.idxFun i = none) : l x i = x := by
   simp only [Option.get_or_else_none, h, l.apply]
 
-theorem apply_of_ne_none {α ι} (l : line α ι) (x : α) (i : ι) (h : l.idx_fun i ≠ none) : some (l x i) = l.idx_fun i :=
-  by
+theorem apply_of_ne_none {α ι} (l : Line α ι) (x : α) (i : ι) (h : l.idxFun i ≠ none) : some (l x i) = l.idxFun i := by
   rw [l.apply, Option.get_or_else_of_ne_none h]
 
 @[simp]
-theorem map_apply {α α' ι} (f : α → α') (l : line α ι) (x : α) : l.map f (f x) = f ∘ l x := by
+theorem map_apply {α α' ι} (f : α → α') (l : Line α ι) (x : α) : l.map f (f x) = f ∘ l x := by
   simp only [line.apply, line.map, Option.get_or_else_map]
 
 @[simp]
-theorem vertical_apply {α ι ι'} (v : ι → α) (l : line α ι') (x : α) : l.vertical v x = Sum.elim v (l x) := by
+theorem vertical_apply {α ι ι'} (v : ι → α) (l : Line α ι') (x : α) : l.vertical v x = Sum.elim v (l x) := by
   funext i
   cases i <;> rfl
 
 @[simp]
-theorem horizontal_apply {α ι ι'} (l : line α ι) (v : ι' → α) (x : α) : l.horizontal v x = Sum.elim (l x) v := by
+theorem horizontal_apply {α ι ι'} (l : Line α ι) (v : ι' → α) (x : α) : l.horizontal v x = Sum.elim (l x) v := by
   funext i
   cases i <;> rfl
 
 @[simp]
-theorem prod_apply {α ι ι'} (l : line α ι) (l' : line α ι') (x : α) : l.prod l' x = Sum.elim (l x) (l' x) := by
+theorem prod_apply {α ι ι'} (l : Line α ι) (l' : Line α ι') (x : α) : l.Prod l' x = Sum.elim (l x) (l' x) := by
   funext i
   cases i <;> rfl
 
 @[simp]
-theorem diagonal_apply {α ι} [Nonempty ι] (x : α) : line.diagonal α ι x = fun i => x := by
+theorem diagonal_apply {α ι} [Nonempty ι] (x : α) : Line.diagonal α ι x = fun i => x := by
   simp_rw [line.apply, line.diagonal, Option.get_or_else_none]
 
 /-- The Hales-Jewett theorem. This version has a restriction on universe levels which is necessary
 for the proof. See `exists_mono_in_high_dimension` for a fully universe-polymorphic version. -/
 private theorem exists_mono_in_high_dimension' :
     ∀ α : Type u [Fintype α] κ : Type max v u [Fintype κ],
-      ∃ (ι : Type)(_ : Fintype ι), ∀ C : (ι → α) → κ, ∃ l : line α ι, l.is_mono C :=
+      ∃ (ι : Type)(_ : Fintype ι), ∀ C : (ι → α) → κ, ∃ l : Line α ι, l.IsMono C :=
   Fintype.induction_empty_option
     (fun α α' e =>
       forall_imp fun κ =>
@@ -195,7 +194,7 @@ private theorem exists_mono_in_high_dimension' :
     (by
       intros α _ ihα κ _
       by_cases' h : Nonempty α
-      work_on_goal 1
+      on_goal 1 =>
         refine' ⟨Unit, inferInstance, fun C => ⟨diagonal _ _, C fun _ => none, _⟩⟩
         rintro (_ | ⟨a⟩)
         rfl
@@ -230,7 +229,7 @@ private theorem exists_mono_in_high_dimension' :
         rw [line.horizontal_apply, ← hl, ← hl']
       specialize hι C'
       rcases hι with (⟨s, sr⟩ | _)
-      work_on_goal 1
+      on_goal 1 =>
         exact Or.inr (mono_of_mono hι)
       by_cases' h : ∃ p ∈ s.lines, (p : almost_mono _).Color = C' s.focus
       · obtain ⟨p, p_mem, hp⟩ := h
@@ -246,7 +245,7 @@ private theorem exists_mono_in_high_dimension' :
             _⟩
       · rw [vertical_apply, ← congr_funₓ (hl' x), line.map_apply]
         
-      · refine' fun p => ⟨p.line.prod (l'.map some), p.color, fun x => _⟩
+      · refine' fun p => ⟨p.line.prod (l'.map some), p.Color, fun x => _⟩
         rw [line.prod_apply, line.map_apply, ← p.has_color, ← congr_funₓ (hl' x)]
         
       · simp_rw [Multiset.mem_cons, Multiset.mem_map]
@@ -265,7 +264,7 @@ private theorem exists_mono_in_high_dimension' :
 /-- The Hales-Jewett theorem: for any finite types `α` and `κ`, there exists a finite type `ι` such
 that whenever the hypercube `ι → α` is `κ`-colored, there is a monochromatic combinatorial line. -/
 theorem exists_mono_in_high_dimension (α : Type u) [Fintype α] (κ : Type v) [Fintype κ] :
-    ∃ (ι : Type)(_ : Fintype ι), ∀ C : (ι → α) → κ, ∃ l : line α ι, l.is_mono C :=
+    ∃ (ι : Type)(_ : Fintype ι), ∀ C : (ι → α) → κ, ∃ l : Line α ι, l.IsMono C :=
   let ⟨ι, ιfin, hι⟩ := exists_mono_in_high_dimension' α (Ulift κ)
   ⟨ι, ιfin, fun C =>
     let ⟨l, c, hc⟩ := hι (Ulift.up ∘ C)

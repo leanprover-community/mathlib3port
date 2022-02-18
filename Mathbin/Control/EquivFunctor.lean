@@ -53,18 +53,18 @@ def map_equiv : f α ≃ f β where
     simp
 
 @[simp]
-theorem map_equiv_apply (x : f α) : map_equiv f e x = EquivFunctor.map e x :=
+theorem map_equiv_apply (x : f α) : mapEquiv f e x = EquivFunctor.map e x :=
   rfl
 
-theorem map_equiv_symm_apply (y : f β) : (map_equiv f e).symm y = EquivFunctor.map e.symm y :=
+theorem map_equiv_symm_apply (y : f β) : (mapEquiv f e).symm y = EquivFunctor.map e.symm y :=
   rfl
 
 @[simp]
-theorem map_equiv_refl α : map_equiv f (Equivₓ.refl α) = Equivₓ.refl (f α) := by
+theorem map_equiv_refl α : mapEquiv f (Equivₓ.refl α) = Equivₓ.refl (f α) := by
   simpa [EquivFunctor.mapEquiv]
 
 @[simp]
-theorem map_equiv_symm : (map_equiv f e).symm = map_equiv f e.symm :=
+theorem map_equiv_symm : (mapEquiv f e).symm = mapEquiv f e.symm :=
   Equivₓ.ext <| map_equiv_symm_apply f e
 
 /-- The composition of `map_equiv`s is carried over the `equiv_functor`.
@@ -73,7 +73,7 @@ or `map_comp_map` when not applied.
 -/
 @[simp]
 theorem map_equiv_trans {γ : Type u₀} (ab : α ≃ β) (bc : β ≃ γ) :
-    (map_equiv f ab).trans (map_equiv f bc) = map_equiv f (ab.trans bc) :=
+    (mapEquiv f ab).trans (mapEquiv f bc) = mapEquiv f (ab.trans bc) :=
   Equivₓ.ext fun x => by
     simp [map_equiv, map_trans']
 

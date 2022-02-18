@@ -12,8 +12,6 @@ elsewhere, with a shorter name for ease of discovery, and no need for a `[fact (
 
 variable {R ι : Type _}
 
-attribute [local instance] Nat.fact_prime_two
-
 namespace CharTwo
 
 section Semiringₓ
@@ -64,16 +62,16 @@ theorem add_mul_self (x y : R) : (x + y) * (x + y) = x * x + y * y := by
 
 open_locale BigOperators
 
-theorem list_sum_sq (l : List R) : l.sum ^ 2 = (l.map (· ^ 2)).Sum :=
+theorem list_sum_sq (l : List R) : l.Sum ^ 2 = (l.map (· ^ 2)).Sum :=
   list_sum_pow_char _ _
 
-theorem list_sum_mul_self (l : List R) : l.sum * l.sum = (List.map (fun x => x * x) l).Sum := by
+theorem list_sum_mul_self (l : List R) : l.Sum * l.Sum = (List.map (fun x => x * x) l).Sum := by
   simp_rw [← pow_two, list_sum_sq]
 
-theorem multiset_sum_sq (l : Multiset R) : l.sum ^ 2 = (l.map (· ^ 2)).Sum :=
+theorem multiset_sum_sq (l : Multiset R) : l.Sum ^ 2 = (l.map (· ^ 2)).Sum :=
   multiset_sum_pow_char _ _
 
-theorem multiset_sum_mul_self (l : Multiset R) : l.sum * l.sum = (Multiset.map (fun x => x * x) l).Sum := by
+theorem multiset_sum_mul_self (l : Multiset R) : l.Sum * l.Sum = (Multiset.map (fun x => x * x) l).Sum := by
   simp_rw [← pow_two, multiset_sum_sq]
 
 theorem sum_sq (s : Finset ι) (f : ι → R) : (∑ i in s, f i) ^ 2 = ∑ i in s, f i ^ 2 :=
@@ -92,7 +90,7 @@ variable [Ringₓ R]
 
 theorem neg_one_eq_one_iff [Nontrivial R] : (-1 : R) = 1 ↔ ringChar R = 2 := by
   refine' ⟨fun h => _, fun h => @CharTwo.neg_eq _ (ringChar.of_eq h) 1⟩
-  rw [eq_comm, ← sub_eq_zero, sub_neg_eq_add, ← Nat.cast_one, ← Nat.cast_add] at h
+  rw [eq_comm, ← sub_eq_zero, sub_neg_eq_add, ← Nat.cast_oneₓ, ← Nat.cast_addₓ] at h
   exact ((Nat.dvd_prime Nat.prime_two).mp (ringChar.dvd h)).resolve_left CharP.ring_char_ne_one
 
 @[simp]

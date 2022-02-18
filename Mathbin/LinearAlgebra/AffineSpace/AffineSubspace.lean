@@ -111,7 +111,7 @@ theorem subset_span_points (s : Set P) : s ⊆ SpanPoints k s := fun p => mem_sp
 /-- The `span_points` of a set is nonempty if and only if that set
 is. -/
 @[simp]
-theorem span_points_nonempty (s : Set P) : (SpanPoints k s).Nonempty ↔ s.nonempty := by
+theorem span_points_nonempty (s : Set P) : (SpanPoints k s).Nonempty ↔ s.Nonempty := by
   constructor
   · contrapose
     rw [Set.not_nonempty_iff_eq_empty, Set.not_nonempty_iff_eq_empty]
@@ -173,7 +173,7 @@ variable (k : Type _) {V : Type _} (P : Type _) [Ringₓ k] [AddCommGroupₓ V] 
 include V
 
 instance : Coe (AffineSubspace k P) (Set P) :=
-  ⟨carrier⟩
+  ⟨Carrier⟩
 
 instance : HasMem P (AffineSubspace k P) :=
   ⟨fun p s => p ∈ (s : Set P)⟩
@@ -226,7 +226,7 @@ def direction_of_nonempty {s : AffineSubspace k P} (h : (s : Set P).Nonempty) : 
 /-- `direction_of_nonempty` gives the same submodule as
 `direction`. -/
 theorem direction_of_nonempty_eq_direction {s : AffineSubspace k P} (h : (s : Set P).Nonempty) :
-    direction_of_nonempty h = s.direction :=
+    directionOfNonempty h = s.direction :=
   le_antisymmₓ (vsub_set_subset_vector_span k s) (Submodule.span_le.2 Set.Subset.rfl)
 
 /-- The set of vectors in the direction of a nonempty affine subspace
@@ -565,7 +565,7 @@ variable (k V)
 
 /-- The affine span is the `Inf` of subspaces containing the given
 points. -/
-theorem affine_span_eq_Inf (s : Set P) : affineSpan k s = Inf { s' | s ⊆ s' } :=
+theorem affine_span_eq_Inf (s : Set P) : affineSpan k s = inf { s' | s ⊆ s' } :=
   le_antisymmₓ (span_points_subset_coe_of_subset_coe <| Set.subset_Inter₂ fun _ => id) (Inf_le (subset_span_points k _))
 
 variable (P)
@@ -656,7 +656,7 @@ theorem bot_ne_top : (⊥ : AffineSubspace k P) ≠ ⊤ := by
 instance : Nontrivial (AffineSubspace k P) :=
   ⟨⟨⊥, ⊤, bot_ne_top k V P⟩⟩
 
-theorem nonempty_of_affine_span_eq_top {s : Set P} (h : affineSpan k s = ⊤) : s.nonempty := by
+theorem nonempty_of_affine_span_eq_top {s : Set P} (h : affineSpan k s = ⊤) : s.Nonempty := by
   rw [← Set.ne_empty_iff_nonempty]
   rintro rfl
   rw [AffineSubspace.span_empty] at h
@@ -667,7 +667,7 @@ theorem vector_span_eq_top_of_affine_span_eq_top {s : Set P} (h : affineSpan k s
   rw [← direction_affine_span, h, direction_top]
 
 /-- For a nonempty set, the affine span is `⊤` iff its vector span is `⊤`. -/
-theorem affine_span_eq_top_iff_vector_span_eq_top_of_nonempty {s : Set P} (hs : s.nonempty) :
+theorem affine_span_eq_top_iff_vector_span_eq_top_of_nonempty {s : Set P} (hs : s.Nonempty) :
     affineSpan k s = ⊤ ↔ vectorSpan k s = ⊤ := by
   refine' ⟨vector_span_eq_top_of_affine_span_eq_top k V P, _⟩
   intro h
@@ -686,7 +686,7 @@ theorem affine_span_eq_top_iff_vector_span_eq_top_of_nontrivial {s : Set P} [Non
   · rw [affine_span_eq_top_iff_vector_span_eq_top_of_nonempty k V P hs]
     
 
-theorem card_pos_of_affine_span_eq_top {ι : Type _} [Fintype ι] {p : ι → P} (h : affineSpan k (range p) = ⊤) :
+theorem card_pos_of_affine_span_eq_top {ι : Type _} [Fintype ι] {p : ι → P} (h : affineSpan k (Range p) = ⊤) :
     0 < Fintype.card ι := by
   obtain ⟨-, ⟨i, -⟩⟩ := nonempty_of_affine_span_eq_top k V P h
   exact fintype.card_pos_iff.mpr ⟨i⟩
@@ -706,7 +706,7 @@ theorem direction_bot : (⊥ : AffineSubspace k P).direction = ⊥ := by
 
 variable {k V P}
 
-theorem subsingleton_of_subsingleton_span_eq_top {s : Set P} (h₁ : s.subsingleton) (h₂ : affineSpan k s = ⊤) :
+theorem subsingleton_of_subsingleton_span_eq_top {s : Set P} (h₁ : s.Subsingleton) (h₂ : affineSpan k s = ⊤) :
     Subsingleton P := by
   obtain ⟨p, hp⟩ := AffineSubspace.nonempty_of_affine_span_eq_top k V P h₂
   have : s = {p} :=
@@ -717,8 +717,8 @@ theorem subsingleton_of_subsingleton_span_eq_top {s : Set P} (h₁ : s.subsingle
     subsingleton_iff_singleton (mem_univ _)] at h₂
   exact subsingleton_of_univ_subsingleton h₂
 
-theorem eq_univ_of_subsingleton_span_eq_top {s : Set P} (h₁ : s.subsingleton) (h₂ : affineSpan k s = ⊤) :
-    s = (univ : Set P) := by
+theorem eq_univ_of_subsingleton_span_eq_top {s : Set P} (h₁ : s.Subsingleton) (h₂ : affineSpan k s = ⊤) :
+    s = (Univ : Set P) := by
   obtain ⟨p, hp⟩ := AffineSubspace.nonempty_of_affine_span_eq_top k V P h₂
   have : s = {p} :=
     subset.antisymm (fun q hq => h₁ hq hp)
@@ -993,7 +993,7 @@ theorem vector_span_range_eq_span_range_vsub_right_ne (p : ι → P) (i₀ : ι)
 
 /-- The affine span of a set is nonempty if and only if that set
 is. -/
-theorem affine_span_nonempty (s : Set P) : (affineSpan k s : Set P).Nonempty ↔ s.nonempty :=
+theorem affine_span_nonempty (s : Set P) : (affineSpan k s : Set P).Nonempty ↔ s.Nonempty :=
   span_points_nonempty k s
 
 /-- The affine span of a nonempty set is nonempty. -/

@@ -28,11 +28,11 @@ namespace Germ
 
 open Ultrafilter
 
-local notation "β*" => germ (φ : Filter α) β
+local notation "β*" => Germ (φ : Filter α) β
 
 /-- If `φ` is an ultrafilter then the ultraproduct is a division ring. -/
 instance [DivisionRing β] : DivisionRing β* :=
-  { germ.ring, germ.div_inv_monoid, germ.nontrivial with
+  { Germ.ring, Germ.divInvMonoid, Germ.nontrivial with
     mul_inv_cancel := fun f =>
       (induction_on f) fun f hf =>
         coe_eq.2 <|
@@ -43,11 +43,11 @@ instance [DivisionRing β] : DivisionRing β* :=
 
 /-- If `φ` is an ultrafilter then the ultraproduct is a field. -/
 instance [Field β] : Field β* :=
-  { germ.comm_ring, germ.division_ring with }
+  { Germ.commRing, Germ.divisionRing with }
 
 /-- If `φ` is an ultrafilter then the ultraproduct is a linear order. -/
 noncomputable instance [LinearOrderₓ β] : LinearOrderₓ β* :=
-  { germ.partial_order with
+  { Germ.partialOrder with
     le_total := fun f g =>
       (induction_on₂ f g) fun f g => eventually_or.1 <| eventually_of_forall fun x => le_totalₓ _ _,
     decidableLe := by
@@ -66,32 +66,32 @@ theorem coe_pos [Preorderₓ β] [Zero β] {f : α → β} : 0 < (f : β*) ↔ �
 theorem const_lt [Preorderₓ β] {x y : β} : (↑x : β*) < ↑y ↔ x < y :=
   coe_lt.trans lift_rel_const_iff
 
-theorem lt_def [Preorderₓ β] : (· < · : β* → β* → Prop) = lift_rel (· < ·) := by
+theorem lt_def [Preorderₓ β] : (· < · : β* → β* → Prop) = LiftRel (· < ·) := by
   ext ⟨f⟩ ⟨g⟩
   exact coe_lt
 
 /-- If `φ` is an ultrafilter then the ultraproduct is an ordered ring. -/
 instance [OrderedRing β] : OrderedRing β* :=
-  { germ.ring, germ.ordered_add_comm_group, germ.nontrivial with zero_le_one := const_le zero_le_one,
+  { Germ.ring, Germ.orderedAddCommGroup, Germ.nontrivial with zero_le_one := const_le zero_le_one,
     mul_pos := fun x y =>
       (induction_on₂ x y) fun f g hf hg => coe_pos.2 <| (coe_pos.1 hg).mp <| (coe_pos.1 hf).mono fun x => mul_pos }
 
 /-- If `φ` is an ultrafilter then the ultraproduct is a linear ordered ring. -/
 noncomputable instance [LinearOrderedRing β] : LinearOrderedRing β* :=
-  { germ.ordered_ring, germ.linear_order, germ.nontrivial with }
+  { Germ.orderedRing, Germ.linearOrder, Germ.nontrivial with }
 
 /-- If `φ` is an ultrafilter then the ultraproduct is a linear ordered field. -/
 noncomputable instance [LinearOrderedField β] : LinearOrderedField β* :=
-  { germ.linear_ordered_ring, germ.field with }
+  { Germ.linearOrderedRing, Germ.field with }
 
 /-- If `φ` is an ultrafilter then the ultraproduct is a linear ordered commutative ring. -/
 noncomputable instance [LinearOrderedCommRing β] : LinearOrderedCommRing β* :=
-  { germ.linear_ordered_ring, germ.comm_monoid with }
+  { Germ.linearOrderedRing, Germ.commMonoid with }
 
 /-- If `φ` is an ultrafilter then the ultraproduct is a decidable linear ordered commutative
 group. -/
 noncomputable instance [LinearOrderedAddCommGroup β] : LinearOrderedAddCommGroup β* :=
-  { germ.ordered_add_comm_group, germ.linear_order with }
+  { Germ.orderedAddCommGroup, Germ.linearOrder with }
 
 theorem max_def [LinearOrderₓ β] (x y : β*) : max x y = map₂ max x y :=
   (induction_on₂ x y) fun a b => by

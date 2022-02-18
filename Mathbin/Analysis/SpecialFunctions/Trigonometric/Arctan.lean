@@ -71,7 +71,7 @@ theorem continuous_on_tan_Ioo : ContinuousOn tan (Ioo (-(π / 2)) (π / 2)) := b
     
   · rw [lt_iff_not_geₓ] at hx_gt
     refine' hx_gt _
-    rw [hxr_eq, ← one_mulₓ (π / 2), mul_div_assoc, ge_iff_le, neg_mul_eq_neg_mul, mul_le_mul_right (half_pos pi_pos)]
+    rw [hxr_eq, ← one_mulₓ (π / 2), mul_div_assoc, ge_iff_le, neg_mul_eq_neg_mulₓ, mul_le_mul_right (half_pos pi_pos)]
     have hr_le : r ≤ -1 := by
       rwa [Int.lt_iff_add_one_leₓ, ← le_neg_iff_add_nonpos_right] at h
     rw [← le_sub_iff_add_le, mul_comm, ← le_div_iff]
@@ -84,7 +84,7 @@ theorem continuous_on_tan_Ioo : ContinuousOn tan (Ioo (-(π / 2)) (π / 2)) := b
       
     
 
-theorem surj_on_tan : surj_on tan (Ioo (-(π / 2)) (π / 2)) univ :=
+theorem surj_on_tan : SurjOn tan (Ioo (-(π / 2)) (π / 2)) Univ :=
   have := neg_lt_self pi_div_two_pos
   continuous_on_tan_Ioo.surj_on_of_tendsto (nonempty_Ioo.2 this)
     (by
@@ -105,17 +105,17 @@ def tan_order_iso : Ioo (-(π / 2)) (π / 2) ≃o ℝ :=
 `arctan x < π / 2` -/
 @[pp_nodot]
 noncomputable def arctan (x : ℝ) : ℝ :=
-  tan_order_iso.symm x
+  tanOrderIso.symm x
 
 @[simp]
 theorem tan_arctan (x : ℝ) : tan (arctan x) = x :=
-  tan_order_iso.apply_symm_apply x
+  tanOrderIso.apply_symm_apply x
 
 theorem arctan_mem_Ioo (x : ℝ) : arctan x ∈ Ioo (-(π / 2)) (π / 2) :=
   Subtype.coe_prop _
 
 theorem arctan_tan {x : ℝ} (hx₁ : -(π / 2) < x) (hx₂ : x < π / 2) : arctan (tan x) = x :=
-  Subtype.ext_iff.1 <| tan_order_iso.symm_apply_apply ⟨x, hx₁, hx₂⟩
+  Subtype.ext_iff.1 <| tanOrderIso.symm_apply_apply ⟨x, hx₁, hx₂⟩
 
 theorem cos_arctan_pos (x : ℝ) : 0 < cos (arctan x) :=
   cos_pos_of_mem_Ioo <| arctan_mem_Ioo x
@@ -163,7 +163,7 @@ theorem arctan_neg (x : ℝ) : arctan (-x) = -arctan x := by
 
 @[continuity]
 theorem continuous_arctan : Continuous arctan :=
-  continuous_subtype_coe.comp tan_order_iso.toHomeomorph.continuous_inv_fun
+  continuous_subtype_coe.comp tanOrderIso.toHomeomorph.continuous_inv_fun
 
 theorem continuous_at_arctan {x : ℝ} : ContinuousAt arctan x :=
   continuous_arctan.ContinuousAt
@@ -173,7 +173,7 @@ def tan_local_homeomorph : LocalHomeomorph ℝ ℝ where
   toFun := tan
   invFun := arctan
   Source := Ioo (-(π / 2)) (π / 2)
-  Target := univ
+  Target := Univ
   map_source' := maps_to_univ _ _
   map_target' := fun y hy => arctan_mem_Ioo y
   left_inv' := fun x hx => arctan_tan hx.1 hx.2
@@ -188,7 +188,7 @@ theorem coe_tan_local_homeomorph : ⇑tan_local_homeomorph = tan :=
   rfl
 
 @[simp]
-theorem coe_tan_local_homeomorph_symm : ⇑tan_local_homeomorph.symm = arctan :=
+theorem coe_tan_local_homeomorph_symm : ⇑tanLocalHomeomorph.symm = arctan :=
   rfl
 
 end Real

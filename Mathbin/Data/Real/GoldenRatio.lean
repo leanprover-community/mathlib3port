@@ -47,7 +47,7 @@ theorem inv_gold : φ⁻¹ = -ψ := by
 
 /-- The opposite of the golden ratio is the inverse of its conjugate. -/
 theorem inv_gold_conj : ψ⁻¹ = -φ := by
-  rw [inv_eq_iff, ← neg_inv, neg_eq_iff_neg_eq]
+  rw [inv_eq_iff_inv_eq, ← neg_inv, neg_eq_iff_neg_eq]
   exact inv_gold.symm
 
 @[simp]
@@ -154,12 +154,12 @@ section Fibrec
 
 variable {α : Type _} [CommSemiringₓ α]
 
--- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»
 /-- The recurrence relation satisfied by the Fibonacci sequence. -/
 def fibRec : LinearRecurrence α where
   order := 2
-  coeffs := «expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr![ , ]»"
+  coeffs := «expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»"
 
 section Poly
 

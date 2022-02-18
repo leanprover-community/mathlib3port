@@ -28,15 +28,15 @@ universe u
 
 variable (K : Type u) [Field K]
 
--- ././Mathport/Syntax/Translate/Basic.lean:857:9: unsupported derive handler λ α, has_coe_to_sort α (Sort*)
+-- ././Mathport/Syntax/Translate/Basic.lean:859:9: unsupported derive handler λ α, has_coe_to_sort α (Sort*)
 /-- Define `FinVect` as the subtype of `Module.{u} K` of finite dimensional vector spaces. -/
 def FinVect :=
-  { V : ModuleCat.{u} K // FiniteDimensional K V }deriving category, [anonymous]
+  { V : ModuleCat.{u} K // FiniteDimensional K V }deriving Category, [anonymous]
 
 namespace FinVect
 
 instance FiniteDimensional (V : FinVect K) : FiniteDimensional K V :=
-  V.prop
+  V.Prop
 
 instance : Inhabited (FinVect K) :=
   ⟨⟨ModuleCat.of K K, FiniteDimensional.finite_dimensional_self K⟩⟩
@@ -47,8 +47,8 @@ instance : Coe (FinVect.{u} K) (ModuleCat.{u} K) where
 protected theorem coe_comp {U V W : FinVect K} (f : U ⟶ V) (g : V ⟶ W) : (f ≫ g : U → W) = (g : V → W) ∘ (f : U → V) :=
   rfl
 
-instance monoidal_category : monoidal_category (FinVect K) :=
-  monoidal_category.full_monoidal_subcategory (fun V => FiniteDimensional K V)
+instance monoidal_category : MonoidalCategory (FinVect K) :=
+  MonoidalCategory.fullMonoidalSubcategory (fun V => FiniteDimensional K V)
     (FiniteDimensional.finite_dimensional_self K) fun X Y hX hY => finite_dimensional_tensor_product X Y
 
 variable (V : FinVect K)
@@ -57,7 +57,7 @@ variable (V : FinVect K)
 def FinVect_dual : FinVect K :=
   ⟨ModuleCat.of K (Module.Dual K V), Subspace.Module.Dual.finite_dimensional⟩
 
-instance : CoeFun (FinVect_dual K V) fun _ => V → K where
+instance : CoeFun (finVectDual K V) fun _ => V → K where
   coe := fun v => by
     change V →ₗ[K] K at v
     exact v
@@ -65,45 +65,45 @@ instance : CoeFun (FinVect_dual K V) fun _ => V → K where
 open CategoryTheory.MonoidalCategory
 
 /-- The coevaluation map is defined in `linear_algebra.coevaluation`. -/
-def FinVect_coevaluation : 𝟙_ (FinVect K) ⟶ V ⊗ FinVect_dual K V := by
+def FinVect_coevaluation : 𝟙_ (FinVect K) ⟶ V ⊗ finVectDual K V := by
   apply coevaluation K V
 
 theorem FinVect_coevaluation_apply_one :
-    FinVect_coevaluation K V (1 : K) =
+    finVectCoevaluation K V (1 : K) =
       ∑ i : Basis.OfVectorSpaceIndex K V, (Basis.ofVectorSpace K V) i ⊗ₜ[K] (Basis.ofVectorSpace K V).Coord i :=
   by
   apply coevaluation_apply_one K V
 
 /-- The evaluation morphism is given by the contraction map. -/
-def FinVect_evaluation : FinVect_dual K V ⊗ V ⟶ 𝟙_ (FinVect K) := by
+def FinVect_evaluation : finVectDual K V ⊗ V ⟶ 𝟙_ (FinVect K) := by
   apply contractLeft K V
 
 @[simp]
-theorem FinVect_evaluation_apply (f : FinVect_dual K V) (x : V) : (FinVect_evaluation K V) (f ⊗ₜ x) = f x := by
+theorem FinVect_evaluation_apply (f : finVectDual K V) (x : V) : (finVectEvaluation K V) (f ⊗ₜ x) = f x := by
   apply contract_left_apply f x
 
 private theorem coevaluation_evaluation :
-    let V' : FinVect K := FinVect_dual K V
-    𝟙 V' ⊗ FinVect_coevaluation K V ≫ (α_ V' V V').inv ≫ FinVect_evaluation K V ⊗ 𝟙 V' = (ρ_ V').Hom ≫ (λ_ V').inv :=
+    let V' : FinVect K := finVectDual K V
+    𝟙 V' ⊗ finVectCoevaluation K V ≫ (α_ V' V V').inv ≫ finVectEvaluation K V ⊗ 𝟙 V' = (ρ_ V').Hom ≫ (λ_ V').inv :=
   by
   apply contract_left_assoc_coevaluation K V
 
 private theorem evaluation_coevaluation :
-    FinVect_coevaluation K V ⊗ 𝟙 V ≫ (α_ V (FinVect_dual K V) V).Hom ≫ 𝟙 V ⊗ FinVect_evaluation K V =
+    finVectCoevaluation K V ⊗ 𝟙 V ≫ (α_ V (finVectDual K V) V).Hom ≫ 𝟙 V ⊗ finVectEvaluation K V =
       (λ_ V).Hom ≫ (ρ_ V).inv :=
   by
   apply contract_left_assoc_coevaluation' K V
 
-instance exact_pairing : exact_pairing V (FinVect_dual K V) where
-  coevaluation := FinVect_coevaluation K V
-  evaluation := FinVect_evaluation K V
+instance exact_pairing : ExactPairing V (finVectDual K V) where
+  coevaluation := finVectCoevaluation K V
+  evaluation := finVectEvaluation K V
   coevaluation_evaluation' := coevaluation_evaluation K V
   evaluation_coevaluation' := evaluation_coevaluation K V
 
-instance right_dual : has_right_dual V :=
-  ⟨FinVect_dual K V⟩
+instance right_dual : HasRightDual V :=
+  ⟨finVectDual K V⟩
 
-instance right_rigid_category : right_rigid_category (FinVect K) :=
+instance right_rigid_category : RightRigidCategory (FinVect K) :=
   {  }
 
 end FinVect

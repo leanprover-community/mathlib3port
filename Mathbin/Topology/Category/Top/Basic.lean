@@ -19,14 +19,14 @@ universe u
 
 /-- The category of topological spaces and continuous maps. -/
 def Top : Type (u + 1) :=
-  bundled TopologicalSpace
+  Bundled TopologicalSpace
 
 namespace Top
 
-instance bundled_hom : bundled_hom @ContinuousMap :=
-  ⟨@ContinuousMap.toFun, @ContinuousMap.id, @ContinuousMap.comp, @ContinuousMap.coe_inj⟩
+instance bundled_hom : BundledHom @ContinuousMap :=
+  ⟨@ContinuousMap.toFun, @ContinuousMap.id, @ContinuousMap.comp, @ContinuousMap.coe_injective⟩
 
-deriving instance large_category, concrete_category for Top
+deriving instance LargeCategory, ConcreteCategory for Top
 
 instance : CoeSort Top (Type _) :=
   bundled.has_coe_to_sort
@@ -75,32 +75,32 @@ def iso_of_homeo {X Y : Top.{u}} (f : X ≃ₜ Y) : X ≅ Y where
 /-- Any isomorphism in `Top` induces a homeomorphism. -/
 @[simps]
 def homeo_of_iso {X Y : Top.{u}} (f : X ≅ Y) : X ≃ₜ Y where
-  toFun := f.hom
+  toFun := f.Hom
   invFun := f.inv
   left_inv := fun x => by
     simp
   right_inv := fun x => by
     simp
-  continuous_to_fun := f.hom.continuous
-  continuous_inv_fun := f.inv.continuous
+  continuous_to_fun := f.Hom.Continuous
+  continuous_inv_fun := f.inv.Continuous
 
 @[simp]
-theorem of_iso_of_homeo {X Y : Top.{u}} (f : X ≃ₜ Y) : homeo_of_iso (iso_of_homeo f) = f := by
+theorem of_iso_of_homeo {X Y : Top.{u}} (f : X ≃ₜ Y) : homeoOfIso (isoOfHomeo f) = f := by
   ext
   rfl
 
 @[simp]
-theorem of_homeo_of_iso {X Y : Top.{u}} (f : X ≅ Y) : iso_of_homeo (homeo_of_iso f) = f := by
+theorem of_homeo_of_iso {X Y : Top.{u}} (f : X ≅ Y) : isoOfHomeo (homeoOfIso f) = f := by
   ext
   rfl
 
 @[simp]
-theorem open_embedding_iff_comp_is_iso {X Y Z : Top} (f : X ⟶ Y) (g : Y ⟶ Z) [is_iso g] :
+theorem open_embedding_iff_comp_is_iso {X Y Z : Top} (f : X ⟶ Y) (g : Y ⟶ Z) [IsIso g] :
     OpenEmbedding (f ≫ g) ↔ OpenEmbedding f :=
-  open_embedding_iff_open_embedding_compose f (Top.homeoOfIso (as_iso g)).OpenEmbedding
+  open_embedding_iff_open_embedding_compose f (Top.homeoOfIso (asIso g)).OpenEmbedding
 
 @[simp]
-theorem open_embedding_iff_is_iso_comp {X Y Z : Top} (f : X ⟶ Y) (g : Y ⟶ Z) [is_iso f] :
+theorem open_embedding_iff_is_iso_comp {X Y Z : Top} (f : X ⟶ Y) (g : Y ⟶ Z) [IsIso f] :
     OpenEmbedding (f ≫ g) ↔ OpenEmbedding g := by
   constructor
   · intro h

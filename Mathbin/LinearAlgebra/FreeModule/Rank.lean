@@ -29,8 +29,8 @@ variable [AddCommGroupₓ M] [Module R M] [Module.Free R M]
 variable [AddCommGroupₓ N] [Module R N] [Module.Free R N]
 
 /-- The rank of a free module `M` over `R` is the cardinality of `choose_basis_index R M`. -/
-theorem rank_eq_card_choose_basis_index : Module.rank R M = # (choose_basis_index R M) :=
-  (choose_basis R M).mk_eq_dim''.symm
+theorem rank_eq_card_choose_basis_index : Module.rank R M = # (ChooseBasisIndex R M) :=
+  (chooseBasis R M).mk_eq_dim''.symm
 
 /-- The rank of `(ι →₀ R)` is `(# ι).lift`. -/
 @[simp]

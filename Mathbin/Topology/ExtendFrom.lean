@@ -33,12 +33,12 @@ def extendFrom (A : Set X) (f : X → Y) : X → Y := fun x => @limₓ _ ⟨f x�
 
 /-- If `f` converges to some `y` as `x` tends to `x₀` within `A`,
 then `f` tends to `extend_from A f x` as `x` tends to `x₀`. -/
-theorem tendsto_extend_from {A : Set X} {f : X → Y} {x : X} (h : ∃ y, tendsto f (𝓝[A] x) (𝓝 y)) :
-    tendsto f (𝓝[A] x) (𝓝 <| extendFrom A f x) :=
+theorem tendsto_extend_from {A : Set X} {f : X → Y} {x : X} (h : ∃ y, Tendsto f (𝓝[A] x) (𝓝 y)) :
+    Tendsto f (𝓝[A] x) (𝓝 <| extendFrom A f x) :=
   tendsto_nhds_lim h
 
 theorem extend_from_eq [T2Space Y] {A : Set X} {f : X → Y} {x : X} {y : Y} (hx : x ∈ Closure A)
-    (hf : tendsto f (𝓝[A] x) (𝓝 y)) : extendFrom A f x = y :=
+    (hf : Tendsto f (𝓝[A] x) (𝓝 y)) : extendFrom A f x = y :=
   have := mem_closure_iff_nhds_within_ne_bot.mp hx
   tendsto_nhds_unique (tendsto_nhds_lim ⟨y, hf⟩) hf
 
@@ -48,7 +48,7 @@ theorem extend_from_extends [T2Space Y] {f : X → Y} {A : Set X} (hf : Continuo
 /-- If `f` is a function to a regular space `Y` which has a limit within `A` at any
 point of a set `B ⊆ closure A`, then `extend_from A f` is continuous on `B`. -/
 theorem continuous_on_extend_from [RegularSpace Y] {f : X → Y} {A B : Set X} (hB : B ⊆ Closure A)
-    (hf : ∀, ∀ x ∈ B, ∀, ∃ y, tendsto f (𝓝[A] x) (𝓝 y)) : ContinuousOn (extendFrom A f) B := by
+    (hf : ∀, ∀ x ∈ B, ∀, ∃ y, Tendsto f (𝓝[A] x) (𝓝 y)) : ContinuousOn (extendFrom A f) B := by
   set φ := extendFrom A f
   intro x x_in
   suffices ∀, ∀ V' ∈ 𝓝 (φ x), ∀, IsClosed V' → φ ⁻¹' V' ∈ 𝓝[B] x by
@@ -71,7 +71,7 @@ theorem continuous_on_extend_from [RegularSpace Y] {f : X → Y} {A B : Set X} (
 /-- If a function `f` to a regular space `Y` has a limit within a
 dense set `A` for any `x`, then `extend_from A f` is continuous. -/
 theorem continuous_extend_from [RegularSpace Y] {f : X → Y} {A : Set X} (hA : Dense A)
-    (hf : ∀ x, ∃ y, tendsto f (𝓝[A] x) (𝓝 y)) : Continuous (extendFrom A f) := by
+    (hf : ∀ x, ∃ y, Tendsto f (𝓝[A] x) (𝓝 y)) : Continuous (extendFrom A f) := by
   rw [continuous_iff_continuous_on_univ]
   exact
     continuous_on_extend_from (fun x _ => hA x)

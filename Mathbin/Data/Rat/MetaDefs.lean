@@ -70,11 +70,11 @@ end
 if that expression represents a numeral or the quotient of two numerals. -/
 protected unsafe def expr.to_nonneg_rat : expr → Option ℚ
   | quote.1 ((%%ₓe₁) / %%ₓe₂) => do
-    let m ← e₁.to_nat
-    let n ← e₂.to_nat
-    if c : m.coprime n then if h : 1 < n then return ⟨m, n, lt_transₓ zero_lt_one h, c⟩ else none else none
+    let m ← e₁.toNat
+    let n ← e₂.toNat
+    if c : m n then if h : 1 < n then return ⟨m, n, lt_transₓ zero_lt_one h, c⟩ else none else none
   | e => do
-    let n ← e.to_nat
+    let n ← e.toNat
     return (Rat.ofInt n)
 
 /-- Evaluates an expression as a rational number,
@@ -131,19 +131,19 @@ This function is similar to `rat.mk_numeral` but it takes fewer hypotheses and i
 -/
 protected unsafe def of_rat (c : instance_cache) : ℚ → tactic (instance_cache × expr)
   | ⟨(n : ℕ), d, _, _⟩ =>
-    if d = 1 then c.of_nat n
+    if d = 1 then c.ofNat n
     else do
-      let (c, e₁) ← c.of_nat n
-      let (c, e₂) ← c.of_nat d
-      c.mk_app `` Div.div [e₁, e₂]
+      let (c, e₁) ← c.ofNat n
+      let (c, e₂) ← c.ofNat d
+      c `` Div.div [e₁, e₂]
   | ⟨-[1+ n], d, _, _⟩ => do
     let (c, e) ←
-      if d = 1 then c.of_nat (n + 1)
+      if d = 1 then c.ofNat (n + 1)
         else do
-          let (c, e₁) ← c.of_nat (n + 1)
-          let (c, e₂) ← c.of_nat d
-          c.mk_app `` Div.div [e₁, e₂]
-    c.mk_app `` Neg.neg [e]
+          let (c, e₁) ← c.ofNat (n + 1)
+          let (c, e₂) ← c.ofNat d
+          c `` Div.div [e₁, e₂]
+    c `` Neg.neg [e]
 
 end InstanceCache
 

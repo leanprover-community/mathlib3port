@@ -38,32 +38,32 @@ namespace Ideal
 -/
 @[nolint has_inhabited_instance]
 structure prime_pair (P : Type _) [Preorderₓ P] where
-  i : ideal P
-  f : pfilter P
+  i : Ideal P
+  f : Pfilter P
   is_compl_I_F : IsCompl (I : Set P) F
 
 namespace PrimePair
 
-variable [Preorderₓ P] (IF : prime_pair P)
+variable [Preorderₓ P] (IF : PrimePair P)
 
-theorem compl_I_eq_F : (IF.I : Set P)ᶜ = IF.F :=
+theorem compl_I_eq_F : (IF.i : Set P)ᶜ = IF.f :=
   IF.is_compl_I_F.compl_eq
 
-theorem compl_F_eq_I : (IF.F : Set P)ᶜ = IF.I :=
+theorem compl_F_eq_I : (IF.f : Set P)ᶜ = IF.i :=
   IF.is_compl_I_F.eq_compl.symm
 
-theorem I_is_proper : is_proper IF.I := by
+theorem I_is_proper : IsProper IF.i := by
   cases IF.F.nonempty
   apply is_proper_of_not_mem (_ : w ∉ IF.I)
   rwa [← IF.compl_I_eq_F] at h
 
-theorem Disjoint : Disjoint (IF.I : Set P) IF.F :=
-  IF.is_compl_I_F.disjoint
+theorem Disjoint : Disjoint (IF.i : Set P) IF.f :=
+  IF.is_compl_I_F.Disjoint
 
-theorem I_union_F : (IF.I : Set P) ∪ IF.F = Set.Univ :=
+theorem I_union_F : (IF.i : Set P) ∪ IF.f = Set.Univ :=
   IF.is_compl_I_F.sup_eq_top
 
-theorem F_union_I : (IF.F : Set P) ∪ IF.I = Set.Univ :=
+theorem F_union_I : (IF.f : Set P) ∪ IF.i = Set.Univ :=
   IF.is_compl_I_F.symm.sup_eq_top
 
 end PrimePair
@@ -71,8 +71,8 @@ end PrimePair
 /-- An ideal `I` is prime if its complement is a filter.
 -/
 @[mk_iff]
-class is_prime [Preorderₓ P] (I : ideal P) extends is_proper I : Prop where
-  compl_filter : is_pfilter ((I : Set P)ᶜ)
+class is_prime [Preorderₓ P] (I : Ideal P) extends IsProper I : Prop where
+  compl_filter : IsPfilter ((I : Set P)ᶜ)
 
 section Preorderₓ
 
@@ -80,10 +80,10 @@ variable [Preorderₓ P]
 
 /-- Create an element of type `order.ideal.prime_pair` from an ideal satisfying the predicate
 `order.ideal.is_prime`. -/
-def is_prime.to_prime_pair {I : ideal P} (h : is_prime I) : prime_pair P :=
-  { i, f := h.compl_filter.to_pfilter, is_compl_I_F := is_compl_compl }
+def is_prime.to_prime_pair {I : Ideal P} (h : IsPrime I) : PrimePair P :=
+  { i, f := h.compl_filter.toPfilter, is_compl_I_F := is_compl_compl }
 
-theorem prime_pair.I_is_prime (IF : prime_pair P) : is_prime IF.I :=
+theorem prime_pair.I_is_prime (IF : PrimePair P) : IsPrime IF.i :=
   { IF.I_is_proper with
     compl_filter := by
       rw [IF.compl_I_eq_F]
@@ -93,15 +93,15 @@ end Preorderₓ
 
 section SemilatticeInf
 
-variable [SemilatticeInf P] {x y : P} {I : ideal P}
+variable [SemilatticeInf P] {x y : P} {I : Ideal P}
 
-theorem is_prime.mem_or_mem (hI : is_prime I) {x y : P} : x⊓y ∈ I → x ∈ I ∨ y ∈ I := by
+theorem is_prime.mem_or_mem (hI : IsPrime I) {x y : P} : x⊓y ∈ I → x ∈ I ∨ y ∈ I := by
   contrapose!
   let F := hI.compl_filter.to_pfilter
   show x ∈ F ∧ y ∈ F → x⊓y ∈ F
   exact fun h => inf_mem _ h.1 _ h.2
 
-theorem is_prime.of_mem_or_mem [is_proper I] (hI : ∀ {x y : P}, x⊓y ∈ I → x ∈ I ∨ y ∈ I) : is_prime I := by
+theorem is_prime.of_mem_or_mem [IsProper I] (hI : ∀ {x y : P}, x⊓y ∈ I → x ∈ I ∨ y ∈ I) : IsPrime I := by
   rw [is_prime_iff]
   use ‹_›
   apply is_pfilter.of_def
@@ -115,16 +115,16 @@ theorem is_prime.of_mem_or_mem [is_proper I] (hI : ∀ {x y : P}, x⊓y ∈ I �
   · exact @mem_compl_of_ge _ _ _
     
 
-theorem is_prime_iff_mem_or_mem [is_proper I] : is_prime I ↔ ∀ {x y : P}, x⊓y ∈ I → x ∈ I ∨ y ∈ I :=
-  ⟨is_prime.mem_or_mem, is_prime.of_mem_or_mem⟩
+theorem is_prime_iff_mem_or_mem [IsProper I] : IsPrime I ↔ ∀ {x y : P}, x⊓y ∈ I → x ∈ I ∨ y ∈ I :=
+  ⟨IsPrime.mem_or_mem, IsPrime.of_mem_or_mem⟩
 
 end SemilatticeInf
 
 section DistribLattice
 
-variable [DistribLattice P] {I : ideal P}
+variable [DistribLattice P] {I : Ideal P}
 
-instance (priority := 100) is_maximal.is_prime [is_maximal I] : is_prime I := by
+instance (priority := 100) is_maximal.is_prime [IsMaximal I] : IsPrime I := by
   rw [is_prime_iff_mem_or_mem]
   intro x y
   contrapose!
@@ -145,27 +145,27 @@ end DistribLattice
 
 section BooleanAlgebra
 
-variable [BooleanAlgebra P] {x : P} {I : ideal P}
+variable [BooleanAlgebra P] {x : P} {I : Ideal P}
 
-theorem is_prime.mem_or_compl_mem (hI : is_prime I) : x ∈ I ∨ xᶜ ∈ I := by
+theorem is_prime.mem_or_compl_mem (hI : IsPrime I) : x ∈ I ∨ xᶜ ∈ I := by
   apply hI.mem_or_mem
   rw [inf_compl_eq_bot]
   exact bot_mem
 
-theorem is_prime.mem_compl_of_not_mem (hI : is_prime I) (hxnI : x ∉ I) : xᶜ ∈ I :=
+theorem is_prime.mem_compl_of_not_mem (hI : IsPrime I) (hxnI : x ∉ I) : xᶜ ∈ I :=
   hI.mem_or_compl_mem.resolve_left hxnI
 
-theorem is_prime_of_mem_or_compl_mem [is_proper I] (h : ∀ {x : P}, x ∈ I ∨ xᶜ ∈ I) : is_prime I := by
+theorem is_prime_of_mem_or_compl_mem [IsProper I] (h : ∀ {x : P}, x ∈ I ∨ xᶜ ∈ I) : IsPrime I := by
   simp only [is_prime_iff_mem_or_mem, or_iff_not_imp_left]
   intro x y hxy hxI
   have hxcI : xᶜ ∈ I := h.resolve_left hxI
   have ass : x⊓y⊔y⊓xᶜ ∈ I := sup_mem _ hxy _ (mem_of_le I inf_le_right hxcI)
   rwa [inf_comm, sup_inf_inf_compl] at ass
 
-theorem is_prime_iff_mem_or_compl_mem [is_proper I] : is_prime I ↔ ∀ {x : P}, x ∈ I ∨ xᶜ ∈ I :=
+theorem is_prime_iff_mem_or_compl_mem [IsProper I] : IsPrime I ↔ ∀ {x : P}, x ∈ I ∨ xᶜ ∈ I :=
   ⟨fun h _ => h.mem_or_compl_mem, is_prime_of_mem_or_compl_mem⟩
 
-instance (priority := 100) is_prime.is_maximal [is_prime I] : is_maximal I := by
+instance (priority := 100) is_prime.is_maximal [IsPrime I] : IsMaximal I := by
   simp only [is_maximal_iff, Set.eq_univ_iff_forall, is_prime.to_is_proper, true_andₓ]
   intro J hIJ x
   rcases Set.exists_of_ssubset hIJ with ⟨y, hyJ, hyI⟩
@@ -187,15 +187,15 @@ variable [Preorderₓ P]
 /-- A filter `F` is prime if its complement is an ideal.
 -/
 @[mk_iff]
-class is_prime (F : pfilter P) : Prop where
-  compl_ideal : is_ideal ((F : Set P)ᶜ)
+class is_prime (F : Pfilter P) : Prop where
+  compl_ideal : IsIdeal ((F : Set P)ᶜ)
 
 /-- Create an element of type `order.ideal.prime_pair` from a filter satisfying the predicate
 `order.pfilter.is_prime`. -/
-def is_prime.to_prime_pair {F : pfilter P} (h : is_prime F) : ideal.prime_pair P :=
-  { i := h.compl_ideal.to_ideal, f, is_compl_I_F := is_compl_compl.symm }
+def is_prime.to_prime_pair {F : Pfilter P} (h : IsPrime F) : Ideal.PrimePair P :=
+  { i := h.compl_ideal.toIdeal, f, is_compl_I_F := is_compl_compl.symm }
 
-theorem _root_.order.ideal.prime_pair.F_is_prime (IF : ideal.prime_pair P) : is_prime IF.F :=
+theorem _root_.order.ideal.prime_pair.F_is_prime (IF : Ideal.PrimePair P) : IsPrime IF.f :=
   { compl_ideal := by
       rw [IF.compl_F_eq_I]
       exact IF.I.is_ideal }

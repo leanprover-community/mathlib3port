@@ -19,7 +19,7 @@ variable {α : Type u} {β : Type v} [UniformSpace α]
   sequences, because if `a : ℕ → α` then the filter of sets containing
   cofinitely many of the `a n` is Cauchy iff `a` is a Cauchy sequence. -/
 def Cauchy (f : Filter α) :=
-  ne_bot f ∧ f ×ᶠ f ≤ 𝓤 α
+  NeBot f ∧ f ×ᶠ f ≤ 𝓤 α
 
 /-- A set `s` is called *complete*, if any Cauchy filter `f` such that `s ∈ f`
 has a limit in `s` (formally, it satisfies `f ≤ 𝓝 x` for some `x ∈ s`). -/
@@ -28,32 +28,37 @@ def IsComplete (s : Set α) :=
 
 -- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (x y «expr ∈ » t)
 theorem Filter.HasBasis.cauchy_iff {ι} {p : ι → Prop} {s : ι → Set (α × α)} (h : (𝓤 α).HasBasis p s) {f : Filter α} :
-    Cauchy f ↔ ne_bot f ∧ ∀ i, p i → ∃ t ∈ f, ∀ x y _ : x ∈ t _ : y ∈ t, (x, y) ∈ s i :=
+    Cauchy f ↔ NeBot f ∧ ∀ i, p i → ∃ t ∈ f, ∀ x y _ : x ∈ t _ : y ∈ t, (x, y) ∈ s i :=
   and_congr Iff.rfl <|
     (f.basis_sets.prod_self.le_basis_iff h).trans <| by
       simp only [subset_def, Prod.forall, mem_prod_eq, and_imp, id, ball_mem_comm]
 
 -- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (x y «expr ∈ » t)
 theorem cauchy_iff' {f : Filter α} :
-    Cauchy f ↔ ne_bot f ∧ ∀, ∀ s ∈ 𝓤 α, ∀, ∃ t ∈ f, ∀ x y _ : x ∈ t _ : y ∈ t, (x, y) ∈ s :=
+    Cauchy f ↔ NeBot f ∧ ∀, ∀ s ∈ 𝓤 α, ∀, ∃ t ∈ f, ∀ x y _ : x ∈ t _ : y ∈ t, (x, y) ∈ s :=
   (𝓤 α).basis_sets.cauchy_iff
 
-theorem cauchy_iff {f : Filter α} : Cauchy f ↔ ne_bot f ∧ ∀, ∀ s ∈ 𝓤 α, ∀, ∃ t ∈ f, t ×ˢ t ⊆ s :=
+theorem cauchy_iff {f : Filter α} : Cauchy f ↔ NeBot f ∧ ∀, ∀ s ∈ 𝓤 α, ∀, ∃ t ∈ f, t ×ˢ t ⊆ s :=
   cauchy_iff'.trans <| by
     simp only [subset_def, Prod.forall, mem_prod_eq, and_imp, id, ball_mem_comm]
 
+theorem Cauchy.ultrafilter_of {l : Filter α} (h : Cauchy l) : Cauchy (@Ultrafilter.of _ l h.1 : Filter α) := by
+  have := h.1
+  have := Ultrafilter.of_le l
+  exact ⟨Ultrafilter.ne_bot _, (Filter.prod_mono this this).trans h.2⟩
+
 theorem cauchy_map_iff {l : Filter β} {f : β → α} :
-    Cauchy (l.map f) ↔ ne_bot l ∧ tendsto (fun p : β × β => (f p.1, f p.2)) (l ×ᶠ l) (𝓤 α) := by
+    Cauchy (l.map f) ↔ NeBot l ∧ Tendsto (fun p : β × β => (f p.1, f p.2)) (l ×ᶠ l) (𝓤 α) := by
   rw [Cauchy, map_ne_bot_iff, prod_map_map_eq, tendsto]
 
-theorem cauchy_map_iff' {l : Filter β} [hl : ne_bot l] {f : β → α} :
-    Cauchy (l.map f) ↔ tendsto (fun p : β × β => (f p.1, f p.2)) (l ×ᶠ l) (𝓤 α) :=
+theorem cauchy_map_iff' {l : Filter β} [hl : NeBot l] {f : β → α} :
+    Cauchy (l.map f) ↔ Tendsto (fun p : β × β => (f p.1, f p.2)) (l ×ᶠ l) (𝓤 α) :=
   cauchy_map_iff.trans <| and_iff_right hl
 
-theorem Cauchy.mono {f g : Filter α} [hg : ne_bot g] (h_c : Cauchy f) (h_le : g ≤ f) : Cauchy g :=
+theorem Cauchy.mono {f g : Filter α} [hg : NeBot g] (h_c : Cauchy f) (h_le : g ≤ f) : Cauchy g :=
   ⟨hg, le_transₓ (Filter.prod_mono h_le h_le) h_c.right⟩
 
-theorem Cauchy.mono' {f g : Filter α} (h_c : Cauchy f) (hg : ne_bot g) (h_le : g ≤ f) : Cauchy g :=
+theorem Cauchy.mono' {f g : Filter α} (h_c : Cauchy f) (hg : NeBot g) (h_le : g ≤ f) : Cauchy g :=
   h_c.mono h_le
 
 theorem cauchy_nhds {a : α} : Cauchy (𝓝 a) :=
@@ -62,7 +67,7 @@ theorem cauchy_nhds {a : α} : Cauchy (𝓝 a) :=
 theorem cauchy_pure {a : α} : Cauchy (pure a) :=
   cauchy_nhds.mono (pure_le_nhds a)
 
-theorem Filter.Tendsto.cauchy_map {l : Filter β} [ne_bot l] {f : β → α} {a : α} (h : tendsto f l (𝓝 a)) :
+theorem Filter.Tendsto.cauchy_map {l : Filter β} [NeBot l] {f : β → α} {a : α} (h : Tendsto f l (𝓝 a)) :
     Cauchy (map f l) :=
   cauchy_nhds.mono h
 
@@ -108,7 +113,7 @@ theorem Cauchy.map [UniformSpace β] {f : Filter α} {m : α → β} (hf : Cauch
       ⟩
 
 theorem Cauchy.comap [UniformSpace β] {f : Filter β} {m : α → β} (hf : Cauchy f)
-    (hm : comap (fun p : α × α => (m p.1, m p.2)) (𝓤 β) ≤ 𝓤 α) [ne_bot (comap m f)] : Cauchy (comap m f) :=
+    (hm : comap (fun p : α × α => (m p.1, m p.2)) (𝓤 β) ≤ 𝓤 α) [NeBot (comap m f)] : Cauchy (comap m f) :=
   ⟨‹_›,
     calc
       comap m f ×ᶠ comap m f = comap (fun p : α × α => (m p.1, m p.2)) (f ×ᶠ f) := Filter.prod_comap_comap_eq
@@ -117,17 +122,17 @@ theorem Cauchy.comap [UniformSpace β] {f : Filter β} {m : α → β} (hf : Cau
       ⟩
 
 theorem Cauchy.comap' [UniformSpace β] {f : Filter β} {m : α → β} (hf : Cauchy f)
-    (hm : comap (fun p : α × α => (m p.1, m p.2)) (𝓤 β) ≤ 𝓤 α) (hb : ne_bot (comap m f)) : Cauchy (comap m f) :=
+    (hm : comap (fun p : α × α => (m p.1, m p.2)) (𝓤 β) ≤ 𝓤 α) (hb : NeBot (comap m f)) : Cauchy (comap m f) :=
   hf.comap hm
 
 /-- Cauchy sequences. Usually defined on ℕ, but often it is also useful to say that a function
 defined on ℝ is Cauchy at +∞ to deduce convergence. Therefore, we define it in a type class that
 is general enough to cover both ℕ and ℝ, which are the main motivating examples. -/
 def CauchySeq [SemilatticeSup β] (u : β → α) :=
-  Cauchy (at_top.map u)
+  Cauchy (atTop.map u)
 
 theorem CauchySeq.tendsto_uniformity [SemilatticeSup β] {u : β → α} (h : CauchySeq u) :
-    tendsto (Prod.map u u) at_top (𝓤 α) := by
+    Tendsto (Prod.map u u) atTop (𝓤 α) := by
   simpa only [tendsto, prod_map_map_eq', prod_at_top_at_top_eq] using h.right
 
 theorem CauchySeq.nonempty [SemilatticeSup β] {u : β → α} (hu : CauchySeq u) : Nonempty β :=
@@ -140,24 +145,24 @@ theorem CauchySeq.mem_entourage {β : Type _} [SemilatticeSup β] {u : β → α
   rw [← prod_at_top_at_top_eq] at this
   simpa [maps_to] using at_top_basis.prod_self.tendsto_left_iff.1 this V hV
 
-theorem Filter.Tendsto.cauchy_seq [SemilatticeSup β] [Nonempty β] {f : β → α} {x} (hx : tendsto f at_top (𝓝 x)) :
+theorem Filter.Tendsto.cauchy_seq [SemilatticeSup β] [Nonempty β] {f : β → α} {x} (hx : Tendsto f atTop (𝓝 x)) :
     CauchySeq f :=
   hx.cauchy_map
 
-theorem cauchy_seq_const (x : α) : CauchySeq fun n : ℕ => x :=
+theorem cauchy_seq_const [SemilatticeSup β] [Nonempty β] (x : α) : CauchySeq fun n : β => x :=
   tendsto_const_nhds.CauchySeq
 
 theorem cauchy_seq_iff_tendsto [Nonempty β] [SemilatticeSup β] {u : β → α} :
-    CauchySeq u ↔ tendsto (Prod.map u u) at_top (𝓤 α) :=
+    CauchySeq u ↔ Tendsto (Prod.map u u) atTop (𝓤 α) :=
   cauchy_map_iff'.trans <| by
     simp only [prod_at_top_at_top_eq, Prod.map_defₓ]
 
 theorem CauchySeq.comp_tendsto {γ} [SemilatticeSup β] [SemilatticeSup γ] [Nonempty γ] {f : β → α} (hf : CauchySeq f)
-    {g : γ → β} (hg : tendsto g at_top at_top) : CauchySeq (f ∘ g) :=
+    {g : γ → β} (hg : Tendsto g atTop atTop) : CauchySeq (f ∘ g) :=
   cauchy_seq_iff_tendsto.2 <| hf.tendsto_uniformity.comp (hg.prod_at_top hg)
 
 theorem CauchySeq.subseq_subseq_mem {V : ℕ → Set (α × α)} (hV : ∀ n, V n ∈ 𝓤 α) {u : ℕ → α} (hu : CauchySeq u)
-    {f g : ℕ → ℕ} (hf : tendsto f at_top at_top) (hg : tendsto g at_top at_top) :
+    {f g : ℕ → ℕ} (hf : Tendsto f atTop atTop) (hg : Tendsto g atTop atTop) :
     ∃ φ : ℕ → ℕ, StrictMono φ ∧ ∀ n, ((u ∘ f ∘ φ) n, (u ∘ g ∘ φ) n) ∈ V n := by
   rw [cauchy_seq_iff_tendsto] at hu
   exact ((hu.comp <| hf.prod_at_top hg).comp tendsto_at_top_diagonal).subseq_mem hV
@@ -198,7 +203,7 @@ theorem CauchySeq.subseq_mem {V : ℕ → Set (α × α)} (hV : ∀ n, V n ∈ �
   exact ⟨φ, φ_extr, fun n => hφ _ _ (φ_extr <| lt_add_one n).le⟩
 
 theorem Filter.Tendsto.subseq_mem_entourage {V : ℕ → Set (α × α)} (hV : ∀ n, V n ∈ 𝓤 α) {u : ℕ → α} {a : α}
-    (hu : tendsto u at_top (𝓝 a)) :
+    (hu : Tendsto u atTop (𝓝 a)) :
     ∃ φ : ℕ → ℕ, StrictMono φ ∧ (u (φ 0), a) ∈ V 0 ∧ ∀ n, (u <| φ (n + 1), u <| φ n) ∈ V (n + 1) := by
   rcases mem_at_top_sets.1 (hu (ball_mem_nhds a (symm_le_uniformity <| hV 0))) with ⟨n, hn⟩
   rcases(hu.comp (tendsto_add_at_top_nat n)).CauchySeq.subseq_mem fun n => hV (n + 1) with ⟨φ, φ_mono, hφV⟩
@@ -206,8 +211,7 @@ theorem Filter.Tendsto.subseq_mem_entourage {V : ℕ → Set (α × α)} (hV : �
 
 /-- If a Cauchy sequence has a convergent subsequence, then it converges. -/
 theorem tendsto_nhds_of_cauchy_seq_of_subseq [SemilatticeSup β] {u : β → α} (hu : CauchySeq u) {ι : Type _} {f : ι → β}
-    {p : Filter ι} [ne_bot p] (hf : tendsto f p at_top) {a : α} (ha : tendsto (u ∘ f) p (𝓝 a)) :
-    tendsto u at_top (𝓝 a) :=
+    {p : Filter ι} [NeBot p] (hf : Tendsto f p atTop) {a : α} (ha : Tendsto (u ∘ f) p (𝓝 a)) : Tendsto u atTop (𝓝 a) :=
   le_nhds_of_cauchy_adhp hu (map_cluster_pt_of_comp hf ha)
 
 -- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (m n «expr ≥ » N)
@@ -246,12 +250,55 @@ theorem cauchy_seq_of_controlled [SemilatticeSup β] [Nonempty β] (U : β → S
       cases' mn with m n
       exact hN (hf hmn.1 hmn.2))
 
+theorem is_complete_iff_cluster_pt {s : Set α} : IsComplete s ↔ ∀ l, Cauchy l → l ≤ 𝓟 s → ∃ x ∈ s, ClusterPt x l :=
+  forall₃_congrₓ fun l hl hls => exists₂_congrₓ fun x hx => le_nhds_iff_adhp_of_cauchy hl
+
+theorem is_complete_iff_ultrafilter {s : Set α} :
+    IsComplete s ↔ ∀ l : Ultrafilter α, Cauchy (l : Filter α) → ↑l ≤ 𝓟 s → ∃ x ∈ s, ↑l ≤ 𝓝 x := by
+  refine' ⟨fun h l => h l, fun H => is_complete_iff_cluster_pt.2 fun l hl hls => _⟩
+  have := hl.1
+  rcases H (Ultrafilter.of l) hl.ultrafilter_of ((Ultrafilter.of_le l).trans hls) with ⟨x, hxs, hxl⟩
+  exact ⟨x, hxs, (ClusterPt.of_le_nhds hxl).mono (Ultrafilter.of_le l)⟩
+
+theorem is_complete_iff_ultrafilter' {s : Set α} :
+    IsComplete s ↔ ∀ l : Ultrafilter α, Cauchy (l : Filter α) → s ∈ l → ∃ x ∈ s, ↑l ≤ 𝓝 x :=
+  is_complete_iff_ultrafilter.trans <| by
+    simp only [le_principal_iff, Ultrafilter.mem_coe]
+
+protected theorem IsComplete.union {s t : Set α} (hs : IsComplete s) (ht : IsComplete t) : IsComplete (s ∪ t) := by
+  simp only [is_complete_iff_ultrafilter', Ultrafilter.union_mem_iff, or_imp_distrib] at *
+  exact fun l hl =>
+    ⟨fun hsl => (hs l hl hsl).imp fun x hx => ⟨Or.inl hx.fst, hx.snd⟩, fun htl =>
+      (ht l hl htl).imp fun x hx => ⟨Or.inr hx.fst, hx.snd⟩⟩
+
+-- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (t «expr ⊆ » S)
+theorem is_complete_Union_separated {ι : Sort _} {s : ι → Set α} (hs : ∀ i, IsComplete (s i)) {U : Set (α × α)}
+    (hU : U ∈ 𝓤 α) (hd : ∀ i j : ι, ∀ x ∈ s i, ∀, ∀ y ∈ s j, ∀, (x, y) ∈ U → i = j) : IsComplete (⋃ i, s i) := by
+  set S := ⋃ i, s i
+  intro l hl hls
+  rw [le_principal_iff] at hls
+  cases' cauchy_iff.1 hl with hl_ne hl'
+  obtain ⟨t, htS, htl, htU⟩ : ∃ (t : _)(_ : t ⊆ S), t ∈ l ∧ t ×ˢ t ⊆ U := by
+    rcases hl' U hU with ⟨t, htl, htU⟩
+    exact
+      ⟨t ∩ S, inter_subset_right _ _, inter_mem htl hls,
+        (Set.prod_mono (inter_subset_left _ _) (inter_subset_left _ _)).trans htU⟩
+  obtain ⟨i, hi⟩ : ∃ i, t ⊆ s i := by
+    rcases Filter.nonempty_of_mem htl with ⟨x, hx⟩
+    rcases mem_Union.1 (htS hx) with ⟨i, hi⟩
+    refine' ⟨i, fun y hy => _⟩
+    rcases mem_Union.1 (htS hy) with ⟨j, hj⟩
+    convert hj
+    exact hd i j x hi y hj (htU <| mk_mem_prod hx hy)
+  rcases hs i l hl (le_principal_iff.2 <| mem_of_superset htl hi) with ⟨x, hxs, hlx⟩
+  exact ⟨x, mem_Union.2 ⟨i, hxs⟩, hlx⟩
+
 /-- A complete space is defined here using uniformities. A uniform space
   is complete if every Cauchy filter converges. -/
 class CompleteSpace (α : Type u) [UniformSpace α] : Prop where
   complete : ∀ {f : Filter α}, Cauchy f → ∃ x, f ≤ 𝓝 x
 
-theorem complete_univ {α : Type u} [UniformSpace α] [CompleteSpace α] : IsComplete (univ : Set α) := by
+theorem complete_univ {α : Type u} [UniformSpace α] [CompleteSpace α] : IsComplete (Univ : Set α) := by
   intro f hf _
   rcases CompleteSpace.complete hf with ⟨x, hx⟩
   exact ⟨x, mem_univ x, hx⟩
@@ -270,33 +317,37 @@ instance CompleteSpace.prod [UniformSpace β] [CompleteSpace α] [CompleteSpace 
               Filter.inter_mem H1 H2⟩
 
 /-- If `univ` is complete, the space is a complete space -/
-theorem complete_space_of_is_complete_univ (h : IsComplete (univ : Set α)) : CompleteSpace α :=
+theorem complete_space_of_is_complete_univ (h : IsComplete (Univ : Set α)) : CompleteSpace α :=
   ⟨fun f hf =>
     let ⟨x, _, hx⟩ := h f hf ((@principal_univ α).symm ▸ le_top)
     ⟨x, hx⟩⟩
 
-theorem complete_space_iff_is_complete_univ : CompleteSpace α ↔ IsComplete (univ : Set α) :=
+theorem complete_space_iff_is_complete_univ : CompleteSpace α ↔ IsComplete (Univ : Set α) :=
   ⟨@complete_univ α _, complete_space_of_is_complete_univ⟩
 
-theorem cauchy_iff_exists_le_nhds [CompleteSpace α] {l : Filter α} [ne_bot l] : Cauchy l ↔ ∃ x, l ≤ 𝓝 x :=
+theorem complete_space_iff_ultrafilter :
+    CompleteSpace α ↔ ∀ l : Ultrafilter α, Cauchy (l : Filter α) → ∃ x : α, ↑l ≤ 𝓝 x := by
+  simp [complete_space_iff_is_complete_univ, is_complete_iff_ultrafilter]
+
+theorem cauchy_iff_exists_le_nhds [CompleteSpace α] {l : Filter α} [NeBot l] : Cauchy l ↔ ∃ x, l ≤ 𝓝 x :=
   ⟨CompleteSpace.complete, fun ⟨x, hx⟩ => cauchy_nhds.mono hx⟩
 
-theorem cauchy_map_iff_exists_tendsto [CompleteSpace α] {l : Filter β} {f : β → α} [ne_bot l] :
-    Cauchy (l.map f) ↔ ∃ x, tendsto f l (𝓝 x) :=
+theorem cauchy_map_iff_exists_tendsto [CompleteSpace α] {l : Filter β} {f : β → α} [NeBot l] :
+    Cauchy (l.map f) ↔ ∃ x, Tendsto f l (𝓝 x) :=
   cauchy_iff_exists_le_nhds
 
 /-- A Cauchy sequence in a complete space converges -/
 theorem cauchy_seq_tendsto_of_complete [SemilatticeSup β] [CompleteSpace α] {u : β → α} (H : CauchySeq u) :
-    ∃ x, tendsto u at_top (𝓝 x) :=
+    ∃ x, Tendsto u atTop (𝓝 x) :=
   CompleteSpace.complete H
 
 /-- If `K` is a complete subset, then any cauchy sequence in `K` converges to a point in `K` -/
 theorem cauchy_seq_tendsto_of_is_complete [SemilatticeSup β] {K : Set α} (h₁ : IsComplete K) {u : β → α}
-    (h₂ : ∀ n, u n ∈ K) (h₃ : CauchySeq u) : ∃ v ∈ K, tendsto u at_top (𝓝 v) :=
+    (h₂ : ∀ n, u n ∈ K) (h₃ : CauchySeq u) : ∃ v ∈ K, Tendsto u atTop (𝓝 v) :=
   h₁ _ h₃ <|
     le_principal_iff.2 <|
       mem_map_iff_exists_image.2
-        ⟨univ, univ_mem, by
+        ⟨Univ, univ_mem, by
           simp only [image_univ]
           rintro _ ⟨n, rfl⟩
           exact h₂ n⟩
@@ -305,7 +356,7 @@ theorem Cauchy.le_nhds_Lim [CompleteSpace α] [Nonempty α] {f : Filter α} (hf 
   le_nhds_Lim (CompleteSpace.complete hf)
 
 theorem CauchySeq.tendsto_lim [SemilatticeSup β] [CompleteSpace α] [Nonempty α] {u : β → α} (h : CauchySeq u) :
-    tendsto u at_top (𝓝 <| limₓ at_top u) :=
+    Tendsto u atTop (𝓝 <| limₓ atTop u) :=
   h.le_nhds_Lim
 
 theorem IsClosed.is_complete [CompleteSpace α] {s : Set α} (h : IsClosed s) : IsComplete s := fun f cf fs =>
@@ -315,11 +366,11 @@ theorem IsClosed.is_complete [CompleteSpace α] {s : Set α} (h : IsClosed s) : 
 /-- A set `s` is totally bounded if for every entourage `d` there is a finite
   set of points `t` such that every element of `s` is `d`-near to some element of `t`. -/
 def TotallyBounded (s : Set α) : Prop :=
-  ∀, ∀ d ∈ 𝓤 α, ∀, ∃ t : Set α, finite t ∧ s ⊆ ⋃ y ∈ t, { x | (x, y) ∈ d }
+  ∀, ∀ d ∈ 𝓤 α, ∀, ∃ t : Set α, Finite t ∧ s ⊆ ⋃ y ∈ t, { x | (x, y) ∈ d }
 
 -- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (t «expr ⊆ » s)
 theorem totally_bounded_iff_subset {s : Set α} :
-    TotallyBounded s ↔ ∀, ∀ d ∈ 𝓤 α, ∀, ∃ (t : _)(_ : t ⊆ s), finite t ∧ s ⊆ ⋃ y ∈ t, { x | (x, y) ∈ d } :=
+    TotallyBounded s ↔ ∀, ∀ d ∈ 𝓤 α, ∀, ∃ (t : _)(_ : t ⊆ s), Finite t ∧ s ⊆ ⋃ y ∈ t, { x | (x, y) ∈ d } :=
   ⟨fun H d hd => by
     rcases comp_symm_of_uniformity hd with ⟨r, hr, rs, rd⟩
     rcases H r hr with ⟨k, fk, ks⟩
@@ -343,7 +394,7 @@ theorem totally_bounded_iff_subset {s : Set α} :
     ⟨t, ht⟩⟩
 
 theorem totally_bounded_of_forall_symm {s : Set α}
-    (h : ∀, ∀ V ∈ 𝓤 α, ∀, SymmetricRel V → ∃ t : Set α, finite t ∧ s ⊆ ⋃ y ∈ t, ball y V) : TotallyBounded s := by
+    (h : ∀, ∀ V ∈ 𝓤 α, ∀, SymmetricRel V → ∃ t : Set α, Finite t ∧ s ⊆ ⋃ y ∈ t, Ball y V) : TotallyBounded s := by
   intro V V_in
   rcases h _ (symmetrize_mem_uniformity V_in) (symmetric_symmetrize_rel V) with ⟨t, tfin, h⟩
   refine' ⟨t, tfin, subset.trans h _⟩
@@ -353,7 +404,7 @@ theorem totally_bounded_of_forall_symm {s : Set α}
 
 theorem totally_bounded_subset {s₁ s₂ : Set α} (hs : s₁ ⊆ s₂) (h : TotallyBounded s₂) : TotallyBounded s₁ := fun d hd =>
   let ⟨t, ht₁, ht₂⟩ := h d hd
-  ⟨t, ht₁, subset.trans hs ht₂⟩
+  ⟨t, ht₁, Subset.trans hs ht₂⟩
 
 theorem totally_bounded_empty : TotallyBounded (∅ : Set α) := fun d hd => ⟨∅, finite_empty, empty_subset _⟩
 
@@ -367,7 +418,7 @@ theorem TotallyBounded.closure {s : Set α} (h : TotallyBounded s) : TotallyBoun
       _ = _ :=
         IsClosed.closure_eq <|
           (is_closed_bUnion hcf) fun i hi => continuous_iff_is_closed.mp (continuous_id.prod_mk continuous_const) _ hct'
-      _ ⊆ _ := Union₂_subset fun i hi => subset.trans (fun x => @htt' (x, i)) (subset_bUnion_of_mem hi)
+      _ ⊆ _ := Union₂_subset fun i hi => Subset.trans (fun x => @htt' (x, i)) (subset_bUnion_of_mem hi)
       ⟩
 
 /-- The image of a totally bounded set under a unifromly continuous map is totally bounded. -/
@@ -375,7 +426,7 @@ theorem TotallyBounded.image [UniformSpace β] {f : α → β} {s : Set α} (hs 
     (hf : UniformContinuous f) : TotallyBounded (f '' s) := fun t ht =>
   have : { p : α × α | (f p.1, f p.2) ∈ t } ∈ 𝓤 α := hf ht
   let ⟨c, hfc, hct⟩ := hs _ this
-  ⟨f '' c, hfc.image f, by
+  ⟨f '' c, hfc.Image f, by
     simp [image_subset_iff]
     simp [subset_def] at hct
     intro x hx
@@ -392,9 +443,9 @@ theorem Ultrafilter.cauchy_of_totally_bounded {s : Set α} (f : Ultrafilter α) 
     let ⟨y, hy, hif⟩ := this
     have : { x | (x, y) ∈ t' } ×ˢ { x | (x, y) ∈ t' } ⊆ CompRel t' t' :=
       fun ⟨x₁, x₂⟩ ⟨(h₁ : (x₁, y) ∈ t'), (h₂ : (x₂, y) ∈ t')⟩ => ⟨y, h₁, ht'_symm h₂⟩
-    mem_of_superset (prod_mem_prod hif hif) (subset.trans this ht'_t)⟩
+    mem_of_superset (prod_mem_prod hif hif) (Subset.trans this ht'_t)⟩
 
-theorem totally_bounded_iff_filter {s : Set α} : TotallyBounded s ↔ ∀ f, ne_bot f → f ≤ 𝓟 s → ∃ c ≤ f, Cauchy c := by
+theorem totally_bounded_iff_filter {s : Set α} : TotallyBounded s ↔ ∀ f, NeBot f → f ≤ 𝓟 s → ∃ c ≤ f, Cauchy c := by
   constructor
   · intros H f hf hfs
     exact
@@ -450,7 +501,7 @@ theorem compact_iff_totally_bounded_complete {s : Set α} : IsCompact s ↔ Tota
 theorem IsCompact.totally_bounded {s : Set α} (h : IsCompact s) : TotallyBounded s :=
   (compact_iff_totally_bounded_complete.1 h).1
 
-theorem IsCompact.is_complete {s : Set α} (h : IsCompact s) : IsComplete s :=
+protected theorem IsCompact.is_complete {s : Set α} (h : IsCompact s) : IsComplete s :=
   (compact_iff_totally_bounded_complete.1 h).2
 
 instance (priority := 100) complete_of_compact {α : Type u} [UniformSpace α] [CompactSpace α] : CompleteSpace α :=
@@ -459,7 +510,7 @@ instance (priority := 100) complete_of_compact {α : Type u} [UniformSpace α] [
 
 theorem compact_of_totally_bounded_is_closed [CompleteSpace α] {s : Set α} (ht : TotallyBounded s) (hc : IsClosed s) :
     IsCompact s :=
-  (@compact_iff_totally_bounded_complete α _ s).2 ⟨ht, hc.is_complete⟩
+  (@compact_iff_totally_bounded_complete α _ s).2 ⟨ht, hc.IsComplete⟩
 
 /-!
 ### Sequentially complete space
@@ -486,23 +537,23 @@ noncomputable section
 
 /-- An auxiliary sequence of sets approximating a Cauchy filter. -/
 def set_seq_aux (n : ℕ) : { s : Set α // ∃ _ : s ∈ f, s ×ˢ s ⊆ U n } :=
-  indefinite_description _ <| (cauchy_iff.1 hf).2 (U n) (U_mem n)
+  indefiniteDescription _ <| (cauchy_iff.1 hf).2 (U n) (U_mem n)
 
 /-- Given a Cauchy filter `f` and a sequence `U` of entourages, `set_seq` provides
 an antitone sequence of sets `s n ∈ f` such that `s n ×ˢ s n ⊆ U`. -/
 def set_seq (n : ℕ) : Set α :=
-  ⋂ m ∈ Iic n, (set_seq_aux hf U_mem m).val
+  ⋂ m ∈ Iic n, (setSeqAux hf U_mem m).val
 
-theorem set_seq_mem (n : ℕ) : set_seq hf U_mem n ∈ f :=
-  (bInter_mem (finite_le_nat n)).2 fun m _ => (set_seq_aux hf U_mem m).2.fst
+theorem set_seq_mem (n : ℕ) : SetSeq hf U_mem n ∈ f :=
+  (bInter_mem (finite_le_nat n)).2 fun m _ => (setSeqAux hf U_mem m).2.fst
 
-theorem set_seq_mono ⦃m n : ℕ⦄ (h : m ≤ n) : set_seq hf U_mem n ⊆ set_seq hf U_mem m :=
+theorem set_seq_mono ⦃m n : ℕ⦄ (h : m ≤ n) : SetSeq hf U_mem n ⊆ SetSeq hf U_mem m :=
   bInter_subset_bInter_left fun k hk => le_transₓ hk h
 
-theorem set_seq_sub_aux (n : ℕ) : set_seq hf U_mem n ⊆ set_seq_aux hf U_mem n :=
+theorem set_seq_sub_aux (n : ℕ) : SetSeq hf U_mem n ⊆ setSeqAux hf U_mem n :=
   bInter_subset_of_mem right_mem_Iic
 
-theorem set_seq_prod_subset {N m n} (hm : N ≤ m) (hn : N ≤ n) : set_seq hf U_mem m ×ˢ set_seq hf U_mem n ⊆ U N := by
+theorem set_seq_prod_subset {N m n} (hm : N ≤ m) (hn : N ≤ n) : SetSeq hf U_mem m ×ˢ SetSeq hf U_mem n ⊆ U N := by
   intro p hp
   refine' (set_seq_aux hf U_mem N).2.snd ⟨_, _⟩ <;> apply set_seq_sub_aux
   exact set_seq_mono hf U_mem hm hp.1
@@ -514,7 +565,7 @@ of entourages. -/
 def seq (n : ℕ) : α :=
   some <| hf.1.nonempty_of_mem (set_seq_mem hf U_mem n)
 
-theorem seq_mem (n : ℕ) : seq hf U_mem n ∈ set_seq hf U_mem n :=
+theorem seq_mem (n : ℕ) : seq hf U_mem n ∈ SetSeq hf U_mem n :=
   some_spec <| hf.1.nonempty_of_mem (set_seq_mem hf U_mem n)
 
 theorem seq_pair_mem ⦃N m n : ℕ⦄ (hm : N ≤ m) (hn : N ≤ n) : (seq hf U_mem m, seq hf U_mem n) ∈ U N :=
@@ -526,7 +577,7 @@ theorem seq_is_cauchy_seq : CauchySeq <| seq hf U_mem :=
   cauchy_seq_of_controlled U U_le <| seq_pair_mem hf U_mem
 
 /-- If the sequence `sequentially_complete.seq` converges to `a`, then `f ≤ 𝓝 a`. -/
-theorem le_nhds_of_seq_tendsto_nhds ⦃a : α⦄ (ha : tendsto (seq hf U_mem) at_top (𝓝 a)) : f ≤ 𝓝 a :=
+theorem le_nhds_of_seq_tendsto_nhds ⦃a : α⦄ (ha : Tendsto (seq hf U_mem) atTop (𝓝 a)) : f ≤ 𝓝 a :=
   le_nhds_of_cauchy_adhp_aux
     (by
       intro s hs
@@ -545,13 +596,12 @@ namespace UniformSpace
 
 open SequentiallyComplete
 
-variable [is_countably_generated (𝓤 α)]
+variable [IsCountablyGenerated (𝓤 α)]
 
 /-- A uniform space is complete provided that (a) its uniformity filter has a countable basis;
 (b) any sequence satisfying a "controlled" version of the Cauchy condition converges. -/
 theorem complete_of_convergent_controlled_sequences (U : ℕ → Set (α × α)) (U_mem : ∀ n, U n ∈ 𝓤 α)
-    (HU : ∀ u : ℕ → α, (∀ N m n, N ≤ m → N ≤ n → (u m, u n) ∈ U N) → ∃ a, tendsto u at_top (𝓝 a)) : CompleteSpace α :=
-  by
+    (HU : ∀ u : ℕ → α, (∀ N m n, N ≤ m → N ≤ n → (u m, u n) ∈ U N) → ∃ a, Tendsto u atTop (𝓝 a)) : CompleteSpace α := by
   obtain ⟨U', U'_mono, hU'⟩ := (𝓤 α).exists_antitone_seq
   have Hmem : ∀ n, U n ∩ U' n ∈ 𝓤 α := fun n => inter_mem (U_mem n) (hU'.2 ⟨n, subset.refl _⟩)
   refine' ⟨fun f hf => (HU (seq hf Hmem) fun N m n hm hn => _).imp <| le_nhds_of_seq_tendsto_nhds _ _ fun s hs => _⟩
@@ -563,15 +613,14 @@ theorem complete_of_convergent_controlled_sequences (U : ℕ → Set (α × α))
 
 /-- A sequentially complete uniform space with a countable basis of the uniformity filter is
 complete. -/
-theorem complete_of_cauchy_seq_tendsto (H' : ∀ u : ℕ → α, CauchySeq u → ∃ a, tendsto u at_top (𝓝 a)) :
-    CompleteSpace α :=
+theorem complete_of_cauchy_seq_tendsto (H' : ∀ u : ℕ → α, CauchySeq u → ∃ a, Tendsto u atTop (𝓝 a)) : CompleteSpace α :=
   let ⟨U', U'_mono, hU'⟩ := (𝓤 α).exists_antitone_seq
-  complete_of_convergent_controlled_sequences U' (fun n => hU'.2 ⟨n, subset.refl _⟩) fun u hu =>
+  complete_of_convergent_controlled_sequences U' (fun n => hU'.2 ⟨n, Subset.refl _⟩) fun u hu =>
     H' u <| cauchy_seq_of_controlled U' (fun s hs => hU'.1 hs) hu
 
 variable (α)
 
-instance (priority := 100) first_countable_topology : first_countable_topology α :=
+instance (priority := 100) first_countable_topology : FirstCountableTopology α :=
   ⟨fun a => by
     rw [nhds_eq_comap_uniformity]
     infer_instance⟩
@@ -581,7 +630,7 @@ one obtains a countable basis by taking the balls centered at points in a dense 
 and with rational "radii" from a countable open symmetric antitone basis of `𝓤 α`. We do not
 register this as an instance, as there is already an instance going in the other direction
 from second countable spaces to separable spaces, and we want to avoid loops. -/
-theorem second_countable_of_separable [separable_space α] : second_countable_topology α := by
+theorem second_countable_of_separable [SeparableSpace α] : SecondCountableTopology α := by
   rcases exists_countable_dense α with ⟨s, hsc, hsd⟩
   obtain
     ⟨t : ℕ → Set (α × α), hto : ∀ i : ℕ, t i ∈ (𝓤 α).Sets ∧ IsOpen (t i) ∧ SymmetricRel (t i), h_basis :

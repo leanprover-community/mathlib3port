@@ -52,7 +52,7 @@ variable {α : Type u} {β : Type v} {γ : Type w} {δ : Type x}
 open Function Option
 
 instance : CoeFun (α ≃. β) fun _ => α → Option β :=
-  ⟨to_fun⟩
+  ⟨toFun⟩
 
 @[simp]
 theorem coe_mk_apply (f₁ : α → Option β) (f₂ : β → Option α) h (x : α) : (Pequiv.mk f₁ f₂ h : α → Option β) x = f₁ x :=
@@ -120,7 +120,7 @@ theorem symm_symm (f : α ≃. β) : f.symm.symm = f := by
   cases f <;> rfl
 
 theorem symm_injective : Function.Injective (@Pequiv.symm α β) :=
-  left_inverse.injective symm_symm
+  LeftInverse.injective symm_symm
 
 theorem trans_assoc (f : α ≃. β) (g : β ≃. γ) (h : γ ≃. δ) : (f.trans g).trans h = f.trans (g.trans h) :=
   ext fun _ => Option.bind_assoc _ _ _
@@ -149,8 +149,8 @@ protected theorem inj (f : α ≃. β) {a₁ a₂ : α} {b : β} (h₁ : b ∈ f
   rw [← mem_iff_mem] at * <;> cases h : f.symm b <;> simp_all
 
 /-- If the domain of a `pequiv` is `α` except a point, its forward direction is injective. -/
-theorem injective_of_forall_ne_is_some (f : α ≃. β) (a₂ : α) (h : ∀ a₁ : α, a₁ ≠ a₂ → is_some (f a₁)) : injective f :=
-  has_left_inverse.injective
+theorem injective_of_forall_ne_is_some (f : α ≃. β) (a₂ : α) (h : ∀ a₁ : α, a₁ ≠ a₂ → isSome (f a₁)) : Injective f :=
+  HasLeftInverse.injective
     ⟨fun b => Option.recOn b a₂ fun b' => Option.recOn (f.symm b') a₂ id, fun x => by
       classical
       cases hfx : f x
@@ -166,7 +166,7 @@ theorem injective_of_forall_ne_is_some (f : α ≃. β) (a₂ : α) (h : ∀ a�
         ⟩
 
 /-- If the domain of a `pequiv` is all of `α`, its forward direction is injective. -/
-theorem injective_of_forall_is_some {f : α ≃. β} (h : ∀ a : α, is_some (f a)) : injective f :=
+theorem injective_of_forall_is_some {f : α ≃. β} (h : ∀ a : α, isSome (f a)) : Injective f :=
   (Classical.em (Nonempty α)).elim (fun hn => injective_of_forall_ne_is_some f (Classical.choice hn) fun a _ => h a)
     fun hn x => (hn ⟨x⟩).elim
 
@@ -189,10 +189,10 @@ def of_set (s : Set α) [DecidablePred (· ∈ s)] : α ≃. α where
     · simp
       
 
-theorem mem_of_set_self_iff {s : Set α} [DecidablePred (· ∈ s)] {a : α} : a ∈ of_set s a ↔ a ∈ s := by
+theorem mem_of_set_self_iff {s : Set α} [DecidablePred (· ∈ s)] {a : α} : a ∈ ofSet s a ↔ a ∈ s := by
   dsimp [of_set] <;> split_ifs <;> simp [*]
 
-theorem mem_of_set_iff {s : Set α} [DecidablePred (· ∈ s)] {a b : α} : a ∈ of_set s b ↔ a = b ∧ a ∈ s := by
+theorem mem_of_set_iff {s : Set α} [DecidablePred (· ∈ s)] {a b : α} : a ∈ ofSet s b ↔ a = b ∧ a ∈ s := by
   dsimp [of_set]
   split_ifs
   · simp only [iff_self_and, Option.mem_def, eq_comm]
@@ -205,23 +205,23 @@ theorem mem_of_set_iff {s : Set α} [DecidablePred (· ∈ s)] {a b : α} : a �
     
 
 @[simp]
-theorem of_set_eq_some_iff {s : Set α} {h : DecidablePred (· ∈ s)} {a b : α} : of_set s b = some a ↔ a = b ∧ a ∈ s :=
+theorem of_set_eq_some_iff {s : Set α} {h : DecidablePred (· ∈ s)} {a b : α} : ofSet s b = some a ↔ a = b ∧ a ∈ s :=
   mem_of_set_iff
 
 @[simp]
-theorem of_set_eq_some_self_iff {s : Set α} {h : DecidablePred (· ∈ s)} {a : α} : of_set s a = some a ↔ a ∈ s :=
+theorem of_set_eq_some_self_iff {s : Set α} {h : DecidablePred (· ∈ s)} {a : α} : ofSet s a = some a ↔ a ∈ s :=
   mem_of_set_self_iff
 
 @[simp]
-theorem of_set_symm : (of_set s).symm = of_set s :=
+theorem of_set_symm : (ofSet s).symm = ofSet s :=
   rfl
 
 @[simp]
-theorem of_set_univ : of_set Set.Univ = Pequiv.refl α :=
+theorem of_set_univ : ofSet Set.Univ = Pequiv.refl α :=
   rfl
 
 @[simp]
-theorem of_set_eq_refl {s : Set α} [DecidablePred (· ∈ s)] : of_set s = Pequiv.refl α ↔ s = Set.Univ :=
+theorem of_set_eq_refl {s : Set α} [DecidablePred (· ∈ s)] : ofSet s = Pequiv.refl α ↔ s = Set.Univ :=
   ⟨fun h => by
     rw [Set.eq_univ_iff_forall]
     intro
@@ -234,7 +234,7 @@ end OfSet
 theorem symm_trans_rev (f : α ≃. β) (g : β ≃. γ) : (f.trans g).symm = g.symm.trans f.symm :=
   rfl
 
-theorem self_trans_symm (f : α ≃. β) : f.trans f.symm = of_set { a | (f a).isSome } := by
+theorem self_trans_symm (f : α ≃. β) : f.trans f.symm = ofSet { a | (f a).isSome } := by
   ext
   dsimp [Pequiv.trans]
   simp only [eq_some_iff f, Option.is_some_iff_exists, Option.mem_def, bind_eq_some', of_set_eq_some_iff]
@@ -245,11 +245,11 @@ theorem self_trans_symm (f : α ≃. β) : f.trans f.symm = of_set { a | (f a).i
   · simp (config := { contextual := true })
     
 
-theorem symm_trans_self (f : α ≃. β) : f.symm.trans f = of_set { b | (f.symm b).isSome } :=
+theorem symm_trans_self (f : α ≃. β) : f.symm.trans f = ofSet { b | (f.symm b).isSome } :=
   symm_injective <| by
     simp [symm_trans_rev, self_trans_symm, -symm_symm]
 
-theorem trans_symm_eq_iff_forall_is_some {f : α ≃. β} : f.trans f.symm = Pequiv.refl α ↔ ∀ a, is_some (f a) := by
+theorem trans_symm_eq_iff_forall_is_some {f : α ≃. β} : f.trans f.symm = Pequiv.refl α ↔ ∀ a, isSome (f a) := by
   rw [self_trans_symm, of_set_eq_refl, Set.eq_univ_iff_forall] <;> rfl
 
 instance : HasBot (α ≃. β) :=
@@ -276,7 +276,7 @@ theorem trans_bot (f : α ≃. β) : f.trans (⊥ : β ≃. γ) = ⊥ := by
 theorem bot_trans (f : β ≃. γ) : (⊥ : α ≃. β).trans f = ⊥ := by
   ext <;> dsimp [Pequiv.trans] <;> simp
 
-theorem is_some_symm_get (f : α ≃. β) {a : α} (h : is_some (f a)) : is_some (f.symm (Option.getₓ h)) :=
+theorem is_some_symm_get (f : α ≃. β) {a : α} (h : isSome (f a)) : isSome (f.symm (Option.getₓ h)) :=
   is_some_iff_exists.2
     ⟨a, by
       rw [f.eq_some_iff, some_get]⟩
@@ -422,13 +422,13 @@ def to_pequiv (f : α ≃ β) : α ≃. β where
 theorem to_pequiv_refl : (Equivₓ.refl α).toPequiv = Pequiv.refl α :=
   rfl
 
-theorem to_pequiv_trans (f : α ≃ β) (g : β ≃ γ) : (f.trans g).toPequiv = f.to_pequiv.trans g.to_pequiv :=
+theorem to_pequiv_trans (f : α ≃ β) (g : β ≃ γ) : (f.trans g).toPequiv = f.toPequiv.trans g.toPequiv :=
   rfl
 
-theorem to_pequiv_symm (f : α ≃ β) : f.symm.to_pequiv = f.to_pequiv.symm :=
+theorem to_pequiv_symm (f : α ≃ β) : f.symm.toPequiv = f.toPequiv.symm :=
   rfl
 
-theorem to_pequiv_apply (f : α ≃ β) (x : α) : f.to_pequiv x = some (f x) :=
+theorem to_pequiv_apply (f : α ≃ β) (x : α) : f.toPequiv x = some (f x) :=
   rfl
 
 end Equivₓ

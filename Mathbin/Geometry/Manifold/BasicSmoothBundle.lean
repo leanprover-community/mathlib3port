@@ -91,17 +91,17 @@ in general. -/
 structure BasicSmoothBundleCore {𝕜 : Type _} [NondiscreteNormedField 𝕜] {E : Type _} [NormedGroup E] [NormedSpace 𝕜 E]
   {H : Type _} [TopologicalSpace H] (I : ModelWithCorners 𝕜 E H) (M : Type _) [TopologicalSpace M] [ChartedSpace H M]
   [SmoothManifoldWithCorners I M] (F : Type _) [NormedGroup F] [NormedSpace 𝕜 F] where
-  coordChange : atlas H M → atlas H M → H → F → F
-  coord_change_self : ∀ i : atlas H M, ∀, ∀ x ∈ i.1.Target, ∀, ∀ v, coord_change i i x v = v
+  coordChange : Atlas H M → Atlas H M → H → F → F
+  coord_change_self : ∀ i : Atlas H M, ∀, ∀ x ∈ i.1.Target, ∀, ∀ v, coord_change i i x v = v
   coord_change_comp :
-    ∀ i j k : atlas H M,
+    ∀ i j k : Atlas H M,
       ∀,
         ∀ x ∈ ((i.1.symm.trans j.1).trans (j.1.symm.trans k.1)).Source,
           ∀, ∀ v, (coord_change j k ((i.1.symm.trans j.1) x)) (coord_change i j x v) = coord_change i k x v
   coord_change_smooth :
-    ∀ i j : atlas H M,
+    ∀ i j : Atlas H M,
       TimesContDiffOn 𝕜 ∞ (fun p : E × F => coord_change i j (I.symm p.1) p.2)
-        (I '' (i.1.symm.trans j.1).Source ×ˢ (univ : Set F))
+        (I '' (i.1.symm.trans j.1).Source ×ˢ (Univ : Set F))
 
 /-- The trivial basic smooth bundle core, in which all the changes of coordinates are the
 identity. -/
@@ -123,12 +123,12 @@ instance : Inhabited (BasicSmoothBundleCore I M F) :=
   ⟨trivialBasicSmoothBundleCore I M F⟩
 
 /-- Fiber bundle core associated to a basic smooth bundle core -/
-def to_topological_fiber_bundle_core : TopologicalFiberBundleCore (atlas H M) M F where
+def to_topological_fiber_bundle_core : TopologicalFiberBundleCore (Atlas H M) M F where
   BaseSet := fun i => i.1.Source
   is_open_base_set := fun i => i.1.open_source
-  indexAt := fun x => ⟨chart_at H x, chart_mem_atlas H x⟩
+  indexAt := fun x => ⟨chartAt H x, chart_mem_atlas H x⟩
   mem_base_set_at := fun x => mem_chart_source H x
-  coordChange := fun i j x v => Z.coord_change i j (i.1 x) v
+  coordChange := fun i j x v => Z.coordChange i j (i.1 x) v
   coord_change_self := fun i x hx v => Z.coord_change_self i (i.1 x) (i.1.map_source hx) v
   coord_change_comp := fun i j k x ⟨⟨hx1, hx2⟩, hx3⟩ v => by
     have := Z.coord_change_comp i j k (i.1 x) _ v
@@ -161,31 +161,31 @@ def to_topological_fiber_bundle_core : TopologicalFiberBundleCore (atlas H M) M 
     simp' only with mfld_simps
 
 @[simp, mfld_simps]
-theorem base_set (i : atlas H M) : (Z.to_topological_fiber_bundle_core.local_triv i).BaseSet = i.1.Source :=
+theorem base_set (i : Atlas H M) : (Z.toTopologicalFiberBundleCore.localTriv i).BaseSet = i.1.Source :=
   rfl
 
 /-- Local chart for the total space of a basic smooth bundle -/
-def chart {e : LocalHomeomorph M H} (he : e ∈ atlas H M) :
-    LocalHomeomorph Z.to_topological_fiber_bundle_core.total_space (ModelProd H F) :=
-  (Z.to_topological_fiber_bundle_core.local_triv ⟨e, he⟩).toLocalHomeomorph.trans
+def chart {e : LocalHomeomorph M H} (he : e ∈ Atlas H M) :
+    LocalHomeomorph Z.toTopologicalFiberBundleCore.TotalSpace (ModelProd H F) :=
+  (Z.toTopologicalFiberBundleCore.localTriv ⟨e, he⟩).toLocalHomeomorph.trans
     (LocalHomeomorph.prod e (LocalHomeomorph.refl F))
 
 @[simp, mfld_simps]
-theorem chart_source (e : LocalHomeomorph M H) (he : e ∈ atlas H M) :
-    (Z.chart he).Source = Z.to_topological_fiber_bundle_core.proj ⁻¹' e.source := by
+theorem chart_source (e : LocalHomeomorph M H) (he : e ∈ Atlas H M) :
+    (Z.chart he).Source = Z.toTopologicalFiberBundleCore.proj ⁻¹' e.Source := by
   simp only [chart, mem_prod]
   mfld_set_tac
 
 @[simp, mfld_simps]
-theorem chart_target (e : LocalHomeomorph M H) (he : e ∈ atlas H M) :
-    (Z.chart he).Target = e.target ×ˢ (univ : Set F) := by
+theorem chart_target (e : LocalHomeomorph M H) (he : e ∈ Atlas H M) :
+    (Z.chart he).Target = e.Target ×ˢ (Univ : Set F) := by
   simp only [chart]
   mfld_set_tac
 
 /-- The total space of a basic smooth bundle is endowed with a charted space structure, where the
 charts are in bijection with the charts of the basis. -/
-instance to_charted_space : ChartedSpace (ModelProd H F) Z.to_topological_fiber_bundle_core.total_space where
-  Atlas := ⋃ (e : LocalHomeomorph M H) (he : e ∈ atlas H M), {Z.chart he}
+instance to_charted_space : ChartedSpace (ModelProd H F) Z.toTopologicalFiberBundleCore.TotalSpace where
+  Atlas := ⋃ (e : LocalHomeomorph M H) (he : e ∈ Atlas H M), {Z.chart he}
   chartAt := fun p => Z.chart (chart_mem_atlas H p.1)
   mem_chart_source := fun p => by
     simp [mem_chart_source]
@@ -193,35 +193,34 @@ instance to_charted_space : ChartedSpace (ModelProd H F) Z.to_topological_fiber_
     simp only [mem_Union, mem_singleton_iff, chart_mem_atlas]
     exact ⟨chart_at H p.1, chart_mem_atlas H p.1, rfl⟩
 
-theorem mem_atlas_iff (f : LocalHomeomorph Z.to_topological_fiber_bundle_core.total_space (ModelProd H F)) :
-    f ∈ atlas (ModelProd H F) Z.to_topological_fiber_bundle_core.total_space ↔
-      ∃ (e : LocalHomeomorph M H)(he : e ∈ atlas H M), f = Z.chart he :=
+theorem mem_atlas_iff (f : LocalHomeomorph Z.toTopologicalFiberBundleCore.TotalSpace (ModelProd H F)) :
+    f ∈ Atlas (ModelProd H F) Z.toTopologicalFiberBundleCore.TotalSpace ↔
+      ∃ (e : LocalHomeomorph M H)(he : e ∈ Atlas H M), f = Z.chart he :=
   by
   simp only [atlas, mem_Union, mem_singleton_iff]
 
 @[simp, mfld_simps]
-theorem mem_chart_source_iff (p q : Z.to_topological_fiber_bundle_core.total_space) :
-    p ∈ (chart_at (ModelProd H F) q).Source ↔ p.1 ∈ (chart_at H q.1).Source := by
+theorem mem_chart_source_iff (p q : Z.toTopologicalFiberBundleCore.TotalSpace) :
+    p ∈ (chartAt (ModelProd H F) q).Source ↔ p.1 ∈ (chartAt H q.1).Source := by
   simp' only [chart_at] with mfld_simps
 
 @[simp, mfld_simps]
-theorem mem_chart_target_iff (p : H × F) (q : Z.to_topological_fiber_bundle_core.total_space) :
-    p ∈ (chart_at (ModelProd H F) q).Target ↔ p.1 ∈ (chart_at H q.1).Target := by
+theorem mem_chart_target_iff (p : H × F) (q : Z.toTopologicalFiberBundleCore.TotalSpace) :
+    p ∈ (chartAt (ModelProd H F) q).Target ↔ p.1 ∈ (chartAt H q.1).Target := by
   simp' only [chart_at] with mfld_simps
 
 @[simp, mfld_simps]
-theorem coe_chart_at_fst (p q : Z.to_topological_fiber_bundle_core.total_space) :
-    ((chart_at (ModelProd H F) q) p).1 = chart_at H q.1 p.1 :=
+theorem coe_chart_at_fst (p q : Z.toTopologicalFiberBundleCore.TotalSpace) :
+    ((chartAt (ModelProd H F) q) p).1 = chartAt H q.1 p.1 :=
   rfl
 
 @[simp, mfld_simps]
-theorem coe_chart_at_symm_fst (p : H × F) (q : Z.to_topological_fiber_bundle_core.total_space) :
-    ((chart_at (ModelProd H F) q).symm p).1 = ((chart_at H q.1).symm : H → M) p.1 :=
+theorem coe_chart_at_symm_fst (p : H × F) (q : Z.toTopologicalFiberBundleCore.TotalSpace) :
+    ((chartAt (ModelProd H F) q).symm p).1 = ((chartAt H q.1).symm : H → M) p.1 :=
   rfl
 
 /-- Smooth manifold structure on the total space of a basic smooth bundle -/
-instance to_smooth_manifold :
-    SmoothManifoldWithCorners (I.prod 𝓘(𝕜, F)) Z.to_topological_fiber_bundle_core.total_space := by
+instance to_smooth_manifold : SmoothManifoldWithCorners (I.Prod 𝓘(𝕜, F)) Z.toTopologicalFiberBundleCore.TotalSpace := by
   let J := ModelWithCorners.toLocalEquiv (I.prod 𝓘(𝕜, F))
   have A :
     ∀ e e' : LocalHomeomorph M H he : e ∈ atlas H M he' : e' ∈ atlas H M,
@@ -286,7 +285,7 @@ variable {𝕜 : Type _} [NondiscreteNormedField 𝕜] {E : Type _} [NormedGroup
 model with corners `I` on `(E, H)`. The fibers are equal to `E`, and the coordinate change in the
 fiber corresponds to the derivative of the coordinate change in `M`. -/
 def tangentBundleCore : BasicSmoothBundleCore I M E where
-  coordChange := fun i j x v => (fderivWithin 𝕜 (I ∘ j.1 ∘ i.1.symm ∘ I.symm) (range I) (I x) : E → E) v
+  coordChange := fun i j x v => (fderivWithin 𝕜 (I ∘ j.1 ∘ i.1.symm ∘ I.symm) (Range I) (I x) : E → E) v
   coord_change_smooth := fun i j => by
     rw [I.image_eq]
     have A : TimesContDiffOn 𝕜 ∞ (I ∘ i.1.symm.trans j.1 ∘ I.symm) (I.symm ⁻¹' (i.1.symm.trans j.1).Source ∩ range I) :=
@@ -483,7 +482,7 @@ section TangentBundleInstances
 variable (M)
 
 instance : TopologicalSpace (TangentBundle I M) :=
-  (tangentBundleCore I M).toTopologicalFiberBundleCore.toTopologicalSpace (atlas H M)
+  (tangentBundleCore I M).toTopologicalFiberBundleCore.toTopologicalSpace (Atlas H M)
 
 instance : ChartedSpace (ModelProd H E) (TangentBundle I M) :=
   (tangentBundleCore I M).toChartedSpace
@@ -529,7 +528,7 @@ theorem tangent_bundle_proj_open : IsOpenMap (TangentBundle.proj I M) :=
 between a product type and a sigma type, a.k.a. `equiv.sigma_equiv_prod`. -/
 @[simp, mfld_simps]
 theorem tangent_bundle_model_space_chart_at (p : TangentBundle I H) :
-    (chart_at (ModelProd H E) p).toLocalEquiv = (Equivₓ.sigmaEquivProd H E).toLocalEquiv := by
+    (chartAt (ModelProd H E) p).toLocalEquiv = (Equivₓ.sigmaEquivProd H E).toLocalEquiv := by
   have A : ∀ x_fst, fderivWithin 𝕜 (I ∘ I.symm) (range I) (I x_fst) = ContinuousLinearMap.id 𝕜 E := by
     intro x_fst
     have : fderivWithin 𝕜 (I ∘ I.symm) (range I) (I x_fst) = fderivWithin 𝕜 id (range I) (I x_fst) := by
@@ -557,13 +556,13 @@ theorem tangent_bundle_model_space_chart_at (p : TangentBundle I H) :
 
 @[simp, mfld_simps]
 theorem tangent_bundle_model_space_coe_chart_at (p : TangentBundle I H) :
-    ⇑chart_at (ModelProd H E) p = Equivₓ.sigmaEquivProd H E := by
+    ⇑chartAt (ModelProd H E) p = Equivₓ.sigmaEquivProd H E := by
   unfold_coes
   simp' only with mfld_simps
 
 @[simp, mfld_simps]
 theorem tangent_bundle_model_space_coe_chart_at_symm (p : TangentBundle I H) :
-    ((chart_at (ModelProd H E) p).symm : ModelProd H E → TangentBundle I H) = (Equivₓ.sigmaEquivProd H E).symm := by
+    ((chartAt (ModelProd H E) p).symm : ModelProd H E → TangentBundle I H) = (Equivₓ.sigmaEquivProd H E).symm := by
   unfold_coes
   simp' only with mfld_simps
 

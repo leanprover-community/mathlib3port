@@ -45,7 +45,7 @@ def le : Game → Game → Prop :=
   Quotientₓ.lift₂ (fun x y => x ≤ y) fun x₁ y₁ x₂ y₂ hx hy => propext (le_congr hx hy)
 
 instance : LE Game where
-  le := le
+  le := Le
 
 theorem le_reflₓ : ∀ x : Game, x ≤ x := by
   rintro ⟨x⟩
@@ -64,7 +64,7 @@ theorem le_antisymmₓ : ∀ x y : Game, x ≤ y → y ≤ x → x = y := by
 def lt : Game → Game → Prop :=
   Quotientₓ.lift₂ (fun x y => x < y) fun x₁ y₁ x₂ y₂ hx hy => propext (lt_congr hx hy)
 
-theorem not_leₓ : ∀ {x y : Game}, ¬x ≤ y ↔ lt y x := by
+theorem not_leₓ : ∀ {x y : Game}, ¬x ≤ y ↔ Lt y x := by
   rintro ⟨x⟩ ⟨y⟩
   exact not_leₓ
 
@@ -97,7 +97,7 @@ theorem add_assocₓ : ∀ x y z : Game, x + y + z = x + (y + z) := by
   exact add_assoc_equiv
 
 instance : AddSemigroupₓ Game.{u} :=
-  { Game.hasAdd with add_assoc := add_assocₓ }
+  { Game.hasAdd with add_assoc := add_assoc }
 
 theorem add_zeroₓ : ∀ x : Game, x + 0 = x := by
   rintro ⟨x⟩
@@ -110,7 +110,7 @@ theorem zero_addₓ : ∀ x : Game, 0 + x = x := by
   apply zero_add_equiv
 
 instance : AddMonoidₓ Game :=
-  { Game.hasZero, Game.addSemigroup with add_zero := add_zeroₓ, zero_add := zero_addₓ }
+  { Game.hasZero, Game.addSemigroup with add_zero := add_zero, zero_add := zero_add }
 
 theorem add_left_negₓ : ∀ x : Game, -x + x = 0 := by
   rintro ⟨x⟩
@@ -118,7 +118,7 @@ theorem add_left_negₓ : ∀ x : Game, -x + x = 0 := by
   apply add_left_neg_equiv
 
 instance : AddGroupₓ Game :=
-  { Game.hasNeg, Game.addMonoid with add_left_neg := add_left_negₓ }
+  { Game.hasNeg, Game.addMonoid with add_left_neg := add_left_neg }
 
 theorem add_commₓ : ∀ x y : Game, x + y = y + x := by
   rintro ⟨x⟩ ⟨y⟩
@@ -126,7 +126,7 @@ theorem add_commₓ : ∀ x y : Game, x + y = y + x := by
   exact add_comm_equiv
 
 instance : AddCommSemigroupₓ Game :=
-  { Game.addSemigroup with add_comm := add_commₓ }
+  { Game.addSemigroup with add_comm := add_comm }
 
 instance : AddCommGroupₓ Game :=
   { Game.addCommSemigroup, Game.addGroup with }
@@ -137,11 +137,11 @@ theorem add_le_add_left : ∀ a b : Game, a ≤ b → ∀ c : Game, c + a ≤ c 
 
 /-- The `<` operation provided by this partial order is not the usual `<` on games! -/
 def game_partial_order : PartialOrderₓ Game :=
-  { Game.hasLe with le_refl := le_reflₓ, le_trans := le_transₓ, le_antisymm := le_antisymmₓ }
+  { Game.hasLe with le_refl := le_refl, le_trans := le_trans, le_antisymm := le_antisymm }
 
 /-- The `<` operation provided by this `ordered_add_comm_group` is not the usual `<` on games! -/
 def ordered_add_comm_group_game : OrderedAddCommGroup Game :=
-  { Game.addCommGroup, game_partial_order with add_le_add_left := add_le_add_left }
+  { Game.addCommGroup, gamePartialOrder with add_le_add_left := add_le_add_left }
 
 end Game
 
@@ -159,9 +159,9 @@ theorem quot_add (a b : Pgame) : ⟦a + b⟧ = ⟦a⟧ + ⟦b⟧ :=
 theorem quot_sub (a b : Pgame) : ⟦a - b⟧ = ⟦a⟧ - ⟦b⟧ :=
   rfl
 
-theorem quot_eq_of_mk_quot_eq {x y : Pgame} (L : x.left_moves ≃ y.left_moves) (R : x.right_moves ≃ y.right_moves)
-    (hl : ∀ i : x.left_moves, ⟦x.move_left i⟧ = ⟦y.move_left (L i)⟧)
-    (hr : ∀ j : y.right_moves, ⟦x.move_right (R.symm j)⟧ = ⟦y.move_right j⟧) : ⟦x⟧ = ⟦y⟧ := by
+theorem quot_eq_of_mk_quot_eq {x y : Pgame} (L : x.LeftMoves ≃ y.LeftMoves) (R : x.RightMoves ≃ y.RightMoves)
+    (hl : ∀ i : x.LeftMoves, ⟦x.moveLeft i⟧ = ⟦y.moveLeft (L i)⟧)
+    (hr : ∀ j : y.RightMoves, ⟦x.moveRight (R.symm j)⟧ = ⟦y.moveRight j⟧) : ⟦x⟧ = ⟦y⟧ := by
   simp only [Quotientₓ.eq] at hl hr
   apply Quotientₓ.sound
   apply equiv_of_mk_equiv L R hl hr
@@ -191,15 +191,15 @@ instance : Mul Pgame :=
   ⟨mul⟩
 
 /-- An explicit description of the moves for Left in `x * y`. -/
-def left_moves_mul (x y : Pgame) :
-    (x * y).LeftMoves ≃ Sum (x.left_moves × y.left_moves) (x.right_moves × y.right_moves) := by
+def left_moves_mul (x y : Pgame) : (x * y).LeftMoves ≃ Sum (x.LeftMoves × y.LeftMoves) (x.RightMoves × y.RightMoves) :=
+  by
   cases x
   cases y
   rfl
 
 /-- An explicit description of the moves for Right in `x * y`. -/
 def right_moves_mul (x y : Pgame) :
-    (x * y).RightMoves ≃ Sum (x.left_moves × y.right_moves) (x.right_moves × y.left_moves) := by
+    (x * y).RightMoves ≃ Sum (x.LeftMoves × y.RightMoves) (x.RightMoves × y.LeftMoves) := by
   cases x
   cases y
   rfl
@@ -212,8 +212,8 @@ theorem mk_mul_move_left_inl {xl xr yl yr} {xL xR yL yR} {i j} :
 
 @[simp]
 theorem mul_move_left_inl {x y : Pgame} {i j} :
-    (x * y).moveLeft ((left_moves_mul x y).symm (Sum.inl (i, j))) =
-      x.move_left i * y + x * y.move_left j - x.move_left i * y.move_left j :=
+    (x * y).moveLeft ((leftMovesMul x y).symm (Sum.inl (i, j))) =
+      x.moveLeft i * y + x * y.moveLeft j - x.moveLeft i * y.moveLeft j :=
   by
   cases x
   cases y
@@ -227,8 +227,8 @@ theorem mk_mul_move_left_inr {xl xr yl yr} {xL xR yL yR} {i j} :
 
 @[simp]
 theorem mul_move_left_inr {x y : Pgame} {i j} :
-    (x * y).moveLeft ((left_moves_mul x y).symm (Sum.inr (i, j))) =
-      x.move_right i * y + x * y.move_right j - x.move_right i * y.move_right j :=
+    (x * y).moveLeft ((leftMovesMul x y).symm (Sum.inr (i, j))) =
+      x.moveRight i * y + x * y.moveRight j - x.moveRight i * y.moveRight j :=
   by
   cases x
   cases y
@@ -242,8 +242,8 @@ theorem mk_mul_move_right_inl {xl xr yl yr} {xL xR yL yR} {i j} :
 
 @[simp]
 theorem mul_move_right_inl {x y : Pgame} {i j} :
-    (x * y).moveRight ((right_moves_mul x y).symm (Sum.inl (i, j))) =
-      x.move_left i * y + x * y.move_right j - x.move_left i * y.move_right j :=
+    (x * y).moveRight ((rightMovesMul x y).symm (Sum.inl (i, j))) =
+      x.moveLeft i * y + x * y.moveRight j - x.moveLeft i * y.moveRight j :=
   by
   cases x
   cases y
@@ -257,8 +257,8 @@ theorem mk_mul_move_right_inr {xl xr yl yr} {xL xR yL yR} {i j} :
 
 @[simp]
 theorem mul_move_right_inr {x y : Pgame} {i j} :
-    (x * y).moveRight ((right_moves_mul x y).symm (Sum.inr (i, j))) =
-      x.move_right i * y + x * y.move_left j - x.move_right i * y.move_left j :=
+    (x * y).moveRight ((rightMovesMul x y).symm (Sum.inr (i, j))) =
+      x.moveRight i * y + x * y.moveLeft j - x.moveRight i * y.moveLeft j :=
   by
   cases x
   cases y
@@ -298,7 +298,7 @@ theorem mul_comm_equiv (x y : Pgame) : x * y ≈ y * x :=
   Quotientₓ.exact <| quot_mul_comm _ _
 
 /-- `x * 0` has exactly the same moves as `0`. -/
-def mul_zero_relabelling : ∀ x : Pgame, relabelling (x * 0) 0
+def mul_zero_relabelling : ∀ x : Pgame, Relabelling (x * 0) 0
   | mk xl xr xL xR =>
     ⟨by
       fconstructor <;> rintro (⟨_, ⟨⟩⟩ | ⟨_, ⟨⟩⟩), by
@@ -308,14 +308,14 @@ def mul_zero_relabelling : ∀ x : Pgame, relabelling (x * 0) 0
 
 /-- `x * 0` is equivalent to `0`. -/
 theorem mul_zero_equiv (x : Pgame) : x * 0 ≈ 0 :=
-  (mul_zero_relabelling x).Equiv
+  (mulZeroRelabelling x).Equiv
 
 @[simp]
 theorem quot_mul_zero (x : Pgame) : ⟦x * 0⟧ = ⟦0⟧ :=
   @Quotientₓ.sound _ _ (x * 0) _ x.mul_zero_equiv
 
 /-- `0 * x` has exactly the same moves as `0`. -/
-def zero_mul_relabelling : ∀ x : Pgame, relabelling (0 * x) 0
+def zero_mul_relabelling : ∀ x : Pgame, Relabelling (0 * x) 0
   | mk xl xr xL xR =>
     ⟨by
       fconstructor <;> rintro (⟨⟨⟩, _⟩ | ⟨⟨⟩, _⟩), by
@@ -325,7 +325,7 @@ def zero_mul_relabelling : ∀ x : Pgame, relabelling (0 * x) 0
 
 /-- `0 * x` is equivalent to `0`. -/
 theorem zero_mul_equiv (x : Pgame) : 0 * x ≈ 0 :=
-  (zero_mul_relabelling x).Equiv
+  (zeroMulRelabelling x).Equiv
 
 @[simp]
 theorem quot_zero_mul (x : Pgame) : ⟦0 * x⟧ = ⟦0⟧ :=
@@ -605,16 +605,16 @@ theorem mul_assoc_equiv (x y z : Pgame) : x * y * z ≈ x * (y * z) :=
 on each side, we have to define the two families inductively.
 This is the indexing set for the function, and `inv_val` is the function part. -/
 inductive inv_ty (l r : Type u) : Bool → Type u
-  | zero : inv_ty ff
-  | left₁ : r → inv_ty ff → inv_ty ff
-  | left₂ : l → inv_ty tt → inv_ty ff
-  | right₁ : l → inv_ty ff → inv_ty tt
-  | right₂ : r → inv_ty tt → inv_ty tt
+  | zero : inv_ty false
+  | left₁ : r → inv_ty false → inv_ty false
+  | left₂ : l → inv_ty true → inv_ty false
+  | right₁ : l → inv_ty false → inv_ty true
+  | right₂ : r → inv_ty true → inv_ty true
 
 /-- Because the two halves of the definition of `inv` produce more elements
 of each side, we have to define the two families inductively.
 This is the function part, defined by recursion on `inv_ty`. -/
-def inv_val {l r} (L : l → Pgame) (R : r → Pgame) (IHl : l → Pgame) (IHr : r → Pgame) : ∀ {b}, inv_ty l r b → Pgame
+def inv_val {l r} (L : l → Pgame) (R : r → Pgame) (IHl : l → Pgame) (IHr : r → Pgame) : ∀ {b}, InvTy l r b → Pgame
   | _, inv_ty.zero => 0
   | _, inv_ty.left₁ i j => (1 + (R i - mk l r L R) * inv_val j) * IHr i
   | _, inv_ty.left₂ i j => (1 + (L i - mk l r L R) * inv_val j) * IHl i
@@ -633,7 +633,7 @@ def inv' : Pgame → Pgame
     let L' : l' → Pgame := fun i => L i.1
     let IHl' : l' → Pgame := fun i => inv' (L i.1)
     let IHr := fun i => inv' (R i)
-    ⟨inv_ty l' r ff, inv_ty l' r tt, inv_val L' R IHl' IHr, inv_val L' R IHl' IHr⟩
+    ⟨InvTy l' r false, InvTy l' r true, invVal L' R IHl' IHr, invVal L' R IHl' IHr⟩
 
 /-- The inverse of a surreal number in terms of the inverse on positive surreals. -/
 noncomputable def inv (x : Pgame) : Pgame := by

@@ -132,12 +132,12 @@ def sym' (α : Type u) (n : ℕ) :=
 
 /-- This is `cons` but for the alternative `sym'` definition.
 -/
-def cons' {α : Type u} {n : ℕ} : α → sym' α n → sym' α (Nat.succ n) := fun a =>
+def cons' {α : Type u} {n : ℕ} : α → Sym' α n → Sym' α (Nat.succ n) := fun a =>
   Quotientₓ.map (Vector.cons a) fun ⟨l₁, h₁⟩ ⟨l₂, h₂⟩ h => List.Perm.cons _ h
 
 /-- Multisets of cardinality n are equivalent to length-n vectors up to permutations.
 -/
-def sym_equiv_sym' {α : Type u} {n : ℕ} : Sym α n ≃ sym' α n :=
+def sym_equiv_sym' {α : Type u} {n : ℕ} : Sym α n ≃ Sym' α n :=
   Equivₓ.subtypeQuotientEquivQuotientSubtype _ _
     (fun _ => by
       rfl)
@@ -145,7 +145,7 @@ def sym_equiv_sym' {α : Type u} {n : ℕ} : Sym α n ≃ sym' α n :=
     rfl
 
 theorem cons_equiv_eq_equiv_cons (α : Type u) (n : ℕ) (a : α) (s : Sym α n) :
-    a :: sym_equiv_sym' s = sym_equiv_sym' (a :: s) := by
+    a :: symEquivSym' s = symEquivSym' (a :: s) := by
   rcases s with ⟨⟨l⟩, _⟩
   rfl
 
@@ -189,7 +189,7 @@ theorem exists_eq_cons_of_succ (s : Sym α n.succ) : ∃ (a : α)(s' : Sym α n)
   exact ⟨a, s.erase a ha, (s.cons_erase _ _).symm⟩
 
 theorem eq_repeat {a : α} {n : ℕ} {s : Sym α n} : s = repeat a n ↔ ∀, ∀ b ∈ s, ∀, b = a :=
-  Subtype.ext_iff.trans <| Multiset.eq_repeat.trans <| and_iff_right s.prop
+  Subtype.ext_iff.trans <| Multiset.eq_repeat.trans <| and_iff_right s.Prop
 
 theorem eq_repeat_of_subsingleton [Subsingleton α] (a : α) {n : ℕ} (s : Sym α n) : s = repeat a n :=
   eq_repeat.2 fun b hb => Subsingleton.elimₓ _ _
@@ -207,7 +207,7 @@ instance [Subsingleton α] (n : ℕ) : Subsingleton (Sym α n) :=
 instance inhabited_sym [Inhabited α] (n : ℕ) : Inhabited (Sym α n) :=
   ⟨repeat default n⟩
 
-instance inhabited_sym' [Inhabited α] (n : ℕ) : Inhabited (sym' α n) :=
+instance inhabited_sym' [Inhabited α] (n : ℕ) : Inhabited (Sym' α n) :=
   ⟨Quotientₓ.mk' (Vector.repeat default n)⟩
 
 instance (n : ℕ) [IsEmpty α] : IsEmpty (Sym α n.succ) :=

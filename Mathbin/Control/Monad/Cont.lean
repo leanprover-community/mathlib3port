@@ -15,11 +15,11 @@ class MonadCont (m : Type u → Type v) where
 open MonadCont
 
 class IsLawfulMonadCont (m : Type u → Type v) [Monadₓ m] [MonadCont m] extends IsLawfulMonad m where
-  call_cc_bind_right {α ω γ} (cmd : m α) (next : label ω m γ → α → m ω) :
-    (call_cc fun f => cmd >>= next f) = cmd >>= fun x => call_cc fun f => next f x
-  call_cc_bind_left {α} β (x : α) (dead : label α m β → β → m α) :
-    (call_cc fun f : label α m β => goto f x >>= dead f) = pure x
-  call_cc_dummy {α β} (dummy : m α) : (call_cc fun f : label α m β => dummy) = dummy
+  call_cc_bind_right {α ω γ} (cmd : m α) (next : Label ω m γ → α → m ω) :
+    (callCc fun f => cmd >>= next f) = cmd >>= fun x => callCc fun f => next f x
+  call_cc_bind_left {α} β (x : α) (dead : Label α m β → β → m α) :
+    (callCc fun f : Label α m β => goto f x >>= dead f) = pure x
+  call_cc_dummy {α β} (dummy : m α) : (callCc fun f : Label α m β => dummy) = dummy
 
 export IsLawfulMonadCont ()
 
@@ -47,7 +47,7 @@ theorem run_cont_t_map_cont_t (f : m r → m r) (x : ContT r m α) : run (map f 
 
 def with_cont_t (f : (β → m r) → α → m r) (x : ContT r m α) : ContT r m β := fun g => x <| f g
 
-theorem run_with_cont_t (f : (β → m r) → α → m r) (x : ContT r m α) : run (with_cont_t f x) = run x ∘ f :=
+theorem run_with_cont_t (f : (β → m r) → α → m r) (x : ContT r m α) : run (withContT f x) = run x ∘ f :=
   rfl
 
 @[ext]
@@ -77,7 +77,7 @@ instance [Monadₓ m] : HasMonadLift m (ContT r m) where
   monadLift := fun α => ContT.monadLift
 
 theorem monad_lift_bind [Monadₓ m] [IsLawfulMonad m] {α β} (x : m α) (f : α → m β) :
-    (monad_lift (x >>= f) : ContT r m β) = monad_lift x >>= monad_lift ∘ f := by
+    (monadLift (x >>= f) : ContT r m β) = monadLift x >>= monad_lift ∘ f := by
   ext
   simp only [monad_lift, HasMonadLift.monadLift, · ∘ ·, · >>= ·, bind_assoc, id.def, run, ContT.monadLift]
 
@@ -103,15 +103,15 @@ end ContT
 
 variable {m : Type u → Type v} [Monadₓ m]
 
-def ExceptTₓ.mkLabel {α β ε} : label (Except.{u, u} ε α) m β → label α (ExceptTₓ ε m) β
+def ExceptTₓ.mkLabel {α β ε} : Label (Except.{u, u} ε α) m β → Label α (ExceptTₓ ε m) β
   | ⟨f⟩ => ⟨fun a => monad_lift <| f (Except.ok a)⟩
 
-theorem ExceptTₓ.goto_mk_label {α β ε : Type _} (x : label (Except.{u, u} ε α) m β) (i : α) :
+theorem ExceptTₓ.goto_mk_label {α β ε : Type _} (x : Label (Except.{u, u} ε α) m β) (i : α) :
     goto (ExceptTₓ.mkLabel x) i = ⟨Except.ok <$> goto x (Except.ok i)⟩ := by
   cases x <;> rfl
 
-def ExceptTₓ.callCc {ε} [MonadCont m] {α β : Type _} (f : label α (ExceptTₓ ε m) β → ExceptTₓ ε m α) : ExceptTₓ ε m α :=
-  ExceptTₓ.mk (call_cc fun x : label _ m β => ExceptTₓ.run <| f (ExceptTₓ.mkLabel x) : m (Except ε α))
+def ExceptTₓ.callCc {ε} [MonadCont m] {α β : Type _} (f : Label α (ExceptTₓ ε m) β → ExceptTₓ ε m α) : ExceptTₓ ε m α :=
+  ExceptTₓ.mk (call_cc fun x : Label _ m β => ExceptTₓ.run <| f (ExceptTₓ.mkLabel x) : m (Except ε α))
 
 instance {ε} [MonadCont m] : MonadCont (ExceptTₓ ε m) where
   callCc := fun α β => ExceptTₓ.callCc
@@ -135,15 +135,15 @@ instance {ε} [MonadCont m] [IsLawfulMonadCont m] : IsLawfulMonadCont (ExceptT�
     ext
     rfl
 
-def OptionTₓ.mkLabel {α β} : label (Option.{u} α) m β → label α (OptionTₓ m) β
+def OptionTₓ.mkLabel {α β} : Label (Option.{u} α) m β → Label α (OptionTₓ m) β
   | ⟨f⟩ => ⟨fun a => monad_lift <| f (some a)⟩
 
-theorem OptionTₓ.goto_mk_label {α β : Type _} (x : label (Option.{u} α) m β) (i : α) :
+theorem OptionTₓ.goto_mk_label {α β : Type _} (x : Label (Option.{u} α) m β) (i : α) :
     goto (OptionTₓ.mkLabel x) i = ⟨some <$> goto x (some i)⟩ := by
   cases x <;> rfl
 
-def OptionTₓ.callCc [MonadCont m] {α β : Type _} (f : label α (OptionTₓ m) β → OptionTₓ m α) : OptionTₓ m α :=
-  OptionTₓ.mk (call_cc fun x : label _ m β => OptionTₓ.run <| f (OptionTₓ.mkLabel x) : m (Option α))
+def OptionTₓ.callCc [MonadCont m] {α β : Type _} (f : Label α (OptionTₓ m) β → OptionTₓ m α) : OptionTₓ m α :=
+  OptionTₓ.mk (call_cc fun x : Label _ m β => OptionTₓ.run <| f (OptionTₓ.mkLabel x) : m (Option α))
 
 instance [MonadCont m] : MonadCont (OptionTₓ m) where
   callCc := fun α β => OptionTₓ.callCc
@@ -167,29 +167,29 @@ instance [MonadCont m] [IsLawfulMonadCont m] : IsLawfulMonadCont (OptionTₓ m) 
     ext
     rfl
 
-def WriterT.mkLabelₓ {α β ω} [One ω] : label (α × ω) m β → label α (WriterT ω m) β
+def WriterT.mkLabelₓ {α β ω} [One ω] : Label (α × ω) m β → Label α (WriterT ω m) β
   | ⟨f⟩ => ⟨fun a => monad_lift <| f (a, 1)⟩
 
-theorem WriterT.goto_mk_label {α β ω : Type _} [One ω] (x : label (α × ω) m β) (i : α) :
-    goto (WriterT.mkLabelₓ x) i = monad_lift (goto x (i, 1)) := by
+theorem WriterT.goto_mk_label {α β ω : Type _} [One ω] (x : Label (α × ω) m β) (i : α) :
+    goto (WriterT.mkLabelₓ x) i = monadLift (goto x (i, 1)) := by
   cases x <;> rfl
 
-def WriterT.callCc [MonadCont m] {α β ω : Type _} [One ω] (f : label α (WriterT ω m) β → WriterT ω m α) :
+def WriterT.callCc [MonadCont m] {α β ω : Type _} [One ω] (f : Label α (WriterT ω m) β → WriterT ω m α) :
     WriterT ω m α :=
-  ⟨call_cc (WriterT.run ∘ f ∘ WriterT.mkLabelₓ : label (α × ω) m β → m (α × ω))⟩
+  ⟨callCc (WriterT.run ∘ f ∘ WriterT.mkLabelₓ : Label (α × ω) m β → m (α × ω))⟩
 
 instance ω [Monadₓ m] [One ω] [MonadCont m] : MonadCont (WriterT ω m) where
   callCc := fun α β => WriterT.callCc
 
-def StateTₓ.mkLabelₓ {α β σ : Type u} : label (α × σ) m (β × σ) → label α (StateTₓ σ m) β
+def StateTₓ.mkLabelₓ {α β σ : Type u} : Label (α × σ) m (β × σ) → Label α (StateTₓ σ m) β
   | ⟨f⟩ => ⟨fun a => ⟨fun s => f (a, s)⟩⟩
 
-theorem StateTₓ.goto_mk_label {α β σ : Type u} (x : label (α × σ) m (β × σ)) (i : α) :
+theorem StateTₓ.goto_mk_label {α β σ : Type u} (x : Label (α × σ) m (β × σ)) (i : α) :
     goto (StateTₓ.mkLabelₓ x) i = ⟨fun s => goto x (i, s)⟩ := by
   cases x <;> rfl
 
-def StateTₓ.callCc {σ} [MonadCont m] {α β : Type _} (f : label α (StateTₓ σ m) β → StateTₓ σ m α) : StateTₓ σ m α :=
-  ⟨fun r => call_cc fun f' => (f <| StateTₓ.mkLabelₓ f').run r⟩
+def StateTₓ.callCc {σ} [MonadCont m] {α β : Type _} (f : Label α (StateTₓ σ m) β → StateTₓ σ m α) : StateTₓ σ m α :=
+  ⟨fun r => callCc fun f' => (f <| StateTₓ.mkLabelₓ f').run r⟩
 
 instance {σ} [MonadCont m] : MonadCont (StateTₓ σ m) where
   callCc := fun α β => StateTₓ.callCc
@@ -213,15 +213,15 @@ instance {σ} [MonadCont m] [IsLawfulMonadCont m] : IsLawfulMonadCont (StateTₓ
     ext
     rfl
 
-def ReaderTₓ.mkLabelₓ {α β} ρ : label α m β → label α (ReaderTₓ ρ m) β
+def ReaderTₓ.mkLabelₓ {α β} ρ : Label α m β → Label α (ReaderTₓ ρ m) β
   | ⟨f⟩ => ⟨monad_lift ∘ f⟩
 
-theorem ReaderTₓ.goto_mk_label {α ρ β} (x : label α m β) (i : α) :
-    goto (ReaderTₓ.mkLabelₓ ρ x) i = monad_lift (goto x i) := by
+theorem ReaderTₓ.goto_mk_label {α ρ β} (x : Label α m β) (i : α) :
+    goto (ReaderTₓ.mkLabelₓ ρ x) i = monadLift (goto x i) := by
   cases x <;> rfl
 
-def ReaderTₓ.callCc {ε} [MonadCont m] {α β : Type _} (f : label α (ReaderTₓ ε m) β → ReaderTₓ ε m α) : ReaderTₓ ε m α :=
-  ⟨fun r => call_cc fun f' => (f <| ReaderTₓ.mkLabelₓ _ f').run r⟩
+def ReaderTₓ.callCc {ε} [MonadCont m] {α β : Type _} (f : Label α (ReaderTₓ ε m) β → ReaderTₓ ε m α) : ReaderTₓ ε m α :=
+  ⟨fun r => callCc fun f' => (f <| ReaderTₓ.mkLabelₓ _ f').run r⟩
 
 instance {ρ} [MonadCont m] : MonadCont (ReaderTₓ ρ m) where
   callCc := fun α β => ReaderTₓ.callCc

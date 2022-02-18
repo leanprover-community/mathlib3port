@@ -120,7 +120,7 @@ theorem floor_zero : ⌊(0 : α)⌋₊ = 0 :=
 
 @[simp]
 theorem floor_one : ⌊(1 : α)⌋₊ = 1 := by
-  rw [← Nat.cast_one, floor_coe]
+  rw [← Nat.cast_oneₓ, floor_coe]
 
 theorem floor_of_nonpos (ha : a ≤ 0) : ⌊a⌋₊ = 0 :=
   ha.lt_or_eq.elim FloorSemiring.floor_of_neg <| by
@@ -168,10 +168,11 @@ theorem floor_eq_zero : ⌊a⌋₊ = 0 ↔ a < 1 := by
   exact floor_lt' Nat.one_ne_zero
 
 theorem floor_eq_iff (ha : 0 ≤ a) : ⌊a⌋₊ = n ↔ ↑n ≤ a ∧ a < ↑n + 1 := by
-  rw [← le_floor_iff ha, ← Nat.cast_one, ← Nat.cast_add, ← floor_lt ha, Nat.lt_add_one_iff, le_antisymm_iffₓ, And.comm]
+  rw [← le_floor_iff ha, ← Nat.cast_oneₓ, ← Nat.cast_addₓ, ← floor_lt ha, Nat.lt_add_one_iff, le_antisymm_iffₓ,
+    And.comm]
 
 theorem floor_eq_iff' (hn : n ≠ 0) : ⌊a⌋₊ = n ↔ ↑n ≤ a ∧ a < ↑n + 1 := by
-  rw [← le_floor_iff' hn, ← Nat.cast_one, ← Nat.cast_add, ← floor_lt' (Nat.add_one_ne_zero n), Nat.lt_add_one_iff,
+  rw [← le_floor_iff' hn, ← Nat.cast_oneₓ, ← Nat.cast_addₓ, ← floor_lt' (Nat.add_one_ne_zero n), Nat.lt_add_one_iff,
     le_antisymm_iffₓ, And.comm]
 
 theorem floor_eq_on_Ico (n : ℕ) : ∀, ∀ a ∈ (Set.Ico n (n + 1) : Set α), ∀, ⌊a⌋₊ = n := fun a ⟨h₀, h₁⟩ =>
@@ -216,7 +217,7 @@ theorem ceil_zero : ⌈(0 : α)⌉₊ = 0 :=
 
 @[simp]
 theorem ceil_eq_zero : ⌈a⌉₊ = 0 ↔ a ≤ 0 :=
-  le_zero_iff.symm.trans ceil_le
+  le_zero_iffₓ.symm.trans ceil_le
 
 theorem lt_of_ceil_lt (h : ⌈a⌉₊ < n) : a < n :=
   (le_ceil a).trans_lt (Nat.cast_lt.2 h)
@@ -250,6 +251,49 @@ theorem preimage_ceil_zero : (Nat.ceil : α → ℕ) ⁻¹' {0} = Iic 0 :=
 
 theorem preimage_ceil_of_ne_zero (hn : n ≠ 0) : (Nat.ceil : α → ℕ) ⁻¹' {n} = Ioc (↑(n - 1)) n :=
   ext fun x => ceil_eq_iff hn
+
+/-! #### Intervals -/
+
+
+@[simp]
+theorem preimage_Ioo {a b : α} (ha : 0 ≤ a) : (coe : ℕ → α) ⁻¹' Set.Ioo a b = Set.Ioo ⌊a⌋₊ ⌈b⌉₊ := by
+  ext
+  simp [floor_lt, lt_ceil, ha]
+
+@[simp]
+theorem preimage_Ico {a b : α} : (coe : ℕ → α) ⁻¹' Set.Ico a b = Set.Ico ⌈a⌉₊ ⌈b⌉₊ := by
+  ext
+  simp [ceil_le, lt_ceil]
+
+@[simp]
+theorem preimage_Ioc {a b : α} (ha : 0 ≤ a) (hb : 0 ≤ b) : (coe : ℕ → α) ⁻¹' Set.Ioc a b = Set.Ioc ⌊a⌋₊ ⌊b⌋₊ := by
+  ext
+  simp [floor_lt, le_floor_iff, hb, ha]
+
+@[simp]
+theorem preimage_Icc {a b : α} (hb : 0 ≤ b) : (coe : ℕ → α) ⁻¹' Set.Icc a b = Set.Icc ⌈a⌉₊ ⌊b⌋₊ := by
+  ext
+  simp [ceil_le, hb, le_floor_iff]
+
+@[simp]
+theorem preimage_Ioi {a : α} (ha : 0 ≤ a) : (coe : ℕ → α) ⁻¹' Set.Ioi a = Set.Ioi ⌊a⌋₊ := by
+  ext
+  simp [floor_lt, ha]
+
+@[simp]
+theorem preimage_Ici {a : α} : (coe : ℕ → α) ⁻¹' Set.Ici a = Set.Ici ⌈a⌉₊ := by
+  ext
+  simp [ceil_le]
+
+@[simp]
+theorem preimage_Iio {a : α} : (coe : ℕ → α) ⁻¹' Set.Iio a = Set.Iio ⌈a⌉₊ := by
+  ext
+  simp [lt_ceil]
+
+@[simp]
+theorem preimage_Iic {a : α} (ha : 0 ≤ a) : (coe : ℕ → α) ⁻¹' Set.Iic a = Set.Iic ⌊a⌋₊ := by
+  ext
+  simp [le_floor_iff, ha]
 
 end LinearOrderedSemiring
 
@@ -636,7 +680,7 @@ theorem fract_mul_nat (a : α) (b : ℕ) : ∃ z : ℤ, fract a * b - fract (a *
   use 0
   simp
   rcases hc with ⟨z, hz⟩
-  rw [Nat.succ_eq_add_one, Nat.cast_add, mul_addₓ, mul_addₓ, Nat.cast_one, mul_oneₓ, mul_oneₓ]
+  rw [Nat.succ_eq_add_one, Nat.cast_addₓ, mul_addₓ, mul_addₓ, Nat.cast_oneₓ, mul_oneₓ, mul_oneₓ]
   rcases fract_add (a * c) a with ⟨y, hy⟩
   use z - y
   rw [Int.cast_sub, ← hz, ← hy]

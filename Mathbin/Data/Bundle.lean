@@ -24,12 +24,12 @@ conflicts with general sigma types.
 def total_space :=
   Σ x, E x
 
-instance [Inhabited B] [Inhabited (E default)] : Inhabited (total_space E) :=
+instance [Inhabited B] [Inhabited (E default)] : Inhabited (TotalSpace E) :=
   ⟨⟨default, default⟩⟩
 
 /-- `bundle.proj E` is the canonical projection `total_space E → B` on the base space. -/
 @[simp]
-def proj : total_space E → B :=
+def proj : TotalSpace E → B :=
   Sigma.fst
 
 /-- Constructor for the total space of a `topological_fiber_bundle_core`. -/
@@ -37,14 +37,14 @@ def proj : total_space E → B :=
 def total_space_mk (E : B → Type _) (b : B) (a : E b) : Bundle.TotalSpace E :=
   ⟨b, a⟩
 
-instance {x : B} : CoeTₓ (E x) (total_space E) :=
+instance {x : B} : CoeTₓ (E x) (TotalSpace E) :=
   ⟨Sigma.mk x⟩
 
 @[simp]
-theorem coe_fst (x : B) (v : E x) : (v : total_space E).fst = x :=
+theorem coe_fst (x : B) (v : E x) : (v : TotalSpace E).fst = x :=
   rfl
 
-theorem to_total_space_coe {x : B} (v : E x) : (v : total_space E) = ⟨x, v⟩ :=
+theorem to_total_space_coe {x : B} (v : E x) : (v : TotalSpace E) = ⟨x, v⟩ :=
   rfl
 
 /-- `bundle.trivial B F` is the trivial bundle over `B` of fiber `F`. -/
@@ -55,7 +55,7 @@ instance {F : Type _} [Inhabited F] {b : B} : Inhabited (Bundle.Trivial B F b) :
   ⟨(default : F)⟩
 
 /-- The trivial bundle, unlike other bundles, has a canonical projection on the fiber. -/
-def trivial.proj_snd (B : Type _) (F : Type _) : total_space (Bundle.Trivial B F) → F :=
+def trivial.proj_snd (B : Type _) (F : Type _) : TotalSpace (Bundle.Trivial B F) → F :=
   Sigma.snd
 
 section FiberStructures
@@ -64,13 +64,13 @@ variable [∀ x, AddCommMonoidₓ (E x)]
 
 @[simp]
 theorem coe_snd_map_apply (x : B) (v w : E x) :
-    (↑(v + w) : total_space E).snd = (v : total_space E).snd + (w : total_space E).snd :=
+    (↑(v + w) : TotalSpace E).snd = (v : TotalSpace E).snd + (w : TotalSpace E).snd :=
   rfl
 
 variable (R : Type _) [Semiringₓ R] [∀ x, Module R (E x)]
 
 @[simp]
-theorem coe_snd_map_smul (x : B) (r : R) (v : E x) : (↑(r • v) : total_space E).snd = r • (v : total_space E).snd :=
+theorem coe_snd_map_smul (x : B) (r : R) (v : E x) : (↑(r • v) : TotalSpace E).snd = r • (v : TotalSpace E).snd :=
   rfl
 
 end FiberStructures

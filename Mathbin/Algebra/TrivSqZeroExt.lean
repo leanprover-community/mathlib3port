@@ -269,7 +269,7 @@ variable (R M)
 /-- The canonical `R`-linear inclusion `M → triv_sq_zero_ext R M`. -/
 @[simps apply]
 def inr_hom [Semiringₓ R] [AddCommMonoidₓ M] [Module R M] : M →ₗ[R] tsze R M :=
-  { LinearMap.inr _ _ _ with toFun := inr }
+  { LinearMap.inr R R M with toFun := inr }
 
 /-- The canonical `R`-linear projection `triv_sq_zero_ext R M → M`. -/
 @[simps apply]
@@ -353,7 +353,7 @@ theorem inr_mul_inl [Semiringₓ R] [AddCommMonoidₓ M] [Module R M] (r : R) (m
     show (0 : R) • 0 + r • m = r • m by
       rw [smul_zero, zero_addₓ]
 
-instance [Monoidₓ R] [AddMonoidₓ M] [DistribMulAction R M] : MulOneClass (tsze R M) :=
+instance [Monoidₓ R] [AddMonoidₓ M] [DistribMulAction R M] : MulOneClassₓ (tsze R M) :=
   { TrivSqZeroExt.hasOne, TrivSqZeroExt.hasMul with
     one_mul := fun x =>
       ext (one_mulₓ x.1) <|
@@ -364,7 +364,7 @@ instance [Monoidₓ R] [AddMonoidₓ M] [DistribMulAction R M] : MulOneClass (ts
         show (x.1 • 0 : M) + (1 : R) • x.2 = x.2 by
           rw [smul_zero, zero_addₓ, one_smul] }
 
-instance [Semiringₓ R] [AddCommMonoidₓ M] [Module R M] : NonAssocSemiring (tsze R M) :=
+instance [Semiringₓ R] [AddCommMonoidₓ M] [Module R M] : NonAssocSemiringₓ (tsze R M) :=
   { TrivSqZeroExt.mulOneClass, TrivSqZeroExt.addCommMonoid with
     zero_mul := fun x =>
       ext (zero_mul x.1) <|
@@ -432,7 +432,7 @@ instance : Algebra R (tsze R M) :=
 theorem algebra_map_eq_inl : ⇑algebraMap R (tsze R M) = inl :=
   rfl
 
-theorem algebra_map_eq_inl_hom : algebraMap R (tsze R M) = inl_hom R M :=
+theorem algebra_map_eq_inl_hom : algebraMap R (tsze R M) = inlHom R M :=
   rfl
 
 theorem algebra_map_eq_inl' (s : S) : algebraMap S (tsze R M) s = inl (algebraMap S R s) :=
@@ -455,7 +455,7 @@ theorem alg_hom_ext {A} [Semiringₓ A] [Algebra R A] ⦃f g : tsze R M →ₐ[R
 
 @[ext]
 theorem alg_hom_ext' {A} [Semiringₓ A] [Algebra R A] ⦃f g : tsze R M →ₐ[R] A⦄
-    (h : f.to_linear_map.comp (inr_hom R M) = g.to_linear_map.comp (inr_hom R M)) : f = g :=
+    (h : f.toLinearMap.comp (inrHom R M) = g.toLinearMap.comp (inrHom R M)) : f = g :=
   alg_hom_ext <| LinearMap.congr_fun h
 
 variable {A : Type _} [Semiringₓ A] [Algebra R A]
@@ -465,7 +465,7 @@ whose products are all zero.
 
 See `triv_sq_zero_ext.lift` for this as an equiv. -/
 def lift_aux (f : M →ₗ[R] A) (hf : ∀ x y, f x * f y = 0) : tsze R M →ₐ[R] A :=
-  AlgHom.ofLinearMap ((Algebra.linearMap _ _).comp (fst_hom R M).toLinearMap + f.comp (snd_hom R M))
+  AlgHom.ofLinearMap ((Algebra.linearMap _ _).comp (fstHom R M).toLinearMap + f.comp (sndHom R M))
     (show algebraMap R _ 1 + f (0 : M) = 1 by
       rw [map_zero, map_one, add_zeroₓ])
     (TrivSqZeroExt.ind fun r₁ m₁ =>
@@ -476,17 +476,17 @@ def lift_aux (f : M →ₗ[R] A) (hf : ∀ x y, f x * f y = 0) : tsze R M →ₐ
           add_right_commₓ, add_assocₓ, LinearMap.map_smul, LinearMap.map_smul])
 
 @[simp]
-theorem lift_aux_apply_inr (f : M →ₗ[R] A) (hf : ∀ x y, f x * f y = 0) (m : M) : lift_aux f hf (inr m) = f m :=
+theorem lift_aux_apply_inr (f : M →ₗ[R] A) (hf : ∀ x y, f x * f y = 0) (m : M) : liftAux f hf (inr m) = f m :=
   show algebraMap R A 0 + f m = f m by
     rw [RingHom.map_zero, zero_addₓ]
 
 @[simp]
 theorem lift_aux_comp_inr_hom (f : M →ₗ[R] A) (hf : ∀ x y, f x * f y = 0) :
-    (lift_aux f hf).toLinearMap.comp (inr_hom R M) = f :=
+    (liftAux f hf).toLinearMap.comp (inrHom R M) = f :=
   LinearMap.ext <| lift_aux_apply_inr f hf
 
 @[simp]
-theorem lift_aux_inr_hom : lift_aux (inr_hom R M) (inr_mul_inr R) = AlgHom.id R (tsze R M) :=
+theorem lift_aux_inr_hom : liftAux (inrHom R M) (inr_mul_inr R) = AlgHom.id R (tsze R M) :=
   alg_hom_ext' <| lift_aux_comp_inr_hom _ _
 
 /-- A universal property of the trivial square-zero extension, providing a unique
@@ -496,9 +496,9 @@ products.
 This isomorphism is named to match the very similar `complex.lift`. -/
 @[simps]
 def lift : { f : M →ₗ[R] A // ∀ x y, f x * f y = 0 } ≃ (tsze R M →ₐ[R] A) where
-  toFun := fun f => lift_aux f f.prop
+  toFun := fun f => liftAux f f.Prop
   invFun := fun F =>
-    ⟨F.to_linear_map.comp (inr_hom R M), fun x y =>
+    ⟨F.toLinearMap.comp (inrHom R M), fun x y =>
       (F.map_mul _ _).symm.trans <| (F.congr_arg <| inr_mul_inr _ _ _).trans F.map_zero⟩
   left_inv := fun f => Subtype.ext <| lift_aux_comp_inr_hom _ _
   right_inv := fun F => alg_hom_ext' <| lift_aux_comp_inr_hom _ _

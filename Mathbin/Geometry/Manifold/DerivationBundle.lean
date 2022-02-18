@@ -100,7 +100,7 @@ variable {I}
 def eval_at (x : M) : Derivation 𝕜 C^∞⟮I, M; 𝕜⟯ C^∞⟮I, M; 𝕜⟯ →ₗ[𝕜] PointDerivation I x :=
   (SmoothFunction.evalAt I x).compDer
 
-theorem eval_at_apply (x : M) : eval_at x X f = (X f) x :=
+theorem eval_at_apply (x : M) : evalAt x X f = (X f) x :=
   rfl
 
 end Derivation

@@ -36,7 +36,7 @@ variable {τ : Type _} {α : Type _}
 /-- A set `s ⊆ α` is invariant under `ϕ : τ → α → α` if
     `ϕ t s ⊆ s` for all `t` in `τ`. -/
 def IsInvariant (ϕ : τ → α → α) (s : Set α) : Prop :=
-  ∀ t, maps_to (ϕ t) s s
+  ∀ t, MapsTo (ϕ t) s s
 
 variable (ϕ : τ → α → α) (s : Set α)
 
@@ -46,7 +46,7 @@ theorem is_invariant_iff_image : IsInvariant ϕ s ↔ ∀ t, ϕ t '' s ⊆ s := 
 /-- A set `s ⊆ α` is forward-invariant under `ϕ : τ → α → α` if
     `ϕ t s ⊆ s` for all `t ≥ 0`. -/
 def IsFwInvariant [Preorderₓ τ] [Zero τ] (ϕ : τ → α → α) (s : Set α) : Prop :=
-  ∀ ⦃t⦄, 0 ≤ t → maps_to (ϕ t) s s
+  ∀ ⦃t⦄, 0 ≤ t → MapsTo (ϕ t) s s
 
 theorem IsInvariant.is_fw_invariant [Preorderₓ τ] [Zero τ] {ϕ : τ → α → α} {s : Set α} (h : IsInvariant ϕ s) :
     IsFwInvariant ϕ s := fun t ht => h t
@@ -124,7 +124,7 @@ def from_iter {g : α → α} (h : Continuous g) : Flow ℕ α where
 /-- Restriction of a flow onto an invariant set. -/
 def restrict {s : Set α} (h : IsInvariant ϕ s) : Flow τ (↥s) where
   toFun := fun t => (h t).restrict _ _ _
-  cont' := continuous_subtype_mk _ (ϕ.continuous continuous_fst (continuous_subtype_coe.comp continuous_snd))
+  cont' := continuous_subtype_mk _ (ϕ.Continuous continuous_fst (continuous_subtype_coe.comp continuous_snd))
   map_add' := fun _ _ _ => Subtype.ext (map_add _ _ _ _)
   map_zero' := fun _ => Subtype.ext (map_zero_apply _ _)
 
@@ -139,7 +139,7 @@ theorem is_invariant_iff_image_eq (s : Set α) : IsInvariant ϕ s ↔ ∀ t, ϕ 
   (is_invariant_iff_image _ _).trans
     (Iff.intro
       (fun h t =>
-        subset.antisymm (h t) fun _ hx =>
+        Subset.antisymm (h t) fun _ hx =>
           ⟨_, h (-t) ⟨_, hx, rfl⟩, by
             simp [← map_add]⟩)
       fun h t => by
@@ -149,7 +149,7 @@ theorem is_invariant_iff_image_eq (s : Set α) : IsInvariant ϕ s ↔ ∀ t, ϕ 
     is defined `ϕ.reverse t x = ϕ (-t) x`. -/
 def reverse : Flow τ α where
   toFun := fun t => ϕ (-t)
-  cont' := ϕ.continuous continuous_fst.neg continuous_snd
+  cont' := ϕ.Continuous continuous_fst.neg continuous_snd
   map_add' := fun _ _ _ => by
     rw [neg_add, map_add]
   map_zero' := fun _ => by
@@ -165,7 +165,7 @@ def to_homeomorph (t : τ) : α ≃ₜ α where
     rw [← map_add, add_neg_selfₓ, map_zero_apply]
 
 theorem image_eq_preimage (t : τ) (s : Set α) : ϕ t '' s = ϕ (-t) ⁻¹' s :=
-  (ϕ.to_homeomorph t).toEquiv.image_eq_preimage s
+  (ϕ.toHomeomorph t).toEquiv.image_eq_preimage s
 
 end Flow
 

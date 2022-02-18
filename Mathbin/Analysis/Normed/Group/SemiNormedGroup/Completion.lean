@@ -38,27 +38,27 @@ namespace SemiNormedGroupₓ
 @[simps]
 def Completion : SemiNormedGroupₓ.{u} ⥤ SemiNormedGroupₓ.{u} where
   obj := fun V => SemiNormedGroupₓ.of (completion V)
-  map := fun V W f => f.completion
+  map := fun V W f => f.Completion
   map_id' := fun V => completion_id
   map_comp' := fun U V W f g => (completion_comp f g).symm
 
-instance Completion_complete_space {V : SemiNormedGroupₓ} : CompleteSpace (Completion.obj V) :=
-  completion.complete_space _
+instance Completion_complete_space {V : SemiNormedGroupₓ} : CompleteSpace (completion.obj V) :=
+  Completion.complete_space _
 
 /-- The canonical morphism from a seminormed group `V` to its completion. -/
 @[simps]
-def Completion.incl {V : SemiNormedGroupₓ} : V ⟶ Completion.obj V where
+def Completion.incl {V : SemiNormedGroupₓ} : V ⟶ completion.obj V where
   toFun := fun v => (v : completion V)
-  map_add' := completion.coe_add
+  map_add' := Completion.coe_add
   bound' :=
     ⟨1, fun v => by
       simp ⟩
 
-theorem Completion.norm_incl_eq {V : SemiNormedGroupₓ} {v : V} : ∥Completion.incl v∥ = ∥v∥ := by
+theorem Completion.norm_incl_eq {V : SemiNormedGroupₓ} {v : V} : ∥completion.incl v∥ = ∥v∥ := by
   simp
 
-theorem Completion.map_norm_noninc {V W : SemiNormedGroupₓ} {f : V ⟶ W} (hf : f.norm_noninc) :
-    (Completion.map f).NormNoninc :=
+theorem Completion.map_norm_noninc {V W : SemiNormedGroupₓ} {f : V ⟶ W} (hf : f.NormNoninc) :
+    (completion.map f).NormNoninc :=
   NormedGroupHom.NormNoninc.norm_noninc_iff_norm_le_one.2 <|
     (NormedGroupHom.norm_completion f).le.trans <| NormedGroupHom.NormNoninc.norm_noninc_iff_norm_le_one.1 hf
 
@@ -66,14 +66,14 @@ theorem Completion.map_norm_noninc {V W : SemiNormedGroupₓ} {f : V ⟶ W} (hf 
 from the completion of `V` to the completion of `W`.
 The difference from the definition obtained from the functoriality of completion is in that the
 map sending a morphism `f` to the associated morphism of completions is itself additive. -/
-def Completion.map_hom (V W : SemiNormedGroupₓ.{u}) : (V ⟶ W) →+ (Completion.obj V ⟶ Completion.obj W) :=
-  (AddMonoidHom.mk' (CategoryTheory.Functor.map Completion)) fun f g => f.completion_add g
+def Completion.map_hom (V W : SemiNormedGroupₓ.{u}) : (V ⟶ W) →+ (completion.obj V ⟶ completion.obj W) :=
+  (AddMonoidHom.mk' (CategoryTheory.Functor.map completion)) fun f g => f.completion_add g
 
 @[simp]
-theorem Completion.map_zero (V W : SemiNormedGroupₓ) : Completion.map (0 : V ⟶ W) = 0 :=
-  (Completion.map_hom V W).map_zero
+theorem Completion.map_zero (V W : SemiNormedGroupₓ) : completion.map (0 : V ⟶ W) = 0 :=
+  (completion.mapHom V W).map_zero
 
-instance : preadditive SemiNormedGroupₓ.{u} where
+instance : Preadditive SemiNormedGroupₓ.{u} where
   homGroup := fun P Q => inferInstance
   add_comp' := by
     intros
@@ -84,25 +84,25 @@ instance : preadditive SemiNormedGroupₓ.{u} where
     ext
     simp only [NormedGroupHom.add_apply, CategoryTheory.comp_apply, NormedGroupHom.map_add]
 
-instance : functor.additive Completion where
-  map_add' := fun X Y => (Completion.map_hom _ _).map_add
+instance : Functor.Additive completion where
+  map_add' := fun X Y => (completion.mapHom _ _).map_add
 
 /-- Given a normed group hom `f : V → W` with `W` complete, this provides a lift of `f` to
 the completion of `V`. The lemmas `lift_unique` and `lift_comp_incl` provide the api for the
 universal property of the completion. -/
 def Completion.lift {V W : SemiNormedGroupₓ} [CompleteSpace W] [SeparatedSpace W] (f : V ⟶ W) :
-    Completion.obj V ⟶ W where
+    completion.obj V ⟶ W where
   toFun := f.extension
-  map_add' := f.extension.to_add_monoid_hom.map_add'
+  map_add' := f.extension.toAddMonoidHom.map_add'
   bound' := f.extension.bound'
 
 theorem Completion.lift_comp_incl {V W : SemiNormedGroupₓ} [CompleteSpace W] [SeparatedSpace W] (f : V ⟶ W) :
-    Completion.incl ≫ Completion.lift f = f := by
+    Completion.incl ≫ completion.lift f = f := by
   ext
   apply NormedGroupHom.extension_coe
 
 theorem Completion.lift_unique {V W : SemiNormedGroupₓ} [CompleteSpace W] [SeparatedSpace W] (f : V ⟶ W)
-    (g : Completion.obj V ⟶ W) : Completion.incl ≫ g = f → g = Completion.lift f := fun h =>
+    (g : completion.obj V ⟶ W) : Completion.incl ≫ g = f → g = completion.lift f := fun h =>
   (NormedGroupHom.extension_unique _ fun v => ((ext_iff.1 h) v).symm).symm
 
 end SemiNormedGroupₓ

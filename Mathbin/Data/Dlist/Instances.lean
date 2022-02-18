@@ -23,10 +23,10 @@ def list_equiv_dlist : List α ≃ Dlist α := by
     simp [Function.RightInverse, left_inverse, to_list_of_list, of_list_to_list]
 
 instance : Traversable Dlist :=
-  Equivₓ.traversable list_equiv_dlist
+  Equivₓ.traversable listEquivDlist
 
 instance : IsLawfulTraversable Dlist :=
-  Equivₓ.isLawfulTraversable list_equiv_dlist
+  Equivₓ.isLawfulTraversable listEquivDlist
 
 instance {α} : Inhabited (Dlist α) :=
   ⟨Dlist.empty⟩

@@ -203,18 +203,18 @@ theorem forall_val_of_forall_mem {as : List α} {p : α → Prop} : p default �
     apply h1
     
 
-theorem equiv_refl : Equivₓ as as := fun k => rfl
+theorem equiv_refl : Equiv as as := fun k => rfl
 
-theorem equiv_symm : Equivₓ as1 as2 → Equivₓ as2 as1 := fun h1 k => (h1 k).symm
+theorem equiv_symm : Equiv as1 as2 → Equiv as2 as1 := fun h1 k => (h1 k).symm
 
-theorem equiv_trans : Equivₓ as1 as2 → Equivₓ as2 as3 → Equivₓ as1 as3 := fun h1 h2 k => Eq.trans (h1 k) (h2 k)
+theorem equiv_trans : Equiv as1 as2 → Equiv as2 as3 → Equiv as1 as3 := fun h1 h2 k => Eq.trans (h1 k) (h2 k)
 
-theorem equiv_of_eq : as1 = as2 → Equivₓ as1 as2 := by
+theorem equiv_of_eq : as1 = as2 → Equiv as1 as2 := by
   intro h1
   rw [h1]
   apply equiv_refl
 
-theorem eq_of_equiv : ∀ {as1 as2 : List α}, as1.length = as2.length → Equivₓ as1 as2 → as1 = as2
+theorem eq_of_equiv : ∀ {as1 as2 : List α}, as1.length = as2.length → Equiv as1 as2 → as1 = as2
   | [], [], h1, h2 => rfl
   | _ :: _, [], h1, h2 => by
     cases h1

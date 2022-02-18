@@ -15,11 +15,11 @@ run_cmd
 attribute [sugar]
   Ne not_leₓ not_ltₓ Int.lt_iff_add_one_leₓ or_falseₓ false_orₓ and_trueₓ true_andₓ Ge Gt mul_addₓ add_mulₓ one_mulₓ mul_oneₓ mul_comm sub_eq_add_neg imp_iff_not_or iff_iff_not_or_and_or_not
 
--- ././Mathport/Syntax/Translate/Basic.lean:794:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
 unsafe def desugar :=
   sorry
 
-theorem univ_close_of_unsat_clausify (m : Nat) (p : preform) : clauses.unsat (dnf (¬* p)) → univ_close p (fun x => 0) m
+theorem univ_close_of_unsat_clausify (m : Nat) (p : Preform) : Clauses.Unsat (dnf (¬* p)) → UnivClose p (fun x => 0) m
   | h1 => by
     apply univ_close_of_valid
     apply valid_of_unsat_not
@@ -27,7 +27,7 @@ theorem univ_close_of_unsat_clausify (m : Nat) (p : preform) : clauses.unsat (dn
     exact h1
 
 /-- Given a (p : preform), return the expr of a (t : univ_close m p) -/
-unsafe def prove_univ_close (m : Nat) (p : preform) : tactic expr := do
+unsafe def prove_univ_close (m : Nat) (p : Preform) : tactic expr := do
   let x ← prove_unsats (dnf (¬* p))
   return (quote.1 (univ_close_of_unsat_clausify (%%ₓquote.1 m) (%%ₓquote.1 p) (%%ₓx)))
 
@@ -91,10 +91,10 @@ unsafe def exprform.exprs : exprform → List expr
 
 /-- Reification to an intermediate shadow syntax which eliminates exprs,
     but still includes non-canonical terms -/
-unsafe def exprterm.to_preterm (xs : List expr) : exprterm → tactic preterm
+unsafe def exprterm.to_preterm (xs : List expr) : exprterm → tactic Preterm
   | exprterm.cst k => return (&k)
   | exprterm.exp k x =>
-    let m := xs.index_of x
+    let m := xs.indexOf x
     if m < xs.length then return (k ** m) else failed
   | exprterm.add xa xb => do
     let a ← xa.to_preterm
@@ -103,7 +103,7 @@ unsafe def exprterm.to_preterm (xs : List expr) : exprterm → tactic preterm
 
 /-- Reification to an intermediate shadow syntax which eliminates exprs,
     but still includes non-canonical terms -/
-unsafe def exprform.to_preform (xs : List expr) : exprform → tactic preform
+unsafe def exprform.to_preform (xs : List expr) : exprform → tactic Preform
   | exprform.eq xa xb => do
     let a ← xa.to_preterm xs
     let b ← xb.to_preterm xs
@@ -130,7 +130,7 @@ unsafe def to_preform (x : expr) : tactic (preform × Nat) := do
   let xf ← to_exprform x
   let xs := xf.exprs
   let f ← xf.to_preform xs
-  return (f, xs.length)
+  return (f, xs)
 
 /-- Return expr of proof of current LIA goal -/
 unsafe def prove : tactic expr := do
@@ -149,7 +149,7 @@ unsafe def wff : expr → tactic Unit
   | quote.1 ((%%ₓpx) ∧ %%ₓqx) => wff px >> wff qx
   | quote.1 ((%%ₓpx) ↔ %%ₓqx) => wff px >> wff qx
   | quote.1 (%%ₓexpr.pi _ _ px qx) =>
-    Monadₓ.cond (if expr.has_var px then return tt else is_prop px) (wff px >> wff qx) (eq_int px >> wff qx)
+    Monadₓ.cond (if expr.has_var px then return true else is_prop px) (wff px >> wff qx) (eq_int px >> wff qx)
   | quote.1 (@LT.lt (%%ₓdx) (%%ₓh) _ _) => eq_int dx
   | quote.1 (@LE.le (%%ₓdx) (%%ₓh) _ _) => eq_int dx
   | quote.1 (@Eq (%%ₓdx) _ _) => eq_int dx

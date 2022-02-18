@@ -59,7 +59,7 @@ theorem diag_transpose (A : Matrix n n M) : diag n R M (A)ᵀ = diag n R M A :=
   rfl
 
 @[simp]
-theorem diag_col_mul_row (a b : n → R) : diag n R R (col a ⬝ row b) = a * b := by
+theorem diag_col_mul_row (a b : n → R) : diag n R R (colₓ a ⬝ rowₓ b) = a * b := by
   ext
   simp [Matrix.mul_apply]
 
@@ -111,7 +111,7 @@ theorem trace_mul_cycle' {S : Type v} [CommSemiringₓ S] (A : Matrix m n S) (B 
   rw [← Matrix.mul_assoc, trace_mul_comm]
 
 @[simp]
-theorem trace_col_mul_row (a b : n → R) : trace n R R (col a ⬝ row b) = dot_product a b := by
+theorem trace_col_mul_row (a b : n → R) : trace n R R (colₓ a ⬝ rowₓ b) = dotProduct a b := by
   simp [dot_product]
 
 /-! ### Special cases for `fin n`

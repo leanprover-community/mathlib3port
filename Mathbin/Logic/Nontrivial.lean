@@ -109,7 +109,7 @@ instance Option.nontrivial [Nonempty α] : Nontrivial (Option α) := by
 /-- Pushforward a `nontrivial` instance along an injective function. -/
 protected theorem Function.Injective.nontrivial [Nontrivial α] {f : α → β} (hf : Function.Injective f) : Nontrivial β :=
   let ⟨x, y, h⟩ := exists_pair_ne α
-  ⟨⟨f x, f y, hf.ne h⟩⟩
+  ⟨⟨f x, f y, hf.Ne h⟩⟩
 
 /-- Pullback a `nontrivial` instance along a surjective function. -/
 protected theorem Function.Surjective.nontrivial [Nontrivial β] {f : α → β} (hf : Function.Surjective f) :
@@ -183,7 +183,7 @@ unsafe def nontriviality_by_elim (α : expr) (lems : interactive.parse simp_arg_
       fail f! "Could not prove goal assuming `subsingleton {α}`"
   reset_instance_cache
 
--- ././Mathport/Syntax/Translate/Basic.lean:794:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
 /-- Tries to generate a `nontrivial α` instance using `nontrivial_of_ne` or `nontrivial_of_lt`
 and local hypotheses.
 -/
@@ -290,7 +290,7 @@ end Tactic.Interactive
 namespace Bool
 
 instance : Nontrivial Bool :=
-  ⟨⟨tt, ff, tt_eq_ff_eq_false⟩⟩
+  ⟨⟨true, false, tt_eq_ff_eq_false⟩⟩
 
 end Bool
 

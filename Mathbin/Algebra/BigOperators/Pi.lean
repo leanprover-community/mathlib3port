@@ -15,13 +15,13 @@ namespace Pi
 
 @[to_additive]
 theorem list_prod_apply {α : Type _} {β : α → Type _} [∀ a, Monoidₓ (β a)] (a : α) (l : List (∀ a, β a)) :
-    l.prod a = (l.map fun f : ∀ a, β a => f a).Prod :=
-  (eval_monoid_hom β a).map_list_prod _
+    l.Prod a = (l.map fun f : ∀ a, β a => f a).Prod :=
+  (evalMonoidHom β a).map_list_prod _
 
 @[to_additive]
 theorem multiset_prod_apply {α : Type _} {β : α → Type _} [∀ a, CommMonoidₓ (β a)] (a : α) (s : Multiset (∀ a, β a)) :
-    s.prod a = (s.map fun f : ∀ a, β a => f a).Prod :=
-  (eval_monoid_hom β a).map_multiset_prod _
+    s.Prod a = (s.map fun f : ∀ a, β a => f a).Prod :=
+  (evalMonoidHom β a).map_multiset_prod _
 
 end Pi
 

@@ -24,7 +24,7 @@ unsafe def elim_var_aux (m : Nat) : (List Nat × term) × List Nat × term → t
     let lcm := Nat.lcmₓ n o
     let n' := lcm / n
     let o' := lcm / o
-    return (add (p1.map ((· * ·) n')) (p2.map ((· * ·) o')), term.add (t1.mul n') (t2.mul o'))
+    return (add (p1.map ((· * ·) n')) (p2.map ((· * ·) o')), Term.add (t1.mul n') (t2.mul o'))
 
 /-- Use two lists of linear combinations (one in which the resultant terms
     include occurrences of the `m`th variable with positive coefficients,
@@ -55,9 +55,9 @@ unsafe def find_scalars_core : Nat → List (List Nat × term) → tactic (List 
 
 /-- Perform Fourier–Motzkin elimination to find a contradictory
     linear combination of input constraints. -/
-unsafe def find_scalars (ts : List term) : tactic (List Nat) :=
-  find_scalars_core (ts.map fun t : term => t.snd.length).maximum.iget
-    (ts.map_with_index fun m t => (List.Func.set 1 [] m, t))
+unsafe def find_scalars (ts : List Term) : tactic (List Nat) :=
+  find_scalars_core (ts.map fun t : Term => t.snd.length).maximum.iget
+    (ts.mapWithIndex fun m t => (List.Func.set 1 [] m, t))
 
 end Omega
 

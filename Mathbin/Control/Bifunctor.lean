@@ -96,10 +96,10 @@ instance : Bifunctor Prod where
 instance : IsLawfulBifunctor Prod := by
   refine' { .. } <;> intros <;> cases x <;> rfl
 
-instance Bifunctor.const : Bifunctor const where
+instance Bifunctor.const : Bifunctor Const where
   bimap := fun α α' β β f _ => f
 
-instance IsLawfulBifunctor.const : IsLawfulBifunctor const := by
+instance IsLawfulBifunctor.const : IsLawfulBifunctor Const := by
   refine' { .. } <;> intros <;> rfl
 
 instance Bifunctor.flip : Bifunctor (flip F) where

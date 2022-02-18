@@ -7,27 +7,27 @@ namespace Omega
 ⟦t⟧ is the value of (t : term). -/
 @[reducible]
 def clause :=
-  List term × List term
+  List Term × List Term
 
 namespace Clause
 
 /-- holds v c := clause c holds under valuation v -/
-def holds (v : Nat → Int) : clause → Prop
-  | (eqs, les) => (∀ t : term, t ∈ eqs → 0 = term.val v t) ∧ ∀ t : term, t ∈ les → 0 ≤ term.val v t
+def holds (v : Nat → Int) : Clause → Prop
+  | (eqs, les) => (∀ t : Term, t ∈ eqs → 0 = Term.val v t) ∧ ∀ t : Term, t ∈ les → 0 ≤ Term.val v t
 
 /-- sat c := there exists a valuation v under which c holds -/
-def sat (c : clause) : Prop :=
-  ∃ v : Nat → Int, holds v c
+def sat (c : Clause) : Prop :=
+  ∃ v : Nat → Int, Holds v c
 
 /-- unsat c := there is no valuation v under which c holds -/
-def unsat (c : clause) : Prop :=
+def unsat (c : Clause) : Prop :=
   ¬c.sat
 
 /-- append two clauses by elementwise appending -/
-def append (c1 c2 : clause) : clause :=
+def append (c1 c2 : Clause) : Clause :=
   (c1.fst ++ c2.fst, c1.snd ++ c2.snd)
 
-theorem holds_append {v : Nat → Int} {c1 c2 : clause} : holds v c1 → holds v c2 → holds v (append c1 c2) := by
+theorem holds_append {v : Nat → Int} {c1 c2 : Clause} : Holds v c1 → Holds v c2 → Holds v (append c1 c2) := by
   intro h1 h2
   cases' c1 with eqs1 les1
   cases' c2 with eqs2 les2
@@ -38,19 +38,19 @@ theorem holds_append {v : Nat → Int} {c1 c2 : clause} : holds v c1 → holds v
 end Clause
 
 /-- There exists a satisfiable clause c in argument -/
-def clauses.sat (cs : List clause) : Prop :=
-  ∃ c ∈ cs, clause.sat c
+def clauses.sat (cs : List Clause) : Prop :=
+  ∃ c ∈ cs, Clause.Sat c
 
 /-- There is no satisfiable clause c in argument -/
-def clauses.unsat (cs : List clause) : Prop :=
-  ¬clauses.sat cs
+def clauses.unsat (cs : List Clause) : Prop :=
+  ¬Clauses.Sat cs
 
-theorem clauses.unsat_nil : clauses.unsat [] := by
+theorem clauses.unsat_nil : Clauses.Unsat [] := by
   intro h1
   rcases h1 with ⟨c, h1, h2⟩
   cases h1
 
-theorem clauses.unsat_cons (c : clause) (cs : List clause) : clause.unsat c → clauses.unsat cs → clauses.unsat (c :: cs)
+theorem clauses.unsat_cons (c : Clause) (cs : List Clause) : Clause.Unsat c → Clauses.Unsat cs → Clauses.Unsat (c :: cs)
   | h1, h2, h3 => by
     unfold clauses.sat  at h3
     rw [List.exists_mem_cons_iffₓ] at h3

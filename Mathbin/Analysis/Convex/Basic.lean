@@ -371,7 +371,7 @@ section LinearOrderedAddCommMonoid
 
 variable [LinearOrderedAddCommMonoid E] [Module 𝕜 E] [OrderedSmul 𝕜 E] {𝕜}
 
-theorem segment_subset_interval (x y : E) : [x -[𝕜] y] ⊆ interval x y := by
+theorem segment_subset_interval (x y : E) : [x -[𝕜] y] ⊆ Interval x y := by
   cases le_totalₓ x y
   · rw [interval_of_le h]
     exact segment_subset_Icc h
@@ -434,7 +434,7 @@ theorem open_segment_eq_Ioo' {x y : 𝕜} (hxy : x ≠ y) : OpenSegment 𝕜 x y
   · rw [open_segment_symm, open_segment_eq_Ioo h, max_eq_leftₓ h.le, min_eq_rightₓ h.le]
     
 
-theorem segment_eq_interval (x y : 𝕜) : [x -[𝕜] y] = interval x y :=
+theorem segment_eq_interval (x y : 𝕜) : [x -[𝕜] y] = Interval x y :=
   segment_eq_Icc' _ _
 
 /-- A point is in an `Icc` iff it can be expressed as a convex combination of the endpoints. -/
@@ -550,7 +550,7 @@ theorem Convex.inter {t : Set E} (hs : Convex 𝕜 s) (ht : Convex 𝕜 t) : Con
   fun x y hx : x ∈ s ∩ t hy : y ∈ s ∩ t a b ha : 0 ≤ a hb : 0 ≤ b hab : a + b = 1 =>
   ⟨hs hx.left hy.left ha hb hab, ht hx.right hy.right ha hb hab⟩
 
-theorem convex_sInter {S : Set (Set E)} (h : ∀, ∀ s ∈ S, ∀, Convex 𝕜 s) : Convex 𝕜 (⋂₀S) :=
+theorem convex_sInter {S : Set (Set E)} (h : ∀, ∀ s ∈ S, ∀, Convex 𝕜 s) : Convex 𝕜 (⋂₀ S) :=
   fun x y hx hy a b ha hb hab s hs => h s hs (hx s hs) (hy s hs) ha hb hab
 
 theorem convex_Inter {ι : Sort _} {s : ι → Set E} (h : ∀ i : ι, Convex 𝕜 (s i)) : Convex 𝕜 (⋂ i, s i) :=
@@ -593,7 +593,7 @@ theorem convex_iff_forall_pos :
   convex_iff_open_segment_subset.trans <| forall₄_congrₓ fun x y hx hy => open_segment_subset_iff 𝕜
 
 theorem convex_iff_pairwise_pos :
-    Convex 𝕜 s ↔ s.pairwise fun x y => ∀ ⦃a b : 𝕜⦄, 0 < a → 0 < b → a + b = 1 → a • x + b • y ∈ s := by
+    Convex 𝕜 s ↔ s.Pairwise fun x y => ∀ ⦃a b : 𝕜⦄, 0 < a → 0 < b → a + b = 1 → a • x + b • y ∈ s := by
   refine' convex_iff_forall_pos.trans ⟨fun h x hx y hy _ => h hx hy, _⟩
   intro h x y hx hy a b ha hb hab
   obtain rfl | hxy := eq_or_ne x y
@@ -602,8 +602,8 @@ theorem convex_iff_pairwise_pos :
   · exact h hx hy hxy ha hb hab
     
 
-protected theorem Set.Subsingleton.convex {s : Set E} (h : s.subsingleton) : Convex 𝕜 s :=
-  convex_iff_pairwise_pos.mpr (h.pairwise _)
+protected theorem Set.Subsingleton.convex {s : Set E} (h : s.Subsingleton) : Convex 𝕜 s :=
+  convex_iff_pairwise_pos.mpr (h.Pairwise _)
 
 theorem convex_singleton (c : E) : Convex 𝕜 ({c} : Set E) :=
   subsingleton_singleton.Convex
@@ -716,7 +716,7 @@ section LinearOrderedAddCommMonoid
 
 variable [LinearOrderedAddCommMonoid β] [Module 𝕜 β] [OrderedSmul 𝕜 β]
 
-theorem convex_interval (r s : β) : Convex 𝕜 (interval r s) :=
+theorem convex_interval (r s : β) : Convex 𝕜 (Interval r s) :=
   convex_Icc _ _
 
 end LinearOrderedAddCommMonoid
@@ -760,28 +760,28 @@ theorem AntitoneOn.convex_gt (hf : AntitoneOn f s) (hs : Convex 𝕜 s) (r : β)
   @MonotoneOn.convex_lt 𝕜 E (OrderDual β) _ _ _ _ _ _ _ hf hs r
 
 theorem Monotone.convex_le (hf : Monotone f) (r : β) : Convex 𝕜 { x | f x ≤ r } :=
-  Set.sep_univ.subst ((hf.monotone_on univ).convex_le convex_univ r)
+  Set.sep_univ.subst ((hf.MonotoneOn Univ).convex_le convex_univ r)
 
 theorem Monotone.convex_lt (hf : Monotone f) (r : β) : Convex 𝕜 { x | f x ≤ r } :=
-  Set.sep_univ.subst ((hf.monotone_on univ).convex_le convex_univ r)
+  Set.sep_univ.subst ((hf.MonotoneOn Univ).convex_le convex_univ r)
 
 theorem Monotone.convex_ge (hf : Monotone f) (r : β) : Convex 𝕜 { x | r ≤ f x } :=
-  Set.sep_univ.subst ((hf.monotone_on univ).convex_ge convex_univ r)
+  Set.sep_univ.subst ((hf.MonotoneOn Univ).convex_ge convex_univ r)
 
 theorem Monotone.convex_gt (hf : Monotone f) (r : β) : Convex 𝕜 { x | f x ≤ r } :=
-  Set.sep_univ.subst ((hf.monotone_on univ).convex_le convex_univ r)
+  Set.sep_univ.subst ((hf.MonotoneOn Univ).convex_le convex_univ r)
 
 theorem Antitone.convex_le (hf : Antitone f) (r : β) : Convex 𝕜 { x | f x ≤ r } :=
-  Set.sep_univ.subst ((hf.antitone_on univ).convex_le convex_univ r)
+  Set.sep_univ.subst ((hf.AntitoneOn Univ).convex_le convex_univ r)
 
 theorem Antitone.convex_lt (hf : Antitone f) (r : β) : Convex 𝕜 { x | f x < r } :=
-  Set.sep_univ.subst ((hf.antitone_on univ).convex_lt convex_univ r)
+  Set.sep_univ.subst ((hf.AntitoneOn Univ).convex_lt convex_univ r)
 
 theorem Antitone.convex_ge (hf : Antitone f) (r : β) : Convex 𝕜 { x | r ≤ f x } :=
-  Set.sep_univ.subst ((hf.antitone_on univ).convex_ge convex_univ r)
+  Set.sep_univ.subst ((hf.AntitoneOn Univ).convex_ge convex_univ r)
 
 theorem Antitone.convex_gt (hf : Antitone f) (r : β) : Convex 𝕜 { x | r < f x } :=
-  Set.sep_univ.subst ((hf.antitone_on univ).convex_gt convex_univ r)
+  Set.sep_univ.subst ((hf.AntitoneOn Univ).convex_gt convex_univ r)
 
 end LinearOrderedAddCommMonoid
 
@@ -977,7 +977,7 @@ Relates `convex` and `ord_connected`.
 section
 
 theorem Set.OrdConnected.convex_of_chain [OrderedSemiring 𝕜] [OrderedAddCommMonoid E] [Module 𝕜 E] [OrderedSmul 𝕜 E]
-    {s : Set E} (hs : s.ord_connected) (h : Zorn.Chain (· ≤ ·) s) : Convex 𝕜 s := by
+    {s : Set E} (hs : s.OrdConnected) (h : Zorn.Chain (· ≤ ·) s) : Convex 𝕜 s := by
   refine' convex_iff_segment_subset.mpr fun x y hx hy => _
   obtain hxy | hyx := h.total_of_refl hx hy
   · exact (segment_subset_Icc hxy).trans (hs.out hx hy)
@@ -987,10 +987,10 @@ theorem Set.OrdConnected.convex_of_chain [OrderedSemiring 𝕜] [OrderedAddCommM
     
 
 theorem Set.OrdConnected.convex [OrderedSemiring 𝕜] [LinearOrderedAddCommMonoid E] [Module 𝕜 E] [OrderedSmul 𝕜 E]
-    {s : Set E} (hs : s.ord_connected) : Convex 𝕜 s :=
+    {s : Set E} (hs : s.OrdConnected) : Convex 𝕜 s :=
   hs.convex_of_chain (Zorn.chain_of_trichotomous s)
 
-theorem convex_iff_ord_connected [LinearOrderedField 𝕜] {s : Set 𝕜} : Convex 𝕜 s ↔ s.ord_connected := by
+theorem convex_iff_ord_connected [LinearOrderedField 𝕜] {s : Set 𝕜} : Convex 𝕜 s ↔ s.OrdConnected := by
   simp_rw [convex_iff_segment_subset, segment_eq_interval, ord_connected_iff_interval_subset]
   exact forall_congrₓ fun x => forall_swap
 
@@ -1013,7 +1013,7 @@ theorem Submodule.convex [OrderedSemiring 𝕜] [AddCommMonoidₓ E] [Module �
 
 theorem Subspace.convex [LinearOrderedField 𝕜] [AddCommGroupₓ E] [Module 𝕜 E] (K : Subspace 𝕜 E) :
     Convex 𝕜 (↑K : Set E) :=
-  K.convex
+  K.Convex
 
 end Submodule
 

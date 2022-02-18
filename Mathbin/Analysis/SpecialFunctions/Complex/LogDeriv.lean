@@ -45,7 +45,7 @@ theorem has_strict_deriv_at_log {x : ℂ} (h : 0 < x.re ∨ x.im ≠ 0) : HasStr
   have h0 : x ≠ 0 := by
     rintro rfl
     simpa [lt_irreflₓ] using h
-  exp_local_homeomorph.has_strict_deriv_at_symm h h0 <| by
+  expLocalHomeomorph.has_strict_deriv_at_symm h h0 <| by
     simpa [exp_log h0] using has_strict_deriv_at_exp (log x)
 
 theorem has_strict_fderiv_at_log_real {x : ℂ} (h : 0 < x.re ∨ x.im ≠ 0) :
@@ -53,7 +53,7 @@ theorem has_strict_fderiv_at_log_real {x : ℂ} (h : 0 < x.re ∨ x.im ≠ 0) :
   (has_strict_deriv_at_log h).complex_to_real_fderiv
 
 theorem times_cont_diff_at_log {x : ℂ} (h : 0 < x.re ∨ x.im ≠ 0) {n : WithTop ℕ} : TimesContDiffAt ℂ n log x :=
-  exp_local_homeomorph.times_cont_diff_at_symm_deriv (exp_ne_zero <| log x) h (has_deriv_at_exp _)
+  expLocalHomeomorph.times_cont_diff_at_symm_deriv (exp_ne_zero <| log x) h (has_deriv_at_exp _)
     times_cont_diff_exp.TimesContDiffAt
 
 end Complex
@@ -94,7 +94,7 @@ theorem HasDerivAt.clog_real {f : ℝ → ℂ} {x : ℝ} {f' : ℂ} (h₁ : HasD
 
 theorem DifferentiableAt.clog {f : E → ℂ} {x : E} (h₁ : DifferentiableAt ℂ f x) (h₂ : 0 < (f x).re ∨ (f x).im ≠ 0) :
     DifferentiableAt ℂ (fun t => log (f t)) x :=
-  (h₁.has_fderiv_at.clog h₂).DifferentiableAt
+  (h₁.HasFderivAt.clog h₂).DifferentiableAt
 
 theorem HasFderivWithinAt.clog {f : E → ℂ} {f' : E →L[ℂ] ℂ} {s : Set E} {x : E} (h₁ : HasFderivWithinAt f f' s x)
     (h₂ : 0 < (f x).re ∨ (f x).im ≠ 0) : HasFderivWithinAt (fun t => log (f t)) ((f x)⁻¹ • f') s x :=
@@ -111,7 +111,7 @@ theorem HasDerivWithinAt.clog_real {f : ℝ → ℂ} {s : Set ℝ} {x : ℝ} {f'
 
 theorem DifferentiableWithinAt.clog {f : E → ℂ} {s : Set E} {x : E} (h₁ : DifferentiableWithinAt ℂ f s x)
     (h₂ : 0 < (f x).re ∨ (f x).im ≠ 0) : DifferentiableWithinAt ℂ (fun t => log (f t)) s x :=
-  (h₁.has_fderiv_within_at.clog h₂).DifferentiableWithinAt
+  (h₁.HasFderivWithinAt.clog h₂).DifferentiableWithinAt
 
 theorem DifferentiableOn.clog {f : E → ℂ} {s : Set E} (h₁ : DifferentiableOn ℂ f s)
     (h₂ : ∀, ∀ x ∈ s, ∀, 0 < (f x).re ∨ (f x).im ≠ 0) : DifferentiableOn ℂ (fun t => log (f t)) s := fun x hx =>

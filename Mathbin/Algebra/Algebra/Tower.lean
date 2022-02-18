@@ -118,15 +118,15 @@ algebra homomorphism over the bottom element. -/
 def to_alg_hom : S →ₐ[R] A :=
   { algebraMap S A with commutes' := fun _ => (algebra_map_apply _ _ _ _).symm }
 
-theorem to_alg_hom_apply (y : S) : to_alg_hom R S A y = algebraMap S A y :=
+theorem to_alg_hom_apply (y : S) : toAlgHom R S A y = algebraMap S A y :=
   rfl
 
 @[simp]
-theorem coe_to_alg_hom : ↑(to_alg_hom R S A) = algebraMap S A :=
+theorem coe_to_alg_hom : ↑(toAlgHom R S A) = algebraMap S A :=
   RingHom.ext fun _ => rfl
 
 @[simp]
-theorem coe_to_alg_hom' : (to_alg_hom R S A : S → A) = algebraMap S A :=
+theorem coe_to_alg_hom' : (toAlgHom R S A : S → A) = algebraMap S A :=
   rfl
 
 variable {R S A B}
@@ -149,7 +149,7 @@ instance (priority := 999) Subsemiring (U : Subsemiring S) : IsScalarTower U S A
 
 @[nolint instance_priority]
 instance of_ring_hom {R A B : Type _} [CommSemiringₓ R] [CommSemiringₓ A] [CommSemiringₓ B] [Algebra R A] [Algebra R B]
-    (f : A →ₐ[R] B) : @IsScalarTower R A B _ f.to_ring_hom.to_algebra.to_has_scalar _ := by
+    (f : A →ₐ[R] B) : @IsScalarTower R A B _ f.toRingHom.toAlgebra.toHasScalar _ := by
   let this' := (f : A →+* B).toAlgebra
   exact of_algebra_map_eq fun x => (f.commutes x).symm
 
@@ -180,18 +180,18 @@ def restrict_scalars (f : A →ₐ[S] B) : A →ₐ[R] B :=
       rw [algebra_map_apply R S A, algebra_map_apply R S B]
       exact f.commutes (algebraMap R S r) }
 
-theorem restrict_scalars_apply (f : A →ₐ[S] B) (x : A) : f.restrict_scalars R x = f x :=
+theorem restrict_scalars_apply (f : A →ₐ[S] B) (x : A) : f.restrictScalars R x = f x :=
   rfl
 
 @[simp]
-theorem coe_restrict_scalars (f : A →ₐ[S] B) : (f.restrict_scalars R : A →+* B) = f :=
+theorem coe_restrict_scalars (f : A →ₐ[S] B) : (f.restrictScalars R : A →+* B) = f :=
   rfl
 
 @[simp]
-theorem coe_restrict_scalars' (f : A →ₐ[S] B) : (restrict_scalars R f : A → B) = f :=
+theorem coe_restrict_scalars' (f : A →ₐ[S] B) : (restrictScalars R f : A → B) = f :=
   rfl
 
-theorem restrict_scalars_injective : Function.Injective (restrict_scalars R : (A →ₐ[S] B) → A →ₐ[R] B) := fun f g h =>
+theorem restrict_scalars_injective : Function.Injective (restrictScalars R : (A →ₐ[S] B) → A →ₐ[R] B) := fun f g h =>
   AlgHom.ext (AlgHom.congr_fun h : _)
 
 end AlgHom
@@ -205,18 +205,18 @@ def restrict_scalars (f : A ≃ₐ[S] B) : A ≃ₐ[R] B :=
       rw [algebra_map_apply R S A, algebra_map_apply R S B]
       exact f.commutes (algebraMap R S r) }
 
-theorem restrict_scalars_apply (f : A ≃ₐ[S] B) (x : A) : f.restrict_scalars R x = f x :=
+theorem restrict_scalars_apply (f : A ≃ₐ[S] B) (x : A) : f.restrictScalars R x = f x :=
   rfl
 
 @[simp]
-theorem coe_restrict_scalars (f : A ≃ₐ[S] B) : (f.restrict_scalars R : A ≃+* B) = f :=
+theorem coe_restrict_scalars (f : A ≃ₐ[S] B) : (f.restrictScalars R : A ≃+* B) = f :=
   rfl
 
 @[simp]
-theorem coe_restrict_scalars' (f : A ≃ₐ[S] B) : (restrict_scalars R f : A → B) = f :=
+theorem coe_restrict_scalars' (f : A ≃ₐ[S] B) : (restrictScalars R f : A → B) = f :=
   rfl
 
-theorem restrict_scalars_injective : Function.Injective (restrict_scalars R : (A ≃ₐ[S] B) → A ≃ₐ[R] B) := fun f g h =>
+theorem restrict_scalars_injective : Function.Injective (restrictScalars R : (A ≃ₐ[S] B) → A ≃ₐ[R] B) := fun f g h =>
   AlgEquiv.ext (AlgEquiv.congr_fun h : _)
 
 end AlgEquiv
@@ -244,23 +244,23 @@ def restrict_scalars (U : Subalgebra S A) : Subalgebra R A :=
       exact U.algebra_map_mem _ }
 
 @[simp]
-theorem coe_restrict_scalars {U : Subalgebra S A} : (restrict_scalars R U : Set A) = (U : Set A) :=
+theorem coe_restrict_scalars {U : Subalgebra S A} : (restrictScalars R U : Set A) = (U : Set A) :=
   rfl
 
 @[simp]
-theorem restrict_scalars_top : restrict_scalars R (⊤ : Subalgebra S A) = ⊤ :=
+theorem restrict_scalars_top : restrictScalars R (⊤ : Subalgebra S A) = ⊤ :=
   SetLike.coe_injective rfl
 
 @[simp]
 theorem restrict_scalars_to_submodule {U : Subalgebra S A} :
-    (U.restrict_scalars R).toSubmodule = U.to_submodule.restrict_scalars R :=
+    (U.restrictScalars R).toSubmodule = U.toSubmodule.restrictScalars R :=
   SetLike.coe_injective rfl
 
 @[simp]
-theorem mem_restrict_scalars {U : Subalgebra S A} {x : A} : x ∈ restrict_scalars R U ↔ x ∈ U :=
+theorem mem_restrict_scalars {U : Subalgebra S A} {x : A} : x ∈ restrictScalars R U ↔ x ∈ U :=
   Iff.rfl
 
-theorem restrict_scalars_injective : Function.Injective (restrict_scalars R : Subalgebra S A → Subalgebra R A) :=
+theorem restrict_scalars_injective : Function.Injective (restrictScalars R : Subalgebra S A → Subalgebra R A) :=
   fun U V H =>
   ext fun x => by
     rw [← mem_restrict_scalars R, H, mem_restrict_scalars]
@@ -269,8 +269,8 @@ theorem restrict_scalars_injective : Function.Injective (restrict_scalars R : Su
 
 This is a special case of `alg_hom.restrict_scalars` that can be helpful in elaboration. -/
 @[simp]
-def of_restrict_scalars (U : Subalgebra S A) (f : U →ₐ[S] B) : U.restrict_scalars R →ₐ[R] B :=
-  f.restrict_scalars R
+def of_restrict_scalars (U : Subalgebra S A) (f : U →ₐ[S] B) : U.restrictScalars R →ₐ[R] B :=
+  f.restrictScalars R
 
 end Semiringₓ
 
@@ -285,13 +285,13 @@ variable [CommSemiringₓ R] [CommSemiringₓ S] [CommSemiringₓ A]
 variable [Algebra R S] [Algebra S A] [Algebra R A] [IsScalarTower R S A]
 
 theorem adjoin_range_to_alg_hom (t : Set A) :
-    (Algebra.adjoin (to_alg_hom R S A).range t).restrictScalars R = (Algebra.adjoin S t).restrictScalars R :=
+    (Algebra.adjoin (toAlgHom R S A).range t).restrictScalars R = (Algebra.adjoin S t).restrictScalars R :=
   Subalgebra.ext fun z =>
     show
-      z ∈ Subsemiring.closure (Set.Range (algebraMap (to_alg_hom R S A).range A) ∪ t : Set A) ↔
+      z ∈ Subsemiring.closure (Set.Range (algebraMap (toAlgHom R S A).range A) ∪ t : Set A) ↔
         z ∈ Subsemiring.closure (Set.Range (algebraMap S A) ∪ t : Set A)
       by
-      suffices Set.Range (algebraMap (to_alg_hom R S A).range A) = Set.Range (algebraMap S A) by
+      suffices Set.Range (algebraMap (toAlgHom R S A).range A) = Set.Range (algebraMap S A) by
         rw [this]
       ext z
       exact ⟨fun ⟨⟨x, y, h1⟩, h2⟩ => ⟨y, h2 ▸ h1⟩, fun ⟨y, hy⟩ => ⟨⟨z, y, hy⟩, rfl⟩⟩

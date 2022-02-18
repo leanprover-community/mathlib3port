@@ -61,10 +61,10 @@ theorem head_drop {α} (a : Streamₓ α) (n : ℕ) : (a.drop n).head = a.nth n 
 @[ext]
 protected theorem ext {s₁ s₂ : Streamₓ α} : (∀ n, nth s₁ n = nth s₂ n) → s₁ = s₂ := fun h => funext h
 
-theorem all_def (p : α → Prop) (s : Streamₓ α) : all p s = ∀ n, p (nth s n) :=
+theorem all_def (p : α → Prop) (s : Streamₓ α) : All p s = ∀ n, p (nth s n) :=
   rfl
 
-theorem any_def (p : α → Prop) (s : Streamₓ α) : any p s = ∃ n, p (nth s n) :=
+theorem any_def (p : α → Prop) (s : Streamₓ α) : Any p s = ∃ n, p (nth s n) :=
   rfl
 
 theorem mem_cons (a : α) (s : Streamₓ α) : a ∈ a :: s :=
@@ -212,14 +212,14 @@ local infixl:50 " ~ " => R
 def is_bisimulation :=
   ∀ ⦃s₁ s₂⦄, s₁ ~ s₂ → head s₁ = head s₂ ∧ tail s₁ ~ tail s₂
 
-theorem nth_of_bisim (bisim : is_bisimulation R) :
+theorem nth_of_bisim (bisim : IsBisimulation R) :
     ∀ {s₁ s₂} n, s₁ ~ s₂ → nth s₁ n = nth s₂ n ∧ drop (n + 1) s₁ ~ drop (n + 1) s₂
   | s₁, s₂, 0, h => bisim h
   | s₁, s₂, n + 1, h =>
     match bisim h with
     | ⟨h₁, trel⟩ => nth_of_bisim n trel
 
-theorem eq_of_bisim (bisim : is_bisimulation R) : ∀ {s₁ s₂}, s₁ ~ s₂ → s₁ = s₂ := fun s₁ s₂ r =>
+theorem eq_of_bisim (bisim : IsBisimulation R) : ∀ {s₁ s₂}, s₁ ~ s₂ → s₁ = s₂ := fun s₁ s₂ r =>
   Streamₓ.ext fun n => And.elim_left (nth_of_bisim R bisim n r)
 
 end Bisim
@@ -414,10 +414,10 @@ theorem mem_of_mem_odd (a : α) (s : Streamₓ α) : a ∈ odd s → a ∈ s := 
     (by
       rw [h, nth_odd])
 
-theorem nil_append_stream (s : Streamₓ α) : append_stream [] s = s :=
+theorem nil_append_stream (s : Streamₓ α) : appendStream [] s = s :=
   rfl
 
-theorem cons_append_stream (a : α) (l : List α) (s : Streamₓ α) : append_stream (a :: l) s = a :: append_stream l s :=
+theorem cons_append_stream (a : α) (l : List α) (s : Streamₓ α) : appendStream (a :: l) s = a :: appendStream l s :=
   rfl
 
 theorem append_append_stream : ∀ l₁ l₂ : List α s : Streamₓ α, l₁ ++ l₂++ₛs = l₁++ₛ(l₂++ₛs)
@@ -469,7 +469,7 @@ theorem nth_take_succ : ∀ n : Nat s : Streamₓ α, List.nth (take (succ n) s)
     rw [take_succ, add_one, List.nth, nth_take_succ]
     rfl
 
-theorem append_take_drop : ∀ n : Nat s : Streamₓ α, append_stream (take n s) (drop n s) = s := by
+theorem append_take_drop : ∀ n : Nat s : Streamₓ α, appendStream (take n s) (drop n s) = s := by
   intro n
   induction' n with n' ih
   · intro s
@@ -541,21 +541,21 @@ theorem nth_tails : ∀ n : Nat s : Streamₓ α, nth (tails s) n = drop n (tail
 theorem tails_eq_iterate (s : Streamₓ α) : tails s = iterate tail (tail s) :=
   rfl
 
-theorem inits_core_eq (l : List α) (s : Streamₓ α) : inits_core l s = l :: inits_core (l ++ [head s]) (tail s) := by
+theorem inits_core_eq (l : List α) (s : Streamₓ α) : initsCore l s = l :: initsCore (l ++ [head s]) (tail s) := by
   unfold inits_core corec_on
   rw [corec_eq]
   rfl
 
-theorem tail_inits (s : Streamₓ α) : tail (inits s) = inits_core [head s, head (tail s)] (tail (tail s)) := by
+theorem tail_inits (s : Streamₓ α) : tail (inits s) = initsCore [head s, head (tail s)] (tail (tail s)) := by
   unfold inits
   rw [inits_core_eq]
   rfl
 
-theorem inits_tail (s : Streamₓ α) : inits (tail s) = inits_core [head (tail s)] (tail (tail s)) :=
+theorem inits_tail (s : Streamₓ α) : inits (tail s) = initsCore [head (tail s)] (tail (tail s)) :=
   rfl
 
 theorem cons_nth_inits_core :
-    ∀ a : α n : Nat l : List α s : Streamₓ α, a :: nth (inits_core l s) n = nth (inits_core (a :: l) s) n := by
+    ∀ a : α n : Nat l : List α s : Streamₓ α, a :: nth (initsCore l s) n = nth (initsCore (a :: l) s) n := by
   intro a n
   induction' n with n' ih
   · intros
@@ -586,7 +586,7 @@ theorem inits_eq (s : Streamₓ α) : inits s = [head s] :: map (List.cons (head
     rfl
     
 
-theorem zip_inits_tails (s : Streamₓ α) : zip append_stream (inits s) (tails s) = const s := by
+theorem zip_inits_tails (s : Streamₓ α) : zip appendStream (inits s) (tails s) = const s := by
   apply Streamₓ.ext
   intro n
   rw [nth_zip, nth_inits, nth_tails, nth_const, take_succ, cons_append_stream, append_take_drop, Streamₓ.eta]

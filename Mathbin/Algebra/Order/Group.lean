@@ -605,7 +605,7 @@ See note [reducible non-instances]. -/
 def Function.Injective.orderedCommGroup [OrderedCommGroup α] {β : Type _} [One β] [Mul β] [Inv β] [Div β] (f : β → α)
     (hf : Function.Injective f) (one : f 1 = 1) (mul : ∀ x y, f (x * y) = f x * f y) (inv : ∀ x, f x⁻¹ = (f x)⁻¹)
     (div : ∀ x y, f (x / y) = f x / f y) : OrderedCommGroup β :=
-  { PartialOrderₓ.lift f hf, hf.ordered_comm_monoid f one mul, hf.comm_group f one mul inv div with }
+  { PartialOrderₓ.lift f hf, hf.OrderedCommMonoid f one mul, hf.CommGroup f one mul inv div with }
 
 section Groupₓ
 
@@ -651,7 +651,7 @@ instance (priority := 100) AddGroupₓ.toHasOrderedSub {α : Type _} [AddGroup�
 
 /-- `equiv.mul_right` as an `order_iso`. See also `order_embedding.mul_right`. -/
 @[to_additive "`equiv.add_right` as an `order_iso`. See also `order_embedding.add_right`.",
-  simps (config := { simpRhs := tt }) toEquiv apply]
+  simps (config := { simpRhs := true }) toEquiv apply]
 def OrderIso.mulRight (a : α) : α ≃o α where
   map_rel_iff' := fun _ _ => mul_le_mul_iff_right a
   toEquiv := Equivₓ.mulRight a
@@ -669,7 +669,7 @@ variable [CovariantClass α α (· * ·) (· ≤ ·)]
 
 /-- `equiv.mul_left` as an `order_iso`. See also `order_embedding.mul_left`. -/
 @[to_additive "`equiv.add_left` as an `order_iso`. See also `order_embedding.add_left`.",
-  simps (config := { simpRhs := tt }) toEquiv apply]
+  simps (config := { simpRhs := true }) toEquiv apply]
 def OrderIso.mulLeft (a : α) : α ≃o α where
   map_rel_iff' := fun _ _ => mul_le_mul_iff_left a
   toEquiv := Equivₓ.mulLeft a
@@ -982,7 +982,7 @@ See note [reducible non-instances]. -/
 def Function.Injective.linearOrderedCommGroup {β : Type _} [One β] [Mul β] [Inv β] [Div β] (f : β → α)
     (hf : Function.Injective f) (one : f 1 = 1) (mul : ∀ x y, f (x * y) = f x * f y) (inv : ∀ x, f x⁻¹ = (f x)⁻¹)
     (div : ∀ x y, f (x / y) = f x / f y) : LinearOrderedCommGroup β :=
-  { LinearOrderₓ.lift f hf, hf.ordered_comm_group f one mul inv div with }
+  { LinearOrderₓ.lift f hf, hf.OrderedCommGroup f one mul inv div with }
 
 @[to_additive LinearOrderedAddCommGroup.add_lt_add_left]
 theorem LinearOrderedCommGroup.mul_lt_mul_left' (a b : α) (h : a < b) (c : α) : c * a < c * b :=
@@ -1144,10 +1144,10 @@ theorem abs_pos : 0 < abs a ↔ a ≠ 0 := by
     
 
 theorem abs_pos_of_pos (h : 0 < a) : 0 < abs a :=
-  abs_pos.2 h.ne.symm
+  abs_pos.2 h.Ne.symm
 
 theorem abs_pos_of_neg (h : a < 0) : 0 < abs a :=
-  abs_pos.2 h.ne
+  abs_pos.2 h.Ne
 
 theorem neg_abs_le_self (a : α) : -abs a ≤ a := by
   cases' le_totalₓ 0 a with h h
@@ -1342,7 +1342,7 @@ structure positive_cone (α : Type _) [AddCommGroupₓ α] where
 /-- A positive cone in an `add_comm_group` induces a linear order if
 for every `a`, either `a` or `-a` is non-negative. -/
 @[nolint has_inhabited_instance]
-structure total_positive_cone (α : Type _) [AddCommGroupₓ α] extends positive_cone α where
+structure total_positive_cone (α : Type _) [AddCommGroupₓ α] extends PositiveCone α where
   nonnegDecidable : DecidablePred nonneg
   nonneg_total : ∀ a : α, nonneg a ∨ nonneg (-a)
 
@@ -1357,8 +1357,8 @@ open AddCommGroupₓ
 
 /-- Construct an `ordered_add_comm_group` by
 designating a positive cone in an existing `add_comm_group`. -/
-def mk_of_positive_cone {α : Type _} [AddCommGroupₓ α] (C : positive_cone α) : OrderedAddCommGroup α :=
-  { ‹AddCommGroupₓ α› with le := fun a b => C.nonneg (b - a), lt := fun a b => C.pos (b - a),
+def mk_of_positive_cone {α : Type _} [AddCommGroupₓ α] (C : PositiveCone α) : OrderedAddCommGroup α :=
+  { ‹AddCommGroupₓ α› with le := fun a b => C.Nonneg (b - a), lt := fun a b => C.Pos (b - a),
     lt_iff_le_not_le := fun a b => by
       simp <;> rw [C.pos_iff] <;> simp ,
     le_refl := fun a => by
@@ -1382,14 +1382,14 @@ open AddCommGroupₓ
 /-- Construct a `linear_ordered_add_comm_group` by
 designating a positive cone in an existing `add_comm_group`
 such that for every `a`, either `a` or `-a` is non-negative. -/
-def mk_of_positive_cone {α : Type _} [AddCommGroupₓ α] (C : total_positive_cone α) : LinearOrderedAddCommGroup α :=
-  { OrderedAddCommGroup.mkOfPositiveCone C.to_positive_cone with
+def mk_of_positive_cone {α : Type _} [AddCommGroupₓ α] (C : TotalPositiveCone α) : LinearOrderedAddCommGroup α :=
+  { OrderedAddCommGroup.mkOfPositiveCone C.toPositiveCone with
     le_total := fun a b => by
       convert C.nonneg_total (b - a)
       change C.nonneg _ = _
       congr
       simp ,
-    decidableLe := fun a b => C.nonneg_decidable _ }
+    decidableLe := fun a b => C.nonnegDecidable _ }
 
 end LinearOrderedAddCommGroup
 

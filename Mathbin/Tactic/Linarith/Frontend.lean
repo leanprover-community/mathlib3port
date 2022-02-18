@@ -161,7 +161,7 @@ unsafe def partition_by_type (l : List expr) : tactic (rb_lmap expr expr) :=
   l.mfoldl
     (fun m h => do
       let tp ← ineq_prf_tp h
-      return <| m.insert tp h)
+      return <| m tp h)
     mk_rb_map
 
 /-- Given a list `ls` of lists of proofs of comparisons, `try_linarith_on_lists cfg ls` will try to
@@ -182,18 +182,17 @@ If `pref_type` is given, it will first use the class of proofs of comparisons ov
 -/
 unsafe def run_linarith_on_pfs (cfg : linarith_config) (hyps : List expr) (pref_type : Option expr) : tactic Unit :=
   let single_process := fun hyps : List expr => do
-    linarith_trace_proofs ("after preprocessing, linarith has " ++ toString hyps.length ++ " facts:") hyps
+    linarith_trace_proofs ("after preprocessing, linarith has " ++ toString hyps ++ " facts:") hyps
     let hyp_set ← partition_by_type hyps
-    linarith_trace f! "hypotheses appear in {hyp_set.size} different types"
+    linarith_trace f! "hypotheses appear in {hyp_set} different types"
     match pref_type with
-      | some t =>
-        prove_false_by_linarith cfg (hyp_set.ifind t) <|> try_linarith_on_lists cfg (rb_map.values (hyp_set.erase t))
+      | some t => prove_false_by_linarith cfg (hyp_set t) <|> try_linarith_on_lists cfg (rb_map.values (hyp_set t))
       | none => try_linarith_on_lists cfg (rb_map.values hyp_set)
-  let preprocessors := cfg.preprocessors.get_or_else default_preprocessors
+  let preprocessors := cfg.preprocessors.getOrElse default_preprocessors
   let preprocessors := if cfg.split_ne then linarith.remove_ne :: preprocessors else preprocessors
   do
   let hyps ← preprocess preprocessors hyps
-  hyps.mmap' fun hs => do
+  hyps fun hs => do
       set_goals [hs.1]
       single_process hs.2 >>= exact
 
@@ -233,21 +232,21 @@ unsafe def tactic.linarith (reduce_semi : Bool) (only_on : Bool) (hyps : List pe
     tactic Unit :=
   focus1 <| do
     let t ← target
-    if t.is_eq.is_some then
+    if t then
         linarith_trace "target is an equality: splitting" >> seq' (applyc `` eq_of_not_lt_of_not_gt) tactic.linarith
       else do
-        let hyps ← hyps.mmap fun e => i_to_expr e >>= note_anon none
-        when cfg.split_hypotheses (linarith_trace "trying to split hypotheses" >> try auto.split_hyps)
+        let hyps ← hyps fun e => i_to_expr e >>= note_anon none
+        when cfg (linarith_trace "trying to split hypotheses" >> try auto.split_hyps)
         let pref_type_and_new_var_from_tgt ← apply_contr_lemma
-        when pref_type_and_new_var_from_tgt.is_none <|
-            if cfg.exfalso then linarith_trace "using exfalso" >> exfalso
+        when pref_type_and_new_var_from_tgt <|
+            if cfg then linarith_trace "using exfalso" >> exfalso
             else fail "linarith failed: target is not a valid comparison"
-        let cfg := cfg.update_reducibility reduce_semi
-        let (pref_type, new_var) := pref_type_and_new_var_from_tgt.elim (none, none) fun ⟨a, b⟩ => (some a, some b)
-        let hyps ← if only_on then return (new_var.elim [] singleton ++ hyps) else (· ++ hyps) <$> local_context
+        let cfg := cfg reduce_semi
+        let (pref_type, new_var) := pref_type_and_new_var_from_tgt (none, none) fun ⟨a, b⟩ => (some a, some b)
+        let hyps ← if only_on then return (new_var [] singleton ++ hyps) else (· ++ hyps) <$> local_context
         let hyps ←
           (do
-                let t ← get_restrict_type cfg.restrict_type_reflect
+                let t ← get_restrict_type cfg
                 filter_hyps_to_type t hyps) <|>
               return hyps
         linarith_trace_proofs "linarith is running on the following hypotheses:" hyps
@@ -275,7 +274,7 @@ Config options:
 -/
 unsafe def tactic.interactive.linarith (red : parse (tk "!")?) (restr : parse (tk "only")?) (hyps : parse (pexpr_list)?)
     (cfg : linarith_config := {  }) : tactic Unit :=
-  tactic.linarith red.is_some restr.is_some (hyps.get_or_else []) cfg
+  tactic.linarith red.isSome restr.isSome (hyps.getOrElse []) cfg
 
 add_hint_tactic linarith
 
@@ -346,8 +345,8 @@ in `linarith`. The preprocessing is as follows:
 -/
 unsafe def tactic.interactive.nlinarith (red : parse (tk "!")?) (restr : parse (tk "only")?)
     (hyps : parse (pexpr_list)?) (cfg : linarith_config := {  }) : tactic Unit :=
-  tactic.linarith red.is_some restr.is_some (hyps.get_or_else [])
-    { cfg with preprocessors := some <| cfg.preprocessors.get_or_else default_preprocessors ++ [nlinarith_extras] }
+  tactic.linarith red.isSome restr.isSome (hyps.getOrElse [])
+    { cfg with preprocessors := some <| cfg.preprocessors.getOrElse default_preprocessors ++ [nlinarith_extras] }
 
 add_hint_tactic nlinarith
 

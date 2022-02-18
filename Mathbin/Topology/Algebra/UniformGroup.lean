@@ -128,13 +128,13 @@ end
 @[to_additive]
 theorem group_separation_rel (x y : α) : (x, y) ∈ SeparationRel α ↔ x / y ∈ Closure ({1} : Set α) :=
   have : Embedding fun a => a * (y / x) := (uniform_embedding_translate_mul (y / x)).Embedding
-  show (x, y) ∈ ⋂₀(𝓤 α).Sets ↔ x / y ∈ Closure ({1} : Set α) by
+  show (x, y) ∈ ⋂₀ (𝓤 α).Sets ↔ x / y ∈ Closure ({1} : Set α) by
     rw [this.closure_eq_preimage_closure_image, uniformity_eq_comap_nhds_one α, sInter_comap_sets]
     simp [mem_closure_iff_nhds, inter_singleton_nonempty, sub_eq_add_neg, add_assocₓ]
 
 @[to_additive]
 theorem uniform_continuous_of_tendsto_one [UniformSpace β] [Groupₓ β] [UniformGroup β] {f : α →* β}
-    (h : tendsto f (𝓝 1) (𝓝 1)) : UniformContinuous f := by
+    (h : Tendsto f (𝓝 1) (𝓝 1)) : UniformContinuous f := by
   have : ((fun x : β × β => x.2 / x.1) ∘ fun x : α × α => (f x.1, f x.2)) = fun x : α × α => f (x.2 / x.1) := by
     simp only [f.map_div]
   rw [UniformContinuous, uniformity_eq_comap_nhds_one α, uniformity_eq_comap_nhds_one β, tendsto_comap_iff, this]
@@ -151,14 +151,28 @@ theorem MonoidHom.uniform_continuous_of_continuous_at_one [UniformSpace β] [Gro
 theorem uniform_continuous_monoid_hom_of_continuous [UniformSpace β] [Groupₓ β] [UniformGroup β] {f : α →* β}
     (h : Continuous f) : UniformContinuous f :=
   uniform_continuous_of_tendsto_one <|
-    suffices tendsto f (𝓝 1) (𝓝 (f 1)) by
+    suffices Tendsto f (𝓝 1) (𝓝 (f 1)) by
       rwa [f.map_one] at this
-    h.tendsto 1
+    h.Tendsto 1
 
 @[to_additive]
 theorem CauchySeq.mul {ι : Type _} [SemilatticeSup ι] {u v : ι → α} (hu : CauchySeq u) (hv : CauchySeq v) :
     CauchySeq (u * v) :=
-  uniform_continuous_mul.comp_cauchy_seq (hu.prod hv)
+  uniform_continuous_mul.comp_cauchy_seq (hu.Prod hv)
+
+@[to_additive]
+theorem CauchySeq.mul_const {ι : Type _} [SemilatticeSup ι] {u : ι → α} {x : α} (hu : CauchySeq u) :
+    CauchySeq fun n => u n * x :=
+  (uniform_continuous_id.mul uniform_continuous_const).comp_cauchy_seq hu
+
+@[to_additive]
+theorem CauchySeq.const_mul {ι : Type _} [SemilatticeSup ι] {u : ι → α} {x : α} (hu : CauchySeq u) :
+    CauchySeq fun n => x * u n :=
+  (uniform_continuous_const.mul uniform_continuous_id).comp_cauchy_seq hu
+
+@[to_additive]
+theorem CauchySeq.inv {ι : Type _} [SemilatticeSup ι] {u : ι → α} (h : CauchySeq u) : CauchySeq u⁻¹ :=
+  uniform_continuous_inv.comp_cauchy_seq h
 
 end UniformGroup
 
@@ -273,7 +287,7 @@ variable {G}
 @[to_additive]
 theorem topological_group_is_uniform : UniformGroup G := by
   have :
-    tendsto ((fun p : G × G => p.1 / p.2) ∘ fun p : (G × G) × G × G => (p.1.2 / p.1.1, p.2.2 / p.2.1))
+    Tendsto ((fun p : G × G => p.1 / p.2) ∘ fun p : (G × G) × G × G => (p.1.2 / p.1.1, p.2.2 / p.2.1))
       (comap (fun p : (G × G) × G × G => (p.1.2 / p.1.1, p.2.2 / p.2.1)) ((𝓝 1).Prod (𝓝 1))) (𝓝 (1 / 1)) :=
     (tendsto_fst.div' tendsto_snd).comp tendsto_comap
   constructor
@@ -348,7 +362,7 @@ include de
 
 @[to_additive]
 theorem tendsto_div_comap_self (x₀ : α) :
-    tendsto (fun t : β × β => t.2 / t.1) ((comap fun p : β × β => (e p.1, e p.2)) <| 𝓝 (x₀, x₀)) (𝓝 1) := by
+    Tendsto (fun t : β × β => t.2 / t.1) ((comap fun p : β × β => (e p.1, e p.2)) <| 𝓝 (x₀, x₀)) (𝓝 1) := by
   have comm : ((fun x : α × α => x.2 / x.1) ∘ fun t : β × β => (e t.1, e t.2)) = e ∘ fun t : β × β => t.2 / t.1 := by
     ext t
     change e t.2 / e t.1 = e (t.2 / t.1)
@@ -478,7 +492,7 @@ open DenseInducing
 /-- Bourbaki GT III.6.5 Theorem I:
 ℤ-bilinear continuous maps from dense images into a complete Hausdorff group extend by continuity.
 Note: Bourbaki assumes that α and β are also complete Hausdorff, but this is not necessary. -/
-theorem extend_Z_bilin : Continuous (extend (de.prod df) Φ) := by
+theorem extend_Z_bilin : Continuous (extend (de.Prod df) Φ) := by
   refine' continuous_extend_of_cauchy _ _
   rintro ⟨x₀, y₀⟩
   constructor

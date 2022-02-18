@@ -34,7 +34,7 @@ inductive lex (r : ι → ι → Prop) (s : ∀ i, α i → α i → Prop) : ∀
   | left {i j : ι} (a : α i) (b : α j) : r i j → lex ⟨i, a⟩ ⟨j, b⟩
   | right {i : ι} (a b : α i) : s i a b → lex ⟨i, a⟩ ⟨i, b⟩
 
-theorem lex_iff : lex r s a b ↔ r a.1 b.1 ∨ ∃ h : a.1 = b.1, s _ (h.rec a.2) b.2 := by
+theorem lex_iff : Lex r s a b ↔ r a.1 b.1 ∨ ∃ h : a.1 = b.1, s _ (h.rec a.2) b.2 := by
   constructor
   · rintro (⟨i, j, a, b, hij⟩ | ⟨i, a, b, hab⟩)
     · exact Or.inl hij
@@ -53,27 +53,27 @@ theorem lex_iff : lex r s a b ↔ r a.1 b.1 ∨ ∃ h : a.1 = b.1, s _ (h.rec a.
     
 
 instance lex.decidable (r : ι → ι → Prop) (s : ∀ i, α i → α i → Prop) [DecidableEq ι] [DecidableRel r]
-    [∀ i, DecidableRel (s i)] : DecidableRel (lex r s) := fun a b =>
+    [∀ i, DecidableRel (s i)] : DecidableRel (Lex r s) := fun a b =>
   decidableOfDecidableOfIff inferInstance lex_iff.symm
 
 theorem lex.mono (hr : ∀ a b, r₁ a b → r₂ a b) (hs : ∀ i a b, s₁ i a b → s₂ i a b) {a b : Σ i, α i}
-    (h : lex r₁ s₁ a b) : lex r₂ s₂ a b := by
+    (h : Lex r₁ s₁ a b) : Lex r₂ s₂ a b := by
   obtain ⟨i, j, a, b, hij⟩ | ⟨i, a, b, hab⟩ := h
   · exact lex.left _ _ (hr _ _ hij)
     
   · exact lex.right _ _ (hs _ _ _ hab)
     
 
-theorem lex.mono_left (hr : ∀ a b, r₁ a b → r₂ a b) {a b : Σ i, α i} (h : lex r₁ s a b) : lex r₂ s a b :=
+theorem lex.mono_left (hr : ∀ a b, r₁ a b → r₂ a b) {a b : Σ i, α i} (h : Lex r₁ s a b) : Lex r₂ s a b :=
   (h.mono hr) fun _ _ _ => id
 
-theorem lex.mono_right (hs : ∀ i a b, s₁ i a b → s₂ i a b) {a b : Σ i, α i} (h : lex r s₁ a b) : lex r s₂ a b :=
+theorem lex.mono_right (hs : ∀ i a b, s₁ i a b → s₂ i a b) {a b : Σ i, α i} (h : Lex r s₁ a b) : Lex r s₂ a b :=
   h.mono (fun _ _ => id) hs
 
-instance [∀ i, IsRefl (α i) (s i)] : IsRefl _ (lex r s) :=
-  ⟨fun ⟨i, a⟩ => lex.right _ _ <| refl _⟩
+instance [∀ i, IsRefl (α i) (s i)] : IsRefl _ (Lex r s) :=
+  ⟨fun ⟨i, a⟩ => Lex.right _ _ <| refl _⟩
 
-instance [IsIrrefl ι r] [∀ i, IsIrrefl (α i) (s i)] : IsIrrefl _ (lex r s) :=
+instance [IsIrrefl ι r] [∀ i, IsIrrefl (α i) (s i)] : IsIrrefl _ (Lex r s) :=
   ⟨by
     rintro _ (⟨i, j, a, b, hi⟩ | ⟨i, a, b, ha⟩)
     · exact irrefl _ hi
@@ -81,7 +81,7 @@ instance [IsIrrefl ι r] [∀ i, IsIrrefl (α i) (s i)] : IsIrrefl _ (lex r s) :
     · exact irrefl _ ha
       ⟩
 
-instance [IsTrans ι r] [∀ i, IsTrans (α i) (s i)] : IsTrans _ (lex r s) :=
+instance [IsTrans ι r] [∀ i, IsTrans (α i) (s i)] : IsTrans _ (Lex r s) :=
   ⟨by
     rintro _ _ _ (⟨i, j, a, b, hij⟩ | ⟨i, a, b, hab⟩) (⟨_, k, _, c, hk⟩ | ⟨_, _, c, hc⟩)
     · exact lex.left _ _ (trans hij hk)
@@ -93,7 +93,7 @@ instance [IsTrans ι r] [∀ i, IsTrans (α i) (s i)] : IsTrans _ (lex r s) :=
     · exact lex.right _ _ (trans hab hc)
       ⟩
 
-instance [IsSymm ι r] [∀ i, IsSymm (α i) (s i)] : IsSymm _ (lex r s) :=
+instance [IsSymm ι r] [∀ i, IsSymm (α i) (s i)] : IsSymm _ (Lex r s) :=
   ⟨by
     rintro _ _ (⟨i, j, a, b, hij⟩ | ⟨i, a, b, hab⟩)
     · exact lex.left _ _ (symm hij)
@@ -103,7 +103,7 @@ instance [IsSymm ι r] [∀ i, IsSymm (α i) (s i)] : IsSymm _ (lex r s) :=
 
 attribute [local instance] IsAsymm.is_irrefl
 
-instance [IsAsymm ι r] [∀ i, IsAntisymm (α i) (s i)] : IsAntisymm _ (lex r s) :=
+instance [IsAsymm ι r] [∀ i, IsAntisymm (α i) (s i)] : IsAntisymm _ (Lex r s) :=
   ⟨by
     rintro _ _ (⟨i, j, a, b, hij⟩ | ⟨i, a, b, hab⟩) (⟨_, _, _, _, hji⟩ | ⟨_, _, _, hba⟩)
     · exact (asymm hij hji).elim
@@ -115,7 +115,7 @@ instance [IsAsymm ι r] [∀ i, IsAntisymm (α i) (s i)] : IsAntisymm _ (lex r s
     · exact ext rfl (heq_of_eq <| antisymm hab hba)
       ⟩
 
-instance [IsTrichotomous ι r] [∀ i, IsTotal (α i) (s i)] : IsTotal _ (lex r s) :=
+instance [IsTrichotomous ι r] [∀ i, IsTotal (α i) (s i)] : IsTotal _ (Lex r s) :=
   ⟨by
     rintro ⟨i, a⟩ ⟨j, b⟩
     obtain hij | rfl | hji := trichotomous_of r i j
@@ -130,7 +130,7 @@ instance [IsTrichotomous ι r] [∀ i, IsTotal (α i) (s i)] : IsTotal _ (lex r 
     · exact Or.inr (lex.left _ _ hji)
       ⟩
 
-instance [IsTrichotomous ι r] [∀ i, IsTrichotomous (α i) (s i)] : IsTrichotomous _ (lex r s) :=
+instance [IsTrichotomous ι r] [∀ i, IsTrichotomous (α i) (s i)] : IsTrichotomous _ (Lex r s) :=
   ⟨by
     rintro ⟨i, a⟩ ⟨j, b⟩
     obtain hij | rfl | hji := trichotomous_of r i j
@@ -156,7 +156,7 @@ namespace Psigma
 
 variable {ι : Sort _} {α : ι → Sort _} {r r₁ r₂ : ι → ι → Prop} {s s₁ s₂ : ∀ i, α i → α i → Prop}
 
-theorem lex_iff {a b : Σ' i, α i} : lex r s a b ↔ r a.1 b.1 ∨ ∃ h : a.1 = b.1, s _ (h.rec a.2) b.2 := by
+theorem lex_iff {a b : Σ' i, α i} : Lex r s a b ↔ r a.1 b.1 ∨ ∃ h : a.1 = b.1, s _ (h.rec a.2) b.2 := by
   constructor
   · rintro (⟨i, j, a, b, hij⟩ | ⟨i, a, b, hab⟩)
     · exact Or.inl hij
@@ -175,11 +175,11 @@ theorem lex_iff {a b : Σ' i, α i} : lex r s a b ↔ r a.1 b.1 ∨ ∃ h : a.1 
     
 
 instance lex.decidable (r : ι → ι → Prop) (s : ∀ i, α i → α i → Prop) [DecidableEq ι] [DecidableRel r]
-    [∀ i, DecidableRel (s i)] : DecidableRel (lex r s) := fun a b =>
+    [∀ i, DecidableRel (s i)] : DecidableRel (Lex r s) := fun a b =>
   decidableOfDecidableOfIff inferInstance lex_iff.symm
 
 theorem lex.mono {r₁ r₂ : ι → ι → Prop} {s₁ s₂ : ∀ i, α i → α i → Prop} (hr : ∀ a b, r₁ a b → r₂ a b)
-    (hs : ∀ i a b, s₁ i a b → s₂ i a b) {a b : Σ' i, α i} (h : lex r₁ s₁ a b) : lex r₂ s₂ a b := by
+    (hs : ∀ i a b, s₁ i a b → s₂ i a b) {a b : Σ' i, α i} (h : Lex r₁ s₁ a b) : Lex r₂ s₂ a b := by
   obtain ⟨i, j, a, b, hij⟩ | ⟨i, a, b, hab⟩ := h
   · exact lex.left _ _ (hr _ _ hij)
     
@@ -187,11 +187,11 @@ theorem lex.mono {r₁ r₂ : ι → ι → Prop} {s₁ s₂ : ∀ i, α i → �
     
 
 theorem lex.mono_left {r₁ r₂ : ι → ι → Prop} {s : ∀ i, α i → α i → Prop} (hr : ∀ a b, r₁ a b → r₂ a b) {a b : Σ' i, α i}
-    (h : lex r₁ s a b) : lex r₂ s a b :=
+    (h : Lex r₁ s a b) : Lex r₂ s a b :=
   (h.mono hr) fun _ _ _ => id
 
 theorem lex.mono_right {r : ι → ι → Prop} {s₁ s₂ : ∀ i, α i → α i → Prop} (hs : ∀ i a b, s₁ i a b → s₂ i a b)
-    {a b : Σ' i, α i} (h : lex r s₁ a b) : lex r s₂ a b :=
+    {a b : Σ' i, α i} (h : Lex r s₁ a b) : Lex r s₂ a b :=
   h.mono (fun _ _ => id) hs
 
 end Psigma

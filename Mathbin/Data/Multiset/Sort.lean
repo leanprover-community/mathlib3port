@@ -20,16 +20,16 @@ variable (r : α → α → Prop) [DecidableRel r] [IsTrans α r] [IsAntisymm α
 /-- `sort s` constructs a sorted list from the multiset `s`.
   (Uses merge sort algorithm.) -/
 def sort (s : Multiset α) : List α :=
-  (Quot.liftOn s (merge_sort r)) fun a b h =>
+  (Quot.liftOn s (mergeSort r)) fun a b h =>
     eq_of_perm_of_sorted ((perm_merge_sort _ _).trans <| h.trans (perm_merge_sort _ _).symm) (sorted_merge_sort r _)
       (sorted_merge_sort r _)
 
 @[simp]
-theorem coeSort (l : List α) : sort r l = merge_sort r l :=
+theorem coeSort (l : List α) : sort r l = mergeSort r l :=
   rfl
 
 @[simp]
-theorem sort_sorted (s : Multiset α) : sorted r (sort r s) :=
+theorem sort_sorted (s : Multiset α) : Sorted r (sort r s) :=
   (Quot.induction_on s) fun l => sorted_merge_sort r _
 
 @[simp]

@@ -16,11 +16,11 @@ universe v u
 
 namespace CategoryTheory
 
-instance types_monoidal : monoidal_category.{u} (Type u) :=
-  monoidal_of_chosen_finite_products types.terminal_limit_cone types.binary_product_limit_cone
+instance types_monoidal : MonoidalCategory.{u} (Type u) :=
+  monoidalOfChosenFiniteProducts Types.terminalLimitCone Types.binaryProductLimitCone
 
-instance types_symmetric : symmetric_category.{u} (Type u) :=
-  symmetric_of_chosen_finite_products types.terminal_limit_cone types.binary_product_limit_cone
+instance types_symmetric : SymmetricCategory.{u} (Type u) :=
+  symmetricOfChosenFiniteProducts Types.terminalLimitCone Types.binaryProductLimitCone
 
 @[simp]
 theorem tensor_apply {W X Y Z : Type u} (f : W ⟶ X) (g : Y ⟶ Z) (p : W ⊗ Y) : (f ⊗ g) p = (f p.1, g p.2) :=
@@ -65,7 +65,7 @@ open Opposite
 open MonoidalCategory
 
 /-- `(𝟙_ C ⟶ -)` is a lax monoidal functor to `Type`. -/
-def coyoneda_tensor_unit (C : Type u) [category.{v} C] [monoidal_category C] : lax_monoidal_functor C (Type v) :=
+def coyoneda_tensor_unit (C : Type u) [Category.{v} C] [MonoidalCategory C] : LaxMonoidalFunctor C (Type v) :=
   { coyoneda.obj (op (𝟙_ C)) with ε := fun p => 𝟙 _, μ := fun X Y p => (λ_ (𝟙_ C)).inv ≫ (p.1 ⊗ p.2),
     μ_natural' := by
       tidy,

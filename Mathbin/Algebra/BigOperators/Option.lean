@@ -19,12 +19,12 @@ variable {α M : Type _} [CommMonoidₓ M]
 
 @[simp, to_additive]
 theorem prod_insert_none (f : Option α → M) (s : Finset α) :
-    (∏ x in s.insert_none, f x) = f none * ∏ x in s, f (some x) := by
+    (∏ x in s.insertNone, f x) = f none * ∏ x in s, f (some x) := by
   simp [insert_none]
 
 @[to_additive]
-theorem prod_erase_none (f : α → M) (s : Finset (Option α)) :
-    (∏ x in s.erase_none, f x) = ∏ x in s, Option.elim x 1 f := by
+theorem prod_erase_none (f : α → M) (s : Finset (Option α)) : (∏ x in s.eraseNone, f x) = ∏ x in s, Option.elim x 1 f :=
+  by
   classical <;>
     calc (∏ x in s.erase_none, f x) = ∏ x in s.erase_none.map embedding.some, Option.elim x 1 f :=
         (prod_mapₓ s.erase_none embedding.some fun x =>

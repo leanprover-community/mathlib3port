@@ -128,25 +128,25 @@ def Q : QuadraticForm ℝ ℝ :=
   -QuadraticForm.sq
 
 @[simp]
-theorem Q_apply (r : ℝ) : Q r = -(r * r) :=
+theorem Q_apply (r : ℝ) : q r = -(r * r) :=
   rfl
 
 /-- Intermediate result for `clifford_algebra_complex.equiv`: clifford algebras over
 `clifford_algebra_complex.Q` above can be converted to `ℂ`. -/
-def to_complex : CliffordAlgebra Q →ₐ[ℝ] ℂ :=
-  CliffordAlgebra.lift Q
+def to_complex : CliffordAlgebra q →ₐ[ℝ] ℂ :=
+  CliffordAlgebra.lift q
     ⟨LinearMap.toSpanSingleton _ _ Complex.i, fun r => by
       dsimp [LinearMap.toSpanSingleton, LinearMap.id]
       rw [mul_mul_mul_commₓ]
       simp ⟩
 
 @[simp]
-theorem to_complex_ι (r : ℝ) : to_complex (ι Q r) = r • Complex.i :=
+theorem to_complex_ι (r : ℝ) : toComplex (ι q r) = r • Complex.i :=
   CliffordAlgebra.lift_ι_apply _ _ r
 
 /-- `clifford_algebra.involute` is analogous to `complex.conj`. -/
 @[simp]
-theorem to_complex_involute (c : CliffordAlgebra Q) : to_complex c.involute = conj (to_complex c) := by
+theorem to_complex_involute (c : CliffordAlgebra q) : toComplex c.involute = conj (toComplex c) := by
   have : to_complex (involute (ι Q 1)) = conj (to_complex (ι Q 1)) := by
     simp only [involute_ι, to_complex_ι, AlgHom.map_neg, one_smul, Complex.conj_I]
   suffices to_complex.comp involute = complex.conj_ae.to_alg_hom.comp to_complex by
@@ -156,52 +156,52 @@ theorem to_complex_involute (c : CliffordAlgebra Q) : to_complex c.involute = co
 
 /-- Intermediate result for `clifford_algebra_complex.equiv`: `ℂ` can be converted to
 `clifford_algebra_complex.Q` above can be converted to. -/
-def of_complex : ℂ →ₐ[ℝ] CliffordAlgebra Q :=
+def of_complex : ℂ →ₐ[ℝ] CliffordAlgebra q :=
   Complex.lift
-    ⟨CliffordAlgebra.ι Q 1, by
+    ⟨CliffordAlgebra.ι q 1, by
       rw [CliffordAlgebra.ι_sq_scalar, Q_apply, one_mulₓ, RingHom.map_neg, RingHom.map_one]⟩
 
 @[simp]
-theorem of_complex_I : of_complex Complex.i = ι Q 1 :=
+theorem of_complex_I : ofComplex Complex.i = ι q 1 :=
   Complex.lift_aux_apply_I _ _
 
 @[simp]
-theorem to_complex_comp_of_complex : to_complex.comp of_complex = AlgHom.id ℝ ℂ := by
+theorem to_complex_comp_of_complex : toComplex.comp ofComplex = AlgHom.id ℝ ℂ := by
   ext1
   dsimp only [AlgHom.comp_apply, Subtype.coe_mk, AlgHom.id_apply]
   rw [of_complex_I, to_complex_ι, one_smul]
 
 @[simp]
-theorem to_complex_of_complex (c : ℂ) : to_complex (of_complex c) = c :=
+theorem to_complex_of_complex (c : ℂ) : toComplex (ofComplex c) = c :=
   AlgHom.congr_fun to_complex_comp_of_complex c
 
 @[simp]
-theorem of_complex_comp_to_complex : of_complex.comp to_complex = AlgHom.id ℝ (CliffordAlgebra Q) := by
+theorem of_complex_comp_to_complex : ofComplex.comp toComplex = AlgHom.id ℝ (CliffordAlgebra q) := by
   ext
   dsimp only [LinearMap.comp_apply, Subtype.coe_mk, AlgHom.id_apply, AlgHom.to_linear_map_apply, AlgHom.comp_apply]
   rw [to_complex_ι, one_smul, of_complex_I]
 
 @[simp]
-theorem of_complex_to_complex (c : CliffordAlgebra Q) : of_complex (to_complex c) = c :=
+theorem of_complex_to_complex (c : CliffordAlgebra q) : ofComplex (toComplex c) = c :=
   AlgHom.congr_fun of_complex_comp_to_complex c
 
 /-- The clifford algebras over `clifford_algebra_complex.Q` is isomorphic as an `ℝ`-algebra to
 `ℂ`. -/
 @[simps]
-protected def Equivₓ : CliffordAlgebra Q ≃ₐ[ℝ] ℂ :=
-  AlgEquiv.ofAlgHom to_complex of_complex to_complex_comp_of_complex of_complex_comp_to_complex
+protected def Equivₓ : CliffordAlgebra q ≃ₐ[ℝ] ℂ :=
+  AlgEquiv.ofAlgHom toComplex ofComplex to_complex_comp_of_complex of_complex_comp_to_complex
 
 /-- The clifford algebra is commutative since it is isomorphic to the complex numbers.
 
 TODO: prove this is true for all `clifford_algebra`s over a 1-dimensional vector space. -/
-instance : CommRingₓ (CliffordAlgebra Q) :=
+instance : CommRingₓ (CliffordAlgebra q) :=
   { CliffordAlgebra.ring _ with
     mul_comm := fun x y =>
       CliffordAlgebraComplex.equiv.Injective <| by
         rw [AlgEquiv.map_mul, mul_comm, AlgEquiv.map_mul] }
 
 /-- `reverse` is a no-op over `clifford_algebra_complex.Q`. -/
-theorem reverse_apply (x : CliffordAlgebra Q) : x.reverse = x := by
+theorem reverse_apply (x : CliffordAlgebra q) : x.reverse = x := by
   induction x using CliffordAlgebra.induction
   case h_grade0 r =>
     exact reverse.commutes _
@@ -213,12 +213,12 @@ theorem reverse_apply (x : CliffordAlgebra Q) : x.reverse = x := by
     rw [reverse.map_add, hx₁, hx₂]
 
 @[simp]
-theorem reverse_eq_id : (reverse : CliffordAlgebra Q →ₗ[ℝ] _) = LinearMap.id :=
+theorem reverse_eq_id : (reverse : CliffordAlgebra q →ₗ[ℝ] _) = LinearMap.id :=
   LinearMap.ext reverse_apply
 
 /-- `complex.conj` is analogous to `clifford_algebra.involute`. -/
 @[simp]
-theorem of_complex_conj (c : ℂ) : of_complex (conj c) = (of_complex c).involute :=
+theorem of_complex_conj (c : ℂ) : ofComplex (conj c) = (ofComplex c).involute :=
   CliffordAlgebraComplex.equiv.Injective <| by
     rw [equiv_apply, equiv_apply, to_complex_involute, to_complex_of_complex, to_complex_of_complex]
 
@@ -243,15 +243,15 @@ def Q : QuadraticForm R (R × R) :=
   (c₁ • QuadraticForm.sq).Prod (c₂ • QuadraticForm.sq)
 
 @[simp]
-theorem Q_apply (v : R × R) : Q c₁ c₂ v = c₁ * (v.1 * v.1) + c₂ * (v.2 * v.2) :=
+theorem Q_apply (v : R × R) : q c₁ c₂ v = c₁ * (v.1 * v.1) + c₂ * (v.2 * v.2) :=
   rfl
 
 /-- The quaternion basis vectors within the algebra. -/
 @[simps i j k]
-def quaternion_basis : QuaternionAlgebra.Basis (CliffordAlgebra (Q c₁ c₂)) c₁ c₂ where
-  i := ι (Q c₁ c₂) (1, 0)
-  j := ι (Q c₁ c₂) (0, 1)
-  k := ι (Q c₁ c₂) (1, 0) * ι (Q c₁ c₂) (0, 1)
+def quaternion_basis : QuaternionAlgebra.Basis (CliffordAlgebra (q c₁ c₂)) c₁ c₂ where
+  i := ι (q c₁ c₂) (1, 0)
+  j := ι (q c₁ c₂) (0, 1)
+  k := ι (q c₁ c₂) (1, 0) * ι (q c₁ c₂) (0, 1)
   i_mul_i := by
     rw [ι_sq_scalar, Q_apply, ← Algebra.algebra_map_eq_smul_one]
     simp
@@ -267,8 +267,8 @@ variable {c₁ c₂}
 
 /-- Intermediate result of `clifford_algebra_quaternion.equiv`: clifford algebras over
 `clifford_algebra_quaternion.Q` can be converted to `ℍ[R,c₁,c₂]`. -/
-def to_quaternion : CliffordAlgebra (Q c₁ c₂) →ₐ[R] ℍ[R,c₁,c₂] :=
-  CliffordAlgebra.lift (Q c₁ c₂)
+def to_quaternion : CliffordAlgebra (q c₁ c₂) →ₐ[R] ℍ[R,c₁,c₂] :=
+  CliffordAlgebra.lift (q c₁ c₂)
     ⟨{ toFun := fun v => (⟨0, v.1, v.2, 0⟩ : ℍ[R,c₁,c₂]),
         map_add' := fun v₁ v₂ => by
           simp ,
@@ -282,13 +282,13 @@ def to_quaternion : CliffordAlgebra (Q c₁ c₂) →ₐ[R] ℍ[R,c₁,c₂] :=
         ring⟩
 
 @[simp]
-theorem to_quaternion_ι (v : R × R) : to_quaternion (ι (Q c₁ c₂) v) = (⟨0, v.1, v.2, 0⟩ : ℍ[R,c₁,c₂]) :=
+theorem to_quaternion_ι (v : R × R) : toQuaternion (ι (q c₁ c₂) v) = (⟨0, v.1, v.2, 0⟩ : ℍ[R,c₁,c₂]) :=
   CliffordAlgebra.lift_ι_apply _ _ v
 
 /-- The "clifford conjugate" (aka `involute ∘ reverse = reverse ∘ involute`) maps to the quaternion
 conjugate. -/
-theorem to_quaternion_involute_reverse (c : CliffordAlgebra (Q c₁ c₂)) :
-    to_quaternion (involute (reverse c)) = QuaternionAlgebra.conj (to_quaternion c) := by
+theorem to_quaternion_involute_reverse (c : CliffordAlgebra (q c₁ c₂)) :
+    toQuaternion (involute (reverse c)) = QuaternionAlgebra.conj (toQuaternion c) := by
   induction c using CliffordAlgebra.induction
   case h_grade0 r =>
     simp only [reverse.commutes, AlgHom.commutes, QuaternionAlgebra.coe_algebra_map, QuaternionAlgebra.conj_coe]
@@ -301,18 +301,18 @@ theorem to_quaternion_involute_reverse (c : CliffordAlgebra (Q c₁ c₂)) :
     simp only [reverse.map_add, AlgHom.map_add, hx₁, hx₂, QuaternionAlgebra.conj_add]
 
 /-- Map a quaternion into the clifford algebra. -/
-def of_quaternion : ℍ[R,c₁,c₂] →ₐ[R] CliffordAlgebra (Q c₁ c₂) :=
-  (quaternion_basis c₁ c₂).liftHom
+def of_quaternion : ℍ[R,c₁,c₂] →ₐ[R] CliffordAlgebra (q c₁ c₂) :=
+  (quaternionBasis c₁ c₂).liftHom
 
 @[simp]
 theorem of_quaternion_mk (a₁ a₂ a₃ a₄ : R) :
-    of_quaternion (⟨a₁, a₂, a₃, a₄⟩ : ℍ[R,c₁,c₂]) =
-      algebraMap R _ a₁ + a₂ • ι (Q c₁ c₂) (1, 0) + a₃ • ι (Q c₁ c₂) (0, 1) +
-        a₄ • (ι (Q c₁ c₂) (1, 0) * ι (Q c₁ c₂) (0, 1)) :=
+    ofQuaternion (⟨a₁, a₂, a₃, a₄⟩ : ℍ[R,c₁,c₂]) =
+      algebraMap R _ a₁ + a₂ • ι (q c₁ c₂) (1, 0) + a₃ • ι (q c₁ c₂) (0, 1) +
+        a₄ • (ι (q c₁ c₂) (1, 0) * ι (q c₁ c₂) (0, 1)) :=
   rfl
 
 @[simp]
-theorem of_quaternion_comp_to_quaternion : of_quaternion.comp to_quaternion = AlgHom.id R (CliffordAlgebra (Q c₁ c₂)) :=
+theorem of_quaternion_comp_to_quaternion : ofQuaternion.comp toQuaternion = AlgHom.id R (CliffordAlgebra (q c₁ c₂)) :=
   by
   ext : 1
   dsimp
@@ -324,28 +324,28 @@ theorem of_quaternion_comp_to_quaternion : of_quaternion.comp to_quaternion = Al
     simp only [to_quaternion_ι, zero_smul, one_smul, zero_addₓ, add_zeroₓ, RingHom.map_zero]
 
 @[simp]
-theorem of_quaternion_to_quaternion (c : CliffordAlgebra (Q c₁ c₂)) : of_quaternion (to_quaternion c) = c :=
-  AlgHom.congr_fun (of_quaternion_comp_to_quaternion : _ = AlgHom.id R (CliffordAlgebra (Q c₁ c₂))) c
+theorem of_quaternion_to_quaternion (c : CliffordAlgebra (q c₁ c₂)) : ofQuaternion (toQuaternion c) = c :=
+  AlgHom.congr_fun (of_quaternion_comp_to_quaternion : _ = AlgHom.id R (CliffordAlgebra (q c₁ c₂))) c
 
 @[simp]
-theorem to_quaternion_comp_of_quaternion : to_quaternion.comp of_quaternion = AlgHom.id R ℍ[R,c₁,c₂] := by
+theorem to_quaternion_comp_of_quaternion : toQuaternion.comp ofQuaternion = AlgHom.id R ℍ[R,c₁,c₂] := by
   apply quaternion_algebra.lift.symm.injective
   ext1 <;> dsimp [QuaternionAlgebra.Basis.lift] <;> simp
 
 @[simp]
-theorem to_quaternion_of_quaternion (q : ℍ[R,c₁,c₂]) : to_quaternion (of_quaternion q) = q :=
+theorem to_quaternion_of_quaternion (q : ℍ[R,c₁,c₂]) : toQuaternion (ofQuaternion q) = q :=
   AlgHom.congr_fun (to_quaternion_comp_of_quaternion : _ = AlgHom.id R ℍ[R,c₁,c₂]) q
 
 /-- The clifford algebra over `clifford_algebra_quaternion.Q c₁ c₂` is isomorphic as an `R`-algebra
 to `ℍ[R,c₁,c₂]`. -/
 @[simps]
-protected def Equivₓ : CliffordAlgebra (Q c₁ c₂) ≃ₐ[R] ℍ[R,c₁,c₂] :=
-  AlgEquiv.ofAlgHom to_quaternion of_quaternion to_quaternion_comp_of_quaternion of_quaternion_comp_to_quaternion
+protected def Equivₓ : CliffordAlgebra (q c₁ c₂) ≃ₐ[R] ℍ[R,c₁,c₂] :=
+  AlgEquiv.ofAlgHom toQuaternion ofQuaternion to_quaternion_comp_of_quaternion of_quaternion_comp_to_quaternion
 
 /-- The quaternion conjugate maps to the "clifford conjugate" (aka
 `involute ∘ reverse = reverse ∘ involute`). -/
 @[simp]
-theorem of_quaternion_conj (q : ℍ[R,c₁,c₂]) : of_quaternion q.conj = (of_quaternion q).reverse.involute :=
+theorem of_quaternion_conj (q : ℍ[R,c₁,c₂]) : ofQuaternion q.conj = (ofQuaternion q).reverse.involute :=
   CliffordAlgebraQuaternion.equiv.Injective <| by
     rw [equiv_apply, equiv_apply, to_quaternion_involute_reverse, to_quaternion_of_quaternion,
       to_quaternion_of_quaternion]
@@ -372,7 +372,7 @@ theorem ι_mul_ι r₁ r₂ : ι (0 : QuadraticForm R R) r₁ * ι (0 : Quadrati
 /-- The clifford algebra over a 1-dimensional vector space with 0 quadratic form is isomorphic to
 the dual numbers. -/
 protected def Equivₓ : CliffordAlgebra (0 : QuadraticForm R R) ≃ₐ[R] (R)[ε] :=
-  AlgEquiv.ofAlgHom (CliffordAlgebra.lift (0 : QuadraticForm R R) ⟨inr_hom R _, fun m => inr_mul_inr _ m m⟩)
+  AlgEquiv.ofAlgHom (CliffordAlgebra.lift (0 : QuadraticForm R R) ⟨inrHom R _, fun m => inr_mul_inr _ m m⟩)
     (DualNumber.lift ⟨ι _ (1 : R), ι_mul_ι (1 : R) 1⟩)
     (by
       ext x : 1

@@ -206,7 +206,7 @@ theorem ess_sup_add_le (f g : α → ℝ≥0∞) : essSup (f + g) μ ≤ essSup 
   limsup_add_le f g
 
 theorem ess_sup_liminf_le {ι} [Encodable ι] [LinearOrderₓ ι] (f : ι → α → ℝ≥0∞) :
-    essSup (fun x => at_top.liminf fun n => f n x) μ ≤ at_top.liminf fun n => essSup (fun x => f n x) μ := by
+    essSup (fun x => atTop.liminf fun n => f n x) μ ≤ atTop.liminf fun n => essSup (fun x => f n x) μ := by
   simp_rw [essSup]
   exact Ennreal.limsup_liminf_le_liminf_limsup fun a b => f b a
 

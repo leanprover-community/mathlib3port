@@ -31,45 +31,45 @@ def locally_discrete :=
 
 namespace LocallyDiscrete
 
-instance : ∀ [Inhabited C], Inhabited (locally_discrete C) :=
+instance : ∀ [Inhabited C], Inhabited (LocallyDiscrete C) :=
   id
 
-instance : ∀ [category_struct.{v} C], category_struct (locally_discrete C) :=
+instance : ∀ [CategoryStruct.{v} C], CategoryStruct (LocallyDiscrete C) :=
   id
 
-variable {C} [category_struct.{v} C]
+variable {C} [CategoryStruct.{v} C]
 
-instance (X Y : locally_discrete C) : small_category (X ⟶ Y) :=
+instance (X Y : LocallyDiscrete C) : SmallCategory (X ⟶ Y) :=
   CategoryTheory.discreteCategory (X ⟶ Y)
 
 end LocallyDiscrete
 
-variable (C) [category.{v} C]
+variable (C) [Category.{v} C]
 
 /-- The locally discrete bicategory on a category is a bicategory in which the objects and the
 1-morphisms are the same as those in the underlying category, and the 2-morphisms are the
 equalities between 1-morphisms.
 -/
-instance locally_discrete_bicategory : bicategory (locally_discrete C) where
-  whiskerLeft := fun X Y Z f g h η => eq_to_hom (congr_arg2ₓ (· ≫ ·) rfl (eq_of_hom η))
-  whiskerRight := fun X Y Z f g η h => eq_to_hom (congr_arg2ₓ (· ≫ ·) (eq_of_hom η) rfl)
-  associator := fun W X Y Z f g h => eq_to_iso (category.assoc f g h)
-  leftUnitor := fun X Y f => eq_to_iso (category.id_comp f)
-  rightUnitor := fun X Y f => eq_to_iso (category.comp_id f)
+instance locally_discrete_bicategory : Bicategory (LocallyDiscrete C) where
+  whiskerLeft := fun X Y Z f g h η => eqToHom (congr_arg2ₓ (· ≫ ·) rfl (eq_of_hom η))
+  whiskerRight := fun X Y Z f g η h => eqToHom (congr_arg2ₓ (· ≫ ·) (eq_of_hom η) rfl)
+  associator := fun W X Y Z f g h => eqToIso (Category.assoc f g h)
+  leftUnitor := fun X Y f => eqToIso (Category.id_comp f)
+  rightUnitor := fun X Y f => eqToIso (Category.comp_id f)
 
 /-- A locally discrete bicategory is strict. -/
-instance locally_discrete_bicategory.strict : strict (locally_discrete C) :=
+instance locally_discrete_bicategory.strict : Strict (LocallyDiscrete C) :=
   {  }
 
-variable {I : Type u₁} [category.{v₁} I] {B : Type u₂} [bicategory.{w₂, v₂} B] [strict B]
+variable {I : Type u₁} [Category.{v₁} I] {B : Type u₂} [Bicategory.{w₂, v₂} B] [Strict B]
 
 /-- If `B` is a strict bicategory and `I` is a (1-)category, any functor (of 1-categories) `I ⥤ B` can
 be promoted to an oplax functor from `locally_discrete I` to `B`.
 -/
 @[simps]
-def functor.to_oplax_functor (F : I ⥤ B) : oplax_functor (locally_discrete I) B :=
-  { F with map₂ := fun i j f g η => eq_to_hom (congr_argₓ _ (eq_of_hom η)), map_id := fun i => eq_to_hom (F.map_id i),
-    map_comp := fun i j k f g => eq_to_hom (F.map_comp f g) }
+def functor.to_oplax_functor (F : I ⥤ B) : OplaxFunctor (LocallyDiscrete I) B :=
+  { F with map₂ := fun i j f g η => eqToHom (congr_argₓ _ (eq_of_hom η)), map_id := fun i => eqToHom (F.map_id i),
+    map_comp := fun i j k f g => eqToHom (F.map_comp f g) }
 
 end CategoryTheory
 

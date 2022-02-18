@@ -63,10 +63,10 @@ instance : HasMem G (OpenSubgroup G) :=
 
 @[to_additive]
 instance has_coe_subgroup : CoeTₓ (OpenSubgroup G) (Subgroup G) :=
-  ⟨to_subgroup⟩
+  ⟨toSubgroup⟩
 
 @[to_additive]
-instance has_coe_opens : CoeTₓ (OpenSubgroup G) (opens G) :=
+instance has_coe_opens : CoeTₓ (OpenSubgroup G) (Opens G) :=
   ⟨fun U => ⟨U, U.is_open'⟩⟩
 
 @[simp, norm_cast, to_additive]
@@ -74,7 +74,7 @@ theorem mem_coe : g ∈ (U : Set G) ↔ g ∈ U :=
   Iff.rfl
 
 @[simp, norm_cast, to_additive]
-theorem mem_coe_opens : g ∈ (U : opens G) ↔ g ∈ U :=
+theorem mem_coe_opens : g ∈ (U : Opens G) ↔ g ∈ U :=
   Iff.rfl
 
 @[simp, norm_cast, to_additive]
@@ -82,7 +82,7 @@ theorem mem_coe_subgroup : g ∈ (U : Subgroup G) ↔ g ∈ U :=
   Iff.rfl
 
 @[to_additive]
-theorem coe_injective : injective (coe : OpenSubgroup G → Set G) := by
+theorem coe_injective : Injective (coe : OpenSubgroup G → Set G) := by
   rintro ⟨⟨⟩⟩ ⟨⟨⟩⟩ ⟨h⟩
   congr
 
@@ -114,7 +114,7 @@ protected theorem mul_mem {g₁ g₂ : G} (h₁ : g₁ ∈ U) (h₂ : g₂ ∈ U
 
 @[to_additive]
 theorem mem_nhds_one : (U : Set G) ∈ 𝓝 (1 : G) :=
-  IsOpen.mem_nhds U.is_open U.one_mem
+  IsOpen.mem_nhds U.IsOpen U.one_mem
 
 variable {U}
 
@@ -149,7 +149,7 @@ variable {H : Type _} [Groupₓ H] [TopologicalSpace H]
 @[to_additive "The product of two open subgroups as an open subgroup of the product group."]
 def Prod (U : OpenSubgroup G) (V : OpenSubgroup H) : OpenSubgroup (G × H) :=
   { (U : Subgroup G).Prod (V : Subgroup H) with Carrier := (U : Set G) ×ˢ (V : Set H),
-    is_open' := U.is_open.prod V.is_open }
+    is_open' := U.IsOpen.Prod V.IsOpen }
 
 end
 
@@ -160,7 +160,7 @@ instance : PartialOrderₓ (OpenSubgroup G) :=
 @[to_additive]
 instance : SemilatticeInf (OpenSubgroup G) :=
   { OpenSubgroup.partialOrder with
-    inf := fun U V => { (U : Subgroup G)⊓V with is_open' := IsOpen.inter U.is_open V.is_open },
+    inf := fun U V => { (U : Subgroup G)⊓V with is_open' := IsOpen.inter U.IsOpen V.IsOpen },
     inf_le_left := fun U V => Set.inter_subset_left _ _, inf_le_right := fun U V => Set.inter_subset_right _ _,
     le_inf := fun U V W hV hW => Set.subset_inter hV hW }
 
@@ -188,7 +188,7 @@ variable {N : Type _} [Groupₓ N] [TopologicalSpace N]
 @[to_additive
       "The preimage of an `open_add_subgroup` along a continuous `add_monoid` homomorphism\nis an `open_add_subgroup`."]
 def comap (f : G →* N) (hf : Continuous f) (H : OpenSubgroup N) : OpenSubgroup G :=
-  { (H : Subgroup N).comap f with is_open' := H.is_open.preimage hf }
+  { (H : Subgroup N).comap f with is_open' := H.IsOpen.Preimage hf }
 
 @[simp, to_additive]
 theorem coe_comap (H : OpenSubgroup N) (f : G →* N) (hf : Continuous f) : (H.comap f hf : Set G) = f ⁻¹' H :=
@@ -242,7 +242,7 @@ instance : SemilatticeSup (OpenSubgroup G) :=
     sup := fun U V =>
       { (U : Subgroup G)⊔V with
         is_open' :=
-          show IsOpen (((U : Subgroup G)⊔V : Subgroup G) : Set G) from Subgroup.is_open_mono le_sup_left U.is_open },
+          show IsOpen (((U : Subgroup G)⊔V : Subgroup G) : Set G) from Subgroup.is_open_mono le_sup_left U.IsOpen },
     le_sup_left := fun U V => coe_subgroup_le.1 le_sup_left, le_sup_right := fun U V => coe_subgroup_le.1 le_sup_right,
     sup_le := fun U V W hU hV => coe_subgroup_le.1 (sup_le hU hV) }
 
@@ -261,7 +261,7 @@ variable {R : Type _} {M : Type _} [CommRingₓ R]
 variable [AddCommGroupₓ M] [TopologicalSpace M] [TopologicalAddGroup M] [Module R M]
 
 theorem is_open_mono {U P : Submodule R M} (h : U ≤ P) (hU : IsOpen (U : Set M)) : IsOpen (P : Set M) :=
-  @AddSubgroup.is_open_mono M _ _ _ U.to_add_subgroup P.to_add_subgroup h hU
+  @AddSubgroup.is_open_mono M _ _ _ U.toAddSubgroup P.toAddSubgroup h hU
 
 end Submodule
 

@@ -52,8 +52,8 @@ structure Total (V : Type u) [Quiver.{v} V] : Sort max (u + 1) v where
 
 /-- A wide subquiver of `G` can equivalently be viewed as a total set of arrows. -/
 def wide_subquiver_equiv_set_total {V} [Quiver V] : WideSubquiver V ≃ Set (Total V) where
-  toFun := fun H => { e | e.hom ∈ H e.left e.right }
-  invFun := fun S a b => { e | total.mk a b e ∈ S }
+  toFun := fun H => { e | e.Hom ∈ H e.left e.right }
+  invFun := fun S a b => { e | Total.mk a b e ∈ S }
   left_inv := fun H => rfl
   right_inv := by
     intro S
@@ -65,7 +65,7 @@ def wide_subquiver_equiv_set_total {V} [Quiver V] : WideSubquiver V ≃ Set (Tot
 def labelling (V : Type u) [Quiver V] (L : Sort _) :=
   ∀ ⦃a b : V⦄, (a ⟶ b) → L
 
-instance {V : Type u} [Quiver V] L [Inhabited L] : Inhabited (labelling V L) :=
+instance {V : Type u} [Quiver V] L [Inhabited L] : Inhabited (Labelling V L) :=
   ⟨fun a b e => default⟩
 
 end Quiver

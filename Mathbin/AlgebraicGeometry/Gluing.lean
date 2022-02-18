@@ -75,21 +75,21 @@ that the `U i`'s are open subschemes of the glued space.
 -/
 @[nolint has_inhabited_instance]
 structure glue_data extends CategoryTheory.GlueData Scheme where
-  f_open : ∀ i j, is_open_immersion (f i j)
+  f_open : ∀ i j, IsOpenImmersion (f i j)
 
 attribute [instance] glue_data.f_open
 
 namespace GlueData
 
-variable (D : glue_data)
+variable (D : GlueData)
 
 include D
 
-local notation "𝖣" => D.to_glue_data
+local notation "𝖣" => D.toGlueData
 
 /-- The glue data of locally ringed spaces spaces associated to a family of glue data of schemes. -/
-abbrev to_LocallyRingedSpace_glue_data : LocallyRingedSpace.glue_data :=
-  { f_open := D.f_open, toGlueData := 𝖣.mapGlueData forget_to_LocallyRingedSpace }
+abbrev to_LocallyRingedSpace_glue_data : LocallyRingedSpace.GlueData :=
+  { f_open := D.f_open, toGlueData := 𝖣.mapGlueData forgetToLocallyRingedSpace }
 
 /-- (Implementation). The glued scheme of a glue data.
 This should not be used outside this file. Use `Scheme.glue_data.glued` instead. -/
@@ -109,16 +109,16 @@ def glued_Scheme : Scheme := by
   · infer_instance
     
 
-instance : creates_colimit 𝖣.diagram.multispan forget_to_LocallyRingedSpace :=
-  creates_colimit_of_fully_faithful_of_iso D.glued_Scheme
-    (has_colimit.iso_of_nat_iso (𝖣.diagramIso forget_to_LocallyRingedSpace).symm)
+instance : CreatesColimit 𝖣.diagram.multispan forgetToLocallyRingedSpace :=
+  createsColimitOfFullyFaithfulOfIso D.gluedScheme
+    (HasColimit.isoOfNatIso (𝖣.diagramIso forgetToLocallyRingedSpace).symm)
 
-instance : preserves_colimit 𝖣.diagram.multispan forget_to_Top := by
+instance : PreservesColimit 𝖣.diagram.multispan forgetToTop := by
   delta' forget_to_Top LocallyRingedSpace.forget_to_Top
   infer_instance
 
-instance : has_multicoequalizer 𝖣.diagram :=
-  has_colimit_of_created _ forget_to_LocallyRingedSpace
+instance : HasMulticoequalizer 𝖣.diagram :=
+  has_colimit_of_created _ forgetToLocallyRingedSpace
 
 /-- The glued scheme of a glued space. -/
 abbrev glued : Scheme :=
@@ -129,14 +129,14 @@ abbrev ι (i : D.J) : D.U i ⟶ D.glued :=
   𝖣.ι i
 
 /-- The gluing as sheafed spaces is isomorphic to the gluing as presheafed spaces. -/
-abbrev iso_LocallyRingedSpace : D.glued.to_LocallyRingedSpace ≅ D.to_LocallyRingedSpace_glue_data.to_glue_data.glued :=
-  𝖣.gluedIso forget_to_LocallyRingedSpace
+abbrev iso_LocallyRingedSpace : D.glued.toLocallyRingedSpace ≅ D.toLocallyRingedSpaceGlueData.toGlueData.glued :=
+  𝖣.gluedIso forgetToLocallyRingedSpace
 
 theorem ι_iso_LocallyRingedSpace_inv (i : D.J) :
-    D.to_LocallyRingedSpace_glue_data.to_glue_data.ι i ≫ D.iso_LocallyRingedSpace.inv = 𝖣.ι i :=
-  𝖣.ι_glued_iso_inv forget_to_LocallyRingedSpace i
+    D.toLocallyRingedSpaceGlueData.toGlueData.ι i ≫ D.isoLocallyRingedSpace.inv = 𝖣.ι i :=
+  𝖣.ι_glued_iso_inv forgetToLocallyRingedSpace i
 
-instance ι_is_open_immersion (i : D.J) : is_open_immersion (𝖣.ι i) := by
+instance ι_is_open_immersion (i : D.J) : IsOpenImmersion (𝖣.ι i) := by
   rw [← D.ι_iso_LocallyRingedSpace_inv]
   infer_instance
 
@@ -149,8 +149,8 @@ theorem glue_condition (i j : D.J) : D.t i j ≫ D.f j i ≫ D.ι j = D.f i j �
 
 /-- The pullback cone spanned by `V i j ⟶ U i` and `V i j ⟶ U j`.
 This is a pullback diagram (`V_pullback_cone_is_limit`). -/
-def V_pullback_cone (i j : D.J) : pullback_cone (D.ι i) (D.ι j) :=
-  pullback_cone.mk (D.f i j) (D.t i j ≫ D.f j i)
+def V_pullback_cone (i j : D.J) : PullbackCone (D.ι i) (D.ι j) :=
+  PullbackCone.mk (D.f i j) (D.t i j ≫ D.f j i)
     (by
       simp )
 
@@ -161,15 +161,14 @@ Vᵢⱼ ⟶ Uᵢ
  ↓      ↓
  Uⱼ ⟶ X
 -/
-def V_pullback_cone_is_limit (i j : D.J) : is_limit (D.V_pullback_cone i j) :=
-  𝖣.vPullbackConeIsLimitOfMap forget_to_LocallyRingedSpace i j
-    (D.to_LocallyRingedSpace_glue_data.V_pullback_cone_is_limit _ _)
+def V_pullback_cone_is_limit (i j : D.J) : IsLimit (D.vPullbackCone i j) :=
+  𝖣.vPullbackConeIsLimitOfMap forgetToLocallyRingedSpace i j (D.toLocallyRingedSpaceGlueData.vPullbackConeIsLimit _ _)
 
 /-- The underlying topological space of the glued scheme is isomorphic to the gluing of the
 underlying spacess -/
 def iso_carrier :
-    D.glued.carrier ≅
-      D.to_LocallyRingedSpace_glue_data.to_SheafedSpace_glue_data.toPresheafedSpaceGlueData.toTopGlueData.toGlueData.glued :=
+    D.glued.Carrier ≅
+      D.toLocallyRingedSpaceGlueData.toSheafedSpaceGlueData.toPresheafedSpaceGlueData.toTopGlueData.toGlueData.glued :=
   by
   refine' (PresheafedSpace.forget _).mapIso _ ≪≫ glue_data.glued_iso _ (PresheafedSpace.forget _)
   refine' SheafedSpace.forget_to_PresheafedSpace.map_iso _ ≪≫ SheafedSpace.glue_data.iso_PresheafedSpace _
@@ -178,8 +177,8 @@ def iso_carrier :
 
 @[simp]
 theorem ι_iso_carrier_inv (i : D.J) :
-    D.to_LocallyRingedSpace_glue_data.to_SheafedSpace_glue_data.toPresheafedSpaceGlueData.toTopGlueData.toGlueData.ι i ≫
-        D.iso_carrier.inv =
+    D.toLocallyRingedSpaceGlueData.toSheafedSpaceGlueData.toPresheafedSpaceGlueData.toTopGlueData.toGlueData.ι i ≫
+        D.isoCarrier.inv =
       (D.ι i).1.base :=
   by
   delta' iso_carrier
@@ -199,7 +198,7 @@ def Rel (a b : Σ i, ((D.U i).Carrier : Type _)) : Prop :=
   a = b ∨ ∃ x : (D.V (a.1, b.1)).Carrier, (D.f _ _).1.base x = a.2 ∧ (D.t _ _ ≫ D.f _ _).1.base x = b.2
 
 theorem ι_eq_iff (i j : D.J) (x : (D.U i).Carrier) (y : (D.U j).Carrier) :
-    (𝖣.ι i).1.base x = (𝖣.ι j).1.base y ↔ D.rel ⟨i, x⟩ ⟨j, y⟩ := by
+    (𝖣.ι i).1.base x = (𝖣.ι j).1.base y ↔ D.Rel ⟨i, x⟩ ⟨j, y⟩ := by
   refine'
     Iff.trans _
       (D.to_LocallyRingedSpace_glue_data.to_SheafedSpace_glue_data.toPresheafedSpaceGlueData.toTopGlueData.ι_eq_iff_rel
@@ -207,7 +206,7 @@ theorem ι_eq_iff (i j : D.J) (x : (D.U i).Carrier) (y : (D.U j).Carrier) :
   rw [← ((Top.mono_iff_injective D.iso_carrier.inv).mp inferInstance).eq_iff]
   simp_rw [← comp_apply, D.ι_iso_carrier_inv]
 
-theorem is_open_iff (U : Set D.glued.carrier) : IsOpen U ↔ ∀ i, IsOpen ((D.ι i).1.base ⁻¹' U) := by
+theorem is_open_iff (U : Set D.glued.Carrier) : IsOpen U ↔ ∀ i, IsOpen ((D.ι i).1.base ⁻¹' U) := by
   rw [← (Top.homeoOfIso D.iso_carrier.symm).is_open_preimage]
   rw [Top.GlueData.is_open_iff]
   apply forall_congrₓ
@@ -215,7 +214,7 @@ theorem is_open_iff (U : Set D.glued.carrier) : IsOpen U ↔ ∀ i, IsOpen ((D.�
   erw [← Set.preimage_comp, ← coe_comp, ι_iso_carrier_inv]
 
 /-- The open cover of the glued space given by the glue data. -/
-def open_cover (D : Scheme.glue_data) : open_cover D.glued where
+def open_cover (D : Scheme.GlueData) : OpenCover D.glued where
   J := D.J
   obj := D.U
   map := D.ι
@@ -226,7 +225,7 @@ end GlueData
 
 namespace OpenCover
 
-variable {X : Scheme.{u}} (𝒰 : open_cover.{u} X)
+variable {X : Scheme.{u}} (𝒰 : OpenCover.{u} X)
 
 /-- (Implementation) the transition maps in the glue data associated with an open cover. -/
 def glued_cover_t' (x y z : 𝒰.J) :
@@ -244,38 +243,38 @@ def glued_cover_t' (x y z : 𝒰.J) :
 
 @[simp, reassoc]
 theorem glued_cover_t'_fst_fst (x y z : 𝒰.J) :
-    𝒰.glued_cover_t' x y z ≫ pullback.fst ≫ pullback.fst = pullback.fst ≫ pullback.snd := by
+    𝒰.gluedCoverT' x y z ≫ pullback.fst ≫ pullback.fst = pullback.fst ≫ pullback.snd := by
   delta' glued_cover_t'
   simp
 
 @[simp, reassoc]
 theorem glued_cover_t'_fst_snd (x y z : 𝒰.J) :
-    glued_cover_t' 𝒰 x y z ≫ pullback.fst ≫ pullback.snd = pullback.snd ≫ pullback.snd := by
+    gluedCoverT' 𝒰 x y z ≫ pullback.fst ≫ pullback.snd = pullback.snd ≫ pullback.snd := by
   delta' glued_cover_t'
   simp
 
 @[simp, reassoc]
 theorem glued_cover_t'_snd_fst (x y z : 𝒰.J) :
-    glued_cover_t' 𝒰 x y z ≫ pullback.snd ≫ pullback.fst = pullback.fst ≫ pullback.snd := by
+    gluedCoverT' 𝒰 x y z ≫ pullback.snd ≫ pullback.fst = pullback.fst ≫ pullback.snd := by
   delta' glued_cover_t'
   simp
 
 @[simp, reassoc]
 theorem glued_cover_t'_snd_snd (x y z : 𝒰.J) :
-    glued_cover_t' 𝒰 x y z ≫ pullback.snd ≫ pullback.snd = pullback.fst ≫ pullback.fst := by
+    gluedCoverT' 𝒰 x y z ≫ pullback.snd ≫ pullback.snd = pullback.fst ≫ pullback.fst := by
   delta' glued_cover_t'
   simp
 
 theorem glued_cover_cocycle_fst (x y z : 𝒰.J) :
-    glued_cover_t' 𝒰 x y z ≫ glued_cover_t' 𝒰 y z x ≫ glued_cover_t' 𝒰 z x y ≫ pullback.fst = pullback.fst := by
+    gluedCoverT' 𝒰 x y z ≫ gluedCoverT' 𝒰 y z x ≫ gluedCoverT' 𝒰 z x y ≫ pullback.fst = pullback.fst := by
   apply pullback.hom_ext <;> simp
 
 theorem glued_cover_cocycle_snd (x y z : 𝒰.J) :
-    glued_cover_t' 𝒰 x y z ≫ glued_cover_t' 𝒰 y z x ≫ glued_cover_t' 𝒰 z x y ≫ pullback.snd = pullback.snd := by
+    gluedCoverT' 𝒰 x y z ≫ gluedCoverT' 𝒰 y z x ≫ gluedCoverT' 𝒰 z x y ≫ pullback.snd = pullback.snd := by
   apply pullback.hom_ext <;> simp [pullback.condition]
 
-theorem glued_cover_cocycle (x y z : 𝒰.J) :
-    glued_cover_t' 𝒰 x y z ≫ glued_cover_t' 𝒰 y z x ≫ glued_cover_t' 𝒰 z x y = 𝟙 _ := by
+theorem glued_cover_cocycle (x y z : 𝒰.J) : gluedCoverT' 𝒰 x y z ≫ gluedCoverT' 𝒰 y z x ≫ gluedCoverT' 𝒰 z x y = 𝟙 _ :=
+  by
   apply pullback.hom_ext <;> simp_rw [category.id_comp, category.assoc]
   apply glued_cover_cocycle_fst
   apply glued_cover_cocycle_snd
@@ -283,16 +282,16 @@ theorem glued_cover_cocycle (x y z : 𝒰.J) :
 /-- The glue data associated with an open cover.
 The canonical isomorphism `𝒰.glued_cover.glued ⟶ X` is provided by `𝒰.from_glued`. -/
 @[simps]
-def glued_cover : Scheme.glue_data.{u} where
+def glued_cover : Scheme.GlueData.{u} where
   J := 𝒰.J
   U := 𝒰.obj
   V := fun ⟨x, y⟩ => pullback (𝒰.map x) (𝒰.map y)
   f := fun x y => pullback.fst
   f_id := fun x => inferInstance
-  t := fun x y => (pullback_symmetry _ _).Hom
+  t := fun x y => (pullbackSymmetry _ _).Hom
   t_id := fun x => by
     simpa
-  t' := fun x y z => glued_cover_t' 𝒰 x y z
+  t' := fun x y z => gluedCoverT' 𝒰 x y z
   t_fac := fun x y z => by
     apply pullback.hom_ext <;> simp
   cocycle := fun x y z => glued_cover_cocycle 𝒰 x y z
@@ -300,7 +299,7 @@ def glued_cover : Scheme.glue_data.{u} where
 
 /-- The canonical morphism from the gluing of an open cover of `X` into `X`.
 This is an isomorphism, as witnessed by an `is_iso` instance. -/
-def from_glued : 𝒰.glued_cover.glued ⟶ X := by
+def from_glued : 𝒰.gluedCover.glued ⟶ X := by
   fapply multicoequalizer.desc
   exact fun x => 𝒰.map x
   rintro ⟨x, y⟩
@@ -308,10 +307,10 @@ def from_glued : 𝒰.glued_cover.glued ⟶ X := by
   simpa using pullback.condition
 
 @[simp, reassoc]
-theorem ι_from_glued (x : 𝒰.J) : 𝒰.glued_cover.ι x ≫ 𝒰.from_glued = 𝒰.map x :=
+theorem ι_from_glued (x : 𝒰.J) : 𝒰.gluedCover.ι x ≫ 𝒰.fromGlued = 𝒰.map x :=
   multicoequalizer.π_desc _ _ _ _ _
 
-theorem from_glued_injective : Function.Injective 𝒰.from_glued.1.base := by
+theorem from_glued_injective : Function.Injective 𝒰.fromGlued.1.base := by
   intro x y h
   obtain ⟨i, x, rfl⟩ := 𝒰.glued_cover.ι_jointly_surjective x
   obtain ⟨j, y, rfl⟩ := 𝒰.glued_cover.ι_jointly_surjective y
@@ -332,8 +331,8 @@ theorem from_glued_injective : Function.Injective 𝒰.from_glued.1.base := by
     rfl
     
 
-instance from_glued_stalk_iso (x : 𝒰.glued_cover.glued.carrier) :
-    is_iso (PresheafedSpace.stalk_map 𝒰.from_glued.val x) := by
+instance from_glued_stalk_iso (x : 𝒰.gluedCover.glued.Carrier) : IsIso (PresheafedSpace.stalkMap 𝒰.fromGlued.val x) :=
+  by
   obtain ⟨i, x, rfl⟩ := 𝒰.glued_cover.ι_jointly_surjective x
   have := PresheafedSpace.stalk_map.congr_hom _ _ (congr_argₓ Subtype.val <| 𝒰.ι_from_glued i) x
   erw [PresheafedSpace.stalk_map.comp] at this
@@ -341,7 +340,7 @@ instance from_glued_stalk_iso (x : 𝒰.glued_cover.glued.carrier) :
   rw [this]
   infer_instance
 
-theorem from_glued_open_map : IsOpenMap 𝒰.from_glued.1.base := by
+theorem from_glued_open_map : IsOpenMap 𝒰.fromGlued.1.base := by
   intro U hU
   rw [is_open_iff_forall_mem_open]
   intro x hx
@@ -363,13 +362,13 @@ theorem from_glued_open_map : IsOpenMap 𝒰.from_glued.1.base := by
   · exact ⟨hx, 𝒰.covers x⟩
     
 
-theorem from_glued_open_embedding : OpenEmbedding 𝒰.from_glued.1.base :=
+theorem from_glued_open_embedding : OpenEmbedding 𝒰.fromGlued.1.base :=
   open_embedding_of_continuous_injective_open
     (by
       continuity)
     𝒰.from_glued_injective 𝒰.from_glued_open_map
 
-instance : epi 𝒰.from_glued.val.base := by
+instance : Epi 𝒰.fromGlued.val.base := by
   rw [Top.epi_iff_surjective]
   intro x
   obtain ⟨y, h⟩ := 𝒰.covers x
@@ -378,10 +377,10 @@ instance : epi 𝒰.from_glued.val.base := by
   rw [← 𝒰.ι_from_glued (𝒰.f x)] at h
   exact h
 
-instance from_glued_open_immersion : is_open_immersion 𝒰.from_glued :=
-  SheafedSpace.is_open_immersion.of_stalk_iso _ 𝒰.from_glued_open_embedding
+instance from_glued_open_immersion : IsOpenImmersion 𝒰.fromGlued :=
+  SheafedSpace.IsOpenImmersion.of_stalk_iso _ 𝒰.from_glued_open_embedding
 
-instance : is_iso 𝒰.from_glued := by
+instance : IsIso 𝒰.fromGlued := by
   apply
     is_iso_of_reflects_iso _
       (Scheme.forget_to_LocallyRingedSpace ⋙
@@ -409,9 +408,17 @@ def glue_morphisms {Y : Scheme} (f : ∀ x, 𝒰.obj x ⟶ Y)
 @[simp, reassoc]
 theorem ι_glue_morphisms {Y : Scheme} (f : ∀ x, 𝒰.obj x ⟶ Y)
     (hf : ∀ x y, (pullback.fst : pullback (𝒰.map x) (𝒰.map y) ⟶ _) ≫ f x = pullback.snd ≫ f y) (x : 𝒰.J) :
-    𝒰.map x ≫ 𝒰.glue_morphisms f hf = f x := by
+    𝒰.map x ≫ 𝒰.glueMorphisms f hf = f x := by
   rw [← ι_from_glued, category.assoc]
   erw [is_iso.hom_inv_id_assoc, multicoequalizer.π_desc]
+
+theorem hom_ext {Y : Scheme} (f₁ f₂ : X ⟶ Y) (h : ∀ x, 𝒰.map x ≫ f₁ = 𝒰.map x ≫ f₂) : f₁ = f₂ := by
+  rw [← cancel_epi 𝒰.from_glued]
+  apply multicoequalizer.hom_ext
+  intro x
+  erw [multicoequalizer.π_desc_assoc]
+  erw [multicoequalizer.π_desc_assoc]
+  exact h x
 
 end OpenCover
 

@@ -23,7 +23,7 @@ private unsafe def simp_lhs_rhs : expr → tactic (expr × expr)
       | quote.1 ((%%ₓlhs) ↔ %%ₓrhs) => pure (lhs, rhs)
       | expr.pi n bi a b => do
         let l ← mk_local' n bi a
-        simp_lhs_rhs (b.instantiate_var l)
+        simp_lhs_rhs (b l)
       | ty => pure (ty, quote.1 True)
 
 /-- `simp_lhs ty` returns the left-hand side of a simp lemma with type `ty`. -/
@@ -42,8 +42,8 @@ private unsafe def simp_is_conditional_core : expr → tactic (Option expr)
       | quote.1 ((%%ₓlhs) ↔ _) => pure lhs
       | expr.pi n bi a b => do
         let l ← mk_local' n bi a
-        let some lhs ← simp_is_conditional_core (b.instantiate_var l) | pure none
-        if bi ≠ BinderInfo.inst_implicit ∧ ¬(lhs.abstract_local l.local_uniq_name).has_var then pure none else pure lhs
+        let some lhs ← simp_is_conditional_core (b l) | pure none
+        if bi ≠ BinderInfo.inst_implicit ∧ ¬(lhs l).has_var then pure none else pure lhs
       | ty => pure ty
 
 /-- `simp_is_conditional ty` returns true iff the simp lemma with type `ty` is conditional.
@@ -52,33 +52,33 @@ private unsafe def simp_is_conditional (ty : expr) : tactic Bool :=
   Option.isNone <$> simp_is_conditional_core ty
 
 private unsafe def heuristic_simp_lemma_extraction (prf : expr) : tactic (List Name) :=
-  prf.list_constant.to_list.mfilter is_simp_lemma
+  prf.list_constant.toList.mfilter is_simp_lemma
 
 /-- Checks whether two expressions are equal for the simplifier. That is,
 they are reducibly-definitional equal, and they have the same head symbol. -/
 unsafe def is_simp_eq (a b : expr) : tactic Bool :=
-  if a.get_app_fn.const_name ≠ b.get_app_fn.const_name then pure ff
-  else succeeds <| is_def_eq a b transparency.reducible
+  if a.get_app_fn.const_name ≠ b.get_app_fn.const_name then pure false
+  else succeeds <| is_def_eq a b Transparency.reducible
 
 /-- Reports declarations that are simp lemmas whose left-hand side is not in simp-normal form. -/
 unsafe def simp_nf_linter (timeout := 200000) (d : declaration) : tactic (Option Stringₓ) := do
   let tt ← is_simp_lemma d.to_name | pure none
   let tt ← is_valid_simp_lemma_cnst d.to_name | pure none
-  let [] ← get_eqn_lemmas_for ff d.to_name | pure none
+  let [] ← get_eqn_lemmas_for false d.to_name | pure none
   try_for timeout <|
       retrieve <| do
-        let g ← mk_meta_var d.type
+        let g ← mk_meta_var d
         set_goals [g]
         unfreezing intros
         let (lhs, rhs) ← target >>= simp_lhs_rhs
         let sls ← simp_lemmas.mk_default
-        let sls' := sls.erase [d.to_name]
+        let sls' := sls [d]
         let (lhs', prf1, ns1) ←
           decorate_error "simplify fails on left-hand side:" <| simplify sls [] lhs { failIfUnchanged := ff }
         let prf1_lems ← heuristic_simp_lemma_extraction prf1
-        if d.to_name ∈ prf1_lems then pure none
+        if d ∈ prf1_lems then pure none
           else do
-            let is_cond ← simp_is_conditional d.type
+            let is_cond ← simp_is_conditional d
             let (rhs', prf2, ns2) ←
               decorate_error "simplify fails on right-hand side:" <| simplify sls [] rhs { failIfUnchanged := ff }
             let lhs'_eq_rhs' ← is_simp_eq lhs' rhs'
@@ -96,8 +96,7 @@ unsafe def simp_nf_linter (timeout := 200000) (d : declaration) : tactic (Option
                   let lhs' ← pp lhs'
                   pure <|
                       format.to_string <|
-                        to_fmt "Left-hand side simplifies from" ++ lhs.group.indent 2 ++ format.line ++ "to" ++
-                                    lhs'.group.indent 2 ++
+                        to_fmt "Left-hand side simplifies from" ++ lhs 2 ++ format.line ++ "to" ++ lhs' 2 ++
                                   format.line ++
                                 "using " ++
                               (to_fmt prf1_lems).group.indent 2 ++
@@ -111,7 +110,8 @@ unsafe def simp_nf_linter (timeout := 200000) (d : declaration) : tactic (Option
                           "`set_option trace.simplify.rewrite true`"
                   else pure none
 
-/-- This note gives you some tips to debug any errors that the simp-normal form linter raises.
+library_note "simp-normal form"/--
+This note gives you some tips to debug any errors that the simp-normal form linter raises.
 
 The reason that a lemma was considered faulty is because its left-hand side is not in simp-normal
 form.
@@ -157,13 +157,13 @@ Here are some tips depending on the error raised by the linter:
      then apply `try_for 10000 { simp }` to the right-hand side.  You will
      see a periodic sequence of lemma applications in the trace message.
 -/
-library_note "simp-normal form"
+
 
 /-- A linter for simp lemmas whose lhs is not in simp-normal form, and which hence never fire. -/
 @[linter]
 unsafe def linter.simp_nf : linter where
   test := simp_nf_linter
-  auto_decls := tt
+  auto_decls := true
   no_errors_found := "All left-hand sides of simp lemmas are in simp-normal form."
   errors_found :=
     "SOME SIMP LEMMAS ARE NOT IN SIMP-NORMAL FORM.\nsee note [simp-normal form] for tips how to debug this.\nhttps://leanprover-community.github.io/mathlib_docs/notes.html#simp-normal%20form"
@@ -182,7 +182,7 @@ and which hence never fire.
 @[linter]
 unsafe def linter.simp_var_head : linter where
   test := simp_var_head
-  auto_decls := tt
+  auto_decls := true
   no_errors_found := "No left-hand sides of a simp lemma has a variable as head symbol."
   errors_found :=
     "LEFT-HAND SIDE HAS VARIABLE AS HEAD SYMBOL.\n" ++
@@ -192,9 +192,9 @@ private unsafe def simp_comm (d : declaration) : tactic (Option Stringₓ) := do
   let tt ← is_simp_lemma d.to_name | pure none
   let tt ← is_valid_simp_lemma_cnst d.to_name | pure none
   let (lhs, rhs) ← simp_lhs_rhs d.type
-  if lhs.get_app_fn.const_name ≠ rhs.get_app_fn.const_name then pure none
+  if lhs ≠ rhs then pure none
     else do
-      let (lhs', rhs') ← Prod.snd <$> open_pis_metas d.type >>= simp_lhs_rhs
+      let (lhs', rhs') ← Prod.snd <$> open_pis_metas d >>= simp_lhs_rhs
       let tt ← succeeds <| unify rhs lhs' transparency.reducible | pure none
       let tt ← succeeds <| is_def_eq rhs lhs' transparency.reducible | pure none
       let ff ← succeeds <| unify lhs' rhs' transparency.reducible | pure none
@@ -204,7 +204,7 @@ private unsafe def simp_comm (d : declaration) : tactic (Option Stringₓ) := do
 @[linter]
 unsafe def linter.simp_comm : linter where
   test := simp_comm
-  auto_decls := tt
+  auto_decls := true
   no_errors_found := "No commutativity lemma is marked simp."
   errors_found := "COMMUTATIVITY LEMMA IS SIMP.\n" ++ "Some commutativity lemmas are simp lemmas:"
 

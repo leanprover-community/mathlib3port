@@ -41,7 +41,7 @@ unsafe def derive_struct_ext_lemma (n : Name) : tactic Name := do
   let fs ← e.structure_fields n
   let d ← get_decl n
   let n ← resolve_constant n
-  let r := @expr.const tt n <| d.univ_params.map level.param
+  let r := @expr.const true n <| d.univ_params.map level.param
   let (args, _) ← infer_type r >>= open_pis
   let args := args.map expr.to_implicit_local_const
   let t := r.mk_app args
@@ -52,19 +52,19 @@ unsafe def derive_struct_ext_lemma (n : Name) : tactic Name := do
   let bs ←
     fs.mmap fun f => do
         let d ← get_decl (n ++ f)
-        let a := @expr.const tt (n ++ f) <| d.univ_params.map level.param
+        let a := @expr.const true (n ++ f) <| d.univ_params.map level.param
         let t ← infer_type a
         let s ← infer_type t
         if s ≠ quote.1 Prop then do
-            let x := a.mk_app args_x
-            let y := a.mk_app args_y
+            let x := a args_x
+            let y := a args_y
             let t ← infer_type x
             let t' ← infer_type y
             some <$>
                 if t = t' then mk_app `eq [x, y] >>= mk_local_def `h
                 else mk_mapp `heq [none, x, none, y] >>= mk_local_def `h
           else pure none
-  let bs := bs.filter_map id
+  let bs := bs.filterMap id
   let eq_t ← mk_app `eq [x, y]
   let t ← pis (args ++ [x, y] ++ bs) eq_t
   let pr ←
@@ -76,13 +76,13 @@ unsafe def derive_struct_ext_lemma (n : Name) : tactic Name := do
               let y ← intro1
               cases x
               cases y
-              bs.mmap' fun _ => do
+              bs fun _ => do
                   let e ← intro1
                   cases e
               reflexivity
         instantiate_mvars pr
   let decl_n := n <.> "ext"
-  add_decl (declaration.thm decl_n d.univ_params t pr)
+  add_decl (declaration.thm decl_n d t pr)
   let bs ← bs.mmap infer_type
   let rhs := expr.mk_and_lst bs
   let iff_t ← mk_app `iff [eq_t, rhs]
@@ -113,7 +113,7 @@ unsafe def derive_struct_ext_lemma (n : Name) : tactic Name := do
                   cases h
                   reflexivity
         instantiate_mvars pr
-  add_decl (declaration.thm (n <.> "ext_iff") d.univ_params t pr)
+  add_decl (declaration.thm (n <.> "ext_iff") d t pr)
   pure decl_n
 
 unsafe def get_ext_subject : expr → tactic Name
@@ -123,11 +123,11 @@ unsafe def get_ext_subject : expr → tactic Name
     get_ext_subject b'
   | expr.app _ e => do
     let t ← infer_type e >>= instantiate_mvars >>= head_beta
-    if t.get_app_fn.is_constant then pure <| t.get_app_fn.const_name
+    if t then pure <| t
       else
-        if t.is_pi then pure <| Name.mk_numeral 0 Name.anonymous
+        if t then pure <| Name.mk_numeral 0 Name.anonymous
         else
-          if t.is_sort then pure <| Name.mk_numeral 1 Name.anonymous
+          if t then pure <| Name.mk_numeral 1 Name.anonymous
           else do
             let t ← pp t
             fail f! "only constants and Pi types are supported: {t}"
@@ -139,14 +139,14 @@ unsafe def saturate_fun : Name → tactic expr
   | Name.mk_numeral 0 Name.anonymous => do
     let v₀ ← mk_mvar
     let v₁ ← mk_mvar
-    return <| v₀.imp v₁
+    return <| v₀ v₁
   | Name.mk_numeral 1 Name.anonymous => do
     let u ← mk_meta_univ
     pure <| expr.sort u
   | n => do
     let e ← resolve_constant n >>= mk_const
     let a ← get_arity e
-    e.mk_app <$> (List.iota a).mmap fun _ => mk_mvar
+    e <$> (List.iota a).mmap fun _ => mk_mvar
 
 unsafe def equiv_type_constr (n n' : Name) : tactic Unit := do
   let e ← saturate_fun n
@@ -155,7 +155,8 @@ unsafe def equiv_type_constr (n n' : Name) : tactic Unit := do
 
 section PerformanceHack
 
-/-- For performance reasons, it is inadvisable to use `user_attribute.get_param`.
+library_note "user attribute parameters"/--
+For performance reasons, it is inadvisable to use `user_attribute.get_param`.
 The parameter is stored as a reflected expression.  When calling `get_param`,
 the stored parameter is evaluated using `eval_expr`, which first compiles the
 expression into VM bytecode. The unevaluated expression is available using
@@ -172,7 +173,7 @@ There are several possible workarounds:
    The `user_attribute` code unfortunately checks whether the expression has the correct type,
    but you can use `` `(id %%e : Param) `` to pretend that your expression `e` has type `Param`.
 -/
-library_note "user attribute parameters"
+
 
 /-!
 For performance reasons, the parameters of the `@[ext]` attribute are stored
@@ -204,7 +205,7 @@ private unsafe def ext_attr_core : user_attribute (name_map Name) Name where
         ns.mfoldl
           (fun m n => do
             let ext_l ← ext_attr_core.get_param_untyped n
-            pure (m.insert n ext_l.app_arg.const_name))
+            pure (m n ext_l))
           mk_name_map }
   parser := failure
 
@@ -320,7 +321,8 @@ unsafe def extensional_attribute : user_attribute Unit (Option Name) where
 add_tactic_doc
   { Name := "ext", category := DocCategory.attr, declNames := [`extensional_attribute], tags := ["rewrite", "logic"] }
 
-/-- When possible, `ext` lemmas are stated without a full set of arguments. As an example, for bundled
+library_note "partially-applied ext lemmas"/--
+When possible, `ext` lemmas are stated without a full set of arguments. As an example, for bundled
 homs `f`, `g`, and `of`, `f.comp of = g.comp of → f = g` is a better `ext` lemma than
 `(∀ x, f (of x) = g (of x)) → f = g`, as the former allows a second type-specific extensionality
 lemmas to be applied to `f.comp of = g.comp of`.
@@ -332,14 +334,14 @@ For bundled morphisms, there is a `ext` lemma that always applies of the form
 these to be tried first. This happens automatically since the type-specific lemmas are inevitably
 defined later.
 -/
-library_note "partially-applied ext lemmas"
+
 
 attribute [ext] Arrayₓ.ext propext Function.hfunext
 
 attribute [ext Thunkₓ] _root_.funext
 
 run_cmd
-  add_ext_lemma (Name.mk_numeral 0 Name.anonymous) `` _root_.funext tt
+  add_ext_lemma (Name.mk_numeral 0 Name.anonymous) `` _root_.funext true
 
 attribute [ext] Ulift
 
@@ -384,15 +386,15 @@ private unsafe def try_intros_core : StateTₓ ext_state tactic Unit := do
     | [] =>
       (do
           let es ← StateTₓ.lift intros
-          when (es.length > 0) <| do
-              let msg := "intros " ++ " ".intercalate (es.map fun e => e.local_pp_name.to_string)
+          when (es > 0) <| do
+              let msg := "intros " ++ " ".intercalate (es fun e => e)
               modifyₓ fun ⟨patts, trace_msg, fuel⟩ => ⟨patts, trace_msg ++ [msg], fuel⟩) <|>
         pure ()
     | x :: xs => do
       let tgt ← StateTₓ.lift (target >>= whnf)
-      when tgt.is_pi <| do
+      when tgt <| do
           StateTₓ.lift (rintro [x])
-          let msg ← StateTₓ.lift ((· ++ ·) "rintro " <$> format.to_string <$> x.format ff)
+          let msg ← StateTₓ.lift ((· ++ ·) "rintro " <$> format.to_string <$> x ff)
           modifyₓ fun ⟨_, trace_msg, fuel⟩ => ⟨xs, trace_msg ++ [msg], fuel⟩
           try_intros_core
 
@@ -404,7 +406,7 @@ unsafe def try_intros (patts : List rcases_patt) : tactic (List rcases_patt) :=
 
 /-- Apply one extensionality lemma, and destruct the arguments using the patterns
   in the ext_state. -/
-unsafe def ext1_core (cfg : apply_cfg := {  }) : StateTₓ ext_state tactic Unit := do
+unsafe def ext1_core (cfg : ApplyCfg := {  }) : StateTₓ ext_state tactic Unit := do
   let ⟨patts, trace_msg, _⟩ ← get
   let new_msgs ←
     StateTₓ.lift <|
@@ -423,7 +425,7 @@ unsafe def ext1_core (cfg : apply_cfg := {  }) : StateTₓ ext_state tactic Unit
                           dbg_trace "[ext] matched goal to rule: {← rule}") >>
                         timetac "[ext] application attempt time" (applyc rule cfg)
                     else applyc rule cfg
-                  pure ["apply " ++ rule.to_string]) <|>
+                  pure ["apply " ++ rule]) <|>
                 (do
                     let ls ← get_ext_lemma_names
                     let nms := ls.map Name.toString
@@ -435,14 +437,14 @@ unsafe def ext1_core (cfg : apply_cfg := {  }) : StateTₓ ext_state tactic Unit
                                 timetac "[ext] application attempt time" (applyc n cfg)
                             else applyc n cfg) *>
                             pure n
-                    pure ["apply " ++ rule.to_string]) <|>
+                    pure ["apply " ++ rule]) <|>
                   fail f! "no applicable extensionality rule found for {subject}"
           pure new_trace_msg
   modifyₓ fun ⟨patts, trace_msg, fuel⟩ => ⟨patts, trace_msg ++ new_msgs, fuel⟩
   try_intros_core
 
 /-- Apply multiple extensionality lemmas, destructing the arguments using the given patterns. -/
-unsafe def ext_core (cfg : apply_cfg := {  }) : StateTₓ ext_state tactic Unit := do
+unsafe def ext_core (cfg : ApplyCfg := {  }) : StateTₓ ext_state tactic Unit := do
   let acc@⟨_, _, fuel⟩ ← get
   match fuel with
     | some 0 => pure ()
@@ -453,18 +455,19 @@ unsafe def ext_core (cfg : apply_cfg := {  }) : StateTₓ ext_state tactic Unit 
 
 /-- Apply one extensionality lemma, and destruct the arguments using the given patterns.
   Returns the unused patterns. -/
-unsafe def ext1 (xs : List rcases_patt) (cfg : apply_cfg := {  }) (trace : Bool := ff) : tactic (List rcases_patt) := do
+unsafe def ext1 (xs : List rcases_patt) (cfg : ApplyCfg := {  }) (trace : Bool := false) : tactic (List rcases_patt) :=
+  do
   let ⟨_, σ⟩ ← StateTₓ.run (ext1_core cfg) { patts := xs }
-  when trace <| tactic.trace <| "Try this: " ++ ", ".intercalate σ.trace_msg
-  pure σ.patts
+  when trace <| tactic.trace <| "Try this: " ++ ", ".intercalate σ
+  pure σ
 
 /-- Apply multiple extensionality lemmas, destructing the arguments using the given patterns.
   `ext ps (some n)` applies at most `n` extensionality lemmas. Returns the unused patterns. -/
-unsafe def ext (xs : List rcases_patt) (fuel : Option ℕ) (cfg : apply_cfg := {  }) (trace : Bool := ff) :
+unsafe def ext (xs : List rcases_patt) (fuel : Option ℕ) (cfg : ApplyCfg := {  }) (trace : Bool := false) :
     tactic (List rcases_patt) := do
   let ⟨_, σ⟩ ← StateTₓ.run (ext_core cfg) { patts := xs, fuel }
-  when trace <| tactic.trace <| "Try this: " ++ ", ".intercalate σ.trace_msg
-  pure σ.patts
+  when trace <| tactic.trace <| "Try this: " ++ ", ".intercalate σ
+  pure σ
 
 local postfix:9001 "?" => optionalₓ
 
@@ -478,7 +481,7 @@ named automatically, as per `intro`. Placing a `?` after `ext1`
 applications that can replace the call to `ext1`.
 -/
 unsafe def interactive.ext1 (trace : parse (tk "?")?) (xs : parse (rcases_patt_parse_hi)*) : tactic Unit :=
-  ext1 xs {  } trace.is_some $> ()
+  ext1 xs {  } trace.isSome $> ()
 
 /-- - `ext` applies as many extensionality lemmas as possible;
 - `ext ids`, with `ids` a list of identifiers, finds extentionality and applies them
@@ -541,9 +544,9 @@ A maximum depth can be provided with `ext x y z : 3`.
 -/
 unsafe def interactive.ext :
     (parse <| (tk "?")?) → parse (rcases_patt_parse_hi)* → parse (tk ":" *> small_nat)? → tactic Unit
-  | trace, [], some n => iterate_range 1 n (ext1 [] {  } trace.is_some $> ())
-  | trace, [], none => repeat1 (ext1 [] {  } trace.is_some $> ())
-  | trace, xs, n => ext xs n {  } trace.is_some $> ()
+  | trace, [], some n => iterate_range 1 n (ext1 [] {  } trace.isSome $> ())
+  | trace, [], none => repeat1 (ext1 [] {  } trace.isSome $> ())
+  | trace, xs, n => ext xs n {  } trace.isSome $> ()
 
 /-- * `ext1 id` selects and apply one extensionality lemma (with
   attribute `ext`), using `id`, if provided, to name a

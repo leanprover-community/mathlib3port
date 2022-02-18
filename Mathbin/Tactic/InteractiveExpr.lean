@@ -49,16 +49,16 @@ unsafe def sf.repr : sf → format
   | sf.compose a b => a.repr ++ format.line ++ b.repr
   | sf.of_string s => reprₓ s
   | sf.block i a => "(block " ++ to_fmt i ++ format.line ++ a.repr ++ ")"
-  | sf.highlight c a => "(highlight " ++ c.to_string ++ a.repr ++ ")"
+  | sf.highlight c a => "(highlight " ++ c.toString ++ a.repr ++ ")"
 
 unsafe instance : has_to_format sf :=
   ⟨sf.repr⟩
 
 unsafe instance : HasToString sf :=
-  ⟨fun s => s.repr.to_string⟩
+  ⟨fun s => s.repr.toString⟩
 
 unsafe instance : HasRepr sf :=
-  ⟨fun s => s.repr.to_string⟩
+  ⟨fun s => s.repr.toString⟩
 
 /-- Constructs an `sf` from an `eformat` by forgetting grouping, nesting, etc. -/
 unsafe def sf.of_eformat : eformat → sf
@@ -80,7 +80,7 @@ unsafe def sf.flatten : sf → sf
     | sf.compose x (sf.of_string sy1), sf.compose (sf.of_string sy2) z =>
       sf.compose x (sf.compose (sf.of_string (sy1 ++ sy2)) z)
     | x, y => sf.compose x y
-  | sf.of_string s => sf.of_string (s.to_list.map fun c => if c = '\n' then ' ' else c).asString
+  | sf.of_string s => sf.of_string (s.toList.map fun c => if c = '\n' then ' ' else c).asString
   | sf.block i (sf.block j a) => (sf.block (i + j) a).flatten
   | sf.block i a => sf.block i a.flatten
   | sf.highlight i a => sf.highlight i a.flatten
@@ -162,7 +162,7 @@ unsafe def get_block_attrs {γ} : sf → tactic (sf × List (attr γ))
     pure (a, s :: rest)
   | sf.highlight c a => do
     let (a, rest) ← get_block_attrs a
-    pure (a, cn c.to_string :: rest)
+    pure (a, cn c :: rest)
   | a => pure (a, [])
 
 /-- Renders a subexpression as a list of html elements.
@@ -236,7 +236,7 @@ unsafe def mk {γ} (tooltip : Tc subexpr γ) : Tc expr γ :=
         let m := m.flatten
         let m := m.tag_expr [] e
         let v ← view tooltip_comp (Prod.snd <$> ca) (Prod.snd <$> sa) ⟨e, []⟩ m
-        pure <| [h "span" [className "expr", key e.hash, on_mouse_leave fun _ => action.on_mouse_leave_all] <| v]
+        pure <| [h "span" [className "expr", key e, on_mouse_leave fun _ => action.on_mouse_leave_all] <| v]
 
 /-- Render the implicit arguments for an expression in fancy, little pills. -/
 unsafe def implicit_arg_list (tooltip : Tc subexpr Empty) (e : expr) : tactic <| html Empty := do
@@ -271,7 +271,7 @@ unsafe inductive filter_type
 /-- Filters a local constant using the given filter.
 -/
 unsafe def filter_local : filter_type → expr → tactic Bool
-  | filter_type.none, e => pure tt
+  | filter_type.none, e => pure true
   | filter_type.no_instances, e => do
     let t ← tactic.infer_type e
     bnot <$> tactic.is_class t
@@ -317,7 +317,7 @@ unsafe def to_local_collection (l : expr) : tactic local_collection :=
   tactic.unsafe.type_context.run <| do
     let lctx ← tactic.unsafe.type_context.get_local_context
     let some ldecl ← pure <| lctx.get_local_decl l.local_uniq_name
-    pure { key := l.local_uniq_name.repr, locals := [l], type := ldecl.type, value := ldecl.value }
+    pure { key := l, locals := [l], type := ldecl, value := ldecl }
 
 /-- Groups consecutive local collections by type -/
 unsafe def group_local_collection : List local_collection → List local_collection
@@ -346,10 +346,10 @@ unsafe def tactic_view_goal {γ} (local_c : Tc local_collection γ) (target_c : 
           let lh ← local_c lc
           let ns : List (html γ) :=
             lc.locals.map fun n => h "span" [cn "goal-hyp b pr2", key n.local_uniq_name] [html.of_name n.local_pp_name]
-          pure <| h "li" [key lc.key] (ns ++ [": ", h "span" [cn "goal-hyp-type", key "type"] [lh]])
+          pure <| h "li" [key lc] (ns ++ [": ", h "span" [cn "goal-hyp-type", key "type"] [lh]])
     let t_comp ← target_c g
     pure <|
-        h "ul" [key g.hash, className "list pl0 font-code"] <|
+        h "ul" [key g, className "list pl0 font-code"] <|
           case_tag ++ lchs ++ [h "li" [key u_n] [h "span" [cn "goal-vdash b"] ["⊢ "], t_comp]]
 
 /-- Actions accepted by the `tactic_view_component`.
@@ -408,7 +408,7 @@ unsafe def show_local_collection_component : Tc local_collection Empty :=
   tc.stateless fun lc => do
     let l :: _ ← pure lc.locals
     let c ← show_type_component l
-    match lc.value with
+    match lc with
       | some v => do
         let v ← interactive_expression.mk interactive_expression.type_tooltip v
         pure [c, " := ", v]

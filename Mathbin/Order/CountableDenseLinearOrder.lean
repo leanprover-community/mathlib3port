@@ -38,8 +38,8 @@ namespace Order
 theorem exists_between_finsets {α : Type _} [LinearOrderₓ α] [DenselyOrdered α] [NoMinOrder α] [NoMaxOrder α]
     [nonem : Nonempty α] (lo hi : Finset α) (lo_lt_hi : ∀, ∀ x ∈ lo, ∀, ∀ y ∈ hi, ∀, x < y) :
     ∃ m : α, (∀, ∀ x ∈ lo, ∀, x < m) ∧ ∀, ∀ y ∈ hi, ∀, m < y :=
-  if nlo : lo.nonempty then
-    if nhi : hi.nonempty then
+  if nlo : lo.Nonempty then
+    if nhi : hi.Nonempty then
       Exists.elim (exists_between (lo_lt_hi _ (Finset.max'_mem _ nlo) _ (Finset.min'_mem _ nhi))) fun m hm =>
         ⟨m, fun x hx => lt_of_le_of_ltₓ (Finset.le_max' lo x hx) hm.1, fun y hy =>
           lt_of_lt_of_leₓ hm.2 (Finset.min'_le hi y hy)⟩
@@ -47,7 +47,7 @@ theorem exists_between_finsets {α : Type _} [LinearOrderₓ α] [DenselyOrdered
       Exists.elim (exists_gt (Finset.max' lo nlo)) fun m hm =>
         ⟨m, fun x hx => lt_of_le_of_ltₓ (Finset.le_max' lo x hx) hm, fun y hy => (nhi ⟨y, hy⟩).elim⟩
   else
-    if nhi : hi.nonempty then
+    if nhi : hi.Nonempty then
       Exists.elim (exists_lt (Finset.min' hi nhi)) fun m hm =>
         ⟨m, fun x hx => (nlo ⟨x, hx⟩).elim, fun y hy => lt_of_lt_of_leₓ hm (Finset.min'_le hi y hy)⟩
     else nonem.elim fun m => ⟨m, fun x hx => (nlo ⟨x, hx⟩).elim, fun y hy => (nhi ⟨y, hy⟩).elim⟩
@@ -63,10 +63,10 @@ def partial_iso : Type _ :=
 
 namespace PartialIso
 
-instance : Inhabited (partial_iso α β) :=
+instance : Inhabited (PartialIso α β) :=
   ⟨⟨∅, fun p h q => h.elim⟩⟩
 
-instance : Preorderₓ (partial_iso α β) :=
+instance : Preorderₓ (PartialIso α β) :=
   Subtype.preorder _
 
 variable {α β}
@@ -76,7 +76,7 @@ the domain of `f` is `b`'s relation to the image of `f`.
 
 Thus, if `a` is not already in `f`, then we can extend `f` by sending `a` to `b`.
 -/
-theorem exists_across [DenselyOrdered β] [NoMinOrder β] [NoMaxOrder β] [Nonempty β] (f : partial_iso α β) (a : α) :
+theorem exists_across [DenselyOrdered β] [NoMinOrder β] [NoMaxOrder β] [Nonempty β] (f : PartialIso α β) (a : α) :
     ∃ b : β, ∀, ∀ p ∈ f.val, ∀, cmp (Prod.fst p) a = cmp (Prod.snd p) b := by
   by_cases' h : ∃ b, (a, b) ∈ f.val
   · cases' h with b hb
@@ -109,7 +109,7 @@ theorem exists_across [DenselyOrdered β] [NoMinOrder β] [NoMaxOrder β] [Nonem
     
 
 /-- A partial isomorphism between `α` and `β` is also a partial isomorphism between `β` and `α`. -/
-protected def comm : partial_iso α β → partial_iso β α :=
+protected def comm : PartialIso α β → PartialIso β α :=
   (Subtype.map (Finset.image (Equivₓ.prodComm _ _))) fun f hf p hp q hq =>
     Eq.symm <|
       hf ((Equivₓ.prodComm α β).symm p)
@@ -126,7 +126,7 @@ variable (β)
 /-- The set of partial isomorphisms defined at `a : α`, together with a proof that any
     partial isomorphism can be extended to one defined at `a`. -/
 def defined_at_left [DenselyOrdered β] [NoMinOrder β] [NoMaxOrder β] [Nonempty β] (a : α) :
-    cofinal (partial_iso α β) where
+    Cofinal (PartialIso α β) where
   Carrier := fun f => ∃ b : β, (a, b) ∈ f.val
   mem_gt := by
     intro f
@@ -150,7 +150,7 @@ variable (α) {β}
 /-- The set of partial isomorphisms defined at `b : β`, together with a proof that any
     partial isomorphism can be extended to include `b`. We prove this by symmetry. -/
 def defined_at_right [DenselyOrdered α] [NoMinOrder α] [NoMaxOrder α] [Nonempty α] (b : β) :
-    cofinal (partial_iso α β) where
+    Cofinal (PartialIso α β) where
   Carrier := fun f => ∃ a, (a, b) ∈ f.val
   mem_gt := by
     intro f
@@ -171,14 +171,14 @@ variable {α}
 
 /-- Given an ideal which intersects `defined_at_left β a`, pick `b : β` such that
     some partial function in the ideal maps `a` to `b`. -/
-def fun_of_ideal [DenselyOrdered β] [NoMinOrder β] [NoMaxOrder β] [Nonempty β] (a : α) (I : ideal (partial_iso α β)) :
-    (∃ f, f ∈ defined_at_left β a ∧ f ∈ I) → { b // ∃ f ∈ I, (a, b) ∈ Subtype.val f } :=
+def fun_of_ideal [DenselyOrdered β] [NoMinOrder β] [NoMaxOrder β] [Nonempty β] (a : α) (I : Ideal (PartialIso α β)) :
+    (∃ f, f ∈ definedAtLeft β a ∧ f ∈ I) → { b // ∃ f ∈ I, (a, b) ∈ Subtype.val f } :=
   Classical.indefiniteDescription _ ∘ fun ⟨f, ⟨b, hb⟩, hf⟩ => ⟨b, f, hf, hb⟩
 
 /-- Given an ideal which intersects `defined_at_right α b`, pick `a : α` such that
     some partial function in the ideal maps `a` to `b`. -/
-def inv_of_ideal [DenselyOrdered α] [NoMinOrder α] [NoMaxOrder α] [Nonempty α] (b : β) (I : ideal (partial_iso α β)) :
-    (∃ f, f ∈ defined_at_right α b ∧ f ∈ I) → { a // ∃ f ∈ I, (a, b) ∈ Subtype.val f } :=
+def inv_of_ideal [DenselyOrdered α] [NoMinOrder α] [NoMaxOrder α] [Nonempty α] (b : β) (I : Ideal (PartialIso α β)) :
+    (∃ f, f ∈ definedAtRight α b ∧ f ∈ I) → { a // ∃ f ∈ I, (a, b) ∈ Subtype.val f } :=
   Classical.indefiniteDescription _ ∘ fun ⟨f, ⟨a, ha⟩, hf⟩ => ⟨a, f, hf, ha⟩
 
 end PartialIso
@@ -190,8 +190,8 @@ variable (α β)
 /-- Any countable linear order embeds in any nonempty dense linear order without endpoints. -/
 def embedding_from_countable_to_dense [Encodable α] [DenselyOrdered β] [NoMinOrder β] [NoMaxOrder β] [Nonempty β] :
     α ↪o β :=
-  let our_ideal : ideal (partial_iso α β) := ideal_of_cofinals default <| defined_at_left β
-  let F := fun a => fun_of_ideal a our_ideal (cofinal_meets_ideal_of_cofinals _ _ a)
+  let our_ideal : Ideal (PartialIso α β) := idealOfCofinals default <| definedAtLeft β
+  let F := fun a => funOfIdeal a our_ideal (cofinal_meets_ideal_of_cofinals _ _ a)
   OrderEmbedding.ofStrictMono (fun a => (F a).val)
     (by
       intro a₁ a₂
@@ -203,10 +203,10 @@ def embedding_from_countable_to_dense [Encodable α] [DenselyOrdered β] [NoMinO
 /-- Any two countable dense, nonempty linear orders without endpoints are order isomorphic. -/
 def iso_of_countable_dense [Encodable α] [DenselyOrdered α] [NoMinOrder α] [NoMaxOrder α] [Nonempty α] [Encodable β]
     [DenselyOrdered β] [NoMinOrder β] [NoMaxOrder β] [Nonempty β] : α ≃o β :=
-  let to_cofinal : Sum α β → cofinal (partial_iso α β) := fun p => Sum.recOn p (defined_at_left β) (defined_at_right α)
-  let our_ideal : ideal (partial_iso α β) := ideal_of_cofinals default to_cofinal
-  let F := fun a => fun_of_ideal a our_ideal (cofinal_meets_ideal_of_cofinals _ to_cofinal (Sum.inl a))
-  let G := fun b => inv_of_ideal b our_ideal (cofinal_meets_ideal_of_cofinals _ to_cofinal (Sum.inr b))
+  let to_cofinal : Sum α β → Cofinal (PartialIso α β) := fun p => Sum.recOn p (definedAtLeft β) (definedAtRight α)
+  let our_ideal : Ideal (PartialIso α β) := idealOfCofinals default to_cofinal
+  let F := fun a => funOfIdeal a our_ideal (cofinal_meets_ideal_of_cofinals _ to_cofinal (Sum.inl a))
+  let G := fun b => invOfIdeal b our_ideal (cofinal_meets_ideal_of_cofinals _ to_cofinal (Sum.inr b))
   OrderIso.ofCmpEqCmp (fun a => (F a).val) (fun b => (G b).val)
     (by
       intro a b

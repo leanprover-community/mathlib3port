@@ -48,7 +48,7 @@ theorem sup_le {s : Multiset α} {a : α} : s.sup ≤ a ↔ ∀, ∀ b ∈ s, �
       simp (config := { contextual := true })[or_imp_distrib, forall_and_distrib])
 
 theorem le_sup {s : Multiset α} {a : α} (h : a ∈ s) : a ≤ s.sup :=
-  sup_le.1 (le_reflₓ _) _ h
+  sup_le.1 le_rfl _ h
 
 theorem sup_mono {s₁ s₂ : Multiset α} (h : s₁ ⊆ s₂) : s₁.sup ≤ s₂.sup :=
   sup_le.2 fun b hb => le_sup (h hb)
@@ -56,7 +56,7 @@ theorem sup_mono {s₁ s₂ : Multiset α} (h : s₁ ⊆ s₂) : s₁.sup ≤ s�
 variable [DecidableEq α]
 
 @[simp]
-theorem sup_erase_dup (s : Multiset α) : (erase_dup s).sup = s.sup :=
+theorem sup_erase_dup (s : Multiset α) : (eraseDup s).sup = s.sup :=
   fold_erase_dup_idem _ _ _
 
 @[simp]
@@ -72,7 +72,7 @@ theorem sup_ndinsert (a : α) (s : Multiset α) : (ndinsert a s).sup = a⊔s.sup
   rw [← sup_erase_dup, erase_dup_ext.2, sup_erase_dup, sup_cons] <;> simp
 
 theorem nodup_sup_iff {α : Type _} [DecidableEq α] {m : Multiset (Multiset α)} :
-    m.sup.nodup ↔ ∀ a : Multiset α, a ∈ m → a.nodup := by
+    m.sup.Nodup ↔ ∀ a : Multiset α, a ∈ m → a.Nodup := by
   apply m.induction_on
   · simp
     
@@ -120,7 +120,7 @@ theorem le_inf {s : Multiset α} {a : α} : a ≤ s.inf ↔ ∀, ∀ b ∈ s, �
       simp (config := { contextual := true })[or_imp_distrib, forall_and_distrib])
 
 theorem inf_le {s : Multiset α} {a : α} (h : a ∈ s) : s.inf ≤ a :=
-  le_inf.1 (le_reflₓ _) _ h
+  le_inf.1 le_rfl _ h
 
 theorem inf_mono {s₁ s₂ : Multiset α} (h : s₁ ⊆ s₂) : s₂.inf ≤ s₁.inf :=
   le_inf.2 fun b hb => inf_le (h hb)
@@ -128,7 +128,7 @@ theorem inf_mono {s₁ s₂ : Multiset α} (h : s₁ ⊆ s₂) : s₂.inf ≤ s�
 variable [DecidableEq α]
 
 @[simp]
-theorem inf_erase_dup (s : Multiset α) : (erase_dup s).inf = s.inf :=
+theorem inf_erase_dup (s : Multiset α) : (eraseDup s).inf = s.inf :=
   fold_erase_dup_idem _ _ _
 
 @[simp]

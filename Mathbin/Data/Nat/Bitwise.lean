@@ -31,18 +31,18 @@ open Function
 namespace Nat
 
 @[simp]
-theorem bit_ff : bit ff = bit0 :=
+theorem bit_ff : bit false = bit0 :=
   rfl
 
 @[simp]
-theorem bit_tt : bit tt = bit1 :=
+theorem bit_tt : bit true = bit1 :=
   rfl
 
 @[simp]
 theorem bit_eq_zero {n : ℕ} {b : Bool} : n.bit b = 0 ↔ n = 0 ∧ b = ff := by
   cases b <;> norm_num [bit0_eq_zero, Nat.bit1_ne_zero]
 
-theorem zero_of_test_bit_eq_ff {n : ℕ} (h : ∀ i, test_bit n i = ff) : n = 0 := by
+theorem zero_of_test_bit_eq_ff {n : ℕ} (h : ∀ i, testBit n i = ff) : n = 0 := by
   induction' n using Nat.binaryRec with b n hn
   · rfl
     
@@ -55,11 +55,11 @@ theorem zero_of_test_bit_eq_ff {n : ℕ} (h : ∀ i, test_bit n i = ff) : n = 0 
     
 
 @[simp]
-theorem zero_test_bit (i : ℕ) : test_bit 0 i = ff := by
+theorem zero_test_bit (i : ℕ) : testBit 0 i = ff := by
   simp [test_bit]
 
 /-- Bitwise extensionality: Two numbers agree if they agree at every bit position. -/
-theorem eq_of_test_bit_eq {n m : ℕ} (h : ∀ i, test_bit n i = test_bit m i) : n = m := by
+theorem eq_of_test_bit_eq {n m : ℕ} (h : ∀ i, testBit n i = testBit m i) : n = m := by
   induction' n using Nat.binaryRec with b n hn generalizing m
   · simp only [zero_test_bit] at h
     exact (zero_of_test_bit_eq_ff fun i => (h i).symm).symm
@@ -77,7 +77,7 @@ theorem eq_of_test_bit_eq {n m : ℕ} (h : ∀ i, test_bit n i = test_bit m i) :
     hn fun i => by
       convert h (i + 1) using 1 <;> rw [test_bit_succ]
 
-theorem exists_most_significant_bit {n : ℕ} (h : n ≠ 0) : ∃ i, test_bit n i = tt ∧ ∀ j, i < j → test_bit n j = ff := by
+theorem exists_most_significant_bit {n : ℕ} (h : n ≠ 0) : ∃ i, testBit n i = tt ∧ ∀ j, i < j → testBit n j = ff := by
   induction' n using Nat.binaryRec with b n hn
   · exact False.elim (h rfl)
     
@@ -106,8 +106,8 @@ theorem exists_most_significant_bit {n : ℕ} (h : n ≠ 0) : ∃ i, test_bit n 
     exact (test_bit_succ _ _ _).trans (hk' _ (lt_of_succ_lt_succ hj))
     
 
-theorem lt_of_test_bit {n m : ℕ} (i : ℕ) (hn : test_bit n i = ff) (hm : test_bit m i = tt)
-    (hnm : ∀ j, i < j → test_bit n j = test_bit m j) : n < m := by
+theorem lt_of_test_bit {n m : ℕ} (i : ℕ) (hn : testBit n i = ff) (hm : testBit m i = tt)
+    (hnm : ∀ j, i < j → testBit n j = testBit m j) : n < m := by
   induction' n using Nat.binaryRec with b n hn' generalizing i m
   · contrapose! hm
     rw [le_zero_iff] at hm
@@ -139,10 +139,10 @@ theorem lt_of_test_bit {n m : ℕ} (i : ℕ) (hn : test_bit n i = ff) (hm : test
     
 
 @[simp]
-theorem test_bit_two_pow_self (n : ℕ) : test_bit (2 ^ n) n = tt := by
+theorem test_bit_two_pow_self (n : ℕ) : testBit (2 ^ n) n = tt := by
   rw [test_bit, shiftr_eq_div_pow, Nat.div_selfₓ (pow_pos zero_lt_two n), bodd_one]
 
-theorem test_bit_two_pow_of_ne {n m : ℕ} (hm : n ≠ m) : test_bit (2 ^ n) m = ff := by
+theorem test_bit_two_pow_of_ne {n m : ℕ} (hm : n ≠ m) : testBit (2 ^ n) m = ff := by
   rw [test_bit, shiftr_eq_div_pow]
   cases' hm.lt_or_lt with hm hm
   · rw [Nat.div_eq_zero, bodd_zero]
@@ -152,7 +152,7 @@ theorem test_bit_two_pow_of_ne {n m : ℕ} (hm : n ≠ m) : test_bit (2 ^ n) m =
     simp [pow_succₓ]
     
 
-theorem test_bit_two_pow (n m : ℕ) : test_bit (2 ^ n) m = (n = m) := by
+theorem test_bit_two_pow (n m : ℕ) : testBit (2 ^ n) m = (n = m) := by
   by_cases' n = m
   · cases h
     simp
@@ -163,19 +163,19 @@ theorem test_bit_two_pow (n m : ℕ) : test_bit (2 ^ n) m = (n = m) := by
 
 /-- If `f` is a commutative operation on bools such that `f ff ff = ff`, then `bitwise f` is also
     commutative. -/
-theorem bitwise_comm {f : Bool → Bool → Bool} (hf : ∀ b b', f b b' = f b' b) (hf' : f ff ff = ff) (n m : ℕ) :
-    bitwise f n m = bitwise f m n :=
-  suffices bitwise f = swap (bitwise f) by
+theorem bitwise_comm {f : Bool → Bool → Bool} (hf : ∀ b b', f b b' = f b' b) (hf' : f false false = ff) (n m : ℕ) :
+    bitwiseₓ f n m = bitwiseₓ f m n :=
+  suffices bitwiseₓ f = swap (bitwiseₓ f) by
     conv_lhs => rw [this]
   calc
-    bitwise f = bitwise (swap f) := congr_argₓ _ <| funext fun _ => funext <| hf _
-    _ = swap (bitwise f) := bitwise_swap hf'
+    bitwiseₓ f = bitwiseₓ (swap f) := congr_argₓ _ <| funext fun _ => funext <| hf _
+    _ = swap (bitwiseₓ f) := bitwise_swap hf'
     
 
-theorem lor_comm (n m : ℕ) : lor n m = lor m n :=
+theorem lor_comm (n m : ℕ) : lorₓ n m = lorₓ m n :=
   bitwise_comm Bool.bor_comm rfl n m
 
-theorem land_comm (n m : ℕ) : land n m = land m n :=
+theorem land_comm (n m : ℕ) : landₓ n m = landₓ m n :=
   bitwise_comm Bool.band_comm rfl n m
 
 theorem lxor_comm (n m : ℕ) : lxor n m = lxor m n :=
@@ -190,22 +190,22 @@ theorem lxor_zero (n : ℕ) : lxor n 0 = n := by
   simp [lxor]
 
 @[simp]
-theorem zero_land (n : ℕ) : land 0 n = 0 := by
+theorem zero_land (n : ℕ) : landₓ 0 n = 0 := by
   simp [land]
 
 @[simp]
-theorem land_zero (n : ℕ) : land n 0 = 0 := by
+theorem land_zero (n : ℕ) : landₓ n 0 = 0 := by
   simp [land]
 
 @[simp]
-theorem zero_lor (n : ℕ) : lor 0 n = n := by
+theorem zero_lor (n : ℕ) : lorₓ 0 n = n := by
   simp [lor]
 
 @[simp]
-theorem lor_zero (n : ℕ) : lor n 0 = n := by
+theorem lor_zero (n : ℕ) : lorₓ n 0 = n := by
   simp [lor]
 
--- ././Mathport/Syntax/Translate/Basic.lean:794:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
 /-- Proving associativity of bitwise operations in general essentially boils down to a huge case
     distinction, so it is shorter to use this tactic instead of proving it in the general case. -/
 unsafe def bitwise_assoc_tac : tactic Unit :=
@@ -215,11 +215,11 @@ theorem lxor_assoc (n m k : ℕ) : lxor (lxor n m) k = lxor n (lxor m k) := by
   run_tac
     bitwise_assoc_tac
 
-theorem land_assoc (n m k : ℕ) : land (land n m) k = land n (land m k) := by
+theorem land_assoc (n m k : ℕ) : landₓ (landₓ n m) k = landₓ n (landₓ m k) := by
   run_tac
     bitwise_assoc_tac
 
-theorem lor_assoc (n m k : ℕ) : lor (lor n m) k = lor n (lor m k) := by
+theorem lor_assoc (n m k : ℕ) : lorₓ (lorₓ n m) k = lorₓ n (lorₓ m k) := by
   run_tac
     bitwise_assoc_tac
 

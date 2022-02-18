@@ -54,10 +54,10 @@ it satisfies the equations:
   2. `∀ X, f X ≤ X → fix f ≤ X`   (least fixed point)
 -/
 protected def fix (x : α) : Part <| β x :=
-  (Part.assert (∃ i, (fix.approx f i x).Dom)) fun h => WellFounded.fix.{1} (Nat.Upto.wf h) (fix_aux f) Nat.Upto.zero x
+  (Part.assert (∃ i, (Fix.approx f i x).Dom)) fun h => WellFounded.fix.{1} (Nat.Upto.wf h) (fixAux f) Nat.Upto.zero x
 
-protected theorem fix_def {x : α} (h' : ∃ i, (fix.approx f i x).Dom) :
-    Part.fix f x = fix.approx f (Nat.succ <| Nat.findₓ h') x := by
+protected theorem fix_def {x : α} (h' : ∃ i, (Fix.approx f i x).Dom) :
+    Part.fix f x = Fix.approx f (Nat.succ <| Nat.findₓ h') x := by
   let p := fun i : ℕ => (fix.approx f i x).Dom
   have : p (Nat.findₓ h') := Nat.find_specₓ h'
   generalize hk : Nat.findₓ h' = k
@@ -92,7 +92,7 @@ protected theorem fix_def {x : α} (h' : ∃ i, (fix.approx f i x).Dom) :
     rw [assert_pos hh, k_ih (upto.succ z hh) this hk]
     
 
-theorem fix_def' {x : α} (h' : ¬∃ i, (fix.approx f i x).Dom) : Part.fix f x = none := by
+theorem fix_def' {x : α} (h' : ¬∃ i, (Fix.approx f i x).Dom) : Part.fix f x = none := by
   dsimp [Part.fix] <;> rw [assert_neg h']
 
 end Basic

@@ -46,7 +46,7 @@ variable {K : Type _} {σ : Type _} [Fintype K] [Field K] [Fintype σ]
 local notation "q" => Fintype.card K
 
 theorem MvPolynomial.sum_mv_polynomial_eq_zero [DecidableEq σ] (f : MvPolynomial σ K)
-    (h : f.total_degree < (q - 1) * Fintype.card σ) : (∑ x, eval x f) = 0 := by
+    (h : f.totalDegree < (q - 1) * Fintype.card σ) : (∑ x, eval x f) = 0 := by
   have : DecidableEq K := Classical.decEq K
   calc (∑ x, eval x f) = ∑ x : σ → K, ∑ d in f.support, f.coeff d * ∏ i, x i ^ d i := by
       simp only [eval_eq']_ = ∑ d in f.support, ∑ x : σ → K, f.coeff d * ∏ i, x i ^ d i := sum_comm _ = 0 :=
@@ -114,7 +114,7 @@ theorem char_dvd_card_solutions_family (p : ℕ) [CharP K p] {ι : Type _} {s : 
       rw [pow_card_sub_one_eq_one (eval x (f i)) hx, sub_self]
       
   have key : (∑ x, eval x F) = Fintype.card { x : σ → K // ∀, ∀ i ∈ s, ∀, eval x (f i) = 0 }
-  rw [Fintype.card_of_subtype S hS, card_eq_sum_ones, Nat.cast_sum, Nat.cast_one, ← Fintype.sum_extend_by_zero S,
+  rw [Fintype.card_of_subtype S hS, card_eq_sum_ones, Nat.cast_sum, Nat.cast_oneₓ, ← Fintype.sum_extend_by_zero S,
     sum_congr rfl fun x hx => hF x]
   show p ∣ Fintype.card { x // ∀ i : ι, i ∈ s → eval x (f i) = 0 }
   rw [← CharP.cast_eq_zero_iff K, ← key]
@@ -137,7 +137,7 @@ over a finite field of characteristic `p`.
 Assume that the total degree of `f` is less than the cardinality of `σ`.
 Then the number of solutions of `f` is divisible by `p`.
 See `char_dvd_card_solutions_family` for a version that takes a family of polynomials `f i`. -/
-theorem char_dvd_card_solutions (p : ℕ) [CharP K p] {f : MvPolynomial σ K} (h : f.total_degree < Fintype.card σ) :
+theorem char_dvd_card_solutions (p : ℕ) [CharP K p] {f : MvPolynomial σ K} (h : f.totalDegree < Fintype.card σ) :
     p ∣ Fintype.card { x : σ → K // eval x f = 0 } := by
   let F : Unit → MvPolynomial σ K := fun _ => f
   have : (∑ i : Unit, (F i).totalDegree) < Fintype.card σ := by

@@ -62,7 +62,7 @@ theorem exists_prime_spectrum_prod_le_and_ne_bot_of_domain (h_fA : ¬IsField A) 
   apply IsDomain.to_nontrivial A
   by_cases' h_topM : M = ⊤
   · rcases h_topM with rfl
-    obtain ⟨p_id, h_nzp, h_pp⟩ : ∃ p : Ideal A, p ≠ ⊥ ∧ p.is_prime := by
+    obtain ⟨p_id, h_nzp, h_pp⟩ : ∃ p : Ideal A, p ≠ ⊥ ∧ p.IsPrime := by
       apply ring.not_is_field_iff_exists_prime.mp h_fA
     use ({⟨p_id, h_pp⟩} : Multiset (PrimeSpectrum A)), le_top
     rwa [Multiset.map_singleton, Multiset.prod_singleton, Subtype.coe_mk]

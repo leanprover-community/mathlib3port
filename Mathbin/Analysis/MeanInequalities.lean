@@ -143,10 +143,10 @@ theorem geom_mean_le_arith_mean_weighted (w z : ι → ℝ≥0 ) (hw' : (∑ i i
         assumption_mod_cast)
       fun i _ => (z i).coe_nonneg
 
--- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»
 /-- The geometric mean is less than or equal to the arithmetic mean, weighted version
 for two `nnreal` numbers. -/
 theorem geom_mean_le_arith_mean2_weighted (w₁ w₂ p₁ p₂ : ℝ≥0 ) :
@@ -154,25 +154,25 @@ theorem geom_mean_le_arith_mean2_weighted (w₁ w₂ p₁ p₂ : ℝ≥0 ) :
   simpa only [Finₓ.prod_univ_succ, Finₓ.sum_univ_succ, Finset.prod_empty, Finset.sum_empty, Fintype.univ_of_is_empty,
     Finₓ.cons_succ, Finₓ.cons_zero, add_zeroₓ, mul_oneₓ] using
     geom_mean_le_arith_mean_weighted univ
-      («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr![ , ]»")
-      («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr![ , ]»")
+      («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»")
+      («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»")
 
--- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»
 theorem geom_mean_le_arith_mean3_weighted (w₁ w₂ w₃ p₁ p₂ p₃ : ℝ≥0 ) :
     w₁ + w₂ + w₃ = 1 → p₁ ^ (w₁ : ℝ) * p₂ ^ (w₂ : ℝ) * p₃ ^ (w₃ : ℝ) ≤ w₁ * p₁ + w₂ * p₂ + w₃ * p₃ := by
   simpa only [Finₓ.prod_univ_succ, Finₓ.sum_univ_succ, Finset.prod_empty, Finset.sum_empty, Fintype.univ_of_is_empty,
     Finₓ.cons_succ, Finₓ.cons_zero, add_zeroₓ, mul_oneₓ, ← add_assocₓ, mul_assoc] using
     geom_mean_le_arith_mean_weighted univ
-      («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr![ , ]»")
-      («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr![ , ]»")
+      («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»")
+      («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»")
 
--- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»
 theorem geom_mean_le_arith_mean4_weighted (w₁ w₂ w₃ w₄ p₁ p₂ p₃ p₄ : ℝ≥0 ) :
     w₁ + w₂ + w₃ + w₄ = 1 →
       p₁ ^ (w₁ : ℝ) * p₂ ^ (w₂ : ℝ) * p₃ ^ (w₃ : ℝ) * p₄ ^ (w₄ : ℝ) ≤ w₁ * p₁ + w₂ * p₂ + w₃ * p₃ + w₄ * p₄ :=
@@ -180,8 +180,8 @@ theorem geom_mean_le_arith_mean4_weighted (w₁ w₂ w₃ w₄ p₁ p₂ p₃ p�
   simpa only [Finₓ.prod_univ_succ, Finₓ.sum_univ_succ, Finset.prod_empty, Finset.sum_empty, Fintype.univ_of_is_empty,
     Finₓ.cons_succ, Finₓ.cons_zero, add_zeroₓ, mul_oneₓ, ← add_assocₓ, mul_assoc] using
     geom_mean_le_arith_mean_weighted univ
-      («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr![ , ]»")
-      («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr![ , ]»")
+      («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»")
+      («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»")
 
 end Nnreal
 
@@ -219,15 +219,14 @@ section Young
 namespace Real
 
 /-- Young's inequality, a version for nonnegative real numbers. -/
-theorem young_inequality_of_nonneg {a b p q : ℝ} (ha : 0 ≤ a) (hb : 0 ≤ b) (hpq : p.is_conjugate_exponent q) :
+theorem young_inequality_of_nonneg {a b p q : ℝ} (ha : 0 ≤ a) (hb : 0 ≤ b) (hpq : p.IsConjugateExponent q) :
     a * b ≤ a ^ p / p + b ^ q / q := by
   simpa [← rpow_mul, ha, hb, hpq.ne_zero, hpq.symm.ne_zero, div_eq_inv_mul] using
     geom_mean_le_arith_mean2_weighted hpq.one_div_nonneg hpq.symm.one_div_nonneg (rpow_nonneg_of_nonneg ha p)
       (rpow_nonneg_of_nonneg hb q) hpq.inv_add_inv_conj
 
 /-- Young's inequality, a version for arbitrary real numbers. -/
-theorem young_inequality (a b : ℝ) {p q : ℝ} (hpq : p.is_conjugate_exponent q) :
-    a * b ≤ abs a ^ p / p + abs b ^ q / q :=
+theorem young_inequality (a b : ℝ) {p q : ℝ} (hpq : p.IsConjugateExponent q) : a * b ≤ abs a ^ p / p + abs b ^ q / q :=
   calc
     a * b ≤ abs (a * b) := le_abs_self (a * b)
     _ = abs a * abs b := abs_mul a b
@@ -245,7 +244,7 @@ theorem young_inequality (a b : ℝ≥0 ) {p q : ℝ≥0 } (hp : 1 < p) (hpq : 1
   Real.young_inequality_of_nonneg a.coe_nonneg b.coe_nonneg ⟨hp, Nnreal.coe_eq.2 hpq⟩
 
 /-- Young's inequality, `ℝ≥0` version with real conjugate exponents. -/
-theorem young_inequality_real (a b : ℝ≥0 ) {p q : ℝ} (hpq : p.is_conjugate_exponent q) :
+theorem young_inequality_real (a b : ℝ≥0 ) {p q : ℝ} (hpq : p.IsConjugateExponent q) :
     a * b ≤ a ^ p / Real.toNnreal p + b ^ q / Real.toNnreal q := by
   nth_rw 0[← Real.coe_to_nnreal p hpq.nonneg]
   nth_rw 0[← Real.coe_to_nnreal q hpq.symm.nonneg]
@@ -256,7 +255,7 @@ end Nnreal
 namespace Ennreal
 
 /-- Young's inequality, `ℝ≥0∞` version with real conjugate exponents. -/
-theorem young_inequality (a b : ℝ≥0∞) {p q : ℝ} (hpq : p.is_conjugate_exponent q) :
+theorem young_inequality (a b : ℝ≥0∞) {p q : ℝ} (hpq : p.IsConjugateExponent q) :
     a * b ≤ a ^ p / Ennreal.ofReal p + b ^ q / Ennreal.ofReal q := by
   by_cases' h : a = ⊤ ∨ b = ⊤
   · refine' le_transₓ le_top (le_of_eqₓ _)
@@ -288,7 +287,7 @@ section HolderMinkowski
 
 namespace Nnreal
 
-private theorem inner_le_Lp_mul_Lp_of_norm_le_one (f g : ι → ℝ≥0 ) {p q : ℝ} (hpq : p.is_conjugate_exponent q)
+private theorem inner_le_Lp_mul_Lp_of_norm_le_one (f g : ι → ℝ≥0 ) {p q : ℝ} (hpq : p.IsConjugateExponent q)
     (hf : (∑ i in s, f i ^ p) ≤ 1) (hg : (∑ i in s, g i ^ q) ≤ 1) : (∑ i in s, f i * g i) ≤ 1 := by
   have hp_ne_zero : Real.toNnreal p ≠ 0 := (zero_lt_one.trans hpq.one_lt_nnreal).Ne.symm
   have hq_ne_zero : Real.toNnreal q ≠ 0 := (zero_lt_one.trans hpq.symm.one_lt_nnreal).Ne.symm
@@ -305,7 +304,7 @@ private theorem inner_le_Lp_mul_Lp_of_norm_le_one (f g : ι → ℝ≥0 ) {p q :
         _ = 1 :=
       hpq.inv_add_inv_conj_nnreal
 
-private theorem inner_le_Lp_mul_Lp_of_norm_eq_zero (f g : ι → ℝ≥0 ) {p q : ℝ} (hpq : p.is_conjugate_exponent q)
+private theorem inner_le_Lp_mul_Lp_of_norm_eq_zero (f g : ι → ℝ≥0 ) {p q : ℝ} (hpq : p.IsConjugateExponent q)
     (hf : (∑ i in s, f i ^ p) = 0) :
     (∑ i in s, f i * g i) ≤ (∑ i in s, f i ^ p) ^ (1 / p) * (∑ i in s, g i ^ q) ^ (1 / q) := by
   simp only [hf, hpq.ne_zero, one_div, sum_eq_zero_iff, zero_rpow, zero_mul, inv_eq_zero, Ne.def, not_false_iff,
@@ -318,7 +317,7 @@ private theorem inner_le_Lp_mul_Lp_of_norm_eq_zero (f g : ι → ℝ≥0 ) {p q 
 /-- Hölder inequality: the scalar product of two functions is bounded by the product of their
 `L^p` and `L^q` norms when `p` and `q` are conjugate exponents. Version for sums over finite sets,
 with `ℝ≥0`-valued functions. -/
-theorem inner_le_Lp_mul_Lq (f g : ι → ℝ≥0 ) {p q : ℝ} (hpq : p.is_conjugate_exponent q) :
+theorem inner_le_Lp_mul_Lq (f g : ι → ℝ≥0 ) {p q : ℝ} (hpq : p.IsConjugateExponent q) :
     (∑ i in s, f i * g i) ≤ (∑ i in s, f i ^ p) ^ (1 / p) * (∑ i in s, g i ^ q) ^ (1 / q) := by
   by_cases' hF_zero : (∑ i in s, f i ^ p) = 0
   · exact inner_le_Lp_mul_Lp_of_norm_eq_zero s f g hpq hF_zero
@@ -353,7 +352,7 @@ theorem inner_le_Lp_mul_Lq (f g : ι → ℝ≥0 ) {p q : ℝ} (hpq : p.is_conju
 `L^p` and `L^q` norms when `p` and `q` are conjugate exponents. A version for `nnreal`-valued
 functions. For an alternative version, convenient if the infinite sums are already expressed as
 `p`-th powers, see `inner_le_Lp_mul_Lq_has_sum`. -/
-theorem inner_le_Lp_mul_Lq_tsum {f g : ι → ℝ≥0 } {p q : ℝ} (hpq : p.is_conjugate_exponent q)
+theorem inner_le_Lp_mul_Lq_tsum {f g : ι → ℝ≥0 } {p q : ℝ} (hpq : p.IsConjugateExponent q)
     (hf : Summable fun i => f i ^ p) (hg : Summable fun i => g i ^ q) :
     (Summable fun i => f i * g i) ∧ (∑' i, f i * g i) ≤ (∑' i, f i ^ p) ^ (1 / p) * (∑' i, g i ^ q) ^ (1 / q) := by
   have H₁ : ∀ s : Finset ι, (∑ i in s, f i * g i) ≤ (∑' i, f i ^ p) ^ (1 / p) * (∑' i, g i ^ q) ^ (1 / q) := by
@@ -372,11 +371,11 @@ theorem inner_le_Lp_mul_Lq_tsum {f g : ι → ℝ≥0 } {p q : ℝ} (hpq : p.is_
   have H₂ : Summable _ := (has_sum_of_is_lub _ (is_lub_csupr bdd)).Summable
   exact ⟨H₂, tsum_le_of_sum_le H₂ H₁⟩
 
-theorem summable_mul_of_Lp_Lq {f g : ι → ℝ≥0 } {p q : ℝ} (hpq : p.is_conjugate_exponent q)
+theorem summable_mul_of_Lp_Lq {f g : ι → ℝ≥0 } {p q : ℝ} (hpq : p.IsConjugateExponent q)
     (hf : Summable fun i => f i ^ p) (hg : Summable fun i => g i ^ q) : Summable fun i => f i * g i :=
   (inner_le_Lp_mul_Lq_tsum hpq hf hg).1
 
-theorem inner_le_Lp_mul_Lq_tsum' {f g : ι → ℝ≥0 } {p q : ℝ} (hpq : p.is_conjugate_exponent q)
+theorem inner_le_Lp_mul_Lq_tsum' {f g : ι → ℝ≥0 } {p q : ℝ} (hpq : p.IsConjugateExponent q)
     (hf : Summable fun i => f i ^ p) (hg : Summable fun i => g i ^ q) :
     (∑' i, f i * g i) ≤ (∑' i, f i ^ p) ^ (1 / p) * (∑' i, g i ^ q) ^ (1 / q) :=
   (inner_le_Lp_mul_Lq_tsum hpq hf hg).2
@@ -385,7 +384,7 @@ theorem inner_le_Lp_mul_Lq_tsum' {f g : ι → ℝ≥0 } {p q : ℝ} (hpq : p.is
 `L^p` and `L^q` norms when `p` and `q` are conjugate exponents. A version for `nnreal`-valued
 functions. For an alternative version, convenient if the infinite sums are not already expressed as
 `p`-th powers, see `inner_le_Lp_mul_Lq_tsum`.  -/
-theorem inner_le_Lp_mul_Lq_has_sum {f g : ι → ℝ≥0 } {A B : ℝ≥0 } {p q : ℝ} (hpq : p.is_conjugate_exponent q)
+theorem inner_le_Lp_mul_Lq_has_sum {f g : ι → ℝ≥0 } {A B : ℝ≥0 } {p q : ℝ} (hpq : p.IsConjugateExponent q)
     (hf : HasSum (fun i => f i ^ p) (A ^ p)) (hg : HasSum (fun i => g i ^ q) (B ^ q)) :
     ∃ C, C ≤ A * B ∧ HasSum (fun i => f i * g i) C := by
   obtain ⟨H₁, H₂⟩ := inner_le_Lp_mul_Lq_tsum hpq hf.summable hg.summable
@@ -419,7 +418,7 @@ theorem rpow_sum_le_const_mul_sum_rpow (f : ι → ℝ≥0 ) {p : ℝ} (hp : 1 �
 
 /-- The `L_p` seminorm of a vector `f` is the greatest value of the inner product
 `∑ i in s, f i * g i` over functions `g` of `L_q` seminorm less than or equal to one. -/
-theorem is_greatest_Lp (f : ι → ℝ≥0 ) {p q : ℝ} (hpq : p.is_conjugate_exponent q) :
+theorem is_greatest_Lp (f : ι → ℝ≥0 ) {p q : ℝ} (hpq : p.IsConjugateExponent q) :
     IsGreatest ((fun g : ι → ℝ≥0 => ∑ i in s, f i * g i) '' { g | (∑ i in s, g i ^ q) ≤ 1 })
       ((∑ i in s, f i ^ p) ^ (1 / p)) :=
   by
@@ -521,7 +520,7 @@ variable (f g : ι → ℝ) {p q : ℝ}
 /-- Hölder inequality: the scalar product of two functions is bounded by the product of their
 `L^p` and `L^q` norms when `p` and `q` are conjugate exponents. Version for sums over finite sets,
 with real-valued functions. -/
-theorem inner_le_Lp_mul_Lq (hpq : is_conjugate_exponent p q) :
+theorem inner_le_Lp_mul_Lq (hpq : IsConjugateExponent p q) :
     (∑ i in s, f i * g i) ≤ (∑ i in s, abs (f i) ^ p) ^ (1 / p) * (∑ i in s, abs (g i) ^ q) ^ (1 / q) := by
   have :=
     Nnreal.coe_le_coe.2
@@ -554,7 +553,7 @@ variable {f g}
 /-- Hölder inequality: the scalar product of two functions is bounded by the product of their
 `L^p` and `L^q` norms when `p` and `q` are conjugate exponents. Version for sums over finite sets,
 with real-valued nonnegative functions. -/
-theorem inner_le_Lp_mul_Lq_of_nonneg (hpq : is_conjugate_exponent p q) (hf : ∀, ∀ i ∈ s, ∀, 0 ≤ f i)
+theorem inner_le_Lp_mul_Lq_of_nonneg (hpq : IsConjugateExponent p q) (hf : ∀, ∀ i ∈ s, ∀, 0 ≤ f i)
     (hg : ∀, ∀ i ∈ s, ∀, 0 ≤ g i) :
     (∑ i in s, f i * g i) ≤ (∑ i in s, f i ^ p) ^ (1 / p) * (∑ i in s, g i ^ q) ^ (1 / q) := by
   convert inner_le_Lp_mul_Lq s f g hpq using 3 <;>
@@ -564,7 +563,7 @@ theorem inner_le_Lp_mul_Lq_of_nonneg (hpq : is_conjugate_exponent p q) (hf : ∀
 `L^p` and `L^q` norms when `p` and `q` are conjugate exponents. A version for `ℝ`-valued functions.
 For an alternative version, convenient if the infinite sums are already expressed as `p`-th powers,
 see `inner_le_Lp_mul_Lq_has_sum_of_nonneg`. -/
-theorem inner_le_Lp_mul_Lq_tsum_of_nonneg (hpq : p.is_conjugate_exponent q) (hf : ∀ i, 0 ≤ f i) (hg : ∀ i, 0 ≤ g i)
+theorem inner_le_Lp_mul_Lq_tsum_of_nonneg (hpq : p.IsConjugateExponent q) (hf : ∀ i, 0 ≤ f i) (hg : ∀ i, 0 ≤ g i)
     (hf_sum : Summable fun i => f i ^ p) (hg_sum : Summable fun i => g i ^ q) :
     (Summable fun i => f i * g i) ∧ (∑' i, f i * g i) ≤ (∑' i, f i ^ p) ^ (1 / p) * (∑' i, g i ^ q) ^ (1 / q) := by
   lift f to ι → ℝ≥0 using hf
@@ -572,11 +571,11 @@ theorem inner_le_Lp_mul_Lq_tsum_of_nonneg (hpq : p.is_conjugate_exponent q) (hf 
   norm_cast  at *
   exact Nnreal.inner_le_Lp_mul_Lq_tsum hpq hf_sum hg_sum
 
-theorem summable_mul_of_Lp_Lq_of_nonneg (hpq : p.is_conjugate_exponent q) (hf : ∀ i, 0 ≤ f i) (hg : ∀ i, 0 ≤ g i)
+theorem summable_mul_of_Lp_Lq_of_nonneg (hpq : p.IsConjugateExponent q) (hf : ∀ i, 0 ≤ f i) (hg : ∀ i, 0 ≤ g i)
     (hf_sum : Summable fun i => f i ^ p) (hg_sum : Summable fun i => g i ^ q) : Summable fun i => f i * g i :=
   (inner_le_Lp_mul_Lq_tsum_of_nonneg hpq hf hg hf_sum hg_sum).1
 
-theorem inner_le_Lp_mul_Lq_tsum_of_nonneg' (hpq : p.is_conjugate_exponent q) (hf : ∀ i, 0 ≤ f i) (hg : ∀ i, 0 ≤ g i)
+theorem inner_le_Lp_mul_Lq_tsum_of_nonneg' (hpq : p.IsConjugateExponent q) (hf : ∀ i, 0 ≤ f i) (hg : ∀ i, 0 ≤ g i)
     (hf_sum : Summable fun i => f i ^ p) (hg_sum : Summable fun i => g i ^ q) :
     (∑' i, f i * g i) ≤ (∑' i, f i ^ p) ^ (1 / p) * (∑' i, g i ^ q) ^ (1 / q) :=
   (inner_le_Lp_mul_Lq_tsum_of_nonneg hpq hf hg hf_sum hg_sum).2
@@ -585,7 +584,7 @@ theorem inner_le_Lp_mul_Lq_tsum_of_nonneg' (hpq : p.is_conjugate_exponent q) (hf
 `L^p` and `L^q` norms when `p` and `q` are conjugate exponents. A version for `nnreal`-valued
 functions. For an alternative version, convenient if the infinite sums are not already expressed as
 `p`-th powers, see `inner_le_Lp_mul_Lq_tsum_of_nonneg`.  -/
-theorem inner_le_Lp_mul_Lq_has_sum_of_nonneg (hpq : p.is_conjugate_exponent q) {A B : ℝ} (hA : 0 ≤ A) (hB : 0 ≤ B)
+theorem inner_le_Lp_mul_Lq_has_sum_of_nonneg (hpq : p.IsConjugateExponent q) {A B : ℝ} (hA : 0 ≤ A) (hB : 0 ≤ B)
     (hf : ∀ i, 0 ≤ f i) (hg : ∀ i, 0 ≤ g i) (hf_sum : HasSum (fun i => f i ^ p) (A ^ p))
     (hg_sum : HasSum (fun i => g i ^ q) (B ^ q)) : ∃ C : ℝ, 0 ≤ C ∧ C ≤ A * B ∧ HasSum (fun i => f i * g i) C := by
   lift f to ι → ℝ≥0 using hf
@@ -663,7 +662,7 @@ variable (f g : ι → ℝ≥0∞) {p q : ℝ}
 /-- Hölder inequality: the scalar product of two functions is bounded by the product of their
 `L^p` and `L^q` norms when `p` and `q` are conjugate exponents. Version for sums over finite sets,
 with `ℝ≥0∞`-valued functions. -/
-theorem inner_le_Lp_mul_Lq (hpq : p.is_conjugate_exponent q) :
+theorem inner_le_Lp_mul_Lq (hpq : p.IsConjugateExponent q) :
     (∑ i in s, f i * g i) ≤ (∑ i in s, f i ^ p) ^ (1 / p) * (∑ i in s, g i ^ q) ^ (1 / q) := by
   by_cases' H : (∑ i in s, f i ^ p) ^ (1 / p) = 0 ∨ (∑ i in s, g i ^ q) ^ (1 / q) = 0
   · replace H : (∀, ∀ i ∈ s, ∀, f i = 0) ∨ ∀, ∀ i ∈ s, ∀, g i = 0

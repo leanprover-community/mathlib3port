@@ -174,7 +174,7 @@ theorem bernoulli'_odd_eq_zero {n : ℕ} (h_odd : Odd n) (hlt : 1 < n) : bernoul
       
   have h : B * (exp ℚ - 1) = X * exp ℚ := by
     simpa [bernoulli'PowerSeries] using bernoulli'_power_series_mul_exp_sub_one ℚ
-  rw [sub_mul, h, mul_sub X, sub_right_inj, ← neg_sub, ← neg_mul_eq_mul_neg, neg_eq_iff_neg_eq]
+  rw [sub_mul, h, mul_sub X, sub_right_inj, ← neg_sub, mul_neg, neg_eq_iff_neg_eq]
   suffices eval_neg_hom (B * (exp ℚ - 1)) * exp ℚ = eval_neg_hom (X * exp ℚ) * exp ℚ by
     simpa [mul_assoc, sub_mul, mul_comm (eval_neg_hom (exp ℚ)), exp_mul_exp_neg_eq_one, eq_comm]
   congr
@@ -262,7 +262,8 @@ theorem bernoulli_power_series_mul_exp_sub_one : bernoulliPowerSeries A * (exp A
     
   simp only [bernoulliPowerSeries, coeff_mul, coeff_X, sum_antidiagonal_succ', one_div, coeff_mk, coeff_one, coeff_exp,
     LinearMap.map_sub, factorial, if_pos, cast_succ, cast_one, cast_mul, sub_zero, RingHom.map_one, add_eq_zero_iff,
-    if_false, inv_one, zero_addₓ, one_ne_zero, mul_zero, and_falseₓ, sub_self, ← RingHom.map_mul, ← RingHom.map_sum]
+    if_false, _root_.inv_one, zero_addₓ, one_ne_zero, mul_zero, and_falseₓ, sub_self, ← RingHom.map_mul, ←
+    RingHom.map_sum]
   suffices (∑ x in antidiagonal n, bernoulli x.1 / x.1! * ((x.2 + 1) * x.2!)⁻¹) = if n.succ = 1 then 1 else 0 by
     split_ifs <;> simp [h, this]
   cases n
@@ -347,7 +348,7 @@ theorem sum_range_pow (n p : ℕ) :
 numbers: $$\sum_{k=1}^{n} k^p = \sum_{i=0}^p (-1)^iB_i\binom{p+1}{i}\frac{n^{p+1-i}}{p+1}.$$
 Deduced from `sum_range_pow`. -/
 theorem sum_Ico_pow (n p : ℕ) :
-    (∑ k in Ico 1 (n + 1), (k : ℚ) ^ p) =
+    (∑ k in ico 1 (n + 1), (k : ℚ) ^ p) =
       ∑ i in range (p + 1), bernoulli' i * (p + 1).choose i * n ^ (p + 1 - i) / (p + 1) :=
   by
   cases p

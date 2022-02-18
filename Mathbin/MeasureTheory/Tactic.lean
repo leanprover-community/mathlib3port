@@ -34,7 +34,7 @@ attribute [measurability]
 
 namespace Tactic
 
--- ././Mathport/Syntax/Translate/Basic.lean:794:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
 /-- Tactic to apply `measurable.comp` when appropriate.
 
 Applying `measurable.comp` is not always a good idea, so we have some
@@ -54,7 +54,7 @@ extra logic here to try to avoid bad cases.
 unsafe def apply_measurable.comp : tactic Unit :=
   sorry
 
--- ././Mathport/Syntax/Translate/Basic.lean:794:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
 /-- Tactic to apply `measurable.comp_ae_measurable` when appropriate.
 
 Applying `measurable.comp_ae_measurable` is not always a good idea, so we have some
@@ -85,11 +85,11 @@ unsafe def goal_is_not_measurable : tactic Unit := do
     | quote.1 (MeasurableSet (%%ₓl)) => failed
     | _ => skip
 
--- ././Mathport/Syntax/Translate/Basic.lean:794:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
 /-- List of tactics used by `measurability` internally. -/
-unsafe def measurability_tactics (md : transparency := semireducible) : List (tactic Stringₓ) :=
+unsafe def measurability_tactics (md : Transparency := semireducible) : List (tactic Stringₓ) :=
   [(propositional_goal >> apply_assumption) >> pure "apply_assumption",
-    goal_is_not_measurable >> intro1 >>= fun ns => pure ("intro " ++ ns.to_string),
+    goal_is_not_measurable >> intro1 >>= fun ns => pure ("intro " ++ ns.toString),
     apply_rules [pquote.1 measurability] 50 { md } >> pure "apply_rules measurability",
     apply_measurable.comp >> pure "refine measurable.comp _ _",
     apply_measurable.comp_ae_measurable >> pure "refine measurable.comp_ae_measurable _ _",
@@ -104,9 +104,9 @@ setup_tactic_parser
 -/
 unsafe def measurability (bang : parse <| optionalₓ (tk "!")) (trace : parse <| optionalₓ (tk "?"))
     (cfg : tidy.cfg := {  }) : tactic Unit :=
-  let md := if bang.is_some then semireducible else reducible
+  let md := if bang.isSome then semireducible else reducible
   let measurability_core := tactic.tidy { cfg with tactics := measurability_tactics md }
-  let trace_fn := if trace.is_some then show_term else id
+  let trace_fn := if trace.isSome then show_term else id
   trace_fn measurability_core
 
 /-- Version of `measurability` for use with auto_param. -/

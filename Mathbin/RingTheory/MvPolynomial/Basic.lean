@@ -33,7 +33,7 @@ open_locale Classical
 
 open Set LinearMap Submodule
 
-open_locale BigOperators
+open_locale BigOperators Polynomial
 
 universe u v
 
@@ -64,7 +64,7 @@ section Degree
 
 /-- The submodule of polynomials of total degree less than or equal to `m`.-/
 def restrict_total_degree : Submodule R (MvPolynomial σ R) :=
-  Finsupp.supported _ _ { n | (n.sum fun n e => e) ≤ m }
+  Finsupp.supported _ _ { n | (n.Sum fun n e => e) ≤ m }
 
 /-- The submodule of polynomials such that the degree with respect to each individual variable is
 less than or equal to `m`.-/
@@ -73,17 +73,17 @@ def restrict_degree (m : ℕ) : Submodule R (MvPolynomial σ R) :=
 
 variable {R}
 
-theorem mem_restrict_total_degree (p : MvPolynomial σ R) : p ∈ restrict_total_degree σ R m ↔ p.total_degree ≤ m := by
+theorem mem_restrict_total_degree (p : MvPolynomial σ R) : p ∈ restrictTotalDegree σ R m ↔ p.totalDegree ≤ m := by
   rw [total_degree, Finset.sup_le_iff]
   rfl
 
 theorem mem_restrict_degree (p : MvPolynomial σ R) (n : ℕ) :
-    p ∈ restrict_degree σ R n ↔ ∀, ∀ s ∈ p.support, ∀, ∀ i, (s : σ →₀ ℕ) i ≤ n := by
+    p ∈ restrictDegree σ R n ↔ ∀, ∀ s ∈ p.support, ∀, ∀ i, (s : σ →₀ ℕ) i ≤ n := by
   rw [restrict_degree, Finsupp.mem_supported]
   rfl
 
 theorem mem_restrict_degree_iff_sup (p : MvPolynomial σ R) (n : ℕ) :
-    p ∈ restrict_degree σ R n ↔ ∀ i, p.degrees.count i ≤ n := by
+    p ∈ restrictDegree σ R n ↔ ∀ i, p.degrees.count i ≤ n := by
   simp only [mem_restrict_degree, degrees, Multiset.count_finset_sup, Finsupp.count_to_multiset, Finset.sup_le_iff]
   exact ⟨fun h n s hs => h s hs n, fun h s hs n => h n s hs⟩
 
@@ -94,11 +94,11 @@ def basis_monomials : Basis (σ →₀ ℕ) R (MvPolynomial σ R) :=
   Finsupp.basisSingleOne
 
 @[simp]
-theorem coe_basis_monomials : (basis_monomials σ R : (σ →₀ ℕ) → MvPolynomial σ R) = fun s => monomial s 1 :=
+theorem coe_basis_monomials : (basisMonomials σ R : (σ →₀ ℕ) → MvPolynomial σ R) = fun s => monomial s 1 :=
   rfl
 
-theorem linear_independent_X : LinearIndependent R (X : σ → MvPolynomial σ R) :=
-  (basis_monomials σ R).LinearIndependent.comp (fun s : σ => Finsupp.single s 1)
+theorem linear_independent_X : LinearIndependent R (x : σ → MvPolynomial σ R) :=
+  (basisMonomials σ R).LinearIndependent.comp (fun s : σ => Finsupp.single s 1)
     (Finsupp.single_left_injective one_ne_zero)
 
 end Degree
@@ -108,11 +108,11 @@ end MvPolynomial
 namespace Polynomial
 
 /-- The monomials form a basis on `polynomial R`. -/
-noncomputable def basis_monomials : Basis ℕ R (Polynomial R) :=
-  Finsupp.basisSingleOne.map (to_finsupp_iso_alg R).toLinearEquiv.symm
+noncomputable def basis_monomials : Basis ℕ R R[X] :=
+  Finsupp.basisSingleOne.map (toFinsuppIsoAlg R).toLinearEquiv.symm
 
 @[simp]
-theorem coe_basis_monomials : (basis_monomials R : ℕ → Polynomial R) = fun s => monomial s 1 :=
+theorem coe_basis_monomials : (basisMonomials R : ℕ → R[X]) = fun s => monomial s 1 :=
   _root_.funext fun n => to_finsupp_iso_symm_single
 
 end Polynomial

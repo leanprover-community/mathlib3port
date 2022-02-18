@@ -17,7 +17,7 @@ section SemiNormedGroup
 
 variable {E : Type _} [SemiNormedGroup E]
 
-theorem bounded_iff_exists_norm_le {s : Set E} : bounded s ↔ ∃ R, ∀, ∀ x ∈ s, ∀, ∥x∥ ≤ R := by
+theorem bounded_iff_exists_norm_le {s : Set E} : Bounded s ↔ ∃ R, ∀, ∀ x ∈ s, ∀, ∥x∥ ≤ R := by
   simp [subset_def, bounded_iff_subset_ball (0 : E)]
 
 alias bounded_iff_exists_norm_le ↔ Metric.Bounded.exists_norm_le _
@@ -33,7 +33,7 @@ theorem Metric.Bounded.exists_pos_norm_le {s : Set E} (hs : Metric.Bounded s) : 
   intro x hx
   exact (hR₀ x hx).trans (le_max_leftₓ _ _)
 
-theorem Metric.Bounded.add {s t : Set E} (hs : bounded s) (ht : bounded t) : bounded (s + t) := by
+theorem Metric.Bounded.add {s t : Set E} (hs : Bounded s) (ht : Bounded t) : Bounded (s + t) := by
   obtain ⟨Rs, hRs⟩ : ∃ R : ℝ, ∀, ∀ x ∈ s, ∀, ∥x∥ ≤ R := hs.exists_norm_le
   obtain ⟨Rt, hRt⟩ : ∃ R : ℝ, ∀, ∀ x ∈ t, ∀, ∥x∥ ≤ R := ht.exists_norm_le
   refine' bounded_iff_exists_norm_le.2 ⟨Rs + Rt, _⟩
@@ -41,35 +41,35 @@ theorem Metric.Bounded.add {s t : Set E} (hs : bounded s) (ht : bounded t) : bou
   calc ∥x + y∥ ≤ ∥x∥ + ∥y∥ := norm_add_le _ _ _ ≤ Rs + Rt := add_le_add (hRs x hx) (hRt y hy)
 
 @[simp]
-theorem singleton_add_ball (x y : E) (r : ℝ) : {x} + ball y r = ball (x + y) r := by
+theorem singleton_add_ball (x y : E) (r : ℝ) : {x} + Ball y r = Ball (x + y) r := by
   simp only [preimage_add_ball, image_add_left, singleton_add, sub_neg_eq_add, add_commₓ y x]
 
 @[simp]
-theorem ball_add_singleton (x y : E) (r : ℝ) : ball x r + {y} = ball (x + y) r := by
+theorem ball_add_singleton (x y : E) (r : ℝ) : Ball x r + {y} = Ball (x + y) r := by
   simp [add_commₓ _ {y}, add_commₓ y]
 
-theorem singleton_add_ball_zero (x : E) (r : ℝ) : {x} + ball 0 r = ball x r := by
+theorem singleton_add_ball_zero (x : E) (r : ℝ) : {x} + Ball 0 r = Ball x r := by
   simp
 
-theorem ball_zero_add_singleton (x : E) (r : ℝ) : ball 0 r + {x} = ball x r := by
+theorem ball_zero_add_singleton (x : E) (r : ℝ) : Ball 0 r + {x} = Ball x r := by
   simp
 
 @[simp]
-theorem singleton_add_closed_ball (x y : E) (r : ℝ) : {x} + closed_ball y r = closed_ball (x + y) r := by
+theorem singleton_add_closed_ball (x y : E) (r : ℝ) : {x} + ClosedBall y r = ClosedBall (x + y) r := by
   simp only [add_commₓ y x, preimage_add_closed_ball, image_add_left, singleton_add, sub_neg_eq_add]
 
 @[simp]
-theorem closed_ball_add_singleton (x y : E) (r : ℝ) : closed_ball x r + {y} = closed_ball (x + y) r := by
+theorem closed_ball_add_singleton (x y : E) (r : ℝ) : ClosedBall x r + {y} = ClosedBall (x + y) r := by
   simp [add_commₓ _ {y}, add_commₓ y]
 
-theorem singleton_add_closed_ball_zero (x : E) (r : ℝ) : {x} + closed_ball 0 r = closed_ball x r := by
+theorem singleton_add_closed_ball_zero (x : E) (r : ℝ) : {x} + ClosedBall 0 r = ClosedBall x r := by
   simp
 
-theorem closed_ball_zero_add_singleton (x : E) (r : ℝ) : closed_ball 0 r + {x} = closed_ball x r := by
+theorem closed_ball_zero_add_singleton (x : E) (r : ℝ) : ClosedBall 0 r + {x} = ClosedBall x r := by
   simp
 
 theorem IsCompact.cthickening_eq_add_closed_ball {s : Set E} (hs : IsCompact s) {r : ℝ} (hr : 0 ≤ r) :
-    cthickening r s = s + closed_ball 0 r := by
+    Cthickening r s = s + ClosedBall 0 r := by
   rw [hs.cthickening_eq_bUnion_closed_ball hr]
   ext x
   simp only [mem_add, dist_eq_norm, exists_prop, mem_Union, mem_closed_ball, exists_and_distrib_left,

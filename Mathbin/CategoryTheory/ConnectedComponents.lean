@@ -27,37 +27,37 @@ namespace CategoryTheory
 
 attribute [instance] is_connected.is_nonempty
 
-variable {J : Type u₁} [category.{v₁} J]
+variable {J : Type u₁} [Category.{v₁} J]
 
-variable {C : Type u₂} [category.{u₁} C]
+variable {C : Type u₂} [Category.{u₁} C]
 
 /-- This type indexes the connected components of the category `J`. -/
-def connected_components (J : Type u₁) [category.{v₁} J] : Type u₁ :=
-  Quotientₓ (zigzag.setoid J)
+def connected_components (J : Type u₁) [Category.{v₁} J] : Type u₁ :=
+  Quotientₓ (Zigzag.setoid J)
 
-instance [Inhabited J] : Inhabited (connected_components J) :=
+instance [Inhabited J] : Inhabited (ConnectedComponents J) :=
   ⟨Quotientₓ.mk' default⟩
 
 /-- Given an index for a connected component, produce the actual component as a full subcategory. -/
-def component (j : connected_components J) : Type u₁ :=
-  { k : J // Quotientₓ.mk' k = j }deriving category
+def component (j : ConnectedComponents J) : Type u₁ :=
+  { k : J // Quotientₓ.mk' k = j }deriving Category
 
 /-- The inclusion functor from a connected component to the whole category. -/
 @[simps (config := { rhsMd := semireducible })]
-def component.ι j : component j ⥤ J :=
-  full_subcategory_inclusion _ deriving full, faithful
+def component.ι j : Component j ⥤ J :=
+  fullSubcategoryInclusion _ deriving Full, Faithful
 
 /-- Each connected component of the category is nonempty. -/
-instance (j : connected_components J) : Nonempty (component j) := by
+instance (j : ConnectedComponents J) : Nonempty (Component j) := by
   apply Quotientₓ.induction_on' j
   intro k
   refine' ⟨⟨k, rfl⟩⟩
 
-instance (j : connected_components J) : Inhabited (component j) :=
+instance (j : ConnectedComponents J) : Inhabited (Component j) :=
   Classical.inhabitedOfNonempty'
 
 /-- Each connected component of the category is connected. -/
-instance (j : connected_components J) : is_connected (component j) := by
+instance (j : ConnectedComponents J) : IsConnected (Component j) := by
   apply is_connected_of_zigzag
   rintro ⟨j₁, hj₁⟩ ⟨j₂, rfl⟩
   have h₁₂ : zigzag j₁ j₂ := Quotientₓ.exact' hj₁
@@ -87,25 +87,25 @@ instance (j : connected_components J) : is_connected (component j) := by
 category structure.
 This category is equivalent to `J`.
 -/
-abbrev decomposed (J : Type u₁) [category.{v₁} J] :=
-  Σ j : connected_components J, component j
+abbrev decomposed (J : Type u₁) [Category.{v₁} J] :=
+  Σ j : ConnectedComponents J, Component j
 
 /-- The inclusion of each component into the decomposed category. This is just `sigma.incl` but having
 this abbreviation helps guide typeclass search to get the right category instance on `decomposed J`.
 -/
-abbrev inclusion (j : connected_components J) : component j ⥤ decomposed J :=
-  sigma.incl _
+abbrev inclusion (j : ConnectedComponents J) : Component j ⥤ Decomposed J :=
+  Sigma.incl _
 
 /-- The forward direction of the equivalence between the decomposed category and the original. -/
 @[simps (config := { rhsMd := semireducible })]
-def decomposed_to (J : Type u₁) [category.{v₁} J] : decomposed J ⥤ J :=
-  sigma.desc component.ι
+def decomposed_to (J : Type u₁) [Category.{v₁} J] : Decomposed J ⥤ J :=
+  Sigma.desc Component.ι
 
 @[simp]
-theorem inclusion_comp_decomposed_to (j : connected_components J) : inclusion j ⋙ decomposed_to J = component.ι j :=
+theorem inclusion_comp_decomposed_to (j : ConnectedComponents J) : inclusion j ⋙ decomposedTo J = Component.ι j :=
   rfl
 
-instance : full (decomposed_to J) where
+instance : Full (decomposedTo J) where
   Preimage := by
     rintro ⟨j', X, hX⟩ ⟨k', Y, hY⟩ f
     dsimp  at f
@@ -122,22 +122,22 @@ instance : full (decomposed_to J) where
     subst this
     rfl
 
-instance : faithful (decomposed_to J) where
+instance : Faithful (decomposedTo J) where
   map_injective' := by
     rintro ⟨_, j, rfl⟩ ⟨_, k, hY⟩ ⟨_, _, _, f⟩ ⟨_, _, _, g⟩ e
     change f = g at e
     subst e
 
-instance : ess_surj (decomposed_to J) where
-  mem_ess_image := fun j => ⟨⟨_, j, rfl⟩, ⟨iso.refl _⟩⟩
+instance : EssSurj (decomposedTo J) where
+  mem_ess_image := fun j => ⟨⟨_, j, rfl⟩, ⟨Iso.refl _⟩⟩
 
-instance : is_equivalence (decomposed_to J) :=
-  equivalence.of_fully_faithfully_ess_surj _
+instance : IsEquivalence (decomposedTo J) :=
+  Equivalence.ofFullyFaithfullyEssSurj _
 
 /-- This gives that any category is equivalent to a disjoint union of connected categories. -/
 @[simps (config := { rhsMd := semireducible }) Functor]
-def decomposed_equiv : decomposed J ≌ J :=
-  (decomposed_to J).asEquivalence
+def decomposed_equiv : Decomposed J ≌ J :=
+  (decomposedTo J).asEquivalence
 
 end CategoryTheory
 

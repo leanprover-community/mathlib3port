@@ -40,22 +40,22 @@ variable {I G}
 namespace LeftInvariantDerivation
 
 instance : Coe (LeftInvariantDerivation I G) (Derivation 𝕜 C^∞⟮I, G; 𝕜⟯ C^∞⟮I, G; 𝕜⟯) :=
-  ⟨fun X => X.to_derivation⟩
+  ⟨fun X => X.toDerivation⟩
 
 instance : CoeFun (LeftInvariantDerivation I G) fun _ => C^∞⟮I, G; 𝕜⟯ → C^∞⟮I, G; 𝕜⟯ :=
-  ⟨fun X => X.to_derivation.to_fun⟩
+  ⟨fun X => X.toDerivation.toFun⟩
 
 variable {M : Type _} [TopologicalSpace M] [ChartedSpace H M] {x : M} {r : 𝕜} {X Y : LeftInvariantDerivation I G}
   {f f' : C^∞⟮I, G; 𝕜⟯}
 
-theorem to_fun_eq_coe : X.to_fun = ⇑X :=
+theorem to_fun_eq_coe : X.toFun = ⇑X :=
   rfl
 
 theorem coe_to_linear_map : ⇑(X : C^∞⟮I, G; 𝕜⟯ →ₗ[𝕜] C^∞⟮I, G; 𝕜⟯) = X :=
   rfl
 
 @[simp]
-theorem to_derivation_eq_coe : X.to_derivation = X :=
+theorem to_derivation_eq_coe : X.toDerivation = X :=
   rfl
 
 theorem coe_injective : @Function.Injective (LeftInvariantDerivation I G) (_ → C^⊤⟮I, G; 𝕜⟯) coeFn := fun X Y h => by
@@ -177,12 +177,12 @@ variable (I G)
 /-- The coercion to function is a monoid homomorphism. -/
 @[simps]
 def coe_fn_add_monoid_hom : LeftInvariantDerivation I G →+ C^∞⟮I, G; 𝕜⟯ → C^∞⟮I, G; 𝕜⟯ :=
-  ⟨fun X => X.to_derivation.to_fun, coe_zero, coe_add⟩
+  ⟨fun X => X.toDerivation.toFun, coe_zero, coe_add⟩
 
 variable {I G}
 
 instance : Module 𝕜 (LeftInvariantDerivation I G) :=
-  coe_injective.Module _ (coe_fn_add_monoid_hom I G) coe_smul
+  coe_injective.Module _ (coeFnAddMonoidHom I G) coe_smul
 
 /-- Evaluation at a point for left invariant derivation. Same thing as for generic global
 derivations (`derivation.eval_at`). -/
@@ -191,17 +191,17 @@ def eval_at : LeftInvariantDerivation I G →ₗ[𝕜] PointDerivation I g where
   map_add' := fun X Y => rfl
   map_smul' := fun k X => rfl
 
-theorem eval_at_apply : eval_at g X f = (X f) g :=
+theorem eval_at_apply : evalAt g X f = (X f) g :=
   rfl
 
 @[simp]
-theorem eval_at_coe : Derivation.evalAt g ↑X = eval_at g X :=
+theorem eval_at_coe : Derivation.evalAt g ↑X = evalAt g X :=
   rfl
 
-theorem left_invariant : 𝒅ₕ (smooth_left_mul_one I g) (eval_at (1 : G) X) = eval_at g X :=
+theorem left_invariant : 𝒅ₕ (smooth_left_mul_one I g) (evalAt (1 : G) X) = evalAt g X :=
   X.left_invariant'' g
 
-theorem eval_at_mul : eval_at (g * h) X = 𝒅ₕ (L_apply I g h) (eval_at h X) := by
+theorem eval_at_mul : evalAt (g * h) X = 𝒅ₕ (L_apply I g h) (evalAt h X) := by
   ext f
   rw [← left_invariant, apply_hfdifferential, apply_hfdifferential, L_mul, fdifferential_comp, apply_fdifferential,
     LinearMap.comp_apply, apply_fdifferential, ← apply_hfdifferential, left_invariant]

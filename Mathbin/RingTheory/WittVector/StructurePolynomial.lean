@@ -98,7 +98,7 @@ open_locale BigOperators
 
 section PPrime
 
-variable (p) [hp : Fact p.prime]
+variable (p) [hp : Fact p.Prime]
 
 include hp
 
@@ -152,9 +152,9 @@ theorem witt_structure_rat_exists_unique (Φ : MvPolynomial idx ℚ) :
     
 
 theorem witt_structure_rat_rec_aux (Φ : MvPolynomial idx ℚ) (n : ℕ) :
-    wittStructureRat p Φ n * C (p ^ n : ℚ) =
+    wittStructureRat p Φ n * c (p ^ n : ℚ) =
       bind₁ (fun b => rename (fun i => (b, i)) (W_ ℚ n)) Φ -
-        ∑ i in range n, C (p ^ i : ℚ) * wittStructureRat p Φ i ^ p ^ (n - i) :=
+        ∑ i in range n, c (p ^ i : ℚ) * wittStructureRat p Φ i ^ p ^ (n - i) :=
   by
   have := X_in_terms_of_W_aux p ℚ n
   replace := congr_argₓ (bind₁ fun k : ℕ => bind₁ (fun i => rename (Prod.mk i) (W_ ℚ k)) Φ) this
@@ -169,9 +169,9 @@ theorem witt_structure_rat_rec_aux (Φ : MvPolynomial idx ℚ) (n : ℕ) :
 /-- Write `witt_structure_rat p φ n` in terms of `witt_structure_rat p φ i` for `i < n`. -/
 theorem witt_structure_rat_rec (Φ : MvPolynomial idx ℚ) (n : ℕ) :
     wittStructureRat p Φ n =
-      C (1 / p ^ n : ℚ) *
+      c (1 / p ^ n : ℚ) *
         (bind₁ (fun b => rename (fun i => (b, i)) (W_ ℚ n)) Φ -
-          ∑ i in range n, C (p ^ i : ℚ) * wittStructureRat p Φ i ^ p ^ (n - i)) :=
+          ∑ i in range n, c (p ^ i : ℚ) * wittStructureRat p Φ i ^ p ^ (n - i)) :=
   by
   calc wittStructureRat p Φ n = C (1 / p ^ n : ℚ) * (wittStructureRat p Φ n * C (p ^ n : ℚ)) := _ _ = _ := by
       rw [witt_structure_rat_rec_aux]
@@ -219,9 +219,9 @@ theorem C_p_pow_dvd_bind₁_rename_witt_polynomial_sub_sum (Φ : MvPolynomial id
     (IH :
       ∀ m : ℕ,
         m < n → map (Int.castRingHom ℚ) (wittStructureInt p Φ m) = wittStructureRat p (map (Int.castRingHom ℚ) Φ) m) :
-    C ↑(p ^ n) ∣
+    c ↑(p ^ n) ∣
       bind₁ (fun b : idx => rename (fun i => (b, i)) (wittPolynomial p ℤ n)) Φ -
-        ∑ i in range n, C (↑p ^ i) * wittStructureInt p Φ i ^ p ^ (n - i) :=
+        ∑ i in range n, c (↑p ^ i) * wittStructureInt p Φ i ^ p ^ (n - i) :=
   by
   cases n
   · simp only [is_unit_one, Int.coe_nat_zero, Int.coe_nat_succ, zero_addₓ, pow_zeroₓ, C_1, IsUnit.dvd]
@@ -237,13 +237,13 @@ theorem C_p_pow_dvd_bind₁_rename_witt_polynomial_sub_sum (Φ : MvPolynomial id
   intro k hk
   rw [Finset.mem_range, Nat.lt_succ_iffₓ] at hk
   simp only [← sub_eq_zero, ← RingHom.map_sub, ← C_dvd_iff_zmod, C_eq_coe_nat, ← mul_sub, ← Int.nat_cast_eq_coe_nat, ←
-    Nat.cast_pow]
+    Nat.cast_powₓ]
   rw
     [show p ^ (n + 1) = p ^ k * p ^ (n - k + 1) by
       rw [← pow_addₓ, ← add_assocₓ]
       congr 2
       rw [add_commₓ, ← tsub_eq_iff_eq_add_of_le hk]]
-  rw [Nat.cast_mul, Nat.cast_pow, Nat.cast_pow]
+  rw [Nat.cast_mulₓ, Nat.cast_powₓ, Nat.cast_powₓ]
   apply mul_dvd_mul_left
   rw
     [show p ^ (n + 1 - k) = p * p ^ (n - k) by
@@ -338,26 +338,26 @@ theorem witt_structure_int_rename {σ : Type _} (Φ : MvPolynomial idx ℤ) (f :
 
 @[simp]
 theorem constant_coeff_witt_structure_rat_zero (Φ : MvPolynomial idx ℚ) :
-    constant_coeff (wittStructureRat p Φ 0) = constant_coeff Φ := by
+    constantCoeff (wittStructureRat p Φ 0) = constantCoeff Φ := by
   simp only [wittStructureRat, bind₁, map_aeval, X_in_terms_of_W_zero, constant_coeff_rename,
     constant_coeff_witt_polynomial, aeval_X, constant_coeff_comp_algebra_map, eval₂_hom_zero', RingHom.id_apply]
 
-theorem constant_coeff_witt_structure_rat (Φ : MvPolynomial idx ℚ) (h : constant_coeff Φ = 0) (n : ℕ) :
-    constant_coeff (wittStructureRat p Φ n) = 0 := by
+theorem constant_coeff_witt_structure_rat (Φ : MvPolynomial idx ℚ) (h : constantCoeff Φ = 0) (n : ℕ) :
+    constantCoeff (wittStructureRat p Φ n) = 0 := by
   simp only [wittStructureRat, eval₂_hom_zero', h, bind₁, map_aeval, constant_coeff_rename,
     constant_coeff_witt_polynomial, constant_coeff_comp_algebra_map, RingHom.id_apply, constant_coeff_X_in_terms_of_W]
 
 @[simp]
 theorem constant_coeff_witt_structure_int_zero (Φ : MvPolynomial idx ℤ) :
-    constant_coeff (wittStructureInt p Φ 0) = constant_coeff Φ := by
+    constantCoeff (wittStructureInt p Φ 0) = constantCoeff Φ := by
   have inj : Function.Injective (Int.castRingHom ℚ) := by
     intro m n
     exact int.cast_inj.mp
   apply inj
   rw [← constant_coeff_map, map_witt_structure_int, constant_coeff_witt_structure_rat_zero, constant_coeff_map]
 
-theorem constant_coeff_witt_structure_int (Φ : MvPolynomial idx ℤ) (h : constant_coeff Φ = 0) (n : ℕ) :
-    constant_coeff (wittStructureInt p Φ n) = 0 := by
+theorem constant_coeff_witt_structure_int (Φ : MvPolynomial idx ℤ) (h : constantCoeff Φ = 0) (n : ℕ) :
+    constantCoeff (wittStructureInt p Φ n) = 0 := by
   have inj : Function.Injective (Int.castRingHom ℚ) := by
     intro m n
     exact int.cast_inj.mp

@@ -42,7 +42,7 @@ def compares [LT α] : Ordering → α → α → Prop
   | Eq, a, b => a = b
   | Gt, a, b => a > b
 
-theorem compares_swap [LT α] {a b : α} {o : Ordering} : o.swap.compares a b ↔ o.compares b a := by
+theorem compares_swap [LT α] {a b : α} {o : Ordering} : o.swap.Compares a b ↔ o.Compares b a := by
   cases o
   exacts[Iff.rfl, eq_comm, Iff.rfl]
 
@@ -53,7 +53,7 @@ theorem swap_eq_iff_eq_swap {o o' : Ordering} : o.swap = o' ↔ o = o'.swap :=
     rw [← swap_swap o, h], fun h => by
     rw [← swap_swap o', h]⟩
 
-theorem compares.eq_lt [Preorderₓ α] : ∀ {o} {a b : α}, compares o a b → (o = lt ↔ a < b)
+theorem compares.eq_lt [Preorderₓ α] : ∀ {o} {a b : α}, Compares o a b → (o = lt ↔ a < b)
   | lt, a, b, h => ⟨fun _ => h, fun _ => rfl⟩
   | Eq, a, b, h =>
     ⟨fun h => by
@@ -62,7 +62,7 @@ theorem compares.eq_lt [Preorderₓ α] : ∀ {o} {a b : α}, compares o a b →
     ⟨fun h => by
       injection h, fun h' => (lt_asymmₓ h h').elim⟩
 
-theorem compares.ne_lt [Preorderₓ α] : ∀ {o} {a b : α}, compares o a b → (o ≠ lt ↔ b ≤ a)
+theorem compares.ne_lt [Preorderₓ α] : ∀ {o} {a b : α}, Compares o a b → (o ≠ lt ↔ b ≤ a)
   | lt, a, b, h => ⟨absurd rfl, fun h' => (not_le_of_lt h h').elim⟩
   | Eq, a, b, h =>
     ⟨fun _ => ge_of_eq h, fun _ h => by
@@ -71,7 +71,7 @@ theorem compares.ne_lt [Preorderₓ α] : ∀ {o} {a b : α}, compares o a b →
     ⟨fun _ => le_of_ltₓ h, fun _ h => by
       injection h⟩
 
-theorem compares.eq_eq [Preorderₓ α] : ∀ {o} {a b : α}, compares o a b → (o = Eq ↔ a = b)
+theorem compares.eq_eq [Preorderₓ α] : ∀ {o} {a b : α}, Compares o a b → (o = Eq ↔ a = b)
   | lt, a, b, h =>
     ⟨fun h => by
       injection h, fun h' => (ne_of_ltₓ h h').elim⟩
@@ -80,29 +80,29 @@ theorem compares.eq_eq [Preorderₓ α] : ∀ {o} {a b : α}, compares o a b →
     ⟨fun h => by
       injection h, fun h' => (ne_of_gtₓ h h').elim⟩
 
-theorem compares.eq_gt [Preorderₓ α] {o} {a b : α} (h : compares o a b) : o = Gt ↔ b < a :=
+theorem compares.eq_gt [Preorderₓ α] {o} {a b : α} (h : Compares o a b) : o = Gt ↔ b < a :=
   swap_eq_iff_eq_swap.symm.trans h.swap.eq_lt
 
-theorem compares.ne_gt [Preorderₓ α] {o} {a b : α} (h : compares o a b) : o ≠ Gt ↔ a ≤ b :=
+theorem compares.ne_gt [Preorderₓ α] {o} {a b : α} (h : Compares o a b) : o ≠ Gt ↔ a ≤ b :=
   (not_congr swap_eq_iff_eq_swap.symm).trans h.swap.ne_lt
 
-theorem compares.le_total [Preorderₓ α] {a b : α} : ∀ {o}, compares o a b → a ≤ b ∨ b ≤ a
+theorem compares.le_total [Preorderₓ α] {a b : α} : ∀ {o}, Compares o a b → a ≤ b ∨ b ≤ a
   | lt, h => Or.inl (le_of_ltₓ h)
   | Eq, h => Or.inl (le_of_eqₓ h)
   | Gt, h => Or.inr (le_of_ltₓ h)
 
-theorem compares.le_antisymm [Preorderₓ α] {a b : α} : ∀ {o}, compares o a b → a ≤ b → b ≤ a → a = b
+theorem compares.le_antisymm [Preorderₓ α] {a b : α} : ∀ {o}, Compares o a b → a ≤ b → b ≤ a → a = b
   | lt, h, _, hba => (not_le_of_lt h hba).elim
   | Eq, h, _, _ => h
   | Gt, h, hab, _ => (not_le_of_lt h hab).elim
 
-theorem compares.inj [Preorderₓ α] {o₁} : ∀ {o₂} {a b : α}, compares o₁ a b → compares o₂ a b → o₁ = o₂
+theorem compares.inj [Preorderₓ α] {o₁} : ∀ {o₂} {a b : α}, Compares o₁ a b → Compares o₂ a b → o₁ = o₂
   | lt, a, b, h₁, h₂ => h₁.eq_lt.2 h₂
   | Eq, a, b, h₁, h₂ => h₁.eq_eq.2 h₂
   | Gt, a, b, h₁, h₂ => h₁.eq_gt.2 h₂
 
 theorem compares_iff_of_compares_impl {β : Type _} [LinearOrderₓ α] [Preorderₓ β] {a b : α} {a' b' : β}
-    (h : ∀ {o}, compares o a b → compares o a' b') o : compares o a b ↔ compares o a' b' := by
+    (h : ∀ {o}, Compares o a b → Compares o a' b') o : Compares o a b ↔ Compares o a' b' := by
   refine' ⟨h, fun ho => _⟩
   cases' lt_trichotomyₓ a b with hab hab
   · change compares Ordering.lt a b at hab
@@ -117,13 +117,13 @@ theorem compares_iff_of_compares_impl {β : Type _} [LinearOrderₓ α] [Preorde
       
     
 
-theorem swap_or_else o₁ o₂ : (or_else o₁ o₂).swap = or_else o₁.swap o₂.swap := by
+theorem swap_or_else o₁ o₂ : (orElse o₁ o₂).swap = orElse o₁.swap o₂.swap := by
   cases o₁ <;>
     try
         rfl <;>
       cases o₂ <;> rfl
 
-theorem or_else_eq_lt o₁ o₂ : or_else o₁ o₂ = lt ↔ o₁ = lt ∨ o₁ = Eq ∧ o₂ = lt := by
+theorem or_else_eq_lt o₁ o₂ : orElse o₁ o₂ = lt ↔ o₁ = lt ∨ o₁ = Eq ∧ o₂ = lt := by
   cases o₁ <;>
     cases o₂ <;>
       exact by

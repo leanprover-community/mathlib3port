@@ -38,8 +38,8 @@ namespace Measureₓ
 
 include m
 
-theorem with_density_rn_deriv_eq (μ ν : Measureₓ α) [have_lebesgue_decomposition μ ν] (h : μ ≪ ν) :
-    ν.with_density (rn_deriv μ ν) = μ := by
+theorem with_density_rn_deriv_eq (μ ν : Measure α) [HaveLebesgueDecomposition μ ν] (h : μ ≪ ν) :
+    ν.withDensity (rnDeriv μ ν) = μ := by
   obtain ⟨hf₁, ⟨E, hE₁, hE₂, hE₃⟩, hadd⟩ := have_lebesgue_decomposition_spec μ ν
   have : singular_part μ ν = 0 := by
     refine' le_antisymmₓ (fun A hA => _) (measure.zero_le _)
@@ -57,12 +57,12 @@ theorem with_density_rn_deriv_eq (μ ν : Measureₓ α) [have_lebesgue_decompos
 /-- **The Radon-Nikodym theorem**: Given two measures `μ` and `ν`, if
 `have_lebesgue_decomposition μ ν`, then `μ` is absolutely continuous to `ν` if and only if
 `ν.with_density (rn_deriv μ ν) = μ`. -/
-theorem absolutely_continuous_iff_with_density_rn_deriv_eq {μ ν : Measureₓ α} [have_lebesgue_decomposition μ ν] :
-    μ ≪ ν ↔ ν.with_density (rn_deriv μ ν) = μ :=
+theorem absolutely_continuous_iff_with_density_rn_deriv_eq {μ ν : Measure α} [HaveLebesgueDecomposition μ ν] :
+    μ ≪ ν ↔ ν.withDensity (rnDeriv μ ν) = μ :=
   ⟨with_density_rn_deriv_eq μ ν, fun h => h ▸ with_density_absolutely_continuous _ _⟩
 
-theorem with_density_rn_deriv_to_real_eq {μ ν : Measureₓ α} [is_finite_measure μ] [have_lebesgue_decomposition μ ν]
-    (h : μ ≪ ν) {i : Set α} (hi : MeasurableSet i) : (∫ x in i, (μ.rn_deriv ν x).toReal ∂ν) = (μ i).toReal := by
+theorem with_density_rn_deriv_to_real_eq {μ ν : Measure α} [IsFiniteMeasure μ] [HaveLebesgueDecomposition μ ν]
+    (h : μ ≪ ν) {i : Set α} (hi : MeasurableSet i) : (∫ x in i, (μ.rnDeriv ν x).toReal ∂ν) = (μ i).toReal := by
   rw [integral_to_real, ← with_density_apply _ hi, with_density_rn_deriv_eq μ ν h]
   · measurability
     
@@ -79,8 +79,8 @@ include m
 
 open Measureₓ VectorMeasure
 
-theorem with_densityᵥ_rn_deriv_eq (s : signed_measure α) (μ : Measureₓ α) [sigma_finite μ]
-    (h : s ≪ᵥ μ.to_ennreal_vector_measure) : μ.with_densityᵥ (s.rn_deriv μ) = s := by
+theorem with_densityᵥ_rn_deriv_eq (s : SignedMeasure α) (μ : Measure α) [SigmaFinite μ]
+    (h : s ≪ᵥ μ.toEnnrealVectorMeasure) : μ.withDensityᵥ (s.rnDeriv μ) = s := by
   rw [absolutely_continuous_ennreal_iff, (_ : μ.to_ennreal_vector_measure.ennreal_to_measure = μ),
     total_variation_absolutely_continuous_iff] at h
   · ext1 i hi
@@ -104,8 +104,8 @@ theorem with_densityᵥ_rn_deriv_eq (s : signed_measure α) (μ : Measureₓ α)
     
 
 /-- The Radon-Nikodym theorem for signed measures. -/
-theorem absolutely_continuous_iff_with_densityᵥ_rn_deriv_eq (s : signed_measure α) (μ : Measureₓ α) [sigma_finite μ] :
-    s ≪ᵥ μ.to_ennreal_vector_measure ↔ μ.with_densityᵥ (s.rn_deriv μ) = s :=
+theorem absolutely_continuous_iff_with_densityᵥ_rn_deriv_eq (s : SignedMeasure α) (μ : Measure α) [SigmaFinite μ] :
+    s ≪ᵥ μ.toEnnrealVectorMeasure ↔ μ.withDensityᵥ (s.rnDeriv μ) = s :=
   ⟨with_densityᵥ_rn_deriv_eq s μ, fun h => h ▸ with_densityᵥ_absolutely_continuous _ _⟩
 
 end SignedMeasure

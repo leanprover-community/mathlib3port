@@ -35,34 +35,34 @@ def is_complement : Prop :=
 /-- `H` and `K` are complements if `(*) : H × K → G` is a bijection -/
 @[to_additive "`H` and `K` are complements if `(*) : H × K → G` is a bijection"]
 abbrev is_complement' :=
-  is_complement (H : Set G) (K : Set G)
+  IsComplement (H : Set G) (K : Set G)
 
 /-- The set of left-complements of `T : set G` -/
 @[to_additive "The set of left-complements of `T : set G`"]
 def left_transversals : Set (Set G) :=
-  { S : Set G | is_complement S T }
+  { S : Set G | IsComplement S T }
 
 /-- The set of right-complements of `S : set G` -/
 @[to_additive "The set of right-complements of `S : set G`"]
 def right_transversals : Set (Set G) :=
-  { T : Set G | is_complement S T }
+  { T : Set G | IsComplement S T }
 
 variable {H K S T}
 
 @[to_additive]
-theorem is_complement'_def : is_complement' H K ↔ is_complement (H : Set G) (K : Set G) :=
+theorem is_complement'_def : IsComplement' H K ↔ IsComplement (H : Set G) (K : Set G) :=
   Iff.rfl
 
 @[to_additive]
-theorem is_complement_iff_exists_unique : is_complement S T ↔ ∀ g : G, ∃! x : S × T, x.1.1 * x.2.1 = g :=
+theorem is_complement_iff_exists_unique : IsComplement S T ↔ ∀ g : G, ∃! x : S × T, x.1.1 * x.2.1 = g :=
   Function.bijective_iff_exists_unique _
 
 @[to_additive]
-theorem is_complement.exists_unique (h : is_complement S T) (g : G) : ∃! x : S × T, x.1.1 * x.2.1 = g :=
+theorem is_complement.exists_unique (h : IsComplement S T) (g : G) : ∃! x : S × T, x.1.1 * x.2.1 = g :=
   is_complement_iff_exists_unique.mp h g
 
 @[to_additive]
-theorem is_complement'.symm (h : is_complement' H K) : is_complement' K H := by
+theorem is_complement'.symm (h : IsComplement' H K) : IsComplement' K H := by
   let ϕ : H × K ≃ K × H :=
     Equivₓ.mk (fun x => ⟨x.2⁻¹, x.1⁻¹⟩) (fun x => ⟨x.2⁻¹, x.1⁻¹⟩) (fun x => Prod.extₓ (inv_invₓ _) (inv_invₓ _))
       fun x => Prod.extₓ (inv_invₓ _) (inv_invₓ _)
@@ -72,27 +72,27 @@ theorem is_complement'.symm (h : is_complement' H K) : is_complement' K H := by
   exact funext fun x => mul_inv_rev _ _
 
 @[to_additive]
-theorem is_complement'_comm : is_complement' H K ↔ is_complement' K H :=
-  ⟨is_complement'.symm, is_complement'.symm⟩
+theorem is_complement'_comm : IsComplement' H K ↔ IsComplement' K H :=
+  ⟨IsComplement'.symm, IsComplement'.symm⟩
 
 @[to_additive]
-theorem is_complement_top_singleton {g : G} : is_complement (⊤ : Set G) {g} :=
+theorem is_complement_top_singleton {g : G} : IsComplement (⊤ : Set G) {g} :=
   ⟨fun ⟨x, _, rfl⟩ ⟨y, _, rfl⟩ h => Prod.extₓ (Subtype.ext (mul_right_cancelₓ h)) rfl, fun x =>
     ⟨⟨⟨x * g⁻¹, ⟨⟩⟩, g, rfl⟩, inv_mul_cancel_right x g⟩⟩
 
 @[to_additive]
-theorem is_complement_singleton_top {g : G} : is_complement ({g} : Set G) ⊤ :=
+theorem is_complement_singleton_top {g : G} : IsComplement ({g} : Set G) ⊤ :=
   ⟨fun ⟨⟨_, rfl⟩, x⟩ ⟨⟨_, rfl⟩, y⟩ h => Prod.extₓ rfl (Subtype.ext (mul_left_cancelₓ h)), fun x =>
     ⟨⟨⟨g, rfl⟩, g⁻¹ * x, ⟨⟩⟩, mul_inv_cancel_left g x⟩⟩
 
 @[to_additive]
-theorem is_complement_singleton_left {g : G} : is_complement {g} S ↔ S = ⊤ := by
+theorem is_complement_singleton_left {g : G} : IsComplement {g} S ↔ S = ⊤ := by
   refine' ⟨fun h => top_le_iff.mp fun x hx => _, fun h => (congr_argₓ _ h).mpr is_complement_singleton_top⟩
   obtain ⟨⟨⟨z, rfl : z = g⟩, y, _⟩, hy⟩ := h.2 (g * x)
   rwa [← mul_left_cancelₓ hy]
 
 @[to_additive]
-theorem is_complement_singleton_right {g : G} : is_complement S {g} ↔ S = ⊤ := by
+theorem is_complement_singleton_right {g : G} : IsComplement S {g} ↔ S = ⊤ := by
   refine' ⟨fun h => top_le_iff.mp fun x hx => _, fun h => (congr_argₓ _ h).mpr is_complement_top_singleton⟩
   obtain ⟨y, hy⟩ := h.2 (x * g)
   conv_rhs at hy => rw [← show y.2.1 = g from y.2.2]
@@ -100,7 +100,7 @@ theorem is_complement_singleton_right {g : G} : is_complement S {g} ↔ S = ⊤ 
   exact y.1.2
 
 @[to_additive]
-theorem is_complement_top_left : is_complement ⊤ S ↔ ∃ g : G, S = {g} := by
+theorem is_complement_top_left : IsComplement ⊤ S ↔ ∃ g : G, S = {g} := by
   refine' ⟨fun h => set.exists_eq_singleton_iff_nonempty_unique_mem.mpr ⟨_, fun a ha b hb => _⟩, _⟩
   · obtain ⟨a, ha⟩ := h.2 1
     exact ⟨a.2.1, a.2.2⟩
@@ -114,7 +114,7 @@ theorem is_complement_top_left : is_complement ⊤ S ↔ ∃ g : G, S = {g} := b
     
 
 @[to_additive]
-theorem is_complement_top_right : is_complement S ⊤ ↔ ∃ g : G, S = {g} := by
+theorem is_complement_top_right : IsComplement S ⊤ ↔ ∃ g : G, S = {g} := by
   refine' ⟨fun h => set.exists_eq_singleton_iff_nonempty_unique_mem.mpr ⟨_, fun a ha b hb => _⟩, _⟩
   · obtain ⟨a, ha⟩ := h.2 1
     exact ⟨a.1.1, a.1.2⟩
@@ -128,32 +128,32 @@ theorem is_complement_top_right : is_complement S ⊤ ↔ ∃ g : G, S = {g} := 
     
 
 @[to_additive]
-theorem is_complement'_top_bot : is_complement' (⊤ : Subgroup G) ⊥ :=
+theorem is_complement'_top_bot : IsComplement' (⊤ : Subgroup G) ⊥ :=
   is_complement_top_singleton
 
 @[to_additive]
-theorem is_complement'_bot_top : is_complement' (⊥ : Subgroup G) ⊤ :=
+theorem is_complement'_bot_top : IsComplement' (⊥ : Subgroup G) ⊤ :=
   is_complement_singleton_top
 
 @[simp, to_additive]
-theorem is_complement'_bot_left : is_complement' ⊥ H ↔ H = ⊤ :=
+theorem is_complement'_bot_left : IsComplement' ⊥ H ↔ H = ⊤ :=
   is_complement_singleton_left.trans coe_eq_univ
 
 @[simp, to_additive]
-theorem is_complement'_bot_right : is_complement' H ⊥ ↔ H = ⊤ :=
+theorem is_complement'_bot_right : IsComplement' H ⊥ ↔ H = ⊤ :=
   is_complement_singleton_right.trans coe_eq_univ
 
 @[simp, to_additive]
-theorem is_complement'_top_left : is_complement' ⊤ H ↔ H = ⊥ :=
+theorem is_complement'_top_left : IsComplement' ⊤ H ↔ H = ⊥ :=
   is_complement_top_left.trans coe_eq_singleton
 
 @[simp, to_additive]
-theorem is_complement'_top_right : is_complement' H ⊤ ↔ H = ⊥ :=
+theorem is_complement'_top_right : IsComplement' H ⊤ ↔ H = ⊥ :=
   is_complement_top_right.trans coe_eq_singleton
 
 @[to_additive]
 theorem mem_left_transversals_iff_exists_unique_inv_mul_mem :
-    S ∈ left_transversals T ↔ ∀ g : G, ∃! s : S, (s : G)⁻¹ * g ∈ T := by
+    S ∈ LeftTransversals T ↔ ∀ g : G, ∃! s : S, (s : G)⁻¹ * g ∈ T := by
   rw [left_transversals, Set.mem_set_of_eq, is_complement_iff_exists_unique]
   refine' ⟨fun h g => _, fun h g => _⟩
   · obtain ⟨x, h1, h2⟩ := h g
@@ -169,7 +169,7 @@ theorem mem_left_transversals_iff_exists_unique_inv_mul_mem :
 
 @[to_additive]
 theorem mem_right_transversals_iff_exists_unique_mul_inv_mem :
-    S ∈ right_transversals T ↔ ∀ g : G, ∃! s : S, g * (s : G)⁻¹ ∈ T := by
+    S ∈ RightTransversals T ↔ ∀ g : G, ∃! s : S, g * (s : G)⁻¹ ∈ T := by
   rw [right_transversals, Set.mem_set_of_eq, is_complement_iff_exists_unique]
   refine' ⟨fun h g => _, fun h g => _⟩
   · obtain ⟨x, h1, h2⟩ := h g
@@ -185,14 +185,14 @@ theorem mem_right_transversals_iff_exists_unique_mul_inv_mem :
 
 @[to_additive]
 theorem mem_left_transversals_iff_exists_unique_quotient_mk'_eq :
-    S ∈ left_transversals (H : Set G) ↔ ∀ q : Quotientₓ (QuotientGroup.leftRel H), ∃! s : S, Quotientₓ.mk' s.1 = q := by
+    S ∈ LeftTransversals (H : Set G) ↔ ∀ q : Quotientₓ (QuotientGroup.leftRel H), ∃! s : S, Quotientₓ.mk' s.1 = q := by
   have key : ∀ g h, Quotientₓ.mk' g = Quotientₓ.mk' h ↔ g⁻¹ * h ∈ H := @Quotientₓ.eq' G (QuotientGroup.leftRel H)
   simp_rw [mem_left_transversals_iff_exists_unique_inv_mul_mem, SetLike.mem_coe, ← key]
   exact ⟨fun h q => Quotientₓ.induction_on' q h, fun h g => h (Quotientₓ.mk' g)⟩
 
 @[to_additive]
 theorem mem_right_transversals_iff_exists_unique_quotient_mk'_eq :
-    S ∈ right_transversals (H : Set G) ↔ ∀ q : Quotientₓ (QuotientGroup.rightRel H), ∃! s : S, Quotientₓ.mk' s.1 = q :=
+    S ∈ RightTransversals (H : Set G) ↔ ∀ q : Quotientₓ (QuotientGroup.rightRel H), ∃! s : S, Quotientₓ.mk' s.1 = q :=
   by
   have key : ∀ g h, Quotientₓ.mk' g = Quotientₓ.mk' h ↔ h * g⁻¹ ∈ H := @Quotientₓ.eq' G (QuotientGroup.rightRel H)
   simp_rw [mem_right_transversals_iff_exists_unique_mul_inv_mem, SetLike.mem_coe, ← key]
@@ -200,20 +200,20 @@ theorem mem_right_transversals_iff_exists_unique_quotient_mk'_eq :
 
 @[to_additive]
 theorem mem_left_transversals_iff_bijective :
-    S ∈ left_transversals (H : Set G) ↔
+    S ∈ LeftTransversals (H : Set G) ↔
       Function.Bijective (S.restrict (Quotientₓ.mk' : G → Quotientₓ (QuotientGroup.leftRel H))) :=
   mem_left_transversals_iff_exists_unique_quotient_mk'_eq.trans
     (Function.bijective_iff_exists_unique (S.restrict Quotientₓ.mk')).symm
 
 @[to_additive]
 theorem mem_right_transversals_iff_bijective :
-    S ∈ right_transversals (H : Set G) ↔
+    S ∈ RightTransversals (H : Set G) ↔
       Function.Bijective (Set.restrict (Quotientₓ.mk' : G → Quotientₓ (QuotientGroup.rightRel H)) S) :=
   mem_right_transversals_iff_exists_unique_quotient_mk'_eq.trans
     (Function.bijective_iff_exists_unique (S.restrict Quotientₓ.mk')).symm
 
 @[to_additive]
-instance : Inhabited (left_transversals (H : Set G)) :=
+instance : Inhabited (LeftTransversals (H : Set G)) :=
   ⟨⟨Set.Range Quotientₓ.out',
       mem_left_transversals_iff_bijective.mpr
         ⟨by
@@ -221,14 +221,14 @@ instance : Inhabited (left_transversals (H : Set G)) :=
           rw [(q₁.out_eq'.symm.trans hg).trans q₂.out_eq'], fun q => ⟨⟨q.out', q, rfl⟩, Quotientₓ.out_eq' q⟩⟩⟩⟩
 
 @[to_additive]
-instance : Inhabited (right_transversals (H : Set G)) :=
+instance : Inhabited (RightTransversals (H : Set G)) :=
   ⟨⟨Set.Range Quotientₓ.out',
       mem_right_transversals_iff_bijective.mpr
         ⟨by
           rintro ⟨_, q₁, rfl⟩ ⟨_, q₂, rfl⟩ hg
           rw [(q₁.out_eq'.symm.trans hg).trans q₂.out_eq'], fun q => ⟨⟨q.out', q, rfl⟩, Quotientₓ.out_eq' q⟩⟩⟩⟩
 
-theorem is_complement'.is_compl (h : is_complement' H K) : IsCompl H K := by
+theorem is_complement'.is_compl (h : IsComplement' H K) : IsCompl H K := by
   refine'
     ⟨fun g ⟨p, q⟩ =>
       let x : H × K := ⟨⟨g, p⟩, 1⟩
@@ -239,21 +239,21 @@ theorem is_complement'.is_compl (h : is_complement' H K) : IsCompl H K := by
   exact Subgroup.mul_mem_sup h.2 k.2
 
 theorem is_complement'.sup_eq_top (h : Subgroup.IsComplement' H K) : H⊔K = ⊤ :=
-  h.is_compl.sup_eq_top
+  h.IsCompl.sup_eq_top
 
-theorem is_complement'.disjoint (h : is_complement' H K) : Disjoint H K :=
-  h.is_compl.disjoint
+theorem is_complement'.disjoint (h : IsComplement' H K) : Disjoint H K :=
+  h.IsCompl.Disjoint
 
-theorem is_complement.card_mul [Fintype G] [Fintype S] [Fintype T] (h : is_complement S T) :
+theorem is_complement.card_mul [Fintype G] [Fintype S] [Fintype T] (h : IsComplement S T) :
     Fintype.card S * Fintype.card T = Fintype.card G :=
   (Fintype.card_prod _ _).symm.trans (Fintype.card_of_bijective h)
 
-theorem is_complement'.card_mul [Fintype G] [Fintype H] [Fintype K] (h : is_complement' H K) :
+theorem is_complement'.card_mul [Fintype G] [Fintype H] [Fintype K] (h : IsComplement' H K) :
     Fintype.card H * Fintype.card K = Fintype.card G :=
   h.card_mul
 
 theorem is_complement'_of_card_mul_and_disjoint [Fintype G] [Fintype H] [Fintype K]
-    (h1 : Fintype.card H * Fintype.card K = Fintype.card G) (h2 : Disjoint H K) : is_complement' H K := by
+    (h1 : Fintype.card H * Fintype.card K = Fintype.card G) (h2 : Disjoint H K) : IsComplement' H K := by
   refine' (Fintype.bijective_iff_injective_and_card _).mpr ⟨fun x y h => _, (Fintype.card_prod H K).trans h1⟩
   rw [← eq_inv_mul_iff_mul_eq, ← mul_assoc, ← mul_inv_eq_iff_eq_mul] at h
   change ↑(x.2 * y.2⁻¹) = ↑(x.1⁻¹ * y.1) at h
@@ -262,12 +262,12 @@ theorem is_complement'_of_card_mul_and_disjoint [Fintype G] [Fintype H] [Fintype
   exact ⟨Subtype.mem (x.1⁻¹ * y.1), (congr_argₓ (· ∈ K) h).mp (Subtype.mem (x.2 * y.2⁻¹))⟩
 
 theorem is_complement'_iff_card_mul_and_disjoint [Fintype G] [Fintype H] [Fintype K] :
-    is_complement' H K ↔ Fintype.card H * Fintype.card K = Fintype.card G ∧ Disjoint H K :=
-  ⟨fun h => ⟨h.card_mul, h.disjoint⟩, fun h => is_complement'_of_card_mul_and_disjoint h.1 h.2⟩
+    IsComplement' H K ↔ Fintype.card H * Fintype.card K = Fintype.card G ∧ Disjoint H K :=
+  ⟨fun h => ⟨h.card_mul, h.Disjoint⟩, fun h => is_complement'_of_card_mul_and_disjoint h.1 h.2⟩
 
 theorem is_complement'_of_coprime [Fintype G] [Fintype H] [Fintype K]
     (h1 : Fintype.card H * Fintype.card K = Fintype.card G) (h2 : Nat.Coprime (Fintype.card H) (Fintype.card K)) :
-    is_complement' H K :=
+    IsComplement' H K :=
   is_complement'_of_card_mul_and_disjoint h1 (disjoint_iff.mpr (inf_eq_bot_of_coprime h2))
 
 end Subgroup

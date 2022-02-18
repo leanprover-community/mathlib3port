@@ -43,40 +43,40 @@ variable (R : Type _) {ι : Type _} [Semiringₓ R] (φ : ι → Type _) [∀ i,
 def std_basis : ∀ i : ι, φ i →ₗ[R] ∀ i, φ i :=
   single
 
-theorem std_basis_apply (i : ι) (b : φ i) : std_basis R φ i b = update 0 i b :=
+theorem std_basis_apply (i : ι) (b : φ i) : stdBasis R φ i b = update 0 i b :=
   rfl
 
-theorem coe_std_basis (i : ι) : ⇑std_basis R φ i = Pi.single i :=
+theorem coe_std_basis (i : ι) : ⇑stdBasis R φ i = Pi.single i :=
   funext <| std_basis_apply R φ i
 
 @[simp]
-theorem std_basis_same (i : ι) (b : φ i) : std_basis R φ i b i = b := by
+theorem std_basis_same (i : ι) (b : φ i) : stdBasis R φ i b i = b := by
   rw [std_basis_apply, update_same]
 
-theorem std_basis_ne (i j : ι) (h : j ≠ i) (b : φ i) : std_basis R φ i b j = 0 := by
+theorem std_basis_ne (i j : ι) (h : j ≠ i) (b : φ i) : stdBasis R φ i b j = 0 := by
   rw [std_basis_apply, update_noteq h] <;> rfl
 
-theorem std_basis_eq_pi_diag (i : ι) : std_basis R φ i = pi (diag i) := by
+theorem std_basis_eq_pi_diag (i : ι) : stdBasis R φ i = pi (diag i) := by
   ext x j
   convert (update_apply 0 x i j _).symm
   rfl
 
-theorem ker_std_basis (i : ι) : ker (std_basis R φ i) = ⊥ :=
+theorem ker_std_basis (i : ι) : ker (stdBasis R φ i) = ⊥ :=
   ker_eq_bot_of_injective fun f g hfg => by
-    have : std_basis R φ i f i = std_basis R φ i g i := hfg ▸ rfl
+    have : stdBasis R φ i f i = stdBasis R φ i g i := hfg ▸ rfl
     simpa only [std_basis_same]
 
-theorem proj_comp_std_basis (i j : ι) : (proj i).comp (std_basis R φ j) = diag j i := by
+theorem proj_comp_std_basis (i j : ι) : (proj i).comp (stdBasis R φ j) = diag j i := by
   rw [std_basis_eq_pi_diag, proj_pi]
 
-theorem proj_std_basis_same (i : ι) : (proj i).comp (std_basis R φ i) = id := by
+theorem proj_std_basis_same (i : ι) : (proj i).comp (stdBasis R φ i) = id := by
   ext b <;> simp
 
-theorem proj_std_basis_ne (i j : ι) (h : i ≠ j) : (proj i).comp (std_basis R φ j) = 0 := by
+theorem proj_std_basis_ne (i j : ι) (h : i ≠ j) : (proj i).comp (stdBasis R φ j) = 0 := by
   ext b <;> simp [std_basis_ne R φ _ _ h]
 
 theorem supr_range_std_basis_le_infi_ker_proj (I J : Set ι) (h : Disjoint I J) :
-    (⨆ i ∈ I, range (std_basis R φ i)) ≤ ⨅ i ∈ J, ker (proj i) := by
+    (⨆ i ∈ I, range (stdBasis R φ i)) ≤ ⨅ i ∈ J, ker (proj i) := by
   refine' supr_le fun i => supr_le fun hi => range_le_iff_comap.2 _
   simp only [(ker_comp _ _).symm, eq_top_iff, SetLike.le_def, mem_ker, comap_infi, mem_infi]
   rintro b - j hj
@@ -85,7 +85,7 @@ theorem supr_range_std_basis_le_infi_ker_proj (I J : Set ι) (h : Disjoint I J) 
   exact h ⟨hi, hj⟩
 
 theorem infi_ker_proj_le_supr_range_std_basis {I : Finset ι} {J : Set ι} (hu : Set.Univ ⊆ ↑I ∪ J) :
-    (⨅ i ∈ J, ker (proj i)) ≤ ⨆ i ∈ I, range (std_basis R φ i) :=
+    (⨅ i ∈ J, ker (proj i)) ≤ ⨆ i ∈ I, range (stdBasis R φ i) :=
   SetLike.le_def.2
     (by
       intro b hb
@@ -101,15 +101,15 @@ theorem infi_ker_proj_le_supr_range_std_basis {I : Finset ι} {J : Set ι} (hu :
       exact sum_mem _ fun i hiI => mem_supr_of_mem i <| mem_supr_of_mem hiI <| (std_basis R φ i).mem_range_self (b i))
 
 theorem supr_range_std_basis_eq_infi_ker_proj {I J : Set ι} (hd : Disjoint I J) (hu : Set.Univ ⊆ I ∪ J)
-    (hI : Set.Finite I) : (⨆ i ∈ I, range (std_basis R φ i)) = ⨅ i ∈ J, ker (proj i) := by
+    (hI : Set.Finite I) : (⨆ i ∈ I, range (stdBasis R φ i)) = ⨅ i ∈ J, ker (proj i) := by
   refine' le_antisymmₓ (supr_range_std_basis_le_infi_ker_proj _ _ _ _ hd) _
   have : Set.Univ ⊆ ↑hI.to_finset ∪ J := by
     rwa [hI.coe_to_finset]
   refine' le_transₓ (infi_ker_proj_le_supr_range_std_basis R φ this) (supr_le_supr fun i => _)
   rw [Set.Finite.mem_to_finset]
-  exact le_reflₓ _
+  exact le_rfl
 
-theorem supr_range_std_basis [Fintype ι] : (⨆ i : ι, range (std_basis R φ i)) = ⊤ := by
+theorem supr_range_std_basis [Fintype ι] : (⨆ i : ι, range (stdBasis R φ i)) = ⊤ := by
   have : (Set.Univ : Set ι) ⊆ ↑(Finset.univ : Finset ι) ∪ ∅ := by
     rw [Finset.coe_univ, Set.union_empty]
   apply top_unique
@@ -118,7 +118,7 @@ theorem supr_range_std_basis [Fintype ι] : (⨆ i : ι, range (std_basis R φ i
   exact funext fun i => ((@supr_pos _ _ _ fun h => range (std_basis R φ i)) <| Finset.mem_univ i).symm
 
 theorem disjoint_std_basis_std_basis (I J : Set ι) (h : Disjoint I J) :
-    Disjoint (⨆ i ∈ I, range (std_basis R φ i)) (⨆ i ∈ J, range (std_basis R φ i)) := by
+    Disjoint (⨆ i ∈ I, range (stdBasis R φ i)) (⨆ i ∈ J, range (stdBasis R φ i)) := by
   refine'
     Disjoint.mono (supr_range_std_basis_le_infi_ker_proj _ _ _ _ <| disjoint_compl_right)
       (supr_range_std_basis_le_infi_ker_proj _ _ _ _ <| disjoint_compl_right) _
@@ -136,7 +136,7 @@ theorem disjoint_std_basis_std_basis (I J : Set ι) (h : Disjoint I J) :
     
 
 theorem std_basis_eq_single {a : R} :
-    (fun i : ι => (std_basis R (fun _ : ι => R) i) a) = fun i : ι => Finsupp.single i a := by
+    (fun i : ι => (stdBasis R (fun _ : ι => R) i) a) = fun i : ι => Finsupp.single i a := by
   ext i j
   rw [std_basis_apply, Finsupp.single_apply]
   split_ifs
@@ -162,7 +162,7 @@ variable {η : Type _} {ιs : η → Type _} {Ms : η → Type _}
 
 theorem linear_independent_std_basis [Ringₓ R] [∀ i, AddCommGroupₓ (Ms i)] [∀ i, Module R (Ms i)] [DecidableEq η]
     (v : ∀ j, ιs j → Ms j) (hs : ∀ i, LinearIndependent R (v i)) :
-    LinearIndependent R fun ji : Σ j, ιs j => std_basis R Ms ji.1 (v ji.1 ji.2) := by
+    LinearIndependent R fun ji : Σ j, ιs j => stdBasis R Ms ji.1 (v ji.1 ji.2) := by
   have hs' : ∀ j : η, LinearIndependent R fun i : ιs j => std_basis R Ms j (v j i) := by
     intro j
     exact (hs j).map' _ (ker_std_basis _ _ _)
@@ -201,7 +201,7 @@ protected noncomputable def Basis (s : ∀ j, Basis (ιs j) R (Ms j)) : Basis (�
 
 @[simp]
 theorem basis_repr_std_basis [DecidableEq η] (s : ∀ j, Basis (ιs j) R (Ms j)) j i :
-    (Pi.basis s).repr (std_basis R _ j (s j i)) = Finsupp.single ⟨j, i⟩ 1 := by
+    (Pi.basis s).repr (stdBasis R _ j (s j i)) = Finsupp.single ⟨j, i⟩ 1 := by
   ext ⟨j', i'⟩
   by_cases' hj : j = j'
   · subst hj
@@ -221,7 +221,7 @@ theorem basis_repr_std_basis [DecidableEq η] (s : ∀ j, Basis (ιs j) R (Ms j)
 
 @[simp]
 theorem basis_apply [DecidableEq η] (s : ∀ j, Basis (ιs j) R (Ms j)) ji :
-    Pi.basis s ji = std_basis R _ ji.1 (s ji.1 ji.2) :=
+    Pi.basis s ji = stdBasis R _ ji.1 (s ji.1 ji.2) :=
   Basis.apply_eq_iff.mpr
     (by
       simp )
@@ -241,7 +241,7 @@ noncomputable def basis_fun : Basis η R (∀ j : η, R) :=
   Basis.ofEquivFun (LinearEquiv.refl _ _)
 
 @[simp]
-theorem basis_fun_apply [DecidableEq η] i : basis_fun R η i = std_basis R (fun i : η => R) i 1 := by
+theorem basis_fun_apply [DecidableEq η] i : basisFun R η i = stdBasis R (fun i : η => R) i 1 := by
   simp only [basis_fun, Basis.coe_of_equiv_fun, LinearEquiv.refl_symm, LinearEquiv.refl_apply, std_basis_apply]
   congr
 
@@ -266,7 +266,7 @@ noncomputable def std_basis : Basis (n × m) R (Matrix n m R) :=
 variable {n m}
 
 theorem std_basis_eq_std_basis_matrix (i : n) (j : m) [DecidableEq n] [DecidableEq m] :
-    std_basis R n m (i, j) = std_basis_matrix i j (1 : R) := by
+    stdBasis R n m (i, j) = stdBasisMatrix i j (1 : R) := by
   ext a b
   by_cases' hi : i = a <;> by_cases' hj : j = b
   · simp [std_basis, hi, hj]

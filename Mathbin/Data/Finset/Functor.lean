@@ -30,14 +30,14 @@ variable {α β : Type u} [∀ P, Decidable P]
 /-- Because `finset.image` requires a `decidable_eq` instance for the target type, we can only
 construct `functor finset` when working classically. -/
 instance : Functor Finset where
-  map := fun α β f s => s.image f
+  map := fun α β f s => s.Image f
 
 instance : IsLawfulFunctor Finset where
   id_map := fun α s => image_id
   comp_map := fun α β γ f g s => image_image.symm
 
 @[simp]
-theorem fmap_def {s : Finset α} (f : α → β) : f <$> s = s.image f :=
+theorem fmap_def {s : Finset α} (f : α → β) : f <$> s = s.Image f :=
   rfl
 
 end Functor
@@ -60,11 +60,11 @@ section Applicativeₓ
 variable {α β : Type u} [∀ P, Decidable P]
 
 instance : Applicativeₓ Finset :=
-  { Finset.functor, Finset.hasPure with seq := fun α β t s => t.sup fun f => s.image f,
+  { Finset.functor, Finset.hasPure with seq := fun α β t s => t.sup fun f => s.Image f,
     seqLeft := fun α β s t => if t = ∅ then ∅ else s, seqRight := fun α β s t => if s = ∅ then ∅ else t }
 
 @[simp]
-theorem seq_def (s : Finset α) (t : Finset (α → β)) : t <*> s = t.sup fun f => s.image f :=
+theorem seq_def (s : Finset α) (t : Finset (α → β)) : t <*> s = t.sup fun f => s.Image f :=
   rfl
 
 @[simp]

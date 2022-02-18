@@ -24,10 +24,10 @@ variable {α : Type _} {r : α → α → Prop} [IsStrictOrder α r]
 
 /-- If `f` is a strictly `r`-increasing sequence, then this returns `f` as an order embedding. -/
 def nat_lt (f : ℕ → α) (H : ∀ n : ℕ, r (f n) (f (n + 1))) : (· < · : ℕ → ℕ → Prop) ↪r r :=
-  of_monotone f <| Nat.rel_of_forall_rel_succ_of_lt r H
+  ofMonotone f <| Nat.rel_of_forall_rel_succ_of_lt r H
 
 @[simp]
-theorem nat_lt_apply {f : ℕ → α} {H : ∀ n : ℕ, r (f n) (f (n + 1))} {n : ℕ} : nat_lt f H n = f n :=
+theorem nat_lt_apply {f : ℕ → α} {H : ∀ n : ℕ, r (f n) (f (n + 1))} {n : ℕ} : natLt f H n = f n :=
   rfl
 
 /-- If `f` is a strictly `r`-decreasing sequence, then this returns `f` as an order embedding. -/
@@ -53,7 +53,7 @@ theorem well_founded_iff_no_descending_seq : WellFounded r ↔ IsEmpty ((· > ·
               Classical.by_contradiction fun hn =>
                 h <| ⟨_, fun y h => Classical.by_contradiction fun na => hn ⟨⟨y, na⟩, h⟩⟩
         E.elim'
-          ((nat_gt fun n => ((f^[n]) ⟨a, na⟩).1) fun n => by
+          ((natGt fun n => ((f^[n]) ⟨a, na⟩).1) fun n => by
             rw [Function.iterate_succ']
             apply h)⟩⟩
 
@@ -80,14 +80,14 @@ noncomputable def subtype.order_iso_of_nat : ℕ ≃o s :=
 variable {s}
 
 @[simp]
-theorem coe_order_embedding_of_set : ⇑order_embedding_of_set s = coe ∘ subtype.of_nat s :=
+theorem coe_order_embedding_of_set : ⇑orderEmbeddingOfSet s = coe ∘ Subtype.ofNat s :=
   rfl
 
-theorem order_embedding_of_set_apply {n : ℕ} : order_embedding_of_set s n = subtype.of_nat s n :=
+theorem order_embedding_of_set_apply {n : ℕ} : orderEmbeddingOfSet s n = Subtype.ofNat s n :=
   rfl
 
 @[simp]
-theorem subtype.order_iso_of_nat_apply {n : ℕ} : subtype.order_iso_of_nat s n = subtype.of_nat s n := by
+theorem subtype.order_iso_of_nat_apply {n : ℕ} : Subtype.orderIsoOfNat s n = Subtype.ofNat s n := by
   simp [subtype.order_iso_of_nat]
 
 variable (s)
@@ -185,7 +185,7 @@ type, `monotonic_sequence_limit_index a` is the least natural number `n` for whi
 constant value. For sequences that are not eventually constant, `monotonic_sequence_limit_index a`
 is defined, but is a junk value. -/
 noncomputable def monotonicSequenceLimitIndex {α : Type _} [PartialOrderₓ α] (a : ℕ →o α) : ℕ :=
-  Inf { n | ∀ m, n ≤ m → a n = a m }
+  inf { n | ∀ m, n ≤ m → a n = a m }
 
 /-- The constant value of an eventually-constant monotone sequence `a₀ ≤ a₁ ≤ a₂ ≤ ...` in a
 partially-ordered type. -/

@@ -56,14 +56,14 @@ theorem mem_join {a S} : a ∈ @join α S ↔ ∃ s ∈ S, a ∈ s :=
     simp (config := { contextual := true })[or_and_distrib_right, exists_or_distrib]
 
 @[simp]
-theorem card_join S : card (@join α S) = Sum (map card S) :=
+theorem card_join S : card (@join α S) = sum (map card S) :=
   Multiset.induction_on S
     (by
       simp )
     (by
       simp )
 
-theorem rel_join {r : α → β → Prop} {s t} (h : rel (rel r) s t) : rel r s.join t.join := by
+theorem rel_join {r : α → β → Prop} {s t} (h : Rel (Rel r) s t) : Rel r s.join t.join := by
   induction h
   case rel.zero =>
     simp
@@ -192,13 +192,13 @@ theorem prod_bind [CommMonoidₓ β] (s : Multiset α) (t : α → Multiset β) 
     simp [ih, cons_bind]
 
 theorem rel_bind {r : α → β → Prop} {p : γ → δ → Prop} {s t} {f : α → Multiset γ} {g : β → Multiset δ}
-    (h : (r⇒rel p) f g) (hst : rel r s t) : rel p (s.bind f) (t.bind g) := by
+    (h : (r⇒Rel p) f g) (hst : Rel r s t) : Rel p (s.bind f) (t.bind g) := by
   apply rel_join
   rw [rel_map]
   exact hst.mono fun a ha b hb hr => h hr
 
 theorem count_sum [DecidableEq α] {m : Multiset β} {f : β → Multiset α} {a : α} :
-    count a (map f m).Sum = Sum (m.map fun b => count a <| f b) :=
+    count a (map f m).Sum = sum (m.map fun b => count a <| f b) :=
   Multiset.induction_on m
     (by
       simp )
@@ -206,7 +206,7 @@ theorem count_sum [DecidableEq α] {m : Multiset β} {f : β → Multiset α} {a
       simp )
 
 theorem count_bind [DecidableEq α] {m : Multiset β} {f : β → Multiset α} {a : α} :
-    count a (bind m f) = Sum (m.map fun b => count a <| f b) :=
+    count a (bind m f) = sum (m.map fun b => count a <| f b) :=
   count_sum
 
 end Bind
@@ -273,7 +273,7 @@ protected def Sigma (s : Multiset α) (t : ∀ a, Multiset (σ a)) : Multiset (�
   s.bind fun a => (t a).map <| Sigma.mk a
 
 @[simp]
-theorem coe_sigma (l₁ : List α) (l₂ : ∀ a, List (σ a)) : (@Multiset.sigma α σ l₁ fun a => l₂ a) = l₁.sigma l₂ := by
+theorem coe_sigma (l₁ : List α) (l₂ : ∀ a, List (σ a)) : (@Multiset.sigma α σ l₁ fun a => l₂ a) = l₁.Sigma l₂ := by
   rw [Multiset.sigma, List.sigma, ← coe_bind] <;> simp
 
 @[simp]
@@ -281,7 +281,7 @@ theorem zero_sigma : @Multiset.sigma α σ 0 t = 0 :=
   rfl
 
 @[simp]
-theorem cons_sigma : (a ::ₘ s).Sigma t = (t a).map (Sigma.mk a) + s.sigma t := by
+theorem cons_sigma : (a ::ₘ s).Sigma t = (t a).map (Sigma.mk a) + s.Sigma t := by
   simp [Multiset.sigma]
 
 @[simp]
@@ -289,11 +289,11 @@ theorem sigma_singleton (b : α → β) : (({a} : Multiset α).Sigma fun a => ({
   rfl
 
 @[simp]
-theorem add_sigma (s t : Multiset α) (u : ∀ a, Multiset (σ a)) : (s + t).Sigma u = s.sigma u + t.sigma u := by
+theorem add_sigma (s t : Multiset α) (u : ∀ a, Multiset (σ a)) : (s + t).Sigma u = s.Sigma u + t.Sigma u := by
   simp [Multiset.sigma]
 
 @[simp]
-theorem sigma_add : ∀ t u : ∀ a, Multiset (σ a), (s.sigma fun a => t a + u a) = s.sigma t + s.sigma u :=
+theorem sigma_add : ∀ t u : ∀ a, Multiset (σ a), (s.Sigma fun a => t a + u a) = s.Sigma t + s.Sigma u :=
   (Multiset.induction_on s fun t u => rfl) fun a s IH t u => by
     rw [cons_sigma, IH] <;> simp <;> cc
 
@@ -303,7 +303,7 @@ theorem mem_sigma {s t} : ∀ {p : Σ a, σ a}, p ∈ @Multiset.sigma α σ s t 
     simp [Multiset.sigma, and_assoc, And.left_comm]
 
 @[simp]
-theorem card_sigma : card (s.sigma t) = Sum (map (fun a => card (t a)) s) := by
+theorem card_sigma : card (s.Sigma t) = sum (map (fun a => card (t a)) s) := by
   simp [Multiset.sigma, · ∘ ·]
 
 end Sigma

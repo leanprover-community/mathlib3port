@@ -44,9 +44,9 @@ include V W
 
 /-- see Note [function coercion] -/
 instance : CoeFun (P →A[R] Q) fun _ => P → Q :=
-  ⟨fun f => f.to_affine_map.to_fun⟩
+  ⟨fun f => f.toAffineMap.toFun⟩
 
-theorem to_fun_eq_coe (f : P →A[R] Q) : f.to_fun = ⇑f :=
+theorem to_fun_eq_coe (f : P →A[R] Q) : f.toFun = ⇑f :=
   rfl
 
 theorem coe_injective : @Function.Injective (P →A[R] Q) (P → Q) coeFn := by
@@ -69,21 +69,21 @@ theorem congr_funₓ {f g : P →A[R] Q} (h : f = g) (x : P) : f x = g x :=
   h ▸ rfl
 
 instance : Coe (P →A[R] Q) (P →ᵃ[R] Q) :=
-  ⟨to_affine_map⟩
+  ⟨toAffineMap⟩
 
 /-- Forgetting its algebraic properties, a continuous affine map is a continuous map. -/
 def to_continuous_map (f : P →A[R] Q) : C(P, Q) :=
   ⟨f, f.cont⟩
 
 instance : Coe (P →A[R] Q) C(P, Q) :=
-  ⟨to_continuous_map⟩
+  ⟨toContinuousMap⟩
 
 @[simp]
-theorem to_affine_map_eq_coe (f : P →A[R] Q) : f.to_affine_map = ↑f :=
+theorem to_affine_map_eq_coe (f : P →A[R] Q) : f.toAffineMap = ↑f :=
   rfl
 
 @[simp]
-theorem to_continuous_map_coe (f : P →A[R] Q) : f.to_continuous_map = ↑f :=
+theorem to_continuous_map_coe (f : P →A[R] Q) : f.toContinuousMap = ↑f :=
   rfl
 
 @[simp, norm_cast]
@@ -160,9 +160,9 @@ omit W₂
 
 section ModuleValuedMaps
 
-variable {S : Type _} [CommRingₓ S] [Module S V] [Module S W]
+variable {S : Type _}
 
-variable [TopologicalSpace W] [TopologicalSpace S] [HasContinuousSmul S W]
+variable [TopologicalSpace W]
 
 instance : Zero (P →A[R] W) :=
   ⟨ContinuousAffineMap.const R P 0⟩
@@ -174,20 +174,34 @@ theorem coe_zero : ((0 : P →A[R] W) : P → W) = 0 :=
 theorem zero_apply (x : P) : (0 : P →A[R] W) x = 0 :=
   rfl
 
-instance : HasScalar S (P →A[S] W) where
-  smul := fun t f => { t • (f : P →ᵃ[S] W) with cont := f.continuous.const_smul t }
+section MulAction
+
+variable [Monoidₓ S] [DistribMulAction S W] [SmulCommClass R S W]
+
+variable [HasContinuousConstSmul S W]
+
+instance : HasScalar S (P →A[R] W) where
+  smul := fun t f => { t • (f : P →ᵃ[R] W) with cont := f.Continuous.const_smul t }
 
 @[norm_cast, simp]
-theorem coe_smul (t : S) (f : P →A[S] W) : ⇑(t • f) = t • f :=
+theorem coe_smul (t : S) (f : P →A[R] W) : ⇑(t • f) = t • f :=
   rfl
 
-theorem smul_apply (t : S) (f : P →A[S] W) (x : P) : (t • f) x = t • f x :=
+theorem smul_apply (t : S) (f : P →A[R] W) (x : P) : (t • f) x = t • f x :=
   rfl
+
+instance [DistribMulAction (Sᵐᵒᵖ) W] [IsCentralScalar S W] : IsCentralScalar S (P →A[R] W) where
+  op_smul_eq_smul := fun t f => ext fun _ => op_smul_eq_smul _ _
+
+instance : MulAction S (P →A[R] W) :=
+  Function.Injective.mulAction _ coe_injective coe_smul
+
+end MulAction
 
 variable [TopologicalAddGroup W]
 
 instance : Add (P →A[R] W) where
-  add := fun f g => { (f : P →ᵃ[R] W) + (g : P →ᵃ[R] W) with cont := f.continuous.add g.continuous }
+  add := fun f g => { (f : P →ᵃ[R] W) + (g : P →ᵃ[R] W) with cont := f.Continuous.add g.Continuous }
 
 @[norm_cast, simp]
 theorem coe_add (f g : P →A[R] W) : ⇑(f + g) = f + g :=
@@ -197,7 +211,7 @@ theorem add_apply (f g : P →A[R] W) (x : P) : (f + g) x = f x + g x :=
   rfl
 
 instance : Sub (P →A[R] W) where
-  sub := fun f g => { (f : P →ᵃ[R] W) - (g : P →ᵃ[R] W) with cont := f.continuous.sub g.continuous }
+  sub := fun f g => { (f : P →ᵃ[R] W) - (g : P →ᵃ[R] W) with cont := f.Continuous.sub g.Continuous }
 
 @[norm_cast, simp]
 theorem coe_sub (f g : P →A[R] W) : ⇑(f - g) = f - g :=
@@ -207,7 +221,7 @@ theorem sub_apply (f g : P →A[R] W) (x : P) : (f - g) x = f x - g x :=
   rfl
 
 instance : Neg (P →A[R] W) where
-  neg := fun f => { -(f : P →ᵃ[R] W) with cont := f.continuous.neg }
+  neg := fun f => { -(f : P →ᵃ[R] W) with cont := f.Continuous.neg }
 
 @[norm_cast, simp]
 theorem coe_neg (f : P →A[R] W) : ⇑(-f) = -f :=
@@ -220,8 +234,12 @@ instance : AddCommGroupₓ (P →A[R] W) :=
   { (coe_injective.AddCommGroup _ coe_zero coe_add coe_neg coe_sub : AddCommGroupₓ (P →A[R] W)) with add := · + ·,
     zero := 0, neg := Neg.neg, sub := Sub.sub }
 
-instance : Module S (P →A[S] W) :=
-  Function.Injective.module S ⟨fun f => f.to_affine_map.to_fun, rfl, coe_add⟩ coe_injective coe_smul
+instance [Monoidₓ S] [DistribMulAction S W] [SmulCommClass R S W] [HasContinuousConstSmul S W] :
+    DistribMulAction S (P →A[R] W) :=
+  Function.Injective.distribMulAction ⟨fun f => f.toAffineMap.toFun, rfl, coe_add⟩ coe_injective coe_smul
+
+instance [Semiringₓ S] [Module S W] [SmulCommClass R S W] [HasContinuousConstSmul S W] : Module S (P →A[R] W) :=
+  Function.Injective.module S ⟨fun f => f.toAffineMap.toFun, rfl, coe_add⟩ coe_injective coe_smul
 
 end ModuleValuedMaps
 
@@ -244,11 +262,11 @@ def to_continuous_affine_map (f : V →L[R] W) : V →A[R] W where
   cont := f.cont
 
 @[simp]
-theorem coe_to_continuous_affine_map (f : V →L[R] W) : ⇑f.to_continuous_affine_map = f :=
+theorem coe_to_continuous_affine_map (f : V →L[R] W) : ⇑f.toContinuousAffineMap = f :=
   rfl
 
 @[simp]
-theorem to_continuous_affine_map_map_zero (f : V →L[R] W) : f.to_continuous_affine_map 0 = 0 := by
+theorem to_continuous_affine_map_map_zero (f : V →L[R] W) : f.toContinuousAffineMap 0 = 0 := by
   simp
 
 end ContinuousLinearMap

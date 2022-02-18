@@ -24,29 +24,29 @@ namespace CategoryTheory
 
 open Category Limits
 
-variable {C : Type u} [category.{v} C] (X : C)
+variable {C : Type u} [Category.{v} C] (X : C)
 
 section
 
 open Comonad
 
-variable [has_binary_products C]
+variable [HasBinaryProducts C]
 
 /-- `X ⨯ -` has a comonad structure. This is sometimes called the writer comonad. -/
 @[simps]
-def prod_comonad : comonad C where
+def prod_comonad : Comonad C where
   toFunctor := prod.functor.obj X
-  ε' := { app := fun Y => limits.prod.snd }
-  δ' := { app := fun Y => prod.lift limits.prod.fst (𝟙 _) }
+  ε' := { app := fun Y => Limits.prod.snd }
+  δ' := { app := fun Y => prod.lift Limits.prod.fst (𝟙 _) }
 
 /-- The forward direction of the equivalence from coalgebras for the product comonad to the over
 category.
 -/
 @[simps]
-def coalgebra_to_over : coalgebra (prod_comonad X) ⥤ over X where
-  obj := fun A => over.mk (A.a ≫ limits.prod.fst)
+def coalgebra_to_over : Coalgebra (prodComonad X) ⥤ Over X where
+  obj := fun A => Over.mk (A.a ≫ limits.prod.fst)
   map := fun A₁ A₂ f =>
-    over.hom_mk f.f
+    Over.homMk f.f
       (by
         rw [over.mk_hom, ← f.h_assoc]
         dsimp
@@ -56,19 +56,19 @@ def coalgebra_to_over : coalgebra (prod_comonad X) ⥤ over X where
 category.
 -/
 @[simps]
-def over_to_coalgebra : over X ⥤ coalgebra (prod_comonad X) where
-  obj := fun f => { A := f.left, a := prod.lift f.hom (𝟙 _) }
+def over_to_coalgebra : Over X ⥤ Coalgebra (prodComonad X) where
+  obj := fun f => { A := f.left, a := prod.lift f.Hom (𝟙 _) }
   map := fun f₁ f₂ g => { f := g.left }
 
 /-- The equivalence from coalgebras for the product comonad to the over category. -/
 @[simps]
-def coalgebra_equiv_over : coalgebra (prod_comonad X) ≌ over X where
-  Functor := coalgebra_to_over X
-  inverse := over_to_coalgebra X
+def coalgebra_equiv_over : Coalgebra (prodComonad X) ≌ Over X where
+  Functor := coalgebraToOver X
+  inverse := overToCoalgebra X
   unitIso :=
-    nat_iso.of_components
+    NatIso.ofComponents
       (fun A =>
-        coalgebra.iso_mk (iso.refl _)
+        Coalgebra.isoMk (Iso.refl _)
           (prod.hom_ext
             (by
               dsimp
@@ -80,7 +80,7 @@ def coalgebra_equiv_over : coalgebra (prod_comonad X) ≌ over X where
       ext
       simp
   counitIso :=
-    nat_iso.of_components (fun f => over.iso_mk (iso.refl _)) fun f g k => by
+    NatIso.ofComponents (fun f => Over.isoMk (Iso.refl _)) fun f g k => by
       tidy
 
 end
@@ -89,11 +89,11 @@ section
 
 open _Root_.Monad
 
-variable [has_binary_coproducts C]
+variable [HasBinaryCoproducts C]
 
 /-- `X ⨿ -` has a monad structure. This is sometimes called the either monad. -/
 @[simps]
-def coprod_monad : Monadₓ C where
+def coprod_monad : Monad C where
   toFunctor := coprod.functor.obj X
   η' := { app := fun Y => coprod.inr }
   μ' := { app := fun Y => coprod.desc coprod.inl (𝟙 _) }
@@ -102,10 +102,10 @@ def coprod_monad : Monadₓ C where
 category.
 -/
 @[simps]
-def algebra_to_under : monad.algebra (coprod_monad X) ⥤ under X where
-  obj := fun A => under.mk (coprod.inl ≫ A.a)
+def algebra_to_under : Monad.Algebra (coprodMonad X) ⥤ Under X where
+  obj := fun A => Under.mk (coprod.inl ≫ A.a)
   map := fun A₁ A₂ f =>
-    under.hom_mk f.f
+    Under.homMk f.f
       (by
         rw [under.mk_hom, assoc, ← f.h]
         dsimp
@@ -115,20 +115,20 @@ def algebra_to_under : monad.algebra (coprod_monad X) ⥤ under X where
 category.
 -/
 @[simps]
-def under_to_algebra : under X ⥤ monad.algebra (coprod_monad X) where
-  obj := fun f => { A := f.right, a := coprod.desc f.hom (𝟙 _) }
+def under_to_algebra : Under X ⥤ Monad.Algebra (coprodMonad X) where
+  obj := fun f => { A := f.right, a := coprod.desc f.Hom (𝟙 _) }
   map := fun f₁ f₂ g => { f := g.right }
 
 /-- The equivalence from algebras for the coproduct monad to the under category.
 -/
 @[simps]
-def algebra_equiv_under : monad.algebra (coprod_monad X) ≌ under X where
-  Functor := algebra_to_under X
-  inverse := under_to_algebra X
+def algebra_equiv_under : Monad.Algebra (coprodMonad X) ≌ Under X where
+  Functor := algebraToUnder X
+  inverse := underToAlgebra X
   unitIso :=
-    nat_iso.of_components
+    NatIso.ofComponents
       (fun A =>
-        monad.algebra.iso_mk (iso.refl _)
+        Monad.Algebra.isoMk (Iso.refl _)
           (coprod.hom_ext
             (by
               tidy)
@@ -139,9 +139,9 @@ def algebra_equiv_under : monad.algebra (coprod_monad X) ≌ under X where
       ext
       simp
   counitIso :=
-    nat_iso.of_components
+    NatIso.ofComponents
       (fun f =>
-        under.iso_mk (iso.refl _)
+        Under.isoMk (Iso.refl _)
           (by
             tidy))
       fun f g k => by

@@ -49,7 +49,7 @@ variable {X}
 def of : X → FreeNonUnitalNonAssocAlgebra R X :=
   MonoidAlgebra.ofMagma R _ ∘ FreeMagma.of
 
-variable {A : Type w} [NonUnitalNonAssocSemiring A]
+variable {A : Type w} [NonUnitalNonAssocSemiringₓ A]
 
 variable [Module R A] [IsScalarTower R A A] [SmulCommClass R A A]
 

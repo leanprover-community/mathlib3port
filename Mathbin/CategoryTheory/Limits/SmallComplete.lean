@@ -28,9 +28,9 @@ open_locale Cardinal
 
 universe u
 
-variable {C : Type u} [small_category C] [has_products C]
+variable {C : Type u} [SmallCategory C] [HasProducts C]
 
--- ././Mathport/Syntax/Translate/Basic.lean:626:6: warning: expanding binder group (Z W)
+-- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (Z W)
 /-- A small category with products is a thin category.
 
 in Lean, a preorder category is one where the morphisms are in Prop, which is weaker than the usual

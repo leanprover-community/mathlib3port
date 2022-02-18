@@ -47,7 +47,7 @@ form a sheaf.
 In fact, the proof is identical when we do this for dependent functions to a type family `T`,
 so we do the more general case.
 -/
-theorem to_Types_is_sheaf (T : X → Type u) : (presheaf_to_Types X T).IsSheaf :=
+theorem to_Types_is_sheaf (T : X → Type u) : (presheafToTypes X T).IsSheaf :=
   (is_sheaf_of_is_sheaf_unique_gluing_types _) fun ι U sf hsf => by
     choose index index_spec using fun x : supr U => opens.mem_supr.mp x.2
     let s : ∀ x : supr U, T x := fun x => sf (index x) ⟨x.1, index_spec x⟩
@@ -68,7 +68,7 @@ theorem to_Types_is_sheaf (T : X → Type u) : (presheaf_to_Types X T).IsSheaf :
 /-- The presheaf of not-necessarily-continuous functions to
 a target type `T` satsifies the sheaf condition.
 -/
-theorem to_Type_is_sheaf (T : Type u) : (presheaf_to_Type X T).IsSheaf :=
+theorem to_Type_is_sheaf (T : Type u) : (presheafToType X T).IsSheaf :=
   to_Types_is_sheaf X fun _ => T
 
 end Top.Presheaf
@@ -78,13 +78,13 @@ namespace Top
 /-- The sheaf of not-necessarily-continuous functions on `X` with values in type family
 `T : X → Type u`.
 -/
-def sheaf_to_Types (T : X → Type u) : sheaf (Type u) X :=
-  ⟨presheaf_to_Types X T, presheaf.to_Types_is_sheaf _ _⟩
+def sheaf_to_Types (T : X → Type u) : Sheaf (Type u) X :=
+  ⟨presheafToTypes X T, Presheaf.to_Types_is_sheaf _ _⟩
 
 /-- The sheaf of not-necessarily-continuous functions on `X` with values in a type `T`.
 -/
-def sheaf_to_Type (T : Type u) : sheaf (Type u) X :=
-  ⟨presheaf_to_Type X T, presheaf.to_Type_is_sheaf _ _⟩
+def sheaf_to_Type (T : Type u) : Sheaf (Type u) X :=
+  ⟨presheafToType X T, Presheaf.to_Type_is_sheaf _ _⟩
 
 end Top
 

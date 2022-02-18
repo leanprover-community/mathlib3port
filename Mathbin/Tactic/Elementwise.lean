@@ -49,8 +49,7 @@ where `f g : X ⟶ Y` for some objects `X Y : V` with `[S : category V]`,
 extract the expression for `S`.
 -/
 unsafe def extract_category : expr → tactic expr
-  | quote.1 (@Eq (@Quiver.Hom _ (@category_struct.to_quiver _ (@category.to_category_struct _ (%%ₓS))) _ _) _ _) =>
-    pure S
+  | quote.1 (@Eq (@Quiver.Hom _ (@CategoryStruct.toQuiver _ (@Category.toCategoryStruct _ (%%ₓS))) _ _) _ _) => pure S
   | _ => failed
 
 /-- (internals for `@[elementwise]`)
@@ -70,7 +69,7 @@ unsafe def prove_elementwise (h : expr) : tactic (expr × expr × Option Name) :
   let S ← extract_category t <|> fail "no morphism equation found in statement"
   let quote.1 (@Quiver.Hom _ (%%ₓH) (%%ₓX) (%%ₓY)) ← infer_type f
   let C ← infer_type X
-  let CC_type ← to_expr (pquote.1 (@concrete_category (%%ₓC) (%%ₓS)))
+  let CC_type ← to_expr (pquote.1 (@ConcreteCategory (%%ₓC) (%%ₓS)))
   let (CC, CC_found) ←
     (do
           let CC ← mk_instance CC_type
@@ -105,11 +104,11 @@ unsafe def prove_elementwise (h : expr) : tactic (expr × expr × Option Name) :
   let s := simp_lemmas.mk
   let s ← s.add_simp `` id_apply
   let s ← s.add_simp `` comp_apply
-  let (t'', pr', _) ← simplify s [] t' { failIfUnchanged := ff }
+  let (t'', pr', _) ← simplify s [] t' { failIfUnchanged := false }
   let pr' ← mk_eq_mp pr' pr
   let s := simp_lemmas.mk
   let s ← s.add_simp `` concrete_category.has_coe_to_fun_Type
-  let (t'', pr'', _) ← simplify s [] t'' { failIfUnchanged := ff }
+  let (t'', pr'', _) ← simplify s [] t'' { failIfUnchanged := false }
   let pr'' ← mk_eq_mp pr'' pr'
   let t'' ← pis (vs ++ if CC_found then [x] else [CC, x]) t''
   let pr'' ← lambdas (vs ++ if CC_found then [x] else [CC, x]) pr''
@@ -119,11 +118,11 @@ unsafe def prove_elementwise (h : expr) : tactic (expr × expr × Option Name) :
 Given a declaration named `n` of the form `∀ ..., f = g`, proves a new lemma named `n'`
 of the form `∀ ... [concrete_category V] (x : X), f x = g x`.
 -/
-unsafe def elementwise_lemma (n : Name) (n' : Name := n.append_suffix "_apply") : tactic Unit := do
+unsafe def elementwise_lemma (n : Name) (n' : Name := n.appendSuffix "_apply") : tactic Unit := do
   let d ← get_decl n
-  let c := @expr.const tt n d.univ_levels
+  let c := @expr.const true n d.univ_levels
   let (t'', pr', l') ← prove_elementwise c
-  let params := l'.to_list ++ d.univ_params
+  let params := l'.toList ++ d.univ_params
   add_decl <| declaration.thm n' params t'' (pure pr')
   copy_attribute `simp n n'
 
@@ -160,8 +159,8 @@ unsafe def elementwise_attr : user_attribute Unit (Option Name) where
   Parser := optionalₓ ident
   after_set :=
     some fun n _ _ => do
-      let some n' ← elementwise_attr.get_param n | elementwise_lemma n (n.append_suffix "_apply")
-      elementwise_lemma n <| n.get_prefix ++ n'
+      let some n' ← elementwise_attr.get_param n | elementwise_lemma n (n.appendSuffix "_apply")
+      elementwise_lemma n <| n ++ n'
 
 add_tactic_doc
   { Name := "elementwise", category := DocCategory.attr, declNames := [`tactic.elementwise_attr],
@@ -179,17 +178,17 @@ setup_tactic_parser
 in this way.)
 -/
 unsafe def elementwise (del : parse (tk "!")?) (ns : parse (ident)*) : tactic Unit := do
-  ns.mmap' fun n => do
+  ns fun n => do
       let h ← get_local n
       let (t, pr, u) ← prove_elementwise h
       assertv n t pr
-      when del.is_some (tactic.clear h)
+      when del (tactic.clear h)
 
 end Interactive
 
 /-- Auxiliary definition for `category_theory.elementwise_of`. -/
 unsafe def derive_elementwise_proof : tactic Unit := do
-  let quote.1 (calculated_Prop (%%ₓv) (%%ₓh)) ← target
+  let quote.1 (CalculatedProp (%%ₓv) (%%ₓh)) ← target
   let (t, pr, n) ← prove_elementwise h
   unify v t
   exact pr

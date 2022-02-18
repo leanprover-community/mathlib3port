@@ -80,7 +80,7 @@ def adicCompletion : Submodule R (∀ n : ℕ, M ⧸ (I ^ n • ⊤ : Submodule 
         liftq _ (mkq _)
             (by
               rw [ker_mkq]
-              exact smul_mono (Ideal.pow_le_pow h) (le_reflₓ _))
+              exact smul_mono (Ideal.pow_le_pow h) le_rfl)
             (f n) =
           f m }
   zero_mem' := fun m n hmn => by
@@ -135,7 +135,7 @@ variable (I M)
 instance : IsHausdorff I (Hausdorffification I M) :=
   ⟨fun x =>
     (Quotientₓ.induction_on' x) fun x hx =>
-      (quotient.mk_eq_zero _).2 <|
+      (Quotient.mk_eq_zero _).2 <|
         (mem_infi _).2 fun n => by
           have := comap_map_mkq (⨅ n : ℕ, I ^ n • ⊤ : Submodule R M) (I ^ n • ⊤)
           simp only [sup_of_le_right (infi_le (fun n => (I ^ n • ⊤ : Submodule R M)) n)] at this
@@ -155,7 +155,7 @@ def lift (f : M →ₗ[R] N) : Hausdorffification I M →ₗ[R] N :=
         le_infi fun n =>
           le_transₓ (map_mono <| infi_le _ n) <| by
             rw [map_smul'']
-            exact smul_mono (le_reflₓ _) le_top
+            exact smul_mono le_rfl le_top
 
 theorem lift_of (f : M →ₗ[R] N) (x : M) : lift I f (of I M x) = f x :=
   rfl
@@ -285,7 +285,7 @@ theorem le_jacobson_bot [IsAdicComplete I R] : I ≤ (⊥ : Ideal R).jacobson :=
   obtain ⟨L, hL⟩ := IsPrecomplete.prec to_is_precomplete hf
   · rw [is_unit_iff_exists_inv]
     use L
-    rw [← sub_eq_zero, neg_mul_eq_neg_mul_symm]
+    rw [← sub_eq_zero, neg_mul]
     apply IsHausdorff.haus (to_is_Hausdorff : IsHausdorff I R)
     intro n
     specialize hL n
@@ -298,8 +298,8 @@ theorem le_jacobson_bot [IsAdicComplete I R] : I ≤ (⊥ : Ideal R).jacobson :=
     · simp only [Ideal.one_eq_top, pow_zeroₓ]
       
     · dsimp [f]
-      rw [← neg_sub _ (1 : R), neg_mul_eq_neg_mul_symm, mul_geom_sum, neg_sub, sub_sub, add_commₓ, ← sub_sub, sub_self,
-        zero_sub, neg_mem_iff, mul_powₓ]
+      rw [← neg_sub _ (1 : R), neg_mul, mul_geom_sum, neg_sub, sub_sub, add_commₓ, ← sub_sub, sub_self, zero_sub,
+        neg_mem_iff, mul_powₓ]
       exact Ideal.mul_mem_right _ (I ^ _) (Ideal.pow_mem_pow hx _)
       
     

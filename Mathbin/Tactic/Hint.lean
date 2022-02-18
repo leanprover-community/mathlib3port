@@ -78,7 +78,7 @@ and for each such tactic, the number of remaining goals afterwards.
 -/
 unsafe def hint : tactic (List (Stringₓ × ℕ)) := do
   let names ← attribute.get_instances `hint_tactic
-  focus1 <| try_all_sorted (names.reverse.map name_to_tactic)
+  focus1 <| try_all_sorted (names name_to_tactic)
 
 namespace Interactive
 
@@ -86,15 +86,15 @@ namespace Interactive
 -/
 unsafe def hint : tactic Unit := do
   let hints ← tactic.hint
-  if hints.length = 0 then fail "no hints available"
+  if hints = 0 then fail "no hints available"
     else do
-      let t ← hints.nth 0
+      let t ← hints 0
       if t.2 = 0 then do
           trace "the following tactics solve the goal:\n----"
-          (hints.filter fun p : Stringₓ × ℕ => p.2 = 0).mmap' fun p => tactic.trace f! "Try this: {p.1}"
+          (hints fun p : Stringₓ × ℕ => p.2 = 0).mmap' fun p => tactic.trace f! "Try this: {p.1}"
         else do
           trace "the following tactics make progress:\n----"
-          hints.mmap' fun p => tactic.trace f! "Try this: {p.1}"
+          hints fun p => tactic.trace f! "Try this: {p.1}"
 
 /-- `hint` lists possible tactics which will make progress (that is, not fail) against the current goal.
 

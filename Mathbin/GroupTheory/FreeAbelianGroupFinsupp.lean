@@ -44,7 +44,7 @@ theorem Finsupp.to_free_abelian_group_comp_single_add_hom (x : X) :
 
 @[simp]
 theorem FreeAbelianGroup.to_finsupp_comp_to_free_abelian_group :
-    to_finsupp.comp to_free_abelian_group = AddMonoidHom.id (X →₀ ℤ) := by
+    toFinsupp.comp toFreeAbelianGroup = AddMonoidHom.id (X →₀ ℤ) := by
   ext x y
   simp only [AddMonoidHom.id_comp]
   rw [AddMonoidHom.comp_assoc, Finsupp.to_free_abelian_group_comp_single_add_hom]
@@ -53,14 +53,13 @@ theorem FreeAbelianGroup.to_finsupp_comp_to_free_abelian_group :
 
 @[simp]
 theorem Finsupp.to_free_abelian_group_comp_to_finsupp :
-    to_free_abelian_group.comp to_finsupp = AddMonoidHom.id (FreeAbelianGroup X) := by
+    toFreeAbelianGroup.comp toFinsupp = AddMonoidHom.id (FreeAbelianGroup X) := by
   ext
   rw [to_free_abelian_group, to_finsupp, AddMonoidHom.comp_apply, lift.of, lift_add_hom_apply_single,
     AddMonoidHom.flip_apply, smul_add_hom_apply, one_smul, AddMonoidHom.id_apply]
 
 @[simp]
-theorem Finsupp.to_free_abelian_group_to_finsupp {X} (x : FreeAbelianGroup X) :
-    x.to_finsupp.to_free_abelian_group = x := by
+theorem Finsupp.to_free_abelian_group_to_finsupp {X} (x : FreeAbelianGroup X) : x.toFinsupp.toFreeAbelianGroup = x := by
   rw [← AddMonoidHom.comp_apply, Finsupp.to_free_abelian_group_comp_to_finsupp, AddMonoidHom.id_apply]
 
 namespace FreeAbelianGroup
@@ -70,11 +69,11 @@ open Finsupp
 variable {X}
 
 @[simp]
-theorem to_finsupp_of (x : X) : to_finsupp (of x) = Finsupp.single x 1 := by
+theorem to_finsupp_of (x : X) : toFinsupp (of x) = Finsupp.single x 1 := by
   simp only [to_finsupp, lift.of]
 
 @[simp]
-theorem to_finsupp_to_free_abelian_group (f : X →₀ ℤ) : f.to_free_abelian_group.to_finsupp = f := by
+theorem to_finsupp_to_free_abelian_group (f : X →₀ ℤ) : f.toFreeAbelianGroup.toFinsupp = f := by
   rw [← AddMonoidHom.comp_apply, to_finsupp_comp_to_free_abelian_group, AddMonoidHom.id_apply]
 
 variable (X)
@@ -82,11 +81,11 @@ variable (X)
 /-- The additive equivalence between `free_abelian_group X` and `(X →₀ ℤ)`. -/
 @[simps]
 def equiv_finsupp : FreeAbelianGroup X ≃+ (X →₀ ℤ) where
-  toFun := to_finsupp
-  invFun := to_free_abelian_group
+  toFun := toFinsupp
+  invFun := toFreeAbelianGroup
   left_inv := to_free_abelian_group_to_finsupp
   right_inv := to_finsupp_to_free_abelian_group
-  map_add' := to_finsupp.map_add
+  map_add' := toFinsupp.map_add
 
 /-- `A` is a basis of the ℤ-module `free_abelian_group A`. -/
 noncomputable def Basis (α : Type _) : Basis α ℤ (FreeAbelianGroup α) :=
@@ -94,41 +93,41 @@ noncomputable def Basis (α : Type _) : Basis α ℤ (FreeAbelianGroup α) :=
 
 /-- Isomorphic free ablian groups (as modules) have equivalent bases. -/
 def equiv.of_free_abelian_group_linear_equiv {α β : Type _} (e : FreeAbelianGroup α ≃ₗ[ℤ] FreeAbelianGroup β) : α ≃ β :=
-  let t : _root_.basis α ℤ (FreeAbelianGroup β) := (FreeAbelianGroup.basis α).map e
-  t.index_equiv <| FreeAbelianGroup.basis _
+  let t : Basis α ℤ (FreeAbelianGroup β) := (FreeAbelianGroup.basis α).map e
+  t.indexEquiv <| FreeAbelianGroup.basis _
 
 /-- Isomorphic free abelian groups (as additive groups) have equivalent bases. -/
 def equiv.of_free_abelian_group_equiv {α β : Type _} (e : FreeAbelianGroup α ≃+ FreeAbelianGroup β) : α ≃ β :=
-  equiv.of_free_abelian_group_linear_equiv e.to_int_linear_equiv
+  Equiv.ofFreeAbelianGroupLinearEquiv e.toIntLinearEquiv
 
 /-- Isomorphic free groups have equivalent bases. -/
 def equiv.of_free_group_equiv {α β : Type _} (e : FreeGroup α ≃* FreeGroup β) : α ≃ β :=
-  equiv.of_free_abelian_group_equiv e.abelianization_congr.to_additive
+  Equiv.ofFreeAbelianGroupEquiv e.abelianizationCongr.toAdditive
 
 open IsFreeGroup
 
 /-- Isomorphic free groups have equivalent bases (`is_free_group` variant`). -/
 def equiv.of_is_free_group_equiv {G H : Type _} [Groupₓ G] [Groupₓ H] [IsFreeGroup G] [IsFreeGroup H] (e : G ≃* H) :
-    generators G ≃ generators H :=
-  equiv.of_free_group_equiv <| MulEquiv.trans (to_free_group G).symm <| MulEquiv.trans e <| to_free_group H
+    Generators G ≃ Generators H :=
+  equiv.of_free_group_equiv <| MulEquiv.trans (toFreeGroup G).symm <| MulEquiv.trans e <| toFreeGroup H
 
 variable {X}
 
 /-- `coeff x` is the additive group homomorphism `free_abelian_group X →+ ℤ`
 that sends `a` to the multiplicity of `x : X` in `a`. -/
 def coeff (x : X) : FreeAbelianGroup X →+ ℤ :=
-  (Finsupp.applyAddHom x).comp to_finsupp
+  (Finsupp.applyAddHom x).comp toFinsupp
 
 /-- `support a` for `a : free_abelian_group X` is the finite set of `x : X`
 that occur in the formal sum `a`. -/
 def support (a : FreeAbelianGroup X) : Finset X :=
-  a.to_finsupp.support
+  a.toFinsupp.Support
 
-theorem mem_support_iff (x : X) (a : FreeAbelianGroup X) : x ∈ a.support ↔ coeff x a ≠ 0 := by
+theorem mem_support_iff (x : X) (a : FreeAbelianGroup X) : x ∈ a.Support ↔ coeff x a ≠ 0 := by
   rw [support, Finsupp.mem_support_iff]
   exact Iff.rfl
 
-theorem not_mem_support_iff (x : X) (a : FreeAbelianGroup X) : x ∉ a.support ↔ coeff x a = 0 := by
+theorem not_mem_support_iff (x : X) (a : FreeAbelianGroup X) : x ∉ a.Support ↔ coeff x a = 0 := by
   rw [support, Finsupp.not_mem_support_iff]
   exact Iff.rfl
 
@@ -157,7 +156,7 @@ theorem support_nsmul (k : ℕ) (h : k ≠ 0) (a : FreeAbelianGroup X) : support
 
 open_locale Classical
 
-theorem support_add (a b : FreeAbelianGroup X) : support (a + b) ⊆ a.support ∪ b.support := by
+theorem support_add (a b : FreeAbelianGroup X) : support (a + b) ⊆ a.Support ∪ b.Support := by
   simp only [support, AddMonoidHom.map_add]
   apply Finsupp.support_add
 

@@ -29,7 +29,7 @@ and shows how that polynomial interacts with `mv_polynomial.bind₁`.
 -/
 
 
-variable {p : ℕ} [hp : Fact p.prime] (n : ℕ) {R : Type _} [CommRingₓ R]
+variable {p : ℕ} [hp : Fact p.Prime] (n : ℕ) {R : Type _} [CommRingₓ R]
 
 local notation "𝕎" => WittVector p
 
@@ -39,12 +39,12 @@ namespace Interactive
 
 setup_tactic_parser
 
--- ././Mathport/Syntax/Translate/Basic.lean:794:4: warning: unsupported (TODO): `[tacs]
--- ././Mathport/Syntax/Translate/Basic.lean:794:4: warning: unsupported (TODO): `[tacs]
--- ././Mathport/Syntax/Translate/Basic.lean:794:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
 /-- `init_ring` is an auxiliary tactic that discharges goals factoring `init` over ring operations.
 -/
-unsafe def init_ring (assert : parse (tk "using" >> parser.pexpr)?) : tactic Unit := do
+unsafe def init_ring (assert : parse (tk "using" *> parser.pexpr)?) : tactic Unit := do
   sorry
   match assert with
     | none => skip
@@ -80,9 +80,9 @@ variable (P : ℕ → Prop)
 /-- The polynomial that witnesses that `witt_vector.select` is a polynomial function.
 `select_poly n` is `X n` if `P n` holds, and `0` otherwise. -/
 def select_poly (n : ℕ) : MvPolynomial ℕ ℤ :=
-  if P n then X n else 0
+  if P n then x n else 0
 
-theorem coeff_select (x : 𝕎 R) (n : ℕ) : (select P x).coeff n = aeval x.coeff (select_poly P n) := by
+theorem coeff_select (x : 𝕎 R) (n : ℕ) : (select P x).coeff n = aeval x.coeff (selectPoly P n) := by
   dsimp [select, select_poly]
   split_ifs with hi
   · rw [aeval_X]
@@ -91,7 +91,7 @@ theorem coeff_select (x : 𝕎 R) (n : ℕ) : (select P x).coeff n = aeval x.coe
     
 
 @[is_poly]
-theorem select_is_poly (P : ℕ → Prop) : is_poly p fun R _Rcr x => select P x := by
+theorem select_is_poly (P : ℕ → Prop) : IsPoly p fun R _Rcr x => select P x := by
   use select_poly P
   rintro R _Rcr x
   funext i
@@ -202,7 +202,7 @@ variable (p)
 omit hp
 
 /-- `witt_vector.init n x` is polynomial in the coefficients of `x`. -/
-theorem init_is_poly (n : ℕ) : is_poly p fun R _Rcr => init n :=
+theorem init_is_poly (n : ℕ) : IsPoly p fun R _Rcr => init n :=
   select_is_poly fun i => i < n
 
 end

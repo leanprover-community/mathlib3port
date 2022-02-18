@@ -31,15 +31,15 @@ open Complex ContinuousLinearMap
 
 open_locale ComplexConjugate
 
-theorem is_conformal_map_conj : IsConformalMap (conj_lie : ℂ →L[ℝ] ℂ) :=
-  conj_lie.toLinearIsometry.IsConformalMap
+theorem is_conformal_map_conj : IsConformalMap (conjLie : ℂ →L[ℝ] ℂ) :=
+  conjLie.toLinearIsometry.IsConformalMap
 
 section ConformalIntoComplexNormed
 
 variable {E : Type _} [NormedGroup E] [NormedSpace ℝ E] [NormedSpace ℂ E] {z : ℂ} {g : ℂ →L[ℝ] E} {f : ℂ → E}
 
 theorem is_conformal_map_complex_linear {map : ℂ →L[ℂ] E} (nonzero : map ≠ 0) :
-    IsConformalMap (map.restrict_scalars ℝ) := by
+    IsConformalMap (map.restrictScalars ℝ) := by
   have minor₁ : ∥map 1∥ ≠ 0 := by
     simpa [ext_ring_iff] using nonzero
   refine' ⟨∥map 1∥, minor₁, ⟨∥map 1∥⁻¹ • map, _⟩, _⟩
@@ -58,7 +58,7 @@ theorem is_conformal_map_complex_linear {map : ℂ →L[ℂ] E} (nonzero : map �
     
 
 theorem is_conformal_map_complex_linear_conj {map : ℂ →L[ℂ] E} (nonzero : map ≠ 0) :
-    IsConformalMap ((map.restrict_scalars ℝ).comp (conj_cle : ℂ →L[ℝ] ℂ)) :=
+    IsConformalMap ((map.restrictScalars ℝ).comp (conjCle : ℂ →L[ℝ] ℂ)) :=
   (is_conformal_map_complex_linear nonzero).comp is_conformal_map_conj
 
 end ConformalIntoComplexNormed
@@ -70,7 +70,7 @@ open ContinuousLinearMap
 variable {f : ℂ → ℂ} {z : ℂ} {g : ℂ →L[ℝ] ℂ}
 
 theorem IsConformalMap.is_complex_or_conj_linear (h : IsConformalMap g) :
-    (∃ map : ℂ →L[ℂ] ℂ, map.restrict_scalars ℝ = g) ∨ ∃ map : ℂ →L[ℂ] ℂ, map.restrict_scalars ℝ = g ∘L ↑conj_cle := by
+    (∃ map : ℂ →L[ℂ] ℂ, map.restrictScalars ℝ = g) ∨ ∃ map : ℂ →L[ℂ] ℂ, map.restrictScalars ℝ = g ∘L ↑conj_cle := by
   rcases h with ⟨c, hc, li, hg⟩
   rcases linear_isometry_complex (li.to_linear_isometry_equiv rfl) with ⟨a, ha⟩
   let rot := c • (a : ℂ) • ContinuousLinearMap.id ℂ ℂ
@@ -92,7 +92,7 @@ theorem IsConformalMap.is_complex_or_conj_linear (h : IsConformalMap g) :
     conjugate is complex linear, and the map is nonvanishing. -/
 theorem is_conformal_map_iff_is_complex_or_conj_linear :
     IsConformalMap g ↔
-      ((∃ map : ℂ →L[ℂ] ℂ, map.restrict_scalars ℝ = g) ∨ ∃ map : ℂ →L[ℂ] ℂ, map.restrict_scalars ℝ = g ∘L ↑conj_cle) ∧
+      ((∃ map : ℂ →L[ℂ] ℂ, map.restrictScalars ℝ = g) ∨ ∃ map : ℂ →L[ℂ] ℂ, map.restrictScalars ℝ = g ∘L ↑conj_cle) ∧
         g ≠ 0 :=
   by
   constructor

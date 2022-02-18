@@ -12,7 +12,7 @@ instance (n : ℕ) : Preorderₓ (Bitvec n) :=
 def of_fin {n : ℕ} (i : Finₓ <| 2 ^ n) : Bitvec n :=
   Bitvec.ofNat _ i.val
 
-theorem of_fin_val {n : ℕ} (i : Finₓ <| 2 ^ n) : (of_fin i).toNat = i.val := by
+theorem of_fin_val {n : ℕ} (i : Finₓ <| 2 ^ n) : (ofFin i).toNat = i.val := by
   rw [of_fin, to_nat_of_nat, Nat.mod_eq_of_ltₓ] <;> apply i.is_lt
 
 /-- convert `bitvec` to `fin` -/
@@ -22,15 +22,15 @@ def to_fin {n : ℕ} (i : Bitvec n) : Finₓ <| 2 ^ n :=
         (by
           norm_num)
         _⟩
-    i.to_nat
+    i.toNat
 
-theorem add_lsb_eq_twice_add_one {x b} : add_lsb x b = 2 * x + cond b 1 0 := by
+theorem add_lsb_eq_twice_add_one {x b} : addLsb x b = 2 * x + cond b 1 0 := by
   simp [add_lsb, two_mul]
 
-theorem to_nat_eq_foldr_reverse {n : ℕ} (v : Bitvec n) : v.to_nat = v.to_list.reverse.foldr (flip add_lsb) 0 := by
+theorem to_nat_eq_foldr_reverse {n : ℕ} (v : Bitvec n) : v.toNat = v.toList.reverse.foldr (flip addLsb) 0 := by
   rw [List.foldr_reverse, flip] <;> rfl
 
-theorem to_nat_lt {n : ℕ} (v : Bitvec n) : v.to_nat < 2 ^ n := by
+theorem to_nat_lt {n : ℕ} (v : Bitvec n) : v.toNat < 2 ^ n := by
   suffices v.to_nat + 1 ≤ 2 ^ n by
     simpa
   rw [to_nat_eq_foldr_reverse]
@@ -58,19 +58,19 @@ theorem to_nat_lt {n : ℕ} (v : Bitvec n) : v.to_nat < 2 ^ n := by
       
     
 
-theorem add_lsb_div_two {x b} : add_lsb x b / 2 = x := by
+theorem add_lsb_div_two {x b} : addLsb x b / 2 = x := by
   cases b <;>
     simp only [Nat.add_mul_div_leftₓ, add_lsb, ← two_mul, add_commₓ, Nat.succ_pos', Nat.mul_div_rightₓ, gt_iff_lt,
         zero_addₓ, cond] <;>
       norm_num
 
-theorem to_bool_add_lsb_mod_two {x b} : to_bool (add_lsb x b % 2 = 1) = b := by
+theorem to_bool_add_lsb_mod_two {x b} : toBool (addLsb x b % 2 = 1) = b := by
   cases b <;>
     simp only [to_bool_iff, Nat.add_mul_mod_self_leftₓ, add_lsb, ← two_mul, add_commₓ, Bool.to_bool_false,
         Nat.mul_mod_rightₓ, zero_addₓ, cond, zero_ne_one] <;>
       norm_num
 
-theorem of_nat_to_nat {n : ℕ} (v : Bitvec n) : Bitvec.ofNat _ v.to_nat = v := by
+theorem of_nat_to_nat {n : ℕ} (v : Bitvec n) : Bitvec.ofNat _ v.toNat = v := by
   cases' v with xs h
   ext1
   change Vector.toList _ = xs
@@ -93,24 +93,24 @@ theorem of_nat_to_nat {n : ℕ} (v : Bitvec n) : Bitvec.ofNat _ v.to_nat = v := 
     rfl
     
 
-theorem to_fin_val {n : ℕ} (v : Bitvec n) : (to_fin v : ℕ) = v.to_nat := by
+theorem to_fin_val {n : ℕ} (v : Bitvec n) : (toFin v : ℕ) = v.toNat := by
   rw [to_fin, Finₓ.coe_of_nat_eq_mod', Nat.mod_eq_of_ltₓ] <;> apply to_nat_lt
 
-theorem to_fin_le_to_fin_of_le {n} {v₀ v₁ : Bitvec n} (h : v₀ ≤ v₁) : v₀.to_fin ≤ v₁.to_fin :=
-  show (v₀.to_fin : ℕ) ≤ v₁.to_fin by
+theorem to_fin_le_to_fin_of_le {n} {v₀ v₁ : Bitvec n} (h : v₀ ≤ v₁) : v₀.toFin ≤ v₁.toFin :=
+  show (v₀.toFin : ℕ) ≤ v₁.toFin by
     rw [to_fin_val, to_fin_val] <;> exact h
 
-theorem of_fin_le_of_fin_of_le {n : ℕ} {i j : Finₓ (2 ^ n)} (h : i ≤ j) : of_fin i ≤ of_fin j :=
+theorem of_fin_le_of_fin_of_le {n : ℕ} {i j : Finₓ (2 ^ n)} (h : i ≤ j) : ofFin i ≤ ofFin j :=
   show (Bitvec.ofNat n i).toNat ≤ (Bitvec.ofNat n j).toNat by
     simp only [to_nat_of_nat, Nat.mod_eq_of_ltₓ, Finₓ.is_lt]
     exact h
 
-theorem to_fin_of_fin {n} (i : Finₓ <| 2 ^ n) : (of_fin i).toFin = i :=
+theorem to_fin_of_fin {n} (i : Finₓ <| 2 ^ n) : (ofFin i).toFin = i :=
   Finₓ.eq_of_veq
     (by
       simp [to_fin_val, of_fin, to_nat_of_nat, Nat.mod_eq_of_ltₓ, i.is_lt])
 
-theorem of_fin_to_fin {n} (v : Bitvec n) : of_fin (to_fin v) = v := by
+theorem of_fin_to_fin {n} (v : Bitvec n) : ofFin (toFin v) = v := by
   dsimp [of_fin] <;> rw [to_fin_val, of_nat_to_nat]
 
 end Bitvec

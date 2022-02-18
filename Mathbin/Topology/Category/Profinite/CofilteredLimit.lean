@@ -26,20 +26,20 @@ open CategoryTheory.Limits
 
 universe u
 
-variable {J : Type u} [small_category J] [is_cofiltered J] {F : J ⥤ Profinite.{u}} (C : cone F) (hC : is_limit C)
+variable {J : Type u} [SmallCategory J] [IsCofiltered J] {F : J ⥤ Profinite.{u}} (C : Cone F) (hC : IsLimit C)
 
 include hC
 
 /-- If `X` is a cofiltered limit of profinite sets, then any clopen subset of `X` arises from
 a clopen set in one of the terms in the limit.
 -/
-theorem exists_clopen_of_cofiltered {U : Set C.X} (hU : IsClopen U) :
+theorem exists_clopen_of_cofiltered {U : Set C.x} (hU : IsClopen U) :
     ∃ (j : J)(V : Set (F.obj j))(hV : IsClopen V), U = C.π.app j ⁻¹' V := by
   have hB :=
     Top.is_topological_basis_cofiltered_limit (F ⋙ Profinite.toTop) (Profinite.to_Top.map_cone C)
       (is_limit_of_preserves _ hC) (fun j => { W | IsClopen W }) _ (fun i => is_clopen_univ)
       (fun i U1 U2 hU1 hU2 => hU1.inter hU2) _
-  rotate
+  rotate_left
   · intro i
     change TopologicalSpace.IsTopologicalBasis { W : Set (F.obj i) | IsClopen W }
     apply is_topological_basis_clopen
@@ -53,7 +53,7 @@ theorem exists_clopen_of_cofiltered {U : Set C.X} (hU : IsClopen U) :
   let V : ∀ s : S, Set (F.obj (j s)) := fun s => (hS s.2).some_spec.some
   have hV : ∀ s : S, IsClopen (V s) ∧ s.1 = C.π.app (j s) ⁻¹' V s := fun s => (hS s.2).some_spec.some_spec
   have := hU.2.IsCompact.elim_finite_subcover (fun s : S => C.π.app (j s) ⁻¹' V s) _ _
-  rotate
+  rotate_left
   · intro s
     refine' (hV s).1.1.Preimage _
     continuity
@@ -96,7 +96,7 @@ theorem exists_clopen_of_cofiltered {U : Set C.X} (hU : IsClopen U) :
       
     
 
-theorem exists_locally_constant_fin_two (f : LocallyConstant C.X (Finₓ 2)) :
+theorem exists_locally_constant_fin_two (f : LocallyConstant C.x (Finₓ 2)) :
     ∃ (j : J)(g : LocallyConstant (F.obj j) (Finₓ 2)), f = g.comap (C.π.app _) := by
   let U := f ⁻¹' {0}
   have hU : IsClopen U := f.is_locally_constant.is_clopen_fiber _
@@ -107,7 +107,7 @@ theorem exists_locally_constant_fin_two (f : LocallyConstant C.X (Finₓ 2)) :
   conv_rhs => rw [Set.preimage_comp]
   rw [LocallyConstant.of_clopen_fiber_zero hV, ← h]
 
-theorem exists_locally_constant_fintype_aux {α : Type _} [Fintype α] (f : LocallyConstant C.X α) :
+theorem exists_locally_constant_fintype_aux {α : Type _} [Fintype α] (f : LocallyConstant C.x α) :
     ∃ (j : J)(g : LocallyConstant (F.obj j) (α → Finₓ 2)),
       (f.map fun a b => if a = b then (0 : Finₓ 2) else 1) = g.comap (C.π.app _) :=
   by
@@ -149,7 +149,7 @@ theorem exists_locally_constant_fintype_aux {α : Type _} [Fintype α] (f : Loca
   all_goals
     continuity
 
-theorem exists_locally_constant_fintype_nonempty {α : Type _} [Fintype α] [Nonempty α] (f : LocallyConstant C.X α) :
+theorem exists_locally_constant_fintype_nonempty {α : Type _} [Fintype α] [Nonempty α] (f : LocallyConstant C.x α) :
     ∃ (j : J)(g : LocallyConstant (F.obj j) α), f = g.comap (C.π.app _) := by
   inhabit α
   obtain ⟨j, gg, h⟩ := exists_locally_constant_fintype_aux _ hC f
@@ -181,7 +181,7 @@ theorem exists_locally_constant_fintype_nonempty {α : Type _} [Fintype α] [Non
 
 /-- Any locally constant function from a cofiltered limit of profinite sets factors through
 one of the components. -/
-theorem exists_locally_constant {α : Type _} (f : LocallyConstant C.X α) :
+theorem exists_locally_constant {α : Type _} (f : LocallyConstant C.x α) :
     ∃ (j : J)(g : LocallyConstant (F.obj j) α), f = g.comap (C.π.app _) := by
   let S := f.discrete_quotient
   let ff : S → α := f.lift

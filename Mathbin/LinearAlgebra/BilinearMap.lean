@@ -34,11 +34,15 @@ variable {R₂ : Type _} [Semiringₓ R₂] {S₂ : Type _} [Semiringₓ S₂]
 
 variable {M : Type _} {N : Type _} {P : Type _}
 
+variable {M₂ : Type _} {N₂ : Type _} {P₂ : Type _}
+
 variable {Nₗ : Type _} {Pₗ : Type _}
 
 variable {M' : Type _} {N' : Type _} {P' : Type _}
 
 variable [AddCommMonoidₓ M] [AddCommMonoidₓ N] [AddCommMonoidₓ P]
+
+variable [AddCommMonoidₓ M₂] [AddCommMonoidₓ N₂] [AddCommMonoidₓ P₂]
 
 variable [AddCommMonoidₓ Nₗ] [AddCommMonoidₓ Pₗ]
 
@@ -46,11 +50,15 @@ variable [AddCommGroupₓ M'] [AddCommGroupₓ N'] [AddCommGroupₓ P']
 
 variable [Module R M] [Module S N] [Module R₂ P] [Module S₂ P]
 
+variable [Module R M₂] [Module S N₂] [Module R P₂] [Module S₂ P₂]
+
 variable [Module R Pₗ] [Module S Pₗ]
 
 variable [Module R M'] [Module S N'] [Module R₂ P'] [Module S₂ P']
 
 variable [SmulCommClass S₂ R₂ P] [SmulCommClass S R Pₗ] [SmulCommClass S₂ R₂ P']
+
+variable [SmulCommClass S₂ R P₂]
 
 variable {ρ₁₂ : R →+* R₂} {σ₁₂ : S →+* S₂}
 
@@ -131,7 +139,7 @@ theorem map_sub₂ (f : M' →ₛₗ[ρ₁₂] N →ₛₗ[σ₁₂] P') x y z :
 theorem map_add₂ (f : M →ₛₗ[ρ₁₂] N →ₛₗ[σ₁₂] P) x₁ x₂ y : f (x₁ + x₂) y = f x₁ y + f x₂ y :=
   (flip f y).map_add _ _
 
-theorem map_smul₂ (f : M →ₗ[R] N →ₗ[S] Pₗ) (r : R) x y : f (r • x) y = r • f x y :=
+theorem map_smul₂ (f : M₂ →ₗ[R] N₂ →ₛₗ[σ₁₂] P₂) (r : R) x y : f (r • x) y = r • f x y :=
   (flip f y).map_smul _ _
 
 theorem map_smulₛₗ₂ (f : M →ₛₗ[ρ₁₂] N →ₛₗ[σ₁₂] P) (r : R) x y : f (r • x) y = ρ₁₂ r • f x y :=

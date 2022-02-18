@@ -21,15 +21,15 @@ def fin_range (n : ℕ) : Finset (Finₓ n) :=
   ⟨List.finRange n, List.nodup_fin_range n⟩
 
 @[simp]
-theorem fin_range_card : (fin_range n).card = n := by
+theorem fin_range_card : (finRange n).card = n := by
   simp [fin_range]
 
 @[simp]
-theorem mem_fin_range (m : Finₓ n) : m ∈ fin_range n :=
+theorem mem_fin_range (m : Finₓ n) : m ∈ finRange n :=
   List.mem_fin_range m
 
 @[simp]
-theorem coe_fin_range (n : ℕ) : (fin_range n : Set (Finₓ n)) = Set.Univ :=
+theorem coe_fin_range (n : ℕ) : (finRange n : Set (Finₓ n)) = Set.Univ :=
   Set.eq_univ_of_forall mem_fin_range
 
 /-- Given a finset `s` of `ℕ` contained in `{0,..., n-1}`, the corresponding finset in `fin n`
@@ -39,14 +39,14 @@ def attach_fin (s : Finset ℕ) {n : ℕ} (h : ∀, ∀ m ∈ s, ∀, m < n) : F
 
 @[simp]
 theorem mem_attach_fin {n : ℕ} {s : Finset ℕ} (h : ∀, ∀ m ∈ s, ∀, m < n) {a : Finₓ n} :
-    a ∈ s.attach_fin h ↔ (a : ℕ) ∈ s :=
+    a ∈ s.attachFin h ↔ (a : ℕ) ∈ s :=
   ⟨fun h =>
     let ⟨b, hb₁, hb₂⟩ := Multiset.mem_pmap.1 h
     hb₂ ▸ hb₁,
     fun h => Multiset.mem_pmap.2 ⟨a, h, Finₓ.eta _ _⟩⟩
 
 @[simp]
-theorem card_attach_fin {n : ℕ} (s : Finset ℕ) (h : ∀, ∀ m ∈ s, ∀, m < n) : (s.attach_fin h).card = s.card :=
+theorem card_attach_fin {n : ℕ} (s : Finset ℕ) (h : ∀, ∀ m ∈ s, ∀, m < n) : (s.attachFin h).card = s.card :=
   Multiset.card_pmap _ _ _
 
 end Finset

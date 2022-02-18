@@ -26,7 +26,7 @@ variable {ι : Type _} [Fintype ι]
 /-- The isometry between a weighted sum of squares with weights `u` on the
 (non-zero) real numbers and the weighted sum of squares with weights `sign ∘ u`. -/
 noncomputable def isometry_sign_weighted_sum_squares [DecidableEq ι] (w : ι → ℝ) :
-    Isometry (weighted_sum_squares ℝ w) (weighted_sum_squares ℝ (sign ∘ w)) := by
+    Isometry (weightedSumSquares ℝ w) (weightedSumSquares ℝ (sign ∘ w)) := by
   let u := fun i => if h : w i = 0 then (1 : (ℝ)ˣ) else Units.mk0 (w i) h
   have hu' : ∀ i : ι, (sign (u i) * u i) ^ -(1 / 2 : ℝ) ≠ 0 := by
     intro i
@@ -71,21 +71,20 @@ noncomputable def isometry_sign_weighted_sum_squares [DecidableEq ι] (w : ι �
 /-- **Sylvester's law of inertia**: A nondegenerate real quadratic form is equivalent to a weighted
 sum of squares with the weights being ±1. -/
 theorem equivalent_one_neg_one_weighted_sum_squared {M : Type _} [AddCommGroupₓ M] [Module ℝ M] [FiniteDimensional ℝ M]
-    (Q : QuadraticForm ℝ M) (hQ : (Associated Q).Nondegenerate) :
-    ∃ w : Finₓ (FiniteDimensional.finrank ℝ M) → ℝ,
-      (∀ i, w i = -1 ∨ w i = 1) ∧ equivalent Q (weighted_sum_squares ℝ w) :=
+    (Q : QuadraticForm ℝ M) (hQ : (associated Q).Nondegenerate) :
+    ∃ w : Finₓ (FiniteDimensional.finrank ℝ M) → ℝ, (∀ i, w i = -1 ∨ w i = 1) ∧ Equivalent Q (weightedSumSquares ℝ w) :=
   let ⟨w, ⟨hw₁⟩⟩ := Q.equivalent_weighted_sum_squares_units_of_nondegenerate' hQ
   ⟨sign ∘ coe ∘ w, fun i => sign_apply_eq_of_ne_zero (w i) (w i).ne_zero,
-    ⟨hw₁.trans (isometry_sign_weighted_sum_squares (coe ∘ w))⟩⟩
+    ⟨hw₁.trans (isometrySignWeightedSumSquares (coe ∘ w))⟩⟩
 
 /-- **Sylvester's law of inertia**: A real quadratic form is equivalent to a weighted
 sum of squares with the weights being ±1 or 0. -/
 theorem equivalent_one_zero_neg_one_weighted_sum_squared {M : Type _} [AddCommGroupₓ M] [Module ℝ M]
     [FiniteDimensional ℝ M] (Q : QuadraticForm ℝ M) :
     ∃ w : Finₓ (FiniteDimensional.finrank ℝ M) → ℝ,
-      (∀ i, w i = -1 ∨ w i = 0 ∨ w i = 1) ∧ equivalent Q (weighted_sum_squares ℝ w) :=
+      (∀ i, w i = -1 ∨ w i = 0 ∨ w i = 1) ∧ Equivalent Q (weightedSumSquares ℝ w) :=
   let ⟨w, ⟨hw₁⟩⟩ := Q.equivalent_weighted_sum_squares
-  ⟨sign ∘ coe ∘ w, fun i => sign_apply_eq (w i), ⟨hw₁.trans (isometry_sign_weighted_sum_squares w)⟩⟩
+  ⟨sign ∘ coe ∘ w, fun i => sign_apply_eq (w i), ⟨hw₁.trans (isometrySignWeightedSumSquares w)⟩⟩
 
 end QuadraticForm
 

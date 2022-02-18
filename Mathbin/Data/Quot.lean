@@ -26,11 +26,14 @@ namespace Quot
 
 variable {ra : α → α → Prop} {rb : β → β → Prop} {φ : Quot ra → Quot rb → Sort _}
 
--- ././Mathport/Syntax/Translate/Basic.lean:342:9: unsupported: advanced prec syntax
+-- ././Mathport/Syntax/Translate/Basic.lean:343:9: unsupported: advanced prec syntax
 local notation:999 "⟦" a "⟧" => Quot.mk _ a
 
-instance [Inhabited α] : Inhabited (Quot ra) :=
+instance (r : α → α → Prop) [Inhabited α] : Inhabited (Quot r) :=
   ⟨⟦default⟧⟩
+
+instance [Subsingleton α] : Subsingleton (Quot ra) :=
+  ⟨fun x => Quot.induction_on x fun y => Quot.ind fun b => congr_argₓ _ (Subsingleton.elimₓ _ _)⟩
 
 /-- Recursion on two `quotient` arguments `a` and `b`, result type depends on `⟦a⟧` and `⟦b⟧`. -/
 protected def hrec_on₂ (qa : Quot ra) (qb : Quot rb) (f : ∀ a b, φ (⟦a⟧) (⟦b⟧))
@@ -129,8 +132,11 @@ variable [sa : Setoidₓ α] [sb : Setoidₓ β]
 
 variable {φ : Quotientₓ sa → Quotientₓ sb → Sort _}
 
-instance [Inhabited α] : Inhabited (Quotientₓ sa) :=
+instance (s : Setoidₓ α) [Inhabited α] : Inhabited (Quotientₓ s) :=
   ⟨⟦default⟧⟩
+
+instance (s : Setoidₓ α) [Subsingleton α] : Subsingleton (Quotientₓ s) :=
+  Quot.subsingleton
 
 /-- Induction on two `quotient` arguments `a` and `b`, result type depends on `⟦a⟧` and `⟦b⟧`. -/
 protected def hrec_on₂ (qa : Quotientₓ sa) (qb : Quotientₓ sb) (f : ∀ a b, φ (⟦a⟧) (⟦b⟧))
@@ -176,6 +182,11 @@ theorem forall_quotient_iff {α : Type _} [r : Setoidₓ α] {p : Quotientₓ r 
 @[simp]
 theorem Quotientₓ.lift_mk [s : Setoidₓ α] (f : α → β) (h : ∀ a b : α, a ≈ b → f a = f b) (x : α) :
     Quotientₓ.lift f h (Quotientₓ.mk x) = f x :=
+  rfl
+
+@[simp]
+theorem Quotientₓ.lift_comp_mk [Setoidₓ α] (f : α → β) (h : ∀ a b : α, a ≈ b → f a = f b) :
+    Quotientₓ.lift f h ∘ Quotientₓ.mk = f :=
   rfl
 
 @[simp]
@@ -238,11 +249,11 @@ theorem Quotientₓ.eq_mk_iff_out [s : Setoidₓ α] {x : Quotientₓ s} {y : α
   rw [Quotientₓ.out_eq x]
 
 @[simp]
-theorem Quotientₓ.out_equiv_out [s : Setoidₓ α] {x y : Quotientₓ s} : x.out ≈ y.out ↔ x = y := by
+theorem Quotientₓ.out_equiv_out {s : Setoidₓ α} {x y : Quotientₓ s} : x.out ≈ y.out ↔ x = y := by
   rw [← Quotientₓ.eq_mk_iff_out, Quotientₓ.out_eq]
 
 @[simp]
-theorem Quotientₓ.out_inj [s : Setoidₓ α] {x y : Quotientₓ s} : x.out = y.out ↔ x = y :=
+theorem Quotientₓ.out_inj {s : Setoidₓ α} {x y : Quotientₓ s} : x.out = y.out ↔ x = y :=
   ⟨fun h => Quotientₓ.out_equiv_out.1 <| h ▸ Setoidₓ.refl _, fun h => h ▸ rfl⟩
 
 section Pi
@@ -485,12 +496,12 @@ protected def hrec_on₂' {φ : Quotientₓ s₁ → Quotientₓ s₂ → Sort _
 @[simp]
 theorem hrec_on₂'_mk' {φ : Quotientₓ s₁ → Quotientₓ s₂ → Sort _} (f : ∀ a b, φ (Quotientₓ.mk' a) (Quotientₓ.mk' b))
     (c : ∀ a₁ b₁ a₂ b₂, a₁ ≈ a₂ → b₁ ≈ b₂ → HEq (f a₁ b₁) (f a₂ b₂)) (x : α) (qb : Quotientₓ s₂) :
-    (Quotientₓ.mk' x).hrecOn₂' qb f c = qb.hrec_on' (f x) fun b₁ b₂ => c _ _ _ _ (Setoidₓ.refl _) :=
+    (Quotientₓ.mk' x).hrecOn₂' qb f c = qb.hrecOn' (f x) fun b₁ b₂ => c _ _ _ _ (Setoidₓ.refl _) :=
   rfl
 
 /-- Map a function `f : α → β` that sends equivalent elements to equivalent elements
 to a function `quotient sa → quotient sb`. Useful to define unary operations on quotients. -/
-protected def map' (f : α → β) (h : (· ≈ ·⇒· ≈ ·) f f) : Quotientₓ s₁ → Quotientₓ s₂ :=
+protected def map' (f : α → β) (h : (s₁.R⇒s₂.R) f f) : Quotientₓ s₁ → Quotientₓ s₂ :=
   Quot.map f h
 
 @[simp]
@@ -499,7 +510,7 @@ theorem map'_mk' (f : α → β) h (x : α) :
   rfl
 
 /-- A version of `quotient.map₂` using curly braces and unification. -/
-protected def map₂' (f : α → β → γ) (h : (· ≈ ·⇒· ≈ ·⇒· ≈ ·) f f) : Quotientₓ s₁ → Quotientₓ s₂ → Quotientₓ s₃ :=
+protected def map₂' (f : α → β → γ) (h : (s₁.R⇒s₂.R⇒s₃.R) f f) : Quotientₓ s₁ → Quotientₓ s₂ → Quotientₓ s₃ :=
   Quotientₓ.map₂ f h
 
 @[simp]

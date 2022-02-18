@@ -25,7 +25,7 @@ namespace CategoryTheory
 
 section Examples
 
-instance wide_pullback_shape_connected (J : Type v₁) : is_connected (wide_pullback_shape J) := by
+instance wide_pullback_shape_connected (J : Type v₁) : IsConnected (WidePullbackShape J) := by
   apply is_connected.of_induct
   introv hp t
   cases j
@@ -34,7 +34,7 @@ instance wide_pullback_shape_connected (J : Type v₁) : is_connected (wide_pull
   · rwa [t (wide_pullback_shape.hom.term j)]
     
 
-instance wide_pushout_shape_connected (J : Type v₁) : is_connected (wide_pushout_shape J) := by
+instance wide_pushout_shape_connected (J : Type v₁) : IsConnected (WidePushoutShape J) := by
   apply is_connected.of_induct
   introv hp t
   cases j
@@ -43,10 +43,10 @@ instance wide_pushout_shape_connected (J : Type v₁) : is_connected (wide_pusho
   · rwa [← t (wide_pushout_shape.hom.init j)]
     
 
-instance parallel_pair_inhabited : Inhabited walking_parallel_pair :=
-  ⟨walking_parallel_pair.one⟩
+instance parallel_pair_inhabited : Inhabited WalkingParallelPair :=
+  ⟨WalkingParallelPair.one⟩
 
-instance parallel_pair_connected : is_connected walking_parallel_pair := by
+instance parallel_pair_connected : IsConnected WalkingParallelPair := by
   apply is_connected.of_induct
   introv _ t
   cases j
@@ -59,29 +59,29 @@ end Examples
 
 attribute [local tidy] tactic.case_bash
 
-variable {C : Type u₂} [category.{v₂} C]
+variable {C : Type u₂} [Category.{v₂} C]
 
-variable [has_binary_products C]
+variable [HasBinaryProducts C]
 
-variable {J : Type v₂} [small_category J]
+variable {J : Type v₂} [SmallCategory J]
 
 namespace ProdPreservesConnectedLimits
 
 /-- (Impl). The obvious natural transformation from (X × K -) to K. -/
 @[simps]
 def γ₂ {K : J ⥤ C} (X : C) : K ⋙ prod.functor.obj X ⟶ K where
-  app := fun Y => limits.prod.snd
+  app := fun Y => Limits.prod.snd
 
 /-- (Impl). The obvious natural transformation from (X × K -) to X -/
 @[simps]
-def γ₁ {K : J ⥤ C} (X : C) : K ⋙ prod.functor.obj X ⟶ (Functor.Const J).obj X where
-  app := fun Y => limits.prod.fst
+def γ₁ {K : J ⥤ C} (X : C) : K ⋙ prod.functor.obj X ⟶ (Functor.const J).obj X where
+  app := fun Y => Limits.prod.fst
 
 /-- (Impl).
 Given a cone for (X × K -), produce a cone for K using the natural transformation `γ₂` -/
 @[simps]
-def forget_cone {X : C} {K : J ⥤ C} (s : cone (K ⋙ prod.functor.obj X)) : cone K where
-  x := s.X
+def forget_cone {X : C} {K : J ⥤ C} (s : Cone (K ⋙ prod.functor.obj X)) : Cone K where
+  x := s.x
   π := s.π ≫ γ₂ X
 
 end ProdPreservesConnectedLimits
@@ -93,11 +93,11 @@ Note that this functor does not preserve the two most obvious disconnected limit
 `(X × -)` does not preserve products or terminal object, eg `(X ⨯ A) ⨯ (X ⨯ B)` is not isomorphic to
 `X ⨯ (A ⨯ B)` and `X ⨯ 1` is not isomorphic to `1`.
 -/
-noncomputable def prod_preserves_connected_limits [is_connected J] (X : C) :
-    preserves_limits_of_shape J (prod.functor.obj X) where
+noncomputable def prod_preserves_connected_limits [IsConnected J] (X : C) :
+    PreservesLimitsOfShape J (prod.functor.obj X) where
   PreservesLimit := fun K =>
     { preserves := fun c l =>
-        { lift := fun s => prod.lift (s.π.app (Classical.arbitrary _) ≫ limits.prod.fst) (l.lift (forget_cone s)),
+        { lift := fun s => prod.lift (s.π.app (Classical.arbitrary _) ≫ limits.prod.fst) (l.lift (forgetCone s)),
           fac' := fun s j => by
             apply prod.hom_ext
             · erw [assoc, lim_map_π, comp_id, limit.lift_π]

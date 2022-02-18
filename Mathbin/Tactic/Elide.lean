@@ -17,18 +17,18 @@ unsafe def replace : ℕ → expr → tactic expr
     let d' ← replace i d
     let var ← mk_local' n b d
     let e' ← replace i (expr.instantiate_var e var)
-    return (expr.lam n b d' (expr.abstract_local e' var.local_uniq_name))
+    return (expr.lam n b d' (expr.abstract_local e' var))
   | i + 1, expr.pi n b d e => do
     let d' ← replace i d
     let var ← mk_local' n b d
     let e' ← replace i (expr.instantiate_var e var)
-    return (expr.pi n b d' (expr.abstract_local e' var.local_uniq_name))
+    return (expr.pi n b d' (expr.abstract_local e' var))
   | i + 1, el@(expr.elet n t d e) => do
     let t' ← replace i t
     let d' ← replace i d
     let var ← mk_local_def n t
     let e' ← replace i (expr.instantiate_var e var)
-    return (expr.elet n t' d' (expr.abstract_local e' var.local_uniq_name))
+    return (expr.elet n t' d' (expr.abstract_local e' var))
   | i + 1, e => return e
 
 unsafe def unelide (e : expr) : expr :=

@@ -137,8 +137,8 @@ variable {G} {H : Type v} [Groupₓ H] (e : G ≃* H)
 
 /-- Equivalent groups have equivalent abelianizations -/
 def MulEquiv.abelianizationCongr : Abelianization G ≃* Abelianization H where
-  toFun := Abelianization.map e.to_monoid_hom
-  invFun := Abelianization.map e.symm.to_monoid_hom
+  toFun := Abelianization.map e.toMonoidHom
+  invFun := Abelianization.map e.symm.toMonoidHom
   left_inv := by
     rintro ⟨a⟩
     simp
@@ -148,7 +148,7 @@ def MulEquiv.abelianizationCongr : Abelianization G ≃* Abelianization H where
   map_mul' := MonoidHom.map_mul _
 
 @[simp]
-theorem abelianization_congr_of (x : G) : e.abelianization_congr (Abelianization.of x) = Abelianization.of (e x) :=
+theorem abelianization_congr_of (x : G) : e.abelianizationCongr (Abelianization.of x) = Abelianization.of (e x) :=
   rfl
 
 @[simp]
@@ -156,12 +156,12 @@ theorem abelianization_congr_refl : (MulEquiv.refl G).abelianizationCongr = MulE
   MulEquiv.to_monoid_hom_injective Abelianization.lift_of
 
 @[simp]
-theorem abelianization_congr_symm : e.abelianization_congr.symm = e.symm.abelianization_congr :=
+theorem abelianization_congr_symm : e.abelianizationCongr.symm = e.symm.abelianizationCongr :=
   rfl
 
 @[simp]
 theorem abelianization_congr_trans {I : Type v} [Groupₓ I] (e₂ : H ≃* I) :
-    e.abelianization_congr.trans e₂.abelianization_congr = (e.trans e₂).abelianizationCongr :=
+    e.abelianizationCongr.trans e₂.abelianizationCongr = (e.trans e₂).abelianizationCongr :=
   MulEquiv.to_monoid_hom_injective (Abelianization.hom_ext _ _ rfl)
 
 end AbelianizationCongr

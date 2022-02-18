@@ -30,14 +30,14 @@ open TopologicalSpace
 
 open Opposite
 
-variable (C : Type u) [category.{v} C]
+variable (C : Type u) [Category.{v} C]
 
 namespace Top
 
 /-- The category of `C`-valued presheaves on a (bundled) topological space `X`. -/
 @[nolint has_inhabited_instance]
 def presheaf (X : Top.{v}) :=
-  opens Xᵒᵖ ⥤ C deriving category
+  Opens Xᵒᵖ ⥤ C deriving Category
 
 variable {C}
 
@@ -45,33 +45,33 @@ namespace Presheaf
 
 /-- Pushforward a presheaf on `X` along a continuous map `f : X ⟶ Y`, obtaining a presheaf
 on `Y`. -/
-def pushforward_obj {X Y : Top.{v}} (f : X ⟶ Y) (ℱ : X.presheaf C) : Y.presheaf C :=
-  (opens.map f).op ⋙ ℱ
+def pushforward_obj {X Y : Top.{v}} (f : X ⟶ Y) (ℱ : X.Presheaf C) : Y.Presheaf C :=
+  (Opens.map f).op ⋙ ℱ
 
-infixl:80 " _* " => pushforward_obj
+infixl:80 " _* " => pushforwardObj
 
 @[simp]
-theorem pushforward_obj_obj {X Y : Top.{v}} (f : X ⟶ Y) (ℱ : X.presheaf C) (U : opens Yᵒᵖ) :
-    (f _* ℱ).obj U = ℱ.obj ((opens.map f).op.obj U) :=
+theorem pushforward_obj_obj {X Y : Top.{v}} (f : X ⟶ Y) (ℱ : X.Presheaf C) (U : Opens Yᵒᵖ) :
+    (f _* ℱ).obj U = ℱ.obj ((Opens.map f).op.obj U) :=
   rfl
 
 @[simp]
-theorem pushforward_obj_map {X Y : Top.{v}} (f : X ⟶ Y) (ℱ : X.presheaf C) {U V : opens Yᵒᵖ} (i : U ⟶ V) :
-    (f _* ℱ).map i = ℱ.map ((opens.map f).op.map i) :=
+theorem pushforward_obj_map {X Y : Top.{v}} (f : X ⟶ Y) (ℱ : X.Presheaf C) {U V : Opens Yᵒᵖ} (i : U ⟶ V) :
+    (f _* ℱ).map i = ℱ.map ((Opens.map f).op.map i) :=
   rfl
 
 /-- An equality of continuous maps induces a natural isomorphism between the pushforwards of a presheaf
 along those maps.
 -/
-def pushforward_eq {X Y : Top.{v}} {f g : X ⟶ Y} (h : f = g) (ℱ : X.presheaf C) : f _* ℱ ≅ g _* ℱ :=
-  iso_whisker_right (nat_iso.op (opens.map_iso f g h).symm) ℱ
+def pushforward_eq {X Y : Top.{v}} {f g : X ⟶ Y} (h : f = g) (ℱ : X.Presheaf C) : f _* ℱ ≅ g _* ℱ :=
+  isoWhiskerRight (NatIso.op (Opens.mapIso f g h).symm) ℱ
 
-theorem pushforward_eq' {X Y : Top.{v}} {f g : X ⟶ Y} (h : f = g) (ℱ : X.presheaf C) : f _* ℱ = g _* ℱ := by
+theorem pushforward_eq' {X Y : Top.{v}} {f g : X ⟶ Y} (h : f = g) (ℱ : X.Presheaf C) : f _* ℱ = g _* ℱ := by
   rw [h]
 
 @[simp]
-theorem pushforward_eq_hom_app {X Y : Top.{v}} {f g : X ⟶ Y} (h : f = g) (ℱ : X.presheaf C) U :
-    (pushforward_eq h ℱ).Hom.app U =
+theorem pushforward_eq_hom_app {X Y : Top.{v}} {f g : X ⟶ Y} (h : f = g) (ℱ : X.Presheaf C) U :
+    (pushforwardEq h ℱ).Hom.app U =
       ℱ.map
         (by
           dsimp [functor.op]
@@ -81,33 +81,33 @@ theorem pushforward_eq_hom_app {X Y : Top.{v}} {f g : X ⟶ Y} (h : f = g) (ℱ 
   by
   simp [pushforward_eq]
 
-theorem pushforward_eq'_hom_app {X Y : Top.{v}} {f g : X ⟶ Y} (h : f = g) (ℱ : X.presheaf C) U :
-    nat_trans.app (eq_to_hom (pushforward_eq' h ℱ)) U =
+theorem pushforward_eq'_hom_app {X Y : Top.{v}} {f g : X ⟶ Y} (h : f = g) (ℱ : X.Presheaf C) U :
+    NatTrans.app (eqToHom (pushforward_eq' h ℱ)) U =
       ℱ.map
-        (eq_to_hom
+        (eqToHom
           (by
             rw [h])) :=
   by
   simpa
 
 @[simp]
-theorem pushforward_eq_rfl {X Y : Top.{v}} (f : X ⟶ Y) (ℱ : X.presheaf C) U :
-    (pushforward_eq (rfl : f = f) ℱ).Hom.app (op U) = 𝟙 _ := by
+theorem pushforward_eq_rfl {X Y : Top.{v}} (f : X ⟶ Y) (ℱ : X.Presheaf C) U :
+    (pushforwardEq (rfl : f = f) ℱ).Hom.app (op U) = 𝟙 _ := by
   dsimp [pushforward_eq]
   simp
 
-theorem pushforward_eq_eq {X Y : Top.{v}} {f g : X ⟶ Y} (h₁ h₂ : f = g) (ℱ : X.presheaf C) :
-    ℱ.pushforward_eq h₁ = ℱ.pushforward_eq h₂ :=
+theorem pushforward_eq_eq {X Y : Top.{v}} {f g : X ⟶ Y} (h₁ h₂ : f = g) (ℱ : X.Presheaf C) :
+    ℱ.pushforwardEq h₁ = ℱ.pushforwardEq h₂ :=
   rfl
 
 namespace Pushforward
 
-variable {X : Top.{v}} (ℱ : X.presheaf C)
+variable {X : Top.{v}} (ℱ : X.Presheaf C)
 
 /-- The natural isomorphism between the pushforward of a presheaf along the identity continuous map
 and the original presheaf. -/
 def id : 𝟙 X _* ℱ ≅ ℱ :=
-  iso_whisker_right (nat_iso.op (opens.map_id X).symm) ℱ ≪≫ functor.left_unitor _
+  isoWhiskerRight (NatIso.op (Opens.mapId X).symm) ℱ ≪≫ Functor.leftUnitor _
 
 theorem id_eq : 𝟙 X _* ℱ = ℱ := by
   unfold pushforward_obj
@@ -122,7 +122,7 @@ theorem id_hom_app' U p : (id ℱ).Hom.app (op ⟨U, p⟩) = ℱ.map (𝟙 (op �
 attribute [local tidy] tactic.op_induction'
 
 @[simp]
-theorem id_hom_app U : (id ℱ).Hom.app U = ℱ.map (eq_to_hom (opens.op_map_id_obj U)) := by
+theorem id_hom_app U : (id ℱ).Hom.app U = ℱ.map (eqToHom (Opens.op_map_id_obj U)) := by
   tidy
 
 @[simp]
@@ -134,7 +134,7 @@ theorem id_inv_app' U p : (id ℱ).inv.app (op ⟨U, p⟩) = ℱ.map (𝟙 (op �
 the pushforward of a presheaf along the composition of two continuous maps and
 the corresponding pushforward of a pushforward. -/
 def comp {Y Z : Top.{v}} (f : X ⟶ Y) (g : Y ⟶ Z) : (f ≫ g) _* ℱ ≅ g _* (f _* ℱ) :=
-  iso_whisker_right (nat_iso.op (opens.map_comp f g).symm) ℱ
+  isoWhiskerRight (NatIso.op (Opens.mapComp f g).symm) ℱ
 
 theorem comp_eq {Y Z : Top.{v}} (f : X ⟶ Y) (g : Y ⟶ Z) : (f ≫ g) _* ℱ = g _* (f _* ℱ) :=
   rfl
@@ -154,7 +154,7 @@ end Pushforward
 /-- A morphism of presheaves gives rise to a morphisms of the pushforwards of those presheaves.
 -/
 @[simps]
-def pushforward_map {X Y : Top.{v}} (f : X ⟶ Y) {ℱ 𝒢 : X.presheaf C} (α : ℱ ⟶ 𝒢) : f _* ℱ ⟶ f _* 𝒢 where
+def pushforward_map {X Y : Top.{v}} (f : X ⟶ Y) {ℱ 𝒢 : X.Presheaf C} (α : ℱ ⟶ 𝒢) : f _* ℱ ⟶ f _* 𝒢 where
   app := fun U => α.app _
   naturality' := fun U V i => by
     erw [α.naturality]
@@ -164,7 +164,7 @@ open CategoryTheory.Limits
 
 section Pullback
 
-variable [has_colimits C]
+variable [HasColimits C]
 
 noncomputable section
 
@@ -174,17 +174,17 @@ This is defined in terms of left Kan extensions, which is just a fancy way of sa
 "take the colimits over the open sets whose preimage contains U".
 -/
 @[simps]
-def pullback_obj {X Y : Top.{v}} (f : X ⟶ Y) (ℱ : Y.presheaf C) : X.presheaf C :=
-  (Lan (opens.map f).op).obj ℱ
+def pullback_obj {X Y : Top.{v}} (f : X ⟶ Y) (ℱ : Y.Presheaf C) : X.Presheaf C :=
+  (lan (Opens.map f).op).obj ℱ
 
 /-- Pulling back along continuous maps is functorial. -/
-def pullback_map {X Y : Top.{v}} (f : X ⟶ Y) {ℱ 𝒢 : Y.presheaf C} (α : ℱ ⟶ 𝒢) : pullback_obj f ℱ ⟶ pullback_obj f 𝒢 :=
-  (Lan (opens.map f).op).map α
+def pullback_map {X Y : Top.{v}} (f : X ⟶ Y) {ℱ 𝒢 : Y.Presheaf C} (α : ℱ ⟶ 𝒢) : pullbackObj f ℱ ⟶ pullbackObj f 𝒢 :=
+  (lan (Opens.map f).op).map α
 
 /-- If `f '' U` is open, then `f⁻¹ℱ U ≅ ℱ (f '' U)`.  -/
 @[simps]
-def pullback_obj_obj_of_image_open {X Y : Top.{v}} (f : X ⟶ Y) (ℱ : Y.presheaf C) (U : opens X) (H : IsOpen (f '' U)) :
-    (pullback_obj f ℱ).obj (op U) ≅ ℱ.obj (op ⟨_, H⟩) := by
+def pullback_obj_obj_of_image_open {X Y : Top.{v}} (f : X ⟶ Y) (ℱ : Y.Presheaf C) (U : Opens X) (H : IsOpen (f '' U)) :
+    (pullbackObj f ℱ).obj (op U) ≅ ℱ.obj (op ⟨_, H⟩) := by
   let x : costructured_arrow (opens.map f).op (op U) :=
     { left := op ⟨f '' U, H⟩,
       Hom :=
@@ -201,17 +201,17 @@ def pullback_obj_obj_of_image_open {X Y : Top.{v}} (f : X ⟶ Y) (ℱ : Y.preshe
 
 namespace Pullback
 
-variable {X Y : Top.{v}} (ℱ : Y.presheaf C)
+variable {X Y : Top.{v}} (ℱ : Y.Presheaf C)
 
 /-- The pullback along the identity is isomorphic to the original presheaf. -/
-def id : pullback_obj (𝟙 _) ℱ ≅ ℱ :=
-  nat_iso.of_components
+def id : pullbackObj (𝟙 _) ℱ ≅ ℱ :=
+  NatIso.ofComponents
     (fun U =>
-      pullback_obj_obj_of_image_open (𝟙 _) ℱ (unop U)
+      pullbackObjObjOfImageOpen (𝟙 _) ℱ (unop U)
           (by
             simpa using U.unop.2) ≪≫
-        ℱ.map_iso
-          (eq_to_iso
+        ℱ.mapIso
+          (eqToIso
             (by
               simp )))
     fun U V i => by
@@ -224,13 +224,13 @@ def id : pullback_obj (𝟙 _) ℱ ≅ ℱ :=
     simp only [← ℱ.map_comp]
     congr
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:57:31: expecting tactic arg
-theorem id_inv_app (U : opens Y) :
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:50: missing argument
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:59:31: expecting tactic arg
+theorem id_inv_app (U : Opens Y) :
     (id ℱ).inv.app (op U) =
-      colimit.ι (Lan.diagram (opens.map (𝟙 Y)).op ℱ (op U))
-        (@costructured_arrow.mk _ _ _ _ _ (op U) _
-          (eq_to_hom
+      colimit.ι (Lan.diagram (Opens.map (𝟙 Y)).op ℱ (op U))
+        (@CostructuredArrow.mk _ _ _ _ _ (op U) _
+          (eqToHom
             (by
               simp ))) :=
   by
@@ -254,16 +254,16 @@ variable (C)
 
 /-- The pushforward functor.
 -/
-def pushforward {X Y : Top.{v}} (f : X ⟶ Y) : X.presheaf C ⥤ Y.presheaf C where
-  obj := pushforward_obj f
-  map := @pushforward_map _ _ X Y f
+def pushforward {X Y : Top.{v}} (f : X ⟶ Y) : X.Presheaf C ⥤ Y.Presheaf C where
+  obj := pushforwardObj f
+  map := @pushforwardMap _ _ X Y f
 
 @[simp]
-theorem pushforward_map_app' {X Y : Top.{v}} (f : X ⟶ Y) {ℱ 𝒢 : X.presheaf C} (α : ℱ ⟶ 𝒢) {U : opens Yᵒᵖ} :
-    ((pushforward C f).map α).app U = α.app (op <| (opens.map f).obj U.unop) :=
+theorem pushforward_map_app' {X Y : Top.{v}} (f : X ⟶ Y) {ℱ 𝒢 : X.Presheaf C} (α : ℱ ⟶ 𝒢) {U : Opens Yᵒᵖ} :
+    ((pushforward C f).map α).app U = α.app (op <| (Opens.map f).obj U.unop) :=
   rfl
 
-theorem id_pushforward {X : Top.{v}} : pushforward C (𝟙 X) = 𝟭 (X.presheaf C) := by
+theorem id_pushforward {X : Top.{v}} : pushforward C (𝟙 X) = 𝟭 (X.Presheaf C) := by
   apply CategoryTheory.Functor.ext
   · intros
     ext U
@@ -279,27 +279,27 @@ section Iso
 
 /-- A homeomorphism of spaces gives an equivalence of categories of presheaves. -/
 @[simps]
-def presheaf_equiv_of_iso {X Y : Top} (H : X ≅ Y) : X.presheaf C ≌ Y.presheaf C :=
-  equivalence.congr_left (opens.map_map_iso H).symm.op
+def presheaf_equiv_of_iso {X Y : Top} (H : X ≅ Y) : X.Presheaf C ≌ Y.Presheaf C :=
+  Equivalence.congrLeft (Opens.mapMapIso H).symm.op
 
 variable {C}
 
 /-- If `H : X ≅ Y` is a homeomorphism,
 then given an `H _* ℱ ⟶ 𝒢`, we may obtain an `ℱ ⟶ H ⁻¹ _* 𝒢`.
 -/
-def to_pushforward_of_iso {X Y : Top} (H : X ≅ Y) {ℱ : X.presheaf C} {𝒢 : Y.presheaf C} (α : H.hom _* ℱ ⟶ 𝒢) :
+def to_pushforward_of_iso {X Y : Top} (H : X ≅ Y) {ℱ : X.Presheaf C} {𝒢 : Y.Presheaf C} (α : H.Hom _* ℱ ⟶ 𝒢) :
     ℱ ⟶ H.inv _* 𝒢 :=
-  (presheaf_equiv_of_iso _ H).toAdjunction.homEquiv ℱ 𝒢 α
+  (presheafEquivOfIso _ H).toAdjunction.homEquiv ℱ 𝒢 α
 
 @[simp]
-theorem to_pushforward_of_iso_app {X Y : Top} (H₁ : X ≅ Y) {ℱ : X.presheaf C} {𝒢 : Y.presheaf C} (H₂ : H₁.hom _* ℱ ⟶ 𝒢)
-    (U : opens Xᵒᵖ) :
-    (to_pushforward_of_iso H₁ H₂).app U =
+theorem to_pushforward_of_iso_app {X Y : Top} (H₁ : X ≅ Y) {ℱ : X.Presheaf C} {𝒢 : Y.Presheaf C} (H₂ : H₁.Hom _* ℱ ⟶ 𝒢)
+    (U : Opens Xᵒᵖ) :
+    (toPushforwardOfIso H₁ H₂).app U =
       ℱ.map
-          (eq_to_hom
+          (eqToHom
             (by
               simp [opens.map, Set.preimage_preimage])) ≫
-        H₂.app (op ((opens.map H₁.inv).obj (unop U))) :=
+        H₂.app (op ((Opens.map H₁.inv).obj (unop U))) :=
   by
   delta' to_pushforward_of_iso
   simp only [Equivₓ.to_fun_as_coe, nat_trans.comp_app, equivalence.equivalence_mk'_unit, eq_to_hom_map,
@@ -310,17 +310,17 @@ theorem to_pushforward_of_iso_app {X Y : Top} (H₁ : X ≅ Y) {ℱ : X.presheaf
 /-- If `H : X ≅ Y` is a homeomorphism,
 then given an `H _* ℱ ⟶ 𝒢`, we may obtain an `ℱ ⟶ H ⁻¹ _* 𝒢`.
 -/
-def pushforward_to_of_iso {X Y : Top} (H₁ : X ≅ Y) {ℱ : Y.presheaf C} {𝒢 : X.presheaf C} (H₂ : ℱ ⟶ H₁.hom _* 𝒢) :
+def pushforward_to_of_iso {X Y : Top} (H₁ : X ≅ Y) {ℱ : Y.Presheaf C} {𝒢 : X.Presheaf C} (H₂ : ℱ ⟶ H₁.Hom _* 𝒢) :
     H₁.inv _* ℱ ⟶ 𝒢 :=
-  ((presheaf_equiv_of_iso _ H₁.symm).toAdjunction.homEquiv ℱ 𝒢).symm H₂
+  ((presheafEquivOfIso _ H₁.symm).toAdjunction.homEquiv ℱ 𝒢).symm H₂
 
 @[simp]
-theorem pushforward_to_of_iso_app {X Y : Top} (H₁ : X ≅ Y) {ℱ : Y.presheaf C} {𝒢 : X.presheaf C} (H₂ : ℱ ⟶ H₁.hom _* 𝒢)
-    (U : opens Xᵒᵖ) :
-    (pushforward_to_of_iso H₁ H₂).app U =
-      H₂.app (op ((opens.map H₁.inv).obj (unop U))) ≫
+theorem pushforward_to_of_iso_app {X Y : Top} (H₁ : X ≅ Y) {ℱ : Y.Presheaf C} {𝒢 : X.Presheaf C} (H₂ : ℱ ⟶ H₁.Hom _* 𝒢)
+    (U : Opens Xᵒᵖ) :
+    (pushforwardToOfIso H₁ H₂).app U =
+      H₂.app (op ((Opens.map H₁.inv).obj (unop U))) ≫
         𝒢.map
-          (eq_to_hom
+          (eqToHom
             (by
               simp [opens.map, Set.preimage_preimage])) :=
   by
@@ -328,31 +328,31 @@ theorem pushforward_to_of_iso_app {X Y : Top} (H₁ : X ≅ Y) {ℱ : Y.presheaf
 
 end Iso
 
-variable (C) [has_colimits C]
+variable (C) [HasColimits C]
 
 /-- Pullback a presheaf on `Y` along a continuous map `f : X ⟶ Y`, obtaining a presheaf
 on `X`. -/
 @[simps map_app]
-def pullback {X Y : Top.{v}} (f : X ⟶ Y) : Y.presheaf C ⥤ X.presheaf C :=
-  Lan (opens.map f).op
+def pullback {X Y : Top.{v}} (f : X ⟶ Y) : Y.Presheaf C ⥤ X.Presheaf C :=
+  lan (Opens.map f).op
 
 @[simp]
-theorem pullback_obj_eq_pullback_obj {C} [category C] [has_colimits C] {X Y : Top.{v}} (f : X ⟶ Y) (ℱ : Y.presheaf C) :
-    (pullback C f).obj ℱ = pullback_obj f ℱ :=
+theorem pullback_obj_eq_pullback_obj {C} [Category C] [HasColimits C] {X Y : Top.{v}} (f : X ⟶ Y) (ℱ : Y.Presheaf C) :
+    (pullback C f).obj ℱ = pullbackObj f ℱ :=
   rfl
 
 /-- The pullback and pushforward along a continuous map are adjoint to each other. -/
 @[simps unit_app_app counit_app_app]
 def pushforward_pullback_adjunction {X Y : Top.{v}} (f : X ⟶ Y) : pullback C f ⊣ pushforward C f :=
-  Lan.adjunction _ _
+  lan.adjunction _ _
 
 /-- Pulling back along a homeomorphism is the same as pushing forward along its inverse. -/
-def pullback_hom_iso_pushforward_inv {X Y : Top.{v}} (H : X ≅ Y) : pullback C H.hom ≅ pushforward C H.inv :=
-  Adjunction.leftAdjointUniq (pushforward_pullback_adjunction C H.hom) (presheaf_equiv_of_iso C H.symm).toAdjunction
+def pullback_hom_iso_pushforward_inv {X Y : Top.{v}} (H : X ≅ Y) : pullback C H.Hom ≅ pushforward C H.inv :=
+  Adjunction.leftAdjointUniq (pushforwardPullbackAdjunction C H.Hom) (presheafEquivOfIso C H.symm).toAdjunction
 
 /-- Pulling back along the inverse of a homeomorphism is the same as pushing forward along it. -/
-def pullback_inv_iso_pushforward_hom {X Y : Top.{v}} (H : X ≅ Y) : pullback C H.inv ≅ pushforward C H.hom :=
-  Adjunction.leftAdjointUniq (pushforward_pullback_adjunction C H.inv) (presheaf_equiv_of_iso C H).toAdjunction
+def pullback_inv_iso_pushforward_hom {X Y : Top.{v}} (H : X ≅ Y) : pullback C H.inv ≅ pushforward C H.Hom :=
+  Adjunction.leftAdjointUniq (pushforwardPullbackAdjunction C H.inv) (presheafEquivOfIso C H).toAdjunction
 
 end Presheaf
 

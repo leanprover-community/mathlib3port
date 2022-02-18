@@ -107,7 +107,7 @@ theorem _root_.alg_hom.map_coe_real_complex (f : ℂ →ₐ[ℝ] A) (x : ℝ) : 
 
 /-- Two `ℝ`-algebra homomorphisms from ℂ are equal if they agree on `complex.I`. -/
 @[ext]
-theorem alg_hom_ext ⦃f g : ℂ →ₐ[ℝ] A⦄ (h : f I = g I) : f = g := by
+theorem alg_hom_ext ⦃f g : ℂ →ₐ[ℝ] A⦄ (h : f i = g i) : f = g := by
   ext ⟨x, y⟩
   simp only [mk_eq_add_mul_I, AlgHom.map_add, AlgHom.map_coe_real_complex, AlgHom.map_mul, h]
 
@@ -129,14 +129,14 @@ end
 
 open Submodule FiniteDimensional
 
--- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»
 -- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
 /-- `ℂ` has a basis over `ℝ` given by `1` and `I`. -/
 noncomputable def basis_one_I : Basis (Finₓ 2) ℝ ℂ :=
   Basis.ofEquivFun
     { toFun := fun z =>
-        «expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr![ , ]»",
+        «expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»",
       invFun := fun c => c 0 + c 1 • I,
       left_inv := fun z => by
         simp ,
@@ -148,21 +148,21 @@ noncomputable def basis_one_I : Basis (Finₓ 2) ℝ ℂ :=
       map_smul' := fun c z => by
         simp [Matrix.smul_cons c z.re, Matrix.smul_cons c z.im] }
 
--- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»
 @[simp]
 theorem coe_basis_one_I_repr (z : ℂ) :
-    ⇑basis_one_I.repr z =
-      «expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr![ , ]»" :=
+    ⇑basisOneI.repr z =
+      «expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»" :=
   rfl
 
 -- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
 -- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
--- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»
 @[simp]
 theorem coe_basis_one_I :
-    ⇑basis_one_I = «expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr![ , ]»" :=
+    ⇑basis_one_I = «expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»" :=
   funext fun i =>
     Basis.apply_eq_iff.mpr <|
       Finsupp.ext fun j => by
@@ -173,7 +173,7 @@ theorem coe_basis_one_I :
               Ne.def, not_false_iff, one_re, one_im, I_re, I_im]
 
 instance : FiniteDimensional ℝ ℂ :=
-  of_fintype_basis basis_one_I
+  of_fintype_basis basisOneI
 
 @[simp]
 theorem finrank_real_complex : FiniteDimensional.finrank ℝ ℂ = 2 := by
@@ -260,13 +260,13 @@ theorem conj_ae_coe : ⇑conj_ae = conj :=
 
 -- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
 -- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
--- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»
 /-- The matrix representation of `conj_ae`. -/
 @[simp]
 theorem to_matrix_conj_ae :
-    LinearMap.toMatrix basis_one_I basis_one_I conj_ae.toLinearMap =
-      «expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr![ , ]»" :=
+    LinearMap.toMatrix basisOneI basisOneI conjAe.toLinearMap =
+      «expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»" :=
   by
   ext i j
   simp [LinearMap.to_matrix_apply]
@@ -280,7 +280,7 @@ variable {A : Type _} [Ringₓ A] [Algebra ℝ A]
 
 See `complex.lift` for this as an equiv. -/
 def lift_aux (I' : A) (hf : I' * I' = -1) : ℂ →ₐ[ℝ] A :=
-  AlgHom.ofLinearMap ((Algebra.ofId ℝ A).toLinearMap.comp re_lm + (LinearMap.toSpanSingleton _ _ I').comp im_lm)
+  AlgHom.ofLinearMap ((Algebra.ofId ℝ A).toLinearMap.comp reLm + (LinearMap.toSpanSingleton _ _ I').comp imLm)
     (show algebraMap ℝ A 1 + (0 : ℝ) • I' = 1 by
       rw [RingHom.map_one, zero_smul, add_zeroₓ])
     fun ⟨x₁, y₁⟩ ⟨x₂, y₂⟩ =>
@@ -298,10 +298,10 @@ def lift_aux (I' : A) (hf : I' * I' = -1) : ℂ →ₐ[ℝ] A :=
         
 
 @[simp]
-theorem lift_aux_apply (I' : A) hI' (z : ℂ) : lift_aux I' hI' z = algebraMap ℝ A z.re + z.im • I' :=
+theorem lift_aux_apply (I' : A) hI' (z : ℂ) : liftAux I' hI' z = algebraMap ℝ A z.re + z.im • I' :=
   rfl
 
-theorem lift_aux_apply_I (I' : A) hI' : lift_aux I' hI' I = I' := by
+theorem lift_aux_apply_I (I' : A) hI' : liftAux I' hI' i = I' := by
   simp
 
 /-- A universal property of the complex numbers, providing a unique `ℂ →ₐ[ℝ] A` for every element
@@ -310,21 +310,21 @@ of `A` which squares to `-1`.
 This can be used to embed the complex numbers in the `quaternion`s.
 
 This isomorphism is named to match the very similar `zsqrtd.lift`. -/
-@[simps (config := { simpRhs := tt })]
+@[simps (config := { simpRhs := true })]
 def lift : { I' : A // I' * I' = -1 } ≃ (ℂ →ₐ[ℝ] A) where
-  toFun := fun I' => lift_aux I' I'.prop
+  toFun := fun I' => liftAux I' I'.Prop
   invFun := fun F =>
-    ⟨F I, by
+    ⟨F i, by
       rw [← F.map_mul, I_mul_I, AlgHom.map_neg, AlgHom.map_one]⟩
-  left_inv := fun I' => Subtype.ext <| lift_aux_apply_I I' I'.prop
+  left_inv := fun I' => Subtype.ext <| lift_aux_apply_I I' I'.Prop
   right_inv := fun F => alg_hom_ext <| lift_aux_apply_I _ _
 
 @[simp]
-theorem lift_aux_I : lift_aux I I_mul_I = AlgHom.id ℝ ℂ :=
+theorem lift_aux_I : liftAux i I_mul_I = AlgHom.id ℝ ℂ :=
   alg_hom_ext <| lift_aux_apply_I _ _
 
 @[simp]
-theorem lift_aux_neg_I : lift_aux (-I) ((neg_mul_neg _ _).trans I_mul_I) = conj_ae :=
+theorem lift_aux_neg_I : liftAux (-I) ((neg_mul_neg _ _).trans I_mul_I) = conj_ae :=
   alg_hom_ext <| (lift_aux_apply_I _ _).trans conj_I.symm
 
 end lift

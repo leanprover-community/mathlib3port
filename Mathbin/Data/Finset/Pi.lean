@@ -72,7 +72,7 @@ theorem pi_cons_injective {a : α} {b : δ a} {s : Finset α} (hs : a ∉ s) : F
         this
 
 @[simp]
-theorem pi_empty {t : ∀ a : α, Finset (δ a)} : pi (∅ : Finset α) t = singleton (pi.empty δ) :=
+theorem pi_empty {t : ∀ a : α, Finset (δ a)} : pi (∅ : Finset α) t = singleton (Pi.empty δ) :=
   rfl
 
 @[simp]

@@ -38,7 +38,7 @@ include V
 
 /-- `midpoint x y` is the midpoint of the segment `[x, y]`. -/
 def midpoint (x y : P) : P :=
-  line_map x y (⅟ 2 : R)
+  lineMap x y (⅟ 2 : R)
 
 variable {R} {x y z : P}
 
@@ -55,7 +55,7 @@ theorem AffineEquiv.map_midpoint (f : P ≃ᵃ[R] P') (a b : P) : f (midpoint R 
 omit V'
 
 @[simp]
-theorem AffineEquiv.point_reflection_midpoint_left (x y : P) : point_reflection R (midpoint R x y) x = y := by
+theorem AffineEquiv.point_reflection_midpoint_left (x y : P) : pointReflection R (midpoint R x y) x = y := by
   rw [midpoint, point_reflection_apply, line_map_apply, vadd_vsub, vadd_vadd, ← add_smul, ← two_mul, mul_inv_of_self,
     one_smul, vsub_vadd]
 
@@ -63,7 +63,7 @@ theorem midpoint_comm (x y : P) : midpoint R x y = midpoint R y x := by
   rw [midpoint, ← line_map_apply_one_sub, one_sub_inv_of_two, midpoint]
 
 @[simp]
-theorem AffineEquiv.point_reflection_midpoint_right (x y : P) : point_reflection R (midpoint R x y) y = x := by
+theorem AffineEquiv.point_reflection_midpoint_right (x y : P) : pointReflection R (midpoint R x y) y = x := by
   rw [midpoint_comm, AffineEquiv.point_reflection_midpoint_left]
 
 theorem midpoint_vsub_midpoint (p₁ p₂ p₃ p₄ : P) :
@@ -74,7 +74,7 @@ theorem midpoint_vadd_midpoint (v v' : V) (p p' : P) :
     midpoint R v v' +ᵥ midpoint R p p' = midpoint R (v +ᵥ p) (v' +ᵥ p') :=
   line_map_vadd_line_map _ _ _ _ _
 
-theorem midpoint_eq_iff {x y z : P} : midpoint R x y = z ↔ point_reflection R z x = y :=
+theorem midpoint_eq_iff {x y z : P} : midpoint R x y = z ↔ pointReflection R z x = y :=
   eq_comm.trans
     ((injective_point_reflection_left_of_module R x).eq_iff' (AffineEquiv.point_reflection_midpoint_left x y)).symm
 
@@ -165,11 +165,11 @@ theorem midpoint_add_sub (x y : V) : midpoint R (x + y) (x - y) = x := by
 end
 
 theorem line_map_inv_two {R : Type _} {V P : Type _} [DivisionRing R] [CharZero R] [AddCommGroupₓ V] [Module R V]
-    [AddTorsor V P] (a b : P) : line_map a b (2⁻¹ : R) = midpoint R a b :=
+    [AddTorsor V P] (a b : P) : lineMap a b (2⁻¹ : R) = midpoint R a b :=
   rfl
 
 theorem line_map_one_half {R : Type _} {V P : Type _} [DivisionRing R] [CharZero R] [AddCommGroupₓ V] [Module R V]
-    [AddTorsor V P] (a b : P) : line_map a b (1 / 2 : R) = midpoint R a b := by
+    [AddTorsor V P] (a b : P) : lineMap a b (1 / 2 : R) = midpoint R a b := by
   rw [one_div, line_map_inv_two]
 
 theorem homothety_inv_of_two {R : Type _} {V P : Type _} [CommRingₓ R] [Invertible (2 : R)] [AddCommGroupₓ V]
@@ -212,7 +212,7 @@ def of_map_midpoint (f : E → F) (h0 : f 0 = 0) (hm : ∀ x y, f (midpoint R x 
 
 @[simp]
 theorem coe_of_map_midpoint (f : E → F) (h0 : f 0 = 0) (hm : ∀ x y, f (midpoint R x y) = midpoint R' (f x) (f y)) :
-    ⇑of_map_midpoint R R' f h0 hm = f :=
+    ⇑ofMapMidpoint R R' f h0 hm = f :=
   rfl
 
 end AddMonoidHom

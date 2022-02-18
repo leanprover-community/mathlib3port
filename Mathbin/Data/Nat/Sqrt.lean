@@ -48,19 +48,19 @@ def sqrt_aux : ℕ → ℕ → ℕ → ℕ
 def sqrt (n : ℕ) : ℕ :=
   match size n with
   | 0 => 0
-  | succ s => sqrt_aux (shiftl 1 (bit0 (div2 s))) 0 n
+  | succ s => sqrtAux (shiftl 1 (bit0 (div2 s))) 0 n
 
-theorem sqrt_aux_0 r n : sqrt_aux 0 r n = r := by
+theorem sqrt_aux_0 r n : sqrtAux 0 r n = r := by
   rw [sqrt_aux] <;> simp
 
 attribute [local simp] sqrt_aux_0
 
 theorem sqrt_aux_1 {r n b} (h : b ≠ 0) {n'} (h₂ : r + b + n' = n) :
-    sqrt_aux b r n = sqrt_aux (shiftr b 2) (div2 r + b) n' := by
+    sqrtAux b r n = sqrtAux (shiftr b 2) (div2 r + b) n' := by
   rw [sqrt_aux] <;>
     simp only [h, h₂.symm, Int.coe_nat_add, if_false] <;> rw [add_commₓ _ (n' : ℤ), add_sub_cancel, sqrt_aux._match_1]
 
-theorem sqrt_aux_2 {r n b} (h : b ≠ 0) (h₂ : n < r + b) : sqrt_aux b r n = sqrt_aux (shiftr b 2) (div2 r) n := by
+theorem sqrt_aux_2 {r n b} (h : b ≠ 0) (h₂ : n < r + b) : sqrtAux b r n = sqrtAux (shiftr b 2) (div2 r) n := by
   rw [sqrt_aux] <;> simp only [h, h₂, if_false]
   cases' Int.eq_neg_succ_of_lt_zeroₓ (sub_lt_zero.2 (Int.coe_nat_lt_coe_nat_of_lt h₂)) with k e
   rw [e, sqrt_aux._match_1]
@@ -71,10 +71,9 @@ private def is_sqrt (n q : ℕ) : Prop :=
 attribute [-simp] mul_eq_mul_left_iff mul_eq_mul_right_iff
 
 private theorem sqrt_aux_is_sqrt_lemma (m r n : ℕ) (h₁ : r * r ≤ n) m' (hm : shiftr (2 ^ m * 2 ^ m) 2 = m')
-    (H1 : n < (r + 2 ^ m) * (r + 2 ^ m) → is_sqrt n (sqrt_aux m' (r * 2 ^ m) (n - r * r)))
-    (H2 :
-      (r + 2 ^ m) * (r + 2 ^ m) ≤ n → is_sqrt n (sqrt_aux m' ((r + 2 ^ m) * 2 ^ m) (n - (r + 2 ^ m) * (r + 2 ^ m)))) :
-    is_sqrt n (sqrt_aux (2 ^ m * 2 ^ m) (2 * r * 2 ^ m) (n - r * r)) := by
+    (H1 : n < (r + 2 ^ m) * (r + 2 ^ m) → IsSqrt n (sqrtAux m' (r * 2 ^ m) (n - r * r)))
+    (H2 : (r + 2 ^ m) * (r + 2 ^ m) ≤ n → IsSqrt n (sqrtAux m' ((r + 2 ^ m) * 2 ^ m) (n - (r + 2 ^ m) * (r + 2 ^ m)))) :
+    IsSqrt n (sqrtAux (2 ^ m * 2 ^ m) (2 * r * 2 ^ m) (n - r * r)) := by
   have b0 :=
     have b0 :=
       ne_of_gtₓ
@@ -110,7 +109,7 @@ private theorem sqrt_aux_is_sqrt_lemma (m r n : ℕ) (h₁ : r * r ≤ n) m' (hm
 private theorem sqrt_aux_is_sqrt n :
     ∀ m r,
       r * r ≤ n →
-        n < (r + 2 ^ (m + 1)) * (r + 2 ^ (m + 1)) → is_sqrt n (sqrt_aux (2 ^ m * 2 ^ m) (2 * r * 2 ^ m) (n - r * r))
+        n < (r + 2 ^ (m + 1)) * (r + 2 ^ (m + 1)) → IsSqrt n (sqrtAux (2 ^ m * 2 ^ m) (2 * r * 2 ^ m) (n - r * r))
   | 0, r, h₁, h₂ => by
     apply sqrt_aux_is_sqrt_lemma 0 r n h₁ 0 rfl <;> intro h <;> simp <;> [exact ⟨h₁, h⟩, exact ⟨h, h₂⟩]
   | m + 1, r, h₁, h₂ => by
@@ -134,7 +133,7 @@ private theorem sqrt_aux_is_sqrt n :
           simp [pow_succₓ, mul_comm, mul_left_commₓ]]
       
 
-private theorem sqrt_is_sqrt (n : ℕ) : is_sqrt n (sqrt n) := by
+private theorem sqrt_is_sqrt (n : ℕ) : IsSqrt n (sqrt n) := by
   generalize e : size n = s
   cases' s with s <;> simp [e, sqrt]
   · rw [size_eq_zero.1 e, is_sqrt]
@@ -265,10 +264,10 @@ theorem exists_mul_self' (x : ℕ) : (∃ n, n ^ 2 = x) ↔ sqrt x ^ 2 = x := by
   simpa only [pow_two] using exists_mul_self x
 
 theorem sqrt_mul_sqrt_lt_succ (n : ℕ) : sqrt n * sqrt n < n + 1 :=
-  lt_succ_iff.mpr (sqrt_le _)
+  lt_succ_iffₓ.mpr (sqrt_le _)
 
 theorem sqrt_mul_sqrt_lt_succ' (n : ℕ) : sqrt n ^ 2 < n + 1 :=
-  lt_succ_iff.mpr (sqrt_le' _)
+  lt_succ_iffₓ.mpr (sqrt_le' _)
 
 theorem succ_le_succ_sqrt (n : ℕ) : n + 1 ≤ (sqrt n + 1) * (sqrt n + 1) :=
   le_of_pred_lt (lt_succ_sqrt _)

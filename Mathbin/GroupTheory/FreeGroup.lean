@@ -58,48 +58,48 @@ attribute [simp] red.step.bnot
 
 /-- Reflexive-transitive closure of red.step -/
 def red : List (α × Bool) → List (α × Bool) → Prop :=
-  refl_trans_gen red.step
+  ReflTransGen Red.Step
 
 @[refl]
-theorem red.refl : red L L :=
+theorem red.refl : Red L L :=
   refl_trans_gen.refl
 
 @[trans]
-theorem red.trans : red L₁ L₂ → red L₂ L₃ → red L₁ L₃ :=
+theorem red.trans : Red L₁ L₂ → Red L₂ L₃ → Red L₁ L₃ :=
   refl_trans_gen.trans
 
 namespace Red
 
 /-- Predicate asserting that word `w₁` can be reduced to `w₂` in one step, i.e. there are words
 `w₃ w₄` and letter `x` such that `w₁ = w₃xx⁻¹w₄` and `w₂ = w₃w₄`  -/
-theorem step.length : ∀ {L₁ L₂ : List (α × Bool)}, step L₁ L₂ → L₂.length + 2 = L₁.length
+theorem step.length : ∀ {L₁ L₂ : List (α × Bool)}, Step L₁ L₂ → L₂.length + 2 = L₁.length
   | _, _, @red.step.bnot _ L1 L2 x b => by
     rw [List.length_append, List.length_append] <;> rfl
 
 @[simp]
-theorem step.bnot_rev {x b} : step (L₁ ++ (x, bnot b) :: (x, b) :: L₂) (L₁ ++ L₂) := by
+theorem step.bnot_rev {x b} : Step (L₁ ++ (x, bnot b) :: (x, b) :: L₂) (L₁ ++ L₂) := by
   cases b <;> exact step.bnot
 
 @[simp]
-theorem step.cons_bnot {x b} : red.step ((x, b) :: (x, bnot b) :: L) L :=
-  @step.bnot _ [] _ _ _
+theorem step.cons_bnot {x b} : Red.Step ((x, b) :: (x, bnot b) :: L) L :=
+  @Step.bnot _ [] _ _ _
 
 @[simp]
-theorem step.cons_bnot_rev {x b} : red.step ((x, bnot b) :: (x, b) :: L) L :=
-  @red.step.bnot_rev _ [] _ _ _
+theorem step.cons_bnot_rev {x b} : Red.Step ((x, bnot b) :: (x, b) :: L) L :=
+  @Red.Step.bnot_rev _ [] _ _ _
 
-theorem step.append_left : ∀ {L₁ L₂ L₃ : List (α × Bool)}, step L₂ L₃ → step (L₁ ++ L₂) (L₁ ++ L₃)
+theorem step.append_left : ∀ {L₁ L₂ L₃ : List (α × Bool)}, Step L₂ L₃ → Step (L₁ ++ L₂) (L₁ ++ L₃)
   | _, _, _, red.step.bnot => by
     rw [← List.append_assoc, ← List.append_assoc] <;> constructor
 
-theorem step.cons {x} (H : red.step L₁ L₂) : red.step (x :: L₁) (x :: L₂) :=
-  @step.append_left _ [x] _ _ H
+theorem step.cons {x} (H : Red.Step L₁ L₂) : Red.Step (x :: L₁) (x :: L₂) :=
+  @Step.append_left _ [x] _ _ H
 
-theorem step.append_right : ∀ {L₁ L₂ L₃ : List (α × Bool)}, step L₁ L₂ → step (L₁ ++ L₃) (L₂ ++ L₃)
+theorem step.append_right : ∀ {L₁ L₂ L₃ : List (α × Bool)}, Step L₁ L₂ → Step (L₁ ++ L₃) (L₂ ++ L₃)
   | _, _, _, red.step.bnot => by
     simp
 
-theorem not_step_nil : ¬step [] L := by
+theorem not_step_nil : ¬Step [] L := by
   generalize h' : [] = L'
   intro h
   cases' h with L₁ L₂
@@ -107,7 +107,7 @@ theorem not_step_nil : ¬step [] L := by
   contradiction
 
 theorem step.cons_left_iff {a : α} {b : Bool} :
-    step ((a, b) :: L₁) L₂ ↔ (∃ L, step L₁ L ∧ L₂ = (a, b) :: L) ∨ L₁ = (a, bnot b) :: L₂ := by
+    Step ((a, b) :: L₁) L₂ ↔ (∃ L, Step L₁ L ∧ L₂ = (a, b) :: L) ∨ L₁ = (a, bnot b) :: L₂ := by
   constructor
   · generalize hL : ((a, b) :: L₁ : List _) = L
     intro h
@@ -129,14 +129,14 @@ theorem step.cons_left_iff {a : α} {b : Bool} :
       
     
 
-theorem not_step_singleton : ∀ {p : α × Bool}, ¬step [p] L
+theorem not_step_singleton : ∀ {p : α × Bool}, ¬Step [p] L
   | (a, b) => by
     simp [step.cons_left_iff, not_step_nil]
 
-theorem step.cons_cons_iff : ∀ {p : α × Bool}, step (p :: L₁) (p :: L₂) ↔ step L₁ L₂ := by
+theorem step.cons_cons_iff : ∀ {p : α × Bool}, Step (p :: L₁) (p :: L₂) ↔ Step L₁ L₂ := by
   simp (config := { contextual := true })[step.cons_left_iff, iff_def, or_imp_distrib]
 
-theorem step.append_left_iff : ∀ L, step (L ++ L₁) (L ++ L₂) ↔ step L₁ L₂
+theorem step.append_left_iff : ∀ L, Step (L ++ L₁) (L ++ L₂) ↔ Step L₁ L₂
   | [] => by
     simp
   | p :: l => by
@@ -145,7 +145,7 @@ theorem step.append_left_iff : ∀ L, step (L ++ L₁) (L ++ L₂) ↔ step L₁
 private theorem step.diamond_aux :
     ∀ {L₁ L₂ L₃ L₄ : List (α × Bool)} {x1 b1 x2 b2},
       L₁ ++ (x1, b1) :: (x1, bnot b1) :: L₂ = L₃ ++ (x2, b2) :: (x2, bnot b2) :: L₄ →
-        L₁ ++ L₂ = L₃ ++ L₄ ∨ ∃ L₅, red.step (L₁ ++ L₂) L₅ ∧ red.step (L₃ ++ L₄) L₅
+        L₁ ++ L₂ = L₃ ++ L₄ ∨ ∃ L₅, Red.Step (L₁ ++ L₂) L₅ ∧ Red.Step (L₃ ++ L₄) L₅
   | [], _, [], _, _, _, _, _, H => by
     injections <;> subst_vars <;> simp
   | [], _, [(x3, b3)], _, _, _, _, _, H => by
@@ -164,33 +164,33 @@ private theorem step.diamond_aux :
         simp [H1, H3]
     | Or.inr ⟨L₅, H3, H4⟩ =>
       Or.inr
-        ⟨_, step.cons H3, by
+        ⟨_, Step.cons H3, by
           simpa [H1] using step.cons H4⟩
 
 theorem step.diamond :
     ∀ {L₁ L₂ L₃ L₄ : List (α × Bool)},
-      red.step L₁ L₃ → red.step L₂ L₄ → L₁ = L₂ → L₃ = L₄ ∨ ∃ L₅, red.step L₃ L₅ ∧ red.step L₄ L₅
-  | _, _, _, _, red.step.bnot, red.step.bnot, H => step.diamond_aux H
+      Red.Step L₁ L₃ → Red.Step L₂ L₄ → L₁ = L₂ → L₃ = L₄ ∨ ∃ L₅, Red.Step L₃ L₅ ∧ Red.Step L₄ L₅
+  | _, _, _, _, red.step.bnot, red.step.bnot, H => Step.diamond_aux H
 
-theorem step.to_red : step L₁ L₂ → red L₁ L₂ :=
+theorem step.to_red : Step L₁ L₂ → Red L₁ L₂ :=
   refl_trans_gen.single
 
 /-- **Church-Rosser theorem** for word reduction: If `w1 w2 w3` are words such that `w1` reduces
 to `w2` and `w3` respectively, then there is a word `w4` such that `w2` and `w3` reduce to `w4`
 respectively. This is also known as Newman's diamond lemma. -/
-theorem church_rosser : red L₁ L₂ → red L₁ L₃ → join red L₂ L₃ :=
+theorem church_rosser : Red L₁ L₂ → Red L₁ L₃ → Join Red L₂ L₃ :=
   Relation.church_rosser fun a b c hab hac =>
-    match b, c, red.step.diamond hab hac rfl with
+    match b, c, Red.Step.diamond hab hac rfl with
     | b, _, Or.inl rfl =>
       ⟨b, by
         rfl, by
         rfl⟩
-    | b, c, Or.inr ⟨d, hbd, hcd⟩ => ⟨d, refl_gen.single hbd, hcd.to_red⟩
+    | b, c, Or.inr ⟨d, hbd, hcd⟩ => ⟨d, ReflGen.single hbd, hcd.to_red⟩
 
-theorem cons_cons {p} : red L₁ L₂ → red (p :: L₁) (p :: L₂) :=
-  refl_trans_gen.lift (List.cons p) fun a b => step.cons
+theorem cons_cons {p} : Red L₁ L₂ → Red (p :: L₁) (p :: L₂) :=
+  ReflTransGen.lift (List.cons p) fun a b => Step.cons
 
-theorem cons_cons_iff p : red (p :: L₁) (p :: L₂) ↔ red L₁ L₂ :=
+theorem cons_cons_iff p : Red (p :: L₁) (p :: L₂) ↔ Red L₁ L₂ :=
   Iff.intro
     (by
       generalize eq₁ : (p :: L₁ : List _) = LL₁
@@ -212,15 +212,15 @@ theorem cons_cons_iff p : red (p :: L₁) (p :: L₂) ↔ red L₁ L₂ :=
         )
     cons_cons
 
-theorem append_append_left_iff : ∀ L, red (L ++ L₁) (L ++ L₂) ↔ red L₁ L₂
+theorem append_append_left_iff : ∀ L, Red (L ++ L₁) (L ++ L₂) ↔ Red L₁ L₂
   | [] => Iff.rfl
   | p :: L => by
     simp [append_append_left_iff L, cons_cons_iff]
 
-theorem append_append (h₁ : red L₁ L₃) (h₂ : red L₂ L₄) : red (L₁ ++ L₂) (L₃ ++ L₄) :=
-  (h₁.lift (fun L => L ++ L₂) fun a b => step.append_right).trans ((append_append_left_iff _).2 h₂)
+theorem append_append (h₁ : Red L₁ L₃) (h₂ : Red L₂ L₄) : Red (L₁ ++ L₂) (L₃ ++ L₄) :=
+  (h₁.lift (fun L => L ++ L₂) fun a b => Step.append_right).trans ((append_append_left_iff _).2 h₂)
 
-theorem to_append_iff : red L (L₁ ++ L₂) ↔ ∃ L₃ L₄, L = L₃ ++ L₄ ∧ red L₃ L₁ ∧ red L₄ L₂ :=
+theorem to_append_iff : Red L (L₁ ++ L₂) ↔ ∃ L₃ L₄, L = L₃ ++ L₄ ∧ Red L₃ L₁ ∧ Red L₄ L₂ :=
   Iff.intro
     (by
       generalize eq : L₁ ++ L₂ = L₁₂
@@ -247,26 +247,26 @@ theorem to_append_iff : red L (L₁ ++ L₂) ↔ ∃ L₃ L₄, L = L₃ ++ L₄
     fun ⟨L₃, L₄, Eq, h₃, h₄⟩ => Eq.symm ▸ append_append h₃ h₄
 
 /-- The empty word `[]` only reduces to itself. -/
-theorem nil_iff : red [] L ↔ L = [] :=
-  refl_trans_gen_iff_eq fun l => red.not_step_nil
+theorem nil_iff : Red [] L ↔ L = [] :=
+  refl_trans_gen_iff_eq fun l => Red.not_step_nil
 
 /-- A letter only reduces to itself. -/
-theorem singleton_iff {x} : red [x] L₁ ↔ L₁ = [x] :=
+theorem singleton_iff {x} : Red [x] L₁ ↔ L₁ = [x] :=
   refl_trans_gen_iff_eq fun l => not_step_singleton
 
 /-- If `x` is a letter and `w` is a word such that `xw` reduces to the empty word, then `w` reduces
 to `x⁻¹` -/
-theorem cons_nil_iff_singleton {x b} : red ((x, b) :: L) [] ↔ red L [(x, bnot b)] :=
+theorem cons_nil_iff_singleton {x b} : Red ((x, b) :: L) [] ↔ Red L [(x, bnot b)] :=
   Iff.intro
     (fun h => by
-      have h₁ : red ((x, bnot b) :: (x, b) :: L) [(x, bnot b)] := cons_cons h
-      have h₂ : red ((x, bnot b) :: (x, b) :: L) L := refl_trans_gen.single step.cons_bnot_rev
+      have h₁ : Red ((x, bnot b) :: (x, b) :: L) [(x, bnot b)] := cons_cons h
+      have h₂ : Red ((x, bnot b) :: (x, b) :: L) L := ReflTransGen.single Step.cons_bnot_rev
       let ⟨L', h₁, h₂⟩ := church_rosser h₁ h₂
       rw [singleton_iff] at h₁ <;> subst L' <;> assumption)
-    fun h => (cons_cons h).tail step.cons_bnot
+    fun h => (cons_cons h).tail Step.cons_bnot
 
 theorem red_iff_irreducible {x1 b1 x2 b2} (h : (x1, b1) ≠ (x2, b2)) :
-    red [(x1, bnot b1), (x2, b2)] L ↔ L = [(x1, bnot b1), (x2, b2)] := by
+    Red [(x1, bnot b1), (x2, b2)] L ↔ L = [(x1, bnot b1), (x2, b2)] := by
   apply refl_trans_gen_iff_eq
   generalize eq : [(x1, bnot b1), (x2, b2)] = L'
   intro L h'
@@ -279,8 +279,8 @@ theorem red_iff_irreducible {x1 b1 x2 b2} (h : (x1, b1) ≠ (x2, b2)) :
 
 /-- If `x` and `y` are distinct letters and `w₁ w₂` are words such that `xw₁` reduces to `yw₂`, then
 `w₁` reduces to `x⁻¹yw₂`. -/
-theorem inv_of_red_of_ne {x1 b1 x2 b2} (H1 : (x1, b1) ≠ (x2, b2)) (H2 : red ((x1, b1) :: L₁) ((x2, b2) :: L₂)) :
-    red L₁ ((x1, bnot b1) :: (x2, b2) :: L₂) := by
+theorem inv_of_red_of_ne {x1 b1 x2 b2} (H1 : (x1, b1) ≠ (x2, b2)) (H2 : Red ((x1, b1) :: L₁) ((x2, b2) :: L₂)) :
+    Red L₁ ((x1, bnot b1) :: (x2, b2) :: L₂) := by
   have : red ((x1, b1) :: L₁) ([(x2, b2)] ++ L₂) := H2
   rcases to_append_iff.1 this with ⟨_ | ⟨p, L₃⟩, L₄, eq, h₁, h₂⟩
   · simp [nil_iff] at h₁
@@ -296,15 +296,15 @@ theorem inv_of_red_of_ne {x1 b1 x2 b2} (H1 : (x1, b1) ≠ (x2, b2)) (H2 : red ((
     rwa [h₁] at h₂
     
 
-theorem step.sublist (H : red.step L₁ L₂) : L₂ <+ L₁ := by
+theorem step.sublist (H : Red.Step L₁ L₂) : L₂ <+ L₁ := by
   cases H <;> simp <;> constructor <;> constructor <;> rfl
 
 /-- If `w₁ w₂` are words such that `w₁` reduces to `w₂`, then `w₂` is a sublist of `w₁`. -/
-theorem sublist : red L₁ L₂ → L₂ <+ L₁ :=
+theorem sublist : Red L₁ L₂ → L₂ <+ L₁ :=
   refl_trans_gen_of_transitive_reflexive (fun l => List.Sublist.refl l)
-    (fun a b c hab hbc => List.Sublist.trans hbc hab) fun a b => red.step.sublist
+    (fun a b c hab hbc => List.Sublist.trans hbc hab) fun a b => Red.Step.sublist
 
-theorem sizeof_of_step : ∀ {L₁ L₂ : List (α × Bool)}, step L₁ L₂ → L₂.sizeof < L₁.sizeof
+theorem sizeof_of_step : ∀ {L₁ L₂ : List (α × Bool)}, Step L₁ L₂ → L₂.sizeof < L₁.sizeof
   | _, _, @step.bnot _ L1 L2 x b => by
     induction' L1 with hd tl ih
     case list.nil =>
@@ -320,7 +320,7 @@ theorem sizeof_of_step : ∀ {L₁ L₂ : List (α × Bool)}, step L₁ L₂ →
       dsimp [List.sizeof]
       exact Nat.add_lt_add_leftₓ ih _
 
-theorem length (h : red L₁ L₂) : ∃ n, L₁.length = L₂.length + 2 * n := by
+theorem length (h : Red L₁ L₂) : ∃ n, L₁.length = L₂.length + 2 * n := by
   induction' h with L₂ L₃ h₁₂ h₂₃ ih
   · exact ⟨0, rfl⟩
     
@@ -329,7 +329,7 @@ theorem length (h : red L₁ L₂) : ∃ n, L₁.length = L₂.length + 2 * n :=
     simp [mul_addₓ, Eq, (step.length h₂₃).symm, add_assocₓ]
     
 
-theorem antisymm (h₁₂ : red L₁ L₂) : red L₂ L₁ → L₁ = L₂ :=
+theorem antisymm (h₁₂ : Red L₁ L₂) : Red L₂ L₁ → L₁ = L₂ :=
   match L₁, h₁₂.cases_head with
   | _, Or.inl rfl => fun h => rfl
   | L₁, Or.inr ⟨L₃, h₁₃, h₃₂⟩ => fun h₂₁ =>
@@ -340,22 +340,22 @@ theorem antisymm (h₁₂ : red L₁ L₂) : red L₂ L₁ → L₁ = L₂ :=
 
 end Red
 
-theorem equivalence_join_red : Equivalenceₓ (join (@red α)) :=
+theorem equivalence_join_red : Equivalenceₓ (Join (@Red α)) :=
   equivalence_join_refl_trans_gen fun a b c hab hac =>
-    match b, c, red.step.diamond hab hac rfl with
+    match b, c, Red.Step.diamond hab hac rfl with
     | b, _, Or.inl rfl =>
       ⟨b, by
         rfl, by
         rfl⟩
-    | b, c, Or.inr ⟨d, hbd, hcd⟩ => ⟨d, refl_gen.single hbd, refl_trans_gen.single hcd⟩
+    | b, c, Or.inr ⟨d, hbd, hcd⟩ => ⟨d, ReflGen.single hbd, ReflTransGen.single hcd⟩
 
-theorem join_red_of_step (h : red.step L₁ L₂) : join red L₁ L₂ :=
+theorem join_red_of_step (h : Red.Step L₁ L₂) : Join Red L₁ L₂ :=
   join_of_single reflexive_refl_trans_gen h.to_red
 
-theorem eqv_gen_step_iff_join_red : EqvGen red.step L₁ L₂ ↔ join red L₁ L₂ :=
+theorem eqv_gen_step_iff_join_red : EqvGen Red.Step L₁ L₂ ↔ Join Red L₁ L₂ :=
   Iff.intro
     (fun h =>
-      have : EqvGen (join red) L₁ L₂ := h.mono fun a b => join_red_of_step
+      have : EqvGen (Join Red) L₁ L₂ := h.mono fun a b => join_red_of_step
       equivalence_join_red.eqv_gen_iff.1 this)
     ((join_of_equivalence (EqvGen.is_equivalence _)) fun a b =>
       refl_trans_gen_of_equivalence (EqvGen.is_equivalence _) EqvGen.rel)
@@ -373,19 +373,19 @@ variable {α} {L L₁ L₂ L₃ L₄ : List (α × Bool)}
 
 /-- The canonical map from `list (α × bool)` to the free group on `α`. -/
 def mk L : FreeGroup α :=
-  Quot.mk red.step L
+  Quot.mk Red.Step L
 
 @[simp]
-theorem quot_mk_eq_mk : Quot.mk red.step L = mk L :=
+theorem quot_mk_eq_mk : Quot.mk Red.Step L = mk L :=
   rfl
 
 @[simp]
-theorem quot_lift_mk (β : Type v) (f : List (α × Bool) → β) (H : ∀ L₁ L₂, red.step L₁ L₂ → f L₁ = f L₂) :
+theorem quot_lift_mk (β : Type v) (f : List (α × Bool) → β) (H : ∀ L₁ L₂, Red.Step L₁ L₂ → f L₁ = f L₂) :
     Quot.lift f H (mk L) = f L :=
   rfl
 
 @[simp]
-theorem quot_lift_on_mk (β : Type v) (f : List (α × Bool) → β) (H : ∀ L₁ L₂, red.step L₁ L₂ → f L₁ = f L₂) :
+theorem quot_lift_on_mk (β : Type v) (f : List (α × Bool) → β) (H : ∀ L₁ L₂, Red.Step L₁ L₂ → f L₁ = f L₂) :
     Quot.liftOn (mk L) f H = f L :=
   rfl
 
@@ -406,8 +406,8 @@ instance : Inhabited (FreeGroup α) :=
 instance : Mul (FreeGroup α) :=
   ⟨fun x y =>
     Quot.liftOn x
-      (fun L₁ => Quot.liftOn y (fun L₂ => mk <| L₁ ++ L₂) fun L₂ L₃ H => Quot.sound <| red.step.append_left H)
-      fun L₁ L₂ H => (Quot.induction_on y) fun L₃ => Quot.sound <| red.step.append_right H⟩
+      (fun L₁ => Quot.liftOn y (fun L₂ => mk <| L₁ ++ L₂) fun L₂ L₃ H => Quot.sound <| Red.Step.append_left H)
+      fun L₁ L₂ H => (Quot.induction_on y) fun L₃ => Quot.sound <| Red.Step.append_right H⟩
 
 @[simp]
 theorem mul_mk : mk L₁ * mk L₂ = mk (L₁ ++ L₂) :=
@@ -445,17 +445,17 @@ instance : Groupₓ (FreeGroup α) where
 /-- `of` is the canonical injection from the type to the free group over that type by sending each
 element to the equivalence class of the letter that is the element. -/
 def of (x : α) : FreeGroup α :=
-  mk [(x, tt)]
+  mk [(x, true)]
 
-theorem red.exact : mk L₁ = mk L₂ ↔ join red L₁ L₂ :=
+theorem red.exact : mk L₁ = mk L₂ ↔ Join Red L₁ L₂ :=
   calc
-    mk L₁ = mk L₂ ↔ EqvGen red.step L₁ L₂ := Iff.intro (Quot.exact _) Quot.eqv_gen_sound
-    _ ↔ join red L₁ L₂ := eqv_gen_step_iff_join_red
+    mk L₁ = mk L₂ ↔ EqvGen Red.Step L₁ L₂ := Iff.intro (Quot.exact _) Quot.eqv_gen_sound
+    _ ↔ Join Red L₁ L₂ := eqv_gen_step_iff_join_red
     
 
 /-- The canonical injection from the type to the free group is an injection. -/
 theorem of_injective : Function.Injective (@of α) := fun _ _ H => by
-  let ⟨L₁, hx, hy⟩ := red.exact.1 H
+  let ⟨L₁, hx, hy⟩ := Red.exact.1 H
   simp [red.singleton_iff] at hx hy <;> cc
 
 section lift
@@ -465,7 +465,7 @@ variable {β : Type v} [Groupₓ β] (f : α → β) {x y : FreeGroup α}
 /-- Given `f : α → β` with `β` a group, the canonical map `list (α × bool) → β` -/
 def lift.aux : List (α × Bool) → β := fun L => List.prod <| L.map fun x => cond x.2 (f x.1) (f x.1)⁻¹
 
-theorem red.step.lift {f : α → β} (H : red.step L₁ L₂) : lift.aux f L₁ = lift.aux f L₂ := by
+theorem red.step.lift {f : α → β} (H : Red.Step L₁ L₂) : Lift.aux f L₁ = Lift.aux f L₂ := by
   cases' H with _ _ _ b <;> cases b <;> simp [lift.aux]
 
 /-- If `β` is a group, then any function from `α` to `β`
@@ -474,7 +474,7 @@ the free group over `α` to `β` -/
 @[simps symmApply]
 def lift : (α → β) ≃ (FreeGroup α →* β) where
   toFun := fun f =>
-    MonoidHom.mk' ((Quot.lift (lift.aux f)) fun L₁ L₂ => red.step.lift) <| by
+    MonoidHom.mk' ((Quot.lift (Lift.aux f)) fun L₁ L₂ => Red.Step.lift) <| by
       rintro ⟨L₁⟩ ⟨L₂⟩
       simp [lift.aux]
   invFun := fun g => g ∘ of
@@ -610,15 +610,15 @@ def free_group_congr {α β} (e : α ≃ β) : FreeGroup α ≃* FreeGroup β wh
   map_mul' := MonoidHom.map_mul _
 
 @[simp]
-theorem free_group_congr_refl : free_group_congr (Equivₓ.refl α) = MulEquiv.refl _ :=
+theorem free_group_congr_refl : freeGroupCongr (Equivₓ.refl α) = MulEquiv.refl _ :=
   MulEquiv.ext map.id
 
 @[simp]
-theorem free_group_congr_symm {α β} (e : α ≃ β) : (free_group_congr e).symm = free_group_congr e.symm :=
+theorem free_group_congr_symm {α β} (e : α ≃ β) : (freeGroupCongr e).symm = freeGroupCongr e.symm :=
   rfl
 
 theorem free_group_congr_trans {α β γ} (e : α ≃ β) (f : β ≃ γ) :
-    (free_group_congr e).trans (free_group_congr f) = free_group_congr (e.trans f) :=
+    (freeGroupCongr e).trans (freeGroupCongr f) = freeGroupCongr (e.trans f) :=
   MulEquiv.ext <| map.comp _ _
 
 end Map
@@ -637,19 +637,19 @@ def Prod : FreeGroup α →* α :=
 variable {x y}
 
 @[simp]
-theorem prod_mk : Prod (mk L) = List.prod (L.map fun x => cond x.2 x.1 x.1⁻¹) :=
+theorem prod_mk : prod (mk L) = List.prod (L.map fun x => cond x.2 x.1 x.1⁻¹) :=
   rfl
 
 @[simp]
-theorem prod.of {x : α} : Prod (of x) = x :=
+theorem prod.of {x : α} : prod (of x) = x :=
   lift.of
 
-theorem prod.unique (g : FreeGroup α →* α) (hg : ∀ x, g (of x) = x) {x} : g x = Prod x :=
+theorem prod.unique (g : FreeGroup α →* α) (hg : ∀ x, g (of x) = x) {x} : g x = prod x :=
   lift.unique g hg
 
 end Prod
 
-theorem lift_eq_prod_map {β : Type v} [Groupₓ β] {f : α → β} {x} : lift f x = Prod (map f x) := by
+theorem lift_eq_prod_map {β : Type v} [Groupₓ β] {f : α → β} {x} : lift f x = prod (map f x) := by
   rw [← lift.unique (prod.comp (map f))]
   · rfl
     
@@ -665,29 +665,29 @@ extends uniquely to a homomorphism from the
 free group over `α` to `α`. This is the additive
 version of `prod`. -/
 def Sum : α :=
-  @Prod (Multiplicative _) _ x
+  @prod (Multiplicative _) _ x
 
 variable {x y}
 
 @[simp]
-theorem sum_mk : Sum (mk L) = List.sum (L.map fun x => cond x.2 x.1 (-x.1)) :=
+theorem sum_mk : sum (mk L) = List.sum (L.map fun x => cond x.2 x.1 (-x.1)) :=
   rfl
 
 @[simp]
-theorem sum.of {x : α} : Sum (of x) = x :=
+theorem sum.of {x : α} : sum (of x) = x :=
   prod.of
 
 @[simp]
-theorem sum.map_mul : Sum (x * y) = Sum x + Sum y :=
-  (@Prod (Multiplicative _) _).map_mul _ _
+theorem sum.map_mul : sum (x * y) = sum x + sum y :=
+  (@prod (Multiplicative _) _).map_mul _ _
 
 @[simp]
-theorem sum.map_one : Sum (1 : FreeGroup α) = 0 :=
-  (@Prod (Multiplicative _) _).map_one
+theorem sum.map_one : sum (1 : FreeGroup α) = 0 :=
+  (@prod (Multiplicative _) _).map_one
 
 @[simp]
-theorem sum.map_inv : Sum x⁻¹ = -Sum x :=
-  (@Prod (Multiplicative _) _).map_inv _
+theorem sum.map_inv : sum x⁻¹ = -sum x :=
+  (@prod (Multiplicative _) _).map_inv _
 
 end Sum
 
@@ -702,7 +702,7 @@ def free_group_empty_equiv_unit : FreeGroup Empty ≃ Unit where
 /-- The bijection between the free group on a singleton, and the integers. -/
 def free_group_unit_equiv_int : FreeGroup Unit ≃ ℤ where
   toFun := fun x =>
-    Sum
+    sum
       (by
         revert x
         apply MonoidHom.toFun
@@ -824,7 +824,7 @@ theorem reduce.cons x :
 
 /-- The first theorem that characterises the function
 `reduce`: a word reduces to its maximal reduction. -/
-theorem reduce.red : red L (reduce L) := by
+theorem reduce.red : Red L (reduce L) := by
   induction' L with hd1 tl1 ih
   case list.nil =>
     constructor
@@ -890,7 +890,7 @@ theorem reduce.not {p : Prop} : ∀ {L₁ L₂ L₃ : List (α × Bool)} {x b}, 
 /-- The second theorem that characterises the
 function `reduce`: the maximal reduction of a word
 only reduces to itself. -/
-theorem reduce.min (H : red (reduce L₁) L₂) : reduce L₁ = L₂ := by
+theorem reduce.min (H : Red (reduce L₁) L₂) : reduce L₁ = L₂ := by
   induction' H with L1 L' L2 H1 H2 ih
   · rfl
     
@@ -904,14 +904,14 @@ reduction of the word. -/
 theorem reduce.idem : reduce (reduce L) = reduce L :=
   Eq.symm <| reduce.min reduce.red
 
-theorem reduce.step.eq (H : red.step L₁ L₂) : reduce L₁ = reduce L₂ :=
-  let ⟨L₃, HR13, HR23⟩ := red.church_rosser reduce.red (reduce.red.head H)
+theorem reduce.step.eq (H : Red.Step L₁ L₂) : reduce L₁ = reduce L₂ :=
+  let ⟨L₃, HR13, HR23⟩ := Red.church_rosser reduce.red (reduce.red.head H)
   (reduce.min HR13).trans (reduce.min HR23).symm
 
 /-- If a word reduces to another word, then they have
 a common maximal reduction. -/
-theorem reduce.eq_of_red (H : red L₁ L₂) : reduce L₁ = reduce L₂ :=
-  let ⟨L₃, HR13, HR23⟩ := red.church_rosser reduce.red (red.trans H reduce.red)
+theorem reduce.eq_of_red (H : Red L₁ L₂) : reduce L₁ = reduce L₂ :=
+  let ⟨L₃, HR13, HR23⟩ := Red.church_rosser reduce.red (Red.trans H reduce.red)
   (reduce.min HR13).trans (reduce.min HR23).symm
 
 /-- If two words correspond to the same element in
@@ -920,13 +920,13 @@ reduction. This is the proof that the function that
 sends an element of the free group to its maximal
 reduction is well-defined. -/
 theorem reduce.sound (H : mk L₁ = mk L₂) : reduce L₁ = reduce L₂ :=
-  let ⟨L₃, H13, H23⟩ := red.exact.1 H
+  let ⟨L₃, H13, H23⟩ := Red.exact.1 H
   (reduce.eq_of_red H13).trans (reduce.eq_of_red H23).symm
 
 /-- If two words have a common maximal reduction,
 then they correspond to the same element in the free group. -/
 theorem reduce.exact (H : reduce L₁ = reduce L₂) : mk L₁ = mk L₂ :=
-  red.exact.2 ⟨reduce L₂, H ▸ reduce.red, reduce.red⟩
+  Red.exact.2 ⟨reduce L₂, H ▸ reduce.red, reduce.red⟩
 
 /-- A word and its maximal reduction correspond to
 the same element of the free group. -/
@@ -935,57 +935,57 @@ theorem reduce.self : mk (reduce L) = mk L :=
 
 /-- If words `w₁ w₂` are such that `w₁` reduces to `w₂`,
 then `w₂` reduces to the maximal reduction of `w₁`. -/
-theorem reduce.rev (H : red L₁ L₂) : red L₂ (reduce L₁) :=
+theorem reduce.rev (H : Red L₁ L₂) : Red L₂ (reduce L₁) :=
   (reduce.eq_of_red H).symm ▸ reduce.red
 
 /-- The function that sends an element of the free
 group to its maximal reduction. -/
 def to_word : FreeGroup α → List (α × Bool) :=
-  (Quot.lift reduce) fun L₁ L₂ H => reduce.step.eq H
+  (Quot.lift reduce) fun L₁ L₂ H => reduce.Step.eq H
 
-theorem to_word.mk : ∀ {x : FreeGroup α}, mk (to_word x) = x := by
+theorem to_word.mk : ∀ {x : FreeGroup α}, mk (toWord x) = x := by
   rintro ⟨L⟩ <;> exact reduce.self
 
-theorem to_word.inj : ∀ x y : FreeGroup α, to_word x = to_word y → x = y := by
+theorem to_word.inj : ∀ x y : FreeGroup α, toWord x = toWord y → x = y := by
   rintro ⟨L₁⟩ ⟨L₂⟩ <;> exact reduce.exact
 
 /-- Constructive Church-Rosser theorem (compare `church_rosser`). -/
-def reduce.church_rosser (H12 : red L₁ L₂) (H13 : red L₁ L₃) : { L₄ // red L₂ L₄ ∧ red L₃ L₄ } :=
+def reduce.church_rosser (H12 : Red L₁ L₂) (H13 : Red L₁ L₃) : { L₄ // Red L₂ L₄ ∧ Red L₃ L₄ } :=
   ⟨reduce L₁, reduce.rev H12, reduce.rev H13⟩
 
 instance : DecidableEq (FreeGroup α) :=
-  Function.Injective.decidableEq to_word.inj
+  Function.Injective.decidableEq toWord.inj
 
-instance red.decidable_rel : DecidableRel (@red α)
-  | [], [] => is_true red.refl
-  | [], hd2 :: tl2 => is_false fun H => List.noConfusion (red.nil_iff.1 H)
+instance red.decidable_rel : DecidableRel (@Red α)
+  | [], [] => isTrue Red.refl
+  | [], hd2 :: tl2 => is_false fun H => List.noConfusion (Red.nil_iff.1 H)
   | (x, b) :: tl, [] =>
     match red.decidable_rel tl [(x, bnot b)] with
-    | is_true H => is_true <| red.trans (red.cons_cons H) <| (@red.step.bnot _ [] [] _ _).to_red
-    | is_false H => is_false fun H2 => H <| red.cons_nil_iff_singleton.1 H2
+    | is_true H => is_true <| Red.trans (Red.cons_cons H) <| (@Red.Step.bnot _ [] [] _ _).to_red
+    | is_false H => is_false fun H2 => H <| Red.cons_nil_iff_singleton.1 H2
   | (x1, b1) :: tl1, (x2, b2) :: tl2 =>
     if h : (x1, b1) = (x2, b2) then
       match red.decidable_rel tl1 tl2 with
-      | is_true H => is_true <| h ▸ red.cons_cons H
-      | is_false H => is_false fun H2 => H <| h ▸ (red.cons_cons_iff _).1 <| H2
+      | is_true H => is_true <| h ▸ Red.cons_cons H
+      | is_false H => is_false fun H2 => H <| h ▸ (Red.cons_cons_iff _).1 <| H2
     else
       match red.decidable_rel tl1 ((x1, bnot b1) :: (x2, b2) :: tl2) with
-      | is_true H => is_true <| (red.cons_cons H).tail red.step.cons_bnot
-      | is_false H => is_false fun H2 => H <| red.inv_of_red_of_ne h H2
+      | is_true H => is_true <| (Red.cons_cons H).tail Red.Step.cons_bnot
+      | is_false H => is_false fun H2 => H <| Red.inv_of_red_of_ne h H2
 
 /-- A list containing every word that `w₁` reduces to. -/
 def red.enum (L₁ : List (α × Bool)) : List (List (α × Bool)) :=
-  List.filterₓ (fun L₂ => red L₁ L₂) (List.sublists L₁)
+  List.filterₓ (fun L₂ => Red L₁ L₂) (List.sublists L₁)
 
-theorem red.enum.sound (H : L₂ ∈ red.enum L₁) : red L₁ L₂ :=
+theorem red.enum.sound (H : L₂ ∈ Red.enum L₁) : Red L₁ L₂ :=
   List.of_mem_filter H
 
-theorem red.enum.complete (H : red L₁ L₂) : L₂ ∈ red.enum L₁ :=
-  List.mem_filter_of_mem (List.mem_sublists.2 <| red.sublist H) H
+theorem red.enum.complete (H : Red L₁ L₂) : L₂ ∈ Red.enum L₁ :=
+  List.mem_filter_of_mem (List.mem_sublists.2 <| Red.sublist H) H
 
-instance : Fintype { L₂ // red L₁ L₂ } :=
-  (Fintype.subtype (List.toFinset <| red.enum L₁)) fun L₂ =>
-    ⟨fun H => red.enum.sound <| List.mem_to_finset.1 H, fun H => List.mem_to_finset.2 <| red.enum.complete H⟩
+instance : Fintype { L₂ // Red L₁ L₂ } :=
+  (Fintype.subtype (List.toFinset <| Red.enum L₁)) fun L₂ =>
+    ⟨fun H => red.enum.sound <| List.mem_to_finset.1 H, fun H => List.mem_to_finset.2 <| Red.enum.complete H⟩
 
 end Reduce
 

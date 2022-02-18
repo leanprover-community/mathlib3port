@@ -83,7 +83,7 @@ instance : IsLawfulFunctor (WittVector p) where
   id_map := fun α ⟨v, _⟩ => rfl
   comp_map := fun α β γ f g v => rfl
 
-variable (p) [hp : Fact p.prime] [CommRingₓ R]
+variable (p) [hp : Fact p.Prime] [CommRingₓ R]
 
 include hp
 
@@ -101,19 +101,19 @@ def witt_one : ℕ → MvPolynomial (Finₓ 0 × ℕ) ℤ :=
 
 /-- The polynomials used for defining the addition of the ring of Witt vectors. -/
 def witt_add : ℕ → MvPolynomial (Finₓ 2 × ℕ) ℤ :=
-  wittStructureInt p (X 0 + X 1)
+  wittStructureInt p (x 0 + x 1)
 
 /-- The polynomials used for describing the subtraction of the ring of Witt vectors. -/
 def witt_sub : ℕ → MvPolynomial (Finₓ 2 × ℕ) ℤ :=
-  wittStructureInt p (X 0 - X 1)
+  wittStructureInt p (x 0 - x 1)
 
 /-- The polynomials used for defining the multiplication of the ring of Witt vectors. -/
 def witt_mul : ℕ → MvPolynomial (Finₓ 2 × ℕ) ℤ :=
-  wittStructureInt p (X 0 * X 1)
+  wittStructureInt p (x 0 * x 1)
 
 /-- The polynomials used for defining the negation of the ring of Witt vectors. -/
 def witt_neg : ℕ → MvPolynomial (Finₓ 1 × ℕ) ℤ :=
-  wittStructureInt p (-X 0)
+  wittStructureInt p (-x 0)
 
 variable {p}
 
@@ -138,69 +138,69 @@ evaluating this at `(x₀, x₁)` gives us the sum of two Witt vectors `x₀ + x
 def eval {k : ℕ} (φ : ℕ → MvPolynomial (Finₓ k × ℕ) ℤ) (x : Finₓ k → 𝕎 R) : 𝕎 R :=
   (mk p) fun n => (peval (φ n)) fun i => (x i).coeff
 
-variable (R) [Fact p.prime]
+variable (R) [Fact p.Prime]
 
--- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»
 instance : Zero (𝕎 R) :=
-  ⟨eval (witt_zero p)
-      («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr![ , ]»")⟩
+  ⟨eval (wittZero p)
+      («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»")⟩
 
 instance : Inhabited (𝕎 R) :=
   ⟨0⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»
 instance : One (𝕎 R) :=
-  ⟨eval (witt_one p)
-      («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr![ , ]»")⟩
+  ⟨eval (wittOne p)
+      («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»")⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»
 instance : Add (𝕎 R) :=
   ⟨fun x y =>
-    eval (witt_add p)
-      («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr![ , ]»")⟩
+    eval (wittAdd p)
+      («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»")⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»
 instance : Sub (𝕎 R) :=
   ⟨fun x y =>
-    eval (witt_sub p)
-      («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr![ , ]»")⟩
+    eval (wittSub p)
+      («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»")⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»
 instance : Mul (𝕎 R) :=
   ⟨fun x y =>
-    eval (witt_mul p)
-      («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr![ , ]»")⟩
+    eval (wittMul p)
+      («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»")⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»
 instance : Neg (𝕎 R) :=
   ⟨fun x =>
-    eval (witt_neg p)
-      («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr![ , ]»")⟩
+    eval (wittNeg p)
+      («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»")⟩
 
 end RingOperations
 
 section WittStructureSimplifications
 
 @[simp]
-theorem witt_zero_eq_zero (n : ℕ) : witt_zero p n = 0 := by
+theorem witt_zero_eq_zero (n : ℕ) : wittZero p n = 0 := by
   apply MvPolynomial.map_injective (Int.castRingHom ℚ) Int.cast_injective
   simp only [witt_zero, wittStructureRat, bind₁, aeval_zero', constant_coeff_X_in_terms_of_W, RingHom.map_zero,
     AlgHom.map_zero, map_witt_structure_int]
 
 @[simp]
-theorem witt_one_zero_eq_one : witt_one p 0 = 1 := by
+theorem witt_one_zero_eq_one : wittOne p 0 = 1 := by
   apply MvPolynomial.map_injective (Int.castRingHom ℚ) Int.cast_injective
   simp only [witt_one, wittStructureRat, X_in_terms_of_W_zero, AlgHom.map_one, RingHom.map_one, bind₁_X_right,
     map_witt_structure_int]
 
 @[simp]
-theorem witt_one_pos_eq_zero (n : ℕ) (hn : 0 < n) : witt_one p n = 0 := by
+theorem witt_one_pos_eq_zero (n : ℕ) (hn : 0 < n) : wittOne p n = 0 := by
   apply MvPolynomial.map_injective (Int.castRingHom ℚ) Int.cast_injective
   simp only [witt_one, wittStructureRat, RingHom.map_zero, AlgHom.map_one, RingHom.map_one, map_witt_structure_int]
   revert hn
@@ -224,46 +224,46 @@ theorem witt_one_pos_eq_zero (n : ℕ) (hn : 0 < n) : witt_one p n = 0 := by
     
 
 @[simp]
-theorem witt_add_zero : witt_add p 0 = X (0, 0) + X (1, 0) := by
+theorem witt_add_zero : wittAdd p 0 = x (0, 0) + x (1, 0) := by
   apply MvPolynomial.map_injective (Int.castRingHom ℚ) Int.cast_injective
   simp only [witt_add, wittStructureRat, AlgHom.map_add, RingHom.map_add, rename_X, X_in_terms_of_W_zero, map_X,
     witt_polynomial_zero, bind₁_X_right, map_witt_structure_int]
 
 @[simp]
-theorem witt_sub_zero : witt_sub p 0 = X (0, 0) - X (1, 0) := by
+theorem witt_sub_zero : wittSub p 0 = x (0, 0) - x (1, 0) := by
   apply MvPolynomial.map_injective (Int.castRingHom ℚ) Int.cast_injective
   simp only [witt_sub, wittStructureRat, AlgHom.map_sub, RingHom.map_sub, rename_X, X_in_terms_of_W_zero, map_X,
     witt_polynomial_zero, bind₁_X_right, map_witt_structure_int]
 
 @[simp]
-theorem witt_mul_zero : witt_mul p 0 = X (0, 0) * X (1, 0) := by
+theorem witt_mul_zero : wittMul p 0 = x (0, 0) * x (1, 0) := by
   apply MvPolynomial.map_injective (Int.castRingHom ℚ) Int.cast_injective
   simp only [witt_mul, wittStructureRat, rename_X, X_in_terms_of_W_zero, map_X, witt_polynomial_zero, RingHom.map_mul,
     bind₁_X_right, AlgHom.map_mul, map_witt_structure_int]
 
 @[simp]
-theorem witt_neg_zero : witt_neg p 0 = -X (0, 0) := by
+theorem witt_neg_zero : wittNeg p 0 = -x (0, 0) := by
   apply MvPolynomial.map_injective (Int.castRingHom ℚ) Int.cast_injective
   simp only [witt_neg, wittStructureRat, rename_X, X_in_terms_of_W_zero, map_X, witt_polynomial_zero, RingHom.map_neg,
     AlgHom.map_neg, bind₁_X_right, map_witt_structure_int]
 
 @[simp]
-theorem constant_coeff_witt_add (n : ℕ) : constant_coeff (witt_add p n) = 0 := by
+theorem constant_coeff_witt_add (n : ℕ) : constantCoeff (wittAdd p n) = 0 := by
   apply constant_coeff_witt_structure_int p _ _ n
   simp only [add_zeroₓ, RingHom.map_add, constant_coeff_X]
 
 @[simp]
-theorem constant_coeff_witt_sub (n : ℕ) : constant_coeff (witt_sub p n) = 0 := by
+theorem constant_coeff_witt_sub (n : ℕ) : constantCoeff (wittSub p n) = 0 := by
   apply constant_coeff_witt_structure_int p _ _ n
   simp only [sub_zero, RingHom.map_sub, constant_coeff_X]
 
 @[simp]
-theorem constant_coeff_witt_mul (n : ℕ) : constant_coeff (witt_mul p n) = 0 := by
+theorem constant_coeff_witt_mul (n : ℕ) : constantCoeff (wittMul p n) = 0 := by
   apply constant_coeff_witt_structure_int p _ _ n
   simp only [mul_zero, RingHom.map_mul, constant_coeff_X]
 
 @[simp]
-theorem constant_coeff_witt_neg (n : ℕ) : constant_coeff (witt_neg p n) = 0 := by
+theorem constant_coeff_witt_neg (n : ℕ) : constantCoeff (wittNeg p n) = 0 := by
   apply constant_coeff_witt_structure_int p _ _ n
   simp only [neg_zero, RingHom.map_neg, constant_coeff_X]
 
@@ -275,17 +275,17 @@ variable (p R)
 
 @[simp]
 theorem zero_coeff (n : ℕ) : (0 : 𝕎 R).coeff n = 0 :=
-  show (aeval _ (witt_zero p n) : R) = 0 by
+  show (aeval _ (wittZero p n) : R) = 0 by
     simp only [witt_zero_eq_zero, AlgHom.map_zero]
 
 @[simp]
 theorem one_coeff_zero : (1 : 𝕎 R).coeff 0 = 1 :=
-  show (aeval _ (witt_one p 0) : R) = 1 by
+  show (aeval _ (wittOne p 0) : R) = 1 by
     simp only [witt_one_zero_eq_one, AlgHom.map_one]
 
 @[simp]
 theorem one_coeff_eq_of_pos (n : ℕ) (hn : 0 < n) : coeff (1 : 𝕎 R) n = 0 :=
-  show (aeval _ (witt_one p n) : R) = 0 by
+  show (aeval _ (wittOne p n) : R) = 0 by
     simp only [hn, witt_one_pos_eq_zero, AlgHom.map_zero]
 
 variable {p R}
@@ -293,52 +293,52 @@ variable {p R}
 omit hp
 
 -- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
--- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»
 @[simp]
 theorem v2_coeff {p' R'} (x y : WittVector p' R') (i : Finₓ 2) :
-    ((«expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr![ , ]»") i).coeff =
-      («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr![ , ]»") i :=
+    ((«expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»") i).coeff =
+      («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»") i :=
   by
   fin_cases i <;> simp
 
 include hp
 
--- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»
 theorem add_coeff (x y : 𝕎 R) (n : ℕ) :
     (x + y).coeff n =
-      peval (witt_add p n)
-        («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr![ , ]»") :=
+      peval (wittAdd p n)
+        («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»") :=
   by
   simp [· + ·, eval]
 
--- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»
 theorem sub_coeff (x y : 𝕎 R) (n : ℕ) :
     (x - y).coeff n =
-      peval (witt_sub p n)
-        («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr![ , ]»") :=
+      peval (wittSub p n)
+        («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»") :=
   by
   simp [Sub.sub, eval]
 
--- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»
 theorem mul_coeff (x y : 𝕎 R) (n : ℕ) :
     (x * y).coeff n =
-      peval (witt_mul p n)
-        («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr![ , ]»") :=
+      peval (wittMul p n)
+        («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»") :=
   by
   simp [· * ·, eval]
 
--- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»
 theorem neg_coeff (x : 𝕎 R) (n : ℕ) :
     (-x).coeff n =
-      peval (witt_neg p n)
-        («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr![ , ]»") :=
+      peval (wittNeg p n)
+        («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»") :=
   by
   simp [Neg.neg, eval, Matrix.cons_fin_one]
 
@@ -350,16 +350,16 @@ theorem mul_coeff_zero (x y : 𝕎 R) : (x * y).coeff 0 = x.coeff 0 * y.coeff 0 
 
 end Coeff
 
-theorem witt_add_vars (n : ℕ) : (witt_add p n).vars ⊆ Finset.univ.product (Finset.range (n + 1)) :=
+theorem witt_add_vars (n : ℕ) : (wittAdd p n).vars ⊆ Finset.univ.product (Finset.range (n + 1)) :=
   witt_structure_int_vars _ _ _
 
-theorem witt_sub_vars (n : ℕ) : (witt_sub p n).vars ⊆ Finset.univ.product (Finset.range (n + 1)) :=
+theorem witt_sub_vars (n : ℕ) : (wittSub p n).vars ⊆ Finset.univ.product (Finset.range (n + 1)) :=
   witt_structure_int_vars _ _ _
 
-theorem witt_mul_vars (n : ℕ) : (witt_mul p n).vars ⊆ Finset.univ.product (Finset.range (n + 1)) :=
+theorem witt_mul_vars (n : ℕ) : (wittMul p n).vars ⊆ Finset.univ.product (Finset.range (n + 1)) :=
   witt_structure_int_vars _ _ _
 
-theorem witt_neg_vars (n : ℕ) : (witt_neg p n).vars ⊆ Finset.univ.product (Finset.range (n + 1)) :=
+theorem witt_neg_vars (n : ℕ) : (wittNeg p n).vars ⊆ Finset.univ.product (Finset.range (n + 1)) :=
   witt_structure_int_vars _ _ _
 
 end WittVector

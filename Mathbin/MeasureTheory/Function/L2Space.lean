@@ -27,13 +27,13 @@ namespace MeasureTheory
 
 namespace L2
 
-variable {α E F 𝕜 : Type _} [IsROrC 𝕜] [MeasurableSpace α] {μ : Measureₓ α} [MeasurableSpace E] [InnerProductSpace 𝕜 E]
-  [BorelSpace E] [second_countable_topology E] [NormedGroup F] [MeasurableSpace F] [BorelSpace F]
-  [second_countable_topology F]
+variable {α E F 𝕜 : Type _} [IsROrC 𝕜] [MeasurableSpace α] {μ : Measure α} [MeasurableSpace E] [InnerProductSpace 𝕜 E]
+  [BorelSpace E] [SecondCountableTopology E] [NormedGroup F] [MeasurableSpace F] [BorelSpace F]
+  [SecondCountableTopology F]
 
 local notation "⟪" x ", " y "⟫" => @inner 𝕜 _ _ x y
 
-theorem snorm_rpow_two_norm_lt_top (f : Lp F 2 μ) : snorm (fun x => ∥f x∥ ^ (2 : ℝ)) 1 μ < ∞ := by
+theorem snorm_rpow_two_norm_lt_top (f : lp F 2 μ) : snorm (fun x => ∥f x∥ ^ (2 : ℝ)) 1 μ < ∞ := by
   have h_two : Ennreal.ofReal (2 : ℝ) = 2 := by
     simp [zero_le_one]
   rw [snorm_norm_rpow f zero_lt_two, one_mulₓ, h_two]
@@ -61,7 +61,7 @@ theorem snorm_inner_lt_top (f g : α →₂[μ] E) : snorm (fun x : α => ⟪f x
     
   · exact (Lp.ae_measurable g).norm.pow_const _
     
-  simp only [Nat.cast_bit0, Ennreal.add_lt_top, Nat.cast_one]
+  simp only [Nat.cast_bit0, Ennreal.add_lt_top, Nat.cast_oneₓ]
   exact ⟨snorm_rpow_two_norm_lt_top f, snorm_rpow_two_norm_lt_top g⟩
 
 section InnerProductSpace
@@ -110,13 +110,13 @@ private theorem norm_sq_eq_inner' (f : α →₂[μ] E) : ∥f∥ ^ 2 = IsROrC.r
     
 
 theorem mem_L1_inner (f g : α →₂[μ] E) :
-    ae_eq_fun.mk (fun x => ⟪f x, g x⟫) ((Lp.ae_measurable f).inner (Lp.ae_measurable g)) ∈ Lp 𝕜 1 μ := by
+    AeEqFun.mk (fun x => ⟪f x, g x⟫) ((lp.ae_measurable f).inner (lp.ae_measurable g)) ∈ lp 𝕜 1 μ := by
   simp_rw [mem_Lp_iff_snorm_lt_top, snorm_ae_eq_fun]
   exact snorm_inner_lt_top f g
 
-theorem integrable_inner (f g : α →₂[μ] E) : integrable (fun x : α => ⟪f x, g x⟫) μ :=
-  (integrable_congr (ae_eq_fun.coe_fn_mk (fun x => ⟪f x, g x⟫) ((Lp.ae_measurable f).inner (Lp.ae_measurable g)))).mp
-    (ae_eq_fun.integrable_iff_mem_L1.mpr (mem_L1_inner f g))
+theorem integrable_inner (f g : α →₂[μ] E) : Integrable (fun x : α => ⟪f x, g x⟫) μ :=
+  (integrable_congr (AeEqFun.coe_fn_mk (fun x => ⟪f x, g x⟫) ((lp.ae_measurable f).inner (lp.ae_measurable g)))).mp
+    (AeEqFun.integrable_iff_mem_L1.mpr (mem_L1_inner f g))
 
 private theorem add_left' (f f' g : α →₂[μ] E) : ⟪f + f', g⟫ = inner f g + inner f' g := by
   simp_rw [inner_def, ← integral_add (integrable_inner f g) (integrable_inner f' g), ← inner_add_left]
@@ -146,8 +146,8 @@ variable (𝕜) {s : Set α}
 
 /-- The inner product in `L2` of the indicator of a set `indicator_const_Lp 2 hs hμs c` and `f` is
 equal to the integral of the inner product over `s`: `∫ x in s, ⟪c, f x⟫ ∂μ`. -/
-theorem inner_indicator_const_Lp_eq_set_integral_inner (f : Lp E 2 μ) (hs : MeasurableSet s) (c : E) (hμs : μ s ≠ ∞) :
-    (⟪indicator_const_Lp 2 hs hμs c, f⟫ : 𝕜) = ∫ x in s, ⟪c, f x⟫ ∂μ := by
+theorem inner_indicator_const_Lp_eq_set_integral_inner (f : lp E 2 μ) (hs : MeasurableSet s) (c : E) (hμs : μ s ≠ ∞) :
+    (⟪indicatorConstLp 2 hs hμs c, f⟫ : 𝕜) = ∫ x in s, ⟪c, f x⟫ ∂μ := by
   rw [inner_def, ← integral_add_compl hs (L2.integrable_inner _ f)]
   have h_left : (∫ x in s, ⟪(indicator_const_Lp 2 hs hμs c) x, f x⟫ ∂μ) = ∫ x in s, ⟪c, f x⟫ ∂μ := by
     suffices h_ae_eq : ∀ᵐ x ∂μ, x ∈ s → ⟪indicator_const_Lp 2 hs hμs c x, f x⟫ = ⟪c, f x⟫
@@ -174,7 +174,7 @@ theorem inner_indicator_const_Lp_eq_set_integral_inner (f : Lp E 2 μ) (hs : Mea
 /-- The inner product in `L2` of the indicator of a set `indicator_const_Lp 2 hs hμs c` and `f` is
 equal to the inner product of the constant `c` and the integral of `f` over `s`. -/
 theorem inner_indicator_const_Lp_eq_inner_set_integral [CompleteSpace E] [NormedSpace ℝ E] (hs : MeasurableSet s)
-    (hμs : μ s ≠ ∞) (c : E) (f : Lp E 2 μ) : (⟪indicator_const_Lp 2 hs hμs c, f⟫ : 𝕜) = ⟪c, ∫ x in s, f x ∂μ⟫ := by
+    (hμs : μ s ≠ ∞) (c : E) (f : lp E 2 μ) : (⟪indicatorConstLp 2 hs hμs c, f⟫ : 𝕜) = ⟪c, ∫ x in s, f x ∂μ⟫ := by
   rw [← integral_inner (integrable_on_Lp_of_measure_ne_top f fact_one_le_two_ennreal.elim hμs),
     L2.inner_indicator_const_Lp_eq_set_integral_inner]
 
@@ -182,8 +182,8 @@ variable {𝕜}
 
 /-- The inner product in `L2` of the indicator of a set `indicator_const_Lp 2 hs hμs (1 : 𝕜)` and
 a real or complex function `f` is equal to the integral of `f` over `s`. -/
-theorem inner_indicator_const_Lp_one (hs : MeasurableSet s) (hμs : μ s ≠ ∞) (f : Lp 𝕜 2 μ) :
-    ⟪indicator_const_Lp 2 hs hμs (1 : 𝕜), f⟫ = ∫ x in s, f x ∂μ := by
+theorem inner_indicator_const_Lp_one (hs : MeasurableSet s) (hμs : μ s ≠ ∞) (f : lp 𝕜 2 μ) :
+    ⟪indicatorConstLp 2 hs hμs (1 : 𝕜), f⟫ = ∫ x in s, f x ∂μ := by
   rw [L2.inner_indicator_const_Lp_eq_inner_set_integral 𝕜 hs hμs (1 : 𝕜) f]
   simp
 
@@ -193,13 +193,11 @@ end L2
 
 section InnerContinuous
 
-variable {α : Type _} [TopologicalSpace α] [measure_space α] [BorelSpace α] {𝕜 : Type _} [IsROrC 𝕜]
+variable {α : Type _} [TopologicalSpace α] [MeasureSpace α] [BorelSpace α] {𝕜 : Type _} [IsROrC 𝕜]
 
-variable (μ : Measureₓ α) [is_finite_measure μ]
+variable (μ : Measure α) [IsFiniteMeasure μ]
 
 open_locale BoundedContinuousFunction ComplexConjugate
-
-attribute [local instance] fact_one_le_two_ennreal
 
 local notation "⟪" x ", " y "⟫" => @inner 𝕜 (α →₂[μ] 𝕜) _ x y
 

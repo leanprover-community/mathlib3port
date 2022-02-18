@@ -61,6 +61,12 @@ theorem norm_eq_abs (z : ℂ) : ∥z∥ = abs z :=
 theorem dist_eq (z w : ℂ) : dist z w = abs (z - w) :=
   rfl
 
+theorem dist_self_conj (z : ℂ) : dist z (conj z) = 2 * abs z.im := by
+  simp only [dist_eq, sub_conj, of_real_mul, of_real_bit0, of_real_one, abs_mul, abs_two, abs_of_real, abs_I, mul_oneₓ]
+
+theorem dist_conj_self (z : ℂ) : dist (conj z) z = 2 * abs z.im := by
+  rw [dist_comm, dist_self_conj]
+
 @[simp]
 theorem norm_real (r : ℝ) : ∥(r : ℂ)∥ = ∥r∥ :=
   abs_of_real _
@@ -89,7 +95,7 @@ theorem continuous_abs : Continuous abs :=
   continuous_norm
 
 @[continuity]
-theorem continuous_norm_sq : Continuous norm_sq := by
+theorem continuous_norm_sq : Continuous normSq := by
   simpa [← norm_sq_eq_abs] using continuous_abs.pow 2
 
 /-- The `abs` function on `ℂ` is proper. -/
@@ -97,33 +103,33 @@ theorem tendsto_abs_cocompact_at_top : Filter.Tendsto abs (Filter.cocompact ℂ)
   tendsto_norm_cocompact_at_top
 
 /-- The `norm_sq` function on `ℂ` is proper. -/
-theorem tendsto_norm_sq_cocompact_at_top : Filter.Tendsto norm_sq (Filter.cocompact ℂ) Filter.atTop := by
+theorem tendsto_norm_sq_cocompact_at_top : Filter.Tendsto normSq (Filter.cocompact ℂ) Filter.atTop := by
   simpa [mul_self_abs] using tendsto_abs_cocompact_at_top.at_top_mul_at_top tendsto_abs_cocompact_at_top
 
 open ContinuousLinearMap
 
 /-- Continuous linear map version of the real part function, from `ℂ` to `ℝ`. -/
 def re_clm : ℂ →L[ℝ] ℝ :=
-  re_lm.mkContinuous 1 fun x => by
+  reLm.mkContinuous 1 fun x => by
     simp [Real.norm_eq_abs, abs_re_le_abs]
 
 @[continuity]
 theorem continuous_re : Continuous re :=
-  re_clm.Continuous
+  reClm.Continuous
 
 @[simp]
-theorem re_clm_coe : (coe re_clm : ℂ →ₗ[ℝ] ℝ) = re_lm :=
+theorem re_clm_coe : (coe reClm : ℂ →ₗ[ℝ] ℝ) = re_lm :=
   rfl
 
 @[simp]
-theorem re_clm_apply (z : ℂ) : (re_clm : ℂ → ℝ) z = z.re :=
+theorem re_clm_apply (z : ℂ) : (reClm : ℂ → ℝ) z = z.re :=
   rfl
 
 @[simp]
 theorem re_clm_norm : ∥re_clm∥ = 1 :=
   le_antisymmₓ (LinearMap.mk_continuous_norm_le _ zero_le_one _) <|
     calc
-      1 = ∥re_clm 1∥ := by
+      1 = ∥reClm 1∥ := by
         simp
       _ ≤ ∥re_clm∥ :=
         unit_le_op_norm _ _
@@ -133,26 +139,26 @@ theorem re_clm_norm : ∥re_clm∥ = 1 :=
 
 /-- Continuous linear map version of the real part function, from `ℂ` to `ℝ`. -/
 def im_clm : ℂ →L[ℝ] ℝ :=
-  im_lm.mkContinuous 1 fun x => by
+  imLm.mkContinuous 1 fun x => by
     simp [Real.norm_eq_abs, abs_im_le_abs]
 
 @[continuity]
 theorem continuous_im : Continuous im :=
-  im_clm.Continuous
+  imClm.Continuous
 
 @[simp]
-theorem im_clm_coe : (coe im_clm : ℂ →ₗ[ℝ] ℝ) = im_lm :=
+theorem im_clm_coe : (coe imClm : ℂ →ₗ[ℝ] ℝ) = im_lm :=
   rfl
 
 @[simp]
-theorem im_clm_apply (z : ℂ) : (im_clm : ℂ → ℝ) z = z.im :=
+theorem im_clm_apply (z : ℂ) : (imClm : ℂ → ℝ) z = z.im :=
   rfl
 
 @[simp]
 theorem im_clm_norm : ∥im_clm∥ = 1 :=
   le_antisymmₓ (LinearMap.mk_continuous_norm_le _ zero_le_one _) <|
     calc
-      1 = ∥im_clm I∥ := by
+      1 = ∥imClm i∥ := by
         simp
       _ ≤ ∥im_clm∥ :=
         unit_le_op_norm _ _
@@ -162,7 +168,7 @@ theorem im_clm_norm : ∥im_clm∥ = 1 :=
 
 theorem restrict_scalars_one_smul_right' {E : Type _} [NormedGroup E] [NormedSpace ℂ E] (x : E) :
     ContinuousLinearMap.restrictScalars ℝ ((1 : ℂ →L[ℂ] ℂ).smulRight x : ℂ →L[ℂ] E) =
-      re_clm.smulRight x + I • im_clm.smulRight x :=
+      reClm.smulRight x + I • imClm.smulRight x :=
   by
   ext ⟨a, b⟩
   simp [mk_eq_add_mul_I, add_smul, mul_smul, smul_comm I]
@@ -175,71 +181,82 @@ theorem restrict_scalars_one_smul_right (x : ℂ) :
 
 /-- The complex-conjugation function from `ℂ` to itself is an isometric linear equivalence. -/
 def conj_lie : ℂ ≃ₗᵢ[ℝ] ℂ :=
-  ⟨conj_ae.toLinearEquiv, abs_conj⟩
+  ⟨conjAe.toLinearEquiv, abs_conj⟩
 
 @[simp]
-theorem conj_lie_apply (z : ℂ) : conj_lie z = conj z :=
+theorem conj_lie_apply (z : ℂ) : conjLie z = conj z :=
+  rfl
+
+@[simp]
+theorem conj_lie_symm : conjLie.symm = conj_lie :=
   rfl
 
 theorem isometry_conj : Isometry (conj : ℂ → ℂ) :=
-  conj_lie.Isometry
+  conjLie.Isometry
+
+@[simp]
+theorem dist_conj_conj (z w : ℂ) : dist (conj z) (conj w) = dist z w :=
+  isometry_conj.dist_eq z w
+
+theorem dist_conj_comm (z w : ℂ) : dist (conj z) w = dist z (conj w) := by
+  rw [← dist_conj_conj, conj_conj]
 
 /-- The determinant of `conj_lie`, as a linear map. -/
 @[simp]
-theorem det_conj_lie : (conj_lie.toLinearEquiv : ℂ →ₗ[ℝ] ℂ).det = -1 :=
+theorem det_conj_lie : (conjLie.toLinearEquiv : ℂ →ₗ[ℝ] ℂ).det = -1 :=
   det_conj_ae
 
 /-- The determinant of `conj_lie`, as a linear equiv. -/
 @[simp]
-theorem linear_equiv_det_conj_lie : conj_lie.toLinearEquiv.det = -1 :=
+theorem linear_equiv_det_conj_lie : conjLie.toLinearEquiv.det = -1 :=
   linear_equiv_det_conj_ae
 
 @[continuity]
 theorem continuous_conj : Continuous (conj : ℂ → ℂ) :=
-  conj_lie.Continuous
+  conjLie.Continuous
 
 /-- Continuous linear equiv version of the conj function, from `ℂ` to `ℂ`. -/
 def conj_cle : ℂ ≃L[ℝ] ℂ :=
   conj_lie
 
 @[simp]
-theorem conj_cle_coe : conj_cle.toLinearEquiv = conj_ae.toLinearEquiv :=
+theorem conj_cle_coe : conjCle.toLinearEquiv = conjAe.toLinearEquiv :=
   rfl
 
 @[simp]
-theorem conj_cle_apply (z : ℂ) : conj_cle z = conj z :=
+theorem conj_cle_apply (z : ℂ) : conjCle z = conj z :=
   rfl
 
 @[simp]
-theorem conj_cle_norm : ∥(conj_cle : ℂ →L[ℝ] ℂ)∥ = 1 :=
-  conj_lie.toLinearIsometry.norm_to_continuous_linear_map
+theorem conj_cle_norm : ∥(conjCle : ℂ →L[ℝ] ℂ)∥ = 1 :=
+  conjLie.toLinearIsometry.norm_to_continuous_linear_map
 
 /-- Linear isometry version of the canonical embedding of `ℝ` in `ℂ`. -/
 def of_real_li : ℝ →ₗᵢ[ℝ] ℂ :=
-  ⟨of_real_am.toLinearMap, norm_real⟩
+  ⟨ofRealAm.toLinearMap, norm_real⟩
 
 theorem isometry_of_real : Isometry (coe : ℝ → ℂ) :=
-  of_real_li.Isometry
+  ofRealLi.Isometry
 
 @[continuity]
 theorem continuous_of_real : Continuous (coe : ℝ → ℂ) :=
-  of_real_li.Continuous
+  ofRealLi.Continuous
 
 /-- Continuous linear map version of the canonical embedding of `ℝ` in `ℂ`. -/
 def of_real_clm : ℝ →L[ℝ] ℂ :=
-  of_real_li.toContinuousLinearMap
+  ofRealLi.toContinuousLinearMap
 
 @[simp]
-theorem of_real_clm_coe : (of_real_clm : ℝ →ₗ[ℝ] ℂ) = of_real_am.toLinearMap :=
+theorem of_real_clm_coe : (ofRealClm : ℝ →ₗ[ℝ] ℂ) = ofRealAm.toLinearMap :=
   rfl
 
 @[simp]
-theorem of_real_clm_apply (x : ℝ) : of_real_clm x = x :=
+theorem of_real_clm_apply (x : ℝ) : ofRealClm x = x :=
   rfl
 
 @[simp]
 theorem of_real_clm_norm : ∥of_real_clm∥ = 1 :=
-  of_real_li.norm_to_continuous_linear_map
+  ofRealLi.norm_to_continuous_linear_map
 
 noncomputable instance : IsROrC ℂ where
   re := ⟨Complex.re, Complex.zero_re, Complex.add_re⟩
@@ -277,23 +294,23 @@ section
 variable {α β γ : Type _} [AddCommMonoidₓ α] [TopologicalSpace α] [AddCommMonoidₓ γ] [TopologicalSpace γ]
 
 /-- The natural `add_equiv` from `ℂ` to `ℝ × ℝ`. -/
-@[simps (config := { simpRhs := tt }) apply symm_apply_re symm_apply_im]
+@[simps (config := { simpRhs := true }) apply symm_apply_re symm_apply_im]
 def equiv_real_prod_add_hom : ℂ ≃+ ℝ × ℝ :=
-  { equiv_real_prod with
+  { equivRealProd with
     map_add' := by
       simp }
 
 /-- The natural `linear_equiv` from `ℂ` to `ℝ × ℝ`. -/
-@[simps (config := { simpRhs := tt }) apply symm_apply_re symm_apply_im]
+@[simps (config := { simpRhs := true }) apply symm_apply_re symm_apply_im]
 def equiv_real_prod_add_hom_lm : ℂ ≃ₗ[ℝ] ℝ × ℝ :=
-  { equiv_real_prod_add_hom with
+  { equivRealProdAddHom with
     map_smul' := by
       simp [equiv_real_prod_add_hom] }
 
 /-- The natural `continuous_linear_equiv` from `ℂ` to `ℝ × ℝ`. -/
-@[simps (config := { simpRhs := tt }) apply symm_apply_re symm_apply_im]
+@[simps (config := { simpRhs := true }) apply symm_apply_re symm_apply_im]
 def equiv_real_prodₗ : ℂ ≃L[ℝ] ℝ × ℝ :=
-  equiv_real_prod_add_hom_lm.toContinuousLinearEquiv
+  equivRealProdAddHomLm.toContinuousLinearEquiv
 
 end
 

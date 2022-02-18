@@ -42,7 +42,7 @@ instance {ι : Type _} {Z : ι → Type _} [∀ i, CanonicallyOrderedMonoid (Z i
           
         
       · rintro ⟨h, rfl⟩
-        exact fun i => le_mul_right (le_reflₓ _)
+        exact fun i => le_mul_right le_rfl
          }
 
 @[to_additive]

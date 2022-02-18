@@ -46,7 +46,7 @@ open_locale BigOperators
 
 namespace CategoryTheory
 
-variable (C : Type u) [category.{v} C]
+variable (C : Type u) [Category.{v} C]
 
 /-- A category is called preadditive if `P ⟶ Q` is an abelian group such that composition is
     linear in both variables. -/
@@ -85,7 +85,7 @@ section Preadditive
 
 open AddMonoidHom
 
-variable {C : Type u} [category.{v} C] [preadditive C]
+variable {C : Type u} [Category.{v} C] [Preadditive C]
 
 section InducedCategory
 
@@ -93,8 +93,8 @@ universe u'
 
 variable {C} {D : Type u'} (F : D → C)
 
-instance induced_category.category : preadditive.{v} (induced_category C F) where
-  homGroup := fun P Q => @preadditive.hom_group C _ _ (F P) (F Q)
+instance induced_category.category : Preadditive.{v} (InducedCategory C F) where
+  homGroup := fun P Q => @Preadditive.homGroup C _ _ (F P) (F Q)
   add_comp' := fun P Q R f f' g => add_comp' _ _ _ _ _ _
   comp_add' := fun P Q R f g g' => comp_add' _ _ _ _ _ _
 
@@ -106,8 +106,8 @@ instance (X : C) : AddCommGroupₓ (End X) := by
 
 instance (X : C) : Ringₓ (End X) :=
   { (inferInstance : AddCommGroupₓ (End X)), (inferInstance : Monoidₓ (End X)) with
-    left_distrib := fun f g h => preadditive.add_comp X X X g h f,
-    right_distrib := fun f g h => preadditive.comp_add X X X h f g }
+    left_distrib := fun f g h => Preadditive.add_comp X X X g h f,
+    right_distrib := fun f g h => Preadditive.comp_add X X X h f g }
 
 /-- Composition by a fixed left argument as a group homomorphism -/
 def left_comp {P Q : C} (R : C) (f : P ⟶ Q) : (Q ⟶ R) →+ (P ⟶ R) :=
@@ -123,115 +123,121 @@ variable {P Q R : C} (f f' : P ⟶ Q) (g g' : Q ⟶ R)
 
 /-- Composition as a bilinear group homomorphism -/
 def comp_hom : (P ⟶ Q) →+ (Q ⟶ R) →+ (P ⟶ R) :=
-  (AddMonoidHom.mk' fun f => left_comp _ f) fun f₁ f₂ => AddMonoidHom.ext fun g => (right_comp _ g).map_add f₁ f₂
+  (AddMonoidHom.mk' fun f => leftComp _ f) fun f₁ f₂ => AddMonoidHom.ext fun g => (rightComp _ g).map_add f₁ f₂
 
 @[simp, reassoc]
 theorem sub_comp : (f - f') ≫ g = f ≫ g - f' ≫ g :=
-  map_sub (right_comp P g) f f'
+  map_sub (rightComp P g) f f'
 
 @[reassoc, simp]
 theorem comp_sub : f ≫ (g - g') = f ≫ g - f ≫ g' :=
-  map_sub (left_comp R f) g g'
+  map_sub (leftComp R f) g g'
 
 @[simp, reassoc]
 theorem neg_comp : -f ≫ g = -(f ≫ g) :=
-  map_neg (right_comp P g) f
+  map_neg (rightComp P g) f
 
 @[reassoc, simp]
 theorem comp_neg : f ≫ -g = -(f ≫ g) :=
-  map_neg (left_comp R f) g
+  map_neg (leftComp R f) g
 
 @[reassoc]
 theorem neg_comp_neg : -f ≫ -g = f ≫ g := by
   simp
 
 theorem nsmul_comp (n : ℕ) : (n • f) ≫ g = n • f ≫ g :=
-  map_nsmul (right_comp P g) f n
+  map_nsmul (rightComp P g) f n
 
 theorem comp_nsmul (n : ℕ) : f ≫ (n • g) = n • f ≫ g :=
-  map_nsmul (left_comp R f) g n
+  map_nsmul (leftComp R f) g n
 
 theorem zsmul_comp (n : ℤ) : (n • f) ≫ g = n • f ≫ g :=
-  map_zsmul (right_comp P g) f n
+  map_zsmul (rightComp P g) f n
 
 theorem comp_zsmul (n : ℤ) : f ≫ (n • g) = n • f ≫ g :=
-  map_zsmul (left_comp R f) g n
+  map_zsmul (leftComp R f) g n
 
 @[reassoc]
 theorem comp_sum {P Q R : C} {J : Type _} (s : Finset J) (f : P ⟶ Q) (g : J → (Q ⟶ R)) :
     (f ≫ ∑ j in s, g j) = ∑ j in s, f ≫ g j :=
-  map_sum (left_comp R f) _ _
+  map_sum (leftComp R f) _ _
 
 @[reassoc]
 theorem sum_comp {P Q R : C} {J : Type _} (s : Finset J) (f : J → (P ⟶ Q)) (g : Q ⟶ R) :
     (∑ j in s, f j) ≫ g = ∑ j in s, f j ≫ g :=
-  map_sum (right_comp P g) _ _
+  map_sum (rightComp P g) _ _
 
-instance {P Q : C} {f : P ⟶ Q} [epi f] : epi (-f) :=
+instance {P Q : C} {f : P ⟶ Q} [Epi f] : Epi (-f) :=
   ⟨fun R g g' H => by
     rwa [neg_comp, neg_comp, ← comp_neg, ← comp_neg, cancel_epi, neg_inj] at H⟩
 
-instance {P Q : C} {f : P ⟶ Q} [mono f] : mono (-f) :=
+instance {P Q : C} {f : P ⟶ Q} [Mono f] : Mono (-f) :=
   ⟨fun R g g' H => by
     rwa [comp_neg, comp_neg, ← neg_comp, ← neg_comp, cancel_mono, neg_inj] at H⟩
 
-instance (priority := 100) preadditive_has_zero_morphisms : has_zero_morphisms C where
+instance (priority := 100) preadditive_has_zero_morphisms : HasZeroMorphisms C where
   HasZero := inferInstance
-  comp_zero' := fun P Q f R => show left_comp R f 0 = 0 from map_zero _
-  zero_comp' := fun P Q R f => show right_comp P f 0 = 0 from map_zero _
+  comp_zero' := fun P Q f R => show leftComp R f 0 = 0 from map_zero _
+  zero_comp' := fun P Q R f => show rightComp P f 0 = 0 from map_zero _
 
-theorem mono_of_cancel_zero {Q R : C} (f : Q ⟶ R) (h : ∀ {P : C} g : P ⟶ Q, g ≫ f = 0 → g = 0) : mono f :=
-  ⟨fun P g g' hg => sub_eq_zero.1 <| h _ <| (map_sub (right_comp P f) g g').trans <| sub_eq_zero.2 hg⟩
+instance module_End_right {X Y : C} : Module (End Y) (X ⟶ Y) where
+  smul_add := fun r f g => add_comp _ _ _ _ _ _
+  smul_zero := fun r => zero_comp
+  add_smul := fun r s f => comp_add _ _ _ _ _ _
+  zero_smul := fun r => comp_zero
 
-theorem mono_iff_cancel_zero {Q R : C} (f : Q ⟶ R) : mono f ↔ ∀ P : C g : P ⟶ Q, g ≫ f = 0 → g = 0 :=
+theorem mono_of_cancel_zero {Q R : C} (f : Q ⟶ R) (h : ∀ {P : C} g : P ⟶ Q, g ≫ f = 0 → g = 0) : Mono f :=
+  ⟨fun P g g' hg => sub_eq_zero.1 <| h _ <| (map_sub (rightComp P f) g g').trans <| sub_eq_zero.2 hg⟩
+
+theorem mono_iff_cancel_zero {Q R : C} (f : Q ⟶ R) : Mono f ↔ ∀ P : C g : P ⟶ Q, g ≫ f = 0 → g = 0 :=
   ⟨fun m P g => zero_of_comp_mono _, mono_of_cancel_zero f⟩
 
-theorem mono_of_kernel_zero {X Y : C} {f : X ⟶ Y} [has_limit (parallel_pair f 0)] (w : kernel.ι f = 0) : mono f :=
+theorem mono_of_kernel_zero {X Y : C} {f : X ⟶ Y} [HasLimit (parallelPair f 0)] (w : kernel.ι f = 0) : Mono f :=
   mono_of_cancel_zero f fun P g h => by
     rw [← kernel.lift_ι f g h, w, limits.comp_zero]
 
-theorem epi_of_cancel_zero {P Q : C} (f : P ⟶ Q) (h : ∀ {R : C} g : Q ⟶ R, f ≫ g = 0 → g = 0) : epi f :=
-  ⟨fun R g g' hg => sub_eq_zero.1 <| h _ <| (map_sub (left_comp R f) g g').trans <| sub_eq_zero.2 hg⟩
+theorem epi_of_cancel_zero {P Q : C} (f : P ⟶ Q) (h : ∀ {R : C} g : Q ⟶ R, f ≫ g = 0 → g = 0) : Epi f :=
+  ⟨fun R g g' hg => sub_eq_zero.1 <| h _ <| (map_sub (leftComp R f) g g').trans <| sub_eq_zero.2 hg⟩
 
-theorem epi_iff_cancel_zero {P Q : C} (f : P ⟶ Q) : epi f ↔ ∀ R : C g : Q ⟶ R, f ≫ g = 0 → g = 0 :=
+theorem epi_iff_cancel_zero {P Q : C} (f : P ⟶ Q) : Epi f ↔ ∀ R : C g : Q ⟶ R, f ≫ g = 0 → g = 0 :=
   ⟨fun e R g => zero_of_epi_comp _, epi_of_cancel_zero f⟩
 
-theorem epi_of_cokernel_zero {X Y : C} {f : X ⟶ Y} [has_colimit (parallel_pair f 0)] (w : cokernel.π f = 0) : epi f :=
+theorem epi_of_cokernel_zero {X Y : C} {f : X ⟶ Y} [HasColimit (parallelPair f 0)] (w : cokernel.π f = 0) : Epi f :=
   epi_of_cancel_zero f fun P g h => by
     rw [← cokernel.π_desc f g h, w, limits.zero_comp]
 
 open_locale ZeroObject
 
-variable [has_zero_object C]
+variable [HasZeroObject C]
 
-theorem mono_of_kernel_iso_zero {X Y : C} {f : X ⟶ Y} [has_limit (parallel_pair f 0)] (w : kernel f ≅ 0) : mono f :=
+theorem mono_of_kernel_iso_zero {X Y : C} {f : X ⟶ Y} [HasLimit (parallelPair f 0)] (w : kernel f ≅ 0) : Mono f :=
   mono_of_kernel_zero (zero_of_source_iso_zero _ w)
 
-theorem epi_of_cokernel_iso_zero {X Y : C} {f : X ⟶ Y} [has_colimit (parallel_pair f 0)] (w : cokernel f ≅ 0) : epi f :=
+theorem epi_of_cokernel_iso_zero {X Y : C} {f : X ⟶ Y} [HasColimit (parallelPair f 0)] (w : cokernel f ≅ 0) : Epi f :=
   epi_of_cokernel_zero (zero_of_target_iso_zero _ w)
 
 end Preadditive
 
 section Equalizers
 
-variable {C : Type u} [category.{v} C] [preadditive C]
+variable {C : Type u} [Category.{v} C] [Preadditive C]
 
 section
 
 variable {X Y : C} (f : X ⟶ Y) (g : X ⟶ Y)
 
 /-- A kernel of `f - g` is an equalizer of `f` and `g`. -/
-theorem has_limit_parallel_pair [has_kernel (f - g)] : has_limit (parallel_pair f g) :=
-  has_limit.mk
+theorem has_limit_parallel_pair [HasKernel (f - g)] : HasLimit (parallelPair f g) :=
+  HasLimit.mk
     { Cone :=
-        fork.of_ι (kernel.ι (f - g))
+        Fork.ofι (kernel.ι (f - g))
           (sub_eq_zero.1 <| by
             rw [← comp_sub]
             exact kernel.condition _),
       IsLimit :=
-        fork.is_limit.mk _
+        Fork.IsLimit.mk _
           (fun s =>
-            kernel.lift (f - g) (fork.ι s) <| by
+            kernel.lift (f - g) (Fork.ι s) <| by
               rw [comp_sub]
               apply sub_eq_zero.2
               exact fork.condition _)
@@ -241,12 +247,31 @@ theorem has_limit_parallel_pair [has_kernel (f - g)] : has_limit (parallel_pair 
           ext
           simpa using h walking_parallel_pair.zero }
 
+/-- Conversely, an equalizer of `f` and `g` is a kernel of `f - g`. -/
+theorem has_kernel_of_has_equalizer [HasEqualizer f g] : HasKernel (f - g) :=
+  HasLimit.mk
+    { Cone :=
+        Fork.ofι (equalizer.ι f g)
+          (by
+            erw [comp_zero, comp_sub, equalizer.condition f g, sub_self]),
+      IsLimit :=
+        Fork.IsLimit.mk _
+          (fun s =>
+            equalizer.lift s.ι
+              (by
+                simpa only [comp_sub, comp_zero, sub_eq_zero] using s.condition))
+          (fun s => by
+            simp only [fork.ι_eq_app_zero, fork.of_ι_π_app, equalizer.lift_ι])
+          fun s m h => by
+          ext
+          simpa only [equalizer.lift_ι] using h walking_parallel_pair.zero }
+
 end
 
 section
 
 /-- If a preadditive category has all kernels, then it also has all equalizers. -/
-theorem has_equalizers_of_has_kernels [has_kernels C] : has_equalizers C :=
+theorem has_equalizers_of_has_kernels [HasKernels C] : HasEqualizers C :=
   @has_equalizers_of_has_limit_parallel_pair _ _ fun _ _ f g => has_limit_parallel_pair f g
 
 end
@@ -256,17 +281,17 @@ section
 variable {X Y : C} (f : X ⟶ Y) (g : X ⟶ Y)
 
 /-- A cokernel of `f - g` is a coequalizer of `f` and `g`. -/
-theorem has_colimit_parallel_pair [has_cokernel (f - g)] : has_colimit (parallel_pair f g) :=
-  has_colimit.mk
+theorem has_colimit_parallel_pair [HasCokernel (f - g)] : HasColimit (parallelPair f g) :=
+  HasColimit.mk
     { Cocone :=
-        cofork.of_π (cokernel.π (f - g))
+        Cofork.ofπ (cokernel.π (f - g))
           (sub_eq_zero.1 <| by
             rw [← sub_comp]
             exact cokernel.condition _),
       IsColimit :=
-        cofork.is_colimit.mk _
+        Cofork.IsColimit.mk _
           (fun s =>
-            cokernel.desc (f - g) (cofork.π s) <| by
+            cokernel.desc (f - g) (Cofork.π s) <| by
               rw [sub_comp]
               apply sub_eq_zero.2
               exact cofork.condition _)
@@ -281,7 +306,7 @@ end
 section
 
 /-- If a preadditive category has all cokernels, then it also has all coequalizers. -/
-theorem has_coequalizers_of_has_cokernels [has_cokernels C] : has_coequalizers C :=
+theorem has_coequalizers_of_has_cokernels [HasCokernels C] : HasCoequalizers C :=
   @has_coequalizers_of_has_colimit_parallel_pair _ _ fun _ _ f g => has_colimit_parallel_pair f g
 
 end

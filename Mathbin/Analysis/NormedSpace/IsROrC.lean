@@ -1,5 +1,6 @@
 import Mathbin.Data.Complex.IsROrC
 import Mathbin.Analysis.NormedSpace.OperatorNorm
+import Mathbin.Analysis.NormedSpace.Pointwise
 
 /-!
 # Normed spaces over R or C
@@ -44,7 +45,7 @@ theorem norm_smul_inv_norm' {r : ℝ} (r_nonneg : 0 ≤ r) {x : E} (hx : x ≠ 0
   field_simp [norm_smul, IsROrC.norm_eq_abs, r_nonneg] with is_R_or_C_simps
 
 theorem LinearMap.bound_of_sphere_bound {r : ℝ} (r_pos : 0 < r) (c : ℝ) (f : E →ₗ[𝕜] 𝕜)
-    (h : ∀, ∀ z ∈ sphere (0 : E) r, ∀, ∥f z∥ ≤ c) (z : E) : ∥f z∥ ≤ c / r * ∥z∥ := by
+    (h : ∀, ∀ z ∈ Sphere (0 : E) r, ∀, ∥f z∥ ≤ c) (z : E) : ∥f z∥ ≤ c / r * ∥z∥ := by
   by_cases' z_zero : z = 0
   · rw [z_zero]
     simp only [LinearMap.map_zero, norm_zero, mul_zero]
@@ -69,11 +70,11 @@ theorem LinearMap.bound_of_sphere_bound {r : ℝ} (r_pos : 0 < r) (c : ℝ) (f :
 /-- `linear_map.bound_of_ball_bound` is a version of this over arbitrary nondiscrete normed fields.
 It produces a less precise bound so we keep both versions. -/
 theorem LinearMap.bound_of_ball_bound' {r : ℝ} (r_pos : 0 < r) (c : ℝ) (f : E →ₗ[𝕜] 𝕜)
-    (h : ∀, ∀ z ∈ closed_ball (0 : E) r, ∀, ∥f z∥ ≤ c) (z : E) : ∥f z∥ ≤ c / r * ∥z∥ :=
+    (h : ∀, ∀ z ∈ ClosedBall (0 : E) r, ∀, ∥f z∥ ≤ c) (z : E) : ∥f z∥ ≤ c / r * ∥z∥ :=
   f.bound_of_sphere_bound r_pos c (fun z hz => h z hz.le) z
 
 theorem ContinuousLinearMap.op_norm_bound_of_ball_bound {r : ℝ} (r_pos : 0 < r) (c : ℝ) (f : E →L[𝕜] 𝕜)
-    (h : ∀, ∀ z ∈ closed_ball (0 : E) r, ∀, ∥f z∥ ≤ c) : ∥f∥ ≤ c / r := by
+    (h : ∀, ∀ z ∈ ClosedBall (0 : E) r, ∀, ∥f z∥ ≤ c) : ∥f∥ ≤ c / r := by
   apply ContinuousLinearMap.op_norm_le_bound
   · apply div_nonneg _ r_pos.le
     exact
@@ -84,4 +85,12 @@ theorem ContinuousLinearMap.op_norm_bound_of_ball_bound {r : ℝ} (r_pos : 0 < r
     
   apply LinearMap.bound_of_ball_bound' r_pos
   exact fun z hz => h z hz
+
+variable (𝕜)
+
+include 𝕜
+
+theorem NormedSpace.sphere_nonempty_is_R_or_C [Nontrivial E] {r : ℝ} (hr : 0 ≤ r) : Nonempty (Sphere (0 : E) r) := by
+  let this' : NormedSpace ℝ E := NormedSpace.restrictScalars ℝ 𝕜 E
+  exact (sphere (0 : E) r).nonempty_coe_sort.mpr (normed_space.sphere_nonempty.mpr hr)
 

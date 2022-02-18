@@ -16,30 +16,30 @@ open CategoryTheory
 
 namespace CategoryTheory.Limits
 
-variable {J : Type v} [small_category J] {F : J ⥤ discrete PUnit.{v + 1}}
+variable {J : Type v} [SmallCategory J] {F : J ⥤ Discrete PUnit.{v + 1}}
 
 /-- A trivial cone for a functor into `punit`. `punit_cone_is_limit` shows it is a limit. -/
-def punit_cone : cone F :=
-  ⟨PUnit.unit, (functor.punit_ext _ _).Hom⟩
+def punit_cone : Cone F :=
+  ⟨PUnit.unit, (Functor.punitExt _ _).Hom⟩
 
 /-- A trivial cocone for a functor into `punit`. `punit_cocone_is_limit` shows it is a colimit. -/
-def punit_cocone : cocone F :=
-  ⟨PUnit.unit, (functor.punit_ext _ _).Hom⟩
+def punit_cocone : Cocone F :=
+  ⟨PUnit.unit, (Functor.punitExt _ _).Hom⟩
 
 /-- Any cone over a functor into `punit` is a limit cone.
 -/
-def punit_cone_is_limit {c : cone F} : is_limit c := by
+def punit_cone_is_limit {c : Cone F} : IsLimit c := by
   tidy
 
 /-- Any cocone over a functor into `punit` is a colimit cocone.
 -/
-def punit_cocone_is_colimit {c : cocone F} : is_colimit c := by
+def punit_cocone_is_colimit {c : Cocone F} : IsColimit c := by
   tidy
 
-instance : has_limits (discrete PUnit) := by
+instance : HasLimits (Discrete PUnit) := by
   tidy
 
-instance : has_colimits (discrete PUnit) := by
+instance : HasColimits (Discrete PUnit) := by
   tidy
 
 end CategoryTheory.Limits

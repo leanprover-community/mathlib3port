@@ -1,5 +1,5 @@
 import Mathbin.Data.Polynomial.Derivative
-import Mathbin.Tactic.Ring
+import Mathbin.Tactic.LinearCombination
 
 /-!
 # Chebyshev polynomials
@@ -51,37 +51,39 @@ namespace Polynomial.Chebyshev
 
 open Polynomial
 
+open_locale Polynomial
+
 variable (R S : Type _) [CommRingₓ R] [CommRingₓ S]
 
 /-- `T n` is the `n`-th Chebyshev polynomial of the first kind -/
-noncomputable def T : ℕ → Polynomial R
+noncomputable def T : ℕ → R[X]
   | 0 => 1
-  | 1 => X
+  | 1 => x
   | n + 2 => 2 * X * T (n + 1) - T n
 
 @[simp]
-theorem T_zero : T R 0 = 1 :=
+theorem T_zero : t R 0 = 1 :=
   rfl
 
 @[simp]
-theorem T_one : T R 1 = X :=
+theorem T_one : t R 1 = X :=
   rfl
 
-theorem T_two : T R 2 = 2 * X ^ 2 - 1 := by
+theorem T_two : t R 2 = 2 * X ^ 2 - 1 := by
   simp only [T, sub_left_inj, sq, mul_assoc]
 
 @[simp]
-theorem T_add_two (n : ℕ) : T R (n + 2) = 2 * X * T R (n + 1) - T R n := by
+theorem T_add_two (n : ℕ) : t R (n + 2) = 2 * X * t R (n + 1) - t R n := by
   rw [T]
 
-theorem T_of_two_le (n : ℕ) (h : 2 ≤ n) : T R n = 2 * X * T R (n - 1) - T R (n - 2) := by
+theorem T_of_two_le (n : ℕ) (h : 2 ≤ n) : t R n = 2 * X * t R (n - 1) - t R (n - 2) := by
   obtain ⟨n, rfl⟩ := Nat.exists_eq_add_of_le h
   rw [add_commₓ]
   exact T_add_two R n
 
 variable {R S}
 
-theorem map_T (f : R →+* S) : ∀ n : ℕ, map f (T R n) = T S n
+theorem map_T (f : R →+* S) : ∀ n : ℕ, map f (t R n) = t S n
   | 0 => by
     simp only [T_zero, Polynomial.map_one]
   | 1 => by
@@ -93,33 +95,33 @@ theorem map_T (f : R →+* S) : ∀ n : ℕ, map f (T R n) = T S n
 variable (R S)
 
 /-- `U n` is the `n`-th Chebyshev polynomial of the second kind -/
-noncomputable def U : ℕ → Polynomial R
+noncomputable def U : ℕ → R[X]
   | 0 => 1
   | 1 => 2 * X
   | n + 2 => 2 * X * U (n + 1) - U n
 
 @[simp]
-theorem U_zero : U R 0 = 1 :=
+theorem U_zero : u R 0 = 1 :=
   rfl
 
 @[simp]
-theorem U_one : U R 1 = 2 * X :=
+theorem U_one : u R 1 = 2 * X :=
   rfl
 
-theorem U_two : U R 2 = 4 * X ^ 2 - 1 := by
+theorem U_two : u R 2 = 4 * X ^ 2 - 1 := by
   simp only [U]
   ring
 
 @[simp]
-theorem U_add_two (n : ℕ) : U R (n + 2) = 2 * X * U R (n + 1) - U R n := by
+theorem U_add_two (n : ℕ) : u R (n + 2) = 2 * X * u R (n + 1) - u R n := by
   rw [U]
 
-theorem U_of_two_le (n : ℕ) (h : 2 ≤ n) : U R n = 2 * X * U R (n - 1) - U R (n - 2) := by
+theorem U_of_two_le (n : ℕ) (h : 2 ≤ n) : u R n = 2 * X * u R (n - 1) - u R (n - 2) := by
   obtain ⟨n, rfl⟩ := Nat.exists_eq_add_of_le h
   rw [add_commₓ]
   exact U_add_two R n
 
-theorem U_eq_X_mul_U_add_T : ∀ n : ℕ, U R (n + 1) = X * U R n + T R (n + 1)
+theorem U_eq_X_mul_U_add_T : ∀ n : ℕ, u R (n + 1) = X * u R n + t R (n + 1)
   | 0 => by
     simp only [U_zero, U_one, T_one]
     ring
@@ -128,18 +130,18 @@ theorem U_eq_X_mul_U_add_T : ∀ n : ℕ, U R (n + 1) = X * U R n + T R (n + 1)
     ring
   | n + 2 =>
     calc
-      U R (n + 2 + 1) = 2 * X * (X * U R (n + 1) + T R (n + 2)) - (X * U R n + T R (n + 1)) := by
+      u R (n + 2 + 1) = 2 * X * (X * u R (n + 1) + t R (n + 2)) - (X * u R n + t R (n + 1)) := by
         simp only [U_add_two, U_eq_X_mul_U_add_T n, U_eq_X_mul_U_add_T (n + 1)]
-      _ = X * (2 * X * U R (n + 1) - U R n) + (2 * X * T R (n + 2) - T R (n + 1)) := by
+      _ = X * (2 * X * u R (n + 1) - u R n) + (2 * X * t R (n + 2) - t R (n + 1)) := by
         ring
-      _ = X * U R (n + 2) + T R (n + 2 + 1) := by
+      _ = X * u R (n + 2) + t R (n + 2 + 1) := by
         simp only [U_add_two, T_add_two]
       
 
-theorem T_eq_U_sub_X_mul_U (n : ℕ) : T R (n + 1) = U R (n + 1) - X * U R n := by
+theorem T_eq_U_sub_X_mul_U (n : ℕ) : t R (n + 1) = u R (n + 1) - X * u R n := by
   rw [U_eq_X_mul_U_add_T, add_commₓ (X * U R n), add_sub_cancel]
 
-theorem T_eq_X_mul_T_sub_pol_U : ∀ n : ℕ, T R (n + 2) = X * T R (n + 1) - (1 - X ^ 2) * U R n
+theorem T_eq_X_mul_T_sub_pol_U : ∀ n : ℕ, t R (n + 2) = X * t R (n + 1) - (1 - X ^ 2) * u R n
   | 0 => by
     simp only [T_one, T_two, U_zero]
     ring
@@ -148,22 +150,22 @@ theorem T_eq_X_mul_T_sub_pol_U : ∀ n : ℕ, T R (n + 2) = X * T R (n + 1) - (1
     ring
   | n + 2 =>
     calc
-      T R (n + 2 + 2) = 2 * X * T R (n + 2 + 1) - T R (n + 2) := T_add_two _ _
-      _ = 2 * X * (X * T R (n + 2) - (1 - X ^ 2) * U R (n + 1)) - (X * T R (n + 1) - (1 - X ^ 2) * U R n) := by
+      t R (n + 2 + 2) = 2 * X * t R (n + 2 + 1) - t R (n + 2) := T_add_two _ _
+      _ = 2 * X * (X * t R (n + 2) - (1 - X ^ 2) * u R (n + 1)) - (X * t R (n + 1) - (1 - X ^ 2) * u R n) := by
         simp only [T_eq_X_mul_T_sub_pol_U]
-      _ = X * (2 * X * T R (n + 2) - T R (n + 1)) - (1 - X ^ 2) * (2 * X * U R (n + 1) - U R n) := by
+      _ = X * (2 * X * t R (n + 2) - t R (n + 1)) - (1 - X ^ 2) * (2 * X * u R (n + 1) - u R n) := by
         ring
-      _ = X * T R (n + 2 + 1) - (1 - X ^ 2) * U R (n + 2) := by
+      _ = X * t R (n + 2 + 1) - (1 - X ^ 2) * u R (n + 2) := by
         rw [T_add_two _ (n + 1), U_add_two]
       
 
-theorem one_sub_X_sq_mul_U_eq_pol_in_T (n : ℕ) : (1 - X ^ 2) * U R n = X * T R (n + 1) - T R (n + 2) := by
+theorem one_sub_X_sq_mul_U_eq_pol_in_T (n : ℕ) : (1 - X ^ 2) * u R n = X * t R (n + 1) - t R (n + 2) := by
   rw [T_eq_X_mul_T_sub_pol_U, ← sub_add, sub_self, zero_addₓ]
 
 variable {R S}
 
 @[simp]
-theorem map_U (f : R →+* S) : ∀ n : ℕ, map f (U R n) = U S n
+theorem map_U (f : R →+* S) : ∀ n : ℕ, map f (u R n) = u S n
   | 0 => by
     simp only [U_zero, Polynomial.map_one]
   | 1 => by
@@ -174,47 +176,47 @@ theorem map_U (f : R →+* S) : ∀ n : ℕ, map f (U R n) = U S n
     simp only [U_add_two, Polynomial.map_mul, Polynomial.map_sub, map_X, bit0, Polynomial.map_add, Polynomial.map_one]
     rw [map_U (n + 1), map_U n]
 
-theorem T_derivative_eq_U : ∀ n : ℕ, derivative (T R (n + 1)) = (n + 1) * U R n
+theorem T_derivative_eq_U : ∀ n : ℕ, derivative (t R (n + 1)) = (n + 1) * u R n
   | 0 => by
-    simp only [T_one, U_zero, derivative_X, Nat.cast_zero, zero_addₓ, mul_oneₓ]
+    simp only [T_one, U_zero, derivative_X, Nat.cast_zeroₓ, zero_addₓ, mul_oneₓ]
   | 1 => by
-    simp only [T_two, U_one, derivative_sub, derivative_one, derivative_mul, derivative_X_pow, Nat.cast_one,
+    simp only [T_two, U_one, derivative_sub, derivative_one, derivative_mul, derivative_X_pow, Nat.cast_oneₓ,
       Nat.cast_two]
     norm_num
   | n + 2 =>
     calc
-      derivative (T R (n + 2 + 1)) =
-          2 * T R (n + 2) + 2 * X * derivative (T R (n + 1 + 1)) - derivative (T R (n + 1)) :=
+      derivative (t R (n + 2 + 1)) =
+          2 * t R (n + 2) + 2 * X * derivative (t R (n + 1 + 1)) - derivative (t R (n + 1)) :=
         by
         simp only [T_add_two _ (n + 1), derivative_sub, derivative_mul, derivative_X, derivative_bit0, derivative_one,
           bit0_zero, zero_mul, zero_addₓ, mul_oneₓ]
-      _ = 2 * (U R (n + 1 + 1) - X * U R (n + 1)) + 2 * X * ((n + 1 + 1) * U R (n + 1)) - (n + 1) * U R n := by
+      _ = 2 * (u R (n + 1 + 1) - X * u R (n + 1)) + 2 * X * ((n + 1 + 1) * u R (n + 1)) - (n + 1) * u R n := by
         rw_mod_cast [T_derivative_eq_U, T_derivative_eq_U, T_eq_U_sub_X_mul_U]
-      _ = (n + 1) * (2 * X * U R (n + 1) - U R n) + 2 * U R (n + 2) := by
+      _ = (n + 1) * (2 * X * u R (n + 1) - u R n) + 2 * u R (n + 2) := by
         ring
-      _ = (n + 1) * U R (n + 2) + 2 * U R (n + 2) := by
+      _ = (n + 1) * u R (n + 2) + 2 * u R (n + 2) := by
         rw [U_add_two]
-      _ = (n + 2 + 1) * U R (n + 2) := by
+      _ = (n + 2 + 1) * u R (n + 2) := by
         ring
-      _ = (↑(n + 2) + 1) * U R (n + 2) := by
+      _ = (↑(n + 2) + 1) * u R (n + 2) := by
         norm_cast
       
 
 theorem one_sub_X_sq_mul_derivative_T_eq_poly_in_T (n : ℕ) :
-    (1 - X ^ 2) * derivative (T R (n + 1)) = (n + 1) * (T R n - X * T R (n + 1)) :=
+    (1 - X ^ 2) * derivative (t R (n + 1)) = (n + 1) * (t R n - X * t R (n + 1)) :=
   calc
-    (1 - X ^ 2) * derivative (T R (n + 1)) = (1 - X ^ 2) * ((n + 1) * U R n) := by
+    (1 - X ^ 2) * derivative (t R (n + 1)) = (1 - X ^ 2) * ((n + 1) * u R n) := by
       rw [T_derivative_eq_U]
-    _ = (n + 1) * ((1 - X ^ 2) * U R n) := by
+    _ = (n + 1) * ((1 - X ^ 2) * u R n) := by
       ring
-    _ = (n + 1) * (X * T R (n + 1) - (2 * X * T R (n + 1) - T R n)) := by
+    _ = (n + 1) * (X * t R (n + 1) - (2 * X * t R (n + 1) - t R n)) := by
       rw [one_sub_X_sq_mul_U_eq_pol_in_T, T_add_two]
-    _ = (n + 1) * (T R n - X * T R (n + 1)) := by
+    _ = (n + 1) * (t R n - X * t R (n + 1)) := by
       ring
     
 
 theorem add_one_mul_T_eq_poly_in_U (n : ℕ) :
-    ((n : Polynomial R) + 1) * T R (n + 1) = X * U R n - (1 - X ^ 2) * derivative (U R n) := by
+    ((n : R[X]) + 1) * t R (n + 1) = X * u R n - (1 - X ^ 2) * derivative (u R n) := by
   have h :
     derivative (T R (n + 2)) =
       U R (n + 1) - X * U R n + X * derivative (T R (n + 1)) + 2 * X * U R n - (1 - X ^ 2) * derivative (U R n) :=
@@ -222,14 +224,14 @@ theorem add_one_mul_T_eq_poly_in_U (n : ℕ) :
     conv_lhs => rw [T_eq_X_mul_T_sub_pol_U]
     simp only [derivative_sub, derivative_mul, derivative_X, derivative_one, derivative_X_pow, one_mulₓ,
       T_derivative_eq_U]
-    rw [T_eq_U_sub_X_mul_U, Nat.cast_bit0, Nat.cast_one]
+    rw [T_eq_U_sub_X_mul_U, Nat.cast_bit0, Nat.cast_oneₓ]
     ring
   calc
-    ((n : Polynomial R) + 1) * T R (n + 1) =
-        ((n : Polynomial R) + 1 + 1) * (X * U R n + T R (n + 1)) - X * ((n + 1) * U R n) - (X * U R n + T R (n + 1)) :=
+    ((n : R[X]) + 1) * T R (n + 1) =
+        ((n : R[X]) + 1 + 1) * (X * U R n + T R (n + 1)) - X * ((n + 1) * U R n) - (X * U R n + T R (n + 1)) :=
       by
       ring _ = derivative (T R (n + 2)) - X * derivative (T R (n + 1)) - U R (n + 1) := by
-      rw [← U_eq_X_mul_U_add_T, ← T_derivative_eq_U, ← Nat.cast_one, ← Nat.cast_add, Nat.cast_one, ←
+      rw [← U_eq_X_mul_U_add_T, ← T_derivative_eq_U, ← Nat.cast_oneₓ, ← Nat.cast_addₓ, Nat.cast_oneₓ, ←
         T_derivative_eq_U
           (n +
             1)]_ =
@@ -242,8 +244,9 @@ theorem add_one_mul_T_eq_poly_in_U (n : ℕ) :
 
 variable (R)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:418:16: unsupported tactic `linear_combination
 /-- The product of two Chebyshev polynomials is the sum of two other Chebyshev polynomials. -/
-theorem mul_T : ∀ m : ℕ, ∀ k, 2 * T R m * T R (m + k) = T R (2 * m + k) + T R k
+theorem mul_T : ∀ m : ℕ, ∀ k, 2 * t R m * t R (m + k) = t R (2 * m + k) + t R k
   | 0 => by
     simp [two_mul, add_mulₓ]
   | 1 => by
@@ -271,18 +274,10 @@ theorem mul_T : ∀ m : ℕ, ∀ k, 2 * T R m * T R (m + k) = T R (2 * m + k) + 
     have h₁ := T_add_two R m
     have h₂ := T_add_two R (2 * m + k + 2)
     have h₃ := T_add_two R k
-    apply_fun fun p => 2 * X * p  at H₁
-    apply_fun fun p => 2 * T R (m + k + 2) * p  at h₁
-    have e₁ := congr (congr_argₓ Add.add H₁) h₁
-    have e₂ := congr (congr_argₓ Sub.sub e₁) H₂
-    have e₃ := congr (congr_argₓ Sub.sub e₂) h₂
-    have e₄ := congr (congr_argₓ Sub.sub e₃) h₃
-    rw [← sub_eq_zero] at e₄⊢
-    rw [← e₄]
-    ring
+    "././Mathport/Syntax/Translate/Basic.lean:418:16: unsupported tactic `linear_combination"
 
 /-- The `(m * n)`-th Chebyshev polynomial is the composition of the `m`-th and `n`-th -/
-theorem T_mul : ∀ m : ℕ, ∀ n : ℕ, T R (m * n) = (T R m).comp (T R n)
+theorem T_mul : ∀ m : ℕ, ∀ n : ℕ, t R (m * n) = (t R m).comp (t R n)
   | 0 => by
     simp
   | 1 => by

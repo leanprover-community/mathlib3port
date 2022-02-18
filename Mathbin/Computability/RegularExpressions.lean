@@ -75,9 +75,9 @@ def matches : RegularExpression α → Language α
   | 0 => 0
   | 1 => 1
   | Charₓ a => {[a]}
-  | P + Q => P.matches + Q.matches
-  | P * Q => P.matches * Q.matches
-  | star P => P.matches.star
+  | P + Q => P.Matches + Q.Matches
+  | P * Q => P.Matches * Q.Matches
+  | star P => P.Matches.star
 
 @[simp]
 theorem matches_zero_def : (0 : RegularExpression α).Matches = 0 :=
@@ -88,25 +88,25 @@ theorem matches_epsilon_def : (1 : RegularExpression α).Matches = 1 :=
   rfl
 
 @[simp]
-theorem matches_add_def (P Q : RegularExpression α) : (P + Q).Matches = P.matches + Q.matches :=
+theorem matches_add_def (P Q : RegularExpression α) : (P + Q).Matches = P.Matches + Q.Matches :=
   rfl
 
 @[simp]
-theorem matches_mul_def (P Q : RegularExpression α) : (P * Q).Matches = P.matches * Q.matches :=
+theorem matches_mul_def (P Q : RegularExpression α) : (P * Q).Matches = P.Matches * Q.Matches :=
   rfl
 
 @[simp]
-theorem matches_star_def (P : RegularExpression α) : P.star.matches = P.matches.star :=
+theorem matches_star_def (P : RegularExpression α) : P.star.Matches = P.Matches.star :=
   rfl
 
 /-- `match_epsilon P` is true if and only if `P` matches the empty string -/
 def match_epsilon : RegularExpression α → Bool
-  | 0 => ff
-  | 1 => tt
-  | Charₓ _ => ff
-  | P + Q => P.match_epsilon || Q.match_epsilon
-  | P * Q => P.match_epsilon && Q.match_epsilon
-  | star P => tt
+  | 0 => false
+  | 1 => true
+  | Charₓ _ => false
+  | P + Q => P.matchEpsilon || Q.matchEpsilon
+  | P * Q => P.matchEpsilon && Q.matchEpsilon
+  | star P => true
 
 include dec
 
@@ -117,13 +117,13 @@ def deriv : RegularExpression α → α → RegularExpression α
   | 1, _ => 0
   | Charₓ a₁, a₂ => if a₁ = a₂ then 1 else 0
   | P + Q, a => deriv P a + deriv Q a
-  | P * Q, a => if P.match_epsilon then deriv P a * Q + deriv Q a else deriv P a * Q
+  | P * Q, a => if P.matchEpsilon then deriv P a * Q + deriv Q a else deriv P a * Q
   | star P, a => deriv P a * star P
 
 /-- `P.rmatch x` is true if and only if `P` matches `x`. This is a computable definition equivalent
   to `matches`. -/
 def rmatch : RegularExpression α → List α → Bool
-  | P, [] => match_epsilon P
+  | P, [] => matchEpsilon P
   | P, a :: as => rmatch (P.deriv a) as
 
 @[simp]
@@ -133,7 +133,7 @@ theorem zero_rmatch (x : List α) : rmatch 0 x = ff := by
 theorem one_rmatch_iff (x : List α) : rmatch 1 x ↔ x = [] := by
   induction x <;> simp [rmatch, match_epsilon, deriv, *]
 
-theorem char_rmatch_iff (a : α) (x : List α) : rmatch (Charₓ a) x ↔ x = [a] := by
+theorem char_rmatch_iff (a : α) (x : List α) : rmatch (char a) x ↔ x = [a] := by
   cases' x with _ x
   decide
   cases x
@@ -300,7 +300,7 @@ theorem star_rmatch_iff (P : RegularExpression α) :
       
 
 @[simp]
-theorem rmatch_iff_matches (P : RegularExpression α) : ∀ x : List α, P.rmatch x ↔ x ∈ P.matches := by
+theorem rmatch_iff_matches (P : RegularExpression α) : ∀ x : List α, P.rmatch x ↔ x ∈ P.Matches := by
   intro x
   induction P generalizing x
   all_goals
@@ -353,7 +353,7 @@ theorem rmatch_iff_matches (P : RegularExpression α) : ∀ x : List α, P.rmatc
       tauto
       
 
-instance (P : RegularExpression α) : DecidablePred P.matches := by
+instance (P : RegularExpression α) : DecidablePred P.Matches := by
   intro x
   change Decidable (x ∈ P.matches)
   rw [← rmatch_iff_matches]

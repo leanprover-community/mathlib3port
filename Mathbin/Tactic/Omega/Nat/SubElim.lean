@@ -9,21 +9,21 @@ open_locale Omega.Nat
 namespace Preterm
 
 /-- Find subtraction inside preterm and return its operands -/
-def sub_terms : preterm → Option (preterm × preterm)
+def sub_terms : Preterm → Option (preterm × preterm)
   | &i => none
   | i ** n => none
-  | t +* s => t.sub_terms <|> s.sub_terms
-  | t -* s => t.sub_terms <|> s.sub_terms <|> some (t, s)
+  | t +* s => t.subTerms <|> s.subTerms
+  | t -* s => t.subTerms <|> s.subTerms <|> some (t, s)
 
 /-- Find (t - s) inside a preterm and replace it with variable k -/
-def sub_subst (t s : preterm) (k : Nat) : preterm → preterm
+def sub_subst (t s : Preterm) (k : Nat) : Preterm → Preterm
   | t@(&m) => t
   | t@(m ** n) => t
-  | x +* y => x.sub_subst +* y.sub_subst
-  | x -* y => if x = t ∧ y = s then 1 ** k else x.sub_subst -* y.sub_subst
+  | x +* y => x.subSubst +* y.subSubst
+  | x -* y => if x = t ∧ y = s then 1 ** k else x.subSubst -* y.subSubst
 
-theorem val_sub_subst {k : Nat} {x y : preterm} {v : Nat → Nat} :
-    ∀ {t : preterm}, t.fresh_index ≤ k → (sub_subst x y k t).val (update k (x.val v - y.val v) v) = t.val v
+theorem val_sub_subst {k : Nat} {x y : Preterm} {v : Nat → Nat} :
+    ∀ {t : Preterm}, t.freshIndex ≤ k → (subSubst x y k t).val (update k (x.val v - y.val v) v) = t.val v
   | &m, h1 => rfl
   | m ** n, h1 => by
     have h2 : n ≠ k := ne_of_ltₓ h1
@@ -53,31 +53,30 @@ end Preterm
 namespace Preform
 
 /-- Find subtraction inside preform and return its operands -/
-def sub_terms : preform → Option (preterm × preterm)
-  | t =* s => t.sub_terms <|> s.sub_terms
-  | t ≤* s => t.sub_terms <|> s.sub_terms
-  | ¬* p => p.sub_terms
-  | p ∨* q => p.sub_terms <|> q.sub_terms
-  | p ∧* q => p.sub_terms <|> q.sub_terms
+def sub_terms : Preform → Option (preterm × preterm)
+  | t =* s => t.subTerms <|> s.subTerms
+  | t ≤* s => t.subTerms <|> s.subTerms
+  | ¬* p => p.subTerms
+  | p ∨* q => p.subTerms <|> q.subTerms
+  | p ∧* q => p.subTerms <|> q.subTerms
 
 /-- Find (t - s) inside a preform and replace it with variable k -/
 @[simp]
-def sub_subst (x y : preterm) (k : Nat) : preform → preform
-  | t =* s => preterm.sub_subst x y k t =* preterm.sub_subst x y k s
-  | t ≤* s => preterm.sub_subst x y k t ≤* preterm.sub_subst x y k s
-  | ¬* p => ¬* p.sub_subst
-  | p ∨* q => p.sub_subst ∨* q.sub_subst
-  | p ∧* q => p.sub_subst ∧* q.sub_subst
+def sub_subst (x y : Preterm) (k : Nat) : Preform → Preform
+  | t =* s => Preterm.subSubst x y k t =* Preterm.subSubst x y k s
+  | t ≤* s => Preterm.subSubst x y k t ≤* Preterm.subSubst x y k s
+  | ¬* p => ¬* p.subSubst
+  | p ∨* q => p.subSubst ∨* q.subSubst
+  | p ∧* q => p.subSubst ∧* q.subSubst
 
 end Preform
 
 /-- Preform which asserts that the value of variable k is
     the truncated difference between preterms t and s -/
-def is_diff (t s : preterm) (k : Nat) : preform :=
+def is_diff (t s : Preterm) (k : Nat) : Preform :=
   (t =* s +* 1 ** k) ∨* (t ≤* s) ∧* (1 ** k) =* &0
 
-theorem holds_is_diff {t s : preterm} {k : Nat} {v : Nat → Nat} : v k = t.val v - s.val v → (is_diff t s k).Holds v :=
-  by
+theorem holds_is_diff {t s : Preterm} {k : Nat} {v : Nat → Nat} : v k = t.val v - s.val v → (isDiff t s k).Holds v := by
   intro h1
   simp only [preform.holds, is_diff, if_pos (Eq.refl 1), preterm.val_add, preterm.val_var, preterm.val_const]
   cases' le_totalₓ (t.val v) (s.val v) with h2 h2
@@ -91,20 +90,20 @@ theorem holds_is_diff {t s : preterm} {k : Nat} {v : Nat → Nat} : v k = t.val 
     
 
 /-- Helper function for sub_elim -/
-def sub_elim_core (t s : preterm) (k : Nat) (p : preform) : preform :=
-  preform.sub_subst t s k p ∧* is_diff t s k
+def sub_elim_core (t s : Preterm) (k : Nat) (p : Preform) : Preform :=
+  Preform.subSubst t s k p ∧* isDiff t s k
 
 /-- Return de Brujin index of fresh variable that does not occur
     in any of the arguments -/
-def sub_fresh_index (t s : preterm) (p : preform) : Nat :=
-  max p.fresh_index (max t.fresh_index s.fresh_index)
+def sub_fresh_index (t s : Preterm) (p : Preform) : Nat :=
+  max p.freshIndex (max t.freshIndex s.freshIndex)
 
 /-- Return a new preform with all subtractions eliminated -/
-def sub_elim (t s : preterm) (p : preform) : preform :=
-  sub_elim_core t s (sub_fresh_index t s p) p
+def sub_elim (t s : Preterm) (p : Preform) : Preform :=
+  subElimCore t s (subFreshIndex t s p) p
 
-theorem sub_subst_equiv {k : Nat} {x y : preterm} {v : Nat → Nat} :
-    ∀ p : preform, p.fresh_index ≤ k → ((preform.sub_subst x y k p).Holds (update k (x.val v - y.val v) v) ↔ p.holds v)
+theorem sub_subst_equiv {k : Nat} {x y : Preterm} {v : Nat → Nat} :
+    ∀ p : Preform, p.freshIndex ≤ k → ((Preform.subSubst x y k p).Holds (update k (x.val v - y.val v) v) ↔ p.Holds v)
   | t =* s, h1 => by
     simp only [preform.holds, preform.sub_subst]
     apply pred_mono_2 <;> apply preterm.val_sub_subst (le_transₓ _ h1)
@@ -129,7 +128,7 @@ theorem sub_subst_equiv {k : Nat} {x y : preterm} {v : Nat → Nat} :
     apply le_max_leftₓ
     apply le_max_rightₓ
 
-theorem sat_sub_elim {t s : preterm} {p : preform} : p.sat → (sub_elim t s p).sat := by
+theorem sat_sub_elim {t s : Preterm} {p : Preform} : p.sat → (subElim t s p).sat := by
   intro h1
   simp only [sub_elim, sub_elim_core]
   cases' h1 with v h1
@@ -149,7 +148,7 @@ theorem sat_sub_elim {t s : preterm} {p : preform} : p.sat → (sub_elim t s p).
     apply le_max_rightₓ
     
 
-theorem unsat_of_unsat_sub_elim (t s : preterm) (p : preform) : (sub_elim t s p).Unsat → p.unsat :=
+theorem unsat_of_unsat_sub_elim (t s : Preterm) (p : Preform) : (subElim t s p).Unsat → p.Unsat :=
   mt sat_sub_elim
 
 end Nat

@@ -18,30 +18,32 @@ namespace Polynomial
 
 noncomputable section
 
+open_locale Polynomial
+
 variable {R : Type _}
 
 section CommRingₓ
 
-variable [CommRingₓ R] (p q : Polynomial R)
+variable [CommRingₓ R] (p q : R[X])
 
 /-- `cancel_leads p q` is formed by multiplying `p` and `q` by monomials so that they
   have the same leading term, and then subtracting. -/
-def cancel_leads : Polynomial R :=
-  C p.leading_coeff * X ^ (p.nat_degree - q.nat_degree) * q - C q.leading_coeff * X ^ (q.nat_degree - p.nat_degree) * p
+def cancel_leads : R[X] :=
+  c p.leadingCoeff * X ^ (p.natDegree - q.natDegree) * q - c q.leadingCoeff * X ^ (q.natDegree - p.natDegree) * p
 
 variable {p q}
 
 @[simp]
-theorem neg_cancel_leads : -p.cancel_leads q = q.cancel_leads p :=
+theorem neg_cancel_leads : -p.cancelLeads q = q.cancelLeads p :=
   neg_sub _ _
 
-theorem dvd_cancel_leads_of_dvd_of_dvd {r : Polynomial R} (pq : p ∣ q) (pr : p ∣ r) : p ∣ q.cancel_leads r :=
+theorem dvd_cancel_leads_of_dvd_of_dvd {r : R[X]} (pq : p ∣ q) (pr : p ∣ r) : p ∣ q.cancelLeads r :=
   dvd_sub (pr.trans (Dvd.intro_left _ rfl)) (pq.trans (Dvd.intro_left _ rfl))
 
 end CommRingₓ
 
-theorem nat_degree_cancel_leads_lt_of_nat_degree_le_nat_degree [CommRingₓ R] [IsDomain R] {p q : Polynomial R}
-    (h : p.nat_degree ≤ q.nat_degree) (hq : 0 < q.nat_degree) : (p.cancel_leads q).natDegree < q.nat_degree := by
+theorem nat_degree_cancel_leads_lt_of_nat_degree_le_nat_degree [CommRingₓ R] [IsDomain R] {p q : R[X]}
+    (h : p.natDegree ≤ q.natDegree) (hq : 0 < q.natDegree) : (p.cancelLeads q).natDegree < q.natDegree := by
   by_cases' hp : p = 0
   · convert hq
     simp [hp, cancel_leads]

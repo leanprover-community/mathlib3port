@@ -39,10 +39,10 @@ def least_of_bdd {P : ℤ → Prop} [DecidablePred P] (b : ℤ) (Hb : ∀ z : �
     { lb : ℤ // P lb ∧ ∀ z : ℤ, P z → lb ≤ z } :=
   have EX : ∃ n : ℕ, P (b + n) :=
     let ⟨elt, Helt⟩ := Hinh
-    match elt, le.dest (Hb _ Helt), Helt with
+    match elt, Le.dest (Hb _ Helt), Helt with
     | _, ⟨n, rfl⟩, Hn => ⟨n, Hn⟩
   ⟨b + (Nat.findₓ EX : ℤ), Nat.find_specₓ EX, fun z h =>
-    match z, le.dest (Hb _ h), h with
+    match z, Le.dest (Hb _ h), h with
     | _, ⟨n, rfl⟩, h => add_le_add_left (Int.coe_nat_le.2 <| Nat.find_min'ₓ _ h) _⟩
 
 /-- If `P : ℤ → Prop` is a predicate such that the set `{m : P m}` is bounded below and nonempty,
@@ -57,7 +57,7 @@ theorem exists_least_of_bdd {P : ℤ → Prop} (Hbdd : ∃ b : ℤ, ∀ z : ℤ,
       ⟨lb, H⟩
 
 theorem coe_least_of_bdd_eq {P : ℤ → Prop} [DecidablePred P] {b b' : ℤ} (Hb : ∀ z : ℤ, P z → b ≤ z)
-    (Hb' : ∀ z : ℤ, P z → b' ≤ z) (Hinh : ∃ z : ℤ, P z) : (least_of_bdd b Hb Hinh : ℤ) = least_of_bdd b' Hb' Hinh := by
+    (Hb' : ∀ z : ℤ, P z → b' ≤ z) (Hinh : ∃ z : ℤ, P z) : (leastOfBdd b Hb Hinh : ℤ) = leastOfBdd b' Hb' Hinh := by
   rcases least_of_bdd b Hb Hinh with ⟨n, hn, h2n⟩
   rcases least_of_bdd b' Hb' Hinh with ⟨n', hn', h2n'⟩
   exact le_antisymmₓ (h2n _ hn') (h2n' _ hn)
@@ -72,7 +72,7 @@ def greatest_of_bdd {P : ℤ → Prop} [DecidablePred P] (b : ℤ) (Hb : ∀ z :
     let ⟨elt, Helt⟩ := Hinh
     ⟨-elt, by
       rw [neg_negₓ] <;> exact Helt⟩
-  let ⟨lb, Plb, al⟩ := least_of_bdd (-b) Hbdd' Hinh'
+  let ⟨lb, Plb, al⟩ := leastOfBdd (-b) Hbdd' Hinh'
   ⟨-lb, Plb, fun z h =>
     le_neg.1 <|
       al _ <| by
@@ -90,8 +90,8 @@ theorem exists_greatest_of_bdd {P : ℤ → Prop} (Hbdd : ∃ b : ℤ, ∀ z : �
       ⟨lb, H⟩
 
 theorem coe_greatest_of_bdd_eq {P : ℤ → Prop} [DecidablePred P] {b b' : ℤ} (Hb : ∀ z : ℤ, P z → z ≤ b)
-    (Hb' : ∀ z : ℤ, P z → z ≤ b') (Hinh : ∃ z : ℤ, P z) :
-    (greatest_of_bdd b Hb Hinh : ℤ) = greatest_of_bdd b' Hb' Hinh := by
+    (Hb' : ∀ z : ℤ, P z → z ≤ b') (Hinh : ∃ z : ℤ, P z) : (greatestOfBdd b Hb Hinh : ℤ) = greatestOfBdd b' Hb' Hinh :=
+  by
   rcases greatest_of_bdd b Hb Hinh with ⟨n, hn, h2n⟩
   rcases greatest_of_bdd b' Hb' Hinh with ⟨n', hn', h2n'⟩
   exact le_antisymmₓ (h2n' _ hn) (h2n _ hn')

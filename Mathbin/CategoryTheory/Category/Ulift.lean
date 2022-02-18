@@ -37,7 +37,7 @@ universe w₁ v₁ v₂ u₁ u₂
 
 namespace CategoryTheory
 
-variable {C : Type u₁} [category.{v₁} C]
+variable {C : Type u₁} [Category.{v₁} C]
 
 /-- The functorial version of `ulift.up`. -/
 @[simps]
@@ -54,8 +54,8 @@ def ulift.down_functor : Ulift.{u₂} C ⥤ C where
 /-- The categorical equivalence between `C` and `ulift C`. -/
 @[simps]
 def ulift.equivalence : C ≌ Ulift.{u₂} C where
-  Functor := ulift.up_functor
-  inverse := ulift.down_functor
+  Functor := Ulift.upFunctor
+  inverse := Ulift.downFunctor
   unitIso := { Hom := 𝟙 _, inv := 𝟙 _ }
   counitIso :=
     { Hom :=
@@ -80,11 +80,11 @@ def ulift.equivalence : C ≌ Ulift.{u₂} C where
     change 𝟙 X ≫ 𝟙 X = 𝟙 X
     simp
 
-instance [is_filtered C] : is_filtered (Ulift.{u₂} C) :=
-  is_filtered.of_equivalence ulift.equivalence
+instance [IsFiltered C] : IsFiltered (Ulift.{u₂} C) :=
+  IsFiltered.of_equivalence Ulift.equivalence
 
-instance [is_cofiltered C] : is_cofiltered (Ulift.{u₂} C) :=
-  is_cofiltered.of_equivalence ulift.equivalence
+instance [IsCofiltered C] : IsCofiltered (Ulift.{u₂} C) :=
+  IsCofiltered.of_equivalence Ulift.equivalence
 
 section UliftHom
 
@@ -94,60 +94,60 @@ section UliftHom
 def ulift_hom.{w, u} (C : Type u) :=
   C
 
-instance {C} [Inhabited C] : Inhabited (ulift_hom C) :=
+instance {C} [Inhabited C] : Inhabited (UliftHom C) :=
   ⟨(arbitrary C : C)⟩
 
 /-- The obvious function `ulift_hom C → C`. -/
-def ulift_hom.obj_down {C} (A : ulift_hom C) : C :=
+def ulift_hom.obj_down {C} (A : UliftHom C) : C :=
   A
 
 /-- The obvious function `C → ulift_hom C`. -/
-def ulift_hom.obj_up {C} (A : C) : ulift_hom C :=
+def ulift_hom.obj_up {C} (A : C) : UliftHom C :=
   A
 
 @[simp]
-theorem obj_down_obj_up {C} (A : C) : (ulift_hom.obj_up A).objDown = A :=
+theorem obj_down_obj_up {C} (A : C) : (UliftHom.objUp A).objDown = A :=
   rfl
 
 @[simp]
-theorem obj_up_obj_down {C} (A : ulift_hom C) : ulift_hom.obj_up A.obj_down = A :=
+theorem obj_up_obj_down {C} (A : UliftHom C) : UliftHom.objUp A.objDown = A :=
   rfl
 
-instance : category.{max v₂ v₁} (ulift_hom.{v₂} C) where
-  Hom := fun A B => Ulift.{v₂} <| A.obj_down ⟶ B.obj_down
+instance : Category.{max v₂ v₁} (UliftHom.{v₂} C) where
+  Hom := fun A B => Ulift.{v₂} <| A.objDown ⟶ B.objDown
   id := fun A => ⟨𝟙 _⟩
   comp := fun A B C f g => ⟨f.down ≫ g.down⟩
 
 /-- One half of the quivalence between `C` and `ulift_hom C`. -/
 @[simps]
-def ulift_hom.up : C ⥤ ulift_hom C where
-  obj := ulift_hom.obj_up
+def ulift_hom.up : C ⥤ UliftHom C where
+  obj := UliftHom.objUp
   map := fun X Y f => ⟨f⟩
 
 /-- One half of the quivalence between `C` and `ulift_hom C`. -/
 @[simps]
-def ulift_hom.down : ulift_hom C ⥤ C where
-  obj := ulift_hom.obj_down
+def ulift_hom.down : UliftHom C ⥤ C where
+  obj := UliftHom.objDown
   map := fun X Y f => f.down
 
 /-- The equivalence between `C` and `ulift_hom C`. -/
-def ulift_hom.equiv : C ≌ ulift_hom C where
-  Functor := ulift_hom.up
-  inverse := ulift_hom.down
+def ulift_hom.equiv : C ≌ UliftHom C where
+  Functor := UliftHom.up
+  inverse := UliftHom.down
   unitIso :=
-    nat_iso.of_components (fun A => eq_to_iso rfl)
+    NatIso.ofComponents (fun A => eqToIso rfl)
       (by
         tidy)
   counitIso :=
-    nat_iso.of_components (fun A => eq_to_iso rfl)
+    NatIso.ofComponents (fun A => eqToIso rfl)
       (by
         tidy)
 
-instance [is_filtered C] : is_filtered (ulift_hom C) :=
-  is_filtered.of_equivalence ulift_hom.equiv
+instance [IsFiltered C] : IsFiltered (UliftHom C) :=
+  IsFiltered.of_equivalence UliftHom.equiv
 
-instance [is_cofiltered C] : is_cofiltered (ulift_hom C) :=
-  is_cofiltered.of_equivalence ulift_hom.equiv
+instance [IsCofiltered C] : IsCofiltered (UliftHom C) :=
+  IsCofiltered.of_equivalence UliftHom.equiv
 
 end UliftHom
 
@@ -162,37 +162,37 @@ end UliftHom
   access to the universe level `v`.
 -/
 @[nolint unused_arguments]
-def as_small.{w, v, u} (C : Type u) [category.{v} C] :=
+def as_small.{w, v, u} (C : Type u) [Category.{v} C] :=
   Ulift.{max w v} C
 
-instance : small_category (as_small.{w₁} C) where
+instance : SmallCategory (AsSmall.{w₁} C) where
   Hom := fun X Y => Ulift.{max w₁ u₁} <| X.down ⟶ Y.down
   id := fun X => ⟨𝟙 _⟩
   comp := fun X Y Z f g => ⟨f.down ≫ g.down⟩
 
 /-- One half of the equivalence between `C` and `as_small C`. -/
 @[simps]
-def as_small.up : C ⥤ as_small C where
+def as_small.up : C ⥤ AsSmall C where
   obj := fun X => ⟨X⟩
   map := fun X Y f => ⟨f⟩
 
 /-- One half of the equivalence between `C` and `as_small C`. -/
 @[simps]
-def as_small.down : as_small C ⥤ C where
+def as_small.down : AsSmall C ⥤ C where
   obj := fun X => X.down
   map := fun X Y f => f.down
 
 /-- The equivalence between `C` and `as_small C`. -/
 @[simps]
-def as_small.equiv : C ≌ as_small C where
-  Functor := as_small.up
-  inverse := as_small.down
+def as_small.equiv : C ≌ AsSmall C where
+  Functor := AsSmall.up
+  inverse := AsSmall.down
   unitIso :=
-    nat_iso.of_components (fun X => eq_to_iso rfl)
+    NatIso.ofComponents (fun X => eqToIso rfl)
       (by
         tidy)
   counitIso :=
-    nat_iso.of_components
+    NatIso.ofComponents
       (fun X =>
         eq_to_iso <| by
           ext
@@ -200,18 +200,18 @@ def as_small.equiv : C ≌ as_small C where
       (by
         tidy)
 
-instance [Inhabited C] : Inhabited (as_small C) :=
+instance [Inhabited C] : Inhabited (AsSmall C) :=
   ⟨⟨arbitrary _⟩⟩
 
-instance [is_filtered C] : is_filtered (as_small C) :=
-  is_filtered.of_equivalence as_small.equiv
+instance [IsFiltered C] : IsFiltered (AsSmall C) :=
+  IsFiltered.of_equivalence AsSmall.equiv
 
-instance [is_cofiltered C] : is_cofiltered (as_small C) :=
-  is_cofiltered.of_equivalence as_small.equiv
+instance [IsCofiltered C] : IsCofiltered (AsSmall C) :=
+  IsCofiltered.of_equivalence AsSmall.equiv
 
 /-- The equivalence between `C` and `ulift_hom (ulift C)`. -/
-def ulift_hom_ulift_category.equiv.{v', u', v, u} (C : Type u) [category.{v} C] : C ≌ ulift_hom.{v'} (Ulift.{u'} C) :=
-  ulift.equivalence.trans ulift_hom.equiv
+def ulift_hom_ulift_category.equiv.{v', u', v, u} (C : Type u) [Category.{v} C] : C ≌ UliftHom.{v'} (Ulift.{u'} C) :=
+  Ulift.equivalence.trans UliftHom.equiv
 
 end CategoryTheory
 

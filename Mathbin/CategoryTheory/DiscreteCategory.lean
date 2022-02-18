@@ -43,7 +43,7 @@ somewhat annoyingly we have to define `X ⟶ Y` as `ulift (plift (X = Y))`.
 
 See https://stacks.math.columbia.edu/tag/001A
 -/
-instance discrete_category (α : Type u₁) : small_category (discrete α) where
+instance discrete_category (α : Type u₁) : SmallCategory (Discrete α) where
   Hom := fun X Y => Ulift (Plift (X = Y))
   id := fun X => Ulift.up (Plift.up rfl)
   comp := fun X Y Z g f => by
@@ -54,31 +54,31 @@ namespace Discrete
 
 variable {α : Type u₁}
 
-instance [Inhabited α] : Inhabited (discrete α) := by
+instance [Inhabited α] : Inhabited (Discrete α) := by
   dsimp [discrete]
   infer_instance
 
-instance [Subsingleton α] : Subsingleton (discrete α) := by
+instance [Subsingleton α] : Subsingleton (Discrete α) := by
   dsimp [discrete]
   infer_instance
 
 /-- Extract the equation from a morphism in a discrete category. -/
-theorem eq_of_hom {X Y : discrete α} (i : X ⟶ Y) : X = Y :=
+theorem eq_of_hom {X Y : Discrete α} (i : X ⟶ Y) : X = Y :=
   i.down.down
 
 @[simp]
-theorem id_def (X : discrete α) : Ulift.up (Plift.up (Eq.refl X)) = 𝟙 X :=
+theorem id_def (X : Discrete α) : Ulift.up (Plift.up (Eq.refl X)) = 𝟙 X :=
   rfl
 
-variable {C : Type u₂} [category.{v₂} C]
+variable {C : Type u₂} [Category.{v₂} C]
 
-instance {I : Type u₁} {i j : discrete I} (f : i ⟶ j) : is_iso f :=
-  ⟨⟨eq_to_hom (eq_of_hom f).symm, by
+instance {I : Type u₁} {i j : Discrete I} (f : i ⟶ j) : IsIso f :=
+  ⟨⟨eqToHom (eq_of_hom f).symm, by
       tidy⟩⟩
 
 /-- Any function `I → C` gives a functor `discrete I ⥤ C`.
 -/
-def Functor {I : Type u₁} (F : I → C) : discrete I ⥤ C where
+def Functor {I : Type u₁} (F : I → C) : Discrete I ⥤ C where
   obj := F
   map := fun X Y f => by
     cases f
@@ -87,10 +87,10 @@ def Functor {I : Type u₁} (F : I → C) : discrete I ⥤ C where
     exact 𝟙 (F X)
 
 @[simp]
-theorem functor_obj {I : Type u₁} (F : I → C) (i : I) : (discrete.functor F).obj i = F i :=
+theorem functor_obj {I : Type u₁} (F : I → C) (i : I) : (Discrete.functor F).obj i = F i :=
   rfl
 
-theorem functor_map {I : Type u₁} (F : I → C) {i : discrete I} (f : i ⟶ i) : (discrete.functor F).map f = 𝟙 (F i) := by
+theorem functor_map {I : Type u₁} (F : I → C) {i : Discrete I} (f : i ⟶ i) : (Discrete.functor F).map f = 𝟙 (F i) := by
   cases f
   cases f
   cases f
@@ -100,68 +100,73 @@ theorem functor_map {I : Type u₁} (F : I → C) {i : discrete I} (f : i ⟶ i)
 a natural transformation is just a collection of maps,
 as the naturality squares are trivial.
 -/
-def nat_trans {I : Type u₁} {F G : discrete I ⥤ C} (f : ∀ i : discrete I, F.obj i ⟶ G.obj i) : F ⟶ G where
+def nat_trans {I : Type u₁} {F G : Discrete I ⥤ C} (f : ∀ i : Discrete I, F.obj i ⟶ G.obj i) : F ⟶ G where
   app := f
 
 @[simp]
-theorem nat_trans_app {I : Type u₁} {F G : discrete I ⥤ C} (f : ∀ i : discrete I, F.obj i ⟶ G.obj i) i :
-    (discrete.nat_trans f).app i = f i :=
+theorem nat_trans_app {I : Type u₁} {F G : Discrete I ⥤ C} (f : ∀ i : Discrete I, F.obj i ⟶ G.obj i) i :
+    (Discrete.natTrans f).app i = f i :=
   rfl
 
 /-- For functors out of a discrete category,
 a natural isomorphism is just a collection of isomorphisms,
 as the naturality squares are trivial.
 -/
-def nat_iso {I : Type u₁} {F G : discrete I ⥤ C} (f : ∀ i : discrete I, F.obj i ≅ G.obj i) : F ≅ G :=
-  nat_iso.of_components f
+def nat_iso {I : Type u₁} {F G : Discrete I ⥤ C} (f : ∀ i : Discrete I, F.obj i ≅ G.obj i) : F ≅ G :=
+  NatIso.ofComponents f
     (by
       tidy)
 
 @[simp]
-theorem nat_iso_hom_app {I : Type u₁} {F G : discrete I ⥤ C} (f : ∀ i : discrete I, F.obj i ≅ G.obj i) (i : I) :
-    (discrete.nat_iso f).Hom.app i = (f i).Hom :=
+theorem nat_iso_hom_app {I : Type u₁} {F G : Discrete I ⥤ C} (f : ∀ i : Discrete I, F.obj i ≅ G.obj i) (i : I) :
+    (Discrete.natIso f).Hom.app i = (f i).Hom :=
   rfl
 
 @[simp]
-theorem nat_iso_inv_app {I : Type u₁} {F G : discrete I ⥤ C} (f : ∀ i : discrete I, F.obj i ≅ G.obj i) (i : I) :
-    (discrete.nat_iso f).inv.app i = (f i).inv :=
+theorem nat_iso_inv_app {I : Type u₁} {F G : Discrete I ⥤ C} (f : ∀ i : Discrete I, F.obj i ≅ G.obj i) (i : I) :
+    (Discrete.natIso f).inv.app i = (f i).inv :=
   rfl
 
 @[simp]
-theorem nat_iso_app {I : Type u₁} {F G : discrete I ⥤ C} (f : ∀ i : discrete I, F.obj i ≅ G.obj i) (i : I) :
-    (discrete.nat_iso f).app i = f i := by
+theorem nat_iso_app {I : Type u₁} {F G : Discrete I ⥤ C} (f : ∀ i : Discrete I, F.obj i ≅ G.obj i) (i : I) :
+    (Discrete.natIso f).app i = f i := by
   tidy
 
 /-- Every functor `F` from a discrete category is naturally isomorphic (actually, equal) to
   `discrete.functor (F.obj)`. -/
-def nat_iso_functor {I : Type u₁} {F : discrete I ⥤ C} : F ≅ discrete.functor F.obj :=
-  nat_iso fun i => iso.refl _
+def nat_iso_functor {I : Type u₁} {F : Discrete I ⥤ C} : F ≅ Discrete.functor F.obj :=
+  nat_iso fun i => Iso.refl _
+
+/-- Composing `discrete.functor F` with another functor `G` amounts to composing `F` with `G.obj` -/
+def comp_nat_iso_discrete {I : Type u₁} {D : Type u₂} [Category.{v₂} D] (F : I → C) (G : C ⥤ D) :
+    Discrete.functor F ⋙ G ≅ Discrete.functor (G.obj ∘ F) :=
+  nat_iso fun i => Iso.refl _
 
 /-- We can promote a type-level `equiv` to
 an equivalence between the corresponding `discrete` categories.
 -/
 @[simps]
-def Equivalenceₓ {I : Type u₁} {J : Type u₂} (e : I ≃ J) : discrete I ≌ discrete J where
-  Functor := discrete.functor (e : I → J)
-  inverse := discrete.functor (e.symm : J → I)
+def Equivalenceₓ {I : Type u₁} {J : Type u₂} (e : I ≃ J) : Discrete I ≌ Discrete J where
+  Functor := Discrete.functor (e : I → J)
+  inverse := Discrete.functor (e.symm : J → I)
   unitIso :=
-    discrete.nat_iso fun i =>
-      eq_to_iso
+    Discrete.natIso fun i =>
+      eqToIso
         (by
           simp )
   counitIso :=
-    discrete.nat_iso fun j =>
-      eq_to_iso
+    Discrete.natIso fun j =>
+      eqToIso
         (by
           simp )
 
 /-- We can convert an equivalence of `discrete` categories to a type-level `equiv`. -/
 @[simps]
-def equiv_of_equivalence {α : Type u₁} {β : Type u₂} (h : discrete α ≌ discrete β) : α ≃ β where
-  toFun := h.functor.obj
+def equiv_of_equivalence {α : Type u₁} {β : Type u₂} (h : Discrete α ≌ Discrete β) : α ≃ β where
+  toFun := h.Functor.obj
   invFun := h.inverse.obj
-  left_inv := fun a => eq_of_hom (h.unit_iso.app a).2
-  right_inv := fun a => eq_of_hom (h.counit_iso.app a).1
+  left_inv := fun a => eq_of_hom (h.unitIso.app a).2
+  right_inv := fun a => eq_of_hom (h.counitIso.app a).1
 
 end Discrete
 
@@ -172,8 +177,8 @@ variable {J : Type v₁}
 open Opposite
 
 /-- A discrete category is equivalent to its opposite category. -/
-protected def Opposite (α : Type u₁) : discrete αᵒᵖ ≌ discrete α := by
-  let F : discrete α ⥤ discrete αᵒᵖ := discrete.functor fun x => op x
+protected def Opposite (α : Type u₁) : Discrete αᵒᵖ ≌ Discrete α := by
+  let F : Discrete α ⥤ Discrete αᵒᵖ := Discrete.functor fun x => op x
   refine'
     equivalence.mk (functor.left_op F) F _
       (discrete.nat_iso fun X => by
@@ -185,10 +190,10 @@ protected def Opposite (α : Type u₁) : discrete αᵒᵖ ≌ discrete α := b
       _
   tidy
 
-variable {C : Type u₂} [category.{v₂} C]
+variable {C : Type u₂} [Category.{v₂} C]
 
 @[simp]
-theorem functor_map_id (F : discrete J ⥤ C) {j : discrete J} (f : j ⟶ j) : F.map f = 𝟙 (F.obj j) := by
+theorem functor_map_id (F : Discrete J ⥤ C) {j : Discrete J} (f : j ⟶ j) : F.map f = 𝟙 (F.obj j) := by
   have h : f = 𝟙 j := by
     cases f
     cases f

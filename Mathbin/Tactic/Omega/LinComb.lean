@@ -7,13 +7,13 @@ namespace Omega
     argument is the list of conefficients by which the
     constraints are multiplied -/
 @[simp]
-def lin_comb : List Nat → List term → term
+def lin_comb : List Nat → List Term → Term
   | [], [] => ⟨0, []⟩
   | [], _ :: _ => ⟨0, []⟩
   | _ :: _, [] => ⟨0, []⟩
-  | n :: ns, t :: ts => term.add (t.mul ↑n) (lin_comb ns ts)
+  | n :: ns, t :: ts => Term.add (t.mul ↑n) (lin_comb ns ts)
 
-theorem lin_comb_holds {v : Nat → Int} : ∀ {ts} ns, (∀, ∀ t ∈ ts, ∀, 0 ≤ term.val v t) → 0 ≤ (lin_comb ns ts).val v
+theorem lin_comb_holds {v : Nat → Int} : ∀ {ts} ns, (∀, ∀ t ∈ ts, ∀, 0 ≤ Term.val v t) → 0 ≤ (linComb ns ts).val v
   | [], [], h => by
     simp only [add_zeroₓ, term.val, lin_comb, coeffs.val_nil]
   | [], _ :: _, h => by
@@ -34,15 +34,15 @@ theorem lin_comb_holds {v : Nat → Int} : ∀ {ts} ns, (∀, ∀ t ∈ ts, ∀,
 
 /-- `unsat_lin_comb ns ts` asserts that the linear combination
     `lin_comb ns ts` is unsatisfiable  -/
-def unsat_lin_comb (ns : List Nat) (ts : List term) : Prop :=
-  (lin_comb ns ts).fst < 0 ∧ ∀, ∀ x ∈ (lin_comb ns ts).snd, ∀, x = (0 : Int)
+def unsat_lin_comb (ns : List Nat) (ts : List Term) : Prop :=
+  (linComb ns ts).fst < 0 ∧ ∀, ∀ x ∈ (linComb ns ts).snd, ∀, x = (0 : Int)
 
-theorem unsat_lin_comb_of (ns : List Nat) (ts : List term) :
-    (lin_comb ns ts).fst < 0 → (∀, ∀ x ∈ (lin_comb ns ts).snd, ∀, x = (0 : Int)) → unsat_lin_comb ns ts := by
+theorem unsat_lin_comb_of (ns : List Nat) (ts : List Term) :
+    (linComb ns ts).fst < 0 → (∀, ∀ x ∈ (linComb ns ts).snd, ∀, x = (0 : Int)) → UnsatLinComb ns ts := by
   intro h1 h2
   exact ⟨h1, h2⟩
 
-theorem unsat_of_unsat_lin_comb (ns : List Nat) (ts : List term) : unsat_lin_comb ns ts → clause.unsat ([], ts) := by
+theorem unsat_of_unsat_lin_comb (ns : List Nat) (ts : List Term) : UnsatLinComb ns ts → Clause.Unsat ([], ts) := by
   intro h1 h2
   cases' h2 with v h2
   have h3 := lin_comb_holds ns h2.right

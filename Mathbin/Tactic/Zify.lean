@@ -39,7 +39,7 @@ unsafe def zify_attr : user_attribute simp_lemmas Unit where
   descr := "Used to tag lemmas for use in the `zify` tactic"
   cache_cfg :=
     { mk_cache := fun ns =>
-        mmap
+        mmapₓ
             (fun n => do
               let c ← mk_const n
               return (c, tt))
@@ -127,7 +127,7 @@ subtype) to propositions about `ℤ` (the supertype), without changing the type 
 -/
 unsafe def tactic.interactive.zify (sl : parse simp_arg_list) (l : parse location) : tactic Unit := do
   let locs ← l.get_locals
-  replace_at (tactic.zify sl) locs l.include_goal >>= guardb
+  replace_at (tactic.zify sl) locs l >>= guardb
 
 end
 

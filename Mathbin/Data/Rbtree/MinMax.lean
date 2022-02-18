@@ -6,7 +6,7 @@ namespace Rbnode
 
 variable {α : Type u} {lt : α → α → Prop}
 
-theorem mem_of_min_eq (lt : α → α → Prop) [IsIrrefl α lt] {a : α} {t : Rbnode α} : t.min = some a → mem lt a t := by
+theorem mem_of_min_eq (lt : α → α → Prop) [IsIrrefl α lt] {a : α} {t : Rbnode α} : t.min = some a → Mem lt a t := by
   induction t
   · intros
     contradiction
@@ -20,7 +20,7 @@ theorem mem_of_min_eq (lt : α → α → Prop) [IsIrrefl α lt] {a : α} {t : R
       rw [mem]
       simp [t_ih_lchild h]
 
-theorem mem_of_max_eq (lt : α → α → Prop) [IsIrrefl α lt] {a : α} {t : Rbnode α} : t.max = some a → mem lt a t := by
+theorem mem_of_max_eq (lt : α → α → Prop) [IsIrrefl α lt] {a : α} {t : Rbnode α} : t.max = some a → Mem lt a t := by
   induction t
   · intros
     contradiction
@@ -59,7 +59,7 @@ theorem eq_leaf_of_max_eq_none {t : Rbnode α} : t.max = none → t = leaf := by
       contradiction
 
 theorem min_is_minimal {a : α} {t : Rbnode α} :
-    ∀ {lo hi}, is_searchable lt t lo hi → t.min = some a → ∀ {b}, mem lt b t → a ≈[lt]b ∨ lt a b := by
+    ∀ {lo hi}, IsSearchable lt t lo hi → t.min = some a → ∀ {b}, Mem lt b t → a ≈[lt]b ∨ lt a b := by
   classical
   induction t
   · simp [StrictWeakOrder.Equiv]
@@ -113,7 +113,7 @@ theorem min_is_minimal {a : α} {t : Rbnode α} :
         
 
 theorem max_is_maximal {a : α} {t : Rbnode α} :
-    ∀ {lo hi}, is_searchable lt t lo hi → t.max = some a → ∀ {b}, mem lt b t → a ≈[lt]b ∨ lt b a := by
+    ∀ {lo hi}, IsSearchable lt t lo hi → t.max = some a → ∀ {b}, Mem lt b t → a ≈[lt]b ∨ lt b a := by
   classical
   induction t
   · simp [StrictWeakOrder.Equiv]

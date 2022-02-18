@@ -1,7 +1,5 @@
 import Mathbin.Data.Set.UnionLift
-import Mathbin.Topology.SubsetProperties
-import Mathbin.Topology.Tactic
-import Mathbin.Topology.Algebra.Ordered.ProjIcc
+import Mathbin.Topology.Homeomorph
 
 /-!
 # Continuous bundled map
@@ -32,7 +30,7 @@ instance : CoeFun C(α, β) fun _ => α → β :=
   ⟨ContinuousMap.toFun⟩
 
 @[simp]
-theorem to_fun_eq_coe {f : C(α, β)} : f.to_fun = (f : α → β) :=
+theorem to_fun_eq_coe {f : C(α, β)} : f.toFun = (f : α → β) :=
   rfl
 
 variable {α β} {f g : ContinuousMap α β}
@@ -48,10 +46,10 @@ theorem continuous_set_coe (s : Set C(α, β)) (f : s) : Continuous f := by
   continuity
 
 protected theorem ContinuousAt (f : C(α, β)) (x : α) : ContinuousAt f x :=
-  f.continuous.continuous_at
+  f.Continuous.ContinuousAt
 
 protected theorem ContinuousWithinAt (f : C(α, β)) (s : Set α) (x : α) : ContinuousWithinAt f s x :=
-  f.continuous.continuous_within_at
+  f.Continuous.ContinuousWithinAt
 
 protected theorem congr_funₓ {f g : C(α, β)} (H : f = g) (x : α) : f x = g x :=
   H ▸ rfl
@@ -69,8 +67,8 @@ theorem ext_iff : f = g ↔ ∀ x, f x = g x :=
 instance [Inhabited β] : Inhabited C(α, β) :=
   ⟨{ toFun := fun _ => default }⟩
 
-theorem coe_inj ⦃f g : C(α, β)⦄ (h : (f : α → β) = g) : f = g := by
-  cases f <;> cases g <;> cases h <;> rfl
+theorem coe_injective : @Function.Injective C(α, β) (α → β) coeFn := fun f g h => by
+  cases f <;> cases g <;> congr
 
 @[simp]
 theorem coe_mk (f : α → β) (h : Continuous f) : ⇑(⟨f, h⟩ : ContinuousMap α β) = f :=
@@ -143,128 +141,6 @@ instance [h : Nonempty α] [Nontrivial β] : Nontrivial C(α, β) where
     change const b₁ h.some = const b₂ h.some
     simp [hb]
 
-section
-
-variable [LinearOrderedAddCommGroup β] [OrderTopology β]
-
-/-- The pointwise absolute value of a continuous function as a continuous function. -/
-def abs (f : C(α, β)) : C(α, β) where
-  toFun := fun x => abs (f x)
-
-instance (priority := 100) : HasAbs C(α, β) :=
-  ⟨fun f => abs f⟩
-
-@[simp]
-theorem abs_apply (f : C(α, β)) (x : α) : (abs f) x = abs (f x) :=
-  rfl
-
-end
-
-/-!
-We now set up the partial order and lattice structure (given by pointwise min and max)
-on continuous functions.
--/
-
-
-section Lattice
-
-instance PartialOrderₓ [PartialOrderₓ β] : PartialOrderₓ C(α, β) :=
-  PartialOrderₓ.lift (fun f => f.to_fun)
-    (by
-      tidy)
-
-theorem le_def [PartialOrderₓ β] {f g : C(α, β)} : f ≤ g ↔ ∀ a, f a ≤ g a :=
-  Pi.le_def
-
-theorem lt_def [PartialOrderₓ β] {f g : C(α, β)} : f < g ↔ (∀ a, f a ≤ g a) ∧ ∃ a, f a < g a :=
-  Pi.lt_def
-
-instance HasSup [LinearOrderₓ β] [OrderClosedTopology β] : HasSup C(α, β) where
-  sup := fun f g => { toFun := fun a => max (f a) (g a) }
-
-@[simp, norm_cast]
-theorem sup_coe [LinearOrderₓ β] [OrderClosedTopology β] (f g : C(α, β)) : ((f⊔g : C(α, β)) : α → β) = (f⊔g : α → β) :=
-  rfl
-
-@[simp]
-theorem sup_apply [LinearOrderₓ β] [OrderClosedTopology β] (f g : C(α, β)) (a : α) : (f⊔g) a = max (f a) (g a) :=
-  rfl
-
-instance [LinearOrderₓ β] [OrderClosedTopology β] : SemilatticeSup C(α, β) :=
-  { ContinuousMap.partialOrder, ContinuousMap.hasSup with
-    le_sup_left := fun f g =>
-      le_def.mpr
-        (by
-          simp [le_reflₓ]),
-    le_sup_right := fun f g =>
-      le_def.mpr
-        (by
-          simp [le_reflₓ]),
-    sup_le := fun f₁ f₂ g w₁ w₂ =>
-      le_def.mpr fun a => by
-        simp [le_def.mp w₁ a, le_def.mp w₂ a] }
-
-instance HasInf [LinearOrderₓ β] [OrderClosedTopology β] : HasInf C(α, β) where
-  inf := fun f g => { toFun := fun a => min (f a) (g a) }
-
-@[simp, norm_cast]
-theorem inf_coe [LinearOrderₓ β] [OrderClosedTopology β] (f g : C(α, β)) : ((f⊓g : C(α, β)) : α → β) = (f⊓g : α → β) :=
-  rfl
-
-@[simp]
-theorem inf_apply [LinearOrderₓ β] [OrderClosedTopology β] (f g : C(α, β)) (a : α) : (f⊓g) a = min (f a) (g a) :=
-  rfl
-
-instance [LinearOrderₓ β] [OrderClosedTopology β] : SemilatticeInf C(α, β) :=
-  { ContinuousMap.partialOrder, ContinuousMap.hasInf with
-    inf_le_left := fun f g =>
-      le_def.mpr
-        (by
-          simp [le_reflₓ]),
-    inf_le_right := fun f g =>
-      le_def.mpr
-        (by
-          simp [le_reflₓ]),
-    le_inf := fun f₁ f₂ g w₁ w₂ =>
-      le_def.mpr fun a => by
-        simp [le_def.mp w₁ a, le_def.mp w₂ a] }
-
-instance [LinearOrderₓ β] [OrderClosedTopology β] : Lattice C(α, β) :=
-  { ContinuousMap.semilatticeInf, ContinuousMap.semilatticeSup with }
-
-section Sup'
-
-variable [LinearOrderₓ γ] [OrderClosedTopology γ]
-
-theorem sup'_apply {ι : Type _} {s : Finset ι} (H : s.nonempty) (f : ι → C(β, γ)) (b : β) :
-    s.sup' H f b = s.sup' H fun a => f a b :=
-  Finset.comp_sup'_eq_sup'_comp H (fun f : C(β, γ) => f b) fun i j => rfl
-
-@[simp, norm_cast]
-theorem sup'_coe {ι : Type _} {s : Finset ι} (H : s.nonempty) (f : ι → C(β, γ)) :
-    ((s.sup' H f : C(β, γ)) : ι → β) = s.sup' H fun a => (f a : β → γ) := by
-  ext
-  simp [sup'_apply]
-
-end Sup'
-
-section Inf'
-
-variable [LinearOrderₓ γ] [OrderClosedTopology γ]
-
-theorem inf'_apply {ι : Type _} {s : Finset ι} (H : s.nonempty) (f : ι → C(β, γ)) (b : β) :
-    s.inf' H f b = s.inf' H fun a => f a b :=
-  @sup'_apply _ (OrderDual γ) _ _ _ _ _ _ H f b
-
-@[simp, norm_cast]
-theorem inf'_coe {ι : Type _} {s : Finset ι} (H : s.nonempty) (f : ι → C(β, γ)) :
-    ((s.inf' H f : C(β, γ)) : ι → β) = s.inf' H fun a => (f a : β → γ) :=
-  @sup'_coe _ (OrderDual γ) _ _ _ _ _ _ H f
-
-end Inf'
-
-end Lattice
-
 section Prod
 
 variable {α₁ α₂ β₁ β₂ : Type _} [TopologicalSpace α₁] [TopologicalSpace α₂] [TopologicalSpace β₁] [TopologicalSpace β₂]
@@ -272,15 +148,15 @@ variable {α₁ α₂ β₁ β₂ : Type _} [TopologicalSpace α₁] [Topologica
 /-- Given two continuous maps `f` and `g`, this is the continuous map `x ↦ (f x, g x)`. -/
 def prod_mk (f : C(α, β₁)) (g : C(α, β₂)) : C(α, β₁ × β₂) where
   toFun := fun x => (f x, g x)
-  continuous_to_fun := Continuous.prod_mk f.continuous g.continuous
+  continuous_to_fun := Continuous.prod_mk f.Continuous g.Continuous
 
 /-- Given two continuous maps `f` and `g`, this is the continuous map `(x, y) ↦ (f x, g y)`. -/
 def prod_mapₓ (f : C(α₁, α₂)) (g : C(β₁, β₂)) : C(α₁ × β₁, α₂ × β₂) where
   toFun := Prod.map f g
-  continuous_to_fun := Continuous.prod_map f.continuous g.continuous
+  continuous_to_fun := Continuous.prod_map f.Continuous g.Continuous
 
 @[simp]
-theorem prod_eval (f : C(α, β₁)) (g : C(α, β₂)) (a : α) : (prod_mk f g) a = (f a, g a) :=
+theorem prod_eval (f : C(α, β₁)) (g : C(α, β₂)) (a : α) : (prodMk f g) a = (f a, g a) :=
   rfl
 
 end Prod
@@ -313,21 +189,6 @@ theorem coe_restrict (f : C(α, β)) : ⇑f.restrict s = f ∘ coe :=
 
 end Restrict
 
-section Extend
-
-variable [LinearOrderₓ α] [OrderTopology α] {a b : α} (h : a ≤ b)
-
-/-- Extend a continuous function `f : C(set.Icc a b, β)` to a function `f : C(α, β)`.
--/
-def Icc_extend (f : C(Set.Icc a b, β)) : C(α, β) :=
-  ⟨Set.iccExtend h f⟩
-
-@[simp]
-theorem coe_Icc_extend (f : C(Set.Icc a b, β)) : ((Icc_extend h f : C(α, β)) : α → β) = Set.iccExtend h f :=
-  rfl
-
-end Extend
-
 section Gluing
 
 variable {ι : Type _} (S : ι → Set α) (φ : ∀ i : ι, C(S i, β))
@@ -354,11 +215,11 @@ noncomputable def lift_cover : C(α, β) := by
 variable {S φ hφ hS}
 
 @[simp]
-theorem lift_cover_coe {i : ι} (x : S i) : lift_cover S φ hφ hS x = φ i x :=
+theorem lift_cover_coe {i : ι} (x : S i) : liftCover S φ hφ hS x = φ i x :=
   Set.lift_cover_coe _
 
 @[simp]
-theorem lift_cover_restrict {i : ι} : (lift_cover S φ hφ hS).restrict (S i) = φ i :=
+theorem lift_cover_restrict {i : ι} : (liftCover S φ hφ hS).restrict (S i) = φ i :=
   ext <| lift_cover_coe
 
 omit hφ hS
@@ -374,8 +235,8 @@ of sets in `α` which contain a neighbourhood of each point in `α` and (2) the 
 pairwise on intersections, can be glued to construct a continuous map in `C(α, β)`. -/
 noncomputable def lift_cover' : C(α, β) := by
   let S : A → Set α := coe
-  let F : ∀ i : A, C(i, β) := fun i => F i i.prop
-  refine' lift_cover S F (fun i j => hF i i.prop j j.prop) _
+  let F : ∀ i : A, C(i, β) := fun i => F i i.Prop
+  refine' lift_cover S F (fun i j => hF i i.Prop j j.Prop) _
   intro x
   obtain ⟨s, hs, hsx⟩ := hA x
   exact ⟨⟨s, hs⟩, hsx⟩
@@ -383,12 +244,12 @@ noncomputable def lift_cover' : C(α, β) := by
 variable {A F hF hA}
 
 @[simp]
-theorem lift_cover_coe' {s : Set α} {hs : s ∈ A} (x : s) : lift_cover' A F hF hA x = F s hs x :=
+theorem lift_cover_coe' {s : Set α} {hs : s ∈ A} (x : s) : liftCover' A F hF hA x = F s hs x :=
   let x' : (coe : A → Set α) ⟨s, hs⟩ := x
   lift_cover_coe x'
 
 @[simp]
-theorem lift_cover_restrict' {s : Set α} {hs : s ∈ A} : (lift_cover' A F hF hA).restrict s = F s hs :=
+theorem lift_cover_restrict' {s : Set α} {hs : s ∈ A} : (liftCover' A F hF hA).restrict s = F s hs :=
   ext <| lift_cover_coe'
 
 end Gluing

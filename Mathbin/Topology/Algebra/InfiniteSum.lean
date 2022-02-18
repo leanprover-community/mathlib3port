@@ -2,7 +2,7 @@ import Mathbin.Algebra.BigOperators.Intervals
 import Mathbin.Algebra.BigOperators.NatAntidiagonal
 import Mathbin.Data.Equiv.Encodable.Lattice
 import Mathbin.Topology.Algebra.MulAction
-import Mathbin.Topology.Algebra.Ordered.MonotoneConvergence
+import Mathbin.Topology.Algebra.Order.MonotoneConvergence
 import Mathbin.Topology.Instances.Real
 
 /-!
@@ -48,7 +48,7 @@ For the definition or many statements, `α` does not need to be a topological mo
 this assumption later, for the lemmas where it is relevant.
 -/
 def HasSum (f : β → α) (a : α) : Prop :=
-  tendsto (fun s : Finset β => ∑ b in s, f b) at_top (𝓝 a)
+  Tendsto (fun s : Finset β => ∑ b in s, f b) atTop (𝓝 a)
 
 /-- `summable f` means that `f` has some (infinite) sum. Use `tsum` to get the value. -/
 def Summable (f : β → α) : Prop :=
@@ -102,16 +102,16 @@ theorem has_sum_iff_has_sum {g : γ → α}
   ⟨HasSum.has_sum_of_sum_eq h₂, HasSum.has_sum_of_sum_eq h₁⟩
 
 -- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (x «expr ∉ » set.range g)
-theorem Function.Injective.has_sum_iff {g : γ → β} (hg : injective g) (hf : ∀ x _ : x ∉ Set.Range g, f x = 0) :
+theorem Function.Injective.has_sum_iff {g : γ → β} (hg : Injective g) (hf : ∀ x _ : x ∉ Set.Range g, f x = 0) :
     HasSum (f ∘ g) a ↔ HasSum f a := by
   simp only [HasSum, tendsto, hg.map_at_top_finset_sum_eq hf]
 
 -- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (x «expr ∉ » set.range g)
-theorem Function.Injective.summable_iff {g : γ → β} (hg : injective g) (hf : ∀ x _ : x ∉ Set.Range g, f x = 0) :
+theorem Function.Injective.summable_iff {g : γ → β} (hg : Injective g) (hf : ∀ x _ : x ∉ Set.Range g, f x = 0) :
     Summable (f ∘ g) ↔ Summable f :=
   exists_congr fun _ => hg.has_sum_iff hf
 
-theorem has_sum_subtype_iff_of_support_subset {s : Set β} (hf : support f ⊆ s) :
+theorem has_sum_subtype_iff_of_support_subset {s : Set β} (hf : Support f ⊆ s) :
     HasSum (f ∘ coe : s → α) a ↔ HasSum f a :=
   Subtype.coe_injective.has_sum_iff <| by
     simpa using support_subset_iff'.1 hf
@@ -120,7 +120,7 @@ theorem has_sum_subtype_iff_indicator {s : Set β} : HasSum (f ∘ coe : s → �
   rw [← Set.indicator_range_comp, Subtype.range_coe, has_sum_subtype_iff_of_support_subset Set.support_indicator_subset]
 
 @[simp]
-theorem has_sum_subtype_support : HasSum (f ∘ coe : support f → α) a ↔ HasSum f a :=
+theorem has_sum_subtype_support : HasSum (f ∘ coe : Support f → α) a ↔ HasSum f a :=
   has_sum_subtype_iff_of_support_subset <| Set.Subset.refl _
 
 theorem has_sum_fintype [Fintype β] (f : β → α) : HasSum f (∑ b, f b) :=
@@ -131,15 +131,15 @@ protected theorem Finset.has_sum (s : Finset β) (f : β → α) : HasSum (f ∘
   exact has_sum_fintype _
 
 protected theorem Finset.summable (s : Finset β) (f : β → α) : Summable (f ∘ coe : (↑s : Set β) → α) :=
-  (s.has_sum f).Summable
+  (s.HasSum f).Summable
 
-protected theorem Set.Finite.summable {s : Set β} (hs : s.finite) (f : β → α) : Summable (f ∘ coe : s → α) := by
+protected theorem Set.Finite.summable {s : Set β} (hs : s.Finite) (f : β → α) : Summable (f ∘ coe : s → α) := by
   convert hs.to_finset.summable f <;> simp only [hs.coe_to_finset]
 
 -- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (b «expr ∉ » s)
 /-- If a function `f` vanishes outside of a finite set `s`, then it `has_sum` `∑ b in s, f b`. -/
 theorem has_sum_sum_of_ne_finset_zero (hf : ∀ b _ : b ∉ s, f b = 0) : HasSum f (∑ b in s, f b) :=
-  (has_sum_subtype_iff_of_support_subset <| support_subset_iff'.2 hf).1 <| s.has_sum f
+  (has_sum_subtype_iff_of_support_subset <| support_subset_iff'.2 hf).1 <| s.HasSum f
 
 -- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (b «expr ∉ » s)
 theorem summable_of_ne_finset_zero (hf : ∀ b _ : b ∉ s, f b = 0) : Summable f :=
@@ -160,10 +160,10 @@ theorem has_sum_ite_eq (b : β) [DecidablePred (· = b)] (a : α) : HasSum (fun 
   exact if_neg hb'
 
 theorem Equivₓ.has_sum_iff (e : γ ≃ β) : HasSum (f ∘ e) a ↔ HasSum f a :=
-  e.injective.has_sum_iff <| by
+  e.Injective.has_sum_iff <| by
     simp
 
-theorem Function.Injective.has_sum_range_iff {g : γ → β} (hg : injective g) :
+theorem Function.Injective.has_sum_range_iff {g : γ → β} (hg : Injective g) :
     HasSum (fun x : Set.Range g => f x) a ↔ HasSum (f ∘ g) a :=
   (Equivₓ.ofInjective g hg).has_sum_iff.symm
 
@@ -173,13 +173,13 @@ theorem Equivₓ.summable_iff (e : γ ≃ β) : Summable (f ∘ e) ↔ Summable 
 theorem Summable.prod_symm {f : β × γ → α} (hf : Summable f) : Summable fun p : γ × β => f p.swap :=
   (Equivₓ.prodComm γ β).summable_iff.2 hf
 
-theorem Equivₓ.has_sum_iff_of_support {g : γ → α} (e : support f ≃ support g) (he : ∀ x : support f, g (e x) = f x) :
+theorem Equivₓ.has_sum_iff_of_support {g : γ → α} (e : Support f ≃ Support g) (he : ∀ x : Support f, g (e x) = f x) :
     HasSum f a ↔ HasSum g a := by
   have : (g ∘ coe) ∘ e = f ∘ coe := funext he
   rw [← has_sum_subtype_support, ← this, e.has_sum_iff, has_sum_subtype_support]
 
-theorem has_sum_iff_has_sum_of_ne_zero_bij {g : γ → α} (i : support g → β) (hi : ∀ ⦃x y⦄, i x = i y → (x : γ) = y)
-    (hf : support f ⊆ Set.Range i) (hfg : ∀ x, f (i x) = g x) : HasSum f a ↔ HasSum g a :=
+theorem has_sum_iff_has_sum_of_ne_zero_bij {g : γ → α} (i : Support g → β) (hi : ∀ ⦃x y⦄, i x = i y → (x : γ) = y)
+    (hf : Support f ⊆ Set.Range i) (hfg : ∀ x, f (i x) = g x) : HasSum f a ↔ HasSum g a :=
   Iff.symm <|
     Equivₓ.has_sum_iff_of_support
       (Equivₓ.ofBijective (fun x => ⟨i x, fun hx => x.coe_prop <| hfg x ▸ hx⟩)
@@ -187,28 +187,28 @@ theorem has_sum_iff_has_sum_of_ne_zero_bij {g : γ → α} (i : support g → β
           (hf y.coe_prop).imp fun x hx => Subtype.ext hx⟩)
       hfg
 
-theorem Equivₓ.summable_iff_of_support {g : γ → α} (e : support f ≃ support g) (he : ∀ x : support f, g (e x) = f x) :
+theorem Equivₓ.summable_iff_of_support {g : γ → α} (e : Support f ≃ Support g) (he : ∀ x : Support f, g (e x) = f x) :
     Summable f ↔ Summable g :=
   exists_congr fun _ => e.has_sum_iff_of_support he
 
 protected theorem HasSum.map [AddCommMonoidₓ γ] [TopologicalSpace γ] (hf : HasSum f a) (g : α →+ γ)
     (hg : Continuous g) : HasSum (g ∘ f) (g a) :=
   have : (g ∘ fun s : Finset β => ∑ b in s, f b) = fun s : Finset β => ∑ b in s, g (f b) := funext <| g.map_sum _
-  show tendsto (fun s : Finset β => ∑ b in s, g (f b)) at_top (𝓝 (g a)) from this ▸ (hg.tendsto a).comp hf
+  show Tendsto (fun s : Finset β => ∑ b in s, g (f b)) atTop (𝓝 (g a)) from this ▸ (hg.Tendsto a).comp hf
 
 protected theorem Summable.map [AddCommMonoidₓ γ] [TopologicalSpace γ] (hf : Summable f) (g : α →+ γ)
     (hg : Continuous g) : Summable (g ∘ f) :=
-  (hf.has_sum.map g hg).Summable
+  (hf.HasSum.map g hg).Summable
 
 /-- If `f : ℕ → α` has sum `a`, then the partial sums `∑_{i=0}^{n-1} f i` converge to `a`. -/
-theorem HasSum.tendsto_sum_nat {f : ℕ → α} (h : HasSum f a) : tendsto (fun n : ℕ => ∑ i in range n, f i) at_top (𝓝 a) :=
+theorem HasSum.tendsto_sum_nat {f : ℕ → α} (h : HasSum f a) : Tendsto (fun n : ℕ => ∑ i in range n, f i) atTop (𝓝 a) :=
   h.comp tendsto_finset_range
 
 theorem HasSum.unique {a₁ a₂ : α} [T2Space α] : HasSum f a₁ → HasSum f a₂ → a₁ = a₂ :=
   tendsto_nhds_unique
 
 theorem Summable.has_sum_iff_tendsto_nat [T2Space α] {f : ℕ → α} {a : α} (hf : Summable f) :
-    HasSum f a ↔ tendsto (fun n : ℕ => ∑ i in range n, f i) at_top (𝓝 a) := by
+    HasSum f a ↔ Tendsto (fun n : ℕ => ∑ i in range n, f i) atTop (𝓝 a) := by
   refine' ⟨fun h => h.tendsto_sum_nat, fun h => _⟩
   rw [tendsto_nhds_unique h hf.has_sum.tendsto_sum_nat]
   exact hf.has_sum
@@ -227,7 +227,7 @@ theorem HasSum.add (hf : HasSum f a) (hg : HasSum g b) : HasSum (fun b => f b + 
   simp only [HasSum, sum_add_distrib] <;> exact hf.add hg
 
 theorem Summable.add (hf : Summable f) (hg : Summable g) : Summable fun b => f b + g b :=
-  (hf.has_sum.add hg.has_sum).Summable
+  (hf.HasSum.add hg.HasSum).Summable
 
 theorem has_sum_sum {f : γ → β → α} {a : γ → α} {s : Finset γ} :
     (∀, ∀ i ∈ s, ∀, HasSum (f i) (a i)) → HasSum (fun b => ∑ i in s, f i b) (∑ i in s, a i) :=
@@ -258,7 +258,7 @@ theorem HasSum.add_compl {s : Set β} (ha : HasSum (f ∘ coe : s → α) a) (hb
 
 theorem Summable.add_compl {s : Set β} (hs : Summable (f ∘ coe : s → α)) (hsc : Summable (f ∘ coe : sᶜ → α)) :
     Summable f :=
-  (hs.has_sum.add_compl hsc.has_sum).Summable
+  (hs.HasSum.add_compl hsc.HasSum).Summable
 
 theorem HasSum.compl_add {s : Set β} (ha : HasSum (f ∘ coe : sᶜ → α) a) (hb : HasSum (f ∘ coe : s → α) b) :
     HasSum f (a + b) :=
@@ -274,11 +274,11 @@ theorem HasSum.even_add_odd {f : ℕ → α} (he : HasSum (fun k => f (2 * k)) a
 
 theorem Summable.compl_add {s : Set β} (hs : Summable (f ∘ coe : sᶜ → α)) (hsc : Summable (f ∘ coe : s → α)) :
     Summable f :=
-  (hs.has_sum.compl_add hsc.has_sum).Summable
+  (hs.HasSum.compl_add hsc.HasSum).Summable
 
 theorem Summable.even_add_odd {f : ℕ → α} (he : Summable fun k => f (2 * k)) (ho : Summable fun k => f (2 * k + 1)) :
     Summable f :=
-  (he.has_sum.even_add_odd ho.has_sum).Summable
+  (he.HasSum.even_add_odd ho.HasSum).Summable
 
 theorem HasSum.sigma [RegularSpace α] {γ : β → Type _} {f : (Σ b : β, γ b) → α} {g : β → α} {a : α} (ha : HasSum f a)
     (hf : ∀ b, HasSum (fun c => f ⟨b, c⟩) (g b)) : HasSum g a := by
@@ -305,7 +305,7 @@ theorem HasSum.prod_fiberwise [RegularSpace α] {f : β × γ → α} {g : β �
 
 theorem Summable.sigma' [RegularSpace α] {γ : β → Type _} {f : (Σ b : β, γ b) → α} (ha : Summable f)
     (hf : ∀ b, Summable fun c => f ⟨b, c⟩) : Summable fun b => ∑' c, f ⟨b, c⟩ :=
-  (ha.has_sum.sigma fun b => (hf b).HasSum).Summable
+  (ha.HasSum.Sigma fun b => (hf b).HasSum).Summable
 
 theorem HasSum.sigma_of_has_sum [RegularSpace α] {γ : β → Type _} {f : (Σ b : β, γ b) → α} {g : β → α} {a : α}
     (ha : HasSum g a) (hf : ∀ b, HasSum (fun c => f ⟨b, c⟩) (g b)) (hf' : Summable f) : HasSum f a := by
@@ -326,7 +326,7 @@ theorem HasSum.tsum_eq (ha : HasSum f a) : (∑' b, f b) = a :=
   (Summable.has_sum ⟨a, ha⟩).unique ha
 
 theorem Summable.has_sum_iff (h : Summable f) : HasSum f a ↔ (∑' b, f b) = a :=
-  Iff.intro HasSum.tsum_eq fun eq => Eq ▸ h.has_sum
+  Iff.intro HasSum.tsum_eq fun eq => Eq ▸ h.HasSum
 
 @[simp]
 theorem tsum_zero : (∑' b : β, (0 : α)) = 0 :=
@@ -352,7 +352,7 @@ theorem tsum_bool (f : Bool → α) : (∑' i : Bool, f i) = f False + f True :=
 
 @[simp]
 theorem Finset.tsum_subtype (s : Finset β) (f : β → α) : (∑' x : { x // x ∈ s }, f x) = ∑ x in s, f x :=
-  (s.has_sum f).tsum_eq
+  (s.HasSum f).tsum_eq
 
 @[simp]
 theorem Finset.tsum_subtype' (s : Finset β) (f : β → α) : (∑' x : (s : Set β), f x) = ∑ x in s, f x :=
@@ -376,7 +376,7 @@ theorem tsum_dite_left (P : Prop) [Decidable P] (x : β → P → α) :
 
 theorem Equivₓ.tsum_eq_tsum_of_has_sum_iff_has_sum {α' : Type _} [AddCommMonoidₓ α'] [TopologicalSpace α'] (e : α' ≃ α)
     (h0 : e 0 = 0) {f : β → α} {g : γ → α'} (h : ∀ {a}, HasSum f (e a) ↔ HasSum g a) : (∑' b, f b) = e (∑' c, g c) :=
-  by_cases (fun this : Summable g => (h.mpr this.has_sum).tsum_eq) fun hg : ¬Summable g => by
+  by_cases (fun this : Summable g => (h.mpr this.HasSum).tsum_eq) fun hg : ¬Summable g => by
     have hf : ¬Summable f := mt (e.summable_iff_of_has_sum_iff @h).1 hg
     simp [tsum, hf, hg, h0]
 
@@ -387,12 +387,12 @@ theorem tsum_eq_tsum_of_has_sum_iff_has_sum {f : β → α} {g : γ → α} (h :
 theorem Equivₓ.tsum_eq (j : γ ≃ β) (f : β → α) : (∑' c, f (j c)) = ∑' b, f b :=
   tsum_eq_tsum_of_has_sum_iff_has_sum fun a => j.has_sum_iff
 
-theorem Equivₓ.tsum_eq_tsum_of_support {f : β → α} {g : γ → α} (e : support f ≃ support g) (he : ∀ x, g (e x) = f x) :
+theorem Equivₓ.tsum_eq_tsum_of_support {f : β → α} {g : γ → α} (e : Support f ≃ Support g) (he : ∀ x, g (e x) = f x) :
     (∑' x, f x) = ∑' y, g y :=
   tsum_eq_tsum_of_has_sum_iff_has_sum fun _ => e.has_sum_iff_of_support he
 
-theorem tsum_eq_tsum_of_ne_zero_bij {g : γ → α} (i : support g → β) (hi : ∀ ⦃x y⦄, i x = i y → (x : γ) = y)
-    (hf : support f ⊆ Set.Range i) (hfg : ∀ x, f (i x) = g x) : (∑' x, f x) = ∑' y, g y :=
+theorem tsum_eq_tsum_of_ne_zero_bij {g : γ → α} (i : Support g → β) (hi : ∀ ⦃x y⦄, i x = i y → (x : γ) = y)
+    (hf : Support f ⊆ Set.Range i) (hfg : ∀ x, f (i x) = g x) : (∑' x, f x) = ∑' y, g y :=
   tsum_eq_tsum_of_has_sum_iff_has_sum fun _ => has_sum_iff_has_sum_of_ne_zero_bij i hi hf hfg
 
 theorem tsum_subtype (s : Set β) (f : β → α) : (∑' x : s, f x) = ∑' x, s.indicator f x :=
@@ -403,24 +403,24 @@ section HasContinuousAdd
 variable [HasContinuousAdd α]
 
 theorem tsum_add (hf : Summable f) (hg : Summable g) : (∑' b, f b + g b) = (∑' b, f b) + ∑' b, g b :=
-  (hf.has_sum.add hg.has_sum).tsum_eq
+  (hf.HasSum.add hg.HasSum).tsum_eq
 
 theorem tsum_sum {f : γ → β → α} {s : Finset γ} (hf : ∀, ∀ i ∈ s, ∀, Summable (f i)) :
     (∑' b, ∑ i in s, f i b) = ∑ i in s, ∑' b, f i b :=
   (has_sum_sum fun i hi => (hf i hi).HasSum).tsum_eq
 
--- ././Mathport/Syntax/Translate/Basic.lean:626:6: warning: expanding binder group (b c)
+-- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (b c)
 theorem tsum_sigma' [RegularSpace α] {γ : β → Type _} {f : (Σ b : β, γ b) → α} (h₁ : ∀ b, Summable fun c => f ⟨b, c⟩)
     (h₂ : Summable f) : (∑' p, f p) = ∑' (b) (c), f ⟨b, c⟩ :=
-  (h₂.has_sum.sigma fun b => (h₁ b).HasSum).tsum_eq.symm
+  (h₂.HasSum.Sigma fun b => (h₁ b).HasSum).tsum_eq.symm
 
--- ././Mathport/Syntax/Translate/Basic.lean:626:6: warning: expanding binder group (b c)
+-- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (b c)
 theorem tsum_prod' [RegularSpace α] {f : β × γ → α} (h : Summable f) (h₁ : ∀ b, Summable fun c => f (b, c)) :
     (∑' p, f p) = ∑' (b) (c), f (b, c) :=
-  (h.has_sum.prod_fiberwise fun b => (h₁ b).HasSum).tsum_eq.symm
+  (h.HasSum.prod_fiberwise fun b => (h₁ b).HasSum).tsum_eq.symm
 
--- ././Mathport/Syntax/Translate/Basic.lean:626:6: warning: expanding binder group (c b)
--- ././Mathport/Syntax/Translate/Basic.lean:626:6: warning: expanding binder group (b c)
+-- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (c b)
+-- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (b c)
 theorem tsum_comm' [RegularSpace α] {f : β → γ → α} (h : Summable (Function.uncurry f)) (h₁ : ∀ b, Summable (f b))
     (h₂ : ∀ c, Summable fun b => f b c) : (∑' (c) (b), f b c) = ∑' (b) (c), f b c := by
   erw [← tsum_prod' h h₁, ← tsum_prod' h.prod_symm h₂, ← (Equivₓ.prodComm β γ).tsum_eq]
@@ -516,15 +516,15 @@ variable [HasContinuousAdd α]
 
 theorem tsum_add_tsum_compl {s : Set β} (hs : Summable (f ∘ coe : s → α)) (hsc : Summable (f ∘ coe : sᶜ → α)) :
     ((∑' x : s, f x) + ∑' x : sᶜ, f x) = ∑' x, f x :=
-  (hs.has_sum.add_compl hsc.has_sum).tsum_eq.symm
+  (hs.HasSum.add_compl hsc.HasSum).tsum_eq.symm
 
 theorem tsum_union_disjoint {s t : Set β} (hd : Disjoint s t) (hs : Summable (f ∘ coe : s → α))
     (ht : Summable (f ∘ coe : t → α)) : (∑' x : s ∪ t, f x) = (∑' x : s, f x) + ∑' x : t, f x :=
-  (hs.has_sum.add_disjoint hd ht.has_sum).tsum_eq
+  (hs.HasSum.add_disjoint hd ht.HasSum).tsum_eq
 
 theorem tsum_even_add_odd {f : ℕ → α} (he : Summable fun k => f (2 * k)) (ho : Summable fun k => f (2 * k + 1)) :
     ((∑' k, f (2 * k)) + ∑' k, f (2 * k + 1)) = ∑' k, f k :=
-  (he.has_sum.even_add_odd ho.has_sum).tsum_eq.symm
+  (he.HasSum.even_add_odd ho.HasSum).tsum_eq.symm
 
 end tsum
 
@@ -549,7 +549,7 @@ theorem Pi.summable {f : ι → ∀ x, π x} : Summable f ↔ ∀ x, Summable fu
   simp only [Summable, Pi.has_sum, skolem]
 
 theorem tsum_apply [∀ x, T2Space (π x)] {f : ι → ∀ x, π x} {x : α} (hf : Summable f) : (∑' i, f i) x = ∑' i, f i x :=
-  (Pi.has_sum.mp hf.has_sum x).tsum_eq.symm
+  (Pi.has_sum.mp hf.HasSum x).tsum_eq.symm
 
 end Pi
 
@@ -563,7 +563,7 @@ theorem HasSum.neg (h : HasSum f a) : HasSum (fun b => -f b) (-a) := by
   simpa only using h.map (-AddMonoidHom.id α) continuous_neg
 
 theorem Summable.neg (hf : Summable f) : Summable fun b => -f b :=
-  hf.has_sum.neg.summable
+  hf.HasSum.neg.Summable
 
 theorem Summable.of_neg (hf : Summable fun b => -f b) : Summable f := by
   simpa only [neg_negₓ] using hf.neg
@@ -576,7 +576,7 @@ theorem HasSum.sub (hf : HasSum f a₁) (hg : HasSum g a₂) : HasSum (fun b => 
   exact hf.add hg.neg
 
 theorem Summable.sub (hf : Summable f) (hg : Summable g) : Summable fun b => f b - g b :=
-  (hf.has_sum.sub hg.has_sum).Summable
+  (hf.HasSum.sub hg.HasSum).Summable
 
 theorem Summable.trans_sub (hg : Summable g) (hfg : Summable fun b => f b - g b) : Summable f := by
   simpa only [sub_add_cancel] using hfg.add hg
@@ -597,7 +597,7 @@ theorem HasSum.update (hf : HasSum f a₁) (b : β) [DecidableEq β] (a : α) : 
   simp only [h, update_noteq, if_false, Ne.def, zero_addₓ, not_false_iff]
 
 theorem Summable.update (hf : Summable f) (b : β) [DecidableEq β] (a : α) : Summable (update f b a) :=
-  (hf.has_sum.update b a).Summable
+  (hf.HasSum.update b a).Summable
 
 theorem HasSum.has_sum_compl_iff {s : Set β} (hf : HasSum (f ∘ coe : s → α) a₁) :
     HasSum (f ∘ coe : sᶜ → α) a₂ ↔ HasSum f (a₁ + a₂) := by
@@ -614,23 +614,23 @@ theorem HasSum.has_sum_iff_compl {s : Set β} (hf : HasSum (f ∘ coe : s → α
 
 theorem Summable.summable_compl_iff {s : Set β} (hf : Summable (f ∘ coe : s → α)) :
     Summable (f ∘ coe : sᶜ → α) ↔ Summable f :=
-  ⟨fun ⟨a, ha⟩ => (hf.has_sum.has_sum_compl_iff.1 ha).Summable, fun ⟨a, ha⟩ =>
-    (hf.has_sum.has_sum_iff_compl.1 ha).Summable⟩
+  ⟨fun ⟨a, ha⟩ => (hf.HasSum.has_sum_compl_iff.1 ha).Summable, fun ⟨a, ha⟩ =>
+    (hf.HasSum.has_sum_iff_compl.1 ha).Summable⟩
 
 protected theorem Finset.has_sum_compl_iff (s : Finset β) :
     HasSum (fun x : { x // x ∉ s } => f x) a ↔ HasSum f (a + ∑ i in s, f i) :=
-  (s.has_sum f).has_sum_compl_iff.trans <| by
+  (s.HasSum f).has_sum_compl_iff.trans <| by
     rw [add_commₓ]
 
 protected theorem Finset.has_sum_iff_compl (s : Finset β) :
     HasSum f a ↔ HasSum (fun x : { x // x ∉ s } => f x) (a - ∑ i in s, f i) :=
-  (s.has_sum f).has_sum_iff_compl
+  (s.HasSum f).has_sum_iff_compl
 
 protected theorem Finset.summable_compl_iff (s : Finset β) : (Summable fun x : { x // x ∉ s } => f x) ↔ Summable f :=
-  (s.summable f).summable_compl_iff
+  (s.Summable f).summable_compl_iff
 
-theorem Set.Finite.summable_compl_iff {s : Set β} (hs : s.finite) : Summable (f ∘ coe : sᶜ → α) ↔ Summable f :=
-  (hs.summable f).summable_compl_iff
+theorem Set.Finite.summable_compl_iff {s : Set β} (hs : s.Finite) : Summable (f ∘ coe : sᶜ → α) ↔ Summable f :=
+  (hs.Summable f).summable_compl_iff
 
 theorem has_sum_ite_eq_extract [DecidableEq β] (hf : HasSum f a) (b : β) :
     HasSum (fun n => ite (n = b) 0 (f n)) (a - f b) := by
@@ -646,14 +646,14 @@ section tsum
 variable [T2Space α]
 
 theorem tsum_neg (hf : Summable f) : (∑' b, -f b) = -∑' b, f b :=
-  hf.has_sum.neg.tsum_eq
+  hf.HasSum.neg.tsum_eq
 
 theorem tsum_sub (hf : Summable f) (hg : Summable g) : (∑' b, f b - g b) = (∑' b, f b) - ∑' b, g b :=
-  (hf.has_sum.sub hg.has_sum).tsum_eq
+  (hf.HasSum.sub hg.HasSum).tsum_eq
 
 theorem sum_add_tsum_compl {s : Finset β} (hf : Summable f) :
     ((∑ x in s, f x) + ∑' x : (↑s : Set β)ᶜ, f x) = ∑' x, f x :=
-  ((s.has_sum f).add_compl (s.summable_compl_iff.2 hf).HasSum).tsum_eq.symm
+  ((s.HasSum f).add_compl (s.summable_compl_iff.2 hf).HasSum).tsum_eq.symm
 
 /-- Let `f : β → α` be a sequence with summable series and let `b ∈ β` be an index.
 Lemma `tsum_ite_eq_extract` writes `Σ f n` as the sum of `f b` plus the series of the
@@ -698,7 +698,7 @@ theorem tsum_eq_zero_add [T2Space α] {f : ℕ → α} (hf : Summable f) : (∑'
 
 /-- For `f : ℕ → α`, then `∑' k, f (k + i)` tends to zero. This does not require a summability
 assumption on `f`, as otherwise all sums are zero. -/
-theorem tendsto_sum_nat_add [T2Space α] (f : ℕ → α) : tendsto (fun i => ∑' k, f (k + i)) at_top (𝓝 0) := by
+theorem tendsto_sum_nat_add [T2Space α] (f : ℕ → α) : Tendsto (fun i => ∑' k, f (k + i)) atTop (𝓝 0) := by
   by_cases' hf : Summable f
   · have h₀ : (fun i => (∑' i, f i) - ∑ j in range i, f j) = fun i => ∑' k : ℕ, f (k + i) := by
       ext1 i
@@ -732,20 +732,20 @@ theorem HasSum.mul_right a₂ (hf : HasSum f a₁) : HasSum (fun b => f b * a₂
   simpa only using hf.map (AddMonoidHom.mulRight a₂) (continuous_id.mul continuous_const)
 
 theorem Summable.mul_left a (hf : Summable f) : Summable fun b => a * f b :=
-  (hf.has_sum.mul_left _).Summable
+  (hf.HasSum.mul_left _).Summable
 
 theorem Summable.mul_right a (hf : Summable f) : Summable fun b => f b * a :=
-  (hf.has_sum.mul_right _).Summable
+  (hf.HasSum.mul_right _).Summable
 
 section tsum
 
 variable [T2Space α]
 
 theorem Summable.tsum_mul_left a (hf : Summable f) : (∑' b, a * f b) = a * ∑' b, f b :=
-  (hf.has_sum.mul_left _).tsum_eq
+  (hf.HasSum.mul_left _).tsum_eq
 
 theorem Summable.tsum_mul_right a (hf : Summable f) : (∑' b, f b * a) = (∑' b, f b) * a :=
-  (hf.has_sum.mul_right _).tsum_eq
+  (hf.HasSum.mul_right _).tsum_eq
 
 end tsum
 
@@ -760,10 +760,10 @@ theorem HasSum.const_smul {a : α} {r : R} (hf : HasSum f a) : HasSum (fun z => 
   hf.map (DistribMulAction.toAddMonoidHom α r) (continuous_const.smul continuous_id)
 
 theorem Summable.const_smul {r : R} (hf : Summable f) : Summable fun z => r • f z :=
-  hf.has_sum.const_smul.summable
+  hf.HasSum.const_smul.Summable
 
 theorem tsum_const_smul [T2Space α] {r : R} (hf : Summable f) : (∑' z, r • f z) = r • ∑' z, f z :=
-  hf.has_sum.const_smul.tsum_eq
+  hf.HasSum.const_smul.tsum_eq
 
 end ConstSmul
 
@@ -776,10 +776,10 @@ theorem HasSum.smul_const {a : α} {r : R} (hf : HasSum f r) : HasSum (fun z => 
   hf.map ((smulAddHom R α).flip a) (continuous_id.smul continuous_const)
 
 theorem Summable.smul_const {a : α} (hf : Summable f) : Summable fun z => f z • a :=
-  hf.has_sum.smul_const.summable
+  hf.HasSum.smul_const.Summable
 
 theorem tsum_smul_const [T2Space α] {a : α} (hf : Summable f) : (∑' z, f z • a) = (∑' z, f z) • a :=
-  hf.has_sum.smul_const.tsum_eq
+  hf.HasSum.smul_const.tsum_eq
 
 end SmulConst
 
@@ -791,7 +791,7 @@ theorem HasSum.div_const (h : HasSum f a) (b : α) : HasSum (fun x => f x / b) (
   simp only [div_eq_mul_inv, h.mul_right b⁻¹]
 
 theorem Summable.div_const (h : Summable f) (b : α) : Summable fun x => f x / b :=
-  (h.has_sum.div_const b).Summable
+  (h.HasSum.div_const b).Summable
 
 theorem has_sum_mul_left_iff (h : a₂ ≠ 0) : HasSum f a₁ ↔ HasSum (fun b => a₂ * f b) (a₂ * a₁) :=
   ⟨HasSum.mul_left _, fun H => by
@@ -847,9 +847,9 @@ theorem le_has_sum_of_le_sum (hf : HasSum f a) (h : ∀ s : Finset β, a₂ ≤ 
   ge_of_tendsto' hf h
 
 -- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (c «expr ∉ » set.range i)
-theorem has_sum_le_inj {g : γ → α} (i : β → γ) (hi : injective i) (hs : ∀ c _ : c ∉ Set.Range i, 0 ≤ g c)
+theorem has_sum_le_inj {g : γ → α} (i : β → γ) (hi : Injective i) (hs : ∀ c _ : c ∉ Set.Range i, 0 ≤ g c)
     (h : ∀ b, f b ≤ g (i b)) (hf : HasSum f a₁) (hg : HasSum g a₂) : a₁ ≤ a₂ := by
-  have : HasSum (fun c => (partial_inv i c).casesOn' 0 f) a₁ := by
+  have : HasSum (fun c => (partialInv i c).casesOn' 0 f) a₁ := by
     refine' (has_sum_iff_has_sum_of_ne_zero_bij (i ∘ coe) _ _ _).2 hf
     · exact fun c₁ c₂ eq => hi Eq
       
@@ -877,9 +877,9 @@ theorem has_sum_le_inj {g : γ → α} (i : β → γ) (hi : injective i) (hs : 
     
 
 -- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (c «expr ∉ » set.range i)
-theorem tsum_le_tsum_of_inj {g : γ → α} (i : β → γ) (hi : injective i) (hs : ∀ c _ : c ∉ Set.Range i, 0 ≤ g c)
+theorem tsum_le_tsum_of_inj {g : γ → α} (i : β → γ) (hi : Injective i) (hs : ∀ c _ : c ∉ Set.Range i, 0 ≤ g c)
     (h : ∀ b, f b ≤ g (i b)) (hf : Summable f) (hg : Summable g) : tsum f ≤ tsum g :=
-  has_sum_le_inj i hi hs h hf.has_sum hg.has_sum
+  has_sum_le_inj i hi hs h hf.HasSum hg.HasSum
 
 -- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (b «expr ∉ » s)
 theorem sum_le_has_sum (s : Finset β) (hs : ∀ b _ : b ∉ s, 0 ≤ f b) (hf : HasSum f a) : (∑ b in s, f b) ≤ a :=
@@ -904,21 +904,21 @@ theorem le_has_sum (hf : HasSum f a) (b : β) (hb : ∀ b' _ : b' ≠ b, 0 ≤ f
 -- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (b «expr ∉ » s)
 theorem sum_le_tsum {f : β → α} (s : Finset β) (hs : ∀ b _ : b ∉ s, 0 ≤ f b) (hf : Summable f) :
     (∑ b in s, f b) ≤ ∑' b, f b :=
-  sum_le_has_sum s hs hf.has_sum
+  sum_le_has_sum s hs hf.HasSum
 
 -- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (b' «expr ≠ » b)
 theorem le_tsum (hf : Summable f) (b : β) (hb : ∀ b' _ : b' ≠ b, 0 ≤ f b') : f b ≤ ∑' b, f b :=
   le_has_sum (Summable.has_sum hf) b hb
 
 theorem tsum_le_tsum (h : ∀ b, f b ≤ g b) (hf : Summable f) (hg : Summable g) : (∑' b, f b) ≤ ∑' b, g b :=
-  has_sum_le h hf.has_sum hg.has_sum
+  has_sum_le h hf.HasSum hg.HasSum
 
 @[mono]
 theorem tsum_mono (hf : Summable f) (hg : Summable g) (h : f ≤ g) : (∑' n, f n) ≤ ∑' n, g n :=
   tsum_le_tsum h hf hg
 
 theorem tsum_le_of_sum_le (hf : Summable f) (h : ∀ s : Finset β, (∑ b in s, f b) ≤ a₂) : (∑' b, f b) ≤ a₂ :=
-  has_sum_le_of_sum_le hf.has_sum h
+  has_sum_le_of_sum_le hf.HasSum h
 
 theorem tsum_le_of_sum_le' (ha₂ : 0 ≤ a₂) (h : ∀ s : Finset β, (∑ b in s, f b) ≤ a₂) : (∑' b, f b) ≤ a₂ := by
   by_cases' hf : Summable f
@@ -968,7 +968,7 @@ theorem has_sum_strict_mono (hf : HasSum f a₁) (hg : HasSum g a₂) (h : f < g
 
 theorem tsum_lt_tsum {i : β} (h : ∀ b : β, f b ≤ g b) (hi : f i < g i) (hf : Summable f) (hg : Summable g) :
     (∑' n, f n) < ∑' n, g n :=
-  has_sum_lt h hi hf.has_sum hg.has_sum
+  has_sum_lt h hi hf.HasSum hg.HasSum
 
 @[mono]
 theorem tsum_strict_mono (hf : Summable f) (hg : Summable g) (h : f < g) : (∑' n, f n) < ∑' n, g n :=
@@ -1066,7 +1066,7 @@ attribute [local instance] TopologicalAddGroup.regular_space
 /-- The sum over the complement of a finset tends to `0` when the finset grows to cover the whole
 space. This does not need a summability assumption, as otherwise all sums are zero. -/
 theorem tendsto_tsum_compl_at_top_zero [T1Space α] (f : β → α) :
-    tendsto (fun s : Finset β => ∑' b : { x // x ∉ s }, f b) at_top (𝓝 0) := by
+    Tendsto (fun s : Finset β => ∑' b : { x // x ∉ s }, f b) atTop (𝓝 0) := by
   by_cases' H : Summable f
   · intro e he
     rcases nhds_is_closed he with ⟨o, ho, oe, o_closed⟩
@@ -1116,7 +1116,7 @@ theorem Summable.summable_of_eq_zero_or_self (hf : Summable f) (h : ∀ b, g b =
 protected theorem Summable.indicator (hf : Summable f) (s : Set β) : Summable (s.indicator f) :=
   hf.summable_of_eq_zero_or_self <| Set.indicator_eq_zero_or_self _ _
 
-theorem Summable.comp_injective {i : γ → β} (hf : Summable f) (hi : injective i) : Summable (f ∘ i) := by
+theorem Summable.comp_injective {i : γ → β} (hf : Summable f) (hi : Injective i) : Summable (f ∘ i) := by
   simpa only [Set.indicator_range_comp] using (hi.summable_iff _).2 (hf.indicator (Set.Range i))
   exact fun x hx => Set.indicator_of_not_mem hx _
 
@@ -1125,7 +1125,7 @@ theorem Summable.subtype (hf : Summable f) (s : Set β) : Summable (f ∘ coe : 
 
 theorem summable_subtype_and_compl {s : Set β} :
     ((Summable fun x : s => f x) ∧ Summable fun x : sᶜ => f x) ↔ Summable f :=
-  ⟨and_imp.2 Summable.add_compl, fun h => ⟨h.subtype s, h.subtype (sᶜ)⟩⟩
+  ⟨and_imp.2 Summable.add_compl, fun h => ⟨h.Subtype s, h.Subtype (sᶜ)⟩⟩
 
 theorem Summable.sigma_factor {γ : β → Type _} {f : (Σ b : β, γ b) → α} (ha : Summable f) (b : β) :
     Summable fun c => f ⟨b, c⟩ :=
@@ -1138,17 +1138,17 @@ theorem Summable.sigma [T1Space α] {γ : β → Type _} {f : (Σ b : β, γ b) 
 theorem Summable.prod_factor {f : β × γ → α} (h : Summable f) (b : β) : Summable fun c => f (b, c) :=
   h.comp_injective fun c₁ c₂ h => (Prod.ext_iff.1 h).2
 
--- ././Mathport/Syntax/Translate/Basic.lean:626:6: warning: expanding binder group (b c)
+-- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (b c)
 theorem tsum_sigma [T1Space α] {γ : β → Type _} {f : (Σ b : β, γ b) → α} (ha : Summable f) :
     (∑' p, f p) = ∑' (b) (c), f ⟨b, c⟩ :=
   tsum_sigma' (fun b => ha.sigma_factor b) ha
 
--- ././Mathport/Syntax/Translate/Basic.lean:626:6: warning: expanding binder group (b c)
+-- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (b c)
 theorem tsum_prod [T1Space α] {f : β × γ → α} (h : Summable f) : (∑' p, f p) = ∑' (b) (c), f ⟨b, c⟩ :=
   tsum_prod' h h.prod_factor
 
--- ././Mathport/Syntax/Translate/Basic.lean:626:6: warning: expanding binder group (c b)
--- ././Mathport/Syntax/Translate/Basic.lean:626:6: warning: expanding binder group (b c)
+-- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (c b)
+-- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (b c)
 theorem tsum_comm [T1Space α] {f : β → γ → α} (h : Summable (Function.uncurry f)) :
     (∑' (c) (b), f b c) = ∑' (b) (c), f b c :=
   tsum_comm' h h.prod_factor h.prod_symm.prod_factor
@@ -1168,7 +1168,7 @@ theorem Summable.vanishing (hf : Summable f) ⦃e : Set G⦄ (he : e ∈ 𝓝 (0
 
 /-- Series divergence test: if `f` is a convergent series, then `f x` tends to zero along
 `cofinite`. -/
-theorem Summable.tendsto_cofinite_zero (hf : Summable f) : tendsto f cofinite (𝓝 0) := by
+theorem Summable.tendsto_cofinite_zero (hf : Summable f) : Tendsto f cofinite (𝓝 0) := by
   intro e he
   rw [Filter.mem_map]
   rcases hf.vanishing he with ⟨s, hs⟩
@@ -1176,12 +1176,12 @@ theorem Summable.tendsto_cofinite_zero (hf : Summable f) : tendsto f cofinite (�
   · simpa using hs {x} (disjoint_singleton_left.2 hx)
     
 
-theorem Summable.tendsto_at_top_zero {f : ℕ → G} (hf : Summable f) : tendsto f at_top (𝓝 0) := by
+theorem Summable.tendsto_at_top_zero {f : ℕ → G} (hf : Summable f) : Tendsto f atTop (𝓝 0) := by
   rw [← Nat.cofinite_eq_at_top]
   exact hf.tendsto_cofinite_zero
 
 theorem Summable.tendsto_top_of_pos {α : Type _} [LinearOrderedField α] [TopologicalSpace α] [OrderTopology α]
-    {f : ℕ → α} (hf : Summable f⁻¹) (hf' : ∀ n, 0 < f n) : tendsto f at_top at_top := by
+    {f : ℕ → α} (hf : Summable f⁻¹) (hf' : ∀ n, 0 < f n) : Tendsto f atTop atTop := by
   rw
     [show f = f⁻¹⁻¹ by
       ext
@@ -1281,10 +1281,10 @@ theorem cauchy_seq_of_dist_le_of_summable [PseudoMetricSpace α] {f : ℕ → α
 
 theorem cauchy_seq_of_summable_dist [PseudoMetricSpace α] {f : ℕ → α} (h : Summable fun n => dist (f n) (f n.succ)) :
     CauchySeq f :=
-  cauchy_seq_of_dist_le_of_summable _ (fun _ => le_reflₓ _) h
+  cauchy_seq_of_dist_le_of_summable _ (fun _ => le_rfl) h
 
 theorem dist_le_tsum_of_dist_le_of_tendsto [PseudoMetricSpace α] {f : ℕ → α} (d : ℕ → ℝ)
-    (hf : ∀ n, dist (f n) (f n.succ) ≤ d n) (hd : Summable d) {a : α} (ha : tendsto f at_top (𝓝 a)) (n : ℕ) :
+    (hf : ∀ n, dist (f n) (f n.succ) ≤ d n) (hd : Summable d) {a : α} (ha : Tendsto f atTop (𝓝 a)) (n : ℕ) :
     dist (f n) a ≤ ∑' m, d (n + m) := by
   refine' le_of_tendsto (tendsto_const_nhds.dist ha) (eventually_at_top.2 ⟨n, fun m hnm => _⟩)
   refine' le_transₓ (dist_le_Ico_sum_of_dist_le hnm fun k _ _ => hf k) _
@@ -1293,17 +1293,17 @@ theorem dist_le_tsum_of_dist_le_of_tendsto [PseudoMetricSpace α] {f : ℕ → �
   exact hd.comp_injective (add_right_injective n)
 
 theorem dist_le_tsum_of_dist_le_of_tendsto₀ [PseudoMetricSpace α] {f : ℕ → α} (d : ℕ → ℝ)
-    (hf : ∀ n, dist (f n) (f n.succ) ≤ d n) (hd : Summable d) {a : α} (ha : tendsto f at_top (𝓝 a)) :
+    (hf : ∀ n, dist (f n) (f n.succ) ≤ d n) (hd : Summable d) {a : α} (ha : Tendsto f atTop (𝓝 a)) :
     dist (f 0) a ≤ tsum d := by
   simpa only [zero_addₓ] using dist_le_tsum_of_dist_le_of_tendsto d hf hd ha 0
 
 theorem dist_le_tsum_dist_of_tendsto [PseudoMetricSpace α] {f : ℕ → α} (h : Summable fun n => dist (f n) (f n.succ))
-    {a : α} (ha : tendsto f at_top (𝓝 a)) n : dist (f n) a ≤ ∑' m, dist (f (n + m)) (f (n + m).succ) :=
+    {a : α} (ha : Tendsto f atTop (𝓝 a)) n : dist (f n) a ≤ ∑' m, dist (f (n + m)) (f (n + m).succ) :=
   show dist (f n) a ≤ ∑' m, (fun x => dist (f x) (f x.succ)) (n + m) from
-    dist_le_tsum_of_dist_le_of_tendsto (fun n => dist (f n) (f n.succ)) (fun _ => le_reflₓ _) h ha n
+    dist_le_tsum_of_dist_le_of_tendsto (fun n => dist (f n) (f n.succ)) (fun _ => le_rfl) h ha n
 
 theorem dist_le_tsum_dist_of_tendsto₀ [PseudoMetricSpace α] {f : ℕ → α} (h : Summable fun n => dist (f n) (f n.succ))
-    {a : α} (ha : tendsto f at_top (𝓝 a)) : dist (f 0) a ≤ ∑' n, dist (f n) (f n.succ) := by
+    {a : α} (ha : Tendsto f atTop (𝓝 a)) : dist (f 0) a ≤ ∑' n, dist (f n) (f n.succ) := by
   simpa only [zero_addₓ] using dist_le_tsum_dist_of_tendsto h ha 0
 
 end CauchySeq
@@ -1343,7 +1343,7 @@ theorem HasSum.mul (hf : HasSum f s) (hg : HasSum g t) (hfg : Summable fun x : �
     See also `tsum_mul_tsum_of_summable_norm` if `f` and `g` are abolutely summable. -/
 theorem tsum_mul_tsum (hf : Summable f) (hg : Summable g) (hfg : Summable fun x : β × γ => f x.1 * g x.2) :
     ((∑' x, f x) * ∑' y, g y) = ∑' z : β × γ, f z.1 * g z.2 :=
-  hf.has_sum.mul_eq hg.has_sum hfg.has_sum
+  hf.HasSum.mul_eq hg.HasSum hfg.HasSum
 
 end tsum_mul_tsum
 
@@ -1367,13 +1367,13 @@ variable [TopologicalSpace α] [Semiringₓ α]
 
 theorem summable_mul_prod_iff_summable_mul_sigma_antidiagonal {f g : ℕ → α} :
     (Summable fun x : ℕ × ℕ => f x.1 * g x.2) ↔
-      Summable fun x : Σ n : ℕ, nat.antidiagonal n => f (x.2 : ℕ × ℕ).1 * g (x.2 : ℕ × ℕ).2 :=
-  nat.sigma_antidiagonal_equiv_prod.summable_iff.symm
+      Summable fun x : Σ n : ℕ, Nat.antidiagonal n => f (x.2 : ℕ × ℕ).1 * g (x.2 : ℕ × ℕ).2 :=
+  Nat.sigmaAntidiagonalEquivProd.summable_iff.symm
 
 variable [RegularSpace α] [TopologicalRing α]
 
 theorem summable_sum_mul_antidiagonal_of_summable_mul {f g : ℕ → α} (h : Summable fun x : ℕ × ℕ => f x.1 * g x.2) :
-    Summable fun n => ∑ kl in nat.antidiagonal n, f kl.1 * g kl.2 := by
+    Summable fun n => ∑ kl in Nat.antidiagonal n, f kl.1 * g kl.2 := by
   rw [summable_mul_prod_iff_summable_mul_sigma_antidiagonal] at h
   conv => congr ext rw [← Finset.sum_finset_coe, ← tsum_fintype]
   exact h.sigma' fun n => (has_sum_fintype _).Summable
@@ -1384,7 +1384,7 @@ theorem summable_sum_mul_antidiagonal_of_summable_mul {f g : ℕ → α} (h : Su
     if `f` and `g` are absolutely summable. -/
 theorem tsum_mul_tsum_eq_tsum_sum_antidiagonal (hf : Summable f) (hg : Summable g)
     (hfg : Summable fun x : ℕ × ℕ => f x.1 * g x.2) :
-    ((∑' n, f n) * ∑' n, g n) = ∑' n, ∑ kl in nat.antidiagonal n, f kl.1 * g kl.2 := by
+    ((∑' n, f n) * ∑' n, g n) = ∑' n, ∑ kl in Nat.antidiagonal n, f kl.1 * g kl.2 := by
   conv_rhs => congr ext rw [← Finset.sum_finset_coe, ← tsum_fintype]
   rw [tsum_mul_tsum hf hg hfg, ← nat.sigma_antidiagonal_equiv_prod.tsum_eq (_ : ℕ × ℕ → α)]
   exact

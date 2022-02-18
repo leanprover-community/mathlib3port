@@ -1,4 +1,6 @@
 import Mathbin.Data.Set.Basic
+import Mathbin.Order.Lattice
+import Mathbin.Order.Max
 
 /-!
 # Directed indexed families and sets
@@ -133,6 +135,26 @@ instance OrderDual.is_directed_ge [LE α] [IsDirected α (· ≤ ·)] : IsDirect
 
 instance OrderDual.is_directed_le [LE α] [IsDirected α (swap (· ≤ ·))] : IsDirected (OrderDual α) (· ≤ ·) := by
   assumption
+
+section Preorderₓ
+
+variable [Preorderₓ α] {a : α}
+
+protected theorem IsMin.is_bot [IsDirected α (swap (· ≤ ·))] (h : IsMin a) : IsBot a := fun b =>
+  let ⟨c, hca, hcb⟩ := exists_le_le a b
+  (h hca).trans hcb
+
+protected theorem IsMax.is_top [IsDirected α (· ≤ ·)] (h : IsMax a) : IsTop a := fun b =>
+  let ⟨c, hac, hbc⟩ := exists_ge_ge a b
+  hbc.trans <| h hac
+
+theorem is_bot_iff_is_min [IsDirected α (swap (· ≤ ·))] : IsBot a ↔ IsMin a :=
+  ⟨IsBot.is_min, IsMin.is_bot⟩
+
+theorem is_top_iff_is_max [IsDirected α (· ≤ ·)] : IsTop a ↔ IsMax a :=
+  ⟨IsTop.is_max, IsMax.is_top⟩
+
+end Preorderₓ
 
 instance (priority := 100) SemilatticeSup.to_is_directed_le [SemilatticeSup α] : IsDirected α (· ≤ ·) :=
   ⟨fun a b => ⟨a⊔b, le_sup_left, le_sup_right⟩⟩

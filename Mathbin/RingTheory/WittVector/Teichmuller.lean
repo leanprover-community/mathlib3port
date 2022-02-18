@@ -25,7 +25,7 @@ namespace WittVector
 
 open MvPolynomial
 
-variable (p : ℕ) {R S : Type _} [hp : Fact p.prime] [CommRingₓ R] [CommRingₓ S]
+variable (p : ℕ) {R S : Type _} [hp : Fact p.Prime] [CommRingₓ R] [CommRingₓ S]
 
 local notation "𝕎" => WittVector p
 
@@ -52,7 +52,7 @@ satisfy the ring axioms.
 
 include hp
 
-private theorem ghost_component_teichmuller_fun (r : R) (n : ℕ) : ghost_component n (teichmuller_fun p r) = r ^ p ^ n :=
+private theorem ghost_component_teichmuller_fun (r : R) (n : ℕ) : ghostComponent n (teichmullerFun p r) = r ^ p ^ n :=
   by
   rw [ghost_component_apply, aeval_witt_polynomial, Finset.sum_eq_single 0, pow_zeroₓ, one_mulₓ, tsub_zero]
   · rfl
@@ -74,7 +74,7 @@ private theorem ghost_component_teichmuller_fun (r : R) (n : ℕ) : ghost_compon
     exact (h (Nat.succ_posₓ n)).elim
     
 
-private theorem map_teichmuller_fun (f : R →+* S) (r : R) : map f (teichmuller_fun p r) = teichmuller_fun p (f r) := by
+private theorem map_teichmuller_fun (f : R →+* S) (r : R) : map f (teichmullerFun p r) = teichmullerFun p (f r) := by
   ext n
   cases n
   · rfl
@@ -83,14 +83,14 @@ private theorem map_teichmuller_fun (f : R →+* S) (r : R) : map f (teichmuller
     
 
 private theorem teichmuller_mul_aux₁ (x y : MvPolynomial R ℚ) :
-    teichmuller_fun p (x * y) = teichmuller_fun p x * teichmuller_fun p y := by
+    teichmullerFun p (x * y) = teichmullerFun p x * teichmullerFun p y := by
   apply (ghost_map.bijective_of_invertible p (MvPolynomial R ℚ)).1
   rw [RingHom.map_mul]
   ext1 n
   simp only [Pi.mul_apply, ghost_map_apply, ghost_component_teichmuller_fun, mul_powₓ]
 
 private theorem teichmuller_mul_aux₂ (x y : MvPolynomial R ℤ) :
-    teichmuller_fun p (x * y) = teichmuller_fun p x * teichmuller_fun p y := by
+    teichmullerFun p (x * y) = teichmullerFun p x * teichmullerFun p y := by
   refine' map_injective (MvPolynomial.map (Int.castRingHom ℚ)) (MvPolynomial.map_injective _ Int.cast_injective) _
   simp only [teichmuller_mul_aux₁, map_teichmuller_fun, RingHom.map_mul]
 
@@ -98,7 +98,7 @@ private theorem teichmuller_mul_aux₂ (x y : MvPolynomial R ℤ) :
 The `0`-th coefficient of `teichmuller p r` is `r`, and all others are `0`.
 This is a monoid homomorphism. -/
 noncomputable def teichmuller : R →* 𝕎 R where
-  toFun := teichmuller_fun p
+  toFun := teichmullerFun p
   map_one' := by
     ext ⟨⟩
     · rw [one_coeff_zero]
@@ -135,7 +135,7 @@ theorem map_teichmuller (f : R →+* S) (r : R) : map f (teichmuller p r) = teic
 
 /-- The `n`-th ghost component of `teichmuller p r` is `r ^ p ^ n`. -/
 @[simp]
-theorem ghost_component_teichmuller (r : R) (n : ℕ) : ghost_component n (teichmuller p r) = r ^ p ^ n :=
+theorem ghost_component_teichmuller (r : R) (n : ℕ) : ghostComponent n (teichmuller p r) = r ^ p ^ n :=
   ghost_component_teichmuller_fun _ _ _
 
 end WittVector

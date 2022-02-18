@@ -65,7 +65,7 @@ instance Psum.inhabitedRight {α β} [Inhabited β] : Inhabited (Psum α β) :=
   ⟨Psum.inr default⟩
 
 instance (priority := 10) decidableEqOfSubsingleton {α} [Subsingleton α] : DecidableEq α
-  | a, b => is_true (Subsingleton.elimₓ a b)
+  | a, b => isTrue (Subsingleton.elimₓ a b)
 
 @[simp]
 theorem eq_iff_true_of_subsingleton {α : Sort _} [Subsingleton α] (x y : α) : x = y ↔ True := by
@@ -112,7 +112,7 @@ theorem coe_sort_coe_trans {α β γ δ} [Coe α β] [HasCoeTAux β γ] [CoeSort
     @coeSort α _ _ x = @coeSort β _ _ x :=
   rfl
 
-/-- Many structures such as bundled morphisms coerce to functions so that you can
+library_note "function coercion"/-- Many structures such as bundled morphisms coerce to functions so that you can
 transparently apply them to arguments. For example, if `e : α ≃ β` and `a : α`
 then you can write `e a` and this is elaborated as `⇑e a`. This type of
 coercion is implemented using the `has_coe_to_fun` type class. There is one
@@ -136,7 +136,7 @@ instance {α β} : has_coe_to_fun (sparkling_equiv α β) :=
 simp-normal form. The lemma `coe_fn_coe_base` will unfold it to `⇑↑e a`. This
 often causes loops in the simplifier.)
 -/
-library_note "function coercion"
+
 
 @[simp]
 theorem coe_sort_coe_base {α β γ} [Coe α β] [CoeSort β γ] (x : α) : @coeSort α _ _ x = @coeSort β _ _ x :=
@@ -210,11 +210,12 @@ into an automated theorem prover for first order logic. -/
 class Fact (p : Prop) : Prop where
   out {} : p
 
-/-- In most cases, we should not have global instances of `fact`; typeclass search only reads the head
+library_note "fact non-instances"/--
+In most cases, we should not have global instances of `fact`; typeclass search only reads the head
 symbol and then tries any instances, which means that adding any such instance will cause slowdowns
 everywhere. We instead make them as lemmata and make them local instances as required.
 -/
-library_note "fact non-instances"
+
 
 theorem Fact.elim {p : Prop} (h : Fact p) : p :=
   h.1
@@ -258,6 +259,9 @@ theorem eq_iff_iff {p q : Prop} : p = q ↔ (p ↔ q) :=
 @[simp]
 theorem imp_self : a → a ↔ True :=
   iff_true_intro id
+
+theorem Iff.imp (h₁ : a ↔ b) (h₂ : c ↔ d) : a → c ↔ b → d :=
+  imp_congr h₁ h₂
 
 @[simp]
 theorem eq_true_eq_id : Eq True = id := by
@@ -321,6 +325,9 @@ def Not.elim {α : Sort _} (H1 : ¬a) (H2 : a) : α :=
 theorem Not.imp {a b : Prop} (H2 : ¬b) (H1 : a → b) : ¬a :=
   mt H1 H2
 
+theorem Iff.not (h : a ↔ b) : ¬a ↔ ¬b :=
+  not_congr h
+
 theorem not_not_of_not_imp : ¬(a → b) → ¬¬a :=
   mt Not.elim
 
@@ -366,16 +373,17 @@ theorem by_contradiction {p} : (¬p → False) → p :=
 theorem by_contra {p} : (¬p → False) → p :=
   Decidable.by_contradiction
 
-/-- In most of mathlib, we use the law of excluded middle (LEM) and the axiom of choice (AC) freely.
+library_note "decidable namespace"/--
+In most of mathlib, we use the law of excluded middle (LEM) and the axiom of choice (AC) freely.
 The `decidable` namespace contains versions of lemmas from the root namespace that explicitly
 attempt to avoid the axiom of choice, usually by adding decidability assumptions on the inputs.
 
 You can check if a lemma uses the axiom of choice by using `#print axioms foo` and seeing if
 `classical.choice` appears in the list.
 -/
-library_note "decidable namespace"
 
-/-- As mathlib is primarily classical,
+
+library_note "decidable arguments"/-- As mathlib is primarily classical,
 if the type signature of a `def` or `lemma` does not require any `decidable` instances to state,
 it is preferable not to introduce any `decidable` instances that are needed in the proof
 as arguments, but rather to use the `classical` tactic as needed.
@@ -384,7 +392,7 @@ In the other direction, when `decidable` instances do appear in the type signatu
 it is better to use explicitly introduced ones rather than allowing Lean to automatically infer
 classical ones, as these may cause instance mismatch errors later.
 -/
-library_note "decidable arguments"
+
 
 protected theorem Decidable.not_not [Decidable a] : ¬¬a ↔ a :=
   Iff.intro Decidable.by_contradiction not_not_intro
@@ -467,14 +475,17 @@ theorem xor_self (a : Prop) : Xorₓ a a = False := by
 /-! ### Declarations about `and` -/
 
 
+theorem Iff.and (h₁ : a ↔ b) (h₂ : c ↔ d) : a ∧ c ↔ b ∧ d :=
+  and_congr h₁ h₂
+
 theorem and_congr_left (h : c → (a ↔ b)) : a ∧ c ↔ b ∧ c :=
   And.comm.trans <| (and_congr_right h).trans And.comm
 
 theorem and_congr_left' (h : a ↔ b) : a ∧ c ↔ b ∧ c :=
-  and_congr h Iff.rfl
+  h.And Iff.rfl
 
 theorem and_congr_right' (h : b ↔ c) : a ∧ b ↔ a ∧ c :=
-  and_congr Iff.rfl h
+  Iff.rfl.And h
 
 theorem not_and_of_not_left (b : Prop) : ¬a → ¬(a ∧ b) :=
   mt And.left
@@ -494,8 +505,11 @@ theorem And.right_comm : (a ∧ b) ∧ c ↔ (a ∧ c) ∧ b := by
 theorem and_and_and_comm (a b c d : Prop) : (a ∧ b) ∧ c ∧ d ↔ (a ∧ c) ∧ b ∧ d := by
   rw [← and_assoc, @And.right_comm a, and_assoc]
 
-theorem And.rotate : a ∧ b ∧ c ↔ b ∧ c ∧ a := by
+theorem and_rotate : a ∧ b ∧ c ↔ b ∧ c ∧ a := by
   simp only [And.left_comm, And.comm]
+
+theorem And.rotateₓ : a ∧ b ∧ c → b ∧ c ∧ a :=
+  and_rotate.1
 
 theorem and_not_self_iff (a : Prop) : a ∧ ¬a ↔ False :=
   Iff.intro (fun h => h.right h.left) fun h => h.elim
@@ -545,14 +559,26 @@ theorem and_self_right : (a ∧ b) ∧ b ↔ a ∧ b :=
 /-! ### Declarations about `or` -/
 
 
-theorem or_congr_left (h : a ↔ b) : a ∨ c ↔ b ∨ c :=
-  or_congr h Iff.rfl
+theorem Iff.or (h₁ : a ↔ b) (h₂ : c ↔ d) : a ∨ c ↔ b ∨ d :=
+  or_congr h₁ h₂
 
-theorem or_congr_right (h : b ↔ c) : a ∨ b ↔ a ∨ c :=
-  or_congr Iff.rfl h
+theorem or_congr_left' (h : a ↔ b) : a ∨ c ↔ b ∨ c :=
+  h.Or Iff.rfl
+
+theorem or_congr_right' (h : b ↔ c) : a ∨ b ↔ a ∨ c :=
+  Iff.rfl.Or h
 
 theorem Or.right_comm : (a ∨ b) ∨ c ↔ (a ∨ c) ∨ b := by
   rw [or_assoc, or_assoc, or_comm b]
+
+theorem or_or_or_comm (a b c d : Prop) : (a ∨ b) ∨ c ∨ d ↔ (a ∨ c) ∨ b ∨ d := by
+  rw [← or_assoc, @Or.right_comm a, or_assoc]
+
+theorem or_rotate : a ∨ b ∨ c ↔ b ∨ c ∨ a := by
+  simp only [Or.left_comm, Or.comm]
+
+theorem Or.rotate : a ∨ b ∨ c → b ∨ c ∨ a :=
+  or_rotate.1
 
 theorem or_of_or_of_imp_of_imp (h₁ : a ∨ b) (h₂ : a → c) (h₃ : b → d) : c ∨ d :=
   Or.imp h₂ h₃ h₁
@@ -590,6 +616,20 @@ protected theorem Decidable.not_imp_not [Decidable a] : ¬a → ¬b ↔ b → a 
 theorem not_imp_not : ¬a → ¬b ↔ b → a :=
   Decidable.not_imp_not
 
+protected theorem Decidable.or_congr_left [Decidable c] (h : ¬c → (a ↔ b)) : a ∨ c ↔ b ∨ c := by
+  rw [Decidable.or_iff_not_imp_right, Decidable.or_iff_not_imp_right]
+  exact imp_congr_right h
+
+theorem or_congr_leftₓ (h : ¬c → (a ↔ b)) : a ∨ c ↔ b ∨ c :=
+  Decidable.or_congr_left h
+
+protected theorem Decidable.or_congr_right [Decidable a] (h : ¬a → (b ↔ c)) : a ∨ b ↔ a ∨ c := by
+  rw [Decidable.or_iff_not_imp_left, Decidable.or_iff_not_imp_left]
+  exact imp_congr_right h
+
+theorem or_congr_rightₓ (h : ¬a → (b ↔ c)) : a ∨ b ↔ a ∨ c :=
+  Decidable.or_congr_right h
+
 @[simp]
 theorem or_iff_left_iff_imp : (a ∨ b ↔ a) ↔ b → a :=
   ⟨fun h hb => h.1 (Or.inr hb), or_iff_left_of_imp⟩
@@ -613,7 +653,7 @@ theorem and_or_distrib_left : a ∧ (b ∨ c) ↔ a ∧ b ∨ a ∧ c :=
 
 /-- `∧` distributes over `∨` (on the right). -/
 theorem or_and_distrib_right : (a ∨ b) ∧ c ↔ a ∧ c ∨ b ∧ c :=
-  (And.comm.trans and_or_distrib_left).trans (or_congr And.comm And.comm)
+  (And.comm.trans and_or_distrib_left).trans (And.comm.Or And.comm)
 
 /-- `∨` distributes over `∧` (on the left). -/
 theorem or_and_distrib_left : a ∨ b ∧ c ↔ (a ∨ b) ∧ (a ∨ c) :=
@@ -622,7 +662,7 @@ theorem or_and_distrib_left : a ∨ b ∧ c ↔ (a ∨ b) ∧ (a ∨ c) :=
 
 /-- `∨` distributes over `∧` (on the right). -/
 theorem and_or_distrib_right : a ∧ b ∨ c ↔ (a ∨ c) ∧ (b ∨ c) :=
-  (Or.comm.trans or_and_distrib_left).trans (and_congr Or.comm Or.comm)
+  (Or.comm.trans or_and_distrib_left).trans (Or.comm.And Or.comm)
 
 @[simp]
 theorem or_self_left : a ∨ a ∨ b ↔ a ∨ b :=
@@ -634,6 +674,9 @@ theorem or_self_right : (a ∨ b) ∨ b ↔ a ∨ b :=
 
 /-! Declarations about `iff` -/
 
+
+theorem Iff.iff (h₁ : a ↔ b) (h₂ : c ↔ d) : (a ↔ c) ↔ (b ↔ d) :=
+  iff_congr h₁ h₂
 
 theorem iff_of_true (ha : a) (hb : b) : a ↔ b :=
   ⟨fun _ => hb, fun _ => ha⟩
@@ -702,13 +745,13 @@ theorem peirce' {a : Prop} (H : ∀ b : Prop, (a → b) → a) : a :=
   H _ id
 
 protected theorem Decidable.not_iff_not [Decidable a] [Decidable b] : (¬a ↔ ¬b) ↔ (a ↔ b) := by
-  rw [@iff_def ¬a, @iff_def' a] <;> exact and_congr Decidable.not_imp_not Decidable.not_imp_not
+  rw [@iff_def ¬a, @iff_def' a] <;> exact decidable.not_imp_not.and Decidable.not_imp_not
 
 theorem not_iff_not : (¬a ↔ ¬b) ↔ (a ↔ b) :=
   Decidable.not_iff_not
 
 protected theorem Decidable.not_iff_comm [Decidable a] [Decidable b] : (¬a ↔ b) ↔ (¬b ↔ a) := by
-  rw [@iff_def ¬a, @iff_def ¬b] <;> exact and_congr Decidable.not_imp_comm imp_not_comm
+  rw [@iff_def ¬a, @iff_def ¬b] <;> exact decidable.not_imp_comm.and imp_not_comm
 
 theorem not_iff_comm : (¬a ↔ b) ↔ (¬b ↔ a) :=
   Decidable.not_iff_comm
@@ -720,7 +763,7 @@ theorem not_iff : ¬(a ↔ b) ↔ (¬a ↔ b) :=
   Decidable.not_iff
 
 protected theorem Decidable.iff_not_comm [Decidable a] [Decidable b] : (a ↔ ¬b) ↔ (b ↔ ¬a) := by
-  rw [@iff_def a, @iff_def b] <;> exact and_congr imp_not_comm Decidable.not_imp_comm
+  rw [@iff_def a, @iff_def b] <;> exact imp_not_comm.and Decidable.not_imp_comm
 
 theorem iff_not_comm : (a ↔ ¬b) ↔ (b ↔ ¬a) :=
   Decidable.iff_not_comm
@@ -772,8 +815,8 @@ def decidableOfIff' (b : Prop) (h : a ↔ b) [D : Decidable b] : Decidable a :=
 /-- Prove that `a` is decidable by constructing a boolean `b` and a proof that `b ↔ a`.
 (This is sometimes taken as an alternate definition of decidability.) -/
 def decidableOfBool : ∀ b : Bool h : b ↔ a, Decidable a
-  | tt, h => is_true (h.1 rfl)
-  | ff, h => is_false (mt h.2 Bool.ff_ne_tt)
+  | tt, h => isTrue (h.1 rfl)
+  | ff, h => isFalse (mt h.2 Bool.ff_ne_tt)
 
 /-! ### De Morgan's laws -/
 
@@ -828,6 +871,26 @@ end Propositional
 /-! ### Declarations about equality -/
 
 
+section Mem
+
+variable {α β : Type _} [HasMem α β] {s t : β} {a b : α}
+
+theorem ne_of_mem_of_not_mem (h : a ∈ s) : b ∉ s → a ≠ b :=
+  mt fun e => e ▸ h
+
+theorem ne_of_mem_of_not_mem' (h : a ∈ s) : a ∉ t → s ≠ t :=
+  mt fun e => e ▸ h
+
+/-- **Alias** of `ne_of_mem_of_not_mem`. -/
+theorem HasMem.Mem.ne_of_not_mem : a ∈ s → b ∉ s → a ≠ b :=
+  ne_of_mem_of_not_mem
+
+/-- **Alias** of `ne_of_mem_of_not_mem'`. -/
+theorem HasMem.Mem.ne_of_not_mem' : a ∈ s → a ∉ t → s ≠ t :=
+  ne_of_mem_of_not_mem'
+
+end Mem
+
 section Equality
 
 variable {α : Sort _} {a b : α}
@@ -839,9 +902,6 @@ theorem heq_iff_eq : HEq a b ↔ a = b :=
 theorem proof_irrel_heq {p q : Prop} (hp : p) (hq : q) : HEq hp hq := by
   have : p = q := propext ⟨fun _ => hq, fun _ => hp⟩
   subst q <;> rfl
-
-theorem ne_of_mem_of_not_mem {α β} [HasMem α β] {s : β} {a b : α} (h : a ∈ s) : b ∉ s → a ≠ b :=
-  mt fun e => e ▸ h
 
 theorem ball_cond_comm {α} {s : α → Prop} {p : α → α → Prop} :
     (∀ a, s a → ∀ b, s b → p a b) ↔ ∀ a b, s a → s b → p a b :=
@@ -969,12 +1029,18 @@ theorem exists₅_congr {p q : ∀ a b c d, ε a b c d → Prop} (h : ∀ a b c 
 
 end congr
 
-variable {β : Sort _} {p q : α → Prop} {b : Prop}
+variable {ι β : Sort _} {κ : ι → Sort _} {p q : α → Prop} {b : Prop}
 
 theorem forall_imp (h : ∀ a, p a → q a) : (∀ a, p a) → ∀ a, q a := fun h' a => h a (h' a)
 
+theorem forall₂_imp {p q : ∀ i, κ i → Prop} (h : ∀ i j, p i j → q i j) : (∀ i j, p i j) → ∀ i j, q i j :=
+  forall_imp fun i => forall_imp <| h i
+
 theorem Exists.impₓ (h : ∀ a, p a → q a) (p : ∃ a, p a) : ∃ a, q a :=
   exists_imp_exists h p
+
+theorem Exists₂.imp {p q : ∀ i, κ i → Prop} (h : ∀ i j, p i j → q i j) : (∃ i j, p i j) → ∃ i j, q i j :=
+  Exists.impₓ fun i => Exists.impₓ <| h i
 
 theorem exists_imp_exists' {p : α → Prop} {q : β → Prop} (f : α → β) (hpq : ∀ a, p a → q (f a)) (hp : ∃ a, p a) :
     ∃ b, q b :=

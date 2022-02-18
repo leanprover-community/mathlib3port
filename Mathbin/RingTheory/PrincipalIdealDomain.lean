@@ -53,7 +53,7 @@ variable (R)
 
 /-- A ring is a principal ideal ring if all (left) ideals are principal. -/
 class IsPrincipalIdealRing (R : Type u) [Ringₓ R] : Prop where
-  principal : ∀ S : Ideal R, S.is_principal
+  principal : ∀ S : Ideal R, S.IsPrincipal
 
 attribute [instance] IsPrincipalIdealRing.principal
 
@@ -73,25 +73,25 @@ section Ringₓ
 variable [Ringₓ R] [Module R M]
 
 /-- `generator I`, if `I` is a principal submodule, is an `x ∈ M` such that `span R {x} = I` -/
-noncomputable def generator (S : Submodule R M) [S.is_principal] : M :=
+noncomputable def generator (S : Submodule R M) [S.IsPrincipal] : M :=
   Classical.some (principal S)
 
-theorem span_singleton_generator (S : Submodule R M) [S.is_principal] : span R {generator S} = S :=
+theorem span_singleton_generator (S : Submodule R M) [S.IsPrincipal] : span R {generator S} = S :=
   Eq.symm (Classical.some_spec (principal S))
 
-theorem _root_.ideal.span_singleton_generator (I : Ideal R) [I.is_principal] : Ideal.span ({generator I} : Set R) = I :=
+theorem _root_.ideal.span_singleton_generator (I : Ideal R) [I.IsPrincipal] : Ideal.span ({generator I} : Set R) = I :=
   Eq.symm (Classical.some_spec (principal I))
 
 @[simp]
-theorem generator_mem (S : Submodule R M) [S.is_principal] : generator S ∈ S := by
+theorem generator_mem (S : Submodule R M) [S.IsPrincipal] : generator S ∈ S := by
   conv_rhs => rw [← span_singleton_generator S]
   exact subset_span (mem_singleton _)
 
-theorem mem_iff_eq_smul_generator (S : Submodule R M) [S.is_principal] {x : M} : x ∈ S ↔ ∃ s : R, x = s • generator S :=
+theorem mem_iff_eq_smul_generator (S : Submodule R M) [S.IsPrincipal] {x : M} : x ∈ S ↔ ∃ s : R, x = s • generator S :=
   by
   simp_rw [@eq_comm _ x, ← mem_span_singleton, span_singleton_generator]
 
-theorem eq_bot_iff_generator_eq_zero (S : Submodule R M) [S.is_principal] : S = ⊥ ↔ generator S = 0 := by
+theorem eq_bot_iff_generator_eq_zero (S : Submodule R M) [S.IsPrincipal] : S = ⊥ ↔ generator S = 0 := by
   rw [← @span_singleton_eq_bot R M, span_singleton_generator]
 
 end Ringₓ
@@ -100,12 +100,12 @@ section CommRingₓ
 
 variable [CommRingₓ R] [Module R M]
 
-theorem mem_iff_generator_dvd (S : Ideal R) [S.is_principal] {x : R} : x ∈ S ↔ generator S ∣ x :=
+theorem mem_iff_generator_dvd (S : Ideal R) [S.IsPrincipal] {x : R} : x ∈ S ↔ generator S ∣ x :=
   (mem_iff_eq_smul_generator S).trans
     (exists_congr fun a => by
       simp only [mul_comm, smul_eq_mul])
 
-theorem prime_generator_of_is_prime (S : Ideal R) [Submodule.IsPrincipal S] [is_prime : S.is_prime] (ne_bot : S ≠ ⊥) :
+theorem prime_generator_of_is_prime (S : Ideal R) [Submodule.IsPrincipal S] [is_prime : S.IsPrime] (ne_bot : S ≠ ⊥) :
     Prime (generator S) :=
   ⟨fun h => ne_bot ((eq_bot_iff_generator_eq_zero S).2 h), fun h =>
     is_prime.ne_top (S.eq_top_of_is_unit_mem (generator_mem S) h), by
@@ -117,7 +117,7 @@ theorem generator_map_dvd_of_mem {N : Submodule R M} (ϕ : M →ₗ[R] R) [(N.ma
   exact ⟨x, hx, rfl⟩
 
 theorem generator_submodule_image_dvd_of_mem {N O : Submodule R M} (hNO : N ≤ O) (ϕ : O →ₗ[R] R)
-    [(ϕ.submodule_image N).IsPrincipal] {x : M} (hx : x ∈ N) : generator (ϕ.submodule_image N) ∣ ϕ ⟨x, hNO hx⟩ := by
+    [(ϕ.submoduleImage N).IsPrincipal] {x : M} (hx : x ∈ N) : generator (ϕ.submoduleImage N) ∣ ϕ ⟨x, hNO hx⟩ := by
   rw [← mem_iff_generator_dvd, LinearMap.mem_submodule_image_of_le hNO]
   exact ⟨x, hx, rfl⟩
 
@@ -129,8 +129,8 @@ namespace IsPrime
 
 open Submodule.IsPrincipal Ideal
 
-theorem to_maximal_ideal [CommRingₓ R] [IsDomain R] [IsPrincipalIdealRing R] {S : Ideal R} [hpi : is_prime S]
-    (hS : S ≠ ⊥) : is_maximal S :=
+theorem to_maximal_ideal [CommRingₓ R] [IsDomain R] [IsPrincipalIdealRing R] {S : Ideal R} [hpi : IsPrime S]
+    (hS : S ≠ ⊥) : IsMaximal S :=
   is_maximal_iff.2
     ⟨(ne_top_iff_one S).1 hpi.1, by
       intro T x hST hxS hxT
@@ -190,7 +190,7 @@ instance (priority := 100) EuclideanDomain.to_principal_ideal_domain : IsPrincip
 end
 
 theorem IsField.is_principal_ideal_ring {R : Type _} [CommRingₓ R] (h : IsField R) : IsPrincipalIdealRing R :=
-  @EuclideanDomain.to_principal_ideal_domain R (@Field.toEuclideanDomain R (h.to_field R))
+  @EuclideanDomain.to_principal_ideal_domain R (@Field.toEuclideanDomain R (h.toField R))
 
 namespace PrincipalIdealRing
 
@@ -248,7 +248,7 @@ also maps `a` into that submonoid. -/
 theorem ring_hom_mem_submonoid_of_factors_subset_of_units_subset {R S : Type _} [CommRingₓ R] [IsDomain R]
     [IsPrincipalIdealRing R] [Semiringₓ S] (f : R →+* S) (s : Submonoid S) (a : R) (ha : a ≠ 0)
     (h : ∀, ∀ b ∈ factors a, ∀, f b ∈ s) (hf : ∀ c : (R)ˣ, f c ∈ s) : f a ∈ s :=
-  mem_submonoid_of_factors_subset_of_units_subset (s.comap f.to_monoid_hom) ha h hf
+  mem_submonoid_of_factors_subset_of_units_subset (s.comap f.toMonoidHom) ha h hf
 
 /-- A principal ideal domain has unique factorization -/
 instance (priority := 100) to_unique_factorization_monoid : UniqueFactorizationMonoid R :=
@@ -268,14 +268,14 @@ variable {S N : Type _} [Ringₓ R] [AddCommGroupₓ M] [AddCommGroupₓ N] [Rin
 variable [Module R M] [Module R N]
 
 theorem Submodule.IsPrincipal.of_comap (f : M →ₗ[R] N) (hf : Function.Surjective f) (S : Submodule R N)
-    [hI : is_principal (S.comap f)] : is_principal S :=
-  ⟨⟨f (is_principal.generator (S.comap f)), by
+    [hI : IsPrincipal (S.comap f)] : IsPrincipal S :=
+  ⟨⟨f (IsPrincipal.generator (S.comap f)), by
       rw [← Set.image_singleton, ← Submodule.map_span, is_principal.span_singleton_generator,
         Submodule.map_comap_eq_of_surjective hf]⟩⟩
 
 theorem Ideal.IsPrincipal.of_comap (f : R →+* S) (hf : Function.Surjective f) (I : Ideal S)
-    [hI : is_principal (I.comap f)] : is_principal I :=
-  ⟨⟨f (is_principal.generator (I.comap f)), by
+    [hI : IsPrincipal (I.comap f)] : IsPrincipal I :=
+  ⟨⟨f (IsPrincipal.generator (I.comap f)), by
       rw [Ideal.submodule_span_eq, ← Set.image_singleton, ← Ideal.map_span, Ideal.span_singleton_generator,
         Ideal.map_comap_of_surjective f hf]⟩⟩
 
@@ -377,7 +377,7 @@ theorem Irreducible.coprime_iff_not_dvd {p n : R} (pp : Irreducible p) : IsCopri
     
 
 theorem Prime.coprime_iff_not_dvd {p n : R} (pp : Prime p) : IsCoprime p n ↔ ¬p ∣ n :=
-  pp.irreducible.coprime_iff_not_dvd
+  pp.Irreducible.coprime_iff_not_dvd
 
 theorem exists_associated_pow_of_mul_eq_pow' {a b c : R} (hab : IsCoprime a b) {k : ℕ} (h : a * b = c ^ k) :
     ∃ d, Associated (d ^ k) a :=

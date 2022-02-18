@@ -26,7 +26,7 @@ namespace CategoryTheory
 
 open Opposite
 
-variable {C : Type u₁} [category.{v₁} C]
+variable {C : Type u₁} [Category.{v₁} C]
 
 /-- An equality `X = Y` gives us a morphism `X ⟶ Y`.
 
@@ -37,11 +37,11 @@ def eq_to_hom {X Y : C} (p : X = Y) : X ⟶ Y := by
   rw [p] <;> exact 𝟙 _
 
 @[simp]
-theorem eq_to_hom_refl (X : C) (p : X = X) : eq_to_hom p = 𝟙 X :=
+theorem eq_to_hom_refl (X : C) (p : X = X) : eqToHom p = 𝟙 X :=
   rfl
 
 @[simp, reassoc]
-theorem eq_to_hom_trans {X Y Z : C} (p : X = Y) (q : Y = Z) : eq_to_hom p ≫ eq_to_hom q = eq_to_hom (p.trans q) := by
+theorem eq_to_hom_trans {X Y Z : C} (p : X = Y) (q : Y = Z) : eqToHom p ≫ eqToHom q = eqToHom (p.trans q) := by
   cases p
   cases q
   simp
@@ -55,7 +55,7 @@ rather than relying on this lemma firing.
 -/
 @[simp]
 theorem congr_arg_mpr_hom_left {X Y Z : C} (p : X = Y) (q : Y ⟶ Z) :
-    (congr_argₓ (fun W : C => W ⟶ Z) p).mpr q = eq_to_hom p ≫ q := by
+    (congr_argₓ (fun W : C => W ⟶ Z) p).mpr q = eqToHom p ≫ q := by
   cases p
   simp
 
@@ -68,7 +68,7 @@ rather than relying on this lemma firing.
 -/
 @[simp]
 theorem congr_arg_mpr_hom_right {X Y Z : C} (p : X ⟶ Y) (q : Z = Y) :
-    (congr_argₓ (fun W : C => X ⟶ W) q).mpr p = p ≫ eq_to_hom q.symm := by
+    (congr_argₓ (fun W : C => X ⟶ W) q).mpr p = p ≫ eqToHom q.symm := by
   cases q
   simp
 
@@ -78,52 +78,52 @@ It is typically better to use this, rather than rewriting by the equality then u
 which usually leads to dependent type theory hell.
 -/
 def eq_to_iso {X Y : C} (p : X = Y) : X ≅ Y :=
-  ⟨eq_to_hom p, eq_to_hom p.symm, by
+  ⟨eqToHom p, eqToHom p.symm, by
     simp , by
     simp ⟩
 
 @[simp]
-theorem eq_to_iso.hom {X Y : C} (p : X = Y) : (eq_to_iso p).Hom = eq_to_hom p :=
+theorem eq_to_iso.hom {X Y : C} (p : X = Y) : (eqToIso p).Hom = eqToHom p :=
   rfl
 
 @[simp]
-theorem eq_to_iso.inv {X Y : C} (p : X = Y) : (eq_to_iso p).inv = eq_to_hom p.symm :=
+theorem eq_to_iso.inv {X Y : C} (p : X = Y) : (eqToIso p).inv = eqToHom p.symm :=
   rfl
 
 @[simp]
-theorem eq_to_iso_refl {X : C} (p : X = X) : eq_to_iso p = iso.refl X :=
+theorem eq_to_iso_refl {X : C} (p : X = X) : eqToIso p = Iso.refl X :=
   rfl
 
 @[simp]
-theorem eq_to_iso_trans {X Y Z : C} (p : X = Y) (q : Y = Z) : eq_to_iso p ≪≫ eq_to_iso q = eq_to_iso (p.trans q) := by
+theorem eq_to_iso_trans {X Y Z : C} (p : X = Y) (q : Y = Z) : eqToIso p ≪≫ eqToIso q = eqToIso (p.trans q) := by
   ext <;> simp
 
 @[simp]
-theorem eq_to_hom_op {X Y : C} (h : X = Y) : (eq_to_hom h).op = eq_to_hom (congr_argₓ op h.symm) := by
+theorem eq_to_hom_op {X Y : C} (h : X = Y) : (eqToHom h).op = eqToHom (congr_argₓ op h.symm) := by
   cases h
   rfl
 
 @[simp]
-theorem eq_to_hom_unop {X Y : Cᵒᵖ} (h : X = Y) : (eq_to_hom h).unop = eq_to_hom (congr_argₓ unop h.symm) := by
+theorem eq_to_hom_unop {X Y : Cᵒᵖ} (h : X = Y) : (eqToHom h).unop = eqToHom (congr_argₓ unop h.symm) := by
   cases h
   rfl
 
-instance {X Y : C} (h : X = Y) : is_iso (eq_to_hom h) :=
-  is_iso.of_iso (eq_to_iso h)
+instance {X Y : C} (h : X = Y) : IsIso (eqToHom h) :=
+  IsIso.of_iso (eqToIso h)
 
 @[simp]
-theorem inv_eq_to_hom {X Y : C} (h : X = Y) : inv (eq_to_hom h) = eq_to_hom h.symm := by
+theorem inv_eq_to_hom {X Y : C} (h : X = Y) : inv (eqToHom h) = eqToHom h.symm := by
   ext
   simp
 
-variable {D : Type u₂} [category.{v₂} D]
+variable {D : Type u₂} [Category.{v₂} D]
 
 namespace Functor
 
 /-- Proving equality between functors. This isn't an extensionality lemma,
   because usually you don't really want to do this. -/
 theorem ext {F G : C ⥤ D} (h_obj : ∀ X, F.obj X = G.obj X)
-    (h_map : ∀ X Y f, F.map f = eq_to_hom (h_obj X) ≫ G.map f ≫ eq_to_hom (h_obj Y).symm) : F = G := by
+    (h_map : ∀ X Y f, F.map f = eqToHom (h_obj X) ≫ G.map f ≫ eqToHom (h_obj Y).symm) : F = G := by
   cases' F with F_obj _ _ _
   cases' G with G_obj _ _ _
   have : F_obj = G_obj := by
@@ -149,30 +149,30 @@ theorem congr_obj {F G : C ⥤ D} (h : F = G) X : F.obj X = G.obj X := by
   subst h
 
 theorem congr_hom {F G : C ⥤ D} (h : F = G) {X Y} (f : X ⟶ Y) :
-    F.map f = eq_to_hom (congr_obj h X) ≫ G.map f ≫ eq_to_hom (congr_obj h Y).symm := by
+    F.map f = eqToHom (congr_obj h X) ≫ G.map f ≫ eqToHom (congr_obj h Y).symm := by
   subst h <;> simp
 
 end Functor
 
 @[simp]
-theorem eq_to_hom_map (F : C ⥤ D) {X Y : C} (p : X = Y) : F.map (eq_to_hom p) = eq_to_hom (congr_argₓ F.obj p) := by
+theorem eq_to_hom_map (F : C ⥤ D) {X Y : C} (p : X = Y) : F.map (eqToHom p) = eqToHom (congr_argₓ F.obj p) := by
   cases p <;> simp
 
 @[simp]
-theorem eq_to_iso_map (F : C ⥤ D) {X Y : C} (p : X = Y) : F.map_iso (eq_to_iso p) = eq_to_iso (congr_argₓ F.obj p) := by
+theorem eq_to_iso_map (F : C ⥤ D) {X Y : C} (p : X = Y) : F.mapIso (eqToIso p) = eqToIso (congr_argₓ F.obj p) := by
   ext <;> cases p <;> simp
 
 @[simp]
-theorem eq_to_hom_app {F G : C ⥤ D} (h : F = G) (X : C) :
-    (eq_to_hom h : F ⟶ G).app X = eq_to_hom (functor.congr_obj h X) := by
+theorem eq_to_hom_app {F G : C ⥤ D} (h : F = G) (X : C) : (eqToHom h : F ⟶ G).app X = eqToHom (Functor.congr_obj h X) :=
+  by
   subst h <;> rfl
 
 theorem nat_trans.congr {F G : C ⥤ D} (α : F ⟶ G) {X Y : C} (h : X = Y) :
-    α.app X = F.map (eq_to_hom h) ≫ α.app Y ≫ G.map (eq_to_hom h.symm) := by
+    α.app X = F.map (eqToHom h) ≫ α.app Y ≫ G.map (eqToHom h.symm) := by
   rw [α.naturality_assoc]
   simp
 
-theorem eq_conj_eq_to_hom {X Y : C} (f : X ⟶ Y) : f = eq_to_hom rfl ≫ f ≫ eq_to_hom rfl := by
+theorem eq_conj_eq_to_hom {X Y : C} (f : X ⟶ Y) : f = eqToHom rfl ≫ f ≫ eqToHom rfl := by
   simp only [category.id_comp, eq_to_hom_refl, category.comp_id]
 
 end CategoryTheory

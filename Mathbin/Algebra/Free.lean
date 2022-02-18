@@ -63,13 +63,13 @@ end FreeMagma
 /-- Lifts a function `α → β` to a magma homomorphism `free_magma α → β` given a magma `β`. -/
 def FreeMagma.liftAux {α : Type u} {β : Type v} [Mul β] (f : α → β) : FreeMagma α → β
   | FreeMagma.of x => f x
-  | x * y => x.lift_aux * y.lift_aux
+  | x * y => x.liftAux * y.liftAux
 
 /-- Lifts a function `α → β` to an additive magma homomorphism `free_add_magma α → β` given
 an additive magma `β`. -/
 def FreeAddMagma.liftAux {α : Type u} {β : Type v} [Add β] (f : α → β) : FreeAddMagma α → β
   | FreeAddMagma.of x => f x
-  | x + y => x.lift_aux + y.lift_aux
+  | x + y => x.liftAux + y.liftAux
 
 attribute [to_additive FreeAddMagma.liftAux] FreeMagma.liftAux
 
@@ -78,14 +78,14 @@ namespace FreeMagma
 variable {α : Type u} {β : Type v} [Mul β] (f : α → β)
 
 @[to_additive]
-theorem lift_aux_unique (F : MulHom (FreeMagma α) β) : ⇑F = lift_aux (F ∘ of) :=
+theorem lift_aux_unique (F : MulHom (FreeMagma α) β) : ⇑F = liftAux (F ∘ of) :=
   funext fun x =>
     (FreeMagma.recOn x fun x => rfl) fun x y ih1 ih2 => (F.map_mul x y).trans <| congr (congr_argₓ _ ih1) ih2
 
 /-- The universal property of the free magma expressing its adjointness. -/
 @[to_additive "The universal property of the free additive magma expressing its adjointness."]
 def lift : (α → β) ≃ MulHom (FreeMagma α) β where
-  toFun := fun f => { toFun := lift_aux f, map_mul' := fun x y => rfl }
+  toFun := fun f => { toFun := liftAux f, map_mul' := fun x y => rfl }
   invFun := fun F => F ∘ of
   left_inv := fun f => by
     ext
@@ -309,7 +309,7 @@ namespace Magma
 /-- Free semigroup over a magma. -/
 @[to_additive AddMagma.FreeAddSemigroup "Free additive semigroup over an additive magma."]
 def FreeSemigroup (α : Type u) [Mul α] : Type u :=
-  Quot <| free_semigroup.r α
+  Quot <| FreeSemigroup.R α
 
 namespace FreeSemigroup
 
@@ -330,11 +330,11 @@ protected theorem induction_on {C : FreeSemigroup α → Prop} (x : FreeSemigrou
 
 @[to_additive]
 theorem of_mul_assoc (x y z : α) : of (x * y * z) = of (x * (y * z)) :=
-  Quot.sound <| r.intro x y z
+  Quot.sound <| R.intro x y z
 
 @[to_additive]
 theorem of_mul_assoc_left (w x y z : α) : of (w * (x * y * z)) = of (w * (x * (y * z))) :=
-  Quot.sound <| r.left w x y z
+  Quot.sound <| R.left w x y z
 
 @[to_additive]
 theorem of_mul_assoc_right (w x y z : α) : of (w * x * y * z) = of (w * (x * y) * z) := by
@@ -554,17 +554,17 @@ theorem mul_seq {f g : FreeSemigroup (α → β)} {x : FreeSemigroup α} : f * g
 instance : IsLawfulMonad FreeSemigroup.{u} where
   pure_bind := fun _ _ _ _ => rfl
   bind_assoc := fun α β γ x f g =>
-    rec_on_pure x (fun x => rfl) fun x y ih1 ih2 => by
+    recOnPure x (fun x => rfl) fun x y ih1 ih2 => by
       rw [mul_bind, mul_bind, mul_bind, ih1, ih2]
   id_map := fun α x =>
-    rec_on_pure x (fun _ => rfl) fun x y ih1 ih2 => by
+    recOnPure x (fun _ => rfl) fun x y ih1 ih2 => by
       rw [map_mul', ih1, ih2]
 
 /-- `free_semigroup` is traversable. -/
 @[to_additive "`free_add_semigroup` is traversable."]
 protected def traverse {m : Type u → Type u} [Applicativeₓ m] {α β : Type u} (F : α → m β) (x : FreeSemigroup α) :
     m (FreeSemigroup β) :=
-  rec_on_pure x (fun x => pure <$> F x) fun x y ihx ihy => (· * ·) <$> ihx <*> ihy
+  recOnPure x (fun x => pure <$> F x) fun x y ihx ihy => (· * ·) <$> ihx <*> ihy
 
 @[to_additive]
 instance : Traversable FreeSemigroup :=
@@ -620,13 +620,13 @@ instance : IsLawfulTraversable FreeSemigroup.{u} :=
       FreeSemigroup.recOn x (fun x => rfl) fun x y ih1 ih2 => by
         rw [traverse_mul, ih1, ih2, mul_map_seq],
     comp_traverse := fun F G hf1 hg1 hf2 hg2 α β γ f g x =>
-      rec_on_pure x
+      recOnPure x
         (fun x => by
           skip <;> simp' only [traverse_pure, traverse_pure'] with functor_norm)
         fun x y ih1 ih2 => by
         skip <;> rw [traverse_mul, ih1, ih2, traverse_mul] <;> simp' only [traverse_mul'] with functor_norm,
     naturality := fun F G hf1 hg1 hf2 hg2 η α β f x =>
-      rec_on_pure x
+      recOnPure x
         (fun x => by
           simp' only [traverse_pure] with functor_norm)
         fun x y ih1 ih2 => by

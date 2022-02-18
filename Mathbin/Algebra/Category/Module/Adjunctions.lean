@@ -44,13 +44,13 @@ def free : Type u ⥤ ModuleCat R where
 /-- The free-forgetful adjunction for R-modules.
 -/
 def adj : free R ⊣ forget (ModuleCat.{u} R) :=
-  adjunction.mk_of_hom_equiv
+  Adjunction.mkOfHomEquiv
     { homEquiv := fun X M => (Finsupp.lift M R X).toEquiv.symm,
       hom_equiv_naturality_left_symm' := fun _ _ M f g =>
         Finsupp.lhom_ext' fun x =>
           LinearMap.ext_ring (Finsupp.sum_map_domain_index_add_monoid_hom fun y => (smulAddHom R M).flip (g y)).symm }
 
-instance : is_right_adjoint (forget (ModuleCat.{u} R)) :=
+instance : IsRightAdjoint (forget (ModuleCat.{u} R)) :=
   ⟨_, adj R⟩
 
 end
@@ -104,7 +104,7 @@ theorem associativity (X Y Z : Type u) :
     CategoryTheory.associator_hom_apply]
 
 /-- The free R-module functor is lax monoidal. -/
-instance : lax_monoidal.{u} (free R).obj where
+instance : LaxMonoidal.{u} (free R).obj where
   ε := ε R
   μ := μ R
   μ_natural' := fun X Y X' Y' f g => μ_natural R f g
@@ -133,14 +133,14 @@ def Free (R : Type _) (C : Type u) :=
 def Free.of (R : Type _) {C : Type u} (X : C) : Free R C :=
   X
 
-variable (R : Type _) [CommRingₓ R] (C : Type u) [category.{v} C]
+variable (R : Type _) [CommRingₓ R] (C : Type u) [Category.{v} C]
 
 open Finsupp
 
-instance category_Free : category (Free R C) where
+instance category_Free : Category (Free R C) where
   Hom := fun X Y : C => (X ⟶ Y) →₀ R
   id := fun X : C => Finsupp.single (𝟙 X) 1
-  comp := fun X Y Z : C f g => f.sum fun f' s => g.sum fun g' t => Finsupp.single (f' ≫ g') (s * t)
+  comp := fun X Y Z : C f g => f.Sum fun f' s => g.Sum fun g' t => Finsupp.single (f' ≫ g') (s * t)
   assoc' := fun W X Y Z f g h => by
     dsimp
     simp only [sum_sum_index, sum_single_index, single_zero, single_add, eq_self_iff_true, forall_true_iff,
@@ -158,7 +158,7 @@ theorem single_comp_single {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z) (r s : R) :
   dsimp
   simp
 
-instance : preadditive (Free R C) where
+instance : Preadditive (Free R C) where
   homGroup := fun X Y => Finsupp.addCommGroup
   add_comp' := fun X Y Z f f' g => by
     dsimp
@@ -174,7 +174,7 @@ instance : preadditive (Free R C) where
       · simp [mul_addₓ]
         
 
-instance : linear R (Free R C) where
+instance : Linear R (Free R C) where
   homModule := fun X Y => Finsupp.module (X ⟶ Y) R
   smul_comp' := fun X Y Z r f g => by
     dsimp
@@ -198,7 +198,7 @@ def embedding : C ⥤ Free R C where
   map_comp' := fun X Y Z f g => by
     simp
 
-variable (R) {C} {D : Type u} [category.{v} D] [preadditive D] [linear R D]
+variable (R) {C} {D : Type u} [Category.{v} D] [Preadditive D] [Linear R D]
 
 open Preadditive Linear
 
@@ -207,7 +207,7 @@ open Preadditive Linear
 @[simps]
 def lift (F : C ⥤ D) : Free R C ⥤ D where
   obj := fun X => F.obj X
-  map := fun X Y f => f.sum fun f' r => r • F.map f'
+  map := fun X Y f => f.Sum fun f' r => r • F.map f'
   map_id' := by
     dsimp [CategoryTheory.categoryFree]
     simp
@@ -275,7 +275,7 @@ instance lift_linear (F : C ⥤ D) : (lift R F).Linear R where
 is isomorphic to the original functor.
 -/
 def embedding_lift_iso (F : C ⥤ D) : embedding R C ⋙ lift R F ≅ F :=
-  nat_iso.of_components (fun X => iso.refl _)
+  NatIso.ofComponents (fun X => Iso.refl _)
     (by
       tidy)
 
@@ -283,9 +283,9 @@ def embedding_lift_iso (F : C ⥤ D) : embedding R C ⋙ lift R F ≅ F :=
 compositions with the embedding functor are isomorphic.
 -/
 @[ext]
-def ext {F G : Free R C ⥤ D} [F.additive] [F.linear R] [G.additive] [G.linear R]
+def ext {F G : Free R C ⥤ D} [F.Additive] [F.Linear R] [G.Additive] [G.Linear R]
     (α : embedding R C ⋙ F ≅ embedding R C ⋙ G) : F ≅ G :=
-  nat_iso.of_components (fun X => α.app X)
+  NatIso.ofComponents (fun X => α.app X)
     (by
       intro X Y f
       apply Finsupp.induction_linear f
@@ -305,8 +305,8 @@ def ext {F G : Free R C ⥤ D} [F.additive] [F.linear R] [G.additive] [G.linear 
 /-- `Free.lift` is unique amongst `R`-linear functors `Free R C ⥤ D`
 which compose with `embedding ℤ C` to give the original functor.
 -/
-def lift_unique (F : C ⥤ D) (L : Free R C ⥤ D) [L.additive] [L.linear R] (α : embedding R C ⋙ L ≅ F) : L ≅ lift R F :=
-  ext R (α.trans (embedding_lift_iso R F).symm)
+def lift_unique (F : C ⥤ D) (L : Free R C ⥤ D) [L.Additive] [L.Linear R] (α : embedding R C ⋙ L ≅ F) : L ≅ lift R F :=
+  ext R (α.trans (embeddingLiftIso R F).symm)
 
 end Free
 

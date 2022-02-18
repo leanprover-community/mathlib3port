@@ -111,7 +111,7 @@ theorem SameRay.map {v₁ v₂ : M} (f : M →ₗ[R] N) (h : SameRay R v₁ v₂
 @[simp]
 theorem same_ray_map_iff {v₁ v₂ : M} (e : M ≃ₗ[R] N) : SameRay R (e v₁) (e v₂) ↔ SameRay R v₁ v₂ :=
   ⟨fun h => by
-    simpa using SameRay.map e.symm.to_linear_map h, SameRay.map e.to_linear_map⟩
+    simpa using SameRay.map e.symm.to_linear_map h, SameRay.map e.toLinearMap⟩
 
 /-- If two vectors are on the same ray then both scaled by the same action are also on the same
 ray. -/
@@ -189,7 +189,7 @@ theorem ray_pos_smul [Nontrivial R] {v : M} (h : v ≠ 0) {r : R} (hr : 0 < r) (
 
 /-- An equivalence between modules implies an equivalence between ray vectors. -/
 def RayVector.mapLinearEquiv (e : M ≃ₗ[R] N) : RayVector M ≃ RayVector N :=
-  (Equivₓ.subtypeEquiv e.to_equiv) fun _ => e.map_ne_zero_iff.symm
+  (Equivₓ.subtypeEquiv e.toEquiv) fun _ => e.map_ne_zero_iff.symm
 
 /-- An equivalence between modules implies an equivalence between rays. -/
 def Module.Ray.map [Nontrivial R] (e : M ≃ₗ[R] N) : Module.Ray R M ≃ Module.Ray R N :=
@@ -215,7 +215,7 @@ def Orientation.map [Nontrivial R] (e : M ≃ₗ[R] N) : Orientation R M ι ≃ 
 @[simp]
 theorem Orientation.map_apply [Nontrivial R] (e : M ≃ₗ[R] N) (v : AlternatingMap R M R ι) (hv : v ≠ 0) :
     Orientation.map ι e (rayOfNeZero _ v hv) =
-      rayOfNeZero _ (v.comp_linear_map e.symm) (mt (v.comp_linear_equiv_eq_zero_iff e.symm).mp hv) :=
+      rayOfNeZero _ (v.compLinearMap e.symm) (mt (v.comp_linear_equiv_eq_zero_iff e.symm).mp hv) :=
   rfl
 
 @[simp]
@@ -270,17 +270,17 @@ def some_ray_vector [Nontrivial R] (x : Module.Ray R M) : RayVector M :=
 
 /-- The ray of `some_ray_vector`. -/
 @[simp]
-theorem some_ray_vector_ray [Nontrivial R] (x : Module.Ray R M) : (⟦x.some_ray_vector⟧ : Module.Ray R M) = x :=
+theorem some_ray_vector_ray [Nontrivial R] (x : Module.Ray R M) : (⟦x.someRayVector⟧ : Module.Ray R M) = x :=
   Quotientₓ.out_eq _
 
 /-- An arbitrary nonzero vector giving a ray. -/
 def some_vector [Nontrivial R] (x : Module.Ray R M) : M :=
-  x.some_ray_vector
+  x.someRayVector
 
 /-- `some_vector` is nonzero. -/
 @[simp]
-theorem some_vector_ne_zero [Nontrivial R] (x : Module.Ray R M) : x.some_vector ≠ 0 :=
-  x.some_ray_vector.property
+theorem some_vector_ne_zero [Nontrivial R] (x : Module.Ray R M) : x.someVector ≠ 0 :=
+  x.someRayVector.property
 
 /-- The ray of `some_vector`. -/
 @[simp]
@@ -327,7 +327,7 @@ variable {R}
 
 /-- Negating a nonzero vector. -/
 instance : Neg (RayVector M) :=
-  ⟨fun v => ⟨-v, neg_ne_zero.2 v.prop⟩⟩
+  ⟨fun v => ⟨-v, neg_ne_zero.2 v.Prop⟩⟩
 
 /-- Negating a nonzero vector commutes with coercion to the underlying module. -/
 @[simp, norm_cast]
@@ -335,9 +335,10 @@ theorem coe_neg (v : RayVector M) : ↑(-v) = -(v : M) :=
   rfl
 
 /-- Negating a nonzero vector twice produces the original vector. -/
-@[simp]
-protected theorem neg_negₓ (v : RayVector M) : - -v = v := by
-  rw [Subtype.ext_iff, coe_neg, coe_neg, neg_negₓ]
+instance : HasInvolutiveNeg (RayVector M) where
+  neg := Neg.neg
+  neg_neg := fun v => by
+    rw [Subtype.ext_iff, coe_neg, coe_neg, neg_negₓ]
 
 variable (R)
 
@@ -367,20 +368,11 @@ namespace Module.Ray
 variable {R}
 
 /-- Negating a ray twice produces the original ray. -/
-@[simp]
-protected theorem neg_negₓ [Nontrivial R] (x : Module.Ray R M) : - -x = x :=
-  Quotientₓ.ind (fun a => congr_argₓ Quotientₓ.mk <| RayVector.neg_neg _) x
-
-variable (R M)
-
-/-- Negating a ray is involutive. -/
-theorem neg_involutive [Nontrivial R] : Function.Involutive fun x : Module.Ray R M => -x := fun x =>
-  Module.Ray.neg_neg x
+instance [Nontrivial R] : HasInvolutiveNeg (Module.Ray R M) where
+  neg := Neg.neg
+  neg_neg := fun x => Quotientₓ.ind (fun a => congr_argₓ Quotientₓ.mk <| neg_negₓ _) x
 
 variable {R M}
-
-protected theorem eq_neg_iff_eq_neg [Nontrivial R] (x y : Module.Ray R M) : x = -y ↔ y = -x := by
-  rw [← Module.Ray.neg_neg x, (neg_involutive R M).Injective.eq_iff, Module.Ray.neg_neg x, eq_comm]
 
 /-- A ray does not equal its own negation. -/
 theorem ne_neg_self [Nontrivial R] [NoZeroSmulDivisors R M] (x : Module.Ray R M) : x ≠ -x := by
@@ -406,7 +398,7 @@ protected def Orientation [Nontrivial R] (e : Basis ι R M) : Orientation R M ι
   rayOfNeZero R _ e.det_ne_zero
 
 theorem orientation_map [Nontrivial R] (e : Basis ι R M) (f : M ≃ₗ[R] N) :
-    (e.map f).Orientation = Orientation.map ι f e.orientation := by
+    (e.map f).Orientation = Orientation.map ι f e.Orientation := by
   simp_rw [Basis.orientation, Orientation.map_apply, Basis.det_map']
 
 /-- The value of `orientation.map` when the index type has the cardinality of a basis, in terms
@@ -422,7 +414,7 @@ theorem map_orientation_eq_det_inv_smul [Nontrivial R] [IsDomain R] (e : Basis �
 /-- The orientation given by a basis derived using `units_smul`, in terms of the product of those
 units. -/
 theorem orientation_units_smul [Nontrivial R] (e : Basis ι R M) (w : ι → Units R) :
-    (e.units_smul w).Orientation = (∏ i, w i)⁻¹ • e.orientation := by
+    (e.units_smul w).Orientation = (∏ i, w i)⁻¹ • e.Orientation := by
   rw [Basis.orientation, Basis.orientation, smul_ray_of_ne_zero, ray_eq_iff, e.det.eq_smul_basis_det (e.units_smul w),
     det_units_smul, Units.smul_def, smul_smul]
   norm_cast
@@ -453,7 +445,7 @@ theorem units_inv_smul (u : (R)ˣ) (v : Module.Ray R M) : u⁻¹ • v = u • v
   have : ∀ {u : (R)ˣ}, 0 < (u : R) → SameRay R (u⁻¹ • v) (u • v) := fun u h =>
     ((SameRay.refl v).pos_smul_left <| units.inv_pos.mpr h).pos_smul_right h
   cases lt_or_lt_iff_ne.2 u.ne_zero
-  · rw [← Units.neg_neg u, Units.neg_inv, (-u).neg_smul, Units.neg_smul]
+  · rw [← neg_negₓ u, inv_neg', (-u).neg_smul, Units.neg_smul]
     refine' (this _).neg
     exact neg_pos_of_neg h
     
@@ -474,7 +466,7 @@ theorem same_ray_smul_right_iff {v : M} (hv : v ≠ 0) (r : R) : SameRay R v (r 
     by_contra hr
     rw [not_ltₓ, ← neg_le_neg_iff, neg_zero] at hr
     have hzzz := ne_of_gtₓ (add_pos_of_pos_of_nonneg hr₁ (mul_nonneg hr₂.le hr))
-    simpa [ne_of_gtₓ (add_pos_of_pos_of_nonneg hr₁ (mul_nonneg hr₂.le hr)), -mul_neg_eq_neg_mul_symm] using h
+    simpa [ne_of_gtₓ (add_pos_of_pos_of_nonneg hr₁ (mul_nonneg hr₂.le hr)), -mul_neg] using h
     
   · exact fun h => same_ray_pos_smul_right v h
     
@@ -524,12 +516,12 @@ variable [Fintype ι]
 
 /-- The orientations given by two bases are equal if and only if the determinant of one basis
 with respect to the other is positive. -/
-theorem orientation_eq_iff_det_pos (e₁ e₂ : Basis ι R M) : e₁.orientation = e₂.orientation ↔ 0 < e₁.det e₂ := by
+theorem orientation_eq_iff_det_pos (e₁ e₂ : Basis ι R M) : e₁.Orientation = e₂.Orientation ↔ 0 < e₁.det e₂ := by
   rw [Basis.orientation, Basis.orientation, ray_eq_iff, e₁.det.eq_smul_basis_det e₂, AlternatingMap.smul_apply,
     Basis.det_self, smul_eq_mul, mul_oneₓ, same_ray_smul_left_iff e₂.det_ne_zero (_ : R)]
 
 /-- Given a basis, any orientation equals the orientation given by that basis or its negation. -/
-theorem orientation_eq_or_eq_neg (e : Basis ι R M) (x : Orientation R M ι) : x = e.orientation ∨ x = -e.orientation :=
+theorem orientation_eq_or_eq_neg (e : Basis ι R M) (x : Orientation R M ι) : x = e.Orientation ∨ x = -e.Orientation :=
   by
   induction' x using Module.Ray.ind with x hx
   rw [Basis.orientation, ray_eq_iff, ← ray_neg, ray_eq_iff, x.eq_smul_basis_det e,
@@ -539,27 +531,27 @@ theorem orientation_eq_or_eq_neg (e : Basis ι R M) (x : Orientation R M ι) : x
 
 /-- Given a basis, an orientation equals the negation of that given by that basis if and only
 if it does not equal that given by that basis. -/
-theorem orientation_ne_iff_eq_neg (e : Basis ι R M) (x : Orientation R M ι) : x ≠ e.orientation ↔ x = -e.orientation :=
+theorem orientation_ne_iff_eq_neg (e : Basis ι R M) (x : Orientation R M ι) : x ≠ e.Orientation ↔ x = -e.Orientation :=
   ⟨fun h => (e.orientation_eq_or_eq_neg x).resolve_left h, fun h =>
-    h.symm ▸ (Module.Ray.ne_neg_self e.orientation).symm⟩
+    h.symm ▸ (Module.Ray.ne_neg_self e.Orientation).symm⟩
 
 /-- Composing a basis with a linear equiv gives the same orientation if and only if the
 determinant is positive. -/
 theorem orientation_comp_linear_equiv_eq_iff_det_pos (e : Basis ι R M) (f : M ≃ₗ[R] M) :
-    (e.map f).Orientation = e.orientation ↔ 0 < (f : M →ₗ[R] M).det := by
+    (e.map f).Orientation = e.Orientation ↔ 0 < (f : M →ₗ[R] M).det := by
   rw [orientation_map, e.map_orientation_eq_det_inv_smul, units_inv_smul, units_smul_eq_self_iff, LinearEquiv.coe_det]
 
 /-- Composing a basis with a linear equiv gives the negation of that orientation if and only if
 the determinant is negative. -/
 theorem orientation_comp_linear_equiv_eq_neg_iff_det_neg (e : Basis ι R M) (f : M ≃ₗ[R] M) :
-    (e.map f).Orientation = -e.orientation ↔ (f : M →ₗ[R] M).det < 0 := by
+    (e.map f).Orientation = -e.Orientation ↔ (f : M →ₗ[R] M).det < 0 := by
   rw [orientation_map, e.map_orientation_eq_det_inv_smul, units_inv_smul, units_smul_eq_neg_iff, LinearEquiv.coe_det]
 
 /-- Negating a single basis vector (represented using `units_smul`) negates the corresponding
 orientation. -/
 @[simp]
 theorem orientation_neg_single [Nontrivial R] (e : Basis ι R M) (i : ι) :
-    (e.units_smul (Function.update 1 i (-1))).Orientation = -e.orientation := by
+    (e.units_smul (Function.update 1 i (-1))).Orientation = -e.Orientation := by
   rw [orientation_units_smul, Finset.prod_update_of_mem (Finset.mem_univ _)]
   simp
 
@@ -572,7 +564,7 @@ def adjust_to_orientation [Nontrivial R] [Nonempty ι] (e : Basis ι R M) (x : O
 /-- `adjust_to_orientation` gives a basis with the required orientation. -/
 @[simp]
 theorem orientation_adjust_to_orientation [Nontrivial R] [Nonempty ι] (e : Basis ι R M) (x : Orientation R M ι) :
-    (e.adjust_to_orientation x).Orientation = x := by
+    (e.adjustToOrientation x).Orientation = x := by
   rw [adjust_to_orientation]
   split_ifs with h
   · exact h
@@ -584,7 +576,7 @@ theorem orientation_adjust_to_orientation [Nontrivial R] [Nonempty ι] (e : Basi
 /-- Every basis vector from `adjust_to_orientation` is either that from the original basis or its
 negation. -/
 theorem adjust_to_orientation_apply_eq_or_eq_neg [Nontrivial R] [Nonempty ι] (e : Basis ι R M) (x : Orientation R M ι)
-    (i : ι) : e.adjust_to_orientation x i = e i ∨ e.adjust_to_orientation x i = -e i := by
+    (i : ι) : e.adjustToOrientation x i = e i ∨ e.adjustToOrientation x i = -e i := by
   rw [adjust_to_orientation]
   split_ifs with h
   · simp
@@ -666,12 +658,12 @@ theorem map_eq_neg_iff_det_neg (x : Orientation R M ι) (f : M ≃ₗ[R] M) (h :
 /-- If the index type has cardinality equal to the finite dimension, a basis with the given
 orientation. -/
 def some_basis [Nonempty ι] (x : Orientation R M ι) (h : Fintype.card ι = finrank R M) : Basis ι R M :=
-  ((fin_basis R M).reindex (Fintype.equivFinOfCardEq h).symm).adjustToOrientation x
+  ((finBasis R M).reindex (Fintype.equivFinOfCardEq h).symm).adjustToOrientation x
 
 /-- `some_basis` gives a basis with the required orientation. -/
 @[simp]
 theorem some_basis_orientation [Nonempty ι] (x : Orientation R M ι) (h : Fintype.card ι = finrank R M) :
-    (x.some_basis h).Orientation = x :=
+    (x.someBasis h).Orientation = x :=
   Basis.orientation_adjust_to_orientation _ _
 
 end Orientation

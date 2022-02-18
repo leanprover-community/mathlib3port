@@ -150,8 +150,8 @@ section Union
 
 variable {α β : Type _} [SemilatticeSup α] [LinearOrderₓ β] {f g : α → β} {a b : β}
 
-theorem Union_Ioo_of_mono_of_is_glb_of_is_lub (hf : Antitone f) (hg : Monotone g) (ha : IsGlb (range f) a)
-    (hb : IsLub (range g) b) : (⋃ x, Ioo (f x) (g x)) = Ioo a b :=
+theorem Union_Ioo_of_mono_of_is_glb_of_is_lub (hf : Antitone f) (hg : Monotone g) (ha : IsGlb (Range f) a)
+    (hb : IsLub (Range g) b) : (⋃ x, Ioo (f x) (g x)) = Ioo a b :=
   calc
     (⋃ x, Ioo (f x) (g x)) = (⋃ x, Ioi (f x)) ∩ ⋃ x, Iio (g x) := Union_inter_of_monotone hf.Ioi hg.Iio
     _ = Ioi a ∩ Iio b := congr_arg2ₓ (· ∩ ·) ha.Union_Ioi_eq hb.Union_Iio_eq

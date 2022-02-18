@@ -30,7 +30,7 @@ theorem mem_def {a : α} {b : Option α} : a ∈ b ↔ b = some a :=
 theorem mem_iff {a : α} {b : Option α} : a ∈ b ↔ b = a :=
   Iff.rfl
 
-theorem is_none_iff_eq_none {o : Option α} : o.is_none = tt ↔ o = none :=
+theorem is_none_iff_eq_none {o : Option α} : o.isNone = tt ↔ o = none :=
   ⟨Option.eq_none_of_is_none, fun e => e.symm ▸ rfl⟩
 
 theorem some_inj {a b : α} : some a = some b ↔ a = b := by
@@ -50,14 +50,14 @@ def decidable_eq_none {o : Option α} : Decidable (o = none) :=
 
 instance decidable_forall_mem {p : α → Prop} [DecidablePred p] : ∀ o : Option α, Decidable (∀, ∀ a ∈ o, ∀, p a)
   | none =>
-    is_true
+    isTrue
       (by
         simp [false_implies_iff])
   | some a => if h : p a then is_true fun o e => some_inj.1 e ▸ h else is_false <| mt (fun H => H _ rfl) h
 
 instance decidable_exists_mem {p : α → Prop} [DecidablePred p] : ∀ o : Option α, Decidable (∃ a ∈ o, p a)
   | none =>
-    is_false fun ⟨a, ⟨h, _⟩⟩ => by
+    isFalse fun ⟨a, ⟨h, _⟩⟩ => by
       cases h
   | some a => if h : p a then is_true <| ⟨_, rfl, h⟩ else is_false fun ⟨_, ⟨rfl, hn⟩⟩ => h hn
 
@@ -77,7 +77,7 @@ def guardₓ (p : α → Prop) [DecidablePred p] (a : α) : Option α :=
 
 /-- `filter p o` returns `some a` if `o` is `some a` and `p a` holds, otherwise `none`. -/
 def filter (p : α → Prop) [DecidablePred p] (o : Option α) : Option α :=
-  o.bind (guardₓ p)
+  o.bind (guard p)
 
 /-- Cast of `option` to `list `. Returns `[a]` if the input is `some a`, and `[]` if it is
 `none`. -/
@@ -86,7 +86,7 @@ def to_list : Option α → List α
   | some a => [a]
 
 @[simp]
-theorem mem_to_list {a : α} {o : Option α} : a ∈ to_list o ↔ a ∈ o := by
+theorem mem_to_list {a : α} {o : Option α} : a ∈ toList o ↔ a ∈ o := by
   cases o <;> simp [to_list, eq_comm]
 
 /-- Two arguments failsafe function. Returns `f a b` if the inputs are `some a` and `some b`, and
@@ -97,23 +97,23 @@ def lift_or_get (f : α → α → α) : Option α → Option α → Option α
   | none, some b => some b
   | some a, some b => some (f a b)
 
-instance lift_or_get_comm (f : α → α → α) [h : IsCommutative α f] : IsCommutative (Option α) (lift_or_get f) :=
+instance lift_or_get_comm (f : α → α → α) [h : IsCommutative α f] : IsCommutative (Option α) (liftOrGet f) :=
   ⟨fun a b => by
     cases a <;> cases b <;> simp [lift_or_get, h.comm]⟩
 
-instance lift_or_get_assoc (f : α → α → α) [h : IsAssociative α f] : IsAssociative (Option α) (lift_or_get f) :=
+instance lift_or_get_assoc (f : α → α → α) [h : IsAssociative α f] : IsAssociative (Option α) (liftOrGet f) :=
   ⟨fun a b c => by
     cases a <;> cases b <;> cases c <;> simp [lift_or_get, h.assoc]⟩
 
-instance lift_or_get_idem (f : α → α → α) [h : IsIdempotent α f] : IsIdempotent (Option α) (lift_or_get f) :=
+instance lift_or_get_idem (f : α → α → α) [h : IsIdempotent α f] : IsIdempotent (Option α) (liftOrGet f) :=
   ⟨fun a => by
     cases a <;> simp [lift_or_get, h.idempotent]⟩
 
-instance lift_or_get_is_left_id (f : α → α → α) : IsLeftId (Option α) (lift_or_get f) none :=
+instance lift_or_get_is_left_id (f : α → α → α) : IsLeftId (Option α) (liftOrGet f) none :=
   ⟨fun a => by
     cases a <;> simp [lift_or_get]⟩
 
-instance lift_or_get_is_right_id (f : α → α → α) : IsRightId (Option α) (lift_or_get f) none :=
+instance lift_or_get_is_right_id (f : α → α → α) : IsRightId (Option α) (liftOrGet f) none :=
   ⟨fun a => by
     cases a <;> simp [lift_or_get]⟩
 
@@ -169,7 +169,7 @@ def melim {α β : Type _} {m : Type _ → Type _} [Monadₓ m] (x : m (Option �
 
 /-- A monadic analogue of `option.get_or_else`. -/
 def mget_or_else {α : Type _} {m : Type _ → Type _} [Monadₓ m] (x : m (Option α)) (y : m α) : m α :=
-  melim x y pure
+  melimₓ x y pure
 
 end Option
 

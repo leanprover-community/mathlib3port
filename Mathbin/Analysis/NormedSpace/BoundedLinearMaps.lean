@@ -71,7 +71,7 @@ theorem IsLinearMap.with_bound {f : E → F} (hf : IsLinearMap 𝕜 f) (M : ℝ)
 
 /-- A continuous linear map satisfies `is_bounded_linear_map` -/
 theorem ContinuousLinearMap.is_bounded_linear_map (f : E →L[𝕜] F) : IsBoundedLinearMap 𝕜 f :=
-  { f.to_linear_map.is_linear with bound := f.bound }
+  { f.toLinearMap.is_linear with bound := f.bound }
 
 namespace IsBoundedLinearMap
 
@@ -81,10 +81,10 @@ def to_linear_map (f : E → F) (h : IsBoundedLinearMap 𝕜 f) : E →ₗ[𝕜]
 
 /-- Construct a continuous linear map from is_bounded_linear_map -/
 def to_continuous_linear_map {f : E → F} (hf : IsBoundedLinearMap 𝕜 f) : E →L[𝕜] F :=
-  { to_linear_map f hf with
+  { toLinearMap f hf with
     cont :=
       let ⟨C, Cpos, hC⟩ := hf.bound
-      (to_linear_map f hf).continuous_of_bound C hC }
+      (toLinearMap f hf).continuous_of_bound C hC }
 
 theorem zero : IsBoundedLinearMap 𝕜 fun x : E => (0 : F) :=
   (0 : E →ₗ[𝕜] F).is_linear.with_bound 0 <| by
@@ -136,9 +136,9 @@ theorem sub (hf : IsBoundedLinearMap 𝕜 f) (hg : IsBoundedLinearMap 𝕜 g) : 
   simpa [sub_eq_add_neg] using add hf (neg hg)
 
 theorem comp {g : F → G} (hg : IsBoundedLinearMap 𝕜 g) (hf : IsBoundedLinearMap 𝕜 f) : IsBoundedLinearMap 𝕜 (g ∘ f) :=
-  (hg.to_continuous_linear_map.comp hf.to_continuous_linear_map).IsBoundedLinearMap
+  (hg.toContinuousLinearMap.comp hf.toContinuousLinearMap).IsBoundedLinearMap
 
-protected theorem tendsto (x : E) (hf : IsBoundedLinearMap 𝕜 f) : tendsto f (𝓝 x) (𝓝 (f x)) :=
+protected theorem tendsto (x : E) (hf : IsBoundedLinearMap 𝕜 f) : Tendsto f (𝓝 x) (𝓝 (f x)) :=
   let ⟨hf, M, hMp, hM⟩ := hf
   tendsto_iff_norm_tendsto_zero.2 <|
     squeeze_zero (fun e => norm_nonneg _)
@@ -148,30 +148,30 @@ protected theorem tendsto (x : E) (hf : IsBoundedLinearMap 𝕜 f) : tendsto f (
             rw [(hf.mk' _).map_sub e x] <;> rfl
           _ ≤ M * ∥e - x∥ := hM (e - x)
           )
-      (suffices tendsto (fun e : E => M * ∥e - x∥) (𝓝 x) (𝓝 (M * 0)) by
+      (suffices Tendsto (fun e : E => M * ∥e - x∥) (𝓝 x) (𝓝 (M * 0)) by
         simpa
       tendsto_const_nhds.mul (tendsto_norm_sub_self _))
 
 theorem Continuous (hf : IsBoundedLinearMap 𝕜 f) : Continuous f :=
-  continuous_iff_continuous_at.2 fun _ => hf.tendsto _
+  continuous_iff_continuous_at.2 fun _ => hf.Tendsto _
 
-theorem lim_zero_bounded_linear_map (hf : IsBoundedLinearMap 𝕜 f) : tendsto f (𝓝 0) (𝓝 0) :=
-  (hf.1.mk' _).map_zero ▸ continuous_iff_continuous_at.1 hf.continuous 0
+theorem lim_zero_bounded_linear_map (hf : IsBoundedLinearMap 𝕜 f) : Tendsto f (𝓝 0) (𝓝 0) :=
+  (hf.1.mk' _).map_zero ▸ continuous_iff_continuous_at.1 hf.Continuous 0
 
 section
 
 open Asymptotics Filter
 
-theorem is_O_id {f : E → F} (h : IsBoundedLinearMap 𝕜 f) (l : Filter E) : is_O f (fun x => x) l :=
+theorem is_O_id {f : E → F} (h : IsBoundedLinearMap 𝕜 f) (l : Filter E) : IsO f (fun x => x) l :=
   let ⟨M, hMp, hM⟩ := h.bound
-  is_O.of_bound _ (mem_of_superset univ_mem fun x _ => hM x)
+  IsO.of_bound _ (mem_of_superset univ_mem fun x _ => hM x)
 
 theorem is_O_comp {E : Type _} {g : F → G} (hg : IsBoundedLinearMap 𝕜 g) {f : E → F} (l : Filter E) :
-    is_O (fun x' => g (f x')) f l :=
+    IsO (fun x' => g (f x')) f l :=
   (hg.is_O_id ⊤).comp_tendsto le_top
 
 theorem is_O_sub {f : E → F} (h : IsBoundedLinearMap 𝕜 f) (l : Filter E) (x : E) :
-    is_O (fun x' => f (x' - x)) (fun x' => x' - x) l :=
+    IsO (fun x' => f (x' - x)) (fun x' => x' - x) l :=
   is_O_comp h l
 
 end
@@ -211,7 +211,7 @@ theorem is_bounded_linear_map_prod_multilinear {E : ι → Type _} [∀ i, Norme
 continuous multilinear map `f (g m₁, ..., g mₙ)` is a bounded linear operation. -/
 theorem is_bounded_linear_map_continuous_multilinear_map_comp_linear (g : G →L[𝕜] E) :
     IsBoundedLinearMap 𝕜 fun f : ContinuousMultilinearMap 𝕜 (fun i : ι => E) F =>
-      f.comp_continuous_linear_map fun _ => g :=
+      f.compContinuousLinearMap fun _ => g :=
   by
   refine'
     IsLinearMap.with_bound
@@ -273,11 +273,11 @@ protected theorem IsBoundedBilinearMap.is_O (h : IsBoundedBilinearMap 𝕜 f) :
 
 theorem IsBoundedBilinearMap.is_O_comp {α : Type _} (H : IsBoundedBilinearMap 𝕜 f) {g : α → E} {h : α → F}
     {l : Filter α} : Asymptotics.IsO (fun x => f (g x, h x)) (fun x => ∥g x∥ * ∥h x∥) l :=
-  H.is_O.comp_tendsto le_top
+  H.IsO.comp_tendsto le_top
 
 protected theorem IsBoundedBilinearMap.is_O' (h : IsBoundedBilinearMap 𝕜 f) :
     Asymptotics.IsO f (fun p : E × F => ∥p∥ * ∥p∥) ⊤ :=
-  h.is_O.trans (Asymptotics.is_O_fst_prod'.norm_norm.mul Asymptotics.is_O_snd_prod'.norm_norm)
+  h.IsO.trans (Asymptotics.is_O_fst_prod'.norm_norm.mul Asymptotics.is_O_snd_prod'.norm_norm)
 
 theorem IsBoundedBilinearMap.map_sub_left (h : IsBoundedBilinearMap 𝕜 f) {x y : E} {z : F} :
     f (x - y, z) = f (x, z) - f (y, z) :=
@@ -336,11 +336,11 @@ theorem IsBoundedBilinearMap.continuous (h : IsBoundedBilinearMap 𝕜 f) : Cont
 
 theorem IsBoundedBilinearMap.continuous_left (h : IsBoundedBilinearMap 𝕜 f) {e₂ : F} :
     Continuous fun e₁ => f (e₁, e₂) :=
-  h.continuous.comp (continuous_id.prod_mk continuous_const)
+  h.Continuous.comp (continuous_id.prod_mk continuous_const)
 
 theorem IsBoundedBilinearMap.continuous_right (h : IsBoundedBilinearMap 𝕜 f) {e₁ : E} :
     Continuous fun e₂ => f (e₁, e₂) :=
-  h.continuous.comp (continuous_const.prod_mk continuous_id)
+  h.Continuous.comp (continuous_const.prod_mk continuous_id)
 
 theorem IsBoundedBilinearMap.is_bounded_linear_map_left (h : IsBoundedBilinearMap 𝕜 f) (y : F) :
     IsBoundedLinearMap 𝕜 fun x => f (x, y) :=
@@ -362,7 +362,7 @@ theorem IsBoundedBilinearMap.is_bounded_linear_map_left (h : IsBoundedBilinearMa
 
 theorem IsBoundedBilinearMap.is_bounded_linear_map_right (h : IsBoundedBilinearMap 𝕜 f) (x : E) :
     IsBoundedLinearMap 𝕜 fun y => f (x, y) :=
-  { map_add := fun y y' => h.add_right _ _ _, map_smul := fun c y => h.smul_right _ _ _,
+  { map_add := fun y y' => h.add_right _ _ _, map_smul := fun c y => h.smulRight _ _ _,
     bound := by
       rcases h.bound with ⟨C, C_pos, hC⟩
       refine'
@@ -498,7 +498,7 @@ def IsBoundedBilinearMap.linearDeriv (h : IsBoundedBilinearMap 𝕜 f) (p : E ×
 from `E × F` to `G`. The statement that this is indeed the derivative of `f` is
 `is_bounded_bilinear_map.has_fderiv_at` in `analysis.calculus.fderiv`. -/
 def IsBoundedBilinearMap.deriv (h : IsBoundedBilinearMap 𝕜 f) (p : E × F) : E × F →L[𝕜] G :=
-  (h.linear_deriv p).mkContinuousOfExistsBound <| by
+  (h.linearDeriv p).mkContinuousOfExistsBound <| by
     rcases h.bound with ⟨C, Cpos, hC⟩
     refine' ⟨C * ∥p.1∥ + C * ∥p.2∥, fun q => _⟩
     calc ∥f (p.1, q.2) + f (q.1, p.2)∥ ≤ C * ∥p.1∥ * ∥q.2∥ + C * ∥q.1∥ * ∥p.2∥ :=
@@ -556,7 +556,7 @@ spaces is an open subset of the space of linear maps between them.
 -/
 
 
-protected theorem IsOpen [CompleteSpace E] : IsOpen (range (coe : (E ≃L[𝕜] F) → E →L[𝕜] F)) := by
+protected theorem IsOpen [CompleteSpace E] : IsOpen (Range (coe : (E ≃L[𝕜] F) → E →L[𝕜] F)) := by
   rw [is_open_iff_mem_nhds, forall_range_iff]
   refine' fun e => IsOpen.mem_nhds _ (mem_range_self _)
   let O : (E →L[𝕜] F) → E →L[𝕜] E := fun f => (e.symm : F →L[𝕜] E).comp f
@@ -573,7 +573,7 @@ protected theorem IsOpen [CompleteSpace E] : IsOpen (range (coe : (E ≃L[𝕜] 
     simp [coe_fn_coe_base' w, hw]
     
 
-protected theorem nhds [CompleteSpace E] (e : E ≃L[𝕜] F) : range (coe : (E ≃L[𝕜] F) → E →L[𝕜] F) ∈ 𝓝 (e : E →L[𝕜] F) :=
+protected theorem nhds [CompleteSpace E] (e : E ≃L[𝕜] F) : Range (coe : (E ≃L[𝕜] F) → E →L[𝕜] F) ∈ 𝓝 (e : E →L[𝕜] F) :=
   IsOpen.mem_nhds ContinuousLinearEquiv.is_open
     (by
       simp )

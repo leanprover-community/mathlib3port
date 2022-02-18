@@ -11,27 +11,26 @@ open tactic.interactive (casesm constructor_matching)
 -/
 unsafe def distrib_not : tactic Unit := do
   let hs ← local_context
-  hs.for_each fun h =>
+  hs fun h =>
       all_goals' <|
         iterate_at_most' 3 <| do
-          let h ← get_local h.local_pp_name
+          let h ← get_local h
           let e ← infer_type h
           match e with
-            | quote.1 ¬_ = _ => replace h.local_pp_name (pquote.1 (mt Iff.to_eq (%%ₓh)))
-            | quote.1 (_ ≠ _) => replace h.local_pp_name (pquote.1 (mt Iff.to_eq (%%ₓh)))
-            | quote.1 (_ = _) => replace h.local_pp_name (pquote.1 (Eq.to_iff (%%ₓh)))
+            | quote.1 ¬_ = _ => replace h (pquote.1 (mt Iff.to_eq (%%ₓh)))
+            | quote.1 (_ ≠ _) => replace h (pquote.1 (mt Iff.to_eq (%%ₓh)))
+            | quote.1 (_ = _) => replace h (pquote.1 (Eq.to_iff (%%ₓh)))
             | quote.1 ¬(_ ∧ _) =>
-              replace h.local_pp_name (pquote.1 (Decidable.not_and_distrib'.mp (%%ₓh))) <|>
-                replace h.local_pp_name (pquote.1 (Decidable.not_and_distrib.mp (%%ₓh)))
-            | quote.1 ¬(_ ∨ _) => replace h.local_pp_name (pquote.1 (not_or_distrib.mp (%%ₓh)))
-            | quote.1 ¬¬_ => replace h.local_pp_name (pquote.1 (Decidable.of_not_not (%%ₓh)))
-            | quote.1 ¬(_ → (_ : Prop)) => replace h.local_pp_name (pquote.1 (Decidable.not_imp.mp (%%ₓh)))
-            | quote.1 ¬(_ ↔ _) => replace h.local_pp_name (pquote.1 (Decidable.not_iff.mp (%%ₓh)))
+              replace h (pquote.1 (Decidable.not_and_distrib'.mp (%%ₓh))) <|>
+                replace h (pquote.1 (Decidable.not_and_distrib.mp (%%ₓh)))
+            | quote.1 ¬(_ ∨ _) => replace h (pquote.1 (not_or_distrib.mp (%%ₓh)))
+            | quote.1 ¬¬_ => replace h (pquote.1 (Decidable.of_not_not (%%ₓh)))
+            | quote.1 ¬(_ → (_ : Prop)) => replace h (pquote.1 (Decidable.not_imp.mp (%%ₓh)))
+            | quote.1 ¬(_ ↔ _) => replace h (pquote.1 (Decidable.not_iff.mp (%%ₓh)))
             | quote.1 (_ ↔ _) =>
-              replace h.local_pp_name (pquote.1 (Decidable.iff_iff_and_or_not_and_not.mp (%%ₓh))) <|>
-                replace h.local_pp_name (pquote.1 (Decidable.iff_iff_and_or_not_and_not.mp (%%ₓh).symm)) <|>
-                  () <$ tactic.cases h
-            | quote.1 (_ → _) => replace h.local_pp_name (pquote.1 (Decidable.not_or_of_imp (%%ₓh)))
+              replace h (pquote.1 (Decidable.iff_iff_and_or_not_and_not.mp (%%ₓh))) <|>
+                replace h (pquote.1 (Decidable.iff_iff_and_or_not_and_not.mp (%%ₓh).symm)) <|> () <$ tactic.cases h
+            | quote.1 (_ → _) => replace h (pquote.1 (Decidable.not_or_of_imp (%%ₓh)))
             | _ => failed
 
 /-!
@@ -52,7 +51,7 @@ unsafe def modify_ref {α : Type} (r : ref α) (f : α → α) :=
 unsafe def add_refl (r : tauto_state) (e : expr) : tactic (expr × expr) := do
   let m ← read_ref r
   let p ← mk_mapp `rfl [none, e]
-  write_ref r <| m.insert e none
+  write_ref r <| m e none
   return (e, p)
 
 /-- If there exists a symmetry lemma that can be applied to the hypothesis `e`,
@@ -68,7 +67,7 @@ unsafe def add_symm_proof (r : tauto_state) (e : expr) : tactic (expr × expr) :
         let (_, p) ← solve_aux iff_t (andthen (andthen (applyc `iff.to_eq) (() <$ split)) (applyc symm))
         let e' ← instantiate_mvars e'
         let m ← read_ref r
-        write_ref r <| (m.insert e (e', p)).insert e' none
+        write_ref r <| (m e (e', p)).insert e' none
         return (e', p)) <|>
       add_refl r e
 
@@ -142,7 +141,7 @@ unsafe def symm_eq (r : tauto_state) : expr → expr → tactic expr
                 add_edge r a' b' p'
                 return p'
             | (quote.1 ((%%ₓa₀) → %%ₓa₁), quote.1 ((%%ₓb₀) → %%ₓb₁)) =>
-              if ¬a₁.has_var ∧ ¬b₁.has_var then do
+              if ¬a₁ ∧ ¬b₁ then do
                 let p₀ ← symm_eq a₀ b₀
                 let p₁ ← symm_eq a₁ b₁
                 let p' ← mk_app `congr_arg [quote.1 Implies, p₀, p₁]
@@ -150,7 +149,7 @@ unsafe def symm_eq (r : tauto_state) : expr → expr → tactic expr
                 return p'
               else unify a' b' >> add_refl r a' *> mk_mapp `rfl [none, a]
             | (_, _) => do
-              guardₓ <| a'.get_app_fn.is_constant ∧ a'.get_app_fn.const_name = b'.get_app_fn.const_name
+              guardₓ <| a' ∧ a' = b'
               let (a'', pa') ← add_symm_proof r a'
               guardₓ <| expr.alpha_eqv a'' b'
               pure pa'
@@ -202,7 +201,7 @@ unsafe def assumption_symm :=
   `closer` is run on any remaining subgoals left by `tauto_core; basic_tauto_tacs`.
 -/
 unsafe structure tauto_cfg where
-  classical : Bool := ff
+  classical : Bool := false
   closer : tactic Unit := pure ()
 
 unsafe def tautology (cfg : tauto_cfg := {  }) : tactic Unit :=
@@ -232,8 +231,8 @@ unsafe def tautology (cfg : tauto_cfg := {  }) : tactic Unit :=
             let gs' ← get_goals
             guardₓ (gs ≠ gs'))
     do
-    when cfg.classical classical
-    andthen (andthen (using_new_ref (expr_map.mk _) tauto_core) (repeat (first basic_tauto_tacs))) cfg.closer
+    when cfg classical
+    andthen (andthen (using_new_ref (expr_map.mk _) tauto_core) (repeat (first basic_tauto_tacs))) cfg
     done
 
 namespace Interactive
@@ -252,7 +251,7 @@ The variant `tautology!` uses the law of excluded middle.
 that it is unable to solve before failing.
 -/
 unsafe def tautology (c : parse <| (tk "!")?) (cfg : tactic.tauto_cfg := {  }) :=
-  tactic.tautology <| { cfg with classical := c.is_some }
+  tactic.tautology <| { cfg with classical := c.isSome }
 
 /-- `tauto` breaks down assumptions of the form `_ ∧ _`, `_ ∨ _`, `_ ↔ _` and `∃ _, _`
 and splits a goal of the form `_ ∧ _`, `_ ↔ _` or `∃ _, _` until it can be discharged

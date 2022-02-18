@@ -61,7 +61,7 @@ the generated instance for `β` has names `as`, `bs`, ... This can be used to
 create instances for 'containers' such as lists or sets.
 -/
 def make_listlike_instance (α : Sort u) [HasVariableNames α] {β : Sort v} : HasVariableNames β :=
-  ⟨(names α).map fun n => n.append_suffix "s", by
+  ⟨(names α).map fun n => n.appendSuffix "s", by
     simp [names_nonempty]⟩
 
 /-- `@make_inheriting_instance α _ β` creates an instance `has_variable_names β`
@@ -77,7 +77,7 @@ end HasVariableNames
 open HasVariableNames
 
 instance {n α} [HasVariableNames α] : HasVariableNames (DArray n fun _ => α) :=
-  make_listlike_instance α
+  makeListlikeInstance α
 
 instance : HasVariableNames Bool :=
   ⟨[`b]⟩
@@ -92,7 +92,7 @@ instance : HasVariableNames ℤ :=
   ⟨[`n, `m, `o]⟩
 
 instance {α} [HasVariableNames α] : HasVariableNames (List α) :=
-  make_listlike_instance α
+  makeListlikeInstance α
 
 instance : HasVariableNames ℕ :=
   ⟨[`n, `m, `o]⟩
@@ -101,7 +101,7 @@ instance Prop.hasVariableNames : HasVariableNames Prop :=
   ⟨[`P, `Q, `R]⟩
 
 instance {α} [HasVariableNames α] : HasVariableNames (Thunkₓ α) :=
-  make_inheriting_instance α
+  makeInheritingInstance α
 
 instance {α β} : HasVariableNames (Prod α β) :=
   ⟨[`p]⟩
@@ -116,22 +116,22 @@ instance {α} {β : α → Sort _} : HasVariableNames (Psigma β) :=
   ⟨[`p]⟩
 
 instance {α} [HasVariableNames α] {p : α → Prop} : HasVariableNames (Subtype p) :=
-  make_inheriting_instance α
+  makeInheritingInstance α
 
 instance {α} [HasVariableNames α] : HasVariableNames (Option α) :=
-  make_inheriting_instance α
+  makeInheritingInstance α
 
 instance {α} : HasVariableNames (BinTree α) :=
   ⟨[`t]⟩
 
 instance {α} [HasVariableNames α] {lt : α → α → Prop} : HasVariableNames (Rbtree α lt) :=
-  make_listlike_instance α
+  makeListlikeInstance α
 
 unsafe instance {α} [HasVariableNames α] : HasVariableNames (native.rb_set α) :=
-  make_listlike_instance α
+  makeListlikeInstance α
 
 instance {α} [HasVariableNames α] : HasVariableNames (Set α) :=
-  make_listlike_instance α
+  makeListlikeInstance α
 
 instance : HasVariableNames Stringₓ :=
   ⟨[`s]⟩

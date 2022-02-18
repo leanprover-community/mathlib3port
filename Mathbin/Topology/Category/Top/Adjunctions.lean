@@ -22,15 +22,15 @@ namespace Top
 `Top ⥤ Type`. -/
 @[simps Unit counit]
 def adj₁ : discrete ⊣ forget Top.{u} :=
-  adjunction.mk_of_unit_counit { Unit := { app := fun X => id }, counit := { app := fun X => ⟨id, continuous_bot⟩ } }
+  Adjunction.mkOfUnitCounit { Unit := { app := fun X => id }, counit := { app := fun X => ⟨id, continuous_bot⟩ } }
 
 /-- Equipping a type with the trivial topology is right adjoint to the forgetful functor
 `Top ⥤ Type`. -/
 @[simps Unit counit]
 def adj₂ : forget Top.{u} ⊣ trivialₓ :=
-  adjunction.mk_of_unit_counit { Unit := { app := fun X => ⟨id, continuous_top⟩ }, counit := { app := fun X => id } }
+  Adjunction.mkOfUnitCounit { Unit := { app := fun X => ⟨id, continuous_top⟩ }, counit := { app := fun X => id } }
 
-instance : is_right_adjoint (forget Top.{u}) :=
+instance : IsRightAdjoint (forget Top.{u}) :=
   ⟨_, adj₁⟩
 
 end Top

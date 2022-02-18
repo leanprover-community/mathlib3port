@@ -95,9 +95,9 @@ theorem norm_sq_denom_ne_zero (g : SL(2,ℝ)) (z : ℍ) : Complex.normSq (denom 
 
 /-- Fractional linear transformation -/
 def smul_aux' (g : SL(2,ℝ)) (z : ℍ) : ℂ :=
-  Num g z / denom g z
+  num g z / denom g z
 
-theorem smul_aux'_im (g : SL(2,ℝ)) (z : ℍ) : (smul_aux' g z).im = z.im / (denom g z).normSq := by
+theorem smul_aux'_im (g : SL(2,ℝ)) (z : ℍ) : (smulAux' g z).im = z.im / (denom g z).normSq := by
   rw [smul_aux', Complex.div_im]
   set NsqBot := (denom g z).normSq
   have : NsqBot ≠ 0 := by
@@ -112,17 +112,17 @@ theorem smul_aux'_im (g : SL(2,ℝ)) (z : ℍ) : (smul_aux' g z).im = z.im / (de
 
 /-- Fractional linear transformation -/
 def smul_aux (g : SL(2,ℝ)) (z : ℍ) : ℍ :=
-  ⟨smul_aux' g z, by
+  ⟨smulAux' g z, by
     rw [smul_aux'_im]
     exact div_pos z.im_pos (complex.norm_sq_pos.mpr (denom_ne_zero g z))⟩
 
-theorem denom_cocycle (x y : SL(2,ℝ)) (z : ℍ) : denom (x * y) z = denom x (smul_aux y z) * denom y z := by
+theorem denom_cocycle (x y : SL(2,ℝ)) (z : ℍ) : denom (x * y) z = denom x (smulAux y z) * denom y z := by
   change _ = (_ * (_ / _) + _) * _
   field_simp [denom_ne_zero, -denom, -Num]
   simp [Matrix.mul, dot_product, Finₓ.sum_univ_succ]
   ring
 
-theorem mul_smul' (x y : SL(2,ℝ)) (z : ℍ) : smul_aux (x * y) z = smul_aux x (smul_aux y z) := by
+theorem mul_smul' (x y : SL(2,ℝ)) (z : ℍ) : smulAux (x * y) z = smulAux x (smulAux y z) := by
   ext1
   change _ / _ = (_ * (_ / _) + _) * _
   rw [denom_cocycle]
@@ -132,7 +132,7 @@ theorem mul_smul' (x y : SL(2,ℝ)) (z : ℍ) : smul_aux (x * y) z = smul_aux x 
 
 /-- The action of `SL(2, ℝ)` on the upper half-plane by fractional linear transformations. -/
 instance : MulAction SL(2,ℝ) ℍ where
-  smul := smul_aux
+  smul := smulAux
   one_smul := fun z => by
     ext1
     change _ / _ = _
@@ -140,14 +140,14 @@ instance : MulAction SL(2,ℝ) ℍ where
   mul_smul := mul_smul'
 
 @[simp]
-theorem coe_smul (g : SL(2,ℝ)) (z : ℍ) : ↑(g • z) = Num g z / denom g z :=
+theorem coe_smul (g : SL(2,ℝ)) (z : ℍ) : ↑(g • z) = num g z / denom g z :=
   rfl
 
 @[simp]
-theorem re_smul (g : SL(2,ℝ)) (z : ℍ) : (g • z).re = (Num g z / denom g z).re :=
+theorem re_smul (g : SL(2,ℝ)) (z : ℍ) : (g • z).re = (num g z / denom g z).re :=
   rfl
 
-theorem im_smul (g : SL(2,ℝ)) (z : ℍ) : (g • z).im = (Num g z / denom g z).im :=
+theorem im_smul (g : SL(2,ℝ)) (z : ℍ) : (g • z).im = (num g z / denom g z).im :=
   rfl
 
 theorem im_smul_eq_div_norm_sq (g : SL(2,ℝ)) (z : ℍ) : (g • z).im = z.im / Complex.normSq (denom g z) :=

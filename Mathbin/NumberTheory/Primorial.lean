@@ -90,7 +90,7 @@ theorem prod_primes_dvd {s : Finset ℕ} :
     
 
 theorem primorial_le_4_pow : ∀ n : ℕ, n# ≤ 4 ^ n
-  | 0 => le_reflₓ _
+  | 0 => le_rfl
   | 1 => le_of_inf_eq rfl
   | n + 2 =>
     match Nat.mod_two_eq_zero_or_oneₓ (n + 1) with

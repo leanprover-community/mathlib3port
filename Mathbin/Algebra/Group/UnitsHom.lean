@@ -47,8 +47,16 @@ def coe_hom : (M)ˣ →* M :=
 variable {M}
 
 @[simp, to_additive]
-theorem coe_hom_apply (x : (M)ˣ) : coe_hom M x = ↑x :=
+theorem coe_hom_apply (x : (M)ˣ) : coeHom M x = ↑x :=
   rfl
+
+@[simp, norm_cast, to_additive]
+theorem coe_pow (u : (M)ˣ) (n : ℕ) : ((u ^ n : (M)ˣ) : M) = u ^ n :=
+  (Units.coeHom M).map_pow u n
+
+@[simp, norm_cast, to_additive]
+theorem coe_zpow {G} [Groupₓ G] (u : (G)ˣ) (n : ℤ) : ((u ^ n : (G)ˣ) : G) = u ^ n :=
+  (Units.coeHom G).map_zpow u n
 
 /-- If a map `g : M → Nˣ` agrees with a homomorphism `f : M →* N`, then
 this map is a monoid homomorphism too. -/
@@ -62,16 +70,16 @@ def lift_right (f : M →* N) (g : M → (N)ˣ) (h : ∀ x, ↑(g x) = f x) : M 
       simp only [h, coe_mul, f.map_mul]
 
 @[simp, to_additive]
-theorem coe_lift_right {f : M →* N} {g : M → (N)ˣ} (h : ∀ x, ↑(g x) = f x) x : (lift_right f g h x : N) = f x :=
+theorem coe_lift_right {f : M →* N} {g : M → (N)ˣ} (h : ∀ x, ↑(g x) = f x) x : (liftRight f g h x : N) = f x :=
   h x
 
 @[simp, to_additive]
-theorem mul_lift_right_inv {f : M →* N} {g : M → (N)ˣ} (h : ∀ x, ↑(g x) = f x) x : f x * ↑(lift_right f g h x)⁻¹ = 1 :=
+theorem mul_lift_right_inv {f : M →* N} {g : M → (N)ˣ} (h : ∀ x, ↑(g x) = f x) x : f x * ↑(liftRight f g h x)⁻¹ = 1 :=
   by
   rw [Units.mul_inv_eq_iff_eq_mul, one_mulₓ, coe_lift_right]
 
 @[simp, to_additive]
-theorem lift_right_inv_mul {f : M →* N} {g : M → (N)ˣ} (h : ∀ x, ↑(g x) = f x) x : ↑(lift_right f g h x)⁻¹ * f x = 1 :=
+theorem lift_right_inv_mul {f : M →* N} {g : M → (N)ˣ} (h : ∀ x, ↑(g x) = f x) x : ↑(liftRight f g h x)⁻¹ * f x = 1 :=
   by
   rw [Units.inv_mul_eq_iff_eq_mul, mul_oneₓ, coe_lift_right]
 
@@ -93,7 +101,7 @@ def to_hom_units {G M : Type _} [Groupₓ G] [Monoidₓ M] (f : G →* M) : G �
   map_mul' := fun _ _ => Units.ext (f.map_mul _ _)
 
 @[simp]
-theorem coe_to_hom_units {G M : Type _} [Groupₓ G] [Monoidₓ M] (f : G →* M) (g : G) : (f.to_hom_units g : M) = f g :=
+theorem coe_to_hom_units {G M : Type _} [Groupₓ G] [Monoidₓ M] (f : G →* M) (g : G) : (f.toHomUnits g : M) = f g :=
   rfl
 
 end MonoidHom

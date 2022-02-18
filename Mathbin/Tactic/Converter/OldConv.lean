@@ -28,7 +28,7 @@ private unsafe def join_proofs (r : Name) (o₁ o₂ : Option expr) : tactic (Op
   | _, none => return o₁
   | some p₁, some p₂ => do
     let env ← get_env
-    match env.trans_for r with
+    match env r with
       | some trans => do
         let pr ← mk_app trans [p₁, p₂]
         return <| some pr
@@ -62,7 +62,7 @@ unsafe instance : Monadₓ old_conv where
 unsafe instance : Alternativeₓ old_conv :=
   { old_conv.monad with failure := @old_conv.failed, orelse := @old_conv.orelse }
 
-unsafe def whnf (md : transparency := reducible) : old_conv Unit := fun r e => do
+unsafe def whnf (md : Transparency := reducible) : old_conv Unit := fun r e => do
   let n ← tactic.whnf e md
   return ⟨(), n, none⟩
 
@@ -155,19 +155,20 @@ unsafe def funext (c : old_conv Unit) : old_conv Unit := fun r lhs => do
         let x ← intro1
         let c_result ← c r (b.instantiate_var x)
         let rhs := expr.lam n bi d (c_result.rhs.abstract x)
-        match c_result.proof with
+        match c_result with
           | some pr => do
-            let aux_pr := expr.lam n bi d (pr.abstract x)
+            let aux_pr := expr.lam n bi d (pr x)
             let new_pr ← mk_app `funext [lhs, rhs, aux_pr]
             return ⟨(), rhs, some new_pr⟩
           | none => return ⟨(), rhs, none⟩
   return result
 
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `f_type
 unsafe def congr_core (c_f c_a : old_conv Unit) : old_conv Unit := fun r lhs => do
   guardₓ (r = `eq)
   let expr.app f a ← return lhs
   let f_type ← infer_type f >>= tactic.whnf
-  guardₓ f_type.is_arrow
+  guardₓ (f_type f_type.is_arrow)
   let ⟨(), new_f, of⟩ ← mtry c_f r f
   let ⟨(), new_a, oa⟩ ← mtry c_a r a
   let rhs ← return <| new_f new_a
@@ -214,7 +215,7 @@ unsafe def find (c : old_conv Unit) : old_conv Unit := fun r e => do
           (do
               let ⟨u, new_e, pr⟩ ← c r e
               return ((), new_e, pr, ff)) <|>
-            return ((), e, none, tt))
+            return ((), e, none, true))
         (fun a s r p e => failed) r e
   return ⟨(), new_e, some pr⟩
 
@@ -223,7 +224,7 @@ unsafe def find_pattern (pat : pattern) (c : old_conv Unit) : old_conv Unit := f
   let (a, new_e, pr) ←
     ext_simplify_core () {  } s (fun u => return u)
         (fun a s r p e => do
-          let matched ← tactic.match_pattern pat e >> return tt <|> return ff
+          let matched ← tactic.match_pattern pat e >> return true <|> return false
           if matched then do
               let ⟨u, new_e, pr⟩ ← c r e
               return ((), new_e, pr, ff)
@@ -241,9 +242,7 @@ unsafe def conversion (c : old_conv Unit) : tactic Unit := do
   unify new_lhs rhs <|> do
       let new_lhs_fmt ← pp new_lhs
       let rhs_fmt ← pp rhs
-      fail
-          (to_fmt "conversion failed, expected" ++ rhs_fmt.indent 4 ++ format.line ++ "provided" ++
-            new_lhs_fmt.indent 4)
+      fail (to_fmt "conversion failed, expected" ++ rhs_fmt 4 ++ format.line ++ "provided" ++ new_lhs_fmt 4)
   exact pr
 
 end OldConv

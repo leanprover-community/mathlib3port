@@ -44,6 +44,15 @@ def rotation : circle →* ℂ ≃ₗᵢ[ℝ] ℂ where
 theorem rotation_apply (a : circle) (z : ℂ) : rotation a z = a * z :=
   rfl
 
+@[simp]
+theorem rotation_symm (a : circle) : (rotation a).symm = rotation a⁻¹ :=
+  LinearIsometryEquiv.ext fun x => rfl
+
+@[simp]
+theorem rotation_trans (a b : circle) : (rotation a).trans (rotation b) = rotation (b * a) := by
+  ext1
+  simp
+
 theorem rotation_ne_conj_lie (a : circle) : rotation a ≠ conj_lie := by
   intro h
   have h1 : rotation a 1 = conj 1 := LinearIsometryEquiv.congr_fun h 1
@@ -122,7 +131,7 @@ theorem linear_isometry_complex_aux {f : ℂ ≃ₗᵢ[ℝ] ℂ} (h : f 1 = 1) :
       fin_cases i <;> simp [h, h']
       
 
-theorem linear_isometry_complex (f : ℂ ≃ₗᵢ[ℝ] ℂ) : ∃ a : circle, f = rotation a ∨ f = conj_lie.trans (rotation a) := by
+theorem linear_isometry_complex (f : ℂ ≃ₗᵢ[ℝ] ℂ) : ∃ a : circle, f = rotation a ∨ f = conjLie.trans (rotation a) := by
   let a : circle :=
     ⟨f 1, by
       simpa using f.norm_map 1⟩
@@ -140,7 +149,7 @@ theorem linear_isometry_complex (f : ℂ ≃ₗᵢ[ℝ] ℂ) : ∃ a : circle, f
 /-- The matrix representation of `rotation a` is equal to the conformal matrix
 `![![re a, -im a], ![im a, re a]]`. -/
 theorem to_matrix_rotation (a : circle) :
-    LinearMap.toMatrix basis_one_I basis_one_I (rotation a).toLinearEquiv =
+    LinearMap.toMatrix basisOneI basisOneI (rotation a).toLinearEquiv =
       Matrix.planeConformalMatrix (re a) (im a)
         (by
           simp [pow_two, ← norm_sq_apply]) :=

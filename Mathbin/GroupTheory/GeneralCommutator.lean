@@ -26,7 +26,7 @@ theorem general_commutator_def (H₁ H₂ : Subgroup G) :
     ⁅H₁,H₂⁆ = closure { x | ∃ p ∈ H₁, ∃ q ∈ H₂, p * q * p⁻¹ * q⁻¹ = x } :=
   rfl
 
-instance general_commutator_normal (H₁ H₂ : Subgroup G) [h₁ : H₁.normal] [h₂ : H₂.normal] : normal ⁅H₁,H₂⁆ := by
+instance general_commutator_normal (H₁ H₂ : Subgroup G) [h₁ : H₁.Normal] [h₂ : H₂.Normal] : Normal ⁅H₁,H₂⁆ := by
   let base : Set G := { x | ∃ p ∈ H₁, ∃ q ∈ H₂, p * q * p⁻¹ * q⁻¹ = x }
   suffices h_base : base = Groupₓ.ConjugatesOfSet base
   · dsimp only [general_commutator_def, ← base]
@@ -46,8 +46,8 @@ theorem general_commutator_mono {H₁ H₂ K₁ K₂ : Subgroup G} (h₁ : H₁ 
   rintro x ⟨p, hp, q, hq, rfl⟩
   exact ⟨p, h₁ hp, q, h₂ hq, rfl⟩
 
-theorem general_commutator_def' (H₁ H₂ : Subgroup G) [H₁.normal] [H₂.normal] :
-    ⁅H₁,H₂⁆ = normal_closure { x | ∃ p ∈ H₁, ∃ q ∈ H₂, p * q * p⁻¹ * q⁻¹ = x } := by
+theorem general_commutator_def' (H₁ H₂ : Subgroup G) [H₁.Normal] [H₂.Normal] :
+    ⁅H₁,H₂⁆ = normalClosure { x | ∃ p ∈ H₁, ∃ q ∈ H₂, p * q * p⁻¹ * q⁻¹ = x } := by
   rw [← normal_closure_eq_self ⁅H₁,H₂⁆, general_commutator_def, normal_closure_closure_eq_normal_closure]
 
 theorem general_commutator_le (H₁ H₂ : Subgroup G) (K : Subgroup G) :
@@ -78,12 +78,12 @@ theorem general_commutator_comm (H₁ H₂ : Subgroup G) : ⁅H₁,H₂⁆ = ⁅
   convert inv_mem ⁅H₂,H₁⁆ h
   group
 
-theorem general_commutator_le_right (H₁ H₂ : Subgroup G) [h : normal H₂] : ⁅H₁,H₂⁆ ≤ H₂ := by
+theorem general_commutator_le_right (H₁ H₂ : Subgroup G) [h : Normal H₂] : ⁅H₁,H₂⁆ ≤ H₂ := by
   rw [general_commutator_le]
   intro p hp q hq
   exact mul_mem H₂ (h.conj_mem q hq p) (inv_mem H₂ hq)
 
-theorem general_commutator_le_left (H₁ H₂ : Subgroup G) [h : normal H₁] : ⁅H₁,H₂⁆ ≤ H₁ := by
+theorem general_commutator_le_left (H₁ H₂ : Subgroup G) [h : Normal H₁] : ⁅H₁,H₂⁆ ≤ H₁ := by
   rw [general_commutator_comm]
   exact general_commutator_le_right H₂ H₁
 
@@ -97,6 +97,67 @@ theorem bot_general_commutator (H : Subgroup G) : ⁅(⊥ : Subgroup G),H⁆ = (
   rw [eq_bot_iff]
   exact general_commutator_le_left ⊥ H
 
-theorem general_commutator_le_inf (H₁ H₂ : Subgroup G) [normal H₁] [normal H₂] : ⁅H₁,H₂⁆ ≤ H₁⊓H₂ := by
+theorem general_commutator_le_inf (H₁ H₂ : Subgroup G) [Normal H₁] [Normal H₂] : ⁅H₁,H₂⁆ ≤ H₁⊓H₂ := by
   simp only [general_commutator_le_left, general_commutator_le_right, le_inf_iff, and_selfₓ]
+
+theorem map_general_commutator {G₂ : Type _} [Groupₓ G₂] (f : G →* G₂) (H₁ H₂ : Subgroup G) :
+    map f ⁅H₁,H₂⁆ = ⁅map f H₁,map f H₂⁆ := by
+  apply le_antisymmₓ
+  · rw [gc_map_comap, general_commutator_le]
+    intro p hp q hq
+    simp only [mem_comap, map_inv, map_mul]
+    exact general_commutator_containment _ _ (mem_map_of_mem _ hp) (mem_map_of_mem _ hq)
+    
+  · rw [general_commutator_le]
+    rintro _ ⟨p, hp, rfl⟩ _ ⟨q, hq, rfl⟩
+    simp only [← map_inv, ← map_mul]
+    exact mem_map_of_mem _ (general_commutator_containment _ _ hp hq)
+    
+
+theorem general_commutator_prod_prod {G₂ : Type _} [Groupₓ G₂] (H₁ K₁ : Subgroup G) (H₂ K₂ : Subgroup G₂) :
+    ⁅H₁.Prod H₂,K₁.Prod K₂⁆ = ⁅H₁,K₁⁆.Prod ⁅H₂,K₂⁆ := by
+  apply le_antisymmₓ
+  · rw [general_commutator_le]
+    rintro ⟨p₁, p₂⟩ ⟨hp₁, hp₂⟩ ⟨q₁, q₂⟩ ⟨hq₁, hq₂⟩
+    exact ⟨general_commutator_containment _ _ hp₁ hq₁, general_commutator_containment _ _ hp₂ hq₂⟩
+    
+  · rw [prod_le_iff]
+    constructor <;>
+      · rw [map_general_commutator]
+        apply general_commutator_mono <;>
+          simp [le_prod_iff, map_map, MonoidHom.fst_comp_inl, MonoidHom.snd_comp_inl, MonoidHom.fst_comp_inr,
+            MonoidHom.snd_comp_inr]
+        
+    
+
+/-- The commutator of direct product is contained in the direct product of the commutators.
+
+See `general_commutator_pi_pi_of_fintype` for equality given `fintype η`.
+-/
+theorem general_commutator_pi_pi_le {η : Type _} {Gs : η → Type _} [∀ i, Groupₓ (Gs i)] (H K : ∀ i, Subgroup (Gs i)) :
+    ⁅Subgroup.pi Set.Univ H,Subgroup.pi Set.Univ K⁆ ≤ Subgroup.pi Set.Univ fun i => ⁅H i,K i⁆ :=
+  (general_commutator_le _ _ _).mpr fun p hp q hq i hi => general_commutator_containment _ _ (hp i hi) (hq i hi)
+
+/-- The commutator of a finite direct product is contained in the direct product of the commutators.
+-/
+theorem general_commutator_pi_pi_of_fintype {η : Type _} [Fintype η] {Gs : η → Type _} [∀ i, Groupₓ (Gs i)]
+    (H K : ∀ i, Subgroup (Gs i)) :
+    ⁅Subgroup.pi Set.Univ H,Subgroup.pi Set.Univ K⁆ = Subgroup.pi Set.Univ fun i => ⁅H i,K i⁆ := by
+  classical
+  apply le_antisymmₓ (general_commutator_pi_pi_le H K)
+  · rw [pi_le_iff]
+    intro i hi
+    rw [map_general_commutator]
+    apply general_commutator_mono <;>
+      · rw [le_pi_iff]
+        intro j hj
+        rintro _ ⟨_, ⟨x, hx, rfl⟩, rfl⟩
+        by_cases' h : j = i
+        · subst h
+          simpa using hx
+          
+        · simp [h, one_mem]
+          
+        
+    
 

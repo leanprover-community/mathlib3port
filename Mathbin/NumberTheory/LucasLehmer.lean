@@ -88,7 +88,7 @@ theorem mersenne_int_ne_zero (p : ℕ) (w : 0 < p) : (2 ^ p - 1 : ℤ) ≠ 0 := 
   simp only [gt_iff_lt, sub_pos]
   exact_mod_cast Nat.one_lt_two_pow p w
 
-theorem s_mod_nonneg (p : ℕ) (w : 0 < p) (i : ℕ) : 0 ≤ s_mod p i := by
+theorem s_mod_nonneg (p : ℕ) (w : 0 < p) (i : ℕ) : 0 ≤ sMod p i := by
   cases i <;> dsimp [s_mod]
   · exact sup_eq_left.mp rfl
     
@@ -96,10 +96,10 @@ theorem s_mod_nonneg (p : ℕ) (w : 0 < p) (i : ℕ) : 0 ≤ s_mod p i := by
     exact mersenne_int_ne_zero p w
     
 
-theorem s_mod_mod (p i : ℕ) : s_mod p i % (2 ^ p - 1) = s_mod p i := by
+theorem s_mod_mod (p i : ℕ) : sMod p i % (2 ^ p - 1) = sMod p i := by
   cases i <;> simp [s_mod]
 
-theorem s_mod_lt (p : ℕ) (w : 0 < p) (i : ℕ) : s_mod p i < 2 ^ p - 1 := by
+theorem s_mod_lt (p : ℕ) (w : 0 < p) (i : ℕ) : sMod p i < 2 ^ p - 1 := by
   rw [← s_mod_mod]
   convert Int.mod_lt _ _
   · refine' (abs_of_nonneg _).symm
@@ -109,7 +109,7 @@ theorem s_mod_lt (p : ℕ) (w : 0 < p) (i : ℕ) : s_mod p i < 2 ^ p - 1 := by
   · exact mersenne_int_ne_zero p w
     
 
-theorem s_zmod_eq_s (p' : ℕ) (i : ℕ) : s_zmod (p' + 2) i = (s i : Zmod (2 ^ (p' + 2) - 1)) := by
+theorem s_zmod_eq_s (p' : ℕ) (i : ℕ) : sZmod (p' + 2) i = (s i : Zmod (2 ^ (p' + 2) - 1)) := by
   induction' i with i ih
   · dsimp [s, s_zmod]
     norm_num
@@ -122,18 +122,18 @@ theorem int.coe_nat_pow_pred (b p : ℕ) (w : 0 < b) : ((b ^ p - 1 : ℕ) : ℤ)
   push_cast [this]
 
 theorem int.coe_nat_two_pow_pred (p : ℕ) : ((2 ^ p - 1 : ℕ) : ℤ) = (2 ^ p - 1 : ℤ) :=
-  int.coe_nat_pow_pred 2 p
+  Int.coe_nat_pow_pred 2 p
     (by
       decide)
 
-theorem s_zmod_eq_s_mod (p : ℕ) (i : ℕ) : s_zmod p i = (s_mod p i : Zmod (2 ^ p - 1)) := by
+theorem s_zmod_eq_s_mod (p : ℕ) (i : ℕ) : sZmod p i = (sMod p i : Zmod (2 ^ p - 1)) := by
   induction i <;> push_cast [← int.coe_nat_two_pow_pred p, s_mod, s_zmod, *]
 
 /-- The Lucas-Lehmer residue is `s p (p-2)` in `zmod (2^p - 1)`. -/
 def lucas_lehmer_residue (p : ℕ) : Zmod (2 ^ p - 1) :=
-  s_zmod p (p - 2)
+  sZmod p (p - 2)
 
-theorem residue_eq_zero_iff_s_mod_eq_zero (p : ℕ) (w : 1 < p) : lucas_lehmer_residue p = 0 ↔ s_mod p (p - 2) = 0 := by
+theorem residue_eq_zero_iff_s_mod_eq_zero (p : ℕ) (w : 1 < p) : lucasLehmerResidue p = 0 ↔ sMod p (p - 2) = 0 := by
   dsimp [lucas_lehmer_residue]
   rw [s_zmod_eq_s_mod p]
   constructor
@@ -154,7 +154,7 @@ theorem residue_eq_zero_iff_s_mod_eq_zero (p : ℕ) (w : 1 < p) : lucas_lehmer_r
 the Lucas-Lehmer residue `s p (p-2) % (2^p - 1)` is zero.
 -/
 def lucas_lehmer_test (p : ℕ) : Prop :=
-  lucas_lehmer_residue p = 0deriving DecidablePred
+  lucasLehmerResidue p = 0deriving DecidablePred
 
 /-- `q` is defined as the minimum factor of `mersenne p`, bundled as an `ℕ+`. -/
 def q (p : ℕ) : ℕ+ :=
@@ -392,7 +392,7 @@ theorem two_lt_q (p' : ℕ) : 2 < q (p' + 2) := by
     exact Nat.two_not_dvd_two_mul_sub_one (Nat.one_le_two_pow _) h'
     
 
-theorem ω_pow_formula (p' : ℕ) (h : lucas_lehmer_residue (p' + 2) = 0) :
+theorem ω_pow_formula (p' : ℕ) (h : lucasLehmerResidue (p' + 2) = 0) :
     ∃ k : ℤ, (ω : X (q (p' + 2))) ^ 2 ^ (p' + 1) = k * mersenne (p' + 2) * (ω : X (q (p' + 2))) ^ 2 ^ p' - 1 := by
   dsimp [lucas_lehmer_residue]  at h
   rw [s_zmod_eq_s p'] at h
@@ -417,13 +417,12 @@ theorem mersenne_coe_X (p : ℕ) : (mersenne p : X (q p)) = 0 := by
   ext <;> simp [mersenne, q, Zmod.nat_coe_zmod_eq_zero_iff_dvd, -pow_pos]
   apply Nat.min_fac_dvd
 
-theorem ω_pow_eq_neg_one (p' : ℕ) (h : lucas_lehmer_residue (p' + 2) = 0) : (ω : X (q (p' + 2))) ^ 2 ^ (p' + 1) = -1 :=
-  by
+theorem ω_pow_eq_neg_one (p' : ℕ) (h : lucasLehmerResidue (p' + 2) = 0) : (ω : X (q (p' + 2))) ^ 2 ^ (p' + 1) = -1 := by
   cases' ω_pow_formula p' h with k w
   rw [mersenne_coe_X] at w
   simpa using w
 
-theorem ω_pow_eq_one (p' : ℕ) (h : lucas_lehmer_residue (p' + 2) = 0) : (ω : X (q (p' + 2))) ^ 2 ^ (p' + 2) = 1 :=
+theorem ω_pow_eq_one (p' : ℕ) (h : lucasLehmerResidue (p' + 2) = 0) : (ω : X (q (p' + 2))) ^ 2 ^ (p' + 2) = 1 :=
   calc
     (ω : X (q (p' + 2))) ^ 2 ^ (p' + 2) = (ω ^ 2 ^ (p' + 1)) ^ 2 := by
       rw [← pow_mulₓ, ← pow_succ'ₓ]
@@ -443,11 +442,11 @@ def ω_unit (p : ℕ) : Units (X (q p)) where
     simp [ωb_mul_ω]
 
 @[simp]
-theorem ω_unit_coe (p : ℕ) : (ω_unit p : X (q p)) = ω :=
+theorem ω_unit_coe (p : ℕ) : (ωUnit p : X (q p)) = ω :=
   rfl
 
 /-- The order of `ω` in the unit group is exactly `2^p`. -/
-theorem order_ω (p' : ℕ) (h : lucas_lehmer_residue (p' + 2) = 0) : orderOf (ω_unit (p' + 2)) = 2 ^ (p' + 2) := by
+theorem order_ω (p' : ℕ) (h : lucasLehmerResidue (p' + 2) = 0) : orderOf (ωUnit (p' + 2)) = 2 ^ (p' + 2) := by
   apply Nat.eq_prime_pow_of_dvd_least_prime_pow
   · norm_num
     
@@ -465,9 +464,9 @@ theorem order_ω (p' : ℕ) (h : lucas_lehmer_residue (p' + 2) = 0) : orderOf (�
     exact ω_pow_eq_one p' h
     
 
-theorem order_ineq (p' : ℕ) (h : lucas_lehmer_residue (p' + 2) = 0) : 2 ^ (p' + 2) < (q (p' + 2) : ℕ) ^ 2 :=
+theorem order_ineq (p' : ℕ) (h : lucasLehmerResidue (p' + 2) = 0) : 2 ^ (p' + 2) < (q (p' + 2) : ℕ) ^ 2 :=
   calc
-    2 ^ (p' + 2) = orderOf (ω_unit (p' + 2)) := (order_ω p' h).symm
+    2 ^ (p' + 2) = orderOf (ωUnit (p' + 2)) := (order_ω p' h).symm
     _ ≤ Fintype.card (X _)ˣ := order_of_le_card_univ
     _ < (q (p' + 2) : ℕ) ^ 2 := units_card (Nat.lt_of_succ_ltₓ (two_lt_q _))
     
@@ -478,7 +477,7 @@ export LucasLehmer (LucasLehmerTest lucasLehmerResidue)
 
 open LucasLehmer
 
-theorem lucas_lehmer_sufficiency (p : ℕ) (w : 1 < p) : lucas_lehmer_test p → (mersenne p).Prime := by
+theorem lucas_lehmer_sufficiency (p : ℕ) (w : 1 < p) : LucasLehmerTest p → (mersenne p).Prime := by
   let p' := p - 2
   have z : p = p' + 2 := (tsub_eq_iff_eq_add_of_le w.nat_succ_le).mp rfl
   have w : 1 < p' + 2 := Nat.lt_of_sub_eq_succₓ rfl
@@ -508,20 +507,20 @@ unsafe instance nat_pexpr : has_to_pexpr ℕ :=
 unsafe instance int_pexpr : has_to_pexpr ℤ :=
   ⟨pexpr.of_expr ∘ fun n => reflect n⟩
 
-theorem s_mod_succ {p a i b c} (h1 : (2 ^ p - 1 : ℤ) = a) (h2 : s_mod p i = b) (h3 : (b * b - 2) % a = c) :
-    s_mod p (i + 1) = c := by
+theorem s_mod_succ {p a i b c} (h1 : (2 ^ p - 1 : ℤ) = a) (h2 : sMod p i = b) (h3 : (b * b - 2) % a = c) :
+    sMod p (i + 1) = c := by
   dsimp [s_mod, mersenne]
   rw [h1, h2, sq, h3]
 
--- ././Mathport/Syntax/Translate/Basic.lean:794:4: warning: unsupported (TODO): `[tacs]
--- ././Mathport/Syntax/Translate/Basic.lean:794:4: warning: unsupported (TODO): `[tacs]
--- ././Mathport/Syntax/Translate/Basic.lean:794:4: warning: unsupported (TODO): `[tacs]
--- ././Mathport/Syntax/Translate/Basic.lean:794:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
 /-- Given a goal of the form `lucas_lehmer_test p`,
 attempt to do the calculation using `norm_num` to certify each step.
 -/
 unsafe def run_test : tactic Unit := do
-  let quote.1 (lucas_lehmer_test (%%ₓp)) ← target
+  let quote.1 (LucasLehmerTest (%%ₓp)) ← target
   sorry
   sorry
   let p ← eval_expr ℕ p
@@ -534,12 +533,12 @@ unsafe def run_test : tactic Unit := do
             norm_num : (2 ^ %%ₓp) - 1 = %%ₓM))
   let w ← assertv `w t v
   sorry
-  let t ← to_expr (pquote.1 (s_mod (%%ₓp) 0 = 4))
+  let t ← to_expr (pquote.1 (sMod (%%ₓp) 0 = 4))
   let v ←
     to_expr
         (pquote.1
           (by
-            norm_num [LucasLehmer.sMod] : s_mod (%%ₓp) 0 = 4))
+            norm_num [LucasLehmer.sMod] : sMod (%%ₓp) 0 = 4))
   let h ← assertv `h t v
   iterate_exactly (p - 2) sorry
   let h ← get_local `h

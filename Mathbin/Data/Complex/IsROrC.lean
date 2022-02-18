@@ -1,7 +1,7 @@
 import Mathbin.Data.Real.Sqrt
 import Mathbin.FieldTheory.Tower
 import Mathbin.Analysis.NormedSpace.FiniteDimension
-import Mathbin.Analysis.NormedSpace.Star
+import Mathbin.Analysis.NormedSpace.Star.Basic
 
 /-!
 # `is_R_or_C`: a typeclass for ℝ or ℂ
@@ -223,22 +223,22 @@ theorem smul_im : ∀ r : ℝ z : K, im (r • z) = r * im z := fun r z => by
 
 /-- The imaginary unit. -/
 @[simp, is_R_or_C_simps]
-theorem I_re : re (I : K) = 0 :=
+theorem I_re : re (i : K) = 0 :=
   I_re_ax
 
 @[simp, is_R_or_C_simps]
-theorem I_im (z : K) : im z * im (I : K) = im z :=
+theorem I_im (z : K) : im z * im (i : K) = im z :=
   mul_im_I_ax z
 
 @[simp, is_R_or_C_simps]
-theorem I_im' (z : K) : im (I : K) * im z = im z := by
+theorem I_im' (z : K) : im (i : K) * im z = im z := by
   rw [mul_comm, I_im _]
 
 @[simp, is_R_or_C_simps]
 theorem I_mul_re (z : K) : re (I * z) = -im z := by
   simp only [I_re, zero_sub, I_im', zero_mul, mul_re]
 
-theorem I_mul_I : (I : K) = 0 ∨ (I : K) * I = -1 :=
+theorem I_mul_I : (i : K) = 0 ∨ (i : K) * I = -1 :=
   I_mul_I_ax
 
 @[simp, is_R_or_C_simps]
@@ -250,7 +250,7 @@ theorem conj_im (z : K) : im (conj z) = -im z :=
   IsROrC.conj_im_ax z
 
 @[simp, is_R_or_C_simps]
-theorem conj_I : conj (I : K) = -I :=
+theorem conj_I : conj (i : K) = -I :=
   IsROrC.conj_I_ax
 
 @[simp, is_R_or_C_simps]
@@ -267,7 +267,7 @@ theorem conj_bit1 (z : K) : conj (bit1 z) = bit1 (conj z) := by
   simp only [bit0, ext_iff, bit1_re, conj_im, eq_self_iff_true, conj_re, neg_add_rev, and_selfₓ, bit1_im]
 
 @[simp, is_R_or_C_simps]
-theorem conj_neg_I : conj (-I) = (I : K) := by
+theorem conj_neg_I : conj (-I) = (i : K) := by
   simp only [conj_I, RingHom.map_neg, eq_self_iff_true, neg_negₓ]
 
 theorem conj_eq_re_sub_im (z : K) : conj z = re z - im z * I := by
@@ -329,7 +329,7 @@ def norm_sq : K →*₀ ℝ where
 theorem norm_sq_eq_def {z : K} : ∥z∥ ^ 2 = re z * re z + im z * im z :=
   norm_sq_eq_def_ax z
 
-theorem norm_sq_eq_def' (z : K) : norm_sq z = ∥z∥ ^ 2 := by
+theorem norm_sq_eq_def' (z : K) : normSq z = ∥z∥ ^ 2 := by
   rw [norm_sq_eq_def]
   rfl
 
@@ -338,52 +338,51 @@ theorem norm_sq_of_real (r : ℝ) : ∥(r : K)∥ ^ 2 = r * r := by
   simp' only [norm_sq_eq_def, add_zeroₓ, mul_zero] with is_R_or_C_simps
 
 @[is_R_or_C_simps]
-theorem norm_sq_zero : norm_sq (0 : K) = 0 :=
-  norm_sq.map_zero
+theorem norm_sq_zero : normSq (0 : K) = 0 :=
+  normSq.map_zero
 
 @[is_R_or_C_simps]
-theorem norm_sq_one : norm_sq (1 : K) = 1 :=
-  norm_sq.map_one
+theorem norm_sq_one : normSq (1 : K) = 1 :=
+  normSq.map_one
 
-theorem norm_sq_nonneg (z : K) : 0 ≤ norm_sq z :=
+theorem norm_sq_nonneg (z : K) : 0 ≤ normSq z :=
   add_nonneg (mul_self_nonneg _) (mul_self_nonneg _)
 
 @[simp, is_R_or_C_simps]
-theorem norm_sq_eq_zero {z : K} : norm_sq z = 0 ↔ z = 0 := by
+theorem norm_sq_eq_zero {z : K} : normSq z = 0 ↔ z = 0 := by
   rw [norm_sq_eq_def']
   simp [sq]
 
 @[simp, is_R_or_C_simps]
-theorem norm_sq_pos {z : K} : 0 < norm_sq z ↔ z ≠ 0 := by
+theorem norm_sq_pos {z : K} : 0 < normSq z ↔ z ≠ 0 := by
   rw [lt_iff_le_and_ne, Ne, eq_comm] <;> simp [norm_sq_nonneg]
 
 @[simp, is_R_or_C_simps]
-theorem norm_sq_neg (z : K) : norm_sq (-z) = norm_sq z := by
+theorem norm_sq_neg (z : K) : normSq (-z) = normSq z := by
   simp only [norm_sq_eq_def', norm_neg]
 
 @[simp, is_R_or_C_simps]
-theorem norm_sq_conj (z : K) : norm_sq (conj z) = norm_sq z := by
-  simp' only [norm_sq, neg_mul_eq_neg_mul_symm, MonoidWithZeroHom.coe_mk, mul_neg_eq_neg_mul_symm, neg_negₓ] with
-    is_R_or_C_simps
+theorem norm_sq_conj (z : K) : normSq (conj z) = normSq z := by
+  simp' only [norm_sq, neg_mul, MonoidWithZeroHom.coe_mk, mul_neg, neg_negₓ] with is_R_or_C_simps
 
 @[simp, is_R_or_C_simps]
-theorem norm_sq_mul (z w : K) : norm_sq (z * w) = norm_sq z * norm_sq w :=
-  norm_sq.map_mul z w
+theorem norm_sq_mul (z w : K) : normSq (z * w) = normSq z * normSq w :=
+  normSq.map_mul z w
 
-theorem norm_sq_add (z w : K) : norm_sq (z + w) = norm_sq z + norm_sq w + 2 * re (z * conj w) := by
-  simp' only [norm_sq, map_add, MonoidWithZeroHom.coe_mk, mul_neg_eq_neg_mul_symm, sub_neg_eq_add] with is_R_or_C_simps
+theorem norm_sq_add (z w : K) : normSq (z + w) = normSq z + normSq w + 2 * re (z * conj w) := by
+  simp' only [norm_sq, map_add, MonoidWithZeroHom.coe_mk, mul_neg, sub_neg_eq_add] with is_R_or_C_simps
   ring
 
-theorem re_sq_le_norm_sq (z : K) : re z * re z ≤ norm_sq z :=
+theorem re_sq_le_norm_sq (z : K) : re z * re z ≤ normSq z :=
   le_add_of_nonneg_right (mul_self_nonneg _)
 
-theorem im_sq_le_norm_sq (z : K) : im z * im z ≤ norm_sq z :=
+theorem im_sq_le_norm_sq (z : K) : im z * im z ≤ normSq z :=
   le_add_of_nonneg_left (mul_self_nonneg _)
 
-theorem mul_conj (z : K) : z * conj z = (norm_sq z : K) := by
+theorem mul_conj (z : K) : z * conj z = (normSq z : K) := by
   simp' only [map_add, add_zeroₓ, ext_iff, MonoidWithZeroHom.coe_mk, add_left_injₓ, mul_eq_mul_left_iff, zero_mul,
-    add_commₓ, true_orₓ, eq_self_iff_true, mul_neg_eq_neg_mul_symm, add_right_negₓ, zero_addₓ, norm_sq, mul_comm,
-    and_selfₓ, neg_negₓ, mul_zero, sub_eq_neg_add, neg_zero] with is_R_or_C_simps
+    add_commₓ, true_orₓ, eq_self_iff_true, mul_neg, add_right_negₓ, zero_addₓ, norm_sq, mul_comm, and_selfₓ, neg_negₓ,
+    mul_zero, sub_eq_neg_add, neg_zero] with is_R_or_C_simps
 
 theorem add_conj (z : K) : z + conj z = 2 * re z := by
   simp only [ext_iff, two_mul, map_add, add_zeroₓ, of_real_im, conj_im, of_real_re, eq_self_iff_true, add_right_negₓ,
@@ -414,10 +413,10 @@ theorem sub_conj (z : K) : z - conj z = 2 * im z * I := by
   simp' only [ext_iff, two_mul, sub_eq_add_neg, add_mulₓ, map_add, add_zeroₓ, add_left_injₓ, zero_mul, map_add_neg,
     eq_self_iff_true, add_right_negₓ, and_selfₓ, neg_negₓ, mul_zero, neg_zero] with is_R_or_C_simps
 
-theorem norm_sq_sub (z w : K) : norm_sq (z - w) = norm_sq z + norm_sq w - 2 * re (z * conj w) := by
-  simp only [norm_sq_add, sub_eq_add_neg, RingEquiv.map_neg, mul_neg_eq_neg_mul_symm, norm_sq_neg, map_neg]
+theorem norm_sq_sub (z w : K) : normSq (z - w) = normSq z + normSq w - 2 * re (z * conj w) := by
+  simp only [norm_sq_add, sub_eq_add_neg, RingEquiv.map_neg, mul_neg, norm_sq_neg, map_neg]
 
-theorem sqrt_norm_sq_eq_norm {z : K} : Real.sqrt (norm_sq z) = ∥z∥ := by
+theorem sqrt_norm_sq_eq_norm {z : K} : Real.sqrt (normSq z) = ∥z∥ := by
   have h₂ : ∥z∥ = Real.sqrt (∥z∥ ^ 2) := (Real.sqrt_sq (norm_nonneg z)).symm
   rw [h₂]
   exact congr_argₓ Real.sqrt (norm_sq_eq_def' z)
@@ -426,12 +425,12 @@ theorem sqrt_norm_sq_eq_norm {z : K} : Real.sqrt (norm_sq z) = ∥z∥ := by
 
 
 @[simp, is_R_or_C_simps]
-theorem inv_re (z : K) : re z⁻¹ = re z / norm_sq z := by
+theorem inv_re (z : K) : re z⁻¹ = re z / normSq z := by
   simp' only [inv_def, norm_sq_eq_def, norm_sq, division_def, MonoidWithZeroHom.coe_mk, sub_zero, mul_zero] with
     is_R_or_C_simps
 
 @[simp, is_R_or_C_simps]
-theorem inv_im (z : K) : im z⁻¹ = im (-z) / norm_sq z := by
+theorem inv_im (z : K) : im z⁻¹ = im (-z) / normSq z := by
   simp' only [inv_def, norm_sq_eq_def, norm_sq, division_def, of_real_im, MonoidWithZeroHom.coe_mk, of_real_re,
     zero_addₓ, map_neg, mul_zero] with is_R_or_C_simps
 
@@ -452,13 +451,11 @@ protected theorem mul_inv_cancel {z : K} (h : z ≠ 0) : z * z⁻¹ = 1 := by
   rw [inv_def, ← mul_assoc, mul_conj, ← of_real_mul, ← norm_sq_eq_def', mul_inv_cancel (mt norm_sq_eq_zero.1 h),
     of_real_one]
 
-theorem div_re (z w : K) : re (z / w) = re z * re w / norm_sq w + im z * im w / norm_sq w := by
-  simp' only [div_eq_mul_inv, mul_assoc, sub_eq_add_neg, neg_mul_eq_neg_mul_symm, mul_neg_eq_neg_mul_symm, neg_negₓ,
-    map_neg] with is_R_or_C_simps
+theorem div_re (z w : K) : re (z / w) = re z * re w / normSq w + im z * im w / normSq w := by
+  simp' only [div_eq_mul_inv, mul_assoc, sub_eq_add_neg, neg_mul, mul_neg, neg_negₓ, map_neg] with is_R_or_C_simps
 
-theorem div_im (z w : K) : im (z / w) = im z * re w / norm_sq w - re z * im w / norm_sq w := by
-  simp' only [div_eq_mul_inv, mul_assoc, sub_eq_add_neg, add_commₓ, neg_mul_eq_neg_mul_symm, mul_neg_eq_neg_mul_symm,
-    map_neg] with is_R_or_C_simps
+theorem div_im (z w : K) : im (z / w) = im z * re w / normSq w - re z * im w / normSq w := by
+  simp' only [div_eq_mul_inv, mul_assoc, sub_eq_add_neg, add_commₓ, neg_mul, mul_neg, map_neg] with is_R_or_C_simps
 
 @[simp, norm_cast, is_R_or_C_simps]
 theorem of_real_div (r s : ℝ) : ((r / s : ℝ) : K) = r / s :=
@@ -477,7 +474,7 @@ theorem div_re_of_real {z : K} {r : ℝ} : re (z / r) = re z / r := by
 theorem of_real_zpow (r : ℝ) (n : ℤ) : ((r ^ n : ℝ) : K) = r ^ n :=
   (@IsROrC.coeHom K _).map_zpow r n
 
-theorem I_mul_I_of_nonzero : (I : K) ≠ 0 → (I : K) * I = -1 := by
+theorem I_mul_I_of_nonzero : (i : K) ≠ 0 → (i : K) * I = -1 := by
   have := I_mul_I_ax
   tauto
 
@@ -490,16 +487,16 @@ theorem div_I (z : K) : z / I = -(z * I) := by
     
 
 @[simp, is_R_or_C_simps]
-theorem inv_I : (I : K)⁻¹ = -I := by
+theorem inv_I : (i : K)⁻¹ = -I := by
   field_simp
 
 @[simp, is_R_or_C_simps]
-theorem norm_sq_inv (z : K) : norm_sq z⁻¹ = (norm_sq z)⁻¹ :=
-  (@norm_sq K _).map_inv z
+theorem norm_sq_inv (z : K) : normSq z⁻¹ = (normSq z)⁻¹ :=
+  (@normSq K _).map_inv z
 
 @[simp, is_R_or_C_simps]
-theorem norm_sq_div (z w : K) : norm_sq (z / w) = norm_sq z / norm_sq w :=
-  (@norm_sq K _).map_div z w
+theorem norm_sq_div (z w : K) : normSq (z / w) = normSq z / normSq w :=
+  (@normSq K _).map_div z w
 
 @[is_R_or_C_simps]
 theorem norm_conj {z : K} : ∥conj z∥ = ∥z∥ := by
@@ -513,7 +510,7 @@ instance (priority := 100) : CstarRing K where
 
 @[simp, is_R_or_C_simps, norm_cast]
 theorem of_real_nat_cast (n : ℕ) : ((n : ℝ) : K) = n :=
-  show (algebraMap ℝ K) n = n from map_nat_cast of_real_hom n
+  show (algebraMap ℝ K) n = n from map_nat_cast ofRealHom n
 
 @[simp, is_R_or_C_simps, norm_cast]
 theorem nat_cast_re (n : ℕ) : re (n : K) = n := by
@@ -525,7 +522,7 @@ theorem nat_cast_im (n : ℕ) : im (n : K) = 0 := by
 
 @[simp, is_R_or_C_simps, norm_cast]
 theorem of_real_int_cast (n : ℤ) : ((n : ℝ) : K) = n :=
-  of_real_hom.map_int_cast n
+  ofRealHom.map_int_cast n
 
 @[simp, is_R_or_C_simps, norm_cast]
 theorem int_cast_re (n : ℤ) : re (n : K) = n := by
@@ -564,8 +561,7 @@ theorem re_eq_add_conj (z : K) : ↑(re z) = (z + conj z) / 2 := by
 
 theorem im_eq_conj_sub (z : K) : ↑(im z) = I * (conj z - z) / 2 := by
   rw [← neg_inj, ← of_real_neg, ← I_mul_re, re_eq_add_conj]
-  simp only [mul_addₓ, sub_eq_add_neg, neg_div', neg_mul_eq_neg_mul_symm, conj_I, mul_neg_eq_neg_mul_symm, neg_add_rev,
-    neg_negₓ, RingHom.map_mul]
+  simp only [mul_addₓ, sub_eq_add_neg, neg_div', neg_mul, conj_I, mul_neg, neg_add_rev, neg_negₓ, RingHom.map_mul]
 
 /-! ### Absolute value -/
 
@@ -573,7 +569,7 @@ theorem im_eq_conj_sub (z : K) : ↑(im z) = I * (conj z - z) / 2 := by
 /-- The complex absolute value function, defined as the square root of the norm squared. -/
 @[pp_nodot]
 noncomputable def abs (z : K) : ℝ :=
-  (norm_sq z).sqrt
+  (normSq z).sqrt
 
 local notation "abs'" => HasAbs.abs
 
@@ -602,7 +598,7 @@ theorem abs_of_nat (n : ℕ) : absK n = n := by
   rw [← of_real_nat_cast]
   exact abs_of_nonneg (Nat.cast_nonneg n)
 
-theorem mul_self_abs (z : K) : abs z * abs z = norm_sq z :=
+theorem mul_self_abs (z : K) : abs z * abs z = normSq z :=
   Real.mul_self_sqrt (norm_sq_nonneg _)
 
 @[simp, is_R_or_C_simps]
@@ -690,7 +686,7 @@ open IsAbsoluteValue
 
 @[simp, is_R_or_C_simps]
 theorem abs_abs (z : K) : abs' (abs z) = abs z :=
-  _root_.abs_of_nonneg (abs_nonneg _)
+  abs_of_nonneg (abs_nonneg _)
 
 @[simp, is_R_or_C_simps]
 theorem abs_pos {z : K} : 0 < abs z ↔ z ≠ 0 :=
@@ -735,7 +731,7 @@ theorem abs_im_div_abs_le_one (z : K) : abs' (im z / abs z) ≤ 1 := by
 theorem abs_cast_nat (n : ℕ) : abs (n : K) = n := by
   rw [← of_real_nat_cast, abs_of_nonneg (Nat.cast_nonneg n)]
 
-theorem norm_sq_eq_abs (x : K) : norm_sq x = abs x ^ 2 := by
+theorem norm_sq_eq_abs (x : K) : normSq x = abs x ^ 2 := by
   rw [abs, sq, Real.mul_self_sqrt (norm_sq_nonneg _)]
 
 theorem re_eq_abs_of_mul_conj (x : K) : re (x * conj x) = abs (x * conj x) := by
@@ -749,14 +745,14 @@ theorem abs_sq_re_add_conj' (x : K) : abs (conj x + x) ^ 2 = re (conj x + x) ^ 2
   simp' only [sq, ← norm_sq_eq_abs, norm_sq, map_add, add_zeroₓ, MonoidWithZeroHom.coe_mk, add_left_negₓ, mul_zero] with
     is_R_or_C_simps
 
-theorem conj_mul_eq_norm_sq_left (x : K) : conj x * x = (norm_sq x : K) := by
+theorem conj_mul_eq_norm_sq_left (x : K) : conj x * x = (normSq x : K) := by
   rw [ext_iff]
   refine'
     ⟨by
-      simp' only [norm_sq, neg_mul_eq_neg_mul_symm, MonoidWithZeroHom.coe_mk, sub_neg_eq_add, map_add, sub_zero,
-        mul_zero] with is_R_or_C_simps,
+      simp' only [norm_sq, neg_mul, MonoidWithZeroHom.coe_mk, sub_neg_eq_add, map_add, sub_zero, mul_zero] with
+        is_R_or_C_simps,
       _⟩
-  simp' only [mul_comm, mul_neg_eq_neg_mul_symm, add_left_negₓ] with is_R_or_C_simps
+  simp' only [mul_comm, mul_neg, add_left_negₓ] with is_R_or_C_simps
 
 /-! ### Cauchy sequences -/
 
@@ -797,12 +793,12 @@ theorem of_real_sum {α : Type _} (s : Finset α) (f : α → ℝ) : ((∑ i in 
 
 @[simp, is_R_or_C_simps, norm_cast]
 theorem of_real_finsupp_sum {α M : Type _} [Zero M] (f : α →₀ M) (g : α → M → ℝ) :
-    ((f.sum fun a b => g a b : ℝ) : K) = f.sum fun a b => (g a b : K) :=
+    ((f.Sum fun a b => g a b : ℝ) : K) = f.Sum fun a b => (g a b : K) :=
   RingHom.map_finsupp_sum _ f g
 
 @[simp, is_R_or_C_simps, norm_cast]
 theorem of_real_finsupp_prod {α M : Type _} [Zero M] (f : α →₀ M) (g : α → M → ℝ) :
-    ((f.prod fun a b => g a b : ℝ) : K) = f.prod fun a b => (g a b : K) :=
+    ((f.Prod fun a b => g a b : ℝ) : K) = f.Prod fun a b => (g a b : K) :=
   RingHom.map_finsupp_prod _ f g
 
 end IsROrC
@@ -815,14 +811,15 @@ open_locale Classical
 
 open IsROrC
 
-/-- This instance generates a type-class problem with a metavariable `?m` that should satisfy
+library_note "is_R_or_C instance"/--
+This instance generates a type-class problem with a metavariable `?m` that should satisfy
 `is_R_or_C ?m`. Since this can only be satisfied by `ℝ` or `ℂ`, this does not cause problems. -/
-library_note "is_R_or_C instance"
+
 
 /-- An `is_R_or_C` field is finite-dimensional over `ℝ`, since it is spanned by `{1, I}`. -/
 @[nolint dangerous_instance]
 instance is_R_or_C_to_real : FiniteDimensional ℝ K :=
-  ⟨⟨{1, I}, by
+  ⟨⟨{1, i}, by
       rw [eq_top_iff]
       intro a _
       rw [Finset.coe_insert, Finset.coe_singleton, Submodule.mem_span_insert]
@@ -920,7 +917,7 @@ theorem I_to_real : IR = 0 :=
   rfl
 
 @[simp, is_R_or_C_simps]
-theorem norm_sq_to_real {x : ℝ} : norm_sq x = x * x := by
+theorem norm_sq_to_real {x : ℝ} : normSq x = x * x := by
   simp [IsROrC.normSq]
 
 @[simp, is_R_or_C_simps]
@@ -942,17 +939,17 @@ noncomputable def re_lm : K →ₗ[ℝ] ℝ :=
   { re with map_smul' := smul_re }
 
 @[simp, is_R_or_C_simps]
-theorem re_lm_coe : (re_lm : K → ℝ) = re :=
+theorem re_lm_coe : (reLm : K → ℝ) = re :=
   rfl
 
 /-- The real part in a `is_R_or_C` field, as a continuous linear map. -/
 noncomputable def re_clm : K →L[ℝ] ℝ :=
-  LinearMap.mkContinuous re_lm 1 <| by
+  LinearMap.mkContinuous reLm 1 <| by
     simp only [norm_eq_abs, re_lm_coe, one_mulₓ, abs_to_real]
     exact abs_re_le_abs
 
 @[simp, is_R_or_C_simps]
-theorem re_clm_norm : ∥(re_clm : K →L[ℝ] ℝ)∥ = 1 := by
+theorem re_clm_norm : ∥(reClm : K →L[ℝ] ℝ)∥ = 1 := by
   apply le_antisymmₓ (LinearMap.mk_continuous_norm_le _ zero_le_one _)
   convert ContinuousLinearMap.ratio_le_op_norm _ (1 : K)
   · simp
@@ -961,117 +958,117 @@ theorem re_clm_norm : ∥(re_clm : K →L[ℝ] ℝ)∥ = 1 := by
     
 
 @[simp, is_R_or_C_simps, norm_cast]
-theorem re_clm_coe : ((re_clm : K →L[ℝ] ℝ) : K →ₗ[ℝ] ℝ) = re_lm :=
+theorem re_clm_coe : ((reClm : K →L[ℝ] ℝ) : K →ₗ[ℝ] ℝ) = re_lm :=
   rfl
 
 @[simp, is_R_or_C_simps]
-theorem re_clm_apply : ((re_clm : K →L[ℝ] ℝ) : K → ℝ) = re :=
+theorem re_clm_apply : ((reClm : K →L[ℝ] ℝ) : K → ℝ) = re :=
   rfl
 
 @[continuity]
 theorem continuous_re : Continuous (re : K → ℝ) :=
-  re_clm.Continuous
+  reClm.Continuous
 
 /-- The imaginary part in a `is_R_or_C` field, as a linear map. -/
 noncomputable def im_lm : K →ₗ[ℝ] ℝ :=
   { im with map_smul' := smul_im }
 
 @[simp, is_R_or_C_simps]
-theorem im_lm_coe : (im_lm : K → ℝ) = im :=
+theorem im_lm_coe : (imLm : K → ℝ) = im :=
   rfl
 
 /-- The imaginary part in a `is_R_or_C` field, as a continuous linear map. -/
 noncomputable def im_clm : K →L[ℝ] ℝ :=
-  LinearMap.mkContinuous im_lm 1 <| by
+  LinearMap.mkContinuous imLm 1 <| by
     simp only [norm_eq_abs, re_lm_coe, one_mulₓ, abs_to_real]
     exact abs_im_le_abs
 
 @[simp, is_R_or_C_simps, norm_cast]
-theorem im_clm_coe : ((im_clm : K →L[ℝ] ℝ) : K →ₗ[ℝ] ℝ) = im_lm :=
+theorem im_clm_coe : ((imClm : K →L[ℝ] ℝ) : K →ₗ[ℝ] ℝ) = im_lm :=
   rfl
 
 @[simp, is_R_or_C_simps]
-theorem im_clm_apply : ((im_clm : K →L[ℝ] ℝ) : K → ℝ) = im :=
+theorem im_clm_apply : ((imClm : K →L[ℝ] ℝ) : K → ℝ) = im :=
   rfl
 
 @[continuity]
 theorem continuous_im : Continuous (im : K → ℝ) :=
-  im_clm.Continuous
+  imClm.Continuous
 
 /-- Conjugate as an `ℝ`-algebra equivalence -/
 noncomputable def conj_ae : K ≃ₐ[ℝ] K :=
   { conj with invFun := conj, left_inv := conj_conj, right_inv := conj_conj, commutes' := conj_of_real }
 
 @[simp, is_R_or_C_simps]
-theorem conj_ae_coe : (conj_ae : K → K) = conj :=
+theorem conj_ae_coe : (conjAe : K → K) = conj :=
   rfl
 
 /-- Conjugate as a linear isometry -/
 noncomputable def conj_lie : K ≃ₗᵢ[ℝ] K :=
-  ⟨conj_ae.toLinearEquiv, fun z => by
+  ⟨conjAe.toLinearEquiv, fun z => by
     simp' [norm_eq_abs] with is_R_or_C_simps⟩
 
 @[simp, is_R_or_C_simps]
-theorem conj_lie_apply : (conj_lie : K → K) = conj :=
+theorem conj_lie_apply : (conjLie : K → K) = conj :=
   rfl
 
 /-- Conjugate as a continuous linear equivalence -/
 noncomputable def conj_cle : K ≃L[ℝ] K :=
-  @conj_lie K _
+  @conjLie K _
 
 @[simp, is_R_or_C_simps]
-theorem conj_cle_coe : (@conj_cle K _).toLinearEquiv = conj_ae.toLinearEquiv :=
+theorem conj_cle_coe : (@conjCle K _).toLinearEquiv = conjAe.toLinearEquiv :=
   rfl
 
 @[simp, is_R_or_C_simps]
-theorem conj_cle_apply : (conj_cle : K → K) = conj :=
+theorem conj_cle_apply : (conjCle : K → K) = conj :=
   rfl
 
 @[simp, is_R_or_C_simps]
-theorem conj_cle_norm : ∥(@conj_cle K _ : K →L[ℝ] K)∥ = 1 :=
-  (@conj_lie K _).toLinearIsometry.norm_to_continuous_linear_map
+theorem conj_cle_norm : ∥(@conjCle K _ : K →L[ℝ] K)∥ = 1 :=
+  (@conjLie K _).toLinearIsometry.norm_to_continuous_linear_map
 
 @[continuity]
 theorem continuous_conj : Continuous (conj : K → K) :=
-  conj_lie.Continuous
+  conjLie.Continuous
 
 /-- The `ℝ → K` coercion, as a linear map -/
 noncomputable def of_real_am : ℝ →ₐ[ℝ] K :=
   Algebra.ofId ℝ K
 
 @[simp, is_R_or_C_simps]
-theorem of_real_am_coe : (of_real_am : ℝ → K) = coe :=
+theorem of_real_am_coe : (ofRealAm : ℝ → K) = coe :=
   rfl
 
 /-- The ℝ → K coercion, as a linear isometry -/
 noncomputable def of_real_li : ℝ →ₗᵢ[ℝ] K where
-  toLinearMap := of_real_am.toLinearMap
+  toLinearMap := ofRealAm.toLinearMap
   norm_map' := by
     simp [norm_eq_abs]
 
 @[simp, is_R_or_C_simps]
-theorem of_real_li_apply : (of_real_li : ℝ → K) = coe :=
+theorem of_real_li_apply : (ofRealLi : ℝ → K) = coe :=
   rfl
 
 /-- The `ℝ → K` coercion, as a continuous linear map -/
 noncomputable def of_real_clm : ℝ →L[ℝ] K :=
-  of_real_li.toContinuousLinearMap
+  ofRealLi.toContinuousLinearMap
 
 @[simp, is_R_or_C_simps]
-theorem of_real_clm_coe : (@of_real_clm K _ : ℝ →ₗ[ℝ] K) = of_real_am.toLinearMap :=
+theorem of_real_clm_coe : (@ofRealClm K _ : ℝ →ₗ[ℝ] K) = ofRealAm.toLinearMap :=
   rfl
 
 @[simp, is_R_or_C_simps]
-theorem of_real_clm_apply : (of_real_clm : ℝ → K) = coe :=
+theorem of_real_clm_apply : (ofRealClm : ℝ → K) = coe :=
   rfl
 
 @[simp, is_R_or_C_simps]
-theorem of_real_clm_norm : ∥(of_real_clm : ℝ →L[ℝ] K)∥ = 1 :=
-  LinearIsometry.norm_to_continuous_linear_map of_real_li
+theorem of_real_clm_norm : ∥(ofRealClm : ℝ →L[ℝ] K)∥ = 1 :=
+  LinearIsometry.norm_to_continuous_linear_map ofRealLi
 
 @[continuity]
 theorem continuous_of_real : Continuous (coe : ℝ → K) :=
-  of_real_li.Continuous
+  ofRealLi.Continuous
 
 end LinearMaps
 

@@ -91,7 +91,7 @@ theorem is_cyclic_of_order_of_eq_card [Fintype α] (x : α) (hx : orderOf x = Fi
 
 /-- A finite group of prime order is cyclic. -/
 @[to_additive is_add_cyclic_of_prime_card]
-theorem is_cyclic_of_prime_card {α : Type u} [Groupₓ α] [Fintype α] {p : ℕ} [hp : Fact p.prime]
+theorem is_cyclic_of_prime_card {α : Type u} [Groupₓ α] [Fintype α] {p : ℕ} [hp : Fact p.Prime]
     (h : Fintype.card α = p) : IsCyclic α :=
   ⟨by
     obtain ⟨g, hg⟩ : ∃ g : α, g ≠ 1 := Fintype.exists_ne_of_one_lt_card (h.symm ▸ hp.1.one_lt) 1
@@ -166,7 +166,7 @@ instance Subgroup.is_cyclic {α : Type u} [Groupₓ α] [IsCyclic α] (H : Subgr
     let ⟨x, hx₁, hx₂⟩ := hx
     let ⟨k, hk⟩ := hg x
     have hex : ∃ n : ℕ, 0 < n ∧ g ^ n ∈ H :=
-      ⟨k.nat_abs,
+      ⟨k.natAbs,
         Nat.pos_of_ne_zeroₓ fun h =>
           hx₂ <| by
             rw [← hk, Int.eq_zero_of_nat_abs_eq_zero h, zpow_zero],
@@ -341,7 +341,7 @@ private theorem card_order_of_eq_totient_aux₁ :
                 simp [mem_range, zero_le_one, le_succ]))
         _ = ∑ m in (range d.succ.succ).filter (· ∣ d.succ), (univ.filter fun a : α => orderOf a = m).card :=
           sum_congr hinsert fun _ _ => rfl
-        _ = (univ.filter fun a : α => a ^ d.succ = 1).card := sum_card_order_of_eq_card_pow_eq_one (succ_pos d)
+        _ = (univ.filter fun a : α => a ^ d.succ = 1).card := sum_card_order_of_eq_card_pow_eq_one (succ_posₓ d)
         _ = ∑ m in (range d.succ.succ).filter (· ∣ d.succ), φ m :=
           ha ▸ (card_pow_eq_one_eq_order_of_aux hn a).symm ▸ (sum_totient _).symm
         _ = _ := by
@@ -386,7 +386,7 @@ theorem card_order_of_eq_totient_aux₂ {d : ℕ} (hd : d ∣ Fintype.card α) :
               (by
                 simp ))
         _ = ∑ m in (range c.succ).filter (· ∣ c), φ m :=
-          Finset.sum_congr (Finset.insert_erase (mem_filter.2 ⟨mem_range.2 (lt_succ_of_le (le_of_dvd hc0 hd)), hd⟩))
+          Finset.sum_congr (Finset.insert_erase (mem_filter.2 ⟨mem_range.2 (lt_succ_of_leₓ (le_of_dvdₓ hc0 hd)), hd⟩))
             fun _ _ => rfl
         _ = c := sum_totient _
         
@@ -421,7 +421,7 @@ attribute [to_additive IsCyclic.card_order_of_eq_totient] IsAddCyclic.card_order
 
 /-- A finite group of prime order is simple. -/
 @[to_additive]
-theorem is_simple_group_of_prime_card {α : Type u} [Groupₓ α] [Fintype α] {p : ℕ} [hp : Fact p.prime]
+theorem is_simple_group_of_prime_card {α : Type u} [Groupₓ α] [Fintype α] {p : ℕ} [hp : Fact p.Prime]
     (h : Fintype.card α = p) : IsSimpleGroup α :=
   ⟨by
     have h' := Nat.Prime.one_lt (Fact.out p.prime)
@@ -452,7 +452,7 @@ variable {G : Type _} {H : Type _} [Groupₓ G] [Groupₓ H]
       "A group is commutative if the quotient by\n  the center is cyclic. Also see `add_comm_group_of_cycle_center_quotient`\n  for the `add_comm_group` instance."]
 theorem commutative_of_cyclic_center_quotient [IsCyclic H] (f : G →* H) (hf : f.ker ≤ center G) (a b : G) :
     a * b = b * a :=
-  let ⟨⟨x, y, (hxy : f y = x)⟩, (hx : ∀ a : f.range, a ∈ zpowers _)⟩ := IsCyclic.exists_generator f.range
+  let ⟨⟨x, y, (hxy : f y = x)⟩, (hx : ∀ a : f, a ∈ zpowers _)⟩ := IsCyclic.exists_generator f.range
   let ⟨m, hm⟩ := hx ⟨f a, a, rfl⟩
   let ⟨n, hn⟩ := hx ⟨f b, b, rfl⟩
   have hm : x ^ m = f a := by

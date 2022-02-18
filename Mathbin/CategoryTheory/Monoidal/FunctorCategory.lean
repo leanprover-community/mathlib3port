@@ -20,9 +20,9 @@ open CategoryTheory.MonoidalCategory
 
 namespace CategoryTheory.Monoidal
 
-variable {C : Type u₁} [category.{v₁} C]
+variable {C : Type u₁} [Category.{v₁} C]
 
-variable {D : Type u₂} [category.{v₂} D] [monoidal_category.{v₂} D]
+variable {D : Type u₂} [Category.{v₂} D] [MonoidalCategory.{v₂} D]
 
 namespace FunctorCategory
 
@@ -48,7 +48,7 @@ variable (α : F ⟶ G) (β : F' ⟶ G')
 Tensor product of natural transformations into `D`, when `D` is monoidal.
 -/
 @[simps]
-def tensor_hom : tensor_obj F F' ⟶ tensor_obj G G' where
+def tensor_hom : tensorObj F F' ⟶ tensorObj G G' where
   app := fun X => α.app X ⊗ β.app X
   naturality' := fun X Y f => by
     dsimp
@@ -62,9 +62,9 @@ open CategoryTheory.Monoidal.FunctorCategory
 the functor category `C ⥤ D` has a natural pointwise monoidal structure,
 where `(F ⊗ G).obj X = F.obj X ⊗ G.obj X`.
 -/
-instance functor_category_monoidal : monoidal_category (C ⥤ D) where
-  tensorObj := fun F G => tensor_obj F G
-  tensorHom := fun F G F' G' α β => tensor_hom α β
+instance functor_category_monoidal : MonoidalCategory (C ⥤ D) where
+  tensorObj := fun F G => tensorObj F G
+  tensorHom := fun F G F' G' α β => tensorHom α β
   tensor_id' := fun F G => by
     ext
     dsimp
@@ -75,15 +75,15 @@ instance functor_category_monoidal : monoidal_category (C ⥤ D) where
     rw [tensor_comp]
   tensorUnit := (CategoryTheory.Functor.const C).obj (𝟙_ D)
   leftUnitor := fun F =>
-    nat_iso.of_components (fun X => λ_ (F.obj X)) fun X Y f => by
+    NatIso.ofComponents (fun X => λ_ (F.obj X)) fun X Y f => by
       dsimp
       rw [left_unitor_naturality]
   rightUnitor := fun F =>
-    nat_iso.of_components (fun X => ρ_ (F.obj X)) fun X Y f => by
+    NatIso.ofComponents (fun X => ρ_ (F.obj X)) fun X Y f => by
       dsimp
       rw [right_unitor_naturality]
   associator := fun F G H =>
-    nat_iso.of_components (fun X => α_ (F.obj X) (G.obj X) (H.obj X)) fun X Y f => by
+    NatIso.ofComponents (fun X => α_ (F.obj X) (G.obj X) (H.obj X)) fun X Y f => by
       dsimp
       rw [associator_naturality]
   left_unitor_naturality' := fun F G α => by
@@ -157,15 +157,15 @@ section BraidedCategory
 
 open CategoryTheory.BraidedCategory
 
-variable [braided_category.{v₂} D]
+variable [BraidedCategory.{v₂} D]
 
 /-- When `C` is any category, and `D` is a braided monoidal category,
 the natural pointwise monoidal structure on the functor category `C ⥤ D`
 is also braided.
 -/
-instance functor_category_braided : braided_category (C ⥤ D) where
+instance functor_category_braided : BraidedCategory (C ⥤ D) where
   braiding := fun F G =>
-    nat_iso.of_components (fun X => β_ _ _)
+    NatIso.ofComponents (fun X => β_ _ _)
       (by
         tidy)
   hexagon_forward' := fun F G H => by
@@ -175,7 +175,7 @@ instance functor_category_braided : braided_category (C ⥤ D) where
     ext X
     apply hexagon_reverse
 
-example : braided_category (C ⥤ D) :=
+example : BraidedCategory (C ⥤ D) :=
   CategoryTheory.Monoidal.functorCategoryBraided
 
 end BraidedCategory
@@ -184,13 +184,13 @@ section SymmetricCategory
 
 open CategoryTheory.SymmetricCategory
 
-variable [symmetric_category.{v₂} D]
+variable [SymmetricCategory.{v₂} D]
 
 /-- When `C` is any category, and `D` is a symmetric monoidal category,
 the natural pointwise monoidal structure on the functor category `C ⥤ D`
 is also symmetric.
 -/
-instance functor_category_symmetric : symmetric_category (C ⥤ D) where
+instance functor_category_symmetric : SymmetricCategory (C ⥤ D) where
   symmetry' := fun F G => by
     ext X
     apply symmetry

@@ -352,13 +352,13 @@ theorem pell_zd_sub {m n} (h : n ≤ m) : pell_zd (m - n) = pell_zd m * (pell_zd
 theorem xz_sub {m n} (h : n ≤ m) : xz (m - n) = xz m * xz n - d * yz m * yz n := by
   injection pell_zd_sub _ h with h _ <;>
     repeat'
-        rw [← neg_mul_eq_mul_neg] at h <;>
+        rw [mul_neg] at h <;>
       exact h
 
 theorem yz_sub {m n} (h : n ≤ m) : yz (m - n) = xz n * yz m - xz m * yz n := by
   injection pell_zd_sub a1 h with _ h <;>
     repeat'
-        rw [← neg_mul_eq_mul_neg] at h <;>
+        rw [mul_neg] at h <;>
       rw [add_commₓ, mul_comm] at h <;> exact h
 
 theorem xy_coprime n : (xn n).Coprime (yn n) :=
@@ -434,7 +434,7 @@ theorem xy_modeq_yn n :
                   _)
                 _
     have R : xn (n * k) * yn n + yn (n * k) * xn n ≡ xn n ^ k * yn n + k * xn n ^ k * yn n [MOD yn n ^ 3] :=
-      modeq.add
+      Modeq.add
           (by
             rw [pow_succ'ₓ]
             exact hx.mul_right' _) <|
@@ -598,7 +598,7 @@ theorem xn_modeq_x2n_sub {n j} (h : j ≤ 2 * n) : xn (2 * n - j) + xn j ≡ 0 [
     rwa [tsub_tsub_cancel_of_le h, add_commₓ] at t
 
 theorem xn_modeq_x4n_add n j : xn (4 * n + j) ≡ xn j [MOD xn n] :=
-  modeq.add_right_cancel' (xn (2 * n + j)) <| by
+  Modeq.add_right_cancel' (xn (2 * n + j)) <| by
     refine'
         @modeq.trans _ _ 0 _ _
           (by
@@ -610,7 +610,7 @@ theorem xn_modeq_x4n_sub {n j} (h : j ≤ 2 * n) : xn (4 * n - j) ≡ xn j [MOD 
     le_transₓ h
       (by
         rw [Nat.succ_mul] <;> apply Nat.le_add_leftₓ)
-  modeq.add_right_cancel' (xn (2 * n - j)) <| by
+  Modeq.add_right_cancel' (xn (2 * n - j)) <| by
     refine'
         @modeq.trans _ _ 0 _ _
           (by

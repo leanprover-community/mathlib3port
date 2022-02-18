@@ -509,7 +509,7 @@ def of_mul_hom : α →* FreeAbelianGroup α where
   map_mul' := of_mul
 
 @[simp]
-theorem of_mul_hom_coe : (of_mul_hom : α → FreeAbelianGroup α) = of :=
+theorem of_mul_hom_coe : (ofMulHom : α → FreeAbelianGroup α) = of :=
   rfl
 
 /-- If `f` preserves multiplication, then so does `lift f`. -/
@@ -531,7 +531,7 @@ def lift_monoid : (α →* R) ≃ (FreeAbelianGroup α →+* R) where
           · intro L1 ih
             iterate 3 
               rw [(lift _).map_neg]
-            rw [ih, neg_mul_eq_neg_mul]
+            rw [ih, neg_mul_eq_neg_mulₓ]
             
           · intro x1 x2 ih1 ih2
             iterate 3 
@@ -540,25 +540,25 @@ def lift_monoid : (α →* R) ≃ (FreeAbelianGroup α →+* R) where
             
           
         · intro L2 ih
-          rw [mul_neg_eq_neg_mul_symm, AddMonoidHom.map_neg, AddMonoidHom.map_neg, mul_neg_eq_neg_mul_symm, ih]
+          rw [mul_neg, AddMonoidHom.map_neg, AddMonoidHom.map_neg, mul_neg, ih]
           
         · intro y1 y2 ih1 ih2
           rw [mul_addₓ, AddMonoidHom.map_add, AddMonoidHom.map_add, mul_addₓ, ih1, ih2]
            }
-  invFun := fun F => MonoidHom.comp (↑F) of_mul_hom
+  invFun := fun F => MonoidHom.comp (↑F) ofMulHom
   left_inv := fun f => MonoidHom.ext <| lift.of _
   right_inv := fun F => RingHom.coe_add_monoid_hom_injective <| lift.apply_symm_apply (↑F : FreeAbelianGroup α →+ R)
 
 @[simp]
-theorem lift_monoid_coe_add_monoid_hom (f : α →* R) : ↑(lift_monoid f) = lift f :=
+theorem lift_monoid_coe_add_monoid_hom (f : α →* R) : ↑(liftMonoid f) = lift f :=
   rfl
 
 @[simp]
-theorem lift_monoid_coe (f : α →* R) : ⇑lift_monoid f = lift f :=
+theorem lift_monoid_coe (f : α →* R) : ⇑liftMonoid f = lift f :=
   rfl
 
 @[simp]
-theorem lift_monoid_symm_coe (f : FreeAbelianGroup α →+* R) : ⇑lift_monoid.symm f = lift.symm ↑f :=
+theorem lift_monoid_symm_coe (f : FreeAbelianGroup α →+* R) : ⇑liftMonoid.symm f = lift.symm ↑f :=
   rfl
 
 theorem one_def : (1 : FreeAbelianGroup α) = of 1 :=
@@ -583,14 +583,14 @@ instance [CommMonoidₓ α] : CommRingₓ (FreeAbelianGroup α) :=
           exact mul_comm _ _
           
         · intro t ih
-          rw [mul_neg_eq_neg_mul_symm, ih, neg_mul_eq_neg_mul]
+          rw [mul_neg, ih, neg_mul_eq_neg_mulₓ]
           
         · intro y1 y2 ih1 ih2
           rw [mul_addₓ, add_mulₓ, ih1, ih2]
           
         
       · intro s ih
-        rw [neg_mul_eq_neg_mul_symm, ih, neg_mul_eq_mul_neg]
+        rw [neg_mul, ih, neg_mul_eq_mul_neg]
         
       · intro x1 x2 ih1 ih2
         rw [add_mulₓ, mul_addₓ, ih1, ih2]

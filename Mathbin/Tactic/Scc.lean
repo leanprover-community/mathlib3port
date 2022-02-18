@@ -91,7 +91,7 @@ unsafe def with_new_closure {α} : (closure → tactic α) → tactic α :=
 Useful for debugging. -/
 unsafe def to_tactic_format (cl : closure) : tactic format := do
   let m ← read_ref cl
-  let l := m.to_list
+  let l := m.toList
   let fmt ←
     l.mmap fun ⟨x, y⟩ =>
         match y with
@@ -107,7 +107,7 @@ itself) along with `p` a proof of `e ↔ r` and `n`, the preorder numbering of t
 unsafe def root (cl : closure) : expr → tactic (ℕ × expr × expr)
   | e => do
     let m ← read_ref cl
-    match m.find e with
+    match m e with
       | none => do
         let p ← mk_app `` Iff.refl [e]
         pure (0, e, p)
@@ -117,7 +117,7 @@ unsafe def root (cl : closure) : expr → tactic (ℕ × expr × expr)
       | some (Sum.inr (e₀, p₀)) => do
         let (n, e₁, p₁) ← root e₀
         let p ← mk_app `` Iff.trans [p₀, p₁]
-        (modify_ref cl) fun m => m.insert e (Sum.inr (e₁, p))
+        (modify_ref cl) fun m => m e (Sum.inr (e₁, p))
         pure (n, e₁, p)
 
 /-- (Implementation of `merge`.) -/
@@ -125,7 +125,7 @@ unsafe def merge_intl (cl : closure) (p e₀ p₀ e₁ p₁ : expr) : tactic Uni
   let p₂ ← mk_app `` Iff.symm [p₀]
   let p ← mk_app `` Iff.trans [p₂, p]
   let p ← mk_app `` Iff.trans [p, p₁]
-  (modify_ref cl) fun m => m.insert e₀ <| Sum.inr (e₁, p)
+  (modify_ref cl) fun m => m e₀ <| Sum.inr (e₁, p)
 
 /-- `merge cl p`, with `p` a proof of `e₀ ↔ e₁` for some `e₀` and `e₁`,
 merges the trees of `e₀` and `e₁` and keeps the root with the smallest preorder
@@ -140,8 +140,8 @@ unsafe def merge (cl : closure) (p : expr) : tactic Unit := do
   if e₂ ≠ e₃ then do
       if n₂ < n₃ then do
           let p ← mk_app `` Iff.symm [p]
-          cl.merge_intl p e₃ p₃ e₂ p₂
-        else cl.merge_intl p e₂ p₂ e₃ p₃
+          cl p e₃ p₃ e₂ p₂
+        else cl p e₂ p₂ e₃ p₃
     else pure ()
 
 /-- Sequentially assign numbers to the nodes of the graph as they are being visited. -/
@@ -191,9 +191,9 @@ unsafe def add_edge (g : impl_graph) : expr → tactic Unit
         is_prop v₀ >>= guardb
         is_prop v₁ >>= guardb
         let m ← read_ref g
-        let xs := (m.find v₀).getOrElse []
-        let xs' := (m.find v₁).getOrElse []
-        (modify_ref g) fun m => (m.insert v₀ ((v₁, p) :: xs)).insert v₁ xs'
+        let xs := (m v₀).getOrElse []
+        let xs' := (m v₁).getOrElse []
+        (modify_ref g) fun m => (m v₀ ((v₁, p) :: xs)).insert v₁ xs'
       | quote.1 ((%%ₓv₀) ↔ %%ₓv₁) => do
         let p₀ ← mk_mapp `` Iff.mp [none, none, p]
         let p₁ ← mk_mapp `` Iff.mpr [none, none, p]
@@ -220,11 +220,11 @@ unsafe def merge_path (path : List (expr × expr)) (e : expr) : tactic Unit := d
   let p₂ ← mk_mapp `` id [e]
   let path := (e, p₁) :: path
   let (_, ls) ←
-    path.mmap_accuml (fun p p' => Prod.mk <$> mk_mapp `` Implies.trans [none, p'.1, none, p, p'.2] <*> pure p) p₂
+    path.mmapAccuml (fun p p' => Prod.mk <$> mk_mapp `` Implies.trans [none, p'.1, none, p, p'.2] <*> pure p) p₂
   let (_, rs) ←
-    path.mmap_accumr (fun p p' => Prod.mk <$> mk_mapp `` Implies.trans [none, none, none, p.2, p'] <*> pure p') p₂
+    path.mmapAccumr (fun p p' => Prod.mk <$> mk_mapp `` Implies.trans [none, none, none, p.2, p'] <*> pure p') p₂
   let ps ← mzipWith (fun p₀ p₁ => mk_app `` Iff.intro [p₀, p₁]) ls.tail rs.init
-  ps.mmap' cl.merge
+  ps cl
 
 /-- (implementation of `collapse`) -/
 unsafe def collapse' : List (expr × expr) → List (expr × expr) → expr → tactic Unit
@@ -256,15 +256,15 @@ unsafe def dfs_at : List (expr × expr) → expr → tactic Unit
   | vs, v => do
     let m ← read_ref visit
     let (_, v', _) ← cl.root v
-    match m.find v' with
+    match m v' with
       | some tt => pure ()
       | some ff => collapse vs v
       | none => do
-        cl.assign_preorder v
-        (modify_ref visit) fun m => m.insert v ff
-        let ns ← g.find v
-        ns.mmap' fun ⟨w, e⟩ => dfs_at ((v, e) :: vs) w
-        (modify_ref visit) fun m => m.insert v tt
+        cl v
+        (modify_ref visit) fun m => m v ff
+        let ns ← g v
+        ns fun ⟨w, e⟩ => dfs_at ((v, e) :: vs) w
+        (modify_ref visit) fun m => m v tt
         pure ()
 
 end Scc
@@ -274,16 +274,16 @@ unsafe def mk_scc (cl : closure) : tactic (expr_map (List (expr × expr))) :=
   with_impl_graph fun g =>
     (using_new_ref (expr_map.mk Bool)) fun visit => do
       let ls ← local_context
-      ls.mmap' fun l => try (g.add_edge l)
+      ls fun l => try (g l)
       let m ← read_ref g
-      m.to_list.mmap fun ⟨v, _⟩ => impl_graph.dfs_at m visit cl [] v
+      m fun ⟨v, _⟩ => impl_graph.dfs_at m visit cl [] v
       pure m
 
 end ImplGraph
 
 unsafe def prove_eqv_target (cl : closure) : tactic Unit := do
   let quote.1 ((%%ₓp) ↔ %%ₓq) ← target >>= whnf
-  cl.prove_eqv p q >>= exact
+  cl p q >>= exact
 
 /-- `scc` uses the available equivalences and implications to prove
 a goal of the form `p ↔ q`.
@@ -297,7 +297,7 @@ unsafe def interactive.scc : tactic Unit :=
   closure.with_new_closure fun cl => do
     impl_graph.mk_scc cl
     let quote.1 ((%%ₓp) ↔ %%ₓq) ← target
-    cl.prove_eqv p q >>= exact
+    cl p q >>= exact
 
 /-- Collect all the available equivalences and implications and
 add assumptions for every equivalence that can be proven using the
@@ -305,9 +305,9 @@ strongly connected components technique. Mostly useful for testing. -/
 unsafe def interactive.scc' : tactic Unit :=
   closure.with_new_closure fun cl => do
     let m ← impl_graph.mk_scc cl
-    let ls := m.to_list.map Prod.fst
+    let ls := m.toList.map Prod.fst
     let ls' := Prod.mk <$> ls <*> ls
-    ls'.mmap' fun x => do
+    ls' fun x => do
         let h ← get_unused_name `h
         try <| closure.prove_eqv cl x.1 x.2 >>= note h none
 

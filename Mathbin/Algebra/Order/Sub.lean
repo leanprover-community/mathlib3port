@@ -65,7 +65,7 @@ theorem AddHom.le_map_tsub [Preorderₓ β] [Add β] [Sub β] [HasOrderedSub β]
   rw [tsub_le_iff_right, ← f.map_add]
   exact hf le_tsub_add
 
-theorem le_mul_tsub {R : Type _} [Distrib R] [Preorderₓ R] [Sub R] [HasOrderedSub R]
+theorem le_mul_tsub {R : Type _} [Distribₓ R] [Preorderₓ R] [Sub R] [HasOrderedSub R]
     [CovariantClass R R (· * ·) (· ≤ ·)] {a b c : R} : a * b - a * c ≤ a * (b - c) :=
   (AddHom.mulLeft a).le_map_tsub (monotone_id.const_mul' a) _ _
 
@@ -213,7 +213,7 @@ alias tsub_nonpos ↔ _ tsub_nonpos_of_le
 
 theorem AddMonoidHom.le_map_tsub [Preorderₓ β] [AddCommMonoidₓ β] [Sub β] [HasOrderedSub β] (f : α →+ β)
     (hf : Monotone f) (a b : α) : f a - f b ≤ f (a - b) :=
-  f.to_add_hom.le_map_tsub hf a b
+  f.toAddHom.le_map_tsub hf a b
 
 end Preorderₓ
 

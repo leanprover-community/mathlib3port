@@ -76,7 +76,7 @@ def refl (ι : Type _) : ComplexShape ι where
 -/
 @[simps]
 def symm (c : ComplexShape ι) : ComplexShape ι where
-  Rel := fun i j => c.rel j i
+  Rel := fun i j => c.Rel j i
   next_eq := fun i j j' w w' => c.prev_eq w w'
   prev_eq := fun i i' j w w' => c.next_eq w w'
 
@@ -91,7 +91,7 @@ We need this to define "related in k steps" later.
 -/
 @[simp]
 def trans (c₁ c₂ : ComplexShape ι) : ComplexShape ι where
-  Rel := Relation.Comp c₁.rel c₂.rel
+  Rel := Relation.Comp c₁.Rel c₂.Rel
   next_eq := fun i j j' w w' => by
     obtain ⟨k, w₁, w₂⟩ := w
     obtain ⟨k', w₁', w₂'⟩ := w'
@@ -103,13 +103,13 @@ def trans (c₁ c₂ : ComplexShape ι) : ComplexShape ι where
     rw [c₂.prev_eq w₂ w₂'] at w₁
     exact c₁.prev_eq w₁ w₁'
 
-instance subsingleton_next (c : ComplexShape ι) (i : ι) : Subsingleton { j // c.rel i j } := by
+instance subsingleton_next (c : ComplexShape ι) (i : ι) : Subsingleton { j // c.Rel i j } := by
   fconstructor
   rintro ⟨j, rij⟩ ⟨k, rik⟩
   congr
   exact c.next_eq rij rik
 
-instance subsingleton_prev (c : ComplexShape ι) (j : ι) : Subsingleton { i // c.rel i j } := by
+instance subsingleton_prev (c : ComplexShape ι) (j : ι) : Subsingleton { i // c.Rel i j } := by
   fconstructor
   rintro ⟨i, rik⟩ ⟨j, rjk⟩
   congr
@@ -117,18 +117,18 @@ instance subsingleton_prev (c : ComplexShape ι) (j : ι) : Subsingleton { i // 
 
 /-- An option-valued arbitary choice of index `j` such that `rel i j`, if such exists.
 -/
-def next (c : ComplexShape ι) (i : ι) : Option { j // c.rel i j } :=
+def next (c : ComplexShape ι) (i : ι) : Option { j // c.Rel i j } :=
   Option.choice _
 
 /-- An option-valued arbitary choice of index `i` such that `rel i j`, if such exists.
 -/
-def prev (c : ComplexShape ι) (j : ι) : Option { i // c.rel i j } :=
+def prev (c : ComplexShape ι) (j : ι) : Option { i // c.Rel i j } :=
   Option.choice _
 
-theorem next_eq_some (c : ComplexShape ι) {i j : ι} (h : c.rel i j) : c.next i = some ⟨j, h⟩ :=
+theorem next_eq_some (c : ComplexShape ι) {i j : ι} (h : c.Rel i j) : c.next i = some ⟨j, h⟩ :=
   Option.choice_eq _
 
-theorem prev_eq_some (c : ComplexShape ι) {i j : ι} (h : c.rel i j) : c.prev j = some ⟨i, h⟩ :=
+theorem prev_eq_some (c : ComplexShape ι) {i j : ι} (h : c.Rel i j) : c.prev j = some ⟨i, h⟩ :=
   Option.choice_eq _
 
 /-- The `complex_shape` allowing differentials from `X i` to `X (i+a)`.

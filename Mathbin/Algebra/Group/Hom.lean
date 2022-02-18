@@ -218,7 +218,7 @@ end Mul
 
 section mul_oneₓ
 
-variable [MulOneClass M] [MulOneClass N]
+variable [MulOneClassₓ M] [MulOneClassₓ N]
 
 /-- `M →* N` is the type of functions `M → N` that preserve the `monoid` structure.
 `monoid_hom` is also used for group homomorphisms.
@@ -229,7 +229,7 @@ you should parametrize over `(F : Type*) [monoid_hom_class F M N] (f : F)`.
 When you extend this structure, make sure to extend `monoid_hom_class`.
 -/
 @[ancestor OneHom MulHom, to_additive]
-structure MonoidHom (M : Type _) (N : Type _) [MulOneClass M] [MulOneClass N] extends OneHom M N, MulHom M N
+structure MonoidHom (M : Type _) (N : Type _) [MulOneClassₓ M] [MulOneClassₓ N] extends OneHom M N, MulHom M N
 
 attribute [nolint doc_blame] MonoidHom.toMulHom
 
@@ -241,8 +241,8 @@ infixr:25 " →* " => MonoidHom
 You should also extend this typeclass when you extend `monoid_hom`.
 -/
 @[ancestor MulHomClass OneHomClass, to_additive]
-class MonoidHomClass (F : Type _) (M N : outParam <| Type _) [MulOneClass M] [MulOneClass N] extends MulHomClass F M N,
-  OneHomClass F M N
+class MonoidHomClass (F : Type _) (M N : outParam <| Type _) [MulOneClassₓ M] [MulOneClassₓ N] extends
+  MulHomClass F M N, OneHomClass F M N
 
 @[to_additive]
 instance MonoidHom.monoidHomClass : MonoidHomClass (M →* N) M N where
@@ -299,7 +299,7 @@ end mul_oneₓ
 
 section MulZeroOne
 
-variable [MulZeroOneClass M] [MulZeroOneClass N]
+variable [MulZeroOneClassₓ M] [MulZeroOneClassₓ N]
 
 /-- `M →*₀ N` is the type of functions `M → N` that preserve
 the `monoid_with_zero` structure.
@@ -312,7 +312,7 @@ you should parametrize over `(F : Type*) [monoid_with_zero_hom_class F M N] (f :
 When you extend this structure, make sure to extend `monoid_with_zero_hom_class`.
 -/
 @[ancestor ZeroHom MonoidHom]
-structure MonoidWithZeroHom (M : Type _) (N : Type _) [MulZeroOneClass M] [MulZeroOneClass N] extends ZeroHom M N,
+structure MonoidWithZeroHom (M : Type _) (N : Type _) [MulZeroOneClassₓ M] [MulZeroOneClassₓ N] extends ZeroHom M N,
   MonoidHom M N
 
 attribute [nolint doc_blame] MonoidWithZeroHom.toMonoidHom
@@ -326,7 +326,7 @@ infixr:25 " →*₀ " => MonoidWithZeroHom
 
 You should also extend this typeclass when you extend `monoid_with_zero_hom`.
 -/
-class MonoidWithZeroHomClass (F : Type _) (M N : outParam <| Type _) [MulZeroOneClass M] [MulZeroOneClass N] extends
+class MonoidWithZeroHomClass (F : Type _) (M N : outParam <| Type _) [MulZeroOneClassₓ M] [MulZeroOneClassₓ N] extends
   MonoidHomClass F M N, ZeroHomClass F M N
 
 instance MonoidWithZeroHom.monoidWithZeroHomClass : MonoidWithZeroHomClass (M →*₀ N) M N where
@@ -348,18 +348,18 @@ section Coes
 
 
 @[to_additive]
-instance MonoidHom.hasCoeToOneHom {mM : MulOneClass M} {mN : MulOneClass N} : Coe (M →* N) (OneHom M N) :=
+instance MonoidHom.hasCoeToOneHom {mM : MulOneClassₓ M} {mN : MulOneClassₓ N} : Coe (M →* N) (OneHom M N) :=
   ⟨MonoidHom.toOneHom⟩
 
 @[to_additive]
-instance MonoidHom.hasCoeToMulHom {mM : MulOneClass M} {mN : MulOneClass N} : Coe (M →* N) (MulHom M N) :=
+instance MonoidHom.hasCoeToMulHom {mM : MulOneClassₓ M} {mN : MulOneClassₓ N} : Coe (M →* N) (MulHom M N) :=
   ⟨MonoidHom.toMulHom⟩
 
-instance MonoidWithZeroHom.hasCoeToMonoidHom {mM : MulZeroOneClass M} {mN : MulZeroOneClass N} :
+instance MonoidWithZeroHom.hasCoeToMonoidHom {mM : MulZeroOneClassₓ M} {mN : MulZeroOneClassₓ N} :
     Coe (M →*₀ N) (M →* N) :=
   ⟨MonoidWithZeroHom.toMonoidHom⟩
 
-instance MonoidWithZeroHom.hasCoeToZeroHom {mM : MulZeroOneClass M} {mN : MulZeroOneClass N} :
+instance MonoidWithZeroHom.hasCoeToZeroHom {mM : MulZeroOneClassₓ M} {mN : MulZeroOneClassₓ N} :
     Coe (M →*₀ N) (ZeroHom M N) :=
   ⟨MonoidWithZeroHom.toZeroHom⟩
 
@@ -369,23 +369,23 @@ elsewhere in Mathlib may choose `↑f` as their simp-normal form instead. -/
 
 
 @[simp, to_additive]
-theorem MonoidHom.coe_eq_to_one_hom {mM : MulOneClass M} {mN : MulOneClass N} (f : M →* N) :
-    (f : OneHom M N) = f.to_one_hom :=
+theorem MonoidHom.coe_eq_to_one_hom {mM : MulOneClassₓ M} {mN : MulOneClassₓ N} (f : M →* N) :
+    (f : OneHom M N) = f.toOneHom :=
   rfl
 
 @[simp, to_additive]
-theorem MonoidHom.coe_eq_to_mul_hom {mM : MulOneClass M} {mN : MulOneClass N} (f : M →* N) :
-    (f : MulHom M N) = f.to_mul_hom :=
+theorem MonoidHom.coe_eq_to_mul_hom {mM : MulOneClassₓ M} {mN : MulOneClassₓ N} (f : M →* N) :
+    (f : MulHom M N) = f.toMulHom :=
   rfl
 
 @[simp]
-theorem MonoidWithZeroHom.coe_eq_to_monoid_hom {mM : MulZeroOneClass M} {mN : MulZeroOneClass N} (f : M →*₀ N) :
-    (f : M →* N) = f.to_monoid_hom :=
+theorem MonoidWithZeroHom.coe_eq_to_monoid_hom {mM : MulZeroOneClassₓ M} {mN : MulZeroOneClassₓ N} (f : M →*₀ N) :
+    (f : M →* N) = f.toMonoidHom :=
   rfl
 
 @[simp]
-theorem MonoidWithZeroHom.coe_eq_to_zero_hom {mM : MulZeroOneClass M} {mN : MulZeroOneClass N} (f : M →*₀ N) :
-    (f : ZeroHom M N) = f.to_zero_hom :=
+theorem MonoidWithZeroHom.coe_eq_to_zero_hom {mM : MulZeroOneClassₓ M} {mN : MulZeroOneClassₓ N} (f : M →*₀ N) :
+    (f : ZeroHom M N) = f.toZeroHom :=
   rfl
 
 @[to_additive]
@@ -397,10 +397,10 @@ instance {mM : Mul M} {mN : Mul N} : CoeFun (MulHom M N) fun _ => M → N :=
   ⟨MulHom.toFun⟩
 
 @[to_additive]
-instance {mM : MulOneClass M} {mN : MulOneClass N} : CoeFun (M →* N) fun _ => M → N :=
+instance {mM : MulOneClassₓ M} {mN : MulOneClassₓ N} : CoeFun (M →* N) fun _ => M → N :=
   ⟨MonoidHom.toFun⟩
 
-instance {mM : MulZeroOneClass M} {mN : MulZeroOneClass N} : CoeFun (M →*₀ N) fun _ => M → N :=
+instance {mM : MulZeroOneClassₓ M} {mN : MulZeroOneClassₓ N} : CoeFun (M →*₀ N) fun _ => M → N :=
   ⟨MonoidWithZeroHom.toFun⟩
 
 initialize_simps_projections ZeroHom (toFun → apply)
@@ -418,19 +418,19 @@ initialize_simps_projections MonoidHom (toFun → apply)
 initialize_simps_projections MonoidWithZeroHom (toFun → apply)
 
 @[simp, to_additive]
-theorem OneHom.to_fun_eq_coe [One M] [One N] (f : OneHom M N) : f.to_fun = f :=
+theorem OneHom.to_fun_eq_coe [One M] [One N] (f : OneHom M N) : f.toFun = f :=
   rfl
 
 @[simp, to_additive]
-theorem MulHom.to_fun_eq_coe [Mul M] [Mul N] (f : MulHom M N) : f.to_fun = f :=
+theorem MulHom.to_fun_eq_coe [Mul M] [Mul N] (f : MulHom M N) : f.toFun = f :=
   rfl
 
 @[simp, to_additive]
-theorem MonoidHom.to_fun_eq_coe [MulOneClass M] [MulOneClass N] (f : M →* N) : f.to_fun = f :=
+theorem MonoidHom.to_fun_eq_coe [MulOneClassₓ M] [MulOneClassₓ N] (f : M →* N) : f.toFun = f :=
   rfl
 
 @[simp]
-theorem MonoidWithZeroHom.to_fun_eq_coe [MulZeroOneClass M] [MulZeroOneClass N] (f : M →*₀ N) : f.to_fun = f :=
+theorem MonoidWithZeroHom.to_fun_eq_coe [MulZeroOneClassₓ M] [MulZeroOneClassₓ N] (f : M →*₀ N) : f.toFun = f :=
   rfl
 
 @[simp, to_additive]
@@ -442,30 +442,30 @@ theorem MulHom.coe_mk [Mul M] [Mul N] (f : M → N) hmul : (MulHom.mk f hmul : M
   rfl
 
 @[simp, to_additive]
-theorem MonoidHom.coe_mk [MulOneClass M] [MulOneClass N] (f : M → N) h1 hmul : (MonoidHom.mk f h1 hmul : M → N) = f :=
+theorem MonoidHom.coe_mk [MulOneClassₓ M] [MulOneClassₓ N] (f : M → N) h1 hmul : (MonoidHom.mk f h1 hmul : M → N) = f :=
   rfl
 
 @[simp]
-theorem MonoidWithZeroHom.coe_mk [MulZeroOneClass M] [MulZeroOneClass N] (f : M → N) h0 h1 hmul :
+theorem MonoidWithZeroHom.coe_mk [MulZeroOneClassₓ M] [MulZeroOneClassₓ N] (f : M → N) h0 h1 hmul :
     (MonoidWithZeroHom.mk f h0 h1 hmul : M → N) = f :=
   rfl
 
 @[simp, to_additive]
-theorem MonoidHom.to_one_hom_coe [MulOneClass M] [MulOneClass N] (f : M →* N) : (f.to_one_hom : M → N) = f :=
+theorem MonoidHom.to_one_hom_coe [MulOneClassₓ M] [MulOneClassₓ N] (f : M →* N) : (f.toOneHom : M → N) = f :=
   rfl
 
 @[simp, to_additive]
-theorem MonoidHom.to_mul_hom_coe [MulOneClass M] [MulOneClass N] (f : M →* N) : (f.to_mul_hom : M → N) = f :=
+theorem MonoidHom.to_mul_hom_coe [MulOneClassₓ M] [MulOneClassₓ N] (f : M →* N) : (f.toMulHom : M → N) = f :=
   rfl
 
 @[simp]
-theorem MonoidWithZeroHom.to_zero_hom_coe [MulZeroOneClass M] [MulZeroOneClass N] (f : M →*₀ N) :
-    (f.to_zero_hom : M → N) = f :=
+theorem MonoidWithZeroHom.to_zero_hom_coe [MulZeroOneClassₓ M] [MulZeroOneClassₓ N] (f : M →*₀ N) :
+    (f.toZeroHom : M → N) = f :=
   rfl
 
 @[simp]
-theorem MonoidWithZeroHom.to_monoid_hom_coe [MulZeroOneClass M] [MulZeroOneClass N] (f : M →*₀ N) :
-    (f.to_monoid_hom : M → N) = f :=
+theorem MonoidWithZeroHom.to_monoid_hom_coe [MulZeroOneClassₓ M] [MulZeroOneClassₓ N] (f : M →*₀ N) :
+    (f.toMonoidHom : M → N) = f :=
   rfl
 
 @[to_additive]
@@ -477,10 +477,10 @@ theorem MulHom.congr_fun [Mul M] [Mul N] {f g : MulHom M N} (h : f = g) (x : M) 
   congr_argₓ (fun h : MulHom M N => h x) h
 
 @[to_additive]
-theorem MonoidHom.congr_fun [MulOneClass M] [MulOneClass N] {f g : M →* N} (h : f = g) (x : M) : f x = g x :=
+theorem MonoidHom.congr_fun [MulOneClassₓ M] [MulOneClassₓ N] {f g : M →* N} (h : f = g) (x : M) : f x = g x :=
   congr_argₓ (fun h : M →* N => h x) h
 
-theorem MonoidWithZeroHom.congr_fun [MulZeroOneClass M] [MulZeroOneClass N] {f g : M →*₀ N} (h : f = g) (x : M) :
+theorem MonoidWithZeroHom.congr_fun [MulZeroOneClassₓ M] [MulZeroOneClassₓ N] {f g : M →*₀ N} (h : f = g) (x : M) :
     f x = g x :=
   congr_argₓ (fun h : M →*₀ N => h x) h
 
@@ -493,10 +493,10 @@ theorem MulHom.congr_arg [Mul M] [Mul N] (f : MulHom M N) {x y : M} (h : x = y) 
   congr_argₓ (fun x : M => f x) h
 
 @[to_additive]
-theorem MonoidHom.congr_arg [MulOneClass M] [MulOneClass N] (f : M →* N) {x y : M} (h : x = y) : f x = f y :=
+theorem MonoidHom.congr_arg [MulOneClassₓ M] [MulOneClassₓ N] (f : M →* N) {x y : M} (h : x = y) : f x = f y :=
   congr_argₓ (fun x : M => f x) h
 
-theorem MonoidWithZeroHom.congr_arg [MulZeroOneClass M] [MulZeroOneClass N] (f : M →*₀ N) {x y : M} (h : x = y) :
+theorem MonoidWithZeroHom.congr_arg [MulZeroOneClassₓ M] [MulZeroOneClassₓ N] (f : M →*₀ N) {x y : M} (h : x = y) :
     f x = f y :=
   congr_argₓ (fun x : M => f x) h
 
@@ -509,10 +509,10 @@ theorem MulHom.coe_inj [Mul M] [Mul N] ⦃f g : MulHom M N⦄ (h : (f : M → N)
   cases f <;> cases g <;> cases h <;> rfl
 
 @[to_additive]
-theorem MonoidHom.coe_inj [MulOneClass M] [MulOneClass N] ⦃f g : M →* N⦄ (h : (f : M → N) = g) : f = g := by
+theorem MonoidHom.coe_inj [MulOneClassₓ M] [MulOneClassₓ N] ⦃f g : M →* N⦄ (h : (f : M → N) = g) : f = g := by
   cases f <;> cases g <;> cases h <;> rfl
 
-theorem MonoidWithZeroHom.coe_inj [MulZeroOneClass M] [MulZeroOneClass N] ⦃f g : M →*₀ N⦄ (h : (f : M → N) = g) :
+theorem MonoidWithZeroHom.coe_inj [MulZeroOneClassₓ M] [MulZeroOneClassₓ N] ⦃f g : M →*₀ N⦄ (h : (f : M → N) = g) :
     f = g := by
   cases f <;> cases g <;> cases h <;> rfl
 
@@ -525,11 +525,11 @@ theorem MulHom.ext [Mul M] [Mul N] ⦃f g : MulHom M N⦄ (h : ∀ x, f x = g x)
   MulHom.coe_inj (funext h)
 
 @[ext, to_additive]
-theorem MonoidHom.ext [MulOneClass M] [MulOneClass N] ⦃f g : M →* N⦄ (h : ∀ x, f x = g x) : f = g :=
+theorem MonoidHom.ext [MulOneClassₓ M] [MulOneClassₓ N] ⦃f g : M →* N⦄ (h : ∀ x, f x = g x) : f = g :=
   MonoidHom.coe_inj (funext h)
 
 @[ext]
-theorem MonoidWithZeroHom.ext [MulZeroOneClass M] [MulZeroOneClass N] ⦃f g : M →*₀ N⦄ (h : ∀ x, f x = g x) : f = g :=
+theorem MonoidWithZeroHom.ext [MulZeroOneClassₓ M] [MulZeroOneClassₓ N] ⦃f g : M →*₀ N⦄ (h : ∀ x, f x = g x) : f = g :=
   MonoidWithZeroHom.coe_inj (funext h)
 
 @[to_additive]
@@ -541,10 +541,10 @@ theorem MulHom.ext_iff [Mul M] [Mul N] {f g : MulHom M N} : f = g ↔ ∀ x, f x
   ⟨fun h x => h ▸ rfl, fun h => MulHom.ext h⟩
 
 @[to_additive]
-theorem MonoidHom.ext_iff [MulOneClass M] [MulOneClass N] {f g : M →* N} : f = g ↔ ∀ x, f x = g x :=
+theorem MonoidHom.ext_iff [MulOneClassₓ M] [MulOneClassₓ N] {f g : M →* N} : f = g ↔ ∀ x, f x = g x :=
   ⟨fun h x => h ▸ rfl, fun h => MonoidHom.ext h⟩
 
-theorem MonoidWithZeroHom.ext_iff [MulZeroOneClass M] [MulZeroOneClass N] {f g : M →*₀ N} : f = g ↔ ∀ x, f x = g x :=
+theorem MonoidWithZeroHom.ext_iff [MulZeroOneClassₓ M] [MulZeroOneClassₓ N] {f g : M →*₀ N} : f = g ↔ ∀ x, f x = g x :=
   ⟨fun h x => h ▸ rfl, fun h => MonoidWithZeroHom.ext h⟩
 
 @[simp, to_additive]
@@ -556,11 +556,11 @@ theorem MulHom.mk_coe [Mul M] [Mul N] (f : MulHom M N) hmul : MulHom.mk f hmul =
   MulHom.ext fun _ => rfl
 
 @[simp, to_additive]
-theorem MonoidHom.mk_coe [MulOneClass M] [MulOneClass N] (f : M →* N) h1 hmul : MonoidHom.mk f h1 hmul = f :=
+theorem MonoidHom.mk_coe [MulOneClassₓ M] [MulOneClassₓ N] (f : M →* N) h1 hmul : MonoidHom.mk f h1 hmul = f :=
   MonoidHom.ext fun _ => rfl
 
 @[simp]
-theorem MonoidWithZeroHom.mk_coe [MulZeroOneClass M] [MulZeroOneClass N] (f : M →*₀ N) h0 h1 hmul :
+theorem MonoidWithZeroHom.mk_coe [MulZeroOneClassₓ M] [MulZeroOneClassₓ N] (f : M →*₀ N) h0 h1 hmul :
     MonoidWithZeroHom.mk f h0 h1 hmul = f :=
   MonoidWithZeroHom.ext fun _ => rfl
 
@@ -584,15 +584,15 @@ protected def MulHom.copy {hM : Mul M} {hN : Mul N} (f : MulHom M N) (f' : M →
 definitional equalities. -/
 @[to_additive
       "Copy of an `add_monoid_hom` with a new `to_fun` equal to the old one. Useful to fix\ndefinitional equalities."]
-protected def MonoidHom.copy {hM : MulOneClass M} {hN : MulOneClass N} (f : M →* N) (f' : M → N) (h : f' = f) :
+protected def MonoidHom.copy {hM : MulOneClassₓ M} {hN : MulOneClassₓ N} (f : M →* N) (f' : M → N) (h : f' = f) :
     M →* N :=
-  { f.to_one_hom.copy f' h, f.to_mul_hom.copy f' h with }
+  { f.toOneHom.copy f' h, f.toMulHom.copy f' h with }
 
 /-- Copy of a `monoid_hom` with a new `to_fun` equal to the old one. Useful to fix
 definitional equalities. -/
-protected def MonoidWithZeroHom.copy {hM : MulZeroOneClass M} {hN : MulZeroOneClass N} (f : M →*₀ N) (f' : M → N)
+protected def MonoidWithZeroHom.copy {hM : MulZeroOneClassₓ M} {hN : MulZeroOneClassₓ N} (f : M →*₀ N) (f' : M → N)
     (h : f' = f) : M →* N :=
-  { f.to_zero_hom.copy f' h, f.to_monoid_hom.copy f' h with }
+  { f.toZeroHom.copy f' h, f.toMonoidHom.copy f' h with }
 
 @[to_additive]
 protected theorem OneHom.map_one [One M] [One N] (f : OneHom M N) : f 1 = 1 :=
@@ -600,16 +600,16 @@ protected theorem OneHom.map_one [One M] [One N] (f : OneHom M N) : f 1 = 1 :=
 
 /-- If `f` is a monoid homomorphism then `f 1 = 1`. -/
 @[to_additive]
-protected theorem MonoidHom.map_one [MulOneClass M] [MulOneClass N] (f : M →* N) : f 1 = 1 :=
+protected theorem MonoidHom.map_one [MulOneClassₓ M] [MulOneClassₓ N] (f : M →* N) : f 1 = 1 :=
   f.map_one'
 
-protected theorem MonoidWithZeroHom.map_one [MulZeroOneClass M] [MulZeroOneClass N] (f : M →*₀ N) : f 1 = 1 :=
+protected theorem MonoidWithZeroHom.map_one [MulZeroOneClassₓ M] [MulZeroOneClassₓ N] (f : M →*₀ N) : f 1 = 1 :=
   f.map_one'
 
 /-- If `f` is an additive monoid homomorphism then `f 0 = 0`. -/
 add_decl_doc AddMonoidHom.map_zero
 
-protected theorem MonoidWithZeroHom.map_zero [MulZeroOneClass M] [MulZeroOneClass N] (f : M →*₀ N) : f 0 = 0 :=
+protected theorem MonoidWithZeroHom.map_zero [MulZeroOneClassₓ M] [MulZeroOneClassₓ N] (f : M →*₀ N) : f 0 = 0 :=
   f.map_zero'
 
 @[to_additive]
@@ -618,10 +618,10 @@ protected theorem MulHom.map_mul [Mul M] [Mul N] (f : MulHom M N) (a b : M) : f 
 
 /-- If `f` is a monoid homomorphism then `f (a * b) = f a * f b`. -/
 @[to_additive]
-protected theorem MonoidHom.map_mul [MulOneClass M] [MulOneClass N] (f : M →* N) (a b : M) : f (a * b) = f a * f b :=
+protected theorem MonoidHom.map_mul [MulOneClassₓ M] [MulOneClassₓ N] (f : M →* N) (a b : M) : f (a * b) = f a * f b :=
   f.map_mul' a b
 
-protected theorem MonoidWithZeroHom.map_mul [MulZeroOneClass M] [MulZeroOneClass N] (f : M →*₀ N) (a b : M) :
+protected theorem MonoidWithZeroHom.map_mul [MulZeroOneClassₓ M] [MulZeroOneClassₓ N] (f : M →*₀ N) (a b : M) :
     f (a * b) = f a * f b :=
   f.map_mul' a b
 
@@ -630,7 +630,7 @@ add_decl_doc AddMonoidHom.map_add
 
 namespace MonoidHom
 
-variable {mM : MulOneClass M} {mN : MulOneClass N} {mP : MulOneClass P}
+variable {mM : MulOneClassₓ M} {mN : MulOneClassₓ N} {mP : MulOneClassₓ P}
 
 variable [Groupₓ G] [CommGroupₓ H]
 
@@ -679,14 +679,14 @@ def MulHom.id (M : Type _) [Mul M] : MulHom M M where
 
 /-- The identity map from a monoid to itself. -/
 @[to_additive, simps]
-def MonoidHom.id (M : Type _) [MulOneClass M] : M →* M where
+def MonoidHom.id (M : Type _) [MulOneClassₓ M] : M →* M where
   toFun := fun x => x
   map_one' := rfl
   map_mul' := fun _ _ => rfl
 
 /-- The identity map from a monoid_with_zero to itself. -/
 @[simps]
-def MonoidWithZeroHom.id (M : Type _) [MulZeroOneClass M] : M →*₀ M where
+def MonoidWithZeroHom.id (M : Type _) [MulZeroOneClassₓ M] : M →*₀ M where
   toFun := fun x => x
   map_zero' := rfl
   map_one' := rfl
@@ -717,7 +717,7 @@ def MulHom.comp [Mul M] [Mul N] [Mul P] (hnp : MulHom N P) (hmn : MulHom M N) : 
 
 /-- Composition of monoid morphisms as a monoid morphism. -/
 @[to_additive]
-def MonoidHom.comp [MulOneClass M] [MulOneClass N] [MulOneClass P] (hnp : N →* P) (hmn : M →* N) : M →* P where
+def MonoidHom.comp [MulOneClassₓ M] [MulOneClassₓ N] [MulOneClassₓ P] (hnp : N →* P) (hmn : M →* N) : M →* P where
   toFun := hnp ∘ hmn
   map_one' := by
     simp
@@ -725,8 +725,8 @@ def MonoidHom.comp [MulOneClass M] [MulOneClass N] [MulOneClass P] (hnp : N →*
     simp
 
 /-- Composition of `monoid_with_zero_hom`s as a `monoid_with_zero_hom`. -/
-def MonoidWithZeroHom.comp [MulZeroOneClass M] [MulZeroOneClass N] [MulZeroOneClass P] (hnp : N →*₀ P) (hmn : M →*₀ N) :
-    M →*₀ P where
+def MonoidWithZeroHom.comp [MulZeroOneClassₓ M] [MulZeroOneClassₓ N] [MulZeroOneClassₓ P] (hnp : N →*₀ P)
+    (hmn : M →*₀ N) : M →*₀ P where
   toFun := hnp ∘ hmn
   map_zero' := by
     simp
@@ -753,12 +753,12 @@ theorem MulHom.coe_comp [Mul M] [Mul N] [Mul P] (g : MulHom N P) (f : MulHom M N
   rfl
 
 @[simp, to_additive]
-theorem MonoidHom.coe_comp [MulOneClass M] [MulOneClass N] [MulOneClass P] (g : N →* P) (f : M →* N) :
+theorem MonoidHom.coe_comp [MulOneClassₓ M] [MulOneClassₓ N] [MulOneClassₓ P] (g : N →* P) (f : M →* N) :
     ⇑g.comp f = g ∘ f :=
   rfl
 
 @[simp]
-theorem MonoidWithZeroHom.coe_comp [MulZeroOneClass M] [MulZeroOneClass N] [MulZeroOneClass P] (g : N →*₀ P)
+theorem MonoidWithZeroHom.coe_comp [MulZeroOneClassₓ M] [MulZeroOneClassₓ N] [MulZeroOneClassₓ P] (g : N →*₀ P)
     (f : M →*₀ N) : ⇑g.comp f = g ∘ f :=
   rfl
 
@@ -771,11 +771,11 @@ theorem MulHom.comp_apply [Mul M] [Mul N] [Mul P] (g : MulHom N P) (f : MulHom M
   rfl
 
 @[to_additive]
-theorem MonoidHom.comp_apply [MulOneClass M] [MulOneClass N] [MulOneClass P] (g : N →* P) (f : M →* N) (x : M) :
+theorem MonoidHom.comp_apply [MulOneClassₓ M] [MulOneClassₓ N] [MulOneClassₓ P] (g : N →* P) (f : M →* N) (x : M) :
     g.comp f x = g (f x) :=
   rfl
 
-theorem MonoidWithZeroHom.comp_apply [MulZeroOneClass M] [MulZeroOneClass N] [MulZeroOneClass P] (g : N →*₀ P)
+theorem MonoidWithZeroHom.comp_apply [MulZeroOneClassₓ M] [MulZeroOneClassₓ N] [MulZeroOneClassₓ P] (g : N →*₀ P)
     (f : M →*₀ N) (x : M) : g.comp f x = g (f x) :=
   rfl
 
@@ -791,12 +791,12 @@ theorem MulHom.comp_assoc {Q : Type _} [Mul M] [Mul N] [Mul P] [Mul Q] (f : MulH
   rfl
 
 @[to_additive]
-theorem MonoidHom.comp_assoc {Q : Type _} [MulOneClass M] [MulOneClass N] [MulOneClass P] [MulOneClass Q] (f : M →* N)
-    (g : N →* P) (h : P →* Q) : (h.comp g).comp f = h.comp (g.comp f) :=
+theorem MonoidHom.comp_assoc {Q : Type _} [MulOneClassₓ M] [MulOneClassₓ N] [MulOneClassₓ P] [MulOneClassₓ Q]
+    (f : M →* N) (g : N →* P) (h : P →* Q) : (h.comp g).comp f = h.comp (g.comp f) :=
   rfl
 
-theorem MonoidWithZeroHom.comp_assoc {Q : Type _} [MulZeroOneClass M] [MulZeroOneClass N] [MulZeroOneClass P]
-    [MulZeroOneClass Q] (f : M →*₀ N) (g : N →*₀ P) (h : P →*₀ Q) : (h.comp g).comp f = h.comp (g.comp f) :=
+theorem MonoidWithZeroHom.comp_assoc {Q : Type _} [MulZeroOneClassₓ M] [MulZeroOneClassₓ N] [MulZeroOneClassₓ P]
+    [MulZeroOneClassₓ Q] (f : M →*₀ N) (g : N →*₀ P) (h : P →*₀ Q) : (h.comp g).comp f = h.comp (g.comp f) :=
   rfl
 
 @[to_additive]
@@ -810,11 +810,11 @@ theorem MulHom.cancel_right [Mul M] [Mul N] [Mul P] {g₁ g₂ : MulHom N P} {f 
   ⟨fun h => MulHom.ext <| hf.forall.2 (MulHom.ext_iff.1 h), fun h => h ▸ rfl⟩
 
 @[to_additive]
-theorem MonoidHom.cancel_right [MulOneClass M] [MulOneClass N] [MulOneClass P] {g₁ g₂ : N →* P} {f : M →* N}
+theorem MonoidHom.cancel_right [MulOneClassₓ M] [MulOneClassₓ N] [MulOneClassₓ P] {g₁ g₂ : N →* P} {f : M →* N}
     (hf : Function.Surjective f) : g₁.comp f = g₂.comp f ↔ g₁ = g₂ :=
   ⟨fun h => MonoidHom.ext <| hf.forall.2 (MonoidHom.ext_iff.1 h), fun h => h ▸ rfl⟩
 
-theorem MonoidWithZeroHom.cancel_right [MulZeroOneClass M] [MulZeroOneClass N] [MulZeroOneClass P] {g₁ g₂ : N →*₀ P}
+theorem MonoidWithZeroHom.cancel_right [MulZeroOneClassₓ M] [MulZeroOneClassₓ N] [MulZeroOneClassₓ P] {g₁ g₂ : N →*₀ P}
     {f : M →*₀ N} (hf : Function.Surjective f) : g₁.comp f = g₂.comp f ↔ g₁ = g₂ :=
   ⟨fun h => MonoidWithZeroHom.ext <| hf.forall.2 (MonoidWithZeroHom.ext_iff.1 h), fun h => h ▸ rfl⟩
 
@@ -837,7 +837,7 @@ theorem MulHom.cancel_left [Mul M] [Mul N] [Mul P] {g : MulHom N P} {f₁ f₂ :
     fun h => h ▸ rfl⟩
 
 @[to_additive]
-theorem MonoidHom.cancel_left [MulOneClass M] [MulOneClass N] [MulOneClass P] {g : N →* P} {f₁ f₂ : M →* N}
+theorem MonoidHom.cancel_left [MulOneClassₓ M] [MulOneClassₓ N] [MulOneClassₓ P] {g : N →* P} {f₁ f₂ : M →* N}
     (hg : Function.Injective g) : g.comp f₁ = g.comp f₂ ↔ f₁ = f₂ :=
   ⟨fun h =>
     MonoidHom.ext fun x =>
@@ -845,7 +845,7 @@ theorem MonoidHom.cancel_left [MulOneClass M] [MulOneClass N] [MulOneClass P] {g
         rw [← MonoidHom.comp_apply, h, MonoidHom.comp_apply],
     fun h => h ▸ rfl⟩
 
-theorem MonoidWithZeroHom.cancel_left [MulZeroOneClass M] [MulZeroOneClass N] [MulZeroOneClass P] {g : N →*₀ P}
+theorem MonoidWithZeroHom.cancel_left [MulZeroOneClassₓ M] [MulZeroOneClassₓ N] [MulZeroOneClassₓ P] {g : N →*₀ P}
     {f₁ f₂ : M →*₀ N} (hg : Function.Injective g) : g.comp f₁ = g.comp f₂ ↔ f₁ = f₂ :=
   ⟨fun h =>
     MonoidWithZeroHom.ext fun x =>
@@ -854,11 +854,11 @@ theorem MonoidWithZeroHom.cancel_left [MulZeroOneClass M] [MulZeroOneClass N] [M
     fun h => h ▸ rfl⟩
 
 @[to_additive]
-theorem MonoidHom.to_one_hom_injective [MulOneClass M] [MulOneClass N] :
+theorem MonoidHom.to_one_hom_injective [MulOneClassₓ M] [MulOneClassₓ N] :
     Function.Injective (MonoidHom.toOneHom : (M →* N) → OneHom M N) := fun f g h => MonoidHom.ext <| OneHom.ext_iff.mp h
 
 @[to_additive]
-theorem MonoidHom.to_mul_hom_injective [MulOneClass M] [MulOneClass N] :
+theorem MonoidHom.to_mul_hom_injective [MulOneClassₓ M] [MulOneClassₓ N] :
     Function.Injective (MonoidHom.toMulHom : (M →* N) → MulHom M N) := fun f g h => MonoidHom.ext <| MulHom.ext_iff.mp h
 
 theorem MonoidWithZeroHom.to_monoid_hom_injective [MonoidWithZeroₓ M] [MonoidWithZeroₓ N] :
@@ -878,11 +878,11 @@ theorem MulHom.comp_id [Mul M] [Mul N] (f : MulHom M N) : f.comp (MulHom.id M) =
   MulHom.ext fun x => rfl
 
 @[simp, to_additive]
-theorem MonoidHom.comp_id [MulOneClass M] [MulOneClass N] (f : M →* N) : f.comp (MonoidHom.id M) = f :=
+theorem MonoidHom.comp_id [MulOneClassₓ M] [MulOneClassₓ N] (f : M →* N) : f.comp (MonoidHom.id M) = f :=
   MonoidHom.ext fun x => rfl
 
 @[simp]
-theorem MonoidWithZeroHom.comp_id [MulZeroOneClass M] [MulZeroOneClass N] (f : M →*₀ N) :
+theorem MonoidWithZeroHom.comp_id [MulZeroOneClassₓ M] [MulZeroOneClassₓ N] (f : M →*₀ N) :
     f.comp (MonoidWithZeroHom.id M) = f :=
   MonoidWithZeroHom.ext fun x => rfl
 
@@ -895,11 +895,11 @@ theorem MulHom.id_comp [Mul M] [Mul N] (f : MulHom M N) : (MulHom.id N).comp f =
   MulHom.ext fun x => rfl
 
 @[simp, to_additive]
-theorem MonoidHom.id_comp [MulOneClass M] [MulOneClass N] (f : M →* N) : (MonoidHom.id N).comp f = f :=
+theorem MonoidHom.id_comp [MulOneClassₓ M] [MulOneClassₓ N] (f : M →* N) : (MonoidHom.id N).comp f = f :=
   MonoidHom.ext fun x => rfl
 
 @[simp]
-theorem MonoidWithZeroHom.id_comp [MulZeroOneClass M] [MulZeroOneClass N] (f : M →*₀ N) :
+theorem MonoidWithZeroHom.id_comp [MulZeroOneClassₓ M] [MulZeroOneClassₓ N] (f : M →*₀ N) :
     (MonoidWithZeroHom.id N).comp f = f :=
   MonoidWithZeroHom.ext fun x => rfl
 
@@ -921,7 +921,7 @@ section End
 
 namespace Monoidₓ
 
-variable (M) [MulOneClass M]
+variable (M) [MulOneClassₓ M]
 
 /-- The monoid of endomorphisms. -/
 protected def End :=
@@ -998,12 +998,12 @@ instance [One M] [One N] : One (OneHom M N) :=
 
 /-- `1` is the multiplicative homomorphism sending all elements to `1`. -/
 @[to_additive]
-instance [Mul M] [MulOneClass N] : One (MulHom M N) :=
+instance [Mul M] [MulOneClassₓ N] : One (MulHom M N) :=
   ⟨⟨fun _ => 1, fun _ _ => (one_mulₓ 1).symm⟩⟩
 
 /-- `1` is the monoid homomorphism sending all elements to `1`. -/
 @[to_additive]
-instance [MulOneClass M] [MulOneClass N] : One (M →* N) :=
+instance [MulOneClassₓ M] [MulOneClassₓ N] : One (M →* N) :=
   ⟨⟨fun _ => 1, rfl, fun _ _ => (one_mulₓ 1).symm⟩⟩
 
 /-- `0` is the homomorphism sending all elements to `0`. -/
@@ -1020,7 +1020,7 @@ theorem OneHom.one_apply [One M] [One N] (x : M) : (1 : OneHom M N) x = 1 :=
   rfl
 
 @[simp, to_additive]
-theorem MonoidHom.one_apply [MulOneClass M] [MulOneClass N] (x : M) : (1 : M →* N) x = 1 :=
+theorem MonoidHom.one_apply [MulOneClassₓ M] [MulOneClassₓ N] (x : M) : (1 : M →* N) x = 1 :=
   rfl
 
 @[simp, to_additive]
@@ -1037,26 +1037,26 @@ instance [One M] [One N] : Inhabited (OneHom M N) :=
   ⟨1⟩
 
 @[to_additive]
-instance [Mul M] [MulOneClass N] : Inhabited (MulHom M N) :=
+instance [Mul M] [MulOneClassₓ N] : Inhabited (MulHom M N) :=
   ⟨1⟩
 
 @[to_additive]
-instance [MulOneClass M] [MulOneClass N] : Inhabited (M →* N) :=
+instance [MulOneClassₓ M] [MulOneClassₓ N] : Inhabited (M →* N) :=
   ⟨1⟩
 
-instance [MulZeroOneClass M] : Inhabited (M →*₀ M) :=
+instance [MulZeroOneClassₓ M] : Inhabited (M →*₀ M) :=
   ⟨MonoidWithZeroHom.id M⟩
 
 namespace MonoidHom
 
-variable [mM : MulOneClass M] [mN : MulOneClass N] [mP : MulOneClass P]
+variable [mM : MulOneClassₓ M] [mN : MulOneClassₓ N] [mP : MulOneClassₓ P]
 
 variable [Groupₓ G] [CommGroupₓ H]
 
 /-- Given two monoid morphisms `f`, `g` to a commutative monoid, `f * g` is the monoid morphism
 sending `x` to `f x * g x`. -/
 @[to_additive]
-instance {M N} {mM : MulOneClass M} [CommMonoidₓ N] : Mul (M →* N) :=
+instance {M N} {mM : MulOneClassₓ M} [CommMonoidₓ N] : Mul (M →* N) :=
   ⟨fun f g =>
     { toFun := fun m => f m * g m,
       map_one' :=
@@ -1072,25 +1072,25 @@ additive monoid morphism sending `x` to `f x + g x`. -/
 add_decl_doc AddMonoidHom.hasAdd
 
 @[simp, to_additive]
-theorem mul_apply {M N} {mM : MulOneClass M} {mN : CommMonoidₓ N} (f g : M →* N) (x : M) : (f * g) x = f x * g x :=
+theorem mul_apply {M N} {mM : MulOneClassₓ M} {mN : CommMonoidₓ N} (f g : M →* N) (x : M) : (f * g) x = f x * g x :=
   rfl
 
 @[simp, to_additive]
-theorem one_comp [MulOneClass M] [MulOneClass N] [MulOneClass P] (f : M →* N) : (1 : N →* P).comp f = 1 :=
+theorem one_comp [MulOneClassₓ M] [MulOneClassₓ N] [MulOneClassₓ P] (f : M →* N) : (1 : N →* P).comp f = 1 :=
   rfl
 
 @[simp, to_additive]
-theorem comp_one [MulOneClass M] [MulOneClass N] [MulOneClass P] (f : N →* P) : f.comp (1 : M →* N) = 1 := by
+theorem comp_one [MulOneClassₓ M] [MulOneClassₓ N] [MulOneClassₓ P] (f : N →* P) : f.comp (1 : M →* N) = 1 := by
   ext
   simp only [map_one, coe_comp, Function.comp_app, one_apply]
 
 @[to_additive]
-theorem mul_comp [MulOneClass M] [CommMonoidₓ N] [CommMonoidₓ P] (g₁ g₂ : N →* P) (f : M →* N) :
+theorem mul_comp [MulOneClassₓ M] [CommMonoidₓ N] [CommMonoidₓ P] (g₁ g₂ : N →* P) (f : M →* N) :
     (g₁ * g₂).comp f = g₁.comp f * g₂.comp f :=
   rfl
 
 @[to_additive]
-theorem comp_mul [MulOneClass M] [CommMonoidₓ N] [CommMonoidₓ P] (g : N →* P) (f₁ f₂ : M →* N) :
+theorem comp_mul [MulOneClassₓ M] [CommMonoidₓ N] [CommMonoidₓ P] (g : N →* P) (f₁ f₂ : M →* N) :
     g.comp (f₁ * f₂) = g.comp f₁ * g.comp f₂ := by
   ext
   simp only [mul_apply, Function.comp_app, map_mul, coe_comp]
@@ -1125,7 +1125,7 @@ protected theorem map_mul_inv {G H} [Groupₓ G] [Groupₓ H] (f : G →* H) (g 
 For the iff statement on the triviality of the kernel, see `monoid_hom.injective_iff'`.  -/
 @[to_additive
       " A homomorphism from an additive group to an additive monoid is injective iff\nits kernel is trivial. For the iff statement on the triviality of the kernel,\nsee `add_monoid_hom.injective_iff'`. "]
-theorem injective_iff {G H} [Groupₓ G] [MulOneClass H] (f : G →* H) : Function.Injective f ↔ ∀ a, f a = 1 → a = 1 :=
+theorem injective_iff {G H} [Groupₓ G] [MulOneClassₓ H] (f : G →* H) : Function.Injective f ↔ ∀ a, f a = 1 → a = 1 :=
   ⟨fun h x => (map_eq_one_iff f h).mp, fun h x y hxy =>
     mul_inv_eq_one.1 <|
       h _ <| by
@@ -1136,14 +1136,14 @@ stated as an iff on the triviality of the kernel.
 For the implication, see `monoid_hom.injective_iff`. -/
 @[to_additive
       " A homomorphism from an additive group to an additive monoid is injective iff\nits kernel is trivial, stated as an iff on the triviality of the kernel. For the implication, see\n`add_monoid_hom.injective_iff`. "]
-theorem injective_iff' {G H} [Groupₓ G] [MulOneClass H] (f : G →* H) : Function.Injective f ↔ ∀ a, f a = 1 ↔ a = 1 :=
+theorem injective_iff' {G H} [Groupₓ G] [MulOneClassₓ H] (f : G →* H) : Function.Injective f ↔ ∀ a, f a = 1 ↔ a = 1 :=
   f.injective_iff.trans <| forall_congrₓ fun a => ⟨fun h => ⟨h, fun H => H.symm ▸ f.map_one⟩, Iff.mp⟩
 
 include mM
 
 /-- Makes a group homomorphism from a proof that the map preserves multiplication. -/
 @[to_additive "Makes an additive group homomorphism from a proof that the map preserves addition.",
-  simps (config := { fullyApplied := ff })]
+  simps (config := { fullyApplied := false })]
 def mk' (f : M → G) (map_mul : ∀ a b : M, f (a * b) = f a * f b) : M →* G where
   toFun := f
   map_mul' := map_mul
@@ -1170,24 +1170,24 @@ def of_map_mul_inv {H : Type _} [Groupₓ H] (f : G → H) (map_div : ∀ a b : 
 
 @[simp, to_additive]
 theorem coe_of_map_mul_inv {H : Type _} [Groupₓ H] (f : G → H) (map_div : ∀ a b : G, f (a * b⁻¹) = f a * (f b)⁻¹) :
-    ⇑of_map_mul_inv f map_div = f :=
+    ⇑ofMapMulInv f map_div = f :=
   rfl
 
 /-- Define a morphism of additive groups given a map which respects ratios. -/
 @[to_additive "Define a morphism of additive groups given a map which respects difference."]
 def of_map_div {H : Type _} [Groupₓ H] (f : G → H) (hf : ∀ x y, f (x / y) = f x / f y) : G →* H :=
-  of_map_mul_inv f
+  ofMapMulInv f
     (by
       simpa only [div_eq_mul_inv] using hf)
 
 @[simp, to_additive]
-theorem coe_of_map_div {H : Type _} [Groupₓ H] (f : G → H) (hf : ∀ x y, f (x / y) = f x / f y) : ⇑of_map_div f hf = f :=
+theorem coe_of_map_div {H : Type _} [Groupₓ H] (f : G → H) (hf : ∀ x y, f (x / y) = f x / f y) : ⇑ofMapDiv f hf = f :=
   rfl
 
 /-- If `f` is a monoid homomorphism to a commutative group, then `f⁻¹` is the homomorphism sending
 `x` to `(f x)⁻¹`. -/
 @[to_additive]
-instance {M G} [MulOneClass M] [CommGroupₓ G] : Inv (M →* G) :=
+instance {M G} [MulOneClassₓ M] [CommGroupₓ G] : Inv (M →* G) :=
   ⟨fun f =>
     (mk' fun g => (f g)⁻¹) fun a b => by
       rw [← mul_inv, f.map_mul]⟩
@@ -1197,17 +1197,17 @@ homomorphism sending `x` to `-(f x)`. -/
 add_decl_doc AddMonoidHom.hasNeg
 
 @[simp, to_additive]
-theorem inv_apply {M G} {mM : MulOneClass M} {gG : CommGroupₓ G} (f : M →* G) (x : M) : f⁻¹ x = (f x)⁻¹ :=
+theorem inv_apply {M G} {mM : MulOneClassₓ M} {gG : CommGroupₓ G} (f : M →* G) (x : M) : f⁻¹ x = (f x)⁻¹ :=
   rfl
 
 @[simp, to_additive]
-theorem inv_comp {M N A} {mM : MulOneClass M} {gN : MulOneClass N} {gA : CommGroupₓ A} (φ : N →* A) (ψ : M →* N) :
+theorem inv_comp {M N A} {mM : MulOneClassₓ M} {gN : MulOneClassₓ N} {gA : CommGroupₓ A} (φ : N →* A) (ψ : M →* N) :
     φ⁻¹.comp ψ = (φ.comp ψ)⁻¹ := by
   ext
   simp only [Function.comp_app, inv_apply, coe_comp]
 
 @[simp, to_additive]
-theorem comp_inv {M A B} {mM : MulOneClass M} {mA : CommGroupₓ A} {mB : CommGroupₓ B} (φ : A →* B) (ψ : M →* A) :
+theorem comp_inv {M A B} {mM : MulOneClassₓ M} {mA : CommGroupₓ A} {mB : CommGroupₓ B} (φ : A →* B) (ψ : M →* A) :
     φ.comp ψ⁻¹ = (φ.comp ψ)⁻¹ := by
   ext
   simp only [Function.comp_app, inv_apply, map_inv, coe_comp]
@@ -1215,7 +1215,7 @@ theorem comp_inv {M A B} {mM : MulOneClass M} {mA : CommGroupₓ A} {mB : CommGr
 /-- If `f` and `g` are monoid homomorphisms to a commutative group, then `f / g` is the homomorphism
 sending `x` to `(f x) / (g x)`. -/
 @[to_additive]
-instance {M G} [MulOneClass M] [CommGroupₓ G] : Div (M →* G) :=
+instance {M G} [MulOneClassₓ M] [CommGroupₓ G] : Div (M →* G) :=
   ⟨fun f g =>
     (mk' fun x => f x / g x) fun a b => by
       simp [div_eq_mul_inv, mul_assoc, mul_left_commₓ, mul_comm]⟩
@@ -1225,14 +1225,14 @@ is the homomorphism sending `x` to `(f x) - (g x)`. -/
 add_decl_doc AddMonoidHom.hasSub
 
 @[simp, to_additive]
-theorem div_apply {M G} {mM : MulOneClass M} {gG : CommGroupₓ G} (f g : M →* G) (x : M) : (f / g) x = f x / g x :=
+theorem div_apply {M G} {mM : MulOneClassₓ M} {gG : CommGroupₓ G} (f g : M →* G) (x : M) : (f / g) x = f x / g x :=
   rfl
 
 end MonoidHom
 
 /-- Given two monoid with zero morphisms `f`, `g` to a commutative monoid, `f * g` is the monoid
 with zero morphism sending `x` to `f x * g x`. -/
-instance {M N} {hM : MulZeroOneClass M} [CommMonoidWithZero N] : Mul (M →*₀ N) :=
+instance {M N} {hM : MulZeroOneClassₓ M} [CommMonoidWithZero N] : Mul (M →*₀ N) :=
   ⟨fun f g =>
     { (f * g : M →* N) with toFun := fun a => f a * g a,
       map_zero' := by

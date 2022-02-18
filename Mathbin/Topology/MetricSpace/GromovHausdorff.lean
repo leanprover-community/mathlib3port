@@ -41,8 +41,6 @@ open_locale Classical TopologicalSpace Ennreal
 
 local notation "ℓ_infty_ℝ" => lp (fun n : ℕ => ℝ) ∞
 
-attribute [local instance] fact_one_le_top_ennreal
-
 universe u v w
 
 open Classical Set Function TopologicalSpace Filter Metric Quotientₓ
@@ -58,37 +56,37 @@ namespace GromovHausdorff
 section GHSpace
 
 /-- Equivalence relation identifying two nonempty compact sets which are isometric -/
-private def isometry_rel : nonempty_compacts ℓ_infty_ℝ → nonempty_compacts ℓ_infty_ℝ → Prop := fun x y =>
+private def isometry_rel : NonemptyCompacts ℓ_infty_ℝ → NonemptyCompacts ℓ_infty_ℝ → Prop := fun x y =>
   Nonempty (x.val ≃ᵢ y.val)
 
 /-- This is indeed an equivalence relation -/
-private theorem is_equivalence_isometry_rel : Equivalenceₓ isometry_rel :=
+private theorem is_equivalence_isometry_rel : Equivalenceₓ IsometryRel :=
   ⟨fun x => ⟨Isometric.refl _⟩, fun x y ⟨e⟩ => ⟨e.symm⟩, fun x y z ⟨e⟩ ⟨f⟩ => ⟨e.trans f⟩⟩
 
 /-- setoid instance identifying two isometric nonempty compact subspaces of ℓ^∞(ℝ) -/
-instance isometry_rel.setoid : Setoidₓ (nonempty_compacts ℓ_infty_ℝ) :=
-  Setoidₓ.mk isometry_rel is_equivalence_isometry_rel
+instance isometry_rel.setoid : Setoidₓ (NonemptyCompacts ℓ_infty_ℝ) :=
+  Setoidₓ.mk IsometryRel is_equivalence_isometry_rel
 
 /-- The Gromov-Hausdorff space -/
 def GH_space : Type :=
-  Quotientₓ isometry_rel.setoid
+  Quotientₓ IsometryRel.setoid
 
 /-- Map any nonempty compact type to `GH_space` -/
-def to_GH_space (X : Type u) [MetricSpace X] [CompactSpace X] [Nonempty X] : GH_space :=
+def to_GH_space (X : Type u) [MetricSpace X] [CompactSpace X] [Nonempty X] : GHSpace :=
   ⟦NonemptyCompacts.kuratowskiEmbedding X⟧
 
-instance : Inhabited GH_space :=
+instance : Inhabited GHSpace :=
   ⟨Quot.mk _
       ⟨{0}, by
         simp ⟩⟩
 
 /-- A metric space representative of any abstract point in `GH_space` -/
 @[nolint has_inhabited_instance]
-def GH_space.rep (p : GH_space) : Type :=
+def GH_space.rep (p : GHSpace) : Type :=
   (Quot.out p).val
 
-theorem eq_to_GH_space_iff {X : Type u} [MetricSpace X] [CompactSpace X] [Nonempty X]
-    {p : nonempty_compacts ℓ_infty_ℝ} : ⟦p⟧ = to_GH_space X ↔ ∃ Ψ : X → ℓ_infty_ℝ, Isometry Ψ ∧ range Ψ = p.val := by
+theorem eq_to_GH_space_iff {X : Type u} [MetricSpace X] [CompactSpace X] [Nonempty X] {p : NonemptyCompacts ℓ_infty_ℝ} :
+    ⟦p⟧ = toGHSpace X ↔ ∃ Ψ : X → ℓ_infty_ℝ, Isometry Ψ ∧ Range Ψ = p.val := by
   simp only [to_GH_space, Quotientₓ.eq]
   refine' ⟨fun h => _, _⟩
   · rcases Setoidₓ.symm h with ⟨e⟩
@@ -104,25 +102,25 @@ theorem eq_to_GH_space_iff {X : Type u} [MetricSpace X] [CompactSpace X] [Nonemp
     exact ⟨cast E f⟩
     
 
-theorem eq_to_GH_space {p : nonempty_compacts ℓ_infty_ℝ} : ⟦p⟧ = to_GH_space p.val :=
+theorem eq_to_GH_space {p : NonemptyCompacts ℓ_infty_ℝ} : ⟦p⟧ = toGHSpace p.val :=
   eq_to_GH_space_iff.2 ⟨fun x => x, isometry_subtype_coe, Subtype.range_coe⟩
 
 section
 
 attribute [local reducible] GH_space.rep
 
-instance rep_GH_space_metric_space {p : GH_space} : MetricSpace p.rep := by
+instance rep_GH_space_metric_space {p : GHSpace} : MetricSpace p.rep := by
   infer_instance
 
-instance rep_GH_space_compact_space {p : GH_space} : CompactSpace p.rep := by
+instance rep_GH_space_compact_space {p : GHSpace} : CompactSpace p.rep := by
   infer_instance
 
-instance rep_GH_space_nonempty {p : GH_space} : Nonempty p.rep := by
+instance rep_GH_space_nonempty {p : GHSpace} : Nonempty p.rep := by
   infer_instance
 
 end
 
-theorem GH_space.to_GH_space_rep (p : GH_space) : to_GH_space p.rep = p := by
+theorem GH_space.to_GH_space_rep (p : GHSpace) : toGHSpace p.rep = p := by
   change to_GH_space (Quot.out p).val = p
   rw [← eq_to_GH_space]
   exact Quot.out_eq p
@@ -130,7 +128,7 @@ theorem GH_space.to_GH_space_rep (p : GH_space) : to_GH_space p.rep = p := by
 /-- Two nonempty compact spaces have the same image in `GH_space` if and only if they are
 isometric. -/
 theorem to_GH_space_eq_to_GH_space_iff_isometric {X : Type u} [MetricSpace X] [CompactSpace X] [Nonempty X] {Y : Type v}
-    [MetricSpace Y] [CompactSpace Y] [Nonempty Y] : to_GH_space X = to_GH_space Y ↔ Nonempty (X ≃ᵢ Y) :=
+    [MetricSpace Y] [CompactSpace Y] [Nonempty Y] : toGHSpace X = toGHSpace Y ↔ Nonempty (X ≃ᵢ Y) :=
   ⟨by
     simp only [to_GH_space, Quotientₓ.eq]
     rintro ⟨e⟩
@@ -158,26 +156,26 @@ theorem to_GH_space_eq_to_GH_space_iff_isometric {X : Type u} [MetricSpace X] [C
 /-- Distance on `GH_space`: the distance between two nonempty compact spaces is the infimum
 Hausdorff distance between isometric copies of the two spaces in a metric space. For the definition,
 we only consider embeddings in `ℓ^∞(ℝ)`, but we will prove below that it works for all spaces. -/
-instance : HasDist GH_space where
+instance : HasDist GHSpace where
   dist := fun x y =>
     Inf <|
-      (fun p : nonempty_compacts ℓ_infty_ℝ × nonempty_compacts ℓ_infty_ℝ => Hausdorff_dist p.1.val p.2.val) ''
+      (fun p : NonemptyCompacts ℓ_infty_ℝ × NonemptyCompacts ℓ_infty_ℝ => hausdorffDist p.1.val p.2.val) ''
         ({ a | ⟦a⟧ = x } ×ˢ { b | ⟦b⟧ = y })
 
 /-- The Gromov-Hausdorff distance between two nonempty compact metric spaces, equal by definition to
 the distance of the equivalence classes of these spaces in the Gromov-Hausdorff space. -/
 def GH_dist (X : Type u) (Y : Type v) [MetricSpace X] [Nonempty X] [CompactSpace X] [MetricSpace Y] [Nonempty Y]
     [CompactSpace Y] : ℝ :=
-  dist (to_GH_space X) (to_GH_space Y)
+  dist (toGHSpace X) (toGHSpace Y)
 
-theorem dist_GH_dist (p q : GH_space) : dist p q = GH_dist p.rep q.rep := by
+theorem dist_GH_dist (p q : GHSpace) : dist p q = gHDist p.rep q.rep := by
   rw [GH_dist, p.to_GH_space_rep, q.to_GH_space_rep]
 
 /-- The Gromov-Hausdorff distance between two spaces is bounded by the Hausdorff distance
 of isometric copies of the spaces, in any metric space. -/
 theorem GH_dist_le_Hausdorff_dist {X : Type u} [MetricSpace X] [CompactSpace X] [Nonempty X] {Y : Type v}
     [MetricSpace Y] [CompactSpace Y] [Nonempty Y] {γ : Type w} [MetricSpace γ] {Φ : X → γ} {Ψ : Y → γ} (ha : Isometry Φ)
-    (hb : Isometry Ψ) : GH_dist X Y ≤ Hausdorff_dist (range Φ) (range Ψ) := by
+    (hb : Isometry Ψ) : gHDist X Y ≤ hausdorffDist (Range Φ) (Range Ψ) := by
   rcases exists_mem_of_nonempty X with ⟨xX, _⟩
   let s : Set γ := range Φ ∪ range Ψ
   let Φ' : X → Subtype s := fun y => ⟨Φ y, mem_union_left _ (mem_range_self _)⟩
@@ -237,7 +235,7 @@ theorem GH_dist_le_Hausdorff_dist {X : Type u} [MetricSpace X] [CompactSpace X] 
 essentially by design. -/
 theorem Hausdorff_dist_optimal {X : Type u} [MetricSpace X] [CompactSpace X] [Nonempty X] {Y : Type v} [MetricSpace Y]
     [CompactSpace Y] [Nonempty Y] :
-    Hausdorff_dist (range (optimal_GH_injl X Y)) (range (optimal_GH_injr X Y)) = GH_dist X Y := by
+    hausdorffDist (Range (optimalGHInjl X Y)) (Range (optimalGHInjr X Y)) = gHDist X Y := by
   inhabit X
   inhabit Y
   have A :
@@ -270,8 +268,8 @@ theorem Hausdorff_dist_optimal {X : Type u} [MetricSpace X] [CompactSpace X] [No
           by
           rw [DΦ, DΨ]
           apply
-            add_le_add (add_le_add (le_reflₓ _) (le_of_ltₓ dy))
-              (le_reflₓ _)_ = 2 * diam (univ : Set X) + 1 + 2 * diam (univ : Set Y) :=
+            add_le_add (add_le_add le_rfl (le_of_ltₓ dy))
+              le_rfl _ = 2 * diam (univ : Set X) + 1 + 2 * diam (univ : Set Y) :=
           by
           ring
     let f : Sum X Y → ℓ_infty_ℝ := fun x =>
@@ -390,7 +388,7 @@ the optimal coupling through its Kuratowski embedding. -/
 theorem GH_dist_eq_Hausdorff_dist (X : Type u) [MetricSpace X] [CompactSpace X] [Nonempty X] (Y : Type v)
     [MetricSpace Y] [CompactSpace Y] [Nonempty Y] :
     ∃ Φ : X → ℓ_infty_ℝ,
-      ∃ Ψ : Y → ℓ_infty_ℝ, Isometry Φ ∧ Isometry Ψ ∧ GH_dist X Y = Hausdorff_dist (range Φ) (range Ψ) :=
+      ∃ Ψ : Y → ℓ_infty_ℝ, Isometry Φ ∧ Isometry Ψ ∧ gHDist X Y = hausdorffDist (Range Φ) (Range Ψ) :=
   by
   let F := kuratowskiEmbedding (optimal_GH_coupling X Y)
   let Φ := F ∘ optimal_GH_injl X Y
@@ -406,7 +404,7 @@ theorem GH_dist_eq_Hausdorff_dist (X : Type u) [MetricSpace X] [CompactSpace X] 
     
 
 /-- The Gromov-Hausdorff distance defines a genuine distance on the Gromov-Hausdorff space. -/
-instance : MetricSpace GH_space where
+instance : MetricSpace GHSpace where
   dist_self := fun x => by
     rcases exists_rep x with ⟨y, hy⟩
     refine' le_antisymmₓ _ _
@@ -522,7 +520,7 @@ end GromovHausdorff
 
 /-- In particular, nonempty compacts of a metric space map to `GH_space`. We register this
 in the topological_space namespace to take advantage of the notation `p.to_GH_space`. -/
-def TopologicalSpace.NonemptyCompacts.toGHSpace {X : Type u} [MetricSpace X] (p : nonempty_compacts X) :
+def TopologicalSpace.NonemptyCompacts.toGHSpace {X : Type u} [MetricSpace X] (p : NonemptyCompacts X) :
     GromovHausdorff.GHSpace :=
   GromovHausdorff.toGHSpace p.val
 
@@ -534,8 +532,7 @@ section NonemptyCompacts
 
 variable {X : Type u} [MetricSpace X]
 
-theorem GH_dist_le_nonempty_compacts_dist (p q : nonempty_compacts X) : dist p.to_GH_space q.to_GH_space ≤ dist p q :=
-  by
+theorem GH_dist_le_nonempty_compacts_dist (p q : NonemptyCompacts X) : dist p.toGHSpace q.toGHSpace ≤ dist p q := by
   have ha : Isometry (coe : p.val → X) := isometry_subtype_coe
   have hb : Isometry (coe : q.val → X) := isometry_subtype_coe
   have A : dist p q = Hausdorff_dist p.val q.val := rfl
@@ -547,10 +544,10 @@ theorem GH_dist_le_nonempty_compacts_dist (p q : nonempty_compacts X) : dist p.t
   rw [A]
   exact GH_dist_le_Hausdorff_dist ha hb
 
-theorem to_GH_space_lipschitz : LipschitzWith 1 (nonempty_compacts.to_GH_space : nonempty_compacts X → GH_space) :=
+theorem to_GH_space_lipschitz : LipschitzWith 1 (NonemptyCompacts.toGHSpace : NonemptyCompacts X → GHSpace) :=
   LipschitzWith.mk_one GH_dist_le_nonempty_compacts_dist
 
-theorem to_GH_space_continuous : Continuous (nonempty_compacts.to_GH_space : nonempty_compacts X → GH_space) :=
+theorem to_GH_space_continuous : Continuous (NonemptyCompacts.toGHSpace : NonemptyCompacts X → GHSpace) :=
   to_GH_space_lipschitz.Continuous
 
 end NonemptyCompacts
@@ -567,7 +564,7 @@ isometric up to `ε₂`, then the Gromov-Hausdorff distance between the spaces i
 `ε₁ + ε₂/2 + ε₃`. -/
 theorem GH_dist_le_of_approx_subsets {s : Set X} (Φ : s → Y) {ε₁ ε₂ ε₃ : ℝ} (hs : ∀ x : X, ∃ y ∈ s, dist x y ≤ ε₁)
     (hs' : ∀ x : Y, ∃ y : s, dist x (Φ y) ≤ ε₃) (H : ∀ x y : s, abs (dist x y - dist (Φ x) (Φ y)) ≤ ε₂) :
-    GH_dist X Y ≤ ε₁ + ε₂ / 2 + ε₃ := by
+    gHDist X Y ≤ ε₁ + ε₂ / 2 + ε₃ := by
   refine' le_of_forall_pos_le_add fun δ δ0 => _
   rcases exists_mem_of_nonempty X with ⟨xX, _⟩
   rcases hs xX with ⟨xs, hxs, Dxs⟩
@@ -647,7 +644,7 @@ theorem GH_dist_le_of_approx_subsets {s : Set X} (Φ : s → Y) {ε₁ ε₂ ε�
 end
 
 /-- The Gromov-Hausdorff space is second countable. -/
-instance : second_countable_topology GH_space := by
+instance : SecondCountableTopology GHSpace := by
   refine' second_countable_of_countable_discretization fun δ δpos => _
   let ε := 2 / 5 * δ
   have εpos : 0 < ε :=
@@ -761,9 +758,9 @@ instance : second_countable_topology GH_space := by
 a uniformly bounded diameter, and for all `ε` the number of balls of radius `ε` required
 to cover the spaces is uniformly bounded. This is an equivalence, but we only prove the
 interesting direction that these conditions imply compactness. -/
-theorem TotallyBounded {t : Set GH_space} {C : ℝ} {u : ℕ → ℝ} {K : ℕ → ℕ} (ulim : tendsto u at_top (𝓝 0))
-    (hdiam : ∀, ∀ p ∈ t, ∀, diam (univ : Set (GH_space.rep p)) ≤ C)
-    (hcov : ∀, ∀ p ∈ t, ∀, ∀ n : ℕ, ∃ s : Set (GH_space.rep p), Cardinal.mk s ≤ K n ∧ univ ⊆ ⋃ x ∈ s, ball x (u n)) :
+theorem TotallyBounded {t : Set GHSpace} {C : ℝ} {u : ℕ → ℝ} {K : ℕ → ℕ} (ulim : Tendsto u atTop (𝓝 0))
+    (hdiam : ∀, ∀ p ∈ t, ∀, diam (Univ : Set (GHSpace.Rep p)) ≤ C)
+    (hcov : ∀, ∀ p ∈ t, ∀, ∀ n : ℕ, ∃ s : Set (GHSpace.Rep p), Cardinal.mk s ≤ K n ∧ univ ⊆ ⋃ x ∈ s, Ball x (u n)) :
     TotallyBounded t := by
   refine' Metric.totally_bounded_of_finite_discretization fun δ δpos => _
   let ε := 1 / 5 * δ
@@ -774,7 +771,7 @@ theorem TotallyBounded {t : Set GH_space} {C : ℝ} {u : ℕ → ℝ} {K : ℕ �
       δpos
   rcases Metric.tendsto_at_top.1 ulim ε εpos with ⟨n, hn⟩
   have u_le_ε : u n ≤ ε := by
-    have := hn n (le_reflₓ _)
+    have := hn n le_rfl
     simp only [Real.dist_eq, add_zeroₓ, sub_eq_add_neg, neg_zero] at this
     exact le_of_ltₓ (lt_of_le_of_ltₓ (le_abs_self _) this)
   have : ∀ p : GH_space, ∃ s : Set p.rep, ∃ N ≤ K n, ∃ E : Equivₓ s (Finₓ N), p ∈ t → univ ⊆ ⋃ x ∈ s, ball x (u n) := by
@@ -921,7 +918,7 @@ structure aux_gluing_struct (A : Type) [MetricSpace A] : Type 1 where
   embed : A → space
   isom : Isometry embed
 
-instance (A : Type) [MetricSpace A] : Inhabited (aux_gluing_struct A) :=
+instance (A : Type) [MetricSpace A] : Inhabited (AuxGluingStruct A) :=
   ⟨{ Space := A,
       metric := by
         infer_instance,
@@ -930,7 +927,7 @@ instance (A : Type) [MetricSpace A] : Inhabited (aux_gluing_struct A) :=
 /-- Auxiliary sequence of metric spaces, containing copies of `X 0`, ..., `X n`, where each
 `X i` is glued to `X (i+1)` in an optimal way. The space at step `n+1` is obtained from the space
 at step `n` by adding `X (n+1)`, glued in an optimal way to the `X n` already sitting there. -/
-def aux_gluing (n : ℕ) : aux_gluing_struct (X n) :=
+def aux_gluing (n : ℕ) : AuxGluingStruct (X n) :=
   Nat.recOn n
     { Space := X 0,
       metric := by
@@ -946,7 +943,7 @@ def aux_gluing (n : ℕ) : aux_gluing_struct (X n) :=
           isom := (to_glue_r_isometry _ _).comp (isometry_optimal_GH_injr (X n) (X (n + 1))) }
 
 /-- The Gromov-Hausdorff space is complete. -/
-instance : CompleteSpace GH_space := by
+instance : CompleteSpace GHSpace := by
   have : ∀ n : ℕ, 0 < ((1 : ℝ) / 2) ^ n := by
     apply pow_pos
     norm_num

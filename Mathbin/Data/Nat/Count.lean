@@ -111,11 +111,11 @@ theorem count_injective {m n : ℕ} (hm : p m) (hn : p n) (heq : count p m = cou
   · simpa [HEq] using count_strict_mono hm hmn
     
 
-theorem count_le_card (hp : (SetOf p).Finite) (n : ℕ) : count p n ≤ hp.to_finset.card := by
+theorem count_le_card (hp : (SetOf p).Finite) (n : ℕ) : count p n ≤ hp.toFinset.card := by
   rw [count_eq_card_filter_range]
   exact Finset.card_mono fun x hx => hp.mem_to_finset.2 (mem_filter.1 hx).2
 
-theorem count_lt_card {n : ℕ} (hp : (SetOf p).Finite) (hpn : p n) : count p n < hp.to_finset.card :=
+theorem count_lt_card {n : ℕ} (hp : (SetOf p).Finite) (hpn : p n) : count p n < hp.toFinset.card :=
   (count_lt_count_succ_iff.2 hpn).trans_le (count_le_card hp _)
 
 variable {q : ℕ → Prop}

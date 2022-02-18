@@ -63,7 +63,7 @@ bilinear estimate for `f (x + hv + hw) - f (x + hv)` in terms of `f' w` and of `
 This is a technical statement used to show that the second derivative is symmetric.
 -/
 theorem Convex.taylor_approx_two_segment {v w : E} (hv : x + v ∈ Interior s) (hw : x + v + w ∈ Interior s) :
-    is_o (fun h : ℝ => f (x + h • v + h • w) - f (x + h • v) - h • f' x w - h ^ 2 • f'' v w - (h ^ 2 / 2) • f'' w w)
+    IsOₓ (fun h : ℝ => f (x + h • v + h • w) - f (x + h • v) - h • f' x w - h ^ 2 • f'' v w - (h ^ 2 / 2) • f'' w w)
       (fun h => h ^ 2) (𝓝[>] (0 : ℝ)) :=
   by
   apply is_o.trans_is_O (is_o_iff.2 fun ε εpos => _) (is_O_const_mul_self ((∥v∥ + ∥w∥) * ∥w∥) _ _)
@@ -107,7 +107,7 @@ theorem Convex.taylor_approx_two_segment {v w : E} (hv : x + v ∈ Interior s) (
         HasDerivWithinAt (fun u => ((u * h) ^ 2 / 2) • f'' w w)
           ((((2 : ℕ) : ℝ) * (t * h) ^ (2 - 1) * (1 * h) / 2) • f'' w w) (Icc 0 1) t
       · convert H using 2
-        simp only [one_mulₓ, Nat.cast_bit0, pow_oneₓ, Nat.cast_one]
+        simp only [one_mulₓ, Nat.cast_bit0, pow_oneₓ, Nat.cast_oneₓ]
         ring
         
       apply_rules [HasDerivAt.has_deriv_within_at, HasDerivAt.smul_const, has_deriv_at_id', HasDerivAt.pow,
@@ -121,7 +121,7 @@ theorem Convex.taylor_approx_two_segment {v w : E} (hv : x + v ∈ Interior s) (
         _ = h * ∥v∥ + t * (h * ∥w∥) := by
           simp only [norm_smul, Real.norm_eq_abs, hpos.le, abs_of_nonneg, abs_mul, ht.left, mul_assoc]
         _ ≤ h * ∥v∥ + 1 * (h * ∥w∥) :=
-          add_le_add (le_reflₓ _) (mul_le_mul_of_nonneg_right ht.2.le (mul_nonneg hpos.le (norm_nonneg _)))
+          add_le_add le_rfl (mul_le_mul_of_nonneg_right ht.2.le (mul_nonneg hpos.le (norm_nonneg _)))
         _ = h * (∥v∥ + ∥w∥) := by
           ring
         
@@ -143,7 +143,7 @@ theorem Convex.taylor_approx_two_segment {v w : E} (hv : x + v ∈ Interior s) (
         apply mul_le_mul_of_nonneg_right _ (norm_nonneg _)
         apply mul_le_mul_of_nonneg_left _ εpos.le
         apply (norm_add_le _ _).trans
-        refine' add_le_add (le_reflₓ _) _
+        refine' add_le_add le_rfl _
         simp only [norm_smul, Real.norm_eq_abs, abs_mul, abs_of_nonneg, ht.1, hpos.le, mul_assoc]
         exact mul_le_of_le_one_left (mul_nonneg hpos.le (norm_nonneg _)) ht.2.le _ = ε * ((∥v∥ + ∥w∥) * ∥w∥) * h ^ 2 :=
         by
@@ -169,7 +169,7 @@ In a setting where `f` is not guaranteed to be continuous at `f`, we can still
 get this if we use a quadrilateral based at `h v + h w`. -/
 theorem Convex.is_o_alternate_sum_square {v w : E} (h4v : x + (4 : ℝ) • v ∈ Interior s)
     (h4w : x + (4 : ℝ) • w ∈ Interior s) :
-    is_o
+    IsOₓ
       (fun h : ℝ =>
         f (x + h • (2 • v + 2 • w)) + f (x + h • (v + w)) - f (x + h • (2 • v + w)) - f (x + h • (v + 2 • w)) -
           h ^ 2 • f'' v w)

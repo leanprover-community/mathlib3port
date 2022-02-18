@@ -30,31 +30,31 @@ namespace CategoryTheory
 
 open Limits Category
 
-variable {C : Type u₁} [category.{v₁} C] {A : C}
+variable {C : Type u₁} [Category.{v₁} C] {A : C}
 
 /-- An object `A` is subterminal iff for any `Z`, there is at most one morphism `Z ⟶ A`. -/
 def is_subterminal (A : C) : Prop :=
   ∀ ⦃Z : C⦄ f g : Z ⟶ A, f = g
 
-theorem is_subterminal.def : is_subterminal A ↔ ∀ ⦃Z : C⦄ f g : Z ⟶ A, f = g :=
+theorem is_subterminal.def : IsSubterminal A ↔ ∀ ⦃Z : C⦄ f g : Z ⟶ A, f = g :=
   Iff.rfl
 
 /-- If `A` is subterminal, the unique morphism from it to a terminal object is a monomorphism.
 The converse of `is_subterminal_of_mono_is_terminal_from`.
 -/
-theorem is_subterminal.mono_is_terminal_from (hA : is_subterminal A) {T : C} (hT : is_terminal T) : mono (hT.from A) :=
+theorem is_subterminal.mono_is_terminal_from (hA : IsSubterminal A) {T : C} (hT : IsTerminal T) : Mono (hT.from A) :=
   { right_cancellation := fun Z g h _ => hA _ _ }
 
 /-- If `A` is subterminal, the unique morphism from it to the terminal object is a monomorphism.
 The converse of `is_subterminal_of_mono_terminal_from`.
 -/
-theorem is_subterminal.mono_terminal_from [has_terminal C] (hA : is_subterminal A) : mono (terminal.from A) :=
-  hA.mono_is_terminal_from terminal_is_terminal
+theorem is_subterminal.mono_terminal_from [HasTerminal C] (hA : IsSubterminal A) : Mono (terminal.from A) :=
+  hA.mono_is_terminal_from terminalIsTerminal
 
 /-- If the unique morphism from `A` to a terminal object is a monomorphism, `A` is subterminal.
 The converse of `is_subterminal.mono_is_terminal_from`.
 -/
-theorem is_subterminal_of_mono_is_terminal_from {T : C} (hT : is_terminal T) [mono (hT.from A)] : is_subterminal A :=
+theorem is_subterminal_of_mono_is_terminal_from {T : C} (hT : IsTerminal T) [Mono (hT.from A)] : IsSubterminal A :=
   fun Z f g => by
   rw [← cancel_mono (hT.from A)]
   apply hT.hom_ext
@@ -62,20 +62,20 @@ theorem is_subterminal_of_mono_is_terminal_from {T : C} (hT : is_terminal T) [mo
 /-- If the unique morphism from `A` to the terminal object is a monomorphism, `A` is subterminal.
 The converse of `is_subterminal.mono_terminal_from`.
 -/
-theorem is_subterminal_of_mono_terminal_from [has_terminal C] [mono (terminal.from A)] : is_subterminal A :=
-  fun Z f g => by
+theorem is_subterminal_of_mono_terminal_from [HasTerminal C] [Mono (terminal.from A)] : IsSubterminal A := fun Z f g =>
+  by
   rw [← cancel_mono (terminal.from A)]
   apply Subsingleton.elimₓ
 
-theorem is_subterminal_of_is_terminal {T : C} (hT : is_terminal T) : is_subterminal T := fun Z f g => hT.hom_ext _ _
+theorem is_subterminal_of_is_terminal {T : C} (hT : IsTerminal T) : IsSubterminal T := fun Z f g => hT.hom_ext _ _
 
-theorem is_subterminal_of_terminal [has_terminal C] : is_subterminal (⊤_ C) := fun Z f g => Subsingleton.elimₓ _ _
+theorem is_subterminal_of_terminal [HasTerminal C] : IsSubterminal (⊤_ C) := fun Z f g => Subsingleton.elimₓ _ _
 
 /-- If `A` is subterminal, its diagonal morphism is an isomorphism.
 The converse of `is_subterminal_of_is_iso_diag`.
 -/
-theorem is_subterminal.is_iso_diag (hA : is_subterminal A) [has_binary_product A A] : is_iso (diag A) :=
-  ⟨⟨limits.prod.fst,
+theorem is_subterminal.is_iso_diag (hA : IsSubterminal A) [HasBinaryProduct A A] : IsIso (diag A) :=
+  ⟨⟨Limits.prod.fst,
       ⟨by
         simp , by
         rw [is_subterminal.def] at hA
@@ -84,14 +84,14 @@ theorem is_subterminal.is_iso_diag (hA : is_subterminal A) [has_binary_product A
 /-- If the diagonal morphism of `A` is an isomorphism, then it is subterminal.
 The converse of `is_subterminal.is_iso_diag`.
 -/
-theorem is_subterminal_of_is_iso_diag [has_binary_product A A] [is_iso (diag A)] : is_subterminal A := fun Z f g => by
+theorem is_subterminal_of_is_iso_diag [HasBinaryProduct A A] [IsIso (diag A)] : IsSubterminal A := fun Z f g => by
   have : (limits.prod.fst : A ⨯ A ⟶ _) = limits.prod.snd := by
     simp [← cancel_epi (diag A)]
   rw [← prod.lift_fst f g, this, prod.lift_snd]
 
 /-- If `A` is subterminal, it is isomorphic to `A ⨯ A`. -/
 @[simps]
-def is_subterminal.iso_diag (hA : is_subterminal A) [has_binary_product A A] : A ⨯ A ≅ A := by
+def is_subterminal.iso_diag (hA : IsSubterminal A) [HasBinaryProduct A A] : A ⨯ A ≅ A := by
   let this' := is_subterminal.is_iso_diag hA
   apply (as_iso (diag A)).symm
 
@@ -102,29 +102,29 @@ TODO: If `C` is the category of sheaves on a topological space `X`, this categor
 to the lattice of open subsets of `X`. More generally, if `C` is a topos, this is the lattice of
 "external truth values".
 -/
-def subterminals (C : Type u₁) [category.{v₁} C] :=
-  { A : C // is_subterminal A }deriving category
+def subterminals (C : Type u₁) [Category.{v₁} C] :=
+  { A : C // IsSubterminal A }deriving Category
 
-instance [has_terminal C] : Inhabited (subterminals C) :=
+instance [HasTerminal C] : Inhabited (Subterminals C) :=
   ⟨⟨⊤_ C, is_subterminal_of_terminal⟩⟩
 
 /-- The inclusion of the subterminal objects into the original category. -/
 @[simps]
-def subterminal_inclusion : subterminals C ⥤ C :=
-  full_subcategory_inclusion _ deriving full, faithful
+def subterminal_inclusion : Subterminals C ⥤ C :=
+  fullSubcategoryInclusion _ deriving Full, Faithful
 
-instance subterminals_thin (X Y : subterminals C) : Subsingleton (X ⟶ Y) :=
+instance subterminals_thin (X Y : Subterminals C) : Subsingleton (X ⟶ Y) :=
   ⟨fun f g => Y.2 f g⟩
 
 /-- The category of subterminal objects is equivalent to the category of monomorphisms to the terminal
 object (which is in turn equivalent to the subobjects of the terminal object).
 -/
 @[simps]
-def subterminals_equiv_mono_over_terminal [has_terminal C] : subterminals C ≌ mono_over (⊤_ C) where
+def subterminals_equiv_mono_over_terminal [HasTerminal C] : Subterminals C ≌ MonoOver (⊤_ C) where
   Functor :=
-    { obj := fun X => ⟨over.mk (terminal.from X.1), X.2.mono_terminal_from⟩,
+    { obj := fun X => ⟨Over.mk (terminal.from X.1), X.2.mono_terminal_from⟩,
       map := fun X Y f =>
-        mono_over.hom_mk f
+        MonoOver.homMk f
           (by
             ext1 ⟨⟩) }
   inverse :=
@@ -134,16 +134,16 @@ def subterminals_equiv_mono_over_terminal [has_terminal C] : subterminals C ≌ 
           apply Subsingleton.elimₓ⟩,
       map := fun X Y f => f.1 }
   unitIso := { Hom := { app := fun X => 𝟙 _ }, inv := { app := fun X => 𝟙 _ } }
-  counitIso := { Hom := { app := fun X => over.hom_mk (𝟙 _) }, inv := { app := fun X => over.hom_mk (𝟙 _) } }
+  counitIso := { Hom := { app := fun X => Over.homMk (𝟙 _) }, inv := { app := fun X => Over.homMk (𝟙 _) } }
 
 @[simp]
-theorem subterminals_to_mono_over_terminal_comp_forget [has_terminal C] :
-    (subterminals_equiv_mono_over_terminal C).Functor ⋙ mono_over.forget _ ⋙ over.forget _ = subterminal_inclusion C :=
+theorem subterminals_to_mono_over_terminal_comp_forget [HasTerminal C] :
+    (subterminalsEquivMonoOverTerminal C).Functor ⋙ MonoOver.forget _ ⋙ Over.forget _ = subterminalInclusion C :=
   rfl
 
 @[simp]
-theorem mono_over_terminal_to_subterminals_comp [has_terminal C] :
-    (subterminals_equiv_mono_over_terminal C).inverse ⋙ subterminal_inclusion C = mono_over.forget _ ⋙ over.forget _ :=
+theorem mono_over_terminal_to_subterminals_comp [HasTerminal C] :
+    (subterminalsEquivMonoOverTerminal C).inverse ⋙ subterminalInclusion C = MonoOver.forget _ ⋙ Over.forget _ :=
   rfl
 
 end CategoryTheory

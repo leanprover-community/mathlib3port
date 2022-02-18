@@ -10,7 +10,7 @@ open_locale Real TopologicalSpace BigOperators
 open Filter Finset intervalIntegral
 
 theorem integral_sin_pow_div_tendsto_one :
-    tendsto (fun k => (∫ x in 0 ..π, sin x ^ (2 * k + 1)) / ∫ x in 0 ..π, sin x ^ (2 * k)) at_top (𝓝 1) := by
+    Tendsto (fun k => (∫ x in 0 ..π, sin x ^ (2 * k + 1)) / ∫ x in 0 ..π, sin x ^ (2 * k)) atTop (𝓝 1) := by
   have h₃ : ∀ n, ((∫ x in 0 ..π, sin x ^ (2 * n + 1)) / ∫ x in 0 ..π, sin x ^ (2 * n)) ≤ 1 := fun n =>
     (div_le_one (integral_sin_pow_pos _)).mpr (integral_sin_pow_succ_le _)
   have h₄ : ∀ n, ((∫ x in 0 ..π, sin x ^ (2 * n + 1)) / ∫ x in 0 ..π, sin x ^ (2 * n)) ≥ 2 * n / (2 * n + 1) := by
@@ -26,7 +26,7 @@ theorem integral_sin_pow_div_tendsto_one :
       ((∫ x in 0 ..π, sin x ^ (2 * n.succ + 1)) / ∫ x in 0 ..π, sin x ^ (2 * n.succ)) ≥
           (∫ x in 0 ..π, sin x ^ (2 * n.succ + 1)) / ∫ x in 0 ..π, sin x ^ (2 * n + 1) :=
         by
-        refine' div_le_div (integral_sin_pow_pos _).le (le_reflₓ _) (integral_sin_pow_pos _) _
+        refine' div_le_div (integral_sin_pow_pos _).le le_rfl (integral_sin_pow_pos _) _
         convert integral_sin_pow_succ_le (2 * n + 1) using 1_ = 2 * ↑n.succ / (2 * ↑n.succ + 1) := by
         rw [div_eq_iff (integral_sin_pow_pos (2 * n + 1)).ne']
         convert integral_sin_pow (2 * n + 1)
@@ -68,7 +68,7 @@ theorem integral_sin_pow_div_tendsto_one :
   it converges to one using the squeeze theorem. The final product for `π` is obtained after some
   algebraic manipulation. -/
 theorem tendsto_prod_pi_div_two :
-    tendsto (fun k => ∏ i in range k, ((2 : ℝ) * i + 2) / (2 * i + 1) * ((2 * i + 2) / (2 * i + 3))) at_top
+    Tendsto (fun k => ∏ i in range k, ((2 : ℝ) * i + 2) / (2 * i + 1) * ((2 * i + 2) / (2 * i + 3))) atTop
       (𝓝 (π / 2)) :=
   by
   suffices h :

@@ -15,7 +15,7 @@ open Sum
 
 namespace CategoryTheory.sum
 
-variable (C : Type u) [category.{v} C] (D : Type u) [category.{v} D] (E : Type u) [category.{v} E]
+variable (C : Type u) [Category.{v} C] (D : Type u) [Category.{v} D] (E : Type u) [Category.{v} E]
 
 /-- The associator functor `(C ⊕ D) ⊕ E ⥤ C ⊕ (D ⊕ E)` for sums of categories.
 -/
@@ -70,57 +70,57 @@ def inverse_associator : Sum C (Sum D E) ⥤ Sum (Sum C D) E where
     | inr (inr X), inr (inr Y), f => f
 
 @[simp]
-theorem inverse_associator_obj_inl X : (inverse_associator C D E).obj (inl X) = inl (inl X) :=
+theorem inverse_associator_obj_inl X : (inverseAssociator C D E).obj (inl X) = inl (inl X) :=
   rfl
 
 @[simp]
-theorem inverse_associator_obj_inr_inl X : (inverse_associator C D E).obj (inr (inl X)) = inl (inr X) :=
+theorem inverse_associator_obj_inr_inl X : (inverseAssociator C D E).obj (inr (inl X)) = inl (inr X) :=
   rfl
 
 @[simp]
-theorem inverse_associator_obj_inr_inr X : (inverse_associator C D E).obj (inr (inr X)) = inr X :=
+theorem inverse_associator_obj_inr_inr X : (inverseAssociator C D E).obj (inr (inr X)) = inr X :=
   rfl
 
 @[simp]
-theorem inverse_associator_map_inl {X Y : C} (f : inl X ⟶ inl Y) : (inverse_associator C D E).map f = f :=
+theorem inverse_associator_map_inl {X Y : C} (f : inl X ⟶ inl Y) : (inverseAssociator C D E).map f = f :=
   rfl
 
 @[simp]
 theorem inverse_associator_map_inr_inl {X Y : D} (f : inr (inl X) ⟶ inr (inl Y)) :
-    (inverse_associator C D E).map f = f :=
+    (inverseAssociator C D E).map f = f :=
   rfl
 
 @[simp]
 theorem inverse_associator_map_inr_inr {X Y : E} (f : inr (inr X) ⟶ inr (inr Y)) :
-    (inverse_associator C D E).map f = f :=
+    (inverseAssociator C D E).map f = f :=
   rfl
 
 /-- The equivalence of categories expressing associativity of sums of categories.
 -/
 def associativity : Sum (Sum C D) E ≌ Sum C (Sum D E) :=
-  equivalence.mk (associator C D E) (inverse_associator C D E)
-    (nat_iso.of_components
+  Equivalence.mk (associator C D E) (inverseAssociator C D E)
+    (NatIso.ofComponents
       (fun X =>
-        eq_to_iso
+        eqToIso
           (by
             tidy))
       (by
         tidy))
-    (nat_iso.of_components
+    (NatIso.ofComponents
       (fun X =>
-        eq_to_iso
+        eqToIso
           (by
             tidy))
       (by
         tidy))
 
-instance associator_is_equivalence : is_equivalence (associator C D E) :=
+instance associator_is_equivalence : IsEquivalence (associator C D E) :=
   (by
-    infer_instance : is_equivalence (associativity C D E).Functor)
+    infer_instance : IsEquivalence (associativity C D E).Functor)
 
-instance inverse_associator_is_equivalence : is_equivalence (inverse_associator C D E) :=
+instance inverse_associator_is_equivalence : IsEquivalence (inverseAssociator C D E) :=
   (by
-    infer_instance : is_equivalence (associativity C D E).inverse)
+    infer_instance : IsEquivalence (associativity C D E).inverse)
 
 end CategoryTheory.sum
 

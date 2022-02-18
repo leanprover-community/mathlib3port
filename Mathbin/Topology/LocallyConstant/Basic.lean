@@ -34,7 +34,7 @@ def IsLocallyConstant (f : X → Y) : Prop :=
 namespace IsLocallyConstant
 
 protected theorem tfae (f : X → Y) :
-    tfae
+    Tfae
       [IsLocallyConstant f, ∀ x, ∀ᶠ x' in 𝓝 x, f x' = f x, ∀ x, IsOpen { x' | f x' = f x }, ∀ y, IsOpen (f ⁻¹' {y}),
         ∀ x, ∃ (U : Set X)(hU : IsOpen U)(hx : x ∈ U), ∀, ∀ x' ∈ U, ∀, f x' = f x] :=
   by
@@ -104,8 +104,7 @@ theorem comp {f : X → Y} (hf : IsLocallyConstant f) (g : Y → Z) : IsLocallyC
 
 theorem prod_mk {Y'} {f : X → Y} {f' : X → Y'} (hf : IsLocallyConstant f) (hf' : IsLocallyConstant f') :
     IsLocallyConstant fun x => (f x, f' x) :=
-  (iff_eventually_eq _).2 fun x =>
-    (hf.eventually_eq x).mp <| (hf'.eventually_eq x).mono fun x' hf' hf => Prod.extₓ hf hf'
+  (iff_eventually_eq _).2 fun x => (hf.EventuallyEq x).mp <| (hf'.EventuallyEq x).mono fun x' hf' hf => Prod.extₓ hf hf'
 
 theorem comp₂ {Y₁ Y₂ Z : Type _} {f : X → Y₁} {g : X → Y₂} (hf : IsLocallyConstant f) (hg : IsLocallyConstant g)
     (h : Y₁ → Y₂ → Z) : IsLocallyConstant fun x => h (f x) (g x) :=
@@ -136,7 +135,7 @@ theorem range_finite [CompactSpace X] {f : X → Y} (hf : IsLocallyConstant f) :
   let this' : TopologicalSpace Y := ⊥
   have : DiscreteTopology Y := ⟨rfl⟩
   rw [@iff_continuous X Y ‹_› ‹_›] at hf
-  exact finite_of_is_compact_of_discrete _ (is_compact_range hf)
+  exact (is_compact_range hf).finite_of_discrete
 
 @[to_additive]
 theorem one [One Y] : IsLocallyConstant (1 : X → Y) :=
@@ -187,7 +186,7 @@ instance : CoeFun (LocallyConstant X Y) fun _ => X → Y :=
 initialize_simps_projections LocallyConstant (toFun → apply)
 
 @[simp]
-theorem to_fun_eq_coe (f : LocallyConstant X Y) : f.to_fun = f :=
+theorem to_fun_eq_coe (f : LocallyConstant X Y) : f.toFun = f :=
   rfl
 
 @[simp]
@@ -221,25 +220,25 @@ section CodomainTopologicalSpace
 variable [TopologicalSpace Y] (f : LocallyConstant X Y)
 
 protected theorem Continuous : Continuous f :=
-  f.is_locally_constant.continuous
+  f.IsLocallyConstant.Continuous
 
 /-- We can turn a locally-constant function into a bundled `continuous_map`. -/
 def to_continuous_map : C(X, Y) :=
-  ⟨f, f.continuous⟩
+  ⟨f, f.Continuous⟩
 
 /-- As a shorthand, `locally_constant.to_continuous_map` is available as a coercion -/
 instance : Coe (LocallyConstant X Y) C(X, Y) :=
-  ⟨to_continuous_map⟩
+  ⟨toContinuousMap⟩
 
 @[simp]
-theorem to_continuous_map_eq_coe : f.to_continuous_map = f :=
+theorem to_continuous_map_eq_coe : f.toContinuousMap = f :=
   rfl
 
 @[simp]
 theorem coe_continuous_map : ((f : C(X, Y)) : X → Y) = (f : X → Y) :=
   rfl
 
-theorem to_continuous_map_injective : Function.Injective (to_continuous_map : LocallyConstant X Y → C(X, Y)) :=
+theorem to_continuous_map_injective : Function.Injective (toContinuousMap : LocallyConstant X Y → C(X, Y)) :=
   fun _ _ h => ext (ContinuousMap.congr_fun h)
 
 end CodomainTopologicalSpace
@@ -274,14 +273,14 @@ def of_clopen {X : Type _} [TopologicalSpace X] {U : Set X} [∀ x, Decidable (x
 
 @[simp]
 theorem of_clopen_fiber_zero {X : Type _} [TopologicalSpace X] {U : Set X} [∀ x, Decidable (x ∈ U)] (hU : IsClopen U) :
-    of_clopen hU ⁻¹' ({0} : Set (Finₓ 2)) = U := by
+    ofClopen hU ⁻¹' ({0} : Set (Finₓ 2)) = U := by
   ext
   simp only [of_clopen, Nat.one_ne_zero, mem_singleton_iff, Finₓ.one_eq_zero_iff, coe_mk, mem_preimage, ite_eq_left_iff]
   tauto
 
 @[simp]
 theorem of_clopen_fiber_one {X : Type _} [TopologicalSpace X] {U : Set X} [∀ x, Decidable (x ∈ U)] (hU : IsClopen U) :
-    of_clopen hU ⁻¹' ({1} : Set (Finₓ 2)) = Uᶜ := by
+    ofClopen hU ⁻¹' ({1} : Set (Finₓ 2)) = Uᶜ := by
   ext
   simp only [of_clopen, Nat.one_ne_zero, mem_singleton_iff, coe_mk, Finₓ.zero_eq_one_iff, mem_preimage,
     ite_eq_right_iff, mem_compl_eq]
@@ -294,14 +293,14 @@ theorem locally_constant_eq_of_fiber_zero_eq {X : Type _} [TopologicalSpace X] (
   exact Finₓ.fin_two_eq_of_eq_zero_iff (h x)
 
 theorem range_finite [CompactSpace X] (f : LocallyConstant X Y) : (Set.Range f).Finite :=
-  f.is_locally_constant.range_finite
+  f.IsLocallyConstant.range_finite
 
 theorem apply_eq_of_is_preconnected (f : LocallyConstant X Y) {s : Set X} (hs : IsPreconnected s) {x y : X} (hx : x ∈ s)
     (hy : y ∈ s) : f x = f y :=
-  f.is_locally_constant.apply_eq_of_is_preconnected hs hx hy
+  f.IsLocallyConstant.apply_eq_of_is_preconnected hs hx hy
 
 theorem apply_eq_of_preconnected_space [PreconnectedSpace X] (f : LocallyConstant X Y) (x y : X) : f x = f y :=
-  f.is_locally_constant.apply_eq_of_is_preconnected is_preconnected_univ trivialₓ trivialₓ
+  f.IsLocallyConstant.apply_eq_of_is_preconnected is_preconnected_univ trivialₓ trivialₓ
 
 theorem eq_const [PreconnectedSpace X] (f : LocallyConstant X Y) (x : X) : f = const X (f x) :=
   ext fun y => apply_eq_of_preconnected_space f _ _
@@ -377,7 +376,7 @@ This definition only makes sense if `f` is continuous,
 in which case it sends locally constant functions to their precomposition with `f`.
 See also `locally_constant.coe_comap`. -/
 noncomputable def comap (f : X → Y) : LocallyConstant Y Z → LocallyConstant X Z :=
-  if hf : Continuous f then fun g => ⟨g ∘ f, g.is_locally_constant.comp_continuous hf⟩
+  if hf : Continuous f then fun g => ⟨g ∘ f, g.IsLocallyConstant.comp_continuous hf⟩
   else by
     by_cases' H : Nonempty X
     · intros g

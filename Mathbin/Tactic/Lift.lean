@@ -32,13 +32,13 @@ unsafe def can_lift_attr : user_attribute (List Name) where
   cache_cfg :=
     { mk_cache := fun _ => do
         let ls ← attribute.get_instances `instance
-        ls.mfilter fun l => do
+        ls fun l => do
             let (_, t) ← mk_const l >>= infer_type >>= open_pis
-            return <| t.is_app_of `can_lift,
+            return <| t `can_lift,
       dependencies := [`instance] }
 
 instance : CanLift ℤ ℕ :=
-  ⟨coe, fun n => 0 ≤ n, fun n hn => ⟨n.nat_abs, Int.nat_abs_of_nonneg hn⟩⟩
+  ⟨coe, fun n => 0 ≤ n, fun n hn => ⟨n.natAbs, Int.nat_abs_of_nonneg hn⟩⟩
 
 /-- Enable automatic handling of pi types in `can_lift`. -/
 instance Pi.canLift (ι : Type _) (α : ∀ i : ι, Type _) (β : ∀ i : ι, Type _) [∀ i : ι, CanLift (α i) (β i)] :
@@ -81,7 +81,7 @@ unsafe def get_lift_prf (h : Option pexpr) (old_tp new_tp inst e : expr) (s : si
     tactic expr := do
   let expected_prf_ty ← mk_app `can_lift.cond [old_tp, new_tp, inst, e]
   let expected_prf_ty ← s.dsimplify to_unfold expected_prf_ty
-  if h_some : h.is_some then
+  if h_some : h then
       decorate_error "lift tactic failed." <| i_to_expr (pquote.1 (%%ₓOption.getₓ h_some : %%ₓexpected_prf_ty))
     else do
       let prf_nm ← get_unused_name
@@ -105,26 +105,25 @@ unsafe def lift (p : pexpr) (t : pexpr) (h : Option pexpr) (n : List Name) : tac
               {← inst_type}") >>=
           fail
   let can_lift_instances ← can_lift_attr.get_cache >>= fun l => l.mmap resolve_name
-  let (s, to_unfold) ← mk_simp_set tt [] <| can_lift_instances.map simp_arg_type.expr
+  let (s, to_unfold) ← mk_simp_set true [] <| can_lift_instances.map simp_arg_type.expr
   let prf_cond ← get_lift_prf h old_tp new_tp inst e s to_unfold
   let prf_nm := if prf_cond.is_local_constant then some prf_cond.local_pp_name else none
   let prf_ex0 ← mk_mapp `can_lift.prf [old_tp, new_tp, inst, e]
   let prf_ex := prf_ex0 prf_cond
   let new_nm ← if n ≠ [] then return n.head else if e.is_local_constant then return e.local_pp_name else get_unused_name
   let eq_nm ←
-    if hn : 1 < n.length then return (n.nth_le 1 hn)
-      else if e.is_local_constant then return `rfl else get_unused_name `h
+    if hn : 1 < n.length then return (n.nthLe 1 hn) else if e.is_local_constant then return `rfl else get_unused_name `h
   let temp_nm ← get_unused_name
   let temp_e ← note temp_nm none prf_ex
   dsimp_hyp temp_e s to_unfold {  }
   rcases none (pexpr.of_expr temp_e) <| rcases_patt.tuple ([new_nm, eq_nm].map rcases_patt.one)
-  when (¬e.is_local_constant)
+  when (¬e)
       (get_local eq_nm >>= fun e => interactive.rw ⟨[⟨⟨0, 0⟩, tt, pexpr.of_expr e⟩], none⟩ Interactive.Loc.wildcard)
-  if h_prf_nm : prf_nm.is_some ∧ n.nth 2 ≠ prf_nm then get_local (Option.getₓ h_prf_nm.1) >>= clear else skip
+  if h_prf_nm : prf_nm ∧ n 2 ≠ prf_nm then get_local (Option.getₓ h_prf_nm.1) >>= clear else skip
 
 setup_tactic_parser
 
--- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr ?»
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr ?»
 /-- Parses an optional token "using" followed by a trailing `pexpr`. -/
 unsafe def using_texpr :=
   «expr ?» (tk "using" *> texpr)

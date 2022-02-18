@@ -36,7 +36,7 @@ open_locale Simplicial
 This is the category of contravariant functors from
 `simplex_category` to `Type u`. -/
 def SSet : Type (u + 1) :=
-  simplicial_object (Type u)deriving large_category, limits.has_limits, limits.has_colimits
+  SimplicialObject (Type u)deriving LargeCategory, Limits.HasLimits, Limits.HasColimits
 
 namespace SSet
 
@@ -55,7 +55,7 @@ section
 /-- The `m`-simplices of the `n`-th standard simplex are
 the monotone maps from `fin (m+1)` to `fin (n+1)`. -/
 def as_order_hom {n} {m} (α : Δ[n].obj m) : OrderHom (Finₓ (m.unop.len + 1)) (Finₓ (n + 1)) :=
-  α.to_order_hom
+  α.toOrderHom
 
 end
 
@@ -63,7 +63,7 @@ end
 all `m`-simplices of `standard_simplex n` that are not surjective
 (when viewed as monotone function `m → n`). -/
 def boundary (n : ℕ) : SSet where
-  obj := fun m => { α : Δ[n].obj m // ¬Function.Surjective (as_order_hom α) }
+  obj := fun m => { α : Δ[n].obj m // ¬Function.Surjective (asOrderHom α) }
   map := fun m₁ m₂ f α =>
     ⟨f.unop ≫ (α : Δ[n].obj m₁), by
       intro h
@@ -81,7 +81,7 @@ It consists of all `m`-simplices `α` of `Δ[n]`
 for which the union of `{i}` and the range of `α` is not all of `n`
 (when viewing `α` as monotone function `m → n`). -/
 def horn (n : ℕ) (i : Finₓ (n + 1)) : SSet where
-  obj := fun m => { α : Δ[n].obj m // Set.Range (as_order_hom α) ∪ {i} ≠ Set.Univ }
+  obj := fun m => { α : Δ[n].obj m // Set.Range (asOrderHom α) ∪ {i} ≠ Set.Univ }
   map := fun m₁ m₂ f α =>
     ⟨f.unop ≫ (α : Δ[n].obj m₁), by
       intro h
@@ -105,18 +105,18 @@ open_locale Simplicial
 /-- The simplicial circle. -/
 noncomputable def S1 : SSet :=
   limits.colimit <|
-    limits.parallel_pair (standard_simplex.map <| SimplexCategory.δ 0 : Δ[0] ⟶ Δ[1])
-      (standard_simplex.map <| SimplexCategory.δ 1)
+    Limits.parallelPair (standardSimplex.map <| SimplexCategory.δ 0 : Δ[0] ⟶ Δ[1])
+      (standardSimplex.map <| SimplexCategory.δ 1)
 
 end Examples
 
 /-- Truncated simplicial sets. -/
 def truncated (n : ℕ) :=
-  simplicial_object.truncated (Type u) n deriving large_category, limits.has_limits, limits.has_colimits
+  SimplicialObject.Truncated (Type u) n deriving LargeCategory, Limits.HasLimits, Limits.HasColimits
 
 /-- The skeleton functor on simplicial sets. -/
 def sk (n : ℕ) : SSet ⥤ SSet.Truncated n :=
-  simplicial_object.sk n
+  SimplicialObject.sk n
 
 instance {n} : Inhabited (SSet.Truncated n) :=
   ⟨(sk n).obj <| Δ[0]⟩
@@ -125,18 +125,18 @@ end SSet
 
 /-- The functor associating the singular simplicial set to a topological space. -/
 noncomputable def Top.toSSet : Top ⥤ SSet :=
-  colimit_adj.restricted_yoneda SimplexCategory.toTop
+  ColimitAdj.restrictedYoneda SimplexCategory.toTop
 
 /-- The geometric realization functor. -/
 noncomputable def SSet.toTop : SSet ⥤ Top :=
-  colimit_adj.extend_along_yoneda SimplexCategory.toTop
+  ColimitAdj.extendAlongYoneda SimplexCategory.toTop
 
 /-- Geometric realization is left adjoint to the singular simplicial set construction. -/
 noncomputable def sSetTopAdj : SSet.toTop ⊣ Top.toSSet :=
-  colimit_adj.yoneda_adjunction _
+  ColimitAdj.yonedaAdjunction _
 
 /-- The geometric realization of the representable simplicial sets agree
   with the usual topological simplices. -/
 noncomputable def SSet.toTopSimplex : (yoneda : SimplexCategory ⥤ _) ⋙ SSet.toTop ≅ SimplexCategory.toTop :=
-  colimit_adj.is_extension_along_yoneda _
+  ColimitAdj.isExtensionAlongYoneda _
 

@@ -11,18 +11,18 @@ open CategoryTheory
 
 open CategoryTheory.MonoidalCategory
 
-variable (C : Type u₁) [category.{v₁} C] [monoidal_category.{v₁} C]
+variable (C : Type u₁) [Category.{v₁} C] [MonoidalCategory.{v₁} C]
 
 variable {C}
 
 /-- A module object for a monoid object, all internal to some monoidal category. -/
 structure Modₓ (A : Mon_ C) where
   x : C
-  act : A.X ⊗ X ⟶ X
+  act : A.x ⊗ X ⟶ X
   one_act' : (A.one ⊗ 𝟙 X) ≫ act = (λ_ X).Hom := by
     run_tac
       obviously
-  assoc' : (A.mul ⊗ 𝟙 X) ≫ act = (α_ A.X A.X X).Hom ≫ (𝟙 A.X ⊗ act) ≫ act := by
+  assoc' : (A.mul ⊗ 𝟙 X) ≫ act = (α_ A.x A.x X).Hom ≫ (𝟙 A.x ⊗ act) ≫ act := by
     run_tac
       obviously
 
@@ -36,14 +36,14 @@ namespace Modₓ
 
 variable {A : Mon_ C} (M : Modₓ A)
 
-theorem assoc_flip : (𝟙 A.X ⊗ M.act) ≫ M.act = (α_ A.X A.X M.X).inv ≫ (A.mul ⊗ 𝟙 M.X) ≫ M.act := by
+theorem assoc_flip : (𝟙 A.x ⊗ M.act) ≫ M.act = (α_ A.x A.x M.x).inv ≫ (A.mul ⊗ 𝟙 M.x) ≫ M.act := by
   simp
 
 /-- A morphism of module objects. -/
 @[ext]
 structure hom (M N : Modₓ A) where
-  Hom : M.X ⟶ N.X
-  act_hom' : M.act ≫ hom = (𝟙 A.X ⊗ hom) ≫ N.act := by
+  Hom : M.x ⟶ N.x
+  act_hom' : M.act ≫ hom = (𝟙 A.x ⊗ hom) ≫ N.act := by
     run_tac
       obviously
 
@@ -53,28 +53,28 @@ attribute [simp, reassoc] hom.act_hom
 
 /-- The identity morphism on a module object. -/
 @[simps]
-def id (M : Modₓ A) : hom M M where
-  Hom := 𝟙 M.X
+def id (M : Modₓ A) : Hom M M where
+  Hom := 𝟙 M.x
 
-instance hom_inhabited (M : Modₓ A) : Inhabited (hom M M) :=
+instance hom_inhabited (M : Modₓ A) : Inhabited (Hom M M) :=
   ⟨id M⟩
 
 /-- Composition of module object morphisms. -/
 @[simps]
-def comp {M N O : Modₓ A} (f : hom M N) (g : hom N O) : hom M O where
-  Hom := f.hom ≫ g.hom
+def comp {M N O : Modₓ A} (f : Hom M N) (g : Hom N O) : Hom M O where
+  Hom := f.Hom ≫ g.Hom
 
-instance : category (Modₓ A) where
-  Hom := fun M N => hom M N
+instance : Category (Modₓ A) where
+  Hom := fun M N => Hom M N
   id := id
   comp := fun M N O f g => comp f g
 
 @[simp]
-theorem id_hom' (M : Modₓ A) : (𝟙 M : hom M M).Hom = 𝟙 M.X :=
+theorem id_hom' (M : Modₓ A) : (𝟙 M : Hom M M).Hom = 𝟙 M.x :=
   rfl
 
 @[simp]
-theorem comp_hom' {M N K : Modₓ A} (f : M ⟶ N) (g : N ⟶ K) : (f ≫ g : hom M K).Hom = f.hom ≫ g.hom :=
+theorem comp_hom' {M N K : Modₓ A} (f : M ⟶ N) (g : N ⟶ K) : (f ≫ g : Hom M K).Hom = f.Hom ≫ g.Hom :=
   rfl
 
 variable (A)
@@ -82,7 +82,7 @@ variable (A)
 /-- A monoid object as a module over itself. -/
 @[simps]
 def regular : Modₓ A where
-  x := A.X
+  x := A.x
   act := A.mul
 
 instance : Inhabited (Modₓ A) :=
@@ -90,8 +90,8 @@ instance : Inhabited (Modₓ A) :=
 
 /-- The forgetful functor from module objects to the ambient category. -/
 def forget : Modₓ A ⥤ C where
-  obj := fun A => A.X
-  map := fun A B f => f.hom
+  obj := fun A => A.x
+  map := fun A B f => f.Hom
 
 open CategoryTheory.MonoidalCategory
 
@@ -101,7 +101,7 @@ between the categories of module objects.
 @[simps]
 def comap {A B : Mon_ C} (f : A ⟶ B) : Modₓ B ⥤ Modₓ A where
   obj := fun M =>
-    { x := M.X, act := (f.hom ⊗ 𝟙 M.X) ≫ M.act,
+    { x := M.x, act := (f.Hom ⊗ 𝟙 M.x) ≫ M.act,
       one_act' := by
         slice_lhs 1 2 => rw [← comp_tensor_id]
         rw [f.one_hom, one_act],
@@ -116,7 +116,7 @@ def comap {A B : Mon_ C} (f : A ⟶ B) : Modₓ B ⥤ Modₓ A where
         slice_rhs 1 2 => rw [← comp_tensor_id, ← f.mul_hom]
         rw [comp_tensor_id, category.assoc] }
   map := fun M N g =>
-    { Hom := g.hom,
+    { Hom := g.Hom,
       act_hom' := by
         dsimp
         slice_rhs 1 2 => rw [id_tensor_comp_tensor_id, ← tensor_id_comp_id_tensor]

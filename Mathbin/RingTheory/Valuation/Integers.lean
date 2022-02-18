@@ -48,12 +48,12 @@ structure integers : Prop where
 instance : Algebra v.integer R :=
   Algebra.ofSubring v.integer
 
-theorem integer.integers : v.integers v.integer :=
+theorem integer.integers : v.Integers v.integer :=
   { hom_inj := Subtype.coe_injective, map_le_one := fun r => r.2, exists_of_le_one := fun r hr => ⟨⟨r, hr⟩, rfl⟩ }
 
 namespace Integers
 
-variable {v O} (hv : integers v O)
+variable {v O} (hv : Integers v O)
 
 include hv
 
@@ -91,7 +91,7 @@ section Field
 
 variable {F : Type u} {Γ₀ : Type v} [Field F] [LinearOrderedCommGroupWithZero Γ₀]
 
-variable {v : Valuation F Γ₀} {O : Type w} [CommRingₓ O] [Algebra O F] (hv : integers v O)
+variable {v : Valuation F Γ₀} {O : Type w} [CommRingₓ O] [Algebra O F] (hv : Integers v O)
 
 include hv
 

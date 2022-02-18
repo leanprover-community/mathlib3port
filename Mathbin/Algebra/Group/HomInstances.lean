@@ -20,7 +20,7 @@ variable {M : Type uM} {N : Type uN} {P : Type uP} {Q : Type uQ}
 
 /-- `(M →* N)` is a `comm_monoid` if `N` is commutative. -/
 @[to_additive "`(M →+ N)` is an `add_comm_monoid` if `N` is commutative."]
-instance [MulOneClass M] [CommMonoidₓ N] : CommMonoidₓ (M →* N) where
+instance [MulOneClassₓ M] [CommMonoidₓ N] : CommMonoidₓ (M →* N) where
   mul := · * ·
   mul_assoc := by
     intros <;> ext <;> apply mul_assoc
@@ -46,7 +46,7 @@ instance [MulOneClass M] [CommMonoidₓ N] : CommMonoidₓ (M →* N) where
 
 /-- If `G` is a commutative group, then `M →* G` is a commutative group too. -/
 @[to_additive "If `G` is an additive commutative group, then `M →+ G` is an additive commutative\ngroup too."]
-instance {M G} [MulOneClass M] [CommGroupₓ G] : CommGroupₓ (M →* G) :=
+instance {M G} [MulOneClassₓ M] [CommGroupₓ G] : CommGroupₓ (M →* G) :=
   { MonoidHom.commMonoid with inv := Inv.inv, div := Div.div,
     div_eq_mul_inv := by
       intros
@@ -90,13 +90,13 @@ is commutative.
 namespace MonoidHom
 
 @[to_additive]
-theorem ext_iff₂ {mM : MulOneClass M} {mN : MulOneClass N} {mP : CommMonoidₓ P} {f g : M →* N →* P} :
+theorem ext_iff₂ {mM : MulOneClassₓ M} {mN : MulOneClassₓ N} {mP : CommMonoidₓ P} {f g : M →* N →* P} :
     f = g ↔ ∀ x y, f x y = g x y :=
   MonoidHom.ext_iff.trans <| forall_congrₓ fun _ => MonoidHom.ext_iff
 
 /-- `flip` arguments of `f : M →* N →* P` -/
 @[to_additive "`flip` arguments of `f : M →+ N →+ P`"]
-def flip {mM : MulOneClass M} {mN : MulOneClass N} {mP : CommMonoidₓ P} (f : M →* N →* P) : N →* M →* P where
+def flip {mM : MulOneClassₓ M} {mN : MulOneClassₓ N} {mP : CommMonoidₓ P} (f : M →* N →* P) : N →* M →* P where
   toFun := fun y =>
     ⟨fun x => f x y, by
       rw [f.map_one, one_apply], fun x₁ x₂ => by
@@ -105,26 +105,27 @@ def flip {mM : MulOneClass M} {mN : MulOneClass N} {mP : CommMonoidₓ P} (f : M
   map_mul' := fun y₁ y₂ => ext fun x => (f x).map_mul y₁ y₂
 
 @[simp, to_additive]
-theorem flip_apply {mM : MulOneClass M} {mN : MulOneClass N} {mP : CommMonoidₓ P} (f : M →* N →* P) (x : M) (y : N) :
+theorem flip_apply {mM : MulOneClassₓ M} {mN : MulOneClassₓ N} {mP : CommMonoidₓ P} (f : M →* N →* P) (x : M) (y : N) :
     f.flip y x = f x y :=
   rfl
 
 @[to_additive]
-theorem map_one₂ {mM : MulOneClass M} {mN : MulOneClass N} {mP : CommMonoidₓ P} (f : M →* N →* P) (n : N) : f 1 n = 1 :=
+theorem map_one₂ {mM : MulOneClassₓ M} {mN : MulOneClassₓ N} {mP : CommMonoidₓ P} (f : M →* N →* P) (n : N) :
+    f 1 n = 1 :=
   (flip f n).map_one
 
 @[to_additive]
-theorem map_mul₂ {mM : MulOneClass M} {mN : MulOneClass N} {mP : CommMonoidₓ P} (f : M →* N →* P) (m₁ m₂ : M) (n : N) :
-    f (m₁ * m₂) n = f m₁ n * f m₂ n :=
+theorem map_mul₂ {mM : MulOneClassₓ M} {mN : MulOneClassₓ N} {mP : CommMonoidₓ P} (f : M →* N →* P) (m₁ m₂ : M)
+    (n : N) : f (m₁ * m₂) n = f m₁ n * f m₂ n :=
   (flip f n).map_mul _ _
 
 @[to_additive]
-theorem map_inv₂ {mM : Groupₓ M} {mN : MulOneClass N} {mP : CommGroupₓ P} (f : M →* N →* P) (m : M) (n : N) :
+theorem map_inv₂ {mM : Groupₓ M} {mN : MulOneClassₓ N} {mP : CommGroupₓ P} (f : M →* N →* P) (m : M) (n : N) :
     f m⁻¹ n = (f m n)⁻¹ :=
   (flip f n).map_inv _
 
 @[to_additive]
-theorem map_div₂ {mM : Groupₓ M} {mN : MulOneClass N} {mP : CommGroupₓ P} (f : M →* N →* P) (m₁ m₂ : M) (n : N) :
+theorem map_div₂ {mM : Groupₓ M} {mN : MulOneClassₓ N} {mP : CommGroupₓ P} (f : M →* N →* P) (m₁ m₂ : M) (n : N) :
     f (m₁ / m₂) n = f m₁ n / f m₂ n :=
   (flip f n).map_div _ _
 
@@ -133,7 +134,7 @@ for the evaluation of any function at a point. -/
 @[to_additive
       "Evaluation of an `add_monoid_hom` at a point as an additive monoid homomorphism.\nSee also `add_monoid_hom.apply` for the evaluation of any function at a point.",
   simps]
-def eval [MulOneClass M] [CommMonoidₓ N] : M →* (M →* N) →* N :=
+def eval [MulOneClassₓ M] [CommMonoidₓ N] : M →* (M →* N) →* N :=
   (MonoidHom.id (M →* N)).flip
 
 /-- The expression `λ g m, g (f m)` as a `monoid_hom`.
@@ -141,7 +142,7 @@ Equivalently, `(λ g, monoid_hom.comp g f)` as a `monoid_hom`. -/
 @[to_additive
       "The expression `λ g m, g (f m)` as a `add_monoid_hom`.\nEquivalently, `(λ g, monoid_hom.comp g f)` as a `add_monoid_hom`.\n\nThis also exists in a `linear_map` version, `linear_map.lcomp`.",
   simps]
-def comp_hom' [MulOneClass M] [MulOneClass N] [CommMonoidₓ P] (f : M →* N) : (N →* P) →* M →* P :=
+def comp_hom' [MulOneClassₓ M] [MulOneClassₓ N] [CommMonoidₓ P] (f : M →* N) : (N →* P) →* M →* P :=
   flip <| eval.comp f
 
 /-- Composition of monoid morphisms (`monoid_hom.comp`) as a monoid morphism.
@@ -150,7 +151,7 @@ Note that unlike `monoid_hom.comp_hom'` this requires commutativity of `N`. -/
 @[to_additive
       "Composition of additive monoid morphisms (`add_monoid_hom.comp`) as an additive\nmonoid morphism.\n\nNote that unlike `add_monoid_hom.comp_hom'` this requires commutativity of `N`.\n\nThis also exists in a `linear_map` version, `linear_map.llcomp`.",
   simps]
-def comp_hom [MulOneClass M] [CommMonoidₓ N] [CommMonoidₓ P] : (N →* P) →* (M →* N) →* M →* P where
+def comp_hom [MulOneClassₓ M] [CommMonoidₓ N] [CommMonoidₓ P] : (N →* P) →* (M →* N) →* M →* P where
   toFun := fun g => { toFun := g.comp, map_one' := comp_one g, map_mul' := comp_mul g }
   map_one' := by
     ext1 f
@@ -163,7 +164,7 @@ def comp_hom [MulOneClass M] [CommMonoidₓ N] [CommMonoidₓ P] : (N →* P) �
 @[to_additive
       "Flipping arguments of additive monoid morphisms (`add_monoid_hom.flip`)\nas an additive monoid morphism.",
   simps]
-def flip_hom {mM : MulOneClass M} {mN : MulOneClass N} {mP : CommMonoidₓ P} : (M →* N →* P) →* N →* M →* P where
+def flip_hom {mM : MulOneClassₓ M} {mN : MulOneClassₓ N} {mP : CommMonoidₓ P} : (M →* N →* P) →* N →* M →* P where
   toFun := MonoidHom.flip
   map_one' := rfl
   map_mul' := fun f g => rfl
@@ -173,24 +174,24 @@ def flip_hom {mM : MulOneClass M} {mN : MulOneClass N} {mP : CommMonoidₓ P} : 
 Note that the expression `λ q n, f (g q) n` is simply `monoid_hom.comp`. -/
 @[to_additive
       "The expression `λ m q, f m (g q)` as an `add_monoid_hom`.\n\nNote that the expression `λ q n, f (g q) n` is simply `add_monoid_hom.comp`.\n\nThis also exists as a `linear_map` version, `linear_map.compl₂`"]
-def compl₂ [MulOneClass M] [MulOneClass N] [CommMonoidₓ P] [CommMonoidₓ Q] (f : M →* N →* P) (g : Q →* N) :
+def compl₂ [MulOneClassₓ M] [MulOneClassₓ N] [CommMonoidₓ P] [CommMonoidₓ Q] (f : M →* N →* P) (g : Q →* N) :
     M →* Q →* P :=
-  (comp_hom' g).comp f
+  (compHom' g).comp f
 
 @[simp, to_additive]
-theorem compl₂_apply [MulOneClass M] [MulOneClass N] [CommMonoidₓ P] [CommMonoidₓ Q] (f : M →* N →* P) (g : Q →* N)
+theorem compl₂_apply [MulOneClassₓ M] [MulOneClassₓ N] [CommMonoidₓ P] [CommMonoidₓ Q] (f : M →* N →* P) (g : Q →* N)
     (m : M) (q : Q) : (compl₂ f g) m q = f m (g q) :=
   rfl
 
 /-- The expression `λ m n, g (f m n)` as a `monoid_hom`. -/
 @[to_additive
       "The expression `λ m n, g (f m n)` as an `add_monoid_hom`.\n\nThis also exists as a linear_map version, `linear_map.compr₂`"]
-def compr₂ [MulOneClass M] [MulOneClass N] [CommMonoidₓ P] [CommMonoidₓ Q] (f : M →* N →* P) (g : P →* Q) :
+def compr₂ [MulOneClassₓ M] [MulOneClassₓ N] [CommMonoidₓ P] [CommMonoidₓ Q] (f : M →* N →* P) (g : P →* Q) :
     M →* N →* Q :=
-  (comp_hom g).comp f
+  (compHom g).comp f
 
 @[simp, to_additive]
-theorem compr₂_apply [MulOneClass M] [MulOneClass N] [CommMonoidₓ P] [CommMonoidₓ Q] (f : M →* N →* P) (g : P →* Q)
+theorem compr₂_apply [MulOneClassₓ M] [MulOneClassₓ N] [CommMonoidₓ P] [CommMonoidₓ Q] (f : M →* N →* P) (g : P →* Q)
     (m : M) (n : N) : (compr₂ f g) m n = g (f m n) :=
   rfl
 
@@ -207,7 +208,7 @@ if the import structure permits them to be.
 
 section Semiringₓ
 
-variable {R S : Type _} [NonUnitalNonAssocSemiring R] [NonUnitalNonAssocSemiring S]
+variable {R S : Type _} [NonUnitalNonAssocSemiringₓ R] [NonUnitalNonAssocSemiringₓ S]
 
 /-- Multiplication of an element of a (semi)ring is an `add_monoid_hom` in both arguments.
 
@@ -238,6 +239,16 @@ theorem AddMonoidHom.coe_flip_mul : ⇑(AddMonoidHom.mul : R →+ R →+ R).flip
 theorem AddMonoidHom.map_mul_iff (f : R →+ S) :
     (∀ x y, f (x * y) = f x * f y) ↔ (AddMonoidHom.mul : R →+ R →+ R).compr₂ f = (AddMonoidHom.mul.comp f).compl₂ f :=
   Iff.symm AddMonoidHom.ext_iff₂
+
+/-- The left multiplication map: `(a, b) ↦ a * b`. See also `add_monoid_hom.mul_left`. -/
+@[simps]
+def AddMonoidₓ.End.mulLeft : R →+ AddMonoidₓ.End R :=
+  AddMonoidHom.mul
+
+/-- The right multiplication map: `(a, b) ↦ b * a`. See also `add_monoid_hom.mul_right`. -/
+@[simps]
+def AddMonoidₓ.End.mulRight : R →+ AddMonoidₓ.End R :=
+  (AddMonoidHom.mul : R →+ AddMonoidₓ.End R).flip
 
 end Semiringₓ
 

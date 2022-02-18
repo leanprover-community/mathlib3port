@@ -1,5 +1,6 @@
 import Mathbin.Data.Set.Lattice
 import Mathbin.Order.Zorn
+import Mathbin.Tactic.ByContra
 
 /-!
 # Extend a partial order to a linear order
@@ -15,6 +16,7 @@ open Set Classical
 
 open_locale Classical
 
+-- ././Mathport/Syntax/Translate/Basic.lean:418:16: unsupported tactic `by_contra'
 /-- Any partial order can be extended to a linear order.
 -/
 theorem extend_partial_order {α : Type u} (r : α → α → Prop) [IsPartialOrder α r] :
@@ -50,8 +52,7 @@ theorem extend_partial_order {α : Type u} (r : α → α → Prop) [IsPartialOr
   skip
   refine' ⟨s, { Total := _ }, rs⟩
   intro x y
-  by_contra h
-  push_neg  at h
+  "././Mathport/Syntax/Translate/Basic.lean:418:16: unsupported tactic `by_contra'"
   let s' := fun x' y' => s x' y' ∨ s x' x ∧ s y y'
   rw [← hs₂ s' _ fun _ _ => Or.inl] at h
   · apply h.1 (Or.inr ⟨refl _, refl _⟩)

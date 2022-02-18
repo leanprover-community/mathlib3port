@@ -33,18 +33,18 @@ def tensor_obj (M N : ModuleCat R) : ModuleCat R :=
   ModuleCat.of R (M ⊗[R] N)
 
 /-- (implementation) tensor product of morphisms R-modules -/
-def tensor_hom {M N M' N' : ModuleCat R} (f : M ⟶ N) (g : M' ⟶ N') : tensor_obj M M' ⟶ tensor_obj N N' :=
+def tensor_hom {M N M' N' : ModuleCat R} (f : M ⟶ N) (g : M' ⟶ N') : tensorObj M M' ⟶ tensorObj N N' :=
   TensorProduct.map f g
 
-theorem tensor_id (M N : ModuleCat R) : tensor_hom (𝟙 M) (𝟙 N) = 𝟙 (ModuleCat.of R (↥M ⊗ ↥N)) := by
+theorem tensor_id (M N : ModuleCat R) : tensorHom (𝟙 M) (𝟙 N) = 𝟙 (ModuleCat.of R (↥M ⊗ ↥N)) := by
   tidy
 
 theorem tensor_comp {X₁ Y₁ Z₁ X₂ Y₂ Z₂ : ModuleCat R} (f₁ : X₁ ⟶ Y₁) (f₂ : X₂ ⟶ Y₂) (g₁ : Y₁ ⟶ Z₁) (g₂ : Y₂ ⟶ Z₂) :
-    tensor_hom (f₁ ≫ g₁) (f₂ ≫ g₂) = tensor_hom f₁ f₂ ≫ tensor_hom g₁ g₂ := by
+    tensorHom (f₁ ≫ g₁) (f₂ ≫ g₂) = tensorHom f₁ f₂ ≫ tensorHom g₁ g₂ := by
   tidy
 
 /-- (implementation) the associator for R-modules -/
-def associator (M N K : ModuleCat R) : tensor_obj (tensor_obj M N) K ≅ tensor_obj M (tensor_obj N K) :=
+def associator (M N K : ModuleCat R) : tensorObj (tensorObj M N) K ≅ tensorObj M (tensorObj N K) :=
   LinearEquiv.toModuleIso (TensorProduct.assoc R M N K)
 
 section
@@ -81,24 +81,24 @@ private theorem pentagon_aux (W X Y Z : Type _) [AddCommMonoidₓ W] [AddCommMon
 end
 
 theorem associator_naturality {X₁ X₂ X₃ Y₁ Y₂ Y₃ : ModuleCat R} (f₁ : X₁ ⟶ Y₁) (f₂ : X₂ ⟶ Y₂) (f₃ : X₃ ⟶ Y₃) :
-    tensor_hom (tensor_hom f₁ f₂) f₃ ≫ (associator Y₁ Y₂ Y₃).Hom =
-      (associator X₁ X₂ X₃).Hom ≫ tensor_hom f₁ (tensor_hom f₂ f₃) :=
+    tensorHom (tensorHom f₁ f₂) f₃ ≫ (associator Y₁ Y₂ Y₃).Hom =
+      (associator X₁ X₂ X₃).Hom ≫ tensorHom f₁ (tensorHom f₂ f₃) :=
   by
   convert associator_naturality_aux f₁ f₂ f₃ using 1
 
 theorem pentagon (W X Y Z : ModuleCat R) :
-    tensor_hom (associator W X Y).Hom (𝟙 Z) ≫
-        (associator W (tensor_obj X Y) Z).Hom ≫ tensor_hom (𝟙 W) (associator X Y Z).Hom =
-      (associator (tensor_obj W X) Y Z).Hom ≫ (associator W X (tensor_obj Y Z)).Hom :=
+    tensorHom (associator W X Y).Hom (𝟙 Z) ≫
+        (associator W (tensorObj X Y) Z).Hom ≫ tensorHom (𝟙 W) (associator X Y Z).Hom =
+      (associator (tensorObj W X) Y Z).Hom ≫ (associator W X (tensorObj Y Z)).Hom :=
   by
   convert pentagon_aux R W X Y Z using 1
 
 /-- (implementation) the left unitor for R-modules -/
 def left_unitor (M : ModuleCat.{u} R) : ModuleCat.of R (R ⊗[R] M) ≅ M :=
-  (LinearEquiv.toModuleIso (TensorProduct.lid R M) : of R (R ⊗ M) ≅ of R M).trans (of_self_iso M)
+  (LinearEquiv.toModuleIso (TensorProduct.lid R M) : of R (R ⊗ M) ≅ of R M).trans (ofSelfIso M)
 
 theorem left_unitor_naturality {M N : ModuleCat R} (f : M ⟶ N) :
-    tensor_hom (𝟙 (ModuleCat.of R R)) f ≫ (left_unitor N).Hom = (left_unitor M).Hom ≫ f := by
+    tensorHom (𝟙 (ModuleCat.of R R)) f ≫ (leftUnitor N).Hom = (leftUnitor M).Hom ≫ f := by
   ext x y
   simp
   erw [TensorProduct.lid_tmul, TensorProduct.lid_tmul]
@@ -107,10 +107,10 @@ theorem left_unitor_naturality {M N : ModuleCat R} (f : M ⟶ N) :
 
 /-- (implementation) the right unitor for R-modules -/
 def right_unitor (M : ModuleCat.{u} R) : ModuleCat.of R (M ⊗[R] R) ≅ M :=
-  (LinearEquiv.toModuleIso (TensorProduct.rid R M) : of R (M ⊗ R) ≅ of R M).trans (of_self_iso M)
+  (LinearEquiv.toModuleIso (TensorProduct.rid R M) : of R (M ⊗ R) ≅ of R M).trans (ofSelfIso M)
 
 theorem right_unitor_naturality {M N : ModuleCat R} (f : M ⟶ N) :
-    tensor_hom f (𝟙 (ModuleCat.of R R)) ≫ (right_unitor N).Hom = (right_unitor M).Hom ≫ f := by
+    tensorHom f (𝟙 (ModuleCat.of R R)) ≫ (rightUnitor N).Hom = (rightUnitor M).Hom ≫ f := by
   ext x y
   simp
   erw [TensorProduct.rid_tmul, TensorProduct.rid_tmul]
@@ -118,8 +118,8 @@ theorem right_unitor_naturality {M N : ModuleCat R} (f : M ⟶ N) :
   rfl
 
 theorem triangle (M N : ModuleCat.{u} R) :
-    (associator M (ModuleCat.of R R) N).Hom ≫ tensor_hom (𝟙 M) (left_unitor N).Hom =
-      tensor_hom (right_unitor M).Hom (𝟙 N) :=
+    (associator M (ModuleCat.of R R) N).Hom ≫ tensorHom (𝟙 M) (leftUnitor N).Hom =
+      tensorHom (rightUnitor M).Hom (𝟙 N) :=
   by
   apply TensorProduct.ext_threefold
   intro x y z
@@ -132,13 +132,13 @@ end MonoidalCategory
 
 open MonoidalCategory
 
-instance monoidal_category : monoidal_category (ModuleCat.{u} R) where
-  tensorObj := tensor_obj
-  tensorHom := @tensor_hom _ _
+instance monoidal_category : MonoidalCategory (ModuleCat.{u} R) where
+  tensorObj := tensorObj
+  tensorHom := @tensorHom _ _
   tensorUnit := ModuleCat.of R R
   associator := associator
-  leftUnitor := left_unitor
-  rightUnitor := right_unitor
+  leftUnitor := leftUnitor
+  rightUnitor := rightUnitor
   tensor_id' := fun M N => tensor_id M N
   tensor_comp' := fun M N K M' N' K' f g h => tensor_comp f g h
   associator_naturality' := fun M N K M' N' K' f g h => associator_naturality f g h
@@ -191,7 +191,7 @@ theorem associator_inv_apply {M N K : ModuleCat.{u} R} (m : M) (n : N) (k : K) :
 end MonoidalCategory
 
 /-- (implementation) the braiding for R-modules -/
-def braiding (M N : ModuleCat R) : tensor_obj M N ≅ tensor_obj N M :=
+def braiding (M N : ModuleCat R) : tensorObj M N ≅ tensorObj N M :=
   LinearEquiv.toModuleIso (TensorProduct.comm R M N)
 
 @[simp]
@@ -223,7 +223,7 @@ theorem hexagon_reverse (X Y Z : ModuleCat.{u} R) :
 attribute [local ext] TensorProduct.ext
 
 /-- The symmetric monoidal structure on `Module R`. -/
-instance symmetric_category : symmetric_category (ModuleCat.{u} R) where
+instance symmetric_category : SymmetricCategory (ModuleCat.{u} R) where
   braiding := braiding
   braiding_naturality' := fun X₁ X₂ Y₁ Y₂ f g => braiding_naturality f g
   hexagon_forward' := hexagon_forward

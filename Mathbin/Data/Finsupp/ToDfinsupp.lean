@@ -65,7 +65,7 @@ def Finsupp.toDfinsupp [Zero M] (f : ι →₀ M) : Π₀ i : ι, M :=
   ⟦⟨f, f.support.1, fun i => (Classical.em (f i = 0)).symm.imp_left Finsupp.mem_support_iff.mpr⟩⟧
 
 @[simp]
-theorem Finsupp.to_dfinsupp_coe [Zero M] (f : ι →₀ M) : ⇑f.to_dfinsupp = f :=
+theorem Finsupp.to_dfinsupp_coe [Zero M] (f : ι →₀ M) : ⇑f.toDfinsupp = f :=
   rfl
 
 section
@@ -80,7 +80,7 @@ theorem Finsupp.to_dfinsupp_single (i : ι) (m : M) : (Finsupp.single i m).toDfi
 variable [∀ m : M, Decidable (m ≠ 0)]
 
 @[simp]
-theorem to_dfinsupp_support (f : ι →₀ M) : f.to_dfinsupp.support = f.support := by
+theorem to_dfinsupp_support (f : ι →₀ M) : f.toDfinsupp.support = f.support := by
   ext
   simp
 
@@ -94,11 +94,11 @@ def Dfinsupp.toFinsupp (f : Π₀ i : ι, M) : ι →₀ M :=
     simp only [Dfinsupp.mem_support_iff]⟩
 
 @[simp]
-theorem Dfinsupp.to_finsupp_coe (f : Π₀ i : ι, M) : ⇑f.to_finsupp = f :=
+theorem Dfinsupp.to_finsupp_coe (f : Π₀ i : ι, M) : ⇑f.toFinsupp = f :=
   rfl
 
 @[simp]
-theorem Dfinsupp.to_finsupp_support (f : Π₀ i : ι, M) : f.to_finsupp.support = f.support := by
+theorem Dfinsupp.to_finsupp_support (f : Π₀ i : ι, M) : f.toFinsupp.support = f.support := by
   ext
   simp
 
@@ -109,11 +109,11 @@ theorem Dfinsupp.to_finsupp_single (i : ι) (m : M) :
   simp [Finsupp.single_apply, Dfinsupp.single_apply]
 
 @[simp]
-theorem Finsupp.to_dfinsupp_to_finsupp (f : ι →₀ M) : f.to_dfinsupp.to_finsupp = f :=
+theorem Finsupp.to_dfinsupp_to_finsupp (f : ι →₀ M) : f.toDfinsupp.toFinsupp = f :=
   Finsupp.coe_fn_injective rfl
 
 @[simp]
-theorem Dfinsupp.to_finsupp_to_dfinsupp (f : Π₀ i : ι, M) : f.to_finsupp.to_dfinsupp = f :=
+theorem Dfinsupp.to_finsupp_to_dfinsupp (f : Π₀ i : ι, M) : f.toFinsupp.toDfinsupp = f :=
   Dfinsupp.coe_fn_injective rfl
 
 end
@@ -132,20 +132,20 @@ theorem to_dfinsupp_zero [Zero M] : (0 : ι →₀ M).toDfinsupp = 0 :=
   Dfinsupp.coe_fn_injective rfl
 
 @[simp]
-theorem to_dfinsupp_add [AddZeroClass M] (f g : ι →₀ M) : (f + g).toDfinsupp = f.to_dfinsupp + g.to_dfinsupp :=
+theorem to_dfinsupp_add [AddZeroClass M] (f g : ι →₀ M) : (f + g).toDfinsupp = f.toDfinsupp + g.toDfinsupp :=
   Dfinsupp.coe_fn_injective rfl
 
 @[simp]
-theorem to_dfinsupp_neg [AddGroupₓ M] (f : ι →₀ M) : (-f).toDfinsupp = -f.to_dfinsupp :=
+theorem to_dfinsupp_neg [AddGroupₓ M] (f : ι →₀ M) : (-f).toDfinsupp = -f.toDfinsupp :=
   Dfinsupp.coe_fn_injective rfl
 
 @[simp]
-theorem to_dfinsupp_sub [AddGroupₓ M] (f g : ι →₀ M) : (f - g).toDfinsupp = f.to_dfinsupp - g.to_dfinsupp :=
+theorem to_dfinsupp_sub [AddGroupₓ M] (f g : ι →₀ M) : (f - g).toDfinsupp = f.toDfinsupp - g.toDfinsupp :=
   Dfinsupp.coe_fn_injective rfl
 
 @[simp]
 theorem to_dfinsupp_smul [Monoidₓ R] [AddMonoidₓ M] [DistribMulAction R M] (r : R) (f : ι →₀ M) :
-    (r • f).toDfinsupp = r • f.to_dfinsupp :=
+    (r • f).toDfinsupp = r • f.toDfinsupp :=
   Dfinsupp.coe_fn_injective rfl
 
 end Finsupp
@@ -155,27 +155,27 @@ namespace Dfinsupp
 variable [DecidableEq ι]
 
 @[simp]
-theorem to_finsupp_zero [Zero M] [∀ m : M, Decidable (m ≠ 0)] : to_finsupp 0 = (0 : ι →₀ M) :=
+theorem to_finsupp_zero [Zero M] [∀ m : M, Decidable (m ≠ 0)] : toFinsupp 0 = (0 : ι →₀ M) :=
   Finsupp.coe_fn_injective rfl
 
 @[simp]
 theorem to_finsupp_add [AddZeroClass M] [∀ m : M, Decidable (m ≠ 0)] (f g : Π₀ i : ι, M) :
-    (to_finsupp (f + g) : ι →₀ M) = to_finsupp f + to_finsupp g :=
+    (toFinsupp (f + g) : ι →₀ M) = toFinsupp f + toFinsupp g :=
   Finsupp.coe_fn_injective <| Dfinsupp.coe_add _ _
 
 @[simp]
 theorem to_finsupp_neg [AddGroupₓ M] [∀ m : M, Decidable (m ≠ 0)] (f : Π₀ i : ι, M) :
-    (to_finsupp (-f) : ι →₀ M) = -to_finsupp f :=
+    (toFinsupp (-f) : ι →₀ M) = -toFinsupp f :=
   Finsupp.coe_fn_injective <| Dfinsupp.coe_neg _
 
 @[simp]
 theorem to_finsupp_sub [AddGroupₓ M] [∀ m : M, Decidable (m ≠ 0)] (f g : Π₀ i : ι, M) :
-    (to_finsupp (f - g) : ι →₀ M) = to_finsupp f - to_finsupp g :=
+    (toFinsupp (f - g) : ι →₀ M) = toFinsupp f - toFinsupp g :=
   Finsupp.coe_fn_injective <| Dfinsupp.coe_sub _ _
 
 @[simp]
 theorem to_finsupp_smul [Monoidₓ R] [AddMonoidₓ M] [DistribMulAction R M] [∀ m : M, Decidable (m ≠ 0)] (r : R)
-    (f : Π₀ i : ι, M) : (to_finsupp (r • f) : ι →₀ M) = r • to_finsupp f :=
+    (f : Π₀ i : ι, M) : (toFinsupp (r • f) : ι →₀ M) = r • toFinsupp f :=
   Finsupp.coe_fn_injective <| Dfinsupp.coe_smul _ _
 
 end Dfinsupp
@@ -188,7 +188,7 @@ end Lemmas
 section Equivs
 
 /-- `finsupp.to_dfinsupp` and `dfinsupp.to_finsupp` together form an equiv. -/
-@[simps (config := { fullyApplied := ff })]
+@[simps (config := { fullyApplied := false })]
 def finsuppEquivDfinsupp [DecidableEq ι] [Zero M] [∀ m : M, Decidable (m ≠ 0)] : (ι →₀ M) ≃ Π₀ i : ι, M where
   toFun := Finsupp.toDfinsupp
   invFun := Dfinsupp.toFinsupp
@@ -197,7 +197,7 @@ def finsuppEquivDfinsupp [DecidableEq ι] [Zero M] [∀ m : M, Decidable (m ≠ 
 
 /-- The additive version of `finsupp.to_finsupp`. Note that this is `noncomputable` because
 `finsupp.has_add` is noncomputable. -/
-@[simps (config := { fullyApplied := ff })]
+@[simps (config := { fullyApplied := false })]
 noncomputable def finsuppAddEquivDfinsupp [DecidableEq ι] [AddZeroClass M] [∀ m : M, Decidable (m ≠ 0)] :
     (ι →₀ M) ≃+ Π₀ i : ι, M :=
   { finsuppEquivDfinsupp with toFun := Finsupp.toDfinsupp, invFun := Dfinsupp.toFinsupp,
@@ -207,7 +207,7 @@ variable (R)
 
 /-- The additive version of `finsupp.to_finsupp`. Note that this is `noncomputable` because
 `finsupp.has_add` is noncomputable. -/
-@[simps (config := { fullyApplied := ff })]
+@[simps (config := { fullyApplied := false })]
 noncomputable def finsuppLequivDfinsupp [DecidableEq ι] [Semiringₓ R] [AddCommMonoidₓ M] [∀ m : M, Decidable (m ≠ 0)]
     [Module R M] : (ι →₀ M) ≃ₗ[R] Π₀ i : ι, M :=
   { finsuppEquivDfinsupp with toFun := Finsupp.toDfinsupp, invFun := Dfinsupp.toFinsupp,
@@ -227,7 +227,7 @@ open Finsupp
 /-- `finsupp.split` is an equivalence between `(Σ i, η i) →₀ N` and `Π₀ i, (η i →₀ N)`. -/
 def sigmaFinsuppEquivDfinsupp [Zero N] : ((Σ i, η i) →₀ N) ≃ Π₀ i, η i →₀ N where
   toFun := fun f =>
-    ⟦⟨split f, (split_support f : Finset ι).val, fun i => by
+    ⟦⟨split f, (splitSupport f : Finset ι).val, fun i => by
         rw [← Finset.mem_def, mem_split_support_iff_nonzero]
         exact (Decidable.em _).symm⟩⟧
   invFun := fun f => by

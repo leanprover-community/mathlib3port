@@ -2,6 +2,7 @@ import Mathbin.Tactic.SplitIfs
 import Mathbin.Tactic.Simpa
 import Mathbin.Tactic.Congr
 import Mathbin.Algebra.Group.ToAdditive
+import Mathbin.Data.Prod
 
 /-!
 # Instances and theorems on pi types
@@ -125,69 +126,90 @@ section
 
 variable [DecidableEq I]
 
-variable [∀ i, Zero (f i)] [∀ i, Zero (g i)] [∀ i, Zero (h i)]
+variable [∀ i, One (f i)] [∀ i, One (g i)] [∀ i, One (h i)]
 
-/-- The function supported at `i`, with value `x` there. -/
-def single (i : I) (x : f i) : ∀ i, f i :=
-  Function.update 0 i x
+/-- The function supported at `i`, with value `x` there, and `1` elsewhere. -/
+@[to_additive Pi.single "The function supported at `i`, with value `x` there, and `0` elsewhere."]
+def mul_single (i : I) (x : f i) : ∀ i, f i :=
+  Function.update 1 i x
 
-@[simp]
-theorem single_eq_same (i : I) (x : f i) : single i x i = x :=
+@[simp, to_additive]
+theorem mul_single_eq_same (i : I) (x : f i) : mulSingle i x i = x :=
   Function.update_same i x _
 
-@[simp]
-theorem single_eq_of_ne {i i' : I} (h : i' ≠ i) (x : f i) : single i x i' = 0 :=
+@[simp, to_additive]
+theorem mul_single_eq_of_ne {i i' : I} (h : i' ≠ i) (x : f i) : mulSingle i x i' = 1 :=
   Function.update_noteq h x _
 
-/-- Abbreviation for `single_eq_of_ne h.symm`, for ease of use by `simp`. -/
-@[simp]
-theorem single_eq_of_ne' {i i' : I} (h : i ≠ i') (x : f i) : single i x i' = 0 :=
-  single_eq_of_ne h.symm x
+/-- Abbreviation for `mul_single_eq_of_ne h.symm`, for ease of use by `simp`. -/
+@[simp, to_additive "Abbreviation for `single_eq_of_ne h.symm`, for ease of\nuse by `simp`."]
+theorem mul_single_eq_of_ne' {i i' : I} (h : i ≠ i') (x : f i) : mulSingle i x i' = 1 :=
+  mul_single_eq_of_ne h.symm x
 
-@[simp]
-theorem single_zero (i : I) : single i (0 : f i) = 0 :=
+@[simp, to_additive]
+theorem mul_single_one (i : I) : mulSingle i (1 : f i) = 1 :=
   Function.update_eq_self _ _
 
-/-- On non-dependent functions, `pi.single` can be expressed as an `ite` -/
-theorem single_apply {β : Sort _} [Zero β] (i : I) (x : β) (i' : I) : single i x i' = if i' = i then x else 0 :=
-  Function.update_apply 0 i x i'
+/-- On non-dependent functions, `pi.mul_single` can be expressed as an `ite` -/
+@[to_additive "On non-dependent functions, `pi.single` can be expressed as an `ite`"]
+theorem mul_single_apply {β : Sort _} [One β] (i : I) (x : β) (i' : I) : mulSingle i x i' = if i' = i then x else 1 :=
+  Function.update_apply 1 i x i'
 
-/-- On non-dependent functions, `pi.single` is symmetric in the two indices. -/
-theorem single_comm {β : Sort _} [Zero β] (i : I) (x : β) (i' : I) : single i x i' = single i' x i := by
-  simp [single_apply, eq_comm]
+/-- On non-dependent functions, `pi.mul_single` is symmetric in the two indices. -/
+@[to_additive "On non-dependent functions, `pi.single` is symmetric in the two\nindices."]
+theorem mul_single_comm {β : Sort _} [One β] (i : I) (x : β) (i' : I) : mulSingle i x i' = mulSingle i' x i := by
+  simp [mul_single_apply, eq_comm]
 
-theorem apply_single (f' : ∀ i, f i → g i) (hf' : ∀ i, f' i 0 = 0) (i : I) (x : f i) (j : I) :
-    f' j (single i x j) = single i (f' i x) j := by
-  simpa only [Pi.zero_apply, hf', single] using Function.apply_update f' 0 i x j
+@[to_additive]
+theorem apply_mul_single (f' : ∀ i, f i → g i) (hf' : ∀ i, f' i 1 = 1) (i : I) (x : f i) (j : I) :
+    f' j (mulSingle i x j) = mulSingle i (f' i x) j := by
+  simpa only [Pi.one_apply, hf', mul_single] using Function.apply_update f' 1 i x j
 
-theorem apply_single₂ (f' : ∀ i, f i → g i → h i) (hf' : ∀ i, f' i 0 0 = 0) (i : I) (x : f i) (y : g i) (j : I) :
-    f' j (single i x j) (single i y j) = single i (f' i x y) j := by
+@[to_additive apply_single₂]
+theorem apply_mul_single₂ (f' : ∀ i, f i → g i → h i) (hf' : ∀ i, f' i 1 1 = 1) (i : I) (x : f i) (y : g i) (j : I) :
+    f' j (mulSingle i x j) (mulSingle i y j) = mulSingle i (f' i x y) j := by
   by_cases' h : j = i
   · subst h
-    simp only [single_eq_same]
+    simp only [mul_single_eq_same]
     
-  · simp only [single_eq_of_ne h, hf']
+  · simp only [mul_single_eq_of_ne h, hf']
     
 
-theorem single_op {g : I → Type _} [∀ i, Zero (g i)] (op : ∀ i, f i → g i) (h : ∀ i, op i 0 = 0) (i : I) (x : f i) :
-    single i (op i x) = fun j => op j (single i x j) :=
-  Eq.symm <| funext <| apply_single op h i x
+@[to_additive]
+theorem mul_single_op {g : I → Type _} [∀ i, One (g i)] (op : ∀ i, f i → g i) (h : ∀ i, op i 1 = 1) (i : I) (x : f i) :
+    mulSingle i (op i x) = fun j => op j (mulSingle i x j) :=
+  Eq.symm <| funext <| apply_mul_single op h i x
 
-theorem single_op₂ {g₁ g₂ : I → Type _} [∀ i, Zero (g₁ i)] [∀ i, Zero (g₂ i)] (op : ∀ i, g₁ i → g₂ i → f i)
-    (h : ∀ i, op i 0 0 = 0) (i : I) (x₁ : g₁ i) (x₂ : g₂ i) :
-    single i (op i x₁ x₂) = fun j => op j (single i x₁ j) (single i x₂ j) :=
-  Eq.symm <| funext <| apply_single₂ op h i x₁ x₂
+@[to_additive]
+theorem mul_single_op₂ {g₁ g₂ : I → Type _} [∀ i, One (g₁ i)] [∀ i, One (g₂ i)] (op : ∀ i, g₁ i → g₂ i → f i)
+    (h : ∀ i, op i 1 1 = 1) (i : I) (x₁ : g₁ i) (x₂ : g₂ i) :
+    mulSingle i (op i x₁ x₂) = fun j => op j (mulSingle i x₁ j) (mulSingle i x₂ j) :=
+  Eq.symm <| funext <| apply_mul_single₂ op h i x₁ x₂
 
 variable (f)
 
-theorem single_injective (i : I) : Function.Injective (single i : f i → ∀ i, f i) :=
+@[to_additive]
+theorem mul_single_injective (i : I) : Function.Injective (mulSingle i : f i → ∀ i, f i) :=
   Function.update_injective _ i
 
-@[simp]
-theorem single_inj (i : I) {x y : f i} : Pi.single i x = Pi.single i y ↔ x = y :=
-  (Pi.single_injective _ _).eq_iff
+@[simp, to_additive]
+theorem mul_single_inj (i : I) {x y : f i} : mulSingle i x = mulSingle i y ↔ x = y :=
+  (Pi.mul_single_injective _ _).eq_iff
 
 end
+
+/-- The mapping into a product type built from maps into each component. -/
+@[simp]
+protected def Prod (f' : ∀ i, f i) (g' : ∀ i, g i) (i : I) : f i × g i :=
+  (f' i, g' i)
+
+@[simp]
+theorem prod_fst_snd : Pi.prod (Prod.fst : α × β → α) (Prod.snd : α × β → β) = id :=
+  funext fun _ => Prod.mk.eta
+
+@[simp]
+theorem prod_snd_fst : Pi.prod (Prod.snd : α × β → β) (Prod.fst : α × β → α) = Prod.swap :=
+  rfl
 
 end Pi
 
@@ -220,21 +242,22 @@ theorem extend_div [Div γ] (f : α → β) (g₁ g₂ : α → γ) (e₁ e₂ :
 
 end Extend
 
-theorem surjective_pi_map {F : ∀ i, f i → g i} (hF : ∀ i, surjective (F i)) :
-    surjective fun x : ∀ i, f i => fun i => F i (x i) := fun y =>
+theorem surjective_pi_map {F : ∀ i, f i → g i} (hF : ∀ i, Surjective (F i)) :
+    Surjective fun x : ∀ i, f i => fun i => F i (x i) := fun y =>
   ⟨fun i => (hF i (y i)).some, funext fun i => (hF i (y i)).some_spec⟩
 
-theorem injective_pi_map {F : ∀ i, f i → g i} (hF : ∀ i, injective (F i)) :
-    injective fun x : ∀ i, f i => fun i => F i (x i) := fun x y h => funext fun i => hF i <| (congr_funₓ h i : _)
+theorem injective_pi_map {F : ∀ i, f i → g i} (hF : ∀ i, Injective (F i)) :
+    Injective fun x : ∀ i, f i => fun i => F i (x i) := fun x y h => funext fun i => hF i <| (congr_funₓ h i : _)
 
-theorem bijective_pi_map {F : ∀ i, f i → g i} (hF : ∀ i, bijective (F i)) :
-    bijective fun x : ∀ i, f i => fun i => F i (x i) :=
+theorem bijective_pi_map {F : ∀ i, f i → g i} (hF : ∀ i, Bijective (F i)) :
+    Bijective fun x : ∀ i, f i => fun i => F i (x i) :=
   ⟨injective_pi_map fun i => (hF i).Injective, surjective_pi_map fun i => (hF i).Surjective⟩
 
 end Function
 
-theorem Subsingleton.pi_single_eq {α : Type _} [DecidableEq I] [Subsingleton I] [Zero α] (i : I) (x : α) :
-    Pi.single i x = fun _ => x :=
+@[to_additive Subsingleton.pi_single_eq]
+theorem Subsingleton.pi_mul_single_eq {α : Type _} [DecidableEq I] [Subsingleton I] [One α] (i : I) (x : α) :
+    Pi.mulSingle i x = fun _ => x :=
   funext fun j => by
-    rw [Subsingleton.elimₓ j i, Pi.single_eq_same]
+    rw [Subsingleton.elimₓ j i, Pi.mul_single_eq_same]
 

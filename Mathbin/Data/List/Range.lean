@@ -36,7 +36,7 @@ theorem range'_eq_nil {s n : ℕ} : range' s n = [] ↔ n = 0 := by
 theorem mem_range' {m : ℕ} : ∀ {s n : ℕ}, m ∈ range' s n ↔ s ≤ m ∧ m < s + n
   | s, 0 => (false_iffₓ _).2 fun ⟨H1, H2⟩ => not_le_of_lt H2 H1
   | s, succ n =>
-    have : m = s → m < s + n + 1 := fun e => e ▸ lt_succ_of_le (Nat.le_add_rightₓ _ _)
+    have : m = s → m < s + n + 1 := fun e => e ▸ lt_succ_of_leₓ (Nat.le_add_rightₓ _ _)
     have l : m = s ∨ s + 1 ≤ m ↔ s ≤ m := by
       simpa only [eq_comm] using (@Decidable.le_iff_eq_or_lt _ _ _ s m).symm
     (mem_cons_iff _ _ _).trans <| by
@@ -53,18 +53,18 @@ theorem map_sub_range' a : ∀ s n : ℕ h : a ≤ s, map (fun x => x - a) (rang
     rw [Nat.succ_subₓ h]
     rfl
 
-theorem chain_succ_range' : ∀ s n : ℕ, chain (fun a b => b = succ a) s (range' (s + 1) n)
-  | s, 0 => chain.nil
+theorem chain_succ_range' : ∀ s n : ℕ, Chain (fun a b => b = succ a) s (range' (s + 1) n)
+  | s, 0 => Chain.nil
   | s, n + 1 => (chain_succ_range' (s + 1) n).cons rfl
 
-theorem chain_lt_range' (s n : ℕ) : chain (· < ·) s (range' (s + 1) n) :=
-  (chain_succ_range' s n).imp fun a b e => e.symm ▸ lt_succ_self _
+theorem chain_lt_range' (s n : ℕ) : Chain (· < ·) s (range' (s + 1) n) :=
+  (chain_succ_range' s n).imp fun a b e => e.symm ▸ lt_succ_selfₓ _
 
-theorem pairwise_lt_range' : ∀ s n : ℕ, Pairwise (· < ·) (range' s n)
-  | s, 0 => pairwise.nil
+theorem pairwise_lt_range' : ∀ s n : ℕ, Pairwiseₓ (· < ·) (range' s n)
+  | s, 0 => Pairwiseₓ.nil
   | s, n + 1 => (chain_iff_pairwise fun a b c => lt_transₓ).1 (chain_lt_range' s n)
 
-theorem nodup_range' (s n : ℕ) : nodup (range' s n) :=
+theorem nodup_range' (s n : ℕ) : Nodupₓ (range' s n) :=
   (pairwise_lt_range' s n).imp fun a b => ne_of_ltₓ
 
 @[simp]
@@ -92,7 +92,7 @@ theorem nth_range' : ∀ s {m n : ℕ}, m < n → nth (range' s n) m = some (s +
       rw [add_right_commₓ] <;> rfl
 
 @[simp]
-theorem nth_le_range' {n m} i (H : i < (range' n m).length) : nth_le (range' n m) i H = n + i :=
+theorem nth_le_range' {n m} i (H : i < (range' n m).length) : nthLe (range' n m) i H = n + i :=
   Option.some.injₓ <| by
     rw [← nth_le_nth _,
       nth_range' _
@@ -102,7 +102,7 @@ theorem nth_le_range' {n m} i (H : i < (range' n m).length) : nth_le (range' n m
 theorem range'_concat (s n : ℕ) : range' s (n + 1) = range' s n ++ [s + n] := by
   rw [add_commₓ n 1] <;> exact (range'_append s n 1).symm
 
-theorem range_core_range' : ∀ s n : ℕ, range_core s (range' s n) = range' 0 (n + s)
+theorem range_core_range' : ∀ s n : ℕ, rangeCore s (range' s n) = range' 0 (n + s)
   | 0, n => rfl
   | s + 1, n => by
     rw [show n + (s + 1) = n + 1 + s from add_right_commₓ n s 1] <;> exact range_core_range' s (n + 1)
@@ -125,10 +125,10 @@ theorem length_range (n : ℕ) : length (range n) = n := by
 theorem range_eq_nil {n : ℕ} : range n = [] ↔ n = 0 := by
   rw [← length_eq_zero, length_range]
 
-theorem pairwise_lt_range (n : ℕ) : Pairwise (· < ·) (range n) := by
+theorem pairwise_lt_range (n : ℕ) : Pairwiseₓ (· < ·) (range n) := by
   simp only [range_eq_range', pairwise_lt_range']
 
-theorem nodup_range (n : ℕ) : nodup (range n) := by
+theorem nodup_range (n : ℕ) : Nodupₓ (range n) := by
   simp only [range_eq_range', nodup_range']
 
 theorem range_sublist {m n : ℕ} : range m <+ range n ↔ m ≤ n := by
@@ -174,10 +174,10 @@ theorem iota_eq_reverse_range' : ∀ n : ℕ, iota n = reverse (range' 1 n)
 theorem length_iota (n : ℕ) : length (iota n) = n := by
   simp only [iota_eq_reverse_range', length_reverse, length_range']
 
-theorem pairwise_gt_iota (n : ℕ) : Pairwise (· > ·) (iota n) := by
+theorem pairwise_gt_iota (n : ℕ) : Pairwiseₓ (· > ·) (iota n) := by
   simp only [iota_eq_reverse_range', pairwise_reverse, pairwise_lt_range']
 
-theorem nodup_iota (n : ℕ) : nodup (iota n) := by
+theorem nodup_iota (n : ℕ) : Nodupₓ (iota n) := by
   simp only [iota_eq_reverse_range', nodup_reverse, nodup_range']
 
 theorem mem_iota {m n : ℕ} : m ∈ iota n ↔ 1 ≤ m ∧ m ≤ n := by
@@ -196,30 +196,30 @@ def fin_range (n : ℕ) : List (Finₓ n) :=
   (range n).pmap Finₓ.mk fun _ => List.mem_range.1
 
 @[simp]
-theorem fin_range_zero : fin_range 0 = [] :=
+theorem fin_range_zero : finRange 0 = [] :=
   rfl
 
 @[simp]
-theorem mem_fin_range {n : ℕ} (a : Finₓ n) : a ∈ fin_range n :=
+theorem mem_fin_range {n : ℕ} (a : Finₓ n) : a ∈ finRange n :=
   mem_pmap.2 ⟨a.1, mem_range.2 a.2, Finₓ.eta _ _⟩
 
-theorem nodup_fin_range (n : ℕ) : (fin_range n).Nodup :=
+theorem nodup_fin_range (n : ℕ) : (finRange n).Nodup :=
   nodup_pmap (fun _ _ _ _ => Finₓ.veq_of_eq) (nodup_range _)
 
 @[simp]
-theorem length_fin_range (n : ℕ) : (fin_range n).length = n := by
+theorem length_fin_range (n : ℕ) : (finRange n).length = n := by
   rw [fin_range, length_pmap, length_range]
 
 @[simp]
-theorem fin_range_eq_nil {n : ℕ} : fin_range n = [] ↔ n = 0 := by
+theorem fin_range_eq_nil {n : ℕ} : finRange n = [] ↔ n = 0 := by
   rw [← length_eq_zero, length_fin_range]
 
 @[simp]
-theorem map_coe_fin_range (n : ℕ) : (fin_range n).map coe = List.range n := by
+theorem map_coe_fin_range (n : ℕ) : (finRange n).map coe = List.range n := by
   simp_rw [fin_range, map_pmap, Finₓ.mk, Subtype.coe_mk, pmap_eq_map]
   exact List.map_id _
 
-theorem fin_range_succ_eq_map (n : ℕ) : fin_range n.succ = 0 :: (fin_range n).map Finₓ.succ := by
+theorem fin_range_succ_eq_map (n : ℕ) : finRange n.succ = 0 :: (finRange n).map Finₓ.succ := by
   apply map_injective_iff.mpr Subtype.coe_injective
   rw [map_cons, map_coe_fin_range, range_succ_eq_map, Finₓ.coe_zero, ← map_coe_fin_range, map_map, map_map,
     Function.comp, Function.comp]
@@ -243,7 +243,7 @@ theorem prod_range_succ' {α : Type u} [Monoidₓ α] (f : ℕ → α) (n : ℕ)
     rw [List.prod_range_succ, hd, mul_assoc, ← List.prod_range_succ]
 
 @[simp]
-theorem enum_from_map_fst : ∀ n l : List α, map Prod.fst (enum_from n l) = range' n l.length
+theorem enum_from_map_fst : ∀ n l : List α, map Prod.fst (enumFrom n l) = range' n l.length
   | n, [] => rfl
   | n, a :: l => congr_argₓ (cons _) (enum_from_map_fst _ _)
 
@@ -258,15 +258,15 @@ theorem enum_eq_zip_range (l : List α) : l.enum = (range l.length).zip l :=
 theorem unzip_enum_eq_prod (l : List α) : l.enum.unzip = (range l.length, l) := by
   simp only [enum_eq_zip_range, unzip_zip, length_range]
 
-theorem enum_from_eq_zip_range' (l : List α) {n : ℕ} : l.enum_from n = (range' n l.length).zip l :=
+theorem enum_from_eq_zip_range' (l : List α) {n : ℕ} : l.enumFrom n = (range' n l.length).zip l :=
   zip_of_prod (enum_from_map_fst _ _) (enum_from_map_snd _ _)
 
 @[simp]
-theorem unzip_enum_from_eq_prod (l : List α) {n : ℕ} : (l.enum_from n).unzip = (range' n l.length, l) := by
+theorem unzip_enum_from_eq_prod (l : List α) {n : ℕ} : (l.enumFrom n).unzip = (range' n l.length, l) := by
   simp only [enum_from_eq_zip_range', unzip_zip, length_range']
 
 @[simp]
-theorem nth_le_range {n} i (H : i < (range n).length) : nth_le (range n) i H = i :=
+theorem nth_le_range {n} i (H : i < (range n).length) : nthLe (range n) i H = i :=
   Option.some.injₓ <| by
     rw [← nth_le_nth _,
       nth_range
@@ -274,10 +274,10 @@ theorem nth_le_range {n} i (H : i < (range n).length) : nth_le (range n) i H = i
           simpa using H)]
 
 @[simp]
-theorem nth_le_fin_range {n : ℕ} {i : ℕ} h : (fin_range n).nthLe i h = ⟨i, length_fin_range n ▸ h⟩ := by
+theorem nth_le_fin_range {n : ℕ} {i : ℕ} h : (finRange n).nthLe i h = ⟨i, length_fin_range n ▸ h⟩ := by
   simp only [fin_range, nth_le_range, nth_le_pmap, Finₓ.mk_eq_subtype_mk]
 
-theorem of_fn_eq_pmap {α n} {f : Finₓ n → α} : of_fn f = pmap (fun i hi => f ⟨i, hi⟩) (range n) fun _ => mem_range.1 :=
+theorem of_fn_eq_pmap {α n} {f : Finₓ n → α} : ofFnₓ f = pmap (fun i hi => f ⟨i, hi⟩) (range n) fun _ => mem_range.1 :=
   by
   rw [pmap_eq_map_attach] <;>
     exact
@@ -288,13 +288,13 @@ theorem of_fn_eq_pmap {α n} {f : Finₓ n → α} : of_fn f = pmap (fun i hi =>
         simp at hi1
         simp [nth_le_of_fn f ⟨i, hi1⟩, -Subtype.val_eq_coe]
 
-theorem of_fn_id n : of_fn id = fin_range n :=
+theorem of_fn_id n : ofFnₓ id = finRange n :=
   of_fn_eq_pmap
 
-theorem of_fn_eq_map {α n} {f : Finₓ n → α} : of_fn f = (fin_range n).map f := by
+theorem of_fn_eq_map {α n} {f : Finₓ n → α} : ofFnₓ f = (finRange n).map f := by
   rw [← of_fn_id, map_of_fn, Function.right_id]
 
-theorem nodup_of_fn {α n} {f : Finₓ n → α} (hf : Function.Injective f) : nodup (of_fn f) := by
+theorem nodup_of_fn {α n} {f : Finₓ n → α} (hf : Function.Injective f) : Nodupₓ (ofFnₓ f) := by
   rw [of_fn_eq_pmap] <;> exact nodup_pmap (fun _ _ _ _ H => Finₓ.veq_of_eq <| hf H) (nodup_range n)
 
 end List

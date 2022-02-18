@@ -33,7 +33,7 @@ variable (R : Type u) (L : Type v) [CommRingₓ R] [LieRing L] [LieAlgebra R L]
 
 /-- A `lie_ring` can be regarded as a `non_unital_non_assoc_semiring` by turning its
 `has_bracket` (denoted `⁅, ⁆`) into a `has_mul` (denoted `*`). -/
-def LieRing.toNonUnitalNonAssocSemiring : NonUnitalNonAssocSemiring L :=
+def LieRing.toNonUnitalNonAssocSemiring : NonUnitalNonAssocSemiringₓ L :=
   { (inferInstance : AddCommMonoidₓ L) with mul := HasBracket.bracket, left_distrib := lie_add,
     right_distrib := add_lie, zero_mul := zero_lie, mul_zero := lie_zero }
 
@@ -63,7 +63,7 @@ regard a `lie_hom` as a `non_unital_alg_hom`. -/
 def to_non_unital_alg_hom (f : L →ₗ⁅R⁆ L₂) : NonUnitalAlgHom R L L₂ :=
   { f with toFun := f, map_zero' := f.map_zero, map_mul' := f.map_lie }
 
-theorem to_non_unital_alg_hom_injective : Function.Injective (to_non_unital_alg_hom : _ → NonUnitalAlgHom R L L₂) :=
+theorem to_non_unital_alg_hom_injective : Function.Injective (toNonUnitalAlgHom : _ → NonUnitalAlgHom R L L₂) :=
   fun f g h => ext <| NonUnitalAlgHom.congr_fun h
 
 end LieHom

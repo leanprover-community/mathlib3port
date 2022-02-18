@@ -62,17 +62,17 @@ theorem cauchy_seq_finset_of_norm_bounded {f : ι → E} (g : ι → ℝ) (hg : 
 
 theorem cauchy_seq_finset_of_summable_norm {f : ι → E} (hf : Summable fun a => ∥f a∥) :
     CauchySeq fun s : Finset ι => ∑ a in s, f a :=
-  cauchy_seq_finset_of_norm_bounded _ hf fun i => le_reflₓ _
+  cauchy_seq_finset_of_norm_bounded _ hf fun i => le_rfl
 
 /-- If a function `f` is summable in norm, and along some sequence of finsets exhausting the space
 its sum is converging to a limit `a`, then this holds along all finsets, i.e., `f` is summable
 with sum `a`. -/
 theorem has_sum_of_subseq_of_summable {f : ι → E} (hf : Summable fun a => ∥f a∥) {s : α → Finset ι} {p : Filter α}
-    [ne_bot p] (hs : tendsto s p at_top) {a : E} (ha : tendsto (fun b => ∑ i in s b, f i) p (𝓝 a)) : HasSum f a :=
+    [NeBot p] (hs : Tendsto s p atTop) {a : E} (ha : Tendsto (fun b => ∑ i in s b, f i) p (𝓝 a)) : HasSum f a :=
   tendsto_nhds_of_cauchy_seq_of_subseq (cauchy_seq_finset_of_summable_norm hf) hs ha
 
 theorem has_sum_iff_tendsto_nat_of_summable_norm {f : ℕ → E} {a : E} (hf : Summable fun i => ∥f i∥) :
-    HasSum f a ↔ tendsto (fun n : ℕ => ∑ i in range n, f i) at_top (𝓝 a) :=
+    HasSum f a ↔ Tendsto (fun n : ℕ => ∑ i in range n, f i) atTop (𝓝 a) :=
   ⟨fun h => h.tendsto_sum_nat, fun h => has_sum_of_subseq_of_summable hf tendsto_finset_range h⟩
 
 /-- The direct comparison test for series:  if the norm of `f` is bounded by a real function `g`
@@ -101,7 +101,7 @@ theorem tsum_of_norm_bounded {f : ι → E} {g : ι → ℝ} {a : ℝ} (hg : Has
 /-- If `∑' i, ∥f i∥` is summable, then `∥∑' i, f i∥ ≤ (∑' i, ∥f i∥)`. Note that we do not assume
 that `∑' i, f i` is summable, and it might not be the case if `α` is not a complete space. -/
 theorem norm_tsum_le_tsum_norm {f : ι → E} (hf : Summable fun i => ∥f i∥) : ∥∑' i, f i∥ ≤ ∑' i, ∥f i∥ :=
-  (tsum_of_norm_bounded hf.has_sum) fun i => le_rfl
+  (tsum_of_norm_bounded hf.HasSum) fun i => le_rfl
 
 /-- Quantitative result associated to the direct comparison test for series: If `∑' i, g i` is
 summable, and for all `i`, `∥f i∥₊ ≤ g i`, then `∥∑' i, f i∥₊ ≤ ∑' i, g i`. Note that we
@@ -116,7 +116,7 @@ theorem tsum_of_nnnorm_bounded {f : ι → E} {g : ι → ℝ≥0 } {a : ℝ≥0
 we do not assume that `∑' i, f i` is summable, and it might not be the case if `α` is not a complete
 space. -/
 theorem nnnorm_tsum_le {f : ι → E} (hf : Summable fun i => ∥f i∥₊) : ∥∑' i, f i∥₊ ≤ ∑' i, ∥f i∥₊ :=
-  tsum_of_nnnorm_bounded hf.has_sum fun i => le_rfl
+  tsum_of_nnnorm_bounded hf.HasSum fun i => le_rfl
 
 variable [CompleteSpace E]
 
@@ -131,8 +131,8 @@ theorem summable_of_nnnorm_bounded {f : ι → E} (g : ι → ℝ≥0 ) (hg : Su
     exact_mod_cast h i
 
 theorem summable_of_summable_norm {f : ι → E} (hf : Summable fun a => ∥f a∥) : Summable f :=
-  summable_of_norm_bounded _ hf fun i => le_reflₓ _
+  summable_of_norm_bounded _ hf fun i => le_rfl
 
 theorem summable_of_summable_nnnorm {f : ι → E} (hf : Summable fun a => ∥f a∥₊) : Summable f :=
-  summable_of_nnnorm_bounded _ hf fun i => le_reflₓ _
+  summable_of_nnnorm_bounded _ hf fun i => le_rfl
 

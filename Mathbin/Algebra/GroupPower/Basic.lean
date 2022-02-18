@@ -178,6 +178,7 @@ theorem zpow_one (a : G) : a ^ (1 : ℤ) = a := by
   convert pow_oneₓ a using 1
   exact zpow_coe_nat a 1
 
+@[to_additive two_zsmul]
 theorem zpow_two (a : G) : a ^ (2 : ℤ) = a * a := by
   convert pow_two a using 1
   exact zpow_coe_nat a 2
@@ -364,11 +365,9 @@ alias add_sq ← add_pow_two
 
 end CommSemiringₓ
 
-section Ringₓ
+section HasDistribNeg
 
-variable [Ringₓ R]
-
-section
+variable [Monoidₓ R] [HasDistribNeg R]
 
 variable (R)
 
@@ -381,15 +380,7 @@ theorem neg_one_pow_eq_or : ∀ n : ℕ, (-1 : R) ^ n = 1 ∨ (-1 : R) ^ n = -1
       fun h => by
       rw [pow_succₓ, h, mul_oneₓ]
 
-end
-
-@[simp]
-theorem neg_one_pow_mul_eq_zero_iff {n : ℕ} {r : R} : -1 ^ n * r = 0 ↔ r = 0 := by
-  rcases neg_one_pow_eq_or R n with ⟨⟩ <;> simp [h]
-
-@[simp]
-theorem mul_neg_one_pow_eq_zero_iff {n : ℕ} {r : R} : r * -1 ^ n = 0 ↔ r = 0 := by
-  rcases neg_one_pow_eq_or R n with ⟨⟩ <;> simp [h]
+variable {R}
 
 theorem neg_pow (a : R) (n : ℕ) : -a ^ n = -1 ^ n * a ^ n :=
   neg_one_mul a ▸ (Commute.neg_one_left a).mul_pow n
@@ -400,13 +391,27 @@ theorem neg_pow_bit0 (a : R) (n : ℕ) : -a ^ bit0 n = a ^ bit0 n := by
 
 @[simp]
 theorem neg_pow_bit1 (a : R) (n : ℕ) : -a ^ bit1 n = -(a ^ bit1 n) := by
-  simp only [bit1, pow_succₓ, neg_pow_bit0, neg_mul_eq_neg_mul]
+  simp only [bit1, pow_succₓ, neg_pow_bit0, neg_mul_eq_neg_mulₓ]
 
 @[simp]
 theorem neg_sq (a : R) : -a ^ 2 = a ^ 2 := by
   simp [sq]
 
 alias neg_sq ← neg_pow_two
+
+end HasDistribNeg
+
+section Ringₓ
+
+variable [Ringₓ R]
+
+@[simp]
+theorem neg_one_pow_mul_eq_zero_iff {n : ℕ} {r : R} : -1 ^ n * r = 0 ↔ r = 0 := by
+  rcases neg_one_pow_eq_or R n with ⟨⟩ <;> simp [h]
+
+@[simp]
+theorem mul_neg_one_pow_eq_zero_iff {n : ℕ} {r : R} : r * -1 ^ n = 0 ↔ r = 0 := by
+  rcases neg_one_pow_eq_or R n with ⟨⟩ <;> simp [h]
 
 end Ringₓ
 
@@ -423,9 +428,18 @@ theorem eq_or_eq_neg_of_sq_eq_sq [IsDomain R] (a b : R) (h : a ^ 2 = b ^ 2) : a 
   rwa [← add_eq_zero_iff_eq_neg, ← sub_eq_zero, or_comm, ← mul_eq_zero, ← sq_sub_sq a b, sub_eq_zero]
 
 theorem sub_sq (a b : R) : (a - b) ^ 2 = a ^ 2 - 2 * a * b + b ^ 2 := by
-  rw [sub_eq_add_neg, add_sq, neg_sq, mul_neg_eq_neg_mul_symm, ← sub_eq_add_neg]
+  rw [sub_eq_add_neg, add_sq, neg_sq, mul_neg, ← sub_eq_add_neg]
 
 alias sub_sq ← sub_pow_two
+
+namespace Units
+
+theorem eq_or_eq_neg_of_sq_eq_sq [IsDomain R] (a b : (R)ˣ) (h : a ^ 2 = b ^ 2) : a = b ∨ a = -b := by
+  refine' (eq_or_eq_neg_of_sq_eq_sq _ _ _).imp (fun h => Units.ext h) fun h => Units.ext h
+  replace h := congr_argₓ (coe : (R)ˣ → R) h
+  rwa [Units.coe_pow, Units.coe_pow] at h
+
+end Units
 
 end CommRingₓ
 

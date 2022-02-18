@@ -43,8 +43,8 @@ variable (R : Type u) (A : Type v) (B : Type w) (C : Type w₁)
 
 /-- A morphism respecting addition, multiplication, and scalar multiplication. When these arise from
 algebra structures, this is the same as a not-necessarily-unital morphism of algebras. -/
-structure NonUnitalAlgHom [Monoidₓ R] [NonUnitalNonAssocSemiring A] [DistribMulAction R A] [NonUnitalNonAssocSemiring B]
-  [DistribMulAction R B] extends A →+[R] B, MulHom A B
+structure NonUnitalAlgHom [Monoidₓ R] [NonUnitalNonAssocSemiringₓ A] [DistribMulAction R A]
+  [NonUnitalNonAssocSemiringₓ B] [DistribMulAction R B] extends A →+[R] B, MulHom A B
 
 attribute [nolint doc_blame] NonUnitalAlgHom.toDistribMulActionHom
 
@@ -54,18 +54,18 @@ namespace NonUnitalAlgHom
 
 variable {R A B C} [Monoidₓ R]
 
-variable [NonUnitalNonAssocSemiring A] [DistribMulAction R A]
+variable [NonUnitalNonAssocSemiringₓ A] [DistribMulAction R A]
 
-variable [NonUnitalNonAssocSemiring B] [DistribMulAction R B]
+variable [NonUnitalNonAssocSemiringₓ B] [DistribMulAction R B]
 
-variable [NonUnitalNonAssocSemiring C] [DistribMulAction R C]
+variable [NonUnitalNonAssocSemiringₓ C] [DistribMulAction R C]
 
 /-- see Note [function coercion] -/
 instance : CoeFun (NonUnitalAlgHom R A B) fun _ => A → B :=
-  ⟨to_fun⟩
+  ⟨toFun⟩
 
 @[simp]
-theorem to_fun_eq_coe (f : NonUnitalAlgHom R A B) : f.to_fun = ⇑f :=
+theorem to_fun_eq_coe (f : NonUnitalAlgHom R A B) : f.toFun = ⇑f :=
   rfl
 
 initialize_simps_projections NonUnitalAlgHom (toFun → apply)
@@ -95,17 +95,17 @@ theorem mk_coe (f : NonUnitalAlgHom R A B) h₁ h₂ h₃ h₄ : (⟨f, h₁, h�
   rfl
 
 instance : Coe (NonUnitalAlgHom R A B) (A →+[R] B) :=
-  ⟨to_distrib_mul_action_hom⟩
+  ⟨toDistribMulActionHom⟩
 
 instance : Coe (NonUnitalAlgHom R A B) (MulHom A B) :=
-  ⟨to_mul_hom⟩
+  ⟨toMulHom⟩
 
 @[simp]
-theorem to_distrib_mul_action_hom_eq_coe (f : NonUnitalAlgHom R A B) : f.to_distrib_mul_action_hom = ↑f :=
+theorem to_distrib_mul_action_hom_eq_coe (f : NonUnitalAlgHom R A B) : f.toDistribMulActionHom = ↑f :=
   rfl
 
 @[simp]
-theorem to_mul_hom_eq_coe (f : NonUnitalAlgHom R A B) : f.to_mul_hom = ↑f :=
+theorem to_mul_hom_eq_coe (f : NonUnitalAlgHom R A B) : f.toMulHom = ↑f :=
   rfl
 
 @[simp, norm_cast]
@@ -139,19 +139,19 @@ theorem coe_mul_hom_mk (f : NonUnitalAlgHom R A B) h₁ h₂ h₃ h₄ :
 
 @[simp]
 theorem map_smul (f : NonUnitalAlgHom R A B) (c : R) (x : A) : f (c • x) = c • f x :=
-  f.to_distrib_mul_action_hom.map_smul c x
+  f.toDistribMulActionHom.map_smul c x
 
 @[simp]
 theorem map_add (f : NonUnitalAlgHom R A B) (x y : A) : f (x + y) = f x + f y :=
-  f.to_distrib_mul_action_hom.map_add x y
+  f.toDistribMulActionHom.map_add x y
 
 @[simp]
 theorem map_mul (f : NonUnitalAlgHom R A B) (x y : A) : f (x * y) = f x * f y :=
-  f.to_mul_hom.map_mul x y
+  f.toMulHom.map_mul x y
 
 @[simp]
 theorem map_zero (f : NonUnitalAlgHom R A B) : f 0 = 0 :=
-  f.to_distrib_mul_action_hom.map_zero
+  f.toDistribMulActionHom.map_zero
 
 instance : Zero (NonUnitalAlgHom R A B) :=
   ⟨{ (0 : A →+[R] B) with
@@ -213,10 +213,10 @@ def to_non_unital_alg_hom (f : A →ₐ[R] B) : NonUnitalAlgHom R A B :=
   { f with map_smul' := f.map_smul }
 
 instance non_unital_alg_hom.has_coe : Coe (A →ₐ[R] B) (NonUnitalAlgHom R A B) :=
-  ⟨to_non_unital_alg_hom⟩
+  ⟨toNonUnitalAlgHom⟩
 
 @[simp]
-theorem to_non_unital_alg_hom_eq_coe (f : A →ₐ[R] B) : f.to_non_unital_alg_hom = f :=
+theorem to_non_unital_alg_hom_eq_coe (f : A →ₐ[R] B) : f.toNonUnitalAlgHom = f :=
   rfl
 
 @[simp, norm_cast]

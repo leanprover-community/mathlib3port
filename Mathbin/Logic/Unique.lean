@@ -49,6 +49,15 @@ structure Unique (α : Sort u) extends Inhabited α where
 
 attribute [class] Unique
 
+theorem unique_iff_exists_unique (α : Sort u) : Nonempty (Unique α) ↔ ∃! a : α, True :=
+  ⟨fun ⟨u⟩ => ⟨u.default, trivialₓ, fun a _ => u.uniq a⟩, fun ⟨a, _, h⟩ => ⟨⟨⟨a⟩, fun _ => h _ trivialₓ⟩⟩⟩
+
+theorem unique_subtype_iff_exists_unique {α} (p : α → Prop) : Nonempty (Unique (Subtype p)) ↔ ∃! a, p a :=
+  ⟨fun ⟨u⟩ => ⟨u.default.1, u.default.2, fun a h => congr_argₓ Subtype.val (u.uniq ⟨a, h⟩)⟩, fun ⟨a, ha, he⟩ =>
+    ⟨⟨⟨⟨a, ha⟩⟩, fun ⟨b, hb⟩ => by
+        congr
+        exact he b hb⟩⟩⟩
+
 /-- Given an explicit `a : α` with `[subsingleton α]`, we can construct
 a `[unique α]` instance. This is a def because the typeclass search cannot
 arbitrarily invent the `a : α` term. Nevertheless, these instances are all
@@ -97,7 +106,7 @@ section
 variable [Unique α]
 
 instance (priority := 100) : Inhabited α :=
-  to_inhabited ‹Unique α›
+  toInhabited ‹Unique α›
 
 theorem eq_default (a : α) : a = default :=
   uniq _ a
@@ -155,7 +164,7 @@ variable {f : α → β}
 
 /-- If the domain of a surjective function is a singleton,
 then the codomain is a singleton as well. -/
-protected def surjective.unique (hf : surjective f) [Unique α] : Unique β where
+protected def surjective.unique (hf : Surjective f) [Unique α] : Unique β where
   default := f default
   uniq := fun b =>
     let ⟨a, ha⟩ := hf b
@@ -163,12 +172,12 @@ protected def surjective.unique (hf : surjective f) [Unique α] : Unique β wher
 
 /-- If the codomain of an injective function is a subsingleton, then the domain
 is a subsingleton as well. -/
-protected theorem injective.subsingleton (hf : injective f) [Subsingleton β] : Subsingleton α :=
+protected theorem injective.subsingleton (hf : Injective f) [Subsingleton β] : Subsingleton α :=
   ⟨fun x y => hf <| Subsingleton.elimₓ _ _⟩
 
 /-- If `α` is inhabited and admits an injective map to a subsingleton type, then `α` is `unique`. -/
-protected def injective.unique [Inhabited α] [Subsingleton β] (hf : injective f) : Unique α :=
-  @Unique.mk' _ _ hf.subsingleton
+protected def injective.unique [Inhabited α] [Subsingleton β] (hf : Injective f) : Unique α :=
+  @Unique.mk' _ _ hf.Subsingleton
 
 end Function
 

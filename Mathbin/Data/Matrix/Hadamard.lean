@@ -51,10 +51,10 @@ theorem hadamard_comm [CommSemigroupₓ α] : A ⊙ B = B ⊙ A :=
 theorem hadamard_assoc [Semigroupₓ α] : A ⊙ B ⊙ C = A ⊙ (B ⊙ C) :=
   ext fun _ _ => mul_assoc _ _ _
 
-theorem hadamard_add [Distrib α] : A ⊙ (B + C) = A ⊙ B + A ⊙ C :=
+theorem hadamard_add [Distribₓ α] : A ⊙ (B + C) = A ⊙ B + A ⊙ C :=
   ext fun _ _ => left_distrib _ _ _
 
-theorem add_hadamard [Distrib α] : (B + C) ⊙ A = B ⊙ A + C ⊙ A :=
+theorem add_hadamard [Distribₓ α] : (B + C) ⊙ A = B ⊙ A + C ⊙ A :=
   ext fun _ _ => right_distrib _ _ _
 
 section Scalar
@@ -71,7 +71,7 @@ end Scalar
 
 section Zero
 
-variable [MulZeroClass α]
+variable [MulZeroClassₓ α]
 
 @[simp]
 theorem hadamard_zero : A ⊙ (0 : Matrix m n α) = 0 :=
@@ -85,15 +85,15 @@ end Zero
 
 section One
 
-variable [DecidableEq n] [MulZeroOneClass α]
+variable [DecidableEq n] [MulZeroOneClassₓ α]
 
 variable (M : Matrix n n α)
 
-theorem hadamard_one : M ⊙ (1 : Matrix n n α) = diagonal fun i => M i i := by
+theorem hadamard_one : M ⊙ (1 : Matrix n n α) = diagonalₓ fun i => M i i := by
   ext
   by_cases' h : i = j <;> simp [h]
 
-theorem one_hadamard : (1 : Matrix n n α) ⊙ M = diagonal fun i => M i i := by
+theorem one_hadamard : (1 : Matrix n n α) ⊙ M = diagonalₓ fun i => M i i := by
   ext
   by_cases' h : i = j <;> simp [h]
 
@@ -101,9 +101,9 @@ end One
 
 section Diagonal
 
-variable [DecidableEq n] [MulZeroClass α]
+variable [DecidableEq n] [MulZeroClassₓ α]
 
-theorem diagonal_hadamard_diagonal (v : n → α) (w : n → α) : diagonal v ⊙ diagonal w = diagonal (v * w) :=
+theorem diagonal_hadamard_diagonal (v : n → α) (w : n → α) : diagonalₓ v ⊙ diagonalₓ w = diagonalₓ (v * w) :=
   ext fun _ _ => (apply_ite2 _ _ _ _ _ _).trans (congr_argₓ _ <| zero_mul 0)
 
 end Diagonal
@@ -118,7 +118,7 @@ theorem sum_hadamard_eq : (∑ (i : m) (j : n), (A ⊙ B) i j) = trace m R α (A
   rfl
 
 theorem dot_product_vec_mul_hadamard [DecidableEq m] [DecidableEq n] (v : m → α) (w : n → α) :
-    dot_product (vec_mul v (A ⊙ B)) w = trace m R α (diagonal v ⬝ A ⬝ (B ⬝ diagonal w)ᵀ) := by
+    dotProduct (vecMulₓ v (A ⊙ B)) w = trace m R α (diagonalₓ v ⬝ A ⬝ (B ⬝ diagonalₓ w)ᵀ) := by
   rw [← sum_hadamard_eq, Finset.sum_comm]
   simp [dot_product, vec_mul, Finset.sum_mul, mul_assoc]
 

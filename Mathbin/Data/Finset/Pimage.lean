@@ -18,11 +18,11 @@ variable {α β : Type _}
 namespace Part
 
 /-- Convert a `o : part α` with decidable `part.dom o` to `finset α`. -/
-def to_finset (o : Part α) [Decidable o.dom] : Finset α :=
-  o.to_option.to_finset
+def to_finset (o : Part α) [Decidable o.Dom] : Finset α :=
+  o.toOption.toFinset
 
 @[simp]
-theorem mem_to_finset {o : Part α} [Decidable o.dom] {x : α} : x ∈ o.to_finset ↔ x ∈ o := by
+theorem mem_to_finset {o : Part α} [Decidable o.Dom] {x : α} : x ∈ o.toFinset ↔ x ∈ o := by
   simp [to_finset]
 
 @[simp]
@@ -34,7 +34,7 @@ theorem to_finset_some {a : α} [Decidable (some a).Dom] : (some a).toFinset = {
   simp [to_finset]
 
 @[simp]
-theorem coe_to_finset (o : Part α) [Decidable o.dom] : (o.to_finset : Set α) = { x | x ∈ o } :=
+theorem coe_to_finset (o : Part α) [Decidable o.Dom] : (o.toFinset : Set α) = { x | x ∈ o } :=
   Set.ext fun x => mem_to_finset
 
 end Part
@@ -52,12 +52,12 @@ theorem mem_pimage : b ∈ s.pimage f ↔ ∃ a ∈ s, b ∈ f a := by
   simp [pimage]
 
 @[simp, norm_cast]
-theorem coe_pimage : (s.pimage f : Set β) = f.image s :=
+theorem coe_pimage : (s.pimage f : Set β) = f.Image s :=
   Set.ext fun x => mem_pimage
 
 @[simp]
 theorem pimage_some (s : Finset α) (f : α → β) [∀ x, Decidable (Part.some <| f x).Dom] :
-    (s.pimage fun x => Part.some (f x)) = s.image f := by
+    (s.pimage fun x => Part.some (f x)) = s.Image f := by
   ext
   simp [eq_comm]
 

@@ -16,25 +16,25 @@ namespace GeneralizedContinuedFraction
 
 variable {K : Type _} {g : GeneralizedContinuedFraction K} {n : ℕ} [DivisionRing K]
 
-theorem continuants_aux_recurrence {gp ppred pred : pair K} (nth_s_eq : g.s.nth n = some gp)
-    (nth_conts_aux_eq : g.continuants_aux n = ppred) (succ_nth_conts_aux_eq : g.continuants_aux (n + 1) = pred) :
-    g.continuants_aux (n + 2) = ⟨gp.b * pred.a + gp.a * ppred.a, gp.b * pred.b + gp.a * ppred.b⟩ := by
+theorem continuants_aux_recurrence {gp ppred pred : Pair K} (nth_s_eq : g.s.nth n = some gp)
+    (nth_conts_aux_eq : g.continuantsAux n = ppred) (succ_nth_conts_aux_eq : g.continuantsAux (n + 1) = pred) :
+    g.continuantsAux (n + 2) = ⟨gp.b * pred.a + gp.a * ppred.a, gp.b * pred.b + gp.a * ppred.b⟩ := by
   simp [*, continuants_aux, next_continuants, next_denominator, next_numerator]
 
-theorem continuants_recurrence_aux {gp ppred pred : pair K} (nth_s_eq : g.s.nth n = some gp)
-    (nth_conts_aux_eq : g.continuants_aux n = ppred) (succ_nth_conts_aux_eq : g.continuants_aux (n + 1) = pred) :
+theorem continuants_recurrence_aux {gp ppred pred : Pair K} (nth_s_eq : g.s.nth n = some gp)
+    (nth_conts_aux_eq : g.continuantsAux n = ppred) (succ_nth_conts_aux_eq : g.continuantsAux (n + 1) = pred) :
     g.continuants (n + 1) = ⟨gp.b * pred.a + gp.a * ppred.a, gp.b * pred.b + gp.a * ppred.b⟩ := by
   simp [nth_cont_eq_succ_nth_cont_aux, continuants_aux_recurrence nth_s_eq nth_conts_aux_eq succ_nth_conts_aux_eq]
 
 /-- Shows that `Aₙ = bₙ * Aₙ₋₁ + aₙ * Aₙ₋₂` and `Bₙ = bₙ * Bₙ₋₁ + aₙ * Bₙ₋₂`. -/
-theorem continuants_recurrence {gp ppred pred : pair K} (succ_nth_s_eq : g.s.nth (n + 1) = some gp)
+theorem continuants_recurrence {gp ppred pred : Pair K} (succ_nth_s_eq : g.s.nth (n + 1) = some gp)
     (nth_conts_eq : g.continuants n = ppred) (succ_nth_conts_eq : g.continuants (n + 1) = pred) :
     g.continuants (n + 2) = ⟨gp.b * pred.a + gp.a * ppred.a, gp.b * pred.b + gp.a * ppred.b⟩ := by
   rw [nth_cont_eq_succ_nth_cont_aux] at nth_conts_eq succ_nth_conts_eq
   exact continuants_recurrence_aux succ_nth_s_eq nth_conts_eq succ_nth_conts_eq
 
 /-- Shows that `Aₙ = bₙ * Aₙ₋₁ + aₙ * Aₙ₋₂`. -/
-theorem numerators_recurrence {gp : pair K} {ppredA predA : K} (succ_nth_s_eq : g.s.nth (n + 1) = some gp)
+theorem numerators_recurrence {gp : Pair K} {ppredA predA : K} (succ_nth_s_eq : g.s.nth (n + 1) = some gp)
     (nth_num_eq : g.numerators n = ppredA) (succ_nth_num_eq : g.numerators (n + 1) = predA) :
     g.numerators (n + 2) = gp.b * predA + gp.a * ppredA := by
   obtain ⟨ppredConts, nth_conts_eq, ⟨rfl⟩⟩ : ∃ conts, g.continuants n = conts ∧ conts.a = ppredA
@@ -44,7 +44,7 @@ theorem numerators_recurrence {gp : pair K} {ppredA predA : K} (succ_nth_s_eq : 
   rw [num_eq_conts_a, continuants_recurrence succ_nth_s_eq nth_conts_eq succ_nth_conts_eq]
 
 /-- Shows that `Bₙ = bₙ * Bₙ₋₁ + aₙ * Bₙ₋₂`. -/
-theorem denominators_recurrence {gp : pair K} {ppredB predB : K} (succ_nth_s_eq : g.s.nth (n + 1) = some gp)
+theorem denominators_recurrence {gp : Pair K} {ppredB predB : K} (succ_nth_s_eq : g.s.nth (n + 1) = some gp)
     (nth_denom_eq : g.denominators n = ppredB) (succ_nth_denom_eq : g.denominators (n + 1) = predB) :
     g.denominators (n + 2) = gp.b * predB + gp.a * ppredB := by
   obtain ⟨ppredConts, nth_conts_eq, ⟨rfl⟩⟩ : ∃ conts, g.continuants n = conts ∧ conts.b = ppredB

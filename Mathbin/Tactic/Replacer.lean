@@ -75,7 +75,7 @@ unsafe def replacer_attr (ntac : Name) : user_attribute where
     some fun n _ _ => do
       let d ← get_decl n
       let base ← get_decl ntac
-      guardb ((valid_types base.type).any (expr.alpha_eqv · d.type)) <|> fail f! "incorrect type for @[{ntac}]"
+      guardb ((valid_types base).any (expr.alpha_eqv · d)) <|> fail f! "incorrect type for @[{ntac}]"
 
 /-- Define a new replaceable tactic. -/
 unsafe def def_replacer (ntac : Name) (ty : expr) : tactic Unit :=
@@ -125,7 +125,7 @@ add_tactic_doc
 
 unsafe def unprime : Name → tactic Name
   | nn@(Name.mk_string s n) =>
-    let s' := (s.split_on ''').head
+    let s' := (s.splitOn ''').head
     if s'.length < s.length then pure (Name.mk_string s' n) else fail f! "expecting primed name: {nn}"
   | n => fail f! "invalid name: {n}"
 
@@ -137,7 +137,7 @@ unsafe def replaceable_attr : user_attribute where
     some fun n' _ _ => do
       let n ← unprime n'
       let d ← get_decl n'
-      def_replacer n d.type
+      def_replacer n d
       (replacer_attr n).Set n' () tt
 
 end Tactic

@@ -13,7 +13,8 @@ semigroups.
 
 open_locale Manifold
 
-/-- 1. All smooth algebraic structures on `G` are `Prop`-valued classes that extend
+library_note "Design choices about smooth algebraic structures"/--
+1. All smooth algebraic structures on `G` are `Prop`-valued classes that extend
 `smooth_manifold_with_corners I G`. This way we save users from adding both
 `[smooth_manifold_with_corners I G]` and `[has_smooth_mul I G]` to the assumptions. While many API
 lemmas hold true without the `smooth_manifold_with_corners I G` assumption, we're not aware of a
@@ -29,7 +30,7 @@ we formulate the definitions and lemmas for any model.
 `has_smooth_mul I G` with unknown `𝕜`, `E`, `H`, and `I : model_with_corners 𝕜 E H`. If users needs
 `[has_continuous_mul G]` in a proof about a smooth monoid, then they need to either add
 `[has_continuous_mul G]` as an assumption (worse) or use `haveI` in the proof (better). -/
-library_note "Design choices about smooth algebraic structures"
+
 
 /-- Basic hypothesis to talk about a smooth (Lie) additive monoid or a smooth additive
 semigroup. A smooth additive monoid over `α`, for example, is obtained by requiring both the
@@ -38,7 +39,7 @@ instances `add_monoid α` and `has_smooth_add α`. -/
 class HasSmoothAdd {𝕜 : Type _} [NondiscreteNormedField 𝕜] {H : Type _} [TopologicalSpace H] {E : Type _}
   [NormedGroup E] [NormedSpace 𝕜 E] (I : ModelWithCorners 𝕜 E H) (G : Type _) [Add G] [TopologicalSpace G]
   [ChartedSpace H G] extends SmoothManifoldWithCorners I G : Prop where
-  smooth_add : Smooth (I.prod I) I fun p : G × G => p.1 + p.2
+  smooth_add : Smooth (I.Prod I) I fun p : G × G => p.1 + p.2
 
 /-- Basic hypothesis to talk about a smooth (Lie) monoid or a smooth semigroup.
 A smooth monoid over `G`, for example, is obtained by requiring both the instances `monoid G`
@@ -47,7 +48,7 @@ and `has_smooth_mul I G`. -/
 class HasSmoothMul {𝕜 : Type _} [NondiscreteNormedField 𝕜] {H : Type _} [TopologicalSpace H] {E : Type _}
   [NormedGroup E] [NormedSpace 𝕜 E] (I : ModelWithCorners 𝕜 E H) (G : Type _) [Mul G] [TopologicalSpace G]
   [ChartedSpace H G] extends SmoothManifoldWithCorners I G : Prop where
-  smooth_mul : Smooth (I.prod I) I fun p : G × G => p.1 * p.2
+  smooth_mul : Smooth (I.Prod I) I fun p : G × G => p.1 * p.2
 
 section HasSmoothMul
 
@@ -61,7 +62,7 @@ section
 variable (I)
 
 @[to_additive]
-theorem smooth_mul : Smooth (I.prod I) I fun p : G × G => p.1 * p.2 :=
+theorem smooth_mul : Smooth (I.Prod I) I fun p : G × G => p.1 * p.2 :=
   HasSmoothMul.smooth_mul
 
 /-- If the multiplication is smooth, then it is continuous. This is not an instance for technical
@@ -147,7 +148,7 @@ instance HasSmoothMul.prod {𝕜 : Type _} [NondiscreteNormedField 𝕜] {E : Ty
     {H : Type _} [TopologicalSpace H] (I : ModelWithCorners 𝕜 E H) (G : Type _) [TopologicalSpace G] [ChartedSpace H G]
     [Mul G] [HasSmoothMul I G] {E' : Type _} [NormedGroup E'] [NormedSpace 𝕜 E'] {H' : Type _} [TopologicalSpace H']
     (I' : ModelWithCorners 𝕜 E' H') (G' : Type _) [TopologicalSpace G'] [ChartedSpace H' G'] [Mul G']
-    [HasSmoothMul I' G'] : HasSmoothMul (I.prod I') (G × G') :=
+    [HasSmoothMul I' G'] : HasSmoothMul (I.Prod I') (G × G') :=
   { SmoothManifoldWithCorners.prod G G' with
     smooth_mul :=
       ((smooth_fst.comp smooth_fst).Smooth.mul (smooth_fst.comp smooth_snd)).prod_mk
@@ -193,7 +194,7 @@ instance : Inhabited (SmoothMonoidMorphism I I' G G') :=
 
 @[to_additive]
 instance : CoeFun (SmoothMonoidMorphism I I' G G') fun _ => G → G' :=
-  ⟨fun a => a.to_fun⟩
+  ⟨fun a => a.toFun⟩
 
 end Monoidₓ
 
@@ -221,7 +222,7 @@ open Function Filter
 
 @[to_additive]
 theorem smooth_finprod {ι} {f : ι → M → G} (h : ∀ i, Smooth I' I (f i))
-    (hfin : LocallyFinite fun i => mul_support (f i)) : Smooth I' I fun x => ∏ᶠ i, f i x := by
+    (hfin : LocallyFinite fun i => MulSupport (f i)) : Smooth I' I fun x => ∏ᶠ i, f i x := by
   intro x
   rcases hfin x with ⟨U, hxU, hUf⟩
   have : SmoothAt I' I (fun x => ∏ i in hUf.to_finset, f i x) x := smooth_finset_prod (fun i hi => h i) x
@@ -232,7 +233,7 @@ theorem smooth_finprod {ι} {f : ι → M → G} (h : ∀ i, Smooth I' I (f i))
 
 @[to_additive]
 theorem smooth_finprod_cond {ι} {f : ι → M → G} {p : ι → Prop} (hc : ∀ i, p i → Smooth I' I (f i))
-    (hf : LocallyFinite fun i => mul_support (f i)) : Smooth I' I fun x => ∏ᶠ (i) (hi : p i), f i x := by
+    (hf : LocallyFinite fun i => MulSupport (f i)) : Smooth I' I fun x => ∏ᶠ (i) (hi : p i), f i x := by
   simp only [← finprod_subtype_eq_finprod_cond]
   exact smooth_finprod (fun i => hc i i.2) (hf.comp_injective Subtype.coe_injective)
 

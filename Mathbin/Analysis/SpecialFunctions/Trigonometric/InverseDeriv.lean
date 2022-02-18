@@ -98,8 +98,8 @@ theorem differentiable_within_at_arcsin_Iic {x : ℝ} : DifferentiableWithinAt �
 
 theorem differentiable_at_arcsin {x : ℝ} : DifferentiableAt ℝ arcsin x ↔ x ≠ -1 ∧ x ≠ 1 :=
   ⟨fun h =>
-    ⟨differentiable_within_at_arcsin_Ici.1 h.differentiable_within_at,
-      differentiable_within_at_arcsin_Iic.1 h.differentiable_within_at⟩,
+    ⟨differentiable_within_at_arcsin_Ici.1 h.DifferentiableWithinAt,
+      differentiable_within_at_arcsin_Iic.1 h.DifferentiableWithinAt⟩,
     fun h => (has_deriv_at_arcsin h.1 h.2).DifferentiableAt⟩
 
 @[simp]
@@ -122,7 +122,7 @@ theorem times_cont_diff_on_arcsin {n : WithTop ℕ} : TimesContDiffOn ℝ n arcs
 theorem times_cont_diff_at_arcsin_iff {x : ℝ} {n : WithTop ℕ} : TimesContDiffAt ℝ n arcsin x ↔ n = 0 ∨ x ≠ -1 ∧ x ≠ 1 :=
   ⟨fun h =>
     or_iff_not_imp_left.2 fun hn =>
-      differentiable_at_arcsin.1 <| h.differentiable_at <| WithTop.one_le_iff_pos.2 (pos_iff_ne_zero.2 hn),
+      differentiable_at_arcsin.1 <| h.DifferentiableAt <| WithTop.one_le_iff_pos.2 (pos_iff_ne_zero.2 hn),
     fun h =>
     (h.elim fun hn => hn.symm ▸ (times_cont_diff_zero.2 continuous_arcsin).TimesContDiffAt) fun hx =>
       times_cont_diff_at_arcsin hx.1 hx.2⟩

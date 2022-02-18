@@ -58,7 +58,7 @@ theorem card_mono : Monotone (@card α) := by
 theorem card_eq_zero : s.card = 0 ↔ s = ∅ :=
   card_eq_zero.trans val_eq_zero
 
-theorem card_pos : 0 < s.card ↔ s.nonempty :=
+theorem card_pos : 0 < s.card ↔ s.Nonempty :=
   pos_iff_ne_zero.trans <| (not_congr card_eq_zero).trans nonempty_iff_ne_empty.symm
 
 alias Finset.card_pos ↔ _ Finset.Nonempty.card_pos
@@ -109,7 +109,7 @@ theorem card_insert_eq_ite : card (insert a s) = if a ∈ s then s.card else s.c
     
 
 @[simp]
-theorem card_erase_of_mem : a ∈ s → (s.erase a).card = pred s.card :=
+theorem card_erase_of_mem : a ∈ s → (s.erase a).card = s.card - 1 :=
   card_erase_of_mem
 
 @[simp]
@@ -131,7 +131,7 @@ theorem pred_card_le_card_erase : s.card - 1 ≤ (s.erase a).card := by
     
 
 /-- If `a ∈ s` is known, see also `finset.card_erase_of_mem` and `finset.erase_eq_of_not_mem`. -/
-theorem card_erase_eq_ite : (s.erase a).card = if a ∈ s then pred s.card else s.card :=
+theorem card_erase_eq_ite : (s.erase a).card = if a ∈ s then s.card - 1 else s.card :=
   card_erase_eq_ite
 
 end InsertErase
@@ -150,22 +150,22 @@ section ToListMultiset
 
 variable [DecidableEq α] (m : Multiset α) (l : List α)
 
-theorem Multiset.card_to_finset : m.to_finset.card = m.erase_dup.card :=
+theorem Multiset.card_to_finset : m.toFinset.card = m.eraseDup.card :=
   rfl
 
-theorem Multiset.to_finset_card_le : m.to_finset.card ≤ m.card :=
+theorem Multiset.to_finset_card_le : m.toFinset.card ≤ m.card :=
   card_le_of_le <| erase_dup_le _
 
-theorem Multiset.to_finset_card_of_nodup {m : Multiset α} (h : m.nodup) : m.to_finset.card = m.card :=
+theorem Multiset.to_finset_card_of_nodup {m : Multiset α} (h : m.Nodup) : m.toFinset.card = m.card :=
   congr_argₓ card <| Multiset.erase_dup_eq_self.mpr h
 
-theorem List.card_to_finset : l.to_finset.card = l.erase_dup.length :=
+theorem List.card_to_finset : l.toFinset.card = l.eraseDup.length :=
   rfl
 
-theorem List.to_finset_card_le : l.to_finset.card ≤ l.length :=
+theorem List.to_finset_card_le : l.toFinset.card ≤ l.length :=
   Multiset.to_finset_card_le (⟦l⟧)
 
-theorem List.to_finset_card_of_nodup {l : List α} (h : l.nodup) : l.to_finset.card = l.length :=
+theorem List.to_finset_card_of_nodup {l : List α} (h : l.Nodup) : l.toFinset.card = l.length :=
   Multiset.to_finset_card_of_nodup h
 
 end ToListMultiset
@@ -175,17 +175,17 @@ namespace Finset
 variable {s t : Finset α} {f : α → β} {n : ℕ}
 
 @[simp]
-theorem length_to_list (s : Finset α) : s.to_list.length = s.card := by
+theorem length_to_list (s : Finset α) : s.toList.length = s.card := by
   rw [to_list, ← Multiset.coe_card, Multiset.coe_to_list]
   rfl
 
-theorem card_image_le [DecidableEq β] : (s.image f).card ≤ s.card := by
+theorem card_image_le [DecidableEq β] : (s.Image f).card ≤ s.card := by
   simpa only [card_map] using (s.1.map f).to_finset_card_le
 
-theorem card_image_of_inj_on [DecidableEq β] (H : Set.InjOn f s) : (s.image f).card = s.card := by
+theorem card_image_of_inj_on [DecidableEq β] (H : Set.InjOn f s) : (s.Image f).card = s.card := by
   simp only [card, image_val_of_inj_on H, card_map]
 
-theorem inj_on_of_card_image_eq [DecidableEq β] (H : (s.image f).card = s.card) : Set.InjOn f s := by
+theorem inj_on_of_card_image_eq [DecidableEq β] (H : (s.Image f).card = s.card) : Set.InjOn f s := by
   change (s.1.map f).eraseDup.card = s.1.card at H
   have : (s.1.map f).eraseDup = s.1.map f := by
     refine' Multiset.eq_of_le_of_card_le (Multiset.erase_dup_le _) _
@@ -194,14 +194,14 @@ theorem inj_on_of_card_image_eq [DecidableEq β] (H : (s.image f).card = s.card)
   rw [Multiset.erase_dup_eq_self] at this
   exact inj_on_of_nodup_map this
 
-theorem card_image_eq_iff_inj_on [DecidableEq β] : (s.image f).card = s.card ↔ Set.InjOn f s :=
+theorem card_image_eq_iff_inj_on [DecidableEq β] : (s.Image f).card = s.card ↔ Set.InjOn f s :=
   ⟨inj_on_of_card_image_eq, card_image_of_inj_on⟩
 
-theorem card_image_of_injective [DecidableEq β] (s : Finset α) (H : injective f) : (s.image f).card = s.card :=
+theorem card_image_of_injective [DecidableEq β] (s : Finset α) (H : Injective f) : (s.Image f).card = s.card :=
   card_image_of_inj_on fun x _ y _ h => H h
 
 theorem fiber_card_ne_zero_iff_mem_image (s : Finset α) (f : α → β) [DecidableEq β] (y : β) :
-    (s.filter fun x => f x = y).card ≠ 0 ↔ y ∈ s.image f := by
+    (s.filter fun x => f x = y).card ≠ 0 ↔ y ∈ s.Image f := by
   rw [← pos_iff_ne_zero, card_pos, fiber_nonempty_iff_mem_image]
 
 @[simp]
@@ -209,7 +209,7 @@ theorem card_map (f : α ↪ β) : (s.map f).card = s.card :=
   Multiset.card_map _ _
 
 @[simp]
-theorem card_subtype (p : α → Prop) [DecidablePred p] (s : Finset α) : (s.subtype p).card = (s.filter p).card := by
+theorem card_subtype (p : α → Prop) [DecidablePred p] (s : Finset α) : (s.Subtype p).card = (s.filter p).card := by
   simp [Finset.subtype]
 
 theorem card_filter_le (s : Finset α) (p : α → Prop) [DecidablePred p] : (s.filter p).card ≤ s.card :=
@@ -267,13 +267,13 @@ theorem card_le_card_of_inj_on {t : Finset β} (f : α → β) (hf : ∀, ∀ a 
     calc s.card = (s.image f).card := (card_image_of_inj_on f_inj).symm _ ≤ t.card :=
         card_le_of_subset <| image_subset_iff.2 hf
 
--- ././Mathport/Syntax/Translate/Basic.lean:417:16: unsupported tactic `by_contra'
+-- ././Mathport/Syntax/Translate/Basic.lean:418:16: unsupported tactic `by_contra'
 /-- If there are more pigeons than pigeonholes, then there are two pigeons in the same pigeonhole.
 -/
 theorem exists_ne_map_eq_of_card_lt_of_maps_to {t : Finset β} (hc : t.card < s.card) {f : α → β}
     (hf : ∀, ∀ a ∈ s, ∀, f a ∈ t) : ∃ x ∈ s, ∃ y ∈ s, x ≠ y ∧ f x = f y := by
   classical
-  "././Mathport/Syntax/Translate/Basic.lean:417:16: unsupported tactic `by_contra'"
+  "././Mathport/Syntax/Translate/Basic.lean:418:16: unsupported tactic `by_contra'"
   refine' hc.not_le (card_le_card_of_inj_on f hf _)
   intro x hx y hy
   contrapose
@@ -296,9 +296,9 @@ theorem surj_on_of_inj_on_of_card_le {t : Finset β} (f : ∀, ∀ a ∈ s, ∀,
     ∀, ∀ b ∈ t, ∀, ∃ a ha, b = f a ha := by
   classical
   intro b hb
-  have h : (s.attach.image fun a : { a // a ∈ s } => f a a.prop).card = s.card :=
+  have h : (s.attach.image fun a : { a // a ∈ s } => f a a.Prop).card = s.card :=
     @card_attach _ s ▸ card_image_of_injective _ fun ⟨a₁, ha₁⟩ ⟨a₂, ha₂⟩ h => Subtype.eq <| hinj _ _ _ _ h
-  have h' : image (fun a : { a // a ∈ s } => f a a.prop) s.attach = t :=
+  have h' : image (fun a : { a // a ∈ s } => f a a.Prop) s.attach = t :=
     eq_of_subset_of_card_le
       (fun b h =>
         let ⟨a, ha₁, ha₂⟩ := mem_image.1 h
@@ -384,9 +384,8 @@ theorem exists_intermediate_set {A B : Finset α} (i : ℕ) (h₁ : i + card B �
     apply Nat.succ_posₓ
   rcases this with ⟨a, ha⟩
   have z : i + card B + k = card (erase A a) := by
-    rw [card_erase_of_mem, ← h, Nat.add_succ, Nat.pred_succ]
-    rw [mem_sdiff] at ha
-    exact ha.1
+    rw [card_erase_of_mem (mem_sdiff.1 ha).1, ← h]
+    rfl
   rcases ih _ z with ⟨B', hB', B'subA', cards⟩
   · exact ⟨B', hB', trans B'subA' (erase_subset _ _), cards⟩
     
@@ -422,6 +421,25 @@ theorem exists_subset_or_subset_of_two_mul_lt_card [DecidableEq α] {X Y : Finse
 
 theorem card_eq_one : s.card = 1 ↔ ∃ a, s = {a} := by
   cases s <;> simp only [Multiset.card_eq_one, Finset.card, ← val_inj, singleton_val]
+
+-- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (a «expr ∉ » s)
+theorem exists_eq_insert_iff [DecidableEq α] {s t : Finset α} :
+    (∃ (a : _)(_ : a ∉ s), insert a s = t) ↔ s ⊆ t ∧ s.card + 1 = t.card := by
+  constructor
+  · rintro ⟨a, ha, rfl⟩
+    exact ⟨subset_insert _ _, (card_insert_of_not_mem ha).symm⟩
+    
+  · rintro ⟨hst, h⟩
+    obtain ⟨a, ha⟩ : ∃ a, t \ s = {a} :=
+      card_eq_one.1
+        (by
+          rw [card_sdiff hst, ← h, add_tsub_cancel_left])
+    refine'
+      ⟨a, fun hs => (_ : a ∉ {a}) <| mem_singleton_self _, by
+        rw [insert_eq, ← ha, sdiff_union_of_subset hst]⟩
+    rw [← ha]
+    exact not_mem_sdiff_of_mem_right hs
+    
 
 theorem card_le_one : s.card ≤ 1 ↔ ∀, ∀ a ∈ s, ∀, ∀ b ∈ s, ∀, a = b := by
   obtain rfl | ⟨x, hx⟩ := s.eq_empty_or_nonempty
@@ -493,10 +511,10 @@ theorem exists_ne_of_one_lt_card (hs : 1 < s.card) (a : α) : ∃ b, b ∈ s ∧
     
 
 theorem card_eq_succ [DecidableEq α] : s.card = n + 1 ↔ ∃ a t, a ∉ t ∧ insert a t = s ∧ t.card = n :=
-  ⟨fun eq =>
-    let ⟨a, has⟩ := card_pos.mp (Eq.symm ▸ Nat.zero_lt_succₓ _ : 0 < s.card)
+  ⟨fun h =>
+    let ⟨a, has⟩ := card_pos.mp (h.symm ▸ Nat.zero_lt_succₓ _ : 0 < s.card)
     ⟨a, s.erase a, s.not_mem_erase a, insert_erase has, by
-      simp only [Eq, card_erase_of_mem has, pred_succ]⟩,
+      simp only [h, card_erase_of_mem has, add_tsub_cancel_right]⟩,
     fun ⟨a, t, hat, s_eq, n_eq⟩ => s_eq ▸ n_eq ▸ card_insert_of_not_mem hat⟩
 
 theorem card_eq_two [DecidableEq α] : s.card = 2 ↔ ∃ x y, x ≠ y ∧ s = {x, y} := by
@@ -537,14 +555,14 @@ def strong_induction {p : Finset α → Sort _} (H : ∀ s, (∀ t _ : t ⊂ s, 
 
 -- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (t «expr ⊂ » s)
 theorem strong_induction_eq {p : Finset α → Sort _} (H : ∀ s, (∀ t _ : t ⊂ s, p t) → p s) (s : Finset α) :
-    strong_induction H s = H s fun t h => strong_induction H t := by
+    strongInductionₓ H s = H s fun t h => strongInductionₓ H t := by
   rw [strong_induction]
 
 -- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (t «expr ⊂ » s)
 /-- Analogue of `strong_induction` with order of arguments swapped. -/
 @[elab_as_eliminator]
 def strong_induction_on {p : Finset α → Sort _} (s : Finset α) : (∀ s, (∀ t _ : t ⊂ s, p t) → p s) → p s := fun H =>
-  strong_induction H s
+  strongInductionₓ H s
 
 -- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (t «expr ⊂ » s)
 theorem strong_induction_on_eq {p : Finset α → Sort _} (s : Finset α) (H : ∀ s, (∀ t _ : t ⊂ s, p t) → p s) :
@@ -574,18 +592,18 @@ def strong_downward_induction {p : Finset α → Sort _} {n : ℕ}
 
 theorem strong_downward_induction_eq {p : Finset α → Sort _}
     (H : ∀ t₁, (∀ {t₂ : Finset α}, t₂.card ≤ n → t₁ ⊂ t₂ → p t₂) → t₁.card ≤ n → p t₁) (s : Finset α) :
-    strong_downward_induction H s = H s fun t ht hst => strong_downward_induction H t ht := by
+    strongDownwardInductionₓ H s = H s fun t ht hst => strongDownwardInductionₓ H t ht := by
   rw [strong_downward_induction]
 
 /-- Analogue of `strong_downward_induction` with order of arguments swapped. -/
 @[elab_as_eliminator]
 def strong_downward_induction_on {p : Finset α → Sort _} (s : Finset α)
     (H : ∀ t₁, (∀ {t₂ : Finset α}, t₂.card ≤ n → t₁ ⊂ t₂ → p t₂) → t₁.card ≤ n → p t₁) : s.card ≤ n → p s :=
-  strong_downward_induction H s
+  strongDownwardInductionₓ H s
 
 theorem strong_downward_induction_on_eq {p : Finset α → Sort _} (s : Finset α)
     (H : ∀ t₁, (∀ {t₂ : Finset α}, t₂.card ≤ n → t₁ ⊂ t₂ → p t₂) → t₁.card ≤ n → p t₁) :
-    s.strong_downward_induction_on H = H s fun t ht h => t.strong_downward_induction_on H ht := by
+    s.strongDownwardInductionOn H = H s fun t ht h => t.strongDownwardInductionOn H ht := by
   dunfold strong_downward_induction_on
   rw [strong_downward_induction]
 

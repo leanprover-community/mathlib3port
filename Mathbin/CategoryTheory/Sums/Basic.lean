@@ -23,11 +23,11 @@ open Sum
 
 section
 
-variable (C : Type u₁) [category.{v₁} C] (D : Type u₁) [category.{v₁} D]
+variable (C : Type u₁) [Category.{v₁} C] (D : Type u₁) [Category.{v₁} D]
 
 /-- `sum C D` gives the direct sum of two categories.
 -/
-instance Sum : category.{v₁} (Sum C D) where
+instance Sum : Category.{v₁} (Sum C D) where
   Hom := fun X Y =>
     match X, Y with
     | inl X, inl Y => X ⟶ Y
@@ -45,21 +45,21 @@ instance Sum : category.{v₁} (Sum C D) where
 
 @[simp]
 theorem sum_comp_inl {P Q R : C} (f : (inl P : Sum C D) ⟶ inl Q) (g : (inl Q : Sum C D) ⟶ inl R) :
-    @category_struct.comp _ _ P Q R (f : P ⟶ Q) (g : Q ⟶ R) =
-      @category_struct.comp _ _ (inl P) (inl Q) (inl R) (f : P ⟶ Q) (g : Q ⟶ R) :=
+    @CategoryStruct.comp _ _ P Q R (f : P ⟶ Q) (g : Q ⟶ R) =
+      @CategoryStruct.comp _ _ (inl P) (inl Q) (inl R) (f : P ⟶ Q) (g : Q ⟶ R) :=
   rfl
 
 @[simp]
 theorem sum_comp_inr {P Q R : D} (f : (inr P : Sum C D) ⟶ inr Q) (g : (inr Q : Sum C D) ⟶ inr R) :
-    @category_struct.comp _ _ P Q R (f : P ⟶ Q) (g : Q ⟶ R) =
-      @category_struct.comp _ _ (inr P) (inr Q) (inr R) (f : P ⟶ Q) (g : Q ⟶ R) :=
+    @CategoryStruct.comp _ _ P Q R (f : P ⟶ Q) (g : Q ⟶ R) =
+      @CategoryStruct.comp _ _ (inr P) (inr Q) (inr R) (f : P ⟶ Q) (g : Q ⟶ R) :=
   rfl
 
 end
 
 namespace Sum
 
-variable (C : Type u₁) [category.{v₁} C] (D : Type u₁) [category.{v₁} D]
+variable (C : Type u₁) [Category.{v₁} C] (D : Type u₁) [Category.{v₁} D]
 
 /-- `inl_` is the functor `X ↦ inl X`. -/
 @[simps]
@@ -104,36 +104,36 @@ namespace Swap
 
 /-- `swap` gives an equivalence between `C ⊕ D` and `D ⊕ C`. -/
 def Equivalenceₓ : Sum C D ≌ Sum D C :=
-  equivalence.mk (swap C D) (swap D C)
-    (nat_iso.of_components
+  Equivalence.mk (swap C D) (swap D C)
+    (NatIso.ofComponents
       (fun X =>
-        eq_to_iso
+        eqToIso
           (by
             cases X <;> rfl))
       (by
         tidy))
-    (nat_iso.of_components
+    (NatIso.ofComponents
       (fun X =>
-        eq_to_iso
+        eqToIso
           (by
             cases X <;> rfl))
       (by
         tidy))
 
-instance is_equivalence : is_equivalence (swap C D) :=
+instance is_equivalence : IsEquivalence (swap C D) :=
   (by
-    infer_instance : is_equivalence (Equivalenceₓ C D).Functor)
+    infer_instance : IsEquivalence (equivalence C D).Functor)
 
 /-- The double swap on `C ⊕ D` is naturally isomorphic to the identity functor. -/
 def symmetry : swap C D ⋙ swap D C ≅ 𝟭 (Sum C D) :=
-  (Equivalenceₓ C D).unitIso.symm
+  (equivalence C D).unitIso.symm
 
 end Swap
 
 end Sum
 
-variable {A : Type u₁} [category.{v₁} A] {B : Type u₁} [category.{v₁} B] {C : Type u₁} [category.{v₁} C] {D : Type u₁}
-  [category.{v₁} D]
+variable {A : Type u₁} [Category.{v₁} A] {B : Type u₁} [Category.{v₁} B] {C : Type u₁} [Category.{v₁} C] {D : Type u₁}
+  [Category.{v₁} D]
 
 namespace Functor
 
@@ -165,19 +165,19 @@ def Sum (F : A ⥤ B) (G : C ⥤ D) : Sum A C ⥤ Sum B D where
       rfl
 
 @[simp]
-theorem sum_obj_inl (F : A ⥤ B) (G : C ⥤ D) (a : A) : (F.sum G).obj (inl a) = inl (F.obj a) :=
+theorem sum_obj_inl (F : A ⥤ B) (G : C ⥤ D) (a : A) : (F.Sum G).obj (inl a) = inl (F.obj a) :=
   rfl
 
 @[simp]
-theorem sum_obj_inr (F : A ⥤ B) (G : C ⥤ D) (c : C) : (F.sum G).obj (inr c) = inr (G.obj c) :=
+theorem sum_obj_inr (F : A ⥤ B) (G : C ⥤ D) (c : C) : (F.Sum G).obj (inr c) = inr (G.obj c) :=
   rfl
 
 @[simp]
-theorem sum_map_inl (F : A ⥤ B) (G : C ⥤ D) {a a' : A} (f : inl a ⟶ inl a') : (F.sum G).map f = F.map f :=
+theorem sum_map_inl (F : A ⥤ B) (G : C ⥤ D) {a a' : A} (f : inl a ⟶ inl a') : (F.Sum G).map f = F.map f :=
   rfl
 
 @[simp]
-theorem sum_map_inr (F : A ⥤ B) (G : C ⥤ D) {c c' : C} (f : inr c ⟶ inr c') : (F.sum G).map f = G.map f :=
+theorem sum_map_inr (F : A ⥤ B) (G : C ⥤ D) {c c' : C} (f : inr c ⟶ inr c') : (F.Sum G).map f = G.map f :=
   rfl
 
 end Functor
@@ -185,7 +185,7 @@ end Functor
 namespace NatTrans
 
 /-- The sum of two natural transformations. -/
-def Sum {F G : A ⥤ B} {H I : C ⥤ D} (α : F ⟶ G) (β : H ⟶ I) : F.sum H ⟶ G.sum I where
+def Sum {F G : A ⥤ B} {H I : C ⥤ D} (α : F ⟶ G) (β : H ⟶ I) : F.Sum H ⟶ G.Sum I where
   app := fun X =>
     match X with
     | inl X => α.app X
@@ -202,11 +202,11 @@ def Sum {F G : A ⥤ B} {H I : C ⥤ D} (α : F ⟶ G) (β : H ⟶ I) : F.sum H 
       rfl
 
 @[simp]
-theorem sum_app_inl {F G : A ⥤ B} {H I : C ⥤ D} (α : F ⟶ G) (β : H ⟶ I) (a : A) : (Sum α β).app (inl a) = α.app a :=
+theorem sum_app_inl {F G : A ⥤ B} {H I : C ⥤ D} (α : F ⟶ G) (β : H ⟶ I) (a : A) : (sum α β).app (inl a) = α.app a :=
   rfl
 
 @[simp]
-theorem sum_app_inr {F G : A ⥤ B} {H I : C ⥤ D} (α : F ⟶ G) (β : H ⟶ I) (c : C) : (Sum α β).app (inr c) = β.app c :=
+theorem sum_app_inr {F G : A ⥤ B} {H I : C ⥤ D} (α : F ⟶ G) (β : H ⟶ I) (c : C) : (sum α β).app (inr c) = β.app c :=
   rfl
 
 end NatTrans

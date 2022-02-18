@@ -39,24 +39,24 @@ variable [Monoidₓ M] (S : Submonoid M)
 
 @[simp, norm_cast, to_additive coe_nsmul]
 theorem coe_pow (x : S) (n : ℕ) : ↑(x ^ n) = (x ^ n : M) :=
-  S.subtype.map_pow x n
+  S.Subtype.map_pow x n
 
 @[simp, norm_cast, to_additive]
-theorem coe_list_prod (l : List S) : (l.prod : M) = (l.map coe).Prod :=
-  S.subtype.map_list_prod l
+theorem coe_list_prod (l : List S) : (l.Prod : M) = (l.map coe).Prod :=
+  S.Subtype.map_list_prod l
 
 @[simp, norm_cast, to_additive]
-theorem coe_multiset_prod {M} [CommMonoidₓ M] (S : Submonoid M) (m : Multiset S) : (m.prod : M) = (m.map coe).Prod :=
-  S.subtype.map_multiset_prod m
+theorem coe_multiset_prod {M} [CommMonoidₓ M] (S : Submonoid M) (m : Multiset S) : (m.Prod : M) = (m.map coe).Prod :=
+  S.Subtype.map_multiset_prod m
 
 @[simp, norm_cast, to_additive]
 theorem coe_finset_prod {ι M} [CommMonoidₓ M] (S : Submonoid M) (f : ι → S) (s : Finset ι) :
     ↑(∏ i in s, f i) = (∏ i in s, f i : M) :=
-  S.subtype.map_prod f s
+  S.Subtype.map_prod f s
 
 /-- Product of a list of elements in a submonoid is in the submonoid. -/
 @[to_additive "Sum of a list of elements in an `add_submonoid` is in the `add_submonoid`."]
-theorem list_prod_mem {l : List M} (hl : ∀, ∀ x ∈ l, ∀, x ∈ S) : l.prod ∈ S := by
+theorem list_prod_mem {l : List M} (hl : ∀, ∀ x ∈ l, ∀, x ∈ S) : l.Prod ∈ S := by
   lift l to List S using hl
   rw [← coe_list_prod]
   exact l.prod.coe_prop
@@ -64,7 +64,7 @@ theorem list_prod_mem {l : List M} (hl : ∀, ∀ x ∈ l, ∀, x ∈ S) : l.pro
 /-- Product of a multiset of elements in a submonoid of a `comm_monoid` is in the submonoid. -/
 @[to_additive "Sum of a multiset of elements in an `add_submonoid` of an `add_comm_monoid` is\nin the `add_submonoid`."]
 theorem multiset_prod_mem {M} [CommMonoidₓ M] (S : Submonoid M) (m : Multiset M) (hm : ∀, ∀ a ∈ m, ∀, a ∈ S) :
-    m.prod ∈ S := by
+    m.Prod ∈ S := by
   lift m to Multiset S using hm
   rw [← coe_multiset_prod]
   exact m.prod.coe_prop
@@ -87,7 +87,7 @@ end Assoc
 
 section NonAssoc
 
-variable [MulOneClass M] (S : Submonoid M)
+variable [MulOneClassₓ M] (S : Submonoid M)
 
 open Set
 
@@ -112,14 +112,14 @@ theorem coe_supr_of_directed {ι} [Nonempty ι] {S : ι → Submonoid M} (hS : D
     simp [mem_supr_of_directed hS]
 
 @[to_additive]
-theorem mem_Sup_of_directed_on {S : Set (Submonoid M)} (Sne : S.nonempty) (hS : DirectedOn (· ≤ ·) S) {x : M} :
-    x ∈ Sup S ↔ ∃ s ∈ S, x ∈ s := by
+theorem mem_Sup_of_directed_on {S : Set (Submonoid M)} (Sne : S.Nonempty) (hS : DirectedOn (· ≤ ·) S) {x : M} :
+    x ∈ sup S ↔ ∃ s ∈ S, x ∈ s := by
   have : Nonempty S := Sne.to_subtype
   simp only [Sup_eq_supr', mem_supr_of_directed hS.directed_coe, SetCoe.exists, Subtype.coe_mk]
 
 @[to_additive]
-theorem coe_Sup_of_directed_on {S : Set (Submonoid M)} (Sne : S.nonempty) (hS : DirectedOn (· ≤ ·) S) :
-    (↑(Sup S) : Set M) = ⋃ s ∈ S, ↑s :=
+theorem coe_Sup_of_directed_on {S : Set (Submonoid M)} (Sne : S.Nonempty) (hS : DirectedOn (· ≤ ·) S) :
+    (↑(sup S) : Set M) = ⋃ s ∈ S, ↑s :=
   Set.ext fun x => by
     simp [mem_Sup_of_directed_on Sne hS]
 
@@ -140,8 +140,8 @@ theorem mem_supr_of_mem {ι : Sort _} {S : ι → Submonoid M} (i : ι) : ∀ {x
   show S i ≤ supr S from le_supr _ _
 
 @[to_additive]
-theorem mem_Sup_of_mem {S : Set (Submonoid M)} {s : Submonoid M} (hs : s ∈ S) : ∀ {x : M}, x ∈ s → x ∈ Sup S :=
-  show s ≤ Sup S from le_Sup hs
+theorem mem_Sup_of_mem {S : Set (Submonoid M)} {s : Submonoid M} (hs : s ∈ S) : ∀ {x : M}, x ∈ s → x ∈ sup S :=
+  show s ≤ sup S from le_Sup hs
 
 /-- An induction principle for elements of `⨆ i, S i`.
 If `C` holds for `1` and all elements of `S i` for all `i`, and is preserved under multiplication,
@@ -216,7 +216,7 @@ theorem closure_eq_mrange (s : Set M) : closure s = (FreeMonoid.lift (coe : s �
 
 @[to_additive]
 theorem exists_list_of_mem_closure {s : Set M} {x : M} (hx : x ∈ closure s) :
-    ∃ (l : List M)(hl : ∀, ∀ y ∈ l, ∀, y ∈ s), l.prod = x := by
+    ∃ (l : List M)(hl : ∀, ∀ y ∈ l, ∀, y ∈ s), l.Prod = x := by
   rw [closure_eq_mrange, mem_mrange] at hx
   rcases hx with ⟨l, hx⟩
   exact
@@ -227,7 +227,7 @@ theorem exists_list_of_mem_closure {s : Set M} {x : M} (hx : x ∈ closure s) :
 
 @[to_additive]
 theorem exists_multiset_of_mem_closure {M : Type _} [CommMonoidₓ M] {s : Set M} {x : M} (hx : x ∈ closure s) :
-    ∃ (l : Multiset M)(hl : ∀, ∀ y ∈ l, ∀, y ∈ s), l.prod = x := by
+    ∃ (l : Multiset M)(hl : ∀, ∀ y ∈ l, ∀, y ∈ s), l.Prod = x := by
   obtain ⟨l, h1, h2⟩ := exists_list_of_mem_closure hx
   exact ⟨l, h1, (Multiset.coe_prod l).trans h2⟩
 
@@ -263,11 +263,11 @@ theorem pow_apply (n : M) (m : ℕ) : Submonoid.pow n m = ⟨n ^ m, m, rfl⟩ :=
 
 /-- Logarithms from powers to natural numbers. -/
 def log [DecidableEq M] {n : M} (p : powers n) : ℕ :=
-  Nat.findₓ <| (mem_powers_iff p.val n).mp p.prop
+  Nat.findₓ <| (mem_powers_iff p.val n).mp p.Prop
 
 @[simp]
 theorem pow_log_eq_self [DecidableEq M] {n : M} (p : powers n) : pow n (log p) = p :=
-  Subtype.ext <| Nat.find_specₓ p.prop
+  Subtype.ext <| Nat.find_specₓ p.Prop
 
 theorem pow_right_injective_iff_pow_injective {n : M} :
     (Function.Injective fun m : ℕ => n ^ m) ↔ Function.Injective (pow n) :=
@@ -283,7 +283,7 @@ when it is injective. The inverse is given by the logarithms. -/
 @[simps]
 def pow_log_equiv [DecidableEq M] {n : M} (h : Function.Injective fun m : ℕ => n ^ m) :
     Multiplicative ℕ ≃* powers n where
-  toFun := fun m => pow n m.to_add
+  toFun := fun m => pow n m.toAdd
   invFun := fun m => Multiplicative.ofAdd (log m)
   left_inv := log_pow_eq_self h
   right_inv := pow_log_eq_self
@@ -292,10 +292,10 @@ def pow_log_equiv [DecidableEq M] {n : M} (h : Function.Injective fun m : ℕ =>
 
 theorem log_mul [DecidableEq M] {n : M} (h : Function.Injective fun m : ℕ => n ^ m) (x y : powers (n : M)) :
     log (x * y) = log x + log y :=
-  (pow_log_equiv h).symm.map_mul x y
+  (powLogEquiv h).symm.map_mul x y
 
-theorem log_pow_int_eq_self {x : ℤ} (h : 1 < x.nat_abs) (m : ℕ) : log (pow x m) = m :=
-  (pow_log_equiv (Int.pow_right_injective h)).symm_apply_apply _
+theorem log_pow_int_eq_self {x : ℤ} (h : 1 < x.natAbs) (m : ℕ) : log (pow x m) = m :=
+  (powLogEquiv (Int.pow_right_injective h)).symm_apply_apply _
 
 @[simp]
 theorem map_powers {N : Type _} [Monoidₓ N] (f : M →* N) (m : M) : (powers m).map f = powers (f m) := by
@@ -310,7 +310,7 @@ variable {N : Type _} [CommMonoidₓ N]
 open MonoidHom
 
 @[to_additive]
-theorem sup_eq_range (s t : Submonoid N) : s⊔t = (s.subtype.coprod t.subtype).mrange := by
+theorem sup_eq_range (s t : Submonoid N) : s⊔t = (s.Subtype.coprod t.Subtype).mrange := by
   rw [mrange_eq_map, ← mrange_inl_sup_mrange_inr, map_sup, map_mrange, coprod_comp_inl, map_mrange, coprod_comp_inr,
     range_subtype, range_subtype]
 
@@ -377,7 +377,7 @@ end AddSubmonoid
 
 namespace Submonoid
 
-variable {R : Type _} [NonAssocSemiring R] (S : Submonoid R) {a b : R}
+variable {R : Type _} [NonAssocSemiringₓ R] (S : Submonoid R) {a b : R}
 
 /-- The product of an element of the additive closure of a multiplicative submonoid `M`
 and an element of `M` is contained in the additive closure of `M`. -/

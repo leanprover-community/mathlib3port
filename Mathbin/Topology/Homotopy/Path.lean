@@ -40,7 +40,7 @@ namespace Path
 /-- The type of homotopies between two paths.
 -/
 abbrev homotopy (p₀ p₁ : Path x₀ x₁) :=
-  ContinuousMap.HomotopyRel p₀.to_continuous_map p₁.to_continuous_map {0, 1}
+  ContinuousMap.HomotopyRel p₀.toContinuousMap p₁.toContinuousMap {0, 1}
 
 namespace Homotopy
 
@@ -48,40 +48,40 @@ section
 
 variable {p₀ p₁ : Path x₀ x₁}
 
-instance : CoeFun (homotopy p₀ p₁) fun _ => I × I → X :=
-  ⟨fun F => F.to_fun⟩
+instance : CoeFun (Homotopy p₀ p₁) fun _ => I × I → X :=
+  ⟨fun F => F.toFun⟩
 
-theorem coe_fn_injective : @Function.Injective (homotopy p₀ p₁) (I × I → X) coeFn :=
+theorem coe_fn_injective : @Function.Injective (Homotopy p₀ p₁) (I × I → X) coeFn :=
   ContinuousMap.HomotopyWith.coe_fn_injective
 
 @[simp]
-theorem source (F : homotopy p₀ p₁) (t : I) : F (t, 0) = x₀ := by
+theorem source (F : Homotopy p₀ p₁) (t : I) : F (t, 0) = x₀ := by
   simp_rw [← p₀.source]
   apply ContinuousMap.HomotopyRel.eq_fst
   simp
 
 @[simp]
-theorem target (F : homotopy p₀ p₁) (t : I) : F (t, 1) = x₁ := by
+theorem target (F : Homotopy p₀ p₁) (t : I) : F (t, 1) = x₁ := by
   simp_rw [← p₁.target]
   apply ContinuousMap.HomotopyRel.eq_snd
   simp
 
 /-- Evaluating a path homotopy at an intermediate point, giving us a `path`.
 -/
-def eval (F : homotopy p₀ p₁) (t : I) : Path x₀ x₁ where
-  toFun := F.to_homotopy.curry t
+def eval (F : Homotopy p₀ p₁) (t : I) : Path x₀ x₁ where
+  toFun := F.toHomotopy.curry t
   source' := by
     simp
   target' := by
     simp
 
 @[simp]
-theorem eval_zero (F : homotopy p₀ p₁) : F.eval 0 = p₀ := by
+theorem eval_zero (F : Homotopy p₀ p₁) : F.eval 0 = p₀ := by
   ext t
   simp [eval]
 
 @[simp]
-theorem eval_one (F : homotopy p₀ p₁) : F.eval 1 = p₁ := by
+theorem eval_one (F : Homotopy p₀ p₁) : F.eval 1 = p₁ := by
   ext t
   simp [eval]
 
@@ -94,38 +94,38 @@ variable {p₀ p₁ p₂ : Path x₀ x₁}
 /-- Given a path `p`, we can define a `homotopy p p` by `F (t, x) = p x`
 -/
 @[simps]
-def refl (p : Path x₀ x₁) : homotopy p p :=
-  ContinuousMap.HomotopyRel.refl p.to_continuous_map {0, 1}
+def refl (p : Path x₀ x₁) : Homotopy p p :=
+  ContinuousMap.HomotopyRel.refl p.toContinuousMap {0, 1}
 
 /-- Given a `homotopy p₀ p₁`, we can define a `homotopy p₁ p₀` by reversing the homotopy.
 -/
 @[simps]
-def symm (F : homotopy p₀ p₁) : homotopy p₁ p₀ :=
+def symm (F : Homotopy p₀ p₁) : Homotopy p₁ p₀ :=
   ContinuousMap.HomotopyRel.symm F
 
 @[simp]
-theorem symm_symm (F : homotopy p₀ p₁) : F.symm.symm = F :=
+theorem symm_symm (F : Homotopy p₀ p₁) : F.symm.symm = F :=
   ContinuousMap.HomotopyRel.symm_symm F
 
 /-- Given `homotopy p₀ p₁` and `homotopy p₁ p₂`, we can define a `homotopy p₀ p₂` by putting the first
 homotopy on `[0, 1/2]` and the second on `[1/2, 1]`.
 -/
-def trans (F : homotopy p₀ p₁) (G : homotopy p₁ p₂) : homotopy p₀ p₂ :=
+def trans (F : Homotopy p₀ p₁) (G : Homotopy p₁ p₂) : Homotopy p₀ p₂ :=
   ContinuousMap.HomotopyRel.trans F G
 
-theorem trans_apply (F : homotopy p₀ p₁) (G : homotopy p₁ p₂) (x : I × I) :
+theorem trans_apply (F : Homotopy p₀ p₁) (G : Homotopy p₁ p₂) (x : I × I) :
     (F.trans G) x =
       if h : (x.1 : ℝ) ≤ 1 / 2 then F (⟨2 * x.1, (UnitInterval.mul_pos_mem_iff zero_lt_two).2 ⟨x.1.2.1, h⟩⟩, x.2)
       else G (⟨2 * x.1 - 1, UnitInterval.two_mul_sub_one_mem_iff.2 ⟨(not_leₓ.1 h).le, x.1.2.2⟩⟩, x.2) :=
   ContinuousMap.HomotopyRel.trans_apply _ _ _
 
-theorem symm_trans (F : homotopy p₀ p₁) (G : homotopy p₁ p₂) : (F.trans G).symm = G.symm.trans F.symm :=
+theorem symm_trans (F : Homotopy p₀ p₁) (G : Homotopy p₁ p₂) : (F.trans G).symm = G.symm.trans F.symm :=
   ContinuousMap.HomotopyRel.symm_trans _ _
 
 /-- Casting a `homotopy p₀ p₁` to a `homotopy q₀ q₁` where `p₀ = q₀` and `p₁ = q₁`.
 -/
 @[simps]
-def cast {p₀ p₁ q₀ q₁ : Path x₀ x₁} (F : homotopy p₀ p₁) (h₀ : p₀ = q₀) (h₁ : p₁ = q₁) : homotopy q₀ q₁ :=
+def cast {p₀ p₁ q₀ q₁ : Path x₀ x₁} (F : Homotopy p₀ p₁) (h₀ : p₀ = q₀) (h₁ : p₁ = q₁) : Homotopy q₀ q₁ :=
   ContinuousMap.HomotopyRel.cast F (congr_argₓ _ h₀) (congr_argₓ _ h₁)
 
 end
@@ -138,7 +138,7 @@ variable {p₀ q₀ : Path x₀ x₁} {p₁ q₁ : Path x₁ x₂}
 Furthermore, suppose `F : homotopy p₀ q₀` and `G : homotopy p₁ q₁`. Then we can define a homotopy
 from `p₀.trans p₁` to `q₀.trans q₁`.
 -/
-def hcomp (F : homotopy p₀ q₀) (G : homotopy p₁ q₁) : homotopy (p₀.trans p₁) (q₀.trans q₁) where
+def hcomp (F : Homotopy p₀ q₀) (G : Homotopy p₁ q₁) : Homotopy (p₀.trans p₁) (q₀.trans q₁) where
   toFun := fun x => if (x.2 : ℝ) ≤ 1 / 2 then (F.eval x.1).extend (2 * x.2) else (G.eval x.1).extend (2 * x.2 - 1)
   continuous_to_fun := by
     refine'
@@ -167,14 +167,14 @@ def hcomp (F : homotopy p₀ q₀) (G : homotopy p₁ q₁) : homotopy (p₀.tra
       norm_num
       
 
-theorem hcomp_apply (F : homotopy p₀ q₀) (G : homotopy p₁ q₁) (x : I × I) :
+theorem hcomp_apply (F : Homotopy p₀ q₀) (G : Homotopy p₁ q₁) (x : I × I) :
     F.hcomp G x =
       if h : (x.2 : ℝ) ≤ 1 / 2 then F.eval x.1 ⟨2 * x.2, (UnitInterval.mul_pos_mem_iff zero_lt_two).2 ⟨x.2.2.1, h⟩⟩
       else G.eval x.1 ⟨2 * x.2 - 1, UnitInterval.two_mul_sub_one_mem_iff.2 ⟨(not_leₓ.1 h).le, x.2.2.2⟩⟩ :=
   show ite _ _ _ = _ by
     split_ifs <;> exact Path.extend_extends _ _
 
-theorem hcomp_half (F : homotopy p₀ q₀) (G : homotopy p₁ q₁) (t : I) :
+theorem hcomp_half (F : Homotopy p₀ q₀) (G : Homotopy p₁ q₁) (t : I) :
     F.hcomp G
         (t,
           ⟨1 / 2, by
@@ -189,7 +189,7 @@ end
 /-- Suppose `p` is a path, then we have a homotopy from `p` to `p.reparam f` by the convexity of `I`.
 -/
 def reparam (p : Path x₀ x₁) (f : I → I) (hf : Continuous f) (hf₀ : f 0 = 0) (hf₁ : f 1 = 1) :
-    homotopy p (p.reparam f hf hf₀ hf₁) where
+    Homotopy p (p.reparam f hf hf₀ hf₁) where
   toFun := fun x =>
     p
       ⟨σ x.1 * x.2 + x.1 * f x.2,
@@ -219,7 +219,7 @@ def reparam (p : Path x₀ x₁) (f : I → I) (hf : Continuous f) (hf₀ : f 0 
 argument.
 -/
 @[simps]
-def symm₂ {p q : Path x₀ x₁} (F : p.homotopy q) : p.symm.homotopy q.symm where
+def symm₂ {p q : Path x₀ x₁} (F : p.Homotopy q) : p.symm.Homotopy q.symm where
   toFun := fun x => F ⟨x.1, σ x.2⟩
   to_fun_zero := by
     simp [Path.symm]
@@ -239,7 +239,7 @@ def symm₂ {p q : Path x₀ x₁} (F : p.homotopy q) : p.symm.homotopy q.symm w
 `q.map f.continuous`.
 -/
 @[simps]
-def map {p q : Path x₀ x₁} (F : p.homotopy q) (f : C(X, Y)) : homotopy (p.map f.continuous) (q.map f.continuous) where
+def map {p q : Path x₀ x₁} (F : p.Homotopy q) (f : C(X, Y)) : Homotopy (p.map f.Continuous) (q.map f.Continuous) where
   toFun := f ∘ F
   to_fun_zero := by
     simp
@@ -258,47 +258,47 @@ end Homotopy
 /-- Two paths `p₀` and `p₁` are `path.homotopic` if there exists a `homotopy` between them.
 -/
 def homotopic (p₀ p₁ : Path x₀ x₁) : Prop :=
-  Nonempty (p₀.homotopy p₁)
+  Nonempty (p₀.Homotopy p₁)
 
 namespace Homotopic
 
 @[refl]
-theorem refl (p : Path x₀ x₁) : p.homotopic p :=
-  ⟨homotopy.refl p⟩
+theorem refl (p : Path x₀ x₁) : p.Homotopic p :=
+  ⟨Homotopy.refl p⟩
 
 @[symm]
-theorem symm ⦃p₀ p₁ : Path x₀ x₁⦄ (h : p₀.homotopic p₁) : p₁.homotopic p₀ :=
-  h.map homotopy.symm
+theorem symm ⦃p₀ p₁ : Path x₀ x₁⦄ (h : p₀.Homotopic p₁) : p₁.Homotopic p₀ :=
+  h.map Homotopy.symm
 
 @[trans]
-theorem trans ⦃p₀ p₁ p₂ : Path x₀ x₁⦄ (h₀ : p₀.homotopic p₁) (h₁ : p₁.homotopic p₂) : p₀.homotopic p₂ :=
-  h₀.map2 homotopy.trans h₁
+theorem trans ⦃p₀ p₁ p₂ : Path x₀ x₁⦄ (h₀ : p₀.Homotopic p₁) (h₁ : p₁.Homotopic p₂) : p₀.Homotopic p₂ :=
+  h₀.map2 Homotopy.trans h₁
 
-theorem Equivalenceₓ : Equivalenceₓ (@homotopic X _ x₀ x₁) :=
+theorem Equivalenceₓ : Equivalenceₓ (@Homotopic X _ x₀ x₁) :=
   ⟨refl, symm, trans⟩
 
-theorem map {p q : Path x₀ x₁} (h : p.homotopic q) (f : C(X, Y)) :
-    homotopic (p.map f.continuous) (q.map f.continuous) :=
+theorem map {p q : Path x₀ x₁} (h : p.Homotopic q) (f : C(X, Y)) :
+    Homotopic (p.map f.Continuous) (q.map f.Continuous) :=
   h.map fun F => F.map f
 
-theorem hcomp {p₀ p₁ : Path x₀ x₁} {q₀ q₁ : Path x₁ x₂} (hp : p₀.homotopic p₁) (hq : q₀.homotopic q₁) :
+theorem hcomp {p₀ p₁ : Path x₀ x₁} {q₀ q₁ : Path x₁ x₂} (hp : p₀.Homotopic p₁) (hq : q₀.Homotopic q₁) :
     (p₀.trans q₀).Homotopic (p₁.trans q₁) :=
-  hp.map2 homotopy.hcomp hq
+  hp.map2 Homotopy.hcomp hq
 
 /-- The setoid on `path`s defined by the equivalence relation `path.homotopic`. That is, two paths are
 equivalent if there is a `homotopy` between them.
 -/
 protected def Setoidₓ (x₀ x₁ : X) : Setoidₓ (Path x₀ x₁) :=
-  ⟨homotopic, Equivalenceₓ⟩
+  ⟨Homotopic, equivalence⟩
 
 /-- The quotient on `path x₀ x₁` by the equivalence relation `path.homotopic`.
 -/
 protected def Quotientₓ (x₀ x₁ : X) :=
-  Quotientₓ (homotopic.setoid x₀ x₁)
+  Quotientₓ (Homotopic.setoid x₀ x₁)
 
 attribute [local instance] homotopic.setoid
 
-instance : Inhabited (homotopic.quotient () ()) :=
+instance : Inhabited (Homotopic.Quotient () ()) :=
   ⟨Quotientₓ.mk <| Path.refl ()⟩
 
 /-- The composition of path homotopy classes. This is `path.trans` descended to the quotient. -/
@@ -306,15 +306,15 @@ def quotient.comp (P₀ : Path.Homotopic.Quotient x₀ x₁) (P₁ : Path.Homoto
     Path.Homotopic.Quotient x₀ x₂ :=
   Quotientₓ.map₂ Path.trans (fun p₀ : Path x₀ x₁ p₁ hp q₀ : Path x₁ x₂ q₁ hq => hcomp hp hq) P₀ P₁
 
-theorem comp_lift (P₀ : Path x₀ x₁) (P₁ : Path x₁ x₂) : ⟦P₀.trans P₁⟧ = quotient.comp (⟦P₀⟧) (⟦P₁⟧) :=
+theorem comp_lift (P₀ : Path x₀ x₁) (P₁ : Path x₁ x₂) : ⟦P₀.trans P₁⟧ = Quotient.comp (⟦P₀⟧) (⟦P₁⟧) :=
   rfl
 
 /-- The image of a path homotopy class `P₀` under a map `f`.
     This is `path.map` descended to the quotient -/
 def quotient.map_fn (P₀ : Path.Homotopic.Quotient x₀ x₁) (f : C(X, Y)) : Path.Homotopic.Quotient (f x₀) (f x₁) :=
-  Quotientₓ.map (fun q : Path x₀ x₁ => q.map f.continuous) (fun p₀ p₁ h => Path.Homotopic.map h f) P₀
+  Quotientₓ.map (fun q : Path x₀ x₁ => q.map f.Continuous) (fun p₀ p₁ h => Path.Homotopic.map h f) P₀
 
-theorem map_lift (P₀ : Path x₀ x₁) (f : C(X, Y)) : ⟦P₀.map f.continuous⟧ = quotient.map_fn (⟦P₀⟧) f :=
+theorem map_lift (P₀ : Path x₀ x₁) (f : C(X, Y)) : ⟦P₀.map f.Continuous⟧ = Quotient.mapFn (⟦P₀⟧) f :=
   rfl
 
 end Homotopic

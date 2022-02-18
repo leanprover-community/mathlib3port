@@ -27,7 +27,7 @@ and the identifications given by the morphisms in the diagram.
 -/
 
 
-variable {J : Type v} [small_category J] (F : J ⥤ CommRingₓₓ.{v})
+variable {J : Type v} [SmallCategory J] (F : J ⥤ CommRingₓₓ.{v})
 
 /-- An inductive type representing all commutative ring expressions (without relations)
 on a collection of types indexed by the objects of `J`.
@@ -40,8 +40,8 @@ inductive prequotient
   | add : prequotient → prequotient → prequotient
   | mul : prequotient → prequotient → prequotient
 
-instance : Inhabited (prequotient F) :=
-  ⟨prequotient.zero⟩
+instance : Inhabited (Prequotient F) :=
+  ⟨Prequotient.zero⟩
 
 open Prequotient
 
@@ -49,7 +49,7 @@ open Prequotient
 because of the commutative ring laws, or
 because one element is mapped to another by a morphism in the diagram.
 -/
-inductive relation : prequotient F → prequotient F → Prop
+inductive relation : Prequotient F → Prequotient F → Prop
   | refl : ∀ x, relation x x
   | symm : ∀ x y h : relation x y, relation y x
   | trans : ∀ x y z h : relation x y k : relation y z, relation x z
@@ -78,18 +78,18 @@ inductive relation : prequotient F → prequotient F → Prop
 
 /-- The setoid corresponding to commutative expressions modulo monoid relations and identifications.
 -/
-def colimit_setoid : Setoidₓ (prequotient F) where
-  R := relation F
-  iseqv := ⟨relation.refl, relation.symm, relation.trans⟩
+def colimit_setoid : Setoidₓ (Prequotient F) where
+  R := Relation F
+  iseqv := ⟨Relation.refl, Relation.symm, Relation.trans⟩
 
 attribute [instance] colimit_setoid
 
 /-- The underlying type of the colimit of a diagram in `CommRing`.
 -/
 def colimit_type : Type v :=
-  Quotientₓ (colimit_setoid F)deriving Inhabited
+  Quotientₓ (colimitSetoid F)deriving Inhabited
 
-instance : CommRingₓ (colimit_type F) where
+instance : CommRingₓ (ColimitType F) where
   zero := Quot.mk _ zero
   one := Quot.mk _ one
   neg := by
@@ -233,37 +233,37 @@ instance : CommRingₓ (colimit_type F) where
     rfl
 
 @[simp]
-theorem quot_zero : Quot.mk Setoidₓ.R zero = (0 : colimit_type F) :=
+theorem quot_zero : Quot.mk Setoidₓ.R zero = (0 : ColimitType F) :=
   rfl
 
 @[simp]
-theorem quot_one : Quot.mk Setoidₓ.R one = (1 : colimit_type F) :=
+theorem quot_one : Quot.mk Setoidₓ.R one = (1 : ColimitType F) :=
   rfl
 
 @[simp]
-theorem quot_neg x : Quot.mk Setoidₓ.R (neg x) = (-Quot.mk Setoidₓ.R x : colimit_type F) :=
+theorem quot_neg x : Quot.mk Setoidₓ.R (neg x) = (-Quot.mk Setoidₓ.R x : ColimitType F) :=
   rfl
 
 @[simp]
-theorem quot_add x y : Quot.mk Setoidₓ.R (add x y) = (Quot.mk Setoidₓ.R x + Quot.mk Setoidₓ.R y : colimit_type F) :=
+theorem quot_add x y : Quot.mk Setoidₓ.R (add x y) = (Quot.mk Setoidₓ.R x + Quot.mk Setoidₓ.R y : ColimitType F) :=
   rfl
 
 @[simp]
-theorem quot_mul x y : Quot.mk Setoidₓ.R (mul x y) = (Quot.mk Setoidₓ.R x * Quot.mk Setoidₓ.R y : colimit_type F) :=
+theorem quot_mul x y : Quot.mk Setoidₓ.R (mul x y) = (Quot.mk Setoidₓ.R x * Quot.mk Setoidₓ.R y : ColimitType F) :=
   rfl
 
 /-- The bundled commutative ring giving the colimit of a diagram. -/
 def colimit : CommRingₓₓ :=
-  CommRingₓₓ.of (colimit_type F)
+  CommRingₓₓ.of (ColimitType F)
 
 /-- The function from a given commutative ring in the diagram to the colimit commutative ring. -/
-def cocone_fun (j : J) (x : F.obj j) : colimit_type F :=
+def cocone_fun (j : J) (x : F.obj j) : ColimitType F :=
   Quot.mk _ (of j x)
 
 /-- The ring homomorphism from a given commutative ring in the diagram to the colimit commutative
 ring. -/
 def cocone_morphism (j : J) : F.obj j ⟶ colimit F where
-  toFun := cocone_fun F j
+  toFun := coconeFun F j
   map_one' := by
     apply Quot.sound <;> apply relation.one
   map_mul' := by
@@ -274,26 +274,26 @@ def cocone_morphism (j : J) : F.obj j ⟶ colimit F where
     intros <;> apply Quot.sound <;> apply relation.add
 
 @[simp]
-theorem cocone_naturality {j j' : J} (f : j ⟶ j') : F.map f ≫ cocone_morphism F j' = cocone_morphism F j := by
+theorem cocone_naturality {j j' : J} (f : j ⟶ j') : F.map f ≫ coconeMorphism F j' = coconeMorphism F j := by
   ext
   apply Quot.sound
   apply Relation.Map
 
 @[simp]
 theorem cocone_naturality_components (j j' : J) (f : j ⟶ j') (x : F.obj j) :
-    (cocone_morphism F j') (F.map f x) = (cocone_morphism F j) x := by
+    (coconeMorphism F j') (F.map f x) = (coconeMorphism F j) x := by
   rw [← cocone_naturality F f]
   rfl
 
 /-- The cocone over the proposed colimit commutative ring. -/
-def colimit_cocone : cocone F where
+def colimit_cocone : Cocone F where
   x := colimit F
-  ι := { app := cocone_morphism F }
+  ι := { app := coconeMorphism F }
 
 /-- The function from the free commutative ring on the diagram to the cone point of any other
 cocone. -/
 @[simp]
-def desc_fun_lift (s : cocone F) : prequotient F → s.X
+def desc_fun_lift (s : Cocone F) : Prequotient F → s.x
   | of j x => (s.ι.app j) x
   | zero => 0
   | one => 1
@@ -302,7 +302,7 @@ def desc_fun_lift (s : cocone F) : prequotient F → s.X
   | mul x y => desc_fun_lift x * desc_fun_lift y
 
 /-- The function from the colimit commutative ring to the cone point of any other cocone. -/
-def desc_fun (s : cocone F) : colimit_type F → s.X := by
+def desc_fun (s : Cocone F) : ColimitType F → s.x := by
   fapply Quot.lift
   · exact desc_fun_lift F s
     
@@ -364,8 +364,8 @@ def desc_fun (s : cocone F) : colimit_type F → s.X := by
 
 /-- The ring homomorphism from the colimit commutative ring to the cone point of any other
 cocone. -/
-def desc_morphism (s : cocone F) : colimit F ⟶ s.X where
-  toFun := desc_fun F s
+def desc_morphism (s : Cocone F) : colimit F ⟶ s.x where
+  toFun := descFun F s
   map_one' := rfl
   map_zero' := rfl
   map_add' := fun x y => by
@@ -374,8 +374,8 @@ def desc_morphism (s : cocone F) : colimit F ⟶ s.X where
     induction x <;> induction y <;> rfl
 
 /-- Evidence that the proposed colimit is the colimit. -/
-def colimit_is_colimit : is_colimit (colimit_cocone F) where
-  desc := fun s => desc_morphism F s
+def colimit_is_colimit : IsColimit (colimitCocone F) where
+  desc := fun s => descMorphism F s
   uniq' := fun s m w => by
     ext
     induction x
@@ -396,7 +396,7 @@ def colimit_is_colimit : is_colimit (colimit_cocone F) where
       
     rfl
 
-instance has_colimits_CommRing : has_colimits CommRingₓₓ where
+instance has_colimits_CommRing : HasColimits CommRingₓₓ where
   HasColimitsOfShape := fun J 𝒥 =>
     { HasColimit := fun F => has_colimit.mk { Cocone := colimit_cocone F, IsColimit := colimit_is_colimit F } }
 

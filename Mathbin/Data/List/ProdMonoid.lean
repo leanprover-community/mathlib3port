@@ -26,7 +26,7 @@ theorem prod_repeat [Monoidₓ α] (a : α) (n : ℕ) : (repeat a n).Prod = a ^ 
 
 @[to_additive]
 theorem prod_le_of_forall_le [OrderedCommMonoid α] (l : List α) (n : α) (h : ∀, ∀ x ∈ l, ∀, x ≤ n) :
-    l.prod ≤ n ^ l.length := by
+    l.Prod ≤ n ^ l.length := by
   induction' l with y l IH
   · simp
     

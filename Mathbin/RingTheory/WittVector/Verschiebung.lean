@@ -16,7 +16,7 @@ namespace WittVector
 
 open MvPolynomial
 
-variable {p : ℕ} {R S : Type _} [hp : Fact p.prime] [CommRingₓ R] [CommRingₓ S]
+variable {p : ℕ} {R S : Type _} [hp : Fact p.Prime] [CommRingₓ R] [CommRingₓ S]
 
 local notation "𝕎" => WittVector p
 
@@ -31,27 +31,27 @@ by inserting 0 as the 0th coefficient.
 def verschiebung_fun (x : 𝕎 R) : 𝕎 R :=
   (mk p) fun n => if n = 0 then 0 else x.coeff (n - 1)
 
-theorem verschiebung_fun_coeff (x : 𝕎 R) (n : ℕ) :
-    (verschiebung_fun x).coeff n = if n = 0 then 0 else x.coeff (n - 1) := by
+theorem verschiebung_fun_coeff (x : 𝕎 R) (n : ℕ) : (verschiebungFun x).coeff n = if n = 0 then 0 else x.coeff (n - 1) :=
+  by
   rw [verschiebung_fun, coeff_mk]
 
-theorem verschiebung_fun_coeff_zero (x : 𝕎 R) : (verschiebung_fun x).coeff 0 = 0 := by
+theorem verschiebung_fun_coeff_zero (x : 𝕎 R) : (verschiebungFun x).coeff 0 = 0 := by
   rw [verschiebung_fun_coeff, if_pos rfl]
 
 @[simp]
-theorem verschiebung_fun_coeff_succ (x : 𝕎 R) (n : ℕ) : (verschiebung_fun x).coeff n.succ = x.coeff n :=
+theorem verschiebung_fun_coeff_succ (x : 𝕎 R) (n : ℕ) : (verschiebungFun x).coeff n.succ = x.coeff n :=
   rfl
 
 include hp
 
 @[ghost_simps]
-theorem ghost_component_zero_verschiebung_fun (x : 𝕎 R) : ghost_component 0 (verschiebung_fun x) = 0 := by
+theorem ghost_component_zero_verschiebung_fun (x : 𝕎 R) : ghostComponent 0 (verschiebungFun x) = 0 := by
   rw [ghost_component_apply, aeval_witt_polynomial, Finset.range_one, Finset.sum_singleton, verschiebung_fun_coeff_zero,
     pow_zeroₓ, pow_zeroₓ, pow_oneₓ, one_mulₓ]
 
 @[ghost_simps]
 theorem ghost_component_verschiebung_fun (x : 𝕎 R) (n : ℕ) :
-    ghost_component (n + 1) (verschiebung_fun x) = p * ghost_component n x := by
+    ghostComponent (n + 1) (verschiebungFun x) = p * ghostComponent n x := by
   simp only [ghost_component_apply, aeval_witt_polynomial]
   rw [Finset.sum_range_succ', verschiebung_fun_coeff, if_pos rfl, zero_pow (pow_pos hp.1.Pos _), mul_zero, add_zeroₓ,
     Finset.mul_sum, Finset.sum_congr rfl]
@@ -64,14 +64,14 @@ omit hp
 variable `X (n-1)`.
 -/
 def verschiebung_poly (n : ℕ) : MvPolynomial ℕ ℤ :=
-  if n = 0 then 0 else X (n - 1)
+  if n = 0 then 0 else x (n - 1)
 
 @[simp]
-theorem verschiebung_poly_zero : verschiebung_poly 0 = 0 :=
+theorem verschiebung_poly_zero : verschiebungPoly 0 = 0 :=
   rfl
 
-theorem aeval_verschiebung_poly' (x : 𝕎 R) (n : ℕ) :
-    aeval x.coeff (verschiebung_poly n) = (verschiebung_fun x).coeff n := by
+theorem aeval_verschiebung_poly' (x : 𝕎 R) (n : ℕ) : aeval x.coeff (verschiebungPoly n) = (verschiebungFun x).coeff n :=
+  by
   cases n
   · simp only [verschiebung_poly, verschiebung_fun_coeff_zero, if_pos rfl, AlgHom.map_zero]
     
@@ -84,7 +84,7 @@ variable (p)
 /-- `witt_vector.verschiebung` has polynomial structure given by `witt_vector.verschiebung_poly`.
 -/
 @[is_poly]
-theorem verschiebung_fun_is_poly : is_poly p fun R _Rcr => @verschiebung_fun p R _Rcr := by
+theorem verschiebung_fun_is_poly : IsPoly p fun R _Rcr => @verschiebungFun p R _Rcr := by
   use verschiebung_poly
   simp only [aeval_verschiebung_poly', eq_self_iff_true, forall_3_true_iff]
 
@@ -98,7 +98,7 @@ include hp
 This is a additive monoid hom with underlying function `verschiebung_fun`.
 -/
 noncomputable def verschiebung : 𝕎 R →+ 𝕎 R where
-  toFun := verschiebung_fun
+  toFun := verschiebungFun
   map_zero' := by
     ext ⟨⟩ <;> rw [verschiebung_fun_coeff] <;> simp only [if_true, eq_self_iff_true, zero_coeff, if_t_t]
   map_add' := by
@@ -109,7 +109,7 @@ omit hp
 
 /-- `witt_vector.verschiebung` is a polynomial function. -/
 @[is_poly]
-theorem verschiebung_is_poly : is_poly p fun R _Rcr => @verschiebung p R hp _Rcr :=
+theorem verschiebung_is_poly : IsPoly p fun R _Rcr => @verschiebung p R hp _Rcr :=
   verschiebung_fun_is_poly p
 
 include hp
@@ -122,12 +122,12 @@ theorem map_verschiebung (f : R →+* S) (x : 𝕎 R) : map f (verschiebung x) =
   rfl
 
 @[ghost_simps]
-theorem ghost_component_zero_verschiebung (x : 𝕎 R) : ghost_component 0 (verschiebung x) = 0 :=
+theorem ghost_component_zero_verschiebung (x : 𝕎 R) : ghostComponent 0 (verschiebung x) = 0 :=
   ghost_component_zero_verschiebung_fun _
 
 @[ghost_simps]
 theorem ghost_component_verschiebung (x : 𝕎 R) (n : ℕ) :
-    ghost_component (n + 1) (verschiebung x) = p * ghost_component n x :=
+    ghostComponent (n + 1) (verschiebung x) = p * ghostComponent n x :=
   ghost_component_verschiebung_fun _ _
 
 @[simp]
@@ -141,12 +141,12 @@ theorem verschiebung_coeff_add_one (x : 𝕎 R) (n : ℕ) : (verschiebung x).coe
 theorem verschiebung_coeff_succ (x : 𝕎 R) (n : ℕ) : (verschiebung x).coeff n.succ = x.coeff n :=
   rfl
 
-theorem aeval_verschiebung_poly (x : 𝕎 R) (n : ℕ) : aeval x.coeff (verschiebung_poly n) = (verschiebung x).coeff n :=
+theorem aeval_verschiebung_poly (x : 𝕎 R) (n : ℕ) : aeval x.coeff (verschiebungPoly n) = (verschiebung x).coeff n :=
   aeval_verschiebung_poly' x n
 
 @[simp]
 theorem bind₁_verschiebung_poly_witt_polynomial (n : ℕ) :
-    bind₁ verschiebung_poly (wittPolynomial p ℤ n) = if n = 0 then 0 else p * wittPolynomial p ℤ (n - 1) := by
+    bind₁ verschiebungPoly (wittPolynomial p ℤ n) = if n = 0 then 0 else p * wittPolynomial p ℤ (n - 1) := by
   apply MvPolynomial.funext
   intro x
   split_ifs with hn

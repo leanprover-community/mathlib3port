@@ -3,7 +3,7 @@ import Mathbin.Data.Rbtree.Init
 
 universe u
 
--- ././Mathport/Syntax/Translate/Basic.lean:794:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
 unsafe def tactic.interactive.blast_disjs : tactic Unit :=
   sorry
 
@@ -22,13 +22,13 @@ def lift (lt : α → α → Prop) : Option α → Option α → Prop
   | _, _ => True
 
 inductive is_searchable (lt : α → α → Prop) : Rbnode α → Option α → Option α → Prop
-  | leaf_s {lo hi} (hlt : lift lt lo hi) : is_searchable leaf lo hi
+  | leaf_s {lo hi} (hlt : Lift lt lo hi) : is_searchable leaf lo hi
   | red_s {l r v lo hi} (hs₁ : is_searchable l lo (some v)) (hs₂ : is_searchable r (some v) hi) :
     is_searchable (red_node l v r) lo hi
   | black_s {l r v lo hi} (hs₁ : is_searchable l lo (some v)) (hs₂ : is_searchable r (some v) hi) :
     is_searchable (black_node l v r) lo hi
 
--- ././Mathport/Syntax/Translate/Basic.lean:794:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
 unsafe def is_searchable_tactic : tactic Unit :=
   sorry
 
@@ -40,7 +40,7 @@ section IsSearchableLemmas
 
 variable {lt : α → α → Prop}
 
-theorem lo_lt_hi {t : Rbnode α} {lt} [IsTrans α lt] : ∀ {lo hi}, is_searchable lt t lo hi → lift lt lo hi := by
+theorem lo_lt_hi {t : Rbnode α} {lt} [IsTrans α lt] : ∀ {lo hi}, IsSearchable lt t lo hi → Lift lt lo hi := by
   induction t <;> intro lo hi hs
   case leaf =>
     cases hs
@@ -53,7 +53,7 @@ theorem lo_lt_hi {t : Rbnode α} {lt} [IsTrans α lt] : ∀ {lo hi}, is_searchab
     apply trans_of lt h₁ h₂
 
 theorem is_searchable_of_is_searchable_of_incomp [IsStrictWeakOrder α lt] {t} :
-    ∀ {lo hi hi'} hc : ¬lt hi' hi ∧ ¬lt hi hi' hs : is_searchable lt t lo (some hi), is_searchable lt t lo (some hi') :=
+    ∀ {lo hi hi'} hc : ¬lt hi' hi ∧ ¬lt hi hi' hs : IsSearchable lt t lo (some hi), IsSearchable lt t lo (some hi') :=
   by
   classical
   induction t <;>
@@ -69,7 +69,7 @@ theorem is_searchable_of_is_searchable_of_incomp [IsStrictWeakOrder α lt] {t} :
     apply t_ih_rchild hc hs_hs₂
 
 theorem is_searchable_of_incomp_of_is_searchable [IsStrictWeakOrder α lt] {t} :
-    ∀ {lo lo' hi} hc : ¬lt lo' lo ∧ ¬lt lo lo' hs : is_searchable lt t (some lo) hi, is_searchable lt t (some lo') hi :=
+    ∀ {lo lo' hi} hc : ¬lt lo' lo ∧ ¬lt lo lo' hs : IsSearchable lt t (some lo) hi, IsSearchable lt t (some lo') hi :=
   by
   classical
   induction t <;>
@@ -85,7 +85,7 @@ theorem is_searchable_of_incomp_of_is_searchable [IsStrictWeakOrder α lt] {t} :
     apply t_ih_lchild hc hs_hs₁
 
 theorem is_searchable_some_low_of_is_searchable_of_lt {t} [IsTrans α lt] :
-    ∀ {lo hi lo'} hlt : lt lo' lo hs : is_searchable lt t (some lo) hi, is_searchable lt t (some lo') hi := by
+    ∀ {lo hi lo'} hlt : lt lo' lo hs : IsSearchable lt t (some lo) hi, IsSearchable lt t (some lo') hi := by
   induction t <;>
     intros <;>
       run_tac
@@ -98,7 +98,7 @@ theorem is_searchable_some_low_of_is_searchable_of_lt {t} [IsTrans α lt] :
     apply t_ih_lchild hlt hs_hs₁
 
 theorem is_searchable_none_low_of_is_searchable_some_low {t} :
-    ∀ {y hi} hlt : is_searchable lt t (some y) hi, is_searchable lt t none hi := by
+    ∀ {y hi} hlt : IsSearchable lt t (some y) hi, IsSearchable lt t none hi := by
   induction t <;>
     intros <;>
       run_tac
@@ -109,7 +109,7 @@ theorem is_searchable_none_low_of_is_searchable_some_low {t} :
     apply t_ih_lchild hlt_hs₁
 
 theorem is_searchable_some_high_of_is_searchable_of_lt {t} [IsTrans α lt] :
-    ∀ {lo hi hi'} hlt : lt hi hi' hs : is_searchable lt t lo (some hi), is_searchable lt t lo (some hi') := by
+    ∀ {lo hi hi'} hlt : lt hi hi' hs : IsSearchable lt t lo (some hi), IsSearchable lt t lo (some hi') := by
   induction t <;>
     intros <;>
       run_tac
@@ -123,7 +123,7 @@ theorem is_searchable_some_high_of_is_searchable_of_lt {t} [IsTrans α lt] :
     apply t_ih_rchild hlt hs_hs₂
 
 theorem is_searchable_none_high_of_is_searchable_some_high {t} :
-    ∀ {lo y} hlt : is_searchable lt t lo (some y), is_searchable lt t lo none := by
+    ∀ {lo y} hlt : IsSearchable lt t lo (some y), IsSearchable lt t lo none := by
   induction t <;>
     intros <;>
       run_tac
@@ -134,7 +134,7 @@ theorem is_searchable_none_high_of_is_searchable_some_high {t} :
     apply t_ih_rchild hlt_hs₂
 
 theorem range [IsStrictWeakOrder α lt] {t : Rbnode α} {x} :
-    ∀ {lo hi}, is_searchable lt t lo hi → mem lt x t → lift lt lo (some x) ∧ lift lt (some x) hi := by
+    ∀ {lo hi}, IsSearchable lt t lo hi → Mem lt x t → Lift lt lo (some x) ∧ Lift lt (some x) hi := by
   classical
   induction t
   case leaf =>
@@ -198,21 +198,21 @@ theorem range [IsStrictWeakOrder α lt] {t : Rbnode α} {x} :
       
 
 theorem lt_of_mem_left [IsStrictWeakOrder α lt] {y : α} {t l r : Rbnode α} :
-    ∀ {lo hi}, is_searchable lt t lo hi → is_node_of t l y r → ∀ {x}, mem lt x l → lt x y := by
+    ∀ {lo hi}, IsSearchable lt t lo hi → IsNodeOf t l y r → ∀ {x}, Mem lt x l → lt x y := by
   intro _ _ hs hn x hm
   cases hn <;> cases hs
   all_goals
     exact (range hs_hs₁ hm).2
 
 theorem lt_of_mem_right [IsStrictWeakOrder α lt] {y : α} {t l r : Rbnode α} :
-    ∀ {lo hi}, is_searchable lt t lo hi → is_node_of t l y r → ∀ {z}, mem lt z r → lt y z := by
+    ∀ {lo hi}, IsSearchable lt t lo hi → IsNodeOf t l y r → ∀ {z}, Mem lt z r → lt y z := by
   intro _ _ hs hn z hm
   cases hn <;> cases hs
   all_goals
     exact (range hs_hs₂ hm).1
 
 theorem lt_of_mem_left_right [IsStrictWeakOrder α lt] {y : α} {t l r : Rbnode α} :
-    ∀ {lo hi}, is_searchable lt t lo hi → is_node_of t l y r → ∀ {x z}, mem lt x l → mem lt z r → lt x z := by
+    ∀ {lo hi}, IsSearchable lt t lo hi → IsNodeOf t l y r → ∀ {x z}, Mem lt x l → Mem lt z r → lt x z := by
   intro _ _ hs hn x z hm₁ hm₂
   cases hn <;> cases hs
   all_goals
@@ -222,7 +222,7 @@ theorem lt_of_mem_left_right [IsStrictWeakOrder α lt] {y : α} {t l r : Rbnode 
 
 end IsSearchableLemmas
 
-inductive is_red_black : Rbnode α → color → Nat → Prop
+inductive is_red_black : Rbnode α → Color → Nat → Prop
   | leaf_rb : is_red_black leaf black 0
   | red_rb {v l r n} (rb_l : is_red_black l black n) (rb_r : is_red_black r black n) :
     is_red_black (red_node l v r) red n
@@ -231,11 +231,11 @@ inductive is_red_black : Rbnode α → color → Nat → Prop
 
 open IsRedBlack
 
-theorem depth_min : ∀ {c n} {t : Rbnode α}, is_red_black t c n → n ≤ depth min t := by
+theorem depth_min : ∀ {c n} {t : Rbnode α}, IsRedBlack t c n → n ≤ depth min t := by
   intro c n' t h
   induction h
   case leaf_rb =>
-    apply le_reflₓ
+    exact le_reflₓ _
   case red_rb =>
     simp [depth]
     have : min (depth min h_l) (depth min h_r) ≥ h_n := by
@@ -247,17 +247,16 @@ theorem depth_min : ∀ {c n} {t : Rbnode α}, is_red_black t c n → n ≤ dept
     apply succ_le_succ
     apply le_minₓ <;> assumption
 
-private def upper : color → Nat → Nat
+private def upper : Color → Nat → Nat
   | red, n => 2 * n + 1
   | black, n => 2 * n
 
 private theorem upper_le : ∀ c n, upper c n ≤ 2 * n + 1
-  | red, n => by
-    apply le_reflₓ
+  | red, n => le_reflₓ _
   | black, n => by
     apply le_succ
 
-theorem depth_max' : ∀ {c n} {t : Rbnode α}, is_red_black t c n → depth max t ≤ upper c n := by
+theorem depth_max' : ∀ {c n} {t : Rbnode α}, IsRedBlack t c n → depth max t ≤ upper c n := by
   intro c n' t h
   induction h
   case leaf_rb =>
@@ -276,10 +275,10 @@ theorem depth_max' : ∀ {c n} {t : Rbnode α}, is_red_black t c n → depth max
     apply succ_le_succ
     apply max_leₓ <;> assumption
 
-theorem depth_max {c n} {t : Rbnode α} (h : is_red_black t c n) : depth max t ≤ 2 * n + 1 :=
+theorem depth_max {c n} {t : Rbnode α} (h : IsRedBlack t c n) : depth max t ≤ 2 * n + 1 :=
   le_transₓ (depth_max' h) (upper_le _ _)
 
-theorem balanced {c n} {t : Rbnode α} (h : is_red_black t c n) : depth max t ≤ 2 * depth min t + 1 := by
+theorem balanced {c n} {t : Rbnode α} (h : IsRedBlack t c n) : depth max t ≤ 2 * depth min t + 1 := by
   have : 2 * depth min t + 1 ≥ 2 * n + 1 := by
     apply succ_le_succ
     apply Nat.mul_le_mul_leftₓ

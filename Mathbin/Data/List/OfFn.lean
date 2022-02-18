@@ -25,17 +25,17 @@ open Nat
 
 namespace List
 
-theorem length_of_fn_aux {n} (f : Finₓ n → α) : ∀ m h l, length (of_fn_aux f m h l) = length l + m
+theorem length_of_fn_aux {n} (f : Finₓ n → α) : ∀ m h l, length (ofFnAuxₓ f m h l) = length l + m
   | 0, h, l => rfl
   | succ m, h, l => (length_of_fn_aux m _ _).trans (succ_add _ _)
 
 /-- The length of a list converted from a function is the size of the domain. -/
 @[simp]
-theorem length_of_fn {n} (f : Finₓ n → α) : length (of_fn f) = n :=
+theorem length_of_fn {n} (f : Finₓ n → α) : length (ofFnₓ f) = n :=
   (length_of_fn_aux f _ _ _).trans (zero_addₓ _)
 
 theorem nth_of_fn_aux {n} (f : Finₓ n → α) i :
-    ∀ m h l, (∀ i, nth l i = of_fn_nth_val f (i + m)) → nth (of_fn_aux f m h l) i = of_fn_nth_val f i
+    ∀ m h l, (∀ i, nth l i = ofFnNthValₓ f (i + m)) → nth (ofFnAuxₓ f m h l) i = ofFnNthValₓ f i
   | 0, h, l, H => H i
   | succ m, h, l, H =>
     nth_of_fn_aux m _ _
@@ -49,21 +49,21 @@ theorem nth_of_fn_aux {n} (f : Finₓ n → α) i :
 
 /-- The `n`th element of a list -/
 @[simp]
-theorem nth_of_fn {n} (f : Finₓ n → α) i : nth (of_fn f) i = of_fn_nth_val f i :=
+theorem nth_of_fn {n} (f : Finₓ n → α) i : nth (ofFnₓ f) i = ofFnNthValₓ f i :=
   (nth_of_fn_aux f _ _ _ _) fun i => by
     simp only [of_fn_nth_val, dif_neg (not_ltₓ.2 (Nat.le_add_leftₓ n i))] <;> rfl
 
-theorem nth_le_of_fn {n} (f : Finₓ n → α) (i : Finₓ n) : nth_le (of_fn f) i ((length_of_fn f).symm ▸ i.2) = f i :=
+theorem nth_le_of_fn {n} (f : Finₓ n → α) (i : Finₓ n) : nthLe (ofFnₓ f) i ((length_of_fn f).symm ▸ i.2) = f i :=
   Option.some.injₓ <| by
     rw [← nth_le_nth] <;> simp only [List.nth_of_fn, of_fn_nth_val, Finₓ.eta, dif_pos i.is_lt]
 
 @[simp]
-theorem nth_le_of_fn' {n} (f : Finₓ n → α) {i : ℕ} (h : i < (of_fn f).length) :
-    nth_le (of_fn f) i h = f ⟨i, length_of_fn f ▸ h⟩ :=
+theorem nth_le_of_fn' {n} (f : Finₓ n → α) {i : ℕ} (h : i < (ofFnₓ f).length) :
+    nthLe (ofFnₓ f) i h = f ⟨i, length_of_fn f ▸ h⟩ :=
   nth_le_of_fn f ⟨i, length_of_fn f ▸ h⟩
 
 @[simp]
-theorem map_of_fn {β : Type _} {n : ℕ} (f : Finₓ n → α) (g : α → β) : map g (of_fn f) = of_fn (g ∘ f) :=
+theorem map_of_fn {β : Type _} {n : ℕ} (f : Finₓ n → α) (g : α → β) : map g (ofFnₓ f) = ofFnₓ (g ∘ f) :=
   ext_le
     (by
       simp )
@@ -71,8 +71,8 @@ theorem map_of_fn {β : Type _} {n : ℕ} (f : Finₓ n → α) (g : α → β) 
     simp
 
 /-- Arrays converted to lists are the same as `of_fn` on the indexing function of the array. -/
-theorem array_eq_of_fn {n} (a : Arrayₓ n α) : a.to_list = of_fn a.read := by
-  suffices ∀ {m h l}, DArray.revIterateAux a (fun i => cons) m h l = of_fn_aux (DArray.read a) m h l from this
+theorem array_eq_of_fn {n} (a : Arrayₓ n α) : a.toList = ofFnₓ a.read := by
+  suffices ∀ {m h l}, DArray.revIterateAux a (fun i => cons) m h l = ofFnAuxₓ (DArray.read a) m h l from this
   intros
   induction' m with m IH generalizing l
   · rfl
@@ -81,12 +81,12 @@ theorem array_eq_of_fn {n} (a : Arrayₓ n α) : a.to_list = of_fn a.read := by
 
 /-- `of_fn` on an empty domain is the empty list. -/
 @[simp]
-theorem of_fn_zero (f : Finₓ 0 → α) : of_fn f = [] :=
+theorem of_fn_zero (f : Finₓ 0 → α) : ofFnₓ f = [] :=
   rfl
 
 @[simp]
-theorem of_fn_succ {n} (f : Finₓ (succ n) → α) : of_fn f = f 0 :: of_fn fun i => f i.succ := by
-  suffices ∀ {m h l}, of_fn_aux f (succ m) (succ_le_succ h) l = f 0 :: of_fn_aux (fun i => f i.succ) m h l from this
+theorem of_fn_succ {n} (f : Finₓ (succ n) → α) : ofFnₓ f = f 0 :: ofFnₓ fun i => f i.succ := by
+  suffices ∀ {m h l}, ofFnAuxₓ f (succ m) (succ_le_succₓ h) l = f 0 :: ofFnAuxₓ (fun i => f i.succ) m h l from this
   intros
   induction' m with m IH generalizing l
   · rfl
@@ -94,7 +94,7 @@ theorem of_fn_succ {n} (f : Finₓ (succ n) → α) : of_fn f = f 0 :: of_fn fun
   rw [of_fn_aux, IH]
   rfl
 
-theorem of_fn_nth_le : ∀ l : List α, (of_fn fun i => nth_le l i i.2) = l
+theorem of_fn_nth_le : ∀ l : List α, (ofFnₓ fun i => nthLe l i i.2) = l
   | [] => rfl
   | a :: l => by
     rw [of_fn_succ]
@@ -102,7 +102,7 @@ theorem of_fn_nth_le : ∀ l : List α, (of_fn fun i => nth_le l i i.2) = l
     simp only [Finₓ.coe_succ]
     exact of_fn_nth_le l
 
-theorem mem_of_fn {n} (f : Finₓ n → α) (a : α) : a ∈ of_fn f ↔ a ∈ Set.Range f := by
+theorem mem_of_fn {n} (f : Finₓ n → α) (a : α) : a ∈ ofFnₓ f ↔ a ∈ Set.Range f := by
   simp only [mem_iff_nth_le, Set.mem_range, nth_le_of_fn']
   exact
     ⟨fun ⟨i, hi, h⟩ => ⟨_, h⟩, fun ⟨i, hi⟩ =>
@@ -111,11 +111,11 @@ theorem mem_of_fn {n} (f : Finₓ n → α) (a : α) : a ∈ of_fn f ↔ a ∈ S
 
 @[simp]
 theorem forall_mem_of_fn_iff {n : ℕ} {f : Finₓ n → α} {P : α → Prop} :
-    (∀, ∀ i ∈ of_fn f, ∀, P i) ↔ ∀ j : Finₓ n, P (f j) := by
+    (∀, ∀ i ∈ ofFnₓ f, ∀, P i) ↔ ∀ j : Finₓ n, P (f j) := by
   simp only [mem_of_fn, Set.forall_range_iff]
 
 @[simp]
-theorem of_fn_const (n : ℕ) (c : α) : (of_fn fun i : Finₓ n => c) = repeat c n :=
+theorem of_fn_const (n : ℕ) (c : α) : (ofFnₓ fun i : Finₓ n => c) = repeat c n :=
   (Nat.recOn n
       (by
         simp ))

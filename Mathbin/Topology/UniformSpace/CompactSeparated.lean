@@ -61,7 +61,7 @@ theorem compact_space_uniformity [CompactSpace α] [SeparatedSpace α] : 𝓤 α
   contradiction
 
 theorem unique_uniformity_of_compact_t2 [t : TopologicalSpace γ] [CompactSpace γ] [T2Space γ] {u u' : UniformSpace γ}
-    (h : u.to_topological_space = t) (h' : u'.to_topological_space = t) : u = u' := by
+    (h : u.toTopologicalSpace = t) (h' : u'.toTopologicalSpace = t) : u = u' := by
   apply uniform_space_eq
   change uniformity _ = uniformity _
   have : @CompactSpace γ u.to_topological_space := by
@@ -217,7 +217,7 @@ theorem IsCompact.uniform_continuous_on_of_continuous [SeparatedSpace α] {s : S
 neighborhood `U` of `x`. -/
 theorem ContinuousOn.tendsto_uniformly [LocallyCompactSpace α] [CompactSpace β] [SeparatedSpace β] [UniformSpace γ]
     {f : α → β → γ} {x : α} {U : Set α} (hxU : U ∈ 𝓝 x) (hU : IsSeparated U)
-    (h : ContinuousOn (↿f) (U ×ˢ (univ : Set β))) : TendstoUniformly f (f x) (𝓝 x) := by
+    (h : ContinuousOn (↿f) (U ×ˢ (Univ : Set β))) : TendstoUniformly f (f x) (𝓝 x) := by
   rcases LocallyCompactSpace.local_compact_nhds _ _ hxU with ⟨K, hxK, hKU, hK⟩
   have : UniformContinuousOn (↿f) (K ×ˢ (univ : Set β)) := by
     refine' IsCompact.uniform_continuous_on_of_continuous' (hK.prod compact_univ) _ (h.mono <| prod_mono hKU subset.rfl)
@@ -228,5 +228,5 @@ theorem ContinuousOn.tendsto_uniformly [LocallyCompactSpace α] [CompactSpace β
 locally compact and `β` is compact and separated. -/
 theorem Continuous.tendsto_uniformly [SeparatedSpace α] [LocallyCompactSpace α] [CompactSpace β] [SeparatedSpace β]
     [UniformSpace γ] (f : α → β → γ) (h : Continuous (↿f)) (x : α) : TendstoUniformly f (f x) (𝓝 x) :=
-  h.continuous_on.tendsto_uniformly univ_mem <| is_separated_of_separated_space _
+  h.ContinuousOn.TendstoUniformly univ_mem <| is_separated_of_separated_space _
 

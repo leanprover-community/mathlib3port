@@ -12,7 +12,7 @@ universe u
 
 namespace AddCommGroupₓₓ
 
-instance well_powered_AddCommGroup : well_powered AddCommGroupₓₓ.{u} :=
+instance well_powered_AddCommGroup : WellPowered AddCommGroupₓₓ.{u} :=
   well_powered_of_equiv (forget₂ (ModuleCat.{u} ℤ) AddCommGroupₓₓ.{u}).asEquivalence
 
 end AddCommGroupₓₓ

@@ -96,30 +96,30 @@ def trop_equiv : R ≃ Tropical R where
   right_inv := trop_untrop
 
 @[simp]
-theorem trop_equiv_coe_fn : (trop_equiv : R → Tropical R) = trop :=
+theorem trop_equiv_coe_fn : (tropEquiv : R → Tropical R) = trop :=
   rfl
 
 @[simp]
-theorem trop_equiv_symm_coe_fn : (trop_equiv.symm : Tropical R → R) = untrop :=
+theorem trop_equiv_symm_coe_fn : (tropEquiv.symm : Tropical R → R) = untrop :=
   rfl
 
 theorem trop_eq_iff_eq_untrop {x : R} {y} : trop x = y ↔ x = untrop y :=
-  trop_equiv.apply_eq_iff_eq_symm_apply
+  tropEquiv.apply_eq_iff_eq_symm_apply
 
 theorem untrop_eq_iff_eq_trop {x} {y : R} : untrop x = y ↔ x = trop y :=
-  trop_equiv.symm.apply_eq_iff_eq_symm_apply
+  tropEquiv.symm.apply_eq_iff_eq_symm_apply
 
 theorem injective_trop : Function.Injective (trop : R → Tropical R) :=
-  trop_equiv.Injective
+  tropEquiv.Injective
 
 theorem injective_untrop : Function.Injective (untrop : Tropical R → R) :=
-  trop_equiv.symm.Injective
+  tropEquiv.symm.Injective
 
 theorem surjective_trop : Function.Surjective (trop : R → Tropical R) :=
-  trop_equiv.Surjective
+  tropEquiv.Surjective
 
 theorem surjective_untrop : Function.Surjective (untrop : Tropical R → R) :=
-  trop_equiv.symm.Surjective
+  tropEquiv.symm.Surjective
 
 instance [Inhabited R] : Inhabited (Tropical R) :=
   ⟨trop default⟩
@@ -154,19 +154,19 @@ instance decidable_lt [LT R] [DecidableRel (· < · : R → R → Prop)] :
     DecidableRel (· < · : Tropical R → Tropical R → Prop) := fun x y => ‹DecidableRel (· < ·)› (untrop x) (untrop y)
 
 instance [Preorderₓ R] : Preorderₓ (Tropical R) :=
-  { Tropical.hasLe, Tropical.hasLt with le_refl := fun _ => le_reflₓ _, le_trans := fun _ _ _ h h' => le_transₓ h h',
+  { Tropical.hasLe, Tropical.hasLt with le_refl := fun _ => le_rfl, le_trans := fun _ _ _ h h' => le_transₓ h h',
     lt_iff_le_not_le := fun _ _ => lt_iff_le_not_leₓ }
 
 /-- Reinterpret `x : R` as an element of `tropical R`, preserving the order. -/
 def trop_order_iso [Preorderₓ R] : R ≃o Tropical R :=
-  { trop_equiv with map_rel_iff' := fun _ _ => untrop_le_iff }
+  { tropEquiv with map_rel_iff' := fun _ _ => untrop_le_iff }
 
 @[simp]
-theorem trop_order_iso_coe_fn [Preorderₓ R] : (trop_order_iso : R → Tropical R) = trop :=
+theorem trop_order_iso_coe_fn [Preorderₓ R] : (tropOrderIso : R → Tropical R) = trop :=
   rfl
 
 @[simp]
-theorem trop_order_iso_symm_coe_fn [Preorderₓ R] : (trop_order_iso.symm : Tropical R → R) = untrop :=
+theorem trop_order_iso_symm_coe_fn [Preorderₓ R] : (tropOrderIso.symm : Tropical R → R) = untrop :=
   rfl
 
 theorem trop_monotone [Preorderₓ R] : Monotone (trop : R → Tropical R) := fun _ _ => id
@@ -378,7 +378,7 @@ theorem untrop_pow {α : Type _} [HasScalar α R] (x : Tropical R) (n : α) : un
 theorem trop_smul {α : Type _} [HasScalar α R] (x : R) (n : α) : trop (n • x) = trop x ^ n :=
   rfl
 
-instance [AddZeroClass R] : MulOneClass (Tropical R) where
+instance [AddZeroClass R] : MulOneClassₓ (Tropical R) where
   one := 1
   mul := · * ·
   one_mul := fun _ => untrop_injective <| zero_addₓ _
@@ -415,7 +415,7 @@ theorem trop_zsmul [AddGroupₓ R] (x : R) (n : ℤ) : trop (n • x) = trop x ^
 
 end Monoidₓ
 
-section Distrib
+section Distribₓ
 
 instance covariant_mul [LE R] [Add R] [CovariantClass R R (· + ·) (· ≤ ·)] :
     CovariantClass (Tropical R) (Tropical R) (· * ·) (· ≤ ·) :=
@@ -438,11 +438,6 @@ instance covariant_add [LinearOrderₓ R] : CovariantClass (Tropical R) (Tropica
         
       ⟩
 
-instance covariant_swap_add [LinearOrderₓ R] :
-    CovariantClass (Tropical R) (Tropical R) (Function.swap (· + ·)) (· ≤ ·) :=
-  ⟨fun x y z h => by
-    convert add_le_add_left h x using 1 <;> rw [add_commₓ]⟩
-
 instance covariant_mul_lt [LT R] [Add R] [CovariantClass R R (· + ·) (· < ·)] :
     CovariantClass (Tropical R) (Tropical R) (· * ·) (· < ·) :=
   ⟨fun x y z h => add_lt_add_left h _⟩
@@ -451,26 +446,8 @@ instance covariant_swap_mul_lt [Preorderₓ R] [Add R] [CovariantClass R R (Func
     CovariantClass (Tropical R) (Tropical R) (Function.swap (· * ·)) (· < ·) :=
   ⟨fun x y z h => add_lt_add_right h _⟩
 
-instance covariant_add_lt [LinearOrderₓ R] : CovariantClass (Tropical R) (Tropical R) (· + ·) (· ≤ ·) :=
-  ⟨fun x y z h => by
-    cases' le_totalₓ x y with hx hy
-    · rw [add_eq_left hx, add_eq_left (hx.trans h)]
-      
-    · rw [add_eq_right hy]
-      cases' le_totalₓ x z with hx hx
-      · rwa [add_eq_left hx]
-        
-      · rwa [add_eq_right hx]
-        
-      ⟩
-
-instance covariant_swap_add_lt [LinearOrderₓ R] :
-    CovariantClass (Tropical R) (Tropical R) (Function.swap (· + ·)) (· ≤ ·) :=
-  ⟨fun x y z h => by
-    convert add_le_add_left h x using 1 <;> rw [add_commₓ]⟩
-
 instance [LinearOrderₓ R] [Add R] [CovariantClass R R (· + ·) (· ≤ ·)]
-    [CovariantClass R R (Function.swap (· + ·)) (· ≤ ·)] : Distrib (Tropical R) where
+    [CovariantClass R R (Function.swap (· + ·)) (· ≤ ·)] : Distribₓ (Tropical R) where
   mul := · * ·
   add := · + ·
   left_distrib := fun _ _ _ => untrop_injective (min_add_add_left _ _ _).symm
@@ -485,7 +462,7 @@ theorem add_pow [LinearOrderₓ R] [AddMonoidₓ R] [CovariantClass R R (· + ·
   · rw [add_eq_right h, add_eq_right (pow_le_pow_of_le_left' h _)]
     
 
-end Distrib
+end Distribₓ
 
 section Semiringₓ
 

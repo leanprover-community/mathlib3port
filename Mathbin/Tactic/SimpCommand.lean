@@ -66,7 +66,7 @@ unsafe def simp_cmd (_ : parse <| tk "#simp") : lean.parser Unit := do
         (do
             let e ← to_expr e
             let hs := hs.map fun sat => sat.replace_subexprs mappings
-            Prod.fst <$> e.simp {  } failed no_dflt attr_names hs)
+            Prod.fst <$> e {  } failed no_dflt attr_names hs)
           ts
   when (¬is_trace_enabled_for `silence_simp_if_true ∨ simp_result ≠ expr.const `true []) (trace simp_result)
 

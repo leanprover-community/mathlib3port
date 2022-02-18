@@ -3,6 +3,10 @@ import Mathbin.Analysis.Convex.Star
 import Mathbin.Analysis.NormedSpace.Ordered
 import Mathbin.Analysis.NormedSpace.Pointwise
 import Mathbin.Data.Real.Pointwise
+import Mathbin.Topology.Algebra.FilterBasis
+import Mathbin.Topology.Algebra.UniformFilterBasis
+import Mathbin.Topology.Algebra.Module.LocallyConvex
+import Mathbin.Data.Real.Sqrt
 
 /-!
 # Seminorms and Local Convexity
@@ -67,9 +71,9 @@ Absorbent and balanced sets in a vector space over a normed field.
 
 open NormedField Set
 
-open_locale Pointwise TopologicalSpace Nnreal
+open_locale Pointwise TopologicalSpace Nnreal BigOperators
 
-variable {R 𝕜 𝕝 E F G ι : Type _}
+variable {R 𝕜 𝕝 E F G ι ι' : Type _}
 
 section SemiNormedRing
 
@@ -95,7 +99,7 @@ def Balanced (A : Set E) :=
 
 variable {𝕜} {A B : Set E}
 
-theorem balanced_univ : Balanced 𝕜 (univ : Set E) := fun a ha => subset_univ _
+theorem balanced_univ : Balanced 𝕜 (Univ : Set E) := fun a ha => subset_univ _
 
 theorem Balanced.union (hA : Balanced 𝕜 A) (hB : Balanced 𝕜 B) : Balanced 𝕜 (A ∪ B) := by
   intro a ha t ht
@@ -122,10 +126,10 @@ theorem Absorbs.mono (hs : Absorbs 𝕜 s u) (hst : s ⊆ t) (hvu : v ⊆ u) : A
   ⟨r, hr, fun a ha => hvu.trans <| (h _ ha).trans <| smul_set_mono hst⟩
 
 theorem Absorbs.mono_left (hs : Absorbs 𝕜 s u) (h : s ⊆ t) : Absorbs 𝕜 t u :=
-  hs.mono h subset.rfl
+  hs.mono h Subset.rfl
 
 theorem Absorbs.mono_right (hs : Absorbs 𝕜 s u) (h : v ⊆ u) : Absorbs 𝕜 s v :=
-  hs.mono subset.rfl h
+  hs.mono Subset.rfl h
 
 theorem Absorbs.union (hu : Absorbs 𝕜 s u) (hv : Absorbs 𝕜 s v) : Absorbs 𝕜 s (u ∪ v) := by
   obtain ⟨a, ha, hu⟩ := hu
@@ -227,7 +231,7 @@ theorem Balanced.subset_smul (hA : Balanced 𝕜 A) (ha : 1 ≤ ∥a∥) : A ⊆
     
 
 theorem Balanced.smul_eq (hA : Balanced 𝕜 A) (ha : ∥a∥ = 1) : a • A = A :=
-  (hA _ ha.le).antisymm <| hA.subset_smul ha.ge
+  (hA _ ha.le).antisymm <| hA.subset_smul ha.Ge
 
 theorem Absorbs.inter (hs : Absorbs 𝕜 s u) (ht : Absorbs 𝕜 t u) : Absorbs 𝕜 (s ∩ t) u := by
   obtain ⟨a, ha, hs⟩ := hs
@@ -241,7 +245,7 @@ theorem Absorbs.inter (hs : Absorbs 𝕜 s u) (ht : Absorbs 𝕜 t u) : Absorbs 
 theorem absorbs_inter : Absorbs 𝕜 (s ∩ t) u ↔ Absorbs 𝕜 s u ∧ Absorbs 𝕜 t u :=
   ⟨fun h => ⟨h.mono_left <| inter_subset_left _ _, h.mono_left <| inter_subset_right _ _⟩, fun h => h.1.inter h.2⟩
 
-theorem absorbent_univ : Absorbent 𝕜 (univ : Set E) := by
+theorem absorbent_univ : Absorbent 𝕜 (Univ : Set E) := by
   refine' fun x => ⟨1, zero_lt_one, fun a ha => _⟩
   rw [smul_set_univ₀ (norm_pos_iff.1 <| zero_lt_one.trans_le ha)]
   exact trivialₓ
@@ -352,7 +356,7 @@ instance FunLike : FunLike (Seminorm 𝕜 E) E fun _ => ℝ where
 
 /-- Helper instance for when there's too many metavariables to apply `to_fun.to_coe_fn`. -/
 instance : CoeFun (Seminorm 𝕜 E) fun _ => E → ℝ :=
-  ⟨fun p => p.to_fun⟩
+  ⟨fun p => p.toFun⟩
 
 @[ext]
 theorem ext {p q : Seminorm 𝕜 E} (h : ∀ x, (p : E → ℝ) x = q x) : p = q :=
@@ -434,7 +438,7 @@ a module. -/
 def coe_fn_add_monoid_hom : AddMonoidHom (Seminorm 𝕜 E) (E → ℝ) :=
   ⟨coeFn, coe_zero, coe_add⟩
 
-theorem coe_fn_add_monoid_hom_injective : Function.Injective (coe_fn_add_monoid_hom 𝕜 E) :=
+theorem coe_fn_add_monoid_hom_injective : Function.Injective (coeFnAddMonoidHom 𝕜 E) :=
   show @Function.Injective (Seminorm 𝕜 E) (E → ℝ) coeFn from FunLike.coe_injective
 
 variable {𝕜 E}
@@ -538,6 +542,11 @@ theorem smul_comp (p : Seminorm 𝕜 F) (f : E →ₗ[𝕜] F) (c : R) : (c • 
 theorem comp_mono {p : Seminorm 𝕜 F} {q : Seminorm 𝕜 F} (f : E →ₗ[𝕜] F) (hp : p ≤ q) : p.comp f ≤ q.comp f := fun _ =>
   hp _
 
+/-- The composition as an `add_monoid_hom`. -/
+@[simps]
+def pullback (f : E →ₗ[𝕜] F) : AddMonoidHom (Seminorm 𝕜 F) (Seminorm 𝕜 E) :=
+  ⟨fun p => p.comp f, zero_comp f, fun p q => add_comp p q f⟩
+
 section NormOneClass
 
 variable [NormOneClass 𝕜] (p : Seminorm 𝕜 E) (x y : E) (r : ℝ)
@@ -584,14 +593,27 @@ theorem coe_bot : ⇑(⊥ : Seminorm 𝕜 E) = 0 :=
 theorem bot_eq_zero : (⊥ : Seminorm 𝕜 E) = 0 :=
   rfl
 
+theorem smul_le_smul {p q : Seminorm 𝕜 E} {a b : ℝ≥0 } (hpq : p ≤ q) (hab : a ≤ b) : a • p ≤ b • q := by
+  simp_rw [le_def, Pi.le_def, coe_smul]
+  intro x
+  simp_rw [Pi.smul_apply, Nnreal.smul_def, smul_eq_mul]
+  exact mul_le_mul hab (hpq x) (nonneg p x) (Nnreal.coe_nonneg b)
+
 theorem finset_sup_apply (p : ι → Seminorm 𝕜 E) (s : Finset ι) (x : E) :
-    s.sup p x = ↑(s.sup fun i => ⟨p i x, nonneg (p i) x⟩ : Nnreal) := by
+    s.sup p x = ↑(s.sup fun i => ⟨p i x, nonneg (p i) x⟩ : ℝ≥0 ) := by
   induction' s using Finset.cons_induction_on with a s ha ih
   · rw [Finset.sup_empty, Finset.sup_empty, coe_bot, _root_.bot_eq_zero, Pi.zero_apply, Nonneg.coe_zero]
     
   · rw [Finset.sup_cons, Finset.sup_cons, coe_sup, sup_eq_max, Pi.sup_apply, sup_eq_max, Nnreal.coe_max, Subtype.coe_mk,
       ih]
     
+
+theorem finset_sup_le_sum (p : ι → Seminorm 𝕜 E) (s : Finset ι) : s.sup p ≤ ∑ i in s, p i := by
+  classical
+  refine' finset.sup_le_iff.mpr _
+  intro i hi
+  rw [Finset.sum_eq_sum_diff_singleton_add hi, le_add_iff_nonneg_left]
+  exact bot_le
 
 end NormOneClass
 
@@ -635,25 +657,30 @@ def ball (x : E) (r : ℝ) :=
 variable {x y : E} {r : ℝ}
 
 @[simp]
-theorem mem_ball : y ∈ ball p x r ↔ p (y - x) < r :=
+theorem mem_ball : y ∈ Ball p x r ↔ p (y - x) < r :=
   Iff.rfl
 
-theorem mem_ball_zero : y ∈ ball p 0 r ↔ p y < r := by
+theorem mem_ball_zero : y ∈ Ball p 0 r ↔ p y < r := by
   rw [mem_ball, sub_zero]
 
-theorem ball_zero_eq : ball p 0 r = { y : E | p y < r } :=
+theorem ball_zero_eq : Ball p 0 r = { y : E | p y < r } :=
   Set.ext fun x => p.mem_ball_zero
 
 @[simp]
-theorem ball_zero' (x : E) (hr : 0 < r) : ball (0 : Seminorm 𝕜 E) x r = Set.Univ := by
+theorem ball_zero' (x : E) (hr : 0 < r) : Ball (0 : Seminorm 𝕜 E) x r = Set.Univ := by
   rw [Set.eq_univ_iff_forall, ball]
   simp [hr]
 
-theorem ball_sup (p : Seminorm 𝕜 E) (q : Seminorm 𝕜 E) (e : E) (r : ℝ) : ball (p⊔q) e r = ball p e r ∩ ball q e r := by
+theorem ball_smul (p : Seminorm 𝕜 E) {c : Nnreal} (hc : 0 < c) (r : ℝ) (x : E) : (c • p).ball x r = p.ball x (r / c) :=
+  by
+  ext
+  rw [mem_ball, mem_ball, smul_apply, Nnreal.smul_def, smul_eq_mul, mul_comm, lt_div_iff (nnreal.coe_pos.mpr hc)]
+
+theorem ball_sup (p : Seminorm 𝕜 E) (q : Seminorm 𝕜 E) (e : E) (r : ℝ) : Ball (p⊔q) e r = Ball p e r ∩ Ball q e r := by
   simp_rw [ball, ← Set.set_of_and, coe_sup, Pi.sup_apply, sup_lt_iff]
 
-theorem ball_finset_sup' (p : ι → Seminorm 𝕜 E) (s : Finset ι) (H : s.nonempty) (e : E) (r : ℝ) :
-    ball (s.sup' H p) e r = s.inf' H fun i => ball (p i) e r := by
+theorem ball_finset_sup' (p : ι → Seminorm 𝕜 E) (s : Finset ι) (H : s.Nonempty) (e : E) (r : ℝ) :
+    Ball (s.sup' H p) e r = s.inf' H fun i => Ball (p i) e r := by
   induction' H using Finset.Nonempty.cons_induction with a a s ha hs ih
   · classical
     simp
@@ -680,7 +707,7 @@ variable [Module 𝕜 E]
 
 variable [AddCommGroupₓ F] [Module 𝕜 F]
 
-theorem ball_comp (p : Seminorm 𝕜 F) (f : E →ₗ[𝕜] F) (x : E) (r : ℝ) : (p.comp f).Ball x r = f ⁻¹' p.ball (f x) r := by
+theorem ball_comp (p : Seminorm 𝕜 F) (f : E →ₗ[𝕜] F) (x : E) (r : ℝ) : (p.comp f).ball x r = f ⁻¹' p.ball (f x) r := by
   ext
   simp_rw [ball, mem_preimage, comp_apply, Set.mem_set_of_eq, map_sub]
 
@@ -689,24 +716,24 @@ section NormOneClass
 variable [NormOneClass 𝕜] (p : Seminorm 𝕜 E)
 
 @[simp]
-theorem ball_bot {r : ℝ} (x : E) (hr : 0 < r) : ball (⊥ : Seminorm 𝕜 E) x r = Set.Univ :=
+theorem ball_bot {r : ℝ} (x : E) (hr : 0 < r) : Ball (⊥ : Seminorm 𝕜 E) x r = Set.Univ :=
   ball_zero' x hr
 
 /-- Seminorm-balls at the origin are balanced. -/
-theorem balanced_ball_zero (r : ℝ) : Balanced 𝕜 (ball p 0 r) := by
+theorem balanced_ball_zero (r : ℝ) : Balanced 𝕜 (Ball p 0 r) := by
   rintro a ha x ⟨y, hy, hx⟩
   rw [mem_ball_zero, ← hx, p.smul]
   calc _ ≤ p y := mul_le_of_le_one_left (p.nonneg _) ha _ < r := by
       rwa [mem_ball_zero] at hy
 
-theorem ball_finset_sup_eq_Inter (p : ι → Seminorm 𝕜 E) (s : Finset ι) (e : E) {r : ℝ} (hr : 0 < r) :
-    ball (s.sup p) e r = ⋂ i ∈ s, ball (p i) e r := by
+theorem ball_finset_sup_eq_Inter (p : ι → Seminorm 𝕜 E) (s : Finset ι) (x : E) {r : ℝ} (hr : 0 < r) :
+    Ball (s.sup p) x r = ⋂ i ∈ s, Ball (p i) x r := by
   lift r to Nnreal using hr.le
   simp_rw [ball, Inter_set_of, finset_sup_apply, Nnreal.coe_lt_coe, Finset.sup_lt_iff (show ⊥ < r from hr), ←
     Nnreal.coe_lt_coe, Subtype.coe_mk]
 
-theorem ball_finset_sup (p : ι → Seminorm 𝕜 E) (s : Finset ι) (e : E) {r : ℝ} (hr : 0 < r) :
-    ball (s.sup p) e r = s.inf fun i => ball (p i) e r := by
+theorem ball_finset_sup (p : ι → Seminorm 𝕜 E) (s : Finset ι) (x : E) {r : ℝ} (hr : 0 < r) :
+    Ball (s.sup p) x r = s.inf fun i => Ball (p i) x r := by
   rw [Finset.inf_eq_infi]
   exact ball_finset_sup_eq_Inter _ _ _ hr
 
@@ -731,7 +758,7 @@ section NormedField
 variable [NormedField 𝕜] [AddCommGroupₓ E] [Module 𝕜 E] (p : Seminorm 𝕜 E) {A B : Set E} {a : 𝕜} {r : ℝ} {x : E}
 
 /-- Seminorm-balls at the origin are absorbent. -/
-protected theorem absorbent_ball_zero (hr : 0 < r) : Absorbent 𝕜 (ball p (0 : E) r) := by
+protected theorem absorbent_ball_zero (hr : 0 < r) : Absorbent 𝕜 (Ball p (0 : E) r) := by
   rw [absorbent_iff_nonneg_lt]
   rintro x
   have hxr : 0 ≤ p x / r := div_nonneg (p.nonneg _) hr.le
@@ -741,12 +768,12 @@ protected theorem absorbent_ball_zero (hr : 0 < r) : Absorbent 𝕜 (ball p (0 :
   rwa [mem_ball_zero, p.smul, norm_inv, inv_mul_lt_iff ha₀, ← div_lt_iff hr]
 
 /-- Seminorm-balls containing the origin are absorbent. -/
-protected theorem absorbent_ball (hpr : p x < r) : Absorbent 𝕜 (ball p x r) := by
+protected theorem absorbent_ball (hpr : p x < r) : Absorbent 𝕜 (Ball p x r) := by
   refine' (p.absorbent_ball_zero <| sub_pos.2 hpr).Subset fun y hy => _
   rw [p.mem_ball_zero] at hy
   exact p.mem_ball.2 ((p.sub_le _ _).trans_lt <| add_lt_of_lt_sub_right hy)
 
-theorem symmetric_ball_zero (r : ℝ) (hx : x ∈ ball p 0 r) : -x ∈ ball p 0 r :=
+theorem symmetric_ball_zero (r : ℝ) (hx : x ∈ Ball p 0 r) : -x ∈ Ball p 0 r :=
   balanced_ball_zero p r (-1)
     (by
       rw [norm_neg, norm_one])
@@ -754,7 +781,7 @@ theorem symmetric_ball_zero (r : ℝ) (hx : x ∈ ball p 0 r) : -x ∈ ball p 0 
       rw [neg_smul, one_smul]⟩
 
 @[simp]
-theorem neg_ball (p : Seminorm 𝕜 E) (r : ℝ) (x : E) : -ball p x r = ball p (-x) r := by
+theorem neg_ball (p : Seminorm 𝕜 E) (r : ℝ) (x : E) : -Ball p x r = Ball p (-x) r := by
   ext
   rw [mem_neg, mem_ball, mem_ball, ← neg_add', sub_neg_eq_add, p.neg]
 
@@ -776,7 +803,7 @@ section HasScalar
 variable [HasScalar ℝ E] [IsScalarTower ℝ 𝕜 E] (p : Seminorm 𝕜 E)
 
 /-- A seminorm is convex. Also see `convex_on_norm`. -/
-protected theorem ConvexOn : ConvexOn ℝ univ p := by
+protected theorem ConvexOn : ConvexOn ℝ Univ p := by
   refine' ⟨convex_univ, fun x y _ _ a b ha hb hab => _⟩
   calc p (a • x + b • y) ≤ p (a • x) + p (b • y) := p.triangle _ _ _ = ∥a • (1 : 𝕜)∥ * p x + ∥b • (1 : 𝕜)∥ * p y := by
       rw [← p.smul, ← p.smul, smul_one_smul, smul_one_smul]_ = a * p x + b * p y := by
@@ -789,7 +816,7 @@ section Module
 variable [Module ℝ E] [IsScalarTower ℝ 𝕜 E] (p : Seminorm 𝕜 E) (x : E) (r : ℝ)
 
 /-- Seminorm-balls are convex. -/
-theorem convex_ball : Convex ℝ (ball p x r) := by
+theorem convex_ball : Convex ℝ (Ball p x r) := by
   convert (p.convex_on.translate_left (-x)).convex_lt r
   ext y
   rw [preimage_univ, sep_univ, p.mem_ball, sub_eq_add_neg]
@@ -817,7 +844,7 @@ theorem coe_norm_seminorm : ⇑normSeminorm 𝕜 E = norm :=
   rfl
 
 @[simp]
-theorem ball_norm_seminorm : (normSeminorm 𝕜 E).Ball = Metric.Ball := by
+theorem ball_norm_seminorm : (normSeminorm 𝕜 E).ball = Metric.Ball := by
   ext x r y
   simp only [Seminorm.mem_ball, Metric.mem_ball, coe_norm_seminorm, dist_eq_norm]
 
@@ -854,16 +881,16 @@ variable [AddCommGroupₓ E] [Module ℝ E]
 /-- The Minkowski functional. Given a set `s` in a real vector space, `gauge s` is the functional
 which sends `x : E` to the smallest `r : ℝ` such that `x` is in `s` scaled by `r`. -/
 def gauge (s : Set E) (x : E) : ℝ :=
-  Inf { r : ℝ | 0 < r ∧ x ∈ r • s }
+  inf { r : ℝ | 0 < r ∧ x ∈ r • s }
 
 variable {s t : Set E} {a : ℝ} {x : E}
 
-theorem gauge_def : gauge s x = Inf { r ∈ Set.Ioi 0 | x ∈ r • s } :=
+theorem gauge_def : gauge s x = inf { r ∈ Set.Ioi 0 | x ∈ r • s } :=
   rfl
 
 /-- An alternative definition of the gauge using scalar multiplication on the element rather than on
 the set. -/
-theorem gauge_def' : gauge s x = Inf { r ∈ Set.Ioi 0 | r⁻¹ • x ∈ s } := by
+theorem gauge_def' : gauge s x = inf { r ∈ Set.Ioi 0 | r⁻¹ • x ∈ s } := by
   unfold gauge
   congr 1
   ext r
@@ -1034,7 +1061,7 @@ theorem gauge_smul_of_nonneg [MulActionWithZero α E] [IsScalarTower α ℝ (Set
     have := smul_pos (inv_pos.2 hr') hβ
     refine' ⟨r⁻¹ • β, ⟨this, _⟩, smul_inv_smul₀ hr'.ne' _⟩
     rw [← mem_smul_set_iff_inv_smul_mem₀] at hx⊢
-    rwa [smul_assoc, mem_smul_set_iff_inv_smul_mem₀ (inv_ne_zero hr'.ne'), inv_inv₀]
+    rwa [smul_assoc, mem_smul_set_iff_inv_smul_mem₀ (inv_ne_zero hr'.ne'), inv_invₓ]
     · exact this.ne'
       
     · exact hβ.ne'
@@ -1085,7 +1112,7 @@ theorem gauge_smul_left_of_nonneg [MulActionWithZero α E] [SmulCommClass α ℝ
     rw [mem_Ioi] at hr⊢
     have := smul_pos ha' hr
     refine' ⟨smul_pos (inv_pos.2 ha') hr, r⁻¹ • x, hx, _⟩
-    rw [smul_inv₀, smul_assoc, inv_inv₀]
+    rw [smul_inv₀, smul_assoc, inv_invₓ]
     
 
 theorem gauge_smul_left [Module α E] [SmulCommClass α ℝ ℝ] [IsScalarTower α ℝ ℝ] [IsScalarTower α ℝ E] {s : Set E}
@@ -1261,4 +1288,277 @@ theorem mul_gauge_le_norm (hs : Metric.Ball (0 : E) r ⊆ s) : r * gauge s x ≤
 end Norm
 
 end gauge
+
+/-! ### Topology induced by a family of seminorms -/
+
+
+namespace Seminorm
+
+section FilterBasis
+
+variable [NormedField 𝕜] [AddCommGroupₓ E] [Module 𝕜 E]
+
+/-- A filter basis for the neighborhood filter of 0. -/
+def seminorm_basis_zero (p : ι → Seminorm 𝕜 E) : Set (Set E) :=
+  ⋃ (s : Finset ι) (r) (hr : 0 < r), singleton <| Ball (s.sup p) (0 : E) r
+
+theorem seminorm_basis_zero_iff (p : ι → Seminorm 𝕜 E) (U : Set E) :
+    U ∈ SeminormBasisZero p ↔ ∃ (i : Finset ι)(r : _)(hr : 0 < r), U = Ball (i.sup p) 0 r := by
+  simp only [seminorm_basis_zero, mem_Union, mem_singleton_iff]
+
+theorem seminorm_basis_zero_mem (p : ι → Seminorm 𝕜 E) (i : Finset ι) {r : ℝ} (hr : 0 < r) :
+    (i.sup p).ball 0 r ∈ SeminormBasisZero p :=
+  (seminorm_basis_zero_iff _ _).mpr ⟨i, _, hr, rfl⟩
+
+theorem seminorm_basis_zero_singleton_mem (p : ι → Seminorm 𝕜 E) (i : ι) {r : ℝ} (hr : 0 < r) :
+    (p i).ball 0 r ∈ SeminormBasisZero p :=
+  (seminorm_basis_zero_iff _ _).mpr
+    ⟨{i}, _, hr, by
+      rw [Finset.sup_singleton]⟩
+
+theorem seminorm_basis_zero_nonempty (p : ι → Seminorm 𝕜 E) [Nonempty ι] : (SeminormBasisZero p).Nonempty := by
+  let i := Classical.arbitrary ι
+  refine' set.nonempty_def.mpr ⟨ball (p i) 0 1, _⟩
+  exact seminorm_basis_zero_singleton_mem _ i zero_lt_one
+
+theorem seminorm_basis_zero_intersect (p : ι → Seminorm 𝕜 E) (U V : Set E) (hU : U ∈ SeminormBasisZero p)
+    (hV : V ∈ SeminormBasisZero p) : ∃ (z : Set E)(H : z ∈ SeminormBasisZero p), z ⊆ U ∩ V := by
+  classical
+  rcases(seminorm_basis_zero_iff p U).mp hU with ⟨s, r₁, hr₁, hU⟩
+  rcases(seminorm_basis_zero_iff p V).mp hV with ⟨t, r₂, hr₂, hV⟩
+  use ((s ∪ t).sup p).ball 0 (min r₁ r₂)
+  refine' ⟨seminorm_basis_zero_mem p (s ∪ t) (lt_min_iff.mpr ⟨hr₁, hr₂⟩), _⟩
+  rw [hU, hV, ball_finset_sup_eq_Inter _ _ _ (lt_min_iff.mpr ⟨hr₁, hr₂⟩), ball_finset_sup_eq_Inter _ _ _ hr₁,
+    ball_finset_sup_eq_Inter _ _ _ hr₂]
+  exact
+    Set.subset_inter (Set.Inter₂_mono' fun i hi => ⟨i, Finset.subset_union_left _ _ hi, ball_mono <| min_le_leftₓ _ _⟩)
+      (Set.Inter₂_mono' fun i hi => ⟨i, Finset.subset_union_right _ _ hi, ball_mono <| min_le_rightₓ _ _⟩)
+
+theorem seminorm_basis_zero_zero (p : ι → Seminorm 𝕜 E) U (hU : U ∈ SeminormBasisZero p) : (0 : E) ∈ U := by
+  rcases(seminorm_basis_zero_iff p U).mp hU with ⟨ι', r, hr, hU⟩
+  rw [hU, mem_ball_zero, (ι'.sup p).zero]
+  exact hr
+
+theorem seminorm_basis_zero_add (p : ι → Seminorm 𝕜 E) U (hU : U ∈ SeminormBasisZero p) :
+    ∃ (V : Set E)(H : V ∈ SeminormBasisZero p), V + V ⊆ U := by
+  rcases(seminorm_basis_zero_iff p U).mp hU with ⟨s, r, hr, hU⟩
+  use (s.sup p).ball 0 (r / 2)
+  refine' ⟨seminorm_basis_zero_mem p s (div_pos hr zero_lt_two), _⟩
+  refine' Set.Subset.trans (ball_add_ball_subset (s.sup p) (r / 2) (r / 2) 0 0) _
+  rw [hU, add_zeroₓ, add_halves']
+
+theorem seminorm_basis_zero_neg (p : ι → Seminorm 𝕜 E) U (hU' : U ∈ SeminormBasisZero p) :
+    ∃ (V : Set E)(H : V ∈ SeminormBasisZero p), V ⊆ (fun x : E => -x) ⁻¹' U := by
+  rcases(seminorm_basis_zero_iff p U).mp hU' with ⟨s, r, hr, hU⟩
+  rw [hU, neg_preimage, neg_ball (s.sup p), neg_zero]
+  exact ⟨U, hU', Eq.subset hU⟩
+
+/-- The `add_group_filter_basis` induced by the filter basis `seminorm_basis_zero`. -/
+def seminorm_add_group_filter_basis [Nonempty ι] (p : ι → Seminorm 𝕜 E) : AddGroupFilterBasis E :=
+  addGroupFilterBasisOfComm (SeminormBasisZero p) (seminorm_basis_zero_nonempty p) (seminorm_basis_zero_intersect p)
+    (seminorm_basis_zero_zero p) (seminorm_basis_zero_add p) (seminorm_basis_zero_neg p)
+
+theorem seminorm_basis_zero_smul_right (p : ι → Seminorm 𝕜 E) (v : E) (U : Set E) (hU : U ∈ SeminormBasisZero p) :
+    ∀ᶠ x : 𝕜 in 𝓝 0, x • v ∈ U := by
+  rcases(seminorm_basis_zero_iff p U).mp hU with ⟨s, r, hr, hU⟩
+  rw [hU, Filter.eventually_iff]
+  simp_rw [(s.sup p).mem_ball_zero, (s.sup p).smul]
+  by_cases' h : 0 < (s.sup p) v
+  · simp_rw [(lt_div_iff h).symm]
+    rw [← _root_.ball_zero_eq]
+    exact Metric.ball_mem_nhds 0 (div_pos hr h)
+    
+  simp_rw [le_antisymmₓ (not_lt.mp h) ((s.sup p).Nonneg v), mul_zero, hr]
+  exact IsOpen.mem_nhds is_open_univ (mem_univ 0)
+
+variable [Nonempty ι]
+
+theorem seminorm_basis_zero_smul (p : ι → Seminorm 𝕜 E) U (hU : U ∈ SeminormBasisZero p) :
+    ∃ (V : Set 𝕜)(H : V ∈ 𝓝 (0 : 𝕜))(W : Set E)(H : W ∈ (seminormAddGroupFilterBasis p).Sets), V • W ⊆ U := by
+  rcases(seminorm_basis_zero_iff p U).mp hU with ⟨s, r, hr, hU⟩
+  refine' ⟨Metric.Ball 0 r.sqrt, Metric.ball_mem_nhds 0 (real.sqrt_pos.mpr hr), _⟩
+  refine' ⟨(s.sup p).ball 0 r.sqrt, seminorm_basis_zero_mem p s (real.sqrt_pos.mpr hr), _⟩
+  refine' Set.Subset.trans (ball_smul_ball (s.sup p) r.sqrt r.sqrt) _
+  rw [hU, Real.mul_self_sqrt (le_of_ltₓ hr)]
+
+theorem seminorm_basis_zero_smul_left (p : ι → Seminorm 𝕜 E) (x : 𝕜) (U : Set E) (hU : U ∈ SeminormBasisZero p) :
+    ∃ (V : Set E)(H : V ∈ (seminormAddGroupFilterBasis p).Sets), V ⊆ (fun y : E => x • y) ⁻¹' U := by
+  rcases(seminorm_basis_zero_iff p U).mp hU with ⟨s, r, hr, hU⟩
+  rw [hU]
+  by_cases' h : x ≠ 0
+  · rw [(s.sup p).smul_ball_preimage 0 r x h, smul_zero]
+    use (s.sup p).ball 0 (r / ∥x∥)
+    exact ⟨seminorm_basis_zero_mem p s (div_pos hr (norm_pos_iff.mpr h)), subset.rfl⟩
+    
+  refine' ⟨(s.sup p).ball 0 r, seminorm_basis_zero_mem p s hr, _⟩
+  simp only [not_ne_iff.mp h, subset_def, mem_ball_zero, hr, mem_univ, Seminorm.zero, implies_true_iff,
+    preimage_const_of_mem, zero_smul]
+
+/-- The `module_filter_basis` induced by the filter basis `seminorm_basis_zero`. -/
+def seminorm_module_filter_basis (p : ι → Seminorm 𝕜 E) : ModuleFilterBasis 𝕜 E where
+  toAddGroupFilterBasis := seminormAddGroupFilterBasis p
+  smul' := seminorm_basis_zero_smul p
+  smul_left' := seminorm_basis_zero_smul_left p
+  smul_right' := seminorm_basis_zero_smul_right p
+
+end FilterBasis
+
+section Bounded
+
+variable [NormedField 𝕜] [AddCommGroupₓ E] [Module 𝕜 E] [AddCommGroupₓ F] [Module 𝕜 F]
+
+/-- The proposition that a linear map is bounded between spaces with families of seminorms. -/
+def is_bounded (p : ι → Seminorm 𝕜 E) (q : ι' → Seminorm 𝕜 F) (f : E →ₗ[𝕜] F) : Prop :=
+  ∀ i, ∃ s : Finset ι, ∃ C : ℝ≥0 , C ≠ 0 ∧ (q i).comp f ≤ C • s.sup p
+
+theorem is_bounded_const (ι' : Type _) [Nonempty ι'] {p : ι → Seminorm 𝕜 E} {q : Seminorm 𝕜 F} (f : E →ₗ[𝕜] F) :
+    IsBounded p (fun _ : ι' => q) f ↔ ∃ (s : Finset ι)(C : ℝ≥0 ), C ≠ 0 ∧ q.comp f ≤ C • s.sup p := by
+  simp only [is_bounded, forall_const]
+
+theorem const_is_bounded (ι : Type _) [Nonempty ι] {p : Seminorm 𝕜 E} {q : ι' → Seminorm 𝕜 F} (f : E →ₗ[𝕜] F) :
+    IsBounded (fun _ : ι => p) q f ↔ ∀ i, ∃ C : ℝ≥0 , C ≠ 0 ∧ (q i).comp f ≤ C • p := by
+  dunfold is_bounded
+  constructor
+  · intro h i
+    rcases h i with ⟨s, C, hC, h⟩
+    exact ⟨C, hC, le_transₓ h (smul_le_smul (Finset.sup_le fun _ _ => le_rfl) le_rfl)⟩
+    
+  intro h i
+  use {Classical.arbitrary ι}
+  simp only [h, Finset.sup_singleton]
+
+theorem is_bounded_sup {p : ι → Seminorm 𝕜 E} {q : ι' → Seminorm 𝕜 F} {f : E →ₗ[𝕜] F} (hf : IsBounded p q f)
+    (s' : Finset ι') : ∃ (C : ℝ≥0 )(s : Finset ι), 0 < C ∧ (s'.sup q).comp f ≤ C • s.sup p := by
+  classical
+  by_cases' hs' : ¬s'.nonempty
+  · refine' ⟨1, ∅, zero_lt_one, _⟩
+    rw [finset.not_nonempty_iff_eq_empty.mp hs', Finset.sup_empty, bot_eq_zero, zero_comp]
+    exact Seminorm.nonneg _
+    
+  rw [not_not] at hs'
+  choose fₛ fC hf using hf
+  use s'.card • s'.sup fC, Finset.bUnion s' fₛ
+  constructor
+  · refine' nsmul_pos _ (ne_of_gtₓ (Finset.Nonempty.card_pos hs'))
+    cases' Finset.Nonempty.bex hs' with j hj
+    exact lt_of_lt_of_leₓ (zero_lt_iff.mpr (And.elim_left (hf j))) (Finset.le_sup hj)
+    
+  have hs : ∀ i : ι', i ∈ s' → (q i).comp f ≤ s'.sup fC • (Finset.bUnion s' fₛ).sup p := by
+    intro i hi
+    refine' le_transₓ (And.elim_right (hf i)) (smul_le_smul _ (Finset.le_sup hi))
+    exact Finset.sup_mono (Finset.subset_bUnion_of_mem fₛ hi)
+  refine' le_transₓ (comp_mono f (finset_sup_le_sum q s')) _
+  simp_rw [← pullback_apply, AddMonoidHom.map_sum, pullback_apply]
+  refine' le_transₓ (Finset.sum_le_sum hs) _
+  rw [Finset.sum_const, smul_assoc]
+  exact le_rfl
+
+end Bounded
+
+section Topology
+
+variable [NormedField 𝕜] [AddCommGroupₓ E] [Module 𝕜 E] [AddCommGroupₓ F] [Module 𝕜 F]
+
+variable [Nonempty ι] [Nonempty ι']
+
+/-- The proposition that the topology of `E` is induced by a family of seminorms `p`. -/
+class with_seminorms (p : ι → Seminorm 𝕜 E) [t : TopologicalSpace E] : Prop where
+  topology_eq_with_seminorms : t = (seminormModuleFilterBasis p).topology
+
+theorem with_seminorms_eq (p : ι → Seminorm 𝕜 E) [t : TopologicalSpace E] [WithSeminorms p] :
+    t = (seminormModuleFilterBasis p).topology :=
+  with_seminorms.topology_eq_with_seminorms
+
+/-- The topology of a `normed_space 𝕜 E` is induced by the seminorm `norm_seminorm 𝕜 E`. -/
+instance norm_with_seminorms 𝕜 E [NormedField 𝕜] [SemiNormedGroup E] [NormedSpace 𝕜 E] :
+    WithSeminorms fun _ : Finₓ 1 => normSeminorm 𝕜 E := by
+  let p := fun _ : Finₓ 1 => normSeminorm 𝕜 E
+  refine' ⟨TopologicalAddGroup.ext normed_top_group (seminorm_add_group_filter_basis _).is_topological_add_group _⟩
+  refine' Filter.HasBasis.eq_of_same_basis Metric.nhds_basis_ball _
+  rw [← ball_norm_seminorm 𝕜 E]
+  refine'
+    Filter.HasBasis.to_has_basis (seminorm_add_group_filter_basis p).nhds_zero_has_basis _ fun r hr =>
+      ⟨(normSeminorm 𝕜 E).ball 0 r, seminorm_basis_zero_singleton_mem p 0 hr, rfl.subset⟩
+  rintro U (hU : U ∈ seminorm_basis_zero p)
+  rcases(seminorm_basis_zero_iff p U).mp hU with ⟨s, r, hr, hU⟩
+  use r, hr
+  rw [hU, id.def]
+  by_cases' h : s.nonempty
+  · rw [Finset.sup_const h]
+    
+  rw [finset.not_nonempty_iff_eq_empty.mp h, Finset.sup_empty, ball_bot _ hr]
+  exact Set.subset_univ _
+
+theorem continuous_from_bounded (p : ι → Seminorm 𝕜 E) (q : ι' → Seminorm 𝕜 F) [UniformSpace E] [UniformAddGroup E]
+    [WithSeminorms p] [UniformSpace F] [UniformAddGroup F] [WithSeminorms q] (f : E →ₗ[𝕜] F) (hf : IsBounded p q f) :
+    Continuous f := by
+  refine' UniformContinuous.continuous _
+  refine' AddMonoidHom.uniform_continuous_of_continuous_at_zero f.to_add_monoid_hom _
+  rw [f.to_add_monoid_hom_coe, continuous_at_def, f.map_zero, with_seminorms_eq p]
+  intro U hU
+  rw [with_seminorms_eq q, AddGroupFilterBasis.nhds_zero_eq, FilterBasis.mem_filter_iff] at hU
+  rcases hU with ⟨V, hV : V ∈ seminorm_basis_zero q, hU⟩
+  rcases(seminorm_basis_zero_iff q V).mp hV with ⟨s₂, r, hr, hV⟩
+  rw [hV] at hU
+  rw [(seminorm_add_group_filter_basis p).nhds_zero_eq, FilterBasis.mem_filter_iff]
+  rcases is_bounded_sup hf s₂ with ⟨C, s₁, hC, hf⟩
+  refine' ⟨(s₁.sup p).ball 0 (r / C), seminorm_basis_zero_mem p _ (div_pos hr (nnreal.coe_pos.mpr hC)), _⟩
+  refine' subset.trans _ (preimage_mono hU)
+  simp_rw [← LinearMap.map_zero f, ← ball_comp]
+  refine' subset.trans _ (ball_antitone hf)
+  rw [ball_smul (s₁.sup p) hC]
+
+theorem cont_with_seminorms_normed_space F [SemiNormedGroup F] [NormedSpace 𝕜 F] [UniformSpace E] [UniformAddGroup E]
+    (p : ι → Seminorm 𝕜 E) [WithSeminorms p] (f : E →ₗ[𝕜] F)
+    (hf : ∃ (s : Finset ι)(C : ℝ≥0 ), C ≠ 0 ∧ (normSeminorm 𝕜 F).comp f ≤ C • s.sup p) : Continuous f := by
+  rw [← is_bounded_const (Finₓ 1)] at hf
+  exact continuous_from_bounded p (fun _ : Finₓ 1 => normSeminorm 𝕜 F) f hf
+
+theorem cont_normed_space_to_with_seminorms E [SemiNormedGroup E] [NormedSpace 𝕜 E] [UniformSpace F] [UniformAddGroup F]
+    (q : ι → Seminorm 𝕜 F) [WithSeminorms q] (f : E →ₗ[𝕜] F)
+    (hf : ∀ i : ι, ∃ C : ℝ≥0 , C ≠ 0 ∧ (q i).comp f ≤ C • normSeminorm 𝕜 E) : Continuous f := by
+  rw [← const_is_bounded (Finₓ 1)] at hf
+  exact continuous_from_bounded (fun _ : Finₓ 1 => normSeminorm 𝕜 E) q f hf
+
+end Topology
+
+section LocallyConvexSpace
+
+open LocallyConvexSpace
+
+variable [Nonempty ι] [NormedLinearOrderedField 𝕜] [NormedSpace ℝ 𝕜] [AddCommGroupₓ E] [Module 𝕜 E] [Module ℝ E]
+  [IsScalarTower ℝ 𝕜 E] [TopologicalSpace E] [TopologicalAddGroup E]
+
+theorem with_seminorms.to_locally_convex_space (p : ι → Seminorm 𝕜 E) [WithSeminorms p] : LocallyConvexSpace ℝ E := by
+  apply of_basis_zero ℝ E id fun s => s ∈ seminorm_basis_zero p
+  · rw [with_seminorms_eq p, AddGroupFilterBasis.nhds_eq _, AddGroupFilterBasis.N_zero]
+    exact FilterBasis.has_basis _
+    
+  · intro s hs
+    change s ∈ Set.Unionₓ _ at hs
+    simp_rw [Set.mem_Union, Set.mem_singleton_iff]  at hs
+    rcases hs with ⟨I, r, hr, rfl⟩
+    exact convex_ball _ _ _
+    
+
+end LocallyConvexSpace
+
+end Seminorm
+
+section NormedSpace
+
+variable (𝕜) [NormedLinearOrderedField 𝕜] [NormedSpace ℝ 𝕜] [SemiNormedGroup E]
+
+/-- Not an instance since `𝕜` can't be inferred. See `normed_space.to_locally_convex_space` for a
+slightly weaker instance version. -/
+theorem NormedSpace.to_locally_convex_space' [NormedSpace 𝕜 E] [Module ℝ E] [IsScalarTower ℝ 𝕜 E] :
+    LocallyConvexSpace ℝ E :=
+  Seminorm.WithSeminorms.to_locally_convex_space fun _ : Finₓ 1 => normSeminorm 𝕜 E
+
+/-- See `normed_space.to_locally_convex_space'` for a slightly stronger version which is not an
+instance. -/
+instance NormedSpace.to_locally_convex_space [NormedSpace ℝ E] : LocallyConvexSpace ℝ E :=
+  NormedSpace.to_locally_convex_space' ℝ
+
+end NormedSpace
 

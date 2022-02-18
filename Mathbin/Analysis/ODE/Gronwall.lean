@@ -173,7 +173,7 @@ theorem dist_le_of_approx_trajectories_ODE {v : ℝ → E → E} {K : ℝ≥0 } 
     (hg' : ∀, ∀ t ∈ Ico a b, ∀, HasDerivWithinAt g (g' t) (Ici t) t)
     (g_bound : ∀, ∀ t ∈ Ico a b, ∀, dist (g' t) (v t (g t)) ≤ εg) (ha : dist (f a) (g a) ≤ δ) :
     ∀, ∀ t ∈ Icc a b, ∀, dist (f t) (g t) ≤ gronwallBound δ K (εf + εg) (t - a) :=
-  have hfs : ∀, ∀ t ∈ Ico a b, ∀, f t ∈ @univ E := fun t ht => trivialₓ
+  have hfs : ∀, ∀ t ∈ Ico a b, ∀, f t ∈ @Univ E := fun t ht => trivialₓ
   dist_le_of_approx_trajectories_ODE_of_mem_set (fun t x hx y hy => (hv t).dist_le_mul x y) hf hf' f_bound hfs hg hg'
     g_bound (fun t ht => trivialₓ) ha
 
@@ -209,7 +209,7 @@ theorem dist_le_of_trajectories_ODE {v : ℝ → E → E} {K : ℝ≥0 } (hv : �
     {δ : ℝ} (hf : ContinuousOn f (Icc a b)) (hf' : ∀, ∀ t ∈ Ico a b, ∀, HasDerivWithinAt f (v t (f t)) (Ici t) t)
     (hg : ContinuousOn g (Icc a b)) (hg' : ∀, ∀ t ∈ Ico a b, ∀, HasDerivWithinAt g (v t (g t)) (Ici t) t)
     (ha : dist (f a) (g a) ≤ δ) : ∀, ∀ t ∈ Icc a b, ∀, dist (f t) (g t) ≤ δ * exp (K * (t - a)) :=
-  have hfs : ∀, ∀ t ∈ Ico a b, ∀, f t ∈ @univ E := fun t ht => trivialₓ
+  have hfs : ∀, ∀ t ∈ Ico a b, ∀, f t ∈ @Univ E := fun t ht => trivialₓ
   dist_le_of_trajectories_ODE_of_mem_set (fun t x hx y hy => (hv t).dist_le_mul x y) hf hf' hfs hg hg'
     (fun t ht => trivialₓ) ha
 
@@ -233,6 +233,6 @@ theorem ODE_solution_unique {v : ℝ → E → E} {K : ℝ≥0 } (hv : ∀ t, Li
     (hf : ContinuousOn f (Icc a b)) (hf' : ∀, ∀ t ∈ Ico a b, ∀, HasDerivWithinAt f (v t (f t)) (Ici t) t)
     (hg : ContinuousOn g (Icc a b)) (hg' : ∀, ∀ t ∈ Ico a b, ∀, HasDerivWithinAt g (v t (g t)) (Ici t) t)
     (ha : f a = g a) : ∀, ∀ t ∈ Icc a b, ∀, f t = g t :=
-  have hfs : ∀, ∀ t ∈ Ico a b, ∀, f t ∈ @univ E := fun t ht => trivialₓ
+  have hfs : ∀, ∀ t ∈ Ico a b, ∀, f t ∈ @Univ E := fun t ht => trivialₓ
   ODE_solution_unique_of_mem_set (fun t x hx y hy => (hv t).dist_le_mul x y) hf hf' hfs hg hg' (fun t ht => trivialₓ) ha
 

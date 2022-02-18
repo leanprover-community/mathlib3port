@@ -67,19 +67,19 @@ theorem adic_basis (I : Ideal R) : SubmodulesRingBasis fun n : ℕ => (I ^ n •
 
 /-- The adic ring filter basis associated to an ideal `I` is made of powers of `I`. -/
 def RingFilterBasis (I : Ideal R) :=
-  I.adic_basis.to_ring_subgroups_basis.to_ring_filter_basis
+  I.adic_basis.to_ring_subgroups_basis.toRingFilterBasis
 
 /-- The adic topology associated to an ideal `I`. This topology admits powers of `I` as a basis of
 neighborhoods of zero. It is compatible with the ring structure and is non-archimedean. -/
 def adic_topology (I : Ideal R) : TopologicalSpace R :=
   (adic_basis I).topology
 
-theorem nonarchimedean (I : Ideal R) : @NonarchimedeanRing R _ I.adic_topology :=
+theorem nonarchimedean (I : Ideal R) : @NonarchimedeanRing R _ I.adicTopology :=
   I.adic_basis.to_ring_subgroups_basis.nonarchimedean
 
 /-- For the `I`-adic topology, the neighborhoods of zero has basis given by the powers of `I`. -/
 theorem has_basis_nhds_zero_adic (I : Ideal R) :
-    has_basis (@nhds R I.adic_topology (0 : R)) (fun n : ℕ => True) fun n => ((I ^ n : Ideal R) : Set R) :=
+    HasBasis (@nhds R I.adicTopology (0 : R)) (fun n : ℕ => True) fun n => ((I ^ n : Ideal R) : Set R) :=
   ⟨by
     intro U
     rw [I.ring_filter_basis.to_add_group_filter_basis.nhds_zero_has_basis.mem_iff]
@@ -98,14 +98,14 @@ theorem has_basis_nhds_zero_adic (I : Ideal R) :
       ⟩
 
 theorem has_basis_nhds_adic (I : Ideal R) (x : R) :
-    has_basis (@nhds R I.adic_topology x) (fun n : ℕ => True) fun n => (fun y => x + y) '' (I ^ n : Ideal R) := by
+    HasBasis (@nhds R I.adicTopology x) (fun n : ℕ => True) fun n => (fun y => x + y) '' (I ^ n : Ideal R) := by
   let this' := I.adic_topology
   have := I.has_basis_nhds_zero_adic.map fun y => x + y
   rwa [map_add_left_nhds_zero x] at this
 
 variable (I : Ideal R) (M : Type _) [AddCommGroupₓ M] [Module R M]
 
-theorem adic_module_basis : I.ring_filter_basis.submodules_basis fun n : ℕ => I ^ n • (⊤ : Submodule R M) :=
+theorem adic_module_basis : I.RingFilterBasis.SubmodulesBasis fun n : ℕ => I ^ n • (⊤ : Submodule R M) :=
   { inter := fun i j =>
       ⟨max i j,
         le_inf_iff.mpr
@@ -120,11 +120,11 @@ theorem adic_module_basis : I.ring_filter_basis.submodules_basis fun n : ℕ => 
 written `I^n • ⊤` form a basis of neighborhoods of zero. -/
 def adic_module_topology : TopologicalSpace M :=
   @ModuleFilterBasis.topology R M _ I.adic_basis.topology _ _
-    (I.ring_filter_basis.module_filter_basis (I.adic_module_basis M))
+    (I.RingFilterBasis.ModuleFilterBasis (I.adic_module_basis M))
 
 /-- The elements of the basis of neighborhoods of zero for the `I`-adic topology
 on a `R`-module `M`, seen as open additive subgroups of `M`. -/
-def OpenAddSubgroup (n : ℕ) : @OpenAddSubgroup R _ I.adic_topology :=
+def OpenAddSubgroup (n : ℕ) : @OpenAddSubgroup R _ I.adicTopology :=
   { (I ^ n).toAddSubgroup with
     is_open' := by
       let this' := I.adic_topology
@@ -138,7 +138,7 @@ section IsAdic
 /-- Given a topology on a ring `R` and an ideal `J`, `is_adic J` means the topology is the
 `J`-adic one. -/
 def IsAdic [H : TopologicalSpace R] (J : Ideal R) : Prop :=
-  H = J.adic_topology
+  H = J.adicTopology
 
 /-- A topological ring is `J`-adic if and only if it admits the powers of `J` as a basis of
 open neighborhoods of zero. -/
@@ -230,7 +230,7 @@ namespace WithIdeal
 variable (R) [WithIdeal R]
 
 instance (priority := 100) : TopologicalSpace R :=
-  I.adicTopology
+  i.adicTopology
 
 instance (priority := 100) : NonarchimedeanRing R :=
   RingSubgroupsBasis.nonarchimedean _
@@ -244,7 +244,7 @@ instance (priority := 100) : UniformAddGroup R :=
 /-- The adic topology on a `R` module coming from the ideal `with_ideal.I`.
 This cannot be an instance because `R` cannot be inferred from `M`. -/
 def topological_space_module (M : Type _) [AddCommGroupₓ M] [Module R M] : TopologicalSpace M :=
-  (I : Ideal R).adicModuleTopology M
+  (i : Ideal R).adicModuleTopology M
 
 example : NonarchimedeanRing R := by
   infer_instance

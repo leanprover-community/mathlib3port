@@ -20,13 +20,13 @@ def angle : Type :=
 
 namespace Angle
 
-instance angle.add_comm_group : AddCommGroupₓ angle :=
+instance angle.add_comm_group : AddCommGroupₓ Angle :=
   QuotientAddGroup.addCommGroup _
 
-instance : Inhabited angle :=
+instance : Inhabited Angle :=
   ⟨0⟩
 
-instance : Coe ℝ angle :=
+instance : Coe ℝ Angle :=
   ⟨QuotientAddGroup.mk' _⟩
 
 /-- Coercion `ℝ → angle` as an additive homomorphism. -/
@@ -34,61 +34,71 @@ def coe_hom : ℝ →+ angle :=
   QuotientAddGroup.mk' _
 
 @[simp]
-theorem coe_coe_hom : (coe_hom : ℝ → angle) = coe :=
+theorem coe_coe_hom : (coeHom : ℝ → Angle) = coe :=
+  rfl
+
+/-- An induction principle to deduce results for `angle` from those for `ℝ`, used with
+`induction θ using real.angle.induction_on`. -/
+@[elab_as_eliminator]
+protected theorem induction_on {p : Angle → Prop} (θ : Angle) (h : ∀ x : ℝ, p x) : p θ :=
+  Quotientₓ.induction_on' θ h
+
+@[simp]
+theorem coe_zero : ↑(0 : ℝ) = (0 : Angle) :=
   rfl
 
 @[simp]
-theorem coe_zero : ↑(0 : ℝ) = (0 : angle) :=
+theorem coe_add (x y : ℝ) : ↑(x + y : ℝ) = (↑x + ↑y : Angle) :=
   rfl
 
 @[simp]
-theorem coe_add (x y : ℝ) : ↑(x + y : ℝ) = (↑x + ↑y : angle) :=
+theorem coe_neg (x : ℝ) : ↑(-x : ℝ) = -(↑x : Angle) :=
   rfl
 
 @[simp]
-theorem coe_neg (x : ℝ) : ↑(-x : ℝ) = -(↑x : angle) :=
-  rfl
-
-@[simp]
-theorem coe_sub (x y : ℝ) : ↑(x - y : ℝ) = (↑x - ↑y : angle) :=
+theorem coe_sub (x y : ℝ) : ↑(x - y : ℝ) = (↑x - ↑y : Angle) :=
   rfl
 
 @[simp, norm_cast]
-theorem coe_nat_mul_eq_nsmul (x : ℝ) (n : ℕ) : ↑((n : ℝ) * x) = n • (↑x : angle) := by
+theorem coe_nat_mul_eq_nsmul (x : ℝ) (n : ℕ) : ↑((n : ℝ) * x) = n • (↑x : Angle) := by
   simpa only [nsmul_eq_mul] using coe_hom.map_nsmul x n
 
 @[simp, norm_cast]
-theorem coe_int_mul_eq_zsmul (x : ℝ) (n : ℤ) : ↑((n : ℝ) * x : ℝ) = n • (↑x : angle) := by
+theorem coe_int_mul_eq_zsmul (x : ℝ) (n : ℤ) : ↑((n : ℝ) * x : ℝ) = n • (↑x : Angle) := by
   simpa only [zsmul_eq_mul] using coe_hom.map_zsmul x n
 
-theorem angle_eq_iff_two_pi_dvd_sub {ψ θ : ℝ} : (θ : angle) = ψ ↔ ∃ k : ℤ, θ - ψ = 2 * π * k := by
+theorem angle_eq_iff_two_pi_dvd_sub {ψ θ : ℝ} : (θ : Angle) = ψ ↔ ∃ k : ℤ, θ - ψ = 2 * π * k := by
   simp only [QuotientAddGroup.eq, AddSubgroup.zmultiples_eq_closure, AddSubgroup.mem_closure_singleton, zsmul_eq_mul',
     (sub_eq_neg_add _ _).symm, eq_comm]
 
 @[simp]
-theorem coe_two_pi : ↑(2 * π : ℝ) = (0 : angle) :=
+theorem coe_two_pi : ↑(2 * π : ℝ) = (0 : Angle) :=
   angle_eq_iff_two_pi_dvd_sub.2
     ⟨1, by
       rw [sub_zero, Int.cast_one, mul_oneₓ]⟩
 
 @[simp]
-theorem neg_coe_pi : -(π : angle) = π := by
+theorem neg_coe_pi : -(π : Angle) = π := by
   rw [← coe_neg, angle_eq_iff_two_pi_dvd_sub]
   use -1
   simp [two_mul, sub_eq_add_neg]
 
-theorem sub_coe_pi_eq_add_coe_pi (θ : angle) : θ - π = θ + π := by
+theorem sub_coe_pi_eq_add_coe_pi (θ : Angle) : θ - π = θ + π := by
   rw [sub_eq_add_neg, neg_coe_pi]
 
 @[simp]
-theorem two_nsmul_coe_pi : (2 : ℕ) • (π : angle) = 0 := by
+theorem two_nsmul_coe_pi : (2 : ℕ) • (π : Angle) = 0 := by
   simp [← coe_nat_mul_eq_nsmul]
 
 @[simp]
-theorem two_zsmul_coe_pi : (2 : ℤ) • (π : angle) = 0 := by
+theorem two_zsmul_coe_pi : (2 : ℤ) • (π : Angle) = 0 := by
   simp [← coe_int_mul_eq_zsmul]
 
-theorem cos_eq_iff_eq_or_eq_neg {θ ψ : ℝ} : cos θ = cos ψ ↔ (θ : angle) = ψ ∨ (θ : angle) = -ψ := by
+@[simp]
+theorem coe_pi_add_coe_pi : (π : Real.Angle) + π = 0 := by
+  rw [← two_nsmul, two_nsmul_coe_pi]
+
+theorem cos_eq_iff_eq_or_eq_neg {θ ψ : ℝ} : cos θ = cos ψ ↔ (θ : Angle) = ψ ∨ (θ : Angle) = -ψ := by
   constructor
   · intro Hcos
     rw [← sub_eq_zero, cos_sub_cos, mul_eq_zero, mul_eq_zero, neg_eq_zero, eq_false_intro two_ne_zero, false_orₓ,
@@ -113,7 +123,7 @@ theorem cos_eq_iff_eq_or_eq_neg {θ ψ : ℝ} : cos θ = cos ψ ↔ (θ : angle)
       mul_comm π _, sin_int_mul_pi, mul_zero, zero_mul]
     
 
-theorem sin_eq_iff_eq_or_add_eq_pi {θ ψ : ℝ} : sin θ = sin ψ ↔ (θ : angle) = ψ ∨ (θ : angle) + ψ = π := by
+theorem sin_eq_iff_eq_or_add_eq_pi {θ ψ : ℝ} : sin θ = sin ψ ↔ (θ : Angle) = ψ ∨ (θ : Angle) + ψ = π := by
   constructor
   · intro Hsin
     rw [← cos_pi_div_two_sub, ← cos_pi_div_two_sub] at Hsin
@@ -137,7 +147,7 @@ theorem sin_eq_iff_eq_or_add_eq_pi {θ ψ : ℝ} : sin θ = sin ψ ↔ (θ : ang
       cos_add_pi_div_two, sin_int_mul_pi, neg_zero, mul_zero]
     
 
-theorem cos_sin_inj {θ ψ : ℝ} (Hcos : cos θ = cos ψ) (Hsin : sin θ = sin ψ) : (θ : angle) = ψ := by
+theorem cos_sin_inj {θ ψ : ℝ} (Hcos : cos θ = cos ψ) (Hsin : sin θ = sin ψ) : (θ : Angle) = ψ := by
   cases' cos_eq_iff_eq_or_eq_neg.mp Hcos with hc hc
   · exact hc
     
@@ -153,6 +163,22 @@ theorem cos_sin_inj {θ ψ : ℝ} (Hcos : cos θ = cos ψ) (Hsin : sin θ = sin 
   have : (n * 2 + 1) % (2 : ℤ) = 0 % (2 : ℤ) := congr_argₓ (· % (2 : ℤ)) hn
   rw [add_commₓ, Int.add_mul_mod_self] at this
   exact absurd this one_ne_zero
+
+/-- The sine of a `real.angle`. -/
+def sin (θ : Angle) : ℝ :=
+  sin_periodic.lift θ
+
+@[simp]
+theorem sin_coe (x : ℝ) : sin (x : Angle) = Real.sin x :=
+  rfl
+
+/-- The cosine of a `real.angle`. -/
+def cos (θ : Angle) : ℝ :=
+  cos_periodic.lift θ
+
+@[simp]
+theorem cos_coe (x : ℝ) : cos (x : Angle) = Real.cos x :=
+  rfl
 
 end Angle
 

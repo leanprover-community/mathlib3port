@@ -35,16 +35,16 @@ class induced_units [t : TopologicalSpace <| (R)ˣ] : Prop where
 
 variable [TopologicalSpace <| (R)ˣ]
 
-theorem units_topology_eq [induced_units R] : ‹TopologicalSpace (R)ˣ› = induced (coe : (R)ˣ → R) ‹_› :=
+theorem units_topology_eq [InducedUnits R] : ‹TopologicalSpace (R)ˣ› = induced (coe : (R)ˣ → R) ‹_› :=
   induced_units.top_eq
 
-theorem induced_units.continuous_coe [induced_units R] : Continuous (coe : (R)ˣ → R) :=
+theorem induced_units.continuous_coe [InducedUnits R] : Continuous (coe : (R)ˣ → R) :=
   (units_topology_eq R).symm ▸ continuous_induced_dom
 
-theorem units_embedding [induced_units R] : Embedding (coe : (R)ˣ → R) :=
+theorem units_embedding [InducedUnits R] : Embedding (coe : (R)ˣ → R) :=
   { induced := units_topology_eq R, inj := fun x y h => Units.ext h }
 
-instance top_monoid_units [TopologicalRing R] [induced_units R] : HasContinuousMul (R)ˣ :=
+instance top_monoid_units [TopologicalRing R] [InducedUnits R] : HasContinuousMul (R)ˣ :=
   ⟨by
     let mulR := fun p : R × R => p.1 * p.2
     let mulRx := fun p : (R)ˣ × (R)ˣ => p.1 * p.2

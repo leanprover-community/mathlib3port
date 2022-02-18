@@ -26,11 +26,11 @@ def Pnat.natPred (i : ℕ+) : ℕ :=
   i - 1
 
 @[simp]
-theorem Pnat.one_add_nat_pred (n : ℕ+) : 1 + n.nat_pred = n := by
+theorem Pnat.one_add_nat_pred (n : ℕ+) : 1 + n.natPred = n := by
   rw [Pnat.natPred, add_tsub_cancel_iff_le.mpr <| show 1 ≤ (n : ℕ) from n.2]
 
 @[simp]
-theorem Pnat.nat_pred_add_one (n : ℕ+) : n.nat_pred + 1 = n :=
+theorem Pnat.nat_pred_add_one (n : ℕ+) : n.natPred + 1 = n :=
   (add_commₓ _ _).trans n.one_add_nat_pred
 
 @[simp]
@@ -50,23 +50,23 @@ def to_pnat (n : ℕ)
 
 /-- Write a successor as an element of `ℕ+`. -/
 def succ_pnat (n : ℕ) : ℕ+ :=
-  ⟨succ n, succ_pos n⟩
+  ⟨succ n, succ_posₓ n⟩
 
 @[simp]
-theorem succ_pnat_coe (n : ℕ) : (succ_pnat n : ℕ) = succ n :=
+theorem succ_pnat_coe (n : ℕ) : (succPnat n : ℕ) = succ n :=
   rfl
 
-theorem succ_pnat_inj {n m : ℕ} : succ_pnat n = succ_pnat m → n = m := fun h => by
+theorem succ_pnat_inj {n m : ℕ} : succPnat n = succPnat m → n = m := fun h => by
   let h' := congr_argₓ (coe : ℕ+ → ℕ) h
   exact Nat.succ.injₓ h'
 
 /-- Convert a natural number to a pnat. `n+1` is mapped to itself,
   and `0` becomes `1`. -/
 def to_pnat' (n : ℕ) : ℕ+ :=
-  succ_pnat (pred n)
+  succPnat (pred n)
 
 @[simp]
-theorem to_pnat'_coe : ∀ n : ℕ, (to_pnat' n : ℕ) = ite (0 < n) n 1
+theorem to_pnat'_coe : ∀ n : ℕ, (toPnat' n : ℕ) = ite (0 < n) n 1
   | 0 => rfl
   | m + 1 => by
     rw [if_pos (succ_pos m)]
@@ -109,6 +109,9 @@ theorem coe_lt_coe (n k : ℕ+) : (n : ℕ) < k ↔ n < k :=
 theorem Pos (n : ℕ+) : 0 < (n : ℕ) :=
   n.2
 
+theorem fact_pos (n : ℕ+) : Fact (0 < ↑n) :=
+  ⟨n.Pos⟩
+
 theorem Eq {m n : ℕ+} : (m : ℕ) = n → m = n :=
   Subtype.eq
 
@@ -124,7 +127,7 @@ theorem mk_coe n h : ((⟨n, h⟩ : ℕ+) : ℕ) = n :=
   rfl
 
 instance : Add ℕ+ :=
-  ⟨fun a b => ⟨(a + b : ℕ), add_pos a.pos b.pos⟩⟩
+  ⟨fun a b => ⟨(a + b : ℕ), add_pos a.Pos b.Pos⟩⟩
 
 instance : AddCommSemigroupₓ ℕ+ :=
   coe_injective.AddCommSemigroup coe fun _ _ => rfl
@@ -148,18 +151,18 @@ instance : AddRightCancelSemigroup ℕ+ :=
 theorem ne_zero (n : ℕ+) : (n : ℕ) ≠ 0 :=
   n.2.ne'
 
-theorem to_pnat'_coe {n : ℕ} : 0 < n → (n.to_pnat' : ℕ) = n :=
+theorem to_pnat'_coe {n : ℕ} : 0 < n → (n.toPnat' : ℕ) = n :=
   succ_pred_eq_of_pos
 
 @[simp]
 theorem coe_to_pnat' (n : ℕ+) : (n : ℕ).toPnat' = n :=
-  Eq (to_pnat'_coe n.pos)
+  eq (to_pnat'_coe n.Pos)
 
 instance : Mul ℕ+ :=
   ⟨fun m n => ⟨m.1 * n.1, mul_pos m.2 n.2⟩⟩
 
 instance : One ℕ+ :=
-  ⟨succ_pnat 0⟩
+  ⟨succPnat 0⟩
 
 instance : CommMonoidₓ ℕ+ :=
   coe_injective.CommMonoid coe rfl fun _ _ => rfl
@@ -226,7 +229,7 @@ def coe_monoid_hom : ℕ+ →* ℕ where
   map_mul' := mul_coe
 
 @[simp]
-theorem coe_coe_monoid_hom : (coe_monoid_hom : ℕ+ → ℕ) = coe :=
+theorem coe_coe_monoid_hom : (coeMonoidHom : ℕ+ → ℕ) = coe :=
   rfl
 
 @[simp]
@@ -262,14 +265,14 @@ instance : OrderedCancelCommMonoid ℕ+ :=
       replace h := congr_argₓ (coe : ℕ+ → ℕ) h
       exact Eq ((Nat.mul_right_inj a.pos).mp h) }
 
-instance : Distrib ℕ+ :=
+instance : Distribₓ ℕ+ :=
   coe_injective.Distrib coe (fun _ _ => rfl) fun _ _ => rfl
 
 /-- Subtraction a - b is defined in the obvious way when
   a > b, and by a - b = 1 if a ≤ b.
 -/
 instance : Sub ℕ+ :=
-  ⟨fun a b => to_pnat' (a - b : ℕ)⟩
+  ⟨fun a b => toPnat' (a - b : ℕ)⟩
 
 theorem sub_coe (a b : ℕ+) : ((a - b : ℕ+) : ℕ) = ite (b < a) (a - b : ℕ) 1 := by
   change (to_pnat' ((a : ℕ) - (b : ℕ)) : ℕ) = ite ((a : ℕ) > (b : ℕ)) ((a : ℕ) - (b : ℕ)) 1
@@ -357,7 +360,7 @@ def mod_div_aux : ℕ+ → ℕ → ℕ → ℕ+ × ℕ
   | k, r + 1, q => ⟨⟨r + 1, Nat.succ_posₓ r⟩, q⟩
 
 theorem mod_div_aux_spec :
-    ∀ k : ℕ+ r q : ℕ h : ¬(r = 0 ∧ q = 0), ((mod_div_aux k r q).1 : ℕ) + k * (mod_div_aux k r q).2 = r + k * q
+    ∀ k : ℕ+ r q : ℕ h : ¬(r = 0 ∧ q = 0), ((modDivAux k r q).1 : ℕ) + k * (modDivAux k r q).2 = r + k * q
   | k, 0, 0, h => (h ⟨rfl, rfl⟩).elim
   | k, 0, q + 1, h => by
     change (k : ℕ) + (k : ℕ) * (q + 1).pred = 0 + (k : ℕ) * (q + 1)
@@ -373,20 +376,20 @@ theorem mod_div_aux_spec :
   in the case where `k` divides `m`.
 -/
 def mod_div (m k : ℕ+) : ℕ+ × ℕ :=
-  mod_div_aux k ((m : ℕ) % (k : ℕ)) ((m : ℕ) / (k : ℕ))
+  modDivAux k ((m : ℕ) % (k : ℕ)) ((m : ℕ) / (k : ℕ))
 
 /-- We define `m % k` in the same way as for `ℕ`
   except that when `m = n * k` we take `m % k = k` This ensures that `m % k` is always positive.
 -/
 def mod (m k : ℕ+) : ℕ+ :=
-  (mod_div m k).1
+  (modDiv m k).1
 
 /-- We define `m / k` in the same way as for `ℕ` except that when `m = n * k` we take
   `m / k = n - 1`. This ensures that `m = (m % k) + k * (m / k)` in all cases. Later we
   define a function `div_exact` which gives the usual `m / k` in the case where `k` divides `m`.
 -/
 def div (m k : ℕ+) : ℕ :=
-  (mod_div m k).2
+  (modDiv m k).2
 
 theorem mod_add_div (m k : ℕ+) : (mod m k + k * div m k : ℕ) = m := by
   let h₀ := Nat.mod_add_divₓ (m : ℕ) (k : ℕ)
@@ -488,7 +491,7 @@ theorem le_of_dvd {m n : ℕ+} : m ∣ n → m ≤ n := by
 def div_exact (m k : ℕ+) : ℕ+ :=
   ⟨(div m k).succ, Nat.succ_posₓ _⟩
 
-theorem mul_div_exact {m k : ℕ+} (h : k ∣ m) : k * div_exact m k = m := by
+theorem mul_div_exact {m k : ℕ+} (h : k ∣ m) : k * divExact m k = m := by
   apply Eq
   rw [mul_coe]
   change (k : ℕ) * (div m k).succ = m

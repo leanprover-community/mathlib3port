@@ -18,13 +18,13 @@ The `tfae_have` and `tfae_finish` tactics can be useful in proofs with `tfae` go
 def tfae (l : List Prop) : Prop :=
   ∀, ∀ x ∈ l, ∀, ∀, ∀ y ∈ l, ∀, x ↔ y
 
-theorem tfae_nil : tfae [] :=
+theorem tfae_nil : Tfae [] :=
   forall_mem_nil _
 
-theorem tfae_singleton p : tfae [p] := by
+theorem tfae_singleton p : Tfae [p] := by
   simp [tfae, -eq_iff_iff]
 
-theorem tfae_cons_of_mem {a b} {l : List Prop} (h : b ∈ l) : tfae (a :: l) ↔ (a ↔ b) ∧ tfae l :=
+theorem tfae_cons_of_mem {a b} {l : List Prop} (h : b ∈ l) : Tfae (a :: l) ↔ (a ↔ b) ∧ Tfae l :=
   ⟨fun H =>
     ⟨H a
         (by
@@ -42,15 +42,15 @@ theorem tfae_cons_of_mem {a b} {l : List Prop} (h : b ∈ l) : tfae (a :: l) ↔
     · exact H _ hp _ hq
       ⟩
 
-theorem tfae_cons_cons {a b} {l : List Prop} : tfae (a :: b :: l) ↔ (a ↔ b) ∧ tfae (b :: l) :=
+theorem tfae_cons_cons {a b} {l : List Prop} : Tfae (a :: b :: l) ↔ (a ↔ b) ∧ Tfae (b :: l) :=
   tfae_cons_of_mem (Or.inl rfl)
 
-theorem tfae_of_forall (b : Prop) (l : List Prop) (h : ∀, ∀ a ∈ l, ∀, a ↔ b) : tfae l := fun a₁ h₁ a₂ h₂ =>
+theorem tfae_of_forall (b : Prop) (l : List Prop) (h : ∀, ∀ a ∈ l, ∀, a ↔ b) : Tfae l := fun a₁ h₁ a₂ h₂ =>
   (h _ h₁).trans (h _ h₂).symm
 
 -- ././Mathport/Syntax/Translate/Basic.lean:473:4: warning: unsupported binary notation `«->»
 theorem tfae_of_cycle {a b} {l : List Prop} :
-    List.Chain («->» · ·) a (b :: l) → (ilast' b l → a) → tfae (a :: b :: l) := by
+    List.Chain («->» · ·) a (b :: l) → (ilast' b l → a) → Tfae (a :: b :: l) := by
   induction' l with c l IH generalizing a b <;>
     simp only [tfae_cons_cons, tfae_singleton, and_trueₓ, chain_cons, chain.nil] at *
   · intro a b
@@ -60,7 +60,7 @@ theorem tfae_of_cycle {a b} {l : List Prop} :
   have := IH ⟨bc, ch⟩ (ab ∘ la)
   exact ⟨⟨ab, la ∘ (this.2 c (Or.inl rfl) _ (ilast'_mem _ _)).1 ∘ bc⟩, this⟩
 
-theorem tfae.out {l} (h : tfae l) n₁ n₂ {a b}
+theorem tfae.out {l} (h : Tfae l) n₁ n₂ {a b}
     (h₁ : List.nth l n₁ = some a := by
       run_tac
         tactic.interactive.refl)

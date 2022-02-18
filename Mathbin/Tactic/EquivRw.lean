@@ -81,10 +81,10 @@ initialize
 unsafe structure equiv_rw_cfg where
   max_depth : ℕ := 10
 
--- ././Mathport/Syntax/Translate/Basic.lean:794:4: warning: unsupported (TODO): `[tacs]
--- ././Mathport/Syntax/Translate/Basic.lean:794:4: warning: unsupported (TODO): `[tacs]
--- ././Mathport/Syntax/Translate/Basic.lean:794:4: warning: unsupported (TODO): `[tacs]
--- ././Mathport/Syntax/Translate/Basic.lean:794:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
 /-- Implementation of `equiv_rw_type`, using `solve_by_elim`.
 Expects a goal of the form `t ≃ _`,
 and tries to solve it using `eq : α ≃ β` and congruence lemmas.
@@ -92,18 +92,18 @@ and tries to solve it using `eq : α ≃ β` and congruence lemmas.
 unsafe def equiv_rw_type_core (eq : expr) (cfg : equiv_rw_cfg) : tactic Unit := do
   solve_by_elim
       { use_symmetry := False, use_exfalso := False, lemma_thunks := some (pure Eq :: equiv_congr_lemmas),
-        ctx_thunk := pure [], max_depth := cfg.max_depth, pre_apply := tactic.intros >> skip, backtrack_all_goals := tt,
+        ctx_thunk := pure [], max_depth := cfg, pre_apply := tactic.intros >> skip, backtrack_all_goals := tt,
         discharger :=
           (sorry >> sorry) >> (sorry <|> sorry) <|>
             trace_if_enabled `equiv_rw_type "Failed, no congruence lemma applied!" >> failed,
         accept := fun goals =>
           lock_tactic_state do
             when_tracing `equiv_rw_type do
-                goals.mmap pp >>= fun goals => trace f! "So far, we've built: {goals}"
+                goals pp >>= fun goals => trace f! "So far, we've built: {goals}"
             done <|>
                 when_tracing `equiv_rw_type do
                   let gs ← get_goals
-                  let gs ← gs.mmap fun g => infer_type g >>= pp
+                  let gs ← gs fun g => infer_type g >>= pp
                   trace f! "Attempting to adapt to {gs}" }
 
 /-- `equiv_rw_type e t` rewrites the type `t` using the equivalence `e : α ≃ β`,
@@ -123,14 +123,14 @@ unsafe def equiv_rw_type (eqv : expr) (ty : expr) (cfg : equiv_rw_cfg) : tactic 
       let eqv_pp ← pp eqv
       let ty_pp ← pp ty
       fail f! "Could not construct an equivalence from {eqv_pp } of the form: {ty_pp} ≃ _"
-  Prod.fst <$> new_eqv.simp { failIfUnchanged := ff }
+  Prod.fst <$> new_eqv { failIfUnchanged := ff }
 
 mk_simp_attribute equiv_rw_simp :=
   "The simpset `equiv_rw_simp` is used by the tactic `equiv_rw` to\nsimplify applications of equivalences and their inverses."
 
 attribute [equiv_rw_simp] Equivₓ.symm_symm Equivₓ.apply_symm_apply Equivₓ.symm_apply_apply
 
--- ././Mathport/Syntax/Translate/Basic.lean:794:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
 /-- Attempt to replace the hypothesis with name `x`
 by transporting it along the equivalence in `e : α ≃ β`.
 -/
@@ -159,7 +159,7 @@ unsafe def equiv_rw_hyp (x : Name) (e : expr) (cfg : equiv_rw_cfg := {  }) : tac
           unfreezing_hyp x' (clear' tt [x']) <|>
             fail f! "equiv_rw expected to be able to clear the original hypothesis {x}, but couldn't."
       skip)
-    { failIfUnchanged := ff } tt
+    { failIfUnchanged := false } true
 
 /-- Rewrite the goal using an equiv `e`. -/
 unsafe def equiv_rw_target (e : expr) (cfg : equiv_rw_cfg := {  }) : tactic Unit := do
@@ -173,33 +173,62 @@ end Tactic
 
 namespace Tactic.Interactive
 
-open Lean.Parser
-
-open Interactive Interactive.Types
-
 open Tactic
 
-local postfix:9001 "?" => optionalₓ
+setup_tactic_parser
 
-/-- `equiv_rw e at h`, where `h : α` is a hypothesis, and `e : α ≃ β`,
-will attempt to transport `h` along `e`, producing a new hypothesis `h : β`,
-with all occurrences of `h` in other hypotheses and the goal replaced with `e.symm h`.
+/-- Auxiliary function to call `equiv_rw_hyp` on a `list pexpr` recursively. -/
+unsafe def equiv_rw_hyp_aux (hyp : Name) (cfg : equiv_rw_cfg) (permissive : Bool := false) : List expr → itactic
+  | [] => skip
+  | e :: t => do
+    if permissive then equiv_rw_hyp hyp e cfg <|> skip else equiv_rw_hyp hyp e cfg
+    equiv_rw_hyp_aux t
+
+/-- Auxiliary function to call `equiv_rw_target` on a `list pexpr` recursively. -/
+unsafe def equiv_rw_target_aux (cfg : equiv_rw_cfg) (permissive : Bool) : List expr → itactic
+  | [] => skip
+  | e :: t => do
+    if permissive then equiv_rw_target e cfg <|> skip else equiv_rw_target e cfg
+    equiv_rw_target_aux t
+
+/-- `equiv_rw e at h₁ h₂ ⋯`, where each `hᵢ : α` is a hypothesis, and `e : α ≃ β`,
+will attempt to transport each `hᵢ` along `e`, producing a new hypothesis `hᵢ : β`,
+with all occurrences of `hᵢ` in other hypotheses and the goal replaced with `e.symm hᵢ`.
 
 `equiv_rw e` will attempt to transport the goal along an equivalence `e : α ≃ β`.
 In its minimal form it replaces the goal `⊢ α` with `⊢ β` by calling `apply e.inv_fun`.
 
-`equiv_rw` will also try rewriting under (equiv_)functors, so can turn
+`equiv_rw [e₁, e₂, ⋯] at h₁ h₂ ⋯` is equivalent to
+`{ equiv_rw [e₁, e₂, ⋯] at h₁, equiv_rw [e₁, e₂, ⋯] at h₂, ⋯ }`.
+
+`equiv_rw [e₁, e₂, ⋯] at *` will attempt to apply `equiv_rw [e₁, e₂, ⋯]` on the goal
+and on each expression available in the local context (except on the `eᵢ`s themselves),
+failing silently when it can't. Failing on a rewrite for a certain `eᵢ` at a certain
+hypothesis `h` doesn't stop `equiv_rw` from trying the other equivalences on the list
+at `h`. This only happens for the wildcard location.
+
+`equiv_rw` will also try rewriting under (equiv_)functors, so it can turn
 a hypothesis `h : list α` into `h : list β` or
 a goal `⊢ unique α` into `⊢ unique β`.
 
 The maximum search depth for rewriting in subexpressions is controlled by
 `equiv_rw e {max_depth := n}`.
 -/
-unsafe def equiv_rw (e : parse texpr) (loc : parse <| (tk "at" *> ident)?) (cfg : equiv_rw_cfg := {  }) : itactic := do
-  let e ← to_expr e
-  match loc with
-    | some hyp => equiv_rw_hyp hyp e cfg
-    | none => equiv_rw_target e cfg
+unsafe def equiv_rw (l : parse pexpr_list_or_texpr) (locat : parse location) (cfg : equiv_rw_cfg := {  }) : itactic :=
+  do
+  let es ← l.mmap fun e => to_expr e
+  match locat with
+    | loc.wildcard => do
+      equiv_rw_target_aux cfg tt es
+      let ctx ← local_context
+      ctx fun e => if e ∈ es then skip else equiv_rw_hyp_aux e cfg tt es
+      skip
+    | loc.ns names => do
+      names fun hyp' =>
+          match hyp' with
+          | some hyp => equiv_rw_hyp_aux hyp cfg ff es
+          | none => equiv_rw_target_aux cfg ff es
+      skip
 
 add_tactic_doc
   { Name := "equiv_rw", category := DocCategory.tactic, declNames := [`tactic.interactive.equiv_rw],

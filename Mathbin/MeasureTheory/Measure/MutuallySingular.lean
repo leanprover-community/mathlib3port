@@ -25,18 +25,18 @@ namespace MeasureTheory
 
 namespace Measureₓ
 
-variable {α : Type _} {m0 : MeasurableSpace α} {μ μ₁ μ₂ ν ν₁ ν₂ : Measureₓ α}
+variable {α : Type _} {m0 : MeasurableSpace α} {μ μ₁ μ₂ ν ν₁ ν₂ : Measure α}
 
 /-- Two measures `μ`, `ν` are said to be mutually singular if there exists a measurable set `s`
 such that `μ s = 0` and `ν sᶜ = 0`. -/
-def mutually_singular {m0 : MeasurableSpace α} (μ ν : Measureₓ α) : Prop :=
+def mutually_singular {m0 : MeasurableSpace α} (μ ν : Measure α) : Prop :=
   ∃ s : Set α, MeasurableSet s ∧ μ s = 0 ∧ ν (sᶜ) = 0
 
 localized [MeasureTheory] infixl:60 " ⊥ₘ " => MeasureTheory.Measure.MutuallySingular
 
 namespace MutuallySingular
 
-theorem mk {s t : Set α} (hs : μ s = 0) (ht : ν t = 0) (hst : univ ⊆ s ∪ t) : mutually_singular μ ν := by
+theorem mk {s t : Set α} (hs : μ s = 0) (ht : ν t = 0) (hst : univ ⊆ s ∪ t) : MutuallySingular μ ν := by
   use to_measurable μ s, measurable_set_to_measurable _ _, (measure_to_measurable _).trans hs
   refine' measure_mono_null (fun x hx => (hst trivialₓ).resolve_left fun hxs => hx _) ht
   exact subset_to_measurable _ _ hxs
@@ -48,7 +48,7 @@ theorem zero_right : μ ⊥ₘ 0 :=
 @[symm]
 theorem symm (h : ν ⊥ₘ μ) : μ ⊥ₘ ν :=
   let ⟨i, hi, his, hit⟩ := h
-  ⟨iᶜ, hi.compl, hit, (compl_compl i).symm ▸ his⟩
+  ⟨iᶜ, hi.Compl, hit, (compl_compl i).symm ▸ his⟩
 
 theorem comm : μ ⊥ₘ ν ↔ ν ⊥ₘ μ :=
   ⟨fun h => h.symm, fun h => h.symm⟩
@@ -62,10 +62,10 @@ theorem mono_ac (h : μ₁ ⊥ₘ ν₁) (hμ : μ₂ ≪ μ₁) (hν : ν₂ �
   ⟨s, hs, hμ h₁, hν h₂⟩
 
 theorem mono (h : μ₁ ⊥ₘ ν₁) (hμ : μ₂ ≤ μ₁) (hν : ν₂ ≤ ν₁) : μ₂ ⊥ₘ ν₂ :=
-  h.mono_ac hμ.absolutely_continuous hν.absolutely_continuous
+  h.mono_ac hμ.AbsolutelyContinuous hν.AbsolutelyContinuous
 
 @[simp]
-theorem sum_left {ι : Type _} [Encodable ι] {μ : ι → Measureₓ α} : Sum μ ⊥ₘ ν ↔ ∀ i, μ i ⊥ₘ ν := by
+theorem sum_left {ι : Type _} [Encodable ι] {μ : ι → Measure α} : sum μ ⊥ₘ ν ↔ ∀ i, μ i ⊥ₘ ν := by
   refine' ⟨fun h i => h.mono (le_sum _ _) le_rfl, fun H => _⟩
   choose s hsm hsμ hsν using H
   refine' ⟨⋂ i, s i, MeasurableSet.Inter hsm, _, _⟩
@@ -76,7 +76,7 @@ theorem sum_left {ι : Type _} [Encodable ι] {μ : ι → Measureₓ α} : Sum 
     
 
 @[simp]
-theorem sum_right {ι : Type _} [Encodable ι] {ν : ι → Measureₓ α} : μ ⊥ₘ Sum ν ↔ ∀ i, μ ⊥ₘ ν i :=
+theorem sum_right {ι : Type _} [Encodable ι] {ν : ι → Measure α} : μ ⊥ₘ sum ν ↔ ∀ i, μ ⊥ₘ ν i :=
   comm.trans <| sum_left.trans <| forall_congrₓ fun i => comm
 
 @[simp]
@@ -94,7 +94,7 @@ theorem add_right (h₁ : μ ⊥ₘ ν₁) (h₂ : μ ⊥ₘ ν₂) : μ ⊥ₘ 
   add_right_iff.2 ⟨h₁, h₂⟩
 
 theorem smul (r : ℝ≥0∞) (h : ν ⊥ₘ μ) : r • ν ⊥ₘ μ :=
-  h.mono_ac (absolutely_continuous.rfl.smul r) absolutely_continuous.rfl
+  h.mono_ac (AbsolutelyContinuous.rfl.smul r) AbsolutelyContinuous.rfl
 
 theorem smul_nnreal (r : ℝ≥0 ) (h : ν ⊥ₘ μ) : r • ν ⊥ₘ μ :=
   h.smul r

@@ -23,31 +23,31 @@ namespace Perm
 universe u
 
 instance sum_congr_hom.decidable_mem_range {α β : Type _} [DecidableEq α] [DecidableEq β] [Fintype α] [Fintype β] :
-    DecidablePred (· ∈ (sum_congr_hom α β).range) := fun x => inferInstance
+    DecidablePred (· ∈ (sumCongrHom α β).range) := fun x => inferInstance
 
 @[simp]
-theorem sum_congr_hom.card_range {α β : Type _} [Fintype (sum_congr_hom α β).range] [Fintype (perm α × perm β)] :
-    Fintype.card (sum_congr_hom α β).range = Fintype.card (perm α × perm β) :=
-  Fintype.card_eq.mpr ⟨(of_injective (sum_congr_hom α β) sum_congr_hom_injective).symm⟩
+theorem sum_congr_hom.card_range {α β : Type _} [Fintype (sumCongrHom α β).range] [Fintype (Perm α × Perm β)] :
+    Fintype.card (sumCongrHom α β).range = Fintype.card (Perm α × Perm β) :=
+  Fintype.card_eq.mpr ⟨(ofInjective (sumCongrHom α β) sum_congr_hom_injective).symm⟩
 
 instance sigma_congr_right_hom.decidable_mem_range {α : Type _} {β : α → Type _} [DecidableEq α]
-    [∀ a, DecidableEq (β a)] [Fintype α] [∀ a, Fintype (β a)] : DecidablePred (· ∈ (sigma_congr_right_hom β).range) :=
+    [∀ a, DecidableEq (β a)] [Fintype α] [∀ a, Fintype (β a)] : DecidablePred (· ∈ (sigmaCongrRightHom β).range) :=
   fun x => inferInstance
 
 @[simp]
-theorem sigma_congr_right_hom.card_range {α : Type _} {β : α → Type _} [Fintype (sigma_congr_right_hom β).range]
-    [Fintype (∀ a, perm (β a))] : Fintype.card (sigma_congr_right_hom β).range = Fintype.card (∀ a, perm (β a)) :=
-  Fintype.card_eq.mpr ⟨(of_injective (sigma_congr_right_hom β) sigma_congr_right_hom_injective).symm⟩
+theorem sigma_congr_right_hom.card_range {α : Type _} {β : α → Type _} [Fintype (sigmaCongrRightHom β).range]
+    [Fintype (∀ a, Perm (β a))] : Fintype.card (sigmaCongrRightHom β).range = Fintype.card (∀ a, Perm (β a)) :=
+  Fintype.card_eq.mpr ⟨(ofInjective (sigmaCongrRightHom β) sigma_congr_right_hom_injective).symm⟩
 
 instance subtype_congr_hom.decidable_mem_range {α : Type _} (p : α → Prop) [DecidablePred p]
-    [Fintype (perm { a // p a } × perm { a // ¬p a })] [DecidableEq (perm α)] :
-    DecidablePred (· ∈ (subtype_congr_hom p).range) := fun x => inferInstance
+    [Fintype (Perm { a // p a } × Perm { a // ¬p a })] [DecidableEq (Perm α)] :
+    DecidablePred (· ∈ (subtypeCongrHom p).range) := fun x => inferInstance
 
 @[simp]
-theorem subtype_congr_hom.card_range {α : Type _} (p : α → Prop) [DecidablePred p] [Fintype (subtype_congr_hom p).range]
-    [Fintype (perm { a // p a } × perm { a // ¬p a })] :
-    Fintype.card (subtype_congr_hom p).range = Fintype.card (perm { a // p a } × perm { a // ¬p a }) :=
-  Fintype.card_eq.mpr ⟨(of_injective (subtype_congr_hom p) (subtype_congr_hom_injective p)).symm⟩
+theorem subtype_congr_hom.card_range {α : Type _} (p : α → Prop) [DecidablePred p] [Fintype (subtypeCongrHom p).range]
+    [Fintype (Perm { a // p a } × Perm { a // ¬p a })] :
+    Fintype.card (subtypeCongrHom p).range = Fintype.card (Perm { a // p a } × Perm { a // ¬p a }) :=
+  Fintype.card_eq.mpr ⟨(ofInjective (subtypeCongrHom p) (subtype_congr_hom_injective p)).symm⟩
 
 /-- **Cayley's theorem**: Every group G is isomorphic to a subgroup of the symmetric group acting on
 `G`. Note that we generalize this to an arbitrary "faithful" group action by `G`. Setting `H = G`

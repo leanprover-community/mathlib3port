@@ -41,7 +41,7 @@ instance : CoeFun C^n⟮I, M; I', M'⟯ fun _ => M → M' :=
   ⟨TimesContMdiffMap.toFun⟩
 
 instance : Coe C^n⟮I, M; I', M'⟯ C(M, M') :=
-  ⟨fun f => ⟨f, f.times_cont_mdiff_to_fun.continuous⟩⟩
+  ⟨fun f => ⟨f, f.times_cont_mdiff_to_fun.Continuous⟩⟩
 
 attribute [to_additive_ignore_args 21]
   TimesContMdiffMap TimesContMdiffMap.hasCoeToFun TimesContMdiffMap.ContinuousMap.hasCoe
@@ -59,13 +59,13 @@ protected theorem Smooth (f : C^∞⟮I, M; I', M'⟯) : Smooth I I' f :=
   f.times_cont_mdiff_to_fun
 
 protected theorem mdifferentiable' (f : C^n⟮I, M; I', M'⟯) (hn : 1 ≤ n) : Mdifferentiable I I' f :=
-  f.times_cont_mdiff.mdifferentiable hn
+  f.TimesContMdiff.Mdifferentiable hn
 
 protected theorem Mdifferentiable (f : C^∞⟮I, M; I', M'⟯) : Mdifferentiable I I' f :=
-  f.times_cont_mdiff.mdifferentiable le_top
+  f.TimesContMdiff.Mdifferentiable le_top
 
 protected theorem MdifferentiableAt (f : C^∞⟮I, M; I', M'⟯) {x} : MdifferentiableAt I I' f x :=
-  f.mdifferentiable x
+  f.Mdifferentiable x
 
 theorem coe_inj ⦃f g : C^n⟮I, M; I', M'⟯⦄ (h : (f : M → M') = g) : f = g := by
   cases f <;> cases g <;> cases h <;> rfl
@@ -97,5 +97,5 @@ def const (y : M') : C^n⟮I, M; I', M'⟯ :=
 end TimesContMdiffMap
 
 instance ContinuousLinearMap.hasCoeToTimesContMdiffMap : Coe (E →L[𝕜] E') C^n⟮𝓘(𝕜, E), E; 𝓘(𝕜, E'), E'⟯ :=
-  ⟨fun f => ⟨f.to_fun, f.times_cont_mdiff⟩⟩
+  ⟨fun f => ⟨f.toFun, f.TimesContMdiff⟩⟩
 

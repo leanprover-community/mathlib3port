@@ -33,13 +33,13 @@ variable {n : Type _} [Fintype n] [DecidableEq n]
 theorem det_le {A : Matrix n n R} {abv : AbsoluteValue R S} {x : S} (hx : ∀ i j, abv (A i j) ≤ x) :
     abv A.det ≤ Nat.factorial (Fintype.card n) • x ^ Fintype.card n :=
   calc
-    abv A.det = abv (∑ σ : perm n, _) := congr_argₓ abv (det_apply _)
-    _ ≤ ∑ σ : perm n, abv _ := abv.sum_le _ _
-    _ = ∑ σ : perm n, ∏ i, abv (A (σ i) i) :=
+    abv A.det = abv (∑ σ : Perm n, _) := congr_argₓ abv (det_apply _)
+    _ ≤ ∑ σ : Perm n, abv _ := abv.sum_le _ _
+    _ = ∑ σ : Perm n, ∏ i, abv (A (σ i) i) :=
       sum_congr rfl fun σ hσ => by
         rw [abv.map_units_int_smul, abv.map_prod]
-    _ ≤ ∑ σ : perm n, ∏ i : n, x := sum_le_sum fun _ _ => prod_le_prod (fun _ _ => abv.nonneg _) fun _ _ => hx _ _
-    _ = ∑ σ : perm n, x ^ Fintype.card n :=
+    _ ≤ ∑ σ : Perm n, ∏ i : n, x := sum_le_sum fun _ _ => prod_le_prod (fun _ _ => abv.Nonneg _) fun _ _ => hx _ _
+    _ = ∑ σ : Perm n, x ^ Fintype.card n :=
       sum_congr rfl fun _ _ => by
         rw [prod_const, Finset.card_univ]
     _ = Nat.factorial (Fintype.card n) • x ^ Fintype.card n := by

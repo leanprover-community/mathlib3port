@@ -15,9 +15,9 @@ universe u v
 
 variable {α : Type u}
 
--- ././Mathport/Syntax/Translate/Basic.lean:857:9: unsupported derive handler has_mem (list α)
--- ././Mathport/Syntax/Translate/Basic.lean:857:9: unsupported derive handler has_singleton (list α)
--- ././Mathport/Syntax/Translate/Basic.lean:857:9: unsupported derive handler has_insert (list α)
+-- ././Mathport/Syntax/Translate/Basic.lean:859:9: unsupported derive handler has_mem (list α)
+-- ././Mathport/Syntax/Translate/Basic.lean:859:9: unsupported derive handler has_singleton (list α)
+-- ././Mathport/Syntax/Translate/Basic.lean:859:9: unsupported derive handler has_insert (list α)
 /-- A language is a set of strings over an alphabet. -/
 def Language α :=
   Set (List α)deriving [anonymous], [anonymous], [anonymous], CompleteBooleanAlgebra
@@ -202,7 +202,7 @@ theorem star_mul_le_right_of_mul_le_right (l m : Language α) : l * m ≤ m → 
   · simp
     
   rw [pow_succ'ₓ, mul_assoc (l ^ n) l m]
-  exact le_transₓ (le_mul_congr (le_reflₓ _) h) ih
+  exact le_transₓ (le_mul_congr le_rfl h) ih
 
 theorem star_mul_le_left_of_mul_le_left (l m : Language α) : m * l ≤ m → m * l.star ≤ m := by
   intro h
@@ -213,7 +213,7 @@ theorem star_mul_le_left_of_mul_le_left (l m : Language α) : m * l ≤ m → m 
   · simp
     
   rw [pow_succₓ, ← mul_assoc m l (l ^ n)]
-  exact le_transₓ (le_mul_congr h (le_reflₓ _)) ih
+  exact le_transₓ (le_mul_congr h le_rfl) ih
 
 end Language
 

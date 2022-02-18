@@ -94,7 +94,7 @@ theorem star_mul' [CommMonoidₓ R] [StarMonoid R] (x y : R) : star (x * y) = st
 /-- `star` as an `mul_equiv` from `R` to `Rᵐᵒᵖ` -/
 @[simps apply]
 def starMulEquiv [Monoidₓ R] [StarMonoid R] : R ≃* Rᵐᵒᵖ :=
-  { (HasInvolutiveStar.star_involutive.toEquiv star).trans op_equiv with toFun := fun x => MulOpposite.op (star x),
+  { (HasInvolutiveStar.star_involutive.toEquiv star).trans opEquiv with toFun := fun x => MulOpposite.op (star x),
     map_mul' := fun x y => (star_mul x y).symm ▸ MulOpposite.op_mul _ _ }
 
 /-- `star` as a `mul_aut` for commutative `R`. -/
@@ -273,11 +273,11 @@ theorem star_div' [Field R] [StarRing R] (x y : R) : star (x / y) = star x / sta
   (starRingEnd R).map_div _ _
 
 @[simp]
-theorem star_bit0 [Ringₓ R] [StarRing R] (r : R) : star (bit0 r) = bit0 (star r) := by
+theorem star_bit0 [AddMonoidₓ R] [StarAddMonoid R] (r : R) : star (bit0 r) = bit0 (star r) := by
   simp [bit0]
 
 @[simp]
-theorem star_bit1 [Ringₓ R] [StarRing R] (r : R) : star (bit1 r) = bit1 (star r) := by
+theorem star_bit1 [Semiringₓ R] [StarRing R] (r : R) : star (bit1 r) = bit1 (star r) := by
   simp [bit1]
 
 /-- Any commutative semiring admits the trivial `*`-structure.
@@ -388,6 +388,18 @@ theorem Ringₓ.inverse_star [Semiringₓ R] [StarRing R] (a : R) : Ring.inverse
     rw [Ring.inverse_unit, ← Units.coe_star, Ring.inverse_unit, ← Units.coe_star_inv]
     
   rw [Ring.inverse_non_unit _ ha, Ring.inverse_non_unit _ (mt is_unit_star.mp ha), star_zero]
+
+instance Invertible.star {R : Type _} [Monoidₓ R] [StarMonoid R] (r : R) [Invertible r] : Invertible (star r) where
+  invOf := star (⅟ r)
+  inv_of_mul_self := by
+    rw [← star_mul, mul_inv_of_self, star_one]
+  mul_inv_of_self := by
+    rw [← star_mul, inv_of_mul_self, star_one]
+
+theorem star_inv_of {R : Type _} [Monoidₓ R] [StarMonoid R] (r : R) [Invertible r] [Invertible (star r)] :
+    star (⅟ r) = ⅟ (star r) := by
+  let this' := Invertible.star r
+  convert (rfl : star (⅟ r) = _)
 
 namespace MulOpposite
 

@@ -245,7 +245,7 @@ instance : Archimedean ℕ :=
 
 instance : Archimedean ℤ :=
   ⟨fun n m m0 =>
-    ⟨n.to_nat,
+    ⟨n.toNat,
       le_transₓ (Int.le_to_nat _) <| by
         simpa only [nsmul_eq_mul, Int.nat_cast_eq_coe_nat, zero_addₓ, mul_oneₓ] using
           mul_le_mul_of_nonneg_left (Int.add_one_le_iff.2 m0) (Int.coe_zero_le n.to_nat)⟩⟩
@@ -308,9 +308,9 @@ theorem exists_rat_btwn {x y : α} (h : x < y) : ∃ q : ℚ, x < q ∧ (q : α)
   rw [Rat.cast_div_of_ne_zero, Rat.cast_coe_nat, Rat.cast_coe_int, div_lt_iff n0']
   refine' ⟨(lt_div_iff n0').2 <| (lt_iff_lt_of_le_iff_le (zh _)).1 (lt_add_one _), _⟩
   rw [Int.cast_add, Int.cast_one]
-  refine' lt_of_le_of_ltₓ (add_le_add_right ((zh _).1 (le_reflₓ _)) _) _
+  refine' lt_of_le_of_ltₓ (add_le_add_right ((zh _).1 le_rfl) _) _
   rwa [← lt_sub_iff_add_lt', ← sub_mul, ← div_lt_iff' (sub_pos.2 h), one_div]
-  · rw [Rat.coe_int_denom, Nat.cast_one]
+  · rw [Rat.coe_int_denom, Nat.cast_oneₓ]
     exact one_ne_zero
     
   · intro H
@@ -318,7 +318,7 @@ theorem exists_rat_btwn {x y : α} (h : x < y) : ∃ q : ℚ, x < q ∧ (q : α)
     subst H
     cases n0
     
-  · rw [Rat.coe_nat_denom, Nat.cast_one]
+  · rw [Rat.coe_nat_denom, Nat.cast_oneₓ]
     exact one_ne_zero
     
 

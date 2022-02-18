@@ -97,12 +97,12 @@ theorem measurable_arg : Measurable arg :=
   have B : Measurable fun x : ℂ => Real.arcsin ((-x).im / x.abs) :=
     Real.measurable_arcsin.comp ((measurable_im.comp measurable_neg).div measurable_norm)
   Measurable.ite (is_closed_le continuous_const continuous_re).MeasurableSet A <|
-    Measurable.ite (is_closed_le continuous_const continuous_im).MeasurableSet (B.add_const _) (B.sub_const _)
+    Measurable.ite (is_closed_le continuous_const continuous_im).MeasurableSet (B.AddConst _) (B.sub_const _)
 
 @[measurability]
 theorem measurable_log : Measurable log :=
   (measurable_of_real.comp <| Real.measurable_log.comp measurable_norm).add <|
-    (measurable_of_real.comp measurable_arg).mul_const I
+    (measurable_of_real.comp measurable_arg).mul_const i
 
 end Complex
 

@@ -23,14 +23,14 @@ variable {X Y Z : Type _} [TopologicalSpace X] [TopologicalSpace Y] [Topological
 /-- A function `f : X → Y` satisfies `is_locally_homeomorph` if each `x : x` is contained in
   the source of some `e : local_homeomorph X Y` with `f = e`. -/
 def IsLocallyHomeomorph :=
-  ∀ x : X, ∃ e : LocalHomeomorph X Y, x ∈ e.source ∧ f = e
+  ∀ x : X, ∃ e : LocalHomeomorph X Y, x ∈ e.Source ∧ f = e
 
 namespace IsLocallyHomeomorph
 
 /-- Proves that `f` satisfies `is_locally_homeomorph`. The condition `h` is weaker than definition
 of `is_locally_homeomorph`, since it only requires `e : local_homeomorph X Y` to agree with `f` on
 its source `e.source`, as opposed to on the whole space `X`. -/
-theorem mk (h : ∀ x : X, ∃ e : LocalHomeomorph X Y, x ∈ e.source ∧ ∀ x, x ∈ e.source → f x = e x) :
+theorem mk (h : ∀ x : X, ∃ e : LocalHomeomorph X Y, x ∈ e.Source ∧ ∀ x, x ∈ e.Source → f x = e x) :
     IsLocallyHomeomorph f := by
   intro x
   obtain ⟨e, hx, he⟩ := h x

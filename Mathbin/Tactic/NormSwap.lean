@@ -28,20 +28,20 @@ example : equiv.swap 1 2 1 = 2 := by norm_num
 @[norm_num]
 unsafe def eval : expr → tactic (expr × expr) := fun e => do
   let (swapt, fun_ty, coe_fn_inst, fexpr, c) ← e.match_app_coe_fn <|> fail "did not get an app coe_fn expr"
-  guardₓ (fexpr.get_app_fn.const_name = `` Equivₓ.swap) <|> fail "coe_fn not of equiv.swap"
+  guardₓ (fexpr = `` Equivₓ.swap) <|> fail "coe_fn not of equiv.swap"
   let [α, deceq_inst, a, b] ← pure fexpr.get_app_args <|> fail "swap did not have exactly two args applied"
   let na ←
     a.to_rat <|> do
         let (fa, _) ← norm_fin.eval_fin_num a
-        fa.to_rat
+        fa
   let nb ←
     b.to_rat <|> do
         let (fb, _) ← norm_fin.eval_fin_num b
-        fb.to_rat
+        fb
   let nc ←
     c.to_rat <|> do
         let (fc, _) ← norm_fin.eval_fin_num c
-        fc.to_rat
+        fc
   if nc = na then do
       let p ← mk_mapp `equiv.swap_apply_left [α, deceq_inst, a, b]
       pure (b, p)

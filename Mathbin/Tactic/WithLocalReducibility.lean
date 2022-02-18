@@ -19,12 +19,12 @@ inductive decl_reducibility
   deriving DecidableEq
 
 /-- Satisfy the inhabited linter -/
-instance : Inhabited decl_reducibility :=
-  ⟨decl_reducibility.semireducible⟩
+instance : Inhabited DeclReducibility :=
+  ⟨DeclReducibility.semireducible⟩
 
 /-- Get the reducibility attribute of a declaration.
 Fails if the name does not refer to an existing declaration. -/
-unsafe def get_decl_reducibility (n : Name) : tactic decl_reducibility := do
+unsafe def get_decl_reducibility (n : Name) : tactic DeclReducibility := do
   let is_irred ← has_attribute' `irreducible n
   if is_irred then pure decl_reducibility.irreducible
     else do
@@ -32,22 +32,21 @@ unsafe def get_decl_reducibility (n : Name) : tactic decl_reducibility := do
       if is_red then pure decl_reducibility.reducible
         else do
           let e ← get_env
-          if e.contains n then pure decl_reducibility.semireducible
-            else fail f! "get_decl_reducibility: no declaration {n}"
+          if e n then pure decl_reducibility.semireducible else fail f! "get_decl_reducibility: no declaration {n}"
 
 /-- Return the attribute (as a `name`) corresponding to a reducibility level. -/
-def decl_reducibility.to_attribute : decl_reducibility → Name
+def decl_reducibility.to_attribute : DeclReducibility → Name
   | decl_reducibility.reducible => `reducible
   | decl_reducibility.semireducible => `semireducible
   | decl_reducibility.irreducible => `irreducible
 
 /-- Set the reducibility attribute of a declaration.
 If `persistent := ff`, this is scoped to the enclosing `section`, like `local attribute`. -/
-unsafe def set_decl_reducibility (n : Name) (r : decl_reducibility) (persistent := ff) : tactic Unit :=
-  set_basic_attribute r.to_attribute n persistent
+unsafe def set_decl_reducibility (n : Name) (r : DeclReducibility) (persistent := false) : tactic Unit :=
+  set_basic_attribute r.toAttribute n persistent
 
 /-- Execute a tactic with a temporarily modified reducibility attribute for a declaration. -/
-unsafe def with_local_reducibility {α : Type _} (n : Name) (r : decl_reducibility) (body : tactic α) : tactic α := do
+unsafe def with_local_reducibility {α : Type _} (n : Name) (r : DeclReducibility) (body : tactic α) : tactic α := do
   let r' ← get_decl_reducibility n
   bracket (set_decl_reducibility n r) body (set_decl_reducibility n r')
 

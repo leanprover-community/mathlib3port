@@ -84,9 +84,9 @@ end Semigroupₓ
 protected theorem all {S : Type _} [CommSemigroupₓ S] (a b : S) : Commute a b :=
   mul_comm a b
 
-section MulOneClass
+section MulOneClassₓ
 
-variable {M : Type _} [MulOneClass M]
+variable {M : Type _} [MulOneClassₓ M]
 
 @[simp, to_additive]
 theorem one_right (a : M) : Commute a 1 :=
@@ -96,7 +96,7 @@ theorem one_right (a : M) : Commute a 1 :=
 theorem one_left (a : M) : Commute 1 a :=
   SemiconjBy.one_left a
 
-end MulOneClass
+end MulOneClassₓ
 
 section Monoidₓ
 

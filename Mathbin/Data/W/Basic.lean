@@ -45,11 +45,11 @@ def of_sigma : (Σ a : α, β a → WType β) → WType β
   | ⟨a, f⟩ => WType.mk a f
 
 @[simp]
-theorem of_sigma_to_sigma : ∀ w : WType β, of_sigma (to_sigma w) = w
+theorem of_sigma_to_sigma : ∀ w : WType β, ofSigma (toSigma w) = w
   | ⟨a, f⟩ => rfl
 
 @[simp]
-theorem to_sigma_of_sigma : ∀ s : Σ a : α, β a → WType β, to_sigma (of_sigma s) = s
+theorem to_sigma_of_sigma : ∀ s : Σ a : α, β a → WType β, toSigma (ofSigma s) = s
   | ⟨a, f⟩ => rfl
 
 variable (β)
@@ -58,8 +58,8 @@ variable (β)
   the polynomial `Σ a : α, β a → W_type β`.  -/
 @[simps]
 def equiv_sigma : WType β ≃ Σ a : α, β a → WType β where
-  toFun := to_sigma
-  invFun := of_sigma
+  toFun := toSigma
+  invFun := ofSigma
   left_inv := of_sigma_to_sigma
   right_inv := to_sigma_of_sigma
 
@@ -70,7 +70,7 @@ def elim (γ : Type _) (fγ : (Σ a : α, β a → γ) → γ) : WType β → γ
   | ⟨a, f⟩ => fγ ⟨a, fun b => elim (f b)⟩
 
 theorem elim_injective (γ : Type _) (fγ : (Σ a : α, β a → γ) → γ) (fγ_injective : Function.Injective fγ) :
-    Function.Injective (elim γ fγ)
+    Function.Injective (elimₓ γ fγ)
   | ⟨a₁, f₁⟩, ⟨a₂, f₂⟩, h => by
     obtain ⟨rfl, h⟩ := Sigma.mk.inj (fγ_injective h)
     congr with x
@@ -121,22 +121,22 @@ private def W_type' {α : Type _} (β : α → Type _) [∀ a : α, Fintype (β 
 
 variable {α : Type _} {β : α → Type _} [∀ a : α, Fintype (β a)] [∀ a : α, Encodable (β a)]
 
-private def encodable_zero : Encodable (W_type' β 0) :=
-  let f : W_type' β 0 → Empty := fun ⟨x, h⟩ => False.elim <| not_lt_of_geₓ h (WType.depth_pos _)
-  let finv : Empty → W_type' β 0 := by
+private def encodable_zero : Encodable (WType' β 0) :=
+  let f : WType' β 0 → Empty := fun ⟨x, h⟩ => False.elim <| not_lt_of_geₓ h (WType.depth_pos _)
+  let finv : Empty → WType' β 0 := by
     intro x
     cases x
   have : ∀ x, finv (f x) = x := fun ⟨x, h⟩ => False.elim <| not_lt_of_geₓ h (WType.depth_pos _)
   Encodable.ofLeftInverse f finv this
 
-private def f (n : ℕ) : W_type' β (n + 1) → Σ a : α, β a → W_type' β n
+private def f (n : ℕ) : WType' β (n + 1) → Σ a : α, β a → WType' β n
   | ⟨t, h⟩ => by
     cases' t with a f
     have h₀ : ∀ i : β a, WType.depth (f i) ≤ n := fun i =>
       Nat.le_of_lt_succₓ (lt_of_lt_of_leₓ (WType.depth_lt_depth_mk a f i) h)
     exact ⟨a, fun i : β a => ⟨f i, h₀ i⟩⟩
 
-private def finv (n : ℕ) : (Σ a : α, β a → W_type' β n) → W_type' β (n + 1)
+private def finv (n : ℕ) : (Σ a : α, β a → WType' β n) → WType' β (n + 1)
   | ⟨a, f⟩ =>
     let f' := fun i : β a => (f i).val
     have : WType.depth ⟨a, f'⟩ ≤ n + 1 := add_le_add_right (Finset.sup_le fun b h => (f b).2) 1
@@ -144,7 +144,7 @@ private def finv (n : ℕ) : (Σ a : α, β a → W_type' β n) → W_type' β (
 
 variable [Encodable α]
 
-private def encodable_succ (n : Nat) (h : Encodable (W_type' β n)) : Encodable (W_type' β (n + 1)) :=
+private def encodable_succ (n : Nat) (h : Encodable (WType' β n)) : Encodable (WType' β (n + 1)) :=
   Encodable.ofLeftInverse (f n) (finv n)
     (by
       rintro ⟨⟨_, _⟩, _⟩
@@ -154,7 +154,7 @@ private def encodable_succ (n : Nat) (h : Encodable (W_type' β n)) : Encodable 
 encodable. -/
 instance : Encodable (WType β) := by
   have h' : ∀ n, Encodable (W_type' β n) := fun n => Nat.recOn n encodable_zero encodable_succ
-  let f : WType β → Σ n, W_type' β n := fun t => ⟨t.depth, ⟨t, le_reflₓ _⟩⟩
+  let f : WType β → Σ n, W_type' β n := fun t => ⟨t.depth, ⟨t, le_rfl⟩⟩
   let finv : (Σ n, W_type' β n) → WType β := fun p => p.2.1
   have : ∀ t, finv (f t) = t := fun t => rfl
   exact Encodable.ofLeftInverse f finv this

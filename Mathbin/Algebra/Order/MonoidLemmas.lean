@@ -96,9 +96,9 @@ end LT
 
 end Mul
 
-section MulOneClass
+section MulOneClassₓ
 
-variable [MulOneClass α]
+variable [MulOneClassₓ α]
 
 section LE
 
@@ -138,7 +138,7 @@ theorem mul_le_iff_le_one_left' [CovariantClass α α (swap (· * ·)) (· ≤ �
 
 end LE
 
-theorem exists_square_le {α : Type _} [MulOneClass α] [LinearOrderₓ α] [CovariantClass α α (· * ·) (· < ·)] (a : α) :
+theorem exists_square_le {α : Type _} [MulOneClassₓ α] [LinearOrderₓ α] [CovariantClass α α (· * ·) (· < ·)] (a : α) :
     ∃ b : α, b * b ≤ a := by
   by_cases' h : a < 1
   · use a
@@ -389,17 +389,17 @@ theorem mul_le_of_le_one_right' [LE α] [CovariantClass α α (· * ·) (· ≤ 
     _ = a := mul_oneₓ a
     
 
-end MulOneClass
+end MulOneClassₓ
 
 @[to_additive]
 theorem mul_left_cancel'' [Semigroupₓ α] [PartialOrderₓ α] [ContravariantClass α α (· * ·) (· ≤ ·)] {a b c : α}
     (h : a * b = a * c) : b = c :=
-  (le_of_mul_le_mul_left' h.le).antisymm (le_of_mul_le_mul_left' h.ge)
+  (le_of_mul_le_mul_left' h.le).antisymm (le_of_mul_le_mul_left' h.Ge)
 
 @[to_additive]
 theorem mul_right_cancel'' [Semigroupₓ α] [PartialOrderₓ α] [ContravariantClass α α (swap (· * ·)) (· ≤ ·)] {a b c : α}
     (h : a * b = c * b) : a = c :=
-  le_antisymmₓ (le_of_mul_le_mul_right' h.le) (le_of_mul_le_mul_right' h.ge)
+  le_antisymmₓ (le_of_mul_le_mul_right' h.le) (le_of_mul_le_mul_right' h.Ge)
 
 /-- A semigroup with a partial order and satisfying `left_cancel_semigroup`
 (i.e. `a * c < b * c → a < b`) is a `left_cancel semigroup`. -/
@@ -490,9 +490,9 @@ end Mul
 /-!  Here we start using properties of one, on the left. -/
 
 
-section MulOneClass
+section MulOneClassₓ
 
-variable [MulOneClass α] [CovariantClass α α (· * ·) (· ≤ ·)]
+variable [MulOneClassₓ α] [CovariantClass α α (· * ·) (· ≤ ·)]
 
 @[to_additive]
 theorem lt_of_mul_lt_of_one_le_left (h : a * b < c) (hle : 1 ≤ b) : a < c :=
@@ -518,7 +518,7 @@ theorem mul_lt_of_lt_of_lt_one (bc : b < c) (a1 : a < 1) : b * a < c :=
     _ < c := bc
     
 
-end MulOneClass
+end MulOneClassₓ
 
 end Left
 
@@ -565,9 +565,9 @@ end Mul
 /-!  Here we start using properties of one, on the right. -/
 
 
-section MulOneClass
+section MulOneClassₓ
 
-variable [MulOneClass α]
+variable [MulOneClassₓ α]
 
 section LeRight
 
@@ -623,7 +623,7 @@ theorem lt_mul_of_one_lt_left' [CovariantClass α α (swap (· * ·)) (· < ·)]
 
 end LtRight
 
-end MulOneClass
+end MulOneClassₓ
 
 end Preorderₓ
 
@@ -633,9 +633,9 @@ section Preorderₓ
 
 variable [Preorderₓ α]
 
-section MulOneClass
+section MulOneClassₓ
 
-variable [MulOneClass α]
+variable [MulOneClassₓ α]
 
 section CovariantLeft
 
@@ -693,7 +693,7 @@ theorem lt_mul_of_one_lt_of_lt (ha : 1 < a) (hbc : b < c) : b < a * c :=
 
 end CovariantRight
 
-end MulOneClass
+end MulOneClassₓ
 
 end Preorderₓ
 
@@ -702,7 +702,7 @@ section PartialOrderₓ
 /-!  Properties assuming `partial_order`. -/
 
 
-variable [MulOneClass α] [PartialOrderₓ α] [CovariantClass α α (· * ·) (· ≤ ·)]
+variable [MulOneClassₓ α] [PartialOrderₓ α] [CovariantClass α α (· * ·) (· ≤ ·)]
   [CovariantClass α α (swap (· * ·)) (· ≤ ·)]
 
 @[to_additive]
@@ -796,17 +796,17 @@ theorem Contravariant.mul_le_cancellable [Mul α] [LE α] [ContravariantClass α
 namespace MulLeCancellable
 
 @[to_additive]
-protected theorem injective [Mul α] [PartialOrderₓ α] {a : α} (ha : MulLeCancellable a) : injective ((· * ·) a) :=
-  fun b c h => le_antisymmₓ (ha h.le) (ha h.ge)
+protected theorem injective [Mul α] [PartialOrderₓ α] {a : α} (ha : MulLeCancellable a) : Injective ((· * ·) a) :=
+  fun b c h => le_antisymmₓ (ha h.le) (ha h.Ge)
 
 @[to_additive]
 protected theorem inj [Mul α] [PartialOrderₓ α] {a b c : α} (ha : MulLeCancellable a) : a * b = a * c ↔ b = c :=
-  ha.injective.eq_iff
+  ha.Injective.eq_iff
 
 @[to_additive]
 protected theorem injective_left [CommSemigroupₓ α] [PartialOrderₓ α] {a : α} (ha : MulLeCancellable a) :
-    injective (· * a) := fun b c h =>
-  ha.injective <| by
+    Injective (· * a) := fun b c h =>
+  ha.Injective <| by
     rwa [mul_comm a, mul_comm a]
 
 @[to_additive]
@@ -827,7 +827,7 @@ protected theorem mul_le_mul_iff_right [CommSemigroupₓ α] [CovariantClass α 
   rw [mul_comm b, mul_comm c, ha.mul_le_mul_iff_left]
 
 @[to_additive]
-protected theorem le_mul_iff_one_le_right [MulOneClass α] [CovariantClass α α (· * ·) (· ≤ ·)] {a b : α}
+protected theorem le_mul_iff_one_le_right [MulOneClassₓ α] [CovariantClass α α (· * ·) (· ≤ ·)] {a b : α}
     (ha : MulLeCancellable a) : a ≤ a * b ↔ 1 ≤ b :=
   Iff.trans
     (by
@@ -835,7 +835,7 @@ protected theorem le_mul_iff_one_le_right [MulOneClass α] [CovariantClass α α
     ha.mul_le_mul_iff_left
 
 @[to_additive]
-protected theorem mul_le_iff_le_one_right [MulOneClass α] [CovariantClass α α (· * ·) (· ≤ ·)] {a b : α}
+protected theorem mul_le_iff_le_one_right [MulOneClassₓ α] [CovariantClass α α (· * ·) (· ≤ ·)] {a b : α}
     (ha : MulLeCancellable a) : a * b ≤ a ↔ b ≤ 1 :=
   Iff.trans
     (by

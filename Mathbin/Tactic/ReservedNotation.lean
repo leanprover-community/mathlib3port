@@ -18,7 +18,7 @@ are defined.
 -- ././Mathport/Syntax/Translate/Basic.lean:1297:11: warning: suppressing unsupported reserve notation
 -- ././Mathport/Syntax/Translate/Basic.lean:1297:11: warning: suppressing unsupported reserve notation
 -- ././Mathport/Syntax/Translate/Basic.lean:1297:11: warning: suppressing unsupported reserve notation
--- ././Mathport/Syntax/Translate/Basic.lean:342:9: unsupported: advanced prec syntax
+-- ././Mathport/Syntax/Translate/Basic.lean:343:9: unsupported: advanced prec syntax
 -- ././Mathport/Syntax/Translate/Basic.lean:1297:11: warning: suppressing unsupported reserve notation
 -- ././Mathport/Syntax/Translate/Basic.lean:1297:11: warning: suppressing unsupported reserve notation
 -- ././Mathport/Syntax/Translate/Basic.lean:1297:11: warning: suppressing unsupported reserve notation

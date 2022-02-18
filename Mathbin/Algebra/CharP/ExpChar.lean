@@ -33,7 +33,7 @@ variable [Semiringₓ R]
 /-- The definition of the exponential characteristic of a semiring. -/
 class inductive ExpChar (R : Type u) [Semiringₓ R] : ℕ → Prop
   | zero [CharZero R] : ExpChar 1
-  | Prime {q : ℕ} (hprime : q.prime) [hchar : CharP R q] : ExpChar q
+  | Prime {q : ℕ} (hprime : q.Prime) [hchar : CharP R q] : ExpChar q
 
 /-- The exponential characteristic is one if the characteristic is zero. -/
 theorem exp_char_one_of_char_zero (q : ℕ) [hp : CharP R 0] [hq : ExpChar R q] : q = 1 := by
@@ -44,7 +44,7 @@ theorem exp_char_one_of_char_zero (q : ℕ) [hp : CharP R 0] [hq : ExpChar R q] 
     
 
 /-- The characteristic equals the exponential characteristic iff the former is prime. -/
-theorem char_eq_exp_char_iff (p q : ℕ) [hp : CharP R p] [hq : ExpChar R q] : p = q ↔ p.prime := by
+theorem char_eq_exp_char_iff (p q : ℕ) [hp : CharP R p] [hq : ExpChar R q] : p = q ↔ p.Prime := by
   cases' hq with q hq_one hq_prime
   · constructor
     · rintro rfl

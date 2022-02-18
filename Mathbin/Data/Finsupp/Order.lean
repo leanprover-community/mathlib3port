@@ -51,7 +51,7 @@ def order_embedding_to_fun : (ι →₀ α) ↪o (ι → α) where
   map_rel_iff' := fun a b => (@le_def _ _ _ _ a b).symm
 
 @[simp]
-theorem order_embedding_to_fun_apply {f : ι →₀ α} {i : ι} : order_embedding_to_fun f i = f i :=
+theorem order_embedding_to_fun_apply {f : ι →₀ α} {i : ι} : orderEmbeddingToFun f i = f i :=
   rfl
 
 end LE
@@ -71,7 +71,7 @@ instance [PartialOrderₓ α] : PartialOrderₓ (ι →₀ α) :=
   { Finsupp.preorder with le_antisymm := fun f g hfg hgf => ext fun i => (hfg i).antisymm (hgf i) }
 
 instance [SemilatticeInf α] : SemilatticeInf (ι →₀ α) :=
-  { Finsupp.partialOrder with inf := zip_with (·⊓·) inf_idem, inf_le_left := fun f g i => inf_le_left,
+  { Finsupp.partialOrder with inf := zipWith (·⊓·) inf_idem, inf_le_left := fun f g i => inf_le_left,
     inf_le_right := fun f g i => inf_le_right, le_inf := fun f g i h1 h2 s => le_inf (h1 s) (h2 s) }
 
 @[simp]
@@ -79,7 +79,7 @@ theorem inf_apply [SemilatticeInf α] {i : ι} {f g : ι →₀ α} : (f⊓g) i 
   rfl
 
 instance [SemilatticeSup α] : SemilatticeSup (ι →₀ α) :=
-  { Finsupp.partialOrder with sup := zip_with (·⊔·) sup_idem, le_sup_left := fun f g i => le_sup_left,
+  { Finsupp.partialOrder with sup := zipWith (·⊔·) sup_idem, le_sup_left := fun f g i => le_sup_left,
     le_sup_right := fun f g i => le_sup_right, sup_le := fun f g h hf hg i => sup_le (hf i) (hg i) }
 
 @[simp]
@@ -121,12 +121,12 @@ protected theorem bot_eq_zero : (⊥ : ι →₀ α) = 0 :=
 theorem add_eq_zero_iff (f g : ι →₀ α) : f + g = 0 ↔ f = 0 ∧ g = 0 := by
   simp [ext_iff, forall_and_distrib]
 
-theorem le_iff' (f g : ι →₀ α) {s : Finset ι} (hf : f.support ⊆ s) : f ≤ g ↔ ∀, ∀ i ∈ s, ∀, f i ≤ g i :=
+theorem le_iff' (f g : ι →₀ α) {s : Finset ι} (hf : f.Support ⊆ s) : f ≤ g ↔ ∀, ∀ i ∈ s, ∀, f i ≤ g i :=
   ⟨fun h s hs => h s, fun h s =>
-    if H : s ∈ f.support then h s (hf H) else (not_mem_support_iff.1 H).symm ▸ zero_le (g s)⟩
+    if H : s ∈ f.Support then h s (hf H) else (not_mem_support_iff.1 H).symm ▸ zero_le (g s)⟩
 
-theorem le_iff (f g : ι →₀ α) : f ≤ g ↔ ∀, ∀ i ∈ f.support, ∀, f i ≤ g i :=
-  le_iff' f g <| subset.refl _
+theorem le_iff (f g : ι →₀ α) : f ≤ g ↔ ∀, ∀ i ∈ f.Support, ∀, f i ≤ g i :=
+  le_iff' f g <| Subset.refl _
 
 instance decidable_le [DecidableRel (@LE.le α _)] : DecidableRel (@LE.le (ι →₀ α) _) := fun f g =>
   decidableOfIff _ (le_iff f g).symm
@@ -141,7 +141,7 @@ variable [Sub α] [HasOrderedSub α] {f g : ι →₀ α} {i : ι} {a b : α}
 /-- This is called `tsub` for truncated subtraction, to distinguish it with subtraction in an
 additive group. -/
 instance tsub : Sub (ι →₀ α) :=
-  ⟨zip_with (fun m n => m - n) (tsub_self 0)⟩
+  ⟨zipWith (fun m n => m - n) (tsub_self 0)⟩
 
 instance : HasOrderedSub (ι →₀ α) :=
   ⟨fun n m k => forall_congrₓ fun x => tsub_le_iff_right⟩
@@ -173,11 +173,11 @@ theorem single_tsub : single i (a - b) = single i a - single i b := by
   · rw [tsub_apply, single_eq_of_ne h, single_eq_of_ne h, single_eq_of_ne h, tsub_self]
     
 
-theorem support_tsub {f1 f2 : ι →₀ α} : (f1 - f2).Support ⊆ f1.support := by
+theorem support_tsub {f1 f2 : ι →₀ α} : (f1 - f2).Support ⊆ f1.Support := by
   simp (config := { contextual := true })only [subset_iff, tsub_eq_zero_iff_le, mem_support_iff, Ne.def, coe_tsub,
     Pi.sub_apply, not_imp_not, zero_le, implies_true_iff]
 
-theorem subset_support_tsub {f1 f2 : ι →₀ α} : f1.support \ f2.support ⊆ (f1 - f2).Support := by
+theorem subset_support_tsub {f1 f2 : ι →₀ α} : f1.Support \ f2.Support ⊆ (f1 - f2).Support := by
   simp (config := { contextual := true })[subset_iff]
 
 end CanonicallyOrderedAddMonoid
@@ -187,18 +187,18 @@ section CanonicallyLinearOrderedAddMonoid
 variable [CanonicallyLinearOrderedAddMonoid α] [DecidableEq ι] {f g : ι →₀ α}
 
 @[simp]
-theorem support_inf : (f⊓g).Support = f.support ∩ g.support := by
+theorem support_inf : (f⊓g).Support = f.Support ∩ g.Support := by
   ext
   simp only [inf_apply, mem_support_iff, Ne.def, Finset.mem_union, Finset.mem_filter, Finset.mem_inter]
   simp only [inf_eq_min, ← nonpos_iff_eq_zero, min_le_iff, not_or_distrib]
 
 @[simp]
-theorem support_sup : (f⊔g).Support = f.support ∪ g.support := by
+theorem support_sup : (f⊔g).Support = f.Support ∪ g.Support := by
   ext
   simp only [Finset.mem_union, mem_support_iff, sup_apply, Ne.def, ← bot_eq_zero]
   rw [_root_.sup_eq_bot_iff, not_and_distrib]
 
-theorem disjoint_iff : Disjoint f g ↔ Disjoint f.support g.support := by
+theorem disjoint_iff : Disjoint f g ↔ Disjoint f.Support g.Support := by
   rw [disjoint_iff, disjoint_iff, Finsupp.bot_eq_zero, ← Finsupp.support_eq_empty, Finsupp.support_inf]
   rfl
 

@@ -29,8 +29,8 @@ theorem join_append (L₁ L₂ : List (List α)) : join (L₁ ++ L₂) = join L�
   induction L₁ <;> [rfl, simp only [*, join, cons_append, append_assoc]]
 
 @[simp]
-theorem join_filter_empty_eq_ff [DecidablePred fun l : List α => l.empty = ff] :
-    ∀ {L : List (List α)}, join (L.filter fun l => l.empty = ff) = L.join
+theorem join_filter_empty_eq_ff [DecidablePred fun l : List α => l.Empty = ff] :
+    ∀ {L : List (List α)}, join (L.filter fun l => l.Empty = ff) = L.join
   | [] => rfl
   | [] :: L => by
     simp [@join_filter_empty_eq_ff L]
@@ -48,11 +48,11 @@ theorem join_join (l : List (List (List α))) : l.join.join = (l.map join).join 
   simp [l_ih]
 
 @[simp]
-theorem length_join (L : List (List α)) : length (join L) = Sum (map length L) := by
+theorem length_join (L : List (List α)) : length (join L) = sum (map length L) := by
   induction L <;> [rfl, simp only [*, join, map, sum_cons, length_append]]
 
 @[simp]
-theorem length_bind (l : List α) (f : α → List β) : length (List.bind l f) = Sum (map (length ∘ f) l) := by
+theorem length_bind (l : List α) (f : α → List β) : length (List.bind l f) = sum (map (length ∘ f) l) := by
   rw [List.bind, length_join, map_map]
 
 /-- In a join, taking the first elements up to an index which is the sum of the lengths of the
@@ -80,7 +80,7 @@ theorem drop_sum_join (L : List (List α)) (i : ℕ) : L.join.drop ((L.map lengt
 /-- Taking only the first `i+1` elements in a list, and then dropping the first `i` ones, one is
 left with a list of length `1` made of the `i`-th element of the original list. -/
 theorem drop_take_succ_eq_cons_nth_le (L : List α) {i : ℕ} (hi : i < L.length) :
-    (L.take (i + 1)).drop i = [nth_le L i hi] := by
+    (L.take (i + 1)).drop i = [nthLe L i hi] := by
   induction L generalizing i
   · simp only [length] at hi
     exact (Nat.not_succ_le_zeroₓ i hi).elim
@@ -98,18 +98,18 @@ theorem drop_take_succ_eq_cons_nth_le (L : List α) {i : ℕ} (hi : i < L.length
 original sublist of index `i` if `A` is the sum of the lenghts of sublists of index `< i`, and
 `B` is the sum of the lengths of sublists of index `≤ i`. -/
 theorem drop_take_succ_join_eq_nth_le (L : List (List α)) {i : ℕ} (hi : i < L.length) :
-    (L.join.take ((L.map length).take (i + 1)).Sum).drop ((L.map length).take i).Sum = nth_le L i hi := by
+    (L.join.take ((L.map length).take (i + 1)).Sum).drop ((L.map length).take i).Sum = nthLe L i hi := by
   have : (L.map length).take i = ((L.take (i + 1)).map length).take i := by
     simp [map_take, take_take]
   simp [take_sum_join, this, drop_sum_join, drop_take_succ_eq_cons_nth_le _ hi]
 
 /-- Auxiliary lemma to control elements in a join. -/
-theorem sum_take_map_length_lt1 (L : List (List α)) {i j : ℕ} (hi : i < L.length) (hj : j < (nth_le L i hi).length) :
+theorem sum_take_map_length_lt1 (L : List (List α)) {i j : ℕ} (hi : i < L.length) (hj : j < (nthLe L i hi).length) :
     ((L.map length).take i).Sum + j < ((L.map length).take (i + 1)).Sum := by
   simp [hi, sum_take_succ, hj]
 
 /-- Auxiliary lemma to control elements in a join. -/
-theorem sum_take_map_length_lt2 (L : List (List α)) {i j : ℕ} (hi : i < L.length) (hj : j < (nth_le L i hi).length) :
+theorem sum_take_map_length_lt2 (L : List (List α)) {i j : ℕ} (hi : i < L.length) (hj : j < (nthLe L i hi).length) :
     ((L.map length).take i).Sum + j < L.join.length := by
   convert lt_of_lt_of_leₓ (sum_take_map_length_lt1 L hi hj) (monotone_sum_take _ hi)
   have : L.length = (L.map length).length := by
@@ -119,9 +119,8 @@ theorem sum_take_map_length_lt2 (L : List (List α)) {i j : ℕ} (hi : i < L.len
 /-- The `n`-th element in a join of sublists is the `j`-th element of the `i`th sublist,
 where `n` can be obtained in terms of `i` and `j` by adding the lengths of all the sublists
 of index `< i`, and adding `j`. -/
-theorem nth_le_join (L : List (List α)) {i j : ℕ} (hi : i < L.length) (hj : j < (nth_le L i hi).length) :
-    nth_le L.join (((L.map length).take i).Sum + j) (sum_take_map_length_lt2 L hi hj) = nth_le (nth_le L i hi) j hj :=
-  by
+theorem nth_le_join (L : List (List α)) {i j : ℕ} (hi : i < L.length) (hj : j < (nthLe L i hi).length) :
+    nthLe L.join (((L.map length).take i).Sum + j) (sum_take_map_length_lt2 L hi hj) = nthLe (nthLe L i hi) j hj := by
   rw [nth_le_take L.join (sum_take_map_length_lt2 L hi hj) (sum_take_map_length_lt1 L hi hj), nth_le_drop,
     nth_le_of_eq (drop_take_succ_join_eq_nth_le L hi)]
 

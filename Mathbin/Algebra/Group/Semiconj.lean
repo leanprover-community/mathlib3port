@@ -58,9 +58,9 @@ protected theorem Transitive : Transitive fun a b : S => ∃ c, SemiconjBy c a b
 
 end Semigroupₓ
 
-section MulOneClass
+section MulOneClassₓ
 
-variable {M : Type u} [MulOneClass M]
+variable {M : Type u} [MulOneClassₓ M]
 
 /-- Any element semiconjugates `1` to `1`. -/
 @[simp, to_additive]
@@ -78,7 +78,7 @@ generally, on ` mul_one_class` type) is reflexive. -/
       "The relation “there exists an element that semiconjugates `a` to `b`” on an additive\nmonoid (or, more generally, on a `add_zero_class` type) is reflexive."]
 protected theorem Reflexive : Reflexive fun a b : M => ∃ c, SemiconjBy c a b := fun a => ⟨1, one_left a⟩
 
-end MulOneClass
+end MulOneClassₓ
 
 section Monoidₓ
 

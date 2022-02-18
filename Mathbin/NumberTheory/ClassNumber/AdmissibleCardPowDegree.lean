@@ -18,14 +18,16 @@ of the ring of integers of a function field is finite.
 
 namespace Polynomial
 
+open_locale Polynomial
+
 open AbsoluteValue Real
 
 variable {Fq : Type _} [Field Fq] [Fintype Fq]
 
 /-- If `A` is a family of enough low-degree polynomials over a finite field, there is a
 pair of equal elements in `A`. -/
-theorem exists_eq_polynomial {d : ℕ} {m : ℕ} (hm : Fintype.card Fq ^ d ≤ m) (b : Polynomial Fq) (hb : nat_degree b ≤ d)
-    (A : Finₓ m.succ → Polynomial Fq) (hA : ∀ i, degree (A i) < degree b) : ∃ i₀ i₁, i₀ ≠ i₁ ∧ A i₁ = A i₀ := by
+theorem exists_eq_polynomial {d : ℕ} {m : ℕ} (hm : Fintype.card Fq ^ d ≤ m) (b : Fq[X]) (hb : natDegree b ≤ d)
+    (A : Finₓ m.succ → Fq[X]) (hA : ∀ i, degree (A i) < degree b) : ∃ i₀ i₁, i₀ ≠ i₁ ∧ A i₁ = A i₀ := by
   set f : Finₓ m.succ → Finₓ d → Fq := fun i j => (A i).coeff j
   have : Fintype.card (Finₓ d → Fq) < Fintype.card (Finₓ m.succ) := by
     simpa using lt_of_le_of_ltₓ hm (Nat.lt_succ_selfₓ m)
@@ -43,9 +45,9 @@ theorem exists_eq_polynomial {d : ℕ} {m : ℕ} (hm : Fintype.card Fq ^ d ≤ m
 /-- If `A` is a family of enough low-degree polynomials over a finite field,
 there is a pair of elements in `A` (with different indices but not necessarily
 distinct), such that their difference has small degree. -/
-theorem exists_approx_polynomial_aux {d : ℕ} {m : ℕ} (hm : Fintype.card Fq ^ d ≤ m) (b : Polynomial Fq)
-    (A : Finₓ m.succ → Polynomial Fq) (hA : ∀ i, degree (A i) < degree b) :
-    ∃ i₀ i₁, i₀ ≠ i₁ ∧ degree (A i₁ - A i₀) < ↑(nat_degree b - d) := by
+theorem exists_approx_polynomial_aux {d : ℕ} {m : ℕ} (hm : Fintype.card Fq ^ d ≤ m) (b : Fq[X])
+    (A : Finₓ m.succ → Fq[X]) (hA : ∀ i, degree (A i) < degree b) :
+    ∃ i₀ i₁, i₀ ≠ i₁ ∧ degree (A i₁ - A i₀) < ↑(natDegree b - d) := by
   have hb : b ≠ 0 := by
     rintro rfl
     specialize hA 0
@@ -78,9 +80,9 @@ theorem exists_approx_polynomial_aux {d : ℕ} {m : ℕ} (hm : Fintype.card Fq ^
 /-- If `A` is a family of enough low-degree polynomials over a finite field,
 there is a pair of elements in `A` (with different indices but not necessarily
 distinct), such that the difference of their remainders is close together. -/
-theorem exists_approx_polynomial {b : Polynomial Fq} (hb : b ≠ 0) {ε : ℝ} (hε : 0 < ε)
-    (A : Finₓ (Fintype.card Fq ^ ⌈-log ε / log (Fintype.card Fq)⌉₊).succ → Polynomial Fq) :
-    ∃ i₀ i₁, i₀ ≠ i₁ ∧ (card_pow_degree (A i₁ % b - A i₀ % b) : ℝ) < card_pow_degree b • ε := by
+theorem exists_approx_polynomial {b : Fq[X]} (hb : b ≠ 0) {ε : ℝ} (hε : 0 < ε)
+    (A : Finₓ (Fintype.card Fq ^ ⌈-log ε / log (Fintype.card Fq)⌉₊).succ → Fq[X]) :
+    ∃ i₀ i₁, i₀ ≠ i₁ ∧ (cardPowDegree (A i₁ % b - A i₀ % b) : ℝ) < cardPowDegree b • ε := by
   have hbε : 0 < card_pow_degree b • ε := by
     rw [Algebra.smul_def, RingHom.eq_int_cast]
     exact mul_pos (int.cast_pos.mpr (AbsoluteValue.pos _ hb)) hε
@@ -123,8 +125,8 @@ theorem exists_approx_polynomial {b : Polynomial Fq} (hb : b ≠ 0) {ε : ℝ} (
   exact le_of_eqₓ (Nat.cast_sub le_b.le)
 
 /-- If `x` is close to `y` and `y` is close to `z`, then `x` and `z` are at least as close. -/
-theorem card_pow_degree_anti_archimedean {x y z : Polynomial Fq} {a : ℤ} (hxy : card_pow_degree (x - y) < a)
-    (hyz : card_pow_degree (y - z) < a) : card_pow_degree (x - z) < a := by
+theorem card_pow_degree_anti_archimedean {x y z : Fq[X]} {a : ℤ} (hxy : cardPowDegree (x - y) < a)
+    (hyz : cardPowDegree (y - z) < a) : cardPowDegree (x - z) < a := by
   have ha : 0 < a := lt_of_le_of_ltₓ (AbsoluteValue.nonneg _ _) hxy
   by_cases' hxy' : x = y
   · rwa [hxy']
@@ -150,10 +152,9 @@ theorem card_pow_degree_anti_archimedean {x y z : Polynomial Fq} {a : ℤ} (hxy 
 /-- A slightly stronger version of `exists_partition` on which we perform induction on `n`:
 for all `ε > 0`, we can partition the remainders of any family of polynomials `A`
 into equivalence classes, where the equivalence(!) relation is "closer than `ε`". -/
-theorem exists_partition_polynomial_aux (n : ℕ) {ε : ℝ} (hε : 0 < ε) {b : Polynomial Fq} (hb : b ≠ 0)
-    (A : Finₓ n → Polynomial Fq) :
+theorem exists_partition_polynomial_aux (n : ℕ) {ε : ℝ} (hε : 0 < ε) {b : Fq[X]} (hb : b ≠ 0) (A : Finₓ n → Fq[X]) :
     ∃ t : Finₓ n → Finₓ (Fintype.card Fq ^ ⌈-log ε / log (Fintype.card Fq)⌉₊),
-      ∀ i₀ i₁ : Finₓ n, t i₀ = t i₁ ↔ (card_pow_degree (A i₁ % b - A i₀ % b) : ℝ) < card_pow_degree b • ε :=
+      ∀ i₀ i₁ : Finₓ n, t i₀ = t i₁ ↔ (cardPowDegree (A i₁ % b - A i₀ % b) : ℝ) < cardPowDegree b • ε :=
   by
   have hbε : 0 < card_pow_degree b • ε := by
     rw [Algebra.smul_def, RingHom.eq_int_cast]
@@ -225,17 +226,16 @@ theorem exists_partition_polynomial_aux (n : ℕ) {ε : ℝ} (hε : 0 < ε) {b :
 
 /-- For all `ε > 0`, we can partition the remainders of any family of polynomials `A`
 into classes, where all remainders in a class are close together. -/
-theorem exists_partition_polynomial (n : ℕ) {ε : ℝ} (hε : 0 < ε) {b : Polynomial Fq} (hb : b ≠ 0)
-    (A : Finₓ n → Polynomial Fq) :
+theorem exists_partition_polynomial (n : ℕ) {ε : ℝ} (hε : 0 < ε) {b : Fq[X]} (hb : b ≠ 0) (A : Finₓ n → Fq[X]) :
     ∃ t : Finₓ n → Finₓ (Fintype.card Fq ^ ⌈-log ε / log (Fintype.card Fq)⌉₊),
-      ∀ i₀ i₁ : Finₓ n, t i₀ = t i₁ → (card_pow_degree (A i₁ % b - A i₀ % b) : ℝ) < card_pow_degree b • ε :=
+      ∀ i₀ i₁ : Finₓ n, t i₀ = t i₁ → (cardPowDegree (A i₁ % b - A i₀ % b) : ℝ) < cardPowDegree b • ε :=
   by
   obtain ⟨t, ht⟩ := exists_partition_polynomial_aux n hε hb A
   exact ⟨t, fun i₀ i₁ hi => (ht i₀ i₁).mp hi⟩
 
 /-- `λ p, fintype.card Fq ^ degree p` is an admissible absolute value.
 We set `q ^ degree 0 = 0`. -/
-noncomputable def card_pow_degree_is_admissible : is_admissible (card_pow_degree : AbsoluteValue (Polynomial Fq) ℤ) :=
+noncomputable def card_pow_degree_is_admissible : IsAdmissible (cardPowDegree : AbsoluteValue Fq[X] ℤ) :=
   { @card_pow_degree_is_euclidean Fq _ _ with card := fun ε => Fintype.card Fq ^ ⌈-log ε / log (Fintype.card Fq)⌉₊,
     exists_partition' := fun n ε hε b hb => exists_partition_polynomial n hε hb }
 

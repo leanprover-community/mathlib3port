@@ -47,12 +47,12 @@ section Order
 variable [Zero β] [Preorderₓ β] {s t : Set α} {f g : α → β} {a : α} {l : Filter α}
 
 theorem indicator_eventually_le_indicator (h : f ≤ᶠ[l⊓𝓟 s] g) : indicator s f ≤ᶠ[l] indicator s g :=
-  (eventually_inf_principal.1 h).mono fun a h => indicator_rel_indicator (le_reflₓ _) h
+  (eventually_inf_principal.1 h).mono fun a h => indicator_rel_indicator le_rfl h
 
 end Order
 
 theorem Monotone.tendsto_indicator {ι} [Preorderₓ ι] [Zero β] (s : ι → Set α) (hs : Monotone s) (f : α → β) (a : α) :
-    tendsto (fun i => indicator (s i) f a) at_top (pure <| indicator (⋃ i, s i) f a) := by
+    Tendsto (fun i => indicator (s i) f a) atTop (pure <| indicator (⋃ i, s i) f a) := by
   by_cases' h : ∃ i, a ∈ s i
   · rcases h with ⟨i, hi⟩
     refine' tendsto_pure.2 ((eventually_ge_at_top i).mono fun n hn => _)
@@ -66,7 +66,7 @@ theorem Monotone.tendsto_indicator {ι} [Preorderₓ ι] [Zero β] (s : ι → S
     
 
 theorem Antitone.tendsto_indicator {ι} [Preorderₓ ι] [Zero β] (s : ι → Set α) (hs : Antitone s) (f : α → β) (a : α) :
-    tendsto (fun i => indicator (s i) f a) at_top (pure <| indicator (⋂ i, s i) f a) := by
+    Tendsto (fun i => indicator (s i) f a) atTop (pure <| indicator (⋂ i, s i) f a) := by
   by_cases' h : ∃ i, a ∉ s i
   · rcases h with ⟨i, hi⟩
     refine' tendsto_pure.2 ((eventually_ge_at_top i).mono fun n hn => _)
@@ -84,7 +84,7 @@ theorem Antitone.tendsto_indicator {ι} [Preorderₓ ι] [Zero β] (s : ι → S
     
 
 theorem tendsto_indicator_bUnion_finset {ι} [Zero β] (s : ι → Set α) (f : α → β) (a : α) :
-    tendsto (fun n : Finset ι => indicator (⋃ i ∈ n, s i) f a) at_top (pure <| indicator (Union s) f a) := by
+    Tendsto (fun n : Finset ι => indicator (⋃ i ∈ n, s i) f a) atTop (pure <| indicator (Unionₓ s) f a) := by
   rw [Union_eq_Union_finset s]
   refine' Monotone.tendsto_indicator (fun n : Finset ι => ⋃ i ∈ n, s i) _ f a
   exact fun t₁ t₂ => bUnion_subset_bUnion_left

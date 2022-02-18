@@ -40,7 +40,7 @@ variable {α : Type v} (a : α)
 unsafe instance [DecidableEq α] : DecidableEq (uchange α) :=
   unchecked_cast'
     (by
-      infer_instance : _root_.decidable_eq α)
+      infer_instance : DecidableEq α)
 
 /-- `uchange.down` embeds `α` to `uchange α`.
 

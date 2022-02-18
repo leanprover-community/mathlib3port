@@ -51,14 +51,14 @@ variable {F α β γ δ G : Type _}
 structure AddFreimanHom (A : Set α) (β : Type _) [AddCommMonoidₓ α] [AddCommMonoidₓ β] (n : ℕ) where
   toFun : α → β
   map_sum_eq_map_sum' {s t : Multiset α} (hsA : ∀ ⦃x⦄, x ∈ s → x ∈ A) (htA : ∀ ⦃x⦄, x ∈ t → x ∈ A) (hs : s.card = n)
-    (ht : t.card = n) (h : s.sum = t.sum) : (s.map to_fun).Sum = (t.map to_fun).Sum
+    (ht : t.card = n) (h : s.Sum = t.Sum) : (s.map to_fun).Sum = (t.map to_fun).Sum
 
 /-- A `n`-Freiman homomorphism on a set `A` is a map which preserves products of `n` elements. -/
 @[to_additive AddFreimanHom]
 structure FreimanHom (A : Set α) (β : Type _) [CommMonoidₓ α] [CommMonoidₓ β] (n : ℕ) where
   toFun : α → β
   map_prod_eq_map_prod' {s t : Multiset α} (hsA : ∀ ⦃x⦄, x ∈ s → x ∈ A) (htA : ∀ ⦃x⦄, x ∈ t → x ∈ A) (hs : s.card = n)
-    (ht : t.card = n) (h : s.prod = t.prod) : (s.map to_fun).Prod = (t.map to_fun).Prod
+    (ht : t.card = n) (h : s.Prod = t.Prod) : (s.map to_fun).Prod = (t.map to_fun).Prod
 
 notation:25 A " →+[" n:25 "] " β:0 => AddFreimanHom A β n
 
@@ -69,7 +69,7 @@ You should extend this class when you extend `add_freiman_hom`. -/
 class AddFreimanHomClass (F : Type _) (A : outParam <| Set α) (β : outParam <| Type _) [AddCommMonoidₓ α]
   [AddCommMonoidₓ β] (n : ℕ) [FunLike F α fun _ => β] where
   map_sum_eq_map_sum' (f : F) {s t : Multiset α} (hsA : ∀ ⦃x⦄, x ∈ s → x ∈ A) (htA : ∀ ⦃x⦄, x ∈ t → x ∈ A)
-    (hs : s.card = n) (ht : t.card = n) (h : s.sum = t.sum) : (s.map f).Sum = (t.map f).Sum
+    (hs : s.card = n) (ht : t.card = n) (h : s.Sum = t.Sum) : (s.map f).Sum = (t.map f).Sum
 
 /-- `freiman_hom_class F A β n` states that `F` is a type of `n`-ary products-preserving morphisms.
 You should extend this class when you extend `freiman_hom`. -/
@@ -77,7 +77,7 @@ You should extend this class when you extend `freiman_hom`. -/
 class FreimanHomClass (F : Type _) (A : outParam <| Set α) (β : outParam <| Type _) [CommMonoidₓ α] [CommMonoidₓ β]
   (n : ℕ) [FunLike F α fun _ => β] where
   map_prod_eq_map_prod' (f : F) {s t : Multiset α} (hsA : ∀ ⦃x⦄, x ∈ s → x ∈ A) (htA : ∀ ⦃x⦄, x ∈ t → x ∈ A)
-    (hs : s.card = n) (ht : t.card = n) (h : s.prod = t.prod) : (s.map f).Prod = (t.map f).Prod
+    (hs : s.card = n) (ht : t.card = n) (h : s.Prod = t.Prod) : (s.map f).Prod = (t.map f).Prod
 
 variable [FunLike F α fun _ => β]
 
@@ -88,7 +88,7 @@ variable [CommMonoidₓ α] [CommMonoidₓ β] [CommMonoidₓ γ] [CommMonoidₓ
 
 @[to_additive]
 theorem map_prod_eq_map_prod [FreimanHomClass F A β n] (f : F) {s t : Multiset α} (hsA : ∀ ⦃x⦄, x ∈ s → x ∈ A)
-    (htA : ∀ ⦃x⦄, x ∈ t → x ∈ A) (hs : s.card = n) (ht : t.card = n) (h : s.prod = t.prod) :
+    (htA : ∀ ⦃x⦄, x ∈ t → x ∈ A) (hs : s.card = n) (ht : t.card = n) (h : s.Prod = t.Prod) :
     (s.map f).Prod = (t.map f).Prod :=
   FreimanHomClass.map_prod_eq_map_prod' f hsA htA hs ht h
 
@@ -96,7 +96,7 @@ namespace FreimanHom
 
 @[to_additive]
 instance FunLike : FunLike (A →*[n] β) α fun _ => β where
-  coe := to_fun
+  coe := toFun
   coe_injective' := fun f g h => by
     cases f <;> cases g <;> congr
 
@@ -108,12 +108,12 @@ instance FreimanHomClass : FreimanHomClass (A →*[n] β) A β n where
 `fun_like.has_coe_to_fun` directly. -/
 @[to_additive]
 instance : CoeFun (A →*[n] β) fun _ => α → β :=
-  ⟨to_fun⟩
+  ⟨toFun⟩
 
 initialize_simps_projections FreimanHom (toFun → apply)
 
 @[simp, to_additive]
-theorem to_fun_eq_coe (f : A →*[n] β) : f.to_fun = f :=
+theorem to_fun_eq_coe (f : A →*[n] β) : f.toFun = f :=
   rfl
 
 @[ext, to_additive]
@@ -125,7 +125,7 @@ theorem coe_mk (f : α → β)
     (h :
       ∀ s t : Multiset α,
         (∀ ⦃x⦄, x ∈ s → x ∈ A) →
-          (∀ ⦃x⦄, x ∈ t → x ∈ A) → s.card = n → t.card = n → s.prod = t.prod → (s.map f).Prod = (t.map f).Prod) :
+          (∀ ⦃x⦄, x ∈ t → x ∈ A) → s.card = n → t.card = n → s.Prod = t.Prod → (s.map f).Prod = (t.map f).Prod) :
     ⇑mk f h = f :=
   rfl
 
@@ -142,7 +142,7 @@ protected def id (A : Set α) (n : ℕ) : A →*[n] α where
 
 /-- Composition of Freiman homomorphisms as a Freiman homomorphism. -/
 @[to_additive "Composition of additive Freiman homomorphisms as an additive Freiman homomorphism."]
-protected def comp (f : B →*[n] γ) (g : A →*[n] β) (hAB : A.maps_to g B) : A →*[n] γ where
+protected def comp (f : B →*[n] γ) (g : A →*[n] β) (hAB : A.MapsTo g B) : A →*[n] γ where
   toFun := f ∘ g
   map_prod_eq_map_prod' := fun s t hsA htA hs ht h => by
     rw [← map_map,
@@ -163,7 +163,7 @@ theorem comp_apply (f : B →*[n] γ) (g : A →*[n] β) {hfg} (x : α) : f.comp
   rfl
 
 @[to_additive]
-theorem comp_assoc (f : A →*[n] β) (g : B →*[n] γ) (h : C →*[n] δ) {hf hhg hgf} {hh : A.maps_to (g.comp f hgf) C} :
+theorem comp_assoc (f : A →*[n] β) (g : B →*[n] γ) (h : C →*[n] δ) {hf hhg hgf} {hh : A.MapsTo (g.comp f hgf) C} :
     (h.comp g hhg).comp f hf = h.comp (g.comp f hgf) hh :=
   rfl
 
@@ -173,13 +173,13 @@ theorem cancel_right {g₁ g₂ : B →*[n] γ} {f : A →*[n] β} (hf : Functio
   ⟨fun h => ext <| hf.forall.2 <| FunLike.ext_iff.1 h, fun h => h ▸ rfl⟩
 
 @[to_additive]
-theorem cancel_right_on {g₁ g₂ : B →*[n] γ} {f : A →*[n] β} (hf : A.surj_on f B) {hf'} :
-    A.eq_on (g₁.comp f hf') (g₂.comp f hf') ↔ B.eq_on g₁ g₂ :=
+theorem cancel_right_on {g₁ g₂ : B →*[n] γ} {f : A →*[n] β} (hf : A.SurjOn f B) {hf'} :
+    A.EqOn (g₁.comp f hf') (g₂.comp f hf') ↔ B.EqOn g₁ g₂ :=
   hf.cancel_right hf'
 
 @[to_additive]
-theorem cancel_left_on {g : B →*[n] γ} {f₁ f₂ : A →*[n] β} (hg : B.inj_on g) {hf₁ hf₂} :
-    A.eq_on (g.comp f₁ hf₁) (g.comp f₂ hf₂) ↔ A.eq_on f₁ f₂ :=
+theorem cancel_left_on {g : B →*[n] γ} {f₁ f₂ : A →*[n] β} (hg : B.InjOn g) {hf₁ hf₂} :
+    A.EqOn (g.comp f₁ hf₁) (g.comp f₂ hf₂) ↔ A.EqOn f₁ f₂ :=
   hg.cancel_left hf₁ hf₂
 
 @[simp, to_additive]
@@ -357,7 +357,7 @@ def MonoidHom.toFreimanHom (A : Set α) (n : ℕ) (f : α →* β) : A →*[n] �
     map_prod_eq_map_prod f (fun _ _ => Set.mem_univ _) fun _ _ => Set.mem_univ _
 
 @[simp, to_additive]
-theorem MonoidHom.to_freiman_hom_coe (f : α →* β) : (f.to_freiman_hom A n : α → β) = f :=
+theorem MonoidHom.to_freiman_hom_coe (f : α →* β) : (f.toFreimanHom A n : α → β) = f :=
   rfl
 
 @[to_additive]
@@ -372,7 +372,7 @@ variable [CommMonoidₓ α] [CancelCommMonoid β] {A : Set α} {m n : ℕ}
 
 @[to_additive]
 theorem map_prod_eq_map_prod_of_le [FreimanHomClass F A β n] (f : F) {s t : Multiset α} (hsA : ∀, ∀ x ∈ s, ∀, x ∈ A)
-    (htA : ∀, ∀ x ∈ t, ∀, x ∈ A) (hs : s.card = m) (ht : t.card = m) (hst : s.prod = t.prod) (h : m ≤ n) :
+    (htA : ∀, ∀ x ∈ t, ∀, x ∈ A) (hs : s.card = m) (ht : t.card = m) (hst : s.Prod = t.Prod) (h : m ≤ n) :
     (s.map f).Prod = (t.map f).Prod := by
   obtain rfl | hm := m.eq_zero_or_pos
   · rw [card_eq_zero] at hs ht
@@ -385,7 +385,7 @@ theorem map_prod_eq_map_prod_of_le [FreimanHomClass F A β n] (f : F) {s t : Mul
     exact mul_right_cancelₓ this
   replace ha := hsA _ ha
   refine' map_prod_eq_map_prod f (fun x hx => _) (fun x hx => _) _ _ _
-  rotate 2
+  rotate_left 2
   assumption
   · rw [mem_add] at hx
     refine' hx.elim (hsA _) fun h => _
@@ -415,7 +415,7 @@ def FreimanHom.freimanHomClassOfLe [FreimanHomClass F A β n] (h : m ≤ n) : Fr
   map_prod_eq_map_prod' := fun f s t hsA htA hs ht hst => map_prod_eq_map_prod_of_le f hsA htA hs ht hst h
 
 @[simp, to_additive AddFreimanHom.to_add_freiman_hom_coe]
-theorem FreimanHom.to_freiman_hom_coe (h : m ≤ n) (f : A →*[n] β) : (f.to_freiman_hom h : α → β) = f :=
+theorem FreimanHom.to_freiman_hom_coe (h : m ≤ n) (f : A →*[n] β) : (f.toFreimanHom h : α → β) = f :=
   rfl
 
 @[to_additive]

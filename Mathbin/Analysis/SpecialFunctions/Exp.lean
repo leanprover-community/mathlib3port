@@ -68,8 +68,8 @@ variable {α : Type _}
 
 open Complex
 
-theorem Filter.Tendsto.cexp {l : Filter α} {f : α → ℂ} {z : ℂ} (hf : tendsto f l (𝓝 z)) :
-    tendsto (fun x => exp (f x)) l (𝓝 (exp z)) :=
+theorem Filter.Tendsto.cexp {l : Filter α} {f : α → ℂ} {z : ℂ} (hf : Tendsto f l (𝓝 z)) :
+    Tendsto (fun x => exp (f x)) l (𝓝 (exp z)) :=
   (continuous_exp.Tendsto _).comp hf
 
 variable [TopologicalSpace α] {f : α → ℂ} {s : Set α} {x : α}
@@ -83,7 +83,7 @@ theorem ContinuousAt.cexp (h : ContinuousAt f x) : ContinuousAt (fun y => exp (f
 theorem ContinuousOn.cexp (h : ContinuousOn f s) : ContinuousOn (fun y => exp (f y)) s := fun x hx => (h x hx).cexp
 
 theorem Continuous.cexp (h : Continuous f) : Continuous fun y => exp (f y) :=
-  continuous_iff_continuous_at.2 fun x => h.continuous_at.cexp
+  continuous_iff_continuous_at.2 fun x => h.ContinuousAt.cexp
 
 end ComplexContinuousExpComp
 
@@ -104,8 +104,8 @@ variable {α : Type _}
 
 open Real
 
-theorem Filter.Tendsto.exp {l : Filter α} {f : α → ℝ} {z : ℝ} (hf : tendsto f l (𝓝 z)) :
-    tendsto (fun x => exp (f x)) l (𝓝 (exp z)) :=
+theorem Filter.Tendsto.exp {l : Filter α} {f : α → ℝ} {z : ℝ} (hf : Tendsto f l (𝓝 z)) :
+    Tendsto (fun x => exp (f x)) l (𝓝 (exp z)) :=
   (continuous_exp.Tendsto _).comp hf
 
 variable [TopologicalSpace α] {f : α → ℝ} {s : Set α} {x : α}
@@ -119,7 +119,7 @@ theorem ContinuousAt.exp (h : ContinuousAt f x) : ContinuousAt (fun y => exp (f 
 theorem ContinuousOn.exp (h : ContinuousOn f s) : ContinuousOn (fun y => exp (f y)) s := fun x hx => (h x hx).exp
 
 theorem Continuous.exp (h : Continuous f) : Continuous fun y => exp (f y) :=
-  continuous_iff_continuous_at.2 fun x => h.continuous_at.exp
+  continuous_iff_continuous_at.2 fun x => h.ContinuousAt.exp
 
 end RealContinuousExpComp
 
@@ -128,29 +128,29 @@ namespace Real
 variable {x y z : ℝ}
 
 /-- The real exponential function tends to `+∞` at `+∞`. -/
-theorem tendsto_exp_at_top : tendsto exp at_top at_top := by
+theorem tendsto_exp_at_top : Tendsto exp atTop atTop := by
   have A : tendsto (fun x : ℝ => x + 1) at_top at_top := tendsto_at_top_add_const_right at_top 1 tendsto_id
   have B : ∀ᶠ x in at_top, x + 1 ≤ exp x := eventually_at_top.2 ⟨0, fun x hx => add_one_le_exp x⟩
   exact tendsto_at_top_mono' at_top B A
 
 /-- The real exponential function tends to `0` at `-∞` or, equivalently, `exp(-x)` tends to `0`
 at `+∞` -/
-theorem tendsto_exp_neg_at_top_nhds_0 : tendsto (fun x => exp (-x)) at_top (𝓝 0) :=
+theorem tendsto_exp_neg_at_top_nhds_0 : Tendsto (fun x => exp (-x)) atTop (𝓝 0) :=
   (tendsto_inv_at_top_zero.comp tendsto_exp_at_top).congr fun x => (exp_neg x).symm
 
 /-- The real exponential function tends to `1` at `0`. -/
-theorem tendsto_exp_nhds_0_nhds_1 : tendsto exp (𝓝 0) (𝓝 1) := by
+theorem tendsto_exp_nhds_0_nhds_1 : Tendsto exp (𝓝 0) (𝓝 1) := by
   convert continuous_exp.tendsto 0
   simp
 
-theorem tendsto_exp_at_bot : tendsto exp at_bot (𝓝 0) :=
+theorem tendsto_exp_at_bot : Tendsto exp atBot (𝓝 0) :=
   (tendsto_exp_neg_at_top_nhds_0.comp tendsto_neg_at_bot_at_top).congr fun x => congr_argₓ exp <| neg_negₓ x
 
-theorem tendsto_exp_at_bot_nhds_within : tendsto exp at_bot (𝓝[>] 0) :=
+theorem tendsto_exp_at_bot_nhds_within : Tendsto exp atBot (𝓝[>] 0) :=
   tendsto_inf.2 ⟨tendsto_exp_at_bot, tendsto_principal.2 <| eventually_of_forall exp_pos⟩
 
 /-- The function `exp(x)/x^n` tends to `+∞` at `+∞`, for any natural number `n` -/
-theorem tendsto_exp_div_pow_at_top (n : ℕ) : tendsto (fun x => exp x / x ^ n) at_top at_top := by
+theorem tendsto_exp_div_pow_at_top (n : ℕ) : Tendsto (fun x => exp x / x ^ n) atTop atTop := by
   refine' (at_top_basis_Ioi.tendsto_iff (at_top_basis' 1)).2 fun C hC₁ => _
   have hC₀ : 0 < C := zero_lt_one.trans_le hC₁
   have : 0 < (exp 1 * C)⁻¹ := inv_pos.2 (mul_pos (exp_pos _) hC₀)
@@ -168,14 +168,14 @@ theorem tendsto_exp_div_pow_at_top (n : ℕ) : tendsto (fun x => exp x / x ^ n) 
       rw [add_commₓ, exp_add, mul_div_mul_left _ _ (exp_pos _).ne']
 
 /-- The function `x^n * exp(-x)` tends to `0` at `+∞`, for any natural number `n`. -/
-theorem tendsto_pow_mul_exp_neg_at_top_nhds_0 (n : ℕ) : tendsto (fun x => x ^ n * exp (-x)) at_top (𝓝 0) :=
+theorem tendsto_pow_mul_exp_neg_at_top_nhds_0 (n : ℕ) : Tendsto (fun x => x ^ n * exp (-x)) atTop (𝓝 0) :=
   (tendsto_inv_at_top_zero.comp (tendsto_exp_div_pow_at_top n)).congr fun x => by
     rw [comp_app, inv_eq_one_div, div_div_eq_mul_div, one_mulₓ, div_eq_mul_inv, exp_neg]
 
 /-- The function `(b * exp x + c) / (x ^ n)` tends to `+∞` at `+∞`, for any positive natural number
 `n` and any real numbers `b` and `c` such that `b` is positive. -/
 theorem tendsto_mul_exp_add_div_pow_at_top (b c : ℝ) (n : ℕ) (hb : 0 < b) (hn : 1 ≤ n) :
-    tendsto (fun x => (b * exp x + c) / x ^ n) at_top at_top := by
+    Tendsto (fun x => (b * exp x + c) / x ^ n) atTop atTop := by
   refine'
     tendsto.congr' (eventually_eq_of_mem (Ioi_mem_at_top 0) _)
       (((tendsto_exp_div_pow_at_top n).const_mul_at_top hb).at_top_add
@@ -187,7 +187,7 @@ theorem tendsto_mul_exp_add_div_pow_at_top (b c : ℝ) (n : ℕ) (hb : 0 < b) (h
 /-- The function `(x ^ n) / (b * exp x + c)` tends to `0` at `+∞`, for any positive natural number
 `n` and any real numbers `b` and `c` such that `b` is nonzero. -/
 theorem tendsto_div_pow_mul_exp_add_at_top (b c : ℝ) (n : ℕ) (hb : 0 ≠ b) (hn : 1 ≤ n) :
-    tendsto (fun x => x ^ n / (b * exp x + c)) at_top (𝓝 0) := by
+    Tendsto (fun x => x ^ n / (b * exp x + c)) atTop (𝓝 0) := by
   have H : ∀ d e, 0 < d → tendsto (fun x : ℝ => x ^ n / (d * exp x + e)) at_top (𝓝 0) := by
     intro b' c' h
     convert (tendsto_mul_exp_add_div_pow_at_top b' c' n h hn).inv_tendsto_at_top
@@ -215,7 +215,7 @@ def exp_order_iso : ℝ ≃o Ioi (0 : ℝ) :=
         simp [tendsto_exp_at_bot_nhds_within])
 
 @[simp]
-theorem coe_exp_order_iso_apply (x : ℝ) : (exp_order_iso x : ℝ) = exp x :=
+theorem coe_exp_order_iso_apply (x : ℝ) : (expOrderIso x : ℝ) = exp x :=
   rfl
 
 @[simp]
@@ -223,35 +223,35 @@ theorem coe_comp_exp_order_iso : coe ∘ exp_order_iso = exp :=
   rfl
 
 @[simp]
-theorem range_exp : range exp = Ioi 0 := by
+theorem range_exp : Range exp = Ioi 0 := by
   rw [← coe_comp_exp_order_iso, range_comp, exp_order_iso.range_eq, image_univ, Subtype.range_coe]
 
 @[simp]
-theorem map_exp_at_top : map exp at_top = at_top := by
+theorem map_exp_at_top : map exp atTop = at_top := by
   rw [← coe_comp_exp_order_iso, ← Filter.map_map, OrderIso.map_at_top, map_coe_Ioi_at_top]
 
 @[simp]
-theorem comap_exp_at_top : comap exp at_top = at_top := by
+theorem comap_exp_at_top : comap exp atTop = at_top := by
   rw [← map_exp_at_top, comap_map exp_injective, map_exp_at_top]
 
 @[simp]
 theorem tendsto_exp_comp_at_top {α : Type _} {l : Filter α} {f : α → ℝ} :
-    tendsto (fun x => exp (f x)) l at_top ↔ tendsto f l at_top := by
+    Tendsto (fun x => exp (f x)) l atTop ↔ Tendsto f l atTop := by
   rw [← tendsto_comap_iff, comap_exp_at_top]
 
 theorem tendsto_comp_exp_at_top {α : Type _} {l : Filter α} {f : ℝ → α} :
-    tendsto (fun x => f (exp x)) at_top l ↔ tendsto f at_top l := by
+    Tendsto (fun x => f (exp x)) atTop l ↔ Tendsto f atTop l := by
   rw [← tendsto_map'_iff, map_exp_at_top]
 
 @[simp]
-theorem map_exp_at_bot : map exp at_bot = 𝓝[>] 0 := by
+theorem map_exp_at_bot : map exp atBot = 𝓝[>] 0 := by
   rw [← coe_comp_exp_order_iso, ← Filter.map_map, exp_order_iso.map_at_bot, ← map_coe_Ioi_at_bot]
 
 theorem comap_exp_nhds_within_Ioi_zero : comap exp (𝓝[>] 0) = at_bot := by
   rw [← map_exp_at_bot, comap_map exp_injective]
 
 theorem tendsto_comp_exp_at_bot {α : Type _} {l : Filter α} {f : ℝ → α} :
-    tendsto (fun x => f (exp x)) at_bot l ↔ tendsto f (𝓝[>] 0) l := by
+    Tendsto (fun x => f (exp x)) atBot l ↔ Tendsto f (𝓝[>] 0) l := by
   rw [← map_exp_at_bot, tendsto_map'_iff]
 
 end Real

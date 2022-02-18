@@ -20,8 +20,8 @@ instance : HasToString Side :=
 
 namespace Tactic.RewriteAll
 
-unsafe structure cfg extends rewrite_cfg where
-  try_simp : Bool := ff
+unsafe structure cfg extends RewriteCfg where
+  try_simp : Bool := false
   discharger : tactic Unit := skip
   simplifier : expr → tactic (expr × expr) := fun e => failed
 
@@ -34,15 +34,15 @@ namespace TrackedRewrite
 
 unsafe def eval (rw : tracked_rewrite) : tactic (expr × expr) := do
   let prf ← rw.proof
-  return (rw.exp, prf)
+  return (rw, prf)
 
 unsafe def replace_target (rw : tracked_rewrite) : tactic Unit := do
   let (exp, prf) ← rw.eval
   tactic.replace_target exp prf
 
 private unsafe def replace_target_side (new_target lam : pexpr) (prf : expr) : tactic Unit := do
-  let new_target ← to_expr new_target tt ff
-  let prf' ← to_expr (pquote.1 (congr_argₓ (%%ₓlam) (%%ₓprf))) tt ff
+  let new_target ← to_expr new_target true false
+  let prf' ← to_expr (pquote.1 (congr_argₓ (%%ₓlam) (%%ₓprf))) true false
   tactic.replace_target new_target prf'
 
 unsafe def replace_target_lhs (rw : tracked_rewrite) : tactic Unit := do

@@ -2,11 +2,11 @@ import Mathbin.Algebra.Star.Basic
 import Mathbin.GroupTheory.Subgroup.Basic
 
 /-!
-# Self-adjoint elements of a star additive group
+# Self-adjoint and skew-adjoint elements of a star additive group
 
-This file defines `self_adjoint R`, where `R` is a star additive monoid, as the additive subgroup
-containing the elements that satisfy `star x = x`. This includes, for instance, Hermitian
-operators on Hilbert spaces.
+This file defines `self_adjoint R` (resp. `skew_adjoint R`), where `R` is a star additive group,
+as the additive subgroup containing the elements that satisfy `star x = x` (resp. `star x = -x`).
+This includes, for instance, (skew-)Hermitian operators on Hilbert spaces.
 
 ## Implementation notes
 
@@ -29,7 +29,7 @@ operators on Hilbert spaces.
 -/
 
 
-variable (R : Type _)
+variable (R : Type _) {A : Type _}
 
 /-- The self-adjoint elements of a star additive group, as an additive subgroup. -/
 def selfAdjoint [AddGroupₓ R] [StarAddMonoid R] : AddSubgroup R where
@@ -40,6 +40,19 @@ def selfAdjoint [AddGroupₓ R] [StarAddMonoid R] : AddSubgroup R where
       simp only [star_add x y, hx, hy]
   neg_mem' := fun x hx : star x = x =>
     show star (-x) = -x by
+      simp only [hx, star_neg]
+
+/-- The skew-adjoint elements of a star additive group, as an additive subgroup. -/
+def skewAdjoint [AddCommGroupₓ R] [StarAddMonoid R] : AddSubgroup R where
+  Carrier := { x | star x = -x }
+  zero_mem' :=
+    show star (0 : R) = -0 by
+      simp only [star_zero, neg_zero]
+  add_mem' := fun x y hx : star x = -x hy : star y = -y =>
+    show star (x + y) = -(x + y) by
+      rw [star_add x y, hx, hy, neg_add]
+  neg_mem' := fun x hx : star x = -x =>
+    show star (-x) = - -x by
       simp only [hx, star_neg]
 
 variable {R}
@@ -56,15 +69,15 @@ theorem mem_iff {x : R} : x ∈ selfAdjoint R ↔ star x = x := by
 
 @[simp, norm_cast]
 theorem star_coe_eq {x : selfAdjoint R} : star (x : R) = x :=
-  x.prop
+  x.Prop
 
 instance : Inhabited (selfAdjoint R) :=
   ⟨0⟩
 
-end AddGroupₓ
+theorem bit0_mem {x : R} (hx : x ∈ selfAdjoint R) : bit0 x ∈ selfAdjoint R := by
+  simp only [mem_iff, star_bit0, mem_iff.mp hx]
 
-instance [AddCommGroupₓ R] [StarAddMonoid R] : AddCommGroupₓ (selfAdjoint R) :=
-  { AddSubgroup.toAddGroup (selfAdjoint R) with add_comm := add_commₓ }
+end AddGroupₓ
 
 section Ringₓ
 
@@ -75,7 +88,7 @@ instance : One (selfAdjoint R) :=
       rw [mem_iff, star_one]⟩⟩
 
 @[simp, norm_cast]
-theorem coe_one : (coe : selfAdjoint R → R) (1 : selfAdjoint R) = (1 : R) :=
+theorem coe_one : ↑(1 : selfAdjoint R) = (1 : R) :=
   rfl
 
 instance [Nontrivial R] : Nontrivial (selfAdjoint R) :=
@@ -83,9 +96,6 @@ instance [Nontrivial R] : Nontrivial (selfAdjoint R) :=
 
 theorem one_mem : (1 : R) ∈ selfAdjoint R := by
   simp only [mem_iff, star_one]
-
-theorem bit0_mem {x : R} (hx : x ∈ selfAdjoint R) : bit0 x ∈ selfAdjoint R := by
-  simp only [mem_iff, star_bit0, mem_iff.mp hx]
 
 theorem bit1_mem {x : R} (hx : x ∈ selfAdjoint R) : bit1 x ∈ selfAdjoint R := by
   simp only [mem_iff, star_bit1, mem_iff.mp hx]
@@ -108,29 +118,23 @@ instance : Mul (selfAdjoint R) :=
       simp only [mem_iff, star_mul', star_coe_eq]⟩⟩
 
 @[simp, norm_cast]
-theorem coe_mul (x y : selfAdjoint R) : (coe : selfAdjoint R → R) (x * y) = (x : R) * y :=
+theorem coe_mul (x y : selfAdjoint R) : ↑(x * y) = (x : R) * y :=
+  rfl
+
+instance : Pow (selfAdjoint R) ℕ :=
+  ⟨fun x n =>
+    ⟨(x : R) ^ n, by
+      simp only [mem_iff, star_pow, star_coe_eq]⟩⟩
+
+@[simp, norm_cast]
+theorem coe_pow (x : selfAdjoint R) (n : ℕ) : ↑(x ^ n) = (x : R) ^ n :=
   rfl
 
 instance : CommRingₓ (selfAdjoint R) :=
-  { selfAdjoint.addCommGroup, selfAdjoint.hasOne, selfAdjoint.hasMul with
-    mul_assoc := fun x y z => by
-      ext
-      exact mul_assoc _ _ _,
-    one_mul := fun x => by
-      ext
-      simp only [coe_mul, one_mulₓ, coe_one],
-    mul_one := fun x => by
-      ext
-      simp only [mul_oneₓ, coe_mul, coe_one],
-    mul_comm := fun x y => by
-      ext
-      exact mul_comm _ _,
-    left_distrib := fun x y z => by
-      ext
-      exact left_distrib _ _ _,
-    right_distrib := fun x y z => by
-      ext
-      exact right_distrib _ _ _ }
+  { (Function.Injective.monoidPow _ Subtype.coe_injective coe_one coe_mul coe_pow : Monoidₓ (selfAdjoint R)),
+    (Function.Injective.distrib _ Subtype.coe_injective (selfAdjoint R).coe_add coe_mul : Distribₓ (selfAdjoint R)),
+    (Function.Injective.commSemigroup _ Subtype.coe_injective coe_mul : CommSemigroupₓ (selfAdjoint R)),
+    (selfAdjoint R).toAddCommGroup with npow := fun n x => x ^ n, nsmul := · • ·, zsmul := · • · }
 
 end CommRingₓ
 
@@ -138,64 +142,129 @@ section Field
 
 variable [Field R] [StarRing R]
 
-instance : Field (selfAdjoint R) :=
-  { selfAdjoint.commRing with
-    inv := fun x =>
-      ⟨x.val⁻¹, by
-        simp only [mem_iff, star_inv', star_coe_eq, Subtype.val_eq_coe]⟩,
-    exists_pair_ne := ⟨0, 1, Subtype.ne_of_val_ne zero_ne_one⟩,
-    mul_inv_cancel := fun x hx => by
-      ext
-      exact mul_inv_cancel fun H => hx <| Subtype.eq H,
-    inv_zero := by
-      ext
-      exact inv_zero }
+instance : Inv (selfAdjoint R) where
+  inv := fun x =>
+    ⟨x.val⁻¹, by
+      simp only [mem_iff, star_inv', star_coe_eq, Subtype.val_eq_coe]⟩
 
 @[simp, norm_cast]
-theorem coe_inv (x : selfAdjoint R) : (coe : selfAdjoint R → R) x⁻¹ = (x : R)⁻¹ :=
+theorem coe_inv (x : selfAdjoint R) : ↑x⁻¹ = (x : R)⁻¹ :=
   rfl
+
+instance : Div (selfAdjoint R) where
+  div := fun x y =>
+    ⟨x / y, by
+      simp only [mem_iff, star_div', star_coe_eq, Subtype.val_eq_coe]⟩
+
+@[simp, norm_cast]
+theorem coe_div (x y : selfAdjoint R) : ↑(x / y) = (x / y : R) :=
+  rfl
+
+instance : Pow (selfAdjoint R) ℤ where
+  pow := fun x z =>
+    ⟨x ^ z, by
+      simp only [mem_iff, star_zpow₀, star_coe_eq, Subtype.val_eq_coe]⟩
+
+@[simp, norm_cast]
+theorem coe_zpow (x : selfAdjoint R) (z : ℤ) : ↑(x ^ z) = (x : R) ^ z :=
+  rfl
+
+instance : Field (selfAdjoint R) :=
+  { (Function.Injective.divInvMonoidPow _ Subtype.coe_injective _ _ coe_inv coe_div _ coe_zpow :
+      DivInvMonoidₓ (selfAdjoint R)),
+    (Function.Injective.groupWithZero _ Subtype.coe_injective (selfAdjoint R).coe_zero _ _ _ _ :
+      GroupWithZeroₓ (selfAdjoint R)),
+    selfAdjoint.commRing with npow := fun n x => x ^ n, zpow := fun z x => x ^ z, nsmul := · • ·, zsmul := · • · }
 
 end Field
 
-section Module
+section HasScalar
 
-variable {A : Type _} [Semiringₓ R] [HasStar R] [HasTrivialStar R] [AddCommGroupₓ A] [StarAddMonoid A] [Module R A]
-  [StarModule R A]
+variable [HasStar R] [HasTrivialStar R] [AddGroupₓ A] [StarAddMonoid A]
 
-instance : HasScalar R (selfAdjoint A) :=
+instance [HasScalar R A] [StarModule R A] : HasScalar R (selfAdjoint A) :=
   ⟨fun r x =>
     ⟨r • x, by
       rw [mem_iff, star_smul, star_trivial, star_coe_eq]⟩⟩
 
 @[simp, norm_cast]
-theorem coe_smul (r : R) (x : selfAdjoint A) : (coe : selfAdjoint A → A) (r • x) = r • x :=
+theorem coe_smul [HasScalar R A] [StarModule R A] (r : R) (x : selfAdjoint A) : ↑(r • x) = r • (x : A) :=
   rfl
 
-instance : MulAction R (selfAdjoint A) where
-  one_smul := fun x => by
-    ext
-    rw [coe_smul, one_smul]
-  mul_smul := fun r s x => by
-    ext
-    simp only [mul_smul, coe_smul]
+instance [Monoidₓ R] [MulAction R A] [StarModule R A] : MulAction R (selfAdjoint A) :=
+  Function.Injective.mulAction coe Subtype.coe_injective coe_smul
 
-instance : DistribMulAction R (selfAdjoint A) where
-  smul_add := fun r x y => by
-    ext
-    simp only [smul_add, AddSubgroup.coe_add, coe_smul]
-  smul_zero := fun r => by
-    ext
-    simp only [smul_zero', coe_smul, AddSubgroup.coe_zero]
+instance [Monoidₓ R] [DistribMulAction R A] [StarModule R A] : DistribMulAction R (selfAdjoint A) :=
+  Function.Injective.distribMulAction (selfAdjoint A).Subtype Subtype.coe_injective coe_smul
 
-instance : Module R (selfAdjoint A) where
-  add_smul := fun r s x => by
-    ext
-    simp only [add_smul, AddSubgroup.coe_add, coe_smul]
-  zero_smul := fun x => by
-    ext
-    simp only [coe_smul, zero_smul, AddSubgroup.coe_zero]
+end HasScalar
+
+section Module
+
+variable [HasStar R] [HasTrivialStar R] [AddCommGroupₓ A] [StarAddMonoid A]
+
+instance [Semiringₓ R] [Module R A] [StarModule R A] : Module R (selfAdjoint A) :=
+  Function.Injective.module R (selfAdjoint A).Subtype Subtype.coe_injective coe_smul
 
 end Module
 
 end selfAdjoint
+
+namespace skewAdjoint
+
+section AddGroupₓ
+
+variable [AddCommGroupₓ R] [StarAddMonoid R]
+
+theorem mem_iff {x : R} : x ∈ skewAdjoint R ↔ star x = -x := by
+  rw [← AddSubgroup.mem_carrier]
+  exact Iff.rfl
+
+@[simp, norm_cast]
+theorem star_coe_eq {x : skewAdjoint R} : star (x : R) = -x :=
+  x.Prop
+
+instance : Inhabited (skewAdjoint R) :=
+  ⟨0⟩
+
+theorem bit0_mem {x : R} (hx : x ∈ skewAdjoint R) : bit0 x ∈ skewAdjoint R := by
+  rw [mem_iff, star_bit0, mem_iff.mp hx, bit0, bit0, neg_add]
+
+end AddGroupₓ
+
+section Ringₓ
+
+variable [Ringₓ R] [StarRing R]
+
+theorem conjugate {x : R} (hx : x ∈ skewAdjoint R) (z : R) : z * x * star z ∈ skewAdjoint R := by
+  simp only [mem_iff, star_mul, star_star, mem_iff.mp hx, neg_mul, mul_neg, mul_assoc]
+
+theorem conjugate' {x : R} (hx : x ∈ skewAdjoint R) (z : R) : star z * x * z ∈ skewAdjoint R := by
+  simp only [mem_iff, star_mul, star_star, mem_iff.mp hx, neg_mul, mul_neg, mul_assoc]
+
+end Ringₓ
+
+section HasScalar
+
+variable [HasStar R] [HasTrivialStar R] [AddCommGroupₓ A] [StarAddMonoid A]
+
+instance [Monoidₓ R] [DistribMulAction R A] [StarModule R A] : HasScalar R (skewAdjoint A) :=
+  ⟨fun r x =>
+    ⟨r • x, by
+      rw [mem_iff, star_smul, star_trivial, star_coe_eq, smul_neg r]⟩⟩
+
+@[simp, norm_cast]
+theorem coe_smul [Monoidₓ R] [DistribMulAction R A] [StarModule R A] (r : R) (x : skewAdjoint A) :
+    ↑(r • x) = r • (x : A) :=
+  rfl
+
+instance [Monoidₓ R] [DistribMulAction R A] [StarModule R A] : DistribMulAction R (skewAdjoint A) :=
+  Function.Injective.distribMulAction (skewAdjoint A).Subtype Subtype.coe_injective coe_smul
+
+instance [Semiringₓ R] [Module R A] [StarModule R A] : Module R (skewAdjoint A) :=
+  Function.Injective.module R (skewAdjoint A).Subtype Subtype.coe_injective coe_smul
+
+end HasScalar
+
+end skewAdjoint
 

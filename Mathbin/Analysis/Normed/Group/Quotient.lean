@@ -86,7 +86,7 @@ variable {M N : Type _} [SemiNormedGroup M] [SemiNormedGroup N]
 
 /-- The definition of the norm on the quotient by an additive subgroup. -/
 noncomputable instance normOnQuotient (S : AddSubgroup M) : HasNorm (M ⧸ S) where
-  norm := fun x => Inf (norm '' { m | mk' S m = x })
+  norm := fun x => inf (norm '' { m | mk' S m = x })
 
 theorem image_norm_nonempty {S : AddSubgroup M} : ∀ x : M ⧸ S, (norm '' { m | mk' S m = x }).Nonempty := by
   rintro ⟨m⟩
@@ -141,7 +141,7 @@ theorem quotient_norm_mk_le' (S : AddSubgroup M) (m : M) : ∥(m : M ⧸ S)∥ �
   quotient_norm_mk_le S m
 
 /-- The norm of the image under the natural morphism to the quotient. -/
-theorem quotient_norm_mk_eq (S : AddSubgroup M) (m : M) : ∥mk' S m∥ = Inf ((fun x => ∥m + x∥) '' S) := by
+theorem quotient_norm_mk_eq (S : AddSubgroup M) (m : M) : ∥mk' S m∥ = inf ((fun x => ∥m + x∥) '' S) := by
   change Inf _ = _
   congr 1
   ext r
@@ -302,7 +302,7 @@ noncomputable instance AddSubgroup.semiNormedGroupQuotient (S : AddSubgroup M) :
 
 example (S : AddSubgroup M) :
     (Quotientₓ.topologicalSpace : TopologicalSpace <| M ⧸ S) =
-      S.semi_normed_group_quotient.to_uniform_space.to_topological_space :=
+      S.semiNormedGroupQuotient.toUniformSpace.toTopologicalSpace :=
   rfl
 
 /-- The quotient in the category of normed groups. -/
@@ -314,7 +314,7 @@ noncomputable instance AddSubgroup.normedGroupQuotient (S : AddSubgroup M) [hS :
       erw [← (mk' S).map_sub, quotient_norm_eq_zero_iff, hS.closure_eq, ← QuotientAddGroup.eq_iff_sub_mem] at h
       exact h }
 
-example (S : AddSubgroup M) [IsClosed (S : Set M)] : S.semi_normed_group_quotient = NormedGroup.toSemiNormedGroup :=
+example (S : AddSubgroup M) [IsClosed (S : Set M)] : S.semiNormedGroupQuotient = NormedGroup.toSemiNormedGroup :=
   rfl
 
 namespace AddSubgroup
@@ -330,24 +330,24 @@ noncomputable def normed_mk (S : AddSubgroup M) : NormedGroupHom M (M ⧸ S) :=
 
 /-- `S.normed_mk` agrees with `quotient_add_group.mk' S`. -/
 @[simp]
-theorem normed_mk.apply (S : AddSubgroup M) (m : M) : normed_mk S m = QuotientAddGroup.mk' S m :=
+theorem normed_mk.apply (S : AddSubgroup M) (m : M) : normedMk S m = QuotientAddGroup.mk' S m :=
   rfl
 
 /-- `S.normed_mk` is surjective. -/
-theorem surjective_normed_mk (S : AddSubgroup M) : Function.Surjective (normed_mk S) :=
+theorem surjective_normed_mk (S : AddSubgroup M) : Function.Surjective (normedMk S) :=
   surjective_quot_mk _
 
 /-- The kernel of `S.normed_mk` is `S`. -/
-theorem ker_normed_mk (S : AddSubgroup M) : S.normed_mk.ker = S :=
+theorem ker_normed_mk (S : AddSubgroup M) : S.normedMk.ker = S :=
   QuotientAddGroup.ker_mk _
 
 /-- The operator norm of the projection is at most `1`. -/
-theorem norm_normed_mk_le (S : AddSubgroup M) : ∥S.normed_mk∥ ≤ 1 :=
+theorem norm_normed_mk_le (S : AddSubgroup M) : ∥S.normedMk∥ ≤ 1 :=
   NormedGroupHom.op_norm_le_bound _ zero_le_one fun m => by
     simp [quotient_norm_mk_le']
 
 /-- The operator norm of the projection is `1` if the subspace is not dense. -/
-theorem norm_normed_mk (S : AddSubgroup M) (h : (S.topological_closure : Set M) ≠ univ) : ∥S.normed_mk∥ = 1 := by
+theorem norm_normed_mk (S : AddSubgroup M) (h : (S.topologicalClosure : Set M) ≠ univ) : ∥S.normedMk∥ = 1 := by
   obtain ⟨x, hx⟩ := Set.nonempty_compl.2 h
   let y := S.normed_mk x
   have hy : ∥y∥ ≠ 0 := by
@@ -384,9 +384,9 @@ theorem norm_normed_mk (S : AddSubgroup M) (h : (S.topological_closure : Set M) 
       field_simp [(ne_of_ltₓ hδ).symm]
 
 /-- The operator norm of the projection is `0` if the subspace is dense. -/
-theorem norm_trivial_quotient_mk (S : AddSubgroup M) (h : (S.topological_closure : Set M) = Set.Univ) :
-    ∥S.normed_mk∥ = 0 := by
-  refine' le_antisymmₓ (op_norm_le_bound _ (le_reflₓ _) fun x => _) (norm_nonneg _)
+theorem norm_trivial_quotient_mk (S : AddSubgroup M) (h : (S.topologicalClosure : Set M) = Set.Univ) :
+    ∥S.normedMk∥ = 0 := by
+  refine' le_antisymmₓ (op_norm_le_bound _ le_rfl fun x => _) (norm_nonneg _)
   have hker : x ∈ S.normed_mk.ker.topologicalClosure := by
     rw [S.ker_normed_mk]
     exact Set.mem_of_eq_of_mem h trivialₓ
@@ -401,13 +401,13 @@ namespace NormedGroupHom
 by the kernel of `f`. -/
 structure is_quotient (f : NormedGroupHom M N) : Prop where
   Surjective : Function.Surjective f
-  norm : ∀ x, ∥f x∥ = Inf ((fun m => ∥x + m∥) '' f.ker)
+  norm : ∀ x, ∥f x∥ = inf ((fun m => ∥x + m∥) '' f.ker)
 
 /-- Given  `f : normed_group_hom M N` such that `f s = 0` for all `s ∈ S`, where,
 `S : add_subgroup M` is closed, the induced morphism `normed_group_hom (M ⧸ S) N`. -/
 noncomputable def lift {N : Type _} [SemiNormedGroup N] (S : AddSubgroup M) (f : NormedGroupHom M N)
     (hf : ∀, ∀ s ∈ S, ∀, f s = 0) : NormedGroupHom (M ⧸ S) N :=
-  { QuotientAddGroup.lift S f.to_add_monoid_hom hf with
+  { QuotientAddGroup.lift S f.toAddMonoidHom hf with
     bound' := by
       obtain ⟨c : ℝ, hcpos : (0 : ℝ) < c, hc : ∀ x, ∥f x∥ ≤ c * ∥x∥⟩ := f.bound
       refine' ⟨c, fun mbar => le_of_forall_pos_le_add fun ε hε => _⟩
@@ -417,11 +417,11 @@ noncomputable def lift {N : Type _} [SemiNormedGroup N] (S : AddSubgroup M) (f :
           rw [mul_addₓ, mul_div_cancel' _ hcpos.ne.symm] }
 
 theorem lift_mk {N : Type _} [SemiNormedGroup N] (S : AddSubgroup M) (f : NormedGroupHom M N)
-    (hf : ∀, ∀ s ∈ S, ∀, f s = 0) (m : M) : lift S f hf (S.normed_mk m) = f m :=
+    (hf : ∀, ∀ s ∈ S, ∀, f s = 0) (m : M) : lift S f hf (S.normedMk m) = f m :=
   rfl
 
 theorem lift_unique {N : Type _} [SemiNormedGroup N] (S : AddSubgroup M) (f : NormedGroupHom M N)
-    (hf : ∀, ∀ s ∈ S, ∀, f s = 0) (g : NormedGroupHom (M ⧸ S) N) : g.comp S.normed_mk = f → g = lift S f hf := by
+    (hf : ∀, ∀ s ∈ S, ∀, f s = 0) (g : NormedGroupHom (M ⧸ S) N) : g.comp S.normedMk = f → g = lift S f hf := by
   intro h
   ext
   rcases AddSubgroup.surjective_normed_mk _ x with ⟨x, rfl⟩
@@ -429,11 +429,11 @@ theorem lift_unique {N : Type _} [SemiNormedGroup N] (S : AddSubgroup M) (f : No
   simpa only [h]
 
 /-- `S.normed_mk` satisfies `is_quotient`. -/
-theorem is_quotient_quotient (S : AddSubgroup M) : is_quotient S.normed_mk :=
+theorem is_quotient_quotient (S : AddSubgroup M) : IsQuotient S.normedMk :=
   ⟨S.surjective_normed_mk, fun m => by
     simpa [S.ker_normed_mk] using quotient_norm_mk_eq _ m⟩
 
-theorem is_quotient.norm_lift {f : NormedGroupHom M N} (hquot : is_quotient f) {ε : ℝ} (hε : 0 < ε) (n : N) :
+theorem is_quotient.norm_lift {f : NormedGroupHom M N} (hquot : IsQuotient f) {ε : ℝ} (hε : 0 < ε) (n : N) :
     ∃ m : M, f m = n ∧ ∥m∥ < ∥n∥ + ε := by
   obtain ⟨m, rfl⟩ := hquot.surjective n
   have nonemp : ((fun m' => ∥m + m'∥) '' f.ker).Nonempty := by
@@ -446,7 +446,7 @@ theorem is_quotient.norm_lift {f : NormedGroupHom M N} (hquot : is_quotient f) {
       rw [f.map_add, (NormedGroupHom.mem_ker f x).mp hx, add_zeroₓ], by
       rwa [hquot.norm]⟩
 
-theorem is_quotient.norm_le {f : NormedGroupHom M N} (hquot : is_quotient f) (m : M) : ∥f m∥ ≤ ∥m∥ := by
+theorem is_quotient.norm_le {f : NormedGroupHom M N} (hquot : IsQuotient f) (m : M) : ∥f m∥ ≤ ∥m∥ := by
   rw [hquot.norm]
   apply cInf_le
   · use 0
@@ -484,7 +484,7 @@ theorem lift_norm_le {N : Type _} [SemiNormedGroup N] (S : AddSubgroup M) (f : N
     
 
 theorem lift_norm_noninc {N : Type _} [SemiNormedGroup N] (S : AddSubgroup M) (f : NormedGroupHom M N)
-    (hf : ∀, ∀ s ∈ S, ∀, f s = 0) (fb : f.norm_noninc) : (lift S f hf).NormNoninc := fun x => by
+    (hf : ∀, ∀ s ∈ S, ∀, f s = 0) (fb : f.NormNoninc) : (lift S f hf).NormNoninc := fun x => by
   have fb' : ∥f∥ ≤ (1 : ℝ≥0 ) := norm_noninc.norm_noninc_iff_norm_le_one.mp fb
   simpa using le_of_op_norm_le _ (f.lift_norm_le _ _ fb') _
 

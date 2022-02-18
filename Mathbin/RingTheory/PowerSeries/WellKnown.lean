@@ -26,15 +26,15 @@ def inv_units_sub (u : (R)ˣ) : PowerSeries R :=
   mk fun n => 1 /ₚ u ^ (n + 1)
 
 @[simp]
-theorem coeff_inv_units_sub (u : (R)ˣ) (n : ℕ) : coeff R n (inv_units_sub u) = 1 /ₚ u ^ (n + 1) :=
+theorem coeff_inv_units_sub (u : (R)ˣ) (n : ℕ) : coeff R n (invUnitsSub u) = 1 /ₚ u ^ (n + 1) :=
   coeff_mk _ _
 
 @[simp]
-theorem constant_coeff_inv_units_sub (u : (R)ˣ) : constant_coeff R (inv_units_sub u) = 1 /ₚ u := by
+theorem constant_coeff_inv_units_sub (u : (R)ˣ) : constantCoeff R (invUnitsSub u) = 1 /ₚ u := by
   rw [← coeff_zero_eq_constant_coeff_apply, coeff_inv_units_sub, zero_addₓ, pow_oneₓ]
 
 @[simp]
-theorem inv_units_sub_mul_X (u : (R)ˣ) : inv_units_sub u * X = inv_units_sub u * C R u - 1 := by
+theorem inv_units_sub_mul_X (u : (R)ˣ) : invUnitsSub u * X = invUnitsSub u * c R u - 1 := by
   ext (_ | n)
   · simp
     
@@ -42,11 +42,11 @@ theorem inv_units_sub_mul_X (u : (R)ˣ) : inv_units_sub u * X = inv_units_sub u 
     
 
 @[simp]
-theorem inv_units_sub_mul_sub (u : (R)ˣ) : inv_units_sub u * (C R u - X) = 1 := by
+theorem inv_units_sub_mul_sub (u : (R)ˣ) : invUnitsSub u * (c R u - X) = 1 := by
   simp [mul_sub, sub_sub_cancel]
 
-theorem map_inv_units_sub (f : R →+* S) (u : (R)ˣ) :
-    map f (inv_units_sub u) = inv_units_sub (Units.map (f : R →* S) u) := by
+theorem map_inv_units_sub (f : R →+* S) (u : (R)ˣ) : map f (invUnitsSub u) = invUnitsSub (Units.map (f : R →* S) u) :=
+  by
   ext
   simp [← map_pow]
 
@@ -77,7 +77,7 @@ theorem coeff_exp : coeff A n (exp A) = algebraMap ℚ A (1 / n !) :=
   coeff_mk _ _
 
 @[simp]
-theorem constant_coeff_exp : constant_coeff A (exp A) = 1 := by
+theorem constant_coeff_exp : constantCoeff A (exp A) = 1 := by
   rw [← coeff_zero_eq_constant_coeff_apply, coeff_exp]
   simp
 
@@ -135,7 +135,7 @@ theorem exp_mul_exp_eq_exp_add [Algebra ℚ A] (a b : A) :
     
 
 /-- Shows that $e^{x} * e^{-x} = 1$ -/
-theorem exp_mul_exp_neg_eq_one [Algebra ℚ A] : exp A * eval_neg_hom (exp A) = 1 := by
+theorem exp_mul_exp_neg_eq_one [Algebra ℚ A] : exp A * evalNegHom (exp A) = 1 := by
   convert exp_mul_exp_eq_exp_add (1 : A) (-1) <;> simp
 
 /-- Shows that $(e^{X})^k = e^{kX}$. -/

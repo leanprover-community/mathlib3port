@@ -68,7 +68,7 @@ theorem eps_mul_eps [Semiringₓ R] : (ε * ε : (R)[ε]) = 0 :=
   inr_mul_inr _ _ _
 
 @[simp]
-theorem inr_eq_smul_eps [MulZeroOneClass R] (r : R) : inr r = (r • ε : (R)[ε]) :=
+theorem inr_eq_smul_eps [MulZeroOneClassₓ R] (r : R) : inr r = (r • ε : (R)[ε]) :=
   ext (mul_zero r).symm (mul_oneₓ r).symm
 
 /-- For two algebra morphisms out of `R[ε]` to agree, it suffices for them to agree on `ε`. -/

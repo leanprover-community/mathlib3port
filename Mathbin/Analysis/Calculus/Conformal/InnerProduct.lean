@@ -41,5 +41,5 @@ theorem conformal_factor_at_inner_eq_mul_inner' {f : E → F} {x : E} (h : Confo
 
 theorem conformal_factor_at_inner_eq_mul_inner {f : E → F} {x : E} {f' : E →L[ℝ] F} (h : HasFderivAt f f' x)
     (H : ConformalAt f x) (u v : E) : ⟪f' u, f' v⟫ = (conformalFactorAt H : ℝ) * ⟪u, v⟫ :=
-  H.differentiable_at.has_fderiv_at.unique h ▸ conformal_factor_at_inner_eq_mul_inner' H u v
+  H.DifferentiableAt.HasFderivAt.unique h ▸ conformal_factor_at_inner_eq_mul_inner' H u v
 

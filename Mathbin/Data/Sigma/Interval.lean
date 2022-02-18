@@ -27,10 +27,10 @@ section Disjoint
 variable [DecidableEq ι] [∀ i, Preorderₓ (α i)] [∀ i, LocallyFiniteOrder (α i)]
 
 instance : LocallyFiniteOrder (Σ i, α i) where
-  finsetIcc := sigma_lift fun _ => Icc
-  finsetIco := sigma_lift fun _ => Ico
-  finsetIoc := sigma_lift fun _ => Ioc
-  finsetIoo := sigma_lift fun _ => Ioo
+  finsetIcc := sigmaLift fun _ => icc
+  finsetIco := sigmaLift fun _ => ico
+  finsetIoc := sigmaLift fun _ => ioc
+  finsetIoo := sigmaLift fun _ => ioo
   finset_mem_Icc := fun ⟨i, a⟩ ⟨j, b⟩ ⟨k, c⟩ => by
     simp_rw [mem_sigma_lift, le_def, mem_Icc, exists_and_distrib_left, ← exists_and_distrib_right, ← exists_prop]
     exact
@@ -58,16 +58,16 @@ section
 
 variable (a b : Σ i, α i)
 
-theorem card_Icc : (Icc a b).card = if h : a.1 = b.1 then (Icc (h.rec a.2) b.2).card else 0 :=
+theorem card_Icc : (icc a b).card = if h : a.1 = b.1 then (icc (h.rec a.2) b.2).card else 0 :=
   card_sigma_lift _ _ _
 
-theorem card_Ico : (Ico a b).card = if h : a.1 = b.1 then (Ico (h.rec a.2) b.2).card else 0 :=
+theorem card_Ico : (ico a b).card = if h : a.1 = b.1 then (ico (h.rec a.2) b.2).card else 0 :=
   card_sigma_lift _ _ _
 
-theorem card_Ioc : (Ioc a b).card = if h : a.1 = b.1 then (Ioc (h.rec a.2) b.2).card else 0 :=
+theorem card_Ioc : (ioc a b).card = if h : a.1 = b.1 then (ioc (h.rec a.2) b.2).card else 0 :=
   card_sigma_lift _ _ _
 
-theorem card_Ioo : (Ioo a b).card = if h : a.1 = b.1 then (Ioo (h.rec a.2) b.2).card else 0 :=
+theorem card_Ioo : (ioo a b).card = if h : a.1 = b.1 then (ioo (h.rec a.2) b.2).card else 0 :=
   card_sigma_lift _ _ _
 
 end
@@ -75,19 +75,19 @@ end
 variable (i : ι) (a b : α i)
 
 @[simp]
-theorem Icc_mk_mk : Icc (⟨i, a⟩ : Sigma α) ⟨i, b⟩ = (Icc a b).map (embedding.sigma_mk i) :=
+theorem Icc_mk_mk : icc (⟨i, a⟩ : Sigma α) ⟨i, b⟩ = (icc a b).map (Embedding.sigmaMk i) :=
   dif_pos rfl
 
 @[simp]
-theorem Ico_mk_mk : Ico (⟨i, a⟩ : Sigma α) ⟨i, b⟩ = (Ico a b).map (embedding.sigma_mk i) :=
+theorem Ico_mk_mk : ico (⟨i, a⟩ : Sigma α) ⟨i, b⟩ = (ico a b).map (Embedding.sigmaMk i) :=
   dif_pos rfl
 
 @[simp]
-theorem Ioc_mk_mk : Ioc (⟨i, a⟩ : Sigma α) ⟨i, b⟩ = (Ioc a b).map (embedding.sigma_mk i) :=
+theorem Ioc_mk_mk : ioc (⟨i, a⟩ : Sigma α) ⟨i, b⟩ = (ioc a b).map (Embedding.sigmaMk i) :=
   dif_pos rfl
 
 @[simp]
-theorem Ioo_mk_mk : Ioo (⟨i, a⟩ : Sigma α) ⟨i, b⟩ = (Ioo a b).map (embedding.sigma_mk i) :=
+theorem Ioo_mk_mk : ioo (⟨i, a⟩ : Sigma α) ⟨i, b⟩ = (ioo a b).map (Embedding.sigmaMk i) :=
   dif_pos rfl
 
 end Disjoint

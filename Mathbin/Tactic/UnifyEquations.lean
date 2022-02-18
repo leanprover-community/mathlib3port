@@ -63,7 +63,7 @@ unsafe def unify_heterogeneous : unification_step := fun equ lhs_type rhs_type l
       let t ← to_expr (pquote.1 (@Eq (%%ₓlhs_type) (%%ₓlhs) (%%ₓrhs)))
       let equ' ← note equ.local_pp_name t p
       clear equ
-      pure <| simplified [equ'.local_pp_name]) <|>
+      pure <| simplified [equ']) <|>
     pure not_simplified
 
 /-- For `equ : t = u`, if `t` and `u` are defeq, we delete `equ`.
@@ -96,8 +96,8 @@ private unsafe def injection_with' (h : expr) (ns : List Name) (base := `h) (off
   let (lhs, rhs, constructor_left, constructor_right, inj_name) ←
     (do
           let (lhs, rhs) ← match_eq H
-          let constructor_left ← get_app_fn_const_whnf lhs semireducible ff
-          let constructor_right ← get_app_fn_const_whnf rhs semireducible ff
+          let constructor_left ← get_app_fn_const_whnf lhs semireducible false
+          let constructor_right ← get_app_fn_const_whnf rhs semireducible false
           let inj_name ← resolve_constant <| constructor_left ++ "inj_arrow"
           pure (lhs, rhs, constructor_left, constructor_right, inj_name)) <|>
         fail
@@ -107,20 +107,20 @@ private unsafe def injection_with' (h : expr) (ns : List Name) (base := `h) (off
       let inj ← mk_const inj_name
       let inj_type ← infer_type inj
       let inj_arity ← get_pi_arity inj_type
-      let num_equations := (inj_type.nth_binding_body (inj_arity - 1)).binding_domain.pi_arity
+      let num_equations := (inj_type (inj_arity - 1)).binding_domain.pi_arity
       let tgt ← target
       let proof ← mk_mapp inj_name (List.repeat none (inj_arity - 3) ++ [some h, some tgt])
       eapply proof
       let (next, ns) ← intron_with num_equations ns base offset
       let next ←
-        next.mfilter fun h => do
+        next fun h => do
             let quote.1 True ← infer_type h | pure tt
             clear h >> pure ff <|> pure tt
       pure (some next, ns)
     else do
       let tgt ← target
       let constructor_left ← get_app_fn_const_whnf lhs semireducible tt
-      let no_confusion := constructor_left.get_prefix ++ "no_confusion"
+      let no_confusion := constructor_left ++ "no_confusion"
       let pr ← mk_app no_confusion [tgt, lhs, rhs, h]
       exact pr
       return (none, ns)
@@ -138,7 +138,7 @@ unsafe def unify_constructor_headed : unification_step := fun equ _ _ _ _ _ _ _ 
       pure <|
           match next with
           | none => goal_solved
-          | some next => simplified <| next.map expr.local_pp_name) <|>
+          | some next => simplified <| next expr.local_pp_name) <|>
     pure not_simplified
 
 /-- For `type = I x₁ ... xₙ`, where `I` is an inductive type, `get_sizeof type`
@@ -146,7 +146,7 @@ returns the constant `I.sizeof`. Fails if `type` is not of this form or if no
 such constant exists.
 -/
 unsafe def get_sizeof (type : expr) : tactic pexpr := do
-  let n ← get_app_fn_const_whnf type semireducible ff
+  let n ← get_app_fn_const_whnf type semireducible false
   resolve_name <| n ++ `sizeof
 
 theorem add_add_one_ne (n m : ℕ) : n + (m + 1) ≠ n := by
@@ -171,7 +171,7 @@ precisely, the two sides of the equation must be of the form
 `nat.succ (... (nat.succ e)...)` with different numbers of `nat.succ`
 constructors. Matching is performed with transparency `md`.
 -/
-unsafe def contradict_n_eq_n_plus_m (md : transparency) (equ lhs rhs : expr) : tactic expr := do
+unsafe def contradict_n_eq_n_plus_m (md : Transparency) (equ lhs rhs : expr) : tactic expr := do
   let ⟨lhs_n, lhs_e⟩ ← match_n_plus_m md 0 lhs
   let ⟨rhs_n, rhs_e⟩ ← match_n_plus_m md 0 rhs
   is_def_eq lhs_e rhs_e md <|>
@@ -265,7 +265,7 @@ Returns true iff the goal has been solved during the unification process.
 Note: you must make sure that the input names are unique in the context.
 -/
 unsafe def unify_equations : List Name → tactic Bool
-  | [] => pure ff
+  | [] => pure false
   | h :: hs => do
     let res ← unify_equation_once h
     match res with

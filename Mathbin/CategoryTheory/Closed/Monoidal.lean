@@ -19,12 +19,12 @@ namespace CategoryTheory
 open Category MonoidalCategory
 
 /-- An object `X` is (right) closed if `(X ⊗ -)` is a left adjoint. -/
-class closed {C : Type u} [category.{v} C] [monoidal_category.{v} C] (X : C) where
-  isAdj : is_left_adjoint (tensor_left X)
+class closed {C : Type u} [Category.{v} C] [MonoidalCategory.{v} C] (X : C) where
+  isAdj : IsLeftAdjoint (tensorLeft X)
 
 /-- A monoidal category `C` is (right) monoidal closed if every object is (right) closed. -/
-class monoidal_closed (C : Type u) [category.{v} C] [monoidal_category.{v} C] where
-  Closed : ∀ X : C, closed X
+class monoidal_closed (C : Type u) [Category.{v} C] [MonoidalCategory.{v} C] where
+  Closed : ∀ X : C, Closed X
 
 attribute [instance] monoidal_closed.closed
 
@@ -32,13 +32,13 @@ attribute [instance] monoidal_closed.closed
 This isn't an instance because most of the time we'll prove closedness for all objects at once,
 rather than just for this one.
 -/
-def unit_closed {C : Type u} [category.{v} C] [monoidal_category.{v} C] : closed (𝟙_ C) where
+def unit_closed {C : Type u} [Category.{v} C] [MonoidalCategory.{v} C] : Closed (𝟙_ C) where
   isAdj :=
     { right := 𝟭 C,
       adj :=
-        adjunction.mk_of_hom_equiv
+        Adjunction.mkOfHomEquiv
           { homEquiv := fun X _ =>
-              { toFun := fun a => (left_unitor X).inv ≫ a, invFun := fun a => (left_unitor X).Hom ≫ a,
+              { toFun := fun a => (leftUnitor X).inv ≫ a, invFun := fun a => (leftUnitor X).Hom ≫ a,
                 left_inv := by
                   tidy,
                 right_inv := by

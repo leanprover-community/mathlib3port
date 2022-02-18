@@ -67,16 +67,16 @@ theorem unpair_mkpair (a b : ℕ) : unpair (mkpair a b) = (a, b) := by
     
 
 /-- An equivalence between `ℕ × ℕ` and `ℕ`. -/
-@[simps (config := { fullyApplied := ff })]
+@[simps (config := { fullyApplied := false })]
 def mkpair_equiv : ℕ × ℕ ≃ ℕ :=
   ⟨uncurry mkpair, unpair, fun ⟨a, b⟩ => unpair_mkpair a b, mkpair_unpair⟩
 
-theorem surjective_unpair : surjective unpair :=
-  mkpair_equiv.symm.Surjective
+theorem surjective_unpair : Surjective unpair :=
+  mkpairEquiv.symm.Surjective
 
 @[simp]
 theorem mkpair_eq_mkpair {a b c d : ℕ} : mkpair a b = mkpair c d ↔ a = c ∧ b = d :=
-  mkpair_equiv.Injective.eq_iff.trans (@Prod.ext_iff ℕ ℕ (a, b) (c, d))
+  mkpairEquiv.Injective.eq_iff.trans (@Prod.ext_iff ℕ ℕ (a, b) (c, d))
 
 theorem unpair_lt {n : ℕ} (n1 : 1 ≤ n) : (unpair n).1 < n := by
   let s := sqrt n
@@ -143,12 +143,12 @@ open Nat
 
 section CompleteLattice
 
--- ././Mathport/Syntax/Translate/Basic.lean:626:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (i j)
 theorem supr_unpair {α} [CompleteLattice α] (f : ℕ → ℕ → α) :
     (⨆ n : ℕ, f n.unpair.1 n.unpair.2) = ⨆ (i : ℕ) (j : ℕ), f i j := by
   rw [← (supr_prod : (⨆ i : ℕ × ℕ, f i.1 i.2) = _), ← nat.surjective_unpair.supr_comp]
 
--- ././Mathport/Syntax/Translate/Basic.lean:626:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (i j)
 theorem infi_unpair {α} [CompleteLattice α] (f : ℕ → ℕ → α) :
     (⨅ n : ℕ, f n.unpair.1 n.unpair.2) = ⨅ (i : ℕ) (j : ℕ), f i j :=
   supr_unpair (show ℕ → ℕ → OrderDual α from f)
@@ -163,11 +163,11 @@ theorem Union_unpair_prod {α β} {s : ℕ → Set α} {t : ℕ → Set β} :
   convert surjective_unpair.Union_comp _
   rfl
 
--- ././Mathport/Syntax/Translate/Basic.lean:626:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (i j)
 theorem Union_unpair {α} (f : ℕ → ℕ → Set α) : (⋃ n : ℕ, f n.unpair.1 n.unpair.2) = ⋃ (i : ℕ) (j : ℕ), f i j :=
   supr_unpair f
 
--- ././Mathport/Syntax/Translate/Basic.lean:626:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (i j)
 theorem Inter_unpair {α} (f : ℕ → ℕ → Set α) : (⋂ n : ℕ, f n.unpair.1 n.unpair.2) = ⋂ (i : ℕ) (j : ℕ), f i j :=
   infi_unpair f
 

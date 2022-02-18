@@ -35,7 +35,7 @@ private unsafe def parse_name_list (e : expr) : List Name :=
 
 attribute [local instance] reflect_name_list
 
--- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr *»
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr *»
 /-- Defines the user attribute `nolint` for skipping `#lint` -/
 @[user_attribute]
 unsafe def nolint_attr : user_attribute (name_map (List Name)) (List Name) where
@@ -62,7 +62,7 @@ add_tactic_doc { Name := "nolint", category := DocCategory.attr, declNames := [`
 using `linter`, i.e., if there is no `nolint` attribute. -/
 unsafe def should_be_linted (linter : Name) (decl : Name) : tactic Bool := do
   let c ← nolint_attr.get_cache
-  pure <| linter ∉ (c.find decl).getOrElse []
+  pure <| linter ∉ (c decl).getOrElse []
 
 /-- A linting test for the `#lint` command.
 
@@ -80,7 +80,7 @@ unsafe structure linter where
   test : declaration → tactic (Option Stringₓ)
   no_errors_found : Stringₓ
   errors_found : Stringₓ
-  is_fast : Bool := tt
+  is_fast : Bool := true
   auto_decls : Bool
 
 /-- Takes a list of names that resolve to declarations of type `linter`,

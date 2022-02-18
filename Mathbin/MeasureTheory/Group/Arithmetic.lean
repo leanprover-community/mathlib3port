@@ -126,6 +126,12 @@ theorem AeMeasurable.mul [HasMeasurableMul₂ M] (hf : AeMeasurable f μ) (hg : 
 omit m
 
 @[to_additive]
+instance Pi.has_measurable_mul {ι : Type _} {α : ι → Type _} [∀ i, Mul (α i)] [∀ i, MeasurableSpace (α i)]
+    [∀ i, HasMeasurableMul (α i)] : HasMeasurableMul (∀ i, α i) :=
+  ⟨fun g => measurable_pi_iff.mpr fun i => (measurable_const_mul (g i)).comp <| measurable_pi_apply i, fun g =>
+    measurable_pi_iff.mpr fun i => (measurable_mul_const (g i)).comp <| measurable_pi_apply i⟩
+
+@[to_additive]
 instance (priority := 100) HasMeasurableMul₂.to_has_measurable_mul [HasMeasurableMul₂ M] : HasMeasurableMul M :=
   ⟨fun c => measurable_const.mul measurable_id, fun c => measurable_id.mul measurable_const⟩
 
@@ -278,7 +284,7 @@ theorem measurable_set_eq_fun {m : MeasurableSpace α} {E} [MeasurableSpace E] [
 
 theorem ae_eq_trim_of_measurable {α E} {m m0 : MeasurableSpace α} {μ : Measureₓ α} [MeasurableSpace E] [AddGroupₓ E]
     [MeasurableSingletonClass E] [HasMeasurableSub₂ E] (hm : m ≤ m0) {f g : α → E} (hf : @Measurable _ _ m _ f)
-    (hg : @Measurable _ _ m _ g) (hfg : f =ᵐ[μ] g) : f =ᶠ[@measure.ae α m (μ.trim hm)] g := by
+    (hg : @Measurable _ _ m _ g) (hfg : f =ᵐ[μ] g) : f =ᶠ[@Measure.ae α m (μ.trim hm)] g := by
   rwa [Filter.EventuallyEq, ae_iff, trim_measurable_set_eq hm _]
   exact @MeasurableSet.compl α _ m (@measurable_set_eq_fun α m E _ _ _ _ _ _ hf hg)
 
@@ -342,13 +348,13 @@ theorem ae_measurable_inv_iff {G : Type _} [Groupₓ G] [MeasurableSpace G] [Has
 theorem measurable_inv_iff₀ {G₀ : Type _} [GroupWithZeroₓ G₀] [MeasurableSpace G₀] [HasMeasurableInv G₀] {f : α → G₀} :
     (Measurable fun x => (f x)⁻¹) ↔ Measurable f :=
   ⟨fun h => by
-    simpa only [inv_inv₀] using h.inv, fun h => h.inv⟩
+    simpa only [inv_invₓ] using h.inv, fun h => h.inv⟩
 
 @[simp]
 theorem ae_measurable_inv_iff₀ {G₀ : Type _} [GroupWithZeroₓ G₀] [MeasurableSpace G₀] [HasMeasurableInv G₀]
     {f : α → G₀} : AeMeasurable (fun x => (f x)⁻¹) μ ↔ AeMeasurable f μ :=
   ⟨fun h => by
-    simpa only [inv_inv₀] using h.inv, fun h => h.inv⟩
+    simpa only [inv_invₓ] using h.inv, fun h => h.inv⟩
 
 omit m
 
@@ -434,7 +440,7 @@ instance Submonoid.has_measurable_smul {M α} [MeasurableSpace M] [MeasurableSpa
 @[to_additive]
 instance Subgroup.has_measurable_smul {G α} [MeasurableSpace G] [MeasurableSpace α] [Groupₓ G] [MulAction G α]
     [HasMeasurableSmul G α] (s : Subgroup G) : HasMeasurableSmul s α :=
-  s.to_submonoid.has_measurable_smul
+  s.toSubmonoid.HasMeasurableSmul
 
 section Smul
 
@@ -548,26 +554,34 @@ section Opposite
 
 open MulOpposite
 
+@[to_additive]
 instance {α : Type _} [h : MeasurableSpace α] : MeasurableSpace (αᵐᵒᵖ) :=
   MeasurableSpace.map op h
 
-theorem measurable_op {α : Type _} [MeasurableSpace α] : Measurable (op : α → αᵐᵒᵖ) := fun s => id
+@[to_additive]
+theorem measurable_mul_op {α : Type _} [MeasurableSpace α] : Measurable (op : α → αᵐᵒᵖ) := fun s => id
 
-theorem measurable_unop {α : Type _} [MeasurableSpace α] : Measurable (unop : αᵐᵒᵖ → α) := fun s => id
+@[to_additive]
+theorem measurable_mul_unop {α : Type _} [MeasurableSpace α] : Measurable (unop : αᵐᵒᵖ → α) := fun s => id
 
+@[to_additive]
 instance {M : Type _} [Mul M] [MeasurableSpace M] [HasMeasurableMul M] : HasMeasurableMul (Mᵐᵒᵖ) :=
-  ⟨fun c => measurable_op.comp (measurable_unop.mul_const _), fun c => measurable_op.comp (measurable_unop.const_mul _)⟩
+  ⟨fun c => measurable_mul_op.comp (measurable_mul_unop.mul_const _), fun c =>
+    measurable_mul_op.comp (measurable_mul_unop.const_mul _)⟩
 
+@[to_additive]
 instance {M : Type _} [Mul M] [MeasurableSpace M] [HasMeasurableMul₂ M] : HasMeasurableMul₂ (Mᵐᵒᵖ) :=
-  ⟨measurable_op.comp ((measurable_unop.comp measurable_snd).mul (measurable_unop.comp measurable_fst))⟩
+  ⟨measurable_mul_op.comp ((measurable_mul_unop.comp measurable_snd).mul (measurable_mul_unop.comp measurable_fst))⟩
 
+@[to_additive]
 instance has_measurable_smul_opposite_of_mul {M : Type _} [Mul M] [MeasurableSpace M] [HasMeasurableMul M] :
     HasMeasurableSmul (Mᵐᵒᵖ) M :=
-  ⟨fun c => measurable_mul_const (unop c), fun x => measurable_unop.const_mul x⟩
+  ⟨fun c => measurable_mul_const (unop c), fun x => measurable_mul_unop.const_mul x⟩
 
+@[to_additive]
 instance has_measurable_smul₂_opposite_of_mul {M : Type _} [Mul M] [MeasurableSpace M] [HasMeasurableMul₂ M] :
     HasMeasurableSmul₂ (Mᵐᵒᵖ) M :=
-  ⟨measurable_snd.mul (measurable_unop.comp measurable_fst)⟩
+  ⟨measurable_snd.mul (measurable_mul_unop.comp measurable_fst)⟩
 
 end Opposite
 
@@ -583,7 +597,7 @@ variable {M α : Type _} [Monoidₓ M] [MeasurableSpace M] [HasMeasurableMul₂ 
 include m
 
 @[measurability, to_additive]
-theorem List.measurable_prod' (l : List (α → M)) (hl : ∀, ∀ f ∈ l, ∀, Measurable f) : Measurable l.prod := by
+theorem List.measurable_prod' (l : List (α → M)) (hl : ∀, ∀ f ∈ l, ∀, Measurable f) : Measurable l.Prod := by
   induction' l with f l ihl
   · exact measurable_one
     
@@ -592,7 +606,7 @@ theorem List.measurable_prod' (l : List (α → M)) (hl : ∀, ∀ f ∈ l, ∀,
   exact hl.1.mul (ihl hl.2)
 
 @[measurability, to_additive]
-theorem List.ae_measurable_prod' (l : List (α → M)) (hl : ∀, ∀ f ∈ l, ∀, AeMeasurable f μ) : AeMeasurable l.prod μ := by
+theorem List.ae_measurable_prod' (l : List (α → M)) (hl : ∀, ∀ f ∈ l, ∀, AeMeasurable f μ) : AeMeasurable l.Prod μ := by
   induction' l with f l ihl
   · exact ae_measurable_one
     
@@ -622,7 +636,7 @@ variable {M ι α : Type _} [CommMonoidₓ M] [MeasurableSpace M] [HasMeasurable
 include m
 
 @[measurability, to_additive]
-theorem Multiset.measurable_prod' (l : Multiset (α → M)) (hl : ∀, ∀ f ∈ l, ∀, Measurable f) : Measurable l.prod := by
+theorem Multiset.measurable_prod' (l : Multiset (α → M)) (hl : ∀, ∀ f ∈ l, ∀, Measurable f) : Measurable l.Prod := by
   rcases l with ⟨l⟩
   simpa using
     l.measurable_prod'
@@ -631,7 +645,7 @@ theorem Multiset.measurable_prod' (l : Multiset (α → M)) (hl : ∀, ∀ f ∈
 
 @[measurability, to_additive]
 theorem Multiset.ae_measurable_prod' (l : Multiset (α → M)) (hl : ∀, ∀ f ∈ l, ∀, AeMeasurable f μ) :
-    AeMeasurable l.prod μ := by
+    AeMeasurable l.Prod μ := by
   rcases l with ⟨l⟩
   simpa using
     l.ae_measurable_prod'

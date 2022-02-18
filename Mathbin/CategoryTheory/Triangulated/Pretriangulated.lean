@@ -31,8 +31,8 @@ namespace CategoryTheory.Triangulated
 
 open CategoryTheory.Category
 
-variable (C : Type u) [category.{v} C] [has_zero_object C] [has_shift C ℤ] [preadditive C]
-  [∀ n : ℤ, functor.additive (shift_functor C n)]
+variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ] [Preadditive C]
+  [∀ n : ℤ, Functor.Additive (shiftFunctor C n)]
 
 -- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (T₂ «expr ≅ » T₁)
 /-- A preadditive category `C` with an additive shift, and a class of "distinguished triangles"
@@ -57,22 +57,22 @@ relative to that shift is called pretriangulated if the following hold:
 See https://stacks.math.columbia.edu/tag/0145
 -/
 class pretriangulated where
-  DistinguishedTriangles {} : Set (triangle C)
+  DistinguishedTriangles {} : Set (Triangle C)
   isomorphic_distinguished : ∀, ∀ T₁ ∈ distinguished_triangles, ∀ T₂ _ : T₂ ≅ T₁, T₂ ∈ distinguished_triangles
-  contractible_distinguished : ∀ X : C, contractible_triangle C X ∈ distinguished_triangles
+  contractible_distinguished : ∀ X : C, contractibleTriangle C X ∈ distinguished_triangles
   distinguished_cocone_triangle :
-    ∀ X Y : C f : X ⟶ Y, ∃ (Z : C)(g : Y ⟶ Z)(h : Z ⟶ X⟦(1 : ℤ)⟧), triangle.mk _ f g h ∈ distinguished_triangles
-  rotate_distinguished_triangle : ∀ T : triangle C, T ∈ distinguished_triangles ↔ T.rotate ∈ distinguished_triangles
+    ∀ X Y : C f : X ⟶ Y, ∃ (Z : C)(g : Y ⟶ Z)(h : Z ⟶ X⟦(1 : ℤ)⟧), Triangle.mk _ f g h ∈ distinguished_triangles
+  rotate_distinguished_triangle : ∀ T : Triangle C, T ∈ distinguished_triangles ↔ T.rotate ∈ distinguished_triangles
   complete_distinguished_triangle_morphism :
-    ∀ T₁ T₂ : triangle C h₁ : T₁ ∈ distinguished_triangles h₂ : T₂ ∈ distinguished_triangles a : T₁.obj₁ ⟶ T₂.obj₁ b :
+    ∀ T₁ T₂ : Triangle C h₁ : T₁ ∈ distinguished_triangles h₂ : T₂ ∈ distinguished_triangles a : T₁.obj₁ ⟶ T₂.obj₁ b :
       T₁.obj₂ ⟶ T₂.obj₂ comm₁ : T₁.mor₁ ≫ b = a ≫ T₂.mor₁,
       ∃ c : T₁.obj₃ ⟶ T₂.obj₃, T₁.mor₂ ≫ c = b ≫ T₂.mor₂ ∧ T₁.mor₃ ≫ a⟦1⟧' = c ≫ T₂.mor₃
 
 namespace Pretriangulated
 
-variable [pretriangulated C]
+variable [Pretriangulated C]
 
-notation:20 "dist_triang" C => distinguished_triangles C
+notation:20 "dist_triang" C => DistinguishedTriangles C
 
 -- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (T «expr ∈ » «exprdist_triang »(C))
 /-- Given any distinguished triangle `T`, then we know `T.rotate` is also distinguished.
@@ -83,9 +83,9 @@ theorem rot_of_dist_triangle T (_ : T ∈ (dist_triang C)) : T.rotate ∈ (dist_
 -- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (T «expr ∈ » «exprdist_triang »(C))
 /-- Given any distinguished triangle `T`, then we know `T.inv_rotate` is also distinguished.
 -/
-theorem inv_rot_of_dist_triangle T (_ : T ∈ (dist_triang C)) : T.inv_rotate ∈ (dist_triang C) :=
-  (rotate_distinguished_triangle T.inv_rotate).mpr
-    (isomorphic_distinguished T H T.inv_rotate.rotate (inv_rot_comp_rot.app T))
+theorem inv_rot_of_dist_triangle T (_ : T ∈ (dist_triang C)) : T.invRotate ∈ (dist_triang C) :=
+  (rotate_distinguished_triangle T.invRotate).mpr
+    (isomorphic_distinguished T H T.invRotate.rotate (invRotCompRot.app T))
 
 -- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (T «expr ∈ » «exprdist_triang »(C))
 /-- Given any distinguished triangle
@@ -128,7 +128,7 @@ theorem comp_dist_triangle_mor_zero₂₃ T (_ : T ∈ (dist_triang C)) : T.mor�
 the composition `h ≫ f⟦1⟧ = 0`.
 See https://stacks.math.columbia.edu/tag/0146
 -/
-theorem comp_dist_triangle_mor_zero₃₁ T (_ : T ∈ (dist_triang C)) : T.mor₃ ≫ (shift_equiv C 1).Functor.map T.mor₁ = 0 :=
+theorem comp_dist_triangle_mor_zero₃₁ T (_ : T ∈ (dist_triang C)) : T.mor₃ ≫ (shiftEquiv C 1).Functor.map T.mor₁ = 0 :=
   by
   have H₂ := rot_of_dist_triangle C T.rotate (rot_of_dist_triangle C T H)
   simpa using comp_dist_triangle_mor_zero₁₂ C T.rotate.rotate H₂
@@ -141,19 +141,19 @@ namespace CategoryTheory.Triangulated
 
 namespace Pretriangulated
 
-variable (C : Type u₁) [category.{v₁} C] [has_zero_object C] [has_shift C ℤ] [preadditive C]
-  [∀ n : ℤ, functor.additive (shift_functor C n)]
+variable (C : Type u₁) [Category.{v₁} C] [HasZeroObject C] [HasShift C ℤ] [Preadditive C]
+  [∀ n : ℤ, Functor.Additive (shiftFunctor C n)]
 
-variable (D : Type u₂) [category.{v₂} D] [has_zero_object D] [has_shift D ℤ] [preadditive D]
-  [∀ n : ℤ, functor.additive (shift_functor D n)]
+variable (D : Type u₂) [Category.{v₂} D] [HasZeroObject D] [HasShift D ℤ] [Preadditive D]
+  [∀ n : ℤ, Functor.Additive (shiftFunctor D n)]
 
 /-- The underlying structure of a triangulated functor between pretriangulated categories `C` and `D`
 is a functor `F : C ⥤ D` together with given functorial isomorphisms `ξ X : F(X⟦1⟧) ⟶ F(X)⟦1⟧`.
 -/
 structure triangulated_functor_struct extends C ⥤ D where
-  commShift : shift_functor C (1 : ℤ) ⋙ to_functor ≅ to_functor ⋙ shift_functor D (1 : ℤ)
+  commShift : shiftFunctor C (1 : ℤ) ⋙ to_functor ≅ to_functor ⋙ shiftFunctor D (1 : ℤ)
 
-instance : Inhabited (triangulated_functor_struct C C) :=
+instance : Inhabited (TriangulatedFunctorStruct C C) :=
   ⟨{ obj := fun X => X, map := fun _ _ f => f,
       commShift := by
         rfl }⟩
@@ -164,8 +164,8 @@ variable {C D}
 triangles of `D`.
 -/
 @[simp]
-def triangulated_functor_struct.map_triangle (F : triangulated_functor_struct C D) (T : triangle C) : triangle D :=
-  triangle.mk _ (F.map T.mor₁) (F.map T.mor₂) (F.map T.mor₃ ≫ F.comm_shift.hom.app T.obj₁)
+def triangulated_functor_struct.map_triangle (F : TriangulatedFunctorStruct C D) (T : Triangle C) : Triangle D :=
+  Triangle.mk _ (F.map T.mor₁) (F.map T.mor₂) (F.map T.mor₃ ≫ F.commShift.Hom.app T.obj₁)
 
 variable (C D)
 
@@ -175,11 +175,11 @@ distinguished triangle `(X,Y,Z,f,g,h)` of `C`, the triangle
 `(F(X), F(Y), F(Z), F(f), F(g), F(h) ≫ (ξ X))` is a distinguished triangle of `D`.
 See https://stacks.math.columbia.edu/tag/014V
 -/
-structure triangulated_functor [pretriangulated C] [pretriangulated D] extends triangulated_functor_struct C D where
+structure triangulated_functor [Pretriangulated C] [Pretriangulated D] extends TriangulatedFunctorStruct C D where
   map_distinguished' :
-    ∀ T : triangle C, T ∈ (dist_triang C) → to_triangulated_functor_struct.map_triangle T ∈ (dist_triang D)
+    ∀ T : Triangle C, T ∈ (dist_triang C) → to_triangulated_functor_struct.mapTriangle T ∈ (dist_triang D)
 
-instance [pretriangulated C] : Inhabited (triangulated_functor C C) :=
+instance [Pretriangulated C] : Inhabited (TriangulatedFunctor C C) :=
   ⟨{ obj := fun X => X, map := fun _ _ f => f,
       commShift := by
         rfl,
@@ -188,19 +188,19 @@ instance [pretriangulated C] : Inhabited (triangulated_functor C C) :=
         dsimp  at *
         rwa [category.comp_id] }⟩
 
-variable {C D} [pretriangulated C] [pretriangulated D]
+variable {C D} [Pretriangulated C] [Pretriangulated D]
 
 /-- Given a `triangulated_functor` we can define a function from triangles of `C` to triangles of `D`.
 -/
 @[simp]
-def triangulated_functor.map_triangle (F : triangulated_functor C D) (T : triangle C) : triangle D :=
-  triangle.mk _ (F.map T.mor₁) (F.map T.mor₂) (F.map T.mor₃ ≫ F.comm_shift.hom.app T.obj₁)
+def triangulated_functor.map_triangle (F : TriangulatedFunctor C D) (T : Triangle C) : Triangle D :=
+  Triangle.mk _ (F.map T.mor₁) (F.map T.mor₂) (F.map T.mor₃ ≫ F.commShift.Hom.app T.obj₁)
 
 /-- Given a `triangulated_functor` and a distinguished triangle `T` of `C`, then the triangle it
 maps onto in `D` is also distinguished.
 -/
-theorem triangulated_functor.map_distinguished (F : triangulated_functor C D) (T : triangle C)
-    (h : T ∈ (dist_triang C)) : F.map_triangle T ∈ (dist_triang D) :=
+theorem triangulated_functor.map_distinguished (F : TriangulatedFunctor C D) (T : Triangle C)
+    (h : T ∈ (dist_triang C)) : F.mapTriangle T ∈ (dist_triang D) :=
   F.map_distinguished' T h
 
 end Pretriangulated

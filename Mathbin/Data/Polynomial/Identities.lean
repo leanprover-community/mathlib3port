@@ -12,6 +12,8 @@ noncomputable section
 
 namespace Polynomial
 
+open_locale Polynomial
+
 universe u v w x y z
 
 variable {R : Type u} {S : Type v} {T : Type w} {ι : Type x} {k : Type y} {A : Type z} {a b : R} {m n : ℕ}
@@ -45,16 +47,16 @@ private def poly_binom_aux1 (x y : R) (e : ℕ) (a : R) :
   congr
   apply (pow_add_expansion _ _ _).property
 
-private theorem poly_binom_aux2 (f : Polynomial R) (x y : R) :
-    f.eval (x + y) = f.sum fun e a => a * (x ^ e + e * x ^ (e - 1) * y + (poly_binom_aux1 x y e a).val * y ^ 2) := by
+private theorem poly_binom_aux2 (f : R[X]) (x y : R) :
+    f.eval (x + y) = f.Sum fun e a => a * (x ^ e + e * x ^ (e - 1) * y + (polyBinomAux1 x y e a).val * y ^ 2) := by
   unfold eval eval₂
   congr with n z
   apply (poly_binom_aux1 x y _ _).property
 
-private theorem poly_binom_aux3 (f : Polynomial R) (x y : R) :
+private theorem poly_binom_aux3 (f : R[X]) (x y : R) :
     f.eval (x + y) =
-      ((f.sum fun e a => a * x ^ e) + f.sum fun e a => a * e * x ^ (e - 1) * y) +
-        f.sum fun e a => a * (poly_binom_aux1 x y e a).val * y ^ 2 :=
+      ((f.Sum fun e a => a * x ^ e) + f.Sum fun e a => a * e * x ^ (e - 1) * y) +
+        f.Sum fun e a => a * (polyBinomAux1 x y e a).val * y ^ 2 :=
   by
   rw [poly_binom_aux2]
   simp [left_distrib, sum_add, mul_assoc]
@@ -63,7 +65,7 @@ private theorem poly_binom_aux3 (f : Polynomial R) (x y : R) :
 the evaluation of `f` at `x`, plus `y` times the (polynomial) derivative of `f` at `x`,
 plus some element `k : R` times `y^2`.
 -/
-def binom_expansion (f : Polynomial R) (x y : R) :
+def binom_expansion (f : R[X]) (x y : R) :
     { k : R // f.eval (x + y) = f.eval x + f.derivative.eval x * y + k * y ^ 2 } := by
   exists f.sum fun e a => a * (poly_binom_aux1 x y e a).val
   rw [poly_binom_aux3]
@@ -96,7 +98,7 @@ def pow_sub_pow_factor (x y : R) : ∀ i : ℕ, { z : R // x ^ i - y ^ i = z * (
 /-- For any polynomial `f`, `f.eval x - f.eval y` can be expressed as `z * (x - y)`
 for some `z` in the ring.
 -/
-def eval_sub_factor (f : Polynomial R) (x y : R) : { z : R // f.eval x - f.eval y = z * (x - y) } := by
+def eval_sub_factor (f : R[X]) (x y : R) : { z : R // f.eval x - f.eval y = z * (x - y) } := by
   refine' ⟨f.sum fun i r => r * (pow_sub_pow_factor x y i).val, _⟩
   delta' eval eval₂
   simp only [Sum, ← Finset.sum_sub_distrib, Finset.sum_mul]

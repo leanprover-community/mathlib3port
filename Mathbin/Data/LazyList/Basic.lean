@@ -53,30 +53,30 @@ def list_equiv_lazy_list (α : Type _) : List α ≃ LazyList α where
     simp [*]
 
 instance {α : Type u} [DecidableEq α] : DecidableEq (LazyList α)
-  | nil, nil => is_true rfl
+  | nil, nil => isTrue rfl
   | cons x xs, cons y ys =>
     if h : x = y then
       match DecidableEq (xs ()) (ys ()) with
       | is_false h2 =>
-        is_false
+        isFalse
           (by
             intro <;> cc)
       | is_true h2 =>
         have : xs = ys := by
           ext u <;> cases u <;> assumption
-        is_true
+        isTrue
           (by
             cc)
     else
-      is_false
+      isFalse
         (by
           intro <;> cc)
   | nil, cons _ _ =>
-    is_false
+    isFalse
       (by
         cc)
   | cons _ _, nil =>
-    is_false
+    isFalse
       (by
         cc)
 
@@ -158,7 +158,7 @@ It is done by converting to a `list` first because reversal involves evaluating 
 the list and if the list is all evaluated, `list` is a better representation for
 it than a series of thunks. -/
 def reverse {α} (xs : LazyList α) : LazyList α :=
-  of_list xs.to_list.reverse
+  ofList xs.toList.reverse
 
 instance : Monadₓ LazyList where
   pure := @LazyList.singleton
@@ -246,7 +246,7 @@ def attach {α} (l : LazyList α) : LazyList { x // x ∈ l } :=
   pmap Subtype.mk l fun a => id
 
 instance {α} [HasRepr α] : HasRepr (LazyList α) :=
-  ⟨fun xs => reprₓ xs.to_list⟩
+  ⟨fun xs => reprₓ xs.toList⟩
 
 end LazyList
 

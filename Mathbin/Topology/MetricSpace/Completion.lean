@@ -26,19 +26,19 @@ namespace Metric
 
 /-- The distance on the completion is obtained by extending the distance on the original space,
 by uniform continuity. -/
-instance : HasDist (completion α) :=
-  ⟨completion.extension₂ dist⟩
+instance : HasDist (Completion α) :=
+  ⟨Completion.extension₂ dist⟩
 
 /-- The new distance is uniformly continuous. -/
 protected theorem completion.uniform_continuous_dist :
-    UniformContinuous fun p : completion α × completion α => dist p.1 p.2 :=
+    UniformContinuous fun p : Completion α × Completion α => dist p.1 p.2 :=
   uniform_continuous_extension₂ dist
 
 /-- The new distance is an extension of the original distance. -/
-protected theorem completion.dist_eq (x y : α) : dist (x : completion α) y = dist x y :=
-  completion.extension₂_coe_coe uniform_continuous_dist _ _
+protected theorem completion.dist_eq (x y : α) : dist (x : Completion α) y = dist x y :=
+  Completion.extension₂_coe_coe uniform_continuous_dist _ _
 
-protected theorem completion.dist_self (x : completion α) : dist x x = 0 := by
+protected theorem completion.dist_self (x : Completion α) : dist x x = 0 := by
   apply induction_on x
   · refine' is_closed_eq _ continuous_const
     exact (completion.uniform_continuous_dist.continuous.comp (Continuous.prod_mk continuous_id continuous_id : _) : _)
@@ -47,7 +47,7 @@ protected theorem completion.dist_self (x : completion α) : dist x x = 0 := by
     rw [completion.dist_eq, dist_self]
     
 
-protected theorem completion.dist_comm (x y : completion α) : dist x y = dist y x := by
+protected theorem completion.dist_comm (x y : Completion α) : dist x y = dist y x := by
   apply induction_on₂ x y
   · refine' is_closed_eq completion.uniform_continuous_dist.continuous _
     exact completion.uniform_continuous_dist.continuous.comp (@continuous_swap (completion α) (completion α) _ _)
@@ -56,7 +56,7 @@ protected theorem completion.dist_comm (x y : completion α) : dist x y = dist y
     rw [completion.dist_eq, completion.dist_eq, dist_comm]
     
 
-protected theorem completion.dist_triangle (x y z : completion α) : dist x z ≤ dist x y + dist y z := by
+protected theorem completion.dist_triangle (x y z : Completion α) : dist x z ≤ dist x y + dist y z := by
   apply induction_on₃ x y z
   · refine' is_closed_le _ (Continuous.add _ _)
     · have : Continuous fun p : completion α × completion α × completion α => (p.1, p.2.2) :=
@@ -79,8 +79,8 @@ protected theorem completion.dist_triangle (x y z : completion α) : dist x z �
 
 /-- Elements of the uniformity (defined generally for completions) can be characterized in terms
 of the distance. -/
-protected theorem completion.mem_uniformity_dist (s : Set (completion α × completion α)) :
-    s ∈ uniformity (completion α) ↔ ∃ ε > 0, ∀ {a b}, dist a b < ε → (a, b) ∈ s := by
+protected theorem completion.mem_uniformity_dist (s : Set (Completion α × Completion α)) :
+    s ∈ uniformity (Completion α) ↔ ∃ ε > 0, ∀ {a b}, dist a b < ε → (a, b) ∈ s := by
   constructor
   · intro hs
     rcases mem_uniformity_is_closed hs with ⟨t, ht, ⟨tclosed, ts⟩⟩
@@ -133,7 +133,7 @@ protected theorem completion.mem_uniformity_dist (s : Set (completion α × comp
     
 
 /-- If two points are at distance 0, then they coincide. -/
-protected theorem completion.eq_of_dist_eq_zero (x y : completion α) (h : dist x y = 0) : x = y := by
+protected theorem completion.eq_of_dist_eq_zero (x y : Completion α) (h : dist x y = 0) : x = y := by
   have : SeparatedSpace (completion α) := by
     infer_instance
   refine' separated_def.1 this x y fun s hs => _
@@ -144,7 +144,7 @@ protected theorem completion.eq_of_dist_eq_zero (x y : completion α) (h : dist 
 /-- Reformulate `completion.mem_uniformity_dist` in terms that are suitable for the definition
 of the metric space structure. -/
 protected theorem completion.uniformity_dist' :
-    uniformity (completion α) = ⨅ ε : { ε : ℝ // 0 < ε }, 𝓟 { p | dist p.1 p.2 < ε.val } := by
+    uniformity (Completion α) = ⨅ ε : { ε : ℝ // 0 < ε }, 𝓟 { p | dist p.1 p.2 < ε.val } := by
   ext s
   rw [mem_infi_of_directed]
   · simp [completion.mem_uniformity_dist, subset_def]
@@ -154,22 +154,22 @@ protected theorem completion.uniformity_dist' :
     simp (config := { contextual := true })[lt_min_iff, · ≥ ·]
     
 
-protected theorem completion.uniformity_dist : uniformity (completion α) = ⨅ ε > 0, 𝓟 { p | dist p.1 p.2 < ε } := by
+protected theorem completion.uniformity_dist : uniformity (Completion α) = ⨅ ε > 0, 𝓟 { p | dist p.1 p.2 < ε } := by
   simpa [infi_subtype] using @completion.uniformity_dist' α _
 
 /-- Metric space structure on the completion of a pseudo_metric space. -/
-instance completion.metric_space : MetricSpace (completion α) where
-  dist_self := completion.dist_self
-  eq_of_dist_eq_zero := completion.eq_of_dist_eq_zero
-  dist_comm := completion.dist_comm
-  dist_triangle := completion.dist_triangle
+instance completion.metric_space : MetricSpace (Completion α) where
+  dist_self := Completion.dist_self
+  eq_of_dist_eq_zero := Completion.eq_of_dist_eq_zero
+  dist_comm := Completion.dist_comm
+  dist_triangle := Completion.dist_triangle
   toUniformSpace := by
     infer_instance
-  uniformity_dist := completion.uniformity_dist
+  uniformity_dist := Completion.uniformity_dist
 
 /-- The embedding of a metric space in its completion is an isometry. -/
-theorem completion.coe_isometry : Isometry (coe : α → completion α) :=
-  isometry_emetric_iff_metric.2 completion.dist_eq
+theorem completion.coe_isometry : Isometry (coe : α → Completion α) :=
+  isometry_emetric_iff_metric.2 Completion.dist_eq
 
 end Metric
 

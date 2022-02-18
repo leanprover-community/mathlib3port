@@ -12,7 +12,7 @@ open Tactic Tactic.Interactive
 
 setup_tactic_parser
 
--- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr ?»
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr ?»
 /-- `observe hp : p` asserts the proposition `p`, and tries to prove it using `library_search`.
 If no proof is found, the tactic fails.
 In other words, this tactic is equivalent to `have hp : p, { library_search }`.
@@ -23,14 +23,14 @@ The variant `observe? hp : p` will emit a trace message of the form `have hp : p
 This may be particularly useful to speed up proofs. -/
 unsafe def tactic.interactive.observe (trc : parse <| optionalₓ (tk "?")) (h : parse («expr ?» ident))
     (t : parse (tk ":" *> texpr)) : tactic Unit := do
-  let h' := h.get_or_else `this
+  let h' := h.getOrElse `this
   let t ← to_expr (pquote.1 (%%ₓt : Prop))
   assert h' t
-  let s ← focus1 (tactic.library_search { try_this := ff }) <|> fail "observe failed"
-  let s ← s.get_rest "Try this: exact "
+  let s ← focus1 (tactic.library_search { try_this := false }) <|> fail "observe failed"
+  let s ← s.getRest "Try this: exact "
   let ppt ← pp t
-  let pph : Stringₓ := (h.map fun n : Name => n.to_string ++ " ").getOrElse ""
-  when trc.is_some <|
+  let pph : Stringₓ := (h.map fun n : Name => n.toString ++ " ").getOrElse ""
+  when trc <|
       ← do
         dbg_trace "Try this: have {(← pph)}: {(← ppt)} := {← s}"
 

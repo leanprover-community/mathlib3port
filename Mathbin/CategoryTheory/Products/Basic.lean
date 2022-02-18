@@ -24,14 +24,14 @@ universe v₁ v₂ v₃ v₄ u₁ u₂ u₃ u₄
 
 section
 
-variable (C : Type u₁) [category.{v₁} C] (D : Type u₂) [category.{v₂} D]
+variable (C : Type u₁) [Category.{v₁} C] (D : Type u₂) [Category.{v₂} D]
 
 /-- `prod C D` gives the cartesian product of two categories.
 
 See https://stacks.math.columbia.edu/tag/001K.
 -/
 @[simps (config := { notRecursive := [] })]
-instance Prod : category.{max v₁ v₂} (C × D) where
+instance Prod : Category.{max v₁ v₂} (C × D) where
   Hom := fun X Y => (X.1 ⟶ Y.1) × (X.2 ⟶ Y.2)
   id := fun X => ⟨𝟙 X.1, 𝟙 X.2⟩
   comp := fun _ _ _ f g => (f.1 ≫ g.1, f.2 ≫ g.2)
@@ -50,12 +50,12 @@ end
 
 section
 
-variable (C : Type u₁) [category.{v₁} C] (D : Type u₁) [category.{v₁} D]
+variable (C : Type u₁) [Category.{v₁} C] (D : Type u₁) [Category.{v₁} D]
 
 /-- `prod.category.uniform C D` is an additional instance specialised so both factors have the same
 universe levels. This helps typeclass resolution.
 -/
-instance uniform_prod : category (C × D) :=
+instance uniform_prod : Category (C × D) :=
   CategoryTheory.prod C D
 
 end
@@ -64,17 +64,17 @@ namespace Prod
 
 /-- `sectl C Z` is the functor `C ⥤ C × D` given by `X ↦ (X, Z)`. -/
 @[simps]
-def sectl (C : Type u₁) [category.{v₁} C] {D : Type u₂} [category.{v₂} D] (Z : D) : C ⥤ C × D where
+def sectl (C : Type u₁) [Category.{v₁} C] {D : Type u₂} [Category.{v₂} D] (Z : D) : C ⥤ C × D where
   obj := fun X => (X, Z)
   map := fun X Y f => (f, 𝟙 Z)
 
 /-- `sectr Z D` is the functor `D ⥤ C × D` given by `Y ↦ (Z, Y)` . -/
 @[simps]
-def sectr {C : Type u₁} [category.{v₁} C] (Z : C) (D : Type u₂) [category.{v₂} D] : D ⥤ C × D where
+def sectr {C : Type u₁} [Category.{v₁} C] (Z : C) (D : Type u₂) [Category.{v₂} D] : D ⥤ C × D where
   obj := fun X => (Z, X)
   map := fun X Y f => (𝟙 Z, f)
 
-variable (C : Type u₁) [category.{v₁} C] (D : Type u₂) [category.{v₂} D]
+variable (C : Type u₁) [Category.{v₁} C] (D : Type u₂) [Category.{v₂} D]
 
 /-- `fst` is the functor `(X, Y) ↦ X`. -/
 @[simps]
@@ -106,31 +106,31 @@ def symmetry : swap C D ⋙ swap D C ≅ 𝟭 (C × D) where
 -/
 @[simps]
 def braiding : C × D ≌ D × C :=
-  equivalence.mk (swap C D) (swap D C)
-    (nat_iso.of_components
+  Equivalence.mk (swap C D) (swap D C)
+    (NatIso.ofComponents
       (fun X =>
-        eq_to_iso
+        eqToIso
           (by
             simp ))
       (by
         tidy))
-    (nat_iso.of_components
+    (NatIso.ofComponents
       (fun X =>
-        eq_to_iso
+        eqToIso
           (by
             simp ))
       (by
         tidy))
 
-instance swap_is_equivalence : is_equivalence (swap C D) :=
+instance swap_is_equivalence : IsEquivalence (swap C D) :=
   (by
-    infer_instance : is_equivalence (braiding C D).Functor)
+    infer_instance : IsEquivalence (braiding C D).Functor)
 
 end Prod
 
 section
 
-variable (C : Type u₁) [category.{v₁} C] (D : Type u₂) [category.{v₂} D]
+variable (C : Type u₁) [Category.{v₁} C] (D : Type u₂) [Category.{v₂} D]
 
 /-- The "evaluation at `X`" functor, such that
 `(evaluation.obj X).obj F = F.obj X`,
@@ -159,8 +159,8 @@ def evaluation_uncurried : C × (C ⥤ D) ⥤ D where
 
 end
 
-variable {A : Type u₁} [category.{v₁} A] {B : Type u₂} [category.{v₂} B] {C : Type u₃} [category.{v₃} C] {D : Type u₄}
-  [category.{v₄} D]
+variable {A : Type u₁} [Category.{v₁} A] {B : Type u₂} [Category.{v₂} B] {C : Type u₃} [Category.{v₃} C] {D : Type u₄}
+  [Category.{v₄} D]
 
 namespace Functor
 
@@ -170,13 +170,19 @@ def Prod (F : A ⥤ B) (G : C ⥤ D) : A × C ⥤ B × D where
   obj := fun X => (F.obj X.1, G.obj X.2)
   map := fun _ _ f => (F.map f.1, G.map f.2)
 
+/-- Similar to `prod`, but both functors start from the same category `A` -/
+@[simps]
+def prod' (F : A ⥤ B) (G : A ⥤ C) : A ⥤ B × C where
+  obj := fun a => (F.obj a, G.obj a)
+  map := fun x y f => (F.map f, G.map f)
+
 end Functor
 
 namespace NatTrans
 
 /-- The cartesian product of two natural transformations. -/
 @[simps]
-def Prod {F G : A ⥤ B} {H I : C ⥤ D} (α : F ⟶ G) (β : H ⟶ I) : F.prod H ⟶ G.prod I where
+def Prod {F G : A ⥤ B} {H I : C ⥤ D} (α : F ⟶ G) (β : H ⟶ I) : F.Prod H ⟶ G.Prod I where
   app := fun X => (α.app X.1, β.app X.2)
   naturality' := fun X Y f => by
     cases X
@@ -189,7 +195,7 @@ end NatTrans
 /-- `F.flip` composed with evaluation is the same as evaluating `F`. -/
 @[simps]
 def flip_comp_evaluation (F : A ⥤ B ⥤ C) a : F.flip ⋙ (evaluation _ _).obj a ≅ F.obj a :=
-  (nat_iso.of_components fun b => eq_to_iso rfl) <| by
+  (NatIso.ofComponents fun b => eqToIso rfl) <| by
     tidy
 
 end CategoryTheory

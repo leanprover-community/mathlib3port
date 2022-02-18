@@ -111,7 +111,7 @@ variable {v}
 theorem stereo_inv_fun_aux_apply (w : E) : stereoInvFunAux v w = (∥w∥ ^ 2 + 4)⁻¹ • ((4 : ℝ) • w + (∥w∥ ^ 2 - 4) • v) :=
   rfl
 
-theorem stereo_inv_fun_aux_mem (hv : ∥v∥ = 1) {w : E} (hw : w ∈ (ℝ∙v)ᗮ) : stereoInvFunAux v w ∈ sphere (0 : E) 1 := by
+theorem stereo_inv_fun_aux_mem (hv : ∥v∥ = 1) {w : E} (hw : w ∈ (ℝ∙v)ᗮ) : stereoInvFunAux v w ∈ Sphere (0 : E) 1 := by
   have h₁ : 0 ≤ ∥w∥ ^ 2 + 4 := by
     nlinarith
   suffices ∥(4 : ℝ) • w + (∥w∥ ^ 2 - 4) • v∥ = ∥w∥ ^ 2 + 4 by
@@ -140,7 +140,7 @@ theorem times_cont_diff_stereo_inv_fun_aux : TimesContDiff ℝ ⊤ (stereoInvFun
 
 /-- Stereographic projection, reverse direction.  This is a map from the orthogonal complement of a
 unit vector `v` in an inner product space `E` to the unit sphere in `E`. -/
-def stereoInvFun (hv : ∥v∥ = 1) (w : (ℝ∙v)ᗮ) : sphere (0 : E) 1 :=
+def stereoInvFun (hv : ∥v∥ = 1) (w : (ℝ∙v)ᗮ) : Sphere (0 : E) 1 :=
   ⟨stereoInvFunAux v (w : E), stereo_inv_fun_aux_mem hv w.2⟩
 
 @[simp]
@@ -152,7 +152,7 @@ theorem stereo_inv_fun_ne_north_pole (hv : ∥v∥ = 1) (w : (ℝ∙v)ᗮ) :
     stereoInvFun hv w ≠
       (⟨v, by
         simp [hv]⟩ :
-        sphere (0 : E) 1) :=
+        Sphere (0 : E) 1) :=
   by
   refine' Subtype.ne_of_val_ne _
   rw [← inner_lt_one_iff_real_of_norm_one _ hv]
@@ -172,7 +172,7 @@ theorem continuous_stereo_inv_fun (hv : ∥v∥ = 1) : Continuous (stereoInvFun 
 
 variable [CompleteSpace E]
 
-theorem stereo_left_inv (hv : ∥v∥ = 1) {x : sphere (0 : E) 1} (hx : (x : E) ≠ v) :
+theorem stereo_left_inv (hv : ∥v∥ = 1) {x : Sphere (0 : E) 1} (hx : (x : E) ≠ v) :
     stereoInvFun hv (stereoToFun v x) = x := by
   ext
   simp only [stereo_to_fun_apply, stereo_inv_fun_apply, smul_add]
@@ -206,11 +206,13 @@ theorem stereo_left_inv (hv : ∥v∥ = 1) {x : sphere (0 : E) 1} (hx : (x : E) 
     nlinarith
   have h₁ : (2 ^ 2 / (1 - a) ^ 2 * ∥y∥ ^ 2 + 4)⁻¹ * 4 * (2 / (1 - a)) = 1 := by
     field_simp
+    simp only [Submodule.coe_norm] at *
     nlinarith
   have h₂ : (2 ^ 2 / (1 - a) ^ 2 * ∥y∥ ^ 2 + 4)⁻¹ * (2 ^ 2 / (1 - a) ^ 2 * ∥y∥ ^ 2 - 4) = a := by
     field_simp
     trans (1 - a) ^ 2 * (a * (2 ^ 2 * ∥y∥ ^ 2 + 4 * (1 - a) ^ 2))
     · congr
+      simp only [Submodule.coe_norm] at *
       nlinarith
       
     ring
@@ -242,7 +244,7 @@ theorem stereo_right_inv (hv : ∥v∥ = 1) (w : (ℝ∙v)ᗮ) : stereoToFun v (
 
 /-- Stereographic projection from the unit sphere in `E`, centred at a unit vector `v` in `E`; this
 is the version as a local homeomorphism. -/
-def stereographic (hv : ∥v∥ = 1) : LocalHomeomorph (sphere (0 : E) 1) (ℝ∙v)ᗮ where
+def stereographic (hv : ∥v∥ = 1) : LocalHomeomorph (Sphere (0 : E) 1) (ℝ∙v)ᗮ where
   toFun := stereoToFun v ∘ coe
   invFun := stereoInvFun hv
   Source :=
@@ -304,25 +306,25 @@ orthogonalization, but in the finite-dimensional case it follows more easily by 
 space `E`.  This version has codomain the Euclidean space of dimension `n`, and is obtained by
 composing the original sterographic projection (`stereographic`) with an arbitrary linear isometry
 from `(ℝ ∙ v)ᗮ` to the Euclidean space. -/
-def stereographic' (n : ℕ) [Fact (finrank ℝ E = n + 1)] (v : sphere (0 : E) 1) :
-    LocalHomeomorph (sphere (0 : E) 1) (EuclideanSpace ℝ (Finₓ n)) :=
+def stereographic' (n : ℕ) [Fact (finrank ℝ E = n + 1)] (v : Sphere (0 : E) 1) :
+    LocalHomeomorph (Sphere (0 : E) 1) (EuclideanSpace ℝ (Finₓ n)) :=
   stereographic (norm_eq_of_mem_sphere v) ≫ₕ
     (LinearIsometryEquiv.fromOrthogonalSpanSingleton n (ne_zero_of_mem_unit_sphere v)).toHomeomorph.toLocalHomeomorph
 
 @[simp]
-theorem stereographic'_source {n : ℕ} [Fact (finrank ℝ E = n + 1)] (v : sphere (0 : E) 1) :
+theorem stereographic'_source {n : ℕ} [Fact (finrank ℝ E = n + 1)] (v : Sphere (0 : E) 1) :
     (stereographic' n v).Source = {v}ᶜ := by
   simp [stereographic']
 
 @[simp]
-theorem stereographic'_target {n : ℕ} [Fact (finrank ℝ E = n + 1)] (v : sphere (0 : E) 1) :
+theorem stereographic'_target {n : ℕ} [Fact (finrank ℝ E = n + 1)] (v : Sphere (0 : E) 1) :
     (stereographic' n v).Target = Set.Univ := by
   simp [stereographic']
 
 /-- The unit sphere in an `n + 1`-dimensional inner product space `E` is a charted space
 modelled on the Euclidean space of dimension `n`. -/
-instance {n : ℕ} [Fact (finrank ℝ E = n + 1)] : ChartedSpace (EuclideanSpace ℝ (Finₓ n)) (sphere (0 : E) 1) where
-  Atlas := { f | ∃ v : sphere (0 : E) 1, f = stereographic' n v }
+instance {n : ℕ} [Fact (finrank ℝ E = n + 1)] : ChartedSpace (EuclideanSpace ℝ (Finₓ n)) (Sphere (0 : E) 1) where
+  Atlas := { f | ∃ v : Sphere (0 : E) 1, f = stereographic' n v }
   chartAt := fun v => stereographic' n (-v)
   mem_chart_source := fun v => by
     simpa using ne_neg_of_mem_unit_sphere ℝ v
@@ -337,8 +339,8 @@ section SmoothManifold
 
 /-- The unit sphere in an `n + 1`-dimensional inner product space `E` is a smooth manifold,
 modelled on the Euclidean space of dimension `n`. -/
-instance {n : ℕ} [Fact (finrank ℝ E = n + 1)] : SmoothManifoldWithCorners (𝓡 n) (sphere (0 : E) 1) :=
-  smooth_manifold_with_corners_of_times_cont_diff_on (𝓡 n) (sphere (0 : E) 1)
+instance {n : ℕ} [Fact (finrank ℝ E = n + 1)] : SmoothManifoldWithCorners (𝓡 n) (Sphere (0 : E) 1) :=
+  smooth_manifold_with_corners_of_times_cont_diff_on (𝓡 n) (Sphere (0 : E) 1)
     (by
       rintro _ _ ⟨v, rfl⟩ ⟨v', rfl⟩
       let U : (ℝ∙(v : E))ᗮ ≃ₗᵢ[ℝ] EuclideanSpace ℝ (Finₓ n) :=
@@ -357,11 +359,11 @@ instance {n : ℕ} [Fact (finrank ℝ E = n + 1)] : SmoothManifoldWithCorners (�
       have h_set : ∀ p : sphere (0 : E) 1, p = v' ↔ ⟪(p : E), v'⟫_ℝ = 1 := by
         simp [Subtype.ext_iff, inner_eq_norm_mul_iff_of_norm_one]
       ext
-      simp [h_set, hUv, hU'v', stereographic, real_inner_comm])
+      simp [h_set, hUv, hU'v', stereographic, real_inner_comm, ← Submodule.coe_norm])
 
 /-- The inclusion map (i.e., `coe`) from the sphere in `E` to `E` is smooth.  -/
 theorem times_cont_mdiff_coe_sphere {n : ℕ} [Fact (finrank ℝ E = n + 1)] :
-    TimesContMdiff (𝓡 n) 𝓘(ℝ, E) ∞ (coe : sphere (0 : E) 1 → E) := by
+    TimesContMdiff (𝓡 n) 𝓘(ℝ, E) ∞ (coe : Sphere (0 : E) 1 → E) := by
   rw [times_cont_mdiff_iff]
   constructor
   · exact continuous_subtype_coe
@@ -383,8 +385,8 @@ variable {M : Type _} [TopologicalSpace M] [ChartedSpace H M] [SmoothManifoldWit
 /-- If a `times_cont_mdiff` function `f : M → E`, where `M` is some manifold, takes values in the
 sphere, then it restricts to a `times_cont_mdiff` function from `M` to the sphere. -/
 theorem TimesContMdiff.cod_restrict_sphere {n : ℕ} [Fact (finrank ℝ E = n + 1)] {m : WithTop ℕ} {f : M → E}
-    (hf : TimesContMdiff I 𝓘(ℝ, E) m f) (hf' : ∀ x, f x ∈ sphere (0 : E) 1) :
-    TimesContMdiff I (𝓡 n) m (Set.codRestrict _ _ hf' : M → sphere (0 : E) 1) := by
+    (hf : TimesContMdiff I 𝓘(ℝ, E) m f) (hf' : ∀ x, f x ∈ Sphere (0 : E) 1) :
+    TimesContMdiff I (𝓡 n) m (Set.codRestrict _ _ hf' : M → Sphere (0 : E) 1) := by
   rw [times_cont_mdiff_iff_target]
   refine' ⟨continuous_induced_rng hf.continuous, _⟩
   intro v
@@ -405,7 +407,7 @@ theorem TimesContMdiff.cod_restrict_sphere {n : ℕ} [Fact (finrank ℝ E = n + 
 
 /-- The antipodal map is smooth. -/
 theorem times_cont_mdiff_neg_sphere {n : ℕ} [Fact (finrank ℝ E = n + 1)] :
-    TimesContMdiff (𝓡 n) (𝓡 n) ∞ fun x : sphere (0 : E) 1 => -x := by
+    TimesContMdiff (𝓡 n) (𝓡 n) ∞ fun x : Sphere (0 : E) 1 => -x := by
   apply TimesContMdiff.cod_restrict_sphere
   apply times_cont_diff_neg.times_cont_mdiff.comp _
   exact times_cont_mdiff_coe_sphere

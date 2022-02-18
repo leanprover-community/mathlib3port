@@ -48,7 +48,7 @@ variable (𝕜 : Type _) {E : Type _} [NormedLinearOrderedField 𝕜] [NormedGro
 /-- A set `B` is exposed with respect to `A` iff it maximizes some functional over `A` (and contains
 all points maximizing it). Written `is_exposed 𝕜 A B`. -/
 def IsExposed (A B : Set E) : Prop :=
-  B.nonempty → ∃ l : E →L[𝕜] 𝕜, B = { x ∈ A | ∀, ∀ y ∈ A, ∀, l y ≤ l x }
+  B.Nonempty → ∃ l : E →L[𝕜] 𝕜, B = { x ∈ A | ∀, ∀ y ∈ A, ∀, l y ≤ l x }
 
 variable {𝕜}
 
@@ -57,7 +57,7 @@ inequality with a functional). -/
 def ContinuousLinearMap.ToExposed (l : E →L[𝕜] 𝕜) (A : Set E) : Set E :=
   { x ∈ A | ∀, ∀ y ∈ A, ∀, l y ≤ l x }
 
-theorem ContinuousLinearMap.ToExposed.is_exposed : IsExposed 𝕜 A (l.to_exposed A) := fun h => ⟨l, rfl⟩
+theorem ContinuousLinearMap.ToExposed.is_exposed : IsExposed 𝕜 A (l.ToExposed A) := fun h => ⟨l, rfl⟩
 
 theorem is_exposed_empty : IsExposed 𝕜 A ∅ := fun ⟨x, hx⟩ => by
   exfalso
@@ -72,10 +72,10 @@ protected theorem subset (hAB : IsExposed 𝕜 A B) : B ⊆ A := by
 
 @[refl]
 protected theorem refl (A : Set E) : IsExposed 𝕜 A A := fun ⟨w, hw⟩ =>
-  ⟨0, subset.antisymm (fun x hx => ⟨hx, fun y hy => le_reflₓ 0⟩) fun x hx => hx.1⟩
+  ⟨0, Subset.antisymm (fun x hx => ⟨hx, fun y hy => le_reflₓ 0⟩) fun x hx => hx.1⟩
 
 protected theorem antisymm (hB : IsExposed 𝕜 A B) (hA : IsExposed 𝕜 B A) : A = B :=
-  hA.subset.antisymm hB.subset
+  hA.Subset.antisymm hB.Subset
 
 protected theorem mono (hC : IsExposed 𝕜 A C) (hBA : B ⊆ A) (hCB : C ⊆ B) : IsExposed 𝕜 B C := by
   rintro ⟨w, hw⟩
@@ -116,7 +116,8 @@ protected theorem inter (hB : IsExposed 𝕜 A B) (hC : IsExposed 𝕜 A C) : Is
   · exact (add_le_add_iff_left (l₁ x)).1 (le_transₓ (add_le_add (hwB.2 x hxA) (hwC.2 y hy)) (hx w hwB.1))
     
 
-theorem sInter {F : Finset (Set E)} (hF : F.nonempty) (hAF : ∀, ∀ B ∈ F, ∀, IsExposed 𝕜 A B) : IsExposed 𝕜 A (⋂₀F) := by
+theorem sInter {F : Finset (Set E)} (hF : F.Nonempty) (hAF : ∀, ∀ B ∈ F, ∀, IsExposed 𝕜 A B) : IsExposed 𝕜 A (⋂₀ F) :=
+  by
   revert hF F
   refine' Finset.induction _ _
   · rintro h
@@ -172,7 +173,7 @@ protected theorem IsClosed [OrderClosedTopology 𝕜] (hAB : IsExposed 𝕜 A B)
   exact hA.is_closed_le continuous_on_const l.continuous.continuous_on
 
 protected theorem IsCompact [OrderClosedTopology 𝕜] (hAB : IsExposed 𝕜 A B) (hA : IsCompact A) : IsCompact B :=
-  compact_of_is_closed_subset hA (hAB.is_closed hA.is_closed) hAB.subset
+  compact_of_is_closed_subset hA (hAB.IsClosed hA.IsClosed) hAB.Subset
 
 end IsExposed
 
@@ -186,17 +187,17 @@ def Set.ExposedPoints (A : Set E) : Set E :=
 variable {𝕜}
 
 theorem exposed_point_def :
-    x ∈ A.exposed_points 𝕜 ↔ x ∈ A ∧ ∃ l : E →L[𝕜] 𝕜, ∀, ∀ y ∈ A, ∀, l y ≤ l x ∧ (l x ≤ l y → y = x) :=
+    x ∈ A.ExposedPoints 𝕜 ↔ x ∈ A ∧ ∃ l : E →L[𝕜] 𝕜, ∀, ∀ y ∈ A, ∀, l y ≤ l x ∧ (l x ≤ l y → y = x) :=
   Iff.rfl
 
-theorem exposed_points_subset : A.exposed_points 𝕜 ⊆ A := fun x hx => hx.1
+theorem exposed_points_subset : A.ExposedPoints 𝕜 ⊆ A := fun x hx => hx.1
 
 @[simp]
 theorem exposed_points_empty : (∅ : Set E).ExposedPoints 𝕜 = ∅ :=
   subset_empty_iff.1 exposed_points_subset
 
 /-- Exposed points exactly correspond to exposed singletons. -/
-theorem mem_exposed_points_iff_exposed_singleton : x ∈ A.exposed_points 𝕜 ↔ IsExposed 𝕜 A {x} := by
+theorem mem_exposed_points_iff_exposed_singleton : x ∈ A.ExposedPoints 𝕜 ↔ IsExposed 𝕜 A {x} := by
   use fun ⟨hxA, l, hl⟩ h =>
     ⟨l,
       Eq.symm <| eq_singleton_iff_unique_mem.2 ⟨⟨hxA, fun y hy => (hl y hy).1⟩, fun z hz => (hl z hz.1).2 (hz.2 x hxA)⟩⟩
@@ -205,6 +206,6 @@ theorem mem_exposed_points_iff_exposed_singleton : x ∈ A.exposed_points 𝕜 �
   rw [eq_comm, eq_singleton_iff_unique_mem] at hl
   exact ⟨hl.1.1, l, fun y hy => ⟨hl.1.2 y hy, fun hxy => hl.2 y ⟨hy, fun z hz => (hl.1.2 z hz).trans hxy⟩⟩⟩
 
-theorem exposed_points_subset_extreme_points : A.exposed_points 𝕜 ⊆ A.extreme_points 𝕜 := fun x hx =>
+theorem exposed_points_subset_extreme_points : A.ExposedPoints 𝕜 ⊆ A.ExtremePoints 𝕜 := fun x hx =>
   mem_extreme_points_iff_extreme_singleton.2 (mem_exposed_points_iff_exposed_singleton.1 hx).IsExtreme
 

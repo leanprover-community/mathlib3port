@@ -42,23 +42,23 @@ def lieEquivMatrix' : Module.End R (n → R) ≃ₗ⁅R⁆ Matrix n n R :=
       rw [LinearEquiv.map_sub, h, h, Matrix.mul_eq_mul, Matrix.mul_eq_mul] }
 
 @[simp]
-theorem lie_equiv_matrix'_apply (f : Module.End R (n → R)) : lieEquivMatrix' f = f.to_matrix' :=
+theorem lie_equiv_matrix'_apply (f : Module.End R (n → R)) : lieEquivMatrix' f = f.toMatrix' :=
   rfl
 
 @[simp]
-theorem lie_equiv_matrix'_symm_apply (A : Matrix n n R) : (@lieEquivMatrix' R _ n _ _).symm A = A.to_lin' :=
+theorem lie_equiv_matrix'_symm_apply (A : Matrix n n R) : (@lieEquivMatrix' R _ n _ _).symm A = A.toLin' :=
   rfl
 
 /-- An invertible matrix induces a Lie algebra equivalence from the space of matrices to itself. -/
 def Matrix.lieConj (P : Matrix n n R) (h : Invertible P) : Matrix n n R ≃ₗ⁅R⁆ Matrix n n R :=
-  ((@lieEquivMatrix' R _ n _ _).symm.trans (P.to_linear_equiv' h).lieConj).trans lieEquivMatrix'
+  ((@lieEquivMatrix' R _ n _ _).symm.trans (P.toLinearEquiv' h).lieConj).trans lieEquivMatrix'
 
 @[simp]
-theorem Matrix.lie_conj_apply (P A : Matrix n n R) (h : Invertible P) : P.lie_conj h A = P ⬝ A ⬝ P⁻¹ := by
+theorem Matrix.lie_conj_apply (P A : Matrix n n R) (h : Invertible P) : P.lieConj h A = P ⬝ A ⬝ P⁻¹ := by
   simp [LinearEquiv.conj_apply, Matrix.lieConj, LinearMap.to_matrix'_comp, LinearMap.to_matrix'_to_lin']
 
 @[simp]
-theorem Matrix.lie_conj_symm_apply (P A : Matrix n n R) (h : Invertible P) : (P.lie_conj h).symm A = P⁻¹ ⬝ A ⬝ P := by
+theorem Matrix.lie_conj_symm_apply (P A : Matrix n n R) (h : Invertible P) : (P.lieConj h).symm A = P⁻¹ ⬝ A ⬝ P := by
   simp [LinearEquiv.symm_conj_apply, Matrix.lieConj, LinearMap.to_matrix'_comp, LinearMap.to_matrix'_to_lin']
 
 variable {m : Type w₁} [DecidableEq m] [Fintype m] (e : n ≃ m)

@@ -74,6 +74,8 @@ theorem IsUnit.smul_sub_iff_sub_inv_smul {R : Type u} {A : Type v} [CommRingₓ 
 
 namespace Spectrum
 
+open_locale Polynomial
+
 section ScalarRing
 
 variable {R : Type u} {A : Type v}
@@ -100,8 +102,8 @@ theorem mem_resolvent_set_of_left_right_inverse {r : R} {a b c : A} (h₁ : (↑
 theorem mem_resolvent_set_iff {r : R} {a : A} : r ∈ ResolventSet R a ↔ IsUnit (↑ₐ r - a) :=
   Iff.rfl
 
-theorem resolvent_eq {a : A} {r : R} (h : r ∈ ResolventSet R a) : resolvent a r = ↑h.unit⁻¹ :=
-  Ring.inverse_unit h.unit
+theorem resolvent_eq {a : A} {r : R} (h : r ∈ ResolventSet R a) : resolvent a r = ↑h.Unit⁻¹ :=
+  Ring.inverse_unit h.Unit
 
 theorem add_mem_iff {a : A} {r s : R} : r ∈ σ a ↔ r + s ∈ σ (↑ₐ s + a) := by
   apply not_iff_not.mpr
@@ -118,7 +120,7 @@ theorem smul_mem_smul_iff {a : A} {s : R} {r : (R)ˣ} : r • s ∈ σ (r • a)
     simp
   rw [h_eq, ← smul_sub, is_unit_smul_iff]
 
-open_locale Pointwise
+open_locale Pointwise Polynomial
 
 theorem unit_smul_eq_smul (a : A) (r : (R)ˣ) : σ (r • a) = r • σ a := by
   ext
@@ -255,7 +257,7 @@ open Polynomial
 /-- Half of the spectral mapping theorem for polynomials. We prove it separately
 because it holds over any field, whereas `spectrum.map_polynomial_aeval_of_degree_pos` and
 `spectrum.map_polynomial_aeval_of_nonempty` need the field to be algebraically closed. -/
-theorem subset_polynomial_aeval (a : A) (p : Polynomial 𝕜) : (fun k => eval k p) '' σ a ⊆ σ (aeval a p) := by
+theorem subset_polynomial_aeval (a : A) (p : 𝕜[X]) : (fun k => eval k p) '' σ a ⊆ σ (aeval a p) := by
   rintro _ ⟨k, hk, rfl⟩
   let q := C (eval k p) - p
   have hroot : is_root q k := by
@@ -268,8 +270,8 @@ theorem subset_polynomial_aeval (a : A) (p : Polynomial 𝕜) : (fun k => eval k
   apply mt fun h => (hcomm.is_unit_mul_iff.mp h).1
   simpa only [aeval_X, aeval_C, AlgHom.map_sub] using hk
 
-theorem exists_mem_of_not_is_unit_aeval_prod {p : Polynomial 𝕜} {a : A} (hp : p ≠ 0)
-    (h : ¬IsUnit (aeval a (Multiset.map (fun x : 𝕜 => X - C x) p.roots).Prod)) : ∃ k : 𝕜, k ∈ σ a ∧ eval k p = 0 := by
+theorem exists_mem_of_not_is_unit_aeval_prod {p : 𝕜[X]} {a : A} (hp : p ≠ 0)
+    (h : ¬IsUnit (aeval a (Multiset.map (fun x : 𝕜 => X - c x) p.roots).Prod)) : ∃ k : 𝕜, k ∈ σ a ∧ eval k p = 0 := by
   rw [← Multiset.prod_to_list, AlgHom.map_list_prod] at h
   replace h := mt List.prod_is_unit h
   simp only [not_forall, exists_prop, aeval_C, Multiset.mem_to_list, List.mem_mapₓ, aeval_X, exists_exists_and_eq_and,
@@ -283,7 +285,7 @@ theorem exists_mem_of_not_is_unit_aeval_prod {p : Polynomial 𝕜} {a : A} (hp :
 /-- The *spectral mapping theorem* for polynomials.  Note: the assumption `degree p > 0`
 is necessary in case `σ a = ∅`, for then the left-hand side is `∅` and the right-hand side,
 assuming `[nontrivial A]`, is `{k}` where `p = polynomial.C k`. -/
-theorem map_polynomial_aeval_of_degree_pos [IsAlgClosed 𝕜] (a : A) (p : Polynomial 𝕜) (hdeg : 0 < degree p) :
+theorem map_polynomial_aeval_of_degree_pos [IsAlgClosed 𝕜] (a : A) (p : 𝕜[X]) (hdeg : 0 < degree p) :
     σ (aeval a p) = (fun k => eval k p) '' σ a := by
   refine' Set.eq_of_subset_of_subset (fun k hk => _) (subset_polynomial_aeval a p)
   have hprod := eq_prod_roots_of_splits_id (IsAlgClosed.splits (C k - p))
@@ -307,8 +309,8 @@ theorem map_polynomial_aeval_of_degree_pos [IsAlgClosed 𝕜] (a : A) (p : Polyn
 /-- In this version of the spectral mapping theorem, we assume the spectrum
 is nonempty instead of assuming the degree of the polynomial is positive. Note: the
 assumption `[nontrivial A]` is necessary for the same reason as in `spectrum.zero_eq`. -/
-theorem map_polynomial_aeval_of_nonempty [IsAlgClosed 𝕜] [Nontrivial A] (a : A) (p : Polynomial 𝕜)
-    (hnon : (σ a).Nonempty) : σ (aeval a p) = (fun k => eval k p) '' σ a := by
+theorem map_polynomial_aeval_of_nonempty [IsAlgClosed 𝕜] [Nontrivial A] (a : A) (p : 𝕜[X]) (hnon : (σ a).Nonempty) :
+    σ (aeval a p) = (fun k => eval k p) '' σ a := by
   refine' Or.elim (le_or_gtₓ (degree p) 0) (fun h => _) (map_polynomial_aeval_of_degree_pos a p)
   · rw [eq_C_of_degree_le_zero h]
     simp only [Set.image_congr, eval_C, aeval_C, scalar_eq, Set.Nonempty.image_const hnon]

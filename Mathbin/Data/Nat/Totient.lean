@@ -2,6 +2,7 @@ import Mathbin.Algebra.BigOperators.Basic
 import Mathbin.Data.Nat.Prime
 import Mathbin.Data.Zmod.Basic
 import Mathbin.RingTheory.Multiplicity
+import Mathbin.Data.Nat.Periodic
 import Mathbin.Algebra.CharP.Two
 
 /-!
@@ -24,7 +25,7 @@ namespace Nat
 /-- Euler's totient function. This counts the number of naturals strictly less than `n` which are
 coprime with `n`. -/
 def totient (n : ℕ) : ℕ :=
-  ((range n).filter (Nat.Coprime n)).card
+  ((range n).filter n.Coprime).card
 
 localized [Nat] notation "φ" => Nat.totient
 
@@ -36,7 +37,7 @@ theorem totient_zero : φ 0 = 0 :=
 theorem totient_one : φ 1 = 1 := by
   simp [totient]
 
-theorem totient_eq_card_coprime (n : ℕ) : φ n = ((range n).filter (Nat.Coprime n)).card :=
+theorem totient_eq_card_coprime (n : ℕ) : φ n = ((range n).filter n.Coprime).card :=
   rfl
 
 theorem totient_le (n : ℕ) : φ n ≤ n :=
@@ -52,7 +53,7 @@ theorem totient_lt (n : ℕ) (hn : 1 < n) : φ n < n :=
       intro n1 hn1 hn1'
       simpa only [hn1', coprime_zero_right, hn.ne'] using hn1
     _ = n - 1 := by
-      simp only [filter_ne' (range n) 0, card_erase_of_mem, n.pred_eq_sub_one, card_range, pos_of_gt hn, mem_range]
+      simp only [filter_ne' (range n) 0, card_erase_of_mem, card_range, pos_of_gt hn, mem_range]
     _ < n := Nat.sub_ltₓ (pos_of_gt hn) zero_lt_one
     
 
@@ -68,7 +69,36 @@ theorem totient_pos : ∀ {n : ℕ}, 0 < n → 0 < φ n
           ⟨mem_range.2
               (by
                 decide),
-            coprime_one_right _⟩⟩
+            coprime_one_rightₓ _⟩⟩
+
+theorem filter_coprime_Ico_eq_totient (a n : ℕ) : ((ico n (n + a)).filter (Coprime a)).card = totient a := by
+  rw [totient, filter_Ico_card_eq_of_periodic, count_eq_card_filter_range]
+  exact periodic_coprime a
+
+theorem Ico_filter_coprime_le {a : ℕ} (k n : ℕ) (a_pos : 0 < a) :
+    ((ico k (k + n)).filter (Coprime a)).card ≤ totient a * (n / a + 1) := by
+  conv_lhs => rw [← Nat.mod_add_divₓ n a]
+  induction' n / a with i ih
+  · rw [← filter_coprime_Ico_eq_totient a k]
+    simp only [add_zeroₓ, mul_oneₓ, mul_zero, le_of_ltₓ (mod_lt n a_pos)]
+    mono
+    refine' monotone_filter_left a.coprime _
+    simp only [Finset.le_eq_subset]
+    exact Ico_subset_Ico rfl.le (add_le_add_left (le_of_ltₓ (mod_lt n a_pos)) k)
+    
+  simp only [mul_succ]
+  simp_rw [← add_assocₓ]  at ih⊢
+  calc
+    (filter a.coprime (Ico k (k + n % a + a * i + a))).card =
+        (filter a.coprime (Ico k (k + n % a + a * i) ∪ Ico (k + n % a + a * i) (k + n % a + a * i + a))).card :=
+      by
+      congr
+      rw [Ico_union_Ico_eq_Ico]
+      rw [add_assocₓ]
+      exact le_self_add
+      exact le_self_add _ ≤ (filter a.coprime (Ico k (k + n % a + a * i))).card + a.totient := by
+      rw [filter_union, ← filter_coprime_Ico_eq_totient a (k + n % a + a * i)]
+      apply card_union_le _ ≤ a.totient * i + a.totient + a.totient := add_le_add_right ih (totient a)
 
 open Zmod
 
@@ -77,7 +107,7 @@ diamonds. -/
 @[simp]
 theorem _root_.zmod.card_units_eq_totient (n : ℕ) [Fact (0 < n)] [Fintype (Zmod n)ˣ] : Fintype.card (Zmod n)ˣ = φ n :=
   calc
-    Fintype.card (Zmod n)ˣ = Fintype.card { x : Zmod n // x.val.coprime n } := Fintype.card_congr Zmod.unitsEquivCoprime
+    Fintype.card (Zmod n)ˣ = Fintype.card { x : Zmod n // x.val.Coprime n } := Fintype.card_congr Zmod.unitsEquivCoprime
     _ = φ n := by
       apply Finset.card_congr fun a : { x : Zmod n // x.val.coprime n } _ => a.1.val
       · intro a
@@ -107,7 +137,7 @@ theorem totient_even {n : ℕ} (hn : 2 < n) : Even n.totient := by
     exact order_of_dvd_card_univ
   rw [← order_of_units, Units.coe_neg_one, order_of_neg_one, ringChar.eq (Zmod n) n, if_neg hn.ne']
 
-theorem totient_mul {m n : ℕ} (h : m.coprime n) : φ (m * n) = φ m * φ n :=
+theorem totient_mul {m n : ℕ} (h : m.Coprime n) : φ (m * n) = φ m * φ n :=
   if hmn0 : m * n = 0 then by
     cases' Nat.mul_eq_zero.1 hmn0 with h h <;> simp only [totient_zero, mul_zero, zero_mul, h]
   else by
@@ -124,7 +154,7 @@ theorem sum_totient (n : ℕ) : (∑ m in (range n.succ).filter (· ∣ n), φ m
   else
     calc
       (∑ m in (range n.succ).filter (· ∣ n), φ m) =
-          ∑ d in (range n.succ).filter (· ∣ n), ((range (n / d)).filter fun m => gcd (n / d) m = 1).card :=
+          ∑ d in (range n.succ).filter (· ∣ n), ((range (n / d)).filter fun m => gcdₓ (n / d) m = 1).card :=
         Eq.symm <|
           sum_bij (fun d _ => n / d)
             (fun d hd =>
@@ -148,19 +178,19 @@ theorem sum_totient (n : ℕ) : (∑ m in (range n.succ).filter (· ∣ n), φ m
               simpa [h, Ne.symm hn0] using Nat.div_mul_cancelₓ hbn
             ⟨n / b, mem_filter.2 ⟨mem_range.2 <| lt_succ_of_le <| Nat.div_le_selfₓ _ _, hbn⟩, by
               rw [← Nat.mul_left_inj (Nat.pos_of_ne_zeroₓ hnb0), Nat.mul_div_cancel'ₓ hb.2, Nat.div_mul_cancelₓ hbn]⟩
-      _ = ∑ d in (range n.succ).filter (· ∣ n), ((range n).filter fun m => gcd n m = d).card :=
+      _ = ∑ d in (range n.succ).filter (· ∣ n), ((range n).filter fun m => gcdₓ n m = d).card :=
         sum_congr rfl fun d hd =>
           have hd : d ∣ n := (mem_filter.1 hd).2
           have hd0 : 0 < d := Nat.pos_of_ne_zeroₓ fun h => hn0 (eq_zero_of_zero_dvd <| h ▸ hd)
           card_congr (fun m hm => d * m)
             (fun m hm =>
-              have hm : m < n / d ∧ gcd (n / d) m = 1 := by
+              have hm : m < n / d ∧ gcdₓ (n / d) m = 1 := by
                 simpa using hm
               mem_filter.2
                 ⟨mem_range.2 <| Nat.mul_div_cancel'ₓ hd ▸ (mul_lt_mul_left hd0).2 hm.1, by
                   rw [← Nat.mul_div_cancel'ₓ hd, gcd_mul_left, hm.2, mul_oneₓ]⟩)
             (fun a b ha hb h => (Nat.mul_right_inj hd0).1 h) fun b hb =>
-            have hb : b < n ∧ gcd n b = d := by
+            have hb : b < n ∧ gcdₓ n b = d := by
               simpa using hb
             ⟨b / d,
               mem_filter.2
@@ -170,9 +200,9 @@ theorem sum_totient (n : ℕ) : (∑ m in (range n.succ).filter (· ∣ n), φ m
                         rw [← hb.2, Nat.mul_div_cancel'ₓ (gcd_dvd_left _ _),
                             Nat.mul_div_cancel'ₓ (gcd_dvd_right _ _)] <;>
                           exact hb.1)),
-                  hb.2 ▸ coprime_div_gcd_div_gcd (hb.2.symm ▸ hd0)⟩,
-              hb.2 ▸ Nat.mul_div_cancel'ₓ (gcd_dvd_right _ _)⟩
-      _ = ((filter (· ∣ n) (range n.succ)).bUnion fun d => (range n).filter fun m => gcd n m = d).card :=
+                  hb.2 ▸ coprime_div_gcd_div_gcdₓ (hb.2.symm ▸ hd0)⟩,
+              hb.2 ▸ Nat.mul_div_cancel'ₓ (gcd_dvd_rightₓ _ _)⟩
+      _ = ((filter (· ∣ n) (range n.succ)).bUnion fun d => (range n).filter fun m => gcdₓ n m = d).card :=
         (card_bUnion
             (by
               intros <;> apply disjoint_filter.2 <;> cc)).symm
@@ -183,18 +213,18 @@ theorem sum_totient (n : ℕ) : (∑ m in (range n.succ).filter (· ∣ n), φ m
               simp , fun hm =>
               have h : m < n := mem_range.1 hm
               mem_bUnion.2
-                ⟨gcd n m,
+                ⟨gcdₓ n m,
                   mem_filter.2
-                    ⟨mem_range.2 (lt_succ_of_le (le_of_dvd (lt_of_le_of_ltₓ (zero_le _) h) (gcd_dvd_left _ _))),
-                      gcd_dvd_left _ _⟩,
+                    ⟨mem_range.2 (lt_succ_of_leₓ (le_of_dvdₓ (lt_of_le_of_ltₓ (zero_le _) h) (gcd_dvd_leftₓ _ _))),
+                      gcd_dvd_leftₓ _ _⟩,
                   mem_filter.2 ⟨hm, rfl⟩⟩⟩)
       _ = n := card_range _
       
 
 /-- When `p` is prime, then the totient of `p ^ (n + 1)` is `p ^ n * (p - 1)` -/
-theorem totient_prime_pow_succ {p : ℕ} (hp : p.prime) (n : ℕ) : φ (p ^ (n + 1)) = p ^ n * (p - 1) :=
+theorem totient_prime_pow_succ {p : ℕ} (hp : p.Prime) (n : ℕ) : φ (p ^ (n + 1)) = p ^ n * (p - 1) :=
   calc
-    φ (p ^ (n + 1)) = ((range (p ^ (n + 1))).filter (coprime (p ^ (n + 1)))).card := totient_eq_card_coprime _
+    φ (p ^ (n + 1)) = ((range (p ^ (n + 1))).filter (Coprime (p ^ (n + 1)))).card := totient_eq_card_coprime _
     _ = (range (p ^ (n + 1)) \ (range (p ^ n)).Image (· * p)).card :=
       congr_argₓ card
         (by
@@ -212,7 +242,7 @@ theorem totient_prime_pow_succ {p : ℕ} (hp : p.prime) (n : ℕ) : φ (p ^ (n +
             exact h b (lt_of_mul_lt_mul_left ha (zero_le _)) (mul_comm _ _)
             )
     _ = _ := by
-      have h1 : Set.InjOn (· * p) (range (p ^ n)) := fun x _ y _ => (Nat.mul_left_inj hp.pos).1
+      have h1 : Set.InjOn (· * p) (range (p ^ n)) := fun x _ y _ => (Nat.mul_left_inj hp.Pos).1
       have h2 : (range (p ^ n)).Image (· * p) ⊆ range (p ^ (n + 1)) := fun a => by
         simp only [mem_image, mem_range, exists_imp_distrib]
         rintro b h rfl
@@ -223,13 +253,13 @@ theorem totient_prime_pow_succ {p : ℕ} (hp : p.prime) (n : ℕ) : φ (p ^ (n +
     
 
 /-- When `p` is prime, then the totient of `p ^ n` is `p ^ (n - 1) * (p - 1)` -/
-theorem totient_prime_pow {p : ℕ} (hp : p.prime) {n : ℕ} (hn : 0 < n) : φ (p ^ n) = p ^ (n - 1) * (p - 1) := by
+theorem totient_prime_pow {p : ℕ} (hp : p.Prime) {n : ℕ} (hn : 0 < n) : φ (p ^ n) = p ^ (n - 1) * (p - 1) := by
   rcases exists_eq_succ_of_ne_zero (pos_iff_ne_zero.1 hn) with ⟨m, rfl⟩ <;> exact totient_prime_pow_succ hp _
 
-theorem totient_prime {p : ℕ} (hp : p.prime) : φ p = p - 1 := by
+theorem totient_prime {p : ℕ} (hp : p.Prime) : φ p = p - 1 := by
   rw [← pow_oneₓ p, totient_prime_pow hp] <;> simp
 
-theorem totient_mul_of_prime_of_dvd {p n : ℕ} (hp : p.prime) (h : p ∣ n) : (p * n).totient = p * n.totient := by
+theorem totient_mul_of_prime_of_dvd {p n : ℕ} (hp : p.Prime) (h : p ∣ n) : (p * n).totient = p * n.totient := by
   by_cases' hzero : n = 0
   · simp [hzero]
     
@@ -243,7 +273,7 @@ theorem totient_mul_of_prime_of_dvd {p n : ℕ} (hp : p.prime) (h : p ∣ n) : (
       mul_assoc p, ← pow_succₓ, ← succ_pred_eq_of_pos h0, Nat.pred_succ]
     
 
-theorem totient_eq_iff_prime {p : ℕ} (hp : 0 < p) : p.totient = p - 1 ↔ p.prime := by
+theorem totient_eq_iff_prime {p : ℕ} (hp : 0 < p) : p.totient = p - 1 ↔ p.Prime := by
   refine' ⟨fun h => _, totient_prime⟩
   replace hp : 1 < p
   · apply lt_of_le_of_neₓ
@@ -264,7 +294,7 @@ theorem card_units_zmod_lt_sub_one {p : ℕ} (hp : 1 < p) [Fintype (Zmod p)ˣ] :
   rw [Zmod.card_units_eq_totient p]
   exact Nat.le_pred_of_lt (Nat.totient_lt p hp)
 
-theorem prime_iff_card_units (p : ℕ) [Fintype (Zmod p)ˣ] : p.prime ↔ Fintype.card (Zmod p)ˣ = p - 1 := by
+theorem prime_iff_card_units (p : ℕ) [Fintype (Zmod p)ˣ] : p.Prime ↔ Fintype.card (Zmod p)ˣ = p - 1 := by
   by_cases' hp : p = 0
   · subst hp
     simp only [Zmod, not_prime_zero, false_iffₓ, zero_tsub]

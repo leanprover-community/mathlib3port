@@ -43,15 +43,15 @@ unsafe def gives_upper_bound (n e : expr) : tactic expr := do
   match t with
     | quote.1 ((%%ₓn') < %%ₓb) => do
       guardₓ (n = n')
-      let b ← b.to_rat
+      let b ← b
       return e
     | quote.1 ((%%ₓb) > %%ₓn') => do
       guardₓ (n = n')
-      let b ← b.to_rat
+      let b ← b
       return e
     | quote.1 ((%%ₓn') ≤ %%ₓb) => do
       guardₓ (n = n')
-      let b ← b.to_rat
+      let b ← b
       let tn ← infer_type n
       match tn with
         | quote.1 ℕ => to_expr (pquote.1 (Nat.lt_add_one_iff.mpr (%%ₓe)))
@@ -60,7 +60,7 @@ unsafe def gives_upper_bound (n e : expr) : tactic expr := do
         | _ => failed
     | quote.1 ((%%ₓb) ≥ %%ₓn') => do
       guardₓ (n = n')
-      let b ← b.to_rat
+      let b ← b
       let tn ← infer_type n
       match tn with
         | quote.1 ℕ => to_expr (pquote.1 (Nat.lt_add_one_iff.mpr (%%ₓe)))
@@ -78,15 +78,15 @@ unsafe def gives_lower_bound (n e : expr) : tactic expr := do
   match t with
     | quote.1 ((%%ₓn') ≥ %%ₓb) => do
       guardₓ (n = n')
-      let b ← b.to_rat
+      let b ← b
       return e
     | quote.1 ((%%ₓb) ≤ %%ₓn') => do
       guardₓ (n = n')
-      let b ← b.to_rat
+      let b ← b
       return e
     | quote.1 ((%%ₓn') > %%ₓb) => do
       guardₓ (n = n')
-      let b ← b.to_rat
+      let b ← b
       let tn ← infer_type n
       match tn with
         | quote.1 ℕ => to_expr (pquote.1 (Nat.add_one_le_iff.mpr (%%ₓe)))
@@ -95,7 +95,7 @@ unsafe def gives_lower_bound (n e : expr) : tactic expr := do
         | _ => failed
     | quote.1 ((%%ₓb) < %%ₓn') => do
       guardₓ (n = n')
-      let b ← b.to_rat
+      let b ← b
       let tn ← infer_type n
       match tn with
         | quote.1 ℕ => to_expr (pquote.1 (Nat.add_one_le_iff.mpr (%%ₓe)))
@@ -171,7 +171,7 @@ def set_elems {α} [DecidableEq α] (s : Set α) [Fintype s] : Finset α :=
   (Fintype.elems s).Image Subtype.val
 
 /-- Each element of `s` is a member of `set_elems s`. -/
-theorem mem_set_elems {α} [DecidableEq α] (s : Set α) [Fintype s] {a : α} (h : a ∈ s) : a ∈ set_elems s :=
+theorem mem_set_elems {α} [DecidableEq α] (s : Set α) [Fintype s] {a : α} (h : a ∈ s) : a ∈ setElems s :=
   Finset.mem_image.2 ⟨⟨a, h⟩, Fintype.complete _, rfl⟩
 
 end IntervalCases
@@ -189,7 +189,7 @@ can be specified via the optional argument `n`.
 -/
 unsafe def interval_cases_using (hl hu : expr) (n : Option Name) : tactic Unit :=
   (to_expr (pquote.1 (mem_set_elems (Ico _ _) ⟨%%ₓhl, %%ₓhu⟩)) >>=
-      if hn : n.is_some then note (Option.getₓ hn) else note_anon none) >>=
+      if hn : n.isSome then note (Option.getₓ hn) else note_anon none) >>=
     fin_cases_at none none
 
 setup_tactic_parser
@@ -222,13 +222,13 @@ as `interval_cases n with h` or `interval_cases n using hl hu with h`.
 -/
 unsafe def interval_cases (n : parse (texpr)?) (bounds : parse (tk "using" *> (Prod.mk <$> ident <*> ident))?)
     (lname : parse (tk "with" *> ident)?) : tactic Unit := do
-  if h : n.is_some then do
-      guardₓ bounds.is_none <|> fail "Do not use the `using` keyword if specifying the variable explicitly."
+  if h : n then do
+      guardₓ bounds <|> fail "Do not use the `using` keyword if specifying the variable explicitly."
       let n ← to_expr (Option.getₓ h)
       let (hl, hu) ← get_bounds n
       tactic.interval_cases_using hl hu lname
     else
-      if h' : bounds.is_some then do
+      if h' : bounds then do
         let [hl, hu] ← [(Option.getₓ h').1, (Option.getₓ h').2].mmap get_local
         tactic.interval_cases_using hl hu lname
       else

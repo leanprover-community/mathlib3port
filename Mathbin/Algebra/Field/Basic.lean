@@ -75,7 +75,7 @@ theorem one_div_neg_eq_neg_one_div (a : K) : 1 / -a = -(1 / a) :=
     _ = 1 / a * -1 := by
       rw [one_div_neg_one_eq_neg_one]
     _ = -(1 / a) := by
-      rw [mul_neg_eq_neg_mul_symm, mul_oneₓ]
+      rw [mul_neg, mul_oneₓ]
     
 
 theorem div_neg_eq_neg_div (a b : K) : b / -a = -(b / a) :=
@@ -299,19 +299,19 @@ variable {R K' : Type _} [DivisionRing K] [Semiringₓ R] [Nontrivial R] [Divisi
   {x y : K}
 
 theorem map_ne_zero : f x ≠ 0 ↔ x ≠ 0 :=
-  f.to_monoid_with_zero_hom.map_ne_zero
+  f.toMonoidWithZeroHom.map_ne_zero
 
 @[simp]
 theorem map_eq_zero : f x = 0 ↔ x = 0 :=
-  f.to_monoid_with_zero_hom.map_eq_zero
+  f.toMonoidWithZeroHom.map_eq_zero
 
 variable (x y)
 
 theorem map_inv : g x⁻¹ = (g x)⁻¹ :=
-  g.to_monoid_with_zero_hom.map_inv x
+  g.toMonoidWithZeroHom.map_inv x
 
 theorem map_div : g (x / y) = g x / g y :=
-  g.to_monoid_with_zero_hom.map_div x y
+  g.toMonoidWithZeroHom.map_div x y
 
 protected theorem injective : Function.Injective f :=
   f.injective_iff.2 fun x => f.map_eq_zero.1
@@ -344,7 +344,7 @@ protected def Function.Injective.divisionRing [DivisionRing K] {K'} [Zero K'] [M
     (add : ∀ x y, f (x + y) = f x + f y) (mul : ∀ x y, f (x * y) = f x * f y) (neg : ∀ x, f (-x) = -f x)
     (sub : ∀ x y, f (x - y) = f x - f y) (inv : ∀ x, f x⁻¹ = (f x)⁻¹) (div : ∀ x y, f (x / y) = f x / f y) :
     DivisionRing K' :=
-  { hf.group_with_zero f zero one mul inv div, hf.ring f zero one add mul neg sub with }
+  { hf.GroupWithZero f zero one mul inv div, hf.Ring f zero one add mul neg sub with }
 
 /-- Pullback a `field` along an injective function.
 See note [reducible non-instances]. -/
@@ -353,5 +353,5 @@ protected def Function.Injective.field [Field K] {K'} [Zero K'] [Mul K'] [Add K'
     [Div K'] (f : K' → K) (hf : Function.Injective f) (zero : f 0 = 0) (one : f 1 = 1)
     (add : ∀ x y, f (x + y) = f x + f y) (mul : ∀ x y, f (x * y) = f x * f y) (neg : ∀ x, f (-x) = -f x)
     (sub : ∀ x y, f (x - y) = f x - f y) (inv : ∀ x, f x⁻¹ = (f x)⁻¹) (div : ∀ x y, f (x / y) = f x / f y) : Field K' :=
-  { hf.comm_group_with_zero f zero one mul inv div, hf.comm_ring f zero one add mul neg sub with }
+  { hf.CommGroupWithZero f zero one mul inv div, hf.CommRing f zero one add mul neg sub with }
 

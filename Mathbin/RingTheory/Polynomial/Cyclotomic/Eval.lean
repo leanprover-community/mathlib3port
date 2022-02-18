@@ -20,28 +20,28 @@ open Finset Nat
 open_locale BigOperators
 
 @[simp]
-theorem eval_one_cyclotomic_prime {R : Type _} [CommRingₓ R] {p : ℕ} [hn : Fact p.prime] :
+theorem eval_one_cyclotomic_prime {R : Type _} [CommRingₓ R] {p : ℕ} [hn : Fact p.Prime] :
     eval 1 (cyclotomic p R) = p := by
   simp only [cyclotomic_eq_geom_sum hn.out, geom_sum_def, eval_X, one_pow, sum_const, eval_pow, eval_finset_sum,
     card_range, smul_one_eq_coe]
 
 @[simp]
-theorem eval₂_one_cyclotomic_prime {R S : Type _} [CommRingₓ R] [Semiringₓ S] (f : R →+* S) {p : ℕ} [Fact p.prime] :
+theorem eval₂_one_cyclotomic_prime {R S : Type _} [CommRingₓ R] [Semiringₓ S] (f : R →+* S) {p : ℕ} [Fact p.Prime] :
     eval₂ f 1 (cyclotomic p R) = p := by
   simp
 
 @[simp]
-theorem eval_one_cyclotomic_prime_pow {R : Type _} [CommRingₓ R] {p : ℕ} (k : ℕ) [hn : Fact p.prime] :
+theorem eval_one_cyclotomic_prime_pow {R : Type _} [CommRingₓ R] {p : ℕ} (k : ℕ) [hn : Fact p.Prime] :
     eval 1 (cyclotomic (p ^ (k + 1)) R) = p := by
   simp only [cyclotomic_prime_pow_eq_geom_sum hn.out, geom_sum_def, eval_X, one_pow, sum_const, eval_pow,
     eval_finset_sum, card_range, smul_one_eq_coe]
 
 @[simp]
 theorem eval₂_one_cyclotomic_prime_pow {R S : Type _} [CommRingₓ R] [Semiringₓ S] (f : R →+* S) {p : ℕ} (k : ℕ)
-    [Fact p.prime] : eval₂ f 1 (cyclotomic (p ^ (k + 1)) R) = p := by
+    [Fact p.Prime] : eval₂ f 1 (cyclotomic (p ^ (k + 1)) R) = p := by
   simp
 
--- ././Mathport/Syntax/Translate/Basic.lean:417:16: unsupported tactic `by_contra'
+-- ././Mathport/Syntax/Translate/Basic.lean:418:16: unsupported tactic `by_contra'
 private theorem cyclotomic_neg_one_pos {n : ℕ} (hn : 2 < n) {R} [LinearOrderedCommRing R] :
     0 < eval (-1 : R) (cyclotomic n R) := by
   have := NeZero.of_gt hn
@@ -52,7 +52,7 @@ private theorem cyclotomic_neg_one_pos {n : ℕ} (hn : 2 < n) {R} [LinearOrdered
   simp only [Int.cast_one, Int.cast_neg]
   have h0 := cyclotomic_coeff_zero ℝ hn.le
   rw [coeff_zero_eq_eval_zero] at h0
-  "././Mathport/Syntax/Translate/Basic.lean:417:16: unsupported tactic `by_contra'"
+  "././Mathport/Syntax/Translate/Basic.lean:418:16: unsupported tactic `by_contra'"
   have := intermediate_value_univ (-1) 0 (cyclotomic n ℝ).Continuous
   obtain ⟨y, hy : is_root _ y⟩ :=
     this
@@ -71,7 +71,7 @@ theorem cyclotomic_pos {n : ℕ} (hn : 2 < n) {R} [LinearOrderedCommRing R] (x :
   apply_fun eval x  at this
   rw [divisors_eq_proper_divisors_insert_self_of_pos hn', insert_sdiff_of_not_mem, prod_insert, eval_mul,
     eval_geom_sum] at this
-  rotate
+  rotate_left
   · simp only [lt_self_iff_false, mem_sdiff, not_false_iff, mem_proper_divisors, and_falseₓ, false_andₓ]
     
   · simpa only [mem_singleton] using hn''.ne'
@@ -124,10 +124,10 @@ theorem cyclotomic_pos {n : ℕ} (hn : 2 < n) {R} [LinearOrderedCommRing R] (x :
       
     
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:57:31: expecting tactic arg
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:50: missing argument
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:59:31: expecting tactic arg
 theorem eval_one_cyclotomic_not_prime_pow {R : Type _} [CommRingₓ R] {n : ℕ}
-    (h : ∀ {p : ℕ}, p.prime → ∀ k : ℕ, p ^ k ≠ n) : eval 1 (cyclotomic n R) = 1 := by
+    (h : ∀ {p : ℕ}, p.Prime → ∀ k : ℕ, p ^ k ≠ n) : eval 1 (cyclotomic n R) = 1 := by
   rcases n.eq_zero_or_pos with (rfl | hn')
   · simp
     

@@ -47,7 +47,7 @@ theorem coe_pointwise_smul (a : α) (S : Subgroup G) : ↑(a • S) = a • (S :
   rfl
 
 @[simp]
-theorem pointwise_smul_to_submonoid (a : α) (S : Subgroup G) : (a • S).toSubmonoid = a • S.to_submonoid :=
+theorem pointwise_smul_to_submonoid (a : α) (S : Subgroup G) : (a • S).toSubmonoid = a • S.toSubmonoid :=
   rfl
 
 theorem smul_mem_pointwise_smul (m : G) (a : α) (S : Subgroup G) : m ∈ S → a • m ∈ a • S :=
@@ -148,7 +148,7 @@ theorem coe_pointwise_smul (a : α) (S : AddSubgroup A) : ↑(a • S) = a • (
   rfl
 
 @[simp]
-theorem pointwise_smul_to_add_submonoid (a : α) (S : AddSubgroup A) : (a • S).toAddSubmonoid = a • S.to_add_submonoid :=
+theorem pointwise_smul_to_add_submonoid (a : α) (S : AddSubgroup A) : (a • S).toAddSubmonoid = a • S.toAddSubmonoid :=
   rfl
 
 theorem smul_mem_pointwise_smul (m : A) (a : α) (S : AddSubgroup A) : m ∈ S → a • m ∈ a • S :=

@@ -46,16 +46,16 @@ variable {K V}
 
 /-- In a noetherian module over a division ring, all bases are indexed by a finite type. -/
 noncomputable def fintype_basis_index {ι : Type _} [IsNoetherian K V] (b : Basis ι K V) : Fintype ι :=
-  b.fintype_index_of_dim_lt_omega (dim_lt_omega K V)
+  b.fintypeIndexOfDimLtOmega (dim_lt_omega K V)
 
 /-- In a noetherian module over a division ring,
 `basis.of_vector_space` is indexed by a finite type. -/
 noncomputable instance [IsNoetherian K V] : Fintype (Basis.OfVectorSpaceIndex K V) :=
-  fintype_basis_index (Basis.ofVectorSpace K V)
+  fintypeBasisIndex (Basis.ofVectorSpace K V)
 
 /-- In a noetherian module over a division ring,
 if a basis is indexed by a set, that set is finite. -/
-theorem finite_basis_index {ι : Type _} {s : Set ι} [IsNoetherian K V] (b : Basis s K V) : s.finite :=
+theorem finite_basis_index {ι : Type _} {s : Set ι} [IsNoetherian K V] (b : Basis s K V) : s.Finite :=
   b.finite_index_of_dim_lt_omega (dim_lt_omega K V)
 
 variable (K V)
@@ -66,13 +66,12 @@ noncomputable def finset_basis_index [IsNoetherian K V] : Finset V :=
   (finite_basis_index (Basis.ofVectorSpace K V)).toFinset
 
 @[simp]
-theorem coe_finset_basis_index [IsNoetherian K V] :
-    (↑(finset_basis_index K V) : Set V) = Basis.OfVectorSpaceIndex K V :=
+theorem coe_finset_basis_index [IsNoetherian K V] : (↑(finsetBasisIndex K V) : Set V) = Basis.OfVectorSpaceIndex K V :=
   Set.Finite.coe_to_finset _
 
 @[simp]
 theorem coe_sort_finset_basis_index [IsNoetherian K V] :
-    (finset_basis_index K V : Type _) = Basis.OfVectorSpaceIndex K V :=
+    (finsetBasisIndex K V : Type _) = Basis.OfVectorSpaceIndex K V :=
   Set.Finite.coe_sort_to_finset _
 
 /-- In a noetherian module over a division ring, there exists a finite basis.
@@ -80,13 +79,13 @@ This is indexed by the `finset` `finite_dimensional.finset_basis_index`.
 This is in contrast to the result `finite_basis_index (basis.of_vector_space K V)`,
 which provides a set and a `set.finite`.
 -/
-noncomputable def finset_basis [IsNoetherian K V] : Basis (finset_basis_index K V) K V :=
+noncomputable def finset_basis [IsNoetherian K V] : Basis (finsetBasisIndex K V) K V :=
   (Basis.ofVectorSpace K V).reindex
     (by
       simp )
 
 @[simp]
-theorem range_finset_basis [IsNoetherian K V] : Set.Range (finset_basis K V) = Basis.OfVectorSpaceIndex K V := by
+theorem range_finset_basis [IsNoetherian K V] : Set.Range (finsetBasis K V) = Basis.OfVectorSpaceIndex K V := by
   rw [finset_basis, Basis.range_reindex, Basis.range_of_vector_space]
 
 variable {K V}

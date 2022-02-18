@@ -27,13 +27,13 @@ protected def UniformSpace : UniformSpace G :=
 
 /-- The uniform space structure associated to an abelian group filter basis via the associated
 topological abelian group structure is compatible with its group structure. -/
-protected theorem UniformAddGroup : @UniformAddGroup G B.uniform_space _ :=
+protected theorem UniformAddGroup : @UniformAddGroup G B.UniformSpace _ :=
   @topological_add_group_is_uniform G _ B.topology B.is_topological_add_group
 
 -- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (x y «expr ∈ » M)
 -- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (x y «expr ∈ » M)
 theorem cauchy_iff {F : Filter G} :
-    @Cauchy G B.uniform_space F ↔ F.ne_bot ∧ ∀, ∀ U ∈ B, ∀, ∃ M ∈ F, ∀ x y _ : x ∈ M _ : y ∈ M, y - x ∈ U := by
+    @Cauchy G B.UniformSpace F ↔ F.ne_bot ∧ ∀, ∀ U ∈ B, ∀, ∃ M ∈ F, ∀ x y _ : x ∈ M _ : y ∈ M, y - x ∈ U := by
   let this' := B.uniform_space
   have := B.uniform_add_group
   suffices F ×ᶠ F ≤ 𝓤 G ↔ ∀, ∀ U ∈ B, ∀, ∃ M ∈ F, ∀ x y _ : x ∈ M _ : y ∈ M, y - x ∈ U by

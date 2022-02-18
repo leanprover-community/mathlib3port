@@ -41,13 +41,13 @@ def fintype_diagram : DiscreteQuotient X ⥤ Fintypeₓ where
 
 /-- An abbreviation for `X.fintype_diagram ⋙ Fintype_to_Profinite`. -/
 abbrev diagram : DiscreteQuotient X ⥤ Profinite :=
-  X.fintype_diagram ⋙ Fintypeₓ.toProfinite
+  X.fintypeDiagram ⋙ Fintypeₓ.toProfinite
 
 /-- A cone over `X.diagram` whose cone point is `X`. -/
 def as_limit_cone : CategoryTheory.Limits.Cone X.diagram :=
-  { x, π := { app := fun S => ⟨S.proj, S.proj_is_locally_constant.continuous⟩ } }
+  { x, π := { app := fun S => ⟨S.proj, S.proj_is_locally_constant.Continuous⟩ } }
 
-instance is_iso_as_limit_cone_lift : is_iso ((limit_cone_is_limit X.diagram).lift X.as_limit_cone) :=
+instance is_iso_as_limit_cone_lift : IsIso ((limitConeIsLimit X.diagram).lift X.asLimitCone) :=
   is_iso_of_bijective _
     (by
       refine' ⟨fun a b => _, fun a => _⟩
@@ -65,22 +65,22 @@ instance is_iso_as_limit_cone_lift : is_iso ((limit_cone_is_limit X.diagram).lif
 /-- The isomorphism between `X` and the explicit limit of `X.diagram`,
 induced by lifting `X.as_limit_cone`.
 -/
-def iso_as_limit_cone_lift : X ≅ (limit_cone X.diagram).x :=
-  as_iso <| (limit_cone_is_limit _).lift X.as_limit_cone
+def iso_as_limit_cone_lift : X ≅ (limitCone X.diagram).x :=
+  as_iso <| (limitConeIsLimit _).lift X.asLimitCone
 
 /-- The isomorphism of cones `X.as_limit_cone` and `Profinite.limit_cone X.diagram`.
 The underlying isomorphism is defeq to `X.iso_as_limit_cone_lift`.
 -/
-def as_limit_cone_iso : X.as_limit_cone ≅ limit_cone _ :=
-  limits.cones.ext (iso_as_limit_cone_lift _) fun _ => rfl
+def as_limit_cone_iso : X.asLimitCone ≅ limitCone _ :=
+  Limits.Cones.ext (isoAsLimitConeLift _) fun _ => rfl
 
 /-- `X.as_limit_cone` is indeed a limit cone. -/
-def as_limit : CategoryTheory.Limits.IsLimit X.as_limit_cone :=
-  limits.is_limit.of_iso_limit (limit_cone_is_limit _) X.as_limit_cone_iso.symm
+def as_limit : CategoryTheory.Limits.IsLimit X.asLimitCone :=
+  Limits.IsLimit.ofIsoLimit (limitConeIsLimit _) X.asLimitConeIso.symm
 
 /-- A bundled version of `X.as_limit_cone` and `X.as_limit`. -/
-def limₓ : limits.limit_cone X.diagram :=
-  ⟨X.as_limit_cone, X.as_limit⟩
+def limₓ : Limits.LimitCone X.diagram :=
+  ⟨X.asLimitCone, X.asLimit⟩
 
 end Profinite
 

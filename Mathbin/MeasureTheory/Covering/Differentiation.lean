@@ -65,11 +65,11 @@ namespace VitaliFamily
 Do *not* use this definition: it is only a temporary device to show that this ratio tends almost
 everywhere to the Radon-Nikodym derivative. -/
 noncomputable def lim_ratio (ρ : Measureₓ α) (x : α) : ℝ≥0∞ :=
-  limₓ (v.filter_at x) fun a => ρ a / μ a
+  limₓ (v.filterAt x) fun a => ρ a / μ a
 
 /-- For almost every point `x`, sufficiently small sets in a Vitali family around `x` have positive
 measure. (This is a nontrivial result, following from the covering property of Vitali families). -/
-theorem ae_eventually_measure_pos [second_countable_topology α] : ∀ᵐ x ∂μ, ∀ᶠ a in v.filter_at x, 0 < μ a := by
+theorem ae_eventually_measure_pos [SecondCountableTopology α] : ∀ᵐ x ∂μ, ∀ᶠ a in v.filterAt x, 0 < μ a := by
   set s := { x | ¬∀ᶠ a in v.filter_at x, 0 < μ a } with hs
   simp only [not_ltₓ, not_eventually, nonpos_iff_eq_zero] at hs
   change μ s = 0
@@ -89,7 +89,7 @@ theorem ae_eventually_measure_pos [second_countable_topology α] : ∀ᵐ x ∂�
 
 /-- For every point `x`, sufficiently small sets in a Vitali family around `x` have finite measure.
 (This is a trivial result, following from the fact that the measure is locally finite). -/
-theorem eventually_measure_lt_top [is_locally_finite_measure μ] (x : α) : ∀ᶠ a in v.filter_at x, μ a < ∞ := by
+theorem eventually_measure_lt_top [IsLocallyFiniteMeasure μ] (x : α) : ∀ᶠ a in v.filterAt x, μ a < ∞ := by
   obtain ⟨ε, εpos, με⟩ : ∃ (ε : ℝ)(hi : 0 < ε), μ (closed_ball x ε) < ∞ :=
     (μ.finite_at_nhds x).exists_mem_basis nhds_basis_closed_ball
   exact v.eventually_filter_at_iff.2 ⟨ε, εpos, fun a ha haε => (measure_mono haε).trans_lt με⟩
@@ -97,7 +97,7 @@ theorem eventually_measure_lt_top [is_locally_finite_measure μ] (x : α) : ∀�
 /-- If two measures `ρ` and `ν` have, at every point of a set `s`, arbitrarily small sets in a
 Vitali family satisfying `ρ a ≤ ν a`, then `ρ s ≤ ν s` if `ρ ≪ μ`.-/
 theorem measure_le_of_frequently_le [SigmaCompactSpace α] [BorelSpace α] {ρ : Measureₓ α} (ν : Measureₓ α)
-    [is_locally_finite_measure ν] (hρ : ρ ≪ μ) (s : Set α) (hs : ∀, ∀ x ∈ s, ∀, ∃ᶠ a in v.filter_at x, ρ a ≤ ν a) :
+    [IsLocallyFiniteMeasure ν] (hρ : ρ ≪ μ) (s : Set α) (hs : ∀, ∀ x ∈ s, ∀, ∃ᶠ a in v.filterAt x, ρ a ≤ ν a) :
     ρ s ≤ ν s := by
   apply Ennreal.le_of_forall_pos_le_add fun ε εpos hc => _
   obtain ⟨U, sU, U_open, νU⟩ : ∃ (U : Set α)(H : s ⊆ U), IsOpen U ∧ ν U ≤ ν s + ε :=
@@ -120,14 +120,13 @@ theorem measure_le_of_frequently_le [SigmaCompactSpace α] [BorelSpace α] {ρ :
 
 section
 
-variable [SigmaCompactSpace α] [BorelSpace α] [is_locally_finite_measure μ] {ρ : Measureₓ α}
-  [is_locally_finite_measure ρ]
+variable [SigmaCompactSpace α] [BorelSpace α] [IsLocallyFiniteMeasure μ] {ρ : Measureₓ α} [IsLocallyFiniteMeasure ρ]
 
 /-- If a measure `ρ` is singular with respect to `μ`, then for `μ` almost every `x`, the ratio
 `ρ a / μ a` tends to zero when `a` shrinks to `x` along the Vitali family. This makes sense
 as `μ a` is eventually positive by `ae_eventually_measure_pos`. -/
 theorem ae_eventually_measure_zero_of_singular (hρ : ρ ⊥ₘ μ) :
-    ∀ᵐ x ∂μ, tendsto (fun a => ρ a / μ a) (v.filter_at x) (𝓝 0) := by
+    ∀ᵐ x ∂μ, Tendsto (fun a => ρ a / μ a) (v.filterAt x) (𝓝 0) := by
   have A : ∀, ∀ ε > (0 : ℝ≥0 ), ∀, ∀ᵐ x ∂μ, ∀ᶠ a in v.filter_at x, ρ a < ε * μ a := by
     intro ε εpos
     set s := { x | ¬∀ᶠ a in v.filter_at x, ρ a < ε * μ a } with hs
@@ -171,8 +170,8 @@ include hρ
 sets in a Vitali family has measure `0` if `c < d`. Indeed, the first inequality should imply
 that `ρ s ≤ c * μ s`, and the second one that `ρ s ≥ d * μ s`, a contradiction if `0 < μ s`. -/
 theorem null_of_frequently_le_of_frequently_ge {c d : ℝ≥0 } (hcd : c < d) (s : Set α)
-    (hc : ∀, ∀ x ∈ s, ∀, ∃ᶠ a in v.filter_at x, ρ a ≤ c * μ a)
-    (hd : ∀, ∀ x ∈ s, ∀, ∃ᶠ a in v.filter_at x, (d : ℝ≥0∞) * μ a ≤ ρ a) : μ s = 0 := by
+    (hc : ∀, ∀ x ∈ s, ∀, ∃ᶠ a in v.filterAt x, ρ a ≤ c * μ a)
+    (hd : ∀, ∀ x ∈ s, ∀, ∃ᶠ a in v.filterAt x, (d : ℝ≥0∞) * μ a ≤ ρ a) : μ s = 0 := by
   apply null_of_locally_null s fun x hx => _
   obtain ⟨o, xo, o_open, μo⟩ : ∃ o : Set α, x ∈ o ∧ IsOpen o ∧ μ o < ∞ := measure.exists_is_open_measure_lt_top μ x
   refine' ⟨s ∩ o, inter_mem_nhds_within _ (o_open.mem_nhds xo), _⟩
@@ -186,7 +185,7 @@ theorem null_of_frequently_le_of_frequently_ge {c d : ℝ≥0 } (hcd : c < d) (s
 
 /-- If `ρ` is absolutely continuous with respect to `μ`, then for almost every `x`,
 the ratio `ρ a / μ a` converges as `a` shrinks to `x` along a Vitali family for `μ`. -/
-theorem ae_tendsto_div : ∀ᵐ x ∂μ, ∃ c, tendsto (fun a => ρ a / μ a) (v.filter_at x) (𝓝 c) := by
+theorem ae_tendsto_div : ∀ᵐ x ∂μ, ∃ c, Tendsto (fun a => ρ a / μ a) (v.filterAt x) (𝓝 c) := by
   obtain ⟨w, w_count, w_dense, w_zero, w_top⟩ : ∃ w : Set ℝ≥0∞, countable w ∧ Dense w ∧ 0 ∉ w ∧ ∞ ∉ w :=
     Ennreal.exists_countable_dense_no_zero_top
   have I : ∀, ∀ x ∈ w, ∀, x ≠ ∞ := fun x xs hx => w_top (hx ▸ xs)
@@ -225,16 +224,16 @@ theorem ae_tendsto_div : ∀ᵐ x ∂μ, ∃ c, tendsto (fun a => ρ a / μ a) (
   intro x hx
   exact tendsto_of_no_upcrossings w_dense hx
 
-theorem ae_tendsto_lim_ratio : ∀ᵐ x ∂μ, tendsto (fun a => ρ a / μ a) (v.filter_at x) (𝓝 (v.lim_ratio ρ x)) := by
+theorem ae_tendsto_lim_ratio : ∀ᵐ x ∂μ, Tendsto (fun a => ρ a / μ a) (v.filterAt x) (𝓝 (v.limRatio ρ x)) := by
   filter_upwards [v.ae_tendsto_div hρ]
   intro x hx
   exact tendsto_nhds_lim hx
 
--- ././Mathport/Syntax/Translate/Basic.lean:626:6: warning: expanding binder group (m n)
--- ././Mathport/Syntax/Translate/Basic.lean:626:6: warning: expanding binder group (m n)
--- ././Mathport/Syntax/Translate/Basic.lean:626:6: warning: expanding binder group (m n)
--- ././Mathport/Syntax/Translate/Basic.lean:626:6: warning: expanding binder group (m n)
--- ././Mathport/Syntax/Translate/Basic.lean:626:6: warning: expanding binder group (m n)
+-- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (m n)
+-- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (m n)
+-- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (m n)
+-- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (m n)
+-- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (m n)
 /-- Given two thresholds `p < q`, the sets `{x | v.lim_ratio ρ x < p}`
 and `{x | q < v.lim_ratio ρ x}` are obviously disjoint. The key to proving that `v.lim_ratio ρ` is
 almost everywhere measurable is to show that these sets have measurable supersets which are also
@@ -242,7 +241,7 @@ disjoint, up to zero measure. This is the content of this lemma. -/
 theorem exists_measurable_supersets_lim_ratio {p q : ℝ≥0 } (hpq : p < q) :
     ∃ a b,
       MeasurableSet a ∧
-        MeasurableSet b ∧ { x | v.lim_ratio ρ x < p } ⊆ a ∧ { x | (q : ℝ≥0∞) < v.lim_ratio ρ x } ⊆ b ∧ μ (a ∩ b) = 0 :=
+        MeasurableSet b ∧ { x | v.limRatio ρ x < p } ⊆ a ∧ { x | (q : ℝ≥0∞) < v.limRatio ρ x } ⊆ b ∧ μ (a ∩ b) = 0 :=
   by
   let s := { x | ∃ c, tendsto (fun a => ρ a / μ a) (v.filter_at x) (𝓝 c) }
   let o : ℕ → Set α := spanning_sets (ρ + μ)
@@ -360,7 +359,7 @@ theorem exists_measurable_supersets_lim_ratio {p q : ℝ≥0 } (hpq : p < q) :
       apply lt_of_le_of_ltₓ (measure_mono _) (measure_spanning_sets_lt_top (ρ + μ) m)
       exact inter_subset_right _ _ _ ≤ ρ (to_measurable (ρ + μ) (u m) ∩ to_measurable (ρ + μ) (w n)) := B
 
-theorem ae_measurable_lim_ratio : AeMeasurable (v.lim_ratio ρ) μ := by
+theorem ae_measurable_lim_ratio : AeMeasurable (v.limRatio ρ) μ := by
   apply Ennreal.ae_measurable_of_exist_almost_disjoint_supersets _ _ fun p q hpq => _
   exact v.exists_measurable_supersets_lim_ratio hρ hpq
 
@@ -369,11 +368,10 @@ device to show that `v.lim_ratio` is almost everywhere equal to the Radon-Nikody
 noncomputable def lim_ratio_meas : α → ℝ≥0∞ :=
   (v.ae_measurable_lim_ratio hρ).mk _
 
-theorem lim_ratio_meas_measurable : Measurable (v.lim_ratio_meas hρ) :=
+theorem lim_ratio_meas_measurable : Measurable (v.limRatioMeas hρ) :=
   AeMeasurable.measurable_mk _
 
-theorem ae_tendsto_lim_ratio_meas : ∀ᵐ x ∂μ, tendsto (fun a => ρ a / μ a) (v.filter_at x) (𝓝 (v.lim_ratio_meas hρ x)) :=
-  by
+theorem ae_tendsto_lim_ratio_meas : ∀ᵐ x ∂μ, Tendsto (fun a => ρ a / μ a) (v.filterAt x) (𝓝 (v.limRatioMeas hρ x)) := by
   filter_upwards [v.ae_tendsto_lim_ratio hρ, AeMeasurable.ae_eq_mk (v.ae_measurable_lim_ratio hρ)]
   intro x hx h'x
   rwa [h'x] at hx
@@ -381,7 +379,7 @@ theorem ae_tendsto_lim_ratio_meas : ∀ᵐ x ∂μ, tendsto (fun a => ρ a / μ 
 /-- If, for all `x` in a set `s`, one has frequently `ρ a / μ a < p`, then `ρ s ≤ p * μ s`, as
 proved in `measure_le_of_frequently_le`. Since `ρ a / μ a` tends almost everywhere to
 `v.lim_ratio_meas hρ x`, the same property holds for sets `s` on which `v.lim_ratio_meas hρ < p`. -/
-theorem measure_le_mul_of_subset_lim_ratio_meas_lt {p : ℝ≥0 } {s : Set α} (h : s ⊆ { x | v.lim_ratio_meas hρ x < p }) :
+theorem measure_le_mul_of_subset_lim_ratio_meas_lt {p : ℝ≥0 } {s : Set α} (h : s ⊆ { x | v.limRatioMeas hρ x < p }) :
     ρ s ≤ p * μ s := by
   let t := { x : α | tendsto (fun a => ρ a / μ a) (v.filter_at x) (𝓝 (v.lim_ratio_meas hρ x)) }
   have A : μ (tᶜ) = 0 := v.ae_tendsto_lim_ratio_meas hρ
@@ -407,7 +405,7 @@ theorem measure_le_mul_of_subset_lim_ratio_meas_lt {p : ℝ≥0 } {s : Set α} (
 proved in `measure_le_of_frequently_le`. Since `ρ a / μ a` tends almost everywhere to
 `v.lim_ratio_meas hρ x`, the same property holds for sets `s` on which `q < v.lim_ratio_meas hρ`. -/
 theorem mul_measure_le_of_subset_lt_lim_ratio_meas {q : ℝ≥0 } {s : Set α}
-    (h : s ⊆ { x | (q : ℝ≥0∞) < v.lim_ratio_meas hρ x }) : (q : ℝ≥0∞) * μ s ≤ ρ s := by
+    (h : s ⊆ { x | (q : ℝ≥0∞) < v.limRatioMeas hρ x }) : (q : ℝ≥0∞) * μ s ≤ ρ s := by
   let t := { x : α | tendsto (fun a => ρ a / μ a) (v.filter_at x) (𝓝 (v.lim_ratio_meas hρ x)) }
   have A : μ (tᶜ) = 0 := v.ae_tendsto_lim_ratio_meas hρ
   suffices H : (q • μ) (s ∩ t) ≤ ρ (s ∩ t)
@@ -432,7 +430,7 @@ theorem mul_measure_le_of_subset_lt_lim_ratio_meas {q : ℝ≥0 } {s : Set α}
   exact Ennreal.mul_le_of_le_div ha.le
 
 /-- The points with `v.lim_ratio_meas hρ x = ∞` have measure `0` for `μ`. -/
-theorem measure_lim_ratio_meas_top : μ { x | v.lim_ratio_meas hρ x = ∞ } = 0 := by
+theorem measure_lim_ratio_meas_top : μ { x | v.limRatioMeas hρ x = ∞ } = 0 := by
   refine' null_of_locally_null _ fun x hx => _
   obtain ⟨o, xo, o_open, μo⟩ : ∃ o : Set α, x ∈ o ∧ IsOpen o ∧ ρ o < ∞ := measure.exists_is_open_measure_lt_top ρ x
   let s := { x : α | v.lim_ratio_meas hρ x = ∞ } ∩ o
@@ -456,7 +454,7 @@ theorem measure_lim_ratio_meas_top : μ { x | v.lim_ratio_meas hρ x = ∞ } = 0
   exact eventually_at_top.2 ⟨1, A⟩
 
 /-- The points with `v.lim_ratio_meas hρ x = 0` have measure `0` for `ρ`. -/
-theorem measure_lim_ratio_meas_zero : ρ { x | v.lim_ratio_meas hρ x = 0 } = 0 := by
+theorem measure_lim_ratio_meas_zero : ρ { x | v.limRatioMeas hρ x = 0 } = 0 := by
   refine' null_of_locally_null _ fun x hx => _
   obtain ⟨o, xo, o_open, μo⟩ : ∃ o : Set α, x ∈ o ∧ IsOpen o ∧ μ o < ∞ := measure.exists_is_open_measure_lt_top μ x
   let s := { x : α | v.lim_ratio_meas hρ x = 0 } ∩ o
@@ -479,7 +477,7 @@ theorem measure_lim_ratio_meas_zero : ρ { x | v.lim_ratio_meas hρ x = 0 } = 0 
 /-- As an intermediate step to show that `μ.with_density (v.lim_ratio_meas hρ) = ρ`, we show here
 that `μ.with_density (v.lim_ratio_meas hρ) ≤ t^2 ρ` for any `t > 1`. -/
 theorem with_density_le_mul {s : Set α} (hs : MeasurableSet s) {t : ℝ≥0 } (ht : 1 < t) :
-    μ.with_density (v.lim_ratio_meas hρ) s ≤ t ^ 2 * ρ s := by
+    μ.withDensity (v.limRatioMeas hρ) s ≤ t ^ 2 * ρ s := by
   have t_ne_zero' : t ≠ 0 := (zero_lt_one.trans ht).ne'
   have t_ne_zero : (t : ℝ≥0∞) ≠ 0 := by
     simpa only [Ennreal.coe_eq_zero, Ne.def] using t_ne_zero'
@@ -534,7 +532,7 @@ theorem with_density_le_mul {s : Set α} (hs : MeasurableSet s) {t : ℝ≥0 } (
 /-- As an intermediate step to show that `μ.with_density (v.lim_ratio_meas hρ) = ρ`, we show here
 that `ρ ≤ t μ.with_density (v.lim_ratio_meas hρ)` for any `t > 1`. -/
 theorem le_mul_with_density {s : Set α} (hs : MeasurableSet s) {t : ℝ≥0 } (ht : 1 < t) :
-    ρ s ≤ t * μ.with_density (v.lim_ratio_meas hρ) s := by
+    ρ s ≤ t * μ.withDensity (v.limRatioMeas hρ) s := by
   have t_ne_zero' : t ≠ 0 := (zero_lt_one.trans ht).ne'
   have t_ne_zero : (t : ℝ≥0∞) ≠ 0 := by
     simpa only [Ennreal.coe_eq_zero, Ne.def] using t_ne_zero'
@@ -573,7 +571,7 @@ theorem le_mul_with_density {s : Set α} (hs : MeasurableSet s) {t : ℝ≥0 } (
       add_le_add (add_le_add A B) (Ennreal.tsum_le_tsum C)_ = (t • ν) s :=
       (measure_eq_measure_preimage_add_measure_tsum_Ico_zpow (t • ν) f_meas hs ht).symm
 
-theorem with_density_lim_ratio_meas_eq : μ.with_density (v.lim_ratio_meas hρ) = ρ := by
+theorem with_density_lim_ratio_meas_eq : μ.withDensity (v.limRatioMeas hρ) = ρ := by
   ext1 s hs
   refine' le_antisymmₓ _ _
   · have : tendsto (fun t : ℝ≥0 => (t ^ 2 * ρ s : ℝ≥0∞)) (𝓝[>] 1) (𝓝 ((1 : ℝ≥0 ) ^ 2 * ρ s)) := by
@@ -610,7 +608,7 @@ This version assumes that `ρ` is absolutely continuous with respect to `μ`. Th
 without this superfluous assumption is `vitali_family.ae_tendsto_rn_deriv`.
 -/
 theorem ae_tendsto_rn_deriv_of_absolutely_continuous :
-    ∀ᵐ x ∂μ, tendsto (fun a => ρ a / μ a) (v.filter_at x) (𝓝 (ρ.rn_deriv μ x)) := by
+    ∀ᵐ x ∂μ, Tendsto (fun a => ρ a / μ a) (v.filterAt x) (𝓝 (ρ.rnDeriv μ x)) := by
   have A : (μ.with_density (v.lim_ratio_meas hρ)).rnDeriv μ =ᵐ[μ] v.lim_ratio_meas hρ :=
     rn_deriv_with_density μ (v.lim_ratio_meas_measurable hρ)
   rw [v.with_density_lim_ratio_meas_eq hρ] at A
@@ -625,7 +623,7 @@ variable (ρ)
 measure `μ`, and another locally finite measure `ρ`, then for `μ`-almost every `x` the
 ratio `ρ a / μ a` converges, when `a` shrinks to `x` along the Vitali family, towards the
 Radon-Nikodym derivative of `ρ` with respect to `μ`. -/
-theorem ae_tendsto_rn_deriv : ∀ᵐ x ∂μ, tendsto (fun a => ρ a / μ a) (v.filter_at x) (𝓝 (ρ.rn_deriv μ x)) := by
+theorem ae_tendsto_rn_deriv : ∀ᵐ x ∂μ, Tendsto (fun a => ρ a / μ a) (v.filterAt x) (𝓝 (ρ.rnDeriv μ x)) := by
   let t := μ.with_density (ρ.rn_deriv μ)
   have eq_add : ρ = ρ.singular_part μ + t := have_lebesgue_decomposition_add _ _
   have A : ∀ᵐ x ∂μ, tendsto (fun a => ρ.singular_part μ a / μ a) (v.filter_at x) (𝓝 0) :=
@@ -647,7 +645,7 @@ point `x` along a Vitali family. The limit is `1` for `x ∈ s` and `0` for `x �
 almost every point of `s` is a Lebesgue density point for `s`. A version for non-measurable sets
 holds, but it only gives the first conclusion, see `ae_tendsto_measure_inter_div`. -/
 theorem ae_tendsto_measure_inter_div_of_measurable_set {s : Set α} (hs : MeasurableSet s) :
-    ∀ᵐ x ∂μ, tendsto (fun a => μ (s ∩ a) / μ a) (v.filter_at x) (𝓝 (s.indicator 1 x)) := by
+    ∀ᵐ x ∂μ, Tendsto (fun a => μ (s ∩ a) / μ a) (v.filterAt x) (𝓝 (s.indicator 1 x)) := by
   have : is_locally_finite_measure (μ.restrict s) := is_locally_finite_measure_of_le restrict_le_self
   filter_upwards [ae_tendsto_rn_deriv v (μ.restrict s), rn_deriv_restrict μ hs]
   intro x hx h'x
@@ -658,7 +656,7 @@ typical point of `s` along a Vitali family. This shows that almost every point o
 Lebesgue density point for `s`. A stronger version for measurable sets is given
 in `ae_tendsto_measure_inter_div_of_measurable_set`. -/
 theorem ae_tendsto_measure_inter_div (s : Set α) :
-    ∀ᵐ x ∂μ.restrict s, tendsto (fun a => μ (s ∩ a) / μ a) (v.filter_at x) (𝓝 1) := by
+    ∀ᵐ x ∂μ.restrict s, Tendsto (fun a => μ (s ∩ a) / μ a) (v.filterAt x) (𝓝 1) := by
   let t := to_measurable μ s
   have A : ∀ᵐ x ∂μ.restrict s, tendsto (fun a => μ (t ∩ a) / μ a) (v.filter_at x) (𝓝 (t.indicator 1 x)) := by
     apply ae_mono restrict_le_self

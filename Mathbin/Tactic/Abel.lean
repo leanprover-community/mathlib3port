@@ -19,7 +19,7 @@ Stores a few options for this call, and caches some common subexpressions
 such as typeclass instances and `0 : α`.
 -/
 unsafe structure context where
-  red : transparency
+  red : Transparency
   α : expr
   Univ : level
   α0 : expr
@@ -27,7 +27,7 @@ unsafe structure context where
   inst : expr
 
 /-- Populate a `context` object for evaluating `e`, up to reducibility level `red`. -/
-unsafe def mk_context (red : transparency) (e : expr) : tactic context := do
+unsafe def mk_context (red : Transparency) (e : expr) : tactic context := do
   let α ← infer_type e
   let c ← mk_app `` AddCommMonoidₓ [α] >>= mk_instance
   let cg ← try_core (mk_app `` AddCommGroupₓ [α] >>= mk_instance)
@@ -42,7 +42,7 @@ unsafe def mk_context (red : transparency) (e : expr) : tactic context := do
 /-- Apply the function `n : ∀ {α} [inst : add_whatever α], _` to the
 implicit parameters in the context, and the given list of arguments. -/
 unsafe def context.app (c : context) (n : Name) (inst : expr) : List expr → expr :=
-  (@expr.const tt n [c.univ] c.α inst).mk_app
+  (@expr.const true n [c.Univ] c.α inst).mk_app
 
 /-- Apply the function `n : ∀ {α} [inst α], _` to the implicit parameters in the
 context, and the given list of arguments.
@@ -51,8 +51,8 @@ Compared to `context.app`, this takes the name of the typeclass, rather than an
 inferred typeclass instance.
 -/
 unsafe def context.mk_app (c : context) (n inst : Name) (l : List expr) : tactic expr := do
-  let m ← mk_instance ((expr.const inst [c.univ] : expr) c.α)
-  return <| c.app n m l
+  let m ← mk_instance ((expr.const inst [c.Univ] : expr) c.α)
+  return <| c n m l
 
 /-- Add the letter "g" to the end of the name, e.g. turning `term` into `termg`.
 
@@ -107,7 +107,7 @@ unsafe def normal_expr.zero' (c : context) : normal_expr :=
 
 unsafe def normal_expr.to_list : normal_expr → List (ℤ × expr)
   | normal_expr.zero _ => []
-  | normal_expr.nterm _ (_, n) x a => (n, x) :: a.to_list
+  | normal_expr.nterm _ (_, n) x a => (n, x) :: a.toList
 
 open NormalExpr
 
@@ -119,7 +119,7 @@ unsafe def normal_expr.pp (e : normal_expr) : tactic format := do
     (to_list e).mmap fun ⟨n, e⟩ => do
         let pe ← pp e
         return (to_fmt n ++ " • (" ++ pe ++ ")")
-  return <| format.join <| l.intersperse ↑" + "
+  return <| format.join <| l ↑" + "
 
 unsafe instance : has_to_tactic_format normal_expr :=
   ⟨normal_expr.pp⟩
@@ -163,21 +163,21 @@ unsafe def eval_add (c : context) : normal_expr → normal_expr → tactic (norm
     return (e₁, p)
   | he₁@(nterm e₁ n₁ x₁ a₁), he₂@(nterm e₂ n₂ x₂ a₂) =>
     (do
-        is_def_eq x₁ x₂ c.red
+        is_def_eq x₁ x₂ c
         let (n', h₁) ← mk_app `` Add.add [n₁.1, n₂.1] >>= norm_num.eval_field
         let (a', h₂) ← eval_add a₁ a₂
         let k := n₁.2 + n₂.2
         let p₁ := c.iapp `` term_add_term [n₁.1, x₁, a₁, n₂.1, a₂, n', a', h₁, h₂]
         if k = 0 then do
-            let p ← mk_eq_trans p₁ (c.iapp `` zero_term [x₁, a'])
+            let p ← mk_eq_trans p₁ (c `` zero_term [x₁, a'])
             return (a', p)
           else return (term' c (n', k) x₁ a', p₁)) <|>
       if expr.lex_lt x₁ x₂ then do
         let (a', h) ← eval_add a₁ he₂
-        return (term' c n₁ x₁ a', c.iapp `` term_add_const [n₁.1, x₁, a₁, e₂, a', h])
+        return (term' c n₁ x₁ a', c `` term_add_const [n₁.1, x₁, a₁, e₂, a', h])
       else do
         let (a', h) ← eval_add he₁ a₂
-        return (term' c n₂ x₂ a', c.iapp `` const_add_term [e₁, n₂.1, x₂, a₂, a', h])
+        return (term' c n₂ x₂ a', c `` const_add_term [e₁, n₂.1, x₂, a₂, a', h])
 
 theorem term_neg {α} [AddCommGroupₓ α] n x a n' a' (h₁ : -n = n') (h₂ : -a = a') : -@termg α _ n x a = termg n' x a' :=
   by
@@ -190,7 +190,7 @@ unsafe def eval_neg (c : context) : normal_expr → tactic (normal_expr × expr)
   | nterm e n x a => do
     let (n', h₁) ← mk_app `` Neg.neg [n.1] >>= norm_num.eval_field
     let (a', h₂) ← eval_neg a
-    return (term' c (n', -n.2) x a', c.app `` term_neg c.inst [n.1, x, a, n', a', h₁, h₂])
+    return (term' c (n', -n.2) x a', c `` term_neg c [n.1, x, a, n', a', h₁, h₂])
 
 def smul {α} [AddCommMonoidₓ α] (n : ℕ) (x : α) : α :=
   n • x
@@ -217,7 +217,7 @@ unsafe def eval_smul (c : context) (k : expr × ℤ) : normal_expr → tactic (n
   | nterm e n x a => do
     let (n', h₁) ← mk_app `` Mul.mul [k.1, n.1] >>= norm_num.eval_field
     let (a', h₂) ← eval_smul a
-    return (term' c (n', k.2 * n.2) x a', c.iapp `` term_smul [k.1, n.1, x, a, n', a', h₁, h₂])
+    return (term' c (n', k.2 * n.2) x a', c `` term_smul [k.1, n.1, x, a, n', a', h₁, h₂])
 
 theorem term_atom {α} [AddCommMonoidₓ α] (x : α) : x = term 1 x 0 := by
   simp [term]
@@ -227,7 +227,7 @@ theorem term_atomg {α} [AddCommGroupₓ α] (x : α) : x = termg 1 x 0 := by
 
 unsafe def eval_atom (c : context) (e : expr) : tactic (normal_expr × expr) := do
   let n1 ← c.int_to_expr 1
-  return (term' c (n1, 1) e (zero' c), c.iapp `` term_atom [e])
+  return (term' c (n1, 1) e (zero' c), c `` term_atom [e])
 
 theorem unfold_sub {α} [AddGroupₓ α] (a b c : α) (h : a + -b = c) : a - b = c := by
   rw [sub_eq_add_neg, h]
@@ -265,20 +265,20 @@ theorem subst_into_smul_upcast {α} [AddCommGroupₓ α] l r tl zl tr t (prl₁ 
 unsafe def eval_smul' (c : context) (eval : expr → tactic (normal_expr × expr)) (is_smulg : Bool) (orig e₁ e₂ : expr) :
     tactic (normal_expr × expr) := do
   let (e₁', p₁) ← norm_num.derive e₁ <|> refl_conv e₁
-  match if is_smulg then e₁'.to_int else coe <$> e₁'.to_nat with
+  match if is_smulg then e₁' else coe <$> e₁' with
     | some n => do
       let (e₂', p₂) ← eval e₂
-      if c.is_group = is_smulg then do
+      if c = is_smulg then do
           let (e', p) ← eval_smul c (e₁', n) e₂'
-          return (e', c.iapp `` subst_into_smul [e₁, e₂, e₁', e₂', e', p₁, p₂, p])
+          return (e', c `` subst_into_smul [e₁, e₂, e₁', e₂', e', p₁, p₂, p])
         else do
-          guardb c.is_group
+          guardb c
           let ic ← mk_instance_cache (quote.1 ℤ)
           let nc ← mk_instance_cache (quote.1 ℕ)
-          let (ic, zl) ← ic.of_int n
+          let (ic, zl) ← ic n
           let (_, _, _, p₁') ← norm_num.prove_nat_uncast ic nc zl
           let (e', p) ← eval_smul c (zl, n) e₂'
-          return (e', c.app `` subst_into_smul_upcast c.inst [e₁, e₂, e₁', zl, e₂', e', p₁, p₁', p₂, p])
+          return (e', c `` subst_into_smul_upcast c [e₁, e₂, e₁', zl, e₂', e', p₁, p₁', p₂, p])
     | none => eval_atom c orig
 
 unsafe def eval (c : context) : expr → tactic (normal_expr × expr)
@@ -302,15 +302,15 @@ unsafe def eval (c : context) : expr → tactic (normal_expr × expr)
   | quote.1 (AddMonoidₓ.nsmul (%%ₓe₁) (%%ₓe₂)) => do
     let n ← if c.is_group then mk_app `` Int.ofNat [e₁] else return e₁
     let (e', p) ← eval <| c.iapp `` smul [n, e₂]
-    return (e', c.iapp `` unfold_smul [e₁, e₂, e', p])
+    return (e', c `` unfold_smul [e₁, e₂, e', p])
   | quote.1 (SubNegMonoidₓ.zsmul (%%ₓe₁) (%%ₓe₂)) => do
-    guardb c.is_group
+    guardb c
     let (e', p) ← eval <| c.iapp `` smul [e₁, e₂]
-    return (e', c.app `` unfold_zsmul c.inst [e₁, e₂, e', p])
-  | e@(quote.1 (@HasScalar.smul Nat _ AddMonoidₓ.hasScalarNat (%%ₓe₁) (%%ₓe₂))) => eval_smul' c eval ff e e₁ e₂
-  | e@(quote.1 (@HasScalar.smul Int _ SubNegMonoidₓ.hasScalarInt (%%ₓe₁) (%%ₓe₂))) => eval_smul' c eval tt e e₁ e₂
-  | e@(quote.1 (smul (%%ₓe₁) (%%ₓe₂))) => eval_smul' c eval ff e e₁ e₂
-  | e@(quote.1 (smulg (%%ₓe₁) (%%ₓe₂))) => eval_smul' c eval tt e e₁ e₂
+    return (e', c `` unfold_zsmul c [e₁, e₂, e', p])
+  | e@(quote.1 (@HasScalar.smul Nat _ AddMonoidₓ.hasScalarNat (%%ₓe₁) (%%ₓe₂))) => eval_smul' c eval false e e₁ e₂
+  | e@(quote.1 (@HasScalar.smul Int _ SubNegMonoidₓ.hasScalarInt (%%ₓe₁) (%%ₓe₂))) => eval_smul' c eval true e e₁ e₂
+  | e@(quote.1 (smul (%%ₓe₁) (%%ₓe₂))) => eval_smul' c eval false e e₁ e₂
+  | e@(quote.1 (smulg (%%ₓe₁) (%%ₓe₂))) => eval_smul' c eval true e e₁ e₂
   | e@(quote.1 (@Zero.zero _ _)) =>
     mcond (succeeds (is_def_eq e c.α0)) (mk_eq_refl c.α0 >>= fun p => pure (zero' c, p)) (eval_atom c e)
   | e => eval_atom c e
@@ -324,10 +324,10 @@ inductive normalize_mode
   | term
   deriving has_reflect
 
-instance : Inhabited normalize_mode :=
-  ⟨normalize_mode.term⟩
+instance : Inhabited NormalizeMode :=
+  ⟨NormalizeMode.term⟩
 
-unsafe def normalize (red : transparency) (mode := normalize_mode.term) (e : expr) : tactic (expr × expr) := do
+unsafe def normalize (red : Transparency) (mode := NormalizeMode.term) (e : expr) : tactic (expr × expr) := do
   let pow_lemma ← simp_lemmas.mk.add_simp `` pow_oneₓ
   let lemmas :=
     match mode with
@@ -370,14 +370,14 @@ This can prove goals that `abel` cannot, but is more expensive.
 -/
 unsafe def abel1 (red : parse (tk "!")?) : tactic Unit := do
   let quote.1 ((%%ₓe₁) = %%ₓe₂) ← target
-  let c ← mk_context (if red.is_some then semireducible else reducible) e₁
+  let c ← mk_context (if red.isSome then semireducible else reducible) e₁
   let (e₁', p₁) ← eval c e₁
   let (e₂', p₂) ← eval c e₂
   is_def_eq e₁' e₂'
   let p ← mk_eq_symm p₂ >>= mk_eq_trans p₁
   tactic.exact p
 
-unsafe def abel.mode : lean.parser abel.normalize_mode :=
+unsafe def abel.mode : lean.parser Abel.NormalizeMode :=
   with_desc "(raw|term)?" <| do
     let mode ← (ident)?
     match mode with
@@ -408,9 +408,9 @@ unsafe def abel (red : parse (tk "!")?) (SOP : parse abel.mode) (loc : parse loc
     | _ => failed) <|>
     do
     let ns ← loc.get_locals
-    let red := if red.is_some then semireducible else reducible
+    let red := if red.isSome then semireducible else reducible
     let tt ← tactic.replace_at (normalize red SOP) ns loc.include_goal | fail "abel failed to simplify"
-    when loc.include_goal <| try tactic.reflexivity
+    when loc <| try tactic.reflexivity
 
 add_tactic_doc
   { Name := "abel", category := DocCategory.tactic, declNames := [`tactic.interactive.abel],

@@ -58,7 +58,7 @@ def cof (r : α → α → Prop) [IsRefl α r] : Cardinal :=
   @Cardinal.min { S : Set α // ∀ a, ∃ b ∈ S, r a b } ⟨⟨Set.Univ, fun a => ⟨a, ⟨⟩, refl _⟩⟩⟩ fun S => # S
 
 theorem cof_le (r : α → α → Prop) [IsRefl α r] {S : Set α} (h : ∀ a, ∃ b ∈ S, r a b) : Order.cof r ≤ # S :=
-  le_transₓ (Cardinal.min_le _ ⟨S, h⟩) (le_reflₓ _)
+  le_transₓ (Cardinal.min_le _ ⟨S, h⟩) le_rfl
 
 theorem le_cof {r : α → α → Prop} [IsRefl α r] (c : Cardinal) :
     c ≤ Order.cof r ↔ ∀ {S : Set α} h : ∀ a, ∃ b ∈ S, r a b, c ≤ # S := by
@@ -117,7 +117,7 @@ theorem le_cof_type [IsWellOrder α r] {c} : c ≤ cof (type r) ↔ ∀ S : Set 
     rw [Cardinal.le_min, Subtype.forall] <;> rfl
 
 theorem cof_type_le [IsWellOrder α r] (S : Set α) (h : ∀ a, ∃ b ∈ S, ¬r b a) : cof (type r) ≤ # S :=
-  le_cof_type.1 (le_reflₓ _) S h
+  le_cof_type.1 le_rfl S h
 
 theorem lt_cof_type [IsWellOrder α r] (S : Set α) (hl : # S < cof (type r)) : ∃ a, ∀, ∀ b ∈ S, ∀, r b a :=
   not_forall_not.1 fun h => not_le_of_lt hl <| cof_type_le S fun a => not_ball.1 (h a)
@@ -350,7 +350,7 @@ theorem cof_cof (o : Ordinal) : cof (cof o).ord = cof o :=
           injection h with h <;> congr <;> injection h
         
 
-theorem omega_le_cof {o} : ω ≤ cof o ↔ is_limit o := by
+theorem omega_le_cof {o} : ω ≤ cof o ↔ IsLimit o := by
   rcases zero_or_succ_or_limit o with (rfl | ⟨o, rfl⟩ | l)
   · simp [not_zero_is_limit, Cardinal.omega_ne_zero]
     
@@ -379,7 +379,7 @@ theorem cof_omega : cof omega = ω :=
       rw [← card_omega] <;> apply cof_le_card)
     (omega_le_cof.2 omega_is_limit)
 
-theorem cof_eq' (r : α → α → Prop) [IsWellOrder α r] (h : is_limit (type r)) :
+theorem cof_eq' (r : α → α → Prop) [IsWellOrder α r] (h : IsLimit (type r)) :
     ∃ S : Set α, (∀ a, ∃ b ∈ S, r a b) ∧ # S = cof (type r) :=
   let ⟨S, H, e⟩ := cof_eq r
   ⟨S, fun a =>
@@ -476,7 +476,7 @@ theorem sup_lt {ι} (f : ι → Cardinal) {c : Cardinal} (H1 : # ι < c.ord.cof)
 /-- If the union of s is unbounded and s is smaller than the cofinality,
   then s has an unbounded member -/
 theorem unbounded_of_unbounded_sUnion (r : α → α → Prop) [wo : IsWellOrder α r] {s : Set (Set α)}
-    (h₁ : unbounded r <| ⋃₀s) (h₂ : # s < StrictOrder.cof r) : ∃ x ∈ s, unbounded r x := by
+    (h₁ : Unbounded r <| ⋃₀s) (h₂ : # s < StrictOrder.cof r) : ∃ x ∈ s, Unbounded r x := by
   by_contra h
   simp only [not_exists, exists_prop, not_and, not_unbounded_iff] at h
   apply not_le_of_lt h₂
@@ -496,7 +496,7 @@ theorem unbounded_of_unbounded_sUnion (r : α → α → Prop) [wo : IsWellOrder
 /-- If the union of s is unbounded and s is smaller than the cofinality,
   then s has an unbounded member -/
 theorem unbounded_of_unbounded_Union {α β : Type u} (r : α → α → Prop) [wo : IsWellOrder α r] (s : β → Set α)
-    (h₁ : unbounded r <| ⋃ x, s x) (h₂ : # β < StrictOrder.cof r) : ∃ x : β, unbounded r (s x) := by
+    (h₁ : Unbounded r <| ⋃ x, s x) (h₂ : # β < StrictOrder.cof r) : ∃ x : β, Unbounded r (s x) := by
   rw [← sUnion_range] at h₁
   have : # (range fun i : β => s i) < StrictOrder.cof r := lt_of_le_of_ltₓ mk_range_le h₂
   rcases unbounded_of_unbounded_sUnion r h₁ this with ⟨_, ⟨x, rfl⟩, u⟩
@@ -564,25 +564,25 @@ def is_limit (c : Cardinal) : Prop :=
 def is_strong_limit (c : Cardinal) : Prop :=
   c ≠ 0 ∧ ∀, ∀ x < c, ∀, (2^x) < c
 
-theorem is_strong_limit.is_limit {c} (H : is_strong_limit c) : is_limit c :=
+theorem is_strong_limit.is_limit {c} (H : IsStrongLimit c) : IsLimit c :=
   ⟨H.1, fun x h => lt_of_le_of_ltₓ (succ_le.2 <| cantor _) (H.2 _ h)⟩
 
 /-- A cardinal is regular if it is infinite and it equals its own cofinality. -/
 def IsRegular (c : Cardinal) : Prop :=
   ω ≤ c ∧ c.ord.cof = c
 
-theorem is_regular.pos {c : Cardinal} (H : c.is_regular) : 0 < c :=
+theorem is_regular.pos {c : Cardinal} (H : c.IsRegular) : 0 < c :=
   omega_pos.trans_le H.left
 
-theorem is_regular.ord_pos {c : Cardinal} (H : c.is_regular) : 0 < c.ord := by
+theorem is_regular.ord_pos {c : Cardinal} (H : c.IsRegular) : 0 < c.ord := by
   rw [Cardinal.lt_ord]
   exact H.pos
 
-theorem cof_is_regular {o : Ordinal} (h : o.is_limit) : IsRegular o.cof :=
+theorem cof_is_regular {o : Ordinal} (h : o.IsLimit) : IsRegular o.cof :=
   ⟨omega_le_cof.2 h, cof_cof _⟩
 
 theorem omega_is_regular : IsRegular ω :=
-  ⟨le_reflₓ _, by
+  ⟨le_rfl, by
     simp ⟩
 
 theorem succ_is_regular {c : Cardinal.{u}} (h : ω ≤ c) : IsRegular (succ c) :=
@@ -626,8 +626,8 @@ theorem infinite_pigeonhole_card_lt {β α : Type u} (f : β → α) (w : # α <
 /-- A function whose codomain's cardinality is infinite but strictly smaller than its domain's
 has an infinite fiber.
 -/
-theorem exists_infinite_fiber {β α : Type _} (f : β → α) (w : # α < # β) (w' : _root_.infinite α) :
-    ∃ a : α, _root_.infinite (f ⁻¹' {a}) := by
+theorem exists_infinite_fiber {β α : Type _} (f : β → α) (w : # α < # β) (w' : Infinite α) :
+    ∃ a : α, Infinite (f ⁻¹' {a}) := by
   simp_rw [Cardinal.infinite_iff]  at w'⊢
   cases' infinite_pigeonhole_card_lt f w w' with a ha
   exact ⟨a, w'.trans ha.le⟩
@@ -637,7 +637,7 @@ then the cardinality of the collection of those finite sets
 must be at least the cardinality of `β`.
 -/
 theorem le_range_of_union_finset_eq_top {α β : Type _} [Infinite β] (f : α → Finset β) (w : (⋃ a, (f a : Set β)) = ⊤) :
-    # β ≤ # (range f) := by
+    # β ≤ # (Range f) := by
   have k : _root_.infinite (range f) := by
     rw [infinite_coe_iff]
     apply mt (union_finset_finite_of_range_finite f)
@@ -676,18 +676,18 @@ theorem sup_lt_of_is_regular {ι} (f : ι → Cardinal) {c} (hc : IsRegular c) (
   rwa [hc.2]
 
 theorem sum_lt_of_is_regular {ι} (f : ι → Cardinal) {c} (hc : IsRegular c) (H1 : # ι < c) (H2 : ∀ i, f i < c) :
-    Sum.{u, u} f < c :=
+    sum.{u, u} f < c :=
   lt_of_le_of_ltₓ (sum_le_sup _) <| mul_lt_of_lt hc.1 H1 <| sup_lt_of_is_regular f hc H1 H2
 
 /-- A cardinal is inaccessible if it is an uncountable regular strong limit cardinal. -/
 def is_inaccessible (c : Cardinal) :=
-  ω < c ∧ IsRegular c ∧ is_strong_limit c
+  ω < c ∧ IsRegular c ∧ IsStrongLimit c
 
-theorem is_inaccessible.mk {c} (h₁ : ω < c) (h₂ : c ≤ c.ord.cof) (h₃ : ∀, ∀ x < c, ∀, (2^x) < c) : is_inaccessible c :=
+theorem is_inaccessible.mk {c} (h₁ : ω < c) (h₂ : c ≤ c.ord.cof) (h₃ : ∀, ∀ x < c, ∀, (2^x) < c) : IsInaccessible c :=
   ⟨h₁, ⟨le_of_ltₓ h₁, le_antisymmₓ (cof_ord_le _) h₂⟩, ne_of_gtₓ (lt_transₓ omega_pos h₁), h₃⟩
 
-theorem univ_inaccessible : is_inaccessible univ.{u, v} :=
-  is_inaccessible.mk
+theorem univ_inaccessible : IsInaccessible univ.{u, v} :=
+  IsInaccessible.mk
     (by
       simpa using lift_lt_univ' ω)
     (by

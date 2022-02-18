@@ -45,12 +45,12 @@ theorem exists_partition_int (n : ℕ) {ε : ℝ} (hε : 0 < ε) {b : ℤ} (hb :
   rwa [Int.cast_abs, Int.cast_sub]
 
 /-- `abs : ℤ → ℤ` is an admissible absolute value -/
-noncomputable def abs_is_admissible : is_admissible AbsoluteValue.abs :=
+noncomputable def abs_is_admissible : IsAdmissible AbsoluteValue.abs :=
   { AbsoluteValue.abs_is_euclidean with card := fun ε => ⌈1 / ε⌉₊,
     exists_partition' := fun n ε hε b hb => exists_partition_int n hε hb }
 
-noncomputable instance : Inhabited (is_admissible AbsoluteValue.abs) :=
-  ⟨abs_is_admissible⟩
+noncomputable instance : Inhabited (IsAdmissible AbsoluteValue.abs) :=
+  ⟨absIsAdmissible⟩
 
 end AbsoluteValue
 

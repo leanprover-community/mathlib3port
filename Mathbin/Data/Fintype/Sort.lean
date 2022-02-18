@@ -29,14 +29,13 @@ elements of `s` and elements of `fin n` to elements of `sᶜ` while preserving o
 def finSumEquivOfFinset (hm : s.card = m) (hn : sᶜ.card = n) : Sum (Finₓ m) (Finₓ n) ≃ α :=
   calc
     Sum (Finₓ m) (Finₓ n) ≃ Sum (s : Set α) (sᶜ : Set α) :=
-      Equivₓ.sumCongr (s.order_iso_of_fin hm).toEquiv <|
-        (sᶜ.orderIsoOfFin hn).toEquiv.trans <| Equivₓ.Set.ofEq s.coe_compl
+      Equivₓ.sumCongr (s.orderIsoOfFin hm).toEquiv <| (sᶜ.orderIsoOfFin hn).toEquiv.trans <| Equivₓ.Set.ofEq s.coe_compl
     _ ≃ α := Equivₓ.Set.sumCompl _
     
 
 @[simp]
 theorem fin_sum_equiv_of_finset_inl (hm : s.card = m) (hn : sᶜ.card = n) (i : Finₓ m) :
-    finSumEquivOfFinset hm hn (Sum.inl i) = s.order_emb_of_fin hm i :=
+    finSumEquivOfFinset hm hn (Sum.inl i) = s.orderEmbOfFin hm i :=
   rfl
 
 @[simp]

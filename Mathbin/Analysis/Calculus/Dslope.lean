@@ -33,7 +33,7 @@ variable {f : 𝕜 → E} {a b : 𝕜} {s : Set 𝕜}
 theorem dslope_of_ne (f : 𝕜 → E) (h : b ≠ a) : dslope f a b = slope f a b :=
   update_noteq h _ _
 
-theorem eq_on_dslope_slope (f : 𝕜 → E) (a : 𝕜) : eq_on (dslope f a) (slope f a) ({a}ᶜ) := fun b => dslope_of_ne f
+theorem eq_on_dslope_slope (f : 𝕜 → E) (a : 𝕜) : EqOn (dslope f a) (slope f a) ({a}ᶜ) := fun b => dslope_of_ne f
 
 theorem dslope_eventually_eq_slope_of_ne (f : 𝕜 → E) (h : b ≠ a) : dslope f a =ᶠ[𝓝 b] slope f a :=
   (eq_on_dslope_slope f a).eventually_eq_of_mem (is_open_ne.mem_nhds h)
@@ -48,7 +48,7 @@ theorem sub_smul_dslope (f : 𝕜 → E) (a b : 𝕜) : (b - a) • dslope f a b
 theorem dslope_sub_smul_of_ne (f : 𝕜 → E) (h : b ≠ a) : dslope (fun x => (x - a) • f x) a b = f b := by
   rw [dslope_of_ne _ h, slope_sub_smul _ h.symm]
 
-theorem eq_on_dslope_sub_smul (f : 𝕜 → E) (a : 𝕜) : eq_on (dslope (fun x => (x - a) • f x) a) f ({a}ᶜ) := fun b =>
+theorem eq_on_dslope_sub_smul (f : 𝕜 → E) (a : 𝕜) : EqOn (dslope (fun x => (x - a) • f x) a) f ({a}ᶜ) := fun b =>
   dslope_sub_smul_of_ne f
 
 theorem dslope_sub_smul [DecidableEq 𝕜] (f : 𝕜 → E) (a : 𝕜) :
@@ -65,7 +65,7 @@ theorem ContinuousWithinAt.of_dslope (h : ContinuousWithinAt (dslope f a) s b) :
   simpa only [sub_smul_dslope, sub_add_cancel] using this
 
 theorem ContinuousAt.of_dslope (h : ContinuousAt (dslope f a) b) : ContinuousAt f b :=
-  (continuous_within_at_univ _ _).1 h.continuous_within_at.of_dslope
+  (continuous_within_at_univ _ _).1 h.ContinuousWithinAt.of_dslope
 
 theorem ContinuousOn.of_dslope (h : ContinuousOn (dslope f a) s) : ContinuousOn f s := fun x hx => (h x hx).of_dslope
 
@@ -82,7 +82,7 @@ theorem continuous_at_dslope_of_ne (h : b ≠ a) : ContinuousAt (dslope f a) b �
 
 theorem continuous_on_dslope (h : s ∈ 𝓝 a) : ContinuousOn (dslope f a) s ↔ ContinuousOn f s ∧ DifferentiableAt 𝕜 f a :=
   by
-  refine' ⟨fun hc => ⟨hc.of_dslope, continuous_at_dslope_same.1 <| hc.continuous_at h⟩, _⟩
+  refine' ⟨fun hc => ⟨hc.of_dslope, continuous_at_dslope_same.1 <| hc.ContinuousAt h⟩, _⟩
   rintro ⟨hc, hd⟩ x hx
   rcases eq_or_ne x a with (rfl | hne)
   exacts[(continuous_at_dslope_same.2 hd).ContinuousWithinAt, (continuous_within_at_dslope_of_ne hne).2 (hc x hx)]
@@ -93,7 +93,7 @@ theorem DifferentiableWithinAt.of_dslope (h : DifferentiableWithinAt 𝕜 (dslop
     ((differentiable_within_at_id.sub_const a).smul h).AddConst (f a)
 
 theorem DifferentiableAt.of_dslope (h : DifferentiableAt 𝕜 (dslope f a) b) : DifferentiableAt 𝕜 f b :=
-  differentiable_within_at_univ.1 h.differentiable_within_at.of_dslope
+  differentiable_within_at_univ.1 h.DifferentiableWithinAt.of_dslope
 
 theorem DifferentiableOn.of_dslope (h : DifferentiableOn 𝕜 (dslope f a) s) : DifferentiableOn 𝕜 f s := fun x hx =>
   (h x hx).of_dslope

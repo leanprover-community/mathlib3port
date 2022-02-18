@@ -34,7 +34,7 @@ universe v u₁ u₂
 
 section Induced
 
-variable {C : Type u₁} (D : Type u₂) [category.{v} D]
+variable {C : Type u₁} (D : Type u₂) [Category.{v} D]
 
 variable (F : C → D)
 
@@ -50,10 +50,10 @@ def induced_category : Type u₁ :=
 
 variable {D}
 
-instance induced_category.has_coe_to_sort {α : Sort _} [CoeSort D α] : CoeSort (induced_category D F) α :=
+instance induced_category.has_coe_to_sort {α : Sort _} [CoeSort D α] : CoeSort (InducedCategory D F) α :=
   ⟨fun c => ↥F c⟩
 
-instance induced_category.category : category.{v} (induced_category D F) where
+instance induced_category.category : Category.{v} (InducedCategory D F) where
   Hom := fun X Y => F X ⟶ F Y
   id := fun X => 𝟙 (F X)
   comp := fun _ _ _ f g => f ≫ g
@@ -62,21 +62,21 @@ instance induced_category.category : category.{v} (induced_category D F) where
 forgetting the extra data.
 -/
 @[simps]
-def induced_functor : induced_category D F ⥤ D where
+def induced_functor : InducedCategory D F ⥤ D where
   obj := F
   map := fun x y f => f
 
-instance induced_category.full : full (induced_functor F) where
+instance induced_category.full : Full (inducedFunctor F) where
   Preimage := fun x y f => f
 
-instance induced_category.faithful : faithful (induced_functor F) :=
+instance induced_category.faithful : Faithful (inducedFunctor F) :=
   {  }
 
 end Induced
 
 section FullSubcategory
 
-variable {C : Type u₂} [category.{v} C]
+variable {C : Type u₂} [Category.{v} C]
 
 variable (Z : C → Prop)
 
@@ -84,28 +84,28 @@ variable (Z : C → Prop)
 
 See https://stacks.math.columbia.edu/tag/001D. We do not define 'strictly full' subcategories.
 -/
-instance full_subcategory : category.{v} { X : C // Z X } :=
-  induced_category.category Subtype.val
+instance full_subcategory : Category.{v} { X : C // Z X } :=
+  InducedCategory.category Subtype.val
 
 /-- The forgetful functor from a full subcategory into the original category
 ("forgetting" the condition).
 -/
 def full_subcategory_inclusion : { X : C // Z X } ⥤ C :=
-  induced_functor Subtype.val
+  inducedFunctor Subtype.val
 
 @[simp]
-theorem full_subcategory_inclusion.obj {X} : (full_subcategory_inclusion Z).obj X = X.val :=
+theorem full_subcategory_inclusion.obj {X} : (fullSubcategoryInclusion Z).obj X = X.val :=
   rfl
 
 @[simp]
-theorem full_subcategory_inclusion.map {X Y} {f : X ⟶ Y} : (full_subcategory_inclusion Z).map f = f :=
+theorem full_subcategory_inclusion.map {X Y} {f : X ⟶ Y} : (fullSubcategoryInclusion Z).map f = f :=
   rfl
 
-instance full_subcategory.full : full (full_subcategory_inclusion Z) :=
-  induced_category.full Subtype.val
+instance full_subcategory.full : Full (fullSubcategoryInclusion Z) :=
+  InducedCategory.full Subtype.val
 
-instance full_subcategory.faithful : faithful (full_subcategory_inclusion Z) :=
-  induced_category.faithful Subtype.val
+instance full_subcategory.faithful : Faithful (fullSubcategoryInclusion Z) :=
+  InducedCategory.faithful Subtype.val
 
 end FullSubcategory
 

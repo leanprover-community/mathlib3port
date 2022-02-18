@@ -38,7 +38,7 @@ def argmin (f : α → β) (l : List α) :=
 
 @[simp]
 theorem argmax_two_self (f : α → β) (a : α) : argmax₂ f (some a) a = a :=
-  if_pos (le_reflₓ _)
+  if_pos le_rfl
 
 @[simp]
 theorem argmax_nil (f : α → β) : argmax f [] = none :=
@@ -71,7 +71,7 @@ theorem foldl_argmax₂_eq_none {f : α → β} {l : List α} {o : Option α} :
             simp
 
 private theorem le_of_foldl_argmax₂ {f : α → β} {l} :
-    ∀ {a m : α} {o : Option α}, a ∈ l → m ∈ foldl (argmax₂ f) o l → f a ≤ f m :=
+    ∀ {a m : α} {o : Option α}, a ∈ l → m ∈ foldlₓ (argmax₂ f) o l → f a ≤ f m :=
   List.reverseRecOn l (fun _ _ _ h => absurd h <| not_mem_nil _)
     (by
       intro tl _ ih _ _ _ h ho
@@ -91,7 +91,7 @@ private theorem le_of_foldl_argmax₂ {f : α → β} {l} :
       · split_ifs  at ho <;> simp_all
         )
 
-private theorem foldl_argmax₂_mem (f : α → β) l : ∀ a m : α, m ∈ foldl (argmax₂ f) (some a) l → m ∈ a :: l :=
+private theorem foldl_argmax₂_mem (f : α → β) l : ∀ a m : α, m ∈ foldlₓ (argmax₂ f) (some a) l → m ∈ a :: l :=
   List.reverseRecOn l
     (by
       simp [eq_comm])
@@ -185,7 +185,7 @@ theorem argmin_cons (f : α → β) (a : α) (l : List α) :
   @argmax_cons _ (OrderDual β) _ _ _ _
 
 theorem index_of_argmax [DecidableEq α] {f : α → β} :
-    ∀ {l : List α} {m : α}, m ∈ argmax f l → ∀ {a}, a ∈ l → f m ≤ f a → l.index_of m ≤ l.index_of a
+    ∀ {l : List α} {m : α}, m ∈ argmax f l → ∀ {a}, a ∈ l → f m ≤ f a → l.indexOf m ≤ l.indexOf a
   | [], m, _, _, _, _ => by
     simp
   | hd :: tl, m, hm, a, ha, ham => by
@@ -217,11 +217,11 @@ theorem index_of_argmax [DecidableEq α] {f : α → β} :
       
 
 theorem index_of_argmin [DecidableEq α] {f : α → β} :
-    ∀ {l : List α} {m : α}, m ∈ argmin f l → ∀ {a}, a ∈ l → f a ≤ f m → l.index_of m ≤ l.index_of a :=
+    ∀ {l : List α} {m : α}, m ∈ argmin f l → ∀ {a}, a ∈ l → f a ≤ f m → l.indexOf m ≤ l.indexOf a :=
   @index_of_argmax _ (OrderDual β) _ _ _
 
 theorem mem_argmax_iff [DecidableEq α] {f : α → β} {m : α} {l : List α} :
-    m ∈ argmax f l ↔ m ∈ l ∧ (∀, ∀ a ∈ l, ∀, f a ≤ f m) ∧ ∀, ∀ a ∈ l, ∀, f m ≤ f a → l.index_of m ≤ l.index_of a :=
+    m ∈ argmax f l ↔ m ∈ l ∧ (∀, ∀ a ∈ l, ∀, f a ≤ f m) ∧ ∀, ∀ a ∈ l, ∀, f m ≤ f a → l.indexOf m ≤ l.indexOf a :=
   ⟨fun hm => ⟨argmax_mem hm, fun a ha => le_argmax_of_mem ha hm, fun _ => index_of_argmax hm⟩, by
     rintro ⟨hml, ham, hma⟩
     cases' harg : argmax f l with n
@@ -234,15 +234,15 @@ theorem mem_argmax_iff [DecidableEq α] {f : α → β} {m : α} {l : List α} :
       ⟩
 
 theorem argmax_eq_some_iff [DecidableEq α] {f : α → β} {m : α} {l : List α} :
-    argmax f l = some m ↔ m ∈ l ∧ (∀, ∀ a ∈ l, ∀, f a ≤ f m) ∧ ∀, ∀ a ∈ l, ∀, f m ≤ f a → l.index_of m ≤ l.index_of a :=
+    argmax f l = some m ↔ m ∈ l ∧ (∀, ∀ a ∈ l, ∀, f a ≤ f m) ∧ ∀, ∀ a ∈ l, ∀, f m ≤ f a → l.indexOf m ≤ l.indexOf a :=
   mem_argmax_iff
 
 theorem mem_argmin_iff [DecidableEq α] {f : α → β} {m : α} {l : List α} :
-    m ∈ argmin f l ↔ m ∈ l ∧ (∀, ∀ a ∈ l, ∀, f m ≤ f a) ∧ ∀, ∀ a ∈ l, ∀, f a ≤ f m → l.index_of m ≤ l.index_of a :=
+    m ∈ argmin f l ↔ m ∈ l ∧ (∀, ∀ a ∈ l, ∀, f m ≤ f a) ∧ ∀, ∀ a ∈ l, ∀, f a ≤ f m → l.indexOf m ≤ l.indexOf a :=
   @mem_argmax_iff _ (OrderDual β) _ _ _ _ _
 
 theorem argmin_eq_some_iff [DecidableEq α] {f : α → β} {m : α} {l : List α} :
-    argmin f l = some m ↔ m ∈ l ∧ (∀, ∀ a ∈ l, ∀, f m ≤ f a) ∧ ∀, ∀ a ∈ l, ∀, f a ≤ f m → l.index_of m ≤ l.index_of a :=
+    argmin f l = some m ↔ m ∈ l ∧ (∀, ∀ a ∈ l, ∀, f m ≤ f a) ∧ ∀, ∀ a ∈ l, ∀, f a ≤ f m → l.indexOf m ≤ l.indexOf a :=
   mem_argmin_iff
 
 variable [LinearOrderₓ α]

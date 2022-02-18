@@ -2,11 +2,17 @@ import Mathbin.Algebra.QuadraticDiscriminant
 import Mathbin.Analysis.Complex.Polynomial
 import Mathbin.FieldTheory.IsAlgClosed.Basic
 import Mathbin.Analysis.SpecialFunctions.Trigonometric.Basic
+import Mathbin.Analysis.Convex.SpecificFunctions
 
 /-!
 # Complex trigonometric functions
 
 Basic facts and derivatives for the complex trigonometric functions.
+
+Several facts about the real trigonometric functions have the proofs deferred here, rather than
+`analysis.special_functions.trigonometric.basic`,
+as they are most easily proved by appealing to the corresponding fact for complex trigonometric
+functions, or require additional imports which are not available in that file.
 -/
 
 
@@ -167,7 +173,7 @@ theorem cos_surjective : Function.Surjective cos := by
   ring
 
 @[simp]
-theorem range_cos : range cos = Set.Univ :=
+theorem range_cos : Range cos = Set.Univ :=
   cos_surjective.range_eq
 
 theorem sin_surjective : Function.Surjective sin := by
@@ -176,7 +182,7 @@ theorem sin_surjective : Function.Surjective sin := by
   exact ⟨z + π / 2, sin_add_pi_div_two z⟩
 
 @[simp]
-theorem range_sin : range sin = Set.Univ :=
+theorem range_sin : Range sin = Set.Univ :=
   sin_surjective.range_eq
 
 end Complex
@@ -196,6 +202,34 @@ theorem cos_eq_cos_iff {x y : ℝ} : cos x = cos y ↔ ∃ k : ℤ, y = 2 * k * 
 
 theorem sin_eq_sin_iff {x y : ℝ} : sin x = sin y ↔ ∃ k : ℤ, y = 2 * k * π + x ∨ y = (2 * k + 1) * π - x := by
   exact_mod_cast @Complex.sin_eq_sin_iff x y
+
+theorem lt_sin_mul {x : ℝ} (hx : 0 < x) (hx' : x < 1) : x < sin (π / 2 * x) := by
+  simpa [mul_comm x] using
+    strict_concave_on_sin_Icc.2 ⟨le_rfl, pi_pos.le⟩ ⟨pi_div_two_pos.le, half_le_self pi_pos.le⟩ pi_div_two_pos.ne
+      (sub_pos.2 hx') hx
+
+theorem le_sin_mul {x : ℝ} (hx : 0 ≤ x) (hx' : x ≤ 1) : x ≤ sin (π / 2 * x) := by
+  simpa [mul_comm x] using
+    strict_concave_on_sin_Icc.concave_on.2 ⟨le_rfl, pi_pos.le⟩ ⟨pi_div_two_pos.le, half_le_self pi_pos.le⟩
+      (sub_nonneg.2 hx') hx
+
+theorem mul_lt_sin {x : ℝ} (hx : 0 < x) (hx' : x < π / 2) : 2 / π * x < sin x := by
+  rw [← inv_div]
+  simpa [pi_div_two_pos.ne', mul_nonneg, inv_nonneg] using @lt_sin_mul ((π / 2)⁻¹ * x) _ _
+  · exact mul_pos (inv_pos.2 pi_div_two_pos) hx
+    
+  · rwa [← div_eq_inv_mul, div_lt_one pi_div_two_pos]
+    
+
+/-- In the range `[0, π / 2]`, we have a linear lower bound on `sin`. This inequality forms one half
+of Jordan's inequality, the other half is `real.sin_lt` -/
+theorem mul_le_sin {x : ℝ} (hx : 0 ≤ x) (hx' : x ≤ π / 2) : 2 / π * x ≤ sin x := by
+  rw [← inv_div]
+  simpa [pi_div_two_pos.ne', mul_nonneg, inv_nonneg] using @le_sin_mul ((π / 2)⁻¹ * x) _ _
+  · exact mul_nonneg (inv_nonneg.2 pi_div_two_pos.le) hx
+    
+  · rwa [← div_eq_inv_mul, div_le_one pi_div_two_pos]
+    
 
 end Real
 

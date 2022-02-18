@@ -70,7 +70,7 @@ namespace ModuleCat
 instance : CoeSort (ModuleCat.{v} R) (Type v) :=
   ⟨ModuleCat.Carrier⟩
 
-instance Module_category : category (ModuleCat.{v} R) where
+instance Module_category : Category (ModuleCat.{v} R) where
   Hom := fun M N => M →ₗ[R] N
   id := fun M => 1
   comp := fun A B C f g => g.comp f
@@ -78,11 +78,11 @@ instance Module_category : category (ModuleCat.{v} R) where
   comp_id' := fun X Y f => LinearMap.comp_id _
   assoc' := fun W X Y Z f g h => LinearMap.comp_assoc _ _ _
 
-instance Module_concrete_category : concrete_category.{v} (ModuleCat.{v} R) where
+instance Module_concrete_category : ConcreteCategory.{v} (ModuleCat.{v} R) where
   forget := { obj := fun R => R, map := fun R S f => (f : R → S) }
   forget_faithful := {  }
 
-instance has_forget_to_AddCommGroup : has_forget₂ (ModuleCat R) AddCommGroupₓₓ where
+instance has_forget_to_AddCommGroup : HasForget₂ (ModuleCat R) AddCommGroupₓₓ where
   forget₂ := { obj := fun M => AddCommGroupₓₓ.of M, map := fun M₁ M₂ f => LinearMap.toAddMonoidHom f }
 
 instance (M N : ModuleCat R) : AddMonoidHomClass (M ⟶ N) M N :=
@@ -91,6 +91,20 @@ instance (M N : ModuleCat R) : AddMonoidHomClass (M ⟶ N) M N :=
 /-- The object in the category of R-modules associated to an R-module -/
 def of (X : Type v) [AddCommGroupₓ X] [Module R X] : ModuleCat R :=
   ⟨X⟩
+
+@[simp]
+theorem forget₂_obj (X : ModuleCat R) : (forget₂ (ModuleCat R) AddCommGroupₓₓ).obj X = AddCommGroupₓₓ.of X :=
+  rfl
+
+@[simp]
+theorem forget₂_obj_Module_of (X : Type v) [AddCommGroupₓ X] [Module R X] :
+    (forget₂ (ModuleCat R) AddCommGroupₓₓ).obj (of R X) = AddCommGroupₓₓ.of X :=
+  rfl
+
+@[simp]
+theorem forget₂_map (X Y : ModuleCat R) (f : X ⟶ Y) :
+    (forget₂ (ModuleCat R) AddCommGroupₓₓ).map f = LinearMap.toAddMonoidHom f :=
+  rfl
 
 /-- Typecheck a `linear_map` as a morphism in `Module R`. -/
 def of_hom {R : Type u} [Ringₓ R] {X Y : Type u} [AddCommGroupₓ X] [Module R X] [AddCommGroupₓ Y] [Module R Y]
@@ -120,7 +134,7 @@ instance : Subsingleton (of R PUnit) := by
   rw [coe_of R PUnit]
   infer_instance
 
-instance : has_zero_object (ModuleCat.{v} R) where
+instance : HasZeroObject (ModuleCat.{v} R) where
   zero := 0
   uniqueTo := fun X =>
     { default := (0 : PUnit →ₗ[R] X),
@@ -240,7 +254,7 @@ namespace CategoryTheory.Iso
 /-- Build a `linear_equiv` from an isomorphism in the category `Module R`. -/
 @[simps]
 def to_linear_equiv {X Y : ModuleCat R} (i : X ≅ Y) : X ≃ₗ[R] Y where
-  toFun := i.hom
+  toFun := i.Hom
   invFun := i.inv
   left_inv := by
     tidy
@@ -258,12 +272,12 @@ in `Module` -/
 @[simps]
 def linearEquivIsoModuleIso {X Y : Type u} [AddCommGroupₓ X] [AddCommGroupₓ Y] [Module R X] [Module R Y] :
     (X ≃ₗ[R] Y) ≅ ModuleCat.of R X ≅ ModuleCat.of R Y where
-  Hom := fun e => e.to_Module_iso
-  inv := fun i => i.to_linear_equiv
+  Hom := fun e => e.toModuleIso
+  inv := fun i => i.toLinearEquiv
 
 namespace ModuleCat
 
-instance : preadditive (ModuleCat.{v} R) where
+instance : Preadditive (ModuleCat.{v} R) where
   add_comp' := fun P Q R f f' g =>
     show (f + f') ≫ g = f ≫ g + f' ≫ g by
       ext
@@ -277,7 +291,7 @@ section
 
 variable {S : Type u} [CommRingₓ S]
 
-instance : linear S (ModuleCat.{v} S) where
+instance : Linear S (ModuleCat.{v} S) where
   homModule := fun X Y => LinearMap.module
   smul_comp' := by
     intros

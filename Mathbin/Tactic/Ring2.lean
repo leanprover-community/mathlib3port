@@ -22,7 +22,7 @@ protected unsafe def reflect' (u : level) (α : expr) : Tree expr → expr
 /-- Returns an element indexed by `n`, or zero if `n` isn't a valid index.
 See `tree.get`. -/
 protected def get_or_zero {α} [Zero α] (t : Tree α) (n : PosNum) : α :=
-  t.get_or_else n 0
+  t.getOrElse n 0
 
 end Tree
 
@@ -41,14 +41,14 @@ inductive csring_expr
 
 namespace CsringExpr
 
-instance : Inhabited csring_expr :=
+instance : Inhabited CsringExpr :=
   ⟨const 0⟩
 
 /-- Evaluates a reflected `csring_expr` into an element of the
 original `comm_semiring` type `α`, retrieving opaque elements
 (atoms) from the tree `t`. -/
-def eval {α} [CommSemiringₓ α] (t : Tree α) : csring_expr → α
-  | atom n => t.get_or_zero n
+def eval {α} [CommSemiringₓ α] (t : Tree α) : CsringExpr → α
+  | atom n => t.getOrZero n
   | const n => n
   | add x y => eval x + eval y
   | mul x y => eval x * eval y
@@ -70,38 +70,38 @@ namespace HornerExpr
 
 /-- True iff the `horner_expr` argument is a valid `csring_expr`.
 For that to be the case, all its constants must be non-negative. -/
-def is_cs : horner_expr → Prop
-  | const n => ∃ m : Num, n = m.to_znum
+def is_cs : HornerExpr → Prop
+  | const n => ∃ m : Num, n = m.toZnum
   | horner a x n b => is_cs a ∧ is_cs b
 
-instance : Zero horner_expr :=
+instance : Zero HornerExpr :=
   ⟨const 0⟩
 
-instance : One horner_expr :=
+instance : One HornerExpr :=
   ⟨const 1⟩
 
-instance : Inhabited horner_expr :=
+instance : Inhabited HornerExpr :=
   ⟨0⟩
 
 /-- Represent a `csring_expr.atom` in Horner form. -/
-def atom (n : PosNum) : horner_expr :=
+def atom (n : PosNum) : HornerExpr :=
   horner 1 n 1 0
 
-def toString : horner_expr → Stringₓ
-  | const n => _root_.repr n
-  | horner a x n b => "(" ++ toString a ++ ") * x" ++ _root_.repr x ++ "^" ++ _root_.repr n ++ " + " ++ toString b
+def toString : HornerExpr → Stringₓ
+  | const n => reprₓ n
+  | horner a x n b => "(" ++ toString a ++ ") * x" ++ reprₓ x ++ "^" ++ reprₓ n ++ " + " ++ toString b
 
-instance : HasToString horner_expr :=
+instance : HasToString HornerExpr :=
   ⟨toString⟩
 
 /-- Alternative constructor for (horner a x n b) which maintains canonical
 form by simplifying special cases of `a`. -/
-def horner' (a : horner_expr) (x : PosNum) (n : Num) (b : horner_expr) : horner_expr :=
+def horner' (a : HornerExpr) (x : PosNum) (n : Num) (b : HornerExpr) : HornerExpr :=
   match a with
   | const q => if q = 0 then b else horner a x n b
   | horner a₁ x₁ n₁ b₁ => if x₁ = x ∧ b₁ = 0 then horner a₁ x (n₁ + n) b else horner a x n b
 
-def add_const (k : Znum) (e : horner_expr) : horner_expr :=
+def add_const (k : Znum) (e : HornerExpr) : HornerExpr :=
   if k = 0 then e
   else by
     induction' e with n a x n b A B
@@ -110,9 +110,9 @@ def add_const (k : Znum) (e : horner_expr) : horner_expr :=
     · exact horner a x n B
       
 
-def add_aux (a₁ : horner_expr) (A₁ : horner_expr → horner_expr) (x₁ : PosNum) :
-    horner_expr → Num → horner_expr → (horner_expr → horner_expr) → horner_expr
-  | const n₂, n₁, b₁, B₁ => add_const n₂ (horner a₁ x₁ n₁ b₁)
+def add_aux (a₁ : HornerExpr) (A₁ : HornerExpr → HornerExpr) (x₁ : PosNum) :
+    HornerExpr → Num → HornerExpr → (HornerExpr → HornerExpr) → HornerExpr
+  | const n₂, n₁, b₁, B₁ => addConst n₂ (horner a₁ x₁ n₁ b₁)
   | horner a₂ x₂ n₂ b₂, n₁, b₁, B₁ =>
     let e₂ := horner a₂ x₂ n₂ b₂
     match PosNum.cmp x₁ x₂ with
@@ -124,18 +124,18 @@ def add_aux (a₁ : horner_expr) (A₁ : horner_expr → horner_expr) (x₁ : Po
       | Znum.pos k => horner (add_aux a₂ k 0 id) x₁ n₂ (B₁ b₂)
       | Znum.neg k => horner (A₁ (horner a₂ x₁ k 0)) x₁ n₁ (B₁ b₂)
 
-def add : horner_expr → horner_expr → horner_expr
-  | const n₁, e₂ => add_const n₁ e₂
-  | horner a₁ x₁ n₁ b₁, e₂ => add_aux a₁ (add a₁) x₁ e₂ n₁ b₁ (add b₁)
+def add : HornerExpr → HornerExpr → HornerExpr
+  | const n₁, e₂ => addConst n₁ e₂
+  | horner a₁ x₁ n₁ b₁, e₂ => addAux a₁ (add a₁) x₁ e₂ n₁ b₁ (add b₁)
 
-def neg (e : horner_expr) : horner_expr := by
+def neg (e : HornerExpr) : HornerExpr := by
   induction' e with n a x n b A B
   · exact const (-n)
     
   · exact horner A x n B
     
 
-def mul_const (k : Znum) (e : horner_expr) : horner_expr :=
+def mul_const (k : Znum) (e : HornerExpr) : HornerExpr :=
   if k = 0 then 0
   else
     if k = 1 then e
@@ -146,8 +146,8 @@ def mul_const (k : Znum) (e : horner_expr) : horner_expr :=
       · exact horner A x n B
         
 
-def mul_aux a₁ x₁ n₁ b₁ (A₁ B₁ : horner_expr → horner_expr) : horner_expr → horner_expr
-  | const n₂ => mul_const n₂ (horner a₁ x₁ n₁ b₁)
+def mul_aux a₁ x₁ n₁ b₁ (A₁ B₁ : HornerExpr → HornerExpr) : HornerExpr → HornerExpr
+  | const n₂ => mulConst n₂ (horner a₁ x₁ n₁ b₁)
   | e₂@(horner a₂ x₂ n₂ b₂) =>
     match PosNum.cmp x₁ x₂ with
     | Ordering.lt => horner (A₁ e₂) x₁ n₁ (B₁ e₂)
@@ -156,20 +156,20 @@ def mul_aux a₁ x₁ n₁ b₁ (A₁ B₁ : horner_expr → horner_expr) : horn
       let haa := horner' (mul_aux a₂) x₁ n₂ 0
       if b₂ = 0 then haa else haa.add (horner (A₁ b₂) x₁ n₁ (B₁ b₂))
 
-def mul : horner_expr → horner_expr → horner_expr
-  | const n₁ => mul_const n₁
-  | horner a₁ x₁ n₁ b₁ => mul_aux a₁ x₁ n₁ b₁ (mul a₁) (mul b₁)
+def mul : HornerExpr → HornerExpr → HornerExpr
+  | const n₁ => mulConst n₁
+  | horner a₁ x₁ n₁ b₁ => mulAux a₁ x₁ n₁ b₁ (mul a₁) (mul b₁)
 
-instance : Add horner_expr :=
+instance : Add HornerExpr :=
   ⟨add⟩
 
-instance : Neg horner_expr :=
+instance : Neg HornerExpr :=
   ⟨neg⟩
 
-instance : Mul horner_expr :=
+instance : Mul HornerExpr :=
   ⟨mul⟩
 
-def pow (e : horner_expr) : Num → horner_expr
+def pow (e : HornerExpr) : Num → HornerExpr
   | 0 => 1
   | Num.pos p => by
     induction' p with p ep p ep
@@ -180,31 +180,31 @@ def pow (e : horner_expr) : Num → horner_expr
     · exact ep.mul ep
       
 
-def inv (e : horner_expr) : horner_expr :=
+def inv (e : HornerExpr) : HornerExpr :=
   0
 
 /-- Brings expressions into Horner normal form. -/
-def of_csexpr : csring_expr → horner_expr
+def of_csexpr : CsringExpr → HornerExpr
   | csring_expr.atom n => atom n
-  | csring_expr.const n => const n.to_znum
+  | csring_expr.const n => const n.toZnum
   | csring_expr.add x y => (of_csexpr x).add (of_csexpr y)
   | csring_expr.mul x y => (of_csexpr x).mul (of_csexpr y)
   | csring_expr.pow x n => (of_csexpr x).pow n
 
 /-- Evaluates a reflected `horner_expr` - see `csring_expr.eval`. -/
-def cseval {α} [CommSemiringₓ α] (t : Tree α) : horner_expr → α
+def cseval {α} [CommSemiringₓ α] (t : Tree α) : HornerExpr → α
   | const n => n.abs
-  | horner a x n b => Tactic.Ring.hornerₓ (cseval a) (t.get_or_zero x) n (cseval b)
+  | horner a x n b => Tactic.Ring.hornerₓ (cseval a) (t.getOrZero x) n (cseval b)
 
 theorem cseval_atom {α} [CommSemiringₓ α] (t : Tree α) (n : PosNum) :
-    (atom n).IsCs ∧ cseval t (atom n) = t.get_or_zero n :=
+    (atom n).IsCs ∧ cseval t (atom n) = t.getOrZero n :=
   ⟨⟨⟨1, rfl⟩, ⟨0, rfl⟩⟩, (Tactic.Ring.horner_atomₓ _).symm⟩
 
 -- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:377:22: warning: unsupported simp config option: iota_eqn
 -- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:377:22: warning: unsupported simp config option: iota_eqn
 -- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:377:22: warning: unsupported simp config option: iota_eqn
-theorem cseval_add_const {α} [CommSemiringₓ α] (t : Tree α) (k : Num) {e : horner_expr} (cs : e.is_cs) :
-    (add_const k.to_znum e).IsCs ∧ cseval t (add_const k.to_znum e) = k + cseval t e := by
+theorem cseval_add_const {α} [CommSemiringₓ α] (t : Tree α) (k : Num) {e : HornerExpr} (cs : e.IsCs) :
+    (addConst k.toZnum e).IsCs ∧ cseval t (addConst k.toZnum e) = k + cseval t e := by
   simp [add_const]
   cases k <;> simp [*]
   simp
@@ -226,9 +226,9 @@ theorem cseval_add_const {α} [CommSemiringₓ α] (t : Tree α) (k : Num) {e : 
 
 -- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:377:22: warning: unsupported simp config option: iota_eqn
 -- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:377:22: warning: unsupported simp config option: iota_eqn
-theorem cseval_horner' {α} [CommSemiringₓ α] (t : Tree α) a x n b (h₁ : is_cs a) (h₂ : is_cs b) :
+theorem cseval_horner' {α} [CommSemiringₓ α] (t : Tree α) a x n b (h₁ : IsCs a) (h₂ : IsCs b) :
     (horner' a x n b).IsCs ∧
-      cseval t (horner' a x n b) = Tactic.Ring.hornerₓ (cseval t a) (t.get_or_zero x) n (cseval t b) :=
+      cseval t (horner' a x n b) = Tactic.Ring.hornerₓ (cseval t a) (t.getOrZero x) n (cseval t b) :=
   by
   cases' a with n₁ a₁ x₁ n₁ b₁ <;> simp [horner'] <;> split_ifs
   · simp [*, Tactic.Ring.hornerₓ]
@@ -249,7 +249,7 @@ theorem cseval_horner' {α} [CommSemiringₓ α] (t : Tree α) a x n b (h₁ : i
 -- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:377:22: warning: unsupported simp config option: iota_eqn
 -- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:377:22: warning: unsupported simp config option: iota_eqn
 -- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:377:22: warning: unsupported simp config option: iota_eqn
-theorem cseval_add {α} [CommSemiringₓ α] (t : Tree α) {e₁ e₂ : horner_expr} (cs₁ : e₁.is_cs) (cs₂ : e₂.is_cs) :
+theorem cseval_add {α} [CommSemiringₓ α] (t : Tree α) {e₁ e₂ : HornerExpr} (cs₁ : e₁.IsCs) (cs₂ : e₂.IsCs) :
     (add e₁ e₂).IsCs ∧ cseval t (add e₁ e₂) = cseval t e₁ + cseval t e₂ := by
   induction' e₁ with n₁ a₁ x₁ n₁ b₁ A₁ B₁ generalizing e₂ <;> simp
   · rcases cs₁ with ⟨n₁, rfl⟩
@@ -325,8 +325,8 @@ theorem cseval_add {α} [CommSemiringₓ α] (t : Tree α) {e₁ e₂ : horner_e
 
 -- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:377:22: warning: unsupported simp config option: iota_eqn
 -- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:377:22: warning: unsupported simp config option: iota_eqn
-theorem cseval_mul_const {α} [CommSemiringₓ α] (t : Tree α) (k : Num) {e : horner_expr} (cs : e.is_cs) :
-    (mul_const k.to_znum e).IsCs ∧ cseval t (mul_const k.to_znum e) = cseval t e * k := by
+theorem cseval_mul_const {α} [CommSemiringₓ α] (t : Tree α) (k : Num) {e : HornerExpr} (cs : e.IsCs) :
+    (mulConst k.toZnum e).IsCs ∧ cseval t (mulConst k.toZnum e) = cseval t e * k := by
   simp [mul_const]
   split_ifs with h h
   · cases (Num.to_znum_inj.1 h : k = 0)
@@ -356,7 +356,7 @@ theorem cseval_mul_const {α} [CommSemiringₓ α] (t : Tree α) (k : Num) {e : 
 -- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:377:22: warning: unsupported simp config option: iota_eqn
 -- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:377:22: warning: unsupported simp config option: iota_eqn
 -- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:377:22: warning: unsupported simp config option: iota_eqn
-theorem cseval_mul {α} [CommSemiringₓ α] (t : Tree α) {e₁ e₂ : horner_expr} (cs₁ : e₁.is_cs) (cs₂ : e₂.is_cs) :
+theorem cseval_mul {α} [CommSemiringₓ α] (t : Tree α) {e₁ e₂ : HornerExpr} (cs₁ : e₁.IsCs) (cs₂ : e₂.IsCs) :
     (mul e₁ e₂).IsCs ∧ cseval t (mul e₁ e₂) = cseval t e₁ * cseval t e₂ := by
   induction' e₁ with n₁ a₁ x₁ n₁ b₁ A₁ B₁ generalizing e₂ <;> simp
   · rcases cs₁ with ⟨n₁, rfl⟩
@@ -406,7 +406,7 @@ theorem cseval_mul {α} [CommSemiringₓ α] (t : Tree α) {e₁ e₂ : horner_e
       
     
 
-theorem cseval_pow {α} [CommSemiringₓ α] (t : Tree α) {x : horner_expr} (cs : x.is_cs) :
+theorem cseval_pow {α} [CommSemiringₓ α] (t : Tree α) {x : HornerExpr} (cs : x.IsCs) :
     ∀ n : Num, (pow x n).IsCs ∧ cseval t (pow x n) = cseval t x ^ (n : ℕ)
   | 0 => ⟨⟨1, rfl⟩, (pow_zeroₓ _).symm⟩
   | Num.pos p => by
@@ -431,7 +431,7 @@ theorem cseval_pow {α} [CommSemiringₓ α] (t : Tree α) {x : horner_expr} (cs
 the Horner form of `r` is a valid csring expression, and under `t`,
 the Horner form evaluates to the same thing as `r`. -/
 theorem cseval_of_csexpr {α} [CommSemiringₓ α] (t : Tree α) :
-    ∀ r : csring_expr, (of_csexpr r).IsCs ∧ cseval t (of_csexpr r) = r.eval t
+    ∀ r : CsringExpr, (ofCsexpr r).IsCs ∧ cseval t (ofCsexpr r) = r.eval t
   | csring_expr.atom n => cseval_atom _ _
   | csring_expr.const n =>
     ⟨⟨n, rfl⟩, by
@@ -460,8 +460,8 @@ end HornerExpr
 `r₁` and `r₂` plus a storage `t` of atoms, if both expressions go to the
 same Horner normal form, then the original non-reflected expressions are
 equal. `H` follows from kernel reduction and is therefore `rfl`. -/
-theorem correctness {α} [CommSemiringₓ α] (t : Tree α) (r₁ r₂ : csring_expr)
-    (H : horner_expr.of_csexpr r₁ = horner_expr.of_csexpr r₂) : r₁.eval t = r₂.eval t := by
+theorem correctness {α} [CommSemiringₓ α] (t : Tree α) (r₁ r₂ : CsringExpr)
+    (H : HornerExpr.ofCsexpr r₁ = HornerExpr.ofCsexpr r₂) : r₁.eval t = r₂.eval t := by
   repeat'
       rw [← (horner_expr.cseval_of_csexpr t _).2] <;>
     rw [H]
@@ -481,27 +481,27 @@ unsafe def reflect_expr : expr → csring_expr × Dlist expr
   | e@(quote.1 ((%%ₓe₁) ^ %%ₓe₂)) =>
     match reflect_expr e₁, expr.to_nat e₂ with
     | (r₁, l₁), some n₂ => (r₁.pow (Num.ofNat' n₂), l₁)
-    | (r₁, l₁), none => (csring_expr.atom 1, Dlist.singleton e)
+    | (r₁, l₁), none => (CsringExpr.atom 1, Dlist.singleton e)
   | e =>
     match expr.to_nat e with
-    | some n => (csring_expr.const (Num.ofNat' n), Dlist.empty)
-    | none => (csring_expr.atom 1, Dlist.singleton e)
+    | some n => (CsringExpr.const (Num.ofNat' n), Dlist.empty)
+    | none => (CsringExpr.atom 1, Dlist.singleton e)
 
 /-- In the output of `reflect_expr`, `atom`s are initialized with incorrect indices.
 The indices cannot be computed until the whole tree is built, so another pass over
 the expressions is needed - this is what `replace` does. The computation (expressed
 in the state monad) fixes up `atom`s to match their positions in the atom tree.
 The initial state is a list of all atom occurrences in the goal, left-to-right. -/
-unsafe def csring_expr.replace (t : Tree expr) : csring_expr → StateTₓ (List expr) Option csring_expr
+unsafe def csring_expr.replace (t : Tree expr) : CsringExpr → StateTₓ (List expr) Option CsringExpr
   | csring_expr.atom _ => do
     let e ← get
-    let p ← monad_lift (t.index_of (· < ·) e.head)
-    put e.tail
+    let p ← monadLift (t.indexOf (· < ·) e.head)
+    put e
     pure (csring_expr.atom p)
-  | csring_expr.const n => pure (csring_expr.const n)
+  | csring_expr.const n => pure (CsringExpr.const n)
   | csring_expr.add x y => csring_expr.add <$> x.replace <*> y.replace
   | csring_expr.mul x y => csring_expr.mul <$> x.replace <*> y.replace
-  | csring_expr.pow x n => (fun x => csring_expr.pow x n) <$> x.replace
+  | csring_expr.pow x n => (fun x => CsringExpr.pow x n) <$> x.replace
 
 end Tactic.Ring2
 
@@ -515,7 +515,7 @@ open Tactic.Ring2
 
 local postfix:9001 "?" => optionalₓ
 
--- ././Mathport/Syntax/Translate/Basic.lean:794:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
 /-- `ring2` solves equations in the language of rings.
 
 It supports only the commutative semiring operations, i.e. it does not normalize subtraction or
@@ -541,8 +541,8 @@ unsafe def ring2 : tactic Unit := do
   let e ←
     to_expr (pquote.1 (correctness (%%ₓse) (%%ₓer₁) (%%ₓer₂) rfl)) <|>
         fail
-          ("ring2 tactic failed, cannot show equality:\n" ++ toString (horner_expr.of_csexpr r₁) ++ "\n  =?=\n" ++
-            toString (horner_expr.of_csexpr r₂))
+          ("ring2 tactic failed, cannot show equality:\n" ++ toString (HornerExpr.ofCsexpr r₁) ++ "\n  =?=\n" ++
+            toString (HornerExpr.ofCsexpr r₂))
   tactic.exact e
 
 add_tactic_doc

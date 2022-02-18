@@ -44,12 +44,12 @@ inductive dir
   deriving DecidableEq, Inhabited
 
 /-- String representation of `dir`. -/
-def dir.to_string : dir → Stringₓ
+def dir.to_string : Dir → Stringₓ
   | dir.F => "F"
   | dir.A => "A"
 
-instance : HasToString dir :=
-  ⟨dir.to_string⟩
+instance : HasToString Dir :=
+  ⟨Dir.toString⟩
 
 open Tactic
 
@@ -61,7 +61,7 @@ unsafe def fill : expr_lens → expr → expr
 
 /-- Zoom into `e : expr` given the context of an `expr_lens`, popping out an `expr` and a new
 zoomed `expr_lens`, if this is possible (`e` has to be an application). -/
-unsafe def zoom : expr_lens → List dir → expr → Option (expr_lens × expr)
+unsafe def zoom : expr_lens → List Dir → expr → Option (expr_lens × expr)
   | l, [], e => (l, e)
   | l, dir.F :: rest, expr.app f x => (expr_lens.app_arg l x).zoom rest f
   | l, dir.A :: rest, expr.app f x => (expr_lens.app_fun l f).zoom rest x
@@ -69,17 +69,17 @@ unsafe def zoom : expr_lens → List dir → expr → Option (expr_lens × expr)
 
 /-- Convert an `expr_lens` into a list of instructions needed to build it; repeatedly inspecting a
 function or its argument a finite number of times. -/
-unsafe def to_dirs : expr_lens → List dir
+unsafe def to_dirs : expr_lens → List Dir
   | expr_lens.entire => []
-  | expr_lens.app_fun l _ => l.to_dirs.concat dir.A
-  | expr_lens.app_arg l _ => l.to_dirs.concat dir.F
+  | expr_lens.app_fun l _ => l.to_dirs.concat Dir.A
+  | expr_lens.app_arg l _ => l.to_dirs.concat Dir.F
 
 /-- Sometimes `mk_congr_arg` fails, when the function is 'superficially dependent'.
 Try to `dsimp` the function first before building the `congr_arg` expression. -/
 unsafe def mk_congr_arg_using_dsimp (G W : expr) (u : List Name) : tactic expr := do
   let s ← simp_lemmas.mk_default
   let t ← infer_type G
-  let t' ← s.dsimplify u t { failIfUnchanged := ff }
+  let t' ← s.dsimplify u t { failIfUnchanged := false }
   to_expr (ppquote.1 (congr_argₓ (show %%ₓt' from %%ₓG) (%%ₓW)))
 
 private unsafe def trace_congr_error (f : expr) (x_eq : expr) : tactic Unit := do
@@ -101,7 +101,7 @@ unsafe def congr : expr_lens → expr → tactic expr
       try_core <| do
           mk_congr_arg f x_eq <|> mk_congr_arg_using_dsimp f x_eq [`has_coe_to_fun.F]
     match fx_eq with
-      | some fx_eq => l.congr fx_eq
+      | some fx_eq => l fx_eq
       | none => trace_congr_error f x_eq >> failed
   | app_arg l x, f_eq => mk_congr_fun f_eq x >>= l.congr
 

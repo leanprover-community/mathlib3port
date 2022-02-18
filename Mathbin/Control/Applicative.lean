@@ -33,9 +33,8 @@ theorem Applicativeₓ.pure_seq_eq_map' (f : α → β) : (· <*> ·) (pure f : 
 
 theorem Applicativeₓ.ext {F} :
     ∀ {A1 : Applicativeₓ F} {A2 : Applicativeₓ F} [@IsLawfulApplicative F A1] [@IsLawfulApplicative F A2] H1 :
-      ∀ {α : Type u} x : α, @Pure.pure _ A1.to_has_pure _ x = @Pure.pure _ A2.to_has_pure _ x H2 :
-      ∀ {α β : Type u} f : F (α → β) x : F α, @Seqₓ.seq _ A1.to_has_seq _ _ f x = @Seqₓ.seq _ A2.to_has_seq _ _ f x,
-      A1 = A2
+      ∀ {α : Type u} x : α, @Pure.pure _ A1.toHasPure _ x = @Pure.pure _ A2.toHasPure _ x H2 :
+      ∀ {α β : Type u} f : F (α → β) x : F α, @Seqₓ.seq _ A1.toHasSeq _ _ f x = @Seqₓ.seq _ A2.toHasSeq _ _ f x, A1 = A2
   | { toFunctor := F1, seq := s1, pure := p1, seqLeft := sl1, seqRight := sr1 },
     { toFunctor := F2, seq := s2, pure := p2, seqLeft := sl2, seqRight := sr2 }, L1, L2, H1, H2 => by
     have : @p1 = @p2 := by
@@ -81,34 +80,34 @@ variable [IsLawfulApplicative F] [IsLawfulApplicative G]
 
 variable {α β γ : Type v}
 
-theorem map_pure (f : α → β) (x : α) : (f <$> pure x : comp F G β) = pure (f x) :=
+theorem map_pure (f : α → β) (x : α) : (f <$> pure x : Comp F G β) = pure (f x) :=
   comp.ext <| by
     simp
 
-theorem seq_pure (f : comp F G (α → β)) (x : α) : f <*> pure x = (fun g : α → β => g x) <$> f :=
+theorem seq_pure (f : Comp F G (α → β)) (x : α) : f <*> pure x = (fun g : α → β => g x) <$> f :=
   comp.ext <| by
     simp' [· ∘ ·] with functor_norm
 
-theorem seq_assoc (x : comp F G α) (f : comp F G (α → β)) (g : comp F G (β → γ)) :
+theorem seq_assoc (x : Comp F G α) (f : Comp F G (α → β)) (g : Comp F G (β → γ)) :
     g <*> (f <*> x) = @Function.comp α β γ <$> g <*> f <*> x :=
   comp.ext <| by
     simp' [· ∘ ·] with functor_norm
 
-theorem pure_seq_eq_map (f : α → β) (x : comp F G α) : pure f <*> x = f <$> x :=
+theorem pure_seq_eq_map (f : α → β) (x : Comp F G α) : pure f <*> x = f <$> x :=
   comp.ext <| by
     simp' [Applicativeₓ.pure_seq_eq_map'] with functor_norm
 
-instance : IsLawfulApplicative (comp F G) where
-  pure_seq_eq_map := @comp.pure_seq_eq_map F G _ _ _ _
-  map_pure := @comp.map_pure F G _ _ _ _
-  seq_pure := @comp.seq_pure F G _ _ _ _
-  seq_assoc := @comp.seq_assoc F G _ _ _ _
+instance : IsLawfulApplicative (Comp F G) where
+  pure_seq_eq_map := @Comp.pure_seq_eq_map F G _ _ _ _
+  map_pure := @Comp.map_pure F G _ _ _ _
+  seq_pure := @Comp.seq_pure F G _ _ _ _
+  seq_assoc := @Comp.seq_assoc F G _ _ _ _
 
-theorem applicative_id_comp {F} [AF : Applicativeₓ F] [LF : IsLawfulApplicative F] : @comp.applicative id F _ _ = AF :=
-  @Applicativeₓ.ext F _ _ (@comp.is_lawful_applicative id F _ _ _ _) _ (fun α x => rfl) fun α β f x => rfl
+theorem applicative_id_comp {F} [AF : Applicativeₓ F] [LF : IsLawfulApplicative F] : @Comp.applicative id F _ _ = AF :=
+  @Applicativeₓ.ext F _ _ (@Comp.is_lawful_applicative id F _ _ _ _) _ (fun α x => rfl) fun α β f x => rfl
 
-theorem applicative_comp_id {F} [AF : Applicativeₓ F] [LF : IsLawfulApplicative F] : @comp.applicative F id _ _ = AF :=
-  @Applicativeₓ.ext F _ _ (@comp.is_lawful_applicative F id _ _ _ _) _ (fun α x => rfl) fun α β f x =>
+theorem applicative_comp_id {F} [AF : Applicativeₓ F] [LF : IsLawfulApplicative F] : @Comp.applicative F id _ _ = AF :=
+  @Applicativeₓ.ext F _ _ (@Comp.is_lawful_applicative F id _ _ _ _) _ (fun α x => rfl) fun α β f x =>
     show id <$> f <*> x = f <*> x by
       rw [id_map]
 
@@ -116,7 +115,7 @@ open IsCommApplicative
 
 -- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:377:22: warning: unsupported simp config option: iota_eqn
 instance {f : Type u → Type w} {g : Type v → Type u} [Applicativeₓ f] [Applicativeₓ g] [IsCommApplicative f]
-    [IsCommApplicative g] : IsCommApplicative (comp f g) := by
+    [IsCommApplicative g] : IsCommApplicative (Comp f g) := by
   refine' { @comp.is_lawful_applicative f g _ _ _ _ with .. }
   intros
   casesm* comp _ _ _
@@ -136,20 +135,20 @@ open Functor
 
 @[functor_norm]
 theorem Comp.seq_mk {α β : Type w} {f : Type u → Type v} {g : Type w → Type u} [Applicativeₓ f] [Applicativeₓ g]
-    (h : f (g (α → β))) (x : f (g α)) : comp.mk h <*> comp.mk x = comp.mk (Seqₓ.seq <$> h <*> x) :=
+    (h : f (g (α → β))) (x : f (g α)) : Comp.mk h <*> Comp.mk x = Comp.mk (Seqₓ.seq <$> h <*> x) :=
   rfl
 
-instance {α} [One α] [Mul α] : Applicativeₓ (const α) where
+instance {α} [One α] [Mul α] : Applicativeₓ (Const α) where
   pure := fun β x => (1 : α)
   seq := fun β γ f x => (f * x : α)
 
-instance {α} [Monoidₓ α] : IsLawfulApplicative (const α) := by
+instance {α} [Monoidₓ α] : IsLawfulApplicative (Const α) := by
   refine' { .. } <;> intros <;> simp [mul_assoc, · <$> ·, · <*> ·, pure]
 
-instance {α} [Zero α] [Add α] : Applicativeₓ (add_const α) where
+instance {α} [Zero α] [Add α] : Applicativeₓ (AddConst α) where
   pure := fun β x => (0 : α)
   seq := fun β γ f x => (f + x : α)
 
-instance {α} [AddMonoidₓ α] : IsLawfulApplicative (add_const α) := by
+instance {α} [AddMonoidₓ α] : IsLawfulApplicative (AddConst α) := by
   refine' { .. } <;> intros <;> simp [add_assocₓ, · <$> ·, · <*> ·, pure]
 

@@ -41,56 +41,56 @@ universe w v u
 open Category Iso
 
 -- ././Mathport/Syntax/Translate/Basic.lean:1151:29: unsupported: (notation) in structure
--- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr ◁ »
--- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr ◁ »
--- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr ◁ »
--- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr ◁ »
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr ◁ »
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr ◁ »
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr ◁ »
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr ◁ »
 -- ././Mathport/Syntax/Translate/Basic.lean:1151:29: unsupported: (notation) in structure
--- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr ▷ »
--- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr ▷ »
--- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr ▷ »
--- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr ▷ »
--- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr ◁ »
--- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr ▷ »
--- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr ▷ »
--- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr ◁ »
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr ▷ »
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr ▷ »
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr ▷ »
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr ▷ »
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr ◁ »
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr ▷ »
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr ▷ »
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr ◁ »
 -- ././Mathport/Syntax/Translate/Basic.lean:1151:29: unsupported: (notation) in structure
--- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr ▷ »
--- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr ▷ »
--- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `exprα_
--- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `exprα_
--- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr ▷ »
--- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr ▷ »
--- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr ◁ »
--- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `exprα_
--- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `exprα_
--- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr ◁ »
--- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr ▷ »
--- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr ◁ »
--- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `exprα_
--- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `exprα_
--- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr ◁ »
--- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr ◁ »
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr ▷ »
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr ▷ »
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `exprα_
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `exprα_
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr ▷ »
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr ▷ »
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr ◁ »
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `exprα_
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `exprα_
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr ◁ »
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr ▷ »
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr ◁ »
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `exprα_
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `exprα_
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr ◁ »
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr ◁ »
 -- ././Mathport/Syntax/Translate/Basic.lean:1151:29: unsupported: (notation) in structure
--- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr ◁ »
--- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«exprλ_»
--- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«exprλ_»
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr ◁ »
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«exprλ_»
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«exprλ_»
 -- ././Mathport/Syntax/Translate/Basic.lean:1151:29: unsupported: (notation) in structure
--- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr ▷ »
--- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `exprρ_
--- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `exprρ_
--- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr ▷ »
--- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `exprα_
--- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `exprα_
--- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr ◁ »
--- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `exprα_
--- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `exprα_
--- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `exprα_
--- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `exprα_
--- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr ◁ »
--- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«exprλ_»
--- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr ▷ »
--- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `exprρ_
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr ▷ »
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `exprρ_
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `exprρ_
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr ▷ »
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `exprα_
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `exprα_
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr ◁ »
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `exprα_
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `exprα_
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `exprα_
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `exprα_
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr ◁ »
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«exprλ_»
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr ▷ »
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `exprρ_
 /-- In a bicategory, we can compose the 1-morphisms `f : a ⟶ b` and `g : b ⟶ c` to obtain
 a 1-morphism `f ≫ g : a ⟶ c`. This composition does not need to be strictly associative,
 but there is a specified associator, `α_ f g h : (f ≫ g) ≫ h ≅ f ≫ (g ≫ h)`.
@@ -101,7 +101,7 @@ These associators and unitors satisfy the pentagon and triangle equations.
 See https://ncatlab.org/nlab/show/bicategory.
 -/
 @[nolint check_univs]
-class bicategory (B : Type u) extends category_struct.{v} B where
+class bicategory (B : Type u) extends CategoryStruct.{v} B where
   right_unitor_naturality' :
     ∀ {a b} {f f' : a ⟶ b} η : f ⟶ f', «expr ▷ » η (𝟙 b) ≫ ((exprρ_) f').Hom = ((exprρ_) f).Hom ≫ η := by
     run_tac
@@ -151,71 +151,71 @@ attribute [simp] bicategory.whisker_left_comp bicategory.whisker_right_comp
 
 attribute [instance] bicategory.hom_category
 
-localized [Bicategory] infixr:70 " ◁ " => bicategory.whisker_left
+localized [Bicategory] infixr:70 " ◁ " => Bicategory.whiskerLeft
 
-localized [Bicategory] infixr:70 " ▷ " => bicategory.whisker_right
+localized [Bicategory] infixr:70 " ▷ " => Bicategory.whiskerRight
 
-localized [Bicategory] notation "α_" => bicategory.associator
+localized [Bicategory] notation "α_" => Bicategory.associator
 
-localized [Bicategory] notation "λ_" => bicategory.left_unitor
+localized [Bicategory] notation "λ_" => Bicategory.leftUnitor
 
-localized [Bicategory] notation "ρ_" => bicategory.right_unitor
+localized [Bicategory] notation "ρ_" => Bicategory.rightUnitor
 
 namespace Bicategory
 
 section
 
-variable {B : Type u} [bicategory.{w, v} B] {a b c d e : B}
+variable {B : Type u} [Bicategory.{w, v} B] {a b c d e : B}
 
 @[simp, reassoc]
-theorem hom_inv_whisker_left (f : a ⟶ b) {g h : b ⟶ c} (η : g ≅ h) : (f ◁ η.hom) ≫ (f ◁ η.inv) = 𝟙 (f ≫ g) := by
+theorem hom_inv_whisker_left (f : a ⟶ b) {g h : b ⟶ c} (η : g ≅ h) : (f ◁ η.Hom) ≫ (f ◁ η.inv) = 𝟙 (f ≫ g) := by
   rw [← whisker_left_comp, hom_inv_id, whisker_left_id]
 
 @[simp, reassoc]
-theorem hom_inv_whisker_right {f g : a ⟶ b} (η : f ≅ g) (h : b ⟶ c) : (η.hom ▷ h) ≫ (η.inv ▷ h) = 𝟙 (f ≫ h) := by
+theorem hom_inv_whisker_right {f g : a ⟶ b} (η : f ≅ g) (h : b ⟶ c) : (η.Hom ▷ h) ≫ (η.inv ▷ h) = 𝟙 (f ≫ h) := by
   rw [← whisker_right_comp, hom_inv_id, whisker_right_id]
 
 @[simp, reassoc]
-theorem inv_hom_whisker_left (f : a ⟶ b) {g h : b ⟶ c} (η : g ≅ h) : (f ◁ η.inv) ≫ (f ◁ η.hom) = 𝟙 (f ≫ h) := by
+theorem inv_hom_whisker_left (f : a ⟶ b) {g h : b ⟶ c} (η : g ≅ h) : (f ◁ η.inv) ≫ (f ◁ η.Hom) = 𝟙 (f ≫ h) := by
   rw [← whisker_left_comp, inv_hom_id, whisker_left_id]
 
 @[simp, reassoc]
-theorem inv_hom_whisker_right {f g : a ⟶ b} (η : f ≅ g) (h : b ⟶ c) : (η.inv ▷ h) ≫ (η.hom ▷ h) = 𝟙 (g ≫ h) := by
+theorem inv_hom_whisker_right {f g : a ⟶ b} (η : f ≅ g) (h : b ⟶ c) : (η.inv ▷ h) ≫ (η.Hom ▷ h) = 𝟙 (g ≫ h) := by
   rw [← whisker_right_comp, inv_hom_id, whisker_right_id]
 
 /-- The left whiskering of a 2-isomorphism is a 2-isomorphism. -/
 @[simps]
 def whisker_left_iso (f : a ⟶ b) {g h : b ⟶ c} (η : g ≅ h) : f ≫ g ≅ f ≫ h where
-  Hom := f ◁ η.hom
+  Hom := f ◁ η.Hom
   inv := f ◁ η.inv
   hom_inv_id' := by
     simp only [hom_inv_whisker_left]
   inv_hom_id' := by
     simp only [inv_hom_whisker_left]
 
-instance whisker_left_is_iso (f : a ⟶ b) {g h : b ⟶ c} (η : g ⟶ h) [is_iso η] : is_iso (f ◁ η) :=
-  is_iso.of_iso (whisker_left_iso f (as_iso η))
+instance whisker_left_is_iso (f : a ⟶ b) {g h : b ⟶ c} (η : g ⟶ h) [IsIso η] : IsIso (f ◁ η) :=
+  IsIso.of_iso (whiskerLeftIso f (asIso η))
 
 @[simp]
-theorem inv_whisker_left (f : a ⟶ b) {g h : b ⟶ c} (η : g ⟶ h) [is_iso η] : inv (f ◁ η) = f ◁ inv η := by
+theorem inv_whisker_left (f : a ⟶ b) {g h : b ⟶ c} (η : g ⟶ h) [IsIso η] : inv (f ◁ η) = f ◁ inv η := by
   ext
   simp only [← whisker_left_comp, whisker_left_id, is_iso.hom_inv_id]
 
 /-- The right whiskering of a 2-isomorphism is a 2-isomorphism. -/
 @[simps]
 def whisker_right_iso {f g : a ⟶ b} (η : f ≅ g) (h : b ⟶ c) : f ≫ h ≅ g ≫ h where
-  Hom := η.hom ▷ h
+  Hom := η.Hom ▷ h
   inv := η.inv ▷ h
   hom_inv_id' := by
     simp only [hom_inv_whisker_right]
   inv_hom_id' := by
     simp only [inv_hom_whisker_right]
 
-instance whisker_right_is_iso {f g : a ⟶ b} (η : f ⟶ g) (h : b ⟶ c) [is_iso η] : is_iso (η ▷ h) :=
-  is_iso.of_iso (whisker_right_iso (as_iso η) h)
+instance whisker_right_is_iso {f g : a ⟶ b} (η : f ⟶ g) (h : b ⟶ c) [IsIso η] : IsIso (η ▷ h) :=
+  IsIso.of_iso (whiskerRightIso (asIso η) h)
 
 @[simp]
-theorem inv_whisker_right {f g : a ⟶ b} (η : f ⟶ g) (h : b ⟶ c) [is_iso η] : inv (η ▷ h) = inv η ▷ h := by
+theorem inv_whisker_right {f g : a ⟶ b} (η : f ⟶ g) (h : b ⟶ c) [IsIso η] : inv (η ▷ h) = inv η ▷ h := by
   ext
   simp only [← whisker_right_comp, whisker_right_id, is_iso.hom_inv_id]
 

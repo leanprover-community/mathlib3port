@@ -17,7 +17,7 @@ section CommMonoidWithZero
 variable {M : Type _} [CommMonoidWithZero M]
 
 /-- Prime `p` divides the product of a list `L` iff it divides some `a ∈ L` -/
-theorem Prime.dvd_prod_iff {p : M} {L : List M} (pp : Prime p) : p ∣ L.prod ↔ ∃ a ∈ L, p ∣ a := by
+theorem Prime.dvd_prod_iff {p : M} {L : List M} (pp : Prime p) : p ∣ L.Prod ↔ ∃ a ∈ L, p ∣ a := by
   constructor
   · intro h
     induction' L with L_hd L_tl L_ih
@@ -36,7 +36,7 @@ theorem Prime.dvd_prod_iff {p : M} {L : List M} (pp : Prime p) : p ∣ L.prod �
   · exact fun ⟨a, ha1, ha2⟩ => dvd_trans ha2 (dvd_prod ha1)
     
 
-theorem Prime.not_dvd_prod {p : M} {L : List M} (pp : Prime p) (hL : ∀, ∀ a ∈ L, ∀, ¬p ∣ a) : ¬p ∣ L.prod :=
+theorem Prime.not_dvd_prod {p : M} {L : List M} (pp : Prime p) (hL : ∀, ∀ a ∈ L, ∀, ¬p ∣ a) : ¬p ∣ L.Prod :=
   mt (Prime.dvd_prod_iff pp).mp <| not_bex.mpr hL
 
 end CommMonoidWithZero
@@ -49,19 +49,19 @@ theorem prime_dvd_prime_iff_eq {p q : M} (pp : Prime p) (qp : Prime q) : p ∣ q
   rw [pp.dvd_prime_iff_associated qp, ← associated_eq_eq]
 
 theorem mem_list_primes_of_dvd_prod {p : M} (hp : Prime p) {L : List M} (hL : ∀, ∀ q ∈ L, ∀, Prime q)
-    (hpL : p ∣ L.prod) : p ∈ L := by
+    (hpL : p ∣ L.Prod) : p ∈ L := by
   obtain ⟨x, hx1, hx2⟩ := hp.dvd_prod_iff.mp hpL
   rwa [(prime_dvd_prime_iff_eq hp (hL x hx1)).mp hx2]
 
 theorem perm_of_prod_eq_prod :
-    ∀ {l₁ l₂ : List M}, l₁.prod = l₂.prod → (∀, ∀ p ∈ l₁, ∀, Prime p) → (∀, ∀ p ∈ l₂, ∀, Prime p) → perm l₁ l₂
-  | [], [], _, _, _ => perm.nil
+    ∀ {l₁ l₂ : List M}, l₁.Prod = l₂.Prod → (∀, ∀ p ∈ l₁, ∀, Prime p) → (∀, ∀ p ∈ l₂, ∀, Prime p) → Perm l₁ l₂
+  | [], [], _, _, _ => Perm.nil
   | [], a :: l, h₁, h₂, h₃ =>
     have ha : a ∣ 1 := @prod_nil M _ ▸ h₁.symm ▸ (@prod_cons _ _ l a).symm ▸ dvd_mul_right _ _
-    absurd ha (Prime.not_dvd_one (h₃ a (mem_cons_self _ _)))
+    absurd ha (Prime.not_dvd_one (h₃ a (mem_cons_selfₓ _ _)))
   | a :: l, [], h₁, h₂, h₃ =>
     have ha : a ∣ 1 := @prod_nil M _ ▸ h₁ ▸ (@prod_cons _ _ l a).symm ▸ dvd_mul_right _ _
-    absurd ha (Prime.not_dvd_one (h₂ a (mem_cons_self _ _)))
+    absurd ha (Prime.not_dvd_one (h₂ a (mem_cons_selfₓ _ _)))
   | a :: l₁, b :: l₂, h, hl₁, hl₂ => by
     classical
     have hl₁' : ∀, ∀ p ∈ l₁, ∀, Prime p := fun p hp => hl₁ p (mem_cons_of_mem _ hp)

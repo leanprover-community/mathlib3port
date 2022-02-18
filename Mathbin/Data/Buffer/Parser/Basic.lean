@@ -53,7 +53,7 @@ class mono : Prop where
   le' : ∀ cb : CharBuffer n : ℕ, n ≤ (p cb n).Pos
 
 theorem mono.le [p.mono] : n ≤ (p cb n).Pos :=
-  mono.le' cb n
+  Mono.le' cb n
 
 /-- A `parser α` is defined to be `static` if it does not move on success.
 -/
@@ -81,9 +81,9 @@ class prog : Prop where
 class bounded : Prop where
   ex' : ∀ {cb : CharBuffer} {n : ℕ}, cb.size ≤ n → ∃ (n' : ℕ)(err : Dlist Stringₓ), p cb n = fail n' err
 
-theorem bounded.exists (p : Parser α) [p.bounded] {cb : CharBuffer} {n : ℕ} (h : cb.size ≤ n) :
+theorem bounded.exists (p : Parser α) [p.Bounded] {cb : CharBuffer} {n : ℕ} (h : cb.size ≤ n) :
     ∃ (n' : ℕ)(err : Dlist Stringₓ), p cb n = fail n' err :=
-  bounded.ex' h
+  Bounded.ex' h
 
 /-- A `parser a` is defined to be `unfailing` if it always produces a `done` `parse_result`.
 -/
@@ -111,68 +111,68 @@ theorem mono.of_done [p.mono] (h : p cb n = done n' a) : n ≤ n' := by
 theorem mono.of_fail [p.mono] (h : p cb n = fail n' err) : n ≤ n' := by
   simpa [h] using mono.le p cb n
 
-theorem bounded.of_done [p.bounded] (h : p cb n = done n' a) : n < cb.size := by
+theorem bounded.of_done [p.Bounded] (h : p cb n = done n' a) : n < cb.size := by
   contrapose! h
   obtain ⟨np, err, hp⟩ := bounded.exists p h
   simp [hp]
 
-theorem static.iff : static p ↔ ∀ cb : CharBuffer n n' : ℕ a : α, p cb n = done n' a → n = n' :=
+theorem static.iff : Static p ↔ ∀ cb : CharBuffer n n' : ℕ a : α, p cb n = done n' a → n = n' :=
   ⟨fun h _ _ _ _ hp =>
     have := h
     static.of_done hp,
     fun h => ⟨h⟩⟩
 
-theorem exists_done (p : Parser α) [p.unfailing] (cb : CharBuffer) (n : ℕ) : ∃ (n' : ℕ)(a : α), p cb n = done n' a :=
-  unfailing.ex' cb n
+theorem exists_done (p : Parser α) [p.Unfailing] (cb : CharBuffer) (n : ℕ) : ∃ (n' : ℕ)(a : α), p cb n = done n' a :=
+  Unfailing.ex' cb n
 
-theorem unfailing.of_fail [p.unfailing] (h : p cb n = fail n' err) : False := by
+theorem unfailing.of_fail [p.Unfailing] (h : p cb n = fail n' err) : False := by
   obtain ⟨np, a, hp⟩ := p.exists_done cb n
   simpa [hp] using h
 
-instance (priority := 100) conditionally_unfailing_of_unfailing [p.unfailing] : conditionally_unfailing p :=
+instance (priority := 100) conditionally_unfailing_of_unfailing [p.Unfailing] : ConditionallyUnfailing p :=
   ⟨fun _ _ _ => p.exists_done _ _⟩
 
-theorem exists_done_in_bounds (p : Parser α) [p.conditionally_unfailing] {cb : CharBuffer} {n : ℕ} (h : n < cb.size) :
+theorem exists_done_in_bounds (p : Parser α) [p.ConditionallyUnfailing] {cb : CharBuffer} {n : ℕ} (h : n < cb.size) :
     ∃ (n' : ℕ)(a : α), p cb n = done n' a :=
-  conditionally_unfailing.ex' h
+  ConditionallyUnfailing.ex' h
 
-theorem conditionally_unfailing.of_fail [p.conditionally_unfailing] (h : p cb n = fail n' err) (hn : n < cb.size) :
+theorem conditionally_unfailing.of_fail [p.ConditionallyUnfailing] (h : p cb n = fail n' err) (hn : n < cb.size) :
     False := by
   obtain ⟨np, a, hp⟩ := p.exists_done_in_bounds hn
   simpa [hp] using h
 
 theorem decorate_errors_fail (h : p cb n = fail n' err) :
-    @decorate_errors α msgs p cb n = fail n (Dlist.lazyOfList (msgs ())) := by
+    @decorateErrors α msgs p cb n = fail n (Dlist.lazyOfList (msgs ())) := by
   simp [decorate_errors, h]
 
-theorem decorate_errors_success (h : p cb n = done n' a) : @decorate_errors α msgs p cb n = done n' a := by
+theorem decorate_errors_success (h : p cb n = done n' a) : @decorateErrors α msgs p cb n = done n' a := by
   simp [decorate_errors, h]
 
 theorem decorate_error_fail (h : p cb n = fail n' err) :
-    @decorate_error α msg p cb n = fail n (Dlist.lazyOfList [msg ()]) :=
+    @decorateError α msg p cb n = fail n (Dlist.lazyOfList [msg ()]) :=
   decorate_errors_fail h
 
-theorem decorate_error_success (h : p cb n = done n' a) : @decorate_error α msg p cb n = done n' a :=
+theorem decorate_error_success (h : p cb n = done n' a) : @decorateError α msg p cb n = done n' a :=
   decorate_errors_success h
 
 @[simp]
-theorem decorate_errors_eq_done : @decorate_errors α msgs p cb n = done n' a ↔ p cb n = done n' a := by
+theorem decorate_errors_eq_done : @decorateErrors α msgs p cb n = done n' a ↔ p cb n = done n' a := by
   cases h : p cb n <;> simp [decorate_errors, h]
 
 @[simp]
-theorem decorate_error_eq_done : @decorate_error α msg p cb n = done n' a ↔ p cb n = done n' a :=
+theorem decorate_error_eq_done : @decorateError α msg p cb n = done n' a ↔ p cb n = done n' a :=
   decorate_errors_eq_done
 
 @[simp]
 theorem decorate_errors_eq_fail :
-    @decorate_errors α msgs p cb n = fail n' err ↔
+    @decorateErrors α msgs p cb n = fail n' err ↔
       n = n' ∧ err = Dlist.lazyOfList (msgs ()) ∧ ∃ np err', p cb n = fail np err' :=
   by
   cases h : p cb n <;> simp [decorate_errors, h, eq_comm]
 
 @[simp]
 theorem decorate_error_eq_fail :
-    @decorate_error α msg p cb n = fail n' err ↔
+    @decorateError α msg p cb n = fail n' err ↔
       n = n' ∧ err = Dlist.lazyOfList [msg ()] ∧ ∃ np err', p cb n = fail np err' :=
   decorate_errors_eq_fail
 
@@ -403,7 +403,7 @@ namespace Mono
 
 variable {sep : Parser Unit}
 
-instance pure : mono (pure a) :=
+instance pure : Mono (pure a) :=
   ⟨fun _ _ => by
     simp [pure_eq_done]⟩
 
@@ -433,7 +433,7 @@ instance seq {f : Parser (α → β)} [f.mono] [p.mono] : (f <*> p).mono :=
   mono.bind
 
 instance mmap : ∀ {l : List α} {f : α → Parser β} [∀, ∀ a ∈ l, ∀, (f a).mono], (l.mmap f).mono
-  | [], _, _ => mono.pure
+  | [], _, _ => Mono.pure
   | a :: l, f, h => by
     convert mono.bind
     · exact h _ (List.mem_cons_selfₓ _ _)
@@ -445,7 +445,7 @@ instance mmap : ∀ {l : List α} {f : α → Parser β} [∀, ∀ a ∈ l, ∀,
       
 
 instance mmap' : ∀ {l : List α} {f : α → Parser β} [∀, ∀ a ∈ l, ∀, (f a).mono], (l.mmap' f).mono
-  | [], _, _ => mono.pure
+  | [], _, _ => Mono.pure
   | a :: l, f, h => by
     convert mono.and_then
     · exact h _ (List.mem_cons_selfₓ _ _)
@@ -458,7 +458,7 @@ instance failure : (failure : Parser α).mono :=
   ⟨by
     simp [le_reflₓ]⟩
 
-instance guardₓ {p : Prop} [Decidable p] : mono (guardₓ p) :=
+instance guardₓ {p : Prop} [Decidable p] : Mono (guardₓ p) :=
   ⟨by
     by_cases' h : p <;> simp [h, pure_eq_done, le_reflₓ]⟩
 
@@ -476,7 +476,7 @@ instance orelse [p.mono] [q.mono] : (p <|> q).mono := by
       
     
 
-instance decorate_errors [p.mono] : (@decorate_errors α msgs p).mono := by
+instance decorate_errors [p.mono] : (@decorateErrors α msgs p).mono := by
   constructor
   intro cb n
   cases h : p cb n
@@ -485,46 +485,46 @@ instance decorate_errors [p.mono] : (@decorate_errors α msgs p).mono := by
   · simp [decorate_errors, h]
     
 
-instance decorate_error [p.mono] : (@decorate_error α msg p).mono :=
+instance decorate_error [p.mono] : (@decorateError α msg p).mono :=
   mono.decorate_errors
 
-instance any_char : mono any_char := by
+instance any_char : Mono anyChar := by
   constructor
   intro cb n
   by_cases' h : n < cb.size <;> simp [any_char, h]
 
-instance sat {p : Charₓ → Prop} [DecidablePred p] : mono (sat p) := by
+instance sat {p : Charₓ → Prop} [DecidablePred p] : Mono (sat p) := by
   constructor
   intro cb n
   simp only [sat]
   split_ifs <;> simp
 
-instance eps : mono eps :=
+instance eps : Mono eps :=
   mono.pure
 
-instance ch {c : Charₓ} : mono (ch c) :=
+instance ch {c : Charₓ} : Mono (ch c) :=
   mono.decorate_error
 
-instance char_buf {s : CharBuffer} : mono (char_buf s) :=
+instance char_buf {s : CharBuffer} : Mono (charBuf s) :=
   mono.decorate_error
 
-instance one_of {cs : List Charₓ} : (one_of cs).mono :=
+instance one_of {cs : List Charₓ} : (oneOf cs).mono :=
   mono.decorate_errors
 
-instance one_of' {cs : List Charₓ} : (one_of' cs).mono :=
+instance one_of' {cs : List Charₓ} : (oneOf' cs).mono :=
   mono.and_then
 
 instance str {s : Stringₓ} : (str s).mono :=
   mono.decorate_error
 
 instance remaining : remaining.mono :=
-  ⟨fun _ _ => le_reflₓ _⟩
+  ⟨fun _ _ => le_rfl⟩
 
 instance eof : eof.mono :=
   mono.decorate_error
 
-instance foldr_core {f : α → β → β} {b : β} [p.mono] : ∀ {reps : ℕ}, (foldr_core f p b reps).mono
-  | 0 => mono.failure
+instance foldr_core {f : α → β → β} {b : β} [p.mono] : ∀ {reps : ℕ}, (foldrCore f p b reps).mono
+  | 0 => Mono.failure
   | reps + 1 => by
     convert mono.orelse
     · convert mono.bind
@@ -536,13 +536,13 @@ instance foldr_core {f : α → β → β} {b : β} [p.mono] : ∀ {reps : ℕ},
     · exact mono.pure
       
 
-instance foldr {f : α → β → β} [p.mono] : mono (foldr f p b) :=
+instance foldr {f : α → β → β} [p.mono] : Mono (foldr f p b) :=
   ⟨fun _ _ => by
     convert mono.le (foldr_core f p b _) _ _
     exact mono.foldr_core⟩
 
-instance foldl_core {f : α → β → α} {p : Parser β} [p.mono] : ∀ {a : α} {reps : ℕ}, (foldl_core f a p reps).mono
-  | _, 0 => mono.failure
+instance foldl_core {f : α → β → α} {p : Parser β} [p.mono] : ∀ {a : α} {reps : ℕ}, (foldlCore f a p reps).mono
+  | _, 0 => Mono.failure
   | _, reps + 1 => by
     convert mono.orelse
     · convert mono.bind
@@ -554,7 +554,7 @@ instance foldl_core {f : α → β → α} {p : Parser β} [p.mono] : ∀ {a : �
     · exact mono.pure
       
 
-instance foldl {f : α → β → α} {p : Parser β} [p.mono] : mono (foldl f a p) :=
+instance foldl {f : α → β → α} {p : Parser β} [p.mono] : Mono (foldl f a p) :=
   ⟨fun _ _ => by
     convert mono.le (foldl_core f a p _) _ _
     exact mono.foldl_core⟩
@@ -562,7 +562,7 @@ instance foldl {f : α → β → α} {p : Parser β} [p.mono] : mono (foldl f a
 instance many [p.mono] : p.many.mono :=
   mono.foldr
 
-instance many_char {p : Parser Charₓ} [p.mono] : p.many_char.mono :=
+instance many_char {p : Parser Charₓ} [p.mono] : p.manyChar.mono :=
   mono.map
 
 instance many' [p.mono] : p.many'.mono :=
@@ -571,27 +571,27 @@ instance many' [p.mono] : p.many'.mono :=
 instance many1 [p.mono] : p.many1.mono :=
   mono.seq
 
-instance many_char1 {p : Parser Charₓ} [p.mono] : p.many_char1.mono :=
+instance many_char1 {p : Parser Charₓ} [p.mono] : p.manyChar1.mono :=
   mono.map
 
-instance sep_by1 [p.mono] [sep.mono] : mono (sep_by1 sep p) :=
+instance sep_by1 [p.mono] [sep.mono] : Mono (sepBy1 sep p) :=
   mono.seq
 
-instance sep_by [p.mono] [hs : sep.mono] : mono (sep_by sep p) :=
+instance sep_by [p.mono] [hs : sep.mono] : Mono (sepBy sep p) :=
   mono.orelse
 
 theorem fix_core {F : Parser α → Parser α} (hF : ∀ p : Parser α, p.mono → (F p).mono) :
-    ∀ max_depth : ℕ, mono (fix_core F max_depth)
-  | 0 => mono.failure
+    ∀ max_depth : ℕ, Mono (fixCore F max_depth)
+  | 0 => Mono.failure
   | max_depth + 1 => hF _ (fix_core _)
 
 instance digit : digit.mono :=
   mono.decorate_error
 
-instance Nat : Nat.mono :=
+instance Nat : nat.mono :=
   mono.decorate_error
 
-theorem fix {F : Parser α → Parser α} (hF : ∀ p : Parser α, p.mono → (F p).mono) : mono (fix F) :=
+theorem fix {F : Parser α → Parser α} (hF : ∀ p : Parser α, p.mono → (F p).mono) : Mono (fix F) :=
   ⟨fun _ _ => by
     convert mono.le (Parser.fixCore F _) _ _
     exact fix_core hF _⟩
@@ -612,11 +612,11 @@ section Done
 
 variable {α β : Type} {cb : CharBuffer} {n n' : ℕ} {a a' : α} {b : β} {c : Charₓ} {u : Unit} {err : Dlist Stringₓ}
 
-theorem any_char_eq_done : any_char cb n = done n' c ↔ ∃ hn : n < cb.size, n' = n + 1 ∧ cb.read ⟨n, hn⟩ = c := by
+theorem any_char_eq_done : anyChar cb n = done n' c ↔ ∃ hn : n < cb.size, n' = n + 1 ∧ cb.read ⟨n, hn⟩ = c := by
   simp_rw [any_char]
   split_ifs with h <;> simp [h, eq_comm]
 
-theorem any_char_eq_fail : any_char cb n = fail n' err ↔ n = n' ∧ err = Dlist.empty ∧ cb.size ≤ n := by
+theorem any_char_eq_fail : anyChar cb n = fail n' err ↔ n = n' ∧ err = Dlist.empty ∧ cb.size ≤ n := by
   simp_rw [any_char]
   split_ifs with h <;> simp [← not_ltₓ, h, eq_comm]
 
@@ -653,7 +653,7 @@ theorem ch_eq_done : ch c cb n = done n' u ↔ ∃ hn : n < cb.size, n' = n + 1 
   simp [ch, eps_eq_done, sat_eq_done, And.comm, @eq_comm _ n']
 
 theorem char_buf_eq_done {cb' : CharBuffer} :
-    char_buf cb' cb n = done n' u ↔ n + cb'.size = n' ∧ cb'.to_list <+: cb.to_list.drop n := by
+    charBuf cb' cb n = done n' u ↔ n + cb'.size = n' ∧ cb'.toList <+: cb.toList.drop n := by
   simp only [char_buf, decorate_error_eq_done, Ne.def, ← Buffer.length_to_list]
   induction' cb'.to_list with hd tl hl generalizing cb n n'
   · simp [pure_eq_done, mmap'_eq_done, -Buffer.length_to_list, List.nil_prefix]
@@ -684,11 +684,11 @@ theorem char_buf_eq_done {cb' : CharBuffer} :
     
 
 theorem one_of_eq_done {cs : List Charₓ} :
-    one_of cs cb n = done n' c ↔ ∃ hn : n < cb.size, c ∈ cs ∧ n' = n + 1 ∧ cb.read ⟨n, hn⟩ = c := by
+    oneOf cs cb n = done n' c ↔ ∃ hn : n < cb.size, c ∈ cs ∧ n' = n + 1 ∧ cb.read ⟨n, hn⟩ = c := by
   simp [one_of, sat_eq_done]
 
 theorem one_of'_eq_done {cs : List Charₓ} :
-    one_of' cs cb n = done n' u ↔ ∃ hn : n < cb.size, cb.read ⟨n, hn⟩ ∈ cs ∧ n' = n + 1 := by
+    oneOf' cs cb n = done n' u ↔ ∃ hn : n < cb.size, cb.read ⟨n, hn⟩ ∈ cs ∧ n' = n + 1 := by
   simp only [one_of', one_of_eq_done, eps_eq_done, And.comm, and_then_eq_bind, bind_eq_done, exists_eq_left,
     exists_and_distrib_left]
   constructor
@@ -699,7 +699,7 @@ theorem one_of'_eq_done {cs : List Charₓ} :
     exact ⟨cb.read ⟨n, hn⟩, hc, rfl, hn, rfl⟩
     
 
-theorem str_eq_char_buf (s : Stringₓ) : str s = char_buf s.to_list.to_buffer := by
+theorem str_eq_char_buf (s : Stringₓ) : str s = charBuf s.toList.toBuffer := by
   ext cb n
   rw [str, char_buf]
   congr
@@ -708,7 +708,7 @@ theorem str_eq_char_buf (s : Stringₓ) : str s = char_buf s.to_list.to_buffer :
   · simp
     
 
-theorem str_eq_done {s : Stringₓ} : str s cb n = done n' u ↔ n + s.length = n' ∧ s.to_list <+: cb.to_list.drop n := by
+theorem str_eq_done {s : Stringₓ} : str s cb n = done n' u ↔ n + s.length = n' ∧ s.toList <+: cb.toList.drop n := by
   simp [str_eq_char_buf, char_buf_eq_done]
 
 theorem remaining_eq_done {r : ℕ} : remaining cb n = done n' r ↔ n = n' ∧ cb.size - n = r := by
@@ -721,39 +721,39 @@ theorem eof_eq_done {u : Unit} : eof cb n = done n' u ↔ n = n' ∧ cb.size ≤
   simp [eof, guard_eq_done, remaining_eq_done, tsub_eq_zero_iff_le, and_comm, and_assoc]
 
 @[simp]
-theorem foldr_core_zero_eq_done {f : α → β → β} {p : Parser α} {b' : β} : foldr_core f p b 0 cb n ≠ done n' b' := by
+theorem foldr_core_zero_eq_done {f : α → β → β} {p : Parser α} {b' : β} : foldrCore f p b 0 cb n ≠ done n' b' := by
   simp [foldr_core]
 
 theorem foldr_core_eq_done {f : α → β → β} {p : Parser α} {reps : ℕ} {b' : β} :
-    foldr_core f p b (reps + 1) cb n = done n' b' ↔
-      (∃ (np : ℕ)(a : α)(xs : β), p cb n = done np a ∧ foldr_core f p b reps cb np = done n' xs ∧ f a xs = b') ∨
+    foldrCore f p b (reps + 1) cb n = done n' b' ↔
+      (∃ (np : ℕ)(a : α)(xs : β), p cb n = done np a ∧ foldrCore f p b reps cb np = done n' xs ∧ f a xs = b') ∨
         n = n' ∧
           b = b' ∧
             ∃ err,
-              p cb n = fail n err ∨ ∃ (np : ℕ)(a : α), p cb n = done np a ∧ foldr_core f p b reps cb np = fail n err :=
+              p cb n = fail n err ∨ ∃ (np : ℕ)(a : α), p cb n = done np a ∧ foldrCore f p b reps cb np = fail n err :=
   by
   simp [foldr_core, And.comm, And.assoc, pure_eq_done]
 
 @[simp]
 theorem foldr_core_zero_eq_fail {f : α → β → β} {p : Parser α} {err : Dlist Stringₓ} :
-    foldr_core f p b 0 cb n = fail n' err ↔ n = n' ∧ err = Dlist.empty := by
+    foldrCore f p b 0 cb n = fail n' err ↔ n = n' ∧ err = Dlist.empty := by
   simp [foldr_core, eq_comm]
 
 theorem foldr_core_succ_eq_fail {f : α → β → β} {p : Parser α} {reps : ℕ} {err : Dlist Stringₓ} :
-    foldr_core f p b (reps + 1) cb n = fail n' err ↔
+    foldrCore f p b (reps + 1) cb n = fail n' err ↔
       n ≠ n' ∧
-        (p cb n = fail n' err ∨ ∃ (np : ℕ)(a : α), p cb n = done np a ∧ foldr_core f p b reps cb np = fail n' err) :=
+        (p cb n = fail n' err ∨ ∃ (np : ℕ)(a : α), p cb n = done np a ∧ foldrCore f p b reps cb np = fail n' err) :=
   by
   simp [foldr_core, and_comm]
 
 theorem foldr_eq_done {f : α → β → β} {p : Parser α} {b' : β} :
     foldr f p b cb n = done n' b' ↔
-      (∃ (np : ℕ)(a : α)(x : β), p cb n = done np a ∧ foldr_core f p b (cb.size - n) cb np = done n' x ∧ f a x = b') ∨
+      (∃ (np : ℕ)(a : α)(x : β), p cb n = done np a ∧ foldrCore f p b (cb.size - n) cb np = done n' x ∧ f a x = b') ∨
         n = n' ∧
           b = b' ∧
             ∃ err,
               p cb n = ParseResult.fail n err ∨
-                ∃ (np : ℕ)(x : α), p cb n = done np x ∧ foldr_core f p b (cb.size - n) cb np = fail n err :=
+                ∃ (np : ℕ)(x : α), p cb n = done np x ∧ foldrCore f p b (cb.size - n) cb np = fail n err :=
   by
   simp [foldr, foldr_core_eq_done]
 
@@ -774,47 +774,47 @@ theorem foldr_eq_fail {f : α → β → β} {p : Parser α} {err : Dlist String
     foldr f p b cb n = fail n' err ↔
       n ≠ n' ∧
         (p cb n = fail n' err ∨
-          ∃ (np : ℕ)(a : α), p cb n = done np a ∧ foldr_core f p b (cb.size - n) cb np = fail n' err) :=
+          ∃ (np : ℕ)(a : α), p cb n = done np a ∧ foldrCore f p b (cb.size - n) cb np = fail n' err) :=
   by
   simp [foldr, foldr_core_succ_eq_fail]
 
 @[simp]
-theorem foldl_core_zero_eq_done {f : β → α → β} {p : Parser α} {b' : β} :
-    foldl_core f b p 0 cb n = done n' b' ↔ False := by
+theorem foldl_core_zero_eq_done {f : β → α → β} {p : Parser α} {b' : β} : foldlCore f b p 0 cb n = done n' b' ↔ False :=
+  by
   simp [foldl_core]
 
 theorem foldl_core_eq_done {f : β → α → β} {p : Parser α} {reps : ℕ} {b' : β} :
-    foldl_core f b p (reps + 1) cb n = done n' b' ↔
-      (∃ (np : ℕ)(a : α), p cb n = done np a ∧ foldl_core f (f b a) p reps cb np = done n' b') ∨
+    foldlCore f b p (reps + 1) cb n = done n' b' ↔
+      (∃ (np : ℕ)(a : α), p cb n = done np a ∧ foldlCore f (f b a) p reps cb np = done n' b') ∨
         n = n' ∧
           b = b' ∧
             ∃ err,
               p cb n = fail n err ∨
-                ∃ (np : ℕ)(a : α), p cb n = done np a ∧ foldl_core f (f b a) p reps cb np = fail n err :=
+                ∃ (np : ℕ)(a : α), p cb n = done np a ∧ foldlCore f (f b a) p reps cb np = fail n err :=
   by
   simp [foldl_core, And.assoc, pure_eq_done]
 
 @[simp]
 theorem foldl_core_zero_eq_fail {f : β → α → β} {p : Parser α} {err : Dlist Stringₓ} :
-    foldl_core f b p 0 cb n = fail n' err ↔ n = n' ∧ err = Dlist.empty := by
+    foldlCore f b p 0 cb n = fail n' err ↔ n = n' ∧ err = Dlist.empty := by
   simp [foldl_core, eq_comm]
 
 theorem foldl_core_succ_eq_fail {f : β → α → β} {p : Parser α} {reps : ℕ} {err : Dlist Stringₓ} :
-    foldl_core f b p (reps + 1) cb n = fail n' err ↔
+    foldlCore f b p (reps + 1) cb n = fail n' err ↔
       n ≠ n' ∧
         (p cb n = fail n' err ∨
-          ∃ (np : ℕ)(a : α), p cb n = done np a ∧ foldl_core f (f b a) p reps cb np = fail n' err) :=
+          ∃ (np : ℕ)(a : α), p cb n = done np a ∧ foldlCore f (f b a) p reps cb np = fail n' err) :=
   by
   simp [foldl_core, and_comm]
 
 theorem foldl_eq_done {f : β → α → β} {p : Parser α} {b' : β} :
     foldl f b p cb n = done n' b' ↔
-      (∃ (np : ℕ)(a : α), p cb n = done np a ∧ foldl_core f (f b a) p (cb.size - n) cb np = done n' b') ∨
+      (∃ (np : ℕ)(a : α), p cb n = done np a ∧ foldlCore f (f b a) p (cb.size - n) cb np = done n' b') ∨
         n = n' ∧
           b = b' ∧
             ∃ err,
               p cb n = fail n err ∨
-                ∃ (np : ℕ)(a : α), p cb n = done np a ∧ foldl_core f (f b a) p (cb.size - n) cb np = fail n err :=
+                ∃ (np : ℕ)(a : α), p cb n = done np a ∧ foldlCore f (f b a) p (cb.size - n) cb np = fail n err :=
   by
   simp [foldl, foldl_core_eq_done]
 
@@ -822,7 +822,7 @@ theorem foldl_eq_fail {f : β → α → β} {p : Parser α} {err : Dlist String
     foldl f b p cb n = fail n' err ↔
       n ≠ n' ∧
         (p cb n = fail n' err ∨
-          ∃ (np : ℕ)(a : α), p cb n = done np a ∧ foldl_core f (f b a) p (cb.size - n) cb np = fail n' err) :=
+          ∃ (np : ℕ)(a : α), p cb n = done np a ∧ foldlCore f (f b a) p (cb.size - n) cb np = fail n' err) :=
   by
   simp [foldl, foldl_core_succ_eq_fail]
 
@@ -844,13 +844,13 @@ theorem many_eq_done_nil {p : Parser α} :
       n = n' ∧
         ∃ err,
           p cb n = fail n err ∨
-            ∃ (np : ℕ)(a : α), p cb n = done np a ∧ foldr_core List.cons p [] (cb.size - n) cb np = fail n err :=
+            ∃ (np : ℕ)(a : α), p cb n = done np a ∧ foldrCore List.cons p [] (cb.size - n) cb np = fail n err :=
   by
   simp [many, foldr_eq_done]
 
 theorem many_eq_done {p : Parser α} {x : α} {xs : List α} :
     many p cb n = done n' (x :: xs) ↔
-      ∃ np : ℕ, p cb n = done np x ∧ foldr_core List.cons p [] (cb.size - n) cb np = done n' xs :=
+      ∃ np : ℕ, p cb n = done np x ∧ foldrCore List.cons p [] (cb.size - n) cb np = done n' xs :=
   by
   simp [many, foldr_eq_done, And.comm, And.assoc, And.left_comm]
 
@@ -858,29 +858,29 @@ theorem many_eq_fail {p : Parser α} {err : Dlist Stringₓ} :
     many p cb n = fail n' err ↔
       n ≠ n' ∧
         (p cb n = fail n' err ∨
-          ∃ (np : ℕ)(a : α), p cb n = done np a ∧ foldr_core List.cons p [] (cb.size - n) cb np = fail n' err) :=
+          ∃ (np : ℕ)(a : α), p cb n = done np a ∧ foldrCore List.cons p [] (cb.size - n) cb np = fail n' err) :=
   by
   simp [many, foldr_eq_fail]
 
 theorem many_char_eq_done_empty {p : Parser Charₓ} :
-    many_char p cb n = done n' Stringₓ.empty ↔
+    manyChar p cb n = done n' Stringₓ.empty ↔
       n = n' ∧
         ∃ err,
           p cb n = fail n err ∨
-            ∃ (np : ℕ)(c : Charₓ), p cb n = done np c ∧ foldr_core List.cons p [] (cb.size - n) cb np = fail n err :=
+            ∃ (np : ℕ)(c : Charₓ), p cb n = done np c ∧ foldrCore List.cons p [] (cb.size - n) cb np = fail n err :=
   by
   simp [many_char, many_eq_done_nil, map_eq_done, List.as_string_eq]
 
 theorem many_char_eq_done_not_empty {p : Parser Charₓ} {s : Stringₓ} (h : s ≠ "") :
-    many_char p cb n = done n' s ↔
+    manyChar p cb n = done n' s ↔
       ∃ np : ℕ,
         p cb n = done np s.head ∧
-          foldr_core List.cons p List.nil (Buffer.size cb - n) cb np = done n' (s.popn 1).toList :=
+          foldrCore List.cons p List.nil (Buffer.size cb - n) cb np = done n' (s.popn 1).toList :=
   by
   simp [many_char, List.as_string_eq, Stringₓ.to_list_nonempty h, many_eq_done]
 
 theorem many_char_eq_many_of_to_list {p : Parser Charₓ} {s : Stringₓ} :
-    many_char p cb n = done n' s ↔ many p cb n = done n' s.to_list := by
+    manyChar p cb n = done n' s ↔ many p cb n = done n' s.toList := by
   simp [many_char, List.as_string_eq]
 
 theorem many'_eq_done {p : Parser α} :
@@ -888,7 +888,7 @@ theorem many'_eq_done {p : Parser α} :
       many p cb n = done n' [] ∨
         ∃ (np : ℕ)(a : α)(l : List α),
           many p cb n = done n' (a :: l) ∧
-            p cb n = done np a ∧ foldr_core List.cons p [] (Buffer.size cb - n) cb np = done n' l :=
+            p cb n = done np a ∧ foldrCore List.cons p [] (Buffer.size cb - n) cb np = done n' l :=
   by
   simp only [many', eps_eq_done, many, foldr, and_then_eq_bind, exists_and_distrib_right, bind_eq_done, exists_eq_right]
   constructor
@@ -924,31 +924,31 @@ theorem many1_eq_fail {p : Parser α} {err : Dlist Stringₓ} :
   simp [many1, seq_eq_fail]
 
 @[simp]
-theorem many_char1_ne_empty {p : Parser Charₓ} : many_char1 p cb n ≠ done n' "" := by
+theorem many_char1_ne_empty {p : Parser Charₓ} : manyChar1 p cb n ≠ done n' "" := by
   simp [many_char1, ← Stringₓ.nil_as_string_eq_empty]
 
 theorem many_char1_eq_done {p : Parser Charₓ} {s : Stringₓ} (h : s ≠ "") :
-    many_char1 p cb n = done n' s ↔ ∃ np : ℕ, p cb n = done np s.head ∧ many_char p cb np = done n' (s.popn 1) := by
+    manyChar1 p cb n = done n' s ↔ ∃ np : ℕ, p cb n = done np s.head ∧ manyChar p cb np = done n' (s.popn 1) := by
   simp [many_char1, List.as_string_eq, Stringₓ.to_list_nonempty h, many1_eq_done, many_char_eq_many_of_to_list]
 
 @[simp]
-theorem sep_by1_ne_done_nil {sep : Parser Unit} {p : Parser α} : sep_by1 sep p cb n ≠ done n' [] := by
+theorem sep_by1_ne_done_nil {sep : Parser Unit} {p : Parser α} : sepBy1 sep p cb n ≠ done n' [] := by
   simp [sep_by1, seq_eq_done]
 
 theorem sep_by1_eq_done {sep : Parser Unit} {p : Parser α} {l : List α} :
-    sep_by1 sep p cb n = done n' (a :: l) ↔ ∃ np : ℕ, p cb n = done np a ∧ (sep >> p).many cb np = done n' l := by
+    sepBy1 sep p cb n = done n' (a :: l) ↔ ∃ np : ℕ, p cb n = done np a ∧ (sep >> p).many cb np = done n' l := by
   simp [sep_by1, seq_eq_done]
 
 theorem sep_by_eq_done_nil {sep : Parser Unit} {p : Parser α} :
-    sep_by sep p cb n = done n' [] ↔ n = n' ∧ ∃ err, sep_by1 sep p cb n = fail n err := by
+    sepBy sep p cb n = done n' [] ↔ n = n' ∧ ∃ err, sepBy1 sep p cb n = fail n err := by
   simp [sep_by, pure_eq_done]
 
 @[simp]
-theorem fix_core_ne_done_zero {F : Parser α → Parser α} : fix_core F 0 cb n ≠ done n' a := by
+theorem fix_core_ne_done_zero {F : Parser α → Parser α} : fixCore F 0 cb n ≠ done n' a := by
   simp [fix_core]
 
 theorem fix_core_eq_done {F : Parser α → Parser α} {max_depth : ℕ} :
-    fix_core F (max_depth + 1) cb n = done n' a ↔ F (fix_core F max_depth) cb n = done n' a := by
+    fixCore F (max_depth + 1) cb n = done n' a ↔ F (fixCore F max_depth) cb n = done n' a := by
   simp [fix_core]
 
 theorem digit_eq_done {k : ℕ} :
@@ -959,7 +959,7 @@ theorem digit_eq_done {k : ℕ} :
   have c9 : '9'.toNat - '0'.toNat = 9 := rfl
   have l09 : '0'.toNat ≤ '9'.toNat := by
     decide
-  have le_iff_le : ∀ {c c' : Charₓ}, c ≤ c' ↔ c.to_nat ≤ c'.to_nat := fun _ _ => Iff.rfl
+  have le_iff_le : ∀ {c c' : Charₓ}, c ≤ c' ↔ c.toNat ≤ c'.toNat := fun _ _ => Iff.rfl
   constructor
   · simp only [digit, sat_eq_done, pure_eq_done, decorate_error_eq_done, bind_eq_done, ← c9]
     rintro ⟨np, c, ⟨hn, ⟨ge0, le9⟩, rfl, rfl⟩, rfl, rfl⟩
@@ -985,36 +985,36 @@ namespace Static
 variable {α β : Type} {p q : Parser α} {msgs : Thunkₓ (List Stringₓ)} {msg : Thunkₓ Stringₓ} {cb : CharBuffer}
   {n' n : ℕ} {err : Dlist Stringₓ} {a : α} {b : β} {sep : Parser Unit}
 
-theorem not_of_ne (h : p cb n = done n' a) (hne : n ≠ n') : ¬static p := by
+theorem not_of_ne (h : p cb n = done n' a) (hne : n ≠ n') : ¬Static p := by
   intro
   exact hne (of_done h)
 
-instance pure : static (pure a) :=
+instance pure : Static (pure a) :=
   ⟨fun _ _ _ _ => by
     simp_rw [pure_eq_done]
     rw [And.comm]
     simp ⟩
 
-instance bind {f : α → Parser β} [p.static] [∀ a, (f a).Static] : (p >>= f).Static :=
+instance bind {f : α → Parser β} [p.Static] [∀ a, (f a).Static] : (p >>= f).Static :=
   ⟨fun _ _ _ _ => by
     rw [bind_eq_done]
     rintro ⟨_, _, hp, hf⟩
     exact trans (of_done hp) (of_done hf)⟩
 
-instance and_then {q : Parser β} [p.static] [q.static] : (p >> q).Static :=
+instance and_then {q : Parser β} [p.Static] [q.Static] : (p >> q).Static :=
   static.bind
 
-instance map [p.static] {f : α → β} : (f <$> p).Static :=
+instance map [p.Static] {f : α → β} : (f <$> p).Static :=
   ⟨fun _ _ _ _ => by
     simp_rw [map_eq_done]
     rintro ⟨_, hp, _⟩
     exact of_done hp⟩
 
-instance seq {f : Parser (α → β)} [f.static] [p.static] : (f <*> p).Static :=
+instance seq {f : Parser (α → β)} [f.Static] [p.Static] : (f <*> p).Static :=
   static.bind
 
 instance mmap : ∀ {l : List α} {f : α → Parser β} [∀ a, (f a).Static], (l.mmap f).Static
-  | [], _, _ => static.pure
+  | [], _, _ => Static.pure
   | a :: l, _, h => by
     convert static.bind
     · exact h _
@@ -1029,7 +1029,7 @@ instance mmap : ∀ {l : List α} {f : α → Parser β} [∀ a, (f a).Static], 
       
 
 instance mmap' : ∀ {l : List α} {f : α → Parser β} [∀ a, (f a).Static], (l.mmap' f).Static
-  | [], _, _ => static.pure
+  | [], _, _ => Static.pure
   | a :: l, _, h => by
     convert static.and_then
     · exact h _
@@ -1042,31 +1042,31 @@ instance failure : @Parser.Static α failure :=
   ⟨fun _ _ _ _ => by
     simp ⟩
 
-instance guardₓ {p : Prop} [Decidable p] : static (guardₓ p) :=
+instance guardₓ {p : Prop} [Decidable p] : Static (guardₓ p) :=
   ⟨fun _ _ _ _ => by
     simp [guard_eq_done]⟩
 
-instance orelse [p.static] [q.static] : (p <|> q).Static :=
+instance orelse [p.Static] [q.Static] : (p <|> q).Static :=
   ⟨fun _ _ _ _ => by
     simp_rw [orelse_eq_done]
     rintro (h | ⟨h, -⟩) <;> exact of_done h⟩
 
-instance decorate_errors [p.static] : (@decorate_errors α msgs p).Static :=
+instance decorate_errors [p.Static] : (@decorateErrors α msgs p).Static :=
   ⟨fun _ _ _ _ => by
     rw [decorate_errors_eq_done]
     exact of_done⟩
 
-instance decorate_error [p.static] : (@decorate_error α msg p).Static :=
+instance decorate_error [p.Static] : (@decorateError α msg p).Static :=
   static.decorate_errors
 
-theorem any_char : ¬static any_char :=
+theorem any_char : ¬Static anyChar :=
   have : any_char "s".toCharBuffer 0 = done 1 's' := by
     have : 0 < "s".toCharBuffer.size := by
       decide
     simpa [any_char_eq_done, this]
   not_of_ne this zero_ne_one
 
-theorem sat_iff {p : Charₓ → Prop} [DecidablePred p] : static (sat p) ↔ ∀ c, ¬p c := by
+theorem sat_iff {p : Charₓ → Prop} [DecidablePred p] : Static (sat p) ↔ ∀ c, ¬p c := by
   constructor
   · intro
     intro c hc
@@ -1081,21 +1081,21 @@ theorem sat_iff {p : Charₓ → Prop} [DecidablePred p] : static (sat p) ↔ �
     exact ⟨a, hp⟩
     
 
-instance sat : static (sat fun _ => False) := by
+instance sat : Static (sat fun _ => False) := by
   apply sat_iff.mpr
   simp
 
-instance eps : static eps :=
+instance eps : Static eps :=
   static.pure
 
-theorem ch (c : Charₓ) : ¬static (ch c) :=
+theorem ch (c : Charₓ) : ¬Static (ch c) :=
   have : ch c [c].toBuffer 0 = done 1 () := by
     have : 0 < [c].toBuffer.size := by
       decide
     simp [ch_eq_done, this]
   not_of_ne this zero_ne_one
 
-theorem char_buf_iff {cb' : CharBuffer} : static (char_buf cb') ↔ cb' = Buffer.nil := by
+theorem char_buf_iff {cb' : CharBuffer} : Static (charBuf cb') ↔ cb' = Buffer.nil := by
   rw [← Buffer.size_eq_zero_iff]
   have : char_buf cb' cb' 0 = done cb'.size () := by
     simp [char_buf_eq_done]
@@ -1109,7 +1109,7 @@ theorem char_buf_iff {cb' : CharBuffer} : static (char_buf cb') ↔ cb' = Buffer
     simpa [Nat.succ_ne_zero] using not_of_ne this (Nat.succ_ne_zero n).symm
     
 
-theorem one_of_iff {cs : List Charₓ} : static (one_of cs) ↔ cs = [] := by
+theorem one_of_iff {cs : List Charₓ} : Static (oneOf cs) ↔ cs = [] := by
   cases' cs with hd tl
   · simp [one_of, static.decorate_errors]
     
@@ -1118,11 +1118,11 @@ theorem one_of_iff {cs : List Charₓ} : static (one_of cs) ↔ cs = [] := by
     simpa using not_of_ne this zero_ne_one
     
 
-instance one_of : static (one_of []) := by
+instance one_of : Static (oneOf []) := by
   apply one_of_iff.mpr
   rfl
 
-theorem one_of'_iff {cs : List Charₓ} : static (one_of' cs) ↔ cs = [] := by
+theorem one_of'_iff {cs : List Charₓ} : Static (oneOf' cs) ↔ cs = [] := by
   cases' cs with hd tl
   · simp [one_of', static.bind]
     
@@ -1131,11 +1131,11 @@ theorem one_of'_iff {cs : List Charₓ} : static (one_of' cs) ↔ cs = [] := by
     simpa using not_of_ne this zero_ne_one
     
 
-instance one_of' : static (one_of []) := by
+instance one_of' : Static (oneOf []) := by
   apply one_of_iff.mpr
   rfl
 
-theorem str_iff {s : Stringₓ} : static (str s) ↔ s = "" := by
+theorem str_iff {s : Stringₓ} : Static (str s) ↔ s = "" := by
   simp [str_eq_char_buf, char_buf_iff, ← Stringₓ.to_list_inj, Buffer.ext_iff]
 
 instance remaining : remaining.Static :=
@@ -1144,8 +1144,8 @@ instance remaining : remaining.Static :=
 instance eof : eof.Static :=
   static.decorate_error
 
-instance foldr_core {f : α → β → β} [p.static] : ∀ {b : β} {reps : ℕ}, (foldr_core f p b reps).Static
-  | _, 0 => static.failure
+instance foldr_core {f : α → β → β} [p.Static] : ∀ {b : β} {reps : ℕ}, (foldrCore f p b reps).Static
+  | _, 0 => Static.failure
   | _, reps + 1 => by
     simp_rw [Parser.foldrCore]
     convert static.orelse
@@ -1163,13 +1163,13 @@ instance foldr_core {f : α → β → β} [p.static] : ∀ {b : β} {reps : ℕ
     · exact static.pure
       
 
-instance foldr {f : α → β → β} [p.static] : static (foldr f p b) :=
+instance foldr {f : α → β → β} [p.Static] : Static (foldr f p b) :=
   ⟨fun _ _ _ _ => by
     dsimp [foldr]
     exact of_done⟩
 
-instance foldl_core {f : α → β → α} {p : Parser β} [p.static] : ∀ {a : α} {reps : ℕ}, (foldl_core f a p reps).Static
-  | _, 0 => static.failure
+instance foldl_core {f : α → β → α} {p : Parser β} [p.Static] : ∀ {a : α} {reps : ℕ}, (foldlCore f a p reps).Static
+  | _, 0 => Static.failure
   | _, reps + 1 => by
     convert static.orelse
     · convert static.bind
@@ -1181,35 +1181,35 @@ instance foldl_core {f : α → β → α} {p : Parser β} [p.static] : ∀ {a :
     · exact static.pure
       
 
-instance foldl {f : α → β → α} {p : Parser β} [p.static] : static (foldl f a p) :=
+instance foldl {f : α → β → α} {p : Parser β} [p.Static] : Static (foldl f a p) :=
   ⟨fun _ _ _ _ => by
     dsimp [foldl]
     exact of_done⟩
 
-instance many [p.static] : p.many.static :=
+instance many [p.Static] : p.many.Static :=
   static.foldr
 
-instance many_char {p : Parser Charₓ} [p.static] : p.many_char.static :=
+instance many_char {p : Parser Charₓ} [p.Static] : p.manyChar.Static :=
   static.map
 
-instance many' [p.static] : p.many'.static :=
+instance many' [p.Static] : p.many'.Static :=
   static.and_then
 
-instance many1 [p.static] : p.many1.static :=
+instance many1 [p.Static] : p.many1.Static :=
   static.seq
 
-instance many_char1 {p : Parser Charₓ} [p.static] : p.many_char1.static :=
+instance many_char1 {p : Parser Charₓ} [p.Static] : p.manyChar1.Static :=
   static.map
 
-instance sep_by1 [p.static] [sep.static] : static (sep_by1 sep p) :=
+instance sep_by1 [p.Static] [sep.Static] : Static (sepBy1 sep p) :=
   static.seq
 
-instance sep_by [p.static] [sep.static] : static (sep_by sep p) :=
+instance sep_by [p.Static] [sep.Static] : Static (sepBy sep p) :=
   static.orelse
 
-theorem fix_core {F : Parser α → Parser α} (hF : ∀ p : Parser α, p.static → (F p).Static) :
-    ∀ max_depth : ℕ, static (fix_core F max_depth)
-  | 0 => static.failure
+theorem fix_core {F : Parser α → Parser α} (hF : ∀ p : Parser α, p.Static → (F p).Static) :
+    ∀ max_depth : ℕ, Static (fixCore F max_depth)
+  | 0 => Static.failure
   | max_depth + 1 => hF _ (fix_core _)
 
 theorem digit : ¬digit.Static :=
@@ -1219,14 +1219,14 @@ theorem digit : ¬digit.Static :=
     simpa [this]
   not_of_ne this zero_ne_one
 
-theorem Nat : ¬Nat.Static :=
+theorem Nat : ¬nat.Static :=
   have : Nat "1".toCharBuffer 0 = done 1 1 := by
     have : 0 < "s".toCharBuffer.size := by
       decide
     simpa [this]
   not_of_ne this zero_ne_one
 
-theorem fix {F : Parser α → Parser α} (hF : ∀ p : Parser α, p.static → (F p).Static) : static (fix F) :=
+theorem fix {F : Parser α → Parser α} (hF : ∀ p : Parser α, p.Static → (F p).Static) : Static (fix F) :=
   ⟨fun cb n _ _ h => by
     have := fix_core hF (cb.size - n + 1)
     dsimp [fix]  at h
@@ -1242,7 +1242,7 @@ variable {p q : Parser α} {cb : CharBuffer} {n n' : ℕ} {err : Dlist Stringₓ
 
 variable {a : α} {b : β}
 
-theorem done_of_unbounded (h : ¬p.bounded) : ∃ (cb : CharBuffer)(n n' : ℕ)(a : α), p cb n = done n' a ∧ cb.size ≤ n :=
+theorem done_of_unbounded (h : ¬p.Bounded) : ∃ (cb : CharBuffer)(n n' : ℕ)(a : α), p cb n = done n' a ∧ cb.size ≤ n :=
   by
   contrapose! h
   constructor
@@ -1253,25 +1253,25 @@ theorem done_of_unbounded (h : ¬p.bounded) : ∃ (cb : CharBuffer)(n n' : ℕ)(
   · simp [hp]
     
 
-theorem pure : ¬bounded (pure a) := by
+theorem pure : ¬Bounded (pure a) := by
   intro
   have : (pure a : Parser α) Buffer.nil 0 = done 0 a := by
     simp [pure_eq_done]
   exact absurd (bounded.of_done this) (lt_irreflₓ _)
 
-instance bind {f : α → Parser β} [p.bounded] : (p >>= f).Bounded := by
+instance bind {f : α → Parser β} [p.Bounded] : (p >>= f).Bounded := by
   constructor
   intro cb n hn
   obtain ⟨_, _, hp⟩ := bounded.exists p hn
   simp [hp]
 
-instance and_then {q : Parser β} [p.bounded] : (p >> q).Bounded :=
+instance and_then {q : Parser β} [p.Bounded] : (p >> q).Bounded :=
   bounded.bind
 
-instance map [p.bounded] {f : α → β} : (f <$> p).Bounded :=
+instance map [p.Bounded] {f : α → β} : (f <$> p).Bounded :=
   bounded.bind
 
-instance seq {f : Parser (α → β)} [f.bounded] : (f <*> p).Bounded :=
+instance seq {f : Parser (α → β)} [f.Bounded] : (f <*> p).Bounded :=
   bounded.bind
 
 instance mmap {a : α} {l : List α} {f : α → Parser β} [∀ a, (f a).Bounded] : ((a :: l).mmap f).Bounded :=
@@ -1284,10 +1284,10 @@ instance failure : @Parser.Bounded α failure :=
   ⟨by
     simp ⟩
 
-theorem guard_iff {p : Prop} [Decidable p] : bounded (guardₓ p) ↔ ¬p := by
+theorem guard_iff {p : Prop} [Decidable p] : Bounded (guardₓ p) ↔ ¬p := by
   simpa [guardₓ, apply_ite bounded, pure, failure] using fun _ => bounded.failure
 
-instance orelse [p.bounded] [q.bounded] : (p <|> q).Bounded := by
+instance orelse [p.Bounded] [q.Bounded] : (p <|> q).Bounded := by
   constructor
   intro cb n hn
   cases' hx : (p <|> q) cb n with posx resx posx errx
@@ -1296,12 +1296,12 @@ instance orelse [p.bounded] [q.bounded] : (p <|> q).Bounded := by
   · simp
     
 
-instance decorate_errors [p.bounded] : (@decorate_errors α msgs p).Bounded := by
+instance decorate_errors [p.Bounded] : (@decorateErrors α msgs p).Bounded := by
   constructor
   intro _ _
   simpa using bounded.exists p
 
-theorem decorate_errors_iff : (@Parser.decorateErrors α msgs p).Bounded ↔ p.bounded := by
+theorem decorate_errors_iff : (@Parser.decorateErrors α msgs p).Bounded ↔ p.Bounded := by
   constructor
   · intro
     constructor
@@ -1317,27 +1317,27 @@ theorem decorate_errors_iff : (@Parser.decorateErrors α msgs p).Bounded ↔ p.b
     simp [h]
     
 
-instance decorate_error [p.bounded] : (@decorate_error α msg p).Bounded :=
+instance decorate_error [p.Bounded] : (@decorateError α msg p).Bounded :=
   bounded.decorate_errors
 
-theorem decorate_error_iff : (@Parser.decorateError α msg p).Bounded ↔ p.bounded :=
+theorem decorate_error_iff : (@Parser.decorateError α msg p).Bounded ↔ p.Bounded :=
   decorate_errors_iff
 
-instance any_char : bounded any_char :=
+instance any_char : Bounded anyChar :=
   ⟨fun cb n hn => by
     simp [any_char, hn]⟩
 
-instance sat {p : Charₓ → Prop} [DecidablePred p] : bounded (sat p) :=
+instance sat {p : Charₓ → Prop} [DecidablePred p] : Bounded (sat p) :=
   ⟨fun cb n hn => by
     simp [sat, hn]⟩
 
-theorem eps : ¬bounded eps :=
+theorem eps : ¬Bounded eps :=
   pure
 
-instance ch {c : Charₓ} : bounded (ch c) :=
+instance ch {c : Charₓ} : Bounded (ch c) :=
   bounded.decorate_error
 
-theorem char_buf_iff {cb' : CharBuffer} : bounded (char_buf cb') ↔ cb' ≠ Buffer.nil := by
+theorem char_buf_iff {cb' : CharBuffer} : Bounded (charBuf cb') ↔ cb' ≠ Buffer.nil := by
   have : cb' ≠ Buffer.nil ↔ cb'.to_list ≠ [] :=
     not_iff_not_of_iff
       ⟨fun h => by
@@ -1351,10 +1351,10 @@ theorem char_buf_iff {cb' : CharBuffer} : bounded (char_buf cb') ↔ cb' ≠ Buf
     infer_instance
     
 
-instance one_of {cs : List Charₓ} : (one_of cs).Bounded :=
+instance one_of {cs : List Charₓ} : (oneOf cs).Bounded :=
   bounded.decorate_errors
 
-instance one_of' {cs : List Charₓ} : (one_of' cs).Bounded :=
+instance one_of' {cs : List Charₓ} : (oneOf' cs).Bounded :=
   bounded.and_then
 
 theorem str_iff {s : Stringₓ} : (str s).Bounded ↔ s ≠ "" := by
@@ -1387,17 +1387,17 @@ theorem eof : ¬eof.Bounded := by
 
 section Fold
 
-instance foldr_core_zero {f : α → β → β} : (foldr_core f p b 0).Bounded :=
+instance foldr_core_zero {f : α → β → β} : (foldrCore f p b 0).Bounded :=
   bounded.failure
 
-instance foldl_core_zero {f : β → α → β} {b : β} : (foldl_core f b p 0).Bounded :=
+instance foldl_core_zero {f : β → α → β} {b : β} : (foldlCore f b p 0).Bounded :=
   bounded.failure
 
-variable {reps : ℕ} [hpb : p.bounded] (he : ∀ cb n n' err, p cb n = fail n' err → n ≠ n')
+variable {reps : ℕ} [hpb : p.Bounded] (he : ∀ cb n n' err, p cb n = fail n' err → n ≠ n')
 
 include hpb he
 
-theorem foldr_core {f : α → β → β} : (foldr_core f p b reps).Bounded := by
+theorem foldr_core {f : α → β → β} : (foldrCore f p b reps).Bounded := by
   cases reps
   · exact bounded.foldr_core_zero
     
@@ -1406,14 +1406,14 @@ theorem foldr_core {f : α → β → β} : (foldr_core f p b reps).Bounded := b
   obtain ⟨np, errp, hp⟩ := bounded.exists p hn
   simpa [foldr_core_succ_eq_fail, hp] using he cb n np errp
 
-theorem foldr {f : α → β → β} : bounded (foldr f p b) := by
+theorem foldr {f : α → β → β} : Bounded (foldr f p b) := by
   constructor
   intro cb n hn
   have : (Parser.foldrCore f p b (cb.size - n + 1)).Bounded := foldr_core he
   obtain ⟨np, errp, hp⟩ := bounded.exists (Parser.foldrCore f p b (cb.size - n + 1)) hn
   simp [foldr, hp]
 
-theorem foldl_core {f : β → α → β} : (foldl_core f b p reps).Bounded := by
+theorem foldl_core {f : β → α → β} : (foldlCore f b p reps).Bounded := by
   cases reps
   · exact bounded.foldl_core_zero
     
@@ -1422,52 +1422,52 @@ theorem foldl_core {f : β → α → β} : (foldl_core f b p reps).Bounded := b
   obtain ⟨np, errp, hp⟩ := bounded.exists p hn
   simpa [foldl_core_succ_eq_fail, hp] using he cb n np errp
 
-theorem foldl {f : β → α → β} : bounded (foldl f b p) := by
+theorem foldl {f : β → α → β} : Bounded (foldl f b p) := by
   constructor
   intro cb n hn
   have : (Parser.foldlCore f b p (cb.size - n + 1)).Bounded := foldl_core he
   obtain ⟨np, errp, hp⟩ := bounded.exists (Parser.foldlCore f b p (cb.size - n + 1)) hn
   simp [foldl, hp]
 
-theorem many : p.many.bounded :=
+theorem many : p.many.Bounded :=
   foldr he
 
 omit hpb
 
-theorem many_char {pc : Parser Charₓ} [pc.bounded] (he : ∀ cb n n' err, pc cb n = fail n' err → n ≠ n') :
-    pc.many_char.bounded := by
+theorem many_char {pc : Parser Charₓ} [pc.Bounded] (he : ∀ cb n n' err, pc cb n = fail n' err → n ≠ n') :
+    pc.manyChar.Bounded := by
   convert bounded.map
   exact many he
 
 include hpb
 
-theorem many' : p.many'.bounded := by
+theorem many' : p.many'.Bounded := by
   convert bounded.and_then
   exact many he
 
 end Fold
 
-instance many1 [p.bounded] : p.many1.bounded :=
+instance many1 [p.Bounded] : p.many1.Bounded :=
   bounded.seq
 
-instance many_char1 {p : Parser Charₓ} [p.bounded] : p.many_char1.bounded :=
+instance many_char1 {p : Parser Charₓ} [p.Bounded] : p.manyChar1.Bounded :=
   bounded.map
 
-instance sep_by1 {sep : Parser Unit} [p.bounded] : bounded (sep_by1 sep p) :=
+instance sep_by1 {sep : Parser Unit} [p.Bounded] : Bounded (sepBy1 sep p) :=
   bounded.seq
 
-theorem fix_core {F : Parser α → Parser α} (hF : ∀ p : Parser α, p.bounded → (F p).Bounded) :
-    ∀ max_depth : ℕ, bounded (fix_core F max_depth)
-  | 0 => bounded.failure
+theorem fix_core {F : Parser α → Parser α} (hF : ∀ p : Parser α, p.Bounded → (F p).Bounded) :
+    ∀ max_depth : ℕ, Bounded (fixCore F max_depth)
+  | 0 => Bounded.failure
   | max_depth + 1 => hF _ (fix_core _)
 
 instance digit : digit.Bounded :=
   bounded.decorate_error
 
-instance Nat : Nat.Bounded :=
+instance Nat : nat.Bounded :=
   bounded.decorate_error
 
-theorem fix {F : Parser α → Parser α} (hF : ∀ p : Parser α, p.bounded → (F p).Bounded) : bounded (fix F) := by
+theorem fix {F : Parser α → Parser α} (hF : ∀ p : Parser α, p.Bounded → (F p).Bounded) : Bounded (fix F) := by
   constructor
   intro cb n hn
   have : (Parser.fixCore F (cb.size - n + 1)).Bounded := fix_core hF _
@@ -1481,7 +1481,7 @@ namespace Unfailing
 variable {α β : Type} {p q : Parser α} {msgs : Thunkₓ (List Stringₓ)} {msg : Thunkₓ Stringₓ} {cb : CharBuffer}
   {n' n : ℕ} {err : Dlist Stringₓ} {a : α} {b : β} {sep : Parser Unit}
 
-theorem of_bounded [p.bounded] : ¬unfailing p := by
+theorem of_bounded [p.Bounded] : ¬Unfailing p := by
   intro
   cases h : p Buffer.nil 0
   · simpa [lt_irreflₓ] using bounded.of_done h
@@ -1489,22 +1489,22 @@ theorem of_bounded [p.bounded] : ¬unfailing p := by
   · exact of_fail h
     
 
-instance pure : unfailing (pure a) :=
+instance pure : Unfailing (pure a) :=
   ⟨fun _ _ => by
     simp [pure_eq_done]⟩
 
-instance bind {f : α → Parser β} [p.unfailing] [∀ a, (f a).Unfailing] : (p >>= f).Unfailing :=
+instance bind {f : α → Parser β} [p.Unfailing] [∀ a, (f a).Unfailing] : (p >>= f).Unfailing :=
   ⟨fun cb n => by
     obtain ⟨np, a, hp⟩ := exists_done p cb n
     simpa [hp, And.comm, And.left_comm, And.assoc] using exists_done (f a) cb np⟩
 
-instance and_then {q : Parser β} [p.unfailing] [q.unfailing] : (p >> q).Unfailing :=
+instance and_then {q : Parser β} [p.Unfailing] [q.Unfailing] : (p >> q).Unfailing :=
   unfailing.bind
 
-instance map [p.unfailing] {f : α → β} : (f <$> p).Unfailing :=
+instance map [p.Unfailing] {f : α → β} : (f <$> p).Unfailing :=
   unfailing.bind
 
-instance seq {f : Parser (α → β)} [f.unfailing] [p.unfailing] : (f <*> p).Unfailing :=
+instance seq {f : Parser (α → β)} [f.Unfailing] [p.Unfailing] : (f <*> p).Unfailing :=
   unfailing.bind
 
 instance mmap {l : List α} {f : α → Parser β} [∀ a, (f a).Unfailing] : (l.mmap f).Unfailing := by
@@ -1537,45 +1537,45 @@ theorem failure : ¬@Parser.Unfailing α failure := by
     simp
   exact of_fail this
 
-instance guard_true : unfailing (guardₓ True) :=
+instance guard_true : Unfailing (guardₓ True) :=
   unfailing.pure
 
-theorem guardₓ : ¬unfailing (guardₓ False) :=
+theorem guardₓ : ¬Unfailing (guardₓ False) :=
   unfailing.failure
 
-instance orelse [p.unfailing] : (p <|> q).Unfailing :=
+instance orelse [p.Unfailing] : (p <|> q).Unfailing :=
   ⟨fun cb n => by
     obtain ⟨_, _, h⟩ := p.exists_done cb n
     simp [success_iff, h]⟩
 
-instance decorate_errors [p.unfailing] : (@decorate_errors α msgs p).Unfailing :=
+instance decorate_errors [p.Unfailing] : (@decorateErrors α msgs p).Unfailing :=
   ⟨fun cb n => by
     obtain ⟨_, _, h⟩ := p.exists_done cb n
     simp [success_iff, h]⟩
 
-instance decorate_error [p.unfailing] : (@decorate_error α msg p).Unfailing :=
+instance decorate_error [p.Unfailing] : (@decorateError α msg p).Unfailing :=
   unfailing.decorate_errors
 
-instance any_char : conditionally_unfailing any_char :=
+instance any_char : ConditionallyUnfailing anyChar :=
   ⟨fun _ _ hn => by
     simp [success_iff, any_char_eq_done, hn]⟩
 
-theorem sat : conditionally_unfailing (sat fun _ => True) :=
+theorem sat : ConditionallyUnfailing (sat fun _ => True) :=
   ⟨fun _ _ hn => by
     simp [success_iff, sat_eq_done, hn]⟩
 
-instance eps : unfailing eps :=
+instance eps : Unfailing eps :=
   unfailing.pure
 
 instance remaining : remaining.Unfailing :=
   ⟨fun _ _ => by
     simp [success_iff, remaining_eq_done]⟩
 
-theorem foldr_core_zero {f : α → β → β} {b : β} : ¬(foldr_core f p b 0).Unfailing :=
+theorem foldr_core_zero {f : α → β → β} {b : β} : ¬(foldrCore f p b 0).Unfailing :=
   unfailing.failure
 
-instance foldr_core_of_static {f : α → β → β} {b : β} {reps : ℕ} [p.static] [p.unfailing] :
-    (foldr_core f p b (reps + 1)).Unfailing := by
+instance foldr_core_of_static {f : α → β → β} {b : β} {reps : ℕ} [p.Static] [p.Unfailing] :
+    (foldrCore f p b (reps + 1)).Unfailing := by
   induction' reps with reps hr
   · constructor
     intro cb n
@@ -1596,8 +1596,8 @@ instance foldr_core_of_static {f : α → β → β} {b : β} {reps : ℕ} [p.st
     simp [h, hf, And.comm, And.left_comm, And.assoc]
     
 
-instance foldr_core_one_of_err_static {f : α → β → β} {b : β} [p.static] [p.err_static] :
-    (foldr_core f p b 1).Unfailing := by
+instance foldr_core_one_of_err_static {f : α → β → β} {b : β} [p.Static] [p.ErrStatic] :
+    (foldrCore f p b 1).Unfailing := by
   constructor
   intro cb n
   cases h : p cb n
@@ -1609,7 +1609,7 @@ instance foldr_core_one_of_err_static {f : α → β → β} {b : β} [p.static]
 theorem digit : ¬digit.Unfailing :=
   of_bounded
 
-theorem Nat : ¬Nat.Unfailing :=
+theorem Nat : ¬nat.Unfailing :=
   of_bounded
 
 end Unfailing
@@ -1619,15 +1619,15 @@ namespace ErrStatic
 variable {α β : Type} {p q : Parser α} {msgs : Thunkₓ (List Stringₓ)} {msg : Thunkₓ Stringₓ} {cb : CharBuffer}
   {n' n : ℕ} {err : Dlist Stringₓ} {a : α} {b : β} {sep : Parser Unit}
 
-theorem not_of_ne (h : p cb n = fail n' err) (hne : n ≠ n') : ¬err_static p := by
+theorem not_of_ne (h : p cb n = fail n' err) (hne : n ≠ n') : ¬ErrStatic p := by
   intro
   exact hne (of_fail h)
 
-instance pure : err_static (pure a) :=
+instance pure : ErrStatic (pure a) :=
   ⟨fun _ _ _ _ => by
     simp [pure_eq_done]⟩
 
-instance bind {f : α → Parser β} [p.static] [p.err_static] [∀ a, (f a).ErrStatic] : (p >>= f).ErrStatic :=
+instance bind {f : α → Parser β} [p.Static] [p.ErrStatic] [∀ a, (f a).ErrStatic] : (p >>= f).ErrStatic :=
   ⟨fun cb n n' err => by
     rw [bind_eq_fail]
     rintro (hp | ⟨_, _, hp, hf⟩)
@@ -1636,7 +1636,7 @@ instance bind {f : α → Parser β} [p.static] [p.err_static] [∀ a, (f a).Err
     · exact trans (static.of_done hp) (of_fail hf)
       ⟩
 
-instance bind_of_unfailing {f : α → Parser β} [p.err_static] [∀ a, (f a).Unfailing] : (p >>= f).ErrStatic :=
+instance bind_of_unfailing {f : α → Parser β} [p.ErrStatic] [∀ a, (f a).Unfailing] : (p >>= f).ErrStatic :=
   ⟨fun cb n n' err => by
     rw [bind_eq_fail]
     rintro (hp | ⟨_, _, hp, hf⟩)
@@ -1645,25 +1645,25 @@ instance bind_of_unfailing {f : α → Parser β} [p.err_static] [∀ a, (f a).U
     · exact False.elim (unfailing.of_fail hf)
       ⟩
 
-instance and_then {q : Parser β} [p.static] [p.err_static] [q.err_static] : (p >> q).ErrStatic :=
+instance and_then {q : Parser β} [p.Static] [p.ErrStatic] [q.ErrStatic] : (p >> q).ErrStatic :=
   err_static.bind
 
-instance and_then_of_unfailing {q : Parser β} [p.err_static] [q.unfailing] : (p >> q).ErrStatic :=
+instance and_then_of_unfailing {q : Parser β} [p.ErrStatic] [q.Unfailing] : (p >> q).ErrStatic :=
   err_static.bind_of_unfailing
 
-instance map [p.err_static] {f : α → β} : (f <$> p).ErrStatic :=
+instance map [p.ErrStatic] {f : α → β} : (f <$> p).ErrStatic :=
   ⟨fun _ _ _ _ => by
     rw [map_eq_fail]
     exact of_fail⟩
 
-instance seq {f : Parser (α → β)} [f.static] [f.err_static] [p.err_static] : (f <*> p).ErrStatic :=
+instance seq {f : Parser (α → β)} [f.Static] [f.ErrStatic] [p.ErrStatic] : (f <*> p).ErrStatic :=
   err_static.bind
 
-instance seq_of_unfailing {f : Parser (α → β)} [f.err_static] [p.unfailing] : (f <*> p).ErrStatic :=
+instance seq_of_unfailing {f : Parser (α → β)} [f.ErrStatic] [p.Unfailing] : (f <*> p).ErrStatic :=
   err_static.bind_of_unfailing
 
 instance mmap : ∀ {l : List α} {f : α → Parser β} [∀ a, (f a).Static] [∀ a, (f a).ErrStatic], (l.mmap f).ErrStatic
-  | [], _, _, _ => err_static.pure
+  | [], _, _, _ => ErrStatic.pure
   | a :: l, _, h, h' => by
     convert err_static.bind
     · exact h _
@@ -1687,7 +1687,7 @@ instance mmap : ∀ {l : List α} {f : α → Parser β} [∀ a, (f a).Static] [
 
 instance mmap_of_unfailing :
     ∀ {l : List α} {f : α → Parser β} [∀ a, (f a).Unfailing] [∀ a, (f a).ErrStatic], (l.mmap f).ErrStatic
-  | [], _, _, _ => err_static.pure
+  | [], _, _, _ => ErrStatic.pure
   | a :: l, _, h, h' => by
     convert err_static.bind_of_unfailing
     · exact h' _
@@ -1702,7 +1702,7 @@ instance mmap_of_unfailing :
       
 
 instance mmap' : ∀ {l : List α} {f : α → Parser β} [∀ a, (f a).Static] [∀ a, (f a).ErrStatic], (l.mmap' f).ErrStatic
-  | [], _, _, _ => err_static.pure
+  | [], _, _, _ => ErrStatic.pure
   | a :: l, _, h, h' => by
     convert err_static.and_then
     · exact h _
@@ -1718,7 +1718,7 @@ instance mmap' : ∀ {l : List α} {f : α → Parser β} [∀ a, (f a).Static] 
 
 instance mmap'_of_unfailing :
     ∀ {l : List α} {f : α → Parser β} [∀ a, (f a).Unfailing] [∀ a, (f a).ErrStatic], (l.mmap' f).ErrStatic
-  | [], _, _, _ => err_static.pure
+  | [], _, _, _ => ErrStatic.pure
   | a :: l, _, h, h' => by
     convert err_static.and_then_of_unfailing
     · exact h' _
@@ -1730,10 +1730,10 @@ instance mmap'_of_unfailing :
 instance failure : @Parser.ErrStatic α failure :=
   ⟨fun _ _ _ _ h => (failure_eq_fail.mp h).left⟩
 
-instance guardₓ {p : Prop} [Decidable p] : err_static (guardₓ p) :=
+instance guardₓ {p : Prop} [Decidable p] : ErrStatic (guardₓ p) :=
   ⟨fun _ _ _ _ h => (guard_eq_fail.mp h).right.left⟩
 
-instance orelse [p.err_static] [q.mono] : (p <|> q).ErrStatic :=
+instance orelse [p.ErrStatic] [q.mono] : (p <|> q).ErrStatic :=
   ⟨fun _ n n' _ => by
     by_cases' hn : n = n'
     · exact fun _ => hn
@@ -1745,36 +1745,36 @@ instance orelse [p.err_static] [q.mono] : (p <|> q).ErrStatic :=
         
       ⟩
 
-instance decorate_errors : (@decorate_errors α msgs p).ErrStatic :=
+instance decorate_errors : (@decorateErrors α msgs p).ErrStatic :=
   ⟨fun _ _ _ _ h => (decorate_errors_eq_fail.mp h).left⟩
 
-instance decorate_error : (@decorate_error α msg p).ErrStatic :=
+instance decorate_error : (@decorateError α msg p).ErrStatic :=
   err_static.decorate_errors
 
-instance any_char : err_static any_char :=
+instance any_char : ErrStatic anyChar :=
   ⟨fun _ _ _ _ => by
     rw [any_char_eq_fail, And.comm]
     simp ⟩
 
-instance sat_iff {p : Charₓ → Prop} [DecidablePred p] : err_static (sat p) :=
+instance sat_iff {p : Charₓ → Prop} [DecidablePred p] : ErrStatic (sat p) :=
   ⟨fun _ _ _ _ h => (sat_eq_fail.mp h).left⟩
 
-instance eps : err_static eps :=
+instance eps : ErrStatic eps :=
   err_static.pure
 
-instance ch (c : Charₓ) : err_static (ch c) :=
+instance ch (c : Charₓ) : ErrStatic (ch c) :=
   err_static.decorate_error
 
-instance char_buf {cb' : CharBuffer} : err_static (char_buf cb') :=
+instance char_buf {cb' : CharBuffer} : ErrStatic (charBuf cb') :=
   err_static.decorate_error
 
-instance one_of {cs : List Charₓ} : err_static (one_of cs) :=
+instance one_of {cs : List Charₓ} : ErrStatic (oneOf cs) :=
   err_static.decorate_errors
 
-instance one_of' {cs : List Charₓ} : err_static (one_of' cs) :=
+instance one_of' {cs : List Charₓ} : ErrStatic (oneOf' cs) :=
   err_static.and_then_of_unfailing
 
-instance str {s : Stringₓ} : err_static (str s) :=
+instance str {s : Stringₓ} : ErrStatic (str s) :=
   err_static.decorate_error
 
 instance remaining : remaining.ErrStatic :=
@@ -1784,18 +1784,18 @@ instance remaining : remaining.ErrStatic :=
 instance eof : eof.ErrStatic :=
   err_static.decorate_error
 
-theorem fix_core {F : Parser α → Parser α} (hF : ∀ p : Parser α, p.err_static → (F p).ErrStatic) :
-    ∀ max_depth : ℕ, err_static (fix_core F max_depth)
-  | 0 => err_static.failure
+theorem fix_core {F : Parser α → Parser α} (hF : ∀ p : Parser α, p.ErrStatic → (F p).ErrStatic) :
+    ∀ max_depth : ℕ, ErrStatic (fixCore F max_depth)
+  | 0 => ErrStatic.failure
   | max_depth + 1 => hF _ (fix_core _)
 
 instance digit : digit.ErrStatic :=
   err_static.decorate_error
 
-instance Nat : Nat.ErrStatic :=
+instance Nat : nat.ErrStatic :=
   err_static.decorate_error
 
-theorem fix {F : Parser α → Parser α} (hF : ∀ p : Parser α, p.err_static → (F p).ErrStatic) : err_static (fix F) :=
+theorem fix {F : Parser α → Parser α} (hF : ∀ p : Parser α, p.ErrStatic → (F p).ErrStatic) : ErrStatic (fix F) :=
   ⟨fun cb n _ _ h => by
     have := fix_core hF (cb.size - n + 1)
     dsimp [fix]  at h
@@ -1808,13 +1808,13 @@ namespace Step
 variable {α β : Type} {p q : Parser α} {msgs : Thunkₓ (List Stringₓ)} {msg : Thunkₓ Stringₓ} {cb : CharBuffer}
   {n' n : ℕ} {err : Dlist Stringₓ} {a : α} {b : β} {sep : Parser Unit}
 
-theorem not_step_of_static_done [static p] (h : ∃ cb n n' a, p cb n = done n' a) : ¬step p := by
+theorem not_step_of_static_done [Static p] (h : ∃ cb n n' a, p cb n = done n' a) : ¬Step p := by
   intro
   rcases h with ⟨cb, n, n', a, h⟩
   have hs := static.of_done h
   simpa [← hs] using of_done h
 
-theorem pure (a : α) : ¬step (pure a) := by
+theorem pure (a : α) : ¬Step (pure a) := by
   apply not_step_of_static_done
   simp [pure_eq_done]
 
@@ -1824,17 +1824,17 @@ instance bind {f : α → Parser β} [p.step] [∀ a, (f a).Static] : (p >>= f).
     rintro ⟨_, _, hp, hf⟩
     exact static.of_done hf ▸ of_done hp⟩
 
-instance bind' {f : α → Parser β} [p.static] [∀ a, (f a).step] : (p >>= f).step :=
+instance bind' {f : α → Parser β} [p.Static] [∀ a, (f a).step] : (p >>= f).step :=
   ⟨fun _ _ _ _ => by
     simp_rw [bind_eq_done]
     rintro ⟨_, _, hp, hf⟩
     rw [static.of_done hp]
     exact of_done hf⟩
 
-instance and_then {q : Parser β} [p.step] [q.static] : (p >> q).step :=
+instance and_then {q : Parser β} [p.step] [q.Static] : (p >> q).step :=
   step.bind
 
-instance and_then' {q : Parser β} [p.static] [q.step] : (p >> q).step :=
+instance and_then' {q : Parser β} [p.Static] [q.step] : (p >> q).step :=
   step.bind'
 
 instance map [p.step] {f : α → β} : (f <$> p).step :=
@@ -1843,10 +1843,10 @@ instance map [p.step] {f : α → β} : (f <$> p).step :=
     rintro ⟨_, hp, _⟩
     exact of_done hp⟩
 
-instance seq {f : Parser (α → β)} [f.step] [p.static] : (f <*> p).step :=
+instance seq {f : Parser (α → β)} [f.step] [p.Static] : (f <*> p).step :=
   step.bind
 
-instance seq' {f : Parser (α → β)} [f.static] [p.step] : (f <*> p).step :=
+instance seq' {f : Parser (α → β)} [f.Static] [p.step] : (f <*> p).step :=
   step.bind'
 
 instance mmap {f : α → Parser β} [(f a).step] : ([a].mmap f).step := by
@@ -1872,10 +1872,10 @@ instance failure : @Parser.Step α failure :=
   ⟨fun _ _ _ _ => by
     simp ⟩
 
-theorem guard_true : ¬step (guardₓ True) :=
+theorem guard_true : ¬Step (guardₓ True) :=
   pure _
 
-instance guardₓ : step (guardₓ False) :=
+instance guardₓ : Step (guardₓ False) :=
   step.failure
 
 instance orelse [p.step] [q.step] : (p <|> q).step :=
@@ -1899,7 +1899,7 @@ theorem decorate_errors_iff : (@Parser.decorateErrors α msgs p).step ↔ p.step
     exact of_done h
     
 
-instance decorate_errors [p.step] : (@decorate_errors α msgs p).step :=
+instance decorate_errors [p.step] : (@decorateErrors α msgs p).step :=
   ⟨fun _ _ _ _ => by
     rw [decorate_errors_eq_done]
     exact of_done⟩
@@ -1907,30 +1907,30 @@ instance decorate_errors [p.step] : (@decorate_errors α msgs p).step :=
 theorem decorate_error_iff : (@Parser.decorateError α msg p).step ↔ p.step :=
   decorate_errors_iff
 
-instance decorate_error [p.step] : (@decorate_error α msg p).step :=
+instance decorate_error [p.step] : (@decorateError α msg p).step :=
   step.decorate_errors
 
-instance any_char : step any_char := by
+instance any_char : Step anyChar := by
   constructor
   intro cb n
   simp_rw [any_char_eq_done]
   rintro _ _ ⟨_, rfl, -⟩
   simp
 
-instance sat {p : Charₓ → Prop} [DecidablePred p] : step (sat p) := by
+instance sat {p : Charₓ → Prop} [DecidablePred p] : Step (sat p) := by
   constructor
   intro cb n
   simp_rw [sat_eq_done]
   rintro _ _ ⟨_, _, rfl, -⟩
   simp
 
-theorem eps : ¬step eps :=
-  step.pure ()
+theorem eps : ¬Step eps :=
+  Step.pure ()
 
-instance ch {c : Charₓ} : step (ch c) :=
+instance ch {c : Charₓ} : Step (ch c) :=
   step.decorate_error
 
-theorem char_buf_iff {cb' : CharBuffer} : (char_buf cb').step ↔ cb'.size = 1 := by
+theorem char_buf_iff {cb' : CharBuffer} : (charBuf cb').step ↔ cb'.size = 1 := by
   have : char_buf cb' cb' 0 = done cb'.size () := by
     simp [char_buf_eq_done]
   constructor
@@ -1945,10 +1945,10 @@ theorem char_buf_iff {cb' : CharBuffer} : (char_buf cb').step ↔ cb'.size = 1 :
     rfl
     
 
-instance one_of {cs : List Charₓ} : (one_of cs).step :=
+instance one_of {cs : List Charₓ} : (oneOf cs).step :=
   step.decorate_errors
 
-instance one_of' {cs : List Charₓ} : (one_of' cs).step :=
+instance one_of' {cs : List Charₓ} : (oneOf' cs).step :=
   step.and_then
 
 theorem str_iff {s : Stringₓ} : (str s).step ↔ s.length = 1 := by
@@ -1965,14 +1965,14 @@ theorem eof : ¬eof.step := by
   simp
 
 theorem fix_core {F : Parser α → Parser α} (hF : ∀ p : Parser α, p.step → (F p).step) :
-    ∀ max_depth : ℕ, step (fix_core F max_depth)
-  | 0 => step.failure
+    ∀ max_depth : ℕ, Step (fixCore F max_depth)
+  | 0 => Step.failure
   | max_depth + 1 => hF _ (fix_core _)
 
 instance digit : digit.step :=
   step.decorate_error
 
-theorem fix {F : Parser α → Parser α} (hF : ∀ p : Parser α, p.step → (F p).step) : step (fix F) :=
+theorem fix {F : Parser α → Parser α} (hF : ∀ p : Parser α, p.step → (F p).step) : Step (fix F) :=
   ⟨fun cb n _ _ h => by
     have := fix_core hF (cb.size - n + 1)
     dsimp [fix]  at h
@@ -1985,7 +1985,7 @@ section Step
 variable {α β : Type} {p q : Parser α} {msgs : Thunkₓ (List Stringₓ)} {msg : Thunkₓ Stringₓ} {cb : CharBuffer}
   {n' n : ℕ} {err : Dlist Stringₓ} {a : α} {b : β} {sep : Parser Unit}
 
-theorem many1_eq_done_iff_many_eq_done [p.step] [p.bounded] {x : α} {xs : List α} :
+theorem many1_eq_done_iff_many_eq_done [p.step] [p.Bounded] {x : α} {xs : List α} :
     many1 p cb n = done n' (x :: xs) ↔ many p cb n = done n' (x :: xs) := by
   induction' hx : x :: xs with hd tl IH generalizing x xs n n'
   · simpa using hx
@@ -2048,34 +2048,34 @@ namespace Prog
 variable {α β : Type} {p q : Parser α} {msgs : Thunkₓ (List Stringₓ)} {msg : Thunkₓ Stringₓ} {cb : CharBuffer}
   {n' n : ℕ} {err : Dlist Stringₓ} {a : α} {b : β} {sep : Parser Unit}
 
-instance (priority := 100) of_step [step p] : prog p :=
+instance (priority := 100) of_step [Step p] : Prog p :=
   ⟨fun _ _ _ _ h => by
     rw [step.of_done h]
     exact Nat.lt_succ_selfₓ _⟩
 
-theorem pure (a : α) : ¬prog (pure a) := by
+theorem pure (a : α) : ¬Prog (pure a) := by
   intro h
   have : (pure a : Parser α) Buffer.nil 0 = done 0 a := by
     simp [pure_eq_done]
   replace this : 0 < 0 := prog.of_done this
   exact (lt_irreflₓ _) this
 
-instance bind {f : α → Parser β} [p.prog] [∀ a, (f a).mono] : (p >>= f).Prog :=
+instance bind {f : α → Parser β} [p.Prog] [∀ a, (f a).mono] : (p >>= f).Prog :=
   ⟨fun _ _ _ _ => by
     simp_rw [bind_eq_done]
     rintro ⟨_, _, hp, hf⟩
     exact lt_of_lt_of_leₓ (of_done hp) (mono.of_done hf)⟩
 
-instance and_then {q : Parser β} [p.prog] [q.mono] : (p >> q).Prog :=
+instance and_then {q : Parser β} [p.Prog] [q.mono] : (p >> q).Prog :=
   prog.bind
 
-instance map [p.prog] {f : α → β} : (f <$> p).Prog :=
+instance map [p.Prog] {f : α → β} : (f <$> p).Prog :=
   ⟨fun _ _ _ _ => by
     simp_rw [map_eq_done]
     rintro ⟨_, hp, _⟩
     exact of_done hp⟩
 
-instance seq {f : Parser (α → β)} [f.prog] [p.mono] : (f <*> p).Prog :=
+instance seq {f : Parser (α → β)} [f.Prog] [p.mono] : (f <*> p).Prog :=
   prog.bind
 
 instance mmap {l : List α} {f : α → Parser β} [(f a).Prog] [∀ a, (f a).mono] : ((a :: l).mmap f).Prog := by
@@ -2093,18 +2093,18 @@ instance mmap' {l : List α} {f : α → Parser β} [(f a).Prog] [∀ a, (f a).m
 instance failure : @Parser.Prog α failure :=
   prog.of_step
 
-theorem guard_true : ¬prog (guardₓ True) :=
+theorem guard_true : ¬Prog (guardₓ True) :=
   pure _
 
-instance guardₓ : prog (guardₓ False) :=
+instance guardₓ : Prog (guardₓ False) :=
   prog.failure
 
-instance orelse [p.prog] [q.prog] : (p <|> q).Prog :=
+instance orelse [p.Prog] [q.Prog] : (p <|> q).Prog :=
   ⟨fun _ _ _ _ => by
     simp_rw [orelse_eq_done]
     rintro (h | ⟨h, -⟩) <;> exact of_done h⟩
 
-theorem decorate_errors_iff : (@Parser.decorateErrors α msgs p).Prog ↔ p.prog := by
+theorem decorate_errors_iff : (@Parser.decorateErrors α msgs p).Prog ↔ p.Prog := by
   constructor
   · intro
     constructor
@@ -2120,30 +2120,30 @@ theorem decorate_errors_iff : (@Parser.decorateErrors α msgs p).Prog ↔ p.prog
     exact of_done h
     
 
-instance decorate_errors [p.prog] : (@decorate_errors α msgs p).Prog :=
+instance decorate_errors [p.Prog] : (@decorateErrors α msgs p).Prog :=
   ⟨fun _ _ _ _ => by
     rw [decorate_errors_eq_done]
     exact of_done⟩
 
-theorem decorate_error_iff : (@Parser.decorateError α msg p).Prog ↔ p.prog :=
+theorem decorate_error_iff : (@Parser.decorateError α msg p).Prog ↔ p.Prog :=
   decorate_errors_iff
 
-instance decorate_error [p.prog] : (@decorate_error α msg p).Prog :=
+instance decorate_error [p.Prog] : (@decorateError α msg p).Prog :=
   prog.decorate_errors
 
-instance any_char : prog any_char :=
+instance any_char : Prog anyChar :=
   prog.of_step
 
-instance sat {p : Charₓ → Prop} [DecidablePred p] : prog (sat p) :=
+instance sat {p : Charₓ → Prop} [DecidablePred p] : Prog (sat p) :=
   prog.of_step
 
-theorem eps : ¬prog eps :=
-  prog.pure ()
+theorem eps : ¬Prog eps :=
+  Prog.pure ()
 
-instance ch {c : Charₓ} : prog (ch c) :=
+instance ch {c : Charₓ} : Prog (ch c) :=
   prog.of_step
 
-theorem char_buf_iff {cb' : CharBuffer} : (char_buf cb').Prog ↔ cb' ≠ Buffer.nil := by
+theorem char_buf_iff {cb' : CharBuffer} : (charBuf cb').Prog ↔ cb' ≠ Buffer.nil := by
   have : cb' ≠ Buffer.nil ↔ cb'.to_list ≠ [] :=
     not_iff_not_of_iff
       ⟨fun h => by
@@ -2157,10 +2157,10 @@ theorem char_buf_iff {cb' : CharBuffer} : (char_buf cb').Prog ↔ cb' ≠ Buffer
     infer_instance
     
 
-instance one_of {cs : List Charₓ} : (one_of cs).Prog :=
+instance one_of {cs : List Charₓ} : (oneOf cs).Prog :=
   prog.decorate_errors
 
-instance one_of' {cs : List Charₓ} : (one_of' cs).Prog :=
+instance one_of' {cs : List Charₓ} : (oneOf' cs).Prog :=
   prog.and_then
 
 theorem str_iff {s : Stringₓ} : (str s).Prog ↔ s ≠ "" := by
@@ -2180,7 +2180,7 @@ theorem eof : ¬eof.Prog := by
   replace this : 0 < 0 := prog.of_done this
   exact (lt_irreflₓ _) this
 
-instance many1 [p.mono] [p.prog] : p.many1.prog := by
+instance many1 [p.mono] [p.Prog] : p.many1.Prog := by
   constructor
   rintro cb n n' (_ | ⟨hd, tl⟩)
   · simp
@@ -2190,18 +2190,18 @@ instance many1 [p.mono] [p.prog] : p.many1.prog := by
     exact (of_done hp).trans_le (mono.of_done h)
     
 
-theorem fix_core {F : Parser α → Parser α} (hF : ∀ p : Parser α, p.prog → (F p).Prog) :
-    ∀ max_depth : ℕ, prog (fix_core F max_depth)
-  | 0 => prog.failure
+theorem fix_core {F : Parser α → Parser α} (hF : ∀ p : Parser α, p.Prog → (F p).Prog) :
+    ∀ max_depth : ℕ, Prog (fixCore F max_depth)
+  | 0 => Prog.failure
   | max_depth + 1 => hF _ (fix_core _)
 
 instance digit : digit.Prog :=
   prog.of_step
 
-instance Nat : Nat.Prog :=
+instance Nat : nat.Prog :=
   prog.decorate_error
 
-theorem fix {F : Parser α → Parser α} (hF : ∀ p : Parser α, p.prog → (F p).Prog) : prog (fix F) :=
+theorem fix {F : Parser α → Parser α} (hF : ∀ p : Parser α, p.Prog → (F p).Prog) : Prog (fix F) :=
   ⟨fun cb n _ _ h => by
     have := fix_core hF (cb.size - n + 1)
     dsimp [fix]  at h
@@ -2217,7 +2217,7 @@ variable {a : α} {b : β}
 
 section Many
 
-theorem many_sublist_of_done [p.step] [p.bounded] {l : List α} (h : p.many cb n = done n' l) :
+theorem many_sublist_of_done [p.step] [p.Bounded] {l : List α} (h : p.many cb n = done n' l) :
     ∀, ∀ k < n' - n, ∀, p.many cb (n + k) = done n' (l.drop k) := by
   induction' l with hd tl hl generalizing n
   · rw [many_eq_done_nil] at h
@@ -2237,7 +2237,7 @@ theorem many_sublist_of_done [p.step] [p.bounded] {l : List α} (h : p.many cb n
   · exact nat.lt_pred_iff.mpr hm
     
 
-theorem many_eq_nil_of_done [p.step] [p.bounded] {l : List α} (h : p.many cb n = done n' l) :
+theorem many_eq_nil_of_done [p.step] [p.Bounded] {l : List α} (h : p.many cb n = done n' l) :
     p.many cb n' = done n' [] := by
   induction' l with hd tl hl generalizing n
   · convert h
@@ -2249,7 +2249,7 @@ theorem many_eq_nil_of_done [p.step] [p.bounded] {l : List α} (h : p.many cb n 
     exact hl h
     
 
-theorem many_eq_nil_of_out_of_bound [p.bounded] {l : List α} (h : p.many cb n = done n' l) (hn : cb.size < n) :
+theorem many_eq_nil_of_out_of_bound [p.Bounded] {l : List α} (h : p.many cb n = done n' l) (hn : cb.size < n) :
     n' = n ∧ l = [] := by
   cases l
   · rw [many_eq_done_nil] at h
@@ -2260,7 +2260,7 @@ theorem many_eq_nil_of_out_of_bound [p.bounded] {l : List α} (h : p.many cb n =
     exact absurd (bounded.of_done hp) hn.not_lt
     
 
-theorem many1_length_of_done [p.mono] [p.step] [p.bounded] {l : List α} (h : many1 p cb n = done n' l) :
+theorem many1_length_of_done [p.mono] [p.step] [p.Bounded] {l : List α} (h : many1 p cb n = done n' l) :
     l.length = n' - n := by
   induction' l with hd tl hl generalizing n n'
   · simpa using h
@@ -2281,7 +2281,7 @@ theorem many1_length_of_done [p.mono] [p.step] [p.bounded] {l : List α} (h : ma
     simp [hl, add_commₓ, add_assocₓ, Nat.sub_succ]
     
 
-theorem many1_bounded_of_done [p.step] [p.bounded] {l : List α} (h : many1 p cb n = done n' l) : n' ≤ cb.size := by
+theorem many1_bounded_of_done [p.step] [p.Bounded] {l : List α} (h : many1 p cb n = done n' l) : n' ≤ cb.size := by
   induction' l with hd tl hl generalizing n n'
   · simpa using h
     
@@ -2309,8 +2309,8 @@ of characters parsed in is necessarily `n' - n`.
 
 This is one of the directions of `nat_eq_done`.
 -/
-theorem nat_of_done {val : ℕ} (h : Nat cb n = done n' val) :
-    val = Nat.ofDigits 10 (((cb.to_list.drop n).take (n' - n)).reverse.map fun c => c.to_nat - '0'.toNat) := by
+theorem nat_of_done {val : ℕ} (h : nat cb n = done n' val) :
+    val = Nat.ofDigits 10 (((cb.toList.drop n).take (n' - n)).reverse.map fun c => c.toNat - '0'.toNat) := by
   have natm : nat._match_1 = fun d : ℕ p => ⟨p.1 + d * p.2, p.2 * 10⟩ := by
     ext1
     ext1 ⟨⟩
@@ -2394,7 +2394,7 @@ position in `cb : char_buffer` is "numeric", that is, is between `'0'` and `'9'`
 
 This is a necessary part of proving one of the directions of `nat_eq_done`.
 -/
-theorem nat_of_done_as_digit {val : ℕ} (h : Nat cb n = done n' val) :
+theorem nat_of_done_as_digit {val : ℕ} (h : nat cb n = done n' val) :
     ∀ hn : n' ≤ cb.size k hk : k < n', n ≤ k → '0' ≤ cb.read ⟨k, hk.trans_le hn⟩ ∧ cb.read ⟨k, hk.trans_le hn⟩ ≤ '9' :=
   by
   simp only [Nat, pure_eq_done, And.left_comm, decorate_error_eq_done, bind_eq_done, exists_eq_left,
@@ -2430,7 +2430,7 @@ then it must be the case that for the ending position `n'`, either it is beyond 
 
 This is a necessary part of proving one of the directions of `nat_eq_done`.
 -/
-theorem nat_of_done_bounded {val : ℕ} (h : Nat cb n = done n' val) :
+theorem nat_of_done_bounded {val : ℕ} (h : nat cb n = done n' val) :
     ∀ hn : n' < cb.size, '0' ≤ cb.read ⟨n', hn⟩ → '9' < cb.read ⟨n', hn⟩ := by
   simp only [Nat, pure_eq_done, And.left_comm, decorate_error_eq_done, bind_eq_done, exists_eq_left,
     exists_and_distrib_left] at h
@@ -2467,9 +2467,9 @@ are between `'0'` and `'9'` inclusive. Such a `char_buffer` would produce the `�
 by its decimal characters.
 -/
 theorem nat_eq_done {val : ℕ} :
-    Nat cb n = done n' val ↔
+    nat cb n = done n' val ↔
       ∃ hn : n < n',
-        val = Nat.ofDigits 10 (((cb.to_list.drop n).take (n' - n)).reverse.map fun c => c.to_nat - '0'.toNat) ∧
+        val = Nat.ofDigits 10 (((cb.toList.drop n).take (n' - n)).reverse.map fun c => c.toNat - '0'.toNat) ∧
           (∀ hn' : n' < cb.size, '0' ≤ cb.read ⟨n', hn'⟩ → '9' < cb.read ⟨n', hn'⟩) ∧
             ∃ hn'' : n' ≤ cb.size,
               ∀ k hk : k < n', n ≤ k → '0' ≤ cb.read ⟨k, hk.trans_le hn''⟩ ∧ cb.read ⟨k, hk.trans_le hn''⟩ ≤ '9' :=
@@ -2504,7 +2504,7 @@ theorem nat_eq_done {val : ℕ} :
           simpa using hn.trans_le hn')] at
       H
     have hdigit : digit cb n = done (n + 1) (hd.to_nat - '0'.toNat) := by
-      specialize ho n hn (le_reflₓ _)
+      specialize ho n hn le_rfl
       have : (Buffer.read cb ⟨n, hn.trans_le hn'⟩).toNat - '0'.toNat ≤ 9 := by
         rw
           [show 9 = '9'.toNat - '0'.toNat by

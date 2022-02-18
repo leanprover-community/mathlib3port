@@ -58,7 +58,7 @@ structure ClosureOperator [Preorderₓ α] extends α →o α where
 namespace ClosureOperator
 
 instance [Preorderₓ α] : CoeFun (ClosureOperator α) fun _ => α → α :=
-  ⟨fun c => c.to_fun⟩
+  ⟨fun c => c.toFun⟩
 
 /-- See Note [custom simps projection] -/
 def simps.apply [Preorderₓ α] (f : ClosureOperator α) : α → α :=
@@ -139,50 +139,50 @@ theorem idempotent (x : α) : c (c x) = c x :=
   c.idempotent' x
 
 theorem le_closure_iff (x y : α) : x ≤ c y ↔ c x ≤ c y :=
-  ⟨fun h => c.idempotent y ▸ c.monotone h, fun h => (c.le_closure x).trans h⟩
+  ⟨fun h => c.idempotent y ▸ c.Monotone h, fun h => (c.le_closure x).trans h⟩
 
 /-- An element `x` is closed for the closure operator `c` if it is a fixed point for it. -/
 def closed : Set α := fun x => c x = x
 
-theorem mem_closed_iff (x : α) : x ∈ c.closed ↔ c x = x :=
+theorem mem_closed_iff (x : α) : x ∈ c.Closed ↔ c x = x :=
   Iff.rfl
 
-theorem mem_closed_iff_closure_le (x : α) : x ∈ c.closed ↔ c x ≤ x :=
+theorem mem_closed_iff_closure_le (x : α) : x ∈ c.Closed ↔ c x ≤ x :=
   ⟨le_of_eqₓ, fun h => h.antisymm (c.le_closure x)⟩
 
-theorem closure_eq_self_of_mem_closed {x : α} (h : x ∈ c.closed) : c x = x :=
+theorem closure_eq_self_of_mem_closed {x : α} (h : x ∈ c.Closed) : c x = x :=
   h
 
 @[simp]
-theorem closure_is_closed (x : α) : c x ∈ c.closed :=
+theorem closure_is_closed (x : α) : c x ∈ c.Closed :=
   c.idempotent x
 
 /-- The set of closed elements for `c` is exactly its range. -/
-theorem closed_eq_range_close : c.closed = Set.Range c :=
+theorem closed_eq_range_close : c.Closed = Set.Range c :=
   Set.ext fun x =>
     ⟨fun h => ⟨x, h⟩, by
       rintro ⟨y, rfl⟩
       apply c.idempotent⟩
 
 /-- Send an `x` to an element of the set of closed elements (by taking the closure). -/
-def to_closed (x : α) : c.closed :=
+def to_closed (x : α) : c.Closed :=
   ⟨c x, c.closure_is_closed x⟩
 
 @[simp]
-theorem closure_le_closed_iff_le (x : α) {y : α} (hy : c.closed y) : c x ≤ y ↔ x ≤ y := by
+theorem closure_le_closed_iff_le (x : α) {y : α} (hy : c.Closed y) : c x ≤ y ↔ x ≤ y := by
   rw [← c.closure_eq_self_of_mem_closed hy, ← le_closure_iff]
 
 /-- A closure operator is equal to the closure operator obtained by feeding `c.closed` into the
 `mk₃` constructor. -/
 theorem eq_mk₃_closed (c : ClosureOperator α) :
-    c = mk₃ c c.closed c.le_closure c.closure_is_closed fun x y hxy hy => (c.closure_le_closed_iff_le x hy).2 hxy := by
+    c = mk₃ c c.Closed c.le_closure c.closure_is_closed fun x y hxy hy => (c.closure_le_closed_iff_le x hy).2 hxy := by
   ext
   rfl
 
 /-- The property `p` fed into the `mk₃` constructor implies being closed. -/
 theorem mem_mk₃_closed {f : α → α} {p : α → Prop} {hf : ∀ x, x ≤ f x} {hfp : ∀ x, p (f x)}
     {hmin : ∀ ⦃x y⦄, x ≤ y → p y → f x ≤ y} {x : α} (hx : p x) : x ∈ (mk₃ f p hf hfp hmin).Closed :=
-  (hmin (le_reflₓ _) hx).antisymm (hf _)
+  (hmin le_rfl hx).antisymm (hf _)
 
 end PartialOrderₓ
 
@@ -196,24 +196,24 @@ variable [PartialOrderₓ α] [OrderTop α] (c : ClosureOperator α)
 theorem closure_top : c ⊤ = ⊤ :=
   le_top.antisymm (c.le_closure _)
 
-theorem top_mem_closed : ⊤ ∈ c.closed :=
+theorem top_mem_closed : ⊤ ∈ c.Closed :=
   c.closure_top
 
 end OrderTop
 
 theorem closure_inf_le [SemilatticeInf α] (c : ClosureOperator α) (x y : α) : c (x⊓y) ≤ c x⊓c y :=
-  c.monotone.map_inf_le _ _
+  c.Monotone.map_inf_le _ _
 
 section SemilatticeSup
 
 variable [SemilatticeSup α] (c : ClosureOperator α)
 
 theorem closure_sup_closure_le (x y : α) : c x⊔c y ≤ c (x⊔y) :=
-  c.monotone.le_map_sup _ _
+  c.Monotone.le_map_sup _ _
 
 theorem closure_sup_closure_left (x y : α) : c (c x⊔y) = c (x⊔y) :=
-  ((c.le_closure_iff _ _).1 (sup_le (c.monotone le_sup_left) (le_sup_right.trans (c.le_closure _)))).antisymm
-    (c.monotone (sup_le_sup_right (c.le_closure _) _))
+  ((c.le_closure_iff _ _).1 (sup_le (c.Monotone le_sup_left) (le_sup_right.trans (c.le_closure _)))).antisymm
+    (c.Monotone (sup_le_sup_right (c.le_closure _) _))
 
 theorem closure_sup_closure_right (x y : α) : c (x⊔c y) = c (x⊔y) := by
   rw [sup_comm, closure_sup_closure_left, sup_comm]
@@ -228,12 +228,12 @@ section CompleteLattice
 variable [CompleteLattice α] (c : ClosureOperator α)
 
 theorem closure_supr_closure {ι : Type u} (x : ι → α) : c (⨆ i, c (x i)) = c (⨆ i, x i) :=
-  le_antisymmₓ ((c.le_closure_iff _ _).1 (supr_le fun i => c.monotone (le_supr x i)))
-    (c.monotone (supr_le_supr fun i => c.le_closure _))
+  le_antisymmₓ ((c.le_closure_iff _ _).1 (supr_le fun i => c.Monotone (le_supr x i)))
+    (c.Monotone (supr_le_supr fun i => c.le_closure _))
 
 theorem closure_bsupr_closure (p : α → Prop) : c (⨆ (x) (H : p x), c x) = c (⨆ (x) (H : p x), x) :=
-  le_antisymmₓ ((c.le_closure_iff _ _).1 (bsupr_le fun x hx => c.monotone (le_bsupr_of_le x hx (le_reflₓ x))))
-    (c.monotone (bsupr_le_bsupr fun x hx => c.le_closure x))
+  le_antisymmₓ ((c.le_closure_iff _ _).1 (bsupr_le fun x hx => c.Monotone (le_bsupr_of_le x hx (le_reflₓ x))))
+    (c.Monotone (bsupr_le_bsupr fun x hx => c.le_closure x))
 
 end CompleteLattice
 
@@ -271,7 +271,7 @@ section Preorderₓ
 variable [Preorderₓ α] [Preorderₓ β] {u : β → α} (l : LowerAdjoint u)
 
 instance : CoeFun (LowerAdjoint u) fun _ => α → β where
-  coe := to_fun
+  coe := toFun
 
 /-- See Note [custom simps projection] -/
 def simps.apply : α → β :=
@@ -306,15 +306,15 @@ order version of the statement that every adjunction induces a monad. -/
 @[simps]
 def ClosureOperator : ClosureOperator α where
   toFun := fun x => u (l x)
-  monotone' := l.monotone
+  monotone' := l.Monotone
   le_closure' := l.le_closure
   idempotent' := fun x => l.gc.u_l_u_eq_u (l x)
 
 theorem idempotent (x : α) : u (l (u (l x))) = u (l x) :=
-  l.closure_operator.idempotent _
+  l.ClosureOperator.idempotent _
 
 theorem le_closure_iff (x y : α) : x ≤ u (l y) ↔ u (l x) ≤ u (l y) :=
-  l.closure_operator.le_closure_iff _ _
+  l.ClosureOperator.le_closure_iff _ _
 
 end PartialOrderₓ
 
@@ -325,10 +325,10 @@ variable [Preorderₓ α] [Preorderₓ β] {u : β → α} (l : LowerAdjoint u)
 /-- An element `x` is closed for `l : lower_adjoint u` if it is a fixed point: `u (l x) = x` -/
 def closed : Set α := fun x => u (l x) = x
 
-theorem mem_closed_iff (x : α) : x ∈ l.closed ↔ u (l x) = x :=
+theorem mem_closed_iff (x : α) : x ∈ l.Closed ↔ u (l x) = x :=
   Iff.rfl
 
-theorem closure_eq_self_of_mem_closed {x : α} (h : x ∈ l.closed) : u (l x) = x :=
+theorem closure_eq_self_of_mem_closed {x : α} (h : x ∈ l.Closed) : u (l x) = x :=
   h
 
 end Preorderₓ
@@ -337,49 +337,49 @@ section PartialOrderₓ
 
 variable [PartialOrderₓ α] [PartialOrderₓ β] {u : β → α} (l : LowerAdjoint u)
 
-theorem mem_closed_iff_closure_le (x : α) : x ∈ l.closed ↔ u (l x) ≤ x :=
-  l.closure_operator.mem_closed_iff_closure_le _
+theorem mem_closed_iff_closure_le (x : α) : x ∈ l.Closed ↔ u (l x) ≤ x :=
+  l.ClosureOperator.mem_closed_iff_closure_le _
 
 @[simp]
-theorem closure_is_closed (x : α) : u (l x) ∈ l.closed :=
+theorem closure_is_closed (x : α) : u (l x) ∈ l.Closed :=
   l.idempotent x
 
 /-- The set of closed elements for `l` is the range of `u ∘ l`. -/
-theorem closed_eq_range_close : l.closed = Set.Range (u ∘ l) :=
-  l.closure_operator.closed_eq_range_close
+theorem closed_eq_range_close : l.Closed = Set.Range (u ∘ l) :=
+  l.ClosureOperator.closed_eq_range_close
 
 /-- Send an `x` to an element of the set of closed elements (by taking the closure). -/
-def to_closed (x : α) : l.closed :=
+def to_closed (x : α) : l.Closed :=
   ⟨u (l x), l.closure_is_closed x⟩
 
 @[simp]
-theorem closure_le_closed_iff_le (x : α) {y : α} (hy : l.closed y) : u (l x) ≤ y ↔ x ≤ y :=
-  l.closure_operator.closure_le_closed_iff_le x hy
+theorem closure_le_closed_iff_le (x : α) {y : α} (hy : l.Closed y) : u (l x) ≤ y ↔ x ≤ y :=
+  l.ClosureOperator.closure_le_closed_iff_le x hy
 
 end PartialOrderₓ
 
 theorem closure_top [PartialOrderₓ α] [OrderTop α] [Preorderₓ β] {u : β → α} (l : LowerAdjoint u) : u (l ⊤) = ⊤ :=
-  l.closure_operator.closure_top
+  l.ClosureOperator.closure_top
 
 theorem closure_inf_le [SemilatticeInf α] [Preorderₓ β] {u : β → α} (l : LowerAdjoint u) (x y : α) :
     u (l (x⊓y)) ≤ u (l x)⊓u (l y) :=
-  l.closure_operator.closure_inf_le x y
+  l.ClosureOperator.closure_inf_le x y
 
 section SemilatticeSup
 
 variable [SemilatticeSup α] [Preorderₓ β] {u : β → α} (l : LowerAdjoint u)
 
 theorem closure_sup_closure_le (x y : α) : u (l x)⊔u (l y) ≤ u (l (x⊔y)) :=
-  l.closure_operator.closure_sup_closure_le x y
+  l.ClosureOperator.closure_sup_closure_le x y
 
 theorem closure_sup_closure_left (x y : α) : u (l (u (l x)⊔y)) = u (l (x⊔y)) :=
-  l.closure_operator.closure_sup_closure_left x y
+  l.ClosureOperator.closure_sup_closure_left x y
 
 theorem closure_sup_closure_right (x y : α) : u (l (x⊔u (l y))) = u (l (x⊔y)) :=
-  l.closure_operator.closure_sup_closure_right x y
+  l.ClosureOperator.closure_sup_closure_right x y
 
 theorem closure_sup_closure (x y : α) : u (l (u (l x)⊔u (l y))) = u (l (x⊔y)) :=
-  l.closure_operator.closure_sup_closure x y
+  l.ClosureOperator.closure_sup_closure x y
 
 end SemilatticeSup
 
@@ -388,10 +388,10 @@ section CompleteLattice
 variable [CompleteLattice α] [Preorderₓ β] {u : β → α} (l : LowerAdjoint u)
 
 theorem closure_supr_closure {ι : Type u} (x : ι → α) : u (l (⨆ i, u (l (x i)))) = u (l (⨆ i, x i)) :=
-  l.closure_operator.closure_supr_closure x
+  l.ClosureOperator.closure_supr_closure x
 
 theorem closure_bsupr_closure (p : α → Prop) : u (l (⨆ (x) (H : p x), u (l x))) = u (l (⨆ (x) (H : p x), x)) :=
-  l.closure_operator.closure_bsupr_closure p
+  l.ClosureOperator.closure_bsupr_closure p
 
 end CompleteLattice
 
@@ -427,7 +427,7 @@ theorem closure_union_closure_right (x y : α) : l (x ∪ l y) = l (x ∪ y) :=
 
 @[simp]
 theorem closure_union_closure (x y : α) : l (l x ∪ l y) = l (x ∪ y) :=
-  SetLike.coe_injective (l.closure_operator.closure_sup_closure x y)
+  SetLike.coe_injective (l.ClosureOperator.closure_sup_closure x y)
 
 @[simp]
 theorem closure_Union_closure {ι : Type u} (x : ι → α) : l (⋃ i, l (x i)) = l (⋃ i, x i) :=
@@ -458,10 +458,10 @@ order version of the statement that every adjunction induces a monad. -/
 @[simps]
 def GaloisConnection.closureOperator [PartialOrderₓ α] [Preorderₓ β] {l : α → β} {u : β → α}
     (gc : GaloisConnection l u) : ClosureOperator α :=
-  gc.lower_adjoint.closure_operator
+  gc.LowerAdjoint.ClosureOperator
 
 /-- The set of closed elements has a Galois insertion to the underlying type. -/
-def ClosureOperator.gi [PartialOrderₓ α] (c : ClosureOperator α) : GaloisInsertion c.to_closed coe where
+def ClosureOperator.gi [PartialOrderₓ α] (c : ClosureOperator α) : GaloisInsertion c.toClosed coe where
   choice := fun x hx => ⟨x, hx.antisymm (c.le_closure x)⟩
   gc := fun x y => c.closure_le_closed_iff_le _ y.2
   le_l_u := fun x => c.le_closure _
@@ -471,7 +471,7 @@ def ClosureOperator.gi [PartialOrderₓ α] (c : ClosureOperator α) : GaloisIns
 operator.
 Note that the inverse in the opposite direction does not hold in general. -/
 @[simp]
-theorem closure_operator_gi_self [PartialOrderₓ α] (c : ClosureOperator α) : c.gi.gc.closure_operator = c := by
+theorem closure_operator_gi_self [PartialOrderₓ α] (c : ClosureOperator α) : c.gi.gc.ClosureOperator = c := by
   ext x
   rfl
 

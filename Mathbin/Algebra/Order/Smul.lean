@@ -65,11 +65,11 @@ instance [OrderedSemiring R] [OrderedAddCommMonoid M] [SmulWithZero R M] [Ordere
   lt_of_smul_lt_smul_of_pos := fun a b => @OrderedSmul.lt_of_smul_lt_smul_of_pos R M _ _ _ _ b a
 
 @[simp]
-theorem to_dual_smul [HasScalar R M] {c : R} {a : M} : to_dual (c • a) = c • to_dual a :=
+theorem to_dual_smul [HasScalar R M] {c : R} {a : M} : toDual (c • a) = c • toDual a :=
   rfl
 
 @[simp]
-theorem of_dual_smul [HasScalar R M] {c : R} {a : OrderDual M} : of_dual (c • a) = c • of_dual a :=
+theorem of_dual_smul [HasScalar R M] {c : R} {a : OrderDual M} : ofDual (c • a) = c • ofDual a :=
   rfl
 
 end OrderDual

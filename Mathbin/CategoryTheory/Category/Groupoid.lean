@@ -1,4 +1,7 @@
 import Mathbin.CategoryTheory.SingleObj
+import Mathbin.CategoryTheory.Limits.Shapes.Products
+import Mathbin.CategoryTheory.Pi.Basic
+import Mathbin.CategoryTheory.Limits.IsLimit
 
 /-!
 # Category of groupoids
@@ -24,22 +27,22 @@ namespace CategoryTheory
 /-- Category of groupoids -/
 @[nolint check_univs]
 def Groupoid :=
-  bundled groupoid.{v, u}
+  Bundled Groupoid.{v, u}
 
 namespace Groupoid
 
-instance : Inhabited Groupoid :=
-  ⟨bundled.of (single_obj PUnit)⟩
+instance : Inhabited Groupoidₓ :=
+  ⟨Bundled.of (SingleObj PUnit)⟩
 
-instance str (C : Groupoid.{v, u}) : groupoid.{v, u} C.α :=
+instance str (C : Groupoidₓ.{v, u}) : Groupoid.{v, u} C.α :=
   C.str
 
 /-- Construct a bundled `Groupoid` from the underlying type and the typeclass. -/
-def of (C : Type u) [groupoid.{v} C] : Groupoid.{v, u} :=
-  bundled.of C
+def of (C : Type u) [Groupoid.{v} C] : Groupoidₓ.{v, u} :=
+  Bundled.of C
 
 /-- Category structure on `Groupoid` -/
-instance category : large_category.{max v u} Groupoid.{v, u} where
+instance category : LargeCategory.{max v u} Groupoidₓ.{v, u} where
   Hom := fun C D => C.α ⥤ D.α
   id := fun C => 𝟭 C.α
   comp := fun C D E F G => F ⋙ G
@@ -53,7 +56,7 @@ instance category : large_category.{max v u} Groupoid.{v, u} where
 /-- Functor that gets the set of objects of a groupoid. It is not
 called `forget`, because it is not a faithful functor. -/
 def objects : Groupoid.{v, u} ⥤ Type u where
-  obj := bundled.α
+  obj := Bundled.α
   map := fun C D F => F.obj
 
 /-- Forgetting functor to `Cat` -/
@@ -61,11 +64,55 @@ def forget_to_Cat : Groupoid.{v, u} ⥤ Cat.{v, u} where
   obj := fun C => Cat.of C.α
   map := fun C D => id
 
-instance forget_to_Cat_full : full forget_to_Cat where
+instance forget_to_Cat_full : Full forgetToCat where
   Preimage := fun C D => id
 
-instance forget_to_Cat_faithful : faithful forget_to_Cat :=
+instance forget_to_Cat_faithful : Faithful forgetToCat :=
   {  }
+
+/-- Convert arrows in the category of groupoids to functors,
+which sometimes helps in applying simp lemmas -/
+theorem hom_to_functor {C D E : Groupoidₓ.{v, u}} (f : C ⟶ D) (g : D ⟶ E) : f ≫ g = f ⋙ g :=
+  rfl
+
+section Products
+
+/-- The cone for the product of a family of groupoids indexed by J is a limit cone -/
+@[simps]
+def pi_limit_cone {J : Type u} (F : Discrete J ⥤ Groupoid.{u, u}) : Limits.LimitCone F where
+  Cone := { x := @of (∀ j : J, (F.obj j).α) _, π := { app := fun j : J => CategoryTheory.pi.eval _ j } }
+  IsLimit :=
+    { lift := fun s => Functor.pi' s.π.app,
+      fac' := by
+        intros
+        simp [hom_to_functor],
+      uniq' := by
+        intro s m w
+        apply functor.pi_ext
+        intro j
+        specialize w j
+        simpa }
+
+/-- `pi_limit_cone` reinterpreted as a fan -/
+abbrev pi_limit_fan {J : Type u} (F : J → Groupoidₓ.{u, u}) : Limits.Fan F :=
+  (piLimitCone (Discrete.functor F)).Cone
+
+instance has_pi : Limits.HasProducts Groupoidₓ.{u, u} := fun J =>
+  { HasLimit := fun F => { exists_limit := Nonempty.intro (piLimitCone F) } }
+
+/-- The product of a family of groupoids is isomorphic
+to the product object in the category of Groupoids -/
+noncomputable def pi_iso_pi (J : Type u) (f : J → Groupoidₓ.{u, u}) : @of (∀ j, (f j).α) _ ≅ ∏ f :=
+  Limits.IsLimit.conePointUniqueUpToIso (piLimitCone (Discrete.functor f)).IsLimit
+    (Limits.limit.isLimit (Discrete.functor f))
+
+@[simp]
+theorem pi_iso_pi_hom_π (J : Type u) (f : J → Groupoidₓ.{u, u}) (j : J) :
+    (piIsoPi J f).Hom ≫ Limits.Pi.π f j = CategoryTheory.pi.eval _ j := by
+  simp [pi_iso_pi]
+  rfl
+
+end Products
 
 end Groupoid
 

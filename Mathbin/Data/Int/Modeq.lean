@@ -22,7 +22,7 @@ namespace Int
 def modeq (n a b : ℤ) :=
   a % n = b % n deriving Decidable
 
-notation:50 a " ≡ " b " [ZMOD " n "]" => modeq n a b
+notation:50 a " ≡ " b " [ZMOD " n "]" => Modeq n a b
 
 variable {m n a b c d : ℤ}
 
@@ -33,7 +33,7 @@ protected theorem refl (a : ℤ) : a ≡ a [ZMOD n] :=
   @rfl _ _
 
 protected theorem rfl : a ≡ a [ZMOD n] :=
-  modeq.refl _
+  Modeq.refl _
 
 @[symm]
 protected theorem symm : a ≡ b [ZMOD n] → b ≡ a [ZMOD n] :=
@@ -72,7 +72,7 @@ theorem mod_modeq a n : a % n ≡ a [ZMOD n] :=
 namespace Modeq
 
 protected theorem modeq_of_dvd (d : m ∣ n) (h : a ≡ b [ZMOD n]) : a ≡ b [ZMOD m] :=
-  modeq_iff_dvd.2 <| d.trans h.dvd
+  modeq_iff_dvd.2 <| d.trans h.Dvd
 
 protected theorem mul_left' (hc : 0 ≤ c) (h : a ≡ b [ZMOD n]) : c * a ≡ c * b [ZMOD c * n] :=
   Or.cases_on hc.lt_or_eq
@@ -90,10 +90,10 @@ protected theorem add (h₁ : a ≡ b [ZMOD n]) (h₂ : c ≡ d [ZMOD n]) : a + 
     ring
 
 protected theorem add_left (c : ℤ) (h : a ≡ b [ZMOD n]) : c + a ≡ c + b [ZMOD n] :=
-  modeq.rfl.add h
+  Modeq.rfl.add h
 
 protected theorem add_right (c : ℤ) (h : a ≡ b [ZMOD n]) : a + c ≡ b + c [ZMOD n] :=
-  h.add modeq.rfl
+  h.add Modeq.rfl
 
 protected theorem add_left_cancelₓ (h₁ : a ≡ b [ZMOD n]) (h₂ : a + c ≡ b + d [ZMOD n]) : c ≡ d [ZMOD n] :=
   have : d - c = b + d - (a + c) - (b - a) := by
@@ -103,14 +103,14 @@ protected theorem add_left_cancelₓ (h₁ : a ≡ b [ZMOD n]) (h₂ : a + c ≡
     exact dvd_sub h₂.dvd h₁.dvd
 
 protected theorem add_left_cancel' (c : ℤ) (h : c + a ≡ c + b [ZMOD n]) : a ≡ b [ZMOD n] :=
-  modeq.rfl.add_left_cancel h
+  Modeq.rfl.add_left_cancel h
 
 protected theorem add_right_cancelₓ (h₁ : c ≡ d [ZMOD n]) (h₂ : a + c ≡ b + d [ZMOD n]) : a ≡ b [ZMOD n] := by
   rw [add_commₓ a, add_commₓ b] at h₂
   exact h₁.add_left_cancel h₂
 
 protected theorem add_right_cancel' (c : ℤ) (h : a + c ≡ b + c [ZMOD n]) : a ≡ b [ZMOD n] :=
-  modeq.rfl.add_right_cancel h
+  Modeq.rfl.add_right_cancel h
 
 protected theorem neg (h : a ≡ b [ZMOD n]) : -a ≡ -b [ZMOD n] :=
   h.add_left_cancel
@@ -122,14 +122,14 @@ protected theorem sub (h₁ : a ≡ b [ZMOD n]) (h₂ : c ≡ d [ZMOD n]) : a - 
   exact h₁.add h₂.neg
 
 protected theorem sub_left (c : ℤ) (h : a ≡ b [ZMOD n]) : c - a ≡ c - b [ZMOD n] :=
-  modeq.rfl.sub h
+  Modeq.rfl.sub h
 
 protected theorem sub_right (c : ℤ) (h : a ≡ b [ZMOD n]) : a - c ≡ b - c [ZMOD n] :=
-  h.sub modeq.rfl
+  h.sub Modeq.rfl
 
 protected theorem mul_left (c : ℤ) (h : a ≡ b [ZMOD n]) : c * a ≡ c * b [ZMOD n] :=
   Or.cases_on (le_totalₓ 0 c) (fun hc => (h.mul_left' hc).modeq_of_dvd (dvd_mul_left _ _)) fun hc => by
-    rw [← neg_negₓ c, ← neg_mul_eq_neg_mul, ← neg_mul_eq_neg_mul _ b] <;>
+    rw [← neg_negₓ c, neg_mul, neg_mul _ b] <;>
       exact ((h.mul_left' <| neg_nonneg.2 hc).modeq_of_dvd (dvd_mul_left _ _)).neg
 
 protected theorem mul_right (c : ℤ) (h : a ≡ b [ZMOD n]) : a * c ≡ b * c [ZMOD n] := by
@@ -160,7 +160,7 @@ theorem modeq_one : a ≡ b [ZMOD 1] :=
 theorem modeq_sub (a b : ℤ) : a ≡ b [ZMOD a - b] :=
   (modeq_of_dvd dvd_rfl).symm
 
-theorem modeq_and_modeq_iff_modeq_mul {a b m n : ℤ} (hmn : m.nat_abs.coprime n.nat_abs) :
+theorem modeq_and_modeq_iff_modeq_mul {a b m n : ℤ} (hmn : m.natAbs.Coprime n.natAbs) :
     a ≡ b [ZMOD m] ∧ a ≡ b [ZMOD n] ↔ a ≡ b [ZMOD m * n] :=
   ⟨fun h => by
     rw [modeq_iff_dvd, modeq_iff_dvd] at h
@@ -185,7 +185,7 @@ theorem mod_coprime {a b : ℕ} (hab : Nat.Coprime a b) : ∃ y : ℤ, a * y ≡
     have hgcd : Nat.gcdₓ a b = 1 := Nat.Coprime.gcd_eq_one hab
     calc
       ↑a * Nat.gcdA a b ≡ ↑a * Nat.gcdA a b + ↑b * Nat.gcdB a b [ZMOD ↑b] :=
-        modeq.symm <| modeq_add_fac _ <| modeq.refl _
+        modeq.symm <| modeq_add_fac _ <| Modeq.refl _
       _ ≡ 1 [ZMOD ↑b] := by
         rw [← Nat.gcd_eq_gcd_ab, hgcd] <;> rfl
       ⟩
@@ -198,7 +198,7 @@ theorem exists_unique_equiv (a : ℤ) {b : ℤ} (hb : 0 < b) : ∃ z : ℤ, 0 �
 
 theorem exists_unique_equiv_nat (a : ℤ) {b : ℤ} (hb : 0 < b) : ∃ z : ℕ, ↑z < b ∧ ↑z ≡ a [ZMOD b] :=
   let ⟨z, hz1, hz2, hz3⟩ := exists_unique_equiv a hb
-  ⟨z.nat_abs, by
+  ⟨z.natAbs, by
     constructor <;> rw [← of_nat_eq_coe, of_nat_nat_abs_eq_of_nonneg hz1] <;> assumption⟩
 
 @[simp]

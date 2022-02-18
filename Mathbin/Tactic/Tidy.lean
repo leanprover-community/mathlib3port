@@ -18,7 +18,7 @@ add_tactic_doc
 
 unsafe def run_tactics : tactic Stringₓ := do
   let names ← attribute.get_instances `tidy
-  first (names.map name_to_tactic) <|> fail "no @[tidy] tactics succeeded"
+  first (names name_to_tactic) <|> fail "no @[tidy] tactics succeeded"
 
 @[hint_tactic]
 unsafe def ext1_wrapper : tactic Stringₓ := do
@@ -27,34 +27,35 @@ unsafe def ext1_wrapper : tactic Stringₓ := do
   let ng' ← num_goals
   return <| if ng' > ng then "tactic.ext1 [] {new_goals := tactic.new_goals.all}" else "ext1"
 
--- ././Mathport/Syntax/Translate/Basic.lean:794:4: warning: unsupported (TODO): `[tacs]
--- ././Mathport/Syntax/Translate/Basic.lean:794:4: warning: unsupported (TODO): `[tacs]
--- ././Mathport/Syntax/Translate/Basic.lean:794:4: warning: unsupported (TODO): `[tacs]
--- ././Mathport/Syntax/Translate/Basic.lean:794:4: warning: unsupported (TODO): `[tacs]
--- ././Mathport/Syntax/Translate/Basic.lean:794:4: warning: unsupported (TODO): `[tacs]
--- ././Mathport/Syntax/Translate/Basic.lean:794:4: warning: unsupported (TODO): `[tacs]
--- ././Mathport/Syntax/Translate/Basic.lean:794:4: warning: unsupported (TODO): `[tacs]
--- ././Mathport/Syntax/Translate/Basic.lean:794:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
 unsafe def default_tactics : List (tactic Stringₓ) :=
   [reflexivity >> pure "refl", sorry >> pure "exact dec_trivial",
     (propositional_goal >> assumption) >> pure "assumption",
-    intros1 >>= fun ns => pure ("intros " ++ (" ".intercalate <| ns.map fun e => e.to_string)), auto_cases,
+    intros1 >>= fun ns => pure ("intros " ++ (" ".intercalate <| ns.map fun e => e.toString)), auto_cases,
     sorry >> pure "apply_auto_param", sorry >> pure "dsimp at *", sorry >> pure "simp at *", ext1_wrapper,
     fsplit >> pure "fsplit", injections_and_clear >> pure "injections_and_clear",
     (propositional_goal >> sorry) >> pure "solve_by_elim", sorry >> pure "norm_cast", sorry >> pure "unfold_coes",
     sorry >> pure "unfold_aux", tidy.run_tactics]
 
 unsafe structure cfg where
-  trace_result : Bool := ff
+  trace_result : Bool := false
   trace_result_prefix : Stringₓ := "Try this: "
   tactics : List (tactic Stringₓ) := default_tactics
 
 initialize
   registerTraceClass.1 `tidy
 
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `cfg
 unsafe def core (cfg : cfg := {  }) : tactic (List Stringₓ) := do
   let results ← chain cfg.tactics
-  when cfg.trace_result <| trace (cfg.trace_result_prefix ++ ", ".intercalate results)
+  when (cfg cfg.trace_result) <| trace (cfg ++ ", ".intercalate results)
   return results
 
 end Tidy
@@ -84,7 +85,7 @@ can report a usable tactic script.)
 Tactics can also be added to the list by tagging them (locally) with the
 `[tidy]` attribute. -/
 unsafe def tidy (trace : parse <| optionalₓ (tk "?")) (cfg : tidy.cfg := {  }) :=
-  tactic.tidy { cfg with trace_result := trace.is_some }
+  tactic.tidy { cfg with trace_result := trace.isSome }
 
 end Interactive
 

@@ -53,7 +53,7 @@ noncomputable section
 
 universe u v
 
-open_locale BigOperators
+open_locale BigOperators Polynomial
 
 open LocalRing Polynomial Function
 
@@ -87,8 +87,8 @@ of `X^2-1` over `ℤ/4ℤ`.) -/
 class HenselianRing (R : Type _) [CommRingₓ R] (I : Ideal R) : Prop where
   jac : I ≤ Ideal.jacobson ⊥
   is_henselian :
-    ∀ f : Polynomial R hf : f.monic a₀ : R h₁ : f.eval a₀ ∈ I h₂ : IsUnit (Ideal.Quotient.mk I (f.derivative.eval a₀)),
-      ∃ a : R, f.is_root a ∧ a - a₀ ∈ I
+    ∀ f : R[X] hf : f.Monic a₀ : R h₁ : f.eval a₀ ∈ I h₂ : IsUnit (Ideal.Quotient.mk I (f.derivative.eval a₀)),
+      ∃ a : R, f.IsRoot a ∧ a - a₀ ∈ I
 
 /-- A local ring `R` is *Henselian* if the following condition holds:
 for every polynomial `f` over `R`, with a *simple* root `a₀` over the residue field,
@@ -100,8 +100,8 @@ In other words, `R` is local Henselian if it is Henselian at the ideal `I`,
 in the sense of `henselian_ring`. -/
 class HenselianLocalRing (R : Type _) [CommRingₓ R] extends LocalRing R : Prop where
   is_henselian :
-    ∀ f : Polynomial R hf : f.monic a₀ : R h₁ : f.eval a₀ ∈ maximal_ideal R h₂ : IsUnit (f.derivative.eval a₀),
-      ∃ a : R, f.is_root a ∧ a - a₀ ∈ maximal_ideal R
+    ∀ f : R[X] hf : f.Monic a₀ : R h₁ : f.eval a₀ ∈ maximalIdeal R h₂ : IsUnit (f.derivative.eval a₀),
+      ∃ a : R, f.IsRoot a ∧ a - a₀ ∈ maximalIdeal R
 
 instance (priority := 100) Field.henselian (K : Type _) [Field K] : HenselianLocalRing K where
   is_henselian := fun f hf a₀ h₁ h₂ => by
@@ -109,13 +109,13 @@ instance (priority := 100) Field.henselian (K : Type _) [Field K] : HenselianLoc
     rw [sub_self]
 
 theorem HenselianLocalRing.tfae (R : Type u) [CommRingₓ R] [LocalRing R] :
-    tfae
+    Tfae
       [HenselianLocalRing R,
-        ∀ f : Polynomial R hf : f.monic a₀ : residue_field R h₁ : aeval a₀ f = 0 h₂ : aeval a₀ f.derivative ≠ 0,
-          ∃ a : R, f.is_root a ∧ residue R a = a₀,
+        ∀ f : R[X] hf : f.Monic a₀ : ResidueField R h₁ : aeval a₀ f = 0 h₂ : aeval a₀ f.derivative ≠ 0,
+          ∃ a : R, f.IsRoot a ∧ residue R a = a₀,
         ∀ {K : Type u} [Field K],
-          ∀ φ : R →+* K hφ : surjective φ f : Polynomial R hf : f.monic a₀ : K h₁ : f.eval₂ φ a₀ = 0 h₂ :
-            f.derivative.eval₂ φ a₀ ≠ 0, ∃ a : R, f.is_root a ∧ φ a = a₀] :=
+          ∀ φ : R →+* K hφ : surjective φ f : R[X] hf : f.Monic a₀ : K h₁ : f.eval₂ φ a₀ = 0 h₂ :
+            f.derivative.eval₂ φ a₀ ≠ 0, ∃ a : R, f.IsRoot a ∧ φ a = a₀] :=
   by
   tfae_have _3_2 : 3 → 2
   · intro H
@@ -149,7 +149,7 @@ theorem HenselianLocalRing.tfae (R : Type u) [CommRingₓ R] [LocalRing R] :
     
   tfae_finish
 
-instance (R : Type _) [CommRingₓ R] [hR : HenselianLocalRing R] : HenselianRing R (maximal_ideal R) where
+instance (R : Type _) [CommRingₓ R] [hR : HenselianLocalRing R] : HenselianRing R (maximalIdeal R) where
   jac := by
     rw [Ideal.jacobson, le_Inf_iff]
     rintro I ⟨-, hI⟩
@@ -207,8 +207,8 @@ instance (priority := 100) IsAdicComplete.henselian_ring (R : Type _) [CommRing�
         rw [zero_mul]
         
       refine' Ideal.add_mem _ _ _
-      · simp only [Finset.sum_range_succ, taylor_coeff_one, mul_oneₓ, pow_oneₓ, taylor_coeff_zero,
-          mul_neg_eq_neg_mul_symm, Finset.sum_singleton, Finset.range_one, pow_zeroₓ]
+      · simp only [Finset.sum_range_succ, taylor_coeff_one, mul_oneₓ, pow_oneₓ, taylor_coeff_zero, mul_neg,
+          Finset.sum_singleton, Finset.range_one, pow_zeroₓ]
         rw [mul_left_commₓ, Ring.mul_inverse_cancel _ (hf'c n), mul_oneₓ, add_neg_selfₓ]
         exact Ideal.zero_mem _
         

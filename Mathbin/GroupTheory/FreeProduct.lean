@@ -73,7 +73,7 @@ letters can come from the same summand. -/
 structure word where
   toList : List (Σ i, M i)
   ne_one : ∀, ∀ l ∈ to_list, ∀, Sigma.snd l ≠ 1
-  chain_ne : to_list.chain' fun l l' => Sigma.fst l ≠ Sigma.fst l'
+  chain_ne : to_list.Chain' fun l l' => Sigma.fst l ≠ Sigma.fst l'
 
 variable {M}
 
@@ -175,28 +175,28 @@ end Groupₓ
 namespace Word
 
 /-- The empty reduced word. -/
-def Empty : word M where
+def Empty : Word M where
   toList := []
   ne_one := fun _ => False.elim
   chain_ne := List.chain'_nil
 
-instance : Inhabited (word M) :=
-  ⟨Empty⟩
+instance : Inhabited (Word M) :=
+  ⟨empty⟩
 
 /-- A reduced word determines an element of the free product, given by multiplication. -/
-def Prod (w : word M) : FreeProduct M :=
-  List.prod (w.to_list.map fun l => of l.snd)
+def Prod (w : Word M) : FreeProduct M :=
+  List.prod (w.toList.map fun l => of l.snd)
 
 @[simp]
-theorem prod_nil : Prod (Empty : word M) = 1 :=
+theorem prod_nil : prod (empty : Word M) = 1 :=
   rfl
 
 /-- `fst_idx w` is `some i` if the first letter of `w` is `⟨i, m⟩` with `m : M i`. If `w` is empty
 then it's `none`. -/
-def fst_idx (w : word M) : Option ι :=
-  w.to_list.head'.map Sigma.fst
+def fst_idx (w : Word M) : Option ι :=
+  w.toList.head'.map Sigma.fst
 
-theorem fst_idx_ne_iff {w : word M} {i} : fst_idx w ≠ some i ↔ ∀, ∀ l ∈ w.to_list.head', ∀, i ≠ Sigma.fst l :=
+theorem fst_idx_ne_iff {w : Word M} {i} : fstIdx w ≠ some i ↔ ∀, ∀ l ∈ w.toList.head', ∀, i ≠ Sigma.fst l :=
   not_iff_not.mp <| by
     simp [fst_idx]
 
@@ -209,11 +209,11 @@ obtained in this way. -/
 @[ext]
 structure pair (i : ι) where
   head : M i
-  tail : word M
-  fst_idx_ne : fst_idx tail ≠ some i
+  tail : Word M
+  fst_idx_ne : fstIdx tail ≠ some i
 
-instance (i : ι) : Inhabited (pair M i) :=
-  ⟨⟨1, Empty, by
+instance (i : ι) : Inhabited (Pair M i) :=
+  ⟨⟨1, empty, by
       tauto⟩⟩
 
 variable {M}
@@ -222,10 +222,10 @@ variable [∀ i, DecidableEq (M i)]
 
 /-- Given a pair `(head, tail)`, we can form a word by prepending `head` to `tail`, except if `head`
 is `1 : M i` then we have to just return `word` since we need the result to be reduced. -/
-def rcons {i} (p : pair M i) : word M :=
+def rcons {i} (p : Pair M i) : Word M :=
   if h : p.head = 1 then p.tail
   else
-    { toList := ⟨i, p.head⟩ :: p.tail.to_list,
+    { toList := ⟨i, p.head⟩ :: p.tail.toList,
       ne_one := by
         rintro l (rfl | hl)
         exact h
@@ -235,23 +235,23 @@ def rcons {i} (p : pair M i) : word M :=
 /-- Given a word of the form `⟨l :: ls, h1, h2⟩`, we can form a word of the form `⟨ls, _, _⟩`,
 dropping the first letter. -/
 private def mk_aux {l} (ls : List (Σ i, M i)) (h1 : ∀, ∀ l' ∈ l :: ls, ∀, Sigma.snd l' ≠ 1) (h2 : (l :: ls).Chain' _) :
-    word M :=
+    Word M :=
   ⟨ls, fun l' hl => h1 _ (List.mem_cons_of_memₓ _ hl), h2.tail⟩
 
 theorem cons_eq_rcons {i} {m : M i} {ls h1 h2} :
-    word.mk (⟨i, m⟩ :: ls) h1 h2 = rcons ⟨m, mk_aux ls h1 h2, fst_idx_ne_iff.mpr h2.rel_head'⟩ := by
+    Word.mk (⟨i, m⟩ :: ls) h1 h2 = rcons ⟨m, mkAux ls h1 h2, fst_idx_ne_iff.mpr h2.rel_head'⟩ := by
   rw [rcons, dif_neg]
   rfl
   exact h1 ⟨i, m⟩ (ls.mem_cons_self _)
 
 @[simp]
-theorem prod_rcons {i} (p : pair M i) : Prod (rcons p) = of p.head * Prod p.tail :=
+theorem prod_rcons {i} (p : Pair M i) : prod (rcons p) = of p.head * prod p.tail :=
   if hm : p.head = 1 then by
     rw [rcons, dif_pos hm, hm, MonoidHom.map_one, one_mulₓ]
   else by
     rw [rcons, dif_neg hm, Prod, List.map_cons, List.prod_cons, Prod]
 
-theorem rcons_inj {i} : Function.Injective (rcons : pair M i → word M) := by
+theorem rcons_inj {i} : Function.Injective (rcons : Pair M i → Word M) := by
   rintro ⟨m, w, h⟩ ⟨m', w', h'⟩ he
   by_cases' hm : m = 1 <;> by_cases' hm' : m' = 1
   · simp only [rcons, dif_pos hm, dif_pos hm'] at he
@@ -278,7 +278,7 @@ theorem rcons_inj {i} : Function.Injective (rcons : pair M i → word M) := by
 variable [DecidableEq ι]
 
 /-- Given `i : ι`, any reduced word can be decomposed into a pair `p` such that `w = rcons p`. -/
-private def equiv_pair_aux i : ∀ w : word M, { p : pair M i // rcons p = w }
+private def equiv_pair_aux i : ∀ w : Word M, { p : Pair M i // rcons p = w }
   | w@⟨[], _, _⟩ =>
     ⟨⟨1, w, by
         rintro ⟨⟩⟩,
@@ -286,7 +286,7 @@ private def equiv_pair_aux i : ∀ w : word M, { p : pair M i // rcons p = w }
   | w@⟨⟨j, m⟩ :: ls, h1, h2⟩ =>
     if ij : i = j then
       { val :=
-          { head := ij.symm.rec m, tail := mk_aux ls h1 h2,
+          { head := ij.symm.rec m, tail := mkAux ls h1 h2,
             fst_idx_ne := by
               cases ij <;> exact fst_idx_ne_iff.mpr h2.rel_head' },
         property := by
@@ -295,20 +295,20 @@ private def equiv_pair_aux i : ∀ w : word M, { p : pair M i // rcons p = w }
 
 /-- The equivalence between words and pairs. Given a word, it decomposes it as a pair by removing
 the first letter if it comes from `M i`. Given a pair, it prepends the head to the tail. -/
-def equiv_pair i : word M ≃ pair M i where
-  toFun := fun w => (equiv_pair_aux i w).val
+def equiv_pair i : Word M ≃ Pair M i where
+  toFun := fun w => (equivPairAux i w).val
   invFun := rcons
-  left_inv := fun w => (equiv_pair_aux i w).property
-  right_inv := fun p => rcons_inj (equiv_pair_aux i _).property
+  left_inv := fun w => (equivPairAux i w).property
+  right_inv := fun p => rcons_inj (equivPairAux i _).property
 
-theorem equiv_pair_symm i (p : pair M i) : (equiv_pair i).symm p = rcons p :=
+theorem equiv_pair_symm i (p : Pair M i) : (equivPair i).symm p = rcons p :=
   rfl
 
-theorem equiv_pair_eq_of_fst_idx_ne {i} {w : word M} (h : fst_idx w ≠ some i) : equiv_pair i w = ⟨1, w, h⟩ :=
-  (equiv_pair i).apply_eq_iff_eq_symm_apply.mpr <| Eq.symm (dif_pos rfl)
+theorem equiv_pair_eq_of_fst_idx_ne {i} {w : Word M} (h : fstIdx w ≠ some i) : equivPair i w = ⟨1, w, h⟩ :=
+  (equivPair i).apply_eq_iff_eq_symm_apply.mpr <| Eq.symm (dif_pos rfl)
 
-instance summand_action i : MulAction (M i) (word M) where
-  smul := fun m w => rcons { equiv_pair i w with head := m * (equiv_pair i w).head }
+instance summand_action i : MulAction (M i) (Word M) where
+  smul := fun m w => rcons { equivPair i w with head := m * (equivPair i w).head }
   one_smul := fun w => by
     simp_rw [one_mulₓ]
     apply (equiv_pair i).symm_apply_eq.mpr
@@ -316,18 +316,18 @@ instance summand_action i : MulAction (M i) (word M) where
   mul_smul := fun m m' w => by
     simp only [mul_assoc, ← equiv_pair_symm, Equivₓ.apply_symm_apply]
 
-instance : MulAction (FreeProduct M) (word M) :=
+instance : MulAction (FreeProduct M) (Word M) :=
   MulAction.ofEndHom (lift fun i => MulAction.toEndHom)
 
-theorem of_smul_def i (w : word M) (m : M i) :
-    of m • w = rcons { equiv_pair i w with head := m * (equiv_pair i w).head } :=
+theorem of_smul_def i (w : Word M) (m : M i) :
+    of m • w = rcons { equivPair i w with head := m * (equivPair i w).head } :=
   rfl
 
-theorem cons_eq_smul {i} {m : M i} {ls h1 h2} : word.mk (⟨i, m⟩ :: ls) h1 h2 = of m • mk_aux ls h1 h2 := by
+theorem cons_eq_smul {i} {m : M i} {ls h1 h2} : Word.mk (⟨i, m⟩ :: ls) h1 h2 = of m • mkAux ls h1 h2 := by
   rw [cons_eq_rcons, of_smul_def, equiv_pair_eq_of_fst_idx_ne _] <;> simp only [mul_oneₓ]
 
-theorem smul_induction {C : word M → Prop} (h_empty : C Empty) (h_smul : ∀ i m : M i w, C w → C (of m • w))
-    (w : word M) : C w := by
+theorem smul_induction {C : Word M → Prop} (h_empty : C empty) (h_smul : ∀ i m : M i w, C w → C (of m • w))
+    (w : Word M) : C w := by
   cases' w with ls h1 h2
   induction' ls with l ls ih
   · exact h_empty
@@ -337,7 +337,7 @@ theorem smul_induction {C : word M → Prop} (h_empty : C Empty) (h_smul : ∀ i
   exact h_smul _ _ _ (ih _ _)
 
 @[simp]
-theorem prod_smul m : ∀ w : word M, Prod (m • w) = m * Prod w := by
+theorem prod_smul m : ∀ w : Word M, prod (m • w) = m * prod w := by
   apply m.induction_on
   · intro
     rw [one_smul, one_mulₓ]
@@ -350,9 +350,9 @@ theorem prod_smul m : ∀ w : word M, Prod (m • w) = m * Prod w := by
     
 
 /-- Each element of the free product corresponds to a unique reduced word. -/
-def Equivₓ : FreeProduct M ≃ word M where
+def Equivₓ : FreeProduct M ≃ Word M where
   toFun := fun m => m • Empty
-  invFun := fun w => Prod w
+  invFun := fun w => prod w
   left_inv := fun m => by
     dsimp only <;> rw [prod_smul, prod_nil, mul_oneₓ]
   right_inv := by
@@ -365,11 +365,11 @@ def Equivₓ : FreeProduct M ≃ word M where
       rw [prod_smul, mul_smul, ih]
       
 
-instance : DecidableEq (word M) :=
-  Function.Injective.decidableEq word.ext
+instance : DecidableEq (Word M) :=
+  Function.Injective.decidableEq Word.ext
 
 instance : DecidableEq (FreeProduct M) :=
-  word.equiv.DecidableEq
+  Word.equiv.DecidableEq
 
 end Word
 

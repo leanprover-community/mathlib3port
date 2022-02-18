@@ -137,11 +137,11 @@ theorem IsGenericPoint.is_irreducible : IsIrreducible S :=
   h.def ▸ is_irreducible_singleton.closure
 
 theorem IsGenericPoint.eq [T0Space α] {y : α} (h' : IsGenericPoint y S) : x = y :=
-  specializes_antisymm _ _ (h.specializes h'.mem) (h'.specializes h.mem)
+  specializes_antisymm _ _ (h.Specializes h'.Mem) (h'.Specializes h.Mem)
 
 theorem IsGenericPoint.mem_open_set_iff {U : Set α} (hU : IsOpen U) : x ∈ U ↔ (S ∩ U).Nonempty :=
-  ⟨fun h' => ⟨x, h.mem, h'⟩, fun h' =>
-    specializes_iff_forall_open.mp (h.specializes h'.some_spec.1) U hU h'.some_spec.2⟩
+  ⟨fun h' => ⟨x, h.Mem, h'⟩, fun h' =>
+    specializes_iff_forall_open.mp (h.Specializes h'.some_spec.1) U hU h'.some_spec.2⟩
 
 theorem IsGenericPoint.disjoint_iff {U : Set α} (hU : IsOpen U) : Disjoint S U ↔ x ∉ U := by
   rw [h.mem_open_set_iff hU, ← Set.ne_empty_iff_nonempty, not_not, Set.disjoint_iff_inter_eq_empty]
@@ -188,12 +188,12 @@ noncomputable def IsIrreducible.genericPoint [QuasiSober α] {S : Set α} (hS : 
   (QuasiSober.sober hS.closure is_closed_closure).some
 
 theorem IsIrreducible.generic_point_spec [QuasiSober α] {S : Set α} (hS : IsIrreducible S) :
-    IsGenericPoint hS.generic_point (Closure S) :=
+    IsGenericPoint hS.genericPoint (Closure S) :=
   (QuasiSober.sober hS.closure is_closed_closure).some_spec
 
 @[simp]
 theorem IsIrreducible.generic_point_closure_eq [QuasiSober α] {S : Set α} (hS : IsIrreducible S) :
-    Closure ({hS.generic_point} : Set α) = Closure S :=
+    Closure ({hS.genericPoint} : Set α) = Closure S :=
   hS.generic_point_spec
 
 variable (α)
@@ -221,9 +221,9 @@ attribute [local instance] specializationOrder
 /-- The closed irreducible subsets of a sober space bijects with the points of the space. -/
 noncomputable def irreducibleSetEquivPoints [QuasiSober α] [T0Space α] :
     { s : Set α | IsIrreducible s ∧ IsClosed s } ≃o α where
-  toFun := fun s => s.prop.1.genericPoint
+  toFun := fun s => s.Prop.1.genericPoint
   invFun := fun x => ⟨Closure ({x} : Set α), is_irreducible_singleton.closure, is_closed_closure⟩
-  left_inv := fun s => Subtype.eq <| Eq.trans s.prop.1.generic_point_spec <| closure_eq_iff_is_closed.mpr s.2.2
+  left_inv := fun s => Subtype.eq <| Eq.trans s.Prop.1.generic_point_spec <| closure_eq_iff_is_closed.mpr s.2.2
   right_inv := fun x =>
     is_irreducible_singleton.closure.generic_point_spec.Eq
       (by

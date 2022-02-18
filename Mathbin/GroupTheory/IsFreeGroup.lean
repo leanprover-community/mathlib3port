@@ -51,14 +51,14 @@ variable {G H : Type u} {X : Type w} [Groupₓ G] [Groupₓ H] [Groupₓ X] [IsF
 /-- The equivalence between functions on the generators and group homomorphisms from a free group
 given by those generators. -/
 @[simps symmApply]
-def lift' : (generators G → H) ≃ (G →* H) where
+def lift' : (Generators G → H) ≃ (G →* H) where
   toFun := fun f => Classical.some (unique_lift' f)
   invFun := fun F => F ∘ of
   left_inv := fun f => funext (Classical.some_spec (unique_lift' f)).left
   right_inv := fun F => ((Classical.some_spec (unique_lift' (F ∘ of))).right F fun _ => rfl).symm
 
 @[simp]
-theorem lift'_of (f : generators G → H) (a : generators G) : (lift' f) (of a) = f a :=
+theorem lift'_of (f : Generators G → H) (a : Generators G) : (lift' f) (of a) = f a :=
   congr_funₓ (lift'.symm_apply_apply f) a
 
 @[simp]
@@ -78,7 +78,7 @@ theorem ext_hom' ⦃f g : G →* H⦄ (h : ∀ a, f (of a) = g (of a)) : f = g :
 
 /-- Being a free group transports across group isomorphisms within a universe. -/
 def of_mul_equiv (h : G ≃* H) : IsFreeGroup H where
-  Generators := generators G
+  Generators := Generators G
   of := h ∘ of
   unique_lift' := by
     intros X _ f
@@ -108,7 +108,7 @@ variable (G)
 
 /-- Any free group is isomorphic to "the" free group. -/
 @[simps]
-def to_free_group : G ≃* FreeGroup (generators G) where
+def to_free_group : G ≃* FreeGroup (Generators G) where
   toFun := lift' FreeGroup.of
   invFun := FreeGroup.lift of
   left_inv := by
@@ -116,7 +116,7 @@ def to_free_group : G ≃* FreeGroup (generators G) where
     ext
     simp
   right_inv := by
-    suffices (lift' FreeGroup.of).comp (FreeGroup.lift of) = MonoidHom.id (FreeGroup (generators G)) from
+    suffices (lift' FreeGroup.of).comp (FreeGroup.lift of) = MonoidHom.id (FreeGroup (Generators G)) from
       MonoidHom.congr_fun this
     ext
     simp
@@ -125,14 +125,14 @@ def to_free_group : G ≃* FreeGroup (generators G) where
 variable {G}
 
 private theorem lift_right_inv_aux (F : G →* X) :
-    FreeGroup.lift.symm (F.comp (to_free_group G).symm.toMonoidHom) = F ∘ of := by
+    FreeGroup.lift.symm (F.comp (toFreeGroup G).symm.toMonoidHom) = F ∘ of := by
   ext
   simp
 
 /-- A universe-polymorphic version of `is_free_group.lift'`. -/
 @[simps symmApply]
-def lift : (generators G → X) ≃ (G →* X) where
-  toFun := fun f => (FreeGroup.lift f).comp (to_free_group G).toMonoidHom
+def lift : (Generators G → X) ≃ (G →* X) where
+  toFun := fun f => (FreeGroup.lift f).comp (toFreeGroup G).toMonoidHom
   invFun := fun F => F ∘ of
   left_inv := fun f =>
     FreeGroup.lift.Injective
@@ -152,7 +152,7 @@ theorem ext_hom ⦃f g : G →* X⦄ (h : ∀ a, f (of a) = g (of a)) : f = g :=
   IsFreeGroup.lift.symm.Injective <| funext h
 
 @[simp]
-theorem lift_of (f : generators G → X) (a : generators G) : (lift f) (of a) = f a :=
+theorem lift_of (f : Generators G → X) (a : Generators G) : (lift f) (of a) = f a :=
   congr_funₓ (lift.symm_apply_apply f) a
 
 @[simp]
@@ -163,7 +163,7 @@ theorem lift_eq_free_group_lift {A : Type u} : @lift (FreeGroup A) H _ _ _ = Fre
   rfl
 
 /-- A universe-polymorphic version of `unique_lift`. -/
-theorem unique_lift {X : Type w} [Groupₓ X] (f : generators G → X) : ∃! F : G →* X, ∀ a, F (of a) = f a := by
+theorem unique_lift {X : Type w} [Groupₓ X] (f : Generators G → X) : ∃! F : G →* X, ∀ a, F (of a) = f a := by
   have := lift.symm.bijective.exists_unique f
   simp_rw [Function.funext_iffₓ]  at this
   exact this

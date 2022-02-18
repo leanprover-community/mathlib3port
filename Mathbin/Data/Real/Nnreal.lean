@@ -191,7 +191,7 @@ section Actions
 
 /-- A `mul_action` over `ℝ` restricts to a `mul_action` over `ℝ≥0`. -/
 instance {M : Type _} [MulAction ℝ M] : MulAction ℝ≥0 M :=
-  MulAction.compHom M to_real_hom.toMonoidHom
+  MulAction.compHom M toRealHom.toMonoidHom
 
 theorem smul_def {M : Type _} [MulAction ℝ M] (c : ℝ≥0 ) (x : M) : c • x = (c : ℝ) • x :=
   rfl
@@ -210,11 +210,11 @@ instance smul_comm_class_right {M N : Type _} [MulAction ℝ N] [HasScalar M N] 
 
 /-- A `distrib_mul_action` over `ℝ` restricts to a `distrib_mul_action` over `ℝ≥0`. -/
 instance {M : Type _} [AddMonoidₓ M] [DistribMulAction ℝ M] : DistribMulAction ℝ≥0 M :=
-  DistribMulAction.compHom M to_real_hom.toMonoidHom
+  DistribMulAction.compHom M toRealHom.toMonoidHom
 
 /-- A `module` over `ℝ` restricts to a `module` over `ℝ≥0`. -/
 instance {M : Type _} [AddCommMonoidₓ M] [Module ℝ M] : Module ℝ≥0 M :=
-  Module.compHom M to_real_hom
+  Module.compHom M toRealHom
 
 /-- An `algebra` over `ℝ` restricts to an `algebra` over `ℝ≥0`. -/
 instance {A : Type _} [Semiringₓ A] [Algebra ℝ A] : Algebra ℝ≥0 A where
@@ -223,7 +223,7 @@ instance {A : Type _} [Semiringₓ A] [Algebra ℝ A] : Algebra ℝ≥0 A where
     simp [Algebra.commutes]
   smul_def' := fun r x => by
     simp [← Algebra.smul_def (r : ℝ) x, smul_def]
-  toRingHom := (algebraMap ℝ A).comp (to_real_hom : ℝ≥0 →+* ℝ)
+  toRingHom := (algebraMap ℝ A).comp (toRealHom : ℝ≥0 →+* ℝ)
 
 example : Algebra ℝ≥0 ℝ := by
   infer_instance
@@ -245,35 +245,35 @@ noncomputable example : CommGroupWithZero ℝ≥0 := by
 @[simp, norm_cast]
 theorem coe_indicator {α} (s : Set α) (f : α → ℝ≥0 ) (a : α) :
     ((s.indicator f a : ℝ≥0 ) : ℝ) = s.indicator (fun x => f x) a :=
-  (to_real_hom : ℝ≥0 →+ ℝ).map_indicator _ _ _
+  (toRealHom : ℝ≥0 →+ ℝ).map_indicator _ _ _
 
 @[simp, norm_cast]
 theorem coe_pow (r : ℝ≥0 ) (n : ℕ) : ((r ^ n : ℝ≥0 ) : ℝ) = r ^ n :=
-  to_real_hom.map_pow r n
+  toRealHom.map_pow r n
 
 @[simp, norm_cast]
 theorem coe_zpow (r : ℝ≥0 ) (n : ℤ) : ((r ^ n : ℝ≥0 ) : ℝ) = r ^ n := by
   cases n <;> simp
 
 @[norm_cast]
-theorem coe_list_sum (l : List ℝ≥0 ) : ((l.sum : ℝ≥0 ) : ℝ) = (l.map coe).Sum :=
-  to_real_hom.map_list_sum l
+theorem coe_list_sum (l : List ℝ≥0 ) : ((l.Sum : ℝ≥0 ) : ℝ) = (l.map coe).Sum :=
+  toRealHom.map_list_sum l
 
 @[norm_cast]
-theorem coe_list_prod (l : List ℝ≥0 ) : ((l.prod : ℝ≥0 ) : ℝ) = (l.map coe).Prod :=
-  to_real_hom.map_list_prod l
+theorem coe_list_prod (l : List ℝ≥0 ) : ((l.Prod : ℝ≥0 ) : ℝ) = (l.map coe).Prod :=
+  toRealHom.map_list_prod l
 
 @[norm_cast]
-theorem coe_multiset_sum (s : Multiset ℝ≥0 ) : ((s.sum : ℝ≥0 ) : ℝ) = (s.map coe).Sum :=
-  to_real_hom.map_multiset_sum s
+theorem coe_multiset_sum (s : Multiset ℝ≥0 ) : ((s.Sum : ℝ≥0 ) : ℝ) = (s.map coe).Sum :=
+  toRealHom.map_multiset_sum s
 
 @[norm_cast]
-theorem coe_multiset_prod (s : Multiset ℝ≥0 ) : ((s.prod : ℝ≥0 ) : ℝ) = (s.map coe).Prod :=
-  to_real_hom.map_multiset_prod s
+theorem coe_multiset_prod (s : Multiset ℝ≥0 ) : ((s.Prod : ℝ≥0 ) : ℝ) = (s.map coe).Prod :=
+  toRealHom.map_multiset_prod s
 
 @[norm_cast]
 theorem coe_sum {α} {s : Finset α} {f : α → ℝ≥0 } : ↑(∑ a in s, f a) = ∑ a in s, (f a : ℝ) :=
-  to_real_hom.map_sum _ _
+  toRealHom.map_sum _ _
 
 theorem _root_.real.to_nnreal_sum_of_nonneg {α} {s : Finset α} {f : α → ℝ} (hf : ∀ a, a ∈ s → 0 ≤ f a) :
     Real.toNnreal (∑ a in s, f a) = ∑ a in s, Real.toNnreal (f a) := by
@@ -284,7 +284,7 @@ theorem _root_.real.to_nnreal_sum_of_nonneg {α} {s : Finset α} {f : α → ℝ
 
 @[norm_cast]
 theorem coe_prod {α} {s : Finset α} {f : α → ℝ≥0 } : ↑(∏ a in s, f a) = ∏ a in s, (f a : ℝ) :=
-  to_real_hom.map_prod _ _
+  toRealHom.map_prod _ _
 
 theorem _root_.real.to_nnreal_prod_of_nonneg {α} {s : Finset α} {f : α → ℝ} (hf : ∀ a, a ∈ s → 0 ≤ f a) :
     Real.toNnreal (∏ a in s, f a) = ∏ a in s, Real.toNnreal (f a) := by
@@ -298,7 +298,7 @@ theorem nsmul_coe (r : ℝ≥0 ) (n : ℕ) : ↑(n • r) = n • (r : ℝ) := b
 
 @[simp, norm_cast]
 protected theorem coe_nat_cast (n : ℕ) : (↑(↑n : ℝ≥0 ) : ℝ) = n :=
-  map_nat_cast to_real_hom n
+  map_nat_cast toRealHom n
 
 noncomputable example : LinearOrderₓ ℝ≥0 := by
   infer_instance
@@ -393,10 +393,10 @@ theorem bdd_below_coe (s : Set ℝ≥0 ) : BddBelow ((coe : ℝ≥0 → ℝ) '' 
 noncomputable instance : ConditionallyCompleteLinearOrderBot ℝ≥0 :=
   Nonneg.conditionallyCompleteLinearOrderBot Real.Sup_empty.le
 
-theorem coe_Sup (s : Set ℝ≥0 ) : (↑(Sup s) : ℝ) = Sup ((coe : ℝ≥0 → ℝ) '' s) :=
+theorem coe_Sup (s : Set ℝ≥0 ) : (↑(sup s) : ℝ) = sup ((coe : ℝ≥0 → ℝ) '' s) :=
   Eq.symm <| @subset_Sup_of_within ℝ (Set.Ici 0) _ ⟨(0 : ℝ≥0 )⟩ s <| (Real.Sup_nonneg _) fun y ⟨x, _, hy⟩ => hy ▸ x.2
 
-theorem coe_Inf (s : Set ℝ≥0 ) : (↑(Inf s) : ℝ) = Inf ((coe : ℝ≥0 → ℝ) '' s) :=
+theorem coe_Inf (s : Set ℝ≥0 ) : (↑(inf s) : ℝ) = inf ((coe : ℝ≥0 → ℝ) '' s) :=
   Eq.symm <| @subset_Inf_of_within ℝ (Set.Ici 0) _ ⟨(0 : ℝ≥0 )⟩ s <| (Real.Inf_nonneg _) fun y ⟨x, _, hy⟩ => hy ▸ x.2
 
 example : Archimedean ℝ≥0 := by
@@ -740,7 +740,7 @@ theorem le_of_forall_lt_one_mul_le {x y : ℝ≥0 } (h : ∀, ∀ a < 1, ∀, a 
     have hx' : x⁻¹ ≠ 0 := by
       rwa [· ≠ ·, inv_eq_zero]
     have : a * x⁻¹ < 1 := by
-      rwa [← lt_inv_iff_mul_lt hx', inv_inv₀]
+      rwa [← lt_inv_iff_mul_lt hx', inv_invₓ]
     have : a * x⁻¹ * x ≤ y := h _ this
     rwa [mul_assoc, inv_mul_cancel hx, mul_oneₓ] at this
 
@@ -843,14 +843,14 @@ theorem coe_nnabs (x : ℝ) : (nnabs x : ℝ) = abs x :=
   rfl
 
 @[simp]
-theorem nnabs_of_nonneg {x : ℝ} (h : 0 ≤ x) : nnabs x = to_nnreal x := by
+theorem nnabs_of_nonneg {x : ℝ} (h : 0 ≤ x) : nnabs x = toNnreal x := by
   ext
   simp [coe_to_nnreal x h, abs_of_nonneg h]
 
-theorem coe_to_nnreal_le (x : ℝ) : (to_nnreal x : ℝ) ≤ abs x :=
+theorem coe_to_nnreal_le (x : ℝ) : (toNnreal x : ℝ) ≤ abs x :=
   max_leₓ (le_abs_self _) (abs_nonneg _)
 
-theorem cast_nat_abs_eq_nnabs_cast (n : ℤ) : (n.nat_abs : ℝ≥0 ) = nnabs n := by
+theorem cast_nat_abs_eq_nnabs_cast (n : ℤ) : (n.natAbs : ℝ≥0 ) = nnabs n := by
   ext
   rw [Nnreal.coe_nat_cast, Int.cast_nat_abs, Real.coe_nnabs]
 

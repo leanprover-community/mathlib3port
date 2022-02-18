@@ -31,23 +31,23 @@ namespace Nat
 namespace ArithmeticFunction
 
 /-- The L-series of an `arithmetic_function`. -/
-def l_series (f : arithmetic_function ℂ) (z : ℂ) : ℂ :=
+def l_series (f : ArithmeticFunction ℂ) (z : ℂ) : ℂ :=
   ∑' n, f n / n ^ z
 
 /-- `f.l_series_summable z` indicates that the L-series of `f` converges at `z`. -/
-def l_series_summable (f : arithmetic_function ℂ) (z : ℂ) : Prop :=
+def l_series_summable (f : ArithmeticFunction ℂ) (z : ℂ) : Prop :=
   Summable fun n => f n / n ^ z
 
-theorem l_series_eq_zero_of_not_l_series_summable (f : arithmetic_function ℂ) (z : ℂ) :
-    ¬f.l_series_summable z → f.l_series z = 0 :=
+theorem l_series_eq_zero_of_not_l_series_summable (f : ArithmeticFunction ℂ) (z : ℂ) :
+    ¬f.LSeriesSummable z → f.lSeries z = 0 :=
   tsum_eq_zero_of_not_summable
 
 @[simp]
-theorem l_series_summable_zero {z : ℂ} : l_series_summable 0 z := by
+theorem l_series_summable_zero {z : ℂ} : LSeriesSummable 0 z := by
   simp [l_series_summable, summable_zero]
 
-theorem l_series_summable_of_bounded_of_one_lt_real {f : arithmetic_function ℂ} {m : ℝ}
-    (h : ∀ n : ℕ, Complex.abs (f n) ≤ m) {z : ℝ} (hz : 1 < z) : f.l_series_summable z := by
+theorem l_series_summable_of_bounded_of_one_lt_real {f : ArithmeticFunction ℂ} {m : ℝ}
+    (h : ∀ n : ℕ, Complex.abs (f n) ≤ m) {z : ℝ} (hz : 1 < z) : f.LSeriesSummable z := by
   by_cases' h0 : m = 0
   · subst h0
     have hf : f = 0 :=
@@ -68,8 +68,8 @@ theorem l_series_summable_of_bounded_of_one_lt_real {f : arithmetic_function ℂ
     rw [Complex.abs_cpow_real, Complex.abs_cast_nat]
     
 
-theorem l_series_summable_iff_of_re_eq_re {f : arithmetic_function ℂ} {w z : ℂ} (h : w.re = z.re) :
-    f.l_series_summable w ↔ f.l_series_summable z := by
+theorem l_series_summable_iff_of_re_eq_re {f : ArithmeticFunction ℂ} {w z : ℂ} (h : w.re = z.re) :
+    f.LSeriesSummable w ↔ f.LSeriesSummable z := by
   suffices h : ∀ n : ℕ, Complex.abs (f n) / Complex.abs (↑n ^ w) = Complex.abs (f n) / Complex.abs (↑n ^ z)
   · simp [l_series_summable, ← summable_norm_iff, h, Complex.norm_eq_abs]
     
@@ -87,15 +87,15 @@ theorem l_series_summable_iff_of_re_eq_re {f : arithmetic_function ℂ} {w z : �
   rw [Complex.log_im, ← Complex.of_real_nat_cast]
   exact Complex.arg_of_real_of_nonneg (le_of_ltₓ (cast_pos.2 n.succ_pos))
 
-theorem l_series_summable_of_bounded_of_one_lt_re {f : arithmetic_function ℂ} {m : ℝ}
-    (h : ∀ n : ℕ, Complex.abs (f n) ≤ m) {z : ℂ} (hz : 1 < z.re) : f.l_series_summable z := by
+theorem l_series_summable_of_bounded_of_one_lt_re {f : ArithmeticFunction ℂ} {m : ℝ}
+    (h : ∀ n : ℕ, Complex.abs (f n) ≤ m) {z : ℂ} (hz : 1 < z.re) : f.LSeriesSummable z := by
   rw [← l_series_summable_iff_of_re_eq_re (Complex.of_real_re z.re)]
   apply l_series_summable_of_bounded_of_one_lt_real h
   exact hz
 
 open_locale ArithmeticFunction
 
-theorem zeta_l_series_summable_iff_one_lt_re {z : ℂ} : l_series_summable ζ z ↔ 1 < z.re := by
+theorem zeta_l_series_summable_iff_one_lt_re {z : ℂ} : LSeriesSummable ζ z ↔ 1 < z.re := by
   rw [← l_series_summable_iff_of_re_eq_re (Complex.of_real_re z.re), l_series_summable, ← summable_norm_iff, ←
     Real.summable_one_div_nat_rpow, iff_iff_eq]
   by_cases' h0 : z.re = 0
@@ -112,13 +112,13 @@ theorem zeta_l_series_summable_iff_one_lt_re {z : ℂ} : l_series_summable ζ z 
     cases n
     · simp [h0]
       
-    simp only [n.succ_ne_zero, one_div, cast_one, nat_coe_apply, Complex.abs_cpow_real, inv_inj₀, Complex.abs_inv,
+    simp only [n.succ_ne_zero, one_div, cast_one, nat_coe_apply, Complex.abs_cpow_real, inv_inj, Complex.abs_inv,
       if_false, zeta_apply, Complex.norm_eq_abs, Complex.abs_of_nat]
     
 
 @[simp]
-theorem l_series_add {f g : arithmetic_function ℂ} {z : ℂ} (hf : f.l_series_summable z) (hg : g.l_series_summable z) :
-    (f + g).lSeries z = f.l_series z + g.l_series z := by
+theorem l_series_add {f g : ArithmeticFunction ℂ} {z : ℂ} (hf : f.LSeriesSummable z) (hg : g.LSeriesSummable z) :
+    (f + g).lSeries z = f.lSeries z + g.lSeries z := by
   simp only [l_series, add_apply]
   rw [← tsum_add hf hg]
   apply congr rfl (funext fun n => _)

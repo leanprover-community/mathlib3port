@@ -22,7 +22,7 @@ namespace CategoryTheory
 
 universe v u₁ u₂
 
-variable (C : Type u₁) [category.{v} C] {C' : Type u₂} [category.{v} C']
+variable (C : Type u₁) [Category.{v} C] {C' : Type u₂} [Category.{v} C']
 
 /-- A gluing datum consists of
 1. An index type `J`
@@ -44,13 +44,13 @@ structure glue_data where
   U : J → C
   V : J × J → C
   f : ∀ i j, V (i, j) ⟶ U i
-  f_mono : ∀ i j, mono (f i j) := by
+  f_mono : ∀ i j, Mono (f i j) := by
     run_tac
       tactic.apply_instance
-  f_has_pullback : ∀ i j k, has_pullback (f i j) (f i k) := by
+  f_has_pullback : ∀ i j k, HasPullback (f i j) (f i k) := by
     run_tac
       tactic.apply_instance
-  f_id : ∀ i, is_iso (f i i) := by
+  f_id : ∀ i, IsIso (f i i) := by
     run_tac
       tactic.apply_instance
   t : ∀ i j, V (i, j) ⟶ V (j, i)
@@ -67,10 +67,10 @@ attribute [reassoc] glue_data.t_fac glue_data.cocycle
 
 namespace GlueData
 
-variable {C} (D : glue_data C)
+variable {C} (D : GlueData C)
 
 @[simp]
-theorem t'_iij (i j : D.J) : D.t' i i j = (pullback_symmetry _ _).Hom := by
+theorem t'_iij (i j : D.J) : D.t' i i j = (pullbackSymmetry _ _).Hom := by
   have eq₁ := D.t_fac i i j
   have eq₂ := (is_iso.eq_comp_inv (D.f i i)).mpr (@pullback.condition _ _ _ _ _ _ (D.f i j) _)
   rw [D.t_id, category.comp_id, eq₂] at eq₁
@@ -97,20 +97,20 @@ theorem t_inv (i j : D.J) : D.t i j ≫ D.t j i = 𝟙 _ := by
   simpa using this
 
 theorem t'_inv (i j k : D.J) :
-    D.t' i j k ≫ (pullback_symmetry _ _).Hom ≫ D.t' j i k ≫ (pullback_symmetry _ _).Hom = 𝟙 _ := by
+    D.t' i j k ≫ (pullbackSymmetry _ _).Hom ≫ D.t' j i k ≫ (pullbackSymmetry _ _).Hom = 𝟙 _ := by
   rw [← cancel_mono (pullback.fst : pullback (D.f i j) (D.f i k) ⟶ _)]
   simp [t_fac, t_fac_assoc]
 
-instance t_is_iso (i j : D.J) : is_iso (D.t i j) :=
+instance t_is_iso (i j : D.J) : IsIso (D.t i j) :=
   ⟨⟨D.t j i, D.t_inv _ _, D.t_inv _ _⟩⟩
 
-instance t'_is_iso (i j k : D.J) : is_iso (D.t' i j k) :=
+instance t'_is_iso (i j k : D.J) : IsIso (D.t' i j k) :=
   ⟨⟨D.t' j k i ≫ D.t' k i j, D.cocycle _ _ _, by
       simpa using D.cocycle _ _ _⟩⟩
 
 @[reassoc]
 theorem t'_comp_eq_pullback_symmetry (i j k : D.J) :
-    D.t' j k i ≫ D.t' k i j = (pullback_symmetry _ _).Hom ≫ D.t' j i k ≫ (pullback_symmetry _ _).Hom := by
+    D.t' j k i ≫ D.t' k i j = (pullbackSymmetry _ _).Hom ≫ D.t' j i k ≫ (pullbackSymmetry _ _).Hom := by
   trans inv (D.t' i j k)
   · exact is_iso.eq_inv_of_hom_inv_id (D.cocycle _ _ _)
     
@@ -119,15 +119,15 @@ theorem t'_comp_eq_pullback_symmetry (i j k : D.J) :
     
 
 /-- (Implementation) The disjoint union of `U i`. -/
-def sigma_opens [has_coproduct D.U] : C :=
+def sigma_opens [HasCoproduct D.U] : C :=
   ∐ D.U
 
 /-- (Implementation) The diagram to take colimit of. -/
-def diagram : multispan_index C where
+def diagram : MultispanIndex C where
   L := D.J × D.J
   R := D.J
-  fstFrom := _root_.prod.fst
-  sndFrom := _root_.prod.snd
+  fstFrom := Prod.fst
+  sndFrom := Prod.snd
   left := D.V
   right := D.U
   fst := fun ⟨i, j⟩ => D.f i j
@@ -142,11 +142,11 @@ theorem diagram_R : D.diagram.R = D.J :=
   rfl
 
 @[simp]
-theorem diagram_fst_from (i j : D.J) : D.diagram.fst_from ⟨i, j⟩ = i :=
+theorem diagram_fst_from (i j : D.J) : D.diagram.fstFrom ⟨i, j⟩ = i :=
   rfl
 
 @[simp]
-theorem diagram_snd_from (i j : D.J) : D.diagram.snd_from ⟨i, j⟩ = j :=
+theorem diagram_snd_from (i j : D.J) : D.diagram.sndFrom ⟨i, j⟩ = j :=
   rfl
 
 @[simp]
@@ -167,7 +167,7 @@ theorem diagram_right : D.diagram.right = D.U :=
 
 section
 
-variable [has_multicoequalizer D.diagram]
+variable [HasMulticoequalizer D.diagram]
 
 /-- The glued object given a family of gluing data. -/
 def glued : C :=
@@ -179,31 +179,31 @@ def ι (i : D.J) : D.U i ⟶ D.glued :=
 
 @[simp, elementwise]
 theorem glue_condition (i j : D.J) : D.t i j ≫ D.f j i ≫ D.ι j = D.f i j ≫ D.ι i :=
-  (category.assoc _ _ _).symm.trans (multicoequalizer.condition D.diagram ⟨i, j⟩).symm
+  (Category.assoc _ _ _).symm.trans (multicoequalizer.condition D.diagram ⟨i, j⟩).symm
 
 /-- The pullback cone spanned by `V i j ⟶ U i` and `V i j ⟶ U j`.
 This will often be a pullback diagram. -/
-def V_pullback_cone (i j : D.J) : pullback_cone (D.ι i) (D.ι j) :=
-  pullback_cone.mk (D.f i j) (D.t i j ≫ D.f j i)
+def V_pullback_cone (i j : D.J) : PullbackCone (D.ι i) (D.ι j) :=
+  PullbackCone.mk (D.f i j) (D.t i j ≫ D.f j i)
     (by
       simp )
 
-variable [has_colimits C]
+variable [HasColimits C]
 
 /-- The projection `∐ D.U ⟶ D.glued` given by the colimit. -/
-def π : D.sigma_opens ⟶ D.glued :=
-  multicoequalizer.sigma_π D.diagram
+def π : D.sigmaOpens ⟶ D.glued :=
+  multicoequalizer.sigmaπ D.diagram
 
-instance π_epi : epi D.π := by
+instance π_epi : Epi D.π := by
   unfold π
   infer_instance
 
 end
 
-theorem types_π_surjective (D : glue_data (Type _)) : Function.Surjective D.π :=
+theorem types_π_surjective (D : GlueData (Type _)) : Function.Surjective D.π :=
   (epi_iff_surjective _).mp inferInstance
 
-theorem types_ι_jointly_surjective (D : glue_data (Type _)) (x : D.glued) : ∃ (i : _)(y : D.U i), D.ι i y = x := by
+theorem types_ι_jointly_surjective (D : GlueData (Type _)) (x : D.glued) : ∃ (i : _)(y : D.U i), D.ι i y = x := by
   delta' CategoryTheory.GlueData.ι
   simp_rw [← multicoequalizer.ι_sigma_π D.diagram]
   rcases D.types_π_surjective x with ⟨x', rfl⟩
@@ -216,16 +216,16 @@ theorem types_ι_jointly_surjective (D : glue_data (Type _)) (x : D.glued) : ∃
     ⟨i, y, by
       simpa [← multicoequalizer.ι_sigma_π, -multicoequalizer.ι_sigma_π]⟩
 
-variable (F : C ⥤ C') [H : ∀ i j k, preserves_limit (cospan (D.f i j) (D.f i k)) F]
+variable (F : C ⥤ C') [H : ∀ i j k, PreservesLimit (cospan (D.f i j) (D.f i k)) F]
 
 include H
 
-instance (i j k : D.J) : has_pullback (F.map (D.f i j)) (F.map (D.f i k)) :=
-  ⟨⟨⟨_, is_limit_of_has_pullback_of_preserves_limit F (D.f i j) (D.f i k)⟩⟩⟩
+instance (i j k : D.J) : HasPullback (F.map (D.f i j)) (F.map (D.f i k)) :=
+  ⟨⟨⟨_, isLimitOfHasPullbackOfPreservesLimit F (D.f i j) (D.f i k)⟩⟩⟩
 
 /-- A functor that preserves the pullbacks of `f i j` and `f i k` can map a family of glue data. -/
 @[simps]
-def map_glue_data : glue_data C' where
+def map_glue_data : GlueData C' where
   J := D.J
   U := fun i => F.obj (D.U i)
   V := fun i => F.obj (D.V i)
@@ -237,8 +237,8 @@ def map_glue_data : glue_data C' where
     rw [D.t_id i]
     simp
   t' := fun i j k =>
-    (preserves_pullback.iso F (D.f i j) (D.f i k)).inv ≫
-      F.map (D.t' i j k) ≫ (preserves_pullback.iso F (D.f j k) (D.f j i)).Hom
+    (PreservesPullback.iso F (D.f i j) (D.f i k)).inv ≫
+      F.map (D.t' i j k) ≫ (PreservesPullback.iso F (D.f j k) (D.f j i)).Hom
   t_fac := fun i j k => by
     simpa [iso.inv_comp_eq] using congr_argₓ (fun f => F.map f) (D.t_fac i j k)
   cocycle := fun i j k => by
@@ -248,12 +248,12 @@ def map_glue_data : glue_data C' where
 /-- The diagram of the image of a `glue_data` under a functor `F` is naturally isomorphic to the
 original diagram of the `glue_data` via `F`.
 -/
-def diagram_iso : D.diagram.multispan ⋙ F ≅ (D.map_glue_data F).diagram.multispan :=
-  nat_iso.of_components
+def diagram_iso : D.diagram.multispan ⋙ F ≅ (D.mapGlueData F).diagram.multispan :=
+  NatIso.ofComponents
     (fun x =>
       match x with
-      | walking_multispan.left a => iso.refl _
-      | walking_multispan.right b => iso.refl _)
+      | walking_multispan.left a => Iso.refl _
+      | walking_multispan.right b => Iso.refl _)
     (by
       rintro (⟨_, _⟩ | _) _ (_ | _ | _)
       · erw [category.comp_id, category.id_comp, Functor.map_id]
@@ -270,64 +270,64 @@ def diagram_iso : D.diagram.multispan ⋙ F ≅ (D.map_glue_data F).diagram.mult
         )
 
 @[simp]
-theorem diagram_iso_app_left (i : D.J × D.J) : (D.diagram_iso F).app (walking_multispan.left i) = iso.refl _ :=
+theorem diagram_iso_app_left (i : D.J × D.J) : (D.diagramIso F).app (WalkingMultispan.left i) = Iso.refl _ :=
   rfl
 
 @[simp]
-theorem diagram_iso_app_right (i : D.J) : (D.diagram_iso F).app (walking_multispan.right i) = iso.refl _ :=
+theorem diagram_iso_app_right (i : D.J) : (D.diagramIso F).app (WalkingMultispan.right i) = Iso.refl _ :=
   rfl
 
 @[simp]
-theorem diagram_iso_hom_app_left (i : D.J × D.J) : (D.diagram_iso F).Hom.app (walking_multispan.left i) = 𝟙 _ :=
+theorem diagram_iso_hom_app_left (i : D.J × D.J) : (D.diagramIso F).Hom.app (WalkingMultispan.left i) = 𝟙 _ :=
   rfl
 
 @[simp]
-theorem diagram_iso_hom_app_right (i : D.J) : (D.diagram_iso F).Hom.app (walking_multispan.right i) = 𝟙 _ :=
+theorem diagram_iso_hom_app_right (i : D.J) : (D.diagramIso F).Hom.app (WalkingMultispan.right i) = 𝟙 _ :=
   rfl
 
 @[simp]
-theorem diagram_iso_inv_app_left (i : D.J × D.J) : (D.diagram_iso F).inv.app (walking_multispan.left i) = 𝟙 _ :=
+theorem diagram_iso_inv_app_left (i : D.J × D.J) : (D.diagramIso F).inv.app (WalkingMultispan.left i) = 𝟙 _ :=
   rfl
 
 @[simp]
-theorem diagram_iso_inv_app_right (i : D.J) : (D.diagram_iso F).inv.app (walking_multispan.right i) = 𝟙 _ :=
+theorem diagram_iso_inv_app_right (i : D.J) : (D.diagramIso F).inv.app (WalkingMultispan.right i) = 𝟙 _ :=
   rfl
 
-variable [has_multicoequalizer D.diagram] [preserves_colimit D.diagram.multispan F]
+variable [HasMulticoequalizer D.diagram] [PreservesColimit D.diagram.multispan F]
 
 omit H
 
-theorem has_colimit_multispan_comp : has_colimit (D.diagram.multispan ⋙ F) :=
-  ⟨⟨⟨_, preserves_colimit.preserves (colimit.is_colimit _)⟩⟩⟩
+theorem has_colimit_multispan_comp : HasColimit (D.diagram.multispan ⋙ F) :=
+  ⟨⟨⟨_, PreservesColimit.preserves (colimit.isColimit _)⟩⟩⟩
 
 include H
 
 attribute [local instance] has_colimit_multispan_comp
 
-theorem has_colimit_map_glue_data_diagram : has_multicoequalizer (D.map_glue_data F).diagram :=
-  has_colimit_of_iso (D.diagram_iso F).symm
+theorem has_colimit_map_glue_data_diagram : HasMulticoequalizer (D.mapGlueData F).diagram :=
+  has_colimit_of_iso (D.diagramIso F).symm
 
 attribute [local instance] has_colimit_map_glue_data_diagram
 
 /-- If `F` preserves the gluing, we obtain an iso between the glued objects. -/
-def glued_iso : F.obj D.glued ≅ (D.map_glue_data F).glued :=
-  preserves_colimit_iso F D.diagram.multispan ≪≫ limits.has_colimit.iso_of_nat_iso (D.diagram_iso F)
+def glued_iso : F.obj D.glued ≅ (D.mapGlueData F).glued :=
+  preservesColimitIso F D.diagram.multispan ≪≫ Limits.HasColimit.isoOfNatIso (D.diagramIso F)
 
 @[simp, reassoc]
-theorem ι_glued_iso_hom (i : D.J) : F.map (D.ι i) ≫ (D.glued_iso F).Hom = (D.map_glue_data F).ι i := by
+theorem ι_glued_iso_hom (i : D.J) : F.map (D.ι i) ≫ (D.gluedIso F).Hom = (D.mapGlueData F).ι i := by
   erw [ι_preserves_colimits_iso_hom_assoc]
   rw [has_colimit.iso_of_nat_iso_ι_hom]
   erw [category.id_comp]
   rfl
 
 @[simp, reassoc]
-theorem ι_glued_iso_inv (i : D.J) : (D.map_glue_data F).ι i ≫ (D.glued_iso F).inv = F.map (D.ι i) := by
+theorem ι_glued_iso_inv (i : D.J) : (D.mapGlueData F).ι i ≫ (D.gluedIso F).inv = F.map (D.ι i) := by
   rw [iso.comp_inv_eq, ι_glued_iso_hom]
 
 /-- If `F` preserves the gluing, and reflects the pullback of `U i ⟶ glued` and `U j ⟶ glued`,
 then `F` reflects the fact that `V_pullback_cone` is a pullback. -/
-def V_pullback_cone_is_limit_of_map (i j : D.J) [reflects_limit (cospan (D.ι i) (D.ι j)) F]
-    (hc : is_limit ((D.map_glue_data F).vPullbackCone i j)) : is_limit (D.V_pullback_cone i j) := by
+def V_pullback_cone_is_limit_of_map (i j : D.J) [ReflectsLimit (cospan (D.ι i) (D.ι j)) F]
+    (hc : IsLimit ((D.mapGlueData F).vPullbackCone i j)) : IsLimit (D.vPullbackCone i j) := by
   apply is_limit_of_reflects F
   apply (is_limit_map_cone_pullback_cone_equiv _ _).symm _
   let e : cospan (F.map (D.ι i)) (F.map (D.ι j)) ≅ cospan ((D.map_glue_data F).ι i) ((D.map_glue_data F).ι j)
@@ -352,8 +352,8 @@ omit H
 
 /-- If there is a forgetful functor into `Type` that preserves enough (co)limits, then `D.ι` will
 be jointly surjective. -/
-theorem ι_jointly_surjective (F : C ⥤ Type v) [preserves_colimit D.diagram.multispan F]
-    [∀ i j k : D.J, preserves_limit (cospan (D.f i j) (D.f i k)) F] (x : F.obj D.glued) :
+theorem ι_jointly_surjective (F : C ⥤ Type v) [PreservesColimit D.diagram.multispan F]
+    [∀ i j k : D.J, PreservesLimit (cospan (D.f i j) (D.f i k)) F] (x : F.obj D.glued) :
     ∃ (i : _)(y : F.obj (D.U i)), F.map (D.ι i) y = x := by
   let e := D.glued_iso F
   obtain ⟨i, y, eq⟩ := (D.map_glue_data F).types_ι_jointly_surjective (e.hom x)

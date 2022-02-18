@@ -109,12 +109,12 @@ def finset_above α (enum : α → ℕ) (n : ℕ) :=
   { s : Finset α // ∀, ∀ x ∈ s, ∀, n ≤ enum x }
 
 /-- Construct a fintype instance from a completed `finset_above`. -/
-def mk_fintype {α} (enum : α → ℕ) (s : finset_above α enum 0) (H : ∀ x, x ∈ s.1) : Fintype α :=
+def mk_fintype {α} (enum : α → ℕ) (s : FinsetAbove α enum 0) (H : ∀ x, x ∈ s.1) : Fintype α :=
   ⟨s.1, H⟩
 
 /-- This is the case for a simple variant (no arguments) in an inductive type. -/
-def finset_above.cons {α} {enum : α → ℕ} n (a : α) (h : enum a = n) (s : finset_above α enum (n + 1)) :
-    finset_above α enum n := by
+def finset_above.cons {α} {enum : α → ℕ} n (a : α) (h : enum a = n) (s : FinsetAbove α enum (n + 1)) :
+    FinsetAbove α enum n := by
   refine' ⟨Finset.cons a s.1 _, _⟩
   · intro h'
     have := s.2 _ h'
@@ -129,20 +129,20 @@ def finset_above.cons {α} {enum : α → ℕ} n (a : α) (h : enum a = n) (s : 
       
     
 
-theorem finset_above.mem_cons_self {α} {enum : α → ℕ} {n a h s} : a ∈ (@finset_above.cons α enum n a h s).1 :=
+theorem finset_above.mem_cons_self {α} {enum : α → ℕ} {n a h s} : a ∈ (@FinsetAbove.cons α enum n a h s).1 :=
   Multiset.mem_cons_self _ _
 
 theorem finset_above.mem_cons_of_mem {α} {enum : α → ℕ} {n a h s b} :
-    b ∈ (s : finset_above _ _ _).1 → b ∈ (@finset_above.cons α enum n a h s).1 :=
+    b ∈ (s : FinsetAbove _ _ _).1 → b ∈ (@FinsetAbove.cons α enum n a h s).1 :=
   Multiset.mem_cons_of_mem
 
 /-- The base case is when we run out of variants; we just put an empty finset at the end. -/
-def finset_above.nil {α} {enum : α → ℕ} n : finset_above α enum n :=
+def finset_above.nil {α} {enum : α → ℕ} n : FinsetAbove α enum n :=
   ⟨∅, by
     rintro _ ⟨⟩⟩
 
-instance α enum n : Inhabited (finset_above α enum n) :=
-  ⟨finset_above.nil _⟩
+instance α enum n : Inhabited (FinsetAbove α enum n) :=
+  ⟨FinsetAbove.nil _⟩
 
 /-- This is a finset covering a nontrivial variant (with one or more constructor arguments).
 The property `P` here is `λ a, enum a = n` where `n` is the discriminant for the current
@@ -157,18 +157,18 @@ to prove that `Γ` is a fintype, and construct the function `f` that maps `⟨a,
 to `C_n a b c ...` where `C_n` is the nth constructor, and `mem` asserts
 `enum (C_n a b c ...) = n`. -/
 def finset_in.mk {α} {P : α → Prop} Γ [Fintype Γ] (f : Γ → α) (inj : Function.Injective f) (mem : ∀ x, P (f x)) :
-    finset_in P :=
+    FinsetIn P :=
   ⟨Finset.univ.map ⟨f, inj⟩, fun x h => by
     rcases Finset.mem_map.1 h with ⟨x, _, rfl⟩ <;> exact mem x⟩
 
 theorem finset_in.mem_mk {α} {P : α → Prop} {Γ} {s : Fintype Γ} {f : Γ → α} {inj mem a} b (H : f b = a) :
-    a ∈ (@finset_in.mk α P Γ s f inj mem).1 :=
+    a ∈ (@FinsetIn.mk α P Γ s f inj mem).1 :=
   Finset.mem_map.2 ⟨_, Finset.mem_univ _, H⟩
 
 /-- For nontrivial variants, we split the constructor list into a `finset_in` component for the
 current constructor and a `finset_above` for the rest. -/
-def finset_above.union {α} {enum : α → ℕ} n (s : finset_in fun a => enum a = n) (t : finset_above α enum (n + 1)) :
-    finset_above α enum n := by
+def finset_above.union {α} {enum : α → ℕ} n (s : FinsetIn fun a => enum a = n) (t : FinsetAbove α enum (n + 1)) :
+    FinsetAbove α enum n := by
   refine' ⟨Finset.disjUnion s.1 t.1 _, _⟩
   · intro a hs ht
     have := t.2 _ ht
@@ -183,12 +183,12 @@ def finset_above.union {α} {enum : α → ℕ} n (s : finset_in fun a => enum a
       
     
 
-theorem finset_above.mem_union_left {α} {enum : α → ℕ} {n s t a} (H : a ∈ (s : finset_in _).1) :
-    a ∈ (@finset_above.union α enum n s t).1 :=
+theorem finset_above.mem_union_left {α} {enum : α → ℕ} {n s t a} (H : a ∈ (s : FinsetIn _).1) :
+    a ∈ (@FinsetAbove.union α enum n s t).1 :=
   Multiset.mem_add.2 (Or.inl H)
 
-theorem finset_above.mem_union_right {α} {enum : α → ℕ} {n s t a} (H : a ∈ (t : finset_above _ _ _).1) :
-    a ∈ (@finset_above.union α enum n s t).1 :=
+theorem finset_above.mem_union_right {α} {enum : α → ℕ} {n s t a} (H : a ∈ (t : FinsetAbove _ _ _).1) :
+    a ∈ (@FinsetAbove.union α enum n s t).1 :=
   Multiset.mem_add.2 (Or.inr H)
 
 end DeriveFintype
@@ -240,7 +240,7 @@ unsafe def mk_sigma_elim_inj : ℕ → expr → expr → tactic Unit
     cases x
     cases y
     let is ← intro1 >>= injection
-    is.mmap' cases
+    is cases
     reflexivity
 
 /-- Prove the goal `a |- enum (f a) = n`, where `f` is the function constructed in `mk_sigma_elim`,
@@ -263,15 +263,15 @@ unsafe def mk_finset (ls : List level) (args : List expr) : ℕ → List Name �
     let e := (expr.const c ls).mk_app args
     let t ← infer_type e
     if is_pi t then do
-        to_expr (pquote.1 (finset_above.union (%%ₓreflect k))) tt ff >>= fun c => apply c { NewGoals := new_goals.all }
+        to_expr (pquote.1 (FinsetAbove.union (%%ₓreflect k))) tt ff >>= fun c => apply c { NewGoals := new_goals.all }
         let Γ ← mk_sigma t
-        to_expr (pquote.1 (finset_in.mk (%%ₓΓ))) tt ff >>= fun c => apply c { NewGoals := new_goals.all }
+        to_expr (pquote.1 (FinsetIn.mk (%%ₓΓ))) tt ff >>= fun c => apply c { NewGoals := new_goals.all }
         let n ← mk_sigma_elim t e
         intro1 >>= fun x => intro1 >>= mk_sigma_elim_inj n x
         intro1 >>= mk_sigma_elim_eq n
         mk_finset (k + 1) cs
       else do
-        let c ← to_expr (pquote.1 (finset_above.cons (%%ₓreflect k) (%%ₓe))) tt ff
+        let c ← to_expr (pquote.1 (FinsetAbove.cons (%%ₓreflect k) (%%ₓe))) tt ff
         apply c { NewGoals := new_goals.all }
         reflexivity
         mk_finset (k + 1) cs
@@ -313,11 +313,11 @@ unsafe def mk_fintype_instance : tactic Unit := do
   let (const I ls, args) ← pure (get_app_fn_args e)
   let env ← get_env
   let cs := env.constructors_of I
-  guardₓ (env.inductive_num_indices I = 0) <|> fail "@[derive fintype]: inductive indices are not supported"
-  guardₓ ¬env.is_recursive I <|>
+  guardₓ (env I = 0) <|> fail "@[derive fintype]: inductive indices are not supported"
+  guardₓ ¬env I <|>
       fail ("@[derive fintype]: recursive inductive types are " ++ "not supported (they are also usually infinite)")
   applyc `` mk_fintype { NewGoals := new_goals.all }
-  intro1 >>= cases >>= fun gs => gs.enum.mmap' fun ⟨i, _⟩ => exact (reflect i)
+  intro1 >>= cases >>= fun gs => gs fun ⟨i, _⟩ => exact (reflect i)
   mk_finset ls args 0 cs
   intro1 >>= cases >>= mk_finset_total skip
 

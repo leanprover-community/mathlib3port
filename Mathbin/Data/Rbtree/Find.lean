@@ -45,7 +45,7 @@ theorem find.induction {p : Rbnode α → Prop} lt [DecidableRel lt] t x (h₁ :
       assumption
 
 theorem find_correct {t : Rbnode α} {lt x} [DecidableRel lt] [IsStrictWeakOrder α lt] :
-    ∀ {lo hi} hs : is_searchable lt t lo hi, mem lt x t ↔ ∃ y, find lt t x = some y ∧ x ≈[lt]y := by
+    ∀ {lo hi} hs : IsSearchable lt t lo hi, Mem lt x t ↔ ∃ y, find lt t x = some y ∧ x ≈[lt]y := by
   apply find.induction lt t x <;> intros <;> simp only [mem, find, *]
   · simp
     
@@ -101,7 +101,7 @@ theorem find_correct {t : Rbnode α} {lt x} [DecidableRel lt] [IsStrictWeakOrder
         
       
 
-theorem mem_of_mem_exact {lt} [IsIrrefl α lt] {x t} : mem_exact x t → mem lt x t := by
+theorem mem_of_mem_exact {lt} [IsIrrefl α lt] {x t} : MemExact x t → Mem lt x t := by
   induction t <;> simp [mem_exact, mem, false_implies_iff] <;> intro h
   all_goals
     cases_type* or.1
@@ -110,7 +110,7 @@ theorem mem_of_mem_exact {lt} [IsIrrefl α lt] {x t} : mem_exact x t → mem lt 
     simp [t_ih_rchild h]
 
 theorem find_correct_exact {t : Rbnode α} {lt x} [DecidableRel lt] [IsStrictWeakOrder α lt] :
-    ∀ {lo hi} hs : is_searchable lt t lo hi, mem_exact x t ↔ find lt t x = some x := by
+    ∀ {lo hi} hs : IsSearchable lt t lo hi, MemExact x t ↔ find lt t x = some x := by
   apply find.induction lt t x <;> intros <;> simp only [mem_exact, find, *]
   iterate 2 
     · cases hs
@@ -182,7 +182,7 @@ theorem find_correct_exact {t : Rbnode α} {lt x} [DecidableRel lt] [IsStrictWea
       
 
 theorem eqv_of_find_some {t : Rbnode α} {lt x y} [DecidableRel lt] :
-    ∀ {lo hi} hs : is_searchable lt t lo hi he : find lt t x = some y, x ≈[lt]y := by
+    ∀ {lo hi} hs : IsSearchable lt t lo hi he : find lt t x = some y, x ≈[lt]y := by
   apply find.induction lt t x <;> intros <;> simp_all only [mem, find]
   iterate 2 
     · cases hs
@@ -197,7 +197,7 @@ theorem eqv_of_find_some {t : Rbnode α} {lt x y} [DecidableRel lt] :
       
 
 theorem find_eq_find_of_eqv {lt a b} [DecidableRel lt] [IsStrictWeakOrder α lt] {t : Rbnode α} :
-    ∀ {lo hi} hs : is_searchable lt t lo hi heqv : a ≈[lt]b, find lt t a = find lt t b := by
+    ∀ {lo hi} hs : IsSearchable lt t lo hi heqv : a ≈[lt]b, find lt t a = find lt t b := by
   apply find.induction lt t a <;> intros <;> simp_all [mem, find, StrictWeakOrder.Equiv, true_implies_iff]
   iterate 2 
     · have : lt b y := lt_of_incomp_of_lt heqv.swap h

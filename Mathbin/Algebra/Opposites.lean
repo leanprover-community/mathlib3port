@@ -37,10 +37,10 @@ reverses left and right in multiplication.-/
 def MulOpposite (α : Type u) : Type u :=
   α
 
--- ././Mathport/Syntax/Translate/Basic.lean:342:9: unsupported: advanced prec syntax
+-- ././Mathport/Syntax/Translate/Basic.lean:343:9: unsupported: advanced prec syntax
 postfix:999 "ᵐᵒᵖ" => MulOpposite
 
--- ././Mathport/Syntax/Translate/Basic.lean:342:9: unsupported: advanced prec syntax
+-- ././Mathport/Syntax/Translate/Basic.lean:343:9: unsupported: advanced prec syntax
 postfix:999 "ᵃᵒᵖ" => AddOpposite
 
 variable {α : Type u}
@@ -81,32 +81,32 @@ protected def rec {F : ∀ X : αᵐᵒᵖ, Sort v} (h : ∀ X, F (op X)) : ∀ 
 
 /-- The canonical bijection between `α` and `αᵐᵒᵖ`. -/
 @[to_additive "The canonical bijection between `α` and `αᵃᵒᵖ`.",
-  simps (config := { fullyApplied := ff }) apply symmApply]
+  simps (config := { fullyApplied := false }) apply symmApply]
 def op_equiv : α ≃ αᵐᵒᵖ :=
   ⟨op, unop, unop_op, op_unop⟩
 
 @[to_additive]
-theorem op_bijective : bijective (op : α → αᵐᵒᵖ) :=
-  op_equiv.Bijective
+theorem op_bijective : Bijective (op : α → αᵐᵒᵖ) :=
+  opEquiv.Bijective
 
 @[to_additive]
-theorem unop_bijective : bijective (unop : αᵐᵒᵖ → α) :=
-  op_equiv.symm.Bijective
+theorem unop_bijective : Bijective (unop : αᵐᵒᵖ → α) :=
+  opEquiv.symm.Bijective
 
 @[to_additive]
-theorem op_injective : injective (op : α → αᵐᵒᵖ) :=
+theorem op_injective : Injective (op : α → αᵐᵒᵖ) :=
   op_bijective.Injective
 
 @[to_additive]
-theorem op_surjective : surjective (op : α → αᵐᵒᵖ) :=
+theorem op_surjective : Surjective (op : α → αᵐᵒᵖ) :=
   op_bijective.Surjective
 
 @[to_additive]
-theorem unop_injective : injective (unop : αᵐᵒᵖ → α) :=
+theorem unop_injective : Injective (unop : αᵐᵒᵖ → α) :=
   unop_bijective.Injective
 
 @[to_additive]
-theorem unop_surjective : surjective (unop : αᵐᵒᵖ → α) :=
+theorem unop_surjective : Surjective (unop : αᵐᵒᵖ → α) :=
   unop_bijective.Surjective
 
 @[simp, to_additive]

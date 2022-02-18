@@ -39,8 +39,6 @@ open Set Function
 
 open_locale Manifold
 
-attribute [local instance] fact_one_le_two_real
-
 /-- The half-space in `ℝ^n`, used to model manifolds with boundary. We only define it when
 `1 ≤ n`, as the definition only makes sense in this case.
 -/
@@ -66,15 +64,15 @@ instance : TopologicalSpace (EuclideanQuadrant n) := by
   infer_instance
 
 instance [Zero (Finₓ n)] : Inhabited (EuclideanHalfSpace n) :=
-  ⟨⟨0, le_reflₓ _⟩⟩
+  ⟨⟨0, le_rfl⟩⟩
 
 instance : Inhabited (EuclideanQuadrant n) :=
-  ⟨⟨0, fun i => le_reflₓ _⟩⟩
+  ⟨⟨0, fun i => le_rfl⟩⟩
 
-theorem range_half_space (n : ℕ) [Zero (Finₓ n)] : (range fun x : EuclideanHalfSpace n => x.val) = { y | 0 ≤ y 0 } := by
+theorem range_half_space (n : ℕ) [Zero (Finₓ n)] : (Range fun x : EuclideanHalfSpace n => x.val) = { y | 0 ≤ y 0 } := by
   simp
 
-theorem range_quadrant (n : ℕ) : (range fun x : EuclideanQuadrant n => x.val) = { y | ∀ i : Finₓ n, 0 ≤ y i } := by
+theorem range_quadrant (n : ℕ) : (Range fun x : EuclideanQuadrant n => x.val) = { y | ∀ i : Finₓ n, 0 ≤ y i } := by
   simp
 
 end
@@ -89,7 +87,7 @@ def modelWithCornersEuclideanHalfSpace (n : ℕ) [Zero (Finₓ n)] :
   invFun := fun x =>
     ⟨update x 0 (max (x 0) 0), by
       simp [le_reflₓ]⟩
-  Source := univ
+  Source := Univ
   Target := { x | 0 ≤ x 0 }
   map_source' := fun x hx => x.property
   map_target' := fun x hx => mem_univ _
@@ -113,7 +111,7 @@ def modelWithCornersEuclideanQuadrant (n : ℕ) :
   invFun := fun x =>
     ⟨fun i => max (x i) 0, fun i => by
       simp only [le_reflₓ, or_trueₓ, le_max_iff]⟩
-  Source := univ
+  Source := Univ
   Target := { x | ∀ i, 0 ≤ x i }
   map_source' := fun x hx => by
     simpa only [Subtype.range_val] using x.property

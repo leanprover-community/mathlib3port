@@ -49,14 +49,14 @@ variable (e : Basis ι R M) (v : ι' → M) (i : ι) (j : ι')
 
 namespace Basis
 
-theorem to_matrix_apply : e.to_matrix v i j = e.repr (v j) i :=
+theorem to_matrix_apply : e.toMatrix v i j = e.repr (v j) i :=
   rfl
 
-theorem to_matrix_transpose_apply : (e.to_matrix v)ᵀ j = e.repr (v j) :=
+theorem to_matrix_transpose_apply : (e.toMatrix v)ᵀ j = e.repr (v j) :=
   funext fun _ => rfl
 
 theorem to_matrix_eq_to_matrix_constr [Fintype ι] [DecidableEq ι] (v : ι → M) :
-    e.to_matrix v = LinearMap.toMatrix e e (e.constr ℕ v) := by
+    e.toMatrix v = LinearMap.toMatrix e e (e.constr ℕ v) := by
   ext
   rw [Basis.to_matrix_apply, LinearMap.to_matrix_apply, Basis.constr_basis]
 
@@ -66,13 +66,13 @@ theorem coe_pi_basis_fun.to_matrix_eq_transpose [Fintype ι] :
   rfl
 
 @[simp]
-theorem to_matrix_self [DecidableEq ι] : e.to_matrix e = 1 := by
+theorem to_matrix_self [DecidableEq ι] : e.toMatrix e = 1 := by
   rw [Basis.toMatrix]
   ext i j
   simp [Basis.equivFun, Matrix.one_apply, Finsupp.single, eq_comm]
 
 theorem to_matrix_update [DecidableEq ι'] (x : M) :
-    e.to_matrix (Function.update v j x) = Matrix.updateColumn (e.to_matrix v) j (e.repr x) := by
+    e.toMatrix (Function.update v j x) = Matrix.updateColumn (e.toMatrix v) j (e.repr x) := by
   ext i' k
   rw [Basis.toMatrix, Matrix.update_column_apply, e.to_matrix_apply]
   split_ifs
@@ -83,7 +83,7 @@ theorem to_matrix_update [DecidableEq ι'] (x : M) :
 
 /-- The basis constructed by `units_smul` has vectors given by a diagonal matrix. -/
 @[simp]
-theorem to_matrix_units_smul [DecidableEq ι] (w : ι → (R)ˣ) : e.to_matrix (e.units_smul w) = diagonal (coe ∘ w) := by
+theorem to_matrix_units_smul [DecidableEq ι] (w : ι → (R)ˣ) : e.toMatrix (e.units_smul w) = diagonalₓ (coe ∘ w) := by
   ext i j
   by_cases' h : i = j
   · simp [h, to_matrix_apply, units_smul_apply, Units.smul_def]
@@ -94,23 +94,28 @@ theorem to_matrix_units_smul [DecidableEq ι] (w : ι → (R)ˣ) : e.to_matrix (
 /-- The basis constructed by `is_unit_smul` has vectors given by a diagonal matrix. -/
 @[simp]
 theorem to_matrix_is_unit_smul [DecidableEq ι] {w : ι → R} (hw : ∀ i, IsUnit (w i)) :
-    e.to_matrix (e.is_unit_smul hw) = diagonal w :=
+    e.toMatrix (e.isUnitSmul hw) = diagonalₓ w :=
   e.to_matrix_units_smul _
 
 @[simp]
-theorem sum_to_matrix_smul_self [Fintype ι] : (∑ i : ι, e.to_matrix v i j • e i) = v j := by
+theorem sum_to_matrix_smul_self [Fintype ι] : (∑ i : ι, e.toMatrix v i j • e i) = v j := by
   simp_rw [e.to_matrix_apply, e.sum_repr]
+
+theorem to_matrix_map_vec_mul {S : Type _} [Ringₓ S] [Algebra R S] [Fintype ι] (b : Basis ι R S) (v : ι' → S) :
+    ((b.toMatrix v).map <| algebraMap R S).vecMul b = v := by
+  ext i
+  simp_rw [vec_mul, dot_product, Matrix.map_apply, ← Algebra.commutes, ← Algebra.smul_def, sum_to_matrix_smul_self]
 
 @[simp]
 theorem to_lin_to_matrix [Fintype ι] [Fintype ι'] [DecidableEq ι'] (v : Basis ι' R M) :
-    Matrix.toLin v e (e.to_matrix v) = id :=
+    Matrix.toLin v e (e.toMatrix v) = id :=
   v.ext fun i => by
     rw [to_lin_self, id_apply, e.sum_to_matrix_smul_self]
 
 /-- From a basis `e : ι → M`, build a linear equivalence between families of vectors `v : ι → M`,
 and matrices, making the matrix whose columns are the vectors `v i` written in the basis `e`. -/
 def to_matrix_equiv [Fintype ι] (e : Basis ι R M) : (ι → M) ≃ₗ[R] Matrix ι ι R where
-  toFun := e.to_matrix
+  toFun := e.toMatrix
   map_add' := fun v w => by
     ext i j
     change _ = _ + _
@@ -149,7 +154,7 @@ variable [Fintype ι'] [Fintype κ] [Fintype κ']
 
 @[simp]
 theorem basis_to_matrix_mul_linear_map_to_matrix [DecidableEq ι'] :
-    c.to_matrix c' ⬝ LinearMap.toMatrix b' c' f = LinearMap.toMatrix b' c f :=
+    c.toMatrix c' ⬝ LinearMap.toMatrix b' c' f = LinearMap.toMatrix b' c f :=
   (Matrix.toLin b' c).Injective
     (by
       have := Classical.decEq κ' <;>
@@ -159,24 +164,24 @@ variable [Fintype ι]
 
 @[simp]
 theorem linear_map_to_matrix_mul_basis_to_matrix [DecidableEq ι] [DecidableEq ι'] :
-    LinearMap.toMatrix b' c' f ⬝ b'.to_matrix b = LinearMap.toMatrix b c' f :=
+    LinearMap.toMatrix b' c' f ⬝ b'.toMatrix b = LinearMap.toMatrix b c' f :=
   (Matrix.toLin b c').Injective
     (by
       rw [to_lin_to_matrix, to_lin_mul b b' c', to_lin_to_matrix, b'.to_lin_to_matrix, comp_id])
 
 theorem basis_to_matrix_mul_linear_map_to_matrix_mul_basis_to_matrix [DecidableEq ι] [DecidableEq ι'] :
-    c.to_matrix c' ⬝ LinearMap.toMatrix b' c' f ⬝ b'.to_matrix b = LinearMap.toMatrix b c f := by
+    c.toMatrix c' ⬝ LinearMap.toMatrix b' c' f ⬝ b'.toMatrix b = LinearMap.toMatrix b c f := by
   rw [basis_to_matrix_mul_linear_map_to_matrix, linear_map_to_matrix_mul_basis_to_matrix]
 
 /-- A generalization of `linear_map.to_matrix_id`. -/
 @[simp]
-theorem LinearMap.to_matrix_id_eq_basis_to_matrix [DecidableEq ι] : LinearMap.toMatrix b b' id = b'.to_matrix b := by
+theorem LinearMap.to_matrix_id_eq_basis_to_matrix [DecidableEq ι] : LinearMap.toMatrix b b' id = b'.toMatrix b := by
   have := Classical.decEq ι'
   rw [← @basis_to_matrix_mul_linear_map_to_matrix _ _ ι, to_matrix_id, Matrix.mul_one]
 
 /-- See also `basis.to_matrix_reindex` which gives the `simp` normal form of this result. -/
 theorem Basis.to_matrix_reindex' [DecidableEq ι] [DecidableEq ι'] (b : Basis ι R M) (v : ι' → M) (e : ι ≃ ι') :
-    (b.reindex e).toMatrix v = Matrix.reindexAlgEquiv _ e (b.to_matrix (v ∘ e)) := by
+    (b.reindex e).toMatrix v = Matrix.reindexAlgEquiv _ e (b.toMatrix (v ∘ e)) := by
   ext
   simp only [Basis.to_matrix_apply, Basis.reindex_repr, Matrix.reindex_alg_equiv_apply, Matrix.reindex_apply,
     Matrix.minor_apply, Function.comp_app, e.apply_symm_apply]
@@ -186,7 +191,7 @@ end Fintype
 /-- A generalization of `basis.to_matrix_self`, in the opposite direction. -/
 @[simp]
 theorem Basis.to_matrix_mul_to_matrix {ι'' : Type _} [Fintype ι'] (b'' : ι'' → M) :
-    b.to_matrix b' ⬝ b'.to_matrix b'' = b.to_matrix b'' := by
+    b.toMatrix b' ⬝ b'.toMatrix b'' = b.toMatrix b'' := by
   have := Classical.decEq ι
   have := Classical.decEq ι'
   have := Classical.decEq ι''
@@ -194,18 +199,18 @@ theorem Basis.to_matrix_mul_to_matrix {ι'' : Type _} [Fintype ι'] (b'' : ι'' 
   simp only [Matrix.mul_apply, Basis.to_matrix_apply, Basis.sum_repr_mul_repr]
 
 /-- `b.to_matrix b'` and `b'.to_matrix b` are inverses. -/
-theorem Basis.to_matrix_mul_to_matrix_flip [DecidableEq ι] [Fintype ι'] : b.to_matrix b' ⬝ b'.to_matrix b = 1 := by
+theorem Basis.to_matrix_mul_to_matrix_flip [DecidableEq ι] [Fintype ι'] : b.toMatrix b' ⬝ b'.toMatrix b = 1 := by
   rw [Basis.to_matrix_mul_to_matrix, Basis.to_matrix_self]
 
 @[simp]
 theorem Basis.to_matrix_reindex (b : Basis ι R M) (v : ι' → M) (e : ι ≃ ι') :
-    (b.reindex e).toMatrix v = (b.to_matrix v).minor e.symm id := by
+    (b.reindex e).toMatrix v = (b.toMatrix v).minor e.symm id := by
   ext
   simp only [Basis.to_matrix_apply, Basis.reindex_repr, Matrix.minor_apply, id.def]
 
 @[simp]
 theorem Basis.to_matrix_map (b : Basis ι R M) (f : M ≃ₗ[R] N) (v : ι → N) :
-    (b.map f).toMatrix v = b.to_matrix (f.symm ∘ v) := by
+    (b.map f).toMatrix v = b.toMatrix (f.symm ∘ v) := by
   ext
   simp only [Basis.to_matrix_apply, Basis.map, LinearEquiv.trans_apply]
 

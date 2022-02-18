@@ -16,23 +16,23 @@ universe v u
 
 open CategoryTheory CategoryTheory.Limits
 
-variable {J : Type v} [small_category J]
+variable {J : Type v} [SmallCategory J]
 
-variable {C : Type u} [category.{v} C]
+variable {C : Type u} [Category.{v} C]
 
 variable {X : C}
 
 namespace CategoryTheory.Over
 
 /-- Make sure we can derive pullbacks in `over B`. -/
-example {B : C} [has_pullbacks C] : has_pullbacks (over B) := by
+example {B : C} [HasPullbacks C] : HasPullbacks (Over B) := by
   infer_instance
 
 /-- Make sure we can derive equalizers in `over B`. -/
-example {B : C} [has_equalizers C] : has_equalizers (over B) := by
+example {B : C} [HasEqualizers C] : HasEqualizers (Over B) := by
   infer_instance
 
-instance has_finite_limits {B : C} [has_finite_wide_pullbacks C] : has_finite_limits (over B) := by
+instance has_finite_limits {B : C} [HasFiniteWidePullbacks C] : HasFiniteLimits (Over B) := by
   apply @finite_limits_from_equalizers_and_finite_products _ _ _ _
   · exact construct_products.over_finite_products_of_finite_wide_pullbacks
     
@@ -46,7 +46,7 @@ instance has_finite_limits {B : C} [has_finite_wide_pullbacks C] : has_finite_li
       
     
 
-instance has_limits {B : C} [has_wide_pullbacks C] : has_limits (over B) := by
+instance has_limits {B : C} [HasWidePullbacks C] : HasLimits (Over B) := by
   apply @limits_from_equalizers_and_products _ _ _ _
   · exact construct_products.over_products_of_wide_pullbacks
     

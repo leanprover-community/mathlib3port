@@ -26,7 +26,7 @@ noncomputable section
 
 namespace Top
 
-variable {J : Type u} [small_category J]
+variable {J : Type u} [SmallCategory J]
 
 local notation "forget" => forget Top
 
@@ -34,7 +34,7 @@ local notation "forget" => forget Top
 Generally you should just use `limit.cone F`, unless you need the actual definition
 (which is in terms of `types.limit_cone`).
 -/
-def limit_cone (F : J ⥤ Top.{u}) : cone F where
+def limit_cone (F : J ⥤ Top.{u}) : Cone F where
   x := Top.of { u : ∀ j : J, F.obj j | ∀ {i j : J} f : i ⟶ j, F.map f (u i) = u j }
   π :=
     { app := fun j =>
@@ -48,17 +48,17 @@ infimum of topologies infimum.
 Generally you should just use `limit.cone F`, unless you need the actual definition
 (which is in terms of `types.limit_cone`).
 -/
-def limit_cone_infi (F : J ⥤ Top.{u}) : cone F where
-  x := ⟨(types.limit_cone (F ⋙ forget)).x, ⨅ j, (F.obj j).str.induced ((types.limit_cone (F ⋙ forget)).π.app j)⟩
+def limit_cone_infi (F : J ⥤ Top.{u}) : Cone F where
+  x := ⟨(Types.limitCone (F ⋙ forget)).x, ⨅ j, (F.obj j).str.induced ((Types.limitCone (F ⋙ forget)).π.app j)⟩
   π :=
-    { app := fun j => ⟨(types.limit_cone (F ⋙ forget)).π.app j, continuous_iff_le_induced.mpr (infi_le _ _)⟩,
-      naturality' := fun j j' f => ContinuousMap.coe_inj ((types.limit_cone (F ⋙ forget)).π.naturality f) }
+    { app := fun j => ⟨(Types.limitCone (F ⋙ forget)).π.app j, continuous_iff_le_induced.mpr (infi_le _ _)⟩,
+      naturality' := fun j j' f => ContinuousMap.coe_injective ((Types.limitCone (F ⋙ forget)).π.naturality f) }
 
 /-- The chosen cone `Top.limit_cone F` for a functor `F : J ⥤ Top` is a limit cone.
 Generally you should just use `limit.is_limit F`, unless you need the actual definition
 (which is in terms of `types.limit_cone_is_limit`).
 -/
-def limit_cone_is_limit (F : J ⥤ Top.{u}) : is_limit (limit_cone F) where
+def limit_cone_is_limit (F : J ⥤ Top.{u}) : IsLimit (limitCone F) where
   lift := fun S =>
     { toFun := fun x =>
         ⟨fun j => S.π.app _ x, fun i j f => by
@@ -73,17 +73,17 @@ def limit_cone_is_limit (F : J ⥤ Top.{u}) : is_limit (limit_cone F) where
 Generally you should just use `limit.is_limit F`, unless you need the actual definition
 (which is in terms of `types.limit_cone_is_limit`).
 -/
-def limit_cone_infi_is_limit (F : J ⥤ Top.{u}) : is_limit (limit_cone_infi F) := by
+def limit_cone_infi_is_limit (F : J ⥤ Top.{u}) : IsLimit (limitConeInfi F) := by
   refine' is_limit.of_faithful forget (types.limit_cone_is_limit _) (fun s => ⟨_, _⟩) fun s => rfl
   exact
     continuous_iff_coinduced_le.mpr
       (le_infi fun j => coinduced_le_iff_le_induced.mp <| (continuous_iff_coinduced_le.mp (s.π.app j).Continuous : _))
 
-instance Top_has_limits : has_limits.{u} Top.{u} where
+instance Top_has_limits : HasLimits.{u} Top.{u} where
   HasLimitsOfShape := fun J 𝒥 =>
     { HasLimit := fun F => has_limit.mk { Cone := limit_cone F, IsLimit := limit_cone_is_limit F } }
 
-instance forget_preserves_limits : preserves_limits (forget : Top.{u} ⥤ Type u) where
+instance forget_preserves_limits : PreservesLimits (forget : Top.{u} ⥤ Type u) where
   PreservesLimitsOfShape := fun J 𝒥 =>
     { PreservesLimit := fun F =>
         preserves_limit_of_preserves_limit_cone (limit_cone_is_limit F) (types.limit_cone_is_limit (F ⋙ forget)) }
@@ -92,28 +92,27 @@ instance forget_preserves_limits : preserves_limits (forget : Top.{u} ⥤ Type u
 Generally you should just use `colimit.coone F`, unless you need the actual definition
 (which is in terms of `types.colimit_cocone`).
 -/
-def colimit_cocone (F : J ⥤ Top.{u}) : cocone F where
-  x :=
-    ⟨(types.colimit_cocone (F ⋙ forget)).x, ⨆ j, (F.obj j).str.coinduced ((types.colimit_cocone (F ⋙ forget)).ι.app j)⟩
+def colimit_cocone (F : J ⥤ Top.{u}) : Cocone F where
+  x := ⟨(Types.colimitCocone (F ⋙ forget)).x, ⨆ j, (F.obj j).str.coinduced ((Types.colimitCocone (F ⋙ forget)).ι.app j)⟩
   ι :=
-    { app := fun j => ⟨(types.colimit_cocone (F ⋙ forget)).ι.app j, continuous_iff_coinduced_le.mpr (le_supr _ j)⟩,
-      naturality' := fun j j' f => ContinuousMap.coe_inj ((types.colimit_cocone (F ⋙ forget)).ι.naturality f) }
+    { app := fun j => ⟨(Types.colimitCocone (F ⋙ forget)).ι.app j, continuous_iff_coinduced_le.mpr (le_supr _ j)⟩,
+      naturality' := fun j j' f => ContinuousMap.coe_injective ((Types.colimitCocone (F ⋙ forget)).ι.naturality f) }
 
 /-- The chosen cocone `Top.colimit_cocone F` for a functor `F : J ⥤ Top` is a colimit cocone.
 Generally you should just use `colimit.is_colimit F`, unless you need the actual definition
 (which is in terms of `types.colimit_cocone_is_colimit`).
 -/
-def colimit_cocone_is_colimit (F : J ⥤ Top.{u}) : is_colimit (colimit_cocone F) := by
+def colimit_cocone_is_colimit (F : J ⥤ Top.{u}) : IsColimit (colimitCocone F) := by
   refine' is_colimit.of_faithful forget (types.colimit_cocone_is_colimit _) (fun s => ⟨_, _⟩) fun s => rfl
   exact
     continuous_iff_le_induced.mpr
       (supr_le fun j => coinduced_le_iff_le_induced.mp <| (continuous_iff_coinduced_le.mp (s.ι.app j).Continuous : _))
 
-instance Top_has_colimits : has_colimits.{u} Top.{u} where
+instance Top_has_colimits : HasColimits.{u} Top.{u} where
   HasColimitsOfShape := fun J 𝒥 =>
     { HasColimit := fun F => has_colimit.mk { Cocone := colimit_cocone F, IsColimit := colimit_cocone_is_colimit F } }
 
-instance forget_preserves_colimits : preserves_colimits (forget : Top.{u} ⥤ Type u) where
+instance forget_preserves_colimits : PreservesColimits (forget : Top.{u} ⥤ Type u) where
   PreservesColimitsOfShape := fun J 𝒥 =>
     { PreservesColimit := fun F =>
         preserves_colimit_of_preserves_colimit_cocone (colimit_cocone_is_colimit F)
@@ -125,11 +124,11 @@ abbrev pi_π {ι : Type u} (α : ι → Top.{u}) (i : ι) : Top.of (∀ i, α i)
 
 /-- The explicit fan of a family of topological spaces given by the pi type. -/
 @[simps x π_app]
-def pi_fan {ι : Type u} (α : ι → Top.{u}) : fan α :=
-  fan.mk (Top.of (∀ i, α i)) (pi_π α)
+def pi_fan {ι : Type u} (α : ι → Top.{u}) : Fan α :=
+  Fan.mk (Top.of (∀ i, α i)) (piπ α)
 
 /-- The constructed fan is indeed a limit -/
-def pi_fan_is_limit {ι : Type u} (α : ι → Top.{u}) : is_limit (pi_fan α) where
+def pi_fan_is_limit {ι : Type u} (α : ι → Top.{u}) : IsLimit (piFan α) where
   lift := fun S => { toFun := fun s i => S.π.app i s }
   uniq' := by
     intro S m h
@@ -140,20 +139,20 @@ def pi_fan_is_limit {ι : Type u} (α : ι → Top.{u}) : is_limit (pi_fan α) w
 equipped with the product topology.
 -/
 def pi_iso_pi {ι : Type u} (α : ι → Top.{u}) : ∏ α ≅ Top.of (∀ i, α i) :=
-  (limit.is_limit _).conePointUniqueUpToIso (pi_fan_is_limit α)
+  (limit.isLimit _).conePointUniqueUpToIso (piFanIsLimit α)
 
 @[simp, reassoc]
-theorem pi_iso_pi_inv_π {ι : Type u} (α : ι → Top) (i : ι) : (pi_iso_pi α).inv ≫ pi.π α i = pi_π α i := by
+theorem pi_iso_pi_inv_π {ι : Type u} (α : ι → Top) (i : ι) : (piIsoPi α).inv ≫ Pi.π α i = piπ α i := by
   simp [pi_iso_pi]
 
 @[simp]
 theorem pi_iso_pi_inv_π_apply {ι : Type u} (α : ι → Top.{u}) (i : ι) (x : ∀ i, α i) :
-    (pi.π α i : _) ((pi_iso_pi α).inv x) = x i :=
-  concrete_category.congr_hom (pi_iso_pi_inv_π α i) x
+    (Pi.π α i : _) ((piIsoPi α).inv x) = x i :=
+  ConcreteCategory.congr_hom (pi_iso_pi_inv_π α i) x
 
 @[simp]
-theorem pi_iso_pi_hom_apply {ι : Type u} (α : ι → Top.{u}) (i : ι) (x : ∏ α) :
-    (pi_iso_pi α).Hom x i = (pi.π α i : _) x := by
+theorem pi_iso_pi_hom_apply {ι : Type u} (α : ι → Top.{u}) (i : ι) (x : ∏ α) : (piIsoPi α).Hom x i = (Pi.π α i : _) x :=
+  by
   have := pi_iso_pi_inv_π α i
   rw [iso.inv_comp_eq] at this
   exact concrete_category.congr_hom this x
@@ -164,11 +163,11 @@ abbrev sigma_ι {ι : Type u} (α : ι → Top.{u}) (i : ι) : α i ⟶ Top.of (
 
 /-- The explicit cofan of a family of topological spaces given by the sigma type. -/
 @[simps x ι_app]
-def sigma_cofan {ι : Type u} (α : ι → Top.{u}) : cofan α :=
-  cofan.mk (Top.of (Σ i, α i)) (sigma_ι α)
+def sigma_cofan {ι : Type u} (α : ι → Top.{u}) : Cofan α :=
+  Cofan.mk (Top.of (Σ i, α i)) (sigmaι α)
 
 /-- The constructed cofan is indeed a colimit -/
-def sigma_cofan_is_colimit {ι : Type u} (α : ι → Top.{u}) : is_colimit (sigma_cofan α) where
+def sigma_cofan_is_colimit {ι : Type u} (α : ι → Top.{u}) : IsColimit (sigmaCofan α) where
   desc := fun S =>
     { toFun := fun s => S.ι.app s.1 s.2,
       continuous_to_fun := by
@@ -183,26 +182,26 @@ def sigma_cofan_is_colimit {ι : Type u} (α : ι → Top.{u}) : is_colimit (sig
 /-- The coproduct is homeomorphic to the disjoint union of the topological spaces.
 -/
 def sigma_iso_sigma {ι : Type u} (α : ι → Top.{u}) : ∐ α ≅ Top.of (Σ i, α i) :=
-  (colimit.is_colimit _).coconePointUniqueUpToIso (sigma_cofan_is_colimit α)
+  (colimit.isColimit _).coconePointUniqueUpToIso (sigmaCofanIsColimit α)
 
 @[simp, reassoc]
-theorem sigma_iso_sigma_hom_ι {ι : Type u} (α : ι → Top) (i : ι) :
-    sigma.ι α i ≫ (sigma_iso_sigma α).Hom = sigma_ι α i := by
+theorem sigma_iso_sigma_hom_ι {ι : Type u} (α : ι → Top) (i : ι) : Sigma.ι α i ≫ (sigmaIsoSigma α).Hom = sigmaι α i :=
+  by
   simp [sigma_iso_sigma]
 
 @[simp]
 theorem sigma_iso_sigma_hom_ι_apply {ι : Type u} (α : ι → Top) (i : ι) (x : α i) :
-    (sigma_iso_sigma α).Hom ((sigma.ι α i : _) x) = Sigma.mk i x :=
-  concrete_category.congr_hom (sigma_iso_sigma_hom_ι α i) x
+    (sigmaIsoSigma α).Hom ((Sigma.ι α i : _) x) = Sigma.mk i x :=
+  ConcreteCategory.congr_hom (sigma_iso_sigma_hom_ι α i) x
 
 @[simp]
 theorem sigma_iso_sigma_inv_apply {ι : Type u} (α : ι → Top) (i : ι) (x : α i) :
-    (sigma_iso_sigma α).inv ⟨i, x⟩ = (sigma.ι α i : _) x := by
+    (sigmaIsoSigma α).inv ⟨i, x⟩ = (Sigma.ι α i : _) x := by
   rw [← sigma_iso_sigma_hom_ι_apply, ← comp_app]
   simp
 
-theorem induced_of_is_limit {F : J ⥤ Top.{u}} (C : cone F) (hC : is_limit C) :
-    C.X.topological_space = ⨅ j, (F.obj j).TopologicalSpace.induced (C.π.app j) := by
+theorem induced_of_is_limit {F : J ⥤ Top.{u}} (C : Cone F) (hC : IsLimit C) :
+    C.x.TopologicalSpace = ⨅ j, (F.obj j).TopologicalSpace.induced (C.π.app j) := by
   let homeo := homeo_of_iso (hC.cone_point_unique_up_to_iso (limit_cone_infi_is_limit F))
   refine' homeo.inducing.induced.trans _
   change induced homeo (⨅ j : J, _) = _
@@ -210,7 +209,7 @@ theorem induced_of_is_limit {F : J ⥤ Top.{u}} (C : cone F) (hC : is_limit C) :
 
 theorem limit_topology (F : J ⥤ Top.{u}) :
     (limit F).TopologicalSpace = ⨅ j, (F.obj j).TopologicalSpace.induced (limit.π F j) :=
-  induced_of_is_limit _ (limit.is_limit F)
+  induced_of_is_limit _ (limit.isLimit F)
 
 section Prod
 
@@ -223,12 +222,12 @@ abbrev prod_snd {X Y : Top.{u}} : Top.of (X × Y) ⟶ Y :=
   ⟨Prod.snd⟩
 
 /-- The explicit binary cofan of `X, Y` given by `X × Y`. -/
-def prod_binary_fan (X Y : Top.{u}) : binary_fan X Y :=
-  binary_fan.mk prod_fst prod_snd
+def prod_binary_fan (X Y : Top.{u}) : BinaryFan X Y :=
+  BinaryFan.mk prodFst prodSnd
 
 /-- The constructed binary fan is indeed a limit -/
-def prod_binary_fan_is_limit (X Y : Top.{u}) : is_limit (prod_binary_fan X Y) where
-  lift := fun S : binary_fan X Y => { toFun := fun s => (S.fst s, S.snd s) }
+def prod_binary_fan_is_limit (X Y : Top.{u}) : IsLimit (prodBinaryFan X Y) where
+  lift := fun S : BinaryFan X Y => { toFun := fun s => (S.fst s, S.snd s) }
   fac' := by
     rintro S (_ | _)
     tidy
@@ -248,19 +247,19 @@ def prod_binary_fan_is_limit (X Y : Top.{u}) : is_limit (prod_binary_fan X Y) wh
 equipped with the product topology.
 -/
 def prod_iso_prod (X Y : Top.{u}) : X ⨯ Y ≅ Top.of (X × Y) :=
-  (limit.is_limit _).conePointUniqueUpToIso (prod_binary_fan_is_limit X Y)
+  (limit.isLimit _).conePointUniqueUpToIso (prodBinaryFanIsLimit X Y)
 
 @[simp, reassoc]
-theorem prod_iso_prod_hom_fst (X Y : Top.{u}) : (prod_iso_prod X Y).Hom ≫ prod_fst = limits.prod.fst := by
+theorem prod_iso_prod_hom_fst (X Y : Top.{u}) : (prodIsoProd X Y).Hom ≫ prod_fst = limits.prod.fst := by
   simpa [← iso.eq_inv_comp, prod_iso_prod]
 
 @[simp, reassoc]
-theorem prod_iso_prod_hom_snd (X Y : Top.{u}) : (prod_iso_prod X Y).Hom ≫ prod_snd = limits.prod.snd := by
+theorem prod_iso_prod_hom_snd (X Y : Top.{u}) : (prodIsoProd X Y).Hom ≫ prod_snd = limits.prod.snd := by
   simpa [← iso.eq_inv_comp, prod_iso_prod]
 
 @[simp]
 theorem prod_iso_prod_hom_apply {X Y : Top.{u}} (x : X ⨯ Y) :
-    (prod_iso_prod X Y).Hom x = ((limits.prod.fst : X ⨯ Y ⟶ _) x, (limits.prod.snd : X ⨯ Y ⟶ _) x) := by
+    (prodIsoProd X Y).Hom x = ((Limits.prod.fst : X ⨯ Y ⟶ _) x, (Limits.prod.snd : X ⨯ Y ⟶ _) x) := by
   ext
   · exact concrete_category.congr_hom (prod_iso_prod_hom_fst X Y) x
     
@@ -268,17 +267,17 @@ theorem prod_iso_prod_hom_apply {X Y : Top.{u}} (x : X ⨯ Y) :
     
 
 @[simp, reassoc, elementwise]
-theorem prod_iso_prod_inv_fst (X Y : Top.{u}) : (prod_iso_prod X Y).inv ≫ limits.prod.fst = prod_fst := by
+theorem prod_iso_prod_inv_fst (X Y : Top.{u}) : (prodIsoProd X Y).inv ≫ limits.prod.fst = prod_fst := by
   simp [iso.inv_comp_eq]
 
 @[simp, reassoc, elementwise]
-theorem prod_iso_prod_inv_snd (X Y : Top.{u}) : (prod_iso_prod X Y).inv ≫ limits.prod.snd = prod_snd := by
+theorem prod_iso_prod_inv_snd (X Y : Top.{u}) : (prodIsoProd X Y).inv ≫ limits.prod.snd = prod_snd := by
   simp [iso.inv_comp_eq]
 
 theorem prod_topology {X Y : Top} :
     (X ⨯ Y).TopologicalSpace =
-      induced (limits.prod.fst : X ⨯ Y ⟶ _)
-          X.topological_space⊓induced (limits.prod.snd : X ⨯ Y ⟶ _) Y.topological_space :=
+      induced (Limits.prod.fst : X ⨯ Y ⟶ _)
+          X.TopologicalSpace⊓induced (Limits.prod.snd : X ⨯ Y ⟶ _) Y.TopologicalSpace :=
   by
   let homeo := homeo_of_iso (prod_iso_prod X Y)
   refine' homeo.inducing.induced.trans _
@@ -286,8 +285,8 @@ theorem prod_topology {X Y : Top} :
   simpa [induced_compose]
 
 theorem range_prod_map {W X Y Z : Top.{u}} (f : W ⟶ Y) (g : X ⟶ Z) :
-    Set.Range (limits.prod.map f g) =
-      (limits.prod.fst : Y ⨯ Z ⟶ _) ⁻¹' Set.Range f ∩ (limits.prod.snd : Y ⨯ Z ⟶ _) ⁻¹' Set.Range g :=
+    Set.Range (Limits.prod.map f g) =
+      (Limits.prod.fst : Y ⨯ Z ⟶ _) ⁻¹' Set.Range f ∩ (Limits.prod.snd : Y ⨯ Z ⟶ _) ⁻¹' Set.Range g :=
   by
   ext
   constructor
@@ -310,14 +309,14 @@ theorem range_prod_map {W X Y Z : Top.{u}} (f : W ⟶ Y) (g : X ⟶ Z) :
     
 
 theorem inducing_prod_map {W X Y Z : Top} {f : W ⟶ X} {g : Y ⟶ Z} (hf : Inducing f) (hg : Inducing g) :
-    Inducing (limits.prod.map f g) := by
+    Inducing (Limits.prod.map f g) := by
   constructor
   simp only [prod_topology, induced_compose, ← coe_comp, limits.prod.map_fst, limits.prod.map_snd, induced_inf]
   simp only [coe_comp]
   rw [← @induced_compose _ _ _ _ _ f, ← @induced_compose _ _ _ _ _ g, ← hf.induced, ← hg.induced]
 
 theorem embedding_prod_map {W X Y Z : Top} {f : W ⟶ X} {g : Y ⟶ Z} (hf : Embedding f) (hg : Embedding g) :
-    Embedding (limits.prod.map f g) :=
+    Embedding (Limits.prod.map f g) :=
   ⟨inducing_prod_map hf.to_inducing hg.to_inducing, by
     have := (Top.mono_iff_injective _).mpr hf.inj
     have := (Top.mono_iff_injective _).mpr hg.inj
@@ -338,15 +337,15 @@ abbrev pullback_snd (f : X ⟶ Z) (g : Y ⟶ Z) : Top.of { p : X × Y // f p.1 =
   ⟨Prod.snd ∘ Subtype.val⟩
 
 /-- The explicit pullback cone of `X, Y` given by `{ p : X × Y // f p.1 = g p.2 }`. -/
-def pullback_cone (f : X ⟶ Z) (g : Y ⟶ Z) : pullback_cone f g :=
-  pullback_cone.mk (pullback_fst f g) (pullback_snd f g)
+def pullback_cone (f : X ⟶ Z) (g : Y ⟶ Z) : PullbackCone f g :=
+  PullbackCone.mk (pullbackFst f g) (pullbackSnd f g)
     (by
       ext ⟨x, h⟩
       simp [h])
 
 /-- The constructed cone is a limit. -/
-def pullback_cone_is_limit (f : X ⟶ Z) (g : Y ⟶ Z) : is_limit (pullback_cone f g) :=
-  pullback_cone.is_limit_aux' _
+def pullback_cone_is_limit (f : X ⟶ Z) (g : Y ⟶ Z) : IsLimit (pullbackCone f g) :=
+  PullbackCone.isLimitAux' _
     (by
       intro s
       constructor
@@ -374,39 +373,39 @@ def pullback_cone_is_limit (f : X ⟶ Z) (g : Y ⟶ Z) : is_limit (pullback_cone
 
 /-- The pullback of two maps can be identified as a subspace of `X × Y`. -/
 def pullback_iso_prod_subtype (f : X ⟶ Z) (g : Y ⟶ Z) : pullback f g ≅ Top.of { p : X × Y // f p.1 = g p.2 } :=
-  (limit.is_limit _).conePointUniqueUpToIso (pullback_cone_is_limit f g)
+  (limit.isLimit _).conePointUniqueUpToIso (pullbackConeIsLimit f g)
 
 @[simp, reassoc]
 theorem pullback_iso_prod_subtype_inv_fst (f : X ⟶ Z) (g : Y ⟶ Z) :
-    (pullback_iso_prod_subtype f g).inv ≫ pullback.fst = pullback_fst f g := by
+    (pullbackIsoProdSubtype f g).inv ≫ pullback.fst = pullbackFst f g := by
   simpa [pullback_iso_prod_subtype]
 
 @[simp]
 theorem pullback_iso_prod_subtype_inv_fst_apply (f : X ⟶ Z) (g : Y ⟶ Z) (x : { p : X × Y // f p.1 = g p.2 }) :
-    (pullback.fst : pullback f g ⟶ _) ((pullback_iso_prod_subtype f g).inv x) = (x : X × Y).fst :=
-  concrete_category.congr_hom (pullback_iso_prod_subtype_inv_fst f g) x
+    (pullback.fst : pullback f g ⟶ _) ((pullbackIsoProdSubtype f g).inv x) = (x : X × Y).fst :=
+  ConcreteCategory.congr_hom (pullback_iso_prod_subtype_inv_fst f g) x
 
 @[simp, reassoc]
 theorem pullback_iso_prod_subtype_inv_snd (f : X ⟶ Z) (g : Y ⟶ Z) :
-    (pullback_iso_prod_subtype f g).inv ≫ pullback.snd = pullback_snd f g := by
+    (pullbackIsoProdSubtype f g).inv ≫ pullback.snd = pullbackSnd f g := by
   simpa [pullback_iso_prod_subtype]
 
 @[simp]
 theorem pullback_iso_prod_subtype_inv_snd_apply (f : X ⟶ Z) (g : Y ⟶ Z) (x : { p : X × Y // f p.1 = g p.2 }) :
-    (pullback.snd : pullback f g ⟶ _) ((pullback_iso_prod_subtype f g).inv x) = (x : X × Y).snd :=
-  concrete_category.congr_hom (pullback_iso_prod_subtype_inv_snd f g) x
+    (pullback.snd : pullback f g ⟶ _) ((pullbackIsoProdSubtype f g).inv x) = (x : X × Y).snd :=
+  ConcreteCategory.congr_hom (pullback_iso_prod_subtype_inv_snd f g) x
 
 theorem pullback_iso_prod_subtype_hom_fst (f : X ⟶ Z) (g : Y ⟶ Z) :
-    (pullback_iso_prod_subtype f g).Hom ≫ pullback_fst f g = pullback.fst := by
+    (pullbackIsoProdSubtype f g).Hom ≫ pullbackFst f g = pullback.fst := by
   rw [← iso.eq_inv_comp, pullback_iso_prod_subtype_inv_fst]
 
 theorem pullback_iso_prod_subtype_hom_snd (f : X ⟶ Z) (g : Y ⟶ Z) :
-    (pullback_iso_prod_subtype f g).Hom ≫ pullback_snd f g = pullback.snd := by
+    (pullbackIsoProdSubtype f g).Hom ≫ pullbackSnd f g = pullback.snd := by
   rw [← iso.eq_inv_comp, pullback_iso_prod_subtype_inv_snd]
 
 @[simp]
 theorem pullback_iso_prod_subtype_hom_apply {f : X ⟶ Z} {g : Y ⟶ Z} (x : pullback f g) :
-    (pullback_iso_prod_subtype f g).Hom x =
+    (pullbackIsoProdSubtype f g).Hom x =
       ⟨⟨(pullback.fst : pullback f g ⟶ _) x, (pullback.snd : pullback f g ⟶ _) x⟩, by
         simpa using concrete_category.congr_hom pullback.condition x⟩ :=
   by
@@ -417,7 +416,7 @@ theorem pullback_iso_prod_subtype_hom_apply {f : X ⟶ Z} {g : Y ⟶ Z} (x : pul
 theorem pullback_topology {X Y Z : Top.{u}} (f : X ⟶ Z) (g : Y ⟶ Z) :
     (pullback f g).TopologicalSpace =
       induced (pullback.fst : pullback f g ⟶ _)
-          X.topological_space⊓induced (pullback.snd : pullback f g ⟶ _) Y.topological_space :=
+          X.TopologicalSpace⊓induced (pullback.snd : pullback f g ⟶ _) Y.TopologicalSpace :=
   by
   let homeo := homeo_of_iso (pullback_iso_prod_subtype f g)
   refine' homeo.inducing.induced.trans _
@@ -452,7 +451,7 @@ theorem embedding_pullback_to_prod {X Y Z : Top} (f : X ⟶ Z) (g : Y ⟶ Z) :
 
 /-- If the map `S ⟶ T` is mono, then there is a description of the image of `W ×ₛ X ⟶ Y ×ₜ Z`. -/
 theorem range_pullback_map {W X Y Z S T : Top} (f₁ : W ⟶ S) (f₂ : X ⟶ S) (g₁ : Y ⟶ T) (g₂ : Z ⟶ T) (i₁ : W ⟶ Y)
-    (i₂ : X ⟶ Z) (i₃ : S ⟶ T) [H₃ : mono i₃] (eq₁ : f₁ ≫ i₃ = i₁ ≫ g₁) (eq₂ : f₂ ≫ i₃ = i₂ ≫ g₂) :
+    (i₂ : X ⟶ Z) (i₃ : S ⟶ T) [H₃ : Mono i₃] (eq₁ : f₁ ≫ i₃ = i₁ ≫ g₁) (eq₂ : f₂ ≫ i₃ = i₂ ≫ g₂) :
     Set.Range (pullback.map f₁ f₂ g₁ g₂ i₁ i₂ i₃ eq₁ eq₂) =
       (pullback.fst : pullback g₁ g₂ ⟶ _) ⁻¹' Set.Range i₁ ∩ (pullback.snd : pullback g₁ g₂ ⟶ _) ⁻¹' Set.Range i₂ :=
   by
@@ -538,7 +537,7 @@ is mono, then the induced morphism `W ×ₛ X ⟶ Y ×ₜ Z` is also an open emb
   X  ⟶  Z
 -/
 theorem pullback_map_open_embedding_of_open_embeddings {W X Y Z S T : Top} (f₁ : W ⟶ S) (f₂ : X ⟶ S) (g₁ : Y ⟶ T)
-    (g₂ : Z ⟶ T) {i₁ : W ⟶ Y} {i₂ : X ⟶ Z} (H₁ : OpenEmbedding i₁) (H₂ : OpenEmbedding i₂) (i₃ : S ⟶ T) [H₃ : mono i₃]
+    (g₂ : Z ⟶ T) {i₁ : W ⟶ Y} {i₂ : X ⟶ Z} (H₁ : OpenEmbedding i₁) (H₂ : OpenEmbedding i₂) (i₃ : S ⟶ T) [H₃ : Mono i₃]
     (eq₁ : f₁ ≫ i₃ = i₁ ≫ g₁) (eq₂ : f₂ ≫ i₃ = i₂ ≫ g₂) : OpenEmbedding (pullback.map f₁ f₂ g₁ g₂ i₁ i₂ i₃ eq₁ eq₂) :=
   by
   constructor
@@ -571,7 +570,7 @@ theorem fst_embedding_of_right_embedding {X Y S : Top} (f : X ⟶ S) {g : Y ⟶ 
   simp
 
 theorem embedding_of_pullback_embeddings {X Y S : Top} {f : X ⟶ S} {g : Y ⟶ S} (H₁ : Embedding f) (H₂ : Embedding g) :
-    Embedding (limit.π (cospan f g) walking_cospan.one) := by
+    Embedding (limit.π (cospan f g) WalkingCospan.one) := by
   convert H₂.comp (snd_embedding_of_left_embedding H₁ g)
   erw [← coe_comp]
   congr
@@ -599,14 +598,14 @@ theorem fst_open_embedding_of_right_open_embedding {X Y S : Top} (f : X ⟶ S) {
 
 /-- If `X ⟶ S`, `Y ⟶ S` are open embeddings, then so is `X ×ₛ Y ⟶ S`. -/
 theorem open_embedding_of_pullback_open_embeddings {X Y S : Top} {f : X ⟶ S} {g : Y ⟶ S} (H₁ : OpenEmbedding f)
-    (H₂ : OpenEmbedding g) : OpenEmbedding (limit.π (cospan f g) walking_cospan.one) := by
+    (H₂ : OpenEmbedding g) : OpenEmbedding (limit.π (cospan f g) WalkingCospan.one) := by
   convert H₂.comp (snd_open_embedding_of_left_open_embedding H₁ g)
   erw [← coe_comp]
   congr
   exact (limit.w _ walking_cospan.hom.inr).symm
 
 theorem fst_iso_of_right_embedding_range_subset {X Y S : Top} (f : X ⟶ S) {g : Y ⟶ S} (hg : Embedding g)
-    (H : Set.Range f ⊆ Set.Range g) : is_iso (pullback.fst : pullback f g ⟶ X) := by
+    (H : Set.Range f ⊆ Set.Range g) : IsIso (pullback.fst : pullback f g ⟶ X) := by
   let this : (pullback f g : Top) ≃ₜ X :=
     (Homeomorph.ofEmbedding _ (fst_embedding_of_right_embedding f hg)).trans
       { toFun := coe,
@@ -620,7 +619,7 @@ theorem fst_iso_of_right_embedding_range_subset {X Y S : Top} (f : X ⟶ S) {g :
   rfl
 
 theorem snd_iso_of_left_embedding_range_subset {X Y S : Top} {f : X ⟶ S} (hf : Embedding f) (g : Y ⟶ S)
-    (H : Set.Range g ⊆ Set.Range f) : is_iso (pullback.snd : pullback f g ⟶ Y) := by
+    (H : Set.Range g ⊆ Set.Range f) : IsIso (pullback.snd : pullback f g ⟶ Y) := by
   let this : (pullback f g : Top) ≃ₜ Y :=
     (Homeomorph.ofEmbedding _ (snd_embedding_of_left_embedding hf g)).trans
       { toFun := coe,
@@ -663,8 +662,8 @@ theorem pullback_fst_image_snd_preimage (f : X ⟶ Z) (g : Y ⟶ Z) (U : Set Y) 
 
 end Pullback
 
-theorem coinduced_of_is_colimit {F : J ⥤ Top.{u}} (c : cocone F) (hc : is_colimit c) :
-    c.X.topological_space = ⨆ j, (F.obj j).TopologicalSpace.coinduced (c.ι.app j) := by
+theorem coinduced_of_is_colimit {F : J ⥤ Top.{u}} (c : Cocone F) (hc : IsColimit c) :
+    c.x.TopologicalSpace = ⨆ j, (F.obj j).TopologicalSpace.coinduced (c.ι.app j) := by
   let homeo := homeo_of_iso (hc.cocone_point_unique_up_to_iso (colimit_cocone_is_colimit F))
   ext
   refine' homeo.symm.is_open_preimage.symm.trans (Iff.trans _ is_open_supr_iff.symm)
@@ -672,7 +671,7 @@ theorem coinduced_of_is_colimit {F : J ⥤ Top.{u}} (c : cocone F) (hc : is_coli
 
 theorem colimit_topology (F : J ⥤ Top.{u}) :
     (colimit F).TopologicalSpace = ⨆ j, (F.obj j).TopologicalSpace.coinduced (colimit.ι F j) :=
-  coinduced_of_is_colimit _ (colimit.is_colimit F)
+  coinduced_of_is_colimit _ (colimit.isColimit F)
 
 theorem colimit_is_open_iff (F : J ⥤ Top.{u}) (U : Set ((colimit F : _) : Type u)) :
     IsOpen U ↔ ∀ j, IsOpen (colimit.ι F j ⁻¹' U) := by
@@ -680,7 +679,7 @@ theorem colimit_is_open_iff (F : J ⥤ Top.{u}) (U : Set ((colimit F : _) : Type
   exact is_open_supr_iff
 
 theorem coequalizer_is_open_iff (F : walking_parallel_pair.{u} ⥤ Top.{u}) (U : Set ((colimit F : _) : Type u)) :
-    IsOpen U ↔ IsOpen (colimit.ι F walking_parallel_pair.one ⁻¹' U) := by
+    IsOpen U ↔ IsOpen (colimit.ι F WalkingParallelPair.one ⁻¹' U) := by
   rw [colimit_is_open_iff]
   constructor
   · intro H
@@ -701,7 +700,7 @@ namespace Top
 
 section CofilteredLimit
 
-variable {J : Type u} [small_category J] [is_cofiltered J] (F : J ⥤ Top.{u}) (C : cone F) (hC : is_limit C)
+variable {J : Type u} [SmallCategory J] [IsCofiltered J] (F : J ⥤ Top.{u}) (C : Cone F) (hC : IsLimit C)
 
 include hC
 
@@ -709,10 +708,10 @@ include hC
 which contain `set.univ` and are closed under intersections, the induced *naive* collection
 of sets in the limit is, in fact, a topological basis.
 -/
-theorem is_topological_basis_cofiltered_limit (T : ∀ j, Set (Set (F.obj j))) (hT : ∀ j, is_topological_basis (T j))
+theorem is_topological_basis_cofiltered_limit (T : ∀ j, Set (Set (F.obj j))) (hT : ∀ j, IsTopologicalBasis (T j))
     (univ : ∀ i : J, Set.Univ ∈ T i) (inter : ∀ i U1 U2 : Set (F.obj i), U1 ∈ T i → U2 ∈ T i → U1 ∩ U2 ∈ T i)
     (compat : ∀ i j : J f : i ⟶ j V : Set (F.obj j) hV : V ∈ T j, F.map f ⁻¹' V ∈ T i) :
-    is_topological_basis { U : Set C.X | ∃ (j : _)(V : Set (F.obj j)), V ∈ T j ∧ U = C.π.app j ⁻¹' V } := by
+    IsTopologicalBasis { U : Set C.x | ∃ (j : _)(V : Set (F.obj j)), V ∈ T j ∧ U = C.π.app j ⁻¹' V } := by
   classical
   let D := limit_cone_infi F
   let E : C.X ≅ D.X := hC.cone_point_unique_up_to_iso (limit_cone_infi_is_limit _)
@@ -820,26 +819,26 @@ discrete topology) in `nonempty_sections_of_fintype_cofiltered_system` and
 -/
 
 
-variable {J : Type u} [small_category J]
+variable {J : Type u} [SmallCategory J]
 
 variable (F : J ⥤ Top.{u})
 
--- ././Mathport/Syntax/Translate/Basic.lean:626:6: warning: expanding binder group (X Y)
-private abbrev finite_diagram_arrow {J : Type u} [small_category J] (G : Finset J) :=
+-- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (X Y)
+private abbrev finite_diagram_arrow {J : Type u} [SmallCategory J] (G : Finset J) :=
   Σ' (X : J) (Y : J) (mX : X ∈ G) (mY : Y ∈ G), X ⟶ Y
 
-private abbrev finite_diagram (J : Type u) [small_category J] :=
-  Σ G : Finset J, Finset (finite_diagram_arrow G)
+private abbrev finite_diagram (J : Type u) [SmallCategory J] :=
+  Σ G : Finset J, Finset (FiniteDiagramArrow G)
 
 /-- Partial sections of a cofiltered limit are sections when restricted to
 a finite subset of objects and morphisms of `J`.
 -/
-def partial_sections {J : Type u} [small_category J] (F : J ⥤ Top.{u}) {G : Finset J}
-    (H : Finset (finite_diagram_arrow G)) : Set (∀ j, F.obj j) :=
-  { u | ∀ {f : finite_diagram_arrow G} hf : f ∈ H, F.map f.2.2.2.2 (u f.1) = u f.2.1 }
+def partial_sections {J : Type u} [SmallCategory J] (F : J ⥤ Top.{u}) {G : Finset J}
+    (H : Finset (FiniteDiagramArrow G)) : Set (∀ j, F.obj j) :=
+  { u | ∀ {f : FiniteDiagramArrow G} hf : f ∈ H, F.map f.2.2.2.2 (u f.1) = u f.2.1 }
 
-theorem partial_sections.nonempty [is_cofiltered J] [h : ∀ j : J, Nonempty (F.obj j)] {G : Finset J}
-    (H : Finset (finite_diagram_arrow G)) : (partial_sections F H).Nonempty := by
+theorem partial_sections.nonempty [IsCofiltered J] [h : ∀ j : J, Nonempty (F.obj j)] {G : Finset J}
+    (H : Finset (FiniteDiagramArrow G)) : (PartialSections F H).Nonempty := by
   classical
   use fun j : J =>
     if hj : j ∈ G then F.map (is_cofiltered.inf_to G H hj) (h (is_cofiltered.inf G H)).some else (h _).some
@@ -847,7 +846,7 @@ theorem partial_sections.nonempty [is_cofiltered J] [h : ∀ j : J, Nonempty (F.
   dsimp only
   rwa [dif_pos hX, dif_pos hY, ← comp_app, ← F.map_comp, @is_cofiltered.inf_to_commutes _ _ _ G H]
 
-theorem partial_sections.directed : Directed Superset fun G : finite_diagram J => partial_sections F G.2 := by
+theorem partial_sections.directed : Directed Superset fun G : FiniteDiagram J => PartialSections F G.2 := by
   classical
   intro A B
   let ιA : finite_diagram_arrow A.1 → finite_diagram_arrow (A.1⊔B.1) := fun f =>
@@ -870,8 +869,8 @@ theorem partial_sections.directed : Directed Superset fun G : finite_diagram J =
     exact hu this
     
 
-theorem partial_sections.closed [∀ j : J, T2Space (F.obj j)] {G : Finset J} (H : Finset (finite_diagram_arrow G)) :
-    IsClosed (partial_sections F H) := by
+theorem partial_sections.closed [∀ j : J, T2Space (F.obj j)] {G : Finset J} (H : Finset (FiniteDiagramArrow G)) :
+    IsClosed (PartialSections F H) := by
   have :
     partial_sections F H = ⋂ (f : finite_diagram_arrow G) (hf : f ∈ H), { u | F.map f.2.2.2.2 (u f.1) = u f.2.1 } := by
     ext1
@@ -885,7 +884,7 @@ theorem partial_sections.closed [∀ j : J, T2Space (F.obj j)] {G : Finset J} (H
 
 /-- Cofiltered limits of nonempty compact Hausdorff spaces are nonempty topological spaces.
 --/
-theorem nonempty_limit_cone_of_compact_t2_cofiltered_system [is_cofiltered J] [∀ j : J, Nonempty (F.obj j)]
+theorem nonempty_limit_cone_of_compact_t2_cofiltered_system [IsCofiltered J] [∀ j : J, Nonempty (F.obj j)]
     [∀ j : J, CompactSpace (F.obj j)] [∀ j : J, T2Space (F.obj j)] : Nonempty (Top.limitCone F).x := by
   classical
   obtain ⟨u, hu⟩ :=
@@ -910,8 +909,8 @@ section FintypeKonig
 /-- This bootstraps `nonempty_sections_of_fintype_inverse_system`. In this version,
 the `F` functor is between categories of the same universe, and it is an easy
 corollary to `Top.nonempty_limit_cone_of_compact_t2_inverse_system`. -/
-theorem NonemptySectionsOfFintypeCofilteredSystem.init {J : Type u} [small_category J] [is_cofiltered J]
-    (F : J ⥤ Type u) [hf : ∀ j : J, Fintype (F.obj j)] [hne : ∀ j : J, Nonempty (F.obj j)] : F.sections.nonempty := by
+theorem NonemptySectionsOfFintypeCofilteredSystem.init {J : Type u} [SmallCategory J] [IsCofiltered J] (F : J ⥤ Type u)
+    [hf : ∀ j : J, Fintype (F.obj j)] [hne : ∀ j : J, Nonempty (F.obj j)] : F.sections.Nonempty := by
   let F' : J ⥤ Top := F ⋙ Top.discrete
   have : ∀ j : J, Fintype (F'.obj j) := hf
   have : ∀ j : J, Nonempty (F'.obj j) := hne
@@ -921,9 +920,9 @@ theorem NonemptySectionsOfFintypeCofilteredSystem.init {J : Type u} [small_categ
 /-- The cofiltered limit of nonempty finite types is nonempty.
 
 See `nonempty_sections_of_fintype_inverse_system` for a specialization to inverse limits. -/
-theorem nonempty_sections_of_fintype_cofiltered_system {J : Type u} [category.{w} J] [is_cofiltered J] (F : J ⥤ Type v)
-    [∀ j : J, Fintype (F.obj j)] [∀ j : J, Nonempty (F.obj j)] : F.sections.nonempty := by
-  let J' : Type max w v u := as_small.{max w v} J
+theorem nonempty_sections_of_fintype_cofiltered_system {J : Type u} [Category.{w} J] [IsCofiltered J] (F : J ⥤ Type v)
+    [∀ j : J, Fintype (F.obj j)] [∀ j : J, Nonempty (F.obj j)] : F.sections.Nonempty := by
+  let J' : Type max w v u := AsSmall.{max w v} J
   let down : J' ⥤ J := as_small.down
   let F' : J' ⥤ Type max u v w := down ⋙ F ⋙ ulift_functor.{max u w, v}
   have : ∀ i, Nonempty (F'.obj i) := fun i => ⟨⟨Classical.arbitrary (F.obj (down.obj i))⟩⟩
@@ -947,7 +946,7 @@ To specialize: given a locally finite connected graph, take `Jᵒᵖ` to be `ℕ
 `F j` to be length-`j` paths that start from an arbitrary fixed vertex.
 Elements of `F.sections` can be read off as infinite rays in the graph. -/
 theorem nonempty_sections_of_fintype_inverse_system {J : Type u} [Preorderₓ J] [IsDirected J (· ≤ ·)] (F : Jᵒᵖ ⥤ Type v)
-    [∀ j : Jᵒᵖ, Fintype (F.obj j)] [∀ j : Jᵒᵖ, Nonempty (F.obj j)] : F.sections.nonempty := by
+    [∀ j : Jᵒᵖ, Fintype (F.obj j)] [∀ j : Jᵒᵖ, Nonempty (F.obj j)] : F.sections.Nonempty := by
   cases' is_empty_or_nonempty J
   · have : IsEmpty (Jᵒᵖ) := ⟨fun j => isEmptyElim j.unop⟩
     exact ⟨isEmptyElim, isEmptyElim⟩

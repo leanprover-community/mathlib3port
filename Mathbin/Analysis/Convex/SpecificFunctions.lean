@@ -30,7 +30,7 @@ open Real Set
 open_locale BigOperators
 
 /-- The norm of a real normed space is convex. Also see `seminorm.convex_on`. -/
-theorem convex_on_norm {E : Type _} [NormedGroup E] [NormedSpace ℝ E] : ConvexOn ℝ univ (norm : E → ℝ) :=
+theorem convex_on_norm {E : Type _} [NormedGroup E] [NormedSpace ℝ E] : ConvexOn ℝ Univ (norm : E → ℝ) :=
   ⟨convex_univ, fun x y hx hy a b ha hb hab =>
     calc
       ∥a • x + b • y∥ ≤ ∥a • x∥ + ∥b • y∥ := norm_add_le _ _
@@ -39,11 +39,11 @@ theorem convex_on_norm {E : Type _} [NormedGroup E] [NormedSpace ℝ E] : Convex
       ⟩
 
 /-- `exp` is strictly convex on the whole real line. -/
-theorem strict_convex_on_exp : StrictConvexOn ℝ univ exp :=
+theorem strict_convex_on_exp : StrictConvexOn ℝ Univ exp :=
   strict_convex_on_univ_of_deriv2_pos differentiable_exp fun x => (iter_deriv_exp 2).symm ▸ exp_pos x
 
 /-- `exp` is convex on the whole real line. -/
-theorem convex_on_exp : ConvexOn ℝ univ exp :=
+theorem convex_on_exp : ConvexOn ℝ Univ exp :=
   strict_convex_on_exp.ConvexOn
 
 /-- `x^n`, `n : ℕ` is convex on the whole real line whenever `n` is even -/
@@ -218,7 +218,7 @@ theorem strict_concave_on_log_Ioi : StrictConcaveOn ℝ (Ioi 0) log := by
   exact neg_neg_of_pos (inv_pos.2 <| sq_pos_of_ne_zero _ hx.ne')
 
 theorem strict_concave_on_log_Iio : StrictConcaveOn ℝ (Iio 0) log := by
-  have h₁ : Iio 0 ⊆ ({0} : Set ℝ)ᶜ := fun x hx : x < 0 hx' : x = 0 => hx.ne hx'
+  have h₁ : Iio 0 ⊆ ({0} : Set ℝ)ᶜ := fun x hx : x < 0 hx' : x = 0 => hx.Ne hx'
   refine'
     strict_concave_on_open_of_deriv2_neg (convex_Iio 0) is_open_Iio (differentiable_on_log.mono h₁) fun x hx : x < 0 =>
       _
@@ -226,4 +226,20 @@ theorem strict_concave_on_log_Iio : StrictConcaveOn ℝ (Iio 0) log := by
   change (deriv (deriv log)) x < 0
   rw [deriv_log', deriv_inv]
   exact neg_neg_of_pos (inv_pos.2 <| sq_pos_of_ne_zero _ hx.ne)
+
+open_locale Real
+
+theorem strict_concave_on_sin_Icc : StrictConcaveOn ℝ (Icc 0 π) sin := by
+  apply
+    strict_concave_on_of_deriv2_neg (convex_Icc _ _) continuous_on_sin differentiable_sin.differentiable_on fun x hx =>
+      _
+  rw [interior_Icc] at hx
+  simp [sin_pos_of_mem_Ioo hx]
+
+theorem strict_concave_on_cos_Icc : StrictConcaveOn ℝ (Icc (-(π / 2)) (π / 2)) cos := by
+  apply
+    strict_concave_on_of_deriv2_neg (convex_Icc _ _) continuous_on_cos differentiable_cos.differentiable_on fun x hx =>
+      _
+  rw [interior_Icc] at hx
+  simp [cos_pos_of_mem_Ioo hx]
 

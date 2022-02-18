@@ -66,7 +66,7 @@ def rec_on {C : FreeMonoid α → Sort _} (xs : FreeMonoid α) (h0 : C 1) (ih : 
 @[ext, to_additive]
 theorem hom_eq ⦃f g : FreeMonoid α →* M⦄ (h : ∀ x, f (of x) = g (of x)) : f = g :=
   MonoidHom.ext fun l =>
-    (rec_on l (f.map_one.trans g.map_one.symm)) fun x xs hxs => by
+    (recOn l (f.map_one.trans g.map_one.symm)) fun x xs hxs => by
       simp only [h, hxs, MonoidHom.map_mul]
 
 /-- Equivalence between maps `α → M` and monoid homomorphisms `free_monoid α →* M`. -/

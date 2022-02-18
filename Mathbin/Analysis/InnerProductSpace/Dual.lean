@@ -1,6 +1,6 @@
 import Mathbin.Analysis.InnerProductSpace.Projection
 import Mathbin.Analysis.NormedSpace.Dual
-import Mathbin.Analysis.NormedSpace.Star
+import Mathbin.Analysis.NormedSpace.Star.Basic
 
 /-!
 # The Fréchet-Riesz representation theorem
@@ -13,6 +13,11 @@ Under the hypothesis of completeness (i.e., for Hilbert spaces), we upgrade this
 conjugate-linear isometric *equivalence* of `E` onto its dual; that is, we establish the
 surjectivity of `to_dual_map`.  This is the Fréchet-Riesz representation theorem: every element of
 the dual of a Hilbert space `E` has the form `λ u, ⟪x, u⟫` for some `x : E`.
+
+For a bounded sesquilinear form `B : E →L⋆[𝕜] E →L[𝕜] 𝕜`,
+we define a map `inner_product_space.continuous_linear_map_of_bilin B : E →L[𝕜] E`,
+given by substituting `E →L[𝕜] 𝕜` with `E` using `to_dual`.
+
 
 ## References
 
@@ -55,11 +60,11 @@ def to_dual_map : E →ₗᵢ⋆[𝕜] NormedSpace.Dual 𝕜 E :=
 variable {E}
 
 @[simp]
-theorem to_dual_map_apply {x y : E} : to_dual_map 𝕜 E x y = ⟪x, y⟫ :=
+theorem to_dual_map_apply {x y : E} : toDualMap 𝕜 E x y = ⟪x, y⟫ :=
   rfl
 
 theorem innerSL_norm [Nontrivial E] : ∥(innerSL : E →L⋆[𝕜] E →L[𝕜] 𝕜)∥ = 1 :=
-  show ∥(to_dual_map 𝕜 E).toContinuousLinearMap∥ = 1 from LinearIsometry.norm_to_continuous_linear_map _
+  show ∥(toDualMap 𝕜 E).toContinuousLinearMap∥ = 1 from LinearIsometry.norm_to_continuous_linear_map _
 
 variable (𝕜)
 
@@ -103,7 +108,7 @@ variable (𝕜) (E) [CompleteSpace E]
 `λ u, ⟪y, u⟫` for some `y : E`, i.e. `to_dual_map` is surjective.
 -/
 def to_dual : E ≃ₗᵢ⋆[𝕜] NormedSpace.Dual 𝕜 E :=
-  LinearIsometryEquiv.ofSurjective (to_dual_map 𝕜 E)
+  LinearIsometryEquiv.ofSurjective (toDualMap 𝕜 E)
     (by
       intro ℓ
       set Y := ker ℓ with hY
@@ -158,13 +163,36 @@ def to_dual : E ≃ₗᵢ⋆[𝕜] NormedSpace.Dual 𝕜 E :=
 variable {𝕜} {E}
 
 @[simp]
-theorem to_dual_apply {x y : E} : to_dual 𝕜 E x y = ⟪x, y⟫ :=
+theorem to_dual_apply {x y : E} : toDual 𝕜 E x y = ⟪x, y⟫ :=
   rfl
 
 @[simp]
-theorem to_dual_symm_apply {x : E} {y : NormedSpace.Dual 𝕜 E} : ⟪(to_dual 𝕜 E).symm y, x⟫ = y x := by
+theorem to_dual_symm_apply {x : E} {y : NormedSpace.Dual 𝕜 E} : ⟪(toDual 𝕜 E).symm y, x⟫ = y x := by
   rw [← to_dual_apply]
   simp only [LinearIsometryEquiv.apply_symm_apply]
+
+variable {E 𝕜}
+
+/-- Maps a bounded sesquilinear form to its continuous linear map,
+given by interpreting the form as a map `B : E →L⋆[𝕜] normed_space.dual 𝕜 E`
+and dualizing the result using `to_dual`.
+-/
+def continuous_linear_map_of_bilin (B : E →L⋆[𝕜] E →L[𝕜] 𝕜) : E →L[𝕜] E :=
+  comp (toDual 𝕜 E).symm.toContinuousLinearEquiv.toContinuousLinearMap B
+
+local postfix:1025 "♯" => continuousLinearMapOfBilin
+
+variable (B : E →L⋆[𝕜] E →L[𝕜] 𝕜)
+
+@[simp]
+theorem continuous_linear_map_of_bilin_apply (v w : E) : ⟪(B)♯ v, w⟫ = B v w := by
+  simp [continuous_linear_map_of_bilin]
+
+theorem unique_continuous_linear_map_of_bilin {v f : E} (is_lax_milgram : ∀ w, ⟪f, w⟫ = B v w) : f = (B)♯ v := by
+  refine' ext_inner_right 𝕜 _
+  intro w
+  rw [continuous_linear_map_of_bilin_apply]
+  exact is_lax_milgram w
 
 end InnerProductSpace
 

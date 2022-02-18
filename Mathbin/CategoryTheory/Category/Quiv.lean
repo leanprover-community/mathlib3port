@@ -17,25 +17,25 @@ namespace CategoryTheory
 /-- Category of quivers. -/
 @[nolint check_univs]
 def Quiv :=
-  bundled Quiver.{v + 1, u}
+  Bundled Quiver.{v + 1, u}
 
 namespace Quiv
 
 instance : CoeSort Quiv (Type u) where
-  coe := bundled.α
+  coe := Bundled.α
 
 instance str (C : Quiv.{v, u}) : Quiver.{v + 1, u} C :=
   C.str
 
 /-- Construct a bundled `Quiv` from the underlying type and the typeclass. -/
 def of (C : Type u) [Quiver.{v + 1} C] : Quiv.{v, u} :=
-  bundled.of C
+  Bundled.of C
 
 instance : Inhabited Quiv :=
   ⟨Quiv.of (Quiver.Empty Pempty)⟩
 
 /-- Category structure on `Quiv` -/
-instance category : large_category.{max v u} Quiv.{v, u} where
+instance category : LargeCategory.{max v u} Quiv.{v, u} where
   Hom := fun C D => Prefunctor C D
   id := fun C => Prefunctor.id C
   comp := fun C D E F G => Prefunctor.comp F G
@@ -50,7 +50,7 @@ instance category : large_category.{max v u} Quiv.{v, u} where
 @[simps]
 def forget : Cat.{v, u} ⥤ Quiv.{v, u} where
   obj := fun C => Quiv.of C
-  map := fun C D F => F.to_prefunctor
+  map := fun C D F => F.toPrefunctor
 
 end Quiv
 
@@ -59,9 +59,9 @@ namespace Cat
 /-- The functor sending each quiver to its path category. -/
 @[simps]
 def free : Quiv.{v, u} ⥤ Cat.{max u v, u} where
-  obj := fun V => Cat.of (paths V)
+  obj := fun V => Cat.of (Paths V)
   map := fun V W F =>
-    { obj := fun X => F.obj X, map := fun X Y f => F.map_path f, map_comp' := fun X Y Z f g => F.map_path_comp f g }
+    { obj := fun X => F.obj X, map := fun X Y f => F.mapPath f, map_comp' := fun X Y Z f g => F.map_path_comp f g }
   map_id' := fun V => by
     change (show paths V ⥤ _ from _) = _
     ext
@@ -79,16 +79,16 @@ namespace Quiv
 
 /-- Any prefunctor into a category lifts to a functor from the path category. -/
 @[simps]
-def lift {V : Type u} [Quiver.{v + 1} V] {C : Type u} [category.{v} C] (F : Prefunctor V C) : paths V ⥤ C where
+def lift {V : Type u} [Quiver.{v + 1} V] {C : Type u} [Category.{v} C] (F : Prefunctor V C) : Paths V ⥤ C where
   obj := fun X => F.obj X
-  map := fun X Y f => compose_path (F.map_path f)
+  map := fun X Y f => composePathₓ (F.mapPath f)
 
 /-- The adjunction between forming the free category on a quiver, and forgetting a category to a quiver.
 -/
 def adj : Cat.free ⊣ Quiv.forget :=
-  adjunction.mk_of_hom_equiv
+  Adjunction.mkOfHomEquiv
     { homEquiv := fun V C =>
-        { toFun := fun F => paths.of.comp F.to_prefunctor, invFun := fun F => lift F,
+        { toFun := fun F => Paths.of.comp F.toPrefunctor, invFun := fun F => lift F,
           left_inv := fun F => by
             ext
             · erw [(eq_conj_eq_to_hom _).symm]

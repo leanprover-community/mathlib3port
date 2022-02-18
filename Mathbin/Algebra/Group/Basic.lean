@@ -54,9 +54,9 @@ theorem comp_mul_right [Semigroupₓ α] (x y : α) : (· * x) ∘ (· * y) = ·
 
 end Semigroupₓ
 
-section MulOneClass
+section MulOneClassₓ
 
-variable {M : Type u} [MulOneClass M]
+variable {M : Type u} [MulOneClassₓ M]
 
 @[to_additive]
 theorem ite_mul_one {P : Prop} [Decidable P] {a b : M} : ite P (a * b) 1 = ite P a 1 * ite P b 1 := by
@@ -81,7 +81,7 @@ theorem one_mul_eq_id : (· * ·) (1 : M) = id :=
 theorem mul_one_eq_id : · * (1 : M) = id :=
   funext mul_oneₓ
 
-end MulOneClass
+end MulOneClassₓ
 
 section CommSemigroupₓ
 
@@ -163,6 +163,40 @@ theorem self_eq_mul_left : b = a * b ↔ a = 1 :=
 
 end RightCancelMonoid
 
+section HasInvolutiveInv
+
+variable {G : Type u} [HasInvolutiveInv G] {a b : G}
+
+@[simp, to_additive]
+theorem inv_involutive : Function.Involutive (Inv.inv : G → G) :=
+  inv_invₓ
+
+@[simp, to_additive]
+theorem inv_surjective : Function.Surjective (Inv.inv : G → G) :=
+  inv_involutive.Surjective
+
+@[to_additive]
+theorem inv_injective : Function.Injective (Inv.inv : G → G) :=
+  inv_involutive.Injective
+
+@[simp, to_additive]
+theorem inv_inj {a b : G} : a⁻¹ = b⁻¹ ↔ a = b :=
+  inv_injective.eq_iff
+
+@[to_additive]
+theorem eq_inv_of_eq_inv (h : a = b⁻¹) : b = a⁻¹ := by
+  simp [h]
+
+@[to_additive]
+theorem eq_inv_iff_eq_inv : a = b⁻¹ ↔ b = a⁻¹ :=
+  ⟨eq_inv_of_eq_inv, eq_inv_of_eq_inv⟩
+
+@[to_additive]
+theorem inv_eq_iff_inv_eq : a⁻¹ = b ↔ b⁻¹ = a :=
+  eq_comm.trans <| eq_inv_iff_eq_inv.trans eq_comm
+
+end HasInvolutiveInv
+
 section DivInvMonoidₓ
 
 variable {G : Type u} [DivInvMonoidₓ G]
@@ -206,22 +240,6 @@ theorem left_inverse_inv G [Groupₓ G] : Function.LeftInverse (fun a : G => a�
   inv_invₓ
 
 @[simp, to_additive]
-theorem inv_involutive : Function.Involutive (Inv.inv : G → G) :=
-  inv_invₓ
-
-@[simp, to_additive]
-theorem inv_surjective : Function.Surjective (Inv.inv : G → G) :=
-  inv_involutive.Surjective
-
-@[to_additive]
-theorem inv_injective : Function.Injective (Inv.inv : G → G) :=
-  inv_involutive.Injective
-
-@[simp, to_additive]
-theorem inv_inj : a⁻¹ = b⁻¹ ↔ a = b :=
-  inv_injective.eq_iff
-
-@[simp, to_additive]
 theorem inv_eq_one : a⁻¹ = 1 ↔ a = 1 :=
   inv_injective.eq_iff' one_inv
 
@@ -252,10 +270,6 @@ theorem mul_right_surjective (a : G) : Function.Surjective fun x => x * a := fun
 theorem mul_inv_rev (a b : G) : (a * b)⁻¹ = b⁻¹ * a⁻¹ :=
   inv_eq_of_mul_eq_oneₓ <| by
     simp
-
-@[to_additive]
-theorem eq_inv_of_eq_inv (h : a = b⁻¹) : b = a⁻¹ := by
-  simp [h]
 
 @[to_additive]
 theorem eq_inv_of_mul_eq_one (h : a * b = 1) : a = b⁻¹ := by
@@ -293,14 +307,6 @@ theorem mul_eq_of_eq_inv_mul (h : b = a⁻¹ * c) : a * b = c := by
 @[to_additive]
 theorem mul_eq_of_eq_mul_inv (h : a = c * b⁻¹) : a * b = c := by
   simp [h]
-
-@[to_additive]
-theorem eq_inv_iff_eq_inv : a = b⁻¹ ↔ b = a⁻¹ :=
-  ⟨eq_inv_of_eq_inv, eq_inv_of_eq_inv⟩
-
-@[to_additive]
-theorem inv_eq_iff_inv_eq : a⁻¹ = b ↔ b⁻¹ = a :=
-  eq_comm.trans <| eq_inv_iff_eq_inv.trans eq_comm
 
 @[to_additive]
 theorem mul_eq_one_iff_eq_inv : a * b = 1 ↔ a = b⁻¹ :=

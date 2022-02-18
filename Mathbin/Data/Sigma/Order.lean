@@ -52,18 +52,18 @@ inductive lt [∀ i, LT (α i)] : ∀ a b : Σ i, α i, Prop
   | fiber (i : ι) (a b : α i) : a < b → lt ⟨i, a⟩ ⟨i, b⟩
 
 instance [∀ i, LE (α i)] : LE (Σ i, α i) :=
-  ⟨le⟩
+  ⟨Le⟩
 
 instance [∀ i, LT (α i)] : LT (Σ i, α i) :=
-  ⟨lt⟩
+  ⟨Lt⟩
 
 @[simp]
 theorem mk_le_mk_iff [∀ i, LE (α i)] {i : ι} {a b : α i} : (⟨i, a⟩ : Sigma α) ≤ ⟨i, b⟩ ↔ a ≤ b :=
-  ⟨fun ⟨_, _, _, h⟩ => h, le.fiber _ _ _⟩
+  ⟨fun ⟨_, _, _, h⟩ => h, Le.fiber _ _ _⟩
 
 @[simp]
 theorem mk_lt_mk_iff [∀ i, LT (α i)] {i : ι} {a b : α i} : (⟨i, a⟩ : Sigma α) < ⟨i, b⟩ ↔ a < b :=
-  ⟨fun ⟨_, _, _, h⟩ => h, lt.fiber _ _ _⟩
+  ⟨fun ⟨_, _, _, h⟩ => h, Lt.fiber _ _ _⟩
 
 theorem le_def [∀ i, LE (α i)] {a b : Σ i, α i} : a ≤ b ↔ ∃ h : a.1 = b.1, h.rec a.2 ≤ b.2 := by
   constructor
@@ -88,7 +88,7 @@ theorem lt_def [∀ i, LT (α i)] {a b : Σ i, α i} : a < b ↔ ∃ h : a.1 = b
     
 
 instance [∀ i, Preorderₓ (α i)] : Preorderₓ (Σ i, α i) :=
-  { Sigma.hasLe, Sigma.hasLt with le_refl := fun ⟨i, a⟩ => le.fiber i a a le_rfl,
+  { Sigma.hasLe, Sigma.hasLt with le_refl := fun ⟨i, a⟩ => Le.fiber i a a le_rfl,
     le_trans := by
       rintro _ _ _ ⟨i, a, b, hab⟩ ⟨_, _, c, hbc⟩
       exact le.fiber i a c (hab.trans hbc),
@@ -113,7 +113,7 @@ instance [∀ i, PartialOrderₓ (α i)] : PartialOrderₓ (Σ i, α i) :=
 
 namespace Lex
 
-notation3 "Σₗ " (...) ", " r:(scoped p => _root_.lex Sigma p) => r
+notation3 "Σₗ " (...) ", " r:(scoped p => Lex Sigma p) => r
 
 /-- The lexicographical `≤` on a sigma type. -/
 instance LE [LT ι] [∀ i, LE (α i)] : LE (Σₗ i, α i) :=
@@ -125,7 +125,7 @@ instance LT [LT ι] [∀ i, LT (α i)] : LT (Σₗ i, α i) :=
 
 /-- The lexicographical preorder on a sigma type. -/
 instance Preorderₓ [Preorderₓ ι] [∀ i, Preorderₓ (α i)] : Preorderₓ (Σₗ i, α i) :=
-  { lex.has_le, lex.has_lt with le_refl := fun ⟨i, a⟩ => lex.right a a le_rfl,
+  { Lex.hasLe, Lex.hasLt with le_refl := fun ⟨i, a⟩ => Lex.right a a le_rfl,
     le_trans := fun _ _ _ => trans_of ((Lex (· < ·)) fun _ => · ≤ ·),
     lt_iff_le_not_le := by
       refine' fun a b => ⟨fun hab => ⟨hab.mono_right fun i a b => le_of_ltₓ, _⟩, _⟩
@@ -148,12 +148,12 @@ instance Preorderₓ [Preorderₓ ι] [∀ i, Preorderₓ (α i)] : Preorderₓ 
 
 /-- The lexicographical partial order on a sigma type. -/
 instance PartialOrderₓ [Preorderₓ ι] [∀ i, PartialOrderₓ (α i)] : PartialOrderₓ (Σₗ i, α i) :=
-  { lex.preorder with le_antisymm := fun _ _ => antisymm_of ((Lex (· < ·)) fun _ => · ≤ ·) }
+  { Lex.preorder with le_antisymm := fun _ _ => antisymm_of ((Lex (· < ·)) fun _ => · ≤ ·) }
 
 /-- The lexicographical linear order on a sigma type. -/
 instance LinearOrderₓ [LinearOrderₓ ι] [∀ i, LinearOrderₓ (α i)] : LinearOrderₓ (Σₗ i, α i) :=
-  { lex.partial_order with le_total := total_of ((Lex (· < ·)) fun _ => · ≤ ·), DecidableEq := Sigma.decidableEq,
-    decidableLe := lex.decidable _ _ }
+  { Lex.partialOrder with le_total := total_of ((Lex (· < ·)) fun _ => · ≤ ·), DecidableEq := Sigma.decidableEq,
+    decidableLe := Lex.decidable _ _ }
 
 /-- The lexicographical linear order on a sigma type. -/
 instance OrderBot [PartialOrderₓ ι] [OrderBot ι] [∀ i, Preorderₓ (α i)] [OrderBot (α ⊥)] : OrderBot (Σₗ i, α i) where
@@ -178,7 +178,7 @@ instance OrderTop [PartialOrderₓ ι] [OrderTop ι] [∀ i, Preorderₓ (α i)]
 /-- The lexicographical linear order on a sigma type. -/
 instance BoundedOrder [PartialOrderₓ ι] [BoundedOrder ι] [∀ i, Preorderₓ (α i)] [OrderBot (α ⊥)] [OrderTop (α ⊤)] :
     BoundedOrder (Σₗ i, α i) :=
-  { lex.order_bot, lex.order_top with }
+  { Lex.orderBot, Lex.orderTop with }
 
 end Lex
 

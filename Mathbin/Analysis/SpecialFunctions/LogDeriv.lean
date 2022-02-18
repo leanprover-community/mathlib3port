@@ -25,7 +25,7 @@ variable {x : ℝ}
 theorem has_strict_deriv_at_log_of_pos (hx : 0 < x) : HasStrictDerivAt log x⁻¹ x := by
   have : HasStrictDerivAt log (exp <| log x)⁻¹ x :=
     (has_strict_deriv_at_exp <| log x).of_local_left_inverse (continuous_at_log hx.ne') (ne_of_gtₓ <| exp_pos _) <|
-      eventually.mono (lt_mem_nhds hx) @exp_log
+      Eventually.mono (lt_mem_nhds hx) @exp_log
   rwa [exp_log hx] at this
 
 theorem has_strict_deriv_at_log (hx : x ≠ 0) : HasStrictDerivAt log x⁻¹ x := by
@@ -51,7 +51,7 @@ theorem differentiable_on_log : DifferentiableOn ℝ log ({0}ᶜ) := fun x hx =>
 
 @[simp]
 theorem differentiable_at_log_iff : DifferentiableAt ℝ log x ↔ x ≠ 0 :=
-  ⟨fun h => continuous_at_log_iff.1 h.continuous_at, differentiable_at_log⟩
+  ⟨fun h => continuous_at_log_iff.1 h.ContinuousAt, differentiable_at_log⟩
 
 theorem deriv_log (x : ℝ) : deriv log x = x⁻¹ :=
   if hx : x = 0 then by
@@ -69,7 +69,7 @@ theorem times_cont_diff_on_log {n : WithTop ℕ} : TimesContDiffOn ℝ n log ({0
   simp [differentiable_on_log, times_cont_diff_on_inv]
 
 theorem times_cont_diff_at_log {n : WithTop ℕ} : TimesContDiffAt ℝ n log x ↔ x ≠ 0 :=
-  ⟨fun h => continuous_at_log_iff.1 h.continuous_at, fun hx =>
+  ⟨fun h => continuous_at_log_iff.1 h.ContinuousAt, fun hx =>
     (times_cont_diff_on_log x hx).TimesContDiffAt <| IsOpen.mem_nhds is_open_compl_singleton hx⟩
 
 end Real
@@ -98,11 +98,11 @@ theorem HasStrictDerivAt.log (hf : HasStrictDerivAt f f' x) (hx : f x ≠ 0) :
 
 theorem derivWithin.log (hf : DifferentiableWithinAt ℝ f s x) (hx : f x ≠ 0) (hxs : UniqueDiffWithinAt ℝ s x) :
     derivWithin (fun x => log (f x)) s x = derivWithin f s x / f x :=
-  (hf.has_deriv_within_at.log hx).derivWithin hxs
+  (hf.HasDerivWithinAt.log hx).derivWithin hxs
 
 @[simp]
 theorem deriv.log (hf : DifferentiableAt ℝ f x) (hx : f x ≠ 0) : deriv (fun x => log (f x)) x = deriv f x / f x :=
-  (hf.has_deriv_at.log hx).deriv
+  (hf.HasDerivAt.log hx).deriv
 
 end deriv
 
@@ -123,11 +123,11 @@ theorem HasStrictFderivAt.log (hf : HasStrictFderivAt f f' x) (hx : f x ≠ 0) :
 
 theorem DifferentiableWithinAt.log (hf : DifferentiableWithinAt ℝ f s x) (hx : f x ≠ 0) :
     DifferentiableWithinAt ℝ (fun x => log (f x)) s x :=
-  (hf.has_fderiv_within_at.log hx).DifferentiableWithinAt
+  (hf.HasFderivWithinAt.log hx).DifferentiableWithinAt
 
 @[simp]
 theorem DifferentiableAt.log (hf : DifferentiableAt ℝ f x) (hx : f x ≠ 0) : DifferentiableAt ℝ (fun x => log (f x)) x :=
-  (hf.has_fderiv_at.log hx).DifferentiableAt
+  (hf.HasFderivAt.log hx).DifferentiableAt
 
 theorem TimesContDiffAt.log {n} (hf : TimesContDiffAt ℝ n f x) (hx : f x ≠ 0) :
     TimesContDiffAt ℝ n (fun x => log (f x)) x :=
@@ -141,7 +141,7 @@ theorem TimesContDiffOn.log {n} (hf : TimesContDiffOn ℝ n f s) (hs : ∀, ∀ 
     TimesContDiffOn ℝ n (fun x => log (f x)) s := fun x hx => (hf x hx).log (hs x hx)
 
 theorem TimesContDiff.log {n} (hf : TimesContDiff ℝ n f) (h : ∀ x, f x ≠ 0) : TimesContDiff ℝ n fun x => log (f x) :=
-  times_cont_diff_iff_times_cont_diff_at.2 fun x => hf.times_cont_diff_at.log (h x)
+  times_cont_diff_iff_times_cont_diff_at.2 fun x => hf.TimesContDiffAt.log (h x)
 
 theorem DifferentiableOn.log (hf : DifferentiableOn ℝ f s) (hx : ∀, ∀ x ∈ s, ∀, f x ≠ 0) :
     DifferentiableOn ℝ (fun x => log (f x)) s := fun x h => (hf x h).log (hx x h)
@@ -152,12 +152,12 @@ theorem Differentiable.log (hf : Differentiable ℝ f) (hx : ∀ x, f x ≠ 0) :
 
 theorem fderivWithin.log (hf : DifferentiableWithinAt ℝ f s x) (hx : f x ≠ 0) (hxs : UniqueDiffWithinAt ℝ s x) :
     fderivWithin ℝ (fun x => log (f x)) s x = (f x)⁻¹ • fderivWithin ℝ f s x :=
-  (hf.has_fderiv_within_at.log hx).fderivWithin hxs
+  (hf.HasFderivWithinAt.log hx).fderivWithin hxs
 
 @[simp]
 theorem fderiv.log (hf : DifferentiableAt ℝ f x) (hx : f x ≠ 0) :
     fderiv ℝ (fun x => log (f x)) x = (f x)⁻¹ • fderiv ℝ f x :=
-  (hf.has_fderiv_at.log hx).fderiv
+  (hf.HasFderivAt.log hx).fderiv
 
 end fderiv
 
@@ -166,7 +166,7 @@ end LogDifferentiable
 namespace Real
 
 /-- The function `x * log (1 + t / x)` tends to `t` at `+∞`. -/
-theorem tendsto_mul_log_one_plus_div_at_top (t : ℝ) : tendsto (fun x => x * log (1 + t / x)) at_top (𝓝 t) := by
+theorem tendsto_mul_log_one_plus_div_at_top (t : ℝ) : Tendsto (fun x => x * log (1 + t / x)) atTop (𝓝 t) := by
   have h₁ : tendsto (fun h => h⁻¹ * log (1 + t * h)) (𝓝[≠] 0) (𝓝 t) := by
     simpa [has_deriv_at_iff_tendsto_slope, slope_fun_def] using
       (((has_deriv_at_id (0 : ℝ)).const_mul t).const_add 1).log
@@ -174,7 +174,7 @@ theorem tendsto_mul_log_one_plus_div_at_top (t : ℝ) : tendsto (fun x => x * lo
           simp )
   have h₂ : tendsto (fun x : ℝ => x⁻¹) at_top (𝓝[≠] 0) :=
     tendsto_inv_at_top_zero'.mono_right (nhds_within_mono _ fun x hx => (set.mem_Ioi.mp hx).ne')
-  simpa only [· ∘ ·, inv_inv₀] using h₁.comp h₂
+  simpa only [· ∘ ·, inv_invₓ] using h₁.comp h₂
 
 open_locale BigOperators
 
@@ -183,7 +183,7 @@ where the main point of the bound is that it tends to `0`. The goal is to deduce
 expansion of the logarithm, in `has_sum_pow_div_log_of_abs_lt_1`.
 -/
 theorem abs_log_sub_add_sum_range_le {x : ℝ} (h : abs x < 1) (n : ℕ) :
-    abs ((∑ i in range n, x ^ (i + 1) / (i + 1)) + log (1 - x)) ≤ abs x ^ (n + 1) / (1 - abs x) := by
+    abs ((∑ i in Range n, x ^ (i + 1) / (i + 1)) + log (1 - x)) ≤ abs x ^ (n + 1) / (1 - abs x) := by
   let F : ℝ → ℝ := fun x => (∑ i in range n, x ^ (i + 1) / (i + 1)) + log (1 - x)
   have A : ∀, ∀ y ∈ Ioo (-1 : ℝ) 1, ∀, deriv F y = -(y ^ n) / (1 - y) := by
     intro y hy

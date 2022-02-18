@@ -11,7 +11,7 @@ Supplementary theorems about the `string` type.
 namespace Stringₓ
 
 /-- `<` on string iterators. This coincides with `<` on strings as lists. -/
-def ltb : iterator → iterator → Bool
+def ltb : Iterator → Iterator → Bool
   | s₁, s₂ => by
     cases s₂.has_next
     · exact ff
@@ -28,13 +28,13 @@ def ltb : iterator → iterator → Bool
       else s₁.curr < s₂.curr
 
 instance has_lt' : LT Stringₓ :=
-  ⟨fun s₁ s₂ => ltb s₁.mk_iterator s₂.mk_iterator⟩
+  ⟨fun s₁ s₂ => ltb s₁.mkIterator s₂.mkIterator⟩
 
 instance decidable_lt : @DecidableRel Stringₓ (· < ·) := by
   infer_instance
 
 @[simp]
-theorem lt_iff_to_list_lt : ∀ {s₁ s₂ : Stringₓ}, s₁ < s₂ ↔ s₁.to_list < s₂.to_list
+theorem lt_iff_to_list_lt : ∀ {s₁ s₂ : Stringₓ}, s₁ < s₂ ↔ s₁.toList < s₂.toList
   | ⟨i₁⟩, ⟨i₂⟩ => by
     suffices ∀ {p₁ p₂ s₁ s₂}, ltb ⟨p₁, s₁⟩ ⟨p₂, s₂⟩ ↔ s₁ < s₂ from this
     intros
@@ -66,10 +66,10 @@ instance decidable_le : @DecidableRel Stringₓ (· ≤ ·) := by
   infer_instance
 
 @[simp]
-theorem le_iff_to_list_le {s₁ s₂ : Stringₓ} : s₁ ≤ s₂ ↔ s₁.to_list ≤ s₂.to_list :=
+theorem le_iff_to_list_le {s₁ s₂ : Stringₓ} : s₁ ≤ s₂ ↔ s₁.toList ≤ s₂.toList :=
   (not_congr lt_iff_to_list_lt).trans not_ltₓ
 
-theorem to_list_inj : ∀ {s₁ s₂}, to_list s₁ = to_list s₂ ↔ s₁ = s₂
+theorem to_list_inj : ∀ {s₁ s₂}, toList s₁ = toList s₂ ↔ s₁ = s₂
   | ⟨s₁⟩, ⟨s₂⟩ => ⟨congr_argₓ _, congr_argₓ _⟩
 
 theorem nil_as_string_eq_empty : [].asString = "" :=
@@ -79,7 +79,7 @@ theorem nil_as_string_eq_empty : [].asString = "" :=
 theorem to_list_empty : "".toList = [] :=
   rfl
 
-theorem as_string_inv_to_list (s : Stringₓ) : s.to_list.as_string = s := by
+theorem as_string_inv_to_list (s : Stringₓ) : s.toList.asString = s := by
   cases s
   rfl
 
@@ -87,7 +87,7 @@ theorem as_string_inv_to_list (s : Stringₓ) : s.to_list.as_string = s := by
 theorem to_list_singleton (c : Charₓ) : (Stringₓ.singleton c).toList = [c] :=
   rfl
 
-theorem to_list_nonempty : ∀ {s : Stringₓ}, s ≠ Stringₓ.empty → s.to_list = s.head :: (s.popn 1).toList
+theorem to_list_nonempty : ∀ {s : Stringₓ}, s ≠ Stringₓ.empty → s.toList = s.head :: (s.popn 1).toList
   | ⟨s⟩, h => by
     cases s <;> [cases h rfl, rfl]
 
@@ -134,23 +134,23 @@ end Stringₓ
 
 open Stringₓ
 
-theorem List.to_list_inv_as_string (l : List Charₓ) : l.as_string.to_list = l := by
+theorem List.to_list_inv_as_string (l : List Charₓ) : l.asString.toList = l := by
   cases hl : l.as_string
   exact StringImp.mk.inj hl.symm
 
 @[simp]
-theorem List.length_as_string (l : List Charₓ) : l.as_string.length = l.length :=
+theorem List.length_as_string (l : List Charₓ) : l.asString.length = l.length :=
   rfl
 
 @[simp]
-theorem List.as_string_inj {l l' : List Charₓ} : l.as_string = l'.as_string ↔ l = l' :=
+theorem List.as_string_inj {l l' : List Charₓ} : l.asString = l'.asString ↔ l = l' :=
   ⟨fun h => by
     rw [← List.to_list_inv_as_string l, ← List.to_list_inv_as_string l', to_list_inj, h], fun h => h ▸ rfl⟩
 
 @[simp]
-theorem Stringₓ.length_to_list (s : Stringₓ) : s.to_list.length = s.length := by
+theorem Stringₓ.length_to_list (s : Stringₓ) : s.toList.length = s.length := by
   rw [← Stringₓ.as_string_inv_to_list s, List.to_list_inv_as_string, List.length_as_string]
 
-theorem List.as_string_eq {l : List Charₓ} {s : Stringₓ} : l.as_string = s ↔ l = s.to_list := by
+theorem List.as_string_eq {l : List Charₓ} {s : Stringₓ} : l.asString = s ↔ l = s.toList := by
   rw [← as_string_inv_to_list s, List.as_string_inj, as_string_inv_to_list s]
 

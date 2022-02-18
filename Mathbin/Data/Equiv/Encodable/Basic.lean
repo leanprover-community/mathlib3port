@@ -55,7 +55,7 @@ theorem encode_inj [Encodable α] {a b : α} : encode a = encode b ↔ a = b :=
   encode_injective.eq_iff
 
 theorem surjective_decode_iget (α : Type _) [Encodable α] [Inhabited α] :
-    surjective fun n => (Encodable.decode α n).iget := fun x =>
+    Surjective fun n => (Encodable.decode α n).iget := fun x =>
   ⟨Encodable.encode x, by
     simp_rw [Encodable.encodek]⟩
 
@@ -71,19 +71,18 @@ def of_left_injection [Encodable α] (f : β → α) (finv : α → Option β) (
 
 /-- If `α` is encodable and `f : β → α` is invertible, then `β` is encodable as well. -/
 def of_left_inverse [Encodable α] (f : β → α) (finv : α → β) (linv : ∀ b, finv (f b) = b) : Encodable β :=
-  of_left_injection f (some ∘ finv) fun b => congr_argₓ some (linv b)
+  ofLeftInjection f (some ∘ finv) fun b => congr_argₓ some (linv b)
 
 /-- Encodability is preserved by equivalence. -/
 def of_equiv α [Encodable α] (e : β ≃ α) : Encodable β :=
-  of_left_inverse e e.symm e.left_inv
+  ofLeftInverse e e.symm e.left_inv
 
 @[simp]
-theorem encode_of_equiv {α β} [Encodable α] (e : β ≃ α) (b : β) : @encode _ (of_equiv _ e) b = encode (e b) :=
+theorem encode_of_equiv {α β} [Encodable α] (e : β ≃ α) (b : β) : @encode _ (ofEquiv _ e) b = encode (e b) :=
   rfl
 
 @[simp]
-theorem decode_of_equiv {α β} [Encodable α] (e : β ≃ α) (n : ℕ) :
-    @decode _ (of_equiv _ e) n = (decode α n).map e.symm :=
+theorem decode_of_equiv {α β} [Encodable α] (e : β ≃ α) (n : ℕ) : @decode _ (ofEquiv _ e) n = (decode α n).map e.symm :=
   rfl
 
 instance Nat : Encodable ℕ :=
@@ -162,7 +161,7 @@ theorem decode₂_ne_none_iff [Encodable α] {n : ℕ} : decode₂ α n ≠ none
   simp_rw [Set.Range, Set.mem_set_of_eq, Ne.def, Option.eq_none_iff_forall_not_mem, Encodable.mem_decode₂, not_forall,
     not_not]
 
-theorem decode₂_is_partial_inv [Encodable α] : is_partial_inv encode (decode₂ α) := fun a n => mem_decode₂
+theorem decode₂_is_partial_inv [Encodable α] : IsPartialInv encode (decode₂ α) := fun a n => mem_decode₂
 
 theorem decode₂_inj [Encodable α] {n : ℕ} {a₁ a₂ : α} (h₁ : a₁ ∈ decode₂ α n) (h₂ : a₂ ∈ decode₂ α n) : a₁ = a₂ :=
   encode_injective <| (mem_decode₂.1 h₁).trans (mem_decode₂.1 h₂).symm
@@ -184,7 +183,7 @@ def equiv_range_encode (α : Type _) [Encodable α] : α ≃ Set.Range (@encode 
   toFun := fun a : α => ⟨encode a, Set.mem_range_self _⟩
   invFun := fun n =>
     Option.getₓ
-      (show is_some (decode₂ α n.1) by
+      (show isSome (decode₂ α n.1) by
         cases' n.2 with x hx <;> rw [← hx, encodek₂] <;> exact rfl)
   left_inv := fun a => by
     dsimp <;> rw [← Option.some_inj, Option.some_getₓ, encodek₂]
@@ -209,13 +208,13 @@ def encode_sum : Sum α β → ℕ
 
 /-- Explicit decoding function for the sum of two encodable types. -/
 def decode_sum (n : ℕ) : Option (Sum α β) :=
-  match bodd_div2 n with
+  match boddDiv2 n with
   | (ff, m) => (decode α m).map Sum.inl
   | (tt, m) => (decode β m).map Sum.inr
 
 /-- If `α` and `β` are encodable, then so is their sum. -/
 instance Sum : Encodable (Sum α β) :=
-  ⟨encode_sum, decode_sum, fun s => by
+  ⟨encodeSum, decodeSum, fun s => by
     cases s <;> simp [encode_sum, decode_sum, encodek] <;> rfl⟩
 
 @[simp]
@@ -227,28 +226,28 @@ theorem encode_inr (b : β) : @encode (Sum α β) _ (Sum.inr b) = bit1 (encode b
   rfl
 
 @[simp]
-theorem decode_sum_val (n : ℕ) : decode (Sum α β) n = decode_sum n :=
+theorem decode_sum_val (n : ℕ) : decode (Sum α β) n = decodeSum n :=
   rfl
 
 end Sum
 
 instance Bool : Encodable Bool :=
-  of_equiv (Sum Unit Unit) Equivₓ.boolEquivPunitSumPunit
+  ofEquiv (Sum Unit Unit) Equivₓ.boolEquivPunitSumPunit
 
 @[simp]
-theorem encode_tt : encode tt = 1 :=
+theorem encode_tt : encode true = 1 :=
   rfl
 
 @[simp]
-theorem encode_ff : encode ff = 0 :=
+theorem encode_ff : encode false = 0 :=
   rfl
 
 @[simp]
-theorem decode_zero : decode Bool 0 = some ff :=
+theorem decode_zero : decode Bool 0 = some false :=
   rfl
 
 @[simp]
-theorem decode_one : decode Bool 1 = some tt :=
+theorem decode_one : decode Bool 1 = some true :=
   rfl
 
 theorem decode_ge_two n (h : 2 ≤ n) : decode Bool n = none := by
@@ -264,7 +263,7 @@ theorem decode_ge_two n (h : 2 ≤ n) : decode Bool n = none := by
   simp [decode_sum] <;> cases bodd n <;> simp [decode_sum] <;> rw [e] <;> rfl
 
 noncomputable instance Prop : Encodable Prop :=
-  of_equiv Bool Equivₓ.propEquivBool
+  ofEquiv Bool Equivₓ.propEquivBool
 
 section Sigma
 
@@ -280,13 +279,13 @@ def decode_sigma (n : ℕ) : Option (Sigma γ) :=
   (decode α n₁).bind fun a => (decode (γ a) n₂).map <| Sigma.mk a
 
 instance Sigma : Encodable (Sigma γ) :=
-  ⟨encode_sigma, decode_sigma, fun ⟨a, b⟩ => by
+  ⟨encodeSigma, decodeSigma, fun ⟨a, b⟩ => by
     simp [encode_sigma, decode_sigma, unpair_mkpair, encodek]⟩
 
 @[simp]
 theorem decode_sigma_val (n : ℕ) :
     decode (Sigma γ) n = (decode α n.unpair.1).bind fun a => (decode (γ a) n.unpair.2).map <| Sigma.mk a :=
-  show decode_sigma._match_1 _ = _ by
+  show DecodeSigma._match1 _ = _ by
     cases n.unpair <;> rfl
 
 @[simp]
@@ -301,7 +300,7 @@ variable [Encodable α] [Encodable β]
 
 /-- If `α` and `β` are encodable, then so is their product. -/
 instance Prod : Encodable (α × β) :=
-  of_equiv _ (Equivₓ.sigmaEquivProd α β).symm
+  ofEquiv _ (Equivₓ.sigmaEquivProd α β).symm
 
 @[simp]
 theorem decode_prod_val (n : ℕ) :
@@ -335,7 +334,7 @@ def decode_subtype (v : ℕ) : Option { a : α // P a } :=
 
 /-- A decidable subtype of an encodable type is encodable. -/
 instance Subtype : Encodable { a : α // P a } :=
-  ⟨encode_subtype, decode_subtype, fun ⟨v, h⟩ => by
+  ⟨encodeSubtype, decodeSubtype, fun ⟨v, h⟩ => by
     simp [encode_subtype, decode_subtype, encodek, h]⟩
 
 theorem subtype.encode_eq (a : Subtype P) : encode a = encode a.val := by
@@ -344,25 +343,25 @@ theorem subtype.encode_eq (a : Subtype P) : encode a = encode a.val := by
 end Subtype
 
 instance Finₓ n : Encodable (Finₓ n) :=
-  of_equiv _ (Equivₓ.finEquivSubtype _)
+  ofEquiv _ (Equivₓ.finEquivSubtype _)
 
 instance Int : Encodable ℤ :=
-  of_equiv _ Equivₓ.intEquivNat
+  ofEquiv _ Equivₓ.intEquivNat
 
 instance Pnat : Encodable ℕ+ :=
-  of_equiv _ Equivₓ.pnatEquivNat
+  ofEquiv _ Equivₓ.pnatEquivNat
 
 /-- The lift of an encodable type is encodable. -/
 instance Ulift [Encodable α] : Encodable (Ulift α) :=
-  of_equiv _ Equivₓ.ulift
+  ofEquiv _ Equivₓ.ulift
 
 /-- The lift of an encodable type is encodable. -/
 instance Plift [Encodable α] : Encodable (Plift α) :=
-  of_equiv _ Equivₓ.plift
+  ofEquiv _ Equivₓ.plift
 
 /-- If `β` is encodable and there is an injection `f : α → β`, then `α` is encodable as well. -/
-noncomputable def of_inj [Encodable β] (f : α → β) (hf : injective f) : Encodable α :=
-  of_left_injection f (partial_inv f) fun x => (partial_inv_of_injective hf _ _).2 rfl
+noncomputable def of_inj [Encodable β] (f : α → β) (hf : Injective f) : Encodable α :=
+  ofLeftInjection f (partialInv f) fun x => (partial_inv_of_injective hf _ _).2 rfl
 
 end Encodable
 
@@ -388,14 +387,14 @@ variable {α}
 
 /-- Lowers an `a : α` into `ulower α`. -/
 def down (a : α) : Ulower α :=
-  Equivₓ α a
+  equiv α a
 
 instance [Inhabited α] : Inhabited (Ulower α) :=
   ⟨down default⟩
 
 /-- Lifts an `a : ulower α` into `α`. -/
 def up (a : Ulower α) : α :=
-  (Equivₓ α).symm a
+  (equiv α).symm a
 
 @[simp]
 theorem down_up {a : Ulower α} : down a.up = a :=
@@ -429,7 +428,7 @@ private def good : Option α → Prop
   | some a => p a
   | none => False
 
-private def decidable_good : DecidablePred (good p)
+private def decidable_good : DecidablePred (Goodₓ p)
   | n => by
     cases n <;> unfold good <;> infer_instance
 
@@ -441,7 +440,7 @@ variable {p}
 
 /-- Constructive choice function for a decidable subtype of an encodable type. -/
 def choose_x (h : ∃ x, p x) : { a : α // p a } :=
-  have : ∃ n, good p (decode α n) :=
+  have : ∃ n, Goodₓ p (decode α n) :=
     let ⟨w, pw⟩ := h
     ⟨encode w, by
       simp [good, encodek, pw]⟩
@@ -450,10 +449,10 @@ def choose_x (h : ∃ x, p x) : { a : α // p a } :=
 
 /-- Constructive choice function for a decidable predicate over an encodable type. -/
 def choose (h : ∃ x, p x) : α :=
-  (choose_x h).1
+  (chooseX h).1
 
 theorem choose_spec (h : ∃ x, p x) : p (choose h) :=
-  (choose_x h).2
+  (chooseX h).2
 
 end FindA
 

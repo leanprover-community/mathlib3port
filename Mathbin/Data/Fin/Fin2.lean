@@ -92,21 +92,21 @@ def remap_left {m n} (f : Fin2 m → Fin2 n) : ∀ k, Fin2 (m + k) → Fin2 (n +
 class is_lt (m n : ℕ) where
   h : m < n
 
-instance is_lt.zero n : is_lt 0 (succ n) :=
-  ⟨succ_pos _⟩
+instance is_lt.zero n : IsLt 0 (succ n) :=
+  ⟨succ_posₓ _⟩
 
-instance is_lt.succ m n [l : is_lt m n] : is_lt (succ m) (succ n) :=
-  ⟨succ_lt_succ l.h⟩
+instance is_lt.succ m n [l : IsLt m n] : IsLt (succ m) (succ n) :=
+  ⟨succ_lt_succₓ l.h⟩
 
 /-- Use type class inference to infer the boundedness proof, so that we can directly convert a
 `nat` into a `fin2 n`. This supports notation like `&1 : fin 3`. -/
-def of_nat' : ∀ {n} m [is_lt m n], Fin2 n
+def of_nat' : ∀ {n} m [IsLt m n], Fin2 n
   | 0, m, ⟨h⟩ => absurd h (Nat.not_lt_zeroₓ _)
   | succ n, 0, ⟨h⟩ => fz
-  | succ n, succ m, ⟨h⟩ => fs (@of_nat' n m ⟨lt_of_succ_lt_succ h⟩)
+  | succ n, succ m, ⟨h⟩ => fs (@of_nat' n m ⟨lt_of_succ_lt_succₓ h⟩)
 
--- ././Mathport/Syntax/Translate/Basic.lean:342:9: unsupported: advanced prec syntax
-local prefix:999 "&" => of_nat'
+-- ././Mathport/Syntax/Translate/Basic.lean:343:9: unsupported: advanced prec syntax
+local prefix:999 "&" => ofNat'
 
 instance : Inhabited (Fin2 1) :=
   ⟨fz⟩

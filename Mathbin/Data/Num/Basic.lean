@@ -77,8 +77,8 @@ def succ : PosNum → PosNum
 /-- Returns a boolean for whether the `pos_num` is `one`.
   -/
 def is_one : PosNum → Bool
-  | 1 => tt
-  | _ => ff
+  | 1 => true
+  | _ => false
 
 /-- Addition of two `pos_num`s.
   -/
@@ -138,7 +138,7 @@ def of_nat_succ : ℕ → PosNum
 /-- `of_nat n` is the `pos_num` corresponding to `n`, except for `of_nat 0 = 1`.
   -/
 def of_nat (n : ℕ) : PosNum :=
-  of_nat_succ (Nat.pred n)
+  ofNatSucc (Nat.pred n)
 
 open Ordering
 
@@ -213,14 +213,14 @@ def succ' : Num → PosNum
 /-- The successor of a `num` as a `num`.
   -/
 def succ (n : Num) : Num :=
-  Pos (succ' n)
+  pos (succ' n)
 
 /-- Addition of two `num`s.
   -/
 protected def add : Num → Num → Num
   | 0, a => a
   | b, 0 => b
-  | Pos a, Pos b => Pos (a + b)
+  | Pos a, Pos b => pos (a + b)
 
 instance : Add Num :=
   ⟨Num.add⟩
@@ -229,13 +229,13 @@ instance : Add Num :=
   -/
 protected def bit0 : Num → Num
   | 0 => 0
-  | Pos n => Pos (PosNum.bit0 n)
+  | Pos n => pos (PosNum.bit0 n)
 
 /-- `bit1 n` appends a `1` to the end of `n`, where `bit1 n = n1`.
   -/
 protected def bit1 : Num → Num
   | 0 => 1
-  | Pos n => Pos (PosNum.bit1 n)
+  | Pos n => pos (PosNum.bit1 n)
 
 /-- `bit b n` appends the bit `b` to the end of `n`, where `bit tt x = x1` and `bit ff x = x0`.
   -/
@@ -246,7 +246,7 @@ def bit (b : Bool) : Num → Num :=
   -/
 def size : Num → Num
   | 0 => 0
-  | Pos n => Pos (PosNum.size n)
+  | Pos n => pos (PosNum.size n)
 
 /-- The number of bits required to represent a `num`, as a `nat`. `size 0` is defined to be `0`.
   -/
@@ -259,7 +259,7 @@ def nat_size : Num → Nat
 protected def mul : Num → Num → Num
   | 0, _ => 0
   | _, 0 => 0
-  | Pos a, Pos b => Pos (a * b)
+  | Pos a, Pos b => pos (a * b)
 
 instance : Mul Num :=
   ⟨Num.mul⟩
@@ -316,7 +316,7 @@ open PosNum
 def zneg : Znum → Znum
   | 0 => 0
   | Pos a => neg a
-  | neg a => Pos a
+  | neg a => pos a
 
 instance : Neg Znum :=
   ⟨zneg⟩
@@ -332,7 +332,7 @@ def abs : Znum → Num
   -/
 def succ : Znum → Znum
   | 0 => 1
-  | Pos a => Pos (PosNum.succ a)
+  | Pos a => pos (PosNum.succ a)
   | neg a => (PosNum.pred' a).toZnumNeg
 
 /-- The predecessor of a `znum`.
@@ -346,21 +346,21 @@ def pred : Znum → Znum
   -/
 protected def bit0 : Znum → Znum
   | 0 => 0
-  | Pos n => Pos (PosNum.bit0 n)
+  | Pos n => pos (PosNum.bit0 n)
   | neg n => neg (PosNum.bit0 n)
 
 /-- `bit1 x` appends a `1` to the end of `x`, mapping `x` to `2 * x + 1`.
   -/
 protected def bit1 : Znum → Znum
   | 0 => 1
-  | Pos n => Pos (PosNum.bit1 n)
+  | Pos n => pos (PosNum.bit1 n)
   | neg n => neg (Num.casesOn (pred' n) 1 PosNum.bit1)
 
 /-- `bitm1 x` appends a `1` to the end of `x`, mapping `x` to `2 * x - 1`.
   -/
 protected def bitm1 : Znum → Znum
   | 0 => neg 1
-  | Pos n => Pos (Num.casesOn (pred' n) 1 PosNum.bit1)
+  | Pos n => pos (Num.casesOn (pred' n) 1 PosNum.bit1)
   | neg n => neg (PosNum.bit1 n)
 
 /-- Converts an `int` to a `znum`.
@@ -429,20 +429,20 @@ def pred : Num → Num
 def div2 : Num → Num
   | 0 => 0
   | 1 => 0
-  | Pos (PosNum.bit0 p) => Pos p
-  | Pos (PosNum.bit1 p) => Pos p
+  | Pos (PosNum.bit0 p) => pos p
+  | Pos (PosNum.bit1 p) => pos p
 
 /-- Converts a `znum` to an `option num`, where `of_znum' p = none` if `p < 0`.
   -/
 def of_znum' : Znum → Option Num
   | 0 => some 0
-  | Znum.pos p => some (Pos p)
+  | Znum.pos p => some (pos p)
   | Znum.neg p => none
 
 /-- Converts a `znum` to an `option num`, where `of_znum p = 0` if `p < 0`.
   -/
 def of_znum : Znum → Num
-  | Znum.pos p => Pos p
+  | Znum.pos p => pos p
   | _ => 0
 
 /-- Subtraction of two `num`s, producing a `znum`.
@@ -456,12 +456,12 @@ def sub' : Num → Num → Znum
 /-- Subtraction of two `num`s, producing an `option num`.
   -/
 def psub (a b : Num) : Option Num :=
-  of_znum' (sub' a b)
+  ofZnum' (sub' a b)
 
 /-- Subtraction of two `num`s, where if `a < b`, `a - b = 0`.
   -/
 protected def sub (a b : Num) : Num :=
-  of_znum (sub' a b)
+  ofZnum (sub' a b)
 
 instance : Sub Num :=
   ⟨Num.sub⟩
@@ -477,7 +477,7 @@ open PosNum
 protected def add : Znum → Znum → Znum
   | 0, a => a
   | b, 0 => b
-  | Pos a, Pos b => Pos (a + b)
+  | Pos a, Pos b => pos (a + b)
   | Pos a, neg b => sub' a b
   | neg a, Pos b => sub' b a
   | neg a, neg b => neg (a + b)
@@ -490,10 +490,10 @@ instance : Add Znum :=
 protected def mul : Znum → Znum → Znum
   | 0, a => 0
   | b, 0 => 0
-  | Pos a, Pos b => Pos (a * b)
+  | Pos a, Pos b => pos (a * b)
   | Pos a, neg b => neg (a * b)
   | neg a, Pos b => neg (a * b)
-  | neg a, neg b => Pos (a * b)
+  | neg a, neg b => pos (a * b)
 
 instance : Mul Znum :=
   ⟨Znum.mul⟩
@@ -540,11 +540,11 @@ def divmod_aux (d : PosNum) (q r : Num) : Num × Num :=
 def divmod (d : PosNum) : PosNum → Num × Num
   | bit0 n =>
     let (q, r₁) := divmod n
-    divmod_aux d q (Num.bit0 r₁)
+    divmodAux d q (Num.bit0 r₁)
   | bit1 n =>
     let (q, r₁) := divmod n
-    divmod_aux d q (Num.bit1 r₁)
-  | 1 => divmod_aux d 0 1
+    divmodAux d q (Num.bit1 r₁)
+  | 1 => divmodAux d 0 1
 
 /-- Division of `pos_num`,
   -/
@@ -589,7 +589,7 @@ def gcd_aux : Nat → Num → Num → Num
 /-- Greatest Common Divisor (GCD) of two `num`s.
   -/
 def gcd (a b : Num) : Num :=
-  if a ≤ b then gcd_aux (a.nat_size + b.nat_size) a b else gcd_aux (b.nat_size + a.nat_size) b a
+  if a ≤ b then gcdAux (a.natSize + b.natSize) a b else gcdAux (b.natSize + a.natSize) b a
 
 end Num
 
@@ -603,7 +603,7 @@ def div : Znum → Znum → Znum
   | Pos n, Pos d => Num.toZnum (PosNum.div' n d)
   | Pos n, neg d => Num.toZnumNeg (PosNum.div' n d)
   | neg n, Pos d => neg (PosNum.pred' n / Num.pos d).succ'
-  | neg n, neg d => Pos (PosNum.pred' n / Num.pos d).succ'
+  | neg n, neg d => pos (PosNum.pred' n / Num.pos d).succ'
 
 /-- Modulus of `znum`s.
   -/

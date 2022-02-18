@@ -32,7 +32,7 @@ open Limits
 
 variable {J : Type v}
 
-variable {C : Type u} [category.{v} C]
+variable {C : Type u} [Category.{v} C]
 
 /-- The functor `G : D ⥤ C` satisfies the *solution set condition* if for every `A : C`, there is a
 family of morphisms `{f_i : A ⟶ G (B_i) // i ∈ ι}` such that given any morphism `h : A ⟶ G X`,
@@ -42,19 +42,19 @@ The key part of this definition is that the indexing set `ι` lives in `Type v`,
 universe of morphisms of the category: this is the "smallness" condition which allows the general
 adjoint functor theorem to go through.
 -/
-def solution_set_condition {D : Type u} [category.{v} D] (G : D ⥤ C) : Prop :=
+def solution_set_condition {D : Type u} [Category.{v} D] (G : D ⥤ C) : Prop :=
   ∀ A : C,
     ∃ (ι : Type v)(B : ι → D)(f : ∀ i : ι, A ⟶ G.obj (B i)),
       ∀ X h : A ⟶ G.obj X, ∃ (i : ι)(g : B i ⟶ X), f i ≫ G.map g = h
 
-variable {D : Type u} [category.{v} D]
+variable {D : Type u} [Category.{v} D]
 
 section GeneralAdjointFunctorTheorem
 
 variable (G : D ⥤ C)
 
 /-- If `G : D ⥤ C` is a right adjoint it satisfies the solution set condition.  -/
-theorem solution_set_condition_of_is_right_adjoint [is_right_adjoint G] : solution_set_condition G := by
+theorem solution_set_condition_of_is_right_adjoint [IsRightAdjoint G] : SolutionSetCondition G := by
   intro A
   refine' ⟨PUnit, fun _ => (left_adjoint G).obj A, fun _ => (adjunction.of_right_adjoint G).Unit.app A, _⟩
   intro B h
@@ -64,8 +64,8 @@ theorem solution_set_condition_of_is_right_adjoint [is_right_adjoint G] : soluti
 /-- The general adjoint functor theorem says that if `G : D ⥤ C` preserves limits and `D` has them,
 if `G` satisfies the solution set condition then `G` is a right adjoint.
 -/
-noncomputable def is_right_adjoint_of_preserves_limits_of_solution_set_condition [has_limits D] [preserves_limits G]
-    (hG : solution_set_condition G) : is_right_adjoint G := by
+noncomputable def is_right_adjoint_of_preserves_limits_of_solution_set_condition [HasLimits D] [PreservesLimits G]
+    (hG : SolutionSetCondition G) : IsRightAdjoint G := by
   apply is_right_adjoint_of_structured_arrow_initials _
   intro A
   specialize hG A

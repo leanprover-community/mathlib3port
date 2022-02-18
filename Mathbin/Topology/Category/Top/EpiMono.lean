@@ -18,7 +18,7 @@ open Top
 
 namespace Top
 
-theorem epi_iff_surjective {X Y : Top.{u}} (f : X ⟶ Y) : epi f ↔ Function.Surjective f := by
+theorem epi_iff_surjective {X Y : Top.{u}} (f : X ⟶ Y) : Epi f ↔ Function.Surjective f := by
   suffices epi f ↔ epi ((forget Top).map f) by
     rw [this, CategoryTheory.epi_iff_surjective]
     rfl
@@ -28,7 +28,7 @@ theorem epi_iff_surjective {X Y : Top.{u}} (f : X ⟶ Y) : epi f ↔ Function.Su
   · apply faithful_reflects_epi
     
 
-theorem mono_iff_injective {X Y : Top.{u}} (f : X ⟶ Y) : mono f ↔ Function.Injective f := by
+theorem mono_iff_injective {X Y : Top.{u}} (f : X ⟶ Y) : Mono f ↔ Function.Injective f := by
   suffices mono f ↔ mono ((forget Top).map f) by
     rw [this, CategoryTheory.mono_iff_injective]
     rfl

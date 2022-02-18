@@ -1,5 +1,6 @@
 import Mathbin.CategoryTheory.Isomorphism
 import Mathbin.CategoryTheory.FunctorCategory
+import Mathbin.CategoryTheory.FullyFaithful
 
 /-!
 # Whiskering
@@ -29,7 +30,7 @@ universe u₁ v₁ u₂ v₂ u₃ v₃ u₄ v₄
 
 section
 
-variable {C : Type u₁} [category.{v₁} C] {D : Type u₂} [category.{v₂} D] {E : Type u₃} [category.{v₃} E]
+variable {C : Type u₁} [Category.{v₁} C] {D : Type u₂} [Category.{v₂} D] {E : Type u₃} [Category.{v₃} E]
 
 /-- If `α : G ⟶ H` then
 `whisker_left F α : (F ⋙ G) ⟶ (F ⋙ H)` has components `α.app (F.obj X)`.
@@ -58,7 +59,7 @@ variable (C D E)
 -/
 @[simps]
 def whiskering_left : (C ⥤ D) ⥤ (D ⥤ E) ⥤ C ⥤ E where
-  obj := fun F => { obj := fun G => F ⋙ G, map := fun G H α => whisker_left F α }
+  obj := fun F => { obj := fun G => F ⋙ G, map := fun G H α => whiskerLeft F α }
   map := fun F G τ =>
     { app := fun H =>
         { app := fun c => H.map (τ.app c),
@@ -77,7 +78,7 @@ def whiskering_left : (C ⥤ D) ⥤ (D ⥤ E) ⥤ C ⥤ E where
 -/
 @[simps]
 def whiskering_right : (D ⥤ E) ⥤ (C ⥤ D) ⥤ C ⥤ E where
-  obj := fun H => { obj := fun F => F ⋙ H, map := fun _ _ α => whisker_right α H }
+  obj := fun H => { obj := fun F => F ⋙ H, map := fun _ _ α => whiskerRight α H }
   map := fun G H τ =>
     { app := fun F =>
         { app := fun c => τ.app (F.obj c),
@@ -91,86 +92,88 @@ def whiskering_right : (D ⥤ E) ⥤ (C ⥤ D) ⥤ C ⥤ E where
 
 variable {C} {D} {E}
 
+instance faithful_whiskering_right_obj {F : D ⥤ E} [Faithful F] : Faithful ((whiskeringRight C D E).obj F) where
+  map_injective' := fun G H α β hαβ =>
+    NatTrans.ext _ _ <| funext fun X => Functor.map_injective _ <| congr_funₓ (congr_argₓ NatTrans.app hαβ) X
+
 @[simp]
-theorem whisker_left_id (F : C ⥤ D) {G : D ⥤ E} : whisker_left F (nat_trans.id G) = nat_trans.id (F.comp G) :=
+theorem whisker_left_id (F : C ⥤ D) {G : D ⥤ E} : whiskerLeft F (NatTrans.id G) = NatTrans.id (F.comp G) :=
   rfl
 
 @[simp]
-theorem whisker_left_id' (F : C ⥤ D) {G : D ⥤ E} : whisker_left F (𝟙 G) = 𝟙 (F.comp G) :=
+theorem whisker_left_id' (F : C ⥤ D) {G : D ⥤ E} : whiskerLeft F (𝟙 G) = 𝟙 (F.comp G) :=
   rfl
 
 @[simp]
-theorem whisker_right_id {G : C ⥤ D} (F : D ⥤ E) : whisker_right (nat_trans.id G) F = nat_trans.id (G.comp F) :=
-  ((whiskering_right C D E).obj F).map_id _
+theorem whisker_right_id {G : C ⥤ D} (F : D ⥤ E) : whiskerRight (NatTrans.id G) F = NatTrans.id (G.comp F) :=
+  ((whiskeringRight C D E).obj F).map_id _
 
 @[simp]
-theorem whisker_right_id' {G : C ⥤ D} (F : D ⥤ E) : whisker_right (𝟙 G) F = 𝟙 (G.comp F) :=
-  ((whiskering_right C D E).obj F).map_id _
+theorem whisker_right_id' {G : C ⥤ D} (F : D ⥤ E) : whiskerRight (𝟙 G) F = 𝟙 (G.comp F) :=
+  ((whiskeringRight C D E).obj F).map_id _
 
 @[simp]
 theorem whisker_left_comp (F : C ⥤ D) {G H K : D ⥤ E} (α : G ⟶ H) (β : H ⟶ K) :
-    whisker_left F (α ≫ β) = whisker_left F α ≫ whisker_left F β :=
+    whiskerLeft F (α ≫ β) = whiskerLeft F α ≫ whiskerLeft F β :=
   rfl
 
 @[simp]
 theorem whisker_right_comp {G H K : C ⥤ D} (α : G ⟶ H) (β : H ⟶ K) (F : D ⥤ E) :
-    whisker_right (α ≫ β) F = whisker_right α F ≫ whisker_right β F :=
-  ((whiskering_right C D E).obj F).map_comp α β
+    whiskerRight (α ≫ β) F = whiskerRight α F ≫ whiskerRight β F :=
+  ((whiskeringRight C D E).obj F).map_comp α β
 
 /-- If `α : G ≅ H` is a natural isomorphism then
 `iso_whisker_left F α : (F ⋙ G) ≅ (F ⋙ H)` has components `α.app (F.obj X)`.
 -/
 def iso_whisker_left (F : C ⥤ D) {G H : D ⥤ E} (α : G ≅ H) : F ⋙ G ≅ F ⋙ H :=
-  ((whiskering_left C D E).obj F).mapIso α
+  ((whiskeringLeft C D E).obj F).mapIso α
 
 @[simp]
-theorem iso_whisker_left_hom (F : C ⥤ D) {G H : D ⥤ E} (α : G ≅ H) :
-    (iso_whisker_left F α).Hom = whisker_left F α.hom :=
+theorem iso_whisker_left_hom (F : C ⥤ D) {G H : D ⥤ E} (α : G ≅ H) : (isoWhiskerLeft F α).Hom = whiskerLeft F α.Hom :=
   rfl
 
 @[simp]
-theorem iso_whisker_left_inv (F : C ⥤ D) {G H : D ⥤ E} (α : G ≅ H) :
-    (iso_whisker_left F α).inv = whisker_left F α.inv :=
+theorem iso_whisker_left_inv (F : C ⥤ D) {G H : D ⥤ E} (α : G ≅ H) : (isoWhiskerLeft F α).inv = whiskerLeft F α.inv :=
   rfl
 
 /-- If `α : G ≅ H` then
 `iso_whisker_right α F : (G ⋙ F) ≅ (H ⋙ F)` has components `F.map_iso (α.app X)`.
 -/
 def iso_whisker_right {G H : C ⥤ D} (α : G ≅ H) (F : D ⥤ E) : G ⋙ F ≅ H ⋙ F :=
-  ((whiskering_right C D E).obj F).mapIso α
+  ((whiskeringRight C D E).obj F).mapIso α
 
 @[simp]
 theorem iso_whisker_right_hom {G H : C ⥤ D} (α : G ≅ H) (F : D ⥤ E) :
-    (iso_whisker_right α F).Hom = whisker_right α.hom F :=
+    (isoWhiskerRight α F).Hom = whiskerRight α.Hom F :=
   rfl
 
 @[simp]
 theorem iso_whisker_right_inv {G H : C ⥤ D} (α : G ≅ H) (F : D ⥤ E) :
-    (iso_whisker_right α F).inv = whisker_right α.inv F :=
+    (isoWhiskerRight α F).inv = whiskerRight α.inv F :=
   rfl
 
-instance is_iso_whisker_left (F : C ⥤ D) {G H : D ⥤ E} (α : G ⟶ H) [is_iso α] : is_iso (whisker_left F α) :=
-  is_iso.of_iso (iso_whisker_left F (as_iso α))
+instance is_iso_whisker_left (F : C ⥤ D) {G H : D ⥤ E} (α : G ⟶ H) [IsIso α] : IsIso (whiskerLeft F α) :=
+  IsIso.of_iso (isoWhiskerLeft F (asIso α))
 
-instance is_iso_whisker_right {G H : C ⥤ D} (α : G ⟶ H) (F : D ⥤ E) [is_iso α] : is_iso (whisker_right α F) :=
-  is_iso.of_iso (iso_whisker_right (as_iso α) F)
+instance is_iso_whisker_right {G H : C ⥤ D} (α : G ⟶ H) (F : D ⥤ E) [IsIso α] : IsIso (whiskerRight α F) :=
+  IsIso.of_iso (isoWhiskerRight (asIso α) F)
 
-variable {B : Type u₄} [category.{v₄} B]
+variable {B : Type u₄} [Category.{v₄} B]
 
 attribute [local elabWithoutExpectedType] whisker_left whisker_right
 
 @[simp]
 theorem whisker_left_twice (F : B ⥤ C) (G : C ⥤ D) {H K : D ⥤ E} (α : H ⟶ K) :
-    whisker_left F (whisker_left G α) = whisker_left (F ⋙ G) α :=
+    whiskerLeft F (whiskerLeft G α) = whiskerLeft (F ⋙ G) α :=
   rfl
 
 @[simp]
 theorem whisker_right_twice {H K : B ⥤ C} (F : C ⥤ D) (G : D ⥤ E) (α : H ⟶ K) :
-    whisker_right (whisker_right α F) G = whisker_right α (F ⋙ G) :=
+    whiskerRight (whiskerRight α F) G = whiskerRight α (F ⋙ G) :=
   rfl
 
 theorem whisker_right_left (F : B ⥤ C) {G H : C ⥤ D} (α : G ⟶ H) (K : D ⥤ E) :
-    whisker_right (whisker_left F α) K = whisker_left F (whisker_right α K) :=
+    whiskerRight (whiskerLeft F α) K = whiskerLeft F (whiskerRight α K) :=
   rfl
 
 end
@@ -179,9 +182,9 @@ namespace Functor
 
 universe u₅ v₅
 
-variable {A : Type u₁} [category.{v₁} A]
+variable {A : Type u₁} [Category.{v₁} A]
 
-variable {B : Type u₂} [category.{v₂} B]
+variable {B : Type u₂} [Category.{v₂} B]
 
 /-- The left unitor, a natural isomorphism `((𝟭 _) ⋙ F) ≅ F`.
 -/
@@ -197,9 +200,9 @@ def right_unitor (F : A ⥤ B) : F ⋙ 𝟭 B ≅ F where
   Hom := { app := fun X => 𝟙 (F.obj X) }
   inv := { app := fun X => 𝟙 (F.obj X) }
 
-variable {C : Type u₃} [category.{v₃} C]
+variable {C : Type u₃} [Category.{v₃} C]
 
-variable {D : Type u₄} [category.{v₄} D]
+variable {D : Type u₄} [Category.{v₄} D]
 
 /-- The associator for functors, a natural isomorphism `((F ⋙ G) ⋙ H) ≅ (F ⋙ (G ⋙ H))`.
 
@@ -212,17 +215,17 @@ def associator (F : A ⥤ B) (G : B ⥤ C) (H : C ⥤ D) : (F ⋙ G) ⋙ H ≅ F
   inv := { app := fun _ => 𝟙 _ }
 
 theorem triangle (F : A ⥤ B) (G : B ⥤ C) :
-    (associator F (𝟭 B) G).Hom ≫ whisker_left F (left_unitor G).Hom = whisker_right (right_unitor F).Hom G := by
+    (associator F (𝟭 B) G).Hom ≫ whiskerLeft F (leftUnitor G).Hom = whiskerRight (rightUnitor F).Hom G := by
   ext
   dsimp
   simp
 
-variable {E : Type u₅} [category.{v₅} E]
+variable {E : Type u₅} [Category.{v₅} E]
 
 variable (F : A ⥤ B) (G : B ⥤ C) (H : C ⥤ D) (K : D ⥤ E)
 
 theorem pentagon :
-    whisker_right (associator F G H).Hom K ≫ (associator F (G ⋙ H) K).Hom ≫ whisker_left F (associator G H K).Hom =
+    whiskerRight (associator F G H).Hom K ≫ (associator F (G ⋙ H) K).Hom ≫ whiskerLeft F (associator G H K).Hom =
       (associator (F ⋙ G) H K).Hom ≫ (associator F G (H ⋙ K)).Hom :=
   by
   ext

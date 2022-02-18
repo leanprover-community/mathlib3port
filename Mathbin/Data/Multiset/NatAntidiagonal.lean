@@ -41,13 +41,26 @@ theorem antidiagonal_zero : antidiagonal 0 = {(0, 0)} :=
 
 /-- The antidiagonal of `n` does not contain duplicate entries. -/
 @[simp]
-theorem nodup_antidiagonal (n : ℕ) : nodup (antidiagonal n) :=
+theorem nodup_antidiagonal (n : ℕ) : Nodup (antidiagonal n) :=
   coe_nodup.2 <| List.Nat.nodup_antidiagonal n
 
 @[simp]
 theorem antidiagonal_succ {n : ℕ} : antidiagonal (n + 1) = (0, n + 1) ::ₘ (antidiagonal n).map (Prod.map Nat.succ id) :=
   by
   simp only [antidiagonal, List.Nat.antidiagonal_succ, coe_map, cons_coe]
+
+theorem antidiagonal_succ' {n : ℕ} :
+    antidiagonal (n + 1) = (n + 1, 0) ::ₘ (antidiagonal n).map (Prod.map id Nat.succ) := by
+  rw [antidiagonal, List.Nat.antidiagonal_succ', ← coe_add, add_commₓ, antidiagonal, coe_map, coe_add,
+    List.singleton_append, cons_coe]
+
+theorem antidiagonal_succ_succ' {n : ℕ} :
+    antidiagonal (n + 2) = (0, n + 2) ::ₘ (n + 2, 0) ::ₘ (antidiagonal n).map (Prod.map Nat.succ Nat.succ) := by
+  rw [antidiagonal_succ, antidiagonal_succ', map_cons, map_map, prod_mapₓ]
+  rfl
+
+theorem map_swap_antidiagonal {n : ℕ} : (antidiagonal n).map Prod.swap = antidiagonal n := by
+  rw [antidiagonal, coe_map, List.Nat.map_swap_antidiagonal, coe_reverse]
 
 end Nat
 

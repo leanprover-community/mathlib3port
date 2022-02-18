@@ -85,12 +85,12 @@ theorem HasStrictDerivAt.sqrt (hf : HasStrictDerivAt f f' x) (hx : f x ≠ 0) :
 
 theorem deriv_within_sqrt (hf : DifferentiableWithinAt ℝ f s x) (hx : f x ≠ 0) (hxs : UniqueDiffWithinAt ℝ s x) :
     derivWithin (fun x => sqrt (f x)) s x = derivWithin f s x / (2 * sqrt (f x)) :=
-  (hf.has_deriv_within_at.sqrt hx).derivWithin hxs
+  (hf.HasDerivWithinAt.sqrt hx).derivWithin hxs
 
 @[simp]
 theorem deriv_sqrt (hf : DifferentiableAt ℝ f x) (hx : f x ≠ 0) :
     deriv (fun x => sqrt (f x)) x = deriv f x / (2 * sqrt (f x)) :=
-  (hf.has_deriv_at.sqrt hx).deriv
+  (hf.HasDerivAt.sqrt hx).deriv
 
 end deriv
 
@@ -112,11 +112,11 @@ theorem HasFderivWithinAt.sqrt (hf : HasFderivWithinAt f f' s x) (hx : f x ≠ 0
 
 theorem DifferentiableWithinAt.sqrt (hf : DifferentiableWithinAt ℝ f s x) (hx : f x ≠ 0) :
     DifferentiableWithinAt ℝ (fun y => sqrt (f y)) s x :=
-  (hf.has_fderiv_within_at.sqrt hx).DifferentiableWithinAt
+  (hf.HasFderivWithinAt.sqrt hx).DifferentiableWithinAt
 
 theorem DifferentiableAt.sqrt (hf : DifferentiableAt ℝ f x) (hx : f x ≠ 0) :
     DifferentiableAt ℝ (fun y => sqrt (f y)) x :=
-  (hf.has_fderiv_at.sqrt hx).DifferentiableAt
+  (hf.HasFderivAt.sqrt hx).DifferentiableAt
 
 theorem DifferentiableOn.sqrt (hf : DifferentiableOn ℝ f s) (hs : ∀, ∀ x ∈ s, ∀, f x ≠ 0) :
     DifferentiableOn ℝ (fun y => sqrt (f y)) s := fun x hx => (hf x hx).sqrt (hs x hx)
@@ -126,12 +126,12 @@ theorem Differentiable.sqrt (hf : Differentiable ℝ f) (hs : ∀ x, f x ≠ 0) 
 
 theorem fderiv_within_sqrt (hf : DifferentiableWithinAt ℝ f s x) (hx : f x ≠ 0) (hxs : UniqueDiffWithinAt ℝ s x) :
     fderivWithin ℝ (fun x => sqrt (f x)) s x = (1 / (2 * sqrt (f x))) • fderivWithin ℝ f s x :=
-  (hf.has_fderiv_within_at.sqrt hx).fderivWithin hxs
+  (hf.HasFderivWithinAt.sqrt hx).fderivWithin hxs
 
 @[simp]
 theorem fderiv_sqrt (hf : DifferentiableAt ℝ f x) (hx : f x ≠ 0) :
     fderiv ℝ (fun x => sqrt (f x)) x = (1 / (2 * sqrt (f x))) • fderiv ℝ f x :=
-  (hf.has_fderiv_at.sqrt hx).fderiv
+  (hf.HasFderivAt.sqrt hx).fderiv
 
 theorem TimesContDiffAt.sqrt (hf : TimesContDiffAt ℝ n f x) (hx : f x ≠ 0) :
     TimesContDiffAt ℝ n (fun y => sqrt (f y)) x :=
@@ -145,7 +145,7 @@ theorem TimesContDiffOn.sqrt (hf : TimesContDiffOn ℝ n f s) (hs : ∀, ∀ x �
     TimesContDiffOn ℝ n (fun y => sqrt (f y)) s := fun x hx => (hf x hx).sqrt (hs x hx)
 
 theorem TimesContDiff.sqrt (hf : TimesContDiff ℝ n f) (h : ∀ x, f x ≠ 0) : TimesContDiff ℝ n fun y => sqrt (f y) :=
-  times_cont_diff_iff_times_cont_diff_at.2 fun x => hf.times_cont_diff_at.sqrt (h x)
+  times_cont_diff_iff_times_cont_diff_at.2 fun x => hf.TimesContDiffAt.sqrt (h x)
 
 end fderiv
 

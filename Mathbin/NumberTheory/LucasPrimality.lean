@@ -34,7 +34,7 @@ is prime. This is true because `a` has order `p-1` in the multiplicative group m
 group must itself have order `p-1`, which only happens when `p` is prime.
 -/
 theorem lucas_primality (p : ℕ) (a : Zmod p) (ha : a ^ (p - 1) = 1)
-    (hd : ∀ q : ℕ, q.prime → q ∣ p - 1 → a ^ ((p - 1) / q) ≠ 1) : p.prime := by
+    (hd : ∀ q : ℕ, q.Prime → q ∣ p - 1 → a ^ ((p - 1) / q) ≠ 1) : p.Prime := by
   have h0 : p ≠ 0 := by
     rintro ⟨⟩
     exact hd 2 Nat.prime_two (dvd_zero _) (pow_zeroₓ _)

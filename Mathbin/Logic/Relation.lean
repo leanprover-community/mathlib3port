@@ -33,6 +33,8 @@ the bundled version, see `rel`.
 -/
 
 
+open Function
+
 variable {α β γ δ : Type _}
 
 section NeImp
@@ -159,32 +161,41 @@ inductive trans_gen (r : α → α → Prop) (a : α) : α → Prop
 
 attribute [refl] refl_gen.refl
 
-theorem refl_gen.to_refl_trans_gen : ∀ {a b}, refl_gen r a b → refl_trans_gen r a b
+namespace ReflGen
+
+theorem to_refl_trans_gen : ∀ {a b}, ReflGen r a b → ReflTransGen r a b
+  | a, _, refl => by
+    rfl
+  | a, b, single h => ReflTransGen.tail ReflTransGen.refl h
+
+theorem mono {p : α → α → Prop} (hp : ∀ a b, r a b → p a b) : ∀ {a b}, ReflGen r a b → ReflGen p a b
   | a, _, refl_gen.refl => by
     rfl
-  | a, b, refl_gen.single h => refl_trans_gen.tail refl_trans_gen.refl h
+  | a, b, single h => single (hp a b h)
+
+end ReflGen
 
 namespace ReflTransGen
 
 @[trans]
-theorem trans (hab : refl_trans_gen r a b) (hbc : refl_trans_gen r b c) : refl_trans_gen r a c := by
+theorem trans (hab : ReflTransGen r a b) (hbc : ReflTransGen r b c) : ReflTransGen r a c := by
   induction hbc
   case refl_trans_gen.refl =>
     assumption
   case refl_trans_gen.tail c d hbc hcd hac =>
     exact hac.tail hcd
 
-theorem single (hab : r a b) : refl_trans_gen r a b :=
+theorem single (hab : r a b) : ReflTransGen r a b :=
   refl.tail hab
 
-theorem head (hab : r a b) (hbc : refl_trans_gen r b c) : refl_trans_gen r a c := by
+theorem head (hab : r a b) (hbc : ReflTransGen r b c) : ReflTransGen r a c := by
   induction hbc
   case refl_trans_gen.refl =>
     exact refl.tail hab
   case refl_trans_gen.tail c d hbc hcd hac =>
     exact hac.tail hcd
 
-theorem Symmetric (h : Symmetric r) : Symmetric (refl_trans_gen r) := by
+theorem Symmetric (h : Symmetric r) : Symmetric (ReflTransGen r) := by
   intro x y h
   induction' h with z w a b c
   · rfl
@@ -192,12 +203,12 @@ theorem Symmetric (h : Symmetric r) : Symmetric (refl_trans_gen r) := by
   · apply Relation.ReflTransGen.head (h b) c
     
 
-theorem cases_tail : refl_trans_gen r a b → b = a ∨ ∃ c, refl_trans_gen r a c ∧ r c b :=
+theorem cases_tail : ReflTransGen r a b → b = a ∨ ∃ c, ReflTransGen r a c ∧ r c b :=
   (cases_tail_iff r a b).1
 
 @[elab_as_eliminator]
-theorem head_induction_on {P : ∀ a : α, refl_trans_gen r a b → Prop} {a : α} (h : refl_trans_gen r a b)
-    (refl : P b refl) (head : ∀ {a c} h' : r a c h : refl_trans_gen r c b, P c h → P a (h.head h')) : P a h := by
+theorem head_induction_on {P : ∀ a : α, ReflTransGen r a b → Prop} {a : α} (h : ReflTransGen r a b) (refl : P b refl)
+    (head : ∀ {a c} h' : r a c h : ReflTransGen r c b, P c h → P a (h.head h')) : P a h := by
   induction h generalizing P
   case refl_trans_gen.refl =>
     exact refl
@@ -209,16 +220,16 @@ theorem head_induction_on {P : ∀ a : α, refl_trans_gen r a b → Prop} {a : �
     exact fun a a' hab hbc => head hab _
 
 @[elab_as_eliminator]
-theorem trans_induction_on {P : ∀ {a b : α}, refl_trans_gen r a b → Prop} {a b : α} (h : refl_trans_gen r a b)
+theorem trans_induction_on {P : ∀ {a b : α}, ReflTransGen r a b → Prop} {a b : α} (h : ReflTransGen r a b)
     (ih₁ : ∀ a, @P a a refl) (ih₂ : ∀ {a b} h : r a b, P (single h))
-    (ih₃ : ∀ {a b c} h₁ : refl_trans_gen r a b h₂ : refl_trans_gen r b c, P h₁ → P h₂ → P (h₁.trans h₂)) : P h := by
+    (ih₃ : ∀ {a b c} h₁ : ReflTransGen r a b h₂ : ReflTransGen r b c, P h₁ → P h₂ → P (h₁.trans h₂)) : P h := by
   induction h
   case refl_trans_gen.refl =>
     exact ih₁ a
   case refl_trans_gen.tail b c hab hbc ih =>
     exact ih₃ hab (single hbc) ih (ih₂ hbc)
 
-theorem cases_head (h : refl_trans_gen r a b) : a = b ∨ ∃ c, r a c ∧ refl_trans_gen r c b := by
+theorem cases_head (h : ReflTransGen r a b) : a = b ∨ ∃ c, r a c ∧ ReflTransGen r c b := by
   induction h using Relation.ReflTransGen.head_induction_on
   · left
     rfl
@@ -228,7 +239,7 @@ theorem cases_head (h : refl_trans_gen r a b) : a = b ∨ ∃ c, r a c ∧ refl_
     constructor <;> assumption
     
 
-theorem cases_head_iff : refl_trans_gen r a b ↔ a = b ∨ ∃ c, r a c ∧ refl_trans_gen r c b := by
+theorem cases_head_iff : ReflTransGen r a b ↔ a = b ∨ ∃ c, r a c ∧ ReflTransGen r c b := by
   use cases_head
   rintro (rfl | ⟨c, hac, hcb⟩)
   · rfl
@@ -236,8 +247,8 @@ theorem cases_head_iff : refl_trans_gen r a b ↔ a = b ∨ ∃ c, r a c ∧ ref
   · exact head hac hcb
     
 
-theorem total_of_right_unique (U : Relator.RightUnique r) (ab : refl_trans_gen r a b) (ac : refl_trans_gen r a c) :
-    refl_trans_gen r b c ∨ refl_trans_gen r c b := by
+theorem total_of_right_unique (U : Relator.RightUnique r) (ab : ReflTransGen r a b) (ac : ReflTransGen r a c) :
+    ReflTransGen r b c ∨ ReflTransGen r c b := by
   induction' ab with b d ab bd IH
   · exact Or.inl ac
     
@@ -257,13 +268,13 @@ end ReflTransGen
 
 namespace TransGen
 
-theorem to_refl {a b} (h : trans_gen r a b) : refl_trans_gen r a b := by
+theorem to_refl {a b} (h : TransGen r a b) : ReflTransGen r a b := by
   induction' h with b h b c _ bc ab
   exact refl_trans_gen.single h
   exact refl_trans_gen.tail ab bc
 
 @[trans]
-theorem trans_left (hab : trans_gen r a b) (hbc : refl_trans_gen r b c) : trans_gen r a c := by
+theorem trans_left (hab : TransGen r a b) (hbc : ReflTransGen r b c) : TransGen r a c := by
   induction hbc
   case refl_trans_gen.refl =>
     assumption
@@ -271,25 +282,25 @@ theorem trans_left (hab : trans_gen r a b) (hbc : refl_trans_gen r b c) : trans_
     exact hac.tail hcd
 
 @[trans]
-theorem trans (hab : trans_gen r a b) (hbc : trans_gen r b c) : trans_gen r a c :=
+theorem trans (hab : TransGen r a b) (hbc : TransGen r b c) : TransGen r a c :=
   trans_left hab hbc.to_refl
 
-theorem head' (hab : r a b) (hbc : refl_trans_gen r b c) : trans_gen r a c :=
+theorem head' (hab : r a b) (hbc : ReflTransGen r b c) : TransGen r a c :=
   trans_left (single hab) hbc
 
-theorem tail' (hab : refl_trans_gen r a b) (hbc : r b c) : trans_gen r a c := by
+theorem tail' (hab : ReflTransGen r a b) (hbc : r b c) : TransGen r a c := by
   induction hab generalizing c
   case refl_trans_gen.refl c hac =>
     exact single hac
   case refl_trans_gen.tail d b hab hdb IH =>
     exact tail (IH hdb) hbc
 
-theorem head (hab : r a b) (hbc : trans_gen r b c) : trans_gen r a c :=
+theorem head (hab : r a b) (hbc : TransGen r b c) : TransGen r a c :=
   head' hab hbc.to_refl
 
 @[elab_as_eliminator]
-theorem head_induction_on {P : ∀ a : α, trans_gen r a b → Prop} {a : α} (h : trans_gen r a b)
-    (base : ∀ {a} h : r a b, P a (single h)) (ih : ∀ {a c} h' : r a c h : trans_gen r c b, P c h → P a (h.head h')) :
+theorem head_induction_on {P : ∀ a : α, TransGen r a b → Prop} {a : α} (h : TransGen r a b)
+    (base : ∀ {a} h : r a b, P a (single h)) (ih : ∀ {a c} h' : r a c h : TransGen r c b, P c h → P a (h.head h')) :
     P a h := by
   induction h generalizing P
   case single a h =>
@@ -302,9 +313,9 @@ theorem head_induction_on {P : ∀ a : α, trans_gen r a b → Prop} {a : α} (h
     exact fun a a' hab hbc => ih hab _
 
 @[elab_as_eliminator]
-theorem trans_induction_on {P : ∀ {a b : α}, trans_gen r a b → Prop} {a b : α} (h : trans_gen r a b)
+theorem trans_induction_on {P : ∀ {a b : α}, TransGen r a b → Prop} {a b : α} (h : TransGen r a b)
     (base : ∀ {a b} h : r a b, P (single h))
-    (ih : ∀ {a b c} h₁ : trans_gen r a b h₂ : trans_gen r b c, P h₁ → P h₂ → P (h₁.trans h₂)) : P h := by
+    (ih : ∀ {a b c} h₁ : TransGen r a b h₂ : TransGen r b c, P h₁ → P h₂ → P (h₁.trans h₂)) : P h := by
   induction h
   case single a h =>
     exact base h
@@ -312,14 +323,14 @@ theorem trans_induction_on {P : ∀ {a b : α}, trans_gen r a b → Prop} {a b :
     exact ih hab (single hbc) h_ih (base hbc)
 
 @[trans]
-theorem trans_right (hab : refl_trans_gen r a b) (hbc : trans_gen r b c) : trans_gen r a c := by
+theorem trans_right (hab : ReflTransGen r a b) (hbc : TransGen r b c) : TransGen r a c := by
   induction hbc
   case trans_gen.single c hbc =>
     exact tail' hab hbc
   case trans_gen.tail c d hbc hcd hac =>
     exact hac.tail hcd
 
-theorem tail'_iff : trans_gen r a c ↔ ∃ b, refl_trans_gen r a b ∧ r b c := by
+theorem tail'_iff : TransGen r a c ↔ ∃ b, ReflTransGen r a b ∧ r b c := by
   refine' ⟨fun h => _, fun ⟨b, hab, hbc⟩ => tail' hab hbc⟩
   cases' h with _ hac b _ hab hbc
   · exact
@@ -329,7 +340,7 @@ theorem tail'_iff : trans_gen r a c ↔ ∃ b, refl_trans_gen r a b ∧ r b c :=
   · exact ⟨_, hab.to_refl, hbc⟩
     
 
-theorem head'_iff : trans_gen r a c ↔ ∃ b, r a b ∧ refl_trans_gen r b c := by
+theorem head'_iff : TransGen r a c ↔ ∃ b, r a b ∧ ReflTransGen r b c := by
   refine' ⟨fun h => _, fun ⟨b, hab, hbc⟩ => head' hab hbc⟩
   induction h
   case trans_gen.single c hac =>
@@ -344,7 +355,7 @@ end TransGen
 
 section TransGen
 
-theorem trans_gen_eq_self (trans : Transitive r) : trans_gen r = r :=
+theorem trans_gen_eq_self (trans : Transitive r) : TransGen r = r :=
   funext fun a =>
     funext fun b =>
       propext <|
@@ -354,27 +365,39 @@ theorem trans_gen_eq_self (trans : Transitive r) : trans_gen r = r :=
             exact hc
           case trans_gen.tail c d hac hcd hac =>
             exact trans hac hcd,
-          trans_gen.single⟩
+          TransGen.single⟩
 
-theorem transitive_trans_gen : Transitive (trans_gen r) := fun a b c => trans_gen.trans
+theorem transitive_trans_gen : Transitive (TransGen r) := fun a b c => TransGen.trans
 
-theorem trans_gen_idem : trans_gen (trans_gen r) = trans_gen r :=
+theorem trans_gen_idem : TransGen (TransGen r) = TransGen r :=
   trans_gen_eq_self transitive_trans_gen
 
 theorem trans_gen.lift {p : β → β → Prop} {a b : α} (f : α → β) (h : ∀ a b, r a b → p (f a) (f b))
-    (hab : trans_gen r a b) : trans_gen p (f a) (f b) := by
+    (hab : TransGen r a b) : TransGen p (f a) (f b) := by
   induction hab
   case trans_gen.single c hac =>
     exact trans_gen.single (h a c hac)
   case trans_gen.tail c d hac hcd hac =>
     exact trans_gen.tail hac (h c d hcd)
 
-theorem trans_gen.lift' {p : β → β → Prop} {a b : α} (f : α → β) (h : ∀ a b, r a b → trans_gen p (f a) (f b))
-    (hab : trans_gen r a b) : trans_gen p (f a) (f b) := by
+theorem trans_gen.lift' {p : β → β → Prop} {a b : α} (f : α → β) (h : ∀ a b, r a b → TransGen p (f a) (f b))
+    (hab : TransGen r a b) : TransGen p (f a) (f b) := by
   simpa [trans_gen_idem] using hab.lift f h
 
-theorem trans_gen.closed {p : α → α → Prop} : (∀ a b, r a b → trans_gen p a b) → trans_gen r a b → trans_gen p a b :=
-  trans_gen.lift' id
+theorem trans_gen.closed {p : α → α → Prop} : (∀ a b, r a b → TransGen p a b) → TransGen r a b → TransGen p a b :=
+  TransGen.lift' id
+
+theorem trans_gen.mono {p : α → α → Prop} : (∀ a b, r a b → p a b) → TransGen r a b → TransGen p a b :=
+  TransGen.lift id
+
+theorem trans_gen.swap (h : TransGen r b a) : TransGen (swap r) a b := by
+  induction' h with b h b c hab hbc ih
+  · exact trans_gen.single h
+    
+  exact ih.head hbc
+
+theorem trans_gen_swap : TransGen (swap r) a b ↔ TransGen r b a :=
+  ⟨TransGen.swap, TransGen.swap⟩
 
 end TransGen
 
@@ -382,10 +405,10 @@ section ReflTransGen
 
 open ReflTransGen
 
-theorem refl_trans_gen_iff_eq (h : ∀ b, ¬r a b) : refl_trans_gen r a b ↔ b = a := by
+theorem refl_trans_gen_iff_eq (h : ∀ b, ¬r a b) : ReflTransGen r a b ↔ b = a := by
   rw [cases_head_iff] <;> simp [h, eq_comm]
 
-theorem refl_trans_gen_iff_eq_or_trans_gen : refl_trans_gen r a b ↔ b = a ∨ trans_gen r a b := by
+theorem refl_trans_gen_iff_eq_or_trans_gen : ReflTransGen r a b ↔ b = a ∨ TransGen r a b := by
   refine' ⟨fun h => _, fun h => _⟩
   · cases' h with c _ hac hcb
     · exact Or.inl rfl
@@ -401,14 +424,13 @@ theorem refl_trans_gen_iff_eq_or_trans_gen : refl_trans_gen r a b ↔ b = a ∨ 
     
 
 theorem refl_trans_gen.lift {p : β → β → Prop} {a b : α} (f : α → β) (h : ∀ a b, r a b → p (f a) (f b))
-    (hab : refl_trans_gen r a b) : refl_trans_gen p (f a) (f b) :=
-  refl_trans_gen.trans_induction_on hab (fun a => refl) (fun a b => refl_trans_gen.single ∘ h _ _) fun a b c _ _ =>
-    trans
+    (hab : ReflTransGen r a b) : ReflTransGen p (f a) (f b) :=
+  ReflTransGen.trans_induction_on hab (fun a => refl) (fun a b => refl_trans_gen.single ∘ h _ _) fun a b c _ _ => trans
 
-theorem refl_trans_gen.mono {p : α → α → Prop} : (∀ a b, r a b → p a b) → refl_trans_gen r a b → refl_trans_gen p a b :=
-  refl_trans_gen.lift id
+theorem refl_trans_gen.mono {p : α → α → Prop} : (∀ a b, r a b → p a b) → ReflTransGen r a b → ReflTransGen p a b :=
+  ReflTransGen.lift id
 
-theorem refl_trans_gen_eq_self (refl : Reflexive r) (trans : Transitive r) : refl_trans_gen r = r :=
+theorem refl_trans_gen_eq_self (refl : Reflexive r) (trans : Transitive r) : ReflTransGen r = r :=
   funext fun a =>
     funext fun b =>
       propext <|
@@ -418,20 +440,29 @@ theorem refl_trans_gen_eq_self (refl : Reflexive r) (trans : Transitive r) : ref
             
           exact trans IH h₂, single⟩
 
-theorem reflexive_refl_trans_gen : Reflexive (refl_trans_gen r) := fun a => refl
+theorem reflexive_refl_trans_gen : Reflexive (ReflTransGen r) := fun a => refl
 
-theorem transitive_refl_trans_gen : Transitive (refl_trans_gen r) := fun a b c => trans
+theorem transitive_refl_trans_gen : Transitive (ReflTransGen r) := fun a b c => trans
 
-theorem refl_trans_gen_idem : refl_trans_gen (refl_trans_gen r) = refl_trans_gen r :=
+theorem refl_trans_gen_idem : ReflTransGen (ReflTransGen r) = ReflTransGen r :=
   refl_trans_gen_eq_self reflexive_refl_trans_gen transitive_refl_trans_gen
 
-theorem refl_trans_gen.lift' {p : β → β → Prop} {a b : α} (f : α → β) (h : ∀ a b, r a b → refl_trans_gen p (f a) (f b))
-    (hab : refl_trans_gen r a b) : refl_trans_gen p (f a) (f b) := by
+theorem refl_trans_gen.lift' {p : β → β → Prop} {a b : α} (f : α → β) (h : ∀ a b, r a b → ReflTransGen p (f a) (f b))
+    (hab : ReflTransGen r a b) : ReflTransGen p (f a) (f b) := by
   simpa [refl_trans_gen_idem] using hab.lift f h
 
 theorem refl_trans_gen_closed {p : α → α → Prop} :
-    (∀ a b, r a b → refl_trans_gen p a b) → refl_trans_gen r a b → refl_trans_gen p a b :=
-  refl_trans_gen.lift' id
+    (∀ a b, r a b → ReflTransGen p a b) → ReflTransGen r a b → ReflTransGen p a b :=
+  ReflTransGen.lift' id
+
+theorem refl_trans_gen.swap (h : ReflTransGen r b a) : ReflTransGen (swap r) a b := by
+  induction' h with b c hab hbc ih
+  · rfl
+    
+  exact ih.head hbc
+
+theorem refl_trans_gen_swap : ReflTransGen (swap r) a b ↔ ReflTransGen r b a :=
+  ⟨ReflTransGen.swap, ReflTransGen.swap⟩
 
 end ReflTransGen
 
@@ -449,8 +480,8 @@ section Join
 open ReflTransGen ReflGen
 
 /-- A sufficient condition for the Church-Rosser property. -/
-theorem church_rosser (h : ∀ a b c, r a b → r a c → ∃ d, refl_gen r b d ∧ refl_trans_gen r c d)
-    (hab : refl_trans_gen r a b) (hac : refl_trans_gen r a c) : join (refl_trans_gen r) b c := by
+theorem church_rosser (h : ∀ a b c, r a b → r a c → ∃ d, ReflGen r b d ∧ ReflTransGen r c d) (hab : ReflTransGen r a b)
+    (hac : ReflTransGen r a c) : Join (ReflTransGen r) b c := by
   induction hab
   case refl_trans_gen.refl =>
     exact ⟨c, hac, refl⟩
@@ -477,31 +508,31 @@ theorem church_rosser (h : ∀ a b c, r a b → r a c → ∃ d, refl_gen r b d 
     · exact ⟨a, hea, hcb.tail hba⟩
       
 
-theorem join_of_single (h : Reflexive r) (hab : r a b) : join r a b :=
+theorem join_of_single (h : Reflexive r) (hab : r a b) : Join r a b :=
   ⟨b, hab, h b⟩
 
-theorem symmetric_join : Symmetric (join r) := fun a b ⟨c, hac, hcb⟩ => ⟨c, hcb, hac⟩
+theorem symmetric_join : Symmetric (Join r) := fun a b ⟨c, hac, hcb⟩ => ⟨c, hcb, hac⟩
 
-theorem reflexive_join (h : Reflexive r) : Reflexive (join r) := fun a => ⟨a, h a, h a⟩
+theorem reflexive_join (h : Reflexive r) : Reflexive (Join r) := fun a => ⟨a, h a, h a⟩
 
-theorem transitive_join (ht : Transitive r) (h : ∀ a b c, r a b → r a c → join r b c) : Transitive (join r) :=
+theorem transitive_join (ht : Transitive r) (h : ∀ a b c, r a b → r a c → Join r b c) : Transitive (Join r) :=
   fun a b c ⟨x, hax, hbx⟩ ⟨y, hby, hcy⟩ =>
   let ⟨z, hxz, hyz⟩ := h b x y hbx hby
   ⟨z, ht hax hxz, ht hcy hyz⟩
 
-theorem equivalence_join (hr : Reflexive r) (ht : Transitive r) (h : ∀ a b c, r a b → r a c → join r b c) :
-    Equivalenceₓ (join r) :=
+theorem equivalence_join (hr : Reflexive r) (ht : Transitive r) (h : ∀ a b c, r a b → r a c → Join r b c) :
+    Equivalenceₓ (Join r) :=
   ⟨reflexive_join hr, symmetric_join, transitive_join ht h⟩
 
-theorem equivalence_join_refl_trans_gen (h : ∀ a b c, r a b → r a c → ∃ d, refl_gen r b d ∧ refl_trans_gen r c d) :
-    Equivalenceₓ (join (refl_trans_gen r)) :=
+theorem equivalence_join_refl_trans_gen (h : ∀ a b c, r a b → r a c → ∃ d, ReflGen r b d ∧ ReflTransGen r c d) :
+    Equivalenceₓ (Join (ReflTransGen r)) :=
   equivalence_join reflexive_refl_trans_gen transitive_refl_trans_gen fun a b c => church_rosser h
 
-theorem join_of_equivalence {r' : α → α → Prop} (hr : Equivalenceₓ r) (h : ∀ a b, r' a b → r a b) : join r' a b → r a b
+theorem join_of_equivalence {r' : α → α → Prop} (hr : Equivalenceₓ r) (h : ∀ a b, r' a b → r a b) : Join r' a b → r a b
   | ⟨c, hac, hbc⟩ => hr.2.2 (h _ _ hac) (hr.2.1 <| h _ _ hbc)
 
 theorem refl_trans_gen_of_transitive_reflexive {r' : α → α → Prop} (hr : Reflexive r) (ht : Transitive r)
-    (h : ∀ a b, r' a b → r a b) (h' : refl_trans_gen r' a b) : r a b := by
+    (h : ∀ a b, r' a b → r a b) (h' : ReflTransGen r' a b) : r a b := by
   induction' h' with b c hab hbc ih
   · exact hr _
     
@@ -509,7 +540,7 @@ theorem refl_trans_gen_of_transitive_reflexive {r' : α → α → Prop} (hr : R
     
 
 theorem refl_trans_gen_of_equivalence {r' : α → α → Prop} (hr : Equivalenceₓ r) :
-    (∀ a b, r' a b → r a b) → refl_trans_gen r' a b → r a b :=
+    (∀ a b, r' a b → r a b) → ReflTransGen r' a b → r a b :=
   refl_trans_gen_of_transitive_reflexive hr.1 hr.2.2
 
 end Join

@@ -30,9 +30,9 @@ halting problem. Instead, this requirement is limited to only functions that are
 sense of `ω`-complete partial orders, which excludes the example because it is not monotone
 (making the input argument less defined can make `f` more defined). -/
 class LawfulFix (α : Type _) [OmegaCompletePartialOrder α] extends HasFix α where
-  fix_eq : ∀ {f : α →o α}, continuous f → HasFix.fix f = f (HasFix.fix f)
+  fix_eq : ∀ {f : α →o α}, Continuous f → HasFix.fix f = f (HasFix.fix f)
 
-theorem LawfulFix.fix_eq' {α} [OmegaCompletePartialOrder α] [LawfulFix α] {f : α → α} (hf : continuous' f) :
+theorem LawfulFix.fix_eq' {α} [OmegaCompletePartialOrder α] [LawfulFix α] {f : α → α} (hf : Continuous' f) :
     HasFix.fix f = f (HasFix.fix f) :=
   LawfulFix.fix_eq (hf.to_bundled _)
 
@@ -44,7 +44,7 @@ namespace Fix
 
 variable (f : (∀ a, Part <| β a) →o ∀ a, Part <| β a)
 
-theorem approx_mono' {i : ℕ} : fix.approx f i ≤ fix.approx f (succ i) := by
+theorem approx_mono' {i : ℕ} : Fix.approx f i ≤ Fix.approx f (succ i) := by
   induction i
   dsimp [approx]
   apply @bot_le _ _ _ (f ⊥)
@@ -53,13 +53,14 @@ theorem approx_mono' {i : ℕ} : fix.approx f i ≤ fix.approx f (succ i) := by
   apply i_ih
 
 theorem approx_mono ⦃i j : ℕ⦄ (hij : i ≤ j) : approx f i ≤ approx f j := by
-  induction j
+  induction' j with j ih
+  · cases hij
+    exact le_rfl
+    
   cases hij
-  refine' @le_reflₓ _ _ _
-  cases hij
-  apply @le_reflₓ _ _ _
-  apply @le_transₓ _ _ _ (approx f j_n) _ (j_ih ‹_›)
-  apply approx_mono' f
+  · exact le_rfl
+    
+  exact le_transₓ (ih ‹_›) (approx_mono' f)
 
 theorem mem_iff (a : α) (b : β a) : b ∈ Part.fix f a ↔ ∃ i, b ∈ approx f i a := by
   by_cases' h₀ : ∃ i : ℕ, (approx f i a).Dom
@@ -112,17 +113,17 @@ theorem exists_fix_le_approx (x : α) : ∃ i, Part.fix f x ≤ approx f i x := 
 include f
 
 /-- The series of approximations of `fix f` (see `approx`) as a `chain` -/
-def approx_chain : chain (∀ a, Part <| β a) :=
+def approx_chain : Chain (∀ a, Part <| β a) :=
   ⟨approx f, approx_mono f⟩
 
-theorem le_f_of_mem_approx {x} (hx : x ∈ approx_chain f) : x ≤ f x := by
+theorem le_f_of_mem_approx {x} (hx : x ∈ approxChain f) : x ≤ f x := by
   revert hx
   simp [· ∈ ·]
   intro i hx
   subst x
   apply approx_mono'
 
-theorem approx_mem_approx_chain {i} : approx f i ∈ approx_chain f :=
+theorem approx_mem_approx_chain {i} : approx f i ∈ approxChain f :=
   Streamₓ.mem_of_nth_eq rfl
 
 end Fix
@@ -141,7 +142,7 @@ open Nat
 
 open Nat.Upto OmegaCompletePartialOrder
 
-theorem fix_eq_ωSup : Part.fix f = ωSup (approx_chain f) := by
+theorem fix_eq_ωSup : Part.fix f = ωSup (approxChain f) := by
   apply le_antisymmₓ
   · intro x
     cases' exists_fix_le_approx f x with i hx
@@ -172,7 +173,7 @@ theorem fix_le {X : ∀ a, Part <| β a} (hX : f X ≤ X) : Part.fix f ≤ X := 
   apply f.monotone i_ih
   apply hX
 
-variable {f} (hc : continuous f)
+variable {f} (hc : Continuous f)
 
 include hc
 
@@ -199,9 +200,9 @@ namespace Part
 @[simps]
 def to_unit_mono (f : Part α →o Part α) : (Unit → Part α) →o Unit → Part α where
   toFun := fun x u => f (x u)
-  monotone' := fun x y h : x ≤ y u => f.monotone <| h u
+  monotone' := fun x y h : x ≤ y u => f.Monotone <| h u
 
-theorem to_unit_cont (f : Part α →o Part α) (hc : continuous f) : continuous (to_unit_mono f)
+theorem to_unit_cont (f : Part α →o Part α) (hc : Continuous f) : Continuous (toUnitMono f)
   | c => by
     ext ⟨⟩ : 1
     dsimp [OmegaCompletePartialOrder.ωSup]
@@ -210,7 +211,7 @@ theorem to_unit_cont (f : Part α →o Part α) (hc : continuous f) : continuous
 
 noncomputable instance : LawfulFix (Part α) :=
   ⟨fun f hc =>
-    show Part.fix (to_unit_mono f) () = _ by
+    show Part.fix (toUnitMono f) () = _ by
       rw [Part.fix_eq (to_unit_cont f hc)] <;> rfl⟩
 
 end Part
@@ -244,13 +245,13 @@ variable [∀ x y, OmegaCompletePartialOrder <| γ x y]
 
 open OmegaCompletePartialOrder.Chain
 
-theorem continuous_curry : continuous <| monotone_curry α β γ := fun c => by
+theorem continuous_curry : continuous <| monotoneCurry α β γ := fun c => by
   ext x y
   dsimp [curry, ωSup]
   rw [map_comp, map_comp]
   rfl
 
-theorem continuous_uncurry : continuous <| monotone_uncurry α β γ := fun c => by
+theorem continuous_uncurry : continuous <| monotoneUncurry α β γ := fun c => by
   ext x y
   dsimp [uncurry, ωSup]
   rw [map_comp, map_comp]
@@ -269,9 +270,9 @@ section Curry
 
 variable {f : (∀ x y : β x, γ x y) →o ∀ x y : β x, γ x y}
 
-variable (hc : continuous f)
+variable (hc : Continuous f)
 
-theorem uncurry_curry_continuous : continuous <| (monotone_uncurry α β γ).comp <| f.comp <| monotone_curry α β γ :=
+theorem uncurry_curry_continuous : continuous <| (monotoneUncurry α β γ).comp <| f.comp <| monotoneCurry α β γ :=
   continuous_comp _ _ (continuous_comp _ _ (continuous_curry _ _ _) hc) (continuous_uncurry _ _ _)
 
 end Curry

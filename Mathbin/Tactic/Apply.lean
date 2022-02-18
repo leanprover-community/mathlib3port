@@ -25,7 +25,7 @@ namespace Tactic
 /-- With `gs` a list of proof goals, `reorder_goals gs new_g` will use the `new_goals` policy
 `new_g` to rearrange the dependent goals to either drop them, push them to the end of the list
 or leave them in place. The `bool` values in `gs` indicates whether the goal is dependent or not. -/
-def reorder_goals {α} (gs : List (Bool × α)) : new_goals → List α
+def reorder_goals {α} (gs : List (Bool × α)) : NewGoals → List α
   | new_goals.non_dep_first =>
     let ⟨dep, non_dep⟩ := gs.partition (coe ∘ Prod.fst)
     non_dep.map Prod.snd ++ dep.map Prod.snd
@@ -37,20 +37,19 @@ private unsafe def has_opt_auto_param_inst_for_apply (ms : List (Name × expr)) 
     (fun r m => do
       let type ← infer_type m.2
       let b ← is_class type
-      return <| r || type.is_napp_of `opt_param 2 || type.is_napp_of `auto_param 2 || b)
-    ff
+      return <| r || type `opt_param 2 || type `auto_param 2 || b)
+    false
 
-private unsafe def try_apply_opt_auto_param_instance_for_apply (cfg : apply_cfg) (ms : List (Name × expr)) :
+private unsafe def try_apply_opt_auto_param_instance_for_apply (cfg : ApplyCfg) (ms : List (Name × expr)) :
     tactic Unit :=
   mwhen (has_opt_auto_param_inst_for_apply ms) <| do
     let gs ← get_goals
-    ms.mmap' fun m =>
+    ms fun m =>
         mwhen (bnot <$> is_assigned m.2) <|
-          ((set_goals [m.2] >> try apply_instance) >> when cfg.opt_param (try apply_opt_param)) >>
-            when cfg.auto_param (try apply_auto_param)
+          ((set_goals [m.2] >> try apply_instance) >> when cfg (try apply_opt_param)) >> when cfg (try apply_auto_param)
     set_goals gs
 
-private unsafe def retry_apply_aux : ∀ e : expr cfg : apply_cfg, List (Bool × Name × expr) → tactic (List (Name × expr))
+private unsafe def retry_apply_aux : ∀ e : expr cfg : ApplyCfg, List (Bool × Name × expr) → tactic (List (Name × expr))
   | e, cfg, gs =>
     (focus1 do
         let tgt : expr ← target
@@ -58,8 +57,8 @@ private unsafe def retry_apply_aux : ∀ e : expr cfg : apply_cfg, List (Bool ×
         unify t tgt
         exact e
         let gs' ← get_goals
-        let r := reorder_goals gs.reverse cfg.new_goals
-        set_goals (gs' ++ r.map Prod.snd)
+        let r := reorderGoals gs.reverse cfg.NewGoals
+        set_goals (gs' ++ r Prod.snd)
         return r) <|>
       do
       let expr.pi n bi d b ← infer_type e >>= whnf | apply_core e cfg
@@ -68,7 +67,7 @@ private unsafe def retry_apply_aux : ∀ e : expr cfg : apply_cfg, List (Bool ×
       let e ← head_beta <| e v
       retry_apply_aux e cfg ((b, n, v) :: gs)
 
-private unsafe def retry_apply (e : expr) (cfg : apply_cfg) : tactic (List (Name × expr)) :=
+private unsafe def retry_apply (e : expr) (cfg : ApplyCfg) : tactic (List (Name × expr)) :=
   apply_core e cfg <|> retry_apply_aux e cfg []
 
 /-- `apply'` mimics the behavior of `apply_core`. When
@@ -77,22 +76,22 @@ variables as additional arguments. The meta variables can then
 become new goals depending on the `cfg.new_goals` policy.
 
 `apply'` also finds instances and applies opt_params and auto_params. -/
-unsafe def apply' (e : expr) (cfg : apply_cfg := {  }) : tactic (List (Name × expr)) := do
+unsafe def apply' (e : expr) (cfg : ApplyCfg := {  }) : tactic (List (Name × expr)) := do
   let r ← retry_apply e cfg
   try_apply_opt_auto_param_instance_for_apply cfg r
   return r
 
 /-- Same as `apply'` but __all__ arguments that weren't inferred are added to goal list. -/
 unsafe def fapply' (e : expr) : tactic (List (Name × expr)) :=
-  apply' e { NewGoals := new_goals.all }
+  apply' e { NewGoals := NewGoals.all }
 
 /-- Same as `apply'` but only goals that don't depend on other goals are added to goal list. -/
 unsafe def eapply' (e : expr) : tactic (List (Name × expr)) :=
-  apply' e { NewGoals := new_goals.non_dep_only }
+  apply' e { NewGoals := NewGoals.non_dep_only }
 
 /-- `relation_tactic` finds a proof rule for the relation found in the goal and uses `apply'`
 to make one proof step. -/
-private unsafe def relation_tactic (md : transparency) (op_for : environment → Name → Option Name)
+private unsafe def relation_tactic (md : Transparency) (op_for : environment → Name → Option Name)
     (tac_name : Stringₓ) : tactic Unit := do
   let tgt ← target >>= instantiate_mvars
   let env ← get_env
@@ -149,7 +148,7 @@ unsafe def eapply' (q : parse texpr) : tactic Unit :=
 
 /-- Similar to the `apply'` tactic, but allows the user to provide a `apply_cfg` configuration object.
 -/
-unsafe def apply_with' (q : parse parser.pexpr) (cfg : apply_cfg) : tactic Unit :=
+unsafe def apply_with' (q : parse parser.pexpr) (cfg : ApplyCfg) : tactic Unit :=
   concat_tags do
     let e ← i_to_expr_for_apply q
     tactic.apply' e cfg
@@ -177,9 +176,9 @@ to assumption `h`
 -/
 unsafe def symmetry' : parse location → tactic Unit
   | l@loc.wildcard => l.try_apply symmetry_hyp tactic.symmetry'
-  | loc.ns hs => (loc.ns hs.reverse).apply symmetry_hyp tactic.symmetry'
+  | loc.ns hs => (Loc.ns hs.reverse).apply symmetry_hyp tactic.symmetry'
 
--- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr ?»
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr ?»
 /-- Similar to `transitivity` with the difference that `apply'` is used instead of `apply`.
 -/
 unsafe def transitivity' (q : parse («expr ?» texpr)) : tactic Unit :=

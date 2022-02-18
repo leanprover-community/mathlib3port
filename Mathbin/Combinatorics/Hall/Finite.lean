@@ -43,7 +43,7 @@ theorem hall_hard_inductive_zero (t : ι → Finset α) (hn : Fintype.card ι = 
 
 variable {t : ι → Finset α} [DecidableEq α]
 
-theorem hall_cond_of_erase {x : ι} (a : α) (ha : ∀ s : Finset ι, s.nonempty → s ≠ univ → s.card < (s.bUnion t).card)
+theorem hall_cond_of_erase {x : ι} (a : α) (ha : ∀ s : Finset ι, s.Nonempty → s ≠ univ → s.card < (s.bUnion t).card)
     (s' : Finset { x' : ι | x' ≠ x }) : s'.card ≤ (s'.bUnion fun x' => (t x').erase a).card := by
   have := Classical.decEq ι
   specialize ha (s'.image coe)
@@ -84,7 +84,7 @@ theorem hall_hard_inductive_step_A {n : ℕ} (hn : Fintype.card ι = n + 1)
       ∀ {ι' : Type u} [Fintype ι'] t' : ι' → Finset α,
         Fintype.card ι' ≤ n →
           (∀ s' : Finset ι', s'.card ≤ (s'.bUnion t').card) → ∃ f : ι' → α, Function.Injective f ∧ ∀ x, f x ∈ t' x)
-    (ha : ∀ s : Finset ι, s.nonempty → s ≠ univ → s.card < (s.bUnion t).card) :
+    (ha : ∀ s : Finset ι, s.Nonempty → s ≠ univ → s.card < (s.bUnion t).card) :
     ∃ f : ι → α, Function.Injective f ∧ ∀ x, f x ∈ t x := by
   have : Nonempty ι := fintype.card_pos_iff.mp (hn.symm ▸ Nat.succ_posₓ _)
   have := Classical.decEq ι
@@ -171,7 +171,7 @@ theorem hall_hard_inductive_step_B {n : ℕ} (hn : Fintype.card ι = n + 1)
       ∀ {ι' : Type u} [Fintype ι'] t' : ι' → Finset α,
         Fintype.card ι' ≤ n →
           (∀ s' : Finset ι', s'.card ≤ (s'.bUnion t').card) → ∃ f : ι' → α, Function.Injective f ∧ ∀ x, f x ∈ t' x)
-    (s : Finset ι) (hs : s.nonempty) (hns : s ≠ univ) (hus : s.card = (s.bUnion t).card) :
+    (s : Finset ι) (hs : s.Nonempty) (hns : s ≠ univ) (hus : s.card = (s.bUnion t).card) :
     ∃ f : ι → α, Function.Injective f ∧ ∀ x, f x ∈ t x := by
   have := Classical.decEq ι
   let t' : s → Finset α := fun x' => t x'
@@ -223,7 +223,7 @@ theorem hall_hard_inductive_step {n : ℕ} (hn : Fintype.card ι = n + 1) (ht : 
         Fintype.card ι' ≤ n →
           (∀ s' : Finset ι', s'.card ≤ (s'.bUnion t').card) → ∃ f : ι' → α, Function.Injective f ∧ ∀ x, f x ∈ t' x) :
     ∃ f : ι → α, Function.Injective f ∧ ∀ x, f x ∈ t x := by
-  by_cases' h : ∀ s : Finset ι, s.nonempty → s ≠ univ → s.card < (s.bUnion t).card
+  by_cases' h : ∀ s : Finset ι, s.Nonempty → s ≠ univ → s.card < (s.bUnion t).card
   · exact hall_hard_inductive_step_A hn ht (@ih) h
     
   · push_neg  at h

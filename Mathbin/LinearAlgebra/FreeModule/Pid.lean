@@ -65,8 +65,8 @@ theorem eq_bot_of_generator_maximal_map_eq_zero (b : Basis ι R M) {N : Submodul
 
 theorem eq_bot_of_generator_maximal_submodule_image_eq_zero {N O : Submodule R M} (b : Basis ι R O) (hNO : N ≤ O)
     {ϕ : O →ₗ[R] R}
-    (hϕ : ∀ ψ : O →ₗ[R] R, ϕ.submodule_image N ≤ ψ.submodule_image N → ψ.submodule_image N = ϕ.submodule_image N)
-    [(ϕ.submodule_image N).IsPrincipal] (hgen : generator (ϕ.submodule_image N) = 0) : N = ⊥ := by
+    (hϕ : ∀ ψ : O →ₗ[R] R, ϕ.submoduleImage N ≤ ψ.submoduleImage N → ψ.submoduleImage N = ϕ.submoduleImage N)
+    [(ϕ.submoduleImage N).IsPrincipal] (hgen : generator (ϕ.submoduleImage N) = 0) : N = ⊥ := by
   rw [Submodule.eq_bot_iff]
   intro x hx
   refine' congr_argₓ coe (show (⟨x, hNO hx⟩ : O) = 0 from b.ext_elem fun i => _)
@@ -85,7 +85,7 @@ variable {M : Type _} [AddCommGroupₓ M] [Module R M] {b : ι → M}
 
 open Submodule.IsPrincipal Set Submodule
 
-theorem dvd_generator_iff {I : Ideal R} [I.is_principal] {x : R} (hx : x ∈ I) : x ∣ generator I ↔ I = Ideal.span {x} :=
+theorem dvd_generator_iff {I : Ideal R} [I.IsPrincipal] {x : R} (hx : x ∈ I) : x ∣ generator I ↔ I = Ideal.span {x} :=
   by
   conv_rhs => rw [← span_singleton_generator I]
   erw [Ideal.span_singleton_eq_span_singleton, ← dvd_dvd_iff_associated, ← mem_iff_generator_dvd]
@@ -104,9 +104,9 @@ variable {M : Type _} [AddCommGroupₓ M] [Module R M] {b : ι → M}
 open Submodule.IsPrincipal
 
 theorem generator_maximal_submodule_image_dvd {N O : Submodule R M} (hNO : N ≤ O) {ϕ : O →ₗ[R] R}
-    (hϕ : ∀ ψ : O →ₗ[R] R, ϕ.submodule_image N ≤ ψ.submodule_image N → ψ.submodule_image N = ϕ.submodule_image N)
-    [(ϕ.submodule_image N).IsPrincipal] (y : M) (yN : y ∈ N) (ϕy_eq : ϕ ⟨y, hNO yN⟩ = generator (ϕ.submodule_image N))
-    (ψ : O →ₗ[R] R) : generator (ϕ.submodule_image N) ∣ ψ ⟨y, hNO yN⟩ := by
+    (hϕ : ∀ ψ : O →ₗ[R] R, ϕ.submoduleImage N ≤ ψ.submoduleImage N → ψ.submoduleImage N = ϕ.submoduleImage N)
+    [(ϕ.submoduleImage N).IsPrincipal] (y : M) (yN : y ∈ N) (ϕy_eq : ϕ ⟨y, hNO yN⟩ = generator (ϕ.submoduleImage N))
+    (ψ : O →ₗ[R] R) : generator (ϕ.submoduleImage N) ∣ ψ ⟨y, hNO yN⟩ := by
   let a : R := generator (ϕ.submodule_image N)
   let d : R := is_principal.generator (Submodule.span R {a, ψ ⟨y, hNO yN⟩})
   have d_dvd_left : d ∣ a := (mem_iff_generator_dvd _).mp (subset_span (mem_insert _ _))
@@ -161,11 +161,11 @@ theorem Submodule.basis_of_pid_aux [Fintype ι] {O : Type _} [AddCommGroupₓ O]
   by
   have :
     ∃ ϕ : M →ₗ[R] R,
-      ∀ ψ : M →ₗ[R] R, ϕ.submodule_image N ≤ ψ.submodule_image N → ψ.submodule_image N = ϕ.submodule_image N :=
+      ∀ ψ : M →ₗ[R] R, ϕ.submoduleImage N ≤ ψ.submoduleImage N → ψ.submoduleImage N = ϕ.submoduleImage N :=
     by
     obtain ⟨P, P_eq, P_max⟩ :=
       set_has_maximal_iff_noetherian.mpr (inferInstance : IsNoetherian R R) _
-        (show (Set.Range fun ψ : M →ₗ[R] R => ψ.submodule_image N).Nonempty from ⟨_, set.mem_range.mpr ⟨0, rfl⟩⟩)
+        (show (Set.Range fun ψ : M →ₗ[R] R => ψ.submoduleImage N).Nonempty from ⟨_, set.mem_range.mpr ⟨0, rfl⟩⟩)
     obtain ⟨ϕ, rfl⟩ := set.mem_range.mp P_eq
     exact ⟨ϕ, fun ψ hψ => P_max _ ⟨_, rfl⟩ hψ⟩
   let ϕ := this.some
@@ -315,7 +315,7 @@ See also the stronger version `submodule.smith_normal_form_of_le`.
 -/
 noncomputable def Submodule.basisOfPidOfLe {ι : Type _} [Fintype ι] {N O : Submodule R M} (hNO : N ≤ O)
     (b : Basis ι R O) : Σ n : ℕ, Basis (Finₓ n) R N :=
-  let ⟨n, bN'⟩ := Submodule.basisOfPid b (N.comap O.subtype)
+  let ⟨n, bN'⟩ := Submodule.basisOfPid b (N.comap O.Subtype)
   ⟨n, bN'.map (Submodule.comapSubtypeEquivOfLe hNO)⟩
 
 /-- A submodule inside the span of a linear independent family is a free `R`-module of finite rank,
@@ -328,7 +328,7 @@ variable {M}
 
 -- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (i «expr ∉ » I)
 /-- A finite type torsion free module over a PID is free. -/
-noncomputable def Module.freeOfFiniteTypeTorsionFree [Fintype ι] {s : ι → M} (hs : span R (range s) = ⊤)
+noncomputable def Module.freeOfFiniteTypeTorsionFree [Fintype ι] {s : ι → M} (hs : span R (Range s) = ⊤)
     [NoZeroSmulDivisors R M] : Σ n : ℕ, Basis (Finₓ n) R M := by
   classical
   have := exists_maximal_independent R s
@@ -415,7 +415,7 @@ theorem Submodule.exists_smith_normal_form_of_le [Fintype ι] (b : Basis ι R M)
   obtain ⟨as, has⟩ := h'' as' has'
   exact ⟨_, _, hmn, bM, bN, as, has⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:626:6: warning: expanding binder group (o n)
+-- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (o n)
 /-- If `M` is finite free over a PID `R`, then any submodule `N` is free
 and we can find a basis for `M` and `N` such that the inclusion map is a diagonal matrix
 in Smith normal form.
@@ -426,7 +426,7 @@ need to map `N` into a submodule of `O`.
 This is a strengthening of `submodule.basis_of_pid_of_le`.
 -/
 noncomputable def Submodule.smithNormalFormOfLe [Fintype ι] (b : Basis ι R M) (N O : Submodule R M) (N_le_O : N ≤ O) :
-    Σ (o : ℕ) (n : ℕ), Basis.SmithNormalForm (N.comap O.subtype) (Finₓ o) n := by
+    Σ (o : ℕ) (n : ℕ), Basis.SmithNormalForm (N.comap O.Subtype) (Finₓ o) n := by
   choose n o hno bO bN a snf using N.exists_smith_normal_form_of_le b O N_le_O
   refine' ⟨o, n, bO, bN.map (comap_subtype_equiv_of_le N_le_O).symm, (Finₓ.castLe hno).toEmbedding, a, fun i => _⟩
   ext
@@ -444,10 +444,10 @@ an ideal is the same as the dimension of the whole ring.
 -/
 noncomputable def Submodule.smithNormalForm [Fintype ι] (b : Basis ι R M) (N : Submodule R M) :
     Σ n : ℕ, Basis.SmithNormalForm N ι n :=
-  let ⟨m, n, bM, bN, f, a, snf⟩ := N.smith_normal_form_of_le b ⊤ le_top
+  let ⟨m, n, bM, bN, f, a, snf⟩ := N.smithNormalFormOfLe b ⊤ le_top
   let bM' := bM.map (LinearEquiv.ofTop _ rfl)
-  let e := bM'.index_equiv b
-  ⟨n, bM'.reindex e, bN.map (comap_subtype_equiv_of_le le_top), f.trans e.to_embedding, a, fun i => by
+  let e := bM'.indexEquiv b
+  ⟨n, bM'.reindex e, bN.map (comapSubtypeEquivOfLe le_top), f.trans e.toEmbedding, a, fun i => by
     simp only [snf, Basis.map_apply, LinearEquiv.of_top_apply, Submodule.coe_smul_of_tower,
       Submodule.comap_subtype_equiv_of_le_apply_coe, coe_coe, Basis.reindex_apply, Equivₓ.to_embedding_apply,
       Function.Embedding.trans_apply, Equivₓ.symm_apply_apply]⟩
@@ -463,14 +463,14 @@ need to map `I` into a submodule of `R`.
 This is a strengthening of `submodule.basis_of_pid`.
 -/
 noncomputable def Ideal.smithNormalForm [Fintype ι] {S : Type _} [CommRingₓ S] [IsDomain S] [Algebra R S]
-    (b : Basis ι R S) (I : Ideal S) (hI : I ≠ ⊥) : Basis.SmithNormalForm (I.restrict_scalars R) ι (Fintype.card ι) :=
-  let ⟨n, bS, bI, f, a, snf⟩ := (I.restrict_scalars R).SmithNormalForm b
-  have eq := Ideal.rank_eq bS hI (bI.map ((restrict_scalars_equiv R S S I).restrictScalars _))
+    (b : Basis ι R S) (I : Ideal S) (hI : I ≠ ⊥) : Basis.SmithNormalForm (I.restrictScalars R) ι (Fintype.card ι) :=
+  let ⟨n, bS, bI, f, a, snf⟩ := (I.restrictScalars R).SmithNormalForm b
+  have eq := Ideal.rank_eq bS hI (bI.map ((restrictScalarsEquiv R S S I).restrictScalars _))
   let e : Finₓ n ≃ Finₓ (Fintype.card ι) :=
     Fintype.equivOfCardEq
       (by
         rw [Eq, Fintype.card_fin])
-  ⟨bS, bI.reindex e, e.symm.to_embedding.trans f, a ∘ e.symm, fun i => by
+  ⟨bS, bI.reindex e, e.symm.toEmbedding.trans f, a ∘ e.symm, fun i => by
     simp only [snf, Basis.coe_reindex, Function.Embedding.trans_apply, Equivₓ.to_embedding_apply]⟩
 
 /-- If `S` a finite-dimensional ring extension of a PID `R` which is free as an `R`-module,
@@ -484,11 +484,11 @@ a `basis.smith_normal_form`.
 theorem Ideal.exists_smith_normal_form [Fintype ι] {S : Type _} [CommRingₓ S] [IsDomain S] [Algebra R S]
     (b : Basis ι R S) (I : Ideal S) (hI : I ≠ ⊥) :
     ∃ (b' : Basis ι R S)(a : ι → R)(ab' : Basis ι R I), ∀ i, (ab' i : S) = a i • b' i :=
-  let ⟨bS, bI, f, a, snf⟩ := I.smith_normal_form b hI
+  let ⟨bS, bI, f, a, snf⟩ := I.SmithNormalForm b hI
   let e : Finₓ (Fintype.card ι) ≃ ι :=
-    Equivₓ.ofBijective f ((Fintype.bijective_iff_injective_and_card f).mpr ⟨f.injective, Fintype.card_fin _⟩)
+    Equivₓ.ofBijective f ((Fintype.bijective_iff_injective_and_card f).mpr ⟨f.Injective, Fintype.card_fin _⟩)
   have fe : ∀ i, f (e.symm i) = i := e.apply_symm_apply
-  ⟨bS, a ∘ e.symm, (bI.reindex e).map ((restrict_scalars_equiv _ _ _ _).restrictScalars R), fun i => by
+  ⟨bS, a ∘ e.symm, (bI.reindex e).map ((restrictScalarsEquiv _ _ _ _).restrictScalars R), fun i => by
     simp only [snf, fe, Basis.map_apply, LinearEquiv.restrict_scalars_apply, Submodule.restrict_scalars_equiv_apply,
       Basis.coe_reindex]⟩
 

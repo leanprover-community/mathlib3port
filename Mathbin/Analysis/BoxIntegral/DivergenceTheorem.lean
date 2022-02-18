@@ -54,7 +54,7 @@ local notation "ℝⁿ⁺¹" => Finₓ (n + 1) → ℝ
 
 local notation "Eⁿ⁺¹" => Finₓ (n + 1) → E
 
-variable [CompleteSpace E] (I : box (Finₓ (n + 1))) {i : Finₓ (n + 1)}
+variable [CompleteSpace E] (I : Box (Finₓ (n + 1))) {i : Finₓ (n + 1)}
 
 open MeasureTheory
 
@@ -63,8 +63,8 @@ theorem norm_volume_sub_integral_face_upper_sub_lower_smul_le {f : ℝⁿ⁺¹ �
     (hfc : ContinuousOn f I.Icc) {x : ℝⁿ⁺¹} (hxI : x ∈ I.Icc) {a : E} {ε : ℝ} (h0 : 0 < ε)
     (hε : ∀, ∀ y ∈ I.Icc, ∀, ∥f y - a - f' (y - x)∥ ≤ ε * ∥y - x∥) {c : ℝ≥0 } (hc : I.distortion ≤ c) :
     ∥(∏ j, I.upper j - I.lower j) • f' (Pi.single i 1) -
-          (integral (I.face i) ⊥ (f ∘ i.insert_nth (I.upper i)) box_additive_map.volume -
-            integral (I.face i) ⊥ (f ∘ i.insert_nth (I.lower i)) box_additive_map.volume)∥ ≤
+          (integral (I.face i) ⊥ (f ∘ i.insertNth (I.upper i)) BoxAdditiveMap.volume -
+            integral (I.face i) ⊥ (f ∘ i.insertNth (I.lower i)) BoxAdditiveMap.volume)∥ ≤
       2 * ε * c * ∏ j, I.upper j - I.lower j :=
   by
   have Hl : I.lower i ∈ Icc (I.lower i) (I.upper i) := Set.left_mem_Icc.2 (I.lower_le_upper i)
@@ -72,7 +72,7 @@ theorem norm_volume_sub_integral_face_upper_sub_lower_smul_le {f : ℝⁿ⁺¹ �
   have Hi :
     ∀,
       ∀ x ∈ Icc (I.lower i) (I.upper i),
-        ∀, integrable.{0, u, u} (I.face i) ⊥ (f ∘ i.insert_nth x) box_additive_map.volume :=
+        ∀, Integrable.{0, u, u} (I.face i) ⊥ (f ∘ i.insert_nth x) box_additive_map.volume :=
     fun x hx => integrable_of_continuous_on _ (box.continuous_on_face_Icc hfc hx) volume
   have :
     ∀,
@@ -141,12 +141,12 @@ we allow `f` to be non-differentiable (but still continuous) at a countable set 
 TODO: If `n > 0`, then the condition at `x ∈ s` can be replaced by a much weaker estimate but this
 requires either better integrability theorems, or usage of a filter depending on the countable set
 `s` (we need to ensure that none of the faces of a partition contain a point from `s`). -/
-theorem has_integral_bot_pderiv (f : ℝⁿ⁺¹ → E) (f' : ℝⁿ⁺¹ → ℝⁿ⁺¹ →L[ℝ] E) (s : Set ℝⁿ⁺¹) (hs : countable s)
+theorem has_integral_bot_pderiv (f : ℝⁿ⁺¹ → E) (f' : ℝⁿ⁺¹ → ℝⁿ⁺¹ →L[ℝ] E) (s : Set ℝⁿ⁺¹) (hs : Countable s)
     (Hs : ∀, ∀ x ∈ s, ∀, ContinuousWithinAt f I.Icc x) (Hd : ∀, ∀ x ∈ I.Icc \ s, ∀, HasFderivWithinAt f (f' x) I.Icc x)
     (i : Finₓ (n + 1)) :
-    has_integral.{0, u, u} I ⊥ (fun x => f' x (Pi.single i 1)) box_additive_map.volume
-      (integral.{0, u, u} (I.face i) ⊥ (fun x => f (i.insert_nth (I.upper i) x)) box_additive_map.volume -
-        integral.{0, u, u} (I.face i) ⊥ (fun x => f (i.insert_nth (I.lower i) x)) box_additive_map.volume) :=
+    HasIntegral.{0, u, u} I ⊥ (fun x => f' x (Pi.single i 1)) BoxAdditiveMap.volume
+      (integral.{0, u, u} (I.face i) ⊥ (fun x => f (i.insertNth (I.upper i) x)) BoxAdditiveMap.volume -
+        integral.{0, u, u} (I.face i) ⊥ (fun x => f (i.insertNth (I.lower i) x)) BoxAdditiveMap.volume) :=
   by
   have Hc : ContinuousOn f I.Icc := by
     intro x hx
@@ -196,7 +196,7 @@ theorem has_integral_bot_pderiv (f : ℝⁿ⁺¹ → E) (f' : ℝⁿ⁺¹ → �
     have Hi :
       ∀,
         ∀ x ∈ Icc (J.lower i) (J.upper i),
-          ∀, integrable.{0, u, u} (J.face i) ⊥ (fun y => f (i.insert_nth x y)) box_additive_map.volume :=
+          ∀, Integrable.{0, u, u} (J.face i) ⊥ (fun y => f (i.insert_nth x y)) box_additive_map.volume :=
       fun x hx => integrable_of_continuous_on _ (box.continuous_on_face_Icc (Hc.mono <| box.le_iff_Icc.1 hJI) hx) volume
     have hJδ' : J.Icc ⊆ closed_ball x δ ∩ I.Icc := subset_inter hJδ (box.le_iff_Icc.1 hJI)
     have Hmaps :
@@ -256,12 +256,12 @@ the sum of integrals of `f` over the faces of `I` taken with appropriate signs.
 More precisely, we use a non-standard generalization of the Henstock-Kurzweil integral and
 we allow `f` to be non-differentiable (but still continuous) at a countable set of points. -/
 theorem has_integral_bot_divergence_of_forall_has_deriv_within_at (f : ℝⁿ⁺¹ → Eⁿ⁺¹) (f' : ℝⁿ⁺¹ → ℝⁿ⁺¹ →L[ℝ] Eⁿ⁺¹)
-    (s : Set ℝⁿ⁺¹) (hs : countable s) (Hs : ∀, ∀ x ∈ s, ∀, ContinuousWithinAt f I.Icc x)
+    (s : Set ℝⁿ⁺¹) (hs : Countable s) (Hs : ∀, ∀ x ∈ s, ∀, ContinuousWithinAt f I.Icc x)
     (Hd : ∀, ∀ x ∈ I.Icc \ s, ∀, HasFderivWithinAt f (f' x) I.Icc x) :
-    has_integral.{0, u, u} I ⊥ (fun x => ∑ i, f' x (Pi.single i 1) i) box_additive_map.volume
+    HasIntegral.{0, u, u} I ⊥ (fun x => ∑ i, f' x (Pi.single i 1) i) BoxAdditiveMap.volume
       (∑ i,
-        integral.{0, u, u} (I.face i) ⊥ (fun x => f (i.insert_nth (I.upper i) x) i) box_additive_map.volume -
-          integral.{0, u, u} (I.face i) ⊥ (fun x => f (i.insert_nth (I.lower i) x) i) box_additive_map.volume) :=
+        integral.{0, u, u} (I.face i) ⊥ (fun x => f (i.insertNth (I.upper i) x) i) BoxAdditiveMap.volume -
+          integral.{0, u, u} (I.face i) ⊥ (fun x => f (i.insertNth (I.lower i) x) i) BoxAdditiveMap.volume) :=
   by
   refine' has_integral_sum fun i hi => _
   clear hi

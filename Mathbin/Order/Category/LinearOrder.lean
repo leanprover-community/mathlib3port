@@ -1,27 +1,33 @@
-import Mathbin.Order.Category.PartialOrder
+import Mathbin.Order.Category.Lattice
 
-/-! # Category of linearly ordered types -/
+/-!
+# Category of linear orders
+
+This defines `LinearOrder`, the category of linear orders with monotone maps.
+-/
 
 
 open CategoryTheory
 
-/-- The category of linearly ordered types. -/
+universe u
+
+/-- The category of linear orders. -/
 def LinearOrderₓₓ :=
-  bundled LinearOrderₓ
+  Bundled LinearOrderₓ
 
 namespace LinearOrderₓₓ
 
-instance : bundled_hom.parent_projection @LinearOrderₓ.toPartialOrder :=
+instance : BundledHom.ParentProjection @LinearOrderₓ.toPartialOrder :=
   ⟨⟩
 
-deriving instance large_category, concrete_category for LinearOrderₓₓ
+deriving instance LargeCategory, ConcreteCategory for LinearOrderₓₓ
 
 instance : CoeSort LinearOrderₓₓ (Type _) :=
   bundled.has_coe_to_sort
 
-/-- Construct a bundled LinearOrder from the underlying type and typeclass. -/
+/-- Construct a bundled `LinearOrder` from the underlying type and typeclass. -/
 def of (α : Type _) [LinearOrderₓ α] : LinearOrderₓₓ :=
-  bundled.of α
+  Bundled.of α
 
 instance : Inhabited LinearOrderₓₓ :=
   ⟨of PUnit⟩
@@ -29,5 +35,36 @@ instance : Inhabited LinearOrderₓₓ :=
 instance (α : LinearOrderₓₓ) : LinearOrderₓ α :=
   α.str
 
+instance has_forget_to_Lattice : HasForget₂ LinearOrderₓₓ Latticeₓ where
+  forget₂ := { obj := fun X => Latticeₓ.of X, map := fun X Y f => (OrderHomClass.toLatticeHom X Y f : LatticeHom X Y) }
+
+/-- Constructs an equivalence between linear orders from an order isomorphism between them. -/
+@[simps]
+def iso.mk {α β : LinearOrderₓₓ.{u}} (e : α ≃o β) : α ≅ β where
+  Hom := e
+  inv := e.symm
+  hom_inv_id' := by
+    ext
+    exact e.symm_apply_apply x
+  inv_hom_id' := by
+    ext
+    exact e.apply_symm_apply x
+
+/-- `order_dual` as a functor. -/
+@[simps]
+def dual : LinearOrderₓₓ ⥤ LinearOrderₓₓ where
+  obj := fun X => of (OrderDual X)
+  map := fun X Y => OrderHom.dual
+
+/-- The equivalence between `LinearOrder` and itself induced by `order_dual` both ways. -/
+@[simps Functor inverse]
+def dual_equiv : LinearOrderₓₓ ≌ LinearOrderₓₓ :=
+  Equivalence.mk dual dual ((NatIso.ofComponents fun X => iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
+    ((NatIso.ofComponents fun X => iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
+
 end LinearOrderₓₓ
+
+theorem LinearOrder_dual_comp_forget_to_Lattice :
+    LinearOrderₓₓ.dual ⋙ forget₂ LinearOrderₓₓ Latticeₓ = forget₂ LinearOrderₓₓ Latticeₓ ⋙ Latticeₓ.dual :=
+  rfl
 

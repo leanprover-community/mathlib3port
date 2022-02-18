@@ -1,9 +1,11 @@
-import Mathbin.Data.Fin.Basic
+import Mathbin.Data.Fintype.Order
 import Mathbin.Order.Category.LinearOrder
 
-/-! # Nonempty finite linear orders
+/-!
+# Nonempty finite linear orders
 
-Nonempty finite linear orders form the index category for simplicial objects.
+This defines `NonemptyFinLinOrd`, the category of nonempty finite linear orders with monotone maps.
+This is the index category for simplicial objects.
 -/
 
 
@@ -19,25 +21,8 @@ class NonemptyFinLinOrd (α : Type _) extends Fintype α, LinearOrderₓ α wher
 
 attribute [instance] NonemptyFinLinOrd.nonempty
 
-instance (priority := 100) NonemptyFinLinOrd.orderBot (α : Type _) [NonemptyFinLinOrd α] : OrderBot α where
-  bot :=
-    Finset.min' Finset.univ
-      ⟨Classical.arbitrary α, by
-        simp ⟩
-  bot_le := fun a =>
-    Finset.min'_le _ a
-      (by
-        simp )
-
-instance (priority := 100) NonemptyFinLinOrd.orderTop (α : Type _) [NonemptyFinLinOrd α] : OrderTop α where
-  top :=
-    Finset.max' Finset.univ
-      ⟨Classical.arbitrary α, by
-        simp ⟩
-  le_top := fun a =>
-    Finset.le_max' _ a
-      (by
-        simp )
+instance (priority := 100) NonemptyFinLinOrd.toBoundedOrder (α : Type _) [NonemptyFinLinOrd α] : BoundedOrder α :=
+  Fintype.toBoundedOrder α
 
 instance PUnit.nonemptyFinLinOrd : NonemptyFinLinOrd PUnit :=
   { PUnit.linearOrderedCancelAddCommMonoid, PUnit.fintype with }
@@ -48,23 +33,26 @@ instance Finₓ.nonemptyFinLinOrd (n : ℕ) : NonemptyFinLinOrd (Finₓ (n + 1))
 instance Ulift.nonemptyFinLinOrd (α : Type u) [NonemptyFinLinOrd α] : NonemptyFinLinOrd (Ulift.{v} α) :=
   { LinearOrderₓ.lift Equivₓ.ulift (Equivₓ.injective _), Ulift.fintype _ with Nonempty := ⟨Ulift.up ⊥⟩ }
 
+instance (α : Type _) [NonemptyFinLinOrd α] : NonemptyFinLinOrd (OrderDual α) :=
+  { OrderDual.fintype α with }
+
 /-- The category of nonempty finite linear orders. -/
 def NonemptyFinLinOrdₓ :=
-  bundled NonemptyFinLinOrd
+  Bundled NonemptyFinLinOrd
 
 namespace NonemptyFinLinOrdₓ
 
-instance : bundled_hom.parent_projection @NonemptyFinLinOrd.toLinearOrder :=
+instance : BundledHom.ParentProjection @NonemptyFinLinOrd.toLinearOrder :=
   ⟨⟩
 
-deriving instance large_category, concrete_category for NonemptyFinLinOrdₓ
+deriving instance LargeCategory, ConcreteCategory for NonemptyFinLinOrdₓ
 
 instance : CoeSort NonemptyFinLinOrdₓ (Type _) :=
   bundled.has_coe_to_sort
 
-/-- Construct a bundled NonemptyFinLinOrd from the underlying type and typeclass. -/
+/-- Construct a bundled `NonemptyFinLinOrd` from the underlying type and typeclass. -/
 def of (α : Type _) [NonemptyFinLinOrd α] : NonemptyFinLinOrdₓ :=
-  bundled.of α
+  Bundled.of α
 
 instance : Inhabited NonemptyFinLinOrdₓ :=
   ⟨of PUnit⟩
@@ -72,5 +60,38 @@ instance : Inhabited NonemptyFinLinOrdₓ :=
 instance (α : NonemptyFinLinOrdₓ) : NonemptyFinLinOrd α :=
   α.str
 
+instance has_forget_to_LinearOrder : HasForget₂ NonemptyFinLinOrdₓ LinearOrderₓₓ :=
+  BundledHom.forget₂ _ _
+
+/-- Constructs an equivalence between nonempty finite linear orders from an order isomorphism
+between them. -/
+@[simps]
+def iso.mk {α β : NonemptyFinLinOrdₓ.{u}} (e : α ≃o β) : α ≅ β where
+  hom := e
+  inv := e.symm
+  hom_inv_id' := by
+    ext
+    exact e.symm_apply_apply x
+  inv_hom_id' := by
+    ext
+    exact e.apply_symm_apply x
+
+/-- `order_dual` as a functor. -/
+@[simps]
+def to_dual : NonemptyFinLinOrdₓ ⥤ NonemptyFinLinOrdₓ where
+  obj := fun X => of (OrderDual X)
+  map := fun X Y => OrderHom.dual
+
+/-- The equivalence between `FinPartialOrder` and itself induced by `order_dual` both ways. -/
+@[simps Functor inverse]
+def dual_equiv : NonemptyFinLinOrdₓ ≌ NonemptyFinLinOrdₓ :=
+  Equivalence.mk toDual toDual ((NatIso.ofComponents fun X => iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
+    ((NatIso.ofComponents fun X => iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
+
 end NonemptyFinLinOrdₓ
+
+theorem NonemptyFinLinOrd_dual_equiv_comp_forget_to_LinearOrder :
+    NonemptyFinLinOrdₓ.dualEquiv.Functor ⋙ forget₂ NonemptyFinLinOrdₓ LinearOrderₓₓ =
+      forget₂ NonemptyFinLinOrdₓ LinearOrderₓₓ ⋙ LinearOrderₓₓ.dualEquiv.Functor :=
+  rfl
 

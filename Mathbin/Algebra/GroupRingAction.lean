@@ -63,20 +63,20 @@ variable {M G R}
 
 /-- A stronger version of `submonoid.distrib_mul_action`. -/
 instance Submonoid.mulSemiringAction [MulSemiringAction M R] (H : Submonoid M) : MulSemiringAction H R :=
-  { H.mul_distrib_mul_action, H.distrib_mul_action with smul := · • · }
+  { H.MulDistribMulAction, H.DistribMulAction with smul := · • · }
 
 /-- A stronger version of `subgroup.distrib_mul_action`. -/
 instance Subgroup.mulSemiringAction [MulSemiringAction G R] (H : Subgroup G) : MulSemiringAction H R :=
-  H.to_submonoid.mul_semiring_action
+  H.toSubmonoid.MulSemiringAction
 
 /-- A stronger version of `subsemiring.distrib_mul_action`. -/
 instance Subsemiring.mulSemiringAction {R'} [Semiringₓ R'] [MulSemiringAction R' R] (H : Subsemiring R') :
     MulSemiringAction H R :=
-  H.to_submonoid.mul_semiring_action
+  H.toSubmonoid.MulSemiringAction
 
 /-- A stronger version of `subring.distrib_mul_action`. -/
 instance Subring.mulSemiringAction {R'} [Ringₓ R'] [MulSemiringAction R' R] (H : Subring R') : MulSemiringAction H R :=
-  H.to_subsemiring.mul_semiring_action
+  H.toSubsemiring.MulSemiringAction
 
 end
 

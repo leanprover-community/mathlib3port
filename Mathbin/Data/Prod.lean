@@ -51,7 +51,7 @@ theorem map_fst' (f : α → γ) (g : β → δ) : Prod.fst ∘ map f g = f ∘ 
   funext <| map_fst f g
 
 theorem map_snd' (f : α → γ) (g : β → δ) : Prod.snd ∘ map f g = g ∘ Prod.snd :=
-  funext <| map_snd f g
+  funext <| map_sndₓ f g
 
 /-- Composing a `prod.map` with another `prod.map` is equal to
 a single `prod.map` of composed functions.
@@ -89,7 +89,7 @@ theorem ext {α β} {p q : α × β} (h₁ : p.1 = q.1) (h₂ : p.2 = q.2) : p =
   ext_iff.2 ⟨h₁, h₂⟩
 
 theorem map_def {f : α → γ} {g : β → δ} : Prod.map f g = fun p : α × β => (f p.1, g p.2) :=
-  funext fun p => ext (map_fst f g p) (map_snd f g p)
+  funext fun p => extₓ (map_fst f g p) (map_sndₓ f g p)
 
 theorem id_prod : (fun p : α × α => (p.1, p.2)) = id :=
   funext fun ⟨a, b⟩ => rfl
@@ -98,9 +98,9 @@ theorem fst_surjective [h : Nonempty β] : Function.Surjective (@fst α β) := f
 
 theorem snd_surjective [h : Nonempty α] : Function.Surjective (@snd α β) := fun y => h.elim fun x => ⟨⟨x, y⟩, rfl⟩
 
-theorem fst_injective [Subsingleton β] : Function.Injective (@fst α β) := fun x y h => ext h (Subsingleton.elimₓ _ _)
+theorem fst_injective [Subsingleton β] : Function.Injective (@fst α β) := fun x y h => extₓ h (Subsingleton.elimₓ _ _)
 
-theorem snd_injective [Subsingleton α] : Function.Injective (@snd α β) := fun x y h => ext (Subsingleton.elimₓ _ _) h
+theorem snd_injective [Subsingleton α] : Function.Injective (@snd α β) := fun x y h => extₓ (Subsingleton.elimₓ _ _) h
 
 /-- Swap the factors of a product. `swap (a, b) = (b, a)` -/
 def swap : α × β → β × α := fun p => (p.2, p.1)
@@ -163,7 +163,7 @@ theorem lex_def (r : α → α → Prop) (s : β → β → Prop) {p q : α × �
   ⟨fun h => by
     cases h <;> simp [*], fun h =>
     match p, q, h with
-    | (a, b), (c, d), Or.inl h => lex.left _ _ h
+    | (a, b), (c, d), Or.inl h => Lex.left _ _ h
     | (a, b), (c, d), Or.inr ⟨e, h⟩ => by
       change a = c at e <;> subst e <;> exact lex.right _ h⟩
 
@@ -176,30 +176,30 @@ instance lex.decidable [DecidableEq α] (r : α → α → Prop) (s : β → β 
 
 @[refl]
 theorem lex.refl_left (r : α → α → Prop) (s : β → β → Prop) [IsRefl α r] : ∀ x, Prod.Lex r s x x
-  | (x₁, x₂) => lex.left _ _ (refl _)
+  | (x₁, x₂) => Lex.left _ _ (refl _)
 
-instance is_refl_left {r : α → α → Prop} {s : β → β → Prop} [IsRefl α r] : IsRefl (α × β) (lex r s) :=
-  ⟨lex.refl_left _ _⟩
+instance is_refl_left {r : α → α → Prop} {s : β → β → Prop} [IsRefl α r] : IsRefl (α × β) (Lex r s) :=
+  ⟨Lex.refl_left _ _⟩
 
 @[refl]
 theorem lex.refl_right (r : α → α → Prop) (s : β → β → Prop) [IsRefl β s] : ∀ x, Prod.Lex r s x x
-  | (x₁, x₂) => lex.right _ (refl _)
+  | (x₁, x₂) => Lex.right _ (refl _)
 
-instance is_refl_right {r : α → α → Prop} {s : β → β → Prop} [IsRefl β s] : IsRefl (α × β) (lex r s) :=
-  ⟨lex.refl_right _ _⟩
+instance is_refl_right {r : α → α → Prop} {s : β → β → Prop} [IsRefl β s] : IsRefl (α × β) (Lex r s) :=
+  ⟨Lex.refl_right _ _⟩
 
 @[trans]
 theorem lex.trans {r : α → α → Prop} {s : β → β → Prop} [IsTrans α r] [IsTrans β s] :
     ∀ {x y z : α × β}, Prod.Lex r s x y → Prod.Lex r s y z → Prod.Lex r s x z
-  | (x₁, x₂), (y₁, y₂), (z₁, z₂), lex.left _ _ hxy₁, lex.left _ _ hyz₁ => lex.left _ _ (trans hxy₁ hyz₁)
-  | (x₁, x₂), (y₁, y₂), (z₁, z₂), lex.left _ _ hxy₁, lex.right _ hyz₂ => lex.left _ _ hxy₁
-  | (x₁, x₂), (y₁, y₂), (z₁, z₂), lex.right _ _, lex.left _ _ hyz₁ => lex.left _ _ hyz₁
-  | (x₁, x₂), (y₁, y₂), (z₁, z₂), lex.right _ hxy₂, lex.right _ hyz₂ => lex.right _ (trans hxy₂ hyz₂)
+  | (x₁, x₂), (y₁, y₂), (z₁, z₂), lex.left _ _ hxy₁, lex.left _ _ hyz₁ => Lex.left _ _ (trans hxy₁ hyz₁)
+  | (x₁, x₂), (y₁, y₂), (z₁, z₂), lex.left _ _ hxy₁, lex.right _ hyz₂ => Lex.left _ _ hxy₁
+  | (x₁, x₂), (y₁, y₂), (z₁, z₂), lex.right _ _, lex.left _ _ hyz₁ => Lex.left _ _ hyz₁
+  | (x₁, x₂), (y₁, y₂), (z₁, z₂), lex.right _ hxy₂, lex.right _ hyz₂ => Lex.right _ (trans hxy₂ hyz₂)
 
-instance {r : α → α → Prop} {s : β → β → Prop} [IsTrans α r] [IsTrans β s] : IsTrans (α × β) (lex r s) :=
-  ⟨fun _ _ _ => lex.trans⟩
+instance {r : α → α → Prop} {s : β → β → Prop} [IsTrans α r] [IsTrans β s] : IsTrans (α × β) (Lex r s) :=
+  ⟨fun _ _ _ => Lex.trans⟩
 
-instance {r : α → α → Prop} {s : β → β → Prop} [IsStrictOrder α r] [IsAntisymm β s] : IsAntisymm (α × β) (lex r s) :=
+instance {r : α → α → Prop} {s : β → β → Prop} [IsStrictOrder α r] [IsAntisymm β s] : IsAntisymm (α × β) (Lex r s) :=
   ⟨fun x₁ x₂ h₁₂ h₂₁ =>
     match x₁, x₂, h₁₂, h₂₁ with
     | (a₁, b₁), (a₂, b₂), lex.left _ _ hr₁, lex.left _ _ hr₂ => (irrefl a₁ (trans hr₁ hr₂)).elim
@@ -207,11 +207,11 @@ instance {r : α → α → Prop} {s : β → β → Prop} [IsStrictOrder α r] 
     | (a₁, b₁), (a₂, b₂), lex.right _ _, lex.left _ _ hr₂ => (irrefl _ hr₂).elim
     | (a₁, b₁), (a₂, b₂), lex.right _ hs₁, lex.right _ hs₂ => antisymm hs₁ hs₂ ▸ rfl⟩
 
-instance is_total_left {r : α → α → Prop} {s : β → β → Prop} [IsTotal α r] : IsTotal (α × β) (lex r s) :=
-  ⟨fun ⟨a₁, b₁⟩ ⟨a₂, b₂⟩ => (IsTotal.total a₁ a₂).imp (lex.left _ _) (lex.left _ _)⟩
+instance is_total_left {r : α → α → Prop} {s : β → β → Prop} [IsTotal α r] : IsTotal (α × β) (Lex r s) :=
+  ⟨fun ⟨a₁, b₁⟩ ⟨a₂, b₂⟩ => (IsTotal.total a₁ a₂).imp (Lex.left _ _) (Lex.left _ _)⟩
 
 instance is_total_right {r : α → α → Prop} {s : β → β → Prop} [IsTrichotomous α r] [IsTotal β s] :
-    IsTotal (α × β) (lex r s) :=
+    IsTotal (α × β) (Lex r s) :=
   ⟨fun ⟨i, a⟩ ⟨j, b⟩ => by
     obtain hij | rfl | hji := trichotomous_of r i j
     · exact Or.inl (lex.left _ _ hij)
@@ -225,11 +225,11 @@ end Prod
 
 open Function
 
-theorem Function.Injective.prod_map {f : α → γ} {g : β → δ} (hf : injective f) (hg : injective g) :
-    injective (Prod.map f g) := fun x y h => Prod.extₓ (hf (Prod.ext_iff.1 h).1) (hg <| (Prod.ext_iff.1 h).2)
+theorem Function.Injective.prod_map {f : α → γ} {g : β → δ} (hf : Injective f) (hg : Injective g) :
+    Injective (Prod.map f g) := fun x y h => Prod.extₓ (hf (Prod.ext_iff.1 h).1) (hg <| (Prod.ext_iff.1 h).2)
 
-theorem Function.Surjective.prod_map {f : α → γ} {g : β → δ} (hf : surjective f) (hg : surjective g) :
-    surjective (Prod.map f g) := fun p =>
+theorem Function.Surjective.prod_map {f : α → γ} {g : β → δ} (hf : Surjective f) (hg : Surjective g) :
+    Surjective (Prod.map f g) := fun p =>
   let ⟨x, hx⟩ := hf p.1
   let ⟨y, hy⟩ := hg p.2
   ⟨(x, y), Prod.extₓ hx hy⟩

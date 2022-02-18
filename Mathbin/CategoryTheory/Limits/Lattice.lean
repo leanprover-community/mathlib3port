@@ -21,62 +21,61 @@ section Semilattice
 
 variable {α : Type u}
 
-variable {J : Type u} [small_category J] [fin_category J]
+variable {J : Type u} [SmallCategory J] [FinCategory J]
 
 /-- The limit cone over any functor from a finite diagram into a `semilattice_inf` with `order_top`.
 -/
-def finite_limit_cone [SemilatticeInf α] [OrderTop α] (F : J ⥤ α) : limit_cone F where
-  Cone := { x := Finset.univ.inf F.obj, π := { app := fun j => hom_of_le (Finset.inf_le (Fintype.complete _)) } }
-  IsLimit := { lift := fun s => hom_of_le (Finset.le_inf fun j _ => (s.π.app j).down.down) }
+def finite_limit_cone [SemilatticeInf α] [OrderTop α] (F : J ⥤ α) : LimitCone F where
+  Cone := { x := Finset.univ.inf F.obj, π := { app := fun j => homOfLe (Finset.inf_le (Fintype.complete _)) } }
+  IsLimit := { lift := fun s => homOfLe (Finset.le_inf fun j _ => (s.π.app j).down.down) }
 
 /-- The colimit cocone over any functor from a finite diagram into a `semilattice_sup` with `order_bot`.
 -/
-def finite_colimit_cocone [SemilatticeSup α] [OrderBot α] (F : J ⥤ α) : colimit_cocone F where
-  Cocone := { x := Finset.univ.sup F.obj, ι := { app := fun i => hom_of_le (Finset.le_sup (Fintype.complete _)) } }
-  IsColimit := { desc := fun s => hom_of_le (Finset.sup_le fun j _ => (s.ι.app j).down.down) }
+def finite_colimit_cocone [SemilatticeSup α] [OrderBot α] (F : J ⥤ α) : ColimitCocone F where
+  Cocone := { x := Finset.univ.sup F.obj, ι := { app := fun i => homOfLe (Finset.le_sup (Fintype.complete _)) } }
+  IsColimit := { desc := fun s => homOfLe (Finset.sup_le fun j _ => (s.ι.app j).down.down) }
 
 instance (priority := 100) has_finite_limits_of_semilattice_inf_order_top [SemilatticeInf α] [OrderTop α] :
-    has_finite_limits α :=
+    HasFiniteLimits α :=
   ⟨fun J 𝒥₁ 𝒥₂ => { HasLimit := fun F => has_limit.mk (finite_limit_cone F) }⟩
 
 instance (priority := 100) has_finite_colimits_of_semilattice_sup_order_bot [SemilatticeSup α] [OrderBot α] :
-    has_finite_colimits α :=
+    HasFiniteColimits α :=
   ⟨fun J 𝒥₁ 𝒥₂ => { HasColimit := fun F => has_colimit.mk (finite_colimit_cocone F) }⟩
 
 /-- The limit of a functor from a finite diagram into a `semilattice_inf` with `order_top` is the
 infimum of the objects in the image.
 -/
 theorem finite_limit_eq_finset_univ_inf [SemilatticeInf α] [OrderTop α] (F : J ⥤ α) : limit F = Finset.univ.inf F.obj :=
-  (is_limit.cone_point_unique_up_to_iso (limit.is_limit F) (finite_limit_cone F).IsLimit).to_eq
+  (IsLimit.conePointUniqueUpToIso (limit.isLimit F) (finiteLimitCone F).IsLimit).to_eq
 
 /-- The colimit of a functor from a finite diagram into a `semilattice_sup` with `order_bot`
 is the supremum of the objects in the image.
 -/
 theorem finite_colimit_eq_finset_univ_sup [SemilatticeSup α] [OrderBot α] (F : J ⥤ α) :
     colimit F = Finset.univ.sup F.obj :=
-  (is_colimit.cocone_point_unique_up_to_iso (colimit.is_colimit F) (finite_colimit_cocone F).IsColimit).to_eq
+  (IsColimit.coconePointUniqueUpToIso (colimit.isColimit F) (finiteColimitCocone F).IsColimit).to_eq
 
 /-- A finite product in the category of a `semilattice_inf` with `order_top` is the same as the infimum.
 -/
 theorem finite_product_eq_finset_inf [SemilatticeInf α] [OrderTop α] {ι : Type u} [DecidableEq ι] [Fintype ι]
     (f : ι → α) : (∏ f) = (Fintype.elems ι).inf f :=
-  (is_limit.cone_point_unique_up_to_iso (limit.is_limit _) (finite_limit_cone (discrete.functor f)).IsLimit).to_eq
+  (IsLimit.conePointUniqueUpToIso (limit.isLimit _) (finiteLimitCone (Discrete.functor f)).IsLimit).to_eq
 
 /-- A finite coproduct in the category of a `semilattice_sup` with `order_bot` is the same as the
 supremum.
 -/
 theorem finite_coproduct_eq_finset_sup [SemilatticeSup α] [OrderBot α] {ι : Type u} [DecidableEq ι] [Fintype ι]
     (f : ι → α) : (∐ f) = (Fintype.elems ι).sup f :=
-  (is_colimit.cocone_point_unique_up_to_iso (colimit.is_colimit _)
-      (finite_colimit_cocone (discrete.functor f)).IsColimit).to_eq
+  (IsColimit.coconePointUniqueUpToIso (colimit.isColimit _) (finiteColimitCocone (Discrete.functor f)).IsColimit).to_eq
 
 /-- The binary product in the category of a `semilattice_inf` with `order_top` is the same as the
 infimum.
 -/
 @[simp]
-theorem prod_eq_inf [SemilatticeInf α] [OrderTop α] (x y : α) : limits.prod x y = x⊓y :=
+theorem prod_eq_inf [SemilatticeInf α] [OrderTop α] (x y : α) : Limits.prod x y = x⊓y :=
   calc
-    limits.prod x y = limit (pair x y) := rfl
+    Limits.prod x y = limit (pair x y) := rfl
     _ = Finset.univ.inf (pair x y).obj := by
       rw [finite_limit_eq_finset_univ_inf (pair x y)]
     _ = x⊓(y⊓⊤) := rfl
@@ -88,9 +87,9 @@ theorem prod_eq_inf [SemilatticeInf α] [OrderTop α] (x y : α) : limits.prod x
 supremum.
 -/
 @[simp]
-theorem coprod_eq_sup [SemilatticeSup α] [OrderBot α] (x y : α) : limits.coprod x y = x⊔y :=
+theorem coprod_eq_sup [SemilatticeSup α] [OrderBot α] (x y : α) : Limits.coprod x y = x⊔y :=
   calc
-    limits.coprod x y = colimit (pair x y) := rfl
+    Limits.coprod x y = colimit (pair x y) := rfl
     _ = Finset.univ.sup (pair x y).obj := by
       rw [finite_colimit_eq_finset_univ_sup (pair x y)]
     _ = x⊔(y⊔⊥) := rfl
@@ -132,15 +131,15 @@ end Semilattice
 
 variable {α : Type u} [CompleteLattice α]
 
-variable {J : Type u} [small_category J]
+variable {J : Type u} [SmallCategory J]
 
 /-- The limit cone over any functor into a complete lattice.
 -/
-def limit_cone (F : J ⥤ α) : limit_cone F where
-  Cone := { x := infi F.obj, π := { app := fun j => hom_of_le (CompleteLattice.Inf_le _ _ (Set.mem_range_self _)) } }
+def limit_cone (F : J ⥤ α) : LimitCone F where
+  Cone := { x := infi F.obj, π := { app := fun j => homOfLe (CompleteLattice.Inf_le _ _ (Set.mem_range_self _)) } }
   IsLimit :=
     { lift := fun s =>
-        hom_of_le
+        homOfLe
           (CompleteLattice.le_Inf _ _
             (by
               rintro _ ⟨j, rfl⟩
@@ -148,31 +147,31 @@ def limit_cone (F : J ⥤ α) : limit_cone F where
 
 /-- The colimit cocone over any functor into a complete lattice.
 -/
-def colimit_cocone (F : J ⥤ α) : colimit_cocone F where
-  Cocone := { x := supr F.obj, ι := { app := fun j => hom_of_le (CompleteLattice.le_Sup _ _ (Set.mem_range_self _)) } }
+def colimit_cocone (F : J ⥤ α) : ColimitCocone F where
+  Cocone := { x := supr F.obj, ι := { app := fun j => homOfLe (CompleteLattice.le_Sup _ _ (Set.mem_range_self _)) } }
   IsColimit :=
     { desc := fun s =>
-        hom_of_le
+        homOfLe
           (CompleteLattice.Sup_le _ _
             (by
               rintro _ ⟨j, rfl⟩
               exact (s.ι.app j).le)) }
 
-instance (priority := 100) has_limits_of_complete_lattice : has_limits α where
+instance (priority := 100) has_limits_of_complete_lattice : HasLimits α where
   HasLimitsOfShape := fun J 𝒥 => { HasLimit := fun F => has_limit.mk (limit_cone F) }
 
-instance (priority := 100) has_colimits_of_complete_lattice : has_colimits α where
+instance (priority := 100) has_colimits_of_complete_lattice : HasColimits α where
   HasColimitsOfShape := fun J 𝒥 => { HasColimit := fun F => has_colimit.mk (colimit_cocone F) }
 
 /-- The limit of a functor into a complete lattice is the infimum of the objects in the image.
 -/
 theorem limit_eq_infi (F : J ⥤ α) : limit F = infi F.obj :=
-  (is_limit.cone_point_unique_up_to_iso (limit.is_limit F) (limit_cone F).IsLimit).to_eq
+  (IsLimit.conePointUniqueUpToIso (limit.isLimit F) (limitCone F).IsLimit).to_eq
 
 /-- The colimit of a functor into a complete lattice is the supremum of the objects in the image.
 -/
 theorem colimit_eq_supr (F : J ⥤ α) : colimit F = supr F.obj :=
-  (is_colimit.cocone_point_unique_up_to_iso (colimit.is_colimit F) (colimit_cocone F).IsColimit).to_eq
+  (IsColimit.coconePointUniqueUpToIso (colimit.isColimit F) (colimitCocone F).IsColimit).to_eq
 
 end CategoryTheory.Limits.CompleteLattice
 

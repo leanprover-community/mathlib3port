@@ -13,7 +13,7 @@ unsafe def repeat_with_results {α : Type} (t : tactic α) : tactic (List α) :=
 
 unsafe def repeat_count {α : Type} (t : tactic α) : tactic ℕ := do
   let r ← repeat_with_results t
-  return r.length
+  return r
 
 end Tactic
 
@@ -30,16 +30,16 @@ unsafe def repeat_with_results {α : Type} (t : tactic α) : tactic (List α) :=
 
 unsafe def repeat_count {α : Type} (t : tactic α) : tactic ℕ := do
   let r ← repeat_with_results t
-  return r.length
+  return r
 
 unsafe def slice (a b : ℕ) : conv Unit := do
-  repeat <| to_expr (pquote.1 category.assoc) >>= fun e => tactic.rewrite_target e { symm := ff }
+  repeat <| to_expr (pquote.1 Category.assoc) >>= fun e => tactic.rewrite_target e { symm := ff }
   iterate_range (a - 1) (a - 1) do
       conv.congr
       conv.skip
-  let k ← repeat_count <| to_expr (pquote.1 category.assoc) >>= fun e => tactic.rewrite_target e { symm := tt }
+  let k ← repeat_count <| to_expr (pquote.1 Category.assoc) >>= fun e => tactic.rewrite_target e { symm := true }
   iterate_range (k + 1 + a - b) (k + 1 + a - b) conv.congr
-  repeat <| to_expr (pquote.1 category.assoc) >>= fun e => tactic.rewrite_target e { symm := ff }
+  repeat <| to_expr (pquote.1 Category.assoc) >>= fun e => tactic.rewrite_target e { symm := ff }
   rotate 1
   iterate_exactly' (k + 1 + a - b) conv.skip
 

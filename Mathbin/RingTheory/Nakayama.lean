@@ -43,7 +43,7 @@ namespace Submodule
 /-- *Nakayama's Lemma** - A slightly more general version of (2) in
 [Stacks 00DV](https://stacks.math.columbia.edu/tag/00DV).
 See also `eq_bot_of_le_smul_of_le_jacobson_bot` for the special case when `J = ⊥`.  -/
-theorem eq_smul_of_le_smul_of_le_jacobson {I J : Ideal R} {N : Submodule R M} (hN : N.fg) (hIN : N ≤ I • N)
+theorem eq_smul_of_le_smul_of_le_jacobson {I J : Ideal R} {N : Submodule R M} (hN : N.Fg) (hIN : N ≤ I • N)
     (hIjac : I ≤ jacobson J) : N = J • N := by
   refine' le_antisymmₓ _ (Submodule.smul_le.2 fun _ _ _ => Submodule.smul_mem _ _)
   intro n hn
@@ -58,14 +58,14 @@ theorem eq_smul_of_le_smul_of_le_jacobson {I J : Ideal R} {N : Submodule R M} (h
 [Stacks 00DV](https://stacks.math.columbia.edu/tag/00DV).
 See also `eq_smul_of_le_smul_of_le_jacobson` for a generalisation
 to the `jacobson` of any ideal -/
-theorem eq_bot_of_le_smul_of_le_jacobson_bot (I : Ideal R) (N : Submodule R M) (hN : N.fg) (hIN : N ≤ I • N)
+theorem eq_bot_of_le_smul_of_le_jacobson_bot (I : Ideal R) (N : Submodule R M) (hN : N.Fg) (hIN : N ≤ I • N)
     (hIjac : I ≤ jacobson ⊥) : N = ⊥ := by
   rw [eq_smul_of_le_smul_of_le_jacobson hN hIN hIjac, Submodule.bot_smul]
 
 /-- *Nakayama's Lemma** - A slightly more general version of (4) in
 [Stacks 00DV](https://stacks.math.columbia.edu/tag/00DV).
 See also `smul_sup_eq_of_le_smul_of_le_jacobson_bot` for the special case when `J = ⊥`.  -/
-theorem smul_sup_eq_smul_sup_of_le_smul_of_le_jacobson {I J : Ideal R} {N N' : Submodule R M} (hN' : N'.fg)
+theorem smul_sup_eq_smul_sup_of_le_smul_of_le_jacobson {I J : Ideal R} {N N' : Submodule R M} (hN' : N'.Fg)
     (hIJ : I ≤ jacobson J) (hNN : N⊔N' ≤ N⊔I • N') : N⊔I • N' = N⊔J • N' := by
   have hNN' : N⊔N' = N⊔I • N' :=
     le_antisymmₓ hNN (sup_le_sup_left (Submodule.smul_le.2 fun _ _ _ => Submodule.smul_mem _ _) _)
@@ -76,7 +76,7 @@ theorem smul_sup_eq_smul_sup_of_le_smul_of_le_jacobson {I J : Ideal R} {N N' : S
   have :=
     @Submodule.eq_smul_of_le_smul_of_le_jacobson _ _ _ _ _ I J (N'.map N.mkq) (hN'.map _)
       (by
-        rw [← map_smul'', this] <;> exact le_reflₓ _)
+        rw [← map_smul'', this] <;> exact le_rfl)
       hIJ
   rw [← map_smul'', ← h_comap.eq_iff, comap_map_eq, comap_map_eq, Submodule.ker_mkq, sup_comm, hNN'] at this
   rw [this, sup_comm]
@@ -85,7 +85,7 @@ theorem smul_sup_eq_smul_sup_of_le_smul_of_le_jacobson {I J : Ideal R} {N N' : S
 [Stacks 00DV](https://stacks.math.columbia.edu/tag/00DV).
 See also `smul_sup_eq_smul_sup_of_le_smul_of_le_jacobson` for a generalisation
 to the `jacobson` of any ideal -/
-theorem smul_sup_le_of_le_smul_of_le_jacobson_bot {I : Ideal R} {N N' : Submodule R M} (hN' : N'.fg)
+theorem smul_sup_le_of_le_smul_of_le_jacobson_bot {I : Ideal R} {N N' : Submodule R M} (hN' : N'.Fg)
     (hIJ : I ≤ jacobson ⊥) (hNN : N⊔N' ≤ N⊔I • N') : I • N' ≤ N := by
   rw [← sup_eq_left, smul_sup_eq_smul_sup_of_le_smul_of_le_jacobson hN' hIJ hNN, bot_smul, sup_bot_eq]
 

@@ -17,9 +17,9 @@ noncomputable section
 instance : ConditionallyCompleteLinearOrder ℤ :=
   { Int.linearOrder, LinearOrderₓ.toLattice with
     sup := fun s =>
-      if h : s.nonempty ∧ BddAbove s then greatest_of_bdd (Classical.some h.2) (Classical.some_spec h.2) h.1 else 0,
+      if h : s.Nonempty ∧ BddAbove s then greatestOfBdd (Classical.some h.2) (Classical.some_spec h.2) h.1 else 0,
     inf := fun s =>
-      if h : s.nonempty ∧ BddBelow s then least_of_bdd (Classical.some h.2) (Classical.some_spec h.2) h.1 else 0,
+      if h : s.Nonempty ∧ BddBelow s then leastOfBdd (Classical.some h.2) (Classical.some_spec h.2) h.1 else 0,
     le_cSup := by
       intro s n hs hns
       have : s.nonempty ∧ BddAbove s := ⟨⟨n, hns⟩, hs⟩
@@ -44,7 +44,7 @@ instance : ConditionallyCompleteLinearOrder ℤ :=
 namespace Int
 
 theorem cSup_eq_greatest_of_bdd {s : Set ℤ} [DecidablePred (· ∈ s)] (b : ℤ) (Hb : ∀, ∀ z ∈ s, ∀, z ≤ b)
-    (Hinh : ∃ z : ℤ, z ∈ s) : Sup s = greatest_of_bdd b Hb Hinh := by
+    (Hinh : ∃ z : ℤ, z ∈ s) : sup s = greatestOfBdd b Hb Hinh := by
   convert dif_pos _ using 1
   · convert coe_greatest_of_bdd_eq _ (Classical.some_spec (⟨b, Hb⟩ : BddAbove s)) _
     
@@ -52,18 +52,18 @@ theorem cSup_eq_greatest_of_bdd {s : Set ℤ} [DecidablePred (· ∈ s)] (b : �
     
 
 @[simp]
-theorem cSup_empty : Sup (∅ : Set ℤ) = 0 :=
+theorem cSup_empty : sup (∅ : Set ℤ) = 0 :=
   dif_neg
     (by
       simp )
 
-theorem cSup_of_not_bdd_above {s : Set ℤ} (h : ¬BddAbove s) : Sup s = 0 :=
+theorem cSup_of_not_bdd_above {s : Set ℤ} (h : ¬BddAbove s) : sup s = 0 :=
   dif_neg
     (by
       simp [h])
 
 theorem cInf_eq_least_of_bdd {s : Set ℤ} [DecidablePred (· ∈ s)] (b : ℤ) (Hb : ∀, ∀ z ∈ s, ∀, b ≤ z)
-    (Hinh : ∃ z : ℤ, z ∈ s) : Inf s = least_of_bdd b Hb Hinh := by
+    (Hinh : ∃ z : ℤ, z ∈ s) : inf s = leastOfBdd b Hb Hinh := by
   convert dif_pos _ using 1
   · convert coe_least_of_bdd_eq _ (Classical.some_spec (⟨b, Hb⟩ : BddBelow s)) _
     
@@ -71,21 +71,21 @@ theorem cInf_eq_least_of_bdd {s : Set ℤ} [DecidablePred (· ∈ s)] (b : ℤ) 
     
 
 @[simp]
-theorem cInf_empty : Inf (∅ : Set ℤ) = 0 :=
+theorem cInf_empty : inf (∅ : Set ℤ) = 0 :=
   dif_neg
     (by
       simp )
 
-theorem cInf_of_not_bdd_below {s : Set ℤ} (h : ¬BddBelow s) : Inf s = 0 :=
+theorem cInf_of_not_bdd_below {s : Set ℤ} (h : ¬BddBelow s) : inf s = 0 :=
   dif_neg
     (by
       simp [h])
 
-theorem cSup_mem {s : Set ℤ} (h1 : s.nonempty) (h2 : BddAbove s) : Sup s ∈ s := by
+theorem cSup_mem {s : Set ℤ} (h1 : s.Nonempty) (h2 : BddAbove s) : sup s ∈ s := by
   convert (greatest_of_bdd _ (Classical.some_spec h2) h1).2.1
   exact dif_pos ⟨h1, h2⟩
 
-theorem cInf_mem {s : Set ℤ} (h1 : s.nonempty) (h2 : BddBelow s) : Inf s ∈ s := by
+theorem cInf_mem {s : Set ℤ} (h1 : s.Nonempty) (h2 : BddBelow s) : inf s ∈ s := by
   convert (least_of_bdd _ (Classical.some_spec h2) h1).2.1
   exact dif_pos ⟨h1, h2⟩
 

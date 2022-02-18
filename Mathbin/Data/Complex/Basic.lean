@@ -73,6 +73,13 @@ instance : CanLift ℂ ℝ where
   coe := coe
   prf := fun z hz => ⟨z.re, ext rfl hz.symm⟩
 
+/-- The product of a set on the real axis and a set on the imaginary axis of the complex plane,
+denoted by `s ×ℂ t`. -/
+def _root_.set.re_prod_im (s t : Set ℝ) : Set ℂ :=
+  re ⁻¹' s ∩ im ⁻¹' t
+
+infixl:72 " ×ℂ " => Set.ReProdIm
+
 instance : Zero ℂ :=
   ⟨(0 : ℝ)⟩
 
@@ -214,11 +221,11 @@ def I : ℂ :=
   ⟨0, 1⟩
 
 @[simp]
-theorem I_re : I.re = 0 :=
+theorem I_re : i.re = 0 :=
   rfl
 
 @[simp]
-theorem I_im : I.im = 1 :=
+theorem I_im : i.im = 1 :=
   rfl
 
 @[simp]
@@ -230,7 +237,7 @@ theorem I_mul (z : ℂ) : I * z = ⟨-z.im, z.re⟩ :=
   ext_iff.2 <| by
     simp
 
-theorem I_ne_zero : (I : ℂ) ≠ 0 :=
+theorem I_ne_zero : (i : ℂ) ≠ 0 :=
   mt (congr_argₓ im) zero_ne_one.symm
 
 theorem mk_eq_add_mul_I (a b : ℝ) : Complex.mk a b = a + b * I :=
@@ -279,7 +286,7 @@ def re_add_group_hom : ℂ →+ ℝ where
   map_add' := add_re
 
 @[simp]
-theorem coe_re_add_group_hom : (re_add_group_hom : ℂ → ℝ) = re :=
+theorem coe_re_add_group_hom : (reAddGroupHom : ℂ → ℝ) = re :=
   rfl
 
 /-- The "imaginary part" map, considered as an additive group homomorphism. -/
@@ -289,7 +296,7 @@ def im_add_group_hom : ℂ →+ ℝ where
   map_add' := add_im
 
 @[simp]
-theorem coe_im_add_group_hom : (im_add_group_hom : ℂ → ℝ) = im :=
+theorem coe_im_add_group_hom : (imAddGroupHom : ℂ → ℝ) = im :=
   rfl
 
 @[simp]
@@ -328,7 +335,7 @@ theorem conj_of_real (r : ℝ) : conj (r : ℂ) = r :=
     simp [conj]
 
 @[simp]
-theorem conj_I : conj I = -I :=
+theorem conj_I : conj i = -I :=
   ext_iff.2 <| by
     simp
 
@@ -377,69 +384,69 @@ def norm_sq : ℂ →*₀ ℝ where
     dsimp
     ring
 
-theorem norm_sq_apply (z : ℂ) : norm_sq z = z.re * z.re + z.im * z.im :=
+theorem norm_sq_apply (z : ℂ) : normSq z = z.re * z.re + z.im * z.im :=
   rfl
 
 @[simp]
-theorem norm_sq_of_real (r : ℝ) : norm_sq r = r * r := by
+theorem norm_sq_of_real (r : ℝ) : normSq r = r * r := by
   simp [norm_sq]
 
 @[simp]
-theorem norm_sq_mk (x y : ℝ) : norm_sq ⟨x, y⟩ = x * x + y * y :=
+theorem norm_sq_mk (x y : ℝ) : normSq ⟨x, y⟩ = x * x + y * y :=
   rfl
 
-theorem norm_sq_add_mul_I (x y : ℝ) : norm_sq (x + y * I) = x ^ 2 + y ^ 2 := by
+theorem norm_sq_add_mul_I (x y : ℝ) : normSq (x + y * I) = x ^ 2 + y ^ 2 := by
   rw [← mk_eq_add_mul_I, norm_sq_mk, sq, sq]
 
-theorem norm_sq_eq_conj_mul_self {z : ℂ} : (norm_sq z : ℂ) = conj z * z := by
+theorem norm_sq_eq_conj_mul_self {z : ℂ} : (normSq z : ℂ) = conj z * z := by
   ext <;> simp [norm_sq, mul_comm]
 
 @[simp]
-theorem norm_sq_zero : norm_sq 0 = 0 :=
-  norm_sq.map_zero
+theorem norm_sq_zero : normSq 0 = 0 :=
+  normSq.map_zero
 
 @[simp]
-theorem norm_sq_one : norm_sq 1 = 1 :=
-  norm_sq.map_one
+theorem norm_sq_one : normSq 1 = 1 :=
+  normSq.map_one
 
 @[simp]
-theorem norm_sq_I : norm_sq I = 1 := by
+theorem norm_sq_I : normSq i = 1 := by
   simp [norm_sq]
 
-theorem norm_sq_nonneg (z : ℂ) : 0 ≤ norm_sq z :=
+theorem norm_sq_nonneg (z : ℂ) : 0 ≤ normSq z :=
   add_nonneg (mul_self_nonneg _) (mul_self_nonneg _)
 
-theorem norm_sq_eq_zero {z : ℂ} : norm_sq z = 0 ↔ z = 0 :=
+theorem norm_sq_eq_zero {z : ℂ} : normSq z = 0 ↔ z = 0 :=
   ⟨fun h =>
     ext (eq_zero_of_mul_self_add_mul_self_eq_zero h)
       (eq_zero_of_mul_self_add_mul_self_eq_zero <| (add_commₓ _ _).trans h),
     fun h => h.symm ▸ norm_sq_zero⟩
 
 @[simp]
-theorem norm_sq_pos {z : ℂ} : 0 < norm_sq z ↔ z ≠ 0 :=
+theorem norm_sq_pos {z : ℂ} : 0 < normSq z ↔ z ≠ 0 :=
   (norm_sq_nonneg z).lt_iff_ne.trans <| not_congr (eq_comm.trans norm_sq_eq_zero)
 
 @[simp]
-theorem norm_sq_neg (z : ℂ) : norm_sq (-z) = norm_sq z := by
+theorem norm_sq_neg (z : ℂ) : normSq (-z) = normSq z := by
   simp [norm_sq]
 
 @[simp]
-theorem norm_sq_conj (z : ℂ) : norm_sq (conj z) = norm_sq z := by
+theorem norm_sq_conj (z : ℂ) : normSq (conj z) = normSq z := by
   simp [norm_sq]
 
-theorem norm_sq_mul (z w : ℂ) : norm_sq (z * w) = norm_sq z * norm_sq w :=
-  norm_sq.map_mul z w
+theorem norm_sq_mul (z w : ℂ) : normSq (z * w) = normSq z * normSq w :=
+  normSq.map_mul z w
 
-theorem norm_sq_add (z w : ℂ) : norm_sq (z + w) = norm_sq z + norm_sq w + 2 * (z * conj w).re := by
+theorem norm_sq_add (z w : ℂ) : normSq (z + w) = normSq z + normSq w + 2 * (z * conj w).re := by
   dsimp [norm_sq] <;> ring
 
-theorem re_sq_le_norm_sq (z : ℂ) : z.re * z.re ≤ norm_sq z :=
+theorem re_sq_le_norm_sq (z : ℂ) : z.re * z.re ≤ normSq z :=
   le_add_of_nonneg_right (mul_self_nonneg _)
 
-theorem im_sq_le_norm_sq (z : ℂ) : z.im * z.im ≤ norm_sq z :=
+theorem im_sq_le_norm_sq (z : ℂ) : z.im * z.im ≤ normSq z :=
   le_add_of_nonneg_left (mul_self_nonneg _)
 
-theorem mul_conj (z : ℂ) : z * conj z = norm_sq z :=
+theorem mul_conj (z : ℂ) : z * conj z = normSq z :=
   ext_iff.2 <| by
     simp [norm_sq, mul_comm, sub_eq_neg_add, add_commₓ]
 
@@ -452,7 +459,7 @@ def of_real : ℝ →+* ℂ :=
   ⟨coe, of_real_one, of_real_mul, of_real_zero, of_real_add⟩
 
 @[simp]
-theorem of_real_eq_coe (r : ℝ) : of_real r = r :=
+theorem of_real_eq_coe (r : ℝ) : ofReal r = r :=
   rfl
 
 @[simp]
@@ -480,25 +487,25 @@ theorem sub_conj (z : ℂ) : z - conj z = (2 * z.im : ℝ) * I :=
   ext_iff.2 <| by
     simp [two_mul, sub_eq_add_neg]
 
-theorem norm_sq_sub (z w : ℂ) : norm_sq (z - w) = norm_sq z + norm_sq w - 2 * (z * conj w).re := by
+theorem norm_sq_sub (z w : ℂ) : normSq (z - w) = normSq z + normSq w - 2 * (z * conj w).re := by
   rw [sub_eq_add_neg, norm_sq_add]
-  simp only [RingHom.map_neg, mul_neg_eq_neg_mul_symm, neg_re, Tactic.Ring.add_neg_eq_sub, norm_sq_neg]
+  simp only [RingHom.map_neg, mul_neg, neg_re, Tactic.Ring.add_neg_eq_sub, norm_sq_neg]
 
 /-! ### Inversion -/
 
 
 noncomputable instance : Inv ℂ :=
-  ⟨fun z => conj z * ((norm_sq z)⁻¹ : ℝ)⟩
+  ⟨fun z => conj z * ((normSq z)⁻¹ : ℝ)⟩
 
-theorem inv_def (z : ℂ) : z⁻¹ = conj z * ((norm_sq z)⁻¹ : ℝ) :=
+theorem inv_def (z : ℂ) : z⁻¹ = conj z * ((normSq z)⁻¹ : ℝ) :=
   rfl
 
 @[simp]
-theorem inv_re (z : ℂ) : z⁻¹.re = z.re / norm_sq z := by
+theorem inv_re (z : ℂ) : z⁻¹.re = z.re / normSq z := by
   simp [inv_def, division_def]
 
 @[simp]
-theorem inv_im (z : ℂ) : z⁻¹.im = -z.im / norm_sq z := by
+theorem inv_im (z : ℂ) : z⁻¹.im = -z.im / normSq z := by
   simp [inv_def, division_def]
 
 @[simp, norm_cast]
@@ -527,19 +534,19 @@ theorem I_zpow_bit0 (n : ℤ) : I ^ bit0 n = -1 ^ n := by
 theorem I_zpow_bit1 (n : ℤ) : I ^ bit1 n = -1 ^ n * I := by
   rw [zpow_bit1', I_mul_I]
 
-theorem div_re (z w : ℂ) : (z / w).re = z.re * w.re / norm_sq w + z.im * w.im / norm_sq w := by
+theorem div_re (z w : ℂ) : (z / w).re = z.re * w.re / normSq w + z.im * w.im / normSq w := by
   simp [div_eq_mul_inv, mul_assoc, sub_eq_add_neg]
 
-theorem div_im (z w : ℂ) : (z / w).im = z.im * w.re / norm_sq w - z.re * w.im / norm_sq w := by
+theorem div_im (z w : ℂ) : (z / w).im = z.im * w.re / normSq w - z.re * w.im / normSq w := by
   simp [div_eq_mul_inv, mul_assoc, sub_eq_add_neg, add_commₓ]
 
 @[simp, norm_cast]
 theorem of_real_div (r s : ℝ) : ((r / s : ℝ) : ℂ) = r / s :=
-  of_real.map_div r s
+  ofReal.map_div r s
 
 @[simp, norm_cast]
 theorem of_real_zpow (r : ℝ) (n : ℤ) : ((r ^ n : ℝ) : ℂ) = (r : ℂ) ^ n :=
-  of_real.map_zpow r n
+  ofReal.map_zpow r n
 
 @[simp]
 theorem div_I (z : ℂ) : z / I = -(z * I) :=
@@ -551,19 +558,19 @@ theorem inv_I : I⁻¹ = -I := by
   simp [inv_eq_one_div]
 
 @[simp]
-theorem norm_sq_inv (z : ℂ) : norm_sq z⁻¹ = (norm_sq z)⁻¹ :=
-  norm_sq.map_inv z
+theorem norm_sq_inv (z : ℂ) : normSq z⁻¹ = (normSq z)⁻¹ :=
+  normSq.map_inv z
 
 @[simp]
-theorem norm_sq_div (z w : ℂ) : norm_sq (z / w) = norm_sq z / norm_sq w :=
-  norm_sq.map_div z w
+theorem norm_sq_div (z w : ℂ) : normSq (z / w) = normSq z / normSq w :=
+  normSq.map_div z w
 
 /-! ### Cast lemmas -/
 
 
 @[simp, norm_cast]
 theorem of_real_nat_cast (n : ℕ) : ((n : ℝ) : ℂ) = n :=
-  map_nat_cast of_real n
+  map_nat_cast ofReal n
 
 @[simp, norm_cast]
 theorem nat_cast_re (n : ℕ) : (n : ℂ).re = n := by
@@ -575,7 +582,7 @@ theorem nat_cast_im (n : ℕ) : (n : ℂ).im = 0 := by
 
 @[simp, norm_cast]
 theorem of_real_int_cast (n : ℤ) : ((n : ℝ) : ℂ) = n :=
-  of_real.map_int_cast n
+  ofReal.map_int_cast n
 
 @[simp, norm_cast]
 theorem int_cast_re (n : ℤ) : (n : ℂ).re = n := by
@@ -587,7 +594,7 @@ theorem int_cast_im (n : ℤ) : (n : ℂ).im = 0 := by
 
 @[simp, norm_cast]
 theorem of_real_rat_cast (n : ℚ) : ((n : ℝ) : ℂ) = n :=
-  of_real.map_rat_cast n
+  ofReal.map_rat_cast n
 
 @[simp, norm_cast]
 theorem rat_cast_re (q : ℚ) : (q : ℂ).re = q := by
@@ -619,7 +626,7 @@ theorem im_eq_sub_conj (z : ℂ) : (z.im : ℂ) = (z - conj z) / (2 * I) := by
 /-- The complex absolute value function, defined as the square root of the norm squared. -/
 @[pp_nodot]
 noncomputable def abs (z : ℂ) : ℝ :=
-  (norm_sq z).sqrt
+  (normSq z).sqrt
 
 local notation "abs'" => HasAbs.abs
 
@@ -637,10 +644,10 @@ theorem abs_of_nat (n : ℕ) : Complex.abs n = n :=
     _ = _ := abs_of_nonneg (Nat.cast_nonneg n)
     
 
-theorem mul_self_abs (z : ℂ) : abs z * abs z = norm_sq z :=
+theorem mul_self_abs (z : ℂ) : abs z * abs z = normSq z :=
   Real.mul_self_sqrt (norm_sq_nonneg _)
 
-theorem sq_abs (z : ℂ) : abs z ^ 2 = norm_sq z :=
+theorem sq_abs (z : ℂ) : abs z ^ 2 = normSq z :=
   Real.sq_sqrt (norm_sq_nonneg _)
 
 @[simp]
@@ -660,7 +667,7 @@ theorem abs_one : abs 1 = 1 := by
   simp [abs]
 
 @[simp]
-theorem abs_I : abs I = 1 := by
+theorem abs_I : abs i = 1 := by
   simp [abs]
 
 @[simp]
@@ -732,7 +739,7 @@ open IsAbsoluteValue
 
 @[simp]
 theorem abs_abs (z : ℂ) : abs (abs z) = abs z :=
-  _root_.abs_of_nonneg (abs_nonneg _)
+  abs_of_nonneg (abs_nonneg _)
 
 @[simp]
 theorem abs_pos {z : ℂ} : 0 < abs z ↔ z ≠ 0 :=
@@ -782,7 +789,7 @@ theorem abs_cast_nat (n : ℕ) : abs (n : ℂ) = n := by
 theorem int_cast_abs (n : ℤ) : ↑(abs n) = abs n := by
   rw [← of_real_int_cast, abs_of_real, Int.cast_abs]
 
-theorem norm_sq_eq_abs (x : ℂ) : norm_sq x = abs x ^ 2 := by
+theorem norm_sq_eq_abs (x : ℂ) : normSq x = abs x ^ 2 := by
   rw [abs, sq, Real.mul_self_sqrt (norm_sq_nonneg _)]
 
 /-- We put a partial order on ℂ so that `z ≤ w` exactly if `w - z` is real and nonnegative.
@@ -900,9 +907,9 @@ theorem is_cau_seq_abs {f : ℕ → ℂ} (hf : IsCauSeq abs f) : IsCauSeq abs' (
 
 /-- The limit of a Cauchy sequence of complex numbers. -/
 noncomputable def lim_aux (f : CauSeq ℂ abs) : ℂ :=
-  ⟨CauSeq.lim (cau_seq_re f), CauSeq.lim (cau_seq_im f)⟩
+  ⟨CauSeq.lim (cauSeqRe f), CauSeq.lim (cauSeqIm f)⟩
 
-theorem equiv_lim_aux (f : CauSeq ℂ abs) : f ≈ CauSeq.const abs (lim_aux f) := fun ε ε0 =>
+theorem equiv_lim_aux (f : CauSeq ℂ abs) : f ≈ CauSeq.const abs (limAux f) := fun ε ε0 =>
   (exists_forall_ge_and (CauSeq.equiv_lim ⟨_, is_cau_seq_re f⟩ _ (half_pos ε0))
         (CauSeq.equiv_lim ⟨_, is_cau_seq_im f⟩ _ (half_pos ε0))).imp
     fun i H j ij => by
@@ -913,15 +920,15 @@ theorem equiv_lim_aux (f : CauSeq ℂ abs) : f ≈ CauSeq.const abs (lim_aux f) 
     rwa [add_halves] at this
 
 noncomputable instance : CauSeq.IsComplete ℂ abs :=
-  ⟨fun f => ⟨lim_aux f, equiv_lim_aux f⟩⟩
+  ⟨fun f => ⟨limAux f, equiv_lim_aux f⟩⟩
 
 open CauSeq
 
-theorem lim_eq_lim_im_add_lim_re (f : CauSeq ℂ abs) : limₓ f = ↑(limₓ (cau_seq_re f)) + ↑(limₓ (cau_seq_im f)) * I :=
+theorem lim_eq_lim_im_add_lim_re (f : CauSeq ℂ abs) : limₓ f = ↑(limₓ (cauSeqRe f)) + ↑(limₓ (cauSeqIm f)) * I :=
   lim_eq_of_equiv_const <|
     calc
       f ≈ _ := equiv_lim_aux f
-      _ = CauSeq.const abs (↑(limₓ (cau_seq_re f)) + ↑(limₓ (cau_seq_im f)) * I) :=
+      _ = CauSeq.const abs (↑(limₓ (cauSeqRe f)) + ↑(limₓ (cauSeqIm f)) * I) :=
         CauSeq.ext fun _ =>
           Complex.ext
             (by
@@ -930,10 +937,10 @@ theorem lim_eq_lim_im_add_lim_re (f : CauSeq ℂ abs) : limₓ f = ↑(limₓ (c
               simp [lim_aux, cau_seq_im])
       
 
-theorem lim_re (f : CauSeq ℂ abs) : limₓ (cau_seq_re f) = (limₓ f).re := by
+theorem lim_re (f : CauSeq ℂ abs) : limₓ (cauSeqRe f) = (limₓ f).re := by
   rw [lim_eq_lim_im_add_lim_re] <;> simp
 
-theorem lim_im (f : CauSeq ℂ abs) : limₓ (cau_seq_im f) = (limₓ f).im := by
+theorem lim_im (f : CauSeq ℂ abs) : limₓ (cauSeqIm f) = (limₓ f).im := by
   rw [lim_eq_lim_im_add_lim_re] <;> simp
 
 theorem is_cau_seq_conj (f : CauSeq ℂ abs) : IsCauSeq abs fun n => conj (f n) := fun ε ε0 =>
@@ -945,7 +952,7 @@ theorem is_cau_seq_conj (f : CauSeq ℂ abs) : IsCauSeq abs fun n => conj (f n) 
 noncomputable def cau_seq_conj (f : CauSeq ℂ abs) : CauSeq ℂ abs :=
   ⟨_, is_cau_seq_conj f⟩
 
-theorem lim_conj (f : CauSeq ℂ abs) : limₓ (cau_seq_conj f) = conj (limₓ f) :=
+theorem lim_conj (f : CauSeq ℂ abs) : limₓ (cauSeqConj f) = conj (limₓ f) :=
   Complex.ext
     (by
       simp [cau_seq_conj, (lim_re _).symm, cau_seq_re])
@@ -956,18 +963,18 @@ theorem lim_conj (f : CauSeq ℂ abs) : limₓ (cau_seq_conj f) = conj (limₓ f
 noncomputable def cau_seq_abs (f : CauSeq ℂ abs) : CauSeq ℝ abs' :=
   ⟨_, is_cau_seq_abs f.2⟩
 
-theorem lim_abs (f : CauSeq ℂ abs) : limₓ (cau_seq_abs f) = abs (limₓ f) :=
+theorem lim_abs (f : CauSeq ℂ abs) : limₓ (cauSeqAbs f) = abs (limₓ f) :=
   lim_eq_of_equiv_const fun ε ε0 =>
     let ⟨i, hi⟩ := equiv_lim f ε ε0
     ⟨i, fun j hj => lt_of_le_of_ltₓ (abs_abs_sub_le_abs_sub _ _) (hi j hj)⟩
 
 @[simp, norm_cast]
 theorem of_real_prod {α : Type _} (s : Finset α) (f : α → ℝ) : ((∏ i in s, f i : ℝ) : ℂ) = ∏ i in s, (f i : ℂ) :=
-  RingHom.map_prod of_real _ _
+  RingHom.map_prod ofReal _ _
 
 @[simp, norm_cast]
 theorem of_real_sum {α : Type _} (s : Finset α) (f : α → ℝ) : ((∑ i in s, f i : ℝ) : ℂ) = ∑ i in s, (f i : ℂ) :=
-  RingHom.map_sum of_real _ _
+  RingHom.map_sum ofReal _ _
 
 end Complex
 

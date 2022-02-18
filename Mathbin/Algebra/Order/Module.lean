@@ -120,8 +120,8 @@ variable (M)
 def OrderIso.smulLeftDual {c : k} (hc : c < 0) : M ≃o OrderDual M where
   toFun := fun b => OrderDual.toDual (c • b)
   invFun := fun b => c⁻¹ • OrderDual.ofDual b
-  left_inv := inv_smul_smul₀ hc.ne
-  right_inv := smul_inv_smul₀ hc.ne
+  left_inv := inv_smul_smul₀ hc.Ne
+  right_inv := smul_inv_smul₀ hc.Ne
   map_rel_iff' := fun b₁ b₂ => smul_le_smul_iff_of_neg hc
 
 variable {M} [OrderedAddCommGroup N] [Module k N] [OrderedSmul k N]

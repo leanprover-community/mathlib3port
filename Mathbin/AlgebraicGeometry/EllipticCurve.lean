@@ -76,7 +76,7 @@ variable {R : Type _} [CommRingₓ R] (E : EllipticCurve R)
   [the LMFDB page on discriminants](https://www.lmfdb.org/knowledge/show/ec.discriminant)
   for more discussion. -/
 def disc : R :=
-  disc_aux E.a1 E.a2 E.a3 E.a4 E.a6
+  discAux E.a1 E.a2 E.a3 E.a4 E.a6
 
 theorem disc_is_unit : IsUnit E.disc := by
   convert Units.is_unit E.disc_unit
@@ -84,7 +84,7 @@ theorem disc_is_unit : IsUnit E.disc := by
 
 /-- The j-invariant of an elliptic curve. -/
 def j :=
-  (-48 * E.a4 + (-24 * E.a1 * E.a3 + (16 * E.a2 ^ 2 + 8 * E.a1 ^ 2 * E.a2 + E.a1 ^ 4))) ^ 3 * (E.disc_unit⁻¹ : (R)ˣ)
+  (-48 * E.a4 + (-24 * E.a1 * E.a3 + (16 * E.a2 ^ 2 + 8 * E.a1 ^ 2 * E.a2 + E.a1 ^ 4))) ^ 3 * (E.discUnit⁻¹ : (R)ˣ)
 
 end EllipticCurve
 

@@ -31,11 +31,11 @@ namespace CategoryTheory
 
 open Category Limits
 
-variable {C : Type u} [category.{v₁} C]
+variable {C : Type u} [Category.{v₁} C]
 
-variable {D : Type u₂} [category.{u} D]
+variable {D : Type u₂} [Category.{u} D]
 
-variable {E : Type u} [category.{v₂} E]
+variable {E : Type u} [Category.{v₂} E]
 
 /-- If `X × -` preserves colimits in `D` for any `X : D`, then the product functor `F ⨯ -` for
 `F : C ⥤ D` also preserves colimits.
@@ -47,8 +47,8 @@ That is, even with a formalised proof of the general statement, there would stil
 work to convert to this version: namely, the natural isomorphism
 `(evaluation C D).obj k ⋙ prod.functor.obj (F.obj k) ≅ prod.functor.obj F ⋙ (evaluation C D).obj k`
 -/
-def functor_category.prod_preserves_colimits [has_binary_products D] [has_colimits D]
-    [∀ X : D, preserves_colimits (prod.functor.obj X)] (F : C ⥤ D) : preserves_colimits (prod.functor.obj F) where
+def functor_category.prod_preserves_colimits [HasBinaryProducts D] [HasColimits D]
+    [∀ X : D, PreservesColimits (prod.functor.obj X)] (F : C ⥤ D) : PreservesColimits (prod.functor.obj F) where
   PreservesColimitsOfShape := fun J 𝒥 =>
     { PreservesColimit := fun K =>
         { preserves := fun c t => by
@@ -64,8 +64,7 @@ def functor_category.prod_preserves_colimits [has_binary_products D] [has_colimi
               apply prod_comparison_natural ((evaluation C D).obj k) (𝟙 F)
                } }
 
-instance whiskering_left_preserves_limits [has_limits D] (F : C ⥤ E) :
-    preserves_limits ((whiskering_left C E D).obj F) :=
+instance whiskering_left_preserves_limits [HasLimits D] (F : C ⥤ E) : PreservesLimits ((whiskeringLeft C E D).obj F) :=
   ⟨fun J hJ =>
     ⟨fun K =>
       ⟨fun c hc => by
@@ -74,9 +73,9 @@ instance whiskering_left_preserves_limits [has_limits D] (F : C ⥤ E) :
         change is_limit (((evaluation E D).obj (F.obj Y)).mapCone c)
         exact preserves_limit.preserves hc⟩⟩⟩
 
-instance whiskering_right_preserves_limits_of_shape {C : Type u} [category C] {D : Type _} [category.{u} D] {E : Type _}
-    [category.{u} E] {J : Type u} [small_category J] [has_limits_of_shape J D] (F : D ⥤ E)
-    [preserves_limits_of_shape J F] : preserves_limits_of_shape J ((whiskering_right C D E).obj F) :=
+instance whiskering_right_preserves_limits_of_shape {C : Type u} [Category C] {D : Type _} [Category.{u} D] {E : Type _}
+    [Category.{u} E] {J : Type u} [SmallCategory J] [HasLimitsOfShape J D] (F : D ⥤ E) [PreservesLimitsOfShape J F] :
+    PreservesLimitsOfShape J ((whiskeringRight C D E).obj F) :=
   ⟨fun K =>
     ⟨fun c hc => by
       apply evaluation_jointly_reflects_limits
@@ -84,15 +83,14 @@ instance whiskering_right_preserves_limits_of_shape {C : Type u} [category C] {D
       change is_limit (((evaluation _ _).obj k ⋙ F).mapCone c)
       exact preserves_limit.preserves hc⟩⟩
 
-instance whiskering_right_preserves_limits {C : Type u} [category C] {D : Type _} [category.{u} D] {E : Type _}
-    [category.{u} E] (F : D ⥤ E) [has_limits D] [preserves_limits F] :
-    preserves_limits ((whiskering_right C D E).obj F) :=
+instance whiskering_right_preserves_limits {C : Type u} [Category C] {D : Type _} [Category.{u} D] {E : Type _}
+    [Category.{u} E] (F : D ⥤ E) [HasLimits D] [PreservesLimits F] : PreservesLimits ((whiskeringRight C D E).obj F) :=
   ⟨⟩
 
 /-- If `Lan F.op : (Cᵒᵖ ⥤ Type*) ⥤ (Dᵒᵖ ⥤ Type*)` preserves limits of shape `J`, so will `F`. -/
-noncomputable def preserves_limit_of_Lan_presesrves_limit {C D : Type u} [small_category C] [small_category D]
-    (F : C ⥤ D) (J : Type u) [small_category J] [preserves_limits_of_shape J (Lan F.op : _ ⥤ Dᵒᵖ ⥤ Type u)] :
-    preserves_limits_of_shape J F := by
+noncomputable def preserves_limit_of_Lan_presesrves_limit {C D : Type u} [SmallCategory C] [SmallCategory D] (F : C ⥤ D)
+    (J : Type u) [SmallCategory J] [PreservesLimitsOfShape J (lan F.op : _ ⥤ Dᵒᵖ ⥤ Type u)] :
+    PreservesLimitsOfShape J F := by
   apply preserves_limits_of_shape_of_reflects_of_preserves F yoneda
   exact preserves_limits_of_shape_of_nat_iso (comp_yoneda_iso_yoneda_comp_Lan F).symm
   infer_instance

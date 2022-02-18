@@ -191,18 +191,18 @@ theorem right_coset_mem_right_coset {a : α} (ha : a ∈ s) : (s : Set α) *r a 
     simp [mem_right_coset_iff, mul_mem_cancel_right s (s.inv_mem ha)]
 
 @[to_additive eq_add_cosets_of_normal]
-theorem eq_cosets_of_normal (N : s.normal) (g : α) : g *l s = s *r g :=
+theorem eq_cosets_of_normal (N : s.Normal) (g : α) : g *l s = s *r g :=
   Set.ext fun a => by
     simp [mem_left_coset_iff, mem_right_coset_iff] <;> rw [N.mem_comm_iff]
 
 @[to_additive normal_of_eq_add_cosets]
-theorem normal_of_eq_cosets (h : ∀ g : α, g *l s = s *r g) : s.normal :=
+theorem normal_of_eq_cosets (h : ∀ g : α, g *l s = s *r g) : s.Normal :=
   ⟨fun a ha g =>
     show g * a * g⁻¹ ∈ (s : Set α) by
       rw [← mem_right_coset_iff, ← h] <;> exact mem_left_coset g ha⟩
 
 @[to_additive normal_iff_eq_add_cosets]
-theorem normal_iff_eq_cosets : s.normal ↔ ∀ g : α, g *l s = s *r g :=
+theorem normal_iff_eq_cosets : s.Normal ↔ ∀ g : α, g *l s = s *r g :=
   ⟨@eq_cosets_of_normal _ _ s, normal_of_eq_cosets s⟩
 
 @[to_additive left_add_coset_eq_iff]
@@ -259,15 +259,14 @@ theorem left_rel_r_eq_left_coset_equivalence : @Setoidₓ.R _ (QuotientGroup.lef
   exact (left_coset_eq_iff s).symm
 
 @[to_additive]
-instance left_rel_decidable [DecidablePred (· ∈ s)] : DecidableRel (left_rel s).R := fun x y =>
-  ‹DecidablePred (· ∈ s)› _
+instance left_rel_decidable [DecidablePred (· ∈ s)] : DecidableRel (leftRel s).R := fun x y => ‹DecidablePred (· ∈ s)› _
 
 /-- `α ⧸ s` is the quotient type representing the left cosets of `s`.
   If `s` is a normal subgroup, `α ⧸ s` is a group -/
 @[to_additive
       "`α ⧸ s` is the quotient type representing the left cosets of `s`.  If `s` is a\nnormal subgroup, `α ⧸ s` is a group"]
 instance : HasQuotient α (Subgroup α) :=
-  ⟨fun s => Quotientₓ (left_rel s)⟩
+  ⟨fun s => Quotientₓ (leftRel s)⟩
 
 /-- The equivalence relation corresponding to the partition of a group by right cosets of a
 subgroup. -/
@@ -282,7 +281,7 @@ theorem right_rel_r_eq_right_coset_equivalence : @Setoidₓ.R _ (QuotientGroup.r
   exact (right_coset_eq_iff s).symm
 
 @[to_additive]
-instance right_rel_decidable [DecidablePred (· ∈ s)] : DecidableRel (right_rel s).R := fun x y =>
+instance right_rel_decidable [DecidablePred (· ∈ s)] : DecidableRel (rightRel s).R := fun x y =>
   ‹DecidablePred (· ∈ s)› _
 
 end QuotientGroup
@@ -292,8 +291,8 @@ namespace QuotientGroup
 variable [Groupₓ α] {s : Subgroup α}
 
 @[to_additive]
-instance Fintype [Fintype α] (s : Subgroup α) [DecidableRel (left_rel s).R] : Fintype (α ⧸ s) :=
-  Quotientₓ.fintype (left_rel s)
+instance Fintype [Fintype α] (s : Subgroup α) [DecidableRel (leftRel s).R] : Fintype (α ⧸ s) :=
+  Quotientₓ.fintype (leftRel s)
 
 /-- The canonical map from a group `α` to the quotient `α ⧸ s`. -/
 @[to_additive "The canonical map from an `add_group` `α` to the quotient `α ⧸ s`."]
@@ -408,7 +407,7 @@ noncomputable def group_equiv_quotient_times_subgroup : α ≃ (α ⧸ s) × s :
           (_root_.subtype fun x : α => Quotientₓ.mk' x = L) ≃
             _root_.subtype fun x : α => Quotientₓ.mk' x = Quotientₓ.mk' _
         simp [-Quotientₓ.eq']
-    _ ≃ Σ L : α ⧸ s, s := Equivₓ.sigmaCongrRight fun L => left_coset_equiv_subgroup _
+    _ ≃ Σ L : α ⧸ s, s := Equivₓ.sigmaCongrRight fun L => leftCosetEquivSubgroup _
     _ ≃ (α ⧸ s) × s := Equivₓ.sigmaEquivProd _ _
     
 
@@ -420,7 +419,7 @@ of the quotient map `G → G/K`. The classical version is `quotient_equiv_prod_o
       "If `H ≤ K`, then `G/H ≃ G/K × K/H` constructively, using the provided right inverse\nof the quotient map `G → G/K`. The classical version is `quotient_equiv_prod_of_le`.",
   simps]
 def quotient_equiv_prod_of_le' (h_le : s ≤ t) (f : α ⧸ t → α) (hf : Function.RightInverse f QuotientGroup.mk) :
-    α ⧸ s ≃ (α ⧸ t) × t ⧸ s.subgroup_of t where
+    α ⧸ s ≃ (α ⧸ t) × t ⧸ s.subgroupOf t where
   toFun := fun a =>
     ⟨a.map' id fun b c h => h_le h,
       a.map' (fun g : α => ⟨(f (Quotientₓ.mk' g))⁻¹ * g, Quotientₓ.exact' (hf g)⟩) fun b c h => by
@@ -447,12 +446,12 @@ The constructive version is `quotient_equiv_prod_of_le'`. -/
 @[to_additive
       "If `H ≤ K`, then `G/H ≃ G/K × K/H` nonconstructively.\nThe constructive version is `quotient_equiv_prod_of_le'`.",
   simps]
-noncomputable def quotient_equiv_prod_of_le (h_le : s ≤ t) : α ⧸ s ≃ (α ⧸ t) × t ⧸ s.subgroup_of t :=
-  quotient_equiv_prod_of_le' h_le Quotientₓ.out' Quotientₓ.out_eq'
+noncomputable def quotient_equiv_prod_of_le (h_le : s ≤ t) : α ⧸ s ≃ (α ⧸ t) × t ⧸ s.subgroupOf t :=
+  quotientEquivProdOfLe' h_le Quotientₓ.out' Quotientₓ.out_eq'
 
 /-- If `K ≤ L`, then there is an embedding `K ⧸ (H.subgroup_of K) ↪ L ⧸ (H.subgroup_of L)`. -/
 def quotient_subgroup_of_embedding_of_le (H : Subgroup α) {K L : Subgroup α} (h : K ≤ L) :
-    K ⧸ H.subgroup_of K ↪ L ⧸ H.subgroup_of L where
+    K ⧸ H.subgroupOf K ↪ L ⧸ H.subgroupOf L where
   toFun := Quotientₓ.map' (Set.inclusion h) fun a b => id
   inj' := by
     refine' Quotientₓ.ind₂' fun a b => _ <;> exact quotient.eq'.mpr ∘ quotient.eq'.mp
@@ -514,7 +513,7 @@ noncomputable def preimage_mk_equiv_subgroup_times_set (s : Subgroup α) (t : Se
         s.inv_mem_iff.1 <| by
           rwa [mul_inv_rev, inv_invₓ, ← mul_assoc, inv_mul_selfₓ, one_mulₓ])
   { toFun := fun ⟨a, ha⟩ =>
-      ⟨⟨(Quotientₓ.out' (Quotientₓ.mk' a))⁻¹ * a, @Quotientₓ.exact' _ (left_rel s) _ _ <| Quotientₓ.out_eq' _⟩,
+      ⟨⟨(Quotientₓ.out' (Quotientₓ.mk' a))⁻¹ * a, @Quotientₓ.exact' _ (leftRel s) _ _ <| Quotientₓ.out_eq' _⟩,
         ⟨Quotientₓ.mk' a, ha⟩⟩,
     invFun := fun ⟨⟨a, ha⟩, ⟨x, hx⟩⟩ =>
       ⟨Quotientₓ.out' x * a,
@@ -530,10 +529,10 @@ noncomputable def preimage_mk_equiv_subgroup_times_set (s : Subgroup α) (t : Se
 
 end QuotientGroup
 
-/-- We use the class `has_coe_t` instead of `has_coe` if the first argument is a variable,
+library_note "use has_coe_t"/-- We use the class `has_coe_t` instead of `has_coe` if the first argument is a variable,
 or if the second argument is a variable not occurring in the first.
 Using `has_coe` would cause looping of type-class inference. See
 <https://leanprover.zulipchat.com/#narrow/stream/113488-general/topic/remove.20all.20instances.20with.20variable.20domain>
 -/
-library_note "use has_coe_t"
+
 

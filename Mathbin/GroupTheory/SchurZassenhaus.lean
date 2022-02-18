@@ -27,7 +27,7 @@ section SchurZassenhausAbelian
 variable {G : Type _} [Groupₓ G] {H : Subgroup G}
 
 @[to_additive]
-instance : MulAction G (left_transversals (H : Set G)) where
+instance : MulAction G (LeftTransversals (H : Set G)) where
   smul := fun g T =>
     ⟨LeftCoset g T,
       mem_left_transversals_iff_exists_unique_inv_mul_mem.mpr fun g' => by
@@ -39,7 +39,7 @@ instance : MulAction G (left_transversals (H : Set G)) where
   one_smul := fun T => Subtype.ext (one_left_coset T)
   mul_smul := fun g g' T => Subtype.ext (left_coset_assoc (↑T) g g').symm
 
-theorem smul_symm_apply_eq_mul_symm_apply_inv_smul (g : G) (α : left_transversals (H : Set G)) (q : G ⧸ H) :
+theorem smul_symm_apply_eq_mul_symm_apply_inv_smul (g : G) (α : LeftTransversals (H : Set G)) (q : G ⧸ H) :
     ↑((Equivₓ.ofBijective _ (mem_left_transversals_iff_bijective.mp (g • α).2)).symm q) =
       g * (Equivₓ.ofBijective _ (mem_left_transversals_iff_bijective.mp α.2)).symm (g⁻¹ • q : G ⧸ H) :=
   by
@@ -52,18 +52,18 @@ theorem smul_symm_apply_eq_mul_symm_apply_inv_smul (g : G) (α : left_transversa
 
 variable [IsCommutative H] [Fintype (G ⧸ H)]
 
-variable (α β γ : left_transversals (H : Set G))
+variable (α β γ : LeftTransversals (H : Set G))
 
 /-- The difference of two left transversals -/
 @[to_additive "The difference of two left transversals"]
-noncomputable def diff [hH : normal H] : H :=
+noncomputable def diff [hH : Normal H] : H :=
   let α' := (Equivₓ.ofBijective _ (mem_left_transversals_iff_bijective.mp α.2)).symm
   let β' := (Equivₓ.ofBijective _ (mem_left_transversals_iff_bijective.mp β.2)).symm
   ∏ q : G ⧸ H,
     ⟨α' q * (β' q)⁻¹, hH.mem_comm (Quotientₓ.exact' ((β'.symm_apply_apply q).trans (α'.symm_apply_apply q).symm))⟩
 
 @[to_additive]
-theorem diff_mul_diff [normal H] : diff α β * diff β γ = diff α γ :=
+theorem diff_mul_diff [Normal H] : diff α β * diff β γ = diff α γ :=
   Finset.prod_mul_distrib.symm.trans
     (Finset.prod_congr rfl fun x hx =>
       Subtype.ext
@@ -71,14 +71,14 @@ theorem diff_mul_diff [normal H] : diff α β * diff β γ = diff α γ :=
           rw [coe_mul, coe_mk, coe_mk, coe_mk, mul_assoc, inv_mul_cancel_leftₓ]))
 
 @[to_additive]
-theorem diff_self [normal H] : diff α α = 1 :=
+theorem diff_self [Normal H] : diff α α = 1 :=
   mul_right_eq_self.mp (diff_mul_diff α α α)
 
 @[to_additive]
-theorem diff_inv [normal H] : (diff α β)⁻¹ = diff β α :=
+theorem diff_inv [Normal H] : (diff α β)⁻¹ = diff β α :=
   inv_eq_of_mul_eq_oneₓ ((diff_mul_diff α β α).trans (diff_self α))
 
-theorem smul_diff_smul [hH : normal H] (g : G) :
+theorem smul_diff_smul [hH : Normal H] (g : G) :
     diff (g • α) (g • β) = ⟨g * diff α β * g⁻¹, hH.conj_mem (diff α β).1 (diff α β).2 g⟩ := by
   let ϕ : H →* H :=
     { toFun := fun h => ⟨g * h * g⁻¹, hH.conj_mem h.1 h.2 g⟩,
@@ -101,7 +101,7 @@ theorem smul_diff_smul [hH : normal H] (g : G) :
   simp_rw [smul_symm_apply_eq_mul_symm_apply_inv_smul, mul_inv_rev, mul_assoc]
   rfl
 
-theorem smul_diff [H.normal] (h : H) : diff (h • α) β = h ^ H.index * diff α β := by
+theorem smul_diff [H.Normal] (h : H) : diff (h • α) β = h ^ H.index * diff α β := by
   rw [diff, diff, index_eq_card, ← Finset.card_univ, ← Finset.prod_const, ← Finset.prod_mul_distrib]
   refine' Finset.prod_congr rfl fun q _ => _
   rw [Subtype.ext_iff, coe_mul, coe_mk, coe_mk, ← mul_assoc, mul_right_cancel_iffₓ]
@@ -111,22 +111,22 @@ theorem smul_diff [H.normal] (h : H) : diff (h • α) β = h ^ H.index * diff �
 
 variable (H)
 
-instance setoid_diff [H.normal] : Setoidₓ (left_transversals (H : Set G)) :=
+instance setoid_diff [H.Normal] : Setoidₓ (LeftTransversals (H : Set G)) :=
   Setoidₓ.mk (fun α β => diff α β = 1)
     ⟨fun α => diff_self α, fun α β h₁ => by
       rw [← diff_inv, h₁, one_inv], fun α β γ h₁ h₂ => by
       rw [← diff_mul_diff, h₁, h₂, one_mulₓ]⟩
 
 /-- The quotient of the transversals of an abelian normal `N` by the `diff` relation -/
-def quotient_diff [H.normal] :=
-  Quotientₓ H.setoid_diff
+def quotient_diff [H.Normal] :=
+  Quotientₓ H.setoidDiff
 
-instance [H.normal] : Inhabited H.quotient_diff :=
-  Quotientₓ.inhabited
+instance [H.Normal] : Inhabited H.QuotientDiff :=
+  Quotientₓ.inhabited _
 
 variable {H}
 
-instance [H.normal] : MulAction G H.quotient_diff where
+instance [H.Normal] : MulAction G H.QuotientDiff where
   smul := fun g =>
     Quotientₓ.map (fun α => g • α) fun α β h =>
       (smul_diff_smul α β g).trans (Subtype.ext (mul_inv_eq_one.mpr (mul_right_eq_self.mpr (Subtype.ext_iff.mp h))))
@@ -135,7 +135,7 @@ instance [H.normal] : MulAction G H.quotient_diff where
 
 variable [Fintype H]
 
-theorem exists_smul_eq [H.normal] (α β : H.quotient_diff) (hH : Nat.Coprime (Fintype.card H) H.index) :
+theorem exists_smul_eq [H.Normal] (α β : H.QuotientDiff) (hH : Nat.Coprime (Fintype.card H) H.index) :
     ∃ h : H, h • α = β :=
   Quotientₓ.induction_on α
     (Quotientₓ.induction_on β fun β α =>
@@ -146,15 +146,15 @@ theorem exists_smul_eq [H.normal] (α β : H.quotient_diff) (hH : Nat.Coprime (F
           change powCoprime hH ((powCoprime hH).symm (diff α β)⁻¹) * diff α β = 1
           rw [Equivₓ.apply_symm_apply, inv_mul_selfₓ]⟩)
 
-theorem smul_left_injective [H.normal] (α : H.quotient_diff) (hH : Nat.Coprime (Fintype.card H) H.index) :
+theorem smul_left_injective [H.Normal] (α : H.QuotientDiff) (hH : Nat.Coprime (Fintype.card H) H.index) :
     Function.Injective fun h : H => h • α := fun h₁ h₂ => by
   refine' Quotientₓ.induction_on α fun α hα => _
   replace hα : diff (h₁ • α) (h₂ • α) = 1 := Quotientₓ.exact hα
   rw [smul_diff, ← diff_inv, smul_diff, diff_self, mul_oneₓ, mul_inv_eq_one] at hα
   exact (powCoprime hH).Injective hα
 
-theorem is_complement'_stabilizer_of_coprime [Fintype G] [H.normal] {α : H.quotient_diff}
-    (hH : Nat.Coprime (Fintype.card H) H.index) : is_complement' H (MulAction.stabilizer G α) := by
+theorem is_complement'_stabilizer_of_coprime [Fintype G] [H.Normal] {α : H.QuotientDiff}
+    (hH : Nat.Coprime (Fintype.card H) H.index) : IsComplement' H (MulAction.stabilizer G α) := by
   classical
   let ϕ : H ≃ MulAction.Orbit G α :=
     Equivₓ.ofBijective (fun h => ⟨h • α, h, rfl⟩)
@@ -171,9 +171,9 @@ theorem is_complement'_stabilizer_of_coprime [Fintype G] [H.normal] {α : H.quot
     
 
 /-- Do not use this lemma: It is made obsolete by `exists_right_complement'_of_coprime` -/
-private theorem exists_right_complement'_of_coprime_aux [Fintype G] [H.normal]
-    (hH : Nat.Coprime (Fintype.card H) H.index) : ∃ K : Subgroup G, is_complement' H K :=
-  nonempty_of_inhabited.elim fun α : H.quotient_diff =>
+private theorem exists_right_complement'_of_coprime_aux [Fintype G] [H.Normal]
+    (hH : Nat.Coprime (Fintype.card H) H.index) : ∃ K : Subgroup G, IsComplement' H K :=
+  nonempty_of_inhabited.elim fun α : H.QuotientDiff =>
     ⟨MulAction.stabilizer G α, is_complement'_stabilizer_of_coprime hH⟩
 
 end SchurZassenhausAbelian
@@ -191,12 +191,12 @@ The proof is by contradiction. We assume that `G` is a minimal counterexample to
 -/
 
 
-variable {G : Type u} [Groupₓ G] [Fintype G] {N : Subgroup G} [normal N] (h1 : Nat.Coprime (Fintype.card N) N.index)
+variable {G : Type u} [Groupₓ G] [Fintype G] {N : Subgroup G} [Normal N] (h1 : Nat.Coprime (Fintype.card N) N.index)
   (h2 :
     ∀ G' : Type u [Groupₓ G'] [Fintype G'],
-      ∀ hG'3 : Fintype.card G' < Fintype.card G {N' : Subgroup G'} [N'.normal] hN :
+      ∀ hG'3 : Fintype.card G' < Fintype.card G {N' : Subgroup G'} [N'.Normal] hN :
         Nat.Coprime (Fintype.card N') N'.index, ∃ H' : Subgroup G', is_complement' N' H')
-  (h3 : ∀ H : Subgroup G, ¬is_complement' N H)
+  (h3 : ∀ H : Subgroup G, ¬IsComplement' N H)
 
 include h1 h2 h3
 
@@ -243,7 +243,7 @@ private theorem step1 (K : Subgroup G) (hK : K⊔N = ⊤) : K = ⊤ := by
   exact ⟨H.map K.subtype, is_complement'_of_coprime h7 h8⟩
 
 /-- Do not use this lemma: It is made obsolete by `exists_right_complement'_of_coprime` -/
-private theorem step2 (K : Subgroup G) [K.normal] (hK : K ≤ N) : K = ⊥ ∨ K = N := by
+private theorem step2 (K : Subgroup G) [K.Normal] (hK : K ≤ N) : K = ⊥ ∨ K = N := by
   have : Function.Surjective (QuotientGroup.mk' K) := Quotientₓ.surjective_quotient_mk'
   have h4 := step1 h1 h2 h3
   contrapose! h4
@@ -275,7 +275,7 @@ private theorem step2 (K : Subgroup G) [K.normal] (hK : K ≤ N) : K = ⊥ ∨ K
     
 
 /-- Do not use this lemma: It is made obsolete by `exists_right_complement'_of_coprime` -/
-private theorem step3 (K : Subgroup N) [(K.map N.subtype).Normal] : K = ⊥ ∨ K = ⊤ := by
+private theorem step3 (K : Subgroup N) [(K.map N.Subtype).Normal] : K = ⊥ ∨ K = ⊤ := by
   have key := step2 h1 h2 h3 (K.map N.subtype) K.map_subtype_le
   rw [← map_bot N.subtype] at key
   conv at key => congr skip rhs rw [← N.subtype_range, N.subtype.range_eq_map]
@@ -314,7 +314,7 @@ variable {n : ℕ} {G : Type u} [Groupₓ G]
 
 /-- Do not use this lemma: It is made obsolete by `exists_right_complement'_of_coprime` -/
 private theorem exists_right_complement'_of_coprime_aux' [Fintype G] (hG : Fintype.card G = n) {N : Subgroup G}
-    [N.normal] (hN : Nat.Coprime (Fintype.card N) N.index) : ∃ H : Subgroup G, is_complement' N H := by
+    [N.Normal] (hN : Nat.Coprime (Fintype.card N) N.index) : ∃ H : Subgroup G, IsComplement' N H := by
   revert G
   apply Nat.strong_induction_onₓ n
   rintro n ih G _ _ rfl N _ hN
@@ -330,15 +330,15 @@ private theorem exists_right_complement'_of_coprime_aux' [Fintype G] (hG : Finty
 /-- **Schur-Zassenhaus** for normal subgroups:
   If `H : subgroup G` is normal, and has order coprime to its index, then there exists a
   subgroup `K` which is a (right) complement of `H`. -/
-theorem exists_right_complement'_of_coprime_of_fintype [Fintype G] {N : Subgroup G} [N.normal]
-    (hN : Nat.Coprime (Fintype.card N) N.index) : ∃ H : Subgroup G, is_complement' N H :=
+theorem exists_right_complement'_of_coprime_of_fintype [Fintype G] {N : Subgroup G} [N.Normal]
+    (hN : Nat.Coprime (Fintype.card N) N.index) : ∃ H : Subgroup G, IsComplement' N H :=
   exists_right_complement'_of_coprime_aux' rfl hN
 
 /-- **Schur-Zassenhaus** for normal subgroups:
   If `H : subgroup G` is normal, and has order coprime to its index, then there exists a
   subgroup `K` which is a (right) complement of `H`. -/
-theorem exists_right_complement'_of_coprime {N : Subgroup G} [N.normal] (hN : Nat.Coprime (Nat.card N) N.index) :
-    ∃ H : Subgroup G, is_complement' N H := by
+theorem exists_right_complement'_of_coprime {N : Subgroup G} [N.Normal] (hN : Nat.Coprime (Nat.card N) N.index) :
+    ∃ H : Subgroup G, IsComplement' N H := by
   by_cases' hN1 : Nat.card N = 0
   · rw [hN1, Nat.coprime_zero_leftₓ, index_eq_one] at hN
     rw [hN]
@@ -360,16 +360,16 @@ theorem exists_right_complement'_of_coprime {N : Subgroup G} [N.normal] (hN : Na
 /-- **Schur-Zassenhaus** for normal subgroups:
   If `H : subgroup G` is normal, and has order coprime to its index, then there exists a
   subgroup `K` which is a (left) complement of `H`. -/
-theorem exists_left_complement'_of_coprime_of_fintype [Fintype G] {N : Subgroup G} [N.normal]
-    (hN : Nat.Coprime (Fintype.card N) N.index) : ∃ H : Subgroup G, is_complement' H N :=
-  Exists.impₓ (fun _ => is_complement'.symm) (exists_right_complement'_of_coprime_of_fintype hN)
+theorem exists_left_complement'_of_coprime_of_fintype [Fintype G] {N : Subgroup G} [N.Normal]
+    (hN : Nat.Coprime (Fintype.card N) N.index) : ∃ H : Subgroup G, IsComplement' H N :=
+  Exists.impₓ (fun _ => IsComplement'.symm) (exists_right_complement'_of_coprime_of_fintype hN)
 
 /-- **Schur-Zassenhaus** for normal subgroups:
   If `H : subgroup G` is normal, and has order coprime to its index, then there exists a
   subgroup `K` which is a (left) complement of `H`. -/
-theorem exists_left_complement'_of_coprime {N : Subgroup G} [N.normal] (hN : Nat.Coprime (Nat.card N) N.index) :
-    ∃ H : Subgroup G, is_complement' H N :=
-  Exists.impₓ (fun _ => is_complement'.symm) (exists_right_complement'_of_coprime hN)
+theorem exists_left_complement'_of_coprime {N : Subgroup G} [N.Normal] (hN : Nat.Coprime (Nat.card N) N.index) :
+    ∃ H : Subgroup G, IsComplement' H N :=
+  Exists.impₓ (fun _ => IsComplement'.symm) (exists_right_complement'_of_coprime hN)
 
 end Subgroup
 

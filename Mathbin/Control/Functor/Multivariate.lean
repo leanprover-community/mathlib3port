@@ -45,10 +45,10 @@ def liftr {α : Typevec n} (r : ∀ {i}, α i → α i → Prop) (x y : F α) : 
 /-- given `x : F α` and a projection `i` of type vector `α`, `supp x i` is the set
 of `α.i` contained in `x` -/
 def supp {α : Typevec n} (x : F α) (i : Fin2 n) : Set (α i) :=
-  { y : α i | ∀ ⦃p⦄, liftp p x → p i y }
+  { y : α i | ∀ ⦃p⦄, Liftp p x → p i y }
 
-theorem of_mem_supp {α : Typevec n} {x : F α} {p : ∀ ⦃i⦄, α i → Prop} (h : liftp p x) (i : Fin2 n) :
-    ∀, ∀ y ∈ supp x i, ∀, p y := fun y hy => hy h
+theorem of_mem_supp {α : Typevec n} {x : F α} {p : ∀ ⦃i⦄, α i → Prop} (h : Liftp p x) (i : Fin2 n) :
+    ∀, ∀ y ∈ Supp x i, ∀, p y := fun y hy => hy h
 
 end Mvfunctor
 
@@ -69,7 +69,7 @@ variable {α β γ : Typevec.{u} n}
 
 variable {F : Typevec.{u} n → Type v} [Mvfunctor F]
 
-variable (p : α ⟹ repeat n Prop) (r : α ⊗ α ⟹ repeat n Prop)
+variable (p : α ⟹ Repeat n Prop) (r : α ⊗ α ⟹ Repeat n Prop)
 
 /-- adapt `mvfunctor.liftp` to accept predicates as arrows -/
 def liftp' : F α → Prop :=
@@ -107,15 +107,15 @@ theorem exists_iff_exists_of_mono {p : F α → Prop} {q : F β → Prop} (f : �
 
 variable {F}
 
-theorem liftp_def (x : F α) : liftp' p x ↔ ∃ u : F (subtype_ p), subtype_val p <$$> u = x :=
+theorem liftp_def (x : F α) : Liftp' p x ↔ ∃ u : F (Subtype_ p), subtypeVal p <$$> u = x :=
   exists_iff_exists_of_mono F _ _ (to_subtype_of_subtype p)
     (by
       simp [Mvfunctor.map_map])
 
 theorem liftr_def (x y : F α) :
-    liftr' r x y ↔
-      ∃ u : F (subtype_ r),
-        (Typevec.Prod.fst ⊚ subtype_val r) <$$> u = x ∧ (Typevec.Prod.snd ⊚ subtype_val r) <$$> u = y :=
+    Liftr' r x y ↔
+      ∃ u : F (Subtype_ r),
+        (Typevec.Prod.fst ⊚ subtypeVal r) <$$> u = x ∧ (Typevec.Prod.snd ⊚ subtypeVal r) <$$> u = y :=
   exists_iff_exists_of_mono _ _ _ (to_subtype'_of_subtype' r)
     (by
       simp only [map_map, comp_assoc, subtype_val_to_subtype'] <;> simp [comp])
@@ -134,7 +134,7 @@ section LiftpLastPredIff
 
 variable {F : Typevec.{u} (n + 1) → Type _} [Mvfunctor F] [IsLawfulMvfunctor F] {α : Typevec.{u} n}
 
-variable (p : α ⟹ repeat n Prop) (r : α ⊗ α ⟹ repeat n Prop)
+variable (p : α ⟹ Repeat n Prop) (r : α ⊗ α ⟹ Repeat n Prop)
 
 open Mvfunctor
 
@@ -144,8 +144,8 @@ variable (pp : β → Prop)
 
 private def f :
     ∀ n α,
-      (fun i : Fin2 (n + 1) => { p_1 // of_repeat (pred_last' α pp i p_1) }) ⟹ fun i : Fin2 (n + 1) =>
-        { p_1 : (α ::: β) i // pred_last α pp p_1 }
+      (fun i : Fin2 (n + 1) => { p_1 // ofRepeat (predLast' α pp i p_1) }) ⟹ fun i : Fin2 (n + 1) =>
+        { p_1 : (α ::: β) i // PredLast α pp p_1 }
   | _, α, Fin2.fs i, x =>
     ⟨x.val,
       cast
@@ -156,8 +156,8 @@ private def f :
 
 private def g :
     ∀ n α,
-      (fun i : Fin2 (n + 1) => { p_1 : (α ::: β) i // pred_last α pp p_1 }) ⟹ fun i : Fin2 (n + 1) =>
-        { p_1 // of_repeat (pred_last' α pp i p_1) }
+      (fun i : Fin2 (n + 1) => { p_1 : (α ::: β) i // PredLast α pp p_1 }) ⟹ fun i : Fin2 (n + 1) =>
+        { p_1 // ofRepeat (predLast' α pp i p_1) }
   | _, α, Fin2.fs i, x =>
     ⟨x.val,
       cast
@@ -166,8 +166,8 @@ private def g :
         x.property⟩
   | _, α, Fin2.fz, x => ⟨x.val, x.property⟩
 
-theorem liftp_last_pred_iff {β} (p : β → Prop) (x : F (α ::: β)) :
-    liftp' (pred_last' _ p) x ↔ liftp (pred_last _ p) x := by
+theorem liftp_last_pred_iff {β} (p : β → Prop) (x : F (α ::: β)) : Liftp' (predLast' _ p) x ↔ Liftp (PredLast _ p) x :=
+  by
   dsimp only [liftp, liftp']
   apply exists_iff_exists_of_mono F (f _ n α) (g _ n α)
   · clear x _inst_2 _inst_1 F
@@ -185,8 +185,8 @@ variable (rr : β → β → Prop)
 
 private def f :
     ∀ n α,
-      (fun i : Fin2 (n + 1) => { p_1 : _ × _ // of_repeat (rel_last' α rr i (Typevec.Prod.mk _ p_1.fst p_1.snd)) }) ⟹
-        fun i : Fin2 (n + 1) => { p_1 : (α ::: β) i × _ // rel_last α rr p_1.fst p_1.snd }
+      (fun i : Fin2 (n + 1) => { p_1 : _ × _ // ofRepeat (relLast' α rr i (Typevec.Prod.mk _ p_1.fst p_1.snd)) }) ⟹
+        fun i : Fin2 (n + 1) => { p_1 : (α ::: β) i × _ // RelLast α rr p_1.fst p_1.snd }
   | _, α, Fin2.fs i, x =>
     ⟨x.val,
       cast
@@ -197,8 +197,8 @@ private def f :
 
 private def g :
     ∀ n α,
-      (fun i : Fin2 (n + 1) => { p_1 : (α ::: β) i × _ // rel_last α rr p_1.fst p_1.snd }) ⟹ fun i : Fin2 (n + 1) =>
-        { p_1 : _ × _ // of_repeat (rel_last' α rr i (Typevec.Prod.mk _ p_1.1 p_1.2)) }
+      (fun i : Fin2 (n + 1) => { p_1 : (α ::: β) i × _ // RelLast α rr p_1.fst p_1.snd }) ⟹ fun i : Fin2 (n + 1) =>
+        { p_1 : _ × _ // ofRepeat (relLast' α rr i (Typevec.Prod.mk _ p_1.1 p_1.2)) }
   | _, α, Fin2.fs i, x =>
     ⟨x.val,
       cast
@@ -207,7 +207,7 @@ private def g :
         x.property⟩
   | _, α, Fin2.fz, x => ⟨x.val, x.property⟩
 
-theorem liftr_last_rel_iff (x y : F (α ::: β)) : liftr' (rel_last' _ rr) x y ↔ liftr (rel_last _ rr) x y := by
+theorem liftr_last_rel_iff (x y : F (α ::: β)) : Liftr' (relLast' _ rr) x y ↔ Liftr (RelLast _ rr) x y := by
   dsimp only [liftr, liftr']
   apply exists_iff_exists_of_mono F (f rr _ _) (g rr _ _)
   · clear x y _inst_2 _inst_1 F

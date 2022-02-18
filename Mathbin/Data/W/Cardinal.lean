@@ -55,7 +55,7 @@ theorem cardinal_mk_le_max_omega_of_fintype [∀ a, Fintype (β a)] : # (WType �
       calc
         (Cardinal.sum fun a : α => m ^ # (β a)) ≤ # α * Cardinal.sup.{u, u} fun a : α => m ^ Cardinal.mk (β a) :=
           Cardinal.sum_le_sup _
-        _ ≤ m * Cardinal.sup.{u, u} fun a : α => m ^ # (β a) := mul_le_mul' (le_max_leftₓ _ _) (le_reflₓ _)
+        _ ≤ m * Cardinal.sup.{u, u} fun a : α => m ^ # (β a) := mul_le_mul' (le_max_leftₓ _ _) le_rfl
         _ = m :=
           mul_eq_left.{u} (le_max_rightₓ _ _)
             (Cardinal.sup_le.2 fun i => by

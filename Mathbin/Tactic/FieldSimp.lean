@@ -10,7 +10,7 @@ Tactic to clear denominators in algebraic expressions, based on `simp` with a sp
 
 namespace Tactic
 
--- ././Mathport/Syntax/Translate/Basic.lean:794:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
 /-- Try to prove a goal of the form `x ≠ 0` by calling `assumption`, or `norm_num1` if `x` is
 a numeral. -/
 unsafe def field_simp.ne_zero : tactic Unit := do
@@ -18,7 +18,7 @@ unsafe def field_simp.ne_zero : tactic Unit := do
   match goal with
     | quote.1 ((%%ₓe) ≠ 0) =>
       assumption <|> do
-        let n ← e.to_rat
+        let n ← e
         sorry
     | _ => tactic.fail "goal should be of the form `x ≠ 0`"
 
@@ -83,7 +83,7 @@ unsafe def field_simp (no_dflt : parse only_flag) (hs : parse simp_arg_list) (at
     (locat : parse location) (cfg : simp_config_ext := { discharger := field_simp.ne_zero }) : tactic Unit :=
   let attr_names := `field_simps :: attr_names
   let hs := simp_arg_type.except `one_div :: simp_arg_type.except `mul_eq_zero :: hs
-  propagate_tags (simp_core cfg.to_simp_config cfg.discharger no_dflt hs attr_names locat >> skip)
+  propagate_tags (simp_core cfg.toSimpConfig cfg.discharger no_dflt hs attr_names locat >> skip)
 
 add_tactic_doc
   { Name := "field_simp", category := DocCategory.tactic, declNames := [`tactic.interactive.field_simp],

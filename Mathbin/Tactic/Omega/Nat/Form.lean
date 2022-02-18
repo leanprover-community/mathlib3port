@@ -14,8 +14,8 @@ unsafe inductive exprform
 
 /-- Intermediate shadow syntax for LNA formulas that includes non-canonical terms -/
 inductive preform
-  | Eq : preterm → preterm → preform
-  | le : preterm → preterm → preform
+  | Eq : Preterm → Preterm → preform
+  | le : Preterm → Preterm → preform
   | Not : preform → preform
   | Or : preform → preform → preform
   | And : preform → preform → preform
@@ -35,25 +35,25 @@ namespace Preform
 
 /-- Evaluate a preform into prop using the valuation `v`. -/
 @[simp]
-def holds (v : Nat → Nat) : preform → Prop
+def holds (v : Nat → Nat) : Preform → Prop
   | t =* s => t.val v = s.val v
   | t ≤* s => t.val v ≤ s.val v
-  | ¬* p => ¬p.holds
-  | p ∨* q => p.holds ∨ q.holds
-  | p ∧* q => p.holds ∧ q.holds
+  | ¬* p => ¬p.Holds
+  | p ∨* q => p.Holds ∨ q.Holds
+  | p ∧* q => p.Holds ∧ q.Holds
 
 end Preform
 
 /-- `univ_close p n` := `p` closed by prepending `n` universal quantifiers -/
 @[simp]
-def univ_close (p : preform) : (Nat → Nat) → Nat → Prop
-  | v, 0 => p.holds v
-  | v, k + 1 => ∀ i : Nat, univ_close (update_zero i v) k
+def univ_close (p : Preform) : (Nat → Nat) → Nat → Prop
+  | v, 0 => p.Holds v
+  | v, k + 1 => ∀ i : Nat, univ_close (updateZero i v) k
 
 namespace Preform
 
 /-- Argument is free of negations -/
-def neg_free : preform → Prop
+def neg_free : Preform → Prop
   | t =* s => True
   | t ≤* s => True
   | p ∨* q => neg_free p ∧ neg_free q
@@ -61,23 +61,23 @@ def neg_free : preform → Prop
   | _ => False
 
 /-- Return expr of proof that argument is free of subtractions -/
-def sub_free : preform → Prop
-  | t =* s => t.sub_free ∧ s.sub_free
-  | t ≤* s => t.sub_free ∧ s.sub_free
-  | ¬* p => p.sub_free
-  | p ∨* q => p.sub_free ∧ q.sub_free
-  | p ∧* q => p.sub_free ∧ q.sub_free
+def sub_free : Preform → Prop
+  | t =* s => t.SubFree ∧ s.SubFree
+  | t ≤* s => t.SubFree ∧ s.SubFree
+  | ¬* p => p.SubFree
+  | p ∨* q => p.SubFree ∧ q.SubFree
+  | p ∧* q => p.SubFree ∧ q.SubFree
 
 /-- Fresh de Brujin index not used by any variable in argument -/
-def fresh_index : preform → Nat
-  | t =* s => max t.fresh_index s.fresh_index
-  | t ≤* s => max t.fresh_index s.fresh_index
-  | ¬* p => p.fresh_index
-  | p ∨* q => max p.fresh_index q.fresh_index
-  | p ∧* q => max p.fresh_index q.fresh_index
+def fresh_index : Preform → Nat
+  | t =* s => max t.freshIndex s.freshIndex
+  | t ≤* s => max t.freshIndex s.freshIndex
+  | ¬* p => p.freshIndex
+  | p ∨* q => max p.freshIndex q.freshIndex
+  | p ∧* q => max p.freshIndex q.freshIndex
 
 theorem holds_constant {v w : Nat → Nat} :
-    ∀ p : preform, (∀, ∀ x < p.fresh_index, ∀, v x = w x) → (p.holds v ↔ p.holds w)
+    ∀ p : Preform, (∀, ∀ x < p.freshIndex, ∀, v x = w x) → (p.Holds v ↔ p.Holds w)
   | t =* s, h1 => by
     simp only [holds]
     apply pred_mono_2 <;> apply preterm.val_constant <;> intro x h2 <;> apply h1 _ (lt_of_lt_of_leₓ h2 _)
@@ -103,26 +103,26 @@ theorem holds_constant {v w : Nat → Nat} :
     apply le_max_rightₓ
 
 /-- All valuations satisfy argument -/
-def valid (p : preform) : Prop :=
-  ∀ v, holds v p
+def valid (p : Preform) : Prop :=
+  ∀ v, Holds v p
 
 /-- There exists some valuation that satisfies argument -/
-def sat (p : preform) : Prop :=
-  ∃ v, holds v p
+def sat (p : Preform) : Prop :=
+  ∃ v, Holds v p
 
 /-- `implies p q` := under any valuation, `q` holds if `p` holds -/
-def Implies (p q : preform) : Prop :=
-  ∀ v, holds v p → holds v q
+def Implies (p q : Preform) : Prop :=
+  ∀ v, Holds v p → Holds v q
 
 /-- `equiv p q` := under any valuation, `p` holds iff `q` holds -/
-def Equivₓ (p q : preform) : Prop :=
-  ∀ v, holds v p ↔ holds v q
+def Equivₓ (p q : Preform) : Prop :=
+  ∀ v, Holds v p ↔ Holds v q
 
-theorem sat_of_implies_of_sat {p q : preform} : Implies p q → sat p → sat q := by
+theorem sat_of_implies_of_sat {p q : Preform} : Implies p q → Sat p → Sat q := by
   intro h1 h2
   apply exists_imp_exists h1 h2
 
-theorem sat_or {p q : preform} : sat (p ∨* q) ↔ sat p ∨ sat q := by
+theorem sat_or {p q : Preform} : Sat (p ∨* q) ↔ Sat p ∨ Sat q := by
   constructor <;> intro h1
   · cases' h1 with v h1
     cases' h1 with h1 h1 <;> [left, right] <;> refine' ⟨v, _⟩ <;> assumption
@@ -131,35 +131,35 @@ theorem sat_or {p q : preform} : sat (p ∨* q) ↔ sat p ∨ sat q := by
     
 
 /-- There does not exist any valuation that satisfies argument -/
-def unsat (p : preform) : Prop :=
-  ¬sat p
+def unsat (p : Preform) : Prop :=
+  ¬Sat p
 
-def reprₓ : preform → Stringₓ
+def reprₓ : Preform → Stringₓ
   | t =* s => "(" ++ t.repr ++ " = " ++ s.repr ++ ")"
   | t ≤* s => "(" ++ t.repr ++ " ≤ " ++ s.repr ++ ")"
   | ¬* p => "¬" ++ p.repr
   | p ∨* q => "(" ++ p.repr ++ " ∨ " ++ q.repr ++ ")"
   | p ∧* q => "(" ++ p.repr ++ " ∧ " ++ q.repr ++ ")"
 
-instance HasRepr : HasRepr preform :=
-  ⟨reprₓ⟩
+instance HasRepr : HasRepr Preform :=
+  ⟨repr⟩
 
-unsafe instance has_to_format : has_to_format preform :=
+unsafe instance has_to_format : has_to_format Preform :=
   ⟨fun x => x.repr⟩
 
 end Preform
 
-theorem univ_close_of_valid {p : preform} : ∀ {m : Nat} {v : Nat → Nat}, p.valid → univ_close p v m
+theorem univ_close_of_valid {p : Preform} : ∀ {m : Nat} {v : Nat → Nat}, p.valid → UnivClose p v m
   | 0, v, h1 => h1 _
   | m + 1, v, h1 => fun i => univ_close_of_valid h1
 
-theorem valid_of_unsat_not {p : preform} : (¬* p).Unsat → p.valid := by
+theorem valid_of_unsat_not {p : Preform} : (¬* p).Unsat → p.valid := by
   simp only [preform.sat, preform.unsat, preform.valid, preform.holds]
   rw [not_exists_not]
   intro h
   assumption
 
--- ././Mathport/Syntax/Translate/Basic.lean:794:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
 /-- Tactic for setting up proof by induction over preforms. -/
 unsafe def preform.induce (t : tactic Unit := tactic.skip) : tactic Unit :=
   sorry

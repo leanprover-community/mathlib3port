@@ -80,7 +80,7 @@ namespace ConformalAt
 
 theorem DifferentiableAt {f : X → Y} {x : X} (h : ConformalAt f x) : DifferentiableAt ℝ f x :=
   let ⟨_, h₁, _⟩ := h
-  h₁.differentiable_at
+  h₁.DifferentiableAt
 
 theorem congr {f g : X → Y} {x : X} {u : Set X} (hx : x ∈ u) (hu : IsOpen u) (hf : ConformalAt f x)
     (h : ∀ x : X, x ∈ u → g x = f x) : ConformalAt g x :=

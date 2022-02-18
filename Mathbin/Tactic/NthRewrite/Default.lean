@@ -46,14 +46,14 @@ open Tactic.Interactive
 
 /-- Preprocess a rewrite rule for use in `get_nth_rewrite`. -/
 private unsafe def unpack_rule (p : rw_rule) : tactic (expr × Bool) := do
-  let r ← to_expr p.rule tt ff
-  return (r, p.symm)
+  let r ← to_expr p.rule true false
+  return (r, p)
 
 /-- Get the `n`th rewrite of rewrite rules `q` in expression `e`,
 or fail if there are not enough such rewrites. -/
 unsafe def get_nth_rewrite (n : ℕ) (q : rw_rules_t) (e : expr) : tactic tracked_rewrite := do
   let rewrites ← q.rules.mmap fun r => unpack_rule r >>= all_rewrites e
-  rewrites.join.nth n <|> fail "failed: not enough rewrites found"
+  rewrites n <|> fail "failed: not enough rewrites found"
 
 /-- Rewrite the `n`th occurrence of the rewrite rules `q` of (optionally after zooming into) a
 hypothesis or target `h` which is an application of a relation. -/
@@ -62,7 +62,7 @@ unsafe def get_nth_rewrite_with_zoom (n : ℕ) (q : rw_rules_t) (path : List Exp
   let e ← target_or_hyp_type h
   let (ln, new_e) ← expr_lens.entire.zoom path e
   let rw ← get_nth_rewrite n q new_e
-  return ⟨ln.fill rw.exp, rw.proof >>= ln.congr, rw.addr.map fun l => path ++ l⟩
+  return ⟨ln rw, rw >>= ln, rw fun l => path ++ l⟩
 
 /-- Rewrite the `n`th occurrence of the rewrite rules `q` (optionally on a side)
 at all the locations `loc`. -/
@@ -70,10 +70,10 @@ unsafe def nth_rewrite_core (path : List ExprLens.Dir) (n : parse small_nat) (q 
     tactic Unit := do
   let fn := fun h => get_nth_rewrite_with_zoom n q path h >>= fun rw => rw.proof >>= replace_in_state h rw.exp
   match l with
-    | loc.wildcard => l.try_apply (fn ∘ some) (fn none)
-    | _ => l.apply (fn ∘ some) (fn none)
+    | loc.wildcard => l (fn ∘ some) (fn none)
+    | _ => l (fn ∘ some) (fn none)
   tactic.try (tactic.reflexivity reducible)
-  returnopt q.end_pos >>= save_info <|> skip
+  returnopt q >>= save_info <|> skip
 
 namespace Interactive
 
@@ -101,10 +101,10 @@ unsafe def nth_rewrite (n : parse small_nat) (q : parse rw_rules) (l : parse loc
   nth_rewrite_core [] n q l
 
 unsafe def nth_rewrite_lhs (n : parse small_nat) (q : parse rw_rules) (l : parse location) : tactic Unit :=
-  nth_rewrite_core [dir.F, dir.A] n q l
+  nth_rewrite_core [Dir.F, Dir.A] n q l
 
 unsafe def nth_rewrite_rhs (n : parse small_nat) (q : parse rw_rules) (l : parse location) : tactic Unit :=
-  nth_rewrite_core [dir.A] n q l
+  nth_rewrite_core [Dir.A] n q l
 
 copy_doc_string nth_rewrite → nth_rewrite_lhs nth_rewrite_rhs
 

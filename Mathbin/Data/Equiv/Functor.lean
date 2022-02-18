@@ -37,15 +37,15 @@ def map_equiv (h : α ≃ β) : f α ≃ f β where
     simp [map_map]
 
 @[simp]
-theorem map_equiv_apply (h : α ≃ β) (x : f α) : (map_equiv f h : f α ≃ f β) x = map h x :=
+theorem map_equiv_apply (h : α ≃ β) (x : f α) : (mapEquiv f h : f α ≃ f β) x = map h x :=
   rfl
 
 @[simp]
-theorem map_equiv_symm_apply (h : α ≃ β) (y : f β) : (map_equiv f h : f α ≃ f β).symm y = map h.symm y :=
+theorem map_equiv_symm_apply (h : α ≃ β) (y : f β) : (mapEquiv f h : f α ≃ f β).symm y = map h.symm y :=
   rfl
 
 @[simp]
-theorem map_equiv_refl : map_equiv f (Equivₓ.refl α) = Equivₓ.refl (f α) := by
+theorem map_equiv_refl : mapEquiv f (Equivₓ.refl α) = Equivₓ.refl (f α) := by
   ext x
   simp only [map_equiv_apply, refl_apply]
   exact IsLawfulFunctor.id_map x
@@ -67,16 +67,16 @@ def map_equiv (h : α ≃ β) (h' : α' ≃ β') : F α α' ≃ F β β' where
 
 @[simp]
 theorem map_equiv_apply (h : α ≃ β) (h' : α' ≃ β') (x : F α α') :
-    (map_equiv F h h' : F α α' ≃ F β β') x = bimap h h' x :=
+    (mapEquiv F h h' : F α α' ≃ F β β') x = bimap h h' x :=
   rfl
 
 @[simp]
 theorem map_equiv_symm_apply (h : α ≃ β) (h' : α' ≃ β') (y : F β β') :
-    (map_equiv F h h' : F α α' ≃ F β β').symm y = bimap h.symm h'.symm y :=
+    (mapEquiv F h h' : F α α' ≃ F β β').symm y = bimap h.symm h'.symm y :=
   rfl
 
 @[simp]
-theorem map_equiv_refl_refl : map_equiv F (Equivₓ.refl α) (Equivₓ.refl α') = Equivₓ.refl (F α α') := by
+theorem map_equiv_refl_refl : mapEquiv F (Equivₓ.refl α) (Equivₓ.refl α') = Equivₓ.refl (F α α') := by
   ext x
   simp [id_bimap]
 

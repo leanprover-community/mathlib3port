@@ -34,7 +34,7 @@ instance : Fintype (Derangements α) := by
 
 theorem card_derangements_invariant {α β : Type _} [Fintype α] [DecidableEq α] [Fintype β] [DecidableEq β]
     (h : card α = card β) : card (Derangements α) = card (Derangements β) :=
-  Fintype.card_congr (Equivₓ.derangementsCongr <| equiv_of_card_eq h)
+  Fintype.card_congr (Equivₓ.derangementsCongr <| equivOfCardEq h)
 
 theorem card_derangements_fin_add_two (n : ℕ) :
     card (Derangements (Finₓ (n + 2))) =
@@ -43,7 +43,7 @@ theorem card_derangements_fin_add_two (n : ℕ) :
   have h1 : ∀ a : Finₓ (n + 1), card ({a}ᶜ : Set (Finₓ (n + 1))) = card (Finₓ n) := by
     intro a
     simp only [Fintype.card_fin, Finset.card_fin, Fintype.card_of_finset, Finset.filter_ne' _ a,
-      Set.mem_compl_singleton_iff, Finset.card_erase_of_mem (Finset.mem_univ a), Nat.pred_succ]
+      Set.mem_compl_singleton_iff, Finset.card_erase_of_mem (Finset.mem_univ a), add_tsub_cancel_right]
   have h2 : card (Finₓ (n + 2)) = card (Option (Finₓ (n + 1))) := by
     simp only [card_fin, card_option]
   simp only [card_derangements_invariant h2, card_congr (@derangements_recursion_equiv (Finₓ (n + 1)) _), card_sigma,

@@ -30,16 +30,16 @@ def image : AddCommGroupₓₓ :=
 
 /-- the inclusion of `image f` into the target -/
 def image.ι : image f ⟶ H :=
-  f.range.subtype
+  f.range.Subtype
 
-instance : mono (image.ι f) :=
-  concrete_category.mono_of_injective (image.ι f) Subtype.val_injective
+instance : Mono (image.ι f) :=
+  ConcreteCategory.mono_of_injective (image.ι f) Subtype.val_injective
 
 /-- the corestriction map to the image -/
 def factor_thru_image : G ⟶ image f :=
   f.range_restrict
 
-theorem image.fac : factor_thru_image f ≫ image.ι f = f := by
+theorem image.fac : factorThruImage f ≫ image.ι f = f := by
   ext
   rfl
 
@@ -48,8 +48,8 @@ attribute [local simp] image.fac
 variable {f}
 
 /-- the universal property for the image factorisation -/
-noncomputable def image.lift (F' : mono_factorisation f) : image f ⟶ F'.I where
-  toFun := (fun x => F'.e (Classical.indefiniteDescription _ x.2).1 : image f → F'.I)
+noncomputable def image.lift (F' : MonoFactorisation f) : image f ⟶ F'.i where
+  toFun := (fun x => F'.e (Classical.indefiniteDescription _ x.2).1 : image f → F'.i)
   map_zero' := by
     have := F'.m_mono
     apply injective_of_mono F'.m
@@ -68,7 +68,7 @@ noncomputable def image.lift (F' : mono_factorisation f) : image f ⟶ F'.I wher
     rw [(Classical.indefiniteDescription (fun z => f z = _) _).2]
     rfl
 
-theorem image.lift_fac (F' : mono_factorisation f) : image.lift F' ≫ F'.m = image.ι f := by
+theorem image.lift_fac (F' : MonoFactorisation f) : image.lift F' ≫ F'.m = image.ι f := by
   ext x
   change (F'.e ≫ F'.m) _ = _
   rw [F'.fac, (Classical.indefiniteDescription _ x.2).2]
@@ -77,22 +77,22 @@ theorem image.lift_fac (F' : mono_factorisation f) : image.lift F' ≫ F'.m = im
 end
 
 /-- the factorisation of any morphism in AddCommGroup through a mono. -/
-def mono_factorisation : mono_factorisation f where
+def mono_factorisation : MonoFactorisation f where
   i := image f
   m := image.ι f
-  e := factor_thru_image f
+  e := factorThruImage f
 
 /-- the factorisation of any morphism in AddCommGroup through a mono has the universal property of
 the image. -/
-noncomputable def is_image : is_image (mono_factorisation f) where
+noncomputable def is_image : IsImage (monoFactorisation f) where
   lift := image.lift
   lift_fac' := image.lift_fac
 
 /-- The categorical image of a morphism in `AddCommGroup`
 agrees with the usual group-theoretical range.
 -/
-noncomputable def image_iso_range {G H : AddCommGroupₓₓ.{0}} (f : G ⟶ H) : limits.image f ≅ AddCommGroupₓₓ.of f.range :=
-  is_image.iso_ext (image.is_image f) (is_image f)
+noncomputable def image_iso_range {G H : AddCommGroupₓₓ.{0}} (f : G ⟶ H) : Limits.image f ≅ AddCommGroupₓₓ.of f.range :=
+  IsImage.isoExt (Image.isImage f) (isImage f)
 
 end AddCommGroupₓₓ
 

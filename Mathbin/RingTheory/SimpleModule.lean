@@ -57,7 +57,7 @@ theorem IsAtom : IsAtom m :=
 
 end IsSimpleModule
 
-theorem is_semisimple_of_Sup_simples_eq_top (h : Sup { m : Submodule R M | IsSimpleModule R m } = ⊤) :
+theorem is_semisimple_of_Sup_simples_eq_top (h : sup { m : Submodule R M | IsSimpleModule R m } = ⊤) :
     IsSemisimpleModule R M :=
   is_complemented_of_Sup_atoms_eq_top
     (by
@@ -67,7 +67,7 @@ namespace IsSemisimpleModule
 
 variable [IsSemisimpleModule R M]
 
-theorem Sup_simples_eq_top : Sup { m : Submodule R M | IsSimpleModule R m } = ⊤ := by
+theorem Sup_simples_eq_top : sup { m : Submodule R M | IsSimpleModule R m } = ⊤ := by
   simp_rw [is_simple_module_iff_is_atom]
   exact Sup_atoms_eq_top
 
@@ -78,7 +78,7 @@ instance is_semisimple_submodule {m : Submodule R M} : IsSemisimpleModule R m :=
 end IsSemisimpleModule
 
 theorem is_semisimple_iff_top_eq_Sup_simples :
-    Sup { m : Submodule R M | IsSimpleModule R m } = ⊤ ↔ IsSemisimpleModule R M :=
+    sup { m : Submodule R M | IsSimpleModule R m } = ⊤ ↔ IsSemisimpleModule R M :=
   ⟨is_semisimple_of_Sup_simples_eq_top, by
     intro
     exact IsSemisimpleModule.Sup_simples_eq_top⟩

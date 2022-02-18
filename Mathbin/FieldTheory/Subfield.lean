@@ -72,18 +72,18 @@ namespace Subfield
 
 /-- The underlying `add_subgroup` of a subfield. -/
 def to_add_subgroup (s : Subfield K) : AddSubgroup K :=
-  { s.to_subring.to_add_subgroup with }
+  { s.toSubring.toAddSubgroup with }
 
 /-- The underlying submonoid of a subfield. -/
 def to_submonoid (s : Subfield K) : Submonoid K :=
-  { s.to_subring.to_submonoid with }
+  { s.toSubring.toSubmonoid with }
 
 instance : SetLike (Subfield K) K :=
   ⟨Subfield.Carrier, fun p q h => by
     cases p <;> cases q <;> congr⟩
 
 @[simp]
-theorem mem_carrier {s : Subfield K} {x : K} : x ∈ s.carrier ↔ x ∈ s :=
+theorem mem_carrier {s : Subfield K} {x : K} : x ∈ s.Carrier ↔ x ∈ s :=
   Iff.rfl
 
 @[simp]
@@ -107,7 +107,7 @@ theorem ext {S T : Subfield K} (h : ∀ x, x ∈ S ↔ x ∈ T) : S = T :=
 /-- Copy of a subfield with a new `carrier` equal to the old one. Useful to fix definitional
 equalities. -/
 protected def copy (S : Subfield K) (s : Set K) (hs : s = ↑S) : Subfield K :=
-  { S.to_subring.copy s hs with Carrier := s, inv_mem' := hs.symm ▸ S.inv_mem' }
+  { S.toSubring.copy s hs with Carrier := s, inv_mem' := hs.symm ▸ S.inv_mem' }
 
 @[simp]
 theorem coe_copy (S : Subfield K) (s : Set K) (hs : s = ↑S) : (S.copy s hs : Set K) = s :=
@@ -117,11 +117,11 @@ theorem copy_eq (S : Subfield K) (s : Set K) (hs : s = ↑S) : S.copy s hs = S :
   SetLike.coe_injective hs
 
 @[simp]
-theorem coe_to_subring (s : Subfield K) : (s.to_subring : Set K) = s :=
+theorem coe_to_subring (s : Subfield K) : (s.toSubring : Set K) = s :=
   rfl
 
 @[simp]
-theorem mem_to_subring (s : Subfield K) (x : K) : x ∈ s.to_subring ↔ x ∈ s :=
+theorem mem_to_subring (s : Subfield K) (x : K) : x ∈ s.toSubring ↔ x ∈ s :=
   Iff.rfl
 
 end Subfield
@@ -156,7 +156,7 @@ theorem neg_mem : ∀ {x : K}, x ∈ s → -x ∈ s :=
 
 /-- A subfield is closed under subtraction. -/
 theorem sub_mem {x y : K} : x ∈ s → y ∈ s → x - y ∈ s :=
-  s.to_subring.sub_mem
+  s.toSubring.sub_mem
 
 /-- A subfield is closed under inverses. -/
 theorem inv_mem : ∀ {x : K}, x ∈ s → x⁻¹ ∈ s :=
@@ -168,40 +168,40 @@ theorem div_mem {x y : K} (hx : x ∈ s) (hy : y ∈ s) : x / y ∈ s := by
   exact s.mul_mem hx (s.inv_mem hy)
 
 /-- Product of a list of elements in a subfield is in the subfield. -/
-theorem list_prod_mem {l : List K} : (∀, ∀ x ∈ l, ∀, x ∈ s) → l.prod ∈ s :=
-  s.to_submonoid.list_prod_mem
+theorem list_prod_mem {l : List K} : (∀, ∀ x ∈ l, ∀, x ∈ s) → l.Prod ∈ s :=
+  s.toSubmonoid.list_prod_mem
 
 /-- Sum of a list of elements in a subfield is in the subfield. -/
-theorem list_sum_mem {l : List K} : (∀, ∀ x ∈ l, ∀, x ∈ s) → l.sum ∈ s :=
-  s.to_add_subgroup.list_sum_mem
+theorem list_sum_mem {l : List K} : (∀, ∀ x ∈ l, ∀, x ∈ s) → l.Sum ∈ s :=
+  s.toAddSubgroup.list_sum_mem
 
 /-- Product of a multiset of elements in a subfield is in the subfield. -/
-theorem multiset_prod_mem (m : Multiset K) : (∀, ∀ a ∈ m, ∀, a ∈ s) → m.prod ∈ s :=
-  s.to_submonoid.multiset_prod_mem m
+theorem multiset_prod_mem (m : Multiset K) : (∀, ∀ a ∈ m, ∀, a ∈ s) → m.Prod ∈ s :=
+  s.toSubmonoid.multiset_prod_mem m
 
 /-- Sum of a multiset of elements in a `subfield` is in the `subfield`. -/
-theorem multiset_sum_mem (m : Multiset K) : (∀, ∀ a ∈ m, ∀, a ∈ s) → m.sum ∈ s :=
-  s.to_add_subgroup.multiset_sum_mem m
+theorem multiset_sum_mem (m : Multiset K) : (∀, ∀ a ∈ m, ∀, a ∈ s) → m.Sum ∈ s :=
+  s.toAddSubgroup.multiset_sum_mem m
 
 /-- Product of elements of a subfield indexed by a `finset` is in the subfield. -/
 theorem prod_mem {ι : Type _} {t : Finset ι} {f : ι → K} (h : ∀, ∀ c ∈ t, ∀, f c ∈ s) : (∏ i in t, f i) ∈ s :=
-  s.to_submonoid.prod_mem h
+  s.toSubmonoid.prod_mem h
 
 /-- Sum of elements in a `subfield` indexed by a `finset` is in the `subfield`. -/
 theorem sum_mem {ι : Type _} {t : Finset ι} {f : ι → K} (h : ∀, ∀ c ∈ t, ∀, f c ∈ s) : (∑ i in t, f i) ∈ s :=
-  s.to_add_subgroup.sum_mem h
+  s.toAddSubgroup.sum_mem h
 
 theorem pow_mem {x : K} (hx : x ∈ s) (n : ℕ) : x ^ n ∈ s :=
-  s.to_submonoid.pow_mem hx n
+  s.toSubmonoid.pow_mem hx n
 
 theorem zsmul_mem {x : K} (hx : x ∈ s) (n : ℤ) : n • x ∈ s :=
-  s.to_add_subgroup.zsmul_mem hx n
+  s.toAddSubgroup.zsmul_mem hx n
 
 theorem coe_int_mem (n : ℤ) : (n : K) ∈ s := by
   simp only [← zsmul_one, zsmul_mem, one_mem]
 
 instance : Ringₓ s :=
-  s.to_subring.to_ring
+  s.toSubring.toRing
 
 instance : Div s :=
   ⟨fun x y => ⟨x / y, s.div_mem x.2 y.2⟩⟩
@@ -253,16 +253,16 @@ theorem coe_one : ((1 : s) : K) = 1 :=
 
 /-- The embedding from a subfield of the field `K` to `K`. -/
 def Subtype (s : Subfield K) : s →+* K :=
-  { s.to_submonoid.subtype, s.to_add_subgroup.subtype with toFun := coe }
+  { s.toSubmonoid.Subtype, s.toAddSubgroup.Subtype with toFun := coe }
 
 instance to_algebra : Algebra s K :=
-  RingHom.toAlgebra s.subtype
+  RingHom.toAlgebra s.Subtype
 
 @[simp]
-theorem coeSubtype : ⇑s.subtype = coe :=
+theorem coeSubtype : ⇑s.Subtype = coe :=
   rfl
 
-theorem to_subring.subtype_eq_subtype (F : Type _) [Field F] (S : Subfield F) : S.to_subring.subtype = S.subtype :=
+theorem to_subring.subtype_eq_subtype (F : Type _) [Field F] (S : Subfield F) : S.toSubring.Subtype = S.Subtype :=
   rfl
 
 /-! # Partial order -/
@@ -271,19 +271,19 @@ theorem to_subring.subtype_eq_subtype (F : Type _) [Field F] (S : Subfield F) : 
 variable (s t)
 
 @[simp]
-theorem mem_to_submonoid {s : Subfield K} {x : K} : x ∈ s.to_submonoid ↔ x ∈ s :=
+theorem mem_to_submonoid {s : Subfield K} {x : K} : x ∈ s.toSubmonoid ↔ x ∈ s :=
   Iff.rfl
 
 @[simp]
-theorem coe_to_submonoid : (s.to_submonoid : Set K) = s :=
+theorem coe_to_submonoid : (s.toSubmonoid : Set K) = s :=
   rfl
 
 @[simp]
-theorem mem_to_add_subgroup {s : Subfield K} {x : K} : x ∈ s.to_add_subgroup ↔ x ∈ s :=
+theorem mem_to_add_subgroup {s : Subfield K} {x : K} : x ∈ s.toAddSubgroup ↔ x ∈ s :=
   Iff.rfl
 
 @[simp]
-theorem coe_to_add_subgroup : (s.to_add_subgroup : Set K) = s :=
+theorem coe_to_add_subgroup : (s.toAddSubgroup : Set K) = s :=
   rfl
 
 /-! # top -/
@@ -311,7 +311,7 @@ variable (f : K →+* L)
 
 /-- The preimage of a subfield along a ring homomorphism is a subfield. -/
 def comap (s : Subfield L) : Subfield K :=
-  { s.to_subring.comap f with
+  { s.toSubring.comap f with
     inv_mem' := fun x hx =>
       show f x⁻¹ ∈ s by
         rw [f.map_inv]
@@ -333,7 +333,7 @@ theorem comap_comap (s : Subfield M) (g : L →+* M) (f : K →+* L) : (s.comap 
 
 /-- The image of a subfield along a ring homomorphism is a subfield. -/
 def map (s : Subfield K) : Subfield L :=
-  { s.to_subring.map f with
+  { s.toSubring.map f with
     inv_mem' := by
       rintro _ ⟨x, hx, rfl⟩
       exact ⟨x⁻¹, s.inv_mem hx, f.map_inv x⟩ }
@@ -368,24 +368,24 @@ def field_range : Subfield L :=
   ((⊤ : Subfield K).map f).copy (Set.Range f) Set.image_univ.symm
 
 @[simp]
-theorem coe_field_range : (f.field_range : Set L) = Set.Range f :=
+theorem coe_field_range : (f.fieldRange : Set L) = Set.Range f :=
   rfl
 
 @[simp]
-theorem mem_field_range {f : K →+* L} {y : L} : y ∈ f.field_range ↔ ∃ x, f x = y :=
+theorem mem_field_range {f : K →+* L} {y : L} : y ∈ f.fieldRange ↔ ∃ x, f x = y :=
   Iff.rfl
 
-theorem field_range_eq_map : f.field_range = Subfield.map f ⊤ := by
+theorem field_range_eq_map : f.fieldRange = Subfield.map f ⊤ := by
   ext
   simp
 
-theorem map_field_range : f.field_range.map g = (g.comp f).fieldRange := by
+theorem map_field_range : f.fieldRange.map g = (g.comp f).fieldRange := by
   simpa only [field_range_eq_map] using (⊤ : Subfield K).map_map g f
 
 /-- The range of a morphism of fields is a fintype, if the domain is a fintype.
 
 Note that this instance can cause a diamond with `subtype.fintype` if `L` is also a fintype.-/
-instance fintype_field_range [Fintype K] [DecidableEq L] (f : K →+* L) : Fintype f.field_range :=
+instance fintype_field_range [Fintype K] [DecidableEq L] (f : K →+* L) : Fintype f.fieldRange :=
   Set.fintypeRange f
 
 end RingHom
@@ -398,7 +398,7 @@ namespace Subfield
 /-- The inf of two subfields is their intersection. -/
 instance : HasInf (Subfield K) :=
   ⟨fun s t =>
-    { s.to_subring⊓t.to_subring with
+    { s.toSubring⊓t.toSubring with
       inv_mem' := fun x hx =>
         Subring.mem_inf.mpr ⟨s.inv_mem (Subring.mem_inf.mp hx).1, t.inv_mem (Subring.mem_inf.mp hx).2⟩ }⟩
 
@@ -412,7 +412,7 @@ theorem mem_inf {p p' : Subfield K} {x : K} : x ∈ p⊓p' ↔ x ∈ p ∧ x ∈
 
 instance : HasInfₓ (Subfield K) :=
   ⟨fun S =>
-    { Inf (Subfield.toSubring '' S) with
+    { inf (Subfield.toSubring '' S) with
       inv_mem' := by
         rintro x hx
         apply subring.mem_Inf.mpr
@@ -420,34 +420,34 @@ instance : HasInfₓ (Subfield K) :=
         exact p.inv_mem (subring.mem_Inf.mp hx p.to_subring ⟨p, p_mem, rfl⟩) }⟩
 
 @[simp, norm_cast]
-theorem coe_Inf (S : Set (Subfield K)) : ((Inf S : Subfield K) : Set K) = ⋂ s ∈ S, ↑s :=
-  show ((Inf (Subfield.toSubring '' S) : Subring K) : Set K) = ⋂ s ∈ S, ↑s by
+theorem coe_Inf (S : Set (Subfield K)) : ((inf S : Subfield K) : Set K) = ⋂ s ∈ S, ↑s :=
+  show ((inf (Subfield.toSubring '' S) : Subring K) : Set K) = ⋂ s ∈ S, ↑s by
     ext x
     rw [Subring.coe_Inf, Set.mem_Inter, Set.mem_Inter]
     exact
-      ⟨fun h s s' ⟨s_mem, s'_eq⟩ => h s.to_subring _ ⟨⟨s, s_mem, rfl⟩, s'_eq⟩,
+      ⟨fun h s s' ⟨s_mem, s'_eq⟩ => h s.toSubring _ ⟨⟨s, s_mem, rfl⟩, s'_eq⟩,
         fun h s s' ⟨⟨s'', s''_mem, s_eq⟩, (s'_eq : ↑s = s')⟩ =>
         h s'' _
           ⟨s''_mem, by
             simp [← s_eq, ← s'_eq]⟩⟩
 
-theorem mem_Inf {S : Set (Subfield K)} {x : K} : x ∈ Inf S ↔ ∀, ∀ p ∈ S, ∀, x ∈ p :=
-  Subring.mem_Inf.trans ⟨fun h p hp => h p.to_subring ⟨p, hp, rfl⟩, fun h p ⟨p', hp', p_eq⟩ => p_eq ▸ h p' hp'⟩
+theorem mem_Inf {S : Set (Subfield K)} {x : K} : x ∈ inf S ↔ ∀, ∀ p ∈ S, ∀, x ∈ p :=
+  Subring.mem_Inf.trans ⟨fun h p hp => h p.toSubring ⟨p, hp, rfl⟩, fun h p ⟨p', hp', p_eq⟩ => p_eq ▸ h p' hp'⟩
 
 @[simp]
-theorem Inf_to_subring (s : Set (Subfield K)) : (Inf s).toSubring = ⨅ t ∈ s, Subfield.toSubring t := by
+theorem Inf_to_subring (s : Set (Subfield K)) : (inf s).toSubring = ⨅ t ∈ s, Subfield.toSubring t := by
   ext x
   rw [mem_to_subring, mem_Inf]
   erw [Subring.mem_Inf]
   exact
     ⟨fun h p ⟨p', hp⟩ => hp ▸ subring.mem_Inf.mpr fun p ⟨hp', hp⟩ => hp ▸ h _ hp', fun h p hp =>
-      h p.to_subring
+      h p.toSubring
         ⟨p,
           Subring.ext fun x =>
             ⟨fun hx => subring.mem_Inf.mp hx _ ⟨hp, rfl⟩, fun hx =>
               subring.mem_Inf.mpr fun p' ⟨hp, p'_eq⟩ => p'_eq ▸ hx⟩⟩⟩
 
-theorem is_glb_Inf (S : Set (Subfield K)) : IsGlb S (Inf S) := by
+theorem is_glb_Inf (S : Set (Subfield K)) : IsGlb S (inf S) := by
   refine' IsGlb.of_image (fun s t => show (s : Set K) ≤ t ↔ s ≤ t from SetLike.coe_subset_coe) _
   convert is_glb_binfi
   exact coe_Inf _
@@ -461,11 +461,11 @@ instance : CompleteLattice (Subfield K) :=
 /-! # subfield closure of a subset -/
 
 
--- ././Mathport/Syntax/Translate/Basic.lean:825:4: unsupported set replacement {(«expr / »(x, y)) | (x «expr ∈ » subring.closure s) (y «expr ∈ » subring.closure s)}
+-- ././Mathport/Syntax/Translate/Basic.lean:827:4: unsupported set replacement {(«expr / »(x, y)) | (x «expr ∈ » subring.closure s) (y «expr ∈ » subring.closure s)}
 /-- The `subfield` generated by a set. -/
 def closure (s : Set K) : Subfield K where
   Carrier :=
-    "././Mathport/Syntax/Translate/Basic.lean:825:4: unsupported set replacement {(«expr / »(x, y)) | (x «expr ∈ » subring.closure s) (y «expr ∈ » subring.closure s)}"
+    "././Mathport/Syntax/Translate/Basic.lean:827:4: unsupported set replacement {(«expr / »(x, y)) | (x «expr ∈ » subring.closure s) (y «expr ∈ » subring.closure s)}"
   zero_mem' := ⟨0, Subring.zero_mem _, 1, Subring.one_mem _, div_one _⟩
   one_mem' := ⟨1, Subring.one_mem _, 1, Subring.one_mem _, div_one _⟩
   neg_mem' := fun x ⟨y, hy, z, hz, x_eq⟩ => ⟨-y, Subring.neg_mem _ hy, z, hz, x_eq ▸ neg_div _ _⟩
@@ -502,7 +502,7 @@ theorem not_mem_of_not_mem_closure {s : Set K} {P : K} (hP : P ∉ closure s) : 
 
 theorem mem_closure {x : K} {s : Set K} : x ∈ closure s ↔ ∀ S : Subfield K, s ⊆ S → x ∈ S :=
   ⟨fun ⟨y, hy, z, hz, x_eq⟩ t le =>
-    x_eq ▸ t.div_mem (Subring.mem_closure.mp hy t.to_subring le) (Subring.mem_closure.mp hz t.to_subring le), fun h =>
+    x_eq ▸ t.div_mem (Subring.mem_closure.mp hy t.toSubring le) (Subring.mem_closure.mp hz t.toSubring le), fun h =>
     h (closure s) subset_closure⟩
 
 /-- A subfield `t` includes `closure s` if and only if it includes `s`. -/
@@ -610,13 +610,13 @@ theorem coe_supr_of_directed {ι} [hι : Nonempty ι] {S : ι → Subfield K} (h
   Set.ext fun x => by
     simp [mem_supr_of_directed hS]
 
-theorem mem_Sup_of_directed_on {S : Set (Subfield K)} (Sne : S.nonempty) (hS : DirectedOn (· ≤ ·) S) {x : K} :
-    x ∈ Sup S ↔ ∃ s ∈ S, x ∈ s := by
+theorem mem_Sup_of_directed_on {S : Set (Subfield K)} (Sne : S.Nonempty) (hS : DirectedOn (· ≤ ·) S) {x : K} :
+    x ∈ sup S ↔ ∃ s ∈ S, x ∈ s := by
   have : Nonempty S := Sne.to_subtype
   simp only [Sup_eq_supr', mem_supr_of_directed hS.directed_coe, SetCoe.exists, Subtype.coe_mk]
 
-theorem coe_Sup_of_directed_on {S : Set (Subfield K)} (Sne : S.nonempty) (hS : DirectedOn (· ≤ ·) S) :
-    (↑(Sup S) : Set K) = ⋃ s ∈ S, ↑s :=
+theorem coe_Sup_of_directed_on {S : Set (Subfield K)} (Sne : S.Nonempty) (hS : DirectedOn (· ≤ ·) S) :
+    (↑(sup S) : Set K) = ⋃ s ∈ S, ↑s :=
   Set.ext fun x => by
     simp [mem_Sup_of_directed_on Sne hS]
 
@@ -638,18 +638,18 @@ def cod_restrict_field (f : K →+* L) (s : Subfield L) (h : ∀ x, f x ∈ s) :
 
 /-- Restriction of a ring homomorphism to a subfield of the domain. -/
 def restrict_field (f : K →+* L) (s : Subfield K) : s →+* L :=
-  f.comp s.subtype
+  f.comp s.Subtype
 
 @[simp]
-theorem restrict_field_apply (f : K →+* L) (x : s) : f.restrict_field s x = f x :=
+theorem restrict_field_apply (f : K →+* L) (x : s) : f.restrictField s x = f x :=
   rfl
 
 /-- Restriction of a ring homomorphism to its range interpreted as a subfield. -/
-def range_restrict_field (f : K →+* L) : K →+* f.field_range :=
-  f.srange_restrict
+def range_restrict_field (f : K →+* L) : K →+* f.fieldRange :=
+  f.srangeRestrict
 
 @[simp]
-theorem coe_range_restrict_field (f : K →+* L) (x : K) : (f.range_restrict_field x : L) = f x :=
+theorem coe_range_restrict_field (f : K →+* L) (x : K) : (f.rangeRestrictField x : L) = f x :=
   rfl
 
 /-- The subfield of elements `x : R` such that `f x = g x`, i.e.,
@@ -663,13 +663,12 @@ def eq_locus_field (f g : K →+* L) : Subfield K :=
 
 /-- If two ring homomorphisms are equal on a set, then they are equal on its subfield closure. -/
 theorem eq_on_field_closure {f g : K →+* L} {s : Set K} (h : Set.EqOn f g s) : Set.EqOn f g (closure s) :=
-  show closure s ≤ f.eq_locus_field g from closure_le.2 h
+  show closure s ≤ f.eqLocusField g from closure_le.2 h
 
 theorem eq_of_eq_on_subfield_top {f g : K →+* L} (h : Set.EqOn f g (⊤ : Subfield K)) : f = g :=
   ext fun x => h trivialₓ
 
-theorem eq_of_eq_on_of_field_closure_eq_top {s : Set K} (hs : closure s = ⊤) {f g : K →+* L} (h : s.eq_on f g) :
-    f = g :=
+theorem eq_of_eq_on_of_field_closure_eq_top {s : Set K} (hs : closure s = ⊤) {f g : K →+* L} (h : s.EqOn f g) : f = g :=
   eq_of_eq_on_subfield_top <| hs ▸ eq_on_field_closure h
 
 theorem field_closure_preimage_le (f : K →+* L) (s : Set L) : closure (f ⁻¹' s) ≤ (closure s).comap f :=
@@ -690,10 +689,10 @@ open RingHom
 
 /-- The ring homomorphism associated to an inclusion of subfields. -/
 def inclusion {S T : Subfield K} (h : S ≤ T) : S →+* T :=
-  S.subtype.cod_restrict_field _ fun x => h x.2
+  S.Subtype.codRestrictField _ fun x => h x.2
 
 @[simp]
-theorem field_range_subtype (s : Subfield K) : s.subtype.field_range = s :=
+theorem field_range_subtype (s : Subfield K) : s.Subtype.fieldRange = s :=
   SetLike.ext' <| (coe_srange _).trans Subtype.range_coe
 
 end Subfield

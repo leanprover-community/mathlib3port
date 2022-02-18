@@ -57,7 +57,7 @@ theorem is_conformal_map_const_smul {c : R} (hc : c ≠ 0) : IsConformalMap (c �
     ext
     simp ⟩
 
-theorem LinearIsometry.is_conformal_map (f' : M →ₗᵢ[R] N) : IsConformalMap f'.to_continuous_linear_map :=
+theorem LinearIsometry.is_conformal_map (f' : M →ₗᵢ[R] N) : IsConformalMap f'.toContinuousLinearMap :=
   ⟨1, one_ne_zero, f', by
     ext
     simp ⟩

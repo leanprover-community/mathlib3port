@@ -42,7 +42,7 @@ open MeasureTheory TopologicalSpace ContinuousMap
 
 variable {α : Type _} [MeasurableSpace α] [TopologicalSpace α] [NormalSpace α] [BorelSpace α]
 
-variable (E : Type _) [MeasurableSpace E] [NormedGroup E] [BorelSpace E] [second_countable_topology E]
+variable (E : Type _) [MeasurableSpace E] [NormedGroup E] [BorelSpace E] [SecondCountableTopology E]
 
 variable {p : ℝ≥0∞} [_i : Fact (1 ≤ p)] (hp : p ≠ ∞) (μ : Measureₓ α)
 
@@ -55,15 +55,15 @@ variable [NormedSpace ℝ E]
 -- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (u «expr ⊇ » s)
 -- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (F «expr ⊆ » s)
 /-- A function in `Lp` can be approximated in `Lp` by continuous functions. -/
-theorem bounded_continuous_function_dense [μ.weakly_regular] :
-    (BoundedContinuousFunction E p μ).topologicalClosure = ⊤ := by
+theorem bounded_continuous_function_dense [μ.WeaklyRegular] :
+    (boundedContinuousFunction E p μ).topologicalClosure = ⊤ := by
   have hp₀ : 0 < p := lt_of_lt_of_leₓ Ennreal.zero_lt_one _i.elim
   have hp₀' : 0 ≤ 1 / p.to_real := div_nonneg zero_le_one Ennreal.to_real_nonneg
   have hp₀'' : 0 < p.to_real := by
     simpa [← Ennreal.to_real_lt_to_real Ennreal.zero_ne_top hp] using hp₀
   suffices
     ∀ c : E {s : Set α} hs : MeasurableSet s hμs : μ s < ⊤,
-      (Lp.simple_func.indicator_const p hs hμs.ne c : Lp E p μ) ∈ (BoundedContinuousFunction E p μ).topologicalClosure
+      (Lp.simple_func.indicator_const p hs hμs.Ne c : Lp E p μ) ∈ (BoundedContinuousFunction E p μ).topologicalClosure
     by
     rw [AddSubgroup.eq_top_iff']
     refine' Lp.induction hp _ _ _ _
@@ -163,8 +163,8 @@ variable (𝕜 : Type _) [MeasurableSpace 𝕜] [NormedField 𝕜] [OpensMeasura
 
 namespace BoundedContinuousFunction
 
-theorem to_Lp_dense_range [μ.weakly_regular] [is_finite_measure μ] :
-    DenseRange (⇑(to_Lp p μ 𝕜 : (α →ᵇ E) →L[𝕜] Lp E p μ)) := by
+theorem to_Lp_dense_range [μ.WeaklyRegular] [IsFiniteMeasure μ] :
+    DenseRange (⇑(toLp p μ 𝕜 : (α →ᵇ E) →L[𝕜] lp E p μ)) := by
   have : NormedSpace ℝ E := RestrictScalars.normedSpace ℝ 𝕜 E
   rw [dense_range_iff_closure_range]
   suffices (to_Lp p μ 𝕜 : _ →L[𝕜] Lp E p μ).range.toAddSubgroup.topologicalClosure = ⊤ by
@@ -175,8 +175,8 @@ end BoundedContinuousFunction
 
 namespace ContinuousMap
 
-theorem to_Lp_dense_range [CompactSpace α] [μ.weakly_regular] [is_finite_measure μ] :
-    DenseRange (⇑(to_Lp p μ 𝕜 : C(α, E) →L[𝕜] Lp E p μ)) := by
+theorem to_Lp_dense_range [CompactSpace α] [μ.WeaklyRegular] [IsFiniteMeasure μ] :
+    DenseRange (⇑(toLp p μ 𝕜 : C(α, E) →L[𝕜] lp E p μ)) := by
   have : NormedSpace ℝ E := RestrictScalars.normedSpace ℝ 𝕜 E
   rw [dense_range_iff_closure_range]
   suffices (to_Lp p μ 𝕜 : _ →L[𝕜] Lp E p μ).range.toAddSubgroup.topologicalClosure = ⊤ by

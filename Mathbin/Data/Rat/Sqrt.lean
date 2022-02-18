@@ -28,7 +28,7 @@ theorem exists_mul_self (x : ℚ) : (∃ q, q * q = x) ↔ Rat.sqrt x * Rat.sqrt
 theorem sqrt_nonneg (q : ℚ) : 0 ≤ Rat.sqrt q :=
   nonneg_iff_zero_le.1 <|
     (mk_nonneg _ <|
-          Int.coe_nat_pos.2 <| Nat.pos_of_ne_zeroₓ fun H => pos_iff_ne_zero.1 q.pos <| Nat.sqrt_eq_zero.1 H).2 <|
+          Int.coe_nat_pos.2 <| Nat.pos_of_ne_zeroₓ fun H => pos_iff_ne_zero.1 q.Pos <| Nat.sqrt_eq_zero.1 H).2 <|
       Int.coe_nat_nonneg _
 
 end Rat

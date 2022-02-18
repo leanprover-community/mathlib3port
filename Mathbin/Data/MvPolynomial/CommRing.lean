@@ -56,11 +56,11 @@ instance : CommRingₓ (MvPolynomial σ R) :=
 variable (σ a a')
 
 @[simp]
-theorem C_sub : (C (a - a') : MvPolynomial σ R) = C a - C a' :=
+theorem C_sub : (c (a - a') : MvPolynomial σ R) = c a - c a' :=
   RingHom.map_sub _ _ _
 
 @[simp]
-theorem C_neg : (C (-a) : MvPolynomial σ R) = -C a :=
+theorem C_neg : (c (-a) : MvPolynomial σ R) = -c a :=
   RingHom.map_neg _ _
 
 @[simp]
@@ -121,14 +121,14 @@ variable (f : R →+* S) (g : σ → S)
 
 @[simp]
 theorem eval₂_sub : (p - q).eval₂ f g = p.eval₂ f g - q.eval₂ f g :=
-  (eval₂_hom f g).map_sub _ _
+  (eval₂Hom f g).map_sub _ _
 
 @[simp]
 theorem eval₂_neg : (-p).eval₂ f g = -p.eval₂ f g :=
-  (eval₂_hom f g).map_neg _
+  (eval₂Hom f g).map_neg _
 
-theorem hom_C (f : MvPolynomial σ ℤ →+* S) (n : ℤ) : f (C n) = (n : S) :=
-  (f.comp C).eq_int_cast n
+theorem hom_C (f : MvPolynomial σ ℤ →+* S) (n : ℤ) : f (c n) = (n : S) :=
+  (f.comp c).eq_int_cast n
 
 /-- A ring homomorphism f : Z[X_1, X_2, ...] → R
 is determined by the evaluations f(X_1), f(X_2), ... -/
@@ -150,7 +150,7 @@ theorem eval₂_hom_X {R : Type u} (c : ℤ →+* S) (f : MvPolynomial R ℤ →
 functions out of the type `σ`, -/
 def hom_equiv : (MvPolynomial σ ℤ →+* S) ≃ (σ → S) where
   toFun := fun f => ⇑f ∘ X
-  invFun := fun f => eval₂_hom (Int.castRingHom S) f
+  invFun := fun f => eval₂Hom (Int.castRingHom S) f
   left_inv := fun f => RingHom.ext <| eval₂_hom_X _ _
   right_inv := fun f =>
     funext fun x => by
@@ -162,7 +162,7 @@ section DegreeOf
 
 theorem degree_of_sub_lt {x : σ} {f g : MvPolynomial σ R} {k : ℕ} (h : 0 < k)
     (hf : ∀ m : σ →₀ ℕ, m ∈ f.support → k ≤ m x → coeff m f = coeff m g)
-    (hg : ∀ m : σ →₀ ℕ, m ∈ g.support → k ≤ m x → coeff m f = coeff m g) : degree_of x (f - g) < k := by
+    (hg : ∀ m : σ →₀ ℕ, m ∈ g.support → k ≤ m x → coeff m f = coeff m g) : degreeOf x (f - g) < k := by
   rw [degree_of_lt_iff h]
   intro m hm
   by_contra hc
@@ -180,15 +180,15 @@ end DegreeOf
 section TotalDegree
 
 @[simp]
-theorem total_degree_neg (a : MvPolynomial σ R) : (-a).totalDegree = a.total_degree := by
+theorem total_degree_neg (a : MvPolynomial σ R) : (-a).totalDegree = a.totalDegree := by
   simp only [total_degree, support_neg]
 
-theorem total_degree_sub (a b : MvPolynomial σ R) : (a - b).totalDegree ≤ max a.total_degree b.total_degree :=
+theorem total_degree_sub (a b : MvPolynomial σ R) : (a - b).totalDegree ≤ max a.totalDegree b.totalDegree :=
   calc
     (a - b).totalDegree = (a + -b).totalDegree := by
       rw [sub_eq_add_neg]
-    _ ≤ max a.total_degree (-b).totalDegree := total_degree_add a (-b)
-    _ = max a.total_degree b.total_degree := by
+    _ ≤ max a.totalDegree (-b).totalDegree := total_degree_add a (-b)
+    _ = max a.totalDegree b.totalDegree := by
       rw [total_degree_neg]
     
 

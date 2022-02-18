@@ -18,14 +18,14 @@ variable {α β : Type _}
 /-- The antidiagonal of a multiset `s` consists of all pairs `(t₁, t₂)`
     such that `t₁ + t₂ = s`. These pairs are counted with multiplicities. -/
 def antidiagonal (s : Multiset α) : Multiset (Multiset α × Multiset α) :=
-  Quot.liftOn s (fun l => (revzip (powerset_aux l) : Multiset (Multiset α × Multiset α))) fun l₁ l₂ h =>
+  Quot.liftOn s (fun l => (revzipₓ (powersetAux l) : Multiset (Multiset α × Multiset α))) fun l₁ l₂ h =>
     Quot.sound (revzip_powerset_aux_perm h)
 
-theorem antidiagonal_coe (l : List α) : @antidiagonal α l = revzip (powerset_aux l) :=
+theorem antidiagonal_coe (l : List α) : @antidiagonal α l = revzipₓ (powersetAux l) :=
   rfl
 
 @[simp]
-theorem antidiagonal_coe' (l : List α) : @antidiagonal α l = revzip (powerset_aux' l) :=
+theorem antidiagonal_coe' (l : List α) : @antidiagonal α l = revzipₓ (powersetAux' l) :=
   Quot.sound revzip_powerset_aux_perm_aux'
 
 /-- A pair `(t₁, t₂)` of multisets is contained in `antidiagonal s`
@@ -75,7 +75,7 @@ theorem card_antidiagonal (s : Multiset α) : card (antidiagonal s) = 2 ^ card s
   have := card_powerset s <;> rwa [← antidiagonal_map_fst, card_map] at this
 
 theorem prod_map_add [CommSemiringₓ β] {s : Multiset α} {f g : α → β} :
-    Prod (s.map fun a => f a + g a) = Sum ((antidiagonal s).map fun p => (p.1.map f).Prod * (p.2.map g).Prod) := by
+    prod (s.map fun a => f a + g a) = sum ((antidiagonal s).map fun p => (p.1.map f).Prod * (p.2.map g).Prod) := by
   refine' s.induction_on _ _
   · simp
     

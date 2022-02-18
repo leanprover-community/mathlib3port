@@ -42,10 +42,10 @@ main declaration -/
 private unsafe def update_unsed_decls_list : Name → name_map declaration → tactic (name_map declaration)
   | n, m => do
     let d ← get_decl n
-    if m.contains n then do
-        let m := m.erase n
-        let ns := d.value.list_constant.union d.type.list_constant
-        ns.mfold m update_unsed_decls_list
+    if m n then do
+        let m := m n
+        let ns := d d
+        ns m update_unsed_decls_list
       else pure m
 
 /-- In the current file, list all the declaration that are not marked as `@[main_declaration]` and
@@ -54,9 +54,9 @@ unsafe def all_unused (fs : List (Option Stringₓ)) : tactic (name_map declarat
   let ds ← get_decls_from fs
   let ls ← ds.keys.mfilter (succeeds ∘ user_attribute.get_param_untyped main_declaration_attr)
   let ds ← ls.mfoldl (flip update_unsed_decls_list) ds
-  ds.mfilter fun n d => do
+  ds fun n d => do
       let e ← get_env
-      return <| !d.is_auto_or_internal e
+      return <| !d e
 
 /-- expecting a string literal (e.g. `"src/tactic/find_unused.lean"`)
 -/
@@ -92,9 +92,9 @@ in a finished mathlib development. -/
 unsafe def unused_decls_cmd (_ : parse <| tk "#list_unused_decls") : lean.parser Unit := do
   let fs ← pexpr_list
   show tactic Unit from do
-      let fs ← fs.mmap parse_file_name
+      let fs ← fs parse_file_name
       let ds ← all_unused <| none :: fs
-      ds.to_list.mmap' fun ⟨n, _⟩ =>
+      ds fun ⟨n, _⟩ =>
           ← do
             dbg_trace "#print {← n}"
 

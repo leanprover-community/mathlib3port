@@ -55,13 +55,13 @@ attribute [-instance] Complex.field
 /-- The embedding of the Gaussian integers into the complex numbers, as a ring homomorphism. -/
 def to_complex : ℤ[i] →+* ℂ :=
   Zsqrtd.lift
-    ⟨I, by
+    ⟨i, by
       simp ⟩
 
 end
 
 instance : Coe ℤ[i] ℂ :=
-  ⟨to_complex⟩
+  ⟨toComplex⟩
 
 theorem to_complex_def (x : ℤ[i]) : (x : ℂ) = x.re + x.im * I :=
   rfl
@@ -90,27 +90,27 @@ theorem to_complex_im (x y : ℤ) : ((⟨x, y⟩ : ℤ[i]) : ℂ).im = y := by
 
 @[simp]
 theorem to_complex_add (x y : ℤ[i]) : ((x + y : ℤ[i]) : ℂ) = x + y :=
-  to_complex.map_add _ _
+  toComplex.map_add _ _
 
 @[simp]
 theorem to_complex_mul (x y : ℤ[i]) : ((x * y : ℤ[i]) : ℂ) = x * y :=
-  to_complex.map_mul _ _
+  toComplex.map_mul _ _
 
 @[simp]
 theorem to_complex_one : ((1 : ℤ[i]) : ℂ) = 1 :=
-  to_complex.map_one
+  toComplex.map_one
 
 @[simp]
 theorem to_complex_zero : ((0 : ℤ[i]) : ℂ) = 0 :=
-  to_complex.map_zero
+  toComplex.map_zero
 
 @[simp]
 theorem to_complex_neg (x : ℤ[i]) : ((-x : ℤ[i]) : ℂ) = -x :=
-  to_complex.map_neg _
+  toComplex.map_neg _
 
 @[simp]
 theorem to_complex_sub (x y : ℤ[i]) : ((x - y : ℤ[i]) : ℂ) = x - y :=
-  to_complex.map_sub _ _
+  toComplex.map_sub _ _
 
 @[simp]
 theorem to_complex_inj {x y : ℤ[i]} : (x : ℂ) = y ↔ x = y := by
@@ -142,14 +142,14 @@ theorem norm_pos {x : ℤ[i]} : 0 < norm x ↔ x ≠ 0 := by
   rw [lt_iff_le_and_ne, Ne.def, eq_comm, norm_eq_zero] <;> simp [norm_nonneg]
 
 @[simp]
-theorem coe_nat_abs_norm (x : ℤ[i]) : (x.norm.nat_abs : ℤ) = x.norm :=
+theorem coe_nat_abs_norm (x : ℤ[i]) : (x.norm.natAbs : ℤ) = x.norm :=
   Int.nat_abs_of_nonneg (norm_nonneg _)
 
 @[simp]
-theorem nat_cast_nat_abs_norm {α : Type _} [Ringₓ α] (x : ℤ[i]) : (x.norm.nat_abs : α) = x.norm := by
+theorem nat_cast_nat_abs_norm {α : Type _} [Ringₓ α] (x : ℤ[i]) : (x.norm.natAbs : α) = x.norm := by
   rw [← Int.cast_coe_nat, coe_nat_abs_norm]
 
-theorem nat_abs_norm_eq (x : ℤ[i]) : x.norm.nat_abs = x.re.nat_abs * x.re.nat_abs + x.im.nat_abs * x.im.nat_abs :=
+theorem nat_abs_norm_eq (x : ℤ[i]) : x.norm.natAbs = x.re.natAbs * x.re.natAbs + x.im.natAbs * x.im.natAbs :=
   Int.coe_nat_inj <| by
     simp
     simp [norm]
@@ -174,7 +174,7 @@ theorem to_complex_div_im (x y : ℤ[i]) : ((x / y : ℤ[i]) : ℂ).im = round (
     simp [-Rat.round_cast, mul_assoc, div_eq_mul_inv, mul_addₓ, add_mulₓ]
 
 theorem norm_sq_le_norm_sq_of_re_le_of_im_le {x y : ℂ} (hre : abs x.re ≤ abs y.re) (him : abs x.im ≤ abs y.im) :
-    x.norm_sq ≤ y.norm_sq := by
+    x.normSq ≤ y.normSq := by
   rw [norm_sq_apply, norm_sq_apply, ← _root_.abs_mul_self, _root_.abs_mul, ← _root_.abs_mul_self y.re,
       _root_.abs_mul y.re, ← _root_.abs_mul_self x.im, _root_.abs_mul x.im, ← _root_.abs_mul_self y.im,
       _root_.abs_mul y.im] <;>
@@ -188,7 +188,7 @@ theorem norm_sq_div_sub_div_lt_one (x y : ℤ[i]) : ((x / y : ℂ) - ((x / y : �
         apply Complex.ext <;> simp
     _ ≤ (1 / 2 + 1 / 2 * I).normSq :=
       have : abs (2⁻¹ : ℝ) = 2⁻¹ :=
-        _root_.abs_of_nonneg
+        abs_of_nonneg
           (by
             norm_num)
       norm_sq_le_norm_sq_of_re_le_of_im_le
@@ -223,7 +223,7 @@ theorem norm_mod_lt (x : ℤ[i]) {y : ℤ[i]} (hy : y ≠ 0) : (x % y).norm < y.
         simp
       
 
-theorem nat_abs_norm_mod_lt (x : ℤ[i]) {y : ℤ[i]} (hy : y ≠ 0) : (x % y).norm.natAbs < y.norm.nat_abs :=
+theorem nat_abs_norm_mod_lt (x : ℤ[i]) {y : ℤ[i]} (hy : y ≠ 0) : (x % y).norm.natAbs < y.norm.natAbs :=
   Int.coe_nat_lt.1
     (by
       simp [-Int.coe_nat_lt, norm_mod_lt x hy])
@@ -252,7 +252,7 @@ instance : EuclideanDomain ℤ[i] :=
 
 open PrincipalIdealRing
 
-theorem mod_four_eq_three_of_nat_prime_of_prime (p : ℕ) [hp : Fact p.prime] (hpi : Prime (p : ℤ[i])) : p % 4 = 3 :=
+theorem mod_four_eq_three_of_nat_prime_of_prime (p : ℕ) [hp : Fact p.Prime] (hpi : Prime (p : ℤ[i])) : p % 4 = 3 :=
   hp.1.eq_two_or_odd.elim
     (fun hp2 =>
       absurd hpi
@@ -333,11 +333,11 @@ theorem mod_four_eq_three_of_nat_prime_of_prime (p : ℕ) [hp : Fact p.prime] (h
       have :=
         hpi.2.2 ⟨k, 1⟩ ⟨k, -1⟩
           ⟨y, by
-            rw [← hkmul, ← Nat.cast_mul p, ← hy] <;> simp ⟩
+            rw [← hkmul, ← Nat.cast_mulₓ p, ← hy] <;> simp ⟩
       clear_aux_decl
       tauto
 
-theorem sq_add_sq_of_nat_prime_of_not_irreducible (p : ℕ) [hp : Fact p.prime] (hpi : ¬Irreducible (p : ℤ[i])) :
+theorem sq_add_sq_of_nat_prime_of_not_irreducible (p : ℕ) [hp : Fact p.Prime] (hpi : ¬Irreducible (p : ℤ[i])) :
     ∃ a b, a ^ 2 + b ^ 2 = p :=
   have hpu : ¬IsUnit (p : ℤ[i]) :=
     mt norm_eq_one_iff.2 <| by
@@ -348,10 +348,10 @@ theorem sq_add_sq_of_nat_prime_of_not_irreducible (p : ℕ) [hp : Fact p.prime] 
   have hnap : (norm a).natAbs = p :=
     ((hp.1.mul_eq_prime_sq_iff (mt norm_eq_one_iff.1 hau) (mt norm_eq_one_iff.1 hbu)).1 <| by
         rw [← Int.coe_nat_inj', Int.coe_nat_pow, sq, ← @norm_nat_cast (-1), hpab] <;> simp ).1
-  ⟨a.re.nat_abs, a.im.nat_abs, by
+  ⟨a.re.natAbs, a.im.natAbs, by
     simpa [nat_abs_norm_eq, sq] using hnap⟩
 
-theorem prime_of_nat_prime_of_mod_four_eq_three (p : ℕ) [hp : Fact p.prime] (hp3 : p % 4 = 3) : Prime (p : ℤ[i]) :=
+theorem prime_of_nat_prime_of_mod_four_eq_three (p : ℕ) [hp : Fact p.Prime] (hp3 : p % 4 = 3) : Prime (p : ℤ[i]) :=
   irreducible_iff_prime.1 <|
     Classical.by_contradiction fun hpi =>
       let ⟨a, b, hab⟩ := sq_add_sq_of_nat_prime_of_not_irreducible p hpi
@@ -364,7 +364,7 @@ theorem prime_of_nat_prime_of_mod_four_eq_three (p : ℕ) [hp : Fact p.prime] (h
           simp )
 
 /-- A prime natural number is prime in `ℤ[i]` if and only if it is `3` mod `4` -/
-theorem prime_iff_mod_four_eq_three_of_nat_prime (p : ℕ) [hp : Fact p.prime] : Prime (p : ℤ[i]) ↔ p % 4 = 3 :=
+theorem prime_iff_mod_four_eq_three_of_nat_prime (p : ℕ) [hp : Fact p.Prime] : Prime (p : ℤ[i]) ↔ p % 4 = 3 :=
   ⟨mod_four_eq_three_of_nat_prime_of_prime p, prime_of_nat_prime_of_mod_four_eq_three p⟩
 
 end GaussianInt

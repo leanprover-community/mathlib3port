@@ -38,7 +38,7 @@ variable (α : Sort u)
 def Opposite : Sort u :=
   α
 
--- ././Mathport/Syntax/Translate/Basic.lean:342:9: unsupported: advanced prec syntax
+-- ././Mathport/Syntax/Translate/Basic.lean:343:9: unsupported: advanced prec syntax
 notation:999 α "ᵒᵖ" => Opposite α
 
 namespace Opposite
@@ -83,18 +83,18 @@ def equiv_to_opposite : α ≃ αᵒᵖ where
   right_inv := op_unop
 
 @[simp]
-theorem equiv_to_opposite_coe : (equiv_to_opposite : α → αᵒᵖ) = op :=
+theorem equiv_to_opposite_coe : (equivToOpposite : α → αᵒᵖ) = op :=
   rfl
 
 @[simp]
-theorem equiv_to_opposite_symm_coe : (equiv_to_opposite.symm : αᵒᵖ → α) = unop :=
+theorem equiv_to_opposite_symm_coe : (equivToOpposite.symm : αᵒᵖ → α) = unop :=
   rfl
 
 theorem op_eq_iff_eq_unop {x : α} {y} : op x = y ↔ x = unop y :=
-  equiv_to_opposite.apply_eq_iff_eq_symm_apply
+  equivToOpposite.apply_eq_iff_eq_symm_apply
 
 theorem unop_eq_iff_eq_op {x} {y : α} : unop x = y ↔ x = op y :=
-  equiv_to_opposite.symm.apply_eq_iff_eq_symm_apply
+  equivToOpposite.symm.apply_eq_iff_eq_symm_apply
 
 instance [Inhabited α] : Inhabited (αᵒᵖ) :=
   ⟨op default⟩
@@ -114,7 +114,7 @@ namespace OpInduction
 /-- Test if `e : expr` is of type `opposite α` for some `α`. -/
 unsafe def is_opposite (e : expr) : tactic Bool := do
   let t ← infer_type e
-  let quote.1 (Opposite _) ← whnf t | return ff
+  let quote.1 (Opposite _) ← whnf t | return false
   return tt
 
 /-- Find the first hypothesis of type `opposite _`. Fail if no such hypothesis exist in the local
@@ -122,7 +122,7 @@ context. -/
 unsafe def find_opposite_hyp : tactic Name := do
   let lc ← local_context
   let h :: _ ← lc.mfilter <| is_opposite | fail "No hypotheses of the form Xᵒᵖ"
-  return h.local_pp_name
+  return h
 
 end OpInduction
 

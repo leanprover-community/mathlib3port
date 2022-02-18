@@ -31,7 +31,7 @@ theorem not_ne_zero {R : Type _} [Zero R] {n : R} : ¬NeZero n ↔ n = 0 := by
 
 namespace NeZero
 
-variable {R M F : Type _} {r : R} {x y : M} {n p : ℕ} {a : ℕ+}
+variable {R S M F : Type _} {r : R} {x y : M} {n p : ℕ} {a : ℕ+}
 
 instance Pnat : NeZero (a : ℕ) :=
   ⟨a.ne_zero⟩
@@ -51,9 +51,15 @@ instance CharZero [NeZero n] [AddMonoidₓ M] [One M] [CharZero M] : NeZero (n :
 instance (priority := 100) Invertible [MonoidWithZeroₓ M] [Nontrivial M] [Invertible x] : NeZero x :=
   ⟨nonzero_of_invertible x⟩
 
+instance coeTransₓ {r : R} [Zero M] [Coe R S] [CoeTₓ S M] [h : NeZero (r : M)] : NeZero ((r : S) : M) :=
+  ⟨h.out⟩
+
+theorem trans {r : R} [Zero M] [Coe R S] [CoeTₓ S M] (h : NeZero ((r : S) : M)) : NeZero (r : M) :=
+  ⟨h.out⟩
+
 theorem of_map [Zero R] [Zero M] [ZeroHomClass F R M] (f : F) [NeZero (f r)] : NeZero r :=
   ⟨fun h =>
-    Ne (f r) <| by
+    ne (f r) <| by
       convert map_zero f⟩
 
 theorem of_injective {r : R} [Zero R] [h : NeZero r] [Zero M] [ZeroHomClass F R M] {f : F} (hf : Function.Injective f) :
@@ -62,7 +68,7 @@ theorem of_injective {r : R} [Zero R] [h : NeZero r] [Zero M] [ZeroHomClass F R 
     rw [← map_zero f]
     exact hf.ne (Ne r)⟩
 
-theorem nat_of_injective [NonAssocSemiring M] [NonAssocSemiring R] [h : NeZero (n : R)] [RingHomClass F R M] {f : F}
+theorem nat_of_injective [NonAssocSemiringₓ M] [NonAssocSemiringₓ R] [h : NeZero (n : R)] [RingHomClass F R M] {f : F}
     (hf : Function.Injective f) : NeZero (n : M) :=
   ⟨fun h =>
     NeZero.ne' n R <|
@@ -74,7 +80,7 @@ variable (R M)
 theorem of_not_dvd [AddMonoidₓ M] [One M] [CharP M p] (h : ¬p ∣ n) : NeZero (n : M) :=
   ⟨(not_iff_not.mpr <| CharP.cast_eq_zero_iff M p n).mpr h⟩
 
-theorem of_no_zero_smul_divisors [CommRingₓ R] [NeZero (n : R)] [Ringₓ M] [Nontrivial M] [Algebra R M]
+theorem of_no_zero_smul_divisors (n : ℕ) [CommRingₓ R] [NeZero (n : R)] [Ringₓ M] [Nontrivial M] [Algebra R M]
     [NoZeroSmulDivisors R M] : NeZero (n : M) :=
   nat_of_injective <| NoZeroSmulDivisors.algebra_map_injective R M
 

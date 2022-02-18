@@ -97,7 +97,7 @@ theorem id_traverse {α : Type _} (x : Multiset α) : traverse id.mk x = x :=
 
 theorem comp_traverse {G H : Type _ → Type _} [Applicativeₓ G] [Applicativeₓ H] [IsCommApplicative G]
     [IsCommApplicative H] {α β γ : Type _} (g : α → G β) (h : β → H γ) (x : Multiset α) :
-    traverse (comp.mk ∘ Functor.map h ∘ g) x = comp.mk (Functor.map (traverse h) (traverse g x)) :=
+    traverse (comp.mk ∘ Functor.map h ∘ g) x = Comp.mk (Functor.map (traverse h) (traverse g x)) :=
   Quotientₓ.induction_on x
     (by
       intro <;> simp' [traverse, comp_traverse] with functor_norm <;> simp' [· <$> ·, · ∘ ·] with functor_norm)

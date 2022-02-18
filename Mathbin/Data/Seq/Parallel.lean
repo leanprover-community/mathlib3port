@@ -24,15 +24,15 @@ def parallel.aux1 : List (Computation α) × Wseq (Computation α) → Sum α (L
         | none => (l', nil)
         | some (none, S') => (l', S')
         | some (some c, S') => (c :: l', S'))
-      (parallel.aux2 l)
+      (Parallel.aux2 l)
 
 /-- Parallel computation of an infinite stream of computations,
   taking the first result -/
 def parallel (S : Wseq (Computation α)) : Computation α :=
-  corec parallel.aux1 ([], S)
+  corec Parallel.aux1 ([], S)
 
 theorem terminates_parallel.aux :
-    ∀ {l : List (Computation α)} {S c}, c ∈ l → terminates c → terminates (corec parallel.aux1 (l, S)) := by
+    ∀ {l : List (Computation α)} {S c}, c ∈ l → Terminates c → Terminates (corec Parallel.aux1 (l, S)) := by
   have lem1 : ∀ l S, (∃ a : α, parallel.aux2 l = Sum.inl a) → terminates (corec parallel.aux1 (l, S)) := by
     intro l S e
     cases' e with a e
@@ -99,11 +99,11 @@ theorem terminates_parallel.aux :
       
     
 
-theorem terminates_parallel {S : Wseq (Computation α)} {c} (h : c ∈ S) [T : terminates c] : terminates (parallel S) :=
+theorem terminates_parallel {S : Wseq (Computation α)} {c} (h : c ∈ S) [T : Terminates c] : Terminates (parallel S) :=
   by
   suffices
     ∀ n l : List (Computation α) S c,
-      c ∈ l ∨ some (some c) = Seqₓₓ.nth S n → terminates c → terminates (corec parallel.aux1 (l, S))
+      c ∈ l ∨ some (some c) = Seqₓₓ.nth S n → Terminates c → Terminates (corec Parallel.aux1 (l, S))
     from
     let ⟨n, h⟩ := h
     this n [] S c (Or.inr h) T
@@ -184,7 +184,7 @@ theorem terminates_parallel {S : Wseq (Computation α)} {c} (h : c ∈ S) [T : t
     
 
 theorem exists_of_mem_parallel {S : Wseq (Computation α)} {a} (h : a ∈ parallel S) : ∃ c ∈ S, a ∈ c := by
-  suffices ∀ C, a ∈ C → ∀ l : List (Computation α) S, corec parallel.aux1 (l, S) = C → ∃ c, (c ∈ l ∨ c ∈ S) ∧ a ∈ c from
+  suffices ∀ C, a ∈ C → ∀ l : List (Computation α) S, corec Parallel.aux1 (l, S) = C → ∃ c, (c ∈ l ∨ c ∈ S) ∧ a ∈ c from
     let ⟨c, h1, h2⟩ := this _ h [] S rfl
     ⟨c, h1.resolve_left id, h2⟩
   let F : List (Computation α) → Sum α (List (Computation α)) → Prop := by
@@ -291,7 +291,7 @@ theorem map_parallel (f : α → β) S : map f (parallel S) = parallel (S.map (m
       cases' parallel.aux2 l with a l' <;> simp
       apply S.cases_on _ (fun c S => _) fun S => _ <;> simp <;> simp [parallel.aux1] <;> exact ⟨_, _, rfl, rfl⟩
 
-theorem parallel_empty (S : Wseq (Computation α)) (h : S.head ~> none) : parallel S = Empty _ :=
+theorem parallel_empty (S : Wseq (Computation α)) (h : S.head ~> none) : parallel S = empty _ :=
   eq_empty_of_not_terminates fun ⟨⟨a, m⟩⟩ => by
     let ⟨c, cs, ac⟩ := exists_of_mem_parallel m
     let ⟨n, nm⟩ := exists_nth_of_mem cs
@@ -339,7 +339,7 @@ theorem mem_parallel {S : Wseq (Computation α)} {a} (H : ∀, ∀ s ∈ S, ∀,
     a ∈ parallel S := by
   have := terminates_of_mem ac <;> have := terminates_parallel cs <;> exact mem_of_promises _ (parallel_promises H)
 
-theorem parallel_congr_lem {S T : Wseq (Computation α)} {a} (H : S.lift_rel Equivₓ T) :
+theorem parallel_congr_lem {S T : Wseq (Computation α)} {a} (H : S.LiftRel Equiv T) :
     (∀, ∀ s ∈ S, ∀, s ~> a) ↔ ∀, ∀ t ∈ T, ∀, t ~> a :=
   ⟨fun h1 t tT =>
     let ⟨s, sS, se⟩ := Wseq.exists_of_lift_rel_right H tT
@@ -348,7 +348,7 @@ theorem parallel_congr_lem {S T : Wseq (Computation α)} {a} (H : S.lift_rel Equ
     let ⟨t, tT, se⟩ := Wseq.exists_of_lift_rel_left H sS
     (promises_congr se _).2 (h2 _ tT)⟩
 
-theorem parallel_congr_left {S T : Wseq (Computation α)} {a} (h1 : ∀, ∀ s ∈ S, ∀, s ~> a) (H : S.lift_rel Equivₓ T) :
+theorem parallel_congr_left {S T : Wseq (Computation α)} {a} (h1 : ∀, ∀ s ∈ S, ∀, s ~> a) (H : S.LiftRel Equiv T) :
     parallel S ~ parallel T :=
   let h2 := (parallel_congr_lem H).1 h1
   fun a' =>
@@ -371,7 +371,7 @@ theorem parallel_congr_left {S T : Wseq (Computation α)} {a} (h1 : ∀, ∀ s �
             let aT := (st _).2 as
             mem_parallel h1 tT aT⟩
 
-theorem parallel_congr_right {S T : Wseq (Computation α)} {a} (h2 : ∀, ∀ t ∈ T, ∀, t ~> a) (H : S.lift_rel Equivₓ T) :
+theorem parallel_congr_right {S T : Wseq (Computation α)} {a} (h2 : ∀, ∀ t ∈ T, ∀, t ~> a) (H : S.LiftRel Equiv T) :
     parallel S ~ parallel T :=
   parallel_congr_left ((parallel_congr_lem H).2 h2) H
 

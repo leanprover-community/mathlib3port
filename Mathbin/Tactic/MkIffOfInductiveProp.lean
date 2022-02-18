@@ -61,7 +61,7 @@ unsafe def constr_to_prop (univs : List level) (g : List expr) (idxs : List expr
   let (args, res) ← open_pis type
   let idxs_inst := res.get_app_args.drop g.length
   let (bs, eqs) := compact_relation args (idxs.zip idxs_inst)
-  let bs' := bs.filter_map id
+  let bs' := bs.filterMap id
   let eqs ←
     eqs.mmap fun ⟨idx, inst⟩ => do
         let ty := idx.local_type
@@ -76,14 +76,14 @@ unsafe def constr_to_prop (univs : List level) (g : List expr) (idxs : List expr
         let t : expr := bs'.ilast.local_type
         let sort l ← infer_type t
         if l = level.zero then do
-            let r ← mk_exists_lst bs'.init t
-            return (Sum.inl bs'.ilast, r)
+            let r ← mk_exists_lst bs' t
+            return (Sum.inl bs', r)
           else do
             let r ← mk_exists_lst bs' mk_true
             return (Sum.inr 0, r)
       | _, _ => do
         let r ← mk_exists_lst bs' (mk_and_lst eqs)
-        return (Sum.inr eqs.length, r)
+        return (Sum.inr eqs, r)
   return ((bs, n), r)
 
 @[nolint doc_blame]
@@ -91,16 +91,16 @@ unsafe def to_cases (s : List <| List (Option expr) × Sum expr ℕ) : tactic Un
   let h ← intro1
   let i ← induction h
   focus
-      ((s.zip i).enum.map fun ⟨p, (shape, t), _, vars, _⟩ => do
-        let si := (shape.zip vars).filterMap fun ⟨c, v⟩ => c >>= fun _ => some v
-        select p (s.length - 1)
+      ((s i).enum.map fun ⟨p, (shape, t), _, vars, _⟩ => do
+        let si := (shape vars).filterMap fun ⟨c, v⟩ => c >>= fun _ => some v
+        select p (s - 1)
         match t with
           | Sum.inl e => do
-            si.init.mmap' existsi
-            let some v ← return <| vars.nth (shape.length - 1)
+            si existsi
+            let some v ← return <| vars (shape - 1)
             exact v
           | Sum.inr n => do
-            si.mmap' existsi
+            si existsi
             (iterate_exactly (n - 1) ((split >> constructor) >> skip) >> constructor) >> skip
         done)
   done
@@ -128,8 +128,8 @@ unsafe def to_inductive (cs : List Name) (gs : List expr) (s : List (List (Optio
   | n + 1 => do
     let r ← elim_gen_sum n h
     focus
-        ((cs.zip (r.zip s)).map fun ⟨constr_name, h, bs, e⟩ => do
-          let n := (bs.filter_map id).length
+        ((cs (r s)).map fun ⟨constr_name, h, bs, e⟩ => do
+          let n := (bs id).length
           match e with
             | Sum.inl e => elim_gen_prod (n - 1) h [] [] >> skip
             | Sum.inr 0 => do
@@ -140,18 +140,18 @@ unsafe def to_inductive (cs : List Name) (gs : List expr) (s : List (List (Optio
               let (es, Eq, _) ← elim_gen_prod e h [] []
               let es := es ++ [Eq]
               revert_lst es
-              es.mmap' fun _ => intro1 >>= subst
+              es fun _ => intro1 >>= subst
           let ctxt ← local_context
-          let gs := ctxt.take gs.length
-          let hs := (ctxt.reverse.take n).reverse
-          let m := gs.map some ++ list_option_merge bs hs
+          let gs := ctxt gs
+          let hs := (ctxt n).reverse
+          let m := gs some ++ list_option_merge bs hs
           let args ←
-            m.mmap fun a =>
+            m fun a =>
                 match a with
                 | some v => return v
                 | none => mk_mvar
           let c ← mk_const constr_name
-          exact (c.mk_app args)
+          exact (c args)
           done)
     done
 
@@ -179,7 +179,7 @@ For example, `mk_iff_of_inductive_prop` on `list.chain` produces:
 -/
 unsafe def mk_iff_of_inductive_prop (i : Name) (r : Name) : tactic Unit := do
   let e ← get_env
-  guardₓ (e.is_inductive i)
+  guardₓ (e i)
   let constrs := e.constructors_of i
   let params := e.inductive_num_params i
   let indices := e.inductive_num_indices i
@@ -197,9 +197,9 @@ unsafe def mk_iff_of_inductive_prop (i : Name) (r : Name) : tactic Unit := do
   let shape := shape_rhss.map Prod.fst
   let rhss := shape_rhss.map Prod.snd
   add_theorem_by r univ_names ((mk_iff lhs (mk_or_lst rhss)).pis g) do
-      let gs ← intro_lst (g.map local_pp_name)
+      let gs ← intro_lst (g local_pp_name)
       split
-      focus' [to_cases shape, intro1 >>= to_inductive constrs (gs.take params) shape]
+      focus' [to_cases shape, intro1 >>= to_inductive constrs (gs params) shape]
   skip
 
 end Tactic
@@ -236,7 +236,7 @@ add_tactic_doc
   { Name := "mk_iff_of_inductive_prop", category := DocCategory.cmd, declNames := [`` mk_iff_of_inductive_prop_cmd],
     tags := ["logic", "environment"] }
 
--- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr ?»
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr ?»
 /-- Applying the `mk_iff` attribute to an inductively-defined proposition `mk_iff` makes an `iff` rule
 `r` with the shape `∀ps is, i as ↔ ⋁_j, ∃cs, is = cs`, where `ps` are the type parameters, `is` are
 the indices, `j` ranges over all possible constructors, the `cs` are the parameters for each of the
@@ -281,7 +281,7 @@ unsafe def mk_iff_attr : user_attribute Unit (Option Name) where
   after_set :=
     some fun n _ _ => do
       let tgt ← mk_iff_attr.get_param n
-      tactic.mk_iff_of_inductive_prop n (tgt.get_or_else (n.append_suffix "_iff"))
+      tactic.mk_iff_of_inductive_prop n (tgt (n "_iff"))
 
 add_tactic_doc
   { Name := "mk_iff", category := DocCategory.attr, declNames := [`mk_iff_attr], tags := ["logic", "environment"] }

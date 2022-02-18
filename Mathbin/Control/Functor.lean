@@ -70,35 +70,35 @@ def const (α : Type _) (β : Type _) :=
 /-- `const.mk` is the canonical map `α → const α β` (the identity), and
 it can be used as a pattern to extract this value. -/
 @[matchPattern]
-def const.mk {α β} (x : α) : const α β :=
+def const.mk {α β} (x : α) : Const α β :=
   x
 
 /-- `const.mk'` is `const.mk` but specialized to map `α` to
 `const α punit`, where `punit` is the terminal object in `Type*`. -/
-def const.mk' {α} (x : α) : const α PUnit :=
+def const.mk' {α} (x : α) : Const α PUnit :=
   x
 
 /-- Extract the element of `α` from the `const` functor. -/
-def const.run {α β} (x : const α β) : α :=
+def const.run {α β} (x : Const α β) : α :=
   x
 
 namespace Const
 
-protected theorem ext {α β} {x y : const α β} (h : x.run = y.run) : x = y :=
+protected theorem ext {α β} {x y : Const α β} (h : x.run = y.run) : x = y :=
   h
 
 /-- The map operation of the `const γ` functor. -/
 @[nolint unused_arguments]
-protected def map {γ α β} (f : α → β) (x : const γ β) : const γ α :=
+protected def map {γ α β} (f : α → β) (x : Const γ β) : Const γ α :=
   x
 
-instance {γ} : Functor (const γ) where
-  map := @const.map γ
+instance {γ} : Functor (Const γ) where
+  map := @Const.map γ
 
-instance {γ} : IsLawfulFunctor (const γ) := by
+instance {γ} : IsLawfulFunctor (Const γ) := by
   constructor <;> intros <;> rfl
 
-instance {α β} [Inhabited α] : Inhabited (const α β) :=
+instance {α β} [Inhabited α] : Inhabited (Const α β) :=
   ⟨(default : α)⟩
 
 end Const
@@ -108,25 +108,25 @@ every type to `α`. When `α` has a additive monoid structure,
 `add_const α` has an `applicative` instance. (If `α` has a
 multiplicative monoid structure, see `functor.const`.) -/
 def add_const (α : Type _) :=
-  const α
+  Const α
 
 /-- `add_const.mk` is the canonical map `α → add_const α β`, which is the identity,
 where `add_const α β = const α β`. It can be used as a pattern to extract this value. -/
 @[matchPattern]
-def add_const.mk {α β} (x : α) : add_const α β :=
+def add_const.mk {α β} (x : α) : AddConst α β :=
   x
 
 /-- Extract the element of `α` from the constant functor. -/
-def add_const.run {α β} : add_const α β → α :=
+def add_const.run {α β} : AddConst α β → α :=
   id
 
-instance add_const.functor {γ} : Functor (add_const γ) :=
-  @const.functor γ
+instance add_const.functor {γ} : Functor (AddConst γ) :=
+  @Const.functor γ
 
-instance add_const.is_lawful_functor {γ} : IsLawfulFunctor (add_const γ) :=
-  @const.is_lawful_functor γ
+instance add_const.is_lawful_functor {γ} : IsLawfulFunctor (AddConst γ) :=
+  @Const.is_lawful_functor γ
 
-instance {α β} [Inhabited α] : Inhabited (add_const α β) :=
+instance {α β} [Inhabited α] : Inhabited (AddConst α β) :=
   ⟨(default : α)⟩
 
 /-- `functor.comp` is a wrapper around `function.comp` for types.
@@ -138,61 +138,61 @@ def comp (F : Type u → Type w) (G : Type v → Type u) (α : Type v) : Type w 
 /-- Construct a term of `comp F G α` from a term of `F (G α)`, which is the same type.
 Can be used as a pattern to extract a term of `F (G α)`. -/
 @[matchPattern]
-def comp.mk {F : Type u → Type w} {G : Type v → Type u} {α : Type v} (x : F (G α)) : comp F G α :=
+def comp.mk {F : Type u → Type w} {G : Type v → Type u} {α : Type v} (x : F (G α)) : Comp F G α :=
   x
 
 /-- Extract a term of `F (G α)` from a term of `comp F G α`, which is the same type. -/
-def comp.run {F : Type u → Type w} {G : Type v → Type u} {α : Type v} (x : comp F G α) : F (G α) :=
+def comp.run {F : Type u → Type w} {G : Type v → Type u} {α : Type v} (x : Comp F G α) : F (G α) :=
   x
 
 namespace Comp
 
 variable {F : Type u → Type w} {G : Type v → Type u}
 
-protected theorem ext {α} {x y : comp F G α} : x.run = y.run → x = y :=
+protected theorem ext {α} {x y : Comp F G α} : x.run = y.run → x = y :=
   id
 
-instance {α} [Inhabited (F (G α))] : Inhabited (comp F G α) :=
+instance {α} [Inhabited (F (G α))] : Inhabited (Comp F G α) :=
   ⟨(default : F (G α))⟩
 
 variable [Functor F] [Functor G]
 
 /-- The map operation for the composition `comp F G` of functors `F` and `G`. -/
-protected def map {α β : Type v} (h : α → β) : comp F G α → comp F G β
-  | comp.mk x => comp.mk ((· <$> ·) h <$> x)
+protected def map {α β : Type v} (h : α → β) : Comp F G α → Comp F G β
+  | comp.mk x => Comp.mk ((· <$> ·) h <$> x)
 
-instance : Functor (comp F G) where
-  map := @comp.map F G _ _
+instance : Functor (Comp F G) where
+  map := @Comp.map F G _ _
 
 @[functor_norm]
-theorem map_mk {α β} (h : α → β) (x : F (G α)) : h <$> comp.mk x = comp.mk ((· <$> ·) h <$> x) :=
+theorem map_mk {α β} (h : α → β) (x : F (G α)) : h <$> Comp.mk x = Comp.mk ((· <$> ·) h <$> x) :=
   rfl
 
 @[simp]
-protected theorem run_map {α β} (h : α → β) (x : comp F G α) : (h <$> x).run = (· <$> ·) h <$> x.run :=
+protected theorem run_map {α β} (h : α → β) (x : Comp F G α) : (h <$> x).run = (· <$> ·) h <$> x.run :=
   rfl
 
 variable [IsLawfulFunctor F] [IsLawfulFunctor G]
 
 variable {α β γ : Type v}
 
-protected theorem id_map : ∀ x : comp F G α, comp.map id x = x
+protected theorem id_map : ∀ x : Comp F G α, Comp.map id x = x
   | comp.mk x => by
     simp [comp.map, Functor.map_id]
 
-protected theorem comp_map (g' : α → β) (h : β → γ) : ∀ x : comp F G α, comp.map (h ∘ g') x = comp.map h (comp.map g' x)
+protected theorem comp_map (g' : α → β) (h : β → γ) : ∀ x : Comp F G α, Comp.map (h ∘ g') x = Comp.map h (Comp.map g' x)
   | comp.mk x => by
     simp' [comp.map, Functor.map_comp_map g' h] with functor_norm
 
-instance : IsLawfulFunctor (comp F G) where
-  id_map := @comp.id_map F G _ _ _ _
-  comp_map := @comp.comp_map F G _ _ _ _
+instance : IsLawfulFunctor (Comp F G) where
+  id_map := @Comp.id_map F G _ _ _ _
+  comp_map := @Comp.comp_map F G _ _ _ _
 
-theorem functor_comp_id {F} [AF : Functor F] [IsLawfulFunctor F] : @comp.functor F id _ _ = AF :=
-  @Functor.ext F _ AF (@comp.is_lawful_functor F id _ _ _ _) _ fun α β f x => rfl
+theorem functor_comp_id {F} [AF : Functor F] [IsLawfulFunctor F] : @Comp.functor F id _ _ = AF :=
+  @Functor.ext F _ AF (@Comp.is_lawful_functor F id _ _ _ _) _ fun α β f x => rfl
 
-theorem functor_id_comp {F} [AF : Functor F] [IsLawfulFunctor F] : @comp.functor id F _ _ = AF :=
-  @Functor.ext F _ AF (@comp.is_lawful_functor id F _ _ _ _) _ fun α β f x => rfl
+theorem functor_id_comp {F} [AF : Functor F] [IsLawfulFunctor F] : @Comp.functor id F _ _ = AF :=
+  @Functor.ext F _ AF (@Comp.is_lawful_functor id F _ _ _ _) _ fun α β f x => rfl
 
 end Comp
 
@@ -207,26 +207,26 @@ variable {F : Type u → Type w} {G : Type v → Type u}
 variable [Applicativeₓ F] [Applicativeₓ G]
 
 /-- The `<*>` operation for the composition of applicative functors. -/
-protected def seq {α β : Type v} : comp F G (α → β) → comp F G α → comp F G β
+protected def seq {α β : Type v} : Comp F G (α → β) → Comp F G α → Comp F G β
   | comp.mk f, comp.mk x => comp.mk <| (· <*> ·) <$> f <*> x
 
-instance : Pure (comp F G) :=
+instance : Pure (Comp F G) :=
   ⟨fun _ x => comp.mk <| pure <| pure x⟩
 
-instance : Seqₓ (comp F G) :=
-  ⟨fun _ _ f x => comp.seq f x⟩
+instance : Seqₓ (Comp F G) :=
+  ⟨fun _ _ f x => Comp.seq f x⟩
 
 @[simp]
-protected theorem run_pure {α : Type v} : ∀ x : α, (pure x : comp F G α).run = pure (pure x)
+protected theorem run_pure {α : Type v} : ∀ x : α, (pure x : Comp F G α).run = pure (pure x)
   | _ => rfl
 
 @[simp]
-protected theorem run_seq {α β : Type v} (f : comp F G (α → β)) (x : comp F G α) :
+protected theorem run_seq {α β : Type v} (f : Comp F G (α → β)) (x : Comp F G α) :
     (f <*> x).run = (· <*> ·) <$> f.run <*> x.run :=
   rfl
 
-instance : Applicativeₓ (comp F G) :=
-  { comp.has_pure with map := @comp.map F G _ _, seq := @comp.seq F G _ _ }
+instance : Applicativeₓ (Comp F G) :=
+  { Comp.hasPure with map := @Comp.map F G _ _, seq := @Comp.seq F G _ _ }
 
 end Comp
 
@@ -248,9 +248,9 @@ def liftr {α : Type u} (r : α → α → Prop) (x y : F α) : Prop :=
 /-- If we consider `x : F α` to, in some sense, contain values of type `α`, then
 `supp x` is the set of values of type `α` that `x` contains. -/
 def supp {α : Type u} (x : F α) : Set α :=
-  { y : α | ∀ ⦃p⦄, liftp p x → p y }
+  { y : α | ∀ ⦃p⦄, Liftp p x → p y }
 
-theorem of_mem_supp {α : Type u} {x : F α} {p : α → Prop} (h : liftp p x) : ∀, ∀ y ∈ supp x, ∀, p y := fun y hy => hy h
+theorem of_mem_supp {α : Type u} {x : F α} {p : α → Prop} (h : Liftp p x) : ∀, ∀ y ∈ Supp x, ∀, p y := fun y hy => hy h
 
 end Functor
 

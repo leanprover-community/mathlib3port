@@ -154,7 +154,7 @@ variable (β)
 /-- Each element of the group defines an additive monoid isomorphism.
 
 This is a stronger version of `mul_action.to_perm`. -/
-@[simps (config := { simpRhs := tt })]
+@[simps (config := { simpRhs := true })]
 def DistribMulAction.toAddEquiv (x : α) : β ≃+ β :=
   { DistribMulAction.toAddMonoidHom β x, MulAction.toPermHom α β x with }
 
@@ -203,7 +203,7 @@ variable (β)
 /-- Each element of the group defines a multiplicative monoid isomorphism.
 
 This is a stronger version of `mul_action.to_perm`. -/
-@[simps (config := { simpRhs := tt })]
+@[simps (config := { simpRhs := true })]
 def MulDistribMulAction.toMulEquiv (x : α) : β ≃* β :=
   { MulDistribMulAction.toMonoidHom β x, MulAction.toPermHom α β x with }
 

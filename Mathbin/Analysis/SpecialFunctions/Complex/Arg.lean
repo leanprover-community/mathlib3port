@@ -73,7 +73,7 @@ theorem abs_mul_cos_add_sin_mul_I (x : ℂ) : (abs x * (cos (arg x) + sin (arg x
   rw [← exp_mul_I, abs_mul_exp_arg_mul_I]
 
 @[simp]
-theorem range_exp_mul_I : (range fun x : ℝ => exp (x * I)) = Metric.Sphere 0 1 := by
+theorem range_exp_mul_I : (Range fun x : ℝ => exp (x * I)) = Metric.Sphere 0 1 := by
   simp only [Metric.Sphere, dist_eq, sub_zero]
   refine' (range_subset_iff.2 fun x => _).antisymm fun z hz : abs z = 1 => _
   · exact abs_exp_of_real_mul_I _
@@ -145,7 +145,7 @@ theorem arg_mem_Ioc (z : ℂ) : arg z ∈ Ioc (-π) π := by
   rwa [arg_mul_cos_add_sin_mul_I (abs_pos.2 hz) hN]
 
 @[simp]
-theorem range_arg : range arg = Ioc (-π) π :=
+theorem range_arg : Range arg = Ioc (-π) π :=
   (range_subset_iff.2 arg_mem_Ioc).antisymm fun x hx => ⟨_, arg_cos_add_sin_mul_I hx⟩
 
 theorem arg_le_pi (x : ℂ) : arg x ≤ π :=
@@ -194,7 +194,7 @@ theorem arg_neg_one : arg (-1) = π := by
   simp [arg, le_reflₓ, not_leₓ.2 (@zero_lt_one ℝ _ _)]
 
 @[simp]
-theorem arg_I : arg I = π / 2 := by
+theorem arg_I : arg i = π / 2 := by
   simp [arg, le_reflₓ]
 
 @[simp]
@@ -386,6 +386,78 @@ theorem arg_neg_coe_angle {x : ℂ} (hx : x ≠ 0) : (arg (-x) : Real.Angle) = a
   · rw [arg_neg_eq_arg_sub_pi_of_im_pos hi, Real.Angle.coe_sub, Real.Angle.sub_coe_pi_eq_add_coe_pi]
     
 
+theorem arg_mul_cos_add_sin_mul_I_eq_mul_fract {r : ℝ} (hr : 0 < r) (θ : ℝ) :
+    arg (r * (cos θ + sin θ * I)) = π - 2 * π * Int.fract ((π - θ) / (2 * π)) := by
+  have hi : π - 2 * π * Int.fract ((π - θ) / (2 * π)) ∈ Ioc (-π) π := by
+    rw [← mem_preimage, preimage_const_sub_Ioc, ← mem_preimage, preimage_const_mul_Ico _ _ Real.two_pi_pos, sub_self,
+      zero_div, sub_neg_eq_add, ← two_mul, div_self real.two_pi_pos.ne.symm]
+    refine' Set.mem_of_mem_of_subset (Set.mem_range_self _) _
+    rw [← image_univ, Int.image_fract]
+    simp
+  have hs : π - 2 * π * Int.fract ((π - θ) / (2 * π)) = 2 * π * ⌊(π - θ) / (2 * π)⌋ + θ := by
+    rw [Int.fract, mul_sub, mul_div_cancel' _ real.two_pi_pos.ne.symm]
+    abel
+  convert arg_mul_cos_add_sin_mul_I hr hi using 3
+  simp_rw [hs, mul_comm (2 * π), add_commₓ _ θ, ← of_real_cos, ← of_real_sin, Real.cos_add_int_mul_two_pi,
+    Real.sin_add_int_mul_two_pi]
+
+theorem arg_cos_add_sin_mul_I_eq_mul_fract (θ : ℝ) :
+    arg (cos θ + sin θ * I) = π - 2 * π * Int.fract ((π - θ) / (2 * π)) := by
+  rw [← one_mulₓ (_ + _), ← of_real_one, arg_mul_cos_add_sin_mul_I_eq_mul_fract zero_lt_one]
+
+theorem arg_mul_cos_add_sin_mul_I_sub {r : ℝ} (hr : 0 < r) (θ : ℝ) :
+    arg (r * (cos θ + sin θ * I)) - θ = 2 * π * ⌊(π - θ) / (2 * π)⌋ := by
+  rw [arg_mul_cos_add_sin_mul_I_eq_mul_fract hr, Int.fract, mul_sub, mul_div_cancel' _ real.two_pi_pos.ne.symm]
+  abel
+
+theorem arg_cos_add_sin_mul_I_sub (θ : ℝ) : arg (cos θ + sin θ * I) - θ = 2 * π * ⌊(π - θ) / (2 * π)⌋ := by
+  rw [← one_mulₓ (_ + _), ← of_real_one, arg_mul_cos_add_sin_mul_I_sub zero_lt_one]
+
+theorem arg_mul_cos_add_sin_mul_I_coe_angle {r : ℝ} (hr : 0 < r) (θ : Real.Angle) :
+    (arg (r * (Real.Angle.cos θ + Real.Angle.sin θ * I)) : Real.Angle) = θ := by
+  induction θ using Real.Angle.induction_on
+  rw [Real.Angle.cos_coe, Real.Angle.sin_coe, Real.Angle.angle_eq_iff_two_pi_dvd_sub]
+  use ⌊(π - θ) / (2 * π)⌋
+  exact_mod_cast arg_mul_cos_add_sin_mul_I_sub hr θ
+
+theorem arg_cos_add_sin_mul_I_coe_angle (θ : Real.Angle) :
+    (arg (Real.Angle.cos θ + Real.Angle.sin θ * I) : Real.Angle) = θ := by
+  rw [← one_mulₓ (_ + _), ← of_real_one, arg_mul_cos_add_sin_mul_I_coe_angle zero_lt_one]
+
+theorem arg_mul_coe_angle {x y : ℂ} (hx : x ≠ 0) (hy : y ≠ 0) : (arg (x * y) : Real.Angle) = arg x + arg y := by
+  convert arg_mul_cos_add_sin_mul_I_coe_angle (mul_pos (abs_pos.2 hx) (abs_pos.2 hy)) (arg x + arg y : Real.Angle) using
+    3
+  simp_rw [← Real.Angle.coe_add, Real.Angle.sin_coe, Real.Angle.cos_coe, of_real_cos, of_real_sin, cos_add_sin_I,
+    of_real_add, add_mulₓ, exp_add, of_real_mul]
+  rw [mul_assoc, mul_comm (exp _), ← mul_assoc (abs y : ℂ), abs_mul_exp_arg_mul_I, mul_comm y, ← mul_assoc,
+    abs_mul_exp_arg_mul_I]
+
+theorem arg_div_coe_angle {x y : ℂ} (hx : x ≠ 0) (hy : y ≠ 0) : (arg (x / y) : Real.Angle) = arg x - arg y := by
+  rw [div_eq_mul_inv, arg_mul_coe_angle hx (inv_ne_zero hy), arg_inv_coe_angle, sub_eq_add_neg]
+
+@[simp]
+theorem arg_coe_angle_eq_iff {x y : ℂ} : (arg x : Real.Angle) = arg y ↔ arg x = arg y := by
+  constructor
+  · intro h
+    rw [Real.Angle.angle_eq_iff_two_pi_dvd_sub] at h
+    rcases h with ⟨k, hk⟩
+    rw [← sub_eq_zero]
+    have ha : -(2 * π) < arg x - arg y := by
+      linarith only [neg_pi_lt_arg x, arg_le_pi y]
+    have hb : arg x - arg y < 2 * π := by
+      linarith only [arg_le_pi x, neg_pi_lt_arg y]
+    rw [hk, neg_lt, neg_mul_eq_mul_neg, mul_lt_iff_lt_one_right Real.two_pi_pos, neg_lt, ← Int.cast_one, ← Int.cast_neg,
+      Int.cast_lt] at ha
+    rw [hk, mul_lt_iff_lt_one_right Real.two_pi_pos, ← Int.cast_one, Int.cast_lt] at hb
+    have hk' : k = 0 := by
+      linarith only [ha, hb]
+    rw [hk'] at hk
+    simpa using hk
+    
+  · intro h
+    rw [h]
+    
+
 section Continuity
 
 variable {x z : ℂ}
@@ -429,7 +501,7 @@ theorem continuous_at_arg (h : 0 < x.re ∨ x.im ≠ 0) : ContinuousAt arg x := 
       (arg_eq_nhds_of_im_pos hx_im).symm]
 
 theorem tendsto_arg_nhds_within_im_neg_of_re_neg_of_im_zero {z : ℂ} (hre : z.re < 0) (him : z.im = 0) :
-    tendsto arg (𝓝[{ z : ℂ | z.im < 0 }] z) (𝓝 (-π)) := by
+    Tendsto arg (𝓝[{ z : ℂ | z.im < 0 }] z) (𝓝 (-π)) := by
   suffices H : tendsto (fun x : ℂ => Real.arcsin ((-x).im / x.abs) - π) (𝓝[{ z : ℂ | z.im < 0 }] z) (𝓝 (-π))
   · refine' H.congr' _
     have : ∀ᶠ x : ℂ in 𝓝 z, x.re < 0 := continuous_re.tendsto z (gt_mem_nhds hre)
@@ -466,7 +538,7 @@ theorem continuous_within_at_arg_of_re_neg_of_im_zero {z : ℂ} (hre : z.re < 0)
     
 
 theorem tendsto_arg_nhds_within_im_nonneg_of_re_neg_of_im_zero {z : ℂ} (hre : z.re < 0) (him : z.im = 0) :
-    tendsto arg (𝓝[{ z : ℂ | 0 ≤ z.im }] z) (𝓝 π) := by
+    Tendsto arg (𝓝[{ z : ℂ | 0 ≤ z.im }] z) (𝓝 π) := by
   simpa only [arg_eq_pi_iff.2 ⟨hre, him⟩] using (continuous_within_at_arg_of_re_neg_of_im_zero hre him).Tendsto
 
 end Continuity

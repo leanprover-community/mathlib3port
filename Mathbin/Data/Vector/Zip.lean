@@ -19,7 +19,7 @@ def zip_with : Vector α n → Vector β n → Vector γ n := fun x y =>
 
 @[simp]
 theorem zip_with_to_list (x : Vector α n) (y : Vector β n) :
-    (Vector.zipWith f x y).toList = List.zipWithₓ f x.to_list y.to_list :=
+    (Vector.zipWith f x y).toList = List.zipWithₓ f x.toList y.toList :=
   rfl
 
 @[simp]
@@ -38,9 +38,8 @@ theorem zip_with_tail (x : Vector α n) (y : Vector β n) :
 
 @[to_additive]
 theorem prod_mul_prod_eq_prod_zip_with [CommMonoidₓ α] (x y : Vector α n) :
-    x.to_list.prod * y.to_list.prod = (Vector.zipWith (· * ·) x y).toList.Prod :=
-  List.prod_mul_prod_eq_prod_zip_with_of_length_eq x.to_list y.to_list
-    ((to_list_length x).trans (to_list_length y).symm)
+    x.toList.Prod * y.toList.Prod = (Vector.zipWith (· * ·) x y).toList.Prod :=
+  List.prod_mul_prod_eq_prod_zip_with_of_length_eq x.toList y.toList ((to_list_length x).trans (to_list_length y).symm)
 
 end ZipWith
 

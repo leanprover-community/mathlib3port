@@ -60,7 +60,7 @@ theorem nonarchimedean_of_emb (f : G →* H) (emb : OpenEmbedding f) : Nonarchim
         apply emb.continuous.tendsto
         rwa [f.map_one]
       let ⟨V, hV⟩ := is_nonarchimedean (f ⁻¹' U) h₁
-      ⟨{ Subgroup.map f V with is_open' := emb.is_open_map _ V.is_open }, Set.image_subset_iff.2 hV⟩ }
+      ⟨{ Subgroup.map f V with is_open' := emb.IsOpenMap _ V.IsOpen }, Set.image_subset_iff.2 hV⟩ }
 
 /-- An open neighborhood of the identity in the cartesian product of two nonarchimedean groups
   contains the cartesian product of an open neighborhood in each group. -/
@@ -90,7 +90,7 @@ theorem prod_self_subset {U} (hU : U ∈ nhds (1 : G × G)) : ∃ V : OpenSubgro
 instance : NonarchimedeanGroup (G × K) where
   is_nonarchimedean := fun U hU =>
     let ⟨V, W, h⟩ := prod_subset hU
-    ⟨V.prod W, ‹_›⟩
+    ⟨V.Prod W, ‹_›⟩
 
 end NonarchimedeanGroup
 
@@ -119,7 +119,7 @@ theorem left_mul_subset (U : OpenAddSubgroup R) (r : R) : ∃ V : OpenAddSubgrou
 theorem mul_subset (U : OpenAddSubgroup R) : ∃ V : OpenAddSubgroup R, (V : Set R) * V ⊆ U := by
   let ⟨V, H⟩ :=
     prod_self_subset
-      (IsOpen.mem_nhds (IsOpen.preimage continuous_mul U.is_open)
+      (IsOpen.mem_nhds (IsOpen.preimage continuous_mul U.IsOpen)
         (by
           simpa only [Set.mem_preimage, OpenAddSubgroup.mem_coe, Prod.snd_zero, mul_zero] using U.zero_mem))
   use V

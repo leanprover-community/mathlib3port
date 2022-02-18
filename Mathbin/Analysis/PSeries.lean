@@ -40,7 +40,7 @@ namespace Finset
 variable {M : Type _} [OrderedAddCommMonoid M] {f : ℕ → M}
 
 theorem le_sum_condensed' (hf : ∀ ⦃m n⦄, 0 < m → m ≤ n → f n ≤ f m) (n : ℕ) :
-    (∑ k in Ico 1 (2 ^ n), f k) ≤ ∑ k in range n, 2 ^ k • f (2 ^ k) := by
+    (∑ k in ico 1 (2 ^ n), f k) ≤ ∑ k in range n, 2 ^ k • f (2 ^ k) := by
   induction' n with n ihn
   · simp
     
@@ -59,7 +59,7 @@ theorem le_sum_condensed (hf : ∀ ⦃m n⦄, 0 < m → m ≤ n → f n ≤ f m)
   rw [← sum_range_add_sum_Ico _ n.one_le_two_pow, sum_range_succ, sum_range_zero, zero_addₓ]
 
 theorem sum_condensed_le' (hf : ∀ ⦃m n⦄, 1 < m → m ≤ n → f n ≤ f m) (n : ℕ) :
-    (∑ k in range n, 2 ^ k • f (2 ^ (k + 1))) ≤ ∑ k in Ico 2 (2 ^ n + 1), f k := by
+    (∑ k in range n, 2 ^ k • f (2 ^ (k + 1))) ≤ ∑ k in ico 2 (2 ^ n + 1), f k := by
   induction' n with n ihn
   · simp
     
@@ -74,7 +74,7 @@ theorem sum_condensed_le' (hf : ∀ ⦃m n⦄, 1 < m → m ≤ n → f n ≤ f m
   simp [pow_succₓ, two_mul]
 
 theorem sum_condensed_le (hf : ∀ ⦃m n⦄, 1 < m → m ≤ n → f n ≤ f m) (n : ℕ) :
-    (∑ k in range (n + 1), 2 ^ k • f (2 ^ k)) ≤ f 1 + 2 • ∑ k in Ico 2 (2 ^ n + 1), f k := by
+    (∑ k in range (n + 1), 2 ^ k • f (2 ^ k)) ≤ f 1 + 2 • ∑ k in ico 2 (2 ^ n + 1), f k := by
   convert add_le_add_left (nsmul_le_nsmul_of_le_right (sum_condensed_le' hf n) 2) (f 1)
   simp [sum_range_succ', add_commₓ, pow_succₓ, mul_nsmul, sum_nsmul]
 
@@ -88,7 +88,7 @@ theorem le_tsum_condensed (hf : ∀ ⦃m n⦄, 0 < m → m ≤ n → f n ≤ f m
   by
   rw [Ennreal.tsum_eq_supr_nat' (Nat.tendsto_pow_at_top_at_top_of_one_lt _root_.one_lt_two)]
   refine' supr_le fun n => (Finset.le_sum_condensed hf n).trans (add_le_add_left _ _)
-  simp only [nsmul_eq_mul, Nat.cast_pow, Nat.cast_two]
+  simp only [nsmul_eq_mul, Nat.cast_powₓ, Nat.cast_two]
   apply Ennreal.sum_le_tsum
 
 theorem tsum_condensed_le (hf : ∀ ⦃m n⦄, 1 < m → m ≤ n → f n ≤ f m) :
@@ -144,7 +144,7 @@ if and only if `1 < p`. -/
 theorem Real.summable_nat_rpow_inv {p : ℝ} : Summable (fun n => (n ^ p)⁻¹ : ℕ → ℝ) ↔ 1 < p := by
   cases' le_or_ltₓ 0 p with hp hp
   · rw [← summable_condensed_iff_of_nonneg]
-    · simp_rw [Nat.cast_pow, Nat.cast_two, ← rpow_nat_cast, ← rpow_mul zero_lt_two.le, mul_comm _ p,
+    · simp_rw [Nat.cast_powₓ, Nat.cast_two, ← rpow_nat_cast, ← rpow_mul zero_lt_two.le, mul_comm _ p,
         rpow_mul zero_lt_two.le, rpow_nat_cast, ← inv_pow₀, ← mul_powₓ, summable_geometric_iff_norm_lt_1]
       nth_rw 0[← rpow_one 2]
       rw [← division_def, ← rpow_sub zero_lt_two, norm_eq_abs, abs_of_pos (rpow_pos_of_pos zero_lt_two _),
@@ -202,7 +202,7 @@ theorem Real.not_summable_one_div_nat_cast : ¬Summable (fun n => 1 / n : ℕ �
 
 /-- **Divergence of the Harmonic Series** -/
 theorem Real.tendsto_sum_range_one_div_nat_succ_at_top :
-    tendsto (fun n => ∑ i in Finset.range n, (1 / (i + 1) : ℝ)) at_top at_top := by
+    Tendsto (fun n => ∑ i in Finset.range n, (1 / (i + 1) : ℝ)) atTop atTop := by
   rw [← not_summable_iff_tendsto_nat_at_top_of_nonneg]
   · exact_mod_cast mt (summable_nat_add_iff 1).1 Real.not_summable_one_div_nat_cast
     

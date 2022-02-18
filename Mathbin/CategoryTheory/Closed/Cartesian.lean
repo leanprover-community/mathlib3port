@@ -39,15 +39,15 @@ attribute [local instance] monoidal_of_has_finite_products
 /-- An object `X` is *exponentiable* if `(X × -)` is a left adjoint.
 We define this as being `closed` in the cartesian monoidal structure.
 -/
-abbrev exponentiable {C : Type u} [category.{v} C] [has_finite_products C] (X : C) :=
-  closed X
+abbrev exponentiable {C : Type u} [Category.{v} C] [HasFiniteProducts C] (X : C) :=
+  Closed X
 
 /-- If `X` and `Y` are exponentiable then `X ⨯ Y` is.
 This isn't an instance because it's not usually how we want to construct exponentials, we'll usually
 prove all objects are exponential uniformly.
 -/
-def binary_product_exponentiable {C : Type u} [category.{v} C] [has_finite_products C] {X Y : C} (hX : exponentiable X)
-    (hY : exponentiable Y) : exponentiable (X ⨯ Y) where
+def binary_product_exponentiable {C : Type u} [Category.{v} C] [HasFiniteProducts C] {X Y : C} (hX : Exponentiable X)
+    (hY : Exponentiable Y) : Exponentiable (X ⨯ Y) where
   isAdj := by
     have := hX.is_adj
     have := hY.is_adj
@@ -57,28 +57,28 @@ def binary_product_exponentiable {C : Type u} [category.{v} C] [has_finite_produ
 This isn't an instance because most of the time we'll prove cartesian closed for all objects
 at once, rather than just for this one.
 -/
-def terminal_exponentiable {C : Type u} [category.{v} C] [has_finite_products C] : exponentiable (⊤_ C) :=
+def terminal_exponentiable {C : Type u} [Category.{v} C] [HasFiniteProducts C] : Exponentiable (⊤_ C) :=
   unit_closed
 
 /-- A category `C` is cartesian closed if it has finite products and every object is exponentiable.
 We define this as `monoidal_closed` with respect to the cartesian monoidal structure.
 -/
-abbrev cartesian_closed (C : Type u) [category.{v} C] [has_finite_products C] :=
-  monoidal_closed C
+abbrev cartesian_closed (C : Type u) [Category.{v} C] [HasFiniteProducts C] :=
+  MonoidalClosed C
 
-variable {C : Type u} [category.{v} C] (A B : C) {X X' Y Y' Z : C}
+variable {C : Type u} [Category.{v} C] (A B : C) {X X' Y Y' Z : C}
 
 section Exp
 
-variable [has_finite_products C] [exponentiable A]
+variable [HasFiniteProducts C] [Exponentiable A]
 
 /-- This is (-)^A. -/
 def exp : C ⥤ C :=
-  (@closed.is_adj _ _ _ A _).right
+  (@Closed.isAdj _ _ _ A _).right
 
 /-- The adjunction between A ⨯ - and (-)^A. -/
 def exp.adjunction : prod.functor.obj A ⊣ exp A :=
-  closed.is_adj.adj
+  Closed.isAdj.adj
 
 /-- The evaluation natural transformation. -/
 def ev : exp A ⋙ prod.functor.obj A ⟶ 𝟭 C :=
@@ -97,12 +97,12 @@ theorem exp_adjunction_unit : (exp.adjunction A).Unit = coev A :=
   rfl
 
 @[simp, reassoc]
-theorem ev_naturality {X Y : C} (f : X ⟶ Y) : limits.prod.map (𝟙 A) ((exp A).map f) ≫ (ev A).app Y = (ev A).app X ≫ f :=
+theorem ev_naturality {X Y : C} (f : X ⟶ Y) : Limits.prod.map (𝟙 A) ((exp A).map f) ≫ (ev A).app Y = (ev A).app X ≫ f :=
   (ev A).naturality f
 
 @[simp, reassoc]
 theorem coev_naturality {X Y : C} (f : X ⟶ Y) :
-    f ≫ (coev A).app Y = (coev A).app X ≫ (exp A).map (limits.prod.map (𝟙 A) f) :=
+    f ≫ (coev A).app Y = (coev A).app X ≫ (exp A).map (Limits.prod.map (𝟙 A) f) :=
   (coev A).naturality f
 
 notation:20 A " ⟹ " B:19 => (exp A).obj B
@@ -110,14 +110,14 @@ notation:20 A " ⟹ " B:19 => (exp A).obj B
 notation:30 B " ^^ " A:30 => (exp A).obj B
 
 @[simp, reassoc]
-theorem ev_coev : limits.prod.map (𝟙 A) ((coev A).app B) ≫ (ev A).app (A ⨯ B) = 𝟙 (A ⨯ B) :=
-  adjunction.left_triangle_components (exp.adjunction A)
+theorem ev_coev : Limits.prod.map (𝟙 A) ((coev A).app B) ≫ (ev A).app (A ⨯ B) = 𝟙 (A ⨯ B) :=
+  Adjunction.left_triangle_components (exp.adjunction A)
 
 @[simp, reassoc]
 theorem coev_ev : (coev A).app (A ⟹ B) ≫ (exp A).map ((ev A).app B) = 𝟙 (A ⟹ B) :=
-  adjunction.right_triangle_components (exp.adjunction A)
+  Adjunction.right_triangle_components (exp.adjunction A)
 
-instance : preserves_colimits (prod.functor.obj A) :=
+instance : PreservesColimits (prod.functor.obj A) :=
   (exp.adjunction A).leftAdjointPreservesColimits
 
 end Exp
@@ -126,7 +126,7 @@ variable {A}
 
 namespace CartesianClosed
 
-variable [has_finite_products C] [exponentiable A]
+variable [HasFiniteProducts C] [Exponentiable A]
 
 /-- Currying in a cartesian closed category. -/
 def curry : (A ⨯ Y ⟶ X) → (Y ⟶ A ⟹ X) :=
@@ -145,67 +145,67 @@ theorem hom_equiv_symm_apply_eq (f : Y ⟶ A ⟹ X) : ((exp.adjunction A).homEqu
   rfl
 
 @[reassoc]
-theorem curry_natural_left (f : X ⟶ X') (g : A ⨯ X' ⟶ Y) : curry (limits.prod.map (𝟙 _) f ≫ g) = f ≫ curry g :=
-  adjunction.hom_equiv_naturality_left _ _ _
+theorem curry_natural_left (f : X ⟶ X') (g : A ⨯ X' ⟶ Y) : curry (Limits.prod.map (𝟙 _) f ≫ g) = f ≫ curry g :=
+  Adjunction.hom_equiv_naturality_left _ _ _
 
 @[reassoc]
 theorem curry_natural_right (f : A ⨯ X ⟶ Y) (g : Y ⟶ Y') : curry (f ≫ g) = curry f ≫ (exp _).map g :=
-  adjunction.hom_equiv_naturality_right _ _ _
+  Adjunction.hom_equiv_naturality_right _ _ _
 
 @[reassoc]
 theorem uncurry_natural_right (f : X ⟶ A ⟹ Y) (g : Y ⟶ Y') : uncurry (f ≫ (exp _).map g) = uncurry f ≫ g :=
-  adjunction.hom_equiv_naturality_right_symm _ _ _
+  Adjunction.hom_equiv_naturality_right_symm _ _ _
 
 @[reassoc]
-theorem uncurry_natural_left (f : X ⟶ X') (g : X' ⟶ A ⟹ Y) : uncurry (f ≫ g) = limits.prod.map (𝟙 _) f ≫ uncurry g :=
-  adjunction.hom_equiv_naturality_left_symm _ _ _
+theorem uncurry_natural_left (f : X ⟶ X') (g : X' ⟶ A ⟹ Y) : uncurry (f ≫ g) = Limits.prod.map (𝟙 _) f ≫ uncurry g :=
+  Adjunction.hom_equiv_naturality_left_symm _ _ _
 
 @[simp]
 theorem uncurry_curry (f : A ⨯ X ⟶ Y) : uncurry (curry f) = f :=
-  (closed.is_adj.adj.homEquiv _ _).left_inv f
+  (Closed.isAdj.adj.homEquiv _ _).left_inv f
 
 @[simp]
 theorem curry_uncurry (f : X ⟶ A ⟹ Y) : curry (uncurry f) = f :=
-  (closed.is_adj.adj.homEquiv _ _).right_inv f
+  (Closed.isAdj.adj.homEquiv _ _).right_inv f
 
 theorem curry_eq_iff (f : A ⨯ Y ⟶ X) (g : Y ⟶ A ⟹ X) : curry f = g ↔ f = uncurry g :=
-  adjunction.hom_equiv_apply_eq _ f g
+  Adjunction.hom_equiv_apply_eq _ f g
 
 theorem eq_curry_iff (f : A ⨯ Y ⟶ X) (g : Y ⟶ A ⟹ X) : g = curry f ↔ uncurry g = f :=
-  adjunction.eq_hom_equiv_apply _ f g
+  Adjunction.eq_hom_equiv_apply _ f g
 
-theorem uncurry_eq (g : Y ⟶ A ⟹ X) : uncurry g = limits.prod.map (𝟙 A) g ≫ (ev A).app X :=
-  adjunction.hom_equiv_counit _
+theorem uncurry_eq (g : Y ⟶ A ⟹ X) : uncurry g = Limits.prod.map (𝟙 A) g ≫ (ev A).app X :=
+  Adjunction.hom_equiv_counit _
 
 theorem curry_eq (g : A ⨯ Y ⟶ X) : curry g = (coev A).app Y ≫ (exp A).map g :=
-  adjunction.hom_equiv_unit _
+  Adjunction.hom_equiv_unit _
 
-theorem uncurry_id_eq_ev (A X : C) [exponentiable A] : uncurry (𝟙 (A ⟹ X)) = (ev A).app X := by
+theorem uncurry_id_eq_ev (A X : C) [Exponentiable A] : uncurry (𝟙 (A ⟹ X)) = (ev A).app X := by
   rw [uncurry_eq, prod.map_id_id, id_comp]
 
-theorem curry_id_eq_coev (A X : C) [exponentiable A] : curry (𝟙 _) = (coev A).app X := by
+theorem curry_id_eq_coev (A X : C) [Exponentiable A] : curry (𝟙 _) = (coev A).app X := by
   rw [curry_eq, (exp A).map_id (A ⨯ _)]
   apply comp_id
 
 theorem curry_injective : Function.Injective (curry : (A ⨯ Y ⟶ X) → (Y ⟶ A ⟹ X)) :=
-  (closed.is_adj.adj.homEquiv _ _).Injective
+  (Closed.isAdj.adj.homEquiv _ _).Injective
 
 theorem uncurry_injective : Function.Injective (uncurry : (Y ⟶ A ⟹ X) → (A ⨯ Y ⟶ X)) :=
-  (closed.is_adj.adj.homEquiv _ _).symm.Injective
+  (Closed.isAdj.adj.homEquiv _ _).symm.Injective
 
 end CartesianClosed
 
 open CartesianClosed
 
-variable [has_finite_products C] [exponentiable A]
+variable [HasFiniteProducts C] [Exponentiable A]
 
 /-- Show that the exponential of the terminal object is isomorphic to itself, i.e. `X^1 ≅ X`.
 
 The typeclass argument is explicit: any instance can be used.
 -/
-def exp_terminal_iso_self [exponentiable (⊤_ C)] : (⊤_ C) ⟹ X ≅ X :=
-  yoneda.ext ((⊤_ C) ⟹ X) X (fun Y f => (prod.left_unitor Y).inv ≫ cartesian_closed.uncurry f)
-    (fun Y f => cartesian_closed.curry ((prod.left_unitor Y).Hom ≫ f))
+def exp_terminal_iso_self [Exponentiable (⊤_ C)] : (⊤_ C) ⟹ X ≅ X :=
+  yoneda.ext ((⊤_ C) ⟹ X) X (fun Y f => (prod.leftUnitor Y).inv ≫ CartesianClosed.uncurry f)
+    (fun Y f => CartesianClosed.curry ((prod.leftUnitor Y).Hom ≫ f))
     (fun Z g => by
       rw [curry_eq_iff, iso.hom_inv_id_assoc])
     (fun Z g => by
@@ -215,48 +215,48 @@ def exp_terminal_iso_self [exponentiable (⊤_ C)] : (⊤_ C) ⟹ X ≅ X :=
 
 /-- The internal element which points at the given morphism. -/
 def internalize_hom (f : A ⟶ Y) : ⊤_ C ⟶ A ⟹ Y :=
-  cartesian_closed.curry (limits.prod.fst ≫ f)
+  CartesianClosed.curry (limits.prod.fst ≫ f)
 
 section Pre
 
 variable {B}
 
 /-- Pre-compose an internal hom with an external hom. -/
-def pre (f : B ⟶ A) [exponentiable B] : exp A ⟶ exp B :=
-  transfer_nat_trans_self (exp.adjunction _) (exp.adjunction _) (prod.functor.map f)
+def pre (f : B ⟶ A) [Exponentiable B] : exp A ⟶ exp B :=
+  transferNatTransSelf (exp.adjunction _) (exp.adjunction _) (prod.functor.map f)
 
-theorem prod_map_pre_app_comp_ev (f : B ⟶ A) [exponentiable B] (X : C) :
-    limits.prod.map (𝟙 B) ((pre f).app X) ≫ (ev B).app X = limits.prod.map f (𝟙 (A ⟹ X)) ≫ (ev A).app X :=
+theorem prod_map_pre_app_comp_ev (f : B ⟶ A) [Exponentiable B] (X : C) :
+    Limits.prod.map (𝟙 B) ((pre f).app X) ≫ (ev B).app X = Limits.prod.map f (𝟙 (A ⟹ X)) ≫ (ev A).app X :=
   transfer_nat_trans_self_counit _ _ (prod.functor.map f) X
 
-theorem uncurry_pre (f : B ⟶ A) [exponentiable B] (X : C) :
-    cartesian_closed.uncurry ((pre f).app X) = limits.prod.map f (𝟙 _) ≫ (ev A).app X := by
+theorem uncurry_pre (f : B ⟶ A) [Exponentiable B] (X : C) :
+    CartesianClosed.uncurry ((pre f).app X) = Limits.prod.map f (𝟙 _) ≫ (ev A).app X := by
   rw [uncurry_eq, prod_map_pre_app_comp_ev]
 
-theorem coev_app_comp_pre_app (f : B ⟶ A) [exponentiable B] :
-    (coev A).app X ≫ (pre f).app (A ⨯ X) = (coev B).app X ≫ (exp B).map (limits.prod.map f (𝟙 _)) :=
+theorem coev_app_comp_pre_app (f : B ⟶ A) [Exponentiable B] :
+    (coev A).app X ≫ (pre f).app (A ⨯ X) = (coev B).app X ≫ (exp B).map (Limits.prod.map f (𝟙 _)) :=
   unit_transfer_nat_trans_self _ _ (prod.functor.map f) X
 
 @[simp]
-theorem pre_id (A : C) [exponentiable A] : pre (𝟙 A) = 𝟙 _ := by
+theorem pre_id (A : C) [Exponentiable A] : pre (𝟙 A) = 𝟙 _ := by
   simp [pre]
 
 @[simp]
-theorem pre_map {A₁ A₂ A₃ : C} [exponentiable A₁] [exponentiable A₂] [exponentiable A₃] (f : A₁ ⟶ A₂) (g : A₂ ⟶ A₃) :
+theorem pre_map {A₁ A₂ A₃ : C} [Exponentiable A₁] [Exponentiable A₂] [Exponentiable A₃] (f : A₁ ⟶ A₂) (g : A₂ ⟶ A₃) :
     pre (f ≫ g) = pre g ≫ pre f := by
   rw [pre, pre, pre, transfer_nat_trans_self_comp, prod.functor.map_comp]
 
 end Pre
 
 /-- The internal hom functor given by the cartesian closed structure. -/
-def internal_hom [cartesian_closed C] : Cᵒᵖ ⥤ C ⥤ C where
+def internal_hom [CartesianClosed C] : Cᵒᵖ ⥤ C ⥤ C where
   obj := fun X => exp X.unop
   map := fun X Y f => pre f.unop
 
 /-- If an initial object `I` exists in a CCC, then `A ⨯ I ≅ I`. -/
 @[simps]
-def zero_mul {I : C} (t : is_initial I) : A ⨯ I ≅ I where
-  Hom := limits.prod.snd
+def zero_mul {I : C} (t : IsInitial I) : A ⨯ I ≅ I where
+  Hom := Limits.prod.snd
   inv := t.to _
   hom_inv_id' := by
     have : (limits.prod.snd : A ⨯ I ⟶ I) = cartesian_closed.uncurry (t.to _)
@@ -267,13 +267,13 @@ def zero_mul {I : C} (t : is_initial I) : A ⨯ I ≅ I where
   inv_hom_id' := t.hom_ext _ _
 
 /-- If an initial object `0` exists in a CCC, then `0 ⨯ A ≅ 0`. -/
-def mul_zero {I : C} (t : is_initial I) : I ⨯ A ≅ I :=
-  limits.prod.braiding _ _ ≪≫ zero_mul t
+def mul_zero {I : C} (t : IsInitial I) : I ⨯ A ≅ I :=
+  Limits.prod.braiding _ _ ≪≫ zeroMul t
 
 /-- If an initial object `0` exists in a CCC then `0^B ≅ 1` for any `B`. -/
-def pow_zeroₓ {I : C} (t : is_initial I) [cartesian_closed C] : I ⟹ B ≅ ⊤_ C where
+def pow_zeroₓ {I : C} (t : IsInitial I) [CartesianClosed C] : I ⟹ B ≅ ⊤_ C where
   Hom := default
-  inv := cartesian_closed.curry ((mul_zero t).Hom ≫ t.to _)
+  inv := CartesianClosed.curry ((mulZero t).Hom ≫ t.to _)
   hom_inv_id' := by
     rw [← curry_natural_left, curry_eq_iff, ← cancel_epi (mul_zero t).inv]
     · apply t.hom_ext
@@ -284,9 +284,9 @@ def pow_zeroₓ {I : C} (t : is_initial I) [cartesian_closed C] : I ⟹ B ≅ �
       
 
 /-- In a CCC with binary coproducts, the distribution morphism is an isomorphism. -/
-def prod_coprod_distrib [has_binary_coproducts C] [cartesian_closed C] (X Y Z : C) : (Z ⨯ X) ⨿ Z ⨯ Y ≅ Z ⨯ X ⨿ Y where
-  Hom := coprod.desc (limits.prod.map (𝟙 _) coprod.inl) (limits.prod.map (𝟙 _) coprod.inr)
-  inv := cartesian_closed.uncurry (coprod.desc (cartesian_closed.curry coprod.inl) (cartesian_closed.curry coprod.inr))
+def prod_coprod_distrib [HasBinaryCoproducts C] [CartesianClosed C] (X Y Z : C) : (Z ⨯ X) ⨿ Z ⨯ Y ≅ Z ⨯ X ⨿ Y where
+  Hom := coprod.desc (Limits.prod.map (𝟙 _) coprod.inl) (Limits.prod.map (𝟙 _) coprod.inr)
+  inv := CartesianClosed.uncurry (coprod.desc (CartesianClosed.curry coprod.inl) (CartesianClosed.curry coprod.inr))
   hom_inv_id' := by
     apply coprod.hom_ext
     rw [coprod.inl_desc_assoc, comp_id, ← uncurry_natural_left, coprod.inl_desc, uncurry_curry]
@@ -302,37 +302,37 @@ i.e. any morphism to `I` is an iso.
 This actually shows a slightly stronger version: any morphism to an initial object from an
 exponentiable object is an isomorphism.
 -/
-theorem strict_initial {I : C} (t : is_initial I) (f : A ⟶ I) : is_iso f := by
+theorem strict_initial {I : C} (t : IsInitial I) (f : A ⟶ I) : IsIso f := by
   have : mono (limits.prod.lift (𝟙 A) f ≫ (zero_mul t).Hom) := mono_comp _ _
   rw [zero_mul_hom, prod.lift_snd] at _inst
   have : split_epi f := ⟨t.to _, t.hom_ext _ _⟩
   apply is_iso_of_mono_of_split_epi
 
-instance to_initial_is_iso [has_initial C] (f : A ⟶ ⊥_ C) : is_iso f :=
-  strict_initial initial_is_initial _
+instance to_initial_is_iso [HasInitial C] (f : A ⟶ ⊥_ C) : IsIso f :=
+  strict_initial initialIsInitial _
 
 /-- If an initial object `0` exists in a CCC then every morphism from it is monic. -/
-theorem initial_mono {I : C} (B : C) (t : is_initial I) [cartesian_closed C] : mono (t.to B) :=
+theorem initial_mono {I : C} (B : C) (t : IsInitial I) [CartesianClosed C] : Mono (t.to B) :=
   ⟨fun B g h _ => by
     have := strict_initial t g
     have := strict_initial t h
     exact eq_of_inv_eq_inv (t.hom_ext _ _)⟩
 
-instance initial.mono_to [has_initial C] (B : C) [cartesian_closed C] : mono (initial.to B) :=
-  initial_mono B initial_is_initial
+instance initial.mono_to [HasInitial C] (B : C) [CartesianClosed C] : Mono (initial.to B) :=
+  initial_mono B initialIsInitial
 
-variable {D : Type u₂} [category.{v} D]
+variable {D : Type u₂} [Category.{v} D]
 
 section Functor
 
-variable [has_finite_products D]
+variable [HasFiniteProducts D]
 
 /-- Transport the property of being cartesian closed across an equivalence of categories.
 
 Note we didn't require any coherence between the choice of finite products here, since we transport
 along the `prod_comparison` isomorphism.
 -/
-def cartesian_closed_of_equiv (e : C ≌ D) [h : cartesian_closed C] : cartesian_closed D where
+def cartesian_closed_of_equiv (e : C ≌ D) [h : CartesianClosed C] : CartesianClosed D where
   closed := fun X =>
     { isAdj := by
         have q : exponentiable (e.inverse.obj X) := inferInstance

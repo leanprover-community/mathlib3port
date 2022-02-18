@@ -14,13 +14,13 @@ unsafe def restate_axiom (d : declaration) (new_name : Name) : tactic Unit := do
         (match d.to_definition with
         | declaration.defn Name levels type value reducibility trusted => (levels, type, value, reducibility, trusted)
         | _ => undefined)
-  let (s, u) ← mk_simp_set ff [] []
+  let (s, u) ← mk_simp_set false [] []
   let new_type ← s.dsimplify [] type <|> pure type
   let prop ← is_prop new_type
   let new_decl :=
     if prop then declaration.thm new_name levels new_type (task.pure value)
     else declaration.defn new_name levels new_type value reducibility trusted
-  updateex_env fun env => env.add new_decl
+  updateex_env fun env => env new_decl
 
 private unsafe def name_lemma (old : Name) (new : Option Name := none) : tactic Name :=
   match new with
@@ -28,13 +28,13 @@ private unsafe def name_lemma (old : Name) (new : Option Name := none) : tactic 
     match old.components.reverse with
     | last :: most =>
       (do
-          let last := last.to_string
+          let last := last.toString
           let last :=
-            if last.to_list.ilast = ''' then (last.to_list.reverse.drop 1).reverse.asString else last ++ "_lemma"
-          return (mkStrName old.get_prefix last)) <|>
+            if last.toList.ilast = ''' then (last.toList.reverse.drop 1).reverse.asString else last ++ "_lemma"
+          return (mkStrName old last)) <|>
         failed
     | nil => undefined
-  | some new => return (mkStrName old.get_prefix new.to_string)
+  | some new => return (mkStrName old.getPrefix new.toString)
 
 /-- `restate_axiom` makes a new copy of a structure field, first definitionally simplifying the type.
 This is useful to remove `auto_param` or `opt_param` from the statement.

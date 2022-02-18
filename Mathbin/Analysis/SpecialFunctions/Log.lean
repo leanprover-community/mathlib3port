@@ -31,12 +31,12 @@ to `log |x|` for `x < 0`, and to `0` for `0`. We use this unconventional extensi
 the derivative of `log` is `1/x` away from `0`. -/
 @[pp_nodot]
 noncomputable def log (x : ℝ) : ℝ :=
-  if hx : x = 0 then 0 else exp_order_iso.symm ⟨abs x, abs_pos.2 hx⟩
+  if hx : x = 0 then 0 else expOrderIso.symm ⟨abs x, abs_pos.2 hx⟩
 
-theorem log_of_ne_zero (hx : x ≠ 0) : log x = exp_order_iso.symm ⟨abs x, abs_pos.2 hx⟩ :=
+theorem log_of_ne_zero (hx : x ≠ 0) : log x = expOrderIso.symm ⟨abs x, abs_pos.2 hx⟩ :=
   dif_neg hx
 
-theorem log_of_pos (hx : 0 < x) : log x = exp_order_iso.symm ⟨x, hx⟩ := by
+theorem log_of_pos (hx : 0 < x) : log x = expOrderIso.symm ⟨x, hx⟩ := by
   rw [log_of_ne_zero hx.ne']
   congr
   exact abs_of_pos hx
@@ -56,12 +56,12 @@ theorem exp_log_of_neg (hx : x < 0) : exp (log x) = -x := by
 theorem log_exp (x : ℝ) : log (exp x) = x :=
   exp_injective <| exp_log (exp_pos x)
 
-theorem surj_on_log : surj_on log (Ioi 0) univ := fun x _ => ⟨exp x, exp_pos x, log_exp x⟩
+theorem surj_on_log : SurjOn log (Ioi 0) Univ := fun x _ => ⟨exp x, exp_pos x, log_exp x⟩
 
-theorem log_surjective : surjective log := fun x => ⟨exp x, log_exp x⟩
+theorem log_surjective : Surjective log := fun x => ⟨exp x, log_exp x⟩
 
 @[simp]
-theorem range_log : range log = univ :=
+theorem range_log : Range log = univ :=
   log_surjective.range_eq
 
 @[simp]
@@ -85,7 +85,7 @@ theorem log_abs (x : ℝ) : log (abs x) = log x := by
 theorem log_neg_eq_log (x : ℝ) : log (-x) = log x := by
   rw [← log_abs x, ← log_abs (-x), abs_neg]
 
-theorem surj_on_log' : surj_on log (Iio 0) univ := fun x _ =>
+theorem surj_on_log' : SurjOn log (Iio 0) Univ := fun x _ =>
   ⟨-exp x, neg_lt_zero.2 <| exp_pos x, by
     rw [log_neg_eq_log, log_exp]⟩
 
@@ -104,7 +104,7 @@ theorem log_inv (x : ℝ) : log x⁻¹ = -log x := by
     
   rw [← exp_eq_exp, exp_log_eq_abs (inv_ne_zero hx), exp_neg, exp_log_eq_abs hx, abs_inv]
 
-theorem log_le_log (h : 0 < x) (h₁ : 0 < y) : Real.log x ≤ Real.log y ↔ x ≤ y := by
+theorem log_le_log (h : 0 < x) (h₁ : 0 < y) : log x ≤ log y ↔ x ≤ y := by
   rw [← exp_le_exp, exp_log h, exp_log h₁]
 
 theorem log_lt_log (hx : 0 < x) : x < y → log x < log y := by
@@ -192,6 +192,23 @@ theorem log_eq_zero {x : ℝ} : log x = 0 ↔ x = 0 ∨ x = 1 ∨ x = -1 := by
   · rintro (rfl | rfl | rfl) <;> simp only [log_one, log_zero, log_neg_eq_log]
     
 
+@[simp]
+theorem log_pow (x : ℝ) (n : ℕ) : log (x ^ n) = n * log x := by
+  induction' n with n ih
+  · simp
+    
+  rcases eq_or_ne x 0 with (rfl | hx)
+  · simp
+    
+  rw [pow_succ'ₓ, log_mul (pow_ne_zero _ hx) hx, ih, Nat.cast_succₓ, add_mulₓ, one_mulₓ]
+
+@[simp]
+theorem log_zpow (x : ℝ) (n : ℤ) : log (x ^ n) = n * log x := by
+  induction n
+  · rw [Int.of_nat_eq_coe, zpow_coe_nat, log_pow, Int.cast_coe_nat]
+    
+  rw [zpow_neg_succ_of_nat, log_inv, log_pow, Int.cast_neg_succ_of_nat, Nat.cast_add_one, neg_mul_eq_neg_mulₓ]
+
 theorem log_le_sub_one_of_pos {x : ℝ} (hx : 0 < x) : log x ≤ x - 1 := by
   rw [le_sub_iff_add_le]
   convert add_one_le_exp (log x)
@@ -214,11 +231,11 @@ theorem log_div_self_antitone_on : AntitoneOn (fun x : ℝ => log x / x) { x | e
       ring
 
 /-- The real logarithm function tends to `+∞` at `+∞`. -/
-theorem tendsto_log_at_top : tendsto log at_top at_top :=
+theorem tendsto_log_at_top : Tendsto log atTop atTop :=
   tendsto_comp_exp_at_top.1 <| by
     simpa only [log_exp] using tendsto_id
 
-theorem tendsto_log_nhds_within_zero : tendsto log (𝓝[≠] 0) at_bot := by
+theorem tendsto_log_nhds_within_zero : Tendsto log (𝓝[≠] 0) atBot := by
   rw [← show _ = log from funext log_abs]
   refine' tendsto.comp _ tendsto_abs_nhds_within_zero
   simpa [← tendsto_comp_exp_at_bot] using tendsto_id
@@ -264,8 +281,8 @@ open Real
 
 variable {α : Type _}
 
-theorem Filter.Tendsto.log {f : α → ℝ} {l : Filter α} {x : ℝ} (h : tendsto f l (𝓝 x)) (hx : x ≠ 0) :
-    tendsto (fun x => log (f x)) l (𝓝 (log x)) :=
+theorem Filter.Tendsto.log {f : α → ℝ} {l : Filter α} {x : ℝ} (h : Tendsto f l (𝓝 x)) (hx : x ≠ 0) :
+    Tendsto (fun x => log (f x)) l (𝓝 (log x)) :=
   (continuous_at_log hx).Tendsto.comp h
 
 variable [TopologicalSpace α] {f : α → ℝ} {s : Set α} {a : α}

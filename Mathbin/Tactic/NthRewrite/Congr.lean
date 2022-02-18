@@ -13,9 +13,9 @@ discharged by `cfg.discharger` in the process. -/
 unsafe def rewrite_without_new_mvars (r : expr) (e : expr) (cfg : nth_rewrite.cfg := {  }) : tactic (expr × expr) :=
   lock_tactic_state <| do
     let (new_t, prf, metas) ← rewrite_core r e { cfg.to_rewrite_cfg with md := semireducible }
-    try_apply_opt_auto_param cfg.to_apply_cfg metas
+    try_apply_opt_auto_param cfg metas
     set_goals metas
-    all_goals (try cfg.discharger)
+    all_goals (try cfg)
     done
     let prf ← instantiate_mvars prf
     return (new_t, prf)
@@ -27,9 +27,9 @@ that whether or not the entire expression was rewritten.-/
 unsafe def rewrite_is_of_entire : expr → Bool
   | quote.1 (@Eq.ndrec _ (%%ₓterm) (%%ₓC) (%%ₓp) _ _) =>
     match C with
-    | quote.1 fun p => _ = p => tt
-    | _ => ff
-  | _ => ff
+    | quote.1 fun p => _ = p => true
+    | _ => false
+  | _ => false
 
 /-- Function which tries to perform the rewrite associated to the equality `r : expr × bool` (the
 bool indicates whether we should flip the equality first), at the position pointed to by
@@ -43,16 +43,16 @@ unsafe def rewrite_at_lens (cfg : nth_rewrite.cfg) (r : expr × Bool) (l : expr_
   let (v, pr) ← rewrite_without_new_mvars r.1 e { cfg with symm := r.2 }
   if ¬rewrite_is_of_entire pr then return []
     else do
-      let w := l.fill v
-      let qr ← l.congr pr
-      let s ← try_core (cfg.simplifier w)
+      let w := l v
+      let qr ← l pr
+      let s ← try_core (cfg w)
       let (w, qr) ←
         match s with
           | none => pure (w, qr)
           | some (w', qr') => do
             let qr ← mk_eq_trans qr qr'
             return (w', qr)
-      return [⟨w, pure qr, l.to_dirs⟩]
+      return [⟨w, pure qr, l⟩]
 
 /-- List of all rewrites of an expression `e` by `r : expr × bool`.
 Here `r.1` is the substituting expression and `r.2` flags the direction of the rewrite. -/

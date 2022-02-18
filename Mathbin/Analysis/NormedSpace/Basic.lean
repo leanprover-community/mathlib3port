@@ -90,21 +90,24 @@ variable [SemiNormedRing α]
 theorem norm_mul_le (a b : α) : ∥a * b∥ ≤ ∥a∥ * ∥b∥ :=
   SemiNormedRing.norm_mul _ _
 
+theorem nnnorm_mul_le (a b : α) : ∥a * b∥₊ ≤ ∥a∥₊ * ∥b∥₊ := by
+  simpa only [← norm_to_nnreal, ← Real.to_nnreal_mul (norm_nonneg _)] using Real.to_nnreal_mono (norm_mul_le _ _)
+
 /-- A subalgebra of a seminormed ring is also a seminormed ring, with the restriction of the norm.
 
 See note [implicit instance arguments]. -/
 instance Subalgebra.semiNormedRing {𝕜 : Type _} {_ : CommRingₓ 𝕜} {E : Type _} [SemiNormedRing E] {_ : Algebra 𝕜 E}
     (s : Subalgebra 𝕜 E) : SemiNormedRing s :=
-  { s.to_submodule.semi_normed_group with norm_mul := fun a b => norm_mul_le a.1 b.1 }
+  { s.toSubmodule.SemiNormedGroup with norm_mul := fun a b => norm_mul_le a.1 b.1 }
 
 /-- A subalgebra of a normed ring is also a normed ring, with the restriction of the norm.
 
 See note [implicit instance arguments]. -/
 instance Subalgebra.normedRing {𝕜 : Type _} {_ : CommRingₓ 𝕜} {E : Type _} [NormedRing E] {_ : Algebra 𝕜 E}
     (s : Subalgebra 𝕜 E) : NormedRing s :=
-  { s.semi_normed_ring with }
+  { s.SemiNormedRing with }
 
-theorem List.norm_prod_le' : ∀ {l : List α}, l ≠ [] → ∥l.prod∥ ≤ (l.map norm).Prod
+theorem List.norm_prod_le' : ∀ {l : List α}, l ≠ [] → ∥l.Prod∥ ≤ (l.map norm).Prod
   | [], h => (h rfl).elim
   | [a], _ => by
     simp
@@ -113,12 +116,12 @@ theorem List.norm_prod_le' : ∀ {l : List α}, l ≠ [] → ∥l.prod∥ ≤ (l
     refine' le_transₓ (norm_mul_le _ _) (mul_le_mul_of_nonneg_left _ (norm_nonneg _))
     exact List.norm_prod_le' (List.cons_ne_nil b l)
 
-theorem List.norm_prod_le [NormOneClass α] : ∀ l : List α, ∥l.prod∥ ≤ (l.map norm).Prod
+theorem List.norm_prod_le [NormOneClass α] : ∀ l : List α, ∥l.Prod∥ ≤ (l.map norm).Prod
   | [] => by
     simp
   | a :: l => List.norm_prod_le' (List.cons_ne_nil a l)
 
-theorem Finset.norm_prod_le' {α : Type _} [NormedCommRing α] (s : Finset ι) (hs : s.nonempty) (f : ι → α) :
+theorem Finset.norm_prod_le' {α : Type _} [NormedCommRing α] (s : Finset ι) (hs : s.Nonempty) (f : ι → α) :
     ∥∏ i in s, f i∥ ≤ ∏ i in s, ∥f i∥ := by
   rcases s with ⟨⟨l⟩, hl⟩
   have : l.map f ≠ [] := by
@@ -130,21 +133,33 @@ theorem Finset.norm_prod_le {α : Type _} [NormedCommRing α] [NormOneClass α] 
   rcases s with ⟨⟨l⟩, hl⟩
   simpa using (l.map f).norm_prod_le
 
-/-- If `α` is a seminormed ring, then `∥a^n∥≤ ∥a∥^n` for `n > 0`. See also `norm_pow_le`. -/
-theorem norm_pow_le' (a : α) : ∀ {n : ℕ}, 0 < n → ∥a ^ n∥ ≤ ∥a∥ ^ n
+/-- If `α` is a seminormed ring, then `∥a ^ n∥₊ ≤ ∥a∥₊ ^ n` for `n > 0`.
+See also `nnnorm_pow_le`. -/
+theorem nnnorm_pow_le' (a : α) : ∀ {n : ℕ}, 0 < n → ∥a ^ n∥₊ ≤ ∥a∥₊ ^ n
   | 1, h => by
-    simp
+    simp only [pow_oneₓ]
   | n + 2, h => by
-    rw [pow_succₓ _ (n + 1), pow_succₓ _ (n + 1)]
-    exact
-      le_transₓ (norm_mul_le a (a ^ (n + 1)))
-        (mul_le_mul (le_reflₓ _) (norm_pow_le' (Nat.succ_posₓ _)) (norm_nonneg _) (norm_nonneg _))
+    simpa only [pow_succₓ _ (n + 1)] using
+      le_transₓ (nnnorm_mul_le _ _) (mul_le_mul_left' (nnnorm_pow_le' n.succ_pos) _)
 
-/-- If `α` is a seminormed ring with `∥1∥=1`, then `∥a^n∥≤ ∥a∥^n`. See also `norm_pow_le'`. -/
-theorem norm_pow_le [NormOneClass α] (a : α) : ∀ n : ℕ, ∥a ^ n∥ ≤ ∥a∥ ^ n
-  | 0 => by
-    simp
-  | n + 1 => norm_pow_le' a n.zero_lt_succ
+/-- If `α` is a seminormed ring with `∥1∥₊ = 1`, then `∥a ^ n∥₊ ≤ ∥a∥₊ ^ n`.
+See also `nnnorm_pow_le'`.-/
+theorem nnnorm_pow_le [NormOneClass α] (a : α) (n : ℕ) : ∥a ^ n∥₊ ≤ ∥a∥₊ ^ n :=
+  Nat.recOn n
+    (by
+      simp only [pow_zeroₓ, nnnorm_one])
+    fun k hk => nnnorm_pow_le' a k.succ_pos
+
+/-- If `α` is a seminormed ring, then `∥a ^ n∥ ≤ ∥a∥ ^ n` for `n > 0`. See also `norm_pow_le`. -/
+theorem norm_pow_le' (a : α) {n : ℕ} (h : 0 < n) : ∥a ^ n∥ ≤ ∥a∥ ^ n := by
+  simpa only [Nnreal.coe_pow, coe_nnnorm] using Nnreal.coe_mono (nnnorm_pow_le' a h)
+
+/-- If `α` is a seminormed ring with `∥1∥ = 1`, then `∥a ^ n∥ ≤ ∥a∥ ^ n`. See also `norm_pow_le'`.-/
+theorem norm_pow_le [NormOneClass α] (a : α) (n : ℕ) : ∥a ^ n∥ ≤ ∥a∥ ^ n :=
+  Nat.recOn n
+    (by
+      simp only [pow_zeroₓ, norm_one])
+    fun n hn => norm_pow_le' a n.succ_pos
 
 theorem eventually_norm_pow_le (a : α) : ∀ᶠ n : ℕ in at_top, ∥a ^ n∥ ≤ ∥a∥ ^ n :=
   eventually_at_top.mpr ⟨1, fun b h => norm_pow_le' a (Nat.succ_le_iff.mp h)⟩
@@ -272,31 +287,31 @@ def nnnorm_hom : α →*₀ ℝ≥0 :=
 
 @[simp]
 theorem norm_pow (a : α) : ∀ n : ℕ, ∥a ^ n∥ = ∥a∥ ^ n :=
-  (norm_hom.toMonoidHom : α →* ℝ).map_pow a
+  (normHom.toMonoidHom : α →* ℝ).map_pow a
 
 @[simp]
 theorem nnnorm_pow (a : α) (n : ℕ) : ∥a ^ n∥₊ = ∥a∥₊ ^ n :=
-  (nnnorm_hom.toMonoidHom : α →* ℝ≥0 ).map_pow a n
+  (nnnormHom.toMonoidHom : α →* ℝ≥0 ).map_pow a n
 
 @[simp]
 theorem norm_prod (s : Finset β) (f : β → α) : ∥∏ b in s, f b∥ = ∏ b in s, ∥f b∥ :=
-  (norm_hom.toMonoidHom : α →* ℝ).map_prod f s
+  (normHom.toMonoidHom : α →* ℝ).map_prod f s
 
 @[simp]
 theorem nnnorm_prod (s : Finset β) (f : β → α) : ∥∏ b in s, f b∥₊ = ∏ b in s, ∥f b∥₊ :=
-  (nnnorm_hom.toMonoidHom : α →* ℝ≥0 ).map_prod f s
+  (nnnormHom.toMonoidHom : α →* ℝ≥0 ).map_prod f s
 
 @[simp]
 theorem norm_div (a b : α) : ∥a / b∥ = ∥a∥ / ∥b∥ :=
-  (norm_hom : α →*₀ ℝ).map_div a b
+  (normHom : α →*₀ ℝ).map_div a b
 
 @[simp]
 theorem nnnorm_div (a b : α) : ∥a / b∥₊ = ∥a∥₊ / ∥b∥₊ :=
-  (nnnorm_hom : α →*₀ ℝ≥0 ).map_div a b
+  (nnnormHom : α →*₀ ℝ≥0 ).map_div a b
 
 @[simp]
 theorem norm_inv (a : α) : ∥a⁻¹∥ = ∥a∥⁻¹ :=
-  (norm_hom : α →*₀ ℝ).map_inv a
+  (normHom : α →*₀ ℝ).map_inv a
 
 @[simp]
 theorem nnnorm_inv (a : α) : ∥a⁻¹∥₊ = ∥a∥₊⁻¹ :=
@@ -305,11 +320,11 @@ theorem nnnorm_inv (a : α) : ∥a⁻¹∥₊ = ∥a∥₊⁻¹ :=
 
 @[simp]
 theorem norm_zpow : ∀ a : α n : ℤ, ∥a ^ n∥ = ∥a∥ ^ n :=
-  (norm_hom : α →*₀ ℝ).map_zpow
+  (normHom : α →*₀ ℝ).map_zpow
 
 @[simp]
 theorem nnnorm_zpow : ∀ a : α n : ℤ, ∥a ^ n∥₊ = ∥a∥₊ ^ n :=
-  (nnnorm_hom : α →*₀ ℝ≥0 ).map_zpow
+  (nnnormHom : α →*₀ ℝ≥0 ).map_zpow
 
 instance (priority := 100) : HasContinuousInv₀ α := by
   refine' ⟨fun r r0 => tendsto_iff_norm_tendsto_zero.2 _⟩
@@ -359,7 +374,7 @@ theorem exists_norm_lt {r : ℝ} (hr : 0 < r) : ∃ x : α, 0 < ∥x∥ ∧ ∥x
 variable {α}
 
 @[instance]
-theorem punctured_nhds_ne_bot (x : α) : ne_bot (𝓝[≠] x) := by
+theorem punctured_nhds_ne_bot (x : α) : NeBot (𝓝[≠] x) := by
   rw [← mem_closure_iff_nhds_within_ne_bot, Metric.mem_closure_iff]
   rintro ε ε0
   rcases NormedField.exists_norm_lt α ε0 with ⟨b, hb0, hbε⟩
@@ -367,7 +382,7 @@ theorem punctured_nhds_ne_bot (x : α) : ne_bot (𝓝[≠] x) := by
   rwa [dist_comm, dist_eq_norm, add_sub_cancel']
 
 @[instance]
-theorem nhds_within_is_unit_ne_bot : ne_bot (𝓝[{ x : α | IsUnit x }] 0) := by
+theorem nhds_within_is_unit_ne_bot : NeBot (𝓝[{ x : α | IsUnit x }] 0) := by
   simpa only [is_unit_iff_ne_zero] using punctured_nhds_ne_bot (0 : α)
 
 end NormedField
@@ -425,7 +440,7 @@ theorem of_real_le_ennnorm (x : ℝ) : Ennreal.ofReal x ≤ ∥x∥₊ := by
 /-- If `E` is a nontrivial topological module over `ℝ`, then `E` has no isolated points.
 This is a particular case of `module.punctured_nhds_ne_bot`. -/
 instance punctured_nhds_module_ne_bot {E : Type _} [AddCommGroupₓ E] [TopologicalSpace E] [HasContinuousAdd E]
-    [Nontrivial E] [Module ℝ E] [HasContinuousSmul ℝ E] (x : E) : ne_bot (𝓝[≠] x) :=
+    [Nontrivial E] [Module ℝ E] [HasContinuousSmul ℝ E] (x : E) : NeBot (𝓝[≠] x) :=
   Module.punctured_nhds_ne_bot ℝ E x
 
 end Real
@@ -454,7 +469,7 @@ theorem nnnorm_norm [SemiNormedGroup α] (a : α) : ∥∥a∥∥₊ = ∥a∥�
 
 /-- A restatement of `metric_space.tendsto_at_top` in terms of the norm. -/
 theorem NormedGroup.tendsto_at_top [Nonempty α] [SemilatticeSup α] {β : Type _} [SemiNormedGroup β] {f : α → β}
-    {b : β} : tendsto f at_top (𝓝 b) ↔ ∀ ε, 0 < ε → ∃ N, ∀ n, N ≤ n → ∥f n - b∥ < ε :=
+    {b : β} : Tendsto f atTop (𝓝 b) ↔ ∀ ε, 0 < ε → ∃ N, ∀ n, N ≤ n → ∥f n - b∥ < ε :=
   (at_top_basis.tendsto_iff Metric.nhds_basis_ball).trans
     (by
       simp [dist_eq_norm])
@@ -463,7 +478,7 @@ theorem NormedGroup.tendsto_at_top [Nonempty α] [SemilatticeSup α] {β : Type 
 uses `∃ N, ∀ n > N, ...` rather than `∃ N, ∀ n ≥ N, ...`
 -/
 theorem NormedGroup.tendsto_at_top' [Nonempty α] [SemilatticeSup α] [NoMaxOrder α] {β : Type _} [SemiNormedGroup β]
-    {f : α → β} {b : β} : tendsto f at_top (𝓝 b) ↔ ∀ ε, 0 < ε → ∃ N, ∀ n, N < n → ∥f n - b∥ < ε :=
+    {f : α → β} {b : β} : Tendsto f atTop (𝓝 b) ↔ ∀ ε, 0 < ε → ∃ N, ∀ n, N < n → ∥f n - b∥ < ε :=
   (at_top_basis_Ioi.tendsto_iff Metric.nhds_basis_ball).trans
     (by
       simp [dist_eq_norm])
@@ -484,10 +499,10 @@ theorem Int.norm_cast_real (m : ℤ) : ∥(m : ℝ)∥ = ∥m∥ :=
 theorem Int.norm_eq_abs (n : ℤ) : ∥n∥ = abs n :=
   rfl
 
-theorem Nnreal.coe_nat_abs (n : ℤ) : (n.nat_abs : ℝ≥0 ) = ∥n∥₊ :=
+theorem Nnreal.coe_nat_abs (n : ℤ) : (n.natAbs : ℝ≥0 ) = ∥n∥₊ :=
   Nnreal.eq <|
     calc
-      ((n.nat_abs : ℝ≥0 ) : ℝ) = (n.nat_abs : ℤ) := by
+      ((n.natAbs : ℝ≥0 ) : ℝ) = (n.natAbs : ℤ) := by
         simp only [Int.cast_coe_nat, Nnreal.coe_nat_cast]
       _ = abs n := by
         simp only [← Int.abs_eq_nat_abs, Int.cast_abs]
@@ -525,9 +540,9 @@ variable [SemiNormedGroup α]
 
 theorem norm_nsmul_le (n : ℕ) (a : α) : ∥n • a∥ ≤ n * ∥a∥ := by
   induction' n with n ih
-  · simp only [norm_zero, Nat.cast_zero, zero_mul, zero_smul]
+  · simp only [norm_zero, Nat.cast_zeroₓ, zero_mul, zero_smul]
     
-  simp only [Nat.succ_eq_add_one, add_smul, add_mulₓ, one_mulₓ, Nat.cast_add, Nat.cast_one, one_nsmul]
+  simp only [Nat.succ_eq_add_one, add_smul, add_mulₓ, one_mulₓ, Nat.cast_addₓ, Nat.cast_oneₓ, one_nsmul]
   exact norm_add_le_of_le ih le_rfl
 
 theorem norm_zsmul_le (n : ℤ) (a : α) : ∥n • a∥ ≤ ∥n∥ * ∥a∥ := by
@@ -553,7 +568,7 @@ section SemiNormedGroup
 
 section Prio
 
--- ././Mathport/Syntax/Translate/Basic.lean:169:9: warning: unsupported option extends_priority
+-- ././Mathport/Syntax/Translate/Basic.lean:169:40: warning: unsupported option extends_priority
 set_option extends_priority 920
 
 /-- A normed space over a normed field is a vector space endowed with a norm which satisfies the
@@ -610,13 +625,13 @@ variable {E : Type _} [SemiNormedGroup E] [NormedSpace α E]
 variable {F : Type _} [SemiNormedGroup F] [NormedSpace α F]
 
 theorem eventually_nhds_norm_smul_sub_lt (c : α) (x : E) {ε : ℝ} (h : 0 < ε) : ∀ᶠ y in 𝓝 x, ∥c • (y - x)∥ < ε :=
-  have : tendsto (fun y => ∥c • (y - x)∥) (𝓝 x) (𝓝 0) :=
+  have : Tendsto (fun y => ∥c • (y - x)∥) (𝓝 x) (𝓝 0) :=
     (continuous_const.smul (continuous_id.sub continuous_const)).norm.tendsto' _ _
       (by
         simp )
-  this.eventually (gt_mem_nhds h)
+  this.Eventually (gt_mem_nhds h)
 
-theorem closure_ball [NormedSpace ℝ E] (x : E) {r : ℝ} (hr : 0 < r) : Closure (ball x r) = closed_ball x r := by
+theorem closure_ball [NormedSpace ℝ E] (x : E) {r : ℝ} (hr : 0 < r) : Closure (Ball x r) = ClosedBall x r := by
   refine' Set.Subset.antisymm closure_ball_subset_closed_ball fun y hy => _
   have : ContinuousWithinAt (fun c : ℝ => c • (y - x) + x) (Set.Ico 0 1) 1 :=
     ((continuous_id.smul continuous_const).add continuous_const).ContinuousWithinAt
@@ -632,13 +647,12 @@ theorem closure_ball [NormedSpace ℝ E] (x : E) {r : ℝ} (hr : 0 < r) : Closur
     apply mul_lt_mul' <;> assumption
     
 
-theorem frontier_ball [NormedSpace ℝ E] (x : E) {r : ℝ} (hr : 0 < r) : Frontier (ball x r) = sphere x r := by
+theorem frontier_ball [NormedSpace ℝ E] (x : E) {r : ℝ} (hr : 0 < r) : Frontier (Ball x r) = Sphere x r := by
   rw [Frontier, closure_ball x hr, is_open_ball.interior_eq]
   ext x
   exact (@eq_iff_le_not_lt ℝ _ _ _).symm
 
-theorem interior_closed_ball [NormedSpace ℝ E] (x : E) {r : ℝ} (hr : 0 < r) : Interior (closed_ball x r) = ball x r :=
-  by
+theorem interior_closed_ball [NormedSpace ℝ E] (x : E) {r : ℝ} (hr : 0 < r) : Interior (ClosedBall x r) = Ball x r := by
   refine' Set.Subset.antisymm _ ball_subset_interior_closed_ball
   intro y hy
   rcases le_iff_lt_or_eqₓ.1 (mem_closed_ball.1 <| interior_subset hy) with (hr | rfl)
@@ -657,7 +671,7 @@ theorem interior_closed_ball [NormedSpace ℝ E] (x : E) {r : ℝ} (hr : 0 < r) 
   rw [Set.mem_Icc, ← abs_le, ← Real.norm_eq_abs, ← mul_le_mul_right hr]
   simpa [f, dist_eq_norm, norm_smul] using hc
 
-theorem frontier_closed_ball [NormedSpace ℝ E] (x : E) {r : ℝ} (hr : 0 < r) : Frontier (closed_ball x r) = sphere x r :=
+theorem frontier_closed_ball [NormedSpace ℝ E] (x : E) {r : ℝ} (hr : 0 < r) : Frontier (ClosedBall x r) = Sphere x r :=
   by
   rw [Frontier, closure_closed_ball, interior_closed_ball x hr, closed_ball_diff_ball]
 
@@ -667,7 +681,7 @@ This homeomorphism sends `x : E` to `(1 + ∥x∥)⁻¹ • x`.
 In many cases the actual implementation is not important, so we don't mark the projection lemmas
 `homeomorph_unit_ball_apply_coe` and `homeomorph_unit_ball_symm_apply` as `@[simp]`. -/
 @[simps (config := { attrs := [] })]
-def homeomorphUnitBall {E : Type _} [SemiNormedGroup E] [NormedSpace ℝ E] : E ≃ₜ ball (0 : E) 1 where
+def homeomorphUnitBall {E : Type _} [SemiNormedGroup E] [NormedSpace ℝ E] : E ≃ₜ Ball (0 : E) 1 where
   toFun := fun x =>
     ⟨(1 + ∥x∥)⁻¹ • x, by
       have : ∥x∥ < abs (1 + ∥x∥) := (lt_one_add _).trans_le (le_abs_self _)
@@ -693,14 +707,14 @@ def homeomorphUnitBall {E : Type _} [SemiNormedGroup E] [NormedSpace ℝ E] : E 
 
 variable (α)
 
-theorem ne_neg_of_mem_sphere [CharZero α] {r : ℝ} (hr : r ≠ 0) (x : sphere (0 : E) r) : x ≠ -x := fun h =>
+theorem ne_neg_of_mem_sphere [CharZero α] {r : ℝ} (hr : r ≠ 0) (x : Sphere (0 : E) r) : x ≠ -x := fun h =>
   ne_zero_of_mem_sphere hr x
-    (eq_zero_of_eq_neg α
+    ((self_eq_neg α _).mp
       (by
         conv_lhs => rw [h]
         simp ))
 
-theorem ne_neg_of_mem_unit_sphere [CharZero α] (x : sphere (0 : E) 1) : x ≠ -x :=
+theorem ne_neg_of_mem_unit_sphere [CharZero α] (x : Sphere (0 : E) 1) : x ≠ -x :=
   ne_neg_of_mem_sphere α one_ne_zero x
 
 variable {α}
@@ -757,7 +771,7 @@ theorem rescale_to_shell_semi_normed {c : α} (hc : 1 < ∥c∥) {ε : ℝ} (εp
   show ∥(c ^ (n + 1))⁻¹∥⁻¹ ≤ ε⁻¹ * ∥c∥ * ∥x∥
   · have : ε⁻¹ * ∥c∥ * ∥x∥ = ε⁻¹ * ∥x∥ * ∥c∥ := by
       ring
-    rw [norm_inv, inv_inv₀, norm_zpow, zpow_add₀ (ne_of_gtₓ cpos), zpow_one, this, ← div_eq_inv_mul]
+    rw [norm_inv, inv_invₓ, norm_zpow, zpow_add₀ (ne_of_gtₓ cpos), zpow_one, this, ← div_eq_inv_mul]
     exact mul_le_mul_of_nonneg_right hn.1 (norm_nonneg _)
     
 
@@ -789,8 +803,8 @@ gives some more context. -/
 instance (priority := 100) NormedSpace.toModule' : Module α F :=
   NormedSpace.toModule
 
-theorem interior_closed_ball' [NormedSpace ℝ E] [Nontrivial E] (x : E) (r : ℝ) :
-    Interior (closed_ball x r) = ball x r := by
+theorem interior_closed_ball' [NormedSpace ℝ E] [Nontrivial E] (x : E) (r : ℝ) : Interior (ClosedBall x r) = Ball x r :=
+  by
   rcases lt_trichotomyₓ r 0 with (hr | rfl | hr)
   · simp [closed_ball_eq_empty.2 hr, ball_eq_empty.2 hr.le]
     
@@ -800,7 +814,7 @@ theorem interior_closed_ball' [NormedSpace ℝ E] [Nontrivial E] (x : E) (r : �
     
 
 theorem frontier_closed_ball' [NormedSpace ℝ E] [Nontrivial E] (x : E) (r : ℝ) :
-    Frontier (closed_ball x r) = sphere x r := by
+    Frontier (ClosedBall x r) = Sphere x r := by
   rw [Frontier, closure_closed_ball, interior_closed_ball' x r, closed_ball_diff_ball]
 
 variable {α}
@@ -842,7 +856,7 @@ theorem NormedSpace.exists_lt_norm (c : ℝ) : ∃ x : E, c < ∥x∥ := by
   rwa [norm_smul, ← div_lt_iff]
   rwa [norm_pos_iff]
 
-protected theorem NormedSpace.unbounded_univ : ¬bounded (Set.Univ : Set E) := fun h =>
+protected theorem NormedSpace.unbounded_univ : ¬Bounded (Set.Univ : Set E) := fun h =>
   let ⟨R, hR⟩ := bounded_iff_forall_norm_le.1 h
   let ⟨x, hx⟩ := NormedSpace.exists_lt_norm 𝕜 E R
   hx.not_le (hR x trivialₓ)
@@ -851,7 +865,7 @@ protected theorem NormedSpace.unbounded_univ : ¬bounded (Set.Univ : Set E) := f
 an instance because in order to apply it, Lean would have to search for `normed_space 𝕜 E` with
 unknown `𝕜`. We register this as an instance in two cases: `𝕜 = E` and `𝕜 = ℝ`. -/
 protected theorem NormedSpace.noncompact_space : NoncompactSpace E :=
-  ⟨fun h => NormedSpace.unbounded_univ 𝕜 _ h.bounded⟩
+  ⟨fun h => NormedSpace.unbounded_univ 𝕜 _ h.Bounded⟩
 
 instance (priority := 100) NondiscreteNormedField.noncompact_space : NoncompactSpace 𝕜 :=
   NormedSpace.noncompact_space 𝕜 𝕜
@@ -1001,14 +1015,14 @@ theorem Summable.mul_of_nonneg {f : ι → ℝ} {g : ι' → ℝ} (hf : Summable
     summable_of_sum_le (fun x => mul_nonneg (hf' _) (hg' _)) this
   fun u =>
   calc
-    (∑ x in u, f x.1 * g x.2) ≤ ∑ x in (u.image Prod.fst).product (u.image Prod.snd), f x.1 * g x.2 :=
+    (∑ x in u, f x.1 * g x.2) ≤ ∑ x in (u.Image Prod.fst).product (u.Image Prod.snd), f x.1 * g x.2 :=
       sum_mono_set_of_nonneg (fun x => mul_nonneg (hf' _) (hg' _)) subset_product
-    _ = ∑ x in u.image Prod.fst, ∑ y in u.image Prod.snd, f x * g y := sum_product
-    _ = ∑ x in u.image Prod.fst, f x * ∑ y in u.image Prod.snd, g y := sum_congr rfl fun x _ => mul_sum.symm
-    _ ≤ ∑ x in u.image Prod.fst, f x * t :=
+    _ = ∑ x in u.Image Prod.fst, ∑ y in u.Image Prod.snd, f x * g y := sum_product
+    _ = ∑ x in u.Image Prod.fst, f x * ∑ y in u.Image Prod.snd, g y := sum_congr rfl fun x _ => mul_sum.symm
+    _ ≤ ∑ x in u.Image Prod.fst, f x * t :=
       sum_le_sum fun x _ => mul_le_mul_of_nonneg_left (sum_le_has_sum _ (fun _ _ => hg' _) hg) (hf' _)
-    _ = (∑ x in u.image Prod.fst, f x) * t := sum_mul.symm
-    _ ≤ s * t := mul_le_mul_of_nonneg_right (sum_le_has_sum _ (fun _ _ => hf' _) hf) (hg.nonneg fun _ => hg' _)
+    _ = (∑ x in u.Image Prod.fst, f x) * t := sum_mul.symm
+    _ ≤ s * t := mul_le_mul_of_nonneg_right (sum_le_has_sum _ (fun _ _ => hf' _) hf) (hg.Nonneg fun _ => hg' _)
     
 
 theorem Summable.mul_norm {f : ι → α} {g : ι' → α} (hf : Summable fun x => ∥f x∥) (hg : Summable fun x => ∥g x∥) :

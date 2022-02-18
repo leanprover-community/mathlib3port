@@ -45,12 +45,12 @@ include V
 nontrivial weighted subtractions (where the sum of weights is 0) are
 0. -/
 def AffineIndependent (p : ι → P) : Prop :=
-  ∀ s : Finset ι w : ι → k, (∑ i in s, w i) = 0 → s.weighted_vsub p w = (0 : V) → ∀, ∀ i ∈ s, ∀, w i = 0
+  ∀ s : Finset ι w : ι → k, (∑ i in s, w i) = 0 → s.weightedVsub p w = (0 : V) → ∀, ∀ i ∈ s, ∀, w i = 0
 
 /-- The definition of `affine_independent`. -/
 theorem affine_independent_def (p : ι → P) :
     AffineIndependent k p ↔
-      ∀ s : Finset ι w : ι → k, (∑ i in s, w i) = 0 → s.weighted_vsub p w = (0 : V) → ∀, ∀ i ∈ s, ∀, w i = 0 :=
+      ∀ s : Finset ι w : ι → k, (∑ i in s, w i) = 0 → s.weightedVsub p w = (0 : V) → ∀, ∀ i ∈ s, ∀, w i = 0 :=
   Iff.rfl
 
 /-- A family with at most one point is affinely independent. -/
@@ -167,7 +167,7 @@ theorem affine_independent_iff_indicator_eq_of_affine_combination_eq (p : ι →
       ∀ s1 s2 : Finset ι w1 w2 : ι → k,
         (∑ i in s1, w1 i) = 1 →
           (∑ i in s2, w2 i) = 1 →
-            s1.affine_combination p w1 = s2.affine_combination p w2 → Set.indicator (↑s1) w1 = Set.indicator (↑s2) w2 :=
+            s1.affineCombination p w1 = s2.affineCombination p w2 → Set.indicator (↑s1) w1 = Set.indicator (↑s2) w2 :=
   by
   constructor
   · intro ha s1 s2 w1 w2 hw1 hw2 heq
@@ -244,7 +244,7 @@ theorem AffineIndependent.units_line_map {p : ι → P} (hp : AffineIndependent 
 
 theorem AffineIndependent.indicator_eq_of_affine_combination_eq {p : ι → P} (ha : AffineIndependent k p)
     (s₁ s₂ : Finset ι) (w₁ w₂ : ι → k) (hw₁ : (∑ i in s₁, w₁ i) = 1) (hw₂ : (∑ i in s₂, w₂ i) = 1)
-    (h : s₁.affine_combination p w₁ = s₂.affine_combination p w₂) : Set.indicator (↑s₁) w₁ = Set.indicator (↑s₂) w₂ :=
+    (h : s₁.affineCombination p w₁ = s₂.affineCombination p w₂) : Set.indicator (↑s₁) w₁ = Set.indicator (↑s₂) w₂ :=
   (affine_independent_iff_indicator_eq_of_affine_combination_eq k p).1 ha s₁ s₂ w₁ w₂ hw₁ hw₂ h
 
 /-- An affinely independent family is injective, if the underlying
@@ -282,7 +282,7 @@ theorem AffineIndependent.comp_embedding {ι2 : Type _} (f : ι2 ↪ ι) {p : ι
 by a subtype of the index type. -/
 protected theorem AffineIndependent.subtype {p : ι → P} (ha : AffineIndependent k p) (s : Set ι) :
     AffineIndependent k fun i : s => p i :=
-  ha.comp_embedding (embedding.subtype _)
+  ha.comp_embedding (Embedding.subtype _)
 
 /-- If an indexed family of points is affinely independent, so is the
 corresponding set of points. -/
@@ -308,7 +308,7 @@ theorem affine_independent_equiv {ι' : Type _} (e : ι ≃ ι') {p : ι' → P}
 /-- If a set of points is affinely independent, so is any subset. -/
 protected theorem AffineIndependent.mono {s t : Set P} (ha : AffineIndependent k (fun x => x : t → P)) (hs : s ⊆ t) :
     AffineIndependent k (fun x => x : s → P) :=
-  ha.comp_embedding (s.embedding_of_subset t hs)
+  ha.comp_embedding (s.embeddingOfSubset t hs)
 
 /-- If the range of an injective indexed family of points is affinely
 independent, so is that family. -/
@@ -358,7 +358,7 @@ theorem AffineMap.affine_independent_iff {p : ι → P} (f : P →ᵃ[k] P₂) (
 /-- Affine equivalences preserve affine independence of families of points. -/
 theorem AffineEquiv.affine_independent_iff {p : ι → P} (e : P ≃ᵃ[k] P₂) :
     AffineIndependent k (e ∘ p) ↔ AffineIndependent k p :=
-  e.to_affine_map.affine_independent_iff e.to_equiv.injective
+  e.toAffineMap.affine_independent_iff e.toEquiv.Injective
 
 /-- Affine equivalences preserve affine independence of subsets. -/
 theorem AffineEquiv.affine_independent_set_of_eq_iff {s : Set P} (e : P ≃ᵃ[k] P₂) :
@@ -523,23 +523,23 @@ theorem exists_affine_independent (s : Set P) :
 
 variable (k) {V P}
 
--- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»
 -- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
--- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»
 /-- Two different points are affinely independent. -/
 theorem affine_independent_of_ne {p₁ p₂ : P} (h : p₁ ≠ p₂) :
     AffineIndependent k
-      («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr![ , ]»") :=
+      («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»") :=
   by
   rw
     [affine_independent_iff_linear_independent_vsub k
-      («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr![ , ]»") 0]
+      («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»") 0]
   let i₁ : { x // x ≠ (0 : Finₓ 2) } :=
     ⟨1, by
       norm_num⟩
@@ -551,8 +551,8 @@ theorem affine_independent_of_ne {p₁ p₂ : P} (h : p₁ ≠ p₂) :
       
   have : Unique { x // x ≠ (0 : Finₓ 2) } := ⟨⟨i₁⟩, he'⟩
   have hz :
-    ((«expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr![ , ]»") ↑default -ᵥ
-        («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr![ , ]»") 0 :
+    ((«expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»") ↑default -ᵥ
+        («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»") 0 :
         V) ≠
       0 :=
     by
@@ -578,67 +578,67 @@ structure simplex (n : ℕ) where
 
 /-- A `triangle k P` is a collection of three affinely independent points. -/
 abbrev triangle :=
-  simplex k P 2
+  Simplex k P 2
 
 namespace Simplex
 
 variable {P}
 
 /-- Construct a 0-simplex from a point. -/
-def mk_of_point (p : P) : simplex k P 0 :=
+def mk_of_point (p : P) : Simplex k P 0 :=
   ⟨fun _ => p, affine_independent_of_subsingleton k _⟩
 
 /-- The point in a simplex constructed with `mk_of_point`. -/
 @[simp]
-theorem mk_of_point_points (p : P) (i : Finₓ 1) : (mk_of_point k p).points i = p :=
+theorem mk_of_point_points (p : P) (i : Finₓ 1) : (mkOfPoint k p).points i = p :=
   rfl
 
-instance [Inhabited P] : Inhabited (simplex k P 0) :=
-  ⟨mk_of_point k default⟩
+instance [Inhabited P] : Inhabited (Simplex k P 0) :=
+  ⟨mkOfPoint k default⟩
 
-instance Nonempty : Nonempty (simplex k P 0) :=
-  ⟨mk_of_point k <| AddTorsor.nonempty.some⟩
+instance Nonempty : Nonempty (Simplex k P 0) :=
+  ⟨mkOfPoint k <| AddTorsor.nonempty.some⟩
 
 variable {k V}
 
 /-- Two simplices are equal if they have the same points. -/
 @[ext]
-theorem ext {n : ℕ} {s1 s2 : simplex k P n} (h : ∀ i, s1.points i = s2.points i) : s1 = s2 := by
+theorem ext {n : ℕ} {s1 s2 : Simplex k P n} (h : ∀ i, s1.points i = s2.points i) : s1 = s2 := by
   cases s1
   cases s2
   congr with i
   exact h i
 
 /-- Two simplices are equal if and only if they have the same points. -/
-theorem ext_iff {n : ℕ} (s1 s2 : simplex k P n) : s1 = s2 ↔ ∀ i, s1.points i = s2.points i :=
+theorem ext_iff {n : ℕ} (s1 s2 : Simplex k P n) : s1 = s2 ↔ ∀ i, s1.points i = s2.points i :=
   ⟨fun h _ => h ▸ rfl, ext⟩
 
 /-- A face of a simplex is a simplex with the given subset of
 points. -/
-def face {n : ℕ} (s : simplex k P n) {fs : Finset (Finₓ (n + 1))} {m : ℕ} (h : fs.card = m + 1) : simplex k P m :=
-  ⟨s.points ∘ fs.order_emb_of_fin h, s.independent.comp_embedding (fs.order_emb_of_fin h).toEmbedding⟩
+def face {n : ℕ} (s : Simplex k P n) {fs : Finset (Finₓ (n + 1))} {m : ℕ} (h : fs.card = m + 1) : Simplex k P m :=
+  ⟨s.points ∘ fs.orderEmbOfFin h, s.Independent.comp_embedding (fs.orderEmbOfFin h).toEmbedding⟩
 
 /-- The points of a face of a simplex are given by `mono_of_fin`. -/
-theorem face_points {n : ℕ} (s : simplex k P n) {fs : Finset (Finₓ (n + 1))} {m : ℕ} (h : fs.card = m + 1)
-    (i : Finₓ (m + 1)) : (s.face h).points i = s.points (fs.order_emb_of_fin h i) :=
+theorem face_points {n : ℕ} (s : Simplex k P n) {fs : Finset (Finₓ (n + 1))} {m : ℕ} (h : fs.card = m + 1)
+    (i : Finₓ (m + 1)) : (s.face h).points i = s.points (fs.orderEmbOfFin h i) :=
   rfl
 
 /-- The points of a face of a simplex are given by `mono_of_fin`. -/
-theorem face_points' {n : ℕ} (s : simplex k P n) {fs : Finset (Finₓ (n + 1))} {m : ℕ} (h : fs.card = m + 1) :
-    (s.face h).points = s.points ∘ fs.order_emb_of_fin h :=
+theorem face_points' {n : ℕ} (s : Simplex k P n) {fs : Finset (Finₓ (n + 1))} {m : ℕ} (h : fs.card = m + 1) :
+    (s.face h).points = s.points ∘ fs.orderEmbOfFin h :=
   rfl
 
 /-- A single-point face equals the 0-simplex constructed with
 `mk_of_point`. -/
 @[simp]
-theorem face_eq_mk_of_point {n : ℕ} (s : simplex k P n) (i : Finₓ (n + 1)) :
-    s.face (Finset.card_singleton i) = mk_of_point k (s.points i) := by
+theorem face_eq_mk_of_point {n : ℕ} (s : Simplex k P n) (i : Finₓ (n + 1)) :
+    s.face (Finset.card_singleton i) = mkOfPoint k (s.points i) := by
   ext
   simp [face_points]
 
 /-- The set of points of a face. -/
 @[simp]
-theorem range_face_points {n : ℕ} (s : simplex k P n) {fs : Finset (Finₓ (n + 1))} {m : ℕ} (h : fs.card = m + 1) :
+theorem range_face_points {n : ℕ} (s : Simplex k P n) {fs : Finset (Finₓ (n + 1))} {m : ℕ} (h : fs.card = m + 1) :
     Set.Range (s.face h).points = s.points '' ↑fs := by
   rw [face_points', Set.range_comp, Finset.range_order_emb_of_fin]
 
@@ -657,7 +657,7 @@ include V
 /-- The centroid of a face of a simplex as the centroid of a subset of
 the points. -/
 @[simp]
-theorem face_centroid_eq_centroid {n : ℕ} (s : simplex k P n) {fs : Finset (Finₓ (n + 1))} {m : ℕ}
+theorem face_centroid_eq_centroid {n : ℕ} (s : Simplex k P n) {fs : Finset (Finₓ (n + 1))} {m : ℕ}
     (h : fs.card = m + 1) : Finset.univ.centroid k (s.face h).points = fs.centroid k s.points := by
   convert (finset.univ.centroid_map k (fs.order_emb_of_fin h).toEmbedding s.points).symm
   rw [← Finset.coe_inj, Finset.coe_map, Finset.coe_univ, Set.image_univ]
@@ -667,7 +667,7 @@ theorem face_centroid_eq_centroid {n : ℕ} (s : simplex k P n) {fs : Finset (Fi
 two subsets of the points of a simplex are equal if and only if those
 faces are given by the same subset of points. -/
 @[simp]
-theorem centroid_eq_iff [CharZero k] {n : ℕ} (s : simplex k P n) {fs₁ fs₂ : Finset (Finₓ (n + 1))} {m₁ m₂ : ℕ}
+theorem centroid_eq_iff [CharZero k] {n : ℕ} (s : Simplex k P n) {fs₁ fs₂ : Finset (Finₓ (n + 1))} {m₁ m₂ : ℕ}
     (h₁ : fs₁.card = m₁ + 1) (h₂ : fs₂.card = m₂ + 1) : fs₁.centroid k s.points = fs₂.centroid k s.points ↔ fs₁ = fs₂ :=
   by
   constructor
@@ -700,14 +700,14 @@ theorem centroid_eq_iff [CharZero k] {n : ℕ} (s : simplex k P n) {fs₁ fs₂ 
 /-- Over a characteristic-zero division ring, the centroids of two
 faces of a simplex are equal if and only if those faces are given by
 the same subset of points. -/
-theorem face_centroid_eq_iff [CharZero k] {n : ℕ} (s : simplex k P n) {fs₁ fs₂ : Finset (Finₓ (n + 1))} {m₁ m₂ : ℕ}
+theorem face_centroid_eq_iff [CharZero k] {n : ℕ} (s : Simplex k P n) {fs₁ fs₂ : Finset (Finₓ (n + 1))} {m₁ m₂ : ℕ}
     (h₁ : fs₁.card = m₁ + 1) (h₂ : fs₂.card = m₂ + 1) :
     Finset.univ.centroid k (s.face h₁).points = Finset.univ.centroid k (s.face h₂).points ↔ fs₁ = fs₂ := by
   rw [face_centroid_eq_centroid, face_centroid_eq_centroid]
   exact s.centroid_eq_iff h₁ h₂
 
 /-- Two simplices with the same points have the same centroid. -/
-theorem centroid_eq_of_range_eq {n : ℕ} {s₁ s₂ : simplex k P n} (h : Set.Range s₁.points = Set.Range s₂.points) :
+theorem centroid_eq_of_range_eq {n : ℕ} {s₁ s₂ : Simplex k P n} (h : Set.Range s₁.points = Set.Range s₂.points) :
     Finset.univ.centroid k s₁.points = Finset.univ.centroid k s₂.points := by
   rw [← Set.image_univ, ← Set.image_univ, ← Finset.coe_univ] at h
   exact

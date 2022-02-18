@@ -33,7 +33,7 @@ section Pushout
 variable {R A B : CommRingₓₓ.{u}} (f : R ⟶ A) (g : R ⟶ B)
 
 /-- The explicit cocone with tensor products as the fibered product in `CommRing`. -/
-def pushout_cocone : limits.pushout_cocone f g := by
+def pushout_cocone : Limits.PushoutCocone f g := by
   let this' := RingHom.toAlgebra f
   let this' := RingHom.toAlgebra g
   apply limits.pushout_cocone.mk
@@ -52,7 +52,7 @@ def pushout_cocone : limits.pushout_cocone f g := by
 
 @[simp]
 theorem pushout_cocone_inl :
-    (pushout_cocone f g).inl = by
+    (pushoutCocone f g).inl = by
       let this' := f.to_algebra
       let this' := g.to_algebra
       exact algebra.tensor_product.include_left.to_ring_hom :=
@@ -60,7 +60,7 @@ theorem pushout_cocone_inl :
 
 @[simp]
 theorem pushout_cocone_inr :
-    (pushout_cocone f g).inr = by
+    (pushoutCocone f g).inr = by
       let this' := f.to_algebra
       let this' := g.to_algebra
       exact algebra.tensor_product.include_right.to_ring_hom :=
@@ -68,15 +68,15 @@ theorem pushout_cocone_inr :
 
 @[simp]
 theorem pushout_cocone_X :
-    (pushout_cocone f g).x = by
+    (pushoutCocone f g).x = by
       let this' := f.to_algebra
       let this' := g.to_algebra
       exact CommRingₓₓ.of (A ⊗[R] B) :=
   rfl
 
 /-- Verify that the `pushout_cocone` is indeed the colimit. -/
-def pushout_cocone_is_colimit : limits.is_colimit (pushout_cocone f g) :=
-  limits.pushout_cocone.is_colimit_aux' _ fun s => by
+def pushout_cocone_is_colimit : Limits.IsColimit (pushoutCocone f g) :=
+  Limits.PushoutCocone.isColimitAux' _ fun s => by
     let this' := RingHom.toAlgebra f
     let this' := RingHom.toAlgebra g
     let this' := RingHom.toAlgebra (f ≫ s.inl)
@@ -121,11 +121,11 @@ end Pushout
 section Terminal
 
 /-- The trivial ring is the (strict) terminal object of `CommRing`. -/
-def punit_is_terminal : is_terminal (CommRingₓₓ.of.{u} PUnit) := by
-  apply is_terminal.of_unique with { instances := ff }
+def punit_is_terminal : IsTerminal (CommRingₓₓ.of.{u} PUnit) := by
+  apply is_terminal.of_unique with { instances := false }
   tidy
 
-instance CommRing_has_strict_terminal_objects : has_strict_terminal_objects CommRingₓₓ.{u} := by
+instance CommRing_has_strict_terminal_objects : HasStrictTerminalObjects CommRingₓₓ.{u} := by
   apply has_strict_terminal_objects_of_terminal_is_strict (CommRingₓₓ.of PUnit)
   intro X f
   refine'
@@ -140,14 +140,14 @@ instance CommRing_has_strict_terminal_objects : has_strict_terminal_objects Comm
   rw [one_mulₓ, zero_mul, ← f.map_zero] at e
   exact e
 
-theorem subsingleton_of_is_terminal {X : CommRingₓₓ} (hX : is_terminal X) : Subsingleton X :=
-  (hX.unique_up_to_iso punit_is_terminal).commRingIsoToRingEquiv.toEquiv.subsingleton_congr.mpr
+theorem subsingleton_of_is_terminal {X : CommRingₓₓ} (hX : IsTerminal X) : Subsingleton X :=
+  (hX.uniqueUpToIso punitIsTerminal).commRingIsoToRingEquiv.toEquiv.subsingleton_congr.mpr
     (show Subsingleton PUnit by
       infer_instance)
 
 /-- `ℤ` is the initial object of `CommRing`. -/
-def Z_is_initial : is_initial (CommRingₓₓ.of ℤ) := by
-  apply is_initial.of_unique with { instances := ff }
+def Z_is_initial : IsInitial (CommRingₓₓ.of ℤ) := by
+  apply is_initial.of_unique with { instances := false }
   exact fun R => ⟨⟨Int.castRingHom R⟩, fun a => a.ext_int _⟩
 
 end Terminal
@@ -158,12 +158,12 @@ variable (A B : CommRingₓₓ.{u})
 
 /-- The product in `CommRing` is the cartesian product. This is the binary fan. -/
 @[simps x]
-def prod_fan : binary_fan A B :=
-  binary_fan.mk (CommRingₓₓ.ofHom <| RingHom.fst A B) (CommRingₓₓ.ofHom <| RingHom.snd A B)
+def prod_fan : BinaryFan A B :=
+  BinaryFan.mk (CommRingₓₓ.ofHom <| RingHom.fst A B) (CommRingₓₓ.ofHom <| RingHom.snd A B)
 
 /-- The product in `CommRing` is the cartesian product. -/
-def prod_fan_is_limit : is_limit (prod_fan A B) where
-  lift := fun c => RingHom.prod (c.π.app walking_pair.left) (c.π.app walking_pair.right)
+def prod_fan_is_limit : IsLimit (prodFan A B) where
+  lift := fun c => RingHom.prod (c.π.app WalkingPair.left) (c.π.app WalkingPair.right)
   fac' := fun c j => by
     ext
     cases j <;> simpa only [binary_fan.π_app_left, binary_fan.π_app_right, comp_apply, RingHom.prod_apply]
@@ -181,14 +181,14 @@ section Equalizer
 variable {A B : CommRingₓₓ.{u}} (f g : A ⟶ B)
 
 /-- The equalizer in `CommRing` is the equalizer as sets. This is the equalizer fork. -/
-def equalizer_fork : fork f g :=
-  fork.of_ι (CommRingₓₓ.ofHom (RingHom.eqLocus f g).Subtype)
+def equalizer_fork : Fork f g :=
+  Fork.ofι (CommRingₓₓ.ofHom (RingHom.eqLocus f g).Subtype)
     (by
       ext ⟨x, e⟩
       simpa using e)
 
 /-- The equalizer in `CommRing` is the equalizer as sets. -/
-def equalizer_fork_is_limit : is_limit (equalizer_fork f g) := by
+def equalizer_fork_is_limit : IsLimit (equalizerFork f g) := by
   fapply fork.is_limit.mk'
   intro s
   use s.ι.cod_restrict' _ fun x => (concrete_category.congr_hom s.condition x : _)
@@ -201,7 +201,7 @@ def equalizer_fork_is_limit : is_limit (equalizer_fork f g) := by
     exact concrete_category.congr_hom hm x
     
 
-instance : IsLocalRingHom (equalizer_fork f g).ι := by
+instance : IsLocalRingHom (equalizerFork f g).ι := by
   constructor
   rintro ⟨a, h₁ : _ = _⟩ (⟨⟨x, y, h₃, h₄⟩, rfl : x = _⟩ : IsUnit a)
   have : y ∈ RingHom.eqLocus f g := by
@@ -212,7 +212,7 @@ instance : IsLocalRingHom (equalizer_fork f g).ι := by
   exact ⟨⟨y, this⟩, Subtype.eq h₃⟩
 
 instance equalizer_ι_is_local_ring_hom (F : walking_parallel_pair.{u} ⥤ CommRingₓₓ.{u}) :
-    IsLocalRingHom (limit.π F walking_parallel_pair.zero) := by
+    IsLocalRingHom (limit.π F WalkingParallelPair.zero) := by
   have := lim_map_π (diagram_iso_parallel_pair F).Hom walking_parallel_pair.zero
   rw [← is_iso.comp_inv_eq] at this
   rw [← this]
@@ -228,8 +228,8 @@ open CategoryTheory.Limits.WalkingParallelPair Opposite
 open CategoryTheory.Limits.WalkingParallelPairHom
 
 instance equalizer_ι_is_local_ring_hom' (F : walking_parallel_pair.{u}ᵒᵖ ⥤ CommRingₓₓ.{u}) :
-    IsLocalRingHom (limit.π F (Opposite.op walking_parallel_pair.one)) := by
-  have : _ = limit.π F (walking_parallel_pair_op_equiv.{u, u}.Functor.obj _) :=
+    IsLocalRingHom (limit.π F (Opposite.op WalkingParallelPair.one)) := by
+  have : _ = limit.π F (walkingParallelPairOpEquiv.{u, u}.Functor.obj _) :=
     (limit.iso_limit_cone_inv_π ⟨_, is_limit.whisker_equivalence (limit.is_limit F) walking_parallel_pair_op_equiv⟩
       walking_parallel_pair.zero :
       _)

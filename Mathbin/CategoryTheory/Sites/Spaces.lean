@@ -36,7 +36,7 @@ variable (T : Type u) [TopologicalSpace T]
 open CategoryTheory TopologicalSpace CategoryTheory.Limits
 
 /-- The Grothendieck topology associated to a topological space. -/
-def grothendieck_topology : grothendieck_topology (opens T) where
+def grothendieck_topology : GrothendieckTopology (Opens T) where
   Sieves := fun X S => ∀, ∀ x ∈ X, ∀, ∃ (U : _)(f : U ⟶ X), S f ∧ x ∈ U
   top_mem' := fun X x hx => ⟨_, 𝟙 _, trivialₓ, hx⟩
   pullback_stable' := fun X Y S f hf y hy => by
@@ -49,7 +49,7 @@ def grothendieck_topology : grothendieck_topology (opens T) where
     exact ⟨_, g ≫ f, hg, hV⟩
 
 /-- The Grothendieck pretopology associated to a topological space. -/
-def pretopology : pretopology (opens T) where
+def pretopology : Pretopology (Opens T) where
   Coverings := fun X R => ∀, ∀ x ∈ X, ∀, ∃ (U : _)(f : U ⟶ X), R f ∧ x ∈ U
   has_isos := fun X Y f i x hx => ⟨_, _, presieve.singleton_self _, (inv f).le hx⟩
   pullbacks := fun X Y f S hS x hx => by
@@ -63,19 +63,28 @@ def pretopology : pretopology (opens T) where
     rcases hTi f hf x hU with ⟨V, g, hg, hV⟩
     exact ⟨_, _, ⟨_, g, f, hf, hg, rfl⟩, hV⟩
 
+/-- The pretopology associated to a space is the largest pretopology that
+    generates the Grothendieck topology associated to the space. -/
+@[simp]
+theorem pretopology_of_grothendieck :
+    Pretopology.ofGrothendieck _ (Opens.grothendieckTopology T) = Opens.pretopology T := by
+  apply le_antisymmₓ
+  · intro X R hR x hx
+    rcases hR x hx with ⟨U, f, ⟨V, g₁, g₂, hg₂, _⟩, hU⟩
+    exact ⟨V, g₂, hg₂, g₁.le hU⟩
+    
+  · intro X R hR x hx
+    rcases hR x hx with ⟨U, f, hf, hU⟩
+    exact ⟨U, f, sieve.le_generate R U hf, hU⟩
+    
+
 /-- The pretopology associated to a space induces the Grothendieck topology associated to the space.
 -/
 @[simp]
 theorem pretopology_to_grothendieck :
-    pretopology.to_grothendieck _ (Opens.pretopology T) = Opens.grothendieckTopology T := by
-  apply le_antisymmₓ
-  · rintro X S ⟨R, hR, RS⟩ x hx
-    rcases hR x hx with ⟨U, f, hf, hU⟩
-    exact ⟨_, f, RS _ hf, hU⟩
-    
-  · intro X S hS
-    exact ⟨S, hS, le_reflₓ _⟩
-    
+    Pretopology.toGrothendieck _ (Opens.pretopology T) = Opens.grothendieckTopology T := by
+  rw [← pretopology_of_grothendieck]
+  apply (pretopology.gi (opens T)).l_u_eq
 
 end Opens
 

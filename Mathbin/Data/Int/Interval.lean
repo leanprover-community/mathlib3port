@@ -76,51 +76,51 @@ namespace Int
 variable (a b : ℤ)
 
 theorem Icc_eq_finset_map :
-    Icc a b = (Finset.range (b + 1 - a).toNat).map (Nat.castEmbedding.trans <| addLeftEmbedding a) :=
+    icc a b = (Finset.range (b + 1 - a).toNat).map (Nat.castEmbedding.trans <| addLeftEmbedding a) :=
   rfl
 
 theorem Ico_eq_finset_map :
-    Ico a b = (Finset.range (b - a).toNat).map (Nat.castEmbedding.trans <| addLeftEmbedding a) :=
+    ico a b = (Finset.range (b - a).toNat).map (Nat.castEmbedding.trans <| addLeftEmbedding a) :=
   rfl
 
 theorem Ioc_eq_finset_map :
-    Ioc a b = (Finset.range (b - a).toNat).map (Nat.castEmbedding.trans <| addLeftEmbedding (a + 1)) :=
+    ioc a b = (Finset.range (b - a).toNat).map (Nat.castEmbedding.trans <| addLeftEmbedding (a + 1)) :=
   rfl
 
 theorem Ioo_eq_finset_map :
-    Ioo a b = (Finset.range (b - a - 1).toNat).map (Nat.castEmbedding.trans <| addLeftEmbedding (a + 1)) :=
+    ioo a b = (Finset.range (b - a - 1).toNat).map (Nat.castEmbedding.trans <| addLeftEmbedding (a + 1)) :=
   rfl
 
 @[simp]
-theorem card_Icc : (Icc a b).card = (b + 1 - a).toNat := by
+theorem card_Icc : (icc a b).card = (b + 1 - a).toNat := by
   change (Finset.map _ _).card = _
   rw [Finset.card_map, Finset.card_range]
 
 @[simp]
-theorem card_Ico : (Ico a b).card = (b - a).toNat := by
+theorem card_Ico : (ico a b).card = (b - a).toNat := by
   change (Finset.map _ _).card = _
   rw [Finset.card_map, Finset.card_range]
 
 @[simp]
-theorem card_Ioc : (Ioc a b).card = (b - a).toNat := by
+theorem card_Ioc : (ioc a b).card = (b - a).toNat := by
   change (Finset.map _ _).card = _
   rw [Finset.card_map, Finset.card_range]
 
 @[simp]
-theorem card_Ioo : (Ioo a b).card = (b - a - 1).toNat := by
+theorem card_Ioo : (ioo a b).card = (b - a - 1).toNat := by
   change (Finset.map _ _).card = _
   rw [Finset.card_map, Finset.card_range]
 
-theorem card_Icc_of_le (h : a ≤ b + 1) : ((Icc a b).card : ℤ) = b + 1 - a := by
+theorem card_Icc_of_le (h : a ≤ b + 1) : ((icc a b).card : ℤ) = b + 1 - a := by
   rw [card_Icc, to_nat_sub_of_le h]
 
-theorem card_Ico_of_le (h : a ≤ b) : ((Ico a b).card : ℤ) = b - a := by
+theorem card_Ico_of_le (h : a ≤ b) : ((ico a b).card : ℤ) = b - a := by
   rw [card_Ico, to_nat_sub_of_le h]
 
-theorem card_Ioc_of_le (h : a ≤ b) : ((Ioc a b).card : ℤ) = b - a := by
+theorem card_Ioc_of_le (h : a ≤ b) : ((ioc a b).card : ℤ) = b - a := by
   rw [card_Ioc, to_nat_sub_of_le h]
 
-theorem card_Ioo_of_lt (h : a < b) : ((Ioo a b).card : ℤ) = b - a - 1 := by
+theorem card_Ioo_of_lt (h : a < b) : ((ioo a b).card : ℤ) = b - a - 1 := by
   rw [card_Ioo, sub_sub, to_nat_sub_of_le h]
 
 @[simp]
@@ -151,7 +151,7 @@ theorem card_fintype_Ioc_of_le (h : a ≤ b) : (Fintype.card (Set.Ioc a b) : ℤ
 theorem card_fintype_Ioo_of_lt (h : a < b) : (Fintype.card (Set.Ioo a b) : ℤ) = b - a - 1 := by
   rw [card_fintype_Ioo, sub_sub, to_nat_sub_of_le h]
 
-theorem image_Ico_mod (n a : ℤ) (h : 0 ≤ a) : (Ico n (n + a)).Image (· % a) = Ico 0 a := by
+theorem image_Ico_mod (n a : ℤ) (h : 0 ≤ a) : (ico n (n + a)).Image (· % a) = ico 0 a := by
   obtain rfl | ha := eq_or_lt_of_le h
   · simp
     

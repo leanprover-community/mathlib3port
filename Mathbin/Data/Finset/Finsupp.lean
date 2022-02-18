@@ -33,7 +33,7 @@ namespace Finset
 protected def Finsupp (s : Finset ι) (t : ι → Finset α) : Finset (ι →₀ α) :=
   (s.pi t).map ⟨indicator s, indicator_injective s⟩
 
-theorem mem_finsupp_iff {t : ι → Finset α} : f ∈ s.finsupp t ↔ f.support ⊆ s ∧ ∀, ∀ i ∈ s, ∀, f i ∈ t i := by
+theorem mem_finsupp_iff {t : ι → Finset α} : f ∈ s.Finsupp t ↔ f.Support ⊆ s ∧ ∀, ∀ i ∈ s, ∀, f i ∈ t i := by
   refine' mem_map.trans ⟨_, _⟩
   · rintro ⟨f, hf, rfl⟩
     refine' ⟨support_indicator_subset _ _, fun i hi => _⟩
@@ -47,7 +47,7 @@ theorem mem_finsupp_iff {t : ι → Finset α} : f ∈ s.finsupp t ↔ f.support
 
 /-- When `t` is supported on `s`, `f ∈ s.finsupp t` precisely means that `f` is pointwise in `t`. -/
 @[simp]
-theorem mem_finsupp_iff_of_support_subset {t : ι →₀ Finset α} (ht : t.support ⊆ s) : f ∈ s.finsupp t ↔ ∀ i, f i ∈ t i :=
+theorem mem_finsupp_iff_of_support_subset {t : ι →₀ Finset α} (ht : t.Support ⊆ s) : f ∈ s.Finsupp t ↔ ∀ i, f i ∈ t i :=
   by
   refine'
     mem_finsupp_iff.trans
@@ -65,7 +65,7 @@ theorem mem_finsupp_iff_of_support_subset {t : ι →₀ Finset α} (ht : t.supp
     
 
 @[simp]
-theorem card_finsupp (s : Finset ι) (t : ι → Finset α) : (s.finsupp t).card = ∏ i in s, (t i).card :=
+theorem card_finsupp (s : Finset ι) (t : ι → Finset α) : (s.Finsupp t).card = ∏ i in s, (t i).card :=
   (card_map _).trans <| card_pi _ _
 
 end Finset
@@ -77,14 +77,14 @@ namespace Finsupp
 /-- Given a finitely supported function `f : ι →₀ finset α`, one can define the finset
 `f.pi` of all finitely supported functions whose value at `i` is in `f i` for all `i`. -/
 def pi (f : ι →₀ Finset α) : Finset (ι →₀ α) :=
-  f.support.finsupp f
+  f.Support.Finsupp f
 
 @[simp]
 theorem mem_pi {f : ι →₀ Finset α} {g : ι →₀ α} : g ∈ f.pi ↔ ∀ i, g i ∈ f i :=
-  mem_finsupp_iff_of_support_subset <| subset.refl _
+  mem_finsupp_iff_of_support_subset <| Subset.refl _
 
 @[simp]
-theorem card_pi (f : ι →₀ Finset α) : f.pi.card = f.prod fun i => (f i).card := by
+theorem card_pi (f : ι →₀ Finset α) : f.pi.card = f.Prod fun i => (f i).card := by
   rw [pi, card_finsupp]
   exact
     Finset.prod_congr rfl fun i _ => by

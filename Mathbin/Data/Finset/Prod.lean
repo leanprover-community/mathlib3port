@@ -27,7 +27,7 @@ namespace Finset
 
 section Prod
 
-variable {s s' : Finset α} {t t' : Finset β}
+variable {s s' : Finset α} {t t' : Finset β} {a : α} {b : β}
 
 /-- `product s t` is the set of pairs `(a, b)` such that `a ∈ s` and `b ∈ t`. -/
 protected def product (s : Finset α) (t : Finset β) : Finset (α × β) :=
@@ -41,31 +41,34 @@ theorem product_val : (s.product t).1 = s.1.product t.1 :=
 theorem mem_product {p : α × β} : p ∈ s.product t ↔ p.1 ∈ s ∧ p.2 ∈ t :=
   mem_product
 
+theorem mk_mem_product (ha : a ∈ s) (hb : b ∈ t) : (a, b) ∈ s.product t :=
+  mem_product.2 ⟨ha, hb⟩
+
 @[simp, norm_cast]
 theorem coe_product (s : Finset α) (t : Finset β) : (s.product t : Set (α × β)) = (s : Set α) ×ˢ (t : Set β) :=
   Set.ext fun x => Finset.mem_product
 
 theorem subset_product [DecidableEq α] [DecidableEq β] {s : Finset (α × β)} :
-    s ⊆ (s.image Prod.fst).product (s.image Prod.snd) := fun p hp =>
+    s ⊆ (s.Image Prod.fst).product (s.Image Prod.snd) := fun p hp =>
   mem_product.2 ⟨mem_image_of_mem _ hp, mem_image_of_mem _ hp⟩
 
 theorem product_subset_product (hs : s ⊆ s') (ht : t ⊆ t') : s.product t ⊆ s'.product t' := fun ⟨x, y⟩ h =>
   mem_product.2 ⟨hs (mem_product.1 h).1, ht (mem_product.1 h).2⟩
 
 theorem product_subset_product_left (hs : s ⊆ s') : s.product t ⊆ s'.product t :=
-  product_subset_product hs (subset.refl _)
+  product_subset_product hs (Subset.refl _)
 
 theorem product_subset_product_right (ht : t ⊆ t') : s.product t ⊆ s.product t' :=
-  product_subset_product (subset.refl _) ht
+  product_subset_product (Subset.refl _) ht
 
 theorem product_eq_bUnion [DecidableEq α] [DecidableEq β] (s : Finset α) (t : Finset β) :
-    s.product t = s.bUnion fun a => t.image fun b => (a, b) :=
+    s.product t = s.bUnion fun a => t.Image fun b => (a, b) :=
   ext fun ⟨x, y⟩ => by
     simp only [mem_product, mem_bUnion, mem_image, exists_prop, Prod.mk.inj_iffₓ, And.left_comm,
       exists_and_distrib_left, exists_eq_right, exists_eq_left]
 
 theorem product_eq_bUnion_right [DecidableEq α] [DecidableEq β] (s : Finset α) (t : Finset β) :
-    s.product t = t.bUnion fun b => s.image fun a => (a, b) :=
+    s.product t = t.bUnion fun b => s.Image fun a => (a, b) :=
   ext fun ⟨x, y⟩ => by
     simp only [mem_product, mem_bUnion, mem_image, exists_prop, Prod.mk.inj_iffₓ, And.left_comm,
       exists_and_distrib_left, exists_eq_right, exists_eq_left]
@@ -120,21 +123,21 @@ theorem empty_product (t : Finset β) : (∅ : Finset α).product t = ∅ :=
 theorem product_empty (s : Finset α) : s.product (∅ : Finset β) = ∅ :=
   eq_empty_of_forall_not_mem fun x h => (Finset.mem_product.1 h).2
 
-theorem nonempty.product (hs : s.nonempty) (ht : t.nonempty) : (s.product t).Nonempty :=
+theorem nonempty.product (hs : s.Nonempty) (ht : t.Nonempty) : (s.product t).Nonempty :=
   let ⟨x, hx⟩ := hs
   let ⟨y, hy⟩ := ht
   ⟨(x, y), mem_product.2 ⟨hx, hy⟩⟩
 
-theorem nonempty.fst (h : (s.product t).Nonempty) : s.nonempty :=
+theorem nonempty.fst (h : (s.product t).Nonempty) : s.Nonempty :=
   let ⟨xy, hxy⟩ := h
   ⟨xy.1, (mem_product.1 hxy).1⟩
 
-theorem nonempty.snd (h : (s.product t).Nonempty) : t.nonempty :=
+theorem nonempty.snd (h : (s.product t).Nonempty) : t.Nonempty :=
   let ⟨xy, hxy⟩ := h
   ⟨xy.2, (mem_product.1 hxy).2⟩
 
 @[simp]
-theorem nonempty_product : (s.product t).Nonempty ↔ s.nonempty ∧ t.nonempty :=
+theorem nonempty_product : (s.product t).Nonempty ↔ s.Nonempty ∧ t.Nonempty :=
   ⟨fun h => ⟨h.fst, h.snd⟩, fun h => h.1.product h.2⟩
 
 @[simp]
@@ -189,7 +192,7 @@ theorem mem_diag (x : α × α) : x ∈ s.diag ↔ x.1 ∈ s ∧ x.1 = x.2 := by
   exact h.1
 
 @[simp]
-theorem mem_off_diag (x : α × α) : x ∈ s.off_diag ↔ x.1 ∈ s ∧ x.2 ∈ s ∧ x.1 ≠ x.2 := by
+theorem mem_off_diag (x : α × α) : x ∈ s.offDiag ↔ x.1 ∈ s ∧ x.2 ∈ s ∧ x.1 ≠ x.2 := by
   simp only [off_diag, mem_filter, mem_product]
   constructor <;> intro h <;> simp only [h, Ne.def, not_false_iff, and_selfₓ]
 
@@ -211,7 +214,7 @@ theorem diag_card : (diag s).card = s.card := by
     
 
 @[simp]
-theorem off_diag_card : (off_diag s).card = s.card * s.card - s.card := by
+theorem off_diag_card : (offDiag s).card = s.card * s.card - s.card := by
   suffices (diag s).card + (off_diag s).card = s.card * s.card by
     nth_rw 2[← s.diag_card]
     simp only [diag_card] at *
@@ -229,11 +232,11 @@ theorem off_diag_empty : (∅ : Finset α).offDiag = ∅ :=
   rfl
 
 @[simp]
-theorem diag_union_off_diag : s.diag ∪ s.off_diag = s.product s :=
+theorem diag_union_off_diag : s.diag ∪ s.offDiag = s.product s :=
   filter_union_filter_neg_eq _ _
 
 @[simp]
-theorem disjoint_diag_off_diag : Disjoint s.diag s.off_diag :=
+theorem disjoint_diag_off_diag : Disjoint s.diag s.offDiag :=
   disjoint_filter_filter_neg _ _
 
 end Diag

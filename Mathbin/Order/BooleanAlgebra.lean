@@ -738,7 +738,7 @@ class HasCompl (α : Type _) where
 
 export HasCompl (Compl)
 
--- ././Mathport/Syntax/Translate/Basic.lean:342:9: unsupported: advanced prec syntax
+-- ././Mathport/Syntax/Translate/Basic.lean:343:9: unsupported: advanced prec syntax
 postfix:999 "ᶜ" => compl
 
 /-- This class contains the core axioms of a Boolean algebra. The `boolean_algebra` class extends
@@ -782,10 +782,10 @@ theorem is_compl_compl : IsCompl x (xᶜ) :=
   IsCompl.of_eq inf_compl_eq_bot sup_compl_eq_top
 
 theorem IsCompl.eq_compl (h : IsCompl x y) : x = yᶜ :=
-  h.left_unique is_compl_compl.symm
+  h.LeftUnique is_compl_compl.symm
 
 theorem IsCompl.compl_eq (h : IsCompl x y) : xᶜ = y :=
-  (h.right_unique is_compl_compl).symm
+  (h.RightUnique is_compl_compl).symm
 
 theorem eq_compl_iff_is_compl : x = yᶜ ↔ IsCompl x y :=
   ⟨fun h => by
@@ -989,4 +989,13 @@ instance Pi.booleanAlgebra {ι : Type u} {α : ι → Type v} [∀ i, BooleanAlg
     inf_inf_sdiff := fun x y => funext fun i => inf_inf_sdiff (x i) (y i),
     inf_compl_le_bot := fun _ _ => BooleanAlgebra.inf_compl_le_bot _,
     top_le_sup_compl := fun _ _ => BooleanAlgebra.top_le_sup_compl _ }
+
+instance : BooleanAlgebra Bool :=
+  BooleanAlgebra.ofCore
+    { Bool.linearOrder, Bool.boundedOrder with sup := bor, le_sup_left := Bool.left_le_bor,
+      le_sup_right := Bool.right_le_bor, sup_le := fun _ _ _ => Bool.bor_le, inf := band,
+      inf_le_left := Bool.band_le_left, inf_le_right := Bool.band_le_right, le_inf := fun _ _ _ => Bool.le_band,
+      le_sup_inf := by
+        decide,
+      Compl := bnot, inf_compl_le_bot := fun a => a.band_bnot_self.le, top_le_sup_compl := fun a => a.bor_bnot_self.Ge }
 

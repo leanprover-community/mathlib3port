@@ -52,24 +52,24 @@ unsafe def Sum : Type :=
   rb_map monom ℤ
 
 /-- `1` is represented as the singleton sum of the monomial `monom.one` with coefficient 1. -/
-unsafe def sum.one : Sum :=
+unsafe def sum.one : sum :=
   rb_map.of_list [(monom.one, 1)]
 
 /-- `sum.scale_by_monom s m` multiplies every monomial in `s` by `m`. -/
-unsafe def sum.scale_by_monom (s : Sum) (m : monom) : Sum :=
+unsafe def sum.scale_by_monom (s : sum) (m : monom) : sum :=
   (s.fold mk_rb_map) fun m' coeff sm => sm.insert (m.add m') coeff
 
 /-- `sum.mul s1 s2` distributes the multiplication of two sums.` -/
-unsafe def sum.mul (s1 s2 : Sum) : Sum :=
+unsafe def sum.mul (s1 s2 : sum) : sum :=
   (s1.fold mk_rb_map) fun mn coeff sm => sm.add <| (s2.scale_by_monom mn).scale coeff
 
 /-- The `n`th power of `s : sum` is the `n`-fold product of `s`, with `s.pow 0 = sum.one`. -/
-unsafe def sum.pow (s : Sum) : ℕ → Sum
+unsafe def sum.pow (s : sum) : ℕ → sum
   | 0 => sum.one
   | k + 1 => s.mul (sum.pow k)
 
 /-- `sum_of_monom m` lifts `m` to a sum with coefficient `1`. -/
-unsafe def sum_of_monom (m : monom) : Sum :=
+unsafe def sum_of_monom (m : monom) : sum :=
   mk_rb_map.insert m 1
 
 /-- The unit monomial `one` is represented by the empty rb map. -/
@@ -77,11 +77,11 @@ unsafe def one : monom :=
   mk_rb_map
 
 /-- A scalar `z` is represented by a `sum` with coefficient `z` and monomial `one` -/
-unsafe def scalar (z : ℤ) : Sum :=
+unsafe def scalar (z : ℤ) : sum :=
   mk_rb_map.insert one z
 
 /-- A single variable `n` is represented by a sum with coefficient `1` and monomial `n`. -/
-unsafe def var (n : ℕ) : Sum :=
+unsafe def var (n : ℕ) : sum :=
   mk_rb_map.insert (mk_rb_map.insert n 1) 1
 
 /-! ### Parsing algorithms -/
@@ -93,7 +93,7 @@ local notation "exmap" => List (expr × ℕ)
 If `e` appears with index `k` in `map`, it returns the singleton sum `var k`.
 Otherwise it updates `map`, adding `e` with index `n`, and returns the singleton sum `var n`.
 -/
-unsafe def linear_form_of_atom (red : transparency) (m : exmap) (e : expr) : tactic (exmap × Sum) :=
+unsafe def linear_form_of_atom (red : Transparency) (m : exmap) (e : expr) : tactic (exmap × Sum) :=
   (do
       let (_, k) ← m.find_defeq red e
       return (m, var k)) <|>
@@ -109,27 +109,27 @@ It matches atomic expressions up to reducibility given by `red`.
 Because it matches up to definitional equality, this function must be in the `tactic` monad,
 and forces some functions that call it into `tactic` as well.
 -/
-unsafe def linear_form_of_expr (red : transparency) : exmap → expr → tactic (exmap × Sum)
+unsafe def linear_form_of_expr (red : Transparency) : exmap → expr → tactic (exmap × Sum)
   | m, e@(quote.1 ((%%ₓe1) * %%ₓe2)) => do
     let (m', comp1) ← linear_form_of_expr m e1
     let (m', comp2) ← linear_form_of_expr m' e2
-    return (m', comp1.mul comp2)
+    return (m', comp1 comp2)
   | m, quote.1 ((%%ₓe1) + %%ₓe2) => do
     let (m', comp1) ← linear_form_of_expr m e1
     let (m', comp2) ← linear_form_of_expr m' e2
-    return (m', comp1.add comp2)
+    return (m', comp1 comp2)
   | m, quote.1 ((%%ₓe1) - %%ₓe2) => do
     let (m', comp1) ← linear_form_of_expr m e1
     let (m', comp2) ← linear_form_of_expr m' e2
-    return (m', comp1.add (comp2.scale (-1)))
+    return (m', comp1 (comp2 (-1)))
   | m, quote.1 (-%%ₓe) => do
     let (m', comp) ← linear_form_of_expr m e
-    return (m', comp.scale (-1))
+    return (m', comp (-1))
   | m, p@(quote.1 (@Pow.pow _ ℕ _ (%%ₓe) (%%ₓn))) =>
-    match n.to_nat with
+    match n.toNat with
     | some k => do
       let (m', comp) ← linear_form_of_expr m e
-      return (m', comp.pow k)
+      return (m', comp k)
     | none => linear_form_of_atom red m p
   | m, e =>
     match e.to_int with
@@ -144,7 +144,7 @@ The output `rb_map ℕ ℤ` has the same structure as `sum`,
 but each monomial key is replaced with its index according to `map`.
 If any new monomials are encountered, they are assigned variable numbers and `map` is updated.
  -/
-unsafe def sum_to_lf (s : Sum) (m : rb_map monom ℕ) : rb_map monom ℕ × rb_map ℕ ℤ :=
+unsafe def sum_to_lf (s : sum) (m : rb_map monom ℕ) : rb_map monom ℕ × rb_map ℕ ℤ :=
   (s.fold (m, mk_rb_map)) fun mn coeff ⟨map, out⟩ =>
     match map.find mn with
     | some n => ⟨map, out.insert n coeff⟩
@@ -158,18 +158,18 @@ into a `comp` object.
 `e_map` maps atomic expressions to indices; `monom_map` maps monomials to indices.
 Both of these are updated during processing and returned.
 -/
-unsafe def to_comp (red : transparency) (e : expr) (e_map : exmap) (monom_map : rb_map monom ℕ) :
+unsafe def to_comp (red : Transparency) (e : expr) (e_map : exmap) (monom_map : rb_map monom ℕ) :
     tactic (comp × exmap × rb_map monom ℕ) := do
   let (iq, e) ← parse_into_comp_and_expr e
   let (m', comp') ← linear_form_of_expr red e_map e
   let ⟨nm, mm'⟩ := sum_to_lf comp' monom_map
-  return ⟨⟨iq, mm'.to_list⟩, m', nm⟩
+  return ⟨⟨iq, mm'⟩, m', nm⟩
 
 /-- `to_comp_fold red e_map exprs monom_map` folds `to_comp` over `exprs`,
 updating `e_map` and `monom_map` as it goes.
  -/
-unsafe def to_comp_fold (red : transparency) :
-    exmap → List expr → rb_map monom ℕ → tactic (List comp × exmap × rb_map monom ℕ)
+unsafe def to_comp_fold (red : Transparency) :
+    exmap → List expr → rb_map monom ℕ → tactic (List Comp × exmap × rb_map monom ℕ)
   | m, [], mm => return ([], m, mm)
   | m, h :: t, mm => do
     let (c, m', mm') ← to_comp red h m mm
@@ -182,10 +182,10 @@ the same length, such that `c[i]` represents the linear form of the type of `pfs
 
 It also returns the largest variable index that appears in comparisons in `c`.
 -/
-unsafe def linear_forms_and_max_var (red : transparency) (pfs : List expr) : tactic (List comp × ℕ) := do
+unsafe def linear_forms_and_max_var (red : Transparency) (pfs : List expr) : tactic (List Comp × ℕ) := do
   let pftps ← pfs.mmap infer_type
   let (l, _, map) ← to_comp_fold red [] pftps mk_rb_map
-  return (l, map.size - 1)
+  return (l, map - 1)
 
 end Linarith
 

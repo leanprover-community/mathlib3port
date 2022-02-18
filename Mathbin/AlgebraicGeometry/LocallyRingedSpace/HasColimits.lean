@@ -21,19 +21,19 @@ open CategoryTheory CategoryTheory.Limits Opposite TopologicalSpace
 
 namespace SheafedSpace
 
-variable {C : Type u} [category.{v} C] [has_limits C]
+variable {C : Type u} [Category.{v} C] [HasLimits C]
 
-variable {J : Type v} [category.{v} J] (F : J ⥤ SheafedSpace C)
+variable {J : Type v} [Category.{v} J] (F : J ⥤ SheafedSpace C)
 
-theorem is_colimit_exists_rep {c : cocone F} (hc : is_colimit c) (x : c.X) :
+theorem is_colimit_exists_rep {c : Cocone F} (hc : IsColimit c) (x : c.x) :
     ∃ (i : J)(y : F.obj i), (c.ι.app i).base y = x :=
-  concrete.is_colimit_exists_rep (F ⋙ SheafedSpace.forget _) (is_colimit_of_preserves (SheafedSpace.forget _) hc) x
+  Concrete.is_colimit_exists_rep (F ⋙ SheafedSpace.forget _) (isColimitOfPreserves (SheafedSpace.forget _) hc) x
 
 theorem colimit_exists_rep (x : colimit F) : ∃ (i : J)(y : F.obj i), (colimit.ι F i).base y = x :=
-  concrete.is_colimit_exists_rep (F ⋙ SheafedSpace.forget _)
-    (is_colimit_of_preserves (SheafedSpace.forget _) (colimit.is_colimit F)) x
+  Concrete.is_colimit_exists_rep (F ⋙ SheafedSpace.forget _)
+    (isColimitOfPreserves (SheafedSpace.forget _) (colimit.isColimit F)) x
 
-instance {X Y : SheafedSpace C} (f g : X ⟶ Y) : epi (coequalizer.π f g).base := by
+instance {X Y : SheafedSpace C} (f g : X ⟶ Y) : Epi (coequalizer.π f g).base := by
   erw [← show _ = (coequalizer.π f g).base from ι_comp_coequalizer_comparison f g (SheafedSpace.forget C)]
   rw [← preserves_coequalizer.iso_hom]
   apply epi_comp
@@ -44,7 +44,7 @@ namespace LocallyRingedSpace
 
 section HasCoproducts
 
-variable {ι : Type u} (F : discrete ι ⥤ LocallyRingedSpace.{u})
+variable {ι : Type u} (F : Discrete ι ⥤ LocallyRingedSpace.{u})
 
 /-- The explicit coproduct for `F : discrete ι ⥤ LocallyRingedSpace`. -/
 noncomputable def coproduct : LocallyRingedSpace where
@@ -58,14 +58,14 @@ noncomputable def coproduct : LocallyRingedSpace where
                 y)).symm.commRingIsoToRingEquiv.LocalRing
 
 /-- The explicit coproduct cofan for `F : discrete ι ⥤ LocallyRingedSpace`. -/
-noncomputable def coproduct_cofan : cocone F where
+noncomputable def coproduct_cofan : Cocone F where
   x := coproduct F
   ι := { app := fun j => ⟨colimit.ι (F ⋙ forget_to_SheafedSpace) j, inferInstance⟩ }
 
 /-- The explicit coproduct cofan constructed in `coproduct_cofan` is indeed a colimit. -/
-noncomputable def coproduct_cofan_is_colimit : is_colimit (coproduct_cofan F) where
+noncomputable def coproduct_cofan_is_colimit : IsColimit (coproductCofan F) where
   desc := fun s =>
-    ⟨colimit.desc (F ⋙ forget_to_SheafedSpace) (forget_to_SheafedSpace.mapCocone s), by
+    ⟨colimit.desc (F ⋙ forget_to_SheafedSpace) (forgetToSheafedSpace.mapCocone s), by
       intro x
       obtain ⟨i, y, ⟨⟩⟩ := SheafedSpace.colimit_exists_rep (F ⋙ forget_to_SheafedSpace) x
       have :=
@@ -78,14 +78,14 @@ noncomputable def coproduct_cofan_is_colimit : is_colimit (coproduct_cofan F) wh
       infer_instance⟩
   fac' := fun s j => Subtype.eq (colimit.ι_desc _ _)
   uniq' := fun s f h =>
-    Subtype.eq (is_colimit.uniq _ (forget_to_SheafedSpace.mapCocone s) f.1 fun j => congr_argₓ Subtype.val (h j))
+    Subtype.eq (IsColimit.uniq _ (forgetToSheafedSpace.mapCocone s) f.1 fun j => congr_argₓ Subtype.val (h j))
 
-instance : has_coproducts LocallyRingedSpace.{u} := fun ι => ⟨fun F => ⟨⟨⟨_, coproduct_cofan_is_colimit F⟩⟩⟩⟩
+instance : HasCoproducts LocallyRingedSpace.{u} := fun ι => ⟨fun F => ⟨⟨⟨_, coproductCofanIsColimit F⟩⟩⟩⟩
 
-noncomputable instance (J : Type _) : preserves_colimits_of_shape (discrete J) forget_to_SheafedSpace :=
+noncomputable instance (J : Type _) : PreservesColimitsOfShape (Discrete J) forgetToSheafedSpace :=
   ⟨fun G =>
-    preserves_colimit_of_preserves_colimit_cocone (coproduct_cofan_is_colimit G)
-      ((colimit.is_colimit _).ofIsoColimit (cocones.ext (iso.refl _) fun j => category.comp_id _))⟩
+    preservesColimitOfPreservesColimitCocone (coproductCofanIsColimit G)
+      ((colimit.isColimit _).ofIsoColimit (Cocones.ext (Iso.refl _) fun j => Category.comp_id _))⟩
 
 end HasCoproducts
 
@@ -122,17 +122,17 @@ are local ring homs.
 -/
 
 
-variable (U : opens (coequalizer f.1 g.1).Carrier)
+variable (U : Opens (coequalizer f.1 g.1).Carrier)
 
 variable (s : (coequalizer f.1 g.1).Presheaf.obj (op U))
 
 /-- (Implementation). The basic open set of the section `π꙳ s`. -/
-noncomputable def image_basic_open : opens Y :=
-  Y.to_RingedSpace.basic_open (show Y.presheaf.obj (op (unop _)) from ((coequalizer.π f.1 g.1).c.app (op U)) s)
+noncomputable def image_basic_open : Opens Y :=
+  Y.toRingedSpace.basicOpen (show Y.Presheaf.obj (op (unop _)) from ((coequalizer.π f.1 g.1).c.app (op U)) s)
 
 theorem image_basic_open_image_preimage :
-    (coequalizer.π f.1 g.1).base ⁻¹' ((coequalizer.π f.1 g.1).base '' (image_basic_open f g U s).1) =
-      (image_basic_open f g U s).1 :=
+    (coequalizer.π f.1 g.1).base ⁻¹' ((coequalizer.π f.1 g.1).base '' (imageBasicOpen f g U s).1) =
+      (imageBasicOpen f g U s).1 :=
   by
   fapply types.coequalizer_preimage_image_eq_of_preimage_eq f.1.base g.1.base
   · ext
@@ -161,7 +161,7 @@ theorem image_basic_open_image_preimage :
     exact fun _ h => h
     
 
-theorem image_basic_open_image_open : IsOpen ((coequalizer.π f.1 g.1).base '' (image_basic_open f g U s).1) := by
+theorem image_basic_open_image_open : IsOpen ((coequalizer.π f.1 g.1).base '' (imageBasicOpen f g U s).1) := by
   rw [← (Top.homeoOfIso (preserves_coequalizer.iso (SheafedSpace.forget _) f.1 g.1)).is_open_preimage,
     Top.coequalizer_is_open_iff, ← Set.preimage_comp]
   erw [← coe_comp]
@@ -171,7 +171,7 @@ theorem image_basic_open_image_open : IsOpen ((coequalizer.π f.1 g.1).base '' (
   exact (image_basic_open f g U s).2
 
 instance coequalizer_π_stalk_is_local_ring_hom (x : Y) :
-    IsLocalRingHom (PresheafedSpace.stalk_map (coequalizer.π f.val g.val : _) x) := by
+    IsLocalRingHom (PresheafedSpace.stalkMap (coequalizer.π f.val g.val : _) x) := by
   constructor
   rintro a ha
   rcases Top.Presheaf.germ_exist _ _ a with ⟨U, hU, s, rfl⟩
@@ -206,17 +206,17 @@ noncomputable def coequalizer : LocallyRingedSpace where
     exact (PresheafedSpace.stalk_map (coequalizer.π f.val g.val : _) y).domain_local_ring
 
 /-- The explicit coequalizer cofork of locally ringed spaces. -/
-noncomputable def coequalizer_cofork : cofork f g :=
-  @cofork.of_π _ _ _ _ f g (coequalizer f g) ⟨coequalizer.π f.1 g.1, inferInstance⟩
+noncomputable def coequalizer_cofork : Cofork f g :=
+  @Cofork.ofπ _ _ _ _ f g (coequalizer f g) ⟨coequalizer.π f.1 g.1, inferInstance⟩
     (Subtype.eq (coequalizer.condition f.1 g.1))
 
 theorem is_local_ring_hom_stalk_map_congr {X Y : RingedSpace} (f g : X ⟶ Y) (H : f = g) x
-    (h : IsLocalRingHom (PresheafedSpace.stalk_map f x)) : IsLocalRingHom (PresheafedSpace.stalk_map g x) := by
+    (h : IsLocalRingHom (PresheafedSpace.stalkMap f x)) : IsLocalRingHom (PresheafedSpace.stalkMap g x) := by
   rw [PresheafedSpace.stalk_map.congr_hom _ _ H.symm x]
   infer_instance
 
 /-- The cofork constructed in `coequalizer_cofork` is indeed a colimit cocone. -/
-noncomputable def coequalizer_cofork_is_colimit : is_colimit (coequalizer_cofork f g) := by
+noncomputable def coequalizer_cofork_is_colimit : IsColimit (coequalizerCofork f g) := by
   apply cofork.is_colimit.mk'
   intro s
   have e : f.val ≫ s.π.val = g.val ≫ s.π.val := by
@@ -247,14 +247,14 @@ noncomputable def coequalizer_cofork_is_colimit : is_colimit (coequalizer_cofork
   · exact h
     
 
-instance : has_coequalizer f g :=
-  ⟨⟨⟨_, coequalizer_cofork_is_colimit f g⟩⟩⟩
+instance : HasCoequalizer f g :=
+  ⟨⟨⟨_, coequalizerCoforkIsColimit f g⟩⟩⟩
 
-instance : has_coequalizers LocallyRingedSpace :=
+instance : HasCoequalizers LocallyRingedSpace :=
   has_coequalizers_of_has_colimit_parallel_pair _
 
 noncomputable instance preserves_coequalizer :
-    preserves_colimits_of_shape walking_parallel_pair.{v} forget_to_SheafedSpace.{v} :=
+    PreservesColimitsOfShape WalkingParallelPair.{v} forgetToSheafedSpace.{v} :=
   ⟨fun F => by
     apply preserves_colimit_of_iso_diagram _ (diagram_iso_parallel_pair F).symm
     apply preserves_colimit_of_preserves_colimit_cocone (coequalizer_cofork_is_colimit _ _)
@@ -264,11 +264,11 @@ noncomputable instance preserves_coequalizer :
 
 end HasCoequalizer
 
-instance : has_colimits LocallyRingedSpace :=
+instance : HasColimits LocallyRingedSpace :=
   colimits_from_coequalizers_and_coproducts
 
-noncomputable instance : preserves_colimits LocallyRingedSpace.forget_to_SheafedSpace :=
-  preserves_colimits_of_preserves_coequalizers_and_coproducts _
+noncomputable instance : PreservesColimits LocallyRingedSpace.forgetToSheafedSpace :=
+  preservesColimitsOfPreservesCoequalizersAndCoproducts _
 
 end LocallyRingedSpace
 

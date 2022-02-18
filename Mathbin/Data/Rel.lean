@@ -41,7 +41,7 @@ def inv : Rel β α :=
 theorem inv_def (x : α) (y : β) : r.inv y x ↔ r x y :=
   Iff.rfl
 
-theorem inv_invₓ : inv (inv r) = r := by
+theorem inv_invₓ : Inv (Inv r) = r := by
   ext x y
   rfl
 
@@ -49,17 +49,17 @@ theorem inv_invₓ : inv (inv r) = r := by
 def dom :=
   { x | ∃ y, r x y }
 
-theorem dom_mono {r s : Rel α β} (h : r ≤ s) : dom r ⊆ dom s := fun a ⟨b, hx⟩ => ⟨b, h a b hx⟩
+theorem dom_mono {r s : Rel α β} (h : r ≤ s) : Dom r ⊆ Dom s := fun a ⟨b, hx⟩ => ⟨b, h a b hx⟩
 
 /-- Codomain aka range of a relation -/
 def codom :=
   { y | ∃ x, r x y }
 
-theorem codom_inv : r.inv.codom = r.dom := by
+theorem codom_inv : r.inv.Codom = r.Dom := by
   ext x y
   rfl
 
-theorem dom_inv : r.inv.dom = r.codom := by
+theorem dom_inv : r.inv.Dom = r.Codom := by
   ext x y
   rfl
 
@@ -90,11 +90,11 @@ theorem comp_left_id (r : Rel α β) : (@Eq α ∘ r) = r := by
   ext x
   simp
 
-theorem inv_id : inv (@Eq α) = @Eq α := by
+theorem inv_id : Inv (@Eq α) = @Eq α := by
   ext x y
   constructor <;> apply Eq.symm
 
-theorem inv_comp (r : Rel α β) (s : Rel β γ) : inv (r ∘ s) = (inv s ∘ inv r) := by
+theorem inv_comp (r : Rel α β) (s : Rel β γ) : Inv (r ∘ s) = (Inv s ∘ Inv r) := by
   ext x z
   simp [comp, inv, flip, And.comm]
 
@@ -102,27 +102,27 @@ theorem inv_comp (r : Rel α β) (s : Rel β γ) : inv (r ∘ s) = (inv s ∘ in
 def image (s : Set α) : Set β :=
   { y | ∃ x ∈ s, r x y }
 
-theorem mem_image (y : β) (s : Set α) : y ∈ image r s ↔ ∃ x ∈ s, r x y :=
+theorem mem_image (y : β) (s : Set α) : y ∈ Image r s ↔ ∃ x ∈ s, r x y :=
   Iff.rfl
 
-theorem image_subset : (· ⊆ ·⇒· ⊆ ·) r.image r.image := fun s t h y ⟨x, xs, rxy⟩ => ⟨x, h xs, rxy⟩
+theorem image_subset : (· ⊆ ·⇒· ⊆ ·) r.Image r.Image := fun s t h y ⟨x, xs, rxy⟩ => ⟨x, h xs, rxy⟩
 
-theorem image_mono : Monotone r.image :=
+theorem image_mono : Monotone r.Image :=
   r.image_subset
 
-theorem image_inter (s t : Set α) : r.image (s ∩ t) ⊆ r.image s ∩ r.image t :=
+theorem image_inter (s t : Set α) : r.Image (s ∩ t) ⊆ r.Image s ∩ r.Image t :=
   r.image_mono.map_inf_le s t
 
-theorem image_union (s t : Set α) : r.image (s ∪ t) = r.image s ∪ r.image t :=
+theorem image_union (s t : Set α) : r.Image (s ∪ t) = r.Image s ∪ r.Image t :=
   le_antisymmₓ (fun y ⟨x, xst, rxy⟩ => xst.elim (fun xs => Or.inl ⟨x, ⟨xs, rxy⟩⟩) fun xt => Or.inr ⟨x, ⟨xt, rxy⟩⟩)
     (r.image_mono.le_map_sup s t)
 
 @[simp]
-theorem image_id (s : Set α) : image (@Eq α) s = s := by
+theorem image_id (s : Set α) : Image (@Eq α) s = s := by
   ext x
   simp [mem_image]
 
-theorem image_comp (s : Rel β γ) (t : Set α) : image (r ∘ s) t = image s (image r t) := by
+theorem image_comp (s : Rel β γ) (t : Set α) : Image (r ∘ s) t = Image s (Image r t) := by
   ext z
   simp only [mem_image, comp]
   constructor
@@ -132,36 +132,36 @@ theorem image_comp (s : Rel β γ) (t : Set α) : image (r ∘ s) t = image s (i
   rintro ⟨y, ⟨x, xt, rxy⟩, syz⟩
   exact ⟨x, xt, y, rxy, syz⟩
 
-theorem image_univ : r.image Set.Univ = r.codom := by
+theorem image_univ : r.Image Set.Univ = r.Codom := by
   ext y
   simp [mem_image, codom]
 
 /-- Preimage of a set under a relation `r`. Same as the image of `s` under `r.inv` -/
 def preimage (s : Set β) : Set α :=
-  r.inv.image s
+  r.inv.Image s
 
-theorem mem_preimage (x : α) (s : Set β) : x ∈ r.preimage s ↔ ∃ y ∈ s, r x y :=
+theorem mem_preimage (x : α) (s : Set β) : x ∈ r.Preimage s ↔ ∃ y ∈ s, r x y :=
   Iff.rfl
 
-theorem preimage_def (s : Set β) : preimage r s = { x | ∃ y ∈ s, r x y } :=
+theorem preimage_def (s : Set β) : Preimage r s = { x | ∃ y ∈ s, r x y } :=
   Set.ext fun x => mem_preimage _ _ _
 
-theorem preimage_mono {s t : Set β} (h : s ⊆ t) : r.preimage s ⊆ r.preimage t :=
+theorem preimage_mono {s t : Set β} (h : s ⊆ t) : r.Preimage s ⊆ r.Preimage t :=
   image_mono _ h
 
-theorem preimage_inter (s t : Set β) : r.preimage (s ∩ t) ⊆ r.preimage s ∩ r.preimage t :=
+theorem preimage_inter (s t : Set β) : r.Preimage (s ∩ t) ⊆ r.Preimage s ∩ r.Preimage t :=
   image_inter _ s t
 
-theorem preimage_union (s t : Set β) : r.preimage (s ∪ t) = r.preimage s ∪ r.preimage t :=
+theorem preimage_union (s t : Set β) : r.Preimage (s ∪ t) = r.Preimage s ∪ r.Preimage t :=
   image_union _ s t
 
-theorem preimage_id (s : Set α) : preimage (@Eq α) s = s := by
+theorem preimage_id (s : Set α) : Preimage (@Eq α) s = s := by
   simp only [preimage, inv_id, image_id]
 
-theorem preimage_comp (s : Rel β γ) (t : Set γ) : preimage (r ∘ s) t = preimage r (preimage s t) := by
+theorem preimage_comp (s : Rel β γ) (t : Set γ) : Preimage (r ∘ s) t = Preimage r (Preimage s t) := by
   simp only [preimage, inv_comp, image_comp]
 
-theorem preimage_univ : r.preimage Set.Univ = r.dom := by
+theorem preimage_univ : r.Preimage Set.Univ = r.Dom := by
   rw [preimage, image_univ, codom_inv]
 
 /-- Core of a set `s : set β` w.r.t `r : rel α β` is the set of `x : α` that are related *only*
@@ -169,32 +169,32 @@ to elements of `s`. Other generalization of `function.preimage`. -/
 def core (s : Set β) :=
   { x | ∀ y, r x y → y ∈ s }
 
-theorem mem_core (x : α) (s : Set β) : x ∈ r.core s ↔ ∀ y, r x y → y ∈ s :=
+theorem mem_core (x : α) (s : Set β) : x ∈ r.Core s ↔ ∀ y, r x y → y ∈ s :=
   Iff.rfl
 
-theorem core_subset : (· ⊆ ·⇒· ⊆ ·) r.core r.core := fun s t h x h' y rxy => h (h' y rxy)
+theorem core_subset : (· ⊆ ·⇒· ⊆ ·) r.Core r.Core := fun s t h x h' y rxy => h (h' y rxy)
 
-theorem core_mono : Monotone r.core :=
+theorem core_mono : Monotone r.Core :=
   r.core_subset
 
-theorem core_inter (s t : Set β) : r.core (s ∩ t) = r.core s ∩ r.core t :=
+theorem core_inter (s t : Set β) : r.Core (s ∩ t) = r.Core s ∩ r.Core t :=
   Set.ext
     (by
       simp [mem_core, imp_and_distrib, forall_and_distrib])
 
-theorem core_union (s t : Set β) : r.core s ∪ r.core t ⊆ r.core (s ∪ t) :=
+theorem core_union (s t : Set β) : r.Core s ∪ r.Core t ⊆ r.Core (s ∪ t) :=
   r.core_mono.le_map_sup s t
 
 @[simp]
-theorem core_univ : r.core Set.Univ = Set.Univ :=
+theorem core_univ : r.Core Set.Univ = Set.Univ :=
   Set.ext
     (by
       simp [mem_core])
 
-theorem core_id (s : Set α) : core (@Eq α) s = s := by
+theorem core_id (s : Set α) : Core (@Eq α) s = s := by
   simp [core]
 
-theorem core_comp (s : Rel β γ) (t : Set γ) : core (r ∘ s) t = core r (core s t) := by
+theorem core_comp (s : Rel β γ) (t : Set γ) : Core (r ∘ s) t = Core r (Core s t) := by
   ext x
   simp [core, comp]
   constructor
@@ -206,10 +206,10 @@ theorem core_comp (s : Rel β γ) (t : Set γ) : core (r ∘ s) t = core r (core
 /-- Restrict the domain of a relation to a subtype. -/
 def restrict_domain (s : Set α) : Rel { x // x ∈ s } β := fun x y => r x.val y
 
-theorem image_subset_iff (s : Set α) (t : Set β) : image r s ⊆ t ↔ s ⊆ core r t :=
+theorem image_subset_iff (s : Set α) (t : Set β) : Image r s ⊆ t ↔ s ⊆ Core r t :=
   Iff.intro (fun h x xs y rxy => h ⟨x, xs, rxy⟩) fun h y ⟨x, xs, rxy⟩ => h xs y rxy
 
-theorem image_core_gc : GaloisConnection r.image r.core :=
+theorem image_core_gc : GaloisConnection r.Image r.Core :=
   image_subset_iff _
 
 end Rel

@@ -54,19 +54,19 @@ For example, suppose `cs` is produced by scaling assumption 2 by 5,
 and adding to that the sum of assumptions 1 and 2.
 `cs.flatten` maps `1 ↦ 1, 2 ↦ 6`.
  -/
-unsafe def comp_source.flatten : comp_source → rb_map ℕ ℕ
+unsafe def comp_source.flatten : CompSource → rb_map ℕ ℕ
   | comp_source.assump n => mk_rb_map.insert n 1
   | comp_source.add c1 c2 => (comp_source.flatten c1).add (comp_source.flatten c2)
   | comp_source.scale n c => (comp_source.flatten c).map fun v => v * n
 
 /-- Formats a `comp_source` for printing. -/
-def comp_source.to_string : comp_source → Stringₓ
+def comp_source.to_string : CompSource → Stringₓ
   | comp_source.assump e => toString e
   | comp_source.add c1 c2 => comp_source.to_string c1 ++ " + " ++ comp_source.to_string c2
   | comp_source.scale n c => toString n ++ " * " ++ comp_source.to_string c
 
-unsafe instance comp_source.has_to_format : has_to_format comp_source :=
-  ⟨fun a => comp_source.to_string a⟩
+unsafe instance comp_source.has_to_format : has_to_format CompSource :=
+  ⟨fun a => CompSource.toString a⟩
 
 /-- A `pcomp` stores a linear comparison `Σ cᵢ*xᵢ R 0`,
 along with information about how this comparison was derived.
@@ -92,8 +92,8 @@ Checking this directly is expensive, but effective approximations can be defined
 sets. During the variable elimination process, a `pcomp` with non-minimal history can be discarded.
 -/
 unsafe structure pcomp : Type where
-  c : comp
-  src : comp_source
+  c : Comp
+  src : CompSource
   history : rb_set ℕ
   effective : rb_set ℕ
   implicit : rb_set ℕ
@@ -161,8 +161,8 @@ unsafe def pcomp.add (c1 c2 : pcomp) (elim_var : ℕ) : pcomp :=
 The history is the singleton set `{n}`.
 No variables have been eliminated (effectively or implicitly).
 -/
-unsafe def pcomp.assump (c : comp) (n : ℕ) : pcomp :=
-  { c, src := comp_source.assump n, history := mk_rb_set.insert n, effective := mk_rb_set, implicit := mk_rb_set,
+unsafe def pcomp.assump (c : Comp) (n : ℕ) : pcomp :=
+  { c, src := CompSource.assump n, history := mk_rb_set.insert n, effective := mk_rb_set, implicit := mk_rb_set,
     vars := rb_set.of_list c.vars }
 
 unsafe instance pcomp.to_format : has_to_format pcomp :=
@@ -178,13 +178,13 @@ unsafe def mk_pcomp_set : rb_set pcomp :=
 
 /-- If `c1` and `c2` both contain variable `a` with opposite coefficients,
 produces `v1` and `v2` such that `a` has been cancelled in `v1*c1 + v2*c2`. -/
-unsafe def elim_var (c1 c2 : comp) (a : ℕ) : Option (ℕ × ℕ) :=
-  let v1 := c1.coeff_of a
-  let v2 := c2.coeff_of a
+unsafe def elim_var (c1 c2 : Comp) (a : ℕ) : Option (ℕ × ℕ) :=
+  let v1 := c1.coeffOf a
+  let v2 := c2.coeffOf a
   if v1 * v2 < 0 then
-    let vlcm := Nat.lcmₓ v1.nat_abs v2.nat_abs
-    let v1' := vlcm / v1.nat_abs
-    let v2' := vlcm / v2.nat_abs
+    let vlcm := Nat.lcmₓ v1.natAbs v2.natAbs
+    let v1' := vlcm / v1.natAbs
+    let v2' := vlcm / v2.natAbs
     some ⟨v1', v2'⟩
   else none
 
@@ -194,7 +194,7 @@ and tracks this in the `comp_source`.
 -/
 unsafe def pelim_var (p1 p2 : pcomp) (a : ℕ) : Option pcomp := do
   let (n1, n2) ← elim_var p1.c p2.c a
-  return <| (p1.scale n1).add (p2.scale n2) a
+  return <| (p1 n1).add (p2 n2) a
 
 /-- A `pcomp` represents a contradiction if its `comp` field represents a contradiction.
 -/
@@ -221,7 +221,7 @@ unsafe structure linarith_structure : Type where
   max_var : ℕ
   comps : rb_set pcomp
 
--- ././Mathport/Syntax/Translate/Basic.lean:857:9: unsupported derive handler monad_except pcomp
+-- ././Mathport/Syntax/Translate/Basic.lean:859:9: unsupported derive handler monad_except pcomp
 /-- The linarith monad extends an exceptional monad with a `linarith_structure` state.
 An exception produces a contradictory `pcomp`.
 -/
@@ -240,7 +240,7 @@ unsafe def get_comps : linarith_monad (rb_set pcomp) :=
 /-- Throws an exception if a contradictory `pcomp` is contained in the current state. -/
 unsafe def validate : linarith_monad Unit := do
   let ⟨_, comps⟩ ← get
-  match comps.to_list.find fun p : pcomp => p.is_contr with
+  match comps fun p : pcomp => p with
     | none => return ()
     | some c => throw c
 
@@ -259,8 +259,8 @@ Returns `(pos, neg, not_present)`.
 -/
 unsafe def split_set_by_var_sign (a : ℕ) (comps : rb_set pcomp) : rb_set pcomp × rb_set pcomp × rb_set pcomp :=
   (comps.fold ⟨mk_pcomp_set, mk_pcomp_set, mk_pcomp_set⟩) fun pc ⟨Pos, neg, not_present⟩ =>
-    let n := pc.c.coeff_of a
-    if n > 0 then ⟨pos.insert pc, neg, not_present⟩
+    let n := pc.c.coeffOf a
+    if n > 0 then ⟨Pos.insert pc, neg, not_present⟩
     else if n < 0 then ⟨Pos, neg.insert pc, not_present⟩ else ⟨Pos, neg, not_present.insert pc⟩
 
 /-- `monad.elim_var a` performs one round of Fourier-Motzkin elimination, eliminating the variable `a`
@@ -270,7 +270,7 @@ unsafe def monad.elim_var (a : ℕ) : linarith_monad Unit := do
   let vs ← get_max_var
   when (a ≤ vs) <| do
       let ⟨Pos, neg, not_present⟩ ← split_set_by_var_sign a <$> get_comps
-      let cs' := pos.fold not_present fun p s => s.union (elim_with_set a p neg)
+      let cs' := Pos not_present fun p s => s (elim_with_set a p neg)
       update (vs - 1) cs'
 
 /-- `elim_all_vars` eliminates all variables from the linarith state, leaving it with a set of
@@ -283,7 +283,7 @@ unsafe def elim_all_vars : linarith_monad Unit := do
 /-- `mk_linarith_structure hyps vars` takes a list of hypotheses and the largest variable present in
 those hypotheses. It produces an initial state for the elimination monad.
 -/
-unsafe def mk_linarith_structure (hyps : List comp) (max_var : ℕ) : linarith_structure :=
+unsafe def mk_linarith_structure (hyps : List Comp) (max_var : ℕ) : linarith_structure :=
   let pcomp_list : List pcomp := hyps.enum.map fun ⟨n, cmp⟩ => pcomp.assump cmp n
   let pcomp_set := rb_set.of_list_core mk_pcomp_set pcomp_list
   ⟨max_var, pcomp_set⟩

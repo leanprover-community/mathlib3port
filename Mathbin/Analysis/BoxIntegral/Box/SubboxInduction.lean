@@ -32,12 +32,12 @@ namespace BoxIntegral
 
 namespace Box
 
-variable {ι : Type _} {I J : box ι}
+variable {ι : Type _} {I J : Box ι}
 
 /-- For a box `I`, the hyperplanes passing through its center split `I` into `2 ^ card ι` boxes.
 `box_integral.box.split_center_box I s` is one of these boxes. See also
 `box_integral.partition.split_center` for the corresponding `box_integral.partition`. -/
-def split_center_box (I : box ι) (s : Set ι) : box ι where
+def split_center_box (I : Box ι) (s : Set ι) : Box ι where
   lower := s.piecewise (fun i => (I.lower i + I.upper i) / 2) I.lower
   upper := s.piecewise I.upper fun i => (I.lower i + I.upper i) / 2
   lower_lt_upper := fun i => by
@@ -45,7 +45,7 @@ def split_center_box (I : box ι) (s : Set ι) : box ι where
     split_ifs <;> simp only [left_lt_add_div_two, add_div_two_lt_right, I.lower_lt_upper]
 
 theorem mem_split_center_box {s : Set ι} {y : ι → ℝ} :
-    y ∈ I.split_center_box s ↔ y ∈ I ∧ ∀ i, (I.lower i + I.upper i) / 2 < y i ↔ i ∈ s := by
+    y ∈ I.splitCenterBox s ↔ y ∈ I ∧ ∀ i, (I.lower i + I.upper i) / 2 < y i ↔ i ∈ s := by
   simp only [split_center_box, mem_def, ← forall_and_distrib]
   refine' forall_congrₓ fun i => _
   dunfold Set.piecewise
@@ -53,38 +53,38 @@ theorem mem_split_center_box {s : Set ι} {y : ι → ℝ} :
   exacts[⟨fun H => ⟨⟨(left_lt_add_div_two.2 (I.lower_lt_upper i)).trans H.1, H.2⟩, H.1⟩, fun H => ⟨H.2, H.1.2⟩⟩,
     ⟨fun H => ⟨⟨H.1, H.2.trans (add_div_two_lt_right.2 (I.lower_lt_upper i)).le⟩, H.2⟩, fun H => ⟨H.1.1, H.2⟩⟩]
 
-theorem split_center_box_le (I : box ι) (s : Set ι) : I.split_center_box s ≤ I := fun x hx =>
+theorem split_center_box_le (I : Box ι) (s : Set ι) : I.splitCenterBox s ≤ I := fun x hx =>
   (mem_split_center_box.1 hx).1
 
-theorem disjoint_split_center_box (I : box ι) {s t : Set ι} (h : s ≠ t) :
-    Disjoint (I.split_center_box s : Set (ι → ℝ)) (I.split_center_box t) := by
+theorem disjoint_split_center_box (I : Box ι) {s t : Set ι} (h : s ≠ t) :
+    Disjoint (I.splitCenterBox s : Set (ι → ℝ)) (I.splitCenterBox t) := by
   rintro y ⟨hs, ht⟩
   apply h
   ext i
   rw [mem_coe, mem_split_center_box] at hs ht
   rw [← hs.2, ← ht.2]
 
-theorem injective_split_center_box (I : box ι) : injective I.split_center_box := fun s t H =>
+theorem injective_split_center_box (I : Box ι) : Injective I.splitCenterBox := fun s t H =>
   by_contra fun Hne => (I.disjoint_split_center_box Hne).Ne (nonempty_coe _).ne_empty (H ▸ rfl)
 
 @[simp]
-theorem exists_mem_split_center_box {I : box ι} {x : ι → ℝ} : (∃ s, x ∈ I.split_center_box s) ↔ x ∈ I :=
+theorem exists_mem_split_center_box {I : Box ι} {x : ι → ℝ} : (∃ s, x ∈ I.splitCenterBox s) ↔ x ∈ I :=
   ⟨fun ⟨s, hs⟩ => I.split_center_box_le s hs, fun hx =>
     ⟨{ i | (I.lower i + I.upper i) / 2 < x i }, mem_split_center_box.2 ⟨hx, fun i => Iff.rfl⟩⟩⟩
 
 /-- `box_integral.box.split_center_box` bundled as a `function.embedding`. -/
 @[simps]
-def split_center_box_emb (I : box ι) : Set ι ↪ box ι :=
-  ⟨split_center_box I, injective_split_center_box I⟩
+def split_center_box_emb (I : Box ι) : Set ι ↪ Box ι :=
+  ⟨splitCenterBox I, injective_split_center_box I⟩
 
 @[simp]
-theorem Union_coe_split_center_box (I : box ι) : (⋃ s, (I.split_center_box s : Set (ι → ℝ))) = I := by
+theorem Union_coe_split_center_box (I : Box ι) : (⋃ s, (I.splitCenterBox s : Set (ι → ℝ))) = I := by
   ext x
   simp
 
 @[simp]
-theorem upper_sub_lower_split_center_box (I : box ι) (s : Set ι) (i : ι) :
-    (I.split_center_box s).upper i - (I.split_center_box s).lower i = (I.upper i - I.lower i) / 2 := by
+theorem upper_sub_lower_split_center_box (I : Box ι) (s : Set ι) (i : ι) :
+    (I.splitCenterBox s).upper i - (I.splitCenterBox s).lower i = (I.upper i - I.lower i) / 2 := by
   by_cases' hs : i ∈ s <;> field_simp [split_center_box, hs, mul_two, two_mul]
 
 /-- Let `p` be a predicate on `box ι`, let `I` be a box. Suppose that the following two properties
@@ -103,8 +103,7 @@ Then `p I` is true. See also `box_integral.box.subbox_induction_on` for a versio
 The proof still works if we assume `H_ind` only for subboxes `J ≤ I` that are homothetic to `I` with
 a coefficient of the form `2⁻ᵐ` but we do not need this generalization yet. -/
 @[elab_as_eliminator]
-theorem subbox_induction_on' {p : box ι → Prop} (I : box ι)
-    (H_ind : ∀, ∀ J ≤ I, ∀, (∀ s, p (split_center_box J s)) → p J)
+theorem subbox_induction_on' {p : Box ι → Prop} (I : Box ι) (H_ind : ∀, ∀ J ≤ I, ∀, (∀ s, p (splitCenterBox J s)) → p J)
     (H_nhds :
       ∀,
         ∀ z ∈ I.Icc,

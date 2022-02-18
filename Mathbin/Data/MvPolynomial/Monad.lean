@@ -69,7 +69,7 @@ producing a new polynomial over `S`.
 The variable type remains the same. This operation is a ring hom.
 -/
 def bind₂ (f : R →+* MvPolynomial σ S) : MvPolynomial σ R →+* MvPolynomial σ S :=
-  eval₂_hom f X
+  eval₂Hom f x
 
 /-- `join₁` is the monadic join operation corresponding to `mv_polynomial.bind₁`. Given a polynomial `p`
 with coefficients in `R` whose variables are polynomials in `σ` with coefficients in `R`,
@@ -85,18 +85,18 @@ with variables in `σ` whose coefficients are polynomials in `σ` with coefficie
 This operation is a ring hom.
 -/
 def join₂ : MvPolynomial σ (MvPolynomial σ R) →+* MvPolynomial σ R :=
-  eval₂_hom (RingHom.id _) X
+  eval₂Hom (RingHom.id _) x
 
 @[simp]
 theorem aeval_eq_bind₁ (f : σ → MvPolynomial τ R) : aeval f = bind₁ f :=
   rfl
 
 @[simp]
-theorem eval₂_hom_C_eq_bind₁ (f : σ → MvPolynomial τ R) : eval₂_hom C f = bind₁ f :=
+theorem eval₂_hom_C_eq_bind₁ (f : σ → MvPolynomial τ R) : eval₂Hom c f = bind₁ f :=
   rfl
 
 @[simp]
-theorem eval₂_hom_eq_bind₂ (f : R →+* MvPolynomial σ S) : eval₂_hom f X = bind₂ f :=
+theorem eval₂_hom_eq_bind₂ (f : R →+* MvPolynomial σ S) : eval₂Hom f x = bind₂ f :=
   rfl
 
 section
@@ -107,11 +107,11 @@ variable (σ R)
 theorem aeval_id_eq_join₁ : aeval id = @join₁ σ R _ :=
   rfl
 
-theorem eval₂_hom_C_id_eq_join₁ (φ : MvPolynomial (MvPolynomial σ R) R) : eval₂_hom C id φ = join₁ φ :=
+theorem eval₂_hom_C_id_eq_join₁ (φ : MvPolynomial (MvPolynomial σ R) R) : eval₂Hom c id φ = join₁ φ :=
   rfl
 
 @[simp]
-theorem eval₂_hom_id_X_eq_join₂ : eval₂_hom (RingHom.id _) X = @join₂ σ R _ :=
+theorem eval₂_hom_id_X_eq_join₂ : eval₂Hom (RingHom.id _) x = @join₂ σ R _ :=
   rfl
 
 end
@@ -119,40 +119,40 @@ end
 attribute [-simp] aeval_eq_bind₁ eval₂_hom_C_eq_bind₁ eval₂_hom_eq_bind₂ aeval_id_eq_join₁ eval₂_hom_id_X_eq_join₂
 
 @[simp]
-theorem bind₁_X_right (f : σ → MvPolynomial τ R) (i : σ) : bind₁ f (X i) = f i :=
+theorem bind₁_X_right (f : σ → MvPolynomial τ R) (i : σ) : bind₁ f (x i) = f i :=
   aeval_X f i
 
 @[simp]
-theorem bind₂_X_right (f : R →+* MvPolynomial σ S) (i : σ) : bind₂ f (X i) = X i :=
-  eval₂_hom_X' f X i
+theorem bind₂_X_right (f : R →+* MvPolynomial σ S) (i : σ) : bind₂ f (x i) = x i :=
+  eval₂_hom_X' f x i
 
 @[simp]
-theorem bind₁_X_left : bind₁ (X : σ → MvPolynomial σ R) = AlgHom.id R _ := by
+theorem bind₁_X_left : bind₁ (x : σ → MvPolynomial σ R) = AlgHom.id R _ := by
   ext1 i
   simp
 
-theorem aeval_X_left : aeval (X : σ → MvPolynomial σ R) = AlgHom.id R _ := by
+theorem aeval_X_left : aeval (x : σ → MvPolynomial σ R) = AlgHom.id R _ := by
   rw [aeval_eq_bind₁, bind₁_X_left]
 
-theorem aeval_X_left_apply (φ : MvPolynomial σ R) : aeval X φ = φ := by
+theorem aeval_X_left_apply (φ : MvPolynomial σ R) : aeval x φ = φ := by
   rw [aeval_eq_bind₁, bind₁_X_left, AlgHom.id_apply]
 
 variable (f : σ → MvPolynomial τ R)
 
 @[simp]
-theorem bind₁_C_right (f : σ → MvPolynomial τ R) x : bind₁ f (C x) = C x := by
+theorem bind₁_C_right (f : σ → MvPolynomial τ R) x : bind₁ f (c x) = c x := by
   simp [bind₁, algebra_map_eq]
 
 @[simp]
-theorem bind₂_C_right (f : R →+* MvPolynomial σ S) (r : R) : bind₂ f (C r) = f r :=
-  eval₂_hom_C f X r
+theorem bind₂_C_right (f : R →+* MvPolynomial σ S) (r : R) : bind₂ f (c r) = f r :=
+  eval₂_hom_C f x r
 
 @[simp]
-theorem bind₂_C_left : bind₂ (C : R →+* MvPolynomial σ R) = RingHom.id _ := by
+theorem bind₂_C_left : bind₂ (c : R →+* MvPolynomial σ R) = RingHom.id _ := by
   ext : 2 <;> simp
 
 @[simp]
-theorem bind₂_comp_C (f : R →+* MvPolynomial σ S) : (bind₂ f).comp C = f :=
+theorem bind₂_comp_C (f : R →+* MvPolynomial σ S) : (bind₂ f).comp c = f :=
   RingHom.ext <| bind₂_C_right _
 
 @[simp]
@@ -224,12 +224,12 @@ theorem bind₂_map (f : S →+* MvPolynomial σ T) (g : R →+* S) (φ : MvPoly
   simp [bind₂]
 
 @[simp]
-theorem map_comp_C (f : R →+* S) : (map f).comp (C : R →+* MvPolynomial σ R) = C.comp f := by
+theorem map_comp_C (f : R →+* S) : (map f).comp (c : R →+* MvPolynomial σ R) = c.comp f := by
   ext1
   apply map_C
 
 theorem hom_bind₁ (f : MvPolynomial τ R →+* S) (g : σ → MvPolynomial τ R) (φ : MvPolynomial σ R) :
-    f (bind₁ g φ) = eval₂_hom (f.comp C) (fun i => f (g i)) φ := by
+    f (bind₁ g φ) = eval₂Hom (f.comp c) (fun i => f (g i)) φ := by
   rw [bind₁, map_aeval, algebra_map_eq]
 
 theorem map_bind₁ (f : R →+* S) (g : σ → MvPolynomial τ R) (φ : MvPolynomial σ R) :
@@ -238,12 +238,12 @@ theorem map_bind₁ (f : R →+* S) (g : σ → MvPolynomial τ R) (φ : MvPolyn
   rfl
 
 @[simp]
-theorem eval₂_hom_comp_C (f : R →+* S) (g : σ → S) : (eval₂_hom f g).comp C = f := by
+theorem eval₂_hom_comp_C (f : R →+* S) (g : σ → S) : (eval₂Hom f g).comp c = f := by
   ext1 r
   exact eval₂_C f g r
 
 theorem eval₂_hom_bind₁ (f : R →+* S) (g : τ → S) (h : σ → MvPolynomial τ R) (φ : MvPolynomial σ R) :
-    eval₂_hom f g (bind₁ h φ) = eval₂_hom f (fun i => eval₂_hom f g (h i)) φ := by
+    eval₂Hom f g (bind₁ h φ) = eval₂Hom f (fun i => eval₂Hom f g (h i)) φ := by
   rw [hom_bind₁, eval₂_hom_comp_C]
 
 theorem aeval_bind₁ [Algebra R S] (f : τ → S) (g : σ → MvPolynomial τ R) (φ : MvPolynomial σ R) :
@@ -256,22 +256,22 @@ theorem aeval_comp_bind₁ [Algebra R S] (f : τ → S) (g : σ → MvPolynomial
   apply aeval_bind₁
 
 theorem eval₂_hom_comp_bind₂ (f : S →+* T) (g : σ → T) (h : R →+* MvPolynomial σ S) :
-    (eval₂_hom f g).comp (bind₂ h) = eval₂_hom ((eval₂_hom f g).comp h) g := by
+    (eval₂Hom f g).comp (bind₂ h) = eval₂Hom ((eval₂Hom f g).comp h) g := by
   ext : 2 <;> simp
 
 theorem eval₂_hom_bind₂ (f : S →+* T) (g : σ → T) (h : R →+* MvPolynomial σ S) (φ : MvPolynomial σ R) :
-    eval₂_hom f g (bind₂ h φ) = eval₂_hom ((eval₂_hom f g).comp h) g φ :=
+    eval₂Hom f g (bind₂ h φ) = eval₂Hom ((eval₂Hom f g).comp h) g φ :=
   RingHom.congr_fun (eval₂_hom_comp_bind₂ f g h) φ
 
 theorem aeval_bind₂ [Algebra S T] (f : σ → T) (g : R →+* MvPolynomial σ S) (φ : MvPolynomial σ R) :
-    aeval f (bind₂ g φ) = eval₂_hom ((↑(aeval f : _ →ₐ[S] _) : _ →+* _).comp g) f φ :=
+    aeval f (bind₂ g φ) = eval₂Hom ((↑(aeval f : _ →ₐ[S] _) : _ →+* _).comp g) f φ :=
   eval₂_hom_bind₂ _ _ _ _
 
-theorem eval₂_hom_C_left (f : σ → MvPolynomial τ R) : eval₂_hom C f = bind₁ f :=
+theorem eval₂_hom_C_left (f : σ → MvPolynomial τ R) : eval₂Hom c f = bind₁ f :=
   rfl
 
 theorem bind₁_monomial (f : σ → MvPolynomial τ R) (d : σ →₀ ℕ) (r : R) :
-    bind₁ f (monomial d r) = C r * ∏ i in d.support, f i ^ d i := by
+    bind₁ f (monomial d r) = c r * ∏ i in d.support, f i ^ d i := by
   simp only [monomial_eq, AlgHom.map_mul, bind₁_C_right, Finsupp.prod, AlgHom.map_prod, AlgHom.map_pow, bind₁_X_right]
 
 theorem bind₂_monomial (f : R →+* MvPolynomial σ S) (d : σ →₀ ℕ) (r : R) :
@@ -285,7 +285,7 @@ theorem bind₂_monomial_one (f : R →+* MvPolynomial σ S) (d : σ →₀ ℕ)
 
 instance Monadₓ : Monadₓ fun σ => MvPolynomial σ R where
   map := fun α β f p => rename f p
-  pure := fun _ => X
+  pure := fun _ => x
   bind := fun _ _ p f => bind₁ f p
 
 instance IsLawfulFunctor : IsLawfulFunctor fun σ => MvPolynomial σ R where

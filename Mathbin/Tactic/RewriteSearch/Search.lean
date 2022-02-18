@@ -46,7 +46,7 @@ unsafe structure vertex where
   id : ℕ
   exp : expr
   pp : Stringₓ
-  Side : side
+  Side : Side
   parent : Option edge
 
 /-- The graph represents two trees, one descending from each of the left and right sides
@@ -80,8 +80,8 @@ unsafe def mk_graph (conf : config) (rules : List (expr × Bool)) (eq : expr) : 
   let (lhs, rhs) ← tactic.match_eq Eq <|> tactic.match_iff Eq
   let lhs_pp ← toString <$> tactic.pp lhs
   let rhs_pp ← toString <$> tactic.pp rhs
-  let lhs_vertex : vertex := ⟨0, lhs, lhs_pp, side.L, none⟩
-  let rhs_vertex : vertex := ⟨1, rhs, rhs_pp, side.R, none⟩
+  let lhs_vertex : vertex := ⟨0, lhs, lhs_pp, Side.L, none⟩
+  let rhs_vertex : vertex := ⟨1, rhs, rhs_pp, Side.R, none⟩
   return
       ⟨conf, rules, [lhs_vertex, rhs_vertex].toBuffer, native.rb_map.of_list [(lhs_pp, [0]), (rhs_pp, [1])], none, lhs,
         rhs⟩
@@ -109,9 +109,9 @@ private unsafe def solution_paths : tactic (List edge × List edge) := do
   let v ← g.vertices.read_t e.to_id
   let path1 ← walk_up_parents g e
   let path2 ← walk_up_parents g v.parent
-  match v.side with
-    | side.L => return (path2.reverse, path1.reverse)
-    | side.R => return (path1.reverse, path2.reverse)
+  match v with
+    | side.L => return (path2, path1)
+    | side.R => return (path1, path2)
 
 /-- Finds the id of a vertex in a list whose expression is defeq to the provided expression.
 Returns none if there is none.
@@ -121,7 +121,7 @@ private unsafe def find_defeq : expr → List ℕ → tactic (Option ℕ)
   | exp, id :: rest => do
     let v ← g.vertices.read_t id
     (do
-          tactic.is_def_eq v.exp exp
+          tactic.is_def_eq v exp
           return (some id)) <|>
         find_defeq exp rest
 
@@ -139,23 +139,20 @@ private unsafe def add_rewrite (v : vertex) (rw : rewrite) : tactic graph := do
   let maybe_id ← find_defeq g rw.exp existing_ids
   match maybe_id with
     | some id => do
-      let existing_vertex ← g.vertices.read_t id
-      if v.side = existing_vertex.side then return g
-        else return { g with solving_edge := some ⟨v.id, existing_vertex.id, rw.proof, rw.how⟩ }
+      let existing_vertex ← g id
+      if v = existing_vertex then return g else return { g with solving_edge := some ⟨v, existing_vertex, rw, rw⟩ }
     | none => do
-      let new_vertex_id := g.vertices.size
-      let new_edge : edge := ⟨v.id, new_vertex_id, rw.proof, rw.how⟩
-      let new_vertex : vertex := ⟨new_vertex_id, rw.exp, pp, v.side, some new_edge⟩
-      trace_if_enabled `rewrite_search f! "new edge: {v.pp } → {new_vertex.pp}"
-      return
-          { g with vertices := g.vertices.push_back new_vertex,
-            vmap := g.vmap.insert pp (new_vertex_id :: existing_ids) }
+      let new_vertex_id := g
+      let new_edge : edge := ⟨v, new_vertex_id, rw, rw⟩
+      let new_vertex : vertex := ⟨new_vertex_id, rw, pp, v, some new_edge⟩
+      trace_if_enabled `rewrite_search f! "new edge: {v } → {new_vertex}"
+      return { g with vertices := g new_vertex, vmap := g pp (new_vertex_id :: existing_ids) }
 
 /-- Add all single-step rewrites starting at a particular vertex to the graph.
 -/
 private unsafe def expand_vertex (v : vertex) : tactic graph := do
   let rws ← get_rewrites g.rules v.exp g.conf
-  List.mfoldl (fun g rw => add_rewrite g v rw) g rws.to_list
+  List.mfoldl (fun g rw => add_rewrite g v rw) g rws
 
 /-- Repeatedly expand edges, starting at a given vertex id, until a solution is found.
 -/
@@ -166,7 +163,7 @@ private unsafe def find_solving_edge : graph → ℕ → tactic graph
       if h : vertex_id < g.vertices.size then do
         let v := g.vertices.read (Finₓ.mk vertex_id h)
         let g ← expand_vertex g v
-        match g.solving_edge with
+        match g with
           | some _ => return g
           | none => find_solving_edge g (vertex_id + 1)
       else fail "search failed: all vertices explored"
@@ -186,8 +183,8 @@ private unsafe def proof_for_edges : side × List edge → tactic (Option proof_
   | (s, edges) => do
     let proofs ←
       match s with
-        | side.L => edges.mmap fun e => e.proof
-        | side.R => edges.reverse.mmap fun e => e.proof >>= mk_eq_symm
+        | side.L => edges.mmap fun e => e.Proof
+        | side.R => edges.reverse.mmap fun e => e.Proof >>= mk_eq_symm
     let proof ← combine_proofs proofs
     let hows := edges.map fun e => e.how
     return <| some ⟨proof, s, hows⟩
@@ -196,7 +193,7 @@ private unsafe def proof_for_edges : side × List edge → tactic (Option proof_
 of the form a = a.
 -/
 private unsafe def find_trivial_proof : tactic (graph × expr × List proof_unit) := do
-  is_def_eq g.lhs g.rhs
+  is_def_eq g g
   let exp ← mk_eq_refl g.lhs
   return (g, exp, [])
 
@@ -207,8 +204,8 @@ unsafe def find_proof : tactic (graph × expr × List proof_unit) :=
   find_trivial_proof g <|> do
     let g ← find_solving_edge g 0
     let (left_edges, right_edges) ← solution_paths g
-    let units ← [(side.L, left_edges), (side.R, right_edges)].mmapFilter proof_for_edges
-    let proof ← combine_proofs <| Units.map fun u => u.proof
+    let units ← [(Side.L, left_edges), (Side.R, right_edges)].mmapFilter proof_for_edges
+    let proof ← combine_proofs <| Units.map fun u => u.Proof
     return (g, proof, Units)
 
 end Graph

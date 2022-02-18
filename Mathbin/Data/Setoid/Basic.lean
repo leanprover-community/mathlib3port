@@ -34,44 +34,44 @@ variable {α : Type _} {β : Type _}
 def Setoidₓ.Rel (r : Setoidₓ α) : α → α → Prop :=
   @Setoidₓ.R _ r
 
-instance Setoidₓ.decidableRel (r : Setoidₓ α) [h : DecidableRel r.r] : DecidableRel r.rel :=
+instance Setoidₓ.decidableRel (r : Setoidₓ α) [h : DecidableRel r.R] : DecidableRel r.Rel :=
   h
 
 /-- A version of `quotient.eq'` compatible with `setoid.rel`, to make rewriting possible. -/
-theorem Quotientₓ.eq_rel {r : Setoidₓ α} {x y} : (Quotientₓ.mk' x : Quotientₓ r) = Quotientₓ.mk' y ↔ r.rel x y :=
+theorem Quotientₓ.eq_rel {r : Setoidₓ α} {x y} : (Quotientₓ.mk' x : Quotientₓ r) = Quotientₓ.mk' y ↔ r.Rel x y :=
   Quotientₓ.eq
 
 namespace Setoidₓ
 
 @[ext]
-theorem ext' {r s : Setoidₓ α} (H : ∀ a b, r.rel a b ↔ s.rel a b) : r = s :=
+theorem ext' {r s : Setoidₓ α} (H : ∀ a b, r.Rel a b ↔ s.Rel a b) : r = s :=
   ext H
 
-theorem ext_iff {r s : Setoidₓ α} : r = s ↔ ∀ a b, r.rel a b ↔ s.rel a b :=
+theorem ext_iff {r s : Setoidₓ α} : r = s ↔ ∀ a b, r.Rel a b ↔ s.Rel a b :=
   ⟨fun h a b => h ▸ Iff.rfl, ext'⟩
 
 /-- Two equivalence relations are equal iff their underlying binary operations are equal. -/
-theorem eq_iff_rel_eq {r₁ r₂ : Setoidₓ α} : r₁ = r₂ ↔ r₁.rel = r₂.rel :=
+theorem eq_iff_rel_eq {r₁ r₂ : Setoidₓ α} : r₁ = r₂ ↔ r₁.Rel = r₂.Rel :=
   ⟨fun h => h ▸ rfl, fun h => Setoidₓ.ext' fun x y => h ▸ Iff.rfl⟩
 
 /-- Defining `≤` for equivalence relations. -/
 instance : LE (Setoidₓ α) :=
-  ⟨fun r s => ∀ ⦃x y⦄, r.rel x y → s.rel x y⟩
+  ⟨fun r s => ∀ ⦃x y⦄, r.Rel x y → s.Rel x y⟩
 
-theorem le_def {r s : Setoidₓ α} : r ≤ s ↔ ∀ {x y}, r.rel x y → s.rel x y :=
+theorem le_def {r s : Setoidₓ α} : r ≤ s ↔ ∀ {x y}, r.Rel x y → s.Rel x y :=
   Iff.rfl
 
 @[refl]
-theorem refl' (r : Setoidₓ α) x : r.rel x x :=
+theorem refl' (r : Setoidₓ α) x : r.Rel x x :=
   r.2.1 x
 
 @[symm]
-theorem symm' (r : Setoidₓ α) : ∀ {x y}, r.rel x y → r.rel y x := fun _ _ h => r.2.2.1 h
+theorem symm' (r : Setoidₓ α) : ∀ {x y}, r.Rel x y → r.Rel y x := fun _ _ h => r.2.2.1 h
 
 @[trans]
-theorem trans' (r : Setoidₓ α) : ∀ {x y z}, r.rel x y → r.rel y z → r.rel x z := fun _ _ _ hx => r.2.2.2 hx
+theorem trans' (r : Setoidₓ α) : ∀ {x y z}, r.Rel x y → r.Rel y z → r.Rel x z := fun _ _ _ hx => r.2.2.2 hx
 
-theorem comm' (s : Setoidₓ α) {x y} : s.rel x y ↔ s.rel y x :=
+theorem comm' (s : Setoidₓ α) {x y} : s.Rel x y ↔ s.Rel y x :=
   ⟨s.symm', s.symm'⟩
 
 /-- The kernel of a function is an equivalence relation. -/
@@ -100,7 +100,7 @@ theorem ker_def {f : α → β} {x y : α} : (ker f).Rel x y ↔ f x = f y :=
     `(x₁, x₂), (y₁, y₂) ∈ α × β` are related by `r.prod s` iff `x₁` is related to `y₁`
     by `r` and `x₂` is related to `y₂` by `s`. -/
 protected def Prod (r : Setoidₓ α) (s : Setoidₓ β) : Setoidₓ (α × β) where
-  R := fun x y => r.rel x.1 y.1 ∧ s.rel x.2 y.2
+  R := fun x y => r.Rel x.1 y.1 ∧ s.Rel x.2 y.2
   iseqv :=
     ⟨fun x => ⟨r.refl' x.1, s.refl' x.2⟩, fun _ _ h => ⟨r.symm' h.1, s.symm' h.2⟩, fun _ _ _ h1 h2 =>
       ⟨r.trans' h1.1 h2.1, s.trans' h1.2 h2.2⟩⟩
@@ -108,28 +108,28 @@ protected def Prod (r : Setoidₓ α) (s : Setoidₓ β) : Setoidₓ (α × β) 
 /-- The infimum of two equivalence relations. -/
 instance : HasInf (Setoidₓ α) :=
   ⟨fun r s =>
-    ⟨fun x y => r.rel x y ∧ s.rel x y,
+    ⟨fun x y => r.Rel x y ∧ s.Rel x y,
       ⟨fun x => ⟨r.refl' x, s.refl' x⟩, fun _ _ h => ⟨r.symm' h.1, s.symm' h.2⟩, fun _ _ _ h1 h2 =>
         ⟨r.trans' h1.1 h2.1, s.trans' h1.2 h2.2⟩⟩⟩⟩
 
 /-- The infimum of 2 equivalence relations r and s is the same relation as the infimum
     of the underlying binary operations. -/
-theorem inf_def {r s : Setoidₓ α} : (r⊓s).Rel = r.rel⊓s.rel :=
+theorem inf_def {r s : Setoidₓ α} : (r⊓s).Rel = r.Rel⊓s.Rel :=
   rfl
 
-theorem inf_iff_and {r s : Setoidₓ α} {x y} : (r⊓s).Rel x y ↔ r.rel x y ∧ s.rel x y :=
+theorem inf_iff_and {r s : Setoidₓ α} {x y} : (r⊓s).Rel x y ↔ r.Rel x y ∧ s.Rel x y :=
   Iff.rfl
 
 /-- The infimum of a set of equivalence relations. -/
 instance : HasInfₓ (Setoidₓ α) :=
   ⟨fun S =>
-    ⟨fun x y => ∀, ∀ r ∈ S, ∀, rel r x y,
+    ⟨fun x y => ∀, ∀ r ∈ S, ∀, Rel r x y,
       ⟨fun x r hr => r.refl' x, fun _ _ h r hr => r.symm' <| h r hr, fun _ _ _ h1 h2 r hr =>
         r.trans' (h1 r hr) <| h2 r hr⟩⟩⟩
 
 /-- The underlying binary operation of the infimum of a set of equivalence relations
     is the infimum of the set's image under the map to the underlying binary operation. -/
-theorem Inf_def {s : Set (Setoidₓ α)} : (Inf s).Rel = Inf (rel '' s) := by
+theorem Inf_def {s : Set (Setoidₓ α)} : (inf s).Rel = inf (rel '' s) := by
   ext
   simp only [Inf_image, infi_apply, infi_Prop_eq]
   rfl
@@ -161,31 +161,31 @@ theorem top_def : (⊤ : Setoidₓ α).Rel = ⊤ :=
 theorem bot_def : (⊥ : Setoidₓ α).Rel = (· = ·) :=
   rfl
 
-theorem eq_top_iff {s : Setoidₓ α} : s = (⊤ : Setoidₓ α) ↔ ∀ x y : α, s.rel x y := by
+theorem eq_top_iff {s : Setoidₓ α} : s = (⊤ : Setoidₓ α) ↔ ∀ x y : α, s.Rel x y := by
   simp [eq_top_iff, Setoidₓ.le_def, Setoidₓ.top_def, Pi.top_apply]
 
 /-- The inductively defined equivalence closure of a binary relation r is the infimum
     of the set of all equivalence relations containing r. -/
-theorem eqv_gen_eq (r : α → α → Prop) : EqvGen.setoid r = Inf { s : Setoidₓ α | ∀ ⦃x y⦄, r x y → s.rel x y } :=
+theorem eqv_gen_eq (r : α → α → Prop) : EqvGen.setoid r = inf { s : Setoidₓ α | ∀ ⦃x y⦄, r x y → s.Rel x y } :=
   le_antisymmₓ
     (fun _ _ H => EqvGen.ndrec (fun _ _ h _ hs => hs h) (refl' _) (fun _ _ _ => symm' _) (fun _ _ _ _ _ => trans' _) H)
     (Inf_le fun _ _ h => EqvGen.rel _ _ h)
 
 /-- The supremum of two equivalence relations r and s is the equivalence closure of the binary
     relation `x is related to y by r or s`. -/
-theorem sup_eq_eqv_gen (r s : Setoidₓ α) : r⊔s = EqvGen.setoid fun x y => r.rel x y ∨ s.rel x y := by
+theorem sup_eq_eqv_gen (r s : Setoidₓ α) : r⊔s = EqvGen.setoid fun x y => r.Rel x y ∨ s.Rel x y := by
   rw [eqv_gen_eq]
   apply congr_argₓ Inf
   simp only [le_def, or_imp_distrib, ← forall_and_distrib]
 
 /-- The supremum of 2 equivalence relations r and s is the equivalence closure of the
     supremum of the underlying binary operations. -/
-theorem sup_def {r s : Setoidₓ α} : r⊔s = EqvGen.setoid (r.rel⊔s.rel) := by
+theorem sup_def {r s : Setoidₓ α} : r⊔s = EqvGen.setoid (r.Rel⊔s.Rel) := by
   rw [sup_eq_eqv_gen] <;> rfl
 
 /-- The supremum of a set S of equivalence relations is the equivalence closure of the binary
     relation `there exists r ∈ S relating x and y`. -/
-theorem Sup_eq_eqv_gen (S : Set (Setoidₓ α)) : Sup S = EqvGen.setoid fun x y => ∃ r : Setoidₓ α, r ∈ S ∧ r.rel x y := by
+theorem Sup_eq_eqv_gen (S : Set (Setoidₓ α)) : sup S = EqvGen.setoid fun x y => ∃ r : Setoidₓ α, r ∈ S ∧ r.Rel x y := by
   rw [eqv_gen_eq]
   apply congr_argₓ Inf
   simp only [UpperBounds, le_def, and_imp, exists_imp_distrib]
@@ -194,14 +194,14 @@ theorem Sup_eq_eqv_gen (S : Set (Setoidₓ α)) : Sup S = EqvGen.setoid fun x y 
 
 /-- The supremum of a set of equivalence relations is the equivalence closure of the
     supremum of the set's image under the map to the underlying binary operation. -/
-theorem Sup_def {s : Set (Setoidₓ α)} : Sup s = EqvGen.setoid (Sup (rel '' s)) := by
+theorem Sup_def {s : Set (Setoidₓ α)} : sup s = EqvGen.setoid (sup (rel '' s)) := by
   rw [Sup_eq_eqv_gen, Sup_image]
   congr with x y
   simp only [supr_apply, supr_Prop_eq, exists_prop]
 
 /-- The equivalence closure of an equivalence relation r is r. -/
 @[simp]
-theorem eqv_gen_of_setoid (r : Setoidₓ α) : EqvGen.setoid r.r = r :=
+theorem eqv_gen_of_setoid (r : Setoidₓ α) : EqvGen.setoid r.R = r :=
   le_antisymmₓ
     (by
       rw [eqv_gen_eq] <;> exact Inf_le fun _ _ => id)
@@ -214,7 +214,7 @@ theorem eqv_gen_idem (r : α → α → Prop) : EqvGen.setoid (EqvGen.setoid r).
 
 /-- The equivalence closure of a binary relation r is contained in any equivalence
     relation containing r. -/
-theorem eqv_gen_le {r : α → α → Prop} {s : Setoidₓ α} (h : ∀ x y, r x y → s.rel x y) : EqvGen.setoid r ≤ s := by
+theorem eqv_gen_le {r : α → α → Prop} {s : Setoidₓ α} (h : ∀ x y, r x y → s.Rel x y) : EqvGen.setoid r ≤ s := by
   rw [eqv_gen_eq] <;> exact Inf_le h
 
 /-- Equivalence closure of binary relations is monotone. -/
@@ -223,7 +223,7 @@ theorem eqv_gen_mono {r s : α → α → Prop} (h : ∀ x y, r x y → s x y) :
 
 /-- There is a Galois insertion of equivalence relations on α into binary relations
     on α, with equivalence closure the lower adjoint. -/
-def gi : @GaloisInsertion (α → α → Prop) (Setoidₓ α) _ _ EqvGen.setoid rel where
+def gi : @GaloisInsertion (α → α → Prop) (Setoidₓ α) _ _ EqvGen.setoid Rel where
   choice := fun r h => EqvGen.setoid r
   gc := fun r s => ⟨fun H _ _ h => H <| EqvGen.rel _ _ h, fun H => eqv_gen_of_setoid s ▸ eqv_gen_mono H⟩
   le_l_u := fun x => (eqv_gen_of_setoid x).symm ▸ le_reflₓ x
@@ -233,7 +233,7 @@ open Function
 
 /-- A function from α to β is injective iff its kernel is the bottom element of the complete lattice
     of equivalence relations on α. -/
-theorem injective_iff_ker_bot (f : α → β) : injective f ↔ ker f = ⊥ :=
+theorem injective_iff_ker_bot (f : α → β) : Injective f ↔ ker f = ⊥ :=
   (@eq_bot_iff (Setoidₓ α) _ _ (ker f)).symm
 
 /-- The elements related to x ∈ α by the kernel of f are those in the preimage of f(x) under f. -/
@@ -259,13 +259,13 @@ theorem lift_unique {r : Setoidₓ α} {f : α → β} (H : r ≤ ker f) (g : Qu
 
 /-- Given a map f from α to β, the natural map from the quotient of α by the kernel of f is
     injective. -/
-theorem ker_lift_injective (f : α → β) : injective (@Quotientₓ.lift _ _ (ker f) f fun _ _ h => h) := fun x y =>
+theorem ker_lift_injective (f : α → β) : Injective (@Quotientₓ.lift _ _ (ker f) f fun _ _ h => h) := fun x y =>
   (Quotientₓ.induction_on₂' x y) fun a b h => Quotientₓ.sound' h
 
 /-- Given a map f from α to β, the kernel of f is the unique equivalence relation on α whose
     induced map from the quotient of α to β is injective. -/
-theorem ker_eq_lift_of_injective {r : Setoidₓ α} (f : α → β) (H : ∀ x y, r.rel x y → f x = f y)
-    (h : injective (Quotientₓ.lift f H)) : ker f = r :=
+theorem ker_eq_lift_of_injective {r : Setoidₓ α} (f : α → β) (H : ∀ x y, r.Rel x y → f x = f y)
+    (h : Injective (Quotientₓ.lift f H)) : ker f = r :=
   le_antisymmₓ (fun x y hk => Quotientₓ.exact <| h <| show Quotientₓ.lift f H (⟦x⟧) = Quotientₓ.lift f H (⟦y⟧) from hk)
     H
 
@@ -296,8 +296,8 @@ def quotient_ker_equiv_of_right_inverse (g : β → α) (hf : Function.RightInve
 
 If a specific right-inverse of `f` is known, `setoid.quotient_ker_equiv_of_right_inverse` can be
 definitionally more useful. -/
-noncomputable def quotient_ker_equiv_of_surjective (hf : surjective f) : Quotientₓ (ker f) ≃ β :=
-  quotient_ker_equiv_of_right_inverse _ (Function.surjInv hf) (right_inverse_surj_inv hf)
+noncomputable def quotient_ker_equiv_of_surjective (hf : Surjective f) : Quotientₓ (ker f) ≃ β :=
+  quotientKerEquivOfRightInverse _ (Function.surjInv hf) (right_inverse_surj_inv hf)
 
 variable {r f}
 
@@ -305,13 +305,13 @@ variable {r f}
     closure of the relation on `f`'s image defined by '`x ≈ y` iff the elements of `f⁻¹(x)` are
     related to the elements of `f⁻¹(y)` by `r`.' -/
 def map (r : Setoidₓ α) (f : α → β) : Setoidₓ β :=
-  EqvGen.setoid fun x y => ∃ a b, f a = x ∧ f b = y ∧ r.rel a b
+  EqvGen.setoid fun x y => ∃ a b, f a = x ∧ f b = y ∧ r.Rel a b
 
 /-- Given a surjective function f whose kernel is contained in an equivalence relation r, the
     equivalence relation on f's codomain defined by x ≈ y ↔ the elements of f⁻¹(x) are related to
     the elements of f⁻¹(y) by r. -/
-def map_of_surjective r (f : α → β) (h : ker f ≤ r) (hf : surjective f) : Setoidₓ β :=
-  ⟨fun x y => ∃ a b, f a = x ∧ f b = y ∧ r.rel a b,
+def map_of_surjective r (f : α → β) (h : ker f ≤ r) (hf : Surjective f) : Setoidₓ β :=
+  ⟨fun x y => ∃ a b, f a = x ∧ f b = y ∧ r.Rel a b,
     ⟨fun x =>
       let ⟨y, hy⟩ := hf x
       ⟨y, y, hy, hy, r.refl' y⟩,
@@ -324,7 +324,7 @@ def map_of_surjective r (f : α → β) (h : ker f ≤ r) (hf : surjective f) : 
             h₂⟩⟩⟩
 
 /-- A special case of the equivalence closure of an equivalence relation r equalling r. -/
-theorem map_of_surjective_eq_map (h : ker f ≤ r) (hf : surjective f) : map r f = map_of_surjective r f h hf := by
+theorem map_of_surjective_eq_map (h : ker f ≤ r) (hf : Surjective f) : map r f = mapOfSurjective r f h hf := by
   rw [← eqv_gen_of_setoid (map_of_surjective r f h hf)] <;> rfl
 
 /-- Given a function `f : α → β`, an equivalence relation `r` on `β` induces an equivalence
@@ -333,9 +333,9 @@ relation on `α` defined by '`x ≈ y` iff `f(x)` is related to `f(y)` by `r`'.
 See note [reducible non-instances]. -/
 @[reducible]
 def comap (f : α → β) (r : Setoidₓ β) : Setoidₓ α :=
-  ⟨r.rel on f, r.iseqv.comap _⟩
+  ⟨r.Rel on f, r.iseqv.comap _⟩
 
-theorem comap_rel (f : α → β) (r : Setoidₓ β) (x y : α) : (comap f r).Rel x y ↔ r.rel (f x) (f y) :=
+theorem comap_rel (f : α → β) (r : Setoidₓ β) (x y : α) : (comap f r).Rel x y ↔ r.Rel (f x) (f y) :=
   Iff.rfl
 
 /-- Given a map `f : N → M` and an equivalence relation `r` on `β`, the equivalence relation
@@ -375,7 +375,7 @@ open Quotientₓ
 /-- Given an equivalence relation `r` on `α`, the order-preserving bijection between the set of
 equivalence relations containing `r` and the equivalence relations on the quotient of `α` by `r`. -/
 def correspondence (r : Setoidₓ α) : { s // r ≤ s } ≃o Setoidₓ (Quotientₓ r) where
-  toFun := fun s => map_of_surjective s.1 Quotientₓ.mk ((ker_mk_eq r).symm ▸ s.2) exists_rep
+  toFun := fun s => mapOfSurjective s.1 Quotientₓ.mk ((ker_mk_eq r).symm ▸ s.2) exists_rep
   invFun := fun s =>
     ⟨comap Quotientₓ.mk' s, fun x y h => by
       rw [comap_rel, eq_rel.2 h]⟩

@@ -24,9 +24,9 @@ noncomputable section
 
 namespace Mon_
 
-variable {J : Type v} [small_category J]
+variable {J : Type v} [SmallCategory J]
 
-variable {C : Type u} [category.{v} C] [has_limits C] [monoidal_category.{v} C]
+variable {C : Type u} [Category.{v} C] [HasLimits C] [MonoidalCategory.{v} C]
 
 /-- We construct the (candidate) limit of a functor `F : J ⥤ Mon_ C`
 by interpreting it as a functor `Mon_ (J ⥤ C)`,
@@ -35,12 +35,12 @@ and hence sends monoid objects to monoid objects.
 -/
 @[simps]
 def limit (F : J ⥤ Mon_ C) : Mon_ C :=
-  lim_lax.mapMon.obj (Mon_functor_category_equivalence.inverse.obj F)
+  limLax.mapMon.obj (MonFunctorCategoryEquivalence.inverse.obj F)
 
 /-- Implementation of `Mon_.has_limits`: a limiting cone over a functor `F : J ⥤ Mon_ C`.
 -/
 @[simps]
-def limit_cone (F : J ⥤ Mon_ C) : cone F where
+def limit_cone (F : J ⥤ Mon_ C) : Cone F where
   x := limit F
   π :=
     { app := fun j => { Hom := limit.π (F ⋙ Mon_.forget C) j },
@@ -51,15 +51,15 @@ def limit_cone (F : J ⥤ Mon_ C) : cone F where
 /-- The image of the proposed limit cone for `F : J ⥤ Mon_ C` under the forgetful functor
 `forget C : Mon_ C ⥤ C` is isomorphic to the limit cone of `F ⋙ forget C`.
 -/
-def forget_map_cone_limit_cone_iso (F : J ⥤ Mon_ C) : (forget C).mapCone (limit_cone F) ≅ limit.cone (F ⋙ forget C) :=
-  cones.ext (iso.refl _) fun j => by
+def forget_map_cone_limit_cone_iso (F : J ⥤ Mon_ C) : (forget C).mapCone (limitCone F) ≅ Limit.cone (F ⋙ forget C) :=
+  Cones.ext (Iso.refl _) fun j => by
     tidy
 
 /-- Implementation of `Mon_.has_limits`:
 the proposed cone over a functor `F : J ⥤ Mon_ C` is a limit cone.
 -/
 @[simps]
-def limit_cone_is_limit (F : J ⥤ Mon_ C) : is_limit (limit_cone F) where
+def limit_cone_is_limit (F : J ⥤ Mon_ C) : IsLimit (limitCone F) where
   lift := fun s =>
     { Hom := limit.lift (F ⋙ Mon_.forget C) ((Mon_.forget C).mapCone s),
       mul_hom' := by
@@ -77,11 +77,11 @@ def limit_cone_is_limit (F : J ⥤ Mon_ C) : is_limit (limit_cone F) where
     simp only [Mon_.forget_map, limit.lift_π, functor.map_cone_π_app]
     exact congr_argₓ Mon_.Hom.hom (w j)
 
-instance has_limits : has_limits (Mon_ C) where
+instance has_limits : HasLimits (Mon_ C) where
   HasLimitsOfShape := fun J 𝒥 =>
     { HasLimit := fun F => has_limit.mk { Cone := limit_cone F, IsLimit := limit_cone_is_limit F } }
 
-instance forget_preserves_limits : preserves_limits (Mon_.forget C) where
+instance forget_preserves_limits : PreservesLimits (Mon_.forget C) where
   PreservesLimitsOfShape := fun J 𝒥 =>
     { PreservesLimit := fun F : J ⥤ Mon_ C =>
         preserves_limit_of_preserves_limit_cone (limit_cone_is_limit F)

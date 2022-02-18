@@ -33,7 +33,7 @@ variable {E F : Type _} [NormedGroup E] [NormedSpace ℝ E] [CompleteSpace E] [N
 at `x₀`, both `f : E → F` and `φ` are strictly differentiable at `x₀`, and the codomain of `f` is
 a complete space, then the linear map `x ↦ (f' x, φ' x)` is not surjective. -/
 theorem IsLocalExtrOn.range_ne_top_of_has_strict_fderiv_at (hextr : IsLocalExtrOn φ { x | f x = f x₀ } x₀)
-    (hf' : HasStrictFderivAt f f' x₀) (hφ' : HasStrictFderivAt φ φ' x₀) : (f'.prod φ').range ≠ ⊤ := by
+    (hf' : HasStrictFderivAt f f' x₀) (hφ' : HasStrictFderivAt φ φ' x₀) : (f'.Prod φ').range ≠ ⊤ := by
   intro htop
   set fφ := fun x => (f x, φ x)
   have A : map φ (𝓝[f ⁻¹' {f x₀}] x₀) = 𝓝 (φ x₀) := by

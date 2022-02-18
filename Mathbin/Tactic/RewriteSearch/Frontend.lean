@@ -59,18 +59,17 @@ Takes an optional list of rewrite rules specified in the same way as the `rw` ta
 unsafe def rewrite_search (explain : parse <| optionalₓ (tk "?"))
     (rs : parse <| optionalₓ (list_of (rw_rule_p <| lean.parser.pexpr 0))) (cfg : config := {  }) : tactic Unit := do
   let t ← tactic.target
-  if t.has_meta_var then tactic.fail "rewrite_search is not suitable for goals containing metavariables"
-    else tactic.skip
+  if t then tactic.fail "rewrite_search is not suitable for goals containing metavariables" else tactic.skip
   let implicit_rules ← collect_rules
   let explicit_rules ←
-    (rs.get_or_else []).mmap fun ⟨_, dir, pe⟩ => do
+    (rs.getOrElse []).mmap fun ⟨_, dir, pe⟩ => do
         let e ← to_expr' pe
         return (e, dir)
   let rules := implicit_rules ++ explicit_rules
   let g ← mk_graph cfg rules t
   let (_, proof, steps) ← g.find_proof
   tactic.exact proof
-  if explain.is_some then explain_search_result cfg rules proof steps else skip
+  if explain then explain_search_result cfg rules proof steps else skip
 
 add_tactic_doc
   { Name := "rewrite_search", category := DocCategory.tactic, declNames := [`tactic.interactive.rewrite_search],

@@ -46,7 +46,7 @@ free commutative ring, free ring
 
 noncomputable section
 
-open_locale Classical
+open_locale Classical Polynomial
 
 universe u v
 
@@ -83,7 +83,7 @@ variable {R : Type v} [CommRingₓ R] (f : α → R)
 currently exist. -/
 private def lift_to_multiset : (α → R) ≃ (Multiplicative (Multiset α) →* R) where
   toFun := fun f =>
-    { toFun := fun s => (s.to_add.map f).Prod,
+    { toFun := fun s => (s.toAdd.map f).Prod,
       map_mul' := fun x y =>
         calc
           _ = Multiset.prod (Multiset.map f x + Multiset.map f y) := by
@@ -99,8 +99,8 @@ private def lift_to_multiset : (α → R) ≃ (Multiplicative (Multiset α) →*
         simp
   right_inv := fun F =>
     MonoidHom.ext fun x =>
-      let F' := F.to_additive''
-      let x' := x.to_add
+      let F' := F.toAdditive''
+      let x' := x.toAdd
       show (Multiset.map (fun a => F' {a}) x').Sum = F' x' by
         rw [← Multiset.map_map, ← AddMonoidHom.map_multiset_sum]
         exact F.congr_arg (Multiset.sum_map_singleton x')
@@ -108,7 +108,7 @@ private def lift_to_multiset : (α → R) ≃ (Multiplicative (Multiset α) →*
 /-- Lift a map `α → R` to a additive group homomorphism `free_comm_ring α → R`.
 For a version producing a bundled homomorphism, see `lift_hom`. -/
 def lift : (α → R) ≃ (FreeCommRing α →+* R) :=
-  Equivₓ.trans lift_to_multiset FreeAbelianGroup.liftMonoid
+  Equivₓ.trans liftToMultiset FreeAbelianGroup.liftMonoid
 
 @[simp]
 theorem lift_of (x : α) : lift f (of x) = f x :=
@@ -150,28 +150,28 @@ section IsSupported
 
 variable {x y : FreeCommRing α} {s t : Set α}
 
-theorem is_supported_upwards (hs : is_supported x s) (hst : s ⊆ t) : is_supported x t :=
+theorem is_supported_upwards (hs : IsSupported x s) (hst : s ⊆ t) : IsSupported x t :=
   Subring.closure_mono (Set.monotone_image hst) hs
 
-theorem is_supported_add (hxs : is_supported x s) (hys : is_supported y s) : is_supported (x + y) s :=
+theorem is_supported_add (hxs : IsSupported x s) (hys : IsSupported y s) : IsSupported (x + y) s :=
   Subring.add_mem _ hxs hys
 
-theorem is_supported_neg (hxs : is_supported x s) : is_supported (-x) s :=
+theorem is_supported_neg (hxs : IsSupported x s) : IsSupported (-x) s :=
   Subring.neg_mem _ hxs
 
-theorem is_supported_sub (hxs : is_supported x s) (hys : is_supported y s) : is_supported (x - y) s :=
+theorem is_supported_sub (hxs : IsSupported x s) (hys : IsSupported y s) : IsSupported (x - y) s :=
   Subring.sub_mem _ hxs hys
 
-theorem is_supported_mul (hxs : is_supported x s) (hys : is_supported y s) : is_supported (x * y) s :=
+theorem is_supported_mul (hxs : IsSupported x s) (hys : IsSupported y s) : IsSupported (x * y) s :=
   Subring.mul_mem _ hxs hys
 
-theorem is_supported_zero : is_supported 0 s :=
+theorem is_supported_zero : IsSupported 0 s :=
   Subring.zero_mem _
 
-theorem is_supported_one : is_supported 1 s :=
+theorem is_supported_one : IsSupported 1 s :=
   Subring.one_mem _
 
-theorem is_supported_int {i : ℤ} {s : Set α} : is_supported (↑i) s :=
+theorem is_supported_int {i : ℤ} {s : Set α} : IsSupported (↑i) s :=
   Int.induction_on i is_supported_zero
     (fun i hi => by
       rw [Int.cast_add, Int.cast_one] <;> exact is_supported_add hi is_supported_one)
@@ -195,11 +195,11 @@ theorem restriction_of p : restriction s (of p) = if H : p ∈ s then of ⟨p, H
 
 end Restriction
 
-theorem is_supported_of {p} {s : Set α} : is_supported (of p) s ↔ p ∈ s :=
-  suffices is_supported (of p) s → p ∈ s from ⟨this, fun hps => Subring.subset_closure ⟨p, hps, rfl⟩⟩
-  fun hps : is_supported (of p) s => by
+theorem is_supported_of {p} {s : Set α} : IsSupported (of p) s ↔ p ∈ s :=
+  suffices IsSupported (of p) s → p ∈ s from ⟨this, fun hps => Subring.subset_closure ⟨p, hps, rfl⟩⟩
+  fun hps : IsSupported (of p) s => by
   have := Classical.decPred s
-  have : ∀ x, is_supported x s → ∃ n : ℤ, lift (fun a => if a ∈ s then (0 : Polynomial ℤ) else Polynomial.x) x = n := by
+  have : ∀ x, is_supported x s → ∃ n : ℤ, lift (fun a => if a ∈ s then (0 : ℤ[X]) else Polynomial.x) x = n := by
     intro x hx
     refine' Subring.InClosure.rec_on hx _ _ _ _
     · use 1
@@ -233,7 +233,7 @@ theorem is_supported_of {p} {s : Set α} : is_supported (of p) s ↔ p ∈ s :=
     rw [H]
   rwa [Polynomial.coeff_C, if_neg (one_ne_zero : 1 ≠ 0), Polynomial.coeff_X, if_pos rfl] at this
 
-theorem map_subtype_val_restriction {x} (s : Set α) [DecidablePred (· ∈ s)] (hxs : is_supported x s) :
+theorem map_subtype_val_restriction {x} (s : Set α) [DecidablePred (· ∈ s)] (hxs : IsSupported x s) :
     map (Subtype.val : s → α) (restriction s x) = x := by
   refine' Subring.InClosure.rec_on hxs _ _ _ _
   · rw [RingHom.map_one]
@@ -249,7 +249,7 @@ theorem map_subtype_val_restriction {x} (s : Set α) [DecidablePred (· ∈ s)] 
     rw [RingHom.map_add, RingHom.map_add, ihx, ihy]
     
 
-theorem exists_finite_support (x : FreeCommRing α) : ∃ s : Set α, Set.Finite s ∧ is_supported x s :=
+theorem exists_finite_support (x : FreeCommRing α) : ∃ s : Set α, Set.Finite s ∧ IsSupported x s :=
   FreeCommRing.induction_on x ⟨∅, Set.finite_empty, is_supported_neg is_supported_one⟩
     (fun p => ⟨{p}, Set.finite_singleton p, is_supported_of.2 <| Set.mem_singleton _⟩)
     (fun x y ⟨s, hfs, hxs⟩ ⟨t, hft, hxt⟩ =>
@@ -261,9 +261,9 @@ theorem exists_finite_support (x : FreeCommRing α) : ∃ s : Set α, Set.Finite
       is_supported_mul (is_supported_upwards hxs <| Set.subset_union_left s t)
         (is_supported_upwards hxt <| Set.subset_union_right s t)⟩
 
-theorem exists_finset_support (x : FreeCommRing α) : ∃ s : Finset α, is_supported x ↑s :=
+theorem exists_finset_support (x : FreeCommRing α) : ∃ s : Finset α, IsSupported x ↑s :=
   let ⟨s, hfs, hxs⟩ := exists_finite_support x
-  ⟨hfs.to_finset, by
+  ⟨hfs.toFinset, by
     rwa [Set.Finite.coe_to_finset]⟩
 
 end FreeCommRing
@@ -280,7 +280,7 @@ def to_free_comm_ring {α} : FreeRing α →+* FreeCommRing α :=
   FreeRing.lift FreeCommRing.of
 
 instance : Coe (FreeRing α) (FreeCommRing α) :=
-  ⟨to_free_comm_ring⟩
+  ⟨toFreeCommRing⟩
 
 /-- The natural map `free_ring α → free_comm_ring α`, as a `ring_hom`. -/
 def coe_ring_hom : FreeRing α →+* FreeCommRing α :=
@@ -318,7 +318,7 @@ protected theorem coe_mul (x y : FreeRing α) : ↑(x * y) = (x : FreeCommRing �
 
 variable (α)
 
-protected theorem coe_surjective : surjective (coe : FreeRing α → FreeCommRing α) := fun x => by
+protected theorem coe_surjective : Surjective (coe : FreeRing α → FreeCommRing α) := fun x => by
   apply FreeCommRing.induction_on x
   · use -1
     rfl
@@ -357,7 +357,7 @@ def subsingleton_equiv_free_comm_ring [Subsingleton α] : FreeRing α ≃+* Free
   @of' (FreeRing α) (FreeCommRing α) _ _ (Functor.mapEquiv FreeAbelianGroup (Multiset.subsingletonEquiv α)) <| by
     delta' Functor.mapEquiv
     rw [congr_argₓ IsRingHom _]
-    work_on_goal 2
+    on_goal 2 =>
       symm
       exact coe_eq α
     exact (coe_ring_hom _).to_is_ring_hom
@@ -394,9 +394,9 @@ open FreeRing
 
 /-- The free ring on the empty type is isomorphic to `ℤ`. -/
 def freeRingPemptyEquivInt : FreeRing Pempty.{u + 1} ≃+* ℤ :=
-  RingEquiv.trans (subsingleton_equiv_free_comm_ring _) freeCommRingPemptyEquivInt
+  RingEquiv.trans (subsingletonEquivFreeCommRing _) freeCommRingPemptyEquivInt
 
 /-- The free ring on a type with one term is isomorphic to `ℤ[X]`. -/
 def freeRingPunitEquivPolynomialInt : FreeRing PUnit.{u + 1} ≃+* Polynomial ℤ :=
-  RingEquiv.trans (subsingleton_equiv_free_comm_ring _) freeCommRingPunitEquivPolynomialInt
+  RingEquiv.trans (subsingletonEquivFreeCommRing _) freeCommRingPunitEquivPolynomialInt
 

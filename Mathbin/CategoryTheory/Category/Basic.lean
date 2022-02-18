@@ -19,7 +19,8 @@ local notation f ` ⊚ `:80 g:80 := category.comp g f    -- type as \oo
 -/
 
 
-/-- The typeclass `category C` describes morphisms associated to objects of type `C : Type u`.
+library_note "category_theory universes"/--
+The typeclass `category C` describes morphisms associated to objects of type `C : Type u`.
 
 The universe levels of the objects and morphisms are independent, and will often need to be
 specified explicitly, as `category.{v} C`.
@@ -61,7 +62,7 @@ Often, however, it's not even necessary to include the `.{v}`.
 (Although it was in earlier versions of Lean.)
 If it is omitted a "free" universe will be used.
 -/
-library_note "category_theory universes"
+
 
 universe v u
 
@@ -73,9 +74,9 @@ class category_struct (obj : Type u) extends Quiver.{v + 1} obj : Type max u (v 
   id : ∀ X : obj, hom X X
   comp : ∀ {X Y Z : obj}, (X ⟶ Y) → (Y ⟶ Z) → (X ⟶ Z)
 
-notation "𝟙" => category_struct.id
+notation "𝟙" => CategoryStruct.id
 
-infixr:80 " ≫ " => category_struct.comp
+infixr:80 " ≫ " => CategoryStruct.comp
 
 /-- The typeclass `category C` describes morphisms associated to objects of type `C`.
 The universe levels of the objects and morphisms are unconstrained, and will often need to be
@@ -83,7 +84,7 @@ specified explicitly, as `category.{v} C`. (See also `large_category` and `small
 
 See https://stacks.math.columbia.edu/tag/0014.
 -/
-class category (obj : Type u) extends category_struct.{v} obj : Type max u (v + 1) where
+class category (obj : Type u) extends CategoryStruct.{v} obj : Type max u (v + 1) where
   id_comp' : ∀ {X Y : obj} f : hom X Y, 𝟙 X ≫ f = f := by
     run_tac
       obviously
@@ -109,16 +110,16 @@ the morphisms. It is useful for examples such as the category of types, or the c
 of groups, etc.
 -/
 abbrev large_category (C : Type (u + 1)) : Type (u + 1) :=
-  category.{u} C
+  Category.{u} C
 
 /-- A `small_category` has objects and morphisms in the same universe level.
 -/
 abbrev small_category (C : Type u) : Type (u + 1) :=
-  category.{u} C
+  Category.{u} C
 
 section
 
-variable {C : Type u} [category.{v} C] {X Y Z : C}
+variable {C : Type u} [Category.{v} C] {X Y Z : C}
 
 initialize_simps_projections category (to_category_struct_to_quiver_hom → Hom, to_category_struct_comp → comp,
   to_category_struct_id → id, -toCategoryStruct)
@@ -185,47 +186,47 @@ See https://stacks.math.columbia.edu/tag/003B.
 class mono (f : X ⟶ Y) : Prop where
   right_cancellation : ∀ {Z : C} g h : Z ⟶ X w : g ≫ f = h ≫ f, g = h
 
-instance (X : C) : epi (𝟙 X) :=
+instance (X : C) : Epi (𝟙 X) :=
   ⟨fun Z g h w => by
     simpa using w⟩
 
-instance (X : C) : mono (𝟙 X) :=
+instance (X : C) : Mono (𝟙 X) :=
   ⟨fun Z g h w => by
     simpa using w⟩
 
-theorem cancel_epi (f : X ⟶ Y) [epi f] {g h : Y ⟶ Z} : f ≫ g = f ≫ h ↔ g = h :=
-  ⟨fun p => epi.left_cancellation g h p, by
+theorem cancel_epi (f : X ⟶ Y) [Epi f] {g h : Y ⟶ Z} : f ≫ g = f ≫ h ↔ g = h :=
+  ⟨fun p => Epi.left_cancellation g h p, by
     intro a
     subst a⟩
 
-theorem cancel_mono (f : X ⟶ Y) [mono f] {g h : Z ⟶ X} : g ≫ f = h ≫ f ↔ g = h :=
-  ⟨fun p => mono.right_cancellation g h p, by
+theorem cancel_mono (f : X ⟶ Y) [Mono f] {g h : Z ⟶ X} : g ≫ f = h ≫ f ↔ g = h :=
+  ⟨fun p => Mono.right_cancellation g h p, by
     intro a
     subst a⟩
 
-theorem cancel_epi_id (f : X ⟶ Y) [epi f] {h : Y ⟶ Y} : f ≫ h = f ↔ h = 𝟙 Y := by
+theorem cancel_epi_id (f : X ⟶ Y) [Epi f] {h : Y ⟶ Y} : f ≫ h = f ↔ h = 𝟙 Y := by
   convert cancel_epi f
   simp
 
-theorem cancel_mono_id (f : X ⟶ Y) [mono f] {g : X ⟶ X} : g ≫ f = f ↔ g = 𝟙 X := by
+theorem cancel_mono_id (f : X ⟶ Y) [Mono f] {g : X ⟶ X} : g ≫ f = f ↔ g = 𝟙 X := by
   convert cancel_mono f
   simp
 
-theorem epi_comp {X Y Z : C} (f : X ⟶ Y) [epi f] (g : Y ⟶ Z) [epi g] : epi (f ≫ g) := by
+theorem epi_comp {X Y Z : C} (f : X ⟶ Y) [Epi f] (g : Y ⟶ Z) [Epi g] : Epi (f ≫ g) := by
   constructor
   intro Z a b w
   apply (cancel_epi g).1
   apply (cancel_epi f).1
   simpa using w
 
-theorem mono_comp {X Y Z : C} (f : X ⟶ Y) [mono f] (g : Y ⟶ Z) [mono g] : mono (f ≫ g) := by
+theorem mono_comp {X Y Z : C} (f : X ⟶ Y) [Mono f] (g : Y ⟶ Z) [Mono g] : Mono (f ≫ g) := by
   constructor
   intro Z a b w
   apply (cancel_mono f).1
   apply (cancel_mono g).1
   simpa using w
 
-theorem mono_of_mono {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z) [mono (f ≫ g)] : mono f := by
+theorem mono_of_mono {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z) [Mono (f ≫ g)] : Mono f := by
   constructor
   intro Z a b w
   replace w := congr_argₓ (fun k => k ≫ g) w
@@ -233,11 +234,11 @@ theorem mono_of_mono {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z) [mono (f ≫ g)] : 
   rw [category.assoc, category.assoc] at w
   exact (cancel_mono _).1 w
 
-theorem mono_of_mono_fac {X Y Z : C} {f : X ⟶ Y} {g : Y ⟶ Z} {h : X ⟶ Z} [mono h] (w : f ≫ g = h) : mono f := by
+theorem mono_of_mono_fac {X Y Z : C} {f : X ⟶ Y} {g : Y ⟶ Z} {h : X ⟶ Z} [Mono h] (w : f ≫ g = h) : Mono f := by
   subst h
   exact mono_of_mono f g
 
-theorem epi_of_epi {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z) [epi (f ≫ g)] : epi g := by
+theorem epi_of_epi {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z) [Epi (f ≫ g)] : Epi g := by
   constructor
   intro Z a b w
   replace w := congr_argₓ (fun k => f ≫ k) w
@@ -245,7 +246,7 @@ theorem epi_of_epi {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z) [epi (f ≫ g)] : epi
   rw [← category.assoc, ← category.assoc] at w
   exact (cancel_epi _).1 w
 
-theorem epi_of_epi_fac {X Y Z : C} {f : X ⟶ Y} {g : Y ⟶ Z} {h : X ⟶ Z} [epi h] (w : f ≫ g = h) : epi g := by
+theorem epi_of_epi_fac {X Y Z : C} {f : X ⟶ Y} {g : Y ⟶ Z} {h : X ⟶ Z} [Epi h] (w : f ≫ g = h) : Epi g := by
   subst h <;> exact epi_of_epi f g
 
 end
@@ -254,23 +255,23 @@ section
 
 variable (C : Type u)
 
-variable [category.{v} C]
+variable [Category.{v} C]
 
 universe u'
 
-instance ulift_category : category.{v} (Ulift.{u'} C) where
+instance ulift_category : Category.{v} (Ulift.{u'} C) where
   Hom := fun X Y => X.down ⟶ Y.down
   id := fun X => 𝟙 X.down
   comp := fun _ _ _ f g => f ≫ g
 
-example (D : Type u) [small_category D] : large_category (Ulift.{u + 1} D) := by
+example (D : Type u) [SmallCategory D] : LargeCategory (Ulift.{u + 1} D) := by
   infer_instance
 
 end
 
 end CategoryTheory
 
-/-- Many proofs in the category theory library use the `dsimp, simp` pattern,
+library_note "dsimp, simp"/-- Many proofs in the category theory library use the `dsimp, simp` pattern,
 which typically isn't necessary elsewhere.
 
 One would usually hope that the same effect could be achieved simply with `simp`.
@@ -298,5 +299,5 @@ if the `simp` introduced new objects we again need to `dsimp`.
 In practice this does occur, but only rarely, because `simp` tends to shorten chains of compositions
 (i.e. not introduce new objects at all).
 -/
-library_note "dsimp, simp"
+
 

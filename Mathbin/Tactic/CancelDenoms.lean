@@ -113,15 +113,15 @@ unsafe def find_cancel_factor : expr → ℕ × Tree ℕ
     match e2.to_nonneg_rat with
     | some q =>
       let (v1, t1) := find_cancel_factor e1
-      let n := v1.lcm q.num.nat_abs
-      (n, node n t1 (node q.num.nat_abs Tree.nil Tree.nil))
+      let n := v1.lcm q.num.natAbs
+      (n, node n t1 (node q.num.natAbs Tree.nil Tree.nil))
     | none => (1, node 1 Tree.nil Tree.nil)
   | quote.1 (-%%ₓe) => find_cancel_factor e
   | _ => (1, node 1 Tree.nil Tree.nil)
 
--- ././Mathport/Syntax/Translate/Basic.lean:794:4: warning: unsupported (TODO): `[tacs]
--- ././Mathport/Syntax/Translate/Basic.lean:794:4: warning: unsupported (TODO): `[tacs]
--- ././Mathport/Syntax/Translate/Basic.lean:794:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
 /-- `mk_prod_prf n tr e` produces a proof of `n*e = e'`, where numeric denominators have been
 canceled in `e'`, distributing `n` proportionally according to `tr`.
 -/
@@ -138,19 +138,19 @@ unsafe def mk_prod_prf : ℕ → Tree ℕ → expr → tactic expr
     let tp ← infer_type e1
     let v1 ← mk_prod_prf ln lhs e1
     let v2 ← mk_prod_prf (v / ln) rhs e2
-    let ln' ← tp.of_nat ln
-    let vln' ← tp.of_nat (v / ln)
-    let v' ← tp.of_nat v
+    let ln' ← tp.ofNat ln
+    let vln' ← tp.ofNat (v / ln)
+    let v' ← tp.ofNat v
     let ntp ← to_expr (pquote.1 (((%%ₓln') * %%ₓvln') = %%ₓv'))
     let (_, npf) ← solve_aux ntp sorry
     mk_app `` mul_subst [v1, v2, npf]
   | v, node n lhs rhs@(node rn _ _), quote.1 ((%%ₓe1) / %%ₓe2) => do
     let tp ← infer_type e1
     let v1 ← mk_prod_prf (v / rn) lhs e1
-    let rn' ← tp.of_nat rn
-    let vrn' ← tp.of_nat (v / rn)
-    let n' ← tp.of_nat n
-    let v' ← tp.of_nat v
+    let rn' ← tp.ofNat rn
+    let vrn' ← tp.ofNat (v / rn)
+    let n' ← tp.ofNat n
+    let v' ← tp.ofNat v
     let ntp ← to_expr (pquote.1 (((%%ₓrn') / %%ₓe2) = 1))
     let (_, npf) ← solve_aux ntp sorry
     let ntp2 ← to_expr (pquote.1 (((%%ₓvrn') * %%ₓn') = %%ₓv'))
@@ -161,7 +161,7 @@ unsafe def mk_prod_prf : ℕ → Tree ℕ → expr → tactic expr
     mk_app `` neg_subst [v']
   | v, _, e => do
     let tp ← infer_type e
-    let v' ← tp.of_nat v
+    let v' ← tp.ofNat v
     let e' ← to_expr (pquote.1 ((%%ₓv') * %%ₓe))
     mk_app `eq.refl [e']
 
@@ -173,14 +173,14 @@ unsafe def derive (e : expr) : tactic (ℕ × expr) :=
   Prod.mk n <$> mk_prod_prf n t e <|>
     throwError "cancel_factors.derive failed to normalize {← e}. Are you sure this is well-behaved division?"
 
--- ././Mathport/Syntax/Translate/Basic.lean:794:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
 /-- Given `e`, a term with rational divison, produces a natural number `n` and a proof of `e = e' / n`,
 where `e'` has no divison. Assumes "well-behaved" division.
 -/
 unsafe def derive_div (e : expr) : tactic (ℕ × expr) := do
   let (n, p) ← derive e
   let tp ← infer_type e
-  let n' ← tp.of_nat n
+  let n' ← tp.ofNat n
   let tgt ← to_expr (pquote.1 ((%%ₓn') ≠ 0))
   let (_, pn) ← solve_aux tgt sorry
   Prod.mk n <$> mk_mapp `` cancel_factors_eq_div [none, none, n', none, none, p, pn]
@@ -196,9 +196,9 @@ unsafe def find_comp_lemma : expr → Option (expr × expr × Name)
   | quote.1 ((%%ₓa) > %%ₓb) => (b, a, `` cancel_factors_lt)
   | _ => none
 
--- ././Mathport/Syntax/Translate/Basic.lean:794:4: warning: unsupported (TODO): `[tacs]
--- ././Mathport/Syntax/Translate/Basic.lean:794:4: warning: unsupported (TODO): `[tacs]
--- ././Mathport/Syntax/Translate/Basic.lean:794:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
 /-- `cancel_denominators_in_type h` assumes that `h` is of the form `lhs R rhs`,
 where `R ∈ {<, ≤, =, ≥, >}`.
 It produces an expression `h'` of the form `lhs' R rhs'` and a proof that `h = h'`.
@@ -210,9 +210,9 @@ unsafe def cancel_denominators_in_type (h : expr) : tactic (expr × expr) := do
   let (ar, rhs_p) ← derive rhs
   let gcd := al.gcd ar
   let tp ← infer_type lhs
-  let al ← tp.of_nat al
-  let ar ← tp.of_nat ar
-  let gcd ← tp.of_nat gcd
+  let al ← tp.ofNat al
+  let ar ← tp.ofNat ar
+  let gcd ← tp.ofNat gcd
   let al_pos ← to_expr (pquote.1 (0 < %%ₓal))
   let ar_pos ← to_expr (pquote.1 (0 < %%ₓar))
   let gcd_pos ← to_expr (pquote.1 (0 < %%ₓgcd))
@@ -253,8 +253,7 @@ end
 -/
 unsafe def tactic.interactive.cancel_denoms (l : parse location) : tactic Unit := do
   let locs ← l.get_locals
-  tactic.replace_at cancel_denominators_in_type locs l.include_goal >>= guardb <|>
-      fail "failed to cancel any denominators"
+  tactic.replace_at cancel_denominators_in_type locs l >>= guardb <|> fail "failed to cancel any denominators"
   tactic.interactive.norm_num [simp_arg_type.symm_expr (pquote.1 mul_assoc)] l
 
 add_tactic_doc

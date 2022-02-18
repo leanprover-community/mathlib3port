@@ -15,25 +15,25 @@ namespace CategoryTheory
 
 universe v u
 
-variable {C : Type u} [category.{v} C]
+variable {C : Type u} [Category.{v} C]
 
 /-- The objects for the Kleisli category of the functor (usually monad) `T : C ⥤ C`, which are the same
 thing as objects of the base category `C`.
 -/
 @[nolint unused_arguments]
-def kleisli (T : Monadₓ C) :=
+def kleisli (T : Monad C) :=
   C
 
 namespace Kleisli
 
-variable (T : Monadₓ C)
+variable (T : Monad C)
 
-instance [Inhabited C] (T : Monadₓ C) : Inhabited (kleisli T) :=
+instance [Inhabited C] (T : Monad C) : Inhabited (Kleisli T) :=
   ⟨(default : C)⟩
 
 /-- The Kleisli category on a monad `T`.
     cf Definition 5.2.9 in [Riehl][riehl2017]. -/
-instance kleisli.category : category (kleisli T) where
+instance kleisli.category : Category (Kleisli T) where
   Hom := fun X Y : C => X ⟶ (T : C ⥤ C).obj Y
   id := fun X => T.η.app X
   comp := fun X Y Z f g => f ≫ (T : C ⥤ C).map g ≫ T.μ.app Z
@@ -48,8 +48,8 @@ namespace Adjunction
 
 /-- The left adjoint of the adjunction which induces the monad `(T, η_ T, μ_ T)`. -/
 @[simps]
-def to_kleisli : C ⥤ kleisli T where
-  obj := fun X => (X : kleisli T)
+def to_kleisli : C ⥤ Kleisli T where
+  obj := fun X => (X : Kleisli T)
   map := fun X Y f => (f ≫ T.η.app Y : _)
   map_comp' := fun X Y Z f g => by
     unfold_projs
@@ -57,7 +57,7 @@ def to_kleisli : C ⥤ kleisli T where
 
 /-- The right adjoint of the adjunction which induces the monad `(T, η_ T, μ_ T)`. -/
 @[simps]
-def from_kleisli : kleisli T ⥤ C where
+def from_kleisli : Kleisli T ⥤ C where
   obj := fun X => T.obj X
   map := fun X Y f => T.map f ≫ T.μ.app Y
   map_id' := fun X => T.right_unit _
@@ -69,8 +69,8 @@ def from_kleisli : kleisli T ⥤ C where
 
 /-- The Kleisli adjunction which gives rise to the monad `(T, η_ T, μ_ T)`.
     cf Lemma 5.2.11 of [Riehl][riehl2017]. -/
-def adj : to_kleisli T ⊣ from_kleisli T :=
-  adjunction.mk_of_hom_equiv
+def adj : toKleisli T ⊣ fromKleisli T :=
+  Adjunction.mkOfHomEquiv
     { homEquiv := fun X Y => Equivₓ.refl (X ⟶ T.obj Y),
       hom_equiv_naturality_left_symm' := fun X Y Z f g => by
         unfold_projs
@@ -80,8 +80,8 @@ def adj : to_kleisli T ⊣ from_kleisli T :=
         simp [monad.left_unit] }
 
 /-- The composition of the adjunction gives the original functor. -/
-def to_kleisli_comp_from_kleisli_iso_self : to_kleisli T ⋙ from_kleisli T ≅ T :=
-  nat_iso.of_components (fun X => iso.refl _) fun X Y f => by
+def to_kleisli_comp_from_kleisli_iso_self : toKleisli T ⋙ fromKleisli T ≅ T :=
+  NatIso.ofComponents (fun X => Iso.refl _) fun X Y f => by
     dsimp
     simp
 

@@ -47,8 +47,8 @@ theorem mk_nonneg (a : ℤ) {b : ℤ} (h : 0 < b) : (a /. b).Nonneg ↔ 0 ≤ a 
     
 
 protected theorem nonneg_add {a b} : Rat.Nonneg a → Rat.Nonneg b → Rat.Nonneg (a + b) :=
-  (num_denom_cases_on' a) fun n₁ d₁ h₁ =>
-    (num_denom_cases_on' b) fun n₂ d₂ h₂ => by
+  (numDenomCasesOn' a) fun n₁ d₁ h₁ =>
+    (numDenomCasesOn' b) fun n₂ d₂ h₂ => by
       have d₁0 : 0 < (d₁ : ℤ) := Int.coe_nat_pos.2 (Nat.pos_of_ne_zeroₓ h₁)
       have d₂0 : 0 < (d₂ : ℤ) := Int.coe_nat_pos.2 (Nat.pos_of_ne_zeroₓ h₂)
       simp [d₁0, d₂0, h₁, h₂, mul_pos d₁0 d₂0]
@@ -61,14 +61,14 @@ protected theorem nonneg_add {a b} : Rat.Nonneg a → Rat.Nonneg b → Rat.Nonne
             
 
 protected theorem nonneg_mul {a b} : Rat.Nonneg a → Rat.Nonneg b → Rat.Nonneg (a * b) :=
-  (num_denom_cases_on' a) fun n₁ d₁ h₁ =>
-    (num_denom_cases_on' b) fun n₂ d₂ h₂ => by
+  (numDenomCasesOn' a) fun n₁ d₁ h₁ =>
+    (numDenomCasesOn' b) fun n₂ d₂ h₂ => by
       have d₁0 : 0 < (d₁ : ℤ) := Int.coe_nat_pos.2 (Nat.pos_of_ne_zeroₓ h₁)
       have d₂0 : 0 < (d₂ : ℤ) := Int.coe_nat_pos.2 (Nat.pos_of_ne_zeroₓ h₂)
       simp (config := { contextual := true })[d₁0, d₂0, h₁, h₂, mul_pos d₁0 d₂0, mul_nonneg]
 
 protected theorem nonneg_antisymm {a} : Rat.Nonneg a → Rat.Nonneg (-a) → a = 0 :=
-  (num_denom_cases_on' a) fun n d h => by
+  (numDenomCasesOn' a) fun n d h => by
     have d0 : 0 < (d : ℤ) := Int.coe_nat_pos.2 (Nat.pos_of_ne_zeroₓ h)
     simp [d0, h]
     exact fun h₁ h₂ => le_antisymmₓ h₂ h₁
@@ -241,7 +241,7 @@ theorem div_lt_div_iff_mul_lt_mul {a b c d : ℤ} (b_pos : 0 < b) (d_pos : 0 < d
 theorem lt_one_iff_num_lt_denom {q : ℚ} : q < 1 ↔ q.num < q.denom := by
   simp [Rat.lt_def]
 
-theorem abs_def (q : ℚ) : abs q = q.num.nat_abs /. q.denom := by
+theorem abs_def (q : ℚ) : abs q = q.num.natAbs /. q.denom := by
   cases' le_totalₓ q 0 with hq hq
   · rw [abs_of_nonpos hq]
     rw [← @num_denom q, ← mk_zero_one, Rat.le_def (Int.coe_nat_pos.2 q.pos) zero_lt_one, mul_oneₓ, zero_mul] at hq

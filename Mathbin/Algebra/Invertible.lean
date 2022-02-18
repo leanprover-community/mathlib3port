@@ -135,7 +135,7 @@ theorem inv_of_units [Monoidₓ α] (u : (α)ˣ) [Invertible (u : α)] : ⅟ (u 
 
 theorem IsUnit.nonempty_invertible [Monoidₓ α] {a : α} (h : IsUnit a) : Nonempty (Invertible a) :=
   let ⟨x, hx⟩ := h
-  ⟨x.invertible.copy _ hx.symm⟩
+  ⟨x.Invertible.copy _ hx.symm⟩
 
 /-- Convert `is_unit` to `invertible` using `classical.choice`.
 

@@ -211,20 +211,20 @@ protected theorem Monotone.monotone_on (hf : Monotone f) (s : Set α) : Monotone
 protected theorem Antitone.antitone_on (hf : Antitone f) (s : Set α) : AntitoneOn f s := fun a _ b _ h => hf h
 
 theorem monotone_on_univ : MonotoneOn f Set.Univ ↔ Monotone f :=
-  ⟨fun h a b => h trivialₓ trivialₓ, fun h => h.monotone_on _⟩
+  ⟨fun h a b => h trivialₓ trivialₓ, fun h => h.MonotoneOn _⟩
 
 theorem antitone_on_univ : AntitoneOn f Set.Univ ↔ Antitone f :=
-  ⟨fun h a b => h trivialₓ trivialₓ, fun h => h.antitone_on _⟩
+  ⟨fun h a b => h trivialₓ trivialₓ, fun h => h.AntitoneOn _⟩
 
 protected theorem StrictMono.strict_mono_on (hf : StrictMono f) (s : Set α) : StrictMonoOn f s := fun a _ b _ h => hf h
 
 protected theorem StrictAnti.strict_anti_on (hf : StrictAnti f) (s : Set α) : StrictAntiOn f s := fun a _ b _ h => hf h
 
 theorem strict_mono_on_univ : StrictMonoOn f Set.Univ ↔ StrictMono f :=
-  ⟨fun h a b => h trivialₓ trivialₓ, fun h => h.strict_mono_on _⟩
+  ⟨fun h a b => h trivialₓ trivialₓ, fun h => h.StrictMonoOn _⟩
 
 theorem strict_anti_on_univ : StrictAntiOn f Set.Univ ↔ StrictAnti f :=
-  ⟨fun h a b => h trivialₓ trivialₓ, fun h => h.strict_anti_on _⟩
+  ⟨fun h a b => h trivialₓ trivialₓ, fun h => h.StrictAntiOn _⟩
 
 end Preorderₓ
 
@@ -232,11 +232,11 @@ section PartialOrderₓ
 
 variable [PartialOrderₓ β] {f : α → β}
 
-theorem Monotone.strict_mono_of_injective (h₁ : Monotone f) (h₂ : injective f) : StrictMono f := fun a b h =>
-  (h₁ h.le).lt_of_ne fun H => h.ne <| h₂ H
+theorem Monotone.strict_mono_of_injective (h₁ : Monotone f) (h₂ : Injective f) : StrictMono f := fun a b h =>
+  (h₁ h.le).lt_of_ne fun H => h.Ne <| h₂ H
 
-theorem Antitone.strict_anti_of_injective (h₁ : Antitone f) (h₂ : injective f) : StrictAnti f := fun a b h =>
-  (h₁ h.le).lt_of_ne fun H => h.ne <| h₂ H.symm
+theorem Antitone.strict_anti_of_injective (h₁ : Antitone f) (h₂ : Injective f) : StrictAnti f := fun a b h =>
+  (h₁ h.le).lt_of_ne fun H => h.Ne <| h₂ H.symm
 
 end PartialOrderₓ
 
@@ -290,10 +290,10 @@ theorem monotone' [Subsingleton β] (f : α → β) : Monotone f := fun a b _ =>
 theorem antitone' [Subsingleton β] (f : α → β) : Antitone f := fun a b _ => (Subsingleton.elimₓ _ _).le
 
 protected theorem StrictMono [Subsingleton α] (f : α → β) : StrictMono f := fun a b h =>
-  (h.ne <| Subsingleton.elimₓ _ _).elim
+  (h.Ne <| Subsingleton.elimₓ _ _).elim
 
 protected theorem StrictAnti [Subsingleton α] (f : α → β) : StrictAnti f := fun a b h =>
-  (h.ne <| Subsingleton.elimₓ _ _).elim
+  (h.Ne <| Subsingleton.elimₓ _ _).elim
 
 end Subsingleton
 
@@ -311,14 +311,14 @@ theorem antitone_const [Preorderₓ α] [Preorderₓ β] {c : β} : Antitone fun
 theorem strict_mono_of_le_iff_le [Preorderₓ α] [Preorderₓ β] {f : α → β} (h : ∀ x y, x ≤ y ↔ f x ≤ f y) :
     StrictMono f := fun a b => (lt_iff_lt_of_le_iff_le' (h _ _) (h _ _)).1
 
-theorem injective_of_lt_imp_ne [LinearOrderₓ α] {f : α → β} (h : ∀ x y, x < y → f x ≠ f y) : injective f := by
+theorem injective_of_lt_imp_ne [LinearOrderₓ α] {f : α → β} (h : ∀ x y, x < y → f x ≠ f y) : Injective f := by
   intro x y hxy
   contrapose hxy
   cases' Ne.lt_or_lt hxy with hxy hxy
   exacts[h _ _ hxy, (h _ _ hxy).symm]
 
 theorem injective_of_le_imp_le [PartialOrderₓ α] [Preorderₓ β] (f : α → β) (h : ∀ {x y}, f x ≤ f y → x ≤ y) :
-    injective f := fun x y hxy => (h hxy.le).antisymm (h hxy.ge)
+    Injective f := fun x y hxy => (h hxy.le).antisymm (h hxy.Ge)
 
 section Preorderₓ
 
@@ -437,7 +437,7 @@ theorem AntitoneOn.reflect_lt (hf : AntitoneOn f s) {a b : α} (ha : a ∈ s) (h
 
 theorem StrictMonoOn.le_iff_le (hf : StrictMonoOn f s) {a b : α} (ha : a ∈ s) (hb : b ∈ s) : f a ≤ f b ↔ a ≤ b :=
   ⟨fun h => le_of_not_gtₓ fun h' => (hf hb ha h').not_le h, fun h =>
-    h.lt_or_eq_dec.elim (fun h' => (hf ha hb h').le) fun h' => h' ▸ le_reflₓ _⟩
+    h.lt_or_eq_dec.elim (fun h' => (hf ha hb h').le) fun h' => h' ▸ le_rfl⟩
 
 theorem StrictAntiOn.le_iff_le (hf : StrictAntiOn f s) {a b : α} (ha : a ∈ s) (hb : b ∈ s) : f a ≤ f b ↔ b ≤ a :=
   hf.dual_right.le_iff_le hb ha
@@ -449,39 +449,39 @@ theorem StrictAntiOn.lt_iff_lt (hf : StrictAntiOn f s) {a b : α} (ha : a ∈ s)
   hf.dual_right.lt_iff_lt hb ha
 
 theorem StrictMono.le_iff_le (hf : StrictMono f) {a b : α} : f a ≤ f b ↔ a ≤ b :=
-  (hf.strict_mono_on Set.Univ).le_iff_le trivialₓ trivialₓ
+  (hf.StrictMonoOn Set.Univ).le_iff_le trivialₓ trivialₓ
 
 theorem StrictAnti.le_iff_le (hf : StrictAnti f) {a b : α} : f a ≤ f b ↔ b ≤ a :=
-  (hf.strict_anti_on Set.Univ).le_iff_le trivialₓ trivialₓ
+  (hf.StrictAntiOn Set.Univ).le_iff_le trivialₓ trivialₓ
 
 theorem StrictMono.lt_iff_lt (hf : StrictMono f) {a b : α} : f a < f b ↔ a < b :=
-  (hf.strict_mono_on Set.Univ).lt_iff_lt trivialₓ trivialₓ
+  (hf.StrictMonoOn Set.Univ).lt_iff_lt trivialₓ trivialₓ
 
 theorem StrictAnti.lt_iff_lt (hf : StrictAnti f) {a b : α} : f a < f b ↔ b < a :=
-  (hf.strict_anti_on Set.Univ).lt_iff_lt trivialₓ trivialₓ
+  (hf.StrictAntiOn Set.Univ).lt_iff_lt trivialₓ trivialₓ
 
 protected theorem StrictMonoOn.compares (hf : StrictMonoOn f s) {a b : α} (ha : a ∈ s) (hb : b ∈ s) :
-    ∀ {o : Ordering}, o.compares (f a) (f b) ↔ o.compares a b
+    ∀ {o : Ordering}, o.Compares (f a) (f b) ↔ o.Compares a b
   | Ordering.lt => hf.lt_iff_lt ha hb
   | Ordering.eq => ⟨fun h => ((hf.le_iff_le ha hb).1 h.le).antisymm ((hf.le_iff_le hb ha).1 h.symm.le), congr_argₓ _⟩
   | Ordering.gt => hf.lt_iff_lt hb ha
 
 protected theorem StrictAntiOn.compares (hf : StrictAntiOn f s) {a b : α} (ha : a ∈ s) (hb : b ∈ s) {o : Ordering} :
-    o.compares (f a) (f b) ↔ o.compares b a :=
-  OrderDual.dual_compares.trans <| hf.dual_right.compares hb ha
+    o.Compares (f a) (f b) ↔ o.Compares b a :=
+  OrderDual.dual_compares.trans <| hf.dual_right.Compares hb ha
 
 protected theorem StrictMono.compares (hf : StrictMono f) {a b : α} {o : Ordering} :
-    o.compares (f a) (f b) ↔ o.compares a b :=
-  (hf.strict_mono_on Set.Univ).Compares trivialₓ trivialₓ
+    o.Compares (f a) (f b) ↔ o.Compares a b :=
+  (hf.StrictMonoOn Set.Univ).Compares trivialₓ trivialₓ
 
 protected theorem StrictAnti.compares (hf : StrictAnti f) {a b : α} {o : Ordering} :
-    o.compares (f a) (f b) ↔ o.compares b a :=
-  (hf.strict_anti_on Set.Univ).Compares trivialₓ trivialₓ
+    o.Compares (f a) (f b) ↔ o.Compares b a :=
+  (hf.StrictAntiOn Set.Univ).Compares trivialₓ trivialₓ
 
-theorem StrictMono.injective (hf : StrictMono f) : injective f := fun x y h => show compares Eq x y from hf.compares.1 h
+theorem StrictMono.injective (hf : StrictMono f) : Injective f := fun x y h => show Compares Eq x y from hf.Compares.1 h
 
-theorem StrictAnti.injective (hf : StrictAnti f) : injective f := fun x y h =>
-  show compares Eq x y from hf.compares.1 h.symm
+theorem StrictAnti.injective (hf : StrictAnti f) : Injective f := fun x y h =>
+  show Compares Eq x y from hf.Compares.1 h.symm
 
 theorem StrictMono.maximal_of_maximal_image (hf : StrictMono f) {a} (hmax : ∀ p, p ≤ f a) (x : α) : x ≤ a :=
   hf.le_iff_le.mp (hmax (f x))
@@ -501,11 +501,11 @@ section PartialOrderₓ
 
 variable [PartialOrderₓ β] {f : α → β}
 
-theorem Monotone.strict_mono_iff_injective (hf : Monotone f) : StrictMono f ↔ injective f :=
-  ⟨fun h => h.injective, hf.strict_mono_of_injective⟩
+theorem Monotone.strict_mono_iff_injective (hf : Monotone f) : StrictMono f ↔ Injective f :=
+  ⟨fun h => h.Injective, hf.strict_mono_of_injective⟩
 
-theorem Antitone.strict_anti_iff_injective (hf : Antitone f) : StrictAnti f ↔ injective f :=
-  ⟨fun h => h.injective, hf.strict_anti_of_injective⟩
+theorem Antitone.strict_anti_iff_injective (hf : Antitone f) : StrictAnti f ↔ Injective f :=
+  ⟨fun h => h.Injective, hf.strict_anti_of_injective⟩
 
 end PartialOrderₓ
 

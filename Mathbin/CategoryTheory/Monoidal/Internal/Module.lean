@@ -29,9 +29,9 @@ variable {R : Type u} [CommRingₓ R]
 namespace MonModuleEquivalenceAlgebra
 
 @[simps]
-instance (A : Mon_ (ModuleCat.{u} R)) : Ringₓ A.X :=
+instance (A : Mon_ (ModuleCat.{u} R)) : Ringₓ A.x :=
   { (by
-      infer_instance : AddCommGroupₓ A.X) with
+      infer_instance : AddCommGroupₓ A.x) with
     one := A.one (1 : R), mul := fun x y => A.mul (x ⊗ₜ y),
     one_mul := fun x => by
       convert LinearMap.congr_fun A.one_mul ((1 : R) ⊗ₜ x)
@@ -50,7 +50,7 @@ instance (A : Mon_ (ModuleCat.{u} R)) : Ringₓ A.X :=
       rw [← TensorProduct.add_tmul]
       rfl }
 
-instance (A : Mon_ (ModuleCat.{u} R)) : Algebra R A.X :=
+instance (A : Mon_ (ModuleCat.{u} R)) : Algebra R A.x :=
   { A.one with map_zero' := A.one.map_zero, map_one' := rfl,
     map_mul' := fun x y => by
       have h := LinearMap.congr_fun A.one_mul.symm (x ⊗ₜ A.one y)
@@ -65,18 +65,18 @@ instance (A : Mon_ (ModuleCat.{u} R)) : Algebra R A.X :=
       simp }
 
 @[simp]
-theorem algebraMap (A : Mon_ (ModuleCat.{u} R)) (r : R) : algebraMap R A.X r = A.one r :=
+theorem algebraMap (A : Mon_ (ModuleCat.{u} R)) (r : R) : algebraMap R A.x r = A.one r :=
   rfl
 
 /-- Converting a monoid object in `Module R` to a bundled algebra.
 -/
 @[simps]
 def Functor : Mon_ (ModuleCat.{u} R) ⥤ AlgebraCat R where
-  obj := fun A => AlgebraCat.of R A.X
+  obj := fun A => AlgebraCat.of R A.x
   map := fun A B f =>
-    { f.hom.to_add_monoid_hom with toFun := f.hom, map_one' := LinearMap.congr_fun f.one_hom (1 : R),
-      map_mul' := fun x y => LinearMap.congr_fun f.mul_hom (x ⊗ₜ y),
-      commutes' := fun r => LinearMap.congr_fun f.one_hom r }
+    { f.Hom.toAddMonoidHom with toFun := f.Hom, map_one' := LinearMap.congr_fun f.OneHom (1 : R),
+      map_mul' := fun x y => LinearMap.congr_fun f.MulHom (x ⊗ₜ y),
+      commutes' := fun r => LinearMap.congr_fun f.OneHom r }
 
 /-- Converting a bundled algebra to a monoid object in `Module R`.
 -/
@@ -106,9 +106,9 @@ def inverse_obj (A : AlgebraCat.{u} R) : Mon_ (ModuleCat.{u} R) where
 -/
 @[simps]
 def inverse : AlgebraCat.{u} R ⥤ Mon_ (ModuleCat.{u} R) where
-  obj := inverse_obj
+  obj := inverseObj
   map := fun A B f =>
-    { Hom := f.to_linear_map,
+    { Hom := f.toLinearMap,
       one_hom' := by
         ext
         dsimp
@@ -129,7 +129,7 @@ def Mon_Module_equivalence_Algebra : Mon_ (ModuleCat.{u} R) ≌ AlgebraCat R whe
   Functor := Functor
   inverse := inverse
   unitIso :=
-    nat_iso.of_components
+    NatIso.ofComponents
       (fun A =>
         { Hom :=
             { Hom := { toFun := id, map_add' := fun x y => rfl, map_smul' := fun r a => rfl },
@@ -146,7 +146,7 @@ def Mon_Module_equivalence_Algebra : Mon_ (ModuleCat.{u} R) ≌ AlgebraCat R whe
       (by
         tidy)
   counitIso :=
-    nat_iso.of_components
+    NatIso.ofComponents
       (fun A =>
         { Hom :=
             { toFun := id, map_zero' := rfl, map_add' := fun x y => rfl, map_one' := (algebraMap R A).map_one,
@@ -164,7 +164,7 @@ is naturally compatible with the forgetful functors to `Module R`.
 def Mon_Module_equivalence_Algebra_forget :
     Mon_Module_equivalence_Algebra.functor ⋙ forget₂ (AlgebraCat.{u} R) (ModuleCat.{u} R) ≅
       Mon_.forget (ModuleCat.{u} R) :=
-  nat_iso.of_components
+  NatIso.ofComponents
     (fun A =>
       { Hom := { toFun := id, map_add' := fun x y => rfl, map_smul' := fun c x => rfl },
         inv := { toFun := id, map_add' := fun x y => rfl, map_smul' := fun c x => rfl } })

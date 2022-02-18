@@ -79,7 +79,7 @@ theorem ConvexIndependent.comp_embedding {ι' : Type _} (f : ι' ↪ ι) {p : ι
 -/
 protected theorem ConvexIndependent.subtype {p : ι → E} (hc : ConvexIndependent 𝕜 p) (s : Set ι) :
     ConvexIndependent 𝕜 fun i : s => p i :=
-  hc.comp_embedding (embedding.subtype _)
+  hc.comp_embedding (Embedding.subtype _)
 
 /-- If an indexed family of points is convex independent, so is the corresponding set of points. -/
 protected theorem ConvexIndependent.range {p : ι → E} (hc : ConvexIndependent 𝕜 p) :
@@ -94,7 +94,7 @@ protected theorem ConvexIndependent.range {p : ι → E} (hc : ConvexIndependent
 /-- A subset of a convex independent set of points is convex independent as well. -/
 protected theorem ConvexIndependent.mono {s t : Set E} (hc : ConvexIndependent 𝕜 (fun x => x : t → E)) (hs : s ⊆ t) :
     ConvexIndependent 𝕜 (fun x => x : s → E) :=
-  hc.comp_embedding (s.embedding_of_subset t hs)
+  hc.comp_embedding (s.embeddingOfSubset t hs)
 
 /-- The range of an injective indexed family of points is convex independent iff that family is. -/
 theorem Function.Injective.convex_independent_iff_set {p : ι → E} (hi : Function.Injective p) :
@@ -160,7 +160,7 @@ variable [LinearOrderedField 𝕜] [AddCommGroupₓ E] [Module 𝕜 E] {s : Set 
 
 /-- To check convex independence, one only has to check finsets thanks to Carathéodory's theorem. -/
 theorem convex_independent_iff_finset {p : ι → E} :
-    ConvexIndependent 𝕜 p ↔ ∀ s : Finset ι x : ι, p x ∈ convexHull 𝕜 (s.image p : Set E) → x ∈ s := by
+    ConvexIndependent 𝕜 p ↔ ∀ s : Finset ι x : ι, p x ∈ convexHull 𝕜 (s.Image p : Set E) → x ∈ s := by
   refine' ⟨fun hc s x hx => hc s x _, fun h s x hx => _⟩
   · rwa [Finset.coe_image] at hx
     
@@ -186,7 +186,7 @@ theorem convex_independent_iff_finset {p : ι → E} :
 
 
 theorem Convex.convex_independent_extreme_points (hs : Convex 𝕜 s) :
-    ConvexIndependent 𝕜 (fun p => p : s.extreme_points 𝕜 → E) :=
+    ConvexIndependent 𝕜 (fun p => p : s.ExtremePoints 𝕜 → E) :=
   convex_independent_set_iff_not_mem_convex_hull_diff.2 fun x hx h =>
     (extreme_points_convex_hull_subset
           (inter_extreme_points_subset_extreme_points_of_subset

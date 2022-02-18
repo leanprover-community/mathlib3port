@@ -1,4 +1,4 @@
-import Mathbin.Order.SuccPred
+import Mathbin.Order.SuccPred.Basic
 
 /-!
 # Successors and predecessors of naturals
@@ -16,7 +16,7 @@ instance : SuccOrder ℕ :=
 @[reducible]
 instance : PredOrder ℕ where
   pred := pred
-  pred_le := pred_le
+  pred_le := pred_leₓ
   minimal_of_le_pred := fun a ha b h => by
     cases a
     · exact b.not_lt_zero h

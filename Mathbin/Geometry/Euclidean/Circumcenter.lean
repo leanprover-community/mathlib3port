@@ -81,7 +81,7 @@ and a point `p` not in that subspace, there is a unique (circumcenter,
 circumradius) pair for the set with `p` added, in the span of the
 subspace with `p` added. -/
 theorem exists_unique_dist_eq_of_insert {s : AffineSubspace ℝ P} [CompleteSpace s.direction] {ps : Set P}
-    (hnps : ps.nonempty) {p : P} (hps : ps ⊆ s) (hp : p ∉ s)
+    (hnps : ps.Nonempty) {p : P} (hps : ps ⊆ s) (hp : p ∉ s)
     (hu : ∃! cccr : P × ℝ, cccr.fst ∈ s ∧ ∀, ∀ p1 ∈ ps, ∀, dist p1 cccr.fst = cccr.snd) :
     ∃! cccr₂ : P × ℝ,
       cccr₂.fst ∈ affineSpan ℝ (insert p (s : Set P)) ∧ ∀, ∀ p1 ∈ insert p ps, ∀, dist p1 cccr₂.fst = cccr₂.snd :=
@@ -259,41 +259,41 @@ variable {V : Type _} {P : Type _} [InnerProductSpace ℝ V] [MetricSpace P] [No
 include V
 
 /-- The pair (circumcenter, circumradius) of a simplex. -/
-def circumcenter_circumradius {n : ℕ} (s : simplex ℝ P n) : P × ℝ :=
-  s.independent.exists_unique_dist_eq.some
+def circumcenter_circumradius {n : ℕ} (s : Simplex ℝ P n) : P × ℝ :=
+  s.Independent.exists_unique_dist_eq.some
 
 /-- The property satisfied by the (circumcenter, circumradius) pair. -/
-theorem circumcenter_circumradius_unique_dist_eq {n : ℕ} (s : simplex ℝ P n) :
-    (s.circumcenter_circumradius.fst ∈ affineSpan ℝ (Set.Range s.points) ∧
-        ∀ i, dist (s.points i) s.circumcenter_circumradius.fst = s.circumcenter_circumradius.snd) ∧
+theorem circumcenter_circumradius_unique_dist_eq {n : ℕ} (s : Simplex ℝ P n) :
+    (s.circumcenterCircumradius.fst ∈ affineSpan ℝ (Set.Range s.points) ∧
+        ∀ i, dist (s.points i) s.circumcenterCircumradius.fst = s.circumcenterCircumradius.snd) ∧
       ∀ cccr : P × ℝ,
         (cccr.fst ∈ affineSpan ℝ (Set.Range s.points) ∧ ∀ i, dist (s.points i) cccr.fst = cccr.snd) →
-          cccr = s.circumcenter_circumradius :=
-  s.independent.exists_unique_dist_eq.some_spec
+          cccr = s.circumcenterCircumradius :=
+  s.Independent.exists_unique_dist_eq.some_spec
 
 /-- The circumcenter of a simplex. -/
-def circumcenter {n : ℕ} (s : simplex ℝ P n) : P :=
-  s.circumcenter_circumradius.fst
+def circumcenter {n : ℕ} (s : Simplex ℝ P n) : P :=
+  s.circumcenterCircumradius.fst
 
 /-- The circumradius of a simplex. -/
-def circumradius {n : ℕ} (s : simplex ℝ P n) : ℝ :=
-  s.circumcenter_circumradius.snd
+def circumradius {n : ℕ} (s : Simplex ℝ P n) : ℝ :=
+  s.circumcenterCircumradius.snd
 
 /-- The circumcenter lies in the affine span. -/
-theorem circumcenter_mem_affine_span {n : ℕ} (s : simplex ℝ P n) : s.circumcenter ∈ affineSpan ℝ (Set.Range s.points) :=
+theorem circumcenter_mem_affine_span {n : ℕ} (s : Simplex ℝ P n) : s.circumcenter ∈ affineSpan ℝ (Set.Range s.points) :=
   s.circumcenter_circumradius_unique_dist_eq.1.1
 
 /-- All points have distance from the circumcenter equal to the
 circumradius. -/
 @[simp]
-theorem dist_circumcenter_eq_circumradius {n : ℕ} (s : simplex ℝ P n) :
+theorem dist_circumcenter_eq_circumradius {n : ℕ} (s : Simplex ℝ P n) :
     ∀ i, dist (s.points i) s.circumcenter = s.circumradius :=
   s.circumcenter_circumradius_unique_dist_eq.1.2
 
 /-- All points have distance to the circumcenter equal to the
 circumradius. -/
 @[simp]
-theorem dist_circumcenter_eq_circumradius' {n : ℕ} (s : simplex ℝ P n) :
+theorem dist_circumcenter_eq_circumradius' {n : ℕ} (s : Simplex ℝ P n) :
     ∀ i, dist s.circumcenter (s.points i) = s.circumradius := by
   intro i
   rw [dist_comm]
@@ -301,7 +301,7 @@ theorem dist_circumcenter_eq_circumradius' {n : ℕ} (s : simplex ℝ P n) :
 
 /-- Given a point in the affine span from which all the points are
 equidistant, that point is the circumcenter. -/
-theorem eq_circumcenter_of_dist_eq {n : ℕ} (s : simplex ℝ P n) {p : P} (hp : p ∈ affineSpan ℝ (Set.Range s.points))
+theorem eq_circumcenter_of_dist_eq {n : ℕ} (s : Simplex ℝ P n) {p : P} (hp : p ∈ affineSpan ℝ (Set.Range s.points))
     {r : ℝ} (hr : ∀ i, dist (s.points i) p = r) : p = s.circumcenter := by
   have h := s.circumcenter_circumradius_unique_dist_eq.2 (p, r)
   simp only [hp, hr, forall_const, eq_self_iff_true, and_selfₓ, Prod.ext_iff] at h
@@ -309,19 +309,19 @@ theorem eq_circumcenter_of_dist_eq {n : ℕ} (s : simplex ℝ P n) {p : P} (hp :
 
 /-- Given a point in the affine span from which all the points are
 equidistant, that distance is the circumradius. -/
-theorem eq_circumradius_of_dist_eq {n : ℕ} (s : simplex ℝ P n) {p : P} (hp : p ∈ affineSpan ℝ (Set.Range s.points))
+theorem eq_circumradius_of_dist_eq {n : ℕ} (s : Simplex ℝ P n) {p : P} (hp : p ∈ affineSpan ℝ (Set.Range s.points))
     {r : ℝ} (hr : ∀ i, dist (s.points i) p = r) : r = s.circumradius := by
   have h := s.circumcenter_circumradius_unique_dist_eq.2 (p, r)
   simp only [hp, hr, forall_const, eq_self_iff_true, and_selfₓ, Prod.ext_iff] at h
   exact h.2
 
 /-- The circumradius is non-negative. -/
-theorem circumradius_nonneg {n : ℕ} (s : simplex ℝ P n) : 0 ≤ s.circumradius :=
+theorem circumradius_nonneg {n : ℕ} (s : Simplex ℝ P n) : 0 ≤ s.circumradius :=
   s.dist_circumcenter_eq_circumradius 0 ▸ dist_nonneg
 
 /-- The circumradius of a simplex with at least two points is
 positive. -/
-theorem circumradius_pos {n : ℕ} (s : simplex ℝ P (n + 1)) : 0 < s.circumradius := by
+theorem circumradius_pos {n : ℕ} (s : Simplex ℝ P (n + 1)) : 0 < s.circumradius := by
   refine' lt_of_le_of_neₓ s.circumradius_nonneg _
   intro h
   have hr := s.dist_circumcenter_eq_circumradius
@@ -333,7 +333,7 @@ theorem circumradius_pos {n : ℕ} (s : simplex ℝ P (n + 1)) : 0 < s.circumrad
   simpa [hr] using h01
 
 /-- The circumcenter of a 0-simplex equals its unique point. -/
-theorem circumcenter_eq_point (s : simplex ℝ P 0) (i : Finₓ 1) : s.circumcenter = s.points i := by
+theorem circumcenter_eq_point (s : Simplex ℝ P 0) (i : Finₓ 1) : s.circumcenter = s.points i := by
   have h := s.circumcenter_mem_affine_span
   rw [Set.range_unique, mem_affine_span_singleton] at h
   rw [h]
@@ -342,7 +342,7 @@ theorem circumcenter_eq_point (s : simplex ℝ P 0) (i : Finₓ 1) : s.circumcen
 -- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
 -- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
 /-- The circumcenter of a 1-simplex equals its centroid. -/
-theorem circumcenter_eq_centroid (s : simplex ℝ P 1) : s.circumcenter = Finset.univ.centroid ℝ s.points := by
+theorem circumcenter_eq_centroid (s : Simplex ℝ P 1) : s.circumcenter = Finset.univ.centroid ℝ s.points := by
   have hr :
     Set.Pairwise Set.Univ fun i j : Finₓ 2 =>
       dist (s.points i) (finset.univ.centroid ℝ s.points) = dist (s.points j) (finset.univ.centroid ℝ s.points) :=
@@ -361,7 +361,7 @@ theorem circumcenter_eq_centroid (s : simplex ℝ P 1) : s.circumcenter = Finset
 /-- If there exists a distance that a point has from all vertices of a
 simplex, the orthogonal projection of that point onto the subspace
 spanned by that simplex is its circumcenter.  -/
-theorem orthogonal_projection_eq_circumcenter_of_exists_dist_eq {n : ℕ} (s : simplex ℝ P n) {p : P}
+theorem orthogonal_projection_eq_circumcenter_of_exists_dist_eq {n : ℕ} (s : Simplex ℝ P n) {p : P}
     (hr : ∃ r, ∀ i, dist (s.points i) p = r) :
     ↑(orthogonalProjection (affineSpan ℝ (Set.Range s.points)) p) = s.circumcenter := by
   change ∃ r : ℝ, ∀ i, (fun x => dist x p = r) (s.points i) at hr
@@ -373,14 +373,14 @@ theorem orthogonal_projection_eq_circumcenter_of_exists_dist_eq {n : ℕ} (s : s
 /-- If a point has the same distance from all vertices of a simplex,
 the orthogonal projection of that point onto the subspace spanned by
 that simplex is its circumcenter.  -/
-theorem orthogonal_projection_eq_circumcenter_of_dist_eq {n : ℕ} (s : simplex ℝ P n) {p : P} {r : ℝ}
+theorem orthogonal_projection_eq_circumcenter_of_dist_eq {n : ℕ} (s : Simplex ℝ P n) {p : P} {r : ℝ}
     (hr : ∀ i, dist (s.points i) p = r) :
     ↑(orthogonalProjection (affineSpan ℝ (Set.Range s.points)) p) = s.circumcenter :=
   s.orthogonal_projection_eq_circumcenter_of_exists_dist_eq ⟨r, hr⟩
 
 /-- The orthogonal projection of the circumcenter onto a face is the
 circumcenter of that face. -/
-theorem orthogonal_projection_circumcenter {n : ℕ} (s : simplex ℝ P n) {fs : Finset (Finₓ (n + 1))} {m : ℕ}
+theorem orthogonal_projection_circumcenter {n : ℕ} (s : Simplex ℝ P n) {fs : Finset (Finₓ (n + 1))} {m : ℕ}
     (h : fs.card = m + 1) :
     ↑(orthogonalProjection (affineSpan ℝ (Set.Range (s.face h).points)) s.circumcenter) = (s.face h).circumcenter :=
   have hr : ∃ r, ∀ i, dist ((s.face h).points i) s.circumcenter = r := by
@@ -389,7 +389,7 @@ theorem orthogonal_projection_circumcenter {n : ℕ} (s : simplex ℝ P n) {fs :
   orthogonal_projection_eq_circumcenter_of_exists_dist_eq _ hr
 
 /-- Two simplices with the same points have the same circumcenter. -/
-theorem circumcenter_eq_of_range_eq {n : ℕ} {s₁ s₂ : simplex ℝ P n} (h : Set.Range s₁.points = Set.Range s₂.points) :
+theorem circumcenter_eq_of_range_eq {n : ℕ} {s₁ s₂ : Simplex ℝ P n} (h : Set.Range s₁.points = Set.Range s₂.points) :
     s₁.circumcenter = s₂.circumcenter := by
   have hs : s₁.circumcenter ∈ affineSpan ℝ (Set.Range s₂.points) := h ▸ s₁.circumcenter_mem_affine_span
   have hr : ∀ i, dist (s₂.points i) s₁.circumcenter = s₁.circumradius := by
@@ -414,17 +414,16 @@ inductive points_with_circumcenter_index (n : ℕ)
 
 open PointsWithCircumcenterIndex
 
-instance points_with_circumcenter_index_inhabited (n : ℕ) : Inhabited (points_with_circumcenter_index n) :=
+instance points_with_circumcenter_index_inhabited (n : ℕ) : Inhabited (PointsWithCircumcenterIndex n) :=
   ⟨circumcenter_index⟩
 
 /-- `point_index` as an embedding. -/
-def point_index_embedding (n : ℕ) : Finₓ (n + 1) ↪ points_with_circumcenter_index n :=
+def point_index_embedding (n : ℕ) : Finₓ (n + 1) ↪ PointsWithCircumcenterIndex n :=
   ⟨fun i => point_index i, fun _ _ h => by
     injection h⟩
 
 /-- The sum of a function over `points_with_circumcenter_index`. -/
-theorem sum_points_with_circumcenter {α : Type _} [AddCommMonoidₓ α] {n : ℕ}
-    (f : points_with_circumcenter_index n → α) :
+theorem sum_points_with_circumcenter {α : Type _} [AddCommMonoidₓ α] {n : ℕ} (f : PointsWithCircumcenterIndex n → α) :
     (∑ i, f i) = (∑ i : Finₓ (n + 1), f (point_index i)) + f circumcenter_index := by
   have h : univ = insert circumcenter_index (univ.map (point_index_embedding n)) := by
     ext x
@@ -443,36 +442,36 @@ theorem sum_points_with_circumcenter {α : Type _} [AddCommMonoidₓ α] {n : �
 include V
 
 /-- The vertices of a simplex plus its circumcenter. -/
-def points_with_circumcenter {n : ℕ} (s : simplex ℝ P n) : points_with_circumcenter_index n → P
+def points_with_circumcenter {n : ℕ} (s : Simplex ℝ P n) : PointsWithCircumcenterIndex n → P
   | point_index i => s.points i
   | circumcenter_index => s.circumcenter
 
 /-- `points_with_circumcenter`, applied to a `point_index` value,
 equals `points` applied to that value. -/
 @[simp]
-theorem points_with_circumcenter_point {n : ℕ} (s : simplex ℝ P n) (i : Finₓ (n + 1)) :
-    s.points_with_circumcenter (point_index i) = s.points i :=
+theorem points_with_circumcenter_point {n : ℕ} (s : Simplex ℝ P n) (i : Finₓ (n + 1)) :
+    s.pointsWithCircumcenter (point_index i) = s.points i :=
   rfl
 
 /-- `points_with_circumcenter`, applied to `circumcenter_index`, equals the
 circumcenter. -/
 @[simp]
-theorem points_with_circumcenter_eq_circumcenter {n : ℕ} (s : simplex ℝ P n) :
-    s.points_with_circumcenter circumcenter_index = s.circumcenter :=
+theorem points_with_circumcenter_eq_circumcenter {n : ℕ} (s : Simplex ℝ P n) :
+    s.pointsWithCircumcenter circumcenter_index = s.circumcenter :=
   rfl
 
 omit V
 
 /-- The weights for a single vertex of a simplex, in terms of
 `points_with_circumcenter`. -/
-def point_weights_with_circumcenter {n : ℕ} (i : Finₓ (n + 1)) : points_with_circumcenter_index n → ℝ
+def point_weights_with_circumcenter {n : ℕ} (i : Finₓ (n + 1)) : PointsWithCircumcenterIndex n → ℝ
   | point_index j => if j = i then 1 else 0
   | circumcenter_index => 0
 
 /-- `point_weights_with_circumcenter` sums to 1. -/
 @[simp]
-theorem sum_point_weights_with_circumcenter {n : ℕ} (i : Finₓ (n + 1)) :
-    (∑ j, point_weights_with_circumcenter i j) = 1 := by
+theorem sum_point_weights_with_circumcenter {n : ℕ} (i : Finₓ (n + 1)) : (∑ j, pointWeightsWithCircumcenter i j) = 1 :=
+  by
   convert sum_ite_eq' univ (point_index i) (Function.const _ (1 : ℝ))
   · ext j
     cases j <;> simp [point_weights_with_circumcenter]
@@ -483,10 +482,10 @@ theorem sum_point_weights_with_circumcenter {n : ℕ} (i : Finₓ (n + 1)) :
 include V
 
 /-- A single vertex, in terms of `points_with_circumcenter`. -/
-theorem point_eq_affine_combination_of_points_with_circumcenter {n : ℕ} (s : simplex ℝ P n) (i : Finₓ (n + 1)) :
+theorem point_eq_affine_combination_of_points_with_circumcenter {n : ℕ} (s : Simplex ℝ P n) (i : Finₓ (n + 1)) :
     s.points i =
-      (univ : Finset (points_with_circumcenter_index n)).affineCombination s.points_with_circumcenter
-        (point_weights_with_circumcenter i) :=
+      (univ : Finset (PointsWithCircumcenterIndex n)).affineCombination s.pointsWithCircumcenter
+        (pointWeightsWithCircumcenter i) :=
   by
   rw [← points_with_circumcenter_point]
   symm
@@ -507,15 +506,15 @@ omit V
 
 /-- The weights for the centroid of some vertices of a simplex, in
 terms of `points_with_circumcenter`. -/
-def centroid_weights_with_circumcenter {n : ℕ} (fs : Finset (Finₓ (n + 1))) : points_with_circumcenter_index n → ℝ
+def centroid_weights_with_circumcenter {n : ℕ} (fs : Finset (Finₓ (n + 1))) : PointsWithCircumcenterIndex n → ℝ
   | point_index i => if i ∈ fs then (card fs : ℝ)⁻¹ else 0
   | circumcenter_index => 0
 
 /-- `centroid_weights_with_circumcenter` sums to 1, if the `finset` is
 nonempty. -/
 @[simp]
-theorem sum_centroid_weights_with_circumcenter {n : ℕ} {fs : Finset (Finₓ (n + 1))} (h : fs.nonempty) :
-    (∑ i, centroid_weights_with_circumcenter fs i) = 1 := by
+theorem sum_centroid_weights_with_circumcenter {n : ℕ} {fs : Finset (Finₓ (n + 1))} (h : fs.Nonempty) :
+    (∑ i, centroidWeightsWithCircumcenter fs i) = 1 := by
   simp_rw [sum_points_with_circumcenter, centroid_weights_with_circumcenter, add_zeroₓ, ←
     fs.sum_centroid_weights_eq_one_of_nonempty ℝ h, Set.sum_indicator_subset _ fs.subset_univ]
   rcongr
@@ -524,11 +523,11 @@ include V
 
 /-- The centroid of some vertices of a simplex, in terms of
 `points_with_circumcenter`. -/
-theorem centroid_eq_affine_combination_of_points_with_circumcenter {n : ℕ} (s : simplex ℝ P n)
+theorem centroid_eq_affine_combination_of_points_with_circumcenter {n : ℕ} (s : Simplex ℝ P n)
     (fs : Finset (Finₓ (n + 1))) :
     fs.centroid ℝ s.points =
-      (univ : Finset (points_with_circumcenter_index n)).affineCombination s.points_with_circumcenter
-        (centroid_weights_with_circumcenter fs) :=
+      (univ : Finset (PointsWithCircumcenterIndex n)).affineCombination s.pointsWithCircumcenter
+        (centroidWeightsWithCircumcenter fs) :=
   by
   simp_rw [centroid_def, affine_combination_apply, weighted_vsub_of_point_apply, sum_points_with_circumcenter,
     centroid_weights_with_circumcenter, points_with_circumcenter_point, zero_smul, add_zeroₓ, centroid_weights,
@@ -543,13 +542,13 @@ omit V
 
 /-- The weights for the circumcenter of a simplex, in terms of
 `points_with_circumcenter`. -/
-def circumcenter_weights_with_circumcenter (n : ℕ) : points_with_circumcenter_index n → ℝ
+def circumcenter_weights_with_circumcenter (n : ℕ) : PointsWithCircumcenterIndex n → ℝ
   | point_index i => 0
   | circumcenter_index => 1
 
 /-- `circumcenter_weights_with_circumcenter` sums to 1. -/
 @[simp]
-theorem sum_circumcenter_weights_with_circumcenter (n : ℕ) : (∑ i, circumcenter_weights_with_circumcenter n i) = 1 := by
+theorem sum_circumcenter_weights_with_circumcenter (n : ℕ) : (∑ i, circumcenterWeightsWithCircumcenter n i) = 1 := by
   convert sum_ite_eq' univ circumcenter_index (Function.const _ (1 : ℝ))
   · ext ⟨j⟩ <;> simp [circumcenter_weights_with_circumcenter]
     
@@ -560,10 +559,10 @@ include V
 
 /-- The circumcenter of a simplex, in terms of
 `points_with_circumcenter`. -/
-theorem circumcenter_eq_affine_combination_of_points_with_circumcenter {n : ℕ} (s : simplex ℝ P n) :
+theorem circumcenter_eq_affine_combination_of_points_with_circumcenter {n : ℕ} (s : Simplex ℝ P n) :
     s.circumcenter =
-      (univ : Finset (points_with_circumcenter_index n)).affineCombination s.points_with_circumcenter
-        (circumcenter_weights_with_circumcenter n) :=
+      (univ : Finset (PointsWithCircumcenterIndex n)).affineCombination s.pointsWithCircumcenter
+        (circumcenterWeightsWithCircumcenter n) :=
   by
   rw [← points_with_circumcenter_eq_circumcenter]
   symm
@@ -574,15 +573,14 @@ omit V
 
 /-- The weights for the reflection of the circumcenter in an edge of a
 simplex.  This definition is only valid with `i₁ ≠ i₂`. -/
-def reflection_circumcenter_weights_with_circumcenter {n : ℕ} (i₁ i₂ : Finₓ (n + 1)) :
-    points_with_circumcenter_index n → ℝ
+def reflection_circumcenter_weights_with_circumcenter {n : ℕ} (i₁ i₂ : Finₓ (n + 1)) : PointsWithCircumcenterIndex n → ℝ
   | point_index i => if i = i₁ ∨ i = i₂ then 1 else 0
   | circumcenter_index => -1
 
 /-- `reflection_circumcenter_weights_with_circumcenter` sums to 1. -/
 @[simp]
 theorem sum_reflection_circumcenter_weights_with_circumcenter {n : ℕ} {i₁ i₂ : Finₓ (n + 1)} (h : i₁ ≠ i₂) :
-    (∑ i, reflection_circumcenter_weights_with_circumcenter i₁ i₂ i) = 1 := by
+    (∑ i, reflectionCircumcenterWeightsWithCircumcenter i₁ i₂ i) = 1 := by
   simp_rw [sum_points_with_circumcenter, reflection_circumcenter_weights_with_circumcenter, sum_ite, sum_const,
     filter_or, filter_eq']
   rw [card_union_eq]
@@ -595,11 +593,11 @@ include V
 
 /-- The reflection of the circumcenter of a simplex in an edge, in
 terms of `points_with_circumcenter`. -/
-theorem reflection_circumcenter_eq_affine_combination_of_points_with_circumcenter {n : ℕ} (s : simplex ℝ P n)
+theorem reflection_circumcenter_eq_affine_combination_of_points_with_circumcenter {n : ℕ} (s : Simplex ℝ P n)
     {i₁ i₂ : Finₓ (n + 1)} (h : i₁ ≠ i₂) :
     reflection (affineSpan ℝ (s.points '' {i₁, i₂})) s.circumcenter =
-      (univ : Finset (points_with_circumcenter_index n)).affineCombination s.points_with_circumcenter
-        (reflection_circumcenter_weights_with_circumcenter i₁ i₂) :=
+      (univ : Finset (PointsWithCircumcenterIndex n)).affineCombination s.pointsWithCircumcenter
+        (reflectionCircumcenterWeightsWithCircumcenter i₁ i₂) :=
   by
   have hc : card ({i₁, i₂} : Finset (Finₓ (n + 1))) = 2 := by
     simp [h]
@@ -635,7 +633,7 @@ include V
 that contains a set of points, those points are cospherical if and
 only if they are equidistant from some point in that subspace. -/
 theorem cospherical_iff_exists_mem_of_complete {s : AffineSubspace ℝ P} {ps : Set P} (h : ps ⊆ s) [Nonempty s]
-    [CompleteSpace s.direction] : cospherical ps ↔ ∃ center ∈ s, ∃ radius : ℝ, ∀, ∀ p ∈ ps, ∀, dist p center = radius :=
+    [CompleteSpace s.direction] : Cospherical ps ↔ ∃ center ∈ s, ∃ radius : ℝ, ∀, ∀ p ∈ ps, ∀, dist p center = radius :=
   by
   constructor
   · rintro ⟨c, hcr⟩
@@ -651,14 +649,14 @@ cospherical if and only if they are equidistant from some point in
 that subspace. -/
 theorem cospherical_iff_exists_mem_of_finite_dimensional {s : AffineSubspace ℝ P} {ps : Set P} (h : ps ⊆ s) [Nonempty s]
     [FiniteDimensional ℝ s.direction] :
-    cospherical ps ↔ ∃ center ∈ s, ∃ radius : ℝ, ∀, ∀ p ∈ ps, ∀, dist p center = radius :=
+    Cospherical ps ↔ ∃ center ∈ s, ∃ radius : ℝ, ∀, ∀ p ∈ ps, ∀, dist p center = radius :=
   cospherical_iff_exists_mem_of_complete h
 
 /-- All n-simplices among cospherical points in an n-dimensional
 subspace have the same circumradius. -/
 theorem exists_circumradius_eq_of_cospherical_subset {s : AffineSubspace ℝ P} {ps : Set P} (h : ps ⊆ s) [Nonempty s]
-    {n : ℕ} [FiniteDimensional ℝ s.direction] (hd : finrank ℝ s.direction = n) (hc : cospherical ps) :
-    ∃ r : ℝ, ∀ sx : simplex ℝ P n, Set.Range sx.points ⊆ ps → sx.circumradius = r := by
+    {n : ℕ} [FiniteDimensional ℝ s.direction] (hd : finrank ℝ s.direction = n) (hc : Cospherical ps) :
+    ∃ r : ℝ, ∀ sx : Simplex ℝ P n, Set.Range sx.points ⊆ ps → sx.circumradius = r := by
   rw [cospherical_iff_exists_mem_of_finite_dimensional h] at hc
   rcases hc with ⟨c, hc, r, hcr⟩
   use r
@@ -674,7 +672,7 @@ theorem exists_circumradius_eq_of_cospherical_subset {s : AffineSubspace ℝ P} 
 /-- Two n-simplices among cospherical points in an n-dimensional
 subspace have the same circumradius. -/
 theorem circumradius_eq_of_cospherical_subset {s : AffineSubspace ℝ P} {ps : Set P} (h : ps ⊆ s) [Nonempty s] {n : ℕ}
-    [FiniteDimensional ℝ s.direction] (hd : finrank ℝ s.direction = n) (hc : cospherical ps) {sx₁ sx₂ : simplex ℝ P n}
+    [FiniteDimensional ℝ s.direction] (hd : finrank ℝ s.direction = n) (hc : Cospherical ps) {sx₁ sx₂ : Simplex ℝ P n}
     (hsx₁ : Set.Range sx₁.points ⊆ ps) (hsx₂ : Set.Range sx₂.points ⊆ ps) : sx₁.circumradius = sx₂.circumradius := by
   rcases exists_circumradius_eq_of_cospherical_subset h hd hc with ⟨r, hr⟩
   rw [hr sx₁ hsx₁, hr sx₂ hsx₂]
@@ -682,7 +680,7 @@ theorem circumradius_eq_of_cospherical_subset {s : AffineSubspace ℝ P} {ps : S
 /-- All n-simplices among cospherical points in n-space have the same
 circumradius. -/
 theorem exists_circumradius_eq_of_cospherical {ps : Set P} {n : ℕ} [FiniteDimensional ℝ V] (hd : finrank ℝ V = n)
-    (hc : cospherical ps) : ∃ r : ℝ, ∀ sx : simplex ℝ P n, Set.Range sx.points ⊆ ps → sx.circumradius = r := by
+    (hc : Cospherical ps) : ∃ r : ℝ, ∀ sx : Simplex ℝ P n, Set.Range sx.points ⊆ ps → sx.circumradius = r := by
   have : Nonempty (⊤ : AffineSubspace ℝ P) := Set.Univ.nonempty
   rw [← finrank_top, ← direction_top ℝ V P] at hd
   refine' exists_circumradius_eq_of_cospherical_subset _ hd hc
@@ -691,7 +689,7 @@ theorem exists_circumradius_eq_of_cospherical {ps : Set P} {n : ℕ} [FiniteDime
 /-- Two n-simplices among cospherical points in n-space have the same
 circumradius. -/
 theorem circumradius_eq_of_cospherical {ps : Set P} {n : ℕ} [FiniteDimensional ℝ V] (hd : finrank ℝ V = n)
-    (hc : cospherical ps) {sx₁ sx₂ : simplex ℝ P n} (hsx₁ : Set.Range sx₁.points ⊆ ps)
+    (hc : Cospherical ps) {sx₁ sx₂ : Simplex ℝ P n} (hsx₁ : Set.Range sx₁.points ⊆ ps)
     (hsx₂ : Set.Range sx₂.points ⊆ ps) : sx₁.circumradius = sx₂.circumradius := by
   rcases exists_circumradius_eq_of_cospherical hd hc with ⟨r, hr⟩
   rw [hr sx₁ hsx₁, hr sx₂ hsx₂]
@@ -699,8 +697,8 @@ theorem circumradius_eq_of_cospherical {ps : Set P} {n : ℕ} [FiniteDimensional
 /-- All n-simplices among cospherical points in an n-dimensional
 subspace have the same circumcenter. -/
 theorem exists_circumcenter_eq_of_cospherical_subset {s : AffineSubspace ℝ P} {ps : Set P} (h : ps ⊆ s) [Nonempty s]
-    {n : ℕ} [FiniteDimensional ℝ s.direction] (hd : finrank ℝ s.direction = n) (hc : cospherical ps) :
-    ∃ c : P, ∀ sx : simplex ℝ P n, Set.Range sx.points ⊆ ps → sx.circumcenter = c := by
+    {n : ℕ} [FiniteDimensional ℝ s.direction] (hd : finrank ℝ s.direction = n) (hc : Cospherical ps) :
+    ∃ c : P, ∀ sx : Simplex ℝ P n, Set.Range sx.points ⊆ ps → sx.circumcenter = c := by
   rw [cospherical_iff_exists_mem_of_finite_dimensional h] at hc
   rcases hc with ⟨c, hc, r, hcr⟩
   use c
@@ -716,7 +714,7 @@ theorem exists_circumcenter_eq_of_cospherical_subset {s : AffineSubspace ℝ P} 
 /-- Two n-simplices among cospherical points in an n-dimensional
 subspace have the same circumcenter. -/
 theorem circumcenter_eq_of_cospherical_subset {s : AffineSubspace ℝ P} {ps : Set P} (h : ps ⊆ s) [Nonempty s] {n : ℕ}
-    [FiniteDimensional ℝ s.direction] (hd : finrank ℝ s.direction = n) (hc : cospherical ps) {sx₁ sx₂ : simplex ℝ P n}
+    [FiniteDimensional ℝ s.direction] (hd : finrank ℝ s.direction = n) (hc : Cospherical ps) {sx₁ sx₂ : Simplex ℝ P n}
     (hsx₁ : Set.Range sx₁.points ⊆ ps) (hsx₂ : Set.Range sx₂.points ⊆ ps) : sx₁.circumcenter = sx₂.circumcenter := by
   rcases exists_circumcenter_eq_of_cospherical_subset h hd hc with ⟨r, hr⟩
   rw [hr sx₁ hsx₁, hr sx₂ hsx₂]
@@ -724,7 +722,7 @@ theorem circumcenter_eq_of_cospherical_subset {s : AffineSubspace ℝ P} {ps : S
 /-- All n-simplices among cospherical points in n-space have the same
 circumcenter. -/
 theorem exists_circumcenter_eq_of_cospherical {ps : Set P} {n : ℕ} [FiniteDimensional ℝ V] (hd : finrank ℝ V = n)
-    (hc : cospherical ps) : ∃ c : P, ∀ sx : simplex ℝ P n, Set.Range sx.points ⊆ ps → sx.circumcenter = c := by
+    (hc : Cospherical ps) : ∃ c : P, ∀ sx : Simplex ℝ P n, Set.Range sx.points ⊆ ps → sx.circumcenter = c := by
   have : Nonempty (⊤ : AffineSubspace ℝ P) := Set.Univ.nonempty
   rw [← finrank_top, ← direction_top ℝ V P] at hd
   refine' exists_circumcenter_eq_of_cospherical_subset _ hd hc
@@ -733,7 +731,7 @@ theorem exists_circumcenter_eq_of_cospherical {ps : Set P} {n : ℕ} [FiniteDime
 /-- Two n-simplices among cospherical points in n-space have the same
 circumcenter. -/
 theorem circumcenter_eq_of_cospherical {ps : Set P} {n : ℕ} [FiniteDimensional ℝ V] (hd : finrank ℝ V = n)
-    (hc : cospherical ps) {sx₁ sx₂ : simplex ℝ P n} (hsx₁ : Set.Range sx₁.points ⊆ ps)
+    (hc : Cospherical ps) {sx₁ sx₂ : Simplex ℝ P n} (hsx₁ : Set.Range sx₁.points ⊆ ps)
     (hsx₂ : Set.Range sx₂.points ⊆ ps) : sx₁.circumcenter = sx₂.circumcenter := by
   rcases exists_circumcenter_eq_of_cospherical hd hc with ⟨r, hr⟩
   rw [hr sx₁ hsx₁, hr sx₂ hsx₂]
@@ -743,7 +741,7 @@ simplex are equal, and that `p₁` and `p₂` lie in the affine span of
 `p` with the vertices of that simplex.  Then `p₁` and `p₂` are equal
 or reflections of each other in the affine span of the vertices of the
 simplex. -/
-theorem eq_or_eq_reflection_of_dist_eq {n : ℕ} {s : simplex ℝ P n} {p p₁ p₂ : P} {r : ℝ}
+theorem eq_or_eq_reflection_of_dist_eq {n : ℕ} {s : Simplex ℝ P n} {p p₁ p₂ : P} {r : ℝ}
     (hp₁ : p₁ ∈ affineSpan ℝ (insert p (Set.Range s.points))) (hp₂ : p₂ ∈ affineSpan ℝ (insert p (Set.Range s.points)))
     (h₁ : ∀ i, dist (s.points i) p₁ = r) (h₂ : ∀ i, dist (s.points i) p₂ = r) :
     p₁ = p₂ ∨ p₁ = reflection (affineSpan ℝ (Set.Range s.points)) p₂ := by

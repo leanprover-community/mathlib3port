@@ -21,7 +21,7 @@ universe v₁ v₂ v₃ u₁ u₂ u₃
 
 open NatTrans Category CategoryTheory.Functor
 
-variable (C : Type u₁) [category.{v₁} C] (D : Type u₂) [category.{v₂} D]
+variable (C : Type u₁) [Category.{v₁} C] (D : Type u₂) [Category.{v₂} D]
 
 attribute [local simp] vcomp_app
 
@@ -33,12 +33,12 @@ this is another small category at that level.
 However if `C` and `D` are both large categories at the same universe level,
 this is a small category at the next higher level.
 -/
-instance functor.category : category.{max u₁ v₂} (C ⥤ D) where
-  Hom := fun F G => nat_trans F G
-  id := fun F => nat_trans.id F
+instance functor.category : Category.{max u₁ v₂} (C ⥤ D) where
+  Hom := fun F G => NatTrans F G
+  id := fun F => NatTrans.id F
   comp := fun _ _ _ α β => vcomp α β
 
-variable {C D} {E : Type u₃} [category.{v₃} E]
+variable {C D} {E : Type u₃} [Category.{v₃} E]
 
 variable {F G H I : C ⥤ D}
 
@@ -71,13 +71,13 @@ theorem naturality_app {F G : C ⥤ D ⥤ E} (T : F ⟶ G) (Z : D) {X Y : C} (f 
   congr_funₓ (congr_argₓ app (T.naturality f)) Z
 
 /-- A natural transformation is a monomorphism if each component is. -/
-theorem mono_app_of_mono (α : F ⟶ G) [∀ X : C, mono (α.app X)] : mono α :=
+theorem mono_app_of_mono (α : F ⟶ G) [∀ X : C, Mono (α.app X)] : Mono α :=
   ⟨fun H g h eq => by
     ext X
     rw [← cancel_mono (α.app X), ← comp_app, Eq, comp_app]⟩
 
 /-- A natural transformation is an epimorphism if each component is. -/
-theorem epi_app_of_epi (α : F ⟶ G) [∀ X : C, epi (α.app X)] : epi α :=
+theorem epi_app_of_epi (α : F ⟶ G) [∀ X : C, Epi (α.app X)] : Epi α :=
   ⟨fun H g h eq => by
     ext X
     rw [← cancel_epi (α.app X), ← comp_app, Eq, comp_app]⟩
@@ -139,12 +139,12 @@ end Functor
 
 @[simp, reassoc]
 theorem map_hom_inv_app (F : C ⥤ D ⥤ E) {X Y : C} (e : X ≅ Y) (Z : D) :
-    (F.map e.hom).app Z ≫ (F.map e.inv).app Z = 𝟙 _ := by
+    (F.map e.Hom).app Z ≫ (F.map e.inv).app Z = 𝟙 _ := by
   simp [← nat_trans.comp_app, ← functor.map_comp]
 
 @[simp, reassoc]
 theorem map_inv_hom_app (F : C ⥤ D ⥤ E) {X Y : C} (e : X ≅ Y) (Z : D) :
-    (F.map e.inv).app Z ≫ (F.map e.hom).app Z = 𝟙 _ := by
+    (F.map e.inv).app Z ≫ (F.map e.Hom).app Z = 𝟙 _ := by
   simp [← nat_trans.comp_app, ← functor.map_comp]
 
 end CategoryTheory

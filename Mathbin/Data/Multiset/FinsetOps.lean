@@ -33,15 +33,15 @@ theorem ndinsert_zero (a : α) : ndinsert a 0 = {a} :=
 
 @[simp]
 theorem ndinsert_of_mem {a : α} {s : Multiset α} : a ∈ s → ndinsert a s = s :=
-  (Quot.induction_on s) fun l h => congr_argₓ coe <| insert_of_mem h
+  (Quot.induction_on s) fun l h => congr_argₓ coe <| insert_of_memₓ h
 
 @[simp]
 theorem ndinsert_of_not_mem {a : α} {s : Multiset α} : a ∉ s → ndinsert a s = a ::ₘ s :=
-  (Quot.induction_on s) fun l h => congr_argₓ coe <| insert_of_not_mem h
+  (Quot.induction_on s) fun l h => congr_argₓ coe <| insert_of_not_memₓ h
 
 @[simp]
 theorem mem_ndinsert {a b : α} {s : Multiset α} : a ∈ ndinsert b s ↔ a = b ∨ a ∈ s :=
-  (Quot.induction_on s) fun l => mem_insert_iff
+  (Quot.induction_on s) fun l => mem_insert_iffₓ
 
 @[simp]
 theorem le_ndinsert_self (a : α) (s : Multiset α) : s ≤ ndinsert a s :=
@@ -62,10 +62,10 @@ theorem length_ndinsert_of_mem {a : α} {s : Multiset α} (h : a ∈ s) : card (
 theorem length_ndinsert_of_not_mem {a : α} {s : Multiset α} (h : a ∉ s) : card (ndinsert a s) = card s + 1 := by
   simp [h]
 
-theorem erase_dup_cons {a : α} {s : Multiset α} : erase_dup (a ::ₘ s) = ndinsert a (erase_dup s) := by
+theorem erase_dup_cons {a : α} {s : Multiset α} : eraseDup (a ::ₘ s) = ndinsert a (eraseDup s) := by
   by_cases' a ∈ s <;> simp [h]
 
-theorem nodup_ndinsert (a : α) {s : Multiset α} : nodup s → nodup (ndinsert a s) :=
+theorem nodup_ndinsert (a : α) {s : Multiset α} : Nodup s → Nodup (ndinsert a s) :=
   (Quot.induction_on s) fun l => nodup_insert
 
 theorem ndinsert_le {a : α} {s t : Multiset α} : ndinsert a s ≤ t ↔ s ≤ t ∧ a ∈ t :=
@@ -153,20 +153,20 @@ theorem ndunion_le {s t u : Multiset α} : ndunion s t ≤ u ↔ s ⊆ u ∧ t �
 
 theorem subset_ndunion_left (s t : Multiset α) : s ⊆ ndunion s t := fun a h => mem_ndunion.2 <| Or.inl h
 
-theorem le_ndunion_left {s} (t : Multiset α) (d : nodup s) : s ≤ ndunion s t :=
+theorem le_ndunion_left {s} (t : Multiset α) (d : Nodup s) : s ≤ ndunion s t :=
   (le_iff_subset d).2 <| subset_ndunion_left _ _
 
 theorem ndunion_le_union (s t : Multiset α) : ndunion s t ≤ s ∪ t :=
   ndunion_le.2 ⟨subset_of_le (le_union_left _ _), le_union_right _ _⟩
 
-theorem nodup_ndunion (s : Multiset α) {t : Multiset α} : nodup t → nodup (ndunion s t) :=
+theorem nodup_ndunion (s : Multiset α) {t : Multiset α} : Nodup t → Nodup (ndunion s t) :=
   (Quotientₓ.induction_on₂ s t) fun l₁ l₂ => List.nodup_union _
 
 @[simp]
-theorem ndunion_eq_union {s t : Multiset α} (d : nodup s) : ndunion s t = s ∪ t :=
+theorem ndunion_eq_union {s t : Multiset α} (d : Nodup s) : ndunion s t = s ∪ t :=
   le_antisymmₓ (ndunion_le_union _ _) <| union_le (le_ndunion_left _ d) (le_ndunion_right _ _)
 
-theorem erase_dup_add (s t : Multiset α) : erase_dup (s + t) = ndunion s (erase_dup t) :=
+theorem erase_dup_add (s t : Multiset α) : eraseDup (s + t) = ndunion s (eraseDup t) :=
   (Quotientₓ.induction_on₂ s t) fun l₁ l₂ => congr_argₓ coe <| erase_dup_append _ _
 
 /-! ### finset inter -/
@@ -202,29 +202,29 @@ theorem mem_ndinter {s t : Multiset α} {a : α} : a ∈ ndinter s t ↔ a ∈ s
   mem_filter
 
 @[simp]
-theorem nodup_ndinter {s : Multiset α} (t : Multiset α) : nodup s → nodup (ndinter s t) :=
+theorem nodup_ndinter {s : Multiset α} (t : Multiset α) : Nodup s → Nodup (ndinter s t) :=
   nodup_filter _
 
 theorem le_ndinter {s t u : Multiset α} : s ≤ ndinter t u ↔ s ≤ t ∧ s ⊆ u := by
   simp [ndinter, le_filter, subset_iff]
 
 theorem ndinter_le_left (s t : Multiset α) : ndinter s t ≤ s :=
-  (le_ndinter.1 (le_reflₓ _)).1
+  (le_ndinter.1 le_rfl).1
 
 theorem ndinter_subset_left (s t : Multiset α) : ndinter s t ⊆ s :=
   subset_of_le (ndinter_le_left s t)
 
 theorem ndinter_subset_right (s t : Multiset α) : ndinter s t ⊆ t :=
-  (le_ndinter.1 (le_reflₓ _)).2
+  (le_ndinter.1 le_rfl).2
 
-theorem ndinter_le_right {s} (t : Multiset α) (d : nodup s) : ndinter s t ≤ t :=
+theorem ndinter_le_right {s} (t : Multiset α) (d : Nodup s) : ndinter s t ≤ t :=
   (le_iff_subset <| nodup_ndinter _ d).2 (ndinter_subset_right _ _)
 
 theorem inter_le_ndinter (s t : Multiset α) : s ∩ t ≤ ndinter s t :=
   le_ndinter.2 ⟨inter_le_left _ _, subset_of_le <| inter_le_right _ _⟩
 
 @[simp]
-theorem ndinter_eq_inter {s t : Multiset α} (d : nodup s) : ndinter s t = s ∩ t :=
+theorem ndinter_eq_inter {s t : Multiset α} (d : Nodup s) : ndinter s t = s ∩ t :=
   le_antisymmₓ (le_inter (ndinter_le_left _ _) (ndinter_le_right _ d)) (inter_le_ndinter _ _)
 
 theorem ndinter_eq_zero_iff_disjoint {s t : Multiset α} : ndinter s t = 0 ↔ Disjoint s t := by

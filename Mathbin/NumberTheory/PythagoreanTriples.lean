@@ -108,7 +108,7 @@ def is_primitive_classified :=
     (x = m ^ 2 - n ^ 2 ∧ y = 2 * m * n ∨ x = 2 * m * n ∧ y = m ^ 2 - n ^ 2) ∧
       Int.gcdₓ m n = 1 ∧ (m % 2 = 0 ∧ n % 2 = 1 ∨ m % 2 = 1 ∧ n % 2 = 0)
 
-theorem mul_is_classified (k : ℤ) (hc : h.is_classified) : (h.mul k).IsClassified := by
+theorem mul_is_classified (k : ℤ) (hc : h.IsClassified) : (h.mul k).IsClassified := by
   obtain ⟨l, m, n, ⟨⟨rfl, rfl⟩ | ⟨rfl, rfl⟩, co⟩⟩ := hc
   · use k * l, m, n
     apply And.intro _ co
@@ -204,15 +204,15 @@ theorem normalize : PythagoreanTriple (x / Int.gcdₓ x y) (y / Int.gcdₓ x y) 
   rw [mul_comm x0, mul_comm y0, mul_iff k hk] at h
   rwa [Int.mul_div_cancel _ hk, Int.mul_div_cancel _ hk, Int.mul_div_cancel_left _ hk]
 
-theorem is_classified_of_is_primitive_classified (hp : h.is_primitive_classified) : h.is_classified := by
+theorem is_classified_of_is_primitive_classified (hp : h.IsPrimitiveClassified) : h.IsClassified := by
   obtain ⟨m, n, H⟩ := hp
   use 1, m, n
   rcases H with ⟨t, co, pp⟩
   rw [one_mulₓ, one_mulₓ]
   exact ⟨t, co⟩
 
-theorem is_classified_of_normalize_is_primitive_classified (hc : h.normalize.is_primitive_classified) :
-    h.is_classified := by
+theorem is_classified_of_normalize_is_primitive_classified (hc : h.normalize.IsPrimitiveClassified) : h.IsClassified :=
+  by
   convert h.normalize.mul_is_classified (Int.gcdₓ x y) (is_classified_of_is_primitive_classified h.normalize hc) <;>
     rw [Int.mul_div_cancel']
   · exact Int.gcd_dvd_left x y
@@ -237,7 +237,7 @@ theorem ne_zero_of_coprime (hc : Int.gcdₓ x y = 1) : z ≠ 0 := by
     
 
 theorem is_primitive_classified_of_coprime_of_zero_left (hc : Int.gcdₓ x y = 1) (hx : x = 0) :
-    h.is_primitive_classified := by
+    h.IsPrimitiveClassified := by
   subst x
   change Nat.gcdₓ 0 (Int.natAbs y) = 1 at hc
   rw [Nat.gcd_zero_leftₓ (Int.natAbs y)] at hc
@@ -281,7 +281,7 @@ def circleEquivGen (hk : ∀ x : K, 1 + x ^ 2 ≠ 0) : K ≃ { p : K × K // p.1
     ⟨⟨2 * x / (1 + x ^ 2), (1 - x ^ 2) / (1 + x ^ 2)⟩, by
       field_simp [hk x, div_pow]
       ring, by
-      simp only [Ne.def, div_eq_iff (hk x), ← neg_mul_eq_neg_mul, one_mulₓ, neg_add, sub_eq_add_neg, add_left_injₓ]
+      simp only [Ne.def, div_eq_iff (hk x), neg_mul, one_mulₓ, neg_add, sub_eq_add_neg, add_left_injₓ]
       simpa only [eq_neg_iff_add_eq_zero, one_pow] using hk 1⟩
   invFun := fun p => (p : K × K).1 / ((p : K × K).2 + 1)
   left_inv := fun x => by
@@ -462,7 +462,7 @@ include h
 theorem is_primitive_classified_aux (hc : x.gcd y = 1) (hzpos : 0 < z) {m n : ℤ} (hm2n2 : 0 < m ^ 2 + n ^ 2)
     (hv2 : (x : ℚ) / z = 2 * m * n / (m ^ 2 + n ^ 2)) (hw2 : (y : ℚ) / z = (m ^ 2 - n ^ 2) / (m ^ 2 + n ^ 2))
     (H : Int.gcdₓ (m ^ 2 - n ^ 2) (m ^ 2 + n ^ 2) = 1) (co : Int.gcdₓ m n = 1)
-    (pp : m % 2 = 0 ∧ n % 2 = 1 ∨ m % 2 = 1 ∧ n % 2 = 0) : h.is_primitive_classified := by
+    (pp : m % 2 = 0 ∧ n % 2 = 1 ∨ m % 2 = 1 ∧ n % 2 = 0) : h.IsPrimitiveClassified := by
   have hz : z ≠ 0
   apply ne_of_gtₓ hzpos
   have h2 : y = m ^ 2 - n ^ 2 ∧ z = m ^ 2 + n ^ 2 := by
@@ -478,7 +478,7 @@ theorem is_primitive_classified_aux (hc : x.gcd y = 1) (hzpos : 0 < z) {m n : �
 
 -- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:98:4: warning: unsupported: rw with cfg: { occs := occurrences.pos «expr[ , ]»([2, 3]) }
 theorem is_primitive_classified_of_coprime_of_odd_of_pos (hc : Int.gcdₓ x y = 1) (hyo : y % 2 = 1) (hzpos : 0 < z) :
-    h.is_primitive_classified := by
+    h.IsPrimitiveClassified := by
   by_cases' h0 : x = 0
   · exact h.is_primitive_classified_of_coprime_of_zero_left hc h0
     
@@ -581,7 +581,7 @@ theorem is_primitive_classified_of_coprime_of_odd_of_pos (hc : Int.gcdₓ x y = 
     norm_num
     
 
-theorem is_primitive_classified_of_coprime_of_pos (hc : Int.gcdₓ x y = 1) (hzpos : 0 < z) : h.is_primitive_classified :=
+theorem is_primitive_classified_of_coprime_of_pos (hc : Int.gcdₓ x y = 1) (hzpos : 0 < z) : h.IsPrimitiveClassified :=
   by
   cases' h.even_odd_of_coprime hc with h1 h2
   · exact h.is_primitive_classified_of_coprime_of_odd_of_pos hc h1.right hzpos
@@ -591,7 +591,7 @@ theorem is_primitive_classified_of_coprime_of_pos (hc : Int.gcdₓ x y = 1) (hzp
   use m, n
   tauto
 
-theorem is_primitive_classified_of_coprime (hc : Int.gcdₓ x y = 1) : h.is_primitive_classified := by
+theorem is_primitive_classified_of_coprime (hc : Int.gcdₓ x y = 1) : h.IsPrimitiveClassified := by
   by_cases' hz : 0 < z
   · exact h.is_primitive_classified_of_coprime_of_pos hc hz
     
@@ -601,7 +601,7 @@ theorem is_primitive_classified_of_coprime (hc : Int.gcdₓ x y = 1) : h.is_prim
   apply lt_of_le_of_neₓ _ (h'.ne_zero_of_coprime hc).symm
   exact le_neg.mp (not_lt.mp hz)
 
-theorem classified : h.is_classified := by
+theorem classified : h.IsClassified := by
   by_cases' h0 : Int.gcdₓ x y = 0
   · have hx : x = 0 := by
       apply int.nat_abs_eq_zero.mp

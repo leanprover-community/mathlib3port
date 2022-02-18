@@ -55,13 +55,13 @@ instance : IsLawfulBitraversable Sum := by
 
 /-- The bitraverse function for `const`. It throws away the second map. -/
 @[nolint unused_arguments]
-def Const.bitraverse {α α' β β'} (f : α → F α') (f' : β → F β') : const α β → F (const α' β') :=
+def Const.bitraverse {α α' β β'} (f : α → F α') (f' : β → F β') : Const α β → F (Const α' β') :=
   f
 
-instance Bitraversable.const : Bitraversable const where
+instance Bitraversable.const : Bitraversable Const where
   bitraverse := @Const.bitraverse
 
-instance IsLawfulBitraversable.const : IsLawfulBitraversable const := by
+instance IsLawfulBitraversable.const : IsLawfulBitraversable Const := by
   constructor <;> intros <;> simp' [bitraverse, Const.bitraverse] with functor_norm <;> rfl
 
 /-- The bitraverse function for `flip`. -/

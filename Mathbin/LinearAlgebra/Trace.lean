@@ -42,10 +42,10 @@ def trace_aux : (M →ₗ[R] M) →ₗ[R] R :=
   Matrix.trace ι R R ∘ₗ ↑(LinearMap.toMatrix b b)
 
 theorem trace_aux_def (b : Basis ι R M) (f : M →ₗ[R] M) :
-    trace_aux R b f = Matrix.trace ι R R (LinearMap.toMatrix b b f) :=
+    traceAux R b f = Matrix.trace ι R R (LinearMap.toMatrix b b f) :=
   rfl
 
-theorem trace_aux_eq : trace_aux R b = trace_aux R c :=
+theorem trace_aux_eq : traceAux R b = traceAux R c :=
   LinearMap.ext fun f =>
     calc
       Matrix.trace ι R R (LinearMap.toMatrix b b f) =
@@ -74,7 +74,7 @@ variable (R) (M)
 
 /-- Trace of an endomorphism independent of basis. -/
 def trace : (M →ₗ[R] M) →ₗ[R] R :=
-  if H : ∃ s : Finset M, Nonempty (Basis s R M) then trace_aux R H.some_spec.some else 0
+  if H : ∃ s : Finset M, Nonempty (Basis s R M) then traceAux R H.some_spec.some else 0
 
 variable (R) {M}
 

@@ -44,7 +44,7 @@ variable {K : Type _} {R : Type _}
 
 local notation "q" => Fintype.card K
 
-open_locale BigOperators
+open_locale BigOperators Polynomial
 
 namespace FiniteField
 
@@ -58,20 +58,20 @@ open Polynomial
 
 /-- The cardinality of a field is at most `n` times the cardinality of the image of a degree `n`
   polynomial -/
-theorem card_image_polynomial_eval [DecidableEq R] [Fintype R] {p : Polynomial R} (hp : 0 < p.degree) :
-    Fintype.card R ≤ nat_degree p * (univ.Image fun x => eval x p).card :=
+theorem card_image_polynomial_eval [DecidableEq R] [Fintype R] {p : R[X]} (hp : 0 < p.degree) :
+    Fintype.card R ≤ natDegree p * (univ.Image fun x => eval x p).card :=
   Finset.card_le_mul_card_image _ _ fun a _ =>
     calc
-      _ = (p - C a).roots.toFinset.card :=
+      _ = (p - c a).roots.toFinset.card :=
         congr_argₓ card
           (by
             simp [Finset.ext_iff, mem_roots_sub_C hp])
-      _ ≤ (p - C a).roots.card := Multiset.to_finset_card_le _
+      _ ≤ (p - c a).roots.card := Multiset.to_finset_card_le _
       _ ≤ _ := card_roots_sub_C' hp
       
 
 /-- If `f` and `g` are quadratic polynomials, then the `f.eval a + g.eval b = 0` has a solution. -/
-theorem exists_root_sum_quadratic [Fintype R] {f g : Polynomial R} (hf2 : degree f = 2) (hg2 : degree g = 2)
+theorem exists_root_sum_quadratic [Fintype R] {f g : R[X]} (hf2 : degree f = 2) (hg2 : degree g = 2)
     (hR : Fintype.card R % 2 = 1) : ∃ a b, f.eval a + g.eval b = 0 := by
   let this' := Classical.decEq R <;>
     exact
@@ -122,7 +122,7 @@ theorem prod_univ_units_id_eq_neg_one [CommRingₓ K] [IsDomain K] [Fintype (K)�
       (fun a => by
         simp (config := { contextual := true })[Units.inv_eq_self_iff])
       (fun a => by
-        simp (config := { contextual := true })[@inv_eq_iff_inv_eq _ _ a, eq_comm])
+        simp [@inv_eq_iff_inv_eq _ _ a, eq_comm])
       (by
         simp )
   rw [← insert_erase (mem_univ (-1 : (K)ˣ)), prod_insert (not_mem_erase _ _), this, mul_oneₓ]
@@ -220,7 +220,7 @@ theorem sum_pow_units [Fintype (K)ˣ] (i : ℕ) : (∑ x : (K)ˣ, (x ^ i : K)) =
     split_ifs with h h
     swap
     rfl
-    rw [Fintype.card_units, Nat.cast_sub, cast_card_eq_zero, Nat.cast_one, zero_sub]
+    rw [Fintype.card_units, Nat.cast_sub, cast_card_eq_zero, Nat.cast_oneₓ, zero_sub]
     show 1 ≤ q
     exact fintype.card_pos_iff.mpr ⟨0⟩
   rw [← forall_pow_eq_one_iff, MonoidHom.ext_iff]
@@ -261,34 +261,33 @@ section
 
 variable (K' : Type _) [Field K'] {p n : ℕ}
 
-theorem X_pow_card_sub_X_nat_degree_eq (hp : 1 < p) : (X ^ p - X : Polynomial K').natDegree = p := by
-  have h1 : (X : Polynomial K').degree < (X ^ p : Polynomial K').degree := by
+theorem X_pow_card_sub_X_nat_degree_eq (hp : 1 < p) : (X ^ p - X : K'[X]).natDegree = p := by
+  have h1 : (X : K'[X]).degree < (X ^ p : K'[X]).degree := by
     rw [degree_X_pow, degree_X]
     exact_mod_cast hp
   rw [nat_degree_eq_of_degree_eq (degree_sub_eq_left_of_degree_lt h1), nat_degree_X_pow]
 
-theorem X_pow_card_pow_sub_X_nat_degree_eq (hn : n ≠ 0) (hp : 1 < p) :
-    (X ^ p ^ n - X : Polynomial K').natDegree = p ^ n :=
+theorem X_pow_card_pow_sub_X_nat_degree_eq (hn : n ≠ 0) (hp : 1 < p) : (X ^ p ^ n - X : K'[X]).natDegree = p ^ n :=
   X_pow_card_sub_X_nat_degree_eq K' <| Nat.one_lt_pow _ _ (Nat.pos_of_ne_zeroₓ hn) hp
 
-theorem X_pow_card_sub_X_ne_zero (hp : 1 < p) : (X ^ p - X : Polynomial K') ≠ 0 :=
+theorem X_pow_card_sub_X_ne_zero (hp : 1 < p) : (X ^ p - X : K'[X]) ≠ 0 :=
   ne_zero_of_nat_degree_gt <|
     calc
       1 < _ := hp
       _ = _ := (X_pow_card_sub_X_nat_degree_eq K' hp).symm
       
 
-theorem X_pow_card_pow_sub_X_ne_zero (hn : n ≠ 0) (hp : 1 < p) : (X ^ p ^ n - X : Polynomial K') ≠ 0 :=
+theorem X_pow_card_pow_sub_X_ne_zero (hn : n ≠ 0) (hp : 1 < p) : (X ^ p ^ n - X : K'[X]) ≠ 0 :=
   X_pow_card_sub_X_ne_zero K' <| Nat.one_lt_pow _ _ (Nat.pos_of_ne_zeroₓ hn) hp
 
 end
 
-variable (p : ℕ) [Fact p.prime] [CharP K p]
+variable (p : ℕ) [Fact p.Prime] [CharP K p]
 
-theorem roots_X_pow_card_sub_X : roots (X ^ q - X : Polynomial K) = Finset.univ.val := by
+theorem roots_X_pow_card_sub_X : roots (X ^ q - X : K[X]) = Finset.univ.val := by
   classical
-  have aux : (X ^ q - X : Polynomial K) ≠ 0 := X_pow_card_sub_X_ne_zero K Fintype.one_lt_card
-  have : (roots (X ^ q - X : Polynomial K)).toFinset = Finset.univ := by
+  have aux : (X ^ q - X : K[X]) ≠ 0 := X_pow_card_sub_X_ne_zero K Fintype.one_lt_card
+  have : (roots (X ^ q - X : K[X])).toFinset = Finset.univ := by
     rw [eq_univ_iff_forall]
     intro x
     rw [Multiset.mem_to_finset, mem_roots aux, is_root.def, eval_sub, eval_pow, eval_X, sub_eq_zero, pow_card]
@@ -299,14 +298,14 @@ theorem roots_X_pow_card_sub_X : roots (X ^ q - X : Polynomial K) = Finset.univ.
   rw [derivative_sub, derivative_X, derivative_X_pow, ← C_eq_nat_cast, C_eq_zero.mpr (CharP.cast_card_eq_zero K),
     zero_mul, zero_sub]
 
-instance : is_splitting_field (Zmod p) K (X ^ q - X) where
+instance : IsSplittingField (Zmod p) K (X ^ q - X) where
   Splits := by
-    have h : (X ^ q - X : Polynomial K).natDegree = q := X_pow_card_sub_X_nat_degree_eq K Fintype.one_lt_card
+    have h : (X ^ q - X : K[X]).natDegree = q := X_pow_card_sub_X_nat_degree_eq K Fintype.one_lt_card
     rw [← splits_id_iff_splits, splits_iff_card_roots, Polynomial.map_sub, Polynomial.map_pow, map_X, h,
       roots_X_pow_card_sub_X K, ← Finset.card_def, Finset.card_univ]
   adjoin_roots := by
     classical
-    trans Algebra.adjoin (Zmod p) ((roots (X ^ q - X : Polynomial K)).toFinset : Set K)
+    trans Algebra.adjoin (Zmod p) ((roots (X ^ q - X : K[X])).toFinset : Set K)
     · simp only [Polynomial.map_pow, map_X, Polynomial.map_sub]
       convert rfl
       
@@ -317,7 +316,7 @@ end IsSplittingField
 
 variable {K}
 
-theorem frobenius_pow {p : ℕ} [Fact p.prime] [CharP K p] {n : ℕ} (hcard : q = p ^ n) : frobenius K p ^ n = 1 := by
+theorem frobenius_pow {p : ℕ} [Fact p.Prime] [CharP K p] {n : ℕ} (hcard : q = p ^ n) : frobenius K p ^ n = 1 := by
   ext
   conv_rhs => rw [RingHom.one_def, RingHom.id_apply, ← pow_card x, hcard]
   clear hcard
@@ -328,7 +327,7 @@ theorem frobenius_pow {p : ℕ} [Fact p.prime] [CharP K p] {n : ℕ} (hcard : q 
 
 open Polynomial
 
-theorem expand_card (f : Polynomial K) : expand K q f = f ^ q := by
+theorem expand_card (f : K[X]) : expand K q f = f ^ q := by
   cases' CharP.exists K with p hp
   let this' := hp
   rcases FiniteField.card K p with ⟨⟨n, npos⟩, ⟨hp, hn⟩⟩
@@ -343,7 +342,7 @@ namespace Zmod
 open FiniteField Polynomial
 
 -- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
-theorem sq_add_sq (p : ℕ) [hp : Fact p.prime] (x : Zmod p) : ∃ a b : Zmod p, a ^ 2 + b ^ 2 = x := by
+theorem sq_add_sq (p : ℕ) [hp : Fact p.Prime] (x : Zmod p) : ∃ a b : Zmod p, a ^ 2 + b ^ 2 = x := by
   cases' hp.1.eq_two_or_odd with hp2 hp_odd
   · subst p
     change Finₓ 2 at x
@@ -355,8 +354,8 @@ theorem sq_add_sq (p : ℕ) [hp : Fact p.prime] (x : Zmod p) : ∃ a b : Zmod p,
       simp
       
     
-  let f : Polynomial (Zmod p) := X ^ 2
-  let g : Polynomial (Zmod p) := X ^ 2 - C x
+  let f : (Zmod p)[X] := X ^ 2
+  let g : (Zmod p)[X] := X ^ 2 - C x
   obtain ⟨a, b, hab⟩ : ∃ a b, f.eval a + g.eval b = 0 :=
     @exists_root_sum_quadratic _ _ _ _ f g (degree_X_pow 2)
       (degree_X_pow_sub_C
@@ -402,7 +401,7 @@ theorem Nat.Modeq.pow_totient {x n : ℕ} (h : Nat.Coprime x n) : x ^ φ n ≡ 1
   let x' : Units (Zmod (n + 1)) := Zmod.unitOfCoprime _ h
   have := Zmod.pow_totient x'
   apply_fun (coe : Units (Zmod (n + 1)) → Zmod (n + 1))  at this
-  simpa only [-Zmod.pow_totient, Nat.succ_eq_add_one, Nat.cast_pow, Units.coe_one, Nat.cast_one, coe_unit_of_coprime,
+  simpa only [-Zmod.pow_totient, Nat.succ_eq_add_one, Nat.cast_powₓ, Units.coe_one, Nat.cast_oneₓ, coe_unit_of_coprime,
     Units.coe_pow]
 
 section
@@ -421,12 +420,12 @@ namespace Zmod
 
 /-- A variation on Fermat's little theorem. See `zmod.pow_card_sub_one_eq_one` -/
 @[simp]
-theorem pow_card {p : ℕ} [Fact p.prime] (x : Zmod p) : x ^ p = x := by
+theorem pow_card {p : ℕ} [Fact p.Prime] (x : Zmod p) : x ^ p = x := by
   have h := FiniteField.pow_card x
   rwa [Zmod.card p] at h
 
 @[simp]
-theorem pow_card_pow {n p : ℕ} [Fact p.prime] (x : Zmod p) : x ^ p ^ n = x := by
+theorem pow_card_pow {n p : ℕ} [Fact p.Prime] (x : Zmod p) : x ^ p ^ n = x := by
   induction' n with n ih
   · simp
     
@@ -434,26 +433,26 @@ theorem pow_card_pow {n p : ℕ} [Fact p.prime] (x : Zmod p) : x ^ p ^ n = x := 
     
 
 @[simp]
-theorem frobenius_zmod (p : ℕ) [Fact p.prime] : frobenius (Zmod p) p = RingHom.id _ := by
+theorem frobenius_zmod (p : ℕ) [Fact p.Prime] : frobenius (Zmod p) p = RingHom.id _ := by
   ext a
   rw [frobenius_def, Zmod.pow_card, RingHom.id_apply]
 
 @[simp]
-theorem card_units (p : ℕ) [Fact p.prime] : Fintype.card (Zmod p)ˣ = p - 1 := by
+theorem card_units (p : ℕ) [Fact p.Prime] : Fintype.card (Zmod p)ˣ = p - 1 := by
   rw [Fintype.card_units, card]
 
 /-- **Fermat's Little Theorem**: for every unit `a` of `zmod p`, we have `a ^ (p - 1) = 1`. -/
-theorem units_pow_card_sub_one_eq_one (p : ℕ) [Fact p.prime] (a : (Zmod p)ˣ) : a ^ (p - 1) = 1 := by
+theorem units_pow_card_sub_one_eq_one (p : ℕ) [Fact p.Prime] (a : (Zmod p)ˣ) : a ^ (p - 1) = 1 := by
   rw [← card_units p, pow_card_eq_one]
 
 /-- **Fermat's Little Theorem**: for all nonzero `a : zmod p`, we have `a ^ (p - 1) = 1`. -/
-theorem pow_card_sub_one_eq_one {p : ℕ} [Fact p.prime] {a : Zmod p} (ha : a ≠ 0) : a ^ (p - 1) = 1 := by
+theorem pow_card_sub_one_eq_one {p : ℕ} [Fact p.Prime] {a : Zmod p} (ha : a ≠ 0) : a ^ (p - 1) = 1 := by
   have h := pow_card_sub_one_eq_one a ha
   rwa [Zmod.card p] at h
 
 open Polynomial
 
-theorem expand_card {p : ℕ} [Fact p.prime] (f : Polynomial (Zmod p)) : expand (Zmod p) p f = f ^ p := by
+theorem expand_card {p : ℕ} [Fact p.Prime] (f : Polynomial (Zmod p)) : expand (Zmod p) p f = f ^ p := by
   have h := FiniteField.expand_card f
   rwa [Zmod.card p] at h
 

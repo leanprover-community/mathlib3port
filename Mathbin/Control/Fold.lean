@@ -104,10 +104,10 @@ how the monoid of endofunctions define `foldl`.
 def foldl (α : Type u) : Type u :=
   End αᵐᵒᵖ
 
-def foldl.mk (f : α → α) : foldl α :=
+def foldl.mk (f : α → α) : Foldl α :=
   op f
 
-def foldl.get (x : foldl α) : α → α :=
+def foldl.get (x : Foldl α) : α → α :=
   unop x
 
 def foldl.of_free_monoid (f : β → α → β) (xs : FreeMonoid α) : Monoidₓ.Foldl β :=
@@ -117,10 +117,10 @@ def foldl.of_free_monoid (f : β → α → β) (xs : FreeMonoid α) : Monoidₓ
 def foldr (α : Type u) : Type u :=
   End α
 
-def foldr.mk (f : α → α) : foldr α :=
+def foldr.mk (f : α → α) : Foldr α :=
   f
 
-def foldr.get (x : foldr α) : α → α :=
+def foldr.get (x : Foldr α) : α → α :=
   x
 
 def foldr.of_free_monoid (f : α → β → β) (xs : FreeMonoid α) : Monoidₓ.Foldr β :=
@@ -128,12 +128,12 @@ def foldr.of_free_monoid (f : α → β → β) (xs : FreeMonoid α) : Monoidₓ
 
 @[reducible]
 def mfoldl (m : Type u → Type u) [Monadₓ m] (α : Type u) : Type u :=
-  MulOpposite <| End <| Kleisli.mk m α
+  MulOpposite <| End <| KleisliCat.mk m α
 
-def mfoldl.mk (f : α → m α) : mfoldl m α :=
+def mfoldl.mk (f : α → m α) : Mfoldl m α :=
   op f
 
-def mfoldl.get (x : mfoldl m α) : α → m α :=
+def mfoldl.get (x : Mfoldl m α) : α → m α :=
   unop x
 
 def mfoldl.of_free_monoid (f : β → α → m β) (xs : FreeMonoid α) : Monoidₓ.Mfoldl m β :=
@@ -141,12 +141,12 @@ def mfoldl.of_free_monoid (f : β → α → m β) (xs : FreeMonoid α) : Monoid
 
 @[reducible]
 def mfoldr (m : Type u → Type u) [Monadₓ m] (α : Type u) : Type u :=
-  End <| Kleisli.mk m α
+  End <| KleisliCat.mk m α
 
-def mfoldr.mk (f : α → m α) : mfoldr m α :=
+def mfoldr.mk (f : α → m α) : Mfoldr m α :=
   f
 
-def mfoldr.get (x : mfoldr m α) : α → m α :=
+def mfoldr.get (x : Mfoldr m α) : α → m α :=
   x
 
 def mfoldr.of_free_monoid (f : α → β → m β) (xs : FreeMonoid α) : Monoidₓ.Mfoldr m β :=
@@ -166,10 +166,10 @@ def fold_map {α ω} [One ω] [Mul ω] (f : α → ω) : t α → ω :=
   traverse (const.mk' ∘ f)
 
 def foldl (f : α → β → α) (x : α) (xs : t β) : α :=
-  (fold_map (foldl.mk ∘ flip f) xs).get x
+  (foldMap (foldl.mk ∘ flip f) xs).get x
 
 def foldr (f : α → β → β) (x : β) (xs : t α) : β :=
-  (fold_map (foldr.mk ∘ f) xs).get x
+  (foldMap (foldr.mk ∘ f) xs).get x
 
 /-- Conceptually, `to_list` collects all the elements of a collection
 in a list. This idea is formalized by
@@ -196,10 +196,10 @@ def length (xs : t α) : ℕ :=
 variable {m : Type u → Type u} [Monadₓ m]
 
 def mfoldl (f : α → β → m α) (x : α) (xs : t β) : m α :=
-  (fold_map (mfoldl.mk ∘ flip f) xs).get x
+  (foldMap (mfoldl.mk ∘ flip f) xs).get x
 
 def mfoldr (f : α → β → m β) (x : β) (xs : t α) : m β :=
-  (fold_map (mfoldr.mk ∘ f) xs).get x
+  (foldMap (mfoldr.mk ∘ f) xs).get x
 
 end Defs
 
@@ -212,7 +212,7 @@ open Function hiding const
 open IsMonoidHom
 
 def map_fold [Monoidₓ α] [Monoidₓ β] {f : α → β} (hf : IsMonoidHom f) :
-    ApplicativeTransformation (const α) (const β) where
+    ApplicativeTransformation (Const α) (Const β) where
   app := fun x => f
   preserves_seq' := by
     intros
@@ -227,26 +227,26 @@ def free.mk : α → FreeMonoid α :=
 def free.map (f : α → β) : FreeMonoid α → FreeMonoid β :=
   List.map f
 
-theorem free.map_eq_map (f : α → β) (xs : List α) : f <$> xs = free.map f xs :=
+theorem free.map_eq_map (f : α → β) (xs : List α) : f <$> xs = Free.map f xs :=
   rfl
 
-theorem free.map.is_monoid_hom (f : α → β) : IsMonoidHom (free.map f) :=
+theorem free.map.is_monoid_hom (f : α → β) : IsMonoidHom (Free.map f) :=
   { map_mul := fun x y => by
       simp only [free.map, FreeMonoid.mul_def, List.map_append, FreeAddMonoid.add_def],
     map_one := by
       simp only [free.map, FreeMonoid.one_def, List.map, FreeAddMonoid.zero_def] }
 
-theorem fold_foldl (f : β → α → β) : IsMonoidHom (foldl.of_free_monoid f) :=
+theorem fold_foldl (f : β → α → β) : IsMonoidHom (Foldl.ofFreeMonoid f) :=
   { map_one := rfl,
     map_mul := by
       intros <;>
         simp only [FreeMonoid.mul_def, foldl.of_free_monoid, flip, unop_op, List.foldl_append, op_inj] <;> rfl }
 
 theorem foldl.unop_of_free_monoid (f : β → α → β) (xs : FreeMonoid α) (a : β) :
-    unop (foldl.of_free_monoid f xs) a = List.foldlₓ f a xs :=
+    unop (Foldl.ofFreeMonoid f xs) a = List.foldlₓ f a xs :=
   rfl
 
-theorem fold_foldr (f : α → β → β) : IsMonoidHom (foldr.of_free_monoid f) :=
+theorem fold_foldr (f : α → β → β) : IsMonoidHom (Foldr.ofFreeMonoid f) :=
   { map_one := rfl,
     map_mul := by
       intros
@@ -257,15 +257,15 @@ variable (m : Type u → Type u) [Monadₓ m] [IsLawfulMonad m]
 
 @[simp]
 theorem mfoldl.unop_of_free_monoid (f : β → α → m β) (xs : FreeMonoid α) (a : β) :
-    unop (mfoldl.of_free_monoid f xs) a = List.mfoldl f a xs :=
+    unop (Mfoldl.ofFreeMonoid f xs) a = List.mfoldl f a xs :=
   rfl
 
-theorem fold_mfoldl (f : β → α → m β) : IsMonoidHom (mfoldl.of_free_monoid f) :=
+theorem fold_mfoldl (f : β → α → m β) : IsMonoidHom (Mfoldl.ofFreeMonoid f) :=
   { map_one := rfl,
     map_mul := by
       intros <;> apply unop_injective <;> ext <;> apply List.mfoldl_append }
 
-theorem fold_mfoldr (f : α → β → m β) : IsMonoidHom (mfoldr.of_free_monoid f) :=
+theorem fold_mfoldr (f : α → β → m β) : IsMonoidHom (Mfoldr.ofFreeMonoid f) :=
   { map_one := rfl,
     map_mul := by
       intros <;> ext <;> apply List.mfoldr_append }
@@ -275,24 +275,24 @@ variable {t : Type u → Type u} [Traversable t] [IsLawfulTraversable t]
 open IsLawfulTraversable
 
 theorem fold_map_hom [Monoidₓ α] [Monoidₓ β] {f : α → β} (hf : IsMonoidHom f) (g : γ → α) (x : t γ) :
-    f (fold_map g x) = fold_map (f ∘ g) x :=
+    f (foldMap g x) = foldMap (f ∘ g) x :=
   calc
-    f (fold_map g x) = f (traverse (const.mk' ∘ g) x) := rfl
-    _ = (map_fold hf).app _ (traverse (const.mk' ∘ g) x) := rfl
-    _ = traverse ((map_fold hf).app _ ∘ const.mk' ∘ g) x := naturality (map_fold hf) _ _
-    _ = fold_map (f ∘ g) x := rfl
+    f (foldMap g x) = f (traverse (const.mk' ∘ g) x) := rfl
+    _ = (mapFold hf).app _ (traverse (const.mk' ∘ g) x) := rfl
+    _ = traverse ((mapFold hf).app _ ∘ const.mk' ∘ g) x := naturality (mapFold hf) _ _
+    _ = foldMap (f ∘ g) x := rfl
     
 
 theorem fold_map_hom_free [Monoidₓ β] {f : FreeMonoid α → β} (hf : IsMonoidHom f) (x : t α) :
-    f (fold_map free.mk x) = fold_map (f ∘ free.mk) x :=
+    f (foldMap Free.mk x) = foldMap (f ∘ free.mk) x :=
   fold_map_hom hf _ x
 
 variable {m}
 
-theorem fold_mfoldl_cons (f : α → β → m α) (x : β) (y : α) : List.mfoldl f y (free.mk x) = f y x := by
+theorem fold_mfoldl_cons (f : α → β → m α) (x : β) (y : α) : List.mfoldl f y (Free.mk x) = f y x := by
   simp only [free.mk, List.ret, List.mfoldl, bind_pureₓ]
 
-theorem fold_mfoldr_cons (f : β → α → m α) (x : β) (y : α) : List.mfoldr f y (free.mk x) = f x y := by
+theorem fold_mfoldr_cons (f : β → α → m α) (x : β) (y : α) : List.mfoldr f y (Free.mk x) = f x y := by
   simp only [free.mk, List.ret, List.mfoldr, pure_bind]
 
 end ApplicativeTransformation
@@ -308,34 +308,34 @@ variable {α β γ : Type u}
 variable {t : Type u → Type u} [Traversable t] [IsLawfulTraversable t]
 
 @[simp]
-theorem foldl.of_free_monoid_comp_free_mk (f : α → β → α) : foldl.of_free_monoid f ∘ free.mk = foldl.mk ∘ flip f :=
+theorem foldl.of_free_monoid_comp_free_mk (f : α → β → α) : Foldl.ofFreeMonoid f ∘ free.mk = foldl.mk ∘ flip f :=
   rfl
 
 @[simp]
-theorem foldr.of_free_monoid_comp_free_mk (f : β → α → α) : foldr.of_free_monoid f ∘ free.mk = foldr.mk ∘ f :=
+theorem foldr.of_free_monoid_comp_free_mk (f : β → α → α) : Foldr.ofFreeMonoid f ∘ free.mk = foldr.mk ∘ f :=
   rfl
 
 @[simp]
 theorem mfoldl.of_free_monoid_comp_free_mk {m} [Monadₓ m] [IsLawfulMonad m] (f : α → β → m α) :
-    mfoldl.of_free_monoid f ∘ free.mk = mfoldl.mk ∘ flip f := by
+    Mfoldl.ofFreeMonoid f ∘ free.mk = mfoldl.mk ∘ flip f := by
   ext <;> simp only [· ∘ ·, mfoldl.of_free_monoid, mfoldl.mk, flip, fold_mfoldl_cons] <;> rfl
 
 @[simp]
 theorem mfoldr.of_free_monoid_comp_free_mk {m} [Monadₓ m] [IsLawfulMonad m] (f : β → α → m α) :
-    mfoldr.of_free_monoid f ∘ free.mk = mfoldr.mk ∘ f := by
+    Mfoldr.ofFreeMonoid f ∘ free.mk = mfoldr.mk ∘ f := by
   ext
   simp only [· ∘ ·, mfoldr.of_free_monoid, mfoldr.mk, flip, fold_mfoldr_cons]
 
-theorem to_list_spec (xs : t α) : to_list xs = (fold_map free.mk xs : FreeMonoid _) :=
+theorem to_list_spec (xs : t α) : toList xs = (foldMap Free.mk xs : FreeMonoid _) :=
   Eq.symm <|
     calc
-      fold_map free.mk xs = (fold_map free.mk xs).reverse.reverse := by
+      foldMap Free.mk xs = (foldMap Free.mk xs).reverse.reverse := by
         simp only [List.reverse_reverse]
-      _ = (List.foldr cons [] (fold_map free.mk xs).reverse).reverse := by
+      _ = (List.foldr cons [] (foldMap Free.mk xs).reverse).reverse := by
         simp only [List.foldr_eta]
-      _ = (unop (foldl.of_free_monoid (flip cons) (fold_map free.mk xs)) []).reverse := by
+      _ = (unop (Foldl.ofFreeMonoid (flip cons) (foldMap Free.mk xs)) []).reverse := by
         simp only [flip, List.foldr_reverse, foldl.of_free_monoid, unop_op]
-      _ = to_list xs := by
+      _ = toList xs := by
         have : IsMonoidHom (foldl.of_free_monoid (flip <| @cons α)) := by
           apply fold_foldl
         rw [fold_map_hom_free this]
@@ -344,18 +344,18 @@ theorem to_list_spec (xs : t α) : to_list xs = (fold_map free.mk xs : FreeMonoi
           infer_instance
       
 
-theorem fold_map_map [Monoidₓ γ] (f : α → β) (g : β → γ) (xs : t α) : fold_map g (f <$> xs) = fold_map (g ∘ f) xs := by
+theorem fold_map_map [Monoidₓ γ] (f : α → β) (g : β → γ) (xs : t α) : foldMap g (f <$> xs) = foldMap (g ∘ f) xs := by
   simp only [fold_map, traverse_map]
 
-theorem foldl_to_list (f : α → β → α) (xs : t β) (x : α) : foldl f x xs = List.foldlₓ f x (to_list xs) := by
+theorem foldl_to_list (f : α → β → α) (xs : t β) (x : α) : foldl f x xs = List.foldlₓ f x (toList xs) := by
   rw [← foldl.unop_of_free_monoid]
   simp only [foldl, to_list_spec, fold_map_hom_free (fold_foldl f), foldl.of_free_monoid_comp_free_mk, foldl.get]
 
-theorem foldr_to_list (f : α → β → β) (xs : t α) (x : β) : foldr f x xs = List.foldr f x (to_list xs) := by
+theorem foldr_to_list (f : α → β → β) (xs : t α) (x : β) : foldr f x xs = List.foldr f x (toList xs) := by
   change _ = foldr.of_free_monoid _ _ _
   simp only [foldr, to_list_spec, fold_map_hom_free (fold_foldr f), foldr.of_free_monoid_comp_free_mk, foldr.get]
 
-theorem to_list_map (f : α → β) (xs : t α) : to_list (f <$> xs) = f <$> to_list xs := by
+theorem to_list_map (f : α → β) (xs : t α) : toList (f <$> xs) = f <$> toList xs := by
   simp only [to_list_spec, free.map_eq_map, fold_map_hom (free.map.is_monoid_hom f), fold_map_map] <;> rfl
 
 @[simp]
@@ -368,7 +368,7 @@ theorem foldr_map (g : β → γ) (f : γ → α → α) (a : α) (l : t β) : f
   simp only [foldr, fold_map_map, · ∘ ·, flip]
 
 @[simp]
-theorem to_list_eq_self {xs : List α} : to_list xs = xs := by
+theorem to_list_eq_self {xs : List α} : toList xs = xs := by
   simp only [to_list_spec, fold_map, traverse]
   induction xs
   case list.nil =>
@@ -378,7 +378,7 @@ theorem to_list_eq_self {xs : List α} : to_list xs = xs := by
     rw [ih]
     rfl
 
-theorem length_to_list {xs : t α} : length xs = List.length (to_list xs) := by
+theorem length_to_list {xs : t α} : length xs = List.length (toList xs) := by
   unfold length
   rw [foldl_to_list]
   generalize to_list xs = ys
@@ -402,16 +402,16 @@ theorem length_to_list {xs : t α} : length xs = List.length (to_list xs) := by
 
 variable {m : Type u → Type u} [Monadₓ m] [IsLawfulMonad m]
 
-theorem mfoldl_to_list {f : α → β → m α} {x : α} {xs : t β} : mfoldl f x xs = List.mfoldl f x (to_list xs) :=
+theorem mfoldl_to_list {f : α → β → m α} {x : α} {xs : t β} : mfoldl f x xs = List.mfoldl f x (toList xs) :=
   calc
-    mfoldl f x xs = unop (mfoldl.of_free_monoid f (to_list xs)) x := by
+    mfoldl f x xs = unop (Mfoldl.ofFreeMonoid f (toList xs)) x := by
       simp only [mfoldl, to_list_spec, fold_map_hom_free (fold_mfoldl (fun β : Type u => m β) f),
         mfoldl.of_free_monoid_comp_free_mk, mfoldl.get]
-    _ = List.mfoldl f x (to_list xs) := by
+    _ = List.mfoldl f x (toList xs) := by
       simp only [mfoldl.of_free_monoid, unop_op, flip]
     
 
-theorem mfoldr_to_list (f : α → β → m β) (x : β) (xs : t α) : mfoldr f x xs = List.mfoldr f x (to_list xs) := by
+theorem mfoldr_to_list (f : α → β → m β) (x : β) (xs : t α) : mfoldr f x xs = List.mfoldr f x (toList xs) := by
   change _ = mfoldr.of_free_monoid f (to_list xs) x
   simp only [mfoldr, to_list_spec, fold_map_hom_free (fold_mfoldr (fun β : Type u => m β) f),
     mfoldr.of_free_monoid_comp_free_mk, mfoldr.get]

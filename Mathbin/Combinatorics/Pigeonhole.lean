@@ -149,7 +149,7 @@ theorem exists_sum_fiber_lt_of_sum_fiber_nonneg_of_sum_lt_nsmul
 version: if the total weight of a finite set of pigeons is greater than or equal to `n • b`, and
 they are sorted into `n > 0` pigeonholes, then for some pigeonhole, the total weight of the pigeons
 in this pigeonhole is greater than or equal to `b`. -/
-theorem exists_le_sum_fiber_of_maps_to_of_nsmul_le_sum (hf : ∀, ∀ a ∈ s, ∀, f a ∈ t) (ht : t.nonempty)
+theorem exists_le_sum_fiber_of_maps_to_of_nsmul_le_sum (hf : ∀, ∀ a ∈ s, ∀, f a ∈ t) (ht : t.Nonempty)
     (hb : t.card • b ≤ ∑ x in s, w x) : ∃ y ∈ t, b ≤ ∑ x in s.filter fun x => f x = y, w x :=
   exists_le_of_sum_le ht <| by
     simpa only [sum_fiberwise_of_maps_to hf, sum_const]
@@ -158,7 +158,7 @@ theorem exists_le_sum_fiber_of_maps_to_of_nsmul_le_sum (hf : ∀, ∀ a ∈ s, �
 version: if the total weight of a finite set of pigeons is less than or equal to `n • b`, and they
 are sorted into `n > 0` pigeonholes, then for some pigeonhole, the total weight of the pigeons in
 this pigeonhole is less than or equal to `b`. -/
-theorem exists_sum_fiber_le_of_maps_to_of_sum_le_nsmul (hf : ∀, ∀ a ∈ s, ∀, f a ∈ t) (ht : t.nonempty)
+theorem exists_sum_fiber_le_of_maps_to_of_sum_le_nsmul (hf : ∀, ∀ a ∈ s, ∀, f a ∈ t) (ht : t.Nonempty)
     (hb : (∑ x in s, w x) ≤ t.card • b) : ∃ y ∈ t, (∑ x in s.filter fun x => f x = y, w x) ≤ b :=
   @exists_le_sum_fiber_of_maps_to_of_nsmul_le_sum α β (OrderDual M) _ _ _ _ _ _ _ hf ht hb
 
@@ -169,7 +169,7 @@ are sorted into some pigeonholes, and for all but `n > 0` pigeonholes the total 
 pigeons there is nonpositive, then for at least one of these `n` pigeonholes, the total weight of
 the pigeons in this pigeonhole is greater than or equal to `b`. -/
 theorem exists_le_sum_fiber_of_sum_fiber_nonpos_of_nsmul_le_sum
-    (hf : ∀ y _ : y ∉ t, (∑ x in s.filter fun x => f x = y, w x) ≤ 0) (ht : t.nonempty)
+    (hf : ∀ y _ : y ∉ t, (∑ x in s.filter fun x => f x = y, w x) ≤ 0) (ht : t.Nonempty)
     (hb : t.card • b ≤ ∑ x in s, w x) : ∃ y ∈ t, b ≤ ∑ x in s.filter fun x => f x = y, w x :=
   exists_le_of_sum_le ht <|
     calc
@@ -185,7 +185,7 @@ sorted into some pigeonholes, and for all but `n > 0` pigeonholes the total weig
 there is nonnegative, then for at least one of these `n` pigeonholes, the total weight of the
 pigeons in this pigeonhole is less than or equal to `b`. -/
 theorem exists_sum_fiber_le_of_sum_fiber_nonneg_of_sum_le_nsmul
-    (hf : ∀ y _ : y ∉ t, (0 : M) ≤ ∑ x in s.filter fun x => f x = y, w x) (ht : t.nonempty)
+    (hf : ∀ y _ : y ∉ t, (0 : M) ≤ ∑ x in s.filter fun x => f x = y, w x) (ht : t.Nonempty)
     (hb : (∑ x in s, w x) ≤ t.card • b) : ∃ y ∈ t, (∑ x in s.filter fun x => f x = y, w x) ≤ b :=
   @exists_le_sum_fiber_of_sum_fiber_nonpos_of_nsmul_le_sum α β (OrderDual M) _ _ _ _ _ _ _ hf ht hb
 
@@ -237,7 +237,7 @@ theorem exists_card_fiber_lt_of_card_lt_mul (hn : s.card < t.card * n) :
 finite sets `s` and `t` and a natural number `n` such that `card t * n ≤ card s`, there exists `y ∈
 t` such that its preimage in `s` has at least `n` elements. See also
 `finset.exists_lt_card_fiber_of_mul_lt_card_of_maps_to` for a stronger statement. -/
-theorem exists_le_card_fiber_of_mul_le_card_of_maps_to (hf : ∀, ∀ a ∈ s, ∀, f a ∈ t) (ht : t.nonempty)
+theorem exists_le_card_fiber_of_mul_le_card_of_maps_to (hf : ∀, ∀ a ∈ s, ∀, f a ∈ t) (ht : t.Nonempty)
     (hn : t.card * n ≤ s.card) : ∃ y ∈ t, n ≤ (s.filter fun x => f x = y).card := by
   simp only [card_eq_sum_ones]
   apply exists_le_sum_fiber_of_maps_to_of_nsmul_le_sum hf ht
@@ -247,7 +247,7 @@ theorem exists_le_card_fiber_of_mul_le_card_of_maps_to (hf : ∀, ∀ a ∈ s, �
 finite sets `s` in its domain, a finite set `t` in its codomain, and a natural number `n` such that
 `card s ≤ card t * n`, there exists `y ∈ t` such that its preimage in `s` has no more than `n`
 elements. See also `finset.exists_card_fiber_lt_of_card_lt_mul` for a stronger statement. -/
-theorem exists_card_fiber_le_of_card_le_mul (ht : t.nonempty) (hn : s.card ≤ t.card * n) :
+theorem exists_card_fiber_le_of_card_le_mul (ht : t.Nonempty) (hn : s.card ≤ t.card * n) :
     ∃ y ∈ t, (s.filter fun x => f x = y).card ≤ n := by
   simp only [card_eq_sum_ones]
   apply exists_sum_fiber_le_of_sum_fiber_nonneg_of_sum_le_nsmul (fun _ _ => Nat.zero_leₓ _) ht
@@ -353,7 +353,7 @@ open Set
 
 /-- If `s` is an infinite set of natural numbers and `k > 0`, then `s` contains two elements `m < n`
 that are equal mod `k`. -/
-theorem exists_lt_modeq_of_infinite {s : Set ℕ} (hs : s.infinite) {k : ℕ} (hk : 0 < k) :
+theorem exists_lt_modeq_of_infinite {s : Set ℕ} (hs : s.Infinite) {k : ℕ} (hk : 0 < k) :
     ∃ m ∈ s, ∃ n ∈ s, m < n ∧ m ≡ n [MOD k] :=
   (hs.exists_lt_map_eq_of_maps_to fun n _ => show n % k ∈ Iio k from Nat.mod_ltₓ n hk) <| finite_lt_nat k
 

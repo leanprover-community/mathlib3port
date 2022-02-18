@@ -53,7 +53,7 @@ theorem of_rat_one : of_rat 1 = 1 :=
   rfl
 
 @[simp]
-theorem mk_eq_zero {f} : mk f = 0 ↔ lim_zero f := by
+theorem mk_eq_zero {f} : mk f = 0 ↔ LimZero f := by
   have : mk f = 0 ↔ lim_zero (f - 0) := Quotientₓ.eq <;> rwa [sub_zero] at this
 
 instance : Add Cauchy :=
@@ -141,7 +141,7 @@ local notation "Cauchy" => @Cauchy _ _ _ _ abv _
 
 noncomputable instance : Inv Cauchy :=
   ⟨fun x =>
-    (Quotientₓ.liftOn x fun f => mk <| if h : lim_zero f then 0 else inv f h) fun f g fg => by
+    (Quotientₓ.liftOn x fun f => mk <| if h : LimZero f then 0 else inv f h) fun f g fg => by
       have := lim_zero_congr fg
       by_cases' hf : lim_zero f
       · simp [hf, this.1 hf, Setoidₓ.refl]
@@ -166,8 +166,8 @@ theorem inv_mk {f} hf : (@mk α _ β _ abv _ f)⁻¹ = mk (inv f hf) :=
     rw [dif_neg]
 
 theorem cau_seq_zero_ne_one : ¬(0 : CauSeq _ abv) ≈ 1 := fun h =>
-  have : lim_zero (1 - 0) := Setoidₓ.symm h
-  have : lim_zero 1 := by
+  have : LimZero (1 - 0) := Setoidₓ.symm h
+  have : LimZero 1 := by
     simpa
   one_ne_zero <| const_lim_zero.1 this
 
@@ -183,18 +183,18 @@ protected theorem inv_mul_cancel {x : Cauchy} : x ≠ 0 → x⁻¹ * x = 1 :=
 See note [reducible non-instances]. -/
 @[reducible]
 noncomputable def Field : Field Cauchy :=
-  { Cauchy.comm_ring with inv := Inv.inv,
+  { Cauchy.commRing with inv := Inv.inv,
     mul_inv_cancel := fun x x0 => by
       rw [mul_comm, CauSeq.Completion.inv_mul_cancel x0],
     exists_pair_ne := ⟨0, 1, zero_ne_one⟩, inv_zero }
 
 attribute [local instance] Field
 
-theorem of_rat_inv (x : β) : of_rat x⁻¹ = ((of_rat x)⁻¹ : Cauchy) :=
+theorem of_rat_inv (x : β) : ofRat x⁻¹ = ((ofRat x)⁻¹ : Cauchy) :=
   congr_argₓ mk <| by
     split_ifs with h <;> [simp [const_lim_zero.1 h], rfl]
 
-theorem of_rat_div (x y : β) : of_rat (x / y) = (of_rat x / of_rat y : Cauchy) := by
+theorem of_rat_div (x y : β) : ofRat (x / y) = (ofRat x / ofRat y : Cauchy) := by
   simp only [div_eq_inv_mul, of_rat_inv, of_rat_mul]
 
 end
@@ -220,7 +220,7 @@ section
 
 variable {β : Type _} [Ringₓ β] {abv : β → α} [IsAbsoluteValue abv]
 
-variable [is_complete β abv]
+variable [IsComplete β abv]
 
 theorem complete : ∀ s : CauSeq β abv, ∃ b : β, s ≈ const abv b :=
   is_complete.is_complete
@@ -247,12 +247,12 @@ theorem lim_const (x : β) : lim (const abv x) = x :=
 
 theorem lim_add (f g : CauSeq β abv) : lim f + lim g = lim (f + g) :=
   eq_lim_of_const_equiv <|
-    show lim_zero (const abv (lim f + lim g) - (f + g)) by
+    show LimZero (const abv (lim f + lim g) - (f + g)) by
       rw [const_add, add_sub_comm] <;> exact add_lim_zero (Setoidₓ.symm (equiv_lim f)) (Setoidₓ.symm (equiv_lim g))
 
 theorem lim_mul_lim (f g : CauSeq β abv) : lim f * lim g = lim (f * g) :=
   eq_lim_of_const_equiv <|
-    show lim_zero (const abv (lim f * lim g) - f * g) by
+    show LimZero (const abv (lim f * lim g) - f * g) by
       have h :
         const abv (lim f * lim g) - f * g = (const abv (lim f) - f) * g + const abv (lim f) * (const abv (lim g) - g) :=
         by
@@ -267,10 +267,10 @@ theorem lim_mul (f : CauSeq β abv) (x : β) : lim f * x = lim (f * const abv x)
 
 theorem lim_neg (f : CauSeq β abv) : lim (-f) = -lim f :=
   lim_eq_of_equiv_const
-    (show lim_zero (-f - const abv (-lim f)) by
+    (show LimZero (-f - const abv (-lim f)) by
       rw [const_neg, sub_neg_eq_add, add_commₓ, ← sub_eq_add_neg] <;> exact Setoidₓ.symm (equiv_lim f))
 
-theorem lim_eq_zero_iff (f : CauSeq β abv) : lim f = 0 ↔ lim_zero f :=
+theorem lim_eq_zero_iff (f : CauSeq β abv) : lim f = 0 ↔ LimZero f :=
   ⟨fun h => by
     have hf := equiv_lim f <;> rw [h] at hf <;> exact (lim_zero_congr hf).mpr (const_lim_zero.mpr rfl), fun h => by
     have h₁ : f = f - const abv 0 :=
@@ -282,18 +282,18 @@ end
 
 section
 
-variable {β : Type _} [Field β] {abv : β → α} [IsAbsoluteValue abv] [is_complete β abv]
+variable {β : Type _} [Field β] {abv : β → α} [IsAbsoluteValue abv] [IsComplete β abv]
 
-theorem lim_inv {f : CauSeq β abv} (hf : ¬lim_zero f) : lim (inv f hf) = (lim f)⁻¹ :=
+theorem lim_inv {f : CauSeq β abv} (hf : ¬LimZero f) : lim (inv f hf) = (lim f)⁻¹ :=
   have hl : lim f ≠ 0 := by
     rwa [← lim_eq_zero_iff] at hf
   lim_eq_of_equiv_const <|
-    show lim_zero (inv f hf - const abv (lim f)⁻¹) from
-      have h₁ : ∀ g f : CauSeq β abv hf : ¬lim_zero f, lim_zero (g - f * inv f hf * g) := fun g f hf => by
+    show LimZero (inv f hf - const abv (lim f)⁻¹) from
+      have h₁ : ∀ g f : CauSeq β abv hf : ¬LimZero f, LimZero (g - f * inv f hf * g) := fun g f hf => by
         rw [← one_mulₓ g, ← mul_assoc, ← sub_mul, mul_oneₓ, mul_comm, mul_comm f] <;>
           exact mul_lim_zero_right _ (Setoidₓ.symm (CauSeq.inv_mul_cancel _))
-      have h₂ :
-        lim_zero (inv f hf - const abv (lim f)⁻¹ - (const abv (lim f) - f) * (inv f hf * const abv (lim f)⁻¹)) := by
+      have h₂ : LimZero (inv f hf - const abv (lim f)⁻¹ - (const abv (lim f) - f) * (inv f hf * const abv (lim f)⁻¹)) :=
+        by
         rw [sub_mul, ← sub_add, sub_sub, sub_add_eq_sub_sub, sub_right_comm, sub_add] <;>
           exact
             show
@@ -312,7 +312,7 @@ end
 
 section
 
-variable [is_complete α abs]
+variable [IsComplete α abs]
 
 theorem lim_le {f : CauSeq α abs} {x : α} (h : f ≤ CauSeq.const abs x) : lim f ≤ x :=
   CauSeq.const_le.1 <| CauSeq.le_of_eq_of_le (Setoidₓ.symm (equiv_lim f)) h

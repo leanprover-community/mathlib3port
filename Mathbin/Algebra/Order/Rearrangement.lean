@@ -36,7 +36,7 @@ variable {ι α β : Type _}
 
 section Smul
 
-variable [LinearOrderedRing α] [LinearOrderedAddCommGroup β] [Module α β] [OrderedSmul α β] {s : Finset ι} {σ : perm ι}
+variable [LinearOrderedRing α] [LinearOrderedAddCommGroup β] [Module α β] [OrderedSmul α β] {s : Finset ι} {σ : Perm ι}
   {f : ι → α} {g : ι → β}
 
 /-- **Rearrangement Inequality**: Pointwise scalar multiplication of `f` and `g` is maximized when
@@ -138,22 +138,22 @@ variable [Fintype ι]
 /-- **Rearrangement Inequality**: Pointwise scalar multiplication of `f` and `g` is maximized when
 `f` and `g` vary together. Stated by permuting the entries of `g`.  -/
 theorem Monovary.sum_smul_comp_perm_le_sum_smul (hfg : Monovary f g) : (∑ i, f i • g (σ i)) ≤ ∑ i, f i • g i :=
-  (hfg.monovary_on _).sum_smul_comp_perm_le_sum_smul fun i _ => mem_univ _
+  (hfg.MonovaryOn _).sum_smul_comp_perm_le_sum_smul fun i _ => mem_univ _
 
 /-- **Rearrangement Inequality**: Pointwise scalar multiplication of `f` and `g` is maximized when
 `f` and `g` vary together. Stated by permuting the entries of `f`. -/
 theorem Monovary.sum_comp_perm_smul_le_sum_smul (hfg : Monovary f g) : (∑ i, f (σ i) • g i) ≤ ∑ i, f i • g i :=
-  (hfg.monovary_on _).sum_comp_perm_smul_le_sum_smul fun i _ => mem_univ _
+  (hfg.MonovaryOn _).sum_comp_perm_smul_le_sum_smul fun i _ => mem_univ _
 
 /-- **Rearrangement Inequality**: Pointwise scalar multiplication of `f` and `g` is minimized when
 `f` and `g` antivary together. Stated by permuting the entries of `g`.-/
 theorem Antivary.sum_smul_le_sum_smul_comp_perm (hfg : Antivary f g) : (∑ i, f i • g i) ≤ ∑ i, f i • g (σ i) :=
-  (hfg.antivary_on _).sum_smul_le_sum_smul_comp_perm fun i _ => mem_univ _
+  (hfg.AntivaryOn _).sum_smul_le_sum_smul_comp_perm fun i _ => mem_univ _
 
 /-- **Rearrangement Inequality**: Pointwise scalar multiplication of `f` and `g` is minimized when
 `f` and `g` antivary together. Stated by permuting the entries of `f`. -/
 theorem Antivary.sum_smul_le_sum_comp_perm_smul (hfg : Antivary f g) : (∑ i, f i • g i) ≤ ∑ i, f (σ i) • g i :=
-  (hfg.antivary_on _).sum_smul_le_sum_comp_perm_smul fun i _ => mem_univ _
+  (hfg.AntivaryOn _).sum_smul_le_sum_comp_perm_smul fun i _ => mem_univ _
 
 end Smul
 
@@ -166,7 +166,7 @@ Special cases of the above when scalar multiplication is actually multiplication
 
 section Mul
 
-variable [LinearOrderedRing α] {s : Finset ι} {σ : perm ι} {f g : ι → α}
+variable [LinearOrderedRing α] {s : Finset ι} {σ : Perm ι} {f g : ι → α}
 
 /-- **Rearrangement Inequality**: Pointwise multiplication of `f` and `g` is maximized when `f` and
 `g` vary together. Stated by permuting the entries of `g`.  -/

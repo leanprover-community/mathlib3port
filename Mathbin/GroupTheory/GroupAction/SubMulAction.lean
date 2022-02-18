@@ -45,7 +45,7 @@ instance : SetLike (SubMulAction R M) M :=
     cases p <;> cases q <;> congr⟩
 
 @[simp]
-theorem mem_carrier {p : SubMulAction R M} {x : M} : x ∈ p.carrier ↔ x ∈ (p : Set M) :=
+theorem mem_carrier {p : SubMulAction R M} {x : M} : x ∈ p.Carrier ↔ x ∈ (p : Set M) :=
   Iff.rfl
 
 @[ext]
@@ -106,7 +106,7 @@ protected def Subtype : p →[R] M := by
   refine' { toFun := coe, .. } <;> simp [coe_smul]
 
 @[simp]
-theorem subtype_apply (x : p) : p.subtype x = x :=
+theorem subtype_apply (x : p) : p.Subtype x = x :=
   rfl
 
 theorem subtype_eq_val : (SubMulAction.subtype p : p → M) = Subtype.val :=
@@ -114,7 +114,7 @@ theorem subtype_eq_val : (SubMulAction.subtype p : p → M) = Subtype.val :=
 
 end HasScalar
 
-section MulAction
+section MulActionMonoid
 
 variable [Monoidₓ R] [MulAction R M]
 
@@ -162,11 +162,33 @@ instance mul_action' : MulAction S p where
   mul_smul := fun c₁ c₂ x => Subtype.ext <| mul_smul c₁ c₂ x
 
 instance : MulAction R p :=
-  p.mul_action'
+  p.mulAction'
 
 end
 
-end MulAction
+/-- Orbits in a `sub_mul_action` coincide with orbits in the ambient space. -/
+theorem coe_image_orbit {p : SubMulAction R M} (m : p) : coe '' MulAction.Orbit R m = MulAction.Orbit R (m : M) :=
+  (Set.range_comp _ _).symm
+
+/-- Stabilizers in monoid sub_mul_action coincide with stabilizers in the ambient space -/
+theorem stabilizer_of_sub_mul.submonoid {p : SubMulAction R M} (m : p) :
+    MulAction.Stabilizer.submonoid R m = MulAction.Stabilizer.submonoid R (m : M) := by
+  ext
+  simp only [MulAction.mem_stabilizer_submonoid_iff, ← SubMulAction.coe_smul, SetLike.coe_eq_coe]
+
+end MulActionMonoid
+
+section MulActionGroup
+
+variable [Groupₓ R] [MulAction R M]
+
+/-- Stabilizers in group sub_mul_action coincide with stabilizers in the ambient space -/
+theorem stabilizer_of_sub_mul {p : SubMulAction R M} (m : p) :
+    MulAction.stabilizer R m = MulAction.stabilizer R (m : M) := by
+  rw [← Subgroup.to_submonoid_eq]
+  exact stabilizer_of_sub_mul.submonoid m
+
+end MulActionGroup
 
 section Module
 
@@ -183,7 +205,7 @@ theorem zero_mem (h : (p : Set M).Nonempty) : (0 : M) ∈ p :=
 /-- If the scalar product forms a `module`, and the `sub_mul_action` is not `⊥`, then the
 subset inherits the zero. -/
 instance [n_empty : Nonempty p] : Zero p where
-  zero := ⟨0, n_empty.elim fun x => p.zero_mem ⟨x, x.prop⟩⟩
+  zero := ⟨0, n_empty.elim fun x => p.zero_mem ⟨x, x.Prop⟩⟩
 
 end Module
 

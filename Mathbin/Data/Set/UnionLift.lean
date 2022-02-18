@@ -42,25 +42,25 @@ section UnionLift
 it on each component, and proving that it agrees on the intersections. -/
 @[nolint unused_arguments]
 noncomputable def Union_lift (S : ι → Set α) (f : ∀ i x : S i, β)
-    (hf : ∀ i j x : α hxi : x ∈ S i hxj : x ∈ S j, f i ⟨x, hxi⟩ = f j ⟨x, hxj⟩) (T : Set α) (hT : T ⊆ Union S) (x : T) :
-    β :=
-  let i := Classical.indefiniteDescription _ (mem_Union.1 (hT x.prop))
-  f i ⟨x, i.prop⟩
+    (hf : ∀ i j x : α hxi : x ∈ S i hxj : x ∈ S j, f i ⟨x, hxi⟩ = f j ⟨x, hxj⟩) (T : Set α) (hT : T ⊆ Unionₓ S)
+    (x : T) : β :=
+  let i := Classical.indefiniteDescription _ (mem_Union.1 (hT x.Prop))
+  f i ⟨x, i.Prop⟩
 
 variable {S : ι → Set α} {f : ∀ i x : S i, β}
-  {hf : ∀ i j x : α hxi : x ∈ S i hxj : x ∈ S j, f i ⟨x, hxi⟩ = f j ⟨x, hxj⟩} {T : Set α} {hT : T ⊆ Union S}
-  (hT' : T = Union S)
+  {hf : ∀ i j x : α hxi : x ∈ S i hxj : x ∈ S j, f i ⟨x, hxi⟩ = f j ⟨x, hxj⟩} {T : Set α} {hT : T ⊆ Unionₓ S}
+  (hT' : T = Unionₓ S)
 
 @[simp]
-theorem Union_lift_mk {i : ι} (x : S i) (hx : (x : α) ∈ T) : Union_lift S f hf T hT ⟨x, hx⟩ = f i x := by
+theorem Union_lift_mk {i : ι} (x : S i) (hx : (x : α) ∈ T) : unionLift S f hf T hT ⟨x, hx⟩ = f i x := by
   let j := Classical.indefiniteDescription _ (mem_Union.1 (hT hx))
   cases' x with x hx <;> exact hf j i x j.2 _
 
 @[simp]
-theorem Union_lift_inclusion {i : ι} (x : S i) (h : S i ⊆ T) : Union_lift S f hf T hT (Set.inclusion h x) = f i x :=
+theorem Union_lift_inclusion {i : ι} (x : S i) (h : S i ⊆ T) : unionLift S f hf T hT (Set.inclusion h x) = f i x :=
   Union_lift_mk x _
 
-theorem Union_lift_of_mem (x : T) {i : ι} (hx : (x : α) ∈ S i) : Union_lift S f hf T hT x = f i ⟨x, hx⟩ := by
+theorem Union_lift_of_mem (x : T) {i : ι} (hx : (x : α) ∈ S i) : unionLift S f hf T hT x = f i ⟨x, hx⟩ := by
   cases' x with x hx <;> exact hf _ _ _ _ _
 
 /-- `Union_lift_const` is useful for proving that `Union_lift` is a homomorphism
@@ -68,8 +68,8 @@ theorem Union_lift_of_mem (x : T) {i : ι} (hx : (x : α) ∈ S i) : Union_lift 
   For example, it could be used to prove that the lift of a collection
   of group homomorphisms on a union of subgroups preserves `1`. -/
 theorem Union_lift_const (c : T) (ci : ∀ i, S i) (hci : ∀ i, (ci i : α) = c) (cβ : β) (h : ∀ i, f i (ci i) = cβ) :
-    Union_lift S f hf T hT c = cβ := by
-  let ⟨i, hi⟩ := Set.mem_Union.1 (hT c.prop)
+    unionLift S f hf T hT c = cβ := by
+  let ⟨i, hi⟩ := Set.mem_Union.1 (hT c.Prop)
   have : ci i = ⟨c, hi⟩ := Subtype.ext (hci i)
   rw [Union_lift_of_mem _ hi, ← this, h]
 
@@ -83,7 +83,7 @@ theorem Union_lift_unary (u : T → T) (ui : ∀ i, S i → S i)
         u (Set.inclusion (show S i ⊆ T from hT'.symm ▸ Set.subset_Union S i) x) =
           Set.inclusion (show S i ⊆ T from hT'.symm ▸ Set.subset_Union S i) (ui i x))
     (uβ : β → β) (h : ∀ i x : S i, f i (ui i x) = uβ (f i x)) (x : T) :
-    Union_lift S f hf T (le_of_eqₓ hT') (u x) = uβ (Union_lift S f hf T (le_of_eqₓ hT') x) := by
+    unionLift S f hf T (le_of_eqₓ hT') (u x) = uβ (unionLift S f hf T (le_of_eqₓ hT') x) := by
   subst hT'
   cases' Set.mem_Union.1 x.prop with i hi
   rw [Union_lift_of_mem x hi, ← h i]
@@ -104,8 +104,8 @@ theorem Union_lift_binary (dir : Directed (· ≤ ·) S) (op : T → T → T) (o
           op (Set.inclusion (show S i ⊆ T from hT'.symm ▸ Set.subset_Union S i) x)
             (Set.inclusion (show S i ⊆ T from hT'.symm ▸ Set.subset_Union S i) y))
     (opβ : β → β → β) (h : ∀ i x y : S i, f i (opi i x y) = opβ (f i x) (f i y)) (x y : T) :
-    Union_lift S f hf T (le_of_eqₓ hT') (op x y) =
-      opβ (Union_lift S f hf T (le_of_eqₓ hT') x) (Union_lift S f hf T (le_of_eqₓ hT') y) :=
+    unionLift S f hf T (le_of_eqₓ hT') (op x y) =
+      opβ (unionLift S f hf T (le_of_eqₓ hT') x) (unionLift S f hf T (le_of_eqₓ hT') y) :=
   by
   subst hT'
   cases' Set.mem_Union.1 x.prop with i hi
@@ -126,19 +126,19 @@ theorem Union_lift_binary (dir : Directed (· ≤ ·) S) (op : T → T → T) (o
 end UnionLift
 
 variable {S : ι → Set α} {f : ∀ i x : S i, β}
-  {hf : ∀ i j x : α hxi : x ∈ S i hxj : x ∈ S j, f i ⟨x, hxi⟩ = f j ⟨x, hxj⟩} {hS : Union S = univ}
+  {hf : ∀ i j x : α hxi : x ∈ S i hxj : x ∈ S j, f i ⟨x, hxi⟩ = f j ⟨x, hxj⟩} {hS : Unionₓ S = univ}
 
 /-- Glue together functions defined on each of a collection `S` of sets that cover a type. See
   also `set.Union_lift`.   -/
 noncomputable def lift_cover (S : ι → Set α) (f : ∀ i x : S i, β)
-    (hf : ∀ i j x : α hxi : x ∈ S i hxj : x ∈ S j, f i ⟨x, hxi⟩ = f j ⟨x, hxj⟩) (hS : Union S = univ) (a : α) : β :=
-  Union_lift S f hf univ (hS ▸ Set.Subset.refl _) ⟨a, trivialₓ⟩
+    (hf : ∀ i j x : α hxi : x ∈ S i hxj : x ∈ S j, f i ⟨x, hxi⟩ = f j ⟨x, hxj⟩) (hS : Unionₓ S = univ) (a : α) : β :=
+  unionLift S f hf Univ (hS ▸ Set.Subset.refl _) ⟨a, trivialₓ⟩
 
 @[simp]
-theorem lift_cover_coe {i : ι} (x : S i) : lift_cover S f hf hS x = f i x :=
+theorem lift_cover_coe {i : ι} (x : S i) : liftCover S f hf hS x = f i x :=
   Union_lift_mk x _
 
-theorem lift_cover_of_mem {i : ι} {x : α} (hx : (x : α) ∈ S i) : lift_cover S f hf hS x = f i ⟨x, hx⟩ :=
+theorem lift_cover_of_mem {i : ι} {x : α} (hx : (x : α) ∈ S i) : liftCover S f hf hS x = f i ⟨x, hx⟩ :=
   Union_lift_of_mem ⟨x, trivialₓ⟩ hx
 
 end Set

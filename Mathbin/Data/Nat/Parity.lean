@@ -27,7 +27,7 @@ theorem even_iff : Even n ↔ n % 2 = 0 :=
   ⟨fun ⟨m, hm⟩ => by
     simp [hm], fun h =>
     ⟨n / 2,
-      (mod_add_div n 2).symm.trans
+      (mod_add_divₓ n 2).symm.trans
         (by
           simp [h])⟩⟩
 
@@ -35,7 +35,7 @@ theorem odd_iff : Odd n ↔ n % 2 = 1 :=
   ⟨fun ⟨m, hm⟩ => by
     norm_num [hm, add_mod], fun h =>
     ⟨n / 2,
-      (mod_add_div n 2).symm.trans
+      (mod_add_divₓ n 2).symm.trans
         (by
           rw [h, add_commₓ])⟩⟩
 
@@ -240,13 +240,13 @@ theorem even_mul_self_pred (n : ℕ) : Even (n * (n - 1)) := by
     
 
 theorem even_sub_one_of_prime_ne_two {p : ℕ} (hp : Prime p) (hodd : p ≠ 2) : Even (p - 1) :=
-  odd.sub_odd (odd_iff.2 <| hp.eq_two_or_odd.resolve_left hodd) (odd_iff.2 rfl)
+  Odd.sub_odd (odd_iff.2 <| hp.eq_two_or_odd.resolve_left hodd) (odd_iff.2 rfl)
 
 variable {R : Type _} [Ringₓ R]
 
 theorem neg_one_pow_eq_one_iff_even (h1 : (-1 : R) ≠ 1) : (-1 : R) ^ n = 1 ↔ Even n :=
   ⟨fun h =>
-    n.mod_two_eq_zero_or_one.elim (dvd_iff_mod_eq_zero _ _).2 fun hn => by
+    n.mod_two_eq_zero_or_one.elim (dvd_iff_mod_eq_zeroₓ _ _).2 fun hn => by
       rw [neg_one_pow_eq_pow_mod_two, hn, pow_oneₓ] at h <;> exact (h1 h).elim,
     fun ⟨m, hm⟩ => by
     rw [neg_one_pow_eq_pow_mod_two, hm] <;> simp ⟩
@@ -264,6 +264,26 @@ theorem neg_one_pow_of_even : Even n → (-1 : R) ^ n = 1 := by
 theorem neg_one_pow_of_odd : Odd n → (-1 : R) ^ n = -1 := by
   rintro ⟨c, rfl⟩
   simp [pow_addₓ, pow_mulₓ]
+
+theorem two_mul_div_two_of_even : Even n → 2 * (n / 2) = n :=
+  Nat.mul_div_cancel_left'
+
+theorem div_two_mul_two_of_even : Even n → n / 2 * 2 = n :=
+  Nat.div_mul_cancelₓ
+
+theorem two_mul_div_two_add_one_of_odd (h : Odd n) : 2 * (n / 2) + 1 = n := by
+  rw [mul_comm]
+  convert Nat.div_add_mod' n 2
+  rw [odd_iff.mp h]
+
+theorem div_two_mul_two_add_one_of_odd (h : Odd n) : n / 2 * 2 + 1 = n := by
+  convert Nat.div_add_mod' n 2
+  rw [odd_iff.mp h]
+
+theorem one_add_div_two_mul_two_of_odd (h : Odd n) : 1 + n / 2 * 2 = n := by
+  rw [add_commₓ]
+  convert Nat.div_add_mod' n 2
+  rw [odd_iff.mp h]
 
 example (m n : ℕ) (h : Even m) : ¬Even (n + 3) ↔ Even (m ^ 2 + m + n) := by
   simp' [*,

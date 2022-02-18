@@ -95,7 +95,7 @@ theorem has_strict_fderiv_at_exp_of_mem_ball [CharZero 𝕂] {x : 𝔸}
     (hx : x ∈ Emetric.Ball (0 : 𝔸) (expSeries 𝕂 𝔸).radius) :
     HasStrictFderivAt (exp 𝕂 𝔸) (exp 𝕂 𝔸 x • 1 : 𝔸 →L[𝕂] 𝔸) x :=
   let ⟨p, hp⟩ := analytic_at_exp_of_mem_ball x hx
-  hp.has_fderiv_at.unique (has_fderiv_at_exp_of_mem_ball hx) ▸ hp.has_strict_fderiv_at
+  hp.HasFderivAt.unique (has_fderiv_at_exp_of_mem_ball hx) ▸ hp.HasStrictFderivAt
 
 end AnyFieldCommAlgebra
 

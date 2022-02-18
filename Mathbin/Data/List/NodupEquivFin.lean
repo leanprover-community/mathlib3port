@@ -32,9 +32,9 @@ namespace Nodup
 a bijection `fin l.length → α`.  See `list.nodup.nth_le_equiv_of_forall_mem_list`
 for a version giving an equivalence when there is decidable equality. -/
 @[simps]
-def nth_le_bijection_of_forall_mem_list (l : List α) (nd : l.nodup) (h : ∀ x : α, x ∈ l) :
+def nth_le_bijection_of_forall_mem_list (l : List α) (nd : l.Nodup) (h : ∀ x : α, x ∈ l) :
     { f : Finₓ l.length → α // Function.Bijective f } :=
-  ⟨fun i => l.nth_le i i.property, fun i j h => Finₓ.ext <| (nd.nth_le_inj_iff _ _).1 h, fun x =>
+  ⟨fun i => l.nthLe i i.property, fun i j h => Finₓ.ext <| (nd.nth_le_inj_iff _ _).1 h, fun x =>
     let ⟨i, hi, hl⟩ := List.mem_iff_nth_le.1 (h x)
     ⟨⟨i, hi⟩, hl⟩⟩
 
@@ -43,9 +43,9 @@ variable [DecidableEq α]
 /-- If `l` has no duplicates, then `list.nth_le` defines an equivalence between `fin (length l)` and
 the set of elements of `l`. -/
 @[simps]
-def nth_le_equiv (l : List α) (H : nodup l) : Finₓ (length l) ≃ { x // x ∈ l } where
-  toFun := fun i => ⟨nth_le l i i.2, nth_le_mem l i i.2⟩
-  invFun := fun x => ⟨index_of (↑x) l, index_of_lt_length.2 x.2⟩
+def nth_le_equiv (l : List α) (H : Nodupₓ l) : Finₓ (length l) ≃ { x // x ∈ l } where
+  toFun := fun i => ⟨nthLe l i i.2, nth_le_mem l i i.2⟩
+  invFun := fun x => ⟨indexOfₓ (↑x) l, index_of_lt_length.2 x.2⟩
   left_inv := fun i => by
     simp [H]
   right_inv := fun x => by
@@ -57,8 +57,8 @@ an equivalence between `fin l.length` and `α`.
 See `list.nodup.nth_le_bijection_of_forall_mem_list` for a version without
 decidable equality. -/
 @[simps]
-def nth_le_equiv_of_forall_mem_list (l : List α) (nd : l.nodup) (h : ∀ x : α, x ∈ l) : Finₓ l.length ≃ α where
-  toFun := fun i => l.nth_le i i.2
+def nth_le_equiv_of_forall_mem_list (l : List α) (nd : l.Nodup) (h : ∀ x : α, x ∈ l) : Finₓ l.length ≃ α where
+  toFun := fun i => l.nthLe i i.2
   invFun := fun a => ⟨_, index_of_lt_length.2 (h a)⟩
   left_inv := fun i => by
     simp [nd]
@@ -71,28 +71,28 @@ namespace Sorted
 
 variable [Preorderₓ α] {l : List α}
 
-theorem nth_le_mono (h : l.sorted (· ≤ ·)) : Monotone fun i : Finₓ l.length => l.nth_le i i.2 := fun i j =>
+theorem nth_le_mono (h : l.Sorted (· ≤ ·)) : Monotone fun i : Finₓ l.length => l.nthLe i i.2 := fun i j =>
   h.rel_nth_le_of_le _ _
 
-theorem nth_le_strict_mono (h : l.sorted (· < ·)) : StrictMono fun i : Finₓ l.length => l.nth_le i i.2 := fun i j =>
+theorem nth_le_strict_mono (h : l.Sorted (· < ·)) : StrictMono fun i : Finₓ l.length => l.nthLe i i.2 := fun i j =>
   h.rel_nth_le_of_lt _ _
 
 variable [DecidableEq α]
 
 /-- If `l` is a list sorted w.r.t. `(<)`, then `list.nth_le` defines an order isomorphism between
 `fin (length l)` and the set of elements of `l`. -/
-def nth_le_iso (l : List α) (H : sorted (· < ·) l) : Finₓ (length l) ≃o { x // x ∈ l } where
-  toEquiv := H.nodup.nth_le_equiv l
+def nth_le_iso (l : List α) (H : Sorted (· < ·) l) : Finₓ (length l) ≃o { x // x ∈ l } where
+  toEquiv := H.Nodup.nthLeEquiv l
   map_rel_iff' := fun i j => H.nth_le_strict_mono.le_iff_le
 
-variable (H : sorted (· < ·) l) {x : { x // x ∈ l }} {i : Finₓ l.length}
+variable (H : Sorted (· < ·) l) {x : { x // x ∈ l }} {i : Finₓ l.length}
 
 @[simp]
-theorem coe_nth_le_iso_apply : (H.nth_le_iso l i : α) = nth_le l i i.2 :=
+theorem coe_nth_le_iso_apply : (H.nthLeIso l i : α) = nthLe l i i.2 :=
   rfl
 
 @[simp]
-theorem coe_nth_le_iso_symm_apply : ((H.nth_le_iso l).symm x : ℕ) = index_of (↑x) l :=
+theorem coe_nth_le_iso_symm_apply : ((H.nthLeIso l).symm x : ℕ) = indexOfₓ (↑x) l :=
   rfl
 
 end Sorted
@@ -163,8 +163,7 @@ any element of `l` found at index `ix` can be found at index `f ix` in `l'`.
 -/
 theorem sublist_iff_exists_fin_order_embedding_nth_le_eq {l l' : List α} :
     l <+ l' ↔
-      ∃ f : Finₓ l.length ↪o Finₓ l'.length,
-        ∀ ix : Finₓ l.length, l.nth_le ix ix.is_lt = l'.nth_le (f ix) (f ix).is_lt :=
+      ∃ f : Finₓ l.length ↪o Finₓ l'.length, ∀ ix : Finₓ l.length, l.nthLe ix ix.is_lt = l'.nthLe (f ix) (f ix).is_lt :=
   by
   rw [sublist_iff_exists_order_embedding_nth_eq]
   constructor
@@ -217,8 +216,8 @@ theorem sublist_iff_exists_fin_order_embedding_nth_le_eq {l l' : List α} :
 at two distinct indices `n m : ℕ` inside the list `l`.
 -/
 theorem duplicate_iff_exists_distinct_nth_le {l : List α} {x : α} :
-    l.duplicate x ↔
-      ∃ (n : ℕ)(hn : n < l.length)(m : ℕ)(hm : m < l.length)(h : n < m), x = l.nth_le n hn ∧ x = l.nth_le m hm :=
+    l.Duplicate x ↔
+      ∃ (n : ℕ)(hn : n < l.length)(m : ℕ)(hm : m < l.length)(h : n < m), x = l.nthLe n hn ∧ x = l.nthLe m hm :=
   by
   classical
   rw [duplicate_iff_two_le_count, le_count_iff_repeat_sublist, sublist_iff_exists_fin_order_embedding_nth_le_eq]

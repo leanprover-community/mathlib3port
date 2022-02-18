@@ -57,40 +57,40 @@ structure simplicial_complex where
 
 namespace SimplicialComplex
 
-variable {𝕜 E} {K : simplicial_complex 𝕜 E} {s t : Finset E} {x : E}
+variable {𝕜 E} {K : SimplicialComplex 𝕜 E} {s t : Finset E} {x : E}
 
 /-- A `finset` belongs to a `simplicial_complex` if it's a face of it. -/
-instance : HasMem (Finset E) (simplicial_complex 𝕜 E) :=
-  ⟨fun s K => s ∈ K.faces⟩
+instance : HasMem (Finset E) (SimplicialComplex 𝕜 E) :=
+  ⟨fun s K => s ∈ K.Faces⟩
 
 /-- The underlying space of a simplicial complex is the union of its faces. -/
-def space (K : simplicial_complex 𝕜 E) : Set E :=
-  ⋃ s ∈ K.faces, convexHull 𝕜 (s : Set E)
+def space (K : SimplicialComplex 𝕜 E) : Set E :=
+  ⋃ s ∈ K.Faces, convexHull 𝕜 (s : Set E)
 
-theorem mem_space_iff : x ∈ K.space ↔ ∃ s ∈ K.faces, x ∈ convexHull 𝕜 (s : Set E) :=
+theorem mem_space_iff : x ∈ K.Space ↔ ∃ s ∈ K.Faces, x ∈ convexHull 𝕜 (s : Set E) :=
   mem_Union₂
 
-theorem convex_hull_subset_space (hs : s ∈ K.faces) : convexHull 𝕜 ↑s ⊆ K.space :=
+theorem convex_hull_subset_space (hs : s ∈ K.Faces) : convexHull 𝕜 ↑s ⊆ K.Space :=
   subset_bUnion_of_mem hs
 
-protected theorem subset_space (hs : s ∈ K.faces) : (s : Set E) ⊆ K.space :=
+protected theorem subset_space (hs : s ∈ K.Faces) : (s : Set E) ⊆ K.Space :=
   (subset_convex_hull 𝕜 _).trans <| convex_hull_subset_space hs
 
-theorem convex_hull_inter_convex_hull (hs : s ∈ K.faces) (ht : t ∈ K.faces) :
+theorem convex_hull_inter_convex_hull (hs : s ∈ K.Faces) (ht : t ∈ K.Faces) :
     convexHull 𝕜 ↑s ∩ convexHull 𝕜 ↑t = convexHull 𝕜 (s ∩ t : Set E) :=
   (K.inter_subset_convex_hull hs ht).antisymm <|
     subset_inter (convex_hull_mono <| Set.inter_subset_left _ _) <| convex_hull_mono <| Set.inter_subset_right _ _
 
--- ././Mathport/Syntax/Translate/Basic.lean:417:16: unsupported tactic `by_contra'
+-- ././Mathport/Syntax/Translate/Basic.lean:418:16: unsupported tactic `by_contra'
 /-- The conclusion is the usual meaning of "glue nicely" in textbooks. It turns out to be quite
 unusable, as it's about faces as sets in space rather than simplices. Further,  additional structure
 on `𝕜` means the only choice of `u` is `s ∩ t` (but it's hard to prove). -/
-theorem disjoint_or_exists_inter_eq_convex_hull (hs : s ∈ K.faces) (ht : t ∈ K.faces) :
+theorem disjoint_or_exists_inter_eq_convex_hull (hs : s ∈ K.Faces) (ht : t ∈ K.Faces) :
     Disjoint (convexHull 𝕜 (s : Set E)) (convexHull 𝕜 ↑t) ∨
-      ∃ u ∈ K.faces, convexHull 𝕜 (s : Set E) ∩ convexHull 𝕜 ↑t = convexHull 𝕜 ↑u :=
+      ∃ u ∈ K.Faces, convexHull 𝕜 (s : Set E) ∩ convexHull 𝕜 ↑t = convexHull 𝕜 ↑u :=
   by
   classical
-  "././Mathport/Syntax/Translate/Basic.lean:417:16: unsupported tactic `by_contra'"
+  "././Mathport/Syntax/Translate/Basic.lean:418:16: unsupported tactic `by_contra'"
   refine'
     h.2 (s ∩ t)
       ((K.down_closed hs (inter_subset_left _ _)) fun hst => h.1 <| (K.inter_subset_convex_hull hs ht).trans _) _
@@ -108,7 +108,7 @@ def of_erase (faces : Set (Finset E)) (indep : ∀, ∀ s ∈ faces, ∀, Affine
     (down_closed : ∀, ∀ s ∈ faces, ∀, ∀ t _ : t ⊆ s, t ∈ faces)
     (inter_subset_convex_hull :
       ∀ s t _ : s ∈ faces _ : t ∈ faces, convexHull 𝕜 ↑s ∩ convexHull 𝕜 ↑t ⊆ convexHull 𝕜 (s ∩ t : Set E)) :
-    simplicial_complex 𝕜 E where
+    SimplicialComplex 𝕜 E where
   Faces := faces \ {∅}
   not_empty_mem := fun h => h.2 (mem_singleton _)
   indep := fun s hs => indep _ hs.1
@@ -117,8 +117,8 @@ def of_erase (faces : Set (Finset E)) (indep : ∀, ∀ s ∈ faces, ∀, Affine
 
 /-- Construct a simplicial complex as a subset of a given simplicial complex. -/
 @[simps]
-def of_subcomplex (K : simplicial_complex 𝕜 E) (faces : Set (Finset E)) (subset : faces ⊆ K.faces)
-    (down_closed : ∀ {s t}, s ∈ faces → t ⊆ s → t ∈ faces) : simplicial_complex 𝕜 E :=
+def of_subcomplex (K : SimplicialComplex 𝕜 E) (faces : Set (Finset E)) (subset : faces ⊆ K.Faces)
+    (down_closed : ∀ {s t}, s ∈ faces → t ⊆ s → t ∈ faces) : SimplicialComplex 𝕜 E :=
   { Faces, not_empty_mem := fun h => K.not_empty_mem (subset h), indep := fun s hs => K.indep (subset hs),
     down_closed := fun s t hs hts _ => down_closed hs hts,
     inter_subset_convex_hull := fun s t hs ht => K.inter_subset_convex_hull (subset hs) (subset ht) }
@@ -127,22 +127,22 @@ def of_subcomplex (K : simplicial_complex 𝕜 E) (faces : Set (Finset E)) (subs
 
 
 /-- The vertices of a simplicial complex are its zero dimensional faces. -/
-def vertices (K : simplicial_complex 𝕜 E) : Set E :=
-  { x | {x} ∈ K.faces }
+def vertices (K : SimplicialComplex 𝕜 E) : Set E :=
+  { x | {x} ∈ K.Faces }
 
-theorem mem_vertices : x ∈ K.vertices ↔ {x} ∈ K.faces :=
+theorem mem_vertices : x ∈ K.Vertices ↔ {x} ∈ K.Faces :=
   Iff.rfl
 
-theorem vertices_eq : K.vertices = ⋃ k ∈ K.faces, (k : Set E) := by
+theorem vertices_eq : K.Vertices = ⋃ k ∈ K.Faces, (k : Set E) := by
   ext x
   refine' ⟨fun h => mem_bUnion h <| mem_coe.2 <| mem_singleton_self x, fun h => _⟩
   obtain ⟨s, hs, hx⟩ := mem_Union₂.1 h
   exact K.down_closed hs (Finset.singleton_subset_iff.2 <| mem_coe.1 hx) (singleton_ne_empty _)
 
-theorem vertices_subset_space : K.vertices ⊆ K.space :=
+theorem vertices_subset_space : K.Vertices ⊆ K.Space :=
   vertices_eq.Subset.trans <| Union₂_mono fun x hx => subset_convex_hull 𝕜 x
 
-theorem vertex_mem_convex_hull_iff (hx : x ∈ K.vertices) (hs : s ∈ K.faces) : x ∈ convexHull 𝕜 (s : Set E) ↔ x ∈ s := by
+theorem vertex_mem_convex_hull_iff (hx : x ∈ K.Vertices) (hs : s ∈ K.Faces) : x ∈ convexHull 𝕜 (s : Set E) ↔ x ∈ s := by
   refine' ⟨fun h => _, fun h => subset_convex_hull _ _ h⟩
   classical
   have h :=
@@ -154,7 +154,7 @@ theorem vertex_mem_convex_hull_iff (hx : x ∈ K.vertices) (hs : s ∈ K.faces) 
     convex_hull_empty] at h
 
 /-- A face is a subset of another one iff its vertices are.  -/
-theorem face_subset_face_iff (hs : s ∈ K.faces) (ht : t ∈ K.faces) :
+theorem face_subset_face_iff (hs : s ∈ K.Faces) (ht : t ∈ K.Faces) :
     convexHull 𝕜 (s : Set E) ⊆ convexHull 𝕜 ↑t ↔ s ⊆ t :=
   ⟨fun h x hxs =>
     (vertex_mem_convex_hull_iff (K.down_closed hs (Finset.singleton_subset_iff.2 hxs) <| singleton_ne_empty _) ht).1
@@ -165,15 +165,15 @@ theorem face_subset_face_iff (hs : s ∈ K.faces) (ht : t ∈ K.faces) :
 
 
 /-- A facet of a simplicial complex is a maximal face. -/
-def facets (K : simplicial_complex 𝕜 E) : Set (Finset E) :=
-  { s ∈ K.faces | ∀ ⦃t⦄, t ∈ K.faces → s ⊆ t → s = t }
+def facets (K : SimplicialComplex 𝕜 E) : Set (Finset E) :=
+  { s ∈ K.Faces | ∀ ⦃t⦄, t ∈ K.Faces → s ⊆ t → s = t }
 
-theorem mem_facets : s ∈ K.facets ↔ s ∈ K.faces ∧ ∀, ∀ t ∈ K.faces, ∀, s ⊆ t → s = t :=
+theorem mem_facets : s ∈ K.Facets ↔ s ∈ K.Faces ∧ ∀, ∀ t ∈ K.Faces, ∀, s ⊆ t → s = t :=
   mem_sep_iff
 
-theorem facets_subset : K.facets ⊆ K.faces := fun s hs => hs.1
+theorem facets_subset : K.Facets ⊆ K.Faces := fun s hs => hs.1
 
-theorem not_facet_iff_subface (hs : s ∈ K.faces) : s ∉ K.facets ↔ ∃ t, t ∈ K.faces ∧ s ⊂ t := by
+theorem not_facet_iff_subface (hs : s ∈ K.Faces) : s ∉ K.Facets ↔ ∃ t, t ∈ K.Faces ∧ s ⊂ t := by
   refine' ⟨fun hs' : ¬(_ ∧ _) => _, _⟩
   · push_neg  at hs'
     obtain ⟨t, ht⟩ := hs' hs
@@ -195,37 +195,37 @@ theorem not_facet_iff_subface (hs : s ∈ K.faces) : s ∉ K.facets ↔ ∃ t, t
 variable (𝕜 E)
 
 /-- The complex consisting of only the faces present in both of its arguments. -/
-instance : HasInf (simplicial_complex 𝕜 E) :=
+instance : HasInf (SimplicialComplex 𝕜 E) :=
   ⟨fun K L =>
-    { Faces := K.faces ∩ L.faces, not_empty_mem := fun h => K.not_empty_mem (Set.inter_subset_left _ _ h),
+    { Faces := K.Faces ∩ L.Faces, not_empty_mem := fun h => K.not_empty_mem (Set.inter_subset_left _ _ h),
       indep := fun s hs => K.indep hs.1,
       down_closed := fun s t hs hst ht => ⟨K.down_closed hs.1 hst ht, L.down_closed hs.2 hst ht⟩,
       inter_subset_convex_hull := fun s t hs ht => K.inter_subset_convex_hull hs.1 ht.1 }⟩
 
-instance : SemilatticeInf (simplicial_complex 𝕜 E) :=
-  { (PartialOrderₓ.lift faces) fun x y => ext _ _ with inf := ·⊓·, inf_le_left := fun K L s hs => hs.1,
+instance : SemilatticeInf (SimplicialComplex 𝕜 E) :=
+  { (PartialOrderₓ.lift Faces) fun x y => ext _ _ with inf := ·⊓·, inf_le_left := fun K L s hs => hs.1,
     inf_le_right := fun K L s hs => hs.2, le_inf := fun K L M hKL hKM s hs => ⟨hKL hs, hKM hs⟩ }
 
-instance : HasBot (simplicial_complex 𝕜 E) :=
+instance : HasBot (SimplicialComplex 𝕜 E) :=
   ⟨{ Faces := ∅, not_empty_mem := Set.not_mem_empty ∅, indep := fun s hs => (Set.not_mem_empty _ hs).elim,
       down_closed := fun s _ hs => (Set.not_mem_empty _ hs).elim,
       inter_subset_convex_hull := fun s _ hs => (Set.not_mem_empty _ hs).elim }⟩
 
-instance : OrderBot (simplicial_complex 𝕜 E) :=
-  { simplicial_complex.has_bot 𝕜 E with bot_le := fun K => Set.empty_subset _ }
+instance : OrderBot (SimplicialComplex 𝕜 E) :=
+  { SimplicialComplex.hasBot 𝕜 E with bot_le := fun K => Set.empty_subset _ }
 
-instance : Inhabited (simplicial_complex 𝕜 E) :=
+instance : Inhabited (SimplicialComplex 𝕜 E) :=
   ⟨⊥⟩
 
 variable {𝕜 E}
 
-theorem faces_bot : (⊥ : simplicial_complex 𝕜 E).Faces = ∅ :=
+theorem faces_bot : (⊥ : SimplicialComplex 𝕜 E).Faces = ∅ :=
   rfl
 
-theorem space_bot : (⊥ : simplicial_complex 𝕜 E).Space = ∅ :=
+theorem space_bot : (⊥ : SimplicialComplex 𝕜 E).Space = ∅ :=
   Set.bUnion_empty _
 
-theorem facets_bot : (⊥ : simplicial_complex 𝕜 E).Facets = ∅ :=
+theorem facets_bot : (⊥ : SimplicialComplex 𝕜 E).Facets = ∅ :=
   eq_empty_of_subset_empty facets_subset
 
 end SimplicialComplex

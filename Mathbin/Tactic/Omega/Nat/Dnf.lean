@@ -14,16 +14,16 @@ namespace Nat
 open_locale Omega.Nat
 
 @[simp]
-def dnf_core : preform → List clause
+def dnf_core : Preform → List Clause
   | p ∨* q => dnf_core p ++ dnf_core q
-  | p ∧* q => (List.product (dnf_core p) (dnf_core q)).map fun pq => clause.append pq.fst pq.snd
-  | t =* s => [([term.sub (canonize s) (canonize t)], [])]
-  | t ≤* s => [([], [term.sub (canonize s) (canonize t)])]
+  | p ∧* q => (List.product (dnf_core p) (dnf_core q)).map fun pq => Clause.append pq.fst pq.snd
+  | t =* s => [([Term.sub (canonize s) (canonize t)], [])]
+  | t ≤* s => [([], [Term.sub (canonize s) (canonize t)])]
   | ¬* _ => []
 
--- ././Mathport/Syntax/Translate/Basic.lean:794:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
 theorem exists_clause_holds_core {v : Nat → Nat} :
-    ∀ {p : preform}, p.neg_free → p.sub_free → p.holds v → ∃ c ∈ dnf_core p, clause.holds (fun x => ↑(v x)) c := by
+    ∀ {p : Preform}, p.NegFree → p.SubFree → p.Holds v → ∃ c ∈ dnfCore p, Clause.Holds (fun x => ↑(v x)) c := by
   run_tac
     preform.induce sorry
   · apply List.exists_mem_cons_ofₓ
@@ -61,11 +61,11 @@ theorem exists_clause_holds_core {v : Nat → Nat} :
     
 
 def term.vars_core (is : List Int) : List Bool :=
-  is.map fun i => if i = 0 then ff else tt
+  is.map fun i => if i = 0 then false else true
 
 /-- Return a list of bools that encodes which variables have nonzero coefficients -/
-def term.vars (t : term) : List Bool :=
-  term.vars_core t.snd
+def term.vars (t : Term) : List Bool :=
+  Term.varsCore t.snd
 
 def bools.or : List Bool → List Bool → List Bool
   | [], bs2 => bs2
@@ -74,33 +74,33 @@ def bools.or : List Bool → List Bool → List Bool
 
 /-- Return a list of bools that encodes which variables have nonzero coefficients in any one of the
 input terms. -/
-def terms.vars : List term → List Bool
+def terms.vars : List Term → List Bool
   | [] => []
-  | t :: ts => bools.or (term.vars t) (terms.vars ts)
+  | t :: ts => Bools.or (Term.vars t) (terms.vars ts)
 
 open_locale List.Func
 
-def nonneg_consts_core : Nat → List Bool → List term
+def nonneg_consts_core : Nat → List Bool → List Term
   | _, [] => []
   | k, ff :: bs => nonneg_consts_core (k + 1) bs
   | k, tt :: bs => ⟨0, [] {k ↦ 1}⟩ :: nonneg_consts_core (k + 1) bs
 
-def nonneg_consts (bs : List Bool) : List term :=
-  nonneg_consts_core 0 bs
+def nonneg_consts (bs : List Bool) : List Term :=
+  nonnegConstsCore 0 bs
 
-def nonnegate : clause → clause
+def nonnegate : Clause → Clause
   | (eqs, les) =>
-    let xs := terms.vars eqs
-    let ys := terms.vars les
-    let bs := bools.or xs ys
-    (eqs, nonneg_consts bs ++ les)
+    let xs := Terms.vars eqs
+    let ys := Terms.vars les
+    let bs := Bools.or xs ys
+    (eqs, nonnegConsts bs ++ les)
 
 /-- DNF transformation -/
-def dnf (p : preform) : List clause :=
-  (dnf_core p).map nonnegate
+def dnf (p : Preform) : List Clause :=
+  (dnfCore p).map nonnegate
 
 theorem holds_nonneg_consts_core {v : Nat → Int} (h1 : ∀ x, 0 ≤ v x) :
-    ∀ m bs, ∀, ∀ t ∈ nonneg_consts_core m bs, ∀, 0 ≤ term.val v t
+    ∀ m bs, ∀, ∀ t ∈ nonnegConstsCore m bs, ∀, 0 ≤ Term.val v t
   | _, [] => fun _ h2 => by
     cases h2
   | k, ff :: bs => holds_nonneg_consts_core (k + 1) bs
@@ -115,12 +115,12 @@ theorem holds_nonneg_consts_core {v : Nat → Int} (h1 : ∀ x, 0 ≤ v x) :
       
 
 theorem holds_nonneg_consts {v : Nat → Int} {bs : List Bool} :
-    (∀ x, 0 ≤ v x) → ∀, ∀ t ∈ nonneg_consts bs, ∀, 0 ≤ term.val v t
+    (∀ x, 0 ≤ v x) → ∀, ∀ t ∈ nonnegConsts bs, ∀, 0 ≤ Term.val v t
   | h1 => by
     apply holds_nonneg_consts_core h1
 
-theorem exists_clause_holds {v : Nat → Nat} {p : preform} :
-    p.neg_free → p.sub_free → p.holds v → ∃ c ∈ dnf p, clause.holds (fun x => ↑(v x)) c := by
+theorem exists_clause_holds {v : Nat → Nat} {p : Preform} :
+    p.NegFree → p.SubFree → p.Holds v → ∃ c ∈ dnf p, Clause.Holds (fun x => ↑(v x)) c := by
   intro h1 h2 h3
   rcases exists_clause_holds_core h1 h2 h3 with ⟨c, h4, h5⟩
   exists nonnegate c
@@ -138,13 +138,13 @@ theorem exists_clause_holds {v : Nat → Nat} {p : preform} :
   intro x
   apply Int.coe_nat_nonneg
 
-theorem exists_clause_sat {p : preform} : p.neg_free → p.sub_free → p.sat → ∃ c ∈ dnf p, clause.sat c := by
+theorem exists_clause_sat {p : Preform} : p.NegFree → p.SubFree → p.sat → ∃ c ∈ dnf p, Clause.Sat c := by
   intro h1 h2 h3
   cases' h3 with v h3
   rcases exists_clause_holds h1 h2 h3 with ⟨c, h4, h5⟩
   refine' ⟨c, h4, _, h5⟩
 
-theorem unsat_of_unsat_dnf (p : preform) : p.neg_free → p.sub_free → clauses.unsat (dnf p) → p.unsat := by
+theorem unsat_of_unsat_dnf (p : Preform) : p.NegFree → p.SubFree → Clauses.Unsat (dnf p) → p.Unsat := by
   intro hnf hsf h1 h2
   apply h1
   apply exists_clause_sat hnf hsf h2

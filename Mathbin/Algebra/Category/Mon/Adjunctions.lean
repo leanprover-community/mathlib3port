@@ -30,13 +30,13 @@ def adjoinOne : Semigroupₓₓ.{u} ⥤ Mon.{u} where
   map_comp' := fun X Y Z => WithOne.map_comp
 
 @[to_additive hasForgetToAddSemigroup]
-instance hasForgetToSemigroup : has_forget₂ Mon Semigroupₓₓ where
+instance hasForgetToSemigroup : HasForget₂ Mon Semigroupₓₓ where
   forget₂ := { obj := fun M => Semigroupₓₓ.of M, map := fun M N => MonoidHom.toMulHom }
 
 /-- The adjoin_one-forgetful adjunction from `Semigroup` to `Mon`.-/
 @[to_additive "The adjoin_one-forgetful adjunction from `AddSemigroup` to `AddMon`"]
 def adjoinOneAdj : adjoinOne ⊣ forget₂ Mon.{u} Semigroupₓₓ.{u} :=
-  adjunction.mk_of_hom_equiv
+  Adjunction.mkOfHomEquiv
     { homEquiv := fun S M => WithOne.lift.symm,
       hom_equiv_naturality_left_symm' := by
         intro S T M f g
@@ -64,12 +64,12 @@ def free : Type u ⥤ Mon.{u} where
 
 /-- The free-forgetful adjunction for monoids. -/
 def adj : free ⊣ forget Mon.{u} :=
-  adjunction.mk_of_hom_equiv
+  Adjunction.mkOfHomEquiv
     { homEquiv := fun X G => FreeMonoid.lift.symm,
       hom_equiv_naturality_left_symm' := fun X Y G f g => by
         ext1
         rfl }
 
-instance : is_right_adjoint (forget Mon.{u}) :=
+instance : IsRightAdjoint (forget Mon.{u}) :=
   ⟨_, adj⟩
 

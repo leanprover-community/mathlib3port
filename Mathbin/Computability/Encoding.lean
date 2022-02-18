@@ -28,7 +28,7 @@ structure encoding (α : Type) where
   decode_encode : ∀ x, decode (encode x) = some x
 
 /-- An encoding plus a guarantee of finiteness of the alphabet. -/
-structure fin_encoding (α : Type) extends encoding α where
+structure fin_encoding (α : Type) extends Encoding α where
   ΓFin : Fintype Γ
 
 /-- A standard Turing machine alphabet, consisting of blank,bit0,bit1,bra,ket,comma. -/
@@ -52,26 +52,26 @@ def section_Γ'_bool : Γ' → Bool
   | Γ'.bit b => b
   | _ => arbitrary Bool
 
-theorem left_inverse_section_inclusion : Function.LeftInverse section_Γ'_bool inclusion_bool_Γ' := fun x =>
+theorem left_inverse_section_inclusion : Function.LeftInverse sectionΓ'Bool inclusionBoolΓ' := fun x =>
   Bool.casesOn x rfl rfl
 
-theorem inclusion_bool_Γ'_injective : Function.Injective inclusion_bool_Γ' :=
-  Function.HasLeftInverse.injective (Exists.intro section_Γ'_bool left_inverse_section_inclusion)
+theorem inclusion_bool_Γ'_injective : Function.Injective inclusionBoolΓ' :=
+  Function.HasLeftInverse.injective (Exists.intro sectionΓ'Bool left_inverse_section_inclusion)
 
 /-- An encoding function of the positive binary numbers in bool. -/
 def encode_pos_num : PosNum → List Bool
-  | PosNum.one => [tt]
+  | PosNum.one => [true]
   | PosNum.bit0 n => ff :: encode_pos_num n
   | PosNum.bit1 n => tt :: encode_pos_num n
 
 /-- An encoding function of the binary numbers in bool. -/
 def encode_num : Num → List Bool
   | Num.zero => []
-  | Num.pos n => encode_pos_num n
+  | Num.pos n => encodePosNum n
 
 /-- An encoding function of ℕ in bool. -/
 def encode_nat (n : ℕ) : List Bool :=
-  encode_num n
+  encodeNum n
 
 /-- A decoding function from `list bool` to the positive binary numbers. -/
 def decode_pos_num : List Bool → PosNum
@@ -80,15 +80,15 @@ def decode_pos_num : List Bool → PosNum
   | _ => PosNum.one
 
 /-- A decoding function from `list bool` to the binary numbers. -/
-def decode_num : List Bool → Num := fun l => ite (l = []) Num.zero <| decode_pos_num l
+def decode_num : List Bool → Num := fun l => ite (l = []) Num.zero <| decodePosNum l
 
 /-- A decoding function from `list bool` to ℕ. -/
-def decode_nat : List Bool → Nat := fun l => decode_num l
+def decode_nat : List Bool → Nat := fun l => decodeNum l
 
-theorem encode_pos_num_nonempty (n : PosNum) : encode_pos_num n ≠ [] :=
+theorem encode_pos_num_nonempty (n : PosNum) : encodePosNum n ≠ [] :=
   PosNum.casesOn n (List.cons_ne_nil _ _) (fun m => List.cons_ne_nil _ _) fun m => List.cons_ne_nil _ _
 
-theorem decode_encode_pos_num : ∀ n, decode_pos_num (encode_pos_num n) = n := by
+theorem decode_encode_pos_num : ∀ n, decodePosNum (encodePosNum n) = n := by
   intro n
   induction' n with m hm m hm <;> unfold encode_pos_num decode_pos_num
   · rfl
@@ -99,7 +99,7 @@ theorem decode_encode_pos_num : ∀ n, decode_pos_num (encode_pos_num n) = n := 
   · exact congr_argₓ PosNum.bit0 hm
     
 
-theorem decode_encode_num : ∀ n, decode_num (encode_num n) = n := by
+theorem decode_encode_num : ∀ n, decodeNum (encodeNum n) = n := by
   intro n
   cases n <;> unfold encode_num decode_num
   · rfl
@@ -108,34 +108,34 @@ theorem decode_encode_num : ∀ n, decode_num (encode_num n) = n := by
   rw [PosNum.cast_to_num]
   exact if_neg (encode_pos_num_nonempty n)
 
-theorem decode_encode_nat : ∀ n, decode_nat (encode_nat n) = n := by
+theorem decode_encode_nat : ∀ n, decodeNat (encodeNat n) = n := by
   intro n
   conv_rhs => rw [← Num.to_of_nat n]
   exact congr_argₓ coe (decode_encode_num ↑n)
 
 /-- A binary encoding of ℕ in bool. -/
-def encoding_nat_bool : encoding ℕ where
+def encoding_nat_bool : Encoding ℕ where
   Γ := Bool
-  encode := encode_nat
-  decode := fun n => some (decode_nat n)
+  encode := encodeNat
+  decode := fun n => some (decodeNat n)
   decode_encode := fun n => congr_argₓ _ (decode_encode_nat n)
 
 /-- A binary fin_encoding of ℕ in bool. -/
-def fin_encoding_nat_bool : fin_encoding ℕ :=
-  ⟨encoding_nat_bool, Bool.fintype⟩
+def fin_encoding_nat_bool : FinEncoding ℕ :=
+  ⟨encodingNatBool, Bool.fintype⟩
 
 /-- A binary encoding of ℕ in Γ'. -/
-def encoding_nat_Γ' : encoding ℕ where
+def encoding_nat_Γ' : Encoding ℕ where
   Γ := Γ'
-  encode := fun x => List.map inclusion_bool_Γ' (encode_nat x)
-  decode := fun x => some (decode_nat (List.map section_Γ'_bool x))
+  encode := fun x => List.map inclusionBoolΓ' (encodeNat x)
+  decode := fun x => some (decodeNat (List.map sectionΓ'Bool x))
   decode_encode := fun x =>
     congr_argₓ _ <| by
       rw [List.map_mapₓ, List.map_id' left_inverse_section_inclusion, decode_encode_nat]
 
 /-- A binary fin_encoding of ℕ in Γ'. -/
-def fin_encoding_nat_Γ' : fin_encoding ℕ :=
-  ⟨encoding_nat_Γ', Γ'.fintype⟩
+def fin_encoding_nat_Γ' : FinEncoding ℕ :=
+  ⟨encodingNatΓ', Γ'.fintype⟩
 
 /-- A unary encoding function of ℕ in bool. -/
 def unary_encode_nat : Nat → List Bool
@@ -146,14 +146,14 @@ def unary_encode_nat : Nat → List Bool
 def unary_decode_nat : List Bool → Nat :=
   List.length
 
-theorem unary_decode_encode_nat : ∀ n, unary_decode_nat (unary_encode_nat n) = n := fun n =>
+theorem unary_decode_encode_nat : ∀ n, unaryDecodeNat (unaryEncodeNat n) = n := fun n =>
   Nat.rec rfl (fun m : ℕ hm => (congr_argₓ Nat.succ hm.symm).symm) n
 
 /-- A unary fin_encoding of ℕ. -/
-def unary_fin_encoding_nat : fin_encoding ℕ where
+def unary_fin_encoding_nat : FinEncoding ℕ where
   Γ := Bool
-  encode := unary_encode_nat
-  decode := fun n => some (unary_decode_nat n)
+  encode := unaryEncodeNat
+  decode := fun n => some (unaryDecodeNat n)
   decode_encode := fun n => congr_argₓ _ (unary_decode_encode_nat n)
   ΓFin := Bool.fintype
 
@@ -166,21 +166,21 @@ def decode_bool : List Bool → Bool
   | b :: _ => b
   | _ => arbitrary Bool
 
-theorem decode_encode_bool : ∀ b, decode_bool (encode_bool b) = b := fun b => Bool.casesOn b rfl rfl
+theorem decode_encode_bool : ∀ b, decodeBool (encodeBool b) = b := fun b => Bool.casesOn b rfl rfl
 
 /-- A fin_encoding of bool in bool. -/
-def fin_encoding_bool_bool : fin_encoding Bool where
+def fin_encoding_bool_bool : FinEncoding Bool where
   Γ := Bool
-  encode := encode_bool
-  decode := fun x => some (decode_bool x)
+  encode := encodeBool
+  decode := fun x => some (decodeBool x)
   decode_encode := fun x => congr_argₓ _ (decode_encode_bool x)
   ΓFin := Bool.fintype
 
-instance inhabited_fin_encoding : Inhabited (fin_encoding Bool) :=
-  ⟨fin_encoding_bool_bool⟩
+instance inhabited_fin_encoding : Inhabited (FinEncoding Bool) :=
+  ⟨finEncodingBoolBool⟩
 
-instance inhabited_encoding : Inhabited (encoding Bool) :=
-  ⟨fin_encoding_bool_bool.toEncoding⟩
+instance inhabited_encoding : Inhabited (Encoding Bool) :=
+  ⟨finEncodingBoolBool.toEncoding⟩
 
 end Computability
 

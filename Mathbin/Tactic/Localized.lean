@@ -29,11 +29,11 @@ unsafe def localized_attr : user_attribute (rb_lmap Name Stringₓ) Unit where
 /-- Get all commands in the given locale and return them as a list of strings -/
 unsafe def get_localized (ns : List Name) : tactic (List Stringₓ) := do
   let m ← localized_attr.get_cache
-  ns.mfoldl
+  ns
       (fun l nm =>
-        match m.find nm with
+        match m nm with
         | [] => fail f! "locale {nm} does not exist"
-        | new_l => return <| l.append new_l)
+        | new_l => return <| l new_l)
       []
 
 /-- Execute all commands in the given locale -/
@@ -41,7 +41,7 @@ unsafe def get_localized (ns : List Name) : tactic (List Stringₓ) := do
 unsafe def open_locale_cmd (_ : parse <| tk "open_locale") : parser Unit := do
   let ns ← many ident
   let cmds ← get_localized ns
-  cmds.mmap' emit_code_here
+  cmds emit_code_here
 
 /-- Add a new command to a locale and execute it right now.
   The new command is added as a declaration to the environment with name `_localized_decl.<number>`.
@@ -56,8 +56,7 @@ unsafe def localized_cmd (_ : parse <| tk "localized") : parser Unit := do
   tk "in"
   let nm ← ident
   let env ← get_env
-  let dummy_decl_name :=
-    mkNumName `_localized_decl ((Stringₓ.hash (cmd ++ nm.to_string) + env.fingerprint) % unsignedSz)
+  let dummy_decl_name := mkNumName `_localized_decl ((Stringₓ.hash (cmd ++ nm.toString) + env.fingerprint) % unsignedSz)
   add_decl
       (declaration.defn dummy_decl_name [] (quote.1 (Name × Stringₓ)) (reflect (⟨nm, cmd⟩ : Name × Stringₓ))
         (ReducibilityHints.regular 1 tt) ff)
@@ -112,7 +111,7 @@ add_tactic_doc
 /-- Print all commands in a given locale -/
 unsafe def print_localized_commands (ns : List Name) : tactic Unit := do
   let cmds ← get_localized ns
-  cmds.mmap' trace
+  cmds trace
 
 localized [Classical] attribute [instance] Classical.propDecidable
 

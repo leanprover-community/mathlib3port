@@ -44,7 +44,7 @@ private unsafe def collect_by_aux {α β γ : Type} (p : α → β × γ) [Decid
   | [], [] => []
   | [], _ => undefined_core "didn't find every key entry!"
   | b :: rest, as =>
-    let (cs, as) := select_for_which p b as
+    let (cs, as) := selectForWhich p b as
     (b, cs) :: collect_by_aux rest as
 
 /-- Returns the elements of `l` under the image of `p`, collecting together elements with the same
@@ -89,7 +89,7 @@ private unsafe def strip_namespace (ns n : Name) : Name :=
 the namespace `ns` (which we do not include). -/
 unsafe def get_open_namespaces (ns : Name) : tactic (List Name) := do
   let opens ← List.eraseDupₓ <$> tactic.open_namespaces
-  return <| (opens.erase ns).map <| strip_namespace ns
+  return <| (opens ns).map <| strip_namespace ns
 
 /-- Give a slightly friendlier name for `name.anonymous` in the context of your current namespace.
 -/
@@ -105,19 +105,19 @@ unsafe def build_str_namespace (ns : Name) : lean.parser Stringₓ :=
 unsafe def build_str_open_namespaces (ns : Name) : tactic Stringₓ := do
   let l ← get_open_namespaces ns
   let str := " ".intercalate <| l.map toString
-  if l.empty then return "" else return s! "open {str}"
+  if l then return "" else return s! "open {str}"
 
 /-- `#where` output helper which traces the variables. -/
 unsafe def build_str_variables : lean.parser Stringₓ := do
   let l ← get_variables
   let str ← compile_variable_list l
-  if l.empty then return "" else return s! "variables {str}"
+  if l then return "" else return s! "variables {str}"
 
 /-- `#where` output helper which traces the includes. -/
 unsafe def build_str_includes : lean.parser Stringₓ := do
   let l ← get_included_variables
   let str := " ".intercalate <| l.map fun n => toString n.1
-  if l.empty then return "" else return s! "include {str}"
+  if l then return "" else return s! "include {str}"
 
 /-- `#where` output helper which traces the namespace end. -/
 unsafe def build_str_end (ns : Name) : tactic Stringₓ :=
@@ -130,7 +130,7 @@ private unsafe def append_nl (s : Stringₓ) (n : ℕ) : tactic Stringₓ :=
 /-- `#where` output helper which traces lines, adding a newline if nonempty. -/
 private unsafe def append_line (s : Stringₓ) (t : lean.parser Stringₓ) : lean.parser Stringₓ := do
   let v ← t
-  return <| s ++ v ++ if v.length = 0 then "" else "\n"
+  return <| s ++ v ++ if v = 0 then "" else "\n"
 
 /-- `#where` output main function. -/
 unsafe def build_msg : lean.parser Stringₓ := do

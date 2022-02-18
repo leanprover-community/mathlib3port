@@ -18,7 +18,7 @@ an idempotent, i.e. an `m` such that `m * m = m`. -/
       "Any nonempty compact Hausdorff additive semigroup where right-addition is continuous\ncontains an idempotent, i.e. an `m` such that `m + m = m`"]
 theorem exists_idempotent_of_compact_t2_of_continuous_mul_left {M} [Nonempty M] [Semigroupₓ M] [TopologicalSpace M]
     [CompactSpace M] [T2Space M] (continuous_mul_left : ∀ r : M, Continuous (· * r)) : ∃ m : M, m * m = m := by
-  let S : Set (Set M) := { N : Set M | IsClosed N ∧ N.nonempty ∧ ∀ m m' _ : m ∈ N _ : m' ∈ N, m * m' ∈ N }
+  let S : Set (Set M) := { N : Set M | IsClosed N ∧ N.Nonempty ∧ ∀ m m' _ : m ∈ N _ : m' ∈ N, m * m' ∈ N }
   suffices ∃ N ∈ S, ∀, ∀ N' ∈ S, ∀, N' ⊆ N → N' = N by
     rcases this with ⟨N, ⟨N_closed, ⟨m, hm⟩, N_mul⟩, N_minimal⟩
     use m
@@ -47,7 +47,7 @@ theorem exists_idempotent_of_compact_t2_of_continuous_mul_left {M} [Nonempty M] 
     exact hm.2
   apply Zorn.zorn_superset
   intro c hcs hc
-  refine' ⟨⋂₀c, ⟨is_closed_sInter fun t ht => (hcs ht).1, _, _⟩, _⟩
+  refine' ⟨⋂₀ c, ⟨is_closed_sInter fun t ht => (hcs ht).1, _, _⟩, _⟩
   · obtain rfl | hcnemp := c.eq_empty_or_nonempty
     · rw [Set.sInter_empty]
       apply Set.univ_nonempty
@@ -85,7 +85,7 @@ in some specified nonempty compact subsemigroup. -/
 @[to_additive exists_idempotent_in_compact_add_subsemigroup
       "A version of\n`exists_idempotent_of_compact_t2_of_continuous_add_left` where the idempotent lies in some specified\nnonempty compact additive subsemigroup."]
 theorem exists_idempotent_in_compact_subsemigroup {M} [Semigroupₓ M] [TopologicalSpace M] [T2Space M]
-    (continuous_mul_left : ∀ r : M, Continuous (· * r)) (s : Set M) (snemp : s.nonempty) (s_compact : IsCompact s)
+    (continuous_mul_left : ∀ r : M, Continuous (· * r)) (s : Set M) (snemp : s.Nonempty) (s_compact : IsCompact s)
     (s_add : ∀ x y _ : x ∈ s _ : y ∈ s, x * y ∈ s) : ∃ m ∈ s, m * m = m := by
   let M' := { m // m ∈ s }
   let this' : Semigroupₓ M' :=

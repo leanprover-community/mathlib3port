@@ -34,7 +34,7 @@ open Opposite
 
 namespace AlgebraicTopology
 
-variable {C : Type _} [category C] [abelian C]
+variable {C : Type _} [Category C] [Abelian C]
 
 attribute [local instance] abelian.has_pullbacks
 
@@ -46,20 +46,20 @@ namespace NormalizedMooreComplex
 
 open CategoryTheory.Subobject
 
-variable (X : simplicial_object C)
+variable (X : SimplicialObject C)
 
 /-- The normalized Moore complex in degree `n`, as a subobject of `X n`.
 -/
 @[simp]
-def obj_X : ∀ n : ℕ, subobject (X.obj (op (SimplexCategory.mk n)))
+def obj_X : ∀ n : ℕ, Subobject (X.obj (op (SimplexCategory.mk n)))
   | 0 => ⊤
-  | n + 1 => Finset.univ.inf fun k : Finₓ (n + 1) => kernel_subobject (X.δ k.succ)
+  | n + 1 => Finset.univ.inf fun k : Finₓ (n + 1) => kernelSubobject (X.δ k.succ)
 
 /-- The differentials in the normalized Moore complex.
 -/
 @[simp]
-def obj_d : ∀ n : ℕ, (obj_X X (n + 1) : C) ⟶ (obj_X X n : C)
-  | 0 => subobject.arrow _ ≫ X.δ (0 : Finₓ 2) ≫ inv (⊤ : subobject _).arrow
+def obj_d : ∀ n : ℕ, (objX X (n + 1) : C) ⟶ (objX X n : C)
+  | 0 => Subobject.arrow _ ≫ X.δ (0 : Finₓ 2) ≫ inv (⊤ : Subobject _).arrow
   | n + 1 => by
     refine' factor_thru _ (arrow _ ≫ X.δ (0 : Finₓ (n + 3))) _
     refine' (finset_inf_factors _).mpr fun i m => _
@@ -76,7 +76,7 @@ def obj_d : ∀ n : ℕ, (obj_X X (n + 1) : C) ⟶ (obj_X X n : C)
     convert comp_zero
     exact kernel_subobject_arrow_comp _
 
-theorem d_squared (n : ℕ) : obj_d X (n + 1) ≫ obj_d X n = 0 := by
+theorem d_squared (n : ℕ) : objD X (n + 1) ≫ objD X n = 0 := by
   cases n <;> dsimp
   · simp only [subobject.factor_thru_arrow_assoc]
     slice_lhs 2 3 => erw [← X.δ_comp_δ (Finₓ.zero_le 0)]
@@ -102,10 +102,10 @@ theorem d_squared (n : ℕ) : obj_d X (n + 1) ≫ obj_d X n = 0 := by
 /-- The normalized Moore complex functor, on objects.
 -/
 @[simps]
-def obj (X : simplicial_object C) : ChainComplex C ℕ :=
-  ChainComplex.of (fun n => (obj_X X n : C)) (obj_d X) (d_squared X)
+def obj (X : SimplicialObject C) : ChainComplex C ℕ :=
+  ChainComplex.of (fun n => (objX X n : C)) (objD X) (d_squared X)
 
-variable {X} {Y : simplicial_object C} (f : X ⟶ Y)
+variable {X} {Y : SimplicialObject C} (f : X ⟶ Y)
 
 /-- The normalized Moore complex functor, on morphisms.
 -/
@@ -156,7 +156,7 @@ The differentials are induced from `X.δ 0`,
 which maps each of these intersections of kernels to the next.
 -/
 @[simps]
-def normalized_Moore_complex : simplicial_object C ⥤ ChainComplex C ℕ where
+def normalized_Moore_complex : SimplicialObject C ⥤ ChainComplex C ℕ where
   obj := obj
   map := fun X Y f => map f
   map_id' := fun X => by

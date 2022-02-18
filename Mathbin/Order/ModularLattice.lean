@@ -66,14 +66,14 @@ theorem eq_of_le_of_inf_le_of_sup_le (hxy : x ≤ y) (hinf : y⊓z ≤ x⊓z) (h
         _ ≤ x⊔z := hsup
         
     calc
-      y ≤ (x⊔z)⊓y := le_inf h (le_reflₓ _)
+      y ≤ (x⊔z)⊓y := le_inf h le_rfl
       _ = x⊔z⊓y := sup_inf_assoc_of_le _ hxy
       _ ≤ x⊔z⊓x :=
         sup_le_sup_left
           (by
             rw [inf_comm, @inf_comm _ _ z] <;> exact hinf)
           _
-      _ ≤ x := sup_le (le_reflₓ _) inf_le_right
+      _ ≤ x := sup_le le_rfl inf_le_right
       
 
 theorem sup_lt_sup_of_lt_of_inf_le_inf (hxy : x < y) (hinf : y⊓z ≤ x⊓z) : x⊔z < y⊔z :=
@@ -112,8 +112,8 @@ theorem well_founded_gt_exact_sequence {β γ : Type _} [PartialOrderₓ β] [Pa
 
 /-- The diamond isomorphism between the intervals `[a ⊓ b, a]` and `[b, a ⊔ b]` -/
 def infIccOrderIsoIccSup (a b : α) : Set.Icc (a⊓b) a ≃o Set.Icc b (a⊔b) where
-  toFun := fun x => ⟨x⊔b, ⟨le_sup_right, sup_le_sup_right x.prop.2 b⟩⟩
-  invFun := fun x => ⟨a⊓x, ⟨inf_le_inf_left a x.prop.1, inf_le_left⟩⟩
+  toFun := fun x => ⟨x⊔b, ⟨le_sup_right, sup_le_sup_right x.Prop.2 b⟩⟩
+  invFun := fun x => ⟨a⊓x, ⟨inf_le_inf_left a x.Prop.1, inf_le_left⟩⟩
   left_inv := fun x =>
     Subtype.ext
       (by

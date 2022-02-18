@@ -32,28 +32,28 @@ def obj (α : Typevec.{u} n) : Type u :=
   Σ a : P.A, P.B a ⟹ α
 
 /-- Applying `P` to a morphism of `Type` -/
-def map {α β : Typevec n} (f : α ⟹ β) : P.obj α → P.obj β := fun ⟨a, g⟩ => ⟨a, Typevec.comp f g⟩
+def map {α β : Typevec n} (f : α ⟹ β) : P.Obj α → P.Obj β := fun ⟨a, g⟩ => ⟨a, Typevec.comp f g⟩
 
 instance : Inhabited (Mvpfunctor n) :=
   ⟨⟨default, fun _ => default⟩⟩
 
-instance obj.inhabited {α : Typevec n} [Inhabited P.A] [∀ i, Inhabited (α i)] : Inhabited (P.obj α) :=
+instance obj.inhabited {α : Typevec n} [Inhabited P.A] [∀ i, Inhabited (α i)] : Inhabited (P.Obj α) :=
   ⟨⟨default, fun _ _ => default⟩⟩
 
-instance : Mvfunctor P.obj :=
+instance : Mvfunctor P.Obj :=
   ⟨@Mvpfunctor.map n P⟩
 
 theorem map_eq {α β : Typevec n} (g : α ⟹ β) (a : P.A) (f : P.B a ⟹ α) :
-    @Mvfunctor.map _ P.obj _ _ _ g ⟨a, f⟩ = ⟨a, g ⊚ f⟩ :=
+    @Mvfunctor.map _ P.Obj _ _ _ g ⟨a, f⟩ = ⟨a, g ⊚ f⟩ :=
   rfl
 
-theorem id_map {α : Typevec n} : ∀ x : P.obj α, Typevec.id <$$> x = x
+theorem id_map {α : Typevec n} : ∀ x : P.Obj α, Typevec.id <$$> x = x
   | ⟨a, g⟩ => rfl
 
-theorem comp_map {α β γ : Typevec n} (f : α ⟹ β) (g : β ⟹ γ) : ∀ x : P.obj α, (g ⊚ f) <$$> x = g <$$> f <$$> x
+theorem comp_map {α β γ : Typevec n} (f : α ⟹ β) (g : β ⟹ γ) : ∀ x : P.Obj α, (g ⊚ f) <$$> x = g <$$> f <$$> x
   | ⟨a, h⟩ => rfl
 
-instance : IsLawfulMvfunctor P.obj where
+instance : IsLawfulMvfunctor P.Obj where
   id_map := @id_map _ P
   comp_map := @comp_map _ P
 
@@ -100,11 +100,11 @@ def comp (P : Mvpfunctor.{u} n) (Q : Fin2 n → Mvpfunctor.{u} m) : Mvpfunctor m
 variable {P} {Q : Fin2 n → Mvpfunctor.{u} m} {α β : Typevec.{u} m}
 
 /-- Constructor for functor composition -/
-def comp.mk (x : P.obj fun i => (Q i).Obj α) : (comp P Q).Obj α :=
+def comp.mk (x : P.Obj fun i => (Q i).Obj α) : (comp P Q).Obj α :=
   ⟨⟨x.1, fun i a => (x.2 _ a).1⟩, fun i a => (x.snd a.fst a.snd.fst).snd i a.snd.snd⟩
 
 /-- Destructor for functor composition -/
-def comp.get (x : (comp P Q).Obj α) : P.obj fun i => (Q i).Obj α :=
+def comp.get (x : (comp P Q).Obj α) : P.Obj fun i => (Q i).Obj α :=
   ⟨x.1.1, fun i a => ⟨x.fst.snd i a, fun j : Fin2 m b : (Q i).B _ j => x.snd j ⟨i, ⟨a, b⟩⟩⟩⟩
 
 theorem comp.get_map (f : α ⟹ β) (x : (comp P Q).Obj α) :
@@ -114,7 +114,7 @@ theorem comp.get_map (f : α ⟹ β) (x : (comp P Q).Obj α) :
 
 -- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:377:22: warning: unsupported simp config option: iota_eqn
 @[simp]
-theorem comp.get_mk (x : P.obj fun i => (Q i).Obj α) : comp.get (comp.mk x) = x := by
+theorem comp.get_mk (x : P.Obj fun i => (Q i).Obj α) : comp.get (comp.mk x) = x := by
   cases x
   simp [comp.get, comp.mk]
 
@@ -131,8 +131,8 @@ theorem comp.mk_get (x : (comp P Q).Obj α) : comp.mk (comp.get x) = x := by
   congr
   rcases x_1 with ⟨a, b, c⟩ <;> rfl
 
-theorem liftp_iff {α : Typevec n} (p : ∀ ⦃i⦄, α i → Prop) (x : P.obj α) :
-    liftp p x ↔ ∃ a f, x = ⟨a, f⟩ ∧ ∀ i j, p (f i j) := by
+theorem liftp_iff {α : Typevec n} (p : ∀ ⦃i⦄, α i → Prop) (x : P.Obj α) :
+    Liftp p x ↔ ∃ a f, x = ⟨a, f⟩ ∧ ∀ i j, p (f i j) := by
   constructor
   · rintro ⟨y, hy⟩
     cases' h : y with a f
@@ -146,7 +146,7 @@ theorem liftp_iff {α : Typevec n} (p : ∀ ⦃i⦄, α i → Prop) (x : P.obj �
   rfl
 
 theorem liftp_iff' {α : Typevec n} (p : ∀ ⦃i⦄, α i → Prop) (a : P.A) (f : P.B a ⟹ α) :
-    @liftp.{u} _ P.obj _ α p ⟨a, f⟩ ↔ ∀ i x, p (f i x) := by
+    @Liftp.{u} _ P.Obj _ α p ⟨a, f⟩ ↔ ∀ i x, p (f i x) := by
   simp only [liftp_iff, Sigma.mk.inj_iff] <;> constructor <;> intro
   · casesm* Exists _, _ ∧ _
     subst_vars
@@ -157,8 +157,8 @@ theorem liftp_iff' {α : Typevec n} (p : ∀ ⦃i⦄, α i → Prop) (a : P.A) (
       constructor|
       assumption
 
-theorem liftr_iff {α : Typevec n} (r : ∀ ⦃i⦄, α i → α i → Prop) (x y : P.obj α) :
-    liftr r x y ↔ ∃ a f₀ f₁, x = ⟨a, f₀⟩ ∧ y = ⟨a, f₁⟩ ∧ ∀ i j, r (f₀ i j) (f₁ i j) := by
+theorem liftr_iff {α : Typevec n} (r : ∀ ⦃i⦄, α i → α i → Prop) (x y : P.Obj α) :
+    Liftr r x y ↔ ∃ a f₀ f₁, x = ⟨a, f₀⟩ ∧ y = ⟨a, f₁⟩ ∧ ∀ i j, r (f₀ i j) (f₁ i j) := by
   constructor
   · rintro ⟨u, xeq, yeq⟩
     cases' h : u with a f
@@ -187,7 +187,7 @@ theorem liftr_iff {α : Typevec n} (r : ∀ ⦃i⦄, α i → α i → Prop) (x 
 open Set Mvfunctor
 
 theorem supp_eq {α : Typevec n} (a : P.A) (f : P.B a ⟹ α) i :
-    @supp.{u} _ P.obj _ α (⟨a, f⟩ : P.obj α) i = f i '' univ := by
+    @Supp.{u} _ P.Obj _ α (⟨a, f⟩ : P.Obj α) i = f i '' univ := by
   ext
   simp only [supp, image_univ, mem_range, mem_set_of_eq]
   constructor <;> intro h
@@ -226,7 +226,7 @@ def last : Pfunctor where
 @[reducible]
 def append_contents {α : Typevec n} {β : Type _} {a : P.A} (f' : P.drop.B a ⟹ α) (f : P.last.B a → β) :
     P.B a ⟹ (α ::: β) :=
-  split_fun f' f
+  splitFun f' f
 
 end Mvpfunctor
 

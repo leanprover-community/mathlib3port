@@ -42,7 +42,7 @@ theorem sq_add_sq_of_two_mul_sq_add_sq {m x y : ℤ} (h : 2 * m = x ^ 2 + y ^ 2)
         simp [mul_addₓ, pow_succₓ, mul_comm, mul_assoc, mul_left_commₓ]
       
 
-theorem exists_sq_add_sq_add_one_eq_k (p : ℕ) [hp : Fact p.prime] :
+theorem exists_sq_add_sq_add_one_eq_k (p : ℕ) [hp : Fact p.Prime] :
     ∃ (a b : ℤ)(k : ℕ), a ^ 2 + b ^ 2 + 1 = k * p ∧ k < p :=
   (hp.1.eq_two_or_odd.elim fun hp2 =>
       hp2.symm ▸
@@ -50,7 +50,7 @@ theorem exists_sq_add_sq_add_one_eq_k (p : ℕ) [hp : Fact p.prime] :
           decide⟩)
     fun hp1 =>
     let ⟨a, b, hab⟩ := Zmod.sq_add_sq p (-1)
-    have hab' : (p : ℤ) ∣ a.val_min_abs ^ 2 + b.val_min_abs ^ 2 + 1 :=
+    have hab' : (p : ℤ) ∣ a.valMinAbs ^ 2 + b.valMinAbs ^ 2 + 1 :=
       (CharP.int_cast_eq_zero_iff (Zmod p) p _).1 <| by
         simpa [eq_neg_iff_add_eq_zero] using hab
     let ⟨k, hk⟩ := hab'
@@ -59,18 +59,18 @@ theorem exists_sq_add_sq_add_one_eq_k (p : ℕ) [hp : Fact p.prime] :
         (by
           rw [← hk] <;> exact add_nonneg (add_nonneg (sq_nonneg _) (sq_nonneg _)) zero_le_one)
         (Int.coe_nat_pos.2 hp.1.Pos)
-    ⟨a.val_min_abs, b.val_min_abs, k.nat_abs, by
+    ⟨a.valMinAbs, b.valMinAbs, k.natAbs, by
       rw [hk, Int.nat_abs_of_nonneg hk0, mul_comm],
       lt_of_mul_lt_mul_left
         (calc
-          p * k.nat_abs = a.val_min_abs.nat_abs ^ 2 + b.val_min_abs.nat_abs ^ 2 + 1 := by
+          p * k.natAbs = a.valMinAbs.natAbs ^ 2 + b.valMinAbs.natAbs ^ 2 + 1 := by
             rw [← Int.coe_nat_inj', Int.coe_nat_add, Int.coe_nat_add, Int.coe_nat_pow, Int.coe_nat_pow, Int.nat_abs_sq,
               Int.nat_abs_sq, Int.coe_nat_one, hk, Int.coe_nat_mul, Int.nat_abs_of_nonneg hk0]
           _ ≤ (p / 2) ^ 2 + (p / 2) ^ 2 + 1 :=
             add_le_add
               (add_le_add (Nat.pow_le_pow_of_le_leftₓ (Zmod.nat_abs_val_min_abs_le _) _)
                 (Nat.pow_le_pow_of_le_leftₓ (Zmod.nat_abs_val_min_abs_le _) _))
-              (le_reflₓ _)
+              le_rfl
           _ < (p / 2) ^ 2 + (p / 2) ^ 2 + (p % 2) ^ 2 + (2 * (p / 2) ^ 2 + 4 * (p / 2) * (p % 2)) := by
             rw [hp1, one_pow, mul_oneₓ] <;>
               exact
@@ -131,8 +131,7 @@ private theorem sum_four_squares_of_two_mul_sum_four_squares {m a b c d : ℤ}
       decide
     simpa [Finset.sum_eq_multiset_sum, fin4univ, Multiset.sum_cons, f, add_assocₓ]⟩
 
-private theorem prime_sum_four_squares (p : ℕ) [hp : _root_.fact p.prime] :
-    ∃ a b c d : ℤ, a ^ 2 + b ^ 2 + c ^ 2 + d ^ 2 = p :=
+private theorem prime_sum_four_squares (p : ℕ) [hp : Fact p.Prime] : ∃ a b c d : ℤ, a ^ 2 + b ^ 2 + c ^ 2 + d ^ 2 = p :=
   have hm : ∃ m < p, 0 < m ∧ ∃ a b c d : ℤ, a ^ 2 + b ^ 2 + c ^ 2 + d ^ 2 = m * p :=
     let ⟨a, b, k, hk⟩ := exists_sq_add_sq_add_one_eq_k p
     ⟨k, hk.2,
@@ -174,13 +173,12 @@ private theorem prime_sum_four_squares (p : ℕ) [hp : _root_.fact p.prime] :
       let x := (b : Zmod m).valMinAbs
       let y := (c : Zmod m).valMinAbs
       let z := (d : Zmod m).valMinAbs
-      have hnat_abs :
-        w ^ 2 + x ^ 2 + y ^ 2 + z ^ 2 = (w.nat_abs ^ 2 + x.nat_abs ^ 2 + y.nat_abs ^ 2 + z.nat_abs ^ 2 : ℕ) := by
+      have hnat_abs : w ^ 2 + x ^ 2 + y ^ 2 + z ^ 2 = (w.natAbs ^ 2 + x.natAbs ^ 2 + y.natAbs ^ 2 + z.natAbs ^ 2 : ℕ) :=
+        by
         simp [sq]
       have hwxyzlt : w ^ 2 + x ^ 2 + y ^ 2 + z ^ 2 < m ^ 2 :=
         calc
-          w ^ 2 + x ^ 2 + y ^ 2 + z ^ 2 = (w.nat_abs ^ 2 + x.nat_abs ^ 2 + y.nat_abs ^ 2 + z.nat_abs ^ 2 : ℕ) :=
-            hnat_abs
+          w ^ 2 + x ^ 2 + y ^ 2 + z ^ 2 = (w.natAbs ^ 2 + x.natAbs ^ 2 + y.natAbs ^ 2 + z.natAbs ^ 2 : ℕ) := hnat_abs
           _ ≤ ((m / 2) ^ 2 + (m / 2) ^ 2 + (m / 2) ^ 2 + (m / 2) ^ 2 : ℕ) :=
             Int.coe_nat_le.2 <|
               add_le_add
@@ -207,9 +205,9 @@ private theorem prime_sum_four_squares (p : ℕ) [hp : _root_.fact p.prime] :
       have hwxyz0 : ((w ^ 2 + x ^ 2 + y ^ 2 + z ^ 2 : ℤ) : Zmod m) = 0 := by
         rw [hwxyzabcd, habcd, Int.cast_mul, cast_coe_nat, Zmod.nat_cast_self, zero_mul]
       let ⟨n, hn⟩ := (CharP.int_cast_eq_zero_iff _ m _).1 hwxyz0
-      have hn0 : 0 < n.nat_abs :=
+      have hn0 : 0 < n.natAbs :=
         Int.nat_abs_pos_of_ne_zero fun hn0 =>
-          have hwxyz0 : (w.nat_abs ^ 2 + x.nat_abs ^ 2 + y.nat_abs ^ 2 + z.nat_abs ^ 2 : ℕ) = 0 := by
+          have hwxyz0 : (w.natAbs ^ 2 + x.natAbs ^ 2 + y.natAbs ^ 2 + z.natAbs ^ 2 : ℕ) = 0 := by
             rw [← Int.coe_nat_eq_zero, ← hnat_abs]
             rwa [hn0, mul_zero] at hn
           have habcd0 : (m : ℤ) ∣ a ∧ (m : ℤ) ∣ b ∧ (m : ℤ) ∣ c ∧ (m : ℤ) ∣ d := by
@@ -258,14 +256,14 @@ private theorem prime_sum_four_squares (p : ℕ) [hp : _root_.fact p.prime] :
               try
                 exact sq_nonneg _)
           (Int.coe_nat_pos.2 hm0.1)
-      have hnm : n.nat_abs < m :=
+      have hnm : n.natAbs < m :=
         Int.coe_nat_lt.1
           (lt_of_mul_lt_mul_left
             (by
               rw [Int.nat_abs_of_nonneg hn_nonneg, ← hn, ← sq]
               exact hwxyzlt)
             (Int.coe_nat_nonneg m))
-      have hstuv : s ^ 2 + t ^ 2 + u ^ 2 + v ^ 2 = n.nat_abs * p :=
+      have hstuv : s ^ 2 + t ^ 2 + u ^ 2 + v ^ 2 = n.natAbs * p :=
         (mul_right_inj' (show (m ^ 2 : ℤ) ≠ 0 from pow_ne_zero 2 (Int.coe_nat_ne_zero_iff_pos.2 hm0.1))).1 <|
           calc
             (m : ℤ) ^ 2 * (s ^ 2 + t ^ 2 + u ^ 2 + v ^ 2) =
@@ -288,14 +286,14 @@ theorem sum_four_squares : ∀ n : ℕ, ∃ a b c d : ℕ, a ^ 2 + b ^ 2 + c ^ 2
   | 0 => ⟨0, 0, 0, 0, rfl⟩
   | 1 => ⟨1, 0, 0, 0, rfl⟩
   | n@(k + 2) =>
-    have hm : _root_.fact (min_fac (k + 2)).Prime :=
+    have hm : Fact (minFac (k + 2)).Prime :=
       ⟨min_fac_prime
           (by
             decide)⟩
-    have : n / min_fac n < n := factors_lemma
+    have : n / minFac n < n := factors_lemma
     let ⟨a, b, c, d, h₁⟩ :=
-      show ∃ a b c d : ℤ, a ^ 2 + b ^ 2 + c ^ 2 + d ^ 2 = min_fac n from prime_sum_four_squares (min_fac (k + 2))
-    let ⟨w, x, y, z, h₂⟩ := sum_four_squares (n / min_fac n)
+      show ∃ a b c d : ℤ, a ^ 2 + b ^ 2 + c ^ 2 + d ^ 2 = minFac n from prime_sum_four_squares (min_fac (k + 2))
+    let ⟨w, x, y, z, h₂⟩ := sum_four_squares (n / minFac n)
     ⟨(a * w - b * x - c * y - d * z).natAbs, (a * x + b * w + c * z - d * y).natAbs,
       (a * y - b * z + c * w + d * x).natAbs, (a * z + b * y - c * x + d * w).natAbs, by
       rw [← Int.coe_nat_inj', ← Nat.mul_div_cancel'ₓ (min_fac_dvd (k + 2)), Int.coe_nat_mul, ← h₁, ← h₂]

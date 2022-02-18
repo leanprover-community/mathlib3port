@@ -17,22 +17,27 @@ namespace Function
 @[nolint has_inhabited_instance]
 structure embedding (α : Sort _) (β : Sort _) where
   toFun : α → β
-  inj' : injective to_fun
+  inj' : Injective to_fun
 
-infixr:25 " ↪ " => embedding
+infixr:25 " ↪ " => Embedding
 
 instance {α : Sort u} {β : Sort v} : CoeFun (α ↪ β) fun _ => α → β :=
-  ⟨embedding.to_fun⟩
+  ⟨Embedding.toFun⟩
 
 initialize_simps_projections Embedding (toFun → apply)
 
 instance {α : Sort u} {β : Sort v} : EmbeddingLike (α ↪ β) α β where
-  coe := embedding.to_fun
-  injective' := embedding.inj'
+  coe := Embedding.toFun
+  injective' := Embedding.inj'
   coe_injective' := fun f g h => by
     cases f
     cases g
     congr
+
+instance {α β : Sort _} : CanLift (α → β) (α ↪ β) where
+  coe := coeFn
+  cond := Injective
+  prf := fun f hf => ⟨⟨f, hf⟩, rfl⟩
 
 end Function
 
@@ -55,7 +60,7 @@ example (s : finset (fin 3)) (f : equiv.perm (fin 3)) : s.map f = s.map f.to_emb
 -/
 @[simps]
 protected def Equivₓ.toEmbedding : α ↪ β :=
-  ⟨f, f.injective⟩
+  ⟨f, f.Injective⟩
 
 instance Equivₓ.coeEmbedding : Coe (α ≃ β) (α ↪ β) :=
   ⟨Equivₓ.toEmbedding⟩
@@ -65,18 +70,18 @@ instance Equivₓ.Perm.coeEmbedding : Coe (Equivₓ.Perm α) (α ↪ α) :=
   Equivₓ.coeEmbedding
 
 @[simp]
-theorem Equivₓ.coe_eq_to_embedding : ↑f = f.to_embedding :=
+theorem Equivₓ.coe_eq_to_embedding : ↑f = f.toEmbedding :=
   rfl
 
 /-- Given an equivalence to a subtype, produce an embedding to the elements of the corresponding
 set. -/
 @[simps]
 def Equivₓ.asEmbedding {p : β → Prop} (e : α ≃ Subtype p) : α ↪ β :=
-  ⟨coe ∘ e, Subtype.coe_injective.comp e.injective⟩
+  ⟨coe ∘ e, Subtype.coe_injective.comp e.Injective⟩
 
 @[simp]
 theorem Equivₓ.as_embedding_range {α β : Sort _} {p : β → Prop} (e : α ≃ Subtype p) :
-    Set.Range e.as_embedding = SetOf p :=
+    Set.Range e.asEmbedding = SetOf p :=
   Set.ext fun x =>
     ⟨fun ⟨y, h⟩ => h ▸ Subtype.coe_prop (e y), fun hs =>
       ⟨e.symm ⟨x, hs⟩, by
@@ -92,14 +97,14 @@ theorem coe_injective {α β} : @Function.Injective (α ↪ β) (α → β) coeF
   FunLike.coe_injective
 
 @[ext]
-theorem ext {α β} {f g : embedding α β} (h : ∀ x, f x = g x) : f = g :=
+theorem ext {α β} {f g : Embedding α β} (h : ∀ x, f x = g x) : f = g :=
   FunLike.ext f g h
 
-theorem ext_iff {α β} {f g : embedding α β} : (∀ x, f x = g x) ↔ f = g :=
+theorem ext_iff {α β} {f g : Embedding α β} : (∀ x, f x = g x) ↔ f = g :=
   FunLike.ext_iff.symm
 
 @[simp]
-theorem to_fun_eq_coe {α β} (f : α ↪ β) : to_fun f = f :=
+theorem to_fun_eq_coe {α β} (f : α ↪ β) : toFun f = f :=
   rfl
 
 @[simp]
@@ -111,46 +116,46 @@ theorem mk_coe {α β : Type _} (f : α ↪ β) inj : (⟨f, inj⟩ : α ↪ β)
   ext
   simp
 
-protected theorem injective {α β} (f : α ↪ β) : injective f :=
+protected theorem injective {α β} (f : α ↪ β) : Injective f :=
   EmbeddingLike.injective f
 
 theorem apply_eq_iff_eq {α β} (f : α ↪ β) (x y : α) : f x = f y ↔ x = y :=
   EmbeddingLike.apply_eq_iff_eq f
 
 /-- The identity map as a `function.embedding`. -/
-@[refl, simps (config := { simpRhs := tt })]
+@[refl, simps (config := { simpRhs := true })]
 protected def refl (α : Sort _) : α ↪ α :=
   ⟨id, injective_id⟩
 
 /-- Composition of `f : α ↪ β` and `g : β ↪ γ`. -/
-@[trans, simps (config := { simpRhs := tt })]
+@[trans, simps (config := { simpRhs := true })]
 protected def trans {α β γ} (f : α ↪ β) (g : β ↪ γ) : α ↪ γ :=
-  ⟨g ∘ f, g.injective.comp f.injective⟩
+  ⟨g ∘ f, g.Injective.comp f.Injective⟩
 
 @[simp]
 theorem equiv_to_embedding_trans_symm_to_embedding {α β : Sort _} (e : α ≃ β) :
-    e.to_embedding.trans e.symm.to_embedding = embedding.refl _ := by
+    e.toEmbedding.trans e.symm.toEmbedding = Embedding.refl _ := by
   ext
   simp
 
 @[simp]
 theorem equiv_symm_to_embedding_trans_to_embedding {α β : Sort _} (e : α ≃ β) :
-    e.symm.to_embedding.trans e.to_embedding = embedding.refl _ := by
+    e.symm.toEmbedding.trans e.toEmbedding = Embedding.refl _ := by
   ext
   simp
 
 /-- Transfer an embedding along a pair of equivalences. -/
-@[simps (config := { fullyApplied := ff })]
+@[simps (config := { fullyApplied := false })]
 protected def congr {α : Sort u} {β : Sort v} {γ : Sort w} {δ : Sort x} (e₁ : α ≃ β) (e₂ : γ ≃ δ) (f : α ↪ γ) : β ↪ δ :=
-  (Equivₓ.toEmbedding e₁.symm).trans (f.trans e₂.to_embedding)
+  (Equivₓ.toEmbedding e₁.symm).trans (f.trans e₂.toEmbedding)
 
 /-- A right inverse `surj_inv` of a surjective function as an `embedding`. -/
-protected noncomputable def of_surjective {α β} (f : β → α) (hf : surjective f) : α ↪ β :=
-  ⟨surj_inv hf, injective_surj_inv _⟩
+protected noncomputable def of_surjective {α β} (f : β → α) (hf : Surjective f) : α ↪ β :=
+  ⟨surjInv hf, injective_surj_inv _⟩
 
 /-- Convert a surjective `embedding` to an `equiv` -/
-protected noncomputable def equiv_of_surjective {α β} (f : α ↪ β) (hf : surjective f) : α ≃ β :=
-  Equivₓ.ofBijective f ⟨f.injective, hf⟩
+protected noncomputable def equiv_of_surjective {α β} (f : α ↪ β) (hf : Surjective f) : α ≃ β :=
+  Equivₓ.ofBijective f ⟨f.Injective, hf⟩
 
 /-- There is always an embedding from an empty type. --/
 protected def of_is_empty {α β} [IsEmpty α] : α ↪ β :=
@@ -170,23 +175,23 @@ def set_value {α β} (f : α ↪ β) (a : α) (b : β) [∀ a', Decidable (a' =
           cc⟩
 
 theorem set_value_eq {α β} (f : α ↪ β) (a : α) (b : β) [∀ a', Decidable (a' = a)] [∀ a', Decidable (f a' = b)] :
-    set_value f a b a = b := by
+    setValue f a b a = b := by
   simp [set_value]
 
 /-- Embedding into `option α` using `some`. -/
-@[simps (config := { fullyApplied := ff })]
+@[simps (config := { fullyApplied := false })]
 protected def some {α} : α ↪ Option α :=
   ⟨some, Option.some_injective α⟩
 
 /-- Embedding into `option α` using `coe`. Usually the correct synctatical form for `simp`. -/
-@[simps (config := { fullyApplied := ff })]
+@[simps (config := { fullyApplied := false })]
 def coeOption {α} : α ↪ Option α :=
   ⟨coe, Option.some_injective α⟩
 
 /-- Embedding into `with_top α`. -/
 @[simps]
 def coe_with_top {α} : α ↪ WithTop α :=
-  { embedding.some with toFun := coe }
+  { Embedding.some with toFun := coe }
 
 /-- Given an embedding `f : α ↪ β` and a point outside of `set.range f`, construct an embedding
 `option α ↪ β`. -/
@@ -199,7 +204,7 @@ def Subtype {α} (p : α → Prop) : Subtype p ↪ α :=
   ⟨coe, fun _ _ => Subtype.ext_val⟩
 
 @[simp]
-theorem coeSubtype {α} (p : α → Prop) : ⇑Subtype p = coe :=
+theorem coeSubtype {α} (p : α → Prop) : ⇑subtype p = coe :=
   rfl
 
 /-- Choosing an element `b : β` gives an embedding of `punit` into `β`. -/
@@ -218,15 +223,15 @@ def sectr {α : Sort _} (a : α) (β : Sort _) : β ↪ α × β :=
 
 /-- Restrict the codomain of an embedding. -/
 def cod_restrict {α β} (p : Set β) (f : α ↪ β) (H : ∀ a, f a ∈ p) : α ↪ p :=
-  ⟨fun a => ⟨f a, H a⟩, fun a b h => f.injective (@congr_argₓ _ _ _ _ Subtype.val h)⟩
+  ⟨fun a => ⟨f a, H a⟩, fun a b h => f.Injective (@congr_argₓ _ _ _ _ Subtype.val h)⟩
 
 @[simp]
-theorem cod_restrict_apply {α β} p (f : α ↪ β) H a : cod_restrict p f H a = ⟨f a, H a⟩ :=
+theorem cod_restrict_apply {α β} p (f : α ↪ β) H a : codRestrict p f H a = ⟨f a, H a⟩ :=
   rfl
 
 /-- If `e₁` and `e₂` are embeddings, then so is `prod.map e₁ e₂ : (a, b) ↦ (e₁ a, e₂ b)`. -/
 def prod_mapₓ {α β γ δ : Type _} (e₁ : α ↪ β) (e₂ : γ ↪ δ) : α × γ ↪ β × δ :=
-  ⟨Prod.map e₁ e₂, e₁.injective.prod_map e₂.injective⟩
+  ⟨Prod.map e₁ e₂, e₁.Injective.prod_map e₂.Injective⟩
 
 @[simp]
 theorem coe_prod_map {α β γ δ : Type _} (e₁ : α ↪ β) (e₂ : γ ↪ δ) : ⇑e₁.prod_map e₂ = Prod.map e₁ e₂ :=
@@ -234,7 +239,7 @@ theorem coe_prod_map {α β γ δ : Type _} (e₁ : α ↪ β) (e₂ : γ ↪ δ
 
 /-- If `e₁` and `e₂` are embeddings, then so is `λ ⟨a, b⟩, ⟨e₁ a, e₂ b⟩ : pprod α γ → pprod β δ`. -/
 def pprod_map {α β γ δ : Sort _} (e₁ : α ↪ β) (e₂ : γ ↪ δ) : PProd α γ ↪ PProd β δ :=
-  ⟨fun x => ⟨e₁ x.1, e₂ x.2⟩, e₁.injective.pprod_map e₂.injective⟩
+  ⟨fun x => ⟨e₁ x.1, e₂ x.2⟩, e₁.Injective.pprod_map e₂.Injective⟩
 
 section Sum
 
@@ -244,11 +249,11 @@ open Sum
 def sum_map {α β γ δ : Type _} (e₁ : α ↪ β) (e₂ : γ ↪ δ) : Sum α γ ↪ Sum β δ :=
   ⟨Sum.map e₁ e₂, fun s₁ s₂ h =>
     match s₁, s₂, h with
-    | inl a₁, inl a₂, h => congr_argₓ inl <| e₁.injective <| inl.inj h
-    | inr b₁, inr b₂, h => congr_argₓ inr <| e₂.injective <| inr.inj h⟩
+    | inl a₁, inl a₂, h => congr_argₓ inl <| e₁.Injective <| inl.injₓ h
+    | inr b₁, inr b₂, h => congr_argₓ inr <| e₂.Injective <| inr.injₓ h⟩
 
 @[simp]
-theorem coe_sum_map {α β γ δ} (e₁ : α ↪ β) (e₂ : γ ↪ δ) : ⇑sum_map e₁ e₂ = Sum.map e₁ e₂ :=
+theorem coe_sum_map {α β γ δ} (e₁ : α ↪ β) (e₂ : γ ↪ δ) : ⇑sumMap e₁ e₂ = Sum.map e₁ e₂ :=
   rfl
 
 /-- The embedding of `α` into the sum `α ⊕ β`. -/
@@ -276,7 +281,7 @@ def sigma_mk (a : α) : β a ↪ Σ x, β x :=
 of embeddings, then `sigma.map f g` is an embedding. -/
 @[simps apply]
 def sigma_map (f : α ↪ α') (g : ∀ a, β a ↪ β' (f a)) : (Σ a, β a) ↪ Σ a', β' a' :=
-  ⟨Sigma.map f fun a => g a, f.injective.sigma_map fun a => (g a).Injective⟩
+  ⟨Sigma.map f fun a => g a, f.Injective.sigma_map fun a => (g a).Injective⟩
 
 end Sigma
 
@@ -289,18 +294,18 @@ def Pi_congr_right {α : Sort _} {β γ : α → Sort _} (e : ∀ a, β a ↪ γ
 /-- An embedding `e : α ↪ β` defines an embedding `(γ → α) ↪ (γ → β)` that sends each `f`
 to `e ∘ f`. -/
 def arrow_congr_right {α : Sort u} {β : Sort v} {γ : Sort w} (e : α ↪ β) : (γ → α) ↪ γ → β :=
-  Pi_congr_right fun _ => e
+  piCongrRight fun _ => e
 
 @[simp]
 theorem arrow_congr_right_apply {α : Sort u} {β : Sort v} {γ : Sort w} (e : α ↪ β) (f : γ ↪ α) :
-    arrow_congr_right e f = e ∘ f :=
+    arrowCongrRight e f = e ∘ f :=
   rfl
 
 /-- An embedding `e : α ↪ β` defines an embedding `(α → γ) ↪ (β → γ)` for any inhabited type `γ`.
 This embedding sends each `f : α → γ` to a function `g : β → γ` such that `g ∘ e = f` and
 `g y = default` whenever `y ∉ range e`. -/
 noncomputable def arrow_congr_left {α : Sort u} {β : Sort v} {γ : Sort w} [Inhabited γ] (e : α ↪ β) : (α → γ) ↪ β → γ :=
-  ⟨fun f => extend e f fun _ => default, fun f₁ f₂ h =>
+  ⟨fun f => extendₓ e f fun _ => default, fun f₁ f₂ h =>
     funext fun x => by
       simpa only [extend_apply e.injective] using congr_funₓ h (e x)⟩
 
@@ -314,15 +319,15 @@ open Set
 /-- `set.image` as an embedding `set α ↪ set β`. -/
 @[simps apply]
 protected def image {α β} (f : α ↪ β) : Set α ↪ Set β :=
-  ⟨image f, f.2.image_injective⟩
+  ⟨Image f, f.2.image_injective⟩
 
 theorem swap_apply {α β : Type _} [DecidableEq α] [DecidableEq β] (f : α ↪ β) (x y z : α) :
     Equivₓ.swap (f x) (f y) (f z) = f (Equivₓ.swap x y z) :=
-  f.injective.swap_apply x y z
+  f.Injective.swap_apply x y z
 
 theorem swap_comp {α β : Type _} [DecidableEq α] [DecidableEq β] (f : α ↪ β) (x y : α) :
     Equivₓ.swap (f x) (f y) ∘ f = f ∘ Equivₓ.swap x y :=
-  f.injective.swap_comp x y
+  f.Injective.swap_comp x y
 
 end Embedding
 
@@ -336,7 +341,7 @@ open Function.Embedding
     the subtype of all injective functions `α → β`. -/
 def subtype_injective_equiv_embedding (α β : Sort _) : { f : α → β // Function.Injective f } ≃ (α ↪ β) where
   toFun := fun f => ⟨f.val, f.property⟩
-  invFun := fun f => ⟨f, f.injective⟩
+  invFun := fun f => ⟨f, f.Injective⟩
   left_inv := fun f => by
     simp
   right_inv := fun f => by
@@ -357,20 +362,19 @@ def embedding_congr {α β γ δ : Sort _} (h : α ≃ β) (h' : γ ≃ δ) : (�
     simp
 
 @[simp]
-theorem embedding_congr_refl {α β : Sort _} : embedding_congr (Equivₓ.refl α) (Equivₓ.refl β) = Equivₓ.refl (α ↪ β) :=
-  by
+theorem embedding_congr_refl {α β : Sort _} : embeddingCongr (Equivₓ.refl α) (Equivₓ.refl β) = Equivₓ.refl (α ↪ β) := by
   ext
   rfl
 
 @[simp]
 theorem embedding_congr_trans {α₁ β₁ α₂ β₂ α₃ β₃ : Sort _} (e₁ : α₁ ≃ α₂) (e₁' : β₁ ≃ β₂) (e₂ : α₂ ≃ α₃)
     (e₂' : β₂ ≃ β₃) :
-    embedding_congr (e₁.trans e₂) (e₁'.trans e₂') = (embedding_congr e₁ e₁').trans (embedding_congr e₂ e₂') :=
+    embeddingCongr (e₁.trans e₂) (e₁'.trans e₂') = (embeddingCongr e₁ e₁').trans (embeddingCongr e₂ e₂') :=
   rfl
 
 @[simp]
 theorem embedding_congr_symm {α₁ β₁ α₂ β₂ : Sort _} (e₁ : α₁ ≃ α₂) (e₂ : β₁ ≃ β₂) :
-    (embedding_congr e₁ e₂).symm = embedding_congr e₁.symm e₂.symm :=
+    (embeddingCongr e₁ e₂).symm = embeddingCongr e₁.symm e₂.symm :=
   rfl
 
 theorem embedding_congr_apply_trans {α₁ β₁ γ₁ α₂ β₂ γ₂ : Sort _} (ea : α₁ ≃ α₂) (eb : β₁ ≃ β₂) (ec : γ₁ ≃ γ₂)
@@ -386,7 +390,7 @@ theorem refl_to_embedding {α : Type _} : (Equivₓ.refl α).toEmbedding = Funct
 
 @[simp]
 theorem trans_to_embedding {α β γ : Type _} (e : α ≃ β) (f : β ≃ γ) :
-    (e.trans f).toEmbedding = e.to_embedding.trans f.to_embedding :=
+    (e.trans f).toEmbedding = e.toEmbedding.trans f.toEmbedding :=
   rfl
 
 end Equivₓ
@@ -409,7 +413,7 @@ variable {α : Type _}
 /-- A subtype `{x // p x ∨ q x}` over a disjunction of `p q : α → Prop` can be injectively split
 into a sum of subtypes `{x // p x} ⊕ {x // q x}` such that `¬ p x` is sent to the right. -/
 def subtypeOrLeftEmbedding (p q : α → Prop) [DecidablePred p] : { x // p x ∨ q x } ↪ Sum { x // p x } { x // q x } :=
-  ⟨fun x => if h : p x then Sum.inl ⟨x, h⟩ else Sum.inr ⟨x, x.prop.resolve_left h⟩, by
+  ⟨fun x => if h : p x then Sum.inl ⟨x, h⟩ else Sum.inr ⟨x, x.Prop.resolve_left h⟩, by
     intro x y
     dsimp only
     split_ifs <;> simp [Subtype.ext_iff]⟩
@@ -419,14 +423,14 @@ theorem subtype_or_left_embedding_apply_left {p q : α → Prop} [DecidablePred 
   dif_pos hx
 
 theorem subtype_or_left_embedding_apply_right {p q : α → Prop} [DecidablePred p] (x : { x // p x ∨ q x }) (hx : ¬p x) :
-    subtypeOrLeftEmbedding p q x = Sum.inr ⟨x, x.prop.resolve_left hx⟩ :=
+    subtypeOrLeftEmbedding p q x = Sum.inr ⟨x, x.Prop.resolve_left hx⟩ :=
   dif_neg hx
 
 /-- A subtype `{x // p x}` can be injectively sent to into a subtype `{x // q x}`,
 if `p x → q x` for all `x : α`. -/
 @[simps]
 def Subtype.impEmbedding (p q : α → Prop) (h : p ≤ q) : { x // p x } ↪ { x // q x } :=
-  ⟨fun x => ⟨x, h x x.prop⟩, fun x y => by
+  ⟨fun x => ⟨x, h x x.Prop⟩, fun x y => by
     simp [Subtype.ext_iff]⟩
 
 /-- A subtype `{x // p x ∨ q x}` over a disjunction of `p q : α → Prop` is equivalent to a sum of
@@ -471,12 +475,12 @@ def subtypeOrEquiv (p q : α → Prop) [DecidablePred p] (h : Disjoint p q) :
 
 @[simp]
 theorem subtype_or_equiv_symm_inl (p q : α → Prop) [DecidablePred p] (h : Disjoint p q) (x : { x // p x }) :
-    (subtypeOrEquiv p q h).symm (Sum.inl x) = ⟨x, Or.inl x.prop⟩ :=
+    (subtypeOrEquiv p q h).symm (Sum.inl x) = ⟨x, Or.inl x.Prop⟩ :=
   rfl
 
 @[simp]
 theorem subtype_or_equiv_symm_inr (p q : α → Prop) [DecidablePred p] (h : Disjoint p q) (x : { x // q x }) :
-    (subtypeOrEquiv p q h).symm (Sum.inr x) = ⟨x, Or.inr x.prop⟩ :=
+    (subtypeOrEquiv p q h).symm (Sum.inr x) = ⟨x, Or.inr x.Prop⟩ :=
   rfl
 
 end Subtype

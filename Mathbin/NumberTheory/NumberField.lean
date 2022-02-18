@@ -39,6 +39,17 @@ open Function
 
 open_locale Classical BigOperators
 
+/-- `ℤ` with its usual ring structure is not a field. -/
+theorem Int.not_is_field : ¬IsField ℤ := by
+  intro hf
+  cases' hf.mul_inv_cancel two_ne_zero with inv2 hinv2
+  have not_even_2 : ¬Even (2 : ℤ) := by
+    rw [← Int.odd_iff_not_even]
+    apply Int.Odd.of_mul_left
+    rw [hinv2, Int.odd_iff_not_even]
+    exact Int.not_even_one
+  exact not_even_2 (even_bit0 1)
+
 namespace NumberField
 
 variable (K L : Type _) [Field K] [Field L] [nf : NumberField K]
@@ -48,7 +59,7 @@ include nf
 attribute [instance] NumberField.to_char_zero NumberField.to_finite_dimensional
 
 protected theorem IsAlgebraic : Algebra.IsAlgebraic ℚ K :=
-  Algebra.is_algebraic_of_finite
+  Algebra.is_algebraic_of_finite _ _
 
 omit nf
 
@@ -103,6 +114,12 @@ variable (K)
 instance [NumberField K] : CharZero (𝓞 K) :=
   CharZero.of_module _ K
 
+/-- The ring of integers of a number field is not a field. -/
+theorem not_is_field [NumberField K] : ¬IsField (𝓞 K) := by
+  have h_inj : Function.Injective (⇑algebraMap ℤ (𝓞 K)) := RingHom.injective_int (algebraMap ℤ (𝓞 K))
+  intro hf
+  exact Int.not_is_field ((IsIntegral.is_field_iff_is_field (IsIntegralClosure.is_integral_algebra ℤ K) h_inj).mpr hf)
+
 instance [NumberField K] : IsDedekindDomain (𝓞 K) :=
   IsIntegralClosure.is_dedekind_domain ℤ ℚ K _
 
@@ -114,16 +131,16 @@ namespace Rat
 
 open NumberField
 
+attribute [local instance] subsingleton_rat_module
+
 instance rat.number_field : NumberField ℚ where
   to_char_zero := inferInstance
   to_finite_dimensional := by
     convert (inferInstance : FiniteDimensional ℚ ℚ)
-    ext1
-    simp [Algebra.smul_def]
 
 /-- The ring of integers of `ℚ` as a number field is just `ℤ`. -/
-noncomputable def ring_of_integers_equiv : ring_of_integers ℚ ≃+* ℤ :=
-  ring_of_integers.equiv ℤ
+noncomputable def ring_of_integers_equiv : ringOfIntegers ℚ ≃+* ℤ :=
+  ringOfIntegers.equiv ℤ
 
 end Rat
 

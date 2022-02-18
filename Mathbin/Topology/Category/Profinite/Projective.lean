@@ -26,7 +26,7 @@ open CategoryTheory Function
 
 namespace Profinite
 
-instance projective_ultrafilter (X : Type u) : projective (of <| Ultrafilter X) where
+instance projective_ultrafilter (X : Type u) : Projective (of <| Ultrafilter X) where
   factors := fun Y Z f g hg => by
     rw [epi_iff_surjective] at hg
     obtain ⟨g', hg'⟩ := hg.has_right_inverse
@@ -40,16 +40,16 @@ instance projective_ultrafilter (X : Type u) : projective (of <| Ultrafilter X) 
     rw [comp.assoc, ultrafilter_extend_extends, ← comp.assoc, hg'.comp_eq_id, comp.left_id]
 
 /-- For any profinite `X`, the natural map `ultrafilter X → X` is a projective presentation. -/
-def projective_presentation (X : Profinite.{u}) : projective_presentation X where
+def projective_presentation (X : Profinite.{u}) : ProjectivePresentation X where
   P := of <| Ultrafilter X
   f := ⟨_, continuous_ultrafilter_extend id⟩
   Projective := Profinite.projective_ultrafilter X
   Epi :=
-    (concrete_category.epi_of_surjective _) fun x =>
+    (ConcreteCategory.epi_of_surjective _) fun x =>
       ⟨(pure x : Ultrafilter X), congr_funₓ (ultrafilter_extend_extends (𝟙 X)) x⟩
 
-instance : enough_projectives Profinite.{u} where
-  presentation := fun X => ⟨projective_presentation X⟩
+instance : EnoughProjectives Profinite.{u} where
+  presentation := fun X => ⟨projectivePresentation X⟩
 
 end Profinite
 

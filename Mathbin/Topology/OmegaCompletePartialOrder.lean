@@ -23,10 +23,10 @@ universe u
 namespace Scott
 
 /-- `x` is an `ω`-Sup of a chain `c` if it is the least upper bound of the range of `c`. -/
-def is_ωSup {α : Type u} [Preorderₓ α] (c : chain α) (x : α) : Prop :=
+def is_ωSup {α : Type u} [Preorderₓ α] (c : Chain α) (x : α) : Prop :=
   (∀ i, c i ≤ x) ∧ ∀ y, (∀ i, c i ≤ y) → x ≤ y
 
-theorem is_ωSup_iff_is_lub {α : Type u} [Preorderₓ α] {c : chain α} {x : α} : is_ωSup c x ↔ IsLub (Set.Range c) x := by
+theorem is_ωSup_iff_is_lub {α : Type u} [Preorderₓ α] {c : Chain α} {x : α} : IsωSup c x ↔ IsLub (Set.Range c) x := by
   simp [is_ωSup, IsLub, IsLeast, UpperBounds, LowerBounds]
 
 variable (α : Type u) [OmegaCompletePartialOrder α]
@@ -34,7 +34,7 @@ variable (α : Type u) [OmegaCompletePartialOrder α]
 /-- The characteristic function of open sets is monotone and preserves
 the limits of chains. -/
 def IsOpen (s : Set α) : Prop :=
-  continuous' fun x => x ∈ s
+  Continuous' fun x => x ∈ s
 
 theorem is_open_univ : IsOpen α Set.Univ :=
   ⟨fun x y h => by
@@ -100,7 +100,7 @@ open Scott hiding IsOpen
 
 open OmegaCompletePartialOrder
 
-theorem is_ωSup_ωSup {α} [OmegaCompletePartialOrder α] (c : chain α) : is_ωSup c (ωSup c) := by
+theorem is_ωSup_ωSup {α} [OmegaCompletePartialOrder α] (c : Chain α) : IsωSup c (ωSup c) := by
   constructor
   · apply le_ωSup
     

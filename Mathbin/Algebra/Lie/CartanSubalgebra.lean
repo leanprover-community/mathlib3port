@@ -48,21 +48,43 @@ theorem mem_normalizer_iff (x : L) : x ∈ H.normalizer ↔ ∀ y : L, y ∈ H �
   Iff.rfl
 
 theorem mem_normalizer_iff' (x : L) : x ∈ H.normalizer ↔ ∀ y : L, y ∈ H → ⁅y,x⁆ ∈ H :=
-  forall_congrₓ fun y =>
-    forall_congrₓ fun hy => by
-      rw [← lie_skew, H.neg_mem_iff]
+  forall₂_congrₓ fun y hy => by
+    rw [← lie_skew, H.neg_mem_iff]
 
 theorem le_normalizer : H ≤ H.normalizer := fun x hx => show ∀ y : L, y ∈ H → ⁅x,y⁆ ∈ H from fun y => H.lie_mem hx
 
+variable {H}
+
+theorem lie_mem_sup_of_mem_normalizer {x y z : L} (hx : x ∈ H.normalizer) (hy : y ∈ (R∙x)⊔↑H) (hz : z ∈ (R∙x)⊔↑H) :
+    ⁅y,z⁆ ∈ (R∙x)⊔↑H := by
+  rw [Submodule.mem_sup] at hy hz
+  obtain ⟨u₁, hu₁, v, hv : v ∈ H, rfl⟩ := hy
+  obtain ⟨u₂, hu₂, w, hw : w ∈ H, rfl⟩ := hz
+  obtain ⟨t, rfl⟩ := submodule.mem_span_singleton.mp hu₁
+  obtain ⟨s, rfl⟩ := submodule.mem_span_singleton.mp hu₂
+  apply Submodule.mem_sup_right
+  simp only [LieSubalgebra.mem_coe_submodule, smul_lie, add_lie, zero_addₓ, lie_add, smul_zero, lie_smul, lie_self]
+  refine' H.add_mem (H.smul_mem s _) (H.add_mem (H.smul_mem t _) (H.lie_mem hv hw))
+  exacts[(H.mem_normalizer_iff' x).mp hx v hv, (H.mem_normalizer_iff x).mp hx w hw]
+
 /-- A Lie subalgebra is an ideal of its normalizer. -/
-theorem ideal_in_normalizer : ∀ x y : L, x ∈ H.normalizer → y ∈ H → ⁅x,y⁆ ∈ H := fun x y h => h y
+theorem ideal_in_normalizer : ∀ {x y : L}, x ∈ H.normalizer → y ∈ H → ⁅x,y⁆ ∈ H := fun x y h => h y
+
+/-- A Lie subalgebra `H` is an ideal of any Lie subalgebra `K` containing `H` and contained in the
+normalizer of `H`. -/
+theorem exists_nested_lie_ideal_of_le_normalizer {K : LieSubalgebra R L} (h₁ : H ≤ K) (h₂ : K ≤ H.normalizer) :
+    ∃ I : LieIdeal R K, (I : LieSubalgebra R K) = ofLe h₁ := by
+  rw [exists_nested_lie_ideal_coe_eq_iff]
+  exact fun x y hx hy => ideal_in_normalizer (h₂ hx) hy
 
 /-- The normalizer of a Lie subalgebra `H` is the maximal Lie subalgebra in which `H` is a Lie
 ideal. -/
 theorem le_normalizer_of_ideal {N : LieSubalgebra R L} (h : ∀ x y : L, x ∈ N → y ∈ H → ⁅x,y⁆ ∈ H) : N ≤ H.normalizer :=
   fun x hx y => h x y hx
 
-theorem normalizer_eq_self_iff : H.normalizer = H ↔ (LieModule.maxTrivSubmodule R H <| L ⧸ H.to_lie_submodule) = ⊥ := by
+variable (H)
+
+theorem normalizer_eq_self_iff : H.normalizer = H ↔ (LieModule.maxTrivSubmodule R H <| L ⧸ H.toLieSubmodule) = ⊥ := by
   rw [LieSubmodule.eq_bot_iff]
   refine' ⟨fun h => _, fun h => le_antisymmₓ (fun x hx => _) H.le_normalizer⟩
   · rintro ⟨x⟩ hx

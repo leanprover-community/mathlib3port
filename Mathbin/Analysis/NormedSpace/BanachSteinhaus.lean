@@ -89,7 +89,7 @@ open Filter
 domain is complete, the Banach-Steinhaus theorem is used to guarantee that the limit map
 is a *continuous* linear map as well. -/
 def continuousLinearMapOfTendsto [CompleteSpace E] [T2Space F] (g : ℕ → E →SL[σ₁₂] F) {f : E → F}
-    (h : tendsto (fun n x => g n x) at_top (𝓝 f)) : E →SL[σ₁₂] F where
+    (h : Tendsto (fun n x => g n x) atTop (𝓝 f)) : E →SL[σ₁₂] F where
   toFun := f
   map_add' := (linearMapOfTendsto _ _ h).map_add'
   map_smul' := (linearMapOfTendsto _ _ h).map_smul'

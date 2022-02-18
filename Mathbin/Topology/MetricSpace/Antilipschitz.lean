@@ -106,16 +106,16 @@ theorem comp {Kg : ℝ≥0 } {g : β → γ} (hg : AntilipschitzWith Kg g) {Kf :
 theorem restrict (hf : AntilipschitzWith K f) (s : Set α) : AntilipschitzWith K (s.restrict f) := fun x y => hf x y
 
 theorem cod_restrict (hf : AntilipschitzWith K f) {s : Set β} (hs : ∀ x, f x ∈ s) :
-    AntilipschitzWith K (s.cod_restrict f hs) := fun x y => hf x y
+    AntilipschitzWith K (s.codRestrict f hs) := fun x y => hf x y
 
 theorem to_right_inv_on' {s : Set α} (hf : AntilipschitzWith K (s.restrict f)) {g : β → α} {t : Set β}
-    (g_maps : maps_to g t s) (g_inv : right_inv_on g f t) : LipschitzWith K (t.restrict g) := fun x y => by
+    (g_maps : MapsTo g t s) (g_inv : RightInvOn g f t) : LipschitzWith K (t.restrict g) := fun x y => by
   simpa only [restrict_apply, g_inv x.mem, g_inv y.mem, Subtype.edist_eq, Subtype.coe_mk] using
     hf ⟨g x, g_maps x.mem⟩ ⟨g y, g_maps y.mem⟩
 
-theorem to_right_inv_on (hf : AntilipschitzWith K f) {g : β → α} {t : Set β} (h : right_inv_on g f t) :
+theorem to_right_inv_on (hf : AntilipschitzWith K f) {g : β → α} {t : Set β} (h : RightInvOn g f t) :
     LipschitzWith K (t.restrict g) :=
-  (hf.restrict univ).to_right_inv_on' (maps_to_univ g t) h
+  (hf.restrict Univ).to_right_inv_on' (maps_to_univ g t) h
 
 theorem to_right_inverse (hf : AntilipschitzWith K f) {g : β → α} (hg : Function.RightInverse g f) :
     LipschitzWith K g := by
@@ -136,19 +136,19 @@ protected theorem UniformInducing (hf : AntilipschitzWith K f) (hfc : UniformCon
 
 protected theorem UniformEmbedding {α : Type _} {β : Type _} [EmetricSpace α] [PseudoEmetricSpace β] {K : ℝ≥0 }
     {f : α → β} (hf : AntilipschitzWith K f) (hfc : UniformContinuous f) : UniformEmbedding f :=
-  ⟨hf.uniform_inducing hfc, hf.injective⟩
+  ⟨hf.UniformInducing hfc, hf.Injective⟩
 
 theorem is_complete_range [CompleteSpace α] (hf : AntilipschitzWith K f) (hfc : UniformContinuous f) :
-    IsComplete (range f) :=
-  (hf.uniform_inducing hfc).is_complete_range
+    IsComplete (Range f) :=
+  (hf.UniformInducing hfc).is_complete_range
 
 theorem is_closed_range {α β : Type _} [PseudoEmetricSpace α] [EmetricSpace β] [CompleteSpace α] {f : α → β} {K : ℝ≥0 }
-    (hf : AntilipschitzWith K f) (hfc : UniformContinuous f) : IsClosed (range f) :=
+    (hf : AntilipschitzWith K f) (hfc : UniformContinuous f) : IsClosed (Range f) :=
   (hf.is_complete_range hfc).IsClosed
 
 theorem ClosedEmbedding {α : Type _} {β : Type _} [EmetricSpace α] [EmetricSpace β] {K : ℝ≥0 } {f : α → β}
     [CompleteSpace α] (hf : AntilipschitzWith K f) (hfc : UniformContinuous f) : ClosedEmbedding f :=
-  { (hf.uniform_embedding hfc).Embedding with closed_range := hf.is_closed_range hfc }
+  { (hf.UniformEmbedding hfc).Embedding with closed_range := hf.is_closed_range hfc }
 
 theorem subtype_coe (s : Set α) : AntilipschitzWith 1 (coe : s → α) :=
   AntilipschitzWith.id.restrict s
@@ -169,7 +169,7 @@ open Metric
 
 variable [PseudoMetricSpace α] [PseudoMetricSpace β] {K : ℝ≥0 } {f : α → β}
 
-theorem bounded_preimage (hf : AntilipschitzWith K f) {s : Set β} (hs : bounded s) : bounded (f ⁻¹' s) :=
+theorem bounded_preimage (hf : AntilipschitzWith K f) {s : Set β} (hs : Bounded s) : Bounded (f ⁻¹' s) :=
   (Exists.introₓ (K * diam s)) fun x hx y hy =>
     calc
       dist x y ≤ K * dist (f x) (f y) := hf.le_mul_dist x y

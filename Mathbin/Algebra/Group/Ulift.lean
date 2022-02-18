@@ -67,7 +67,7 @@ instance CommSemigroupₓ [CommSemigroupₓ α] : CommSemigroupₓ (Ulift α) :=
   (Equivₓ.ulift.Injective.CommSemigroup _) fun x y => rfl
 
 @[to_additive]
-instance MulOneClass [MulOneClass α] : MulOneClass (Ulift α) :=
+instance MulOneClassₓ [MulOneClassₓ α] : MulOneClassₓ (Ulift α) :=
   (Equivₓ.ulift.Injective.MulOneClass _ rfl) fun x y => rfl
 
 @[to_additive HasVadd]

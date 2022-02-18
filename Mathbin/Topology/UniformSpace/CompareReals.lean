@@ -99,10 +99,10 @@ instance : UniformSpace Q :=
 
 /-- Real numbers constructed as in Bourbaki. -/
 def Bourbakiℝ : Type :=
-  completion Q deriving Inhabited
+  Completion Q deriving Inhabited
 
 instance bourbaki.uniform_space : UniformSpace Bourbakiℝ :=
-  completion.uniform_space Q
+  Completion.uniformSpace Q
 
 /-- Bourbaki reals packaged as a completion of Q using the general theory. -/
 def Bourbaki_pkg : AbstractCompletion Q :=
@@ -110,13 +110,13 @@ def Bourbaki_pkg : AbstractCompletion Q :=
 
 /-- The equivalence between Bourbaki and Cauchy reals-/
 noncomputable def compare_equiv : Bourbakiℝ ≃ ℝ :=
-  Bourbaki_pkg.compareEquiv rationalCauSeqPkg
+  bourbakiPkg.compareEquiv rationalCauSeqPkg
 
-theorem compare_uc : UniformContinuous compare_equiv :=
-  Bourbaki_pkg.uniform_continuous_compare_equiv _
+theorem compare_uc : UniformContinuous compareEquiv :=
+  bourbakiPkg.uniform_continuous_compare_equiv _
 
-theorem compare_uc_symm : UniformContinuous compare_equiv.symm :=
-  Bourbaki_pkg.uniform_continuous_compare_equiv_symm _
+theorem compare_uc_symm : UniformContinuous compareEquiv.symm :=
+  bourbakiPkg.uniform_continuous_compare_equiv_symm _
 
 end CompareReals
 

@@ -169,7 +169,7 @@ instance PartialOrderₓ (α β : Type _) [PartialOrderₓ α] [PartialOrderₓ 
 /-- Dictionary / lexicographic linear_order for pairs. -/
 instance LinearOrderₓ (α β : Type _) [LinearOrderₓ α] [LinearOrderₓ β] : LinearOrderₓ (α ×ₗ β) :=
   { Prod.Lex.partialOrder α β with le_total := total_of (Prod.Lex _ _), decidableLe := Prod.Lex.decidable _ _,
-    decidableLt := Prod.Lex.decidable _ _, DecidableEq := lex.decidable_eq _ _ }
+    decidableLt := Prod.Lex.decidable _ _, DecidableEq := Lex.decidableEq _ _ }
 
 end Prod.Lex
 

@@ -78,7 +78,7 @@ theorem mul_le : M * N ≤ P ↔ ∀, ∀ m ∈ M, ∀, ∀ n ∈ N, ∀, m * n 
   ⟨fun H m hm n hn => H <| mul_mem_mul hm hn, fun H =>
     supr_le fun ⟨m, hm⟩ => map_le_iff_le_comap.2 fun n hn => H m hm n hn⟩
 
-theorem mul_to_add_submonoid : (M * N).toAddSubmonoid = M.to_add_submonoid * N.to_add_submonoid := by
+theorem mul_to_add_submonoid : (M * N).toAddSubmonoid = M.toAddSubmonoid * N.toAddSubmonoid := by
   dsimp [Mul.mul]
   simp_rw [← Algebra.lmul_left_to_add_monoid_hom R, Algebra.lmulLeft, ← map_to_add_submonoid]
   rw [supr_to_add_submonoid]
@@ -106,10 +106,10 @@ theorem span_mul_span : span R S * span R T = span R (S * T) := by
   · rw [mul_le]
     intro a ha b hb
     apply span_induction ha
-    work_on_goal 0
+    on_goal 0 =>
       intros
       apply span_induction hb
-      work_on_goal 0
+      on_goal 0 =>
         intros
         exact subset_span ⟨_, _, ‹_›, ‹_›, rfl⟩
     all_goals
@@ -195,10 +195,10 @@ theorem mul_subset_mul : (↑M : Set A) * (↑N : Set A) ⊆ (↑(M * N) : Set A
   exact mul_mem_mul hi hj
 
 theorem map_mul {A'} [Semiringₓ A'] [Algebra R A'] (f : A →ₐ[R] A') :
-    map f.to_linear_map (M * N) = map f.to_linear_map M * map f.to_linear_map N :=
+    map f.toLinearMap (M * N) = map f.toLinearMap M * map f.toLinearMap N :=
   calc
-    map f.to_linear_map (M * N) = ⨆ i : M, (N.map (lmul R A i)).map f.to_linear_map := map_supr _ _
-    _ = map f.to_linear_map M * map f.to_linear_map N := by
+    map f.toLinearMap (M * N) = ⨆ i : M, (N.map (lmul R A i)).map f.toLinearMap := map_supr _ _
+    _ = map f.toLinearMap M * map f.toLinearMap N := by
       apply congr_argₓ Sup
       ext S
       constructor <;> rintro ⟨y, hy⟩
@@ -265,7 +265,7 @@ theorem pow_subset_pow {n : ℕ} : (↑M : Set A) ^ n ⊆ ↑(M ^ n : Submodule 
   induction' n with n ih
   · erw [pow_zeroₓ, pow_zeroₓ, Set.singleton_subset_iff]
     rw [SetLike.mem_coe, ← one_le]
-    exact le_reflₓ _
+    exact le_rfl
     
   · rw [pow_succₓ, pow_succₓ]
     refine' Set.Subset.trans (Set.mul_subset_mul (subset.refl _) ih) _
@@ -296,7 +296,7 @@ protected theorem pow_induction_on {C : A → Prop} (hr : ∀ r : R, C (algebraM
 
 /-- `span` is a semiring homomorphism (recall multiplication is pointwise multiplication of subsets
 on either side). -/
-def span.ring_hom : set_semiring A →+* Submodule R A where
+def span.ring_hom : SetSemiring A →+* Submodule R A where
   toFun := Submodule.span R
   map_zero' := span_empty
   map_one' := one_eq_span.symm
@@ -342,7 +342,7 @@ theorem prod_span_singleton {ι : Type _} (s : Finset ι) (x : ι → A) :
 variable (R A)
 
 /-- R-submodules of the R-algebra A are a module over `set A`. -/
-instance module_set : Module (set_semiring A) (Submodule R A) where
+instance module_set : Module (SetSemiring A) (Submodule R A) where
   smul := fun s P => span R s * P
   smul_add := fun _ _ _ => mul_addₓ _ _ _
   add_smul := fun s t P =>
@@ -362,13 +362,13 @@ instance module_set : Module (set_semiring A) (Submodule R A) where
 
 variable {R A}
 
-theorem smul_def {s : set_semiring A} {P : Submodule R A} : s • P = span R s * P :=
+theorem smul_def {s : SetSemiring A} {P : Submodule R A} : s • P = span R s * P :=
   rfl
 
-theorem smul_le_smul {s t : set_semiring A} {M N : Submodule R A} (h₁ : s.down ≤ t.down) (h₂ : M ≤ N) : s • M ≤ t • N :=
+theorem smul_le_smul {s t : SetSemiring A} {M N : Submodule R A} (h₁ : s.down ≤ t.down) (h₂ : M ≤ N) : s • M ≤ t • N :=
   mul_le_mul (span_mono h₁) h₂
 
-theorem smul_singleton (a : A) (M : Submodule R A) : ({a} : Set A).up • M = M.map (lmul_left _ a) := by
+theorem smul_singleton (a : A) (M : Submodule R A) : ({a} : Set A).up • M = M.map (lmulLeft _ a) := by
   conv_lhs => rw [← span_eq M]
   change span _ _ * span _ _ = _
   rw [span_mul_span]
@@ -443,7 +443,7 @@ theorem mul_one_div_le_one {I : Submodule R A} : I * (1 / I) ≤ 1 := by
 
 @[simp]
 theorem map_div {B : Type _} [CommRingₓ B] [Algebra R B] (I J : Submodule R A) (h : A ≃ₐ[R] B) :
-    (I / J).map h.to_linear_map = I.map h.to_linear_map / J.map h.to_linear_map := by
+    (I / J).map h.toLinearMap = I.map h.toLinearMap / J.map h.toLinearMap := by
   ext x
   simp only [mem_map, mem_div_iff_forall_mul_mem]
   constructor

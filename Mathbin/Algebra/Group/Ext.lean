@@ -22,7 +22,7 @@ universe u
 @[ext, to_additive]
 theorem Monoidₓ.ext {M : Type u} ⦃m₁ m₂ : Monoidₓ M⦄ (h_mul : m₁.mul = m₂.mul) : m₁ = m₂ := by
   have h₁ : (@Monoidₓ.toMulOneClass _ m₁).one = (@Monoidₓ.toMulOneClass _ m₂).one :=
-    congr_argₓ (@MulOneClass.one M) (MulOneClass.ext h_mul)
+    congr_argₓ (@MulOneClassₓ.one M) (MulOneClassₓ.ext h_mul)
   set f : @MonoidHom M M (@Monoidₓ.toMulOneClass _ m₁) (@Monoidₓ.toMulOneClass _ m₂) :=
     { toFun := id, map_one' := h₁, map_mul' := fun x y => congr_funₓ (congr_funₓ h_mul x) y }
   have hpow : m₁.npow = m₂.npow := by

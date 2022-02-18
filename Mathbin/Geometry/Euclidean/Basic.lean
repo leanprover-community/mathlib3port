@@ -98,7 +98,7 @@ theorem is_conformal_map.preserves_angle {E F : Type _} [InnerProductSpace ℝ E
 theorem conformal_at.preserves_angle {E F : Type _} [InnerProductSpace ℝ E] [InnerProductSpace ℝ F] {f : E → F} {x : E}
     {f' : E →L[ℝ] F} (h : HasFderivAt f f' x) (H : ConformalAt f x) (u v : E) : angle (f' u) (f' v) = angle u v :=
   let ⟨f₁, h₁, c⟩ := H
-  h₁.unique h ▸ is_conformal_map.preserves_angle c u v
+  h₁.unique h ▸ IsConformalMap.preserves_angle c u v
 
 /-- The cosine of the angle between two vectors. -/
 theorem cos_angle (x y : V) : Real.cos (angle x y) = inner x y / (∥x∥ * ∥y∥) :=
@@ -504,7 +504,7 @@ theorem angle_right_midpoint_eq_pi_div_two_of_dist_eq {p1 p2 p3 : P} (h : dist p
 terms of the pairwise distances. -/
 theorem inner_weighted_vsub {ι₁ : Type _} {s₁ : Finset ι₁} {w₁ : ι₁ → ℝ} (p₁ : ι₁ → P) (h₁ : (∑ i in s₁, w₁ i) = 0)
     {ι₂ : Type _} {s₂ : Finset ι₂} {w₂ : ι₂ → ℝ} (p₂ : ι₂ → P) (h₂ : (∑ i in s₂, w₂ i) = 0) :
-    inner (s₁.weighted_vsub p₁ w₁) (s₂.weighted_vsub p₂ w₂) =
+    inner (s₁.weightedVsub p₁ w₁) (s₂.weightedVsub p₂ w₂) =
       (-∑ i₁ in s₁, ∑ i₂ in s₂, w₁ i₁ * w₂ i₂ * (dist (p₁ i₁) (p₂ i₂) * dist (p₁ i₁) (p₂ i₂))) / 2 :=
   by
   rw [Finset.weighted_vsub_apply, Finset.weighted_vsub_apply, inner_sum_smul_sum_smul_of_sum_eq_zero _ h₁ _ h₂]
@@ -516,8 +516,8 @@ in terms of the pairwise distances between the points in that
 combination. -/
 theorem dist_affine_combination {ι : Type _} {s : Finset ι} {w₁ w₂ : ι → ℝ} (p : ι → P) (h₁ : (∑ i in s, w₁ i) = 1)
     (h₂ : (∑ i in s, w₂ i) = 1) :
-    dist (s.affine_combination p w₁) (s.affine_combination p w₂) *
-        dist (s.affine_combination p w₁) (s.affine_combination p w₂) =
+    dist (s.affineCombination p w₁) (s.affineCombination p w₂) *
+        dist (s.affineCombination p w₁) (s.affineCombination p w₂) =
       (-∑ i₁ in s, ∑ i₂ in s, (w₁ - w₂) i₁ * (w₁ - w₂) i₂ * (dist (p i₁) (p i₂) * dist (p i₁) (p i₂))) / 2 :=
   by
   rw [dist_eq_norm_vsub V (s.affine_combination p w₁) (s.affine_combination p w₂), ← inner_self_eq_norm_mul_norm,
@@ -565,14 +565,14 @@ theorem dist_smul_vadd_eq_dist {v : V} (p₁ p₂ : P) (hv : v ≠ 0) (r : ℝ) 
   have hd : discrim ⟪v, v⟫ (2 * ⟪v, p₁ -ᵥ p₂⟫) 0 = 2 * inner v (p₁ -ᵥ p₂) * (2 * inner v (p₁ -ᵥ p₂)) := by
     rw [discrim]
     ring
-  rw [quadratic_eq_zero_iff hvi hd, add_left_negₓ, zero_div, neg_mul_eq_neg_mul, ← mul_sub_right_distrib,
+  rw [quadratic_eq_zero_iff hvi hd, add_left_negₓ, zero_div, neg_mul_eq_neg_mulₓ, ← mul_sub_right_distrib,
     sub_eq_add_neg, ← mul_two, mul_assoc, mul_div_assoc, mul_div_mul_left, mul_div_assoc]
   norm_num
 
 open AffineSubspace FiniteDimensional
 
--- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»
 -- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
 -- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
 -- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
@@ -590,7 +590,7 @@ theorem eq_of_dist_eq_of_dist_eq_of_mem_of_finrank_eq_two {s : AffineSubspace �
   have hop : ⟪c₂ -ᵥ c₁, p -ᵥ p₁⟫ = 0 :=
     inner_vsub_vsub_of_dist_eq_of_dist_eq (hp₁c₁.trans hpc₁.symm) (hp₁c₂.trans hpc₂.symm)
   let b : Finₓ 2 → V :=
-    «expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr![ , ]»"
+    «expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»"
   have hb : LinearIndependent ℝ b := by
     refine' linear_independent_of_ne_zero_of_inner_eq_zero _ _
     · intro i
@@ -747,7 +747,7 @@ theorem orthogonal_projection_fn_eq {s : AffineSubspace ℝ P} [Nonempty s] [Com
 /-- The linear map corresponding to `orthogonal_projection`. -/
 @[simp]
 theorem orthogonal_projection_linear {s : AffineSubspace ℝ P} [Nonempty s] [CompleteSpace s.direction] :
-    (orthogonalProjection s).linear = _root_.orthogonal_projection s.direction :=
+    (orthogonalProjection s).linear = orthogonalProjection s.direction :=
   rfl
 
 /-- The intersection of the subspace and the orthogonal subspace
@@ -843,8 +843,7 @@ theorem vsub_orthogonal_projection_mem_direction_orthogonal (s : AffineSubspace 
 /-- Subtracting the `orthogonal_projection` from `p` produces a result in the kernel of the linear
 part of the orthogonal projection. -/
 theorem orthogonal_projection_vsub_orthogonal_projection (s : AffineSubspace ℝ P) [Nonempty s]
-    [CompleteSpace s.direction] (p : P) :
-    _root_.orthogonal_projection s.direction (p -ᵥ orthogonalProjection s p) = 0 := by
+    [CompleteSpace s.direction] (p : P) : orthogonalProjection s.direction (p -ᵥ orthogonalProjection s p) = 0 := by
   apply orthogonal_projection_mem_subspace_orthogonal_complement_eq_zero
   intro c hc
   rw [← neg_vsub_eq_vsub_rev, inner_neg_right, orthogonal_projection_vsub_mem_direction_orthogonal s p c hc, neg_zero]
@@ -897,8 +896,8 @@ theorem dist_sq_smul_orthogonal_vadd_smul_orthogonal_vadd {s : AffineSubspace �
     dist (r1 • v +ᵥ p1) (r2 • v +ᵥ p2) * dist (r1 • v +ᵥ p1) (r2 • v +ᵥ p2) =
         ∥p1 -ᵥ p2 + (r1 - r2) • v∥ * ∥p1 -ᵥ p2 + (r1 - r2) • v∥ :=
       by
-      rw [dist_eq_norm_vsub V (r1 • v +ᵥ p1), vsub_vadd_eq_vsub_sub, vadd_vsub_assoc, sub_smul]
-      abel
+      rw [dist_eq_norm_vsub V (r1 • v +ᵥ p1), vsub_vadd_eq_vsub_sub, vadd_vsub_assoc, sub_smul, add_commₓ,
+        add_sub_assoc]
     _ = ∥p1 -ᵥ p2∥ * ∥p1 -ᵥ p2∥ + ∥(r1 - r2) • v∥ * ∥(r1 - r2) • v∥ :=
       norm_add_sq_eq_norm_sq_add_norm_sq_real
         (Submodule.inner_right_of_mem_orthogonal (vsub_mem_direction hp1 hp2) (Submodule.smul_mem _ _ hv))
@@ -917,7 +916,7 @@ definition here, of reflection in an affine subspace, is a more
 general sense of the word that includes both those common cases. -/
 def reflection (s : AffineSubspace ℝ P) [Nonempty s] [CompleteSpace s.direction] : P ≃ᵃⁱ[ℝ] P :=
   AffineIsometryEquiv.mk' (fun p => ↑(orthogonalProjection s p) -ᵥ p +ᵥ orthogonalProjection s p)
-    (_root_.reflection s.direction) (↑(Classical.arbitrary s))
+    (reflection s.direction) (↑(Classical.arbitrary s))
     (by
       intro p
       let v := p -ᵥ ↑(Classical.arbitrary s)
@@ -1052,32 +1051,32 @@ def cospherical (ps : Set P) : Prop :=
 
 /-- The definition of `cospherical`. -/
 theorem cospherical_def (ps : Set P) :
-    cospherical ps ↔ ∃ (center : P)(radius : ℝ), ∀, ∀ p ∈ ps, ∀, dist p center = radius :=
+    Cospherical ps ↔ ∃ (center : P)(radius : ℝ), ∀, ∀ p ∈ ps, ∀, dist p center = radius :=
   Iff.rfl
 
 /-- A subset of a cospherical set is cospherical. -/
-theorem cospherical_subset {ps₁ ps₂ : Set P} (hs : ps₁ ⊆ ps₂) (hc : cospherical ps₂) : cospherical ps₁ := by
+theorem cospherical_subset {ps₁ ps₂ : Set P} (hs : ps₁ ⊆ ps₂) (hc : Cospherical ps₂) : Cospherical ps₁ := by
   rcases hc with ⟨c, r, hcr⟩
   exact ⟨c, r, fun p hp => hcr p (hs hp)⟩
 
 include V
 
 /-- The empty set is cospherical. -/
-theorem cospherical_empty : cospherical (∅ : Set P) := by
+theorem cospherical_empty : Cospherical (∅ : Set P) := by
   use add_torsor.nonempty.some
   simp
 
 omit V
 
 /-- A single point is cospherical. -/
-theorem cospherical_singleton (p : P) : cospherical ({p} : Set P) := by
+theorem cospherical_singleton (p : P) : Cospherical ({p} : Set P) := by
   use p
   simp
 
 include V
 
 /-- Two points are cospherical. -/
-theorem cospherical_insert_singleton (p₁ p₂ : P) : cospherical ({p₁, p₂} : Set P) := by
+theorem cospherical_insert_singleton (p₁ p₂ : P) : Cospherical ({p₁, p₂} : Set P) := by
   use (2⁻¹ : ℝ) • (p₂ -ᵥ p₁) +ᵥ p₁, (2⁻¹ : ℝ) * dist p₂ p₁
   intro p
   rw [Set.mem_insert_iff, Set.mem_singleton_iff]
@@ -1092,7 +1091,7 @@ theorem cospherical_insert_singleton (p₁ p₂ : P) : cospherical ({p₁, p₂}
     
 
 /-- Any three points in a cospherical set are affinely independent. -/
-theorem cospherical.affine_independent {s : Set P} (hs : cospherical s) {p : Finₓ 3 → P} (hps : Set.Range p ⊆ s)
+theorem cospherical.affine_independent {s : Set P} (hs : Cospherical s) {p : Finₓ 3 → P} (hps : Set.Range p ⊆ s)
     (hpi : Function.Injective p) : AffineIndependent ℝ p := by
   rw [affine_independent_iff_not_collinear]
   intro hc

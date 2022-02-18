@@ -48,11 +48,11 @@ unsafe def pretty_cases_advice : tactic Stringₓ :=
           set_goals [g]
           let ls ← local_context
           let m := native.rb_map.of_list <| (ls.map expr.local_uniq_name).zip (ls.map expr.local_pp_name)
-          let vs := vs.map fun v => (m.find v.get_prefix).getOrElse `_
+          let vs := vs.map fun v => (m.find v.getPrefix).getOrElse `_
           let var_decls := Stringₓ.intercalate " " <| vs.map toString
-          let var_decls := if vs.empty then "" else " : " ++ var_decls
+          let var_decls := if vs.Empty then "" else " : " ++ var_decls
           pure
-              s! "  case {ts.head }{var_decls}
+              s! "  case {ts }{var_decls}
                   \{ admit }}"
     let cases := Stringₓ.intercalate ",\n" cases
     pure

@@ -23,48 +23,48 @@ section Bounded
 
 variable {n} (a b : Finₓ n)
 
-theorem Icc_eq_finset_subtype : Icc a b = (Icc (a : ℕ) b).Subtype fun x => x < n :=
+theorem Icc_eq_finset_subtype : icc a b = (icc (a : ℕ) b).Subtype fun x => x < n :=
   rfl
 
-theorem Ico_eq_finset_subtype : Ico a b = (Ico (a : ℕ) b).Subtype fun x => x < n :=
+theorem Ico_eq_finset_subtype : ico a b = (ico (a : ℕ) b).Subtype fun x => x < n :=
   rfl
 
-theorem Ioc_eq_finset_subtype : Ioc a b = (Ioc (a : ℕ) b).Subtype fun x => x < n :=
+theorem Ioc_eq_finset_subtype : ioc a b = (ioc (a : ℕ) b).Subtype fun x => x < n :=
   rfl
 
-theorem Ioo_eq_finset_subtype : Ioo a b = (Ioo (a : ℕ) b).Subtype fun x => x < n :=
+theorem Ioo_eq_finset_subtype : ioo a b = (ioo (a : ℕ) b).Subtype fun x => x < n :=
   rfl
 
 @[simp]
-theorem map_subtype_embedding_Icc : (Icc a b).map (Function.Embedding.subtype _) = Icc (a : ℕ) b :=
+theorem map_subtype_embedding_Icc : (icc a b).map (Function.Embedding.subtype _) = icc (a : ℕ) b :=
   map_subtype_embedding_Icc _ _ _ fun _ c x _ hx _ => hx.trans_lt
 
 @[simp]
-theorem map_subtype_embedding_Ico : (Ico a b).map (Function.Embedding.subtype _) = Ico (a : ℕ) b :=
+theorem map_subtype_embedding_Ico : (ico a b).map (Function.Embedding.subtype _) = ico (a : ℕ) b :=
   map_subtype_embedding_Ico _ _ _ fun _ c x _ hx _ => hx.trans_lt
 
 @[simp]
-theorem map_subtype_embedding_Ioc : (Ioc a b).map (Function.Embedding.subtype _) = Ioc (a : ℕ) b :=
+theorem map_subtype_embedding_Ioc : (ioc a b).map (Function.Embedding.subtype _) = ioc (a : ℕ) b :=
   map_subtype_embedding_Ioc _ _ _ fun _ c x _ hx _ => hx.trans_lt
 
 @[simp]
-theorem map_subtype_embedding_Ioo : (Ioo a b).map (Function.Embedding.subtype _) = Ioo (a : ℕ) b :=
+theorem map_subtype_embedding_Ioo : (ioo a b).map (Function.Embedding.subtype _) = ioo (a : ℕ) b :=
   map_subtype_embedding_Ioo _ _ _ fun _ c x _ hx _ => hx.trans_lt
 
 @[simp]
-theorem card_Icc : (Icc a b).card = b + 1 - a := by
+theorem card_Icc : (icc a b).card = b + 1 - a := by
   rw [← Nat.card_Icc, ← map_subtype_embedding_Icc, card_map]
 
 @[simp]
-theorem card_Ico : (Ico a b).card = b - a := by
+theorem card_Ico : (ico a b).card = b - a := by
   rw [← Nat.card_Ico, ← map_subtype_embedding_Ico, card_map]
 
 @[simp]
-theorem card_Ioc : (Ioc a b).card = b - a := by
+theorem card_Ioc : (ioc a b).card = b - a := by
   rw [← Nat.card_Ioc, ← map_subtype_embedding_Ioc, card_map]
 
 @[simp]
-theorem card_Ioo : (Ioo a b).card = b - a - 1 := by
+theorem card_Ioo : (ioo a b).card = b - a - 1 := by
   rw [← Nat.card_Ioo, ← map_subtype_embedding_Ioo, card_map]
 
 @[simp]
@@ -89,24 +89,24 @@ section Unbounded
 
 variable {n} (a b : Finₓ (n + 1))
 
-theorem Ici_eq_finset_subtype : Ici a = (Icc (a : ℕ) (n + 1)).Subtype fun x => x < n + 1 := by
+theorem Ici_eq_finset_subtype : ici a = (icc (a : ℕ) (n + 1)).Subtype fun x => x < n + 1 := by
   ext x
   simp only [mem_subtype, mem_Ici, mem_Icc, coe_fin_le, iff_self_and]
   exact fun _ => x.2.le
 
-theorem Ioi_eq_finset_subtype : Ioi a = (Ioc (a : ℕ) (n + 1)).Subtype fun x => x < n + 1 := by
+theorem Ioi_eq_finset_subtype : ioi a = (ioc (a : ℕ) (n + 1)).Subtype fun x => x < n + 1 := by
   ext x
   simp only [mem_subtype, mem_Ioi, mem_Ioc, coe_fin_lt, iff_self_and]
   exact fun _ => x.2.le
 
-theorem Iic_eq_finset_subtype : Iic b = (Iic (b : ℕ)).Subtype fun x => x < n + 1 :=
+theorem Iic_eq_finset_subtype : iic b = (iic (b : ℕ)).Subtype fun x => x < n + 1 :=
   rfl
 
-theorem Iio_eq_finset_subtype : Iio b = (Iio (b : ℕ)).Subtype fun x => x < n + 1 :=
+theorem Iio_eq_finset_subtype : iio b = (iio (b : ℕ)).Subtype fun x => x < n + 1 :=
   rfl
 
 @[simp]
-theorem map_subtype_embedding_Ici : (Ici a).map (Function.Embedding.subtype _) = Icc a n := by
+theorem map_subtype_embedding_Ici : (ici a).map (Function.Embedding.subtype _) = icc a n := by
   ext x
   simp only [exists_prop, Function.Embedding.coe_subtype, mem_Ici, mem_map, mem_Icc]
   constructor
@@ -118,7 +118,7 @@ theorem map_subtype_embedding_Ici : (Ici a).map (Function.Embedding.subtype _) =
     
 
 @[simp]
-theorem map_subtype_embedding_Ioi : (Ioi a).map (Function.Embedding.subtype _) = Ioc a n := by
+theorem map_subtype_embedding_Ioi : (ioi a).map (Function.Embedding.subtype _) = ioc a n := by
   ext x
   simp only [exists_prop, Function.Embedding.coe_subtype, mem_Ioi, mem_map, mem_Ioc]
   refine' ⟨_, fun hx => ⟨⟨x, Nat.lt_succ_iffₓ.2 hx.2⟩, hx.1, rfl⟩⟩
@@ -126,7 +126,7 @@ theorem map_subtype_embedding_Ioi : (Ioi a).map (Function.Embedding.subtype _) =
   exact ⟨hx, Nat.lt_succ_iffₓ.1 x.2⟩
 
 @[simp]
-theorem map_subtype_embedding_Iic : (Iic b).map (Function.Embedding.subtype _) = Iic b := by
+theorem map_subtype_embedding_Iic : (iic b).map (Function.Embedding.subtype _) = iic b := by
   ext x
   simp only [exists_prop, Function.Embedding.coe_subtype, mem_Iic, mem_map]
   refine' ⟨_, fun hx => ⟨⟨x, hx.trans_lt b.2⟩, hx, rfl⟩⟩
@@ -134,7 +134,7 @@ theorem map_subtype_embedding_Iic : (Iic b).map (Function.Embedding.subtype _) =
   exact hx
 
 @[simp]
-theorem map_subtype_embedding_Iio : (Iio b).map (Function.Embedding.subtype _) = Iio b := by
+theorem map_subtype_embedding_Iio : (iio b).map (Function.Embedding.subtype _) = iio b := by
   ext x
   simp only [exists_prop, Function.Embedding.coe_subtype, mem_Iio, mem_map]
   refine' ⟨_, fun hx => ⟨⟨x, hx.trans b.2⟩, hx, rfl⟩⟩
@@ -142,19 +142,19 @@ theorem map_subtype_embedding_Iio : (Iio b).map (Function.Embedding.subtype _) =
   exact hx
 
 @[simp]
-theorem card_Ici : (Ici a).card = n + 1 - a := by
+theorem card_Ici : (ici a).card = n + 1 - a := by
   rw [← Nat.card_Icc, ← map_subtype_embedding_Ici, card_map]
 
 @[simp]
-theorem card_Ioi : (Ioi a).card = n - a := by
+theorem card_Ioi : (ioi a).card = n - a := by
   rw [← Nat.card_Ioc, ← map_subtype_embedding_Ioi, card_map]
 
 @[simp]
-theorem card_Iic : (Iic b).card = b + 1 := by
+theorem card_Iic : (iic b).card = b + 1 := by
   rw [← Nat.card_Iic b, ← map_subtype_embedding_Iic, card_map]
 
 @[simp]
-theorem card_Iio : (Iio b).card = b := by
+theorem card_Iio : (iio b).card = b := by
   rw [← Nat.card_Iio b, ← map_subtype_embedding_Iio, card_map]
 
 @[simp]

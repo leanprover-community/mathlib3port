@@ -66,7 +66,7 @@ class Module.Projective (R : Type u) [Semiringₓ R] (P : Type max u v) [AddComm
 namespace Module
 
 theorem projective_def {R : Type u} [Semiringₓ R] {P : Type max u v} [AddCommMonoidₓ P] [Module R P] :
-    projective R P ↔ ∃ s : P →ₗ[R] P →₀ R, Function.LeftInverse (Finsupp.total P P R id) s :=
+    Projective R P ↔ ∃ s : P →ₗ[R] P →₀ R, Function.LeftInverse (Finsupp.total P P R id) s :=
   ⟨fun h => h.1, fun h => ⟨h⟩⟩
 
 section Semiringₓ
@@ -75,7 +75,7 @@ variable {R : Type u} [Semiringₓ R] {P : Type max u v} [AddCommMonoidₓ P] [M
   [AddCommGroupₓ M] [Module R M] {N : Type _} [AddCommGroupₓ N] [Module R N]
 
 /-- A projective R-module has the property that maps from it lift along surjections. -/
-theorem projective_lifting_property [h : projective R P] (f : M →ₗ[R] N) (g : P →ₗ[R] N) (hf : Function.Surjective f) :
+theorem projective_lifting_property [h : Projective R P] (f : M →ₗ[R] N) (g : P →ₗ[R] N) (hf : Function.Surjective f) :
     ∃ h : P →ₗ[R] M, f.comp h = g := by
   let φ : (P →₀ R) →ₗ[R] M := Finsupp.total _ _ _ fun p => Function.surjInv hf (g p)
   cases' h.out with s hs
@@ -91,7 +91,7 @@ theorem projective_of_lifting_property'
       ∀ {M : Type max v u} {N : Type max u v} [AddCommMonoidₓ M] [AddCommMonoidₓ N],
         ∀ [Module R M] [Module R N],
           ∀ f : M →ₗ[R] N g : P →ₗ[R] N, Function.Surjective f → ∃ h : P →ₗ[R] M, f.comp h = g) :
-    projective R P := by
+    Projective R P := by
   obtain ⟨s, hs⟩ : ∃ s : P →ₗ[R] P →₀ R, (Finsupp.total P P R id).comp s = LinearMap.id :=
     huniv (Finsupp.total P P R (id : P → P)) (LinearMap.id : P →ₗ[R] P) _
   · use s
@@ -115,7 +115,7 @@ theorem projective_of_lifting_property
       ∀ {M : Type max v u} {N : Type max u v} [AddCommGroupₓ M] [AddCommGroupₓ N],
         ∀ [Module R M] [Module R N],
           ∀ f : M →ₗ[R] N g : P →ₗ[R] N, Function.Surjective f → ∃ h : P →ₗ[R] M, f.comp h = g) :
-    projective R P := by
+    Projective R P := by
   obtain ⟨s, hs⟩ : ∃ s : P →ₗ[R] P →₀ R, (Finsupp.total P P R id).comp s = LinearMap.id :=
     huniv (Finsupp.total P P R (id : P → P)) (LinearMap.id : P →ₗ[R] P) _
   · use s
@@ -127,7 +127,7 @@ theorem projective_of_lifting_property
     
 
 /-- Free modules are projective. -/
-theorem projective_of_basis {ι : Type _} (b : Basis ι R P) : projective R P := by
+theorem projective_of_basis {ι : Type _} (b : Basis ι R P) : Projective R P := by
   use b.constr ℕ fun i => Finsupp.single (b i) (1 : R)
   intro m
   simp only [b.constr_apply, mul_oneₓ, id.def, Finsupp.smul_single', Finsupp.total_single, LinearMap.map_finsupp_sum]

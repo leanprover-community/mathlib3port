@@ -19,7 +19,7 @@ valuation from each `X i` to `r i`.
 
 universe u
 
-open_locale BigOperators
+open_locale BigOperators Polynomial
 
 open Finset Polynomial Fintype
 
@@ -33,7 +33,7 @@ variable (σ : Type u) [Fintype σ]
 the product of linear terms `λ + X i` is equal to a linear combination of
 the symmetric polynomials `esymm σ R j`. -/
 theorem prod_X_add_C_eq_sum_esymm :
-    (∏ i : σ, Polynomial.c (X i) + Polynomial.x : Polynomial (MvPolynomial σ R)) =
+    (∏ i : σ, Polynomial.c (x i) + Polynomial.x : Polynomial (MvPolynomial σ R)) =
       ∑ j in range (card σ + 1), Polynomial.c (esymm σ R j) * Polynomial.x ^ (card σ - j) :=
   by
   classical
@@ -58,7 +58,7 @@ where `e_j` is the `j`th symmetric polynomial of the constant terms `r i`. -/
 theorem prod_X_add_C_eval (r : σ → R) :
     (∏ i : σ, Polynomial.c (r i) + Polynomial.x) =
       ∑ i in range (card σ + 1),
-        (∑ t in powerset_len i (univ : Finset σ), ∏ i in t, Polynomial.c (r i)) * Polynomial.x ^ (card σ - i) :=
+        (∑ t in powersetLen i (univ : Finset σ), ∏ i in t, Polynomial.c (r i)) * Polynomial.x ^ (card σ - i) :=
   by
   classical
   have h := @prod_X_add_C_eq_sum_esymm _ _ σ _
@@ -71,10 +71,10 @@ theorem prod_X_add_C_eval (r : σ → R) :
     Polynomial.map_pow, Polynomial.map_X, Polynomial.map_mul]
   congr
   funext
-  simp only [eval_prod, eval_X, (Polynomial.c : R →+* Polynomial R).map_prod]
+  simp only [eval_prod, eval_X, (Polynomial.c : R →+* R[X]).map_prod]
 
 theorem esymm_to_sum (r : σ → R) (j : ℕ) :
-    Polynomial.c (eval r (esymm σ R j)) = ∑ t in powerset_len j (univ : Finset σ), ∏ i in t, Polynomial.c (r i) := by
+    Polynomial.c (eval r (esymm σ R j)) = ∑ t in powersetLen j (univ : Finset σ), ∏ i in t, Polynomial.c (r i) := by
   simp only [esymm, eval_sum, eval_prod, eval_X, polynomial.C.map_sum, (Polynomial.c : R →+* Polynomial _).map_prod]
 
 /-- Vieta's formula for the coefficients of the product of linear terms `X + r i`,
@@ -82,7 +82,7 @@ The `k`th coefficient is `∑ t in powerset_len (card σ - k) (univ : finset σ)
 i.e. the symmetric polynomial `esymm σ R (card σ - k)` of the constant terms `r i`. -/
 theorem prod_X_add_C_coeff (r : σ → R) (k : ℕ) (h : k ≤ card σ) :
     Polynomial.coeff (∏ i : σ, Polynomial.c (r i) + Polynomial.x) k =
-      ∑ t in powerset_len (card σ - k) (univ : Finset σ), ∏ i in t, r i :=
+      ∑ t in powersetLen (card σ - k) (univ : Finset σ), ∏ i in t, r i :=
   by
   have hk : filter (fun x : ℕ => k = card σ - x) (range (card σ + 1)) = {card σ - k} := by
     refine' Finset.ext fun a => ⟨fun ha => _, fun ha => _⟩
@@ -98,7 +98,7 @@ theorem prod_X_add_C_coeff (r : σ → R) (k : ℕ) (h : k ≤ card σ) :
     rw [tsub_eq_iff_eq_add_of_le (mem_range_succ_iff.mp haσ)]
     have hσ := (tsub_eq_iff_eq_add_of_le h).mp (mem_singleton.mp ha).symm
     rwa [add_commₓ]
-  simp only [prod_X_add_C_eval, ← esymm_to_sum, finset_sum_coeff, coeff_C_mul_X, sum_ite, hk, sum_singleton, esymm,
+  simp only [prod_X_add_C_eval, ← esymm_to_sum, finset_sum_coeff, coeff_C_mul_X_pow, sum_ite, hk, sum_singleton, esymm,
     eval_sum, eval_prod, eval_X, add_zeroₓ, sum_const_zero]
 
 end MvPolynomial

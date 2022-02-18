@@ -241,7 +241,7 @@ theorem concave_on_iff_forall_pos {s : Set E} {f : E → β} :
 theorem convex_on_iff_pairwise_pos {s : Set E} {f : E → β} :
     ConvexOn 𝕜 s f ↔
       Convex 𝕜 s ∧
-        s.pairwise fun x y => ∀ ⦃a b : 𝕜⦄, 0 < a → 0 < b → a + b = 1 → f (a • x + b • y) ≤ a • f x + b • f y :=
+        s.Pairwise fun x y => ∀ ⦃a b : 𝕜⦄, 0 < a → 0 < b → a + b = 1 → f (a • x + b • y) ≤ a • f x + b • f y :=
   by
   rw [convex_on_iff_forall_pos]
   refine' and_congr_right' ⟨fun h x hx y hy _ a b ha hb hab => h hx hy ha hb hab, fun h x y hx hy a b ha hb hab => _⟩
@@ -253,7 +253,7 @@ theorem convex_on_iff_pairwise_pos {s : Set E} {f : E → β} :
 theorem concave_on_iff_pairwise_pos {s : Set E} {f : E → β} :
     ConcaveOn 𝕜 s f ↔
       Convex 𝕜 s ∧
-        s.pairwise fun x y => ∀ ⦃a b : 𝕜⦄, 0 < a → 0 < b → a + b = 1 → a • f x + b • f y ≤ f (a • x + b • y) :=
+        s.Pairwise fun x y => ∀ ⦃a b : 𝕜⦄, 0 < a → 0 < b → a + b = 1 → a • f x + b • f y ≤ f (a • x + b • y) :=
   @convex_on_iff_pairwise_pos 𝕜 E (OrderDual β) _ _ _ _ _ _ _
 
 /-- A linear map is convex. -/
@@ -270,7 +270,7 @@ theorem StrictConvexOn.convex_on {s : Set E} {f : E → β} (hf : StrictConvexOn
   convex_on_iff_pairwise_pos.mpr ⟨hf.1, fun x hx y hy hxy a b ha hb hab => (hf.2 hx hy hxy ha hb hab).le⟩
 
 theorem StrictConcaveOn.concave_on {s : Set E} {f : E → β} (hf : StrictConcaveOn 𝕜 s f) : ConcaveOn 𝕜 s f :=
-  hf.dual.convex_on
+  hf.dual.ConvexOn
 
 section OrderedSmul
 

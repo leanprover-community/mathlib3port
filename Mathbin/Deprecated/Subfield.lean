@@ -48,10 +48,10 @@ def closure : Set F :=
 
 variable {S}
 
-theorem ring_closure_subset : Ringₓ.Closure S ⊆ closure S := fun x hx =>
+theorem ring_closure_subset : Ringₓ.Closure S ⊆ Closure S := fun x hx =>
   ⟨x, hx, 1, Ringₓ.Closure.is_subring.to_is_submonoid.one_mem, div_one x⟩
 
-theorem closure.is_submonoid : IsSubmonoid (closure S) :=
+theorem closure.is_submonoid : IsSubmonoid (Closure S) :=
   { mul_mem := by
       rintro _ _ ⟨p, hp, q, hq, hq0, rfl⟩ ⟨r, hr, s, hs, hs0, rfl⟩ <;>
         exact
@@ -59,10 +59,10 @@ theorem closure.is_submonoid : IsSubmonoid (closure S) :=
             IsSubmonoid.mul_mem ring.closure.is_subring.to_is_submonoid hq hs, (div_mul_div _ _ _ _).symm⟩,
     one_mem := ring_closure_subset <| IsSubmonoid.one_mem Ringₓ.Closure.is_subring.to_is_submonoid }
 
-theorem closure.is_subfield : IsSubfield (closure S) :=
-  have h0 : (0 : F) ∈ closure S :=
+theorem closure.is_subfield : IsSubfield (Closure S) :=
+  have h0 : (0 : F) ∈ Closure S :=
     ring_closure_subset <| Ringₓ.Closure.is_subring.to_is_add_subgroup.to_is_add_submonoid.zero_mem
-  { closure.is_submonoid with
+  { Closure.is_submonoid with
     add_mem := by
       intro a b ha hb
       rcases id ha with ⟨p, hp, q, hq, rfl⟩
@@ -88,20 +88,20 @@ theorem closure.is_subfield : IsSubfield (closure S) :=
       rintro _ ⟨p, hp, q, hq, rfl⟩
       exact ⟨q, hq, p, hp, inv_div.symm⟩ }
 
-theorem mem_closure {a : F} (ha : a ∈ S) : a ∈ closure S :=
+theorem mem_closure {a : F} (ha : a ∈ S) : a ∈ Closure S :=
   ring_closure_subset <| Ringₓ.mem_closure ha
 
-theorem subset_closure : S ⊆ closure S := fun _ => mem_closure
+theorem subset_closure : S ⊆ Closure S := fun _ => mem_closure
 
-theorem closure_subset {T : Set F} (hT : IsSubfield T) (H : S ⊆ T) : closure S ⊆ T := by
+theorem closure_subset {T : Set F} (hT : IsSubfield T) (H : S ⊆ T) : Closure S ⊆ T := by
   rintro _ ⟨p, hp, q, hq, hq0, rfl⟩ <;>
     exact hT.div_mem (Ringₓ.closure_subset hT.to_is_subring H hp) (Ringₓ.closure_subset hT.to_is_subring H hq)
 
-theorem closure_subset_iff {s t : Set F} (ht : IsSubfield t) : closure s ⊆ t ↔ s ⊆ t :=
+theorem closure_subset_iff {s t : Set F} (ht : IsSubfield t) : Closure s ⊆ t ↔ s ⊆ t :=
   ⟨Set.Subset.trans subset_closure, closure_subset ht⟩
 
-theorem closure_mono {s t : Set F} (H : s ⊆ t) : closure s ⊆ closure t :=
-  closure_subset closure.is_subfield <| Set.Subset.trans H subset_closure
+theorem closure_mono {s t : Set F} (H : s ⊆ t) : Closure s ⊆ Closure t :=
+  closure_subset Closure.is_subfield <| Set.Subset.trans H subset_closure
 
 end Field
 

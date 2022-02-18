@@ -56,12 +56,12 @@ def exponent_exists :=
 @[to_additive
       "The exponent of an additive group is the smallest positive integer `n` such that\n  `n • g = 0` for all `g ∈ G` if it exists, otherwise it is zero by convention."]
 noncomputable def exponent :=
-  if h : exponent_exists G then Nat.findₓ h else 0
+  if h : ExponentExists G then Nat.findₓ h else 0
 
 variable {G}
 
 @[to_additive]
-theorem exponent_eq_zero_iff : exponent G = 0 ↔ ¬exponent_exists G := by
+theorem exponent_eq_zero_iff : exponent G = 0 ↔ ¬ExponentExists G := by
   rw [exponent]
   split_ifs
   · simp [h, @not_lt_zero' ℕ]
@@ -106,10 +106,10 @@ theorem exponent_min' (n : ℕ) (hpos : 0 < n) (hG : ∀ g : G, g ^ n = 1) : exp
   · exact ⟨n, hpos, hG⟩
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:417:16: unsupported tactic `by_contra'
+-- ././Mathport/Syntax/Translate/Basic.lean:418:16: unsupported tactic `by_contra'
 @[to_additive]
 theorem exponent_min (m : ℕ) (hpos : 0 < m) (hm : m < exponent G) : ∃ g : G, g ^ m ≠ 1 := by
-  "././Mathport/Syntax/Translate/Basic.lean:417:16: unsupported tactic `by_contra'"
+  "././Mathport/Syntax/Translate/Basic.lean:418:16: unsupported tactic `by_contra'"
   have hcon : exponent G ≤ m := exponent_min' m hpos h
   linarith
 
@@ -152,10 +152,10 @@ theorem lcm_order_of_dvd_exponent [Fintype G] : (Finset.univ : Finset G).lcm ord
   exact order_dvd_exponent g
 
 @[to_additive exists_order_of_eq_pow_padic_val_nat_add_exponent]
-theorem _root_.nat.prime.exists_order_of_eq_pow_padic_val_nat_exponent {p : ℕ} (hp : p.prime) :
-    ∃ g : G, orderOf g = p ^ padicValNat p (exponent G) := by
+theorem _root_.nat.prime.exists_order_of_eq_pow_factorization_exponent {p : ℕ} (hp : p.Prime) :
+    ∃ g : G, orderOf g = p ^ (exponent G).factorization p := by
   have := Fact.mk hp
-  rcases(padicValNat p <| exponent G).eq_zero_or_pos with (h | h)
+  rcases eq_or_ne ((exponent G).factorization p) 0 with (h | h)
   · refine'
       ⟨1, by
         rw [h, pow_zeroₓ, order_of_one]⟩
@@ -163,7 +163,9 @@ theorem _root_.nat.prime.exists_order_of_eq_pow_padic_val_nat_exponent {p : ℕ}
   have he : 0 < exponent G :=
     Ne.bot_lt fun ht => by
       rw [ht] at h
-      exact h.ne' (padic_val_nat_zero _)
+      apply h
+      rw [bot_eq_zero, Nat.factorization_zero, Finsupp.zero_apply]
+  rw [← Finsupp.mem_support_iff] at h
   obtain ⟨g, hg⟩ : ∃ g : G, g ^ (exponent G / p) ≠ 1 := by
     suffices key : ¬exponent G ∣ exponent G / p
     · simpa using mt (exponent_dvd_of_forall_pow_eq_one G (exponent G / p)) key
@@ -171,11 +173,9 @@ theorem _root_.nat.prime.exists_order_of_eq_pow_padic_val_nat_exponent {p : ℕ}
     exact fun hd =>
       hp.one_lt.not_le
         ((mul_le_iff_le_one_left he).mp <|
-          Nat.le_of_dvdₓ he <| Nat.mul_dvd_of_dvd_div (dvd_of_one_le_padic_val_nat h) hd)
-  obtain ⟨k, hk : exponent G = p ^ _ * k⟩ := pow_padic_val_nat_dvd <;>
-    try
-      infer_instance
-  obtain ⟨t, ht⟩ := Nat.exists_eq_succ_of_ne_zero h.ne'
+          Nat.le_of_dvdₓ he <| Nat.mul_dvd_of_dvd_div (Nat.dvd_of_mem_factorization h) hd)
+  obtain ⟨k, hk : exponent G = p ^ _ * k⟩ := Nat.pow_factorization_dvd _ _
+  obtain ⟨t, ht⟩ := Nat.exists_eq_succ_of_ne_zero (finsupp.mem_support_iff.mp h)
   refine' ⟨g ^ k, _⟩
   rw [ht]
   apply order_of_eq_prime_pow
@@ -241,7 +241,7 @@ section CommMonoidₓ
 
 variable [CancelCommMonoid G]
 
--- ././Mathport/Syntax/Translate/Basic.lean:417:16: unsupported tactic `by_contra'
+-- ././Mathport/Syntax/Translate/Basic.lean:418:16: unsupported tactic `by_contra'
 @[to_additive]
 theorem exponent_eq_supr_order_of (h : ∀ g : G, 0 < orderOf g) : exponent G = ⨆ g : G, orderOf g := by
   rw [supr]
@@ -258,29 +258,29 @@ theorem exponent_eq_supr_order_of (h : ∀ g : G, 0 < orderOf g) : exponent G = 
     
   refine' Nat.dvd_of_factors_subperm he _
   rw [List.subperm_ext_iff]
-  "././Mathport/Syntax/Translate/Basic.lean:417:16: unsupported tactic `by_contra'"
+  "././Mathport/Syntax/Translate/Basic.lean:418:16: unsupported tactic `by_contra'"
   obtain ⟨p, hp, hpe⟩ := h
-  have hp := Fact.mk (Nat.prime_of_mem_factors hp)
-  simp only [← padic_val_nat_eq_factors_count p] at hpe
-  set k := padicValNat p (orderOf t) with hk
-  obtain ⟨g, hg⟩ := hp.1.exists_order_of_eq_pow_padic_val_nat_exponent G
+  replace hp := Nat.prime_of_mem_factors hp
+  simp only [Nat.factors_count_eq] at hpe
+  set k := (orderOf t).factorization p with hk
+  obtain ⟨g, hg⟩ := hp.exists_order_of_eq_pow_factorization_exponent G
   suffices orderOf t < orderOf (t ^ p ^ k * g) by
     rw [ht] at this
     exact this.not_le (le_cSup hfin.bdd_above <| Set.mem_range_self _)
-  have hpk : p ^ k ∣ orderOf t := pow_padic_val_nat_dvd
+  have hpk : p ^ k ∣ orderOf t := Nat.pow_factorization_dvd _ _
   have hpk' : orderOf (t ^ p ^ k) = orderOf t / p ^ k := by
-    rw [order_of_pow' t (pow_ne_zero k hp.1.ne_zero), Nat.gcd_eq_rightₓ hpk]
+    rw [order_of_pow' t (pow_ne_zero k hp.ne_zero), Nat.gcd_eq_rightₓ hpk]
   obtain ⟨a, ha⟩ := Nat.exists_eq_add_of_lt hpe
   have hcoprime : (orderOf (t ^ p ^ k)).Coprime (orderOf g) := by
     rw [hg, Nat.coprime_pow_right_iff (pos_of_gt hpe), Nat.coprime_commₓ]
-    apply Or.resolve_right (Nat.coprime_or_dvd_of_prime hp.1 _)
+    apply Or.resolve_right (Nat.coprime_or_dvd_of_prime hp _)
     nth_rw 0[← pow_oneₓ p]
-    convert pow_succ_padic_val_nat_not_dvd (h <| t ^ p ^ k)
-    rw [hpk', padicValNat.div_pow hpk, hk, Nat.sub_self]
-    infer_instance
+    convert Nat.pow_succ_factorization_not_dvd (h <| t ^ p ^ k).ne' hp
+    rw [hpk', Nat.factorization_div hpk]
+    simp [hp]
   rw [(Commute.all _ g).order_of_mul_eq_mul_order_of_of_coprime hcoprime, hpk', hg, ha, ← ht, ← hk, pow_addₓ, pow_addₓ,
     pow_oneₓ, ← mul_assoc, ← mul_assoc, Nat.div_mul_cancelₓ, mul_assoc, lt_mul_iff_one_lt_right <| h t, ← pow_succ'ₓ]
-  exact one_lt_pow hp.1.one_lt a.succ_ne_zero
+  exact one_lt_pow hp.one_lt a.succ_ne_zero
   exact hpk
 
 @[to_additive]

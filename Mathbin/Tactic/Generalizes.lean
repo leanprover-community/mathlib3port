@@ -57,7 +57,7 @@ Note that the substitution also affects the types of the `kᵢ`: If `jᵢ : Jᵢ
 The transparency `md` and the boolean `unify` are passed to `kabstract` when we
 abstract over occurrences of the `jᵢ` in `e`.
 -/
-unsafe def step1 (md : transparency) (unify : Bool) (e : expr) (to_generalize : List (Name × expr)) :
+unsafe def step1 (md : Transparency) (unify : Bool) (e : expr) (to_generalize : List (Name × expr)) :
     tactic (expr × List expr) := do
   let go : Name × expr → expr × List expr → tactic (expr × List expr) := fun ⟨n, j⟩ ⟨e, ks⟩ => do
     let J ← infer_type j
@@ -65,7 +65,7 @@ unsafe def step1 (md : transparency) (unify : Bool) (e : expr) (to_generalize : 
     let e ← kreplace e j k md unify
     let ks ← ks.mmap fun k' => kreplace k' j k md unify
     pure (e, k :: ks)
-  to_generalize.mfoldr go (e, [])
+  to_generalize go (e, [])
 
 /-- Input: for each equation that should be generated: the equation name, the
 argument `jᵢ` and the corresponding local constant `kᵢ` from step 1.
@@ -77,7 +77,7 @@ The transparency `md` is used when determining whether the type of `jᵢ` is def
 to the type of `kᵢ` (and thus whether to generate a homogeneous or heterogeneous
 equation).
 -/
-unsafe def step2 (md : transparency) (to_generalize : List (Name × expr × expr)) : tactic (List (expr × expr)) :=
+unsafe def step2 (md : Transparency) (to_generalize : List (Name × expr × expr)) : tactic (List (expr × expr)) :=
   to_generalize.mmap fun ⟨n, j, k⟩ => do
     let J ← infer_type j
     let K ← infer_type k
@@ -133,14 +133,14 @@ The `args` must be given in dependency order, so `[n, fin n]` is okay but
 After generalizing the `args`, the target type may no longer type check.
 `generalizes'` will then raise an error.
 -/
-unsafe def generalizes' (args : List (Name × Option Name × expr)) (md := semireducible) (unify := tt) : tactic Unit :=
+unsafe def generalizes' (args : List (Name × Option Name × expr)) (md := semireducible) (unify := true) : tactic Unit :=
   do
   let tgt ← target
   let stage1_args := args.map fun ⟨n, _, j⟩ => (n, j)
   let ⟨e, ks⟩ ← step1 md unify tgt stage1_args
   let stage2_args : List (Option (Name × expr × expr)) :=
     args.map₂ (fun ⟨_, eq_name, j⟩ k => eq_name.map fun eq_name => (eq_name, j, k)) ks
-  let stage2_args := stage2_args.reduce_option
+  let stage2_args := stage2_args.reduceOption
   let eqs_and_proofs ← step2 md stage2_args
   let eqs := eqs_and_proofs.map Prod.fst
   let eq_proofs := eqs_and_proofs.map Prod.snd
@@ -150,11 +150,11 @@ unsafe def generalizes' (args : List (Name × Option Name × expr)) (md := semir
 /-- Like `generalizes'`, but also introduces the generalized constants and their
 associated equations into the context.
 -/
-unsafe def generalizes_intro (args : List (Name × Option Name × expr)) (md := semireducible) (unify := tt) :
+unsafe def generalizes_intro (args : List (Name × Option Name × expr)) (md := semireducible) (unify := true) :
     tactic (List expr × List expr) := do
   generalizes' args md unify
   let ks ← intron' args.length
-  let eqs ← intron' <| args.countp fun x => x.snd.fst.is_some
+  let eqs ← intron' <| args.countp fun x => x.snd.fst.isSome
   pure (ks, eqs)
 
 namespace Interactive

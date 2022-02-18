@@ -38,41 +38,41 @@ inductive ε_closure : Set σ → Set σ
   | step : ∀ S s, ∀ t ∈ M.step s none, ∀, ε_closure S s → ε_closure S t
 
 /-- `M.step_set S a` is the union of the ε-closure of `M.step s a` for all `s ∈ S`. -/
-def step_set : Set σ → α → Set σ := fun S a => S >>= fun s => M.ε_closure (M.step s a)
+def step_set : Set σ → α → Set σ := fun S a => S >>= fun s => M.εClosure (M.step s a)
 
 /-- `M.eval_from S x` computes all possible paths though `M` with input `x` starting at an element
   of `S`. -/
 def eval_from (start : Set σ) : List α → Set σ :=
-  List.foldlₓ M.step_set (M.ε_closure start)
+  List.foldlₓ M.StepSet (M.εClosure start)
 
 /-- `M.eval x` computes all possible paths though `M` with input `x` starting at an element of
   `M.start`. -/
 def eval :=
-  M.eval_from M.start
+  M.evalFrom M.start
 
 /-- `M.accepts` is the language of `x` such that there is an accept state in `M.eval x`. -/
 def accepts : Language α := fun x => ∃ S ∈ M.accept, S ∈ M.eval x
 
 /-- `M.to_NFA` is an `NFA` constructed from an `ε_NFA` `M`. -/
 def to_NFA : NFA α σ where
-  step := fun S a => M.ε_closure (M.step S a)
-  start := M.ε_closure M.start
+  step := fun S a => M.εClosure (M.step S a)
+  start := M.εClosure M.start
   accept := M.accept
 
 @[simp]
-theorem to_NFA_eval_from_match (start : Set σ) : M.to_NFA.eval_from (M.ε_closure start) = M.eval_from start :=
+theorem to_NFA_eval_from_match (start : Set σ) : M.toNFA.evalFrom (M.εClosure start) = M.evalFrom start :=
   rfl
 
 @[simp]
-theorem to_NFA_correct : M.to_NFA.accepts = M.accepts := by
+theorem to_NFA_correct : M.toNFA.Accepts = M.Accepts := by
   ext x
   rw [accepts, NFA.Accepts, eval, NFA.Eval, ← to_NFA_eval_from_match]
   rfl
 
-theorem pumping_lemma [Fintype σ] {x : List α} (hx : x ∈ M.accepts) (hlen : Fintype.card (Set σ) ≤ List.length x) :
+theorem pumping_lemma [Fintype σ] {x : List α} (hx : x ∈ M.Accepts) (hlen : Fintype.card (Set σ) ≤ List.length x) :
     ∃ a b c,
       x = a ++ b ++ c ∧
-        a.length + b.length ≤ Fintype.card (Set σ) ∧ b ≠ [] ∧ {a} * Language.Star {b} * {c} ≤ M.accepts :=
+        a.length + b.length ≤ Fintype.card (Set σ) ∧ b ≠ [] ∧ {a} * Language.Star {b} * {c} ≤ M.Accepts :=
   by
   rw [← to_NFA_correct] at hx⊢
   exact M.to_NFA.pumping_lemma hx hlen
@@ -84,12 +84,12 @@ namespace NFA
 /-- `M.to_ε_NFA` is an `ε_NFA` constructed from an `NFA` `M` by using the same start and accept
   states and transition functions. -/
 def to_ε_NFA (M : NFA α σ) : εNFA α σ where
-  step := fun s a => a.cases_on' ∅ fun a => M.step s a
+  step := fun s a => a.casesOn' ∅ fun a => M.step s a
   start := M.start
   accept := M.accept
 
 @[simp]
-theorem to_ε_NFA_ε_closure (M : NFA α σ) (S : Set σ) : M.to_ε_NFA.ε_closure S = S := by
+theorem to_ε_NFA_ε_closure (M : NFA α σ) (S : Set σ) : M.toεNFA.εClosure S = S := by
   ext a
   constructor
   · rintro (⟨_, _, h⟩ | ⟨_, _, _, h, _⟩)
@@ -102,7 +102,7 @@ theorem to_ε_NFA_ε_closure (M : NFA α σ) (S : Set σ) : M.to_ε_NFA.ε_closu
     
 
 @[simp]
-theorem to_ε_NFA_eval_from_match (M : NFA α σ) (start : Set σ) : M.to_ε_NFA.eval_from start = M.eval_from start := by
+theorem to_ε_NFA_eval_from_match (M : NFA α σ) (start : Set σ) : M.toεNFA.evalFrom start = M.evalFrom start := by
   rw [eval_from, εNFA.EvalFrom, step_set, εNFA.StepSet, to_ε_NFA_ε_closure]
   congr
   ext S s
@@ -114,7 +114,7 @@ theorem to_ε_NFA_eval_from_match (M : NFA α σ) (start : Set σ) : M.to_ε_NFA
   rfl
 
 @[simp]
-theorem to_ε_NFA_correct (M : NFA α σ) : M.to_ε_NFA.accepts = M.accepts := by
+theorem to_ε_NFA_correct (M : NFA α σ) : M.toεNFA.Accepts = M.Accepts := by
   rw [accepts, εNFA.Accepts, eval, εNFA.Eval, to_ε_NFA_eval_from_match]
   rfl
 

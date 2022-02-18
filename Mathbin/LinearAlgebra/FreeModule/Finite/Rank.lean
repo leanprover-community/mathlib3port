@@ -42,8 +42,7 @@ theorem finrank_eq_rank : ↑(finrank R M) = Module.rank R M := by
 /-- The finrank of a free module `M` over `R` is the cardinality of `choose_basis_index R M`. -/
 theorem finrank_eq_card_choose_basis_index :
     finrank R M =
-      @card (choose_basis_index R M)
-        (@choose_basis_index.fintype R M _ _ _ _ (nontrivial_of_invariant_basis_number R) _) :=
+      @card (ChooseBasisIndex R M) (@ChooseBasisIndex.fintype R M _ _ _ _ (nontrivial_of_invariant_basis_number R) _) :=
   by
   let this' := nontrivial_of_invariant_basis_number R
   simp [finrank, rank_eq_card_choose_basis_index]

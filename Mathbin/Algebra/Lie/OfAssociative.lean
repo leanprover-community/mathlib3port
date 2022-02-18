@@ -1,5 +1,6 @@
 import Mathbin.Algebra.Lie.Basic
 import Mathbin.Algebra.Lie.Subalgebra
+import Mathbin.Algebra.Lie.Submodule
 import Mathbin.Algebra.Algebra.Subalgebra
 
 /-!
@@ -143,23 +144,23 @@ variable (f : A →ₐ[R] B) (g : B →ₐ[R] C)
 /-- The map `of_associative_algebra` associating a Lie algebra to an associative algebra is
 functorial. -/
 def to_lie_hom : A →ₗ⁅R⁆ B :=
-  { f.to_linear_map with
+  { f.toLinearMap with
     map_lie' := fun x y =>
       show f ⁅x,y⁆ = ⁅f x,f y⁆ by
         simp only [LieRing.of_associative_ring_bracket, AlgHom.map_sub, AlgHom.map_mul] }
 
 instance : Coe (A →ₐ[R] B) (A →ₗ⁅R⁆ B) :=
-  ⟨to_lie_hom⟩
+  ⟨toLieHom⟩
 
 @[simp]
-theorem to_lie_hom_coe : f.to_lie_hom = ↑f :=
+theorem to_lie_hom_coe : f.toLieHom = ↑f :=
   rfl
 
 @[simp]
 theorem coe_to_lie_hom : ((f : A →ₗ⁅R⁆ B) : A → B) = f :=
   rfl
 
-theorem to_lie_hom_apply (x : A) : f.to_lie_hom x = f x :=
+theorem to_lie_hom_apply (x : A) : f.toLieHom x = f x :=
   rfl
 
 @[simp]
@@ -217,14 +218,28 @@ theorem LieModule.to_endomorphism_module_End : LieModule.toEndomorphism R (Modul
   ext g m
   simp [lie_eq_smul]
 
+theorem LieSubalgebra.to_endomorphism_eq (K : LieSubalgebra R L) {x : K} :
+    LieModule.toEndomorphism R K M x = LieModule.toEndomorphism R L M x :=
+  rfl
+
+@[simp]
+theorem LieSubalgebra.to_endomorphism_mk (K : LieSubalgebra R L) {x : L} (hx : x ∈ K) :
+    LieModule.toEndomorphism R K M ⟨x, hx⟩ = LieModule.toEndomorphism R L M x :=
+  rfl
+
+variable {R L M}
+
+theorem LieSubmodule.coe_map_to_endomorphism_le {N : LieSubmodule R L M} {x : L} :
+    (N : Submodule R M).map (LieModule.toEndomorphism R L M x) ≤ N := by
+  rintro n ⟨m, hm, rfl⟩
+  exact N.lie_mem hm
+
 open LieAlgebra
 
 theorem LieAlgebra.ad_eq_lmul_left_sub_lmul_right (A : Type v) [Ringₓ A] [Algebra R A] :
     (ad R A : A → Module.End R A) = Algebra.lmulLeft R - Algebra.lmulRight R := by
   ext a b
   simp [LieRing.of_associative_ring_bracket]
-
-variable {R L}
 
 theorem LieSubalgebra.ad_comp_incl_eq (K : LieSubalgebra R L) (x : K) :
     (ad R L ↑x).comp (K.incl : K →ₗ[R] L) = (K.incl : K →ₗ[R] L).comp (ad R K x) := by
@@ -237,7 +252,7 @@ end AdjointAction
 /-- A subalgebra of an associative algebra is a Lie subalgebra of the associated Lie algebra. -/
 def lieSubalgebraOfSubalgebra (R : Type u) [CommRingₓ R] (A : Type v) [Ringₓ A] [Algebra R A] (A' : Subalgebra R A) :
     LieSubalgebra R A :=
-  { A'.to_submodule with
+  { A'.toSubmodule with
     lie_mem' := fun x y hx hy => by
       change ⁅x,y⁆ ∈ A'
       change x ∈ A' at hx
@@ -263,11 +278,11 @@ def lie_conj : Module.End R M₁ ≃ₗ⁅R⁆ Module.End R M₂ :=
         simp only [LieRing.of_associative_ring_bracket, LinearMap.mul_eq_comp, e.conj_comp, LinearEquiv.map_sub] }
 
 @[simp]
-theorem lie_conj_apply (f : Module.End R M₁) : e.lie_conj f = e.conj f :=
+theorem lie_conj_apply (f : Module.End R M₁) : e.lieConj f = e.conj f :=
   rfl
 
 @[simp]
-theorem lie_conj_symm : e.lie_conj.symm = e.symm.lie_conj :=
+theorem lie_conj_symm : e.lieConj.symm = e.symm.lieConj :=
   rfl
 
 end LinearEquiv
@@ -282,16 +297,16 @@ variable (e : A₁ ≃ₐ[R] A₂)
 
 /-- An equivalence of associative algebras is an equivalence of associated Lie algebras. -/
 def to_lie_equiv : A₁ ≃ₗ⁅R⁆ A₂ :=
-  { e.to_linear_equiv with toFun := e.to_fun,
+  { e.toLinearEquiv with toFun := e.toFun,
     map_lie' := fun x y => by
       simp [LieRing.of_associative_ring_bracket] }
 
 @[simp]
-theorem to_lie_equiv_apply (x : A₁) : e.to_lie_equiv x = e x :=
+theorem to_lie_equiv_apply (x : A₁) : e.toLieEquiv x = e x :=
   rfl
 
 @[simp]
-theorem to_lie_equiv_symm_apply (x : A₂) : e.to_lie_equiv.symm x = e.symm x :=
+theorem to_lie_equiv_symm_apply (x : A₂) : e.toLieEquiv.symm x = e.symm x :=
   rfl
 
 end AlgEquiv

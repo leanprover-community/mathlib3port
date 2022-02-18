@@ -16,7 +16,7 @@ namespace CategoryTheory
 
 section Category
 
-variable {C : Type u} [category.{v} C]
+variable {C : Type u} [Category.{v} C]
 
 /-- An object `X` is isomorphic to an object `Y`, if `X ≅ Y` is not empty. -/
 def is_isomorphic : C → C → Prop := fun X Y => Nonempty (X ≅ Y)
@@ -25,20 +25,20 @@ variable (C)
 
 /-- `is_isomorphic` defines a setoid. -/
 def is_isomorphic_setoid : Setoidₓ C where
-  R := is_isomorphic
-  iseqv := ⟨fun X => ⟨iso.refl X⟩, fun X Y ⟨α⟩ => ⟨α.symm⟩, fun X Y Z ⟨α⟩ ⟨β⟩ => ⟨α.trans β⟩⟩
+  R := IsIsomorphic
+  iseqv := ⟨fun X => ⟨Iso.refl X⟩, fun X Y ⟨α⟩ => ⟨α.symm⟩, fun X Y Z ⟨α⟩ ⟨β⟩ => ⟨α.trans β⟩⟩
 
 end Category
 
 /-- The functor that sends each category to the quotient space of its objects up to an isomorphism.
 -/
 def isomorphism_classes : Cat.{v, u} ⥤ Type u where
-  obj := fun C => Quotientₓ (is_isomorphic_setoid C.α)
-  map := fun C D F => (Quot.map F.obj) fun X Y ⟨f⟩ => ⟨F.map_iso f⟩
+  obj := fun C => Quotientₓ (isIsomorphicSetoid C.α)
+  map := fun C D F => (Quot.map F.obj) fun X Y ⟨f⟩ => ⟨F.mapIso f⟩
 
-theorem groupoid.is_isomorphic_iff_nonempty_hom {C : Type u} [groupoid.{v} C] {X Y : C} :
-    is_isomorphic X Y ↔ Nonempty (X ⟶ Y) :=
-  (groupoid.iso_equiv_hom X Y).nonempty_congr
+theorem groupoid.is_isomorphic_iff_nonempty_hom {C : Type u} [Groupoid.{v} C] {X Y : C} :
+    IsIsomorphic X Y ↔ Nonempty (X ⟶ Y) :=
+  (Groupoid.isoEquivHom X Y).nonempty_congr
 
 end CategoryTheory
 

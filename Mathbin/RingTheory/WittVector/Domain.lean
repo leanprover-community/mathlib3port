@@ -54,7 +54,7 @@ def shift (x : 𝕎 R) (n : ℕ) : 𝕎 R :=
 theorem shift_coeff (x : 𝕎 R) (n k : ℕ) : (x.shift n).coeff k = x.coeff (n + k) :=
   rfl
 
-variable [hp : Fact p.prime] [CommRingₓ R]
+variable [hp : Fact p.Prime] [CommRingₓ R]
 
 include hp
 
@@ -82,11 +82,11 @@ theorem eq_iterate_verschiebung {x : 𝕎 R} {n : ℕ} (h : ∀, ∀ i < n, ∀,
       
     
 
+-- ././Mathport/Syntax/Translate/Basic.lean:418:16: unsupported tactic `by_contra'
 theorem verschiebung_nonzero {x : 𝕎 R} (hx : x ≠ 0) : ∃ n : ℕ, ∃ x' : 𝕎 R, x'.coeff 0 ≠ 0 ∧ x = (verschiebung^[n]) x' :=
   by
   have hex : ∃ k : ℕ, x.coeff k ≠ 0 := by
-    by_contra hall
-    push_neg  at hall
+    "././Mathport/Syntax/Translate/Basic.lean:418:16: unsupported tactic `by_contra'"
     apply hx
     ext i
     simp only [hall, zero_coeff]

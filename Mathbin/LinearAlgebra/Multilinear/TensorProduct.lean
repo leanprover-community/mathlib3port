@@ -52,7 +52,7 @@ def dom_coprod' :
     MultilinearMap R (fun _ : ι₁ => N) N₁ ⊗[R] MultilinearMap R (fun _ : ι₂ => N) N₂ →ₗ[R]
       MultilinearMap R (fun _ : Sum ι₁ ι₂ => N) (N₁ ⊗[R] N₂) :=
   TensorProduct.lift <|
-    LinearMap.mk₂ R dom_coprod
+    LinearMap.mk₂ R domCoprod
       (fun m₁ m₂ n => by
         ext
         simp only [dom_coprod_apply, TensorProduct.add_tmul, add_apply])
@@ -68,14 +68,14 @@ def dom_coprod' :
 
 @[simp]
 theorem dom_coprod'_apply (a : MultilinearMap R (fun _ : ι₁ => N) N₁) (b : MultilinearMap R (fun _ : ι₂ => N) N₂) :
-    dom_coprod' (a ⊗ₜ[R] b) = dom_coprod a b :=
+    domCoprod' (a ⊗ₜ[R] b) = domCoprod a b :=
   rfl
 
 /-- When passed an `equiv.sum_congr`, `multilinear_map.dom_dom_congr` distributes over
 `multilinear_map.dom_coprod`. -/
 theorem dom_coprod_dom_dom_congr_sum_congr (a : MultilinearMap R (fun _ : ι₁ => N) N₁)
     (b : MultilinearMap R (fun _ : ι₂ => N) N₂) (σa : ι₁ ≃ ι₃) (σb : ι₂ ≃ ι₄) :
-    (a.dom_coprod b).domDomCongr (σa.sum_congr σb) = (a.dom_dom_congr σa).domCoprod (b.dom_dom_congr σb) :=
+    (a.domCoprod b).domDomCongr (σa.sumCongr σb) = (a.domDomCongr σa).domCoprod (b.domDomCongr σb) :=
   rfl
 
 end DomCoprod

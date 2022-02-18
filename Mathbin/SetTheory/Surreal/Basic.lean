@@ -47,11 +47,11 @@ and all the elements of L and R are also numeric. -/
 def numeric : Pgame → Prop
   | ⟨l, r, L, R⟩ => (∀ i j, L i < R j) ∧ (∀ i, numeric (L i)) ∧ ∀ i, numeric (R i)
 
-theorem numeric.move_left {x : Pgame} (o : numeric x) (i : x.left_moves) : numeric (x.move_left i) := by
+theorem numeric.move_left {x : Pgame} (o : Numeric x) (i : x.LeftMoves) : Numeric (x.moveLeft i) := by
   cases' x with xl xr xL xR
   exact o.2.1 i
 
-theorem numeric.move_right {x : Pgame} (o : numeric x) (j : x.right_moves) : numeric (x.move_right j) := by
+theorem numeric.move_right {x : Pgame} (o : Numeric x) (j : x.RightMoves) : Numeric (x.moveRight j) := by
   cases' x with xl xr xL xR
   exact o.2.2 j
 
@@ -60,11 +60,11 @@ theorem numeric_rec {C : Pgame → Prop}
     (H :
       ∀ l r L : l → Pgame R : r → Pgame,
         (∀ i j, L i < R j) →
-          (∀ i, numeric (L i)) → (∀ i, numeric (R i)) → (∀ i, C (L i)) → (∀ i, C (R i)) → C ⟨l, r, L, R⟩) :
-    ∀ x, numeric x → C x
+          (∀ i, Numeric (L i)) → (∀ i, Numeric (R i)) → (∀ i, C (L i)) → (∀ i, C (R i)) → C ⟨l, r, L, R⟩) :
+    ∀ x, Numeric x → C x
   | ⟨l, r, L, R⟩, ⟨h, hl, hr⟩ => H _ _ _ _ h hl hr (fun i => numeric_rec _ (hl i)) fun i => numeric_rec _ (hr i)
 
-theorem lt_asymmₓ {x y : Pgame} (ox : numeric x) (oy : numeric y) : x < y → ¬y < x := by
+theorem lt_asymmₓ {x y : Pgame} (ox : Numeric x) (oy : Numeric y) : x < y → ¬y < x := by
   refine' numeric_rec (fun xl xr xL xR hx oxl oxr IHxl IHxr => _) x ox y oy
   refine' numeric_rec fun yl yr yL yR hy oyl oyr IHyl IHyr => _
   rw [mk_lt_mk, mk_lt_mk]
@@ -78,50 +78,50 @@ theorem lt_asymmₓ {x y : Pgame} (ox : numeric x) (oy : numeric y) : x < y → 
   · exact IHxr _ _ (oyr _) (lt_of_mk_le h₁) (lt_of_mk_le h₂)
     
 
-theorem le_of_ltₓ {x y : Pgame} (ox : numeric x) (oy : numeric y) (h : x < y) : x ≤ y :=
-  not_ltₓ.1 (lt_asymmₓ ox oy h)
+theorem le_of_ltₓ {x y : Pgame} (ox : Numeric x) (oy : Numeric y) (h : x < y) : x ≤ y :=
+  not_lt.1 (lt_asymm ox oy h)
 
 /-- On numeric pre-games, `<` and `≤` satisfy the axioms of a partial order (even though they
 don't on all pre-games). -/
-theorem lt_iff_le_not_leₓ {x y : Pgame} (ox : numeric x) (oy : numeric y) : x < y ↔ x ≤ y ∧ ¬y ≤ x :=
-  ⟨fun h => ⟨le_of_ltₓ ox oy h, not_leₓ.2 h⟩, fun h => not_leₓ.1 h.2⟩
+theorem lt_iff_le_not_leₓ {x y : Pgame} (ox : Numeric x) (oy : Numeric y) : x < y ↔ x ≤ y ∧ ¬y ≤ x :=
+  ⟨fun h => ⟨le_of_lt ox oy h, not_le.2 h⟩, fun h => not_le.1 h.2⟩
 
-theorem numeric_zero : numeric 0 :=
+theorem numeric_zero : Numeric 0 :=
   ⟨by
     rintro ⟨⟩ ⟨⟩,
     ⟨by
       rintro ⟨⟩, by
       rintro ⟨⟩⟩⟩
 
-theorem numeric_one : numeric 1 :=
+theorem numeric_one : Numeric 1 :=
   ⟨by
     rintro ⟨⟩ ⟨⟩,
     ⟨fun x => numeric_zero, by
       rintro ⟨⟩⟩⟩
 
-theorem numeric_neg : ∀ {x : Pgame} o : numeric x, numeric (-x)
+theorem numeric_neg : ∀ {x : Pgame} o : Numeric x, Numeric (-x)
   | ⟨l, r, L, R⟩, o =>
     ⟨fun j i => lt_iff_neg_gt.1 (o.1 i j), ⟨fun j => numeric_neg (o.2.2 j), fun i => numeric_neg (o.2.1 i)⟩⟩
 
 @[nolint unused_arguments]
-theorem numeric.move_left_lt {x : Pgame.{u}} (o : numeric x) (i : x.left_moves) : x.move_left i < x := by
+theorem numeric.move_left_lt {x : Pgame.{u}} (o : Numeric x) (i : x.LeftMoves) : x.moveLeft i < x := by
   rw [lt_def_le]
   left
   use i
 
-theorem numeric.move_left_le {x : Pgame} (o : numeric x) (i : x.left_moves) : x.move_left i ≤ x :=
-  le_of_ltₓ (o.move_left i) o (o.move_left_lt i)
+theorem numeric.move_left_le {x : Pgame} (o : Numeric x) (i : x.LeftMoves) : x.moveLeft i ≤ x :=
+  le_of_lt (o.moveLeft i) o (o.move_left_lt i)
 
 @[nolint unused_arguments]
-theorem numeric.lt_move_right {x : Pgame} (o : numeric x) (j : x.right_moves) : x < x.move_right j := by
+theorem numeric.lt_move_right {x : Pgame} (o : Numeric x) (j : x.RightMoves) : x < x.moveRight j := by
   rw [lt_def_le]
   right
   use j
 
-theorem numeric.le_move_right {x : Pgame} (o : numeric x) (j : x.right_moves) : x ≤ x.move_right j :=
-  le_of_ltₓ o (o.move_right j) (o.lt_move_right j)
+theorem numeric.le_move_right {x : Pgame} (o : Numeric x) (j : x.RightMoves) : x ≤ x.moveRight j :=
+  le_of_lt o (o.moveRight j) (o.lt_move_right j)
 
-theorem add_lt_add {w x y z : Pgame.{u}} (oy : numeric y) (oz : numeric z) (hwx : w < x) (hyz : y < z) :
+theorem add_lt_add {w x y z : Pgame.{u}} (oy : Numeric y) (oz : Numeric z) (hwx : w < x) (hyz : y < z) :
     w + y < x + z := by
   rw [lt_def_le] at *
   rcases hwx with (⟨ix, hix⟩ | ⟨jw, hjw⟩) <;> rcases hyz with (⟨iz, hiz⟩ | ⟨jy, hjy⟩)
@@ -150,7 +150,7 @@ theorem add_lt_add {w x y z : Pgame.{u}} (oy : numeric y) (oz : numeric z) (hwx 
         add_le_add_left (oy.le_move_right jy)_ ≤ x + z := add_le_add_left hjy
     
 
-theorem numeric_add : ∀ {x y : Pgame} ox : numeric x oy : numeric y, numeric (x + y)
+theorem numeric_add : ∀ {x y : Pgame} ox : Numeric x oy : Numeric y, Numeric (x + y)
   | ⟨xl, xr, xL, xR⟩, ⟨yl, yr, yL, yR⟩, ox, oy =>
     ⟨by
       rintro (ix | iy) (jx | jy)
@@ -180,18 +180,18 @@ theorem numeric_add : ∀ {x y : Pgame} ox : numeric x oy : numeric y, numeric (
         ⟩
 
 /-- Pre-games defined by natural numbers are numeric. -/
-theorem numeric_nat : ∀ n : ℕ, numeric n
+theorem numeric_nat : ∀ n : ℕ, Numeric n
   | 0 => numeric_zero
   | n + 1 => numeric_add (numeric_nat n) numeric_one
 
 /-- The pre-game omega is numeric. -/
-theorem numeric_omega : numeric omega :=
+theorem numeric_omega : Numeric omega :=
   ⟨by
     rintro ⟨⟩ ⟨⟩, fun i => numeric_nat i.down, by
     rintro ⟨⟩⟩
 
 /-- The pre-game `half` is numeric. -/
-theorem numeric_half : numeric half := by
+theorem numeric_half : Numeric half := by
   constructor
   · rintro ⟨⟩ ⟨⟩
     exact zero_lt_one
@@ -260,7 +260,7 @@ namespace Surreal
 open Pgame
 
 /-- Construct a surreal number from a numeric pre-game. -/
-def mk (x : Pgame) (h : x.numeric) : Surreal :=
+def mk (x : Pgame) (h : x.Numeric) : Surreal :=
   Quotientₓ.mk ⟨x, h⟩
 
 instance : Zero Surreal where
@@ -273,15 +273,15 @@ instance : Inhabited Surreal :=
   ⟨0⟩
 
 /-- Lift an equivalence-respecting function on pre-games to surreals. -/
-def lift {α} (f : ∀ x, numeric x → α) (H : ∀ {x y} hx : numeric x hy : numeric y, x.equiv y → f x hx = f y hy) :
+def lift {α} (f : ∀ x, Numeric x → α) (H : ∀ {x y} hx : Numeric x hy : Numeric y, x.Equiv y → f x hx = f y hy) :
     Surreal → α :=
-  Quotientₓ.lift (fun x : { x // numeric x } => f x.1 x.2) fun x y => H x.2 y.2
+  Quotientₓ.lift (fun x : { x // Numeric x } => f x.1 x.2) fun x y => H x.2 y.2
 
 /-- Lift a binary equivalence-respecting function on pre-games to surreals. -/
-def lift₂ {α} (f : ∀ x y, numeric x → numeric y → α)
+def lift₂ {α} (f : ∀ x y, Numeric x → Numeric y → α)
     (H :
-      ∀ {x₁ y₁ x₂ y₂} ox₁ : numeric x₁ oy₁ : numeric y₁ ox₂ : numeric x₂ oy₂ : numeric y₂,
-        x₁.equiv x₂ → y₁.equiv y₂ → f x₁ y₁ ox₁ oy₁ = f x₂ y₂ ox₂ oy₂) :
+      ∀ {x₁ y₁ x₂ y₂} ox₁ : Numeric x₁ oy₁ : Numeric y₁ ox₂ : Numeric x₂ oy₂ : Numeric y₂,
+        x₁.Equiv x₂ → y₁.Equiv y₂ → f x₁ y₁ ox₁ oy₁ = f x₂ y₂ ox₂ oy₂) :
     Surreal → Surreal → α :=
   lift (fun x ox => lift (fun y oy => f x y ox oy) fun y₁ y₂ oy₁ oy₂ h => H _ _ _ _ (equiv_refl _) h)
     fun x₁ x₂ ox₁ ox₂ h => funext <| Quotientₓ.ind fun ⟨y, oy⟩ => H _ _ _ _ h (equiv_refl _)
@@ -294,7 +294,7 @@ def le : Surreal → Surreal → Prop :=
 def lt : Surreal → Surreal → Prop :=
   lift₂ (fun x y _ _ => x < y) fun x₁ y₁ x₂ y₂ _ _ _ _ hx hy => propext (lt_congr hx hy)
 
-theorem not_leₓ : ∀ {x y : Surreal}, ¬le x y ↔ lt y x := by
+theorem not_leₓ : ∀ {x y : Surreal}, ¬Le x y ↔ Lt y x := by
   rintro ⟨⟨x, ox⟩⟩ ⟨⟨y, oy⟩⟩ <;> exact not_leₓ
 
 /-- Addition on surreals is inherited from pre-game addition:
@@ -309,10 +309,10 @@ def neg : Surreal → Surreal :=
   Surreal.lift (fun x ox => ⟦⟨-x, Pgame.numeric_neg ox⟩⟧) fun _ _ _ _ a => Quotientₓ.sound (Pgame.neg_congr a)
 
 instance : LE Surreal :=
-  ⟨le⟩
+  ⟨Le⟩
 
 instance : LT Surreal :=
-  ⟨lt⟩
+  ⟨Lt⟩
 
 instance : Add Surreal :=
   ⟨add⟩

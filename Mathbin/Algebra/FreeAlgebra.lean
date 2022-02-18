@@ -57,37 +57,37 @@ inductive pre
 
 namespace Pre
 
-instance : Inhabited (pre R X) :=
+instance : Inhabited (Pre R X) :=
   ⟨of_scalar 0⟩
 
 /-- Coercion from `X` to `pre R X`. Note: Used for notation only. -/
-def has_coe_generator : Coe X (pre R X) :=
+def has_coe_generator : Coe X (Pre R X) :=
   ⟨of⟩
 
 /-- Coercion from `R` to `pre R X`. Note: Used for notation only. -/
-def has_coe_semiring : Coe R (pre R X) :=
+def has_coe_semiring : Coe R (Pre R X) :=
   ⟨of_scalar⟩
 
 /-- Multiplication in `pre R X` defined as `pre.mul`. Note: Used for notation only. -/
-def Mul : Mul (pre R X) :=
+def Mul : Mul (Pre R X) :=
   ⟨mul⟩
 
 /-- Addition in `pre R X` defined as `pre.add`. Note: Used for notation only. -/
-def Add : Add (pre R X) :=
+def Add : Add (Pre R X) :=
   ⟨add⟩
 
 /-- Zero in `pre R X` defined as the image of `0` from `R`. Note: Used for notation only. -/
-def Zero : Zero (pre R X) :=
+def Zero : Zero (Pre R X) :=
   ⟨of_scalar 0⟩
 
 /-- One in `pre R X` defined as the image of `1` from `R`. Note: Used for notation only. -/
-def One : One (pre R X) :=
+def One : One (Pre R X) :=
   ⟨of_scalar 1⟩
 
 /-- Scalar multiplication defined as multiplication by the image of elements from `R`.
 Note: Used for notation only.
 -/
-def HasScalar : HasScalar R (pre R X) :=
+def HasScalar : HasScalar R (Pre R X) :=
   ⟨fun r m => mul (of_scalar r) m⟩
 
 end Pre
@@ -98,30 +98,30 @@ attribute [local instance]
 /-- Given a function from `X` to an `R`-algebra `A`, `lift_fun` provides a lift of `f` to a function
 from `pre R X` to `A`. This is mainly used in the construction of `free_algebra.lift`.
 -/
-def lift_fun {A : Type _} [Semiringₓ A] [Algebra R A] (f : X → A) : pre R X → A := fun t =>
-  pre.rec_on t f (algebraMap _ _) (fun _ _ => · + ·) fun _ _ => · * ·
+def lift_fun {A : Type _} [Semiringₓ A] [Algebra R A] (f : X → A) : Pre R X → A := fun t =>
+  Pre.recOn t f (algebraMap _ _) (fun _ _ => · + ·) fun _ _ => · * ·
 
 /-- An inductively defined relation on `pre R X` used to force the initial algebra structure on
 the associated quotient.
 -/
-inductive rel : pre R X → pre R X → Prop
+inductive rel : Pre R X → Pre R X → Prop
   | add_scalar {r s : R} : rel (↑(r + s)) (↑r + ↑s)
   | mul_scalar {r s : R} : rel (↑(r * s)) (↑r * ↑s)
-  | central_scalar {r : R} {a : pre R X} : rel (r * a) (a * r)
-  | add_assocₓ {a b c : pre R X} : rel (a + b + c) (a + (b + c))
-  | add_commₓ {a b : pre R X} : rel (a + b) (b + a)
-  | zero_addₓ {a : pre R X} : rel (0 + a) a
-  | mul_assoc {a b c : pre R X} : rel (a * b * c) (a * (b * c))
-  | one_mulₓ {a : pre R X} : rel (1 * a) a
-  | mul_oneₓ {a : pre R X} : rel (a * 1) a
-  | left_distrib {a b c : pre R X} : rel (a * (b + c)) (a * b + a * c)
-  | right_distrib {a b c : pre R X} : rel ((a + b) * c) (a * c + b * c)
-  | zero_mul {a : pre R X} : rel (0 * a) 0
-  | mul_zero {a : pre R X} : rel (a * 0) 0
-  | add_compat_left {a b c : pre R X} : rel a b → rel (a + c) (b + c)
-  | add_compat_right {a b c : pre R X} : rel a b → rel (c + a) (c + b)
-  | mul_compat_left {a b c : pre R X} : rel a b → rel (a * c) (b * c)
-  | mul_compat_right {a b c : pre R X} : rel a b → rel (c * a) (c * b)
+  | central_scalar {r : R} {a : Pre R X} : rel (r * a) (a * r)
+  | add_assocₓ {a b c : Pre R X} : rel (a + b + c) (a + (b + c))
+  | add_commₓ {a b : Pre R X} : rel (a + b) (b + a)
+  | zero_addₓ {a : Pre R X} : rel (0 + a) a
+  | mul_assoc {a b c : Pre R X} : rel (a * b * c) (a * (b * c))
+  | one_mulₓ {a : Pre R X} : rel (1 * a) a
+  | mul_oneₓ {a : Pre R X} : rel (a * 1) a
+  | left_distrib {a b c : Pre R X} : rel (a * (b + c)) (a * b + a * c)
+  | right_distrib {a b c : Pre R X} : rel ((a + b) * c) (a * c + b * c)
+  | zero_mul {a : Pre R X} : rel (0 * a) 0
+  | mul_zero {a : Pre R X} : rel (a * 0) 0
+  | add_compat_left {a b c : Pre R X} : rel a b → rel (a + c) (b + c)
+  | add_compat_right {a b c : Pre R X} : rel a b → rel (c + a) (c + b)
+  | mul_compat_left {a b c : Pre R X} : rel a b → rel (a * c) (b * c)
+  | mul_compat_right {a b c : Pre R X} : rel a b → rel (c * a) (c * b)
 
 end FreeAlgebra
 
@@ -136,7 +136,7 @@ attribute [local instance]
   pre.has_coe_generator pre.has_coe_semiring pre.has_mul pre.has_add pre.has_zero pre.has_one pre.has_scalar
 
 instance : Semiringₓ (FreeAlgebra R X) where
-  add := Quot.map₂ (· + ·) (fun _ _ _ => rel.add_compat_right) fun _ _ _ => rel.add_compat_left
+  add := Quot.map₂ (· + ·) (fun _ _ _ => Rel.add_compat_right) fun _ _ _ => Rel.add_compat_left
   add_assoc := by
     rintro ⟨⟩ ⟨⟩ ⟨⟩
     exact Quot.sound rel.add_assoc
@@ -151,7 +151,7 @@ instance : Semiringₓ (FreeAlgebra R X) where
   add_comm := by
     rintro ⟨⟩ ⟨⟩
     exact Quot.sound rel.add_comm
-  mul := Quot.map₂ (· * ·) (fun _ _ _ => rel.mul_compat_right) fun _ _ _ => rel.mul_compat_left
+  mul := Quot.map₂ (· * ·) (fun _ _ _ => Rel.mul_compat_right) fun _ _ _ => Rel.mul_compat_left
   mul_assoc := by
     rintro ⟨⟩ ⟨⟩ ⟨⟩
     exact Quot.sound rel.mul_assoc
@@ -179,14 +179,14 @@ instance : Inhabited (FreeAlgebra R X) :=
   ⟨0⟩
 
 instance : HasScalar R (FreeAlgebra R X) where
-  smul := fun r => Quot.map ((· * ·) ↑r) fun a b => rel.mul_compat_right
+  smul := fun r => Quot.map ((· * ·) ↑r) fun a b => Rel.mul_compat_right
 
 instance : Algebra R (FreeAlgebra R X) where
   toFun := fun r => Quot.mk _ r
   map_one' := rfl
-  map_mul' := fun _ _ => Quot.sound rel.mul_scalar
+  map_mul' := fun _ _ => Quot.sound Rel.mul_scalar
   map_zero' := rfl
-  map_add' := fun _ _ => Quot.sound rel.add_scalar
+  map_add' := fun _ _ => Quot.sound Rel.add_scalar
   commutes' := fun _ => by
     rintro ⟨⟩
     exact Quot.sound rel.central_scalar
@@ -210,7 +210,7 @@ variable {A : Type _} [Semiringₓ A] [Algebra R A]
 /-- Internal definition used to define `lift` -/
 private def lift_aux (f : X → A) : FreeAlgebra R X →ₐ[R] A where
   toFun := fun a =>
-    (Quot.liftOn a (lift_fun _ _ f)) fun a b h => by
+    (Quot.liftOn a (liftFun _ _ f)) fun a b h => by
       induction h
       · exact (algebraMap R A).map_add h_r h_s
         
@@ -275,7 +275,7 @@ private def lift_aux (f : X → A) : FreeAlgebra R X →ₐ[R] A where
 of `f` to a morphism of `R`-algebras `free_algebra R X → A`.
 -/
 def lift : (X → A) ≃ (FreeAlgebra R X →ₐ[R] A) where
-  toFun := lift_aux R
+  toFun := liftAux R
   invFun := fun F => F ∘ ι R
   left_inv := fun f => by
     ext
@@ -298,7 +298,7 @@ def lift : (X → A) ≃ (FreeAlgebra R X →ₐ[R] A) where
       rw [AlgHom.map_mul, AlgHom.map_mul, ha, hb]
 
 @[simp]
-theorem lift_aux_eq (f : X → A) : lift_aux R f = lift R f :=
+theorem lift_aux_eq (f : X → A) : liftAux R f = lift R f :=
   rfl
 
 @[simp]
@@ -367,7 +367,7 @@ noncomputable def equiv_monoid_algebra_free_monoid : FreeAlgebra R X ≃ₐ[R] M
       simp )
 
 instance [Nontrivial R] : Nontrivial (FreeAlgebra R X) :=
-  equiv_monoid_algebra_free_monoid.Surjective.Nontrivial
+  equivMonoidAlgebraFreeMonoid.Surjective.Nontrivial
 
 section
 
@@ -377,7 +377,7 @@ open_locale Classical
 def algebra_map_inv : FreeAlgebra R X →ₐ[R] R :=
   lift R (0 : X → R)
 
-theorem algebra_map_left_inverse : Function.LeftInverse algebra_map_inv (algebraMap R <| FreeAlgebra R X) := fun x => by
+theorem algebra_map_left_inverse : Function.LeftInverse algebraMapInv (algebraMap R <| FreeAlgebra R X) := fun x => by
   simp [algebra_map_inv]
 
 @[simp]

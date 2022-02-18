@@ -68,14 +68,14 @@ private unsafe def analyse_rule (u' : List Name) (pr : expr) : tactic rule_data 
   let p_vars ← return <| List.map Prod.fst (p_data.filter fun x => ↑x.2)
   let u ← return <| collect_univ_params (app R p) ∩ u'
   let pat ← mk_pattern (level.param <$> u) (p_vars ++ a_vars) (app R p) (level.param <$> u) (p_vars ++ a_vars)
-  return <| rule_data.mk pr (u'.remove_all u) p_data u args pat g
+  return <| rule_data.mk pr (u' u) p_data u args pat g
 
 unsafe def analyse_decls : List Name → tactic (List rule_data) :=
-  mmap fun n => do
+  mmapₓ fun n => do
     let d ← get_decl n
     let c ← return d.univ_params.length
     let ls ← (repeat () c).mmap fun _ => mk_fresh_name
-    analyse_rule ls (const n (ls.map level.param))
+    analyse_rule ls (const n (ls level.param))
 
 private unsafe def split_params_args : List (expr × Bool) → List expr → List (expr × Option expr) × List expr
   | (lc, tt) :: ps, e :: es =>
@@ -115,7 +115,7 @@ unsafe def compute_transfer : List rule_data → List expr → expr → tactic (
             (rds.map fun rd => do
               let (l, m) ← match_pattern rd.pat e semireducible
               let level_map ← rd.uparams.mmap fun l => Prod.mk l <$> mk_meta_univ
-              let inst_univ ← return fun e => instantiate_univ_params e (level_map ++ zip rd.uargs l)
+              let inst_univ ← return fun e => instantiate_univ_params e (level_map ++ zipₓ rd.uargs l)
               let (ps, args) ← return <| split_params_args (rd.params.map (Prod.map inst_univ id)) m
               let (ps, ms) ← param_substitutions ctxt ps
               return (instantiate_locals ps ∘ inst_univ, ps, args, ms, rd)) <|>
@@ -123,7 +123,7 @@ unsafe def compute_transfer : List rule_data → List expr → expr → tactic (
           trace e
           fail "no matching rule"
     let (bs, hs, mss) ←
-      ((zip rd.args args).mmap fun ⟨⟨_, d⟩, e⟩ => do
+      ((zipₓ rd.args args).mmap fun ⟨⟨_, d⟩, e⟩ => do
             let (args, r) ← get_lift_fun (i d.relation)
             let ((a_vars, b_vars), (R_vars, bnds)) ←
               ((enum args).mmap fun ⟨n, arg⟩ => do
@@ -141,7 +141,7 @@ unsafe def compute_transfer : List rule_data → List expr → expr → tactic (
           return ∘ Prod.map id unzip ∘ unzip
     let b ← head_beta (app_of_list (i rd.output) bs)
     let pr ← return <| app_of_list (i rd.pr) (Prod.snd <$> ps ++ List.join hs)
-    return (b, pr, ms ++ mss.join)
+    return (b, pr, ms ++ mss)
 
 end Transfer
 
@@ -150,11 +150,11 @@ open Transfer
 unsafe def tactic.transfer (ds : List Name) : tactic Unit := do
   let rds ← analyse_decls ds
   let tgt ← target
-  guardₓ ¬tgt.has_meta_var <|> fail "Target contains (universe) meta variables. This is not supported by transfer."
+  guardₓ ¬tgt <|> fail "Target contains (universe) meta variables. This is not supported by transfer."
   let (new_tgt, pr, ms) ← compute_transfer rds [] ((const `iff [] : expr) tgt)
   let new_pr ← mk_meta_var new_tgt
   exact ((const `iff.mpr [] : expr) tgt new_tgt pr new_pr)
   let ms ← ms.mmap fun m => get_assignment m >> return [] <|> return [m]
   let gs ← get_goals
-  set_goals (ms.join ++ new_pr :: gs)
+  set_goals (ms ++ new_pr :: gs)
 

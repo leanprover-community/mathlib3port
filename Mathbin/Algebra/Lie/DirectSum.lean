@@ -94,7 +94,7 @@ variable (L : ι → Type w)
 variable [∀ i, LieRing (L i)] [∀ i, LieAlgebra R (L i)]
 
 instance LieRing : LieRing (⨁ i, L i) :=
-  { (inferInstance : AddCommGroupₓ _) with bracket := zip_with (fun i => fun x y => ⁅x,y⁆) fun i => lie_zero 0,
+  { (inferInstance : AddCommGroupₓ _) with bracket := zipWith (fun i => fun x y => ⁅x,y⁆) fun i => lie_zero 0,
     add_lie := fun x y z => by
       ext
       simp only [zip_with_apply, add_apply, add_lie],
@@ -142,7 +142,7 @@ def lie_algebra_component (j : ι) : (⨁ i, L i) →ₗ⁅R⁆ L j :=
       simp only [component, bracket_apply, lapply_apply, LinearMap.to_fun_eq_coe] }
 
 @[ext]
-theorem lie_algebra_ext {x y : ⨁ i, L i} (h : ∀ i, lie_algebra_component R ι L i x = lie_algebra_component R ι L i y) :
+theorem lie_algebra_ext {x y : ⨁ i, L i} (h : ∀ i, lieAlgebraComponent R ι L i x = lieAlgebraComponent R ι L i y) :
     x = y :=
   Dfinsupp.ext h
 
@@ -160,13 +160,13 @@ theorem lie_of_of_ne [DecidableEq ι] {i j : ι} (hij : j ≠ i) (x : L i) (y : 
     
 
 theorem lie_of_of_eq [DecidableEq ι] {i j : ι} (hij : j = i) (x : L i) (y : L j) :
-    ⁅of L i x,of L j y⁆ = of L i ⁅x,hij.rec_on y⁆ := by
+    ⁅of L i x,of L j y⁆ = of L i ⁅x,hij.recOn y⁆ := by
   have : of L j y = of L i (hij.rec_on y) := Eq.drec (Eq.refl _) hij
   rw [this, ← lie_algebra_of_apply R ι L i ⁅x,hij.rec_on y⁆, LieHom.map_lie, lie_algebra_of_apply, lie_algebra_of_apply]
 
 @[simp]
 theorem lie_of [DecidableEq ι] {i j : ι} (x : L i) (y : L j) :
-    ⁅of L i x,of L j y⁆ = if hij : j = i then lie_algebra_of R ι L i ⁅x,hij.rec_on y⁆ else 0 := by
+    ⁅of L i x,of L j y⁆ = if hij : j = i then lieAlgebraOf R ι L i ⁅x,hij.recOn y⁆ else 0 := by
   by_cases' hij : j = i
   · simp only [lie_of_of_eq R ι L hij x y, hij, dif_pos, not_false_iff, lie_algebra_of_apply]
     
@@ -182,7 +182,7 @@ then this map is a morphism of Lie algebras. -/
 @[simps]
 def to_lie_algebra [DecidableEq ι] (L' : Type w₁) [LieRing L'] [LieAlgebra R L'] (f : ∀ i, L i →ₗ⁅R⁆ L')
     (hf : ∀ i j : ι, i ≠ j → ∀ x : L i y : L j, ⁅f i x,f j y⁆ = 0) : (⨁ i, L i) →ₗ⁅R⁆ L' :=
-  { to_module R ι L' fun i => (f i : L i →ₗ[R] L') with toFun := to_module R ι L' fun i => (f i : L i →ₗ[R] L'),
+  { toModule R ι L' fun i => (f i : L i →ₗ[R] L') with toFun := toModule R ι L' fun i => (f i : L i →ₗ[R] L'),
     map_lie' := fun x y => by
       let f' := fun i => (f i : L i →ₗ[R] L')
       suffices
@@ -228,7 +228,7 @@ statement that `L = ⨁ i, I i`.
 More formally, the inclusions give a natural map from the (external) direct sum to the enclosing Lie
 algebra: `(⨁ i, I i) → L`, and this definition is the proposition that this map is bijective. -/
 def lie_algebra_is_internal [DecidableEq ι] : Prop :=
-  Function.Bijective <| (to_module R ι L) fun i => ((I i).incl : I i →ₗ[R] L)
+  Function.Bijective <| (toModule R ι L) fun i => ((I i).incl : I i →ₗ[R] L)
 
 /-- The fact that this instance is necessary seems to be a bug in typeclass inference. See
 [this Zulip thread](https://leanprover.zulipchat.com/#narrow/stream/113488-general/topic/

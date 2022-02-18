@@ -11,7 +11,7 @@ open CategoryTheory
 
 namespace CategoryTheory.prod
 
-variable (C : Type u₁) [category.{v₁} C] (D : Type u₂) [category.{v₂} D] (E : Type u₃) [category.{v₃} E]
+variable (C : Type u₁) [Category.{v₁} C] (D : Type u₂) [Category.{v₂} D] (E : Type u₃) [Category.{v₃} E]
 
 /-- The associator functor `(C × D) × E ⥤ C × (D × E)`.
 -/
@@ -30,29 +30,29 @@ def inverse_associator : C × D × E ⥤ (C × D) × E where
 /-- The equivalence of categories expressing associativity of products of categories.
 -/
 def associativity : (C × D) × E ≌ C × D × E :=
-  equivalence.mk (associator C D E) (inverse_associator C D E)
-    (nat_iso.of_components
+  Equivalence.mk (associator C D E) (inverseAssociator C D E)
+    (NatIso.ofComponents
       (fun X =>
-        eq_to_iso
+        eqToIso
           (by
             simp ))
       (by
         tidy))
-    (nat_iso.of_components
+    (NatIso.ofComponents
       (fun X =>
-        eq_to_iso
+        eqToIso
           (by
             simp ))
       (by
         tidy))
 
-instance associator_is_equivalence : is_equivalence (associator C D E) :=
+instance associator_is_equivalence : IsEquivalence (associator C D E) :=
   (by
-    infer_instance : is_equivalence (associativity C D E).Functor)
+    infer_instance : IsEquivalence (associativity C D E).Functor)
 
-instance inverse_associator_is_equivalence : is_equivalence (inverse_associator C D E) :=
+instance inverse_associator_is_equivalence : IsEquivalence (inverseAssociator C D E) :=
   (by
-    infer_instance : is_equivalence (associativity C D E).inverse)
+    infer_instance : IsEquivalence (associativity C D E).inverse)
 
 end CategoryTheory.prod
 

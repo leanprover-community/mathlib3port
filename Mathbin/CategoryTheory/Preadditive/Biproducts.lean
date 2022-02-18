@@ -40,11 +40,11 @@ noncomputable section
 
 namespace CategoryTheory
 
-variable {C : Type u} [category.{v} C]
+variable {C : Type u} [Category.{v} C]
 
 section
 
-variable [has_zero_morphisms.{v} C] [has_binary_biproducts.{v} C]
+variable [HasZeroMorphisms.{v} C] [HasBinaryBiproducts.{v} C]
 
 /-- If
 ```
@@ -53,7 +53,7 @@ variable [has_zero_morphisms.{v} C] [has_binary_biproducts.{v} C]
 ```
 is invertible, then `f` is invertible.
 -/
-theorem is_iso_left_of_is_iso_biprod_map {W X Y Z : C} (f : W ⟶ Y) (g : X ⟶ Z) [is_iso (biprod.map f g)] : is_iso f :=
+theorem is_iso_left_of_is_iso_biprod_map {W X Y Z : C} (f : W ⟶ Y) (g : X ⟶ Z) [IsIso (biprod.map f g)] : IsIso f :=
   ⟨⟨biprod.inl ≫ inv (biprod.map f g) ≫ biprod.fst,
       ⟨by
         have t := congr_argₓ (fun p : W ⊞ X ⟶ W ⊞ X => biprod.inl ≫ p ≫ biprod.fst) (is_iso.hom_inv_id (biprod.map f g))
@@ -71,8 +71,7 @@ theorem is_iso_left_of_is_iso_biprod_map {W X Y Z : C} (f : W ⟶ Y) (g : X ⟶ 
 ```
 is invertible, then `g` is invertible.
 -/
-theorem is_iso_right_of_is_iso_biprod_map {W X Y Z : C} (f : W ⟶ Y) (g : X ⟶ Z) [is_iso (biprod.map f g)] : is_iso g :=
-  by
+theorem is_iso_right_of_is_iso_biprod_map {W X Y Z : C} (f : W ⟶ Y) (g : X ⟶ Z) [IsIso (biprod.map f g)] : IsIso g := by
   let this' : is_iso (biprod.map g f) := by
     rw [← biprod.braiding_map_braiding]
     infer_instance
@@ -82,7 +81,7 @@ end
 
 section
 
-variable [preadditive.{v} C] [has_binary_biproducts.{v} C]
+variable [Preadditive.{v} C] [HasBinaryBiproducts.{v} C]
 
 variable {X₁ X₂ Y₁ Y₂ : C}
 
@@ -96,27 +95,27 @@ def biprod.of_components : X₁ ⊞ X₂ ⟶ Y₁ ⊞ Y₂ :=
 
 @[simp]
 theorem biprod.inl_of_components :
-    biprod.inl ≫ biprod.of_components f₁₁ f₁₂ f₂₁ f₂₂ = f₁₁ ≫ biprod.inl + f₁₂ ≫ biprod.inr := by
+    biprod.inl ≫ Biprod.ofComponents f₁₁ f₁₂ f₂₁ f₂₂ = f₁₁ ≫ biprod.inl + f₁₂ ≫ biprod.inr := by
   simp [biprod.of_components]
 
 @[simp]
 theorem biprod.inr_of_components :
-    biprod.inr ≫ biprod.of_components f₁₁ f₁₂ f₂₁ f₂₂ = f₂₁ ≫ biprod.inl + f₂₂ ≫ biprod.inr := by
+    biprod.inr ≫ Biprod.ofComponents f₁₁ f₁₂ f₂₁ f₂₂ = f₂₁ ≫ biprod.inl + f₂₂ ≫ biprod.inr := by
   simp [biprod.of_components]
 
 @[simp]
 theorem biprod.of_components_fst :
-    biprod.of_components f₁₁ f₁₂ f₂₁ f₂₂ ≫ biprod.fst = biprod.fst ≫ f₁₁ + biprod.snd ≫ f₂₁ := by
+    Biprod.ofComponents f₁₁ f₁₂ f₂₁ f₂₂ ≫ biprod.fst = biprod.fst ≫ f₁₁ + biprod.snd ≫ f₂₁ := by
   simp [biprod.of_components]
 
 @[simp]
 theorem biprod.of_components_snd :
-    biprod.of_components f₁₁ f₁₂ f₂₁ f₂₂ ≫ biprod.snd = biprod.fst ≫ f₁₂ + biprod.snd ≫ f₂₂ := by
+    Biprod.ofComponents f₁₁ f₁₂ f₂₁ f₂₂ ≫ biprod.snd = biprod.fst ≫ f₁₂ + biprod.snd ≫ f₂₂ := by
   simp [biprod.of_components]
 
 @[simp]
 theorem biprod.of_components_eq (f : X₁ ⊞ X₂ ⟶ Y₁ ⊞ Y₂) :
-    biprod.of_components (biprod.inl ≫ f ≫ biprod.fst) (biprod.inl ≫ f ≫ biprod.snd) (biprod.inr ≫ f ≫ biprod.fst)
+    Biprod.ofComponents (biprod.inl ≫ f ≫ biprod.fst) (biprod.inl ≫ f ≫ biprod.snd) (biprod.inr ≫ f ≫ biprod.fst)
         (biprod.inr ≫ f ≫ biprod.snd) =
       f :=
   by
@@ -125,8 +124,8 @@ theorem biprod.of_components_eq (f : X₁ ⊞ X₂ ⟶ Y₁ ⊞ Y₂) :
 @[simp]
 theorem biprod.of_components_comp {X₁ X₂ Y₁ Y₂ Z₁ Z₂ : C} (f₁₁ : X₁ ⟶ Y₁) (f₁₂ : X₁ ⟶ Y₂) (f₂₁ : X₂ ⟶ Y₁)
     (f₂₂ : X₂ ⟶ Y₂) (g₁₁ : Y₁ ⟶ Z₁) (g₁₂ : Y₁ ⟶ Z₂) (g₂₁ : Y₂ ⟶ Z₁) (g₂₂ : Y₂ ⟶ Z₂) :
-    biprod.of_components f₁₁ f₁₂ f₂₁ f₂₂ ≫ biprod.of_components g₁₁ g₁₂ g₂₁ g₂₂ =
-      biprod.of_components (f₁₁ ≫ g₁₁ + f₁₂ ≫ g₂₁) (f₁₁ ≫ g₁₂ + f₁₂ ≫ g₂₂) (f₂₁ ≫ g₁₁ + f₂₂ ≫ g₂₁)
+    Biprod.ofComponents f₁₁ f₁₂ f₂₁ f₂₂ ≫ Biprod.ofComponents g₁₁ g₁₂ g₂₁ g₂₂ =
+      Biprod.ofComponents (f₁₁ ≫ g₁₁ + f₁₂ ≫ g₂₁) (f₁₁ ≫ g₁₂ + f₁₂ ≫ g₂₂) (f₂₁ ≫ g₁₁ + f₂₂ ≫ g₂₁)
         (f₂₁ ≫ g₁₂ + f₂₂ ≫ g₂₂) :=
   by
   dsimp [biprod.of_components]
@@ -145,8 +144,8 @@ as an isomorphism.
 -/
 @[simps]
 def biprod.unipotent_upper {X₁ X₂ : C} (r : X₁ ⟶ X₂) : X₁ ⊞ X₂ ≅ X₁ ⊞ X₂ where
-  hom := biprod.of_components (𝟙 _) r 0 (𝟙 _)
-  inv := biprod.of_components (𝟙 _) (-r) 0 (𝟙 _)
+  hom := Biprod.ofComponents (𝟙 _) r 0 (𝟙 _)
+  inv := Biprod.ofComponents (𝟙 _) (-r) 0 (𝟙 _)
 
 /-- The unipotent lower triangular matrix
 ```
@@ -157,8 +156,8 @@ as an isomorphism.
 -/
 @[simps]
 def biprod.unipotent_lower {X₁ X₂ : C} (r : X₂ ⟶ X₁) : X₁ ⊞ X₂ ≅ X₁ ⊞ X₂ where
-  hom := biprod.of_components (𝟙 _) 0 r (𝟙 _)
-  inv := biprod.of_components (𝟙 _) 0 (-r) (𝟙 _)
+  hom := Biprod.ofComponents (𝟙 _) 0 r (𝟙 _)
+  inv := Biprod.ofComponents (𝟙 _) 0 (-r) (𝟙 _)
 
 /-- If `f` is a morphism `X₁ ⊞ X₂ ⟶ Y₁ ⊞ Y₂` whose `X₁ ⟶ Y₁` entry is an isomorphism,
 then we can construct isomorphisms `L : X₁ ⊞ X₂ ≅ X₁ ⊞ X₂` and `R : Y₁ ⊞ Y₂ ≅ Y₁ ⊞ Y₂`
@@ -167,10 +166,10 @@ via Gaussian elimination.
 
 (This is the version of `biprod.gaussian` written in terms of components.)
 -/
-def biprod.gaussian' [is_iso f₁₁] :
+def biprod.gaussian' [IsIso f₁₁] :
     Σ' (L : X₁ ⊞ X₂ ≅ X₁ ⊞ X₂) (R : Y₁ ⊞ Y₂ ≅ Y₁ ⊞ Y₂) (g₂₂ : X₂ ⟶ Y₂),
-      L.hom ≫ biprod.of_components f₁₁ f₁₂ f₂₁ f₂₂ ≫ R.hom = biprod.map f₁₁ g₂₂ :=
-  ⟨biprod.unipotent_lower (-(f₂₁ ≫ inv f₁₁)), biprod.unipotent_upper (-(inv f₁₁ ≫ f₁₂)), f₂₂ - f₂₁ ≫ inv f₁₁ ≫ f₁₂, by
+      L.hom ≫ Biprod.ofComponents f₁₁ f₁₂ f₂₁ f₂₂ ≫ R.hom = biprod.map f₁₁ g₂₂ :=
+  ⟨Biprod.unipotentLower (-(f₂₁ ≫ inv f₁₁)), Biprod.unipotentUpper (-(inv f₁₁ ≫ f₁₂)), f₂₂ - f₂₁ ≫ inv f₁₁ ≫ f₁₂, by
     ext <;> simp <;> abel⟩
 
 /-- If `f` is a morphism `X₁ ⊞ X₂ ⟶ Y₁ ⊞ Y₂` whose `X₁ ⟶ Y₁` entry is an isomorphism,
@@ -178,7 +177,7 @@ then we can construct isomorphisms `L : X₁ ⊞ X₂ ≅ X₁ ⊞ X₂` and `R 
 so that `L.hom ≫ g ≫ R.hom` is diagonal (with `X₁ ⟶ Y₁` component still `f`),
 via Gaussian elimination.
 -/
-def biprod.gaussian (f : X₁ ⊞ X₂ ⟶ Y₁ ⊞ Y₂) [is_iso (biprod.inl ≫ f ≫ biprod.fst)] :
+def biprod.gaussian (f : X₁ ⊞ X₂ ⟶ Y₁ ⊞ Y₂) [IsIso (biprod.inl ≫ f ≫ biprod.fst)] :
     Σ' (L : X₁ ⊞ X₂ ≅ X₁ ⊞ X₂) (R : Y₁ ⊞ Y₂ ≅ Y₁ ⊞ Y₂) (g₂₂ : X₂ ⟶ Y₂),
       L.hom ≫ f ≫ R.hom = biprod.map (biprod.inl ≫ f ≫ biprod.fst) g₂₂ :=
   by
@@ -190,7 +189,7 @@ def biprod.gaussian (f : X₁ ⊞ X₂ ⟶ Y₁ ⊞ Y₂) [is_iso (biprod.inl �
 /-- If `X₁ ⊞ X₂ ≅ Y₁ ⊞ Y₂` via a two-by-two matrix whose `X₁ ⟶ Y₁` entry is an isomorphism,
 then we can construct an isomorphism `X₂ ≅ Y₂`, via Gaussian elimination.
 -/
-def biprod.iso_elim' [is_iso f₁₁] [is_iso (biprod.of_components f₁₁ f₁₂ f₂₁ f₂₂)] : X₂ ≅ Y₂ := by
+def biprod.iso_elim' [IsIso f₁₁] [IsIso (Biprod.ofComponents f₁₁ f₁₂ f₂₁ f₂₂)] : X₂ ≅ Y₂ := by
   obtain ⟨L, R, g, w⟩ := biprod.gaussian' f₁₁ f₁₂ f₂₁ f₂₂
   let this' : is_iso (biprod.map f₁₁ g) := by
     rw [← w]
@@ -201,7 +200,7 @@ def biprod.iso_elim' [is_iso f₁₁] [is_iso (biprod.of_components f₁₁ f₁
 /-- If `f` is an isomorphism `X₁ ⊞ X₂ ≅ Y₁ ⊞ Y₂` whose `X₁ ⟶ Y₁` entry is an isomorphism,
 then we can construct an isomorphism `X₂ ≅ Y₂`, via Gaussian elimination.
 -/
-def biprod.iso_elim (f : X₁ ⊞ X₂ ≅ Y₁ ⊞ Y₂) [is_iso (biprod.inl ≫ f.hom ≫ biprod.fst)] : X₂ ≅ Y₂ := by
+def biprod.iso_elim (f : X₁ ⊞ X₂ ≅ Y₁ ⊞ Y₂) [IsIso (biprod.inl ≫ f.hom ≫ biprod.fst)] : X₂ ≅ Y₂ := by
   let this' :
     is_iso
       (biprod.of_components (biprod.inl ≫ f.hom ≫ biprod.fst) (biprod.inl ≫ f.hom ≫ biprod.snd)
@@ -213,7 +212,7 @@ def biprod.iso_elim (f : X₁ ⊞ X₂ ≅ Y₁ ⊞ Y₂) [is_iso (biprod.inl �
     biprod.iso_elim' (biprod.inl ≫ f.hom ≫ biprod.fst) (biprod.inl ≫ f.hom ≫ biprod.snd)
       (biprod.inr ≫ f.hom ≫ biprod.fst) (biprod.inr ≫ f.hom ≫ biprod.snd)
 
-theorem biprod.column_nonzero_of_iso {W X Y Z : C} (f : W ⊞ X ⟶ Y ⊞ Z) [is_iso f] :
+theorem biprod.column_nonzero_of_iso {W X Y Z : C} (f : W ⊞ X ⟶ Y ⊞ Z) [IsIso f] :
     𝟙 W = 0 ∨ biprod.inl ≫ f ≫ biprod.fst ≠ 0 ∨ biprod.inl ≫ f ≫ biprod.snd ≠ 0 := by
   by_contra
   rw [not_or_distrib, not_or_distrib, not_not, not_not] at h
@@ -235,10 +234,10 @@ theorem biprod.column_nonzero_of_iso {W X Y Z : C} (f : W ⊞ X ⟶ Y ⊞ Z) [is
 
 end
 
-variable [preadditive.{v} C]
+variable [Preadditive.{v} C]
 
 theorem biproduct.column_nonzero_of_iso' {σ τ : Type v} [DecidableEq σ] [DecidableEq τ] [Fintype τ] {S : σ → C}
-    [has_biproduct.{v} S] {T : τ → C} [has_biproduct.{v} T] (s : σ) (f : ⨁ S ⟶ ⨁ T) [is_iso f] :
+    [HasBiproduct.{v} S] {T : τ → C} [HasBiproduct.{v} T] (s : σ) (f : ⨁ S ⟶ ⨁ T) [IsIso f] :
     (∀ t : τ, biproduct.ι S s ≫ f ≫ biproduct.π T t = 0) → 𝟙 (S s) = 0 := by
   intro z
   set x := biproduct.ι S s ≫ f ≫ inv f ≫ biproduct.π S s
@@ -256,10 +255,10 @@ theorem biproduct.column_nonzero_of_iso' {σ τ : Type v} [DecidableEq σ] [Deci
 then there is some `t` in the target so that the `s, t` matrix entry of `f` is nonzero.
 -/
 def biproduct.column_nonzero_of_iso {σ τ : Type v} [DecidableEq σ] [DecidableEq τ] [Fintype τ] {S : σ → C}
-    [has_biproduct.{v} S] {T : τ → C} [has_biproduct.{v} T] (s : σ) (nz : 𝟙 (S s) ≠ 0) [∀ t, DecidableEq (S s ⟶ T t)]
-    (f : ⨁ S ⟶ ⨁ T) [is_iso f] : Trunc (Σ' t : τ, biproduct.ι S s ≫ f ≫ biproduct.π T t ≠ 0) := by
+    [HasBiproduct.{v} S] {T : τ → C} [HasBiproduct.{v} T] (s : σ) (nz : 𝟙 (S s) ≠ 0) [∀ t, DecidableEq (S s ⟶ T t)]
+    (f : ⨁ S ⟶ ⨁ T) [IsIso f] : Trunc (Σ' t : τ, biproduct.ι S s ≫ f ≫ biproduct.π T t ≠ 0) := by
   apply truncSigmaOfExists
-  have t := biproduct.column_nonzero_of_iso'.{v} s f
+  have t := Biproduct.column_nonzero_of_iso'.{v} s f
   by_contra h
   simp only [not_exists_not] at h
   exact nz (t h)

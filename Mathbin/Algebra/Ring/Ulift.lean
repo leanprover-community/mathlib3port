@@ -18,27 +18,27 @@ variable {α : Type u} {x y : Ulift.{v} α}
 
 namespace Ulift
 
-instance MulZeroClass [MulZeroClass α] : MulZeroClass (Ulift α) := by
+instance MulZeroClassₓ [MulZeroClassₓ α] : MulZeroClassₓ (Ulift α) := by
   refine_struct { zero := (0 : Ulift α), mul := · * ·, .. } <;>
     run_tac
       tactic.pi_instance_derive_field
 
-instance Distrib [Distrib α] : Distrib (Ulift α) := by
+instance Distribₓ [Distribₓ α] : Distribₓ (Ulift α) := by
   refine_struct { add := · + ·, mul := · * ·, .. } <;>
     run_tac
       tactic.pi_instance_derive_field
 
-instance NonUnitalNonAssocSemiring [NonUnitalNonAssocSemiring α] : NonUnitalNonAssocSemiring (Ulift α) := by
+instance NonUnitalNonAssocSemiringₓ [NonUnitalNonAssocSemiringₓ α] : NonUnitalNonAssocSemiringₓ (Ulift α) := by
   refine_struct { zero := (0 : Ulift α), add := · + ·, mul := · * ·, nsmul := AddMonoidₓ.nsmul } <;>
     run_tac
       tactic.pi_instance_derive_field
 
-instance NonAssocSemiring [NonAssocSemiring α] : NonAssocSemiring (Ulift α) := by
+instance NonAssocSemiringₓ [NonAssocSemiringₓ α] : NonAssocSemiringₓ (Ulift α) := by
   refine_struct { zero := (0 : Ulift α), one := 1, add := · + ·, mul := · * ·, nsmul := AddMonoidₓ.nsmul } <;>
     run_tac
       tactic.pi_instance_derive_field
 
-instance NonUnitalSemiring [NonUnitalSemiring α] : NonUnitalSemiring (Ulift α) := by
+instance NonUnitalSemiringₓ [NonUnitalSemiringₓ α] : NonUnitalSemiringₓ (Ulift α) := by
   refine_struct { zero := (0 : Ulift α), add := · + ·, mul := · * ·, nsmul := AddMonoidₓ.nsmul } <;>
     run_tac
       tactic.pi_instance_derive_field
@@ -52,7 +52,7 @@ instance Semiringₓ [Semiringₓ α] : Semiringₓ (Ulift α) := by
 
 /-- The ring equivalence between `ulift α` and `α`.
 -/
-def RingEquiv [NonUnitalNonAssocSemiring α] : Ulift α ≃+* α where
+def RingEquiv [NonUnitalNonAssocSemiringₓ α] : Ulift α ≃+* α where
   toFun := Ulift.down
   invFun := Ulift.up
   map_mul' := fun x y => rfl

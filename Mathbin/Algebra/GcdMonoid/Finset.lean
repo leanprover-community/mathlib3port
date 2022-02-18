@@ -159,10 +159,10 @@ theorem gcd_mono (h : s₁ ⊆ s₂) : s₂.gcd f ∣ s₁.gcd f :=
   dvd_gcd fun b hb => gcd_dvd (h hb)
 
 theorem gcd_image {g : γ → β} (s : Finset γ) [DecidableEq β] [IsIdempotent α GcdMonoid.gcd] :
-    (s.image g).gcd f = s.gcd (f ∘ g) := by
+    (s.Image g).gcd f = s.gcd (f ∘ g) := by
   simp [gcd, fold_image_idem]
 
-theorem gcd_eq_gcd_image [DecidableEq α] [IsIdempotent α GcdMonoid.gcd] : s.gcd f = (s.image f).gcd id :=
+theorem gcd_eq_gcd_image [DecidableEq α] [IsIdempotent α GcdMonoid.gcd] : s.gcd f = (s.Image f).gcd id :=
   (@gcd_image _ _ _ _ _ id _ _ _ _).symm
 
 theorem gcd_eq_zero_iff : s.gcd f = 0 ↔ ∀ x : β, x ∈ s → f x = 0 := by

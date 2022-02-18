@@ -20,12 +20,12 @@ namespace AddCommGroupₓₓ
 
 /-- Construct limit data for a binary product in `AddCommGroup`, using `AddCommGroup.of (G × H)`.
 -/
-def binary_product_limit_cone (G H : AddCommGroupₓₓ.{u}) : limits.limit_cone (pair G H) where
+def binary_product_limit_cone (G H : AddCommGroupₓₓ.{u}) : Limits.LimitCone (pair G H) where
   Cone :=
     { x := AddCommGroupₓₓ.of (G × H),
-      π := { app := fun j => walking_pair.cases_on j (AddMonoidHom.fst G H) (AddMonoidHom.snd G H) } }
+      π := { app := fun j => WalkingPair.casesOn j (AddMonoidHom.fst G H) (AddMonoidHom.snd G H) } }
   IsLimit :=
-    { lift := fun s => AddMonoidHom.prod (s.π.app walking_pair.left) (s.π.app walking_pair.right),
+    { lift := fun s => AddMonoidHom.prod (s.π.app WalkingPair.left) (s.π.app WalkingPair.right),
       fac' := by
         rintro s (⟨⟩ | ⟨⟩) <;>
           · ext x
@@ -34,29 +34,29 @@ def binary_product_limit_cone (G H : AddCommGroupₓₓ.{u}) : limits.limit_cone
       uniq' := fun s m w => by
         ext <;> [rw [← w walking_pair.left], rw [← w walking_pair.right]] <;> rfl }
 
-instance has_binary_product (G H : AddCommGroupₓₓ.{u}) : has_binary_product G H :=
-  has_limit.mk (binary_product_limit_cone G H)
+instance has_binary_product (G H : AddCommGroupₓₓ.{u}) : HasBinaryProduct G H :=
+  HasLimit.mk (binaryProductLimitCone G H)
 
-instance (G H : AddCommGroupₓₓ.{u}) : has_binary_biproduct G H :=
-  has_binary_biproduct.of_has_binary_product _ _
+instance (G H : AddCommGroupₓₓ.{u}) : HasBinaryBiproduct G H :=
+  HasBinaryBiproduct.of_has_binary_product _ _
 
 /-- We verify that the biproduct in AddCommGroup is isomorphic to
 the cartesian product of the underlying types:
 -/
 noncomputable def biprod_iso_prod (G H : AddCommGroupₓₓ.{u}) : (G ⊞ H : AddCommGroupₓₓ) ≅ AddCommGroupₓₓ.of (G × H) :=
-  is_limit.cone_point_unique_up_to_iso (binary_biproduct.is_limit G H) (binary_product_limit_cone G H).IsLimit
+  IsLimit.conePointUniqueUpToIso (BinaryBiproduct.isLimit G H) (binaryProductLimitCone G H).IsLimit
 
-example (G H : AddCommGroupₓₓ.{u}) : has_colimit (pair G H) := by
+example (G H : AddCommGroupₓₓ.{u}) : HasColimit (pair G H) := by
   infer_instance
 
-variable {J : Type u} (F : discrete J ⥤ AddCommGroupₓₓ.{u})
+variable {J : Type u} (F : Discrete J ⥤ AddCommGroupₓₓ.{u})
 
 namespace HasLimit
 
 /-- The map from an arbitrary cone over a indexed family of abelian groups
 to the cartesian product of those groups.
 -/
-def lift (s : cone F) : s.X ⟶ AddCommGroupₓₓ.of (∀ j, F.obj j) where
+def lift (s : Cone F) : s.x ⟶ AddCommGroupₓₓ.of (∀ j, F.obj j) where
   toFun := fun x j => s.π.app j x
   map_zero' := by
     ext
@@ -66,14 +66,14 @@ def lift (s : cone F) : s.X ⟶ AddCommGroupₓₓ.of (∀ j, F.obj j) where
     simp
 
 @[simp]
-theorem lift_apply (s : cone F) (x : s.X) (j : J) : (lift F s) x j = s.π.app j x :=
+theorem lift_apply (s : Cone F) (x : s.x) (j : J) : (lift F s) x j = s.π.app j x :=
   rfl
 
 /-- Construct limit data for a product in `AddCommGroup`, using `AddCommGroup.of (Π j, F.obj j)`.
 -/
-def product_limit_cone : limits.limit_cone F where
+def product_limit_cone : Limits.LimitCone F where
   Cone :=
-    { x := AddCommGroupₓₓ.of (∀ j, F.obj j), π := discrete.nat_trans fun j => Pi.evalAddMonoidHom (fun j => F.obj j) j }
+    { x := AddCommGroupₓₓ.of (∀ j, F.obj j), π := Discrete.natTrans fun j => Pi.evalAddMonoidHom (fun j => F.obj j) j }
   IsLimit :=
     { lift := lift F,
       fac' := fun s j => by
@@ -93,19 +93,19 @@ open HasLimit
 
 variable [DecidableEq J] [Fintype J]
 
-instance (f : J → AddCommGroupₓₓ.{u}) : has_biproduct f :=
-  has_biproduct.of_has_product _
+instance (f : J → AddCommGroupₓₓ.{u}) : HasBiproduct f :=
+  HasBiproduct.of_has_product _
 
 /-- We verify that the biproduct we've just defined is isomorphic to the AddCommGroup structure
 on the dependent function type
 -/
 noncomputable def biproduct_iso_pi (f : J → AddCommGroupₓₓ.{u}) :
     (⨁ f : AddCommGroupₓₓ) ≅ AddCommGroupₓₓ.of (∀ j, f j) :=
-  is_limit.cone_point_unique_up_to_iso (biproduct.is_limit f) (product_limit_cone (discrete.functor f)).IsLimit
+  IsLimit.conePointUniqueUpToIso (Biproduct.isLimit f) (productLimitCone (Discrete.functor f)).IsLimit
 
 end
 
-instance : has_finite_biproducts AddCommGroupₓₓ :=
+instance : HasFiniteBiproducts AddCommGroupₓₓ :=
   ⟨fun J _ _ =>
     { HasBiproduct := fun f => by
         infer_instance }⟩

@@ -58,17 +58,17 @@ variable {R₁ : Type _} [Field R₁] [Module R₁ E₁] [Module R₁ F] [Finite
 /-- A linear isometry between finite dimensional spaces of equal dimension can be upgraded
     to a linear isometry equivalence. -/
 def to_linear_isometry_equiv (li : E₁ →ₗᵢ[R₁] F) (h : finrank R₁ E₁ = finrank R₁ F) : E₁ ≃ₗᵢ[R₁] F where
-  toLinearEquiv := li.to_linear_map.linear_equiv_of_injective li.injective h
+  toLinearEquiv := li.toLinearMap.linearEquivOfInjective li.Injective h
   norm_map' := li.norm_map'
 
 @[simp]
 theorem coe_to_linear_isometry_equiv (li : E₁ →ₗᵢ[R₁] F) (h : finrank R₁ E₁ = finrank R₁ F) :
-    (li.to_linear_isometry_equiv h : E₁ → F) = li :=
+    (li.toLinearIsometryEquiv h : E₁ → F) = li :=
   rfl
 
 @[simp]
 theorem to_linear_isometry_equiv_apply (li : E₁ →ₗᵢ[R₁] F) (h : finrank R₁ E₁ = finrank R₁ F) (x : E₁) :
-    (li.to_linear_isometry_equiv h) x = li x :=
+    (li.toLinearIsometryEquiv h) x = li x :=
   rfl
 
 end LinearIsometry
@@ -79,24 +79,24 @@ open AffineMap
 
 variable {𝕜 : Type _} {V₁ V₂ : Type _} {P₁ P₂ : Type _} [NormedField 𝕜] [NormedGroup V₁] [SemiNormedGroup V₂]
   [NormedSpace 𝕜 V₁] [NormedSpace 𝕜 V₂] [MetricSpace P₁] [PseudoMetricSpace P₂] [NormedAddTorsor V₁ P₁]
-  [SemiNormedAddTorsor V₂ P₂]
+  [NormedAddTorsor V₂ P₂]
 
 variable [FiniteDimensional 𝕜 V₁] [FiniteDimensional 𝕜 V₂]
 
 /-- An affine isometry between finite dimensional spaces of equal dimension can be upgraded
     to an affine isometry equivalence. -/
 def to_affine_isometry_equiv [Inhabited P₁] (li : P₁ →ᵃⁱ[𝕜] P₂) (h : finrank 𝕜 V₁ = finrank 𝕜 V₂) : P₁ ≃ᵃⁱ[𝕜] P₂ :=
-  AffineIsometryEquiv.mk' li (li.linear_isometry.to_linear_isometry_equiv h) (arbitrary P₁) fun p => by
+  AffineIsometryEquiv.mk' li (li.LinearIsometry.toLinearIsometryEquiv h) (arbitrary P₁) fun p => by
     simp
 
 @[simp]
 theorem coe_to_affine_isometry_equiv [Inhabited P₁] (li : P₁ →ᵃⁱ[𝕜] P₂) (h : finrank 𝕜 V₁ = finrank 𝕜 V₂) :
-    (li.to_affine_isometry_equiv h : P₁ → P₂) = li :=
+    (li.toAffineIsometryEquiv h : P₁ → P₂) = li :=
   rfl
 
 @[simp]
 theorem to_affine_isometry_equiv_apply [Inhabited P₁] (li : P₁ →ᵃⁱ[𝕜] P₂) (h : finrank 𝕜 V₁ = finrank 𝕜 V₂) (x : P₁) :
-    (li.to_affine_isometry_equiv h) x = li x :=
+    (li.toAffineIsometryEquiv h) x = li x :=
   rfl
 
 end AffineIsometry
@@ -135,7 +135,7 @@ all norms are equivalent in finite dimension.
 
 This statement is superceded by the fact that every linear map on a finite-dimensional space is
 continuous, in `linear_map.continuous_of_finite_dimensional`. -/
-theorem continuous_equiv_fun_basis {ι : Type v} [Fintype ι] (ξ : Basis ι 𝕜 E) : Continuous ξ.equiv_fun := by
+theorem continuous_equiv_fun_basis {ι : Type v} [Fintype ι] (ξ : Basis ι 𝕜 E) : Continuous ξ.equivFun := by
   induction' hn : Fintype.card ι with n IH generalizing ι E
   · apply ξ.equiv_fun.to_linear_map.continuous_of_bound 0 fun x => _
     have : ξ.equiv_fun x = 0 := by
@@ -255,15 +255,15 @@ def to_continuous_linear_map : (E →ₗ[𝕜] F') ≃ₗ[𝕜] E →L[𝕜] F' 
   right_inv := fun f => ContinuousLinearMap.coe_injective rfl
 
 @[simp]
-theorem coe_to_continuous_linear_map' (f : E →ₗ[𝕜] F') : ⇑f.to_continuous_linear_map = f :=
+theorem coe_to_continuous_linear_map' (f : E →ₗ[𝕜] F') : ⇑f.toContinuousLinearMap = f :=
   rfl
 
 @[simp]
-theorem coe_to_continuous_linear_map (f : E →ₗ[𝕜] F') : (f.to_continuous_linear_map : E →ₗ[𝕜] F') = f :=
+theorem coe_to_continuous_linear_map (f : E →ₗ[𝕜] F') : (f.toContinuousLinearMap : E →ₗ[𝕜] F') = f :=
   rfl
 
 @[simp]
-theorem coe_to_continuous_linear_map_symm : ⇑(to_continuous_linear_map : (E →ₗ[𝕜] F') ≃ₗ[𝕜] E →L[𝕜] F').symm = coe :=
+theorem coe_to_continuous_linear_map_symm : ⇑(toContinuousLinearMap : (E →ₗ[𝕜] F') ≃ₗ[𝕜] E →L[𝕜] F').symm = coe :=
   rfl
 
 end LinearMap
@@ -275,37 +275,35 @@ variable [FiniteDimensional 𝕜 E]
 /-- The continuous linear equivalence induced by a linear equivalence on a finite dimensional
 space. -/
 def to_continuous_linear_equiv (e : E ≃ₗ[𝕜] F) : E ≃L[𝕜] F :=
-  { e with continuous_to_fun := e.to_linear_map.continuous_of_finite_dimensional,
+  { e with continuous_to_fun := e.toLinearMap.continuous_of_finite_dimensional,
     continuous_inv_fun :=
       have : FiniteDimensional 𝕜 F := e.finite_dimensional
       e.symm.to_linear_map.continuous_of_finite_dimensional }
 
 @[simp]
-theorem coe_to_continuous_linear_equiv (e : E ≃ₗ[𝕜] F) : (e.to_continuous_linear_equiv : E →ₗ[𝕜] F) = e :=
+theorem coe_to_continuous_linear_equiv (e : E ≃ₗ[𝕜] F) : (e.toContinuousLinearEquiv : E →ₗ[𝕜] F) = e :=
   rfl
 
 @[simp]
-theorem coe_to_continuous_linear_equiv' (e : E ≃ₗ[𝕜] F) : (e.to_continuous_linear_equiv : E → F) = e :=
+theorem coe_to_continuous_linear_equiv' (e : E ≃ₗ[𝕜] F) : (e.toContinuousLinearEquiv : E → F) = e :=
   rfl
 
 @[simp]
-theorem coe_to_continuous_linear_equiv_symm (e : E ≃ₗ[𝕜] F) :
-    (e.to_continuous_linear_equiv.symm : F →ₗ[𝕜] E) = e.symm :=
+theorem coe_to_continuous_linear_equiv_symm (e : E ≃ₗ[𝕜] F) : (e.toContinuousLinearEquiv.symm : F →ₗ[𝕜] E) = e.symm :=
   rfl
 
 @[simp]
-theorem coe_to_continuous_linear_equiv_symm' (e : E ≃ₗ[𝕜] F) : (e.to_continuous_linear_equiv.symm : F → E) = e.symm :=
+theorem coe_to_continuous_linear_equiv_symm' (e : E ≃ₗ[𝕜] F) : (e.toContinuousLinearEquiv.symm : F → E) = e.symm :=
   rfl
 
 @[simp]
-theorem to_linear_equiv_to_continuous_linear_equiv (e : E ≃ₗ[𝕜] F) : e.to_continuous_linear_equiv.to_linear_equiv = e :=
-  by
+theorem to_linear_equiv_to_continuous_linear_equiv (e : E ≃ₗ[𝕜] F) : e.toContinuousLinearEquiv.toLinearEquiv = e := by
   ext x
   rfl
 
 @[simp]
 theorem to_linear_equiv_to_continuous_linear_equiv_symm (e : E ≃ₗ[𝕜] F) :
-    e.to_continuous_linear_equiv.symm.to_linear_equiv = e.symm := by
+    e.toContinuousLinearEquiv.symm.toLinearEquiv = e.symm := by
   ext x
   rfl
 
@@ -318,7 +316,7 @@ as `lipschitz_extension_constant E'`. -/
 irreducible_def lipschitzExtensionConstant (E' : Type _) [NormedGroup E'] [NormedSpace ℝ E']
   [FiniteDimensional ℝ E'] : ℝ≥0 :=
   let A := (Basis.ofVectorSpace ℝ E').equivFun.toContinuousLinearEquiv
-  max (∥A.symm.to_continuous_linear_map∥₊ * ∥A.to_continuous_linear_map∥₊) 1
+  max (∥A.symm.toContinuousLinearMap∥₊ * ∥A.toContinuousLinearMap∥₊) 1
 
 theorem lipschitz_extension_constant_pos (E' : Type _) [NormedGroup E'] [NormedSpace ℝ E'] [FiniteDimensional ℝ E'] :
     0 < lipschitzExtensionConstant E' := by
@@ -330,7 +328,7 @@ vector space `E'` can be extended to a Lipschitz map on the whole space `α`, wi
 constant `lipschitz_extension_constant E' * K`. -/
 theorem LipschitzOnWith.extend_finite_dimension {α : Type _} [PseudoMetricSpace α] {E' : Type _} [NormedGroup E']
     [NormedSpace ℝ E'] [FiniteDimensional ℝ E'] {s : Set α} {f : α → E'} {K : ℝ≥0 } (hf : LipschitzOnWith K f s) :
-    ∃ g : α → E', LipschitzWith (lipschitzExtensionConstant E' * K) g ∧ eq_on f g s := by
+    ∃ g : α → E', LipschitzWith (lipschitzExtensionConstant E' * K) g ∧ EqOn f g s := by
   let ι : Type _ := Basis.OfVectorSpaceIndex ℝ E'
   let A := (Basis.ofVectorSpace ℝ E').equivFun.toContinuousLinearEquiv
   have LA : LipschitzWith ∥A.to_continuous_linear_map∥₊ A := by
@@ -402,13 +400,13 @@ theorem FiniteDimensional.nonempty_continuous_linear_equiv_of_finrank_eq [Finite
 have the same (finite) dimension. -/
 theorem FiniteDimensional.nonempty_continuous_linear_equiv_iff_finrank_eq [FiniteDimensional 𝕜 E]
     [FiniteDimensional 𝕜 F] : Nonempty (E ≃L[𝕜] F) ↔ finrank 𝕜 E = finrank 𝕜 F :=
-  ⟨fun ⟨h⟩ => h.to_linear_equiv.finrank_eq, fun h => FiniteDimensional.nonempty_continuous_linear_equiv_of_finrank_eq h⟩
+  ⟨fun ⟨h⟩ => h.toLinearEquiv.finrank_eq, fun h => FiniteDimensional.nonempty_continuous_linear_equiv_of_finrank_eq h⟩
 
 /-- A continuous linear equivalence between two finite-dimensional normed spaces of the same
 (finite) dimension. -/
 def ContinuousLinearEquiv.ofFinrankEq [FiniteDimensional 𝕜 E] [FiniteDimensional 𝕜 F]
     (cond : finrank 𝕜 E = finrank 𝕜 F) : E ≃L[𝕜] F :=
-  (linear_equiv.of_finrank_eq E F cond).toContinuousLinearEquiv
+  (LinearEquiv.ofFinrankEq E F cond).toContinuousLinearEquiv
 
 variable {ι : Type _} [Fintype ι]
 
@@ -424,7 +422,7 @@ theorem Basis.coe_constrL (v : Basis ι 𝕜 E) (f : ι → F) : (v.constrL f : 
 /-- The continuous linear equivalence between a vector space over `𝕜` with a finite basis and
 functions from its basis indexing type to `𝕜`. -/
 def Basis.equivFunL (v : Basis ι 𝕜 E) : E ≃L[𝕜] ι → 𝕜 :=
-  { v.equiv_fun with
+  { v.equivFun with
     continuous_to_fun :=
       have : FiniteDimensional 𝕜 E := FiniteDimensional.of_fintype_basis v
       v.equiv_fun.to_linear_map.continuous_of_finite_dimensional,
@@ -433,14 +431,14 @@ def Basis.equivFunL (v : Basis ι 𝕜 E) : E ≃L[𝕜] ι → 𝕜 :=
       exact v.equiv_fun.symm.to_linear_map.continuous_of_finite_dimensional }
 
 @[simp]
-theorem Basis.constrL_apply (v : Basis ι 𝕜 E) (f : ι → F) (e : E) : (v.constrL f) e = ∑ i, v.equiv_fun e i • f i :=
+theorem Basis.constrL_apply (v : Basis ι 𝕜 E) (f : ι → F) (e : E) : (v.constrL f) e = ∑ i, v.equivFun e i • f i :=
   v.constr_apply_fintype 𝕜 _ _
 
 @[simp]
 theorem Basis.constrL_basis (v : Basis ι 𝕜 E) (f : ι → F) (i : ι) : (v.constrL f) (v i) = f i :=
   v.constr_basis 𝕜 _ _
 
-theorem Basis.sup_norm_le_norm (v : Basis ι 𝕜 E) : ∃ C > (0 : ℝ), ∀ e : E, (∑ i, ∥v.equiv_fun e i∥) ≤ C * ∥e∥ := by
+theorem Basis.sup_norm_le_norm (v : Basis ι 𝕜 E) : ∃ C > (0 : ℝ), ∀ e : E, (∑ i, ∥v.equivFun e i∥) ≤ C * ∥e∥ := by
   set φ := v.equiv_funL.to_continuous_linear_map
   set C := ∥φ∥ * Fintype.card ι
   use max C 1, lt_of_lt_of_leₓ zero_lt_one (le_max_rightₓ C 1)
@@ -469,7 +467,7 @@ theorem Basis.op_norm_le {ι : Type _} [Fintype ι] (v : Basis ι 𝕜 E) :
       finset.sum_mul.symm _ ≤ C * ∥e∥ * M := mul_le_mul_of_nonneg_right (hC e) hM _ = C * M * ∥e∥ := by
       ring
 
-instance [FiniteDimensional 𝕜 E] [second_countable_topology F] : second_countable_topology (E →L[𝕜] F) := by
+instance [FiniteDimensional 𝕜 E] [SecondCountableTopology F] : SecondCountableTopology (E →L[𝕜] F) := by
   set d := FiniteDimensional.finrank 𝕜 E
   suffices : ∀, ∀ ε > (0 : ℝ), ∀, ∃ n : (E →L[𝕜] F) → Finₓ d → ℕ, ∀ f g : E →L[𝕜] F, n f = n g → dist f g ≤ ε
   exact
@@ -530,7 +528,7 @@ theorem Submodule.complete_of_finite_dimensional (s : Submodule 𝕜 E) [FiniteD
 
 /-- A finite-dimensional subspace is closed. -/
 theorem Submodule.closed_of_finite_dimensional (s : Submodule 𝕜 E) [FiniteDimensional 𝕜 s] : IsClosed (s : Set E) :=
-  s.complete_of_finite_dimensional.is_closed
+  s.complete_of_finite_dimensional.IsClosed
 
 section Riesz
 
@@ -614,7 +612,7 @@ end Riesz
 theorem LinearEquiv.closed_embedding_of_injective {f : E →ₗ[𝕜] F} (hf : f.ker = ⊥) [FiniteDimensional 𝕜 E] :
     ClosedEmbedding (⇑f) :=
   let g := LinearEquiv.ofInjective f (LinearMap.ker_eq_bot.mp hf)
-  { embedding_subtype_coe.comp g.to_continuous_linear_equiv.to_homeomorph.embedding with
+  { embedding_subtype_coe.comp g.toContinuousLinearEquiv.toHomeomorph.Embedding with
     closed_range := by
       have := f.finite_dimensional_range
       simpa [f.range_coe] using f.range.closed_of_finite_dimensional }
@@ -622,7 +620,7 @@ theorem LinearEquiv.closed_embedding_of_injective {f : E →ₗ[𝕜] F} (hf : f
 theorem ContinuousLinearMap.exists_right_inverse_of_surjective [FiniteDimensional 𝕜 F] (f : E →L[𝕜] F)
     (hf : f.range = ⊤) : ∃ g : F →L[𝕜] E, f.comp g = ContinuousLinearMap.id 𝕜 F :=
   let ⟨g, hg⟩ := (f : E →ₗ[𝕜] F).exists_right_inverse_of_surjective hf
-  ⟨g.to_continuous_linear_map, ContinuousLinearMap.ext <| LinearMap.ext_iff.1 hg⟩
+  ⟨g.toContinuousLinearMap, ContinuousLinearMap.ext <| LinearMap.ext_iff.1 hg⟩
 
 theorem closed_embedding_smul_left {c : E} (hc : c ≠ 0) : ClosedEmbedding fun x : 𝕜 => x • c :=
   LinearEquiv.closed_embedding_of_injective (LinearEquiv.ker_to_span_singleton 𝕜 E hc)
@@ -691,20 +689,20 @@ theorem summable_norm_iff {α E : Type _} [NormedGroup E] [NormedSpace ℝ E] [F
     
 
 theorem summable_of_is_O' {ι E F : Type _} [NormedGroup E] [CompleteSpace E] [NormedGroup F] [NormedSpace ℝ F]
-    [FiniteDimensional ℝ F] {f : ι → E} {g : ι → F} (hg : Summable g) (h : is_O f g cofinite) : Summable f :=
+    [FiniteDimensional ℝ F] {f : ι → E} {g : ι → F} (hg : Summable g) (h : IsO f g cofinite) : Summable f :=
   summable_of_is_O (summable_norm_iff.mpr hg) h.norm_right
 
 theorem summable_of_is_O_nat' {E F : Type _} [NormedGroup E] [CompleteSpace E] [NormedGroup F] [NormedSpace ℝ F]
-    [FiniteDimensional ℝ F] {f : ℕ → E} {g : ℕ → F} (hg : Summable g) (h : is_O f g at_top) : Summable f :=
+    [FiniteDimensional ℝ F] {f : ℕ → E} {g : ℕ → F} (hg : Summable g) (h : IsO f g atTop) : Summable f :=
   summable_of_is_O_nat (summable_norm_iff.mpr hg) h.norm_right
 
 theorem summable_of_is_equivalent {ι E : Type _} [NormedGroup E] [NormedSpace ℝ E] [FiniteDimensional ℝ E] {f : ι → E}
     {g : ι → E} (hg : Summable g) (h : f ~[cofinite] g) : Summable f :=
-  hg.trans_sub (summable_of_is_O' hg h.is_o.is_O)
+  hg.trans_sub (summable_of_is_O' hg h.IsO.IsO)
 
 theorem summable_of_is_equivalent_nat {E : Type _} [NormedGroup E] [NormedSpace ℝ E] [FiniteDimensional ℝ E] {f : ℕ → E}
     {g : ℕ → E} (hg : Summable g) (h : f ~[at_top] g) : Summable f :=
-  hg.trans_sub (summable_of_is_O_nat' hg h.is_o.is_O)
+  hg.trans_sub (summable_of_is_O_nat' hg h.IsO.IsO)
 
 theorem IsEquivalent.summable_iff {ι E : Type _} [NormedGroup E] [NormedSpace ℝ E] [FiniteDimensional ℝ E] {f : ι → E}
     {g : ι → E} (h : f ~[cofinite] g) : Summable f ↔ Summable g :=

@@ -24,7 +24,7 @@ section MulActionWithZero
 
 variable [MulActionWithZero α ℝ] [OrderedSmul α ℝ] {a : α}
 
-theorem Real.Inf_smul_of_nonneg (ha : 0 ≤ a) (s : Set ℝ) : Inf (a • s) = a • Inf s := by
+theorem Real.Inf_smul_of_nonneg (ha : 0 ≤ a) (s : Set ℝ) : inf (a • s) = a • inf s := by
   obtain rfl | hs := s.eq_empty_or_nonempty
   · rw [smul_set_empty, Real.Inf_empty, smul_zero']
     
@@ -38,7 +38,7 @@ theorem Real.Inf_smul_of_nonneg (ha : 0 ≤ a) (s : Set ℝ) : Inf (a • s) = a
   · rw [Real.Inf_of_not_bdd_below (mt (bdd_below_smul_iff_of_pos ha').1 h), Real.Inf_of_not_bdd_below h, smul_zero']
     
 
-theorem Real.Sup_smul_of_nonneg (ha : 0 ≤ a) (s : Set ℝ) : Sup (a • s) = a • Sup s := by
+theorem Real.Sup_smul_of_nonneg (ha : 0 ≤ a) (s : Set ℝ) : sup (a • s) = a • sup s := by
   obtain rfl | hs := s.eq_empty_or_nonempty
   · rw [smul_set_empty, Real.Sup_empty, smul_zero']
     
@@ -58,7 +58,7 @@ section Module
 
 variable [Module α ℝ] [OrderedSmul α ℝ] {a : α}
 
-theorem Real.Inf_smul_of_nonpos (ha : a ≤ 0) (s : Set ℝ) : Inf (a • s) = a • Sup s := by
+theorem Real.Inf_smul_of_nonpos (ha : a ≤ 0) (s : Set ℝ) : inf (a • s) = a • sup s := by
   obtain rfl | hs := s.eq_empty_or_nonempty
   · rw [smul_set_empty, Real.Inf_empty, Real.Sup_empty, smul_zero']
     
@@ -72,7 +72,7 @@ theorem Real.Inf_smul_of_nonpos (ha : a ≤ 0) (s : Set ℝ) : Inf (a • s) = a
   · rw [Real.Inf_of_not_bdd_below (mt (bdd_below_smul_iff_of_neg ha').1 h), Real.Sup_of_not_bdd_above h, smul_zero']
     
 
-theorem Real.Sup_smul_of_nonpos (ha : a ≤ 0) (s : Set ℝ) : Sup (a • s) = a • Inf s := by
+theorem Real.Sup_smul_of_nonpos (ha : a ≤ 0) (s : Set ℝ) : sup (a • s) = a • inf s := by
   obtain rfl | hs := s.eq_empty_or_nonempty
   · rw [smul_set_empty, Real.Sup_empty, Real.Inf_empty, smul_zero]
     

@@ -1,6 +1,6 @@
-import Mathbin.Topology.Instances.Ennreal
-import Mathbin.Topology.Algebra.Ordered.MonotoneContinuity
 import Mathbin.Data.Real.Ereal
+import Mathbin.Topology.Algebra.Order.MonotoneContinuity
+import Mathbin.Topology.Instances.Ennreal
 
 /-!
 # Topological structure on `ereal`
@@ -39,7 +39,7 @@ instance : OrderTopology Ereal :=
 instance : T2Space Ereal := by
   infer_instance
 
-instance : second_countable_topology Ereal :=
+instance : SecondCountableTopology Ereal :=
   ⟨by
     refine'
       ⟨⋃ q : ℚ, {{ a : Ereal | a < (q : ℝ) }, { a : Ereal | ((q : ℝ) : Ereal) < a }},
@@ -127,7 +127,7 @@ theorem open_embedding_coe : OpenEmbedding (coe : ℝ → Ereal) :=
 
 @[norm_cast]
 theorem tendsto_coe {α : Type _} {f : Filter α} {m : α → ℝ} {a : ℝ} :
-    tendsto (fun a => (m a : Ereal)) f (𝓝 ↑a) ↔ tendsto m f (𝓝 a) :=
+    Tendsto (fun a => (m a : Ereal)) f (𝓝 ↑a) ↔ Tendsto m f (𝓝 a) :=
   embedding_coe.tendsto_nhds_iff.symm
 
 theorem _root_.continuous_coe_real_ereal : Continuous (coe : ℝ → Ereal) :=
@@ -142,7 +142,7 @@ theorem nhds_coe {r : ℝ} : 𝓝 (r : Ereal) = (𝓝 r).map coe :=
 theorem nhds_coe_coe {r p : ℝ} : 𝓝 ((r : Ereal), (p : Ereal)) = (𝓝 (r, p)).map fun p : ℝ × ℝ => (p.1, p.2) :=
   ((open_embedding_coe.Prod open_embedding_coe).map_nhds_eq (r, p)).symm
 
-theorem tendsto_to_real {a : Ereal} (ha : a ≠ ⊤) (h'a : a ≠ ⊥) : tendsto Ereal.toReal (𝓝 a) (𝓝 a.to_real) := by
+theorem tendsto_to_real {a : Ereal} (ha : a ≠ ⊤) (h'a : a ≠ ⊥) : Tendsto Ereal.toReal (𝓝 a) (𝓝 a.toReal) := by
   lift a to ℝ using And.intro ha h'a
   rw [nhds_coe, tendsto_map'_iff]
   exact tendsto_id
@@ -159,7 +159,7 @@ theorem continuous_on_to_real : ContinuousOn Ereal.toReal ({⊥, ⊤} : Set Erea
 
 /-- The set of finite `ereal` numbers is homeomorphic to `ℝ`. -/
 def ne_bot_top_homeomorph_real : ({⊥, ⊤} : Set Ereal).Compl ≃ₜ ℝ :=
-  { ne_top_bot_equiv_real with continuous_to_fun := continuous_on_iff_continuous_restrict.1 continuous_on_to_real,
+  { neTopBotEquivReal with continuous_to_fun := continuous_on_iff_continuous_restrict.1 continuous_on_to_real,
     continuous_inv_fun := continuous_subtype_mk _ continuous_coe_real_ereal }
 
 /-! ### ennreal coercion -/
@@ -223,7 +223,7 @@ theorem embedding_coe_ennreal : Embedding (coe : ℝ≥0∞ → Ereal) :=
 
 @[norm_cast]
 theorem tendsto_coe_ennreal {α : Type _} {f : Filter α} {m : α → ℝ≥0∞} {a : ℝ≥0∞} :
-    tendsto (fun a => (m a : Ereal)) f (𝓝 ↑a) ↔ tendsto m f (𝓝 a) :=
+    Tendsto (fun a => (m a : Ereal)) f (𝓝 ↑a) ↔ Tendsto m f (𝓝 a) :=
   embedding_coe_ennreal.tendsto_nhds_iff.symm
 
 theorem _root_.continuous_coe_ennreal_ereal : Continuous (coe : ℝ≥0∞ → Ereal) :=
@@ -271,7 +271,7 @@ theorem mem_nhds_top_iff {s : Set Ereal} : s ∈ 𝓝 (⊤ : Ereal) ↔ ∃ y : 
       simp [le_reflₓ]⟩
 
 theorem tendsto_nhds_top_iff_real {α : Type _} {m : α → Ereal} {f : Filter α} :
-    tendsto m f (𝓝 ⊤) ↔ ∀ x : ℝ, ∀ᶠ a in f, ↑x < m a := by
+    Tendsto m f (𝓝 ⊤) ↔ ∀ x : ℝ, ∀ᶠ a in f, ↑x < m a := by
   simp only [nhds_top', mem_Ioi, tendsto_infi, tendsto_principal]
 
 -- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (a «expr ≠ » «expr⊥»())
@@ -310,7 +310,7 @@ theorem mem_nhds_bot_iff {s : Set Ereal} : s ∈ 𝓝 (⊥ : Ereal) ↔ ∃ y : 
       simp [le_reflₓ]⟩
 
 theorem tendsto_nhds_bot_iff_real {α : Type _} {m : α → Ereal} {f : Filter α} :
-    tendsto m f (𝓝 ⊥) ↔ ∀ x : ℝ, ∀ᶠ a in f, m a < x := by
+    Tendsto m f (𝓝 ⊥) ↔ ∀ x : ℝ, ∀ᶠ a in f, m a < x := by
   simp only [nhds_bot', mem_Iio, tendsto_infi, tendsto_principal]
 
 /-! ### Continuity of addition -/
@@ -413,10 +413,10 @@ theorem continuous_at_add {p : Ereal × Ereal} (h : p.1 ≠ ⊤ ∨ p.2 ≠ ⊥)
 
 /-- Negation on `ereal` as a homeomorphism -/
 def neg_homeo : Ereal ≃ₜ Ereal :=
-  neg_order_iso.toHomeomorph
+  negOrderIso.toHomeomorph
 
 theorem continuous_neg : Continuous fun x : Ereal => -x :=
-  neg_homeo.Continuous
+  negHomeo.Continuous
 
 end Ereal
 

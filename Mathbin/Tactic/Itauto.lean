@@ -82,54 +82,54 @@ inductive and_kind
   | Eq
   deriving has_reflect, DecidableEq
 
-instance : Inhabited and_kind :=
-  ⟨and_kind.and⟩
+instance : Inhabited AndKind :=
+  ⟨AndKind.and⟩
 
 /-- A reified inductive type for propositional logic. -/
 inductive prop : Type
   | var : ℕ → prop
   | True : prop
   | False : prop
-  | and' : and_kind → prop → prop → prop
+  | and' : AndKind → prop → prop → prop
   | Or : prop → prop → prop
   | imp : prop → prop → prop
   deriving has_reflect, DecidableEq
 
 /-- Constructor for `p ∧ q`. -/
 @[matchPattern]
-def prop.and : prop → prop → prop :=
-  prop.and' and_kind.and
+def prop.and : Prop → Prop → Prop :=
+  Prop.and' AndKind.and
 
 /-- Constructor for `p ↔ q`. -/
 @[matchPattern]
-def prop.iff : prop → prop → prop :=
-  prop.and' and_kind.iff
+def prop.iff : Prop → Prop → Prop :=
+  Prop.and' AndKind.iff
 
 /-- Constructor for `p = q`. -/
 @[matchPattern]
-def prop.eq : prop → prop → prop :=
-  prop.and' and_kind.eq
+def prop.eq : Prop → Prop → Prop :=
+  Prop.and' AndKind.eq
 
 /-- Constructor for `¬ p`. -/
 @[matchPattern]
-def prop.not (a : prop) : prop :=
-  a.imp prop.false
+def prop.not (a : Prop) : Prop :=
+  a.imp Prop.false
 
 /-- Constructor for `xor p q`. -/
 @[matchPattern]
-def prop.xor (a b : prop) : prop :=
-  (a.and b.not).Or (b.and a.not)
+def prop.xor (a b : Prop) : Prop :=
+  (a.And b.Not).Or (b.And a.Not)
 
-instance : Inhabited prop :=
-  ⟨prop.true⟩
+instance : Inhabited Prop :=
+  ⟨Prop.true⟩
 
 /-- Given the contents of an `and` variant, return the two conjuncts. -/
-def and_kind.sides : and_kind → prop → prop → prop × prop
+def and_kind.sides : AndKind → Prop → Prop → prop × prop
   | and_kind.and, A, B => (A, B)
   | _, A, B => (A.imp B, B.imp A)
 
 /-- Debugging printer for propositions. -/
-unsafe def prop.to_format : prop → format
+unsafe def prop.to_format : Prop → format
   | prop.var i => f! "v{i}"
   | prop.true => f!"⊤"
   | prop.false => f!"⊥"
@@ -139,7 +139,7 @@ unsafe def prop.to_format : prop → format
   | prop.or p q => f! "({p.to_format } ∨ {q.to_format})"
   | prop.imp p q => f! "({p.to_format } → {q.to_format})"
 
-unsafe instance : has_to_format prop :=
+unsafe instance : has_to_format Prop :=
   ⟨prop.to_format⟩
 
 section
@@ -147,12 +147,12 @@ section
 open Ordering
 
 /-- A comparator for `and_kind`. (There should really be a derive handler for this.) -/
-def and_kind.cmp (p q : and_kind) : Ordering := by
+def and_kind.cmp (p q : AndKind) : Ordering := by
   cases p <;> cases q
   exacts[Eq, lt, lt, Gt, Eq, lt, Gt, Gt, Eq]
 
 /-- A comparator for propositions. (There should really be a derive handler for this.) -/
-def prop.cmp (p q : prop) : Ordering := by
+def prop.cmp (p q : Prop) : Ordering := by
   induction' p with _ ap _ _ p₁ p₂ _ _ p₁ p₂ _ _ p₁ p₂ _ _ p₁ p₂ generalizing q <;> cases q
   case' var, var =>
     exact cmp p q
@@ -169,10 +169,10 @@ def prop.cmp (p q : prop) : Ordering := by
   exacts[lt, lt, lt, lt, lt, Gt, lt, lt, lt, lt, Gt, Gt, lt, lt, lt, Gt, Gt, Gt, lt, lt, Gt, Gt, Gt, Gt, lt, Gt, Gt, Gt,
     Gt, Gt]
 
-instance : LT prop :=
+instance : LT Prop :=
   ⟨fun p q => p.cmp q = lt⟩
 
-instance : DecidableRel (@LT.lt prop _) := fun _ _ => Ordering.decidableEq _ _
+instance : DecidableRel (@LT.lt Prop _) := fun _ _ => Ordering.decidableEq _ _
 
 end
 
@@ -183,11 +183,11 @@ inductive proof
   | triv : proof
   | exfalso' (p : proof) : proof
   | intro (x : Name) (p : proof) : proof
-  | and_left (ak : and_kind) (p : proof) : proof
-  | and_right (ak : and_kind) (p : proof) : proof
-  | and_intro (ak : and_kind) (p₁ p₂ : proof) : proof
-  | curry (ak : and_kind) (p : proof) : proof
-  | curry₂ (ak : and_kind) (p q : proof) : proof
+  | and_left (ak : AndKind) (p : proof) : proof
+  | and_right (ak : AndKind) (p : proof) : proof
+  | and_intro (ak : AndKind) (p₁ p₂ : proof) : proof
+  | curry (ak : AndKind) (p : proof) : proof
+  | curry₂ (ak : AndKind) (p q : proof) : proof
   | app' : proof → proof → proof
   | or_imp_left (p : proof) : proof
   | or_imp_right (p : proof) : proof
@@ -199,11 +199,11 @@ inductive proof
   | imp_imp_simp (x : Name) (p : proof) : proof
   deriving has_reflect
 
-instance : Inhabited proof :=
-  ⟨proof.triv⟩
+instance : Inhabited Proof :=
+  ⟨Proof.triv⟩
 
 /-- Debugging printer for proof objects. -/
-unsafe def proof.to_format : proof → format
+unsafe def proof.to_format : Proof → format
   | proof.sorry => "sorry"
   | proof.hyp i => to_fmt i
   | proof.triv => "triv"
@@ -225,27 +225,27 @@ unsafe def proof.to_format : proof → format
   | proof.decidable_elim _ p x q r => f! "({p }.elim (λ {x }, {q.to_format }) (λ {x }, {r.to_format})"
   | proof.imp_imp_simp _ p => f! "(imp_imp_simp {p.to_format})"
 
-unsafe instance : has_to_format proof :=
+unsafe instance : has_to_format Proof :=
   ⟨proof.to_format⟩
 
 /-- A variant on `proof.exfalso'` that performs opportunistic simplification. -/
-unsafe def proof.exfalso : prop → proof → proof
+unsafe def proof.exfalso : Prop → Proof → Proof
   | prop.false, p => p
-  | A, p => proof.exfalso' p
+  | A, p => Proof.exfalso' p
 
 /-- A variant on `proof.or_elim` that performs opportunistic simplification. -/
-unsafe def proof.or_elim : proof → Name → proof → proof → proof
-  | proof.em cl p, x, q, r => proof.decidable_elim cl p x q r
-  | p, x, q, r => proof.or_elim' p x q r
+unsafe def proof.or_elim : Proof → Name → Proof → Proof → Proof
+  | proof.em cl p, x, q, r => Proof.decidable_elim cl p x q r
+  | p, x, q, r => Proof.or_elim' p x q r
 
 /-- A variant on `proof.app'` that performs opportunistic simplification.
 (This doesn't do full normalization because we don't want the proof size to blow up.) -/
-unsafe def proof.app : proof → proof → proof
-  | proof.curry ak p, q => proof.curry₂ ak p q
+unsafe def proof.app : Proof → Proof → Proof
+  | proof.curry ak p, q => Proof.curry₂ ak p q
   | proof.curry₂ ak p q, r => p.app (q.and_intro ak r)
   | proof.or_imp_left p, q => p.app q.or_inl
   | proof.or_imp_right p, q => p.app q.or_inr
-  | proof.imp_imp_simp x p, q => p.app (proof.intro x q)
+  | proof.imp_imp_simp x p, q => p.app (Proof.intro x q)
   | p, q => p.app' q
 
 /-- Get a new name in the pattern `h0, h1, h2, ...` -/
@@ -254,7 +254,7 @@ unsafe def fresh_name : ℕ → Name × ℕ := fun n => (mkSimpleName ("h" ++ to
 
 /-- The context during proof search is a map from propositions to proof values. -/
 unsafe def context :=
-  native.rb_map prop proof
+  native.rb_map Prop Proof
 
 /-- Debug printer for the context. -/
 unsafe def context.to_format (Γ : context) : format :=
@@ -268,21 +268,21 @@ apply all level 1 rules on the spot, which are rules that don't split the goal a
 preserving: specifically, we drop `⊤` and `A → ⊤` hypotheses, close the goal if we find a `⊥`
 hypothesis, split all conjunctions, and also simplify `⊥ → A` (drop), `⊤ → A` (simplify to `A`),
 `A ∧ B → C` (curry to `A → B → C`) and `A ∨ B → C` (rewrite to `(A → C) ∧ (B → C)` and split). -/
-unsafe def context.add : prop → proof → context → Except (prop → proof) context
+unsafe def context.add : Prop → Proof → context → Except (Prop → Proof) context
   | prop.true, p, Γ => pure Γ
   | prop.false, p, Γ => Except.error fun A => proof.exfalso A p
   | prop.and' ak A B, p, Γ => do
     let (A, B) := ak.sides A B
     let Γ ← Γ.add A (p.and_left ak)
-    Γ.add B (p.and_right ak)
+    Γ B (p ak)
   | prop.imp prop.false A, p, Γ => pure Γ
-  | prop.imp prop.true A, p, Γ => Γ.add A (p.app proof.triv)
+  | prop.imp prop.true A, p, Γ => Γ.add A (p.app Proof.triv)
   | prop.imp (prop.and' ak A B) C, p, Γ =>
     let (A, B) := ak.sides A B
-    Γ.add (prop.imp A (B.imp C)) (p.curry ak)
+    Γ.add (Prop.imp A (B.imp C)) (p.curry ak)
   | prop.imp (prop.or A B) C, p, Γ => do
     let Γ ← Γ.add (A.imp C) p.or_imp_left
-    Γ.add (B.imp C) p.or_imp_right
+    Γ (B C) p
   | prop.imp A prop.true, p, Γ => pure Γ
   | A, p, Γ => pure (Γ.insert A p)
 
@@ -290,14 +290,14 @@ unsafe def context.add : prop → proof → context → Except (prop → proof) 
 and a target proposition `B`, so that in the case that `⊥` is found we can skip the continuation
 and just prove `B` outright. -/
 @[inline]
-unsafe def context.with_add (Γ : context) (A : prop) (p : proof) (B : prop) (f : context → prop → ℕ → Bool × proof × ℕ)
+unsafe def context.with_add (Γ : context) (A : Prop) (p : Proof) (B : Prop) (f : context → Prop → ℕ → Bool × proof × ℕ)
     (n : ℕ) : Bool × proof × ℕ :=
   match Γ.add A p with
   | Except.ok Γ_A => f Γ_A B n
-  | Except.error p => (tt, p B, n)
+  | Except.error p => (true, p B, n)
 
 /-- Map a function over the proof (regardless of whether the proof is successful or not). -/
-def map_proof (f : proof → proof) : Bool × proof × ℕ → Bool × proof × ℕ
+def map_proof (f : Proof → Proof) : Bool × proof × ℕ → Bool × proof × ℕ
   | (b, p, n) => (b, f p, n)
 
 /-- Convert a value-with-success to an optional value. -/
@@ -307,7 +307,7 @@ def is_ok {α} : Bool × α → Option α
 
 /-- Skip the continuation and return a failed proof if the boolean is false. -/
 def when_ok : Bool → (ℕ → Bool × proof × ℕ) → ℕ → Bool × proof × ℕ
-  | ff, f, n => (ff, proof.sorry, n)
+  | ff, f, n => (false, Proof.sorry, n)
   | tt, f, n => f n
 
 /-- The search phase, which deals with the level 3 rules, which are rules that are not validity
@@ -321,10 +321,10 @@ prove `A₁ → A₂`, which can be written `A₂ → C, A₁ ⊢ A₂` (where w
 `(A₁ → A₂) → C`), and one to use the consequent, `C ⊢ B`. The search here is that there are
 potentially many implications to split like this, and we have to try all of them if we want to be
 complete. -/
-unsafe def search (prove : context → prop → ℕ → Bool × proof × ℕ) : context → prop → ℕ → Bool × proof × ℕ
+unsafe def search (prove : context → Prop → ℕ → Bool × proof × ℕ) : context → Prop → ℕ → Bool × proof × ℕ
   | Γ, B, n =>
     match Γ.find B with
-    | some p => (tt, p, n)
+    | some p => (true, p, n)
     | none =>
       let search₁ :=
         (Γ.fold none) fun A p r =>
@@ -342,20 +342,20 @@ unsafe def search (prove : context → prop → ℕ → Bool × proof × ℕ) : 
                   let (a, n) := fresh_name n
                   let (p₁, n) ←
                     is_ok <|
-                        Γ.with_add A₁ (proof.hyp a) A₂
-                          (fun Γ_A₁ A₂ => Γ_A₁.with_add (prop.imp A₂ C) (proof.imp_imp_simp a p) A₂ prove) n
-                  is_ok <| Γ.with_add C (p.app (proof.intro a p₁)) B prove n
+                        Γ.with_add A₁ (Proof.hyp a) A₂
+                          (fun Γ_A₁ A₂ => Γ_A₁.with_add (Prop.imp A₂ C) (Proof.imp_imp_simp a p) A₂ prove) n
+                  is_ok <| Γ C (p (proof.intro a p₁)) B prove n
                 | _ => none
             | _ => none
       match search₁ with
-      | some r => (tt, r)
+      | some r => (true, r)
       | none =>
         match B with
         | prop.or B₁ B₂ =>
-          match map_proof proof.or_inl (prove Γ B₁ n) with
-          | (ff, _) => map_proof proof.or_inr (prove Γ B₂ n)
+          match mapProof Proof.or_inl (prove Γ B₁ n) with
+          | (ff, _) => mapProof Proof.or_inr (prove Γ B₂ n)
           | r => r
-        | _ => (ff, proof.sorry, n)
+        | _ => (false, Proof.sorry, n)
 
 /-- The main prover. This receives a context of proven or assumed lemmas and a target proposition,
 and returns a proof or `none` (with state for the fresh variable generator).
@@ -372,15 +372,15 @@ handle. The rule `Γ ⊢ A ∧ B` is a level 2 rule, also handled here. If none 
 the level 2 rule `A ∨ B ⊢ C` by searching the context and splitting all ors we find. Finally, if
 we don't make any more progress, we go to the search phase.
 -/
-unsafe def prove : context → prop → ℕ → Bool × proof × ℕ
-  | Γ, prop.true, n => (tt, proof.triv, n)
+unsafe def prove : context → Prop → ℕ → Bool × proof × ℕ
+  | Γ, prop.true, n => (true, Proof.triv, n)
   | Γ, prop.imp A B, n =>
     let (a, n) := fresh_name n
-    map_proof (proof.intro a) <| Γ.with_add A (proof.hyp a) B prove n
+    mapProof (Proof.intro a) <| Γ.with_add A (Proof.hyp a) B prove n
   | Γ, prop.and' ak A B, n =>
     let (A, B) := ak.sides A B
     let (b, p, n) := prove Γ A n
-    map_proof (p.and_intro ak) <| when_ok b (prove Γ B) n
+    mapProof (p.and_intro ak) <| whenOk b (prove Γ B) n
   | Γ, B, n =>
     Γ.fold (fun b Γ => cond b prove (search prove) Γ B)
       (fun A p IH b Γ n =>
@@ -388,25 +388,25 @@ unsafe def prove : context → prop → ℕ → Bool × proof × ℕ
         | prop.or A₁ A₂ =>
           let Γ : context := Γ.erase A
           let (a, n) := fresh_name n
-          let (b, p₁, n) := Γ.with_add A₁ (proof.hyp a) B (fun Γ _ => IH tt Γ) n
-          map_proof (proof.or_elim p a p₁) <| when_ok b (Γ.with_add A₂ (proof.hyp a) B fun Γ _ => IH tt Γ) n
+          let (b, p₁, n) := Γ.with_add A₁ (Proof.hyp a) B (fun Γ _ => IH true Γ) n
+          mapProof (proof.or_elim p a p₁) <| whenOk b (Γ.with_add A₂ (Proof.hyp a) B fun Γ _ => IH true Γ) n
         | _ => IH b Γ n)
-      ff Γ n
+      false Γ n
 
 /-- Reifies an atomic or otherwise unrecognized proposition. If it is defeq to a proposition we
 have already allocated, we reuse it, otherwise we name it with a new index. -/
-unsafe def reify_atom (atoms : ref (Buffer expr)) (e : expr) : tactic prop := do
+unsafe def reify_atom (atoms : ref (Buffer expr)) (e : expr) : tactic Prop := do
   let vec ← read_ref atoms
   let o ← try_core <| vec.iterate failure fun i e' r => r <|> is_def_eq e e' >> pure i.1
   match o with
-    | none => write_ref atoms (vec.push_back e) $> prop.var vec.size
+    | none => write_ref atoms (vec e) $> prop.var vec
     | some i => pure <| prop.var i
 
 /-- Reify an `expr` into a `prop`, allocating anything non-propositional as an atom in the
 `atoms` list. -/
-unsafe def reify (atoms : ref (Buffer expr)) : expr → tactic prop
-  | quote.1 True => pure prop.true
-  | quote.1 False => pure prop.false
+unsafe def reify (atoms : ref (Buffer expr)) : expr → tactic Prop
+  | quote.1 True => pure Prop.true
+  | quote.1 False => pure Prop.false
   | quote.1 ¬%%ₓa => prop.not <$> reify a
   | quote.1 ((%%ₓa) ∧ %%ₓb) => prop.and <$> reify a <*> reify b
   | quote.1 ((%%ₓa) ∨ %%ₓb) => prop.or <$> reify a <*> reify b
@@ -421,7 +421,7 @@ unsafe def reify (atoms : ref (Buffer expr)) : expr → tactic prop
 /-- Once we have a proof object, we have to apply it to the goal. (Some of these cases are a bit
 annoying because `applyc` gets the arguments wrong sometimes so we have to use `to_expr` instead.)
 -/
-unsafe def apply_proof : name_map expr → proof → tactic Unit
+unsafe def apply_proof : name_map expr → Proof → tactic Unit
   | Γ, proof.sorry => fail "itauto failed"
   | Γ, proof.hyp n => do
     let e ← Γ.find n
@@ -435,7 +435,7 @@ unsafe def apply_proof : name_map expr → proof → tactic Unit
     apply_proof Γ p
   | Γ, proof.intro x p => do
     let e ← intro_core x
-    apply_proof (Γ.insert x e) p
+    apply_proof (Γ x e) p
   | Γ, proof.and_left and_kind.and p => do
     let t ← mk_mvar
     to_expr (pquote.1 (And.left (%%ₓt))) tt ff >>= exact
@@ -496,11 +496,11 @@ unsafe def apply_proof : name_map expr → proof → tactic Unit
   | Γ, proof.curry ak p => do
     let e ← intro_core `_
     let n := e.local_uniq_name
-    apply_proof (Γ.insert n e) (proof.curry₂ ak p (proof.hyp n))
+    apply_proof (Γ n e) (proof.curry₂ ak p (proof.hyp n))
   | Γ, proof.curry₂ ak p q => do
     let e ← intro_core `_
     let n := e.local_uniq_name
-    apply_proof (Γ.insert n e) (p.app (q.and_intro ak (proof.hyp n)))
+    apply_proof (Γ n e) (p (q ak (proof.hyp n)))
   | Γ, proof.app' p q => do
     let A ← mk_meta_var (expr.sort level.zero)
     let B ← mk_meta_var (expr.sort level.zero)
@@ -512,11 +512,11 @@ unsafe def apply_proof : name_map expr → proof → tactic Unit
   | Γ, proof.or_imp_left p => do
     let e ← intro_core `_
     let n := e.local_uniq_name
-    apply_proof (Γ.insert n e) (p.app (proof.hyp n).or_inl)
+    apply_proof (Γ n e) (p (proof.hyp n).or_inl)
   | Γ, proof.or_imp_right p => do
     let e ← intro_core `_
     let n := e.local_uniq_name
-    apply_proof (Γ.insert n e) (p.app (proof.hyp n).or_inr)
+    apply_proof (Γ n e) (p (proof.hyp n).or_inr)
   | Γ, proof.or_inl p => do
     let t ← mk_mvar
     to_expr (pquote.1 (Or.inl (%%ₓt))) tt ff >>= exact
@@ -538,9 +538,9 @@ unsafe def apply_proof : name_map expr → proof → tactic Unit
     set_goals (t₁ :: t₂ :: t₃ :: gs)
     apply_proof Γ p
     let e ← intro_core x
-    apply_proof (Γ.insert x e) p₁
+    apply_proof (Γ x e) p₁
     let e ← intro_core x
-    apply_proof (Γ.insert x e) p₂
+    apply_proof (Γ x e) p₂
   | Γ, proof.em ff n => do
     let e ← Γ.find n
     to_expr (pquote.1 (@Decidable.em _ (%%ₓe))) >>= exact
@@ -555,9 +555,9 @@ unsafe def apply_proof : name_map expr → proof → tactic Unit
     let gs ← get_goals
     set_goals (t₁ :: t₂ :: gs)
     let e ← intro_core x
-    apply_proof (Γ.insert x e) p₁
+    apply_proof (Γ x e) p₁
     let e ← intro_core x
-    apply_proof (Γ.insert x e) p₂
+    apply_proof (Γ x e) p₂
   | Γ, proof.decidable_elim tt n x p₁ p₂ => do
     let e ← Γ.find n
     let e ← to_expr (pquote.1 (@Classical.dec (%%ₓe)))
@@ -567,13 +567,13 @@ unsafe def apply_proof : name_map expr → proof → tactic Unit
     let gs ← get_goals
     set_goals (t₁ :: t₂ :: gs)
     let e ← intro_core x
-    apply_proof (Γ.insert x e) p₁
+    apply_proof (Γ x e) p₁
     let e ← intro_core x
-    apply_proof (Γ.insert x e) p₂
+    apply_proof (Γ x e) p₂
   | Γ, proof.imp_imp_simp x p => do
     let e ← intro_core `_
     let n := e.local_uniq_name
-    apply_proof (Γ.insert n e) (p.app (proof.intro x (proof.hyp n)))
+    apply_proof (Γ n e) (p (proof.intro x (proof.hyp n)))
 
 end Itauto
 
@@ -595,34 +595,34 @@ unsafe def itauto (use_dec use_classical : Bool) (extra_dec : List expr) : tacti
       let hyps ← local_context
       let (Γ, decs) ←
         hyps.mfoldl
-            (fun Γ : Except (prop → proof) context × native.rb_map prop (Bool × expr) h => do
+            (fun Γ : Except (Prop → Proof) context × native.rb_map Prop (Bool × expr) h => do
               let e ← infer_type h
               mcond (is_prop e)
                   (do
                     let A ← reify atoms e
-                    let n := h.local_uniq_name
-                    read_ref hs >>= fun Γ => write_ref hs (Γ.insert n h)
-                    pure (Γ.1 >>= fun Γ' => Γ'.add A (proof.hyp n), Γ.2))
+                    let n := h
+                    read_ref hs >>= fun Γ => write_ref hs (Γ n h)
+                    pure (Γ.1 >>= fun Γ' => Γ' A (proof.hyp n), Γ.2))
                   (match e with
                   | quote.1 (Decidable (%%ₓp)) =>
                     if use_dec then do
                       let A ← reify atoms p
-                      let n := h.local_uniq_name
+                      let n := h
                       pure (Γ.1, Γ.2.insert A (ff, h))
                     else pure Γ
                   | _ => pure Γ))
             (Except.ok native.mk_rb_map, native.mk_rb_map)
-      let add_dec (force : Bool) (decs : native.rb_map prop (Bool × expr)) (e : expr) := do
+      let add_dec (force : Bool) (decs : native.rb_map Prop (Bool × expr)) (e : expr) := do
         let A ← reify atoms e
         let dec_e ← mk_app `` Decidable [e]
         let res ← try_core (mk_instance dec_e)
-        if res.is_none ∧ ¬use_classical then
+        if res ∧ ¬use_classical then
             if force then do
               let m ← mk_meta_var dec_e
               (set_goals [m] >> apply_instance) >> failure
             else pure decs
-          else pure (native.rb_map.insert decs A (res.elim (tt, e) (Prod.mk ff)))
-      let decs ← extra_dec.mfoldl (add_dec tt) decs
+          else pure (native.rb_map.insert decs A (res (tt, e) (Prod.mk ff)))
+      let decs ← extra_dec.mfoldl (add_dec true) decs
       let decs ←
         if use_dec then do
             let decided :=
@@ -635,15 +635,14 @@ unsafe def itauto (use_dec use_classical : Bool) (extra_dec : List expr) : tacti
                   | _ => m
               | Except.error _ => native.mk_rb_set
             read_ref atoms >>= fun ats =>
-                (ats.2.iterate (pure decs)) fun i e r =>
-                  if decided.contains i.1 then r else r >>= fun decs => add_dec ff decs e
+                (ats.2.iterate (pure decs)) fun i e r => if decided i.1 then r else r >>= fun decs => add_dec ff decs e
           else pure decs
       let Γ ←
         decs.fold (pure Γ) fun A ⟨cl, pf⟩ r =>
             r >>= fun Γ => do
               let n ← mk_fresh_name
-              read_ref hs >>= fun Γ => write_ref hs (Γ.insert n pf)
-              pure (Γ >>= fun Γ' => Γ'.add (A.or A.not) (proof.em cl n))
+              read_ref hs >>= fun Γ => write_ref hs (Γ n pf)
+              pure (Γ >>= fun Γ' => Γ' (A A) (proof.em cl n))
       let p :=
         match Γ with
         | Except.ok Γ => (prove Γ t 0).2.1
@@ -655,8 +654,8 @@ namespace Interactive
 
 setup_tactic_parser
 
--- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr ?»
--- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr ?»
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr ?»
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr ?»
 /-- A decision procedure for intuitionistic propositional logic. Unlike `finish` and `tauto!` this
 tactic never uses the law of excluded middle (without the `!` option), and the proof search is
 tailored for this use case. (`itauto!` will work as a classical SAT solver, but the algorithm is
@@ -672,10 +671,10 @@ find among the atomic propositions, and `itauto! *` will case on all proposition
 *Warning:* This can blow up the proof search, so it should be used sparingly.
 -/
 unsafe def itauto (classical : parse («expr ?» (tk "!"))) :
-    parse («expr ?» (some <$> pexpr_list <|> none <$ tk "*")) → tactic Unit
-  | none => tactic.itauto False classical.is_some []
-  | some none => tactic.itauto True classical.is_some []
-  | some (some ls) => ls.mmap i_to_expr >>= tactic.itauto False classical.is_some
+    parse («expr ?» (some <$> pexpr_list <|> tk "*" *> pure none)) → tactic Unit
+  | none => tactic.itauto False classical.isSome []
+  | some none => tactic.itauto True classical.isSome []
+  | some (some ls) => ls.mmap i_to_expr >>= tactic.itauto False classical.isSome
 
 -- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
 add_hint_tactic itauto

@@ -32,29 +32,29 @@ section IsomorphismLaws
 /-- The first isomorphism law for modules. The quotient of `M` by the kernel of `f` is linearly
 equivalent to the range of `f`. -/
 noncomputable def quot_ker_equiv_range : (M ⧸ f.ker) ≃ₗ[R] f.range :=
-  (LinearEquiv.ofInjective (f.ker.liftq f <| le_reflₓ _) <|
+  (LinearEquiv.ofInjective (f.ker.liftq f <| le_rfl) <|
         ker_eq_bot.mp <| Submodule.ker_liftq_eq_bot _ _ _ (le_reflₓ f.ker)).trans
     (LinearEquiv.ofEq _ _ <| Submodule.range_liftq _ _ _)
 
 /-- The first isomorphism theorem for surjective linear maps. -/
 noncomputable def quot_ker_equiv_of_surjective (f : M →ₗ[R] M₂) (hf : Function.Surjective f) : (M ⧸ f.ker) ≃ₗ[R] M₂ :=
-  f.quot_ker_equiv_range.trans (LinearEquiv.ofTop f.range (LinearMap.range_eq_top.2 hf))
+  f.quotKerEquivRange.trans (LinearEquiv.ofTop f.range (LinearMap.range_eq_top.2 hf))
 
 @[simp]
-theorem quot_ker_equiv_range_apply_mk (x : M) : (f.quot_ker_equiv_range (Submodule.Quotient.mk x) : M₂) = f x :=
+theorem quot_ker_equiv_range_apply_mk (x : M) : (f.quotKerEquivRange (Submodule.Quotient.mk x) : M₂) = f x :=
   rfl
 
 @[simp]
 theorem quot_ker_equiv_range_symm_apply_image (x : M) (h : f x ∈ f.range) :
-    f.quot_ker_equiv_range.symm ⟨f x, h⟩ = f.ker.mkq x :=
-  f.quot_ker_equiv_range.symm_apply_apply (f.ker.mkq x)
+    f.quotKerEquivRange.symm ⟨f x, h⟩ = f.ker.mkq x :=
+  f.quotKerEquivRange.symm_apply_apply (f.ker.mkq x)
 
 /-- Canonical linear map from the quotient `p/(p ∩ p')` to `(p+p')/p'`, mapping `x + (p ∩ p')`
 to `x + p'`, where `p` and `p'` are submodules of an ambient module.
 -/
 def quotient_inf_to_sup_quotient (p p' : Submodule R M) :
-    p ⧸ comap p.subtype (p⊓p') →ₗ[R] _ ⧸ comap (p⊔p').Subtype p' :=
-  (comap p.subtype (p⊓p')).liftq ((comap (p⊔p').Subtype p').mkq.comp (of_le le_sup_left))
+    p ⧸ comap p.Subtype (p⊓p') →ₗ[R] _ ⧸ comap (p⊔p').Subtype p' :=
+  (comap p.Subtype (p⊓p')).liftq ((comap (p⊔p').Subtype p').mkq.comp (ofLe le_sup_left))
     (by
       rw [ker_comp, of_le, comap_cod_restrict, ker_mkq, map_comap_subtype]
       exact comap_mono (inf_le_inf_right _ le_sup_left))
@@ -62,8 +62,8 @@ def quotient_inf_to_sup_quotient (p p' : Submodule R M) :
 /-- Second Isomorphism Law : the canonical map from `p/(p ∩ p')` to `(p+p')/p'` as a linear isomorphism.
 -/
 noncomputable def quotient_inf_equiv_sup_quotient (p p' : Submodule R M) :
-    (p ⧸ comap p.subtype (p⊓p')) ≃ₗ[R] _ ⧸ comap (p⊔p').Subtype p' :=
-  LinearEquiv.ofBijective (quotient_inf_to_sup_quotient p p')
+    (p ⧸ comap p.Subtype (p⊓p')) ≃ₗ[R] _ ⧸ comap (p⊔p').Subtype p' :=
+  LinearEquiv.ofBijective (quotientInfToSupQuotient p p')
     (by
       rw [← ker_eq_bot, quotient_inf_to_sup_quotient, ker_liftq_eq_bot]
       rw [ker_comp, ker_mkq]
@@ -79,28 +79,28 @@ noncomputable def quotient_inf_equiv_sup_quotient (p p' : Submodule R M) :
 
 @[simp]
 theorem coe_quotient_inf_to_sup_quotient (p p' : Submodule R M) :
-    ⇑quotient_inf_to_sup_quotient p p' = quotient_inf_equiv_sup_quotient p p' :=
+    ⇑quotientInfToSupQuotient p p' = quotientInfEquivSupQuotient p p' :=
   rfl
 
 @[simp]
 theorem quotient_inf_equiv_sup_quotient_apply_mk (p p' : Submodule R M) (x : p) :
-    quotient_inf_equiv_sup_quotient p p' (Submodule.Quotient.mk x) =
-      Submodule.Quotient.mk (of_le (le_sup_left : p ≤ p⊔p') x) :=
+    quotientInfEquivSupQuotient p p' (Submodule.Quotient.mk x) =
+      Submodule.Quotient.mk (ofLe (le_sup_left : p ≤ p⊔p') x) :=
   rfl
 
 theorem quotient_inf_equiv_sup_quotient_symm_apply_left (p p' : Submodule R M) (x : p⊔p') (hx : (x : M) ∈ p) :
-    (quotient_inf_equiv_sup_quotient p p').symm (Submodule.Quotient.mk x) = Submodule.Quotient.mk ⟨x, hx⟩ :=
+    (quotientInfEquivSupQuotient p p').symm (Submodule.Quotient.mk x) = Submodule.Quotient.mk ⟨x, hx⟩ :=
   (LinearEquiv.symm_apply_eq _).2 <| by
     simp [of_le_apply]
 
 @[simp]
 theorem quotient_inf_equiv_sup_quotient_symm_apply_eq_zero_iff {p p' : Submodule R M} {x : p⊔p'} :
-    (quotient_inf_equiv_sup_quotient p p').symm (Submodule.Quotient.mk x) = 0 ↔ (x : M) ∈ p' :=
+    (quotientInfEquivSupQuotient p p').symm (Submodule.Quotient.mk x) = 0 ↔ (x : M) ∈ p' :=
   (LinearEquiv.symm_apply_eq _).trans <| by
     simp [of_le_apply]
 
 theorem quotient_inf_equiv_sup_quotient_symm_apply_right (p p' : Submodule R M) {x : p⊔p'} (hx : (x : M) ∈ p') :
-    (quotient_inf_equiv_sup_quotient p p').symm (Submodule.Quotient.mk x) = 0 :=
+    (quotientInfEquivSupQuotient p p').symm (Submodule.Quotient.mk x) = 0 :=
   quotient_inf_equiv_sup_quotient_symm_apply_eq_zero_iff.2 hx
 
 end IsomorphismLaws
@@ -124,17 +124,17 @@ def quotient_quotient_equiv_quotient_aux : (M ⧸ S) ⧸ T.map S.mkq →ₗ[R] M
 
 @[simp]
 theorem quotient_quotient_equiv_quotient_aux_mk (x : M ⧸ S) :
-    quotient_quotient_equiv_quotient_aux S T h (Quotientₓ.mk x) = mapq S T LinearMap.id h x :=
+    quotientQuotientEquivQuotientAux S T h (Quotient.mk x) = mapq S T LinearMap.id h x :=
   liftq_apply _ _ _
 
 @[simp]
 theorem quotient_quotient_equiv_quotient_aux_mk_mk (x : M) :
-    quotient_quotient_equiv_quotient_aux S T h (Quotientₓ.mk (Quotientₓ.mk x)) = Quotientₓ.mk x := by
+    quotientQuotientEquivQuotientAux S T h (Quotient.mk (Quotient.mk x)) = Quotient.mk x := by
   rw [quotient_quotient_equiv_quotient_aux_mk, mapq_apply, LinearMap.id_apply]
 
 /-- **Noether's third isomorphism theorem** for modules: `(M / S) / (T / S) ≃ M / T`. -/
 def quotient_quotient_equiv_quotient : ((M ⧸ S) ⧸ T.map S.mkq) ≃ₗ[R] M ⧸ T :=
-  { quotient_quotient_equiv_quotient_aux S T h with toFun := quotient_quotient_equiv_quotient_aux S T h,
+  { quotientQuotientEquivQuotientAux S T h with toFun := quotientQuotientEquivQuotientAux S T h,
     invFun := mapq _ _ (mkq S) (le_comap_map _ _),
     left_inv := fun x =>
       (Quotientₓ.induction_on' x) fun x =>

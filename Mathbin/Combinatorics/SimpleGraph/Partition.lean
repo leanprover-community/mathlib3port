@@ -52,17 +52,17 @@ variable {V : Type u} (G : SimpleGraph V)
 structure partition where
   Parts : Set (Set V)
   IsPartition : Setoidₓ.IsPartition parts
-  Independent : ∀, ∀ s ∈ parts, ∀, IsAntichain G.adj s
+  Independent : ∀, ∀ s ∈ parts, ∀, IsAntichain G.Adj s
 
 /-- Whether a partition `P` has at most `n` parts. A graph with a partition
 satisfying this predicate called `n`-partite. (See `simple_graph.partitionable`.) -/
 def partition.parts_card_le {G : SimpleGraph V} (P : G.partition) (n : ℕ) : Prop :=
-  ∃ h : P.parts.finite, h.to_finset.card ≤ n
+  ∃ h : P.Parts.Finite, h.toFinset.card ≤ n
 
 /-- Whether a graph is `n`-partite, which is whether its vertex set
 can be partitioned in at most `n` independent sets. -/
 def partitionable (n : ℕ) : Prop :=
-  ∃ P : G.partition, P.parts_card_le n
+  ∃ P : G.partition, P.PartsCardLe n
 
 namespace Partition
 
@@ -70,17 +70,17 @@ variable {G} (P : G.partition)
 
 /-- The part in the partition that `v` belongs to -/
 def part_of_vertex (v : V) : Set V :=
-  Classical.some (P.is_partition.2 v)
+  Classical.some (P.IsPartition.2 v)
 
-theorem part_of_vertex_mem (v : V) : P.part_of_vertex v ∈ P.parts := by
+theorem part_of_vertex_mem (v : V) : P.PartOfVertex v ∈ P.Parts := by
   obtain ⟨h, -⟩ := (P.is_partition.2 v).some_spec.1
   exact h
 
-theorem mem_part_of_vertex (v : V) : v ∈ P.part_of_vertex v := by
+theorem mem_part_of_vertex (v : V) : v ∈ P.PartOfVertex v := by
   obtain ⟨⟨h1, h2⟩, h3⟩ := (P.is_partition.2 v).some_spec
   exact h2.1
 
-theorem part_of_vertex_ne_of_adj {v w : V} (h : G.adj v w) : P.part_of_vertex v ≠ P.part_of_vertex w := by
+theorem part_of_vertex_ne_of_adj {v w : V} (h : G.Adj v w) : P.PartOfVertex v ≠ P.PartOfVertex w := by
   intro hn
   have hw := P.mem_part_of_vertex w
   rw [← hn] at hw
@@ -88,17 +88,17 @@ theorem part_of_vertex_ne_of_adj {v w : V} (h : G.adj v w) : P.part_of_vertex v 
 
 /-- Create a coloring using the parts themselves as the colors.
 Each vertex is colored by the part it's contained in. -/
-def to_coloring : G.coloring P.parts :=
-  (coloring.mk fun v => ⟨P.part_of_vertex v, P.part_of_vertex_mem v⟩) fun _ _ hvw => by
+def to_coloring : G.Coloring P.Parts :=
+  (Coloring.mk fun v => ⟨P.PartOfVertex v, P.part_of_vertex_mem v⟩) fun _ _ hvw => by
     rw [Ne.def, Subtype.mk_eq_mk]
     exact P.part_of_vertex_ne_of_adj hvw
 
 /-- Like `simple_graph.partition.to_coloring` but uses `set V` as the coloring type. -/
-def to_coloring' : G.coloring (Set V) :=
-  (coloring.mk P.part_of_vertex) fun _ _ hvw => P.part_of_vertex_ne_of_adj hvw
+def to_coloring' : G.Coloring (Set V) :=
+  (Coloring.mk P.PartOfVertex) fun _ _ hvw => P.part_of_vertex_ne_of_adj hvw
 
-theorem to_colorable [Fintype P.parts] : G.colorable (Fintype.card P.parts) :=
-  P.to_coloring.to_colorable
+theorem to_colorable [Fintype P.Parts] : G.Colorable (Fintype.card P.Parts) :=
+  P.toColoring.to_colorable
 
 end Partition
 
@@ -106,17 +106,17 @@ variable {G}
 
 /-- Creates a partition from a coloring. -/
 @[simps]
-def coloring.to_partition {α : Type v} (C : G.coloring α) : G.partition where
-  Parts := C.color_classes
+def coloring.to_partition {α : Type v} (C : G.Coloring α) : G.partition where
+  Parts := C.ColorClasses
   IsPartition := C.color_classes_is_partition
   Independent := by
     rintro s ⟨c, rfl⟩
     apply C.color_classes_independent
 
-instance : Inhabited (partition G) :=
-  ⟨G.self_coloring.to_partition⟩
+instance : Inhabited (Partition G) :=
+  ⟨G.selfColoring.toPartition⟩
 
-theorem partitionable_iff_colorable {n : ℕ} : G.partitionable n ↔ G.colorable n := by
+theorem partitionable_iff_colorable {n : ℕ} : G.Partitionable n ↔ G.Colorable n := by
   constructor
   · rintro ⟨P, hf, h⟩
     have : Fintype P.parts := hf.fintype

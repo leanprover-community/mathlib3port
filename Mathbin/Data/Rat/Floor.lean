@@ -72,7 +72,7 @@ end Rat
 theorem Int.mod_nat_eq_sub_mul_floor_rat_div {n : ℤ} {d : ℕ} : n % d = n - d * ⌊(n : ℚ) / d⌋ := by
   rw [eq_sub_of_add_eq <| Int.mod_add_div n d, Rat.floor_int_div_nat_eq_div]
 
-theorem Nat.coprime_sub_mul_floor_rat_div_of_coprime {n d : ℕ} (n_coprime_d : n.coprime d) :
+theorem Nat.coprime_sub_mul_floor_rat_div_of_coprime {n d : ℕ} (n_coprime_d : n.Coprime d) :
     ((n : ℤ) - d * ⌊(n : ℚ) / d⌋).natAbs.Coprime d := by
   have : (n : ℤ) % d = n - d * ⌊(n : ℚ) / d⌋ := Int.mod_nat_eq_sub_mul_floor_rat_div
   rw [← this]

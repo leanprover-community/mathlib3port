@@ -37,7 +37,7 @@ protected def cast : ℕ → α
 protected def bin_cast (n : ℕ) : α :=
   @Nat.binaryRec (fun _ => α) 0 (fun odd k a => cond Odd (a + a + 1) (a + a)) n
 
-/-- Coercions such as `nat.cast_coe` that go from a concrete structure such as
+library_note "coercion into rings"/-- Coercions such as `nat.cast_coe` that go from a concrete structure such as
 `ℕ` to an arbitrary ring `α` should be set up as follows:
 ```lean
 @[priority 900] instance : has_coe_t ℕ α := ⟨...⟩
@@ -59,14 +59,14 @@ following order:
 
 If `coe_trans` is tried first, then `nat.cast_coe` doesn't get a chance to apply.
 -/
-library_note "coercion into rings"
+
 
 attribute [instance] coeBaseₓ
 
 attribute [instance] coeTransₓ
 
 instance (priority := 900) cast_coe : CoeTₓ ℕ α :=
-  ⟨Nat.cast⟩
+  ⟨Nat.castₓ⟩
 
 @[simp, norm_cast]
 theorem cast_zero : ((0 : ℕ) : α) = 0 :=
@@ -113,16 +113,16 @@ theorem bin_cast_eq [AddMonoidₓ α] [One α] (n : ℕ) : (Nat.binCast n : α) 
 /-- `coe : ℕ → α` as an `add_monoid_hom`. -/
 def cast_add_monoid_hom (α : Type _) [AddMonoidₓ α] [One α] : ℕ →+ α where
   toFun := coe
-  map_add' := cast_add
-  map_zero' := cast_zero
+  map_add' := cast_addₓ
+  map_zero' := cast_zeroₓ
 
 @[simp]
-theorem coe_cast_add_monoid_hom [AddMonoidₓ α] [One α] : (cast_add_monoid_hom α : ℕ → α) = coe :=
+theorem coe_cast_add_monoid_hom [AddMonoidₓ α] [One α] : (castAddMonoidHom α : ℕ → α) = coe :=
   rfl
 
 @[simp, norm_cast]
 theorem cast_bit0 [AddMonoidₓ α] [One α] (n : ℕ) : ((bit0 n : ℕ) : α) = bit0 n :=
-  cast_add _ _
+  cast_addₓ _ _
 
 @[simp, norm_cast]
 theorem cast_bit1 [AddMonoidₓ α] [One α] (n : ℕ) : ((bit1 n : ℕ) : α) = bit1 n := by
@@ -141,10 +141,10 @@ theorem cast_sub [AddGroupₓ α] [One α] {m n} (h : m ≤ n) : ((n - m : ℕ) 
     rw [← cast_add, tsub_add_cancel_of_le h]
 
 @[simp, norm_cast]
-theorem cast_mul [NonAssocSemiring α] m : ∀ n, ((m * n : ℕ) : α) = m * n
+theorem cast_mul [NonAssocSemiringₓ α] m : ∀ n, ((m * n : ℕ) : α) = m * n
   | 0 => (mul_zero _).symm
   | n + 1 =>
-    (cast_add _ _).trans <|
+    (cast_addₓ _ _).trans <|
       show ((m * n : ℕ) : α) + m = m * (n + 1) by
         rw [cast_mul n, left_distrib, mul_oneₓ]
 
@@ -156,23 +156,23 @@ theorem cast_dvd {α : Type _} [Field α] {m n : ℕ} (n_dvd : n ∣ m) (n_nonze
     rintro rfl
     simpa using n_nonzero
   rw [Nat.mul_div_cancel_leftₓ _ (pos_iff_ne_zero.2 this)]
-  rw [Nat.cast_mul, mul_div_cancel_left _ n_nonzero]
+  rw [Nat.cast_mulₓ, mul_div_cancel_left _ n_nonzero]
 
 /-- `coe : ℕ → α` as a `ring_hom` -/
-def cast_ring_hom (α : Type _) [NonAssocSemiring α] : ℕ →+* α :=
-  { cast_add_monoid_hom α with toFun := coe, map_one' := cast_one, map_mul' := cast_mul }
+def cast_ring_hom (α : Type _) [NonAssocSemiringₓ α] : ℕ →+* α :=
+  { castAddMonoidHom α with toFun := coe, map_one' := cast_oneₓ, map_mul' := cast_mulₓ }
 
 @[simp]
-theorem coe_cast_ring_hom [NonAssocSemiring α] : (cast_ring_hom α : ℕ → α) = coe :=
+theorem coe_cast_ring_hom [NonAssocSemiringₓ α] : (castRingHom α : ℕ → α) = coe :=
   rfl
 
-theorem cast_commute [NonAssocSemiring α] (n : ℕ) (x : α) : Commute (↑n) x :=
+theorem cast_commute [NonAssocSemiringₓ α] (n : ℕ) (x : α) : Commute (↑n) x :=
   (Nat.recOn n (Commute.zero_left x)) fun n ihn => ihn.add_left <| Commute.one_left x
 
-theorem cast_comm [NonAssocSemiring α] (n : ℕ) (x : α) : (n : α) * x = x * n :=
+theorem cast_comm [NonAssocSemiringₓ α] (n : ℕ) (x : α) : (n : α) * x = x * n :=
   (cast_commute n x).Eq
 
-theorem commute_cast [NonAssocSemiring α] (x : α) (n : ℕ) : Commute x n :=
+theorem commute_cast [NonAssocSemiringₓ α] (x : α) (n : ℕ) : Commute x n :=
   (n.cast_commute x).symm
 
 section
@@ -181,7 +181,7 @@ variable [OrderedSemiring α]
 
 @[simp]
 theorem cast_nonneg : ∀ n : ℕ, 0 ≤ (n : α)
-  | 0 => le_reflₓ _
+  | 0 => le_rfl
   | n + 1 => add_nonneg (cast_nonneg n) zero_le_one
 
 @[mono]
@@ -192,7 +192,7 @@ theorem mono_cast : Monotone (coe : ℕ → α) := fun m n h => by
 variable [Nontrivial α]
 
 theorem strict_mono_cast : StrictMono (coe : ℕ → α) := fun m n h =>
-  Nat.le_induction (lt_add_of_pos_right _ zero_lt_one) (fun n _ h => lt_add_of_lt_of_pos h zero_lt_one) _ h
+  Nat.le_induction (lt_add_of_pos_right _ zero_lt_one) (fun n _ h => lt_add_of_lt_of_pos' h zero_lt_one) _ h
 
 @[simp, norm_cast]
 theorem cast_le {m n : ℕ} : (m : α) ≤ n ↔ m ≤ n :=
@@ -253,7 +253,7 @@ theorem cast_div_le {m n : ℕ} : ((m / n : ℕ) : α) ≤ m / n := by
   cases n
   · rw [cast_zero, div_zero, Nat.div_zeroₓ, cast_zero]
     
-  rwa [le_div_iff, ← Nat.cast_mul]
+  rwa [le_div_iff, ← Nat.cast_mulₓ]
   exact Nat.cast_le.2 (Nat.div_mul_le_selfₓ m n.succ)
   · exact Nat.cast_pos.2 n.succ_pos
     
@@ -320,7 +320,7 @@ theorem map_nat_cast' [AddMonoidHomClass F A B] (f : F) (h : f 1 = 1) : ∀ n : 
   | 0 => by
     simp
   | n + 1 => by
-    rw [Nat.cast_add, map_add, Nat.cast_add, map_nat_cast', Nat.cast_one, h, Nat.cast_one]
+    rw [Nat.cast_addₓ, map_add, Nat.cast_addₓ, map_nat_cast', Nat.cast_oneₓ, h, Nat.cast_oneₓ]
 
 end AddMonoidHomClass
 
@@ -344,7 +344,7 @@ end MonoidWithZeroHomClass
 
 section RingHomClass
 
-variable {R S F : Type _} [NonAssocSemiring R] [NonAssocSemiring S]
+variable {R S F : Type _} [NonAssocSemiringₓ R] [NonAssocSemiringₓ S]
 
 @[simp]
 theorem eq_nat_cast [RingHomClass F ℕ R] (f : F) : ∀ n, f n = n :=
@@ -368,9 +368,9 @@ theorem Nat.cast_id (n : ℕ) : ↑n = n :=
 theorem Nat.cast_with_bot : ∀ n : ℕ, @coe ℕ (WithBot ℕ) (@coeToLift _ _ Nat.castCoe) n = n
   | 0 => rfl
   | n + 1 => by
-    rw [WithBot.coe_add, Nat.cast_add, Nat.cast_with_bot n] <;> rfl
+    rw [WithBot.coe_add, Nat.cast_addₓ, Nat.cast_with_bot n] <;> rfl
 
-instance Nat.subsingleton_ring_hom {R : Type _} [NonAssocSemiring R] : Subsingleton (ℕ →+* R) :=
+instance Nat.subsingleton_ring_hom {R : Type _} [NonAssocSemiringₓ R] : Subsingleton (ℕ →+* R) :=
   ⟨ext_nat⟩
 
 namespace WithTop
@@ -428,7 +428,7 @@ variable {α β : Type _}
 theorem nat_apply [Zero β] [One β] [Add β] : ∀ n : ℕ a : α, (n : α → β) a = n
   | 0, a => rfl
   | n + 1, a => by
-    rw [Nat.cast_succ, Nat.cast_succ, add_apply, nat_apply, one_apply]
+    rw [Nat.cast_succₓ, Nat.cast_succₓ, add_apply, nat_apply, one_apply]
 
 @[simp]
 theorem coe_nat [Zero β] [One β] [Add β] (n : ℕ) : (n : α → β) = fun _ => n := by

@@ -39,7 +39,7 @@ namespace Sym2
 variable {α : Type _} [DecidableEq α]
 
 /-- The `diag` of `s : finset α` is sent on a finset of `sym2 α` of card `s.card`. -/
-theorem card_image_diag (s : Finset α) : (s.diag.image Quotientₓ.mk).card = s.card := by
+theorem card_image_diag (s : Finset α) : (s.diag.Image Quotientₓ.mk).card = s.card := by
   rw [card_image_of_inj_on, diag_card]
   rintro ⟨x₀, x₁⟩ hx _ _ h
   cases Quotientₓ.eq.1 h
@@ -49,7 +49,7 @@ theorem card_image_diag (s : Finset α) : (s.diag.image Quotientₓ.mk).card = s
     rw [hx.2]
     
 
-theorem two_mul_card_image_off_diag (s : Finset α) : 2 * (s.off_diag.image Quotientₓ.mk).card = s.off_diag.card := by
+theorem two_mul_card_image_off_diag (s : Finset α) : 2 * (s.offDiag.Image Quotientₓ.mk).card = s.offDiag.card := by
   rw
     [card_eq_sum_card_fiberwise
       (fun x => mem_image_of_mem _ : ∀, ∀ x ∈ s.off_diag, ∀, Quotientₓ.mk x ∈ s.off_diag.image Quotientₓ.mk),
@@ -71,11 +71,11 @@ theorem two_mul_card_image_off_diag (s : Finset α) : 2 * (s.off_diag.image Quot
 /-- The `off_diag` of `s : finset α` is sent on a finset of `sym2 α` of card `s.off_diag.card / 2`.
 This is because every element `⟦(x, y)⟧` of `sym2 α` not on the diagonal comes from exactly two
 pairs: `(x, y)` and `(y, x)`. -/
-theorem card_image_off_diag (s : Finset α) : (s.off_diag.image Quotientₓ.mk).card = s.card.choose 2 := by
+theorem card_image_off_diag (s : Finset α) : (s.offDiag.Image Quotientₓ.mk).card = s.card.choose 2 := by
   rw [Nat.choose_two_right, mul_tsub, mul_oneₓ, ← off_diag_card,
     Nat.div_eq_of_eq_mul_rightₓ zero_lt_two (two_mul_card_image_off_diag s).symm]
 
-theorem card_subtype_diag [Fintype α] : card { a : Sym2 α // a.is_diag } = card α := by
+theorem card_subtype_diag [Fintype α] : card { a : Sym2 α // a.IsDiag } = card α := by
   convert card_image_diag (univ : Finset α)
   rw [Fintype.card_of_subtype, ← filter_image_quotient_mk_is_diag]
   rintro x
@@ -83,7 +83,7 @@ theorem card_subtype_diag [Fintype α] : card { a : Sym2 α // a.is_diag } = car
   obtain ⟨a, ha⟩ := Quotientₓ.exists_rep x
   exact and_iff_right ⟨a, mem_univ _, ha⟩
 
-theorem card_subtype_not_diag [Fintype α] : card { a : Sym2 α // ¬a.is_diag } = (card α).choose 2 := by
+theorem card_subtype_not_diag [Fintype α] : card { a : Sym2 α // ¬a.IsDiag } = (card α).choose 2 := by
   convert card_image_off_diag (univ : Finset α)
   rw [Fintype.card_of_subtype, ← filter_image_quotient_mk_not_is_diag]
   rintro x
@@ -92,7 +92,7 @@ theorem card_subtype_not_diag [Fintype α] : card { a : Sym2 α // ¬a.is_diag }
   exact and_iff_right ⟨a, mem_univ _, ha⟩
 
 /-- Finset **stars and bars** for the case `n = 2`. -/
-theorem _root_.finset.card_sym2 (s : Finset α) : s.sym2.card = s.card * (s.card + 1) / 2 := by
+theorem _root_.finset.card_sym2 (s : Finset α) : s.Sym2.card = s.card * (s.card + 1) / 2 := by
   rw [← image_diag_union_image_off_diag, card_union_eq, Sym2.card_image_diag, Sym2.card_image_off_diag,
     Nat.choose_two_right, add_commₓ, ← Nat.triangle_succ, Nat.succ_sub_one, mul_comm]
   rintro m he

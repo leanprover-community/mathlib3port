@@ -26,26 +26,26 @@ namespace Filter
 
 /-- The cofinite filter is the filter of subsets whose complements are finite. -/
 def cofinite : Filter α where
-  Sets := { s | finite (sᶜ) }
+  Sets := { s | Finite (sᶜ) }
   univ_sets := by
     simp only [compl_univ, finite_empty, mem_set_of_eq]
-  sets_of_superset := fun s t hs : finite (sᶜ) st : s ⊆ t => hs.subset <| compl_subset_compl.2 st
-  inter_sets := fun s t hs : finite (sᶜ) ht : finite (tᶜ) => by
+  sets_of_superset := fun s t hs : Finite (sᶜ) st : s ⊆ t => hs.Subset <| compl_subset_compl.2 st
+  inter_sets := fun s t hs : Finite (sᶜ) ht : Finite (tᶜ) => by
     simp only [compl_inter, finite.union, ht, hs, mem_set_of_eq]
 
 @[simp]
-theorem mem_cofinite {s : Set α} : s ∈ @cofinite α ↔ finite (sᶜ) :=
+theorem mem_cofinite {s : Set α} : s ∈ @cofinite α ↔ Finite (sᶜ) :=
   Iff.rfl
 
 @[simp]
-theorem eventually_cofinite {p : α → Prop} : (∀ᶠ x in cofinite, p x) ↔ finite { x | ¬p x } :=
+theorem eventually_cofinite {p : α → Prop} : (∀ᶠ x in cofinite, p x) ↔ Finite { x | ¬p x } :=
   Iff.rfl
 
-theorem has_basis_cofinite : has_basis cofinite (fun s : Set α => s.finite) compl :=
-  ⟨fun s => ⟨fun h => ⟨sᶜ, h, (compl_compl s).Subset⟩, fun ⟨t, htf, hts⟩ => htf.subset <| compl_subset_comm.2 hts⟩⟩
+theorem has_basis_cofinite : HasBasis cofinite (fun s : Set α => s.Finite) compl :=
+  ⟨fun s => ⟨fun h => ⟨sᶜ, h, (compl_compl s).Subset⟩, fun ⟨t, htf, hts⟩ => htf.Subset <| compl_subset_comm.2 hts⟩⟩
 
-instance cofinite_ne_bot [Infinite α] : ne_bot (@cofinite α) :=
-  has_basis_cofinite.ne_bot_iff.2 fun s hs => hs.infinite_compl.nonempty
+instance cofinite_ne_bot [Infinite α] : NeBot (@cofinite α) :=
+  has_basis_cofinite.ne_bot_iff.2 fun s hs => hs.infinite_compl.Nonempty
 
 theorem frequently_cofinite_iff_infinite {p : α → Prop} : (∃ᶠ x in cofinite, p x) ↔ Set.Infinite { x | p x } := by
   simp only [Filter.Frequently, Filter.Eventually, mem_cofinite, compl_set_of, not_not, Set.Infinite]
@@ -81,17 +81,17 @@ theorem Coprod_cofinite {δ : Type _} {κ : δ → Type _} [Fintype δ] :
   · rintro ⟨t, htf, hsub⟩
     exact (finite.pi htf).Subset hsub
     
-  · exact fun hS => ⟨fun i => Function.eval i '' S, fun i => hS.image _, subset_pi_eval_image _ _⟩
+  · exact fun hS => ⟨fun i => Function.eval i '' S, fun i => hS.Image _, subset_pi_eval_image _ _⟩
     
 
 end Filter
 
 open Filter
 
-theorem Set.Finite.compl_mem_cofinite {s : Set α} (hs : s.finite) : sᶜ ∈ @cofinite α :=
+theorem Set.Finite.compl_mem_cofinite {s : Set α} (hs : s.Finite) : sᶜ ∈ @cofinite α :=
   mem_cofinite.2 <| (compl_compl s).symm ▸ hs
 
-theorem Set.Finite.eventually_cofinite_nmem {s : Set α} (hs : s.finite) : ∀ᶠ x in cofinite, x ∉ s :=
+theorem Set.Finite.eventually_cofinite_nmem {s : Set α} (hs : s.Finite) : ∀ᶠ x in cofinite, x ∉ s :=
   hs.compl_mem_cofinite
 
 theorem Finset.eventually_cofinite_nmem (s : Finset α) : ∀ᶠ x in cofinite, x ∉ s :=
@@ -125,7 +125,7 @@ theorem Nat.cofinite_eq_at_top : @cofinite ℕ = at_top := by
 theorem Nat.frequently_at_top_iff_infinite {p : ℕ → Prop} : (∃ᶠ n in at_top, p n) ↔ Set.Infinite { n | p n } := by
   simp only [← Nat.cofinite_eq_at_top, frequently_cofinite_iff_infinite]
 
-theorem Filter.Tendsto.exists_within_forall_le {α β : Type _} [LinearOrderₓ β] {s : Set α} (hs : s.nonempty) {f : α → β}
+theorem Filter.Tendsto.exists_within_forall_le {α β : Type _} [LinearOrderₓ β] {s : Set α} (hs : s.Nonempty) {f : α → β}
     (hf : Filter.Tendsto f Filter.cofinite Filter.atTop) : ∃ a₀ ∈ s, ∀, ∀ a ∈ s, ∀, f a₀ ≤ f a := by
   rcases em (∃ y ∈ s, ∃ x, f y < x) with (⟨y, hys, x, hx⟩ | not_all_top)
   · have : finite { y | ¬x ≤ f y } := filter.eventually_cofinite.mp (tendsto_at_top.1 hf x)
@@ -140,19 +140,19 @@ theorem Filter.Tendsto.exists_within_forall_le {α β : Type _} [LinearOrderₓ 
     
 
 theorem Filter.Tendsto.exists_forall_le {α β : Type _} [Nonempty α] [LinearOrderₓ β] {f : α → β}
-    (hf : tendsto f cofinite at_top) : ∃ a₀, ∀ a, f a₀ ≤ f a :=
+    (hf : Tendsto f cofinite atTop) : ∃ a₀, ∀ a, f a₀ ≤ f a :=
   let ⟨a₀, _, ha₀⟩ := hf.exists_within_forall_le univ_nonempty
   ⟨a₀, fun a => ha₀ a (mem_univ _)⟩
 
-theorem Filter.Tendsto.exists_within_forall_ge {α β : Type _} [LinearOrderₓ β] {s : Set α} (hs : s.nonempty) {f : α → β}
+theorem Filter.Tendsto.exists_within_forall_ge {α β : Type _} [LinearOrderₓ β] {s : Set α} (hs : s.Nonempty) {f : α → β}
     (hf : Filter.Tendsto f Filter.cofinite Filter.atBot) : ∃ a₀ ∈ s, ∀, ∀ a ∈ s, ∀, f a ≤ f a₀ :=
   @Filter.Tendsto.exists_within_forall_le _ (OrderDual β) _ _ hs _ hf
 
 theorem Filter.Tendsto.exists_forall_ge {α β : Type _} [Nonempty α] [LinearOrderₓ β] {f : α → β}
-    (hf : tendsto f cofinite at_bot) : ∃ a₀, ∀ a, f a ≤ f a₀ :=
+    (hf : Tendsto f cofinite atBot) : ∃ a₀, ∀ a, f a ≤ f a₀ :=
   @Filter.Tendsto.exists_forall_le _ (OrderDual β) _ _ _ hf
 
 /-- For an injective function `f`, inverse images of finite sets are finite. -/
 theorem Function.Injective.tendsto_cofinite {α β : Type _} {f : α → β} (hf : Function.Injective f) :
-    tendsto f cofinite cofinite := fun s h => h.preimage (hf.inj_on _)
+    Tendsto f cofinite cofinite := fun s h => h.Preimage (hf.InjOn _)
 

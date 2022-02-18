@@ -21,15 +21,15 @@ open CategoryTheory
 
 /-- A (bundled) uniform space. -/
 def UniformSpaceₓ : Type (u + 1) :=
-  bundled UniformSpace
+  Bundled UniformSpace
 
 namespace UniformSpaceₓ
 
 /-- The information required to build morphisms for `UniformSpace`. -/
-instance : unbundled_hom @UniformContinuous :=
+instance : UnbundledHom @UniformContinuous :=
   ⟨@uniform_continuous_id, @UniformContinuous.comp⟩
 
-deriving instance large_category, concrete_category for UniformSpaceₓ
+deriving instance LargeCategory, ConcreteCategory for UniformSpaceₓ
 
 instance : CoeSort UniformSpaceₓ (Type _) :=
   bundled.has_coe_to_sort
@@ -67,7 +67,7 @@ theorem hom_ext {X Y : UniformSpaceₓ} {f g : X ⟶ Y} : (f : X → Y) = g → 
   Subtype.eq
 
 /-- The forgetful functor from uniform spaces to topological spaces. -/
-instance has_forget_to_Top : has_forget₂ UniformSpaceₓ.{u} Top.{u} where
+instance has_forget_to_Top : HasForget₂ UniformSpaceₓ.{u} Top.{u} where
   forget₂ :=
     { obj := fun X => Top.of X,
       map := fun X Y f => { toFun := f, continuous_to_fun := UniformContinuous.continuous f.property } }
@@ -92,10 +92,10 @@ attribute [instance] is_uniform_space is_complete_space IsSeparated
 def to_UniformSpace (X : CpltSepUniformSpace) : UniformSpaceₓ :=
   UniformSpaceₓ.of X
 
-instance CompleteSpace (X : CpltSepUniformSpace) : CompleteSpace (to_UniformSpace X).α :=
+instance CompleteSpace (X : CpltSepUniformSpace) : CompleteSpace (toUniformSpace X).α :=
   CpltSepUniformSpace.is_complete_space X
 
-instance SeparatedSpace (X : CpltSepUniformSpace) : SeparatedSpace (to_UniformSpace X).α :=
+instance SeparatedSpace (X : CpltSepUniformSpace) : SeparatedSpace (toUniformSpace X).α :=
   CpltSepUniformSpace.is_separated X
 
 /-- Construct a bundled `UniformSpace` from the underlying type and the appropriate typeclasses. -/
@@ -114,15 +114,15 @@ instance : Inhabited CpltSepUniformSpace :=
   ⟨CpltSepUniformSpace.of Empty⟩
 
 /-- The category instance on `CpltSepUniformSpace`. -/
-instance category : large_category CpltSepUniformSpace :=
-  induced_category.category to_UniformSpace
+instance category : LargeCategory CpltSepUniformSpace :=
+  InducedCategory.category toUniformSpace
 
 /-- The concrete category instance on `CpltSepUniformSpace`. -/
-instance concrete_category : concrete_category CpltSepUniformSpace :=
-  induced_category.concrete_category to_UniformSpace
+instance concrete_category : ConcreteCategory CpltSepUniformSpace :=
+  InducedCategory.concreteCategory toUniformSpace
 
-instance has_forget_to_UniformSpace : has_forget₂ CpltSepUniformSpace UniformSpaceₓ :=
-  induced_category.has_forget₂ to_UniformSpace
+instance has_forget_to_UniformSpace : HasForget₂ CpltSepUniformSpace UniformSpaceₓ :=
+  InducedCategory.hasForget₂ toUniformSpace
 
 end CpltSepUniformSpace
 
@@ -134,45 +134,45 @@ open CpltSepUniformSpace
 
 /-- The functor turning uniform spaces into complete separated uniform spaces. -/
 noncomputable def completion_functor : UniformSpaceₓ ⥤ CpltSepUniformSpace where
-  obj := fun X => CpltSepUniformSpace.of (completion X)
-  map := fun X Y f => ⟨completion.map f.1, completion.uniform_continuous_map⟩
-  map_id' := fun X => Subtype.eq completion.map_id
-  map_comp' := fun X Y Z f g => Subtype.eq (completion.map_comp g.property f.property).symm
+  obj := fun X => CpltSepUniformSpace.of (Completion X)
+  map := fun X Y f => ⟨Completion.map f.1, Completion.uniform_continuous_map⟩
+  map_id' := fun X => Subtype.eq Completion.map_id
+  map_comp' := fun X Y Z f g => Subtype.eq (Completion.map_comp g.property f.property).symm
 
 /-- The inclusion of a uniform space into its completion. -/
 def completion_hom (X : UniformSpaceₓ) :
-    X ⟶ (forget₂ CpltSepUniformSpace UniformSpaceₓ).obj (completion_functor.obj X) where
-  val := (coe : X → completion X)
-  property := completion.uniform_continuous_coe X
+    X ⟶ (forget₂ CpltSepUniformSpace UniformSpaceₓ).obj (completionFunctor.obj X) where
+  val := (coe : X → Completion X)
+  property := Completion.uniform_continuous_coe X
 
 @[simp]
-theorem completion_hom_val (X : UniformSpaceₓ) x : (completion_hom X) x = (x : completion X) :=
+theorem completion_hom_val (X : UniformSpaceₓ) x : (completionHom X) x = (x : Completion X) :=
   rfl
 
 /-- The mate of a morphism from a `UniformSpace` to a `CpltSepUniformSpace`. -/
 noncomputable def extension_hom {X : UniformSpaceₓ} {Y : CpltSepUniformSpace}
-    (f : X ⟶ (forget₂ CpltSepUniformSpace UniformSpaceₓ).obj Y) : completion_functor.obj X ⟶ Y where
-  val := completion.extension f
-  property := completion.uniform_continuous_extension
+    (f : X ⟶ (forget₂ CpltSepUniformSpace UniformSpaceₓ).obj Y) : completionFunctor.obj X ⟶ Y where
+  val := Completion.extension f
+  property := Completion.uniform_continuous_extension
 
 @[simp]
 theorem extension_hom_val {X : UniformSpaceₓ} {Y : CpltSepUniformSpace} (f : X ⟶ (forget₂ _ _).obj Y) x :
-    (extension_hom f) x = completion.extension f x :=
+    (extensionHom f) x = Completion.extension f x :=
   rfl
 
 @[simp]
 theorem extension_comp_coe {X : UniformSpaceₓ} {Y : CpltSepUniformSpace}
-    (f : to_UniformSpace (CpltSepUniformSpace.of (completion X)) ⟶ to_UniformSpace Y) :
-    extension_hom (completion_hom X ≫ f) = f := by
+    (f : toUniformSpace (CpltSepUniformSpace.of (Completion X)) ⟶ toUniformSpace Y) :
+    extensionHom (completionHom X ≫ f) = f := by
   apply Subtype.eq
   funext x
   exact congr_funₓ (completion.extension_comp_coe f.property) x
 
 /-- The completion functor is left adjoint to the forgetful functor. -/
 noncomputable def adj : completion_functor ⊣ forget₂ CpltSepUniformSpace UniformSpaceₓ :=
-  adjunction.mk_of_hom_equiv
+  Adjunction.mkOfHomEquiv
     { homEquiv := fun X Y =>
-        { toFun := fun f => completion_hom X ≫ f, invFun := fun f => extension_hom f,
+        { toFun := fun f => completionHom X ≫ f, invFun := fun f => extensionHom f,
           left_inv := fun f => by
             dsimp
             erw [extension_comp_coe],
@@ -190,15 +190,15 @@ noncomputable def adj : completion_functor ⊣ forget₂ CpltSepUniformSpace Uni
         exact g.property
         exact f.property }
 
-noncomputable instance : is_right_adjoint (forget₂ CpltSepUniformSpace UniformSpaceₓ) :=
-  ⟨completion_functor, adj⟩
+noncomputable instance : IsRightAdjoint (forget₂ CpltSepUniformSpace UniformSpaceₓ) :=
+  ⟨completionFunctor, adj⟩
 
-noncomputable instance : reflective (forget₂ CpltSepUniformSpace UniformSpaceₓ) :=
+noncomputable instance : Reflective (forget₂ CpltSepUniformSpace UniformSpaceₓ) :=
   {  }
 
 open CategoryTheory.Limits
 
-example [has_limits.{u} UniformSpaceₓ.{u}] : has_limits.{u} CpltSepUniformSpace.{u} :=
+example [HasLimits.{u} UniformSpaceₓ.{u}] : HasLimits.{u} CpltSepUniformSpace.{u} :=
   has_limits_of_reflective <| forget₂ CpltSepUniformSpace UniformSpaceₓ.{u}
 
 end UniformSpaceₓ

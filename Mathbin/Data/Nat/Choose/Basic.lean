@@ -49,8 +49,8 @@ theorem choose_eq_zero_of_lt : ∀ {n k}, n < k → choose n k = 0
         decide)
   | 0, k + 1, hk => choose_zero_succ _
   | n + 1, k + 1, hk => by
-    have hnk : n < k := lt_of_succ_lt_succ hk
-    have hnk1 : n < k + 1 := lt_of_succ_lt hk
+    have hnk : n < k := lt_of_succ_lt_succₓ hk
+    have hnk1 : n < k + 1 := lt_of_succ_ltₓ hk
     rw [choose_succ_succ, choose_eq_zero_of_lt hnk, choose_eq_zero_of_lt hnk1]
 
 @[simp]
@@ -59,7 +59,7 @@ theorem choose_self (n : ℕ) : choose n n = 1 := by
 
 @[simp]
 theorem choose_succ_self (n : ℕ) : choose n (succ n) = 0 :=
-  choose_eq_zero_of_lt (lt_succ_self _)
+  choose_eq_zero_of_lt (lt_succ_selfₓ _)
 
 @[simp]
 theorem choose_one_right (n : ℕ) : choose n 1 = n := by
@@ -199,21 +199,21 @@ theorem choose_mul_succ_eq (n k : ℕ) : n.choose k * (n + 1) = (n + 1).choose k
     
   rw [choose_eq_zero_of_lt hk, choose_eq_zero_of_lt (n.lt_succ_self.trans hk), zero_mul, zero_mul]
 
-theorem asc_factorial_eq_factorial_mul_choose (n k : ℕ) : n.asc_factorial k = k ! * (n + k).choose k := by
+theorem asc_factorial_eq_factorial_mul_choose (n k : ℕ) : n.ascFactorial k = k ! * (n + k).choose k := by
   rw [mul_comm]
   apply mul_right_cancel₀ (factorial_ne_zero (n + k - k))
   rw [choose_mul_factorial_mul_factorial, add_tsub_cancel_right, ← factorial_mul_asc_factorial, mul_comm]
   exact Nat.le_add_leftₓ k n
 
-theorem factorial_dvd_asc_factorial (n k : ℕ) : k ! ∣ n.asc_factorial k :=
+theorem factorial_dvd_asc_factorial (n k : ℕ) : k ! ∣ n.ascFactorial k :=
   ⟨(n + k).choose k, asc_factorial_eq_factorial_mul_choose _ _⟩
 
-theorem choose_eq_asc_factorial_div_factorial (n k : ℕ) : (n + k).choose k = n.asc_factorial k / k ! := by
+theorem choose_eq_asc_factorial_div_factorial (n k : ℕ) : (n + k).choose k = n.ascFactorial k / k ! := by
   apply mul_left_cancel₀ (factorial_ne_zero k)
   rw [← asc_factorial_eq_factorial_mul_choose]
   exact (Nat.mul_div_cancel'ₓ <| factorial_dvd_asc_factorial _ _).symm
 
-theorem desc_factorial_eq_factorial_mul_choose (n k : ℕ) : n.desc_factorial k = k ! * n.choose k := by
+theorem desc_factorial_eq_factorial_mul_choose (n k : ℕ) : n.descFactorial k = k ! * n.choose k := by
   obtain h | h := Nat.lt_or_geₓ n k
   · rw [desc_factorial_eq_zero_iff_lt.2 h, choose_eq_zero_of_lt h, mul_zero]
     
@@ -221,10 +221,10 @@ theorem desc_factorial_eq_factorial_mul_choose (n k : ℕ) : n.desc_factorial k 
   apply mul_right_cancel₀ (factorial_ne_zero (n - k))
   rw [choose_mul_factorial_mul_factorial h, ← factorial_mul_desc_factorial h, mul_comm]
 
-theorem factorial_dvd_desc_factorial (n k : ℕ) : k ! ∣ n.desc_factorial k :=
+theorem factorial_dvd_desc_factorial (n k : ℕ) : k ! ∣ n.descFactorial k :=
   ⟨n.choose k, desc_factorial_eq_factorial_mul_choose _ _⟩
 
-theorem choose_eq_desc_factorial_div_factorial (n k : ℕ) : n.choose k = n.desc_factorial k / k ! := by
+theorem choose_eq_desc_factorial_div_factorial (n k : ℕ) : n.choose k = n.descFactorial k / k ! := by
   apply mul_left_cancel₀ (factorial_ne_zero k)
   rw [← desc_factorial_eq_factorial_mul_choose]
   exact (Nat.mul_div_cancel'ₓ <| factorial_dvd_desc_factorial _ _).symm
@@ -242,9 +242,9 @@ theorem choose_le_succ_of_lt_half_left {r n : ℕ} (h : r < n / 2) : choose n r 
 
 /-- Show that for small values of the right argument, the middle value is largest. -/
 private theorem choose_le_middle_of_le_half_left {n r : ℕ} (hr : r ≤ n / 2) : choose n r ≤ choose n (n / 2) :=
-  decreasing_induction
+  decreasingInduction
     (fun _ k a =>
-      (eq_or_lt_of_le a).elim (fun t => t.symm ▸ le_reflₓ _) fun h => (choose_le_succ_of_lt_half_left h).trans (k h))
+      (eq_or_lt_of_le a).elim (fun t => t.symm ▸ le_rfl) fun h => (choose_le_succ_of_lt_half_left h).trans (k h))
     hr (fun _ => le_rfl) hr
 
 /-- `choose n r` is maximised when `r` is `n/2`. -/

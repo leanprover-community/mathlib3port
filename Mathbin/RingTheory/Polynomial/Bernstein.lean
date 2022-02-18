@@ -10,7 +10,7 @@ import Mathbin.Data.MvPolynomial.Pderiv
 
 The definition of the Bernstein polynomials
 ```
-bernstein_polynomial (R : Type*) [comm_ring R] (n ν : ℕ) : polynomial R :=
+bernstein_polynomial (R : Type*) [comm_ring R] (n ν : ℕ) : R[X] :=
 (choose n ν) * X^ν * (1 - X)^(n - ν)
 ```
 and the fact that for `ν : fin (n+1)` these are linearly independent over `ℚ`.
@@ -33,7 +33,7 @@ open nat (choose)
 
 open polynomial (x)
 
-open_locale BigOperators
+open_locale BigOperators Polynomial
 
 variable (R : Type _) [CommRingₓ R]
 
@@ -41,7 +41,7 @@ variable (R : Type _) [CommRingₓ R]
 
 Although the coefficients are integers, it is convenient to work over an arbitrary commutative ring.
 -/
-def bernsteinPolynomial (n ν : ℕ) : Polynomial R :=
+def bernsteinPolynomial (n ν : ℕ) : R[X] :=
   choose n ν * X ^ ν * (1 - X) ^ (n - ν)
 
 example : bernsteinPolynomial ℤ 3 2 = 3 * X ^ 2 - 3 * X ^ 3 := by
@@ -109,7 +109,7 @@ theorem derivative_succ_aux (n ν : ℕ) :
   refine' congr (congr_argₓ Sub.sub _) _
   · simp only [← mul_assoc]
     refine' congr (congr_argₓ (· * ·) (congr (congr_argₓ (· * ·) _) rfl)) rfl
-    exact_mod_cast congr_argₓ (fun m : ℕ => (m : Polynomial R)) (Nat.succ_mul_choose_eq n ν).symm
+    exact_mod_cast congr_argₓ (fun m : ℕ => (m : R[X])) (Nat.succ_mul_choose_eq n ν).symm
     
   · rw [← tsub_add_eq_tsub_tsub, ← mul_assoc, ← mul_assoc]
     congr 1
@@ -236,8 +236,8 @@ theorem iterate_derivative_at_1 (n ν : ℕ) (h : ν ≤ n) :
 
 theorem iterate_derivative_at_1_ne_zero [CharZero R] (n ν : ℕ) (h : ν ≤ n) :
     ((Polynomial.derivative^[n - ν]) (bernsteinPolynomial R n ν)).eval 1 ≠ 0 := by
-  rw [bernsteinPolynomial.iterate_derivative_at_1 _ _ _ h, Ne.def, neg_one_pow_mul_eq_zero_iff, ← Nat.cast_succ, ←
-    pochhammer_eval_cast, ← Nat.cast_zero, Nat.cast_inj]
+  rw [bernsteinPolynomial.iterate_derivative_at_1 _ _ _ h, Ne.def, neg_one_pow_mul_eq_zero_iff, ← Nat.cast_succₓ, ←
+    pochhammer_eval_cast, ← Nat.cast_zeroₓ, Nat.cast_inj]
   exact (pochhammer_pos _ _ (Nat.succ_posₓ ν)).ne'
 
 open Submodule
@@ -288,7 +288,7 @@ The inductive step relies on the observation that the `(n-k)`-th derivative, eva
 annihilates `bernstein_polynomial n ν` for `ν < k`, but has a nonzero value at `ν = k`.
 -/
 theorem LinearIndependent (n : ℕ) : LinearIndependent ℚ fun ν : Finₓ (n + 1) => bernsteinPolynomial ℚ n ν :=
-  linear_independent_aux n (n + 1) (le_reflₓ _)
+  linear_independent_aux n (n + 1) le_rfl
 
 theorem Sum (n : ℕ) : (∑ ν in Finset.range (n + 1), bernsteinPolynomial R n ν) = 1 :=
   calc
@@ -310,7 +310,7 @@ theorem sum_smul (n : ℕ) : (∑ ν in Finset.range (n + 1), ν • bernsteinPo
     simp [x]
   have pderiv_tt_y : pderiv tt y = 0 := by
     simp [pderiv_X, y]
-  let e : Bool → Polynomial R := fun i => cond i X (1 - X)
+  let e : Bool → R[X] := fun i => cond i X (1 - X)
   have h : (x + y) ^ n = (x + y) ^ n := rfl
   apply_fun pderiv tt  at h
   apply_fun aeval e  at h
@@ -331,7 +331,7 @@ theorem sum_smul (n : ℕ) : (∑ ν in Finset.range (n + 1), ν • bernsteinPo
   conv at h =>
     lhs rw [add_pow, (pderiv tt).map_sum, (MvPolynomial.aeval e).map_sum,
       Finset.sum_mul]apply_congr skip simp [pderiv_mul, pderiv_tt_x, pderiv_tt_y, e, w]
-  conv at h => rhs rw [pderiv_pow, (pderiv tt).map_add, pderiv_tt_x, pderiv_tt_y]simp [e]
+  conv at h => rhs rw [(pderiv tt).leibniz_pow, (pderiv tt).map_add, pderiv_tt_x, pderiv_tt_y]simp [e]
   simpa using h
 
 theorem sum_mul_smul (n : ℕ) :
@@ -342,7 +342,7 @@ theorem sum_mul_smul (n : ℕ) :
     simp [x]
   have pderiv_tt_y : pderiv tt y = 0 := by
     simp [pderiv_X, y]
-  let e : Bool → Polynomial R := fun i => cond i X (1 - X)
+  let e : Bool → R[X] := fun i => cond i X (1 - X)
   have h : (x + y) ^ n = (x + y) ^ n := rfl
   apply_fun pderiv tt  at h
   apply_fun pderiv tt  at h
@@ -369,8 +369,8 @@ theorem sum_mul_smul (n : ℕ) :
     lhs rw [add_pow, (pderiv tt).map_sum, (pderiv tt).map_sum, (MvPolynomial.aeval e).map_sum,
       Finset.sum_mul]apply_congr skip simp [pderiv_mul, pderiv_tt_x, pderiv_tt_y, e, w]
   conv at h =>
-    rhs simp only [pderiv_one, pderiv_mul, pderiv_pow, pderiv_nat_cast, (pderiv tt).map_add, pderiv_tt_x,
-      pderiv_tt_y]simp [e, smul_smul]
+    rhs simp only [pderiv_one, pderiv_mul, (pderiv _).leibniz_pow, (pderiv _).map_coe_nat, (pderiv tt).map_add,
+      pderiv_tt_x, pderiv_tt_y]simp [e, smul_smul]
   simpa using h
 
 /-- A certain linear combination of the previous three identities,

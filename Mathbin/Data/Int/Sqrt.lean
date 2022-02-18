@@ -17,7 +17,7 @@ integer `r` such that `r * r ≤ n`. If it is negative, it returns `0`. For exam
 def sqrt (z : ℤ) : ℤ :=
   Nat.sqrt <| Int.toNat z
 
-theorem sqrt_eq (n : ℤ) : sqrt (n * n) = n.nat_abs := by
+theorem sqrt_eq (n : ℤ) : sqrt (n * n) = n.natAbs := by
   rw [sqrt, ← nat_abs_mul_self, to_nat_coe_nat, Nat.sqrt_eq]
 
 theorem exists_mul_self (x : ℤ) : (∃ n, n * n = x) ↔ sqrt x * sqrt x = x :=

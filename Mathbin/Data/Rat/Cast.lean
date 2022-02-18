@@ -40,9 +40,9 @@ theorem cast_def (r : ℚ) : (r : α) = r.num / r.denom :=
   rfl
 
 @[simp]
-theorem cast_of_int (n : ℤ) : (of_int n : α) = n :=
+theorem cast_of_int (n : ℤ) : (ofInt n : α) = n :=
   show (n / (1 : ℕ) : α) = n by
-    rw [Nat.cast_one, div_one]
+    rw [Nat.cast_oneₓ, div_one]
 
 @[simp, norm_cast]
 theorem cast_coe_int (n : ℤ) : ((n : ℚ) : α) = n := by
@@ -118,7 +118,7 @@ theorem cast_add_of_ne_zero : ∀ {m n : ℚ}, (m.denom : α) ≠ 0 → (n.denom
 theorem cast_neg : ∀ n, ((-n : ℚ) : α) = -n
   | ⟨n, d, h, c⟩ =>
     show (↑(-n) / d : α) = -(n / d) by
-      rw [div_eq_mul_inv, div_eq_mul_inv, Int.cast_neg, neg_mul_eq_neg_mul]
+      rw [div_eq_mul_inv, div_eq_mul_inv, Int.cast_neg, neg_mul_eq_neg_mulₓ]
 
 @[norm_cast]
 theorem cast_sub_of_ne_zero {m n : ℚ} (m0 : (m.denom : α) ≠ 0) (n0 : (n.denom : α) ≠ 0) : ((m - n : ℚ) : α) = m - n :=
@@ -158,7 +158,7 @@ theorem cast_inv_int (n : ℤ) : ((n⁻¹ : ℚ) : α) = n⁻¹ := by
   cases n
   · exact cast_inv_nat _
     
-  · simp only [Int.cast_neg_succ_of_nat, ← Nat.cast_succ, cast_neg, inv_neg, cast_inv_nat]
+  · simp only [Int.cast_neg_succ_of_nat, ← Nat.cast_succₓ, cast_neg, inv_neg, cast_inv_nat]
     
 
 @[norm_cast]
@@ -208,15 +208,15 @@ theorem cast_ne_zero [CharZero α] {n : ℚ} : (n : α) ≠ 0 ↔ n ≠ 0 :=
 
 @[simp, norm_cast]
 theorem cast_add [CharZero α] m n : ((m + n : ℚ) : α) = m + n :=
-  cast_add_of_ne_zero (Nat.cast_ne_zero.2 <| ne_of_gtₓ m.pos) (Nat.cast_ne_zero.2 <| ne_of_gtₓ n.pos)
+  cast_add_of_ne_zero (Nat.cast_ne_zero.2 <| ne_of_gtₓ m.Pos) (Nat.cast_ne_zero.2 <| ne_of_gtₓ n.Pos)
 
 @[simp, norm_cast]
 theorem cast_sub [CharZero α] m n : ((m - n : ℚ) : α) = m - n :=
-  cast_sub_of_ne_zero (Nat.cast_ne_zero.2 <| ne_of_gtₓ m.pos) (Nat.cast_ne_zero.2 <| ne_of_gtₓ n.pos)
+  cast_sub_of_ne_zero (Nat.cast_ne_zero.2 <| ne_of_gtₓ m.Pos) (Nat.cast_ne_zero.2 <| ne_of_gtₓ n.Pos)
 
 @[simp, norm_cast]
 theorem cast_mul [CharZero α] m n : ((m * n : ℚ) : α) = m * n :=
-  cast_mul_of_ne_zero (Nat.cast_ne_zero.2 <| ne_of_gtₓ m.pos) (Nat.cast_ne_zero.2 <| ne_of_gtₓ n.pos)
+  cast_mul_of_ne_zero (Nat.cast_ne_zero.2 <| ne_of_gtₓ m.Pos) (Nat.cast_ne_zero.2 <| ne_of_gtₓ n.Pos)
 
 @[simp, norm_cast]
 theorem cast_bit0 [CharZero α] (n : ℚ) : ((bit0 n : ℚ) : α) = bit0 n :=
@@ -235,16 +235,16 @@ def cast_hom [CharZero α] : ℚ →+* α :=
 variable {α}
 
 @[simp]
-theorem coe_cast_hom [CharZero α] : ⇑cast_hom α = coe :=
+theorem coe_cast_hom [CharZero α] : ⇑castHom α = coe :=
   rfl
 
 @[simp, norm_cast]
 theorem cast_inv [CharZero α] n : ((n⁻¹ : ℚ) : α) = n⁻¹ :=
-  (cast_hom α).map_inv _
+  (castHom α).map_inv _
 
 @[simp, norm_cast]
 theorem cast_div [CharZero α] m n : ((m / n : ℚ) : α) = m / n :=
-  (cast_hom α).map_div _ _
+  (castHom α).map_div _ _
 
 @[norm_cast]
 theorem cast_mk [CharZero α] (a b : ℤ) : (a /. b : α) = a / b := by
@@ -252,7 +252,7 @@ theorem cast_mk [CharZero α] (a b : ℤ) : (a /. b : α) = a / b := by
 
 @[simp, norm_cast]
 theorem cast_pow [CharZero α] q (k : ℕ) : ((q ^ k : ℚ) : α) = q ^ k :=
-  (cast_hom α).map_pow q k
+  (castHom α).map_pow q k
 
 end WithDivRing
 
@@ -313,7 +313,7 @@ theorem RingHom.eq_rat_cast {k} [DivisionRing k] (f : ℚ →+* k) (r : ℚ) : f
     
 
 theorem RingHom.map_rat_cast {k k'} [DivisionRing k] [CharZero k] [DivisionRing k'] (f : k →+* k') (r : ℚ) : f r = r :=
-  (f.comp (cast_hom k)).eq_rat_cast r
+  (f.comp (castHom k)).eq_rat_cast r
 
 theorem RingHom.ext_rat {R : Type _} [Semiringₓ R] (f g : ℚ →+* R) : f = g := by
   ext r

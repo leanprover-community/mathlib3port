@@ -71,8 +71,6 @@ open IsROrC Submodule Filter
 
 open_locale BigOperators Nnreal Ennreal Classical ComplexConjugate
 
-attribute [local instance] fact_one_le_two_ennreal
-
 noncomputable section
 
 variable {ι : Type _}
@@ -192,14 +190,14 @@ protected def LinearIsometry : lp G 2 →ₗᵢ[𝕜] E where
     ext s
     exact_mod_cast (hV.norm_sum f s).symm
 
-protected theorem linear_isometry_apply (f : lp G 2) : hV.linear_isometry f = ∑' i, V i (f i) :=
+protected theorem linear_isometry_apply (f : lp G 2) : hV.LinearIsometry f = ∑' i, V i (f i) :=
   rfl
 
-protected theorem has_sum_linear_isometry (f : lp G 2) : HasSum (fun i => V i (f i)) (hV.linear_isometry f) :=
+protected theorem has_sum_linear_isometry (f : lp G 2) : HasSum (fun i => V i (f i)) (hV.LinearIsometry f) :=
   (hV.summable_of_lp f).HasSum
 
 @[simp]
-protected theorem linear_isometry_apply_single {i : ι} (x : G i) : hV.linear_isometry (lp.single 2 i x) = V i x := by
+protected theorem linear_isometry_apply_single {i : ι} (x : G i) : hV.LinearIsometry (lp.single 2 i x) = V i x := by
   rw [hV.linear_isometry_apply, ← tsum_ite_eq i (V i x)]
   congr
   ext j
@@ -212,7 +210,7 @@ protected theorem linear_isometry_apply_single {i : ι} (x : G i) : hV.linear_is
 
 @[simp]
 protected theorem linear_isometry_apply_dfinsupp_sum_single (W₀ : Π₀ i : ι, G i) :
-    hV.linear_isometry (W₀.sum (lp.single 2)) = W₀.sum fun i => V i := by
+    hV.LinearIsometry (W₀.Sum (lp.single 2)) = W₀.Sum fun i => V i := by
   have :
     hV.linear_isometry (∑ i in W₀.support, lp.single 2 i (W₀ i)) =
       ∑ i in W₀.support, hV.linear_isometry (lp.single 2 i (W₀ i)) :=
@@ -222,7 +220,7 @@ protected theorem linear_isometry_apply_dfinsupp_sum_single (W₀ : Π₀ i : ι
 /-- The canonical linear isometry from the `lp 2` of a mutually orthogonal family of subspaces of
 `E` into E, has range the closure of the span of the subspaces. -/
 protected theorem range_linear_isometry [∀ i, CompleteSpace (G i)] :
-    hV.linear_isometry.to_linear_map.range = (⨆ i, (V i).toLinearMap.range).topologicalClosure := by
+    hV.LinearIsometry.toLinearMap.range = (⨆ i, (V i).toLinearMap.range).topologicalClosure := by
   classical
   refine' le_antisymmₓ _ _
   · rintro x ⟨f, rfl⟩
@@ -249,7 +247,7 @@ Note that this goes in the opposite direction from `orthogonal_family.linear_iso
 noncomputable def LinearIsometryEquiv [∀ i, CompleteSpace (G i)]
     (hV' : (⨆ i, (V i).toLinearMap.range).topologicalClosure = ⊤) : E ≃ₗᵢ[𝕜] lp G 2 :=
   LinearIsometryEquiv.symm <|
-    LinearIsometryEquiv.ofSurjective hV.linear_isometry
+    LinearIsometryEquiv.ofSurjective hV.LinearIsometry
       (by
         refine' linear_map.range_eq_top.mp _
         rw [← hV']
@@ -259,7 +257,7 @@ noncomputable def LinearIsometryEquiv [∀ i, CompleteSpace (G i)]
 a vector `w : lp G 2` is the image of the infinite sum of the associated elements in `E`. -/
 protected theorem linear_isometry_equiv_symm_apply [∀ i, CompleteSpace (G i)]
     (hV' : (⨆ i, (V i).toLinearMap.range).topologicalClosure = ⊤) (w : lp G 2) :
-    (hV.linear_isometry_equiv hV').symm w = ∑' i, V i (w i) := by
+    (hV.LinearIsometryEquiv hV').symm w = ∑' i, V i (w i) := by
   simp [OrthogonalFamily.linearIsometryEquiv, OrthogonalFamily.linear_isometry_apply]
 
 /-- In the canonical isometric isomorphism `E ≃ₗᵢ[𝕜] lp G 2` induced by an orthogonal family `G`,
@@ -267,7 +265,7 @@ a vector `w : lp G 2` is the image of the infinite sum of the associated element
 sum indeed converges. -/
 protected theorem has_sum_linear_isometry_equiv_symm [∀ i, CompleteSpace (G i)]
     (hV' : (⨆ i, (V i).toLinearMap.range).topologicalClosure = ⊤) (w : lp G 2) :
-    HasSum (fun i => V i (w i)) ((hV.linear_isometry_equiv hV').symm w) := by
+    HasSum (fun i => V i (w i)) ((hV.LinearIsometryEquiv hV').symm w) := by
   simp [OrthogonalFamily.linearIsometryEquiv, OrthogonalFamily.has_sum_linear_isometry]
 
 /-- In the canonical isometric isomorphism `E ≃ₗᵢ[𝕜] lp G 2` induced by an `ι`-indexed orthogonal
@@ -276,7 +274,7 @@ associated element in `E`. -/
 @[simp]
 protected theorem linear_isometry_equiv_symm_apply_single [∀ i, CompleteSpace (G i)]
     (hV' : (⨆ i, (V i).toLinearMap.range).topologicalClosure = ⊤) {i : ι} (x : G i) :
-    (hV.linear_isometry_equiv hV').symm (lp.single 2 i x) = V i x := by
+    (hV.LinearIsometryEquiv hV').symm (lp.single 2 i x) = V i x := by
   simp [OrthogonalFamily.linearIsometryEquiv, OrthogonalFamily.linear_isometry_apply_single]
 
 /-- In the canonical isometric isomorphism `E ≃ₗᵢ[𝕜] lp G 2` induced by an `ι`-indexed orthogonal
@@ -285,7 +283,7 @@ elements of `E`. -/
 @[simp]
 protected theorem linear_isometry_equiv_symm_apply_dfinsupp_sum_single [∀ i, CompleteSpace (G i)]
     (hV' : (⨆ i, (V i).toLinearMap.range).topologicalClosure = ⊤) (W₀ : Π₀ i : ι, G i) :
-    (hV.linear_isometry_equiv hV').symm (W₀.sum (lp.single 2)) = W₀.sum fun i => V i := by
+    (hV.LinearIsometryEquiv hV').symm (W₀.Sum (lp.single 2)) = W₀.Sum fun i => V i := by
   simp [OrthogonalFamily.linearIsometryEquiv, OrthogonalFamily.linear_isometry_apply_dfinsupp_sum_single]
 
 /-- In the canonical isometric isomorphism `E ≃ₗᵢ[𝕜] lp G 2` induced by an `ι`-indexed orthogonal
@@ -294,7 +292,7 @@ elements of `E`. -/
 @[simp]
 protected theorem linear_isometry_equiv_apply_dfinsupp_sum_single [∀ i, CompleteSpace (G i)]
     (hV' : (⨆ i, (V i).toLinearMap.range).topologicalClosure = ⊤) (W₀ : Π₀ i : ι, G i) :
-    (hV.linear_isometry_equiv hV' (W₀.sum fun i => V i) : ∀ i, G i) = W₀ := by
+    (hV.LinearIsometryEquiv hV' (W₀.Sum fun i => V i) : ∀ i, G i) = W₀ := by
   rw [← hV.linear_isometry_equiv_symm_apply_dfinsupp_sum_single hV']
   rw [LinearIsometryEquiv.apply_symm_apply]
   ext i
@@ -383,7 +381,7 @@ include hv cplt
 /-- An orthonormal family of vectors whose span is dense in the whole module is a Hilbert basis. -/
 protected def mk (hsp : (span 𝕜 (Set.Range v)).topologicalClosure = ⊤) : HilbertBasis ι 𝕜 E :=
   HilbertBasis.of_repr <|
-    hv.orthogonal_family.linear_isometry_equiv
+    hv.OrthogonalFamily.LinearIsometryEquiv
       (by
         convert hsp
         simp [← LinearMap.span_singleton_eq_range, ← Submodule.span_Union])

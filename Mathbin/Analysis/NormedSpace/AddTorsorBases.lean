@@ -30,13 +30,13 @@ variable [MetricSpace P] [NormedAddTorsor E P]
 variable (b : AffineBasis ι 𝕜 P)
 
 @[continuity]
-theorem continuous_barycentric_coord (i : ι) : Continuous (b.coord i) :=
-  (b.coord i).continuous_of_finite_dimensional
+theorem continuous_barycentric_coord (i : ι) : Continuous (b.Coord i) :=
+  (b.Coord i).continuous_of_finite_dimensional
 
 attribute [local instance] FiniteDimensional.complete
 
-theorem is_open_map_barycentric_coord [Nontrivial ι] (i : ι) : IsOpenMap (b.coord i) :=
-  (b.coord i).IsOpenMap (continuous_barycentric_coord b i) (b.surjective_coord i)
+theorem is_open_map_barycentric_coord [Nontrivial ι] (i : ι) : IsOpenMap (b.Coord i) :=
+  (b.Coord i).IsOpenMap (continuous_barycentric_coord b i) (b.surjective_coord i)
 
 end Barycentric
 
@@ -49,7 +49,7 @@ to this basis.
 TODO Restate this result for affine spaces (instead of vector spaces) once the definition of
 convexity is generalised to this setting. -/
 theorem interior_convex_hull_aff_basis {ι E : Type _} [Fintype ι] [NormedGroup E] [NormedSpace ℝ E]
-    (b : AffineBasis ι ℝ E) : Interior (convexHull ℝ (range b.points)) = { x | ∀ i, 0 < b.coord i x } := by
+    (b : AffineBasis ι ℝ E) : Interior (convexHull ℝ (Range b.points)) = { x | ∀ i, 0 < b.Coord i x } := by
   cases' subsingleton_or_nontrivial ι with h h
   · have := h
     suffices range b.points = univ by
@@ -83,7 +83,7 @@ open AffineMap
 /-- Given a set `s` of affine-independent points belonging to an open set `u`, we may extend `s` to
 an affine basis, all of whose elements belong to `u`. -/
 theorem exists_subset_affine_independent_span_eq_top_of_open {s u : Set P} (hu : IsOpen u) (hsu : s ⊆ u)
-    (hne : s.nonempty) (h : AffineIndependent ℝ (coe : s → P)) :
+    (hne : s.Nonempty) (h : AffineIndependent ℝ (coe : s → P)) :
     ∃ t : Set P, s ⊆ t ∧ t ⊆ u ∧ AffineIndependent ℝ (coe : t → P) ∧ affineSpan ℝ t = ⊤ := by
   obtain ⟨q, hq⟩ := hne
   obtain ⟨ε, hε, hεu⟩ := metric.is_open_iff.mp hu q (hsu hq)

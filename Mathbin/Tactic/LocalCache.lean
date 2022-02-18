@@ -17,11 +17,11 @@ unsafe def save_data (dn : Name) (a : α) [reflected a] : tactic Unit :=
 unsafe def load_data (dn : Name) : tactic α := do
   let e ← tactic.get_env
   let d ← e.get dn
-  tactic.eval_expr α d.value
+  tactic.eval_expr α d
 
 unsafe def poke_data (dn : Name) : tactic Bool := do
   let e ← tactic.get_env
-  return (e.get dn).toBool
+  return (e dn).toBool
 
 unsafe def run_once_under_name {α : Type} [reflected α] [has_reflect α] (t : tactic α) (cache_name : Name) : tactic α :=
   do
@@ -41,14 +41,14 @@ namespace BlockLocal
 private unsafe def get_name_aux (ns : Name) (mk_new : options → Name → tactic Name) : tactic Name := do
   let o ← tactic.get_options
   let opt := mk_full_namespace ns
-  match o.get_string opt "" with
+  match o opt "" with
     | "" => mk_new o opt
-    | s => return <| Name.fromComponents <| s.split (· = '.')
+    | s => return <| Name.fromComponents <| s (· = '.')
 
 unsafe def get_name (ns : Name) : tactic Name :=
   (get_name_aux ns) fun o opt => do
     let n ← mk_user_fresh_name
-    tactic.set_options <| o.set_string opt n.to_string
+    tactic.set_options <| o opt n
     return n
 
 unsafe def try_get_name (ns : Name) : tactic Name :=
@@ -56,13 +56,13 @@ unsafe def try_get_name (ns : Name) : tactic Name :=
 
 unsafe def present (ns : Name) : tactic Bool := do
   let o ← tactic.get_options
-  match o.get_string (mk_full_namespace ns) "" with
+  match o (mk_full_namespace ns) "" with
     | "" => return ff
     | s => return tt
 
 unsafe def clear (ns : Name) : tactic Unit := do
   let o ← tactic.get_options
-  set_options <| o.set_string (mk_full_namespace ns) ""
+  set_options <| o (mk_full_namespace ns) ""
 
 end BlockLocal
 
@@ -80,11 +80,11 @@ def RADIX := by
   apply_normed 2 ^ 64
 
 def hash_byte (seed : ℕ) (c : Charₓ) : ℕ :=
-  let n : ℕ := c.to_nat
+  let n : ℕ := c.toNat
   seed.lxor n * FNV_PRIME % RADIX
 
 def hash_string (s : Stringₓ) : ℕ :=
-  s.to_list.foldl hash_byte FNV_OFFSET_BASIS
+  s.toList.foldl hashByte fNVOFFSETBASIS
 
 end FnvA1
 

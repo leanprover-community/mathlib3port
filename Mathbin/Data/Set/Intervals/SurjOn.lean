@@ -17,7 +17,7 @@ open Set Function
 open order_dual (toDual)
 
 theorem surj_on_Ioo_of_monotone_surjective (h_mono : Monotone f) (h_surj : Function.Surjective f) (a b : α) :
-    surj_on f (Ioo a b) (Ioo (f a) (f b)) := by
+    SurjOn f (Ioo a b) (Ioo (f a) (f b)) := by
   classical
   intro p hp
   rcases h_surj p with ⟨x, rfl⟩
@@ -30,7 +30,7 @@ theorem surj_on_Ioo_of_monotone_surjective (h_mono : Monotone f) (h_surj : Funct
     
 
 theorem surj_on_Ico_of_monotone_surjective (h_mono : Monotone f) (h_surj : Function.Surjective f) (a b : α) :
-    surj_on f (Ico a b) (Ico (f a) (f b)) := by
+    SurjOn f (Ico a b) (Ico (f a) (f b)) := by
   obtain hab | hab := lt_or_leₓ a b
   · intro p hp
     rcases mem_Ioo_or_eq_left_of_mem_Ico hp with (hp' | hp')
@@ -47,11 +47,11 @@ theorem surj_on_Ico_of_monotone_surjective (h_mono : Monotone f) (h_surj : Funct
     
 
 theorem surj_on_Ioc_of_monotone_surjective (h_mono : Monotone f) (h_surj : Function.Surjective f) (a b : α) :
-    surj_on f (Ioc a b) (Ioc (f a) (f b)) := by
+    SurjOn f (Ioc a b) (Ioc (f a) (f b)) := by
   simpa using surj_on_Ico_of_monotone_surjective h_mono.dual h_surj (to_dual b) (to_dual a)
 
 theorem surj_on_Icc_of_monotone_surjective (h_mono : Monotone f) (h_surj : Function.Surjective f) {a b : α}
-    (hab : a ≤ b) : surj_on f (Icc a b) (Icc (f a) (f b)) := by
+    (hab : a ≤ b) : SurjOn f (Icc a b) (Icc (f a) (f b)) := by
   rcases lt_or_eq_of_leₓ hab with (hab | hab)
   · intro p hp
     rcases mem_Ioo_or_eq_endpoints_of_mem_Icc hp with (hp' | ⟨hp' | hp'⟩)
@@ -72,7 +72,7 @@ theorem surj_on_Icc_of_monotone_surjective (h_mono : Monotone f) (h_surj : Funct
     
 
 theorem surj_on_Ioi_of_monotone_surjective (h_mono : Monotone f) (h_surj : Function.Surjective f) (a : α) :
-    surj_on f (Ioi a) (Ioi (f a)) := by
+    SurjOn f (Ioi a) (Ioi (f a)) := by
   classical
   intro p hp
   rcases h_surj p with ⟨x, rfl⟩
@@ -82,11 +82,11 @@ theorem surj_on_Ioi_of_monotone_surjective (h_mono : Monotone f) (h_surj : Funct
   exact LT.lt.false (lt_of_lt_of_leₓ hp (h_mono (not_lt.mp h)))
 
 theorem surj_on_Iio_of_monotone_surjective (h_mono : Monotone f) (h_surj : Function.Surjective f) (a : α) :
-    surj_on f (Iio a) (Iio (f a)) :=
+    SurjOn f (Iio a) (Iio (f a)) :=
   @surj_on_Ioi_of_monotone_surjective _ _ _ _ _ h_mono.dual h_surj a
 
 theorem surj_on_Ici_of_monotone_surjective (h_mono : Monotone f) (h_surj : Function.Surjective f) (a : α) :
-    surj_on f (Ici a) (Ici (f a)) := by
+    SurjOn f (Ici a) (Ici (f a)) := by
   intro p hp
   rw [mem_Ici, le_iff_lt_or_eqₓ] at hp
   rcases hp with (hp' | hp')
@@ -98,6 +98,6 @@ theorem surj_on_Ici_of_monotone_surjective (h_mono : Monotone f) (h_surj : Funct
     
 
 theorem surj_on_Iic_of_monotone_surjective (h_mono : Monotone f) (h_surj : Function.Surjective f) (a : α) :
-    surj_on f (Iic a) (Iic (f a)) :=
+    SurjOn f (Iic a) (Iic (f a)) :=
   @surj_on_Ici_of_monotone_surjective _ _ _ _ _ h_mono.dual h_surj a
 

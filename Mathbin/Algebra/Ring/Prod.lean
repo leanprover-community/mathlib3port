@@ -21,20 +21,20 @@ variable {R : Type _} {R' : Type _} {S : Type _} {S' : Type _} {T : Type _} {T' 
 namespace Prod
 
 /-- Product of two distributive types is distributive. -/
-instance [Distrib R] [Distrib S] : Distrib (R × S) :=
-  { Prod.hasAdd, Prod.hasMul with left_distrib := fun a b c => mk.inj_iff.mpr ⟨left_distrib _ _ _, left_distrib _ _ _⟩,
-    right_distrib := fun a b c => mk.inj_iff.mpr ⟨right_distrib _ _ _, right_distrib _ _ _⟩ }
+instance [Distribₓ R] [Distribₓ S] : Distribₓ (R × S) :=
+  { Prod.hasAdd, Prod.hasMul with left_distrib := fun a b c => mk.inj_iffₓ.mpr ⟨left_distrib _ _ _, left_distrib _ _ _⟩,
+    right_distrib := fun a b c => mk.inj_iffₓ.mpr ⟨right_distrib _ _ _, right_distrib _ _ _⟩ }
 
 /-- Product of two `non_unital_non_assoc_semiring`s is a `non_unital_non_assoc_semiring`. -/
-instance [NonUnitalNonAssocSemiring R] [NonUnitalNonAssocSemiring S] : NonUnitalNonAssocSemiring (R × S) :=
+instance [NonUnitalNonAssocSemiringₓ R] [NonUnitalNonAssocSemiringₓ S] : NonUnitalNonAssocSemiringₓ (R × S) :=
   { Prod.addCommMonoid, Prod.mulZeroClass, Prod.distrib with }
 
 /-- Product of two `non_unital_semiring`s is a `non_unital_semiring`. -/
-instance [NonUnitalSemiring R] [NonUnitalSemiring S] : NonUnitalSemiring (R × S) :=
+instance [NonUnitalSemiringₓ R] [NonUnitalSemiringₓ S] : NonUnitalSemiringₓ (R × S) :=
   { Prod.nonUnitalNonAssocSemiring, Prod.semigroup with }
 
 /-- Product of two `non_assoc_semiring`s is a `non_assoc_semiring`. -/
-instance [NonAssocSemiring R] [NonAssocSemiring S] : NonAssocSemiring (R × S) :=
+instance [NonAssocSemiringₓ R] [NonAssocSemiringₓ S] : NonAssocSemiringₓ (R × S) :=
   { Prod.nonUnitalNonAssocSemiring, Prod.mulOneClass with }
 
 /-- Product of two semirings is a semiring. -/
@@ -60,7 +60,7 @@ end Prod
 
 namespace RingHom
 
-variable (R S) [NonAssocSemiring R] [NonAssocSemiring S]
+variable (R S) [NonAssocSemiringₓ R] [NonAssocSemiringₓ S]
 
 /-- Given semirings `R`, `S`, the natural projection homomorphism from `R × S` to `R`.-/
 def fst : R × S →+* R :=
@@ -82,7 +82,7 @@ theorem coe_snd : ⇑snd R S = Prod.snd :=
 
 section Prod
 
-variable [NonAssocSemiring T] (f : R →+* S) (g : R →+* T)
+variable [NonAssocSemiringₓ T] (f : R →+* S) (g : R →+* T)
 
 /-- Combine two ring homomorphisms `f : R →+* S`, `g : R →+* T` into `f.prod g : R →+* S × T`
 given by `(f.prod g) x = (f x, g x)` -/
@@ -91,15 +91,15 @@ protected def Prod (f : R →+* S) (g : R →+* T) : R →+* S × T :=
     toFun := fun x => (f x, g x) }
 
 @[simp]
-theorem prod_apply x : f.prod g x = (f x, g x) :=
+theorem prod_apply x : f.Prod g x = (f x, g x) :=
   rfl
 
 @[simp]
-theorem fst_comp_prod : (fst S T).comp (f.prod g) = f :=
+theorem fst_comp_prod : (fst S T).comp (f.Prod g) = f :=
   ext fun x => rfl
 
 @[simp]
-theorem snd_comp_prod : (snd S T).comp (f.prod g) = g :=
+theorem snd_comp_prod : (snd S T).comp (f.Prod g) = g :=
   ext fun x => rfl
 
 theorem prod_unique (f : R →+* S × T) : ((fst S T).comp f).Prod ((snd S T).comp f) = f :=
@@ -110,7 +110,7 @@ end Prod
 
 section prod_mapₓ
 
-variable [NonAssocSemiring R'] [NonAssocSemiring S'] [NonAssocSemiring T]
+variable [NonAssocSemiringₓ R'] [NonAssocSemiringₓ S'] [NonAssocSemiringₓ T]
 
 variable (f : R →+* R') (g : S →+* S')
 
@@ -118,15 +118,15 @@ variable (f : R →+* R') (g : S →+* S')
 def prod_mapₓ : R × S →* R' × S' :=
   (f.comp (fst R S)).Prod (g.comp (snd R S))
 
-theorem prod_map_def : prod_mapₓ f g = (f.comp (fst R S)).Prod (g.comp (snd R S)) :=
+theorem prod_map_def : prodMap f g = (f.comp (fst R S)).Prod (g.comp (snd R S)) :=
   rfl
 
 @[simp]
-theorem coe_prod_map : ⇑prod_mapₓ f g = Prod.map f g :=
+theorem coe_prod_map : ⇑prodMap f g = Prod.map f g :=
   rfl
 
 theorem prod_comp_prod_map (f : T →* R) (g : T →* S) (f' : R →* R') (g' : S →* S') :
-    (f'.prod_map g').comp (f.prod g) = (f'.comp f).Prod (g'.comp g) :=
+    (f'.prod_map g').comp (f.Prod g) = (f'.comp f).Prod (g'.comp g) :=
   rfl
 
 end prod_mapₓ
@@ -135,26 +135,26 @@ end RingHom
 
 namespace RingEquiv
 
-variable {R S} [NonAssocSemiring R] [NonAssocSemiring S]
+variable {R S} [NonAssocSemiringₓ R] [NonAssocSemiringₓ S]
 
 /-- Swapping components as an equivalence of (semi)rings. -/
 def prod_comm : R × S ≃+* S × R :=
   { AddEquiv.prodComm, MulEquiv.prodComm with }
 
 @[simp]
-theorem coe_prod_comm : ⇑(prod_comm : R × S ≃+* S × R) = Prod.swap :=
+theorem coe_prod_comm : ⇑(prodComm : R × S ≃+* S × R) = Prod.swap :=
   rfl
 
 @[simp]
-theorem coe_prod_comm_symm : ⇑(prod_comm : R × S ≃+* S × R).symm = Prod.swap :=
+theorem coe_prod_comm_symm : ⇑(prodComm : R × S ≃+* S × R).symm = Prod.swap :=
   rfl
 
 @[simp]
-theorem fst_comp_coe_prod_comm : (RingHom.fst S R).comp ↑(prod_comm : R × S ≃+* S × R) = RingHom.snd R S :=
+theorem fst_comp_coe_prod_comm : (RingHom.fst S R).comp ↑(prodComm : R × S ≃+* S × R) = RingHom.snd R S :=
   RingHom.ext fun _ => rfl
 
 @[simp]
-theorem snd_comp_coe_prod_comm : (RingHom.snd S R).comp ↑(prod_comm : R × S ≃+* S × R) = RingHom.fst R S :=
+theorem snd_comp_coe_prod_comm : (RingHom.snd S R).comp ↑(prodComm : R × S ≃+* S × R) = RingHom.fst R S :=
   RingHom.ext fun _ => rfl
 
 variable (R S) [Subsingleton S]

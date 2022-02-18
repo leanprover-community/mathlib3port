@@ -64,29 +64,29 @@ variable [Algebra R A] [TopologicalRing A]
 
 /-- The closure of a subalgebra in a topological algebra as a subalgebra. -/
 def Subalgebra.topologicalClosure (s : Subalgebra R A) : Subalgebra R A :=
-  { s.to_subsemiring.topological_closure with Carrier := Closure (s : Set A),
-    algebra_map_mem' := fun r => s.to_subsemiring.subring_topological_closure (s.algebra_map_mem r) }
+  { s.toSubsemiring.topologicalClosure with Carrier := Closure (s : Set A),
+    algebra_map_mem' := fun r => s.toSubsemiring.subring_topological_closure (s.algebra_map_mem r) }
 
 @[simp]
 theorem Subalgebra.topological_closure_coe (s : Subalgebra R A) :
-    (s.topological_closure : Set A) = Closure (s : Set A) :=
+    (s.topologicalClosure : Set A) = Closure (s : Set A) :=
   rfl
 
-instance Subalgebra.topological_closure_topological_ring (s : Subalgebra R A) : TopologicalRing s.topological_closure :=
-  s.to_subsemiring.topological_closure_topological_ring
+instance Subalgebra.topological_closure_topological_ring (s : Subalgebra R A) : TopologicalRing s.topologicalClosure :=
+  s.toSubsemiring.topological_closure_topological_ring
 
 instance Subalgebra.topological_closure_topological_algebra [TopologicalSpace R] [HasContinuousSmul R A]
-    (s : Subalgebra R A) : HasContinuousSmul R s.topological_closure :=
-  s.to_submodule.topological_closure_has_continuous_smul
+    (s : Subalgebra R A) : HasContinuousSmul R s.topologicalClosure :=
+  s.toSubmodule.topological_closure_has_continuous_smul
 
-theorem Subalgebra.subalgebra_topological_closure (s : Subalgebra R A) : s ≤ s.topological_closure :=
+theorem Subalgebra.subalgebra_topological_closure (s : Subalgebra R A) : s ≤ s.topologicalClosure :=
   subset_closure
 
-theorem Subalgebra.is_closed_topological_closure (s : Subalgebra R A) : IsClosed (s.topological_closure : Set A) := by
+theorem Subalgebra.is_closed_topological_closure (s : Subalgebra R A) : IsClosed (s.topologicalClosure : Set A) := by
   convert is_closed_closure
 
 theorem Subalgebra.topological_closure_minimal (s : Subalgebra R A) {t : Subalgebra R A} (h : s ≤ t)
-    (ht : IsClosed (t : Set A)) : s.topological_closure ≤ t :=
+    (ht : IsClosed (t : Set A)) : s.topologicalClosure ≤ t :=
   closure_minimal h ht
 
 /-- This is really a statement about topological algebra isomorphisms,
@@ -96,7 +96,7 @@ along with a witness that as functions they are the same.
 -/
 theorem Subalgebra.topological_closure_comap'_homeomorph (s : Subalgebra R A) {B : Type _} [TopologicalSpace B]
     [Ringₓ B] [TopologicalRing B] [Algebra R B] (f : B →ₐ[R] A) (f' : B ≃ₜ A) (w : (f : B → A) = f') :
-    s.topological_closure.comap' f = (s.comap' f).topologicalClosure := by
+    s.topologicalClosure.comap' f = (s.comap' f).topologicalClosure := by
   apply SetLike.ext'
   simp only [Subalgebra.topological_closure_coe]
   simp only [Subalgebra.coe_comap, Subsemiring.coe_comap, AlgHom.coe_to_ring_hom]

@@ -31,9 +31,9 @@ noncomputable section
 
 open_locale Classical TopologicalSpace
 
-theorem padic_polynomial_dist {p : ℕ} [Fact p.prime] (F : Polynomial ℤ_[p]) (x y : ℤ_[p]) :
+theorem padic_polynomial_dist {p : ℕ} [Fact p.Prime] (F : Polynomial ℤ_[p]) (x y : ℤ_[p]) :
     ∥F.eval x - F.eval y∥ ≤ ∥x - y∥ :=
-  let ⟨z, hz⟩ := F.eval_sub_factor x y
+  let ⟨z, hz⟩ := F.evalSubFactor x y
   calc
     ∥F.eval x - F.eval y∥ = ∥z∥ * ∥x - y∥ := by
       simp [hz]
@@ -44,28 +44,27 @@ theorem padic_polynomial_dist {p : ℕ} [Fact p.prime] (F : Polynomial ℤ_[p]) 
 
 open Filter Metric
 
-private theorem comp_tendsto_lim {p : ℕ} [Fact p.prime] {F : Polynomial ℤ_[p]} (ncs : CauSeq ℤ_[p] norm) :
-    tendsto (fun i => F.eval (ncs i)) at_top (𝓝 (F.eval ncs.lim)) :=
-  F.continuous_at.tendsto.comp ncs.tendsto_limit
+private theorem comp_tendsto_lim {p : ℕ} [Fact p.Prime] {F : Polynomial ℤ_[p]} (ncs : CauSeq ℤ_[p] norm) :
+    Tendsto (fun i => F.eval (ncs i)) atTop (𝓝 (F.eval ncs.lim)) :=
+  F.ContinuousAt.Tendsto.comp ncs.tendsto_limit
 
 section
 
 parameter
   {p :
     ℕ}[Fact
-      p.prime]{ncs :
+      p.Prime]{ncs :
     CauSeq ℤ_[p]
       norm}{F : Polynomial ℤ_[p]}{a : ℤ_[p]}(ncs_der_val : ∀ n, ∥F.derivative.eval (ncs n)∥ = ∥F.derivative.eval a∥)
 
 include ncs_der_val
 
-private theorem ncs_tendsto_const : tendsto (fun i => ∥F.derivative.eval (ncs i)∥) at_top (𝓝 ∥F.derivative.eval a∥) :=
-  by
+private theorem ncs_tendsto_const : Tendsto (fun i => ∥F.derivative.eval (ncs i)∥) atTop (𝓝 ∥F.derivative.eval a∥) := by
   convert tendsto_const_nhds <;> ext <;> rw [ncs_der_val]
 
 private theorem ncs_tendsto_lim :
-    tendsto (fun i => ∥F.derivative.eval (ncs i)∥) at_top (𝓝 ∥F.derivative.eval ncs.lim∥) :=
-  tendsto.comp (continuous_iff_continuous_at.1 continuous_norm _) (comp_tendsto_lim _)
+    Tendsto (fun i => ∥F.derivative.eval (ncs i)∥) atTop (𝓝 ∥F.derivative.eval ncs.lim∥) :=
+  Tendsto.comp (continuous_iff_continuous_at.1 continuous_norm _) (comp_tendsto_lim _)
 
 private theorem norm_deriv_eq : ∥F.derivative.eval ncs.lim∥ = ∥F.derivative.eval a∥ :=
   tendsto_nhds_unique ncs_tendsto_lim ncs_tendsto_const
@@ -77,11 +76,11 @@ section
 parameter
   {p :
     ℕ}[Fact
-      p.prime]{ncs : CauSeq ℤ_[p] norm}{F : Polynomial ℤ_[p]}(hnorm : tendsto (fun i => ∥F.eval (ncs i)∥) at_top (𝓝 0))
+      p.Prime]{ncs : CauSeq ℤ_[p] norm}{F : Polynomial ℤ_[p]}(hnorm : Tendsto (fun i => ∥F.eval (ncs i)∥) atTop (𝓝 0))
 
 include hnorm
 
-private theorem tendsto_zero_of_norm_tendsto_zero : tendsto (fun i => F.eval (ncs i)) at_top (𝓝 0) :=
+private theorem tendsto_zero_of_norm_tendsto_zero : Tendsto (fun i => F.eval (ncs i)) atTop (𝓝 0) :=
   tendsto_iff_norm_tendsto_zero.2
     (by
       simpa using hnorm)
@@ -98,7 +97,7 @@ open Nat
 parameter
   {p :
     ℕ}[Fact
-      p.prime]{F : Polynomial ℤ_[p]}{a : ℤ_[p]}(hnorm : ∥F.eval a∥ < ∥F.derivative.eval a∥ ^ 2)(hnsol : F.eval a ≠ 0)
+      p.Prime]{F : Polynomial ℤ_[p]}{a : ℤ_[p]}(hnorm : ∥F.eval a∥ < ∥F.derivative.eval a∥ ^ 2)(hnsol : F.eval a ≠ 0)
 
 include hnorm
 
@@ -137,7 +136,7 @@ private theorem T_lt_one : T < 1 := by
   rw [T_def] <;> apply h
 
 private theorem T_pow {n : ℕ} (hn : n > 0) : T ^ n < 1 :=
-  have : T ^ n ≤ T ^ 1 := pow_le_pow_of_le_one (norm_nonneg _) (le_of_ltₓ T_lt_one) (succ_le_of_lt hn)
+  have : T ^ n ≤ T ^ 1 := pow_le_pow_of_le_one (norm_nonneg _) (le_of_ltₓ T_lt_one) (succ_le_of_ltₓ hn)
   lt_of_le_of_ltₓ
     (by
       simpa)
@@ -200,7 +199,7 @@ private def calc_eval_z' {z z' z1 : ℤ_[p]} (hz' : z' = z - z1) {n} (hz : ih n 
         (by
           rw [hz.1] <;> apply deriv_norm_ne_zero <;> assumption)
     fun h => hdzne <| Subtype.ext_iff_val.2 h
-  let ⟨q, hq⟩ := F.binom_expansion z (-z1)
+  let ⟨q, hq⟩ := F.binomExpansion z (-z1)
   have : ∥(↑(F.derivative.eval z) * (↑(F.eval z) / ↑(F.derivative.eval z)) : ℚ_[p])∥ ≤ 1 := by
     rw [padicNormE.mul]
     exact mul_le_one (PadicInt.norm_le_one _) (norm_nonneg _) h1
@@ -238,7 +237,7 @@ private def calc_eval_z'_norm {z z' z1 : ℤ_[p]} {n} (hz : ih n z) {q} (heq : F
       rw [← pow_mulₓ, pow_succ'ₓ 2]
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:169:9: warning: unsupported option eqn_compiler.zeta
+-- ././Mathport/Syntax/Translate/Basic.lean:169:40: warning: unsupported option eqn_compiler.zeta
 set_option eqn_compiler.zeta true
 
 /-- Given `z : ℤ_[p]` satisfying `ih n z`, construct `z' : ℤ_[p]` satisfying `ih (n+1) z'`. We need
@@ -261,7 +260,7 @@ private def ih_n {n : ℕ} {z : ℤ_[p]} (hz : ih n z) : { z' : ℤ_[p] // ih (n
     have hnle : ∥F.eval z'∥ ≤ ∥F.derivative.eval a∥ ^ 2 * T ^ 2 ^ (n + 1) := calc_eval_z'_norm hz HEq h1 rfl
     ⟨hfeq, hnle⟩⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:169:9: warning: unsupported option eqn_compiler.zeta
+-- ././Mathport/Syntax/Translate/Basic.lean:169:40: warning: unsupported option eqn_compiler.zeta
 set_option eqn_compiler.zeta false
 
 private noncomputable def newton_seq_aux : ∀ n : ℕ, { z : ℤ_[p] // ih n z }
@@ -366,10 +365,10 @@ private theorem newton_seq_dist_to_a : ∀ n : ℕ, 0 < n → ∥newton_seq n - 
       _ = max ∥newton_seq (k + 2) - newton_seq (k + 1)∥ ∥newton_seq (k + 1) - a∥ := PadicInt.norm_add_eq_max_of_ne hne'
       _ = ∥newton_seq (k + 1) - a∥ := max_eq_right_of_ltₓ hlt
       _ = ∥Polynomial.eval a F∥ / ∥Polynomial.eval a (Polynomial.derivative F)∥ :=
-        newton_seq_dist_to_a (k + 1) (succ_pos _)
+        newton_seq_dist_to_a (k + 1) (succ_posₓ _)
       
 
-private theorem bound' : tendsto (fun n : ℕ => ∥F.derivative.eval a∥ * T ^ 2 ^ n) at_top (𝓝 0) := by
+private theorem bound' : Tendsto (fun n : ℕ => ∥F.derivative.eval a∥ * T ^ 2 ^ n) atTop (𝓝 0) := by
   rw [← mul_zero ∥F.derivative.eval a∥]
   exact
     tendsto_const_nhds.mul
@@ -389,7 +388,7 @@ private theorem bound : ∀ {ε}, ε > 0 → ∃ N : ℕ, ∀ {n}, n ≥ N → �
   intro n hn
   simpa [NormedField.norm_mul, Real.norm_eq_abs, abs_of_nonneg (mtn n)] using hN _ hn
 
-private theorem bound'_sq : tendsto (fun n : ℕ => ∥F.derivative.eval a∥ ^ 2 * T ^ 2 ^ n) at_top (𝓝 0) := by
+private theorem bound'_sq : Tendsto (fun n : ℕ => ∥F.derivative.eval a∥ ^ 2 * T ^ 2 ^ n) atTop (𝓝 0) := by
   rw [← mul_zero ∥F.derivative.eval a∥, sq]
   simp only [mul_assoc]
   apply tendsto.mul
@@ -409,7 +408,7 @@ private theorem newton_seq_is_cauchy : IsCauSeq norm newton_seq := by
     assumption
     
   · apply hN
-    apply le_reflₓ
+    exact le_rfl
     
 
 private def newton_cau_seq : CauSeq ℤ_[p] norm :=
@@ -424,14 +423,14 @@ private theorem soln_spec {ε : ℝ} (hε : ε > 0) : ∃ N : ℕ, ∀ {i : ℕ}
 private theorem soln_deriv_norm : ∥F.derivative.eval soln∥ = ∥F.derivative.eval a∥ :=
   norm_deriv_eq newton_seq_deriv_norm
 
-private theorem newton_seq_norm_tendsto_zero : tendsto (fun i => ∥F.eval (newton_cau_seq i)∥) at_top (𝓝 0) :=
+private theorem newton_seq_norm_tendsto_zero : Tendsto (fun i => ∥F.eval (newton_cau_seq i)∥) atTop (𝓝 0) :=
   squeeze_zero (fun _ => norm_nonneg _) newton_seq_norm_le bound'_sq
 
 private theorem newton_seq_dist_tendsto :
-    tendsto (fun n => ∥newton_cau_seq n - a∥) at_top (𝓝 (∥F.eval a∥ / ∥F.derivative.eval a∥)) :=
+    Tendsto (fun n => ∥newton_cau_seq n - a∥) atTop (𝓝 (∥F.eval a∥ / ∥F.derivative.eval a∥)) :=
   tendsto_const_nhds.congr' <| eventually_at_top.2 ⟨1, fun _ hx => (newton_seq_dist_to_a _ hx).symm⟩
 
-private theorem newton_seq_dist_tendsto' : tendsto (fun n => ∥newton_cau_seq n - a∥) at_top (𝓝 ∥soln - a∥) :=
+private theorem newton_seq_dist_tendsto' : Tendsto (fun n => ∥newton_cau_seq n - a∥) atTop (𝓝 ∥soln - a∥) :=
   (continuous_norm.Tendsto _).comp (newton_cau_seq.tendsto_limit.sub tendsto_const_nhds)
 
 private theorem soln_dist_to_a : ∥soln - a∥ = ∥F.eval a∥ / ∥F.derivative.eval a∥ :=
@@ -457,7 +456,7 @@ private theorem soln_unique (z : ℤ_[p]) (hev : F.eval z = 0) (hnlt : ∥z - a�
       _ < ∥F.derivative.eval a∥ := max_ltₓ hnlt (norm_sub_rev soln a ▸ soln_dist_to_a_lt_deriv)
       
   let h := z - soln
-  let ⟨q, hq⟩ := F.binom_expansion soln h
+  let ⟨q, hq⟩ := F.binomExpansion soln h
   have : (F.derivative.eval soln + q * h) * h = 0 :=
     Eq.symm
       (calc
@@ -491,12 +490,12 @@ private theorem soln_unique (z : ℤ_[p]) (hev : F.eval z = 0) (hnlt : ∥z - a�
 
 end Hensel
 
-variable {p : ℕ} [Fact p.prime] {F : Polynomial ℤ_[p]} {a : ℤ_[p]}
+variable {p : ℕ} [Fact p.Prime] {F : Polynomial ℤ_[p]} {a : ℤ_[p]}
 
 private theorem a_soln_is_unique (ha : F.eval a = 0) (z' : ℤ_[p]) (hz' : F.eval z' = 0)
     (hnormz' : ∥z' - a∥ < ∥F.derivative.eval a∥) : z' = a :=
   let h := z' - a
-  let ⟨q, hq⟩ := F.binom_expansion a h
+  let ⟨q, hq⟩ := F.binomExpansion a h
   have : (F.derivative.eval a + q * h) * h = 0 :=
     Eq.symm
       (calc

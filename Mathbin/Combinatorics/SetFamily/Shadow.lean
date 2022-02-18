@@ -50,7 +50,7 @@ variable [DecidableEq α] {𝒜 : Finset (Finset α)} {s t : Finset α} {a : α}
 `𝒜`, and the (`k` times) iterated shadow (`shadow^[k]`) is all sets we can get by removing `k`
 elements from any set in `𝒜`. -/
 def shadow (𝒜 : Finset (Finset α)) : Finset (Finset α) :=
-  𝒜.sup fun s => s.image (erase s)
+  𝒜.sup fun s => s.Image (erase s)
 
 localized [FinsetFamily] notation:90 "∂ " => Finset.shadow
 
@@ -76,7 +76,6 @@ protected theorem sized.shadow (h𝒜 : (𝒜 : Set (Finset α)).Sized r) : ((�
   intro A h
   obtain ⟨A, hA, i, hi, rfl⟩ := mem_shadow_iff.1 h
   rw [card_erase_of_mem hi, h𝒜 hA]
-  rfl
 
 -- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (a «expr ∉ » s)
 /-- `t` is in the shadow of `𝒜` iff we can add an element to it so that the resulting finset is in
@@ -165,7 +164,7 @@ theorem up_shadow_empty : (∂⁺ ) (∅ : Finset (Finset α)) = ∅ :=
 
 /-- The upper shadow is monotone. -/
 @[mono]
-theorem up_shadow_monotone : Monotone (up_shadow : Finset (Finset α) → Finset (Finset α)) := fun 𝒜 ℬ => sup_mono
+theorem up_shadow_monotone : Monotone (upShadow : Finset (Finset α) → Finset (Finset α)) := fun 𝒜 ℬ => sup_mono
 
 -- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (a «expr ∉ » t)
 /-- `s` is in the upper shadow of `𝒜` iff there is an `t ∈ 𝒜` from which we can remove one element
@@ -245,7 +244,7 @@ theorem mem_up_shadow_iff_exists_mem_card_add : s ∈ (∂⁺ ^[k]) 𝒜 ↔ ∃
     
 
 @[simp]
-theorem shadow_image_compl : ((∂ ) 𝒜).Image compl = (∂⁺ ) (𝒜.image compl) := by
+theorem shadow_image_compl : ((∂ ) 𝒜).Image compl = (∂⁺ ) (𝒜.Image compl) := by
   ext s
   simp only [mem_image, exists_prop, mem_shadow_iff, mem_up_shadow_iff]
   constructor
@@ -257,7 +256,7 @@ theorem shadow_image_compl : ((∂ ) 𝒜).Image compl = (∂⁺ ) (𝒜.image c
     
 
 @[simp]
-theorem up_shadow_image_compl : ((∂⁺ ) 𝒜).Image compl = (∂ ) (𝒜.image compl) := by
+theorem up_shadow_image_compl : ((∂⁺ ) 𝒜).Image compl = (∂ ) (𝒜.Image compl) := by
   ext s
   simp only [mem_image, exists_prop, mem_shadow_iff, mem_up_shadow_iff]
   constructor

@@ -219,11 +219,11 @@ theorem odd_coe_nat (n : ℕ) : Odd (n : ℤ) ↔ Odd n := by
   rw [odd_iff_not_even, Nat.odd_iff_not_even, even_coe_nat]
 
 @[simp]
-theorem nat_abs_even : Even n.nat_abs ↔ Even n :=
+theorem nat_abs_even : Even n.natAbs ↔ Even n :=
   coe_nat_dvd_left.symm
 
 @[simp]
-theorem nat_abs_odd : Odd n.nat_abs ↔ Odd n := by
+theorem nat_abs_odd : Odd n.natAbs ↔ Odd n := by
   rw [odd_iff_not_even, Nat.odd_iff_not_even, nat_abs_even]
 
 theorem four_dvd_add_or_sub_of_odd {a b : ℤ} (ha : Odd a) (hb : Odd b) : 4 ∣ a + b ∨ 4 ∣ a - b := by
@@ -244,6 +244,32 @@ theorem four_dvd_add_or_sub_of_odd {a b : ℤ} (ha : Odd a) (hb : Odd b) : 4 ∣
       ← sub_sub (2 * n), sub_self, zero_sub, sub_neg_eq_add, ← mul_assoc, mul_addₓ]
     norm_num
     
+
+theorem two_mul_div_two_of_even : Even n → 2 * (n / 2) = n :=
+  Int.mul_div_cancel'
+
+theorem div_two_mul_two_of_even : Even n → n / 2 * 2 = n :=
+  Int.div_mul_cancel
+
+theorem two_mul_div_two_add_one_of_odd : Odd n → 2 * (n / 2) + 1 = n := by
+  rintro ⟨c, rfl⟩
+  rw [mul_comm]
+  convert Int.div_add_mod' _ _
+  simpa [Int.add_mod]
+
+theorem div_two_mul_two_add_one_of_odd : Odd n → n / 2 * 2 + 1 = n := by
+  rintro ⟨c, rfl⟩
+  convert Int.div_add_mod' _ _
+  simpa [Int.add_mod]
+
+theorem add_one_div_two_mul_two_of_odd : Odd n → 1 + n / 2 * 2 = n := by
+  rintro ⟨c, rfl⟩
+  rw [add_commₓ]
+  convert Int.div_add_mod' _ _
+  simpa [Int.add_mod]
+
+theorem two_mul_div_two_of_odd (h : Odd n) : 2 * (n / 2) = n - 1 :=
+  eq_sub_of_add_eq (two_mul_div_two_add_one_of_odd h)
 
 example (m n : ℤ) (h : Even m) : ¬Even (n + 3) ↔ Even (m ^ 2 + m + n) := by
   simp' [*,

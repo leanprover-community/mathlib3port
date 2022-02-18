@@ -34,7 +34,7 @@ open Set UniformSpace UniformSpace.Completion Filter
 
 variable (K : Type _) [Field K] [UniformSpace K]
 
-local notation "hat" => completion
+local notation "hat" => Completion
 
 instance (priority := 100) [SeparatedSpace K] : Nontrivial (hat K) :=
   ⟨⟨0, 1, fun h => zero_ne_one <| (uniform_embedding_coe K).inj h⟩⟩
@@ -148,7 +148,7 @@ instance fieldCompletion : Field (hat K) :=
         rw [coe_inv, inv_zero] }
 
 instance topological_division_ring_completion : TopologicalDivisionRing (hat K) :=
-  { completion.top_ring_compl with
+  { Completion.top_ring_compl with
     continuous_inv := by
       intro x x_ne
       have : { y | hatInv y = y⁻¹ } ∈ 𝓝 x :=

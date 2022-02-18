@@ -17,7 +17,7 @@ This file defines a function field and the ring of integers corresponding to it.
 ## Implementation notes
 The definitions that involve a field of fractions choose a canonical field of fractions,
 but are independent of that choice. We also omit assumptions like `finite Fq` or
-`is_scalar_tower (polynomial Fq) (fraction_ring (polynomial Fq)) F` in definitions,
+`is_scalar_tower Fq[X] (fraction_ring Fq[X]) F` in definitions,
 adding them back in lemmas when they are needed.
 
 ## References
@@ -32,6 +32,8 @@ function field, ring of integers
 
 noncomputable section
 
+open_locale nonZeroDivisors Polynomial
+
 variable (Fq F : Type) [Field Fq] [Field F]
 
 /-- `F` is a function field over the finite field `Fq` if it is a finite
@@ -43,17 +45,16 @@ abbrev FunctionField [Algebra (Ratfunc Fq) F] : Prop :=
   FiniteDimensional (Ratfunc Fq) F
 
 /-- `F` is a function field over `Fq` iff it is a finite extension of `Fq(t)`. -/
-protected theorem function_field_iff (Fqt : Type _) [Field Fqt] [Algebra (Polynomial Fq) Fqt]
-    [IsFractionRing (Polynomial Fq) Fqt] [Algebra (Ratfunc Fq) F] [Algebra Fqt F] [Algebra (Polynomial Fq) F]
-    [IsScalarTower (Polynomial Fq) Fqt F] [IsScalarTower (Polynomial Fq) (Ratfunc Fq) F] :
-    FunctionField Fq F ↔ FiniteDimensional Fqt F := by
-  let e := IsLocalization.algEquiv (nonZeroDivisors (Polynomial Fq)) (Ratfunc Fq) Fqt
+protected theorem function_field_iff (Fqt : Type _) [Field Fqt] [Algebra Fq[X] Fqt] [IsFractionRing Fq[X] Fqt]
+    [Algebra (Ratfunc Fq) F] [Algebra Fqt F] [Algebra Fq[X] F] [IsScalarTower Fq[X] Fqt F]
+    [IsScalarTower Fq[X] (Ratfunc Fq) F] : FunctionField Fq F ↔ FiniteDimensional Fqt F := by
+  let e := IsLocalization.algEquiv Fq[X]⁰ (Ratfunc Fq) Fqt
   have : ∀ c x : F, e c • x = c • x := by
     intro c x
     rw [Algebra.smul_def, Algebra.smul_def]
     congr
     refine' congr_funₓ _ c
-    refine' IsLocalization.ext (nonZeroDivisors (Polynomial Fq)) _ _ _ _ _ _ _ <;>
+    refine' IsLocalization.ext (nonZeroDivisors Fq[X]) _ _ _ _ _ _ _ <;>
       intros <;>
         simp only [AlgEquiv.map_one, RingHom.map_one, AlgEquiv.map_mul, RingHom.map_mul, AlgEquiv.commutes, ←
           IsScalarTower.algebra_map_apply]
@@ -76,31 +77,31 @@ namespace FunctionField
 We don't actually assume `F` is a function field over `Fq` in the definition,
 only when proving its properties.
 -/
-def ring_of_integers [Algebra (Polynomial Fq) F] :=
-  integralClosure (Polynomial Fq) F
+def ring_of_integers [Algebra Fq[X] F] :=
+  integralClosure Fq[X] F
 
 namespace RingOfIntegers
 
-variable [Algebra (Polynomial Fq) F]
+variable [Algebra Fq[X] F]
 
-instance : IsDomain (ring_of_integers Fq F) :=
-  (ring_of_integers Fq F).IsDomain
+instance : IsDomain (ringOfIntegers Fq F) :=
+  (ringOfIntegers Fq F).IsDomain
 
-instance : IsIntegralClosure (ring_of_integers Fq F) (Polynomial Fq) F :=
+instance : IsIntegralClosure (ringOfIntegers Fq F) Fq[X] F :=
   integralClosure.is_integral_closure _ _
 
 variable [Algebra (Ratfunc Fq) F] [FunctionField Fq F]
 
-variable [IsScalarTower (Polynomial Fq) (Ratfunc Fq) F]
+variable [IsScalarTower Fq[X] (Ratfunc Fq) F]
 
-instance : IsFractionRing (ring_of_integers Fq F) F :=
+instance : IsFractionRing (ringOfIntegers Fq F) F :=
   integralClosure.is_fraction_ring_of_finite_extension (Ratfunc Fq) F
 
-instance : IsIntegrallyClosed (ring_of_integers Fq F) :=
+instance : IsIntegrallyClosed (ringOfIntegers Fq F) :=
   integralClosure.is_integrally_closed_of_finite_extension (Ratfunc Fq)
 
-instance [IsSeparable (Ratfunc Fq) F] : IsDedekindDomain (ring_of_integers Fq F) :=
-  IsIntegralClosure.is_dedekind_domain (Polynomial Fq) (Ratfunc Fq) F _
+instance [IsSeparable (Ratfunc Fq) F] : IsDedekindDomain (ringOfIntegers Fq F) :=
+  IsIntegralClosure.is_dedekind_domain Fq[X] (Ratfunc Fq) F _
 
 end RingOfIntegers
 

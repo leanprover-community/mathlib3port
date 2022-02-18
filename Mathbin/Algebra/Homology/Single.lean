@@ -23,7 +23,7 @@ open CategoryTheory.Limits
 
 universe v u
 
-variable (V : Type u) [category.{v} V] [has_zero_morphisms V] [has_zero_object V]
+variable (V : Type u) [Category.{v} V] [HasZeroMorphisms V] [HasZeroObject V]
 
 namespace HomologicalComplex
 
@@ -43,12 +43,12 @@ def single (j : ι) : V ⥤ HomologicalComplex V c where
   map := fun A B f =>
     { f := fun i =>
         if h : i = j then
-          eq_to_hom
+          eqToHom
               (by
                 dsimp
                 rw [if_pos h]) ≫
             f ≫
-              eq_to_hom
+              eqToHom
                 (by
                   dsimp
                   rw [if_pos h])
@@ -77,17 +77,17 @@ def single (j : ι) : V ⥤ HomologicalComplex V c where
 -/
 @[simps]
 def single_obj_X_self (j : ι) (A : V) : ((single V c j).obj A).x j ≅ A :=
-  eq_to_iso
+  eqToIso
     (by
       simp )
 
 @[simp]
 theorem single_map_f_self (j : ι) {A B : V} (f : A ⟶ B) :
-    ((single V c j).map f).f j = (single_obj_X_self V c j A).Hom ≫ f ≫ (single_obj_X_self V c j B).inv := by
+    ((single V c j).map f).f j = (singleObjXSelf V c j A).Hom ≫ f ≫ (singleObjXSelf V c j B).inv := by
   simp
   rfl
 
-instance (j : ι) : faithful (single V c j) where
+instance (j : ι) : Faithful (single V c j) where
   map_injective' := fun X Y f g w => by
     have := congr_hom w j
     dsimp  at this
@@ -96,13 +96,13 @@ instance (j : ι) : faithful (single V c j) where
       is_iso.comp_inv_eq, category.assoc, inv_eq_to_hom, eq_to_hom_trans, eq_to_hom_refl, category.comp_id] at this
     exact this
 
-instance (j : ι) : full (single V c j) where
+instance (j : ι) : Full (single V c j) where
   Preimage := fun X Y f =>
-    eq_to_hom
+    eqToHom
         (by
           simp ) ≫
       f.f j ≫
-        eq_to_hom
+        eqToHom
           (by
             simp )
   witness' := fun X Y f => by
@@ -195,13 +195,13 @@ theorem single₀_map_f_succ {X Y : V} (f : X ⟶ Y) (n : ℕ) : ((single₀ V).
 
 section
 
-variable [has_equalizers V] [has_cokernels V] [has_images V] [has_image_maps V]
+variable [HasEqualizers V] [HasCokernels V] [HasImages V] [HasImageMaps V]
 
 /-- Sending objects to chain complexes supported at `0` then taking `0`-th homology
 is the same as doing nothing.
 -/
 noncomputable def homology_functor_0_single₀ : single₀ V ⋙ homologyFunctor V _ 0 ≅ 𝟭 V :=
-  nat_iso.of_components
+  NatIso.ofComponents
     (fun X =>
       homology.congr _ _
           (by
@@ -218,7 +218,7 @@ noncomputable def homology_functor_0_single₀ : single₀ V ⋙ homologyFunctor
 is the same as the zero functor.
 -/
 noncomputable def homology_functor_succ_single₀ (n : ℕ) : single₀ V ⋙ homologyFunctor V _ (n + 1) ≅ 0 :=
-  nat_iso.of_components
+  NatIso.ofComponents
     (fun X =>
       homology.congr _ _
           (by
@@ -238,7 +238,7 @@ to a single object chain complex with `X` concentrated in degree 0
 are the same as morphisms `f : C.X 0 ⟶ X` such that `C.d 1 0 ≫ f = 0`.
 -/
 def to_single₀_equiv (C : ChainComplex V ℕ) (X : V) :
-    (C ⟶ (single₀ V).obj X) ≃ { f : C.X 0 ⟶ X // C.d 1 0 ≫ f = 0 } where
+    (C ⟶ (single₀ V).obj X) ≃ { f : C.x 0 ⟶ X // C.d 1 0 ≫ f = 0 } where
   toFun := fun f =>
     ⟨f.f 0, by
       rw [← f.comm 1 0]
@@ -272,7 +272,7 @@ variable (V)
 
 /-- `single₀` is the same as `single V _ 0`. -/
 def single₀_iso_single : single₀ V ≅ single V _ 0 :=
-  nat_iso.of_components
+  NatIso.ofComponents
     (fun X =>
       { Hom :=
           { f := fun i => by
@@ -297,11 +297,11 @@ def single₀_iso_single : single₀ V ≅ single V _ 0 :=
         simp
         
 
-instance : faithful (single₀ V) :=
-  faithful.of_iso (single₀_iso_single V).symm
+instance : Faithful (single₀ V) :=
+  Faithful.of_iso (single₀IsoSingle V).symm
 
-instance : full (single₀ V) :=
-  full.of_iso (single₀_iso_single V).symm
+instance : Full (single₀ V) :=
+  Full.ofIso (single₀IsoSingle V).symm
 
 end ChainComplex
 
@@ -378,13 +378,13 @@ theorem single₀_map_f_succ {X Y : V} (f : X ⟶ Y) (n : ℕ) : ((single₀ V).
 
 section
 
-variable [has_equalizers V] [has_cokernels V] [has_images V] [has_image_maps V]
+variable [HasEqualizers V] [HasCokernels V] [HasImages V] [HasImageMaps V]
 
 /-- Sending objects to cochain complexes supported at `0` then taking `0`-th homology
 is the same as doing nothing.
 -/
 noncomputable def homology_functor_0_single₀ : single₀ V ⋙ homologyFunctor V _ 0 ≅ 𝟭 V :=
-  nat_iso.of_components
+  NatIso.ofComponents
     (fun X =>
       homology.congr _ _
           (by
@@ -401,7 +401,7 @@ noncomputable def homology_functor_0_single₀ : single₀ V ⋙ homologyFunctor
 is the same as the zero functor.
 -/
 noncomputable def homology_functor_succ_single₀ (n : ℕ) : single₀ V ⋙ homologyFunctor V _ (n + 1) ≅ 0 :=
-  nat_iso.of_components
+  NatIso.ofComponents
     (fun X =>
       homology.congr _ _
           (by
@@ -421,7 +421,7 @@ to a `ℕ`-indexed cochain complex `C`
 are the same as morphisms `f : X ⟶ C.X 0` such that `f ≫ C.d 0 1 = 0`.
 -/
 def from_single₀_equiv (C : CochainComplex V ℕ) (X : V) :
-    ((single₀ V).obj X ⟶ C) ≃ { f : X ⟶ C.X 0 // f ≫ C.d 0 1 = 0 } where
+    ((single₀ V).obj X ⟶ C) ≃ { f : X ⟶ C.x 0 // f ≫ C.d 0 1 = 0 } where
   toFun := fun f =>
     ⟨f.f 0, by
       rw [f.comm 0 1]
@@ -458,7 +458,7 @@ variable (V)
 
 /-- `single₀` is the same as `single V _ 0`. -/
 def single₀_iso_single : single₀ V ≅ single V _ 0 :=
-  nat_iso.of_components
+  NatIso.ofComponents
     (fun X =>
       { Hom :=
           { f := fun i => by
@@ -483,11 +483,11 @@ def single₀_iso_single : single₀ V ≅ single V _ 0 :=
         simp
         
 
-instance : faithful (single₀ V) :=
-  faithful.of_iso (single₀_iso_single V).symm
+instance : Faithful (single₀ V) :=
+  Faithful.of_iso (single₀IsoSingle V).symm
 
-instance : full (single₀ V) :=
-  full.of_iso (single₀_iso_single V).symm
+instance : Full (single₀ V) :=
+  Full.ofIso (single₀IsoSingle V).symm
 
 end CochainComplex
 

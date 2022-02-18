@@ -211,6 +211,9 @@ theorem pow_lt_pow (h : 1 < a) (h2 : n < m) : a ^ n < a ^ m :=
 theorem pow_lt_pow_iff (h : 1 < a) : a ^ n < a ^ m ↔ n < m :=
   (strict_mono_pow h).lt_iff_lt
 
+theorem pow_le_pow_iff (h : 1 < a) : a ^ n ≤ a ^ m ↔ n ≤ m :=
+  (strict_mono_pow h).le_iff_le
+
 theorem strict_anti_pow (h₀ : 0 < a) (h₁ : a < 1) : StrictAnti fun n : ℕ => a ^ n :=
   strict_anti_nat_of_succ_lt fun n => by
     simpa only [pow_succₓ, one_mulₓ] using mul_lt_mul h₁ le_rfl (pow_pos h₀ n) zero_le_one
@@ -337,6 +340,15 @@ theorem sq_pos_of_ne_zero (a : R) (h : a ≠ 0) : 0 < a ^ 2 :=
 
 alias sq_pos_of_ne_zero ← pow_two_pos_of_ne_zero
 
+theorem pow_bit0_pos_iff (a : R) {n : ℕ} (hn : n ≠ 0) : 0 < a ^ bit0 n ↔ a ≠ 0 := by
+  refine' ⟨fun h => _, fun h => pow_bit0_pos h n⟩
+  rintro rfl
+  rw [zero_pow (Nat.zero_lt_bit0 hn)] at h
+  exact lt_irreflₓ _ h
+
+theorem sq_pos_iff (a : R) : 0 < a ^ 2 ↔ a ≠ 0 :=
+  pow_bit0_pos_iff a one_ne_zero
+
 variable {x y : R}
 
 theorem sq_abs (x : R) : abs x ^ 2 = x ^ 2 := by
@@ -345,11 +357,11 @@ theorem sq_abs (x : R) : abs x ^ 2 = x ^ 2 := by
 theorem abs_sq (x : R) : abs (x ^ 2) = x ^ 2 := by
   simpa only [sq] using abs_mul_self x
 
-theorem sq_lt_sq (h : abs x < y) : x ^ 2 < y ^ 2 := by
+theorem sq_lt_sq (h : abs x < abs y) : x ^ 2 < y ^ 2 := by
   simpa only [sq_abs] using pow_lt_pow_of_lt_left h (abs_nonneg x) (1 : ℕ).succ_pos
 
 theorem sq_lt_sq' (h1 : -y < x) (h2 : x < y) : x ^ 2 < y ^ 2 :=
-  sq_lt_sq (abs_lt.mpr ⟨h1, h2⟩)
+  sq_lt_sq (lt_of_lt_of_leₓ (abs_lt.2 ⟨h1, h2⟩) (le_abs_self _))
 
 theorem sq_le_sq (h : abs x ≤ abs y) : x ^ 2 ≤ y ^ 2 := by
   simpa only [sq_abs] using pow_le_pow_of_le_left (abs_nonneg x) h 2
@@ -378,6 +390,37 @@ theorem abs_le_of_sq_le_sq (h : x ^ 2 ≤ y ^ 2) (hy : 0 ≤ y) : abs x ≤ y :=
 
 theorem abs_le_of_sq_le_sq' (h : x ^ 2 ≤ y ^ 2) (hy : 0 ≤ y) : -y ≤ x ∧ x ≤ y :=
   abs_le.mp <| abs_le_of_sq_le_sq h hy
+
+theorem sq_eq_sq_iff_abs_eq_abs (x y : R) : x ^ 2 = y ^ 2 ↔ abs x = abs y :=
+  ⟨fun h => (abs_le_abs_of_sq_le_sq h.le).antisymm (abs_le_abs_of_sq_le_sq h.Ge), fun h => by
+    rw [← sq_abs, h, sq_abs]⟩
+
+@[simp]
+theorem sq_eq_one_iff (x : R) : x ^ 2 = 1 ↔ x = 1 ∨ x = -1 := by
+  rw [← abs_eq_abs, ← sq_eq_sq_iff_abs_eq_abs, one_pow]
+
+theorem sq_ne_one_iff (x : R) : x ^ 2 ≠ 1 ↔ x ≠ 1 ∧ x ≠ -1 :=
+  (not_iff_not.2 (sq_eq_one_iff _)).trans not_or_distrib
+
+@[simp]
+theorem sq_le_one_iff_abs_le_one (x : R) : x ^ 2 ≤ 1 ↔ abs x ≤ 1 := by
+  have t : x ^ 2 ≤ 1 ^ 2 ↔ abs x ≤ abs 1 := ⟨abs_le_abs_of_sq_le_sq, sq_le_sq⟩
+  simpa using t
+
+@[simp]
+theorem sq_lt_one_iff_abs_lt_one (x : R) : x ^ 2 < 1 ↔ abs x < 1 := by
+  have t : x ^ 2 < 1 ^ 2 ↔ abs x < abs 1 := ⟨abs_lt_abs_of_sq_lt_sq, sq_lt_sq⟩
+  simpa using t
+
+@[simp]
+theorem one_le_sq_iff_one_le_abs (x : R) : 1 ≤ x ^ 2 ↔ 1 ≤ abs x := by
+  have t : 1 ^ 2 ≤ x ^ 2 ↔ abs 1 ≤ abs x := ⟨abs_le_abs_of_sq_le_sq, sq_le_sq⟩
+  simpa using t
+
+@[simp]
+theorem one_lt_sq_iff_one_lt_abs (x : R) : 1 < x ^ 2 ↔ 1 < abs x := by
+  have t : 1 ^ 2 < x ^ 2 ↔ abs 1 < abs x := ⟨abs_lt_abs_of_sq_lt_sq, sq_lt_sq⟩
+  simpa using t
 
 end LinearOrderedRing
 

@@ -117,7 +117,7 @@ theorem fib_add (m n : ℕ) : fib m * fib n + fib (m + 1) * fib (n + 1) = fib (m
     ring
     
 
-theorem gcd_fib_add_self (m n : ℕ) : gcd (fib m) (fib (n + m)) = gcd (fib m) (fib n) := by
+theorem gcd_fib_add_self (m n : ℕ) : gcdₓ (fib m) (fib (n + m)) = gcdₓ (fib m) (fib n) := by
   cases Nat.eq_zero_or_posₓ n
   · rw [h]
     simp
@@ -130,7 +130,7 @@ theorem gcd_fib_add_self (m n : ℕ) : gcd (fib m) (fib (n + m)) = gcd (fib m) (
       rw [add_commₓ, gcd_add_mul_right_right (fib m) _ (fib n.pred)]_ = gcd (fib m) (fib (n.pred + 1)) :=
       coprime.gcd_mul_right_cancel_right (fib (n.pred + 1)) (coprime.symm (fib_coprime_fib_succ m))
 
-theorem gcd_fib_add_mul_self (m n : ℕ) : ∀ k, gcd (fib m) (fib (n + k * m)) = gcd (fib m) (fib n)
+theorem gcd_fib_add_mul_self (m n : ℕ) : ∀ k, gcdₓ (fib m) (fib (n + k * m)) = gcdₓ (fib m) (fib n)
   | 0 => by
     simp
   | k + 1 => by
@@ -138,7 +138,7 @@ theorem gcd_fib_add_mul_self (m n : ℕ) : ∀ k, gcd (fib m) (fib (n + k * m)) 
 
 /-- `fib n` is a strong divisibility sequence,
   see https://proofwiki.org/wiki/GCD_of_Fibonacci_Numbers -/
-theorem fib_gcd (m n : ℕ) : fib (gcd m n) = gcd (fib m) (fib n) := by
+theorem fib_gcd (m n : ℕ) : fib (gcdₓ m n) = gcdₓ (fib m) (fib n) := by
   wlog h : m ≤ n using n m, m n
   exact le_totalₓ m n
   · apply gcd.induction m n

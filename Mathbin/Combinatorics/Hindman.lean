@@ -180,7 +180,7 @@ theorem exists_FP_of_large {M} [Semigroupₓ M] (U : Ultrafilter M) (U_idem : U 
 /-- The strong form of **Hindman's theorem**: in any finite cover of an FP-set, one the parts
 contains an FP-set. -/
 @[to_additive FS_partition_regular]
-theorem FP_partition_regular {M} [Semigroupₓ M] (a : Streamₓ M) (s : Set (Set M)) (sfin : s.finite)
+theorem FP_partition_regular {M} [Semigroupₓ M] (a : Streamₓ M) (s : Set (Set M)) (sfin : s.Finite)
     (scov : FP a ⊆ ⋃₀s) : ∃ c ∈ s, ∃ b : Streamₓ M, FP b ⊆ c :=
   let ⟨U, idem, aU⟩ := exists_idempotent_ultrafilter_le_FP a
   let ⟨c, cs, hc⟩ := (Ultrafilter.finite_sUnion_mem_iff sfin).mp (mem_of_superset aU scov)
@@ -189,7 +189,7 @@ theorem FP_partition_regular {M} [Semigroupₓ M] (a : Streamₓ M) (s : Set (Se
 /-- The weak form of **Hindman's theorem**: in any finite cover of a nonempty semigroup, one of the
 parts contains an FP-set. -/
 @[to_additive exists_FS_of_finite_cover]
-theorem exists_FP_of_finite_cover {M} [Semigroupₓ M] [Nonempty M] (s : Set (Set M)) (sfin : s.finite) (scov : ⊤ ⊆ ⋃₀s) :
+theorem exists_FP_of_finite_cover {M} [Semigroupₓ M] [Nonempty M] (s : Set (Set M)) (sfin : s.Finite) (scov : ⊤ ⊆ ⋃₀s) :
     ∃ c ∈ s, ∃ a : Streamₓ M, FP a ⊆ c :=
   let ⟨U, hU⟩ := exists_idempotent_of_compact_t2_of_continuous_mul_left (@Ultrafilter.continuous_mul_left M _)
   let ⟨c, c_s, hc⟩ := (Ultrafilter.finite_sUnion_mem_iff sfin).mp (mem_of_superset univ_mem scov)
@@ -224,8 +224,8 @@ theorem FP.mul_two {M} [Semigroupₓ M] (a : Streamₓ M) (i j : ℕ) (ij : i < 
   rw [hd, add_commₓ, Nat.succ_add, Nat.add_succ]
 
 @[to_additive]
-theorem FP.finset_prod {M} [CommMonoidₓ M] (a : Streamₓ M) (s : Finset ℕ) (hs : s.nonempty) :
-    (s.prod fun i => a.nth i) ∈ FP a := by
+theorem FP.finset_prod {M} [CommMonoidₓ M] (a : Streamₓ M) (s : Finset ℕ) (hs : s.Nonempty) :
+    (s.Prod fun i => a.nth i) ∈ FP a := by
   refine' FP_drop_subset_FP _ (s.min' hs) _
   induction' s using Finset.strongInductionₓ with s ih
   rw [← Finset.mul_prod_erase _ _ (s.min'_mem hs), ← Streamₓ.head_drop]

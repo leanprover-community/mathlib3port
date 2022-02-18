@@ -40,15 +40,15 @@ open SheafConditionEqualizerProducts
 
 universe v u₁ u₂
 
-variable {C : Type u₁} [category.{v} C] [has_limits C]
+variable {C : Type u₁} [Category.{v} C] [HasLimits C]
 
-variable {D : Type u₂} [category.{v} D] [has_limits D]
+variable {D : Type u₂} [Category.{v} D] [HasLimits D]
 
-variable (G : C ⥤ D) [preserves_limits G]
+variable (G : C ⥤ D) [PreservesLimits G]
 
-variable {X : Top.{v}} (F : presheaf C X)
+variable {X : Top.{v}} (F : Presheaf C X)
 
-variable {ι : Type v} (U : ι → opens X)
+variable {ι : Type v} (U : ι → Opens X)
 
 attribute [local reducible] diagram left_res right_res
 
@@ -91,8 +91,8 @@ is the sheaf condition fork for `F ⋙ G`,
 postcomposed with the inverse of the natural isomorphism `diagram_comp_preserves_limits`.
 -/
 def map_cone_fork :
-    G.map_cone (fork F U) ≅ (cones.postcompose (diagram_comp_preserves_limits G F U).inv).obj (fork (F ⋙ G) U) :=
-  cones.ext (iso.refl _) fun j => by
+    G.mapCone (fork F U) ≅ (Cones.postcompose (diagramCompPreservesLimits G F U).inv).obj (fork (F ⋙ G) U) :=
+  Cones.ext (Iso.refl _) fun j => by
     dsimp
     simp [diagram_comp_preserves_limits]
     cases j <;> dsimp
@@ -115,15 +115,15 @@ universe v u₁ u₂
 
 open SheafCondition SheafConditionEqualizerProducts
 
-variable {C : Type u₁} [category.{v} C] {D : Type u₂} [category.{v} D]
+variable {C : Type u₁} [Category.{v} C] {D : Type u₂} [Category.{v} D]
 
 variable (G : C ⥤ D)
 
-variable [reflects_isomorphisms G]
+variable [ReflectsIsomorphisms G]
 
-variable [has_limits C] [has_limits D] [preserves_limits G]
+variable [HasLimits C] [HasLimits D] [PreservesLimits G]
 
-variable {X : Top.{v}} (F : presheaf C X)
+variable {X : Top.{v}} (F : Presheaf C X)
 
 /-- If `G : C ⥤ D` is a functor which reflects isomorphisms and preserves limits
 (we assume all limits exist in both `C` and `D`),
@@ -140,7 +140,7 @@ Another useful example is the forgetful functor `TopCommRing ⥤ Top`.
 See https://stacks.math.columbia.edu/tag/0073.
 In fact we prove a stronger version with arbitrary complete target category.
 -/
-theorem is_sheaf_iff_is_sheaf_comp : presheaf.is_sheaf F ↔ presheaf.is_sheaf (F ⋙ G) := by
+theorem is_sheaf_iff_is_sheaf_comp : Presheaf.IsSheaf F ↔ Presheaf.IsSheaf (F ⋙ G) := by
   constructor
   · intro S ι U
     obtain ⟨t₁⟩ := S U

@@ -138,6 +138,10 @@ include i
 instance (priority := 100) : CoeFun F fun _ => ∀ a : α, β a where
   coe := FunLike.coe
 
+@[simp]
+theorem coe_eq_coe_fn : (FunLike.coe : F → ∀ a : α, β a) = coeFn :=
+  rfl
+
 theorem coe_injective : Function.Injective (coeFn : F → ∀ a : α, β a) :=
   FunLike.coe_injective'
 

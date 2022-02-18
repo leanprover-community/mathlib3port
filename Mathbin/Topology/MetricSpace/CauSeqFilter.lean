@@ -18,8 +18,8 @@ open_locale TopologicalSpace Classical
 variable {β : Type v}
 
 theorem CauSeq.tendsto_limit [NormedRing β] [hn : IsAbsoluteValue (norm : β → ℝ)] (f : CauSeq β norm)
-    [CauSeq.IsComplete β norm] : tendsto f at_top (𝓝 f.lim) :=
-  _root_.tendsto_nhds.mpr
+    [CauSeq.IsComplete β norm] : Tendsto f atTop (𝓝 f.lim) :=
+  tendsto_nhds.mpr
     (by
       intro s os lfs
       suffices ∃ a : ℕ, ∀ b : ℕ, b ≥ a → f b ∈ s by
@@ -80,7 +80,7 @@ theorem CauSeq.cauchy_seq (f : CauSeq β norm) : CauchySeq f := by
 
 /-- In a normed field, `cau_seq` coincides with the usual notion of Cauchy sequences. -/
 theorem cau_seq_iff_cauchy_seq {α : Type u} [NormedField α] {u : ℕ → α} : IsCauSeq norm u ↔ CauchySeq u :=
-  ⟨fun h => CauSeq.cauchy_seq ⟨u, h⟩, fun h => h.is_cau_seq⟩
+  ⟨fun h => CauSeq.cauchy_seq ⟨u, h⟩, fun h => h.IsCauSeq⟩
 
 /-- A complete normed field is complete as a metric space, as Cauchy sequences converge by
 assumption and this suffices to characterize completeness. -/

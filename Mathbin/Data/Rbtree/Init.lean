@@ -16,9 +16,9 @@ inductive color
 
 open Color Nat
 
-instance color.decidable_eq : DecidableEq color := fun a b =>
-  color.cases_on a (color.cases_on b (is_true rfl) (is_false fun h => color.no_confusion h))
-    (color.cases_on b (is_false fun h => color.no_confusion h) (is_true rfl))
+instance color.decidable_eq : DecidableEq Color := fun a b =>
+  Color.casesOn a (Color.casesOn b (isTrue rfl) (isFalse fun h => Color.noConfusion h))
+    (Color.casesOn b (isFalse fun h => Color.noConfusion h) (isTrue rfl))
 
 def depth (f : Nat → Nat → Nat) : Rbnode α → Nat
   | leaf => 0
@@ -69,7 +69,7 @@ def balance2_node : Rbnode α → α → Rbnode α → Rbnode α
   | black_node l x r, v, t => balance2 l x r v t
   | leaf, v, t => t
 
-def get_color : Rbnode α → color
+def get_color : Rbnode α → Color
   | red_node _ _ _ => red
   | _ => black
 
@@ -86,16 +86,16 @@ def ins : Rbnode α → α → Rbnode α
     | Ordering.gt => red_node a y (ins b x)
   | black_node a y b, x =>
     match cmpUsing lt x y with
-    | Ordering.lt => if a.get_color = red then balance1_node (ins a x) y b else black_node (ins a x) y b
+    | Ordering.lt => if a.getColor = red then balance1Node (ins a x) y b else black_node (ins a x) y b
     | Ordering.eq => black_node a x b
-    | Ordering.gt => if b.get_color = red then balance2_node (ins b x) y a else black_node a y (ins b x)
+    | Ordering.gt => if b.getColor = red then balance2Node (ins b x) y a else black_node a y (ins b x)
 
-def mk_insert_result : color → Rbnode α → Rbnode α
+def mk_insert_result : Color → Rbnode α → Rbnode α
   | red, red_node l v r => black_node l v r
   | _, t => t
 
 def insert (t : Rbnode α) (x : α) : Rbnode α :=
-  mk_insert_result (get_color t) (ins lt t x)
+  mkInsertResult (getColor t) (ins lt t x)
 
 end Insert
 
@@ -138,7 +138,7 @@ end Rbnode
 
 open Rbnode
 
--- ././Mathport/Syntax/Translate/Basic.lean:169:9: warning: unsupported option auto_param.check_exists
+-- ././Mathport/Syntax/Translate/Basic.lean:169:40: warning: unsupported option auto_param.check_exists
 set_option auto_param.check_exists false
 
 def Rbtree (α : Type u)
@@ -146,14 +146,14 @@ def Rbtree (α : Type u)
       run_tac
         rbtree.default_lt) :
     Type u :=
-  { t : Rbnode α // t.well_formed lt }
+  { t : Rbnode α // t.WellFormed lt }
 
 def mkRbtree (α : Type u)
     (lt : α → α → Prop := by
       run_tac
         rbtree.default_lt) :
     Rbtree α lt :=
-  ⟨leaf, well_formed.leaf_wff⟩
+  ⟨leaf, WellFormed.leaf_wff⟩
 
 namespace Rbtree
 
@@ -175,14 +175,14 @@ def fold (f : α → β → β) : Rbtree α lt → β → β
   | ⟨t, _⟩, b => t.fold f b
 
 def rev_fold (f : α → β → β) : Rbtree α lt → β → β
-  | ⟨t, _⟩, b => t.rev_fold f b
+  | ⟨t, _⟩, b => t.revFold f b
 
 def Empty : Rbtree α lt → Bool
-  | ⟨leaf, _⟩ => tt
-  | _ => ff
+  | ⟨leaf, _⟩ => true
+  | _ => false
 
 def to_list : Rbtree α lt → List α
-  | ⟨t, _⟩ => t.rev_fold (· :: ·) []
+  | ⟨t, _⟩ => t.revFold (· :: ·) []
 
 protected def min : Rbtree α lt → Option α
   | ⟨t, _⟩ => t.min
@@ -191,12 +191,12 @@ protected def max : Rbtree α lt → Option α
   | ⟨t, _⟩ => t.max
 
 instance [HasRepr α] : HasRepr (Rbtree α lt) :=
-  ⟨fun t => "rbtree_of " ++ reprₓ t.to_list⟩
+  ⟨fun t => "rbtree_of " ++ reprₓ t.toList⟩
 
 variable [DecidableRel lt]
 
 def insert : Rbtree α lt → α → Rbtree α lt
-  | ⟨t, w⟩, x => ⟨t.insert lt x, well_formed.insert_wff w rfl⟩
+  | ⟨t, w⟩, x => ⟨t.insert lt x, WellFormed.insert_wff w rfl⟩
 
 def find : Rbtree α lt → α → Option α
   | ⟨t, _⟩, x => t.find lt x

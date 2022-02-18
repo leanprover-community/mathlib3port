@@ -18,16 +18,16 @@ inductive side
   deriving DecidableEq, Inhabited
 
 /-- Convert a side to a human-readable string. -/
-unsafe def side.to_string : side → format
+unsafe def side.to_string : Side → format
   | side.L => "L"
   | side.R => "R"
 
 /-- Convert a side to the string "lhs" or "rhs", for use in tactic name generation. -/
-def side.to_xhs : side → Stringₓ
+def side.to_xhs : Side → Stringₓ
   | side.L => "lhs"
   | side.R => "rhs"
 
-unsafe instance side.has_to_format : has_to_format side :=
+unsafe instance side.has_to_format : has_to_format Side :=
   ⟨side.to_string⟩
 
 /-- A `how` contains information needed by the explainer to generate code for a rewrite.
@@ -42,7 +42,7 @@ unsafe structure how where
 
 /-- Convert a `how` to a human-readable string. -/
 unsafe def how.to_string : how → format
-  | h => f! "rewrite {h.rule_index } {h.location } {h.addr.iget.to_string}"
+  | h => f! "rewrite {h.rule_index } {h.location } {h.addr.iget.toString}"
 
 unsafe instance how.has_to_format : has_to_format how :=
   ⟨how.to_string⟩
@@ -58,7 +58,7 @@ equation to prove a particular expression.
 -/
 unsafe structure proof_unit where
   proof : expr
-  Side : side
+  Side : Side
   steps : List how
 
 /-- Configuration options for a rewrite search.
@@ -68,7 +68,7 @@ unsafe structure proof_unit where
 -/
 unsafe structure config extends tactic.nth_rewrite.cfg where
   max_iterations : ℕ := 5000
-  explain_using_conv : Bool := tt
+  explain_using_conv : Bool := true
 
 end Tactic.RewriteSearch
 

@@ -1,4 +1,4 @@
-import Mathbin.Data.Int.Gcd
+import Mathbin.Data.Nat.Modeq
 import Mathbin.Algebra.IterateHom
 import Mathbin.Algebra.Pointwise
 import Mathbin.Dynamics.PeriodicPts
@@ -41,19 +41,19 @@ variable [Monoidₓ G] [AddMonoidₓ A]
 section IsOfFinOrder
 
 @[to_additive is_periodic_pt_add_iff_nsmul_eq_zero]
-theorem is_periodic_pt_mul_iff_pow_eq_one (x : G) : is_periodic_pt ((· * ·) x) n 1 ↔ x ^ n = 1 := by
+theorem is_periodic_pt_mul_iff_pow_eq_one (x : G) : IsPeriodicPt ((· * ·) x) n 1 ↔ x ^ n = 1 := by
   rw [is_periodic_pt, is_fixed_pt, mul_left_iterate, mul_oneₓ]
 
 /-- `is_of_fin_add_order` is a predicate on an element `a` of an additive monoid to be of finite
 order, i.e. there exists `n ≥ 1` such that `n • a = 0`.-/
 def IsOfFinAddOrder (a : A) : Prop :=
-  (0 : A) ∈ periodic_pts ((· + ·) a)
+  (0 : A) ∈ PeriodicPts ((· + ·) a)
 
 /-- `is_of_fin_order` is a predicate on an element `x` of a monoid to be of finite order, i.e. there
 exists `n ≥ 1` such that `x ^ n = 1`.-/
 @[to_additive IsOfFinAddOrder]
 def IsOfFinOrder (x : G) : Prop :=
-  (1 : G) ∈ periodic_pts ((· * ·) x)
+  (1 : G) ∈ PeriodicPts ((· * ·) x)
 
 theorem is_of_fin_add_order_of_mul_iff : IsOfFinAddOrder (Additive.ofMul x) ↔ IsOfFinOrder x :=
   Iff.rfl
@@ -73,7 +73,7 @@ Otherwise, i.e. if `x` is of infinite order, then `order_of x` is `0` by convent
 @[to_additive addOrderOf
       "`add_order_of a` is the order of the element `a`, i.e. the `n ≥ 1`, s.t. `n • a = 0` if it\nexists. Otherwise, i.e. if `a` is of infinite order, then `add_order_of a` is `0` by convention."]
 noncomputable def orderOf (x : G) : ℕ :=
-  minimal_period ((· * ·) x) 1
+  minimalPeriod ((· * ·) x) 1
 
 @[simp]
 theorem add_order_of_of_mul_eq_order_of (x : G) : addOrderOf (Additive.ofMul x) = orderOf x :=
@@ -110,7 +110,7 @@ theorem pow_ne_one_of_lt_order_of' (n0 : n ≠ 0) (h : n < orderOf x) : x ^ n �
 
 @[to_additive add_order_of_le_of_nsmul_eq_zero]
 theorem order_of_le_of_pow_eq_one (hn : 0 < n) (h : x ^ n = 1) : orderOf x ≤ n :=
-  is_periodic_pt.minimal_period_le hn
+  IsPeriodicPt.minimal_period_le hn
     (by
       rwa [is_periodic_pt_mul_iff_pow_eq_one])
 
@@ -133,7 +133,7 @@ theorem pow_eq_mod_order_of {n : ℕ} : x ^ n = x ^ (n % orderOf x) :=
 
 @[to_additive add_order_of_dvd_of_nsmul_eq_zero]
 theorem order_of_dvd_of_pow_eq_one (h : x ^ n = 1) : orderOf x ∣ n :=
-  is_periodic_pt.minimal_period_dvd ((is_periodic_pt_mul_iff_pow_eq_one _).mpr h)
+  IsPeriodicPt.minimal_period_dvd ((is_periodic_pt_mul_iff_pow_eq_one _).mpr h)
 
 @[to_additive add_order_of_dvd_iff_nsmul_eq_zero]
 theorem order_of_dvd_iff_pow_eq_one {n : ℕ} : orderOf x ∣ n ↔ x ^ n = 1 :=
@@ -141,7 +141,7 @@ theorem order_of_dvd_iff_pow_eq_one {n : ℕ} : orderOf x ∣ n ↔ x ^ n = 1 :=
     rw [pow_eq_mod_order_of, Nat.mod_eq_zero_of_dvdₓ h, pow_zeroₓ], order_of_dvd_of_pow_eq_one⟩
 
 @[to_additive exists_nsmul_eq_self_of_coprime]
-theorem exists_pow_eq_self_of_coprime (h : n.coprime (orderOf x)) : ∃ m : ℕ, (x ^ n) ^ m = x := by
+theorem exists_pow_eq_self_of_coprime (h : n.Coprime (orderOf x)) : ∃ m : ℕ, (x ^ n) ^ m = x := by
   by_cases' h0 : orderOf x = 0
   · rw [h0, coprime_zero_right] at h
     exact
@@ -163,7 +163,7 @@ then `x` has order `n` in `G`.
 -/
 @[to_additive add_order_of_eq_of_nsmul_and_div_prime_nsmul]
 theorem order_of_eq_of_pow_and_pow_div_prime (hn : 0 < n) (hx : x ^ n = 1)
-    (hd : ∀ p : ℕ, p.prime → p ∣ n → x ^ (n / p) ≠ 1) : orderOf x = n := by
+    (hd : ∀ p : ℕ, p.Prime → p ∣ n → x ^ (n / p) ≠ 1) : orderOf x = n := by
   cases' exists_eq_mul_right_of_dvd (order_of_dvd_of_pow_eq_one hx) with a ha
   suffices a = 1 by
     simp [this, ha]
@@ -193,7 +193,7 @@ theorem order_of_injective {H : Type _} [Monoidₓ H] (f : G →* H) (hf : Funct
 
 @[simp, norm_cast, to_additive]
 theorem order_of_submonoid {H : Submonoid G} (y : H) : orderOf (y : G) = orderOf y :=
-  order_of_injective H.subtype Subtype.coe_injective y
+  order_of_injective H.Subtype Subtype.coe_injective y
 
 @[to_additive order_of_add_units]
 theorem order_of_units {y : (G)ˣ} : orderOf (y : G) = orderOf y :=
@@ -202,14 +202,14 @@ theorem order_of_units {y : (G)ˣ} : orderOf (y : G) = orderOf y :=
 variable (x)
 
 @[to_additive add_order_of_nsmul']
-theorem order_of_pow' (h : n ≠ 0) : orderOf (x ^ n) = orderOf x / gcd (orderOf x) n := by
+theorem order_of_pow' (h : n ≠ 0) : orderOf (x ^ n) = orderOf x / gcdₓ (orderOf x) n := by
   convert minimal_period_iterate_eq_div_gcd h
   simp only [orderOf, mul_left_iterate]
 
 variable (a) (n)
 
 @[to_additive add_order_of_nsmul'']
-theorem order_of_pow'' (h : IsOfFinOrder x) : orderOf (x ^ n) = orderOf x / gcd (orderOf x) n := by
+theorem order_of_pow'' (h : IsOfFinOrder x) : orderOf (x ^ n) = orderOf x / gcdₓ (orderOf x) n := by
   convert minimal_period_iterate_eq_div_gcd' h
   simp only [orderOf, mul_left_iterate]
 
@@ -231,7 +231,7 @@ theorem Commute.order_of_mul_eq_mul_order_of_of_coprime {x y : G} (h : Commute x
 
 section PPrime
 
-variable {a x n} {p : ℕ} [hp : Fact p.prime]
+variable {a x n} {p : ℕ} [hp : Fact p.Prime]
 
 include hp
 
@@ -248,7 +248,6 @@ theorem order_of_eq_prime_pow (hnot : ¬x ^ p ^ n = 1) (hfin : x ^ p ^ (n + 1) =
 omit hp
 
 example : orderOf (-1 : (ℤ)ˣ) = 2 :=
-  have := fact_prime_two
   order_of_eq_prime (Int.units_sq _)
     (by
       decide)
@@ -287,6 +286,15 @@ theorem mem_powers_iff_mem_range_order_of' [DecidableEq G] (hx : 0 < orderOf x) 
     y ∈ Submonoid.powers x ↔ y ∈ (Finset.range (orderOf x)).Image ((· ^ ·) x : ℕ → G) :=
   Finset.mem_range_iff_mem_finset_range_of_mod_eq' hx fun i => pow_eq_mod_order_of.symm
 
+theorem pow_eq_one_iff_modeq : x ^ n = 1 ↔ n ≡ 0 [MOD orderOf x] := by
+  rw [modeq_zero_iff_dvd, order_of_dvd_iff_pow_eq_one]
+
+theorem pow_eq_pow_iff_modeq : x ^ n = x ^ m ↔ n ≡ m [MOD orderOf x] := by
+  wlog hmn : m ≤ n
+  obtain ⟨k, rfl⟩ := Nat.exists_eq_add_of_le hmn
+  rw [← mul_oneₓ (x ^ m), pow_addₓ, mul_left_cancel_iffₓ, pow_eq_one_iff_modeq]
+  exact ⟨fun h => Nat.Modeq.add_left _ h, fun h => Nat.Modeq.add_left_cancel' _ h⟩
+
 end CancelMonoid
 
 section Groupₓ
@@ -303,7 +311,7 @@ theorem order_of_dvd_iff_zpow_eq_one : (orderOf x : ℤ) ∣ i ↔ x ^ i = 1 := 
 
 @[simp, norm_cast, to_additive]
 theorem order_of_subgroup {H : Subgroup G} (y : H) : orderOf (y : G) = orderOf y :=
-  order_of_injective H.subtype Subtype.coe_injective y
+  order_of_injective H.Subtype Subtype.coe_injective y
 
 @[to_additive zsmul_eq_mod_add_order_of]
 theorem zpow_eq_mod_order_of : x ^ i = x ^ (i % orderOf x) :=
@@ -314,7 +322,7 @@ theorem zpow_eq_mod_order_of : x ^ i = x ^ (i % orderOf x) :=
       simp [zpow_add, zpow_mul, pow_order_of_eq_one]
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:169:9: warning: unsupported option pp.all
+-- ././Mathport/Syntax/Translate/Basic.lean:169:40: warning: unsupported option pp.all
 set_option pp.all true
 
 @[to_additive nsmul_inj_iff_of_add_order_of_eq_zero]
@@ -413,7 +421,7 @@ open Nat
 automatic in the case of a finite cancellative monoid.-/
 @[to_additive add_order_of_nsmul
       "This is the same as `add_order_of_nsmul'` and `add_order_of_nsmul` but with one assumption less\nwhich is automatic in the case of a finite cancellative additive monoid."]
-theorem order_of_pow (x : G) : orderOf (x ^ n) = orderOf x / gcd (orderOf x) n :=
+theorem order_of_pow (x : G) : orderOf (x ^ n) = orderOf x / gcdₓ (orderOf x) n :=
   order_of_pow'' _ _ (exists_pow_eq_one _)
 
 @[to_additive mem_multiples_iff_mem_range_add_order_of]
@@ -433,7 +441,7 @@ noncomputable instance decidablePowers [DecidableEq G] : DecidablePred (· ∈ S
 noncomputable def finEquivPowers (x : G) : Finₓ (orderOf x) ≃ (Submonoid.powers x : Set G) :=
   Equivₓ.ofBijective (fun n => ⟨x ^ ↑n, ⟨n, rfl⟩⟩)
     ⟨fun ⟨i, hi⟩ ⟨j, hj⟩ ij => Subtype.mk_eq_mk.2 (pow_injective_of_lt_order_of x hi hj (Subtype.mk_eq_mk.1 ij)),
-      fun ⟨_, i, rfl⟩ => ⟨⟨i % orderOf x, mod_lt i (order_of_pos x)⟩, Subtype.eq pow_eq_mod_order_of.symm⟩⟩
+      fun ⟨_, i, rfl⟩ => ⟨⟨i % orderOf x, mod_ltₓ i (order_of_pos x)⟩, Subtype.eq pow_eq_mod_order_of.symm⟩⟩
 
 @[simp, to_additive fin_equiv_multiples_apply]
 theorem fin_equiv_powers_apply {x : G} {n : Finₓ (orderOf x)} : finEquivPowers x n = ⟨x ^ ↑n, n, rfl⟩ :=
@@ -617,9 +625,9 @@ theorem image_range_order_of [DecidableEq G] :
 
 /-- TODO: Generalise to `finite_cancel_monoid`. -/
 @[to_additive gcd_nsmul_card_eq_zero_iff]
-theorem pow_gcd_card_eq_one_iff : x ^ n = 1 ↔ x ^ gcd n (Fintype.card G) = 1 :=
+theorem pow_gcd_card_eq_one_iff : x ^ n = 1 ↔ x ^ gcdₓ n (Fintype.card G) = 1 :=
   ⟨fun h => pow_gcd_eq_one _ h <| pow_card_eq_one, fun h => by
-    let ⟨m, hm⟩ := gcd_dvd_left n (Fintype.card G)
+    let ⟨m, hm⟩ := gcd_dvd_leftₓ n (Fintype.card G)
     rw [hm, pow_mulₓ, h, one_pow]⟩
 
 end FiniteGroup
@@ -630,7 +638,7 @@ section PowIsSubgroup
 
 /-- A nonempty idempotent subset of a finite cancellative monoid is a submonoid -/
 @[to_additive "A nonempty idempotent subset of a finite cancellative add monoid is a submonoid"]
-def submonoidOfIdempotent {M : Type _} [LeftCancelMonoid M] [Fintype M] (S : Set M) (hS1 : S.nonempty)
+def submonoidOfIdempotent {M : Type _} [LeftCancelMonoid M] [Fintype M] (S : Set M) (hS1 : S.Nonempty)
     (hS2 : S * S = S) : Submonoid M :=
   have pow_mem : ∀ a : M, a ∈ S → ∀ n : ℕ, a ^ (n + 1) ∈ S := fun a ha =>
     Nat.rec
@@ -646,7 +654,7 @@ def submonoidOfIdempotent {M : Type _} [LeftCancelMonoid M] [Fintype M] (S : Set
 
 /-- A nonempty idempotent subset of a finite group is a subgroup -/
 @[to_additive "A nonempty idempotent subset of a finite add group is a subgroup"]
-def subgroupOfIdempotent {G : Type _} [Groupₓ G] [Fintype G] (S : Set G) (hS1 : S.nonempty) (hS2 : S * S = S) :
+def subgroupOfIdempotent {G : Type _} [Groupₓ G] [Fintype G] (S : Set G) (hS1 : S.Nonempty) (hS2 : S * S = S) :
     Subgroup G :=
   { submonoidOfIdempotent S hS1 hS2 with Carrier := S,
     inv_mem' := fun a ha => by
@@ -657,7 +665,7 @@ def subgroupOfIdempotent {G : Type _} [Groupₓ G] [Fintype G] (S : Set G) (hS1 
 @[to_additive smulCardAddSubgroup
       "If `S` is a nonempty subset of a finite add group `G`,\n  then `|G| • S` is a subgroup",
   simps]
-def powCardSubgroup {G : Type _} [Groupₓ G] [Fintype G] (S : Set G) (hS : S.nonempty) : Subgroup G :=
+def powCardSubgroup {G : Type _} [Groupₓ G] [Fintype G] (S : Set G) (hS : S.Nonempty) : Subgroup G :=
   have one_mem : (1 : G) ∈ S ^ Fintype.card G := by
     obtain ⟨a, ha⟩ := hS
     rw [← pow_card_eq_one]

@@ -21,6 +21,8 @@ definitive definition of derivation will be implemented.
 
 open Algebra
 
+open_locale BigOperators
+
 /-- `D : derivation R A M` is an `R`-linear map from `A` to `M` that satisfies the `leibniz`
 equality. We also require that `D 1 = 0`. See `derivation.mk'` for a constructor that deduces this
 assumption from the Leibniz rule when `M` is cancellative.
@@ -48,27 +50,27 @@ variable {M : Type _} [AddCommMonoidₓ M] [Module A M] [Module R M]
 variable (D : Derivation R A M) {D1 D2 : Derivation R A M} (r : R) (a b : A)
 
 instance : AddMonoidHomClass (Derivation R A M) A M where
-  coe := fun D => D.to_fun
+  coe := fun D => D.toFun
   coe_injective' := fun D1 D2 h => by
     cases D1
     cases D2
     congr
     exact FunLike.coe_injective h
-  map_add := fun D => D.to_linear_map.map_add'
-  map_zero := fun D => D.to_linear_map.map_zero
+  map_add := fun D => D.toLinearMap.map_add'
+  map_zero := fun D => D.toLinearMap.map_zero
 
 /-- Helper instance for when there's too many metavariables to apply `to_fun.to_coe_fn` directly. -/
 instance : CoeFun (Derivation R A M) fun _ => A → M :=
-  ⟨fun D => D.to_linear_map.to_fun⟩
+  ⟨fun D => D.toLinearMap.toFun⟩
 
-theorem to_fun_eq_coe : D.to_fun = ⇑D :=
+theorem to_fun_eq_coe : D.toFun = ⇑D :=
   rfl
 
 instance has_coe_to_linear_map : Coe (Derivation R A M) (A →ₗ[R] M) :=
-  ⟨fun D => D.to_linear_map⟩
+  ⟨fun D => D.toLinearMap⟩
 
 @[simp]
-theorem to_linear_map_eq_coe : D.to_linear_map = D :=
+theorem to_linear_map_eq_coe : D.toLinearMap = D :=
   rfl
 
 @[simp]
@@ -97,16 +99,19 @@ protected theorem map_zero : D 0 = 0 :=
 
 @[simp]
 theorem map_smul : D (r • a) = r • D a :=
-  D.to_linear_map.map_smul r a
+  D.toLinearMap.map_smul r a
 
 @[simp]
 theorem leibniz : D (a * b) = a • D b + b • D a :=
   D.leibniz' _ _
 
+theorem map_sum {ι : Type _} (s : Finset ι) (f : ι → A) : D (∑ i in s, f i) = ∑ i in s, D (f i) :=
+  D.toLinearMap.map_sum
+
 @[simp]
 theorem map_smul_of_tower {S : Type _} [HasScalar S A] [HasScalar S M] [LinearMap.CompatibleSmul A M S R]
     (D : Derivation R A M) (r : S) (a : A) : D (r • a) = r • D a :=
-  D.to_linear_map.map_smul_of_tower r a
+  D.toLinearMap.map_smul_of_tower r a
 
 @[simp]
 theorem map_one_eq_zero : D 1 = 0 :=
@@ -218,7 +223,7 @@ theorem smul_apply (r : S) (D : Derivation R A M) : (r • D) a = r • D a :=
   rfl
 
 instance (priority := 100) : DistribMulAction S (Derivation R A M) :=
-  Function.Injective.distribMulAction coe_fn_add_monoid_hom coe_injective coe_smul
+  Function.Injective.distribMulAction coeFnAddMonoidHom coe_injective coe_smul
 
 instance [DistribMulAction (Sᵐᵒᵖ) M] [IsCentralScalar S M] : IsCentralScalar S (Derivation R A M) where
   op_smul_eq_smul := fun _ _ => ext fun _ => op_smul_eq_smul _ _
@@ -227,7 +232,7 @@ end Scalar
 
 instance (priority := 100) {S : Type _} [Semiringₓ S] [Module S M] [SmulCommClass R S M] [SmulCommClass S A M] :
     Module S (Derivation R A M) :=
-  Function.Injective.module S coe_fn_add_monoid_hom coe_injective coe_smul
+  Function.Injective.module S coeFnAddMonoidHom coe_injective coe_smul
 
 instance [IsScalarTower R A M] : IsScalarTower R A (Derivation R A M) :=
   ⟨fun x y z => ext fun a => smul_assoc _ _ _⟩
@@ -256,11 +261,11 @@ def _root_.linear_map.comp_der : Derivation R A M →ₗ[R] Derivation R A N whe
     exact LinearMap.map_smul _ _ _
 
 @[simp]
-theorem coe_to_linear_map_comp : (f.comp_der D : A →ₗ[R] N) = (f : M →ₗ[R] N).comp (D : A →ₗ[R] M) :=
+theorem coe_to_linear_map_comp : (f.compDer D : A →ₗ[R] N) = (f : M →ₗ[R] N).comp (D : A →ₗ[R] M) :=
   rfl
 
 @[simp]
-theorem coe_comp : (f.comp_der D : A → N) = (f : M →ₗ[R] N).comp (D : A →ₗ[R] M) :=
+theorem coe_comp : (f.compDer D : A → N) = (f : M →ₗ[R] N).comp (D : A →ₗ[R] M) :=
   rfl
 
 end PushForward

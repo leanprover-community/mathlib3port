@@ -29,19 +29,19 @@ structure bundled (c : Type u → Type v) : Type max (u + 1) v where
 namespace Bundled
 
 /-- A generic function for lifting a type equipped with an instance to a bundled object. -/
-def of {c : Type u → Type v} (α : Type u) [str : c α] : bundled c :=
+def of {c : Type u → Type v} (α : Type u) [str : c α] : Bundled c :=
   ⟨α, str⟩
 
-instance : CoeSort (bundled c) (Type u) :=
-  ⟨bundled.α⟩
+instance : CoeSort (Bundled c) (Type u) :=
+  ⟨Bundled.α⟩
 
 @[simp]
-theorem coe_mk α str : (@bundled.mk c α str : Type u) = α :=
+theorem coe_mk α str : (@Bundled.mk c α str : Type u) = α :=
   rfl
 
 /-- Map over the bundled structure -/
 @[reducible]
-def map (f : ∀ {α}, c α → d α) (b : bundled c) : bundled d :=
+def map (f : ∀ {α}, c α → d α) (b : Bundled c) : Bundled d :=
   ⟨b, f b.str⟩
 
 end Bundled

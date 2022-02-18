@@ -28,12 +28,12 @@ def Dfinsupp (s : Finset ι) (t : ∀ i, Finset (α i)) : Finset (Π₀ i, α i)
       convert congr_funₓ h ⟨i, hi⟩⟩
 
 @[simp]
-theorem card_dfinsupp (s : Finset ι) (t : ∀ i, Finset (α i)) : (s.dfinsupp t).card = ∏ i in s, (t i).card :=
+theorem card_dfinsupp (s : Finset ι) (t : ∀ i, Finset (α i)) : (s.Dfinsupp t).card = ∏ i in s, (t i).card :=
   (card_map _).trans <| card_pi _ _
 
 variable [∀ i, DecidableEq (α i)]
 
-theorem mem_dfinsupp_iff : f ∈ s.dfinsupp t ↔ f.support ⊆ s ∧ ∀, ∀ i ∈ s, ∀, f i ∈ t i := by
+theorem mem_dfinsupp_iff : f ∈ s.Dfinsupp t ↔ f.support ⊆ s ∧ ∀, ∀ i ∈ s, ∀, f i ∈ t i := by
   refine' mem_map.trans ⟨_, _⟩
   · rintro ⟨f, hf, rfl⟩
     refine' ⟨support_mk_subset, fun i hi => _⟩
@@ -50,7 +50,7 @@ theorem mem_dfinsupp_iff : f ∈ s.dfinsupp t ↔ f.support ⊆ s ∧ ∀, ∀ i
 -/
 @[simp]
 theorem mem_dfinsupp_iff_of_support_subset {t : Π₀ i, Finset (α i)} (ht : t.support ⊆ s) :
-    f ∈ s.dfinsupp t ↔ ∀ i, f i ∈ t i := by
+    f ∈ s.Dfinsupp t ↔ ∀ i, f i ∈ t i := by
   refine'
     mem_dfinsupp_iff.trans
       (forall_and_distrib.symm.trans <|
@@ -95,7 +95,7 @@ variable [∀ i, Zero (α i)] [∀ i, PartialOrderₓ (α i)] [∀ i, LocallyFin
 
 /-- Pointwise `finset.Icc` bundled as a `dfinsupp`. -/
 def range_Icc (f g : Π₀ i, α i) : Π₀ i, Finset (α i) :=
-  ⟦{ toFun := fun i => Icc (f i) (g i), preSupport := f.support.1 + g.support.1,
+  ⟦{ toFun := fun i => icc (f i) (g i), preSupport := f.support.1 + g.support.1,
       zero := fun i => by
         refine' or_iff_not_imp_left.2 fun h => _
         rw [not_mem_support_iff.1 (Multiset.not_mem_mono (Multiset.le_add_right _ _).Subset h),
@@ -103,13 +103,13 @@ def range_Icc (f g : Π₀ i, α i) : Π₀ i, Finset (α i) :=
         exact Icc_self _ }⟧
 
 @[simp]
-theorem range_Icc_apply (f g : Π₀ i, α i) (i : ι) : f.range_Icc g i = Icc (f i) (g i) :=
+theorem range_Icc_apply (f g : Π₀ i, α i) (i : ι) : f.rangeIcc g i = icc (f i) (g i) :=
   rfl
 
-theorem mem_range_Icc_apply_iff : a ∈ f.range_Icc g i ↔ f i ≤ a ∧ a ≤ g i :=
+theorem mem_range_Icc_apply_iff : a ∈ f.rangeIcc g i ↔ f i ≤ a ∧ a ≤ g i :=
   mem_Icc
 
-theorem support_range_Icc_subset : (f.range_Icc g).support ⊆ f.support ∪ g.support := by
+theorem support_range_Icc_subset : (f.rangeIcc g).support ⊆ f.support ∪ g.support := by
   refine' fun x hx => _
   by_contra
   refine' not_mem_support_iff.2 _ hx
@@ -126,14 +126,14 @@ variable [∀ i, Zero (α i)]
 /-- Given a finitely supported function `f : Π₀ i, finset (α i)`, one can define the finset
 `f.pi` of all finitely supported functions whose value at `i` is in `f i` for all `i`. -/
 def pi (f : Π₀ i, Finset (α i)) : Finset (Π₀ i, α i) :=
-  f.support.dfinsupp f
+  f.support.Dfinsupp f
 
 @[simp]
 theorem mem_pi {f : Π₀ i, Finset (α i)} {g : Π₀ i, α i} : g ∈ f.pi ↔ ∀ i, g i ∈ f i :=
-  mem_dfinsupp_iff_of_support_subset <| subset.refl _
+  mem_dfinsupp_iff_of_support_subset <| Subset.refl _
 
 @[simp]
-theorem card_pi (f : Π₀ i, Finset (α i)) : f.pi.card = f.prod fun i => (f i).card := by
+theorem card_pi (f : Π₀ i, Finset (α i)) : f.pi.card = f.Prod fun i => (f i).card := by
   rw [pi, card_dfinsupp]
   exact
     Finset.prod_congr rfl fun i _ => by
@@ -146,23 +146,23 @@ section LocallyFinite
 variable [∀ i, PartialOrderₓ (α i)] [∀ i, Zero (α i)] [∀ i, LocallyFiniteOrder (α i)]
 
 instance : LocallyFiniteOrder (Π₀ i, α i) :=
-  LocallyFiniteOrder.ofIcc (Π₀ i, α i) (fun f g => (f.support ∪ g.support).Dfinsupp <| f.range_Icc g) fun f g x => by
+  LocallyFiniteOrder.ofIcc (Π₀ i, α i) (fun f g => (f.support ∪ g.support).Dfinsupp <| f.rangeIcc g) fun f g x => by
     refine' (mem_dfinsupp_iff_of_support_subset <| support_range_Icc_subset).trans _
     simp_rw [mem_range_Icc_apply_iff, forall_and_distrib]
     rfl
 
 variable (f g : Π₀ i, α i)
 
-theorem card_Icc : (Icc f g).card = ∏ i in f.support ∪ g.support, (Icc (f i) (g i)).card :=
+theorem card_Icc : (icc f g).card = ∏ i in f.support ∪ g.support, (icc (f i) (g i)).card :=
   card_dfinsupp _ _
 
-theorem card_Ico : (Ico f g).card = (∏ i in f.support ∪ g.support, (Icc (f i) (g i)).card) - 1 := by
+theorem card_Ico : (ico f g).card = (∏ i in f.support ∪ g.support, (icc (f i) (g i)).card) - 1 := by
   rw [card_Ico_eq_card_Icc_sub_one, card_Icc]
 
-theorem card_Ioc : (Ioc f g).card = (∏ i in f.support ∪ g.support, (Icc (f i) (g i)).card) - 1 := by
+theorem card_Ioc : (ioc f g).card = (∏ i in f.support ∪ g.support, (icc (f i) (g i)).card) - 1 := by
   rw [card_Ioc_eq_card_Icc_sub_one, card_Icc]
 
-theorem card_Ioo : (Ioo f g).card = (∏ i in f.support ∪ g.support, (Icc (f i) (g i)).card) - 2 := by
+theorem card_Ioo : (ioo f g).card = (∏ i in f.support ∪ g.support, (icc (f i) (g i)).card) - 2 := by
   rw [card_Ioo_eq_card_Icc_sub_two, card_Icc]
 
 end LocallyFinite

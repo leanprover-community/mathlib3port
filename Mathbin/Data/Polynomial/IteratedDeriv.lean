@@ -12,7 +12,7 @@ noncomputable section
 
 open Finset Nat Polynomial
 
-open_locale BigOperators
+open_locale BigOperators Polynomial
 
 namespace Polynomial
 
@@ -22,21 +22,21 @@ variable {R : Type u}
 
 section Semiringₓ
 
-variable [Semiringₓ R] (r : R) (f p q : Polynomial R) (n k : ℕ)
+variable [Semiringₓ R] (r : R) (f p q : R[X]) (n k : ℕ)
 
 /-- `iterated_deriv f n` is the `n`-th formal derivative of the polynomial `f` -/
-def iterated_deriv : Polynomial R :=
+def iterated_deriv : R[X] :=
   (derivative^[n]) f
 
 @[simp]
-theorem iterated_deriv_zero_right : iterated_deriv f 0 = f :=
+theorem iterated_deriv_zero_right : iteratedDeriv f 0 = f :=
   rfl
 
-theorem iterated_deriv_succ : iterated_deriv f (n + 1) = (iterated_deriv f n).derivative := by
+theorem iterated_deriv_succ : iteratedDeriv f (n + 1) = (iteratedDeriv f n).derivative := by
   rw [iterated_deriv, iterated_deriv, Function.iterate_succ']
 
 @[simp]
-theorem iterated_deriv_zero_left : iterated_deriv (0 : Polynomial R) n = 0 := by
+theorem iterated_deriv_zero_left : iteratedDeriv (0 : R[X]) n = 0 := by
   induction' n with n hn
   · exact iterated_deriv_zero_right _
     
@@ -44,7 +44,7 @@ theorem iterated_deriv_zero_left : iterated_deriv (0 : Polynomial R) n = 0 := by
     
 
 @[simp]
-theorem iterated_deriv_add : iterated_deriv (p + q) n = iterated_deriv p n + iterated_deriv q n := by
+theorem iterated_deriv_add : iteratedDeriv (p + q) n = iteratedDeriv p n + iteratedDeriv q n := by
   induction' n with n ih
   · simp only [iterated_deriv_zero_right]
     
@@ -52,7 +52,7 @@ theorem iterated_deriv_add : iterated_deriv (p + q) n = iterated_deriv p n + ite
     
 
 @[simp]
-theorem iterated_deriv_smul : iterated_deriv (r • p) n = r • iterated_deriv p n := by
+theorem iterated_deriv_smul : iteratedDeriv (r • p) n = r • iteratedDeriv p n := by
   induction' n with n ih
   · simp only [iterated_deriv_zero_right]
     
@@ -60,15 +60,15 @@ theorem iterated_deriv_smul : iterated_deriv (r • p) n = r • iterated_deriv 
     
 
 @[simp]
-theorem iterated_deriv_X_zero : iterated_deriv (X : Polynomial R) 0 = X := by
+theorem iterated_deriv_X_zero : iteratedDeriv (x : R[X]) 0 = X := by
   simp only [iterated_deriv_zero_right]
 
 @[simp]
-theorem iterated_deriv_X_one : iterated_deriv (X : Polynomial R) 1 = 1 := by
+theorem iterated_deriv_X_one : iteratedDeriv (x : R[X]) 1 = 1 := by
   simp only [iterated_deriv, derivative_X, Function.iterate_one]
 
 @[simp]
-theorem iterated_deriv_X (h : 1 < n) : iterated_deriv (X : Polynomial R) n = 0 := by
+theorem iterated_deriv_X (h : 1 < n) : iteratedDeriv (x : R[X]) n = 0 := by
   induction' n with n ih
   · exfalso
     exact Nat.not_lt_zeroₓ 1 h
@@ -85,11 +85,11 @@ theorem iterated_deriv_X (h : 1 < n) : iterated_deriv (X : Polynomial R) n = 0 :
     
 
 @[simp]
-theorem iterated_deriv_C_zero : iterated_deriv (C r) 0 = C r := by
+theorem iterated_deriv_C_zero : iteratedDeriv (c r) 0 = c r := by
   simp only [iterated_deriv_zero_right]
 
 @[simp]
-theorem iterated_deriv_C (h : 0 < n) : iterated_deriv (C r) n = 0 := by
+theorem iterated_deriv_C (h : 0 < n) : iteratedDeriv (c r) n = 0 := by
   induction' n with n ih
   · exfalso
     exact Nat.lt_asymmₓ h h
@@ -105,12 +105,12 @@ theorem iterated_deriv_C (h : 0 < n) : iterated_deriv (C r) n = 0 := by
     
 
 @[simp]
-theorem iterated_deriv_one_zero : iterated_deriv (1 : Polynomial R) 0 = 1 := by
+theorem iterated_deriv_one_zero : iteratedDeriv (1 : R[X]) 0 = 1 := by
   simp only [iterated_deriv_zero_right]
 
 @[simp]
-theorem iterated_deriv_one : 0 < n → iterated_deriv (1 : Polynomial R) n = 0 := fun h => by
-  have eq1 : (1 : Polynomial R) = C 1 := by
+theorem iterated_deriv_one : 0 < n → iteratedDeriv (1 : R[X]) n = 0 := fun h => by
+  have eq1 : (1 : R[X]) = C 1 := by
     simp only [RingHom.map_one]
   rw [eq1]
   exact iterated_deriv_C _ _ h
@@ -119,10 +119,10 @@ end Semiringₓ
 
 section Ringₓ
 
-variable [Ringₓ R] (p q : Polynomial R) (n : ℕ)
+variable [Ringₓ R] (p q : R[X]) (n : ℕ)
 
 @[simp]
-theorem iterated_deriv_neg : iterated_deriv (-p) n = -iterated_deriv p n := by
+theorem iterated_deriv_neg : iteratedDeriv (-p) n = -iteratedDeriv p n := by
   induction' n with n ih
   · simp only [iterated_deriv_zero_right]
     
@@ -130,7 +130,7 @@ theorem iterated_deriv_neg : iterated_deriv (-p) n = -iterated_deriv p n := by
     
 
 @[simp]
-theorem iterated_deriv_sub : iterated_deriv (p - q) n = iterated_deriv p n - iterated_deriv q n := by
+theorem iterated_deriv_sub : iteratedDeriv (p - q) n = iteratedDeriv p n - iteratedDeriv q n := by
   rw [sub_eq_add_neg, iterated_deriv_add, iterated_deriv_neg, ← sub_eq_add_neg]
 
 end Ringₓ
@@ -139,10 +139,10 @@ section CommSemiringₓ
 
 variable [CommSemiringₓ R]
 
-variable (f p q : Polynomial R) (n k : ℕ)
+variable (f p q : R[X]) (n k : ℕ)
 
 theorem coeff_iterated_deriv_as_prod_Ico :
-    ∀ m : ℕ, (iterated_deriv f k).coeff m = (∏ i in Ico m.succ (m + k.succ), i) * f.coeff (m + k) := by
+    ∀ m : ℕ, (iteratedDeriv f k).coeff m = (∏ i in ico m.succ (m + k.succ), i) * f.coeff (m + k) := by
   induction' k with k ih
   · simp only [add_zeroₓ, forall_const, one_mulₓ, Ico_self, eq_self_iff_true, iterated_deriv_zero_right, prod_empty]
     
@@ -170,7 +170,7 @@ theorem coeff_iterated_deriv_as_prod_Ico :
     
 
 theorem coeff_iterated_deriv_as_prod_range :
-    ∀ m : ℕ, (iterated_deriv f k).coeff m = f.coeff (m + k) * ∏ i in range k, ↑(m + k - i) := by
+    ∀ m : ℕ, (iteratedDeriv f k).coeff m = f.coeff (m + k) * ∏ i in range k, ↑(m + k - i) := by
   induction' k with k ih
   · simp
     
@@ -182,14 +182,13 @@ theorem coeff_iterated_deriv_as_prod_range :
       push_cast _ = f.coeff (m + k.succ) * ∏ i in range k.succ, ↑(m + k.succ - i) := by
       rw [prod_range_succ, add_tsub_assoc_of_le k.le_succ, succ_sub le_rfl, tsub_self, mul_assoc]
 
-theorem iterated_deriv_eq_zero_of_nat_degree_lt (h : f.nat_degree < n) : iterated_deriv f n = 0 := by
+theorem iterated_deriv_eq_zero_of_nat_degree_lt (h : f.natDegree < n) : iteratedDeriv f n = 0 := by
   ext m
   rw [coeff_iterated_deriv_as_prod_range, coeff_zero, coeff_eq_zero_of_nat_degree_lt, zero_mul]
   linarith
 
 theorem iterated_deriv_mul :
-    iterated_deriv (p * q) n =
-      ∑ k in range n.succ, C (n.choose k : R) * iterated_deriv p (n - k) * iterated_deriv q k :=
+    iteratedDeriv (p * q) n = ∑ k in range n.succ, c (n.choose k : R) * iteratedDeriv p (n - k) * iteratedDeriv q k :=
   by
   induction' n with n IH
   · simp

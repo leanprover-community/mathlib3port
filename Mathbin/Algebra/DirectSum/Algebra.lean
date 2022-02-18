@@ -34,7 +34,7 @@ variable (R : Type uR) (A : ι → Type uA) {B : Type uB} [DecidableEq ι]
 
 variable [CommSemiringₓ R] [∀ i, AddCommMonoidₓ (A i)] [∀ i, Module R (A i)]
 
-variable [AddMonoidₓ ι] [gsemiring A]
+variable [AddMonoidₓ ι] [Gsemiring A]
 
 section
 
@@ -49,13 +49,13 @@ class galgebra where
 
 end
 
-variable [Semiringₓ B] [galgebra R A] [Algebra R B]
+variable [Semiringₓ B] [Galgebra R A] [Algebra R B]
 
 instance : Algebra R (⨁ i, A i) where
-  toFun := (DirectSum.of A 0).comp galgebra.to_fun
+  toFun := (DirectSum.of A 0).comp Galgebra.toFun
   map_zero' := AddMonoidHom.map_zero _
   map_add' := AddMonoidHom.map_add _
-  map_one' := (DirectSum.of A 0).congr_arg galgebra.map_one
+  map_one' := (DirectSum.of A 0).congr_arg Galgebra.map_one
   map_mul' := fun a b => by
     simp only [AddMonoidHom.comp_apply]
     rw [of_mul_of]
@@ -75,11 +75,11 @@ instance : Algebra R (⨁ i, A i) where
     rw [DirectSum.of_mul_of, ← of_smul]
     apply Dfinsupp.single_eq_of_sigma_eq (galgebra.smul_def r ⟨i, xi⟩)
 
-theorem algebra_map_apply (r : R) : algebraMap R (⨁ i, A i) r = DirectSum.of A 0 (galgebra.to_fun r) :=
+theorem algebra_map_apply (r : R) : algebraMap R (⨁ i, A i) r = DirectSum.of A 0 (Galgebra.toFun r) :=
   rfl
 
 theorem algebra_map_to_add_monoid_hom :
-    ↑(algebraMap R (⨁ i, A i)) = (DirectSum.of A 0).comp (galgebra.to_fun : R →+ A 0) :=
+    ↑(algebraMap R (⨁ i, A i)) = (DirectSum.of A 0).comp (Galgebra.toFun : R →+ A 0) :=
   rfl
 
 /-- A family of `linear_map`s preserving `direct_sum.ghas_one.one` and `direct_sum.ghas_mul.mul`
@@ -92,9 +92,9 @@ can be discharged by `rfl`. -/
 @[simps]
 def to_algebra (f : ∀ i, A i →ₗ[R] B) (hone : f _ GradedMonoid.GhasOne.one = 1)
     (hmul : ∀ {i j} ai : A i aj : A j, f _ (GradedMonoid.GhasMul.mul ai aj) = f _ ai * f _ aj)
-    (hcommutes : ∀ r, (f 0) (galgebra.to_fun r) = (algebraMap R B) r) : (⨁ i, A i) →ₐ[R] B :=
-  { to_semiring (fun i => (f i).toAddMonoidHom) hone @hmul with
-    toFun := to_semiring (fun i => (f i).toAddMonoidHom) hone @hmul,
+    (hcommutes : ∀ r, (f 0) (Galgebra.toFun r) = (algebraMap R B) r) : (⨁ i, A i) →ₐ[R] B :=
+  { toSemiring (fun i => (f i).toAddMonoidHom) hone @hmul with
+    toFun := toSemiring (fun i => (f i).toAddMonoidHom) hone @hmul,
     commutes' := fun r => (DirectSum.to_semiring_of _ _ _ _ _).trans (hcommutes r) }
 
 /-- Two `alg_hom`s out of a direct sum are equal if they agree on the generators.
@@ -102,7 +102,7 @@ def to_algebra (f : ∀ i, A i →ₗ[R] B) (hone : f _ GradedMonoid.GhasOne.one
 See note [partially-applied ext lemmas]. -/
 @[ext]
 theorem alg_hom_ext' ⦃f g : (⨁ i, A i) →ₐ[R] B⦄
-    (h : ∀ i, f.to_linear_map.comp (lof _ _ A i) = g.to_linear_map.comp (lof _ _ A i)) : f = g :=
+    (h : ∀ i, f.toLinearMap.comp (lof _ _ A i) = g.toLinearMap.comp (lof _ _ A i)) : f = g :=
   AlgHom.to_linear_map_injective <| DirectSum.linear_map_ext _ h
 
 theorem alg_hom_ext ⦃f g : (⨁ i, A i) →ₐ[R] B⦄ (h : ∀ i x, f (of A i x) = g (of A i x)) : f = g :=

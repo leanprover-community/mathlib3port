@@ -37,10 +37,10 @@ def mk' (f : R →+* Rᵐᵒᵖ) (involution : ∀ r, (f (f r).unop).unop = r) :
     right_inv := fun r => MulOpposite.unop_injective <| involution _, involution' := involution }
 
 instance : CoeFun (RingInvo R) fun _ => R → Rᵐᵒᵖ :=
-  ⟨fun f => f.to_ring_equiv.to_fun⟩
+  ⟨fun f => f.toRingEquiv.toFun⟩
 
 @[simp]
-theorem to_fun_eq_coe (f : RingInvo R) : f.to_fun = f :=
+theorem to_fun_eq_coe (f : RingInvo R) : f.toFun = f :=
   rfl
 
 @[simp]
@@ -56,7 +56,7 @@ theorem coe_ring_equiv (f : RingInvo R) (a : R) : (f : R ≃+* Rᵐᵒᵖ) a = f
 
 @[simp]
 theorem map_eq_zero_iff (f : RingInvo R) {x : R} : f x = 0 ↔ x = 0 :=
-  f.to_ring_equiv.map_eq_zero_iff
+  f.toRingEquiv.map_eq_zero_iff
 
 end RingInvo
 

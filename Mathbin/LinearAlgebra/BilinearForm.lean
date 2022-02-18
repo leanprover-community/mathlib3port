@@ -136,7 +136,7 @@ theorem congr_funₓ (h : B = D) (x y : M) : B x y = D x y :=
   h ▸ rfl
 
 theorem ext_iff : B = D ↔ ∀ x y, B x y = D x y :=
-  ⟨congr_funₓ, ext⟩
+  ⟨congr_fun, ext⟩
 
 instance : AddCommMonoidₓ (BilinForm R M) where
   add := fun B D =>
@@ -185,11 +185,11 @@ instance : AddCommGroupₓ (BilinForm R₁ M₁) :=
         bilin_add_left := fun x y z => by
           rw [bilin_add_left, neg_add],
         bilin_smul_left := fun a x y => by
-          rw [bilin_smul_left, mul_neg_eq_neg_mul_symm],
+          rw [bilin_smul_left, mul_neg],
         bilin_add_right := fun x y z => by
           rw [bilin_add_right, neg_add],
         bilin_smul_right := fun a x y => by
-          rw [bilin_smul_right, mul_neg_eq_neg_mul_symm] },
+          rw [bilin_smul_right, mul_neg] },
     add_left_neg := by
       intros
       ext
@@ -284,7 +284,7 @@ def flip_hom_aux [Algebra R₂ R] : BilinForm R M →ₗ[R₂] BilinForm R M whe
 
 variable {R₂}
 
-theorem flip_flip_aux [Algebra R₂ R] (A : BilinForm R M) : (flip_hom_aux R₂) (flip_hom_aux R₂ A) = A := by
+theorem flip_flip_aux [Algebra R₂ R] (A : BilinForm R M) : (flipHomAux R₂) (flipHomAux R₂ A) = A := by
   ext A x y
   simp [flip_hom_aux]
 
@@ -294,27 +294,27 @@ variable (R₂)
 less structured version of the equiv which applies to general (noncommutative) rings `R` with a
 distinguished commutative subring `R₂`; over a commutative ring use `flip`. -/
 def flip_hom [Algebra R₂ R] : BilinForm R M ≃ₗ[R₂] BilinForm R M :=
-  { flip_hom_aux R₂ with invFun := flip_hom_aux R₂, left_inv := flip_flip_aux, right_inv := flip_flip_aux }
+  { flipHomAux R₂ with invFun := flipHomAux R₂, left_inv := flip_flip_aux, right_inv := flip_flip_aux }
 
 variable {R₂}
 
 @[simp]
-theorem flip_apply [Algebra R₂ R] (A : BilinForm R M) (x y : M) : flip_hom R₂ A x y = A y x :=
+theorem flip_apply [Algebra R₂ R] (A : BilinForm R M) (x y : M) : flipHom R₂ A x y = A y x :=
   rfl
 
-theorem flip_flip [Algebra R₂ R] : (flip_hom R₂).trans (flip_hom R₂) = LinearEquiv.refl R₂ (BilinForm R M) := by
+theorem flip_flip [Algebra R₂ R] : (flipHom R₂).trans (flipHom R₂) = LinearEquiv.refl R₂ (BilinForm R M) := by
   ext A x y
   simp
 
 /-- The flip of a bilinear form over a ring, obtained by exchanging the left and right arguments,
 here considered as an `ℕ`-linear equivalence, i.e. an additive equivalence. -/
 abbrev flip' : BilinForm R M ≃ₗ[ℕ] BilinForm R M :=
-  flip_hom ℕ
+  flipHom ℕ
 
 /-- The `flip` of a bilinear form over a commutative ring, obtained by exchanging the left and
 right arguments. -/
 abbrev flip : BilinForm R₂ M₂ ≃ₗ[R₂] BilinForm R₂ M₂ :=
-  flip_hom R₂
+  flipHom R₂
 
 end flip
 
@@ -330,7 +330,7 @@ def to_lin_hom_aux₁ (A : BilinForm R M) (x : M) : M →ₗ[R] R where
 
 /-- Auxiliary definition to define `to_lin_hom`; see below. -/
 def to_lin_hom_aux₂ (A : BilinForm R M) : M →ₗ[R₂] M →ₗ[R] R where
-  toFun := to_lin_hom_aux₁ A
+  toFun := toLinHomAux₁ A
   map_add' := fun x₁ x₂ =>
     LinearMap.ext fun x => by
       simp only [to_lin_hom_aux₁, LinearMap.coe_mk, LinearMap.add_apply, add_left]
@@ -349,7 +349,7 @@ commutative subsemiring `R₂` of the scalar ring.  Over a semiring with no part
 such subsemiring, use `to_lin'`, which is `ℕ`-linear.  Over a commutative semiring, use `to_lin`,
 which is linear. -/
 def to_lin_hom : BilinForm R M →ₗ[R₂] M →ₗ[R₂] M →ₗ[R] R where
-  toFun := to_lin_hom_aux₂
+  toFun := toLinHomAux₂
   map_add' := fun A₁ A₂ =>
     LinearMap.ext fun x => by
       dsimp only [to_lin_hom_aux₁, to_lin_hom_aux₂]
@@ -367,14 +367,14 @@ def to_lin_hom : BilinForm R M →ₗ[R₂] M →ₗ[R₂] M →ₗ[R] R where
 variable {R₂}
 
 @[simp]
-theorem to_lin'_apply (A : BilinForm R M) (x : M) : ⇑to_lin_hom R₂ A x = A x :=
+theorem to_lin'_apply (A : BilinForm R M) (x : M) : ⇑toLinHom R₂ A x = A x :=
   rfl
 
 /-- The linear map obtained from a `bilin_form` by fixing the left co-ordinate and evaluating in
 the right.
 Over a commutative semiring, use `to_lin`, which is linear rather than `ℕ`-linear. -/
 abbrev to_lin' : BilinForm R M →ₗ[ℕ] M →ₗ[ℕ] M →ₗ[R] R :=
-  to_lin_hom ℕ
+  toLinHom ℕ
 
 @[simp]
 theorem sum_left {α} (t : Finset α) (g : α → M) (w : M) : B (∑ i in t, g i) w = ∑ i in t, B (g i) w :=
@@ -393,19 +393,19 @@ commutative subsemiring `R₂` of the scalar ring.  Over semiring with no partic
 such subsemiring, use `to_lin'_flip`, which is `ℕ`-linear.  Over a commutative semiring, use
 `to_lin_flip`, which is linear. -/
 def to_lin_hom_flip : BilinForm R M →ₗ[R₂] M →ₗ[R₂] M →ₗ[R] R :=
-  (to_lin_hom R₂).comp (flip_hom R₂).toLinearMap
+  (toLinHom R₂).comp (flipHom R₂).toLinearMap
 
 variable {R₂}
 
 @[simp]
-theorem to_lin'_flip_apply (A : BilinForm R M) (x : M) : ⇑to_lin_hom_flip R₂ A x = fun y => A y x :=
+theorem to_lin'_flip_apply (A : BilinForm R M) (x : M) : ⇑toLinHomFlip R₂ A x = fun y => A y x :=
   rfl
 
 /-- The linear map obtained from a `bilin_form` by fixing the right co-ordinate and evaluating in
 the left.
 Over a commutative semiring, use `to_lin_flip`, which is linear rather than `ℕ`-linear. -/
 abbrev to_lin'_flip : BilinForm R M →ₗ[ℕ] M →ₗ[ℕ] M →ₗ[R] R :=
-  to_lin_hom_flip ℕ
+  toLinHomFlip ℕ
 
 end ToLin'
 
@@ -488,11 +488,11 @@ theorem comp_comp {M'' : Type _} [AddCommMonoidₓ M''] [Module R M''] (B : Bili
   rfl
 
 @[simp]
-theorem comp_left_comp_right (B : BilinForm R M) (l r : M →ₗ[R] M) : (B.comp_left l).compRight r = B.comp l r :=
+theorem comp_left_comp_right (B : BilinForm R M) (l r : M →ₗ[R] M) : (B.compLeft l).compRight r = B.comp l r :=
   rfl
 
 @[simp]
-theorem comp_right_comp_left (B : BilinForm R M) (l r : M →ₗ[R] M) : (B.comp_right r).compLeft l = B.comp l r :=
+theorem comp_right_comp_left (B : BilinForm R M) (l r : M →ₗ[R] M) : (B.compRight r).compLeft l = B.comp l r :=
   rfl
 
 @[simp]
@@ -500,30 +500,30 @@ theorem comp_apply (B : BilinForm R M') (l r : M →ₗ[R] M') v w : B.comp l r 
   rfl
 
 @[simp]
-theorem comp_left_apply (B : BilinForm R M) (f : M →ₗ[R] M) v w : B.comp_left f v w = B (f v) w :=
+theorem comp_left_apply (B : BilinForm R M) (f : M →ₗ[R] M) v w : B.compLeft f v w = B (f v) w :=
   rfl
 
 @[simp]
-theorem comp_right_apply (B : BilinForm R M) (f : M →ₗ[R] M) v w : B.comp_right f v w = B v (f w) :=
+theorem comp_right_apply (B : BilinForm R M) (f : M →ₗ[R] M) v w : B.compRight f v w = B v (f w) :=
   rfl
 
 @[simp]
-theorem comp_id_left (B : BilinForm R M) (r : M →ₗ[R] M) : B.comp LinearMap.id r = B.comp_right r := by
+theorem comp_id_left (B : BilinForm R M) (r : M →ₗ[R] M) : B.comp LinearMap.id r = B.compRight r := by
   ext
   rfl
 
 @[simp]
-theorem comp_id_right (B : BilinForm R M) (l : M →ₗ[R] M) : B.comp l LinearMap.id = B.comp_left l := by
+theorem comp_id_right (B : BilinForm R M) (l : M →ₗ[R] M) : B.comp l LinearMap.id = B.compLeft l := by
   ext
   rfl
 
 @[simp]
-theorem comp_left_id (B : BilinForm R M) : B.comp_left LinearMap.id = B := by
+theorem comp_left_id (B : BilinForm R M) : B.compLeft LinearMap.id = B := by
   ext
   rfl
 
 @[simp]
-theorem comp_right_id (B : BilinForm R M) : B.comp_right LinearMap.id = B := by
+theorem comp_right_id (B : BilinForm R M) : B.compRight LinearMap.id = B := by
   ext
   rfl
 
@@ -619,19 +619,19 @@ def lin_mul_lin (f g : M₂ →ₗ[R₂] R₂) : BilinForm R₂ M₂ where
 variable {f g : M₂ →ₗ[R₂] R₂}
 
 @[simp]
-theorem lin_mul_lin_apply x y : lin_mul_lin f g x y = f x * g y :=
+theorem lin_mul_lin_apply x y : linMulLin f g x y = f x * g y :=
   rfl
 
 @[simp]
-theorem lin_mul_lin_comp (l r : M₂' →ₗ[R₂] M₂) : (lin_mul_lin f g).comp l r = lin_mul_lin (f.comp l) (g.comp r) :=
+theorem lin_mul_lin_comp (l r : M₂' →ₗ[R₂] M₂) : (linMulLin f g).comp l r = linMulLin (f.comp l) (g.comp r) :=
   rfl
 
 @[simp]
-theorem lin_mul_lin_comp_left (l : M₂ →ₗ[R₂] M₂) : (lin_mul_lin f g).compLeft l = lin_mul_lin (f.comp l) g :=
+theorem lin_mul_lin_comp_left (l : M₂ →ₗ[R₂] M₂) : (linMulLin f g).compLeft l = linMulLin (f.comp l) g :=
   rfl
 
 @[simp]
-theorem lin_mul_lin_comp_right (r : M₂ →ₗ[R₂] M₂) : (lin_mul_lin f g).compRight r = lin_mul_lin f (g.comp r) :=
+theorem lin_mul_lin_comp_right (r : M₂ →ₗ[R₂] M₂) : (linMulLin f g).compRight r = linMulLin f (g.comp r) :=
   rfl
 
 end LinMulLin
@@ -641,26 +641,26 @@ of an indexed set of elements, use `bilin_form.is_Ortho`. -/
 def is_ortho (B : BilinForm R M) (x y : M) : Prop :=
   B x y = 0
 
-theorem is_ortho_def {B : BilinForm R M} {x y : M} : B.is_ortho x y ↔ B x y = 0 :=
+theorem is_ortho_def {B : BilinForm R M} {x y : M} : B.IsOrtho x y ↔ B x y = 0 :=
   Iff.rfl
 
-theorem is_ortho_zero_left (x : M) : is_ortho B (0 : M) x :=
+theorem is_ortho_zero_left (x : M) : IsOrtho B (0 : M) x :=
   zero_left x
 
-theorem is_ortho_zero_right (x : M) : is_ortho B x (0 : M) :=
+theorem is_ortho_zero_right (x : M) : IsOrtho B x (0 : M) :=
   zero_right x
 
-theorem ne_zero_of_not_is_ortho_self {B : BilinForm K V} (x : V) (hx₁ : ¬B.is_ortho x x) : x ≠ 0 := fun hx₂ =>
+theorem ne_zero_of_not_is_ortho_self {B : BilinForm K V} (x : V) (hx₁ : ¬B.IsOrtho x x) : x ≠ 0 := fun hx₂ =>
   hx₁ (hx₂.symm ▸ is_ortho_zero_left _)
 
 /-- A set of vectors `v` is orthogonal with respect to some bilinear form `B` if and only
 if for all `i ≠ j`, `B (v i) (v j) = 0`. For orthogonality between two elements, use
 `bilin_form.is_ortho` -/
 def is_Ortho {n : Type w} (B : BilinForm R M) (v : n → M) : Prop :=
-  Pairwise (B.is_ortho on v)
+  Pairwise (B.IsOrtho on v)
 
 theorem is_Ortho_def {n : Type w} {B : BilinForm R M} {v : n → M} :
-    B.is_Ortho v ↔ ∀ i j : n, i ≠ j → B (v i) (v j) = 0 :=
+    B.IsOrtho v ↔ ∀ i j : n, i ≠ j → B (v i) (v j) = 0 :=
   Iff.rfl
 
 section
@@ -670,7 +670,7 @@ variable {R₄ M₄ : Type _} [Ringₓ R₄] [IsDomain R₄]
 variable [AddCommGroupₓ M₄] [Module R₄ M₄] {G : BilinForm R₄ M₄}
 
 @[simp]
-theorem is_ortho_smul_left {x y : M₄} {a : R₄} (ha : a ≠ 0) : is_ortho G (a • x) y ↔ is_ortho G x y := by
+theorem is_ortho_smul_left {x y : M₄} {a : R₄} (ha : a ≠ 0) : IsOrtho G (a • x) y ↔ IsOrtho G x y := by
   dunfold is_ortho
   constructor <;> intro H
   · rw [smul_left, mul_eq_zero] at H
@@ -684,7 +684,7 @@ theorem is_ortho_smul_left {x y : M₄} {a : R₄} (ha : a ≠ 0) : is_ortho G (
     
 
 @[simp]
-theorem is_ortho_smul_right {x y : M₄} {a : R₄} (ha : a ≠ 0) : is_ortho G x (a • y) ↔ is_ortho G x y := by
+theorem is_ortho_smul_right {x y : M₄} {a : R₄} (ha : a ≠ 0) : IsOrtho G x (a • y) ↔ IsOrtho G x y := by
   dunfold is_ortho
   constructor <;> intro H
   · rw [smul_right, mul_eq_zero] at H
@@ -699,8 +699,8 @@ theorem is_ortho_smul_right {x y : M₄} {a : R₄} (ha : a ≠ 0) : is_ortho G 
 
 /-- A set of orthogonal vectors `v` with respect to some bilinear form `B` is linearly independent
   if for all `i`, `B (v i) (v i) ≠ 0`. -/
-theorem linear_independent_of_is_Ortho {n : Type w} {B : BilinForm K V} {v : n → V} (hv₁ : B.is_Ortho v)
-    (hv₂ : ∀ i, ¬B.is_ortho (v i) (v i)) : LinearIndependent K v := by
+theorem linear_independent_of_is_Ortho {n : Type w} {B : BilinForm K V} {v : n → V} (hv₁ : B.IsOrtho v)
+    (hv₂ : ∀ i, ¬B.IsOrtho (v i) (v i)) : LinearIndependent K v := by
   classical
   rw [linear_independent_iff']
   intro s w hs i hi
@@ -723,7 +723,7 @@ variable {ι : Type _} (b : Basis ι R₃ M₃)
 
 /-- Two bilinear forms are equal when they are equal on all basis vectors. -/
 theorem ext_basis (h : ∀ i j, B₃ (b i) (b j) = F₃ (b i) (b j)) : B₃ = F₃ :=
-  to_lin.Injective <| b.ext fun i => b.ext fun j => h i j
+  toLin.Injective <| b.ext fun i => b.ext fun j => h i j
 
 /-- Write out `B x y` as a sum over `B (b i) (b j)` if `b` is a basis. -/
 theorem sum_repr_mul_repr_mul (x y : M₃) :
@@ -743,7 +743,7 @@ open BilinForm Finset LinearMap Matrix
 
 open_locale Matrix
 
--- ././Mathport/Syntax/Translate/Basic.lean:626:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (i j)
 /-- The map from `matrix n n R` to bilinear forms on `n → R`.
 
 This is an auxiliary definition for the equivalence `matrix.to_bilin_form'`. -/
@@ -759,7 +759,7 @@ def Matrix.toBilin'Aux [Fintype n] (M : Matrix n n R₂) : BilinForm R₂ (n →
     simp only [Pi.smul_apply, smul_eq_mul, mul_assoc, mul_left_commₓ, mul_sum]
 
 theorem Matrix.to_bilin'_aux_std_basis [Fintype n] [DecidableEq n] (M : Matrix n n R₂) (i j : n) :
-    M.to_bilin'_aux (std_basis R₂ (fun _ => R₂) i 1) (std_basis R₂ (fun _ => R₂) j 1) = M i j := by
+    M.toBilin'Aux (stdBasis R₂ (fun _ => R₂) i 1) (stdBasis R₂ (fun _ => R₂) j 1) = M i j := by
   rw [Matrix.toBilin'Aux, coe_fn_mk, sum_eq_single i, sum_eq_single j]
   · simp only [std_basis_same, std_basis_same, one_mulₓ, mul_oneₓ]
     
@@ -793,7 +793,7 @@ def BilinForm.toMatrixAux (b : n → M₂) : BilinForm R₂ M₂ →ₗ[R₂] Ma
 variable [Fintype n] [Fintype o]
 
 theorem to_bilin'_aux_to_matrix_aux [DecidableEq n] (B₃ : BilinForm R₃ (n → R₃)) :
-    Matrix.toBilin'Aux (BilinForm.toMatrixAux (fun j => std_basis R₃ (fun _ => R₃) j 1) B₃) = B₃ := by
+    Matrix.toBilin'Aux (BilinForm.toMatrixAux (fun j => stdBasis R₃ (fun _ => R₃) j 1) B₃) = B₃ := by
   refine' ext_basis (Pi.basisFun R₃ n) fun i j => _
   rw [BilinForm.toMatrixAux, LinearMap.coe_mk, Pi.basis_fun_apply, Pi.basis_fun_apply, Matrix.to_bilin'_aux_std_basis]
 
@@ -809,7 +809,7 @@ variable [DecidableEq n] [DecidableEq o]
 
 /-- The linear equivalence between bilinear forms on `n → R` and `n × n` matrices -/
 def BilinForm.toMatrix' : BilinForm R₃ (n → R₃) ≃ₗ[R₃] Matrix n n R₃ :=
-  { BilinForm.toMatrixAux fun j => std_basis R₃ (fun _ => R₃) j 1 with invFun := Matrix.toBilin'Aux,
+  { BilinForm.toMatrixAux fun j => stdBasis R₃ (fun _ => R₃) j 1 with invFun := Matrix.toBilin'Aux,
     left_inv := by
       convert to_bilin'_aux_to_matrix_aux,
     right_inv := fun M => by
@@ -818,7 +818,7 @@ def BilinForm.toMatrix' : BilinForm R₃ (n → R₃) ≃ₗ[R₃] Matrix n n R�
 
 @[simp]
 theorem BilinForm.to_matrix_aux_std_basis (B : BilinForm R₃ (n → R₃)) :
-    BilinForm.toMatrixAux (fun j => std_basis R₃ (fun _ => R₃) j 1) B = BilinForm.toMatrix' B :=
+    BilinForm.toMatrixAux (fun j => stdBasis R₃ (fun _ => R₃) j 1) B = BilinForm.toMatrix' B :=
   rfl
 
 /-- The linear equivalence between `n × n` matrices and bilinear forms on `n → R` -/
@@ -829,13 +829,13 @@ def Matrix.toBilin' : Matrix n n R₃ ≃ₗ[R₃] BilinForm R₃ (n → R₃) :
 theorem Matrix.to_bilin'_aux_eq (M : Matrix n n R₃) : Matrix.toBilin'Aux M = Matrix.toBilin' M :=
   rfl
 
--- ././Mathport/Syntax/Translate/Basic.lean:626:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (i j)
 theorem Matrix.to_bilin'_apply (M : Matrix n n R₃) (x y : n → R₃) :
     Matrix.toBilin' M x y = ∑ (i) (j), x i * M i j * y j :=
   rfl
 
 theorem Matrix.to_bilin'_apply' (M : Matrix n n R₃) (v w : n → R₃) :
-    Matrix.toBilin' M v w = Matrix.dotProduct v (M.mul_vec w) := by
+    Matrix.toBilin' M v w = Matrix.dotProduct v (M.mulVec w) := by
   simp_rw [Matrix.to_bilin'_apply, Matrix.dotProduct, Matrix.mulVecₓ, Matrix.dotProduct]
   refine' Finset.sum_congr rfl fun _ _ => _
   rw [Finset.mul_sum]
@@ -844,7 +844,7 @@ theorem Matrix.to_bilin'_apply' (M : Matrix n n R₃) (v w : n → R₃) :
 
 @[simp]
 theorem Matrix.to_bilin'_std_basis (M : Matrix n n R₃) (i j : n) :
-    Matrix.toBilin' M (std_basis R₃ (fun _ => R₃) i 1) (std_basis R₃ (fun _ => R₃) j 1) = M i j :=
+    Matrix.toBilin' M (stdBasis R₃ (fun _ => R₃) i 1) (stdBasis R₃ (fun _ => R₃) j 1) = M i j :=
   Matrix.to_bilin'_aux_std_basis M i j
 
 @[simp]
@@ -865,12 +865,12 @@ theorem BilinForm.to_matrix'_to_bilin' (M : Matrix n n R₃) : BilinForm.toMatri
 
 @[simp]
 theorem BilinForm.to_matrix'_apply (B : BilinForm R₃ (n → R₃)) (i j : n) :
-    BilinForm.toMatrix' B i j = B (std_basis R₃ (fun _ => R₃) i 1) (std_basis R₃ (fun _ => R₃) j 1) :=
+    BilinForm.toMatrix' B i j = B (stdBasis R₃ (fun _ => R₃) i 1) (stdBasis R₃ (fun _ => R₃) j 1) :=
   rfl
 
 @[simp]
 theorem BilinForm.to_matrix'_comp (B : BilinForm R₃ (n → R₃)) (l r : (o → R₃) →ₗ[R₃] n → R₃) :
-    (B.comp l r).toMatrix' = (l.to_matrix')ᵀ ⬝ B.to_matrix' ⬝ r.to_matrix' := by
+    (B.comp l r).toMatrix' = (l.toMatrix')ᵀ ⬝ B.toMatrix' ⬝ r.toMatrix' := by
   ext i j
   simp only [BilinForm.to_matrix'_apply, BilinForm.comp_apply, transpose_apply, Matrix.mul_apply, LinearMap.toMatrix',
     LinearEquiv.coe_mk, sum_mul]
@@ -893,27 +893,27 @@ theorem BilinForm.to_matrix'_comp (B : BilinForm R₃ (n → R₃)) (l r : (o �
     
 
 theorem BilinForm.to_matrix'_comp_left (B : BilinForm R₃ (n → R₃)) (f : (n → R₃) →ₗ[R₃] n → R₃) :
-    (B.comp_left f).toMatrix' = (f.to_matrix')ᵀ ⬝ B.to_matrix' := by
+    (B.compLeft f).toMatrix' = (f.toMatrix')ᵀ ⬝ B.toMatrix' := by
   simp only [BilinForm.compLeft, BilinForm.to_matrix'_comp, to_matrix'_id, Matrix.mul_one]
 
 theorem BilinForm.to_matrix'_comp_right (B : BilinForm R₃ (n → R₃)) (f : (n → R₃) →ₗ[R₃] n → R₃) :
-    (B.comp_right f).toMatrix' = B.to_matrix' ⬝ f.to_matrix' := by
+    (B.compRight f).toMatrix' = B.toMatrix' ⬝ f.toMatrix' := by
   simp only [BilinForm.compRight, BilinForm.to_matrix'_comp, to_matrix'_id, transpose_one, Matrix.one_mul]
 
 theorem BilinForm.mul_to_matrix'_mul (B : BilinForm R₃ (n → R₃)) (M : Matrix o n R₃) (N : Matrix n o R₃) :
-    M ⬝ B.to_matrix' ⬝ N = (B.comp (M)ᵀ.toLin' N.to_lin').toMatrix' := by
+    M ⬝ B.toMatrix' ⬝ N = (B.comp (M)ᵀ.toLin' N.toLin').toMatrix' := by
   simp only [B.to_matrix'_comp, transpose_transpose, to_matrix'_to_lin']
 
 theorem BilinForm.mul_to_matrix' (B : BilinForm R₃ (n → R₃)) (M : Matrix n n R₃) :
-    M ⬝ B.to_matrix' = (B.comp_left (M)ᵀ.toLin').toMatrix' := by
+    M ⬝ B.toMatrix' = (B.compLeft (M)ᵀ.toLin').toMatrix' := by
   simp only [B.to_matrix'_comp_left, transpose_transpose, to_matrix'_to_lin']
 
 theorem BilinForm.to_matrix'_mul (B : BilinForm R₃ (n → R₃)) (M : Matrix n n R₃) :
-    B.to_matrix' ⬝ M = (B.comp_right M.to_lin').toMatrix' := by
+    B.toMatrix' ⬝ M = (B.compRight M.toLin').toMatrix' := by
   simp only [B.to_matrix'_comp_right, to_matrix'_to_lin']
 
 theorem Matrix.to_bilin'_comp (M : Matrix n n R₃) (P Q : Matrix n o R₃) :
-    M.to_bilin'.comp P.to_lin' Q.to_lin' = ((P)ᵀ ⬝ M ⬝ Q).toBilin' :=
+    M.toBilin'.comp P.toLin' Q.toLin' = ((P)ᵀ ⬝ M ⬝ Q).toBilin' :=
   BilinForm.toMatrix'.Injective
     (by
       simp only [BilinForm.to_matrix'_comp, BilinForm.to_matrix'_to_bilin', to_matrix'_to_lin'])
@@ -934,7 +934,7 @@ variable [DecidableEq n] (b : Basis n R₃ M₃)
 /-- `bilin_form.to_matrix b` is the equivalence between `R`-bilinear forms on `M` and
 `n`-by-`n` matrices with entries in `R`, if `b` is an `R`-basis for `M`. -/
 noncomputable def BilinForm.toMatrix : BilinForm R₃ M₃ ≃ₗ[R₃] Matrix n n R₃ :=
-  (BilinForm.congr b.equiv_fun).trans BilinForm.toMatrix'
+  (BilinForm.congr b.equivFun).trans BilinForm.toMatrix'
 
 /-- `bilin_form.to_matrix b` is the equivalence between `R`-bilinear forms on `M` and
 `n`-by-`n` matrices with entries in `R`, if `b` is an `R`-basis for `M`. -/
@@ -942,7 +942,7 @@ noncomputable def Matrix.toBilin : Matrix n n R₃ ≃ₗ[R₃] BilinForm R₃ M
   (BilinForm.toMatrix b).symm
 
 @[simp]
-theorem Basis.equiv_fun_symm_std_basis (i : n) : b.equiv_fun.symm (std_basis R₃ (fun _ => R₃) i 1) = b i := by
+theorem Basis.equiv_fun_symm_std_basis (i : n) : b.equivFun.symm (stdBasis R₃ (fun _ => R₃) i 1) = b i := by
   rw [b.equiv_fun_symm_apply, Finset.sum_eq_single i]
   · rw [std_basis_same, one_smul]
     
@@ -959,7 +959,7 @@ theorem BilinForm.to_matrix_apply (B : BilinForm R₃ M₃) (i j : n) : BilinFor
   rw [BilinForm.toMatrix, LinearEquiv.trans_apply, BilinForm.to_matrix'_apply, congr_apply, b.equiv_fun_symm_std_basis,
     b.equiv_fun_symm_std_basis]
 
--- ././Mathport/Syntax/Translate/Basic.lean:626:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (i j)
 @[simp]
 theorem Matrix.to_bilin_apply (M : Matrix n n R₃) (x y : M₃) :
     Matrix.toBilin b M x y = ∑ (i) (j), b.repr x i * M i j * b.repr y j := by
@@ -1001,7 +1001,7 @@ variable (c : Basis o R₃ M₃')
 variable [DecidableEq o]
 
 theorem BilinForm.to_matrix_comp (B : BilinForm R₃ M₃) (l r : M₃' →ₗ[R₃] M₃) :
-    BilinForm.toMatrix c (B.comp l r) = (to_matrix c b l)ᵀ ⬝ BilinForm.toMatrix b B ⬝ to_matrix c b r := by
+    BilinForm.toMatrix c (B.comp l r) = (toMatrix c b l)ᵀ ⬝ BilinForm.toMatrix b B ⬝ toMatrix c b r := by
   ext i j
   simp only [BilinForm.to_matrix_apply, BilinForm.comp_apply, transpose_apply, Matrix.mul_apply, LinearMap.toMatrix',
     LinearEquiv.coe_mk, sum_mul]
@@ -1024,32 +1024,32 @@ theorem BilinForm.to_matrix_comp (B : BilinForm R₃ M₃) (l r : M₃' →ₗ[R
     
 
 theorem BilinForm.to_matrix_comp_left (B : BilinForm R₃ M₃) (f : M₃ →ₗ[R₃] M₃) :
-    BilinForm.toMatrix b (B.comp_left f) = (to_matrix b b f)ᵀ ⬝ BilinForm.toMatrix b B := by
+    BilinForm.toMatrix b (B.compLeft f) = (toMatrix b b f)ᵀ ⬝ BilinForm.toMatrix b B := by
   simp only [comp_left, BilinForm.to_matrix_comp b b, to_matrix_id, Matrix.mul_one]
 
 theorem BilinForm.to_matrix_comp_right (B : BilinForm R₃ M₃) (f : M₃ →ₗ[R₃] M₃) :
-    BilinForm.toMatrix b (B.comp_right f) = BilinForm.toMatrix b B ⬝ to_matrix b b f := by
+    BilinForm.toMatrix b (B.compRight f) = BilinForm.toMatrix b B ⬝ toMatrix b b f := by
   simp only [BilinForm.compRight, BilinForm.to_matrix_comp b b, to_matrix_id, transpose_one, Matrix.one_mul]
 
 @[simp]
 theorem BilinForm.to_matrix_mul_basis_to_matrix (c : Basis o R₃ M₃) (B : BilinForm R₃ M₃) :
-    (b.to_matrix c)ᵀ ⬝ BilinForm.toMatrix b B ⬝ b.to_matrix c = BilinForm.toMatrix c B := by
+    (b.toMatrix c)ᵀ ⬝ BilinForm.toMatrix b B ⬝ b.toMatrix c = BilinForm.toMatrix c B := by
   rw [← LinearMap.to_matrix_id_eq_basis_to_matrix, ← BilinForm.to_matrix_comp, BilinForm.comp_id_id]
 
 theorem BilinForm.mul_to_matrix_mul (B : BilinForm R₃ M₃) (M : Matrix o n R₃) (N : Matrix n o R₃) :
-    M ⬝ BilinForm.toMatrix b B ⬝ N = BilinForm.toMatrix c (B.comp (to_lin c b (M)ᵀ) (to_lin c b N)) := by
+    M ⬝ BilinForm.toMatrix b B ⬝ N = BilinForm.toMatrix c (B.comp (toLin c b (M)ᵀ) (toLin c b N)) := by
   simp only [B.to_matrix_comp b c, to_matrix_to_lin, transpose_transpose]
 
 theorem BilinForm.mul_to_matrix (B : BilinForm R₃ M₃) (M : Matrix n n R₃) :
-    M ⬝ BilinForm.toMatrix b B = BilinForm.toMatrix b (B.comp_left (to_lin b b (M)ᵀ)) := by
+    M ⬝ BilinForm.toMatrix b B = BilinForm.toMatrix b (B.compLeft (toLin b b (M)ᵀ)) := by
   rw [B.to_matrix_comp_left b, to_matrix_to_lin, transpose_transpose]
 
 theorem BilinForm.to_matrix_mul (B : BilinForm R₃ M₃) (M : Matrix n n R₃) :
-    BilinForm.toMatrix b B ⬝ M = BilinForm.toMatrix b (B.comp_right (to_lin b b M)) := by
+    BilinForm.toMatrix b B ⬝ M = BilinForm.toMatrix b (B.compRight (toLin b b M)) := by
   rw [B.to_matrix_comp_right b, to_matrix_to_lin]
 
 theorem Matrix.to_bilin_comp (M : Matrix n n R₃) (P Q : Matrix n o R₃) :
-    (Matrix.toBilin b M).comp (to_lin c b P) (to_lin c b Q) = Matrix.toBilin c ((P)ᵀ ⬝ M ⬝ Q) :=
+    (Matrix.toBilin b M).comp (toLin c b P) (toLin c b Q) = Matrix.toBilin c ((P)ᵀ ⬝ M ⬝ Q) :=
   (BilinForm.toMatrix c).Injective
     (by
       simp only [BilinForm.to_matrix_comp b c, BilinForm.to_matrix_to_bilin, to_matrix_to_lin])
@@ -1066,11 +1066,11 @@ def IsRefl (B : BilinForm R M) : Prop :=
 
 namespace IsRefl
 
-variable (H : B.is_refl)
+variable (H : B.IsRefl)
 
 theorem eq_zero : ∀ {x y : M}, B x y = 0 → B y x = 0 := fun x y => H x y
 
-theorem ortho_comm {x y : M} : is_ortho B x y ↔ is_ortho B y x :=
+theorem ortho_comm {x y : M} : IsOrtho B x y ↔ IsOrtho B y x :=
   ⟨eq_zero H, eq_zero H⟩
 
 end IsRefl
@@ -1081,19 +1081,19 @@ def IsSymm (B : BilinForm R M) : Prop :=
 
 namespace IsSymm
 
-variable (H : B.is_symm)
+variable (H : B.IsSymm)
 
 protected theorem Eq (x y : M) : B x y = B y x :=
   H x y
 
-theorem IsRefl : B.is_refl := fun x y H1 => H x y ▸ H1
+theorem IsRefl : B.IsRefl := fun x y H1 => H x y ▸ H1
 
-theorem ortho_comm {x y : M} : is_ortho B x y ↔ is_ortho B y x :=
-  H.is_refl.ortho_comm
+theorem ortho_comm {x y : M} : IsOrtho B x y ↔ IsOrtho B y x :=
+  H.IsRefl.ortho_comm
 
 end IsSymm
 
-theorem is_symm_iff_flip' [Algebra R₂ R] : B.is_symm ↔ flip_hom R₂ B = B := by
+theorem is_symm_iff_flip' [Algebra R₂ R] : B.IsSymm ↔ flipHom R₂ B = B := by
   constructor
   · intro h
     ext x y
@@ -1110,21 +1110,21 @@ def is_alt (B : BilinForm R M) : Prop :=
 
 namespace IsAlt
 
-theorem self_eq_zero (H : B.is_alt) (x : M) : B x x = 0 :=
+theorem self_eq_zero (H : B.IsAlt) (x : M) : B x x = 0 :=
   H x
 
-theorem neg (H : B₁.is_alt) (x y : M₁) : -B₁ x y = B₁ y x := by
+theorem neg (H : B₁.IsAlt) (x y : M₁) : -B₁ x y = B₁ y x := by
   have H1 : B₁ (x + y) (x + y) = 0 := self_eq_zero H (x + y)
   rw [add_left, add_right, add_right, self_eq_zero H, self_eq_zero H, Ringₓ.zero_add, Ringₓ.add_zero,
     add_eq_zero_iff_neg_eq] at H1
   exact H1
 
-theorem IsRefl (H : B₁.is_alt) : B₁.is_refl := by
+theorem IsRefl (H : B₁.IsAlt) : B₁.IsRefl := by
   intro x y h
   rw [← neg H, h, neg_zero]
 
-theorem ortho_comm (H : B₁.is_alt) {x y : M₁} : is_ortho B₁ x y ↔ is_ortho B₁ y x :=
-  H.is_refl.ortho_comm
+theorem ortho_comm (H : B₁.IsAlt) {x y : M₁} : IsOrtho B₁ x y ↔ IsOrtho B₁ y x :=
+  H.IsRefl.ortho_comm
 
 end IsAlt
 
@@ -1143,11 +1143,11 @@ def is_adjoint_pair :=
 
 variable {B B' B₂ f f' g g'}
 
-theorem is_adjoint_pair.eq (h : is_adjoint_pair B B' f g) : ∀ {x y}, B' (f x) y = B x (g y) :=
+theorem is_adjoint_pair.eq (h : IsAdjointPair B B' f g) : ∀ {x y}, B' (f x) y = B x (g y) :=
   h
 
 theorem is_adjoint_pair_iff_comp_left_eq_comp_right (f g : Module.End R M) :
-    is_adjoint_pair B F f g ↔ F.comp_left f = B.comp_right g := by
+    IsAdjointPair B F f g ↔ F.compLeft f = B.compRight g := by
   constructor <;> intro h
   · ext x y
     rw [comp_left_apply, comp_right_apply]
@@ -1158,28 +1158,28 @@ theorem is_adjoint_pair_iff_comp_left_eq_comp_right (f g : Module.End R M) :
     rw [h]
     
 
-theorem is_adjoint_pair_zero : is_adjoint_pair B B' 0 0 := fun x y => by
+theorem is_adjoint_pair_zero : IsAdjointPair B B' 0 0 := fun x y => by
   simp only [BilinForm.zero_left, BilinForm.zero_right, LinearMap.zero_apply]
 
-theorem is_adjoint_pair_id : is_adjoint_pair B B 1 1 := fun x y => rfl
+theorem is_adjoint_pair_id : IsAdjointPair B B 1 1 := fun x y => rfl
 
-theorem is_adjoint_pair.add (h : is_adjoint_pair B B' f g) (h' : is_adjoint_pair B B' f' g') :
-    is_adjoint_pair B B' (f + f') (g + g') := fun x y => by
+theorem is_adjoint_pair.add (h : IsAdjointPair B B' f g) (h' : IsAdjointPair B B' f' g') :
+    IsAdjointPair B B' (f + f') (g + g') := fun x y => by
   rw [LinearMap.add_apply, LinearMap.add_apply, add_left, add_right, h, h']
 
 variable {M₁' : Type _} [AddCommGroupₓ M₁'] [Module R₁ M₁']
 
 variable {B₁' : BilinForm R₁ M₁'} {f₁ f₁' : M₁ →ₗ[R₁] M₁'} {g₁ g₁' : M₁' →ₗ[R₁] M₁}
 
-theorem is_adjoint_pair.sub (h : is_adjoint_pair B₁ B₁' f₁ g₁) (h' : is_adjoint_pair B₁ B₁' f₁' g₁') :
-    is_adjoint_pair B₁ B₁' (f₁ - f₁') (g₁ - g₁') := fun x y => by
+theorem is_adjoint_pair.sub (h : IsAdjointPair B₁ B₁' f₁ g₁) (h' : IsAdjointPair B₁ B₁' f₁' g₁') :
+    IsAdjointPair B₁ B₁' (f₁ - f₁') (g₁ - g₁') := fun x y => by
   rw [LinearMap.sub_apply, LinearMap.sub_apply, sub_left, sub_right, h, h']
 
 variable {M₂' : Type _} [AddCommMonoidₓ M₂'] [Module R₂ M₂']
 
 variable {B₂' : BilinForm R₂ M₂'} {f₂ f₂' : M₂ →ₗ[R₂] M₂'} {g₂ g₂' : M₂' →ₗ[R₂] M₂}
 
-theorem is_adjoint_pair.smul (c : R₂) (h : is_adjoint_pair B₂ B₂' f₂ g₂) : is_adjoint_pair B₂ B₂' (c • f₂) (c • g₂) :=
+theorem is_adjoint_pair.smul (c : R₂) (h : IsAdjointPair B₂ B₂' f₂ g₂) : IsAdjointPair B₂ B₂' (c • f₂) (c • g₂) :=
   fun x y => by
   rw [LinearMap.smul_apply, LinearMap.smul_apply, smul_left, smul_right, h]
 
@@ -1187,12 +1187,12 @@ variable {M'' : Type _} [AddCommMonoidₓ M''] [Module R M'']
 
 variable (B'' : BilinForm R M'')
 
-theorem is_adjoint_pair.comp {f' : M' →ₗ[R] M''} {g' : M'' →ₗ[R] M'} (h : is_adjoint_pair B B' f g)
-    (h' : is_adjoint_pair B' B'' f' g') : is_adjoint_pair B B'' (f'.comp f) (g.comp g') := fun x y => by
+theorem is_adjoint_pair.comp {f' : M' →ₗ[R] M''} {g' : M'' →ₗ[R] M'} (h : IsAdjointPair B B' f g)
+    (h' : IsAdjointPair B' B'' f' g') : IsAdjointPair B B'' (f'.comp f) (g.comp g') := fun x y => by
   rw [LinearMap.comp_apply, LinearMap.comp_apply, h', h]
 
-theorem is_adjoint_pair.mul {f g f' g' : Module.End R M} (h : is_adjoint_pair B B f g)
-    (h' : is_adjoint_pair B B f' g') : is_adjoint_pair B B (f * f') (g' * g) := fun x y => by
+theorem is_adjoint_pair.mul {f g f' g' : Module.End R M} (h : IsAdjointPair B B f g) (h' : IsAdjointPair B B f' g') :
+    IsAdjointPair B B (f * f') (g' * g) := fun x y => by
   rw [LinearMap.mul_apply, LinearMap.mul_apply, h, h']
 
 variable (B B' B₁ B₂) (F₂ : BilinForm R₂ M₂)
@@ -1202,18 +1202,18 @@ on the underlying module. In the case that these two forms are identical, this i
 of self adjointness. In the case that one of the forms is the negation of the other, this is the
 usual concept of skew adjointness. -/
 def is_pair_self_adjoint (f : Module.End R M) :=
-  is_adjoint_pair B F f f
+  IsAdjointPair B F f f
 
 /-- The set of pair-self-adjoint endomorphisms are a submodule of the type of all endomorphisms. -/
 def is_pair_self_adjoint_submodule : Submodule R₂ (Module.End R₂ M₂) where
-  Carrier := { f | is_pair_self_adjoint B₂ F₂ f }
+  Carrier := { f | IsPairSelfAdjoint B₂ F₂ f }
   zero_mem' := is_adjoint_pair_zero
   add_mem' := fun f g hf hg => hf.add hg
   smul_mem' := fun c f h => h.smul c
 
 @[simp]
 theorem mem_is_pair_self_adjoint_submodule (f : Module.End R₂ M₂) :
-    f ∈ is_pair_self_adjoint_submodule B₂ F₂ ↔ is_pair_self_adjoint B₂ F₂ f := by
+    f ∈ isPairSelfAdjointSubmodule B₂ F₂ ↔ IsPairSelfAdjoint B₂ F₂ f := by
   rfl
 
 variable {M₃' : Type _} [AddCommGroupₓ M₃'] [Module R₃ M₃']
@@ -1221,7 +1221,7 @@ variable {M₃' : Type _} [AddCommGroupₓ M₃'] [Module R₃ M₃']
 variable (B₃ F₃ : BilinForm R₃ M₃)
 
 theorem is_pair_self_adjoint_equiv (e : M₃' ≃ₗ[R₃] M₃) (f : Module.End R₃ M₃) :
-    is_pair_self_adjoint B₃ F₃ f ↔ is_pair_self_adjoint (B₃.comp ↑e ↑e) (F₃.comp ↑e ↑e) (e.symm.conj f) := by
+    IsPairSelfAdjoint B₃ F₃ f ↔ IsPairSelfAdjoint (B₃.comp ↑e ↑e) (F₃.comp ↑e ↑e) (e.symm.conj f) := by
   have hₗ : (F₃.comp ↑e ↑e).compLeft (e.symm.conj f) = (F₃.comp_left f).comp ↑e ↑e := by
     ext
     simp [LinearEquiv.symm_conj_apply]
@@ -1236,34 +1236,33 @@ theorem is_pair_self_adjoint_equiv (e : M₃' ≃ₗ[R₃] M₃) (f : Module.End
 /-- An endomorphism of a module is self-adjoint with respect to a bilinear form if it serves as an
 adjoint for itself. -/
 def is_self_adjoint (f : Module.End R M) :=
-  is_adjoint_pair B B f f
+  IsAdjointPair B B f f
 
 /-- An endomorphism of a module is skew-adjoint with respect to a bilinear form if its negation
 serves as an adjoint. -/
 def is_skew_adjoint (f : Module.End R₁ M₁) :=
-  is_adjoint_pair B₁ B₁ f (-f)
+  IsAdjointPair B₁ B₁ f (-f)
 
-theorem is_skew_adjoint_iff_neg_self_adjoint (f : Module.End R₁ M₁) :
-    B₁.is_skew_adjoint f ↔ is_adjoint_pair (-B₁) B₁ f f :=
+theorem is_skew_adjoint_iff_neg_self_adjoint (f : Module.End R₁ M₁) : B₁.IsSkewAdjoint f ↔ IsAdjointPair (-B₁) B₁ f f :=
   show (∀ x y, B₁ (f x) y = B₁ x ((-f) y)) ↔ ∀ x y, B₁ (f x) y = (-B₁) x (f y) by
     simp only [LinearMap.neg_apply, BilinForm.neg_apply, BilinForm.neg_right]
 
 /-- The set of self-adjoint endomorphisms of a module with bilinear form is a submodule. (In fact
 it is a Jordan subalgebra.) -/
 def self_adjoint_submodule :=
-  is_pair_self_adjoint_submodule B₂ B₂
+  isPairSelfAdjointSubmodule B₂ B₂
 
 @[simp]
-theorem mem_self_adjoint_submodule (f : Module.End R₂ M₂) : f ∈ B₂.self_adjoint_submodule ↔ B₂.is_self_adjoint f :=
+theorem mem_self_adjoint_submodule (f : Module.End R₂ M₂) : f ∈ B₂.selfAdjointSubmodule ↔ B₂.IsSelfAdjoint f :=
   Iff.rfl
 
 /-- The set of skew-adjoint endomorphisms of a module with bilinear form is a submodule. (In fact
 it is a Lie subalgebra.) -/
 def skew_adjoint_submodule :=
-  is_pair_self_adjoint_submodule (-B₃) B₃
+  isPairSelfAdjointSubmodule (-B₃) B₃
 
 @[simp]
-theorem mem_skew_adjoint_submodule (f : Module.End R₃ M₃) : f ∈ B₃.skew_adjoint_submodule ↔ B₃.is_skew_adjoint f := by
+theorem mem_skew_adjoint_submodule (f : Module.End R₃ M₃) : f ∈ B₃.skewAdjointSubmodule ↔ B₃.IsSkewAdjoint f := by
   rw [is_skew_adjoint_iff_neg_self_adjoint]
   exact Iff.rfl
 
@@ -1331,7 +1330,7 @@ theorem is_adjoint_pair_to_bilin [DecidableEq n] :
   rfl
 
 theorem Matrix.is_adjoint_pair_equiv [DecidableEq n] (P : Matrix n n R₃) (h : IsUnit P) :
-    ((P)ᵀ ⬝ J ⬝ P).IsAdjointPair ((P)ᵀ ⬝ J ⬝ P) A A' ↔ J.is_adjoint_pair J (P ⬝ A ⬝ P⁻¹) (P ⬝ A' ⬝ P⁻¹) := by
+    ((P)ᵀ ⬝ J ⬝ P).IsAdjointPair ((P)ᵀ ⬝ J ⬝ P) A A' ↔ J.IsAdjointPair J (P ⬝ A ⬝ P⁻¹) (P ⬝ A' ⬝ P⁻¹) := by
   have h' : IsUnit P.det := P.is_unit_iff_is_unit_det.mp h
   let u := P.nonsing_inv_unit h'
   let v := (P)ᵀ.nonsingInvUnit (P.is_unit_det_transpose h')
@@ -1382,7 +1381,7 @@ def selfAdjointMatricesSubmodule : Submodule R₃ (Matrix n n R₃) :=
   pairSelfAdjointMatricesSubmodule J J
 
 @[simp]
-theorem mem_self_adjoint_matrices_submodule : A ∈ selfAdjointMatricesSubmodule J ↔ J.is_self_adjoint A := by
+theorem mem_self_adjoint_matrices_submodule : A ∈ selfAdjointMatricesSubmodule J ↔ J.IsSelfAdjoint A := by
   erw [mem_pair_self_adjoint_matrices_submodule]
   rfl
 
@@ -1392,7 +1391,7 @@ def skewAdjointMatricesSubmodule : Submodule R₃ (Matrix n n R₃) :=
   pairSelfAdjointMatricesSubmodule (-J) J
 
 @[simp]
-theorem mem_skew_adjoint_matrices_submodule : A ∈ skewAdjointMatricesSubmodule J ↔ J.is_skew_adjoint A := by
+theorem mem_skew_adjoint_matrices_submodule : A ∈ skewAdjointMatricesSubmodule J ↔ J.IsSkewAdjoint A := by
   erw [mem_pair_self_adjoint_matrices_submodule]
   simp [Matrix.IsSkewAdjoint, Matrix.IsAdjointPair]
 
@@ -1410,7 +1409,7 @@ chirality; in addition to this "left" orthogonal complement one could define a "
 complement for which, for all `y` in `N`, `B y x = 0`.  This variant definition is not currently
 provided in mathlib. -/
 def orthogonal (B : BilinForm R M) (N : Submodule R M) : Submodule R M where
-  Carrier := { m | ∀, ∀ n ∈ N, ∀, is_ortho B n m }
+  Carrier := { m | ∀, ∀ n ∈ N, ∀, IsOrtho B n m }
   zero_mem' := fun x _ => is_ortho_zero_right x
   add_mem' := fun x y hx hy n hn => by
     rw [is_ortho, add_right, show B n x = 0 from hx n hn, show B n y = 0 from hy n hn, zero_addₓ]
@@ -1420,14 +1419,14 @@ def orthogonal (B : BilinForm R M) (N : Submodule R M) : Submodule R M where
 variable {N L : Submodule R M}
 
 @[simp]
-theorem mem_orthogonal_iff {N : Submodule R M} {m : M} : m ∈ B.orthogonal N ↔ ∀, ∀ n ∈ N, ∀, is_ortho B n m :=
+theorem mem_orthogonal_iff {N : Submodule R M} {m : M} : m ∈ B.orthogonal N ↔ ∀, ∀ n ∈ N, ∀, IsOrtho B n m :=
   Iff.rfl
 
 theorem orthogonal_le (h : N ≤ L) : B.orthogonal L ≤ B.orthogonal N := fun _ hn l hl => hn l (h hl)
 
-theorem le_orthogonal_orthogonal (b : B.is_refl) : N ≤ B.orthogonal (B.orthogonal N) := fun n hn m hm => b _ _ (hm n hn)
+theorem le_orthogonal_orthogonal (b : B.IsRefl) : N ≤ B.orthogonal (B.orthogonal N) := fun n hn m hm => b _ _ (hm n hn)
 
-theorem span_singleton_inf_orthogonal_eq_bot {B : BilinForm K V} {x : V} (hx : ¬B.is_ortho x x) :
+theorem span_singleton_inf_orthogonal_eq_bot {B : BilinForm K V} {x : V} (hx : ¬B.IsOrtho x x) :
     (K∙x)⊓B.orthogonal (K∙x) = ⊥ := by
   rw [← Finset.coe_singleton]
   refine' eq_bot_iff.2 fun y h => _
@@ -1456,14 +1455,14 @@ theorem orthogonal_span_singleton_eq_to_lin_ker {B : BilinForm K V} (x : V) :
     exact Or.intro_rightₓ _ h
     
 
-theorem span_singleton_sup_orthogonal_eq_top {B : BilinForm K V} {x : V} (hx : ¬B.is_ortho x x) :
+theorem span_singleton_sup_orthogonal_eq_top {B : BilinForm K V} {x : V} (hx : ¬B.IsOrtho x x) :
     (K∙x)⊔B.orthogonal (K∙x) = ⊤ := by
   rw [orthogonal_span_singleton_eq_to_lin_ker]
   exact LinearMap.span_singleton_sup_ker_eq_top _ hx
 
 /-- Given a bilinear form `B` and some `x` such that `B x x ≠ 0`, the span of the singleton of `x`
   is complement to its orthogonal complement. -/
-theorem is_compl_span_singleton_orthogonal {B : BilinForm K V} {x : V} (hx : ¬B.is_ortho x x) :
+theorem is_compl_span_singleton_orthogonal {B : BilinForm K V} {x : V} (hx : ¬B.IsOrtho x x) :
     IsCompl (K∙x) (B.orthogonal <| K∙x) :=
   { inf_le_bot := eq_bot_iff.1 <| span_singleton_inf_orthogonal_eq_bot hx,
     top_le_sup := eq_top_iff.1 <| span_singleton_sup_orthogonal_eq_top hx }
@@ -1480,8 +1479,7 @@ def restrict (B : BilinForm R M) (W : Submodule R M) : BilinForm R W where
   bilin_smul_right := fun _ _ _ => smul_right _ _ _
 
 /-- The restriction of a symmetric bilinear form on a submodule is also symmetric. -/
-theorem restrict_symm (B : BilinForm R M) (b : B.is_symm) (W : Submodule R M) : (B.restrict W).IsSymm := fun x y =>
-  b x y
+theorem restrict_symm (B : BilinForm R M) (b : B.IsSymm) (W : Submodule R M) : (B.restrict W).IsSymm := fun x y => b x y
 
 /-- A nondegenerate bilinear form is a bilinear form such that the only element that is orthogonal
 to every other element is `0`; i.e., for all nonzero `m` in `M`, there exists `n` in `M` with
@@ -1509,22 +1507,22 @@ variable {M₂' : Type _}
 
 variable [AddCommMonoidₓ M₂'] [Module R₂ M₂']
 
-theorem nondegenerate.ne_zero [Nontrivial M] {B : BilinForm R M} (h : B.nondegenerate) : B ≠ 0 := fun h0 =>
+theorem nondegenerate.ne_zero [Nontrivial M] {B : BilinForm R M} (h : B.Nondegenerate) : B ≠ 0 := fun h0 =>
   not_nondegenerate_zero R M <| h0 ▸ h
 
-theorem nondegenerate.congr {B : BilinForm R₂ M₂} (e : M₂ ≃ₗ[R₂] M₂') (h : B.nondegenerate) :
+theorem nondegenerate.congr {B : BilinForm R₂ M₂} (e : M₂ ≃ₗ[R₂] M₂') (h : B.Nondegenerate) :
     (congr e B).Nondegenerate := fun m hm =>
   e.symm.map_eq_zero_iff.1 <| (h (e.symm m)) fun n => (congr_argₓ _ (e.symm_apply_apply n).symm).trans (hm (e n))
 
 @[simp]
 theorem nondegenerate_congr_iff {B : BilinForm R₂ M₂} (e : M₂ ≃ₗ[R₂] M₂') :
-    (congr e B).Nondegenerate ↔ B.nondegenerate :=
+    (congr e B).Nondegenerate ↔ B.Nondegenerate :=
   ⟨fun h => by
     convert h.congr e.symm
-    rw [congr_congr, e.self_trans_symm, congr_refl, LinearEquiv.refl_apply], nondegenerate.congr e⟩
+    rw [congr_congr, e.self_trans_symm, congr_refl, LinearEquiv.refl_apply], Nondegenerate.congr e⟩
 
 /-- A bilinear form is nondegenerate if and only if it has a trivial kernel. -/
-theorem nondegenerate_iff_ker_eq_bot {B : BilinForm R₂ M₂} : B.nondegenerate ↔ B.to_lin.ker = ⊥ := by
+theorem nondegenerate_iff_ker_eq_bot {B : BilinForm R₂ M₂} : B.Nondegenerate ↔ B.toLin.ker = ⊥ := by
   rw [LinearMap.ker_eq_bot']
   constructor <;> intro h
   · refine' fun m hm => h _ fun x => _
@@ -1537,12 +1535,12 @@ theorem nondegenerate_iff_ker_eq_bot {B : BilinForm R₂ M₂} : B.nondegenerate
     exact hm x
     
 
-theorem nondegenerate.ker_eq_bot {B : BilinForm R₂ M₂} (h : B.nondegenerate) : B.to_lin.ker = ⊥ :=
+theorem nondegenerate.ker_eq_bot {B : BilinForm R₂ M₂} (h : B.Nondegenerate) : B.toLin.ker = ⊥ :=
   nondegenerate_iff_ker_eq_bot.mp h
 
 /-- The restriction of a nondegenerate bilinear form `B` onto a submodule `W` is
 nondegenerate if `disjoint W (B.orthogonal W)`. -/
-theorem nondegenerate_restrict_of_disjoint_orthogonal (B : BilinForm R₁ M₁) (b : B.is_symm) {W : Submodule R₁ M₁}
+theorem nondegenerate_restrict_of_disjoint_orthogonal (B : BilinForm R₁ M₁) (b : B.IsSymm) {W : Submodule R₁ M₁}
     (hW : Disjoint W (B.orthogonal W)) : (B.restrict W).Nondegenerate := by
   rintro ⟨x, hx⟩ b₁
   rw [Submodule.mk_eq_zero, ← Submodule.mem_bot R₁]
@@ -1553,7 +1551,7 @@ theorem nondegenerate_restrict_of_disjoint_orthogonal (B : BilinForm R₁ M₁) 
 /-- An orthogonal basis with respect to a nondegenerate bilinear form has no self-orthogonal
 elements. -/
 theorem is_Ortho.not_is_ortho_basis_self_of_nondegenerate {n : Type w} [Nontrivial R] {B : BilinForm R M}
-    {v : Basis n R M} (h : B.is_Ortho v) (hB : B.nondegenerate) (i : n) : ¬B.is_ortho (v i) (v i) := by
+    {v : Basis n R M} (h : B.IsOrtho v) (hB : B.Nondegenerate) (i : n) : ¬B.IsOrtho (v i) (v i) := by
   intro ho
   refine' v.ne_zero i ((hB (v i)) fun m => _)
   obtain ⟨vi, rfl⟩ := v.repr.symm.surjective m
@@ -1571,7 +1569,7 @@ theorem is_Ortho.not_is_ortho_basis_self_of_nondegenerate {n : Type w} [Nontrivi
 /-- Given an orthogonal basis with respect to a bilinear form, the bilinear form is nondegenerate
 iff the basis has no elements which are self-orthogonal. -/
 theorem is_Ortho.nondegenerate_iff_not_is_ortho_basis_self {n : Type w} [Nontrivial R] [NoZeroDivisors R]
-    (B : BilinForm R M) (v : Basis n R M) (hO : B.is_Ortho v) : B.nondegenerate ↔ ∀ i, ¬B.is_ortho (v i) (v i) := by
+    (B : BilinForm R M) (v : Basis n R M) (hO : B.IsOrtho v) : B.Nondegenerate ↔ ∀ i, ¬B.IsOrtho (v i) (v i) := by
   refine' ⟨hO.not_is_ortho_basis_self_of_nondegenerate, fun ho m hB => _⟩
   obtain ⟨vi, rfl⟩ := v.repr.symm.surjective m
   rw [LinearEquiv.map_eq_zero_iff]
@@ -1593,8 +1591,8 @@ theorem is_Ortho.nondegenerate_iff_not_is_ortho_basis_self {n : Type w} [Nontriv
 
 section
 
-theorem to_lin_restrict_ker_eq_inf_orthogonal (B : BilinForm K V) (W : Subspace K V) (b : B.is_symm) :
-    (B.to_lin.dom_restrict W).ker.map W.subtype = (W⊓B.orthogonal ⊤ : Subspace K V) := by
+theorem to_lin_restrict_ker_eq_inf_orthogonal (B : BilinForm K V) (W : Subspace K V) (b : B.IsSymm) :
+    (B.toLin.domRestrict W).ker.map W.Subtype = (W⊓B.orthogonal ⊤ : Subspace K V) := by
   ext x
   constructor <;> intro hx
   · rcases hx with ⟨⟨x, hx⟩, hker, rfl⟩
@@ -1618,7 +1616,7 @@ theorem to_lin_restrict_ker_eq_inf_orthogonal (B : BilinForm K V) (W : Subspace 
     
 
 theorem to_lin_restrict_range_dual_annihilator_comap_eq_orthogonal (B : BilinForm K V) (W : Subspace K V) :
-    (B.to_lin.dom_restrict W).range.dualAnnihilatorComap = B.orthogonal W := by
+    (B.toLin.domRestrict W).range.dualAnnihilatorComap = B.orthogonal W := by
   ext x
   constructor <;> rw [mem_orthogonal_iff] <;> intro hx
   · intro y hy
@@ -1634,7 +1632,7 @@ variable [FiniteDimensional K V]
 
 open FiniteDimensional
 
-theorem finrank_add_finrank_orthogonal {B : BilinForm K V} {W : Subspace K V} (b₁ : B.is_symm) :
+theorem finrank_add_finrank_orthogonal {B : BilinForm K V} {W : Subspace K V} (b₁ : B.IsSymm) :
     finrank K W + finrank K (B.orthogonal W) = finrank K V + finrank K (W⊓B.orthogonal ⊤ : Subspace K V) := by
   rw [← to_lin_restrict_ker_eq_inf_orthogonal _ _ b₁, ← to_lin_restrict_range_dual_annihilator_comap_eq_orthogonal _ _,
     finrank_map_subtype_eq]
@@ -1645,7 +1643,7 @@ theorem finrank_add_finrank_orthogonal {B : BilinForm K V} {W : Subspace K V} (b
 
 /-- A subspace is complement to its orthogonal complement with respect to some
 bilinear form if that bilinear form restricted on to the subspace is nondegenerate. -/
-theorem restrict_nondegenerate_of_is_compl_orthogonal {B : BilinForm K V} {W : Subspace K V} (b₁ : B.is_symm)
+theorem restrict_nondegenerate_of_is_compl_orthogonal {B : BilinForm K V} {W : Subspace K V} (b₁ : B.IsSymm)
     (b₂ : (B.restrict W).Nondegenerate) : IsCompl W (B.orthogonal W) := by
   have : W⊓B.orthogonal W = ⊥ := by
     rw [eq_bot_iff]
@@ -1655,7 +1653,7 @@ theorem restrict_nondegenerate_of_is_compl_orthogonal {B : BilinForm K V} {W : S
     rintro ⟨n, hn⟩
     rw [restrict_apply, Submodule.coe_mk, Submodule.coe_mk, b₁]
     exact hx₂ n hn
-  refine' ⟨this ▸ le_reflₓ _, _⟩
+  refine' ⟨this ▸ le_rfl, _⟩
   · rw [top_le_iff]
     refine' eq_top_of_finrank_eq _
     refine' le_antisymmₓ (Submodule.finrank_le _) _
@@ -1666,7 +1664,7 @@ theorem restrict_nondegenerate_of_is_compl_orthogonal {B : BilinForm K V} {W : S
 
 /-- A subspace is complement to its orthogonal complement with respect to some bilinear form
 if and only if that bilinear form restricted on to the subspace is nondegenerate. -/
-theorem restrict_nondegenerate_iff_is_compl_orthogonal {B : BilinForm K V} {W : Subspace K V} (b₁ : B.is_symm) :
+theorem restrict_nondegenerate_iff_is_compl_orthogonal {B : BilinForm K V} {W : Subspace K V} (b₁ : B.IsSymm) :
     (B.restrict W).Nondegenerate ↔ IsCompl W (B.orthogonal W) :=
   ⟨fun b₂ => restrict_nondegenerate_of_is_compl_orthogonal b₁ b₂, fun h =>
     B.nondegenerate_restrict_of_disjoint_orthogonal b₁ h.1⟩
@@ -1674,10 +1672,10 @@ theorem restrict_nondegenerate_iff_is_compl_orthogonal {B : BilinForm K V} {W : 
 /-- Given a nondegenerate bilinear form `B` on a finite-dimensional vector space, `B.to_dual` is
 the linear equivalence between a vector space and its dual with the underlying linear map
 `B.to_lin`. -/
-noncomputable def to_dual (B : BilinForm K V) (b : B.nondegenerate) : V ≃ₗ[K] Module.Dual K V :=
-  B.to_lin.linear_equiv_of_injective (LinearMap.ker_eq_bot.mp <| b.ker_eq_bot) Subspace.dual_finrank_eq.symm
+noncomputable def to_dual (B : BilinForm K V) (b : B.Nondegenerate) : V ≃ₗ[K] Module.Dual K V :=
+  B.toLin.linearEquivOfInjective (LinearMap.ker_eq_bot.mp <| b.ker_eq_bot) Subspace.dual_finrank_eq.symm
 
-theorem to_dual_def {B : BilinForm K V} (b : B.nondegenerate) {m n : V} : B.to_dual b m n = B m n :=
+theorem to_dual_def {B : BilinForm K V} (b : B.Nondegenerate) {m n : V} : B.toDual b m n = B m n :=
   rfl
 
 section DualBasis
@@ -1687,21 +1685,21 @@ variable {ι : Type _} [DecidableEq ι] [Fintype ι]
 /-- The `B`-dual basis `B.dual_basis hB b` to a finite basis `b` satisfies
 `B (B.dual_basis hB b i) (b j) = B (b i) (B.dual_basis hB b j) = if i = j then 1 else 0`,
 where `B` is a nondegenerate (symmetric) bilinear form and `b` is a finite basis. -/
-noncomputable def dual_basis (B : BilinForm K V) (hB : B.nondegenerate) (b : Basis ι K V) : Basis ι K V :=
-  b.dual_basis.map (B.to_dual hB).symm
+noncomputable def dual_basis (B : BilinForm K V) (hB : B.Nondegenerate) (b : Basis ι K V) : Basis ι K V :=
+  b.dualBasis.map (B.toDual hB).symm
 
 @[simp]
-theorem dual_basis_repr_apply (B : BilinForm K V) (hB : B.nondegenerate) (b : Basis ι K V) x i :
-    (B.dual_basis hB b).repr x i = B x (b i) := by
+theorem dual_basis_repr_apply (B : BilinForm K V) (hB : B.Nondegenerate) (b : Basis ι K V) x i :
+    (B.dualBasis hB b).repr x i = B x (b i) := by
   rw [dual_basis, Basis.map_repr, LinearEquiv.symm_symm, LinearEquiv.trans_apply, Basis.dual_basis_repr, to_dual_def]
 
-theorem apply_dual_basis_left (B : BilinForm K V) (hB : B.nondegenerate) (b : Basis ι K V) i j :
-    B (B.dual_basis hB b i) (b j) = if j = i then 1 else 0 := by
+theorem apply_dual_basis_left (B : BilinForm K V) (hB : B.Nondegenerate) (b : Basis ι K V) i j :
+    B (B.dualBasis hB b i) (b j) = if j = i then 1 else 0 := by
   rw [dual_basis, Basis.map_apply, Basis.coe_dual_basis, ← to_dual_def hB, LinearEquiv.apply_symm_apply,
     Basis.coord_apply, Basis.repr_self, Finsupp.single_apply]
 
-theorem apply_dual_basis_right (B : BilinForm K V) (hB : B.nondegenerate) (sym : B.is_symm) (b : Basis ι K V) i j :
-    B (b i) (B.dual_basis hB b j) = if i = j then 1 else 0 := by
+theorem apply_dual_basis_right (B : BilinForm K V) (hB : B.Nondegenerate) (sym : B.IsSymm) (b : Basis ι K V) i j :
+    B (b i) (B.dualBasis hB b j) = if i = j then 1 else 0 := by
   rw [Sym, apply_dual_basis_left]
 
 end DualBasis
@@ -1716,8 +1714,8 @@ on the whole space. -/
 
 /-- The restriction of a symmetric, non-degenerate bilinear form on the orthogonal complement of
 the span of a singleton is also non-degenerate. -/
-theorem restrict_orthogonal_span_singleton_nondegenerate (B : BilinForm K V) (b₁ : B.nondegenerate) (b₂ : B.is_symm)
-    {x : V} (hx : ¬B.is_ortho x x) : nondegenerate <| B.restrict <| B.orthogonal (K∙x) := by
+theorem restrict_orthogonal_span_singleton_nondegenerate (B : BilinForm K V) (b₁ : B.Nondegenerate) (b₂ : B.IsSymm)
+    {x : V} (hx : ¬B.IsOrtho x x) : nondegenerate <| B.restrict <| B.orthogonal (K∙x) := by
   refine' fun m hm => Submodule.coe_eq_zero.1 (b₁ m.1 fun n => _)
   have : n ∈ (K∙x)⊔B.orthogonal (K∙x) := (span_singleton_sup_orthogonal_eq_top hx).symm ▸ Submodule.mem_top
   rcases Submodule.mem_sup.1 this with ⟨y, hy, z, hz, rfl⟩
@@ -1730,15 +1728,15 @@ theorem restrict_orthogonal_span_singleton_nondegenerate (B : BilinForm K V) (b�
 
 section LinearAdjoints
 
-theorem comp_left_injective (B : BilinForm R₁ M₁) (b : B.nondegenerate) : Function.Injective B.comp_left := fun φ ψ h =>
+theorem comp_left_injective (B : BilinForm R₁ M₁) (b : B.Nondegenerate) : Function.Injective B.compLeft := fun φ ψ h =>
   by
   ext w
   refine' eq_of_sub_eq_zero (b _ _)
   intro v
   rw [sub_left, ← comp_left_apply, ← comp_left_apply, ← h, sub_self]
 
-theorem is_adjoint_pair_unique_of_nondegenerate (B : BilinForm R₁ M₁) (b : B.nondegenerate) (φ ψ₁ ψ₂ : M₁ →ₗ[R₁] M₁)
-    (hψ₁ : is_adjoint_pair B B ψ₁ φ) (hψ₂ : is_adjoint_pair B B ψ₂ φ) : ψ₁ = ψ₂ :=
+theorem is_adjoint_pair_unique_of_nondegenerate (B : BilinForm R₁ M₁) (b : B.Nondegenerate) (φ ψ₁ ψ₂ : M₁ →ₗ[R₁] M₁)
+    (hψ₁ : IsAdjointPair B B ψ₁ φ) (hψ₂ : IsAdjointPair B B ψ₂ φ) : ψ₁ = ψ₂ :=
   B.comp_left_injective b <|
     ext fun v w => by
       rw [comp_left_apply, comp_left_apply, hψ₁, hψ₂]
@@ -1747,33 +1745,33 @@ variable [FiniteDimensional K V]
 
 /-- Given bilinear forms `B₁, B₂` where `B₂` is nondegenerate, `symm_comp_of_nondegenerate`
 is the linear map `B₂.to_lin⁻¹ ∘ B₁.to_lin`. -/
-noncomputable def symm_comp_of_nondegenerate (B₁ B₂ : BilinForm K V) (b₂ : B₂.nondegenerate) : V →ₗ[K] V :=
-  (B₂.to_dual b₂).symm.toLinearMap.comp B₁.to_lin
+noncomputable def symm_comp_of_nondegenerate (B₁ B₂ : BilinForm K V) (b₂ : B₂.Nondegenerate) : V →ₗ[K] V :=
+  (B₂.toDual b₂).symm.toLinearMap.comp B₁.toLin
 
-theorem comp_symm_comp_of_nondegenerate_apply (B₁ : BilinForm K V) {B₂ : BilinForm K V} (b₂ : B₂.nondegenerate)
-    (v : V) : to_lin B₂ (B₁.symm_comp_of_nondegenerate B₂ b₂ v) = to_lin B₁ v := by
+theorem comp_symm_comp_of_nondegenerate_apply (B₁ : BilinForm K V) {B₂ : BilinForm K V} (b₂ : B₂.Nondegenerate)
+    (v : V) : toLin B₂ (B₁.symmCompOfNondegenerate B₂ b₂ v) = toLin B₁ v := by
   erw [symm_comp_of_nondegenerate, LinearEquiv.apply_symm_apply (B₂.to_dual b₂) _]
 
 @[simp]
-theorem symm_comp_of_nondegenerate_left_apply (B₁ : BilinForm K V) {B₂ : BilinForm K V} (b₂ : B₂.nondegenerate)
-    (v w : V) : B₂ (symm_comp_of_nondegenerate B₁ B₂ b₂ w) v = B₁ w v := by
+theorem symm_comp_of_nondegenerate_left_apply (B₁ : BilinForm K V) {B₂ : BilinForm K V} (b₂ : B₂.Nondegenerate)
+    (v w : V) : B₂ (symmCompOfNondegenerate B₁ B₂ b₂ w) v = B₁ w v := by
   conv_lhs => rw [← BilinForm.to_lin_apply, comp_symm_comp_of_nondegenerate_apply]
   rfl
 
 /-- Given the nondegenerate bilinear form `B` and the linear map `φ`,
 `left_adjoint_of_nondegenerate` provides the left adjoint of `φ` with respect to `B`.
 The lemma proving this property is `bilin_form.is_adjoint_pair_left_adjoint_of_nondegenerate`. -/
-noncomputable def left_adjoint_of_nondegenerate (B : BilinForm K V) (b : B.nondegenerate) (φ : V →ₗ[K] V) : V →ₗ[K] V :=
-  symm_comp_of_nondegenerate (B.comp_right φ) B b
+noncomputable def left_adjoint_of_nondegenerate (B : BilinForm K V) (b : B.Nondegenerate) (φ : V →ₗ[K] V) : V →ₗ[K] V :=
+  symmCompOfNondegenerate (B.compRight φ) B b
 
-theorem is_adjoint_pair_left_adjoint_of_nondegenerate (B : BilinForm K V) (b : B.nondegenerate) (φ : V →ₗ[K] V) :
-    is_adjoint_pair B B (B.left_adjoint_of_nondegenerate b φ) φ := fun x y =>
-  (B.comp_right φ).symm_comp_of_nondegenerate_left_apply b y x
+theorem is_adjoint_pair_left_adjoint_of_nondegenerate (B : BilinForm K V) (b : B.Nondegenerate) (φ : V →ₗ[K] V) :
+    IsAdjointPair B B (B.leftAdjointOfNondegenerate b φ) φ := fun x y =>
+  (B.compRight φ).symm_comp_of_nondegenerate_left_apply b y x
 
 /-- Given the nondegenerate bilinear form `B`, the linear map `φ` has a unique left adjoint given by
 `bilin_form.left_adjoint_of_nondegenerate`. -/
-theorem is_adjoint_pair_iff_eq_of_nondegenerate (B : BilinForm K V) (b : B.nondegenerate) (ψ φ : V →ₗ[K] V) :
-    is_adjoint_pair B B ψ φ ↔ ψ = B.left_adjoint_of_nondegenerate b φ :=
+theorem is_adjoint_pair_iff_eq_of_nondegenerate (B : BilinForm K V) (b : B.Nondegenerate) (ψ φ : V →ₗ[K] V) :
+    IsAdjointPair B B ψ φ ↔ ψ = B.leftAdjointOfNondegenerate b φ :=
   ⟨fun h => B.is_adjoint_pair_unique_of_nondegenerate b φ ψ _ h (is_adjoint_pair_left_adjoint_of_nondegenerate _ _ _),
     fun h => h.symm ▸ is_adjoint_pair_left_adjoint_of_nondegenerate _ _ _⟩
 
@@ -1788,54 +1786,54 @@ variable {A : Type _} [CommRingₓ A] [IsDomain A] [Module A M₃] (B₃ : Bilin
 variable {ι : Type _} [DecidableEq ι] [Fintype ι]
 
 theorem _root_.matrix.nondegenerate_to_bilin'_iff_nondegenerate_to_bilin {M : Matrix ι ι R₃} (b : Basis ι R₃ M₃) :
-    M.to_bilin'.nondegenerate ↔ (Matrix.toBilin b M).Nondegenerate :=
-  (nondegenerate_congr_iff b.equiv_fun.symm).symm
+    M.toBilin'.Nondegenerate ↔ (Matrix.toBilin b M).Nondegenerate :=
+  (nondegenerate_congr_iff b.equivFun.symm).symm
 
-theorem _root_.matrix.nondegenerate.to_bilin' {M : Matrix ι ι R₃} (h : M.nondegenerate) : M.to_bilin'.nondegenerate :=
+theorem _root_.matrix.nondegenerate.to_bilin' {M : Matrix ι ι R₃} (h : M.Nondegenerate) : M.toBilin'.Nondegenerate :=
   fun x hx =>
   h.eq_zero_of_ortho fun y => by
     simpa only [to_bilin'_apply'] using hx y
 
 @[simp]
-theorem _root_.matrix.nondegenerate_to_bilin'_iff {M : Matrix ι ι R₃} : M.to_bilin'.nondegenerate ↔ M.nondegenerate :=
+theorem _root_.matrix.nondegenerate_to_bilin'_iff {M : Matrix ι ι R₃} : M.toBilin'.Nondegenerate ↔ M.Nondegenerate :=
   ⟨fun h v hv => (h v) fun w => (M.to_bilin'_apply' _ _).trans <| hv w, Matrix.Nondegenerate.to_bilin'⟩
 
-theorem _root_.matrix.nondegenerate.to_bilin {M : Matrix ι ι R₃} (h : M.nondegenerate) (b : Basis ι R₃ M₃) :
-    (to_bilin b M).Nondegenerate :=
-  (Matrix.nondegenerate_to_bilin'_iff_nondegenerate_to_bilin b).mp h.to_bilin'
+theorem _root_.matrix.nondegenerate.to_bilin {M : Matrix ι ι R₃} (h : M.Nondegenerate) (b : Basis ι R₃ M₃) :
+    (toBilin b M).Nondegenerate :=
+  (Matrix.nondegenerate_to_bilin'_iff_nondegenerate_to_bilin b).mp h.toBilin'
 
 @[simp]
 theorem _root_.matrix.nondegenerate_to_bilin_iff {M : Matrix ι ι R₃} (b : Basis ι R₃ M₃) :
-    (to_bilin b M).Nondegenerate ↔ M.nondegenerate := by
+    (toBilin b M).Nondegenerate ↔ M.Nondegenerate := by
   rw [← Matrix.nondegenerate_to_bilin'_iff_nondegenerate_to_bilin, Matrix.nondegenerate_to_bilin'_iff]
 
 @[simp]
-theorem nondegenerate_to_matrix'_iff {B : BilinForm R₃ (ι → R₃)} : B.to_matrix'.nondegenerate ↔ B.nondegenerate :=
+theorem nondegenerate_to_matrix'_iff {B : BilinForm R₃ (ι → R₃)} : B.toMatrix'.Nondegenerate ↔ B.Nondegenerate :=
   Matrix.nondegenerate_to_bilin'_iff.symm.trans <| (Matrix.to_bilin'_to_matrix' B).symm ▸ Iff.rfl
 
-theorem nondegenerate.to_matrix' {B : BilinForm R₃ (ι → R₃)} (h : B.nondegenerate) : B.to_matrix'.nondegenerate :=
+theorem nondegenerate.to_matrix' {B : BilinForm R₃ (ι → R₃)} (h : B.Nondegenerate) : B.toMatrix'.Nondegenerate :=
   nondegenerate_to_matrix'_iff.mpr h
 
 @[simp]
 theorem nondegenerate_to_matrix_iff {B : BilinForm R₃ M₃} (b : Basis ι R₃ M₃) :
-    (to_matrix b B).Nondegenerate ↔ B.nondegenerate :=
+    (toMatrix b B).Nondegenerate ↔ B.Nondegenerate :=
   (Matrix.nondegenerate_to_bilin_iff b).symm.trans <| (Matrix.to_bilin_to_matrix b B).symm ▸ Iff.rfl
 
-theorem nondegenerate.to_matrix {B : BilinForm R₃ M₃} (h : B.nondegenerate) (b : Basis ι R₃ M₃) :
-    (to_matrix b B).Nondegenerate :=
+theorem nondegenerate.to_matrix {B : BilinForm R₃ M₃} (h : B.Nondegenerate) (b : Basis ι R₃ M₃) :
+    (toMatrix b B).Nondegenerate :=
   (nondegenerate_to_matrix_iff b).mpr h
 
-theorem nondegenerate_to_bilin'_iff_det_ne_zero {M : Matrix ι ι A} : M.to_bilin'.nondegenerate ↔ M.det ≠ 0 := by
+theorem nondegenerate_to_bilin'_iff_det_ne_zero {M : Matrix ι ι A} : M.toBilin'.Nondegenerate ↔ M.det ≠ 0 := by
   rw [Matrix.nondegenerate_to_bilin'_iff, Matrix.nondegenerate_iff_det_ne_zero]
 
-theorem nondegenerate_to_bilin'_of_det_ne_zero' (M : Matrix ι ι A) (h : M.det ≠ 0) : M.to_bilin'.nondegenerate :=
+theorem nondegenerate_to_bilin'_of_det_ne_zero' (M : Matrix ι ι A) (h : M.det ≠ 0) : M.toBilin'.Nondegenerate :=
   nondegenerate_to_bilin'_iff_det_ne_zero.mpr h
 
 theorem nondegenerate_iff_det_ne_zero {B : BilinForm A M₃} (b : Basis ι A M₃) :
-    B.nondegenerate ↔ (to_matrix b B).det ≠ 0 := by
+    B.Nondegenerate ↔ (toMatrix b B).det ≠ 0 := by
   rw [← Matrix.nondegenerate_iff_det_ne_zero, nondegenerate_to_matrix_iff]
 
-theorem nondegenerate_of_det_ne_zero (b : Basis ι A M₃) (h : (to_matrix b B₃).det ≠ 0) : B₃.nondegenerate :=
+theorem nondegenerate_of_det_ne_zero (b : Basis ι A M₃) (h : (toMatrix b B₃).det ≠ 0) : B₃.Nondegenerate :=
   (nondegenerate_iff_det_ne_zero b).mpr h
 
 end Det

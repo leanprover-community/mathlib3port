@@ -39,16 +39,16 @@ inductive lex (r : α → α → Prop) : List α → List α → Prop
 
 namespace Lex
 
-theorem cons_iff {r : α → α → Prop} [IsIrrefl α r] {a l₁ l₂} : lex r (a :: l₁) (a :: l₂) ↔ lex r l₁ l₂ :=
+theorem cons_iff {r : α → α → Prop} [IsIrrefl α r] {a l₁ l₂} : Lex r (a :: l₁) (a :: l₂) ↔ Lex r l₁ l₂ :=
   ⟨fun h => by
-    cases' h with _ _ _ _ _ h _ _ _ _ h <;> [exact h, exact (irrefl_of r a h).elim], lex.cons⟩
+    cases' h with _ _ _ _ _ h _ _ _ _ h <;> [exact h, exact (irrefl_of r a h).elim], Lex.cons⟩
 
 @[simp]
-theorem not_nil_right (r : α → α → Prop) (l : List α) : ¬lex r l [] :=
+theorem not_nil_right (r : α → α → Prop) (l : List α) : ¬Lex r l [] :=
   fun.
 
 instance IsOrderConnected (r : α → α → Prop) [IsOrderConnected α r] [IsTrichotomous α r] :
-    IsOrderConnected (List α) (lex r) :=
+    IsOrderConnected (List α) (Lex r) :=
   ⟨fun l₁ =>
     match l₁ with
     | _, [], c :: l₃, nil => Or.inr nil
@@ -65,7 +65,7 @@ instance IsOrderConnected (r : α → α → Prop) [IsOrderConnected α r] [IsTr
       · exact Or.inr (rel ab)
         ⟩
 
-instance IsTrichotomous (r : α → α → Prop) [IsTrichotomous α r] : IsTrichotomous (List α) (lex r) :=
+instance IsTrichotomous (r : α → α → Prop) [IsTrichotomous α r] : IsTrichotomous (List α) (Lex r) :=
   ⟨fun l₁ =>
     match l₁ with
     | [], [] => Or.inr (Or.inl rfl)
@@ -80,7 +80,7 @@ instance IsTrichotomous (r : α → α → Prop) [IsTrichotomous α r] : IsTrich
       · exact Or.inr (Or.inr (rel ab))
         ⟩
 
-instance IsAsymm (r : α → α → Prop) [IsAsymm α r] : IsAsymm (List α) (lex r) :=
+instance IsAsymm (r : α → α → Prop) [IsAsymm α r] : IsAsymm (List α) (Lex r) :=
   ⟨fun l₁ =>
     match l₁ with
     | a :: l₁, b :: l₂, lex.rel h₁, lex.rel h₂ => asymm h₁ h₂
@@ -88,14 +88,14 @@ instance IsAsymm (r : α → α → Prop) [IsAsymm α r] : IsAsymm (List α) (le
     | a :: l₁, b :: l₂, lex.cons h₁, lex.rel h₂ => asymm h₂ h₂
     | a :: l₁, b :: l₂, lex.cons h₁, lex.cons h₂ => _match _ _ h₁ h₂⟩
 
-instance IsStrictTotalOrder (r : α → α → Prop) [IsStrictTotalOrder' α r] : IsStrictTotalOrder' (List α) (lex r) :=
+instance IsStrictTotalOrder (r : α → α → Prop) [IsStrictTotalOrder' α r] : IsStrictTotalOrder' (List α) (Lex r) :=
   { is_strict_weak_order_of_is_order_connected with }
 
-instance DecidableRel [DecidableEq α] (r : α → α → Prop) [DecidableRel r] : DecidableRel (lex r)
+instance DecidableRel [DecidableEq α] (r : α → α → Prop) [DecidableRel r] : DecidableRel (Lex r)
   | l₁, [] =>
     is_false fun h => by
       cases h
-  | [], b :: l₂ => is_true lex.nil
+  | [], b :: l₂ => isTrue Lex.nil
   | a :: l₁, b :: l₂ => by
     have := DecidableRel l₁ l₂
     refine' decidableOfIff (r a b ∨ a = b ∧ lex r l₁ l₂) ⟨fun h => _, fun h => _⟩
@@ -112,26 +112,26 @@ instance DecidableRel [DecidableEq α] (r : α → α → Prop) [DecidableRel r]
         
       
 
-theorem append_right (r : α → α → Prop) : ∀ {s₁ s₂} t, lex r s₁ s₂ → lex r s₁ (s₂ ++ t)
+theorem append_right (r : α → α → Prop) : ∀ {s₁ s₂} t, Lex r s₁ s₂ → Lex r s₁ (s₂ ++ t)
   | _, _, t, nil => nil
   | _, _, t, cons h => cons (append_right _ h)
   | _, _, t, rel r => rel r
 
-theorem append_left (R : α → α → Prop) {t₁ t₂} (h : lex R t₁ t₂) : ∀ s, lex R (s ++ t₁) (s ++ t₂)
+theorem append_left (R : α → α → Prop) {t₁ t₂} (h : Lex R t₁ t₂) : ∀ s, Lex R (s ++ t₁) (s ++ t₂)
   | [] => h
   | a :: l => cons (append_left l)
 
-theorem imp {r s : α → α → Prop} (H : ∀ a b, r a b → s a b) : ∀ l₁ l₂, lex r l₁ l₂ → lex s l₁ l₂
+theorem imp {r s : α → α → Prop} (H : ∀ a b, r a b → s a b) : ∀ l₁ l₂, Lex r l₁ l₂ → Lex s l₁ l₂
   | _, _, nil => nil
   | _, _, cons h => cons (imp _ _ h)
   | _, _, rel r => rel (H _ _ r)
 
-theorem to_ne : ∀ {l₁ l₂ : List α}, lex (· ≠ ·) l₁ l₂ → l₁ ≠ l₂
+theorem to_ne : ∀ {l₁ l₂ : List α}, Lex (· ≠ ·) l₁ l₂ → l₁ ≠ l₂
   | _, _, cons h, e => to_ne h (List.cons.injₓ e).2
   | _, _, rel r, e => r (List.cons.injₓ e).1
 
 theorem _root_.decidable.list.lex.ne_iff [DecidableEq α] {l₁ l₂ : List α} (H : length l₁ ≤ length l₂) :
-    lex (· ≠ ·) l₁ l₂ ↔ l₁ ≠ l₂ :=
+    Lex (· ≠ ·) l₁ l₂ ↔ l₁ ≠ l₂ :=
   ⟨to_ne, fun h => by
     induction' l₁ with a l₁ IH generalizing l₂ <;> cases' l₂ with b l₂
     · contradiction
@@ -149,19 +149,19 @@ theorem _root_.decidable.list.lex.ne_iff [DecidableEq α] {l₁ l₂ : List α} 
         
       ⟩
 
-theorem ne_iff {l₁ l₂ : List α} (H : length l₁ ≤ length l₂) : lex (· ≠ ·) l₁ l₂ ↔ l₁ ≠ l₂ := by
+theorem ne_iff {l₁ l₂ : List α} (H : length l₁ ≤ length l₂) : Lex (· ≠ ·) l₁ l₂ ↔ l₁ ≠ l₂ := by
   classical <;> exact Decidable.List.Lex.ne_iff H
 
 end Lex
 
 instance has_lt' [LT α] : LT (List α) :=
-  ⟨lex (· < ·)⟩
+  ⟨Lex (· < ·)⟩
 
 theorem nil_lt_cons [LT α] (a : α) (l : List α) : [] < a :: l :=
   lex.nil
 
 instance [LinearOrderₓ α] : LinearOrderₓ (List α) :=
-  linearOrderOfSTO' (lex (· < ·))
+  linearOrderOfSTO' (Lex (· < ·))
 
 instance has_le' [LinearOrderₓ α] : LE (List α) :=
   Preorderₓ.toHasLe _

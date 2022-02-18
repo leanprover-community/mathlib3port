@@ -76,12 +76,12 @@ section NormalizationMonoid
 variable [CancelCommMonoidWithZero α] [NormalizationMonoid α]
 
 @[simp]
-theorem norm_unit_one : norm_unit (1 : α) = 1 :=
+theorem norm_unit_one : normUnit (1 : α) = 1 :=
   norm_unit_coe_units 1
 
 /-- Chooses an element of each associate class, by multiplying by `norm_unit` -/
 def normalize : α →*₀ α where
-  toFun := fun x => x * norm_unit x
+  toFun := fun x => x * normUnit x
   map_zero' := by
     simp
   map_one' := by
@@ -105,7 +105,7 @@ theorem Associates.mk_normalize (x : α) : Associates.mk (normalize x) = Associa
   Associates.mk_eq_mk_iff_associated.2 (normalize_associated _)
 
 @[simp]
-theorem normalize_apply (x : α) : normalize x = x * norm_unit x :=
+theorem normalize_apply (x : α) : normalize x = x * normUnit x :=
   rfl
 
 @[simp]
@@ -127,7 +127,7 @@ theorem normalize_eq_one {x : α} : normalize x = 1 ↔ IsUnit x :=
   ⟨fun hx => is_unit_iff_exists_inv.2 ⟨_, hx⟩, fun ⟨u, hu⟩ => hu ▸ normalize_coe_units u⟩
 
 @[simp]
-theorem norm_unit_mul_norm_unit (a : α) : norm_unit (a * norm_unit a) = 1 := by
+theorem norm_unit_mul_norm_unit (a : α) : normUnit (a * normUnit a) = 1 := by
   nontriviality α using Subsingleton.elimₓ a 0
   obtain rfl | h := eq_or_ne a 0
   · rw [norm_unit_zero, zero_mul, norm_unit_zero]
@@ -400,12 +400,12 @@ theorem gcd_dvd_gcd_mul_right_right [GcdMonoid α] (m n k : α) : gcd m n ∣ gc
   gcd_dvd_gcd dvd_rfl (dvd_mul_right _ _)
 
 theorem Associated.gcd_eq_left [NormalizedGcdMonoid α] {m n : α} (h : Associated m n) (k : α) : gcd m k = gcd n k :=
-  dvd_antisymm_of_normalize_eq (normalize_gcd _ _) (normalize_gcd _ _) (gcd_dvd_gcd h.dvd dvd_rfl)
-    (gcd_dvd_gcd h.symm.dvd dvd_rfl)
+  dvd_antisymm_of_normalize_eq (normalize_gcd _ _) (normalize_gcd _ _) (gcd_dvd_gcd h.Dvd dvd_rfl)
+    (gcd_dvd_gcd h.symm.Dvd dvd_rfl)
 
 theorem Associated.gcd_eq_right [NormalizedGcdMonoid α] {m n : α} (h : Associated m n) (k : α) : gcd k m = gcd k n :=
-  dvd_antisymm_of_normalize_eq (normalize_gcd _ _) (normalize_gcd _ _) (gcd_dvd_gcd dvd_rfl h.dvd)
-    (gcd_dvd_gcd dvd_rfl h.symm.dvd)
+  dvd_antisymm_of_normalize_eq (normalize_gcd _ _) (normalize_gcd _ _) (gcd_dvd_gcd dvd_rfl h.Dvd)
+    (gcd_dvd_gcd dvd_rfl h.symm.Dvd)
 
 theorem dvd_gcd_mul_of_dvd_mul [GcdMonoid α] {m n k : α} (H : k ∣ m * n) : k ∣ gcd k m * n :=
   (dvd_gcd (dvd_mul_right _ n) H).trans (gcd_mul_right' n k m).Dvd
@@ -706,12 +706,12 @@ theorem lcm_dvd_lcm_mul_right_right [GcdMonoid α] (m n k : α) : lcm m n ∣ lc
   lcm_dvd_lcm dvd_rfl (dvd_mul_right _ _)
 
 theorem lcm_eq_of_associated_left [NormalizedGcdMonoid α] {m n : α} (h : Associated m n) (k : α) : lcm m k = lcm n k :=
-  dvd_antisymm_of_normalize_eq (normalize_lcm _ _) (normalize_lcm _ _) (lcm_dvd_lcm h.dvd dvd_rfl)
-    (lcm_dvd_lcm h.symm.dvd dvd_rfl)
+  dvd_antisymm_of_normalize_eq (normalize_lcm _ _) (normalize_lcm _ _) (lcm_dvd_lcm h.Dvd dvd_rfl)
+    (lcm_dvd_lcm h.symm.Dvd dvd_rfl)
 
 theorem lcm_eq_of_associated_right [NormalizedGcdMonoid α] {m n : α} (h : Associated m n) (k : α) : lcm k m = lcm k n :=
-  dvd_antisymm_of_normalize_eq (normalize_lcm _ _) (normalize_lcm _ _) (lcm_dvd_lcm dvd_rfl h.dvd)
-    (lcm_dvd_lcm dvd_rfl h.symm.dvd)
+  dvd_antisymm_of_normalize_eq (normalize_lcm _ _) (normalize_lcm _ _) (lcm_dvd_lcm dvd_rfl h.Dvd)
+    (lcm_dvd_lcm dvd_rfl h.symm.Dvd)
 
 end Lcm
 
@@ -751,7 +751,7 @@ instance (priority := 100) normalizationMonoidOfUniqueUnits : NormalizationMonoi
   norm_unit_coe_units := fun u => Subsingleton.elimₓ _ _
 
 @[simp]
-theorem norm_unit_eq_one (x : α) : norm_unit x = 1 :=
+theorem norm_unit_eq_one (x : α) : normUnit x = 1 :=
   rfl
 
 @[simp]
@@ -1149,7 +1149,7 @@ instance (priority := 100) : NormalizedGcdMonoid G₀ where
       simp [if_neg h]
 
 @[simp]
-theorem coe_norm_unit {a : G₀} (h0 : a ≠ 0) : (↑(norm_unit a) : G₀) = a⁻¹ := by
+theorem coe_norm_unit {a : G₀} (h0 : a ≠ 0) : (↑(normUnit a) : G₀) = a⁻¹ := by
   simp [norm_unit, h0]
 
 theorem normalize_eq_one {a : G₀} (h0 : a ≠ 0) : normalize a = 1 := by

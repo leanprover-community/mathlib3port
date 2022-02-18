@@ -12,7 +12,7 @@ This file extends the theory of `ℕ+` with `gcd`, `lcm` and `prime` functions, 
 namespace Nat.Primes
 
 instance coe_pnat : Coe Nat.Primes ℕ+ :=
-  ⟨fun p => ⟨(p : ℕ), p.property.pos⟩⟩
+  ⟨fun p => ⟨(p : ℕ), p.property.Pos⟩⟩
 
 theorem coePnatNat (p : Nat.Primes) : ((p : ℕ+) : ℕ) = p :=
   rfl
@@ -31,7 +31,7 @@ open Nat
 /-- The greatest common divisor (gcd) of two positive natural numbers,
   viewed as positive natural number. -/
 def gcd (n m : ℕ+) : ℕ+ :=
-  ⟨Nat.gcdₓ (n : ℕ) (m : ℕ), Nat.gcd_pos_of_pos_leftₓ (m : ℕ) n.pos⟩
+  ⟨Nat.gcdₓ (n : ℕ) (m : ℕ), Nat.gcd_pos_of_pos_leftₓ (m : ℕ) n.Pos⟩
 
 /-- The least common multiple (lcm) of two positive natural numbers,
   viewed as positive natural number. -/
@@ -88,18 +88,18 @@ section Prime
 def Prime (p : ℕ+) : Prop :=
   (p : ℕ).Prime
 
-theorem prime.one_lt {p : ℕ+} : p.prime → 1 < p :=
+theorem prime.one_lt {p : ℕ+} : p.Prime → 1 < p :=
   Nat.Prime.one_lt
 
 theorem prime_two : (2 : ℕ+).Prime :=
   Nat.prime_two
 
-theorem dvd_prime {p m : ℕ+} (pp : p.prime) : m ∣ p ↔ m = 1 ∨ m = p := by
+theorem dvd_prime {p m : ℕ+} (pp : p.Prime) : m ∣ p ↔ m = 1 ∨ m = p := by
   rw [Pnat.dvd_iff]
   rw [Nat.dvd_prime pp]
   simp
 
-theorem Prime.ne_one {p : ℕ+} : p.prime → p ≠ 1 := by
+theorem Prime.ne_one {p : ℕ+} : p.Prime → p ≠ 1 := by
   intro pp
   intro contra
   apply Nat.Prime.ne_one pp
@@ -110,11 +110,11 @@ theorem Prime.ne_one {p : ℕ+} : p.prime → p ≠ 1 := by
 theorem not_prime_one : ¬(1 : ℕ+).Prime :=
   Nat.not_prime_one
 
-theorem Prime.not_dvd_one {p : ℕ+} : p.prime → ¬p ∣ 1 := fun pp : p.prime => by
+theorem Prime.not_dvd_one {p : ℕ+} : p.Prime → ¬p ∣ 1 := fun pp : p.Prime => by
   rw [dvd_iff]
   apply Nat.Prime.not_dvd_one pp
 
-theorem exists_prime_and_dvd {n : ℕ+} : 2 ≤ n → ∃ p : ℕ+, p.prime ∧ p ∣ n := by
+theorem exists_prime_and_dvd {n : ℕ+} : 2 ≤ n → ∃ p : ℕ+, p.Prime ∧ p ∣ n := by
   intro h
   cases' Nat.exists_prime_and_dvd h with p hp
   exists (⟨p, Nat.Prime.pos hp.left⟩ : ℕ+)
@@ -133,19 +133,19 @@ def coprime (m n : ℕ+) : Prop :=
   m.gcd n = 1
 
 @[simp]
-theorem coprime_coe {m n : ℕ+} : Nat.Coprime ↑m ↑n ↔ m.coprime n := by
+theorem coprime_coe {m n : ℕ+} : Nat.Coprime ↑m ↑n ↔ m.Coprime n := by
   unfold coprime
   unfold Nat.Coprime
   rw [← coe_inj]
   simp
 
-theorem coprime.mul {k m n : ℕ+} : m.coprime k → n.coprime k → (m * n).Coprime k := by
+theorem coprime.mul {k m n : ℕ+} : m.Coprime k → n.Coprime k → (m * n).Coprime k := by
   repeat'
     rw [← coprime_coe]
   rw [mul_coe]
   apply Nat.Coprime.mul
 
-theorem coprime.mul_right {k m n : ℕ+} : k.coprime m → k.coprime n → k.coprime (m * n) := by
+theorem coprime.mul_right {k m n : ℕ+} : k.Coprime m → k.Coprime n → k.Coprime (m * n) := by
   repeat'
     rw [← coprime_coe]
   rw [mul_coe]
@@ -166,25 +166,25 @@ theorem gcd_eq_right_iff_dvd {m n : ℕ+} : m ∣ n ↔ n.gcd m = m := by
   rw [gcd_comm]
   apply gcd_eq_left_iff_dvd
 
-theorem coprime.gcd_mul_left_cancel (m : ℕ+) {n k : ℕ+} : k.coprime n → (k * m).gcd n = m.gcd n := by
+theorem coprime.gcd_mul_left_cancel (m : ℕ+) {n k : ℕ+} : k.Coprime n → (k * m).gcd n = m.gcd n := by
   intro h
   apply Eq
   simp only [gcd_coe, mul_coe]
   apply Nat.Coprime.gcd_mul_left_cancel
   simpa
 
-theorem coprime.gcd_mul_right_cancel (m : ℕ+) {n k : ℕ+} : k.coprime n → (m * k).gcd n = m.gcd n := by
+theorem coprime.gcd_mul_right_cancel (m : ℕ+) {n k : ℕ+} : k.Coprime n → (m * k).gcd n = m.gcd n := by
   rw [mul_comm]
   apply coprime.gcd_mul_left_cancel
 
-theorem coprime.gcd_mul_left_cancel_right (m : ℕ+) {n k : ℕ+} : k.coprime m → m.gcd (k * n) = m.gcd n := by
+theorem coprime.gcd_mul_left_cancel_right (m : ℕ+) {n k : ℕ+} : k.Coprime m → m.gcd (k * n) = m.gcd n := by
   intro h
   iterate 2 
     rw [gcd_comm]
     symm
   apply coprime.gcd_mul_left_cancel _ h
 
-theorem coprime.gcd_mul_right_cancel_right (m : ℕ+) {n k : ℕ+} : k.coprime m → m.gcd (n * k) = m.gcd n := by
+theorem coprime.gcd_mul_right_cancel_right (m : ℕ+) {n k : ℕ+} : k.Coprime m → m.gcd (n * k) = m.gcd n := by
   rw [mul_comm]
   apply coprime.gcd_mul_left_cancel_right
 
@@ -199,7 +199,7 @@ theorem gcd_one {n : ℕ+} : gcd n 1 = 1 := by
   apply one_gcd
 
 @[symm]
-theorem coprime.symm {m n : ℕ+} : m.coprime n → n.coprime m := by
+theorem coprime.symm {m n : ℕ+} : m.Coprime n → n.Coprime m := by
   unfold coprime
   rw [gcd_comm]
   simp
@@ -209,16 +209,16 @@ theorem one_coprime {n : ℕ+} : (1 : ℕ+).Coprime n :=
   one_gcd
 
 @[simp]
-theorem coprime_one {n : ℕ+} : n.coprime 1 :=
-  coprime.symm one_coprime
+theorem coprime_one {n : ℕ+} : n.Coprime 1 :=
+  Coprime.symm one_coprime
 
-theorem coprime.coprime_dvd_left {m k n : ℕ+} : m ∣ k → k.coprime n → m.coprime n := by
+theorem coprime.coprime_dvd_left {m k n : ℕ+} : m ∣ k → k.Coprime n → m.Coprime n := by
   rw [dvd_iff]
   repeat'
     rw [← coprime_coe]
   apply Nat.Coprime.coprime_dvd_left
 
-theorem coprime.factor_eq_gcd_left {a b m n : ℕ+} (cop : m.coprime n) (am : a ∣ m) (bn : b ∣ n) : a = (a * b).gcd m :=
+theorem coprime.factor_eq_gcd_left {a b m n : ℕ+} (cop : m.Coprime n) (am : a ∣ m) (bn : b ∣ n) : a = (a * b).gcd m :=
   by
   rw [gcd_eq_left_iff_dvd] at am
   conv_lhs => rw [← am]
@@ -226,22 +226,22 @@ theorem coprime.factor_eq_gcd_left {a b m n : ℕ+} (cop : m.coprime n) (am : a 
   apply coprime.gcd_mul_right_cancel a
   apply coprime.coprime_dvd_left bn cop.symm
 
-theorem coprime.factor_eq_gcd_right {a b m n : ℕ+} (cop : m.coprime n) (am : a ∣ m) (bn : b ∣ n) : a = (b * a).gcd m :=
+theorem coprime.factor_eq_gcd_right {a b m n : ℕ+} (cop : m.Coprime n) (am : a ∣ m) (bn : b ∣ n) : a = (b * a).gcd m :=
   by
   rw [mul_comm]
   apply coprime.factor_eq_gcd_left cop am bn
 
-theorem coprime.factor_eq_gcd_left_right {a b m n : ℕ+} (cop : m.coprime n) (am : a ∣ m) (bn : b ∣ n) :
+theorem coprime.factor_eq_gcd_left_right {a b m n : ℕ+} (cop : m.Coprime n) (am : a ∣ m) (bn : b ∣ n) :
     a = m.gcd (a * b) := by
   rw [gcd_comm]
   apply coprime.factor_eq_gcd_left cop am bn
 
-theorem coprime.factor_eq_gcd_right_right {a b m n : ℕ+} (cop : m.coprime n) (am : a ∣ m) (bn : b ∣ n) :
+theorem coprime.factor_eq_gcd_right_right {a b m n : ℕ+} (cop : m.Coprime n) (am : a ∣ m) (bn : b ∣ n) :
     a = m.gcd (b * a) := by
   rw [gcd_comm]
   apply coprime.factor_eq_gcd_right cop am bn
 
-theorem coprime.gcd_mul (k : ℕ+) {m n : ℕ+} (h : m.coprime n) : k.gcd (m * n) = k.gcd m * k.gcd n := by
+theorem coprime.gcd_mul (k : ℕ+) {m n : ℕ+} (h : m.Coprime n) : k.gcd (m * n) = k.gcd m * k.gcd n := by
   rw [← coprime_coe] at h
   apply Eq
   simp only [gcd_coe, mul_coe]
@@ -254,7 +254,7 @@ theorem gcd_eq_left {m n : ℕ+} : m ∣ n → m.gcd n = m := by
   simp only [gcd_coe]
   apply Nat.gcd_eq_leftₓ h
 
-theorem coprime.pow {m n : ℕ+} (k l : ℕ) (h : m.coprime n) : (m ^ k).Coprime (n ^ l) := by
+theorem coprime.pow {m n : ℕ+} (k l : ℕ) (h : m.Coprime n) : (m ^ k).Coprime (n ^ l) := by
   rw [← coprime_coe] at *
   simp only [pow_coe]
   apply Nat.Coprime.pow

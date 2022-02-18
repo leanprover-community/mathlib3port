@@ -20,20 +20,20 @@ universe v u
 
 variable {ι : Type _}
 
-variable {V : Type u} [category.{v} V] [has_zero_morphisms V] [has_zero_object V]
+variable {V : Type u} [Category.{v} V] [HasZeroMorphisms V] [HasZeroObject V]
 
-variable [has_equalizers V] [has_images V] [has_image_maps V] [has_cokernels V]
+variable [HasEqualizers V] [HasImages V] [HasImageMaps V] [HasCokernels V]
 
 variable {c : ComplexShape ι} {C D E : HomologicalComplex V c}
 
 /-- A chain map is a quasi-isomorphism if it induces isomorphisms on homology.
 -/
 class QuasiIso (f : C ⟶ D) : Prop where
-  IsIso : ∀ i, is_iso ((homologyFunctor V c i).map f)
+  IsIso : ∀ i, IsIso ((homologyFunctor V c i).map f)
 
 attribute [instance] QuasiIso.is_iso
 
-instance (priority := 100) quasi_iso_of_iso (f : C ⟶ D) [is_iso f] : QuasiIso f where
+instance (priority := 100) quasi_iso_of_iso (f : C ⟶ D) [IsIso f] : QuasiIso f where
   IsIso := fun i => by
     change is_iso ((homologyFunctor V c i).mapIso (as_iso f)).Hom
     infer_instance

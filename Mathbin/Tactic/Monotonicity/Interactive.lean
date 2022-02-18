@@ -17,7 +17,7 @@ local postfix:9001 "?" => optionalₓ
 
 local postfix:9001 "*" => many
 
-unsafe inductive mono_function (elab : Bool := tt)
+unsafe inductive mono_function (elab : Bool := true)
   | non_assoc : expr elab → List (expr elab) → List (expr elab) → mono_function
   | assoc : expr elab → Option (expr elab) → Option (expr elab) → mono_function
   | assoc_comm : expr elab → expr elab → mono_function
@@ -29,8 +29,8 @@ unsafe instance : DecidableEq mono_function := by
 unsafe def mono_function.to_tactic_format : mono_function → tactic format
   | mono_function.non_assoc fn xs ys => do
     let fn' ← pp fn
-    let xs' ← mmap pp xs
-    let ys' ← mmap pp ys
+    let xs' ← mmapₓ pp xs
+    let ys' ← mmapₓ pp ys
     return f! "{fn' } {xs' } _ {ys'}"
   | mono_function.assoc fn xs ys => do
     let fn' ← pp fn
@@ -85,7 +85,7 @@ open Functor Dlist
 
 section Config
 
-parameter (opt : mono_cfg)
+parameter (opt : MonoCfg)
 
 parameter (asms : List expr)
 
@@ -97,15 +97,15 @@ unsafe def unify_with_instance (e : expr) : tactic Unit :=
 
 private unsafe def match_rule_head (p : expr) : List expr → expr → expr → tactic expr
   | vs, e, t =>
-    (unify t p >> mmap' unify_with_instance vs) >> instantiate_mvars e <|> do
+    (unify t p >> mmap'ₓ unify_with_instance vs) >> instantiate_mvars e <|> do
       let expr.pi _ _ d b ← return t | failed
       let v ← mk_meta_var d
-      match_rule_head (v :: vs) (expr.app e v) (b.instantiate_var v)
+      match_rule_head (v :: vs) (expr.app e v) (b v)
 
 unsafe def pi_head : expr → tactic expr
   | expr.pi n _ t b => do
     let v ← mk_meta_var t
-    pi_head (b.instantiate_var v)
+    pi_head (b v)
   | e => return e
 
 unsafe def delete_expr (e : expr) : List expr → tactic (Option (List expr))
@@ -127,9 +127,9 @@ unsafe def match_ac' : List expr → List expr → tactic (List expr × List exp
 
 unsafe def match_ac (l : List expr) (r : List expr) : tactic (List expr × List expr × List expr) := do
   let (s', l', r') ← match_ac' l r
-  let s' ← mmap instantiate_mvars s'
-  let l' ← mmap instantiate_mvars l'
-  let r' ← mmap instantiate_mvars r'
+  let s' ← mmapₓ instantiate_mvars s'
+  let l' ← mmapₓ instantiate_mvars l'
+  let r' ← mmapₓ instantiate_mvars r'
   return (s', l', r')
 
 unsafe def match_prefix : List expr → List expr → tactic (List expr × List expr × List expr)
@@ -166,8 +166,8 @@ unsafe def check_ac : expr → tactic (Bool × Bool × Option (expr × expr × e
           mk_instance r_inst_p >>= unify r_v
           let v' ← instantiate_mvars v
           return (l_id, r_id, v')
-    return (a.is_some, c.is_some, i, f)
-  | _ => return (ff, ff, none, expr.var 1)
+    return (a, c, i, f)
+  | _ => return (false, false, none, expr.var 1)
 
 unsafe def parse_assoc_chain' (f : expr) : expr → tactic (Dlist expr)
   | e =>
@@ -181,12 +181,12 @@ unsafe def parse_assoc_chain (f : expr) : expr → tactic (List expr) :=
   map Dlist.toList ∘ parse_assoc_chain' f
 
 unsafe def fold_assoc (op : expr) : Option (expr × expr × expr) → List expr → Option (expr × List expr)
-  | _, x :: xs => some (foldl (expr.app ∘ expr.app op) x xs, [])
+  | _, x :: xs => some (foldlₓ (expr.app ∘ expr.app op) x xs, [])
   | none, [] => none
   | some (l_id, r_id, x₀), [] => some (x₀, [l_id, r_id])
 
 unsafe def fold_assoc1 (op : expr) : List expr → Option expr
-  | x :: xs => some <| foldl (expr.app ∘ expr.app op) x xs
+  | x :: xs => some <| foldlₓ (expr.app ∘ expr.app op) x xs
   | [] => none
 
 unsafe def same_function_aux : List expr → List expr → expr → expr → tactic (expr × List expr × List expr)
@@ -283,17 +283,18 @@ unsafe instance has_to_tactic_format_mono_law : has_to_tactic_format mono_law wh
 unsafe def mk_rel (ctx : ac_mono_ctx_ne) (f : expr → expr) : expr :=
   ctx.to_rel (f ctx.left) (f ctx.right)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `xs₁
 unsafe def mk_congr_args (fn : expr) (xs₀ xs₁ : List expr) (l r : expr) : tactic expr := do
   let p ← mk_app `eq [fn.mk_app <| xs₀ ++ l :: xs₁, fn.mk_app <| xs₀ ++ r :: xs₁]
   Prod.snd <$>
       solve_aux p do
-        iterate_exactly xs₁.length (applyc `congr_fun)
+        iterate_exactly (xs₁ xs₁.length) (applyc `congr_fun)
         applyc `congr_arg
 
 unsafe def mk_congr_law (ctx : ac_mono_ctx) : tactic expr :=
   match ctx.function with
   | mono_function.assoc f x₀ x₁ =>
-    if (x₀ <|> x₁).isSome then mk_congr_args f x₀.to_monad x₁.to_monad ctx.left ctx.right else failed
+    if (x₀ <|> x₁).isSome then mk_congr_args f x₀.toMonad x₁.toMonad ctx.left ctx.right else failed
   | mono_function.assoc_comm f x₀ => mk_congr_args f [x₀] [] ctx.left ctx.right
   | mono_function.non_assoc f x₀ x₁ => mk_congr_args f x₀ x₁ ctx.left ctx.right
 
@@ -315,7 +316,7 @@ unsafe def match_rule (pat : expr) (r : Name) : tactic expr := do
   let r' ← mk_const r
   let t ← infer_type r'
   let t ←
-    expr.dsimp t { failIfUnchanged := ff } tt []
+    expr.dsimp t { failIfUnchanged := false } true []
         [simp_arg_type.expr (pquote.1 Monotone), simp_arg_type.expr (pquote.1 StrictMono)]
   match_rule_head pat [] r' t
 
@@ -354,7 +355,7 @@ unsafe def one_line (e : expr) : tactic format := do
 
 unsafe def side_conditions (e : expr) : tactic format := do
   let vs := e.list_meta_vars
-  let ts ← mmap one_line vs.tail
+  let ts ← mmapₓ one_line vs.tail
   let r := e.get_app_fn.const_name
   return
       f! "{r }:
@@ -370,7 +371,7 @@ private unsafe def monotonicity.generalize' (h : Name) (v : expr) (x : Name) : t
   let tgt' ←
     (do
           let ⟨tgt', _⟩ ← solve_aux tgt (tactic.generalize v x >> target)
-          to_expr (pquote.1 fun y : %%ₓt => ∀ x, y = x → %%ₓtgt'.binding_body.lift_vars 0 1)) <|>
+          to_expr (pquote.1 fun y : %%ₓt => ∀ x, y = x → %%ₓtgt' 0 1)) <|>
         to_expr (pquote.1 fun y : %%ₓt => ∀ x, (%%ₓv) = x → %%ₓtgt)
   let t ← head_beta (tgt' v) >>= assert h
   swap
@@ -385,13 +386,13 @@ private unsafe def hide_meta_vars (tac : List expr → tactic Unit) : tactic Uni
     let ctx ← local_context
     let vs := tgt.list_meta_vars
     let vs' ←
-      mmap
+      mmapₓ
           (fun v => do
             let h ← get_unused_name `h
             let x ← get_unused_name `x
             Prod.snd <$> monotonicity.generalize' h v x)
           vs
-    andthen (tac ctx) (vs'.mmap' (try ∘ tactic.subst))
+    andthen (tac ctx) (vs' (try ∘ tactic.subst))
 
 unsafe def hide_meta_vars' (tac : itactic) : itactic :=
   hide_meta_vars fun _ => tac
@@ -421,17 +422,17 @@ open Format MonoSelection
 unsafe def best_match {β} (xs : List expr) (tac : expr → tactic β) : tactic Unit := do
   let t ← target
   let xs ← xs.mmap fun x => try_core <| Prod.mk x <$> solve_aux t (tac x >> get_goals)
-  let xs := xs.filter_map id
-  let r := list.minimum_on (List.length ∘ Prod.fst ∘ Prod.snd) xs
+  let xs := xs.filterMap id
+  let r := List.minimumOn (List.length ∘ Prod.fst ∘ Prod.snd) xs
   match r with
     | [(_, gs, pr)] => tactic.exact pr >> set_goals gs
     | [] => fail "no good match found"
     | _ => do
       let lmms ←
-        r.mmap fun ⟨l, gs, _⟩ => do
-            let ts ← gs.mmap infer_type
-            let msg ← ts.mmap pp
-            pure <| foldl compose "\n\n" <| List.intersperse "\n" <| to_fmt l.get_app_fn.const_name :: msg
+        r fun ⟨l, gs, _⟩ => do
+            let ts ← gs infer_type
+            let msg ← ts pp
+            pure <| foldl compose "\n\n" <| List.intersperse "\n" <| to_fmt l :: msg
       let msg := foldl compose "" lmms
       fail
           f! "ambiguous match: {msg}
@@ -492,27 +493,28 @@ unsafe def mono (many : parse (tk "*")?) (dir : parse side)
     (hyps : parse <| tk "with" *> pexpr_list_or_texpr <|> pure [])
     (simp_rules : parse <| tk "using" *> simp_arg_list <|> pure []) : tactic Unit := do
   let hyps ← hyps.mmap fun p => to_expr p >>= mk_meta_var
-  hyps.mmap' fun pr => do
+  hyps fun pr => do
       let h ← get_unused_name `h
       note h none pr
-  when (¬simp_rules.empty) (simp_core {  } failed tt simp_rules [] (loc.ns [none]) >> skip)
-  if many.is_some then repeat <| mono_aux dir else mono_aux dir
+  when (¬simp_rules) (simp_core {  } failed tt simp_rules [] (loc.ns [none]) >> skip)
+  if many then repeat <| mono_aux dir else mono_aux dir
   let gs ← get_goals
   set_goals <| hyps ++ gs
 
 add_tactic_doc
   { Name := "mono", category := DocCategory.tactic, declNames := [`tactic.interactive.mono], tags := ["monotonicity"] }
 
--- ././Mathport/Syntax/Translate/Basic.lean:794:4: warning: unsupported (TODO): `[tacs]
--- ././Mathport/Syntax/Translate/Basic.lean:794:4: warning: unsupported (TODO): `[tacs]
--- ././Mathport/Syntax/Translate/Basic.lean:794:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `g
+-- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
 /-- transforms a goal of the form `f x ≼ f y` into `x ≤ y` using lemmas
 marked as `monotonic`.
 
 Special care is taken when `f` is the repeated application of an
 associative operator and if the operator is commutative
 -/
-unsafe def ac_mono_aux (cfg : mono_cfg := {  }) : tactic Unit :=
+unsafe def ac_mono_aux (cfg : MonoCfg := {  }) : tactic Unit :=
   hide_meta_vars fun asms => do
     try sorry
     let tgt ← target >>= instantiate_mvars
@@ -521,14 +523,14 @@ unsafe def ac_mono_aux (cfg : mono_cfg := {  }) : tactic Unit :=
     let p ← mk_pattern g
     let rules ← find_rule asms ns p <|> fail "no applicable rules found"
     when (rules = []) (fail "no applicable rules found")
-    let err ← format.join <$> mmap side_conditions rules
+    let err ← format.join <$> mmapₓ side_conditions rules
     focus1 <|
         best_match rules fun rule => do
           let t₀ ← mk_meta_var (quote.1 Prop)
           let v₀ ← mk_meta_var t₀
           let t₁ ← mk_meta_var (quote.1 Prop)
           let v₁ ← mk_meta_var t₁
-          tactic.refine <| pquote.1 (apply_rel (%%ₓg.rel_def) (%%ₓl) (%%ₓr) (%%ₓrule) (%%ₓv₀) (%%ₓv₁))
+          tactic.refine <| pquote.1 (applyRel (g (%%ₓg.rel_def)) (%%ₓl) (%%ₓr) (%%ₓrule) (%%ₓv₀) (%%ₓv₁))
           solve_mvar v₀ (try (any_of id_rs rewrite_target) >> (done <|> refl <|> ac_refl <|> sorry))
           solve_mvar v₁ (try (any_of id_rs rewrite_target) >> (done <|> refl <|> ac_refl <|> sorry))
           let n ← num_goals
@@ -548,9 +550,9 @@ inductive rep_arity : Type
   | one
   | exactly (n : ℕ)
   | many
-  deriving _root_.has_reflect, _root_.inhabited
+  deriving _root_.has_reflect, Inhabited
 
-unsafe def repeat_or_not : rep_arity → tactic Unit → Option (tactic Unit) → tactic Unit
+unsafe def repeat_or_not : RepArity → tactic Unit → Option (tactic Unit) → tactic Unit
   | rep_arity.one, tac, none => tac
   | rep_arity.many, tac, none => repeat tac
   | rep_arity.exactly n, tac, none => iterate_exactly' n tac
@@ -561,8 +563,8 @@ unsafe def repeat_or_not : rep_arity → tactic Unit → Option (tactic Unit) �
 unsafe def assert_or_rule : lean.parser (Sum pexpr pexpr) :=
   tk ":=" *> inl <$> texpr <|> tk ":" *> inr <$> texpr
 
-unsafe def arity : lean.parser rep_arity :=
-  rep_arity.many <$ tk "*" <|> rep_arity.exactly <$> (tk "^" *> small_nat) <|> pure rep_arity.one
+unsafe def arity : lean.parser RepArity :=
+  tk "*" *> pure RepArity.many <|> rep_arity.exactly <$> (tk "^" *> small_nat) <|> pure RepArity.one
 
 /-- `ac_mono` reduces the `f x ⊑ f y`, for some relation `⊑` and a
 monotonic function `f` to `x ≺ y`.
@@ -618,7 +620,7 @@ by ac_mono* := h₁.
 By giving `ac_mono` the assumption `h₁`, we are asking `ac_refl` to
 stop earlier than it would normally would.
 -/
-unsafe def ac_mono (rep : parse arity) : parse (assert_or_rule)? → optParam mono_cfg {  } → tactic Unit
+unsafe def ac_mono (rep : parse arity) : parse (assert_or_rule)? → optParam MonoCfg {  } → tactic Unit
   | none, opt => focus1 <| repeat_or_not rep (ac_mono_aux opt) none
   | some (inl h), opt => do
     focus1 <| repeat_or_not rep (ac_mono_aux opt) (some <| done <|> to_expr h >>= ac_refine)

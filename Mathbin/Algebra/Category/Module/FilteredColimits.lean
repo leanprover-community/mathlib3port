@@ -34,7 +34,7 @@ namespace ModuleCat.FilteredColimits
 
 section
 
-parameter {R : Type u}[Ringₓ R]{J : Type v}[small_category J][is_filtered J]
+parameter {R : Type u}[Ringₓ R]{J : Type v}[SmallCategory J][IsFiltered J]
 
 parameter (F : J ⥤ ModuleCat.{v} R)
 
@@ -46,18 +46,18 @@ abbrev M : AddCommGroupₓₓ :=
 
 /-- The canonical projection into the colimit, as a quotient type. -/
 abbrev M.mk : (Σ j, F.obj j) → M :=
-  Quot.mk (types.quot.rel (F ⋙ forget (ModuleCat R)))
+  Quot.mk (Types.Quot.Rel (F ⋙ forget (ModuleCat R)))
 
 theorem M.mk_eq (x y : Σ j, F.obj j) (h : ∃ (k : J)(f : x.1 ⟶ k)(g : y.1 ⟶ k), F.map f x.2 = F.map g y.2) :
     M.mk x = M.mk y :=
-  Quot.eqv_gen_sound (types.filtered_colimit.eqv_gen_quot_rel_of_rel (F ⋙ forget (ModuleCat R)) x y h)
+  Quot.eqv_gen_sound (Types.FilteredColimit.eqv_gen_quot_rel_of_rel (F ⋙ forget (ModuleCat R)) x y h)
 
 /-- The "unlifted" version of scalar multiplication in the colimit. -/
 def colimit_smul_aux (r : R) (x : Σ j, F.obj j) : M :=
   M.mk ⟨x.1, r • x.2⟩
 
 theorem colimit_smul_aux_eq_of_rel (r : R) (x y : Σ j, F.obj j)
-    (h : types.filtered_colimit.rel (F ⋙ forget (ModuleCat R)) x y) : colimit_smul_aux r x = colimit_smul_aux r y := by
+    (h : Types.FilteredColimit.Rel (F ⋙ forget (ModuleCat R)) x y) : colimit_smul_aux r x = colimit_smul_aux r y := by
   apply M.mk_eq
   obtain ⟨k, f, g, hfg⟩ := h
   use k, f, g
@@ -138,13 +138,13 @@ def colimit_cocone : cocone F where
   ι :=
     { app := cocone_morphism,
       naturality' := fun j j' f =>
-        LinearMap.coe_injective ((types.colimit_cocone (F ⋙ forget (ModuleCat R))).ι.naturality f) }
+        LinearMap.coe_injective ((Types.colimitCocone (F ⋙ forget (ModuleCat R))).ι.naturality f) }
 
 /-- Given a cocone `t` of `F`, the induced monoid linear map from the colimit to the cocone point.
 We already know that this is a morphism between additive groups. The only thing left to see is that
 it is a linear map, i.e. preserves scalar multiplication.
 -/
-def colimit_desc (t : cocone F) : colimit ⟶ t.X :=
+def colimit_desc (t : cocone F) : colimit ⟶ t.x :=
   { (AddCommGroupₓₓ.FilteredColimits.colimitCoconeIsColimit (F ⋙ forget₂ (ModuleCat R) AddCommGroupₓₓ)).desc
       ((forget₂ (ModuleCat R) AddCommGroupₓₓ.{v}).mapCocone t) with
     map_smul' := fun r x => by
@@ -156,25 +156,25 @@ def colimit_desc (t : cocone F) : colimit ⟶ t.X :=
       exact LinearMap.map_smul (t.ι.app j) r x }
 
 /-- The proposed colimit cocone is a colimit in `Module R`. -/
-def colimit_cocone_is_colimit : is_colimit colimit_cocone where
+def colimit_cocone_is_colimit : IsColimit colimit_cocone where
   desc := colimit_desc
   fac' := fun t j =>
     LinearMap.coe_injective <|
-      (types.colimit_cocone_is_colimit (F ⋙ forget (ModuleCat R))).fac ((forget (ModuleCat R)).mapCocone t) j
+      (Types.colimitCoconeIsColimit (F ⋙ forget (ModuleCat R))).fac ((forget (ModuleCat R)).mapCocone t) j
   uniq' := fun t m h =>
     LinearMap.coe_injective <|
-      (types.colimit_cocone_is_colimit (F ⋙ forget (ModuleCat R))).uniq ((forget (ModuleCat R)).mapCocone t) m fun j =>
+      (Types.colimitCoconeIsColimit (F ⋙ forget (ModuleCat R))).uniq ((forget (ModuleCat R)).mapCocone t) m fun j =>
         funext fun x => LinearMap.congr_fun (h j) x
 
 instance forget₂_AddCommGroup_preserves_filtered_colimits :
-    preserves_filtered_colimits (forget₂ (ModuleCat R) AddCommGroupₓₓ.{v}) where
+    PreservesFilteredColimits (forget₂ (ModuleCat R) AddCommGroupₓₓ.{v}) where
   PreservesFilteredColimits := fun J _ _ =>
     { PreservesColimit := fun F =>
         preserves_colimit_of_preserves_colimit_cocone (colimit_cocone_is_colimit F)
           (AddCommGroupₓₓ.FilteredColimits.colimitCoconeIsColimit (F ⋙ forget₂ (ModuleCat R) AddCommGroupₓₓ.{v})) }
 
-instance forget_preserves_filtered_colimits : preserves_filtered_colimits (forget (ModuleCat R)) :=
-  limits.comp_preserves_filtered_colimits (forget₂ (ModuleCat R) AddCommGroupₓₓ) (forget AddCommGroupₓₓ)
+instance forget_preserves_filtered_colimits : PreservesFilteredColimits (forget (ModuleCat R)) :=
+  Limits.compPreservesFilteredColimits (forget₂ (ModuleCat R) AddCommGroupₓₓ) (forget AddCommGroupₓₓ)
 
 end
 

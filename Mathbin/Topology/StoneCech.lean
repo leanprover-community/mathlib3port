@@ -34,7 +34,7 @@ theorem ultrafilter_basis_is_basis : TopologicalSpace.IsTopologicalBasis (Ultraf
     rintro _ ⟨a, rfl⟩ _ ⟨b, rfl⟩ u ⟨ua, ub⟩
     refine' ⟨_, ⟨a ∩ b, rfl⟩, inter_mem ua ub, fun v hv => ⟨_, _⟩⟩ <;>
       apply mem_of_superset hv <;> simp [inter_subset_right a b],
-    eq_univ_of_univ_subset <| subset_sUnion_of_mem <| ⟨univ, eq_univ_of_forall fun u => univ_mem⟩, rfl⟩
+    eq_univ_of_univ_subset <| subset_sUnion_of_mem <| ⟨Univ, eq_univ_of_forall fun u => univ_mem⟩, rfl⟩
 
 /-- The basic open sets for the topology on ultrafilters are open. -/
 theorem ultrafilter_is_open_basic (s : Set α) : IsOpen { u : Ultrafilter α | s ∈ u } :=
@@ -142,7 +142,7 @@ theorem ultrafilter_extend_extends (f : α → γ) : Ultrafilter.extend f ∘ pu
 variable [CompactSpace γ]
 
 theorem continuous_ultrafilter_extend (f : α → γ) : Continuous (Ultrafilter.extend f) := by
-  have : ∀ b : Ultrafilter α, ∃ c, tendsto f (comap pure (𝓝 b)) (𝓝 c) := fun b =>
+  have : ∀ b : Ultrafilter α, ∃ c, Tendsto f (comap pure (𝓝 b)) (𝓝 c) := fun b =>
     let ⟨c, _, h⟩ :=
       compact_univ.ultrafilter_le_nhds (b.map f)
         (by
@@ -164,7 +164,7 @@ theorem ultrafilter_extend_eq_iff {f : α → γ} {b : Ultrafilter α} {c : γ} 
     refine' le_transₓ _ (le_transₓ (map_mono t) this)
     change _ ≤ map (Ultrafilter.extend f ∘ pure) ↑b
     rw [ultrafilter_extend_extends]
-    exact le_reflₓ _, fun h => by
+    exact le_rfl, fun h => by
     let this' : TopologicalSpace α := ⊥ <;>
       exact dense_inducing_pure.extend_eq_of_tendsto (le_transₓ (map_mono (ultrafilter_comap_pure_nhds _)) h)⟩
 

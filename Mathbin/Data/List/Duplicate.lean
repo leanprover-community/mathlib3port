@@ -28,10 +28,10 @@ local infixl:50 " ∈+ " => List.Duplicate
 variable {l : List α} {x : α}
 
 theorem mem.duplicate_cons_self (h : x ∈ l) : x ∈+ x :: l :=
-  duplicate.cons_mem h
+  Duplicate.cons_mem h
 
 theorem duplicate.duplicate_cons (h : x ∈+ l) (y : α) : x ∈+ y :: l :=
-  duplicate.cons_duplicate h
+  Duplicate.cons_duplicate h
 
 theorem duplicate.mem (h : x ∈+ l) : x ∈ l := by
   induction' h with l' h y l' h hm
@@ -49,9 +49,9 @@ theorem duplicate.mem_cons_self (h : x ∈+ x :: l) : x ∈ l := by
 
 @[simp]
 theorem duplicate_cons_self_iff : x ∈+ x :: l ↔ x ∈ l :=
-  ⟨duplicate.mem_cons_self, mem.duplicate_cons_self⟩
+  ⟨Duplicate.mem_cons_self, Mem.duplicate_cons_self⟩
 
-theorem duplicate.ne_nil (h : x ∈+ l) : l ≠ [] := fun H => (mem_nil_iff x).mp (H ▸ h.mem)
+theorem duplicate.ne_nil (h : x ∈+ l) : l ≠ [] := fun H => (mem_nil_iff x).mp (H ▸ h.Mem)
 
 @[simp]
 theorem not_duplicate_nil (x : α) : ¬x ∈+ [] := fun H => H.ne_nil rfl
@@ -125,26 +125,26 @@ theorem duplicate_iff_sublist : x ∈+ l ↔ [x, x] <+ l := by
       
     
 
-theorem nodup_iff_forall_not_duplicate : nodup l ↔ ∀ x : α, ¬x ∈+ l := by
+theorem nodup_iff_forall_not_duplicate : Nodupₓ l ↔ ∀ x : α, ¬x ∈+ l := by
   simp_rw [nodup_iff_sublist, duplicate_iff_sublist]
 
-theorem exists_duplicate_iff_not_nodup : (∃ x : α, x ∈+ l) ↔ ¬nodup l := by
+theorem exists_duplicate_iff_not_nodup : (∃ x : α, x ∈+ l) ↔ ¬Nodupₓ l := by
   simp [nodup_iff_forall_not_duplicate]
 
-theorem duplicate.not_nodup (h : x ∈+ l) : ¬nodup l := fun H => nodup_iff_forall_not_duplicate.mp H _ h
+theorem duplicate.not_nodup (h : x ∈+ l) : ¬Nodupₓ l := fun H => nodup_iff_forall_not_duplicate.mp H _ h
 
 theorem duplicate_iff_two_le_count [DecidableEq α] : x ∈+ l ↔ 2 ≤ count x l := by
   simp [duplicate_iff_sublist, le_count_iff_repeat_sublist]
 
 instance decidable_duplicate [DecidableEq α] (x : α) : ∀ l : List α, Decidable (x ∈+ l)
-  | [] => is_false (not_duplicate_nil x)
+  | [] => isFalse (not_duplicate_nil x)
   | y :: l =>
     match decidable_duplicate l with
-    | is_true h => is_true (h.duplicate_cons y)
+    | is_true h => isTrue (h.duplicate_cons y)
     | is_false h =>
-      if hx : y = x ∧ x ∈ l then is_true (hx.left.symm ▸ hx.right.duplicate_cons_self)
+      if hx : y = x ∧ x ∈ l then isTrue (hx.left.symm ▸ hx.right.duplicate_cons_self)
       else
-        is_false
+        isFalse
           (by
             simpa [duplicate_cons_iff, h] using hx)
 

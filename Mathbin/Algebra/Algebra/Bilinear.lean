@@ -62,7 +62,7 @@ def lmul_left (r : A) : A →ₗ[R] A :=
   lmul R A r
 
 @[simp]
-theorem lmul_left_to_add_monoid_hom (r : A) : (lmul_left R r : A →+ A) = AddMonoidHom.mulLeft r :=
+theorem lmul_left_to_add_monoid_hom (r : A) : (lmulLeft R r : A →+ A) = AddMonoidHom.mulLeft r :=
   FunLike.coe_injective rfl
 
 /-- The multiplication on the right in an algebra is a linear map. -/
@@ -70,14 +70,14 @@ def lmul_right (r : A) : A →ₗ[R] A :=
   (lmul R A).toLinearMap.flip r
 
 @[simp]
-theorem lmul_right_to_add_monoid_hom (r : A) : (lmul_right R r : A →+ A) = AddMonoidHom.mulRight r :=
+theorem lmul_right_to_add_monoid_hom (r : A) : (lmulRight R r : A →+ A) = AddMonoidHom.mulRight r :=
   FunLike.coe_injective rfl
 
 /-- Simultaneous multiplication on the left and right is a linear map. -/
 def lmul_left_right (vw : A × A) : A →ₗ[R] A :=
-  (lmul_right R vw.2).comp (lmul_left R vw.1)
+  (lmulRight R vw.2).comp (lmulLeft R vw.1)
 
-theorem commute_lmul_left_right (a b : A) : Commute (lmul_left R a) (lmul_right R b) := by
+theorem commute_lmul_left_right (a b : A) : Commute (lmulLeft R a) (lmulRight R b) := by
   ext c
   exact (mul_assoc a c b).symm
 
@@ -92,47 +92,47 @@ theorem lmul'_apply {x y : A} : lmul' R (x ⊗ₜ y) = x * y := by
   simp only [Algebra.lmul', TensorProduct.lift.tmul, AlgHom.to_linear_map_apply, lmul_apply]
 
 @[simp]
-theorem lmul_left_apply (p q : A) : lmul_left R p q = p * q :=
+theorem lmul_left_apply (p q : A) : lmulLeft R p q = p * q :=
   rfl
 
 @[simp]
-theorem lmul_right_apply (p q : A) : lmul_right R p q = q * p :=
+theorem lmul_right_apply (p q : A) : lmulRight R p q = q * p :=
   rfl
 
 @[simp]
-theorem lmul_left_right_apply (vw : A × A) (p : A) : lmul_left_right R vw p = vw.1 * p * vw.2 :=
+theorem lmul_left_right_apply (vw : A × A) (p : A) : lmulLeftRight R vw p = vw.1 * p * vw.2 :=
   rfl
 
 @[simp]
-theorem lmul_left_one : lmul_left R (1 : A) = LinearMap.id := by
+theorem lmul_left_one : lmulLeft R (1 : A) = LinearMap.id := by
   ext
   simp only [LinearMap.id_coe, one_mulₓ, id.def, lmul_left_apply]
 
 @[simp]
-theorem lmul_left_mul (a b : A) : lmul_left R (a * b) = (lmul_left R a).comp (lmul_left R b) := by
+theorem lmul_left_mul (a b : A) : lmulLeft R (a * b) = (lmulLeft R a).comp (lmulLeft R b) := by
   ext
   simp only [lmul_left_apply, LinearMap.comp_apply, mul_assoc]
 
 @[simp]
-theorem lmul_right_one : lmul_right R (1 : A) = LinearMap.id := by
+theorem lmul_right_one : lmulRight R (1 : A) = LinearMap.id := by
   ext
   simp only [LinearMap.id_coe, mul_oneₓ, id.def, lmul_right_apply]
 
 @[simp]
-theorem lmul_right_mul (a b : A) : lmul_right R (a * b) = (lmul_right R b).comp (lmul_right R a) := by
+theorem lmul_right_mul (a b : A) : lmulRight R (a * b) = (lmulRight R b).comp (lmulRight R a) := by
   ext
   simp only [lmul_right_apply, LinearMap.comp_apply, mul_assoc]
 
 @[simp]
-theorem lmul_left_zero_eq_zero : lmul_left R (0 : A) = 0 :=
+theorem lmul_left_zero_eq_zero : lmulLeft R (0 : A) = 0 :=
   (lmul R A).map_zero
 
 @[simp]
-theorem lmul_right_zero_eq_zero : lmul_right R (0 : A) = 0 :=
+theorem lmul_right_zero_eq_zero : lmulRight R (0 : A) = 0 :=
   (lmul R A).toLinearMap.flip.map_zero
 
 @[simp]
-theorem lmul_left_eq_zero_iff (a : A) : lmul_left R a = 0 ↔ a = 0 := by
+theorem lmul_left_eq_zero_iff (a : A) : lmulLeft R a = 0 ↔ a = 0 := by
   constructor <;> intro h
   · rw [← mul_oneₓ a, ← lmul_left_apply a 1, h, LinearMap.zero_apply]
     
@@ -141,7 +141,7 @@ theorem lmul_left_eq_zero_iff (a : A) : lmul_left R a = 0 ↔ a = 0 := by
     
 
 @[simp]
-theorem lmul_right_eq_zero_iff (a : A) : lmul_right R a = 0 ↔ a = 0 := by
+theorem lmul_right_eq_zero_iff (a : A) : lmulRight R a = 0 ↔ a = 0 := by
   constructor <;> intro h
   · rw [← one_mulₓ a, ← lmul_right_apply a 1, h, LinearMap.zero_apply]
     
@@ -150,12 +150,12 @@ theorem lmul_right_eq_zero_iff (a : A) : lmul_right R a = 0 ↔ a = 0 := by
     
 
 @[simp]
-theorem pow_lmul_left (a : A) (n : ℕ) : lmul_left R a ^ n = lmul_left R (a ^ n) :=
+theorem pow_lmul_left (a : A) (n : ℕ) : lmulLeft R a ^ n = lmulLeft R (a ^ n) :=
   ((lmul R A).map_pow a n).symm
 
 @[simp]
-theorem pow_lmul_right (a : A) (n : ℕ) : lmul_right R a ^ n = lmul_right R (a ^ n) :=
-  LinearMap.coe_injective <| ((lmul_right R a).coe_pow n).symm ▸ mul_right_iterate a n
+theorem pow_lmul_right (a : A) (n : ℕ) : lmulRight R a ^ n = lmulRight R (a ^ n) :=
+  LinearMap.coe_injective <| ((lmulRight R a).coe_pow n).symm ▸ mul_right_iterate a n
 
 end
 
@@ -163,11 +163,11 @@ section
 
 variable {R A : Type _} [CommSemiringₓ R] [Ringₓ A] [Algebra R A]
 
-theorem lmul_left_injective [NoZeroDivisors A] {x : A} (hx : x ≠ 0) : Function.Injective (lmul_left R x) := by
+theorem lmul_left_injective [NoZeroDivisors A] {x : A} (hx : x ≠ 0) : Function.Injective (lmulLeft R x) := by
   let this' : IsDomain A := { ‹Ringₓ A›, ‹NoZeroDivisors A› with exists_pair_ne := ⟨x, 0, hx⟩ }
   exact mul_right_injective₀ hx
 
-theorem lmul_right_injective [NoZeroDivisors A] {x : A} (hx : x ≠ 0) : Function.Injective (lmul_right R x) := by
+theorem lmul_right_injective [NoZeroDivisors A] {x : A} (hx : x ≠ 0) : Function.Injective (lmulRight R x) := by
   let this' : IsDomain A := { ‹Ringₓ A›, ‹NoZeroDivisors A› with exists_pair_ne := ⟨x, 0, hx⟩ }
   exact mul_left_injective₀ hx
 

@@ -115,7 +115,7 @@ instance : AddMonoidHomClass (M →ₛₗ[σ] M₃) M M₃ where
     cases f <;> cases g <;> congr
   map_add := LinearMap.map_add'
   map_zero := fun f =>
-    show f.to_fun 0 = 0 by
+    show f.toFun 0 = 0 by
       rw [← zero_smul R (0 : M), f.map_smul']
       simp
 
@@ -129,7 +129,7 @@ instance : CoeFun (M →ₛₗ[σ] M₃) fun _ => M → M₃ :=
   ⟨LinearMap.toFun⟩
 
 @[simp]
-theorem to_fun_eq_coe {f : M →ₛₗ[σ] M₃} : f.to_fun = (f : M → M₃) :=
+theorem to_fun_eq_coe {f : M →ₛₗ[σ] M₃} : f.toFun = (f : M → M₃) :=
   rfl
 
 @[ext]
@@ -180,7 +180,7 @@ theorem is_linear : IsLinearMap R fₗ :=
 
 variable {fₗ gₗ f g σ}
 
-theorem coe_injective : @injective (M →ₛₗ[σ] M₃) (M → M₃) coeFn :=
+theorem coe_injective : @Injective (M →ₛₗ[σ] M₃) (M → M₃) coeFn :=
   FunLike.coe_injective
 
 protected theorem congr_argₓ {x x' : M} : x = x' → f x = f x' :=
@@ -275,14 +275,14 @@ variable {M M₂}
 
 instance (priority := 100) is_scalar_tower.compatible_smul {R S : Type _} [Semiringₓ S] [HasScalar R S] [HasScalar R M]
     [Module S M] [IsScalarTower R S M] [HasScalar R M₂] [Module S M₂] [IsScalarTower R S M₂] :
-    compatible_smul M M₂ R S :=
+    CompatibleSmul M M₂ R S :=
   ⟨fun fₗ c x => by
     rw [← smul_one_smul S c x, ← smul_one_smul S c (fₗ x), map_smul]⟩
 
 @[simp]
 theorem map_smul_of_tower {R S : Type _} [Semiringₓ S] [HasScalar R M] [Module S M] [HasScalar R M₂] [Module S M₂]
-    [compatible_smul M M₂ R S] (fₗ : M →ₗ[S] M₂) (c : R) (x : M) : fₗ (c • x) = c • fₗ x :=
-  compatible_smul.map_smul fₗ c x
+    [CompatibleSmul M M₂ R S] (fₗ : M →ₗ[S] M₂) (c : R) (x : M) : fₗ (c • x) = c • fₗ x :=
+  CompatibleSmul.map_smul fₗ c x
 
 /-- convert a linear map to an additive map -/
 def to_add_monoid_hom : M →+ M₃ where
@@ -291,12 +291,12 @@ def to_add_monoid_hom : M →+ M₃ where
   map_add' := f.map_add
 
 @[simp]
-theorem to_add_monoid_hom_coe : ⇑f.to_add_monoid_hom = f :=
+theorem to_add_monoid_hom_coe : ⇑f.toAddMonoidHom = f :=
   rfl
 
 section RestrictScalars
 
-variable (R) [Module S M] [Module S M₂] [compatible_smul M M₂ R S]
+variable (R) [Module S M] [Module S M₂] [CompatibleSmul M M₂ R S]
 
 /-- If `M` and `M₂` are both `R`-modules and `S`-modules and `R`-module structures
 are defined by an action of `R` on `S` (formally, we have two scalar towers), then any `S`-linear
@@ -309,11 +309,11 @@ def restrict_scalars (fₗ : M →ₗ[S] M₂) : M →ₗ[R] M₂ where
   map_add' := fₗ.map_add
   map_smul' := fₗ.map_smul_of_tower
 
-theorem restrict_scalars_injective : Function.Injective (restrict_scalars R : (M →ₗ[S] M₂) → M →ₗ[R] M₂) :=
+theorem restrict_scalars_injective : Function.Injective (restrictScalars R : (M →ₗ[S] M₂) → M →ₗ[R] M₂) :=
   fun fₗ gₗ h => ext (LinearMap.congr_fun h : _)
 
 @[simp]
-theorem restrict_scalars_inj (fₗ gₗ : M →ₗ[S] M₂) : fₗ.restrict_scalars R = gₗ.restrict_scalars R ↔ fₗ = gₗ :=
+theorem restrict_scalars_inj (fₗ gₗ : M →ₗ[S] M₂) : fₗ.restrictScalars R = gₗ.restrictScalars R ↔ fₗ = gₗ :=
   (restrict_scalars_injective R).eq_iff
 
 end RestrictScalars
@@ -322,9 +322,9 @@ variable {R}
 
 @[simp]
 theorem map_sum {ι} {t : Finset ι} {g : ι → M} : f (∑ i in t, g i) = ∑ i in t, f (g i) :=
-  f.to_add_monoid_hom.map_sum _ _
+  f.toAddMonoidHom.map_sum _ _
 
-theorem to_add_monoid_hom_injective : Function.Injective (to_add_monoid_hom : (M →ₛₗ[σ] M₃) → M →+ M₃) := fun f g h =>
+theorem to_add_monoid_hom_injective : Function.Injective (toAddMonoidHom : (M →ₛₗ[σ] M₃) → M →+ M₃) := fun f g h =>
   ext <| AddMonoidHom.congr_fun h
 
 /-- If two `σ`-linear maps from `R` are equal on `1`, then they are equal. -/
@@ -401,7 +401,7 @@ variable [AddCommMonoidₓ M] [AddCommMonoidₓ M₁] [AddCommMonoidₓ M₂] [A
 
 /-- If a function `g` is a left and right inverse of a linear map `f`, then `g` is linear itself. -/
 def inverse [Module R M] [Module S M₂] {σ : R →+* S} {σ' : S →+* R} [RingHomInvPair σ σ'] (f : M →ₛₗ[σ] M₂) (g : M₂ → M)
-    (h₁ : left_inverse g f) (h₂ : RightInverse g f) : M₂ →ₛₗ[σ'] M := by
+    (h₁ : LeftInverse g f) (h₂ : RightInverse g f) : M₂ →ₛₗ[σ'] M := by
   dsimp [left_inverse, Function.RightInverse]  at h₁ h₂ <;>
     exact
       { toFun := g,
@@ -427,7 +427,7 @@ protected theorem map_neg (x : M) : f (-x) = -f x :=
 protected theorem map_sub (x y : M) : f (x - y) = f x - f y :=
   map_sub f x y
 
-instance compatible_smul.int_module {S : Type _} [Semiringₓ S] [Module S M] [Module S M₂] : compatible_smul M M₂ ℤ S :=
+instance compatible_smul.int_module {S : Type _} [Semiringₓ S] [Module S M] [Module S M₂] : CompatibleSmul M M₂ ℤ S :=
   ⟨fun fₗ c x => by
     induction c using Int.induction_on
     case hz =>
@@ -438,8 +438,8 @@ instance compatible_smul.int_module {S : Type _} [Semiringₓ S] [Module S M] [M
       simp [sub_smul, ih]⟩
 
 instance compatible_smul.units {R S : Type _} [Monoidₓ R] [MulAction R M] [MulAction R M₂] [Semiringₓ S] [Module S M]
-    [Module S M₂] [compatible_smul M M₂ R S] : compatible_smul M M₂ (R)ˣ S :=
-  ⟨fun fₗ c x => (compatible_smul.map_smul fₗ (c : R) x : _)⟩
+    [Module S M₂] [CompatibleSmul M M₂ R S] : CompatibleSmul M M₂ (R)ˣ S :=
+  ⟨fun fₗ c x => (CompatibleSmul.map_smul fₗ (c : R) x : _)⟩
 
 end AddCommGroupₓ
 
@@ -467,10 +467,10 @@ def to_linear_map (fₗ : M →+[R] M₂) : M →ₗ[R] M₂ :=
   { fₗ with }
 
 instance : Coe (M →+[R] M₂) (M →ₗ[R] M₂) :=
-  ⟨to_linear_map⟩
+  ⟨toLinearMap⟩
 
 @[simp]
-theorem to_linear_map_eq_coe (f : M →+[R] M₂) : f.to_linear_map = ↑f :=
+theorem to_linear_map_eq_coe (f : M →+[R] M₂) : f.toLinearMap = ↑f :=
   rfl
 
 @[simp, norm_cast]
@@ -577,8 +577,7 @@ theorem AddMonoidHom.to_int_linear_map_injective [AddCommGroupₓ M] [AddCommGro
   exact LinearMap.congr_fun h x
 
 @[simp]
-theorem AddMonoidHom.coe_to_int_linear_map [AddCommGroupₓ M] [AddCommGroupₓ M₂] (f : M →+ M₂) :
-    ⇑f.to_int_linear_map = f :=
+theorem AddMonoidHom.coe_to_int_linear_map [AddCommGroupₓ M] [AddCommGroupₓ M₂] (f : M →+ M₂) : ⇑f.toIntLinearMap = f :=
   rfl
 
 /-- Reinterpret an additive homomorphism as a `ℚ`-linear map. -/
@@ -594,7 +593,7 @@ theorem AddMonoidHom.to_rat_linear_map_injective [AddCommGroupₓ M] [Module ℚ
 
 @[simp]
 theorem AddMonoidHom.coe_to_rat_linear_map [AddCommGroupₓ M] [Module ℚ M] [AddCommGroupₓ M₂] [Module ℚ M₂]
-    (f : M →+ M₂) : ⇑f.to_rat_linear_map = f :=
+    (f : M →+ M₂) : ⇑f.toRatLinearMap = f :=
   rfl
 
 namespace LinearMap
@@ -809,7 +808,7 @@ theorem smul_comp (a : S₃) (g : M₂ →ₛₗ[σ₂₃] M₃) (f : M →ₛ�
 omit σ₁₃
 
 theorem comp_smul [Module R M₂] [Module R M₃] [SmulCommClass R S M₂] [DistribMulAction S M₃] [SmulCommClass R S M₃]
-    [compatible_smul M₃ M₂ S R] (g : M₃ →ₗ[R] M₂) (a : S) (f : M →ₗ[R] M₃) : g.comp (a • f) = a • g.comp f :=
+    [CompatibleSmul M₃ M₂ S R] (g : M₃ →ₗ[R] M₂) (a : S) (f : M →ₗ[R] M₃) : g.comp (a • f) = a • g.comp f :=
   ext fun x => g.map_smul_of_tower _ _
 
 end HasScalar
@@ -874,8 +873,8 @@ instance _root_.module.End.monoid : Monoidₓ (Module.End R M) where
   one_mul := id_comp
 
 instance _root_.module.End.semiring : Semiringₓ (Module.End R M) :=
-  { _root_.module.End.monoid, LinearMap.addCommMonoid with mul := · * ·, one := (1 : M →ₗ[R] M), zero := 0,
-    add := · + ·, npow := @npowRec _ ⟨(1 : M →ₗ[R] M)⟩ ⟨· * ·⟩, mul_zero := comp_zero, zero_mul := zero_comp,
+  { Module.End.monoid, LinearMap.addCommMonoid with mul := · * ·, one := (1 : M →ₗ[R] M), zero := 0, add := · + ·,
+    npow := @npowRec _ ⟨(1 : M →ₗ[R] M)⟩ ⟨· * ·⟩, mul_zero := comp_zero, zero_mul := zero_comp,
     left_distrib := fun f g h => comp_add _ _ _, right_distrib := fun f g h => add_comp _ _ _ }
 
 instance _root_.module.End.ring : Ringₓ (Module.End R N₁) :=
@@ -958,7 +957,7 @@ def to_linear_map (s : S) : M →ₗ[R] M where
 This is a stronger version of `distrib_mul_action.to_add_monoid_End`. -/
 @[simps]
 def to_module_End : S →* Module.End R M where
-  toFun := to_linear_map R M
+  toFun := toLinearMap R M
   map_one' := LinearMap.ext <| one_smul _
   map_mul' := fun a b => LinearMap.ext <| mul_smul _ _
 

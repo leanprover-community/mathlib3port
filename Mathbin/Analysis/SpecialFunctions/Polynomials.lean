@@ -18,13 +18,13 @@ polynomials.
 
 open Filter Finset Asymptotics
 
-open_locale Asymptotics TopologicalSpace
+open_locale Asymptotics Polynomial TopologicalSpace
 
 namespace Polynomial
 
-variable {𝕜 : Type _} [NormedLinearOrderedField 𝕜] (P Q : Polynomial 𝕜)
+variable {𝕜 : Type _} [NormedLinearOrderedField 𝕜] (P Q : 𝕜[X])
 
-theorem eventually_no_roots (hP : P ≠ 0) : ∀ᶠ x in Filter.atTop, ¬P.is_root x := by
+theorem eventually_no_roots (hP : P ≠ 0) : ∀ᶠ x in Filter.atTop, ¬P.IsRoot x := by
   obtain ⟨x₀, hx₀⟩ := exists_max_root P hP
   refine' filter.eventually_at_top.mpr ⟨x₀ + 1, fun x hx h => _⟩
   exact absurd (hx₀ x h) (not_le.mpr (lt_of_lt_of_leₓ (lt_add_one x₀) hx))
@@ -33,7 +33,7 @@ variable [OrderTopology 𝕜]
 
 section PolynomialAtTop
 
-theorem is_equivalent_at_top_lead : (fun x => eval x P) ~[at_top] fun x => P.leading_coeff * x ^ P.nat_degree := by
+theorem is_equivalent_at_top_lead : (fun x => eval x P) ~[at_top] fun x => P.leadingCoeff * x ^ P.natDegree := by
   by_cases' h : P = 0
   · simp [h]
     
@@ -47,37 +47,37 @@ theorem is_equivalent_at_top_lead : (fun x => eval x P) ~[at_top] fun x => P.lea
             _)
     
 
-theorem tendsto_at_top_of_leading_coeff_nonneg (hdeg : 1 ≤ P.degree) (hnng : 0 ≤ P.leading_coeff) :
-    tendsto (fun x => eval x P) at_top at_top :=
+theorem tendsto_at_top_of_leading_coeff_nonneg (hdeg : 1 ≤ P.degree) (hnng : 0 ≤ P.leadingCoeff) :
+    Tendsto (fun x => eval x P) atTop atTop :=
   P.is_equivalent_at_top_lead.symm.tendsto_at_top
     (tendsto_const_mul_pow_at_top (le_nat_degree_of_coe_le_degree hdeg)
       (lt_of_le_of_neₓ hnng <| Ne.symm <| mt leading_coeff_eq_zero.mp <| ne_zero_of_coe_le_degree hdeg))
 
 theorem tendsto_at_top_iff_leading_coeff_nonneg :
-    tendsto (fun x => eval x P) at_top at_top ↔ 1 ≤ P.degree ∧ 0 ≤ P.leading_coeff := by
+    Tendsto (fun x => eval x P) atTop atTop ↔ 1 ≤ P.degree ∧ 0 ≤ P.leadingCoeff := by
   refine' ⟨fun h => _, fun h => tendsto_at_top_of_leading_coeff_nonneg P h.1 h.2⟩
   have : tendsto (fun x => P.leading_coeff * x ^ P.nat_degree) at_top at_top :=
     is_equivalent.tendsto_at_top (is_equivalent_at_top_lead P) h
   rw [tendsto_const_mul_pow_at_top_iff P.leading_coeff P.nat_degree] at this
-  rw [degree_eq_nat_degree (leading_coeff_ne_zero.mp (ne_of_ltₓ this.2).symm), ← Nat.cast_one]
+  rw [degree_eq_nat_degree (leading_coeff_ne_zero.mp (ne_of_ltₓ this.2).symm), ← Nat.cast_oneₓ]
   refine' ⟨with_bot.coe_le_coe.mpr this.1, le_of_ltₓ this.2⟩
 
-theorem tendsto_at_bot_of_leading_coeff_nonpos (hdeg : 1 ≤ P.degree) (hnps : P.leading_coeff ≤ 0) :
-    tendsto (fun x => eval x P) at_top at_bot :=
+theorem tendsto_at_bot_of_leading_coeff_nonpos (hdeg : 1 ≤ P.degree) (hnps : P.leadingCoeff ≤ 0) :
+    Tendsto (fun x => eval x P) atTop atBot :=
   P.is_equivalent_at_top_lead.symm.tendsto_at_bot
     (tendsto_neg_const_mul_pow_at_top (le_nat_degree_of_coe_le_degree hdeg)
       (lt_of_le_of_neₓ hnps <| mt leading_coeff_eq_zero.mp <| ne_zero_of_coe_le_degree hdeg))
 
 theorem tendsto_at_bot_iff_leading_coeff_nonpos :
-    tendsto (fun x => eval x P) at_top at_bot ↔ 1 ≤ P.degree ∧ P.leading_coeff ≤ 0 := by
+    Tendsto (fun x => eval x P) atTop atBot ↔ 1 ≤ P.degree ∧ P.leadingCoeff ≤ 0 := by
   refine' ⟨fun h => _, fun h => tendsto_at_bot_of_leading_coeff_nonpos P h.1 h.2⟩
   have : tendsto (fun x => P.leading_coeff * x ^ P.nat_degree) at_top at_bot :=
     is_equivalent.tendsto_at_bot (is_equivalent_at_top_lead P) h
   rw [tendsto_neg_const_mul_pow_at_top_iff P.leading_coeff P.nat_degree] at this
-  rw [degree_eq_nat_degree (leading_coeff_ne_zero.mp (ne_of_ltₓ this.2)), ← Nat.cast_one]
+  rw [degree_eq_nat_degree (leading_coeff_ne_zero.mp (ne_of_ltₓ this.2)), ← Nat.cast_oneₓ]
   refine' ⟨with_bot.coe_le_coe.mpr this.1, le_of_ltₓ this.2⟩
 
-theorem abs_tendsto_at_top (hdeg : 1 ≤ P.degree) : tendsto (fun x => abs <| eval x P) at_top at_top := by
+theorem abs_tendsto_at_top (hdeg : 1 ≤ P.degree) : Tendsto (fun x => abs <| eval x P) atTop atTop := by
   by_cases' hP : 0 ≤ P.leading_coeff
   · exact tendsto_abs_at_top_at_top.comp (P.tendsto_at_top_of_leading_coeff_nonneg hdeg hP)
     
@@ -85,7 +85,7 @@ theorem abs_tendsto_at_top (hdeg : 1 ≤ P.degree) : tendsto (fun x => abs <| ev
     exact tendsto_abs_at_bot_at_top.comp (P.tendsto_at_bot_of_leading_coeff_nonpos hdeg hP.le)
     
 
-theorem abs_is_bounded_under_iff : (is_bounded_under (· ≤ ·) at_top fun x => abs (eval x P)) ↔ P.degree ≤ 0 := by
+theorem abs_is_bounded_under_iff : (IsBoundedUnder (· ≤ ·) atTop fun x => abs (eval x P)) ↔ P.degree ≤ 0 := by
   refine'
     ⟨fun h => _, fun h =>
       ⟨abs (P.coeff 0),
@@ -96,13 +96,13 @@ theorem abs_is_bounded_under_iff : (is_bounded_under (· ≤ ·) at_top fun x =>
   contrapose! h
   exact not_is_bounded_under_of_tendsto_at_top (abs_tendsto_at_top P (Nat.WithBot.one_le_iff_zero_lt.2 h))
 
-theorem abs_tendsto_at_top_iff : tendsto (fun x => abs <| eval x P) at_top at_top ↔ 1 ≤ P.degree :=
+theorem abs_tendsto_at_top_iff : Tendsto (fun x => abs <| eval x P) atTop atTop ↔ 1 ≤ P.degree :=
   ⟨fun h =>
     Nat.WithBot.one_le_iff_zero_lt.2
       (not_leₓ.mp ((mt (abs_is_bounded_under_iff P).mpr) (not_is_bounded_under_of_tendsto_at_top h))),
     abs_tendsto_at_top P⟩
 
-theorem tendsto_nhds_iff {c : 𝕜} : tendsto (fun x => eval x P) at_top (𝓝 c) ↔ P.leading_coeff = c ∧ P.degree ≤ 0 := by
+theorem tendsto_nhds_iff {c : 𝕜} : Tendsto (fun x => eval x P) atTop (𝓝 c) ↔ P.leadingCoeff = c ∧ P.degree ≤ 0 := by
   refine' ⟨fun h => _, fun h => _⟩
   · have := P.is_equivalent_at_top_lead.tendsto_nhds h
     by_cases' hP : P.leading_coeff = 0
@@ -127,7 +127,7 @@ section PolynomialDivAtTop
 
 theorem is_equivalent_at_top_div :
     (fun x => eval x P / eval x Q) ~[at_top] fun x =>
-      P.leading_coeff / Q.leading_coeff * x ^ (P.nat_degree - Q.nat_degree : ℤ) :=
+      P.leadingCoeff / Q.leadingCoeff * x ^ (P.natDegree - Q.natDegree : ℤ) :=
   by
   by_cases' hP : P = 0
   · simp [hP]
@@ -141,7 +141,7 @@ theorem is_equivalent_at_top_div :
   simp [← div_mul_div, hP, hQ, zpow_sub₀ hx.ne.symm]
 
 theorem div_tendsto_zero_of_degree_lt (hdeg : P.degree < Q.degree) :
-    tendsto (fun x => eval x P / eval x Q) at_top (𝓝 0) := by
+    Tendsto (fun x => eval x P / eval x Q) atTop (𝓝 0) := by
   by_cases' hP : P = 0
   · simp [hP, tendsto_const_nhds]
     
@@ -152,7 +152,7 @@ theorem div_tendsto_zero_of_degree_lt (hdeg : P.degree < Q.degree) :
   linarith
 
 theorem div_tendsto_zero_iff_degree_lt (hQ : Q ≠ 0) :
-    tendsto (fun x => eval x P / eval x Q) at_top (𝓝 0) ↔ P.degree < Q.degree := by
+    Tendsto (fun x => eval x P / eval x Q) atTop (𝓝 0) ↔ P.degree < Q.degree := by
   refine' ⟨fun h => _, div_tendsto_zero_of_degree_lt P Q⟩
   by_cases' hPQ : P.leading_coeff / Q.leading_coeff = 0
   · simp only [div_eq_mul_inv, inv_eq_zero, mul_eq_zero] at hPQ
@@ -174,15 +174,15 @@ theorem div_tendsto_zero_iff_degree_lt (hQ : Q ≠ 0) :
     
 
 theorem div_tendsto_leading_coeff_div_of_degree_eq (hdeg : P.degree = Q.degree) :
-    tendsto (fun x => eval x P / eval x Q) at_top (𝓝 <| P.leading_coeff / Q.leading_coeff) := by
+    Tendsto (fun x => eval x P / eval x Q) atTop (𝓝 <| P.leadingCoeff / Q.leadingCoeff) := by
   refine' (is_equivalent_at_top_div P Q).symm.tendsto_nhds _
   rw
     [show (P.nat_degree : ℤ) = Q.nat_degree by
       simp [hdeg, nat_degree]]
   simp [tendsto_const_nhds]
 
-theorem div_tendsto_at_top_of_degree_gt' (hdeg : Q.degree < P.degree) (hpos : 0 < P.leading_coeff / Q.leading_coeff) :
-    tendsto (fun x => eval x P / eval x Q) at_top at_top := by
+theorem div_tendsto_at_top_of_degree_gt' (hdeg : Q.degree < P.degree) (hpos : 0 < P.leadingCoeff / Q.leadingCoeff) :
+    Tendsto (fun x => eval x P / eval x Q) atTop atTop := by
   have hQ : Q ≠ 0 := fun h => by
     simp only [h, div_zero, leading_coeff_zero] at hpos
     linarith
@@ -193,15 +193,15 @@ theorem div_tendsto_at_top_of_degree_gt' (hdeg : Q.degree < P.degree) (hpos : 0 
   linarith
 
 theorem div_tendsto_at_top_of_degree_gt (hdeg : Q.degree < P.degree) (hQ : Q ≠ 0)
-    (hnng : 0 ≤ P.leading_coeff / Q.leading_coeff) : tendsto (fun x => eval x P / eval x Q) at_top at_top :=
-  have ratio_pos : 0 < P.leading_coeff / Q.leading_coeff :=
+    (hnng : 0 ≤ P.leadingCoeff / Q.leadingCoeff) : Tendsto (fun x => eval x P / eval x Q) atTop atTop :=
+  have ratio_pos : 0 < P.leadingCoeff / Q.leadingCoeff :=
     lt_of_le_of_neₓ hnng
       (div_ne_zero (fun h => ne_zero_of_degree_gt hdeg <| leading_coeff_eq_zero.mp h) fun h =>
           hQ <| leading_coeff_eq_zero.mp h).symm
   div_tendsto_at_top_of_degree_gt' P Q hdeg ratio_pos
 
-theorem div_tendsto_at_bot_of_degree_gt' (hdeg : Q.degree < P.degree) (hneg : P.leading_coeff / Q.leading_coeff < 0) :
-    tendsto (fun x => eval x P / eval x Q) at_top at_bot := by
+theorem div_tendsto_at_bot_of_degree_gt' (hdeg : Q.degree < P.degree) (hneg : P.leadingCoeff / Q.leadingCoeff < 0) :
+    Tendsto (fun x => eval x P / eval x Q) atTop atBot := by
   have hQ : Q ≠ 0 := fun h => by
     simp only [h, div_zero, leading_coeff_zero] at hneg
     linarith
@@ -212,15 +212,15 @@ theorem div_tendsto_at_bot_of_degree_gt' (hdeg : Q.degree < P.degree) (hneg : P.
   linarith
 
 theorem div_tendsto_at_bot_of_degree_gt (hdeg : Q.degree < P.degree) (hQ : Q ≠ 0)
-    (hnps : P.leading_coeff / Q.leading_coeff ≤ 0) : tendsto (fun x => eval x P / eval x Q) at_top at_bot :=
-  have ratio_neg : P.leading_coeff / Q.leading_coeff < 0 :=
+    (hnps : P.leadingCoeff / Q.leadingCoeff ≤ 0) : Tendsto (fun x => eval x P / eval x Q) atTop atBot :=
+  have ratio_neg : P.leadingCoeff / Q.leadingCoeff < 0 :=
     lt_of_le_of_neₓ hnps
       (div_ne_zero (fun h => ne_zero_of_degree_gt hdeg <| leading_coeff_eq_zero.mp h) fun h =>
         hQ <| leading_coeff_eq_zero.mp h)
   div_tendsto_at_bot_of_degree_gt' P Q hdeg ratio_neg
 
 theorem abs_div_tendsto_at_top_of_degree_gt (hdeg : Q.degree < P.degree) (hQ : Q ≠ 0) :
-    tendsto (fun x => abs (eval x P / eval x Q)) at_top at_top := by
+    Tendsto (fun x => abs (eval x P / eval x Q)) atTop atTop := by
   by_cases' h : 0 ≤ P.leading_coeff / Q.leading_coeff
   · exact tendsto_abs_at_top_at_top.comp (P.div_tendsto_at_top_of_degree_gt Q hdeg hQ h)
     
@@ -230,7 +230,7 @@ theorem abs_div_tendsto_at_top_of_degree_gt (hdeg : Q.degree < P.degree) (hQ : Q
 
 end PolynomialDivAtTop
 
-theorem is_O_of_degree_le (h : P.degree ≤ Q.degree) : is_O (fun x => eval x P) (fun x => eval x Q) Filter.atTop := by
+theorem is_O_of_degree_le (h : P.degree ≤ Q.degree) : IsO (fun x => eval x P) (fun x => eval x Q) Filter.atTop := by
   by_cases' hp : P = 0
   · simpa [hp] using is_O_zero (fun x => eval x Q) Filter.atTop
     

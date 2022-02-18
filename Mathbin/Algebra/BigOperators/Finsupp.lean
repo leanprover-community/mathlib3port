@@ -1,6 +1,7 @@
 import Mathbin.Data.Finsupp.Basic
 import Mathbin.Algebra.BigOperators.Pi
 import Mathbin.Algebra.BigOperators.Ring
+import Mathbin.Algebra.BigOperators.Order
 
 /-!
 # Big operators for finsupps
@@ -22,7 +23,7 @@ variable (g : ι →₀ A) (k : ι → A → γ → B) (x : γ)
 theorem Finset.sum_apply' : (∑ k in s, f k) i = ∑ k in s, f k i :=
   (Finsupp.applyAddHom i : (ι →₀ A) →+ A).map_sum f s
 
-theorem Finsupp.sum_apply' : g.sum k x = g.sum fun i b => k i b x :=
+theorem Finsupp.sum_apply' : g.Sum k x = g.Sum fun i b => k i b x :=
   Finset.sum_apply _ _ _
 
 section
@@ -39,13 +40,25 @@ end
 
 section
 
-variable {R S : Type _} [NonUnitalNonAssocSemiring R] [NonUnitalNonAssocSemiring S]
+variable {R S : Type _} [NonUnitalNonAssocSemiringₓ R] [NonUnitalNonAssocSemiringₓ S]
 
-theorem Finsupp.sum_mul (b : S) (s : α →₀ R) {f : α → R → S} : s.sum f * b = s.sum fun a c => f a c * b := by
+theorem Finsupp.sum_mul (b : S) (s : α →₀ R) {f : α → R → S} : s.Sum f * b = s.Sum fun a c => f a c * b := by
   simp only [Finsupp.sum, Finset.sum_mul]
 
-theorem Finsupp.mul_sum (b : S) (s : α →₀ R) {f : α → R → S} : b * s.sum f = s.sum fun a c => b * f a c := by
+theorem Finsupp.mul_sum (b : S) (s : α →₀ R) {f : α → R → S} : b * s.Sum f = s.Sum fun a c => b * f a c := by
   simp only [Finsupp.sum, Finset.mul_sum]
 
 end
+
+namespace Nat
+
+/-- If `0 : ℕ` is not in the support of `f : ℕ →₀ ℕ` then `0 < ∏ x in f.support, x ^ (f x)`. -/
+theorem prod_pow_pos_of_zero_not_mem_support {f : ℕ →₀ ℕ} (hf : 0 ∉ f.Support) : 0 < f.Prod pow :=
+  Finset.prod_pos fun a ha =>
+    pos_iff_ne_zero.mpr
+      (pow_ne_zero _ fun H => by
+        subst H
+        exact hf ha)
+
+end Nat
 

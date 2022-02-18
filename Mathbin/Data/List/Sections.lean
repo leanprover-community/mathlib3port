@@ -14,7 +14,7 @@ namespace List
 
 variable {α β : Type _}
 
-theorem mem_sections {L : List (List α)} {f} : f ∈ sections L ↔ forall₂ (· ∈ ·) f L := by
+theorem mem_sections {L : List (List α)} {f} : f ∈ sections L ↔ Forall₂ (· ∈ ·) f L := by
   refine' ⟨fun h => _, fun h => _⟩
   · induction L generalizing f
     · cases mem_singleton.1 h
@@ -34,9 +34,9 @@ theorem mem_sections {L : List (List α)} {f} : f ∈ sections L ↔ forall₂ (
 theorem mem_sections_length {L : List (List α)} {f} (h : f ∈ sections L) : length f = length L :=
   forall₂_length_eq (mem_sections.1 h)
 
-theorem rel_sections {r : α → β → Prop} : (forall₂ (forall₂ r)⇒forall₂ (forall₂ r)) sections sections
-  | _, _, forall₂.nil => forall₂.cons forall₂.nil forall₂.nil
-  | _, _, forall₂.cons h₀ h₁ => rel_bind (rel_sections h₁) fun _ _ hl => rel_map (fun _ _ ha => forall₂.cons ha hl) h₀
+theorem rel_sections {r : α → β → Prop} : (Forall₂ (Forall₂ r)⇒Forall₂ (Forall₂ r)) sections sections
+  | _, _, forall₂.nil => Forall₂.cons Forall₂.nil Forall₂.nil
+  | _, _, forall₂.cons h₀ h₁ => rel_bind (rel_sections h₁) fun _ _ hl => rel_map (fun _ _ ha => Forall₂.cons ha hl) h₀
 
 end List
 

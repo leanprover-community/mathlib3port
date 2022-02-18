@@ -25,7 +25,7 @@ supersets which are disjoint up to measure zero when `p < q`, then `f` is almost
 measurable. It is even enough to have this for `p` and `q` in a countable dense set. -/
 theorem MeasureTheory.ae_measurable_of_exist_almost_disjoint_supersets {α : Type _} {m : MeasurableSpace α}
     (μ : Measureₓ α) {β : Type _} [CompleteLinearOrder β] [DenselyOrdered β] [TopologicalSpace β] [OrderTopology β]
-    [second_countable_topology β] [MeasurableSpace β] [BorelSpace β] (s : Set β) (s_count : countable s)
+    [SecondCountableTopology β] [MeasurableSpace β] [BorelSpace β] (s : Set β) (s_count : Countable s)
     (s_dense : Dense s) (f : α → β)
     (h :
       ∀,

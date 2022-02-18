@@ -33,7 +33,7 @@ variable {ι : Type _} {α : ι → Type _}
 
 namespace Psigma
 
-notation3 "Σₗ' " (...) ", " r:(scoped p => _root_.lex Psigma p) => r
+notation3 "Σₗ' " (...) ", " r:(scoped p => Lex Psigma p) => r
 
 /-- The lexicographical `≤` on a sigma type. -/
 instance lex.has_le [LT ι] [∀ i, LE (α i)] : LE (Σₗ' i, α i) where
@@ -44,7 +44,7 @@ instance lex.has_lt [LT ι] [∀ i, LT (α i)] : LT (Σₗ' i, α i) where
   lt := Lex (· < ·) fun i => · < ·
 
 instance lex.preorder [Preorderₓ ι] [∀ i, Preorderₓ (α i)] : Preorderₓ (Σₗ' i, α i) :=
-  { lex.has_le, lex.has_lt with le_refl := fun ⟨i, a⟩ => lex.right _ le_rfl,
+  { Lex.hasLe, Lex.hasLt with le_refl := fun ⟨i, a⟩ => Lex.right _ le_rfl,
     le_trans := by
       rintro ⟨a₁, b₁⟩ ⟨a₂, b₂⟩ ⟨a₃, b₃⟩ ⟨h₁l, h₁r⟩ ⟨h₂l, h₂r⟩
       · left
@@ -84,7 +84,7 @@ instance lex.preorder [Preorderₓ ι] [∀ i, Preorderₓ (α i)] : Preorderₓ
 
 /-- Dictionary / lexicographic partial_order for dependent pairs. -/
 instance lex.partial_order [PartialOrderₓ ι] [∀ i, PartialOrderₓ (α i)] : PartialOrderₓ (Σₗ' i, α i) :=
-  { lex.preorder with
+  { Lex.preorder with
     le_antisymm := by
       rintro ⟨a₁, b₁⟩ ⟨a₂, b₂⟩ (⟨_, _, _, _, hlt₁⟩ | ⟨_, _, _, hlt₁⟩) (⟨_, _, _, _, hlt₂⟩ | ⟨_, _, _, hlt₂⟩)
       · exact (lt_irreflₓ a₁ <| hlt₁.trans hlt₂).elim
@@ -98,7 +98,7 @@ instance lex.partial_order [PartialOrderₓ ι] [∀ i, PartialOrderₓ (α i)] 
 
 /-- Dictionary / lexicographic linear_order for pairs. -/
 instance lex.linear_order [LinearOrderₓ ι] [∀ i, LinearOrderₓ (α i)] : LinearOrderₓ (Σₗ' i, α i) :=
-  { lex.partial_order with
+  { Lex.partialOrder with
     le_total := by
       rintro ⟨i, a⟩ ⟨j, b⟩
       obtain hij | rfl | hji := lt_trichotomyₓ i j
@@ -112,7 +112,7 @@ instance lex.linear_order [LinearOrderₓ ι] [∀ i, LinearOrderₓ (α i)] : L
         
       · exact Or.inr (lex.left _ _ hji)
         ,
-    DecidableEq := Psigma.decidableEq, decidableLe := lex.decidable _ _, decidableLt := lex.decidable _ _ }
+    DecidableEq := Psigma.decidableEq, decidableLe := Lex.decidable _ _, decidableLt := Lex.decidable _ _ }
 
 end Psigma
 

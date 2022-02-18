@@ -55,32 +55,32 @@ namespace PrelaxFunctor
 
 variable {B C} {D : Type u₃} [Quiver.{v₃ + 1} D] [∀ a b : D, Quiver.{w₃ + 1} (a ⟶ b)]
 
-variable (F : prelax_functor B C) (G : prelax_functor C D)
+variable (F : PrelaxFunctor B C) (G : PrelaxFunctor C D)
 
 @[simp]
-theorem to_prefunctor_obj : F.to_prefunctor.obj = F.obj :=
+theorem to_prefunctor_obj : F.toPrefunctor.obj = F.obj :=
   rfl
 
 @[simp]
-theorem to_prefunctor_map : F.to_prefunctor.map = F.map :=
+theorem to_prefunctor_map : F.toPrefunctor.map = F.map :=
   rfl
 
 variable (B)
 
 /-- The identity prelax functor. -/
 @[simps]
-def id : prelax_functor B B :=
+def id : PrelaxFunctor B B :=
   { Prefunctor.id B with map₂ := fun a b f g η => η }
 
-instance : Inhabited (prelax_functor B B) :=
-  ⟨prelax_functor.id B⟩
+instance : Inhabited (PrelaxFunctor B B) :=
+  ⟨PrelaxFunctor.id B⟩
 
 variable {B}
 
 /-- Composition of prelax functors. -/
 @[simps]
-def comp : prelax_functor B D :=
-  { F.to_prefunctor.comp G.to_prefunctor with map₂ := fun a b f g η => G.map₂ (F.map₂ η) }
+def comp : PrelaxFunctor B D :=
+  { F.toPrefunctor.comp G.toPrefunctor with map₂ := fun a b f g η => G.map₂ (F.map₂ η) }
 
 end PrelaxFunctor
 
@@ -88,7 +88,7 @@ end
 
 section
 
-variable {B : Type u₁} [bicategory.{w₁, v₁} B] {C : Type u₂} [bicategory.{w₂, v₂} C]
+variable {B : Type u₁} [Bicategory.{w₁, v₁} B] {C : Type u₂} [Bicategory.{w₂, v₂} C]
 
 /-- This auxiliary definition states that oplax functors preserve the associators
 modulo some adjustments of domains and codomains of 2-morphisms.
@@ -114,7 +114,7 @@ Functions between 2-morphisms strictly commute with compositions and preserve th
 They also preserve the associator, the left unitor, and the right unitor modulo some adjustments
 of domains and codomains of 2-morphisms.
 -/
-structure oplax_functor extends prelax_functor B C : Type max w₁ w₂ v₁ v₂ u₁ u₂ where
+structure oplax_functor extends PrelaxFunctor B C : Type max w₁ w₂ v₁ v₂ u₁ u₂ where
   map_id (a : B) : map (𝟙 a) ⟶ 𝟙 (obj a)
   map_comp {a b c : B} (f : a ⟶ b) (g : b ⟶ c) : map (f ≫ g) ⟶ map f ≫ map g
   map_comp_naturality_left' :
@@ -135,7 +135,7 @@ structure oplax_functor extends prelax_functor B C : Type max w₁ w₂ v₁ v�
       obviously
   map₂_associator' :
     ∀ {a b c d : B} f : a ⟶ b g : b ⟶ c h : c ⟶ d,
-      oplax_functor.map₂_associator_aux obj (fun a b => map) (fun a b f g => map₂) (fun a b c => map_comp) f g h := by
+      OplaxFunctor.Map₂AssociatorAux obj (fun a b => map) (fun a b f g => map₂) (fun a b c => map_comp) f g h := by
     run_tac
       obviously
   map₂_left_unitor' :
@@ -171,9 +171,9 @@ attribute [simp] oplax_functor.map₂_comp oplax_functor.map₂_left_unitor opla
 
 namespace OplaxFunctor
 
-variable {B} {C} {D : Type u₃} [bicategory.{w₃, v₃} D]
+variable {B} {C} {D : Type u₃} [Bicategory.{w₃, v₃} D]
 
-variable (F : oplax_functor B C) (G : oplax_functor C D)
+variable (F : OplaxFunctor B C) (G : OplaxFunctor C D)
 
 /-- Function between 1-morphisms as a functor. -/
 @[simps]
@@ -185,35 +185,35 @@ def map_functor (a b : B) : (a ⟶ b) ⥤ (F.obj a ⟶ F.obj b) where
 add_decl_doc oplax_functor.to_prelax_functor
 
 @[simp]
-theorem to_prelax_functor_obj : F.to_prelax_functor.obj = F.obj :=
+theorem to_prelax_functor_obj : F.toPrelaxFunctor.obj = F.obj :=
   rfl
 
 @[simp]
-theorem to_prelax_functor_map : F.to_prelax_functor.map = F.map :=
+theorem to_prelax_functor_map : F.toPrelaxFunctor.map = F.map :=
   rfl
 
 @[simp]
-theorem to_prelax_functor_map₂ : F.to_prelax_functor.map₂ = F.map₂ :=
+theorem to_prelax_functor_map₂ : F.toPrelaxFunctor.map₂ = F.map₂ :=
   rfl
 
 variable (B)
 
 /-- The identity oplax functor. -/
 @[simps]
-def id : oplax_functor B B :=
-  { prelax_functor.id B with map_id := fun a => 𝟙 (𝟙 a), map_comp := fun a b c f g => 𝟙 (f ≫ g) }
+def id : OplaxFunctor B B :=
+  { PrelaxFunctor.id B with map_id := fun a => 𝟙 (𝟙 a), map_comp := fun a b c f g => 𝟙 (f ≫ g) }
 
-instance : Inhabited (oplax_functor B B) :=
+instance : Inhabited (OplaxFunctor B B) :=
   ⟨id B⟩
 
 variable {B}
 
 /-- Composition of oplax functors. -/
 @[simps]
-def comp : oplax_functor B D :=
-  { F.to_prelax_functor.comp G.to_prelax_functor with
-    map_id := fun a => (G.map_functor _ _).map (F.map_id a) ≫ G.map_id (F.obj a),
-    map_comp := fun a b c f g => (G.map_functor _ _).map (F.map_comp f g) ≫ G.map_comp (F.map f) (F.map g),
+def comp : OplaxFunctor B D :=
+  { F.toPrelaxFunctor.comp G.toPrelaxFunctor with
+    map_id := fun a => (G.mapFunctor _ _).map (F.map_id a) ≫ G.map_id (F.obj a),
+    map_comp := fun a b c f g => (G.mapFunctor _ _).map (F.map_comp f g) ≫ G.map_comp (F.map f) (F.map g),
     map_comp_naturality_left' := fun a b c f f' η g => by
       dsimp
       rw [← map₂_comp_assoc, map_comp_naturality_left, map₂_comp_assoc, map_comp_naturality_left, assoc],

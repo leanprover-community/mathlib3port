@@ -24,41 +24,41 @@ variable {G M α : Type _}
 /-- A measure `μ : measure α` is invariant under an additive action of `M` on `α` if for any
 measurable set `s : set α` and `c : M`, the measure of its preimage under `λ x, c +ᵥ x` is equal to
 the measure of `s`. -/
-class vadd_invariant_measure (M α : Type _) [HasVadd M α] {_ : MeasurableSpace α} (μ : Measureₓ α) : Prop where
+class vadd_invariant_measure (M α : Type _) [HasVadd M α] {_ : MeasurableSpace α} (μ : Measure α) : Prop where
   measure_preimage_vadd {} : ∀ c : M ⦃s : Set α⦄, MeasurableSet s → μ ((fun x => c +ᵥ x) ⁻¹' s) = μ s
 
 /-- A measure `μ : measure α` is invariant under a multiplicative action of `M` on `α` if for any
 measurable set `s : set α` and `c : M`, the measure of its preimage under `λ x, c • x` is equal to
 the measure of `s`. -/
 @[to_additive]
-class smul_invariant_measure (M α : Type _) [HasScalar M α] {_ : MeasurableSpace α} (μ : Measureₓ α) : Prop where
+class smul_invariant_measure (M α : Type _) [HasScalar M α] {_ : MeasurableSpace α} (μ : Measure α) : Prop where
   measure_preimage_smul {} : ∀ c : M ⦃s : Set α⦄, MeasurableSet s → μ ((fun x => c • x) ⁻¹' s) = μ s
 
 namespace SmulInvariantMeasure
 
 @[to_additive]
-instance zero [MeasurableSpace α] [HasScalar M α] : smul_invariant_measure M α 0 :=
+instance zero [MeasurableSpace α] [HasScalar M α] : SmulInvariantMeasure M α 0 :=
   ⟨fun _ _ _ => rfl⟩
 
-variable [HasScalar M α] {m : MeasurableSpace α} {μ ν : Measureₓ α}
+variable [HasScalar M α] {m : MeasurableSpace α} {μ ν : Measure α}
 
 @[to_additive]
-instance add [smul_invariant_measure M α μ] [smul_invariant_measure M α ν] : smul_invariant_measure M α (μ + ν) :=
+instance add [SmulInvariantMeasure M α μ] [SmulInvariantMeasure M α ν] : SmulInvariantMeasure M α (μ + ν) :=
   ⟨fun c s hs =>
     show _ + _ = _ + _ from congr_arg2ₓ (· + ·) (measure_preimage_smul μ c hs) (measure_preimage_smul ν c hs)⟩
 
 @[to_additive]
-instance smul [smul_invariant_measure M α μ] (c : ℝ≥0∞) : smul_invariant_measure M α (c • μ) :=
+instance smul [SmulInvariantMeasure M α μ] (c : ℝ≥0∞) : SmulInvariantMeasure M α (c • μ) :=
   ⟨fun a s hs => show c • _ = c • _ from congr_argₓ ((· • ·) c) (measure_preimage_smul μ a hs)⟩
 
 @[to_additive]
-instance smul_nnreal [smul_invariant_measure M α μ] (c : ℝ≥0 ) : smul_invariant_measure M α (c • μ) :=
-  smul_invariant_measure.smul c
+instance smul_nnreal [SmulInvariantMeasure M α μ] (c : ℝ≥0 ) : SmulInvariantMeasure M α (c • μ) :=
+  SmulInvariantMeasure.smul c
 
 end SmulInvariantMeasure
 
 variable (G) {m : MeasurableSpace α} [Groupₓ G] [MulAction G α] [MeasurableSpace G] [HasMeasurableSmul G α] (c : G)
-  (μ : Measureₓ α)
+  (μ : Measure α)
 
 /-- Equivalent definitions of a measure invariant under a multiplicative action of a group.
 
@@ -77,10 +77,10 @@ variable (G) {m : MeasurableSpace α} [Groupₓ G] [MulAction G α] [MeasurableS
 - 6: for any `c : G`, scalar multiplication by `c` is a measure preserving map. -/
 @[to_additive]
 theorem smul_invariant_measure_tfae :
-    tfae
-      [smul_invariant_measure G α μ, ∀ c : G s, MeasurableSet s → μ ((· • ·) c ⁻¹' s) = μ s,
+    Tfae
+      [SmulInvariantMeasure G α μ, ∀ c : G s, MeasurableSet s → μ ((· • ·) c ⁻¹' s) = μ s,
         ∀ c : G s, MeasurableSet s → μ (c • s) = μ s, ∀ c : G s, μ ((· • ·) c ⁻¹' s) = μ s, ∀ c : G s, μ (c • s) = μ s,
-        ∀ c : G, measure.map ((· • ·) c) μ = μ, ∀ c : G, measure_preserving ((· • ·) c) μ μ] :=
+        ∀ c : G, Measure.map ((· • ·) c) μ = μ, ∀ c : G, MeasurePreserving ((· • ·) c) μ μ] :=
   by
   tfae_have 1 ↔ 2
   exact ⟨fun h => h.1, fun h => ⟨h⟩⟩
@@ -122,10 +122,10 @@ theorem smul_invariant_measure_tfae :
 - 6: for any `c : G`, vector addition of `c` is a measure preserving map. -/
 add_decl_doc vadd_invariant_measure_tfae
 
-variable {G} [smul_invariant_measure G α μ]
+variable {G} [SmulInvariantMeasure G α μ]
 
 @[to_additive]
-theorem measure_preserving_smul : measure_preserving ((· • ·) c) μ μ :=
+theorem measure_preserving_smul : MeasurePreserving ((· • ·) c) μ μ :=
   ((smul_invariant_measure_tfae G μ).out 0 6).mp ‹_› c
 
 @[simp, to_additive]
@@ -150,7 +150,7 @@ positive on any nonempty open set. In case of a regular measure, one can assume 
 `μ K ≠ 0`, see `measure_theory.measure_is_open_pos_of_smul_invariant_of_ne_zero`. -/
 @[to_additive]
 theorem measure_is_open_pos_of_smul_invariant_of_compact_ne_zero (hK : IsCompact K) (hμK : μ K ≠ 0) (hU : IsOpen U)
-    (hne : U.nonempty) : 0 < μ U :=
+    (hne : U.Nonempty) : 0 < μ U :=
   let ⟨t, ht⟩ := hK.exists_finite_cover_smul G hU hne
   pos_iff_ne_zero.2 fun hμU =>
     hμK <|
@@ -164,23 +164,23 @@ instead of `μ K ≠ 0`, see `measure_theory.measure_is_open_pos_of_vadd_invaria
 add_decl_doc measure_is_open_pos_of_vadd_invariant_of_compact_ne_zero
 
 @[to_additive]
-theorem is_locally_finite_measure_of_smul_invariant (hU : IsOpen U) (hne : U.nonempty) (hμU : μ U ≠ ∞) :
-    is_locally_finite_measure μ :=
+theorem is_locally_finite_measure_of_smul_invariant (hU : IsOpen U) (hne : U.Nonempty) (hμU : μ U ≠ ∞) :
+    IsLocallyFiniteMeasure μ :=
   ⟨fun x =>
     let ⟨g, hg⟩ := hU.exists_smul_mem G x hne
-    ⟨(· • ·) g ⁻¹' U, (hU.preimage (continuous_id.const_smul _)).mem_nhds hg,
+    ⟨(· • ·) g ⁻¹' U, (hU.Preimage (continuous_id.const_smul _)).mem_nhds hg,
       Ne.lt_top <| by
         rwa [measure_preimage_smul]⟩⟩
 
-variable [measure.regular μ]
+variable [Measure.Regular μ]
 
 @[to_additive]
-theorem measure_is_open_pos_of_smul_invariant_of_ne_zero (hμ : μ ≠ 0) (hU : IsOpen U) (hne : U.nonempty) : 0 < μ U :=
-  let ⟨K, hK, hμK⟩ := regular.exists_compact_not_null.mpr hμ
+theorem measure_is_open_pos_of_smul_invariant_of_ne_zero (hμ : μ ≠ 0) (hU : IsOpen U) (hne : U.Nonempty) : 0 < μ U :=
+  let ⟨K, hK, hμK⟩ := Regular.exists_compact_not_null.mpr hμ
   measure_is_open_pos_of_smul_invariant_of_compact_ne_zero G hK hμK hU hne
 
 @[to_additive]
-theorem measure_pos_iff_nonempty_of_smul_invariant (hμ : μ ≠ 0) (hU : IsOpen U) : 0 < μ U ↔ U.nonempty :=
+theorem measure_pos_iff_nonempty_of_smul_invariant (hμ : μ ≠ 0) (hU : IsOpen U) : 0 < μ U ↔ U.Nonempty :=
   ⟨fun h => nonempty_of_measure_ne_zero h.ne', measure_is_open_pos_of_smul_invariant_of_ne_zero G hμ hU⟩
 
 include G

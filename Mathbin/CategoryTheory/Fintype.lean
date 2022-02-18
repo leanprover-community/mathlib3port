@@ -23,7 +23,7 @@ open CategoryTheory
 
 /-- The category of finite types. -/
 def Fintypeₓ :=
-  bundled Fintype
+  Bundled Fintype
 
 namespace Fintypeₓ
 
@@ -32,7 +32,7 @@ instance : CoeSort Fintypeₓ (Type _) :=
 
 /-- Construct a bundled `Fintype` from the underlying type and typeclass. -/
 def of (X : Type _) [Fintype X] : Fintypeₓ :=
-  bundled.of X
+  Bundled.of X
 
 instance : Inhabited Fintypeₓ :=
   ⟨⟨Pempty⟩⟩
@@ -40,15 +40,15 @@ instance : Inhabited Fintypeₓ :=
 instance {X : Fintypeₓ} : Fintype X :=
   X.2
 
-instance : category Fintypeₓ :=
-  induced_category.category bundled.α
+instance : Category Fintypeₓ :=
+  InducedCategory.category Bundled.α
 
 /-- The fully faithful embedding of `Fintype` into the category of types. -/
 @[simps]
 def incl : Fintypeₓ ⥤ Type _ :=
-  induced_functor _ deriving full, faithful
+  inducedFunctor _ deriving Full, Faithful
 
-instance : concrete_category Fintypeₓ :=
+instance : ConcreteCategory Fintypeₓ :=
   ⟨incl⟩
 
 @[simp]
@@ -73,30 +73,30 @@ def skeleton : Type u :=
 namespace Skeleton
 
 /-- Given any natural number `n`, this creates the associated object of `Fintype.skeleton`. -/
-def mk : ℕ → skeleton :=
+def mk : ℕ → Skeleton :=
   Ulift.up
 
-instance : Inhabited skeleton :=
+instance : Inhabited Skeleton :=
   ⟨mk 0⟩
 
 /-- Given any object of `Fintype.skeleton`, this returns the associated natural number. -/
-def len : skeleton → ℕ :=
+def len : Skeleton → ℕ :=
   Ulift.down
 
 @[ext]
-theorem ext (X Y : skeleton) : X.len = Y.len → X = Y :=
+theorem ext (X Y : Skeleton) : X.len = Y.len → X = Y :=
   Ulift.ext _ _
 
-instance : small_category skeleton.{u} where
+instance : SmallCategory Skeleton.{u} where
   Hom := fun X Y => Ulift.{u} (Finₓ X.len) → Ulift.{u} (Finₓ Y.len)
   id := fun _ => id
   comp := fun _ _ _ f g => g ∘ f
 
-theorem is_skeletal : skeletal skeleton.{u} := fun X Y ⟨h⟩ =>
+theorem is_skeletal : Skeletal Skeleton.{u} := fun X Y ⟨h⟩ =>
   ext _ _ <|
     Finₓ.equiv_iff_eq.mp <|
       Nonempty.intro <|
-        { toFun := fun x => (h.hom ⟨x⟩).down, invFun := fun x => (h.inv ⟨x⟩).down,
+        { toFun := fun x => (h.Hom ⟨x⟩).down, invFun := fun x => (h.inv ⟨x⟩).down,
           left_inv := by
             intro a
             change Ulift.down _ = _
@@ -115,19 +115,19 @@ def incl : skeleton.{u} ⥤ Fintypeₓ.{u} where
   obj := fun X => Fintypeₓ.of (Ulift (Finₓ X.len))
   map := fun _ _ f => f
 
-instance : full incl where
+instance : Full incl where
   Preimage := fun _ _ f => f
 
-instance : faithful incl :=
+instance : Faithful incl :=
   {  }
 
-instance : ess_surj incl :=
+instance : EssSurj incl :=
   ess_surj.mk fun X =>
     let F := Fintype.equivFin X
     ⟨mk (Fintype.card X), Nonempty.intro { Hom := F.symm ∘ Ulift.down, inv := Ulift.up ∘ F }⟩
 
-noncomputable instance : is_equivalence incl :=
-  equivalence.of_fully_faithfully_ess_surj _
+noncomputable instance : IsEquivalence incl :=
+  Equivalence.ofFullyFaithfullyEssSurj _
 
 /-- The equivalence between `Fintype.skeleton` and `Fintype`. -/
 noncomputable def Equivalenceₓ : skeleton ≌ Fintypeₓ :=
@@ -141,8 +141,8 @@ theorem incl_mk_nat_card (n : ℕ) : Fintype.card (incl.obj (mk n)) = n := by
 end Skeleton
 
 /-- `Fintype.skeleton` is a skeleton of `Fintype`. -/
-noncomputable def is_skeleton : is_skeleton_of Fintypeₓ skeleton skeleton.incl where
-  skel := skeleton.is_skeletal
+noncomputable def is_skeleton : IsSkeletonOf Fintypeₓ Skeleton Skeleton.incl where
+  skel := Skeleton.is_skeletal
   eqv := by
     infer_instance
 

@@ -89,36 +89,35 @@ def compact_conv_nhd : Set C(α, β) :=
 
 variable {K V}
 
-theorem self_mem_compact_conv_nhd (hV : V ∈ 𝓤 β) : f ∈ compact_conv_nhd K V f := fun x hx => refl_mem_uniformity hV
+theorem self_mem_compact_conv_nhd (hV : V ∈ 𝓤 β) : f ∈ CompactConvNhd K V f := fun x hx => refl_mem_uniformity hV
 
 @[mono]
-theorem compact_conv_nhd_mono {V' : Set (β × β)} (hV' : V' ⊆ V) : compact_conv_nhd K V' f ⊆ compact_conv_nhd K V f :=
+theorem compact_conv_nhd_mono {V' : Set (β × β)} (hV' : V' ⊆ V) : CompactConvNhd K V' f ⊆ CompactConvNhd K V f :=
   fun x hx a ha => hV' (hx a ha)
 
-theorem compact_conv_nhd_mem_comp {g₁ g₂ : C(α, β)} {V' : Set (β × β)} (hg₁ : g₁ ∈ compact_conv_nhd K V f)
-    (hg₂ : g₂ ∈ compact_conv_nhd K V' g₁) : g₂ ∈ compact_conv_nhd K (V ○ V') f := fun x hx => ⟨g₁ x, hg₁ x hx, hg₂ x hx⟩
+theorem compact_conv_nhd_mem_comp {g₁ g₂ : C(α, β)} {V' : Set (β × β)} (hg₁ : g₁ ∈ CompactConvNhd K V f)
+    (hg₂ : g₂ ∈ CompactConvNhd K V' g₁) : g₂ ∈ CompactConvNhd K (V ○ V') f := fun x hx => ⟨g₁ x, hg₁ x hx, hg₂ x hx⟩
 
 /-- A key property of `compact_conv_nhd`. It allows us to apply
 `topological_space.nhds_mk_of_nhds_filter_basis` below. -/
 theorem compact_conv_nhd_nhd_basis (hV : V ∈ 𝓤 β) :
-    ∃ V' ∈ 𝓤 β, V' ⊆ V ∧ ∀, ∀ g ∈ compact_conv_nhd K V' f, ∀, compact_conv_nhd K V' g ⊆ compact_conv_nhd K V f := by
+    ∃ V' ∈ 𝓤 β, V' ⊆ V ∧ ∀, ∀ g ∈ CompactConvNhd K V' f, ∀, CompactConvNhd K V' g ⊆ CompactConvNhd K V f := by
   obtain ⟨V', h₁, h₂⟩ := comp_mem_uniformity_sets hV
   exact
     ⟨V', h₁, subset.trans (subset_comp_self_of_mem_uniformity h₁) h₂, fun g hg g' hg' =>
       compact_conv_nhd_mono f h₂ (compact_conv_nhd_mem_comp f hg hg')⟩
 
 theorem compact_conv_nhd_subset_inter (K₁ K₂ : Set α) (V₁ V₂ : Set (β × β)) :
-    compact_conv_nhd (K₁ ∪ K₂) (V₁ ∩ V₂) f ⊆ compact_conv_nhd K₁ V₁ f ∩ compact_conv_nhd K₂ V₂ f := fun g hg =>
+    CompactConvNhd (K₁ ∪ K₂) (V₁ ∩ V₂) f ⊆ CompactConvNhd K₁ V₁ f ∩ CompactConvNhd K₂ V₂ f := fun g hg =>
   ⟨fun x hx => mem_of_mem_inter_left (hg x (mem_union_left K₂ hx)), fun x hx =>
     mem_of_mem_inter_right (hg x (mem_union_right K₁ hx))⟩
 
 theorem compact_conv_nhd_compact_entourage_nonempty :
     { KV : Set α × Set (β × β) | IsCompact KV.1 ∧ KV.2 ∈ 𝓤 β }.Nonempty :=
-  ⟨⟨∅, univ⟩, is_compact_empty, Filter.univ_mem⟩
+  ⟨⟨∅, Univ⟩, is_compact_empty, Filter.univ_mem⟩
 
 theorem compact_conv_nhd_filter_is_basis :
-    Filter.IsBasis (fun KV : Set α × Set (β × β) => IsCompact KV.1 ∧ KV.2 ∈ 𝓤 β) fun KV =>
-      compact_conv_nhd KV.1 KV.2 f :=
+    Filter.IsBasis (fun KV : Set α × Set (β × β) => IsCompact KV.1 ∧ KV.2 ∈ 𝓤 β) fun KV => CompactConvNhd KV.1 KV.2 f :=
   { Nonempty := compact_conv_nhd_compact_entourage_nonempty,
     inter := by
       rintro ⟨K₁, V₁⟩ ⟨K₂, V₂⟩ ⟨hK₁, hV₁⟩ ⟨hK₂, hV₂⟩
@@ -130,8 +129,8 @@ def compact_convergence_filter_basis (f : C(α, β)) : FilterBasis C(α, β) :=
   (compact_conv_nhd_filter_is_basis f).FilterBasis
 
 theorem mem_compact_convergence_nhd_filter (Y : Set C(α, β)) :
-    Y ∈ (compact_convergence_filter_basis f).filter ↔
-      ∃ (K : Set α)(V : Set (β × β))(hK : IsCompact K)(hV : V ∈ 𝓤 β), compact_conv_nhd K V f ⊆ Y :=
+    Y ∈ (compactConvergenceFilterBasis f).filter ↔
+      ∃ (K : Set α)(V : Set (β × β))(hK : IsCompact K)(hV : V ∈ 𝓤 β), CompactConvNhd K V f ⊆ Y :=
   by
   constructor
   · rintro ⟨X, ⟨⟨K, V⟩, ⟨hK, hV⟩, rfl⟩, hY⟩
@@ -145,10 +144,9 @@ theorem mem_compact_convergence_nhd_filter (Y : Set C(α, β)) :
 the same as the compact-open topology. This definition is thus an auxiliary convenience definition
 and is unlikely to be of direct use. -/
 def compact_convergence_topology : TopologicalSpace C(α, β) :=
-  TopologicalSpace.mkOfNhds fun f => (compact_convergence_filter_basis f).filter
+  TopologicalSpace.mkOfNhds fun f => (compactConvergenceFilterBasis f).filter
 
-theorem nhds_compact_convergence :
-    @nhds _ compact_convergence_topology f = (compact_convergence_filter_basis f).filter := by
+theorem nhds_compact_convergence : @nhds _ compactConvergenceTopology f = (compactConvergenceFilterBasis f).filter := by
   rw [TopologicalSpace.nhds_mk_of_nhds_filter_basis] <;> rintro g - ⟨⟨K, V⟩, ⟨hK, hV⟩, rfl⟩
   · exact self_mem_compact_conv_nhd g hV
     
@@ -159,15 +157,15 @@ theorem nhds_compact_convergence :
     
 
 theorem has_basis_nhds_compact_convergence :
-    has_basis (@nhds _ compact_convergence_topology f) (fun p : Set α × Set (β × β) => IsCompact p.1 ∧ p.2 ∈ 𝓤 β)
-      fun p => compact_conv_nhd p.1 p.2 f :=
+    HasBasis (@nhds _ compactConvergenceTopology f) (fun p : Set α × Set (β × β) => IsCompact p.1 ∧ p.2 ∈ 𝓤 β) fun p =>
+      CompactConvNhd p.1 p.2 f :=
   (nhds_compact_convergence f).symm ▸ (compact_conv_nhd_filter_is_basis f).HasBasis
 
 /-- This is an auxiliary lemma and is unlikely to be of direct use outside of this file. See
 `tendsto_iff_forall_compact_tendsto_uniformly_on` below for the useful version where the topology
 is picked up via typeclass inference. -/
 theorem tendsto_iff_forall_compact_tendsto_uniformly_on' {ι : Type u₃} {p : Filter ι} {F : ι → C(α, β)} :
-    Filter.Tendsto F p (@nhds _ compact_convergence_topology f) ↔
+    Filter.Tendsto F p (@nhds _ compactConvergenceTopology f) ↔
       ∀ K, IsCompact K → TendstoUniformlyOn (fun i a => F i a) f p K :=
   by
   simp only [(has_basis_nhds_compact_convergence f).tendsto_right_iff, TendstoUniformlyOn, and_imp, Prod.forall]
@@ -180,7 +178,7 @@ convergence.
 
 The topology of compact convergence is thus at least as fine as the compact-open topology. -/
 theorem compact_conv_nhd_subset_compact_open (hK : IsCompact K) {U : Set β} (hU : IsOpen U)
-    (hf : f ∈ compact_open.gen K U) : ∃ V ∈ 𝓤 β, IsOpen V ∧ compact_conv_nhd K V f ⊆ compact_open.gen K U := by
+    (hf : f ∈ CompactOpen.Gen K U) : ∃ V ∈ 𝓤 β, IsOpen V ∧ CompactConvNhd K V f ⊆ CompactOpen.Gen K U := by
   obtain ⟨V, hV₁, hV₂, hV₃⟩ := lebesgue_number_of_compact_open (hK.image f.continuous) hU hf
   refine' ⟨V, hV₁, hV₂, _⟩
   rintro g hg - ⟨x, hx, rfl⟩
@@ -194,7 +192,7 @@ the compact-open topology is at least as fine as the topology of compact converg
 theorem Inter_compact_open_gen_subset_compact_conv_nhd (hK : IsCompact K) (hV : V ∈ 𝓤 β) :
     ∃ (ι : Sort (u₁ + 1))(_ : Fintype ι)(C : ι → Set α)(hC : ∀ i, IsCompact (C i))(U : ι → Set β)(hU :
       ∀ i, IsOpen (U i)),
-      (f ∈ ⋂ i, compact_open.gen (C i) (U i)) ∧ (⋂ i, compact_open.gen (C i) (U i)) ⊆ compact_conv_nhd K V f :=
+      (f ∈ ⋂ i, CompactOpen.Gen (C i) (U i)) ∧ (⋂ i, CompactOpen.Gen (C i) (U i)) ⊆ CompactConvNhd K V f :=
   by
   obtain ⟨W, hW₁, hW₄, hW₂, hW₃⟩ := comp_open_symm_mem_uniformity_sets hV
   obtain ⟨Z, hZ₁, hZ₄, hZ₂, hZ₃⟩ := comp_open_symm_mem_uniformity_sets hW₁
@@ -238,7 +236,7 @@ theorem Inter_compact_open_gen_subset_compact_conv_nhd (hK : IsCompact K) (hV : 
 
 /-- The compact-open topology is equal to the compact-convergence topology. -/
 theorem compact_open_eq_compact_convergence :
-    ContinuousMap.compactOpen = (compact_convergence_topology : TopologicalSpace C(α, β)) := by
+    ContinuousMap.compactOpen = (compactConvergenceTopology : TopologicalSpace C(α, β)) := by
   rw [compact_convergence_topology, ContinuousMap.compactOpen]
   refine' le_antisymmₓ _ _
   · refine' fun X hX => is_open_iff_forall_mem_open.mpr fun f hf => _
@@ -265,7 +263,7 @@ def compact_convergence_uniformity : Filter (C(α, β) × C(α, β)) :=
 
 /-- An intermediate lemma. Usually `mem_compact_convergence_entourage_iff` is more useful. -/
 theorem mem_compact_convergence_uniformity (X : Set (C(α, β) × C(α, β))) :
-    X ∈ @compact_convergence_uniformity α β _ _ ↔
+    X ∈ @compactConvergenceUniformity α β _ _ ↔
       ∃ (K : Set α)(V : Set (β × β))(hK : IsCompact K)(hV : V ∈ 𝓤 β),
         { fg : C(α, β) × C(α, β) | ∀, ∀ x ∈ K, ∀, (fg.1 x, fg.2 x) ∈ V } ⊆ X :=
   by
@@ -287,7 +285,7 @@ theorem mem_compact_convergence_uniformity (X : Set (C(α, β) × C(α, β))) :
 
 /-- Note that we ensure the induced topology is definitionally the compact-open topology. -/
 instance compact_convergence_uniform_space : UniformSpace C(α, β) where
-  uniformity := compact_convergence_uniformity
+  uniformity := compactConvergenceUniformity
   refl := by
     simp only [compact_convergence_uniformity, and_imp, Filter.le_principal_iff, Prod.forall, Filter.mem_principal,
       mem_set_of_eq, le_infi_iff, id_rel_subset]
@@ -331,7 +329,7 @@ theorem mem_compact_convergence_entourage_iff (X : Set (C(α, β) × C(α, β)))
   mem_compact_convergence_uniformity X
 
 theorem has_basis_compact_convergence_uniformity :
-    has_basis (𝓤 C(α, β)) (fun p : Set α × Set (β × β) => IsCompact p.1 ∧ p.2 ∈ 𝓤 β) fun p =>
+    HasBasis (𝓤 C(α, β)) (fun p : Set α × Set (β × β) => IsCompact p.1 ∧ p.2 ∈ 𝓤 β) fun p =>
       { fg : C(α, β) × C(α, β) | ∀, ∀ x ∈ p.1, ∀, (fg.1 x, fg.2 x) ∈ p.2 } :=
   ⟨fun t => by
     simp only [mem_compact_convergence_entourage_iff, Prod.exists]
@@ -340,11 +338,11 @@ theorem has_basis_compact_convergence_uniformity :
 variable {ι : Type u₃} {p : Filter ι} {F : ι → C(α, β)} {f}
 
 theorem tendsto_iff_forall_compact_tendsto_uniformly_on :
-    tendsto F p (𝓝 f) ↔ ∀ K, IsCompact K → TendstoUniformlyOn (fun i a => F i a) f p K := by
+    Tendsto F p (𝓝 f) ↔ ∀ K, IsCompact K → TendstoUniformlyOn (fun i a => F i a) f p K := by
   rw [compact_open_eq_compact_convergence, tendsto_iff_forall_compact_tendsto_uniformly_on']
 
 /-- Locally uniform convergence implies convergence in the compact-open topology. -/
-theorem tendsto_of_tendsto_locally_uniformly (h : TendstoLocallyUniformly (fun i a => F i a) f p) : tendsto F p (𝓝 f) :=
+theorem tendsto_of_tendsto_locally_uniformly (h : TendstoLocallyUniformly (fun i a => F i a) f p) : Tendsto F p (𝓝 f) :=
   by
   rw [tendsto_iff_forall_compact_tendsto_uniformly_on]
   intro K hK
@@ -355,7 +353,7 @@ theorem tendsto_of_tendsto_locally_uniformly (h : TendstoLocallyUniformly (fun i
 implies locally uniform convergence.
 
 See also `tendsto_iff_tendsto_locally_uniformly`, especially for T2 spaces. -/
-theorem tendsto_locally_uniformly_of_tendsto (hα : ∀ x : α, ∃ n, IsCompact n ∧ n ∈ 𝓝 x) (h : tendsto F p (𝓝 f)) :
+theorem tendsto_locally_uniformly_of_tendsto (hα : ∀ x : α, ∃ n, IsCompact n ∧ n ∈ 𝓝 x) (h : Tendsto F p (𝓝 f)) :
     TendstoLocallyUniformly (fun i a => F i a) f p := by
   rw [tendsto_iff_forall_compact_tendsto_uniformly_on] at h
   intro V hV x
@@ -369,7 +367,7 @@ For non-T2 spaces, the assumption `locally_compact_space α` is stronger than we
 the `←` direction is true unconditionally. See `tendsto_locally_uniformly_of_tendsto` and
 `tendsto_of_tendsto_locally_uniformly` for versions requiring weaker hypotheses. -/
 theorem tendsto_iff_tendsto_locally_uniformly [LocallyCompactSpace α] :
-    tendsto F p (𝓝 f) ↔ TendstoLocallyUniformly (fun i a => F i a) f p :=
+    Tendsto F p (𝓝 f) ↔ TendstoLocallyUniformly (fun i a => F i a) f p :=
   ⟨tendsto_locally_uniformly_of_tendsto exists_compact_mem_nhds, tendsto_of_tendsto_locally_uniformly⟩
 
 section CompactDomain
@@ -377,14 +375,14 @@ section CompactDomain
 variable [CompactSpace α]
 
 theorem has_basis_compact_convergence_uniformity_of_compact :
-    has_basis (𝓤 C(α, β)) (fun V : Set (β × β) => V ∈ 𝓤 β) fun V =>
+    HasBasis (𝓤 C(α, β)) (fun V : Set (β × β) => V ∈ 𝓤 β) fun V =>
       { fg : C(α, β) × C(α, β) | ∀ x, (fg.1 x, fg.2 x) ∈ V } :=
   has_basis_compact_convergence_uniformity.to_has_basis (fun p hp => ⟨p.2, hp.2, fun fg hfg x hx => hfg x⟩) fun V hV =>
-    ⟨⟨univ, V⟩, ⟨compact_univ, hV⟩, fun fg hfg x => hfg x (mem_univ x)⟩
+    ⟨⟨Univ, V⟩, ⟨compact_univ, hV⟩, fun fg hfg x => hfg x (mem_univ x)⟩
 
 /-- Convergence in the compact-open topology is the same as uniform convergence for sequences of
 continuous functions on a compact space. -/
-theorem tendsto_iff_tendsto_uniformly : tendsto F p (𝓝 f) ↔ TendstoUniformly (fun i a => F i a) f p := by
+theorem tendsto_iff_tendsto_uniformly : Tendsto F p (𝓝 f) ↔ TendstoUniformly (fun i a => F i a) f p := by
   rw [tendsto_iff_forall_compact_tendsto_uniformly_on, ← tendsto_uniformly_on_univ]
   exact ⟨fun h => h univ compact_univ, fun h K hK => h.mono (subset_univ K)⟩
 

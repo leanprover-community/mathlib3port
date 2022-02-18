@@ -22,12 +22,12 @@ namespace CategoryTheory
 
 namespace Coyoneda
 
-variable {C : Type v} [small_category C]
+variable {C : Type v} [SmallCategory C]
 
 /-- The colimit cocone over `coyoneda.obj X`, with cocone point `punit`.
 -/
 @[simps]
-def colimit_cocone (X : Cᵒᵖ) : cocone (coyoneda.obj X) where
+def colimit_cocone (X : Cᵒᵖ) : Cocone (coyoneda.obj X) where
   x := PUnit
   ι :=
     { app := by
@@ -36,7 +36,7 @@ def colimit_cocone (X : Cᵒᵖ) : cocone (coyoneda.obj X) where
 /-- The proposed colimit cocone over `coyoneda.obj X` is a colimit cocone.
 -/
 @[simps]
-def colimit_cocone_is_colimit (X : Cᵒᵖ) : is_colimit (colimit_cocone X) where
+def colimit_cocone_is_colimit (X : Cᵒᵖ) : IsColimit (colimitCocone X) where
   desc := fun s x => s.ι.app (unop X) (𝟙 _)
   fac' := fun s Y => by
     ext f
@@ -47,22 +47,22 @@ def colimit_cocone_is_colimit (X : Cᵒᵖ) : is_colimit (colimit_cocone X) wher
     rw [← w]
     simp
 
-instance (X : Cᵒᵖ) : has_colimit (coyoneda.obj X) :=
-  has_colimit.mk { Cocone := _, IsColimit := colimit_cocone_is_colimit X }
+instance (X : Cᵒᵖ) : HasColimit (coyoneda.obj X) :=
+  HasColimit.mk { Cocone := _, IsColimit := colimitCoconeIsColimit X }
 
 /-- The colimit of `coyoneda.obj X` is isomorphic to `punit`.
 -/
 noncomputable def colimit_coyoneda_iso (X : Cᵒᵖ) : colimit (coyoneda.obj X) ≅ PUnit :=
-  colimit.iso_colimit_cocone { Cocone := _, IsColimit := colimit_cocone_is_colimit X }
+  colimit.isoColimitCocone { Cocone := _, IsColimit := colimitCoconeIsColimit X }
 
 end Coyoneda
 
-variable {C : Type u} [category.{v} C]
+variable {C : Type u} [Category.{v} C]
 
 open Limits
 
 /-- The yoneda embedding `yoneda.obj X : Cᵒᵖ ⥤ Type v` for `X : C` preserves limits. -/
-instance yoneda_preserves_limits (X : C) : preserves_limits (yoneda.obj X) where
+instance yoneda_preserves_limits (X : C) : PreservesLimits (yoneda.obj X) where
   PreservesLimitsOfShape := fun J 𝒥 =>
     { PreservesLimit := fun K =>
         { preserves := fun c t =>
@@ -78,7 +78,7 @@ instance yoneda_preserves_limits (X : C) : preserves_limits (yoneda.obj X) where
                      } } }
 
 /-- The coyoneda embedding `coyoneda.obj X : C ⥤ Type v` for `X : Cᵒᵖ` preserves limits. -/
-instance coyoneda_preserves_limits (X : Cᵒᵖ) : preserves_limits (coyoneda.obj X) where
+instance coyoneda_preserves_limits (X : Cᵒᵖ) : PreservesLimits (coyoneda.obj X) where
   PreservesLimitsOfShape := fun J 𝒥 =>
     { PreservesLimit := fun K =>
         { preserves := fun c t =>
@@ -94,12 +94,12 @@ instance coyoneda_preserves_limits (X : Cᵒᵖ) : preserves_limits (coyoneda.ob
                   exact congr_funₓ (w j) x } } }
 
 /-- The yoneda embeddings jointly reflect limits. -/
-def yoneda_jointly_reflects_limits (J : Type v) [small_category J] (K : J ⥤ Cᵒᵖ) (c : cone K)
-    (t : ∀ X : C, is_limit ((yoneda.obj X).mapCone c)) : is_limit c :=
-  let s' : ∀ s : cone K, cone (K ⋙ yoneda.obj s.X.unop) := fun s =>
+def yoneda_jointly_reflects_limits (J : Type v) [SmallCategory J] (K : J ⥤ Cᵒᵖ) (c : Cone K)
+    (t : ∀ X : C, IsLimit ((yoneda.obj X).mapCone c)) : IsLimit c :=
+  let s' : ∀ s : Cone K, Cone (K ⋙ yoneda.obj s.x.unop) := fun s =>
     ⟨PUnit, fun j _ => (s.π.app j).unop, fun j₁ j₂ α => funext fun _ => Quiver.Hom.op_inj (s.w α).symm⟩
-  { lift := fun s => ((t s.X.unop).lift (s' s) PUnit.unit).op,
-    fac' := fun s j => Quiver.Hom.unop_inj (congr_funₓ ((t s.X.unop).fac (s' s) j) PUnit.unit),
+  { lift := fun s => ((t s.x.unop).lift (s' s) PUnit.unit).op,
+    fac' := fun s j => Quiver.Hom.unop_inj (congr_funₓ ((t s.x.unop).fac (s' s) j) PUnit.unit),
     uniq' := fun s m w => by
       apply Quiver.Hom.unop_inj
       suffices (fun x : PUnit => m.unop) = (t s.X.unop).lift (s' s) by
@@ -109,11 +109,11 @@ def yoneda_jointly_reflects_limits (J : Type v) [small_category J] (K : J ⥤ C�
       exact Quiver.Hom.op_inj (w j) }
 
 /-- The coyoneda embeddings jointly reflect limits. -/
-def coyoneda_jointly_reflects_limits (J : Type v) [small_category J] (K : J ⥤ C) (c : cone K)
-    (t : ∀ X : Cᵒᵖ, is_limit ((coyoneda.obj X).mapCone c)) : is_limit c :=
-  let s' : ∀ s : cone K, cone (K ⋙ coyoneda.obj (op s.X)) := fun s =>
+def coyoneda_jointly_reflects_limits (J : Type v) [SmallCategory J] (K : J ⥤ C) (c : Cone K)
+    (t : ∀ X : Cᵒᵖ, IsLimit ((coyoneda.obj X).mapCone c)) : IsLimit c :=
+  let s' : ∀ s : Cone K, Cone (K ⋙ coyoneda.obj (op s.x)) := fun s =>
     ⟨PUnit, fun j _ => s.π.app j, fun j₁ j₂ α => funext fun _ => (s.w α).symm⟩
-  { lift := fun s => (t (op s.X)).lift (s' s) PUnit.unit, fac' := fun s j => congr_funₓ ((t _).fac (s' s) j) PUnit.unit,
+  { lift := fun s => (t (op s.x)).lift (s' s) PUnit.unit, fac' := fun s j => congr_funₓ ((t _).fac (s' s) j) PUnit.unit,
     uniq' := fun s m w => by
       suffices (fun x : PUnit => m) = (t _).lift (s' s) by
         apply congr_funₓ this PUnit.unit
@@ -121,25 +121,25 @@ def coyoneda_jointly_reflects_limits (J : Type v) [small_category J] (K : J ⥤ 
       ext
       exact w j }
 
-variable {D : Type u} [small_category D]
+variable {D : Type u} [SmallCategory D]
 
-instance yoneda_functor_preserves_limits : preserves_limits (@yoneda D _) := by
+instance yoneda_functor_preserves_limits : PreservesLimits (@yoneda D _) := by
   apply preserves_limits_of_evaluation
   intro K
   change preserves_limits (coyoneda.obj K)
   infer_instance
 
-instance coyoneda_functor_preserves_limits : preserves_limits (@coyoneda D _) := by
+instance coyoneda_functor_preserves_limits : PreservesLimits (@coyoneda D _) := by
   apply preserves_limits_of_evaluation
   intro K
   change preserves_limits (yoneda.obj K)
   infer_instance
 
-instance yoneda_functor_reflects_limits : reflects_limits (@yoneda D _) :=
-  limits.fully_faithful_reflects_limits _
+instance yoneda_functor_reflects_limits : ReflectsLimits (@yoneda D _) :=
+  Limits.fullyFaithfulReflectsLimits _
 
-instance coyoneda_functor_reflects_limits : reflects_limits (@coyoneda D _) :=
-  limits.fully_faithful_reflects_limits _
+instance coyoneda_functor_reflects_limits : ReflectsLimits (@coyoneda D _) :=
+  Limits.fullyFaithfulReflectsLimits _
 
 end CategoryTheory
 

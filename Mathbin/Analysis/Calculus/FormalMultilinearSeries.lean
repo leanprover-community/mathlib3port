@@ -69,14 +69,14 @@ def remove_zero (p : FormalMultilinearSeries 𝕜 E F) : FormalMultilinearSeries
   | n + 1 => p (n + 1)
 
 @[simp]
-theorem remove_zero_coeff_zero : p.remove_zero 0 = 0 :=
+theorem remove_zero_coeff_zero : p.removeZero 0 = 0 :=
   rfl
 
 @[simp]
-theorem remove_zero_coeff_succ (n : ℕ) : p.remove_zero (n + 1) = p (n + 1) :=
+theorem remove_zero_coeff_succ (n : ℕ) : p.removeZero (n + 1) = p (n + 1) :=
   rfl
 
-theorem remove_zero_of_pos {n : ℕ} (h : 0 < n) : p.remove_zero n = p n := by
+theorem remove_zero_of_pos {n : ℕ} (h : 0 < n) : p.removeZero n = p n := by
   rw [← Nat.succ_pred_eq_of_posₓ h]
   rfl
 
@@ -95,7 +95,7 @@ def comp_continuous_linear_map (p : FormalMultilinearSeries 𝕜 F G) (u : E →
 
 @[simp]
 theorem comp_continuous_linear_map_apply (p : FormalMultilinearSeries 𝕜 F G) (u : E →L[𝕜] F) (n : ℕ) (v : Finₓ n → E) :
-    (p.comp_continuous_linear_map u) n v = p n (u ∘ v) :=
+    (p.compContinuousLinearMap u) n v = p n (u ∘ v) :=
   rfl
 
 variable (𝕜) {𝕜' : Type _} [NondiscreteNormedField 𝕜'] [NormedAlgebra 𝕜 𝕜']

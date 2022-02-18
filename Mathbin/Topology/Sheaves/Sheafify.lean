@@ -33,7 +33,7 @@ open Opposite
 
 open TopologicalSpace
 
-variable {X : Top.{v}} (F : presheaf (Type v) X)
+variable {X : Top.{v}} (F : Presheaf (Type v) X)
 
 namespace Top.Presheaf
 
@@ -41,30 +41,30 @@ namespace Sheafify
 
 /-- The prelocal predicate on functions into the stalks, asserting that the function is equal to a germ.
 -/
-def is_germ : prelocal_predicate fun x => F.stalk x where
+def is_germ : PrelocalPredicate fun x => F.stalk x where
   pred := fun U f => ∃ g : F.obj (op U), ∀ x : U, f x = F.germ x g
   res := fun V U i f ⟨g, p⟩ => ⟨F.map i.op g, fun x => (p (i x)).trans (F.germ_res_apply _ _ _).symm⟩
 
 /-- The local predicate on functions into the stalks,
 asserting that the function is locally equal to a germ.
 -/
-def is_locally_germ : local_predicate fun x => F.stalk x :=
-  (is_germ F).sheafify
+def is_locally_germ : LocalPredicate fun x => F.stalk x :=
+  (isGerm F).sheafify
 
 end Sheafify
 
 /-- The sheafification of a `Type` valued presheaf, defined as the functions into the stalks which
 are locally equal to germs.
 -/
-def sheafify : sheaf (Type v) X :=
-  subsheaf_to_Types (sheafify.is_locally_germ F)
+def sheafify : Sheaf (Type v) X :=
+  subsheafToTypes (Sheafify.isLocallyGerm F)
 
 /-- The morphism from a presheaf to its sheafification,
 sending each section to its germs.
 (This forms the unit of the adjunction.)
 -/
 def to_sheafify : F ⟶ F.sheafify.1 where
-  app := fun U f => ⟨fun x => F.germ x f, prelocal_predicate.sheafify_of ⟨f, fun x => rfl⟩⟩
+  app := fun U f => ⟨fun x => F.germ x f, PrelocalPredicate.sheafify_of ⟨f, fun x => rfl⟩⟩
   naturality' := fun U U' f => by
     ext x ⟨u, m⟩
     exact germ_res_apply F f.unop ⟨u, m⟩ x
@@ -73,9 +73,9 @@ def to_sheafify : F ⟶ F.sheafify.1 where
 In `sheafify_stalk_iso` we show this is an isomorphism.
 -/
 def stalk_to_fiber (x : X) : F.sheafify.1.stalk x ⟶ F.stalk x :=
-  stalk_to_fiber (sheafify.is_locally_germ F) x
+  stalkToFiber (Sheafify.isLocallyGerm F) x
 
-theorem stalk_to_fiber_surjective (x : X) : Function.Surjective (F.stalk_to_fiber x) := by
+theorem stalk_to_fiber_surjective (x : X) : Function.Surjective (F.stalkToFiber x) := by
   apply stalk_to_fiber_surjective
   intro t
   obtain ⟨U, m, s, rfl⟩ := F.germ_exist _ t
@@ -87,7 +87,7 @@ theorem stalk_to_fiber_surjective (x : X) : Function.Surjective (F.stalk_to_fibe
       
     
 
-theorem stalk_to_fiber_injective (x : X) : Function.Injective (F.stalk_to_fiber x) := by
+theorem stalk_to_fiber_injective (x : X) : Function.Injective (F.stalkToFiber x) := by
   apply stalk_to_fiber_injective
   intros
   rcases hU ⟨x, U.2⟩ with ⟨U', mU, iU, gU, wU⟩

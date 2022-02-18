@@ -65,17 +65,17 @@ theorem star_mem_iff {U : R} : star U ∈ unitary R ↔ U ∈ unitary R :=
   ⟨fun h => star_star U ▸ star_mem h, star_mem⟩
 
 instance : HasStar (unitary R) :=
-  ⟨fun U => ⟨star U, star_mem U.prop⟩⟩
+  ⟨fun U => ⟨star U, star_mem U.Prop⟩⟩
 
 @[simp, norm_cast]
 theorem coe_star {U : unitary R} : ↑(star U) = (star U : R) :=
   rfl
 
 theorem coe_star_mul_self (U : unitary R) : (star U : R) * U = 1 :=
-  star_mul_self_of_mem U.prop
+  star_mul_self_of_mem U.Prop
 
 theorem coe_mul_star_self (U : unitary R) : (U : R) * star U = 1 :=
-  mul_star_self_of_mem U.prop
+  mul_star_self_of_mem U.Prop
 
 @[simp]
 theorem star_mul_self (U : unitary R) : star U * U = 1 :=
@@ -155,6 +155,28 @@ theorem coe_zpow (U : unitary R) (z : ℤ) : ↑(U ^ z) = (U ^ z : R) := by
     
 
 end GroupWithZeroₓ
+
+section Ringₓ
+
+variable [Ringₓ R] [StarRing R]
+
+instance : Neg (unitary R) where
+  neg := fun U =>
+    ⟨-U, by
+      simp_rw [mem_iff, star_neg, neg_mul_neg]
+      exact U.prop⟩
+
+@[norm_cast]
+theorem coe_neg (U : unitary R) : ↑(-U) = (-U : R) :=
+  rfl
+
+instance : HasDistribNeg (unitary R) where
+  neg := Neg.neg
+  neg_neg := fun U => Subtype.ext <| neg_negₓ _
+  neg_mul := fun U₁ U₂ => Subtype.ext <| neg_mul _ _
+  mul_neg := fun U₁ U₂ => Subtype.ext <| mul_neg _ _
+
+end Ringₓ
 
 end unitary
 

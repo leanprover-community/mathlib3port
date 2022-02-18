@@ -70,19 +70,19 @@ def direct_limit : Type max v w :=
 
 namespace DirectLimit
 
-instance : AddCommGroupₓ (direct_limit G f) :=
-  quotient.add_comm_group _
+instance : AddCommGroupₓ (DirectLimit G f) :=
+  Quotient.addCommGroup _
 
-instance : Module R (direct_limit G f) :=
-  quotient.module _
+instance : Module R (DirectLimit G f) :=
+  Quotient.module _
 
-instance : Inhabited (direct_limit G f) :=
+instance : Inhabited (DirectLimit G f) :=
   ⟨0⟩
 
 variable (R ι)
 
 /-- The canonical map from a component to the direct limit. -/
-def of i : G i →ₗ[R] direct_limit G f :=
+def of i : G i →ₗ[R] DirectLimit G f :=
   (mkq _).comp <| DirectSum.lof R ι G i
 
 variable {R ι G f}
@@ -93,7 +93,7 @@ theorem of_f {i j hij x} : of R ι G f j (f i j hij x) = of R ι G f i x :=
 
 /-- Every element of the direct limit corresponds to some element in
 some component of the directed system. -/
-theorem exists_of [Nonempty ι] [IsDirected ι (· ≤ ·)] (z : direct_limit G f) : ∃ i x, of R ι G f i x = z :=
+theorem exists_of [Nonempty ι] [IsDirected ι (· ≤ ·)] (z : DirectLimit G f) : ∃ i x, of R ι G f i x = z :=
   (Nonempty.elimₓ
       (by
         infer_instance))
@@ -106,7 +106,7 @@ theorem exists_of [Nonempty ι] [IsDirected ι (· ≤ ·)] (z : direct_limit G 
           rw [LinearMap.map_add, of_f, of_f, ihx, ihy] <;> rfl⟩
 
 @[elab_as_eliminator]
-protected theorem induction_on [Nonempty ι] [IsDirected ι (· ≤ ·)] {C : direct_limit G f → Prop} (z : direct_limit G f)
+protected theorem induction_on [Nonempty ι] [IsDirected ι (· ≤ ·)] {C : DirectLimit G f → Prop} (z : DirectLimit G f)
     (ih : ∀ i x, C (of R ι G f i x)) : C z :=
   let ⟨i, x, h⟩ := exists_of z
   h ▸ ih i x
@@ -122,7 +122,7 @@ variable (R ι G f)
 /-- The universal property of the direct limit: maps from the components to another module
 that respect the directed system structure (i.e. make some diagram commute) give rise
 to a unique map out of the direct limit. -/
-def lift : direct_limit G f →ₗ[R] P :=
+def lift : DirectLimit G f →ₗ[R] P :=
   liftq _ (DirectSum.toModule R ι P g)
     (span_le.2 fun a ⟨i, j, hij, x, hx⟩ => by
       rw [← hx, SetLike.mem_coe, LinearMap.sub_mem_ker_iff, DirectSum.to_module_lof, DirectSum.to_module_lof, Hg])
@@ -134,13 +134,13 @@ omit Hg
 theorem lift_of {i} x : lift R ι G f g Hg (of R ι G f i x) = g i x :=
   DirectSum.to_module_lof R _ _
 
-theorem lift_unique [Nonempty ι] [IsDirected ι (· ≤ ·)] (F : direct_limit G f →ₗ[R] P) x :
+theorem lift_unique [Nonempty ι] [IsDirected ι (· ≤ ·)] (F : DirectLimit G f →ₗ[R] P) x :
     F x =
       lift R ι G f (fun i => F.comp <| of R ι G f i)
         (fun i j hij x => by
           rw [LinearMap.comp_apply, of_f] <;> rfl)
         x :=
-  (direct_limit.induction_on x) fun i x => by
+  (DirectLimit.induction_on x) fun i x => by
     rw [lift_of] <;> rfl
 
 section Totalize
@@ -183,13 +183,13 @@ theorem to_module_totalize_of_le {x : DirectSum ι G} {i j : ι} (hij : i ≤ j)
     totalize_of_le (le_transₓ (hx k hk) hij), DirectedSystem.map_map]
 
 theorem of.zero_exact_aux [Nonempty ι] [IsDirected ι (· ≤ ·)] {x : DirectSum ι G}
-    (H : Submodule.Quotient.mk x = (0 : direct_limit G f)) :
+    (H : Submodule.Quotient.mk x = (0 : DirectLimit G f)) :
     ∃ j, (∀, ∀ k ∈ x.support, ∀, k ≤ j) ∧ DirectSum.toModule R ι (G j) (fun i => totalize G f i j) x = (0 : G j) :=
   (Nonempty.elimₓ
       (by
         infer_instance))
     fun ind : ι =>
-    span_induction ((quotient.mk_eq_zero _).1 H)
+    span_induction ((Quotient.mk_eq_zero _).1 H)
       (fun x ⟨i, j, hij, y, hxy⟩ =>
         let ⟨k, hik, hjk⟩ := exists_ge_ge i j
         ⟨k, by
@@ -230,7 +230,7 @@ theorem of.zero_exact [IsDirected ι (· ≤ ·)] {i x} (H : of R ι G f i x = 0
   have : Nonempty ι := ⟨i⟩
   let ⟨j, hj, hxj⟩ := of.zero_exact_aux H
   if hx0 : x = 0 then
-    ⟨i, le_reflₓ _, by
+    ⟨i, le_rfl, by
       simp [hx0]⟩
   else
     have hij : i ≤ j :=
@@ -267,14 +267,14 @@ include dec_ι
 
 attribute [local instance] direct_limit.directed_system
 
-instance : AddCommGroupₓ (direct_limit G f) :=
+instance : AddCommGroupₓ (DirectLimit G f) :=
   Module.DirectLimit.addCommGroup G fun i j hij => (f i j hij).toIntLinearMap
 
-instance : Inhabited (direct_limit G f) :=
+instance : Inhabited (DirectLimit G f) :=
   ⟨0⟩
 
 /-- The canonical map from a component to the direct limit. -/
-def of i : G i →ₗ[ℤ] direct_limit G f :=
+def of i : G i →ₗ[ℤ] DirectLimit G f :=
   Module.DirectLimit.of ℤ ι G (fun i j hij => (f i j hij).toIntLinearMap) i
 
 variable {G f}
@@ -284,7 +284,7 @@ theorem of_f {i j} hij x : of G f j (f i j hij x) = of G f i x :=
   Module.DirectLimit.of_f
 
 @[elab_as_eliminator]
-protected theorem induction_on [Nonempty ι] [IsDirected ι (· ≤ ·)] {C : direct_limit G f → Prop} (z : direct_limit G f)
+protected theorem induction_on [Nonempty ι] [IsDirected ι (· ≤ ·)] {C : DirectLimit G f → Prop} (z : DirectLimit G f)
     (ih : ∀ i x, C (of G f i x)) : C z :=
   Module.DirectLimit.induction_on z ih
 
@@ -305,7 +305,7 @@ variable (G f)
 /-- The universal property of the direct limit: maps from the components to another abelian group
 that respect the directed system structure (i.e. make some diagram commute) give rise
 to a unique map out of the direct limit. -/
-def lift : direct_limit G f →ₗ[ℤ] P :=
+def lift : DirectLimit G f →ₗ[ℤ] P :=
   Module.DirectLimit.lift ℤ ι G (fun i j hij => (f i j hij).toIntLinearMap) (fun i => (g i).toIntLinearMap) Hg
 
 variable {G f}
@@ -314,13 +314,13 @@ variable {G f}
 theorem lift_of i x : lift G f P g Hg (of G f i x) = g i x :=
   Module.DirectLimit.lift_of _ _ _
 
-theorem lift_unique [Nonempty ι] [IsDirected ι (· ≤ ·)] (F : direct_limit G f →+ P) x :
+theorem lift_unique [Nonempty ι] [IsDirected ι (· ≤ ·)] (F : DirectLimit G f →+ P) x :
     F x =
       lift G f P (fun i => F.comp (of G f i).toAddMonoidHom)
         (fun i j hij x => by
           simp )
         x :=
-  (direct_limit.induction_on x) fun i x => by
+  (DirectLimit.induction_on x) fun i x => by
     simp
 
 end DirectLimit
@@ -349,17 +349,17 @@ def direct_limit : Type max v w :=
 
 namespace DirectLimit
 
-instance : CommRingₓ (direct_limit G f) :=
+instance : CommRingₓ (DirectLimit G f) :=
   Ideal.Quotient.commRing _
 
-instance : Ringₓ (direct_limit G f) :=
+instance : Ringₓ (DirectLimit G f) :=
   CommRingₓ.toRing _
 
-instance : Inhabited (direct_limit G f) :=
+instance : Inhabited (DirectLimit G f) :=
   ⟨0⟩
 
 /-- The canonical map from a component to the direct limit. -/
-def of i : G i →+* direct_limit G f :=
+def of i : G i →+* DirectLimit G f :=
   RingHom.mk'
     { toFun := fun x => Ideal.Quotient.mk _ (of (⟨i, x⟩ : Σ i, G i)),
       map_one' := Ideal.Quotient.eq.2 <| subset_span <| Or.inr <| Or.inl ⟨i, rfl⟩,
@@ -374,7 +374,7 @@ theorem of_f {i j} hij x : of G f j (f i j hij x) = of G f i x :=
 
 /-- Every element of the direct limit corresponds to some element in
 some component of the directed system. -/
-theorem exists_of [Nonempty ι] [IsDirected ι (· ≤ ·)] (z : direct_limit G f) : ∃ i x, of G f i x = z :=
+theorem exists_of [Nonempty ι] [IsDirected ι (· ≤ ·)] (z : DirectLimit G f) : ∃ i x, of G f i x = z :=
   (Nonempty.elimₓ
       (by
         infer_instance))
@@ -405,12 +405,12 @@ open Polynomial
 variable {f' : ∀ i j, i ≤ j → G i →+* G j}
 
 theorem polynomial.exists_of [Nonempty ι] [IsDirected ι (· ≤ ·)]
-    (q : Polynomial (direct_limit G fun i j h => f' i j h)) :
+    (q : Polynomial (DirectLimit G fun i j h => f' i j h)) :
     ∃ i p, Polynomial.map (of G (fun i j h => f' i j h) i) p = q :=
   Polynomial.induction_on q
     (fun z =>
       let ⟨i, x, h⟩ := exists_of z
-      ⟨i, C x, by
+      ⟨i, c x, by
         rw [map_C, h]⟩)
     (fun q₁ q₂ ⟨i₁, p₁, ih₁⟩ ⟨i₂, p₂, ih₂⟩ =>
       let ⟨i, h1, h2⟩ := exists_ge_ge i₁ i₂
@@ -419,13 +419,13 @@ theorem polynomial.exists_of [Nonempty ι] [IsDirected ι (· ≤ ·)]
         congr 2 <;> ext x <;> simp_rw [RingHom.comp_apply, of_f]⟩)
     fun n z ih =>
     let ⟨i, x, h⟩ := exists_of z
-    ⟨i, C x * X ^ (n + 1), by
+    ⟨i, c x * X ^ (n + 1), by
       rw [Polynomial.map_mul, map_C, h, Polynomial.map_pow, map_X]⟩
 
 end
 
 @[elab_as_eliminator]
-theorem induction_on [Nonempty ι] [IsDirected ι (· ≤ ·)] {C : direct_limit G f → Prop} (z : direct_limit G f)
+theorem induction_on [Nonempty ι] [IsDirected ι (· ≤ ·)] {C : DirectLimit G f → Prop} (z : DirectLimit G f)
     (ih : ∀ i x, C (of G f i x)) : C z :=
   let ⟨i, x, hx⟩ := exists_of z
   hx ▸ ih i x
@@ -440,7 +440,7 @@ variable [DirectedSystem G fun i j h => f' i j h]
 
 variable (G f)
 
-theorem of.zero_exact_aux2 {x : FreeCommRing (Σ i, G i)} {s t} (hxs : is_supported x s) {j k}
+theorem of.zero_exact_aux2 {x : FreeCommRing (Σ i, G i)} {s t} (hxs : IsSupported x s) {j k}
     (hj : ∀ z : Σ i, G i, z ∈ s → z.1 ≤ j) (hk : ∀ z : Σ i, G i, z ∈ t → z.1 ≤ k) (hjk : j ≤ k) (hst : s ⊆ t) :
     f' j k hjk (lift (fun ix : s => f' ix.1.1 j (hj ix ix.2) ix.1.2) (restriction s x)) =
       lift (fun ix : t => f' ix.1.1 k (hk ix ix.2) ix.1.2) (restriction t x) :=
@@ -470,10 +470,10 @@ theorem of.zero_exact_aux2 {x : FreeCommRing (Σ i, G i)} {s t} (hxs : is_suppor
 variable {G f f'}
 
 theorem of.zero_exact_aux [Nonempty ι] [IsDirected ι (· ≤ ·)] {x : FreeCommRing (Σ i, G i)}
-    (H : Ideal.Quotient.mk _ x = (0 : direct_limit G fun i j h => f' i j h)) :
+    (H : Ideal.Quotient.mk _ x = (0 : DirectLimit G fun i j h => f' i j h)) :
     ∃ j s,
       ∃ H : ∀ k : Σ i, G i, k ∈ s → k.1 ≤ j,
-        is_supported x s ∧ lift (fun ix : s => f' ix.1.1 j (H ix ix.2) ix.1.2) (restriction s x) = (0 : G j) :=
+        IsSupported x s ∧ lift (fun ix : s => f' ix.1.1 j (H ix ix.2) ix.1.2) (restriction s x) = (0 : G j) :=
   by
   refine' span_induction (Ideal.Quotient.eq_zero_iff_mem.1 H) _ _ _ _
   · rintro x (⟨i, j, hij, x, rfl⟩ | ⟨i, rfl⟩ | ⟨i, x, y, rfl⟩ | ⟨i, x, y, rfl⟩)
@@ -622,7 +622,7 @@ variable (G f)
 that respect the directed system structure (i.e. make some diagram commute) give rise
 to a unique map out of the direct limit.
 -/
-def lift : direct_limit G f →+* P :=
+def lift : DirectLimit G f →+* P :=
   Ideal.Quotient.lift _ (FreeCommRing.lift fun x : Σ i, G i => g x.1 x.2)
     (by
       suffices Ideal.span _ ≤ Ideal.comap (FreeCommRing.lift fun x : Σ i : ι, G i => g x.fst x.snd) ⊥ by
@@ -643,13 +643,13 @@ omit Hg
 theorem lift_of i x : lift G f P g Hg (of G f i x) = g i x :=
   FreeCommRing.lift_of _ _
 
-theorem lift_unique [Nonempty ι] [IsDirected ι (· ≤ ·)] (F : direct_limit G f →+* P) x :
+theorem lift_unique [Nonempty ι] [IsDirected ι (· ≤ ·)] (F : DirectLimit G f →+* P) x :
     F x =
       lift G f P (fun i => F.comp <| of G f i)
         (fun i j hij x => by
           simp )
         x :=
-  (direct_limit.induction_on x) fun i x => by
+  (DirectLimit.induction_on x) fun i x => by
     simp
 
 end DirectLimit
@@ -696,7 +696,7 @@ open_locale Classical
 
 /-- Noncomputable multiplicative inverse in a direct limit of fields. -/
 noncomputable def inv (p : Ringₓ.DirectLimit G f) : Ringₓ.DirectLimit G f :=
-  if H : p = 0 then 0 else Classical.some (direct_limit.exists_inv G f H)
+  if H : p = 0 then 0 else Classical.some (DirectLimit.exists_inv G f H)
 
 protected theorem mul_inv_cancel {p : Ringₓ.DirectLimit G f} (hp : p ≠ 0) : p * inv G f p = 1 := by
   rw [inv, dif_neg hp, Classical.some_spec (direct_limit.exists_inv G f hp)]
@@ -709,8 +709,8 @@ See note [reducible non-instances]. -/
 @[reducible]
 protected noncomputable def Field [DirectedSystem G fun i j h => f' i j h] :
     Field (Ringₓ.DirectLimit G fun i j h => f' i j h) :=
-  { Ringₓ.DirectLimit.commRing G fun i j h => f' i j h, direct_limit.nontrivial G fun i j h => f' i j h with
-    inv := inv G fun i j h => f' i j h, mul_inv_cancel := fun p => direct_limit.mul_inv_cancel G fun i j h => f' i j h,
+  { Ringₓ.DirectLimit.commRing G fun i j h => f' i j h, DirectLimit.nontrivial G fun i j h => f' i j h with
+    inv := inv G fun i j h => f' i j h, mul_inv_cancel := fun p => DirectLimit.mul_inv_cancel G fun i j h => f' i j h,
     inv_zero := dif_pos rfl }
 
 end

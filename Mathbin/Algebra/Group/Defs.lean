@@ -41,7 +41,7 @@ class HasVsub (G : outParam (Type _)) (P : Type _) where
   vsub : P → P → G
 
 /-- Typeclass for types with a scalar multiplication operation, denoted `•` (`\bu`) -/
-@[to_additive HasVadd]
+@[ext, to_additive HasVadd]
 class HasScalar (M : Type _) (α : Type _) where
   smul : M → α → α
 
@@ -206,7 +206,7 @@ end RightCancelSemigroup
 /-- Typeclass for expressing that a type `M` with multiplication and a one satisfies
 `1 * a = a` and `a * 1 = a` for all `a : M`. -/
 @[ancestor One Mul]
-class MulOneClass (M : Type u) extends One M, Mul M where
+class MulOneClassₓ (M : Type u) extends One M, Mul M where
   one_mul : ∀ a : M, 1 * a = a
   mul_one : ∀ a : M, a * 1 = a
 
@@ -217,35 +217,35 @@ class AddZeroClass (M : Type u) extends Zero M, Add M where
   zero_add : ∀ a : M, 0 + a = a
   add_zero : ∀ a : M, a + 0 = a
 
-attribute [to_additive] MulOneClass
+attribute [to_additive] MulOneClassₓ
 
 @[ext, to_additive]
-theorem MulOneClass.ext {M : Type u} : ∀ ⦃m₁ m₂ : MulOneClass M⦄, m₁.mul = m₂.mul → m₁ = m₂ := by
+theorem MulOneClassₓ.ext {M : Type u} : ∀ ⦃m₁ m₂ : MulOneClassₓ M⦄, m₁.mul = m₂.mul → m₁ = m₂ := by
   rintro ⟨one₁, mul₁, one_mul₁, mul_one₁⟩ ⟨one₂, mul₂, one_mul₂, mul_one₂⟩ (rfl : mul₁ = mul₂)
   congr
   exact (one_mul₂ one₁).symm.trans (mul_one₁ one₂)
 
-section MulOneClass
+section MulOneClassₓ
 
-variable {M : Type u} [MulOneClass M]
+variable {M : Type u} [MulOneClassₓ M]
 
 @[ematch, simp, to_additive]
 theorem one_mulₓ : ∀ a : M, 1 * a = a :=
-  MulOneClass.one_mul
+  MulOneClassₓ.one_mul
 
 @[ematch, simp, to_additive]
 theorem mul_oneₓ : ∀ a : M, a * 1 = a :=
-  MulOneClass.mul_one
+  MulOneClassₓ.mul_one
 
 @[to_additive]
-instance MulOneClass.to_is_left_id : IsLeftId M (· * ·) 1 :=
-  ⟨MulOneClass.one_mul⟩
+instance MulOneClassₓ.to_is_left_id : IsLeftId M (· * ·) 1 :=
+  ⟨MulOneClassₓ.one_mul⟩
 
 @[to_additive]
-instance MulOneClass.to_is_right_id : IsRightId M (· * ·) 1 :=
-  ⟨MulOneClass.mul_one⟩
+instance MulOneClassₓ.to_is_right_id : IsRightId M (· * ·) 1 :=
+  ⟨MulOneClassₓ.mul_one⟩
 
-end MulOneClass
+end MulOneClassₓ
 
 section
 
@@ -267,7 +267,8 @@ attribute [to_additive] npowRec
 
 end
 
-/-- Suppose that one can put two mathematical structures on a type, a rich one `R` and a poor one
+library_note "forgetful inheritance"/--
+Suppose that one can put two mathematical structures on a type, a rich one `R` and a poor one
 `P`, and that one can deduce the poor structure from the rich structure through a map `F` (called a
 forgetful functor) (think `R = metric_space` and `P = topological_space`). A possible
 implementation would be to have a type class `rich` containing a field `R`, a type class `poor`
@@ -316,9 +317,9 @@ For more details on this question, called the forgetful inheritance pattern, see
 inheritance paths in dependent type theory: a case study in functional
 analysis](https://hal.inria.fr/hal-02463336).
 -/
-library_note "forgetful inheritance"
 
--- ././Mathport/Syntax/Translate/Basic.lean:794:4: warning: unsupported (TODO): `[tacs]
+
+-- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
 /-- `try_refl_tac` solves goals of the form `∀ a b, f a b = g a b`,
 if they hold by definition. -/
 unsafe def try_refl_tac : tactic Unit :=
@@ -371,8 +372,8 @@ class AddMonoidₓ (M : Type u) extends AddSemigroupₓ M, AddZeroClass M where
       try_refl_tac
 
 /-- A `monoid` is a `semigroup` with an element `1` such that `1 * a = a * 1 = a`. -/
-@[ancestor Semigroupₓ MulOneClass, to_additive]
-class Monoidₓ (M : Type u) extends Semigroupₓ M, MulOneClass M where
+@[ancestor Semigroupₓ MulOneClassₓ, to_additive]
+class Monoidₓ (M : Type u) extends Semigroupₓ M, MulOneClassₓ M where
   npow : ℕ → M → M := npowRec
   npow_zero' : ∀ x, npow 0 x = 1 := by
     run_tac
@@ -613,6 +614,35 @@ end
 theorem div_eq_mul_inv {G : Type u} [DivInvMonoidₓ G] : ∀ a b : G, a / b = a * b⁻¹ :=
   DivInvMonoidₓ.div_eq_mul_inv
 
+section
+
+-- ././Mathport/Syntax/Translate/Basic.lean:169:40: warning: unsupported option extends_priority
+set_option extends_priority 50
+
+/-- Auxiliary typeclass for types with an involutive `has_inv`. -/
+@[ancestor Inv]
+class HasInvolutiveInv (G : Type _) extends Inv G where
+  inv_inv : ∀ x : G, x⁻¹⁻¹ = x
+
+/-- Auxiliary typeclass for types with an involutive `has_neg`. -/
+@[ancestor Neg]
+class HasInvolutiveNeg (A : Type _) extends Neg A where
+  neg_neg : ∀ x : A, - -x = x
+
+attribute [to_additive] HasInvolutiveInv
+
+end
+
+section HasInvolutiveInv
+
+variable {G : Type _} [HasInvolutiveInv G]
+
+@[simp, to_additive]
+theorem inv_invₓ (a : G) : a⁻¹⁻¹ = a :=
+  HasInvolutiveInv.inv_inv _
+
+end HasInvolutiveInv
+
 /-- A `group` is a `monoid` with an operation `⁻¹` satisfying `a⁻¹ * a = 1`.
 
 There is also a division operation `/` such that `a / b = a * b⁻¹`,
@@ -664,9 +694,10 @@ theorem inv_mul_cancel_leftₓ (a b : G) : a⁻¹ * (a * b) = b := by
 theorem inv_eq_of_mul_eq_oneₓ (h : a * b = 1) : a⁻¹ = b :=
   left_inv_eq_right_invₓ (inv_mul_selfₓ a) h
 
-@[simp, to_additive]
-theorem inv_invₓ (a : G) : a⁻¹⁻¹ = a :=
-  inv_eq_of_mul_eq_oneₓ (mul_left_invₓ a)
+@[to_additive]
+instance (priority := 100) Groupₓ.toHasInvolutiveInv : HasInvolutiveInv G where
+  inv := Inv.inv
+  inv_inv := fun a => inv_eq_of_mul_eq_oneₓ (mul_left_invₓ a)
 
 @[simp, to_additive]
 theorem mul_right_invₓ (a : G) : a * a⁻¹ = 1 := by

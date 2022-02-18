@@ -2,6 +2,7 @@ import Mathbin.Tactic.Tidy
 import Mathbin.Topology.ContinuousFunction.Basic
 import Mathbin.Topology.Homeomorph
 import Mathbin.Topology.SubsetProperties
+import Mathbin.Topology.Maps
 
 /-!
 # The compact-open topology
@@ -47,10 +48,10 @@ def compact_open.gen (s : Set α) (u : Set β) : Set C(α, β) :=
 
 instance compact_open : TopologicalSpace C(α, β) :=
   TopologicalSpace.generateFrom
-    { m | ∃ (s : Set α)(hs : IsCompact s)(u : Set β)(hu : IsOpen u), m = compact_open.gen s u }
+    { m | ∃ (s : Set α)(hs : IsCompact s)(u : Set β)(hu : IsOpen u), m = CompactOpen.Gen s u }
 
 protected theorem is_open_gen {s : Set α} (hs : IsCompact s) {u : Set β} (hu : IsOpen u) :
-    IsOpen (compact_open.gen s u) :=
+    IsOpen (CompactOpen.Gen s u) :=
   TopologicalSpace.GenerateOpen.basic _
     (by
       dsimp [mem_set_of_eq] <;> tauto)
@@ -60,7 +61,7 @@ section Functorial
 variable (g : C(β, γ))
 
 private theorem preimage_gen {s : Set α} (hs : IsCompact s) {u : Set γ} (hu : IsOpen u) :
-    ContinuousMap.comp g ⁻¹' compact_open.gen s u = compact_open.gen s (g ⁻¹' u) := by
+    ContinuousMap.comp g ⁻¹' CompactOpen.Gen s u = CompactOpen.Gen s (g ⁻¹' u) := by
   ext ⟨f, _⟩
   change g ∘ f '' s ⊆ u ↔ f '' s ⊆ g ⁻¹' u
   rw [image_comp, image_subset_iff]
@@ -87,10 +88,10 @@ theorem continuous_ev [LocallyCompactSpace α] : Continuous (ev α β) :=
   continuous_iff_continuous_at.mpr fun ⟨f, x⟩ n hn =>
     let ⟨v, vn, vo, fxv⟩ := mem_nhds_iff.mp hn
     have : v ∈ 𝓝 (f x) := IsOpen.mem_nhds vo fxv
-    let ⟨s, hs, sv, sc⟩ := LocallyCompactSpace.local_compact_nhds x (f ⁻¹' v) (f.continuous.tendsto x this)
+    let ⟨s, hs, sv, sc⟩ := LocallyCompactSpace.local_compact_nhds x (f ⁻¹' v) (f.Continuous.Tendsto x this)
     let ⟨u, us, uo, xu⟩ := mem_nhds_iff.mp hs
     show ev α β ⁻¹' n ∈ 𝓝 (f, x) from
-      let w := compact_open.gen s v ×ˢ u
+      let w := CompactOpen.Gen s v ×ˢ u
       have : w ⊆ ev α β ⁻¹' n := fun ⟨f', x'⟩ ⟨hf', hx'⟩ =>
         calc
           f' x' ∈ f' '' s := mem_image_of_mem f' (us hx')
@@ -342,12 +343,43 @@ def continuous_map_of_unique [Unique α] : β ≃ₜ C(α, β) where
   continuous_inv_fun := Continuous.comp continuous_ev (Continuous.prod_mk continuous_id continuous_const)
 
 @[simp]
-theorem continuous_map_of_unique_apply [Unique α] (b : β) (a : α) : continuous_map_of_unique b a = b :=
+theorem continuous_map_of_unique_apply [Unique α] (b : β) (a : α) : continuousMapOfUnique b a = b :=
   rfl
 
 @[simp]
-theorem continuous_map_of_unique_symm_apply [Unique α] (f : C(α, β)) : continuous_map_of_unique.symm f = f default :=
+theorem continuous_map_of_unique_symm_apply [Unique α] (f : C(α, β)) : continuousMapOfUnique.symm f = f default :=
   rfl
 
 end Homeomorph
+
+section QuotientMap
+
+variable {X₀ X Y Z : Type _} [TopologicalSpace X₀] [TopologicalSpace X] [TopologicalSpace Y] [TopologicalSpace Z]
+  [LocallyCompactSpace Y] {f : X₀ → X}
+
+theorem QuotientMap.continuous_lift_prod_left (hf : QuotientMap f) {g : X × Y → Z}
+    (hg : Continuous fun p : X₀ × Y => g (f p.1, p.2)) : Continuous g := by
+  let Gf : C(X₀, C(Y, Z)) := ContinuousMap.curry ⟨_, hg⟩
+  have h : ∀ x : X, Continuous fun y => g (x, y) := by
+    intro x
+    obtain ⟨x₀, rfl⟩ := hf.surjective x
+    exact (Gf x₀).Continuous
+  let G : X → C(Y, Z) := fun x => ⟨_, h x⟩
+  have : Continuous G := by
+    rw [hf.continuous_iff]
+    exact Gf.continuous
+  convert ContinuousMap.continuous_uncurry_of_continuous ⟨G, this⟩
+  ext x
+  cases x
+  rfl
+
+theorem QuotientMap.continuous_lift_prod_right (hf : QuotientMap f) {g : Y × X → Z}
+    (hg : Continuous fun p : Y × X₀ => g (p.1, f p.2)) : Continuous g := by
+  have : Continuous fun p : X₀ × Y => g ((Prod.swap p).1, f (Prod.swap p).2) := hg.comp continuous_swap
+  have : Continuous fun p : X₀ × Y => (g ∘ Prod.swap) (f p.1, p.2) := this
+  convert (hf.continuous_lift_prod_left this).comp continuous_swap
+  ext x
+  simp
+
+end QuotientMap
 

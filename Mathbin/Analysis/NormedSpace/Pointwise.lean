@@ -19,13 +19,13 @@ section NormedSpace
 
 variable {𝕜 : Type _} [NormedField 𝕜] {E : Type _} [SemiNormedGroup E] [NormedSpace 𝕜 E]
 
-theorem smul_ball {c : 𝕜} (hc : c ≠ 0) (x : E) (r : ℝ) : c • ball x r = ball (c • x) (∥c∥ * r) := by
+theorem smul_ball {c : 𝕜} (hc : c ≠ 0) (x : E) (r : ℝ) : c • Ball x r = Ball (c • x) (∥c∥ * r) := by
   ext y
   rw [mem_smul_set_iff_inv_smul_mem₀ hc]
   conv_lhs => rw [← inv_smul_smul₀ hc x]
   simp [← div_eq_inv_mul, div_lt_iff (norm_pos_iff.2 hc), mul_comm _ r, dist_smul]
 
-theorem smul_sphere' {c : 𝕜} (hc : c ≠ 0) (x : E) (r : ℝ) : c • sphere x r = sphere (c • x) (∥c∥ * r) := by
+theorem smul_sphere' {c : 𝕜} (hc : c ≠ 0) (x : E) (r : ℝ) : c • Sphere x r = Sphere (c • x) (∥c∥ * r) := by
   ext y
   rw [mem_smul_set_iff_inv_smul_mem₀ hc]
   conv_lhs => rw [← inv_smul_smul₀ hc x]
@@ -36,7 +36,7 @@ theorem smul_sphere' {c : 𝕜} (hc : c ≠ 0) (x : E) (r : ℝ) : c • sphere 
 nonnegative. -/
 @[simp]
 theorem NormedSpace.sphere_nonempty {E : Type _} [NormedGroup E] [NormedSpace ℝ E] [Nontrivial E] {x : E} {r : ℝ} :
-    (sphere x r).Nonempty ↔ 0 ≤ r := by
+    (Sphere x r).Nonempty ↔ 0 ≤ r := by
   refine' ⟨fun h => nonempty_closed_ball.1 (h.mono sphere_subset_closed_ball), fun hr => _⟩
   rcases exists_ne x with ⟨y, hy⟩
   have : ∥y - x∥ ≠ 0 := by
@@ -45,18 +45,17 @@ theorem NormedSpace.sphere_nonempty {E : Type _} [NormedGroup E] [NormedSpace �
   simp [norm_smul, this, Real.norm_of_nonneg hr]
 
 theorem smul_sphere {E : Type _} [NormedGroup E] [NormedSpace 𝕜 E] [NormedSpace ℝ E] [Nontrivial E] (c : 𝕜) (x : E)
-    {r : ℝ} (hr : 0 ≤ r) : c • sphere x r = sphere (c • x) (∥c∥ * r) := by
+    {r : ℝ} (hr : 0 ≤ r) : c • Sphere x r = Sphere (c • x) (∥c∥ * r) := by
   rcases eq_or_ne c 0 with (rfl | hc)
   · simp [zero_smul_set, Set.singleton_zero, hr]
     
   · exact smul_sphere' hc x r
     
 
-theorem smul_closed_ball' {c : 𝕜} (hc : c ≠ 0) (x : E) (r : ℝ) : c • closed_ball x r = closed_ball (c • x) (∥c∥ * r) :=
-  by
+theorem smul_closed_ball' {c : 𝕜} (hc : c ≠ 0) (x : E) (r : ℝ) : c • ClosedBall x r = ClosedBall (c • x) (∥c∥ * r) := by
   simp only [← ball_union_sphere, Set.smul_set_union, smul_ball hc, smul_sphere' hc]
 
-theorem Metric.Bounded.smul {s : Set E} (hs : bounded s) (c : 𝕜) : bounded (c • s) := by
+theorem Metric.Bounded.smul {s : Set E} (hs : Bounded s) (c : 𝕜) : Bounded (c • s) := by
   obtain ⟨R, hR⟩ : ∃ R : ℝ, ∀, ∀ x ∈ s, ∀, ∥x∥ ≤ R := hs.exists_norm_le
   refine' bounded_iff_exists_norm_le.2 ⟨∥c∥ * R, _⟩
   intro z hz
@@ -65,7 +64,7 @@ theorem Metric.Bounded.smul {s : Set E} (hs : bounded s) (c : 𝕜) : bounded (c
 
 /-- If `s` is a bounded set, then for small enough `r`, the set `{x} + r • s` is contained in any
 fixed neighborhood of `x`. -/
-theorem eventually_singleton_add_smul_subset {x : E} {s : Set E} (hs : bounded s) {u : Set E} (hu : u ∈ 𝓝 x) :
+theorem eventually_singleton_add_smul_subset {x : E} {s : Set E} (hs : Bounded s) {u : Set E} (hu : u ∈ 𝓝 x) :
     ∀ᶠ r in 𝓝 (0 : 𝕜), {x} + r • s ⊆ u := by
   obtain ⟨ε, εpos, hε⟩ : ∃ (ε : _)(hε : 0 < ε), closed_ball x ε ⊆ u := nhds_basis_closed_ball.mem_iff.1 hu
   obtain ⟨R, Rpos, hR⟩ : ∃ R : ℝ, 0 < R ∧ s ⊆ closed_ball 0 R := hs.subset_ball_lt 0 0
@@ -112,8 +111,7 @@ section NormedSpace
 
 variable {𝕜 : Type _} [NormedField 𝕜] {E : Type _} [NormedGroup E] [NormedSpace 𝕜 E]
 
-theorem smul_closed_ball (c : 𝕜) (x : E) {r : ℝ} (hr : 0 ≤ r) : c • closed_ball x r = closed_ball (c • x) (∥c∥ * r) :=
-  by
+theorem smul_closed_ball (c : 𝕜) (x : E) {r : ℝ} (hr : 0 ≤ r) : c • ClosedBall x r = ClosedBall (c • x) (∥c∥ * r) := by
   rcases eq_or_ne c 0 with (rfl | hc)
   · simp [hr, zero_smul_set, Set.singleton_zero, ← nonempty_closed_ball]
     

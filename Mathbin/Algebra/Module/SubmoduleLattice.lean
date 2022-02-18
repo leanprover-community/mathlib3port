@@ -53,7 +53,7 @@ section
 variable (R)
 
 @[simp]
-theorem restrict_scalars_bot : restrict_scalars S (⊥ : Submodule R M) = ⊥ :=
+theorem restrict_scalars_bot : restrictScalars S (⊥ : Submodule R M) = ⊥ :=
   rfl
 
 @[simp]
@@ -63,7 +63,7 @@ theorem mem_bot {x : M} : x ∈ (⊥ : Submodule R M) ↔ x = 0 :=
 end
 
 instance unique_bot : Unique (⊥ : Submodule R M) :=
-  ⟨inferInstance, fun x => Subtype.ext <| (mem_bot R).1 x.mem⟩
+  ⟨inferInstance, fun x => Subtype.ext <| (mem_bot R).1 x.Mem⟩
 
 instance : OrderBot (Submodule R M) where
   bot := ⊥
@@ -137,7 +137,7 @@ section
 variable (R)
 
 @[simp]
-theorem restrict_scalars_top : restrict_scalars S (⊤ : Submodule R M) = ⊤ :=
+theorem restrict_scalars_top : restrictScalars S (⊤ : Submodule R M) = ⊤ :=
   rfl
 
 end
@@ -180,10 +180,10 @@ instance : HasInfₓ (Submodule R M) :=
       smul_mem' := by
         simp (config := { contextual := true })[smul_mem] }⟩
 
-private theorem Inf_le' {S : Set (Submodule R M)} {p} : p ∈ S → Inf S ≤ p :=
+private theorem Inf_le' {S : Set (Submodule R M)} {p} : p ∈ S → inf S ≤ p :=
   Set.bInter_subset_of_mem
 
-private theorem le_Inf' {S : Set (Submodule R M)} {p} : (∀, ∀ q ∈ S, ∀, p ≤ q) → p ≤ Inf S :=
+private theorem le_Inf' {S : Set (Submodule R M)} {p} : (∀, ∀ q ∈ S, ∀, p ≤ q) → p ≤ inf S :=
   Set.subset_Inter₂
 
 instance : HasInf (Submodule R M) :=
@@ -197,12 +197,12 @@ instance : HasInf (Submodule R M) :=
         simp (config := { contextual := true })[smul_mem] }⟩
 
 instance : CompleteLattice (Submodule R M) :=
-  { Submodule.orderTop, Submodule.orderBot, SetLike.partialOrder with sup := fun a b => Inf { x | a ≤ x ∧ b ≤ x },
+  { Submodule.orderTop, Submodule.orderBot, SetLike.partialOrder with sup := fun a b => inf { x | a ≤ x ∧ b ≤ x },
     le_sup_left := fun a b => le_Inf' fun x ⟨ha, hb⟩ => ha, le_sup_right := fun a b => le_Inf' fun x ⟨ha, hb⟩ => hb,
     sup_le := fun a b c h₁ h₂ => Inf_le' ⟨h₁, h₂⟩, inf := ·⊓·, le_inf := fun a b c => Set.subset_inter,
     inf_le_left := fun a b => Set.inter_subset_left _ _, inf_le_right := fun a b => Set.inter_subset_right _ _,
-    sup := fun tt => Inf { t | ∀, ∀ t' ∈ tt, ∀, t' ≤ t }, le_Sup := fun s p hs => le_Inf' fun q hq => hq _ hs,
-    Sup_le := fun s p hs => Inf_le' hs, inf := Inf, le_Inf := fun s a => le_Inf', Inf_le := fun s a => Inf_le' }
+    sup := fun tt => inf { t | ∀, ∀ t' ∈ tt, ∀, t' ≤ t }, le_Sup := fun s p hs => le_Inf' fun q hq => hq _ hs,
+    Sup_le := fun s p hs => Inf_le' hs, inf := inf, le_Inf := fun s a => le_Inf', Inf_le := fun s a => Inf_le' }
 
 @[simp]
 theorem inf_coe : ↑(p⊓q) = (p ∩ q : Set M) :=
@@ -213,7 +213,7 @@ theorem mem_inf {p q : Submodule R M} {x : M} : x ∈ p⊓q ↔ x ∈ p ∧ x �
   Iff.rfl
 
 @[simp]
-theorem Inf_coe (P : Set (Submodule R M)) : (↑(Inf P) : Set M) = ⋂ p ∈ P, ↑p :=
+theorem Inf_coe (P : Set (Submodule R M)) : (↑(inf P) : Set M) = ⋂ p ∈ P, ↑p :=
   rfl
 
 @[simp]
@@ -231,7 +231,7 @@ theorem infi_coe {ι} (p : ι → Submodule R M) : (↑(⨅ i, p i) : Set M) = �
   rw [infi, Inf_coe] <;> ext a <;> simp <;> exact ⟨fun h i => h _ i rfl, fun h i x e => e ▸ h _⟩
 
 @[simp]
-theorem mem_Inf {S : Set (Submodule R M)} {x : M} : x ∈ Inf S ↔ ∀, ∀ p ∈ S, ∀, x ∈ p :=
+theorem mem_Inf {S : Set (Submodule R M)} {x : M} : x ∈ inf S ↔ ∀, ∀ p ∈ S, ∀, x ∈ p :=
   Set.mem_Inter₂
 
 @[simp]
@@ -268,8 +268,8 @@ theorem sum_mem_bsupr {ι : Type _} {s : Finset ι} {f : ι → M} {p : ι → S
 /-! Note that `submodule.mem_supr` is provided in `linear_algebra/basic.lean`. -/
 
 
-theorem mem_Sup_of_mem {S : Set (Submodule R M)} {s : Submodule R M} (hs : s ∈ S) : ∀ {x : M}, x ∈ s → x ∈ Sup S :=
-  show s ≤ Sup S from le_Sup hs
+theorem mem_Sup_of_mem {S : Set (Submodule R M)} {s : Submodule R M} (hs : s ∈ S) : ∀ {x : M}, x ∈ s → x ∈ sup S :=
+  show s ≤ sup S from le_Sup hs
 
 theorem disjoint_def {p p' : Submodule R M} : Disjoint p p' ↔ ∀, ∀ x ∈ p, ∀, x ∈ p' → x = (0 : M) :=
   show (∀ x, x ∈ p ∧ x ∈ p' → x ∈ ({0} : Set M)) ↔ _ by
@@ -299,15 +299,15 @@ theorem AddSubmonoid.to_nat_submodule_symm :
   rfl
 
 @[simp]
-theorem AddSubmonoid.coe_to_nat_submodule (S : AddSubmonoid M) : (S.to_nat_submodule : Set M) = S :=
+theorem AddSubmonoid.coe_to_nat_submodule (S : AddSubmonoid M) : (S.toNatSubmodule : Set M) = S :=
   rfl
 
 @[simp]
-theorem AddSubmonoid.to_nat_submodule_to_add_submonoid (S : AddSubmonoid M) : S.to_nat_submodule.to_add_submonoid = S :=
+theorem AddSubmonoid.to_nat_submodule_to_add_submonoid (S : AddSubmonoid M) : S.toNatSubmodule.toAddSubmonoid = S :=
   AddSubmonoid.toNatSubmodule.symm_apply_apply S
 
 @[simp]
-theorem Submodule.to_add_submonoid_to_nat_submodule (S : Submodule ℕ M) : S.to_add_submonoid.to_nat_submodule = S :=
+theorem Submodule.to_add_submonoid_to_nat_submodule (S : Submodule ℕ M) : S.toAddSubmonoid.toNatSubmodule = S :=
   AddSubmonoid.toNatSubmodule.apply_symm_apply S
 
 end NatSubmodule
@@ -332,15 +332,15 @@ theorem AddSubgroup.to_int_submodule_symm :
   rfl
 
 @[simp]
-theorem AddSubgroup.coe_to_int_submodule (S : AddSubgroup M) : (S.to_int_submodule : Set M) = S :=
+theorem AddSubgroup.coe_to_int_submodule (S : AddSubgroup M) : (S.toIntSubmodule : Set M) = S :=
   rfl
 
 @[simp]
-theorem AddSubgroup.to_int_submodule_to_add_subgroup (S : AddSubgroup M) : S.to_int_submodule.to_add_subgroup = S :=
+theorem AddSubgroup.to_int_submodule_to_add_subgroup (S : AddSubgroup M) : S.toIntSubmodule.toAddSubgroup = S :=
   AddSubgroup.toIntSubmodule.symm_apply_apply S
 
 @[simp]
-theorem Submodule.to_add_subgroup_to_int_submodule (S : Submodule ℤ M) : S.to_add_subgroup.to_int_submodule = S :=
+theorem Submodule.to_add_subgroup_to_int_submodule (S : Submodule ℤ M) : S.toAddSubgroup.toIntSubmodule = S :=
   AddSubgroup.toIntSubmodule.apply_symm_apply S
 
 end IntSubmodule

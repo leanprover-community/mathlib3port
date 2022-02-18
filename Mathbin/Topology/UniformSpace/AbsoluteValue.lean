@@ -55,7 +55,7 @@ def uniform_space_core : UniformSpace.Core R where
   comp :=
     le_infi fun ε =>
       le_infi fun h =>
-        lift'_le (mem_infi_of_mem (ε / 2) <| mem_infi_of_mem (div_pos h zero_lt_two) (subset.refl _)) <| by
+        lift'_le (mem_infi_of_mem (ε / 2) <| mem_infi_of_mem (div_pos h zero_lt_two) (Subset.refl _)) <| by
           have : ∀ a b c : R, abv (c - a) < ε / 2 → abv (b - c) < ε / 2 → abv (b - a) < ε := fun a b c hac hcb =>
             calc
               abv (b - a) ≤ _ := abv_sub_le abv b c a
@@ -68,10 +68,10 @@ def uniform_space_core : UniformSpace.Core R where
 
 /-- The uniform structure coming from an absolute value. -/
 def UniformSpace : UniformSpace R :=
-  UniformSpace.ofCore (uniform_space_core abv)
+  UniformSpace.ofCore (uniformSpaceCore abv)
 
 theorem mem_uniformity {s : Set (R × R)} :
-    s ∈ (uniform_space_core abv).uniformity ↔ ∃ ε > 0, ∀ {a b : R}, abv (b - a) < ε → (a, b) ∈ s := by
+    s ∈ (uniformSpaceCore abv).uniformity ↔ ∃ ε > 0, ∀ {a b : R}, abv (b - a) < ε → (a, b) ∈ s := by
   suffices (s ∈ ⨅ ε : { ε : 𝕜 // ε > 0 }, 𝓟 { p : R × R | abv (p.2 - p.1) < ε.val }) ↔ _ by
     rw [infi_subtype] at this
     exact this

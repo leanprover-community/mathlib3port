@@ -33,7 +33,7 @@ namespace Quaternion
 instance : HasInner ℝ ℍ :=
   ⟨fun a b => (a * b.conj).re⟩
 
-theorem inner_self (a : ℍ) : ⟪a, a⟫ = norm_sq a :=
+theorem inner_self (a : ℍ) : ⟪a, a⟫ = normSq a :=
   rfl
 
 theorem inner_def (a b : ℍ) : ⟪a, b⟫ = (a * b.conj).re :=
@@ -50,7 +50,7 @@ instance : InnerProductSpace ℝ ℍ :=
       smulLeft := fun x y r => by
         simp [inner_def] }
 
-theorem norm_sq_eq_norm_sq (a : ℍ) : norm_sq a = ∥a∥ * ∥a∥ := by
+theorem norm_sq_eq_norm_sq (a : ℍ) : normSq a = ∥a∥ * ∥a∥ := by
   rw [← inner_self, real_inner_self_eq_norm_mul_norm]
 
 instance : NormOneClass ℍ :=

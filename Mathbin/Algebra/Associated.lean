@@ -337,7 +337,7 @@ theorem Associated.pow_pow [CommMonoidₓ α] {a b : α} {n : ℕ} (h : a ~ᵤ b
 protected theorem Associated.dvd [Monoidₓ α] {a b : α} : a ~ᵤ b → a ∣ b := fun ⟨u, hu⟩ => ⟨u, hu.symm⟩
 
 protected theorem Associated.dvd_dvd [Monoidₓ α] {a b : α} (h : a ~ᵤ b) : a ∣ b ∧ b ∣ a :=
-  ⟨h.dvd, h.symm.dvd⟩
+  ⟨h.Dvd, h.symm.Dvd⟩
 
 theorem associated_of_dvd_dvd [CancelMonoidWithZero α] {a b : α} (hab : a ∣ b) (hba : b ∣ a) : a ~ᵤ b := by
   rcases hab with ⟨c, rfl⟩
@@ -400,14 +400,14 @@ theorem Irreducible.dvd_irreducible_iff_associated [CancelMonoidWithZero α] {p 
 
 theorem Prime.associated_of_dvd [CancelCommMonoidWithZero α] {p q : α} (p_prime : Prime p) (q_prime : Prime q)
     (dvd : p ∣ q) : Associated p q :=
-  p_prime.irreducible.associated_of_dvd q_prime.irreducible dvd
+  p_prime.Irreducible.associated_of_dvd q_prime.Irreducible dvd
 
 theorem Prime.dvd_prime_iff_associated [CancelCommMonoidWithZero α] {p q : α} (pp : Prime p) (qp : Prime q) :
     p ∣ q ↔ Associated p q :=
-  pp.irreducible.dvd_irreducible_iff_associated qp.irreducible
+  pp.Irreducible.dvd_irreducible_iff_associated qp.Irreducible
 
 theorem Associated.prime_iff [CommMonoidWithZero α] {p q : α} (h : p ~ᵤ q) : Prime p ↔ Prime q :=
-  ⟨h.prime, h.symm.prime⟩
+  ⟨h.Prime, h.symm.Prime⟩
 
 protected theorem Associated.is_unit [Monoidₓ α] {a b : α} (h : a ~ᵤ b) : IsUnit a → IsUnit b :=
   let ⟨u, hu⟩ := h
@@ -416,10 +416,10 @@ protected theorem Associated.is_unit [Monoidₓ α] {a b : α} (h : a ~ᵤ b) : 
     simp [hv, hu.symm]⟩
 
 theorem Associated.is_unit_iff [Monoidₓ α] {a b : α} (h : a ~ᵤ b) : IsUnit a ↔ IsUnit b :=
-  ⟨h.is_unit, h.symm.is_unit⟩
+  ⟨h.IsUnit, h.symm.IsUnit⟩
 
 protected theorem Associated.irreducible [Monoidₓ α] {p q : α} (h : p ~ᵤ q) (hp : Irreducible p) : Irreducible q :=
-  ⟨mt h.symm.is_unit hp.1,
+  ⟨mt h.symm.IsUnit hp.1,
     let ⟨u, hu⟩ := h
     fun a b hab =>
     have hpab : p = a * (b * (u⁻¹ : (α)ˣ)) :=
@@ -435,7 +435,7 @@ protected theorem Associated.irreducible [Monoidₓ α] {p q : α} (h : p ~ᵤ q
           simp [hv]⟩⟩
 
 protected theorem Associated.irreducible_iff [Monoidₓ α] {p q : α} (h : p ~ᵤ q) : Irreducible p ↔ Irreducible q :=
-  ⟨h.irreducible, h.symm.irreducible⟩
+  ⟨h.Irreducible, h.symm.Irreducible⟩
 
 theorem Associated.of_mul_left [CancelCommMonoidWithZero α] {a b c d : α} (h : a * b ~ᵤ c * d) (h₁ : a ~ᵤ c)
     (ha : a ≠ 0) : b ~ᵤ d :=
@@ -450,6 +450,18 @@ theorem Associated.of_mul_left [CancelCommMonoidWithZero α] {a b c d : α} (h :
 theorem Associated.of_mul_right [CancelCommMonoidWithZero α] {a b c d : α} : a * b ~ᵤ c * d → b ~ᵤ d → b ≠ 0 → a ~ᵤ c :=
   by
   rw [mul_comm a, mul_comm c] <;> exact Associated.of_mul_left
+
+theorem Associated.of_pow_associated_of_prime [CancelCommMonoidWithZero α] {p₁ p₂ : α} {k₁ k₂ : ℕ} (hp₁ : Prime p₁)
+    (hp₂ : Prime p₂) (hk₁ : 0 < k₁) (h : p₁ ^ k₁ ~ᵤ p₂ ^ k₂) : p₁ ~ᵤ p₂ := by
+  have : p₁ ∣ p₂ ^ k₂ := by
+    rw [← h.dvd_iff_dvd_right]
+    apply dvd_pow_self _ hk₁.ne'
+  rw [← hp₁.dvd_prime_iff_associated hp₂]
+  exact hp₁.dvd_of_dvd_pow this
+
+theorem Associated.of_pow_associated_of_prime' [CancelCommMonoidWithZero α] {p₁ p₂ : α} {k₁ k₂ : ℕ} (hp₁ : Prime p₁)
+    (hp₂ : Prime p₂) (hk₂ : 0 < k₂) (h : p₁ ^ k₁ ~ᵤ p₂ ^ k₂) : p₁ ~ᵤ p₂ :=
+  (h.symm.of_pow_associated_of_prime hp₂ hp₁ hk₂).symm
 
 section UniqueUnits
 
@@ -716,7 +728,7 @@ theorem mk_dvd_mk {a b : α} : Associates.mk a ∣ Associates.mk b ↔ a ∣ b :
 theorem prime.le_or_le {p : Associates α} (hp : Prime p) {a b : Associates α} (h : p ≤ a * b) : p ≤ a ∨ p ≤ b :=
   hp.2.2 a b h
 
-theorem prime_mk (p : α) : Prime (Associates.mk p) ↔ _root_.prime p := by
+theorem prime_mk (p : α) : Prime (Associates.mk p) ↔ Prime p := by
   rw [Prime, _root_.prime, forall_associated]
   trans
   · apply and_congr

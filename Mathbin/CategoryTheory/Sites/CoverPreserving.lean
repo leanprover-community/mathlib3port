@@ -55,31 +55,31 @@ open CategoryTheory.Limits
 
 namespace CategoryTheory
 
-variable {C : Type u₁} [category.{v₁} C] {D : Type u₂} [category.{v₂} D]
+variable {C : Type u₁} [Category.{v₁} C] {D : Type u₂} [Category.{v₂} D]
 
-variable {A : Type u₃} [category.{v₃} A]
+variable {A : Type u₃} [Category.{v₃} A]
 
-variable (J : grothendieck_topology C) (K : grothendieck_topology D)
+variable (J : GrothendieckTopology C) (K : GrothendieckTopology D)
 
-variable {L : grothendieck_topology A}
+variable {L : GrothendieckTopology A}
 
 /-- A functor `G : (C, J) ⥤ (D, K)` between sites is *cover-preserving*
 if for all covering sieves `R` in `C`, `R.pushforward_functor G` is a covering sieve in `D`.
 -/
 @[nolint has_inhabited_instance]
 structure cover_preserving (G : C ⥤ D) : Prop where
-  cover_preserve : ∀ {U : C} {S : sieve U} hS : S ∈ J U, S.functor_pushforward G ∈ K (G.obj U)
+  cover_preserve : ∀ {U : C} {S : Sieve U} hS : S ∈ J U, S.FunctorPushforward G ∈ K (G.obj U)
 
 /-- The identity functor on a site is cover-preserving. -/
-theorem id_cover_preserving : cover_preserving J J (𝟭 _) :=
+theorem id_cover_preserving : CoverPreserving J J (𝟭 _) :=
   ⟨fun U S hS => by
     simpa using hS⟩
 
 variable (J) (K)
 
 /-- The composition of two cover-preserving functors is cover-preserving. -/
-theorem cover_preserving.comp {F} (hF : cover_preserving J K F) {G} (hG : cover_preserving K L G) :
-    cover_preserving J L (F ⋙ G) :=
+theorem cover_preserving.comp {F} (hF : CoverPreserving J K F) {G} (hG : CoverPreserving K L G) :
+    CoverPreserving J L (F ⋙ G) :=
   ⟨fun U S hS => by
     rw [sieve.functor_pushforward_comp]
     exact hG.cover_preserve (hF.cover_preserve hS)⟩
@@ -91,20 +91,20 @@ This is actually stronger than merely preserving compatible families because of 
 `functor_pushforward` used.
 -/
 @[nolint has_inhabited_instance]
-structure compatible_preserving (K : grothendieck_topology D) (G : C ⥤ D) : Prop where
+structure compatible_preserving (K : GrothendieckTopology D) (G : C ⥤ D) : Prop where
   Compatible :
-    ∀ ℱ : SheafOfTypes.{w} K {Z} {T : presieve Z} {x : family_of_elements (G.op ⋙ ℱ.val) T} h : x.compatible {Y₁ Y₂} {X}
+    ∀ ℱ : SheafOfTypes.{w} K {Z} {T : Presieve Z} {x : FamilyOfElements (G.op ⋙ ℱ.val) T} h : x.Compatible {Y₁ Y₂} {X}
       f₁ : X ⟶ G.obj Y₁ f₂ : X ⟶ G.obj Y₂ {g₁ : Y₁ ⟶ Z} {g₂ : Y₂ ⟶ Z} hg₁ : T g₁ hg₂ : T g₂ eq :
       f₁ ≫ G.map g₁ = f₂ ≫ G.map g₂, ℱ.val.map f₁.op (x g₁ hg₁) = ℱ.val.map f₂.op (x g₂ hg₂)
 
-variable {J K} {G : C ⥤ D} (hG : compatible_preserving.{w} K G) (ℱ : SheafOfTypes.{w} K) {Z : C}
+variable {J K} {G : C ⥤ D} (hG : CompatiblePreserving.{w} K G) (ℱ : SheafOfTypes.{w} K) {Z : C}
 
-variable {T : presieve Z} {x : family_of_elements (G.op ⋙ ℱ.val) T} (h : x.compatible)
+variable {T : Presieve Z} {x : FamilyOfElements (G.op ⋙ ℱ.val) T} (h : x.Compatible)
 
 include h hG
 
 /-- `compatible_preserving` functors indeed preserve compatible families. -/
-theorem presieve.family_of_elements.compatible.functor_pushforward : (x.functor_pushforward G).Compatible := by
+theorem presieve.family_of_elements.compatible.functor_pushforward : (x.FunctorPushforward G).Compatible := by
   rintro Z₁ Z₂ W g₁ g₂ f₁' f₂' H₁ H₂ eq
   unfold family_of_elements.functor_pushforward
   rcases get_functor_pushforward_structure H₁ with ⟨X₁, f₁, h₁, hf₁, rfl⟩
@@ -116,7 +116,7 @@ theorem presieve.family_of_elements.compatible.functor_pushforward : (x.functor_
 
 @[simp]
 theorem compatible_preserving.apply_map {Y : C} {f : Y ⟶ Z} (hf : T f) :
-    x.functor_pushforward G (G.map f) (image_mem_functor_pushforward G T hf) = x f hf := by
+    x.FunctorPushforward G (G.map f) (image_mem_functor_pushforward G T hf) = x f hf := by
   unfold family_of_elements.functor_pushforward
   rcases e₁ : get_functor_pushforward_structure (image_mem_functor_pushforward G T hf) with ⟨X, g, f', hg, eq⟩
   simpa using
@@ -128,8 +128,8 @@ omit h hG
 
 open Limits.WalkingCospan
 
-theorem compatible_preserving_of_flat {C : Type u₁} [category.{v₁} C] {D : Type u₁} [category.{v₁} D]
-    (K : grothendieck_topology D) (G : C ⥤ D) [representably_flat G] : compatible_preserving K G := by
+theorem compatible_preserving_of_flat {C : Type u₁} [Category.{v₁} C] {D : Type u₁} [Category.{v₁} D]
+    (K : GrothendieckTopology D) (G : C ⥤ D) [RepresentablyFlat G] : CompatiblePreserving K G := by
   constructor
   intro ℱ Z T x hx Y₁ Y₂ X f₁ f₂ g₁ g₂ hg₁ hg₂ e
   let c : cone (cospan g₁ g₂ ⋙ G) :=
@@ -168,8 +168,8 @@ then `G.op ⋙ _` pulls sheaves back to sheaves.
 
 This result is basically https://stacks.math.columbia.edu/tag/00WW.
 -/
-theorem pullback_is_sheaf_of_cover_preserving {G : C ⥤ D} (hG₁ : compatible_preserving.{v₃} K G)
-    (hG₂ : cover_preserving J K G) (ℱ : Sheaf K A) : presheaf.is_sheaf J (G.op ⋙ ℱ.val) := by
+theorem pullback_is_sheaf_of_cover_preserving {G : C ⥤ D} (hG₁ : CompatiblePreserving.{v₃} K G)
+    (hG₂ : CoverPreserving J K G) (ℱ : Sheaf K A) : Presheaf.IsSheaf J (G.op ⋙ ℱ.val) := by
   intro X U S hS x hx
   change family_of_elements (G.op ⋙ ℱ.val ⋙ coyoneda.obj (op X)) _ at x
   let H := ℱ.2 X _ (hG₂.cover_preserve hS)
@@ -193,7 +193,7 @@ theorem pullback_is_sheaf_of_cover_preserving {G : C ⥤ D} (hG₁ : compatible_
     
 
 /-- The pullback of a sheaf along a cover-preserving and compatible-preserving functor. -/
-def pullback_sheaf {G : C ⥤ D} (hG₁ : compatible_preserving K G) (hG₂ : cover_preserving J K G) (ℱ : Sheaf K A) :
+def pullback_sheaf {G : C ⥤ D} (hG₁ : CompatiblePreserving K G) (hG₂ : CoverPreserving J K G) (ℱ : Sheaf K A) :
     Sheaf J A :=
   ⟨G.op ⋙ ℱ.val, pullback_is_sheaf_of_cover_preserving hG₁ hG₂ ℱ⟩
 
@@ -203,10 +203,10 @@ variable (A)
 if `G` is cover-preserving and compatible-preserving.
 -/
 @[simps]
-def sites.pullback {G : C ⥤ D} (hG₁ : compatible_preserving K G) (hG₂ : cover_preserving J K G) :
+def sites.pullback {G : C ⥤ D} (hG₁ : CompatiblePreserving K G) (hG₂ : CoverPreserving J K G) :
     Sheaf K A ⥤ Sheaf J A where
-  obj := fun ℱ => pullback_sheaf hG₁ hG₂ ℱ
-  map := fun _ _ f => ⟨((whiskering_left _ _ _).obj G.op).map f.val⟩
+  obj := fun ℱ => pullbackSheaf hG₁ hG₂ ℱ
+  map := fun _ _ f => ⟨((whiskeringLeft _ _ _).obj G.op).map f.val⟩
   map_id' := fun ℱ => by
     ext1
     apply ((whiskering_left _ _ _).obj G.op).map_id
@@ -218,35 +218,35 @@ end CategoryTheory
 
 namespace CategoryTheory
 
-variable {C : Type v₁} [small_category C] {D : Type v₁} [small_category D]
+variable {C : Type v₁} [SmallCategory C] {D : Type v₁} [SmallCategory D]
 
-variable (A : Type u₂) [category.{v₁} A]
+variable (A : Type u₂) [Category.{v₁} A]
 
-variable (J : grothendieck_topology C) (K : grothendieck_topology D)
+variable (J : GrothendieckTopology C) (K : GrothendieckTopology D)
 
-instance [has_limits A] : creates_limits (Sheaf_to_presheaf J A) :=
+instance [HasLimits A] : CreatesLimits (sheafToPresheaf J A) :=
   CategoryTheory.Sheaf.CategoryTheory.SheafToPresheaf.CategoryTheory.createsLimits.{u₂, v₁, v₁}
 
-variable [concrete_category.{v₁} A] [preserves_limits (forget A)] [has_colimits A] [has_limits A]
+variable [ConcreteCategory.{v₁} A] [PreservesLimits (forget A)] [HasColimits A] [HasLimits A]
 
-variable [preserves_filtered_colimits (forget A)] [reflects_isomorphisms (forget A)]
+variable [PreservesFilteredColimits (forget A)] [ReflectsIsomorphisms (forget A)]
 
 attribute [local instance] reflects_limits_of_reflects_isomorphisms
 
-instance {X : C} : is_cofiltered (J.cover X) :=
+instance {X : C} : IsCofiltered (J.cover X) :=
   inferInstance
 
 /-- The pushforward functor `Sheaf J A ⥤ Sheaf K A` associated to a functor `G : C ⥤ D` in the
 same direction as `G`. -/
 @[simps]
 def sites.pushforward (G : C ⥤ D) : Sheaf J A ⥤ Sheaf K A :=
-  Sheaf_to_presheaf J A ⋙ Lan G.op ⋙ presheaf_to_Sheaf K A
+  sheafToPresheaf J A ⋙ lan G.op ⋙ presheafToSheaf K A
 
-instance (G : C ⥤ D) [representably_flat G] : preserves_finite_limits (sites.pushforward A J K G) := by
-  apply comp_preserves_finite_limits with { instances := ff }
+instance (G : C ⥤ D) [RepresentablyFlat G] : PreservesFiniteLimits (Sites.pushforward A J K G) := by
+  apply comp_preserves_finite_limits with { instances := false }
   · infer_instance
     
-  apply comp_preserves_finite_limits with { instances := ff }
+  apply comp_preserves_finite_limits with { instances := false }
   · apply CategoryTheory.lanPreservesFiniteLimitsOfFlat
     
   · apply CategoryTheory.presheafToSheaf.Limits.preservesFiniteLimits.{u₂, v₁, v₁}
@@ -254,11 +254,11 @@ instance (G : C ⥤ D) [representably_flat G] : preserves_finite_limits (sites.p
     
 
 /-- The pushforward functor is left adjoint to the pullback functor. -/
-def sites.pullback_pushforward_adjunction {G : C ⥤ D} (hG₁ : compatible_preserving K G) (hG₂ : cover_preserving J K G) :
-    sites.pushforward A J K G ⊣ sites.pullback A hG₁ hG₂ :=
-  ((Lan.adjunction A G.op).comp _ _ (sheafification_adjunction K A)).restrictFullyFaithful (Sheaf_to_presheaf J A) (𝟭 _)
-    (nat_iso.of_components (fun _ => iso.refl _) fun _ _ _ => (category.comp_id _).trans (category.id_comp _).symm)
-    (nat_iso.of_components (fun _ => iso.refl _) fun _ _ _ => (category.comp_id _).trans (category.id_comp _).symm)
+def sites.pullback_pushforward_adjunction {G : C ⥤ D} (hG₁ : CompatiblePreserving K G) (hG₂ : CoverPreserving J K G) :
+    Sites.pushforward A J K G ⊣ Sites.pullback A hG₁ hG₂ :=
+  ((lan.adjunction A G.op).comp _ _ (sheafificationAdjunction K A)).restrictFullyFaithful (sheafToPresheaf J A) (𝟭 _)
+    (NatIso.ofComponents (fun _ => Iso.refl _) fun _ _ _ => (Category.comp_id _).trans (Category.id_comp _).symm)
+    (NatIso.ofComponents (fun _ => Iso.refl _) fun _ _ _ => (Category.comp_id _).trans (Category.id_comp _).symm)
 
 end CategoryTheory
 

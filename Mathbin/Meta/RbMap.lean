@@ -29,7 +29,7 @@ where the check `P` is monadic. -/
 unsafe def mfilter {m} [Monadₓ m] {key} (s : rb_set key) (P : key → m Bool) : m (rb_set key) :=
   s.fold (pure s) fun a m => do
     let x ← m
-    mcond (P a) (pure x) (pure <| x.erase a)
+    mcond (P a) (pure x) (pure <| x a)
 
 /-- `union s t` returns an rb_set containing every element that appears in either `s` or `t`. -/
 unsafe def union {key} (s t : rb_set key) : rb_set key :=
@@ -100,12 +100,12 @@ open Function
 /-- `mfilter P s` filters `s` by the monadic predicate `P` on keys and values. -/
 unsafe def mfilter {key val} [LT key] [DecidableRel (· < · : key → key → Prop)] (P : key → val → m Bool)
     (s : rb_map key val) : m (rb_map.{0, 0} key val) :=
-  rb_map.of_list <$> s.to_list.mfilter (uncurry P)
+  rb_map.of_list <$> s.toList.mfilter (uncurry P)
 
 /-- `mmap f s` maps the monadic function `f` over values in `s`. -/
 unsafe def mmap {key val val'} [LT key] [DecidableRel (· < · : key → key → Prop)] (f : val → m val')
     (s : rb_map key val) : m (rb_map.{0, 0} key val') :=
-  rb_map.of_list <$> s.to_list.mmap fun ⟨a, b⟩ => Prod.mk a <$> f b
+  rb_map.of_list <$> s.toList.mmap fun ⟨a, b⟩ => Prod.mk a <$> f b
 
 /-- `scale b m` multiplies every value in `m` by `b`. -/
 unsafe def scale {key value} [LT key] [DecidableRel (· < · : key → key → Prop)] [Mul value] (b : value)
@@ -126,7 +126,7 @@ private unsafe def pp_key_data (k : key) (d : data) (first : Bool) : tactic form
 unsafe instance : has_to_tactic_format (rb_map key data) :=
   ⟨fun m => do
     let (fmt, _) ←
-      fold m (return (to_fmt "", tt)) fun k d p => do
+      fold m (return (to_fmt "", true)) fun k d p => do
           let p ← p
           let pkd ← pp_key_data k d (snd p)
           return (fst p ++ pkd, ff)
@@ -176,14 +176,14 @@ where the check `P` is monadic. -/
 unsafe def mfilter {m} [Monadₓ m] (P : Name → m Bool) (s : name_set) : m name_set :=
   s.fold (pure s) fun a m => do
     let x ← m
-    mcond (P a) (pure x) (pure <| x.erase a)
+    mcond (P a) (pure x) (pure <| x a)
 
 /-- `mmap f s` maps the monadic function `f` over values in `s`. -/
 unsafe def mmap {m} [Monadₓ m] (f : Name → m Name) (s : name_set) : m name_set :=
   s.fold (pure mk_name_set) fun a m => do
     let x ← m
     let b ← f a
-    pure <| x.insert b
+    pure <| x b
 
 /-- `insert_list s l` inserts every element of `l` into `s`. -/
 unsafe def insert_list (s : name_set) (l : List Name) : name_set :=
@@ -232,7 +232,7 @@ to_rb_map ['a', 'b', 'c'] = rb_map.of_list [(0, 'a'), (1, 'b'), (2, 'c')]
 ```
 -/
 unsafe def to_rb_map {α : Type} : List α → native.rb_map ℕ α :=
-  foldl_with_index (fun i mapp a => mapp.insert i a) native.mk_rb_map
+  foldlWithIndex (fun i mapp a => mapp.insert i a) native.mk_rb_map
 
 end List
 

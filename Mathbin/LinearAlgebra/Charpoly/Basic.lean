@@ -22,7 +22,7 @@ variable {R : Type u} {M : Type v} [CommRingₓ R] [Nontrivial R]
 
 variable [AddCommGroupₓ M] [Module R M] [Module.Free R M] [Module.Finite R M] (f : M →ₗ[R] M)
 
-open_locale Classical Matrix
+open_locale Classical Matrix Polynomial
 
 noncomputable section
 
@@ -33,17 +33,17 @@ namespace LinearMap
 section Basic
 
 /-- The characteristic polynomial of `f : M →ₗ[R] M`. -/
-def charpoly : Polynomial R :=
-  (to_matrix (choose_basis R M) (choose_basis R M) f).charpoly
+def charpoly : R[X] :=
+  (toMatrix (chooseBasis R M) (chooseBasis R M) f).charpoly
 
-theorem charpoly_def : f.charpoly = (to_matrix (choose_basis R M) (choose_basis R M) f).charpoly :=
+theorem charpoly_def : f.charpoly = (toMatrix (chooseBasis R M) (chooseBasis R M) f).charpoly :=
   rfl
 
 end Basic
 
 section Coeff
 
-theorem charpoly_monic : f.charpoly.monic :=
+theorem charpoly_monic : f.charpoly.Monic :=
   charpoly_monic _
 
 end Coeff

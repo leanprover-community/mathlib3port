@@ -92,19 +92,19 @@ theorem HasFderivWithinAt.const_cpow (hf : HasFderivWithinAt f f' s x) (h0 : c �
 
 theorem DifferentiableAt.cpow (hf : DifferentiableAt ℂ f x) (hg : DifferentiableAt ℂ g x)
     (h0 : 0 < (f x).re ∨ (f x).im ≠ 0) : DifferentiableAt ℂ (fun x => f x ^ g x) x :=
-  (hf.has_fderiv_at.cpow hg.has_fderiv_at h0).DifferentiableAt
+  (hf.HasFderivAt.cpow hg.HasFderivAt h0).DifferentiableAt
 
 theorem DifferentiableAt.const_cpow (hf : DifferentiableAt ℂ f x) (h0 : c ≠ 0 ∨ f x ≠ 0) :
     DifferentiableAt ℂ (fun x => c ^ f x) x :=
-  (hf.has_fderiv_at.const_cpow h0).DifferentiableAt
+  (hf.HasFderivAt.const_cpow h0).DifferentiableAt
 
 theorem DifferentiableWithinAt.cpow (hf : DifferentiableWithinAt ℂ f s x) (hg : DifferentiableWithinAt ℂ g s x)
     (h0 : 0 < (f x).re ∨ (f x).im ≠ 0) : DifferentiableWithinAt ℂ (fun x => f x ^ g x) s x :=
-  (hf.has_fderiv_within_at.cpow hg.has_fderiv_within_at h0).DifferentiableWithinAt
+  (hf.HasFderivWithinAt.cpow hg.HasFderivWithinAt h0).DifferentiableWithinAt
 
 theorem DifferentiableWithinAt.const_cpow (hf : DifferentiableWithinAt ℂ f s x) (h0 : c ≠ 0 ∨ f x ≠ 0) :
     DifferentiableWithinAt ℂ (fun x => c ^ f x) s x :=
-  (hf.has_fderiv_within_at.const_cpow h0).DifferentiableWithinAt
+  (hf.HasFderivWithinAt.const_cpow h0).DifferentiableWithinAt
 
 end fderiv
 
@@ -285,7 +285,7 @@ theorem times_cont_diff_rpow_const_of_le {p : ℝ} {n : ℕ} (h : ↑n ≤ p) : 
         (by
           simp )
         h
-    rw [Nat.cast_succ, ← le_sub_iff_add_le] at h
+    rw [Nat.cast_succₓ, ← le_sub_iff_add_le] at h
     simpa [times_cont_diff_succ_iff_deriv, differentiable_rpow_const, h1, deriv_rpow_const'] using
       times_cont_diff_const.mul (ihn h)
     
@@ -303,7 +303,7 @@ theorem has_strict_deriv_at_rpow_const {x p : ℝ} (hx : x ≠ 0 ∨ 1 ≤ p) :
   TimesContDiffAt.has_strict_deriv_at'
     (times_cont_diff_at_rpow_const
       (by
-        rwa [Nat.cast_one]))
+        rwa [Nat.cast_oneₓ]))
     (has_deriv_at_rpow_const hx) le_rfl
 
 end Real
@@ -319,23 +319,23 @@ variable {E : Type _} [NormedGroup E] [NormedSpace ℝ E] {f g : E → ℝ} {f' 
 
 theorem HasFderivWithinAt.rpow (hf : HasFderivWithinAt f f' s x) (hg : HasFderivWithinAt g g' s x) (h : 0 < f x) :
     HasFderivWithinAt (fun x => f x ^ g x) ((g x * f x ^ (g x - 1)) • f' + (f x ^ g x * log (f x)) • g') s x :=
-  (has_strict_fderiv_at_rpow_of_pos (f x, g x) h).HasFderivAt.comp_has_fderiv_within_at x (hf.prod hg)
+  (has_strict_fderiv_at_rpow_of_pos (f x, g x) h).HasFderivAt.comp_has_fderiv_within_at x (hf.Prod hg)
 
 theorem HasFderivAt.rpow (hf : HasFderivAt f f' x) (hg : HasFderivAt g g' x) (h : 0 < f x) :
     HasFderivAt (fun x => f x ^ g x) ((g x * f x ^ (g x - 1)) • f' + (f x ^ g x * log (f x)) • g') x :=
-  (has_strict_fderiv_at_rpow_of_pos (f x, g x) h).HasFderivAt.comp x (hf.prod hg)
+  (has_strict_fderiv_at_rpow_of_pos (f x, g x) h).HasFderivAt.comp x (hf.Prod hg)
 
 theorem HasStrictFderivAt.rpow (hf : HasStrictFderivAt f f' x) (hg : HasStrictFderivAt g g' x) (h : 0 < f x) :
     HasStrictFderivAt (fun x => f x ^ g x) ((g x * f x ^ (g x - 1)) • f' + (f x ^ g x * log (f x)) • g') x :=
-  (has_strict_fderiv_at_rpow_of_pos (f x, g x) h).comp x (hf.prod hg)
+  (has_strict_fderiv_at_rpow_of_pos (f x, g x) h).comp x (hf.Prod hg)
 
 theorem DifferentiableWithinAt.rpow (hf : DifferentiableWithinAt ℝ f s x) (hg : DifferentiableWithinAt ℝ g s x)
     (h : f x ≠ 0) : DifferentiableWithinAt ℝ (fun x => f x ^ g x) s x :=
-  (differentiable_at_rpow_of_ne (f x, g x) h).comp_differentiable_within_at x (hf.prod hg)
+  (differentiable_at_rpow_of_ne (f x, g x) h).comp_differentiable_within_at x (hf.Prod hg)
 
 theorem DifferentiableAt.rpow (hf : DifferentiableAt ℝ f x) (hg : DifferentiableAt ℝ g x) (h : f x ≠ 0) :
     DifferentiableAt ℝ (fun x => f x ^ g x) x :=
-  (differentiable_at_rpow_of_ne (f x, g x) h).comp x (hf.prod hg)
+  (differentiable_at_rpow_of_ne (f x, g x) h).comp x (hf.Prod hg)
 
 theorem DifferentiableOn.rpow (hf : DifferentiableOn ℝ f s) (hg : DifferentiableOn ℝ g s) (h : ∀, ∀ x ∈ s, ∀, f x ≠ 0) :
     DifferentiableOn ℝ (fun x => f x ^ g x) s := fun x hx => (hf x hx).rpow (hg x hx) (h x hx)
@@ -357,12 +357,12 @@ theorem HasStrictFderivAt.rpow_const (hf : HasStrictFderivAt f f' x) (h : f x �
 
 theorem DifferentiableWithinAt.rpow_const (hf : DifferentiableWithinAt ℝ f s x) (h : f x ≠ 0 ∨ 1 ≤ p) :
     DifferentiableWithinAt ℝ (fun x => f x ^ p) s x :=
-  (hf.has_fderiv_within_at.rpow_const h).DifferentiableWithinAt
+  (hf.HasFderivWithinAt.rpow_const h).DifferentiableWithinAt
 
 @[simp]
 theorem DifferentiableAt.rpow_const (hf : DifferentiableAt ℝ f x) (h : f x ≠ 0 ∨ 1 ≤ p) :
     DifferentiableAt ℝ (fun x => f x ^ p) x :=
-  (hf.has_fderiv_at.rpow_const h).DifferentiableAt
+  (hf.HasFderivAt.rpow_const h).DifferentiableAt
 
 theorem DifferentiableOn.rpow_const (hf : DifferentiableOn ℝ f s) (h : ∀, ∀ x ∈ s, ∀, f x ≠ 0 ∨ 1 ≤ p) :
     DifferentiableOn ℝ (fun x => f x ^ p) s := fun x hx => (hf x hx).rpow_const (h x hx)
@@ -384,11 +384,11 @@ theorem HasStrictFderivAt.const_rpow (hf : HasStrictFderivAt f f' x) (hc : 0 < c
 
 theorem TimesContDiffWithinAt.rpow (hf : TimesContDiffWithinAt ℝ n f s x) (hg : TimesContDiffWithinAt ℝ n g s x)
     (h : f x ≠ 0) : TimesContDiffWithinAt ℝ n (fun x => f x ^ g x) s x :=
-  (times_cont_diff_at_rpow_of_ne (f x, g x) h).comp_times_cont_diff_within_at x (hf.prod hg)
+  (times_cont_diff_at_rpow_of_ne (f x, g x) h).comp_times_cont_diff_within_at x (hf.Prod hg)
 
 theorem TimesContDiffAt.rpow (hf : TimesContDiffAt ℝ n f x) (hg : TimesContDiffAt ℝ n g x) (h : f x ≠ 0) :
     TimesContDiffAt ℝ n (fun x => f x ^ g x) x :=
-  (times_cont_diff_at_rpow_of_ne (f x, g x) h).comp x (hf.prod hg)
+  (times_cont_diff_at_rpow_of_ne (f x, g x) h).comp x (hf.Prod hg)
 
 theorem TimesContDiffOn.rpow (hf : TimesContDiffOn ℝ n f s) (hg : TimesContDiffOn ℝ n g s)
     (h : ∀, ∀ x ∈ s, ∀, f x ≠ 0) : TimesContDiffOn ℝ n (fun x => f x ^ g x) s := fun x hx =>
@@ -396,7 +396,7 @@ theorem TimesContDiffOn.rpow (hf : TimesContDiffOn ℝ n f s) (hg : TimesContDif
 
 theorem TimesContDiff.rpow (hf : TimesContDiff ℝ n f) (hg : TimesContDiff ℝ n g) (h : ∀ x, f x ≠ 0) :
     TimesContDiff ℝ n fun x => f x ^ g x :=
-  times_cont_diff_iff_times_cont_diff_at.mpr fun x => hf.times_cont_diff_at.rpow hg.times_cont_diff_at (h x)
+  times_cont_diff_iff_times_cont_diff_at.mpr fun x => hf.TimesContDiffAt.rpow hg.TimesContDiffAt (h x)
 
 theorem TimesContDiffWithinAt.rpow_const_of_ne (hf : TimesContDiffWithinAt ℝ n f s x) (h : f x ≠ 0) :
     TimesContDiffWithinAt ℝ n (fun x => f x ^ p) s x :=
@@ -428,7 +428,7 @@ theorem TimesContDiffOn.rpow_const_of_le (hf : TimesContDiffOn ℝ m f s) (h : �
     TimesContDiffOn ℝ m (fun x => f x ^ p) s := fun x hx => (hf x hx).rpow_const_of_le h
 
 theorem TimesContDiff.rpow_const_of_le (hf : TimesContDiff ℝ m f) (h : ↑m ≤ p) : TimesContDiff ℝ m fun x => f x ^ p :=
-  times_cont_diff_iff_times_cont_diff_at.mpr fun x => hf.times_cont_diff_at.rpow_const_of_le h
+  times_cont_diff_iff_times_cont_diff_at.mpr fun x => hf.TimesContDiffAt.rpow_const_of_le h
 
 end fderiv
 
@@ -459,12 +459,12 @@ theorem HasDerivAt.rpow_const (hf : HasDerivAt f f' x) (hx : f x ≠ 0 ∨ 1 ≤
 
 theorem deriv_within_rpow_const (hf : DifferentiableWithinAt ℝ f s x) (hx : f x ≠ 0 ∨ 1 ≤ p)
     (hxs : UniqueDiffWithinAt ℝ s x) : derivWithin (fun x => f x ^ p) s x = derivWithin f s x * p * f x ^ (p - 1) :=
-  (hf.has_deriv_within_at.rpow_const hx).derivWithin hxs
+  (hf.HasDerivWithinAt.rpow_const hx).derivWithin hxs
 
 @[simp]
 theorem deriv_rpow_const (hf : DifferentiableAt ℝ f x) (hx : f x ≠ 0 ∨ 1 ≤ p) :
     deriv (fun x => f x ^ p) x = deriv f x * p * f x ^ (p - 1) :=
-  (hf.has_deriv_at.rpow_const hx).deriv
+  (hf.HasDerivAt.rpow_const hx).deriv
 
 end deriv
 
@@ -475,7 +475,7 @@ section Limits
 open Real Filter
 
 /-- The function `(1 + t/x) ^ x` tends to `exp t` at `+∞`. -/
-theorem tendsto_one_plus_div_rpow_exp (t : ℝ) : tendsto (fun x : ℝ => (1 + t / x) ^ x) at_top (𝓝 (exp t)) := by
+theorem tendsto_one_plus_div_rpow_exp (t : ℝ) : Tendsto (fun x : ℝ => (1 + t / x) ^ x) atTop (𝓝 (exp t)) := by
   apply ((real.continuous_exp.tendsto _).comp (tendsto_mul_log_one_plus_div_at_top t)).congr' _
   have h₁ : (1 : ℝ) / 2 < 1 := by
     linarith
@@ -487,7 +487,7 @@ theorem tendsto_one_plus_div_rpow_exp (t : ℝ) : tendsto (fun x : ℝ => (1 + t
   simp [mul_comm x, exp_mul, exp_log hx']
 
 /-- The function `(1 + t/x) ^ x` tends to `exp t` at `+∞` for naturals `x`. -/
-theorem tendsto_one_plus_div_pow_exp (t : ℝ) : tendsto (fun x : ℕ => (1 + t / (x : ℝ)) ^ x) at_top (𝓝 (Real.exp t)) :=
+theorem tendsto_one_plus_div_pow_exp (t : ℝ) : Tendsto (fun x : ℕ => (1 + t / (x : ℝ)) ^ x) atTop (𝓝 (Real.exp t)) :=
   ((tendsto_one_plus_div_rpow_exp t).comp tendsto_coe_nat_at_top_at_top).congr
     (by
       simp )

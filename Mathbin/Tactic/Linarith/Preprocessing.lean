@@ -29,7 +29,7 @@ namespace Linarith
 
 open Tactic
 
--- ././Mathport/Syntax/Translate/Basic.lean:169:9: warning: unsupported option eqn_compiler.max_steps
+-- ././Mathport/Syntax/Translate/Basic.lean:169:40: warning: unsupported option eqn_compiler.max_steps
 set_option eqn_compiler.max_steps 50000
 
 /-- If `prf` is a proof of `¬ e`, where `e` is a comparison,
@@ -106,23 +106,23 @@ unsafe def mk_non_strict_int_pf_of_strict_int_pf (pf : expr) : tactic expr := do
 or the negation thereof.
 -/
 unsafe def is_nat_prop : expr → Bool
-  | quote.1 (@Eq ℕ (%%ₓ_) _) => tt
-  | quote.1 (@LE.le ℕ (%%ₓ_) _ _) => tt
-  | quote.1 (@LT.lt ℕ (%%ₓ_) _ _) => tt
-  | quote.1 (@Ge ℕ (%%ₓ_) _ _) => tt
-  | quote.1 (@Gt ℕ (%%ₓ_) _ _) => tt
+  | quote.1 (@Eq ℕ (%%ₓ_) _) => true
+  | quote.1 (@LE.le ℕ (%%ₓ_) _ _) => true
+  | quote.1 (@LT.lt ℕ (%%ₓ_) _ _) => true
+  | quote.1 (@Ge ℕ (%%ₓ_) _ _) => true
+  | quote.1 (@Gt ℕ (%%ₓ_) _ _) => true
   | quote.1 ¬%%ₓp => is_nat_prop p
-  | _ => ff
+  | _ => false
 
 /-- `is_strict_int_prop tp` is true iff `tp` is a strict inequality between integers
 or the negation of a weak inequality between integers.
 -/
 unsafe def is_strict_int_prop : expr → Bool
-  | quote.1 (@LT.lt ℤ (%%ₓ_) _ _) => tt
-  | quote.1 (@Gt ℤ (%%ₓ_) _ _) => tt
-  | quote.1 ¬@LE.le ℤ (%%ₓ_) _ _ => tt
-  | quote.1 ¬@Ge ℤ (%%ₓ_) _ _ => tt
-  | _ => ff
+  | quote.1 (@LT.lt ℤ (%%ₓ_) _ _) => true
+  | quote.1 (@Gt ℤ (%%ₓ_) _ _) => true
+  | quote.1 ¬@LE.le ℤ (%%ₓ_) _ _ => true
+  | quote.1 ¬@Ge ℤ (%%ₓ_) _ _ => true
+  | _ => false
 
 private unsafe def filter_comparisons_aux : expr → Bool
   | quote.1 ¬%%ₓp => p.app_symbol_in [`has_lt.lt, `has_le.le, `gt, `ge]
@@ -164,9 +164,9 @@ unsafe def nat_to_int : global_preprocessor where
       l.mfoldl
           (fun es : expr_set h => do
             let (a, b) ← infer_type h >>= get_rel_sides
-            return <| (es.insert_list (get_nat_comps a)).insert_list (get_nat_comps b))
+            return <| (es (get_nat_comps a)).insert_list (get_nat_comps b))
           mk_rb_set
-    (· ++ ·) l <$> nonnegs.to_list.mmap mk_coe_nat_nonneg_prf
+    (· ++ ·) l <$> nonnegs mk_coe_nat_nonneg_prf
 
 /-- `strengthen_strict_int h` turns a proof `h` of a strict integer inequality `t1 < t2`
 into a proof of `t1 ≤ t2 + 1`. -/
@@ -202,7 +202,7 @@ unsafe def cancel_denoms : preprocessor where
   transform := fun pf =>
     (do
         let some (_, lhs) ← parse_into_comp_and_expr <$> infer_type pf
-        guardb <| lhs.contains_constant (· = `has_div.div)
+        guardb <| lhs (· = `has_div.div)
         singleton <$> normalize_denominators_in_lhs pf lhs) <|>
       return [pf]
 
@@ -213,11 +213,11 @@ when `a*a` appears in `e`.  -/
 unsafe def find_squares : rb_set (expr × Bool) → expr → tactic (rb_set <| expr ×ₗ Bool)
   | s, quote.1 ((%%ₓa) ^ 2) => do
     let s ← find_squares s a
-    return (s.insert (a, tt))
+    return (s (a, tt))
   | s, e@(quote.1 ((%%ₓe1) * %%ₓe2)) =>
     if e1 = e2 then do
       let s ← find_squares s e1
-      return (s.insert (e1, ff))
+      return (s (e1, ff))
     else e.mfoldl find_squares s
   | s, e => e.mfoldl find_squares s
 
@@ -248,7 +248,7 @@ unsafe def nlinarith_extras : global_preprocessor where
           let tp ← infer_type e
           return <| (parse_into_comp_and_expr tp).elim (ineq.lt, e) fun ⟨ine, _⟩ => (ine, e)
     let products ←
-      with_comps.mmap_upper_triangle fun ⟨posa, a⟩ ⟨posb, b⟩ =>
+      with_comps.mmapUpperTriangle fun ⟨posa, a⟩ ⟨posb, b⟩ =>
           (some <$>
               match posa, posb with
               | ineq.eq, _ => mk_app `` zero_mul_eq [a, b]
@@ -262,7 +262,7 @@ unsafe def nlinarith_extras : global_preprocessor where
                 mk_app `` mul_nonneg_of_nonpos_of_nonpos [a, b]
               | ineq.le, ineq.le => mk_app `` mul_nonneg_of_nonpos_of_nonpos [a, b]) <|>
             return none
-    let products ← make_comp_with_zero.globalize.transform products.reduce_option
+    let products ← make_comp_with_zero.globalize.transform products.reduceOption
     return <| new_es ++ ls ++ products
 
 /-- `remove_ne_aux` case splits on any proof `h : a ≠ b` in the input, turning it into `a < b ∨ a > b`.
@@ -273,13 +273,13 @@ unsafe def remove_ne_aux : List expr → tactic (List branch) := fun hs =>
       let e ←
         hs.mfind fun e : expr => do
             let e ← infer_type e
-            guardₓ <| e.is_ne.is_some
+            guardₓ <| e
       let [(_, ng1), (_, ng2)] ← to_expr (pquote.1 (Or.elim (lt_or_gt_of_neₓ (%%ₓe)))) >>= apply
       let do_goal : expr → tactic (List branch) := fun g => do
           set_goals [g]
           let h ← intro1
-          let ls ← remove_ne_aux <| hs.remove_all [e]
-          return <| ls.map fun b : branch => (b.1, h :: b.2)
+          let ls ← remove_ne_aux <| hs.removeAll [e]
+          return <| ls fun b : branch => (b.1, h :: b.2)
         (· ++ ·) <$> do_goal ng1 <*> do_goal ng2) <|>
     do
     let g ← get_goal
@@ -306,7 +306,7 @@ so the size of the list may change.
 -/
 unsafe def preprocess (pps : List global_branching_preprocessor) (l : List expr) : tactic (List branch) := do
   let g ← get_goal
-  pps.mfoldl (fun ls pp => List.join <$> ls.mmap fun b => set_goals [b.1] >> pp.process b.2) [(g, l)]
+  pps (fun ls pp => List.join <$> ls fun b => set_goals [b.1] >> pp b.2) [(g, l)]
 
 end Linarith
 

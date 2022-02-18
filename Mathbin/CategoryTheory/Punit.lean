@@ -16,21 +16,21 @@ namespace CategoryTheory
 
 namespace Functor
 
-variable (C : Type u) [category.{v} C]
+variable (C : Type u) [Category.{v} C]
 
 /-- The constant functor sending everything to `punit.star`. -/
 @[simps]
-def star : C ⥤ discrete PUnit :=
-  (Functor.Const _).obj PUnit.unit
+def star : C ⥤ Discrete PUnit :=
+  (Functor.const _).obj PUnit.unit
 
 variable {C}
 
 /-- Any two functors to `discrete punit` are isomorphic. -/
 @[simps]
-def punit_ext (F G : C ⥤ discrete PUnit) : F ≅ G :=
-  nat_iso.of_components
+def punit_ext (F G : C ⥤ Discrete PUnit) : F ≅ G :=
+  NatIso.ofComponents
     (fun _ =>
-      eq_to_iso
+      eqToIso
         (by
           decide))
     fun _ _ _ => by
@@ -39,7 +39,7 @@ def punit_ext (F G : C ⥤ discrete PUnit) : F ≅ G :=
 /-- Any two functors to `discrete punit` are *equal*.
 You probably want to use `punit_ext` instead of this.
 -/
-theorem punit_ext' (F G : C ⥤ discrete PUnit) : F = G :=
+theorem punit_ext' (F G : C ⥤ Discrete PUnit) : F = G :=
   Functor.ext
     (fun _ => by
       decide)
@@ -47,14 +47,14 @@ theorem punit_ext' (F G : C ⥤ discrete PUnit) : F = G :=
     decide
 
 /-- The functor from `discrete punit` sending everything to the given object. -/
-abbrev from_punit (X : C) : discrete PUnit.{v + 1} ⥤ C :=
-  (Functor.Const _).obj X
+abbrev from_punit (X : C) : Discrete PUnit.{v + 1} ⥤ C :=
+  (Functor.const _).obj X
 
 /-- Functors from `discrete punit` are equivalent to the category itself. -/
 @[simps]
-def Equivₓ : discrete PUnit ⥤ C ≌ C where
+def Equivₓ : Discrete PUnit ⥤ C ≌ C where
   Functor := { obj := fun F => F.obj PUnit.unit, map := fun F G θ => θ.app PUnit.unit }
-  inverse := Functor.Const _
+  inverse := Functor.const _
   unitIso := by
     apply nat_iso.of_components _ _
     intro X

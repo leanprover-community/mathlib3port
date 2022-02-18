@@ -29,42 +29,42 @@ def orbit (b : β) :=
 variable {α}
 
 @[to_additive]
-theorem mem_orbit_iff {b₁ b₂ : β} : b₂ ∈ orbit α b₁ ↔ ∃ x : α, x • b₁ = b₂ :=
+theorem mem_orbit_iff {b₁ b₂ : β} : b₂ ∈ Orbit α b₁ ↔ ∃ x : α, x • b₁ = b₂ :=
   Iff.rfl
 
 @[simp, to_additive]
-theorem mem_orbit (b : β) (x : α) : x • b ∈ orbit α b :=
+theorem mem_orbit (b : β) (x : α) : x • b ∈ Orbit α b :=
   ⟨x, rfl⟩
 
 @[simp, to_additive]
-theorem mem_orbit_self (b : β) : b ∈ orbit α b :=
+theorem mem_orbit_self (b : β) : b ∈ Orbit α b :=
   ⟨1, by
     simp [MulAction.one_smul]⟩
 
 @[to_additive]
-theorem orbit_nonempty (b : β) : Set.Nonempty (orbit α b) :=
+theorem orbit_nonempty (b : β) : Set.Nonempty (Orbit α b) :=
   Set.range_nonempty _
 
 @[to_additive]
-theorem maps_to_smul_orbit (a : α) (b : β) : Set.MapsTo ((· • ·) a) (orbit α b) (orbit α b) :=
+theorem maps_to_smul_orbit (a : α) (b : β) : Set.MapsTo ((· • ·) a) (Orbit α b) (Orbit α b) :=
   Set.range_subset_iff.2 fun a' => ⟨a * a', mul_smul _ _ _⟩
 
 @[to_additive]
-theorem smul_orbit_subset (a : α) (b : β) : a • orbit α b ⊆ orbit α b :=
+theorem smul_orbit_subset (a : α) (b : β) : a • Orbit α b ⊆ Orbit α b :=
   (maps_to_smul_orbit a b).image_subset
 
 @[to_additive]
-theorem orbit_smul_subset (a : α) (b : β) : orbit α (a • b) ⊆ orbit α b :=
+theorem orbit_smul_subset (a : α) (b : β) : Orbit α (a • b) ⊆ Orbit α b :=
   Set.range_subset_iff.2 fun a' => mul_smul a' a b ▸ mem_orbit _ _
 
 @[to_additive]
-instance {b : β} : MulAction α (orbit α b) where
+instance {b : β} : MulAction α (Orbit α b) where
   smul := fun a => (maps_to_smul_orbit a b).restrict _ _ _
   one_smul := fun a => Subtype.ext (one_smul α a)
   mul_smul := fun a a' b' => Subtype.ext (mul_smul a a' b')
 
 @[simp, to_additive]
-theorem orbit.coe_smul {b : β} {a : α} {b' : orbit α b} : ↑(a • b') = a • (b' : β) :=
+theorem orbit.coe_smul {b : β} {a : α} {b' : Orbit α b} : ↑(a • b') = a • (b' : β) :=
   rfl
 
 variable (α) (β)
@@ -80,21 +80,21 @@ def fixed_by (g : α) : Set β :=
   { x | g • x = x }
 
 @[to_additive]
-theorem fixed_eq_Inter_fixed_by : fixed_points α β = ⋂ g : α, fixed_by α β g :=
+theorem fixed_eq_Inter_fixed_by : FixedPoints α β = ⋂ g : α, FixedBy α β g :=
   Set.ext fun x => ⟨fun hx => Set.mem_Inter.2 fun g => hx g, fun hx g => (Set.mem_Inter.1 hx g : _)⟩
 
 variable {α} (β)
 
 @[simp, to_additive]
-theorem mem_fixed_points {b : β} : b ∈ fixed_points α β ↔ ∀ x : α, x • b = b :=
+theorem mem_fixed_points {b : β} : b ∈ FixedPoints α β ↔ ∀ x : α, x • b = b :=
   Iff.rfl
 
 @[simp, to_additive]
-theorem mem_fixed_by {g : α} {b : β} : b ∈ fixed_by α β g ↔ g • b = b :=
+theorem mem_fixed_by {g : α} {b : β} : b ∈ FixedBy α β g ↔ g • b = b :=
   Iff.rfl
 
 @[to_additive]
-theorem mem_fixed_points' {b : β} : b ∈ fixed_points α β ↔ ∀ b', b' ∈ orbit α b → b' = b :=
+theorem mem_fixed_points' {b : β} : b ∈ FixedPoints α β ↔ ∀ b', b' ∈ Orbit α b → b' = b :=
   ⟨fun h b h₁ =>
     let ⟨x, hx⟩ := mem_orbit_iff.1 h₁
     hx ▸ h x,
@@ -112,11 +112,11 @@ def stabilizer.submonoid (b : β) : Submonoid α where
       rw [← smul_smul, hb, ha]
 
 @[simp, to_additive]
-theorem mem_stabilizer_submonoid_iff {b : β} {a : α} : a ∈ stabilizer.submonoid α b ↔ a • b = b :=
+theorem mem_stabilizer_submonoid_iff {b : β} {a : α} : a ∈ Stabilizer.submonoid α b ↔ a • b = b :=
   Iff.rfl
 
 @[to_additive]
-theorem orbit_eq_univ [is_pretransitive α β] (x : β) : orbit α x = Set.Univ :=
+theorem orbit_eq_univ [IsPretransitive α β] (x : β) : Orbit α x = Set.Univ :=
   (surjective_smul α x).range_eq
 
 end MulAction
@@ -132,7 +132,7 @@ A subgroup. -/
 @[to_additive
       "The stabilizer of an element under an action, i.e. what sends the element to itself.\nAn additive subgroup."]
 def stabilizer (b : β) : Subgroup α :=
-  { stabilizer.submonoid α b with
+  { Stabilizer.submonoid α b with
     inv_mem' := fun a ha : a • b = b =>
       show a⁻¹ • b = b by
         rw [inv_smul_eq_iff, ha] }
@@ -144,25 +144,25 @@ theorem mem_stabilizer_iff {b : β} {a : α} : a ∈ stabilizer α b ↔ a • b
   Iff.rfl
 
 @[simp, to_additive]
-theorem smul_orbit (a : α) (b : β) : a • orbit α b = orbit α b :=
+theorem smul_orbit (a : α) (b : β) : a • Orbit α b = Orbit α b :=
   (smul_orbit_subset a b).antisymm <|
     calc
-      orbit α b = a • a⁻¹ • orbit α b := (smul_inv_smul _ _).symm
-      _ ⊆ a • orbit α b := Set.image_subset _ (smul_orbit_subset _ _)
+      Orbit α b = a • a⁻¹ • Orbit α b := (smul_inv_smul _ _).symm
+      _ ⊆ a • Orbit α b := Set.image_subset _ (smul_orbit_subset _ _)
       
 
 @[simp, to_additive]
-theorem orbit_smul (a : α) (b : β) : orbit α (a • b) = orbit α b :=
+theorem orbit_smul (a : α) (b : β) : Orbit α (a • b) = Orbit α b :=
   (orbit_smul_subset a b).antisymm <|
     calc
-      orbit α b = orbit α (a⁻¹ • a • b) := by
+      Orbit α b = Orbit α (a⁻¹ • a • b) := by
         rw [inv_smul_smul]
-      _ ⊆ orbit α (a • b) := orbit_smul_subset _ _
+      _ ⊆ Orbit α (a • b) := orbit_smul_subset _ _
       
 
 /-- The action of a group on an orbit is transitive. -/
 @[to_additive "The action of an additive group on an orbit is transitive."]
-instance (x : β) : is_pretransitive α (orbit α x) :=
+instance (x : β) : IsPretransitive α (Orbit α x) :=
   ⟨by
     rintro ⟨_, a, rfl⟩ ⟨_, b, rfl⟩
     use b * a⁻¹
@@ -170,12 +170,12 @@ instance (x : β) : is_pretransitive α (orbit α x) :=
     simp [mul_smul]⟩
 
 @[to_additive]
-theorem orbit_eq_iff {a b : β} : orbit α a = orbit α b ↔ a ∈ orbit α b :=
+theorem orbit_eq_iff {a b : β} : Orbit α a = Orbit α b ↔ a ∈ Orbit α b :=
   ⟨fun h => h ▸ mem_orbit_self _, fun ⟨c, hc⟩ => hc ▸ orbit_smul _ _⟩
 
 @[to_additive]
-theorem mem_fixed_points_iff_card_orbit_eq_one {a : β} [Fintype (orbit α a)] :
-    a ∈ fixed_points α β ↔ Fintype.card (orbit α a) = 1 := by
+theorem mem_fixed_points_iff_card_orbit_eq_one {a : β} [Fintype (Orbit α a)] :
+    a ∈ FixedPoints α β ↔ Fintype.card (Orbit α a) = 1 := by
   rw [Fintype.card_eq_one_iff, mem_fixed_points]
   constructor
   · exact fun h =>
@@ -192,11 +192,11 @@ theorem mem_fixed_points_iff_card_orbit_eq_one {a : β} [Fintype (orbit α a)] :
 variable (α) {β}
 
 @[to_additive]
-theorem mem_orbit_smul (g : α) (a : β) : a ∈ orbit α (g • a) := by
+theorem mem_orbit_smul (g : α) (a : β) : a ∈ Orbit α (g • a) := by
   simp only [orbit_smul, mem_orbit_self]
 
 @[to_additive]
-theorem smul_mem_orbit_smul (g h : α) (a : β) : g • a ∈ orbit α (h • a) := by
+theorem smul_mem_orbit_smul (g h : α) (a : β) : g • a ∈ Orbit α (h • a) := by
   simp only [orbit_smul, mem_orbit]
 
 variable (α) (β)
@@ -204,7 +204,7 @@ variable (α) (β)
 /-- The relation 'in the same orbit'. -/
 @[to_additive "The relation 'in the same orbit'."]
 def orbit_rel : Setoidₓ β where
-  R := fun a b => a ∈ orbit α b
+  R := fun a b => a ∈ Orbit α b
   iseqv :=
     ⟨mem_orbit_self, fun a b => by
       simp [orbit_eq_iff.symm, eq_comm], fun a b => by
@@ -260,7 +260,7 @@ theorem image_inter_image_iff (U V : Set β) :
 
 variable (α) (β)
 
-local notation "Ω" => Quotientₓ <| orbit_rel α β
+local notation "Ω" => Quotientₓ <| orbitRel α β
 
 /-- Decomposition of a type `X` as a disjoint union of its orbits under a group action.
 This version works with any right inverse to `quotient.mk'` in order to stay computable. In most
@@ -268,10 +268,10 @@ cases you'll want to use `quotient.out'`, so we provide `mul_action.self_equiv_s
 a special case. -/
 @[to_additive
       "Decomposition of a type `X` as a disjoint union of its orbits under an additive group\naction. This version works with any right inverse to `quotient.mk'` in order to stay computable.\nIn most cases you'll want to use `quotient.out'`, so we provide `add_action.self_equiv_sigma_orbits`\nas a special case."]
-def self_equiv_sigma_orbits' {φ : Ω → β} (hφ : RightInverse φ Quotientₓ.mk') : β ≃ Σ ω : Ω, orbit α (φ ω) :=
+def self_equiv_sigma_orbits' {φ : Ω → β} (hφ : RightInverse φ Quotientₓ.mk') : β ≃ Σ ω : Ω, Orbit α (φ ω) :=
   calc
     β ≃ Σ ω : Ω, { b // Quotientₓ.mk' b = ω } := (Equivₓ.sigmaPreimageEquiv Quotientₓ.mk').symm
-    _ ≃ Σ ω : Ω, orbit α (φ ω) :=
+    _ ≃ Σ ω : Ω, Orbit α (φ ω) :=
       Equivₓ.sigmaCongrRight fun ω =>
         Equivₓ.subtypeEquivRight fun x => by
           rw [← hφ ω, Quotientₓ.eq', hφ ω]
@@ -280,8 +280,8 @@ def self_equiv_sigma_orbits' {φ : Ω → β} (hφ : RightInverse φ Quotientₓ
 
 /-- Decomposition of a type `X` as a disjoint union of its orbits under a group action. -/
 @[to_additive "Decomposition of a type `X` as a disjoint union of its orbits under an additive group\naction."]
-noncomputable def self_equiv_sigma_orbits : β ≃ Σ ω : Ω, orbit α ω.out' :=
-  self_equiv_sigma_orbits' α β Quotientₓ.out_eq'
+noncomputable def self_equiv_sigma_orbits : β ≃ Σ ω : Ω, Orbit α ω.out' :=
+  selfEquivSigmaOrbits' α β Quotientₓ.out_eq'
 
 variable {α β}
 
@@ -293,7 +293,7 @@ theorem stabilizer_smul_eq_stabilizer_map_conj (g : α) (x : β) :
     mem_stabilizer_iff, Subgroup.mem_map_equiv, MulAut.conj_symm_apply]
 
 /-- A bijection between the stabilizers of two elements in the same orbit. -/
-noncomputable def stabilizer_equiv_stabilizer_of_orbit_rel {x y : β} (h : (orbit_rel α β).Rel x y) :
+noncomputable def stabilizer_equiv_stabilizer_of_orbit_rel {x y : β} (h : (orbitRel α β).Rel x y) :
     stabilizer α x ≃* stabilizer α y :=
   let g : α := Classical.some h
   have hg : g • y = x := Classical.some_spec h
@@ -315,7 +315,7 @@ theorem stabilizer_vadd_eq_stabilizer_map_conj (g : α) (x : β) :
     mem_stabilizer_iff, AddSubgroup.mem_map_equiv, AddAut.conj_symm_apply]
 
 /-- A bijection between the stabilizers of two elements in the same orbit. -/
-noncomputable def stabilizer_equiv_stabilizer_of_orbit_rel {x y : β} (h : (orbit_rel α β).Rel x y) :
+noncomputable def stabilizer_equiv_stabilizer_of_orbit_rel {x y : β} (h : (orbitRel α β).Rel x y) :
     stabilizer α x ≃+ stabilizer α y :=
   let g : α := Classical.some h
   have hg : g +ᵥ y = x := Classical.some_spec h
@@ -341,7 +341,7 @@ def mul_left_cosets (H : Subgroup α) (x : α) (y : α ⧸ H) : α ⧸ H :=
 
 @[to_additive]
 instance Quotientₓ (H : Subgroup α) : MulAction α (α ⧸ H) where
-  smul := mul_left_cosets H
+  smul := mulLeftCosets H
   one_smul := fun a =>
     Quotientₓ.induction_on' a fun a =>
       QuotientGroup.eq.2
@@ -378,20 +378,20 @@ def of_quotient_stabilizer (g : α ⧸ MulAction.stabilizer α x) : β :=
       
 
 @[simp, to_additive]
-theorem of_quotient_stabilizer_mk (g : α) : of_quotient_stabilizer α x (QuotientGroup.mk g) = g • x :=
+theorem of_quotient_stabilizer_mk (g : α) : ofQuotientStabilizer α x (QuotientGroup.mk g) = g • x :=
   rfl
 
 @[to_additive]
-theorem of_quotient_stabilizer_mem_orbit g : of_quotient_stabilizer α x g ∈ orbit α x :=
+theorem of_quotient_stabilizer_mem_orbit g : ofQuotientStabilizer α x g ∈ Orbit α x :=
   (Quotientₓ.induction_on' g) fun g => ⟨g, rfl⟩
 
 @[to_additive]
 theorem of_quotient_stabilizer_smul (g : α) (g' : α ⧸ MulAction.stabilizer α x) :
-    of_quotient_stabilizer α x (g • g') = g • of_quotient_stabilizer α x g' :=
+    ofQuotientStabilizer α x (g • g') = g • ofQuotientStabilizer α x g' :=
   (Quotientₓ.induction_on' g') fun _ => mul_smul _ _ _
 
 @[to_additive]
-theorem injective_of_quotient_stabilizer : Function.Injective (of_quotient_stabilizer α x) := fun y₁ y₂ =>
+theorem injective_of_quotient_stabilizer : Function.Injective (ofQuotientStabilizer α x) := fun y₁ y₂ =>
   (Quotientₓ.induction_on₂' y₁ y₂) fun g₁ g₂ H : g₁ • x = g₂ • x =>
     Quotientₓ.sound' <|
       show (g₁⁻¹ * g₂) • x = x by
@@ -399,9 +399,9 @@ theorem injective_of_quotient_stabilizer : Function.Injective (of_quotient_stabi
 
 /-- Orbit-stabilizer theorem. -/
 @[to_additive "Orbit-stabilizer theorem."]
-noncomputable def orbit_equiv_quotient_stabilizer (b : β) : orbit α b ≃ α ⧸ stabilizer α b :=
+noncomputable def orbit_equiv_quotient_stabilizer (b : β) : Orbit α b ≃ α ⧸ stabilizer α b :=
   Equivₓ.symm <|
-    Equivₓ.ofBijective (fun g => ⟨of_quotient_stabilizer α b g, of_quotient_stabilizer_mem_orbit α b g⟩)
+    Equivₓ.ofBijective (fun g => ⟨ofQuotientStabilizer α b g, of_quotient_stabilizer_mem_orbit α b g⟩)
       ⟨fun x y hxy =>
         injective_of_quotient_stabilizer α b
           (by
@@ -410,19 +410,19 @@ noncomputable def orbit_equiv_quotient_stabilizer (b : β) : orbit α b ≃ α �
 
 /-- Orbit-stabilizer theorem. -/
 @[to_additive "Orbit-stabilizer theorem."]
-noncomputable def orbit_prod_stabilizer_equiv_group (b : β) : orbit α b × stabilizer α b ≃ α :=
-  (Equivₓ.prodCongr (orbit_equiv_quotient_stabilizer α _) (Equivₓ.refl _)).trans
+noncomputable def orbit_prod_stabilizer_equiv_group (b : β) : Orbit α b × stabilizer α b ≃ α :=
+  (Equivₓ.prodCongr (orbitEquivQuotientStabilizer α _) (Equivₓ.refl _)).trans
     Subgroup.groupEquivQuotientTimesSubgroup.symm
 
 /-- Orbit-stabilizer theorem. -/
 @[to_additive "Orbit-stabilizer theorem."]
-theorem card_orbit_mul_card_stabilizer_eq_card_group (b : β) [Fintype α] [Fintype <| orbit α b]
-    [Fintype <| stabilizer α b] : Fintype.card (orbit α b) * Fintype.card (stabilizer α b) = Fintype.card α := by
+theorem card_orbit_mul_card_stabilizer_eq_card_group (b : β) [Fintype α] [Fintype <| Orbit α b]
+    [Fintype <| stabilizer α b] : Fintype.card (Orbit α b) * Fintype.card (stabilizer α b) = Fintype.card α := by
   rw [← Fintype.card_prod, Fintype.card_congr (orbit_prod_stabilizer_equiv_group α b)]
 
 @[simp, to_additive]
 theorem orbit_equiv_quotient_stabilizer_symm_apply (b : β) (a : α) :
-    ((orbit_equiv_quotient_stabilizer α b).symm a : β) = a • b :=
+    ((orbitEquivQuotientStabilizer α b).symm a : β) = a • b :=
   rfl
 
 @[simp, to_additive]
@@ -432,7 +432,7 @@ theorem stabilizer_quotient {G} [Groupₓ G] (H : Subgroup G) : MulAction.stabil
 
 variable (β)
 
-local notation "Ω" => Quotientₓ <| orbit_rel α β
+local notation "Ω" => Quotientₓ <| orbitRel α β
 
 /-- **Class formula** : given `G` a group acting on `X` and `φ` a function mapping each orbit of `X`
 under this action (that is, each element of the quotient of `X` by the relation `orbit_rel G X`) to
@@ -441,11 +441,11 @@ of `G/Stab(φ(ω))` over all orbits `ω`. In most cases you'll want `φ` to be `
 provide `mul_action.self_equiv_sigma_orbits_quotient_stabilizer` as a special case. -/
 @[to_additive
       "**Class formula** : given `G` an additive group acting on `X` and `φ` a function\nmapping each orbit of `X` under this action (that is, each element of the quotient of `X` by the\nrelation `orbit_rel G X`) to an element in this orbit, this gives a (noncomputable) bijection\nbetween `X` and the disjoint union of `G/Stab(φ(ω))` over all orbits `ω`. In most cases you'll want\n`φ` to be `quotient.out'`, so we provide `add_action.self_equiv_sigma_orbits_quotient_stabilizer`\nas a special case. "]
-noncomputable def self_equiv_sigma_orbits_quotient_stabilizer' {φ : Ω → β} (hφ : left_inverse Quotientₓ.mk' φ) :
+noncomputable def self_equiv_sigma_orbits_quotient_stabilizer' {φ : Ω → β} (hφ : LeftInverse Quotientₓ.mk' φ) :
     β ≃ Σ ω : Ω, α ⧸ stabilizer α (φ ω) :=
   calc
-    β ≃ Σ ω : Ω, orbit α (φ ω) := self_equiv_sigma_orbits' α β hφ
-    _ ≃ Σ ω : Ω, α ⧸ stabilizer α (φ ω) := Equivₓ.sigmaCongrRight fun ω => orbit_equiv_quotient_stabilizer α (φ ω)
+    β ≃ Σ ω : Ω, Orbit α (φ ω) := selfEquivSigmaOrbits' α β hφ
+    _ ≃ Σ ω : Ω, α ⧸ stabilizer α (φ ω) := Equivₓ.sigmaCongrRight fun ω => orbitEquivQuotientStabilizer α (φ ω)
     
 
 /-- **Class formula** for a finite group acting on a finite type. See
@@ -454,7 +454,7 @@ noncomputable def self_equiv_sigma_orbits_quotient_stabilizer' {φ : Ω → β} 
 @[to_additive
       "**Class formula** for a finite group acting on a finite type. See\n`add_action.card_eq_sum_card_add_group_div_card_stabilizer` for a specialized version using\n`quotient.out'`."]
 theorem card_eq_sum_card_group_div_card_stabilizer' [Fintype α] [Fintype β] [Fintype Ω]
-    [∀ b : β, Fintype <| stabilizer α b] {φ : Ω → β} (hφ : left_inverse Quotientₓ.mk' φ) :
+    [∀ b : β, Fintype <| stabilizer α b] {φ : Ω → β} (hφ : LeftInverse Quotientₓ.mk' φ) :
     Fintype.card β = ∑ ω : Ω, Fintype.card α / Fintype.card (stabilizer α (φ ω)) := by
   classical
   have : ∀ ω : Ω, Fintype.card α / Fintype.card (↥stabilizer α (φ ω)) = Fintype.card (α ⧸ stabilizer α (φ ω)) := by
@@ -472,7 +472,7 @@ theorem card_eq_sum_card_group_div_card_stabilizer' [Fintype α] [Fintype β] [F
 @[to_additive
       "**Class formula**. This is a special case of\n`add_action.self_equiv_sigma_orbits_quotient_stabilizer'` with `φ = quotient.out'`. "]
 noncomputable def self_equiv_sigma_orbits_quotient_stabilizer : β ≃ Σ ω : Ω, α ⧸ stabilizer α ω.out' :=
-  self_equiv_sigma_orbits_quotient_stabilizer' α β Quotientₓ.out_eq'
+  selfEquivSigmaOrbitsQuotientStabilizer' α β Quotientₓ.out_eq'
 
 /-- **Class formula** for a finite group acting on a finite type. -/
 @[to_additive "**Class formula** for a finite group acting on a finite type."]
@@ -486,19 +486,19 @@ theorem card_eq_sum_card_group_div_card_stabilizer [Fintype α] [Fintype β] [Fi
 `X/G`denotes the quotient of `X` by the relation `orbit_rel G X`. -/
 @[to_additive
       "**Burnside's lemma** : a (noncomputable) bijection between the disjoint union of all\n`{x ∈ X | g • x = x}` for `g ∈ G` and the product `G × X/G`, where `G` is an additive group acting\non `X` and `X/G`denotes the quotient of `X` by the relation `orbit_rel G X`. "]
-noncomputable def sigma_fixed_by_equiv_orbits_prod_group : (Σ a : α, fixed_by α β a) ≃ Ω × α :=
+noncomputable def sigma_fixed_by_equiv_orbits_prod_group : (Σ a : α, FixedBy α β a) ≃ Ω × α :=
   calc
-    (Σ a : α, fixed_by α β a) ≃ { ab : α × β // ab.1 • ab.2 = ab.2 } := (Equivₓ.subtypeProdEquivSigmaSubtype _).symm
+    (Σ a : α, FixedBy α β a) ≃ { ab : α × β // ab.1 • ab.2 = ab.2 } := (Equivₓ.subtypeProdEquivSigmaSubtype _).symm
     _ ≃ { ba : β × α // ba.2 • ba.1 = ba.1 } := (Equivₓ.prodComm α β).subtypeEquiv fun ab => Iff.rfl
     _ ≃ Σ b : β, stabilizer α b := Equivₓ.subtypeProdEquivSigmaSubtype fun b : β a => a ∈ stabilizer α b
-    _ ≃ Σ ωb : Σ ω : Ω, orbit α ω.out', stabilizer α (ωb.2 : β) := (self_equiv_sigma_orbits α β).sigmaCongrLeft'
-    _ ≃ Σ ω : Ω, Σ b : orbit α ω.out', stabilizer α (b : β) :=
-      Equivₓ.sigmaAssoc fun ω : Ω b : orbit α ω.out' => stabilizer α (b : β)
-    _ ≃ Σ ω : Ω, Σ b : orbit α ω.out', stabilizer α ω.out' :=
+    _ ≃ Σ ωb : Σ ω : Ω, Orbit α ω.out', stabilizer α (ωb.2 : β) := (selfEquivSigmaOrbits α β).sigmaCongrLeft'
+    _ ≃ Σ ω : Ω, Σ b : Orbit α ω.out', stabilizer α (b : β) :=
+      Equivₓ.sigmaAssoc fun ω : Ω b : Orbit α ω.out' => stabilizer α (b : β)
+    _ ≃ Σ ω : Ω, Σ b : Orbit α ω.out', stabilizer α ω.out' :=
       Equivₓ.sigmaCongrRight fun ω =>
-        Equivₓ.sigmaCongrRight fun ⟨b, hb⟩ => (stabilizer_equiv_stabilizer_of_orbit_rel hb).toEquiv
-    _ ≃ Σ ω : Ω, orbit α ω.out' × stabilizer α ω.out' := Equivₓ.sigmaCongrRight fun ω => Equivₓ.sigmaEquivProd _ _
-    _ ≃ Σ ω : Ω, α := Equivₓ.sigmaCongrRight fun ω => orbit_prod_stabilizer_equiv_group α ω.out'
+        Equivₓ.sigmaCongrRight fun ⟨b, hb⟩ => (stabilizerEquivStabilizerOfOrbitRel hb).toEquiv
+    _ ≃ Σ ω : Ω, Orbit α ω.out' × stabilizer α ω.out' := Equivₓ.sigmaCongrRight fun ω => Equivₓ.sigmaEquivProd _ _
+    _ ≃ Σ ω : Ω, α := Equivₓ.sigmaCongrRight fun ω => orbitProdStabilizerEquivGroup α ω.out'
     _ ≃ Ω × α := Equivₓ.sigmaEquivProd Ω α
     
 
@@ -506,12 +506,12 @@ noncomputable def sigma_fixed_by_equiv_orbits_prod_group : (Σ a : α, fixed_by 
 elements fixed by each `g ∈ G` is the number of orbits. -/
 @[to_additive
       "**Burnside's lemma** : given a finite additive group `G` acting on a set `X`,\nthe average number of elements fixed by each `g ∈ G` is the number of orbits. "]
-theorem sum_card_fixed_by_eq_card_orbits_mul_card_group [Fintype α] [∀ a, Fintype <| fixed_by α β a] [Fintype Ω] :
-    (∑ a : α, Fintype.card (fixed_by α β a)) = Fintype.card Ω * Fintype.card α := by
+theorem sum_card_fixed_by_eq_card_orbits_mul_card_group [Fintype α] [∀ a, Fintype <| FixedBy α β a] [Fintype Ω] :
+    (∑ a : α, Fintype.card (FixedBy α β a)) = Fintype.card Ω * Fintype.card α := by
   rw [← Fintype.card_prod, ← Fintype.card_sigma, Fintype.card_congr (sigma_fixed_by_equiv_orbits_prod_group α β)]
 
 @[to_additive]
-instance is_pretransitive_quotient G [Groupₓ G] (H : Subgroup G) : is_pretransitive G (G ⧸ H) where
+instance is_pretransitive_quotient G [Groupₓ G] (H : Subgroup G) : IsPretransitive G (G ⧸ H) where
   exists_smul_eq := by
     rintro ⟨x⟩ ⟨y⟩
     refine' ⟨y * x⁻¹, quotient_group.eq.mpr _⟩
@@ -523,7 +523,7 @@ section
 
 variable [Monoidₓ α] [AddMonoidₓ β] [DistribMulAction α β]
 
-theorem List.smul_sum {r : α} {l : List β} : r • l.sum = (l.map ((· • ·) r)).Sum :=
+theorem List.smul_sum {r : α} {l : List β} : r • l.Sum = (l.map ((· • ·) r)).Sum :=
   (DistribMulAction.toAddMonoidHom β r).map_list_sum l
 
 /-- `smul` by a `k : M` over a ring is injective, if `k` is not a zero divisor.
@@ -541,7 +541,7 @@ section
 
 variable [Monoidₓ α] [Monoidₓ β] [MulDistribMulAction α β]
 
-theorem List.smul_prod {r : α} {l : List β} : r • l.prod = (l.map ((· • ·) r)).Prod :=
+theorem List.smul_prod {r : α} {l : List β} : r • l.Prod = (l.map ((· • ·) r)).Prod :=
   (MulDistribMulAction.toMonoidHom β r).map_list_prod l
 
 end
@@ -550,7 +550,7 @@ section
 
 variable [Monoidₓ α] [AddCommMonoidₓ β] [DistribMulAction α β]
 
-theorem Multiset.smul_sum {r : α} {s : Multiset β} : r • s.sum = (s.map ((· • ·) r)).Sum :=
+theorem Multiset.smul_sum {r : α} {s : Multiset β} : r • s.Sum = (s.map ((· • ·) r)).Sum :=
   (DistribMulAction.toAddMonoidHom β r).map_multiset_sum s
 
 theorem Finset.smul_sum {r : α} {f : γ → β} {s : Finset γ} : (r • ∑ x in s, f x) = ∑ x in s, r • f x :=
@@ -562,7 +562,7 @@ section
 
 variable [Monoidₓ α] [CommMonoidₓ β] [MulDistribMulAction α β]
 
-theorem Multiset.smul_prod {r : α} {s : Multiset β} : r • s.prod = (s.map ((· • ·) r)).Prod :=
+theorem Multiset.smul_prod {r : α} {s : Multiset β} : r • s.Prod = (s.map ((· • ·) r)).Prod :=
   (MulDistribMulAction.toMonoidHom β r).map_multiset_prod s
 
 theorem Finset.smul_prod {r : α} {f : γ → β} {s : Finset γ} : (r • ∏ x in s, f x) = ∏ x in s, r • f x :=
@@ -574,7 +574,7 @@ namespace Subgroup
 
 variable {G : Type _} [Groupₓ G] (H : Subgroup G)
 
-theorem normal_core_eq_ker : H.normal_core = (MulAction.toPermHom G (G ⧸ H)).ker := by
+theorem normal_core_eq_ker : H.normalCore = (MulAction.toPermHom G (G ⧸ H)).ker := by
   refine'
     le_antisymmₓ
       (fun g hg =>
@@ -588,7 +588,7 @@ theorem normal_core_eq_ker : H.normal_core = (MulAction.toPermHom G (G ⧸ H)).k
     exact (MulAction.quotient.smul_mk H g 1).symm.trans (equiv.perm.ext_iff.mp hg (1 : G))
     
 
-noncomputable instance fintype_quotient_normal_core [Fintype (G ⧸ H)] : Fintype (G ⧸ H.normal_core) := by
+noncomputable instance fintype_quotient_normal_core [Fintype (G ⧸ H)] : Fintype (G ⧸ H.normalCore) := by
   rw [H.normal_core_eq_ker]
   classical
   exact Fintype.ofEquiv _ (QuotientGroup.quotientKerEquivRange _).symm.toEquiv

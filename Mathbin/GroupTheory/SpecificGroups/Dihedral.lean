@@ -106,7 +106,7 @@ private def fintype_helper : Sum (Zmod n) (Zmod n) ≃ DihedralGroup n where
 /-- If `0 < n`, then `dihedral_group n` is a finite group.
 -/
 instance [Fact (0 < n)] : Fintype (DihedralGroup n) :=
-  Fintype.ofEquiv _ fintype_helper
+  Fintype.ofEquiv _ fintypeHelper
 
 instance : Nontrivial (DihedralGroup n) :=
   ⟨⟨r 0, sr 0, by

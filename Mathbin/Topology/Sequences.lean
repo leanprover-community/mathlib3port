@@ -23,7 +23,7 @@ open_locale TopologicalSpace
 
 variable {α : Type _} {β : Type _}
 
-local notation f " ⟶ " limit => tendsto f at_top (𝓝 limit)
+local notation f " ⟶ " limit => Tendsto f atTop (𝓝 limit)
 
 /-! ### Sequential closures, sequential continuity, and sequential spaces. -/
 
@@ -35,7 +35,7 @@ variable [TopologicalSpace α] [TopologicalSpace β]
 /-- A sequence converges in the sence of topological spaces iff the associated statement for filter
 holds. -/
 theorem TopologicalSpace.seq_tendsto_iff {x : ℕ → α} {limit : α} :
-    tendsto x at_top (𝓝 limit) ↔ ∀ U : Set α, limit ∈ U → IsOpen U → ∃ N, ∀, ∀ n ≥ N, ∀, x n ∈ U :=
+    Tendsto x atTop (𝓝 limit) ↔ ∀ U : Set α, limit ∈ U → IsOpen U → ∃ N, ∀, ∀ n ≥ N, ∀, x n ∈ U :=
   (at_top_basis.tendsto_iff (nhds_basis_opens limit)).trans <| by
     simp only [and_imp, exists_prop, true_andₓ, Set.mem_Ici, ge_iff_le, id]
 
@@ -56,7 +56,7 @@ def IsSeqClosed (s : Set α) : Prop :=
 theorem is_seq_closed_of_def {A : Set α} (h : ∀ x : ℕ → α p : α, (∀ n : ℕ, x n ∈ A) → (x ⟶ p) → p ∈ A) :
     IsSeqClosed A :=
   show A = SequentialClosure A from
-    subset.antisymm (subset_sequential_closure A)
+    Subset.antisymm (subset_sequential_closure A)
       (show ∀ p, p ∈ SequentialClosure A → p ∈ A from fun p ⟨x, _, _⟩ =>
         show p ∈ A from h x p ‹∀ n : ℕ, x n ∈ A› ‹x ⟶ p›)
 
@@ -119,8 +119,8 @@ def SequentiallyContinuous (f : α → β) : Prop :=
 
 theorem Continuous.to_sequentially_continuous {f : α → β} (_ : Continuous f) : SequentiallyContinuous f :=
   fun x limit _ : x ⟶ limit =>
-  have : tendsto f (𝓝 limit) (𝓝 (f limit)) := Continuous.tendsto ‹Continuous f› limit
-  show (f ∘ x) ⟶ f limit from tendsto.comp this ‹x ⟶ limit›
+  have : Tendsto f (𝓝 limit) (𝓝 (f limit)) := Continuous.tendsto ‹Continuous f› limit
+  show (f ∘ x) ⟶ f limit from Tendsto.comp this ‹x ⟶ limit›
 
 /-- In a sequential space, continuity and sequential continuity coincide. -/
 theorem continuous_iff_sequentially_continuous {f : α → β} [SequentialSpace α] :
@@ -140,7 +140,7 @@ namespace TopologicalSpace
 
 namespace FirstCountableTopology
 
-variable [TopologicalSpace α] [first_countable_topology α]
+variable [TopologicalSpace α] [FirstCountableTopology α]
 
 /-- Every first-countable space is sequential. -/
 instance (priority := 100) : SequentialSpace α :=
@@ -168,21 +168,21 @@ variable [TopologicalSpace α]
 /-- A set `s` is sequentially compact if every sequence taking values in `s` has a
 converging subsequence. -/
 def IsSeqCompact (s : Set α) :=
-  ∀ ⦃u : ℕ → α⦄, (∀ n, u n ∈ s) → ∃ x ∈ s, ∃ φ : ℕ → ℕ, StrictMono φ ∧ tendsto (u ∘ φ) at_top (𝓝 x)
+  ∀ ⦃u : ℕ → α⦄, (∀ n, u n ∈ s) → ∃ x ∈ s, ∃ φ : ℕ → ℕ, StrictMono φ ∧ Tendsto (u ∘ φ) atTop (𝓝 x)
 
 /-- A space `α` is sequentially compact if every sequence in `α` has a
 converging subsequence. -/
 class SeqCompactSpace (α : Type _) [TopologicalSpace α] : Prop where
-  seq_compact_univ : IsSeqCompact (univ : Set α)
+  seq_compact_univ : IsSeqCompact (Univ : Set α)
 
 theorem IsSeqCompact.subseq_of_frequently_in {s : Set α} (hs : IsSeqCompact s) {u : ℕ → α}
-    (hu : ∃ᶠ n in at_top, u n ∈ s) : ∃ x ∈ s, ∃ φ : ℕ → ℕ, StrictMono φ ∧ tendsto (u ∘ φ) at_top (𝓝 x) :=
+    (hu : ∃ᶠ n in at_top, u n ∈ s) : ∃ x ∈ s, ∃ φ : ℕ → ℕ, StrictMono φ ∧ Tendsto (u ∘ φ) atTop (𝓝 x) :=
   let ⟨ψ, hψ, huψ⟩ := extraction_of_frequently_at_top hu
   let ⟨x, x_in, φ, hφ, h⟩ := hs huψ
   ⟨x, x_in, ψ ∘ φ, hψ.comp hφ, h⟩
 
 theorem SeqCompactSpace.tendsto_subseq [SeqCompactSpace α] (u : ℕ → α) :
-    ∃ (x : _)(φ : ℕ → ℕ), StrictMono φ ∧ tendsto (u ∘ φ) at_top (𝓝 x) :=
+    ∃ (x : _)(φ : ℕ → ℕ), StrictMono φ ∧ Tendsto (u ∘ φ) atTop (𝓝 x) :=
   let ⟨x, _, φ, mono, h⟩ :=
     SeqCompactSpace.seq_compact_univ
       (by
@@ -191,27 +191,27 @@ theorem SeqCompactSpace.tendsto_subseq [SeqCompactSpace α] (u : ℕ → α) :
 
 section FirstCountableTopology
 
-variable [first_countable_topology α]
+variable [FirstCountableTopology α]
 
 open TopologicalSpace.FirstCountableTopology
 
 theorem IsCompact.is_seq_compact {s : Set α} (hs : IsCompact s) : IsSeqCompact s := fun u u_in =>
-  let ⟨x, x_in, hx⟩ := @hs (map u at_top) _ (le_principal_iff.mpr (univ_mem' u_in : _))
+  let ⟨x, x_in, hx⟩ := @hs (map u atTop) _ (le_principal_iff.mpr (univ_mem' u_in : _))
   ⟨x, x_in, tendsto_subseq hx⟩
 
 theorem IsCompact.tendsto_subseq' {s : Set α} {u : ℕ → α} (hs : IsCompact s) (hu : ∃ᶠ n in at_top, u n ∈ s) :
-    ∃ x ∈ s, ∃ φ : ℕ → ℕ, StrictMono φ ∧ tendsto (u ∘ φ) at_top (𝓝 x) :=
-  hs.is_seq_compact.subseq_of_frequently_in hu
+    ∃ x ∈ s, ∃ φ : ℕ → ℕ, StrictMono φ ∧ Tendsto (u ∘ φ) atTop (𝓝 x) :=
+  hs.IsSeqCompact.subseq_of_frequently_in hu
 
 theorem IsCompact.tendsto_subseq {s : Set α} {u : ℕ → α} (hs : IsCompact s) (hu : ∀ n, u n ∈ s) :
-    ∃ x ∈ s, ∃ φ : ℕ → ℕ, StrictMono φ ∧ tendsto (u ∘ φ) at_top (𝓝 x) :=
-  hs.is_seq_compact hu
+    ∃ x ∈ s, ∃ φ : ℕ → ℕ, StrictMono φ ∧ Tendsto (u ∘ φ) atTop (𝓝 x) :=
+  hs.IsSeqCompact hu
 
 instance (priority := 100) FirstCountableTopology.seq_compact_of_compact [CompactSpace α] : SeqCompactSpace α :=
   ⟨compact_univ.IsSeqCompact⟩
 
 theorem CompactSpace.tendsto_subseq [CompactSpace α] (u : ℕ → α) :
-    ∃ (x : _)(φ : ℕ → ℕ), StrictMono φ ∧ tendsto (u ∘ φ) at_top (𝓝 x) :=
+    ∃ (x : _)(φ : ℕ → ℕ), StrictMono φ ∧ Tendsto (u ∘ φ) atTop (𝓝 x) :=
   SeqCompactSpace.tendsto_subseq u
 
 end FirstCountableTopology
@@ -226,8 +226,8 @@ open UniformSpace Prod
 
 variable [UniformSpace β] {s : Set β}
 
-theorem lebesgue_number_lemma_seq {ι : Type _} [is_countably_generated (𝓤 β)] {c : ι → Set β} (hs : IsSeqCompact s)
-    (hc₁ : ∀ i, IsOpen (c i)) (hc₂ : s ⊆ ⋃ i, c i) : ∃ V ∈ 𝓤 β, SymmetricRel V ∧ ∀, ∀ x ∈ s, ∀, ∃ i, ball x V ⊆ c i :=
+theorem lebesgue_number_lemma_seq {ι : Type _} [IsCountablyGenerated (𝓤 β)] {c : ι → Set β} (hs : IsSeqCompact s)
+    (hc₁ : ∀ i, IsOpen (c i)) (hc₂ : s ⊆ ⋃ i, c i) : ∃ V ∈ 𝓤 β, SymmetricRel V ∧ ∀, ∀ x ∈ s, ∀, ∃ i, Ball x V ⊆ c i :=
   by
   classical
   obtain ⟨V, hV, Vsymm⟩ : ∃ V : ℕ → Set (β × β), (𝓤 β).HasAntitoneBasis V ∧ ∀ n, swap ⁻¹' V n = V n
@@ -324,11 +324,11 @@ protected theorem IsSeqCompact.is_compact [is_countably_generated <| 𝓤 β] (h
 /-- A version of Bolzano-Weistrass: in a uniform space with countably generated uniformity filter
 (e.g., in a metric space), a set is compact if and only if it is sequentially compact. -/
 protected theorem UniformSpace.compact_iff_seq_compact [is_countably_generated <| 𝓤 β] : IsCompact s ↔ IsSeqCompact s :=
-  ⟨fun H => H.is_seq_compact, fun H => H.is_compact⟩
+  ⟨fun H => H.IsSeqCompact, fun H => H.IsCompact⟩
 
 theorem UniformSpace.compact_space_iff_seq_compact_space [is_countably_generated <| 𝓤 β] :
     CompactSpace β ↔ SeqCompactSpace β :=
-  have key : IsCompact (univ : Set β) ↔ IsSeqCompact univ := UniformSpace.compact_iff_seq_compact
+  have key : IsCompact (Univ : Set β) ↔ IsSeqCompact Univ := UniformSpace.compact_iff_seq_compact
   ⟨fun ⟨h⟩ => ⟨key.mp h⟩, fun ⟨h⟩ => ⟨key.mpr h⟩⟩
 
 end UniformSpaceSeqCompact
@@ -342,8 +342,8 @@ open Metric
 /-- A version of Bolzano-Weistrass: in a proper metric space (eg. $ℝ^n$),
 every bounded sequence has a converging subsequence. This version assumes only
 that the sequence is frequently in some bounded set. -/
-theorem tendsto_subseq_of_frequently_bounded [ProperSpace β] (hs : bounded s) {u : ℕ → β}
-    (hu : ∃ᶠ n in at_top, u n ∈ s) : ∃ b ∈ Closure s, ∃ φ : ℕ → ℕ, StrictMono φ ∧ tendsto (u ∘ φ) at_top (𝓝 b) := by
+theorem tendsto_subseq_of_frequently_bounded [ProperSpace β] (hs : Bounded s) {u : ℕ → β}
+    (hu : ∃ᶠ n in at_top, u n ∈ s) : ∃ b ∈ Closure s, ∃ φ : ℕ → ℕ, StrictMono φ ∧ Tendsto (u ∘ φ) atTop (𝓝 b) := by
   have hcs : IsCompact (Closure s) := compact_iff_closed_bounded.mpr ⟨is_closed_closure, bounded_closure_of_bounded hs⟩
   replace hcs : IsSeqCompact (Closure s)
   exact uniform_space.compact_iff_seq_compact.mp hcs
@@ -355,12 +355,12 @@ theorem tendsto_subseq_of_frequently_bounded [ProperSpace β] (hs : bounded s) {
 
 /-- A version of Bolzano-Weistrass: in a proper metric space (eg. $ℝ^n$),
 every bounded sequence has a converging subsequence. -/
-theorem tendsto_subseq_of_bounded [ProperSpace β] (hs : bounded s) {u : ℕ → β} (hu : ∀ n, u n ∈ s) :
-    ∃ b ∈ Closure s, ∃ φ : ℕ → ℕ, StrictMono φ ∧ tendsto (u ∘ φ) at_top (𝓝 b) :=
+theorem tendsto_subseq_of_bounded [ProperSpace β] (hs : Bounded s) {u : ℕ → β} (hu : ∀ n, u n ∈ s) :
+    ∃ b ∈ Closure s, ∃ φ : ℕ → ℕ, StrictMono φ ∧ Tendsto (u ∘ φ) atTop (𝓝 b) :=
   tendsto_subseq_of_frequently_bounded hs <| frequently_of_forall hu
 
 theorem SeqCompact.lebesgue_number_lemma_of_metric {ι : Type _} {c : ι → Set β} (hs : IsSeqCompact s)
-    (hc₁ : ∀ i, IsOpen (c i)) (hc₂ : s ⊆ ⋃ i, c i) : ∃ δ > 0, ∀, ∀ x ∈ s, ∀, ∃ i, ball x δ ⊆ c i := by
+    (hc₁ : ∀ i, IsOpen (c i)) (hc₂ : s ⊆ ⋃ i, c i) : ∃ δ > 0, ∀, ∀ x ∈ s, ∀, ∃ i, Ball x δ ⊆ c i := by
   rcases lebesgue_number_lemma_seq hs hc₁ hc₂ with ⟨V, V_in, _, hV⟩
   rcases uniformity_basis_dist.mem_iff.mp V_in with ⟨δ, δ_pos, h⟩
   use δ, δ_pos

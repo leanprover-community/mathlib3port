@@ -16,7 +16,7 @@ open_locale Real
 
 namespace circle
 
-theorem injective_arg : injective fun z : circle => arg z := fun z w h =>
+theorem injective_arg : Injective fun z : circle => arg z := fun z w h =>
   Subtype.ext <| ext_abs_arg ((abs_coe_circle z).trans (abs_coe_circle w).symm) h
 
 @[simp]
@@ -36,11 +36,11 @@ namespace circle
 
 /-- `complex.arg ∘ coe` and `exp_map_circle` define a local equivalence between `circle and `ℝ` with
 `source = set.univ` and `target = set.Ioc (-π) π`. -/
-@[simps (config := { fullyApplied := ff })]
+@[simps (config := { fullyApplied := false })]
 noncomputable def arg_local_equiv : LocalEquiv circle ℝ where
   toFun := arg ∘ coe
   invFun := expMapCircle
-  Source := univ
+  Source := Univ
   Target := Ioc (-π) π
   map_source' := fun z _ => ⟨neg_pi_lt_arg _, arg_le_pi _⟩
   map_target' := maps_to_univ _ _
@@ -48,22 +48,22 @@ noncomputable def arg_local_equiv : LocalEquiv circle ℝ where
   right_inv' := fun x hx => arg_exp_map_circle hx.1 hx.2
 
 /-- `complex.arg` and `exp_map_circle` define an equivalence between `circle and `(-π, π]`. -/
-@[simps (config := { fullyApplied := ff })]
+@[simps (config := { fullyApplied := false })]
 noncomputable def arg_equiv : circle ≃ Ioc (-π) π where
   toFun := fun z => ⟨arg z, neg_pi_lt_arg _, arg_le_pi _⟩
   invFun := expMapCircle ∘ coe
-  left_inv := fun z => arg_local_equiv.left_inv trivialₓ
-  right_inv := fun x => Subtype.ext <| arg_local_equiv.right_inv x.2
+  left_inv := fun z => argLocalEquiv.left_inv trivialₓ
+  right_inv := fun x => Subtype.ext <| argLocalEquiv.right_inv x.2
 
 end circle
 
-theorem left_inverse_exp_map_circle_arg : left_inverse expMapCircle (arg ∘ coe) :=
+theorem left_inverse_exp_map_circle_arg : LeftInverse expMapCircle (arg ∘ coe) :=
   exp_map_circle_arg
 
-theorem inv_on_arg_exp_map_circle : inv_on (arg ∘ coe) expMapCircle (Ioc (-π) π) univ :=
+theorem inv_on_arg_exp_map_circle : InvOn (arg ∘ coe) expMapCircle (Ioc (-π) π) Univ :=
   circle.argLocalEquiv.symm.InvOn
 
-theorem surj_on_exp_map_circle_neg_pi_pi : surj_on expMapCircle (Ioc (-π) π) univ :=
+theorem surj_on_exp_map_circle_neg_pi_pi : SurjOn expMapCircle (Ioc (-π) π) Univ :=
   circle.argLocalEquiv.symm.SurjOn
 
 theorem exp_map_circle_eq_exp_map_circle {x y : ℝ} : expMapCircle x = expMapCircle y ↔ ∃ m : ℤ, x = y + m * (2 * π) :=
@@ -73,7 +73,7 @@ theorem exp_map_circle_eq_exp_map_circle {x y : ℝ} : expMapCircle x = expMapCi
   rw [← mul_assoc, ← add_mulₓ, mul_left_inj' I_ne_zero, ← of_real_one, ← of_real_bit0, ← of_real_mul, ←
     of_real_int_cast, ← of_real_mul, ← of_real_add, of_real_inj]
 
-theorem periodic_exp_map_circle : periodic expMapCircle (2 * π) := fun z =>
+theorem periodic_exp_map_circle : Periodic expMapCircle (2 * π) := fun z =>
   exp_map_circle_eq_exp_map_circle.2
     ⟨1, by
       rw [Int.cast_one, one_mulₓ]⟩
@@ -95,4 +95,27 @@ noncomputable def Real.Angle.expMapCircle (θ : Real.Angle) : circle :=
 @[simp]
 theorem Real.Angle.exp_map_circle_coe (x : ℝ) : Real.Angle.expMapCircle x = expMapCircle x :=
   rfl
+
+@[simp]
+theorem Real.Angle.exp_map_circle_zero : Real.Angle.expMapCircle 0 = 1 := by
+  rw [← Real.Angle.coe_zero, Real.Angle.exp_map_circle_coe, exp_map_circle_zero]
+
+@[simp]
+theorem Real.Angle.exp_map_circle_neg (θ : Real.Angle) : Real.Angle.expMapCircle (-θ) = (Real.Angle.expMapCircle θ)⁻¹ :=
+  by
+  induction θ using Real.Angle.induction_on
+  simp_rw [← Real.Angle.coe_neg, Real.Angle.exp_map_circle_coe, exp_map_circle_neg]
+
+@[simp]
+theorem Real.Angle.exp_map_circle_add (θ₁ θ₂ : Real.Angle) :
+    Real.Angle.expMapCircle (θ₁ + θ₂) = Real.Angle.expMapCircle θ₁ * Real.Angle.expMapCircle θ₂ := by
+  induction θ₁ using Real.Angle.induction_on
+  induction θ₂ using Real.Angle.induction_on
+  exact exp_map_circle_add θ₁ θ₂
+
+@[simp]
+theorem Real.Angle.arg_exp_map_circle (θ : Real.Angle) : (arg (Real.Angle.expMapCircle θ) : Real.Angle) = θ := by
+  induction θ using Real.Angle.induction_on
+  rw [Real.Angle.exp_map_circle_coe, exp_map_circle_apply, exp_mul_I, ← of_real_cos, ← of_real_sin, ←
+    Real.Angle.cos_coe, ← Real.Angle.sin_coe, arg_cos_add_sin_mul_I_coe_angle]
 

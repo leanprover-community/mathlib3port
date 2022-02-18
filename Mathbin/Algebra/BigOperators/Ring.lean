@@ -22,7 +22,7 @@ variable {s s₁ s₂ : Finset α} {a : α} {b : β} {f g : α → β}
 
 section Semiringₓ
 
-variable [NonUnitalNonAssocSemiring β]
+variable [NonUnitalNonAssocSemiringₓ β]
 
 theorem sum_mul : (∑ x in s, f x) * b = ∑ x in s, f x * b :=
   AddMonoidHom.map_sum (AddMonoidHom.mulRight b) _ s
@@ -40,7 +40,7 @@ end Semiringₓ
 
 section Semiringₓ
 
-variable [NonAssocSemiring β]
+variable [NonAssocSemiringₓ β]
 
 theorem sum_mul_boole [DecidableEq α] (s : Finset α) (f : α → β) (a : α) :
     (∑ x in s, f x * ite (a = x) 1 0) = ite (a ∈ s) (f a) 0 := by
@@ -108,7 +108,7 @@ open_locale Classical
   over the powerset of `s` of the product of `f` over a subset `t` times
   the product of `g` over the complement of `t`  -/
 theorem prod_add (f g : α → β) (s : Finset α) :
-    (∏ a in s, f a + g a) = ∑ t in s.powerset, (∏ a in t, f a) * ∏ a in s \ t, g a :=
+    (∏ a in s, f a + g a) = ∑ t in s.Powerset, (∏ a in t, f a) * ∏ a in s \ t, g a :=
   calc
     (∏ a in s, f a + g a) = ∏ a in s, ∑ p in ({True, False} : Finset Prop), if p then f a else g a := by
       simp
@@ -116,7 +116,7 @@ theorem prod_add (f g : α → β) (s : Finset α) :
         ∑ p in (s.pi fun _ => {True, False} : Finset (∀, ∀ a ∈ s, ∀, Prop)),
           ∏ a in s.attach, if p a.1 a.2 then f a.1 else g a.1 :=
       prod_sum
-    _ = ∑ t in s.powerset, (∏ a in t, f a) * ∏ a in s \ t, g a := by
+    _ = ∑ t in s.Powerset, (∏ a in t, f a) * ∏ a in s \ t, g a := by
       refine' Eq.symm (sum_bij (fun t _ a _ => a ∈ t) _ _ _ _)
       · simp [subset_iff] <;> tauto
         
@@ -201,7 +201,7 @@ theorem prod_one_sub_ordered {ι R : Type _} [CommRingₓ R] [LinearOrderₓ ι]
 /-- Summing `a^s.card * b^(n-s.card)` over all finite subsets `s` of a `finset`
 gives `(a + b)^s.card`.-/
 theorem sum_pow_mul_eq_add_pow {α R : Type _} [CommSemiringₓ R] (a b : R) (s : Finset α) :
-    (∑ t in s.powerset, a ^ t.card * b ^ (s.card - t.card)) = (a + b) ^ s.card := by
+    (∑ t in s.Powerset, a ^ t.card * b ^ (s.card - t.card)) = (a + b) ^ s.card := by
   rw [← prod_const, prod_add]
   refine' Finset.sum_congr rfl fun t ht => _
   rw [prod_const, prod_const, ← card_sdiff (mem_powerset.1 ht)]
@@ -243,7 +243,7 @@ end CommRingₓ
 of `s`, and over all subsets of `s` to which one adds `x`. -/
 @[to_additive]
 theorem prod_powerset_insert [DecidableEq α] [CommMonoidₓ β] {s : Finset α} {x : α} (h : x ∉ s) (f : Finset α → β) :
-    (∏ a in (insert x s).Powerset, f a) = (∏ a in s.powerset, f a) * ∏ t in s.powerset, f (insert x t) := by
+    (∏ a in (insert x s).Powerset, f a) = (∏ a in s.Powerset, f a) * ∏ t in s.Powerset, f (insert x t) := by
   rw [powerset_insert, Finset.prod_union, Finset.prod_image]
   · intro t₁ h₁ t₂ h₂ heq
     rw [← Finset.erase_insert (not_mem_of_mem_powerset_of_not_mem h₁ h), ←
@@ -260,7 +260,7 @@ theorem prod_powerset_insert [DecidableEq α] [CommMonoidₓ β] {s : Finset α}
 sets of subsets of `s` with `card s = k`, for `k = 1, ... , card s`. -/
 @[to_additive]
 theorem prod_powerset [CommMonoidₓ β] (s : Finset α) (f : Finset α → β) :
-    (∏ t in powerset s, f t) = ∏ j in range (card s + 1), ∏ t in powerset_len j s, f t := by
+    (∏ t in powerset s, f t) = ∏ j in range (card s + 1), ∏ t in powersetLen j s, f t := by
   classical
   rw [powerset_card_bUnion, prod_bUnion]
   intro i hi j hj hij
@@ -268,6 +268,13 @@ theorem prod_powerset [CommMonoidₓ β] (s : Finset α) (f : Finset α → β) 
   intro x hx hc hnc
   apply hij
   rwa [← hc]
+
+theorem sum_range_succ_mul_sum_range_succ [NonUnitalNonAssocSemiringₓ β] (n k : ℕ) (f g : ℕ → β) :
+    ((∑ i in range (n + 1), f i) * ∑ i in range (k + 1), g i) =
+      (((∑ i in range n, f i) * ∑ i in range k, g i) + f n * ∑ i in range k, g i) + (∑ i in range n, f i) * g k +
+        f n * g k :=
+  by
+  simp only [add_mulₓ, mul_addₓ, add_assocₓ, sum_range_succ]
 
 end Finset
 

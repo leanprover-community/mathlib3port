@@ -27,13 +27,13 @@ local infixl:65 "++ₜ" => Vector.append
 /-- Create a zero bitvector -/
 @[reducible]
 protected def zero (n : ℕ) : Bitvec n :=
-  repeat ff n
+  repeat false n
 
 /-- Create a bitvector of length `n` whose `n-1`st entry is 1 and other entries are 0. -/
 @[reducible]
 protected def one : ∀ n : ℕ, Bitvec n
   | 0 => nil
-  | succ n => repeat ff n++ₜtt::ᵥnil
+  | succ n => repeat false n++ₜtt::ᵥnil
 
 /-- Create a bitvector from another with a provably equal length. -/
 protected def cong {a b : ℕ} (h : a = b) : Bitvec a → Bitvec b
@@ -56,7 +56,7 @@ def shl (x : Bitvec n) (i : ℕ) : Bitvec n :=
   Bitvec.cong
       (by
         simp ) <|
-    drop i x++ₜrepeat ff (min n i)
+    drop i x++ₜrepeat false (min n i)
 
 /-- `fill_shr x i fill` is the bitvector obtained by right-shifting `x` `i` times and then
 padding with `fill : bool`. If `x.length < i` then this will return the constant `fill`
@@ -76,12 +76,12 @@ def fill_shr (x : Bitvec n) (i : ℕ) (fill : Bool) : Bitvec n :=
 
 /-- unsigned shift right -/
 def ushr (x : Bitvec n) (i : ℕ) : Bitvec n :=
-  fill_shr x i ff
+  fillShr x i false
 
 /-- signed shift right -/
 def sshr : ∀ {m : ℕ}, Bitvec m → ℕ → Bitvec m
   | 0, _, _ => nil
-  | succ m, x, i => head x::ᵥfill_shr (tail x) i (head x)
+  | succ m, x, i => head x::ᵥfillShr (tail x) i (head x)
 
 end Shift
 
@@ -128,7 +128,7 @@ protected def carry (x y c : Bool) :=
 /-- `neg x` is the two's complement of `x`. -/
 protected def neg (x : Bitvec n) : Bitvec n :=
   let f := fun y c => (y || c, bxor y c)
-  Prod.snd (map_accumr f x ff)
+  Prod.snd (mapAccumr f x false)
 
 /-- Add with carry (no overflow) -/
 def adc (x y : Bitvec n) (c : Bool) : Bitvec (n + 1) :=
@@ -138,7 +138,7 @@ def adc (x y : Bitvec n) (c : Bool) : Bitvec (n + 1) :=
 
 /-- The sum of two bitvectors -/
 protected def add (x y : Bitvec n) : Bitvec n :=
-  tail (adc x y ff)
+  tail (adc x y false)
 
 /-- Subtract with borrow -/
 def sbb (x y : Bitvec n) (b : Bool) : Bool × Bitvec n :=
@@ -147,7 +147,7 @@ def sbb (x y : Bitvec n) (b : Bool) : Bool × Bitvec n :=
 
 /-- The difference of two bitvectors -/
 protected def sub (x y : Bitvec n) : Bitvec n :=
-  Prod.snd (sbb x y ff)
+  Prod.snd (sbb x y false)
 
 instance : Zero (Bitvec n) :=
   ⟨Bitvec.zero n⟩
@@ -167,7 +167,7 @@ instance : Neg (Bitvec n) :=
 /-- The product of two bitvectors -/
 protected def mul (x y : Bitvec n) : Bitvec n :=
   let f := fun r b => cond b (r + r + y) (r + r)
-  (to_list x).foldl f 0
+  (toList x).foldl f 0
 
 instance : Mul (Bitvec n) :=
   ⟨Bitvec.mul⟩
@@ -184,7 +184,7 @@ variable {n : ℕ}
 /-- `uborrow x y` returns `tt` iff the "subtract with borrow" operation on `x`, `y` and `ff`
 required a borrow. -/
 def uborrow (x y : Bitvec n) : Bool :=
-  Prod.fst (sbb x y ff)
+  Prod.fst (sbb x y false)
 
 /-- unsigned less-than proposition -/
 def ult (x y : Bitvec n) : Prop :=
@@ -192,23 +192,23 @@ def ult (x y : Bitvec n) : Prop :=
 
 /-- unsigned greater-than proposition -/
 def ugt (x y : Bitvec n) : Prop :=
-  ult y x
+  Ult y x
 
 /-- unsigned less-than-or-equal-to proposition -/
 def ule (x y : Bitvec n) : Prop :=
-  ¬ult y x
+  ¬Ult y x
 
 /-- unsigned greater-than-or-equal-to proposition -/
 def uge (x y : Bitvec n) : Prop :=
-  ule y x
+  Ule y x
 
 /-- `sborrow x y` returns `tt` iff `x < y` as two's complement integers -/
 def sborrow : ∀ {n : ℕ}, Bitvec n → Bitvec n → Bool
-  | 0, _, _ => ff
+  | 0, _, _ => false
   | succ n, x, y =>
     match (head x, head y) with
-    | (tt, ff) => tt
-    | (ff, tt) => ff
+    | (tt, ff) => true
+    | (ff, tt) => false
     | _ => uborrow (tail x) (tail y)
 
 /-- signed less-than proposition -/
@@ -217,15 +217,15 @@ def slt (x y : Bitvec n) : Prop :=
 
 /-- signed greater-than proposition -/
 def sgt (x y : Bitvec n) : Prop :=
-  slt y x
+  Slt y x
 
 /-- signed less-than-or-equal-to proposition -/
 def sle (x y : Bitvec n) : Prop :=
-  ¬slt y x
+  ¬Slt y x
 
 /-- signed greater-than-or-equal-to proposition -/
 def sge (x y : Bitvec n) : Prop :=
-  sle y x
+  Sle y x
 
 end Comparison
 
@@ -239,12 +239,12 @@ variable {α : Type}
 /-- Create a bitvector from a `nat` -/
 protected def of_nat : ∀ n : ℕ, Nat → Bitvec n
   | 0, x => nil
-  | succ n, x => of_nat n (x / 2)++ₜto_bool (x % 2 = 1)::ᵥnil
+  | succ n, x => of_nat n (x / 2)++ₜtoBool (x % 2 = 1)::ᵥnil
 
 /-- Create a bitvector in the two's complement representation from an `int` -/
 protected def of_int : ∀ n : ℕ, Int → Bitvec (succ n)
   | n, Int.ofNat m => ff::ᵥBitvec.ofNat n m
-  | n, Int.negSucc m => tt::ᵥNot (Bitvec.ofNat n m)
+  | n, Int.negSucc m => tt::ᵥnot (Bitvec.ofNat n m)
 
 /-- `add_lsb r b` is `r + r + 1` if `b` is `tt` and `r + r` otherwise. -/
 def add_lsb (r : ℕ) (b : Bool) :=
@@ -252,13 +252,13 @@ def add_lsb (r : ℕ) (b : Bool) :=
 
 /-- Given a `list` of `bool`s, return the `nat` they represent as a list of binary digits. -/
 def bits_to_nat (v : List Bool) : Nat :=
-  v.foldl add_lsb 0
+  v.foldl addLsb 0
 
 /-- Return the natural number encoded by the input bitvector -/
 protected def to_nat {n : Nat} (v : Bitvec n) : Nat :=
-  bits_to_nat (to_list v)
+  bitsToNat (toList v)
 
-theorem bits_to_nat_to_list {n : ℕ} (x : Bitvec n) : Bitvec.toNat x = bits_to_nat (Vector.toList x) :=
+theorem bits_to_nat_to_list {n : ℕ} (x : Bitvec n) : Bitvec.toNat x = bitsToNat (Vector.toList x) :=
   rfl
 
 attribute [local simp] Nat.add_comm Nat.add_assoc Nat.add_left_comm Nat.mul_comm Nat.mul_assoc
@@ -284,12 +284,12 @@ theorem to_nat_append {m : ℕ} (xs : Bitvec m) (b : Bool) :
     apply xs_ih
     
 
-theorem bits_to_nat_to_bool (n : ℕ) : Bitvec.toNat (to_bool (n % 2 = 1)::ᵥnil) = n % 2 := by
+theorem bits_to_nat_to_bool (n : ℕ) : Bitvec.toNat (toBool (n % 2 = 1)::ᵥnil) = n % 2 := by
   simp [bits_to_nat_to_list]
   unfold bits_to_nat add_lsb List.foldlₓ cond
   simp [cond_to_bool_mod_two]
 
-theorem of_nat_succ {k n : ℕ} : Bitvec.ofNat (succ k) n = Bitvec.ofNat k (n / 2)++ₜto_bool (n % 2 = 1)::ᵥnil :=
+theorem of_nat_succ {k n : ℕ} : Bitvec.ofNat (succ k) n = Bitvec.ofNat k (n / 2)++ₜtoBool (n % 2 = 1)::ᵥnil :=
   rfl
 
 theorem to_nat_of_nat {k n : ℕ} : Bitvec.toNat (Bitvec.ofNat k n) = n % 2 ^ k := by

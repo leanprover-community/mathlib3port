@@ -53,7 +53,7 @@ def order_embedding_to_fun : (Π₀ i, α i) ↪o ∀ i, α i where
   map_rel_iff' := fun a b => (@le_def _ _ _ _ a b).symm
 
 @[simp]
-theorem order_embedding_to_fun_apply {f : Π₀ i, α i} {i : ι} : order_embedding_to_fun f i = f i :=
+theorem order_embedding_to_fun_apply {f : Π₀ i, α i} {i : ι} : orderEmbeddingToFun f i = f i :=
   rfl
 
 end LE
@@ -73,7 +73,7 @@ instance [∀ i, PartialOrderₓ (α i)] : PartialOrderₓ (Π₀ i, α i) :=
   { Dfinsupp.preorder α with le_antisymm := fun f g hfg hgf => ext fun i => (hfg i).antisymm (hgf i) }
 
 instance [∀ i, SemilatticeInf (α i)] : SemilatticeInf (Π₀ i, α i) :=
-  { Dfinsupp.partialOrder α with inf := zip_with (fun _ => ·⊓·) fun _ => inf_idem,
+  { Dfinsupp.partialOrder α with inf := zipWith (fun _ => ·⊓·) fun _ => inf_idem,
     inf_le_left := fun f g i => by
       rw [zip_with_apply]
       exact inf_le_left,
@@ -89,7 +89,7 @@ theorem inf_apply [∀ i, SemilatticeInf (α i)] (f g : Π₀ i, α i) (i : ι) 
   zip_with_apply _ _ _ _ _
 
 instance [∀ i, SemilatticeSup (α i)] : SemilatticeSup (Π₀ i, α i) :=
-  { Dfinsupp.partialOrder α with sup := zip_with (fun _ => ·⊔·) fun _ => sup_idem,
+  { Dfinsupp.partialOrder α with sup := zipWith (fun _ => ·⊔·) fun _ => sup_idem,
     le_sup_left := fun f g i => by
       rw [zip_with_apply]
       exact le_sup_left,
@@ -164,7 +164,7 @@ theorem le_iff' (hf : f.support ⊆ s) : f ≤ g ↔ ∀, ∀ i ∈ s, ∀, f i 
     if H : s ∈ f.support then h s (hf H) else (not_mem_support_iff.1 H).symm ▸ zero_le (g s)⟩
 
 theorem le_iff : f ≤ g ↔ ∀, ∀ i ∈ f.support, ∀, f i ≤ g i :=
-  le_iff' <| subset.refl _
+  le_iff' <| Subset.refl _
 
 variable (α)
 
@@ -185,7 +185,7 @@ variable (α) [∀ i, Sub (α i)] [∀ i, HasOrderedSub (α i)] {f g : Π₀ i, 
 /-- This is called `tsub` for truncated subtraction, to distinguish it with subtraction in an
 additive group. -/
 instance tsub : Sub (Π₀ i, α i) :=
-  ⟨zip_with (fun i m n => m - n) fun i => tsub_self 0⟩
+  ⟨zipWith (fun i m n => m - n) fun i => tsub_self 0⟩
 
 variable {α}
 

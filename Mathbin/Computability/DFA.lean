@@ -34,24 +34,23 @@ def eval_from (start : σ) : List α → σ :=
 
 /-- `M.eval x` evaluates `M` with input `x` starting from the state `M.start`. -/
 def eval :=
-  M.eval_from M.start
+  M.evalFrom M.start
 
 /-- `M.accepts` is the language of `x` such that `M.eval x` is an accept state. -/
 def accepts : Language α := fun x => M.eval x ∈ M.accept
 
-theorem mem_accepts (x : List α) : x ∈ M.accepts ↔ M.eval_from M.start x ∈ M.accept := by
+theorem mem_accepts (x : List α) : x ∈ M.Accepts ↔ M.evalFrom M.start x ∈ M.accept := by
   rfl
 
 theorem eval_from_of_append (start : σ) (x y : List α) :
-    M.eval_from start (x ++ y) = M.eval_from (M.eval_from start x) y :=
+    M.evalFrom start (x ++ y) = M.evalFrom (M.evalFrom start x) y :=
   x.foldl_append _ _ y
 
 theorem eval_from_split [Fintype σ] {x : List α} {s t : σ} (hlen : Fintype.card σ ≤ x.length)
-    (hx : M.eval_from s x = t) :
+    (hx : M.evalFrom s x = t) :
     ∃ q a b c,
       x = a ++ b ++ c ∧
-        a.length + b.length ≤ Fintype.card σ ∧
-          b ≠ [] ∧ M.eval_from s a = q ∧ M.eval_from q b = q ∧ M.eval_from q c = t :=
+        a.length + b.length ≤ Fintype.card σ ∧ b ≠ [] ∧ M.evalFrom s a = q ∧ M.evalFrom q b = q ∧ M.evalFrom q c = t :=
   by
   obtain ⟨n, m, hneq, heq⟩ :=
     Fintype.exists_ne_map_eq_of_card_lt (fun n : Finₓ (Fintype.card σ + 1) => M.eval_from s (x.take n))
@@ -88,8 +87,8 @@ theorem eval_from_split [Fintype σ] {x : List α} {s t : σ} (hlen : Fintype.ca
   rwa [← hq, ← eval_from_of_append, ← eval_from_of_append, ← List.append_assoc, List.take_append_dropₓ,
     List.take_append_dropₓ]
 
-theorem eval_from_of_pow {x y : List α} {s : σ} (hx : M.eval_from s x = s) (hy : y ∈ @Language.Star α {x}) :
-    M.eval_from s y = s := by
+theorem eval_from_of_pow {x y : List α} {s : σ} (hx : M.evalFrom s x = s) (hy : y ∈ @Language.Star α {x}) :
+    M.evalFrom s y = s := by
   rw [Language.mem_star] at hy
   rcases hy with ⟨S, rfl, hS⟩
   induction' S with a S ih
@@ -103,9 +102,9 @@ theorem eval_from_of_pow {x y : List α} {s : σ} (hx : M.eval_from s x = s) (hy
     exact hS z (List.mem_cons_of_memₓ a hz)
     
 
-theorem pumping_lemma [Fintype σ] {x : List α} (hx : x ∈ M.accepts) (hlen : Fintype.card σ ≤ List.length x) :
+theorem pumping_lemma [Fintype σ] {x : List α} (hx : x ∈ M.Accepts) (hlen : Fintype.card σ ≤ List.length x) :
     ∃ a b c,
-      x = a ++ b ++ c ∧ a.length + b.length ≤ Fintype.card σ ∧ b ≠ [] ∧ {a} * Language.Star {b} * {c} ≤ M.accepts :=
+      x = a ++ b ++ c ∧ a.length + b.length ≤ Fintype.card σ ∧ b ≠ [] ∧ {a} * Language.Star {b} * {c} ≤ M.Accepts :=
   by
   obtain ⟨_, a, b, c, hx, hlen, hnil, rfl, hb, hc⟩ := M.eval_from_split hlen rfl
   use a, b, c, hx, hlen, hnil

@@ -2,7 +2,7 @@ import Mathbin.Algebra.Order.Archimedean
 import Mathbin.Algebra.Order.Sub
 import Mathbin.Algebra.Order.WithZero
 import Mathbin.Order.LatticeIntervals
-import Mathbin.Order.ConditionallyCompleteLattice
+import Mathbin.Order.CompleteLatticeIntervals
 
 /-!
 # The type of nonnegative elements
@@ -68,7 +68,7 @@ The `set.Ici` data fields are definitionally equal, but that requires unfolding 
 definitions, so type-class inference won't see this. -/
 @[reducible]
 protected noncomputable def ConditionallyCompleteLinearOrderBot [ConditionallyCompleteLinearOrder α] {a : α}
-    (h : Sup ∅ ≤ a) : ConditionallyCompleteLinearOrderBot { x : α // a ≤ x } :=
+    (h : sup ∅ ≤ a) : ConditionallyCompleteLinearOrderBot { x : α // a ≤ x } :=
   { Nonneg.orderBot, Nonneg.conditionallyCompleteLinearOrder with
     cSup_empty :=
       (Function.funext_iffₓ.1 (@subset_Sup_def α (Set.Ici a) _ ⟨⟨a, le_rfl⟩⟩) ∅).trans <|
@@ -246,34 +246,34 @@ def to_nonneg (a : α) : { x : α // 0 ≤ x } :=
   ⟨max a 0, le_max_rightₓ _ _⟩
 
 @[simp]
-theorem coe_to_nonneg {a : α} : (to_nonneg a : α) = max a 0 :=
+theorem coe_to_nonneg {a : α} : (toNonneg a : α) = max a 0 :=
   rfl
 
 @[simp]
-theorem to_nonneg_of_nonneg {a : α} (h : 0 ≤ a) : to_nonneg a = ⟨a, h⟩ := by
+theorem to_nonneg_of_nonneg {a : α} (h : 0 ≤ a) : toNonneg a = ⟨a, h⟩ := by
   simp [to_nonneg, h]
 
 @[simp]
-theorem to_nonneg_coe {a : { x : α // 0 ≤ x }} : to_nonneg (a : α) = a := by
+theorem to_nonneg_coe {a : { x : α // 0 ≤ x }} : toNonneg (a : α) = a := by
   cases' a with a ha
   exact to_nonneg_of_nonneg ha
 
 @[simp]
-theorem to_nonneg_le {a : α} {b : { x : α // 0 ≤ x }} : to_nonneg a ≤ b ↔ a ≤ b := by
+theorem to_nonneg_le {a : α} {b : { x : α // 0 ≤ x }} : toNonneg a ≤ b ↔ a ≤ b := by
   cases' b with b hb
   simp [to_nonneg, hb]
 
 @[simp]
-theorem to_nonneg_lt {a : { x : α // 0 ≤ x }} {b : α} : a < to_nonneg b ↔ ↑a < b := by
+theorem to_nonneg_lt {a : { x : α // 0 ≤ x }} {b : α} : a < toNonneg b ↔ ↑a < b := by
   cases' a with a ha
   simp [to_nonneg, ha.not_lt]
 
 instance Sub [Sub α] : Sub { x : α // 0 ≤ x } :=
-  ⟨fun x y => to_nonneg (x - y)⟩
+  ⟨fun x y => toNonneg (x - y)⟩
 
 @[simp]
 theorem mk_sub_mk [Sub α] {x y : α} (hx : 0 ≤ x) (hy : 0 ≤ y) :
-    (⟨x, hx⟩ : { x : α // 0 ≤ x }) - ⟨y, hy⟩ = to_nonneg (x - y) :=
+    (⟨x, hx⟩ : { x : α // 0 ≤ x }) - ⟨y, hy⟩ = toNonneg (x - y) :=
   rfl
 
 end LinearOrderₓ

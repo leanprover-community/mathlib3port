@@ -32,9 +32,9 @@ include h
 this limit is given in `subadditive.tendsto_lim` -/
 @[nolint unused_arguments]
 protected irreducible_def limₓ :=
-  Inf ((fun n : ℕ => u n / n) '' Ici 1)
+  inf ((fun n : ℕ => u n / n) '' Ici 1)
 
-theorem lim_le_div (hbdd : BddBelow (range fun n => u n / n)) {n : ℕ} (hn : n ≠ 0) : h.lim ≤ u n / n := by
+theorem lim_le_div (hbdd : BddBelow (Range fun n => u n / n)) {n : ℕ} (hn : n ≠ 0) : h.lim ≤ u n / n := by
   rw [Subadditive.lim]
   apply cInf_le _ _
   · rcases hbdd with ⟨c, hc⟩
@@ -46,7 +46,7 @@ theorem lim_le_div (hbdd : BddBelow (range fun n => u n / n)) {n : ℕ} (hn : n 
 
 theorem apply_mul_add_le k n r : u (k * n + r) ≤ k * u n + u r := by
   induction' k with k IH
-  · simp only [Nat.cast_zero, zero_mul, zero_addₓ]
+  · simp only [Nat.cast_zeroₓ, zero_mul, zero_addₓ]
     
   calc u ((k + 1) * n + r) = u (n + (k * n + r)) := by
       congr 1
@@ -80,7 +80,7 @@ theorem eventually_div_lt_of_div_lt {L : ℝ} {n : ℕ} (hn : n ≠ 0) (hL : u n
         by
         ring _ = p * w + (u r - r * w) := by
         rw [hp]
-        simp only [Nat.cast_add, Nat.cast_mul]_ ≤ p * w + x := add_le_add_left (hx _ (Nat.mod_ltₓ _ hn.bot_lt)) _
+        simp only [Nat.cast_addₓ, Nat.cast_mulₓ]_ ≤ p * w + x := add_le_add_left (hx _ (Nat.mod_ltₓ _ hn.bot_lt)) _
   have B : ∀ᶠ p in at_top, u p / p ≤ w + x / p := by
     refine' eventually_at_top.2 ⟨1, fun p hp => _⟩
     simp' only [I p hp, Ne.def, not_false_iff] with field_simps
@@ -95,7 +95,7 @@ theorem eventually_div_lt_of_div_lt {L : ℝ} {n : ℕ} (hn : n ≠ 0) (hL : u n
   filter_upwards [B, C] with _ hp h'p using hp.trans_lt h'p
 
 /-- Fekete's lemma: a subadditive sequence which is bounded below converges. -/
-theorem tendsto_lim (hbdd : BddBelow (range fun n => u n / n)) : tendsto (fun n => u n / n) at_top (𝓝 h.lim) := by
+theorem tendsto_lim (hbdd : BddBelow (Range fun n => u n / n)) : Tendsto (fun n => u n / n) atTop (𝓝 h.lim) := by
   refine' tendsto_order.2 ⟨fun l hl => _, fun L hL => _⟩
   · refine' eventually_at_top.2 ⟨1, fun n hn => hl.trans_le (h.lim_le_div hbdd (zero_lt_one.trans_le hn).ne')⟩
     

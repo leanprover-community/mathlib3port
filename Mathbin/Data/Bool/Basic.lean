@@ -18,54 +18,54 @@ prefix:90 "!" => bnot
 
 namespace Bool
 
-theorem coe_sort_tt : coeSort.{1, 1} tt = True :=
+theorem coe_sort_tt : coeSort.{1, 1} true = True :=
   coe_sort_tt
 
-theorem coe_sort_ff : coeSort.{1, 1} ff = False :=
+theorem coe_sort_ff : coeSort.{1, 1} false = False :=
   coe_sort_ff
 
-theorem to_bool_true {h} : @to_bool True h = tt :=
+theorem to_bool_true {h} : @toBool True h = tt :=
   to_bool_true_eq_tt h
 
-theorem to_bool_false {h} : @to_bool False h = ff :=
+theorem to_bool_false {h} : @toBool False h = ff :=
   to_bool_false_eq_ff h
 
 @[simp]
-theorem to_bool_coe (b : Bool) {h} : @to_bool b h = b :=
-  show _ = to_bool b by
+theorem to_bool_coe (b : Bool) {h} : @toBool b h = b :=
+  show _ = toBool b by
         congr.trans
     (by
       cases b <;> rfl)
 
-theorem coe_to_bool (p : Prop) [Decidable p] : to_bool p ↔ p :=
+theorem coe_to_bool (p : Prop) [Decidable p] : toBool p ↔ p :=
   to_bool_iff _
 
 @[simp]
-theorem of_to_bool_iff {p : Prop} [Decidable p] : to_bool p ↔ p :=
-  ⟨of_to_bool_true, _root_.to_bool_true⟩
+theorem of_to_bool_iff {p : Prop} [Decidable p] : toBool p ↔ p :=
+  ⟨of_to_bool_true, to_bool_true⟩
 
 @[simp]
-theorem tt_eq_to_bool_iff {p : Prop} [Decidable p] : tt = to_bool p ↔ p :=
+theorem tt_eq_to_bool_iff {p : Prop} [Decidable p] : tt = toBool p ↔ p :=
   eq_comm.trans of_to_bool_iff
 
 @[simp]
-theorem ff_eq_to_bool_iff {p : Prop} [Decidable p] : ff = to_bool p ↔ ¬p :=
+theorem ff_eq_to_bool_iff {p : Prop} [Decidable p] : ff = toBool p ↔ ¬p :=
   eq_comm.trans (to_bool_ff_iff _)
 
 @[simp]
-theorem to_bool_not (p : Prop) [Decidable p] : (to_bool ¬p) = bnot (to_bool p) := by
+theorem to_bool_not (p : Prop) [Decidable p] : (toBool ¬p) = bnot (toBool p) := by
   by_cases' p <;> simp [*]
 
 @[simp]
-theorem to_bool_and (p q : Prop) [Decidable p] [Decidable q] : to_bool (p ∧ q) = (p && q) := by
+theorem to_bool_and (p q : Prop) [Decidable p] [Decidable q] : toBool (p ∧ q) = (p && q) := by
   by_cases' p <;> by_cases' q <;> simp [*]
 
 @[simp]
-theorem to_bool_or (p q : Prop) [Decidable p] [Decidable q] : to_bool (p ∨ q) = (p || q) := by
+theorem to_bool_or (p q : Prop) [Decidable p] [Decidable q] : toBool (p ∨ q) = (p || q) := by
   by_cases' p <;> by_cases' q <;> simp [*]
 
 @[simp]
-theorem to_bool_eq {p q : Prop} [Decidable p] [Decidable q] : to_bool p = to_bool q ↔ (p ↔ q) :=
+theorem to_bool_eq {p q : Prop} [Decidable p] [Decidable q] : toBool p = toBool q ↔ (p ↔ q) :=
   ⟨fun h =>
     (coe_to_bool p).symm.trans <| by
       simp [h],
@@ -82,13 +82,13 @@ theorem dichotomy (b : Bool) : b = ff ∨ b = tt := by
   cases b <;> simp
 
 @[simp]
-theorem forall_bool {p : Bool → Prop} : (∀ b, p b) ↔ p ff ∧ p tt :=
+theorem forall_bool {p : Bool → Prop} : (∀ b, p b) ↔ p false ∧ p true :=
   ⟨fun h => by
     simp [h], fun ⟨h₁, h₂⟩ b => by
     cases b <;> assumption⟩
 
 @[simp]
-theorem exists_bool {p : Bool → Prop} : (∃ b, p b) ↔ p ff ∨ p tt :=
+theorem exists_bool {p : Bool → Prop} : (∃ b, p b) ↔ p false ∨ p true :=
   ⟨fun ⟨b, h⟩ => by
     cases b <;> [exact Or.inl h, exact Or.inr h], fun h => by
     cases h <;> exact ⟨_, h⟩⟩
@@ -102,15 +102,15 @@ instance decidable_exists_bool {p : Bool → Prop} [∀ b, Decidable (p b)] : De
   decidableOfDecidableOfIff Or.decidable exists_bool.symm
 
 @[simp]
-theorem cond_ff {α} (t e : α) : cond ff t e = e :=
+theorem cond_ff {α} (t e : α) : cond false t e = e :=
   rfl
 
 @[simp]
-theorem cond_tt {α} (t e : α) : cond tt t e = t :=
+theorem cond_tt {α} (t e : α) : cond true t e = t :=
   rfl
 
 @[simp]
-theorem cond_to_bool {α} (p : Prop) [Decidable p] (t e : α) : cond (to_bool p) t e = if p then t else e := by
+theorem cond_to_bool {α} (p : Prop) [Decidable p] (t e : α) : cond (toBool p) t e = if p then t else e := by
   by_cases' p <;> simp [*]
 
 @[simp]
@@ -162,11 +162,11 @@ theorem band_elim_right : ∀ {a b : Bool}, a && b → b := by
   decide
 
 @[simp]
-theorem bnot_false : bnot ff = tt :=
+theorem bnot_false : bnot false = tt :=
   rfl
 
 @[simp]
-theorem bnot_true : bnot tt = ff :=
+theorem bnot_true : bnot true = ff :=
   rfl
 
 @[simp]
@@ -177,6 +177,22 @@ theorem eq_tt_of_bnot_eq_ff : ∀ {a : Bool}, bnot a = ff → a = tt := by
   decide
 
 theorem eq_ff_of_bnot_eq_tt : ∀ {a : Bool}, bnot a = tt → a = ff := by
+  decide
+
+@[simp]
+theorem band_bnot_self : ∀ x, (x && !x) = ff := by
+  decide
+
+@[simp]
+theorem bnot_band_self : ∀ x, (!x && x) = ff := by
+  decide
+
+@[simp]
+theorem bor_bnot_self : ∀ x, (x || !x) = tt := by
+  decide
+
+@[simp]
+theorem bnot_bor_self : ∀ x, (!x || x) = tt := by
   decide
 
 theorem bxor_comm : ∀ a b, bxor a b = bxor b a := by
@@ -202,11 +218,11 @@ theorem bxor_bnot_bnot : ∀ a b, bxor (!a) (!b) = bxor a b := by
   decide
 
 @[simp]
-theorem bxor_ff_left : ∀ a, bxor ff a = a := by
+theorem bxor_ff_left : ∀ a, bxor false a = a := by
   decide
 
 @[simp]
-theorem bxor_ff_right : ∀ a, bxor a ff = a := by
+theorem bxor_ff_right : ∀ a, bxor a false = a := by
   decide
 
 theorem bxor_iff_ne : ∀ {x y : Bool}, bxor x y = tt ↔ x ≠ y := by
@@ -294,9 +310,9 @@ def to_nat (b : Bool) : ℕ :=
 
 /-- convert a `ℕ` to a `bool`, `0 -> false`, everything else -> `true` -/
 def of_nat (n : ℕ) : Bool :=
-  to_bool (n ≠ 0)
+  toBool (n ≠ 0)
 
-theorem of_nat_le_of_nat {n m : ℕ} (h : n ≤ m) : of_nat n ≤ of_nat m := by
+theorem of_nat_le_of_nat {n m : ℕ} (h : n ≤ m) : ofNat n ≤ ofNat m := by
   simp [of_nat] <;> cases Nat.decidableEq n 0 <;> cases Nat.decidableEq m 0 <;> simp only [to_bool]
   · subst m
     have h := le_antisymmₓ h (Nat.zero_leₓ _)
@@ -306,17 +322,17 @@ theorem of_nat_le_of_nat {n m : ℕ} (h : n ≤ m) : of_nat n ≤ of_nat m := by
     rfl
     
 
-theorem to_nat_le_to_nat {b₀ b₁ : Bool} (h : b₀ ≤ b₁) : to_nat b₀ ≤ to_nat b₁ := by
+theorem to_nat_le_to_nat {b₀ b₁ : Bool} (h : b₀ ≤ b₁) : toNat b₀ ≤ toNat b₁ := by
   cases h <;> subst h <;> [cases b₁, cases b₀] <;> simp [to_nat, Nat.zero_leₓ]
 
-theorem of_nat_to_nat (b : Bool) : of_nat (to_nat b) = b := by
+theorem of_nat_to_nat (b : Bool) : ofNat (toNat b) = b := by
   cases b <;>
     simp only [of_nat, to_nat] <;>
       exact by
         decide
 
 @[simp]
-theorem injective_iff {α : Sort _} {f : Bool → α} : Function.Injective f ↔ f ff ≠ f tt :=
+theorem injective_iff {α : Sort _} {f : Bool → α} : Function.Injective f ↔ f false ≠ f true :=
   ⟨fun Hinj Heq => ff_ne_tt (Hinj Heq), fun H x y hxy => by
     cases x <;> cases y
     exacts[rfl, (H hxy).elim, (H hxy.symm).elim, rfl]⟩

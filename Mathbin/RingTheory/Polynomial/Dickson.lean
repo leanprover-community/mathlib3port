@@ -44,14 +44,16 @@ noncomputable section
 
 namespace Polynomial
 
+open_locale Polynomial
+
 variable {R S : Type _} [CommRingₓ R] [CommRingₓ S] (k : ℕ) (a : R)
 
 /-- `dickson` is the `n`the (generalised) Dickson polynomial of the `k`-th kind associated to the
 element `a ∈ R`. -/
-noncomputable def dickson : ℕ → Polynomial R
+noncomputable def dickson : ℕ → R[X]
   | 0 => 3 - k
-  | 1 => X
-  | n + 2 => X * dickson (n + 1) - C a * dickson n
+  | 1 => x
+  | n + 2 => X * dickson (n + 1) - c a * dickson n
 
 @[simp]
 theorem dickson_zero : dickson k a 0 = 3 - k :=
@@ -61,14 +63,14 @@ theorem dickson_zero : dickson k a 0 = 3 - k :=
 theorem dickson_one : dickson k a 1 = X :=
   rfl
 
-theorem dickson_two : dickson k a 2 = X ^ 2 - C a * (3 - k) := by
+theorem dickson_two : dickson k a 2 = X ^ 2 - c a * (3 - k) := by
   simp only [dickson, sq]
 
 @[simp]
-theorem dickson_add_two (n : ℕ) : dickson k a (n + 2) = X * dickson k a (n + 1) - C a * dickson k a n := by
+theorem dickson_add_two (n : ℕ) : dickson k a (n + 2) = X * dickson k a (n + 1) - c a * dickson k a n := by
   rw [dickson]
 
-theorem dickson_of_two_le {n : ℕ} (h : 2 ≤ n) : dickson k a n = X * dickson k a (n - 1) - C a * dickson k a (n - 2) :=
+theorem dickson_of_two_le {n : ℕ} (h : 2 ≤ n) : dickson k a n = X * dickson k a (n - 1) - c a * dickson k a (n - 2) :=
   by
   obtain ⟨n, rfl⟩ := Nat.exists_eq_add_of_le h
   rw [add_commₓ]
@@ -128,7 +130,7 @@ theorem dickson_one_one_eval_add_inv (x y : R) (h : x * y = 1) : ∀ n, (dickson
 variable (R)
 
 theorem dickson_one_one_eq_chebyshev_T [Invertible (2 : R)] :
-    ∀ n, dickson 1 (1 : R) n = 2 * (chebyshev.T R n).comp (C (⅟ 2) * X)
+    ∀ n, dickson 1 (1 : R) n = 2 * (Chebyshev.t R n).comp (c (⅟ 2) * X)
   | 0 => by
     simp only [chebyshev.T_zero, mul_oneₓ, one_comp, dickson_zero]
     norm_num
@@ -142,7 +144,7 @@ theorem dickson_one_one_eq_chebyshev_T [Invertible (2 : R)] :
     ring
 
 theorem chebyshev_T_eq_dickson_one_one [Invertible (2 : R)] (n : ℕ) :
-    chebyshev.T R n = C (⅟ 2) * (dickson 1 1 n).comp (2 * X) := by
+    Chebyshev.t R n = c (⅟ 2) * (dickson 1 1 n).comp (2 * X) := by
   rw [dickson_one_one_eq_chebyshev_T]
   simp only [comp_assoc, mul_comp, C_comp, X_comp, ← mul_assoc, ← C_1, ← C_bit0, ← C_mul]
   rw [inv_of_mul_self, C_1, one_mulₓ, one_mulₓ, comp_X]
@@ -168,7 +170,7 @@ theorem dickson_one_one_comp_comm (m n : ℕ) :
     (dickson 1 (1 : R) m).comp (dickson 1 1 n) = (dickson 1 1 n).comp (dickson 1 1 m) := by
   rw [← dickson_one_one_mul, mul_comm, dickson_one_one_mul]
 
-theorem dickson_one_one_zmod_p (p : ℕ) [Fact p.prime] : dickson 1 (1 : Zmod p) p = X ^ p := by
+theorem dickson_one_one_zmod_p (p : ℕ) [Fact p.Prime] : dickson 1 (1 : Zmod p) p = X ^ p := by
   obtain ⟨K, _, _, H⟩ : ∃ (K : Type)(_ : Field K), ∃ _ : CharP K p, Infinite K := by
     let K := FractionRing (Polynomial (Zmod p))
     let f : Zmod p →+* K := (algebraMap _ (FractionRing _)).comp C
@@ -195,7 +197,7 @@ theorem dickson_one_one_zmod_p (p : ℕ) [Fact p.prime] : dickson 1 (1 : Zmod p)
       rw [this]
       clear this
       refine' h.bUnion fun x hx => _
-      let φ : Polynomial K := X ^ 2 - C x * X + 1
+      let φ : K[X] := X ^ 2 - C x * X + 1
       have hφ : φ ≠ 0 := by
         intro H
         have : φ.eval 0 = 0 := by
@@ -226,7 +228,7 @@ theorem dickson_one_one_zmod_p (p : ℕ) [Fact p.prime] : dickson 1 (1 : Zmod p)
       
     
 
-theorem dickson_one_one_char_p (p : ℕ) [Fact p.prime] [CharP R p] : dickson 1 (1 : R) p = X ^ p := by
+theorem dickson_one_one_char_p (p : ℕ) [Fact p.Prime] [CharP R p] : dickson 1 (1 : R) p = X ^ p := by
   have h : (1 : R) = Zmod.castHom (dvd_refl p) R 1
   simp only [Zmod.cast_hom_apply, Zmod.cast_one']
   rw [h, ← map_dickson (Zmod.castHom (dvd_refl p) R), dickson_one_one_zmod_p, Polynomial.map_pow, map_X]

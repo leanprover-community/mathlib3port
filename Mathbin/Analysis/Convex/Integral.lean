@@ -41,9 +41,9 @@ open_locale TopologicalSpace BigOperators
 variable {α E : Type _} [MeasurableSpace α] {μ : Measureₓ α} [NormedGroup E] [NormedSpace ℝ E] [CompleteSpace E]
   [TopologicalSpace.SecondCountableTopology E] [MeasurableSpace E] [BorelSpace E]
 
-private theorem convex.smul_integral_mem_of_measurable [is_finite_measure μ] {s : Set E} (hs : Convex ℝ s)
-    (hsc : IsClosed s) (hμ : μ ≠ 0) {f : α → E} (hfs : ∀ᵐ x ∂μ, f x ∈ s) (hfi : integrable f μ) (hfm : Measurable f) :
-    ((μ univ).toReal⁻¹ • ∫ x, f x ∂μ) ∈ s := by
+private theorem convex.smul_integral_mem_of_measurable [IsFiniteMeasure μ] {s : Set E} (hs : Convex ℝ s)
+    (hsc : IsClosed s) (hμ : μ ≠ 0) {f : α → E} (hfs : ∀ᵐ x ∂μ, f x ∈ s) (hfi : Integrable f μ) (hfm : Measurable f) :
+    ((μ Univ).toReal⁻¹ • ∫ x, f x ∂μ) ∈ s := by
   rcases eq_empty_or_nonempty s with (rfl | ⟨y₀, h₀⟩)
   · refine' (hμ _).elim
     simpa using hfs
@@ -74,8 +74,8 @@ private theorem convex.smul_integral_mem_of_measurable [is_finite_measure μ] {s
 integrable function sending `μ`-a.e. points to `s`, then the average value of `f` belongs to `s`:
 `(μ univ).to_real⁻¹ • ∫ x, f x ∂μ ∈ s`. See also `convex.center_mass_mem` for a finite sum version
 of this lemma. -/
-theorem Convex.smul_integral_mem [is_finite_measure μ] {s : Set E} (hs : Convex ℝ s) (hsc : IsClosed s) (hμ : μ ≠ 0)
-    {f : α → E} (hfs : ∀ᵐ x ∂μ, f x ∈ s) (hfi : integrable f μ) : ((μ univ).toReal⁻¹ • ∫ x, f x ∂μ) ∈ s := by
+theorem Convex.smul_integral_mem [IsFiniteMeasure μ] {s : Set E} (hs : Convex ℝ s) (hsc : IsClosed s) (hμ : μ ≠ 0)
+    {f : α → E} (hfs : ∀ᵐ x ∂μ, f x ∈ s) (hfi : Integrable f μ) : ((μ Univ).toReal⁻¹ • ∫ x, f x ∂μ) ∈ s := by
   have : ∀ᵐ x : α ∂μ, hfi.ae_measurable.mk f x ∈ s := by
     filter_upwards [hfs, hfi.ae_measurable.ae_eq_mk] with _ _ h
     rwa [← h]
@@ -89,8 +89,8 @@ theorem Convex.smul_integral_mem [is_finite_measure μ] {s : Set E} (hs : Convex
 /-- If `μ` is a probability measure on `α`, `s` is a convex closed set in `E`, and `f` is an
 integrable function sending `μ`-a.e. points to `s`, then the expected value of `f` belongs to `s`:
 `∫ x, f x ∂μ ∈ s`. See also `convex.sum_mem` for a finite sum version of this lemma. -/
-theorem Convex.integral_mem [is_probability_measure μ] {s : Set E} (hs : Convex ℝ s) (hsc : IsClosed s) {f : α → E}
-    (hf : ∀ᵐ x ∂μ, f x ∈ s) (hfi : integrable f μ) : (∫ x, f x ∂μ) ∈ s := by
+theorem Convex.integral_mem [IsProbabilityMeasure μ] {s : Set E} (hs : Convex ℝ s) (hsc : IsClosed s) {f : α → E}
+    (hf : ∀ᵐ x ∂μ, f x ∈ s) (hfi : Integrable f μ) : (∫ x, f x ∂μ) ∈ s := by
   simpa [measure_univ] using hs.smul_integral_mem hsc (is_probability_measure.ne_zero μ) hf hfi
 
 /-- Jensen's inequality: if a function `g : E → ℝ` is convex and continuous on a convex closed set
@@ -98,9 +98,9 @@ theorem Convex.integral_mem [is_probability_measure μ] {s : Set E} (hs : Convex
 to `s`, then the value of `g` at the average value of `f` is less than or equal to the average value
 of `g ∘ f` provided that both `f` and `g ∘ f` are integrable. See also `convex.map_center_mass_le`
 for a finite sum version of this lemma. -/
-theorem ConvexOn.map_smul_integral_le [is_finite_measure μ] {s : Set E} {g : E → ℝ} (hg : ConvexOn ℝ s g)
-    (hgc : ContinuousOn g s) (hsc : IsClosed s) (hμ : μ ≠ 0) {f : α → E} (hfs : ∀ᵐ x ∂μ, f x ∈ s) (hfi : integrable f μ)
-    (hgi : integrable (g ∘ f) μ) : g ((μ univ).toReal⁻¹ • ∫ x, f x ∂μ) ≤ (μ univ).toReal⁻¹ • ∫ x, g (f x) ∂μ := by
+theorem ConvexOn.map_smul_integral_le [IsFiniteMeasure μ] {s : Set E} {g : E → ℝ} (hg : ConvexOn ℝ s g)
+    (hgc : ContinuousOn g s) (hsc : IsClosed s) (hμ : μ ≠ 0) {f : α → E} (hfs : ∀ᵐ x ∂μ, f x ∈ s) (hfi : Integrable f μ)
+    (hgi : Integrable (g ∘ f) μ) : g ((μ Univ).toReal⁻¹ • ∫ x, f x ∂μ) ≤ (μ Univ).toReal⁻¹ • ∫ x, g (f x) ∂μ := by
   set t := { p : E × ℝ | p.1 ∈ s ∧ g p.1 ≤ p.2 }
   have ht_conv : Convex ℝ t := hg.convex_epigraph
   have ht_closed : IsClosed t :=
@@ -113,8 +113,8 @@ closed set `s`, `μ` is a probability measure on `α`, and `f : α → E` is a f
 points to `s`, then the value of `g` at the expected value of `f` is less than or equal to the
 expected value of `g ∘ f` provided that both `f` and `g ∘ f` are integrable. See also
 `convex_on.map_center_mass_le` for a finite sum version of this lemma. -/
-theorem ConvexOn.map_integral_le [is_probability_measure μ] {s : Set E} {g : E → ℝ} (hg : ConvexOn ℝ s g)
-    (hgc : ContinuousOn g s) (hsc : IsClosed s) {f : α → E} (hfs : ∀ᵐ x ∂μ, f x ∈ s) (hfi : integrable f μ)
-    (hgi : integrable (g ∘ f) μ) : g (∫ x, f x ∂μ) ≤ ∫ x, g (f x) ∂μ := by
+theorem ConvexOn.map_integral_le [IsProbabilityMeasure μ] {s : Set E} {g : E → ℝ} (hg : ConvexOn ℝ s g)
+    (hgc : ContinuousOn g s) (hsc : IsClosed s) {f : α → E} (hfs : ∀ᵐ x ∂μ, f x ∈ s) (hfi : Integrable f μ)
+    (hgi : Integrable (g ∘ f) μ) : g (∫ x, f x ∂μ) ≤ ∫ x, g (f x) ∂μ := by
   simpa [measure_univ] using hg.map_smul_integral_le hgc hsc (is_probability_measure.ne_zero μ) hfs hfi hgi
 

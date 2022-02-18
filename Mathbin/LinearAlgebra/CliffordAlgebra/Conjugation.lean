@@ -64,7 +64,7 @@ open MulOpposite
 /-- Grade reversion, inverting the multiplication order of basis vectors.
 Also called *transpose* in some literature. -/
 def reverse : CliffordAlgebra Q →ₗ[R] CliffordAlgebra Q :=
-  (op_linear_equiv R).symm.toLinearMap.comp
+  (opLinearEquiv R).symm.toLinearMap.comp
     (CliffordAlgebra.lift Q
         ⟨(MulOpposite.opLinearEquiv R).toLinearMap.comp (ι Q), fun m =>
           unop_injective <| by

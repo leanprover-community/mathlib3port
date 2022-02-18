@@ -87,7 +87,7 @@ theorem MulHom.map_dvd [Monoidₓ M] [Monoidₓ N] (f : MulHom M N) {a b} : a �
   | ⟨c, h⟩ => ⟨f c, h.symm ▸ f.map_mul a c⟩
 
 theorem MonoidHom.map_dvd [Monoidₓ M] [Monoidₓ N] (f : M →* N) {a b} : a ∣ b → f a ∣ f b :=
-  f.to_mul_hom.map_dvd
+  f.toMulHom.map_dvd
 
 end MapDvd
 

@@ -16,8 +16,11 @@ This file defines partial functions. Partial functions are like functions, excep
 * `pfun.fn`: Evaluation of a partial function. Takes in an element and a proof it belongs to the
   partial function's `dom`.
 * `pfun.as_subtype`: Returns a partial function as a function from its `dom`.
+* `pfun.to_subtype`: Restricts the codomain of a function to a subtype.
 * `pfun.eval_opt`: Returns a partial function with a decidable `dom` as a function `a → option β`.
 * `pfun.lift`: Turns a function into a partial function.
+* `pfun.id`: The identity as a partial function.
+* `pfun.comp`: Composition of partial functions.
 * `pfun.restrict`: Restriction of a partial function to a smaller `dom`.
 * `pfun.res`: Turns a function into a partial function with a prescribed domain.
 * `pfun.fix` : First return map of a partial function `f : α →. β ⊕ α`.
@@ -42,6 +45,8 @@ Monad operations:
 -/
 
 
+open Function
+
 /-- `pfun α β`, or `α →. β`, is the type of partial functions from
   `α` to `β`. It is defined as `α → part β`. -/
 def Pfun (α β : Type _) :=
@@ -51,7 +56,7 @@ infixr:25 " →. " => Pfun
 
 namespace Pfun
 
-variable {α β γ : Type _}
+variable {α β γ δ : Type _}
 
 instance : Inhabited (α →. β) :=
   ⟨fun a => Part.none⟩
@@ -60,40 +65,45 @@ instance : Inhabited (α →. β) :=
 def dom (f : α →. β) : Set α :=
   { a | (f a).Dom }
 
-theorem mem_dom (f : α →. β) (x : α) : x ∈ dom f ↔ ∃ y, y ∈ f x := by
+@[simp]
+theorem mem_dom (f : α →. β) (x : α) : x ∈ Dom f ↔ ∃ y, y ∈ f x := by
   simp [dom, Part.dom_iff_mem]
 
-theorem dom_eq (f : α →. β) : dom f = { x | ∃ y, y ∈ f x } :=
+theorem dom_eq (f : α →. β) : Dom f = { x | ∃ y, y ∈ f x } :=
   Set.ext (mem_dom f)
 
 /-- Evaluate a partial function -/
-def fn (f : α →. β) x (h : dom f x) : β :=
-  (f x).get h
+def fn (f : α →. β) (a : α) : Dom f a → β :=
+  (f a).get
+
+@[simp]
+theorem fn_apply (f : α →. β) (a : α) : f.fn a = (f a).get :=
+  rfl
 
 /-- Evaluate a partial function to return an `option` -/
-def eval_opt (f : α →. β) [D : DecidablePred (· ∈ dom f)] (x : α) : Option β :=
+def eval_opt (f : α →. β) [D : DecidablePred (· ∈ Dom f)] (x : α) : Option β :=
   @Part.toOption _ _ (D x)
 
 /-- Partial function extensionality -/
-theorem ext' {f g : α →. β} (H1 : ∀ a, a ∈ dom f ↔ a ∈ dom g) (H2 : ∀ a p q, f.fn a p = g.fn a q) : f = g :=
+theorem ext' {f g : α →. β} (H1 : ∀ a, a ∈ Dom f ↔ a ∈ Dom g) (H2 : ∀ a p q, f.fn a p = g.fn a q) : f = g :=
   funext fun a => Part.ext' (H1 a) (H2 a)
 
 theorem ext {f g : α →. β} (H : ∀ a b, b ∈ f a ↔ b ∈ g a) : f = g :=
   funext fun a => Part.ext (H a)
 
 /-- Turns a partial function into a function out of its domain. -/
-def as_subtype (f : α →. β) (s : f.dom) : β :=
+def as_subtype (f : α →. β) (s : f.Dom) : β :=
   f.fn s s.2
 
 /-- The type of partial functions `α →. β` is equivalent to
 the type of pairs `(p : α → Prop, f : subtype p → β)`. -/
 def equiv_subtype : (α →. β) ≃ Σ p : α → Prop, Subtype p → β :=
-  ⟨fun f => ⟨fun a => (f a).Dom, as_subtype f⟩, fun f x => ⟨f.1 x, fun h => f.2 ⟨x, h⟩⟩, fun f =>
+  ⟨fun f => ⟨fun a => (f a).Dom, asSubtype f⟩, fun f x => ⟨f.1 x, fun h => f.2 ⟨x, h⟩⟩, fun f =>
     funext fun a => Part.eta _, fun ⟨p, f⟩ => by
     dsimp <;> congr <;> funext a <;> cases a <;> rfl⟩
 
-theorem as_subtype_eq_of_mem {f : α →. β} {x : α} {y : β} (fxy : y ∈ f x) (domx : x ∈ f.dom) :
-    f.as_subtype ⟨x, domx⟩ = y :=
+theorem as_subtype_eq_of_mem {f : α →. β} {x : α} {y : β} (fxy : y ∈ f x) (domx : x ∈ f.Dom) :
+    f.asSubtype ⟨x, domx⟩ = y :=
   Part.mem_unique (Part.get_mem _) fxy
 
 /-- Turn a total function into a partial function. -/
@@ -110,6 +120,13 @@ theorem lift_eq_coe (f : α → β) : Pfun.lift f = f :=
 theorem coe_val (f : α → β) (a : α) : (f : α →. β) a = Part.some (f a) :=
   rfl
 
+@[simp]
+theorem dom_coe (f : α → β) : (f : α →. β).Dom = Set.Univ :=
+  rfl
+
+theorem coe_injective : Injective (coe : (α → β) → α →. β) := fun f g h =>
+  funext fun a => Part.some_injective <| congr_funₓ h a
+
 /-- Graph of a partial function `f` as the set of pairs `(x, f x)` where `x` is in the domain of
 `f`. -/
 def graph (f : α →. β) : Set (α × β) :=
@@ -125,10 +142,10 @@ def ran (f : α →. β) : Set β :=
   { b | ∃ a, b ∈ f a }
 
 /-- Restrict a partial function to a smaller domain. -/
-def restrict (f : α →. β) {p : Set α} (H : p ⊆ f.dom) : α →. β := fun x => (f x).restrict (x ∈ p) (@H x)
+def restrict (f : α →. β) {p : Set α} (H : p ⊆ f.Dom) : α →. β := fun x => (f x).restrict (x ∈ p) (@H x)
 
 @[simp]
-theorem mem_restrict {f : α →. β} {s : Set α} (h : s ⊆ f.dom) (a : α) (b : β) : b ∈ f.restrict h a ↔ a ∈ s ∧ b ∈ f a :=
+theorem mem_restrict {f : α →. β} {s : Set α} (h : s ⊆ f.Dom) (a : α) (b : β) : b ∈ f.restrict h a ↔ a ∈ s ∧ b ∈ f a :=
   by
   simp [restrict]
 
@@ -142,7 +159,7 @@ theorem mem_res (f : α → β) (s : Set α) (a : α) (b : β) : b ∈ res f s a
 theorem res_univ (f : α → β) : Pfun.res f Set.Univ = f :=
   rfl
 
-theorem dom_iff_graph (f : α →. β) (x : α) : x ∈ f.dom ↔ ∃ y, (x, y) ∈ f.graph :=
+theorem dom_iff_graph (f : α →. β) (x : α) : x ∈ f.Dom ↔ ∃ y, (x, y) ∈ f.Graph :=
   Part.dom_iff_mem
 
 theorem lift_graph {f : α → β} {a b} : (a, b) ∈ (f : α →. β).Graph ↔ f a = b :=
@@ -154,6 +171,10 @@ protected def pure (x : β) : α →. β := fun _ => Part.some x
 
 /-- The monad `bind` function, pointwise `part.bind` -/
 def bind (f : α →. β) (g : β → α →. γ) : α →. γ := fun a => (f a).bind fun b => g b a
+
+@[simp]
+theorem bind_apply (f : α →. β) (g : β → α →. γ) (a : α) : f.bind g a = (f a).bind fun b => g b a :=
+  rfl
 
 /-- The monad `map` function, pointwise `part.map` -/
 def map (f : β → γ) (g : α →. β) : α →. γ := fun a => (g a).map f
@@ -173,7 +194,7 @@ instance : IsLawfulMonad (Pfun α) where
 theorem pure_defined (p : Set α) (x : β) : p ⊆ (@Pfun.pure α _ x).Dom :=
   p.subset_univ
 
-theorem bind_defined {α β γ} (p : Set α) {f : α →. β} {g : β → α →. γ} (H1 : p ⊆ f.dom) (H2 : ∀ x, p ⊆ (g x).Dom) :
+theorem bind_defined {α β γ} (p : Set α) {f : α →. β} {g : β → α →. γ} (H1 : p ⊆ f.Dom) (H2 : ∀ x, p ⊆ (g x).Dom) :
     p ⊆ (f >>= g).Dom := fun a ha => (⟨H1 ha, H2 _ ha⟩ : (f >>= g).Dom a)
 
 /-- First return map. Transforms a partial function `f : α →. β ⊕ α` into the partial function
@@ -242,73 +263,71 @@ def fix_induction {f : α →. Sum β α} {b : β} {C : α → Sort _} {a : α} 
   have := (Part.mem_assert_iff.1 ha').snd
   exact IH _ fa' ⟨ha _ fa', this⟩ this
 
-end Pfun
-
-namespace Pfun
-
-variable {α β : Type _} (f : α →. β)
+variable (f : α →. β)
 
 /-- Image of a set under a partial function. -/
 def image (s : Set α) : Set β :=
-  f.graph'.image s
+  f.Graph'.Image s
 
-theorem image_def (s : Set α) : f.image s = { y | ∃ x ∈ s, y ∈ f x } :=
+theorem image_def (s : Set α) : f.Image s = { y | ∃ x ∈ s, y ∈ f x } :=
   rfl
 
-theorem mem_image (y : β) (s : Set α) : y ∈ f.image s ↔ ∃ x ∈ s, y ∈ f x :=
+theorem mem_image (y : β) (s : Set α) : y ∈ f.Image s ↔ ∃ x ∈ s, y ∈ f x :=
   Iff.rfl
 
-theorem image_mono {s t : Set α} (h : s ⊆ t) : f.image s ⊆ f.image t :=
+theorem image_mono {s t : Set α} (h : s ⊆ t) : f.Image s ⊆ f.Image t :=
   Rel.image_mono _ h
 
-theorem image_inter (s t : Set α) : f.image (s ∩ t) ⊆ f.image s ∩ f.image t :=
+theorem image_inter (s t : Set α) : f.Image (s ∩ t) ⊆ f.Image s ∩ f.Image t :=
   Rel.image_inter _ s t
 
-theorem image_union (s t : Set α) : f.image (s ∪ t) = f.image s ∪ f.image t :=
+theorem image_union (s t : Set α) : f.Image (s ∪ t) = f.Image s ∪ f.Image t :=
   Rel.image_union _ s t
 
 /-- Preimage of a set under a partial function. -/
 def preimage (s : Set β) : Set α :=
   Rel.Image (fun x y => x ∈ f y) s
 
-theorem preimage_def (s : Set β) : f.preimage s = { x | ∃ y ∈ s, y ∈ f x } :=
+theorem preimage_def (s : Set β) : f.Preimage s = { x | ∃ y ∈ s, y ∈ f x } :=
   rfl
 
-theorem mem_preimage (s : Set β) (x : α) : x ∈ f.preimage s ↔ ∃ y ∈ s, y ∈ f x :=
+@[simp]
+theorem mem_preimage (s : Set β) (x : α) : x ∈ f.Preimage s ↔ ∃ y ∈ s, y ∈ f x :=
   Iff.rfl
 
-theorem preimage_subset_dom (s : Set β) : f.preimage s ⊆ f.dom := fun x ⟨y, ys, fxy⟩ => Part.dom_iff_mem.mpr ⟨y, fxy⟩
+theorem preimage_subset_dom (s : Set β) : f.Preimage s ⊆ f.Dom := fun x ⟨y, ys, fxy⟩ => Part.dom_iff_mem.mpr ⟨y, fxy⟩
 
-theorem preimage_mono {s t : Set β} (h : s ⊆ t) : f.preimage s ⊆ f.preimage t :=
+theorem preimage_mono {s t : Set β} (h : s ⊆ t) : f.Preimage s ⊆ f.Preimage t :=
   Rel.preimage_mono _ h
 
-theorem preimage_inter (s t : Set β) : f.preimage (s ∩ t) ⊆ f.preimage s ∩ f.preimage t :=
+theorem preimage_inter (s t : Set β) : f.Preimage (s ∩ t) ⊆ f.Preimage s ∩ f.Preimage t :=
   Rel.preimage_inter _ s t
 
-theorem preimage_union (s t : Set β) : f.preimage (s ∪ t) = f.preimage s ∪ f.preimage t :=
+theorem preimage_union (s t : Set β) : f.Preimage (s ∪ t) = f.Preimage s ∪ f.Preimage t :=
   Rel.preimage_union _ s t
 
-theorem preimage_univ : f.preimage Set.Univ = f.dom := by
+theorem preimage_univ : f.Preimage Set.Univ = f.Dom := by
   ext <;> simp [mem_preimage, mem_dom]
 
 /-- Core of a set `s : set β` with respect to a partial function `f : α →. β`. Set of all `a : α`
 such that `f a ∈ s`, if `f a` is defined. -/
 def core (s : Set β) : Set α :=
-  f.graph'.core s
+  f.Graph'.Core s
 
-theorem core_def (s : Set β) : f.core s = { x | ∀ y, y ∈ f x → y ∈ s } :=
+theorem core_def (s : Set β) : f.Core s = { x | ∀ y, y ∈ f x → y ∈ s } :=
   rfl
 
-theorem mem_core (x : α) (s : Set β) : x ∈ f.core s ↔ ∀ y, y ∈ f x → y ∈ s :=
+@[simp]
+theorem mem_core (x : α) (s : Set β) : x ∈ f.Core s ↔ ∀ y, y ∈ f x → y ∈ s :=
   Iff.rfl
 
-theorem compl_dom_subset_core (s : Set β) : f.domᶜ ⊆ f.core s := fun x hx y fxy =>
+theorem compl_dom_subset_core (s : Set β) : f.Domᶜ ⊆ f.Core s := fun x hx y fxy =>
   absurd ((mem_dom f x).mpr ⟨y, fxy⟩) hx
 
-theorem core_mono {s t : Set β} (h : s ⊆ t) : f.core s ⊆ f.core t :=
+theorem core_mono {s t : Set β} (h : s ⊆ t) : f.Core s ⊆ f.Core t :=
   Rel.core_mono _ h
 
-theorem core_inter (s t : Set β) : f.core (s ∩ t) = f.core s ∩ f.core t :=
+theorem core_inter (s t : Set β) : f.Core (s ∩ t) = f.Core s ∩ f.Core t :=
   Rel.core_inter _ s t
 
 theorem mem_core_res (f : α → β) (s : Set α) (t : Set β) (x : α) : x ∈ (res f s).Core t ↔ x ∈ s → f x ∈ t := by
@@ -325,25 +344,25 @@ theorem core_res (f : α → β) (s : Set α) (t : Set β) : (res f s).Core t = 
 
 end
 
-theorem core_restrict (f : α → β) (s : Set β) : (f : α →. β).Core s = s.preimage f := by
+theorem core_restrict (f : α → β) (s : Set β) : (f : α →. β).Core s = s.Preimage f := by
   ext x <;> simp [core_def]
 
-theorem preimage_subset_core (f : α →. β) (s : Set β) : f.preimage s ⊆ f.core s := fun x ⟨y, ys, fxy⟩ y' fxy' =>
+theorem preimage_subset_core (f : α →. β) (s : Set β) : f.Preimage s ⊆ f.Core s := fun x ⟨y, ys, fxy⟩ y' fxy' =>
   have : y = y' := Part.mem_unique fxy fxy'
   this ▸ ys
 
-theorem preimage_eq (f : α →. β) (s : Set β) : f.preimage s = f.core s ∩ f.dom :=
+theorem preimage_eq (f : α →. β) (s : Set β) : f.Preimage s = f.Core s ∩ f.Dom :=
   Set.eq_of_subset_of_subset (Set.subset_inter (f.preimage_subset_core s) (f.preimage_subset_dom s))
     fun x ⟨xcore, xdom⟩ =>
     let y := (f x).get xdom
     have ys : y ∈ s := xcore _ (Part.get_mem _)
-    show x ∈ f.preimage s from ⟨(f x).get xdom, ys, Part.get_mem _⟩
+    show x ∈ f.Preimage s from ⟨(f x).get xdom, ys, Part.get_mem _⟩
 
-theorem core_eq (f : α →. β) (s : Set β) : f.core s = f.preimage s ∪ f.domᶜ := by
+theorem core_eq (f : α →. β) (s : Set β) : f.Core s = f.Preimage s ∪ f.Domᶜ := by
   rw [preimage_eq, Set.union_distrib_right, Set.union_comm (dom f), Set.compl_union_self, Set.inter_univ,
     Set.union_eq_self_of_subset_right (f.compl_dom_subset_core s)]
 
-theorem preimage_as_subtype (f : α →. β) (s : Set β) : f.as_subtype ⁻¹' s = Subtype.val ⁻¹' f.preimage s := by
+theorem preimage_as_subtype (f : α →. β) (s : Set β) : f.asSubtype ⁻¹' s = Subtype.val ⁻¹' f.Preimage s := by
   ext x
   simp only [Set.mem_preimage, Set.mem_set_of_eq, Pfun.asSubtype, Pfun.mem_preimage]
   show f.fn x.val _ ∈ s ↔ ∃ y ∈ s, y ∈ f x.val
@@ -351,6 +370,84 @@ theorem preimage_as_subtype (f : α →. β) (s : Set β) : f.as_subtype ⁻¹' 
     Iff.intro (fun h => ⟨_, h, Part.get_mem _⟩) fun ⟨y, ys, fxy⟩ =>
       have : f.fn x.val x.property ∈ f x.val := Part.get_mem _
       Part.mem_unique fxy this ▸ ys
+
+/-- Turns a function into a partial function to a subtype. -/
+def to_subtype (p : β → Prop) (f : α → β) : α →. Subtype p := fun a => ⟨p (f a), Subtype.mk _⟩
+
+@[simp]
+theorem dom_to_subtype (p : β → Prop) (f : α → β) : (toSubtype p f).Dom = { a | p (f a) } :=
+  rfl
+
+@[simp]
+theorem to_subtype_apply (p : β → Prop) (f : α → β) (a : α) : toSubtype p f a = ⟨p (f a), Subtype.mk _⟩ :=
+  rfl
+
+theorem dom_to_subtype_apply_iff {p : β → Prop} {f : α → β} {a : α} : (toSubtype p f a).Dom ↔ p (f a) :=
+  Iff.rfl
+
+theorem mem_to_subtype_iff {p : β → Prop} {f : α → β} {a : α} {b : Subtype p} : b ∈ toSubtype p f a ↔ ↑b = f a := by
+  rw [to_subtype_apply, Part.mem_mk_iff, exists_subtype_mk_eq_iff, eq_comm]
+
+/-- The identity as a partial function -/
+protected def id (α : Type _) : α →. α :=
+  Part.some
+
+@[simp]
+theorem coe_id (α : Type _) : ((id : α → α) : α →. α) = Pfun.id α :=
+  rfl
+
+@[simp]
+theorem id_apply (a : α) : Pfun.id α a = Part.some a :=
+  rfl
+
+/-- Composition of partial functions as a partial function. -/
+def comp (f : β →. γ) (g : α →. β) : α →. γ := fun a => (g a).bind f
+
+@[simp]
+theorem comp_apply (f : β →. γ) (g : α →. β) (a : α) : f.comp g a = (g a).bind f :=
+  rfl
+
+@[simp]
+theorem id_comp (f : α →. β) : (Pfun.id β).comp f = f :=
+  ext fun _ _ => by
+    simp
+
+@[simp]
+theorem comp_id (f : α →. β) : f.comp (Pfun.id α) = f :=
+  ext fun _ _ => by
+    simp
+
+@[simp]
+theorem dom_comp (f : β →. γ) (g : α →. β) : (f.comp g).Dom = g.Preimage f.Dom := by
+  ext
+  simp_rw [mem_preimage, mem_dom, comp_apply, Part.mem_bind_iff, exists_prop, ← exists_and_distrib_right]
+  rw [exists_comm]
+  simp_rw [And.comm]
+
+@[simp]
+theorem preimage_comp (f : β →. γ) (g : α →. β) (s : Set γ) : (f.comp g).Preimage s = g.Preimage (f.Preimage s) := by
+  ext
+  simp_rw [mem_preimage, comp_apply, Part.mem_bind_iff, exists_prop, ← exists_and_distrib_right, ←
+    exists_and_distrib_left]
+  rw [exists_comm]
+  simp_rw [and_assoc, And.comm]
+
+@[simp]
+theorem _root_.part.bind_comp (f : β →. γ) (g : α →. β) (a : Part α) : a.bind (f.comp g) = (a.bind g).bind f := by
+  ext c
+  simp_rw [Part.mem_bind_iff, comp_apply, Part.mem_bind_iff, exists_prop, ← exists_and_distrib_right, ←
+    exists_and_distrib_left]
+  rw [exists_comm]
+  simp_rw [and_assoc]
+
+@[simp]
+theorem comp_assoc (f : γ →. δ) (g : β →. γ) (h : α →. β) : (f.comp g).comp h = f.comp (g.comp h) :=
+  ext fun _ _ => by
+    simp only [comp_apply, Part.bind_comp]
+
+theorem coe_comp (g : β → γ) (f : α → β) : ((g ∘ f : α → γ) : α →. γ) = (g : β →. γ).comp f :=
+  ext fun _ _ => by
+    simp only [coe_val, comp_apply, Part.bind_some]
 
 end Pfun
 

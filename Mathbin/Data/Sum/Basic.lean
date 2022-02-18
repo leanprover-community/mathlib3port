@@ -51,9 +51,9 @@ theorem exists {p : Sum α β → Prop} : (∃ x, p x) ↔ (∃ a, p (inl a)) �
     | Or.inl ⟨a, h⟩ => ⟨inl a, h⟩
     | Or.inr ⟨b, h⟩ => ⟨inr b, h⟩⟩
 
-theorem inl_injective : Function.Injective (inl : α → Sum α β) := fun x y => inl.inj
+theorem inl_injective : Function.Injective (inl : α → Sum α β) := fun x y => inl.injₓ
 
-theorem inr_injective : Function.Injective (inr : β → Sum α β) := fun x y => inr.inj
+theorem inr_injective : Function.Injective (inr : β → Sum α β) := fun x y => inr.injₓ
 
 section get
 
@@ -72,21 +72,21 @@ def get_right : Sum α β → Option β
 /-- Check if a sum is `inl`. -/
 @[simp]
 def is_left : Sum α β → Bool
-  | inl _ => tt
-  | inr _ => ff
+  | inl _ => true
+  | inr _ => false
 
 /-- Check if a sum is `inr`. -/
 @[simp]
 def is_right : Sum α β → Bool
-  | inl _ => ff
-  | inr _ => tt
+  | inl _ => false
+  | inr _ => true
 
 variable {x y : Sum α β}
 
-theorem get_left_eq_none_iff : x.get_left = none ↔ x.is_right := by
+theorem get_left_eq_none_iff : x.getLeft = none ↔ x.isRight := by
   cases x <;> simp only [get_left, is_right, coe_sort_tt, coe_sort_ff, eq_self_iff_true]
 
-theorem get_right_eq_none_iff : x.get_right = none ↔ x.is_left := by
+theorem get_right_eq_none_iff : x.getRight = none ↔ x.isLeft := by
   cases x <;> simp only [get_right, is_left, coe_sort_tt, coe_sort_ff, eq_self_iff_true]
 
 end get
@@ -120,10 +120,10 @@ theorem map_id_id α β : Sum.map (@id α) (@id β) = id :=
   funext fun x => Sum.recOn x (fun _ => rfl) fun _ => rfl
 
 theorem inl.inj_iff {a b} : (inl a : Sum α β) = inl b ↔ a = b :=
-  ⟨inl.inj, congr_argₓ _⟩
+  ⟨inl.injₓ, congr_argₓ _⟩
 
 theorem inr.inj_iff {a b} : (inr a : Sum α β) = inr b ↔ a = b :=
-  ⟨inr.inj, congr_argₓ _⟩
+  ⟨inr.injₓ, congr_argₓ _⟩
 
 theorem inl_ne_inr {a : α} {b : β} : inl a ≠ inr b :=
   fun.
@@ -255,52 +255,52 @@ attribute [protected] lift_rel.inl lift_rel.inr
 variable {r r₁ r₂ : α → γ → Prop} {s s₁ s₂ : β → δ → Prop} {a : α} {b : β} {c : γ} {d : δ} {x : Sum α β} {y : Sum γ δ}
 
 @[simp]
-theorem lift_rel_inl_inl : lift_rel r s (inl a) (inl c) ↔ r a c :=
+theorem lift_rel_inl_inl : LiftRel r s (inl a) (inl c) ↔ r a c :=
   ⟨fun h => by
     cases h
-    assumption, lift_rel.inl⟩
+    assumption, LiftRel.inl⟩
 
 @[simp]
-theorem not_lift_rel_inl_inr : ¬lift_rel r s (inl a) (inr d) :=
+theorem not_lift_rel_inl_inr : ¬LiftRel r s (inl a) (inr d) :=
   fun.
 
 @[simp]
-theorem not_lift_rel_inr_inl : ¬lift_rel r s (inr b) (inl c) :=
+theorem not_lift_rel_inr_inl : ¬LiftRel r s (inr b) (inl c) :=
   fun.
 
 @[simp]
-theorem lift_rel_inr_inr : lift_rel r s (inr b) (inr d) ↔ s b d :=
+theorem lift_rel_inr_inr : LiftRel r s (inr b) (inr d) ↔ s b d :=
   ⟨fun h => by
     cases h
-    assumption, lift_rel.inr⟩
+    assumption, LiftRel.inr⟩
 
 instance [∀ a c, Decidable (r a c)] [∀ b d, Decidable (s b d)] :
-    ∀ ab : Sum α β cd : Sum γ δ, Decidable (lift_rel r s ab cd)
+    ∀ ab : Sum α β cd : Sum γ δ, Decidable (LiftRel r s ab cd)
   | inl a, inl c => decidableOfIff' _ lift_rel_inl_inl
   | inl a, inr d => Decidable.isFalse not_lift_rel_inl_inr
   | inr b, inl c => Decidable.isFalse not_lift_rel_inr_inl
   | inr b, inr d => decidableOfIff' _ lift_rel_inr_inr
 
-theorem lift_rel.mono (hr : ∀ a b, r₁ a b → r₂ a b) (hs : ∀ a b, s₁ a b → s₂ a b) (h : lift_rel r₁ s₁ x y) :
-    lift_rel r₂ s₂ x y := by
+theorem lift_rel.mono (hr : ∀ a b, r₁ a b → r₂ a b) (hs : ∀ a b, s₁ a b → s₂ a b) (h : LiftRel r₁ s₁ x y) :
+    LiftRel r₂ s₂ x y := by
   cases h
   exacts[lift_rel.inl (hr _ _ ‹_›), lift_rel.inr (hs _ _ ‹_›)]
 
-theorem lift_rel.mono_left (hr : ∀ a b, r₁ a b → r₂ a b) (h : lift_rel r₁ s x y) : lift_rel r₂ s x y :=
+theorem lift_rel.mono_left (hr : ∀ a b, r₁ a b → r₂ a b) (h : LiftRel r₁ s x y) : LiftRel r₂ s x y :=
   (h.mono hr) fun _ _ => id
 
-theorem lift_rel.mono_right (hs : ∀ a b, s₁ a b → s₂ a b) (h : lift_rel r s₁ x y) : lift_rel r s₂ x y :=
+theorem lift_rel.mono_right (hs : ∀ a b, s₁ a b → s₂ a b) (h : LiftRel r s₁ x y) : LiftRel r s₂ x y :=
   h.mono (fun _ _ => id) hs
 
-protected theorem lift_rel.swap (h : lift_rel r s x y) : lift_rel s r x.swap y.swap := by
+protected theorem lift_rel.swap (h : LiftRel r s x y) : LiftRel s r x.swap y.swap := by
   cases h
   exacts[lift_rel.inr ‹_›, lift_rel.inl ‹_›]
 
 @[simp]
-theorem lift_rel_swap_iff : lift_rel s r x.swap y.swap ↔ lift_rel r s x y :=
+theorem lift_rel_swap_iff : LiftRel s r x.swap y.swap ↔ LiftRel r s x y :=
   ⟨fun h => by
     rw [← swap_swap x, ← swap_swap y]
-    exact h.swap, lift_rel.swap⟩
+    exact h.swap, LiftRel.swap⟩
 
 end LiftRel
 
@@ -320,49 +320,49 @@ attribute [simp] lex.sep
 variable {r r₁ r₂ : α → α → Prop} {s s₁ s₂ : β → β → Prop} {a a₁ a₂ : α} {b b₁ b₂ : β} {x y : Sum α β}
 
 @[simp]
-theorem lex_inl_inl : lex r s (inl a₁) (inl a₂) ↔ r a₁ a₂ :=
+theorem lex_inl_inl : Lex r s (inl a₁) (inl a₂) ↔ r a₁ a₂ :=
   ⟨fun h => by
     cases h
-    assumption, lex.inl⟩
+    assumption, Lex.inl⟩
 
 @[simp]
-theorem lex_inr_inr : lex r s (inr b₁) (inr b₂) ↔ s b₁ b₂ :=
+theorem lex_inr_inr : Lex r s (inr b₁) (inr b₂) ↔ s b₁ b₂ :=
   ⟨fun h => by
     cases h
-    assumption, lex.inr⟩
+    assumption, Lex.inr⟩
 
 @[simp]
-theorem lex_inr_inl : ¬lex r s (inr b) (inl a) :=
+theorem lex_inr_inl : ¬Lex r s (inr b) (inl a) :=
   fun.
 
-instance [DecidableRel r] [DecidableRel s] : DecidableRel (lex r s)
+instance [DecidableRel r] [DecidableRel s] : DecidableRel (Lex r s)
   | inl a, inl c => decidableOfIff' _ lex_inl_inl
-  | inl a, inr d => Decidable.isTrue (lex.sep _ _)
+  | inl a, inr d => Decidable.isTrue (Lex.sep _ _)
   | inr b, inl c => Decidable.isFalse lex_inr_inl
   | inr b, inr d => decidableOfIff' _ lex_inr_inr
 
-protected theorem lift_rel.lex {a b : Sum α β} (h : lift_rel r s a b) : lex r s a b := by
+protected theorem lift_rel.lex {a b : Sum α β} (h : LiftRel r s a b) : Lex r s a b := by
   cases h
   exacts[lex.inl ‹_›, lex.inr ‹_›]
 
-theorem lex.mono (hr : ∀ a b, r₁ a b → r₂ a b) (hs : ∀ a b, s₁ a b → s₂ a b) (h : lex r₁ s₁ x y) : lex r₂ s₂ x y := by
+theorem lex.mono (hr : ∀ a b, r₁ a b → r₂ a b) (hs : ∀ a b, s₁ a b → s₂ a b) (h : Lex r₁ s₁ x y) : Lex r₂ s₂ x y := by
   cases h
   exacts[lex.inl (hr _ _ ‹_›), lex.inr (hs _ _ ‹_›), lex.sep _ _]
 
-theorem lex.mono_left (hr : ∀ a b, r₁ a b → r₂ a b) (h : lex r₁ s x y) : lex r₂ s x y :=
+theorem lex.mono_left (hr : ∀ a b, r₁ a b → r₂ a b) (h : Lex r₁ s x y) : Lex r₂ s x y :=
   (h.mono hr) fun _ _ => id
 
-theorem lex.mono_right (hs : ∀ a b, s₁ a b → s₂ a b) (h : lex r s₁ x y) : lex r s₂ x y :=
+theorem lex.mono_right (hs : ∀ a b, s₁ a b → s₂ a b) (h : Lex r s₁ x y) : Lex r s₂ x y :=
   h.mono (fun _ _ => id) hs
 
-theorem lex_acc_inl {a} (aca : Acc r a) : Acc (lex r s) (inl a) := by
+theorem lex_acc_inl {a} (aca : Acc r a) : Acc (Lex r s) (inl a) := by
   induction' aca with a H IH
   constructor
   intro y h
   cases' h with a' _ h'
   exact IH _ h'
 
-theorem lex_acc_inr (aca : ∀ a, Acc (lex r s) (inl a)) {b} (acb : Acc s b) : Acc (lex r s) (inr b) := by
+theorem lex_acc_inr (aca : ∀ a, Acc (Lex r s) (inl a)) {b} (acb : Acc s b) : Acc (Lex r s) (inr b) := by
   induction' acb with b H IH
   constructor
   intro y h
@@ -372,8 +372,8 @@ theorem lex_acc_inr (aca : ∀ a, Acc (lex r s) (inl a)) {b} (acb : Acc s b) : A
   · exact aca _
     
 
-theorem lex_wf (ha : WellFounded r) (hb : WellFounded s) : WellFounded (lex r s) :=
-  have aca : ∀ a, Acc (lex r s) (inl a) := fun a => lex_acc_inl (ha.apply a)
+theorem lex_wf (ha : WellFounded r) (hb : WellFounded s) : WellFounded (Lex r s) :=
+  have aca : ∀ a, Acc (Lex r s) (inl a) := fun a => lex_acc_inl (ha.apply a)
   ⟨fun x => Sum.recOn x aca fun b => lex_acc_inr aca (hb.apply b)⟩
 
 end Lex
@@ -384,18 +384,18 @@ namespace Function
 
 open Sum
 
-theorem injective.sum_elim {f : α → γ} {g : β → γ} (hf : injective f) (hg : injective g) (hfg : ∀ a b, f a ≠ g b) :
-    injective (Sum.elim f g)
+theorem injective.sum_elim {f : α → γ} {g : β → γ} (hf : Injective f) (hg : Injective g) (hfg : ∀ a b, f a ≠ g b) :
+    Injective (Sum.elim f g)
   | inl x, inl y, h => congr_argₓ inl <| hf h
   | inl x, inr y, h => (hfg x y h).elim
   | inr x, inl y, h => (hfg y x h.symm).elim
   | inr x, inr y, h => congr_argₓ inr <| hg h
 
-theorem injective.sum_map {f : α → β} {g : α' → β'} (hf : injective f) (hg : injective g) : injective (Sum.map f g)
-  | inl x, inl y, h => congr_argₓ inl <| hf <| inl.inj h
-  | inr x, inr y, h => congr_argₓ inr <| hg <| inr.inj h
+theorem injective.sum_map {f : α → β} {g : α' → β'} (hf : Injective f) (hg : Injective g) : Injective (Sum.map f g)
+  | inl x, inl y, h => congr_argₓ inl <| hf <| inl.injₓ h
+  | inr x, inr y, h => congr_argₓ inr <| hg <| inr.injₓ h
 
-theorem surjective.sum_map {f : α → β} {g : α' → β'} (hf : surjective f) (hg : surjective g) : surjective (Sum.map f g)
+theorem surjective.sum_map {f : α → β} {g : α' → β'} (hf : Surjective f) (hg : Surjective g) : Surjective (Sum.map f g)
   | inl y =>
     let ⟨x, hx⟩ := hf y
     ⟨inl x, congr_argₓ inl hx⟩

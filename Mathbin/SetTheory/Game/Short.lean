@@ -23,7 +23,7 @@ inductive short : Pgame.{u} → Type (u + 1)
     ∀ {α β : Type u} {L : α → Pgame.{u}} {R : β → Pgame.{u}} sL : ∀ i : α, short (L i) sR : ∀ j : β, short (R j)
       [Fintype α] [Fintype β], short ⟨α, β, L, R⟩
 
-instance subsingleton_short : ∀ x : Pgame, Subsingleton (short x)
+instance subsingleton_short : ∀ x : Pgame, Subsingleton (Short x)
   | mk xl xr xL xR =>
     ⟨fun a b => by
       cases a
@@ -37,8 +37,8 @@ instance subsingleton_short : ∀ x : Pgame, Subsingleton (short x)
         ⟩
 
 /-- A synonym for `short.mk` that specifies the pgame in an implicit argument. -/
-def short.mk' {x : Pgame} [Fintype x.left_moves] [Fintype x.right_moves]
-    (sL : ∀ i : x.left_moves, short (x.move_left i)) (sR : ∀ j : x.right_moves, short (x.move_right j)) : short x := by
+def short.mk' {x : Pgame} [Fintype x.LeftMoves] [Fintype x.RightMoves] (sL : ∀ i : x.LeftMoves, Short (x.moveLeft i))
+    (sR : ∀ j : x.RightMoves, Short (x.moveRight j)) : Short x := by
   (
       cases x
       dsimp  at *) <;>
@@ -49,13 +49,13 @@ attribute [class] short
 /-- Extracting the `fintype` instance for the indexing type for Left's moves in a short game.
 This is an unindexed typeclass, so it can't be made a global instance.
 -/
-def fintype_left {α β : Type u} {L : α → Pgame.{u}} {R : β → Pgame.{u}} [S : short ⟨α, β, L, R⟩] : Fintype α := by
+def fintype_left {α β : Type u} {L : α → Pgame.{u}} {R : β → Pgame.{u}} [S : Short ⟨α, β, L, R⟩] : Fintype α := by
   cases' S with _ _ _ _ _ _ F _
   exact F
 
 attribute [local instance] fintype_left
 
-instance fintype_left_moves (x : Pgame) [S : short x] : Fintype x.left_moves := by
+instance fintype_left_moves (x : Pgame) [S : Short x] : Fintype x.LeftMoves := by
   cases' x
   dsimp
   infer_instance
@@ -63,18 +63,18 @@ instance fintype_left_moves (x : Pgame) [S : short x] : Fintype x.left_moves := 
 /-- Extracting the `fintype` instance for the indexing type for Right's moves in a short game.
 This is an unindexed typeclass, so it can't be made a global instance.
 -/
-def fintype_right {α β : Type u} {L : α → Pgame.{u}} {R : β → Pgame.{u}} [S : short ⟨α, β, L, R⟩] : Fintype β := by
+def fintype_right {α β : Type u} {L : α → Pgame.{u}} {R : β → Pgame.{u}} [S : Short ⟨α, β, L, R⟩] : Fintype β := by
   cases' S with _ _ _ _ _ _ _ F
   exact F
 
 attribute [local instance] fintype_right
 
-instance fintype_right_moves (x : Pgame) [S : short x] : Fintype x.right_moves := by
+instance fintype_right_moves (x : Pgame) [S : Short x] : Fintype x.RightMoves := by
   cases' x
   dsimp
   infer_instance
 
-instance move_left_short (x : Pgame) [S : short x] (i : x.left_moves) : short (x.move_left i) := by
+instance move_left_short (x : Pgame) [S : Short x] (i : x.LeftMoves) : Short (x.moveLeft i) := by
   cases' S with _ _ _ _ L _ _ _
   apply L
 
@@ -82,13 +82,13 @@ instance move_left_short (x : Pgame) [S : short x] (i : x.left_moves) : short (x
 This would be a dangerous instance potentially introducing new metavariables
 in typeclass search, so we only make it an instance locally.
 -/
-def move_left_short' {xl xr} xL xR [S : short (mk xl xr xL xR)] (i : xl) : short (xL i) := by
+def move_left_short' {xl xr} xL xR [S : Short (mk xl xr xL xR)] (i : xl) : Short (xL i) := by
   cases' S with _ _ _ _ L _ _ _
   apply L
 
 attribute [local instance] move_left_short'
 
-instance move_right_short (x : Pgame) [S : short x] (j : x.right_moves) : short (x.move_right j) := by
+instance move_right_short (x : Pgame) [S : Short x] (j : x.RightMoves) : Short (x.moveRight j) := by
   cases' S with _ _ _ _ _ R _ _
   apply R
 
@@ -96,24 +96,24 @@ instance move_right_short (x : Pgame) [S : short x] (j : x.right_moves) : short 
 This would be a dangerous instance potentially introducing new metavariables
 in typeclass search, so we only make it an instance locally.
 -/
-def move_right_short' {xl xr} xL xR [S : short (mk xl xr xL xR)] (j : xr) : short (xR j) := by
+def move_right_short' {xl xr} xL xR [S : Short (mk xl xr xL xR)] (j : xr) : Short (xR j) := by
   cases' S with _ _ _ _ _ R _ _
   apply R
 
 attribute [local instance] move_right_short'
 
-instance short.of_pempty {xL} {xR} : short (mk Pempty Pempty xL xR) :=
-  short.mk (fun i => Pempty.elimₓ i) fun j => Pempty.elimₓ j
+instance short.of_pempty {xL} {xR} : Short (mk Pempty Pempty xL xR) :=
+  Short.mk (fun i => Pempty.elimₓ i) fun j => Pempty.elimₓ j
 
-instance short_0 : short 0 :=
-  short.mk
+instance short_0 : Short 0 :=
+  Short.mk
     (fun i => by
       cases i)
     fun j => by
     cases j
 
-instance short_1 : short 1 :=
-  short.mk
+instance short_1 : Short 1 :=
+  Short.mk
     (fun i => by
       cases i
       infer_instance)
@@ -123,21 +123,20 @@ instance short_1 : short 1 :=
 /-- Evidence that every `pgame` in a list is `short`. -/
 inductive list_short : List Pgame.{u} → Type (u + 1)
   | nil : list_short []
-  | cons : ∀ hd : Pgame.{u} [short hd] tl : List Pgame.{u} [list_short tl], list_short (hd :: tl)
+  | cons : ∀ hd : Pgame.{u} [Short hd] tl : List Pgame.{u} [list_short tl], list_short (hd :: tl)
 
 attribute [class] list_short
 
 attribute [instance] list_short.nil list_short.cons
 
-instance list_short_nth_le :
-    ∀ L : List Pgame.{u} [list_short L] i : Finₓ (List.length L), short (List.nthLe L i i.is_lt)
+instance list_short_nth_le : ∀ L : List Pgame.{u} [ListShort L] i : Finₓ (List.length L), Short (List.nthLe L i i.is_lt)
   | [], _, n => by
     exfalso
     rcases n with ⟨_, ⟨⟩⟩
   | hd :: tl, @list_short.cons _ S _ _, ⟨0, _⟩ => S
   | hd :: tl, @list_short.cons _ _ _ S, ⟨n + 1, h⟩ => @list_short_nth_le tl S ⟨n, (add_lt_add_iff_right 1).mp h⟩
 
-instance short_of_lists : ∀ L R : List Pgame [list_short L] [list_short R], short (Pgame.ofLists L R)
+instance short_of_lists : ∀ L R : List Pgame [ListShort L] [ListShort R], Short (Pgame.ofLists L R)
   | L, R, _, _ => by
     skip
     apply short.mk
@@ -149,7 +148,7 @@ instance short_of_lists : ∀ L R : List Pgame [list_short L] [list_short R], sh
       
 
 /-- If `x` is a short game, and `y` is a relabelling of `x`, then `y` is also short. -/
-def short_of_relabelling : ∀ {x y : Pgame.{u}} R : relabelling x y S : short x, short y
+def short_of_relabelling : ∀ {x y : Pgame.{u}} R : Relabelling x y S : Short x, Short y
   | x, y, ⟨L, R, rL, rR⟩, S => by
     skip
     have := Fintype.ofEquiv _ L
@@ -162,10 +161,10 @@ def short_of_relabelling : ∀ {x y : Pgame.{u}} R : relabelling x y S : short x
         fun j => short_of_relabelling (rR j) inferInstance
 
 /-- If `x` has no left move or right moves, it is (very!) short. -/
-def short_of_equiv_empty {x : Pgame.{u}} (el : x.left_moves ≃ Pempty) (er : x.right_moves ≃ Pempty) : short x :=
-  short_of_relabelling (relabel_relabelling el er).symm short.of_pempty
+def short_of_equiv_empty {x : Pgame.{u}} (el : x.LeftMoves ≃ Pempty) (er : x.RightMoves ≃ Pempty) : Short x :=
+  shortOfRelabelling (relabelRelabelling el er).symm Short.ofPempty
 
-instance short_neg : ∀ x : Pgame.{u} [short x], short (-x)
+instance short_neg : ∀ x : Pgame.{u} [Short x], Short (-x)
   | mk xl xr xL xR, _ => by
     skip
     apply short.mk
@@ -178,7 +177,7 @@ instance short_neg : ∀ x : Pgame.{u} [short x], short (-x)
       infer_instance
       
 
-instance short_add : ∀ x y : Pgame.{u} [short x] [short y], short (x + y)
+instance short_add : ∀ x y : Pgame.{u} [Short x] [Short y], Short (x + y)
   | mk xl xr xL xR, mk yl yr yL yR, _, _ => by
     skip
     apply short.mk
@@ -197,15 +196,15 @@ instance short_add : ∀ x y : Pgame.{u} [short x] [short y], short (x + y)
         
       
 
-instance short_nat : ∀ n : ℕ, short n
+instance short_nat : ∀ n : ℕ, Short n
   | 0 => Pgame.short0
   | n + 1 => @Pgame.shortAdd _ _ (short_nat n) Pgame.short1
 
-instance short_bit0 (x : Pgame.{u}) [short x] : short (bit0 x) := by
+instance short_bit0 (x : Pgame.{u}) [Short x] : Short (bit0 x) := by
   dsimp [bit0]
   infer_instance
 
-instance short_bit1 (x : Pgame.{u}) [short x] : short (bit1 x) := by
+instance short_bit1 (x : Pgame.{u}) [Short x] : Short (bit1 x) := by
   dsimp [bit1]
   infer_instance
 
@@ -213,7 +212,7 @@ instance short_bit1 (x : Pgame.{u}) [short x] : short (bit1 x) := by
 We build `decidable (x ≤ y)` and `decidable (x < y)` in a simultaneous induction.
 Instances for the two projections separately are provided below.
 -/
-def le_lt_decidable : ∀ x y : Pgame.{u} [short x] [short y], Decidable (x ≤ y) × Decidable (x < y)
+def le_lt_decidable : ∀ x y : Pgame.{u} [Short x] [Short y], Decidable (x ≤ y) × Decidable (x < y)
   | mk xl xr xL xR, mk yl yr yL yR, shortx, shorty => by
     skip
     constructor
@@ -252,34 +251,34 @@ def le_lt_decidable : ∀ x y : Pgame.{u} [short x] [short y], Decidable (x ≤ 
         
       
 
-instance le_decidable (x y : Pgame.{u}) [short x] [short y] : Decidable (x ≤ y) :=
-  (le_lt_decidable x y).1
+instance le_decidable (x y : Pgame.{u}) [Short x] [Short y] : Decidable (x ≤ y) :=
+  (leLtDecidable x y).1
 
-instance lt_decidable (x y : Pgame.{u}) [short x] [short y] : Decidable (x < y) :=
-  (le_lt_decidable x y).2
+instance lt_decidable (x y : Pgame.{u}) [Short x] [Short y] : Decidable (x < y) :=
+  (leLtDecidable x y).2
 
-instance equiv_decidable (x y : Pgame.{u}) [short x] [short y] : Decidable (x ≈ y) :=
+instance equiv_decidable (x y : Pgame.{u}) [Short x] [Short y] : Decidable (x ≈ y) :=
   And.decidable
 
-example : short 0 := by
+example : Short 0 := by
   infer_instance
 
-example : short 1 := by
+example : Short 1 := by
   infer_instance
 
-example : short 2 := by
+example : Short 2 := by
   infer_instance
 
-example : short (-2) := by
+example : Short (-2) := by
   infer_instance
 
-example : short (of_lists [0] [1]) := by
+example : Short (ofLists [0] [1]) := by
   infer_instance
 
-example : short (of_lists [-2, -1] [1]) := by
+example : Short (ofLists [-2, -1] [1]) := by
   infer_instance
 
-example : short (0 + 0) := by
+example : Short (0 + 0) := by
   infer_instance
 
 example : Decidable ((1 : Pgame) ≤ 1) := by

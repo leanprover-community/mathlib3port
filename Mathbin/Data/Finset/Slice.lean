@@ -39,9 +39,9 @@ variable {A B : Set (Finset α)} {r : ℕ}
 def sized (r : ℕ) (A : Set (Finset α)) : Prop :=
   ∀ ⦃x⦄, x ∈ A → card x = r
 
-theorem sized.mono (h : A ⊆ B) (hB : B.sized r) : A.sized r := fun x hx => hB <| h hx
+theorem sized.mono (h : A ⊆ B) (hB : B.Sized r) : A.Sized r := fun x hx => hB <| h hx
 
-theorem sized_union : (A ∪ B).Sized r ↔ A.sized r ∧ B.sized r :=
+theorem sized_union : (A ∪ B).Sized r ↔ A.Sized r ∧ B.Sized r :=
   ⟨fun hA => ⟨hA.mono <| subset_union_left _ _, hA.mono <| subset_union_right _ _⟩, fun hA x hx =>
     (hx.elim fun h => hA.1 h) fun h => hA.2 h⟩
 
@@ -52,27 +52,27 @@ theorem sized_Union {f : ι → Set (Finset α)} : (⋃ i, f i).Sized r ↔ ∀ 
   simp_rw [Set.Sized, Set.mem_Union, forall_exists_index]
   exact forall_swap
 
--- ././Mathport/Syntax/Translate/Basic.lean:626:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (i j)
 @[simp]
 theorem sized_Union₂ {f : ∀ i, κ i → Set (Finset α)} : (⋃ (i) (j), f i j).Sized r ↔ ∀ i j, (f i j).Sized r := by
   simp_rw [sized_Union]
 
-protected theorem sized.is_antichain (hA : A.sized r) : IsAntichain (· ⊆ ·) A := fun s hs t ht h hst =>
+protected theorem sized.is_antichain (hA : A.Sized r) : IsAntichain (· ⊆ ·) A := fun s hs t ht h hst =>
   h <| Finset.eq_of_subset_of_card_le hst ((hA ht).trans (hA hs).symm).le
 
-protected theorem sized.subsingleton (hA : A.sized 0) : A.subsingleton :=
+protected theorem sized.subsingleton (hA : A.Sized 0) : A.Subsingleton :=
   (subsingleton_of_forall_eq ∅) fun s hs => card_eq_zero.1 <| hA hs
 
-theorem sized.subsingleton' [Fintype α] (hA : A.sized (Fintype.card α)) : A.subsingleton :=
+theorem sized.subsingleton' [Fintype α] (hA : A.Sized (Fintype.card α)) : A.Subsingleton :=
   (subsingleton_of_forall_eq Finset.univ) fun s hs => s.card_eq_iff_eq_univ.1 <| hA hs
 
-theorem sized.empty_mem_iff (hA : A.sized r) : ∅ ∈ A ↔ A = {∅} :=
-  hA.is_antichain.bot_mem_iff
+theorem sized.empty_mem_iff (hA : A.Sized r) : ∅ ∈ A ↔ A = {∅} :=
+  hA.IsAntichain.bot_mem_iff
 
-theorem sized.univ_mem_iff [Fintype α] (hA : A.sized r) : Finset.univ ∈ A ↔ A = {Finset.univ} :=
-  hA.is_antichain.top_mem_iff
+theorem sized.univ_mem_iff [Fintype α] (hA : A.Sized r) : Finset.univ ∈ A ↔ A = {Finset.univ} :=
+  hA.IsAntichain.top_mem_iff
 
-theorem sized_powerset_len (s : Finset α) (r : ℕ) : (powerset_len r s : Set (Finset α)).Sized r := fun t ht =>
+theorem sized_powerset_len (s : Finset α) (r : ℕ) : (powersetLen r s : Set (Finset α)).Sized r := fun t ht =>
   (mem_powerset_len.1 ht).2
 
 end Set
@@ -83,7 +83,7 @@ section Sized
 
 variable [Fintype α] {𝒜 : Finset (Finset α)} {s : Finset α} {r : ℕ}
 
-theorem subset_powerset_len_univ_iff : 𝒜 ⊆ powerset_len r univ ↔ (𝒜 : Set (Finset α)).Sized r :=
+theorem subset_powerset_len_univ_iff : 𝒜 ⊆ powersetLen r univ ↔ (𝒜 : Set (Finset α)).Sized r :=
   forall_congrₓ fun A => by
     rw [mem_powerset_len_univ_iff, mem_coe]
 
@@ -133,11 +133,11 @@ variable [Fintype α] (𝒜)
 
 @[simp]
 theorem bUnion_slice [DecidableEq α] : (Iic <| Fintype.card α).bUnion 𝒜.slice = 𝒜 :=
-  (subset.antisymm (bUnion_subset.2 fun r _ => slice_subset)) fun s hs =>
+  (Subset.antisymm (bUnion_subset.2 fun r _ => slice_subset)) fun s hs =>
     mem_bUnion.2 ⟨s.card, mem_Iic.2 <| s.card_le_univ, mem_slice.2 <| ⟨hs, rfl⟩⟩
 
 @[simp]
-theorem sum_card_slice : (∑ r in Iic (Fintype.card α), (𝒜 # r).card) = 𝒜.card := by
+theorem sum_card_slice : (∑ r in iic (Fintype.card α), (𝒜 # r).card) = 𝒜.card := by
   rw [← card_bUnion (finset.pairwise_disjoint_slice.subset (Set.subset_univ _)), bUnion_slice]
   exact Classical.decEq _
 

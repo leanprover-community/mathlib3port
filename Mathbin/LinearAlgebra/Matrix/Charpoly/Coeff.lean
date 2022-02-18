@@ -32,7 +32,7 @@ universe u v w z
 
 open Polynomial Matrix
 
-open_locale BigOperators
+open_locale BigOperators Polynomial
 
 variable {R : Type u} [CommRingₓ R]
 
@@ -54,7 +54,7 @@ namespace Matrix
 
 variable (M)
 
-theorem charpoly_sub_diagonal_degree_lt : (M.charpoly - ∏ i : n, X - C (M i i)).degree < ↑(Fintype.card n - 1) := by
+theorem charpoly_sub_diagonal_degree_lt : (M.charpoly - ∏ i : n, X - c (M i i)).degree < ↑(Fintype.card n - 1) := by
   rw [charpoly, det_apply', ← insert_erase (mem_univ (Equivₓ.refl n)), sum_insert (not_mem_erase (Equivₓ.refl n) univ),
     add_commₓ]
   simp only [charmatrix_apply_eq, one_mulₓ, Equivₓ.Perm.sign_refl, id.def, Int.cast_one, Units.coe_one, add_sub_cancel,
@@ -76,7 +76,7 @@ theorem charpoly_sub_diagonal_degree_lt : (M.charpoly - ∏ i : n, X - C (M i i)
   apply charmatrix_apply_nat_degree_le
 
 theorem charpoly_coeff_eq_prod_coeff_of_le {k : ℕ} (h : Fintype.card n - 1 ≤ k) :
-    M.charpoly.coeff k = (∏ i : n, X - C (M i i)).coeff k := by
+    M.charpoly.coeff k = (∏ i : n, X - c (M i i)).coeff k := by
   apply eq_of_sub_eq_zero
   rw [← coeff_sub]
   apply Polynomial.coeff_eq_zero_of_degree_lt
@@ -121,10 +121,10 @@ theorem charpoly_degree_eq_dim [Nontrivial R] (M : Matrix n n R) : M.charpoly.de
   apply Nat.pred_ltₓ
   apply h
 
-theorem charpoly_nat_degree_eq_dim [Nontrivial R] (M : Matrix n n R) : M.charpoly.nat_degree = Fintype.card n :=
+theorem charpoly_nat_degree_eq_dim [Nontrivial R] (M : Matrix n n R) : M.charpoly.natDegree = Fintype.card n :=
   nat_degree_eq_of_degree_eq_some (charpoly_degree_eq_dim M)
 
-theorem charpoly_monic (M : Matrix n n R) : M.charpoly.monic := by
+theorem charpoly_monic (M : Matrix n n R) : M.charpoly.Monic := by
   nontriviality
   by_cases' Fintype.card n = 0
   · rw [charpoly, det_of_card_zero h]
@@ -157,7 +157,7 @@ theorem trace_eq_neg_charpoly_coeff [Nonempty n] (M : Matrix n n R) :
   rw [← Fintype.card, Fintype.card_pos_iff]
   infer_instance
 
-theorem mat_poly_equiv_eval (M : Matrix n n (Polynomial R)) (r : R) (i j : n) :
+theorem mat_poly_equiv_eval (M : Matrix n n R[X]) (r : R) (i j : n) :
     (matPolyEquiv M).eval ((scalar n) r) i j = (M i j).eval r := by
   unfold Polynomial.eval
   unfold eval₂
@@ -179,7 +179,7 @@ theorem mat_poly_equiv_eval (M : Matrix n n (Polynomial R)) (r : R) (i j : n) :
     simp only [h'n, zero_mul]
     
 
-theorem eval_det (M : Matrix n n (Polynomial R)) (r : R) :
+theorem eval_det (M : Matrix n n R[X]) (r : R) :
     Polynomial.eval r M.det = (Polynomial.eval (scalar n r) (matPolyEquiv M)).det := by
   rw [Polynomial.eval, ← coe_eval₂_ring_hom, RingHom.map_det]
   apply congr_argₓ det
@@ -193,10 +193,10 @@ theorem det_eq_sign_charpoly_coeff (M : Matrix n n R) : M.det = -1 ^ Fintype.car
 
 end Matrix
 
-variable {p : ℕ} [Fact p.prime]
+variable {p : ℕ} [Fact p.Prime]
 
 theorem mat_poly_equiv_eq_X_pow_sub_C {K : Type _} (k : ℕ) [Field K] (M : Matrix n n K) :
-    matPolyEquiv ((expand K k : Polynomial K →+* Polynomial K).mapMatrix (charmatrix (M ^ k))) = X ^ k - C (M ^ k) := by
+    matPolyEquiv ((expand K k : K[X] →+* K[X]).mapMatrix (charmatrix (M ^ k))) = X ^ k - c (M ^ k) := by
   ext m
   rw [coeff_sub, coeff_C, mat_poly_equiv_coeff_apply, RingHom.map_matrix_apply, Matrix.map_apply,
     AlgHom.coe_to_ring_hom, Dmatrix.sub_apply, coeff_X_pow]
@@ -219,13 +219,13 @@ theorem FiniteField.Matrix.charpoly_pow_card {K : Type _} [Field K] [Fintype K] 
     have : Fact p.prime := ⟨hp⟩
     dsimp  at hk
     rw [hk] at *
-    apply (frobenius_inj (Polynomial K) p).iterate k
+    apply (frobenius_inj K[X] p).iterate k
     repeat'
       rw [iterate_frobenius]
       rw [← hk]
     rw [← FiniteField.expand_card]
     unfold charpoly
-    rw [AlgHom.map_det, ← coe_det_monoid_hom, ← (det_monoid_hom : Matrix n n (Polynomial K) →* Polynomial K).map_pow]
+    rw [AlgHom.map_det, ← coe_det_monoid_hom, ← (det_monoid_hom : Matrix n n K[X] →* K[X]).map_pow]
     apply congr_argₓ det
     refine' mat_poly_equiv.injective _
     rw [AlgEquiv.map_pow, mat_poly_equiv_charmatrix, hk, sub_pow_char_pow_of_commute, ← C_pow]
@@ -248,7 +248,7 @@ theorem FiniteField.trace_pow_card {K : Type _} [Field K] [Fintype K] [Nonempty 
   rw [Matrix.trace_eq_neg_charpoly_coeff, Matrix.trace_eq_neg_charpoly_coeff, FiniteField.Matrix.charpoly_pow_card,
     FiniteField.pow_card]
 
-theorem Zmod.trace_pow_card {p : ℕ} [Fact p.prime] [Nonempty n] (M : Matrix n n (Zmod p)) :
+theorem Zmod.trace_pow_card {p : ℕ} [Fact p.Prime] [Nonempty n] (M : Matrix n n (Zmod p)) :
     trace n (Zmod p) (Zmod p) (M ^ p) = trace n (Zmod p) (Zmod p) M ^ p := by
   have h := FiniteField.trace_pow_card M
   rwa [Zmod.card] at h
@@ -274,7 +274,7 @@ and a bit of rewriting, this will allow us to conclude the
 field norm resp. trace of `x` is the product resp. sum of `x`'s conjugates.
 -/
 theorem charpoly_left_mul_matrix {K S : Type _} [Field K] [CommRingₓ S] [Algebra K S] (h : PowerBasis K S) :
-    (left_mul_matrix h.basis h.gen).charpoly = minpoly K h.gen := by
+    (leftMulMatrix h.Basis h.gen).charpoly = minpoly K h.gen := by
   apply minpoly.unique
   · apply Matrix.charpoly_monic
     

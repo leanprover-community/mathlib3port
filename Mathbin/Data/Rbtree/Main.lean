@@ -9,7 +9,7 @@ namespace Rbnode
 variable {α : Type u} {lt : α → α → Prop}
 
 theorem is_searchable_of_well_formed {t : Rbnode α} [IsStrictWeakOrder α lt] :
-    t.well_formed lt → is_searchable lt t none none := by
+    t.WellFormed lt → IsSearchable lt t none none := by
   intro h
   induction h
   · constructor
@@ -22,7 +22,7 @@ theorem is_searchable_of_well_formed {t : Rbnode α} [IsStrictWeakOrder α lt] :
 
 open Color
 
-theorem is_red_black_of_well_formed {t : Rbnode α} : t.well_formed lt → ∃ c n, is_red_black t c n := by
+theorem is_red_black_of_well_formed {t : Rbnode α} : t.WellFormed lt → ∃ c n, IsRedBlack t c n := by
   intro h
   induction h
   · exists black
@@ -54,7 +54,7 @@ theorem balanced (t : Rbtree α lt) : t.depth max ≤ 2 * t.depth min + 1 := by
 theorem not_mem_mk_rbtree : ∀ a : α, a ∉ mkRbtree α lt := by
   simp [HasMem.Mem, Rbtree.Mem, Rbnode.Mem, mkRbtree]
 
-theorem not_mem_of_empty {t : Rbtree α lt} (a : α) : t.empty = tt → a ∉ t := by
+theorem not_mem_of_empty {t : Rbtree α lt} (a : α) : t.Empty = tt → a ∉ t := by
   cases' t with n p <;> cases n <;> simp [Empty, HasMem.Mem, Rbtree.Mem, Rbnode.Mem, false_implies_iff]
 
 theorem mem_of_mem_of_eqv [IsStrictWeakOrder α lt] {t : Rbtree α lt} {a b : α} : a ∈ t → a ≈[lt]b → b ∈ t := by
@@ -99,7 +99,7 @@ theorem find_correct_of_total [IsStrictTotalOrder α lt] (a : α) (t : Rbtree α
         simp [HEq, (eq_of_eqv_lt heqv).symm])
     fun h => Iff.mpr (find_correct a t) ⟨a, ⟨h, refl a⟩⟩
 
-theorem find_correct_exact [IsStrictTotalOrder α lt] (a : α) (t : Rbtree α lt) : mem_exact a t ↔ t.find a = some a := by
+theorem find_correct_exact [IsStrictTotalOrder α lt] (a : α) (t : Rbtree α lt) : MemExact a t ↔ t.find a = some a := by
   cases t
   apply Rbnode.find_correct_exact
   apply Rbnode.is_searchable_of_well_formed

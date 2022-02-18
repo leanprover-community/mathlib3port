@@ -50,10 +50,10 @@ variable {R : Type _} [NormedRing R] [CompleteSpace R]
 instance : ChartedSpace R (R)ˣ :=
   open_embedding_coe.singletonChartedSpace
 
-theorem chart_at_apply {a : (R)ˣ} {b : (R)ˣ} : chart_at R a b = b :=
+theorem chart_at_apply {a : (R)ˣ} {b : (R)ˣ} : chartAt R a b = b :=
   rfl
 
-theorem chart_at_source {a : (R)ˣ} : (chart_at R a).Source = Set.Univ :=
+theorem chart_at_source {a : (R)ˣ} : (chartAt R a).Source = Set.Univ :=
   rfl
 
 variable {𝕜 : Type _} [NondiscreteNormedField 𝕜] [NormedAlgebra 𝕜 R]

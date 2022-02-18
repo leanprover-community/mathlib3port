@@ -24,24 +24,24 @@ section
 variable {X Y : AddCommGroupₓₓ.{u}} (f : X ⟶ Y)
 
 /-- In the category of abelian groups, every monomorphism is normal. -/
-def normal_mono (hf : mono f) : normal_mono f :=
-  equivalence_reflects_normal_mono (forget₂ (ModuleCat.{u} ℤ) AddCommGroupₓₓ.{u}).inv <|
-    ModuleCat.normalMono _ <| right_adjoint_preserves_mono (functor.adjunction _) hf
+def normal_mono (hf : Mono f) : NormalMono f :=
+  equivalenceReflectsNormalMono (forget₂ (ModuleCat.{u} ℤ) AddCommGroupₓₓ.{u}).inv <|
+    ModuleCat.normalMono _ <| right_adjoint_preserves_mono (Functor.adjunction _) hf
 
 /-- In the category of abelian groups, every epimorphism is normal. -/
-def normal_epi (hf : epi f) : normal_epi f :=
-  equivalence_reflects_normal_epi (forget₂ (ModuleCat.{u} ℤ) AddCommGroupₓₓ.{u}).inv <|
-    ModuleCat.normalEpi _ <| left_adjoint_preserves_epi (functor.adjunction _) hf
+def normal_epi (hf : Epi f) : NormalEpi f :=
+  equivalenceReflectsNormalEpi (forget₂ (ModuleCat.{u} ℤ) AddCommGroupₓₓ.{u}).inv <|
+    ModuleCat.normalEpi _ <| left_adjoint_preserves_epi (Functor.adjunction _) hf
 
 end
 
 /-- The category of abelian groups is abelian. -/
-instance : abelian AddCommGroupₓₓ.{u} where
+instance : Abelian AddCommGroupₓₓ.{u} where
   HasFiniteProducts :=
     ⟨by
       infer_instance⟩
-  NormalMono := fun X Y => normal_mono
-  NormalEpi := fun X Y => normal_epi
+  normalMonoOfMono := fun X Y => normalMono
+  normalEpiOfEpi := fun X Y => normalEpi
   add_comp' := by
     intros
     simp only [preadditive.add_comp]

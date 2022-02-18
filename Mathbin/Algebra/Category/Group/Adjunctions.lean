@@ -56,7 +56,7 @@ theorem free_map_coe {α β : Type u} {f : α → β} (x : FreeAbelianGroup α) 
 /-- The free-forgetful adjunction for abelian groups.
 -/
 def adj : free ⊣ forget AddCommGroupₓₓ.{u} :=
-  adjunction.mk_of_hom_equiv
+  Adjunction.mkOfHomEquiv
     { homEquiv := fun X G => FreeAbelianGroup.lift.symm,
       hom_equiv_naturality_left_symm' := by
         intros
@@ -68,13 +68,13 @@ the monomorphisms in `AddCommGroup` are just the injective functions.
 
 (This proof works in all universes.)
 -/
-example {G H : AddCommGroupₓₓ.{u}} (f : G ⟶ H) [mono f] : Function.Injective f :=
+example {G H : AddCommGroupₓₓ.{u}} (f : G ⟶ H) [Mono f] : Function.Injective f :=
   (mono_iff_injective f).1
     (right_adjoint_preserves_mono adj
       (by
-        infer_instance : mono f))
+        infer_instance : Mono f))
 
-instance : is_right_adjoint (forget AddCommGroupₓₓ.{u}) :=
+instance : IsRightAdjoint (forget AddCommGroupₓₓ.{u}) :=
   ⟨_, adj⟩
 
 end AddCommGroupₓₓ
@@ -98,13 +98,13 @@ def free : Type u ⥤ Groupₓₓ where
 /-- The free-forgetful adjunction for groups.
 -/
 def adj : free ⊣ forget Groupₓₓ.{u} :=
-  adjunction.mk_of_hom_equiv
+  Adjunction.mkOfHomEquiv
     { homEquiv := fun X G => FreeGroup.lift.symm,
       hom_equiv_naturality_left_symm' := fun X Y G f g => by
         ext1
         rfl }
 
-instance : is_right_adjoint (forget Groupₓₓ.{u}) :=
+instance : IsRightAdjoint (forget Groupₓₓ.{u}) :=
   ⟨_, adj⟩
 
 end Groupₓₓ
@@ -138,7 +138,7 @@ def abelianize : Groupₓₓ.{u} ⥤ CommGroupₓₓ.{u} where
 
 /-- The abelianization-forgetful adjuction from `Group` to `CommGroup`.-/
 def abelianizeAdj : abelianize ⊣ forget₂ CommGroupₓₓ.{u} Groupₓₓ.{u} :=
-  adjunction.mk_of_hom_equiv
+  Adjunction.mkOfHomEquiv
     { homEquiv := fun G A => Abelianization.lift.symm,
       hom_equiv_naturality_left_symm' := fun G H A f g => by
         ext1

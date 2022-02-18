@@ -5,7 +5,7 @@ import Mathbin.Data.Polynomial.Eval
 # The Pochhammer polynomials
 
 We define and prove some basic relations about
-`pochhammer S n : polynomial S := X * (X + 1) * ... * (X + n - 1)`
+`pochhammer S n : S[X] := X * (X + 1) * ... * (X + n - 1)`
 which is also known as the rising factorial. A version of this definition
 that is focused on `nat` can be found in `data.nat.factorial` as `nat.asc_factorial`.
 
@@ -25,6 +25,8 @@ universe u v
 
 open Polynomial
 
+open_locale Polynomial
+
 section Semiringₓ
 
 variable (S : Type u) [Semiringₓ S]
@@ -32,7 +34,7 @@ variable (S : Type u) [Semiringₓ S]
 /-- `pochhammer S n` is the polynomial `X * (X+1) * ... * (X + n - 1)`,
 with coefficients in the semiring `S`.
 -/
-noncomputable def pochhammer : ℕ → Polynomial S
+noncomputable def pochhammer : ℕ → S[X]
   | 0 => 1
   | n + 1 => X * (pochhammer n).comp (X + 1)
 
@@ -90,12 +92,11 @@ theorem pochhammer_succ_right (n : ℕ) : pochhammer S (n + 1) = pochhammer S n 
     
   · conv_lhs =>
       rw [pochhammer_succ_left, ih, mul_comp, ← mul_assoc, ← pochhammer_succ_left, add_comp, X_comp, nat_cast_comp,
-        add_assocₓ, add_commₓ (1 : Polynomial ℕ)]
+        add_assocₓ, add_commₓ (1 : ℕ[X])]
     rfl
     
 
-theorem Polynomial.mul_X_add_nat_cast_comp {p q : Polynomial S} {n : ℕ} : (p * (X + n)).comp q = p.comp q * (q + n) :=
-  by
+theorem Polynomial.mul_X_add_nat_cast_comp {p q : S[X]} {n : ℕ} : (p * (X + n)).comp q = p.comp q * (q + n) := by
   rw [mul_addₓ, add_comp, mul_X_comp, ← Nat.cast_comm, nat_cast_mul_comp, Nat.cast_comm, mul_addₓ]
 
 theorem pochhammer_mul (n m : ℕ) : pochhammer S n * (pochhammer S m).comp (X + n) = pochhammer S (n + m) := by
@@ -103,10 +104,10 @@ theorem pochhammer_mul (n m : ℕ) : pochhammer S n * (pochhammer S m).comp (X +
   · simp
     
   · rw [pochhammer_succ_right, Polynomial.mul_X_add_nat_cast_comp, ← mul_assoc, ih, Nat.succ_eq_add_one, ← add_assocₓ,
-      pochhammer_succ_right, Nat.cast_add, add_assocₓ]
+      pochhammer_succ_right, Nat.cast_addₓ, add_assocₓ]
     
 
-theorem pochhammer_nat_eq_asc_factorial (n : ℕ) : ∀ k, (pochhammer ℕ k).eval (n + 1) = n.asc_factorial k
+theorem pochhammer_nat_eq_asc_factorial (n : ℕ) : ∀ k, (pochhammer ℕ k).eval (n + 1) = n.ascFactorial k
   | 0 => by
     erw [eval_one] <;> rfl
   | t + 1 => by
@@ -180,7 +181,7 @@ theorem pochhammer_nat_eval_succ (r : ℕ) :
 
 theorem pochhammer_eval_succ (r n : ℕ) :
     (n : S) * (pochhammer S r).eval (n + 1 : S) = (n + r) * (pochhammer S r).eval n := by
-  exact_mod_cast congr_argₓ Nat.cast (pochhammer_nat_eval_succ r n)
+  exact_mod_cast congr_argₓ Nat.castₓ (pochhammer_nat_eval_succ r n)
 
 end Factorial
 

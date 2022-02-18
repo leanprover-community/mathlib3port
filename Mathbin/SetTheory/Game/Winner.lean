@@ -11,7 +11,7 @@ These are defined by inequalities which can be unfolded with `pgame.lt_def` and 
 
 namespace Pgame
 
-local infixl:0 " ≈ " => Equivₓ
+local infixl:0 " ≈ " => Equiv
 
 /-- The player who goes first loses -/
 def first_loses (G : Pgame) : Prop :=
@@ -29,19 +29,19 @@ def left_wins (G : Pgame) : Prop :=
 def right_wins (G : Pgame) : Prop :=
   G ≤ 0 ∧ G < 0
 
-theorem zero_first_loses : first_loses 0 := by
+theorem zero_first_loses : FirstLoses 0 := by
   tidy
 
-theorem one_left_wins : left_wins 1 :=
+theorem one_left_wins : LeftWins 1 :=
   ⟨by
     rw [lt_def_le]
     tidy, by
     rw [le_def] <;> tidy⟩
 
-theorem star_first_wins : first_wins star :=
+theorem star_first_wins : FirstWins star :=
   ⟨zero_lt_star, star_lt_zero⟩
 
-theorem omega_left_wins : left_wins omega :=
+theorem omega_left_wins : LeftWins omega :=
   ⟨by
     rw [lt_def_le]
     exact
@@ -51,7 +51,7 @@ theorem omega_left_wins : left_wins omega :=
     by
     rw [le_def] <;> tidy⟩
 
-theorem winner_cases (G : Pgame) : G.left_wins ∨ G.right_wins ∨ G.first_loses ∨ G.first_wins := by
+theorem winner_cases (G : Pgame) : G.LeftWins ∨ G.RightWins ∨ G.FirstLoses ∨ G.FirstWins := by
   classical
   by_cases' hpos : 0 < G <;>
     by_cases' hneg : G < 0 <;>
@@ -78,39 +78,39 @@ theorem winner_cases (G : Pgame) : G.left_wins ∨ G.right_wins ∨ G.first_lose
           exact ⟨hpos, hneg⟩
         
 
-theorem first_loses_is_zero {G : Pgame} : G.first_loses ↔ (G ≈ 0) := by
+theorem first_loses_is_zero {G : Pgame} : G.FirstLoses ↔ (G ≈ 0) := by
   rfl
 
-theorem first_loses_of_equiv {G H : Pgame} (h : G ≈ H) : G.first_loses → H.first_loses := fun hGp =>
+theorem first_loses_of_equiv {G H : Pgame} (h : G ≈ H) : G.FirstLoses → H.FirstLoses := fun hGp =>
   ⟨le_of_equiv_of_le h.symm hGp.1, le_of_le_of_equiv hGp.2 h⟩
 
-theorem first_wins_of_equiv {G H : Pgame} (h : G ≈ H) : G.first_wins → H.first_wins := fun hGn =>
+theorem first_wins_of_equiv {G H : Pgame} (h : G ≈ H) : G.FirstWins → H.FirstWins := fun hGn =>
   ⟨lt_of_lt_of_equiv hGn.1 h, lt_of_equiv_of_lt h.symm hGn.2⟩
 
-theorem left_wins_of_equiv {G H : Pgame} (h : G ≈ H) : G.left_wins → H.left_wins := fun hGl =>
+theorem left_wins_of_equiv {G H : Pgame} (h : G ≈ H) : G.LeftWins → H.LeftWins := fun hGl =>
   ⟨lt_of_lt_of_equiv hGl.1 h, le_of_le_of_equiv hGl.2 h⟩
 
-theorem right_wins_of_equiv {G H : Pgame} (h : G ≈ H) : G.right_wins → H.right_wins := fun hGr =>
+theorem right_wins_of_equiv {G H : Pgame} (h : G ≈ H) : G.RightWins → H.RightWins := fun hGr =>
   ⟨le_of_equiv_of_le h.symm hGr.1, lt_of_equiv_of_lt h.symm hGr.2⟩
 
-theorem first_loses_of_equiv_iff {G H : Pgame} (h : G ≈ H) : G.first_loses ↔ H.first_loses :=
+theorem first_loses_of_equiv_iff {G H : Pgame} (h : G ≈ H) : G.FirstLoses ↔ H.FirstLoses :=
   ⟨first_loses_of_equiv h, first_loses_of_equiv h.symm⟩
 
-theorem first_wins_of_equiv_iff {G H : Pgame} (h : G ≈ H) : G.first_wins ↔ H.first_wins :=
+theorem first_wins_of_equiv_iff {G H : Pgame} (h : G ≈ H) : G.FirstWins ↔ H.FirstWins :=
   ⟨first_wins_of_equiv h, first_wins_of_equiv h.symm⟩
 
-theorem left_wins_of_equiv_iff {G H : Pgame} (h : G ≈ H) : G.left_wins ↔ H.left_wins :=
+theorem left_wins_of_equiv_iff {G H : Pgame} (h : G ≈ H) : G.LeftWins ↔ H.LeftWins :=
   ⟨left_wins_of_equiv h, left_wins_of_equiv h.symm⟩
 
-theorem right_wins_of_equiv_iff {G H : Pgame} (h : G ≈ H) : G.right_wins ↔ H.right_wins :=
+theorem right_wins_of_equiv_iff {G H : Pgame} (h : G ≈ H) : G.RightWins ↔ H.RightWins :=
   ⟨right_wins_of_equiv h, right_wins_of_equiv h.symm⟩
 
-theorem not_first_wins_of_first_loses {G : Pgame} : G.first_loses → ¬G.first_wins := by
+theorem not_first_wins_of_first_loses {G : Pgame} : G.FirstLoses → ¬G.FirstWins := by
   rw [first_loses_is_zero]
   rintro h ⟨h₀, -⟩
   exact Pgame.lt_irrefl 0 (lt_of_lt_of_equiv h₀ h)
 
-theorem not_first_loses_of_first_wins {G : Pgame} : G.first_wins → ¬G.first_loses :=
+theorem not_first_loses_of_first_wins {G : Pgame} : G.FirstWins → ¬G.FirstLoses :=
   imp_not_comm.1 <| not_first_wins_of_first_loses
 
 end Pgame

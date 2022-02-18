@@ -17,7 +17,7 @@ theorem EquivFunctor.Option.map_none {α β : Type _} (e : α ≃ β) : EquivFun
   simp [EquivFunctor.map]
 
 @[simp]
-theorem map_equiv_option_one {α : Type _} : EquivFunctor.mapEquiv Option (1 : perm α) = 1 := by
+theorem map_equiv_option_one {α : Type _} : EquivFunctor.mapEquiv Option (1 : Perm α) = 1 := by
   ext
   simp [EquivFunctor.mapEquiv, EquivFunctor.map]
 
@@ -37,8 +37,8 @@ theorem map_equiv_option_swap {α : Type _} [DecidableEq α] (x y : α) :
     
 
 @[simp]
-theorem EquivFunctor.Option.sign {α : Type _} [DecidableEq α] [Fintype α] (e : perm α) :
-    perm.sign (EquivFunctor.mapEquiv Option e) = perm.sign e := by
+theorem EquivFunctor.Option.sign {α : Type _} [DecidableEq α] [Fintype α] (e : Perm α) :
+    Perm.sign (EquivFunctor.mapEquiv Option e) = Perm.sign e := by
   apply perm.swap_induction_on e
   · simp [perm.one_def]
     
@@ -47,8 +47,8 @@ theorem EquivFunctor.Option.sign {α : Type _} [DecidableEq α] [Fintype α] (e 
     
 
 @[simp]
-theorem map_equiv_remove_none {α : Type _} [DecidableEq α] (σ : perm (Option α)) :
-    EquivFunctor.mapEquiv Option (remove_none σ) = swap none (σ none) * σ := by
+theorem map_equiv_remove_none {α : Type _} [DecidableEq α] (σ : Perm (Option α)) :
+    EquivFunctor.mapEquiv Option (removeNone σ) = swap none (σ none) * σ := by
   ext1 x
   have : Option.map (⇑remove_none σ) x = (swap none (σ none)) (σ x) := by
     cases x
@@ -72,8 +72,8 @@ theorem map_equiv_remove_none {α : Type _} [DecidableEq α] (σ : perm (Option 
 `option α` and permuting the remaining with a `perm α`.
 The fixed `option α` is swapped with `none`. -/
 @[simps]
-def Equivₓ.Perm.decomposeOption {α : Type _} [DecidableEq α] : perm (Option α) ≃ Option α × perm α where
-  toFun := fun σ => (σ none, remove_none σ)
+def Equivₓ.Perm.decomposeOption {α : Type _} [DecidableEq α] : Perm (Option α) ≃ Option α × Perm α where
+  toFun := fun σ => (σ none, removeNone σ)
   invFun := fun i => swap none i.1 * EquivFunctor.mapEquiv Option i.2
   left_inv := fun σ => by
     simp
@@ -84,18 +84,18 @@ def Equivₓ.Perm.decomposeOption {α : Type _} [DecidableEq α] : perm (Option 
           simp [← mul_assoc, EquivFunctor.map])
     simp [← perm.eq_inv_iff_eq, EquivFunctor.map, this]
 
-theorem Equivₓ.Perm.decompose_option_symm_of_none_apply {α : Type _} [DecidableEq α] (e : perm α) (i : Option α) :
+theorem Equivₓ.Perm.decompose_option_symm_of_none_apply {α : Type _} [DecidableEq α] (e : Perm α) (i : Option α) :
     Equivₓ.Perm.decomposeOption.symm (none, e) i = i.map e := by
   simp [EquivFunctor.map]
 
-theorem Equivₓ.Perm.decompose_option_symm_sign {α : Type _} [DecidableEq α] [Fintype α] (e : perm α) :
-    perm.sign (Equivₓ.Perm.decomposeOption.symm (none, e)) = perm.sign e := by
+theorem Equivₓ.Perm.decompose_option_symm_sign {α : Type _} [DecidableEq α] [Fintype α] (e : Perm α) :
+    Perm.sign (Equivₓ.Perm.decomposeOption.symm (none, e)) = Perm.sign e := by
   simp
 
 /-- The set of all permutations of `option α` can be constructed by augmenting the set of
 permutations of `α` by each element of `option α` in turn. -/
 theorem Finset.univ_perm_option {α : Type _} [DecidableEq α] [Fintype α] :
     @Finset.univ (perm <| Option α) _ =
-      (Finset.univ : Finset <| Option α × perm α).map Equivₓ.Perm.decomposeOption.symm.toEmbedding :=
+      (Finset.univ : Finset <| Option α × Perm α).map Equivₓ.Perm.decomposeOption.symm.toEmbedding :=
   (Finset.univ_map_equiv_to_embedding _).symm
 

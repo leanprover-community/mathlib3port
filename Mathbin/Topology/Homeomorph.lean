@@ -44,21 +44,21 @@ namespace Homeomorph
 variable [TopologicalSpace α] [TopologicalSpace β] [TopologicalSpace γ] [TopologicalSpace δ]
 
 instance : CoeFun (α ≃ₜ β) fun _ => α → β :=
-  ⟨fun e => e.to_equiv⟩
+  ⟨fun e => e.toEquiv⟩
 
 @[simp]
 theorem homeomorph_mk_coe (a : Equivₓ α β) b c : (Homeomorph.mk a b c : α → β) = a :=
   rfl
 
 @[simp]
-theorem coe_to_equiv (h : α ≃ₜ β) : ⇑h.to_equiv = h :=
+theorem coe_to_equiv (h : α ≃ₜ β) : ⇑h.toEquiv = h :=
   rfl
 
 /-- Inverse of a homeomorphism. -/
 protected def symm (h : α ≃ₜ β) : β ≃ₜ α where
   continuous_to_fun := h.continuous_inv_fun
   continuous_inv_fun := h.continuous_to_fun
-  toEquiv := h.to_equiv.symm
+  toEquiv := h.toEquiv.symm
 
 /-- See Note [custom simps projection]. We need to specify this projection explicitly in this case,
   because it is a composition of multiple projections. -/
@@ -71,7 +71,7 @@ def simps.symm_apply (h : α ≃ₜ β) : β → α :=
 
 initialize_simps_projections Homeomorph (to_equiv_to_fun → apply, to_equiv_inv_fun → symmApply, -toEquiv)
 
-theorem to_equiv_injective : Function.Injective (to_equiv : α ≃ₜ β → α ≃ β)
+theorem to_equiv_injective : Function.Injective (toEquiv : α ≃ₜ β → α ≃ β)
   | ⟨e, h₁, h₂⟩, ⟨e', h₁', h₂'⟩, rfl => rfl
 
 @[ext]
@@ -79,7 +79,7 @@ theorem ext {h h' : α ≃ₜ β} (H : ∀ x, h x = h' x) : h = h' :=
   to_equiv_injective <| Equivₓ.ext H
 
 /-- Identity map as a homeomorphism. -/
-@[simps (config := { fullyApplied := ff }) apply]
+@[simps (config := { fullyApplied := false }) apply]
 protected def refl (α : Type _) [TopologicalSpace α] : α ≃ₜ α where
   continuous_to_fun := continuous_id
   continuous_inv_fun := continuous_id
@@ -89,7 +89,7 @@ protected def refl (α : Type _) [TopologicalSpace α] : α ≃ₜ α where
 protected def trans (h₁ : α ≃ₜ β) (h₂ : β ≃ₜ γ) : α ≃ₜ γ where
   continuous_to_fun := h₂.continuous_to_fun.comp h₁.continuous_to_fun
   continuous_inv_fun := h₁.continuous_inv_fun.comp h₂.continuous_inv_fun
-  toEquiv := Equivₓ.trans h₁.to_equiv h₂.to_equiv
+  toEquiv := Equivₓ.trans h₁.toEquiv h₂.toEquiv
 
 @[simp]
 theorem trans_apply (h₁ : α ≃ₜ β) (h₂ : β ≃ₜ γ) (a : α) : h₁.trans h₂ a = h₂ (h₁ a) :=
@@ -113,20 +113,20 @@ protected theorem continuous_symm (h : α ≃ₜ β) : Continuous h.symm :=
 
 @[simp]
 theorem apply_symm_apply (h : α ≃ₜ β) (x : β) : h (h.symm x) = x :=
-  h.to_equiv.apply_symm_apply x
+  h.toEquiv.apply_symm_apply x
 
 @[simp]
 theorem symm_apply_apply (h : α ≃ₜ β) (x : α) : h.symm (h x) = x :=
-  h.to_equiv.symm_apply_apply x
+  h.toEquiv.symm_apply_apply x
 
 protected theorem bijective (h : α ≃ₜ β) : Function.Bijective h :=
-  h.to_equiv.bijective
+  h.toEquiv.Bijective
 
 protected theorem injective (h : α ≃ₜ β) : Function.Injective h :=
-  h.to_equiv.injective
+  h.toEquiv.Injective
 
 protected theorem surjective (h : α ≃ₜ β) : Function.Surjective h :=
-  h.to_equiv.surjective
+  h.toEquiv.Surjective
 
 /-- Change the homeomorphism `f` to make the inverse function definitionally equal to `g`. -/
 def change_inv (f : α ≃ₜ β) (g : β → α) (hg : Function.RightInverse g f) : α ≃ₜ β :=
@@ -142,7 +142,7 @@ def change_inv (f : α ≃ₜ β) (g : β → α) (hg : Function.RightInverse g 
       convert f.left_inv,
     right_inv := by
       convert f.right_inv,
-    continuous_to_fun := f.continuous,
+    continuous_to_fun := f.Continuous,
     continuous_inv_fun := by
       convert f.symm.continuous }
 
@@ -155,52 +155,52 @@ theorem self_comp_symm (h : α ≃ₜ β) : ⇑h ∘ ⇑h.symm = id :=
   funext h.apply_symm_apply
 
 @[simp]
-theorem range_coe (h : α ≃ₜ β) : range h = univ :=
-  h.surjective.range_eq
+theorem range_coe (h : α ≃ₜ β) : Range h = univ :=
+  h.Surjective.range_eq
 
-theorem image_symm (h : α ≃ₜ β) : image h.symm = preimage h :=
-  funext h.symm.to_equiv.image_eq_preimage
+theorem image_symm (h : α ≃ₜ β) : Image h.symm = Preimage h :=
+  funext h.symm.toEquiv.image_eq_preimage
 
-theorem preimage_symm (h : α ≃ₜ β) : preimage h.symm = image h :=
-  (funext h.to_equiv.image_eq_preimage).symm
+theorem preimage_symm (h : α ≃ₜ β) : Preimage h.symm = Image h :=
+  (funext h.toEquiv.image_eq_preimage).symm
 
 @[simp]
 theorem image_preimage (h : α ≃ₜ β) (s : Set β) : h '' (h ⁻¹' s) = s :=
-  h.to_equiv.image_preimage s
+  h.toEquiv.image_preimage s
 
 @[simp]
 theorem preimage_image (h : α ≃ₜ β) (s : Set α) : h ⁻¹' (h '' s) = s :=
-  h.to_equiv.preimage_image s
+  h.toEquiv.preimage_image s
 
 protected theorem Inducing (h : α ≃ₜ β) : Inducing h :=
-  inducing_of_inducing_compose h.continuous h.symm.continuous <| by
+  inducing_of_inducing_compose h.Continuous h.symm.Continuous <| by
     simp only [symm_comp_self, inducing_id]
 
 theorem induced_eq (h : α ≃ₜ β) : TopologicalSpace.induced h ‹_› = ‹_› :=
-  h.inducing.1.symm
+  h.Inducing.1.symm
 
 protected theorem QuotientMap (h : α ≃ₜ β) : QuotientMap h :=
-  QuotientMap.of_quotient_map_compose h.symm.continuous h.continuous <| by
+  QuotientMap.of_quotient_map_compose h.symm.Continuous h.Continuous <| by
     simp only [self_comp_symm, QuotientMap.id]
 
 theorem coinduced_eq (h : α ≃ₜ β) : TopologicalSpace.coinduced h ‹_› = ‹_› :=
-  h.quotient_map.2.symm
+  h.QuotientMap.2.symm
 
 protected theorem Embedding (h : α ≃ₜ β) : Embedding h :=
-  ⟨h.inducing, h.injective⟩
+  ⟨h.Inducing, h.Injective⟩
 
 /-- Homeomorphism given an embedding. -/
 noncomputable def of_embedding (f : α → β) (hf : Embedding f) : α ≃ₜ Set.Range f :=
-  { Equivₓ.ofInjective f hf.inj with continuous_to_fun := continuous_subtype_mk _ hf.continuous,
+  { Equivₓ.ofInjective f hf.inj with continuous_to_fun := continuous_subtype_mk _ hf.Continuous,
     continuous_inv_fun := by
       simp [hf.continuous_iff, continuous_subtype_coe] }
 
 protected theorem second_countable_topology [TopologicalSpace.SecondCountableTopology β] (h : α ≃ₜ β) :
     TopologicalSpace.SecondCountableTopology α :=
-  h.inducing.second_countable_topology
+  h.Inducing.SecondCountableTopology
 
 theorem compact_image {s : Set α} (h : α ≃ₜ β) : IsCompact (h '' s) ↔ IsCompact s :=
-  h.embedding.is_compact_iff_is_compact_image.symm
+  h.Embedding.is_compact_iff_is_compact_image.symm
 
 theorem compact_preimage {s : Set β} (h : α ≃ₜ β) : IsCompact (h ⁻¹' s) ↔ IsCompact s := by
   rw [← image_symm] <;> exact h.symm.compact_image
@@ -220,11 +220,11 @@ protected theorem T2Space [T2Space α] (h : α ≃ₜ β) : T2Space β :=
       rw [← preimage_inter, huv, preimage_empty] }
 
 protected theorem DenseEmbedding (h : α ≃ₜ β) : DenseEmbedding h :=
-  { h.embedding with dense := h.surjective.dense_range }
+  { h.Embedding with dense := h.Surjective.DenseRange }
 
 @[simp]
 theorem is_open_preimage (h : α ≃ₜ β) {s : Set β} : IsOpen (h ⁻¹' s) ↔ IsOpen s :=
-  h.quotient_map.is_open_preimage
+  h.QuotientMap.is_open_preimage
 
 @[simp]
 theorem is_open_image (h : α ≃ₜ β) {s : Set α} : IsOpen (h '' s) ↔ IsOpen s := by
@@ -243,29 +243,29 @@ theorem is_closed_image (h : α ≃ₜ β) {s : Set α} : IsClosed (h '' s) ↔ 
 protected theorem IsClosedMap (h : α ≃ₜ β) : IsClosedMap h := fun s => h.is_closed_image.2
 
 protected theorem OpenEmbedding (h : α ≃ₜ β) : OpenEmbedding h :=
-  open_embedding_of_embedding_open h.embedding h.is_open_map
+  open_embedding_of_embedding_open h.Embedding h.IsOpenMap
 
 protected theorem ClosedEmbedding (h : α ≃ₜ β) : ClosedEmbedding h :=
-  closed_embedding_of_embedding_closed h.embedding h.is_closed_map
+  closed_embedding_of_embedding_closed h.Embedding h.IsClosedMap
 
 theorem preimage_closure (h : α ≃ₜ β) (s : Set β) : h ⁻¹' Closure s = Closure (h ⁻¹' s) :=
-  h.is_open_map.preimage_closure_eq_closure_preimage h.continuous _
+  h.IsOpenMap.preimage_closure_eq_closure_preimage h.Continuous _
 
 theorem image_closure (h : α ≃ₜ β) (s : Set α) : h '' Closure s = Closure (h '' s) := by
   rw [← preimage_symm, preimage_closure]
 
 theorem preimage_interior (h : α ≃ₜ β) (s : Set β) : h ⁻¹' Interior s = Interior (h ⁻¹' s) :=
-  h.is_open_map.preimage_interior_eq_interior_preimage h.continuous _
+  h.IsOpenMap.preimage_interior_eq_interior_preimage h.Continuous _
 
 theorem image_interior (h : α ≃ₜ β) (s : Set α) : h '' Interior s = Interior (h '' s) := by
   rw [← preimage_symm, preimage_interior]
 
 theorem preimage_frontier (h : α ≃ₜ β) (s : Set β) : h ⁻¹' Frontier s = Frontier (h ⁻¹' s) :=
-  h.is_open_map.preimage_frontier_eq_frontier_preimage h.continuous _
+  h.IsOpenMap.preimage_frontier_eq_frontier_preimage h.Continuous _
 
 @[simp]
 theorem map_nhds_eq (h : α ≃ₜ β) (x : α) : map h (𝓝 x) = 𝓝 (h x) :=
-  h.embedding.map_nhds_of_mem _
+  h.Embedding.map_nhds_of_mem _
     (by
       simp )
 
@@ -273,7 +273,7 @@ theorem symm_map_nhds_eq (h : α ≃ₜ β) (x : α) : map h.symm (𝓝 (h x)) =
   rw [h.symm.map_nhds_eq, h.symm_apply_apply]
 
 theorem nhds_eq_comap (h : α ≃ₜ β) (x : α) : 𝓝 x = comap h (𝓝 (h x)) :=
-  h.embedding.to_inducing.nhds_eq_comap x
+  h.Embedding.to_inducing.nhds_eq_comap x
 
 @[simp]
 theorem comap_nhds_eq (h : α ≃ₜ β) (y : β) : comap h (𝓝 y) = 𝓝 (h.symm y) := by
@@ -291,27 +291,27 @@ def homeomorph_of_continuous_open (e : α ≃ β) (h₁ : Continuous e) (h₂ : 
 
 @[simp]
 theorem comp_continuous_on_iff (h : α ≃ₜ β) (f : γ → α) (s : Set γ) : ContinuousOn (h ∘ f) s ↔ ContinuousOn f s :=
-  h.inducing.continuous_on_iff.symm
+  h.Inducing.continuous_on_iff.symm
 
 @[simp]
 theorem comp_continuous_iff (h : α ≃ₜ β) {f : γ → α} : Continuous (h ∘ f) ↔ Continuous f :=
-  h.inducing.continuous_iff.symm
+  h.Inducing.continuous_iff.symm
 
 @[simp]
 theorem comp_continuous_iff' (h : α ≃ₜ β) {f : β → γ} : Continuous (f ∘ h) ↔ Continuous f :=
-  h.quotient_map.continuous_iff.symm
+  h.QuotientMap.continuous_iff.symm
 
 theorem comp_continuous_at_iff (h : α ≃ₜ β) (f : γ → α) (x : γ) : ContinuousAt (h ∘ f) x ↔ ContinuousAt f x :=
-  h.inducing.continuous_at_iff.symm
+  h.Inducing.continuous_at_iff.symm
 
 theorem comp_continuous_at_iff' (h : α ≃ₜ β) (f : β → γ) (x : α) : ContinuousAt (f ∘ h) x ↔ ContinuousAt f (h x) :=
-  h.inducing.continuous_at_iff'
+  h.Inducing.continuous_at_iff'
     (by
       simp )
 
 theorem comp_continuous_within_at_iff (h : α ≃ₜ β) (f : γ → α) (s : Set γ) (x : γ) :
     ContinuousWithinAt f s x ↔ ContinuousWithinAt (h ∘ f) s x :=
-  h.inducing.continuous_within_at_iff
+  h.Inducing.continuous_within_at_iff
 
 @[simp]
 theorem comp_is_open_map_iff (h : α ≃ₜ β) {f : γ → α} : IsOpenMap (h ∘ f) ↔ IsOpenMap f := by
@@ -343,20 +343,20 @@ def sum_congr (h₁ : α ≃ₜ β) (h₂ : γ ≃ₜ δ) : Sum α γ ≃ₜ Sum
     convert continuous_sum_rec (continuous_inl.comp h₁.symm.continuous) (continuous_inr.comp h₂.symm.continuous)
     ext x
     cases x <;> rfl
-  toEquiv := h₁.to_equiv.sum_congr h₂.to_equiv
+  toEquiv := h₁.toEquiv.sumCongr h₂.toEquiv
 
 /-- Product of two homeomorphisms. -/
 def prod_congr (h₁ : α ≃ₜ β) (h₂ : γ ≃ₜ δ) : α × γ ≃ₜ β × δ where
-  continuous_to_fun := (h₁.continuous.comp continuous_fst).prod_mk (h₂.continuous.comp continuous_snd)
-  continuous_inv_fun := (h₁.symm.continuous.comp continuous_fst).prod_mk (h₂.symm.continuous.comp continuous_snd)
-  toEquiv := h₁.to_equiv.prod_congr h₂.to_equiv
+  continuous_to_fun := (h₁.Continuous.comp continuous_fst).prod_mk (h₂.Continuous.comp continuous_snd)
+  continuous_inv_fun := (h₁.symm.Continuous.comp continuous_fst).prod_mk (h₂.symm.Continuous.comp continuous_snd)
+  toEquiv := h₁.toEquiv.prodCongr h₂.toEquiv
 
 @[simp]
-theorem prod_congr_symm (h₁ : α ≃ₜ β) (h₂ : γ ≃ₜ δ) : (h₁.prod_congr h₂).symm = h₁.symm.prod_congr h₂.symm :=
+theorem prod_congr_symm (h₁ : α ≃ₜ β) (h₂ : γ ≃ₜ δ) : (h₁.prodCongr h₂).symm = h₁.symm.prodCongr h₂.symm :=
   rfl
 
 @[simp]
-theorem coe_prod_congr (h₁ : α ≃ₜ β) (h₂ : γ ≃ₜ δ) : ⇑h₁.prod_congr h₂ = Prod.map h₁ h₂ :=
+theorem coe_prod_congr (h₁ : α ≃ₜ β) (h₂ : γ ≃ₜ δ) : ⇑h₁.prodCongr h₂ = Prod.map h₁ h₂ :=
   rfl
 
 section
@@ -370,11 +370,11 @@ def prod_comm : α × β ≃ₜ β × α where
   toEquiv := Equivₓ.prodComm α β
 
 @[simp]
-theorem prod_comm_symm : (prod_comm α β).symm = prod_comm β α :=
+theorem prod_comm_symm : (prodComm α β).symm = prodComm β α :=
   rfl
 
 @[simp]
-theorem coe_prod_comm : ⇑prod_comm α β = Prod.swap :=
+theorem coe_prod_comm : ⇑prodComm α β = Prod.swap :=
   rfl
 
 /-- `(α × β) × γ` is homeomorphic to `α × (β × γ)`. -/
@@ -386,7 +386,7 @@ def prod_assoc : (α × β) × γ ≃ₜ α × β × γ where
   toEquiv := Equivₓ.prodAssoc α β γ
 
 /-- `α × {*}` is homeomorphic to `α`. -/
-@[simps (config := { fullyApplied := ff }) apply]
+@[simps (config := { fullyApplied := false }) apply]
 def prod_punit : α × PUnit ≃ₜ α where
   toEquiv := Equivₓ.prodPunit α
   continuous_to_fun := continuous_fst
@@ -394,10 +394,10 @@ def prod_punit : α × PUnit ≃ₜ α where
 
 /-- `{*} × α` is homeomorphic to `α`. -/
 def punit_prod : PUnit × α ≃ₜ α :=
-  (prod_comm _ _).trans (prod_punit _)
+  (prodComm _ _).trans (prodPunit _)
 
 @[simp]
-theorem coe_punit_prod : ⇑punit_prod α = Prod.snd :=
+theorem coe_punit_prod : ⇑punitProd α = Prod.snd :=
   rfl
 
 end
@@ -408,7 +408,7 @@ def Ulift.{u, v} {α : Type u} [TopologicalSpace α] : Ulift.{v, u} α ≃ₜ α
   continuous_inv_fun := continuous_ulift_up
   toEquiv := Equivₓ.ulift
 
-section Distrib
+section Distribₓ
 
 /-- `(α ⊕ β) × γ` is homeomorphic to `α × γ ⊕ β × γ`. -/
 def sum_prod_distrib : Sum α β × γ ≃ₜ Sum (α × γ) (β × γ) := by
@@ -426,42 +426,42 @@ def sum_prod_distrib : Sum α β × γ ≃ₜ Sum (α × γ) (β × γ) := by
 
 /-- `α × (β ⊕ γ)` is homeomorphic to `α × β ⊕ α × γ`. -/
 def prod_sum_distrib : α × Sum β γ ≃ₜ Sum (α × β) (α × γ) :=
-  (prod_comm _ _).trans <| sum_prod_distrib.trans <| sum_congr (prod_comm _ _) (prod_comm _ _)
+  (prodComm _ _).trans <| sumProdDistrib.trans <| sumCongr (prodComm _ _) (prodComm _ _)
 
 variable {ι : Type _} {σ : ι → Type _} [∀ i, TopologicalSpace (σ i)]
 
 /-- `(Σ i, σ i) × β` is homeomorphic to `Σ i, (σ i × β)`. -/
 def sigma_prod_distrib : (Σ i, σ i) × β ≃ₜ Σ i, σ i × β :=
   Homeomorph.symm <|
-    homeomorph_of_continuous_open (Equivₓ.sigmaProdDistrib σ β).symm
+    homeomorphOfContinuousOpen (Equivₓ.sigmaProdDistrib σ β).symm
       (continuous_sigma fun i => (continuous_sigma_mk.comp continuous_fst).prod_mk continuous_snd)
       (is_open_map_sigma fun i => (open_embedding_sigma_mk.Prod open_embedding_id).IsOpenMap)
 
-end Distrib
+end Distribₓ
 
 /-- If `ι` has a unique element, then `ι → α` is homeomorphic to `α`. -/
-@[simps (config := { fullyApplied := ff })]
+@[simps (config := { fullyApplied := false })]
 def fun_unique (ι α : Type _) [Unique ι] [TopologicalSpace α] : (ι → α) ≃ₜ α where
   toEquiv := Equivₓ.funUnique ι α
   continuous_to_fun := continuous_apply _
   continuous_inv_fun := continuous_pi fun _ => continuous_id
 
 /-- Homeomorphism between dependent functions `Π i : fin 2, α i` and `α 0 × α 1`. -/
-@[simps (config := { fullyApplied := ff })]
+@[simps (config := { fullyApplied := false })]
 def pi_fin_two.{u} (α : Finₓ 2 → Type u) [∀ i, TopologicalSpace (α i)] : (∀ i, α i) ≃ₜ α 0 × α 1 where
   toEquiv := piFinTwoEquiv α
   continuous_to_fun := (continuous_apply 0).prod_mk (continuous_apply 1)
   continuous_inv_fun := continuous_pi <| Finₓ.forall_fin_two.2 ⟨continuous_fst, continuous_snd⟩
 
 /-- Homeomorphism between `α² = fin 2 → α` and `α × α`. -/
-@[simps (config := { fullyApplied := ff })]
+@[simps (config := { fullyApplied := false })]
 def fin_two_arrow : (Finₓ 2 → α) ≃ₜ α × α :=
-  { pi_fin_two fun _ => α with toEquiv := finTwoArrowEquiv α }
+  { piFinTwo fun _ => α with toEquiv := finTwoArrowEquiv α }
 
 /-- A subset of a topological space is homeomorphic to its image under a homeomorphism.
 -/
 def image (e : α ≃ₜ β) (s : Set α) : s ≃ₜ e '' s :=
-  { e.to_equiv.image s with
+  { e.toEquiv.Image s with
     continuous_to_fun := by
       continuity!,
     continuous_inv_fun := by
@@ -487,50 +487,6 @@ This is not true when T2 is weakened to T1
 @[simps]
 def homeo_of_equiv_compact_to_t2 [CompactSpace α] [T2Space β] {f : α ≃ β} (hf : Continuous f) : α ≃ₜ β :=
   { f with continuous_to_fun := hf, continuous_inv_fun := hf.continuous_symm_of_equiv_compact_to_t2 }
-
-/-- A concrete counterexample shows that  `continuous.homeo_of_equiv_compact_to_t2`
-cannot be generalized from `t2_space` to `t1_space`.
-
-Let `α = ℕ` be the one-point compactification of `{1, 2, ...}` with the discrete topology,
-where `0` is the adjoined point, and let `β = ℕ` be given the cofinite topology.
-Then `α` is compact, `β` is T1, and the identity map `id : α → β` is a continuous equivalence
-that is not a homeomorphism.
--/
-theorem homeo_of_equiv_compact_to_t2.t1_counterexample :
-    ∃ (α β : Type)(Iα : TopologicalSpace α)(Iβ : TopologicalSpace β),
-      CompactSpace α ∧ T1Space β ∧ ∃ f : α ≃ β, Continuous f ∧ ¬Continuous f.symm :=
-  by
-  let topα : TopologicalSpace ℕ := nhdsAdjoint 0 Filter.cofinite
-  let topβ : TopologicalSpace ℕ := cofiniteTopology ℕ
-  refine' ⟨ℕ, ℕ, topα, topβ, _, t1_space_cofinite, Equivₓ.refl ℕ, _, _⟩
-  · fconstructor
-    rw [is_compact_iff_ultrafilter_le_nhds]
-    intro f
-    suffices ∃ a, ↑f ≤ @nhds _ topα a by
-      simpa
-    by_cases' hf : ↑f ≤ @nhds _ topα 0
-    · exact ⟨0, hf⟩
-      
-    · obtain ⟨U, h0U, hU_fin, hUf⟩ : ∃ U : Set ℕ, 0 ∈ U ∧ Uᶜ.Finite ∧ Uᶜ ∈ f := by
-        rw [nhds_adjoint_nhds, Filter.le_def] at hf
-        push_neg  at hf
-        simpa [and_assoc, ← Ultrafilter.compl_mem_iff_not_mem] using hf
-      obtain ⟨n, hn', hn⟩ := Ultrafilter.eq_principal_of_finite_mem hU_fin hUf
-      rw [hn]
-      exact ⟨n, @mem_of_mem_nhds _ topα n⟩
-      
-    
-  · rw [continuous_iff_coinduced_le]
-    change topα ≤ topβ
-    rw [gc_nhds]
-    simp [nhds_cofinite]
-    
-  · intro h
-    replace h : topβ ≤ topα := by
-      simpa [continuous_iff_coinduced_le, coinduced_id] using h
-    rw [le_nhds_adjoint_iff] at h
-    exact (finite_singleton 1).infinite_compl (h.2 1 one_ne_zero ⟨1, mem_singleton 1⟩)
-    
 
 end Continuous
 

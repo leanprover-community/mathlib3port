@@ -41,8 +41,8 @@ setup_tactic_parser
 open Tactic.SimpArgType Interactive Tactic.Group
 
 /-- Auxiliary tactic for the `group` tactic. Calls the simplifier only. -/
-unsafe def aux_group₁ (locat : loc) : tactic Unit :=
-  simp_core {  } skip tt
+unsafe def aux_group₁ (locat : Loc) : tactic Unit :=
+  simp_core {  } skip true
       [expr (pquote.1 mul_oneₓ), expr (pquote.1 one_mulₓ), expr (pquote.1 one_pow), expr (pquote.1 one_zpow),
         expr (pquote.1 sub_self), expr (pquote.1 add_neg_selfₓ), expr (pquote.1 neg_add_selfₓ),
         expr (pquote.1 neg_negₓ), expr (pquote.1 tsub_self), expr (pquote.1 Int.coe_nat_add),
@@ -58,7 +58,7 @@ unsafe def aux_group₁ (locat : loc) : tactic Unit :=
     skip
 
 /-- Auxiliary tactic for the `group` tactic. Calls `ring_nf` to normalize exponents. -/
-unsafe def aux_group₂ (locat : loc) : tactic Unit :=
+unsafe def aux_group₂ (locat : Loc) : tactic Unit :=
   ring_nf none Tactic.Ring.NormalizeMode.raw locat
 
 end Tactic
@@ -69,7 +69,7 @@ setup_tactic_parser
 
 open Tactic
 
--- ././Mathport/Syntax/Translate/Basic.lean:794:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
 /-- Tactic for normalizing expressions in multiplicative groups, without assuming
 commutativity, using only the group axioms without any information about which group
 is manipulated.
@@ -87,7 +87,7 @@ end
 ```
 -/
 unsafe def Groupₓ (locat : parse location) : tactic Unit := do
-  when locat.include_goal sorry
+  when locat sorry
   try (aux_group₁ locat)
   repeat (andthen (aux_group₂ locat) (aux_group₁ locat))
 

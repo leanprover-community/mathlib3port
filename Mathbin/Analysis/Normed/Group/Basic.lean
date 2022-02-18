@@ -146,7 +146,7 @@ theorem dist_zero_left : dist (0 : E) = norm :=
   funext fun g => by
     rw [dist_comm, dist_zero_right]
 
-theorem tendsto_norm_cocompact_at_top [ProperSpace E] : tendsto norm (cocompact E) at_top := by
+theorem tendsto_norm_cocompact_at_top [ProperSpace E] : Tendsto norm (cocompact E) atTop := by
   simpa only [dist_zero_right] using tendsto_dist_right_cocompact_at_top (0 : E)
 
 theorem norm_sub_rev (g h : E) : ∥g - h∥ = ∥h - g∥ := by
@@ -271,37 +271,37 @@ theorem norm_le_add_norm_add (u v : E) : ∥u∥ ≤ ∥u + v∥ + ∥v∥ :=
     _ ≤ ∥u + v∥ + ∥v∥ := norm_sub_le _ _
     
 
-theorem ball_zero_eq (ε : ℝ) : ball (0 : E) ε = { x | ∥x∥ < ε } :=
+theorem ball_zero_eq (ε : ℝ) : Ball (0 : E) ε = { x | ∥x∥ < ε } :=
   Set.ext fun a => by
     simp
 
-theorem mem_ball_iff_norm {g h : E} {r : ℝ} : h ∈ ball g r ↔ ∥h - g∥ < r := by
+theorem mem_ball_iff_norm {g h : E} {r : ℝ} : h ∈ Ball g r ↔ ∥h - g∥ < r := by
   rw [mem_ball, dist_eq_norm]
 
-theorem add_mem_ball_iff_norm {g h : E} {r : ℝ} : g + h ∈ ball g r ↔ ∥h∥ < r := by
+theorem add_mem_ball_iff_norm {g h : E} {r : ℝ} : g + h ∈ Ball g r ↔ ∥h∥ < r := by
   rw [mem_ball_iff_norm, add_sub_cancel']
 
-theorem mem_ball_iff_norm' {g h : E} {r : ℝ} : h ∈ ball g r ↔ ∥g - h∥ < r := by
+theorem mem_ball_iff_norm' {g h : E} {r : ℝ} : h ∈ Ball g r ↔ ∥g - h∥ < r := by
   rw [mem_ball', dist_eq_norm]
 
 @[simp]
-theorem mem_ball_zero_iff {ε : ℝ} {x : E} : x ∈ ball (0 : E) ε ↔ ∥x∥ < ε := by
+theorem mem_ball_zero_iff {ε : ℝ} {x : E} : x ∈ Ball (0 : E) ε ↔ ∥x∥ < ε := by
   rw [mem_ball, dist_zero_right]
 
-theorem mem_closed_ball_iff_norm {g h : E} {r : ℝ} : h ∈ closed_ball g r ↔ ∥h - g∥ ≤ r := by
+theorem mem_closed_ball_iff_norm {g h : E} {r : ℝ} : h ∈ ClosedBall g r ↔ ∥h - g∥ ≤ r := by
   rw [mem_closed_ball, dist_eq_norm]
 
 @[simp]
-theorem mem_closed_ball_zero_iff {ε : ℝ} {x : E} : x ∈ closed_ball (0 : E) ε ↔ ∥x∥ ≤ ε := by
+theorem mem_closed_ball_zero_iff {ε : ℝ} {x : E} : x ∈ ClosedBall (0 : E) ε ↔ ∥x∥ ≤ ε := by
   rw [mem_closed_ball, dist_zero_right]
 
-theorem add_mem_closed_ball_iff_norm {g h : E} {r : ℝ} : g + h ∈ closed_ball g r ↔ ∥h∥ ≤ r := by
+theorem add_mem_closed_ball_iff_norm {g h : E} {r : ℝ} : g + h ∈ ClosedBall g r ↔ ∥h∥ ≤ r := by
   rw [mem_closed_ball_iff_norm, add_sub_cancel']
 
-theorem mem_closed_ball_iff_norm' {g h : E} {r : ℝ} : h ∈ closed_ball g r ↔ ∥g - h∥ ≤ r := by
+theorem mem_closed_ball_iff_norm' {g h : E} {r : ℝ} : h ∈ ClosedBall g r ↔ ∥g - h∥ ≤ r := by
   rw [mem_closed_ball', dist_eq_norm]
 
-theorem norm_le_of_mem_closed_ball {g h : E} {r : ℝ} (H : h ∈ closed_ball g r) : ∥h∥ ≤ ∥g∥ + r :=
+theorem norm_le_of_mem_closed_ball {g h : E} {r : ℝ} (H : h ∈ ClosedBall g r) : ∥h∥ ≤ ∥g∥ + r :=
   calc
     ∥h∥ = ∥g + (h - g)∥ := by
       rw [add_sub_cancel'_right]
@@ -315,7 +315,7 @@ theorem norm_le_of_mem_closed_ball {g h : E} {r : ℝ} (H : h ∈ closed_ball g 
 theorem norm_le_norm_add_const_of_dist_le {a b : E} {c : ℝ} (h : dist a b ≤ c) : ∥a∥ ≤ ∥b∥ + c :=
   norm_le_of_mem_closed_ball h
 
-theorem norm_lt_of_mem_ball {g h : E} {r : ℝ} (H : h ∈ ball g r) : ∥h∥ < ∥g∥ + r :=
+theorem norm_lt_of_mem_ball {g h : E} {r : ℝ} (H : h ∈ Ball g r) : ∥h∥ < ∥g∥ + r :=
   calc
     ∥h∥ = ∥g + (h - g)∥ := by
       rw [add_sub_cancel'_right]
@@ -329,54 +329,54 @@ theorem norm_lt_of_mem_ball {g h : E} {r : ℝ} (H : h ∈ ball g r) : ∥h∥ <
 theorem norm_lt_norm_add_const_of_dist_lt {a b : E} {c : ℝ} (h : dist a b < c) : ∥a∥ < ∥b∥ + c :=
   norm_lt_of_mem_ball h
 
-theorem bounded_iff_forall_norm_le {s : Set E} : bounded s ↔ ∃ C, ∀, ∀ x ∈ s, ∀, ∥x∥ ≤ C := by
+theorem bounded_iff_forall_norm_le {s : Set E} : Bounded s ↔ ∃ C, ∀, ∀ x ∈ s, ∀, ∥x∥ ≤ C := by
   simpa only [Set.subset_def, mem_closed_ball_iff_norm, sub_zero] using bounded_iff_subset_ball (0 : E)
 
 @[simp]
-theorem preimage_add_ball (x y : E) (r : ℝ) : (· + ·) y ⁻¹' ball x r = ball (x - y) r := by
+theorem preimage_add_ball (x y : E) (r : ℝ) : (· + ·) y ⁻¹' Ball x r = Ball (x - y) r := by
   ext z
   simp only [dist_eq_norm, Set.mem_preimage, mem_ball]
   abel
 
 @[simp]
-theorem preimage_add_closed_ball (x y : E) (r : ℝ) : (· + ·) y ⁻¹' closed_ball x r = closed_ball (x - y) r := by
+theorem preimage_add_closed_ball (x y : E) (r : ℝ) : (· + ·) y ⁻¹' ClosedBall x r = ClosedBall (x - y) r := by
   ext z
   simp only [dist_eq_norm, Set.mem_preimage, mem_closed_ball]
   abel
 
 @[simp]
-theorem mem_sphere_iff_norm (v w : E) (r : ℝ) : w ∈ sphere v r ↔ ∥w - v∥ = r := by
+theorem mem_sphere_iff_norm (v w : E) (r : ℝ) : w ∈ Sphere v r ↔ ∥w - v∥ = r := by
   simp [dist_eq_norm]
 
 @[simp]
-theorem mem_sphere_zero_iff_norm {w : E} {r : ℝ} : w ∈ sphere (0 : E) r ↔ ∥w∥ = r := by
+theorem mem_sphere_zero_iff_norm {w : E} {r : ℝ} : w ∈ Sphere (0 : E) r ↔ ∥w∥ = r := by
   simp [dist_eq_norm]
 
 @[simp]
-theorem norm_eq_of_mem_sphere {r : ℝ} (x : sphere (0 : E) r) : ∥(x : E)∥ = r :=
+theorem norm_eq_of_mem_sphere {r : ℝ} (x : Sphere (0 : E) r) : ∥(x : E)∥ = r :=
   mem_sphere_zero_iff_norm.mp x.2
 
-theorem preimage_add_sphere (x y : E) (r : ℝ) : (· + ·) y ⁻¹' sphere x r = sphere (x - y) r := by
+theorem preimage_add_sphere (x y : E) (r : ℝ) : (· + ·) y ⁻¹' Sphere x r = Sphere (x - y) r := by
   ext z
   simp only [Set.mem_preimage, mem_sphere_iff_norm]
   abel
 
-theorem ne_zero_of_mem_sphere {r : ℝ} (hr : r ≠ 0) (x : sphere (0 : E) r) : (x : E) ≠ 0 :=
+theorem ne_zero_of_mem_sphere {r : ℝ} (hr : r ≠ 0) (x : Sphere (0 : E) r) : (x : E) ≠ 0 :=
   ne_zero_of_norm_ne_zero <| by
     rwa [norm_eq_of_mem_sphere x]
 
-theorem ne_zero_of_mem_unit_sphere (x : sphere (0 : E) 1) : (x : E) ≠ 0 :=
+theorem ne_zero_of_mem_unit_sphere (x : Sphere (0 : E) 1) : (x : E) ≠ 0 :=
   ne_zero_of_mem_sphere one_ne_zero _
 
 /-- We equip the sphere, in a seminormed group, with a formal operation of negation, namely the
 antipodal map. -/
-instance {r : ℝ} : Neg (sphere (0 : E) r) where
+instance {r : ℝ} : Neg (Sphere (0 : E) r) where
   neg := fun w =>
     ⟨-↑w, by
       simp ⟩
 
 @[simp]
-theorem coe_neg_sphere {r : ℝ} (v : sphere (0 : E) r) : ((-v : sphere _ _) : E) = -(v : E) :=
+theorem coe_neg_sphere {r : ℝ} (v : Sphere (0 : E) r) : ((-v : Sphere _ _) : E) = -(v : E) :=
   rfl
 
 namespace Isometric
@@ -441,12 +441,12 @@ theorem coe_neg : ⇑Isometric.neg E = Neg.neg :=
 end Isometric
 
 theorem NormedGroup.tendsto_nhds_zero {f : α → E} {l : Filter α} :
-    tendsto f l (𝓝 0) ↔ ∀, ∀ ε > 0, ∀, ∀ᶠ x in l, ∥f x∥ < ε :=
+    Tendsto f l (𝓝 0) ↔ ∀, ∀ ε > 0, ∀, ∀ᶠ x in l, ∥f x∥ < ε :=
   Metric.tendsto_nhds.trans <| by
     simp only [dist_zero_right]
 
 theorem NormedGroup.tendsto_nhds_nhds {f : E → F} {x : E} {y : F} :
-    tendsto f (𝓝 x) (𝓝 y) ↔ ∀, ∀ ε > 0, ∀, ∃ δ > 0, ∀ x', ∥x' - x∥ < δ → ∥f x' - y∥ < ε := by
+    Tendsto f (𝓝 x) (𝓝 y) ↔ ∀, ∀ ε > 0, ∀, ∃ δ > 0, ∀ x', ∥x' - x∥ < δ → ∥f x' - y∥ < ε := by
   simp_rw [Metric.tendsto_nhds_nhds, dist_eq_norm]
 
 theorem NormedGroup.cauchy_seq_iff [Nonempty α] [SemilatticeSup α] {u : α → E} :
@@ -513,7 +513,7 @@ theorem AddMonoidHom.isometry_of_norm (f : E →+ F) (hf : ∀ x, ∥f x∥ = �
 theorem controlled_sum_of_mem_closure {s : AddSubgroup E} {g : E} (hg : g ∈ Closure (s : Set E)) {b : ℕ → ℝ}
     (b_pos : ∀ n, 0 < b n) :
     ∃ v : ℕ → E,
-      tendsto (fun n => ∑ i in range (n + 1), v i) at_top (𝓝 g) ∧
+      Tendsto (fun n => ∑ i in range (n + 1), v i) atTop (𝓝 g) ∧
         (∀ n, v n ∈ s) ∧ ∥v 0 - g∥ < b 0 ∧ ∀, ∀ n > 0, ∀, ∥v n∥ < b n :=
   by
   obtain ⟨u : ℕ → E, u_in : ∀ n, u n ∈ s, lim_u : tendsto u at_top (𝓝 g)⟩ := mem_closure_iff_seq_limit.mp hg
@@ -548,7 +548,7 @@ theorem controlled_sum_of_mem_closure {s : AddSubgroup E} {g : E} (hg : g ∈ Cl
 theorem controlled_sum_of_mem_closure_range {j : E →+ F} {h : F} (Hh : h ∈ (Closure <| (j.range : Set F))) {b : ℕ → ℝ}
     (b_pos : ∀ n, 0 < b n) :
     ∃ g : ℕ → E,
-      tendsto (fun n => ∑ i in range (n + 1), j (g i)) at_top (𝓝 h) ∧
+      Tendsto (fun n => ∑ i in range (n + 1), j (g i)) atTop (𝓝 h) ∧
         ∥j (g 0) - h∥ < b 0 ∧ ∀, ∀ n > 0, ∀, ∥j (g n)∥ < b n :=
   by
   rcases controlled_sum_of_mem_closure Hh b_pos with ⟨v, sum_v, v_in, hv₀, hv_pos⟩
@@ -670,6 +670,9 @@ theorem add_sub_lipschitz_with (hf : AntilipschitzWith Kf f) (hg : LipschitzWith
     AntilipschitzWith (Kf⁻¹ - Kg)⁻¹ g := by
   simpa only [Pi.sub_apply, add_sub_cancel'_right] using hf.add_lipschitz_with hg hK
 
+theorem le_mul_norm_sub {f : E → F} (hf : AntilipschitzWith K f) (x y : E) : ∥x - y∥ ≤ K * ∥f x - f y∥ := by
+  simp [← dist_eq_norm, hf.le_mul_dist x y]
+
 end AntilipschitzWith
 
 /-- A group homomorphism from an `add_comm_group` to a `semi_normed_group` induces a
@@ -685,12 +688,21 @@ def SemiNormedGroup.induced {E} [AddCommGroupₓ E] (f : E →+ F) : SemiNormedG
 /-- A subgroup of a seminormed group is also a seminormed group,
 with the restriction of the norm. -/
 instance AddSubgroup.semiNormedGroup (s : AddSubgroup E) : SemiNormedGroup s :=
-  SemiNormedGroup.induced s.subtype
+  SemiNormedGroup.induced s.Subtype
 
 /-- If `x` is an element of a subgroup `s` of a seminormed group `E`, its norm in `s` is equal to
 its norm in `E`. -/
 @[simp]
-theorem coe_norm_subgroup {E : Type _} [SemiNormedGroup E] {s : AddSubgroup E} (x : s) : ∥x∥ = ∥(x : E)∥ :=
+theorem AddSubgroup.coe_norm {E : Type _} [SemiNormedGroup E] {s : AddSubgroup E} (x : s) : ∥(x : s)∥ = ∥(x : E)∥ :=
+  rfl
+
+/-- If `x` is an element of a subgroup `s` of a seminormed group `E`, its norm in `s` is equal to
+its norm in `E`.
+
+This is a reversed version of the `simp` lemma `add_subgroup.coe_norm` for use by `norm_cast`.
+-/
+@[norm_cast]
+theorem AddSubgroup.norm_coe {E : Type _} [SemiNormedGroup E] {s : AddSubgroup E} (x : s) : ∥(x : E)∥ = ∥(x : s)∥ :=
   rfl
 
 /-- A submodule of a seminormed group is also a seminormed group, with the restriction of the norm.
@@ -701,18 +713,24 @@ instance Submodule.semiNormedGroup {𝕜 : Type _} {_ : Ringₓ 𝕜} {E : Type 
   norm := fun x => norm (x : E)
   dist_eq := fun x y => dist_eq_norm (x : E) (y : E)
 
+/-- If `x` is an element of a submodule `s` of a normed group `E`, its norm in `s` is equal to its
+norm in `E`.
+
+See note [implicit instance arguments]. -/
+@[simp]
+theorem Submodule.coe_norm {𝕜 : Type _} {_ : Ringₓ 𝕜} {E : Type _} [SemiNormedGroup E] {_ : Module 𝕜 E}
+    {s : Submodule 𝕜 E} (x : s) : ∥(x : s)∥ = ∥(x : E)∥ :=
+  rfl
+
 /-- If `x` is an element of a submodule `s` of a normed group `E`, its norm in `E` is equal to its
 norm in `s`.
 
-See note [implicit instance arguments]. -/
-@[simp, norm_cast]
-theorem Submodule.norm_coe {𝕜 : Type _} {_ : Ringₓ 𝕜} {E : Type _} [SemiNormedGroup E] {_ : Module 𝕜 E}
-    {s : Submodule 𝕜 E} (x : s) : ∥(x : E)∥ = ∥x∥ :=
-  rfl
+This is a reversed version of the `simp` lemma `submodule.coe_norm` for use by `norm_cast`.
 
-@[simp]
-theorem Submodule.norm_mk {𝕜 : Type _} {_ : Ringₓ 𝕜} {E : Type _} [SemiNormedGroup E] {_ : Module 𝕜 E}
-    {s : Submodule 𝕜 E} (x : E) (hx : x ∈ s) : ∥(⟨x, hx⟩ : s)∥ = ∥x∥ :=
+See note [implicit instance arguments]. -/
+@[norm_cast]
+theorem Submodule.norm_coe {𝕜 : Type _} {_ : Ringₓ 𝕜} {E : Type _} [SemiNormedGroup E] {_ : Module 𝕜 E}
+    {s : Submodule 𝕜 E} (x : s) : ∥(x : E)∥ = ∥(x : s)∥ :=
   rfl
 
 /-- seminormed group instance on the product of two seminormed groups, using the sup norm. -/
@@ -763,7 +781,7 @@ theorem pi_norm_lt_iff {π : ι → Type _} [Fintype ι] [∀ i, SemiNormedGroup
 
 theorem norm_le_pi_norm {π : ι → Type _} [Fintype ι] [∀ i, SemiNormedGroup (π i)] (x : ∀ i, π i) (i : ι) :
     ∥x i∥ ≤ ∥x∥ :=
-  (pi_norm_le_iff (norm_nonneg x)).1 (le_reflₓ _) i
+  (pi_norm_le_iff (norm_nonneg x)).1 le_rfl i
 
 @[simp]
 theorem pi_norm_const [Nonempty ι] [Fintype ι] (a : E) : ∥fun i : ι => a∥ = ∥a∥ := by
@@ -774,45 +792,45 @@ theorem pi_nnnorm_const [Nonempty ι] [Fintype ι] (a : E) : ∥fun i : ι => a�
   Nnreal.eq <| pi_norm_const a
 
 theorem tendsto_iff_norm_tendsto_zero {f : α → E} {a : Filter α} {b : E} :
-    tendsto f a (𝓝 b) ↔ tendsto (fun e => ∥f e - b∥) a (𝓝 0) := by
+    Tendsto f a (𝓝 b) ↔ Tendsto (fun e => ∥f e - b∥) a (𝓝 0) := by
   convert tendsto_iff_dist_tendsto_zero
   simp [dist_eq_norm]
 
 theorem is_bounded_under_of_tendsto {l : Filter α} {f : α → E} {c : E} (h : Filter.Tendsto f l (𝓝 c)) :
-    is_bounded_under (· ≤ ·) l fun x => ∥f x∥ :=
+    IsBoundedUnder (· ≤ ·) l fun x => ∥f x∥ :=
   ⟨∥c∥ + 1,
-    @tendsto.eventually α E f _ _ (fun k => ∥k∥ ≤ ∥c∥ + 1) h
+    @Tendsto.eventually α E f _ _ (fun k => ∥k∥ ≤ ∥c∥ + 1) h
       (Filter.eventually_iff_exists_mem.mpr
         ⟨Metric.ClosedBall c 1, Metric.closed_ball_mem_nhds c zero_lt_one, fun y hy =>
           norm_le_norm_add_const_of_dist_le hy⟩)⟩
 
 theorem tendsto_zero_iff_norm_tendsto_zero {f : α → E} {a : Filter α} :
-    tendsto f a (𝓝 0) ↔ tendsto (fun e => ∥f e∥) a (𝓝 0) := by
+    Tendsto f a (𝓝 0) ↔ Tendsto (fun e => ∥f e∥) a (𝓝 0) := by
   rw [tendsto_iff_norm_tendsto_zero]
   simp only [sub_zero]
 
 /-- Special case of the sandwich theorem: if the norm of `f` is eventually bounded by a real
 function `g` which tends to `0`, then `f` tends to `0`.
 In this pair of lemmas (`squeeze_zero_norm'` and `squeeze_zero_norm`), following a convention of
-similar lemmas in `topology.metric_space.basic` and `topology.algebra.ordered`, the `'` version is
+similar lemmas in `topology.metric_space.basic` and `topology.algebra.order`, the `'` version is
 phrased using "eventually" and the non-`'` version is phrased absolutely. -/
 theorem squeeze_zero_norm' {f : α → E} {g : α → ℝ} {t₀ : Filter α} (h : ∀ᶠ n in t₀, ∥f n∥ ≤ g n)
-    (h' : tendsto g t₀ (𝓝 0)) : tendsto f t₀ (𝓝 0) :=
+    (h' : Tendsto g t₀ (𝓝 0)) : Tendsto f t₀ (𝓝 0) :=
   tendsto_zero_iff_norm_tendsto_zero.mpr (squeeze_zero' (eventually_of_forall fun n => norm_nonneg _) h h')
 
 /-- Special case of the sandwich theorem: if the norm of `f` is bounded by a real function `g` which
 tends to `0`, then `f` tends to `0`.  -/
-theorem squeeze_zero_norm {f : α → E} {g : α → ℝ} {t₀ : Filter α} (h : ∀ n, ∥f n∥ ≤ g n) (h' : tendsto g t₀ (𝓝 0)) :
-    tendsto f t₀ (𝓝 0) :=
+theorem squeeze_zero_norm {f : α → E} {g : α → ℝ} {t₀ : Filter α} (h : ∀ n, ∥f n∥ ≤ g n) (h' : Tendsto g t₀ (𝓝 0)) :
+    Tendsto f t₀ (𝓝 0) :=
   squeeze_zero_norm' (eventually_of_forall h) h'
 
-theorem tendsto_norm_sub_self (x : E) : tendsto (fun g : E => ∥g - x∥) (𝓝 x) (𝓝 0) := by
+theorem tendsto_norm_sub_self (x : E) : Tendsto (fun g : E => ∥g - x∥) (𝓝 x) (𝓝 0) := by
   simpa [dist_eq_norm] using tendsto_id.dist (tendsto_const_nhds : tendsto (fun g => (x : E)) (𝓝 x) _)
 
-theorem tendsto_norm {x : E} : tendsto (fun g : E => ∥g∥) (𝓝 x) (𝓝 ∥x∥) := by
+theorem tendsto_norm {x : E} : Tendsto (fun g : E => ∥g∥) (𝓝 x) (𝓝 ∥x∥) := by
   simpa using tendsto_id.dist (tendsto_const_nhds : tendsto (fun g => (0 : E)) _ _)
 
-theorem tendsto_norm_zero : tendsto (fun g : E => ∥g∥) (𝓝 0) (𝓝 0) := by
+theorem tendsto_norm_zero : Tendsto (fun g : E => ∥g∥) (𝓝 0) (𝓝 0) := by
   simpa using tendsto_norm_sub_self (0 : E)
 
 @[continuity]
@@ -836,11 +854,11 @@ section
 
 variable {l : Filter α} {f : α → E} {a : E}
 
-theorem Filter.Tendsto.norm (h : tendsto f l (𝓝 a)) : tendsto (fun x => ∥f x∥) l (𝓝 ∥a∥) :=
+theorem Filter.Tendsto.norm (h : Tendsto f l (𝓝 a)) : Tendsto (fun x => ∥f x∥) l (𝓝 ∥a∥) :=
   tendsto_norm.comp h
 
-theorem Filter.Tendsto.nnnorm (h : tendsto f l (𝓝 a)) : tendsto (fun x => ∥f x∥₊) l (𝓝 ∥a∥₊) :=
-  tendsto.comp continuous_nnnorm.ContinuousAt h
+theorem Filter.Tendsto.nnnorm (h : Tendsto f l (𝓝 a)) : Tendsto (fun x => ∥f x∥₊) l (𝓝 ∥a∥₊) :=
+  Tendsto.comp continuous_nnnorm.ContinuousAt h
 
 end
 
@@ -873,8 +891,8 @@ theorem ContinuousOn.nnnorm (h : ContinuousOn f s) : ContinuousOn (fun x => ∥f
 end
 
 /-- If `∥y∥→∞`, then we can assume `y≠x` for any fixed `x`. -/
-theorem eventually_ne_of_tendsto_norm_at_top {l : Filter α} {f : α → E} (h : tendsto (fun y => ∥f y∥) l at_top)
-    (x : E) : ∀ᶠ y in l, f y ≠ x := by
+theorem eventually_ne_of_tendsto_norm_at_top {l : Filter α} {f : α → E} (h : Tendsto (fun y => ∥f y∥) l atTop) (x : E) :
+    ∀ᶠ y in l, f y ≠ x := by
   have : ∀ᶠ y in l, 1 + ∥x∥ ≤ ∥f y∥ := h (mem_at_top (1 + ∥x∥))
   refine' this.mono fun y hy hxy => _
   subst x
@@ -1007,7 +1025,7 @@ def NormedGroup.induced {E} [AddCommGroupₓ E] (f : E →+ F) (h : Function.Inj
 
 /-- A subgroup of a normed group is also a normed group, with the restriction of the norm. -/
 instance AddSubgroup.normedGroup (s : AddSubgroup E) : NormedGroup s :=
-  NormedGroup.induced s.subtype Subtype.coe_injective
+  NormedGroup.induced s.Subtype Subtype.coe_injective
 
 /-- A submodule of a normed group is also a normed group, with the restriction of the norm.
 
@@ -1024,10 +1042,10 @@ noncomputable instance Prod.normedGroup : NormedGroup (E × F) :=
 noncomputable instance Pi.normedGroup {π : ι → Type _} [Fintype ι] [∀ i, NormedGroup (π i)] : NormedGroup (∀ i, π i) :=
   { Pi.semiNormedGroup with }
 
-theorem tendsto_norm_sub_self_punctured_nhds (a : E) : tendsto (fun x => ∥x - a∥) (𝓝[≠] a) (𝓝[>] 0) :=
+theorem tendsto_norm_sub_self_punctured_nhds (a : E) : Tendsto (fun x => ∥x - a∥) (𝓝[≠] a) (𝓝[>] 0) :=
   (tendsto_norm_sub_self a).inf <| tendsto_principal_principal.2 fun x hx => norm_pos_iff.2 <| sub_ne_zero.2 hx
 
-theorem tendsto_norm_nhds_within_zero : tendsto (norm : E → ℝ) (𝓝[≠] 0) (𝓝[>] 0) :=
+theorem tendsto_norm_nhds_within_zero : Tendsto (norm : E → ℝ) (𝓝[≠] 0) (𝓝[>] 0) :=
   tendsto_norm_zero.inf <| tendsto_principal_principal.2 fun x => norm_pos_iff.2
 
 end NormedGroup

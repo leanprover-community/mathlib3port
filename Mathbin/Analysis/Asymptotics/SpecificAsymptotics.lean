@@ -18,7 +18,7 @@ section NormedField
 /-- If `f : 𝕜 → E` is bounded in a punctured neighborhood of `a`, then `f(x) = o((x - a)⁻¹)` as
 `x → a`, `x ≠ a`. -/
 theorem Filter.IsBoundedUnder.is_o_sub_self_inv {𝕜 E : Type _} [NormedField 𝕜] [HasNorm E] {a : 𝕜} {f : 𝕜 → E}
-    (h : is_bounded_under (· ≤ ·) (𝓝[≠] a) (norm ∘ f)) : is_o f (fun x => (x - a)⁻¹) (𝓝[≠] a) := by
+    (h : IsBoundedUnder (· ≤ ·) (𝓝[≠] a) (norm ∘ f)) : IsOₓ f (fun x => (x - a)⁻¹) (𝓝[≠] a) := by
   refine' (h.is_O_const (@one_ne_zero ℝ _ _)).trans_is_o (is_o_const_left.2 <| Or.inr _)
   simp only [· ∘ ·, NormedField.norm_inv]
   exact (tendsto_norm_sub_self_punctured_nhds a).inv_tendsto_zero
@@ -39,19 +39,19 @@ theorem pow_div_pow_eventually_eq_at_bot {p q : ℕ} :
   apply (eventually_lt_at_bot (0 : 𝕜)).mono fun x hx => _
   simp [zpow_sub₀ hx.ne'.symm]
 
-theorem tendsto_zpow_at_top_at_top {n : ℤ} (hn : 0 < n) : tendsto (fun x : 𝕜 => x ^ n) at_top at_top := by
+theorem tendsto_zpow_at_top_at_top {n : ℤ} (hn : 0 < n) : Tendsto (fun x : 𝕜 => x ^ n) atTop atTop := by
   lift n to ℕ using hn.le
   simp only [zpow_coe_nat]
   exact tendsto_pow_at_top (nat.succ_le_iff.mpr <| int.coe_nat_pos.mp hn)
 
-theorem tendsto_pow_div_pow_at_top_at_top {p q : ℕ} (hpq : q < p) :
-    tendsto (fun x : 𝕜 => x ^ p / x ^ q) at_top at_top := by
+theorem tendsto_pow_div_pow_at_top_at_top {p q : ℕ} (hpq : q < p) : Tendsto (fun x : 𝕜 => x ^ p / x ^ q) atTop atTop :=
+  by
   rw [tendsto_congr' pow_div_pow_eventually_eq_at_top]
   apply tendsto_zpow_at_top_at_top
   linarith
 
 theorem tendsto_pow_div_pow_at_top_zero [TopologicalSpace 𝕜] [OrderTopology 𝕜] {p q : ℕ} (hpq : p < q) :
-    tendsto (fun x : 𝕜 => x ^ p / x ^ q) at_top (𝓝 0) := by
+    Tendsto (fun x : 𝕜 => x ^ p / x ^ q) atTop (𝓝 0) := by
   rw [tendsto_congr' pow_div_pow_eventually_eq_at_top]
   apply tendsto_zpow_at_top_zero
   linarith
@@ -63,12 +63,12 @@ section NormedLinearOrderedField
 variable {𝕜 : Type _} [NormedLinearOrderedField 𝕜]
 
 theorem Asymptotics.is_o_pow_pow_at_top_of_lt [OrderTopology 𝕜] {p q : ℕ} (hpq : p < q) :
-    is_o (fun x : 𝕜 => x ^ p) (fun x => x ^ q) at_top := by
+    IsOₓ (fun x : 𝕜 => x ^ p) (fun x => x ^ q) atTop := by
   refine' (is_o_iff_tendsto' _).mpr (tendsto_pow_div_pow_at_top_zero hpq)
   exact (eventually_gt_at_top 0).mono fun x hx hxq => (pow_ne_zero q hx.ne' hxq).elim
 
-theorem Asymptotics.IsO.trans_tendsto_norm_at_top {α : Type _} {u v : α → 𝕜} {l : Filter α} (huv : is_O u v l)
-    (hu : tendsto (fun x => ∥u x∥) l at_top) : tendsto (fun x => ∥v x∥) l at_top := by
+theorem Asymptotics.IsO.trans_tendsto_norm_at_top {α : Type _} {u v : α → 𝕜} {l : Filter α} (huv : IsO u v l)
+    (hu : Tendsto (fun x => ∥u x∥) l atTop) : Tendsto (fun x => ∥v x∥) l atTop := by
   rcases huv.exists_pos with ⟨c, hc, hcuv⟩
   rw [is_O_with] at hcuv
   convert tendsto.at_top_div_const hc (tendsto_at_top_mono' l hcuv hu)

@@ -53,6 +53,26 @@ instance OrderedCommMonoid.to_covariant_class_right (M : Type _) [OrderedCommMon
     CovariantClass M M (swap (· * ·)) (· ≤ ·) :=
   covariant_swap_mul_le_of_covariant_mul_le M
 
+@[to_additive]
+theorem Mul.to_covariant_class_left (M : Type _) [Mul M] [LinearOrderₓ M] [CovariantClass M M (· * ·) (· < ·)] :
+    CovariantClass M M (· * ·) (· ≤ ·) :=
+  { elim := fun a b c bc => by
+      rcases eq_or_lt_of_le bc with (rfl | bc)
+      · exact rfl.le
+        
+      · exact (mul_lt_mul_left' bc a).le
+         }
+
+@[to_additive]
+theorem Mul.to_covariant_class_right (M : Type _) [Mul M] [LinearOrderₓ M] [CovariantClass M M (swap (· * ·)) (· < ·)] :
+    CovariantClass M M (swap (· * ·)) (· ≤ ·) :=
+  { elim := fun a b c bc => by
+      rcases eq_or_lt_of_le bc with (rfl | bc)
+      · exact rfl.le
+        
+      · exact (mul_lt_mul_right' bc a).le
+         }
+
 end OrderedInstances
 
 /-- An `ordered_comm_monoid` with one-sided 'division' in the sense that
@@ -116,7 +136,7 @@ See note [reducible non-instances]. -/
   to_additive Function.Injective.orderedAddCommMonoid "Pullback an `ordered_add_comm_monoid` under an injective map."]
 def Function.Injective.orderedCommMonoid [OrderedCommMonoid α] {β : Type _} [One β] [Mul β] (f : β → α)
     (hf : Function.Injective f) (one : f 1 = 1) (mul : ∀ x y, f (x * y) = f x * f y) : OrderedCommMonoid β :=
-  { PartialOrderₓ.lift f hf, hf.comm_monoid f one mul with
+  { PartialOrderₓ.lift f hf, hf.CommMonoid f one mul with
     mul_le_mul_left := fun a b ab c =>
       show f (c * a) ≤ f (c * b) by
         rw [mul, mul]
@@ -130,7 +150,7 @@ See note [reducible non-instances]. -/
       "Pullback an `ordered_add_comm_monoid` under an injective map."]
 def Function.Injective.linearOrderedCommMonoid [LinearOrderedCommMonoid α] {β : Type _} [One β] [Mul β] (f : β → α)
     (hf : Function.Injective f) (one : f 1 = 1) (mul : ∀ x y, f (x * y) = f x * f y) : LinearOrderedCommMonoid β :=
-  { hf.ordered_comm_monoid f one mul, LinearOrderₓ.lift f hf with }
+  { hf.OrderedCommMonoid f one mul, LinearOrderₓ.lift f hf with }
 
 theorem bit0_pos [OrderedAddCommMonoid α] {a : α} (h : 0 < a) : 0 < bit0 a :=
   add_pos h h
@@ -237,7 +257,7 @@ def OrderedAddCommMonoid [OrderedAddCommMonoid α] (zero_le : ∀ a : α, 0 ≤ 
   · intro a b h c ca h₂
     cases' b with b
     · rw [le_antisymmₓ h bot_le] at h₂
-      exact ⟨_, h₂, le_reflₓ _⟩
+      exact ⟨_, h₂, le_rfl⟩
       
     cases' a with a
     · change c + 0 = some ca at h₂
@@ -396,7 +416,7 @@ def coe_add_hom [AddMonoidₓ α] : α →+ WithTop α :=
   ⟨coe, rfl, fun _ _ => rfl⟩
 
 @[simp]
-theorem coe_coe_add_hom [AddMonoidₓ α] : ⇑(coe_add_hom : α →+ WithTop α) = coe :=
+theorem coe_coe_add_hom [AddMonoidₓ α] : ⇑(coeAddHom : α →+ WithTop α) = coe :=
   rfl
 
 @[simp]
@@ -758,7 +778,7 @@ See note [reducible non-instances]. -/
       "Pullback an `ordered_cancel_add_comm_monoid` under an injective map."]
 def Function.Injective.orderedCancelCommMonoid {β : Type _} [One β] [Mul β] (f : β → α) (hf : Function.Injective f)
     (one : f 1 = 1) (mul : ∀ x y, f (x * y) = f x * f y) : OrderedCancelCommMonoid β :=
-  { hf.left_cancel_semigroup f mul, hf.ordered_comm_monoid f one mul with
+  { hf.LeftCancelSemigroup f mul, hf.OrderedCommMonoid f one mul with
     le_of_mul_le_mul_left := fun a b c bc : f (a * b) ≤ f (a * c) =>
       (mul_le_mul_iff_left (f a)).mp
         (by
@@ -859,7 +879,7 @@ See note [reducible non-instances]. -/
 def Function.Injective.linearOrderedCancelCommMonoid {β : Type _} [One β] [Mul β] (f : β → α)
     (hf : Function.Injective f) (one : f 1 = 1) (mul : ∀ x y, f (x * y) = f x * f y) :
     LinearOrderedCancelCommMonoid β :=
-  { hf.linear_ordered_comm_monoid f one mul, hf.ordered_cancel_comm_monoid f one mul with }
+  { hf.LinearOrderedCommMonoid f one mul, hf.OrderedCancelCommMonoid f one mul with }
 
 end LinearOrderedCancelCommMonoid
 
@@ -1058,6 +1078,50 @@ instance [LinearOrderedAddCommMonoid α] : LinearOrderedCommMonoid (Multiplicati
 
 instance [LinearOrderedCommMonoid α] : LinearOrderedAddCommMonoid (Additive α) :=
   { Additive.linearOrder, Additive.orderedAddCommMonoid with }
+
+namespace Additive
+
+variable [Preorderₓ α]
+
+@[simp]
+theorem of_mul_le {a b : α} : ofMul a ≤ ofMul b ↔ a ≤ b :=
+  Iff.rfl
+
+@[simp]
+theorem of_mul_lt {a b : α} : ofMul a < ofMul b ↔ a < b :=
+  Iff.rfl
+
+@[simp]
+theorem to_mul_le {a b : Additive α} : toMul a ≤ toMul b ↔ a ≤ b :=
+  Iff.rfl
+
+@[simp]
+theorem to_mul_lt {a b : Additive α} : toMul a < toMul b ↔ a < b :=
+  Iff.rfl
+
+end Additive
+
+namespace Multiplicative
+
+variable [Preorderₓ α]
+
+@[simp]
+theorem of_add_le {a b : α} : ofAdd a ≤ ofAdd b ↔ a ≤ b :=
+  Iff.rfl
+
+@[simp]
+theorem of_add_lt {a b : α} : ofAdd a < ofAdd b ↔ a < b :=
+  Iff.rfl
+
+@[simp]
+theorem to_add_le {a b : Multiplicative α} : toAdd a ≤ toAdd b ↔ a ≤ b :=
+  Iff.rfl
+
+@[simp]
+theorem to_add_lt {a b : Multiplicative α} : toAdd a < toAdd b ↔ a < b :=
+  Iff.rfl
+
+end Multiplicative
 
 end TypeTags
 

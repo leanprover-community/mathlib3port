@@ -24,7 +24,7 @@ namespace Quiver
 def symmetrify V : Type u :=
   V
 
-instance symmetrify_quiver (V : Type u) [Quiver V] : Quiver (symmetrify V) :=
+instance symmetrify_quiver (V : Type u) [Quiver V] : Quiver (Symmetrify V) :=
   ⟨fun a b : V => Sum (a ⟶ b) (b ⟶ a)⟩
 
 variable (V : Type u) [Quiver.{v + 1} V]
@@ -34,18 +34,18 @@ variable (V : Type u) [Quiver.{v + 1} V]
 class has_reverse where
   reverse' : ∀ {a b : V}, (a ⟶ b) → (b ⟶ a)
 
-instance : has_reverse (symmetrify V) :=
+instance : HasReverse (Symmetrify V) :=
   ⟨fun a b e => e.swap⟩
 
 variable {V}
 
 /-- Reverse the direction of an arrow. -/
-def reverse [has_reverse V] {a b : V} : (a ⟶ b) → (b ⟶ a) :=
+def reverse [HasReverse V] {a b : V} : (a ⟶ b) → (b ⟶ a) :=
   has_reverse.reverse'
 
 /-- Reverse the direction of a path. -/
-def path.reverse [has_reverse V] {a : V} : ∀ {b}, path a b → path b a
-  | a, path.nil => path.nil
+def path.reverse [HasReverse V] {a : V} : ∀ {b}, Path a b → Path b a
+  | a, path.nil => Path.nil
   | b, path.cons p e => (reverse e).toPath.comp p.reverse
 
 variable (V)
@@ -53,30 +53,30 @@ variable (V)
 /-- Two vertices are related in the zigzag setoid if there is a
     zigzag of arrows from one to the other. -/
 def zigzag_setoid : Setoidₓ V :=
-  ⟨fun a b => Nonempty (@path (symmetrify V) _ a b), fun a => ⟨path.nil⟩, fun a b ⟨p⟩ => ⟨p.reverse⟩,
+  ⟨fun a b => Nonempty (@Path (Symmetrify V) _ a b), fun a => ⟨Path.nil⟩, fun a b ⟨p⟩ => ⟨p.reverse⟩,
     fun a b c ⟨p⟩ ⟨q⟩ => ⟨p.comp q⟩⟩
 
 /-- The type of weakly connected components of a directed graph. Two vertices are
     in the same weakly connected component if there is a zigzag of arrows from one
     to the other. -/
 def weakly_connected_component : Type _ :=
-  Quotientₓ (zigzag_setoid V)
+  Quotientₓ (zigzagSetoid V)
 
 namespace WeaklyConnectedComponent
 
 variable {V}
 
 /-- The weakly connected component corresponding to a vertex. -/
-protected def mk : V → weakly_connected_component V :=
+protected def mk : V → WeaklyConnectedComponent V :=
   Quotientₓ.mk'
 
-instance : CoeTₓ V (weakly_connected_component V) :=
-  ⟨weakly_connected_component.mk⟩
+instance : CoeTₓ V (WeaklyConnectedComponent V) :=
+  ⟨WeaklyConnectedComponent.mk⟩
 
-instance [Inhabited V] : Inhabited (weakly_connected_component V) :=
+instance [Inhabited V] : Inhabited (WeaklyConnectedComponent V) :=
   ⟨show V from default⟩
 
-protected theorem Eq (a b : V) : (a : weakly_connected_component V) = b ↔ Nonempty (@path (symmetrify V) _ a b) :=
+protected theorem Eq (a b : V) : (a : WeaklyConnectedComponent V) = b ↔ Nonempty (@Path (Symmetrify V) _ a b) :=
   Quotientₓ.eq'
 
 end WeaklyConnectedComponent
@@ -85,7 +85,7 @@ variable {V}
 
 /-- A wide subquiver `H` of `G.symmetrify` determines a wide subquiver of `G`, containing an
     an arrow `e` if either `e` or its reversal is in `H`. -/
-def wide_subquiver_symmetrify (H : WideSubquiver (symmetrify V)) : WideSubquiver V := fun a b =>
+def wide_subquiver_symmetrify (H : WideSubquiver (Symmetrify V)) : WideSubquiver V := fun a b =>
   { e | Sum.inl e ∈ H a b ∨ Sum.inr e ∈ H b a }
 
 end Quiver

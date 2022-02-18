@@ -50,10 +50,10 @@ zero. -/
 class is_semisimple : Prop where
   semisimple : radical R L = ⊥
 
-theorem is_semisimple_iff_no_solvable_ideals : is_semisimple R L ↔ ∀ I : LieIdeal R L, is_solvable R I → I = ⊥ :=
+theorem is_semisimple_iff_no_solvable_ideals : IsSemisimple R L ↔ ∀ I : LieIdeal R L, IsSolvable R I → I = ⊥ :=
   ⟨fun h => Sup_eq_bot.mp h.semisimple, fun h => ⟨Sup_eq_bot.mpr h⟩⟩
 
-theorem is_semisimple_iff_no_abelian_ideals : is_semisimple R L ↔ ∀ I : LieIdeal R L, IsLieAbelian I → I = ⊥ := by
+theorem is_semisimple_iff_no_abelian_ideals : IsSemisimple R L ↔ ∀ I : LieIdeal R L, IsLieAbelian I → I = ⊥ := by
   rw [is_semisimple_iff_no_solvable_ideals]
   constructor <;> intro h₁ I h₂
   · have : IsLieAbelian I := h₂
@@ -67,13 +67,13 @@ theorem is_semisimple_iff_no_abelian_ideals : is_semisimple R L ↔ ∀ I : LieI
     
 
 @[simp]
-theorem center_eq_bot_of_semisimple [h : is_semisimple R L] : center R L = ⊥ := by
+theorem center_eq_bot_of_semisimple [h : IsSemisimple R L] : center R L = ⊥ := by
   rw [is_semisimple_iff_no_abelian_ideals] at h
   apply h
   infer_instance
 
 /-- A simple Lie algebra is semisimple. -/
-instance (priority := 100) is_semisimple_of_is_simple [h : is_simple R L] : is_semisimple R L := by
+instance (priority := 100) is_semisimple_of_is_simple [h : IsSimple R L] : IsSemisimple R L := by
   rw [is_semisimple_iff_no_abelian_ideals]
   intro I hI
   obtain ⟨⟨h₁⟩, h₂⟩ := id h
@@ -82,11 +82,11 @@ instance (priority := 100) is_semisimple_of_is_simple [h : is_simple R L] : is_s
   exact h₂ hI
 
 /-- A semisimple Abelian Lie algebra is trivial. -/
-theorem subsingleton_of_semisimple_lie_abelian [is_semisimple R L] [h : IsLieAbelian L] : Subsingleton L := by
+theorem subsingleton_of_semisimple_lie_abelian [IsSemisimple R L] [h : IsLieAbelian L] : Subsingleton L := by
   rw [is_lie_abelian_iff_center_eq_top R L, center_eq_bot_of_semisimple] at h
   exact (LieSubmodule.subsingleton_iff R L L).mp (subsingleton_of_bot_eq_top h)
 
-theorem abelian_radical_of_semisimple [is_semisimple R L] : IsLieAbelian (radical R L) := by
+theorem abelian_radical_of_semisimple [IsSemisimple R L] : IsLieAbelian (radical R L) := by
   rw [is_semisimple.semisimple]
   exact is_lie_abelian_bot R L
 
@@ -96,7 +96,7 @@ to be reductive.
 Note that there is absolutely [no agreement](https://mathoverflow.net/questions/284713/) on what
 the label 'reductive' should mean when the coefficients are not a field of characteristic zero. -/
 theorem abelian_radical_iff_solvable_is_abelian [IsNoetherian R L] :
-    IsLieAbelian (radical R L) ↔ ∀ I : LieIdeal R L, is_solvable R I → IsLieAbelian I := by
+    IsLieAbelian (radical R L) ↔ ∀ I : LieIdeal R L, IsSolvable R I → IsLieAbelian I := by
   constructor
   · rintro h₁ I h₂
     rw [lie_ideal.solvable_iff_le_radical] at h₂
@@ -107,7 +107,7 @@ theorem abelian_radical_iff_solvable_is_abelian [IsNoetherian R L] :
     infer_instance
     
 
-theorem ad_ker_eq_bot_of_semisimple [is_semisimple R L] : (ad R L).ker = ⊥ := by
+theorem ad_ker_eq_bot_of_semisimple [IsSemisimple R L] : (ad R L).ker = ⊥ := by
   simp
 
 end LieAlgebra

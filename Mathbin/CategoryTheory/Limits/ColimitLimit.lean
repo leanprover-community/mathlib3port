@@ -24,9 +24,9 @@ open CategoryTheory
 
 namespace CategoryTheory.Limits
 
-variable {J K : Type v} [small_category J] [small_category K]
+variable {J K : Type v} [SmallCategory J] [SmallCategory K]
 
-variable {C : Type u} [category.{v} C]
+variable {C : Type u} [Category.{v} C]
 
 variable (F : J × K ⥤ C)
 
@@ -40,9 +40,9 @@ theorem map_id_right_eq_curry_swap_map {j j' : J} {f : j ⟶ j'} {k : K} :
     F.map ((f, 𝟙 k) : (j, k) ⟶ (j', k)) = ((curry.obj (swap K J ⋙ F)).obj k).map f :=
   rfl
 
-variable [has_limits_of_shape J C]
+variable [HasLimitsOfShape J C]
 
-variable [has_colimits_of_shape K C]
+variable [HasColimitsOfShape K C]
 
 /-- The universal morphism
 $\colim_k \lim_j F(j,k) → \lim_j \colim_k F(j, k)$.
@@ -74,7 +74,7 @@ this lemma characterises it.
 -/
 @[simp, reassoc]
 theorem ι_colimit_limit_to_limit_colimit_π j k :
-    colimit.ι _ k ≫ colimit_limit_to_limit_colimit F ≫ limit.π _ j =
+    colimit.ι _ k ≫ colimitLimitToLimitColimit F ≫ limit.π _ j =
       limit.π ((curry.obj (swap K J ⋙ F)).obj k) j ≫ colimit.ι ((curry.obj F).obj j) k :=
   by
   dsimp [colimit_limit_to_limit_colimit]
@@ -82,8 +82,7 @@ theorem ι_colimit_limit_to_limit_colimit_π j k :
 
 @[simp]
 theorem ι_colimit_limit_to_limit_colimit_π_apply (F : J × K ⥤ Type v) j k f :
-    limit.π (curry.obj F ⋙ colim) j
-        (colimit_limit_to_limit_colimit F (colimit.ι (curry.obj (swap K J ⋙ F) ⋙ lim) k f)) =
+    limit.π (curry.obj F ⋙ colim) j (colimitLimitToLimitColimit F (colimit.ι (curry.obj (swap K J ⋙ F) ⋙ lim) k f)) =
       colimit.ι ((curry.obj F).obj j) k (limit.π ((curry.obj (swap K J ⋙ F)).obj k) j f) :=
   by
   dsimp [colimit_limit_to_limit_colimit]
@@ -91,11 +90,11 @@ theorem ι_colimit_limit_to_limit_colimit_π_apply (F : J × K ⥤ Type v) j k f
 
 /-- The map `colimit_limit_to_limit_colimit` realized as a map of cones. -/
 @[simps]
-noncomputable def colimit_limit_to_limit_colimit_cone (G : J ⥤ K ⥤ C) [has_limit G] :
-    colim.mapCone (limit.cone G) ⟶ limit.cone (G ⋙ colim) where
+noncomputable def colimit_limit_to_limit_colimit_cone (G : J ⥤ K ⥤ C) [HasLimit G] :
+    colim.mapCone (Limit.cone G) ⟶ Limit.cone (G ⋙ colim) where
   Hom :=
-    colim.map (limit_iso_swap_comp_lim G).Hom ≫
-      colimit_limit_to_limit_colimit (uncurry.obj G : _) ≫ lim.map (whisker_right (currying.unitIso.app G).inv colim)
+    colim.map (limitIsoSwapCompLim G).Hom ≫
+      colimitLimitToLimitColimit (uncurry.obj G : _) ≫ lim.map (whiskerRight (currying.unitIso.app G).inv colim)
   w' := fun j => by
     ext1 k
     simp only [limit_obj_iso_limit_comp_evaluation_hom_π_assoc, iso.app_inv, ι_colimit_limit_to_limit_colimit_π_assoc,

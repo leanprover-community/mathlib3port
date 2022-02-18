@@ -20,36 +20,36 @@ def map_tokens (c : Charₓ) (f : Stringₓ → Stringₓ) : Stringₓ → Strin
 
 /-- Tests whether the first string is a prefix of the second string. -/
 def is_prefix_of (x y : Stringₓ) : Bool :=
-  x.to_list.is_prefix_of y.to_list
+  x.toList.isPrefixOf y.toList
 
 /-- Tests whether the first string is a suffix of the second string. -/
 def is_suffix_of (x y : Stringₓ) : Bool :=
-  x.to_list.is_suffix_of y.to_list
+  x.toList.isSuffixOf y.toList
 
 /-- `x.starts_with y` is true if `y` is a prefix of `x`, and is false otherwise. -/
 abbrev starts_with (x y : Stringₓ) : Bool :=
-  y.is_prefix_of x
+  y.isPrefixOf x
 
 /-- `x.ends_with y` is true if `y` is a suffix of `x`, and is false otherwise. -/
 abbrev ends_with (x y : Stringₓ) : Bool :=
-  y.is_suffix_of x
+  y.isSuffixOf x
 
 /-- `get_rest s t` returns `some r` if `s = t ++ r`.
   If `t` is not a prefix of `s`, returns `none` -/
 def get_rest (s t : Stringₓ) : Option Stringₓ :=
-  List.asStringₓ <$> s.to_list.get_rest t.to_list
+  List.asStringₓ <$> s.toList.getRest t.toList
 
 /-- Removes the first `n` elements from the string `s` -/
 def popn (s : Stringₓ) (n : Nat) : Stringₓ :=
-  (s.mk_iterator.nextn n).nextToString
+  (s.mkIterator.nextn n).nextToString
 
 /-- `is_nat s` is true iff `s` is a nonempty sequence of digits. -/
 def is_nat (s : Stringₓ) : Bool :=
-  ¬s.is_empty ∧ s.to_list.all fun c => to_bool c.is_digit
+  ¬s.isEmpty ∧ s.toList.all fun c => toBool c.IsDigit
 
 /-- Produce the head character from the string `s`, if `s` is not empty, otherwise 'A'. -/
 def head (s : Stringₓ) : Charₓ :=
-  s.mk_iterator.curr
+  s.mkIterator.curr
 
 end Stringₓ
 

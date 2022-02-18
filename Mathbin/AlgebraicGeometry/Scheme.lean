@@ -35,28 +35,28 @@ structure Scheme extends
   "././Mathport/Syntax/Translate/Basic.lean:1165:11: unsupported: advanced extends in structure" where
   local_affine :
     ∀ x : to_LocallyRingedSpace,
-      ∃ (U : open_nhds x)(R : CommRingₓₓ),
-        Nonempty (to_LocallyRingedSpace.restrict U.open_embedding ≅ Spec.to_LocallyRingedSpace.obj (op R))
+      ∃ (U : OpenNhds x)(R : CommRingₓₓ),
+        Nonempty (to_LocallyRingedSpace.restrict U.OpenEmbedding ≅ Spec.toLocallyRingedSpace.obj (op R))
 
 namespace Scheme
 
 /-- Schemes are a full subcategory of locally ringed spaces.
 -/
-instance : category Scheme :=
-  induced_category.category Scheme.to_LocallyRingedSpace
+instance : Category Scheme :=
+  InducedCategory.category Scheme.toLocallyRingedSpace
 
 /-- The structure sheaf of a Scheme. -/
 protected abbrev sheaf (X : Scheme) :=
-  X.to_SheafedSpace.sheaf
+  X.toSheafedSpace.Sheaf
 
 /-- The forgetful functor from `Scheme` to `LocallyRingedSpace`. -/
 @[simps]
 def forget_to_LocallyRingedSpace : Scheme ⥤ LocallyRingedSpace :=
-  induced_functor _ deriving full, faithful
+  inducedFunctor _ deriving Full, Faithful
 
 @[simp]
 theorem forget_to_LocallyRingedSpace_preimage {X Y : Scheme} (f : X ⟶ Y) :
-    Scheme.forget_to_LocallyRingedSpace.Preimage f = f :=
+    Scheme.forgetToLocallyRingedSpace.Preimage f = f :=
   rfl
 
 /-- The forgetful functor from `Scheme` to `Top`. -/
@@ -64,26 +64,26 @@ theorem forget_to_LocallyRingedSpace_preimage {X Y : Scheme} (f : X ⟶ Y) :
 def forget_to_Top : Scheme ⥤ Top :=
   Scheme.forget_to_LocallyRingedSpace ⋙ LocallyRingedSpace.forget_to_Top
 
-instance {X Y : Scheme} : HasLiftT (X ⟶ Y) (X.to_SheafedSpace ⟶ Y.to_SheafedSpace) :=
+instance {X Y : Scheme} : HasLiftT (X ⟶ Y) (X.toSheafedSpace ⟶ Y.toSheafedSpace) :=
   @coeToLift <| @coeBaseₓ coeSubtype
 
 theorem id_val_base (X : Scheme) : (Subtype.val (𝟙 X)).base = 𝟙 _ :=
   rfl
 
 @[simp]
-theorem id_coe_base (X : Scheme) : (↑(𝟙 X) : X.to_SheafedSpace ⟶ X.to_SheafedSpace).base = 𝟙 _ :=
+theorem id_coe_base (X : Scheme) : (↑(𝟙 X) : X.toSheafedSpace ⟶ X.toSheafedSpace).base = 𝟙 _ :=
   rfl
 
 @[simp]
-theorem id_app {X : Scheme} (U : opens X.carrierᵒᵖ) :
+theorem id_app {X : Scheme} (U : Opens X.Carrierᵒᵖ) :
     (Subtype.val (𝟙 X)).c.app U =
-      X.presheaf.map
-        (eq_to_hom
+      X.Presheaf.map
+        (eqToHom
           (by
             induction U using Opposite.rec
             cases U
             rfl)) :=
-  PresheafedSpace.id_c_app X.to_PresheafedSpace U
+  PresheafedSpace.id_c_app X.toPresheafedSpace U
 
 @[reassoc]
 theorem comp_val {X Y Z : Scheme} (f : X ⟶ Y) (g : Y ⟶ Z) : (f ≫ g).val = f.val ≫ g.val :=
@@ -91,7 +91,7 @@ theorem comp_val {X Y Z : Scheme} (f : X ⟶ Y) (g : Y ⟶ Z) : (f ≫ g).val = 
 
 @[reassoc, simp]
 theorem comp_coe_base {X Y Z : Scheme} (f : X ⟶ Y) (g : Y ⟶ Z) :
-    (↑(f ≫ g) : X.to_SheafedSpace ⟶ Z.to_SheafedSpace).base = f.val.base ≫ g.val.base :=
+    (↑(f ≫ g) : X.toSheafedSpace ⟶ Z.toSheafedSpace).base = f.val.base ≫ g.val.base :=
   rfl
 
 @[reassoc, elementwise]
@@ -106,8 +106,8 @@ theorem comp_val_c_app {X Y Z : Scheme} (f : X ⟶ Y) (g : Y ⟶ Z) U :
 theorem congr_app {X Y : Scheme} {f g : X ⟶ Y} (e : f = g) U :
     f.val.c.app U =
       g.val.c.app U ≫
-        X.presheaf.map
-          (eq_to_hom
+        X.Presheaf.map
+          (eqToHom
             (by
               subst e)) :=
   by
@@ -115,27 +115,27 @@ theorem congr_app {X Y : Scheme} {f g : X ⟶ Y} (e : f = g) U :
   dsimp
   simp
 
-theorem app_eq {X Y : Scheme} (f : X ⟶ Y) {U V : opens Y.carrier} (e : U = V) :
+theorem app_eq {X Y : Scheme} (f : X ⟶ Y) {U V : Opens Y.Carrier} (e : U = V) :
     f.val.c.app (op U) =
-      Y.presheaf.map (eq_to_hom e.symm).op ≫
-        f.val.c.app (op V) ≫ X.presheaf.map (eq_to_hom (congr_argₓ (opens.map f.val.base).obj e)).op :=
+      Y.Presheaf.map (eqToHom e.symm).op ≫
+        f.val.c.app (op V) ≫ X.Presheaf.map (eqToHom (congr_argₓ (Opens.map f.val.base).obj e)).op :=
   by
   rw [← is_iso.inv_comp_eq, ← functor.map_inv, f.val.c.naturality, presheaf.pushforward_obj_map]
   congr
 
-instance is_LocallyRingedSpace_iso {X Y : Scheme} (f : X ⟶ Y) [is_iso f] : @is_iso LocallyRingedSpace _ _ _ f :=
-  forget_to_LocallyRingedSpace.map_is_iso f
+instance is_LocallyRingedSpace_iso {X Y : Scheme} (f : X ⟶ Y) [IsIso f] : @IsIso LocallyRingedSpace _ _ _ f :=
+  forgetToLocallyRingedSpace.map_is_iso f
 
 @[simp]
-theorem inv_val_c_app {X Y : Scheme} (f : X ⟶ Y) [is_iso f] (U : opens X.carrier) :
+theorem inv_val_c_app {X Y : Scheme} (f : X ⟶ Y) [IsIso f] (U : Opens X.Carrier) :
     (inv f).val.c.app (op U) =
-      X.presheaf.map
+      X.Presheaf.map
           (eq_to_hom <| by
               rw [is_iso.hom_inv_id]
               ext1
               rfl :
-              (opens.map (f ≫ inv f).1.base).obj U ⟶ U).op ≫
-        inv (f.val.c.app (op <| (opens.map _).obj U)) :=
+              (Opens.map (f ≫ inv f).1.base).obj U ⟶ U).op ≫
+        inv (f.val.c.app (op <| (Opens.map _).obj U)) :=
   by
   rw [is_iso.eq_comp_inv]
   erw [← Scheme.comp_val_c_app]
@@ -145,32 +145,32 @@ theorem inv_val_c_app {X Y : Scheme} (f : X ⟶ Y) [is_iso f] (U : opens X.carri
 /-- The spectrum of a commutative ring, as a scheme.
 -/
 def Spec_obj (R : CommRingₓₓ) : Scheme where
-  local_affine := fun x => ⟨⟨⊤, trivialₓ⟩, R, ⟨(Spec.to_LocallyRingedSpace.obj (op R)).restrictTopIso⟩⟩
-  toLocallyRingedSpace := Spec.LocallyRingedSpace_obj R
+  local_affine := fun x => ⟨⟨⊤, trivialₓ⟩, R, ⟨(Spec.toLocallyRingedSpace.obj (op R)).restrictTopIso⟩⟩
+  toLocallyRingedSpace := Spec.locallyRingedSpaceObj R
 
 @[simp]
 theorem Spec_obj_to_LocallyRingedSpace (R : CommRingₓₓ) :
-    (Spec_obj R).toLocallyRingedSpace = Spec.LocallyRingedSpace_obj R :=
+    (specObj R).toLocallyRingedSpace = Spec.locallyRingedSpaceObj R :=
   rfl
 
 /-- The induced map of a ring homomorphism on the ring spectra, as a morphism of schemes.
 -/
-def Spec_map {R S : CommRingₓₓ} (f : R ⟶ S) : Spec_obj S ⟶ Spec_obj R :=
-  (Spec.LocallyRingedSpace_map f : Spec.LocallyRingedSpace_obj S ⟶ Spec.LocallyRingedSpace_obj R)
+def Spec_map {R S : CommRingₓₓ} (f : R ⟶ S) : specObj S ⟶ specObj R :=
+  (Spec.locallyRingedSpaceMap f : Spec.locallyRingedSpaceObj S ⟶ Spec.locallyRingedSpaceObj R)
 
 @[simp]
-theorem Spec_map_id (R : CommRingₓₓ) : Spec_map (𝟙 R) = 𝟙 (Spec_obj R) :=
+theorem Spec_map_id (R : CommRingₓₓ) : specMap (𝟙 R) = 𝟙 (specObj R) :=
   Spec.LocallyRingedSpace_map_id R
 
-theorem Spec_map_comp {R S T : CommRingₓₓ} (f : R ⟶ S) (g : S ⟶ T) : Spec_map (f ≫ g) = Spec_map g ≫ Spec_map f :=
+theorem Spec_map_comp {R S T : CommRingₓₓ} (f : R ⟶ S) (g : S ⟶ T) : specMap (f ≫ g) = specMap g ≫ specMap f :=
   Spec.LocallyRingedSpace_map_comp f g
 
 /-- The spectrum, as a contravariant functor from commutative rings to schemes.
 -/
 @[simps]
 def Spec : CommRingₓₓᵒᵖ ⥤ Scheme where
-  obj := fun R => Spec_obj (unop R)
-  map := fun R S f => Spec_map f.unop
+  obj := fun R => specObj (unop R)
+  map := fun R S f => specMap f.unop
   map_id' := fun R => by
     rw [unop_id, Spec_map_id]
   map_comp' := fun R S T f g => by
@@ -179,10 +179,10 @@ def Spec : CommRingₓₓᵒᵖ ⥤ Scheme where
 /-- The empty scheme, as `Spec 0`.
 -/
 def Empty : Scheme :=
-  Spec_obj (CommRingₓₓ.of PUnit)
+  specObj (CommRingₓₓ.of PUnit)
 
 instance : HasEmptyc Scheme :=
-  ⟨Empty⟩
+  ⟨empty⟩
 
 instance : Inhabited Scheme :=
   ⟨∅⟩
@@ -190,16 +190,16 @@ instance : Inhabited Scheme :=
 /-- The global sections, notated Gamma.
 -/
 def Γ : Schemeᵒᵖ ⥤ CommRingₓₓ :=
-  (induced_functor Scheme.to_LocallyRingedSpace).op ⋙ LocallyRingedSpace.Γ
+  (inducedFunctor Scheme.toLocallyRingedSpace).op ⋙ LocallyRingedSpace.Γ
 
-theorem Γ_def : Γ = (induced_functor Scheme.to_LocallyRingedSpace).op ⋙ LocallyRingedSpace.Γ :=
+theorem Γ_def : Γ = (inducedFunctor Scheme.toLocallyRingedSpace).op ⋙ LocallyRingedSpace.Γ :=
   rfl
 
 @[simp]
 theorem Γ_obj (X : Schemeᵒᵖ) : Γ.obj X = (unop X).Presheaf.obj (op ⊤) :=
   rfl
 
-theorem Γ_obj_op (X : Scheme) : Γ.obj (op X) = X.presheaf.obj (op ⊤) :=
+theorem Γ_obj_op (X : Scheme) : Γ.obj (op X) = X.Presheaf.obj (op ⊤) :=
   rfl
 
 @[simp]
@@ -211,52 +211,52 @@ theorem Γ_map_op {X Y : Scheme} (f : X ⟶ Y) : Γ.map f.op = f.1.c.app (op ⊤
 
 section BasicOpen
 
-variable (X : Scheme) {V U : opens X.carrier} (f g : X.presheaf.obj (op U))
+variable (X : Scheme) {V U : Opens X.Carrier} (f g : X.Presheaf.obj (op U))
 
 /-- The subset of the underlying space where the given section does not vanish. -/
-def basic_open : opens X.carrier :=
-  X.to_LocallyRingedSpace.to_RingedSpace.basic_open f
+def basic_open : Opens X.Carrier :=
+  X.toLocallyRingedSpace.toRingedSpace.basicOpen f
 
 @[simp]
-theorem mem_basic_open (x : U) : ↑x ∈ X.basic_open f ↔ IsUnit (X.presheaf.germ x f) :=
+theorem mem_basic_open (x : U) : ↑x ∈ X.basicOpen f ↔ IsUnit (X.Presheaf.germ x f) :=
   RingedSpace.mem_basic_open _ _ _
 
 @[simp]
-theorem mem_basic_open_top (f : X.presheaf.obj (op ⊤)) (x : X.carrier) :
-    x ∈ X.basic_open f ↔ IsUnit (X.presheaf.germ (⟨x, trivialₓ⟩ : (⊤ : opens _)) f) :=
+theorem mem_basic_open_top (f : X.Presheaf.obj (op ⊤)) (x : X.Carrier) :
+    x ∈ X.basicOpen f ↔ IsUnit (X.Presheaf.germ (⟨x, trivialₓ⟩ : (⊤ : Opens _)) f) :=
   RingedSpace.mem_basic_open _ f ⟨x, trivialₓ⟩
 
 @[simp]
-theorem basic_open_res (i : op U ⟶ op V) : X.basic_open (X.presheaf.map i f) = V ∩ X.basic_open f :=
+theorem basic_open_res (i : op U ⟶ op V) : X.basicOpen (X.Presheaf.map i f) = V ∩ X.basicOpen f :=
   RingedSpace.basic_open_res _ i f
 
 @[simp]
-theorem basic_open_res_eq (i : op U ⟶ op V) [is_iso i] : X.basic_open (X.presheaf.map i f) = X.basic_open f :=
+theorem basic_open_res_eq (i : op U ⟶ op V) [IsIso i] : X.basicOpen (X.Presheaf.map i f) = X.basicOpen f :=
   RingedSpace.basic_open_res_eq _ i f
 
-theorem basic_open_subset : X.basic_open f ⊆ U :=
+theorem basic_open_subset : X.basicOpen f ⊆ U :=
   RingedSpace.basic_open_subset _ _
 
-theorem preimage_basic_open {X Y : Scheme} (f : X ⟶ Y) {U : opens Y.carrier} (r : Y.presheaf.obj <| op U) :
-    (opens.map f.1.base).obj (Y.basic_open r) = @Scheme.basic_open X ((opens.map f.1.base).obj U) (f.1.c.app _ r) :=
+theorem preimage_basic_open {X Y : Scheme} (f : X ⟶ Y) {U : Opens Y.Carrier} (r : Y.Presheaf.obj <| op U) :
+    (Opens.map f.1.base).obj (Y.basicOpen r) = @Scheme.basicOpen X ((Opens.map f.1.base).obj U) (f.1.c.app _ r) :=
   LocallyRingedSpace.preimage_basic_open f r
 
 @[simp]
-theorem preimage_basic_open' {X Y : Scheme} (f : X ⟶ Y) {U : opens Y.carrier} (r : Y.presheaf.obj <| op U) :
-    (opens.map (↑f : X.to_SheafedSpace ⟶ Y.to_SheafedSpace).base).obj (Y.basic_open r) =
-      @Scheme.basic_open X ((opens.map f.1.base).obj U) (f.1.c.app _ r) :=
+theorem preimage_basic_open' {X Y : Scheme} (f : X ⟶ Y) {U : Opens Y.Carrier} (r : Y.Presheaf.obj <| op U) :
+    (Opens.map (↑f : X.toSheafedSpace ⟶ Y.toSheafedSpace).base).obj (Y.basicOpen r) =
+      @Scheme.basicOpen X ((Opens.map f.1.base).obj U) (f.1.c.app _ r) :=
   LocallyRingedSpace.preimage_basic_open f r
 
 @[simp]
-theorem basic_open_zero (U : opens X.carrier) : X.basic_open (0 : X.presheaf.obj <| op U) = ∅ :=
+theorem basic_open_zero (U : Opens X.Carrier) : X.basicOpen (0 : X.Presheaf.obj <| op U) = ∅ :=
   LocallyRingedSpace.basic_open_zero _ U
 
 @[simp]
-theorem basic_open_mul : X.basic_open (f * g) = X.basic_open f⊓X.basic_open g :=
+theorem basic_open_mul : X.basicOpen (f * g) = X.basicOpen f⊓X.basicOpen g :=
   RingedSpace.basic_open_mul _ _ _
 
 @[simp]
-theorem basic_open_of_is_unit {f : X.presheaf.obj (op U)} (hf : IsUnit f) : X.basic_open f = U :=
+theorem basic_open_of_is_unit {f : X.Presheaf.obj (op U)} (hf : IsUnit f) : X.basicOpen f = U :=
   RingedSpace.basic_open_of_is_unit _ hf
 
 end BasicOpen
@@ -264,7 +264,7 @@ end BasicOpen
 end Scheme
 
 theorem basic_open_eq_of_affine {R : CommRingₓₓ} (f : R) :
-    (Scheme.Spec.obj <| op R).basicOpen ((Spec_Γ_identity.app R).inv f) = PrimeSpectrum.basicOpen f := by
+    (Scheme.spec.obj <| op R).basicOpen ((specΓIdentity.app R).inv f) = PrimeSpectrum.basicOpen f := by
   ext
   erw [Scheme.mem_basic_open_top]
   suffices IsUnit (structure_sheaf.to_stalk R x f) ↔ f ∉ PrimeSpectrum.asIdeal x by
@@ -277,8 +277,8 @@ theorem basic_open_eq_of_affine {R : CommRingₓₓ} (f : R) :
       _)
 
 @[simp]
-theorem basic_open_eq_of_affine' {R : CommRingₓₓ} (f : (Spec.to_SheafedSpace.obj (op R)).Presheaf.obj (op ⊤)) :
-    (Scheme.Spec.obj <| op R).basicOpen f = PrimeSpectrum.basicOpen ((Spec_Γ_identity.app R).Hom f) := by
+theorem basic_open_eq_of_affine' {R : CommRingₓₓ} (f : (Spec.toSheafedSpace.obj (op R)).Presheaf.obj (op ⊤)) :
+    (Scheme.spec.obj <| op R).basicOpen f = PrimeSpectrum.basicOpen ((specΓIdentity.app R).Hom f) := by
   convert basic_open_eq_of_affine ((Spec_Γ_identity.app R).Hom f)
   exact (coe_hom_inv_id _ _).symm
 

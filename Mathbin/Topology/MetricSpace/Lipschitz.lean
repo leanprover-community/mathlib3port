@@ -74,7 +74,7 @@ alias lipschitz_on_with_iff_dist_le_mul ↔ LipschitzOnWith.dist_le_mul Lipschit
 
 @[simp]
 theorem lipschitz_on_univ [PseudoEmetricSpace α] [PseudoEmetricSpace β] {K : ℝ≥0 } {f : α → β} :
-    LipschitzOnWith K f univ ↔ LipschitzWith K f := by
+    LipschitzOnWith K f Univ ↔ LipschitzWith K f := by
   simp [LipschitzOnWith, LipschitzWith]
 
 theorem lipschitz_on_with_iff_restrict [PseudoEmetricSpace α] [PseudoEmetricSpace β] {K : ℝ≥0 } {f : α → β}
@@ -128,16 +128,16 @@ protected theorem UniformContinuous (hf : LipschitzWith K f) : UniformContinuous
 
 /-- A Lipschitz function is continuous -/
 protected theorem Continuous (hf : LipschitzWith K f) : Continuous f :=
-  hf.uniform_continuous.continuous
+  hf.UniformContinuous.Continuous
 
 protected theorem const (b : β) : LipschitzWith 0 fun a : α => b := fun x y => by
   simp only [edist_self, zero_le]
 
 protected theorem id : LipschitzWith 1 (@id α) :=
-  LipschitzWith.of_edist_le fun x y => le_reflₓ _
+  LipschitzWith.of_edist_le fun x y => le_rfl
 
 protected theorem subtype_val (s : Set α) : LipschitzWith 1 (Subtype.val : s → α) :=
-  LipschitzWith.of_edist_le fun x y => le_reflₓ _
+  LipschitzWith.of_edist_le fun x y => le_rfl
 
 protected theorem subtype_coe (s : Set α) : LipschitzWith 1 (coe : s → α) :=
   LipschitzWith.subtype_val s
@@ -325,7 +325,7 @@ theorem const_min (hf : LipschitzWith Kf f) (a : ℝ) : LipschitzWith Kf fun x =
 
 end Emetric
 
-protected theorem proj_Icc {a b : ℝ} (h : a ≤ b) : LipschitzWith 1 (proj_Icc a b h) :=
+protected theorem proj_Icc {a b : ℝ} (h : a ≤ b) : LipschitzWith 1 (projIcc a b h) :=
   ((LipschitzWith.id.const_min _).const_max _).subtype_mk _
 
 end LipschitzWith
@@ -342,7 +342,7 @@ protected theorem UniformContinuousOn (hf : LipschitzOnWith K f s) : UniformCont
   uniform_continuous_on_iff_restrict.mpr (lipschitz_on_with_iff_restrict.mp hf).UniformContinuous
 
 protected theorem ContinuousOn (hf : LipschitzOnWith K f s) : ContinuousOn f s :=
-  hf.uniform_continuous_on.continuous_on
+  hf.UniformContinuousOn.ContinuousOn
 
 theorem edist_lt_of_edist_lt_div (hf : LipschitzOnWith K f s) {x y : α} (hx : x ∈ s) (hy : y ∈ s) {d : ℝ≥0∞}
     (hd : edist x y < d / K) : edist (f x) (f y) < d :=
@@ -443,7 +443,7 @@ theorem continuous_at_of_locally_lipschitz [PseudoMetricSpace α] [PseudoMetricS
 /-- A function `f : α → ℝ` which is `K`-Lipschitz on a subset `s` admits a `K`-Lipschitz extension
 to the whole space. -/
 theorem LipschitzOnWith.extend_real [PseudoMetricSpace α] {f : α → ℝ} {s : Set α} {K : ℝ≥0 }
-    (hf : LipschitzOnWith K f s) : ∃ g : α → ℝ, LipschitzWith K g ∧ eq_on f g s := by
+    (hf : LipschitzOnWith K f s) : ∃ g : α → ℝ, LipschitzWith K g ∧ EqOn f g s := by
   rcases eq_empty_or_nonempty s with (rfl | hs)
   · exact ⟨fun x => 0, (LipschitzWith.const _).weaken (zero_le _), eq_on_empty _ _⟩
     
@@ -476,7 +476,7 @@ extension to the whole space.
 TODO: state the same result (with the same proof) for the space `ℓ^∞ (ι, ℝ)` over a possibly
 infinite type `ι`. -/
 theorem LipschitzOnWith.extend_pi [PseudoMetricSpace α] [Fintype ι] {f : α → ι → ℝ} {s : Set α} {K : ℝ≥0 }
-    (hf : LipschitzOnWith K f s) : ∃ g : α → ι → ℝ, LipschitzWith K g ∧ eq_on f g s := by
+    (hf : LipschitzOnWith K f s) : ∃ g : α → ι → ℝ, LipschitzWith K g ∧ EqOn f g s := by
   have : ∀ i, ∃ g : α → ℝ, LipschitzWith K g ∧ eq_on (fun x => f x i) g s := by
     intro i
     have : LipschitzOnWith K (fun x : α => f x i) s := by

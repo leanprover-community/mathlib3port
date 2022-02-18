@@ -22,8 +22,8 @@ def monoidal_opposite (C : Type u₁) :=
 
 namespace MonoidalOpposite
 
--- ././Mathport/Syntax/Translate/Basic.lean:342:9: unsupported: advanced prec syntax
-notation:999 C "ᴹᵒᵖ" => monoidal_opposite C
+-- ././Mathport/Syntax/Translate/Basic.lean:343:9: unsupported: advanced prec syntax
+notation:999 C "ᴹᵒᵖ" => MonoidalOpposite C
 
 /-- Think of an object of `C` as an object of `Cᴹᵒᵖ`. -/
 @[pp_nodot]
@@ -55,7 +55,7 @@ theorem mop_unmop (X : Cᴹᵒᵖ) : mop (unmop X) = X :=
 theorem unmop_mop (X : C) : unmop (mop X) = X :=
   rfl
 
-instance monoidal_opposite_category [I : category.{v₁} C] : category (Cᴹᵒᵖ) where
+instance monoidal_opposite_category [I : Category.{v₁} C] : Category (Cᴹᵒᵖ) where
   Hom := fun X Y => unmop X ⟶ unmop Y
   id := fun X => 𝟙 (unmop X)
   comp := fun X Y Z f g => f ≫ g
@@ -68,7 +68,7 @@ open CategoryTheory
 
 open CategoryTheory.MonoidalOpposite
 
-variable [category.{v₁} C]
+variable [Category.{v₁} C]
 
 /-- The monoidal opposite of a morphism `f : X ⟶ Y` is just `f`, thought of as `mop X ⟶ mop Y`. -/
 def Quiver.Hom.mop {X Y : C} (f : X ⟶ Y) : @Quiver.Hom (Cᴹᵒᵖ) _ (mop X) (mop Y) :=
@@ -125,18 +125,18 @@ variable {X Y : C}
 /-- An isomorphism in `C` gives an isomorphism in `Cᴹᵒᵖ`. -/
 @[simps]
 def mop (f : X ≅ Y) : mop X ≅ mop Y where
-  Hom := f.hom.mop
+  Hom := f.Hom.mop
   inv := f.inv.mop
   hom_inv_id' := unmop_inj f.hom_inv_id
   inv_hom_id' := unmop_inj f.inv_hom_id
 
 end Iso
 
-variable [monoidal_category.{v₁} C]
+variable [MonoidalCategory.{v₁} C]
 
 open Opposite MonoidalCategory
 
-instance monoidal_category_op : monoidal_category (Cᵒᵖ) where
+instance monoidal_category_op : MonoidalCategory (Cᵒᵖ) where
   tensorObj := fun X Y => op (unop X ⊗ unop Y)
   tensorHom := fun X₁ Y₁ X₂ Y₂ f g => (f.unop ⊗ g.unop).op
   tensorUnit := op (𝟙_ C)
@@ -172,7 +172,7 @@ theorem op_tensor_obj (X Y : Cᵒᵖ) : X ⊗ Y = op (unop X ⊗ unop Y) :=
 theorem op_tensor_unit : 𝟙_ (Cᵒᵖ) = op (𝟙_ C) :=
   rfl
 
-instance monoidal_category_mop : monoidal_category (Cᴹᵒᵖ) where
+instance monoidal_category_mop : MonoidalCategory (Cᴹᵒᵖ) where
   tensorObj := fun X Y => mop (unmop Y ⊗ unmop X)
   tensorHom := fun X₁ Y₁ X₂ Y₂ f g => (g.unmop ⊗ f.unmop).mop
   tensorUnit := mop (𝟙_ C)

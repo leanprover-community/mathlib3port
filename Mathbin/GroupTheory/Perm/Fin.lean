@@ -13,7 +13,7 @@ open Equivₓ
 /-- Permutations of `fin (n + 1)` are equivalent to fixing a single
 `fin (n + 1)` and permuting the remaining with a `perm (fin n)`.
 The fixed `fin (n + 1)` is swapped with `0`. -/
-def Equivₓ.Perm.decomposeFin {n : ℕ} : perm (Finₓ n.succ) ≃ Finₓ n.succ × perm (Finₓ n) :=
+def Equivₓ.Perm.decomposeFin {n : ℕ} : Perm (Finₓ n.succ) ≃ Finₓ n.succ × Perm (Finₓ n) :=
   ((Equivₓ.permCongr <| finSuccEquiv n).trans Equivₓ.Perm.decomposeOption).trans
     (Equivₓ.prodCongr (finSuccEquiv n).symm (Equivₓ.refl _))
 
@@ -28,12 +28,12 @@ theorem Equivₓ.Perm.decompose_fin_symm_of_one {n : ℕ} (p : Finₓ (n + 1)) :
   Equivₓ.Perm.decompose_fin_symm_of_refl p
 
 @[simp]
-theorem Equivₓ.Perm.decompose_fin_symm_apply_zero {n : ℕ} (p : Finₓ (n + 1)) (e : perm (Finₓ n)) :
+theorem Equivₓ.Perm.decompose_fin_symm_apply_zero {n : ℕ} (p : Finₓ (n + 1)) (e : Perm (Finₓ n)) :
     Equivₓ.Perm.decomposeFin.symm (p, e) 0 = p := by
   simp [Equivₓ.Perm.decomposeFin]
 
 @[simp]
-theorem Equivₓ.Perm.decompose_fin_symm_apply_succ {n : ℕ} (e : perm (Finₓ n)) (p : Finₓ (n + 1)) (x : Finₓ n) :
+theorem Equivₓ.Perm.decompose_fin_symm_apply_succ {n : ℕ} (e : Perm (Finₓ n)) (p : Finₓ (n + 1)) (x : Finₓ n) :
     Equivₓ.Perm.decomposeFin.symm (p, e) x.succ = swap 0 p (e x).succ := by
   refine' Finₓ.cases _ _ p
   · simp [Equivₓ.Perm.decomposeFin, EquivFunctor.map]
@@ -50,20 +50,20 @@ theorem Equivₓ.Perm.decompose_fin_symm_apply_succ {n : ℕ} (e : perm (Finₓ 
     
 
 @[simp]
-theorem Equivₓ.Perm.decompose_fin_symm_apply_one {n : ℕ} (e : perm (Finₓ (n + 1))) (p : Finₓ (n + 2)) :
+theorem Equivₓ.Perm.decompose_fin_symm_apply_one {n : ℕ} (e : Perm (Finₓ (n + 1))) (p : Finₓ (n + 2)) :
     Equivₓ.Perm.decomposeFin.symm (p, e) 1 = swap 0 p (e 0).succ := by
   rw [← Finₓ.succ_zero_eq_one, Equivₓ.Perm.decompose_fin_symm_apply_succ e p 0]
 
 @[simp]
-theorem Equivₓ.Perm.decomposeFin.symm_sign {n : ℕ} (p : Finₓ (n + 1)) (e : perm (Finₓ n)) :
-    perm.sign (Equivₓ.Perm.decomposeFin.symm (p, e)) = ite (p = 0) 1 (-1) * perm.sign e := by
+theorem Equivₓ.Perm.decomposeFin.symm_sign {n : ℕ} (p : Finₓ (n + 1)) (e : Perm (Finₓ n)) :
+    Perm.sign (Equivₓ.Perm.decomposeFin.symm (p, e)) = ite (p = 0) 1 (-1) * Perm.sign e := by
   refine' Finₓ.cases _ _ p <;> simp [Equivₓ.Perm.decomposeFin, Finₓ.succ_ne_zero]
 
 /-- The set of all permutations of `fin (n + 1)` can be constructed by augmenting the set of
 permutations of `fin n` by each element of `fin (n + 1)` in turn. -/
 theorem Finset.univ_perm_fin_succ {n : ℕ} :
     @Finset.univ (perm <| Finₓ n.succ) _ =
-      (Finset.univ : Finset <| Finₓ n.succ × perm (Finₓ n)).map Equivₓ.Perm.decomposeFin.symm.toEmbedding :=
+      (Finset.univ : Finset <| Finₓ n.succ × Perm (Finₓ n)).map Equivₓ.Perm.decomposeFin.symm.toEmbedding :=
   (Finset.univ_map_equiv_to_embedding _).symm
 
 section CycleRange
@@ -76,7 +76,7 @@ Define the permutations `fin.cycle_range i`, the cycle `(0 1 2 ... i)`.
 
 open Equivₓ.Perm
 
-theorem fin_rotate_succ {n : ℕ} : finRotate n.succ = decompose_fin.symm (1, finRotate n) := by
+theorem fin_rotate_succ {n : ℕ} : finRotate n.succ = decomposeFin.symm (1, finRotate n) := by
   ext i
   cases n
   · simp
@@ -93,7 +93,7 @@ theorem fin_rotate_succ {n : ℕ} : finRotate n.succ = decompose_fin.symm (1, fi
     
 
 @[simp]
-theorem sign_fin_rotate (n : ℕ) : perm.sign (finRotate (n + 1)) = -1 ^ n := by
+theorem sign_fin_rotate (n : ℕ) : Perm.sign (finRotate (n + 1)) = -1 ^ n := by
   induction' n with n ih
   · simp
     
@@ -110,7 +110,7 @@ theorem support_fin_rotate_of_le {n : ℕ} (h : 2 ≤ n) : support (finRotate n)
   obtain ⟨m, rfl⟩ := exists_add_of_le h
   rw [add_commₓ, support_fin_rotate]
 
-theorem is_cycle_fin_rotate {n : ℕ} : is_cycle (finRotate (n + 2)) := by
+theorem is_cycle_fin_rotate {n : ℕ} : IsCycle (finRotate (n + 2)) := by
   refine'
     ⟨0, by
       decide, fun x hx' => ⟨x, _⟩⟩
@@ -124,24 +124,24 @@ theorem is_cycle_fin_rotate {n : ℕ} : is_cycle (finRotate (n + 2)) := by
   rw [Ne.def, Finₓ.ext_iff, ih (lt_transₓ x.lt_succ_self hx), Finₓ.coe_last]
   exact ne_of_ltₓ (Nat.lt_of_succ_lt_succₓ hx)
 
-theorem is_cycle_fin_rotate_of_le {n : ℕ} (h : 2 ≤ n) : is_cycle (finRotate n) := by
+theorem is_cycle_fin_rotate_of_le {n : ℕ} (h : 2 ≤ n) : IsCycle (finRotate n) := by
   obtain ⟨m, rfl⟩ := exists_add_of_le h
   rw [add_commₓ]
   exact is_cycle_fin_rotate
 
 @[simp]
-theorem cycle_type_fin_rotate {n : ℕ} : cycle_type (finRotate (n + 2)) = {n + 2} := by
+theorem cycle_type_fin_rotate {n : ℕ} : cycleType (finRotate (n + 2)) = {n + 2} := by
   rw [is_cycle_fin_rotate.cycle_type, support_fin_rotate, ← Fintype.card, Fintype.card_fin]
   rfl
 
-theorem cycle_type_fin_rotate_of_le {n : ℕ} (h : 2 ≤ n) : cycle_type (finRotate n) = {n} := by
+theorem cycle_type_fin_rotate_of_le {n : ℕ} (h : 2 ≤ n) : cycleType (finRotate n) = {n} := by
   obtain ⟨m, rfl⟩ := exists_add_of_le h
   rw [add_commₓ, cycle_type_fin_rotate]
 
 namespace Finₓ
 
 /-- `fin.cycle_range i` is the cycle `(0 1 2 ... i)` leaving `(i+1 ... (n-1))` unchanged. -/
-def cycle_range {n : ℕ} (i : Finₓ n) : perm (Finₓ n) :=
+def cycle_range {n : ℕ} (i : Finₓ n) : Perm (Finₓ n) :=
   (finRotate (i + 1)).extendDomain
     (Equivₓ.ofLeftInverse' (Finₓ.castLe (Nat.succ_le_of_ltₓ i.is_lt)).toEmbedding coe
       (by
@@ -149,12 +149,12 @@ def cycle_range {n : ℕ} (i : Finₓ n) : perm (Finₓ n) :=
         ext
         simp ))
 
-theorem cycle_range_of_gt {n : ℕ} {i j : Finₓ n.succ} (h : i < j) : cycle_range i j = j := by
+theorem cycle_range_of_gt {n : ℕ} {i j : Finₓ n.succ} (h : i < j) : cycleRange i j = j := by
   rw [cycle_range, of_left_inverse'_eq_of_injective, ← Function.Embedding.to_equiv_range_eq_of_injective, ←
     via_fintype_embedding, via_fintype_embedding_apply_not_mem_range]
   simpa
 
-theorem cycle_range_of_le {n : ℕ} {i j : Finₓ n.succ} (h : j ≤ i) : cycle_range i j = if j = i then 0 else j + 1 := by
+theorem cycle_range_of_le {n : ℕ} {i j : Finₓ n.succ} (h : j ≤ i) : cycleRange i j = if j = i then 0 else j + 1 := by
   cases n
   · simp
     
@@ -173,7 +173,7 @@ theorem cycle_range_of_le {n : ℕ} {i j : Finₓ n.succ} (h : j ≤ i) : cycle_
     
 
 theorem coe_cycle_range_of_le {n : ℕ} {i j : Finₓ n.succ} (h : j ≤ i) :
-    (cycle_range i j : ℕ) = if j = i then 0 else j + 1 := by
+    (cycleRange i j : ℕ) = if j = i then 0 else j + 1 := by
   rw [cycle_range_of_le h]
   split_ifs with h'
   · rfl
@@ -185,21 +185,21 @@ theorem coe_cycle_range_of_le {n : ℕ} {i j : Finₓ n.succ} (h : j ≤ i) :
         _ ≤ n := nat.lt_succ_iff.mp i.2
         )
 
-theorem cycle_range_of_lt {n : ℕ} {i j : Finₓ n.succ} (h : j < i) : cycle_range i j = j + 1 := by
+theorem cycle_range_of_lt {n : ℕ} {i j : Finₓ n.succ} (h : j < i) : cycleRange i j = j + 1 := by
   rw [cycle_range_of_le h.le, if_neg h.ne]
 
-theorem coe_cycle_range_of_lt {n : ℕ} {i j : Finₓ n.succ} (h : j < i) : (cycle_range i j : ℕ) = j + 1 := by
+theorem coe_cycle_range_of_lt {n : ℕ} {i j : Finₓ n.succ} (h : j < i) : (cycleRange i j : ℕ) = j + 1 := by
   rw [coe_cycle_range_of_le h.le, if_neg h.ne]
 
-theorem cycle_range_of_eq {n : ℕ} {i j : Finₓ n.succ} (h : j = i) : cycle_range i j = 0 := by
+theorem cycle_range_of_eq {n : ℕ} {i j : Finₓ n.succ} (h : j = i) : cycleRange i j = 0 := by
   rw [cycle_range_of_le h.le, if_pos h]
 
 @[simp]
-theorem cycle_range_self {n : ℕ} (i : Finₓ n.succ) : cycle_range i i = 0 :=
+theorem cycle_range_self {n : ℕ} (i : Finₓ n.succ) : cycleRange i i = 0 :=
   cycle_range_of_eq rfl
 
 theorem cycle_range_apply {n : ℕ} (i j : Finₓ n.succ) :
-    cycle_range i j = if j < i then j + 1 else if j = i then 0 else j := by
+    cycleRange i j = if j < i then j + 1 else if j = i then 0 else j := by
   split_ifs with h₁ h₂
   · exact cycle_range_of_lt h₁
     
@@ -209,7 +209,7 @@ theorem cycle_range_apply {n : ℕ} (i j : Finₓ n.succ) :
     
 
 @[simp]
-theorem cycle_range_zero (n : ℕ) : cycle_range (0 : Finₓ n.succ) = 1 := by
+theorem cycle_range_zero (n : ℕ) : cycleRange (0 : Finₓ n.succ) = 1 := by
   ext j
   refine' Finₓ.cases _ (fun j => _) j
   · simp
@@ -218,23 +218,23 @@ theorem cycle_range_zero (n : ℕ) : cycle_range (0 : Finₓ n.succ) = 1 := by
     
 
 @[simp]
-theorem cycle_range_last (n : ℕ) : cycle_range (last n) = finRotate (n + 1) := by
+theorem cycle_range_last (n : ℕ) : cycleRange (last n) = finRotate (n + 1) := by
   ext i
   rw [coe_cycle_range_of_le (le_last _), coe_fin_rotate]
 
 @[simp]
-theorem cycle_range_zero' {n : ℕ} (h : 0 < n) : cycle_range ⟨0, h⟩ = 1 := by
+theorem cycle_range_zero' {n : ℕ} (h : 0 < n) : cycleRange ⟨0, h⟩ = 1 := by
   cases' n with n
   · cases h
     
   exact cycle_range_zero n
 
 @[simp]
-theorem sign_cycle_range {n : ℕ} (i : Finₓ n) : perm.sign (cycle_range i) = -1 ^ (i : ℕ) := by
+theorem sign_cycle_range {n : ℕ} (i : Finₓ n) : Perm.sign (cycleRange i) = -1 ^ (i : ℕ) := by
   simp [cycle_range]
 
 @[simp]
-theorem succ_above_cycle_range {n : ℕ} (i j : Finₓ n) : i.succ.succ_above (i.cycle_range j) = swap 0 i.succ j.succ := by
+theorem succ_above_cycle_range {n : ℕ} (i j : Finₓ n) : i.succ.succAbove (i.cycleRange j) = swap 0 i.succ j.succ := by
   cases n
   · rcases j with ⟨_, ⟨⟩⟩
     
@@ -266,7 +266,7 @@ theorem succ_above_cycle_range {n : ℕ} (i j : Finₓ n) : i.succ.succ_above (i
     
 
 @[simp]
-theorem cycle_range_succ_above {n : ℕ} (i : Finₓ (n + 1)) (j : Finₓ n) : i.cycle_range (i.succ_above j) = j.succ := by
+theorem cycle_range_succ_above {n : ℕ} (i : Finₓ (n + 1)) (j : Finₓ n) : i.cycleRange (i.succAbove j) = j.succ := by
   cases' lt_or_geₓ j.cast_succ i with h h
   · rw [Finₓ.succ_above_below _ _ h, Finₓ.cycle_range_of_lt h, Finₓ.coe_succ_eq_succ]
     
@@ -274,18 +274,18 @@ theorem cycle_range_succ_above {n : ℕ} (i : Finₓ (n + 1)) (j : Finₓ n) : i
     
 
 @[simp]
-theorem cycle_range_symm_zero {n : ℕ} (i : Finₓ (n + 1)) : i.cycle_range.symm 0 = i :=
-  i.cycle_range.injective
+theorem cycle_range_symm_zero {n : ℕ} (i : Finₓ (n + 1)) : i.cycleRange.symm 0 = i :=
+  i.cycleRange.Injective
     (by
       simp )
 
 @[simp]
-theorem cycle_range_symm_succ {n : ℕ} (i : Finₓ (n + 1)) (j : Finₓ n) : i.cycle_range.symm j.succ = i.succ_above j :=
-  i.cycle_range.injective
+theorem cycle_range_symm_succ {n : ℕ} (i : Finₓ (n + 1)) (j : Finₓ n) : i.cycleRange.symm j.succ = i.succAbove j :=
+  i.cycleRange.Injective
     (by
       simp )
 
-theorem is_cycle_cycle_range {n : ℕ} {i : Finₓ (n + 1)} (h0 : i ≠ 0) : is_cycle (cycle_range i) := by
+theorem is_cycle_cycle_range {n : ℕ} {i : Finₓ (n + 1)} (h0 : i ≠ 0) : IsCycle (cycleRange i) := by
   cases' i with i hi
   cases i
   · exact (h0 rfl).elim
@@ -293,7 +293,7 @@ theorem is_cycle_cycle_range {n : ℕ} {i : Finₓ (n + 1)} (h0 : i ≠ 0) : is_
   exact is_cycle_fin_rotate.extend_domain _
 
 @[simp]
-theorem cycle_type_cycle_range {n : ℕ} {i : Finₓ (n + 1)} (h0 : i ≠ 0) : cycle_type (cycle_range i) = {i + 1} := by
+theorem cycle_type_cycle_range {n : ℕ} {i : Finₓ (n + 1)} (h0 : i ≠ 0) : cycleType (cycleRange i) = {i + 1} := by
   cases' i with i hi
   cases i
   · exact (h0 rfl).elim
@@ -301,7 +301,7 @@ theorem cycle_type_cycle_range {n : ℕ} {i : Finₓ (n + 1)} (h0 : i ≠ 0) : c
   rw [cycle_range, cycle_type_extend_domain]
   exact cycle_type_fin_rotate
 
-theorem is_three_cycle_cycle_range_two {n : ℕ} : is_three_cycle (cycle_range 2 : perm (Finₓ (n + 3))) := by
+theorem is_three_cycle_cycle_range_two {n : ℕ} : IsThreeCycle (cycleRange 2 : Perm (Finₓ (n + 3))) := by
   rw [is_three_cycle, cycle_type_cycle_range] <;> decide
 
 end Finₓ

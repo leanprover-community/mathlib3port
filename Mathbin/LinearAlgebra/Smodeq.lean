@@ -8,6 +8,8 @@ import Mathbin.RingTheory.Ideal.Quotient
 
 open Submodule
 
+open_locale Polynomial
+
 variable {R : Type _} [Ringₓ R]
 
 variable {M : Type _} [AddCommGroupₓ M] [Module R M] (U U₁ U₂ : Submodule R M)
@@ -73,7 +75,7 @@ theorem map (hxy : x ≡ y [SMOD U]) (f : M →ₗ[R] N) : f x ≡ f y [SMOD U.m
 theorem comap {f : M →ₗ[R] N} (hxy : f x ≡ f y [SMOD V]) : x ≡ y [SMOD V.comap f] :=
   (Submodule.Quotient.eq _).2 <| show f (x - y) ∈ V from (f.map_sub x y).symm ▸ (Submodule.Quotient.eq _).1 hxy
 
-theorem eval {R : Type _} [CommRingₓ R] {I : Ideal R} {x y : R} (h : x ≡ y [SMOD I]) (f : Polynomial R) :
+theorem eval {R : Type _} [CommRingₓ R] {I : Ideal R} {x y : R} (h : x ≡ y [SMOD I]) (f : R[X]) :
     f.eval x ≡ f.eval y [SMOD I] := by
   rw [Smodeq.def] at h⊢
   show Ideal.Quotient.mk I (f.eval x) = Ideal.Quotient.mk I (f.eval y)

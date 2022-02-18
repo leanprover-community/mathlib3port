@@ -58,8 +58,8 @@ of great interest for the end user.
 
 
 /-- Shows that the fractional parts of the stream are in `[0,1)`. -/
-theorem nth_stream_fr_nonneg_lt_one {ifp_n : int_fract_pair K}
-    (nth_stream_eq : int_fract_pair.stream v n = some ifp_n) : 0 ≤ ifp_n.fr ∧ ifp_n.fr < 1 := by
+theorem nth_stream_fr_nonneg_lt_one {ifp_n : IntFractPair K} (nth_stream_eq : IntFractPair.stream v n = some ifp_n) :
+    0 ≤ ifp_n.fr ∧ ifp_n.fr < 1 := by
   cases n
   case nat.zero =>
     have : int_fract_pair.of v = ifp_n := by
@@ -72,18 +72,18 @@ theorem nth_stream_fr_nonneg_lt_one {ifp_n : int_fract_pair K}
     exact ⟨fract_nonneg _, fract_lt_one _⟩
 
 /-- Shows that the fractional parts of the stream are nonnegative. -/
-theorem nth_stream_fr_nonneg {ifp_n : int_fract_pair K} (nth_stream_eq : int_fract_pair.stream v n = some ifp_n) :
+theorem nth_stream_fr_nonneg {ifp_n : IntFractPair K} (nth_stream_eq : IntFractPair.stream v n = some ifp_n) :
     0 ≤ ifp_n.fr :=
   (nth_stream_fr_nonneg_lt_one nth_stream_eq).left
 
 /-- Shows that the fractional parts of the stream are smaller than one. -/
-theorem nth_stream_fr_lt_one {ifp_n : int_fract_pair K} (nth_stream_eq : int_fract_pair.stream v n = some ifp_n) :
+theorem nth_stream_fr_lt_one {ifp_n : IntFractPair K} (nth_stream_eq : IntFractPair.stream v n = some ifp_n) :
     ifp_n.fr < 1 :=
   (nth_stream_fr_nonneg_lt_one nth_stream_eq).right
 
 /-- Shows that the integer parts of the stream are at least one. -/
-theorem one_le_succ_nth_stream_b {ifp_succ_n : int_fract_pair K}
-    (succ_nth_stream_eq : int_fract_pair.stream v (n + 1) = some ifp_succ_n) : 1 ≤ ifp_succ_n.b := by
+theorem one_le_succ_nth_stream_b {ifp_succ_n : IntFractPair K}
+    (succ_nth_stream_eq : IntFractPair.stream v (n + 1) = some ifp_succ_n) : 1 ≤ ifp_succ_n.b := by
   obtain ⟨ifp_n, nth_stream_eq, stream_nth_fr_ne_zero, ⟨-⟩⟩ :
     ∃ ifp_n, int_fract_pair.stream v n = some ifp_n ∧ ifp_n.fr ≠ 0 ∧ int_fract_pair.of ifp_n.fr⁻¹ = ifp_succ_n
   exact succ_nth_stream_eq_some_iff.elim_left succ_nth_stream_eq
@@ -99,9 +99,9 @@ theorem one_le_succ_nth_stream_b {ifp_succ_n : int_fract_pair K}
 the `n`th fractional part `frₙ` of the stream.
 This result is straight-forward as `bₙ₊₁` is defined as the floor of `1 / frₙ`
 -/
-theorem succ_nth_stream_b_le_nth_stream_fr_inv {ifp_n ifp_succ_n : int_fract_pair K}
-    (nth_stream_eq : int_fract_pair.stream v n = some ifp_n)
-    (succ_nth_stream_eq : int_fract_pair.stream v (n + 1) = some ifp_succ_n) : (ifp_succ_n.b : K) ≤ ifp_n.fr⁻¹ := by
+theorem succ_nth_stream_b_le_nth_stream_fr_inv {ifp_n ifp_succ_n : IntFractPair K}
+    (nth_stream_eq : IntFractPair.stream v n = some ifp_n)
+    (succ_nth_stream_eq : IntFractPair.stream v (n + 1) = some ifp_succ_n) : (ifp_succ_n.b : K) ≤ ifp_n.fr⁻¹ := by
   suffices (⌊ifp_n.fr⁻¹⌋ : K) ≤ ifp_n.fr⁻¹ by
     cases' ifp_n with _ ifp_n_fr
     have : ifp_n_fr ≠ 0 := by
@@ -360,10 +360,10 @@ position, i.e. bounds for the term `|v - (generalized_continued_fraction.of v).c
 
 /-- This lemma follows from the finite correctness proof, the determinant equality, and
 by simplifying the difference. -/
-theorem sub_convergents_eq {ifp : int_fract_pair K} (stream_nth_eq : int_fract_pair.stream v n = some ifp) :
+theorem sub_convergents_eq {ifp : IntFractPair K} (stream_nth_eq : IntFractPair.stream v n = some ifp) :
     let g := of v
-    let B := (g.continuants_aux (n + 1)).b
-    let pB := (g.continuants_aux n).b
+    let B := (g.continuantsAux (n + 1)).b
+    let pB := (g.continuantsAux n).b
     v - g.convergents n = if ifp.fr = 0 then 0 else -1 ^ n / (B * (ifp.fr⁻¹ * B + pB)) :=
   by
   let g := of v
@@ -454,8 +454,8 @@ theorem sub_convergents_eq {ifp : int_fract_pair K} (stream_nth_eq : int_fract_p
         ac_rfl
     
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:57:31: expecting tactic arg
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:50: missing argument
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:59:31: expecting tactic arg
 /-- Shows that `|v - Aₙ / Bₙ| ≤ 1 / (Bₙ * Bₙ₊₁)` -/
 theorem abs_sub_convergents_le (not_terminated_at_n : ¬(of v).TerminatedAt n) :
     abs (v - (of v).convergents n) ≤ 1 / ((of v).denominators n * ((of v).denominators <| n + 1)) := by
@@ -542,8 +542,8 @@ theorem abs_sub_convergents_le (not_terminated_at_n : ¬(of v).TerminatedAt n) :
     mono
     
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:57:31: expecting tactic arg
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:50: missing argument
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:59:31: expecting tactic arg
 /-- Shows that `|v - Aₙ / Bₙ| ≤ 1 / (bₙ * Bₙ * Bₙ)`. This bound is worse than the one shown in
 `gcf.abs_sub_convergents_le`, but sometimes it is easier to apply and sufficient for one's use case.
  -/

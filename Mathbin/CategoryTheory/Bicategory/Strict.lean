@@ -23,7 +23,7 @@ open_locale Bicategory
 
 universe w v u
 
-variable (B : Type u) [bicategory.{w, v} B]
+variable (B : Type u) [Bicategory.{w, v} B]
 
 /-- A bicategory is called `strict` if the left unitors, the right unitors, and the associators are
 isomorphisms given by equalities.
@@ -38,13 +38,13 @@ class bicategory.strict : Prop where
   assoc' : ∀ {a b c d : B} f : a ⟶ b g : b ⟶ c h : c ⟶ d, (f ≫ g) ≫ h = f ≫ g ≫ h := by
     run_tac
       obviously
-  left_unitor_eq_to_iso' : ∀ {a b : B} f : a ⟶ b, λ_ f = eq_to_iso (id_comp' f) := by
+  left_unitor_eq_to_iso' : ∀ {a b : B} f : a ⟶ b, λ_ f = eqToIso (id_comp' f) := by
     run_tac
       obviously
-  right_unitor_eq_to_iso' : ∀ {a b : B} f : a ⟶ b, ρ_ f = eq_to_iso (comp_id' f) := by
+  right_unitor_eq_to_iso' : ∀ {a b : B} f : a ⟶ b, ρ_ f = eqToIso (comp_id' f) := by
     run_tac
       obviously
-  associator_eq_to_iso' : ∀ {a b c d : B} f : a ⟶ b g : b ⟶ c h : c ⟶ d, α_ f g h = eq_to_iso (assoc' f g h) := by
+  associator_eq_to_iso' : ∀ {a b c d : B} f : a ⟶ b g : b ⟶ c h : c ⟶ d, α_ f g h = eqToIso (assoc' f g h) := by
     run_tac
       obviously
 
@@ -64,10 +64,10 @@ attribute [simp]
   bicategory.strict.id_comp bicategory.strict.left_unitor_eq_to_iso bicategory.strict.comp_id bicategory.strict.right_unitor_eq_to_iso bicategory.strict.assoc bicategory.strict.associator_eq_to_iso
 
 /-- Category structure on a strict bicategory -/
-instance (priority := 100) strict_bicategory.category [bicategory.strict B] : category B where
-  id_comp' := fun a b => bicategory.strict.id_comp
-  comp_id' := fun a b => bicategory.strict.comp_id
-  assoc' := fun a b c d => bicategory.strict.assoc
+instance (priority := 100) strict_bicategory.category [Bicategory.Strict B] : Category B where
+  id_comp' := fun a b => Bicategory.Strict.id_comp
+  comp_id' := fun a b => Bicategory.Strict.comp_id
+  assoc' := fun a b c d => Bicategory.Strict.assoc
 
 namespace Bicategory
 
@@ -75,13 +75,13 @@ variable {B}
 
 @[simp]
 theorem whisker_left_eq_to_hom {a b c : B} (f : a ⟶ b) {g h : b ⟶ c} (η : g = h) :
-    f ◁ eq_to_hom η = eq_to_hom (congr_arg2ₓ (· ≫ ·) rfl η) := by
+    f ◁ eqToHom η = eqToHom (congr_arg2ₓ (· ≫ ·) rfl η) := by
   cases η
   simp only [whisker_left_id, eq_to_hom_refl]
 
 @[simp]
 theorem eq_to_hom_whisker_right {a b c : B} {f g : a ⟶ b} (η : f = g) (h : b ⟶ c) :
-    eq_to_hom η ▷ h = eq_to_hom (congr_arg2ₓ (· ≫ ·) η rfl) := by
+    eqToHom η ▷ h = eqToHom (congr_arg2ₓ (· ≫ ·) η rfl) := by
   cases η
   simp only [whisker_right_id, eq_to_hom_refl]
 

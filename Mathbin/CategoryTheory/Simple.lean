@@ -29,50 +29,49 @@ namespace CategoryTheory
 
 universe v u
 
-variable {C : Type u} [category.{v} C]
+variable {C : Type u} [Category.{v} C]
 
 section
 
-variable [has_zero_morphisms C]
+variable [HasZeroMorphisms C]
 
 /-- An object is simple if monomorphisms into it are (exclusively) either isomorphisms or zero. -/
 class simple (X : C) : Prop where
-  mono_is_iso_iff_nonzero : ∀ {Y : C} f : Y ⟶ X [mono f], is_iso f ↔ f ≠ 0
+  mono_is_iso_iff_nonzero : ∀ {Y : C} f : Y ⟶ X [Mono f], IsIso f ↔ f ≠ 0
 
 /-- A nonzero monomorphism to a simple object is an isomorphism. -/
-theorem is_iso_of_mono_of_nonzero {X Y : C} [simple Y] {f : X ⟶ Y} [mono f] (w : f ≠ 0) : is_iso f :=
-  (simple.mono_is_iso_iff_nonzero f).mpr w
+theorem is_iso_of_mono_of_nonzero {X Y : C} [Simple Y] {f : X ⟶ Y} [Mono f] (w : f ≠ 0) : IsIso f :=
+  (Simple.mono_is_iso_iff_nonzero f).mpr w
 
-theorem kernel_zero_of_nonzero_from_simple {X Y : C} [simple X] {f : X ⟶ Y} [has_kernel f] (w : f ≠ 0) :
+theorem kernel_zero_of_nonzero_from_simple {X Y : C} [Simple X] {f : X ⟶ Y} [HasKernel f] (w : f ≠ 0) :
     kernel.ι f = 0 := by
   classical
-  by_contra h
+  by_contra
   have := is_iso_of_mono_of_nonzero h
   exact w (eq_zero_of_epi_kernel f)
 
-theorem mono_to_simple_zero_of_not_iso {X Y : C} [simple Y] {f : X ⟶ Y} [mono f] (w : is_iso f → False) : f = 0 := by
+theorem mono_to_simple_zero_of_not_iso {X Y : C} [Simple Y] {f : X ⟶ Y} [Mono f] (w : IsIso f → False) : f = 0 := by
   classical
-  by_contra h
-  apply w
-  exact is_iso_of_mono_of_nonzero h
+  by_contra
+  exact w (is_iso_of_mono_of_nonzero h)
 
-theorem id_nonzero (X : C) [simple.{v} X] : 𝟙 X ≠ 0 :=
-  (simple.mono_is_iso_iff_nonzero (𝟙 X)).mp
+theorem id_nonzero (X : C) [Simple.{v} X] : 𝟙 X ≠ 0 :=
+  (Simple.mono_is_iso_iff_nonzero (𝟙 X)).mp
     (by
       infer_instance)
 
-instance (X : C) [simple.{v} X] : Nontrivial (End X) :=
+instance (X : C) [Simple.{v} X] : Nontrivial (End X) :=
   nontrivial_of_ne 1 0 (id_nonzero X)
 
 section
 
-variable [has_zero_object C]
+variable [HasZeroObject C]
 
 open_locale ZeroObject
 
 /-- We don't want the definition of 'simple' to include the zero object, so we check that here. -/
-theorem zero_not_simple [simple (0 : C)] : False :=
-  (simple.mono_is_iso_iff_nonzero (0 : (0 : C) ⟶ (0 : C))).mp
+theorem zero_not_simple [Simple (0 : C)] : False :=
+  (Simple.mono_is_iso_iff_nonzero (0 : (0 : C) ⟶ (0 : C))).mp
     ⟨⟨0, by
         tidy⟩⟩
     rfl
@@ -83,46 +82,44 @@ end
 
 section Abelian
 
-variable [abelian C]
+variable [Abelian C]
 
 /-- In an abelian category, an object satisfying the dual of the definition of a simple object is
     simple. -/
-theorem simple_of_cosimple (X : C) (h : ∀ {Z : C} f : X ⟶ Z [epi f], is_iso f ↔ f ≠ 0) : simple X :=
+theorem simple_of_cosimple (X : C) (h : ∀ {Z : C} f : X ⟶ Z [Epi f], IsIso f ↔ f ≠ 0) : Simple X :=
   ⟨fun Y f I => by
     classical
     fconstructor
     · intros
       have hx := cokernel.π_of_epi f
-      by_contra h
+      by_contra
       subst h
       exact (h _).mp (cokernel.π_of_zero _ _) hx
       
     · intro hf
       suffices epi f by
-        skip
-        apply abelian.is_iso_of_mono_of_epi
+        exact is_iso_of_mono_of_epi _
       apply preadditive.epi_of_cokernel_zero
       by_contra h'
       exact cokernel_not_iso_of_nonzero hf ((h _).mpr h')
       ⟩
 
 /-- A nonzero epimorphism from a simple object is an isomorphism. -/
-theorem is_iso_of_epi_of_nonzero {X Y : C} [simple X] {f : X ⟶ Y} [epi f] (w : f ≠ 0) : is_iso f :=
+theorem is_iso_of_epi_of_nonzero {X Y : C} [Simple X] {f : X ⟶ Y} [Epi f] (w : f ≠ 0) : IsIso f :=
   have : mono f := preadditive.mono_of_kernel_zero (mono_to_simple_zero_of_not_iso (kernel_not_iso_of_nonzero w))
-  abelian.is_iso_of_mono_of_epi f
+  is_iso_of_mono_of_epi f
 
-theorem cokernel_zero_of_nonzero_to_simple {X Y : C} [simple Y] {f : X ⟶ Y} [has_cokernel f] (w : f ≠ 0) :
+theorem cokernel_zero_of_nonzero_to_simple {X Y : C} [Simple Y] {f : X ⟶ Y} [HasCokernel f] (w : f ≠ 0) :
     cokernel.π f = 0 := by
   classical
   by_contra h
   have := is_iso_of_epi_of_nonzero h
   exact w (eq_zero_of_mono_cokernel f)
 
-theorem epi_from_simple_zero_of_not_iso {X Y : C} [simple X] {f : X ⟶ Y} [epi f] (w : is_iso f → False) : f = 0 := by
+theorem epi_from_simple_zero_of_not_iso {X Y : C} [Simple X] {f : X ⟶ Y} [Epi f] (w : IsIso f → False) : f = 0 := by
   classical
-  by_contra h
-  apply w
-  exact is_iso_of_epi_of_nonzero h
+  by_contra
+  exact w (is_iso_of_epi_of_nonzero h)
 
 end Abelian
 

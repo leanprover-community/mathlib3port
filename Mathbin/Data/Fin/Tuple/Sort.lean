@@ -58,7 +58,7 @@ def graph_equiv₁ (f : Finₓ n → α) : Finₓ n ≃ graph f where
     simpa [graph] using h
 
 @[simp]
-theorem proj_equiv₁' (f : Finₓ n → α) : graph.proj ∘ graph_equiv₁ f = f :=
+theorem proj_equiv₁' (f : Finₓ n → α) : graph.proj ∘ graphEquiv₁ f = f :=
   rfl
 
 /-- `graph_equiv₂ f` is an equivalence between `fin n` and `graph f` that respects the order.
@@ -70,10 +70,10 @@ def graph_equiv₂ (f : Finₓ n → α) : Finₓ n ≃o graph f :=
 
 /-- `sort f` is the permutation that orders `fin n` according to the order of the outputs of `f`. -/
 def sort (f : Finₓ n → α) : Equivₓ.Perm (Finₓ n) :=
-  (graph_equiv₂ f).toEquiv.trans (graph_equiv₁ f).symm
+  (graphEquiv₂ f).toEquiv.trans (graphEquiv₁ f).symm
 
-theorem self_comp_sort (f : Finₓ n → α) : f ∘ sort f = graph.proj ∘ graph_equiv₂ f :=
-  show graph.proj ∘ (graph_equiv₁ f ∘ (graph_equiv₁ f).symm) ∘ (graph_equiv₂ f).toEquiv = _ by
+theorem self_comp_sort (f : Finₓ n → α) : f ∘ sort f = graph.proj ∘ graphEquiv₂ f :=
+  show graph.proj ∘ (graphEquiv₁ f ∘ (graphEquiv₁ f).symm) ∘ (graphEquiv₂ f).toEquiv = _ by
     simp
 
 theorem monotone_proj (f : Finₓ n → α) : Monotone (graph.proj : graph f → α) := by

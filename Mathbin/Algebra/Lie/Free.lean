@@ -74,21 +74,21 @@ inductive rel : lib R X → lib R X → Prop
 
 variable {R X}
 
-theorem rel.add_left (a : lib R X) {b c : lib R X} (h : rel R X b c) : rel R X (a + b) (a + c) := by
+theorem rel.add_left (a : lib R X) {b c : lib R X} (h : Rel R X b c) : Rel R X (a + b) (a + c) := by
   rw [add_commₓ _ b, add_commₓ _ c]
   exact h.add_right _
 
-theorem rel.neg {a b : lib R X} (h : rel R X a b) : rel R X (-a) (-b) := by
+theorem rel.neg {a b : lib R X} (h : Rel R X a b) : Rel R X (-a) (-b) := by
   simpa only [neg_one_smul] using h.smul (-1)
 
-theorem rel.sub_left (a : lib R X) {b c : lib R X} (h : rel R X b c) : rel R X (a - b) (a - c) := by
+theorem rel.sub_left (a : lib R X) {b c : lib R X} (h : Rel R X b c) : Rel R X (a - b) (a - c) := by
   simpa only [sub_eq_add_neg] using h.neg.add_left a
 
-theorem rel.sub_right {a b : lib R X} (c : lib R X) (h : rel R X a b) : rel R X (a - c) (b - c) := by
+theorem rel.sub_right {a b : lib R X} (c : lib R X) (h : Rel R X a b) : Rel R X (a - c) (b - c) := by
   simpa only [sub_eq_add_neg] using h.add_right (-c)
 
 theorem rel.smul_of_tower {S : Type _} [Monoidₓ S] [DistribMulAction S R] [IsScalarTower S R R] (t : S) (a b : lib R X)
-    (h : rel R X a b) : rel R X (t • a) (t • b) := by
+    (h : Rel R X a b) : Rel R X (t • a) (t • b) := by
   rw [← smul_one_smul R t a, ← smul_one_smul R t b]
   exact h.smul _
 
@@ -101,7 +101,7 @@ def FreeLieAlgebra :=
 namespace FreeLieAlgebra
 
 instance {S : Type _} [Monoidₓ S] [DistribMulAction S R] [IsScalarTower S R R] : HasScalar S (FreeLieAlgebra R X) where
-  smul := fun t => Quot.map ((· • ·) t) (rel.smul_of_tower t)
+  smul := fun t => Quot.map ((· • ·) t) (Rel.smul_of_tower t)
 
 instance {S : Type _} [Monoidₓ S] [DistribMulAction S R] [DistribMulAction (Sᵐᵒᵖ) R] [IsScalarTower S R R]
     [IsCentralScalar S R] : IsCentralScalar S (FreeLieAlgebra R X) where
@@ -111,13 +111,13 @@ instance : Zero (FreeLieAlgebra R X) where
   zero := Quot.mk _ 0
 
 instance : Add (FreeLieAlgebra R X) where
-  add := Quot.map₂ (· + ·) (fun _ _ _ => rel.add_left _) fun _ _ _ => rel.add_right _
+  add := Quot.map₂ (· + ·) (fun _ _ _ => Rel.add_left _) fun _ _ _ => Rel.add_right _
 
 instance : Neg (FreeLieAlgebra R X) where
-  neg := Quot.map Neg.neg fun _ _ => rel.neg
+  neg := Quot.map Neg.neg fun _ _ => Rel.neg
 
 instance : Sub (FreeLieAlgebra R X) where
-  sub := Quot.map₂ Sub.sub (fun _ _ _ => rel.sub_left _) fun _ _ _ => rel.sub_right _
+  sub := Quot.map₂ Sub.sub (fun _ _ _ => Rel.sub_left _) fun _ _ _ => Rel.sub_right _
 
 instance : AddGroupₓ (FreeLieAlgebra R X) :=
   Function.Surjective.addGroupSmul (Quot.mk _) (surjective_quot_mk _) rfl (fun _ _ => rfl) (fun _ => rfl)
@@ -135,7 +135,7 @@ instance {S : Type _} [Semiringₓ S] [Module S R] [IsScalarTower S R R] : Modul
 /-- Note that here we turn the `has_mul` coming from the `non_unital_non_assoc_semiring` structure
 on `lib R X` into a `has_bracket` on `free_lie_algebra`. -/
 instance : LieRing (FreeLieAlgebra R X) where
-  bracket := Quot.map₂ (· * ·) (fun _ _ _ => rel.mul_left _) fun _ _ _ => rel.mul_right _
+  bracket := Quot.map₂ (· * ·) (fun _ _ _ => Rel.mul_left _) fun _ _ _ => Rel.mul_right _
   add_lie := by
     rintro ⟨a⟩ ⟨b⟩ ⟨c⟩
     change Quot.mk _ _ = Quot.mk _ _
@@ -171,17 +171,16 @@ attribute [local instance] LieRing.toNonUnitalNonAssocSemiring
 def lift_aux (f : X → L) :=
   lib.lift R f
 
-theorem lift_aux_map_smul (f : X → L) (t : R) (a : lib R X) : lift_aux R f (t • a) = t • lift_aux R f a :=
+theorem lift_aux_map_smul (f : X → L) (t : R) (a : lib R X) : liftAux R f (t • a) = t • liftAux R f a :=
   NonUnitalAlgHom.map_smul _ t a
 
-theorem lift_aux_map_add (f : X → L) (a b : lib R X) : lift_aux R f (a + b) = lift_aux R f a + lift_aux R f b :=
+theorem lift_aux_map_add (f : X → L) (a b : lib R X) : liftAux R f (a + b) = liftAux R f a + liftAux R f b :=
   NonUnitalAlgHom.map_add _ a b
 
-theorem lift_aux_map_mul (f : X → L) (a b : lib R X) : lift_aux R f (a * b) = ⁅lift_aux R f a,lift_aux R f b⁆ :=
+theorem lift_aux_map_mul (f : X → L) (a b : lib R X) : liftAux R f (a * b) = ⁅liftAux R f a,liftAux R f b⁆ :=
   NonUnitalAlgHom.map_mul _ a b
 
-theorem lift_aux_spec (f : X → L) (a b : lib R X) (h : FreeLieAlgebra.Rel R X a b) : lift_aux R f a = lift_aux R f b :=
-  by
+theorem lift_aux_spec (f : X → L) (a b : lib R X) (h : FreeLieAlgebra.Rel R X a b) : liftAux R f a = liftAux R f b := by
   induction h
   case rel.lie_self a' =>
     simp only [lift_aux_map_mul, NonUnitalAlgHom.map_zero, lie_self]
@@ -198,7 +197,7 @@ theorem lift_aux_spec (f : X → L) (a b : lib R X) (h : FreeLieAlgebra.Rel R X 
 
 /-- The quotient map as a `non_unital_alg_hom`. -/
 def mk : NonUnitalAlgHom R (lib R X) (FreeLieAlgebra R X) where
-  toFun := Quot.mk (rel R X)
+  toFun := Quot.mk (Rel R X)
   map_smul' := fun t a => rfl
   map_zero' := rfl
   map_add' := fun a b => rfl
@@ -208,7 +207,7 @@ def mk : NonUnitalAlgHom R (lib R X) (FreeLieAlgebra R X) where
 algebras over `R` is adjoint to the forgetful functor in the other direction. -/
 def lift : (X → L) ≃ (FreeLieAlgebra R X →ₗ⁅R⁆ L) where
   toFun := fun f =>
-    { toFun := fun c => Quot.liftOn c (lift_aux R f) (lift_aux_spec R f),
+    { toFun := fun c => Quot.liftOn c (liftAux R f) (lift_aux_spec R f),
       map_add' := by
         rintro ⟨a⟩ ⟨b⟩
         rw [← lift_aux_map_add]

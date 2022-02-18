@@ -1,5 +1,4 @@
-import Mathbin.Topology.Algebra.Group
-import Mathbin.Topology.ContinuousFunction.Basic
+import Mathbin.Topology.ContinuousFunction.Algebra
 
 /-!
 
@@ -62,17 +61,17 @@ def mk' (f : A →* B) (hf : Continuous f) : ContinuousMonoidHom A B :=
 /-- Composition of two continuous homomorphisms. -/
 @[to_additive "Composition of two continuous homomorphisms.", simps]
 def comp (g : ContinuousMonoidHom B C) (f : ContinuousMonoidHom A B) : ContinuousMonoidHom A C :=
-  mk' (g.to_monoid_hom.comp f.to_monoid_hom) (g.continuous_to_fun.comp f.continuous_to_fun)
+  mk' (g.toMonoidHom.comp f.toMonoidHom) (g.continuous_to_fun.comp f.continuous_to_fun)
 
 /-- Product of two continuous homomorphisms on the same space. -/
 @[to_additive "Product of two continuous homomorphisms on the same space.", simps]
 def Prod (f : ContinuousMonoidHom A B) (g : ContinuousMonoidHom A C) : ContinuousMonoidHom A (B × C) :=
-  mk' (f.to_monoid_hom.prod g.to_monoid_hom) (f.continuous_to_fun.prod_mk g.continuous_to_fun)
+  mk' (f.toMonoidHom.Prod g.toMonoidHom) (f.continuous_to_fun.prod_mk g.continuous_to_fun)
 
 /-- Product of two continuous homomorphisms on different spaces. -/
 @[to_additive "Product of two continuous homomorphisms on different spaces.", simps]
 def prod_mapₓ (f : ContinuousMonoidHom A C) (g : ContinuousMonoidHom B D) : ContinuousMonoidHom (A × B) (C × D) :=
-  mk' (f.to_monoid_hom.prod_map g.to_monoid_hom) (f.continuous_to_fun.prod_map g.continuous_to_fun)
+  mk' (f.toMonoidHom.prod_map g.toMonoidHom) (f.continuous_to_fun.prod_map g.continuous_to_fun)
 
 variable (A B C D E)
 
@@ -103,22 +102,22 @@ def snd : ContinuousMonoidHom (A × B) B :=
 /-- The continuous homomorphism given by inclusion of the first factor. -/
 @[to_additive "The continuous homomorphism given by inclusion of the first factor.", simps]
 def inl : ContinuousMonoidHom A (A × B) :=
-  Prod (id A) (one A B)
+  prod (id A) (one A B)
 
 /-- The continuous homomorphism given by inclusion of the second factor. -/
 @[to_additive "The continuous homomorphism given by inclusion of the second factor.", simps]
 def inr : ContinuousMonoidHom B (A × B) :=
-  Prod (one B A) (id B)
+  prod (one B A) (id B)
 
 /-- The continuous homomorphism given by the diagonal embedding. -/
 @[to_additive "The continuous homomorphism given by the diagonal embedding.", simps]
 def diag : ContinuousMonoidHom A (A × A) :=
-  Prod (id A) (id A)
+  prod (id A) (id A)
 
 /-- The continuous homomorphism given by swapping components. -/
 @[to_additive "The continuous homomorphism given by swapping components.", simps]
 def swap : ContinuousMonoidHom (A × B) (B × A) :=
-  Prod (snd A B) (fst A B)
+  prod (snd A B) (fst A B)
 
 /-- The continuous homomorphism given by multiplication. -/
 @[to_additive "The continuous homomorphism given by addition.", simps]
@@ -139,7 +138,7 @@ def coprod (f : ContinuousMonoidHom A E) (g : ContinuousMonoidHom B E) : Continu
 
 @[to_additive]
 instance : CommGroupₓ (ContinuousMonoidHom A E) where
-  mul := fun f g => (mul E).comp (f.prod g)
+  mul := fun f g => (mul E).comp (f.Prod g)
   mul_comm := fun f g => ext fun x => mul_comm (f x) (g x)
   mul_assoc := fun f g h => ext fun x => mul_assoc (f x) (g x) (h x)
   one := one A E
@@ -147,6 +146,28 @@ instance : CommGroupₓ (ContinuousMonoidHom A E) where
   mul_one := fun f => ext fun x => mul_oneₓ (f x)
   inv := fun f => (inv E).comp f
   mul_left_inv := fun f => ext fun x => mul_left_invₓ (f x)
+
+instance : TopologicalSpace (ContinuousMonoidHom A B) :=
+  TopologicalSpace.induced toContinuousMap ContinuousMap.compactOpen
+
+variable (A B C D E)
+
+theorem is_inducing : Inducing (toContinuousMap : ContinuousMonoidHom A B → C(A, B)) :=
+  ⟨rfl⟩
+
+theorem is_embedding : Embedding (toContinuousMap : ContinuousMonoidHom A B → C(A, B)) :=
+  ⟨is_inducing A B, fun _ _ => ext ∘ ContinuousMap.ext_iff.mp⟩
+
+variable {A B C D E}
+
+instance [LocallyCompactSpace A] [T2Space B] : T2Space (ContinuousMonoidHom A B) :=
+  (is_embedding A B).T2Space
+
+instance : TopologicalGroup (ContinuousMonoidHom A E) :=
+  let hi := is_inducing A E
+  let hc := hi.Continuous
+  { continuous_mul := hi.continuous_iff.mpr (continuous_mul.comp (Continuous.prod_map hc hc)),
+    continuous_inv := hi.continuous_iff.mpr (continuous_inv.comp hc) }
 
 end ContinuousMonoidHom
 

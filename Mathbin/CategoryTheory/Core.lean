@@ -26,55 +26,55 @@ isomorphisms of C. -/
 def core (C : Type u₁) :=
   C
 
-variable {C : Type u₁} [category.{v₁} C]
+variable {C : Type u₁} [Category.{v₁} C]
 
-instance core_category : groupoid.{v₁} (core C) where
+instance core_category : Groupoid.{v₁} (Core C) where
   Hom := fun X Y : C => X ≅ Y
-  inv := fun X Y f => iso.symm f
-  id := fun X => iso.refl X
-  comp := fun X Y Z f g => iso.trans f g
+  inv := fun X Y f => Iso.symm f
+  id := fun X => Iso.refl X
+  comp := fun X Y Z f g => Iso.trans f g
 
 namespace Core
 
 @[simp]
-theorem id_hom (X : core C) : iso.hom (𝟙 X) = 𝟙 X :=
+theorem id_hom (X : Core C) : Iso.hom (𝟙 X) = 𝟙 X :=
   rfl
 
 @[simp]
-theorem comp_hom {X Y Z : core C} (f : X ⟶ Y) (g : Y ⟶ Z) : (f ≫ g).Hom = f.hom ≫ g.hom :=
+theorem comp_hom {X Y Z : Core C} (f : X ⟶ Y) (g : Y ⟶ Z) : (f ≫ g).Hom = f.Hom ≫ g.Hom :=
   rfl
 
 variable (C)
 
 /-- The core of a category is naturally included in the category. -/
-def inclusion : core C ⥤ C where
+def inclusion : Core C ⥤ C where
   obj := id
-  map := fun X Y f => f.hom
+  map := fun X Y f => f.Hom
 
-instance : faithful (inclusion C) :=
+instance : Faithful (inclusion C) :=
   {  }
 
-variable {C} {G : Type u₂} [groupoid.{v₂} G]
+variable {C} {G : Type u₂} [Groupoid.{v₂} G]
 
 /-- A functor from a groupoid to a category C factors through the core of C. -/
-noncomputable def functor_to_core (F : G ⥤ C) : G ⥤ core C where
+noncomputable def functor_to_core (F : G ⥤ C) : G ⥤ Core C where
   obj := fun X => F.obj X
   map := fun X Y f => ⟨F.map f, F.map (inv f)⟩
 
 /-- We can functorially associate to any functor from a groupoid to the core of a category `C`,
 a functor from the groupoid to `C`, simply by composing with the embedding `core C ⥤ C`.
 -/
-def forget_functor_to_core : (G ⥤ core C) ⥤ G ⥤ C :=
-  (whiskering_right _ _ _).obj (inclusion C)
+def forget_functor_to_core : (G ⥤ Core C) ⥤ G ⥤ C :=
+  (whiskeringRight _ _ _).obj (inclusion C)
 
 end Core
 
 /-- `of_equiv_functor m` lifts a type-level `equiv_functor`
 to a categorical functor `core (Type u₁) ⥤ core (Type u₂)`.
 -/
-def of_equiv_functor (m : Type u₁ → Type u₂) [EquivFunctor m] : core (Type u₁) ⥤ core (Type u₂) where
+def of_equiv_functor (m : Type u₁ → Type u₂) [EquivFunctor m] : Core (Type u₁) ⥤ Core (Type u₂) where
   obj := m
-  map := fun α β f => (EquivFunctor.mapEquiv m f.to_equiv).toIso
+  map := fun α β f => (EquivFunctor.mapEquiv m f.toEquiv).toIso
   map_id' := fun α => by
     ext
     exact congr_funₓ (EquivFunctor.map_refl _) x

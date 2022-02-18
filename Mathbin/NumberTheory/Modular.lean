@@ -35,7 +35,7 @@ open Complex Matrix Matrix.SpecialLinearGroup UpperHalfPlane
 
 noncomputable section
 
-local notation "SL(" n ", " R ")" => special_linear_group (Finₓ n) R
+local notation "SL(" n ", " R ")" => SpecialLinearGroup (Finₓ n) R
 
 local prefix:1024 "↑ₘ" => @coe _ (Matrix (Finₓ 2) (Finₓ 2) ℤ) _
 
@@ -85,11 +85,11 @@ section BottomRow
 theorem bottom_row_coprime {R : Type _} [CommRingₓ R] (g : SL(2, R)) :
     IsCoprime ((↑g : Matrix (Finₓ 2) (Finₓ 2) R) 1 0) ((↑g : Matrix (Finₓ 2) (Finₓ 2) R) 1 1) := by
   use -(↑g : Matrix (Finₓ 2) (Finₓ 2) R) 0 1, (↑g : Matrix (Finₓ 2) (Finₓ 2) R) 0 0
-  rw [add_commₓ, ← neg_mul_eq_neg_mul, ← sub_eq_add_neg, ← det_fin_two]
+  rw [add_commₓ, neg_mul, ← sub_eq_add_neg, ← det_fin_two]
   exact g.det_coe
 
--- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»
 /-- Every pair `![c, d]` of coprime integers is the "bottom_row" of some element `g=[[*,*],[c,d]]`
 of `SL(2,ℤ)`. -/
 theorem bottom_row_surj {R : Type _} [CommRingₓ R] :
@@ -97,7 +97,7 @@ theorem bottom_row_surj {R : Type _} [CommRingₓ R] :
       { cd | IsCoprime (cd 0) (cd 1) } :=
   by
   rintro cd ⟨b₀, a, gcd_eqn⟩
-  let A := «expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr![ , ]»"
+  let A := «expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»"
   have det_A_1 : det A = 1 := by
     convert gcd_eqn
     simp [A, det_fin_two,
@@ -116,13 +116,13 @@ attribute [local instance] Matrix.normedGroup Matrix.normedSpace
 
 attribute [local simp] coe_smul
 
--- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»
 -- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
 /-- The function `(c,d) → |cz+d|^2` is proper, that is, preimages of bounded-above sets are finite.
 -/
 theorem tendsto_norm_sq_coprime_pair (z : ℍ) :
-    Filter.Tendsto (fun p : Finₓ 2 → ℤ => ((p 0 : ℂ) * z + p 1).normSq) cofinite at_top := by
+    Filter.Tendsto (fun p : Finₓ 2 → ℤ => ((p 0 : ℂ) * z + p 1).normSq) cofinite atTop := by
   let π₀ : (Finₓ 2 → ℝ) →ₗ[ℝ] ℝ := LinearMap.proj 0
   let π₁ : (Finₓ 2 → ℝ) →ₗ[ℝ] ℝ := LinearMap.proj 1
   let f : (Finₓ 2 → ℝ) →ₗ[ℝ] ℂ := π₀.smul_right (z : ℂ) + π₁.smul_right 1
@@ -140,7 +140,7 @@ theorem tendsto_norm_sq_coprime_pair (z : ℍ) :
   rw [this]
   have hf : f.ker = ⊥ := by
     let g : ℂ →ₗ[ℝ] Finₓ 2 → ℝ :=
-      LinearMap.pi («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr![ , ]»")
+      LinearMap.pi («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»")
     suffices ((z : ℂ).im⁻¹ • g).comp f = LinearMap.id by
       exact LinearMap.ker_eq_bot_of_inverse this
     apply LinearMap.ext
@@ -174,40 +174,40 @@ def lc_row0 (p : Finₓ 2 → ℤ) : Matrix (Finₓ 2) (Finₓ 2) ℝ →ₗ[ℝ
   ((p 0 : ℝ) • LinearMap.proj 0 + (p 1 : ℝ) • LinearMap.proj 1 : (Finₓ 2 → ℝ) →ₗ[ℝ] ℝ).comp (LinearMap.proj 0)
 
 @[simp]
-theorem lc_row0_apply (p : Finₓ 2 → ℤ) (g : Matrix (Finₓ 2) (Finₓ 2) ℝ) : lc_row0 p g = p 0 * g 0 0 + p 1 * g 0 1 :=
+theorem lc_row0_apply (p : Finₓ 2 → ℤ) (g : Matrix (Finₓ 2) (Finₓ 2) ℝ) : lcRow0 p g = p 0 * g 0 0 + p 1 * g 0 1 :=
   rfl
 
--- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»
 theorem lc_row0_apply' (a b : ℝ) (c d : ℤ) (v : Finₓ 2 → ℝ) :
-    lc_row0 («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr![ , ]»")
-        («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr![ , ]»") =
+    lcRow0 («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»")
+        («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»") =
       c * a + d * b :=
   by
   simp
 
--- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»
 /-- Linear map sending the matrix [a, b; c, d] to the matrix [ac₀ + bd₀, - ad₀ + bc₀; c, d], for
 some fixed `(c₀, d₀)`. -/
 @[simps]
 def lc_row0_extend {cd : Finₓ 2 → ℤ} (hcd : IsCoprime (cd 0) (cd 1)) :
     Matrix (Finₓ 2) (Finₓ 2) ℝ ≃ₗ[ℝ] Matrix (Finₓ 2) (Finₓ 2) ℝ :=
   LinearEquiv.piCongrRight
-    («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr![ , ]»")
+    («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»")
 
--- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»
 -- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
 -- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
 /-- The map `lc_row0` is proper, that is, preimages of cocompact sets are finite in
 `[[* , *], [c, d]]`.-/
 theorem tendsto_lc_row0 {cd : Finₓ 2 → ℤ} (hcd : IsCoprime (cd 0) (cd 1)) :
-    tendsto (fun g : { g : SL(2, ℤ) // g 1 = cd } => lc_row0 cd ↑(↑g : SL(2, ℝ))) cofinite (cocompact ℝ) := by
+    Tendsto (fun g : { g : SL(2, ℤ) // g 1 = cd } => lcRow0 cd ↑(↑g : SL(2, ℝ))) cofinite (cocompact ℝ) := by
   let mB : ℝ → Matrix (Finₓ 2) (Finₓ 2) ℝ := fun t =>
-    «expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr![ , ]»"
+    «expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»"
   have hmB : Continuous mB := by
     simp only [continuous_pi_iff, Finₓ.forall_fin_two]
     have : ∀ c : ℝ, Continuous fun x : ℝ => c := fun c => continuous_const
@@ -241,7 +241,7 @@ theorem tendsto_lc_row0 {cd : Finₓ 2 → ℤ} (hcd : IsCoprime (cd 0) (cd 1)) 
   which does not need to be decomposed depending on whether `c = 0`. -/
 theorem smul_eq_lc_row0_add {p : Finₓ 2 → ℤ} (hp : IsCoprime (p 0) (p 1)) (z : ℍ) {g : SL(2, ℤ)} (hg : ↑ₘg 1 = p) :
     ↑(g • z) =
-      (lc_row0 p ↑(g : SL(2, ℝ)) : ℂ) / (p 0 ^ 2 + p 1 ^ 2) +
+      (lcRow0 p ↑(g : SL(2, ℝ)) : ℂ) / (p 0 ^ 2 + p 1 ^ 2) +
         ((p 1 : ℂ) * z - p 0) / ((p 0 ^ 2 + p 1 ^ 2) * (p 0 * z + p 1)) :=
   by
   have nonZ1 : (p 0 : ℂ) ^ 2 + p 1 ^ 2 ≠ 0 := by
@@ -259,7 +259,7 @@ theorem smul_eq_lc_row0_add {p : Finₓ 2 → ℤ} (hp : IsCoprime (p 0) (p 1)) 
   ring
 
 theorem tendsto_abs_re_smul (z : ℍ) {p : Finₓ 2 → ℤ} (hp : IsCoprime (p 0) (p 1)) :
-    tendsto (fun g : { g : SL(2, ℤ) // g 1 = p } => abs ((g : SL(2, ℤ)) • z).re) cofinite at_top := by
+    Tendsto (fun g : { g : SL(2, ℤ) // g 1 = p } => abs ((g : SL(2, ℤ)) • z).re) cofinite atTop := by
   suffices tendsto (fun g : (fun g : SL(2, ℤ) => g 1) ⁻¹' {p} => ((g : SL(2, ℤ)) • z).re) cofinite (cocompact ℝ) by
     exact tendsto_norm_cocompact_at_top.comp this
   have : ((p 0 : ℝ) ^ 2 + p 1 ^ 2)⁻¹ ≠ 0 := by
@@ -281,14 +281,14 @@ section FundamentalDomain
 
 attribute [local simp] coe_smul re_smul
 
--- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»
 /-- For `z : ℍ`, there is a `g : SL(2,ℤ)` maximizing `(g•z).im` -/
 theorem exists_max_im (z : ℍ) : ∃ g : SL(2, ℤ), ∀ g' : SL(2, ℤ), (g' • z).im ≤ (g • z).im := by
   classical
   let s : Set (Finₓ 2 → ℤ) := { cd | IsCoprime (cd 0) (cd 1) }
   have hs : s.nonempty :=
-    ⟨«expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr![ , ]»",
+    ⟨«expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»",
       is_coprime_one_left⟩
   obtain ⟨p, hp_coprime, hp⟩ := Filter.Tendsto.exists_within_forall_le hs (tendsto_norm_sq_coprime_pair z)
   obtain ⟨g, -, hg⟩ := bottom_row_surj hp_coprime
@@ -319,25 +319,25 @@ theorem exists_row_one_eq_and_min_re (z : ℍ) {cd : Finₓ 2 → ℤ} (hcd : Is
     exact hg ⟨g1, this⟩
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»
 /-- The matrix `T = [[1,1],[0,1]]` as an element of `SL(2,ℤ)` -/
 def T : SL(2, ℤ) :=
-  ⟨«expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr![ , ]»", by
+  ⟨«expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»", by
     norm_num [Matrix.det_fin_two]⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»
 /-- The matrix `T' (= T⁻¹) = [[1,-1],[0,1]]` as an element of `SL(2,ℤ)` -/
 def T' : SL(2, ℤ) :=
-  ⟨«expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr![ , ]»", by
+  ⟨«expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»", by
     norm_num [Matrix.det_fin_two]⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»
 /-- The matrix `S = [[0,-1],[1,0]]` as an element of `SL(2,ℤ)` -/
 def S : SL(2, ℤ) :=
-  ⟨«expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:706:61: unsupported notation `«expr![ , ]»", by
+  ⟨«expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»", by
     norm_num [Matrix.det_fin_two]⟩
 
 /-- The standard (closed) fundamental domain of the action of `SL(2,ℤ)` on `ℍ` -/
@@ -347,7 +347,7 @@ def fundamental_domain : Set ℍ :=
 localized [Modular] notation "𝒟" => ModularGroup.FundamentalDomain
 
 /-- If `|z|<1`, then applying `S` strictly decreases `im` -/
-theorem im_lt_im_S_smul {z : ℍ} (h : norm_sq z < 1) : z.im < (S • z).im := by
+theorem im_lt_im_S_smul {z : ℍ} (h : normSq z < 1) : z.im < (S • z).im := by
   have : z.im < z.im / norm_sq (z : ℂ) := by
     have imz : 0 < z.im := im_pos z
     apply (lt_div_iff z.norm_sq_pos).mpr

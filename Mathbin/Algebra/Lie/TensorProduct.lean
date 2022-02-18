@@ -41,11 +41,11 @@ attribute [local ext] TensorProduct.ext
 expression of the fact that `L` acts by linear endomorphisms. It simplifies the proofs in
 `lie_ring_module` below. -/
 def has_bracket_aux (x : L) : Module.End R (M ⊗[R] N) :=
-  (to_endomorphism R L M x).rtensor N + (to_endomorphism R L N x).ltensor M
+  (toEndomorphism R L M x).rtensor N + (toEndomorphism R L N x).ltensor M
 
 /-- The tensor product of two Lie modules is a Lie ring module. -/
 instance LieRingModule : LieRingModule L (M ⊗[R] N) where
-  bracket := fun x => has_bracket_aux x
+  bracket := fun x => hasBracketAux x
   add_lie := fun x y t => by
     simp only [has_bracket_aux, LinearMap.ltensor_add, LinearMap.rtensor_add, LieHom.map_add, LinearMap.add_apply]
     abel
@@ -75,7 +75,7 @@ instance LieModule : LieModule R L (M ⊗[R] N) where
 
 @[simp]
 theorem lie_tmul_right (x : L) (m : M) (n : N) : ⁅x,m ⊗ₜ[R] n⁆ = ⁅x,m⁆ ⊗ₜ n + m ⊗ₜ ⁅x,n⁆ :=
-  show has_bracket_aux x (m ⊗ₜ[R] n) = _ by
+  show hasBracketAux x (m ⊗ₜ[R] n) = _ by
     simp only [has_bracket_aux, LinearMap.rtensor_tmul, to_endomorphism_apply_apply, LinearMap.add_apply,
       LinearMap.ltensor_tmul]
 
@@ -100,11 +100,11 @@ theorem lift_apply (f : M →ₗ[R] N →ₗ[R] P) (m : M) (n : N) : lift R L M 
 Note that maps `f` of type `M →ₗ⁅R,L⁆ N →ₗ[R] P` are exactly those `R`-bilinear maps satisfying
 `⁅x, f m n⁆ = f ⁅x, m⁆ n + f m ⁅x, n⁆` for all `x, m, n` (see e.g, `lie_module_hom.map_lie₂`). -/
 def lift_lie : (M →ₗ⁅R,L⁆ N →ₗ[R] P) ≃ₗ[R] M ⊗[R] N →ₗ⁅R,L⁆ P :=
-  max_triv_linear_map_equiv_lie_module_hom.symm ≪≫ₗ ↑(max_triv_equiv (lift R L M N P)) ≪≫ₗ
+  maxTrivLinearMapEquivLieModuleHom.symm ≪≫ₗ ↑(maxTrivEquiv (lift R L M N P)) ≪≫ₗ
     max_triv_linear_map_equiv_lie_module_hom
 
 @[simp]
-theorem coe_lift_lie_eq_lift_coe (f : M →ₗ⁅R,L⁆ N →ₗ[R] P) : ⇑lift_lie R L M N P f = lift R L M N P f := by
+theorem coe_lift_lie_eq_lift_coe (f : M →ₗ⁅R,L⁆ N →ₗ[R] P) : ⇑liftLie R L M N P f = lift R L M N P f := by
   suffices (lift_lie R L M N P f : M ⊗[R] N →ₗ[R] P) = lift R L M N P f by
     rw [← this, LieModuleHom.coe_to_linear_map]
   ext m n
@@ -112,7 +112,7 @@ theorem coe_lift_lie_eq_lift_coe (f : M →ₗ⁅R,L⁆ N →ₗ[R] P) : ⇑lift
     coe_linear_map_max_triv_linear_map_equiv_lie_module_hom, coe_max_triv_equiv_apply,
     coe_linear_map_max_triv_linear_map_equiv_lie_module_hom_symm]
 
-theorem lift_lie_apply (f : M →ₗ⁅R,L⁆ N →ₗ[R] P) (m : M) (n : N) : lift_lie R L M N P f (m ⊗ₜ n) = f m n := by
+theorem lift_lie_apply (f : M →ₗ⁅R,L⁆ N →ₗ[R] P) (m : M) (n : N) : liftLie R L M N P f (m ⊗ₜ n) = f m n := by
   simp only [coe_lift_lie_eq_lift_coe, LieModuleHom.coe_to_linear_map, lift_apply]
 
 variable {R L M N P Q}
@@ -147,7 +147,7 @@ def map_incl (M' : LieSubmodule R L M) (N' : LieSubmodule R L N) : M' ⊗[R] N' 
   map M'.incl N'.incl
 
 @[simp]
-theorem map_incl_def (M' : LieSubmodule R L M) (N' : LieSubmodule R L N) : map_incl M' N' = map M'.incl N'.incl :=
+theorem map_incl_def (M' : LieSubmodule R L M) (N' : LieSubmodule R L N) : mapIncl M' N' = map M'.incl N'.incl :=
   rfl
 
 end LieModule
@@ -167,13 +167,13 @@ variable [AddCommGroupₓ M] [Module R M] [LieRingModule L M] [LieModule R L M]
 /-- The action of the Lie algebra on one of its modules, regarded as a morphism of Lie modules. -/
 def to_module_hom : L ⊗[R] M →ₗ⁅R,L⁆ M :=
   TensorProduct.LieModule.liftLie R L L M M
-    { (to_endomorphism R L M : L →ₗ[R] M →ₗ[R] M) with
+    { (toEndomorphism R L M : L →ₗ[R] M →ₗ[R] M) with
       map_lie' := fun x m => by
         ext n
         simp [LieRing.of_associative_ring_bracket] }
 
 @[simp]
-theorem to_module_hom_apply (x : L) (m : M) : to_module_hom R L M (x ⊗ₜ m) = ⁅x,m⁆ := by
+theorem to_module_hom_apply (x : L) (m : M) : toModuleHom R L M (x ⊗ₜ m) = ⁅x,m⁆ := by
   simp only [to_module_hom, TensorProduct.LieModule.lift_lie_apply, to_endomorphism_apply_apply,
     LieHom.coe_to_linear_map, LieModuleHom.coe_mk, LinearMap.coe_mk, LinearMap.to_fun_eq_coe]
 
@@ -202,7 +202,7 @@ applying the action of `L` on `M`, we obtain morphism of Lie modules `f : I ⊗ 
 
 This lemma states that `⁅I, N⁆ = range f`. -/
 theorem lie_ideal_oper_eq_tensor_map_range :
-    ⁅I,N⁆ = ((to_module_hom R L M).comp (map_incl I N : ↥I ⊗ ↥N →ₗ⁅R,L⁆ L ⊗ M)).range := by
+    ⁅I,N⁆ = ((toModuleHom R L M).comp (mapIncl I N : ↥I ⊗ ↥N →ₗ⁅R,L⁆ L ⊗ M)).range := by
   rw [← coe_to_submodule_eq_iff, lie_ideal_oper_eq_linear_span, LieModuleHom.coe_submodule_range,
     LieModuleHom.coe_linear_map_comp, LinearMap.range_comp, map_incl_def, coe_linear_map_map,
     TensorProduct.map_range_eq_span_tmul, Submodule.map_span]

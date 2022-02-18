@@ -5,7 +5,7 @@ namespace OldConv
 
 unsafe def save_info (p : Pos) : old_conv Unit := fun r lhs => do
   let ts ← tactic.read
-  (tactic.save_info_thunk p fun _ => ts.format_expr lhs) >> return ⟨(), lhs, none⟩
+  (tactic.save_info_thunk p fun _ => ts lhs) >> return ⟨(), lhs, none⟩
 
 unsafe def step {α : Type} (c : old_conv α) : old_conv Unit :=
   c >> return ()
@@ -39,11 +39,11 @@ unsafe def find (p : parse lean.parser.pexpr) (c : itactic) : old_conv Unit := f
   let pat ← tactic.pexpr_to_pattern p
   let s ← simp_lemmas.mk_default
   let (found, new_lhs, pr) ←
-    tactic.ext_simplify_core ff { zeta := ff, beta := ff, singlePass := tt, eta := ff, proj := ff } s
+    tactic.ext_simplify_core false { zeta := false, beta := false, singlePass := true, eta := false, proj := false } s
         (fun u => return u)
         (fun found s r p e => do
           guardₓ (Not found)
-          let matched ← tactic.match_pattern pat e >> return tt <|> return ff
+          let matched ← tactic.match_pattern pat e >> return true <|> return false
           guardₓ matched
           let ⟨u, new_e, pr⟩ ← c r e
           return (tt, new_e, pr, ff))
@@ -92,7 +92,7 @@ protected unsafe def conv (t : conv.interactive.itactic) : conv Unit := do
   all_goals reflexivity
   set_goals rest
 
-unsafe def erw (q : parse rw_rules) (cfg : rewrite_cfg := { md := semireducible }) : conv Unit :=
+unsafe def erw (q : parse rw_rules) (cfg : RewriteCfg := { md := semireducible }) : conv Unit :=
   rw q cfg
 
 open Interactive.Types
@@ -122,14 +122,14 @@ unsafe def old_conv (c : old_conv.interactive.itactic) : tactic Unit := do
 unsafe def find (p : parse lean.parser.pexpr) (c : old_conv.interactive.itactic) : tactic Unit :=
   old_conv <| old_conv.interactive.find p c
 
--- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr ?»
--- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr ?»
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr ?»
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr ?»
 unsafe def conv_lhs (loc : parse («expr ?» (tk "at" *> ident))) (p : parse («expr ?» (tk "in" *> parser.pexpr)))
     (c : conv.interactive.itactic) : tactic Unit :=
   conv loc p (conv.interactive.to_lhs >> c)
 
--- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr ?»
--- ././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported notation `«expr ?»
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr ?»
+-- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr ?»
 unsafe def conv_rhs (loc : parse («expr ?» (tk "at" *> ident))) (p : parse («expr ?» (tk "in" *> parser.pexpr)))
     (c : conv.interactive.itactic) : tactic Unit :=
   conv loc p (conv.interactive.to_rhs >> c)

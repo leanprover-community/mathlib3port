@@ -14,7 +14,7 @@ namespace CategoryTheory
 
 universe v₁ v₂ v₃ u₁ u₂ u₃
 
-variable {C : Type u₁} [category.{v₁} C] {D : Type u₂} [category.{v₂} D] {E : Type u₃} [category.{v₃} E]
+variable {C : Type u₁} [Category.{v₁} C] {D : Type u₂} [Category.{v₂} D] {E : Type u₃} [Category.{v₃} E]
 
 /-- The uncurrying functor, taking a functor `C ⥤ (D ⥤ E)` and producing a functor `(C × D) ⥤ E`.
 -/
@@ -43,7 +43,7 @@ def curry_obj (F : C × D ⥤ E) : C ⥤ D ⥤ E where
 /-- The currying functor, taking a functor `(C × D) ⥤ E` and producing a functor `C ⥤ (D ⥤ E)`.
 -/
 def curry : (C × D ⥤ E) ⥤ C ⥤ D ⥤ E where
-  obj := fun F => curry_obj F
+  obj := fun F => curryObj F
   map := fun F G T =>
     { app := fun X =>
         { app := fun Y => T.app (X, Y),
@@ -89,23 +89,23 @@ theorem curry.map_app_app {F G : C × D ⥤ E} {α : F ⟶ G} {X} {Y} : ((curry.
 -/
 @[simps]
 def currying : C ⥤ D ⥤ E ≌ C × D ⥤ E :=
-  equivalence.mk uncurry curry
-    (nat_iso.of_components
+  Equivalence.mk uncurry curry
+    (NatIso.ofComponents
       (fun F =>
-        nat_iso.of_components
+        NatIso.ofComponents
           (fun X =>
-            nat_iso.of_components (fun Y => iso.refl _)
+            NatIso.ofComponents (fun Y => Iso.refl _)
               (by
                 tidy))
           (by
             tidy))
       (by
         tidy))
-    (nat_iso.of_components
+    (NatIso.ofComponents
       (fun F =>
-        nat_iso.of_components
+        NatIso.ofComponents
           (fun X =>
-            eq_to_iso
+            eqToIso
               (by
                 simp ))
           (by
@@ -115,9 +115,9 @@ def currying : C ⥤ D ⥤ E ≌ C × D ⥤ E :=
 
 /-- `F.flip` is isomorphic to uncurrying `F`, swapping the variables, and currying. -/
 @[simps]
-def flip_iso_curry_swap_uncurry (F : C ⥤ D ⥤ E) : F.flip ≅ curry.obj (Prod.swap _ _ ⋙ uncurry.obj F) :=
-  (nat_iso.of_components fun d =>
-      (nat_iso.of_components fun c => eq_to_iso rfl) <| by
+def flip_iso_curry_swap_uncurry (F : C ⥤ D ⥤ E) : F.flip ≅ curry.obj (prod.swap _ _ ⋙ uncurry.obj F) :=
+  (NatIso.ofComponents fun d =>
+      (NatIso.ofComponents fun c => eqToIso rfl) <| by
         tidy) <|
     by
     tidy

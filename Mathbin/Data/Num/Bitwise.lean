@@ -69,11 +69,11 @@ def lxor : PosNum → PosNum → Num
 /-- `a.test_bit n` is `tt` iff the `n`-th bit (starting from the LSB) in the binary representation
       of `a` is active. If the size of `a` is less than `n`, this evaluates to `ff`. -/
 def test_bit : PosNum → Nat → Bool
-  | 1, 0 => tt
-  | 1, n + 1 => ff
-  | bit0 p, 0 => ff
+  | 1, 0 => true
+  | 1, n + 1 => false
+  | bit0 p, 0 => false
   | bit0 p, n + 1 => test_bit p n
-  | bit1 p, 0 => tt
+  | bit1 p, 0 => true
   | bit1 p, n + 1 => test_bit p n
 
 /-- `n.one_bits 0` is the list of indices of active bits in the binary representation of `n`. -/
@@ -102,7 +102,7 @@ namespace Num
 def lor : Num → Num → Num
   | 0, q => q
   | p, 0 => p
-  | Pos p, Pos q => Pos (p.lor q)
+  | Pos p, Pos q => pos (p.lor q)
 
 /-- Bitwise "and" for `num`. -/
 def land : Num → Num → Num
@@ -132,7 +132,7 @@ def lxor : Num → Num → Num
 /-- Left-shift the binary representation of a `num`. -/
 def shiftl : Num → Nat → Num
   | 0, n => 0
-  | Pos p, n => Pos (p.shiftl n)
+  | Pos p, n => pos (p.shiftl n)
 
 /-- Right-shift the binary representation of a `pos_num`. -/
 def shiftr : Num → Nat → Num
@@ -142,13 +142,13 @@ def shiftr : Num → Nat → Num
 /-- `a.test_bit n` is `tt` iff the `n`-th bit (starting from the LSB) in the binary representation
       of `a` is active. If the size of `a` is less than `n`, this evaluates to `ff`. -/
 def test_bit : Num → Nat → Bool
-  | 0, n => ff
-  | Pos p, n => p.test_bit n
+  | 0, n => false
+  | Pos p, n => p.testBit n
 
 /-- `n.one_bits` is the list of indices of active bits in the binary representation of `n`. -/
 def one_bits : Num → List Nat
   | 0 => []
-  | Pos p => p.one_bits 0
+  | Pos p => p.oneBits 0
 
 end Num
 
@@ -182,10 +182,10 @@ instance : Coe Nzsnum Snum :=
   ⟨Snum.nz⟩
 
 instance : Zero Snum :=
-  ⟨Snum.zero ff⟩
+  ⟨Snum.zero false⟩
 
 instance : One Nzsnum :=
-  ⟨Nzsnum.msb tt⟩
+  ⟨Nzsnum.msb true⟩
 
 instance : One Snum :=
   ⟨Snum.nz 1⟩
@@ -215,15 +215,15 @@ def Not : Nzsnum → Nzsnum
   | msb b => msb (bnot b)
   | b :: p => bnot b :: Not p
 
-prefix:100 "~" => Not
+prefix:100 "~" => not
 
 /-- Add an inactive bit at the end of a `nzsnum`. This mimics `pos_num.bit0`. -/
 def bit0 : Nzsnum → Nzsnum :=
-  bit ff
+  bit false
 
 /-- Add an active bit at the end of a `nzsnum`. This mimics `pos_num.bit1`. -/
 def bit1 : Nzsnum → Nzsnum :=
-  bit tt
+  bit true
 
 /-- The `head` of a `nzsnum` is the boolean value of its LSB. -/
 def head : Nzsnum → Bool
@@ -253,7 +253,7 @@ def Not : Snum → Snum
   | zero z => zero (bnot z)
   | nz p => ~p
 
-prefix:0 "~" => Not
+prefix:0 "~" => not
 
 /-- Add a bit at the end of a `snum`. This mimics `nzsnum.bit`. -/
 @[matchPattern]
@@ -263,11 +263,11 @@ def bit : Bool → Snum → Snum
 
 /-- Add an inactive bit at the end of a `snum`. This mimics `znum.bit0`. -/
 def bit0 : Snum → Snum :=
-  bit ff
+  bit false
 
 /-- Add an active bit at the end of a `snum`. This mimics `znum.bit1`. -/
 def bit1 : Snum → Snum :=
-  bit tt
+  bit true
 
 theorem bit_zero b : b :: zero b = zero b := by
   cases b <;> rfl
@@ -358,7 +358,7 @@ def cadd : Snum → Snum → Bool → Snum :=
 
 /-- Add two `snum`s. -/
 protected def add (a b : Snum) : Snum :=
-  cadd a b ff
+  cadd a b false
 
 instance : Add Snum :=
   ⟨Snum.add⟩

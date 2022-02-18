@@ -73,8 +73,8 @@ unsafe def apply_congr (q : parse (texpr)?) : conv Unit := do
         return [e]
       | none => do
         let congr_lemma_names ← attribute.get_instances `congr
-        congr_lemma_names.mmap mk_const
-  congr_lemmas.any_of fun n =>
+        congr_lemma_names mk_const
+  congr_lemmas fun n =>
       seq' (tactic.eapply n >> tactic.skip)
         (tactic.intros >> do
           let quote.1 (_ = _) ← target

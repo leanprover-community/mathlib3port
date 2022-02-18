@@ -1,5 +1,6 @@
 import Mathbin.Algebra.Lie.Submodule
 import Mathbin.Algebra.Lie.OfAssociative
+import Mathbin.LinearAlgebra.Isomorphisms
 
 /-!
 # Quotients of Lie algebras and Lie modules
@@ -36,7 +37,7 @@ variable (N N' : LieSubmodule R L M) (I J : LieIdeal R L)
 
 /-- The quotient of a Lie module by a Lie submodule. It is a Lie module. -/
 instance : HasQuotient M (LieSubmodule R L M) :=
-  ⟨fun N => M ⧸ N.to_submodule⟩
+  ⟨fun N => M ⧸ N.toSubmodule⟩
 
 namespace Quotientₓ
 
@@ -69,7 +70,7 @@ theorem is_quotient_mk (m : M) : Quotientₓ.mk' m = (mk m : M ⧸ N) :=
 
 /-- Given a Lie module `M` over a Lie algebra `L`, together with a Lie submodule `N ⊆ M`, there
 is a natural linear map from `L` to the endomorphisms of `M` leaving `N` invariant. -/
-def lie_submodule_invariant : L →ₗ[R] Submodule.compatibleMaps N.to_submodule N.to_submodule :=
+def lie_submodule_invariant : L →ₗ[R] Submodule.compatibleMaps N.toSubmodule N.toSubmodule :=
   LinearMap.codRestrict _ (LieModule.toEndomorphism R L M) N.lie_mem
 
 variable (N)
@@ -77,7 +78,7 @@ variable (N)
 /-- Given a Lie module `M` over a Lie algebra `L`, together with a Lie submodule `N ⊆ M`, there
 is a natural Lie algebra morphism from `L` to the linear endomorphism of the quotient `M/N`. -/
 def action_as_endo_map : L →ₗ⁅R⁆ Module.End R (M ⧸ N) :=
-  { LinearMap.comp (Submodule.mapqLinear (N : Submodule R M) ↑N) lie_submodule_invariant with
+  { LinearMap.comp (Submodule.mapqLinear (N : Submodule R M) ↑N) lieSubmoduleInvariant with
     map_lie' := fun x y => by
       ext m
       change mk ⁅⁅x,y⁆,m⁆ = mk (⁅x,⁅y,m⁆⁆ - ⁅y,⁅x,m⁆⁆)
@@ -87,16 +88,16 @@ def action_as_endo_map : L →ₗ⁅R⁆ Module.End R (M ⧸ N) :=
 /-- Given a Lie module `M` over a Lie algebra `L`, together with a Lie submodule `N ⊆ M`, there is
 a natural bracket action of `L` on the quotient `M/N`. -/
 def action_as_endo_map_bracket : HasBracket L (M ⧸ N) :=
-  ⟨fun x n => action_as_endo_map N x n⟩
+  ⟨fun x n => actionAsEndoMap N x n⟩
 
 instance lie_quotient_lie_ring_module : LieRingModule L (M ⧸ N) where
-  bracket := fun x n => (action_as_endo_map N : L →ₗ[R] Module.End R (M ⧸ N)) x n
+  bracket := fun x n => (actionAsEndoMap N : L →ₗ[R] Module.End R (M ⧸ N)) x n
   add_lie := fun x y n => by
     simp only [LinearMap.map_add, LinearMap.add_apply]
   lie_add := fun x m n => by
     simp only [LinearMap.map_add, LinearMap.add_apply]
   leibniz_lie := fun x y m =>
-    show action_as_endo_map _ _ _ = _ by
+    show actionAsEndoMap _ _ _ = _ by
       simp only [LieHom.map_lie, LieRing.of_associative_ring_bracket, sub_add_cancel, LieHom.coe_to_linear_map,
         LinearMap.mul_apply, LinearMap.sub_apply]
 
@@ -188,11 +189,11 @@ instance lie_quotient_lie_algebra : LieAlgebra R (L ⧸ I) where
 /-- `lie_submodule.quotient.mk` as a `lie_module_hom`. -/
 @[simps]
 def mk' : M →ₗ⁅R,L⁆ M ⧸ N :=
-  { N.to_submodule.mkq with toFun := mk, map_lie' := fun r m => rfl }
+  { N.toSubmodule.mkq with toFun := mk, map_lie' := fun r m => rfl }
 
 @[simp]
 theorem mk_eq_zero {m : M} : mk' N m = 0 ↔ m ∈ N :=
-  Submodule.Quotient.mk_eq_zero N.to_submodule
+  Submodule.Quotient.mk_eq_zero N.toSubmodule
 
 @[simp]
 theorem mk'_ker : (mk' N).ker = N := by
@@ -214,4 +215,24 @@ theorem lie_module_hom_ext ⦃f g : M ⧸ N →ₗ⁅R,L⁆ M⦄ (h : f.comp (mk
 end Quotientₓ
 
 end LieSubmodule
+
+namespace LieHom
+
+variable {R L L' : Type _}
+
+variable [CommRingₓ R] [LieRing L] [LieAlgebra R L] [LieRing L'] [LieAlgebra R L']
+
+variable (f : L →ₗ⁅R⁆ L')
+
+/-- The first isomorphism theorem for morphisms of Lie algebras. -/
+@[simps]
+noncomputable def quot_ker_equiv_range : (L ⧸ f.ker) ≃ₗ⁅R⁆ f.range :=
+  { (f : L →ₗ[R] L').quotKerEquivRange with toFun := (f : L →ₗ[R] L').quotKerEquivRange,
+    map_lie' := by
+      rintro ⟨x⟩ ⟨y⟩
+      rw [← SetLike.coe_eq_coe, LieSubalgebra.coe_bracket]
+      simp only [Submodule.Quotient.quot_mk_eq_mk, LinearMap.quot_ker_equiv_range_apply_mk, ←
+        LieSubmodule.Quotient.mk_bracket, coe_to_linear_map, map_lie] }
+
+end LieHom
 

@@ -53,7 +53,7 @@ theorem fold_map {g : γ ↪ α} {s : Finset γ} : (s.map g).fold op b f = s.fol
 
 @[simp]
 theorem fold_image [DecidableEq α] {g : γ → α} {s : Finset γ} (H : ∀, ∀ x ∈ s, ∀, ∀ y ∈ s, ∀, g x = g y → x = y) :
-    (s.image g).fold op b f = s.fold op b (f ∘ g) := by
+    (s.Image g).fold op b f = s.fold op b (f ∘ g) := by
   simp only [fold, image_val_of_inj_on H, Multiset.map_map]
 
 @[congr]

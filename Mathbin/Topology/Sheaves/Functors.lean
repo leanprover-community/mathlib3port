@@ -22,17 +22,17 @@ open CategoryTheory.Limits
 
 open TopologicalSpace
 
-variable {C : Type u₁} [category.{v} C]
+variable {C : Type u₁} [Category.{v} C]
 
 variable {X Y : Top.{v}} (f : X ⟶ Y)
 
-variable ⦃ι : Type v⦄ {U : ι → opens Y}
+variable ⦃ι : Type v⦄ {U : ι → Opens Y}
 
 namespace Top
 
 namespace Presheaf.SheafConditionPairwiseIntersections
 
-theorem map_diagram : pairwise.diagram U ⋙ opens.map f = pairwise.diagram ((opens.map f).obj ∘ U) := by
+theorem map_diagram : Pairwise.diagram U ⋙ Opens.map f = Pairwise.diagram ((Opens.map f).obj ∘ U) := by
   apply functor.hext
   abstract obj_eq 
     intro i
@@ -42,7 +42,7 @@ theorem map_diagram : pairwise.diagram U ⋙ opens.map f = pairwise.diagram ((op
   iterate 2 
     rw [map_diagram.obj_eq]
 
-theorem map_cocone : HEq ((opens.map f).mapCocone (pairwise.cocone U)) (pairwise.cocone ((opens.map f).obj ∘ U)) := by
+theorem map_cocone : HEq ((Opens.map f).mapCocone (Pairwise.cocone U)) (Pairwise.cocone ((Opens.map f).obj ∘ U)) := by
   unfold functor.map_cocone cocones.functoriality
   dsimp
   congr
@@ -53,7 +53,7 @@ theorem map_cocone : HEq ((opens.map f).mapCocone (pairwise.cocone U)) (pairwise
   rw [map_diagram, opens.map_supr]
   apply proof_irrel_heq
 
-theorem pushforward_sheaf_of_sheaf {F : presheaf C X} (h : F.is_sheaf_pairwise_intersections) :
+theorem pushforward_sheaf_of_sheaf {F : Presheaf C X} (h : F.IsSheafPairwiseIntersections) :
     (f _* F).IsSheafPairwiseIntersections := fun ι U => by
   convert h ((opens.map f).obj ∘ U) using 2
   rw [← map_diagram]
@@ -70,19 +70,19 @@ namespace Sheaf
 
 open Presheaf
 
-variable [has_products C]
+variable [HasProducts C]
 
 /-- The pushforward of a sheaf (by a continuous map) is a sheaf.
 -/
-theorem pushforward_sheaf_of_sheaf {F : presheaf C X} (h : F.is_sheaf) : (f _* F).IsSheaf := by
+theorem pushforward_sheaf_of_sheaf {F : Presheaf C X} (h : F.IsSheaf) : (f _* F).IsSheaf := by
   rw [is_sheaf_iff_is_sheaf_pairwise_intersections] at h⊢ <;>
     exact sheaf_condition_pairwise_intersections.pushforward_sheaf_of_sheaf f h
 
 /-- The pushforward functor.
 -/
-def pushforward (f : X ⟶ Y) : X.sheaf C ⥤ Y.sheaf C where
+def pushforward (f : X ⟶ Y) : X.Sheaf C ⥤ Y.Sheaf C where
   obj := fun ℱ => ⟨f _* ℱ.1, pushforward_sheaf_of_sheaf f ℱ.2⟩
-  map := fun _ _ => pushforward_map f
+  map := fun _ _ => pushforwardMap f
 
 end Sheaf
 

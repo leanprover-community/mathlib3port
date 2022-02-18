@@ -35,7 +35,7 @@ local notation "|" x "|" => abs x
   subintervals. Finally, we (6) apply the Mean Value Theorem twice, obtaining bounds on `f 1 - f u`
   and `f u - f 0` from the bounds on `f'` (note that `f 0 = 0`). -/
 theorem tendsto_sum_pi_div_four :
-    tendsto (fun k => ∑ i in Finset.range k, -(1 : ℝ) ^ i / (2 * i + 1)) at_top (𝓝 (π / 4)) := by
+    Tendsto (fun k => ∑ i in Finset.range k, -(1 : ℝ) ^ i / (2 * i + 1)) atTop (𝓝 (π / 4)) := by
   rw [tendsto_iff_norm_tendsto_zero, ← tendsto_zero_iff_norm_tendsto_zero]
   let u := fun k : ℕ => (k : Nnreal) ^ (-1 / (2 * (k : ℝ) + 1))
   have H : tendsto (fun k : ℕ => (1 : ℝ) - u k + u k ^ (2 * (k : ℝ) + 1)) at_top (𝓝 0) := by
@@ -91,8 +91,8 @@ theorem tendsto_sum_pi_div_four :
         simp only [b, id.def]
         ring
         
-      · simp only [Nat.add_succ_sub_one, add_zeroₓ, mul_oneₓ, id.def, Nat.cast_bit0, Nat.cast_add, Nat.cast_one,
-          Nat.cast_mul]
+      · simp only [Nat.add_succ_sub_one, add_zeroₓ, mul_oneₓ, id.def, Nat.cast_bit0, Nat.cast_addₓ, Nat.cast_oneₓ,
+          Nat.cast_mulₓ]
         rw [← mul_assoc,
           @div_mul_cancel _ _ _ (2 * (i : ℝ) + 1)
             (by

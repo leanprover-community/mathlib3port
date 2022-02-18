@@ -23,10 +23,10 @@ section Semiringₓ
 
 variable [Semiringₓ S] (a b : ℕ)
 
-theorem cast_asc_factorial : (a.asc_factorial b : S) = (pochhammer S b).eval (a + 1) := by
-  rw [← pochhammer_nat_eq_asc_factorial, pochhammer_eval_cast, Nat.cast_add, Nat.cast_one]
+theorem cast_asc_factorial : (a.ascFactorial b : S) = (pochhammer S b).eval (a + 1) := by
+  rw [← pochhammer_nat_eq_asc_factorial, pochhammer_eval_cast, Nat.cast_addₓ, Nat.cast_oneₓ]
 
-theorem cast_desc_factorial : (a.desc_factorial b : S) = (pochhammer S b).eval (a - (b - 1) : ℕ) := by
+theorem cast_desc_factorial : (a.descFactorial b : S) = (pochhammer S b).eval (a - (b - 1) : ℕ) := by
   rw [← pochhammer_eval_cast, pochhammer_nat_eq_desc_factorial]
   cases b
   · simp_rw [desc_factorial_zero]
@@ -50,7 +50,7 @@ variable [Ringₓ S] (a b : ℕ)
 
 /-- Convenience lemma. The `a - 1` is not using truncated substraction, as opposed to the definition
 of `nat.desc_factorial` as a natural. -/
-theorem cast_desc_factorial_two : (a.desc_factorial 2 : S) = a * (a - 1) := by
+theorem cast_desc_factorial_two : (a.descFactorial 2 : S) = a * (a - 1) := by
   rw [cast_desc_factorial]
   cases a
   · rw [zero_tsub, cast_zero, pochhammer_ne_zero_eval_zero _ two_ne_zero, zero_mul]

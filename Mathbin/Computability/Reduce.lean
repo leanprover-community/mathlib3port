@@ -61,12 +61,12 @@ theorem transitive_many_one_reducible {α} [Primcodable α] : Transitive (@ManyO
 about `p` to questions about `q`.
 -/
 def OneOneReducible {α β} [Primcodable α] [Primcodable β] (p : α → Prop) (q : β → Prop) :=
-  ∃ f, Computable f ∧ injective f ∧ ∀ a, p a ↔ q (f a)
+  ∃ f, Computable f ∧ Injective f ∧ ∀ a, p a ↔ q (f a)
 
 infixl:1000 " ≤₁ " => OneOneReducible
 
 theorem OneOneReducible.mk {α β} [Primcodable α] [Primcodable β] {f : α → β} (q : β → Prop) (h : Computable f)
-    (i : injective f) : (fun a => q (f a)) ≤₁ q :=
+    (i : Injective f) : (fun a => q (f a)) ≤₁ q :=
   ⟨f, h, i, fun a => Iff.rfl⟩
 
 @[refl]
@@ -89,7 +89,7 @@ theorem OneOneReducible.to_many_one {α β} [Primcodable α] [Primcodable β] {p
 
 theorem OneOneReducible.of_equiv {α β} [Primcodable α] [Primcodable β] {e : α ≃ β} (q : β → Prop) (h : Computable e) :
     (q ∘ e) ≤₁ q :=
-  OneOneReducible.mk _ h e.injective
+  OneOneReducible.mk _ h e.Injective
 
 theorem OneOneReducible.of_equiv_symm {α β} [Primcodable α] [Primcodable β] {e : α ≃ β} (q : β → Prop)
     (h : Computable e.symm) : q ≤₁ (q ∘ e) := by
@@ -175,11 +175,11 @@ theorem OneOneEquiv.to_many_one {α β} [Primcodable α] [Primcodable β] {p : �
 def Equivₓ.Computable {α β} [Primcodable α] [Primcodable β] (e : α ≃ β) :=
   Computable e ∧ Computable e.symm
 
-theorem Equivₓ.Computable.symm {α β} [Primcodable α] [Primcodable β] {e : α ≃ β} : e.computable → e.symm.computable :=
+theorem Equivₓ.Computable.symm {α β} [Primcodable α] [Primcodable β] {e : α ≃ β} : e.Computable → e.symm.Computable :=
   And.swap
 
 theorem Equivₓ.Computable.trans {α β γ} [Primcodable α] [Primcodable β] [Primcodable γ] {e₁ : α ≃ β} {e₂ : β ≃ γ} :
-    e₁.computable → e₂.computable → (e₁.trans e₂).Computable
+    e₁.Computable → e₂.Computable → (e₁.trans e₂).Computable
   | ⟨l₁, r₁⟩, ⟨l₂, r₂⟩ => ⟨l₂.comp l₁, r₁.comp r₂⟩
 
 theorem Computable.eqv α [Denumerable α] : (Denumerable.eqv α).Computable :=
@@ -188,11 +188,11 @@ theorem Computable.eqv α [Denumerable α] : (Denumerable.eqv α).Computable :=
 theorem Computable.equiv₂ α β [Denumerable α] [Denumerable β] : (Denumerable.equiv₂ α β).Computable :=
   (Computable.eqv _).trans (Computable.eqv _).symm
 
-theorem OneOneEquiv.of_equiv {α β} [Primcodable α] [Primcodable β] {e : α ≃ β} (h : e.computable) {p} :
+theorem OneOneEquiv.of_equiv {α β} [Primcodable α] [Primcodable β] {e : α ≃ β} (h : e.Computable) {p} :
     OneOneEquiv (p ∘ e) p :=
   ⟨OneOneReducible.of_equiv _ h.1, OneOneReducible.of_equiv_symm _ h.2⟩
 
-theorem ManyOneEquiv.of_equiv {α β} [Primcodable α] [Primcodable β] {e : α ≃ β} (h : e.computable) {p} :
+theorem ManyOneEquiv.of_equiv {α β} [Primcodable α] [Primcodable β] {e : α ≃ β} (h : e.Computable) {p} :
     ManyOneEquiv (p ∘ e) p :=
   (OneOneEquiv.of_equiv h).to_many_one
 
@@ -322,9 +322,9 @@ protected theorem lift_on_eq {φ} (p : Set ℕ) (f : Set ℕ → φ) (h : ∀ p 
 @[elab_as_eliminator, reducible, simp]
 protected def lift_on₂ {φ} (d₁ d₂ : ManyOneDegree) (f : Set ℕ → Set ℕ → φ)
     (h : ∀ p₁ p₂ q₁ q₂, ManyOneEquiv p₁ p₂ → ManyOneEquiv q₁ q₂ → f p₁ q₁ = f p₂ q₂) : φ :=
-  d₁.lift_on
+  d₁.liftOn
     (fun p =>
-      d₂.lift_on (f p) fun q₁ q₂ hq =>
+      d₂.liftOn (f p) fun q₁ q₂ hq =>
         h _ _ _ _
           (by
             rfl)
@@ -384,7 +384,7 @@ instance : PartialOrderₓ ManyOneDegree where
 /-- The join of two degrees, induced by the disjoint union of two underlying sets. -/
 instance : Add ManyOneDegree :=
   ⟨fun d₁ d₂ =>
-    d₁.lift_on₂ d₂ (fun a b => of (a ⊕' b))
+    d₁.liftOn₂ d₂ (fun a b => of (a ⊕' b))
       (by
         rintro a b c d ⟨hl₁, hr₁⟩ ⟨hl₂, hr₂⟩
         rw [of_eq_of]

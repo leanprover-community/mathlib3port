@@ -43,11 +43,11 @@ theorem smul_def (a : M) (x : α × β) : a • x = (a • x.1, a • x.2) :=
   rfl
 
 instance [HasScalar M N] [IsScalarTower M N α] [IsScalarTower M N β] : IsScalarTower M N (α × β) :=
-  ⟨fun x y z => mk.inj_iff.mpr ⟨smul_assoc _ _ _, smul_assoc _ _ _⟩⟩
+  ⟨fun x y z => mk.inj_iffₓ.mpr ⟨smul_assoc _ _ _, smul_assoc _ _ _⟩⟩
 
 @[to_additive]
 instance [SmulCommClass M N α] [SmulCommClass M N β] : SmulCommClass M N (α × β) where
-  smul_comm := fun r s x => mk.inj_iff.mpr ⟨smul_comm _ _ _, smul_comm _ _ _⟩
+  smul_comm := fun r s x => mk.inj_iffₓ.mpr ⟨smul_comm _ _ _, smul_comm _ _ _⟩
 
 instance [HasScalar (Mᵐᵒᵖ) α] [HasScalar (Mᵐᵒᵖ) β] [IsCentralScalar M α] [IsCentralScalar M β] :
     IsCentralScalar M (α × β) :=
@@ -82,18 +82,18 @@ instance is_scalar_tower_both [Monoidₓ N] [Monoidₓ P] [HasScalar M N] [HasSc
 
 @[to_additive]
 instance {m : Monoidₓ M} [MulAction M α] [MulAction M β] : MulAction M (α × β) where
-  mul_smul := fun a₁ a₂ p => mk.inj_iff.mpr ⟨mul_smul _ _ _, mul_smul _ _ _⟩
-  one_smul := fun ⟨b, c⟩ => mk.inj_iff.mpr ⟨one_smul _ _, one_smul _ _⟩
+  mul_smul := fun a₁ a₂ p => mk.inj_iffₓ.mpr ⟨mul_smul _ _ _, mul_smul _ _ _⟩
+  one_smul := fun ⟨b, c⟩ => mk.inj_iffₓ.mpr ⟨one_smul _ _, one_smul _ _⟩
 
 instance {R M N : Type _} {r : Monoidₓ R} [AddMonoidₓ M] [AddMonoidₓ N] [DistribMulAction R M] [DistribMulAction R N] :
     DistribMulAction R (M × N) where
-  smul_add := fun a p₁ p₂ => mk.inj_iff.mpr ⟨smul_add _ _ _, smul_add _ _ _⟩
-  smul_zero := fun a => mk.inj_iff.mpr ⟨smul_zero _, smul_zero _⟩
+  smul_add := fun a p₁ p₂ => mk.inj_iffₓ.mpr ⟨smul_add _ _ _, smul_add _ _ _⟩
+  smul_zero := fun a => mk.inj_iffₓ.mpr ⟨smul_zero _, smul_zero _⟩
 
 instance {R M N : Type _} {r : Monoidₓ R} [Monoidₓ M] [Monoidₓ N] [MulDistribMulAction R M] [MulDistribMulAction R N] :
     MulDistribMulAction R (M × N) where
-  smul_mul := fun a p₁ p₂ => mk.inj_iff.mpr ⟨smul_mul' _ _ _, smul_mul' _ _ _⟩
-  smul_one := fun a => mk.inj_iff.mpr ⟨smul_one _, smul_one _⟩
+  smul_mul := fun a p₁ p₂ => mk.inj_iffₓ.mpr ⟨smul_mul' _ _ _, smul_mul' _ _ _⟩
+  smul_one := fun a => mk.inj_iffₓ.mpr ⟨smul_one _, smul_one _⟩
 
 end Prod
 
@@ -110,7 +110,7 @@ def smulMulHom [Monoidₓ α] [Mul β] [MulAction α β] [IsScalarTower α β β
 
 /-- Scalar multiplication as a monoid homomorphism. -/
 @[simps]
-def smulMonoidHom [Monoidₓ α] [MulOneClass β] [MulAction α β] [IsScalarTower α β β] [SmulCommClass α β β] :
+def smulMonoidHom [Monoidₓ α] [MulOneClassₓ β] [MulAction α β] [IsScalarTower α β β] [SmulCommClass α β β] :
     α × β →* β :=
   { smulMulHom with map_one' := one_smul _ _ }
 

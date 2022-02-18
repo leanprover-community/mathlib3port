@@ -23,23 +23,23 @@ section
 /-- Typeclass for expressing that a type `M₀` with multiplication and a zero satisfies
 `0 * a = 0` and `a * 0 = 0` for all `a : M₀`. -/
 @[protect_proj, ancestor Mul Zero]
-class MulZeroClass (M₀ : Type _) extends Mul M₀, Zero M₀ where
+class MulZeroClassₓ (M₀ : Type _) extends Mul M₀, Zero M₀ where
   zero_mul : ∀ a : M₀, 0 * a = 0
   mul_zero : ∀ a : M₀, a * 0 = 0
 
-section MulZeroClass
+section MulZeroClassₓ
 
-variable [MulZeroClass M₀] {a b : M₀}
+variable [MulZeroClassₓ M₀] {a b : M₀}
 
 @[ematch, simp]
 theorem zero_mul (a : M₀) : 0 * a = 0 :=
-  MulZeroClass.zero_mul a
+  MulZeroClassₓ.zero_mul a
 
 @[ematch, simp]
 theorem mul_zero (a : M₀) : a * 0 = 0 :=
-  MulZeroClass.mul_zero a
+  MulZeroClassₓ.mul_zero a
 
-end MulZeroClass
+end MulZeroClassₓ
 
 /-- Predicate typeclass for expressing that `a * b = 0` implies `a = 0` or `b = 0`
 for all `a` and `b` of type `G₀`. -/
@@ -51,19 +51,19 @@ export NoZeroDivisors (eq_zero_or_eq_zero_of_mul_eq_zero)
 /-- A type `S₀` is a "semigroup with zero” if it is a semigroup with zero element, and `0` is left
 and right absorbing. -/
 @[protect_proj]
-class SemigroupWithZero (S₀ : Type _) extends Semigroupₓ S₀, MulZeroClass S₀
+class SemigroupWithZeroₓ (S₀ : Type _) extends Semigroupₓ S₀, MulZeroClassₓ S₀
 
 /-- A typeclass for non-associative monoids with zero elements. -/
 @[protect_proj]
-class MulZeroOneClass (M₀ : Type _) extends MulOneClass M₀, MulZeroClass M₀
+class MulZeroOneClassₓ (M₀ : Type _) extends MulOneClassₓ M₀, MulZeroClassₓ M₀
 
 /-- A type `M₀` is a “monoid with zero” if it is a monoid with zero element, and `0` is left
 and right absorbing. -/
 @[protect_proj]
-class MonoidWithZeroₓ (M₀ : Type _) extends Monoidₓ M₀, MulZeroOneClass M₀
+class MonoidWithZeroₓ (M₀ : Type _) extends Monoidₓ M₀, MulZeroOneClassₓ M₀
 
 instance (priority := 100) MonoidWithZeroₓ.toSemigroupWithZero (M₀ : Type _) [MonoidWithZeroₓ M₀] :
-    SemigroupWithZero M₀ :=
+    SemigroupWithZeroₓ M₀ :=
   { ‹MonoidWithZeroₓ M₀› with }
 
 /-- A type `M` is a `cancel_monoid_with_zero` if it is a monoid with zero element, `0` is left

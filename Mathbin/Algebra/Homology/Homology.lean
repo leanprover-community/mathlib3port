@@ -22,7 +22,7 @@ open CategoryTheory CategoryTheory.Limits
 
 variable {ι : Type _}
 
-variable {V : Type u} [category.{v} V] [has_zero_morphisms V]
+variable {V : Type u} [Category.{v} V] [HasZeroMorphisms V]
 
 variable {c : ComplexShape ι} (C : HomologicalComplex V c)
 
@@ -32,29 +32,29 @@ noncomputable section
 
 namespace HomologicalComplex
 
-variable [has_zero_object V]
+variable [HasZeroObject V]
 
 section Cycles
 
-variable [has_kernels V]
+variable [HasKernels V]
 
 /-- The cycles at index `i`, as a subobject. -/
-def cycles (i : ι) : subobject (C.X i) :=
-  kernel_subobject (C.d_from i)
+def cycles (i : ι) : Subobject (C.x i) :=
+  kernelSubobject (C.dFrom i)
 
 @[simp, reassoc]
-theorem cycles_arrow_d_from (i : ι) : (C.cycles i).arrow ≫ C.d_from i = 0 := by
+theorem cycles_arrow_d_from (i : ι) : (C.cycles i).arrow ≫ C.dFrom i = 0 := by
   dsimp [cycles]
   simp
 
-theorem cycles_eq_kernel_subobject {i j : ι} (r : c.rel i j) : C.cycles i = kernel_subobject (C.d i j) :=
+theorem cycles_eq_kernel_subobject {i j : ι} (r : c.Rel i j) : C.cycles i = kernelSubobject (C.d i j) :=
   C.kernel_from_eq_kernel r
 
 /-- The underlying object of `C.cycles i` is isomorphic to `kernel (C.d i j)`,
 for any `j` such that `rel i j`.
 -/
-def cycles_iso_kernel {i j : ι} (r : c.rel i j) : (C.cycles i : V) ≅ kernel (C.d i j) :=
-  subobject.iso_of_eq _ _ (C.cycles_eq_kernel_subobject r) ≪≫ kernel_subobject_iso (C.d i j)
+def cycles_iso_kernel {i j : ι} (r : c.Rel i j) : (C.cycles i : V) ≅ kernel (C.d i j) :=
+  Subobject.isoOfEq _ _ (C.cycles_eq_kernel_subobject r) ≪≫ kernelSubobjectIso (C.d i j)
 
 theorem cycles_eq_top {i} (h : c.next i = none) : C.cycles i = ⊤ := by
   rw [eq_top_iff]
@@ -65,21 +65,21 @@ end Cycles
 
 section Boundaries
 
-variable [has_images V]
+variable [HasImages V]
 
 /-- The boundaries at index `i`, as a subobject. -/
-abbrev boundaries (C : HomologicalComplex V c) (j : ι) : subobject (C.X j) :=
-  image_subobject (C.d_to j)
+abbrev boundaries (C : HomologicalComplex V c) (j : ι) : Subobject (C.x j) :=
+  imageSubobject (C.dTo j)
 
-theorem boundaries_eq_image_subobject [has_equalizers V] {i j : ι} (r : c.rel i j) :
-    C.boundaries j = image_subobject (C.d i j) :=
+theorem boundaries_eq_image_subobject [HasEqualizers V] {i j : ι} (r : c.Rel i j) :
+    C.boundaries j = imageSubobject (C.d i j) :=
   C.image_to_eq_image r
 
 /-- The underlying object of `C.boundaries j` is isomorphic to `image (C.d i j)`,
 for any `i` such that `rel i j`.
 -/
-def boundaries_iso_image [has_equalizers V] {i j : ι} (r : c.rel i j) : (C.boundaries j : V) ≅ image (C.d i j) :=
-  subobject.iso_of_eq _ _ (C.boundaries_eq_image_subobject r) ≪≫ image_subobject_iso (C.d i j)
+def boundaries_iso_image [HasEqualizers V] {i j : ι} (r : c.Rel i j) : (C.boundaries j : V) ≅ image (C.d i j) :=
+  Subobject.isoOfEq _ _ (C.boundaries_eq_image_subobject r) ≪≫ imageSubobjectIso (C.d i j)
 
 theorem boundaries_eq_bot {j} (h : c.prev j = none) : C.boundaries j = ⊥ := by
   rw [eq_bot_iff]
@@ -90,7 +90,7 @@ end Boundaries
 
 section
 
-variable [has_kernels V] [has_images V]
+variable [HasKernels V] [HasImages V]
 
 theorem boundaries_le_cycles (C : HomologicalComplex V c) (i : ι) : C.boundaries i ≤ C.cycles i :=
   image_le_kernel _ _ (C.d_to_comp_d_from i)
@@ -103,21 +103,21 @@ abbrev boundaries_to_cycles (C : HomologicalComplex V c) (i : ι) : (C.boundarie
 /-- Prefer `boundaries_to_cycles`. -/
 @[simp]
 theorem image_to_kernel_as_boundaries_to_cycles (C : HomologicalComplex V c) (i : ι) h :
-    (C.boundaries i).ofLe (C.cycles i) h = C.boundaries_to_cycles i :=
+    (C.boundaries i).ofLe (C.cycles i) h = C.boundariesToCycles i :=
   rfl
 
 @[simp, reassoc]
 theorem boundaries_to_cycles_arrow (C : HomologicalComplex V c) (i : ι) :
-    C.boundaries_to_cycles i ≫ (C.cycles i).arrow = (C.boundaries i).arrow := by
+    C.boundariesToCycles i ≫ (C.cycles i).arrow = (C.boundaries i).arrow := by
   dsimp [cycles]
   simp
 
-variable [has_cokernels V]
+variable [HasCokernels V]
 
 /-- The homology of a complex at index `i`.
 -/
 abbrev homology (C : HomologicalComplex V c) (i : ι) : V :=
-  homology (C.d_to i) (C.d_from i) (C.d_to_comp_d_from i)
+  homology (C.dTo i) (C.dFrom i) (C.d_to_comp_d_from i)
 
 end
 
@@ -130,14 +130,14 @@ open HomologicalComplex
 
 section
 
-variable [has_zero_object V] [has_kernels V]
+variable [HasZeroObject V] [HasKernels V]
 
 variable {C₁ C₂ C₃ : HomologicalComplex V c} (f : C₁ ⟶ C₂)
 
 /-- The morphism between cycles induced by a chain map.
 -/
 abbrev cyclesMap (f : C₁ ⟶ C₂) (i : ι) : (C₁.cycles i : V) ⟶ (C₂.cycles i : V) :=
-  subobject.factor_thru _ ((C₁.cycles i).arrow ≫ f.f i)
+  Subobject.factorThru _ ((C₁.cycles i).arrow ≫ f.f i)
     (kernel_subobject_factors _ _
       (by
         simp ))
@@ -171,14 +171,14 @@ end
 
 section
 
-variable [has_zero_object V] [has_images V] [has_image_maps V]
+variable [HasZeroObject V] [HasImages V] [HasImageMaps V]
 
 variable {C₁ C₂ C₃ : HomologicalComplex V c} (f : C₁ ⟶ C₂)
 
 /-- The morphism between boundaries induced by a chain map.
 -/
 abbrev boundariesMap (f : C₁ ⟶ C₂) (i : ι) : (C₁.boundaries i : V) ⟶ (C₂.boundaries i : V) :=
-  image_subobject_map (f.sq_to i)
+  imageSubobjectMap (f.sqTo i)
 
 variable (V c)
 
@@ -186,7 +186,7 @@ variable (V c)
 @[simps]
 def boundariesFunctor (i : ι) : HomologicalComplex V c ⥤ V where
   obj := fun C => C.boundaries i
-  map := fun C₁ C₂ f => image_subobject_map (f.sq_to i)
+  map := fun C₁ C₂ f => imageSubobjectMap (f.sqTo i)
 
 end
 
@@ -195,13 +195,13 @@ section
 /-! The `boundaries_to_cycles` morphisms are natural. -/
 
 
-variable [has_zero_object V] [has_equalizers V] [has_images V] [has_image_maps V]
+variable [HasZeroObject V] [HasEqualizers V] [HasImages V] [HasImageMaps V]
 
 variable {C₁ C₂ : HomologicalComplex V c} (f : C₁ ⟶ C₂)
 
 @[simp, reassoc]
 theorem boundaries_to_cycles_naturality (i : ι) :
-    boundariesMap f i ≫ C₂.boundaries_to_cycles i = C₁.boundaries_to_cycles i ≫ cyclesMap f i := by
+    boundariesMap f i ≫ C₂.boundariesToCycles i = C₁.boundariesToCycles i ≫ cyclesMap f i := by
   ext
   simp
 
@@ -210,14 +210,14 @@ variable (V c)
 /-- The natural transformation from the boundaries functor to the cycles functor. -/
 @[simps]
 def boundariesToCyclesNatTrans (i : ι) : boundariesFunctor V c i ⟶ cyclesFunctor V c i where
-  app := fun C => C.boundaries_to_cycles i
+  app := fun C => C.boundariesToCycles i
   naturality' := fun C₁ C₂ f => boundaries_to_cycles_naturality f i
 
 /-- The `i`-th homology, as a functor to `V`. -/
 @[simps]
-def homologyFunctor [has_cokernels V] (i : ι) : HomologicalComplex V c ⥤ V where
+def homologyFunctor [HasCokernels V] (i : ι) : HomologicalComplex V c ⥤ V where
   obj := fun C => C.homology i
-  map := fun C₁ C₂ f => _root_.homology.map _ _ (f.sq_to i) (f.sq_from i) rfl
+  map := fun C₁ C₂ f => homology.map _ _ (f.sqTo i) (f.sqFrom i) rfl
   map_id' := by
     intros
     ext1
@@ -229,7 +229,7 @@ def homologyFunctor [has_cokernels V] (i : ι) : HomologicalComplex V c ⥤ V wh
 
 /-- The homology functor from `ι`-indexed complexes to `ι`-graded objects in `V`. -/
 @[simps]
-def gradedHomologyFunctor [has_cokernels V] : HomologicalComplex V c ⥤ graded_object ι V where
+def gradedHomologyFunctor [HasCokernels V] : HomologicalComplex V c ⥤ GradedObject ι V where
   obj := fun C i => C.homology i
   map := fun C C' f i => (homologyFunctor V c i).map f
   map_id' := by

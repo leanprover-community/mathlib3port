@@ -75,7 +75,7 @@ theorem psub_eq_none {m n : ℕ} : psub m n = none ↔ m < n := by
     
 
 theorem ppred_eq_pred {n} (h : 0 < n) : ppred n = some (pred n) :=
-  ppred_eq_some.2 <| succ_pred_eq_of_pos h
+  ppred_eq_some.2 <| succ_pred_eq_of_posₓ h
 
 theorem psub_eq_sub {m n} (h : n ≤ m) : psub m n = some (m - n) :=
   psub_eq_some.2 <| tsub_add_cancel_of_le h

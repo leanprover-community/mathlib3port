@@ -59,7 +59,7 @@ inductive rel : TensorAlgebra R M → TensorAlgebra R M → Prop
 
 end ExteriorAlgebra
 
--- ././Mathport/Syntax/Translate/Basic.lean:857:9: unsupported derive handler algebra R
+-- ././Mathport/Syntax/Translate/Basic.lean:859:9: unsupported derive handler algebra R
 /-- The exterior algebra of an `R`-module `M`.
 -/
 def ExteriorAlgebra :=
@@ -100,11 +100,11 @@ from `exterior_algebra R M` to `A`.
 def lift : { f : M →ₗ[R] A // ∀ m, f m * f m = 0 } ≃ (ExteriorAlgebra R M →ₐ[R] A) where
   toFun := fun f =>
     RingQuot.liftAlgHom R
-      ⟨TensorAlgebra.lift R (f : M →ₗ[R] A), fun x y h : rel R M x y => by
+      ⟨TensorAlgebra.lift R (f : M →ₗ[R] A), fun x y h : Rel R M x y => by
         induction h
         rw [AlgHom.map_zero, AlgHom.map_mul, TensorAlgebra.lift_ι_apply, f.prop]⟩
   invFun := fun F =>
-    ⟨F.to_linear_map.comp (ι R), fun m => by
+    ⟨F.toLinearMap.comp (ι R), fun m => by
       rw [LinearMap.comp_apply, AlgHom.to_linear_map_apply, comp_ι_sq_zero]⟩
   left_inv := fun f => by
     ext
@@ -123,7 +123,7 @@ theorem lift_ι_apply (f : M →ₗ[R] A) (cond : ∀ m, f m * f m = 0) x : lift
 
 @[simp]
 theorem lift_unique (f : M →ₗ[R] A) (cond : ∀ m, f m * f m = 0) (g : ExteriorAlgebra R M →ₐ[R] A) :
-    g.to_linear_map.comp (ι R) = f ↔ g = lift R ⟨f, cond⟩ := by
+    g.toLinearMap.comp (ι R) = f ↔ g = lift R ⟨f, cond⟩ := by
   convert (lift R).symm_apply_eq
   rw [lift_symm_apply]
   simp only
@@ -131,15 +131,15 @@ theorem lift_unique (f : M →ₗ[R] A) (cond : ∀ m, f m * f m = 0) (g : Exter
 variable {R M}
 
 @[simp]
-theorem lift_comp_ι (g : ExteriorAlgebra R M →ₐ[R] A) : lift R ⟨g.to_linear_map.comp (ι R), comp_ι_sq_zero _⟩ = g := by
+theorem lift_comp_ι (g : ExteriorAlgebra R M →ₐ[R] A) : lift R ⟨g.toLinearMap.comp (ι R), comp_ι_sq_zero _⟩ = g := by
   convert (lift R).apply_symm_apply g
   rw [lift_symm_apply]
   rfl
 
 /-- See note [partially-applied ext lemmas]. -/
 @[ext]
-theorem hom_ext {f g : ExteriorAlgebra R M →ₐ[R] A} (h : f.to_linear_map.comp (ι R) = g.to_linear_map.comp (ι R)) :
-    f = g := by
+theorem hom_ext {f g : ExteriorAlgebra R M →ₐ[R] A} (h : f.toLinearMap.comp (ι R) = g.toLinearMap.comp (ι R)) : f = g :=
+  by
   apply (lift R).symm.Injective
   rw [lift_symm_apply, lift_symm_apply]
   simp only [h]
@@ -169,8 +169,8 @@ def algebra_map_inv : ExteriorAlgebra R M →ₐ[R] R :=
 
 variable (M)
 
-theorem algebra_map_left_inverse : Function.LeftInverse algebra_map_inv (algebraMap R <| ExteriorAlgebra R M) :=
-  fun x => by
+theorem algebra_map_left_inverse : Function.LeftInverse algebraMapInv (algebraMap R <| ExteriorAlgebra R M) := fun x =>
+  by
   simp [algebra_map_inv]
 
 @[simp]
@@ -194,7 +194,7 @@ def to_triv_sq_zero_ext : ExteriorAlgebra R M →ₐ[R] TrivSqZeroExt R M :=
   lift R ⟨TrivSqZeroExt.inrHom R M, fun m => TrivSqZeroExt.inr_mul_inr R m m⟩
 
 @[simp]
-theorem to_triv_sq_zero_ext_ι (x : M) : to_triv_sq_zero_ext (ι R x) = TrivSqZeroExt.inr x :=
+theorem to_triv_sq_zero_ext_ι (x : M) : toTrivSqZeroExt (ι R x) = TrivSqZeroExt.inr x :=
   lift_ι_apply _ _ _ _
 
 /-- The left-inverse of `ι`.
@@ -202,9 +202,9 @@ theorem to_triv_sq_zero_ext_ι (x : M) : to_triv_sq_zero_ext (ι R x) = TrivSqZe
 As an implementation detail, we implement this using `triv_sq_zero_ext` which has a suitable
 algebra structure. -/
 def ι_inv : ExteriorAlgebra R M →ₗ[R] M :=
-  (TrivSqZeroExt.sndHom R M).comp to_triv_sq_zero_ext.toLinearMap
+  (TrivSqZeroExt.sndHom R M).comp toTrivSqZeroExt.toLinearMap
 
-theorem ι_left_inverse : Function.LeftInverse ι_inv (ι R : M → ExteriorAlgebra R M) := fun x => by
+theorem ι_left_inverse : Function.LeftInverse ιInv (ι R : M → ExteriorAlgebra R M) := fun x => by
   simp [ι_inv]
 
 variable (R)
@@ -301,7 +301,7 @@ def ι_multi (n : ℕ) : AlternatingMap R M (ExteriorAlgebra R M) (Finₓ n) :=
 
 variable {R}
 
-theorem ι_multi_apply {n : ℕ} (v : Finₓ n → M) : ι_multi R n v = (List.ofFnₓ fun i => ι R (v i)).Prod :=
+theorem ι_multi_apply {n : ℕ} (v : Finₓ n → M) : ιMulti R n v = (List.ofFnₓ fun i => ι R (v i)).Prod :=
   rfl
 
 end ExteriorAlgebra

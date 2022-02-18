@@ -50,7 +50,7 @@ universe v v₁ u u₁
 
 namespace CategoryTheory
 
-variable (C : Type u) [category.{v} C]
+variable (C : Type u) [Category.{v} C]
 
 /-- A category `is_filtered_or_empty` if
 1. for every pair of objects there exists another object "to the right", and
@@ -69,60 +69,60 @@ class is_filtered_or_empty : Prop where
 
 See https://stacks.math.columbia.edu/tag/002V. (They also define a diagram being filtered.)
 -/
-class is_filtered extends is_filtered_or_empty C : Prop where
+class is_filtered extends IsFilteredOrEmpty C : Prop where
   [Nonempty : Nonempty C]
 
 instance (priority := 100) is_filtered_or_empty_of_semilattice_sup (α : Type u) [SemilatticeSup α] :
-    is_filtered_or_empty α where
-  cocone_objs := fun X Y => ⟨X⊔Y, hom_of_le le_sup_left, hom_of_le le_sup_right, trivialₓ⟩
+    IsFilteredOrEmpty α where
+  cocone_objs := fun X Y => ⟨X⊔Y, homOfLe le_sup_left, homOfLe le_sup_right, trivialₓ⟩
   cocone_maps := fun X Y f g =>
     ⟨Y, 𝟙 _, by
       ext⟩
 
 instance (priority := 100) is_filtered_of_semilattice_sup_nonempty (α : Type u) [SemilatticeSup α] [Nonempty α] :
-    is_filtered α :=
+    IsFiltered α :=
   {  }
 
 instance (priority := 100) is_filtered_or_empty_of_directed_le (α : Type u) [Preorderₓ α] [IsDirected α (· ≤ ·)] :
-    is_filtered_or_empty α where
+    IsFilteredOrEmpty α where
   cocone_objs := fun X Y =>
     let ⟨Z, h1, h2⟩ := exists_ge_ge X Y
-    ⟨Z, hom_of_le h1, hom_of_le h2, trivialₓ⟩
+    ⟨Z, homOfLe h1, homOfLe h2, trivialₓ⟩
   cocone_maps := fun X Y f g =>
     ⟨Y, 𝟙 _, by
       simp ⟩
 
 instance (priority := 100) is_filtered_of_directed_le_nonempty (α : Type u) [Preorderₓ α] [IsDirected α (· ≤ ·)]
-    [Nonempty α] : is_filtered α :=
+    [Nonempty α] : IsFiltered α :=
   {  }
 
-example (α : Type u) [SemilatticeSup α] [OrderBot α] : is_filtered α := by
+example (α : Type u) [SemilatticeSup α] [OrderBot α] : IsFiltered α := by
   infer_instance
 
-example (α : Type u) [SemilatticeSup α] [OrderTop α] : is_filtered α := by
+example (α : Type u) [SemilatticeSup α] [OrderTop α] : IsFiltered α := by
   infer_instance
 
 namespace IsFiltered
 
-variable {C} [is_filtered C]
+variable {C} [IsFiltered C]
 
 /-- `max j j'` is an arbitrary choice of object to the right of both `j` and `j'`,
 whose existence is ensured by `is_filtered`.
 -/
 noncomputable def max (j j' : C) : C :=
-  (is_filtered_or_empty.cocone_objs j j').some
+  (IsFilteredOrEmpty.cocone_objs j j').some
 
 /-- `left_to_max j j'` is an arbitrarily choice of morphism from `j` to `max j j'`,
 whose existence is ensured by `is_filtered`.
 -/
 noncomputable def left_to_max (j j' : C) : j ⟶ max j j' :=
-  (is_filtered_or_empty.cocone_objs j j').some_spec.some
+  (IsFilteredOrEmpty.cocone_objs j j').some_spec.some
 
 /-- `right_to_max j j'` is an arbitrarily choice of morphism from `j'` to `max j j'`,
 whose existence is ensured by `is_filtered`.
 -/
 noncomputable def right_to_max (j j' : C) : j' ⟶ max j j' :=
-  (is_filtered_or_empty.cocone_objs j j').some_spec.some_spec.some
+  (IsFilteredOrEmpty.cocone_objs j j').some_spec.some_spec.some
 
 /-- `coeq f f'`, for morphisms `f f' : j ⟶ j'`, is an arbitrary choice of object
 which admits a morphism `coeq_hom f f' : j' ⟶ coeq f f'` such that
@@ -130,7 +130,7 @@ which admits a morphism `coeq_hom f f' : j' ⟶ coeq f f'` such that
 Its existence is ensured by `is_filtered`.
 -/
 noncomputable def coeq {j j' : C} (f f' : j ⟶ j') : C :=
-  (is_filtered_or_empty.cocone_maps f f').some
+  (IsFilteredOrEmpty.cocone_maps f f').some
 
 /-- `coeq_hom f f'`, for morphisms `f f' : j ⟶ j'`, is an arbitrary choice of morphism
 `coeq_hom f f' : j' ⟶ coeq f f'` such that
@@ -138,20 +138,20 @@ noncomputable def coeq {j j' : C} (f f' : j ⟶ j') : C :=
 Its existence is ensured by `is_filtered`.
 -/
 noncomputable def coeq_hom {j j' : C} (f f' : j ⟶ j') : j' ⟶ coeq f f' :=
-  (is_filtered_or_empty.cocone_maps f f').some_spec.some
+  (IsFilteredOrEmpty.cocone_maps f f').some_spec.some
 
 /-- `coeq_condition f f'`, for morphisms `f f' : j ⟶ j'`, is the proof that
 `f ≫ coeq_hom f f' = f' ≫ coeq_hom f f'`.
 -/
 @[simp, reassoc]
-theorem coeq_condition {j j' : C} (f f' : j ⟶ j') : f ≫ coeq_hom f f' = f' ≫ coeq_hom f f' :=
-  (is_filtered_or_empty.cocone_maps f f').some_spec.some_spec
+theorem coeq_condition {j j' : C} (f f' : j ⟶ j') : f ≫ coeqHom f f' = f' ≫ coeqHom f f' :=
+  (IsFilteredOrEmpty.cocone_maps f f').some_spec.some_spec
 
 open CategoryTheory.Limits
 
 /-- Any finite collection of objects in a filtered category has an object "to the right".
 -/
-theorem sup_objs_exists (O : Finset C) : ∃ S : C, ∀ {X}, X ∈ O → _root_.nonempty (X ⟶ S) := by
+theorem sup_objs_exists (O : Finset C) : ∃ S : C, ∀ {X}, X ∈ O → Nonempty (X ⟶ S) := by
   classical
   apply Finset.induction_on O
   · exact
@@ -168,10 +168,10 @@ theorem sup_objs_exists (O : Finset C) : ∃ S : C, ∀ {X}, X ∈ O → _root_.
       
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:626:6: warning: expanding binder group (X Y)
+-- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (X Y)
 variable (O : Finset C) (H : Finset (Σ' (X : C) (Y : C) (mX : X ∈ O) (mY : Y ∈ O), X ⟶ Y))
 
--- ././Mathport/Syntax/Translate/Basic.lean:626:6: warning: expanding binder group (X Y)
+-- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (X Y)
 /-- Given any `finset` of objects `{X, ...}` and
 indexed collection of `finset`s of morphisms `{f, ...}` in `C`,
 there exists an object `S`, with a morphism `T X : X ⟶ S` from each `X`,
@@ -225,21 +225,21 @@ noncomputable def sup : C :=
 noncomputable def to_sup {X : C} (m : X ∈ O) : X ⟶ sup O H :=
   (sup_exists O H).some_spec.some m
 
--- ././Mathport/Syntax/Translate/Basic.lean:626:6: warning: expanding binder group (X Y)
+-- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (X Y)
 /-- The triangles of consisting of a morphism in `H` and the maps to `sup O H` commute.
 -/
 theorem to_sup_commutes {X Y : C} (mX : X ∈ O) (mY : Y ∈ O) {f : X ⟶ Y}
     (mf : (⟨X, Y, mX, mY, f⟩ : Σ' (X : C) (Y : C) (mX : X ∈ O) (mY : Y ∈ O), X ⟶ Y) ∈ H) :
-    f ≫ to_sup O H mY = to_sup O H mX :=
+    f ≫ toSup O H mY = toSup O H mX :=
   (sup_exists O H).some_spec.some_spec mX mY mf
 
-variable {J : Type v} [small_category J] [fin_category J]
+variable {J : Type v} [SmallCategory J] [FinCategory J]
 
--- ././Mathport/Syntax/Translate/Basic.lean:626:6: warning: expanding binder group (X Y)
+-- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (X Y)
 /-- If we have `is_filtered C`, then for any functor `F : J ⥤ C` with `fin_category J`,
 there exists a cocone over `F`.
 -/
-theorem cocone_nonempty (F : J ⥤ C) : _root_.nonempty (cocone F) := by
+theorem cocone_nonempty (F : J ⥤ C) : Nonempty (Cocone F) := by
   classical
   let O := finset.univ.image F.obj
   let H : Finset (Σ' (X : C) (Y : C) (mX : X ∈ O) (mY : Y ∈ O), X ⟶ Y) :=
@@ -268,27 +268,27 @@ theorem cocone_nonempty (F : J ⥤ C) : _root_.nonempty (cocone F) := by
 
 /-- An arbitrary choice of cocone over `F : J ⥤ C`, for `fin_category J` and `is_filtered C`.
 -/
-noncomputable def cocone (F : J ⥤ C) : cocone F :=
+noncomputable def cocone (F : J ⥤ C) : Cocone F :=
   (cocone_nonempty F).some
 
-variable {D : Type u₁} [category.{v₁} D]
+variable {D : Type u₁} [Category.{v₁} D]
 
 /-- If `C` is filtered, and we have a functor `R : C ⥤ D` with a left adjoint, then `D` is filtered.
 -/
-theorem of_right_adjoint {L : D ⥤ C} {R : C ⥤ D} (h : L ⊣ R) : is_filtered D :=
-  { cocone_objs := fun X Y => ⟨_, h.hom_equiv _ _ (left_to_max _ _), h.hom_equiv _ _ (right_to_max _ _), ⟨⟩⟩,
+theorem of_right_adjoint {L : D ⥤ C} {R : C ⥤ D} (h : L ⊣ R) : IsFiltered D :=
+  { cocone_objs := fun X Y => ⟨_, h.homEquiv _ _ (leftToMax _ _), h.homEquiv _ _ (rightToMax _ _), ⟨⟩⟩,
     cocone_maps := fun X Y f g =>
-      ⟨_, h.hom_equiv _ _ (coeq_hom _ _), by
+      ⟨_, h.homEquiv _ _ (coeqHom _ _), by
         rw [← h.hom_equiv_naturality_left, ← h.hom_equiv_naturality_left, coeq_condition]⟩,
-    Nonempty := is_filtered.nonempty.map R.obj }
+    Nonempty := IsFiltered.nonempty.map R.obj }
 
 /-- If `C` is filtered, and we have a right adjoint functor `R : C ⥤ D`, then `D` is filtered. -/
-theorem of_is_right_adjoint (R : C ⥤ D) [is_right_adjoint R] : is_filtered D :=
-  of_right_adjoint (adjunction.of_right_adjoint R)
+theorem of_is_right_adjoint (R : C ⥤ D) [IsRightAdjoint R] : IsFiltered D :=
+  of_right_adjoint (Adjunction.ofRightAdjoint R)
 
 /-- Being filtered is preserved by equivalence of categories. -/
-theorem of_equivalence (h : C ≌ D) : is_filtered D :=
-  of_right_adjoint h.symm.to_adjunction
+theorem of_equivalence (h : C ≌ D) : IsFiltered D :=
+  of_right_adjoint h.symm.toAdjunction
 
 section SpecialShapes
 
@@ -302,19 +302,19 @@ noncomputable def max₃ (j₁ j₂ j₃ : C) : C :=
 whose existence is ensured by `is_filtered`.
 -/
 noncomputable def first_to_max₃ (j₁ j₂ j₃ : C) : j₁ ⟶ max₃ j₁ j₂ j₃ :=
-  left_to_max j₁ j₂ ≫ left_to_max (max j₁ j₂) j₃
+  leftToMax j₁ j₂ ≫ leftToMax (max j₁ j₂) j₃
 
 /-- `second_to_max₃ j₁ j₂ j₃` is an arbitrarily choice of morphism from `j₂` to `max₃ j₁ j₂ j₃`,
 whose existence is ensured by `is_filtered`.
 -/
 noncomputable def second_to_max₃ (j₁ j₂ j₃ : C) : j₂ ⟶ max₃ j₁ j₂ j₃ :=
-  right_to_max j₁ j₂ ≫ left_to_max (max j₁ j₂) j₃
+  rightToMax j₁ j₂ ≫ leftToMax (max j₁ j₂) j₃
 
 /-- `third_to_max₃ j₁ j₂ j₃` is an arbitrarily choice of morphism from `j₃` to `max₃ j₁ j₂ j₃`,
 whose existence is ensured by `is_filtered`.
 -/
 noncomputable def third_to_max₃ (j₁ j₂ j₃ : C) : j₃ ⟶ max₃ j₁ j₂ j₃ :=
-  right_to_max (max j₁ j₂) j₃
+  rightToMax (max j₁ j₂) j₃
 
 /-- `coeq₃ f g h`, for morphisms `f g h : j₁ ⟶ j₂`, is an arbitrary choice of object
 which admits a morphism `coeq₃_hom f g h : j₂ ⟶ coeq₃ f g h` such that
@@ -322,30 +322,30 @@ which admits a morphism `coeq₃_hom f g h : j₂ ⟶ coeq₃ f g h` such that
 Its existence is ensured by `is_filtered`.
 -/
 noncomputable def coeq₃ {j₁ j₂ : C} (f g h : j₁ ⟶ j₂) : C :=
-  coeq (coeq_hom f g ≫ left_to_max (coeq f g) (coeq g h)) (coeq_hom g h ≫ right_to_max (coeq f g) (coeq g h))
+  coeq (coeqHom f g ≫ leftToMax (coeq f g) (coeq g h)) (coeqHom g h ≫ rightToMax (coeq f g) (coeq g h))
 
 /-- `coeq₃_hom f g h`, for morphisms `f g h : j₁ ⟶ j₂`, is an arbitrary choice of morphism
 `j₂ ⟶ coeq₃ f g h` such that `coeq₃_condition₁`, `coeq₃_condition₂` and `coeq₃_condition₃`
 are satisfied. Its existence is ensured by `is_filtered`.
 -/
 noncomputable def coeq₃_hom {j₁ j₂ : C} (f g h : j₁ ⟶ j₂) : j₂ ⟶ coeq₃ f g h :=
-  coeq_hom f g ≫
-    left_to_max (coeq f g) (coeq g h) ≫
-      coeq_hom (coeq_hom f g ≫ left_to_max (coeq f g) (coeq g h)) (coeq_hom g h ≫ right_to_max (coeq f g) (coeq g h))
+  coeqHom f g ≫
+    leftToMax (coeq f g) (coeq g h) ≫
+      coeqHom (coeqHom f g ≫ leftToMax (coeq f g) (coeq g h)) (coeqHom g h ≫ rightToMax (coeq f g) (coeq g h))
 
-theorem coeq₃_condition₁ {j₁ j₂ : C} (f g h : j₁ ⟶ j₂) : f ≫ coeq₃_hom f g h = g ≫ coeq₃_hom f g h := by
+theorem coeq₃_condition₁ {j₁ j₂ : C} (f g h : j₁ ⟶ j₂) : f ≫ coeq₃Hom f g h = g ≫ coeq₃Hom f g h := by
   dsimp [coeq₃_hom]
   slice_lhs 1 2 => rw [coeq_condition f g]
   simp only [category.assoc]
 
-theorem coeq₃_condition₂ {j₁ j₂ : C} (f g h : j₁ ⟶ j₂) : g ≫ coeq₃_hom f g h = h ≫ coeq₃_hom f g h := by
+theorem coeq₃_condition₂ {j₁ j₂ : C} (f g h : j₁ ⟶ j₂) : g ≫ coeq₃Hom f g h = h ≫ coeq₃Hom f g h := by
   dsimp [coeq₃_hom]
   slice_lhs 2 4 => rw [← category.assoc, coeq_condition _ _]
   slice_rhs 2 4 => rw [← category.assoc, coeq_condition _ _]
   slice_lhs 1 3 => rw [← category.assoc, coeq_condition _ _]
   simp only [category.assoc]
 
-theorem coeq₃_condition₃ {j₁ j₂ : C} (f g h : j₁ ⟶ j₂) : f ≫ coeq₃_hom f g h = h ≫ coeq₃_hom f g h :=
+theorem coeq₃_condition₃ {j₁ j₂ : C} (f g h : j₁ ⟶ j₂) : f ≫ coeq₃Hom f g h = h ≫ coeq₃Hom f g h :=
   Eq.trans (coeq₃_condition₁ f g h) (coeq₃_condition₂ f g h)
 
 /-- Given a "bowtie" of morphisms
@@ -449,60 +449,60 @@ class is_cofiltered_or_empty : Prop where
 
 See https://stacks.math.columbia.edu/tag/04AZ.
 -/
-class is_cofiltered extends is_cofiltered_or_empty C : Prop where
+class is_cofiltered extends IsCofilteredOrEmpty C : Prop where
   [Nonempty : Nonempty C]
 
 instance (priority := 100) is_cofiltered_or_empty_of_semilattice_inf (α : Type u) [SemilatticeInf α] :
-    is_cofiltered_or_empty α where
-  cocone_objs := fun X Y => ⟨X⊓Y, hom_of_le inf_le_left, hom_of_le inf_le_right, trivialₓ⟩
+    IsCofilteredOrEmpty α where
+  cocone_objs := fun X Y => ⟨X⊓Y, homOfLe inf_le_left, homOfLe inf_le_right, trivialₓ⟩
   cocone_maps := fun X Y f g =>
     ⟨X, 𝟙 _, by
       ext⟩
 
 instance (priority := 100) is_cofiltered_of_semilattice_inf_nonempty (α : Type u) [SemilatticeInf α] [Nonempty α] :
-    is_cofiltered α :=
+    IsCofiltered α :=
   {  }
 
 instance (priority := 100) is_cofiltered_or_empty_of_directed_ge (α : Type u) [Preorderₓ α]
-    [IsDirected α (swap (· ≤ ·))] : is_cofiltered_or_empty α where
+    [IsDirected α (swap (· ≤ ·))] : IsCofilteredOrEmpty α where
   cocone_objs := fun X Y =>
     let ⟨Z, hX, hY⟩ := exists_le_le X Y
-    ⟨Z, hom_of_le hX, hom_of_le hY, trivialₓ⟩
+    ⟨Z, homOfLe hX, homOfLe hY, trivialₓ⟩
   cocone_maps := fun X Y f g =>
     ⟨X, 𝟙 _, by
       simp ⟩
 
 instance (priority := 100) is_cofiltered_of_directed_ge_nonempty (α : Type u) [Preorderₓ α]
-    [IsDirected α (swap (· ≤ ·))] [Nonempty α] : is_cofiltered α :=
+    [IsDirected α (swap (· ≤ ·))] [Nonempty α] : IsCofiltered α :=
   {  }
 
-example (α : Type u) [SemilatticeInf α] [OrderBot α] : is_cofiltered α := by
+example (α : Type u) [SemilatticeInf α] [OrderBot α] : IsCofiltered α := by
   infer_instance
 
-example (α : Type u) [SemilatticeInf α] [OrderTop α] : is_cofiltered α := by
+example (α : Type u) [SemilatticeInf α] [OrderTop α] : IsCofiltered α := by
   infer_instance
 
 namespace IsCofiltered
 
-variable {C} [is_cofiltered C]
+variable {C} [IsCofiltered C]
 
 /-- `min j j'` is an arbitrary choice of object to the left of both `j` and `j'`,
 whose existence is ensured by `is_cofiltered`.
 -/
 noncomputable def min (j j' : C) : C :=
-  (is_cofiltered_or_empty.cocone_objs j j').some
+  (IsCofilteredOrEmpty.cocone_objs j j').some
 
 /-- `min_to_left j j'` is an arbitrarily choice of morphism from `min j j'` to `j`,
 whose existence is ensured by `is_cofiltered`.
 -/
 noncomputable def min_to_left (j j' : C) : min j j' ⟶ j :=
-  (is_cofiltered_or_empty.cocone_objs j j').some_spec.some
+  (IsCofilteredOrEmpty.cocone_objs j j').some_spec.some
 
 /-- `min_to_right j j'` is an arbitrarily choice of morphism from `min j j'` to `j'`,
 whose existence is ensured by `is_cofiltered`.
 -/
 noncomputable def min_to_right (j j' : C) : min j j' ⟶ j' :=
-  (is_cofiltered_or_empty.cocone_objs j j').some_spec.some_spec.some
+  (IsCofilteredOrEmpty.cocone_objs j j').some_spec.some_spec.some
 
 /-- `eq f f'`, for morphisms `f f' : j ⟶ j'`, is an arbitrary choice of object
 which admits a morphism `eq_hom f f' : eq f f' ⟶ j` such that
@@ -510,28 +510,28 @@ which admits a morphism `eq_hom f f' : eq f f' ⟶ j` such that
 Its existence is ensured by `is_cofiltered`.
 -/
 noncomputable def Eq {j j' : C} (f f' : j ⟶ j') : C :=
-  (is_cofiltered_or_empty.cocone_maps f f').some
+  (IsCofilteredOrEmpty.cocone_maps f f').some
 
 /-- `eq_hom f f'`, for morphisms `f f' : j ⟶ j'`, is an arbitrary choice of morphism
 `eq_hom f f' : eq f f' ⟶ j` such that
 `eq_condition : eq_hom f f' ≫ f = eq_hom f f' ≫ f'`.
 Its existence is ensured by `is_cofiltered`.
 -/
-noncomputable def eq_hom {j j' : C} (f f' : j ⟶ j') : Eq f f' ⟶ j :=
-  (is_cofiltered_or_empty.cocone_maps f f').some_spec.some
+noncomputable def eq_hom {j j' : C} (f f' : j ⟶ j') : eq f f' ⟶ j :=
+  (IsCofilteredOrEmpty.cocone_maps f f').some_spec.some
 
 /-- `eq_condition f f'`, for morphisms `f f' : j ⟶ j'`, is the proof that
 `eq_hom f f' ≫ f = eq_hom f f' ≫ f'`.
 -/
 @[simp, reassoc]
-theorem eq_condition {j j' : C} (f f' : j ⟶ j') : eq_hom f f' ≫ f = eq_hom f f' ≫ f' :=
-  (is_cofiltered_or_empty.cocone_maps f f').some_spec.some_spec
+theorem eq_condition {j j' : C} (f f' : j ⟶ j') : eqHom f f' ≫ f = eqHom f f' ≫ f' :=
+  (IsCofilteredOrEmpty.cocone_maps f f').some_spec.some_spec
 
 open CategoryTheory.Limits
 
 /-- Any finite collection of objects in a cofiltered category has an object "to the left".
 -/
-theorem inf_objs_exists (O : Finset C) : ∃ S : C, ∀ {X}, X ∈ O → _root_.nonempty (S ⟶ X) := by
+theorem inf_objs_exists (O : Finset C) : ∃ S : C, ∀ {X}, X ∈ O → Nonempty (S ⟶ X) := by
   classical
   apply Finset.induction_on O
   · exact
@@ -548,10 +548,10 @@ theorem inf_objs_exists (O : Finset C) : ∃ S : C, ∀ {X}, X ∈ O → _root_.
       
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:626:6: warning: expanding binder group (X Y)
+-- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (X Y)
 variable (O : Finset C) (H : Finset (Σ' (X : C) (Y : C) (mX : X ∈ O) (mY : Y ∈ O), X ⟶ Y))
 
--- ././Mathport/Syntax/Translate/Basic.lean:626:6: warning: expanding binder group (X Y)
+-- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (X Y)
 /-- Given any `finset` of objects `{X, ...}` and
 indexed collection of `finset`s of morphisms `{f, ...}` in `C`,
 there exists an object `S`, with a morphism `T X : S ⟶ X` from each `X`,
@@ -605,21 +605,21 @@ noncomputable def inf : C :=
 noncomputable def inf_to {X : C} (m : X ∈ O) : inf O H ⟶ X :=
   (inf_exists O H).some_spec.some m
 
--- ././Mathport/Syntax/Translate/Basic.lean:626:6: warning: expanding binder group (X Y)
+-- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (X Y)
 /-- The triangles consisting of a morphism in `H` and the maps from `inf O H` commute.
 -/
 theorem inf_to_commutes {X Y : C} (mX : X ∈ O) (mY : Y ∈ O) {f : X ⟶ Y}
     (mf : (⟨X, Y, mX, mY, f⟩ : Σ' (X : C) (Y : C) (mX : X ∈ O) (mY : Y ∈ O), X ⟶ Y) ∈ H) :
-    inf_to O H mX ≫ f = inf_to O H mY :=
+    infTo O H mX ≫ f = infTo O H mY :=
   (inf_exists O H).some_spec.some_spec mX mY mf
 
-variable {J : Type v} [small_category J] [fin_category J]
+variable {J : Type v} [SmallCategory J] [FinCategory J]
 
--- ././Mathport/Syntax/Translate/Basic.lean:626:6: warning: expanding binder group (X Y)
+-- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (X Y)
 /-- If we have `is_cofiltered C`, then for any functor `F : J ⥤ C` with `fin_category J`,
 there exists a cone over `F`.
 -/
-theorem cone_nonempty (F : J ⥤ C) : _root_.nonempty (cone F) := by
+theorem cone_nonempty (F : J ⥤ C) : Nonempty (Cone F) := by
   classical
   let O := finset.univ.image F.obj
   let H : Finset (Σ' (X : C) (Y : C) (mX : X ∈ O) (mY : Y ∈ O), X ⟶ Y) :=
@@ -649,30 +649,30 @@ theorem cone_nonempty (F : J ⥤ C) : _root_.nonempty (cone F) := by
 
 /-- An arbitrary choice of cone over `F : J ⥤ C`, for `fin_category J` and `is_cofiltered C`.
 -/
-noncomputable def cone (F : J ⥤ C) : cone F :=
+noncomputable def cone (F : J ⥤ C) : Cone F :=
   (cone_nonempty F).some
 
-variable {D : Type u₁} [category.{v₁} D]
+variable {D : Type u₁} [Category.{v₁} D]
 
 /-- If `C` is cofiltered, and we have a functor `L : C ⥤ D` with a right adjoint,
 then `D` is cofiltered.
 -/
-theorem of_left_adjoint {L : C ⥤ D} {R : D ⥤ C} (h : L ⊣ R) : is_cofiltered D :=
+theorem of_left_adjoint {L : C ⥤ D} {R : D ⥤ C} (h : L ⊣ R) : IsCofiltered D :=
   { cocone_objs := fun X Y =>
-      ⟨L.obj (min (R.obj X) (R.obj Y)), (h.hom_equiv _ X).symm (min_to_left _ _),
-        (h.hom_equiv _ Y).symm (min_to_right _ _), ⟨⟩⟩,
+      ⟨L.obj (min (R.obj X) (R.obj Y)), (h.homEquiv _ X).symm (minToLeft _ _), (h.homEquiv _ Y).symm (minToRight _ _),
+        ⟨⟩⟩,
     cocone_maps := fun X Y f g =>
-      ⟨L.obj (Eq (R.map f) (R.map g)), (h.hom_equiv _ _).symm (eq_hom _ _), by
+      ⟨L.obj (eq (R.map f) (R.map g)), (h.homEquiv _ _).symm (eqHom _ _), by
         rw [← h.hom_equiv_naturality_right_symm, ← h.hom_equiv_naturality_right_symm, eq_condition]⟩,
-    Nonempty := is_cofiltered.nonempty.map L.obj }
+    Nonempty := IsCofiltered.nonempty.map L.obj }
 
 /-- If `C` is cofiltered, and we have a left adjoint functor `L : C ⥤ D`, then `D` is cofiltered. -/
-theorem of_is_left_adjoint (L : C ⥤ D) [is_left_adjoint L] : is_cofiltered D :=
-  of_left_adjoint (adjunction.of_left_adjoint L)
+theorem of_is_left_adjoint (L : C ⥤ D) [IsLeftAdjoint L] : IsCofiltered D :=
+  of_left_adjoint (Adjunction.ofLeftAdjoint L)
 
 /-- Being cofiltered is preserved by equivalence of categories. -/
-theorem of_equivalence (h : C ≌ D) : is_cofiltered D :=
-  of_left_adjoint h.to_adjunction
+theorem of_equivalence (h : C ≌ D) : IsCofiltered D :=
+  of_left_adjoint h.toAdjunction
 
 end IsCofiltered
 
@@ -680,11 +680,11 @@ section Opposite
 
 open Opposite
 
-instance is_cofiltered_op_of_is_filtered [is_filtered C] : is_cofiltered (Cᵒᵖ) where
+instance is_cofiltered_op_of_is_filtered [IsFiltered C] : IsCofiltered (Cᵒᵖ) where
   cocone_objs := fun X Y =>
-    ⟨op (is_filtered.max X.unop Y.unop), (is_filtered.left_to_max _ _).op, (is_filtered.right_to_max _ _).op, trivialₓ⟩
+    ⟨op (IsFiltered.max X.unop Y.unop), (IsFiltered.leftToMax _ _).op, (IsFiltered.rightToMax _ _).op, trivialₓ⟩
   cocone_maps := fun X Y f g =>
-    ⟨op (is_filtered.coeq f.unop g.unop), (is_filtered.coeq_hom _ _).op, by
+    ⟨op (IsFiltered.coeq f.unop g.unop), (IsFiltered.coeqHom _ _).op, by
       rw
         [show f = f.unop.op by
           simp ,
@@ -693,14 +693,14 @@ instance is_cofiltered_op_of_is_filtered [is_filtered C] : is_cofiltered (Cᵒ�
         ← op_comp, ← op_comp]
       congr 1
       exact is_filtered.coeq_condition f.unop g.unop⟩
-  Nonempty := ⟨op is_filtered.nonempty.some⟩
+  Nonempty := ⟨op IsFiltered.nonempty.some⟩
 
-instance is_filtered_op_of_is_cofiltered [is_cofiltered C] : is_filtered (Cᵒᵖ) where
+instance is_filtered_op_of_is_cofiltered [IsCofiltered C] : IsFiltered (Cᵒᵖ) where
   cocone_objs := fun X Y =>
-    ⟨op (is_cofiltered.min X.unop Y.unop), (is_cofiltered.min_to_left X.unop Y.unop).op,
-      (is_cofiltered.min_to_right X.unop Y.unop).op, trivialₓ⟩
+    ⟨op (IsCofiltered.min X.unop Y.unop), (IsCofiltered.minToLeft X.unop Y.unop).op,
+      (IsCofiltered.minToRight X.unop Y.unop).op, trivialₓ⟩
   cocone_maps := fun X Y f g =>
-    ⟨op (is_cofiltered.eq f.unop g.unop), (is_cofiltered.eq_hom f.unop g.unop).op, by
+    ⟨op (IsCofiltered.eq f.unop g.unop), (IsCofiltered.eqHom f.unop g.unop).op, by
       rw
         [show f = f.unop.op by
           simp ,
@@ -709,7 +709,7 @@ instance is_filtered_op_of_is_cofiltered [is_cofiltered C] : is_filtered (Cᵒ�
         ← op_comp, ← op_comp]
       congr 1
       exact is_cofiltered.eq_condition f.unop g.unop⟩
-  Nonempty := ⟨op is_cofiltered.nonempty.some⟩
+  Nonempty := ⟨op IsCofiltered.nonempty.some⟩
 
 end Opposite
 

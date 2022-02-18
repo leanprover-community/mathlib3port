@@ -63,7 +63,7 @@ theorem lcm_eq : lcm x y = star :=
   rfl
 
 @[simp]
-theorem norm_unit_eq : norm_unit x = 1 :=
+theorem norm_unit_eq : normUnit x = 1 :=
   rfl
 
 instance : CompleteBooleanAlgebra PUnit := by
@@ -94,11 +94,11 @@ theorem inf_eq : x⊓y = star :=
   rfl
 
 @[simp]
-theorem Sup_eq : Sup s = star :=
+theorem Sup_eq : sup s = star :=
   rfl
 
 @[simp]
-theorem Inf_eq : Inf s = star :=
+theorem Inf_eq : inf s = star :=
   rfl
 
 @[simp]
@@ -130,11 +130,14 @@ instance : LinearOrderedCancelAddCommMonoid PUnit :=
     decidableLt := fun _ _ => Decidable.false }
 
 instance : HasScalar R PUnit where
-  smul := fun _ _ => star
+  smul := fun _ _ => unit
 
 @[simp]
 theorem smul_eq (r : R) : r • y = star :=
   rfl
+
+instance : IsCentralScalar R PUnit :=
+  ⟨fun _ _ => rfl⟩
 
 instance : SmulCommClass R S PUnit :=
   ⟨fun _ _ _ => Subsingleton.elimₓ _ _⟩

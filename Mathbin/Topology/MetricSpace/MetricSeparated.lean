@@ -47,17 +47,17 @@ protected theorem Disjoint (h : IsMetricSeparated s t) : Disjoint s t :=
   r0 <| by
     simpa using hr x hx.1 x hx.2
 
-theorem subset_compl_right (h : IsMetricSeparated s t) : s ⊆ tᶜ := fun x hs ht => h.disjoint ⟨hs, ht⟩
+theorem subset_compl_right (h : IsMetricSeparated s t) : s ⊆ tᶜ := fun x hs ht => h.Disjoint ⟨hs, ht⟩
 
 @[mono]
 theorem mono {s' t'} (hs : s ⊆ s') (ht : t ⊆ t') : IsMetricSeparated s' t' → IsMetricSeparated s t := fun ⟨r, r0, hr⟩ =>
   ⟨r, r0, fun x hx y hy => hr x (hs hx) y (ht hy)⟩
 
 theorem mono_left {s'} (h' : IsMetricSeparated s' t) (hs : s ⊆ s') : IsMetricSeparated s t :=
-  h'.mono hs subset.rfl
+  h'.mono hs Subset.rfl
 
 theorem mono_right {t'} (h' : IsMetricSeparated s t') (ht : t ⊆ t') : IsMetricSeparated s t :=
-  h'.mono subset.rfl ht
+  h'.mono Subset.rfl ht
 
 theorem union_left {s'} (h : IsMetricSeparated s t) (h' : IsMetricSeparated s' t) : IsMetricSeparated (s ∪ s') t := by
   rcases h, h' with ⟨⟨r, r0, hr⟩, ⟨r', r0', hr'⟩⟩
@@ -81,7 +81,7 @@ theorem union_right {t'} (h : IsMetricSeparated s t) (h' : IsMetricSeparated s t
 theorem union_right_iff {t'} : IsMetricSeparated s (t ∪ t') ↔ IsMetricSeparated s t ∧ IsMetricSeparated s t' :=
   comm.trans <| union_left_iff.trans <| and_congr comm comm
 
-theorem finite_Union_left_iff {ι : Type _} {I : Set ι} (hI : finite I) {s : ι → Set X} {t : Set X} :
+theorem finite_Union_left_iff {ι : Type _} {I : Set ι} (hI : Finite I) {s : ι → Set X} {t : Set X} :
     IsMetricSeparated (⋃ i ∈ I, s i) t ↔ ∀, ∀ i ∈ I, ∀, IsMetricSeparated (s i) t := by
   refine'
     finite.induction_on hI
@@ -92,7 +92,7 @@ theorem finite_Union_left_iff {ι : Type _} {I : Set ι} (hI : finite I) {s : ι
 
 alias finite_Union_left_iff ↔ _ IsMetricSeparated.finite_Union_left
 
-theorem finite_Union_right_iff {ι : Type _} {I : Set ι} (hI : finite I) {s : Set X} {t : ι → Set X} :
+theorem finite_Union_right_iff {ι : Type _} {I : Set ι} (hI : Finite I) {s : Set X} {t : ι → Set X} :
     IsMetricSeparated s (⋃ i ∈ I, t i) ↔ ∀, ∀ i ∈ I, ∀, IsMetricSeparated s (t i) := by
   simpa only [@comm _ _ s] using finite_Union_left_iff hI
 

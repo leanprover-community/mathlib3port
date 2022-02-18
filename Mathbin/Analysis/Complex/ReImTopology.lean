@@ -35,11 +35,11 @@ namespace Complex
 
 /-- `complex.re` turns `ℂ` into a trivial topological fiber bundle over `ℝ`. -/
 theorem is_trivial_topological_fiber_bundle_re : IsTrivialTopologicalFiberBundle ℝ re :=
-  ⟨equiv_real_prodₗ.toHomeomorph, fun z => rfl⟩
+  ⟨equivRealProdₗ.toHomeomorph, fun z => rfl⟩
 
 /-- `complex.im` turns `ℂ` into a trivial topological fiber bundle over `ℝ`. -/
 theorem is_trivial_topological_fiber_bundle_im : IsTrivialTopologicalFiberBundle ℝ im :=
-  ⟨equiv_real_prodₗ.toHomeomorph.trans (Homeomorph.prodComm ℝ ℝ), fun z => rfl⟩
+  ⟨equivRealProdₗ.toHomeomorph.trans (Homeomorph.prodComm ℝ ℝ), fun z => rfl⟩
 
 theorem is_topological_fiber_bundle_re : IsTopologicalFiberBundle ℝ re :=
   is_trivial_topological_fiber_bundle_re.IsTopologicalFiberBundle
@@ -141,36 +141,32 @@ theorem frontier_set_of_lt_re (a : ℝ) : Frontier { z : ℂ | a < z.re } = { z 
 theorem frontier_set_of_lt_im (a : ℝ) : Frontier { z : ℂ | a < z.im } = { z | z.im = a } := by
   simpa only [frontier_Ioi] using frontier_preimage_im (Ioi a)
 
-theorem closure_preimage_re_inter_preimage_im (s t : Set ℝ) :
-    Closure (re ⁻¹' s ∩ im ⁻¹' t) = re ⁻¹' Closure s ∩ im ⁻¹' Closure t := by
+theorem closure_re_prod_im (s t : Set ℝ) : Closure (s ×ℂ t) = Closure s ×ℂ Closure t := by
   simpa only [← preimage_eq_preimage equiv_real_prodₗ.symm.to_homeomorph.surjective,
     equiv_real_prodₗ.symm.to_homeomorph.preimage_closure] using @closure_prod_eq _ _ _ _ s t
 
-theorem interior_preimage_re_inter_preimage_im (s t : Set ℝ) :
-    Interior (re ⁻¹' s ∩ im ⁻¹' t) = re ⁻¹' Interior s ∩ im ⁻¹' Interior t := by
-  rw [interior_inter, interior_preimage_re, interior_preimage_im]
+theorem interior_re_prod_im (s t : Set ℝ) : Interior (s ×ℂ t) = Interior s ×ℂ Interior t := by
+  rw [re_prod_im, re_prod_im, interior_inter, interior_preimage_re, interior_preimage_im]
 
-theorem frontier_preimage_re_inter_preimage_im (s t : Set ℝ) :
-    Frontier (re ⁻¹' s ∩ im ⁻¹' t) = re ⁻¹' Closure s ∩ im ⁻¹' Frontier t ∪ re ⁻¹' Frontier s ∩ im ⁻¹' Closure t := by
+theorem frontier_re_prod_im (s t : Set ℝ) : Frontier (s ×ℂ t) = Closure s ×ℂ Frontier t ∪ Frontier s ×ℂ Closure t := by
   simpa only [← preimage_eq_preimage equiv_real_prodₗ.symm.to_homeomorph.surjective,
     equiv_real_prodₗ.symm.to_homeomorph.preimage_frontier] using frontier_prod_eq s t
 
 theorem frontier_set_of_le_re_and_le_im (a b : ℝ) :
     Frontier { z | a ≤ re z ∧ b ≤ im z } = { z | a ≤ re z ∧ im z = b ∨ re z = a ∧ b ≤ im z } := by
-  simpa only [closure_Ici, frontier_Ici] using frontier_preimage_re_inter_preimage_im (Ici a) (Ici b)
+  simpa only [closure_Ici, frontier_Ici] using frontier_re_prod_im (Ici a) (Ici b)
 
 theorem frontier_set_of_le_re_and_im_le (a b : ℝ) :
     Frontier { z | a ≤ re z ∧ im z ≤ b } = { z | a ≤ re z ∧ im z = b ∨ re z = a ∧ im z ≤ b } := by
-  simpa only [closure_Ici, closure_Iic, frontier_Ici, frontier_Iic] using
-    frontier_preimage_re_inter_preimage_im (Ici a) (Iic b)
+  simpa only [closure_Ici, closure_Iic, frontier_Ici, frontier_Iic] using frontier_re_prod_im (Ici a) (Iic b)
 
 end Complex
 
 open Complex
 
-theorem IsOpen.re_prod_im {s t : Set ℝ} (hs : IsOpen s) (ht : IsOpen t) : IsOpen (re ⁻¹' s ∩ im ⁻¹' t) :=
-  (hs.preimage continuous_re).inter (ht.preimage continuous_im)
+theorem IsOpen.re_prod_im {s t : Set ℝ} (hs : IsOpen s) (ht : IsOpen t) : IsOpen (s ×ℂ t) :=
+  (hs.Preimage continuous_re).inter (ht.Preimage continuous_im)
 
-theorem IsClosed.re_prod_im {s t : Set ℝ} (hs : IsClosed s) (ht : IsClosed t) : IsClosed (re ⁻¹' s ∩ im ⁻¹' t) :=
-  (hs.preimage continuous_re).inter (ht.preimage continuous_im)
+theorem IsClosed.re_prod_im {s t : Set ℝ} (hs : IsClosed s) (ht : IsClosed t) : IsClosed (s ×ℂ t) :=
+  (hs.Preimage continuous_re).inter (ht.Preimage continuous_im)
 

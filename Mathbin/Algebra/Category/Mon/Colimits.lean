@@ -40,7 +40,7 @@ and the identifications given by the morphisms in the diagram.
 -/
 
 
-variable {J : Type v} [small_category J] (F : J ⥤ Mon.{v})
+variable {J : Type v} [SmallCategory J] (F : J ⥤ Mon.{v})
 
 /-- An inductive type representing all monoid expressions (without relations)
 on a collection of types indexed by the objects of `J`.
@@ -50,8 +50,8 @@ inductive prequotient
   | one : prequotient
   | mul : prequotient → prequotient → prequotient
 
-instance : Inhabited (prequotient F) :=
-  ⟨prequotient.one⟩
+instance : Inhabited (Prequotient F) :=
+  ⟨Prequotient.one⟩
 
 open Prequotient
 
@@ -59,7 +59,7 @@ open Prequotient
 because of the monoid laws, or
 because one element is mapped to another by a morphism in the diagram.
 -/
-inductive relation : prequotient F → prequotient F → Prop
+inductive relation : Prequotient F → Prequotient F → Prop
   | refl : ∀ x, relation x x
   | symm : ∀ x y h : relation x y, relation y x
   | trans : ∀ x y z h : relation x y k : relation y z, relation x z
@@ -74,18 +74,18 @@ inductive relation : prequotient F → prequotient F → Prop
 
 /-- The setoid corresponding to monoid expressions modulo monoid relations and identifications.
 -/
-def colimit_setoid : Setoidₓ (prequotient F) where
-  R := relation F
-  iseqv := ⟨relation.refl, relation.symm, relation.trans⟩
+def colimit_setoid : Setoidₓ (Prequotient F) where
+  R := Relation F
+  iseqv := ⟨Relation.refl, Relation.symm, Relation.trans⟩
 
 attribute [instance] colimit_setoid
 
 /-- The underlying type of the colimit of a diagram in `Mon`.
 -/
 def colimit_type : Type v :=
-  Quotientₓ (colimit_setoid F)deriving Inhabited
+  Quotientₓ (colimitSetoid F)deriving Inhabited
 
-instance monoid_colimit_type : Monoidₓ (colimit_type F) where
+instance monoid_colimit_type : Monoidₓ (ColimitType F) where
   mul := by
     fapply @Quot.lift _ _ (colimit_type F → colimit_type F)
     · intro x
@@ -133,54 +133,54 @@ instance monoid_colimit_type : Monoidₓ (colimit_type F) where
     rfl
 
 @[simp]
-theorem quot_one : Quot.mk Setoidₓ.R one = (1 : colimit_type F) :=
+theorem quot_one : Quot.mk Setoidₓ.R one = (1 : ColimitType F) :=
   rfl
 
 @[simp]
-theorem quot_mul x y : Quot.mk Setoidₓ.R (mul x y) = (Quot.mk Setoidₓ.R x * Quot.mk Setoidₓ.R y : colimit_type F) :=
+theorem quot_mul x y : Quot.mk Setoidₓ.R (mul x y) = (Quot.mk Setoidₓ.R x * Quot.mk Setoidₓ.R y : ColimitType F) :=
   rfl
 
 /-- The bundled monoid giving the colimit of a diagram. -/
 def colimit : Mon :=
-  ⟨colimit_type F, by
+  ⟨ColimitType F, by
     infer_instance⟩
 
 /-- The function from a given monoid in the diagram to the colimit monoid. -/
-def cocone_fun (j : J) (x : F.obj j) : colimit_type F :=
+def cocone_fun (j : J) (x : F.obj j) : ColimitType F :=
   Quot.mk _ (of j x)
 
 /-- The monoid homomorphism from a given monoid in the diagram to the colimit monoid. -/
 def cocone_morphism (j : J) : F.obj j ⟶ colimit F where
-  toFun := cocone_fun F j
-  map_one' := Quot.sound (relation.one _)
-  map_mul' := fun x y => Quot.sound (relation.mul _ _ _)
+  toFun := coconeFun F j
+  map_one' := Quot.sound (Relation.one _)
+  map_mul' := fun x y => Quot.sound (Relation.mul _ _ _)
 
 @[simp]
-theorem cocone_naturality {j j' : J} (f : j ⟶ j') : F.map f ≫ cocone_morphism F j' = cocone_morphism F j := by
+theorem cocone_naturality {j j' : J} (f : j ⟶ j') : F.map f ≫ coconeMorphism F j' = coconeMorphism F j := by
   ext
   apply Quot.sound
   apply Relation.Map
 
 @[simp]
 theorem cocone_naturality_components (j j' : J) (f : j ⟶ j') (x : F.obj j) :
-    (cocone_morphism F j') (F.map f x) = (cocone_morphism F j) x := by
+    (coconeMorphism F j') (F.map f x) = (coconeMorphism F j) x := by
   rw [← cocone_naturality F f]
   rfl
 
 /-- The cocone over the proposed colimit monoid. -/
-def colimit_cocone : cocone F where
+def colimit_cocone : Cocone F where
   x := colimit F
-  ι := { app := cocone_morphism F }
+  ι := { app := coconeMorphism F }
 
 /-- The function from the free monoid on the diagram to the cone point of any other cocone. -/
 @[simp]
-def desc_fun_lift (s : cocone F) : prequotient F → s.X
+def desc_fun_lift (s : Cocone F) : Prequotient F → s.x
   | of j x => (s.ι.app j) x
   | one => 1
   | mul x y => desc_fun_lift x * desc_fun_lift y
 
 /-- The function from the colimit monoid to the cone point of any other cocone. -/
-def desc_fun (s : cocone F) : colimit_type F → s.X := by
+def desc_fun (s : Cocone F) : ColimitType F → s.x := by
   fapply Quot.lift
   · exact desc_fun_lift F s
     
@@ -213,15 +213,15 @@ def desc_fun (s : cocone F) : colimit_type F → s.X := by
     
 
 /-- The monoid homomorphism from the colimit monoid to the cone point of any other cocone. -/
-def desc_morphism (s : cocone F) : colimit F ⟶ s.X where
-  toFun := desc_fun F s
+def desc_morphism (s : Cocone F) : colimit F ⟶ s.x where
+  toFun := descFun F s
   map_one' := rfl
   map_mul' := fun x y => by
     induction x <;> induction y <;> rfl
 
 /-- Evidence that the proposed colimit is the colimit. -/
-def colimit_is_colimit : is_colimit (colimit_cocone F) where
-  desc := fun s => desc_morphism F s
+def colimit_is_colimit : IsColimit (colimitCocone F) where
+  desc := fun s => descMorphism F s
   uniq' := fun s m w => by
     ext
     induction x
@@ -236,7 +236,7 @@ def colimit_is_colimit : is_colimit (colimit_cocone F) where
       
     rfl
 
-instance has_colimits_Mon : has_colimits Mon where
+instance has_colimits_Mon : HasColimits Mon where
   HasColimitsOfShape := fun J 𝒥 =>
     { HasColimit := fun F => has_colimit.mk { Cocone := colimit_cocone F, IsColimit := colimit_is_colimit F } }
 

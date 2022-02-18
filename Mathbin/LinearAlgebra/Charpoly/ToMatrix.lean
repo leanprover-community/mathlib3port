@@ -31,7 +31,7 @@ section Basic
 
 /-- `charpoly f` is the characteristic polynomial of the matrix of `f` in any basis. -/
 @[simp]
-theorem charpoly_to_matrix {ι : Type w} [Fintype ι] (b : Basis ι R M) : (to_matrix b b f).charpoly = f.charpoly := by
+theorem charpoly_to_matrix {ι : Type w} [Fintype ι] (b : Basis ι R M) : (toMatrix b b f).charpoly = f.charpoly := by
   set A := to_matrix b b f
   set b' := choose_basis R M
   set ι' := choose_basis_index R M

@@ -30,7 +30,7 @@ def conjugate_exponent (p : ℝ) : ℝ :=
 
 namespace IsConjugateExponent
 
-variable {p q : ℝ} (h : p.is_conjugate_exponent q)
+variable {p q : ℝ} (h : p.IsConjugateExponent q)
 
 include h
 
@@ -38,10 +38,10 @@ theorem Pos : 0 < p :=
   lt_transₓ zero_lt_one h.one_lt
 
 theorem nonneg : 0 ≤ p :=
-  le_of_ltₓ h.pos
+  le_of_ltₓ h.Pos
 
 theorem ne_zero : p ≠ 0 :=
-  ne_of_gtₓ h.pos
+  ne_of_gtₓ h.Pos
 
 theorem sub_one_pos : 0 < p - 1 :=
   sub_pos.2 h.one_lt
@@ -50,7 +50,7 @@ theorem sub_one_ne_zero : p - 1 ≠ 0 :=
   ne_of_gtₓ h.sub_one_pos
 
 theorem one_div_pos : 0 < 1 / p :=
-  one_div_pos.2 h.pos
+  one_div_pos.2 h.Pos
 
 theorem one_div_nonneg : 0 ≤ 1 / p :=
   le_of_ltₓ h.one_div_pos
@@ -60,10 +60,10 @@ theorem one_div_ne_zero : 1 / p ≠ 0 :=
 
 theorem conj_eq : q = p / (p - 1) := by
   have := h.inv_add_inv_conj
-  rw [← eq_sub_iff_add_eq', one_div, inv_eq_iff] at this
+  rw [← eq_sub_iff_add_eq', one_div, inv_eq_iff_inv_eq] at this
   field_simp [← this, h.ne_zero]
 
-theorem conjugate_eq : conjugate_exponent p = q :=
+theorem conjugate_eq : conjugateExponent p = q :=
   h.conj_eq.symm
 
 theorem sub_one_mul_conj : (p - 1) * q = p :=
@@ -73,7 +73,7 @@ theorem mul_eq_add : p * q = p + q := by
   simpa only [sub_mul, sub_eq_iff_eq_add, one_mulₓ] using h.sub_one_mul_conj
 
 @[symm]
-protected theorem symm : q.is_conjugate_exponent p :=
+protected theorem symm : q.IsConjugateExponent p :=
   { one_lt := by
       rw [h.conj_eq]
       exact (one_lt_div h.sub_one_pos).mpr (sub_one_lt p),
@@ -98,12 +98,12 @@ theorem inv_add_inv_conj_ennreal : 1 / Ennreal.ofReal p + 1 / Ennreal.ofReal q =
 
 end IsConjugateExponent
 
-theorem is_conjugate_exponent_iff {p q : ℝ} (h : 1 < p) : p.is_conjugate_exponent q ↔ q = p / (p - 1) :=
+theorem is_conjugate_exponent_iff {p q : ℝ} (h : 1 < p) : p.IsConjugateExponent q ↔ q = p / (p - 1) :=
   ⟨fun H => H.conj_eq, fun H =>
     ⟨h, by
       field_simp [H, ne_of_gtₓ (lt_transₓ zero_lt_one h)]⟩⟩
 
-theorem is_conjugate_exponent_conjugate_exponent {p : ℝ} (h : 1 < p) : p.is_conjugate_exponent (conjugate_exponent p) :=
+theorem is_conjugate_exponent_conjugate_exponent {p : ℝ} (h : 1 < p) : p.IsConjugateExponent (conjugateExponent p) :=
   (is_conjugate_exponent_iff h).2 rfl
 
 end Real

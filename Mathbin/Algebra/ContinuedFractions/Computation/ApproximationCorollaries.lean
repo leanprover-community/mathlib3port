@@ -1,7 +1,7 @@
 import Mathbin.Algebra.ContinuedFractions.Computation.Approximations
 import Mathbin.Algebra.ContinuedFractions.ConvergentsEquiv
 import Mathbin.Algebra.Order.Archimedean
-import Mathbin.Topology.Algebra.Ordered.Basic
+import Mathbin.Topology.Algebra.Order.Basic
 
 /-!
 # Corollaries From Approximation Lemmas (`algebra.continued_fractions.computation.approximations`)

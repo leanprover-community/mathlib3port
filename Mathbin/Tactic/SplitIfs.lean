@@ -15,15 +15,15 @@ unsafe def find_if_cond : expr → Option expr
             | quote.1 (@ite _ (%%ₓc) (%%ₓ_) _ _) => some c
             | quote.1 (@dite _ (%%ₓc) (%%ₓ_) _ _) => some c
             | _ => none
-        guardₓ ¬c.has_var
+        guardₓ ¬c
         find_if_cond c <|> return c
 
-unsafe def find_if_cond_at (at_ : loc) : tactic (Option expr) := do
+unsafe def find_if_cond_at (at_ : Loc) : tactic (Option expr) := do
   let lctx ← at_.get_locals
   let lctx ← lctx.mmap infer_type
   let tgt ← target
   let es := if at_.include_goal then tgt :: lctx else lctx
-  return <| find_if_cond <| es.foldr app default
+  return <| find_if_cond <| es app default
 
 run_cmd
   mk_simp_attr `split_if_reduction
@@ -33,15 +33,15 @@ run_cmd
 
 attribute [split_if_reduction] if_pos if_neg dif_pos dif_neg if_congr
 
-unsafe def reduce_ifs_at (at_ : loc) : tactic Unit := do
+unsafe def reduce_ifs_at (at_ : Loc) : tactic Unit := do
   let sls ← get_user_simp_lemmas `split_if_reduction
-  let cfg : simp_config := { failIfUnchanged := ff }
+  let cfg : SimpConfig := { failIfUnchanged := false }
   let discharger := assumption <|> applyc `not_not_intro >> assumption
   let hs ← at_.get_locals
-  hs.mmap' fun h => simp_hyp sls [] h cfg discharger >> skip
-  when at_.include_goal (simp_target sls [] cfg discharger >> skip)
+  hs fun h => simp_hyp sls [] h cfg discharger >> skip
+  when at_ (simp_target sls [] cfg discharger >> skip)
 
-unsafe def split_if1 (c : expr) (n : Name) (at_ : loc) : tactic Unit :=
+unsafe def split_if1 (c : expr) (n : Name) (at_ : Loc) : tactic Unit :=
   andthen (by_cases c n) (reduce_ifs_at at_)
 
 private unsafe def get_next_name (names : ref (List Name)) : tactic Name := do
@@ -57,7 +57,7 @@ private unsafe def value_known (c : expr) : tactic Bool := do
   let lctx ← lctx.mmap infer_type
   return <| c ∈ lctx ∨ (quote.1 ¬%%ₓc) ∈ lctx
 
-private unsafe def split_ifs_core (at_ : loc) (names : ref (List Name)) : List expr → tactic Unit
+private unsafe def split_ifs_core (at_ : Loc) (names : ref (List Name)) : List expr → tactic Unit
   | done => do
     let some cond ← find_if_cond_at at_ | fail "no if-then-else expressions to split"
     let cond :=
@@ -72,7 +72,7 @@ private unsafe def split_ifs_core (at_ : loc) (names : ref (List Name)) : List e
             let n ← get_next_name names
             andthen (split_if1 cond n at_) (try (split_ifs_core (cond :: done)))
 
-unsafe def split_ifs (names : List Name) (at_ : loc := loc.ns [none]) :=
+unsafe def split_ifs (names : List Name) (at_ : Loc := Loc.ns [none]) :=
   (using_new_ref names) fun names => split_ifs_core at_ names []
 
 namespace Interactive

@@ -55,10 +55,10 @@ This function can be used to compute the exact value approxmated by a continued 
 `generalized_continued_fraction.of v` as described in lemma
 `comp_exact_value_correctness_of_stream_eq_some`.
 -/
-protected def comp_exact_value (pconts conts : pair K) (fr : K) : K :=
+protected def comp_exact_value (pconts conts : Pair K) (fr : K) : K :=
   if fr = 0 then conts.a / conts.b
   else
-    let exact_conts := next_continuants 1 fr⁻¹ pconts conts
+    let exact_conts := nextContinuants 1 fr⁻¹ pconts conts
     exact_conts.a / exact_conts.b
 
 variable [FloorRing K]
@@ -88,9 +88,9 @@ position `2` is `0.5`. We hence have `v = 3 + 1/(2 + 0.5) = 3 + 1/2.5 = 3.4`. Th
 corresponds exactly to the one using the recurrence equation in `comp_exact_value`.
 -/
 theorem comp_exact_value_correctness_of_stream_eq_some :
-    ∀ {ifp_n : int_fract_pair K},
-      int_fract_pair.stream v n = some ifp_n →
-        v = comp_exact_value ((of v).continuantsAux n) ((of v).continuantsAux <| n + 1) ifp_n.fr :=
+    ∀ {ifp_n : IntFractPair K},
+      IntFractPair.stream v n = some ifp_n →
+        v = compExactValue ((of v).continuantsAux n) ((of v).continuantsAux <| n + 1) ifp_n.fr :=
   by
   let g := of v
   induction' n with n IH
@@ -168,7 +168,7 @@ open generalized_continued_fraction (of_terminated_at_n_iff_succ_nth_int_fract_p
 
 /-- The convergent of `generalized_continued_fraction.of v` at step `n - 1` is exactly `v` if the
 `int_fract_pair.stream` of the corresponding continued fraction terminated at step `n`. -/
-theorem of_correctness_of_nth_stream_eq_none (nth_stream_eq_none : int_fract_pair.stream v n = none) :
+theorem of_correctness_of_nth_stream_eq_none (nth_stream_eq_none : IntFractPair.stream v n = none) :
     v = (of v).convergents (n - 1) := by
   induction' n with n IH
   case nat.zero =>
@@ -197,7 +197,7 @@ theorem of_correctness_of_nth_stream_eq_none (nth_stream_eq_none : int_fract_pai
 exactly `v`.
 -/
 theorem of_correctness_of_terminated_at (terminated_at_n : (of v).TerminatedAt n) : v = (of v).convergents n :=
-  have : int_fract_pair.stream v (n + 1) = none :=
+  have : IntFractPair.stream v (n + 1) = none :=
     of_terminated_at_n_iff_succ_nth_int_fract_pair_stream_eq_none.elim_left terminated_at_n
   of_correctness_of_nth_stream_eq_none this
 

@@ -12,7 +12,7 @@ instance : LinearOrderₓ Charₓ :=
     lt_iff_le_not_le := fun a b => @lt_iff_le_not_leₓ ℕ _ _ _, decidableLe := Charₓ.decidableLe,
     DecidableEq := Charₓ.decidableEq, decidableLt := Charₓ.decidableLt }
 
-theorem Charₓ.of_nat_to_nat {c : Charₓ} (h : IsValidChar c.to_nat) : Charₓ.ofNat c.to_nat = c := by
+theorem Charₓ.of_nat_to_nat {c : Charₓ} (h : IsValidChar c.toNat) : Charₓ.ofNat c.toNat = c := by
   rw [Charₓ.ofNat, dif_pos h]
   cases c
   simp [Charₓ.toNat]

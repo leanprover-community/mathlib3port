@@ -89,31 +89,30 @@ variable {E : Type _} [NormedGroup E] [NormedSpace 𝕜 E]
 
 /-- For normed spaces `E`, there is a canonical map `dual 𝕜 E → weak_dual 𝕜 E` (the "identity"
 mapping). It is a linear equivalence. -/
-def NormedSpace.Dual.toWeakDual : dual 𝕜 E ≃ₗ[𝕜] WeakDual 𝕜 E :=
+def NormedSpace.Dual.toWeakDual : Dual 𝕜 E ≃ₗ[𝕜] WeakDual 𝕜 E :=
   LinearEquiv.refl 𝕜 (E →L[𝕜] 𝕜)
 
 /-- For normed spaces `E`, there is a canonical map `weak_dual 𝕜 E → dual 𝕜 E` (the "identity"
 mapping). It is a linear equivalence. Here it is implemented as the inverse of the linear
 equivalence `normed_space.dual.to_weak_dual` in the other direction. -/
-def WeakDual.toNormedDual : WeakDual 𝕜 E ≃ₗ[𝕜] dual 𝕜 E :=
+def WeakDual.toNormedDual : WeakDual 𝕜 E ≃ₗ[𝕜] Dual 𝕜 E :=
   NormedSpace.Dual.toWeakDual.symm
 
 @[simp]
-theorem WeakDual.coe_to_fun_eq_normed_coe_to_fun (x' : dual 𝕜 E) : (x'.to_weak_dual : E → 𝕜) = x' :=
+theorem WeakDual.coe_to_fun_eq_normed_coe_to_fun (x' : Dual 𝕜 E) : (x'.toWeakDual : E → 𝕜) = x' :=
   rfl
 
 namespace NormedSpace.Dual
 
 @[simp]
-theorem to_weak_dual_eq_iff (x' y' : dual 𝕜 E) : x'.to_weak_dual = y'.to_weak_dual ↔ x' = y' :=
-  to_weak_dual.Injective.eq_iff
+theorem to_weak_dual_eq_iff (x' y' : Dual 𝕜 E) : x'.toWeakDual = y'.toWeakDual ↔ x' = y' :=
+  toWeakDual.Injective.eq_iff
 
 @[simp]
-theorem _root_.weak_dual.to_normed_dual_eq_iff (x' y' : WeakDual 𝕜 E) :
-    x'.to_normed_dual = y'.to_normed_dual ↔ x' = y' :=
+theorem _root_.weak_dual.to_normed_dual_eq_iff (x' y' : WeakDual 𝕜 E) : x'.toNormedDual = y'.toNormedDual ↔ x' = y' :=
   WeakDual.toNormedDual.Injective.eq_iff
 
-theorem to_weak_dual_continuous : Continuous fun x' : dual 𝕜 E => x'.to_weak_dual := by
+theorem to_weak_dual_continuous : Continuous fun x' : Dual 𝕜 E => x'.toWeakDual := by
   apply WeakDual.continuous_of_continuous_eval
   intro z
   exact (inclusion_in_double_dual 𝕜 E z).Continuous
@@ -121,13 +120,13 @@ theorem to_weak_dual_continuous : Continuous fun x' : dual 𝕜 E => x'.to_weak_
 /-- For a normed space `E`, according to `to_weak_dual_continuous` the "identity mapping"
 `dual 𝕜 E → weak_dual 𝕜 E` is continuous. This definition implements it as a continuous linear
 map. -/
-def continuous_linear_map_to_weak_dual : dual 𝕜 E →L[𝕜] WeakDual 𝕜 E :=
-  { to_weak_dual with cont := to_weak_dual_continuous }
+def continuous_linear_map_to_weak_dual : Dual 𝕜 E →L[𝕜] WeakDual 𝕜 E :=
+  { toWeakDual with cont := to_weak_dual_continuous }
 
 /-- The weak-star topology is coarser than the dual-norm topology. -/
 theorem dual_norm_topology_le_weak_dual_topology :
     (by
-        infer_instance : TopologicalSpace (dual 𝕜 E)) ≤
+        infer_instance : TopologicalSpace (Dual 𝕜 E)) ≤
       (by
         infer_instance : TopologicalSpace (WeakDual 𝕜 E)) :=
   by
@@ -141,7 +140,7 @@ end NormedSpace.Dual
 namespace WeakDual
 
 theorem to_normed_dual.preimage_closed_unit_ball :
-    to_normed_dual ⁻¹' Metric.ClosedBall (0 : dual 𝕜 E) 1 = { x' : WeakDual 𝕜 E | ∥x'.to_normed_dual∥ ≤ 1 } := by
+    to_normed_dual ⁻¹' Metric.ClosedBall (0 : Dual 𝕜 E) 1 = { x' : WeakDual 𝕜 E | ∥x'.toNormedDual∥ ≤ 1 } := by
   have eq : Metric.ClosedBall (0 : dual 𝕜 E) 1 = { x' : dual 𝕜 E | ∥x'∥ ≤ 1 } := by
     ext x'
     simp only [dist_zero_right, Metric.mem_closed_ball, Set.mem_set_of_eq]

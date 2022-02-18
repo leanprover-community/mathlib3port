@@ -94,111 +94,111 @@ variable {α : Type _} [MeasurableSpace α]
 /-- Finite measures are defined as the subtype of measures that have the property of being finite
 measures (i.e., their total mass is finite). -/
 def finite_measure (α : Type _) [MeasurableSpace α] : Type _ :=
-  { μ : Measureₓ α // is_finite_measure μ }
+  { μ : Measure α // IsFiniteMeasure μ }
 
 namespace FiniteMeasure
 
 /-- A finite measure can be interpreted as a measure. -/
-instance : Coe (finite_measure α) (MeasureTheory.Measure α) :=
+instance : Coe (FiniteMeasure α) (MeasureTheory.Measure α) :=
   coeSubtype
 
-instance is_finite_measure (μ : finite_measure α) : is_finite_measure (μ : Measureₓ α) :=
-  μ.prop
+instance is_finite_measure (μ : FiniteMeasure α) : IsFiniteMeasure (μ : Measure α) :=
+  μ.Prop
 
-instance : CoeFun (finite_measure α) fun _ => Set α → ℝ≥0 :=
+instance : CoeFun (FiniteMeasure α) fun _ => Set α → ℝ≥0 :=
   ⟨fun μ s => (μ s).toNnreal⟩
 
-theorem coe_fn_eq_to_nnreal_coe_fn_to_measure (ν : finite_measure α) :
-    (ν : Set α → ℝ≥0 ) = fun s => ((ν : Measureₓ α) s).toNnreal :=
+theorem coe_fn_eq_to_nnreal_coe_fn_to_measure (ν : FiniteMeasure α) :
+    (ν : Set α → ℝ≥0 ) = fun s => ((ν : Measure α) s).toNnreal :=
   rfl
 
 @[simp]
-theorem ennreal_coe_fn_eq_coe_fn_to_measure (ν : finite_measure α) (s : Set α) : (ν s : ℝ≥0∞) = (ν : Measureₓ α) s :=
+theorem ennreal_coe_fn_eq_coe_fn_to_measure (ν : FiniteMeasure α) (s : Set α) : (ν s : ℝ≥0∞) = (ν : Measure α) s :=
   Ennreal.coe_to_nnreal (measure_lt_top (↑ν) s).Ne
 
 @[simp]
-theorem val_eq_to_measure (ν : finite_measure α) : ν.val = (ν : Measureₓ α) :=
+theorem val_eq_to_measure (ν : FiniteMeasure α) : ν.val = (ν : Measure α) :=
   rfl
 
-theorem coe_injective : Function.Injective (coe : finite_measure α → Measureₓ α) :=
+theorem coe_injective : Function.Injective (coe : FiniteMeasure α → Measure α) :=
   Subtype.coe_injective
 
 /-- The (total) mass of a finite measure `μ` is `μ univ`, i.e., the cast to `nnreal` of
 `(μ : measure α) univ`. -/
-def mass (μ : finite_measure α) : ℝ≥0 :=
-  μ univ
+def mass (μ : FiniteMeasure α) : ℝ≥0 :=
+  μ Univ
 
 @[simp]
-theorem ennreal_mass {μ : finite_measure α} : (μ.mass : ℝ≥0∞) = (μ : Measureₓ α) univ :=
+theorem ennreal_mass {μ : FiniteMeasure α} : (μ.mass : ℝ≥0∞) = (μ : Measure α) Univ :=
   ennreal_coe_fn_eq_coe_fn_to_measure μ Set.Univ
 
-instance Zero : Zero (finite_measure α) where
+instance Zero : Zero (FiniteMeasure α) where
   zero := ⟨0, MeasureTheory.is_finite_measure_zero⟩
 
-instance : Inhabited (finite_measure α) :=
+instance : Inhabited (FiniteMeasure α) :=
   ⟨0⟩
 
-instance : Add (finite_measure α) where
+instance : Add (FiniteMeasure α) where
   add := fun μ ν => ⟨μ + ν, MeasureTheory.is_finite_measure_add⟩
 
-instance : HasScalar ℝ≥0 (finite_measure α) where
+instance : HasScalar ℝ≥0 (FiniteMeasure α) where
   smul := fun c : ℝ≥0 μ => ⟨c • μ, MeasureTheory.is_finite_measure_smul_nnreal⟩
 
 @[simp, norm_cast]
-theorem coe_zero : (coe : finite_measure α → Measureₓ α) 0 = 0 :=
+theorem coe_zero : (coe : FiniteMeasure α → Measure α) 0 = 0 :=
   rfl
 
 @[simp, norm_cast]
-theorem coe_add (μ ν : finite_measure α) : ↑(μ + ν) = (↑μ + ↑ν : Measureₓ α) :=
+theorem coe_add (μ ν : FiniteMeasure α) : ↑(μ + ν) = (↑μ + ↑ν : Measure α) :=
   rfl
 
 @[simp, norm_cast]
-theorem coe_smul (c : ℝ≥0 ) (μ : finite_measure α) : ↑(c • μ) = (c • ↑μ : Measureₓ α) :=
+theorem coe_smul (c : ℝ≥0 ) (μ : FiniteMeasure α) : ↑(c • μ) = (c • ↑μ : Measure α) :=
   rfl
 
 @[simp, norm_cast]
-theorem coe_fn_zero : (⇑(0 : finite_measure α) : Set α → ℝ≥0 ) = (0 : Set α → ℝ≥0 ) := by
+theorem coe_fn_zero : (⇑(0 : FiniteMeasure α) : Set α → ℝ≥0 ) = (0 : Set α → ℝ≥0 ) := by
   funext
   rfl
 
 @[simp, norm_cast]
-theorem coe_fn_add (μ ν : finite_measure α) : (⇑(μ + ν) : Set α → ℝ≥0 ) = (⇑μ + ⇑ν : Set α → ℝ≥0 ) := by
-  funext
-  simp [← Ennreal.coe_eq_coe]
-
-@[simp, norm_cast]
-theorem coe_fn_smul (c : ℝ≥0 ) (μ : finite_measure α) : (⇑(c • μ) : Set α → ℝ≥0 ) = c • (⇑μ : Set α → ℝ≥0 ) := by
+theorem coe_fn_add (μ ν : FiniteMeasure α) : (⇑(μ + ν) : Set α → ℝ≥0 ) = (⇑μ + ⇑ν : Set α → ℝ≥0 ) := by
   funext
   simp [← Ennreal.coe_eq_coe]
 
-instance : AddCommMonoidₓ (finite_measure α) :=
-  finite_measure.coe_injective.AddCommMonoid (coe : finite_measure α → Measureₓ α) finite_measure.coe_zero
-    finite_measure.coe_add
+@[simp, norm_cast]
+theorem coe_fn_smul (c : ℝ≥0 ) (μ : FiniteMeasure α) : (⇑(c • μ) : Set α → ℝ≥0 ) = c • (⇑μ : Set α → ℝ≥0 ) := by
+  funext
+  simp [← Ennreal.coe_eq_coe]
+
+instance : AddCommMonoidₓ (FiniteMeasure α) :=
+  FiniteMeasure.coe_injective.AddCommMonoid (coe : FiniteMeasure α → Measure α) FiniteMeasure.coe_zero
+    FiniteMeasure.coe_add
 
 /-- Coercion is an `add_monoid_hom`. -/
 @[simps]
-def coe_add_monoid_hom : finite_measure α →+ Measureₓ α where
+def coe_add_monoid_hom : FiniteMeasure α →+ Measure α where
   toFun := coe
   map_zero' := coe_zero
   map_add' := coe_add
 
-instance {α : Type _} [MeasurableSpace α] : Module ℝ≥0 (finite_measure α) :=
-  Function.Injective.module _ coe_add_monoid_hom finite_measure.coe_injective coe_smul
+instance {α : Type _} [MeasurableSpace α] : Module ℝ≥0 (FiniteMeasure α) :=
+  Function.Injective.module _ coeAddMonoidHom FiniteMeasure.coe_injective coe_smul
 
 variable [TopologicalSpace α]
 
 /-- The pairing of a finite (Borel) measure `μ` with a nonnegative bounded continuous
 function is obtained by (Lebesgue) integrating the (test) function against the measure.
 This is `finite_measure.test_against_nn`. -/
-def test_against_nn (μ : finite_measure α) (f : α →ᵇ ℝ≥0 ) : ℝ≥0 :=
-  (∫⁻ x, f x ∂(μ : Measureₓ α)).toNnreal
+def test_against_nn (μ : FiniteMeasure α) (f : α →ᵇ ℝ≥0 ) : ℝ≥0 :=
+  (∫⁻ x, f x ∂(μ : Measure α)).toNnreal
 
 theorem _root_.bounded_continuous_function.nnreal.to_ennreal_comp_measurable {α : Type _} [TopologicalSpace α]
     [MeasurableSpace α] [OpensMeasurableSpace α] (f : α →ᵇ ℝ≥0 ) : Measurable fun x => (f x : ℝ≥0∞) :=
-  measurable_coe_nnreal_ennreal.comp f.continuous.measurable
+  measurable_coe_nnreal_ennreal.comp f.Continuous.Measurable
 
-theorem lintegral_lt_top_of_bounded_continuous_to_nnreal (μ : finite_measure α) (f : α →ᵇ ℝ≥0 ) :
-    (∫⁻ x, f x ∂(μ : Measureₓ α)) < ∞ := by
+theorem lintegral_lt_top_of_bounded_continuous_to_nnreal (μ : FiniteMeasure α) (f : α →ᵇ ℝ≥0 ) :
+    (∫⁻ x, f x ∂(μ : Measure α)) < ∞ := by
   apply IsFiniteMeasure.lintegral_lt_top_of_bounded_to_ennreal
   use nndist f 0
   intro x
@@ -210,36 +210,36 @@ theorem lintegral_lt_top_of_bounded_continuous_to_nnreal (μ : finite_measure α
   rwa [Eq] at key
 
 @[simp]
-theorem test_against_nn_coe_eq {μ : finite_measure α} {f : α →ᵇ ℝ≥0 } :
-    (μ.test_against_nn f : ℝ≥0∞) = ∫⁻ x, f x ∂(μ : Measureₓ α) :=
+theorem test_against_nn_coe_eq {μ : FiniteMeasure α} {f : α →ᵇ ℝ≥0 } :
+    (μ.testAgainstNn f : ℝ≥0∞) = ∫⁻ x, f x ∂(μ : Measure α) :=
   Ennreal.coe_to_nnreal (lintegral_lt_top_of_bounded_continuous_to_nnreal μ f).Ne
 
-theorem test_against_nn_const (μ : finite_measure α) (c : ℝ≥0 ) :
-    μ.test_against_nn (BoundedContinuousFunction.const α c) = c * μ.mass := by
+theorem test_against_nn_const (μ : FiniteMeasure α) (c : ℝ≥0 ) :
+    μ.testAgainstNn (BoundedContinuousFunction.const α c) = c * μ.mass := by
   simp [← Ennreal.coe_eq_coe]
 
-theorem test_against_nn_mono (μ : finite_measure α) {f g : α →ᵇ ℝ≥0 } (f_le_g : (f : α → ℝ≥0 ) ≤ g) :
-    μ.test_against_nn f ≤ μ.test_against_nn g := by
+theorem test_against_nn_mono (μ : FiniteMeasure α) {f g : α →ᵇ ℝ≥0 } (f_le_g : (f : α → ℝ≥0 ) ≤ g) :
+    μ.testAgainstNn f ≤ μ.testAgainstNn g := by
   simp only [← Ennreal.coe_le_coe, test_against_nn_coe_eq]
   apply lintegral_mono
   exact fun x => Ennreal.coe_mono (f_le_g x)
 
 variable [OpensMeasurableSpace α]
 
-theorem test_against_nn_add (μ : finite_measure α) (f₁ f₂ : α →ᵇ ℝ≥0 ) :
-    μ.test_against_nn (f₁ + f₂) = μ.test_against_nn f₁ + μ.test_against_nn f₂ := by
+theorem test_against_nn_add (μ : FiniteMeasure α) (f₁ f₂ : α →ᵇ ℝ≥0 ) :
+    μ.testAgainstNn (f₁ + f₂) = μ.testAgainstNn f₁ + μ.testAgainstNn f₂ := by
   simp only [← Ennreal.coe_eq_coe, BoundedContinuousFunction.coe_add, Ennreal.coe_add, Pi.add_apply,
     test_against_nn_coe_eq]
   apply lintegral_add <;> exact BoundedContinuousFunction.Nnreal.to_ennreal_comp_measurable _
 
-theorem test_against_nn_smul (μ : finite_measure α) (c : ℝ≥0 ) (f : α →ᵇ ℝ≥0 ) :
-    μ.test_against_nn (c • f) = c * μ.test_against_nn f := by
+theorem test_against_nn_smul (μ : FiniteMeasure α) (c : ℝ≥0 ) (f : α →ᵇ ℝ≥0 ) :
+    μ.testAgainstNn (c • f) = c * μ.testAgainstNn f := by
   simp only [← Ennreal.coe_eq_coe, Algebra.id.smul_eq_mul, BoundedContinuousFunction.coe_smul, test_against_nn_coe_eq,
     Ennreal.coe_mul]
   exact @lintegral_const_mul _ _ (μ : Measureₓ α) c _ (BoundedContinuousFunction.Nnreal.to_ennreal_comp_measurable f)
 
-theorem test_against_nn_lipschitz_estimate (μ : finite_measure α) (f g : α →ᵇ ℝ≥0 ) :
-    μ.test_against_nn f ≤ μ.test_against_nn g + nndist f g * μ.mass := by
+theorem test_against_nn_lipschitz_estimate (μ : FiniteMeasure α) (f g : α →ᵇ ℝ≥0 ) :
+    μ.testAgainstNn f ≤ μ.testAgainstNn g + nndist f g * μ.mass := by
   simp only [← μ.test_against_nn_const (nndist f g), ← test_against_nn_add, ← Ennreal.coe_le_coe,
     BoundedContinuousFunction.coe_add, const_apply, Ennreal.coe_add, Pi.add_apply, coe_nnreal_ennreal_nndist,
     test_against_nn_coe_eq]
@@ -255,8 +255,8 @@ theorem test_against_nn_lipschitz_estimate (μ : finite_measure α) (f g : α �
     exact Ennreal.coe_mono le'
   rwa [coe_nnreal_ennreal_nndist] at le
 
-theorem test_against_nn_lipschitz (μ : finite_measure α) :
-    LipschitzWith μ.mass fun f : α →ᵇ ℝ≥0 => μ.test_against_nn f := by
+theorem test_against_nn_lipschitz (μ : FiniteMeasure α) : LipschitzWith μ.mass fun f : α →ᵇ ℝ≥0 => μ.testAgainstNn f :=
+  by
   rw [lipschitz_with_iff_dist_le_mul]
   intro f₁ f₂
   suffices abs (μ.test_against_nn f₁ - μ.test_against_nn f₂ : ℝ) ≤ μ.mass * dist f₁ f₂ by
@@ -280,71 +280,71 @@ theorem test_against_nn_lipschitz (μ : finite_measure α) :
 
 /-- Finite measures yield elements of the `weak_dual` of bounded continuous nonnegative
 functions via `finite_measure.test_against_nn`, i.e., integration. -/
-def to_weak_dual_bounded_continuous_nnreal (μ : finite_measure α) : WeakDual ℝ≥0 (α →ᵇ ℝ≥0 ) where
-  toFun := fun f => μ.test_against_nn f
+def to_weak_dual_bounded_continuous_nnreal (μ : FiniteMeasure α) : WeakDual ℝ≥0 (α →ᵇ ℝ≥0 ) where
+  toFun := fun f => μ.testAgainstNn f
   map_add' := test_against_nn_add μ
   map_smul' := test_against_nn_smul μ
-  cont := μ.test_against_nn_lipschitz.continuous
+  cont := μ.test_against_nn_lipschitz.Continuous
 
 end FiniteMeasure
 
 /-- Probability measures are defined as the subtype of measures that have the property of being
 probability measures (i.e., their total mass is one). -/
 def probability_measure (α : Type _) [MeasurableSpace α] : Type _ :=
-  { μ : Measureₓ α // is_probability_measure μ }
+  { μ : Measure α // IsProbabilityMeasure μ }
 
 namespace ProbabilityMeasure
 
-instance [Inhabited α] : Inhabited (probability_measure α) :=
-  ⟨⟨measure.dirac default, measure.dirac.is_probability_measure⟩⟩
+instance [Inhabited α] : Inhabited (ProbabilityMeasure α) :=
+  ⟨⟨Measure.dirac default, Measure.dirac.is_probability_measure⟩⟩
 
 /-- A probability measure can be interpreted as a measure. -/
-instance : Coe (probability_measure α) (MeasureTheory.Measure α) :=
+instance : Coe (ProbabilityMeasure α) (MeasureTheory.Measure α) :=
   coeSubtype
 
-instance : CoeFun (probability_measure α) fun _ => Set α → ℝ≥0 :=
+instance : CoeFun (ProbabilityMeasure α) fun _ => Set α → ℝ≥0 :=
   ⟨fun μ s => (μ s).toNnreal⟩
 
-instance (μ : probability_measure α) : is_probability_measure (μ : Measureₓ α) :=
-  μ.prop
+instance (μ : ProbabilityMeasure α) : IsProbabilityMeasure (μ : Measure α) :=
+  μ.Prop
 
-theorem coe_fn_eq_to_nnreal_coe_fn_to_measure (ν : probability_measure α) :
-    (ν : Set α → ℝ≥0 ) = fun s => ((ν : Measureₓ α) s).toNnreal :=
+theorem coe_fn_eq_to_nnreal_coe_fn_to_measure (ν : ProbabilityMeasure α) :
+    (ν : Set α → ℝ≥0 ) = fun s => ((ν : Measure α) s).toNnreal :=
   rfl
 
 @[simp]
-theorem val_eq_to_measure (ν : probability_measure α) : ν.val = (ν : Measureₓ α) :=
+theorem val_eq_to_measure (ν : ProbabilityMeasure α) : ν.val = (ν : Measure α) :=
   rfl
 
-theorem coe_injective : Function.Injective (coe : probability_measure α → Measureₓ α) :=
+theorem coe_injective : Function.Injective (coe : ProbabilityMeasure α → Measure α) :=
   Subtype.coe_injective
 
 @[simp]
-theorem coe_fn_univ (ν : probability_measure α) : ν univ = 1 :=
-  congr_argₓ Ennreal.toNnreal ν.prop.measure_univ
+theorem coe_fn_univ (ν : ProbabilityMeasure α) : ν Univ = 1 :=
+  congr_argₓ Ennreal.toNnreal ν.Prop.measure_univ
 
 /-- A probability measure can be interpreted as a finite measure. -/
-def to_finite_measure (μ : probability_measure α) : finite_measure α :=
+def to_finite_measure (μ : ProbabilityMeasure α) : FiniteMeasure α :=
   ⟨μ, inferInstance⟩
 
 @[simp]
-theorem coe_comp_to_finite_measure_eq_coe (ν : probability_measure α) :
-    (ν.to_finite_measure : Measureₓ α) = (ν : Measureₓ α) :=
+theorem coe_comp_to_finite_measure_eq_coe (ν : ProbabilityMeasure α) :
+    (ν.toFiniteMeasure : Measure α) = (ν : Measure α) :=
   rfl
 
 @[simp]
-theorem coe_fn_comp_to_finite_measure_eq_coe_fn (ν : probability_measure α) :
-    (ν.to_finite_measure : Set α → ℝ≥0 ) = (ν : Set α → ℝ≥0 ) :=
+theorem coe_fn_comp_to_finite_measure_eq_coe_fn (ν : ProbabilityMeasure α) :
+    (ν.toFiniteMeasure : Set α → ℝ≥0 ) = (ν : Set α → ℝ≥0 ) :=
   rfl
 
 @[simp]
-theorem ennreal_coe_fn_eq_coe_fn_to_measure (ν : probability_measure α) (s : Set α) :
-    (ν s : ℝ≥0∞) = (ν : Measureₓ α) s := by
+theorem ennreal_coe_fn_eq_coe_fn_to_measure (ν : ProbabilityMeasure α) (s : Set α) : (ν s : ℝ≥0∞) = (ν : Measure α) s :=
+  by
   rw [← coe_fn_comp_to_finite_measure_eq_coe_fn, finite_measure.ennreal_coe_fn_eq_coe_fn_to_measure]
   rfl
 
 @[simp]
-theorem mass_to_finite_measure (μ : probability_measure α) : μ.to_finite_measure.mass = 1 :=
+theorem mass_to_finite_measure (μ : ProbabilityMeasure α) : μ.toFiniteMeasure.mass = 1 :=
   μ.coe_fn_univ
 
 variable [TopologicalSpace α]
@@ -352,45 +352,45 @@ variable [TopologicalSpace α]
 /-- The pairing of a (Borel) probability measure `μ` with a nonnegative bounded continuous
 function is obtained by (Lebesgue) integrating the (test) function against the measure. This
 is `probability_measure.test_against_nn`. -/
-def test_against_nn (μ : probability_measure α) (f : α →ᵇ ℝ≥0 ) : ℝ≥0 :=
-  (lintegral (μ : Measureₓ α) ((coe : ℝ≥0 → ℝ≥0∞) ∘ f)).toNnreal
+def test_against_nn (μ : ProbabilityMeasure α) (f : α →ᵇ ℝ≥0 ) : ℝ≥0 :=
+  (lintegral (μ : Measure α) ((coe : ℝ≥0 → ℝ≥0∞) ∘ f)).toNnreal
 
-theorem lintegral_lt_top_of_bounded_continuous_to_nnreal (μ : probability_measure α) (f : α →ᵇ ℝ≥0 ) :
-    (∫⁻ x, f x ∂(μ : Measureₓ α)) < ∞ :=
-  μ.to_finite_measure.lintegral_lt_top_of_bounded_continuous_to_nnreal f
+theorem lintegral_lt_top_of_bounded_continuous_to_nnreal (μ : ProbabilityMeasure α) (f : α →ᵇ ℝ≥0 ) :
+    (∫⁻ x, f x ∂(μ : Measure α)) < ∞ :=
+  μ.toFiniteMeasure.lintegral_lt_top_of_bounded_continuous_to_nnreal f
 
 @[simp]
-theorem test_against_nn_coe_eq {μ : probability_measure α} {f : α →ᵇ ℝ≥0 } :
-    (μ.test_against_nn f : ℝ≥0∞) = ∫⁻ x, f x ∂(μ : Measureₓ α) :=
+theorem test_against_nn_coe_eq {μ : ProbabilityMeasure α} {f : α →ᵇ ℝ≥0 } :
+    (μ.testAgainstNn f : ℝ≥0∞) = ∫⁻ x, f x ∂(μ : Measure α) :=
   Ennreal.coe_to_nnreal (lintegral_lt_top_of_bounded_continuous_to_nnreal μ f).Ne
 
 @[simp]
-theorem to_finite_measure_test_against_nn_eq_test_against_nn {μ : probability_measure α} {f : α →ᵇ Nnreal} :
-    μ.to_finite_measure.test_against_nn f = μ.test_against_nn f :=
+theorem to_finite_measure_test_against_nn_eq_test_against_nn {μ : ProbabilityMeasure α} {f : α →ᵇ Nnreal} :
+    μ.toFiniteMeasure.testAgainstNn f = μ.testAgainstNn f :=
   rfl
 
-theorem test_against_nn_const (μ : probability_measure α) (c : ℝ≥0 ) :
-    μ.test_against_nn (BoundedContinuousFunction.const α c) = c := by
+theorem test_against_nn_const (μ : ProbabilityMeasure α) (c : ℝ≥0 ) :
+    μ.testAgainstNn (BoundedContinuousFunction.const α c) = c := by
   simp [← Ennreal.coe_eq_coe, (MeasureTheory.IsProbabilityMeasure μ).measure_univ]
 
-theorem test_against_nn_mono (μ : probability_measure α) {f g : α →ᵇ ℝ≥0 } (f_le_g : (f : α → ℝ≥0 ) ≤ g) :
-    μ.test_against_nn f ≤ μ.test_against_nn g := by
+theorem test_against_nn_mono (μ : ProbabilityMeasure α) {f g : α →ᵇ ℝ≥0 } (f_le_g : (f : α → ℝ≥0 ) ≤ g) :
+    μ.testAgainstNn f ≤ μ.testAgainstNn g := by
   simpa using μ.to_finite_measure.test_against_nn_mono f_le_g
 
 variable [OpensMeasurableSpace α]
 
-theorem test_against_nn_lipschitz (μ : probability_measure α) :
-    LipschitzWith 1 fun f : α →ᵇ ℝ≥0 => μ.test_against_nn f := by
+theorem test_against_nn_lipschitz (μ : ProbabilityMeasure α) : LipschitzWith 1 fun f : α →ᵇ ℝ≥0 => μ.testAgainstNn f :=
+  by
   have key := μ.to_finite_measure.test_against_nn_lipschitz
   rwa [μ.mass_to_finite_measure] at key
 
 /-- Probability measures yield elements of the `weak_dual` of bounded continuous nonnegative
 functions via `probability_measure.test_against_nn`, i.e., integration. -/
-def to_weak_dual_bounded_continuous_nnreal (μ : probability_measure α) : WeakDual ℝ≥0 (α →ᵇ ℝ≥0 ) where
-  toFun := fun f => μ.test_against_nn f
-  map_add' := μ.to_finite_measure.test_against_nn_add
-  map_smul' := μ.to_finite_measure.test_against_nn_smul
-  cont := μ.test_against_nn_lipschitz.continuous
+def to_weak_dual_bounded_continuous_nnreal (μ : ProbabilityMeasure α) : WeakDual ℝ≥0 (α →ᵇ ℝ≥0 ) where
+  toFun := fun f => μ.testAgainstNn f
+  map_add' := μ.toFiniteMeasure.test_against_nn_add
+  map_smul' := μ.toFiniteMeasure.test_against_nn_smul
+  cont := μ.test_against_nn_lipschitz.Continuous
 
 end ProbabilityMeasure
 

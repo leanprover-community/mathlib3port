@@ -40,9 +40,9 @@ instance [h₁ : DecidableEq α] [h₂ : ∀ a, DecidableEq (β a)] : DecidableE
     match a₁, b₁, a₂, b₂, h₁ a₁ a₂ with
     | _, b₁, _, b₂, is_true (Eq.refl a) =>
       match b₁, b₂, h₂ a b₁ b₂ with
-      | _, _, is_true (Eq.refl b) => is_true rfl
-      | b₁, b₂, is_false n => is_false fun h => Sigma.noConfusion h fun e₁ e₂ => n <| eq_of_heq e₂
-    | a₁, _, a₂, _, is_false n => is_false fun h => Sigma.noConfusion h fun e₁ e₂ => n e₁
+      | _, _, is_true (Eq.refl b) => isTrue rfl
+      | b₁, b₂, is_false n => isFalse fun h => Sigma.noConfusion h fun e₁ e₂ => n <| eq_of_heq e₂
+    | a₁, _, a₂, _, is_false n => isFalse fun h => Sigma.noConfusion h fun e₁ e₂ => n e₁
 
 @[simp, nolint simp_nf]
 theorem mk.inj_iff {a₁ a₂ : α} {b₁ : β a₁} {b₂ : β a₂} : Sigma.mk a₁ b₁ = ⟨a₂, b₂⟩ ↔ a₁ = a₂ ∧ HEq b₁ b₂ := by
@@ -168,9 +168,9 @@ instance [h₁ : DecidableEq α] [h₂ : ∀ a, DecidableEq (β a)] : DecidableE
     match a₁, b₁, a₂, b₂, h₁ a₁ a₂ with
     | _, b₁, _, b₂, is_true (Eq.refl a) =>
       match b₁, b₂, h₂ a b₁ b₂ with
-      | _, _, is_true (Eq.refl b) => is_true rfl
-      | b₁, b₂, is_false n => is_false fun h => Psigma.noConfusion h fun e₁ e₂ => n <| eq_of_heq e₂
-    | a₁, _, a₂, _, is_false n => is_false fun h => Psigma.noConfusion h fun e₁ e₂ => n e₁
+      | _, _, is_true (Eq.refl b) => isTrue rfl
+      | b₁, b₂, is_false n => isFalse fun h => Psigma.noConfusion h fun e₁ e₂ => n <| eq_of_heq e₂
+    | a₁, _, a₂, _, is_false n => isFalse fun h => Psigma.noConfusion h fun e₁ e₂ => n e₁
 
 theorem mk.inj_iff {a₁ a₂ : α} {b₁ : β a₁} {b₂ : β a₂} :
     @Psigma.mk α β a₁ b₁ = @Psigma.mk α β a₂ b₂ ↔ a₁ = a₂ ∧ HEq b₁ b₂ :=

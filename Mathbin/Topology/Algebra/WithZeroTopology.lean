@@ -1,5 +1,5 @@
-import Mathbin.Topology.Algebra.Ordered.Basic
 import Mathbin.Algebra.Order.WithZero
+import Mathbin.Topology.Algebra.Order.Basic
 
 /-!
 # The topology on linearly ordered commutative groups with zero
@@ -47,7 +47,7 @@ def nhds_fun (x : Γ₀) : Filter Γ₀ :=
 /-- The topology on a linearly ordered commutative group with a zero element adjoined.
 A subset U is open if 0 ∉ U or if there is an invertible element γ₀ such that {γ | γ < γ₀} ⊆ U. -/
 protected def TopologicalSpace : TopologicalSpace Γ₀ :=
-  TopologicalSpace.mkOfNhds (nhds_fun Γ₀)
+  TopologicalSpace.mkOfNhds (nhdsFun Γ₀)
 
 attribute [local instance] LinearOrderedCommGroupWithZero.topologicalSpace
 
@@ -64,13 +64,13 @@ theorem directed_lt : Directed (· ≥ ·) fun γ₀ : (Γ₀)ˣ => principal { 
 
 /-- At all points of a linearly ordered commutative group with a zero element adjoined,
 the pure filter is smaller than the filter given by nhds_fun. -/
-theorem pure_le_nhds_fun : pure ≤ nhds_fun Γ₀ := fun x => by
+theorem pure_le_nhds_fun : pure ≤ nhdsFun Γ₀ := fun x => by
   by_cases' hx : x = 0 <;> simp [hx, nhds_fun]
 
 /-- For every point Γ₀, and every “neighbourhood” s of it (described by nhds_fun), there is a
 smaller “neighbourhood” t ⊆ s, such that s is a “neighbourhood“ of all the points in t. -/
-theorem nhds_fun_ok (x : Γ₀) {s} (s_in : s ∈ nhds_fun Γ₀ x) :
-    ∃ t ∈ nhds_fun Γ₀ x, t ⊆ s ∧ ∀, ∀ y ∈ t, ∀, s ∈ nhds_fun Γ₀ y := by
+theorem nhds_fun_ok (x : Γ₀) {s} (s_in : s ∈ nhdsFun Γ₀ x) :
+    ∃ t ∈ nhdsFun Γ₀ x, t ⊆ s ∧ ∀, ∀ y ∈ t, ∀, s ∈ nhdsFun Γ₀ y := by
   by_cases' hx : x = 0
   · simp only [hx, nhds_fun, exists_prop, if_true, eq_self_iff_true] at s_in⊢
     cases' (mem_infi_of_directed (directed_lt Γ₀) _).mp s_in with γ₀ h
@@ -101,7 +101,7 @@ variable {Γ₀}
 element. -/
 theorem nhds_coe_units (γ : (Γ₀)ˣ) : 𝓝 (γ : Γ₀) = pure (γ : Γ₀) :=
   calc
-    𝓝 (γ : Γ₀) = nhds_fun Γ₀ γ := nhds_mk_of_nhds (nhds_fun Γ₀) γ (pure_le_nhds_fun Γ₀) (nhds_fun_ok Γ₀)
+    𝓝 (γ : Γ₀) = nhdsFun Γ₀ γ := nhds_mk_of_nhds (nhdsFun Γ₀) γ (pure_le_nhds_fun Γ₀) (nhds_fun_ok Γ₀)
     _ = pure (γ : Γ₀) := if_neg γ.ne_zero
     
 
@@ -123,7 +123,7 @@ theorem singleton_nhds_of_ne_zero (γ : Γ₀) (h : γ ≠ 0) : ({γ} : Set Γ�
 
 /-- If U is a neighbourhood of 0 in a linearly ordered group with zero element adjoined,
 then there exists an invertible element γ₀ such that {γ | γ < γ₀} ⊆ U. -/
-theorem has_basis_nhds_zero : has_basis (𝓝 (0 : Γ₀)) (fun _ => True) fun γ₀ : (Γ₀)ˣ => { γ : Γ₀ | γ < γ₀ } :=
+theorem has_basis_nhds_zero : HasBasis (𝓝 (0 : Γ₀)) (fun _ => True) fun γ₀ : (Γ₀)ˣ => { γ : Γ₀ | γ < γ₀ } :=
   ⟨by
     intro U
     rw [nhds_mk_of_nhds (nhds_fun Γ₀) 0 (pure_le_nhds_fun Γ₀) (nhds_fun_ok Γ₀)]
@@ -138,7 +138,7 @@ theorem nhds_zero_of_units (γ : (Γ₀)ˣ) : { x : Γ₀ | x < γ } ∈ 𝓝 (0
   simp
 
 theorem tendsto_zero {α : Type _} {F : Filter α} {f : α → Γ₀} :
-    tendsto f F (𝓝 (0 : Γ₀)) ↔ ∀ γ₀ : (Γ₀)ˣ, { x : α | f x < γ₀ } ∈ F := by
+    Tendsto f F (𝓝 (0 : Γ₀)) ↔ ∀ γ₀ : (Γ₀)ˣ, { x : α | f x < γ₀ } ∈ F := by
   simpa using has_basis_nhds_zero.tendsto_right_iff
 
 /-- If γ is a nonzero element of a linearly ordered group with zero element adjoined,
@@ -146,20 +146,20 @@ then {x | x < γ} is a neighbourhood of 0. -/
 theorem nhds_zero_of_ne_zero (γ : Γ₀) (h : γ ≠ 0) : { x : Γ₀ | x < γ } ∈ 𝓝 (0 : Γ₀) :=
   nhds_zero_of_units (Units.mk0 _ h)
 
-theorem has_basis_nhds_units (γ : (Γ₀)ˣ) : has_basis (𝓝 (γ : Γ₀)) (fun i : Unit => True) fun i => {γ} := by
+theorem has_basis_nhds_units (γ : (Γ₀)ˣ) : HasBasis (𝓝 (γ : Γ₀)) (fun i : Unit => True) fun i => {γ} := by
   rw [nhds_of_ne_zero _ γ.ne_zero]
   exact has_basis_pure γ
 
-theorem has_basis_nhds_of_ne_zero {x : Γ₀} (h : x ≠ 0) : has_basis (𝓝 x) (fun i : Unit => True) fun i => {x} :=
+theorem has_basis_nhds_of_ne_zero {x : Γ₀} (h : x ≠ 0) : HasBasis (𝓝 x) (fun i : Unit => True) fun i => {x} :=
   has_basis_nhds_units (Units.mk0 x h)
 
 theorem tendsto_units {α : Type _} {F : Filter α} {f : α → Γ₀} {γ₀ : (Γ₀)ˣ} :
-    tendsto f F (𝓝 (γ₀ : Γ₀)) ↔ { x : α | f x = γ₀ } ∈ F := by
+    Tendsto f F (𝓝 (γ₀ : Γ₀)) ↔ { x : α | f x = γ₀ } ∈ F := by
   rw [(has_basis_nhds_units γ₀).tendsto_right_iff]
   simpa
 
 theorem tendsto_of_ne_zero {α : Type _} {F : Filter α} {f : α → Γ₀} {γ : Γ₀} (h : γ ≠ 0) :
-    tendsto f F (𝓝 γ) ↔ { x : α | f x = γ } ∈ F :=
+    Tendsto f F (𝓝 γ) ↔ { x : α | f x = γ } ∈ F :=
   @tendsto_units _ _ _ F f (Units.mk0 γ h)
 
 variable (Γ₀)

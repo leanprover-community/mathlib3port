@@ -24,7 +24,7 @@ variable {α : Type _} (r r₁ r₂ : α → α → Prop) (s t : Set α) (a : α
 def Maximals : Set α :=
   { a ∈ s | ∀ ⦃b⦄, b ∈ s → r a b → a = b }
 
-/-- Turns a set into an antichain by keeping only the "maximal" elements. -/
+/-- Turns a set into an antichain by keeping only the "minimal" elements. -/
 def Minimals : Set α :=
   { a ∈ s | ∀ ⦃b⦄, b ∈ s → r b a → a = b }
 
@@ -68,10 +68,10 @@ theorem maximals_eq_minimals [IsSymm α r] : Maximals r s = Minimals r s := by
 
 variable {r r₁ r₂ s t a}
 
-theorem Set.Subsingleton.maximals_eq (h : s.subsingleton) : Maximals r s = s :=
+theorem Set.Subsingleton.maximals_eq (h : s.Subsingleton) : Maximals r s = s :=
   h.induction_on (minimals_empty _) (maximals_singleton _)
 
-theorem Set.Subsingleton.minimals_eq (h : s.subsingleton) : Minimals r s = s :=
+theorem Set.Subsingleton.minimals_eq (h : s.Subsingleton) : Minimals r s = s :=
   h.maximals_eq
 
 theorem maximals_mono (h : ∀ a b, r₁ a b → r₂ a b) : Maximals r₂ s ⊆ Maximals r₁ s := fun a ha =>
@@ -104,7 +104,7 @@ theorem inter_minimals_subset : s ∩ Minimals r t ⊆ Minimals r (s ∩ t) :=
   inter_maximals_subset
 
 theorem _root_.is_antichain.maximals_eq (h : IsAntichain r s) : Maximals r s = s :=
-  (maximals_subset _ _).antisymm fun a ha => ⟨ha, fun b => h.eq ha⟩
+  (maximals_subset _ _).antisymm fun a ha => ⟨ha, fun b => h.Eq ha⟩
 
 theorem _root_.is_antichain.minimals_eq (h : IsAntichain r s) : Minimals r s = s :=
   (minimals_subset _ _).antisymm fun a ha => ⟨ha, fun b => h.eq' ha⟩

@@ -120,7 +120,7 @@ theorem Algebra.fg_trans' {R S A : Type _} [CommSemiringₓ R] [CommSemiringₓ 
     (⊤ : Subalgebra R A).Fg :=
   let ⟨s, hs⟩ := hRS
   let ⟨t, ht⟩ := hSA
-  ⟨s.image (algebraMap S A) ∪ t, by
+  ⟨s.Image (algebraMap S A) ∪ t, by
     rw [Finset.coe_union, Finset.coe_image, Algebra.adjoin_union_eq_adjoin_adjoin, Algebra.adjoin_algebra_map, hs,
       Algebra.map_top, IsScalarTower.adjoin_range_to_alg_hom, ht, Subalgebra.restrict_scalars_top]⟩
 
@@ -138,14 +138,14 @@ variable (b : Basis ι R M) (h : Function.Bijective (algebraMap R A))
 then a basis for `M` as `R`-module is also a basis for `M` as `R'`-module. -/
 @[simps]
 noncomputable def Basis.algebraMapCoeffs : Basis ι A M :=
-  b.map_coeffs (RingEquiv.ofBijective _ h) fun c x => by
+  b.mapCoeffs (RingEquiv.ofBijective _ h) fun c x => by
     simp
 
-theorem Basis.algebra_map_coeffs_apply (i : ι) : b.algebra_map_coeffs A h i = b i :=
+theorem Basis.algebra_map_coeffs_apply (i : ι) : b.algebraMapCoeffs A h i = b i :=
   b.map_coeffs_apply _ _ _
 
 @[simp]
-theorem Basis.coe_algebra_map_coeffs : (b.algebra_map_coeffs A h : ι → M) = b :=
+theorem Basis.coe_algebra_map_coeffs : (b.algebraMapCoeffs A h : ι → M) = b :=
   b.coe_map_coeffs _ _
 
 end AlgebraMapCoeffs
@@ -186,9 +186,9 @@ theorem linear_independent_smul {ι : Type v₁} {b : ι → S} {ι' : Type w₁
 where the `(i, j)`th basis vector is `b i • c j`. -/
 noncomputable def Basis.smul {ι : Type v₁} {ι' : Type w₁} (b : Basis ι R S) (c : Basis ι' S A) : Basis (ι × ι') R A :=
   Basis.of_repr
-    (c.repr.restrict_scalars R ≪≫ₗ
+    (c.repr.restrictScalars R ≪≫ₗ
       (Finsupp.lcongr (Equivₓ.refl _) b.repr ≪≫ₗ
-        ((finsupp_prod_lequiv R).symm ≪≫ₗ Finsupp.lcongr (Equivₓ.prodComm ι' ι) (LinearEquiv.refl _ _))))
+        ((finsuppProdLequiv R).symm ≪≫ₗ Finsupp.lcongr (Equivₓ.prodComm ι' ι) (LinearEquiv.refl _ _))))
 
 @[simp]
 theorem Basis.smul_repr {ι : Type v₁} {ι' : Type w₁} (b : Basis ι R S) (c : Basis ι' S A) x ij :
@@ -223,7 +223,7 @@ variable [CommRingₓ R] [Ringₓ S] [Algebra R S]
 
 theorem Basis.algebra_map_injective {ι : Type _} [NoZeroDivisors R] [Nontrivial S] (b : Basis ι R S) :
     Function.Injective (algebraMap R S) :=
-  have : NoZeroSmulDivisors R S := b.no_zero_smul_divisors
+  have : NoZeroSmulDivisors R S := b.NoZeroSmulDivisors
   NoZeroSmulDivisors.algebra_map_injective R S
 
 end Ringₓ
@@ -244,7 +244,7 @@ open_locale Classical
 
 -- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (yi yj yk «expr ∈ » y)
 theorem exists_subalgebra_of_fg (hAC : (⊤ : Subalgebra A C).Fg) (hBC : (⊤ : Submodule B C).Fg) :
-    ∃ B₀ : Subalgebra A B, B₀.fg ∧ (⊤ : Submodule B₀ C).Fg := by
+    ∃ B₀ : Subalgebra A B, B₀.Fg ∧ (⊤ : Submodule B₀ C).Fg := by
   cases' hAC with x hx
   cases' hBC with y hy
   have := hy
@@ -330,14 +330,14 @@ def AlgHom.restrictDomain : B →ₐ[A] D :=
   f.comp (IsScalarTower.toAlgHom A B C)
 
 /-- Extend the scalars of an `alg_hom`. -/
-def AlgHom.extendScalars : @AlgHom B C D _ _ _ _ (f.restrict_domain B).toRingHom.toAlgebra :=
+def AlgHom.extendScalars : @AlgHom B C D _ _ _ _ (f.restrictDomain B).toRingHom.toAlgebra :=
   { f with commutes' := fun _ => rfl }
 
 variable {B}
 
 /-- `alg_hom`s from the top of a tower are equivalent to a pair of `alg_hom`s. -/
-def algHomEquivSigma : (C →ₐ[A] D) ≃ Σ f : B →ₐ[A] D, @AlgHom B C D _ _ _ _ f.to_ring_hom.to_algebra where
-  toFun := fun f => ⟨f.restrict_domain B, f.extend_scalars B⟩
+def algHomEquivSigma : (C →ₐ[A] D) ≃ Σ f : B →ₐ[A] D, @AlgHom B C D _ _ _ _ f.toRingHom.toAlgebra where
+  toFun := fun f => ⟨f.restrictDomain B, f.extendScalars B⟩
   invFun := fun fg =>
     let alg := fg.1.toRingHom.toAlgebra
     fg.2.restrictScalars A

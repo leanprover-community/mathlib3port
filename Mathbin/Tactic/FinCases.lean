@@ -37,7 +37,7 @@ unsafe def expr_list_to_list_expr : ∀ e : expr, tactic (List expr)
   | quote.1 [] => return []
   | _ => failed
 
--- ././Mathport/Syntax/Translate/Basic.lean:794:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
 private unsafe def fin_cases_at_aux : ∀ with_list : List expr e : expr, tactic Unit
   | with_list, e => do
     let result ← cases_core e
@@ -45,7 +45,7 @@ private unsafe def fin_cases_at_aux : ∀ with_list : List expr e : expr, tactic
       | [(_, [s], _), (_, [e], _)] => do
         let sn := local_pp_name s
         let ng ← num_goals
-        match with_list.nth 0 with
+        match with_list 0 with
           | some h => tactic.interactive.conv (some sn) none (to_rhs >> conv.interactive.change (to_pexpr h))
           | _ =>
             try <|
@@ -57,7 +57,7 @@ private unsafe def fin_cases_at_aux : ∀ with_list : List expr e : expr, tactic
         try sorry
         let ng' ← num_goals
         when (ng = ng') (rotate_left 1)
-        fin_cases_at_aux with_list.tail e
+        fin_cases_at_aux with_list e
       | [] => skip
       | _ => failed
 
@@ -75,7 +75,7 @@ unsafe def fin_cases_at (nm : Option Name) : ∀ with_list : Option pexpr e : ex
         let i ← to_expr (pquote.1 (Fintype (%%ₓty))) >>= mk_instance <|> fail "Failed to find `fintype` instance."
         let t ← to_expr (pquote.1 ((%%ₓe) ∈ @Fintype.elems (%%ₓty) (%%ₓi)))
         let v ← to_expr (pquote.1 (@Fintype.complete (%%ₓty) (%%ₓi) (%%ₓe)))
-        let h ← assertv (nm.get_or_else `this) t v
+        let h ← assertv (nm `this) t v
         fin_cases_at with_list h
       | some ty => do
         let with_list ←
@@ -142,7 +142,7 @@ unsafe def fin_cases : parse hyp → parse (tk "with" *> texpr)? → parse (tk "
   | none, none, nm =>
     focus1 <| do
       let ctx ← local_context
-      ctx.mfirst (fin_cases_at nm none) <|>
+      ctx (fin_cases_at nm none) <|>
           fail
             ("No hypothesis of the forms `x ∈ A`, where " ++
               "`A : finset X`, `A : list X`, or `A : multiset X`, or `x : A`, with `[fintype A]`.")

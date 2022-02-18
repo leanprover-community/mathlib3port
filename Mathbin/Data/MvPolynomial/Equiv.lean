@@ -34,7 +34,7 @@ equivalence, isomorphism, morphism, ring hom, hom
 
 noncomputable section
 
-open_locale Classical BigOperators
+open_locale Classical BigOperators Polynomial
 
 open Set Function Finsupp AddMonoidAlgebra
 
@@ -54,12 +54,12 @@ variable (R) [CommSemiringₓ R]
 polynomials over the ground ring.
 -/
 @[simps]
-def punit_alg_equiv : MvPolynomial PUnit R ≃ₐ[R] Polynomial R where
+def punit_alg_equiv : MvPolynomial PUnit R ≃ₐ[R] R[X] where
   toFun := eval₂ Polynomial.c fun u : PUnit => Polynomial.x
-  invFun := Polynomial.eval₂ MvPolynomial.c (X PUnit.unit)
+  invFun := Polynomial.eval₂ MvPolynomial.c (x PUnit.unit)
   left_inv := by
-    let f : Polynomial R →+* MvPolynomial PUnit R := Polynomial.eval₂RingHom MvPolynomial.c (X PUnit.unit)
-    let g : MvPolynomial PUnit R →+* Polynomial R := eval₂_hom Polynomial.c fun u : PUnit => Polynomial.x
+    let f : R[X] →+* MvPolynomial PUnit R := Polynomial.eval₂RingHom MvPolynomial.c (X PUnit.unit)
+    let g : MvPolynomial PUnit R →+* R[X] := eval₂_hom Polynomial.c fun u : PUnit => Polynomial.x
     show ∀ p, f.comp g p = p
     apply is_id
     · ext a
@@ -94,17 +94,17 @@ def map_equiv [CommSemiringₓ S₁] [CommSemiringₓ S₂] (e : S₁ ≃+* S₂
     left_inv := map_left_inverse e.left_inv, right_inv := map_right_inverse e.right_inv }
 
 @[simp]
-theorem map_equiv_refl : map_equiv σ (RingEquiv.refl R) = RingEquiv.refl _ :=
+theorem map_equiv_refl : mapEquiv σ (RingEquiv.refl R) = RingEquiv.refl _ :=
   RingEquiv.ext map_id
 
 @[simp]
 theorem map_equiv_symm [CommSemiringₓ S₁] [CommSemiringₓ S₂] (e : S₁ ≃+* S₂) :
-    (map_equiv σ e).symm = map_equiv σ e.symm :=
+    (mapEquiv σ e).symm = mapEquiv σ e.symm :=
   rfl
 
 @[simp]
 theorem map_equiv_trans [CommSemiringₓ S₁] [CommSemiringₓ S₂] [CommSemiringₓ S₃] (e : S₁ ≃+* S₂) (f : S₂ ≃+* S₃) :
-    (map_equiv σ e).trans (map_equiv σ f) = map_equiv σ (e.trans f) :=
+    (mapEquiv σ e).trans (mapEquiv σ f) = mapEquiv σ (e.trans f) :=
   RingEquiv.ext (map_map e f)
 
 variable {A₁ A₂ A₃ : Type _} [CommSemiringₓ A₁] [CommSemiringₓ A₂] [CommSemiringₓ A₃]
@@ -114,19 +114,19 @@ variable [Algebra R A₁] [Algebra R A₂] [Algebra R A₃]
 /-- If `e : A ≃ₐ[R] B` is an isomorphism of `R`-algebras, then so is `map e`. -/
 @[simps apply]
 def map_alg_equiv (e : A₁ ≃ₐ[R] A₂) : MvPolynomial σ A₁ ≃ₐ[R] MvPolynomial σ A₂ :=
-  { map_alg_hom (e : A₁ →ₐ[R] A₂), map_equiv σ (e : A₁ ≃+* A₂) with toFun := map (e : A₁ →+* A₂) }
+  { mapAlgHom (e : A₁ →ₐ[R] A₂), mapEquiv σ (e : A₁ ≃+* A₂) with toFun := map (e : A₁ →+* A₂) }
 
 @[simp]
-theorem map_alg_equiv_refl : map_alg_equiv σ (AlgEquiv.refl : A₁ ≃ₐ[R] A₁) = AlgEquiv.refl :=
+theorem map_alg_equiv_refl : mapAlgEquiv σ (AlgEquiv.refl : A₁ ≃ₐ[R] A₁) = AlgEquiv.refl :=
   AlgEquiv.ext map_id
 
 @[simp]
-theorem map_alg_equiv_symm (e : A₁ ≃ₐ[R] A₂) : (map_alg_equiv σ e).symm = map_alg_equiv σ e.symm :=
+theorem map_alg_equiv_symm (e : A₁ ≃ₐ[R] A₂) : (mapAlgEquiv σ e).symm = mapAlgEquiv σ e.symm :=
   rfl
 
 @[simp]
 theorem map_alg_equiv_trans (e : A₁ ≃ₐ[R] A₂) (f : A₂ ≃ₐ[R] A₃) :
-    (map_alg_equiv σ e).trans (map_alg_equiv σ f) = map_alg_equiv σ (e.trans f) :=
+    (mapAlgEquiv σ e).trans (mapAlgEquiv σ f) = mapAlgEquiv σ (e.trans f) :=
   AlgEquiv.ext (map_map e f)
 
 end Map
@@ -142,18 +142,18 @@ with coefficents in multivariable polynomials in the other type.
 See `sum_ring_equiv` for the ring isomorphism.
 -/
 def sum_to_iter : MvPolynomial (Sum S₁ S₂) R →+* MvPolynomial S₁ (MvPolynomial S₂ R) :=
-  eval₂_hom (C.comp C) fun bc => Sum.recOn bc X (C ∘ X)
+  eval₂Hom (c.comp c) fun bc => Sum.recOn bc x (C ∘ X)
 
 @[simp]
-theorem sum_to_iter_C (a : R) : sum_to_iter R S₁ S₂ (C a) = C (C a) :=
+theorem sum_to_iter_C (a : R) : sumToIter R S₁ S₂ (c a) = c (c a) :=
   eval₂_C _ _ a
 
 @[simp]
-theorem sum_to_iter_Xl (b : S₁) : sum_to_iter R S₁ S₂ (X (Sum.inl b)) = X b :=
+theorem sum_to_iter_Xl (b : S₁) : sumToIter R S₁ S₂ (x (Sum.inl b)) = x b :=
   eval₂_X _ _ (Sum.inl b)
 
 @[simp]
-theorem sum_to_iter_Xr (c : S₂) : sum_to_iter R S₁ S₂ (X (Sum.inr c)) = C (X c) :=
+theorem sum_to_iter_Xr (c : S₂) : sumToIter R S₁ S₂ (x (Sum.inr c)) = c (x c) :=
   eval₂_X _ _ (Sum.inr c)
 
 /-- The function from multivariable polynomials in one type,
@@ -163,16 +163,16 @@ to multivariable polynomials in the sum of the two types.
 See `sum_ring_equiv` for the ring isomorphism.
 -/
 def iter_to_sum : MvPolynomial S₁ (MvPolynomial S₂ R) →+* MvPolynomial (Sum S₁ S₂) R :=
-  eval₂_hom (eval₂_hom C (X ∘ Sum.inr)) (X ∘ Sum.inl)
+  eval₂Hom (eval₂Hom c (X ∘ Sum.inr)) (X ∘ Sum.inl)
 
-theorem iter_to_sum_C_C (a : R) : iter_to_sum R S₁ S₂ (C (C a)) = C a :=
-  Eq.trans (eval₂_C _ _ (C a)) (eval₂_C _ _ _)
+theorem iter_to_sum_C_C (a : R) : iterToSum R S₁ S₂ (c (c a)) = c a :=
+  Eq.trans (eval₂_C _ _ (c a)) (eval₂_C _ _ _)
 
-theorem iter_to_sum_X (b : S₁) : iter_to_sum R S₁ S₂ (X b) = X (Sum.inl b) :=
+theorem iter_to_sum_X (b : S₁) : iterToSum R S₁ S₂ (x b) = x (Sum.inl b) :=
   eval₂_X _ _ _
 
-theorem iter_to_sum_C_X (c : S₂) : iter_to_sum R S₁ S₂ (C (X c)) = X (Sum.inr c) :=
-  Eq.trans (eval₂_C _ _ (X c)) (eval₂_X _ _ _)
+theorem iter_to_sum_C_X (c : S₂) : iterToSum R S₁ S₂ (c (x c)) = x (Sum.inr c) :=
+  Eq.trans (eval₂_C _ _ (x c)) (eval₂_X _ _ _)
 
 variable (σ)
 
@@ -192,15 +192,15 @@ def is_empty_alg_equiv [he : IsEmpty σ] : MvPolynomial σ R ≃ₐ[R] R :=
 and the ground ring. -/
 @[simps]
 def is_empty_ring_equiv [he : IsEmpty σ] : MvPolynomial σ R ≃+* R :=
-  (is_empty_alg_equiv R σ).toRingEquiv
+  (isEmptyAlgEquiv R σ).toRingEquiv
 
 variable {σ}
 
 /-- A helper function for `sum_ring_equiv`. -/
 @[simps]
 def mv_polynomial_equiv_mv_polynomial [CommSemiringₓ S₃] (f : MvPolynomial S₁ R →+* MvPolynomial S₂ S₃)
-    (g : MvPolynomial S₂ S₃ →+* MvPolynomial S₁ R) (hfgC : (f.comp g).comp C = C) (hfgX : ∀ n, f (g (X n)) = X n)
-    (hgfC : (g.comp f).comp C = C) (hgfX : ∀ n, g (f (X n)) = X n) : MvPolynomial S₁ R ≃+* MvPolynomial S₂ S₃ where
+    (g : MvPolynomial S₂ S₃ →+* MvPolynomial S₁ R) (hfgC : (f.comp g).comp c = C) (hfgX : ∀ n, f (g (x n)) = x n)
+    (hgfC : (g.comp f).comp c = C) (hgfX : ∀ n, g (f (x n)) = x n) : MvPolynomial S₁ R ≃+* MvPolynomial S₂ S₃ where
   toFun := f
   invFun := g
   left_inv := is_id (RingHom.comp _ _) hgfC hgfX
@@ -245,7 +245,7 @@ and multivariable polynomials in one of the types,
 with coefficents in multivariable polynomials in the other type.
 -/
 def sum_alg_equiv : MvPolynomial (Sum S₁ S₂) R ≃ₐ[R] MvPolynomial S₁ (MvPolynomial S₂ R) :=
-  { sum_ring_equiv R S₁ S₂ with
+  { sumRingEquiv R S₁ S₂ with
     commutes' := by
       intro r
       have A : algebraMap R (MvPolynomial S₁ (MvPolynomial S₂ R)) r = (C (C r) : _) := by
@@ -264,8 +264,8 @@ polynomials with coefficients in `mv_polynomial S₁ R`.
 -/
 @[simps]
 def option_equiv_left : MvPolynomial (Option S₁) R ≃ₐ[R] Polynomial (MvPolynomial S₁ R) :=
-  AlgEquiv.ofAlgHom (MvPolynomial.aeval fun o => o.elim Polynomial.x fun s => Polynomial.c (X s))
-    (Polynomial.aevalTower (MvPolynomial.rename some) (X none))
+  AlgEquiv.ofAlgHom (MvPolynomial.aeval fun o => o.elim Polynomial.x fun s => Polynomial.c (x s))
+    (Polynomial.aevalTower (MvPolynomial.rename some) (x none))
     (by
       ext : 2 <;> simp [← Polynomial.C_eq_algebra_map])
     (by
@@ -276,9 +276,9 @@ end
 /-- The algebra isomorphism between multivariable polynomials in `option S₁` and
 multivariable polynomials with coefficients in polynomials.
 -/
-def option_equiv_right : MvPolynomial (Option S₁) R ≃ₐ[R] MvPolynomial S₁ (Polynomial R) :=
-  AlgEquiv.ofAlgHom (MvPolynomial.aeval fun o => o.elim (C Polynomial.x) X)
-    (MvPolynomial.aevalTower (Polynomial.aeval (X none)) fun i => X (Option.some i))
+def option_equiv_right : MvPolynomial (Option S₁) R ≃ₐ[R] MvPolynomial S₁ R[X] :=
+  AlgEquiv.ofAlgHom (MvPolynomial.aeval fun o => o.elim (c Polynomial.x) x)
+    (MvPolynomial.aevalTower (Polynomial.aeval (x none)) fun i => x (Option.some i))
     (by
       ext : 2 <;> simp [MvPolynomial.algebra_map_eq])
     (by
@@ -288,12 +288,12 @@ def option_equiv_right : MvPolynomial (Option S₁) R ≃ₐ[R] MvPolynomial S�
 polynomials over multivariable polynomials in `fin n`.
 -/
 def finSuccEquiv (n : ℕ) : MvPolynomial (Finₓ (n + 1)) R ≃ₐ[R] Polynomial (MvPolynomial (Finₓ n) R) :=
-  (rename_equiv R (finSuccEquiv n)).trans (option_equiv_left R (Finₓ n))
+  (renameEquiv R (finSuccEquiv n)).trans (optionEquivLeft R (Finₓ n))
 
 theorem fin_succ_equiv_eq (n : ℕ) :
     (finSuccEquiv R n : MvPolynomial (Finₓ (n + 1)) R →+* Polynomial (MvPolynomial (Finₓ n) R)) =
-      eval₂_hom (Polynomial.c.comp (C : R →+* MvPolynomial (Finₓ n) R)) fun i : Finₓ (n + 1) =>
-        Finₓ.cases Polynomial.x (fun k => Polynomial.c (X k)) i :=
+      eval₂Hom (Polynomial.c.comp (c : R →+* MvPolynomial (Finₓ n) R)) fun i : Finₓ (n + 1) =>
+        Finₓ.cases Polynomial.x (fun k => Polynomial.c (x k)) i :=
   by
   ext : 2
   · simp only [finSuccEquiv, option_equiv_left_apply, aeval_C, AlgEquiv.coe_trans, AlgEquiv.coe_alg_hom, coe_eval₂_hom,
@@ -307,8 +307,8 @@ theorem fin_succ_equiv_eq (n : ℕ) :
 @[simp]
 theorem fin_succ_equiv_apply (n : ℕ) (p : MvPolynomial (Finₓ (n + 1)) R) :
     finSuccEquiv R n p =
-      eval₂_hom (Polynomial.c.comp (C : R →+* MvPolynomial (Finₓ n) R))
-        (fun i : Finₓ (n + 1) => Finₓ.cases Polynomial.x (fun k => Polynomial.c (X k)) i) p :=
+      eval₂Hom (Polynomial.c.comp (c : R →+* MvPolynomial (Finₓ n) R))
+        (fun i : Finₓ (n + 1) => Finₓ.cases Polynomial.x (fun k => Polynomial.c (x k)) i) p :=
   by
   rw [← fin_succ_equiv_eq]
   rfl

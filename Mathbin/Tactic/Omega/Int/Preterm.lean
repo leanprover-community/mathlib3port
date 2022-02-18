@@ -33,22 +33,22 @@ namespace Preterm
 
 /-- Preterm evaluation -/
 @[simp]
-def val (v : Nat → Int) : preterm → Int
+def val (v : Nat → Int) : Preterm → Int
   | &i => i
   | i ** n => if i = 1 then v n else if i = -1 then -v n else v n * i
   | t1+*t2 => t1.val + t2.val
 
 /-- Fresh de Brujin index not used by any variable in argument -/
-def fresh_index : preterm → Nat
+def fresh_index : Preterm → Nat
   | &_ => 0
   | i ** n => n + 1
-  | t1+*t2 => max t1.fresh_index t2.fresh_index
+  | t1+*t2 => max t1.freshIndex t2.freshIndex
 
 @[simp]
-def add_one (t : preterm) : preterm :=
+def add_one (t : Preterm) : Preterm :=
   t+*&1
 
-def reprₓ : preterm → Stringₓ
+def reprₓ : Preterm → Stringₓ
   | &i => i.repr
   | i ** n => i.repr ++ "*x" ++ n.repr
   | t1+*t2 => "(" ++ t1.repr ++ " + " ++ t2.repr ++ ")"
@@ -60,13 +60,13 @@ open_locale List.Func
 /-- Return a term (which is in canonical form by definition)
     that is equivalent to the input preterm -/
 @[simp]
-def canonize : preterm → term
+def canonize : Preterm → Term
   | &i => ⟨i, []⟩
   | i ** n => ⟨0, [] {n ↦ i}⟩
-  | t1+*t2 => term.add (canonize t1) (canonize t2)
+  | t1+*t2 => Term.add (canonize t1) (canonize t2)
 
 @[simp]
-theorem val_canonize {v : Nat → Int} : ∀ {t : preterm}, (canonize t).val v = t.val v
+theorem val_canonize {v : Nat → Int} : ∀ {t : Preterm}, (canonize t).val v = t.val v
   | &i => by
     simp only [preterm.val, add_zeroₓ, term.val, canonize, coeffs.val_nil]
   | i ** n => by
@@ -74,7 +74,7 @@ theorem val_canonize {v : Nat → Int} : ∀ {t : preterm}, (canonize t).val v =
     split_ifs with h1 h2
     · simp only [one_mulₓ, h1]
       
-    · simp only [neg_mul_eq_neg_mul_symm, one_mulₓ, h2]
+    · simp only [neg_mul, one_mulₓ, h2]
       
     · rw [mul_comm]
       

@@ -73,7 +73,7 @@ include π
 /-- We define the conjugate of `π` by `g`, as a `k`-linear map.
 -/
 def conjugate (g : G) : W →ₗ[k] V :=
-  ((group_smul.linear_map k V g⁻¹).comp π).comp (group_smul.linear_map k W g)
+  ((GroupSmul.linearMap k V g⁻¹).comp π).comp (GroupSmul.linearMap k W g)
 
 variable (i : V →ₗ[MonoidAlgebra k G] W) (h : ∀ v : V, π (i v) = v)
 
@@ -101,14 +101,13 @@ def sum_of_conjugates : W →ₗ[k] V :=
 /-- In fact, the sum over `g : G` of the conjugate of `π` by `g` is a `k[G]`-linear map.
 -/
 def sum_of_conjugates_equivariant : W →ₗ[MonoidAlgebra k G] V :=
-  MonoidAlgebra.equivariantOfLinearOfComm (π.sum_of_conjugates G) fun g v => by
+  MonoidAlgebra.equivariantOfLinearOfComm (π.sumOfConjugates G) fun g v => by
     dsimp [sum_of_conjugates]
     simp only [LinearMap.sum_apply, Finset.smul_sum]
     dsimp [conjugate]
     conv_lhs => rw [← Finset.univ_map_embedding (mulRightEmbedding g⁻¹)]simp only [mulRightEmbedding]
     simp only [← mul_smul, single_mul_single, mul_inv_rev, mul_oneₓ, Function.Embedding.coe_fn_mk, Finset.sum_map,
       inv_invₓ, inv_mul_cancel_right]
-    recover
 
 section
 
@@ -120,11 +119,11 @@ include inv
 $$ \frac{1}{|G|} \sum_{g \in G} g⁻¹ • π(g • -). $$
 -/
 def equivariant_projection : W →ₗ[MonoidAlgebra k G] V :=
-  ⅟ (Fintype.card G : k) • π.sum_of_conjugates_equivariant G
+  ⅟ (Fintype.card G : k) • π.sumOfConjugatesEquivariant G
 
 include h
 
-theorem equivariant_projection_condition (v : V) : (π.equivariant_projection G) (i v) = v := by
+theorem equivariant_projection_condition (v : V) : (π.equivariantProjection G) (i v) = v := by
   rw [equivariant_projection, smul_apply, sum_of_conjugates_equivariant, equivariant_of_linear_of_comm_apply,
     sum_of_conjugates]
   rw [LinearMap.sum_apply]
@@ -180,7 +179,7 @@ theorem exists_left_inverse_of_injective (f : V →ₗ[MonoidAlgebra k G] W) (hf
 namespace Submodule
 
 theorem exists_is_compl (p : Submodule (MonoidAlgebra k G) V) : ∃ q : Submodule (MonoidAlgebra k G) V, IsCompl p q :=
-  let ⟨f, hf⟩ := MonoidAlgebra.exists_left_inverse_of_injective p.subtype p.ker_subtype
+  let ⟨f, hf⟩ := MonoidAlgebra.exists_left_inverse_of_injective p.Subtype p.ker_subtype
   ⟨f.ker, LinearMap.is_compl_of_proj <| LinearMap.ext_iff.1 hf⟩
 
 /-- This also implies an instance `is_semisimple_module (monoid_algebra k G) V`. -/

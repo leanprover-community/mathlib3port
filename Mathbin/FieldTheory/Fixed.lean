@@ -37,7 +37,7 @@ variable (F : Type v) [Field F] [MulSemiringAction M F] [MulSemiringAction G F] 
 
 /-- The subfield of F fixed by the field endomorphism `m`. -/
 def FixedBy.subfield : Subfield F where
-  Carrier := fixed_by M F m
+  Carrier := FixedBy M F m
   zero_mem' := smul_zero m
   add_mem' := fun x y hx hy => (smul_add m x y).trans <| congr_arg2ₓ _ hx hy
   neg_mem' := fun x hx => (smul_neg m x).trans <| congr_argₓ _ hx
@@ -64,7 +64,7 @@ instance IsInvariantSubfield.toMulSemiringAction [IsInvariantSubfield M S] : Mul
   smul_one := fun m => Subtype.eq <| smul_one m
   smul_mul := fun m s₁ s₂ => Subtype.eq <| smul_mul' m s₁ s₂
 
-instance [IsInvariantSubfield M S] : IsInvariantSubring M S.to_subring where
+instance [IsInvariantSubfield M S] : IsInvariantSubring M S.toSubring where
   smul_mem := IsInvariantSubfield.smul_mem
 
 end InvariantSubfields
@@ -75,7 +75,7 @@ variable (M)
 
 /-- The subfield of fixed points by a monoid action. -/
 def Subfield : Subfield F :=
-  Subfield.copy (⨅ m : M, FixedBy.subfield F m) (fixed_points M F)
+  Subfield.copy (⨅ m : M, FixedBy.subfield F m) (FixedPoints M F)
     (by
       ext z
       simp [fixed_points, FixedBy.subfield, infi, Subfield.mem_Inf])
@@ -106,8 +106,8 @@ theorem smul_polynomial (m : M) (p : Polynomial (FixedPoints.subfield M F)) : m 
     fun n x ih => by
     rw [smul_mul', Polynomial.smul_C, smul, smul_pow', Polynomial.smul_X]
 
-instance : Algebra (FixedPoints.subfield M F) F :=
-  Algebra.ofSubring (FixedPoints.subfield M F).toSubring
+instance : Algebra (FixedPoints.subfield M F) F := by
+  infer_instance
 
 theorem coe_algebra_map : algebraMap (FixedPoints.subfield M F) F = Subfield.subtype (FixedPoints.subfield M F) :=
   rfl
@@ -187,7 +187,7 @@ theorem of_eval₂ (f : Polynomial (FixedPoints.subfield G F))
     MulSemiringActionHom.coe_polynomial, IsInvariantSubring.coe_subtype_hom', Polynomial.eval_map,
     Subfield.toSubring.subtype_eq_subtype, hf, smul_zero]
 
-theorem irreducible_aux (f g : Polynomial (FixedPoints.subfield G F)) (hf : f.monic) (hg : g.monic)
+theorem irreducible_aux (f g : Polynomial (FixedPoints.subfield G F)) (hf : f.Monic) (hg : g.Monic)
     (hfg : f * g = minpoly G F x) : f = 1 ∨ g = 1 := by
   have hf2 : f ∣ minpoly G F x := by
     rw [← hfg]
@@ -219,18 +219,18 @@ end minpoly
 theorem IsIntegral : IsIntegral (FixedPoints.subfield G F) x :=
   ⟨minpoly G F x, minpoly.monic G F x, minpoly.eval₂ G F x⟩
 
-theorem minpoly_eq_minpoly : minpoly G F x = _root_.minpoly (FixedPoints.subfield G F) x :=
+theorem minpoly_eq_minpoly : minpoly G F x = minpoly (FixedPoints.subfield G F) x :=
   minpoly.eq_of_irreducible_of_monic (minpoly.irreducible G F x) (minpoly.eval₂ G F x) (minpoly.monic G F x)
 
 instance Normal : Normal (FixedPoints.subfield G F) F :=
-  ⟨fun x => IsIntegral G F x, fun x =>
+  ⟨fun x => is_integral G F x, fun x =>
     (Polynomial.splits_id_iff_splits _).1 <| by
       rw [← minpoly_eq_minpoly, minpoly, coe_algebra_map, ← Subfield.toSubring.subtype_eq_subtype,
         Polynomial.map_to_subring _ (FixedPoints.subfield G F).toSubring, prodXSubSmul]
       exact Polynomial.splits_prod _ fun _ _ => Polynomial.splits_X_sub_C _⟩
 
 instance separable : IsSeparable (FixedPoints.subfield G F) F :=
-  ⟨fun x => IsIntegral G F x, fun x => by
+  ⟨fun x => is_integral G F x, fun x => by
     erw [← minpoly_eq_minpoly, ← Polynomial.separable_map (FixedPoints.subfield G F).Subtype, minpoly,
       Polynomial.map_to_subring _ (Subfield G F).toSubring]
     exact Polynomial.separable_prod_X_sub_C_iff.2 (injective_of_quotient_stabilizer G x)⟩
@@ -285,13 +285,13 @@ theorem finrank_eq_card (G : Type u) (F : Type v) [Groupₓ G] [Field F] [Fintyp
     calc
       Fintype.card G ≤ Fintype.card (F →ₐ[FixedPoints.subfield G F] F) :=
         Fintype.card_le_of_injective _ (MulSemiringAction.to_alg_hom_injective _ F)
-      _ ≤ finrank F (F →ₗ[FixedPoints.subfield G F] F) := finrank_alg_hom (fixed_points G F) F
+      _ ≤ finrank F (F →ₗ[FixedPoints.subfield G F] F) := finrank_alg_hom (FixedPoints G F) F
       _ = finrank (FixedPoints.subfield G F) F := finrank_linear_map' _ _ _
       
 
 /-- `mul_semiring_action.to_alg_hom` is bijective. -/
 theorem to_alg_hom_bijective (G : Type u) (F : Type v) [Groupₓ G] [Field F] [Fintype G] [MulSemiringAction G F]
-    [HasFaithfulScalar G F] : Function.Bijective (MulSemiringAction.toAlgHom _ _ : G → F →ₐ[Subfield G F] F) := by
+    [HasFaithfulScalar G F] : Function.Bijective (MulSemiringAction.toAlgHom _ _ : G → F →ₐ[subfield G F] F) := by
   rw [Fintype.bijective_iff_injective_and_card]
   constructor
   · exact MulSemiringAction.to_alg_hom_injective _ F

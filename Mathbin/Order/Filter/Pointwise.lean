@@ -60,14 +60,14 @@ theorem mem_mul [Monoidₓ α] {f g : Filter α} {s : Set α} : s ∈ f * g ↔ 
 
 @[to_additive]
 theorem mul_mem_mul [Monoidₓ α] {f g : Filter α} {s t : Set α} (hs : s ∈ f) (ht : t ∈ g) : s * t ∈ f * g :=
-  ⟨_, _, hs, ht, subset.refl _⟩
+  ⟨_, _, hs, ht, Subset.refl _⟩
 
 @[to_additive]
 protected theorem mul_le_mul [Monoidₓ α] {f₁ f₂ g₁ g₂ : Filter α} (hf : f₁ ≤ f₂) (hg : g₁ ≤ g₂) : f₁ * g₁ ≤ f₂ * g₂ :=
   fun _ ⟨s, t, hs, ht, hst⟩ => ⟨s, t, hf hs, hg ht, hst⟩
 
 @[to_additive]
-theorem ne_bot.mul [Monoidₓ α] {f g : Filter α} : ne_bot f → ne_bot g → ne_bot (f * g) := by
+theorem ne_bot.mul [Monoidₓ α] {f g : Filter α} : NeBot f → NeBot g → NeBot (f * g) := by
   simp only [forall_mem_nonempty_iff_ne_bot.symm]
   rintro hf hg s ⟨a, b, ha, hb, ab⟩
   exact ((hf a ha).mul (hg b hb)).mono ab
@@ -166,7 +166,7 @@ protected theorem map_one : map φ (1 : Filter α) = 1 :=
 def map_monoid_hom : Filter α →* Filter β where
   toFun := map φ
   map_one' := Filter.map_one φ
-  map_mul' := fun _ _ => Filter.map_mul φ.to_mul_hom
+  map_mul' := fun _ _ => Filter.map_mul φ.toMulHom
 
 @[to_additive]
 theorem comap_mul_comap_le {f₁ f₂ : Filter β} : comap m f₁ * comap m f₂ ≤ comap m (f₁ * f₂) := by
@@ -177,7 +177,7 @@ theorem comap_mul_comap_le {f₁ f₂ : Filter β} : comap m f₁ * comap m f₂
 
 @[to_additive]
 theorem tendsto.mul_mul {f₁ g₁ : Filter α} {f₂ g₂ : Filter β} :
-    tendsto m f₁ f₂ → tendsto m g₁ g₂ → tendsto m (f₁ * g₁) (f₂ * g₂) := fun hf hg => by
+    Tendsto m f₁ f₂ → Tendsto m g₁ g₂ → Tendsto m (f₁ * g₁) (f₂ * g₂) := fun hf hg => by
   rw [tendsto, Filter.map_mul m]
   exact Filter.mul_le_mul hf hg
 

@@ -44,7 +44,7 @@ theorem continuous_iff {f : E →ᵃ[R] F} : Continuous f ↔ Continuous f.linea
 /-- The line map is continuous. -/
 @[continuity]
 theorem line_map_continuous [TopologicalSpace R] [HasContinuousSmul R F] {p v : F} :
-    Continuous (⇑(line_map p v : R →ᵃ[R] F)) :=
+    Continuous (⇑(lineMap p v : R →ᵃ[R] F)) :=
   continuous_iff.mpr <| (continuous_id.smul continuous_const).add <| @continuous_const _ _ _ _ (0 : F)
 
 end Ringₓ
