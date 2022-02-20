@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2017 Johannes Hölzl. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johannes Hölzl
+-/
 import Mathbin.Algebra.Order.AbsoluteValue
 import Mathbin.Algebra.BigOperators.Basic
 
@@ -184,7 +189,7 @@ theorem card_bUnion_le_card_mul [DecidableEq β] (s : Finset ι) (f : ι → Fin
 
 variable {ι' : Type _} [DecidableEq ι']
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (y «expr ∉ » t)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (y «expr ∉ » t)
 @[to_additive sum_fiberwise_le_sum_of_sum_fiber_nonneg]
 theorem prod_fiberwise_le_prod_of_one_le_prod_fiber' {t : Finset ι'} {g : ι → ι'} {f : ι → N}
     (h : ∀ y _ : y ∉ t, (1 : N) ≤ ∏ x in s.filter fun x => g x = y, f x) :
@@ -195,7 +200,7 @@ theorem prod_fiberwise_le_prod_of_one_le_prod_fiber' {t : Finset ι'} {g : ι �
     _ = ∏ x in s, f x := prod_fiberwise_of_maps_to (fun x hx => mem_union.2 <| Or.inr <| mem_image_of_mem _ hx) _
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (y «expr ∉ » t)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (y «expr ∉ » t)
 @[to_additive sum_le_sum_fiberwise_of_sum_fiber_nonpos]
 theorem prod_le_prod_fiberwise_of_prod_fiber_le_one' {t : Finset ι'} {g : ι → ι'} {f : ι → N}
     (h : ∀ y _ : y ∉ t, (∏ x in s.filter fun x => g x = y, f x) ≤ 1) :
@@ -455,9 +460,11 @@ variable [OrderedCommSemiring R] {f g : ι → R} {s t : Finset ι}
 
 open_locale Classical
 
+-- this is also true for a ordered commutative multiplicative monoid
 theorem prod_nonneg (h0 : ∀, ∀ i ∈ s, ∀, 0 ≤ f i) : 0 ≤ ∏ i in s, f i :=
   prod_induction f (fun i => 0 ≤ i) (fun _ _ ha hb => mul_nonneg ha hb) zero_le_one h0
 
+-- this is also true for a ordered commutative multiplicative monoid
 theorem prod_pos [Nontrivial R] (h0 : ∀, ∀ i ∈ s, ∀, 0 < f i) : 0 < ∏ i in s, f i :=
   prod_induction f (fun x => 0 < x) (fun _ _ ha hb => mul_pos ha hb) zero_lt_one h0
 

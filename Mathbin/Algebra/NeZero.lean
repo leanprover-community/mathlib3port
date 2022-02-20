@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Eric Rodriguez. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Eric Rodriguez
+-/
 import Mathbin.Algebra.Algebra.Basic
 import Mathbin.Algebra.CharP.Basic
 
@@ -33,7 +38,7 @@ namespace NeZero
 
 variable {R S M F : Type _} {r : R} {x y : M} {n p : ℕ} {a : ℕ+}
 
-instance Pnat : NeZero (a : ℕ) :=
+instance pnat : NeZero (a : ℕ) :=
   ⟨a.ne_zero⟩
 
 instance succ : NeZero (n + 1) :=
@@ -45,13 +50,13 @@ theorem of_pos [Preorderₓ M] [Zero M] (h : 0 < x) : NeZero x :=
 theorem of_gt [CanonicallyOrderedAddMonoid M] (h : x < y) : NeZero y :=
   of_pos <| pos_of_gt h
 
-instance CharZero [NeZero n] [AddMonoidₓ M] [One M] [CharZero M] : NeZero (n : M) :=
+instance char_zero [NeZero n] [AddMonoidₓ M] [One M] [CharZero M] : NeZero (n : M) :=
   ⟨Nat.cast_ne_zero.mpr <| NeZero.ne n⟩
 
-instance (priority := 100) Invertible [MonoidWithZeroₓ M] [Nontrivial M] [Invertible x] : NeZero x :=
+instance (priority := 100) invertible [MonoidWithZeroₓ M] [Nontrivial M] [Invertible x] : NeZero x :=
   ⟨nonzero_of_invertible x⟩
 
-instance coeTransₓ {r : R} [Zero M] [Coe R S] [CoeTₓ S M] [h : NeZero (r : M)] : NeZero ((r : S) : M) :=
+instance coe_trans {r : R} [Zero M] [Coe R S] [CoeTₓ S M] [h : NeZero (r : M)] : NeZero ((r : S) : M) :=
   ⟨h.out⟩
 
 theorem trans {r : R} [Zero M] [Coe R S] [CoeTₓ S M] (h : NeZero ((r : S) : M)) : NeZero (r : M) :=

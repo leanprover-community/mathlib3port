@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison
+-/
 import Mathbin.Algebra.Category.Mon.Basic
 import Mathbin.CategoryTheory.Limits.HasLimits
 import Mathbin.CategoryTheory.Limits.ConcreteCategory
@@ -45,8 +50,10 @@ variable {J : Type v} [SmallCategory J] (F : J ⥤ Mon.{v})
 /-- An inductive type representing all monoid expressions (without relations)
 on a collection of types indexed by the objects of `J`.
 -/
-inductive prequotient
-  | of : ∀ j : J x : F.obj j, prequotient
+inductive Prequotient-- There's always `of`
+
+  | of : ∀ j : J x : F.obj j, prequotient-- Then one generator for each operation
+
   | one : prequotient
   | mul : prequotient → prequotient → prequotient
 
@@ -59,22 +66,29 @@ open Prequotient
 because of the monoid laws, or
 because one element is mapped to another by a morphism in the diagram.
 -/
-inductive relation : Prequotient F → Prequotient F → Prop
+inductive Relation : Prequotient F → Prequotient F → Prop-- Make it an equivalence relation:
+
   | refl : ∀ x, relation x x
   | symm : ∀ x y h : relation x y, relation y x
-  | trans : ∀ x y z h : relation x y k : relation y z, relation x z
-  | map : ∀ j j' : J f : j ⟶ j' x : F.obj j, relation (of j' ((F.map f) x)) (of j x)
+  | trans : ∀ x y z h : relation x y k : relation y z, relation x z-- There's always a `map` relation
+
+  | map :
+    ∀ j j' : J f : j ⟶ j' x : F.obj j,
+      relation (of j' ((F.map f) x)) (of j x)-- Then one relation per operation, describing the interaction with `of`
+
   | mul : ∀ j x y : F.obj j, relation (of j (x * y)) (mul (of j x) (of j y))
-  | one : ∀ j, relation (of j 1) one
+  | one : ∀ j, relation (of j 1) one-- Then one relation per argument of each operation
+
   | mul_1 : ∀ x x' y r : relation x x', relation (mul x y) (mul x' y)
-  | mul_2 : ∀ x y y' r : relation y y', relation (mul x y) (mul x y')
+  | mul_2 : ∀ x y y' r : relation y y', relation (mul x y) (mul x y')-- And one relation per axiom
+
   | mul_assoc : ∀ x y z, relation (mul (mul x y) z) (mul x (mul y z))
   | one_mulₓ : ∀ x, relation (mul one x) x
   | mul_oneₓ : ∀ x, relation (mul x one) x
 
 /-- The setoid corresponding to monoid expressions modulo monoid relations and identifications.
 -/
-def colimit_setoid : Setoidₓ (Prequotient F) where
+def colimitSetoid : Setoidₓ (Prequotient F) where
   R := Relation F
   iseqv := ⟨Relation.refl, Relation.symm, Relation.trans⟩
 
@@ -82,10 +96,10 @@ attribute [instance] colimit_setoid
 
 /-- The underlying type of the colimit of a diagram in `Mon`.
 -/
-def colimit_type : Type v :=
+def ColimitType : Type v :=
   Quotientₓ (colimitSetoid F)deriving Inhabited
 
-instance monoid_colimit_type : Monoidₓ (ColimitType F) where
+instance monoidColimitType : Monoidₓ (ColimitType F) where
   mul := by
     fapply @Quot.lift _ _ (colimit_type F → colimit_type F)
     · intro x
@@ -146,11 +160,11 @@ def colimit : Mon :=
     infer_instance⟩
 
 /-- The function from a given monoid in the diagram to the colimit monoid. -/
-def cocone_fun (j : J) (x : F.obj j) : ColimitType F :=
+def coconeFun (j : J) (x : F.obj j) : ColimitType F :=
   Quot.mk _ (of j x)
 
 /-- The monoid homomorphism from a given monoid in the diagram to the colimit monoid. -/
-def cocone_morphism (j : J) : F.obj j ⟶ colimit F where
+def coconeMorphism (j : J) : F.obj j ⟶ colimit F where
   toFun := coconeFun F j
   map_one' := Quot.sound (Relation.one _)
   map_mul' := fun x y => Quot.sound (Relation.mul _ _ _)
@@ -168,19 +182,19 @@ theorem cocone_naturality_components (j j' : J) (f : j ⟶ j') (x : F.obj j) :
   rfl
 
 /-- The cocone over the proposed colimit monoid. -/
-def colimit_cocone : Cocone F where
+def colimitCocone : Cocone F where
   x := colimit F
   ι := { app := coconeMorphism F }
 
 /-- The function from the free monoid on the diagram to the cone point of any other cocone. -/
 @[simp]
-def desc_fun_lift (s : Cocone F) : Prequotient F → s.x
+def descFunLift (s : Cocone F) : Prequotient F → s.x
   | of j x => (s.ι.app j) x
   | one => 1
   | mul x y => desc_fun_lift x * desc_fun_lift y
 
 /-- The function from the colimit monoid to the cone point of any other cocone. -/
-def desc_fun (s : Cocone F) : ColimitType F → s.x := by
+def descFun (s : Cocone F) : ColimitType F → s.x := by
   fapply Quot.lift
   · exact desc_fun_lift F s
     
@@ -188,39 +202,50 @@ def desc_fun (s : Cocone F) : ColimitType F → s.x := by
     induction r <;>
       try
         dsimp
+    -- refl
     · rfl
       
+    -- symm
     · exact r_ih.symm
       
+    -- trans
     · exact Eq.trans r_ih_h r_ih_k
       
+    -- map
     · simp
       
+    -- mul
     · simp
       
+    -- one
     · simp
       
+    -- mul_1
     · rw [r_ih]
       
+    -- mul_2
     · rw [r_ih]
       
+    -- mul_assoc
     · rw [mul_assoc]
       
+    -- one_mul
     · rw [one_mulₓ]
       
+    -- mul_one
     · rw [mul_oneₓ]
       
     
 
 /-- The monoid homomorphism from the colimit monoid to the cone point of any other cocone. -/
-def desc_morphism (s : Cocone F) : colimit F ⟶ s.x where
+def descMorphism (s : Cocone F) : colimit F ⟶ s.x where
   toFun := descFun F s
   map_one' := rfl
   map_mul' := fun x y => by
     induction x <;> induction y <;> rfl
 
 /-- Evidence that the proposed colimit is the colimit. -/
-def colimit_is_colimit : IsColimit (colimitCocone F) where
+def colimitIsColimit : IsColimit (colimitCocone F) where
   desc := fun s => descMorphism F s
   uniq' := fun s m w => by
     ext

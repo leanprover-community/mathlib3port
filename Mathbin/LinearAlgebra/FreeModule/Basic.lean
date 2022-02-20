@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Riccardo Brasca. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Riccardo Brasca
+-/
 import Mathbin.LinearAlgebra.DirectSum.Finsupp
 import Mathbin.Logic.Small
 import Mathbin.LinearAlgebra.StdBasis
@@ -32,6 +37,11 @@ variable [Semiringₓ R] [AddCommMonoidₓ M] [Module R M]
 class Module.Free : Prop where
   exists_basis {} : Nonempty (Σ I : Type v, Basis I R M)
 
+/- If `M` fits in universe `w`, then freeness is equivalent to existence of a basis in that
+universe.
+
+Note that if `M` does not fit in `w`, the reverse direction of this implication is still true as
+`module.free.of_basis`. -/
 theorem Module.free_def [Small.{w} M] : Module.Free R M ↔ ∃ I : Type w, Nonempty (Basis I R M) :=
   ⟨fun h =>
     ⟨Shrink (Set.Range h.exists_basis.some.2), ⟨(Basis.reindexRange h.exists_basis.some.2).reindex (equivShrink _)⟩⟩,
@@ -59,16 +69,16 @@ variable [AddCommMonoidₓ N] [Module R N]
 /-- If `[finite_free R M]` then `choose_basis_index R M` is the `ι` which indexes the basis
   `ι → M`. -/
 @[nolint has_inhabited_instance]
-def choose_basis_index :=
+def ChooseBasisIndex :=
   (exists_basis R M).some.1
 
 /-- If `[finite_free R M]` then `choose_basis : ι → M` is the basis.
 Here `ι = choose_basis_index R M`. -/
-noncomputable def choose_basis : Basis (ChooseBasisIndex R M) R M :=
+noncomputable def chooseBasis : Basis (ChooseBasisIndex R M) R M :=
   (exists_basis R M).some.2
 
 /-- The isomorphism `M ≃ₗ[R] (choose_basis_index R M →₀ R)`. -/
-noncomputable def reprₓ : M ≃ₗ[R] ChooseBasisIndex R M →₀ R :=
+noncomputable def repr : M ≃ₗ[R] ChooseBasisIndex R M →₀ R :=
   (chooseBasis R M).repr
 
 /-- The universal property of free modules: giving a functon `(choose_basis_index R M) → N`, for `N`
@@ -83,7 +93,7 @@ noncomputable def constr {S : Type z} [Semiringₓ S] [Module S N] [SmulCommClas
     (ChooseBasisIndex R M → N) ≃ₗ[S] M →ₗ[R] N :=
   Basis.constr (chooseBasis R M) S
 
-instance (priority := 100) NoZeroSmulDivisors [NoZeroDivisors R] : NoZeroSmulDivisors R M :=
+instance (priority := 100) no_zero_smul_divisors [NoZeroDivisors R] : NoZeroSmulDivisors R M :=
   let ⟨⟨_, b⟩⟩ := exists_basis R M
   b.NoZeroSmulDivisors
 
@@ -93,7 +103,7 @@ instance pi {ι : Type _} [Fintype ι] {M : ι → Type _} [∀ i : ι, AddCommG
   of_basis <| Pi.basis fun i => chooseBasis R (M i)
 
 /-- The module of finite matrices is free. -/
-instance Matrix {n : Type _} [Fintype n] {m : Type _} [Fintype m] : Module.Free R (Matrix n m R) :=
+instance matrix {n : Type _} [Fintype n] {m : Type _} [Fintype m] : Module.Free R (Matrix n m R) :=
   of_basis <| Matrix.stdBasis R n m
 
 variable {R M N}
@@ -115,7 +125,7 @@ instance {ι : Type v} : Module.Free R (ι →₀ R) :=
 instance {ι : Type v} [Fintype ι] : Module.Free R (ι → R) :=
   of_equiv (Basis.of_repr <| LinearEquiv.refl _ _).equivFun
 
-instance Prod [Module.Free R N] : Module.Free R (M × N) :=
+instance prod [Module.Free R N] : Module.Free R (M × N) :=
   of_basis <| (chooseBasis R M).Prod (chooseBasis R N)
 
 instance self : Module.Free R R :=
@@ -124,11 +134,11 @@ instance self : Module.Free R R :=
 instance (priority := 100) of_subsingleton [Subsingleton N] : Module.Free R N :=
   of_basis (Basis.empty N : Basis Pempty R N)
 
-instance Dfinsupp {ι : Type _} (M : ι → Type _) [∀ i : ι, AddCommMonoidₓ (M i)] [∀ i : ι, Module R (M i)]
+instance dfinsupp {ι : Type _} (M : ι → Type _) [∀ i : ι, AddCommMonoidₓ (M i)] [∀ i : ι, Module R (M i)]
     [∀ i : ι, Module.Free R (M i)] : Module.Free R (Π₀ i, M i) :=
   of_basis <| Dfinsupp.basis fun i => chooseBasis R (M i)
 
-instance DirectSum {ι : Type _} (M : ι → Type _) [∀ i : ι, AddCommMonoidₓ (M i)] [∀ i : ι, Module R (M i)]
+instance direct_sum {ι : Type _} (M : ι → Type _) [∀ i : ι, AddCommMonoidₓ (M i)] [∀ i : ι, Module R (M i)]
     [∀ i : ι, Module.Free R (M i)] : Module.Free R (⨁ i, M i) :=
   Module.Free.dfinsupp R M
 

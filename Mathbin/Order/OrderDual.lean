@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Johan Commelin, Damiano Testa. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johan Commelin, Damiano Testa
+-/
 import Mathbin.Data.Equiv.Basic
 import Mathbin.Logic.Nontrivial
 import Mathbin.Order.Basic
@@ -26,11 +31,11 @@ instance [Nontrivial α] : Nontrivial (OrderDual α) := by
   delta' OrderDual <;> assumption
 
 /-- `to_dual` is the identity function to the `order_dual` of a linear order.  -/
-def to_dual : α ≃ OrderDual α :=
+def toDual : α ≃ OrderDual α :=
   ⟨id, id, fun h => rfl, fun h => rfl⟩
 
 /-- `of_dual` is the identity function from the `order_dual` of a linear order.  -/
-def of_dual : OrderDual α ≃ α :=
+def ofDual : OrderDual α ≃ α :=
   toDual.symm
 
 @[simp]

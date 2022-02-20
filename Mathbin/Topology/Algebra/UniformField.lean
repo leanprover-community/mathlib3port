@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Patrick Massot. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Patrick Massot
+-/
 import Mathbin.Topology.Algebra.UniformRing
 import Mathbin.Topology.Algebra.Field
 
@@ -77,6 +82,10 @@ theorem continuous_hat_inv [CompletableTopField K] {x : hat K} (h : x ≠ 0) : C
     exact comap_bot
     
 
+/-
+The value of `hat_inv` at zero is not really specified, although it's probably zero.
+Here we explicitly enforce the `inv_zero` axiom.
+-/
 instance Completion.hasInv : Inv (hat K) :=
   ⟨fun x => if x = 0 then 0 else hatInv x⟩
 

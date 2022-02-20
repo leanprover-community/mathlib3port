@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2017 Mario Carneiro. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Mario Carneiro, Yury Kudryashov, Floris van Doorn
+-/
 import Mathbin.Tactic.TransformDecl
 import Mathbin.Tactic.Algebra
 
@@ -27,6 +32,7 @@ setup_tactic_parser
 
 section PerformanceHack
 
+-- see Note [user attribute parameters]
 attribute [local semireducible] reflected
 
 /-- Temporarily change the `has_reflect` instance for `name`. -/
@@ -57,7 +63,7 @@ end PerformanceHack
 
 section ExtraAttributes
 
--- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr *»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr *»
 /-- An attribute that tells `@[to_additive]` that certain arguments of this definition are not
 involved when using `@[to_additive]`.
 This helps the heuristic of `@[to_additive]` by also transforming definitions if `ℕ` or another
@@ -72,7 +78,9 @@ unsafe def ignore_args_attr : user_attribute (name_map <| List ℕ) (List ℕ) w
       ns.mfoldl
         (fun dict n => do
           let param ← ignore_args_attr.get_param_untyped n
-          return <| dict n (param expr.to_nat).iget)
+          -- see Note [user attribute parameters]
+              return <|
+              dict n (param expr.to_nat).iget)
         mk_name_map,
       []⟩
   parser := «expr *» lean.parser.small_nat
@@ -107,12 +115,15 @@ unsafe def relevant_arg_attr : user_attribute (name_map ℕ) ℕ where
       ns.mfoldl
         (fun dict n => do
           let param ← relevant_arg_attr.get_param_untyped n
-          return <| dict n <| param)
+          -- see Note [user attribute parameters]
+              -- we subtract 1 from the values provided by the user.
+              return <|
+              dict n <| param)
         mk_name_map,
       []⟩
   parser := lean.parser.small_nat
 
--- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr *»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr *»
 /-- An attribute that stores all the declarations that needs their arguments reordered when
 applying `@[to_additive]`. Currently, we only support swapping consecutive arguments.
 The list of the natural numbers contains the positions of the first of the two arguments
@@ -130,7 +141,9 @@ unsafe def reorder_attr : user_attribute (name_map <| List ℕ) (List ℕ) where
       ns.mfoldl
         (fun dict n => do
           let param ← reorder_attr.get_param_untyped n
-          return <| dict n (param expr.to_nat).iget)
+          -- see Note [user attribute parameters]
+              return <|
+              dict n (param expr.to_nat).iget)
         mk_name_map,
       []⟩
   parser := do
@@ -183,7 +196,7 @@ unsafe def map_namespace (src tgt : Name) : Tactic Unit := do
 * if `allow_auto_name` is `ff` (default) then `@[to_additive]` will check whether the given name
   can be auto-generated.
 -/
-structure value_type : Type where
+structure ValueType : Type where
   replaceAll : Bool
   trace : Bool
   tgt : Name
@@ -233,7 +246,10 @@ unsafe def guess_name : Stringₓ → Stringₓ :=
 
 /-- Return the provided target name or autogenerate one if one was not provided. -/
 unsafe def target_name (src tgt : Name) (dict : name_map Name) (allow_auto_name : Bool) : tactic Name :=
-  (if tgt.getPrefix ≠ Name.anonymous ∨ allow_auto_name then pure tgt
+  (if tgt.getPrefix ≠ Name.anonymous ∨ allow_auto_name then
+      -- `tgt` is a full name
+        pure
+        tgt
     else
       match src with
       | Name.mk_string s pre => do
@@ -252,10 +268,10 @@ unsafe def target_name (src tgt : Name) (dict : name_map Name) (allow_auto_name 
           " to itself.\nGive the desired additive name explicitly using `@[to_additive additive_name]`. ")
     else pure res
 
--- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr ?»
--- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr ?»
--- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr ?»
--- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr ?»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr ?»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr ?»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr ?»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr ?»
 /-- the parser for the arguments to `to_additive`. -/
 unsafe def parser : lean.parser ValueType := do
   let bang ← Option.isSome <$> «expr ?» (tk "!")
@@ -529,8 +545,10 @@ add_tactic_doc
 
 end ToAdditive
 
+-- map operations
 attribute [to_additive] Mul One Inv Div
 
+-- the following types are supported by `@[to_additive]` and mapped to themselves.
 attribute [to_additive Empty] Empty
 
 attribute [to_additive Pempty] Pempty

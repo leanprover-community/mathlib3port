@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2017 Johannes Hölzl. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johannes Hölzl, Mario Carneiro, Patrick Massot
+-/
 import Mathbin.Topology.Order
 
 /-!
@@ -142,7 +147,7 @@ theorem embedding_of_embedding_compose {f : α → β} {g : β → γ} (hf : Con
   { induced := (inducing_of_inducing_compose hf hg hgf.to_inducing).induced,
     inj := fun a₁ a₂ h =>
       hgf.inj <| by
-        simp [h, · ∘ ·] }
+        simp [h, (· ∘ ·)] }
 
 protected theorem Function.LeftInverse.embedding {f : α → β} {g : β → α} (h : Function.LeftInverse f g)
     (hf : Continuous f) (hg : Continuous g) : Embedding g :=
@@ -204,7 +209,7 @@ protected theorem of_quotient_map_compose (hf : Continuous f) (hg : Continuous g
 protected theorem continuous_iff (hf : QuotientMap f) : Continuous g ↔ Continuous (g ∘ f) := by
   rw [continuous_iff_coinduced_le, continuous_iff_coinduced_le, hf.right, coinduced_compose]
 
-protected theorem Continuous (hf : QuotientMap f) : Continuous f :=
+protected theorem continuous (hf : QuotientMap f) : Continuous f :=
   hf.continuous_iff.mp continuous_id
 
 protected theorem surjective (hf : QuotientMap f) : Function.Surjective f :=

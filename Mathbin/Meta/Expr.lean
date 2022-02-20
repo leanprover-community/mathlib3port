@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Robert Y. Lewis. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Mario Carneiro, Simon Hudon, Scott Morrison, Keeley Hoek, Robert Y. Lewis, Floris van Doorn
+-/
 import Mathbin.Data.String.Defs
 import Mathbin.Tactic.DeriveInhabited
 
@@ -45,7 +50,7 @@ namespace Name
 
 /-- Find the largest prefix `n` of a `name` such that `f n ≠ none`, then replace this prefix
 with the value of `f n`. -/
-def map_prefix (f : Name → Option Name) : Name → Name
+def mapPrefix (f : Name → Option Name) : Name → Name
   | anonymous => anonymous
   | mk_string s n' => (f (mk_string s n')).getOrElse (mk_string s <| map_prefix n')
   | mk_numeral d n' => (f (mk_numeral d n')).getOrElse (mk_numeral d <| map_prefix n')
@@ -85,7 +90,7 @@ private def from_components_aux : Name → List Stringₓ → Name
 
 /-- Build a name from components. For example `from_components ["foo","bar"]` becomes
   ``` `foo.bar``` -/
-def from_components : List Stringₓ → Name :=
+def fromComponents : List Stringₓ → Name :=
   fromComponentsAux Name.anonymous
 
 /-- `name`s can contain numeral pieces, which are not legal names
@@ -97,19 +102,19 @@ unsafe def sanitize_name : Name → Name
   | Name.mk_numeral s p => (Name.mk_string s! "n{s}") <| sanitize_name p
 
 /-- Append a string to the last component of a name. -/
-def append_suffix : Name → Stringₓ → Name
+def appendSuffix : Name → Stringₓ → Name
   | mk_string s n, s' => mk_string (s ++ s') n
   | n, _ => n
 
 /-- Update the last component of a name. -/
-def update_last (f : Stringₓ → Stringₓ) : Name → Name
+def updateLast (f : Stringₓ → Stringₓ) : Name → Name
   | mk_string s n => mk_string (f s) n
   | n => n
 
 /-- `append_to_last nm s is_prefix` adds `s` to the last component of `nm`,
   either as prefix or as suffix (specified by `is_prefix`), separated by `_`.
   Used by `simps_add_projections`. -/
-def append_to_last (nm : Name) (s : Stringₓ) (is_prefix : Bool) : Name :=
+def appendToLast (nm : Name) (s : Stringₓ) (is_prefix : Bool) : Name :=
   nm.updateLast fun s' => if is_prefix then s ++ "_" ++ s' else s' ++ "_" ++ s
 
 /-- The first component of a name, turning a number to a string -/
@@ -138,7 +143,7 @@ unsafe def length : Name → ℕ
   | anonymous => "[anonymous]".length
 
 /-- Checks whether `nm` has a prefix (including itself) such that P is true -/
-def has_prefix (P : Name → Bool) : Name → Bool
+def hasPrefix (P : Name → Bool) : Name → Bool
   | anonymous => false
   | mk_string s nm => P (mk_string s nm) ∨ has_prefix nm
   | mk_numeral s nm => P (mk_numeral s nm) ∨ has_prefix nm
@@ -150,7 +155,7 @@ unsafe def add_prime : Name → Name
 
 /-- `last_string n` returns the rightmost component of `n`, ignoring numeral components.
 For example, ``last_string `a.b.c.33`` will return `` `c ``. -/
-def last_string : Name → Stringₓ
+def lastString : Name → Stringₓ
   | anonymous => "[anonymous]"
   | mk_string s _ => s
   | mk_numeral _ n => last_string n
@@ -266,7 +271,7 @@ unsafe structure binder where
 namespace Binder
 
 /-- Turn a binder into a string. Uses expr.to_string for the type. -/
-protected unsafe def toString (b : binder) : Stringₓ :=
+protected unsafe def to_string (b : binder) : Stringₓ :=
   let (l, r) := b.info.brackets
   l ++ b.Name.toString ++ " : " ++ b.type.toString ++ r
 
@@ -566,7 +571,9 @@ This represents the notion that `e` "may occur" in `t`,
 possibly after subsequent unification.
 -/
 unsafe def contains_expr_or_mvar (t : expr) (e : expr) : Bool :=
-  ¬t.list_meta_vars.Empty ∨ e.occurs t
+  -- We can't use `t.has_meta_var` here, as that detects universe metavariables, too.
+    ¬t.list_meta_vars.Empty ∨
+    e.occurs t
 
 /-- Returns a `name_set` of all constants in an expression starting with a certain prefix. -/
 unsafe def list_names_with_prefix (pre : Name) (e : expr) : name_set :=
@@ -595,7 +602,9 @@ unsafe def app_symbol_in (e : expr) (l : List Name) : Bool :=
 
 /-- `get_simp_args e` returns the arguments of `e` that simp can reach via congruence lemmas. -/
 unsafe def get_simp_args (e : expr) : tactic (List expr) :=
-  if ¬e.is_app then pure []
+  if-- `mk_specialized_congr_lemma_simp` throws an assertion violation if its argument is not an app
+      ¬e.is_app then
+    pure []
   else do
     let cgr ← mk_specialized_congr_lemma_simp e
     pure <| do
@@ -869,13 +878,20 @@ protected unsafe def apply_replacement_fun (f : Name → Name) (test : expr → 
   | e =>
     e.replace fun e _ =>
       match e with
-      | const n ls => some <| const (f n) <| if 1 ∈ (reorder.find n).iget then ls.inth 1 :: ls.head :: ls.drop 2 else ls
+      | const n ls =>
+        some <|
+          const (f n) <|-- if the first two arguments are reordered, we also reorder the first two universe parameters
+              if 1 ∈ (reorder.find n).iget then ls.inth 1 :: ls.head :: ls.drop 2
+            else ls
       | app g x =>
         let f := g.get_app_fn
         let nm := f.const_name
         let n_args := g.get_app_num_args
-        if n_args ∈ (reorder.find nm).iget ∧ test g.get_app_args.head then
-          some <| apply_replacement_fun g.app_fn (apply_replacement_fun x) <| apply_replacement_fun g.app_arg
+        -- this might be inefficient
+          if n_args ∈ (reorder.find nm).iget ∧ test g.get_app_args.head then
+          -- interchange `x` and the last argument of `g`
+            some <|
+            apply_replacement_fun g.app_fn (apply_replacement_fun x) <| apply_replacement_fun g.app_arg
         else
           if n_args = (relevant.find nm).lhoare 0 ∧ f.is_constant ∧ ¬test x then
             some <| (f.mk_app <| g.get_app_args.map apply_replacement_fun) (apply_replacement_fun x)
@@ -1074,7 +1090,7 @@ unsafe def univ_levels (d : declaration) : List level :=
   d.univ_params.map level.param
 
 /-- Returns the `reducibility_hints` field of a `defn`, and `reducibility_hints.opaque` otherwise -/
-protected unsafe def ReducibilityHints : declaration → ReducibilityHints
+protected unsafe def reducibility_hints : declaration → ReducibilityHints
   | declaration.defn _ _ _ _ red _ => red
   | _ => ReducibilityHints.opaque
 

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Bhavik Mehta. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Bhavik Mehta
+-/
 import Mathbin.Topology.Opens
 import Mathbin.CategoryTheory.Sites.Grothendieck
 import Mathbin.CategoryTheory.Sites.Pretopology
@@ -36,7 +41,7 @@ variable (T : Type u) [TopologicalSpace T]
 open CategoryTheory TopologicalSpace CategoryTheory.Limits
 
 /-- The Grothendieck topology associated to a topological space. -/
-def grothendieck_topology : GrothendieckTopology (Opens T) where
+def grothendieckTopology : GrothendieckTopology (Opens T) where
   Sieves := fun X S => ∀, ∀ x ∈ X, ∀, ∃ (U : _)(f : U ⟶ X), S f ∧ x ∈ U
   top_mem' := fun X x hx => ⟨_, 𝟙 _, trivialₓ, hx⟩
   pullback_stable' := fun X Y S f hf y hy => by

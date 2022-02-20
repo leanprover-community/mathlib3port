@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Johan Commelin, Robert Y. Lewis. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johan Commelin, Robert Y. Lewis
+-/
 import Mathbin.RingTheory.WittVector.Basic
 import Mathbin.RingTheory.WittVector.IsPoly
 
@@ -33,15 +38,16 @@ variable {p : ℕ} [hp : Fact p.Prime] (n : ℕ) {R : Type _} [CommRingₓ R]
 
 local notation "𝕎" => WittVector p
 
+-- type as `\bbW`
 namespace Tactic
 
 namespace Interactive
 
 setup_tactic_parser
 
--- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
--- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
--- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:916:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:916:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:916:4: warning: unsupported (TODO): `[tacs]
 /-- `init_ring` is an auxiliary tactic that discharges goals factoring `init` over ring operations.
 -/
 unsafe def init_ring (assert : parse (tk "using" *> parser.pexpr)?) : tactic Unit := do
@@ -79,7 +85,7 @@ variable (P : ℕ → Prop)
 
 /-- The polynomial that witnesses that `witt_vector.select` is a polynomial function.
 `select_poly n` is `X n` if `P n` holds, and `0` otherwise. -/
-def select_poly (n : ℕ) : MvPolynomial ℕ ℤ :=
+def selectPoly (n : ℕ) : MvPolynomial ℕ ℤ :=
   if P n then x n else 0
 
 theorem coeff_select (x : 𝕎 R) (n : ℕ) : (select P x).coeff n = aeval x.coeff (selectPoly P n) := by

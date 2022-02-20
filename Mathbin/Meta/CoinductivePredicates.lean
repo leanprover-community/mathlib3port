@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2017 Johannes Hölzl. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johannes Hölzl (CMU)
+-/
 import Mathbin.Tactic.Core
 
 section
@@ -49,6 +54,7 @@ namespace Tactic
 
 open Expr Tactic
 
+-- TODO: use backchaining
 private unsafe def mono_aux (ns : List Name) (hs : List expr) : tactic Unit := do
   intros
   (do
@@ -89,12 +95,54 @@ unsafe def mono (e : expr) (hs : List expr) : tactic Unit := do
 
 end Tactic
 
+/-
+The coinductive predicate `pred`:
+
+  coinductive {u} pred (A) : a → Prop
+  | r : ∀A b, pred A p
+
+where
+  `u` is a list of universe parameters
+  `A` is a list of global parameters
+  `pred` is a list predicates to be defined
+  `a` are the indices for each `pred`
+  `r` is a list of introduction rules for each `pred`
+  `b` is a list of parameters for each rule in `r` and `pred`
+  `p` is are the instances of `a` using `A` and `b`
+
+`pred` is compiled to the following defintions:
+
+  inductive {u} pred.functional (A) ([pred'] : a → Prop) : a → Prop
+  | r : ∀a [f], b[pred/pred'] → pred.functional a [f] p
+
+  lemma {u} pred.functional.mono (A) ([pred₁] [pred₂] : a → Prop) [(h : ∀b, pred₁ b → pred₂ b)] :
+    ∀p, pred.functional A pred₁ p → pred.functional A pred₂ p
+
+  def {u} pred_i (A) (a) : Prop :=
+  ∃[pred'], (Λi, ∀a, pred_i a → pred_i.functional A [pred] a) ∧ pred'_i a
+
+  lemma {u} pred_i.corec_functional (A) [Λi, C_i : a_i → Prop]
+    [Λi, h : ∀a, C_i a → pred_i.functional A C_i a] :
+    ∀a, C_i a → pred_i A a
+
+  lemma {u} pred_i.destruct (A) (a) : pred A a → pred.functional A [pred A] a
+
+  lemma {u} pred_i.construct (A) : ∀a, pred_i.functional A [pred A] a → pred_i A a
+
+  lemma {u} pred_i.cases_on (A) (C : a → Prop) {a} (h : pred_i a) [Λi, ∀a, b → C p] → C a
+
+  lemma {u} pred_i.corec_on (A) [(C : a → Prop)] (a) (h : C_i a)
+    [Λi, h_i : ∀a, C_i a → [V j ∃b, a = p]] : pred_i A a
+
+  lemma {u} pred.r (A) (b) : pred_i A p
+-/
 namespace Tactic
 
 open Level Expr Tactic
 
 namespace AddCoinductivePredicate
 
+-- private
 unsafe structure coind_rule : Type where
   orig_nm : Name
   func_nm : Name
@@ -105,6 +153,7 @@ unsafe structure coind_rule : Type where
   concl : expr
   insts : List expr
 
+-- private
 unsafe structure coind_pred : Type where
   u_names : List Name
   params : List expr
@@ -160,6 +209,7 @@ unsafe def rec' (pd : coind_pred) : tactic expr := do
   let num := decl.univ_params.length
   return (const c <| if num = pd then pd else level.zero :: pd)
 
+-- ^^ `rec`'s universes are not always `u_params`, e.g. eq, wf, false
 unsafe def construct (pd : coind_pred) : expr :=
   const (pd.pd_name ++ "construct") pd.u_params
 
@@ -221,16 +271,22 @@ unsafe def add_coinductive_predicate (u_names : List Name) (params : List expr) 
                   { orig_nm := i, func_nm := p ++ "functional" ++ sub, type := i, loc_type := t' loc_args, concl := t',
                     loc_args, args, insts := t' }
         return { pd_name := c, type := c, f₁, f₂, u_f, intros, locals := ls, params, u_names }
-  pds fun pd : coind_pred => do
+  -- Introduce all functionals
+      pds
+      fun pd : coind_pred => do
       let func_f₁ := pd <| fs₁
       let func_f₂ := pd <| fs₂
-      let func_intros ←
-        pd fun r : coind_rule => do
+      let func_intros
+        ←-- Define functional for `pd` as inductive predicate
+            pd
+            fun r : coind_rule => do
             let t := instantiate_local pd (pd fs₁) r
             return (r, r, t <| params ++ fs₁)
       add_inductive pd u_names (params + preds) (pd <| params ++ fs₁) (func_intros fun ⟨t, _, r⟩ => (t, r))
-      let mono_params ←
-        pds fun pd => do
+      let mono_params
+        ←-- Prove monotonicity rule
+            pds
+            fun pd => do
             let h ← mk_local_def `h <| pd pd pd
             return [pd, pd, h]
       pd (pd ++ "mono") ((pd func_f₁ func_f₂).pis <| params ++ mono_params) do
@@ -238,14 +294,17 @@ unsafe def add_coinductive_predicate (u_names : List Name) (params : List expr) 
           let fs ←
             pds fun pd => do
                 let [f₁, f₂, h] ← intro_lst [pd, pd, `h]
-                let h' :=
+                let-- the type of h' reduces to h
+                h' :=
                   local_const h h h <|
                     (((const `implies [] : expr) (f₁ pd) (f₂ pd)).pis pd).instantiate_locals <|
                       (ps params).map fun ⟨lv, p⟩ => (p, lv)
                 return (f₂, h')
           let m ← pd
           eapply <| m ps
-          func_intros fun ⟨n, pp_n, t⟩ =>
+          -- somehow `induction` / `cases` doesn't work?
+              func_intros
+              fun ⟨n, pp_n, t⟩ =>
               solve1 <| do
                 let bs ← intros
                 let ms ← apply_core ((const n u_params).app_of_list <| ps ++ fs Prod.fst) { NewGoals := new_goals.all }
@@ -255,9 +314,16 @@ unsafe def add_coinductive_predicate (u_names : List Name) (params : List expr) 
                       fail f!"failed to prove montonoicity of {(n + 1)}. parameter of intro-rule {pp_n}"
   pds fun pd => do
       let func_f := fun pd : coind_pred => pd <| pds coind_pred.f₁
-      let pred_body ← mk_exists_lst (pds coind_pred.f₁) <| mk_and_lst <| (pds fun pd => pd pd (func_f pd)) ++ [pd pd]
+      let pred_body
+        ←-- define final predicate
+              mk_exists_lst
+              (pds coind_pred.f₁) <|
+            mk_and_lst <| (pds fun pd => pd pd (func_f pd)) ++ [pd pd]
       add_decl <| mk_definition pd u_names (pd <| params) <| pred_body <| params ++ pd
-      let hs ← pds fun pd : coind_pred => mk_local_def `hc <| pd pd (func_f pd)
+      let hs
+        ←-- prove `corec_functional` rule
+            pds
+            fun pd : coind_pred => mk_local_def `hc <| pd pd (func_f pd)
       pd (pd ++ "corec_functional") ((pd pd pd).pis <| params ++ fs₁ ++ hs) do
           intro_lst <| params local_pp_name
           let fs ← intro_lst <| fs₁ local_pp_name
@@ -269,7 +335,9 @@ unsafe def add_coinductive_predicate (u_names : List Name) (params : List expr) 
           hs fun f => econstructor >> exact f
           exact h
   let func_f := fun pd : coind_pred => pd.func_g.app_of_list <| pds.map coind_pred.pred_g
-  pds fun ⟨n, pd⟩ => do
+  -- prove `destruct` rules
+      pds
+      fun ⟨n, pd⟩ => do
       let destruct := pd pd (func_f pd)
       pd (pd ++ "destruct") (destruct params) do
           let ps ← intro_lst <| params local_pp_name
@@ -285,7 +353,9 @@ unsafe def add_coinductive_predicate (u_names : List Name) (params : List expr) 
           let some h' ← return <| hs n
           eapply h'
           exact h
-  pds fun pd =>
+  -- prove `construct` rules
+      pds
+      fun pd =>
       pd (pd ++ "construct") ((pd (func_f pd) pd).pis params) do
         let ps ← intro_lst <| params local_pp_name
         let func_pred_g := fun pd : coind_pred => pd <| ps ++ pds fun pd : coind_pred => pd ps
@@ -294,7 +364,9 @@ unsafe def add_coinductive_predicate (u_names : List Name) (params : List expr) 
             solve1 <| do
               eapply <| pd ps
               pds fun pd => solve1 <| eapply (pd ps) >> skip
-  pds fun pd => do
+  -- prove `cases_on` rules
+      pds
+      fun pd => do
       let C := pd
       let h ← mk_local_def `h <| pd pd
       let rules ←
@@ -312,7 +384,9 @@ unsafe def add_coinductive_predicate (u_names : List Name) (params : List expr) 
             eapply <| pd
             exact h
       set_basic_attribute `elab_as_eliminator cases_on
-  pds fun pd => do
+  -- prove `corec_on` rules
+      pds
+      fun pd => do
       let rules ←
         pds fun pd => do
             let intros ←
@@ -346,7 +420,10 @@ unsafe def add_coinductive_predicate (u_names : List Name) (params : List expr) 
                 let h' ← note `h' none <| hr ls h'
                 match s with
                   | 0 => induction h' >> skip
-                  | n + 1 => do
+                  |-- h' : false
+                      n +
+                      1 =>
+                    do
                     let hs ← elim_gen_sum n h'
                     (hs <| pd s).mmap' fun ⟨h, r, n_bs, n_eqs⟩ =>
                         solve1 <| do
@@ -358,7 +435,9 @@ unsafe def add_coinductive_predicate (u_names : List Name) (params : List expr) 
                           eapply ((const r u_params).app_of_list <| ps ++ fs)
                           iterate assumption
           exact h
-  pds fun pd =>
+  -- prove constructors
+      pds
+      fun pd =>
       pd fun r =>
         pd r (r params) <| do
           let ps ← intro_lst <| params local_pp_name
@@ -368,6 +447,7 @@ unsafe def add_coinductive_predicate (u_names : List Name) (params : List expr) 
   pds fun pd : coind_pred => set_basic_attribute `irreducible pd
   try triv
 
+-- we setup a trivial goal for the tactic framework
 setup_tactic_parser
 
 @[user_command]
@@ -381,7 +461,7 @@ unsafe def coinductive_predicate (meta_info : decl_meta_info) (_ : parse <| tk "
       let some doc_string ← pure meta_info | skip
       add_doc_string d doc_string
 
--- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `hs
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `hs
 /-- Prepares coinduction proofs. This tactic constructs the coinduction invariant from
 the quantifiers in the current goal.
 
@@ -391,11 +471,16 @@ unsafe def coinduction (rule : expr) (ns : List Name) : tactic Unit :=
     let ctxts' ← intros
     let ctxts ← ctxts'.mmap fun v => local_const v.local_uniq_name v.local_pp_name v.local_binding_info <$> infer_type v
     let mvars ← apply_core rule { approx := false, NewGoals := NewGoals.all }
-    let g ← List.headₓ <$> get_goals
+    let g
+      ←-- analyse relation
+          List.headₓ <$>
+          get_goals
     let List.cons _ m_is ← return <| mvars.dropWhile fun v => v.2 ≠ g
     let tgt ← target
     let (is, ty) ← open_pis tgt
-    let (bs, eqs) ← compact_relation ctxts <$> (is.zip m_is).mmap fun ⟨i, m⟩ => Prod.mk i <$> instantiate_mvars m.2
+    let-- construct coinduction predicate
+      (bs, eqs)
+      ← compact_relation ctxts <$> (is.zip m_is).mmap fun ⟨i, m⟩ => Prod.mk i <$> instantiate_mvars m.2
     solve1 do
         let eqs ←
           (mk_and_lst <$> eqs fun ⟨i, m⟩ => mk_app `eq [m, i] >>= instantiate_mvars) <|> do
@@ -405,14 +490,23 @@ unsafe def coinduction (rule : expr) (ns : List Name) : tactic Unit :=
               mk_mapp `eq [t, x, y]
         let rel ← mk_exists_lst bs eqs
         exact (rel is)
-    solve1 do
+    -- prove predicate
+        solve1
+        do
         target >>= instantiate_mvars >>= change
-        bs existsi
+        -- TODO: bug in existsi & constructor when mvars in hyptohesis
+            bs
+            existsi
         iterate' (econstructor >> skip)
-    all_goals' do
+    -- clean up remaining coinduction steps
+        all_goals'
+        do
         ctxts' clear
         target >>= instantiate_mvars >>= change
-        let is ← intro_lst <| is expr.local_pp_name
+        let is
+          ←-- TODO: bug in subst when mvars in hyptohesis
+              intro_lst <|
+              is expr.local_pp_name
         let h ← intro1
         let (_, h, ns) ← elim_gen_prod (bs - if eqs = 0 then 1 else 0) h [] ns
         match eqs with
@@ -420,7 +514,7 @@ unsafe def coinduction (rule : expr) (ns : List Name) : tactic Unit :=
           | e :: eqs => do
             let (hs, h, ns) ← elim_gen_prod eqs h [] ns
             (h :: hs hs.reverse : List _).mfoldl
-                (fun hs : List Name h : expr => do
+                (fun h : expr => do
                   let [(_, hs', σ)] ← cases_core h hs
                   clear (h σ)
                   pure <| hs hs')

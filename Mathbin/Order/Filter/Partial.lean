@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Jeremy Avigad. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Jeremy Avigad
+-/
 import Mathbin.Order.Filter.Basic
 import Mathbin.Data.Pfun
 
@@ -75,7 +80,7 @@ theorem rmap_compose (r : Rel α β) (s : Rel β γ) : rmap s ∘ rmap r = rmap 
 /-- Generic "limit of a relation" predicate. `rtendsto r l₁ l₂` asserts that for every
 `l₂`-neighborhood `a`, the `r`-core of `a` is an `l₁`-neighborhood. One generalization of
 `filter.tendsto` to relations. -/
-def rtendsto (r : Rel α β) (l₁ : Filter α) (l₂ : Filter β) :=
+def Rtendsto (r : Rel α β) (l₁ : Filter α) (l₂ : Filter β) :=
   l₁.rmap r ≤ l₂
 
 theorem rtendsto_def (r : Rel α β) (l₁ : Filter α) (l₂ : Filter β) : Rtendsto r l₁ l₂ ↔ ∀, ∀ s ∈ l₂, ∀, r.Core s ∈ l₁ :=
@@ -86,7 +91,7 @@ theorem rtendsto_def (r : Rel α β) (l₁ : Filter α) (l₂ : Filter β) : Rte
 def rcomap (r : Rel α β) (f : Filter β) : Filter α where
   Sets := Rel.Image (fun s t => r.Core s ⊆ t) f.Sets
   univ_sets := ⟨Set.Univ, univ_mem, Set.subset_univ _⟩
-  sets_of_superset := fun a b ⟨a', ha', ma'a⟩ ab => ⟨a', ha', ma'a.trans ab⟩
+  sets_of_superset := fun ab => ⟨a', ha', ma'a.trans ab⟩
   inter_sets := fun a b ⟨a', ha₁, ha₂⟩ ⟨b', hb₁, hb₂⟩ =>
     ⟨a' ∩ b', inter_mem ha₁ hb₁, (r.core_inter a' b').Subset.trans (Set.inter_subset_inter ha₂ hb₂)⟩
 
@@ -120,10 +125,13 @@ theorem rtendsto_iff_le_rcomap (r : Rel α β) (l₁ : Filter α) (l₂ : Filter
 
 /-- One way of taking the inverse map of a filter under a relation. Generalization of `filter.comap`
 to relations. -/
+-- Interestingly, there does not seem to be a way to express this relation using a forward map.
+-- Given a filter `f` on `α`, we want a filter `f'` on `β` such that `r.preimage s ∈ f` if
+-- and only if `s ∈ f'`. But the intersection of two sets satisfying the lhs may be empty.
 def rcomap' (r : Rel α β) (f : Filter β) : Filter α where
   Sets := Rel.Image (fun s t => r.Preimage s ⊆ t) f.Sets
   univ_sets := ⟨Set.Univ, univ_mem, Set.subset_univ _⟩
-  sets_of_superset := fun a b ⟨a', ha', ma'a⟩ ab => ⟨a', ha', ma'a.trans ab⟩
+  sets_of_superset := fun ab => ⟨a', ha', ma'a.trans ab⟩
   inter_sets := fun a b ⟨a', ha₁, ha₂⟩ ⟨b', hb₁, hb₂⟩ =>
     ⟨a' ∩ b', inter_mem ha₁ hb₁, (@Rel.preimage_inter _ _ r _ _).trans (Set.inter_subset_inter ha₂ hb₂)⟩
 
@@ -153,7 +161,7 @@ theorem rcomap'_compose (r : Rel α β) (s : Rel β γ) : rcomap' r ∘ rcomap' 
 /-- Generic "limit of a relation" predicate. `rtendsto' r l₁ l₂` asserts that for every
 `l₂`-neighborhood `a`, the `r`-preimage of `a` is an `l₁`-neighborhood. One generalization of
 `filter.tendsto` to relations. -/
-def rtendsto' (r : Rel α β) (l₁ : Filter α) (l₂ : Filter β) :=
+def Rtendsto' (r : Rel α β) (l₁ : Filter α) (l₂ : Filter β) :=
   l₁ ≤ l₂.rcomap' r
 
 theorem rtendsto'_def (r : Rel α β) (l₁ : Filter α) (l₂ : Filter β) :
@@ -189,7 +197,7 @@ theorem mem_pmap (f : α →. β) (l : Filter α) (s : Set β) : s ∈ l.pmap f 
 /-- Generic "limit of a partial function" predicate. `ptendsto r l₁ l₂` asserts that for every
 `l₂`-neighborhood `a`, the `p`-core of `a` is an `l₁`-neighborhood. One generalization of
 `filter.tendsto` to partial function. -/
-def ptendsto (f : α →. β) (l₁ : Filter α) (l₂ : Filter β) :=
+def Ptendsto (f : α →. β) (l₁ : Filter α) (l₂ : Filter β) :=
   l₁.pmap f ≤ l₂
 
 theorem ptendsto_def (f : α →. β) (l₁ : Filter α) (l₂ : Filter β) : Ptendsto f l₁ l₂ ↔ ∀, ∀ s ∈ l₂, ∀, f.Core s ∈ l₁ :=
@@ -221,7 +229,7 @@ def pcomap' (f : α →. β) (l : Filter β) : Filter α :=
 /-- Generic "limit of a partial function" predicate. `ptendsto' r l₁ l₂` asserts that for every
 `l₂`-neighborhood `a`, the `p`-preimage of `a` is an `l₁`-neighborhood. One generalization of
 `filter.tendsto` to partial functions. -/
-def ptendsto' (f : α →. β) (l₁ : Filter α) (l₂ : Filter β) :=
+def Ptendsto' (f : α →. β) (l₁ : Filter α) (l₂ : Filter β) :=
   l₁ ≤ l₂.rcomap' f.Graph'
 
 theorem ptendsto'_def (f : α →. β) (l₁ : Filter α) (l₂ : Filter β) :

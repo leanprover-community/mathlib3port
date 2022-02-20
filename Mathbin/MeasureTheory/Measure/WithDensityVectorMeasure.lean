@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Kexing Ying. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Kexing Ying
+-/
 import Mathbin.MeasureTheory.Measure.VectorMeasure
 import Mathbin.MeasureTheory.Function.AeEqOfIntegral
 
@@ -34,7 +39,7 @@ variable {E : Type _} [NormedGroup E] [MeasurableSpace E] [SecondCountableTopolo
 
 /-- Given a measure `μ` and an integrable function `f`, `μ.with_densityᵥ f` is
 the vector measure which maps the set `s` to `∫ₛ f ∂μ`. -/
-def measure.with_densityᵥ {m : MeasurableSpace α} (μ : Measure α) (f : α → E) : VectorMeasure α E :=
+def Measure.withDensityᵥ {m : MeasurableSpace α} (μ : Measure α) (f : α → E) : VectorMeasure α E :=
   if hf : Integrable f μ then
     { measureOf' := fun s => if MeasurableSet s then ∫ x in s, f x ∂μ else 0,
       empty' := by
@@ -128,7 +133,7 @@ theorem with_densityᵥ_smul' {𝕜 : Type _} [NondiscreteNormedField 𝕜] [Nor
     (μ.withDensityᵥ fun x => r • f x) = r • μ.withDensityᵥ f :=
   with_densityᵥ_smul f r
 
-theorem measure.with_densityᵥ_absolutely_continuous (μ : Measure α) (f : α → ℝ) :
+theorem Measure.with_densityᵥ_absolutely_continuous (μ : Measure α) (f : α → ℝ) :
     μ.withDensityᵥ f ≪ᵥ μ.toEnnrealVectorMeasure := by
   by_cases' hf : integrable f μ
   · refine' vector_measure.absolutely_continuous.mk fun i hi₁ hi₂ => _
@@ -140,12 +145,12 @@ theorem measure.with_densityᵥ_absolutely_continuous (μ : Measure α) (f : α 
     
 
 /-- Having the same density implies the underlying functions are equal almost everywhere. -/
-theorem integrable.ae_eq_of_with_densityᵥ_eq {f g : α → E} (hf : Integrable f μ) (hg : Integrable g μ)
+theorem Integrable.ae_eq_of_with_densityᵥ_eq {f g : α → E} (hf : Integrable f μ) (hg : Integrable g μ)
     (hfg : μ.withDensityᵥ f = μ.withDensityᵥ g) : f =ᵐ[μ] g := by
   refine' hf.ae_eq_of_forall_set_integral_eq f g hg fun i hi _ => _
   rw [← with_densityᵥ_apply hf hi, hfg, with_densityᵥ_apply hg hi]
 
-theorem with_densityᵥ_eq.congr_ae {f g : α → E} (h : f =ᵐ[μ] g) : μ.withDensityᵥ f = μ.withDensityᵥ g := by
+theorem WithDensityᵥEq.congr_ae {f g : α → E} (h : f =ᵐ[μ] g) : μ.withDensityᵥ f = μ.withDensityᵥ g := by
   by_cases' hf : integrable f μ
   · ext i hi
     rw [with_densityᵥ_apply hf hi, with_densityᵥ_apply (hf.congr h) hi]
@@ -157,7 +162,7 @@ theorem with_densityᵥ_eq.congr_ae {f g : α → E} (h : f =ᵐ[μ] g) : μ.wit
     rw [with_densityᵥ, with_densityᵥ, dif_neg hf, dif_neg hg]
     
 
-theorem integrable.with_densityᵥ_eq_iff {f g : α → E} (hf : Integrable f μ) (hg : Integrable g μ) :
+theorem Integrable.with_densityᵥ_eq_iff {f g : α → E} (hf : Integrable f μ) (hg : Integrable g μ) :
     μ.withDensityᵥ f = μ.withDensityᵥ g ↔ f =ᵐ[μ] g :=
   ⟨fun hfg => hf.ae_eq_of_with_densityᵥ_eq hg hfg, fun h => WithDensityᵥEq.congr_ae h⟩
 
@@ -187,11 +192,11 @@ theorem with_densityᵥ_eq_with_density_pos_part_sub_with_density_neg_part {f : 
     vector_measure.sub_apply, to_signed_measure_apply_measurable hi, to_signed_measure_apply_measurable hi,
     with_density_apply _ hi, with_density_apply _ hi]
 
-theorem integrable.with_densityᵥ_trim_eq_integral {m m0 : MeasurableSpace α} {μ : Measure α} (hm : m ≤ m0) {f : α → ℝ}
+theorem Integrable.with_densityᵥ_trim_eq_integral {m m0 : MeasurableSpace α} {μ : Measure α} (hm : m ≤ m0) {f : α → ℝ}
     (hf : Integrable f μ) {i : Set α} (hi : measurable_set[m] i) : (μ.withDensityᵥ f).trim hm i = ∫ x in i, f x ∂μ := by
   rw [vector_measure.trim_measurable_set_eq hm hi, with_densityᵥ_apply hf (hm _ hi)]
 
-theorem integrable.with_densityᵥ_trim_absolutely_continuous {m m0 : MeasurableSpace α} {μ : Measure α} (hm : m ≤ m0)
+theorem Integrable.with_densityᵥ_trim_absolutely_continuous {m m0 : MeasurableSpace α} {μ : Measure α} (hm : m ≤ m0)
     (hfi : Integrable f μ) : (μ.withDensityᵥ f).trim hm ≪ᵥ (μ.trim hm).toEnnrealVectorMeasure := by
   refine' vector_measure.absolutely_continuous.mk fun j hj₁ hj₂ => _
   rw [measure.to_ennreal_vector_measure_apply_measurable hj₁, trim_measurable_set_eq hm hj₁] at hj₂

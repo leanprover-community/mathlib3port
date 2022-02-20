@@ -1,3 +1,8 @@
+/-
+Copyright © 2020 Nicolò Cavalleri. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Nicolò Cavalleri
+-/
 import Mathbin.Geometry.Manifold.Algebra.LieGroup
 
 /-!
@@ -15,11 +20,13 @@ section SmoothRing
 variable {𝕜 : Type _} [NondiscreteNormedField 𝕜] {H : Type _} [TopologicalSpace H] {E : Type _} [NormedGroup E]
   [NormedSpace 𝕜 E]
 
--- ././Mathport/Syntax/Translate/Basic.lean:169:40: warning: unsupported option default_priority
+-- ././Mathport/Syntax/Translate/Basic.lean:211:40: warning: unsupported option default_priority
 set_option default_priority 100
 
 /-- A smooth (semi)ring is a (semi)ring `R` where addition and multiplication are smooth.
 If `R` is a ring, then negation is automatically smooth, as it is multiplication with `-1`. -/
+-- see Note [default priority]
+-- See note [Design choices about smooth algebraic structures]
 class SmoothRing (I : ModelWithCorners 𝕜 E H) (R : Type _) [Semiringₓ R] [TopologicalSpace R] [ChartedSpace H R] extends
   HasSmoothAdd I R : Prop where
   smooth_mul : Smooth (I.Prod I) I fun p : R × R => p.1 * p.2

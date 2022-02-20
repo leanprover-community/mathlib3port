@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2014 Jeremy Avigad. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Jeremy Avigad, Mario Carneiro, Yaël Dillies
+-/
 import Mathbin.Order.Compare
 import Mathbin.Order.OrderDual
 import Mathbin.Order.RelClasses
@@ -258,6 +263,8 @@ theorem monotone_on_iff_forall_lt : MonotoneOn f s ↔ ∀ ⦃a⦄ ha : a ∈ s 
 theorem antitone_on_iff_forall_lt : AntitoneOn f s ↔ ∀ ⦃a⦄ ha : a ∈ s ⦃b⦄ hb : b ∈ s, a < b → f b ≤ f a :=
   ⟨fun hf a ha b hb h => hf ha hb h.le, fun hf a ha b hb h => h.eq_or_lt.elim (fun H => (congr_argₓ _ H).Ge) (hf ha hb)⟩
 
+-- `preorder α` isn't strong enough: if the preorder on `α` is an equivalence relation,
+-- then `strict_mono f` is vacuously true.
 protected theorem StrictMonoOn.monotone_on (hf : StrictMonoOn f s) : MonotoneOn f s :=
   monotone_on_iff_forall_lt.2 fun a ha b hb h => (hf ha hb h).le
 
@@ -279,20 +286,20 @@ namespace Subsingleton
 
 variable [Preorderₓ α] [Preorderₓ β]
 
-protected theorem Monotone [Subsingleton α] (f : α → β) : Monotone f := fun a b _ =>
+protected theorem monotone [Subsingleton α] (f : α → β) : Monotone f := fun a b _ =>
   (congr_argₓ _ <| Subsingleton.elimₓ _ _).le
 
-protected theorem Antitone [Subsingleton α] (f : α → β) : Antitone f := fun a b _ =>
+protected theorem antitone [Subsingleton α] (f : α → β) : Antitone f := fun a b _ =>
   (congr_argₓ _ <| Subsingleton.elimₓ _ _).le
 
 theorem monotone' [Subsingleton β] (f : α → β) : Monotone f := fun a b _ => (Subsingleton.elimₓ _ _).le
 
 theorem antitone' [Subsingleton β] (f : α → β) : Antitone f := fun a b _ => (Subsingleton.elimₓ _ _).le
 
-protected theorem StrictMono [Subsingleton α] (f : α → β) : StrictMono f := fun a b h =>
+protected theorem strict_mono [Subsingleton α] (f : α → β) : StrictMono f := fun a b h =>
   (h.Ne <| Subsingleton.elimₓ _ _).elim
 
-protected theorem StrictAnti [Subsingleton α] (f : α → β) : StrictAnti f := fun a b h =>
+protected theorem strict_anti [Subsingleton α] (f : α → β) : StrictAnti f := fun a b h =>
   (h.Ne <| Subsingleton.elimₓ _ _).elim
 
 end Subsingleton
@@ -577,6 +584,7 @@ theorem strict_anti_int_of_succ_lt {f : ℤ → α} (hf : ∀ n, f (n + 1) < f n
 
 /-- If `f` is a monotone function from `ℕ` to a preorder such that `x` lies between `f n` and
   `f (n + 1)`, then `x` doesn't lie in the range of `f`. -/
+-- TODO@Yael: Generalize the following four to succ orders
 theorem Monotone.ne_of_lt_of_lt_nat {f : ℕ → α} (hf : Monotone f) (n : ℕ) {x : α} (h1 : f n < x) (h2 : x < f (n + 1))
     (a : ℕ) : f a ≠ x := by
   rintro rfl

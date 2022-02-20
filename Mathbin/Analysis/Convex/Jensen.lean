@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Alexander Bentkamp. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Alexander Bentkamp, Yury Kudriashov
+-/
 import Mathbin.Analysis.Convex.Combination
 import Mathbin.Analysis.Convex.Function
 

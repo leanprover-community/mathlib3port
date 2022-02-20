@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison
+-/
 import Mathbin.Data.Polynomial.Derivative
 import Mathbin.Data.Nat.Choose.Sum
 import Mathbin.RingTheory.Polynomial.Pochhammer
@@ -106,9 +111,11 @@ theorem derivative_succ_aux (n ν : ℕ) :
     by
     simpa [Polynomial.derivative_pow, ← sub_eq_add_neg]
   conv_rhs => rw [mul_sub]
+  -- We'll prove the two terms match up separately.
   refine' congr (congr_argₓ Sub.sub _) _
   · simp only [← mul_assoc]
     refine' congr (congr_argₓ (· * ·) (congr (congr_argₓ (· * ·) _) rfl)) rfl
+    -- Now it's just about binomial coefficients
     exact_mod_cast congr_argₓ (fun m : ℕ => (m : R[X])) (Nat.succ_mul_choose_eq n ν).symm
     
   · rw [← tsub_add_eq_tsub_tsub, ← mul_assoc, ← mul_assoc]
@@ -251,7 +258,10 @@ theorem linear_independent_aux (n k : ℕ) (h : k ≤ n + 1) :
     fconstructor
     · exact ih (le_of_ltₓ h)
       
-    · clear ih
+    · -- The actual work!
+      -- We show that the (n-k)-th derivative at 1 doesn't vanish,
+      -- but vanishes for everything in the span.
+      clear ih
       simp only [Nat.succ_eq_add_one, add_le_add_iff_right] at h
       simp only [Finₓ.coe_last, Finₓ.init_def]
       dsimp
@@ -260,6 +270,8 @@ theorem linear_independent_aux (n k : ℕ) (h : k ≤ n + 1) :
       intro p m
       apply_fun Polynomial.eval (1 : ℚ)
       simp only [Polynomial.derivative_lhom_coe, LinearMap.pow_apply]
+      -- The right hand side is nonzero,
+      -- so it will suffice to show the left hand side is always zero.
       suffices ((Polynomial.derivative^[n - k]) p).eval 1 = 0 by
         rw [this]
         exact (iterate_derivative_at_1_ne_zero ℚ n k h).symm
@@ -287,10 +299,10 @@ are linearly independent.
 The inductive step relies on the observation that the `(n-k)`-th derivative, evaluated at 1,
 annihilates `bernstein_polynomial n ν` for `ν < k`, but has a nonzero value at `ν = k`.
 -/
-theorem LinearIndependent (n : ℕ) : LinearIndependent ℚ fun ν : Finₓ (n + 1) => bernsteinPolynomial ℚ n ν :=
+theorem linear_independent (n : ℕ) : LinearIndependent ℚ fun ν : Finₓ (n + 1) => bernsteinPolynomial ℚ n ν :=
   linear_independent_aux n (n + 1) le_rfl
 
-theorem Sum (n : ℕ) : (∑ ν in Finset.range (n + 1), bernsteinPolynomial R n ν) = 1 :=
+theorem sum (n : ℕ) : (∑ ν in Finset.range (n + 1), bernsteinPolynomial R n ν) = 1 :=
   calc
     (∑ ν in Finset.range (n + 1), bernsteinPolynomial R n ν) = (X + (1 - X)) ^ n := by
       rw [add_pow]
@@ -304,6 +316,9 @@ open Polynomial
 open MvPolynomial
 
 theorem sum_smul (n : ℕ) : (∑ ν in Finset.range (n + 1), ν • bernsteinPolynomial R n ν) = n • X := by
+  -- We calculate the `x`-derivative of `(x+y)^n`, evaluated at `y=(1-x)`,
+  -- either directly or by using the binomial theorem.
+  -- We'll work in `mv_polynomial bool R`.
   let x : MvPolynomial Bool R := MvPolynomial.x tt
   let y : MvPolynomial Bool R := MvPolynomial.x ff
   have pderiv_tt_x : pderiv tt x = 1 := by
@@ -311,10 +326,14 @@ theorem sum_smul (n : ℕ) : (∑ ν in Finset.range (n + 1), ν • bernsteinPo
   have pderiv_tt_y : pderiv tt y = 0 := by
     simp [pderiv_X, y]
   let e : Bool → R[X] := fun i => cond i X (1 - X)
+  -- Start with `(x+y)^n = (x+y)^n`,
+  -- take the `x`-derivative, evaluate at `x=X, y=1-X`, and multiply by `X`:
   have h : (x + y) ^ n = (x + y) ^ n := rfl
   apply_fun pderiv tt  at h
   apply_fun aeval e  at h
   apply_fun fun p => p * X  at h
+  -- On the left hand side we'll use the binomial theorem, then simplify.
+  -- We first prepare a tedious rewrite:
   have w :
     ∀ k : ℕ,
       ↑k * Polynomial.x ^ (k - 1) * (1 - Polynomial.x) ^ (n - k) * ↑(n.choose k) * Polynomial.x =
@@ -329,13 +348,17 @@ theorem sum_smul (n : ℕ) : (∑ ν in Finset.range (n + 1), ν • bernsteinPo
       ring
       
   conv at h =>
-    lhs rw [add_pow, (pderiv tt).map_sum, (MvPolynomial.aeval e).map_sum,
-      Finset.sum_mul]apply_congr skip simp [pderiv_mul, pderiv_tt_x, pderiv_tt_y, e, w]
+    lhs rw [add_pow, (pderiv tt).map_sum, (MvPolynomial.aeval e).map_sum, Finset.sum_mul]-- Step inside the sum:
+    apply_congr skip simp [pderiv_mul, pderiv_tt_x, pderiv_tt_y, e, w]
+  -- On the right hand side, we'll just simplify.
   conv at h => rhs rw [(pderiv tt).leibniz_pow, (pderiv tt).map_add, pderiv_tt_x, pderiv_tt_y]simp [e]
   simpa using h
 
 theorem sum_mul_smul (n : ℕ) :
     (∑ ν in Finset.range (n + 1), (ν * (ν - 1)) • bernsteinPolynomial R n ν) = (n * (n - 1)) • X ^ 2 := by
+  -- We calculate the second `x`-derivative of `(x+y)^n`, evaluated at `y=(1-x)`,
+  -- either directly or by using the binomial theorem.
+  -- We'll work in `mv_polynomial bool R`.
   let x : MvPolynomial Bool R := MvPolynomial.x tt
   let y : MvPolynomial Bool R := MvPolynomial.x ff
   have pderiv_tt_x : pderiv tt x = 1 := by
@@ -343,11 +366,15 @@ theorem sum_mul_smul (n : ℕ) :
   have pderiv_tt_y : pderiv tt y = 0 := by
     simp [pderiv_X, y]
   let e : Bool → R[X] := fun i => cond i X (1 - X)
+  -- Start with `(x+y)^n = (x+y)^n`,
+  -- take the second `x`-derivative, evaluate at `x=X, y=1-X`, and multiply by `X`:
   have h : (x + y) ^ n = (x + y) ^ n := rfl
   apply_fun pderiv tt  at h
   apply_fun pderiv tt  at h
   apply_fun aeval e  at h
   apply_fun fun p => p * X ^ 2  at h
+  -- On the left hand side we'll use the binomial theorem, then simplify.
+  -- We first prepare a tedious rewrite:
   have w :
     ∀ k : ℕ,
       ↑k * (↑(k - 1) * Polynomial.x ^ (k - 1 - 1)) * (1 - Polynomial.x) ^ (n - k) * ↑(n.choose k) * Polynomial.x ^ 2 =
@@ -367,7 +394,9 @@ theorem sum_mul_smul (n : ℕ) :
       
   conv at h =>
     lhs rw [add_pow, (pderiv tt).map_sum, (pderiv tt).map_sum, (MvPolynomial.aeval e).map_sum,
-      Finset.sum_mul]apply_congr skip simp [pderiv_mul, pderiv_tt_x, pderiv_tt_y, e, w]
+      Finset.sum_mul]-- Step inside the sum:
+    apply_congr skip simp [pderiv_mul, pderiv_tt_x, pderiv_tt_y, e, w]
+  -- On the right hand side, we'll just simplify.
   conv at h =>
     rhs simp only [pderiv_one, pderiv_mul, (pderiv _).leibniz_pow, (pderiv _).map_coe_nat, (pderiv tt).map_add,
       pderiv_tt_x, pderiv_tt_y]simp [e, smul_smul]

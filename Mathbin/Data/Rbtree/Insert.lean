@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2017 Microsoft Corporation. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Leonardo de Moura
+-/
 import Mathbin.Data.Rbtree.Find
 
 universe u v
@@ -47,7 +52,8 @@ theorem balance2_eq₃ (l : Rbnode α) y r v t :
 -- ././Mathport/Syntax/Translate/Tactic/Basic.lean:59:31: expecting tactic arg
 -- ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:50: missing argument
 -- ././Mathport/Syntax/Translate/Tactic/Basic.lean:59:31: expecting tactic arg
-theorem balance.cases {p : Rbnode α → α → Rbnode α → Prop} l y r (red_left : ∀ l x r₁ y r₂, p (red_node l x r₁) y r₂)
+-- We can use the same induction principle for balance1 and balance2
+theorem Balance.cases {p : Rbnode α → α → Rbnode α → Prop} l y r (red_left : ∀ l x r₁ y r₂, p (red_node l x r₁) y r₂)
     (red_right : ∀ l₁ y l₂ x r, getColor l₁ ≠ red → p l₁ y (red_node l₂ x r))
     (other : ∀ l y r, getColor l ≠ red → getColor r ≠ red → p l y r) : p l y r := by
   cases l <;> cases r
@@ -499,6 +505,7 @@ theorem find_balance2_node [DecidableRel lt] [IsStrictWeakOrder α lt] {x y z s 
   have := Iff.mp (find_correct_exact hs) this
   exact Eq.trans (find_eq_find_of_eqv hs heqv) this
 
+-- Auxiliary lemma
 theorem ite_eq_of_not_lt [DecidableRel lt] [IsStrictOrder α lt] {a b} {β : Type v} (t s : β) (h : lt b a) :
     (if lt a b then t else s) = s := by
   have := not_lt_of_lt h
@@ -506,7 +513,7 @@ theorem ite_eq_of_not_lt [DecidableRel lt] [IsStrictOrder α lt] {a b} {β : Typ
 
 attribute [local simp] ite_eq_of_not_lt
 
--- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:916:4: warning: unsupported (TODO): `[tacs]
 private unsafe def simp_fi : tactic Unit :=
   sorry
 
@@ -638,7 +645,7 @@ theorem find_balance1_lt {l r t v x y lo hi} (h : lt x y) (hl : IsSearchable lt 
     case is_gt =>
       apply weak_trichotomous lt l_val x <;> intros <;> simp [*]
 
--- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:916:4: warning: unsupported (TODO): `[tacs]
 unsafe def ins_ne_leaf_tac :=
   sorry
 
@@ -959,7 +966,7 @@ variable {α : Type u}
 
 open Nat Color
 
-inductive is_bad_red_black : Rbnode α → Nat → Prop
+inductive IsBadRedBlack : Rbnode α → Nat → Prop
   | bad_red {c₁ c₂ n l r v} (rb_l : IsRedBlack l c₁ n) (rb_r : IsRedBlack r c₂ n) : is_bad_red_black (red_node l v r) n
 
 theorem balance1_rb {l r t : Rbnode α} {y v : α} {c_l c_r c_t n} :
@@ -990,7 +997,7 @@ theorem balance2_node_rb {t s : Rbnode α} {y : α} {c n} :
     IsBadRedBlack t n → IsRedBlack s c n → ∃ c, IsRedBlack (balance2Node t y s) c (succ n) := by
   intro h _ <;> cases h <;> simp [balance2_node] <;> apply balance2_rb <;> assumption'
 
-def ins_rb_result : Rbnode α → Color → Nat → Prop
+def InsRbResult : Rbnode α → Color → Nat → Prop
   | t, red, n => IsBadRedBlack t n
   | t, black, n => ∃ c, IsRedBlack t c n
 
@@ -1053,7 +1060,7 @@ theorem ins_rb {t : Rbnode α} x : ∀ {c n} h : IsRedBlack t c n, InsRbResult (
     constructor <;> assumption
     
 
-def insert_rb_result : Rbnode α → Color → Nat → Prop
+def InsertRbResult : Rbnode α → Color → Nat → Prop
   | t, red, n => IsRedBlack t black (succ n)
   | t, black, n => ∃ c, IsRedBlack t c n
 

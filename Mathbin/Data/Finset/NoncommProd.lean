@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Yakov Pechersky. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yakov Pechersky
+-/
 import Mathbin.Algebra.BigOperators.Basic
 
 /-!
@@ -28,7 +33,7 @@ namespace Multiset
 
 /-- Fold of a `s : multiset α` with `f : α → β → β`, given a proof that `left_commutative f`
 on all elements `x ∈ s`. -/
-def noncomm_foldr (s : Multiset α) (comm : ∀, ∀ x ∈ s, ∀, ∀ y ∈ s, ∀ b, f x (f y b) = f y (f x b)) (b : β) : β :=
+def noncommFoldr (s : Multiset α) (comm : ∀, ∀ x ∈ s, ∀, ∀ y ∈ s, ∀ b, f x (f y b) = f y (f x b)) (b : β) : β :=
   s.attach.foldr (f ∘ Subtype.val) (fun ⟨x, hx⟩ ⟨y, hy⟩ => comm x hx y hy) b
 
 @[simp]
@@ -62,7 +67,7 @@ include assoc
 
 /-- Fold of a `s : multiset α` with an associative `op : α → α → α`, given a proofs that `op`
 is commutative on all elements `x ∈ s`. -/
-def noncomm_fold (s : Multiset α) (comm : ∀, ∀ x ∈ s, ∀, ∀ y ∈ s, ∀, op x y = op y x) (a : α) : α :=
+def noncommFold (s : Multiset α) (comm : ∀, ∀ x ∈ s, ∀, ∀ y ∈ s, ∀, op x y = op y x) (a : α) : α :=
   noncommFoldr op s
     (fun x hx y hy b => by
       rw [← assoc.assoc, comm _ hx _ hy, assoc.assoc])
@@ -97,7 +102,7 @@ variable [Monoidₓ α]
 on all elements `x ∈ s`. -/
 @[to_additive
       "Sum of a `s : multiset α` with `[add_monoid α]`, given a proof that `+` commutes\non all elements `x ∈ s`."]
-def noncomm_prod (s : Multiset α) (comm : ∀, ∀ x ∈ s, ∀, ∀ y ∈ s, ∀, Commute x y) : α :=
+def noncommProd (s : Multiset α) (comm : ∀, ∀ x ∈ s, ∀, ∀ y ∈ s, ∀, Commute x y) : α :=
   s.noncommFold (· * ·) comm 1
 
 @[simp, to_additive]
@@ -166,7 +171,7 @@ variable [Monoidₓ β]
 given a proof that `*` commutes on all elements `f x` for `x ∈ s`. -/
 @[to_additive
       "Sum of a `s : finset α` mapped with `f : α → β` with `[add_monoid β]`,\ngiven a proof that `+` commutes on all elements `f x` for `x ∈ s`."]
-def noncomm_prod (s : Finset α) (f : α → β) (comm : ∀, ∀ x ∈ s, ∀, ∀ y ∈ s, ∀, Commute (f x) (f y)) : β :=
+def noncommProd (s : Finset α) (f : α → β) (comm : ∀, ∀ x ∈ s, ∀, ∀ y ∈ s, ∀, Commute (f x) (f y)) : β :=
   (s.1.map f).noncommProd
     (by
       simpa [Multiset.mem_map, ← Finset.mem_def] using comm)
@@ -217,6 +222,7 @@ theorem noncomm_prod_eq_prod {β : Type _} [CommMonoidₓ β] (s : Finset α) (f
   · simp [ha, IH]
     
 
+-- The non-commutative version of `finset.prod_union`
 @[to_additive " The non-commutative version of `finset.sum_union` "]
 theorem noncomm_prod_union_of_disjoint [DecidableEq α] {s t : Finset α} (h : Disjoint s t) (f : α → β)
     (comm : ∀, ∀ x ∈ s ∪ t, ∀, ∀ y ∈ s ∪ t, ∀, Commute (f x) (f y))

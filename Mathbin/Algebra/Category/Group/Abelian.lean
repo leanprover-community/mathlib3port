@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Markus Himmel. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Markus Himmel
+-/
 import Mathbin.Algebra.Category.Group.ZModuleEquivalence
 import Mathbin.Algebra.Category.Group.Limits
 import Mathbin.Algebra.Category.Group.Colimits
@@ -24,12 +29,12 @@ section
 variable {X Y : AddCommGroupₓₓ.{u}} (f : X ⟶ Y)
 
 /-- In the category of abelian groups, every monomorphism is normal. -/
-def normal_mono (hf : Mono f) : NormalMono f :=
+def normalMono (hf : Mono f) : NormalMono f :=
   equivalenceReflectsNormalMono (forget₂ (ModuleCat.{u} ℤ) AddCommGroupₓₓ.{u}).inv <|
     ModuleCat.normalMono _ <| right_adjoint_preserves_mono (Functor.adjunction _) hf
 
 /-- In the category of abelian groups, every epimorphism is normal. -/
-def normal_epi (hf : Epi f) : NormalEpi f :=
+def normalEpi (hf : Epi f) : NormalEpi f :=
   equivalenceReflectsNormalEpi (forget₂ (ModuleCat.{u} ℤ) AddCommGroupₓₓ.{u}).inv <|
     ModuleCat.normalEpi _ <| left_adjoint_preserves_epi (Functor.adjunction _) hf
 

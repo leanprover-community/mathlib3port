@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Johan Commelin. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johan Commelin, Robert Y. Lewis
+-/
 import Mathbin.RingTheory.WittVector.InitTail
 
 /-!
@@ -49,6 +54,7 @@ and under this assumption we construct a ring structure on `truncated_witt_vecto
 (`truncated_witt_vector p₁ n R` and `truncated_witt_vector p₂ n R` are definitionally
 equal as types but will have different ring operations.)
 -/
+-- type as `\bbW`
 @[nolint unused_arguments]
 def TruncatedWittVector (p : ℕ) (n : ℕ) (R : Type _) :=
   Finₓ n → R
@@ -118,7 +124,7 @@ section
 /-- `truncate_fun n x` uses the first `n` entries of `x` to construct a `truncated_witt_vector`,
 which has the same base `p` as `x`.
 This function is bundled into a ring homomorphism in `witt_vector.truncate` -/
-def truncate_fun (x : 𝕎 R) : TruncatedWittVector p n R :=
+def truncateFun (x : 𝕎 R) : TruncatedWittVector p n R :=
   (TruncatedWittVector.mk p) fun i => x.coeff i
 
 end
@@ -182,7 +188,7 @@ theorem coeff_zero (i : Finₓ n) : (0 : TruncatedWittVector p n R).coeff i = 0 
 
 end TruncatedWittVector
 
--- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:916:4: warning: unsupported (TODO): `[tacs]
 /-- A macro tactic used to prove that `truncate_fun` respects ring operations. -/
 unsafe def tactic.interactive.witt_truncate_fun_tac : tactic Unit :=
   sorry
@@ -380,7 +386,7 @@ variable (n)
 /-- Given a family `fₖ : S → truncated_witt_vector p k R` and `s : S`, we produce a Witt vector by
 defining the `k`th entry to be the final entry of `fₖ s`.
 -/
-def lift_fun (s : S) : 𝕎 R :=
+def liftFun (s : S) : 𝕎 R :=
   (WittVector.mk p) fun k => TruncatedWittVector.coeff (Finₓ.last k) (f (k + 1) s)
 
 variable {f}
@@ -392,6 +398,7 @@ theorem truncate_lift_fun (s : S) : WittVector.truncate n (liftFun f s) = f n s 
   ext i
   simp only [lift_fun, TruncatedWittVector.coeff_mk, WittVector.truncate_mk]
   rw [← f_compat (i + 1) n i.is_lt, RingHom.comp_apply, TruncatedWittVector.coeff_truncate]
+  -- this is a bit unfortunate
   congr with _
   simp only [Finₓ.coe_last, Finₓ.coe_cast_le]
 
@@ -433,7 +440,7 @@ include hp
 
 /-- The universal property of `𝕎 R` as projective limit of truncated Witt vector rings. -/
 @[simps]
-def lift_equiv :
+def liftEquiv :
     { f : ∀ k, S →+* TruncatedWittVector p k R //
         ∀ k₁ k₂ hk : k₁ ≤ k₂, (TruncatedWittVector.truncate hk).comp (f k₂) = f k₁ } ≃
       (S →+* 𝕎 R) where

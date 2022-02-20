@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Minchao Wu. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Minchao Wu, Chris Hughes
+-/
 import Mathbin.Data.List.Basic
 
 /-!
@@ -103,7 +108,8 @@ private theorem foldl_argmax₂_mem (f : α → β) l : ∀ a m : α, m ∈ fold
         
       · dsimp only
         split_ifs
-        · rcases ih _ _ hf with (rfl | H)
+        · -- `finish [ih _ _ hf]` closes this goal
+          rcases ih _ _ hf with (rfl | H)
           · simp only [mem_cons_iff, mem_append, mem_singleton, Option.mem_def]
             tauto
             

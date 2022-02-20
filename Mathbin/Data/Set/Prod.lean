@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2017 Mario Carneiro. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Mario Carneiro, Johannes Hölzl, Patrick Massot
+-/
 import Mathbin.Data.Set.Basic
 
 /-!
@@ -57,7 +62,7 @@ theorem mk_mem_prod (ha : a ∈ s) (hb : b ∈ t) : (a, b) ∈ s ×ˢ t :=
 theorem prod_mono (hs : s₁ ⊆ s₂) (ht : t₁ ⊆ t₂) : s₁ ×ˢ t₁ ⊆ s₂ ×ˢ t₂ := fun x ⟨h₁, h₂⟩ => ⟨hs h₁, ht h₂⟩
 
 theorem prod_subset_iff {P : Set (α × β)} : s ×ˢ t ⊆ P ↔ ∀, ∀ x ∈ s, ∀, ∀ y ∈ t, ∀, (x, y) ∈ P :=
-  ⟨fun h _ hx _ hy => h (mk_mem_prod hx hy), fun h ⟨_, _⟩ hp => h _ hp.1 _ hp.2⟩
+  ⟨fun h _ hx _ hy => h (mk_mem_prod hx hy), fun hp => h _ hp.1 _ hp.2⟩
 
 theorem forall_prod_set {p : α × β → Prop} : (∀, ∀ x ∈ s ×ˢ t, ∀, p x) ↔ ∀, ∀ x ∈ s, ∀, ∀ y ∈ t, ∀, p (x, y) :=
   prod_subset_iff
@@ -207,11 +212,11 @@ theorem range_pair_subset (f : α → β) (g : α → γ) : (Range fun x => (f x
   rw [this, ← range_prod_map]
   apply range_comp_subset_range
 
-theorem nonempty.prod : s.Nonempty → t.Nonempty → (s ×ˢ t : Set _).Nonempty := fun ⟨x, hx⟩ ⟨y, hy⟩ => ⟨(x, y), ⟨hx, hy⟩⟩
+theorem Nonempty.prod : s.Nonempty → t.Nonempty → (s ×ˢ t : Set _).Nonempty := fun ⟨x, hx⟩ ⟨y, hy⟩ => ⟨(x, y), ⟨hx, hy⟩⟩
 
-theorem nonempty.fst : (s ×ˢ t : Set _).Nonempty → s.Nonempty := fun ⟨x, hx⟩ => ⟨x.1, hx.1⟩
+theorem Nonempty.fst : (s ×ˢ t : Set _).Nonempty → s.Nonempty := fun ⟨x, hx⟩ => ⟨x.1, hx.1⟩
 
-theorem nonempty.snd : (s ×ˢ t : Set _).Nonempty → t.Nonempty := fun ⟨x, hx⟩ => ⟨x.2, hx.2⟩
+theorem Nonempty.snd : (s ×ˢ t : Set _).Nonempty → t.Nonempty := fun ⟨x, hx⟩ => ⟨x.2, hx.2⟩
 
 theorem prod_nonempty_iff : (s ×ˢ t : Set _).Nonempty ↔ s.Nonempty ∧ t.Nonempty :=
   ⟨fun h => ⟨h.fst, h.snd⟩, fun h => h.1.Prod h.2⟩
@@ -297,7 +302,7 @@ section Diagonal
 variable {α : Type _}
 
 /-- `diagonal α` is the set of `α × α` consisting of all pairs of the form `(a, a)`. -/
-def diagonal (α : Type _) : Set (α × α) :=
+def Diagonal (α : Type _) : Set (α × α) :=
   { p | p.1 = p.2 }
 
 @[simp]
@@ -324,7 +329,7 @@ variable {ι : Type _} {α β : ι → Type _} {s s₁ s₂ : Set ι} {t t₁ t�
 /-- Given an index set `ι` and a family of sets `t : Π i, set (α i)`, `pi s t`
 is the set of dependent functions `f : Πa, π a` such that `f a` belongs to `t a`
 whenever `a ∈ s`. -/
-def pi (s : Set ι) (t : ∀ i, Set (α i)) : Set (∀ i, α i) :=
+def Pi (s : Set ι) (t : ∀ i, Set (α i)) : Set (∀ i, α i) :=
   { f | ∀, ∀ i ∈ s, ∀, f i ∈ t i }
 
 @[simp]
@@ -506,7 +511,7 @@ theorem update_preimage_pi [DecidableEq ι] {f : ∀ i, α i} (hi : i ∈ s) (hf
       
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (j «expr ≠ » i)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (j «expr ≠ » i)
 theorem update_preimage_univ_pi [DecidableEq ι] {f : ∀ i, α i} (hf : ∀ j _ : j ≠ i, f j ∈ t j) :
     update f i ⁻¹' Pi Univ t = t i :=
   update_preimage_pi (mem_univ i) fun j _ => hf j

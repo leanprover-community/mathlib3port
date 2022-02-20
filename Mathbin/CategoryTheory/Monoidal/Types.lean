@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Michael Jendrusch. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Michael Jendrusch, Scott Morrison
+-/
 import Mathbin.CategoryTheory.Monoidal.OfChosenFiniteProducts
 import Mathbin.CategoryTheory.Limits.Shapes.Types
 
@@ -16,10 +21,10 @@ universe v u
 
 namespace CategoryTheory
 
-instance types_monoidal : MonoidalCategory.{u} (Type u) :=
+instance typesMonoidal : MonoidalCategory.{u} (Type u) :=
   monoidalOfChosenFiniteProducts Types.terminalLimitCone Types.binaryProductLimitCone
 
-instance types_symmetric : SymmetricCategory.{u} (Type u) :=
+instance typesSymmetric : SymmetricCategory.{u} (Type u) :=
   symmetricOfChosenFiniteProducts Types.terminalLimitCone Types.binaryProductLimitCone
 
 @[simp]
@@ -65,7 +70,7 @@ open Opposite
 open MonoidalCategory
 
 /-- `(𝟙_ C ⟶ -)` is a lax monoidal functor to `Type`. -/
-def coyoneda_tensor_unit (C : Type u) [Category.{v} C] [MonoidalCategory C] : LaxMonoidalFunctor C (Type v) :=
+def coyonedaTensorUnit (C : Type u) [Category.{v} C] [MonoidalCategory C] : LaxMonoidalFunctor C (Type v) :=
   { coyoneda.obj (op (𝟙_ C)) with ε := fun p => 𝟙 _, μ := fun X Y p => (λ_ (𝟙_ C)).inv ≫ (p.1 ⊗ p.2),
     μ_natural' := by
       tidy,

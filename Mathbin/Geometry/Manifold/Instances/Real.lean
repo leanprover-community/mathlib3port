@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Sébastien Gouëzel. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Sébastien Gouëzel
+-/
 import Mathbin.LinearAlgebra.FiniteDimensional
 import Mathbin.Geometry.Manifold.SmoothManifoldWithCorners
 import Mathbin.Analysis.InnerProductSpace.PiL2
@@ -53,6 +58,8 @@ def EuclideanQuadrant (n : ℕ) : Type :=
 
 section
 
+/- Register class instances for euclidean half-space and quadrant, that can not be noticed
+without the following reducibility attribute (which is only set in this section). -/
 attribute [local reducible] EuclideanHalfSpace EuclideanQuadrant
 
 variable {n : ℕ}
@@ -77,7 +84,7 @@ theorem range_quadrant (n : ℕ) : (Range fun x : EuclideanQuadrant n => x.val) 
 
 end
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (i «expr ∈ » ({0} : set (fin n)))
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (i «expr ∈ » ({0} : set (fin n)))
 /-- Definition of the model with corners `(euclidean_space ℝ (fin n), euclidean_half_space n)`, used as
 a model for manifolds with boundary. In the locale `manifold`, use the shortcut `𝓡∂ n`.
 -/
@@ -91,7 +98,7 @@ def modelWithCornersEuclideanHalfSpace (n : ℕ) [Zero (Finₓ n)] :
   Target := { x | 0 ≤ x 0 }
   map_source' := fun x hx => x.property
   map_target' := fun x hx => mem_univ _
-  left_inv' := fun ⟨xval, xprop⟩ hx => by
+  left_inv' := fun hx => by
     rw [Subtype.mk_eq_mk, update_eq_iff]
     exact ⟨max_eq_leftₓ xprop, fun i _ => rfl⟩
   right_inv' := fun x hx => update_eq_iff.2 ⟨max_eq_leftₓ hx, fun i _ => rfl⟩
@@ -116,7 +123,7 @@ def modelWithCornersEuclideanQuadrant (n : ℕ) :
   map_source' := fun x hx => by
     simpa only [Subtype.range_val] using x.property
   map_target' := fun x hx => mem_univ _
-  left_inv' := fun ⟨xval, xprop⟩ hx => by
+  left_inv' := fun hx => by
     ext i
     simp only [Subtype.coe_mk, xprop i, max_eq_leftₓ]
   right_inv' := fun x hx => by
@@ -181,8 +188,7 @@ def iccLeftChart (x y : ℝ) [Fact (x < y)] : LocalHomeomorph (Icc x y) (Euclide
   continuous_to_fun := by
     apply Continuous.continuous_on
     apply continuous_subtype_mk
-    have : Continuous fun z : ℝ i : Finₓ 1 => z - x :=
-      Continuous.sub (continuous_pi fun i => continuous_id) continuous_const
+    have : Continuous fun i : Finₓ 1 => z - x := Continuous.sub (continuous_pi fun i => continuous_id) continuous_const
     exact this.comp continuous_subtype_val
   continuous_inv_fun := by
     apply Continuous.continuous_on
@@ -233,7 +239,7 @@ def iccRightChart (x y : ℝ) [Fact (x < y)] : LocalHomeomorph (Icc x y) (Euclid
   continuous_to_fun := by
     apply Continuous.continuous_on
     apply continuous_subtype_mk
-    have : Continuous fun z : ℝ i : Finₓ 1 => y - z := continuous_const.sub (continuous_pi fun i => continuous_id)
+    have : Continuous fun i : Finₓ 1 => y - z := continuous_const.sub (continuous_pi fun i => continuous_id)
     exact this.comp continuous_subtype_val
   continuous_inv_fun := by
     apply Continuous.continuous_on
@@ -269,10 +275,16 @@ instance Icc_smooth_manifold (x y : ℝ) [Fact (x < y)] : SmoothManifoldWithCorn
   apply smooth_manifold_with_corners_of_times_cont_diff_on
   intro e e' he he'
   simp only [atlas, mem_singleton_iff, mem_insert_iff] at he he'
-  rcases he with (rfl | rfl) <;> rcases he' with (rfl | rfl)
-  · exact (mem_groupoid_of_pregroupoid.mpr (symm_trans_mem_times_cont_diff_groupoid _ _ _)).1
+  /- We need to check that any composition of two charts gives a `C^∞` function. Each chart can be
+      either the left chart or the right chart, leaving 4 possibilities that we handle successively.
+      -/
+    rcases he with (rfl | rfl) <;>
+    rcases he' with (rfl | rfl)
+  · -- `e = left chart`, `e' = left chart`
+    exact (mem_groupoid_of_pregroupoid.mpr (symm_trans_mem_times_cont_diff_groupoid _ _ _)).1
     
-  · apply M.congr_mono _ (subset_univ _)
+  · -- `e = left chart`, `e' = right chart`
+    apply M.congr_mono _ (subset_univ _)
     rintro _ ⟨⟨hz₁, hz₂⟩, ⟨⟨z, hz₀⟩, rfl⟩⟩
     simp' only [modelWithCornersEuclideanHalfSpace, iccLeftChart, iccRightChart, update_same, max_eq_leftₓ, hz₀,
       lt_sub_iff_add_lt] with mfld_simps  at hz₁ hz₂
@@ -283,7 +295,8 @@ instance Icc_smooth_manifold (x y : ℝ) [Fact (x < y)] : SmoothManifoldWithCorn
       max_eq_leftₓ, min_eq_leftₓ hz₁.le, update_same] with mfld_simps
     abel
     
-  · apply M.congr_mono _ (subset_univ _)
+  · -- `e = right chart`, `e' = left chart`
+    apply M.congr_mono _ (subset_univ _)
     rintro _ ⟨⟨hz₁, hz₂⟩, ⟨z, hz₀⟩, rfl⟩
     simp' only [modelWithCornersEuclideanHalfSpace, iccLeftChart, iccRightChart, max_lt_iff, update_same,
       max_eq_leftₓ hz₀] with mfld_simps  at hz₁ hz₂
@@ -294,7 +307,8 @@ instance Icc_smooth_manifold (x y : ℝ) [Fact (x < y)] : SmoothManifoldWithCorn
       update_same, max_eq_leftₓ, hz₀, hz₁.le] with mfld_simps
     abel
     
-  · exact (mem_groupoid_of_pregroupoid.mpr (symm_trans_mem_times_cont_diff_groupoid _ _ _)).1
+  · -- `e = right chart`, `e' = right chart`
+    exact (mem_groupoid_of_pregroupoid.mpr (symm_trans_mem_times_cont_diff_groupoid _ _ _)).1
     
 
 /-! Register the manifold structure on `Icc 0 1`, and also its zero and one. -/

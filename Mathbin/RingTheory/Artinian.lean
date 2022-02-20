@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Chris Hughes. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Chris Hughes
+-/
 import Mathbin.LinearAlgebra.Basic
 import Mathbin.LinearAlgebra.Prod
 import Mathbin.LinearAlgebra.Pi
@@ -52,7 +57,7 @@ open_locale BigOperators Pointwise
 implemented as the well-foundedness of submodule inclusion.
 -/
 class IsArtinian (R M) [Semiringₓ R] [AddCommMonoidₓ M] [Module R M] : Prop where
-  well_founded_submodule_lt {} : WellFounded (· < · : Submodule R M → Submodule R M → Prop)
+  well_founded_submodule_lt {} : WellFounded ((· < ·) : Submodule R M → Submodule R M → Prop)
 
 section
 
@@ -137,7 +142,7 @@ section
 
 variable {R M : Type _} [Ringₓ R] [AddCommGroupₓ M] [Module R M]
 
-theorem is_artinian_iff_well_founded : IsArtinian R M ↔ WellFounded (· < · : Submodule R M → Submodule R M → Prop) :=
+theorem is_artinian_iff_well_founded : IsArtinian R M ↔ WellFounded ((· < ·) : Submodule R M → Submodule R M → Prop) :=
   ⟨fun h => h.1, IsArtinian.mk⟩
 
 variable {R M}
@@ -240,6 +245,7 @@ is eventually ⊤.
 theorem IsArtinian.disjoint_partial_infs_eventually_top [I : IsArtinian R M] (f : ℕ → Submodule R M)
     (h : ∀ n, Disjoint (partialSups (OrderDual.toDual ∘ f) n) (OrderDual.toDual (f (n + 1)))) :
     ∃ n : ℕ, ∀ m, n ≤ m → f m = ⊤ := by
+  -- A little off-by-one cleanup first:
   suffices t : ∃ n : ℕ, ∀ m, n ≤ m → OrderDual.toDual f (m + 1) = ⊤
   · obtain ⟨n, w⟩ := t
     use n + 1
@@ -257,6 +263,22 @@ universe w
 
 variable {N : Type w} [AddCommGroupₓ N] [Module R N]
 
+-- TODO: Prove this for artinian modules
+-- /--
+-- If `M ⊕ N` embeds into `M`, for `M` noetherian over `R`, then `N` is trivial.
+-- -/
+-- noncomputable def is_noetherian.equiv_punit_of_prod_injective [is_noetherian R M]
+--   (f : M × N →ₗ[R] M) (i : injective f) : N ≃ₗ[R] punit.{w+1} :=
+-- begin
+--   apply nonempty.some,
+--   obtain ⟨n, w⟩ := is_noetherian.disjoint_partial_sups_eventually_bot (f.tailing i)
+--     (f.tailings_disjoint_tailing i),
+--   specialize w n (le_refl n),
+--   apply nonempty.intro,
+--   refine (f.tailing_linear_equiv i n).symm.trans _,
+--   rw w,
+--   exact submodule.bot_equiv_punit,
+-- end
 end
 
 /-- A ring is Artinian if it is Artinian as a module over itself.
@@ -372,6 +394,7 @@ theorem is_nilpotent_jacobson_bot : IsNilpotent (Ideal.jacobson (⊥ : Ideal R))
       
   have : J⊔Jac • Ideal.span {x} ≤ J⊔Ideal.span {x} := sup_le_sup_left (smul_le.2 fun _ _ _ => Submodule.smul_mem _ _) _
   have : Jac * Ideal.span {x} ≤ J := by
+    --Need version 4 of Nakayamas lemma on Stacks
     classical
     by_contra H
     refine' H (smul_sup_le_of_le_smul_of_le_jacobson_bot (fg_span_singleton _) le_rfl (hJ' _ _ this).Ge)

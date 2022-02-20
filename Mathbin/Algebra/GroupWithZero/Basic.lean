@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Johan Commelin. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johan Commelin
+-/
 import Mathbin.Logic.Nontrivial
 import Mathbin.Algebra.Group.UnitsHom
 import Mathbin.Algebra.Group.InjSurj
@@ -52,7 +57,7 @@ See note [reducible non-instances]. -/
 @[reducible]
 protected def Function.Injective.mulZeroClass [Mul M₀'] [Zero M₀'] (f : M₀' → M₀) (hf : Injective f) (zero : f 0 = 0)
     (mul : ∀ a b, f (a * b) = f a * f b) : MulZeroClassₓ M₀' where
-  mul := · * ·
+  mul := (· * ·)
   zero := 0
   zero_mul := fun a =>
     hf <| by
@@ -66,7 +71,7 @@ See note [reducible non-instances]. -/
 @[reducible]
 protected def Function.Surjective.mulZeroClass [Mul M₀'] [Zero M₀'] (f : M₀ → M₀') (hf : Surjective f) (zero : f 0 = 0)
     (mul : ∀ a b, f (a * b) = f a * f b) : MulZeroClassₓ M₀' where
-  mul := · * ·
+  mul := (· * ·)
   zero := 0
   mul_zero :=
     hf.forall.2 fun x => by
@@ -101,7 +106,7 @@ theorem zero_mul_eq_const : (· * ·) (0 : M₀) = Function.const _ 0 :=
   funext zero_mul
 
 /-- To match `mul_one_eq_id`. -/
-theorem mul_zero_eq_const : · * (0 : M₀) = Function.const _ 0 :=
+theorem mul_zero_eq_const : (· * (0 : M₀)) = Function.const _ 0 :=
   funext mul_zero
 
 end MulZeroClassₓ
@@ -316,6 +321,8 @@ namespace Units
 theorem ne_zero [Nontrivial M₀] (u : (M₀)ˣ) : (u : M₀) ≠ 0 :=
   left_ne_zero_of_mul_eq_one u.mul_inv
 
+-- We can't use `mul_eq_zero` + `units.ne_zero` in the next two lemmas because we don't assume
+-- `nonzero M₀`.
 @[simp]
 theorem mul_left_eq_zero (u : (M₀)ˣ) {a : M₀} : a * u = 0 ↔ a = 0 :=
   ⟨fun h => by
@@ -451,6 +458,7 @@ section CancelMonoidWithZero
 
 variable [CancelMonoidWithZero M₀] {a b c : M₀}
 
+-- see Note [lower instance priority]
 instance (priority := 10) CancelMonoidWithZero.to_no_zero_divisors : NoZeroDivisors M₀ :=
   ⟨fun a b ab0 => by
     by_cases' a = 0
@@ -783,12 +791,14 @@ theorem IsUnit.mk0 (x : G₀) (hx : x ≠ 0) : IsUnit x :=
 theorem is_unit_iff_ne_zero {x : G₀} : IsUnit x ↔ x ≠ 0 :=
   Units.exists_iff_ne_zero
 
+-- see Note [lower instance priority]
 instance (priority := 10) GroupWithZeroₓ.no_zero_divisors : NoZeroDivisors G₀ :=
   { (‹_› : GroupWithZeroₓ G₀) with
     eq_zero_or_eq_zero_of_mul_eq_zero := fun a b h => by
       contrapose! h
       exact (Units.mk0 a h.1 * Units.mk0 b h.2).ne_zero }
 
+-- see Note [lower instance priority]
 instance (priority := 10) GroupWithZeroₓ.cancelMonoidWithZero : CancelMonoidWithZero G₀ :=
   { (‹_› : GroupWithZeroₓ G₀) with
     mul_left_cancel_of_ne_zero := fun x y z hx h => by
@@ -796,6 +806,8 @@ instance (priority := 10) GroupWithZeroₓ.cancelMonoidWithZero : CancelMonoidWi
     mul_right_cancel_of_ne_zero := fun x y z hy h => by
       rw [← mul_inv_cancel_right₀ hy x, h, mul_inv_cancel_right₀ hy z] }
 
+-- Can't be put next to the other `mk0` lemmas becuase it depends on the
+-- `no_zero_divisors` instance, which depends on `mk0`.
 @[simp]
 theorem Units.mk0_mul (x y : G₀) hxy :
     Units.mk0 (x * y) hxy = Units.mk0 x (mul_ne_zero_iff.mp hxy).1 * Units.mk0 y (mul_ne_zero_iff.mp hxy).2 := by
@@ -1011,8 +1023,10 @@ end GroupWithZeroₓ
 
 section CommGroupWithZero
 
+-- comm
 variable [CommGroupWithZero G₀] {a b c : G₀}
 
+-- see Note [lower instance priority]
 instance (priority := 10) CommGroupWithZero.cancelCommMonoidWithZero : CancelCommMonoidWithZero G₀ :=
   { GroupWithZeroₓ.cancelMonoidWithZero, CommGroupWithZero.toCommMonoidWithZero G₀ with }
 

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2017 Johannes Hölzl. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johannes Hölzl, Mario Carneiro, Floris van Doorn
+-/
 import Mathbin.Data.Nat.Enat
 import Mathbin.Data.Set.Countable
 import Mathbin.Order.ConditionallyCompleteLattice
@@ -90,7 +95,7 @@ def mk : Type u → Cardinal :=
 
 localized [Cardinal] notation "#" => Cardinal.mk
 
-instance can_lift_cardinal_Type : CanLift Cardinal.{u} (Type u) :=
+instance canLiftCardinalType : CanLift Cardinal.{u} (Type u) :=
   ⟨mk, fun c => True, fun c _ => (Quot.induction_on c) fun α => ⟨α, rfl⟩⟩
 
 @[elab_as_eliminator]
@@ -107,7 +112,7 @@ theorem induction_on₃ {p : Cardinal → Cardinal → Cardinal → Prop} (c₁ 
     (h : ∀ α β γ, p (# α) (# β) (# γ)) : p c₁ c₂ c₃ :=
   Quotientₓ.induction_on₃ c₁ c₂ c₃ h
 
-protected theorem Eq : # α = # β ↔ Nonempty (α ≃ β) :=
+protected theorem eq : # α = # β ↔ Nonempty (α ≃ β) :=
   Quotientₓ.eq
 
 @[simp]
@@ -119,7 +124,7 @@ theorem mk_out (c : Cardinal) : # c.out = c :=
   Quotientₓ.out_eq _
 
 /-- The representative of the cardinal of a type is equivalent ot the original type. -/
-def out_mk_equiv {α : Type v} : (# α).out ≃ α :=
+def outMkEquiv {α : Type v} : (# α).out ≃ α :=
   Nonempty.some <|
     Cardinal.eq.mp
       (by
@@ -141,7 +146,7 @@ theorem map_mk (f : Type u → Type v) (hf : ∀ α β, α ≃ β → f α ≃ f
 /-- Lift a binary operation `Type* → Type* → Type*` to a binary operation on `cardinal`s. -/
 def map₂ (f : Type u → Type v → Type w) (hf : ∀ α β γ δ, α ≃ β → γ ≃ δ → f α γ ≃ f β δ) :
     Cardinal.{u} → Cardinal.{v} → Cardinal.{w} :=
-  (Quotientₓ.map₂ f) fun α β ⟨e₁⟩ γ δ ⟨e₂⟩ => ⟨hf α β γ δ e₁ e₂⟩
+  (Quotientₓ.map₂ f) fun γ δ ⟨e₂⟩ => ⟨hf α β γ δ e₁ e₂⟩
 
 /-- The universe lift operation on cardinals. You can specify the universes explicitly with
   `lift.{u v} : cardinal.{v} → cardinal.{max v u}` -/
@@ -202,7 +207,7 @@ theorem out_embedding {c c' : Cardinal} : c ≤ c' ↔ Nonempty (c.out ↪ c'.ou
   rfl
 
 instance : Preorderₓ Cardinal.{u} where
-  le := · ≤ ·
+  le := (· ≤ ·)
   le_refl := by
     rintro ⟨α⟩ <;> exact ⟨embedding.refl _⟩
   le_trans := by
@@ -245,7 +250,7 @@ theorem lift_le {a b : Cardinal} : lift a ≤ lift b ↔ a ≤ b :=
 
 /-- `cardinal.lift` as an `order_embedding`. -/
 @[simps (config := { fullyApplied := false })]
-def lift_order_embedding : Cardinal.{v} ↪o Cardinal.{max v u} :=
+def liftOrderEmbedding : Cardinal.{v} ↪o Cardinal.{max v u} :=
   OrderEmbedding.ofMapLeIff lift fun _ _ => lift_le
 
 theorem lift_injective : Injective lift.{u, v} :=
@@ -342,19 +347,19 @@ theorem mul_def (α β : Type u) : # α * # β = # (α × β) :=
 theorem mk_prod (α : Type u) (β : Type v) : # (α × β) = lift.{v, u} (# α) * lift.{u, v} (# β) :=
   mk_congr (Equivₓ.ulift.symm.prodCongr Equivₓ.ulift.symm)
 
-protected theorem add_commₓ (a b : Cardinal.{u}) : a + b = b + a :=
+protected theorem add_comm (a b : Cardinal.{u}) : a + b = b + a :=
   (induction_on₂ a b) fun α β => mk_congr (Equivₓ.sumComm α β)
 
 protected theorem mul_comm (a b : Cardinal.{u}) : a * b = b * a :=
   (induction_on₂ a b) fun α β => mk_congr (Equivₓ.prodComm α β)
 
-protected theorem zero_addₓ (a : Cardinal.{u}) : 0 + a = a :=
+protected theorem zero_add (a : Cardinal.{u}) : 0 + a = a :=
   (induction_on a) fun α => mk_congr (Equivₓ.emptySum Pempty α)
 
 protected theorem zero_mul (a : Cardinal.{u}) : 0 * a = 0 :=
   (induction_on a) fun α => mk_congr (Equivₓ.pemptyProd α)
 
-protected theorem one_mulₓ (a : Cardinal.{u}) : 1 * a = a :=
+protected theorem one_mul (a : Cardinal.{u}) : 1 * a = a :=
   (induction_on a) fun α => mk_congr (Equivₓ.punitProd α)
 
 protected theorem left_distrib (a b c : Cardinal.{u}) : a * (b + c) = a * b + a * c :=
@@ -401,8 +406,8 @@ theorem power_add {a b c : Cardinal} : (a^b + c) = (a^b) * (a^c) :=
 instance : CommSemiringₓ Cardinal.{u} where
   zero := 0
   one := 1
-  add := · + ·
-  mul := · * ·
+  add := (· + ·)
+  mul := (· * ·)
   zero_add := Cardinal.zero_add
   add_zero := fun a => by
     rw [Cardinal.add_comm a 0, Cardinal.zero_add a]
@@ -554,6 +559,7 @@ instance : LinearOrderₓ Cardinal.{u} :=
 instance : CanonicallyLinearOrderedAddMonoid Cardinal.{u} :=
   { (inferInstance : CanonicallyOrderedAddMonoid Cardinal.{u}), Cardinal.linearOrder with }
 
+-- short-circuit type class inference
 instance : DistribLattice Cardinal.{u} := by
   infer_instance
 
@@ -584,7 +590,7 @@ theorem min_le {ι I} (f : ι → Cardinal) i : min I f ≤ f i := by
       let ⟨g⟩ := Classical.some_spec (@embedding.min_injective _ (fun i => (f i).out) I)
       ⟨g i⟩
 
-theorem le_minₓ {ι I} {f : ι → Cardinal} {a} : a ≤ min I f ↔ ∀ i, a ≤ f i :=
+theorem le_min {ι I} {f : ι → Cardinal} {a} : a ≤ min I f ↔ ∀ i, a ≤ f i :=
   ⟨fun h i => le_transₓ h (min_le _ _), fun h =>
     let ⟨i, e⟩ := min_eq I f
     e.symm ▸ h i⟩
@@ -601,8 +607,8 @@ protected theorem wf : @WellFounded Cardinal.{u} (· < ·) :=
             h' <| by
               have := min_le f ⟨j, hj⟩ <;> rwa [hi] at this)⟩
 
-instance has_wf : @HasWellFounded Cardinal.{u} :=
-  ⟨· < ·, Cardinal.wf⟩
+instance hasWf : @HasWellFounded Cardinal.{u} :=
+  ⟨(· < ·), Cardinal.wf⟩
 
 instance : ConditionallyCompleteLinearOrderBot Cardinal :=
   Cardinal.wf.conditionallyCompleteLinearOrderWithBot 0 <|
@@ -643,7 +649,7 @@ theorem succ_ne_zero (c : Cardinal) : succ c ≠ 0 :=
 
 /-- The indexed sum of cardinals is the cardinality of the
   indexed disjoint union, i.e. sigma type. -/
-def Sum {ι} (f : ι → Cardinal) : Cardinal :=
+def sum {ι} (f : ι → Cardinal) : Cardinal :=
   mk (Σ i, (f i).out)
 
 theorem le_sum {ι} (f : ι → Cardinal) i : f i ≤ sum f := by
@@ -701,7 +707,7 @@ theorem sup_eq_zero {ι} {f : ι → Cardinal} [IsEmpty ι] : sup f = 0 := by
 
 /-- The indexed product of cardinals is the cardinality of the Pi type
   (dependent product). -/
-def Prod {ι : Type u} (f : ι → Cardinal) : Cardinal :=
+def prod {ι : Type u} (f : ι → Cardinal) : Cardinal :=
   # (∀ i, (f i).out)
 
 @[simp]
@@ -982,7 +988,7 @@ theorem lt_omega_iff_fintype {α : Type u} : # α < ω ↔ Nonempty (Fintype α)
 theorem lt_omega_iff_finite {α} {S : Set α} : # S < ω ↔ Finite S :=
   lt_omega_iff_fintype.trans finite_def.symm
 
-instance can_lift_cardinal_nat : CanLift Cardinal ℕ :=
+instance canLiftCardinalNat : CanLift Cardinal ℕ :=
   ⟨coe, fun x => x < ω, fun x hx =>
     let ⟨n, hn⟩ := lt_omega.mp hx
     ⟨n, hn.symm⟩⟩
@@ -1094,7 +1100,7 @@ theorem add_le_omega {c₁ c₂ : Cardinal} : c₁ + c₂ ≤ ω ↔ c₁ ≤ ω
 
 /-- This function sends finite cardinals to the corresponding natural, and infinite cardinals
   to 0. -/
-def to_nat : ZeroHom Cardinal ℕ :=
+def toNat : ZeroHom Cardinal ℕ :=
   ⟨fun c => if h : c < omega.{v} then Classical.some (lt_omega.1 h) else 0, by
     have h : 0 < ω := nat_lt_omega 0
     rw [dif_pos h, ← Cardinal.nat_cast_inj, ← Classical.some_spec (lt_omega.1 h), Nat.cast_zeroₓ]⟩
@@ -1202,7 +1208,7 @@ theorem to_nat_add_of_lt_omega {a : Cardinal.{u}} {b : Cardinal.{v}} (ha : a < �
 
 /-- This function sends finite cardinals to the corresponding natural, and infinite cardinals
   to `⊤`. -/
-def to_enat : Cardinal →+ Enat where
+def toEnat : Cardinal →+ Enat where
   toFun := fun c => if c < omega.{v} then c.toNat else ⊤
   map_zero' := by
     simp [if_pos (lt_transₓ zero_lt_one one_lt_omega)]

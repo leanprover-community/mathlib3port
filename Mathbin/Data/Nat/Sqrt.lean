@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Leonardo de Moura, Johannes Hölzl, Mario Carneiro
+-/
 import Mathbin.Data.Int.Basic
 
 /-!
@@ -32,7 +37,7 @@ theorem sqrt_aux_dec {b} (h : b ≠ 0) : shiftr b 2 < b := by
 
 /-- Auxiliary function for `nat.sqrt`. See e.g.
 <https://en.wikipedia.org/wiki/Methods_of_computing_square_roots#Binary_numeral_system_(base_2)> -/
-def sqrt_aux : ℕ → ℕ → ℕ → ℕ
+def sqrtAux : ℕ → ℕ → ℕ → ℕ
   | b, r, n =>
     if b0 : b = 0 then r
     else

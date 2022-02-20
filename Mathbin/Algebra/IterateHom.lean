@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Yury Kudryashov. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yury Kudryashov
+-/
 import Mathbin.Algebra.GroupPower.Basic
 import Mathbin.Logic.Function.Iterate
 import Mathbin.GroupTheory.Perm.Basic
@@ -73,6 +78,7 @@ end MonoidHom
 theorem Monoidₓ.End.coe_pow {M} [Monoidₓ M] (f : Monoidₓ.End M) (n : ℕ) : ⇑(f ^ n) = f^[n] :=
   hom_coe_pow _ rfl (fun f g => rfl) _ _
 
+-- we define these manually so that we can pick a better argument order
 namespace AddMonoidHom
 
 variable [AddMonoidₓ M] [AddGroupₓ G]
@@ -137,6 +143,7 @@ end RingHom
 theorem Equivₓ.Perm.coe_pow {α : Type _} (f : Equivₓ.Perm α) (n : ℕ) : ⇑(f ^ n) = f^[n] :=
   hom_coe_pow _ rfl (fun _ _ => rfl) _ _
 
+--what should be the namespace for this section?
 section Monoidₓ
 
 variable [Monoidₓ G] (a : G) (n : ℕ)
@@ -151,7 +158,7 @@ theorem mul_left_iterate : (· * ·) a^[n] = (· * ·) (a ^ n) :=
       simp [iterate_succ, ihn, pow_succ'ₓ, mul_assoc]
 
 @[simp, to_additive]
-theorem mul_right_iterate : (· * a)^[n] = · * a ^ n := by
+theorem mul_right_iterate : (· * a)^[n] = (· * a ^ n) := by
   induction' n with d hd
   · simpa
     

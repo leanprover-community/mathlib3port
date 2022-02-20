@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Mario Carneiro. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Mario Carneiro, Johannes Hölzl, Sander Dahmen, Scott Morrison
+-/
 import Mathbin.LinearAlgebra.Dfinsupp
 import Mathbin.LinearAlgebra.StdBasis
 import Mathbin.LinearAlgebra.Isomorphisms
@@ -168,7 +173,7 @@ theorem dim_map_le (f : M →ₗ[R] M₁) (p : Submodule R M) : Module.rank R (p
   simpa using lift_dim_map_le f p
 
 theorem dim_le_of_submodule (s t : Submodule R M) (h : s ≤ t) : Module.rank R s ≤ Module.rank R t :=
-  (ofLe h).dim_le_of_injective fun ⟨x, hx⟩ ⟨y, hy⟩ eq => Subtype.eq <| show x = y from Subtype.ext_iff_val.1 Eq
+  (ofLe h).dim_le_of_injective fun eq => Subtype.eq <| show x = y from Subtype.ext_iff_val.1 Eq
 
 /-- Two linearly equivalent vector spaces have the same dimension, a version with different
 universes. -/
@@ -264,10 +269,17 @@ variable {R M}
 
 /-- Over any nontrivial ring, the existence of a finite spanning set implies that any basis is finite.
 -/
+-- One might hope that a finite spanning set implies that any linearly independent set is finite.
+-- While this is true over a division ring
+-- (simply because any linearly independent set can be extended to a basis),
+-- I'm not certain what more general statements are possible.
 def basisFintypeOfFiniteSpans (w : Set M) [Fintype w] (s : span R w = ⊤) {ι : Type w} (b : Basis ι R M) : Fintype ι :=
   by
+  -- We'll work by contradiction, assuming `ι` is infinite.
   apply fintypeOfNotInfinite _
   intro i
+  -- Let `S` be the union of the supports of `x ∈ w` expressed as linear combinations of `b`.
+  -- This is a finite set since `w` is finite.
   let S : Finset ι := finset.univ.sup fun x : w => (b.repr x).support
   let bS : Set M := b '' S
   have h : ∀, ∀ x ∈ w, ∀, x ∈ span R bS := by
@@ -281,11 +293,15 @@ def basisFintypeOfFiniteSpans (w : Set M) [Fintype w] (s : span R w = ⊤) {ι :
         (by
           simp : (⟨x, m⟩ : w) ∈ Finset.univ)
     rfl
+  -- Thus this finite subset of the basis elements spans the entire module.
   have k : span R bS = ⊤ := eq_top_iff.2 (le_transₓ s.ge (span_le.2 h))
+  -- Now there is some `x : ι` not in `S`, since `ι` is infinite.
   obtain ⟨x, nm⟩ := Infinite.exists_not_mem_finset S
+  -- However it must be in the span of the finite subset,
   have k' : b x ∈ span R bS := by
     rw [k]
     exact mem_top
+  -- giving the desire contradiction.
   refine' b.linear_independent.not_mem_span_image _ k'
   exact nm
 
@@ -293,12 +309,17 @@ def basisFintypeOfFiniteSpans (w : Set M) [Fintype w] (s : span R w = ⊤) {ι :
 and `s` is a maximal linearly independent set,
 then the union of the supports of `x ∈ s` (when written out in the basis `b`) is all of `b`.
 -/
+-- From [Les familles libres maximales d'un module ont-elles le meme cardinal?][lazarus1973]
 theorem union_support_maximal_linear_independent_eq_range_basis {ι : Type w} (b : Basis ι R M) {κ : Type w'} (v : κ → M)
     (i : LinearIndependent R v) (m : i.Maximal) : (⋃ k, ((b.repr (v k)).support : Set ι)) = univ := by
+  -- If that's not the case,
   by_contra h
   simp only [← Ne.def, ne_univ_iff_exists_not_mem, mem_Union, not_exists_not, Finsupp.mem_support_iff,
     Finset.mem_coe] at h
+  -- We have some basis element `b b'` which is not in the support of any of the `v i`.
   obtain ⟨b', w⟩ := h
+  -- Using this, we'll construct a linearly independent family strictly larger than `v`,
+  -- by also using this `b b'`.
   let v' : Option κ → M := fun o => o.elim (b b') v
   have r : range v ⊆ range v' := by
     rintro - ⟨k, rfl⟩
@@ -327,12 +348,16 @@ theorem union_support_maximal_linear_independent_eq_range_basis {ι : Type w} (b
     · congr
       exact i.injective z
       
+  -- The key step in the proof is checking that this strictly larger family is linearly independent.
   have i' : LinearIndependent R (coe : range v' → M) := by
     rw [linear_independent_subtype_range inj', linear_independent_iff]
     intro l z
     rw [Finsupp.total_option] at z
     simp only [v', Option.elim] at z
     change _ + Finsupp.total κ M R v l.some = 0 at z
+    -- We have some linear combination of `b b'` and the `v i`, which we want to show is trivial.
+    -- We'll first show the coefficient of `b b'` is zero,
+    -- by expressing the `v i` in the basis `b`, and using that the `v i` have no `b b'` term.
     have l₀ : l none = 0 := by
       rw [← eq_neg_iff_add_eq_zero] at z
       replace z := eq_neg_of_eq_neg z
@@ -341,9 +366,11 @@ theorem union_support_maximal_linear_independent_eq_range_basis {ι : Type w} (b
         LinearEquiv.map_neg, Finsupp.coe_neg] at z
       erw [Finsupp.congr_fun (Finsupp.apply_total R (b.repr : M →ₗ[R] ι →₀ R) v l.some) b'] at z
       simpa [Finsupp.total_apply, w] using z
+    -- Then all the other coefficients are zero, because `v` is linear independent.
     have l₁ : l.some = 0 := by
       rw [l₀, zero_smul, zero_addₓ] at z
       exact linear_independent_iff.mp i _ z
+    -- Finally we put those facts together to show the linear combination is trivial.
     ext (_ | a)
     · simp only [l₀, Finsupp.coe_zero, Pi.zero_apply]
       
@@ -371,6 +398,8 @@ theorem infinite_basis_le_maximal_linear_independent' {ι : Type w} (b : Basis �
 and `s` is a maximal linearly independent set,
 then the cardinality of `b` is bounded by the cardinality of `s`.
 -/
+-- (See `infinite_basis_le_maximal_linear_independent'` for the more general version
+-- where the index types can live in different universes.)
 theorem infinite_basis_le_maximal_linear_independent {ι : Type w} (b : Basis ι R M) [Infinite ι] {κ : Type w}
     (v : κ → M) (i : LinearIndependent R v) (m : i.Maximal) : # ι ≤ # κ :=
   Cardinal.lift_le.mp (infinite_basis_le_maximal_linear_independent' b v i m)
@@ -439,17 +468,24 @@ theorem mk_eq_mk_of_basis (v : Basis ι R M) (v' : Basis ι' R M) : Cardinal.lif
   by
   have := nontrivial_of_invariant_basis_number R
   by_cases' h : # ι < ω
-  · have : Fintype ι := (cardinal.lt_omega_iff_fintype.mp h).some
+  · -- `v` is a finite basis, so by `basis_fintype_of_finite_spans` so is `v'`.
+    have : Fintype ι := (cardinal.lt_omega_iff_fintype.mp h).some
     have : Fintype (range v) := Set.fintypeRange (⇑v)
     have := basisFintypeOfFiniteSpans _ v.span_eq v'
+    -- We clean up a little:
     rw [Cardinal.mk_fintype, Cardinal.mk_fintype]
     simp only [Cardinal.lift_nat_cast, Cardinal.nat_cast_inj]
+    -- Now we can use invariant basis number to show they have the same cardinality.
     apply card_eq_of_lequiv R
     exact
       (Finsupp.linearEquivFunOnFintype R R ι).symm.trans v.repr.symm ≪≫ₗ v'.repr ≪≫ₗ
         Finsupp.linearEquivFunOnFintype R R ι'
     
-  · simp only [not_ltₓ] at h
+  · -- `v` is an infinite basis,
+    -- so by `infinite_basis_le_maximal_linear_independent`, `v'` is at least as big,
+    -- and then applying `infinite_basis_le_maximal_linear_independent` again
+    -- we see they have the same cardinality.
+    simp only [not_ltₓ] at h
     have : Infinite ι := cardinal.infinite_iff.mpr h
     have w₁ := infinite_basis_le_maximal_linear_independent' v _ v'.linear_independent v'.maximal
     have : Infinite ι' :=
@@ -488,6 +524,8 @@ the cardinality of `ι` is bounded by the cardinality of `w`.
 -/
 theorem Basis.le_span'' {ι : Type _} [Fintype ι] (b : Basis ι R M) {w : Set M} [Fintype w] (s : span R w = ⊤) :
     Fintype.card ι ≤ Fintype.card w := by
+  -- We construct an surjective linear map `(w → R) →ₗ[R] (ι → R)`,
+  -- by expressing a linear combination in `w` as a linear combination in `ι`.
   fapply card_le_of_surjective' R
   · exact b.repr.to_linear_map.comp (Finsupp.total w M R coe)
     
@@ -511,6 +549,8 @@ theorem basis_le_span' {ι : Type _} (b : Basis ι R M) {w : Set M} [Fintype w] 
 /-- If `R` satisfies the rank condition,
 then the cardinality of any basis is bounded by the cardinality of any spanning set.
 -/
+-- Note that if `R` satisfies the strong rank condition,
+-- this also follows from `linear_independent_le_span` below.
 theorem Basis.le_span {J : Set M} (v : Basis ι R M) (hJ : span R J = ⊤) : # (Range v) ≤ # J := by
   have := nontrivial_of_invariant_basis_number R
   cases' fintypeOrInfinite J
@@ -555,8 +595,14 @@ variable {M : Type v} [AddCommGroupₓ M] [Module R M]
 
 open Submodule
 
+-- An auxiliary lemma for `linear_independent_le_span'`,
+-- with the additional assumption that the linearly independent family is finite.
 theorem linear_independent_le_span_aux' {ι : Type _} [Fintype ι] (v : ι → M) (i : LinearIndependent R v) (w : Set M)
     [Fintype w] (s : Range v ≤ span R w) : Fintype.card ι ≤ Fintype.card w := by
+  -- We construct an injective linear map `(ι → R) →ₗ[R] (w → R)`,
+  -- by thinking of `f : ι → R` as a linear combination of the finite family `v`,
+  -- and expressing that (using the axiom of choice) as a linear combination over `w`.
+  -- We can do this linearly by constructing the map on a basis.
   fapply card_le_of_injective' R
   · apply Finsupp.total
     exact fun i => Span.repr R w ⟨v i, s (mem_range_self i)⟩
@@ -649,13 +695,17 @@ then the cardinality of `s` is bounded by the cardinality of `b`.
 -/
 theorem linear_independent_le_basis {ι : Type _} (b : Basis ι R M) {κ : Type _} (v : κ → M)
     (i : LinearIndependent R v) : # κ ≤ # ι := by
-  cases fintypeOrInfinite ι <;> skip
-  · rw [Cardinal.mk_fintype ι]
+  -- We split into cases depending on whether `ι` is infinite.
+    cases fintypeOrInfinite ι <;>
+    skip
+  · -- When `ι` is finite, we have `linear_independent_le_span`,
+    rw [Cardinal.mk_fintype ι]
     have : Nontrivial R := nontrivial_of_invariant_basis_number R
     rw [Fintype.card_congr (Equivₓ.ofInjective b b.injective)]
     exact linear_independent_le_span v i (range b) b.span_eq
     
-  · exact linear_independent_le_infinite_basis b v i
+  · -- and otherwise we have `linear_indepedent_le_infinite_basis`.
+    exact linear_independent_le_infinite_basis b v i
     
 
 /-- In an `n`-dimensional space, the rank is at most `m`. -/
@@ -670,6 +720,7 @@ then every maximal linearly independent set has the same cardinality as `b`.
 This proof (along with some of the lemmas above) comes from
 [Les familles libres maximales d'un module ont-elles le meme cardinal?][lazarus1973]
 -/
+-- When the basis is not infinite this need not be true!
 theorem maximal_linear_independent_eq_infinite_basis {ι : Type _} (b : Basis ι R M) [Infinite ι] {κ : Type _}
     (v : κ → M) (i : LinearIndependent R v) (m : i.Maximal) : # κ = # ι := by
   apply le_antisymmₓ
@@ -697,6 +748,8 @@ theorem Basis.mk_eq_dim'' {ι : Type v} (v : Basis ι R M) : # ι = Module.rank 
     apply linear_independent_le_basis v _ li
     
 
+-- By this stage we want to have a complete API for `module.rank`,
+-- so we set it `irreducible` here, to keep ourselves honest.
 theorem Basis.mk_range_eq_dim (v : Basis ι R M) : # (Range v) = Module.rank R M :=
   v.reindexRange.mk_eq_dim''
 
@@ -730,8 +783,10 @@ theorem Basis.mk_eq_dim'.{m} (v : Basis ι R M) :
 /-- If a module has a finite dimension, all bases are indexed by a finite type. -/
 theorem Basis.nonempty_fintype_index_of_dim_lt_omega {ι : Type _} (b : Basis ι R M) (h : Module.rank R M < ω) :
     Nonempty (Fintype ι) := by
-  rwa [← Cardinal.lift_lt, ← b.mk_eq_dim, Cardinal.lift_omega, ← Cardinal.lift_omega.{u_1, v}, Cardinal.lift_lt,
-    Cardinal.lt_omega_iff_fintype] at h
+  rwa [← Cardinal.lift_lt, ←
+    b.mk_eq_dim,-- ensure `omega` has the correct universe
+    Cardinal.lift_omega,
+    ← Cardinal.lift_omega.{u_1, v}, Cardinal.lift_lt, Cardinal.lt_omega_iff_fintype] at h
 
 /-- If a module has a finite dimension, all bases are indexed by a finite type. -/
 noncomputable def Basis.fintypeIndexOfDimLtOmega {ι : Type _} (b : Basis ι R M) (h : Module.rank R M < ω) : Fintype ι :=
@@ -839,6 +894,9 @@ theorem LinearEquiv.nonempty_equiv_iff_lift_dim_eq :
 theorem LinearEquiv.nonempty_equiv_iff_dim_eq : Nonempty (V ≃ₗ[K] V₁) ↔ Module.rank K V = Module.rank K V₁ :=
   ⟨fun ⟨h⟩ => LinearEquiv.dim_eq h, fun h => nonempty_linear_equiv_of_dim_eq h⟩
 
+-- TODO how far can we generalise this?
+-- When `s` is finite, we could prove this for any ring satisfying the strong rank condition
+-- using `linear_independent_le_span'`
 theorem dim_span_le (s : Set V) : Module.rank K (span K s) ≤ # s := by
   obtain ⟨b, hb, hsab, hlib⟩ := exists_linear_independent K s
   convert Cardinal.mk_le_mk_of_subset hb
@@ -984,6 +1042,7 @@ theorem exists_mem_ne_zero_of_dim_pos {s : Submodule K V} (h : 0 < Module.rank K
 section rank
 
 /-- `rank f` is the rank of a `linear_map f`, defined as the dimension of `f.range`. -/
+-- TODO This definition, and some of the results about it, could be generalized to arbitrary rings.
 def rank (f : V →ₗ[K] V') : Cardinal :=
   Module.rank K f.range
 
@@ -1031,6 +1090,7 @@ end rank
 
 See also `finite_dimensional.fin_basis`.
 -/
+-- TODO The remainder of this file could be generalized to arbitrary rings.
 def Basis.ofDimEqZero {ι : Type _} [IsEmpty ι] (hV : Module.rank K V = 0) : Basis ι K V :=
   have : Subsingleton V := dim_zero_iff.1 hV
   Basis.empty _

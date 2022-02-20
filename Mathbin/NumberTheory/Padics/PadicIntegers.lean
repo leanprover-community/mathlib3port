@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Robert Y. Lewis. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Robert Y. Lewis, Mario Carneiro, Johan Commelin
+-/
 import Mathbin.Data.Int.Modeq
 import Mathbin.NumberTheory.Padics.PadicNumbers
 import Mathbin.RingTheory.DiscreteValuationRing
@@ -157,16 +162,16 @@ theorem coe_zero : ((0 : ℤ_[p]) : ℚ_[p]) = 0 :=
 
 instance : Ringₓ ℤ_[p] := by
   refine_struct
-      { add := · + ·, mul := · * ·, neg := Neg.neg, zero := (0 : ℤ_[p]), one := 1, sub := Sub.sub,
-        npow := @npowRec _ ⟨(1 : ℤ_[p])⟩ ⟨· * ·⟩, nsmul := @nsmulRec _ ⟨(0 : ℤ_[p])⟩ ⟨· + ·⟩,
-        zsmul := @zsmulRec _ ⟨(0 : ℤ_[p])⟩ ⟨· + ·⟩ ⟨Neg.neg⟩ } <;>
+      { add := (· + ·), mul := (· * ·), neg := Neg.neg, zero := (0 : ℤ_[p]), one := 1, sub := Sub.sub,
+        npow := @npowRec _ ⟨(1 : ℤ_[p])⟩ ⟨(· * ·)⟩, nsmul := @nsmulRec _ ⟨(0 : ℤ_[p])⟩ ⟨(· + ·)⟩,
+        zsmul := @zsmulRec _ ⟨(0 : ℤ_[p])⟩ ⟨(· + ·)⟩ ⟨Neg.neg⟩ } <;>
     intros <;>
       try
           rfl <;>
         ext <;> simp <;> ring
 
 /-- The coercion from ℤ[p] to ℚ[p] as a ring homomorphism. -/
-def coe.ring_hom : ℤ_[p] →+* ℚ_[p] where
+def Coe.ringHom : ℤ_[p] →+* ℚ_[p] where
   toFun := (coe : ℤ_[p] → ℚ_[p])
   map_zero' := rfl
   map_one' := rfl
@@ -210,7 +215,7 @@ theorem coe_int_eq (z1 z2 : ℤ) : (z1 : ℤ_[p]) = z2 ↔ z1 = z2 := by
 /-- A sequence of integers that is Cauchy with respect to the `p`-adic norm
 converges to a `p`-adic integer.
 -/
-def of_int_seq (seq : ℕ → ℤ) (h : IsCauSeq (padicNorm p) fun n => seq n) : ℤ_[p] :=
+def ofIntSeq (seq : ℕ → ℤ) (h : IsCauSeq (padicNorm p) fun n => seq n) : ℤ_[p] :=
   ⟨⟦⟨_, h⟩⟧,
     show ↑(PadicSeq.norm _) ≤ (1 : ℝ) by
       rw [PadicSeq.norm]
@@ -239,7 +244,7 @@ variable (p : ℕ) [Fact p.Prime]
 instance : MetricSpace ℤ_[p] :=
   Subtype.metricSpace
 
-instance CompleteSpace : CompleteSpace ℤ_[p] :=
+instance complete_space : CompleteSpace ℤ_[p] :=
   have : IsClosed { x : ℚ_[p] | ∥x∥ ≤ 1 } := is_closed_le continuous_norm continuous_const
   this.complete_space_coe
 
@@ -282,7 +287,7 @@ instance : NormedCommRing ℤ_[p] where
 instance : NormOneClass ℤ_[p] :=
   ⟨norm_def.trans norm_one⟩
 
-instance IsAbsoluteValue : IsAbsoluteValue fun z : ℤ_[p] => ∥z∥ where
+instance is_absolute_value : IsAbsoluteValue fun z : ℤ_[p] => ∥z∥ where
   abv_nonneg := norm_nonneg
   abv_eq_zero := fun ⟨_, _⟩ => by
     simp [norm_eq_zero]
@@ -426,7 +431,7 @@ theorem norm_int_le_pow_iff_dvd {k : ℤ} {n : ℕ} : ∥(k : ℤ_[p])∥ ≤ �
 
 
 /-- `padic_int.valuation` lifts the p-adic valuation on `ℚ` to `ℤ_[p]`.  -/
-def Valuation (x : ℤ_[p]) :=
+def valuation (x : ℤ_[p]) :=
   Padic.valuation (x : ℚ_[p])
 
 theorem norm_eq_pow_val {x : ℤ_[p]} (hx : x ≠ 0) : ∥x∥ = p ^ -x.Valuation := by
@@ -521,7 +526,7 @@ theorem mem_nonunits {z : ℤ_[p]} : z ∈ Nonunits ℤ_[p] ↔ ∥z∥ < 1 := b
   rw [lt_iff_le_and_ne] <;> simp [norm_le_one z, Nonunits, is_unit_iff]
 
 /-- A `p`-adic number `u` with `∥u∥ = 1` is a unit of `ℤ_[p]`. -/
-def mk_units {u : ℚ_[p]} (h : ∥u∥ = 1) : (ℤ_[p])ˣ :=
+def mkUnits {u : ℚ_[p]} (h : ∥u∥ = 1) : (ℤ_[p])ˣ :=
   let z : ℤ_[p] := ⟨u, le_of_eqₓ h⟩
   ⟨z, z.inv, mul_inv h, inv_mul h⟩
 
@@ -536,7 +541,7 @@ theorem norm_units (u : (ℤ_[p])ˣ) : ∥(u : ℤ_[p])∥ = 1 :=
 
 /-- `unit_coeff hx` is the unit `u` in the unique representation `x = u * p ^ n`.
 See `unit_coeff_spec`. -/
-def unit_coeff {x : ℤ_[p]} (hx : x ≠ 0) : (ℤ_[p])ˣ :=
+def unitCoeff {x : ℤ_[p]} (hx : x ≠ 0) : (ℤ_[p])ˣ :=
   let u : ℚ_[p] := x * p ^ -x.Valuation
   have hu : ∥u∥ = 1 := by
     simp [hx,

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Kenny Lau. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Mario Carneiro, Kenny Lau
+-/
 import Mathbin.Data.Int.Basic
 import Mathbin.Data.List.Range
 
@@ -40,18 +45,18 @@ theorem mem_range_iff {m n r : ℤ} : r ∈ range m n ↔ m ≤ r ∧ r < n :=
         show m + _ = _ by
           rw [to_nat_of_nonneg (sub_nonneg_of_le h1), add_sub_cancel'_right]⟩⟩
 
-instance decidable_le_lt (P : Int → Prop) [DecidablePred P] (m n : ℤ) : Decidable (∀ r, m ≤ r → r < n → P r) :=
+instance decidableLeLt (P : Int → Prop) [DecidablePred P] (m n : ℤ) : Decidable (∀ r, m ≤ r → r < n → P r) :=
   decidableOfIff (∀, ∀ r ∈ range m n, ∀, P r) <| by
     simp only [mem_range_iff, and_imp]
 
-instance decidable_le_le (P : Int → Prop) [DecidablePred P] (m n : ℤ) : Decidable (∀ r, m ≤ r → r ≤ n → P r) :=
+instance decidableLeLe (P : Int → Prop) [DecidablePred P] (m n : ℤ) : Decidable (∀ r, m ≤ r → r ≤ n → P r) :=
   decidableOfIff (∀, ∀ r ∈ range m (n + 1), ∀, P r) <| by
     simp only [mem_range_iff, and_imp, lt_add_one_iff]
 
-instance decidable_lt_lt (P : Int → Prop) [DecidablePred P] (m n : ℤ) : Decidable (∀ r, m < r → r < n → P r) :=
+instance decidableLtLt (P : Int → Prop) [DecidablePred P] (m n : ℤ) : Decidable (∀ r, m < r → r < n → P r) :=
   Int.decidableLeLt P _ _
 
-instance decidable_lt_le (P : Int → Prop) [DecidablePred P] (m n : ℤ) : Decidable (∀ r, m < r → r ≤ n → P r) :=
+instance decidableLtLe (P : Int → Prop) [DecidablePred P] (m n : ℤ) : Decidable (∀ r, m < r → r ≤ n → P r) :=
   Int.decidableLeLe P _ _
 
 end Int

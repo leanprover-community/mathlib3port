@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Yury Kudryashov. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yury Kudryashov
+-/
 import Mathbin.Logic.Function.Basic
 
 /-!
@@ -20,7 +25,7 @@ variable {α : Type _} {β : Type _} {γ : Type _}
 /-- We say that `f : α → β` semiconjugates `ga : α → α` to `gb : β → β` if `f ∘ ga = gb ∘ f`.
 We use `∀ x, f (ga x) = gb (f x)` as the definition, so given `h : function.semiconj f ga gb` and
 `a : α`, we have `h a : f (ga a) = gb (f a)` and `h.comp_eq : f ∘ ga = gb ∘ f`. -/
-def semiconj (f : α → β) (ga : α → α) (gb : β → β) : Prop :=
+def Semiconj (f : α → β) (ga : α → α) (gb : β → β) : Prop :=
   ∀ x, f (ga x) = gb (f x)
 
 namespace Semiconj
@@ -30,7 +35,7 @@ variable {f fab : α → β} {fbc : β → γ} {ga ga' : α → α} {gb gb' : β
 protected theorem comp_eq (h : Semiconj f ga gb) : f ∘ ga = gb ∘ f :=
   funext h
 
-protected theorem Eq (h : Semiconj f ga gb) (x : α) : f (ga x) = gb (f x) :=
+protected theorem eq (h : Semiconj f ga gb) (x : α) : f (ga x) = gb (f x) :=
   h x
 
 theorem comp_right (h : Semiconj f ga gb) (h' : Semiconj f ga' gb') : Semiconj f (ga ∘ ga') (gb ∘ gb') := fun x => by
@@ -52,10 +57,10 @@ end Semiconj
 /-- Two maps `f g : α → α` commute if `f (g x) = g (f x)` for all `x : α`.
 Given `h : function.commute f g` and `a : α`, we have `h a : f (g a) = g (f a)` and
 `h.comp_eq : f ∘ g = g ∘ f`. -/
-def commute (f g : α → α) : Prop :=
+def Commute (f g : α → α) : Prop :=
   Semiconj f g g
 
-theorem semiconj.commute {f g : α → α} (h : Semiconj f g g) : Commute f g :=
+theorem Semiconj.commute {f g : α → α} (h : Semiconj f g g) : Commute f g :=
   h
 
 namespace Commute
@@ -85,14 +90,14 @@ end Commute
 /-- A map `f` semiconjugates a binary operation `ga` to a binary operation `gb` if
 for all `x`, `y` we have `f (ga x y) = gb (f x) (f y)`. E.g., a `monoid_hom`
 semiconjugates `(*)` to `(*)`. -/
-def semiconj₂ (f : α → β) (ga : α → α → α) (gb : β → β → β) : Prop :=
+def Semiconj₂ (f : α → β) (ga : α → α → α) (gb : β → β → β) : Prop :=
   ∀ x y, f (ga x y) = gb (f x) (f y)
 
 namespace Semiconj₂
 
 variable {f : α → β} {ga : α → α → α} {gb : β → β → β}
 
-protected theorem Eq (h : Semiconj₂ f ga gb) (x y : α) : f (ga x y) = gb (f x) (f y) :=
+protected theorem eq (h : Semiconj₂ f ga gb) (x y : α) : f (ga x y) = gb (f x) (f y) :=
   h x y
 
 protected theorem comp_eq (h : Semiconj₂ f ga gb) : bicompr f ga = bicompl gb f f :=

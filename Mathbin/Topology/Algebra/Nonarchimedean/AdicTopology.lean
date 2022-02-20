@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Patrick Massot. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Patrick Massot
+-/
 import Mathbin.RingTheory.Ideal.Operations
 import Mathbin.Topology.Algebra.Nonarchimedean.Bases
 import Mathbin.Topology.Algebra.UniformRing
@@ -66,12 +71,12 @@ theorem adic_basis (I : Ideal R) : SubmodulesRingBasis fun n : ℕ => (I ^ n •
       exact (I ^ n).smul_mem x hb }
 
 /-- The adic ring filter basis associated to an ideal `I` is made of powers of `I`. -/
-def RingFilterBasis (I : Ideal R) :=
+def ringFilterBasis (I : Ideal R) :=
   I.adic_basis.to_ring_subgroups_basis.toRingFilterBasis
 
 /-- The adic topology associated to an ideal `I`. This topology admits powers of `I` as a basis of
 neighborhoods of zero. It is compatible with the ring structure and is non-archimedean. -/
-def adic_topology (I : Ideal R) : TopologicalSpace R :=
+def adicTopology (I : Ideal R) : TopologicalSpace R :=
   (adic_basis I).topology
 
 theorem nonarchimedean (I : Ideal R) : @NonarchimedeanRing R _ I.adicTopology :=
@@ -118,13 +123,13 @@ theorem adic_module_basis : I.RingFilterBasis.SubmodulesBasis fun n : ℕ => I ^
 
 /-- The topology on a `R`-module `M` associated to an ideal `M`. Submodules $I^n M$,
 written `I^n • ⊤` form a basis of neighborhoods of zero. -/
-def adic_module_topology : TopologicalSpace M :=
+def adicModuleTopology : TopologicalSpace M :=
   @ModuleFilterBasis.topology R M _ I.adic_basis.topology _ _
     (I.RingFilterBasis.ModuleFilterBasis (I.adic_module_basis M))
 
 /-- The elements of the basis of neighborhoods of zero for the `I`-adic topology
 on a `R`-module `M`, seen as open additive subgroups of `M`. -/
-def OpenAddSubgroup (n : ℕ) : @OpenAddSubgroup R _ I.adicTopology :=
+def openAddSubgroup (n : ℕ) : @OpenAddSubgroup R _ I.adicTopology :=
   { (I ^ n).toAddSubgroup with
     is_open' := by
       let this' := I.adic_topology
@@ -243,9 +248,13 @@ instance (priority := 100) : UniformAddGroup R :=
 
 /-- The adic topology on a `R` module coming from the ideal `with_ideal.I`.
 This cannot be an instance because `R` cannot be inferred from `M`. -/
-def topological_space_module (M : Type _) [AddCommGroupₓ M] [Module R M] : TopologicalSpace M :=
+def topologicalSpaceModule (M : Type _) [AddCommGroupₓ M] [Module R M] : TopologicalSpace M :=
   (i : Ideal R).adicModuleTopology M
 
+/-
+The next examples are kept to make sure potential future refactors won't break the instance
+chaining.
+-/
 example : NonarchimedeanRing R := by
   infer_instance
 

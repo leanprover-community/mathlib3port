@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Floris van Doorn. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Floris van Doorn
+-/
 import Mathbin.Tactic.Rcases
 
 /-!
@@ -104,26 +109,51 @@ unsafe def lift (p : pexpr) (t : pexpr) (h : Option pexpr) (n : List Name) : tac
         (f!"Failed to find a lift from {(← old_tp)} to {(← new_tp)}. Provide an instance of
               {← inst_type}") >>=
           fail
-  let can_lift_instances ← can_lift_attr.get_cache >>= fun l => l.mmap resolve_name
+  let can_lift_instances
+    ←-- make the simp set to get rid of `can_lift` projections
+          can_lift_attr.get_cache >>=
+        fun l => l.mmap resolve_name
   let (s, to_unfold) ← mk_simp_set true [] <| can_lift_instances.map simp_arg_type.expr
   let prf_cond ← get_lift_prf h old_tp new_tp inst e s to_unfold
   let prf_nm := if prf_cond.is_local_constant then some prf_cond.local_pp_name else none
-  let prf_ex0 ← mk_mapp `can_lift.prf [old_tp, new_tp, inst, e]
+  let prf_ex0
+    ←/- We use mk_mapp to apply `can_lift.prf` to all but one argument, and then just use expr.app
+          for the last argument. For some reason we get an error when applying mk_mapp it to all
+          arguments. -/
+        mk_mapp
+        `can_lift.prf [old_tp, new_tp, inst, e]
   let prf_ex := prf_ex0 prf_cond
-  let new_nm ← if n ≠ [] then return n.head else if e.is_local_constant then return e.local_pp_name else get_unused_name
-  let eq_nm ←
-    if hn : 1 < n.length then return (n.nthLe 1 hn) else if e.is_local_constant then return `rfl else get_unused_name `h
-  let temp_nm ← get_unused_name
+  let new_nm
+    ←-- Find the name of the new variable
+        if n ≠ [] then return n.head
+      else if e.is_local_constant then return e.local_pp_name else get_unused_name
+  let eq_nm
+    ←-- Find the name of the proof of the equation
+        if hn : 1 < n.length then return (n.nthLe 1 hn)
+      else if e.is_local_constant then return `rfl else get_unused_name `h
+  let temp_nm
+    ←/- We add the proof of the existential statement to the context and then apply
+        `dsimp` to it, unfolding all `can_lift` instances. -/
+      get_unused_name
   let temp_e ← note temp_nm none prf_ex
   dsimp_hyp temp_e s to_unfold {  }
-  rcases none (pexpr.of_expr temp_e) <| rcases_patt.tuple ([new_nm, eq_nm].map rcases_patt.one)
-  when (¬e)
+  -- We case on the existential. We use `rcases` because `eq_nm` could be `rfl`.
+        rcases
+        none (pexpr.of_expr temp_e) <|
+      rcases_patt.tuple ([new_nm, eq_nm].map rcases_patt.one)
+  /- If the lifted variable is not a local constant,
+          try to rewrite it away using the new equality. -/
+      when
+      (¬e)
       (get_local eq_nm >>= fun e => interactive.rw ⟨[⟨⟨0, 0⟩, tt, pexpr.of_expr e⟩], none⟩ Interactive.Loc.wildcard)
-  if h_prf_nm : prf_nm ∧ n 2 ≠ prf_nm then get_local (Option.getₓ h_prf_nm.1) >>= clear else skip
+  /- If the proof `prf_cond` is a local constant, remove it from the context,
+          unless `n` specifies to keep it. -/
+      if h_prf_nm : prf_nm ∧ n 2 ≠ prf_nm then get_local (Option.getₓ h_prf_nm.1) >>= clear
+    else skip
 
 setup_tactic_parser
 
--- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr ?»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr ?»
 /-- Parses an optional token "using" followed by a trailing `pexpr`. -/
 unsafe def using_texpr :=
   «expr ?» (tk "using" *> texpr)

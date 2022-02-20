@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Yury Kudryashov. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yury Kudryashov
+-/
 import Mathbin.MeasureTheory.Constructions.BorelSpace
 import Mathbin.Dynamics.Ergodic.MeasurePreserving
 import Mathbin.Combinatorics.Pigeonhole
@@ -43,11 +48,11 @@ namespace MeasureTheory
 
 open Measureₓ
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (m «expr ≠ » 0)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (m «expr ≠ » 0)
 /-- We say that a non-singular (`measure_theory.quasi_measure_preserving`) self-map is
 *conservative* if for any measurable set `s` of positive measure there exists `x ∈ s` such that `x`
 returns back to `s` under some iteration of `f`. -/
-structure conservative (f : α → α)
+structure Conservative (f : α → α)
   (μ : Measure α := by
     run_tac
       volume_tac) extends
@@ -55,8 +60,7 @@ structure conservative (f : α → α)
   exists_mem_image_mem : ∀ ⦃s⦄, MeasurableSet s → μ s ≠ 0 → ∃ x ∈ s, ∃ (m : _)(_ : m ≠ 0), (f^[m]) x ∈ s
 
 /-- A self-map preserving a finite measure is conservative. -/
-protected theorem measure_preserving.conservative [IsFiniteMeasure μ] (h : MeasurePreserving f μ μ) :
-    Conservative f μ :=
+protected theorem MeasurePreserving.conservative [IsFiniteMeasure μ] (h : MeasurePreserving f μ μ) : Conservative f μ :=
   ⟨h.QuasiMeasurePreserving, fun s hsm h0 => h.exists_mem_image_mem hsm h0⟩
 
 namespace Conservative
@@ -171,8 +175,12 @@ protected theorem iterate (hf : Conservative f μ) (n : ℕ) : Conservative (f^[
   cases n
   · exact conservative.id μ
     
+  -- Discharge the trivial case `n = 0`
   refine' ⟨hf.1.iterate _, fun s hs hs0 => _⟩
   rcases(hf.frequently_ae_mem_and_frequently_image_mem hs hs0).exists with ⟨x, hxs, hx⟩
+  /- We take a point `x ∈ s` such that `f^[k] x ∈ s` for infinitely many values of `k`,
+    then we choose two of these values `k < l` such that `k ≡ l [MOD (n + 1)]`.
+    Then `f^[k] x ∈ s` and `(f^[n + 1])^[(l - k) / (n + 1)] (f^[k] x) = f^[l] x ∈ s`. -/
   rw [Nat.frequently_at_top_iff_infinite] at hx
   rcases Nat.exists_lt_modeq_of_infinite hx n.succ_pos with ⟨k, hk, l, hl, hkl, hn⟩
   set m := (l - k) / (n + 1)

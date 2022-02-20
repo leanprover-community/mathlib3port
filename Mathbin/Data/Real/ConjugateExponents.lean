@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Sébastien Gouëzel. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Sébastien Gouëzel, Yury Kudryashov
+-/
 import Mathbin.Data.Real.Ennreal
 
 /-!
@@ -20,12 +25,12 @@ namespace Real
 /-- Two real exponents `p, q` are conjugate if they are `> 1` and satisfy the equality
 `1/p + 1/q = 1`. This condition shows up in many theorems in analysis, notably related to `L^p`
 norms. -/
-structure is_conjugate_exponent (p q : ℝ) : Prop where
+structure IsConjugateExponent (p q : ℝ) : Prop where
   one_lt : 1 < p
   inv_add_inv_conj : 1 / p + 1 / q = 1
 
 /-- The conjugate exponent of `p` is `q = p/(p-1)`, so that `1/p + 1/q = 1`. -/
-def conjugate_exponent (p : ℝ) : ℝ :=
+def conjugateExponent (p : ℝ) : ℝ :=
   p / (p - 1)
 
 namespace IsConjugateExponent
@@ -34,7 +39,11 @@ variable {p q : ℝ} (h : p.IsConjugateExponent q)
 
 include h
 
-theorem Pos : 0 < p :=
+/- Register several non-vanishing results following from the fact that `p` has a conjugate exponent
+`q`: many computations using these exponents require clearing out denominators, which can be done
+with `field_simp` given a proof that these denominators are non-zero, so we record the most usual
+ones. -/
+theorem pos : 0 < p :=
   lt_transₓ zero_lt_one h.one_lt
 
 theorem nonneg : 0 ≤ p :=

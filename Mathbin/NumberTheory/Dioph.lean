@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2017 Mario Carneiro. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Mario Carneiro
+-/
 import Mathbin.Data.Fin.Fin2
 import Mathbin.Data.Pfun
 import Mathbin.Data.Vector3
@@ -103,6 +108,7 @@ instance decidableListAll {α} (p : α → Prop) [DecidablePred p] (l : List α)
   (We are being a bit lazy here by allowing many representations for multiplication,
   rather than only allowing monomials and addition, but the definition is equivalent
   and this is easier to use.) -/
+-- poly
 inductive IsPoly {α} : ((α → ℕ) → ℤ) → Prop
   | proj : ∀ i, IsPoly fun x : α → ℕ => x i
   | const : ∀ n : ℤ, IsPoly fun x : α → ℕ => n
@@ -227,9 +233,9 @@ theorem mul_eval : ∀ f g x, (f * g : Poly α) x = f x * g x
 
 instance : CommRingₓ (Poly α) := by
   refine_struct
-      { add := (· + · : Poly α → Poly α → Poly α), zero := 0, neg := (Neg.neg : Poly α → Poly α), mul := · * ·,
-        one := 1, sub := Sub.sub, npow := @npowRec _ ⟨(1 : Poly α)⟩ ⟨· * ·⟩,
-        nsmul := @nsmulRec _ ⟨(0 : Poly α)⟩ ⟨· + ·⟩, zsmul := @zsmulRec _ ⟨(0 : Poly α)⟩ ⟨· + ·⟩ ⟨neg⟩ } <;>
+      { add := ((· + ·) : Poly α → Poly α → Poly α), zero := 0, neg := (Neg.neg : Poly α → Poly α), mul := (· * ·),
+        one := 1, sub := Sub.sub, npow := @npowRec _ ⟨(1 : Poly α)⟩ ⟨(· * ·)⟩,
+        nsmul := @nsmulRec _ ⟨(0 : Poly α)⟩ ⟨(· + ·)⟩, zsmul := @zsmulRec _ ⟨(0 : Poly α)⟩ ⟨(· + ·)⟩ ⟨neg⟩ } <;>
     intros <;>
       try
           rfl <;>
@@ -326,6 +332,7 @@ end Option
 
 /-- A set `S ⊆ ℕ^α` is Diophantine if there exists a polynomial on
   `α ⊕ β` such that `v ∈ S` iff there exists `t : ℕ^β` with `p (v, t) = 0`. -/
+-- dioph
 def Dioph {α : Type u} (S : Set (α → ℕ)) : Prop :=
   ∃ (β : Type u)(p : Poly (Sum α β)), ∀ v : α → ℕ, S v ↔ ∃ t, p (v ⊗ t) = 0
 
@@ -354,7 +361,7 @@ theorem inject_dummies_lem (f : β → γ) (g : γ → Option β) (inv : ∀ x, 
   · have : (v ⊗ (0 :: t) ∘ g) ∘ (inl ⊗ inr ∘ f) = v ⊗ t :=
       funext fun s => by
         cases' s with a b <;>
-          dsimp [join, · ∘ ·] <;>
+          dsimp [join, (· ∘ ·)] <;>
             try
                 rw [inv] <;>
               rfl
@@ -413,7 +420,7 @@ theorem dioph_list_all l (d : ListAll Dioph l) : Dioph fun v => ListAll (fun S :
                   exact hm,
                 by
                 refine' ListAll.imp (fun q hq => _) hn
-                dsimp [· ∘ ·]
+                dsimp [(· ∘ ·)]
                 rw
                     [show (fun x : Sum α γ => (v ⊗ m ⊗ n) ((inl ⊗ fun x : γ => inr (inr x)) x)) = v ⊗ n from
                       funext fun s => by
@@ -428,7 +435,7 @@ theorem dioph_list_all l (d : ListAll Dioph l) : Dioph fun v => ListAll (fun S :
                     hl⟩,
                 ⟨t ∘ inr, by
                   refine' ListAll.imp (fun q hq => _) hr
-                  dsimp [· ∘ ·]  at hq
+                  dsimp [(· ∘ ·)]  at hq
                   rwa
                     [show (fun x : Sum α γ => (v ⊗ t) ((inl ⊗ fun x : γ => inr (inr x)) x)) = v ⊗ t ∘ inr from
                       funext fun s => by
@@ -450,11 +457,11 @@ theorem or_dioph {S S' : Set (α → ℕ)} : ∀ d : Dioph S d' : Dioph S', Diop
       exact inject_dummies_lem _ ((fun _ => none) ⊗ some) (fun x => rfl) _ _⟩
 
 /-- A partial function is Diophantine if its graph is Diophantine. -/
-def dioph_pfun (f : (α → ℕ) →. ℕ) :=
+def DiophPfun (f : (α → ℕ) →. ℕ) :=
   Dioph fun v : Option α → ℕ => f.Graph (v ∘ some, v none)
 
 /-- A function is Diophantine if its graph is Diophantine. -/
-def dioph_fn (f : (α → ℕ) → ℕ) :=
+def DiophFn (f : (α → ℕ) → ℕ) :=
   Dioph fun v : Option α → ℕ => f (v ∘ some) = v none
 
 theorem reindex_dioph_fn {f : (α → ℕ) → ℕ} (d : DiophFn f) (g : α → β) : DiophFn fun v => f (v ∘ g) :=
@@ -625,7 +632,7 @@ localized [Dioph] notation:35 x " D∨ " y => Dioph.or_dioph x y
 
 localized [Dioph] notation:30 "D∃" => Dioph.vec_ex1_dioph
 
--- ././Mathport/Syntax/Translate/Basic.lean:343:9: unsupported: advanced prec syntax
+-- ././Mathport/Syntax/Translate/Basic.lean:462:9: unsupported: advanced prec syntax
 localized [Dioph] prefix:999 "&" => Fin2.ofNat'
 
 theorem proj_dioph_of_nat {n : ℕ} (m : ℕ) [IsLt m n] : DiophFn fun v : Vector3 ℕ n => v (&m) :=

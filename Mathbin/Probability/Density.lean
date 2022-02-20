@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Kexing Ying. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Kexing Ying
+-/
 import Mathbin.MeasureTheory.Decomposition.RadonNikodym
 import Mathbin.MeasureTheory.Measure.Lebesgue
 
@@ -58,7 +63,7 @@ variable {α E : Type _} [NormedGroup E] [MeasurableSpace E] [SecondCountableTop
 /-- A random variable `X : α → E` is said to `has_pdf` with respect to the measure `ℙ` on `α` and
 `μ` on `E` if there exists a measurable function `f` such that the push-forward measure of `ℙ`
 along `X` equals `μ.with_density f`. -/
-class has_pdf {m : MeasurableSpace α} (X : α → E) (ℙ : Measure α)
+class HasPdf {m : MeasurableSpace α} (X : α → E) (ℙ : Measure α)
   (μ : Measure E := by
     run_tac
       volume_tac) :
@@ -66,7 +71,7 @@ class has_pdf {m : MeasurableSpace α} (X : α → E) (ℙ : Measure α)
   pdf' : Measurable X ∧ ∃ f : E → ℝ≥0∞, Measurable f ∧ map X ℙ = μ.withDensity f
 
 @[measurability]
-theorem has_pdf.measurable {m : MeasurableSpace α} (X : α → E) (ℙ : Measure α)
+theorem HasPdf.measurable {m : MeasurableSpace α} (X : α → E) (ℙ : Measure α)
     (μ : Measure E := by
       run_tac
         volume_tac)
@@ -273,11 +278,11 @@ variable [IsFiniteMeasure ℙ] {X : α → ℝ}
 
 /-- A real-valued random variable `X` `has_pdf X ℙ λ` (where `λ` is the Lebesgue measure) if and
 only if the push-forward measure of `ℙ` along `X` is absolutely continuous with respect to `λ`. -/
-theorem real.has_pdf_iff_of_measurable (hX : Measurable X) : HasPdf X ℙ ↔ map X ℙ ≪ volume := by
+theorem Real.has_pdf_iff_of_measurable (hX : Measurable X) : HasPdf X ℙ ↔ map X ℙ ≪ volume := by
   rw [has_pdf_iff_of_measurable hX, and_iff_right_iff_imp]
   exact fun h => inferInstance
 
-theorem real.has_pdf_iff : HasPdf X ℙ ↔ Measurable X ∧ map X ℙ ≪ volume := by
+theorem Real.has_pdf_iff : HasPdf X ℙ ↔ Measurable X ∧ map X ℙ ≪ volume := by
   by_cases' hX : Measurable X
   · rw [real.has_pdf_iff_of_measurable hX, iff_and_self]
     exact fun h => hX
@@ -314,7 +319,7 @@ section
 
 /-- A random variable `X` has uniform distribution if it has a probability density function `f`
 with support `s` such that `f = (μ s)⁻¹ 1ₛ` a.e. where `1ₛ` is the indicator function for `s`. -/
-def is_uniform {m : MeasurableSpace α} (X : α → E) (support : Set E) (ℙ : Measure α)
+def IsUniform {m : MeasurableSpace α} (X : α → E) (support : Set E) (ℙ : Measure α)
     (μ : Measure E := by
       run_tac
         volume_tac) :=

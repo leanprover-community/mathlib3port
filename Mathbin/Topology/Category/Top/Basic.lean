@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2017 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Patrick Massot, Scott Morrison, Mario Carneiro
+-/
 import Mathbin.CategoryTheory.ConcreteCategory.BundledHom
 import Mathbin.Topology.ContinuousFunction.Basic
 
@@ -23,7 +28,7 @@ def Top : Type (u + 1) :=
 
 namespace Top
 
-instance bundled_hom : BundledHom @ContinuousMap :=
+instance bundledHom : BundledHom @ContinuousMap :=
   ⟨@ContinuousMap.toFun, @ContinuousMap.id, @ContinuousMap.comp, @ContinuousMap.coe_injective⟩
 
 deriving instance LargeCategory, ConcreteCategory for Top
@@ -31,7 +36,7 @@ deriving instance LargeCategory, ConcreteCategory for Top
 instance : CoeSort Top (Type _) :=
   bundled.has_coe_to_sort
 
-instance topological_space_unbundled (x : Top) : TopologicalSpace x :=
+instance topologicalSpaceUnbundled (x : Top) : TopologicalSpace x :=
   x.str
 
 @[simp]
@@ -62,19 +67,19 @@ def discrete : Type u ⥤ Top.{u} where
   map := fun X Y f => { toFun := f, continuous_to_fun := continuous_bot }
 
 /-- The trivial topology on any type. -/
-def trivialₓ : Type u ⥤ Top.{u} where
+def trivial : Type u ⥤ Top.{u} where
   obj := fun X => ⟨X, ⊤⟩
   map := fun X Y f => { toFun := f, continuous_to_fun := continuous_top }
 
 /-- Any homeomorphisms induces an isomorphism in `Top`. -/
 @[simps]
-def iso_of_homeo {X Y : Top.{u}} (f : X ≃ₜ Y) : X ≅ Y where
+def isoOfHomeo {X Y : Top.{u}} (f : X ≃ₜ Y) : X ≅ Y where
   Hom := ⟨f⟩
   inv := ⟨f.symm⟩
 
 /-- Any isomorphism in `Top` induces a homeomorphism. -/
 @[simps]
-def homeo_of_iso {X Y : Top.{u}} (f : X ≅ Y) : X ≃ₜ Y where
+def homeoOfIso {X Y : Top.{u}} (f : X ≅ Y) : X ≃ₜ Y where
   toFun := f.Hom
   invFun := f.inv
   left_inv := fun x => by

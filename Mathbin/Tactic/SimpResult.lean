@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Gabriel Ebner, Scott Morrison
+-/
 import Mathbin.Tactic.Core
 
 /-!
@@ -49,14 +54,25 @@ possibly with mysterious error messages.
 Be careful!
 -/
 unsafe def intercept_result {α} (m : expr → tactic expr) (t : tactic α) : tactic α := do
-  let gs ← get_goals
+  let gs
+    ←-- Replace the goals with copies.
+      get_goals
   let gs' ← gs.mmap fun g => infer_type g >>= mk_meta_var
   set_goals gs'
-  let a ← t
-  (gs gs').mmap fun ⟨g, g'⟩ => do
+  let a
+    ←-- Run the tactic on the copied goals.
+      t
+  (-- Run `m` on the produced terms,
+          gs
+          gs').mmap
+      fun ⟨g, g'⟩ => do
       let g' ← instantiate_mvars g'
       let g'' ← with_local_goals' gs <| m g'
-      unsafe.type_context.run <| unsafe.type_context.assign g g''
+      -- and assign to the original goals.
+          -- (We have to use `assign` here, as `unify` and `exact` are apparently
+          -- unreliable about which way they do the assignment!)
+          unsafe.type_context.run <|
+          unsafe.type_context.assign g g''
   pure a
 
 /-- `dsimp_result t`

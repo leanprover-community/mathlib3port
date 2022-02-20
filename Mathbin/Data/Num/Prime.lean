@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Mario Carneiro. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Mario Carneiro
+-/
 import Mathbin.Data.Num.Lemmas
 import Mathbin.Data.Nat.Prime
 import Mathbin.Tactic.Ring
@@ -27,7 +32,7 @@ number of iterations. It is initialized to the number `n` we are determining pri
 though this is exponential in the input (since it is a `nat`, not a `num`), it will get lazily
 evaluated during kernel reduction, so we will only require about `sqrt n` unfoldings, for the
 `sqrt n` iterations of the loop. -/
-def min_fac_aux (n : PosNum) : ℕ → PosNum → PosNum
+def minFacAux (n : PosNum) : ℕ → PosNum → PosNum
   | 0, _ => n
   | fuel + 1, k => if h : n < k.bit1 * k.bit1 then n else if k.bit1 ∣ n then k.bit1 else min_fac_aux fuel k.succ
 
@@ -44,7 +49,7 @@ theorem min_fac_aux_to_nat {fuel : ℕ} {n k : PosNum} (h : Nat.sqrt n < fuel + 
     simp only [_root_.bit1, _root_.bit0, cast_bit1, cast_succ, Nat.succ_eq_add_one, add_assocₓ, add_left_commₓ]
 
 /-- Returns the smallest prime factor of `n ≠ 1`. -/
-def min_fac : PosNum → PosNum
+def minFac : PosNum → PosNum
   | 1 => 1
   | bit0 n => 2
   | bit1 n => minFacAux (bit1 n) n 1
@@ -81,7 +86,7 @@ theorem min_fac_to_nat (n : PosNum) : (minFac n : ℕ) = Nat.minFac n := by
 def Prime (n : PosNum) : Prop :=
   Nat.Prime n
 
-instance decidable_prime : DecidablePred PosNum.Prime
+instance decidablePrime : DecidablePred PosNum.Prime
   | 1 => Decidable.isFalse Nat.not_prime_one
   | bit0 n =>
     decidableOfIff' (n = 1)
@@ -105,7 +110,7 @@ end PosNum
 namespace Num
 
 /-- Returns the smallest prime factor of `n ≠ 1`. -/
-def min_fac : Num → PosNum
+def minFac : Num → PosNum
   | 0 => 2
   | Pos n => n.minFac
 
@@ -119,7 +124,7 @@ theorem min_fac_to_nat : ∀ n : Num, (minFac n : ℕ) = Nat.minFac n
 def Prime (n : Num) : Prop :=
   Nat.Prime n
 
-instance decidable_prime : DecidablePred Num.Prime
+instance decidablePrime : DecidablePred Num.Prime
   | 0 => Decidable.isFalse Nat.not_prime_zero
   | Pos n => PosNum.decidablePrime n
 

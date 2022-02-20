@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Scott Morrison, Bhavik Mehta. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison, Bhavik Mehta
+-/
 import Mathbin.CategoryTheory.FunctorCategory
 import Mathbin.CategoryTheory.Isomorphism
 
@@ -31,11 +36,14 @@ variable [CategoryStruct.{v₁} C] [∀ X Y : C, Subsingleton (X ⟶ Y)]
 
 /-- Construct a category instance from a category_struct, using the fact that
     hom spaces are subsingletons to prove the axioms. -/
-def thin_category : Category C :=
+def thinCategory : Category C :=
   {  }
 
 end
 
+-- We don't assume anything about where the category instance on `C` came from.
+-- In particular this allows `C` to be a preorder, with the category instance inherited from the
+-- preorder structure.
 variable [Category.{v₁} C] {D : Type u₂} [Category.{v₂} D]
 
 variable [∀ X Y : C, Subsingleton (X ⟶ Y)]
@@ -45,7 +53,7 @@ instance functor_thin (F₁ F₂ : D ⥤ C) : Subsingleton (F₁ ⟶ F₂) :=
   ⟨fun α β => NatTrans.ext α β (funext fun _ => Subsingleton.elimₓ _ _)⟩
 
 /-- To show `X ≅ Y` in a thin category, it suffices to just give any morphism in each direction. -/
-def iso_of_both_ways {X Y : C} (f : X ⟶ Y) (g : Y ⟶ X) : X ≅ Y where
+def isoOfBothWays {X Y : C} (f : X ⟶ Y) (g : Y ⟶ X) : X ≅ Y where
   Hom := f
   inv := g
 

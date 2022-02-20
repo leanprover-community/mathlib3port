@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Oliver Nash. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Oliver Nash
+-/
 import Mathbin.Algebra.Lie.Basic
 import Mathbin.Algebra.Lie.Subalgebra
 import Mathbin.Algebra.Lie.Submodule
@@ -49,7 +54,7 @@ end Ringₓ
 namespace LieRing
 
 /-- An associative ring gives rise to a Lie ring by taking the bracket to be the ring commutator. -/
-instance (priority := 100) of_associative_ring : LieRing A where
+instance (priority := 100) ofAssociativeRing : LieRing A where
   add_lie := by
     simp only [Ringₓ.lie_def, right_distrib, left_distrib, sub_eq_add_neg, add_commₓ, add_left_commₓ, forall_const,
       eq_self_iff_true, neg_add_rev]
@@ -88,7 +93,7 @@ specifically we can build two mathematically-different `has_bracket A A`s:
 See note [reducible non-instances] -/
 @[reducible]
 def LieRingModule.ofAssociativeModule : LieRingModule A M where
-  bracket := · • ·
+  bracket := (· • ·)
   add_lie := add_smul
   lie_add := smul_add
   leibniz_lie := by
@@ -143,7 +148,7 @@ variable (f : A →ₐ[R] B) (g : B →ₐ[R] C)
 
 /-- The map `of_associative_algebra` associating a Lie algebra to an associative algebra is
 functorial. -/
-def to_lie_hom : A →ₗ⁅R⁆ B :=
+def toLieHom : A →ₗ⁅R⁆ B :=
   { f.toLinearMap with
     map_lie' := fun x y =>
       show f ⁅x,y⁆ = ⁅f x,f y⁆ by
@@ -271,7 +276,7 @@ variable [CommRingₓ R] [AddCommGroupₓ M₁] [Module R M₁] [AddCommGroupₓ
 variable (e : M₁ ≃ₗ[R] M₂)
 
 /-- A linear equivalence of two modules induces a Lie algebra equivalence of their endomorphisms. -/
-def lie_conj : Module.End R M₁ ≃ₗ⁅R⁆ Module.End R M₂ :=
+def lieConj : Module.End R M₁ ≃ₗ⁅R⁆ Module.End R M₂ :=
   { e.conj with
     map_lie' := fun f g =>
       show e.conj ⁅f,g⁆ = ⁅e.conj f,e.conj g⁆ by
@@ -296,7 +301,7 @@ variable [CommRingₓ R] [Ringₓ A₁] [Ringₓ A₂] [Algebra R A₁] [Algebra
 variable (e : A₁ ≃ₐ[R] A₂)
 
 /-- An equivalence of associative algebras is an equivalence of associated Lie algebras. -/
-def to_lie_equiv : A₁ ≃ₗ⁅R⁆ A₂ :=
+def toLieEquiv : A₁ ≃ₗ⁅R⁆ A₂ :=
   { e.toLinearEquiv with toFun := e.toFun,
     map_lie' := fun x y => by
       simp [LieRing.of_associative_ring_bracket] }

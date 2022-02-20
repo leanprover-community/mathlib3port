@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Chris Hughes. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Chris Hughes, Johannes Hölzl, Scott Morrison, Jens Wagemaker
+-/
 import Mathbin.Algebra.IterateHom
 import Mathbin.Data.Polynomial.Eval
 
@@ -236,6 +241,7 @@ theorem derivative_comp (p q : R[X]) : (p.comp q).derivative = q.derivative * p.
   · intro n r
     simp only [derivative_pow, derivative_mul, monomial_comp, derivative_monomial, derivative_C, zero_mul,
       C_eq_nat_cast, zero_addₓ, RingHom.map_mul]
+    -- is there a tactic for this? (a multiplicative `abel`):
     rw [mul_comm (derivative q)]
     simp only [mul_assoc]
     
@@ -321,7 +327,7 @@ theorem degree_derivative_le {p : R[X]} : p.derivative.degree ≤ p.degree :=
   else le_of_ltₓ <| degree_derivative_lt H
 
 /-- The formal derivative of polynomials, as linear homomorphism. -/
-def derivative_lhom (R : Type _) [CommRingₓ R] : R[X] →ₗ[R] R[X] where
+def derivativeLhom (R : Type _) [CommRingₓ R] : R[X] →ₗ[R] R[X] where
   toFun := derivative
   map_add' := fun p q => derivative_add
   map_smul' := fun r p => derivative_smul r p

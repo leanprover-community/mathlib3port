@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Chris Hughes. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Chris Hughes, Abhimanyu Pallavi Sudhir, Jean Lo, Calle Sönne, Benjamin Davidson
+-/
 import Mathbin.Analysis.SpecialFunctions.Exp
 import Mathbin.Data.Set.Intervals.Infinite
 
@@ -640,6 +645,8 @@ theorem sin_lt {x : ℝ} (h : 0 < x) : sin x < x := by
     
   exact lt_of_le_of_ltₓ (sin_le_one x) h'
 
+/- note 1: this inequality is not tight, the tighter inequality is sin x > x - x ^ 3 / 6.
+   note 2: this is also true for x > 1, but it's nontrivial for x just above 1. -/
 theorem sin_gt_sub_cube {x : ℝ} (h : 0 < x) (h' : x ≤ 1) : x - x ^ 3 / 4 < sin x := by
   have hx : abs x = x := abs_of_nonneg (le_of_ltₓ h)
   have : abs x ≤ 1
@@ -674,7 +681,7 @@ variable (x : ℝ)
   starting with `x`. We define it here because `cos (pi / 2 ^ (n+1)) = sqrt_two_add_series 0 n / 2`
 -/
 @[simp, pp_nodot]
-noncomputable def sqrt_two_add_series (x : ℝ) : ℕ → ℝ
+noncomputable def sqrtTwoAddSeries (x : ℝ) : ℕ → ℝ
   | 0 => x
   | n + 1 => sqrt (2 + sqrt_two_add_series n)
 
@@ -861,6 +868,7 @@ theorem sin_pi_div_thirty_two : sin (π / 32) = sqrt (2 - sqrt (2 + sqrt (2 + sq
   simp
 
 /-- The cosine of `π / 3` is `1 / 2`. -/
+-- This section is also a convenient location for other explicit values of `sin` and `cos`.
 @[simp]
 theorem cos_pi_div_three : cos (π / 3) = 1 / 2 := by
   have h₁ : (2 * cos (π / 3) - 1) ^ 2 * (2 * cos (π / 3) + 2) = 0 := by
@@ -936,7 +944,7 @@ theorem sin_pi_div_three : sin (π / 3) = sqrt 3 / 2 := by
 end CosDivSq
 
 /-- `real.sin` as an `order_iso` between `[-(π / 2), π / 2]` and `[-1, 1]`. -/
-def sin_order_iso : Icc (-(π / 2)) (π / 2) ≃o Icc (-1 : ℝ) 1 :=
+def sinOrderIso : Icc (-(π / 2)) (π / 2) ≃o Icc (-1 : ℝ) 1 :=
   (strict_mono_on_sin.OrderIso _ _).trans <| OrderIso.setCongr _ _ bij_on_sin.image_eq
 
 @[simp]

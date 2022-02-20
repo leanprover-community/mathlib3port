@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Markus Himmel. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Markus Himmel
+-/
 import Mathbin.CategoryTheory.Comma
 
 /-!
@@ -20,6 +25,7 @@ namespace CategoryTheory
 
 universe v u
 
+-- morphism levels before object levels. See note [category_theory universes].
 variable {T : Type u} [Category.{v} T]
 
 section
@@ -28,10 +34,11 @@ variable (T)
 
 /-- The arrow category of `T` has as objects all morphisms in `T` and as morphisms commutative
      squares in `T`. -/
-def arrow :=
+def Arrow :=
   Comma.{v, v, v} (𝟭 T) (𝟭 T)deriving Category
 
-instance arrow.inhabited [Inhabited T] : Inhabited (Arrow T) where
+-- Satisfying the inhabited linter
+instance Arrow.inhabited [Inhabited T] : Inhabited (Arrow T) where
   default := show Comma (𝟭 T) (𝟭 T) from default
 
 end
@@ -66,14 +73,14 @@ instance {X Y : T} : Coe (X ⟶ Y) (Arrow T) :=
 /-- A morphism in the arrow category is a commutative square connecting two objects of the arrow
     category. -/
 @[simps]
-def hom_mk {f g : Arrow T} {u : f.left ⟶ g.left} {v : f.right ⟶ g.right} (w : u ≫ g.Hom = f.Hom ≫ v) : f ⟶ g where
+def homMk {f g : Arrow T} {u : f.left ⟶ g.left} {v : f.right ⟶ g.right} (w : u ≫ g.Hom = f.Hom ≫ v) : f ⟶ g where
   left := u
   right := v
   w' := w
 
 /-- We can also build a morphism in the arrow category out of any commutative square in `T`. -/
 @[simps]
-def hom_mk' {X Y : T} {f : X ⟶ Y} {P Q : T} {g : P ⟶ Q} {u : X ⟶ P} {v : Y ⟶ Q} (w : u ≫ g = f ≫ v) :
+def homMk' {X Y : T} {f : X ⟶ Y} {P Q : T} {g : P ⟶ Q} {u : X ⟶ P} {v : Y ⟶ Q} (w : u ≫ g = f ≫ v) :
     Arrow.mk f ⟶ Arrow.mk g where
   left := u
   right := v
@@ -83,6 +90,7 @@ def hom_mk' {X Y : T} {f : X ⟶ Y} {P Q : T} {g : P ⟶ Q} {u : X ⟶ P} {v : Y
 theorem w {f g : Arrow T} (sq : f ⟶ g) : sq.left ≫ g.Hom = f.Hom ≫ sq.right :=
   sq.w
 
+-- `w_mk_left` is not needed, as it is a consequence of `w` and `mk_hom`.
 @[simp, reassoc]
 theorem w_mk_right {f : Arrow T} {X Y : T} {g : X ⟶ Y} (sq : f ⟶ mk g) : sq.left ≫ g = f.Hom ≫ sq.right :=
   sq.w
@@ -97,7 +105,7 @@ theorem is_iso_of_iso_left_of_is_iso_right {f g : Arrow T} (ff : f ⟶ g) [IsIso
 by providing isomorphisms between the domains and codomains,
 and a proof that the square commutes. -/
 @[simps]
-def iso_mk {f g : Arrow T} (l : f.left ≅ g.left) (r : f.right ≅ g.right) (h : l.Hom ≫ g.Hom = f.Hom ≫ r.Hom) : f ≅ g :=
+def isoMk {f g : Arrow T} (l : f.left ≅ g.left) (r : f.right ≅ g.right) (h : l.Hom ≫ g.Hom = f.Hom ≫ r.Hom) : f ≅ g :=
   Comma.isoMk l r h
 
 section
@@ -128,6 +136,7 @@ theorem inv_right [IsIso sq] : (inv sq).right = inv sq.right :=
 theorem left_hom_inv_right [IsIso sq] : sq.left ≫ g.Hom ≫ inv sq.right = f.Hom := by
   simp only [← category.assoc, is_iso.comp_inv_eq, w]
 
+-- simp proves this
 theorem inv_left_hom_right [IsIso sq] : inv sq.left ≫ f.Hom ≫ sq.right = g.Hom := by
   simp only [w, is_iso.inv_comp_eq]
 
@@ -173,7 +182,7 @@ theorem square_from_iso_invert {X Y : T} (i : X ≅ Y) (p : Arrow T) (sq : Arrow
 
 /-- A lift of a commutative square is a diagonal morphism making the two triangles commute. -/
 @[ext]
-structure lift_struct {f g : Arrow T} (sq : f ⟶ g) where
+structure LiftStruct {f g : Arrow T} (sq : f ⟶ g) where
   lift : f.right ⟶ g.left
   fac_left' : f.Hom ≫ lift = sq.left := by
     run_tac
@@ -186,7 +195,7 @@ restate_axiom lift_struct.fac_left'
 
 restate_axiom lift_struct.fac_right'
 
-instance lift_struct_inhabited {X : T} : Inhabited (LiftStruct (𝟙 (Arrow.mk (𝟙 X)))) :=
+instance liftStructInhabited {X : T} : Inhabited (LiftStruct (𝟙 (Arrow.mk (𝟙 X)))) :=
   ⟨⟨𝟙 _, Category.id_comp _, Category.comp_id _⟩⟩
 
 /-- `has_lift sq` says that there is some `lift_struct sq`, i.e., that it is possible to find a
@@ -200,7 +209,7 @@ theorem HasLift.mk {f g : Arrow T} {sq : f ⟶ g} (s : LiftStruct sq) : HasLift 
 attribute [simp, reassoc] lift_struct.fac_left lift_struct.fac_right
 
 /-- Given `has_lift sq`, obtain a lift. -/
-noncomputable def has_lift.struct {f g : Arrow T} (sq : f ⟶ g) [HasLift sq] : LiftStruct sq :=
+noncomputable def HasLift.struct {f g : Arrow T} (sq : f ⟶ g) [HasLift sq] : LiftStruct sq :=
   Classical.choice HasLift.exists_lift
 
 /-- If there is a lift of a commutative square `sq`, we can access it by saying `lift sq`. -/
@@ -260,23 +269,23 @@ A  → X
 B  → Z                 B → Z
  -/
 @[simps]
-def square_to_snd {X Y Z : C} {i : Arrow C} {f : X ⟶ Y} {g : Y ⟶ Z} (sq : i ⟶ Arrow.mk (f ≫ g)) : i ⟶ Arrow.mk g where
+def squareToSnd {X Y Z : C} {i : Arrow C} {f : X ⟶ Y} {g : Y ⟶ Z} (sq : i ⟶ Arrow.mk (f ≫ g)) : i ⟶ Arrow.mk g where
   left := sq.left ≫ f
   right := sq.right
 
 /-- The functor sending an arrow to its source. -/
 @[simps]
-def left_func : Arrow C ⥤ C :=
+def leftFunc : Arrow C ⥤ C :=
   Comma.fst _ _
 
 /-- The functor sending an arrow to its target. -/
 @[simps]
-def right_func : Arrow C ⥤ C :=
+def rightFunc : Arrow C ⥤ C :=
   Comma.snd _ _
 
 /-- The natural transformation from `left_func` to `right_func`, given by the arrow itself. -/
 @[simps]
-def left_to_right : (leftFunc : Arrow C ⥤ C) ⟶ right_func where
+def leftToRight : (leftFunc : Arrow C ⥤ C) ⟶ right_func where
   app := fun f => f.Hom
 
 end Arrow
@@ -289,7 +298,7 @@ variable {C : Type u₁} [Category.{v₁} C] {D : Type u₂} [Category.{v₂} D]
 
 /-- A functor `C ⥤ D` induces a functor between the corresponding arrow categories. -/
 @[simps]
-def map_arrow (F : C ⥤ D) : Arrow C ⥤ Arrow D where
+def mapArrow (F : C ⥤ D) : Arrow C ⥤ Arrow D where
   obj := fun a => { left := F.obj a.left, right := F.obj a.right, Hom := F.map a.Hom }
   map := fun a b f =>
     { left := F.map f.left, right := F.map f.right,

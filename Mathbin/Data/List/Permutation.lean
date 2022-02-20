@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2014 Parikshit Khanna. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Parikshit Khanna, Jeremy Avigad, Leonardo de Moura, Floris van Doorn, Mario Carneiro
+-/
 import Mathbin.Data.List.Join
 
 /-!
@@ -194,7 +199,7 @@ theorem mem_foldr_permutations_aux2 {t : α} {ts : List α} {r L : List (List α
 
 theorem length_foldr_permutations_aux2 (t : α) (ts : List α) (r L : List (List α)) :
     length (foldr (fun y r => (permutationsAux2 t ts r y id).2) r L) = sum (map length L) + length r := by
-  simp [foldr_permutations_aux2, · ∘ ·, length_permutations_aux2]
+  simp [foldr_permutations_aux2, (· ∘ ·), length_permutations_aux2]
 
 theorem length_foldr_permutations_aux2' (t : α) (ts : List α) (r L : List (List α)) n
     (H : ∀, ∀ l ∈ L, ∀, length l = n) :

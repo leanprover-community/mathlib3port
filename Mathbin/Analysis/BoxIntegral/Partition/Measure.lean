@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Yury Kudryashov. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yury Kudryashov
+-/
 import Mathbin.Analysis.BoxIntegral.Partition.Additive
 import Mathbin.MeasureTheory.Measure.Lebesgue
 
@@ -61,7 +66,7 @@ theorem Ioo_ae_eq_Icc : I.Ioo =ᵐ[volume] I.Icc :=
 
 end Box
 
-theorem prepartition.measure_Union_to_real [Fintype ι] {I : Box ι} (π : Prepartition I) (μ : Measureₓ (ι → ℝ))
+theorem Prepartition.measure_Union_to_real [Fintype ι] {I : Box ι} (π : Prepartition I) (μ : Measureₓ (ι → ℝ))
     [IsLocallyFiniteMeasure μ] : (μ π.Union).toReal = ∑ J in π.boxes, (μ J).toReal := by
   erw [← Ennreal.to_real_sum, π.Union_def, measure_bUnion_finset π.pairwise_disjoint]
   exacts[fun J hJ => J.measurable_set_coe, fun J hJ => (J.measure_coe_lt_top μ).Ne]
@@ -79,7 +84,7 @@ namespace Measureₓ
 /-- If `μ` is a locally finite measure on `ℝⁿ`, then `λ J, (μ J).to_real` is a box-additive
 function. -/
 @[simps]
-def to_box_additive (μ : Measure (ι → ℝ)) [IsLocallyFiniteMeasure μ] : ι →ᵇᵃ[⊤] ℝ where
+def toBoxAdditive (μ : Measure (ι → ℝ)) [IsLocallyFiniteMeasure μ] : ι →ᵇᵃ[⊤] ℝ where
   toFun := fun J => (μ J).toReal
   sum_partition_boxes' := fun J hJ π hπ => by
     rw [← π.measure_Union_to_real, hπ.Union_eq]
@@ -100,7 +105,7 @@ theorem volume_apply (I : Box ι) : (volume : Measureₓ (ι → ℝ)).toBoxAddi
 
 theorem volume_face_mul {n} (i : Finₓ (n + 1)) (I : Box (Finₓ (n + 1))) :
     (∏ j, (I.face i).upper j - (I.face i).lower j) * (I.upper i - I.lower i) = ∏ j, I.upper j - I.lower j := by
-  simp only [face_lower, face_upper, · ∘ ·, Finₓ.prod_univ_succ_above _ i, mul_comm]
+  simp only [face_lower, face_upper, (· ∘ ·), Finₓ.prod_univ_succ_above _ i, mul_comm]
 
 end Box
 

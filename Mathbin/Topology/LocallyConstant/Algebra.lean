@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Johan Commelin. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johan Commelin
+-/
 import Mathbin.Algebra.Algebra.Basic
 import Mathbin.Topology.LocallyConstant.Basic
 
@@ -64,14 +69,14 @@ instance [MulOneClassₓ Y] : MulOneClassₓ (LocallyConstant X Y) :=
 
 /-- `coe_fn` is a `monoid_hom`. -/
 @[to_additive "`coe_fn` is an `add_monoid_hom`.", simps]
-def coe_fn_monoid_hom [MulOneClassₓ Y] : LocallyConstant X Y →* X → Y where
+def coeFnMonoidHom [MulOneClassₓ Y] : LocallyConstant X Y →* X → Y where
   toFun := coeFn
   map_one' := rfl
   map_mul' := fun _ _ => rfl
 
 /-- The constant-function embedding, as a multiplicative monoid hom. -/
 @[to_additive "The constant-function embedding, as an additive monoid hom.", simps]
-def const_monoid_hom [MulOneClassₓ Y] : Y →* LocallyConstant X Y where
+def constMonoidHom [MulOneClassₓ Y] : Y →* LocallyConstant X Y where
   toFun := const X
   map_one' := rfl
   map_mul' := fun _ _ => rfl
@@ -123,7 +128,7 @@ instance [CommSemigroupₓ Y] : CommSemigroupₓ (LocallyConstant X Y) :=
 
 @[to_additive]
 instance [Monoidₓ Y] : Monoidₓ (LocallyConstant X Y) :=
-  { LocallyConstant.semigroup, LocallyConstant.mulOneClass with mul := · * · }
+  { LocallyConstant.semigroup, LocallyConstant.mulOneClass with mul := (· * ·) }
 
 @[to_additive]
 instance [CommMonoidₓ Y] : CommMonoidₓ (LocallyConstant X Y) :=
@@ -167,7 +172,7 @@ instance [NonAssocSemiringₓ Y] : NonAssocSemiringₓ (LocallyConstant X Y) :=
 
 /-- The constant-function embedding, as a ring hom.  -/
 @[simps]
-def const_ring_hom [NonAssocSemiringₓ Y] : Y →+* LocallyConstant X Y :=
+def constRingHom [NonAssocSemiringₓ Y] : Y →+* LocallyConstant X Y :=
   { constMonoidHom, constAddMonoidHom with toFun := const X }
 
 instance [Semiringₓ Y] : Semiringₓ (LocallyConstant X Y) :=

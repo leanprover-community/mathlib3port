@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Alena Gusakov, Bhavik Mehta, Kyle Miller. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Alena Gusakov, Bhavik Mehta, Kyle Miller
+-/
 import Mathbin.Data.Fintype.Basic
 import Mathbin.Data.Set.Finite
 
@@ -88,6 +93,7 @@ theorem hall_hard_inductive_step_A {n : ℕ} (hn : Fintype.card ι = n + 1)
     ∃ f : ι → α, Function.Injective f ∧ ∀ x, f x ∈ t x := by
   have : Nonempty ι := fintype.card_pos_iff.mp (hn.symm ▸ Nat.succ_posₓ _)
   have := Classical.decEq ι
+  -- Choose an arbitrary element `x : ι` and `y : t x`.
   let x := Classical.arbitrary ι
   have tx_ne : (t x).Nonempty := by
     rw [← Finset.card_pos]
@@ -95,12 +101,14 @@ theorem hall_hard_inductive_step_A {n : ℕ} (hn : Fintype.card ι = n + 1)
     convert ht {x}
     rw [Finset.singleton_bUnion]
   rcases Classical.indefiniteDescription _ tx_ne with ⟨y, hy⟩
+  -- Restrict to everything except `x` and `y`.
   let ι' := { x' : ι | x' ≠ x }
   let t' : ι' → Finset α := fun x' => (t x').erase y
   have card_ι' : Fintype.card ι' = n := by
     convert congr_argₓ (fun m => m - 1) hn
     convert Set.card_ne_eq _
   rcases ih t' card_ι'.le (hall_cond_of_erase y ha) with ⟨f', hfinj, hfr⟩
+  -- Extend the resulting function.
   refine' ⟨fun z => if h : z = x then y else f' ⟨z, h⟩, _, _⟩
   · rintro z₁ z₂
     have key : ∀ {x}, y ≠ f' x := by
@@ -174,6 +182,7 @@ theorem hall_hard_inductive_step_B {n : ℕ} (hn : Fintype.card ι = n + 1)
     (s : Finset ι) (hs : s.Nonempty) (hns : s ≠ univ) (hus : s.card = (s.bUnion t).card) :
     ∃ f : ι → α, Function.Injective f ∧ ∀ x, f x ∈ t x := by
   have := Classical.decEq ι
+  -- Restrict to `s`
   let t' : s → Finset α := fun x' => t x'
   rw [Nat.add_one] at hn
   have card_ι'_le : Fintype.card s ≤ n := by
@@ -182,6 +191,7 @@ theorem hall_hard_inductive_step_B {n : ℕ} (hn : Fintype.card ι = n + 1)
     convert (card_lt_iff_ne_univ _).mpr hns
     convert Fintype.card_coe _
   rcases ih t' card_ι'_le (hall_cond_of_restrict ht) with ⟨f', hf', hsf'⟩
+  -- Restrict to `sᶜ` in the domain and `(s.bUnion t)ᶜ` in the codomain.
   set ι'' := (s : Set ι)ᶜ with ι''_def
   let t'' : ι'' → Finset α := fun a'' => t a'' \ s.bUnion t
   have card_ι''_le : Fintype.card ι'' ≤ n := by
@@ -189,6 +199,7 @@ theorem hall_hard_inductive_step_B {n : ℕ} (hn : Fintype.card ι = n + 1)
     rw [Fintype.card_congr' rfl, Fintype.card_coe]
     rwa [card_compl_lt_iff_nonempty]
   rcases ih t'' card_ι''_le (hall_cond_of_compl hus ht) with ⟨f'', hf'', hsf''⟩
+  -- Put them together
   have f'_mem_bUnion : ∀ {x'} hx' : x' ∈ s, f' ⟨x', hx'⟩ ∈ s.bUnion t := by
     intro x' hx'
     rw [mem_bUnion]

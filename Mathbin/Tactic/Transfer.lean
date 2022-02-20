@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2017 Johannes Hölzl. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johannes Hölzl (CMU)
+-/
 prelude
 import Leanbin.Init.Meta.Tactic
 import Leanbin.Init.Meta.MatchTactic
@@ -9,6 +14,32 @@ open Tactic Expr List Monadₓ
 
 namespace Transfer
 
+/- Transfer rules are of the shape:
+
+  rel_t : {u} Πx, R t₁ t₂
+
+where `u` is a list of universe parameters, `x` is a list of dependent variables, and `R` is a
+relation.  Then this rule will translate `t₁` (depending on `u` and `x`) into `t₂`.  `u` and `x`
+will be called parameters. When `R` is a relation on functions lifted from `S` and `R` the variables
+bound by `S` are called arguments. `R` is generally constructed using `⇒` (i.e. `relator.lift_fun`).
+
+As example:
+
+  rel_eq : (R ⇒ R ⇒ iff) eq t
+
+transfer will match this rule when it sees:
+
+  (@eq α a b)      and transfer it to    (t a b)
+
+Here `α` is a parameter and `a` and `b` are arguments.
+
+
+TODO: add trace statements
+
+TODO: currently the used relation must be fixed by the matched rule or through type class
+  inference. Maybe we want to replace this by type inference similar to Isabelle's transfer.
+
+-/
 private unsafe structure rel_data where
   in_type : expr
   out_type : expr
@@ -24,12 +55,18 @@ unsafe instance has_to_tactic_format_rel_data : has_to_tactic_format rel_data :=
 private unsafe structure rule_data where
   pr : expr
   uparams : List Name
+  -- levels not in pat
   params : List (expr × Bool)
+  -- fst : local constant, snd = tt → param appears in pattern
   uargs : List Name
+  -- levels not in pat
   args : List (expr × rel_data)
+  -- fst : local constant
   pat : pattern
+  -- `R c`
   output : expr
 
+-- right-hand side `d` of rel equation `R c d`
 unsafe instance has_to_tactic_format_rule_data : has_to_tactic_format rule_data :=
   ⟨fun r => do
     let pr ← pp r.pr
@@ -108,10 +145,14 @@ private unsafe def param_substitutions (ctxt : List expr) :
     return ((n, e) :: ms, m ++ vs)
   | _ => return ([], [])
 
+/- input expression a type `R a`, it finds a type `b`, s.t. there is a proof of the type `R a b`.
+It return (`a`, pr : `R a b`) -/
 unsafe def compute_transfer : List rule_data → List expr → expr → tactic (expr × expr × List expr)
   | rds, ctxt, e => do
-    let (i, ps, args, ms, rd) ←
-      first
+    let-- Select matching rule
+      (i, ps, args, ms, rd)
+      ←-- this checks type class parameters
+            first
             (rds.map fun rd => do
               let (l, m) ← match_pattern rd.pat e semireducible
               let level_map ← rd.uparams.mmap fun l => Prod.mk l <$> mk_meta_univ
@@ -123,7 +164,11 @@ unsafe def compute_transfer : List rule_data → List expr → expr → tactic (
           trace e
           fail "no matching rule"
     let (bs, hs, mss) ←
-      ((zipₓ rd.args args).mmap fun ⟨⟨_, d⟩, e⟩ => do
+      ((-- Argument has function type
+                -- Transfer argument
+                zipₓ
+                rd.args args).mmap
+            fun ⟨⟨_, d⟩, e⟩ => do
             let (args, r) ← get_lift_fun (i d.relation)
             let ((a_vars, b_vars), (R_vars, bnds)) ←
               ((enum args).mmap fun ⟨n, arg⟩ => do
@@ -139,7 +184,10 @@ unsafe def compute_transfer : List rule_data → List expr → expr → tactic (
             let b' ← head_eta (lambdas b_vars b)
             return (b', [a, b', lambdas (List.join bnds) pr], ms)) >>=
           return ∘ Prod.map id unzip ∘ unzip
-    let b ← head_beta (app_of_list (i rd.output) bs)
+    let b
+      ←-- Combine
+          head_beta
+          (app_of_list (i rd.output) bs)
     let pr ← return <| app_of_list (i rd.pr) (Prod.snd <$> ps ++ List.join hs)
     return (b, pr, ms ++ mss)
 
@@ -153,7 +201,9 @@ unsafe def tactic.transfer (ds : List Name) : tactic Unit := do
   guardₓ ¬tgt <|> fail "Target contains (universe) meta variables. This is not supported by transfer."
   let (new_tgt, pr, ms) ← compute_transfer rds [] ((const `iff [] : expr) tgt)
   let new_pr ← mk_meta_var new_tgt
-  exact ((const `iff.mpr [] : expr) tgt new_tgt pr new_pr)
+  -- Setup final tactic state
+      exact
+      ((const `iff.mpr [] : expr) tgt new_tgt pr new_pr)
   let ms ← ms.mmap fun m => get_assignment m >> return [] <|> return [m]
   let gs ← get_goals
   set_goals (ms ++ new_pr :: gs)

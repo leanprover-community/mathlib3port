@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Anne Baanen. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Anne Baanen
+-/
 import Mathbin.FieldTheory.Minpoly
 
 /-!
@@ -61,7 +66,9 @@ structure PowerBasis (R S : Type _) [CommRingₓ R] [Ringₓ S] [Algebra R S] wh
   Basis : Basis (Finₓ dim) R S
   basis_eq_pow : ∀ i, Basis i = gen ^ (i : ℕ)
 
-initialize_simps_projections PowerBasis (-Basis)
+initialize_simps_projections -- this is usually not needed because of `basis_eq_pow` but can be needed in some cases;
+-- in such circumstances, add it manually using `@[simps dim gen basis]`.
+PowerBasis (-Basis)
 
 namespace PowerBasis
 
@@ -70,7 +77,7 @@ theorem coe_basis (pb : PowerBasis R S) : ⇑pb.Basis = fun i : Finₓ pb.dim =>
   funext pb.basis_eq_pow
 
 /-- Cannot be an instance because `power_basis` cannot be a class. -/
-theorem FiniteDimensional [Algebra K S] (pb : PowerBasis K S) : FiniteDimensional K S :=
+theorem finite_dimensional [Algebra K S] (pb : PowerBasis K S) : FiniteDimensional K S :=
   FiniteDimensional.of_fintype_basis pb.Basis
 
 theorem finrank [Algebra K S] (pb : PowerBasis K S) : FiniteDimensional.finrank K S = pb.dim := by
@@ -138,7 +145,7 @@ variable [Algebra A S]
 If `A` is not a field, it might not necessarily be *the* minimal polynomial,
 however `nat_degree_minpoly` shows its degree is indeed minimal.
 -/
-noncomputable def minpoly_gen (pb : PowerBasis A S) : A[X] :=
+noncomputable def minpolyGen (pb : PowerBasis A S) : A[X] :=
   X ^ pb.dim - ∑ i : Finₓ pb.dim, c (pb.Basis.repr (pb.gen ^ pb.dim) i) * X ^ (i : ℕ)
 
 @[simp]
@@ -237,7 +244,7 @@ theorem constr_pow_aeval (pb : PowerBasis A S) {y : S'} (hy : aeval y (minpoly A
     apply nat_degree_lt_nat_degree hf
     exact degree_mod_by_monic_lt _ (minpoly.monic pb.is_integral_gen)
   rw [aeval_eq_sum_range' this, aeval_eq_sum_range' this, LinearMap.map_sum]
-  refine' Finset.sum_congr rfl fun i hi : i ∈ Finset.range pb.dim => _
+  refine' Finset.sum_congr rfl fun hi : i ∈ Finset.range pb.dim => _
   rw [Finset.mem_range] at hi
   rw [LinearMap.map_smul]
   congr
@@ -289,7 +296,7 @@ If the codomain of the `alg_hom`s is an integral domain, then the roots form a m
 see `lift_equiv'` for the corresponding statement.
 -/
 @[simps]
-noncomputable def lift_equiv (pb : PowerBasis A S) : (S →ₐ[A] S') ≃ { y : S' // aeval y (minpoly A pb.gen) = 0 } where
+noncomputable def liftEquiv (pb : PowerBasis A S) : (S →ₐ[A] S') ≃ { y : S' // aeval y (minpoly A pb.gen) = 0 } where
   toFun := fun f =>
     ⟨f pb.gen, by
       rw [aeval_alg_hom_apply, minpoly.aeval, f.map_zero]⟩
@@ -300,7 +307,7 @@ noncomputable def lift_equiv (pb : PowerBasis A S) : (S →ₐ[A] S') ≃ { y : 
 /-- `pb.lift_equiv'` states that elements of the root set of the minimal
 polynomial of `pb.gen` correspond to maps sending `pb.gen` to that root. -/
 @[simps (config := { fullyApplied := false })]
-noncomputable def lift_equiv' (pb : PowerBasis A S) :
+noncomputable def liftEquiv' (pb : PowerBasis A S) :
     (S →ₐ[A] B) ≃ { y : B // y ∈ ((minpoly A pb.gen).map (algebraMap A B)).roots } :=
   pb.liftEquiv.trans
     ((Equivₓ.refl _).subtypeEquiv fun x => by
@@ -309,7 +316,7 @@ noncomputable def lift_equiv' (pb : PowerBasis A S) :
 
 /-- There are finitely many algebra homomorphisms `S →ₐ[A] B` if `S` is of the form `A[x]`
 and `B` is an integral domain. -/
-noncomputable def alg_hom.fintype (pb : PowerBasis A S) : Fintype (S →ₐ[A] B) := by
+noncomputable def AlgHom.fintype (pb : PowerBasis A S) : Fintype (S →ₐ[A] B) := by
   let this' := Classical.decEq B <;> exact Fintype.ofEquiv _ pb.lift_equiv'.symm
 
 /-- `pb.equiv_of_root pb' h₁ h₂` is an equivalence of algebras with the same power basis,
@@ -319,8 +326,8 @@ See also `power_basis.equiv_of_minpoly` which takes the hypothesis that the
 minimal polynomials are identical.
 -/
 @[simps (config := { attrs := [] }) apply]
-noncomputable def equiv_of_root (pb : PowerBasis A S) (pb' : PowerBasis A S')
-    (h₁ : aeval pb.gen (minpoly A pb'.gen) = 0) (h₂ : aeval pb'.gen (minpoly A pb.gen) = 0) : S ≃ₐ[A] S' :=
+noncomputable def equivOfRoot (pb : PowerBasis A S) (pb' : PowerBasis A S') (h₁ : aeval pb.gen (minpoly A pb'.gen) = 0)
+    (h₂ : aeval pb'.gen (minpoly A pb.gen) = 0) : S ≃ₐ[A] S' :=
   AlgEquiv.ofAlgHom (pb.lift pb'.gen h₂) (pb'.lift pb.gen h₁)
     (by
       ext x
@@ -354,7 +361,7 @@ See also `power_basis.equiv_of_root` which takes the hypothesis that each genera
 other basis' minimal polynomial; `power_basis.equiv_root` is more general if `A` is not a field.
 -/
 @[simps (config := { attrs := [] }) apply]
-noncomputable def equiv_of_minpoly (pb : PowerBasis A S) (pb' : PowerBasis A S')
+noncomputable def equivOfMinpoly (pb : PowerBasis A S) (pb' : PowerBasis A S')
     (h : minpoly A pb.gen = minpoly A pb'.gen) : S ≃ₐ[A] S' :=
   pb.equivOfRoot pb' (h ▸ minpoly.aeval _ _) (h.symm ▸ minpoly.aeval _ _)
 
@@ -458,6 +465,7 @@ variable [Algebra A S] [Algebra A S']
 @[simp]
 theorem minpoly_gen_map (pb : PowerBasis A S) (e : S ≃ₐ[A] S') : (pb.map e).minpolyGen = pb.minpolyGen := by
   dsimp only [minpoly_gen, map_dim]
+  -- Turn `fin (pb.map e).dim` into `fin pb.dim`
   simp only [LinearEquiv.trans_apply, map_basis, Basis.map_repr, map_gen, AlgEquiv.to_linear_equiv_apply,
     e.to_linear_equiv_symm, AlgEquiv.map_pow, AlgEquiv.symm_apply_apply, sub_right_inj]
 

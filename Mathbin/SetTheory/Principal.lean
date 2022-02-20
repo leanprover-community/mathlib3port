@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2022 Violeta Hernández Palacios. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Violeta Hernández Palacios
+-/
 import Mathbin.SetTheory.OrdinalArithmetic
 
 /-!
@@ -26,7 +31,7 @@ ordinals less than it is closed under that operation. In standard mathematical u
 almost exclusively used for additive and multiplicative principal ordinals.
 
 For simplicity, we break usual convention and regard 0 as principal. -/
-def principal (op : Ordinal → Ordinal → Ordinal) (o : Ordinal) : Prop :=
+def Principal (op : Ordinal → Ordinal → Ordinal) (o : Ordinal) : Prop :=
   ∀ ⦃a b⦄, a < o → b < o → op a b < o
 
 theorem principal_iff_principal_swap {op : Ordinal → Ordinal → Ordinal} {o : Ordinal} :
@@ -45,7 +50,7 @@ theorem principal_one_iff {op : Ordinal → Ordinal → Ordinal} : Principal op 
   · rwa [lt_one_iff_zero, ha, hb] at *
     
 
-theorem principal.iterate_lt {op : Ordinal → Ordinal → Ordinal} {a o : Ordinal} (hao : a < o) (ho : Principal op o)
+theorem Principal.iterate_lt {op : Ordinal → Ordinal → Ordinal} {a o : Ordinal} (hao : a < o) (ho : Principal op o)
     (n : ℕ) : (op a^[n]) a < o := by
   induction' n with n hn
   · rwa [Function.iterate_zero]

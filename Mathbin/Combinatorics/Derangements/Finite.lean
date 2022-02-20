@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Henry Swanson. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Henry Swanson
+-/
 import Mathbin.Combinatorics.Derangements.Basic
 import Mathbin.Data.Fintype.Card
 import Mathbin.Tactic.DeltaInstance
@@ -40,13 +45,19 @@ theorem card_derangements_fin_add_two (n : ℕ) :
     card (Derangements (Finₓ (n + 2))) =
       (n + 1) * card (Derangements (Finₓ n)) + (n + 1) * card (Derangements (Finₓ (n + 1))) :=
   by
+  -- get some basic results about the size of fin (n+1) plus or minus an element
   have h1 : ∀ a : Finₓ (n + 1), card ({a}ᶜ : Set (Finₓ (n + 1))) = card (Finₓ n) := by
     intro a
     simp only [Fintype.card_fin, Finset.card_fin, Fintype.card_of_finset, Finset.filter_ne' _ a,
       Set.mem_compl_singleton_iff, Finset.card_erase_of_mem (Finset.mem_univ a), add_tsub_cancel_right]
   have h2 : card (Finₓ (n + 2)) = card (Option (Finₓ (n + 1))) := by
     simp only [card_fin, card_option]
-  simp only [card_derangements_invariant h2, card_congr (@derangements_recursion_equiv (Finₓ (n + 1)) _), card_sigma,
+  -- rewrite the LHS and substitute in our fintype-level equivalence
+  simp only [card_derangements_invariant h2,
+    card_congr
+      (@derangements_recursion_equiv (Finₓ (n + 1))
+        _),-- push the cardinality through the Σ and ⊕ so that we can use `card_n`
+    card_sigma,
     card_sum, card_derangements_invariant (h1 _), Finset.sum_const, nsmul_eq_mul, Finset.card_fin, mul_addₓ,
     Nat.cast_id]
 
@@ -83,6 +94,9 @@ theorem card_derangements_fin_eq_num_derangements {n : ℕ} : card (Derangements
     
   · rfl
     
+  -- knock out cases 0 and 1
+  -- now we have n ≥ 2. rewrite everything in terms of card_derangements, so that we can use
+  -- `card_derangements_fin_add_two`
   rw [num_derangements_add_two, card_derangements_fin_add_two, mul_addₓ, hyp _ (Nat.lt_add_of_pos_rightₓ zero_lt_two),
     hyp _ (lt_add_one _)]
 
@@ -98,6 +112,7 @@ theorem num_derangements_sum (n : ℕ) :
     
   rw [Finset.sum_range_succ, num_derangements_succ, hn, Finset.mul_sum, tsub_self, Nat.asc_factorial_zero,
     Int.coe_nat_one, mul_oneₓ, pow_succₓ, neg_one_mul, sub_eq_add_neg, add_left_injₓ, Finset.sum_congr rfl]
+  -- show that (n + 1) * (-1)^x * asc_fac x (n - x) = (-1)^x * asc_fac x (n.succ - x)
   intro x hx
   have h_le : x ≤ n := finset.mem_range_succ_iff.mp hx
   rw [Nat.succ_subₓ h_le, Nat.asc_factorial_succ, add_tsub_cancel_of_le h_le, Int.coe_nat_mul, Int.coe_nat_succ,

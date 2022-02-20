@@ -1,5 +1,15 @@
+/-
+Copyright (c) 2019 Seul Baek. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Seul Baek
+-/
 import Mathbin.Tactic.Omega.Nat.Form
 
+/-
+Subtraction elimination for linear natural number arithmetic.
+Works by repeatedly rewriting goals of the preform `P[t-s]` into
+`P[x] ∧ (t = s + x ∨ (t ≤ s ∧ x = 0))`, where `x` is fresh.
+-/
 namespace Omega
 
 namespace Nat
@@ -9,14 +19,14 @@ open_locale Omega.Nat
 namespace Preterm
 
 /-- Find subtraction inside preterm and return its operands -/
-def sub_terms : Preterm → Option (preterm × preterm)
+def subTerms : Preterm → Option (preterm × preterm)
   | &i => none
   | i ** n => none
   | t +* s => t.subTerms <|> s.subTerms
   | t -* s => t.subTerms <|> s.subTerms <|> some (t, s)
 
 /-- Find (t - s) inside a preterm and replace it with variable k -/
-def sub_subst (t s : Preterm) (k : Nat) : Preterm → Preterm
+def subSubst (t s : Preterm) (k : Nat) : Preterm → Preterm
   | t@(&m) => t
   | t@(m ** n) => t
   | x +* y => x.subSubst +* y.subSubst
@@ -53,7 +63,7 @@ end Preterm
 namespace Preform
 
 /-- Find subtraction inside preform and return its operands -/
-def sub_terms : Preform → Option (preterm × preterm)
+def subTerms : Preform → Option (preterm × preterm)
   | t =* s => t.subTerms <|> s.subTerms
   | t ≤* s => t.subTerms <|> s.subTerms
   | ¬* p => p.subTerms
@@ -62,7 +72,7 @@ def sub_terms : Preform → Option (preterm × preterm)
 
 /-- Find (t - s) inside a preform and replace it with variable k -/
 @[simp]
-def sub_subst (x y : Preterm) (k : Nat) : Preform → Preform
+def subSubst (x y : Preterm) (k : Nat) : Preform → Preform
   | t =* s => Preterm.subSubst x y k t =* Preterm.subSubst x y k s
   | t ≤* s => Preterm.subSubst x y k t ≤* Preterm.subSubst x y k s
   | ¬* p => ¬* p.subSubst
@@ -73,7 +83,7 @@ end Preform
 
 /-- Preform which asserts that the value of variable k is
     the truncated difference between preterms t and s -/
-def is_diff (t s : Preterm) (k : Nat) : Preform :=
+def isDiff (t s : Preterm) (k : Nat) : Preform :=
   (t =* s +* 1 ** k) ∨* (t ≤* s) ∧* (1 ** k) =* &0
 
 theorem holds_is_diff {t s : Preterm} {k : Nat} {v : Nat → Nat} : v k = t.val v - s.val v → (isDiff t s k).Holds v := by
@@ -90,16 +100,16 @@ theorem holds_is_diff {t s : Preterm} {k : Nat} {v : Nat → Nat} : v k = t.val 
     
 
 /-- Helper function for sub_elim -/
-def sub_elim_core (t s : Preterm) (k : Nat) (p : Preform) : Preform :=
+def subElimCore (t s : Preterm) (k : Nat) (p : Preform) : Preform :=
   Preform.subSubst t s k p ∧* isDiff t s k
 
 /-- Return de Brujin index of fresh variable that does not occur
     in any of the arguments -/
-def sub_fresh_index (t s : Preterm) (p : Preform) : Nat :=
+def subFreshIndex (t s : Preterm) (p : Preform) : Nat :=
   max p.freshIndex (max t.freshIndex s.freshIndex)
 
 /-- Return a new preform with all subtractions eliminated -/
-def sub_elim (t s : Preterm) (p : Preform) : Preform :=
+def subElim (t s : Preterm) (p : Preform) : Preform :=
   subElimCore t s (subFreshIndex t s p) p
 
 theorem sub_subst_equiv {k : Nat} {x y : Preterm} {v : Nat → Nat} :

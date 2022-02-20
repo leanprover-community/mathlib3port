@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Eric Wieser. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Eric Wieser
+-/
 import Mathbin.GroupTheory.GroupAction.Defs
 
 /-! # Group actions on and by `Mˣ`
@@ -68,7 +73,7 @@ instance [Monoidₓ M] [HasScalar M N] [HasScalar M α] [HasScalar N α] [IsScal
 action on `Mˣ`. Notably, this provides `mul_action Mˣ Nˣ` under suitable
 conditions.
 -/
-instance mul_action' [Groupₓ G] [Monoidₓ M] [MulAction G M] [SmulCommClass G M M] [IsScalarTower G M M] :
+instance mulAction' [Groupₓ G] [Monoidₓ M] [MulAction G M] [SmulCommClass G M M] [IsScalarTower G M M] :
     MulAction G (M)ˣ where
   smul := fun g m =>
     ⟨g • (m : M), g⁻¹ • ↑m⁻¹, by
@@ -105,13 +110,14 @@ instance is_scalar_tower'_left [Groupₓ G] [Monoidₓ M] [MulAction G M] [HasSc
     [SmulCommClass G M M] [IsScalarTower G M M] [IsScalarTower G M α] : IsScalarTower G (M)ˣ α where
   smul_assoc := fun g m => (smul_assoc g (m : M) : _)
 
+-- Just to prove this transfers a particularly useful instance.
 example [Monoidₓ M] [Monoidₓ N] [MulAction M N] [SmulCommClass M N N] [IsScalarTower M N N] : MulAction (M)ˣ (N)ˣ :=
   Units.mulAction'
 
 /-- A stronger form of `units.mul_action'`. -/
-instance mul_distrib_mul_action' [Groupₓ G] [Monoidₓ M] [MulDistribMulAction G M] [SmulCommClass G M M]
+instance mulDistribMulAction' [Groupₓ G] [Monoidₓ M] [MulDistribMulAction G M] [SmulCommClass G M M]
     [IsScalarTower G M M] : MulDistribMulAction G (M)ˣ :=
-  { Units.mulAction' with smul := · • ·, smul_one := fun m => Units.ext <| smul_one _,
+  { Units.mulAction' with smul := (· • ·), smul_one := fun m => Units.ext <| smul_one _,
     smul_mul := fun g m₁ m₂ => Units.ext <| smul_mul' _ _ _ }
 
 end Units

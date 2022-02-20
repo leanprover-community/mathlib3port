@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2017 Simon Hudon All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Simon Hudon, Mario Carneiro
+-/
 import Mathbin.Data.Rat.Cast
 import Mathbin.Data.Rat.MetaDefs
 
@@ -425,6 +430,7 @@ theorem lt_bit1_bit1 {α} [LinearOrderedSemiring α] (a b : α) : a < b → bit1
 theorem le_one_bit0 {α} [LinearOrderedSemiring α] (a : α) (h : 1 ≤ a) : 1 ≤ bit0 a :=
   le_of_ltₓ (lt_one_bit0 _ h)
 
+-- deliberately strong hypothesis because bit1 0 is not a numeral
 theorem le_one_bit1 {α} [LinearOrderedSemiring α] (a : α) (h : 0 < a) : 1 ≤ bit1 a :=
   le_of_ltₓ (lt_one_bit1 _ h)
 
@@ -594,7 +600,9 @@ theorem lt_neg_pos {α} [OrderedAddCommGroup α] (a b : α) (ha : 0 < a) (hb : 0
 unsafe def prove_lt_rat (ic : instance_cache) (a b : expr) (na nb : ℚ) : tactic (instance_cache × expr) :=
   match match_sign a, match_sign b with
   | Sum.inl a, Sum.inl b => do
-    let (ic, p) ← prove_lt_nonneg_rat ic b a (-nb) (-na)
+    let-- we have to switch the order of `a` and `b` because `a < b ↔ -b < -a`
+      (ic, p)
+      ← prove_lt_nonneg_rat ic b a (-nb) (-na)
     ic `` neg_lt_neg [b, a, p]
   | Sum.inl a, Sum.inr ff => do
     let (ic, p) ← prove_pos ic a
@@ -1571,7 +1579,7 @@ protected unsafe def attr : user_attribute (expr → tactic (expr × expr)) Unit
     { mk_cache := fun ns => do
         let t ←
           ns.mfoldl
-              (fun t : expr → tactic (expr × expr) n => do
+              (fun n => do
                 let t' ← eval_expr (expr → tactic (expr × expr)) (expr.const n [])
                 pure fun e => t' e <|> t e)
               fun _ => failed

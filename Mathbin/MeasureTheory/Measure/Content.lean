@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Floris van Doorn. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Floris van Doorn
+-/
 import Mathbin.MeasureTheory.Measure.MeasureSpace
 import Mathbin.MeasureTheory.Measure.Regular
 import Mathbin.Topology.Opens
@@ -58,7 +63,7 @@ variable {G : Type w} [TopologicalSpace G]
 
 /-- A content is an additive function on compact sets taking values in `ℝ≥0`. It is a device
 from which one can define a measure. -/
-structure content (G : Type w) [TopologicalSpace G] where
+structure Content (G : Type w) [TopologicalSpace G] where
   toFun : Compacts G → ℝ≥0
   mono' : ∀ K₁ K₂ : Compacts G, K₁.1 ⊆ K₂.1 → to_fun K₁ ≤ to_fun K₂
   sup_disjoint' : ∀ K₁ K₂ : Compacts G, Disjoint K₁.1 K₂.1 → to_fun (K₁⊔K₂) = to_fun K₁ + to_fun K₂
@@ -100,14 +105,14 @@ theorem sup_le (K₁ K₂ : Compacts G) : μ (K₁⊔K₂) ≤ μ K₁ + μ K₂
 theorem lt_top (K : Compacts G) : μ K < ∞ :=
   Ennreal.coe_lt_top
 
-theorem Empty : μ ⊥ = 0 := by
+theorem empty : μ ⊥ = 0 := by
   have := μ.sup_disjoint' ⊥ ⊥
   simpa [apply_eq_coe_to_fun] using this
 
 /-- Constructing the inner content of a content. From a content defined on the compact sets, we
   obtain a function defined on all open sets, by taking the supremum of the content of all compact
   subsets. -/
-def inner_content (U : Opens G) : ℝ≥0∞ :=
+def innerContent (U : Opens G) : ℝ≥0∞ :=
   ⨆ (K : Compacts G) (h : K.1 ⊆ U), μ K
 
 theorem le_inner_content (K : Compacts G) (U : Opens G) (h2 : K.1 ⊆ U) : μ K ≤ μ.innerContent U :=
@@ -226,7 +231,7 @@ theorem inner_content_mono' ⦃U V : Set G⦄ (hU : IsOpen U) (hV : IsOpen V) (h
   supr_le_supr fun K => supr_le_supr_const fun hK => Subset.trans hK h2
 
 /-- Extending a content on compact sets to an outer measure on all sets. -/
-protected def outer_measure : OuterMeasure G :=
+protected def outerMeasure : OuterMeasure G :=
   inducedOuterMeasure (fun U hU => μ.innerContent ⟨U, hU⟩) is_open_empty μ.inner_content_empty
 
 variable [T2Space G]
@@ -341,7 +346,7 @@ theorem borel_le_caratheodory : S ≤ μ.OuterMeasure.caratheodory := by
   exact μ.sup_disjoint _ _ hM.2.symm
 
 /-- The measure induced by the outer measure coming from a content, on the Borel sigma-algebra. -/
-protected def Measureₓ : Measure G :=
+protected def measure : Measure G :=
   μ.OuterMeasure.toMeasure μ.borel_le_caratheodory
 
 theorem measure_apply {s : Set G} (hs : MeasurableSet s) : μ.Measure s = μ.OuterMeasure s :=
@@ -350,7 +355,7 @@ theorem measure_apply {s : Set G} (hs : MeasurableSet s) : μ.Measure s = μ.Out
 /-- In a locally compact space, any measure constructed from a content is regular. -/
 instance regular [LocallyCompactSpace G] : μ.Measure.regular := by
   have : μ.measure.outer_regular := by
-    refine' ⟨fun A hA r hr : _ < _ => _⟩
+    refine' ⟨fun hr : _ < _ => _⟩
     rw [μ.measure_apply hA, outer_measure_eq_infi] at hr
     simp only [infi_lt_iff] at hr
     rcases hr with ⟨U, hUo, hAU, hr⟩

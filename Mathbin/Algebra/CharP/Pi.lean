@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Kenny Lau. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Kenny Lau
+-/
 import Mathbin.Algebra.CharP.Basic
 import Mathbin.Algebra.Ring.Pi
 
@@ -23,6 +28,7 @@ instance pi (ι : Type u) [hi : Nonempty ι] (R : Type v) [Semiringₓ R] (p : �
           map_nat_cast (Pi.evalRingHom (fun _ : ι => R) i) x ▸ by
             rw [h, RingHom.map_zero]⟩⟩
 
+-- diamonds
 instance pi' (ι : Type u) [hi : Nonempty ι] (R : Type v) [CommRingₓ R] (p : ℕ) [CharP R p] : CharP (ι → R) p :=
   CharP.pi ι R p
 

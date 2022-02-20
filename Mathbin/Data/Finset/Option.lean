@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Yury Kudryashov. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yury Kudryashov, Mario Carneiro, Sean Leather
+-/
 import Mathbin.Data.Finset.Card
 import Mathbin.Order.Hom.Basic
 
@@ -27,7 +32,7 @@ open Function
 namespace Option
 
 /-- Construct an empty or singleton finset from an `option` -/
-def to_finset (o : Option α) : Finset α :=
+def toFinset (o : Option α) : Finset α :=
   o.elim ∅ singleton
 
 @[simp]
@@ -51,12 +56,14 @@ namespace Finset
 
 /-- Given a finset on `α`, lift it to being a finset on `option α`
 using `option.some` and then insert `option.none`. -/
-def insert_none : Finset α ↪o Finset (Option α) :=
+def insertNone : Finset α ↪o Finset (Option α) :=
   (OrderEmbedding.ofMapLeIff fun s =>
       cons none (s.map Embedding.some) <| by
         simp )
     fun s t => cons_subset_cons.trans map_subset_map
 
+/-⟨none ::ₘ s.1.map some, multiset.nodup_cons.2
+  ⟨by simp, multiset.nodup_map (λ a b, option.some.inj) s.2⟩⟩-/
 @[simp]
 theorem mem_insert_none {s : Finset α} : ∀ {o : Option α}, o ∈ s.insertNone ↔ ∀, ∀ a ∈ o, ∀, a ∈ s
   | none =>
@@ -75,7 +82,7 @@ theorem card_insert_none (s : Finset α) : s.insertNone.card = s.card + 1 := by
 
 /-- Given `s : finset (option α)`, `s.erase_none : finset α` is the set of `x : α` such that
 `some x ∈ s`. -/
-def erase_none : Finset (Option α) →o Finset α :=
+def eraseNone : Finset (Option α) →o Finset α :=
   (Finset.mapEmbedding (Equivₓ.optionIsSomeEquiv α).toEmbedding).toOrderHom.comp ⟨Finset.subtype _, subtype_mono⟩
 
 @[simp]

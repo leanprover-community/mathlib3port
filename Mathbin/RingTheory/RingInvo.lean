@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Andreas Swerdlow. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Andreas Swerdlow, Kenny Lau
+-/
 import Mathbin.Data.Equiv.Ring
 import Mathbin.Algebra.Ring.Opposite
 
@@ -47,7 +52,7 @@ theorem to_fun_eq_coe (f : RingInvo R) : f.toFun = f :=
 theorem involution (f : RingInvo R) (x : R) : (f (f x).unop).unop = x :=
   f.involution' x
 
-instance has_coe_to_ring_equiv : Coe (RingInvo R) (R ≃+* Rᵐᵒᵖ) :=
+instance hasCoeToRingEquiv : Coe (RingInvo R) (R ≃+* Rᵐᵒᵖ) :=
   ⟨RingInvo.toRingEquiv⟩
 
 @[norm_cast]

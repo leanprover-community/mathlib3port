@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Johan Commelin. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johan Commelin, Fabian Glöckle
+-/
 import Mathbin.LinearAlgebra.FiniteDimensional
 import Mathbin.LinearAlgebra.Projection
 
@@ -40,9 +45,9 @@ variable (R : Type _) (M : Type _)
 
 variable [CommSemiringₓ R] [AddCommMonoidₓ M] [Module R M]
 
--- ././Mathport/Syntax/Translate/Basic.lean:859:9: unsupported derive handler module R
+-- ././Mathport/Syntax/Translate/Basic.lean:981:9: unsupported derive handler module R
 /-- The dual space of an R-module M is the R-module of linear maps `M → R`. -/
-def dual :=
+def Dual :=
   M →ₗ[R] R deriving AddCommMonoidₓ, [anonymous]
 
 instance {S : Type _} [CommRingₓ S] {N : Type _} [AddCommGroupₓ N] [Module S N] : AddCommGroupₓ (Dual S N) := by
@@ -105,7 +110,7 @@ variable (b : Basis ι R M)
 
 /-- The linear map from a vector space equipped with basis to its dual vector space,
 taking basis elements to corresponding dual basis elements. -/
-def to_dual : M →ₗ[R] Module.Dual R M :=
+def toDual : M →ₗ[R] Module.Dual R M :=
   (b.constr ℕ) fun v => (b.constr ℕ) fun w => if w = v then (1 : R) else 0
 
 theorem to_dual_apply (i j : ι) : b.toDual (b i) (b j) = if i = j then 1 else 0 := by
@@ -143,7 +148,7 @@ theorem coe_to_dual_self (i : ι) : b.toDual (b i) = b.Coord i := by
   apply to_dual_apply_right
 
 /-- `h.to_dual_flip v` is the linear map sending `w` to `h.to_dual w v`. -/
-def to_dual_flip (m : M) : M →ₗ[R] R :=
+def toDualFlip (m : M) : M →ₗ[R] R :=
   b.toDual.flip m
 
 theorem to_dual_flip_apply (m₁ m₂ : M) : b.toDualFlip m₁ m₂ = b.toDual m₂ m₁ :=
@@ -192,13 +197,14 @@ variable (b : Basis ι R M)
 
 /-- A vector space is linearly equivalent to its dual space. -/
 @[simps]
-def to_dual_equiv [Fintype ι] : M ≃ₗ[R] Dual R M :=
+def toDualEquiv [Fintype ι] : M ≃ₗ[R] Dual R M :=
   LinearEquiv.ofBijective b.toDual (ker_eq_bot.mp b.to_dual_ker) (range_eq_top.mp b.to_dual_range)
 
 /-- Maps a basis for `V` to a basis for the dual space. -/
-def dual_basis [Fintype ι] : Basis ι R (Dual R M) :=
+def dualBasis [Fintype ι] : Basis ι R (Dual R M) :=
   b.map b.toDualEquiv
 
+-- We use `j = i` to match `basis.repr_self`
 theorem dual_basis_apply_self [Fintype ι] (i j : ι) : b.dualBasis i (b j) = if j = i then 1 else 0 := by
   convert b.to_dual_apply i j using 2
   rw [@eq_comm _ j i]
@@ -244,7 +250,7 @@ theorem eval_range {ι : Type _} [Fintype ι] (b : Basis ι R M) : (eval R M).ra
   infer_instance
 
 /-- A module with a basis is linearly equivalent to the dual of its dual space. -/
-def eval_equiv {ι : Type _} [Fintype ι] (b : Basis ι R M) : M ≃ₗ[R] Dual R (Dual R M) :=
+def evalEquiv {ι : Type _} [Fintype ι] (b : Basis ι R M) : M ≃ₗ[R] Dual R (Dual R M) :=
   LinearEquiv.ofBijective (eval R M) (ker_eq_bot.mp b.eval_ker) (range_eq_top.mp b.eval_range)
 
 @[simp]
@@ -260,6 +266,7 @@ theorem total_coord [CommRingₓ R] [AddCommGroupₓ M] [Module R M] [Fintype ι
   have := Classical.decEq ι
   rw [← coe_dual_basis, total_dual_basis]
 
+-- TODO(jmc): generalize to rings, once `module.rank` is generalized
 theorem dual_dim_eq [Field K] [AddCommGroupₓ V] [Module K V] [Fintype ι] (b : Basis ι K V) :
     Cardinal.lift (Module.rank K V) = Module.rank K (Dual K V) := by
   classical
@@ -282,6 +289,7 @@ theorem eval_ker : (eval K V).ker = ⊥ := by
   classical
   exact (Basis.ofVectorSpace K V).eval_ker
 
+-- TODO(jmc): generalize to rings, once `module.rank` is generalized
 theorem dual_dim_eq [FiniteDimensional K V] : Cardinal.lift (Module.rank K V) = Module.rank K (Dual K V) :=
   (Basis.ofVectorSpace K V).dual_dim_eq
 
@@ -292,7 +300,7 @@ theorem erange_coe [FiniteDimensional K V] : (eval K V).range = ⊤ := by
 variable (K V)
 
 /-- A vector space is linearly equivalent to the dual of its dual space. -/
-def eval_equiv [FiniteDimensional K V] : V ≃ₗ[K] Dual K (Dual K V) :=
+def evalEquiv [FiniteDimensional K V] : V ≃ₗ[K] Dual K (Dual K V) :=
   LinearEquiv.ofBijective (eval K V) (ker_eq_bot.mp eval_ker) (range_eq_top.mp erange_coe)
 
 variable {K V}
@@ -348,7 +356,7 @@ theorem coeffs_apply [DecidableEq ι] (h : DualPair e ε) (m : M) (i : ι) : h.c
 /-- linear combinations of elements of `e`.
 This is a convenient abbreviation for `finsupp.total _ M R e l` -/
 def lc {ι} (e : ι → M) (l : ι →₀ R) : M :=
-  l.Sum fun i : ι a : R => a • e i
+  l.Sum fun a : R => a • e i
 
 theorem lc_def (e : ι → M) (l : ι →₀ R) : lc e l = Finsupp.total _ _ _ e l :=
   rfl
@@ -384,7 +392,7 @@ theorem lc_coeffs (m : M) : DualPair.lc e (h.coeffs m) = m := by
 
 /-- `(h : dual_pair e ε).basis` shows the family of vectors `e` forms a basis. -/
 @[simps]
-def Basis : Basis ι R M :=
+def basis : Basis ι R M :=
   Basis.of_repr
     { toFun := coeffs h, invFun := lc e, left_inv := lc_coeffs h, right_inv := coeffs_lc h,
       map_add' := fun v w => by
@@ -402,6 +410,7 @@ theorem coe_basis : ⇑h.Basis = e := by
   rw [h.basis_repr_apply, coeffs_apply, h.eval, Finsupp.single_apply]
   convert if_congr eq_comm rfl rfl
 
+-- `convert` to get rid of a `decidable_eq` mismatch
 theorem mem_of_mem_span {H : Set ι} {x : M} (hmem : x ∈ Submodule.span R (e '' H)) : ∀ i : ι, ε i x ≠ 0 → i ∈ H := by
   intro i hi
   rcases(Finsupp.mem_span_image_iff_total _).mp hmem with ⟨l, supp_l, rfl⟩
@@ -426,7 +435,7 @@ variable {W : Submodule R M}
 /-- The `dual_restrict` of a submodule `W` of `M` is the linear map from the
   dual of `M` to the dual of `W` such that the domain of each linear map is
   restricted to `W`. -/
-def dual_restrict (W : Submodule R M) : Module.Dual R M →ₗ[R] Module.Dual R W :=
+def dualRestrict (W : Submodule R M) : Module.Dual R M →ₗ[R] Module.Dual R W :=
   LinearMap.domRestrict' W
 
 @[simp]
@@ -435,7 +444,7 @@ theorem dual_restrict_apply (W : Submodule R M) (φ : Module.Dual R M) (x : W) :
 
 /-- The `dual_annihilator` of a submodule `W` is the set of linear maps `φ` such
   that `φ w = 0` for all `w ∈ W`. -/
-def dual_annihilator {R : Type u} {M : Type v} [CommRingₓ R] [AddCommGroupₓ M] [Module R M] (W : Submodule R M) :
+def dualAnnihilator {R : Type u} {M : Type v} [CommRingₓ R] [AddCommGroupₓ M] [Module R M] (W : Submodule R M) :
     Submodule R <| Module.Dual R M :=
   W.dualRestrict.ker
 
@@ -463,7 +472,7 @@ theorem dual_annihilator_sup_eq_inf_dual_annihilator (U V : Submodule R M) :
     
 
 /-- The pullback of a submodule in the dual space along the evaluation map. -/
-def dual_annihilator_comap (Φ : Submodule R (Module.Dual R M)) : Submodule R M :=
+def dualAnnihilatorComap (Φ : Submodule R (Module.Dual R M)) : Submodule R M :=
   Φ.dualAnnihilator.comap (Module.Dual.eval R M)
 
 theorem mem_dual_annihilator_comap_iff {Φ : Submodule R (Module.Dual R M)} (x : M) :
@@ -478,12 +487,13 @@ open Submodule LinearMap
 
 universe u v w
 
+-- We work in vector spaces because `exists_is_compl` only hold for vector spaces
 variable {K : Type u} {V : Type v} [Field K] [AddCommGroupₓ V] [Module K V]
 
 /-- Given a subspace `W` of `V` and an element of its dual `φ`, `dual_lift W φ` is
 the natural extension of `φ` to an element of the dual of `V`.
 That is, `dual_lift W φ` sends `w ∈ W` to `φ x` and `x` in the complement of `W` to `0`. -/
-noncomputable def dual_lift (W : Subspace K V) : Module.Dual K W →ₗ[K] Module.Dual K V :=
+noncomputable def dualLift (W : Subspace K V) : Module.Dual K W →ₗ[K] Module.Dual K V :=
   let h := Classical.indefiniteDescription _ W.exists_is_compl
   (LinearMap.ofIsComplProd h.2).comp (LinearMap.inl _ _ _)
 
@@ -518,13 +528,13 @@ theorem dual_lift_injective : Function.Injective W.dualLift :=
 
 /-- The quotient by the `dual_annihilator` of a subspace is isomorphic to the
   dual of that subspace. -/
-noncomputable def quot_annihilator_equiv (W : Subspace K V) :
+noncomputable def quotAnnihilatorEquiv (W : Subspace K V) :
     (Module.Dual K V ⧸ W.dualAnnihilator) ≃ₗ[K] Module.Dual K W :=
   (quotEquivOfEq _ _ W.dual_restrict_ker_eq_dual_annihilator).symm.trans <|
     W.dualRestrict.quotKerEquivOfSurjective dual_restrict_surjective
 
 /-- The natural isomorphism forom the dual of a subspace `W` to `W.dual_lift.range`. -/
-noncomputable def dual_equiv_dual (W : Subspace K V) : Module.Dual K W ≃ₗ[K] W.dualLift.range :=
+noncomputable def dualEquivDual (W : Subspace K V) : Module.Dual K W ≃ₗ[K] W.dualLift.range :=
   LinearEquiv.ofInjective _ dual_lift_injective
 
 theorem dual_equiv_dual_def (W : Subspace K V) : W.dualEquivDual.toLinearMap = W.dualLift.range_restrict :=
@@ -552,12 +562,12 @@ theorem dual_finrank_eq : finrank K (Module.Dual K V) = finrank K V :=
   LinearEquiv.finrank_eq (Basis.ofVectorSpace K V).toDualEquiv.symm
 
 /-- The quotient by the dual is isomorphic to its dual annihilator.  -/
-noncomputable def quot_dual_equiv_annihilator (W : Subspace K V) :
+noncomputable def quotDualEquivAnnihilator (W : Subspace K V) :
     (Module.Dual K V ⧸ W.dualLift.range) ≃ₗ[K] W.dualAnnihilator :=
   linear_equiv.quot_equiv_of_quot_equiv <| LinearEquiv.trans W.quotAnnihilatorEquiv W.dualEquivDual
 
 /-- The quotient by a subspace is isomorphic to its dual annihilator. -/
-noncomputable def quot_equiv_annihilator (W : Subspace K V) : (V ⧸ W) ≃ₗ[K] W.dualAnnihilator := by
+noncomputable def quotEquivAnnihilator (W : Subspace K V) : (V ⧸ W) ≃ₗ[K] W.dualAnnihilator := by
   refine' _ ≪≫ₗ W.quot_dual_equiv_annihilator
   refine' linear_equiv.quot_equiv_of_equiv _ (Basis.ofVectorSpace K V).toDualEquiv
   exact (Basis.ofVectorSpace K W).toDualEquiv.trans W.dual_equiv_dual

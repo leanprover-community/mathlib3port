@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Johan Commelin. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johan Commelin
+-/
 import Mathbin.RingTheory.WittVector.IsPoly
 
 /-!
@@ -25,6 +30,7 @@ variable {p : ℕ} {R : Type _} [hp : Fact p.Prime] [CommRingₓ R]
 
 local notation "𝕎" => WittVector p
 
+-- type as `\bbW`
 open MvPolynomial
 
 noncomputable section
@@ -33,16 +39,16 @@ include hp
 
 variable (p)
 
--- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»
 /-- `witt_mul_n p n` is the family of polynomials that computes
 the coefficients of `x * n` in terms of the coefficients of the Witt vector `x`. -/
-noncomputable def witt_mul_n : ℕ → ℕ → MvPolynomial ℕ ℤ
+noncomputable def wittMulN : ℕ → ℕ → MvPolynomial ℕ ℤ
   | 0 => 0
   | n + 1 => fun k =>
     bind₁
       (Function.uncurry <|
-        «expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»")
+        «expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»")
       (wittAdd p k)
 
 variable {p}

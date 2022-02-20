@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Yury G. Kudryashov. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yury G. Kudryashov
+-/
 import Mathbin.Data.Set.Intervals.UnorderedInterval
 import Mathbin.Data.Set.Lattice
 
@@ -25,10 +30,10 @@ interval `[x, y]`. If `α` is a `densely_ordered` `conditionally_complete_linear
 the `order_topology`, then this condition is equivalent to `is_preconnected s`. If `α` is a
 `linear_ordered_field`, then this condition is also equivalent to `convex α s`.
 -/
-class ord_connected (s : Set α) : Prop where
+class OrdConnected (s : Set α) : Prop where
   out' ⦃x⦄ (hx : x ∈ s) ⦃y⦄ (hy : y ∈ s) : Icc x y ⊆ s
 
-theorem ord_connected.out (h : OrdConnected s) : ∀ ⦃x⦄ hx : x ∈ s ⦃y⦄ hy : y ∈ s, Icc x y ⊆ s :=
+theorem OrdConnected.out (h : OrdConnected s) : ∀ ⦃x⦄ hx : x ∈ s ⦃y⦄ hy : y ∈ s, Icc x y ⊆ s :=
   h.1
 
 theorem ord_connected_def : OrdConnected s ↔ ∀ ⦃x⦄ hx : x ∈ s ⦃y⦄ hy : y ∈ s, Icc x y ⊆ s :=
@@ -53,13 +58,13 @@ theorem ord_connected_of_Ioo {α : Type _} [PartialOrderₓ α] {s : Set α}
 protected theorem Icc_subset (s : Set α) [hs : OrdConnected s] {x y} (hx : x ∈ s) (hy : y ∈ s) : Icc x y ⊆ s :=
   hs.out hx hy
 
-theorem ord_connected.inter {s t : Set α} (hs : OrdConnected s) (ht : OrdConnected t) : OrdConnected (s ∩ t) :=
+theorem OrdConnected.inter {s t : Set α} (hs : OrdConnected s) (ht : OrdConnected t) : OrdConnected (s ∩ t) :=
   ⟨fun x hx y hy => subset_inter (hs.out hx.1 hy.1) (ht.out hx.2 hy.2)⟩
 
-instance ord_connected.inter' {s t : Set α} [OrdConnected s] [OrdConnected t] : OrdConnected (s ∩ t) :=
+instance OrdConnected.inter' {s t : Set α} [OrdConnected s] [OrdConnected t] : OrdConnected (s ∩ t) :=
   OrdConnected.inter ‹_› ‹_›
 
-theorem ord_connected.dual {s : Set α} (hs : OrdConnected s) : OrdConnected (OrderDual.ofDual ⁻¹' s) :=
+theorem OrdConnected.dual {s : Set α} (hs : OrdConnected s) : OrdConnected (OrderDual.ofDual ⁻¹' s) :=
   ⟨fun x hx y hy z hz => hs.out hy hx ⟨hz.2, hz.1⟩⟩
 
 theorem ord_connected_dual {s : Set α} : OrdConnected (OrderDual.ofDual ⁻¹' s) ↔ OrdConnected s :=
@@ -75,7 +80,7 @@ theorem ord_connected_Inter {ι : Sort _} {s : ι → Set α} (hs : ∀ i, OrdCo
 instance ord_connected_Inter' {ι : Sort _} {s : ι → Set α} [∀ i, OrdConnected (s i)] : OrdConnected (⋂ i, s i) :=
   ord_connected_Inter ‹_›
 
--- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (i hi)
+-- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (i hi)
 theorem ord_connected_bInter {ι : Sort _} {p : ι → Prop} {s : ∀ i : ι hi : p i, Set α}
     (hs : ∀ i hi, OrdConnected (s i hi)) : OrdConnected (⋂ (i) (hi), s i hi) :=
   ord_connected_Inter fun i => ord_connected_Inter <| hs i
@@ -152,7 +157,7 @@ variable {α : Type _} [LinearOrderₓ α] {s : Set α} {x : α}
 theorem ord_connected_interval {a b : α} : OrdConnected (Interval a b) :=
   ord_connected_Icc
 
-theorem ord_connected.interval_subset (hs : OrdConnected s) ⦃x⦄ (hx : x ∈ s) ⦃y⦄ (hy : y ∈ s) : Interval x y ⊆ s := by
+theorem OrdConnected.interval_subset (hs : OrdConnected s) ⦃x⦄ (hx : x ∈ s) ⦃y⦄ (hy : y ∈ s) : Interval x y ⊆ s := by
   cases le_totalₓ x y <;> simp only [interval_of_le, interval_of_ge, *] <;> apply hs.out <;> assumption
 
 theorem ord_connected_iff_interval_subset : OrdConnected s ↔ ∀ ⦃x⦄ hx : x ∈ s ⦃y⦄ hy : y ∈ s, Interval x y ⊆ s :=

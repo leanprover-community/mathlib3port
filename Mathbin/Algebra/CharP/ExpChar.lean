@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Jakob Scholbach. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Jakob Scholbach
+-/
 import Mathbin.Algebra.CharP.Basic
 import Mathbin.Algebra.CharZero
 import Mathbin.Data.Nat.Prime
@@ -78,6 +83,7 @@ theorem char_zero_of_exp_char_one (p : ℕ) [hp : CharP R p] [hq : ExpChar R 1] 
     
 
 /-- The characteristic is zero if the exponential characteristic is one. -/
+-- see Note [lower instance priority]
 instance (priority := 100) char_zero_of_exp_char_one' [hq : ExpChar R 1] : CharZero R := by
   cases' hq
   · assumption

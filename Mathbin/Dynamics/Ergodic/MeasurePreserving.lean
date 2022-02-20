@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Yury Kudryashov. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yury Kudryashov
+-/
 import Mathbin.MeasureTheory.Measure.MeasureSpace
 
 /-!
@@ -32,7 +37,7 @@ variable {μa : Measure α} {μb : Measure β} {μc : Measure γ} {μd : Measure
 /-- `f` is a measure preserving map w.r.t. measures `μa` and `μb` if `f` is measurable
 and `map f μa = μb`. -/
 @[protect_proj]
-structure measure_preserving (f : α → β)
+structure MeasurePreserving (f : α → β)
   (μa : Measure α := by
     run_tac
       volume_tac)
@@ -113,6 +118,7 @@ theorem exists_mem_image_mem_of_volume_lt_mul_volume (hf : MeasurePreserving f �
     simpa only [B, nsmul_eq_mul, Finset.sum_const, Finset.card_range]
   rcases exists_nonempty_inter_of_measure_univ_lt_sum_measure μ (fun m hm => A m) this with
     ⟨i, hi, j, hj, hij, x, hxi, hxj⟩
+  -- without `tactic.skip` Lean closes the extra goal but it takes a long time; not sure why
   wlog (discharger := tactic.skip) hlt : i < j := hij.lt_or_lt using i j, j i
   · simp only [Set.mem_preimage, Finset.mem_range] at hi hj hxi hxj
     refine' ⟨(f^[i]) x, hxi, j - i, ⟨tsub_pos_of_lt hlt, lt_of_le_of_ltₓ (j.sub_le i) hj⟩, _⟩
@@ -121,7 +127,7 @@ theorem exists_mem_image_mem_of_volume_lt_mul_volume (hf : MeasurePreserving f �
   · exact fun hi hj hij hxi hxj => this hj hi hij.symm hxj hxi
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (m «expr ≠ » 0)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (m «expr ≠ » 0)
 /-- A self-map preserving a finite measure is conservative: if `μ s ≠ 0`, then at least one point
 `x ∈ s` comes back to `s` under iterations of `f`. Actually, a.e. point of `s` comes back to `s`
 infinitely many times, see `measure_theory.measure_preserving.conservative` and theorems about

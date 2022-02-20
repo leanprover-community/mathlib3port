@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison
+-/
 import Mathbin.Data.Vector.Basic
 import Mathbin.Data.List.Zip
 
@@ -13,7 +18,7 @@ section ZipWith
 variable {α β γ : Type _} {n : ℕ} (f : α → β → γ)
 
 /-- Apply the function `f : α → β → γ` to each corresponding pair of elements from two vectors. -/
-def zip_with : Vector α n → Vector β n → Vector γ n := fun x y =>
+def zipWith : Vector α n → Vector β n → Vector γ n := fun x y =>
   ⟨List.zipWithₓ f x.1 y.1, by
     simp ⟩
 

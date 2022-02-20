@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Bhavik Mehta, Yaël Dillies. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Bhavik Mehta, Alena Gusakov, Yaël Dillies
+-/
 import Mathbin.Algebra.BigOperators.Basic
 import Mathbin.Data.Nat.Interval
 import Mathbin.Order.Antichain
@@ -36,10 +41,10 @@ variable {A B : Set (Finset α)} {r : ℕ}
 
 
 /-- `sized r A` means that every finset in `A` has size `r`. -/
-def sized (r : ℕ) (A : Set (Finset α)) : Prop :=
+def Sized (r : ℕ) (A : Set (Finset α)) : Prop :=
   ∀ ⦃x⦄, x ∈ A → card x = r
 
-theorem sized.mono (h : A ⊆ B) (hB : B.Sized r) : A.Sized r := fun x hx => hB <| h hx
+theorem Sized.mono (h : A ⊆ B) (hB : B.Sized r) : A.Sized r := fun x hx => hB <| h hx
 
 theorem sized_union : (A ∪ B).Sized r ↔ A.Sized r ∧ B.Sized r :=
   ⟨fun hA => ⟨hA.mono <| subset_union_left _ _, hA.mono <| subset_union_right _ _⟩, fun hA x hx =>
@@ -47,29 +52,30 @@ theorem sized_union : (A ∪ B).Sized r ↔ A.Sized r ∧ B.Sized r :=
 
 alias sized_union ↔ _ Set.Sized.union
 
+--TODO: A `forall_Union` lemma would be handy here.
 @[simp]
 theorem sized_Union {f : ι → Set (Finset α)} : (⋃ i, f i).Sized r ↔ ∀ i, (f i).Sized r := by
   simp_rw [Set.Sized, Set.mem_Union, forall_exists_index]
   exact forall_swap
 
--- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (i j)
 @[simp]
 theorem sized_Union₂ {f : ∀ i, κ i → Set (Finset α)} : (⋃ (i) (j), f i j).Sized r ↔ ∀ i j, (f i j).Sized r := by
   simp_rw [sized_Union]
 
-protected theorem sized.is_antichain (hA : A.Sized r) : IsAntichain (· ⊆ ·) A := fun s hs t ht h hst =>
+protected theorem Sized.is_antichain (hA : A.Sized r) : IsAntichain (· ⊆ ·) A := fun s hs t ht h hst =>
   h <| Finset.eq_of_subset_of_card_le hst ((hA ht).trans (hA hs).symm).le
 
-protected theorem sized.subsingleton (hA : A.Sized 0) : A.Subsingleton :=
+protected theorem Sized.subsingleton (hA : A.Sized 0) : A.Subsingleton :=
   (subsingleton_of_forall_eq ∅) fun s hs => card_eq_zero.1 <| hA hs
 
-theorem sized.subsingleton' [Fintype α] (hA : A.Sized (Fintype.card α)) : A.Subsingleton :=
+theorem Sized.subsingleton' [Fintype α] (hA : A.Sized (Fintype.card α)) : A.Subsingleton :=
   (subsingleton_of_forall_eq Finset.univ) fun s hs => s.card_eq_iff_eq_univ.1 <| hA hs
 
-theorem sized.empty_mem_iff (hA : A.Sized r) : ∅ ∈ A ↔ A = {∅} :=
+theorem Sized.empty_mem_iff (hA : A.Sized r) : ∅ ∈ A ↔ A = {∅} :=
   hA.IsAntichain.bot_mem_iff
 
-theorem sized.univ_mem_iff [Fintype α] (hA : A.Sized r) : Finset.univ ∈ A ↔ A = {Finset.univ} :=
+theorem Sized.univ_mem_iff [Fintype α] (hA : A.Sized r) : Finset.univ ∈ A ↔ A = {Finset.univ} :=
   hA.IsAntichain.top_mem_iff
 
 theorem sized_powerset_len (s : Finset α) (r : ℕ) : (powersetLen r s : Set (Finset α)).Sized r := fun t ht =>

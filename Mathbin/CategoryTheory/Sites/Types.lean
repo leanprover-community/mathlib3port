@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Kenny Lau. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Kenny Lau
+-/
 import Mathbin.CategoryTheory.Sites.Canonical
 
 /-!
@@ -19,7 +24,7 @@ open_locale CategoryTheory.Type
 
 /-- A Grothendieck topology associated to the category of all types.
 A sieve is a covering iff it is jointly surjective. -/
-def types_grothendieck_topology : GrothendieckTopology (Type u) where
+def typesGrothendieckTopology : GrothendieckTopology (Type u) where
   Sieves := fun α S => ∀ x : α, S fun _ : PUnit => x
   top_mem' := fun α x => trivialₓ
   pullback_stable' := fun α β S f hs x => hs (f x)
@@ -27,14 +32,14 @@ def types_grothendieck_topology : GrothendieckTopology (Type u) where
 
 /-- The discrete sieve on a type, which only includes arrows whose image is a subsingleton. -/
 @[simps]
-def discrete_sieve (α : Type u) : Sieve α where
+def discreteSieve (α : Type u) : Sieve α where
   Arrows := fun β f => ∃ x, ∀ y, f y = x
-  downward_closed' := fun β γ f ⟨x, hx⟩ g => ⟨x, fun y => hx <| g y⟩
+  downward_closed' := fun g => ⟨x, fun y => hx <| g y⟩
 
 theorem discrete_sieve_mem (α : Type u) : discreteSieve α ∈ typesGrothendieckTopology α := fun x => ⟨x, fun y => rfl⟩
 
 /-- The discrete presieve on a type, which only includes arrows whose domain is a singleton. -/
-def discrete_presieve (α : Type u) : Presieve α := fun β f => ∃ x : β, ∀ y : β, y = x
+def DiscretePresieve (α : Type u) : Presieve α := fun β f => ∃ x : β, ∀ y : β, y = x
 
 theorem generate_discrete_presieve_mem (α : Type u) :
     Sieve.generate (DiscretePresieve α) ∈ typesGrothendieckTopology α := fun x =>
@@ -71,7 +76,7 @@ def eval (P : Type uᵒᵖ ⥤ Type u) (α : Type u) (s : P.obj (op α)) (x : α
 
 /-- Given a sheaf `S` on the category of types, construct a map
 `(α → S(*)) → S(α)` that is inverse to `eval`. -/
-noncomputable def types_glue (S : Type uᵒᵖ ⥤ Type u) (hs : IsSheaf typesGrothendieckTopology S) (α : Type u)
+noncomputable def typesGlue (S : Type uᵒᵖ ⥤ Type u) (hs : IsSheaf typesGrothendieckTopology S) (α : Type u)
     (f : α → S.obj (op PUnit)) : S.obj (op α) :=
   (hs.IsSheafFor _ _ (generate_discrete_presieve_mem α)).amalgamate
     (fun β g hg => S.map (↾fun x => PUnit.unit).op <| f <| g <| Classical.some hg) fun β γ δ g₁ g₂ f₁ f₂ hf₁ hf₂ h =>
@@ -98,7 +103,7 @@ theorem types_glue_eval {S hs α} s : typesGlue.{u} S hs α (eval S α s) = s :=
 
 /-- Given a sheaf `S`, construct an equivalence `S(α) ≃ (α → S(*))`. -/
 @[simps]
-noncomputable def eval_equiv (S : Type uᵒᵖ ⥤ Type u) (hs : IsSheaf typesGrothendieckTopology S) (α : Type u) :
+noncomputable def evalEquiv (S : Type uᵒᵖ ⥤ Type u) (hs : IsSheaf typesGrothendieckTopology S) (α : Type u) :
     S.obj (op α) ≃ (α → S.obj (op PUnit)) where
   toFun := eval S α
   invFun := typesGlue S hs α
@@ -111,15 +116,14 @@ theorem eval_map (S : Type uᵒᵖ ⥤ Type u) α β (f : β ⟶ α) s x : eval 
 
 /-- Given a sheaf `S`, construct an isomorphism `S ≅ [-, S(*)]`. -/
 @[simps]
-noncomputable def equiv_yoneda (S : Type uᵒᵖ ⥤ Type u) (hs : IsSheaf typesGrothendieckTopology S) :
+noncomputable def equivYoneda (S : Type uᵒᵖ ⥤ Type u) (hs : IsSheaf typesGrothendieckTopology S) :
     S ≅ yoneda.obj (S.obj (op PUnit)) :=
   (NatIso.ofComponents fun α => Equivₓ.toIso <| evalEquiv S hs <| unop α) fun α β f =>
     funext fun s => funext fun x => eval_map S (unop α) (unop β) f.unop _ _
 
 /-- Given a sheaf `S`, construct an isomorphism `S ≅ [-, S(*)]`. -/
 @[simps]
-noncomputable def equiv_yoneda' (S : SheafOfTypes typesGrothendieckTopology) :
-    S ≅ yoneda'.obj (S.1.obj (op PUnit)) where
+noncomputable def equivYoneda' (S : SheafOfTypes typesGrothendieckTopology) : S ≅ yoneda'.obj (S.1.obj (op PUnit)) where
   Hom := ⟨(equivYoneda S.1 S.2).Hom⟩
   inv := ⟨(equivYoneda S.1 S.2).inv⟩
   hom_inv_id' := by
@@ -136,10 +140,11 @@ theorem eval_app (S₁ S₂ : SheafOfTypes.{u} typesGrothendieckTopology) (f : S
 /-- `yoneda'` induces an equivalence of category between `Type u` and
 `Sheaf types_grothendieck_topology`. -/
 @[simps]
-noncomputable def type_equiv : Type u ≌ SheafOfTypes typesGrothendieckTopology :=
+noncomputable def typeEquiv : Type u ≌ SheafOfTypes typesGrothendieckTopology :=
   Equivalence.mk yoneda' (sheafOfTypesToPresheaf _ ⋙ (evaluation _ _).obj (op PUnit))
     (NatIso.ofComponents
       (fun α =>
+        -- α ≅ punit ⟶ α
         { Hom := fun x _ => x, inv := fun f => f PUnit.unit, hom_inv_id' := funext fun x => rfl,
           inv_hom_id' := funext fun f => funext fun y => PUnit.casesOn y rfl })
       fun α β f => rfl)

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Aaron Anderson. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Aaron Anderson
+-/
 import Mathbin.Order.WellFoundedSet
 import Mathbin.Algebra.BigOperators.Finprod
 import Mathbin.RingTheory.Valuation.Basic
@@ -73,7 +78,7 @@ theorem coeff_inj {x y : HahnSeries Γ R} : x.coeff = y.coeff ↔ x = y :=
 
 /-- The support of a Hahn series is just the set of indices whose coefficients are nonzero.
   Notably, it is well-founded. -/
-def support (x : HahnSeries Γ R) : Set Γ :=
+def Support (x : HahnSeries Γ R) : Set Γ :=
   Support x.coeff
 
 @[simp]
@@ -221,7 +226,7 @@ section Domain
 variable {Γ' : Type _} [PartialOrderₓ Γ']
 
 /-- Extends the domain of a `hahn_series` by an `order_embedding`. -/
-def emb_domain (f : Γ ↪o Γ') : HahnSeries Γ R → HahnSeries Γ' R := fun x =>
+def embDomain (f : Γ ↪o Γ') : HahnSeries Γ R → HahnSeries Γ' R := fun x =>
   { coeff := fun b : Γ' => if h : b ∈ f '' x.Support then x.coeff (Classical.some h) else 0,
     is_pwo_support' :=
       (x.is_pwo_support.image_of_monotone f.Monotone).mono fun b hb => by
@@ -303,7 +308,7 @@ instance : Add (HahnSeries Γ R) where
 
 instance : AddMonoidₓ (HahnSeries Γ R) where
   zero := 0
-  add := · + ·
+  add := (· + ·)
   add_assoc := fun x y z => by
     ext
     apply add_assocₓ
@@ -345,7 +350,7 @@ theorem min_order_le_order_add {Γ} [LinearOrderedCancelAddCommMonoid Γ] {x y :
 
 /-- `single` as an additive monoid/group homomorphism -/
 @[simps]
-def single.add_monoid_hom (a : Γ) : R →+ HahnSeries Γ R :=
+def single.addMonoidHom (a : Γ) : R →+ HahnSeries Γ R :=
   { single a with
     map_add' := fun x y => by
       ext b
@@ -353,7 +358,7 @@ def single.add_monoid_hom (a : Γ) : R →+ HahnSeries Γ R :=
 
 /-- `coeff g` as an additive monoid/group homomorphism -/
 @[simps]
-def coeff.add_monoid_hom (g : Γ) : HahnSeries Γ R →+ R where
+def coeff.addMonoidHom (g : Γ) : HahnSeries Γ R →+ R where
   toFun := fun f => f.coeff g
   map_zero' := zero_coeff
   map_add' := fun x y => add_coeff
@@ -436,7 +441,7 @@ theorem smul_coeff {r : R} {x : HahnSeries Γ V} {a : Γ} : (r • x).coeff a = 
   rfl
 
 instance : DistribMulAction R (HahnSeries Γ V) where
-  smul := · • ·
+  smul := (· • ·)
   one_smul := fun _ => by
     ext
     simp
@@ -479,7 +484,7 @@ instance : Module R (HahnSeries Γ V) :=
 
 /-- `single` as a linear map -/
 @[simps]
-def single.linear_map (a : Γ) : R →ₗ[R] HahnSeries Γ R :=
+def single.linearMap (a : Γ) : R →ₗ[R] HahnSeries Γ R :=
   { single.addMonoidHom a with
     map_smul' := fun r s => by
       ext b
@@ -487,7 +492,7 @@ def single.linear_map (a : Γ) : R →ₗ[R] HahnSeries Γ R :=
 
 /-- `coeff g` as a linear map -/
 @[simps]
-def coeff.linear_map (g : Γ) : HahnSeries Γ R →ₗ[R] R :=
+def coeff.linearMap (g : Γ) : HahnSeries Γ R →ₗ[R] R :=
   { coeff.addMonoidHom g with map_smul' := fun r s => rfl }
 
 section Domain
@@ -505,7 +510,7 @@ theorem emb_domain_smul (f : Γ ↪o Γ') (r : R) (x : HahnSeries Γ R) : embDom
 
 /-- Extending the domain of Hahn series is a linear map. -/
 @[simps]
-def emb_domain_linear_map (f : Γ ↪o Γ') : HahnSeries Γ R →ₗ[R] HahnSeries Γ' R where
+def embDomainLinearMap (f : Γ ↪o Γ') : HahnSeries Γ R →ₗ[R] HahnSeries Γ' R where
   toFun := embDomain f
   map_add' := emb_domain_add f
   map_smul' := emb_domain_smul f
@@ -740,7 +745,7 @@ private theorem mul_assoc' [NonUnitalSemiringₓ R] (x y z : HahnSeries Γ R) : 
     
 
 instance [NonUnitalNonAssocSemiringₓ R] : NonUnitalNonAssocSemiringₓ (HahnSeries Γ R) :=
-  { HahnSeries.addCommMonoid, HahnSeries.distrib with zero := 0, add := · + ·, mul := · * ·,
+  { HahnSeries.addCommMonoid, HahnSeries.distrib with zero := 0, add := (· + ·), mul := (· * ·),
     zero_mul := fun _ => by
       ext
       simp ,
@@ -749,10 +754,10 @@ instance [NonUnitalNonAssocSemiringₓ R] : NonUnitalNonAssocSemiringₓ (HahnSe
       simp }
 
 instance [NonUnitalSemiringₓ R] : NonUnitalSemiringₓ (HahnSeries Γ R) :=
-  { HahnSeries.nonUnitalNonAssocSemiring with zero := 0, add := · + ·, mul := · * ·, mul_assoc := mul_assoc' }
+  { HahnSeries.nonUnitalNonAssocSemiring with zero := 0, add := (· + ·), mul := (· * ·), mul_assoc := mul_assoc' }
 
 instance [NonAssocSemiringₓ R] : NonAssocSemiringₓ (HahnSeries Γ R) :=
-  { HahnSeries.nonUnitalNonAssocSemiring with zero := 0, one := 1, add := · + ·, mul := · * ·,
+  { HahnSeries.nonUnitalNonAssocSemiring with zero := 0, one := 1, add := (· + ·), mul := (· * ·),
     one_mul := fun x => by
       ext
       exact single_zero_mul_coeff.trans (one_mulₓ _),
@@ -761,7 +766,7 @@ instance [NonAssocSemiringₓ R] : NonAssocSemiringₓ (HahnSeries Γ R) :=
       exact mul_single_zero_coeff.trans (mul_oneₓ _) }
 
 instance [Semiringₓ R] : Semiringₓ (HahnSeries Γ R) :=
-  { HahnSeries.nonAssocSemiring, HahnSeries.nonUnitalSemiring with zero := 0, one := 1, add := · + ·, mul := · * · }
+  { HahnSeries.nonAssocSemiring, HahnSeries.nonUnitalSemiring with zero := 0, one := 1, add := (· + ·), mul := (· * ·) }
 
 instance [CommSemiringₓ R] : CommSemiringₓ (HahnSeries Γ R) :=
   { HahnSeries.semiring with
@@ -863,7 +868,7 @@ variable [NonAssocSemiringₓ R]
 
 /-- `C a` is the constant Hahn Series `a`. `C` is provided as a ring homomorphism. -/
 @[simps]
-def C : R →+* HahnSeries Γ R where
+def c : R →+* HahnSeries Γ R where
   toFun := single 0
   map_zero' := single_eq_zero
   map_one' := rfl
@@ -958,7 +963,7 @@ theorem emb_domain_one [NonAssocSemiringₓ R] (f : Γ ↪o Γ') (hf : f 0 = 0) 
 
 /-- Extending the domain of Hahn series is a ring homomorphism. -/
 @[simps]
-def emb_domain_ring_hom [NonAssocSemiringₓ R] (f : Γ →+ Γ') (hfi : Function.Injective f)
+def embDomainRingHom [NonAssocSemiringₓ R] (f : Γ →+ Γ') (hfi : Function.Injective f)
     (hf : ∀ g g' : Γ, f g ≤ f g' ↔ g ≤ g') : HahnSeries Γ R →+* HahnSeries Γ' R where
   toFun := embDomain ⟨⟨f, hfi⟩, hf⟩
   map_one' := emb_domain_one _ f.map_zero
@@ -1013,7 +1018,7 @@ variable {Γ' : Type _} [OrderedCancelAddCommMonoid Γ']
 
 /-- Extending the domain of Hahn series is an algebra homomorphism. -/
 @[simps]
-def emb_domain_alg_hom (f : Γ →+ Γ') (hfi : Function.Injective f) (hf : ∀ g g' : Γ, f g ≤ f g' ↔ g ≤ g') :
+def embDomainAlgHom (f : Γ →+ Γ') (hfi : Function.Injective f) (hf : ∀ g g' : Γ, f g ≤ f g' ↔ g ≤ g') :
     HahnSeries Γ A →ₐ[R] HahnSeries Γ' A :=
   { embDomainRingHom f hfi hf with commutes' := fun r => emb_domain_ring_hom_C }
 
@@ -1029,7 +1034,7 @@ variable [Semiringₓ R]
 
 /-- The ring `hahn_series ℕ R` is isomorphic to `power_series R`. -/
 @[simps]
-def to_power_series : HahnSeries ℕ R ≃+* PowerSeries R where
+def toPowerSeries : HahnSeries ℕ R ≃+* PowerSeries R where
   toFun := fun f => PowerSeries.mk f.coeff
   invFun := fun f => ⟨fun n => PowerSeries.coeff R n f, (Nat.lt_wf.IsWf _).IsPwo⟩
   left_inv := fun f => by
@@ -1064,7 +1069,7 @@ theorem coeff_to_power_series_symm {f : PowerSeries R} {n : ℕ} :
 variable (Γ) (R) [OrderedSemiring Γ] [Nontrivial Γ]
 
 /-- Casts a power series as a Hahn series with coefficients from an `ordered_semiring`. -/
-def of_power_series : PowerSeries R →+* HahnSeries Γ R :=
+def ofPowerSeries : PowerSeries R →+* HahnSeries Γ R :=
   (HahnSeries.embDomainRingHom (Nat.castAddMonoidHom Γ) Nat.strict_mono_cast.Injective fun _ _ => Nat.cast_le).comp
     (RingEquiv.toRingHom toPowerSeries.symm)
 
@@ -1130,8 +1135,9 @@ We take the index set of the hahn series to be `finsupp` rather than `pi`,
 even though we assume `fintype σ` as this is more natural for alignment with `mv_power_series`.
 After importing `algebra.order.pi` the ring `hahn_series (σ → ℕ) R` could be constructed instead.
  -/
+-- Lemmas about converting hahn_series over fintype to and from mv_power_series
 @[simps]
-def to_mv_power_series {σ : Type _} [Fintype σ] : HahnSeries (σ →₀ ℕ) R ≃+* MvPowerSeries σ R where
+def toMvPowerSeries {σ : Type _} [Fintype σ] : HahnSeries (σ →₀ ℕ) R ≃+* MvPowerSeries σ R where
   toFun := fun f => f.coeff
   invFun := fun f => ⟨(f : (σ →₀ ℕ) → R), Finsupp.is_pwo _⟩
   left_inv := fun f => by
@@ -1176,7 +1182,7 @@ variable (R) [CommSemiringₓ R] {A : Type _} [Semiringₓ A] [Algebra R A]
 
 /-- The `R`-algebra `hahn_series ℕ A` is isomorphic to `power_series A`. -/
 @[simps]
-def to_power_series_alg : HahnSeries ℕ A ≃ₐ[R] PowerSeries A :=
+def toPowerSeriesAlg : HahnSeries ℕ A ≃ₐ[R] PowerSeries A :=
   { toPowerSeries with
     commutes' := fun r => by
       ext n
@@ -1195,11 +1201,11 @@ variable (Γ) (R) [OrderedSemiring Γ] [Nontrivial Γ]
 /-- Casting a power series as a Hahn series with coefficients from an `ordered_semiring`
   is an algebra homomorphism. -/
 @[simps]
-def of_power_series_alg : PowerSeries A →ₐ[R] HahnSeries Γ A :=
+def ofPowerSeriesAlg : PowerSeries A →ₐ[R] HahnSeries Γ A :=
   (HahnSeries.embDomainAlgHom (Nat.castAddMonoidHom Γ) Nat.strict_mono_cast.Injective fun _ _ => Nat.cast_le).comp
     (AlgEquiv.toAlgHom (toPowerSeriesAlg R).symm)
 
-instance power_series_algebra {S : Type _} [CommSemiringₓ S] [Algebra S (PowerSeries R)] : Algebra S (HahnSeries Γ R) :=
+instance powerSeriesAlgebra {S : Type _} [CommSemiringₓ S] [Algebra S (PowerSeries R)] : Algebra S (HahnSeries Γ R) :=
   RingHom.toAlgebra <| (ofPowerSeries Γ R).comp (algebraMap S (PowerSeries R))
 
 variable {R} {S : Type _} [CommSemiringₓ S] [Algebra S (PowerSeries R)]
@@ -1233,7 +1239,7 @@ variable (Γ) (R)
 
 /-- The additive valuation on `hahn_series Γ R`, returning the smallest index at which
   a Hahn Series has a nonzero coefficient, or `⊤` for the 0 series.  -/
-def add_val : AddValuation (HahnSeries Γ R) (WithTop Γ) :=
+def addVal : AddValuation (HahnSeries Γ R) (WithTop Γ) :=
   AddValuation.of (fun x => if x = (0 : HahnSeries Γ R) then (⊤ : WithTop Γ) else x.order) (if_pos rfl)
     ((if_neg one_ne_zero).trans
       (by
@@ -1303,7 +1309,7 @@ variable (Γ) (R) [PartialOrderₓ Γ] [AddCommMonoidₓ R]
 /-- An infinite family of Hahn series which has a formal coefficient-wise sum.
   The requirements for this are that the union of the supports of the series is well-founded,
   and that only finitely many series are nonzero at any given coefficient. -/
-structure summable_family (α : Type _) where
+structure SummableFamily (α : Type _) where
   toFun : α → HahnSeries Γ R
   is_pwo_Union_support' : Set.IsPwo (⋃ a : α, (to_fun a).Support)
   finite_co_support' : ∀ g : Γ, { a | (to_fun a).coeff g ≠ 0 }.Finite
@@ -1374,7 +1380,7 @@ theorem zero_apply {a : α} : (0 : SummableFamily Γ R α) a = 0 :=
   rfl
 
 instance : AddCommMonoidₓ (SummableFamily Γ R α) where
-  add := · + ·
+  add := (· + ·)
   zero := 0
   zero_add := fun s => by
     ext
@@ -1484,7 +1490,7 @@ theorem smul_apply {x : HahnSeries Γ R} {s : SummableFamily Γ R α} {a : α} :
   rfl
 
 instance : Module (HahnSeries Γ R) (SummableFamily Γ R α) where
-  smul := · • ·
+  smul := (· • ·)
   smul_zero := fun x => ext fun a => mul_zero _
   zero_smul := fun x => ext fun a => zero_mul _
   one_smul := fun x => ext fun a => one_mulₓ _
@@ -1547,7 +1553,7 @@ section OfFinsupp
 variable [PartialOrderₓ Γ] [AddCommMonoidₓ R] {α : Type _}
 
 /-- A family with only finitely many nonzero elements is summable. -/
-def of_finsupp (f : α →₀ HahnSeries Γ R) : SummableFamily Γ R α where
+def ofFinsupp (f : α →₀ HahnSeries Γ R) : SummableFamily Γ R α where
   toFun := f
   is_pwo_Union_support' := by
     apply (f.support.is_pwo_sup (fun a => (f a).Support) fun a ha => (f a).is_pwo_support).mono
@@ -1588,7 +1594,7 @@ section EmbDomain
 variable [PartialOrderₓ Γ] [AddCommMonoidₓ R] {α β : Type _}
 
 /-- A summable family can be reindexed by an embedding without changing its sum. -/
-def emb_domain (s : SummableFamily Γ R α) (f : α ↪ β) : SummableFamily Γ R β where
+def embDomain (s : SummableFamily Γ R α) (f : α ↪ β) : SummableFamily Γ R β where
   toFun := fun b => if h : b ∈ Set.Range f then s (Classical.some h) else 0
   is_pwo_Union_support' := by
     refine' s.is_pwo_Union_support.mono (Set.Union_subset fun b g h => _)

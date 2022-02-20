@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Kenny Lau. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Kenny Lau
+-/
 import Mathbin.Algebra.Ring.Basic
 import Mathbin.Algebra.Group.Opposite
 
@@ -19,7 +24,7 @@ instance [Distribₓ α] : Distribₓ (αᵐᵒᵖ) :=
 
 instance [MulZeroClassₓ α] : MulZeroClassₓ (αᵐᵒᵖ) where
   zero := 0
-  mul := · * ·
+  mul := (· * ·)
   zero_mul := fun x => unop_injective <| mul_zero <| unop x
   mul_zero := fun x => unop_injective <| zero_mul <| unop x
 
@@ -57,7 +62,7 @@ instance [CommRingₓ α] : CommRingₓ (αᵐᵒᵖ) :=
   { MulOpposite.ring α, MulOpposite.commSemiring α with }
 
 instance [Zero α] [Mul α] [NoZeroDivisors α] : NoZeroDivisors (αᵐᵒᵖ) where
-  eq_zero_or_eq_zero_of_mul_eq_zero := fun x y H : op (_ * _) = op (0 : α) =>
+  eq_zero_or_eq_zero_of_mul_eq_zero := fun H : op (_ * _) = op (0 : α) =>
     Or.cases_on (eq_zero_or_eq_zero_of_mul_eq_zero <| op_injective H) (fun hy => Or.inr <| unop_injective <| hy)
       fun hx => Or.inl <| unop_injective <| hx
 

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Jeremy Avigad. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Jeremy Avigad, Mario Carneiro, Simon Hudon
+-/
 import Mathbin.Data.Fin.Fin2
 import Mathbin.Data.Typevec
 import Mathbin.Logic.Function.Basic
@@ -33,18 +38,18 @@ namespace Mvfunctor
 variable {α β γ : Typevec.{u} n} {F : Typevec.{u} n → Type v} [Mvfunctor F]
 
 /-- predicate lifting over multivariate functors -/
-def liftp {α : Typevec n} (p : ∀ i, α i → Prop) (x : F α) : Prop :=
+def Liftp {α : Typevec n} (p : ∀ i, α i → Prop) (x : F α) : Prop :=
   ∃ u : F fun i => Subtype (p i), (fun i => @Subtype.val _ (p i)) <$$> u = x
 
 /-- relational lifting over multivariate functors -/
-def liftr {α : Typevec n} (r : ∀ {i}, α i → α i → Prop) (x y : F α) : Prop :=
+def Liftr {α : Typevec n} (r : ∀ {i}, α i → α i → Prop) (x y : F α) : Prop :=
   ∃ u : F fun i => { p : α i × α i // r p.fst p.snd },
-    (fun i t : { p : α i × α i // r p.fst p.snd } => t.val.fst) <$$> u = x ∧
-      (fun i t : { p : α i × α i // r p.fst p.snd } => t.val.snd) <$$> u = y
+    (fun t : { p : α i × α i // r p.fst p.snd } => t.val.fst) <$$> u = x ∧
+      (fun t : { p : α i × α i // r p.fst p.snd } => t.val.snd) <$$> u = y
 
 /-- given `x : F α` and a projection `i` of type vector `α`, `supp x i` is the set
 of `α.i` contained in `x` -/
-def supp {α : Typevec n} (x : F α) (i : Fin2 n) : Set (α i) :=
+def Supp {α : Typevec n} (x : F α) (i : Fin2 n) : Set (α i) :=
   { y : α i | ∀ ⦃p⦄, Liftp p x → p i y }
 
 theorem of_mem_supp {α : Typevec n} {x : F α} {p : ∀ ⦃i⦄, α i → Prop} (h : Liftp p x) (i : Fin2 n) :
@@ -72,11 +77,11 @@ variable {F : Typevec.{u} n → Type v} [Mvfunctor F]
 variable (p : α ⟹ Repeat n Prop) (r : α ⊗ α ⟹ Repeat n Prop)
 
 /-- adapt `mvfunctor.liftp` to accept predicates as arrows -/
-def liftp' : F α → Prop :=
+def Liftp' : F α → Prop :=
   Mvfunctor.Liftp fun i x => of_repeat <| p i x
 
 /-- adapt `mvfunctor.liftp` to accept relations as arrows -/
-def liftr' : F α → F α → Prop :=
+def Liftr' : F α → F α → Prop :=
   Mvfunctor.Liftr fun i x y => of_repeat <| r i <| Typevec.Prod.mk _ x y
 
 variable [IsLawfulMvfunctor F]
@@ -86,7 +91,7 @@ theorem id_map (x : F α) : Typevec.id <$$> x = x :=
   id_map x
 
 @[simp]
-theorem id_map'ₓ (x : F α) : (fun i a => a) <$$> x = x :=
+theorem id_map' (x : F α) : (fun i a => a) <$$> x = x :=
   id_map x
 
 theorem map_map (g : α ⟹ β) (h : β ⟹ γ) (x : F α) : h <$$> g <$$> x = (h ⊚ g) <$$> x :=
@@ -175,7 +180,7 @@ theorem liftp_last_pred_iff {β} (p : β → Prop) (x : F (α ::: β)) : Liftp' 
     cases i <;> rfl
     
   · intros
-    rw [Mvfunctor.map_map, · ⊚ ·]
+    rw [Mvfunctor.map_map, (· ⊚ ·)]
     congr <;> ext i ⟨x, _⟩ <;> cases i <;> rfl
     
 
@@ -215,7 +220,7 @@ theorem liftr_last_rel_iff (x y : F (α ::: β)) : Liftr' (relLast' _ rr) x y �
     cases i <;> rfl
     
   · intros
-    rw [Mvfunctor.map_map, Mvfunctor.map_map, · ⊚ ·, · ⊚ ·]
+    rw [Mvfunctor.map_map, Mvfunctor.map_map, (· ⊚ ·), (· ⊚ ·)]
     congr <;> ext i ⟨x, _⟩ <;> cases i <;> rfl
     
 

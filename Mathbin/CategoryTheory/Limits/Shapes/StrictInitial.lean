@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Bhavik Mehta. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Bhavik Mehta
+-/
 import Mathbin.CategoryTheory.Limits.Shapes.Terminal
 import Mathbin.CategoryTheory.Limits.Shapes.BinaryProducts
 import Mathbin.CategoryTheory.EpiMono
@@ -51,7 +56,7 @@ section StrictInitial
 Strictly speaking, this says that *any* initial object must be strict, rather than that strict
 initial objects exist.
 -/
-class has_strict_initial_objects : Prop where
+class HasStrictInitialObjects : Prop where
   out : ∀ {I A : C} f : A ⟶ I, IsInitial I → IsIso f
 
 variable {C}
@@ -60,15 +65,15 @@ section
 
 variable [HasStrictInitialObjects C] {I : C}
 
-theorem is_initial.is_iso_to (hI : IsInitial I) {A : C} (f : A ⟶ I) : IsIso f :=
+theorem IsInitial.is_iso_to (hI : IsInitial I) {A : C} (f : A ⟶ I) : IsIso f :=
   HasStrictInitialObjects.out f hI
 
-theorem is_initial.strict_hom_ext (hI : IsInitial I) {A : C} (f g : A ⟶ I) : f = g := by
+theorem IsInitial.strict_hom_ext (hI : IsInitial I) {A : C} (f g : A ⟶ I) : f = g := by
   have := hI.is_iso_to f
   have := hI.is_iso_to g
   exact eq_of_inv_eq_inv (hI.hom_ext (inv f) (inv g))
 
-theorem is_initial.subsingleton_to (hI : IsInitial I) {A : C} : Subsingleton (A ⟶ I) :=
+theorem IsInitial.subsingleton_to (hI : IsInitial I) {A : C} : Subsingleton (A ⟶ I) :=
   ⟨hI.strict_hom_ext⟩
 
 instance (priority := 100) initial_mono_of_strict_initial_objects : InitialMonoClass C where
@@ -76,7 +81,7 @@ instance (priority := 100) initial_mono_of_strict_initial_objects : InitialMonoC
 
 /-- If `I` is initial, then `X ⨯ I` is isomorphic to it. -/
 @[simps Hom]
-noncomputable def mul_is_initial (X : C) [HasBinaryProduct X I] (hI : IsInitial I) : X ⨯ I ≅ I :=
+noncomputable def mulIsInitial (X : C) [HasBinaryProduct X I] (hI : IsInitial I) : X ⨯ I ≅ I :=
   @asIso _ prod.snd (hI.is_iso_to _)
 
 @[simp]
@@ -85,7 +90,7 @@ theorem mul_is_initial_inv (X : C) [HasBinaryProduct X I] (hI : IsInitial I) : (
 
 /-- If `I` is initial, then `I ⨯ X` is isomorphic to it. -/
 @[simps Hom]
-noncomputable def is_initial_mul (X : C) [HasBinaryProduct I X] (hI : IsInitial I) : I ⨯ X ≅ I :=
+noncomputable def isInitialMul (X : C) [HasBinaryProduct I X] (hI : IsInitial I) : I ⨯ X ≅ I :=
   @asIso _ prod.fst (hI.is_iso_to _)
 
 @[simp]
@@ -109,7 +114,7 @@ initial.
 This is the generalisation of the fact that `X × empty ≃ empty` for types (or `n * 0 = 0`).
 -/
 @[simps Hom]
-noncomputable def mul_initial (X : C) [HasBinaryProduct X (⊥_ C)] : X ⨯ ⊥_ C ≅ ⊥_ C :=
+noncomputable def mulInitial (X : C) [HasBinaryProduct X (⊥_ C)] : X ⨯ ⊥_ C ≅ ⊥_ C :=
   mulIsInitial _ initialIsInitial
 
 @[simp]
@@ -121,7 +126,7 @@ initial.
 This is the generalisation of the fact that `empty × X ≃ empty` for types (or `0 * n = 0`).
 -/
 @[simps Hom]
-noncomputable def initial_mul (X : C) [HasBinaryProduct (⊥_ C) X] : (⊥_ C) ⨯ X ≅ ⊥_ C :=
+noncomputable def initialMul (X : C) [HasBinaryProduct (⊥_ C) X] : (⊥_ C) ⨯ X ≅ ⊥_ C :=
   isInitialMul _ initialIsInitial
 
 @[simp]
@@ -149,7 +154,7 @@ section StrictTerminal
 Strictly speaking, this says that *any* terminal object must be strict, rather than that strict
 terminal objects exist.
 -/
-class has_strict_terminal_objects : Prop where
+class HasStrictTerminalObjects : Prop where
   out : ∀ {I A : C} f : I ⟶ A, IsTerminal I → IsIso f
 
 variable {C}
@@ -158,20 +163,20 @@ section
 
 variable [HasStrictTerminalObjects C] {I : C}
 
-theorem is_terminal.is_iso_from (hI : IsTerminal I) {A : C} (f : I ⟶ A) : IsIso f :=
+theorem IsTerminal.is_iso_from (hI : IsTerminal I) {A : C} (f : I ⟶ A) : IsIso f :=
   HasStrictTerminalObjects.out f hI
 
-theorem is_terminal.strict_hom_ext (hI : IsTerminal I) {A : C} (f g : I ⟶ A) : f = g := by
+theorem IsTerminal.strict_hom_ext (hI : IsTerminal I) {A : C} (f g : I ⟶ A) : f = g := by
   have := hI.is_iso_from f
   have := hI.is_iso_from g
   exact eq_of_inv_eq_inv (hI.hom_ext (inv f) (inv g))
 
-theorem is_terminal.subsingleton_to (hI : IsTerminal I) {A : C} : Subsingleton (I ⟶ A) :=
+theorem IsTerminal.subsingleton_to (hI : IsTerminal I) {A : C} : Subsingleton (I ⟶ A) :=
   ⟨hI.strict_hom_ext⟩
 
 variable {J : Type v} [SmallCategory J]
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (j «expr ≠ » i)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (j «expr ≠ » i)
 /-- If all but one object in a diagram is strict terminal, the the limit is isomorphic to the
 said object via `limit.π`. -/
 theorem limit_π_is_iso_of_is_strict_terminal (F : J ⥤ C) [HasLimit F] (i : J) (H : ∀ j _ : j ≠ i, IsTerminal (F.obj j))

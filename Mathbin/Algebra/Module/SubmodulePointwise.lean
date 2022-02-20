@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Eric Wieser. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Eric Wieser
+-/
 import Mathbin.GroupTheory.Subgroup.Pointwise
 import Mathbin.LinearAlgebra.Basic
 
@@ -20,8 +25,8 @@ variable {α : Type _} {R : Type _} {M : Type _}
 
 variable [Semiringₓ R] [AddCommMonoidₓ M] [Module R M]
 
-instance pointwise_add_comm_monoid : AddCommMonoidₓ (Submodule R M) where
-  add := ·⊔·
+instance pointwiseAddCommMonoid : AddCommMonoidₓ (Submodule R M) where
+  add := (·⊔·)
   add_assoc := fun _ _ _ => sup_assoc
   zero := ⊥
   zero_add := fun _ => bot_sup_eq
@@ -43,7 +48,7 @@ variable [Monoidₓ α] [DistribMulAction α M] [SmulCommClass α R M]
 /-- The action on a submodule corresponding to applying the action to every element.
 
 This is available as an instance in the `pointwise` locale. -/
-protected def pointwise_distrib_mul_action : DistribMulAction α (Submodule R M) where
+protected def pointwiseDistribMulAction : DistribMulAction α (Submodule R M) where
   smul := fun a S => S.map (DistribMulAction.toLinearMap _ _ a)
   one_smul := fun S => (congr_argₓ (fun f => S.map f) (LinearMap.ext <| one_smul α)).trans S.map_id
   mul_smul := fun a₁ a₂ S =>
@@ -93,7 +98,7 @@ This is available as an instance in the `pointwise` locale.
 
 This is a stronger version of `submodule.pointwise_distrib_mul_action`. Note that `add_smul` does
 not hold so this cannot be stated as a `module`. -/
-protected def pointwise_mul_action_with_zero : MulActionWithZero α (Submodule R M) :=
+protected def pointwiseMulActionWithZero : MulActionWithZero α (Submodule R M) :=
   { Submodule.pointwiseDistribMulAction with
     zero_smul := fun S => (congr_argₓ (fun f : M →ₗ[R] M => S.map f) (LinearMap.ext <| zero_smul α)).trans S.map_zero }
 

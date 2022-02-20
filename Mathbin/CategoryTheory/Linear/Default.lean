@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison
+-/
 import Mathbin.CategoryTheory.Preadditive.Default
 import Mathbin.Algebra.Module.LinearMap
 import Mathbin.Algebra.Invertible
@@ -35,7 +40,7 @@ namespace CategoryTheory
 
 /-- A category is called `R`-linear if `P ⟶ Q` is an `R`-module such that composition is
     `R`-linear in both variables. -/
-class linear (R : Type w) [Semiringₓ R] (C : Type u) [Category.{v} C] [Preadditive C] where
+class Linear (R : Type w) [Semiringₓ R] (C : Type u) [Category.{v} C] [Preadditive C] where
   homModule : ∀ X Y : C, Module R (X ⟶ Y) := by
     run_tac
       tactic.apply_instance
@@ -56,6 +61,7 @@ attribute [simp, reassoc] linear.smul_comp
 
 attribute [reassoc, simp] linear.comp_smul
 
+-- (the linter doesn't like `simp` on the `_assoc` lemma)
 end CategoryTheory
 
 open CategoryTheory
@@ -64,11 +70,11 @@ namespace CategoryTheory.Linear
 
 variable {C : Type u} [Category.{v} C] [Preadditive C]
 
-instance preadditive_nat_linear : Linear ℕ C where
+instance preadditiveNatLinear : Linear ℕ C where
   smul_comp' := fun X Y Z r f g => (Preadditive.rightComp X g).map_nsmul f r
   comp_smul' := fun X Y Z f r g => (Preadditive.leftComp Z f).map_nsmul g r
 
-instance preadditive_int_linear : Linear ℤ C where
+instance preadditiveIntLinear : Linear ℤ C where
   smul_comp' := fun X Y Z r f g => (Preadditive.rightComp X g).map_zsmul f r
   comp_smul' := fun X Y Z f r g => (Preadditive.leftComp Z f).map_zsmul g r
 
@@ -95,7 +101,7 @@ universe u'
 
 variable {C} {D : Type u'} (F : D → C)
 
-instance induced_category.category : Linear.{w, v} R (InducedCategory C F) where
+instance InducedCategory.category : Linear.{w, v} R (InducedCategory C F) where
   homModule := fun X Y => @Linear.homModule R _ C _ _ _ (F X) (F Y)
   smul_comp' := fun P Q R f f' g => smul_comp' _ _ _ _ _ _
   comp_smul' := fun P Q R f g g' => comp_smul' _ _ _ _ _ _
@@ -106,7 +112,7 @@ variable (R)
 
 /-- Composition by a fixed left argument as an `R`-linear map. -/
 @[simps]
-def left_comp {X Y : C} (Z : C) (f : X ⟶ Y) : (Y ⟶ Z) →ₗ[R] X ⟶ Z where
+def leftComp {X Y : C} (Z : C) (f : X ⟶ Y) : (Y ⟶ Z) →ₗ[R] X ⟶ Z where
   toFun := fun g => f ≫ g
   map_add' := by
     simp
@@ -115,7 +121,7 @@ def left_comp {X Y : C} (Z : C) (f : X ⟶ Y) : (Y ⟶ Z) →ₗ[R] X ⟶ Z wher
 
 /-- Composition by a fixed right argument as an `R`-linear map. -/
 @[simps]
-def right_comp (X : C) {Y Z : C} (g : Y ⟶ Z) : (X ⟶ Y) →ₗ[R] X ⟶ Z where
+def rightComp (X : C) {Y Z : C} (g : Y ⟶ Z) : (X ⟶ Y) →ₗ[R] X ⟶ Z where
   toFun := fun f => f ≫ g
   map_add' := by
     simp

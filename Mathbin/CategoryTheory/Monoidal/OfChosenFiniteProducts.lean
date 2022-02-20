@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison, Simon Hudon
+-/
 import Mathbin.CategoryTheory.Monoidal.Braided
 import Mathbin.CategoryTheory.Limits.Shapes.BinaryProducts
 import Mathbin.CategoryTheory.Limits.Shapes.Terminal
@@ -37,21 +42,21 @@ section
 variable {C}
 
 /-- Swap the two sides of a `binary_fan`. -/
-def binary_fan.swap {P Q : C} (t : BinaryFan P Q) : BinaryFan Q P :=
+def BinaryFan.swap {P Q : C} (t : BinaryFan P Q) : BinaryFan Q P :=
   BinaryFan.mk t.snd t.fst
 
 @[simp]
-theorem binary_fan.swap_fst {P Q : C} (t : BinaryFan P Q) : t.swap.fst = t.snd :=
+theorem BinaryFan.swap_fst {P Q : C} (t : BinaryFan P Q) : t.swap.fst = t.snd :=
   rfl
 
 @[simp]
-theorem binary_fan.swap_snd {P Q : C} (t : BinaryFan P Q) : t.swap.snd = t.fst :=
+theorem BinaryFan.swap_snd {P Q : C} (t : BinaryFan P Q) : t.swap.snd = t.fst :=
   rfl
 
 /-- If a cone `t` over `P Q` is a limit cone, then `t.swap` is a limit cone over `Q P`.
 -/
 @[simps]
-def is_limit.swap_binary_fan {P Q : C} {t : BinaryFan P Q} (I : IsLimit t) : IsLimit t.swap where
+def IsLimit.swapBinaryFan {P Q : C} {t : BinaryFan P Q} (I : IsLimit t) : IsLimit t.swap where
   lift := fun s => I.lift (BinaryFan.swap s)
   fac' := fun s => by
     rintro ⟨⟩ <;> simp
@@ -65,14 +70,14 @@ def is_limit.swap_binary_fan {P Q : C} {t : BinaryFan P Q} (I : IsLimit t) : IsL
 /-- Construct `has_binary_product Q P` from `has_binary_product P Q`.
 This can't be an instance, as it would cause a loop in typeclass search.
 -/
-theorem has_binary_product.swap (P Q : C) [HasBinaryProduct P Q] : HasBinaryProduct Q P :=
+theorem HasBinaryProduct.swap (P Q : C) [HasBinaryProduct P Q] : HasBinaryProduct Q P :=
   HasLimit.mk ⟨BinaryFan.swap (Limit.cone (pair P Q)), (limit.isLimit (pair P Q)).swapBinaryFan⟩
 
 /-- Given a limit cone over `X` and `Y`, and another limit cone over `Y` and `X`, we can construct
 an isomorphism between the cone points. Relative to some fixed choice of limits cones for every
 pair, these isomorphisms constitute a braiding.
 -/
-def binary_fan.braiding {X Y : C} {s : BinaryFan X Y} (P : IsLimit s) {t : BinaryFan Y X} (Q : IsLimit t) : s.x ≅ t.x :=
+def BinaryFan.braiding {X Y : C} {s : BinaryFan X Y} (P : IsLimit s) {t : BinaryFan Y X} (Q : IsLimit t) : s.x ≅ t.x :=
   IsLimit.conePointUniqueUpToIso P Q.swapBinaryFan
 
 /-- Given binary fans `sXY` over `X Y`, and `sYZ` over `Y Z`, and `s` over `sXY.X Z`,
@@ -80,17 +85,17 @@ if `sYZ` is a limit cone we can construct a binary fan over `X sYZ.X`.
 
 This is an ingredient of building the associator for a cartesian category.
 -/
-def binary_fan.assoc {X Y Z : C} {sXY : BinaryFan X Y} {sYZ : BinaryFan Y Z} (Q : IsLimit sYZ) (s : BinaryFan sXY.x Z) :
+def BinaryFan.assoc {X Y Z : C} {sXY : BinaryFan X Y} {sYZ : BinaryFan Y Z} (Q : IsLimit sYZ) (s : BinaryFan sXY.x Z) :
     BinaryFan X sYZ.x :=
   BinaryFan.mk (s.fst ≫ sXY.fst) (Q.lift (BinaryFan.mk (s.fst ≫ sXY.snd) s.snd))
 
 @[simp]
-theorem binary_fan.assoc_fst {X Y Z : C} {sXY : BinaryFan X Y} {sYZ : BinaryFan Y Z} (Q : IsLimit sYZ)
+theorem BinaryFan.assoc_fst {X Y Z : C} {sXY : BinaryFan X Y} {sYZ : BinaryFan Y Z} (Q : IsLimit sYZ)
     (s : BinaryFan sXY.x Z) : (s.assoc Q).fst = s.fst ≫ sXY.fst :=
   rfl
 
 @[simp]
-theorem binary_fan.assoc_snd {X Y Z : C} {sXY : BinaryFan X Y} {sYZ : BinaryFan Y Z} (Q : IsLimit sYZ)
+theorem BinaryFan.assoc_snd {X Y Z : C} {sXY : BinaryFan X Y} {sYZ : BinaryFan Y Z} (Q : IsLimit sYZ)
     (s : BinaryFan sXY.x Z) : (s.assoc Q).snd = Q.lift (BinaryFan.mk (s.fst ≫ sXY.snd) s.snd) :=
   rfl
 
@@ -99,24 +104,24 @@ if `sYZ` is a limit cone we can construct a binary fan over `sXY.X Z`.
 
 This is an ingredient of building the associator for a cartesian category.
 -/
-def binary_fan.assoc_inv {X Y Z : C} {sXY : BinaryFan X Y} (P : IsLimit sXY) {sYZ : BinaryFan Y Z}
+def BinaryFan.assocInv {X Y Z : C} {sXY : BinaryFan X Y} (P : IsLimit sXY) {sYZ : BinaryFan Y Z}
     (s : BinaryFan X sYZ.x) : BinaryFan sXY.x Z :=
   BinaryFan.mk (P.lift (BinaryFan.mk s.fst (s.snd ≫ sYZ.fst))) (s.snd ≫ sYZ.snd)
 
 @[simp]
-theorem binary_fan.assoc_inv_fst {X Y Z : C} {sXY : BinaryFan X Y} (P : IsLimit sXY) {sYZ : BinaryFan Y Z}
+theorem BinaryFan.assoc_inv_fst {X Y Z : C} {sXY : BinaryFan X Y} (P : IsLimit sXY) {sYZ : BinaryFan Y Z}
     (s : BinaryFan X sYZ.x) : (s.assocInv P).fst = P.lift (BinaryFan.mk s.fst (s.snd ≫ sYZ.fst)) :=
   rfl
 
 @[simp]
-theorem binary_fan.assoc_inv_snd {X Y Z : C} {sXY : BinaryFan X Y} (P : IsLimit sXY) {sYZ : BinaryFan Y Z}
+theorem BinaryFan.assoc_inv_snd {X Y Z : C} {sXY : BinaryFan X Y} (P : IsLimit sXY) {sYZ : BinaryFan Y Z}
     (s : BinaryFan X sYZ.x) : (s.assocInv P).snd = s.snd ≫ sYZ.snd :=
   rfl
 
 /-- If all the binary fans involved a limit cones, `binary_fan.assoc` produces another limit cone.
 -/
 @[simps]
-def is_limit.assoc {X Y Z : C} {sXY : BinaryFan X Y} (P : IsLimit sXY) {sYZ : BinaryFan Y Z} (Q : IsLimit sYZ)
+def IsLimit.assoc {X Y Z : C} {sXY : BinaryFan X Y} (P : IsLimit sXY) {sYZ : BinaryFan Y Z} (Q : IsLimit sYZ)
     {s : BinaryFan sXY.x Z} (R : IsLimit s) : IsLimit (s.assoc Q) where
   lift := fun t => R.lift (BinaryFan.assocInv P t)
   fac' := fun t => by
@@ -146,21 +151,21 @@ def is_limit.assoc {X Y Z : C} {sXY : BinaryFan X Y} (P : IsLimit sXY) {sYZ : Bi
 we obtain an isomorphism between the cone points.
 -/
 @[reducible]
-def binary_fan.associator {X Y Z : C} {sXY : BinaryFan X Y} (P : IsLimit sXY) {sYZ : BinaryFan Y Z} (Q : IsLimit sYZ)
+def BinaryFan.associator {X Y Z : C} {sXY : BinaryFan X Y} (P : IsLimit sXY) {sYZ : BinaryFan Y Z} (Q : IsLimit sYZ)
     {s : BinaryFan sXY.x Z} (R : IsLimit s) {t : BinaryFan X sYZ.x} (S : IsLimit t) : s.x ≅ t.x :=
   IsLimit.conePointUniqueUpToIso (IsLimit.assoc P Q R) S
 
 /-- Given a fixed family of limit data for every pair `X Y`, we obtain an associator.
 -/
 @[reducible]
-def binary_fan.associator_of_limit_cone (L : ∀ X Y : C, LimitCone (pair X Y)) (X Y Z : C) :
+def BinaryFan.associatorOfLimitCone (L : ∀ X Y : C, LimitCone (pair X Y)) (X Y Z : C) :
     (L (L X Y).Cone.x Z).Cone.x ≅ (L X (L Y Z).Cone.x).Cone.x :=
   BinaryFan.associator (L X Y).IsLimit (L Y Z).IsLimit (L (L X Y).Cone.x Z).IsLimit (L X (L Y Z).Cone.x).IsLimit
 
 /-- Construct a left unitor from specified limit cones.
 -/
 @[simps]
-def binary_fan.left_unitor {X : C} {s : Cone (Functor.empty.{v} C)} (P : IsLimit s) {t : BinaryFan s.x X}
+def BinaryFan.leftUnitor {X : C} {s : Cone (Functor.empty.{v} C)} (P : IsLimit s) {t : BinaryFan s.x X}
     (Q : IsLimit t) : t.x ≅ X where
   Hom := t.snd
   inv := Q.lift (BinaryFan.mk (P.lift { x, π := { app := Pempty.rec _ } }) (𝟙 X))
@@ -176,7 +181,7 @@ def binary_fan.left_unitor {X : C} {s : Cone (Functor.empty.{v} C)} (P : IsLimit
 /-- Construct a right unitor from specified limit cones.
 -/
 @[simps]
-def binary_fan.right_unitor {X : C} {s : Cone (Functor.empty.{v} C)} (P : IsLimit s) {t : BinaryFan X s.x}
+def BinaryFan.rightUnitor {X : C} {s : Cone (Functor.empty.{v} C)} (P : IsLimit s) {t : BinaryFan X s.x}
     (Q : IsLimit t) : t.x ≅ X where
   Hom := t.fst
   inv := Q.lift (BinaryFan.mk (𝟙 X) (P.lift { x, π := { app := Pempty.rec _ } }))
@@ -209,12 +214,12 @@ namespace MonoidalOfChosenFiniteProducts
 
 /-- Implementation of the tensor product for `monoidal_of_chosen_finite_products`. -/
 @[reducible]
-def tensor_obj (X Y : C) : C :=
+def tensorObj (X Y : C) : C :=
   (ℬ X Y).Cone.x
 
 /-- Implementation of the tensor product of morphisms for `monoidal_of_chosen_finite_products`. -/
 @[reducible]
-def tensor_hom {W X Y Z : C} (f : W ⟶ X) (g : Y ⟶ Z) : tensorObj ℬ W Y ⟶ tensorObj ℬ X Z :=
+def tensorHom {W X Y Z : C} (f : W ⟶ X) (g : Y ⟶ Z) : tensorObj ℬ W Y ⟶ tensorObj ℬ X Z :=
   (BinaryFan.IsLimit.lift' (ℬ X Z).IsLimit ((ℬ W Y).Cone.π.app WalkingPair.left ≫ f)
       (((ℬ W Y).Cone.π.app WalkingPair.right : (ℬ W Y).Cone.x ⟶ Y) ≫ g)).val
 
@@ -302,7 +307,7 @@ end MonoidalOfChosenFiniteProducts
 open MonoidalOfChosenFiniteProducts
 
 /-- A category with a terminal object and binary products has a natural monoidal structure. -/
-def monoidal_of_chosen_finite_products : MonoidalCategory C where
+def monoidalOfChosenFiniteProducts : MonoidalCategory C where
   tensorUnit := 𝒯.Cone.x
   tensorObj := fun X Y => tensorObj ℬ X Y
   tensorHom := fun _ _ _ _ f g => tensorHom ℬ f g
@@ -327,8 +332,7 @@ a fixed choice of limit data for the empty functor, and for `pair X Y` for every
 This is an implementation detail for `symmetric_of_chosen_finite_products`.
 -/
 @[nolint unused_arguments has_inhabited_instance]
-def monoidal_of_chosen_finite_products_synonym (𝒯 : LimitCone (Functor.empty.{v} C))
-    (ℬ : ∀ X Y : C, LimitCone (pair X Y)) :=
+def MonoidalOfChosenFiniteProductsSynonym (𝒯 : LimitCone (Functor.empty.{v} C)) (ℬ : ∀ X Y : C, LimitCone (pair X Y)) :=
   C deriving Category
 
 instance : MonoidalCategory (MonoidalOfChosenFiniteProductsSynonym 𝒯 ℬ) :=
@@ -405,7 +409,7 @@ open MonoidalOfChosenFiniteProducts
 
 /-- The monoidal structure coming from finite products is symmetric.
 -/
-def symmetric_of_chosen_finite_products : SymmetricCategory (MonoidalOfChosenFiniteProductsSynonym 𝒯 ℬ) where
+def symmetricOfChosenFiniteProducts : SymmetricCategory (MonoidalOfChosenFiniteProductsSynonym 𝒯 ℬ) where
   braiding := fun X Y => Limits.BinaryFan.braiding (ℬ _ _).IsLimit (ℬ _ _).IsLimit
   braiding_naturality' := fun X X' Y Y' f g => braiding_naturality ℬ f g
   hexagon_forward' := fun X Y Z => hexagon_forward ℬ X Y Z

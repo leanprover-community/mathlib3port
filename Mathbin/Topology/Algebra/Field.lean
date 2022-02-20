@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Patrick Massot. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Patrick Massot, Scott Morrison
+-/
 import Mathbin.Topology.Algebra.Ring
 import Mathbin.Topology.Algebra.GroupWithZero
 
@@ -21,7 +26,7 @@ variable [TopologicalSpace R]
 /-- The induced topology on units of a topological ring.
 This is not a global instance since other topologies could be relevant. Instead there is a class
 `induced_units` asserting that something equivalent to this construction holds. -/
-def topological_space_units : TopologicalSpace (R)ˣ :=
+def topologicalSpaceUnits : TopologicalSpace (R)ˣ :=
   induced (coe : (R)ˣ → R) ‹_›
 
 /-- Asserts the topology on units is the induced topology.
@@ -30,7 +35,7 @@ def topological_space_units : TopologicalSpace (R)ˣ :=
  Another good candidate is the subspace topology of $R \times R$,
  with the units embedded via $u \mapsto (u, u^{-1})$.
  These topologies are not (propositionally) equal in general. -/
-class induced_units [t : TopologicalSpace <| (R)ˣ] : Prop where
+class InducedUnits [t : TopologicalSpace <| (R)ˣ] : Prop where
   top_eq : t = induced (coe : (R)ˣ → R) ‹_›
 
 variable [TopologicalSpace <| (R)ˣ]
@@ -38,7 +43,7 @@ variable [TopologicalSpace <| (R)ˣ]
 theorem units_topology_eq [InducedUnits R] : ‹TopologicalSpace (R)ˣ› = induced (coe : (R)ˣ → R) ‹_› :=
   induced_units.top_eq
 
-theorem induced_units.continuous_coe [InducedUnits R] : Continuous (coe : (R)ˣ → R) :=
+theorem InducedUnits.continuous_coe [InducedUnits R] : Continuous (coe : (R)ˣ → R) :=
   (units_topology_eq R).symm ▸ continuous_induced_dom
 
 theorem units_embedding [InducedUnits R] : Embedding (coe : (R)ˣ → R) :=

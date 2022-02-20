@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Yury Kudryashov. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yury Kudryashov
+-/
 import Mathbin.Analysis.BoxIntegral.Partition.Split
 import Mathbin.Analysis.NormedSpace.OperatorNorm
 import Mathbin.Data.Set.Intervals.ProjIcc
@@ -38,7 +43,7 @@ we have `f J = ∑ Ji in π.boxes, f Ji`. A function is called box additive on s
 if the same property holds for `J ≤ I`. We formalize these two notions in the same definition
 using `I : with_bot (box ι)`: the value `I = ⊤` corresponds to functions box additive on the whole
 space.  -/
-structure box_additive_map (ι M : Type _) [AddCommMonoidₓ M] (I : WithTop (Box ι)) where
+structure BoxAdditiveMap (ι M : Type _) [AddCommMonoidₓ M] (I : WithTop (Box ι)) where
   toFun : Box ι → M
   sum_partition_boxes' :
     ∀ J : Box ι, ↑J ≤ I → ∀ π : Prepartition J, π.IsPartition → (∑ Ji in π.boxes, to_fun Ji) = to_fun J
@@ -66,7 +71,7 @@ theorem to_fun_eq_coe (f : ι →ᵇᵃ[I₀] M) : f.toFun = f :=
 theorem coe_mk f h : ⇑(mk f h : ι →ᵇᵃ[I₀] M) = f :=
   rfl
 
-theorem coe_injective : Injective fun f : ι →ᵇᵃ[I₀] M x => f x := by
+theorem coe_injective : Injective fun x => f x := by
   rintro ⟨f, hf⟩ ⟨g, hg⟩ (rfl : f = g)
   rfl
 
@@ -106,7 +111,7 @@ def restrict (f : ι →ᵇᵃ[I₀] M) (I : WithTop (Box ι)) (hI : I ≤ I₀)
 
 /-- If `f : box ι → M` is box additive on partitions of the form `split I i x`, then it is box
 additive. -/
-def of_map_split_add [Fintype ι] (f : Box ι → M) (I₀ : WithTop (Box ι))
+def ofMapSplitAdd [Fintype ι] (f : Box ι → M) (I₀ : WithTop (Box ι))
     (hf :
       ∀ I : Box ι,
         ↑I ≤ I₀ →
@@ -166,7 +171,7 @@ variable {E : Type _} [NormedGroup E] [NormedSpace ℝ E]
 
 /-- If `f` is a box-additive map, then so is the map sending `I` to the scalar multiplication
 by `f I` as a continuous linear map from `E` to itself. -/
-def to_smul (f : ι →ᵇᵃ[I₀] ℝ) : ι →ᵇᵃ[I₀] E →L[ℝ] E :=
+def toSmul (f : ι →ᵇᵃ[I₀] ℝ) : ι →ᵇᵃ[I₀] E →L[ℝ] E :=
   f.map (ContinuousLinearMap.lsmul ℝ ℝ).toLinearMap.toAddMonoidHom
 
 @[simp]
@@ -180,7 +185,7 @@ end ToSmul
 `I₀`, then `λ J, f (J.upper i) (J.face i) - f (J.lower i) (J.face i)` is box-additive on subboxes of
 `I₀`. -/
 @[simps]
-def upper_sub_lower.{u} {G : Type u} [AddCommGroupₓ G] (I₀ : Box (Finₓ (n + 1))) (i : Finₓ (n + 1))
+def upperSubLower.{u} {G : Type u} [AddCommGroupₓ G] (I₀ : Box (Finₓ (n + 1))) (i : Finₓ (n + 1))
     (f : ℝ → Box (Finₓ n) → G) (fb : icc (I₀.lower i) (I₀.upper i) → Finₓ n →ᵇᵃ[I₀.face i] G)
     (hf : ∀ x hx : x ∈ icc (I₀.lower i) (I₀.upper i) J, f x J = fb ⟨x, hx⟩ J) : Finₓ (n + 1) →ᵇᵃ[I₀] G :=
   ofMapSplitAdd (fun J : Box (Finₓ (n + 1)) => f (J.upper i) (J.face i) - f (J.lower i) (J.face i)) I₀
@@ -190,7 +195,7 @@ def upper_sub_lower.{u} {G : Type u} [AddCommGroupₓ G] (I₀ : Box (Finₓ (n 
       refine' i.succ_above_cases _ _ j
       · intro x hx
         simp only [box.split_lower_def hx, box.split_upper_def hx, update_same, ← WithBot.some_eq_coe, Option.elim,
-          box.face, · ∘ ·, update_noteq (Finₓ.succ_above_ne _ _)]
+          box.face, (· ∘ ·), update_noteq (Finₓ.succ_above_ne _ _)]
         abel
         
       · clear j

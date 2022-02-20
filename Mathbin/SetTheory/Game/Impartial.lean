@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Fox Thomson. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Fox Thomson
+-/
 import Mathbin.SetTheory.Game.Winner
 import Mathbin.Tactic.NthRewrite.Default
 import Mathbin.Tactic.EquivRw
@@ -19,7 +24,7 @@ namespace Pgame
 local infixl:0 " ≈ " => Equiv
 
 /-- The definition for a impartial game, defined using Conway induction -/
-def impartial_aux : Pgame → Prop
+def ImpartialAux : Pgame → Prop
   | G => (G ≈ -G) ∧ (∀ i, impartial_aux (G.moveLeft i)) ∧ ∀ j, impartial_aux (G.moveRight j)
 
 theorem impartial_aux_def {G : Pgame} :
@@ -35,7 +40,7 @@ theorem impartial_aux_def {G : Pgame} :
     
 
 /-- A typeclass on impartial games. -/
-class impartial (G : Pgame) : Prop where
+class Impartial (G : Pgame) : Prop where
   out : ImpartialAux G
 
 theorem impartial_iff_aux {G : Pgame} : G.Impartial ↔ G.ImpartialAux :=
@@ -120,7 +125,8 @@ theorem winner_cases (G : Pgame) [G.Impartial] : G.FirstLoses ∨ G.FirstWins :=
     
 
 theorem not_first_wins (G : Pgame) [G.Impartial] : ¬G.FirstWins ↔ G.FirstLoses := by
-  cases winner_cases G <;> simp [not_first_loses_of_first_wins, not_first_wins_of_first_loses, h]
+  cases winner_cases G <;>-- `finish using [not_first_loses_of_first_wins]` can close these goals
+    simp [not_first_loses_of_first_wins, not_first_wins_of_first_loses, h]
 
 theorem not_first_loses (G : Pgame) [G.Impartial] : ¬G.FirstLoses ↔ G.FirstWins :=
   Iff.symm <| iff_not_comm.1 <| Iff.symm <| not_first_wins G

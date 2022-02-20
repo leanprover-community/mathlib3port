@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison
+-/
 import Mathbin.CategoryTheory.Monoidal.NaturalTransformation
 import Mathbin.CategoryTheory.DiscreteCategory
 import Mathbin.Algebra.Group.Hom
@@ -21,12 +26,12 @@ variable (M : Type u) [Monoidₓ M]
 namespace CategoryTheory
 
 @[to_additive]
-instance monoid_discrete : Monoidₓ (Discrete M) := by
+instance monoidDiscrete : Monoidₓ (Discrete M) := by
   dsimp [discrete]
   infer_instance
 
 @[to_additive Discrete.addMonoidal]
-instance discrete.monoidal : MonoidalCategory (Discrete M) where
+instance Discrete.monoidal : MonoidalCategory (Discrete M) where
   tensorUnit := 1
   tensorObj := fun X Y => X * Y
   tensorHom := fun W X Y Z f g =>
@@ -45,7 +50,7 @@ discrete monoidal categories.
 @[to_additive Dicrete.addMonoidalFunctor
       "An additive morphism between add_monoids gives a\n  monoidal functor between the corresponding discrete monoidal categories.",
   simps]
-def discrete.monoidal_functor (F : M →* N) : MonoidalFunctor (Discrete M) (Discrete N) where
+def Discrete.monoidalFunctor (F : M →* N) : MonoidalFunctor (Discrete M) (Discrete N) where
   obj := F
   map := fun X Y f => eqToHom (F.congr_arg (eq_of_hom f))
   ε := eqToHom F.map_one.symm
@@ -57,7 +62,7 @@ variable {K : Type u} [Monoidₓ K]
 -/
 @[to_additive Dicrete.addMonoidalFunctorComp
       "The monoidal natural isomorphism corresponding to\ncomposing two additive morphisms."]
-def discrete.monoidal_functor_comp (F : M →* N) (G : N →* K) :
+def Discrete.monoidalFunctorComp (F : M →* N) (G : N →* K) :
     Discrete.monoidalFunctor F ⊗⋙ Discrete.monoidalFunctor G ≅ Discrete.monoidalFunctor (G.comp F) where
   Hom := { app := fun X => 𝟙 _ }
   inv := { app := fun X => 𝟙 _ }

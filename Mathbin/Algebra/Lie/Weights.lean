@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Oliver Nash. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Oliver Nash
+-/
 import Mathbin.Algebra.Lie.Nilpotent
 import Mathbin.Algebra.Lie.TensorProduct
 import Mathbin.Algebra.Lie.Character
@@ -65,7 +70,7 @@ map `χ : L → R` is the simultaneous generalized eigenspace of the action of a
 with eigenvalues `χ x`.
 
 See also `lie_module.weight_space`. -/
-def pre_weight_space (χ : L → R) : Submodule R M :=
+def preWeightSpace (χ : L → R) : Submodule R M :=
   ⨅ x : L, (toEndomorphism R L M x).maximalGeneralizedEigenspace (χ x)
 
 theorem mem_pre_weight_space (χ : L → R) (m : M) :
@@ -82,12 +87,15 @@ protected theorem weight_vector_multiplication (M₁ : Type w₁) (M₂ : Type w
     ((g : M₁ ⊗[R] M₂ →ₗ[R] M₃).comp (mapIncl (preWeightSpace M₁ χ₁) (preWeightSpace M₂ χ₂))).range ≤
       preWeightSpace M₃ (χ₁ + χ₂) :=
   by
+  -- Unpack the statement of the goal.
   intro m₃
   simp only [LieModuleHom.coe_to_linear_map, Pi.add_apply, Function.comp_app, mem_pre_weight_space, LinearMap.coe_comp,
     TensorProduct.mapIncl, exists_imp_distrib, LinearMap.mem_range]
   rintro t rfl x
+  -- Set up some notation.
   let F : Module.End R M₃ := to_endomorphism R L M₃ x - (χ₁ x + χ₂ x) • 1
   change ∃ k, (F ^ k) (g _) = 0
+  -- The goal is linear in `t` so use induction to reduce to the case that `t` is a pure tensor.
   apply t.induction_on
   · use 0
     simp only [LinearMap.map_zero, LieModuleHom.map_zero]
@@ -98,8 +106,10 @@ protected theorem weight_vector_multiplication (M₁ : Type w₁) (M₂ : Type w
     simp only [LieModuleHom.map_add, LinearMap.map_add, LinearMap.pow_map_zero_of_le (le_max_leftₓ k₁ k₂) hk₁,
       LinearMap.pow_map_zero_of_le (le_max_rightₓ k₁ k₂) hk₂, add_zeroₓ]
     
+  -- Now the main argument: pure tensors.
   rintro ⟨m₁, hm₁⟩ ⟨m₂, hm₂⟩
   change ∃ k, (F ^ k) ((g : M₁ ⊗[R] M₂ →ₗ[R] M₃) (m₁ ⊗ₜ m₂)) = 0
+  -- Eliminate `g` from the picture.
   let f₁ : Module.End R (M₁ ⊗[R] M₂) := (to_endomorphism R L M₁ x - χ₁ x • 1).rtensor M₂
   let f₂ : Module.End R (M₁ ⊗[R] M₂) := (to_endomorphism R L M₂ x - χ₂ x • 1).ltensor M₁
   have h_comm_square : F ∘ₗ ↑g = (g : M₁ ⊗[R] M₂ →ₗ[R] M₃).comp (f₁ + f₂) := by
@@ -115,6 +125,7 @@ protected theorem weight_vector_multiplication (M₁ : Type w₁) (M₂ : Type w
     use k
     rw [← LinearMap.comp_apply, LinearMap.commute_pow_left_of_commute h_comm_square, LinearMap.comp_apply, hk,
       LinearMap.map_zero]
+  -- Unpack the information we have about `m₁`, `m₂`.
   simp only [mem_pre_weight_space] at hm₁ hm₂
   obtain ⟨k₁, hk₁⟩ := hm₁ x
   obtain ⟨k₂, hk₂⟩ := hm₂ x
@@ -122,6 +133,7 @@ protected theorem weight_vector_multiplication (M₁ : Type w₁) (M₂ : Type w
     simp only [hk₁, zero_tmul, LinearMap.rtensor_tmul, LinearMap.rtensor_pow]
   have hf₂ : (f₂ ^ k₂) (m₁ ⊗ₜ m₂) = 0 := by
     simp only [hk₂, tmul_zero, LinearMap.ltensor_tmul, LinearMap.ltensor_pow]
+  -- It's now just an application of the binomial theorem.
   use k₁ + k₂ - 1
   have hf_comm : Commute f₁ f₂ := by
     ext m₁ m₂
@@ -130,11 +142,14 @@ protected theorem weight_vector_multiplication (M₁ : Type w₁) (M₂ : Type w
   rw [hf_comm.add_pow']
   simp only [TensorProduct.mapIncl, Submodule.subtype_apply, Finset.sum_apply, Submodule.coe_mk, LinearMap.coe_fn_sum,
     TensorProduct.map_tmul, LinearMap.smul_apply]
+  -- The required sum is zero because each individual term is zero.
   apply Finset.sum_eq_zero
   rintro ⟨i, j⟩ hij
+  -- Eliminate the binomial coefficients from the picture.
   suffices (f₁ ^ i * f₂ ^ j) (m₁ ⊗ₜ m₂) = 0 by
     rw [this]
     apply smul_zero
+  -- Finish off with appropriate case analysis.
   cases' Nat.le_or_le_of_add_eq_add_pred (finset.nat.mem_antidiagonal.mp hij) with hi hj
   · rw [(hf_comm.pow_pow i j).Eq, LinearMap.mul_apply, LinearMap.pow_map_zero_of_le hi hf₁, LinearMap.map_zero]
     
@@ -155,7 +170,7 @@ theorem lie_mem_pre_weight_space_of_mem_pre_weight_space {χ₁ χ₂ : L → R}
 variable (M)
 
 /-- If a Lie algebra is nilpotent, then pre-weight spaces are Lie submodules. -/
-def weight_space [LieAlgebra.IsNilpotent R L] (χ : L → R) : LieSubmodule R L M :=
+def weightSpace [LieAlgebra.IsNilpotent R L] (χ : L → R) : LieSubmodule R L M :=
   { preWeightSpace M χ with
     lie_mem := fun x m hm => by
       rw [← zero_addₓ χ]
@@ -193,6 +208,8 @@ theorem coe_weight_space_of_top [LieAlgebra.IsNilpotent R L] (χ : L → R) :
 @[simp]
 theorem zero_weight_space_eq_top_of_nilpotent [LieAlgebra.IsNilpotent R L] [IsNilpotent R L M] :
     weightSpace M (0 : (⊤ : LieSubalgebra R L) → R) = ⊤ := by
+  /- We use `coe_weight_space_of_top` as a trick to circumvent the fact that we don't (yet) know
+      `is_nilpotent R (⊤ : lie_subalgebra R L) M` is equivalent to `is_nilpotent R L M`. -/
   have h₀ : (0 : L → R) ∘ (⊤ : LieSubalgebra R L).incl = 0 := by
     ext
     rfl
@@ -202,7 +219,7 @@ theorem zero_weight_space_eq_top_of_nilpotent [LieAlgebra.IsNilpotent R L] [IsNi
 
 /-- Given a Lie module `M` of a Lie algebra `L`, a weight of `M` with respect to a nilpotent
 subalgebra `H ⊆ L` is a Lie character whose corresponding weight space is non-empty. -/
-def is_weight (χ : LieCharacter R H) : Prop :=
+def IsWeight (χ : LieCharacter R H) : Prop :=
   weightSpace M χ ≠ ⊥
 
 /-- For a non-trivial nilpotent Lie module over a nilpotent Lie algebra, the zero character is a
@@ -224,7 +241,7 @@ open LieModule
 
 /-- Given a nilpotent Lie subalgebra `H ⊆ L`, the root space of a map `χ : H → R` is the weight
 space of `L` regarded as a module of `H` via the adjoint action. -/
-abbrev root_space (χ : H → R) : LieSubmodule R H L :=
+abbrev rootSpace (χ : H → R) : LieSubmodule R H L :=
   weightSpace L χ
 
 @[simp]
@@ -233,7 +250,7 @@ theorem zero_root_space_eq_top_of_nilpotent [h : IsNilpotent R L] : rootSpace (�
 
 /-- A root of a Lie algebra `L` with respect to a nilpotent subalgebra `H ⊆ L` is a weight of `L`,
 regarded as a module of `H` via the adjoint action. -/
-abbrev is_root :=
+abbrev IsRoot :=
   IsWeight H L
 
 @[simp]
@@ -272,7 +289,7 @@ variable (R L H M)
 /-- Auxiliary definition for `root_space_weight_space_product`,
 which is close to the deterministic timeout limit.
 -/
-def root_space_weight_space_product_aux {χ₁ χ₂ χ₃ : H → R} (hχ : χ₁ + χ₂ = χ₃) :
+def rootSpaceWeightSpaceProductAux {χ₁ χ₂ χ₃ : H → R} (hχ : χ₁ + χ₂ = χ₃) :
     rootSpace H χ₁ →ₗ[R] weightSpace M χ₂ →ₗ[R] weightSpace M χ₃ where
   toFun := fun x =>
     { toFun := fun m => ⟨⁅(x : L),(m : M)⁆, hχ ▸ lie_mem_weight_space_of_mem_weight_space x.property m.property⟩,
@@ -294,7 +311,7 @@ def root_space_weight_space_product_aux {χ₁ χ₂ χ₃ : H → R} (hχ : χ�
 
 /-- Given a nilpotent Lie subalgebra `H ⊆ L` together with `χ₁ χ₂ : H → R`, there is a natural
 `R`-bilinear product of root vectors and weight vectors, compatible with the actions of `H`. -/
-def root_space_weight_space_product (χ₁ χ₂ χ₃ : H → R) (hχ : χ₁ + χ₂ = χ₃) :
+def rootSpaceWeightSpaceProduct (χ₁ χ₂ χ₃ : H → R) (hχ : χ₁ + χ₂ = χ₃) :
     rootSpace H χ₁ ⊗[R] weightSpace M χ₂ →ₗ⁅R,H⁆ weightSpace M χ₃ :=
   liftLie R H (rootSpace H χ₁) (weightSpace M χ₂) (weightSpace M χ₃)
     { toLinearMap := rootSpaceWeightSpaceProductAux R L H M hχ,
@@ -313,7 +330,7 @@ theorem coe_root_space_weight_space_product_tmul (χ₁ χ₂ χ₃ : H → R) (
 
 /-- Given a nilpotent Lie subalgebra `H ⊆ L` together with `χ₁ χ₂ : H → R`, there is a natural
 `R`-bilinear product of root vectors, compatible with the actions of `H`. -/
-def root_space_product (χ₁ χ₂ χ₃ : H → R) (hχ : χ₁ + χ₂ = χ₃) :
+def rootSpaceProduct (χ₁ χ₂ χ₃ : H → R) (hχ : χ₁ + χ₂ = χ₃) :
     rootSpace H χ₁ ⊗[R] rootSpace H χ₂ →ₗ⁅R,H⁆ rootSpace H χ₃ :=
   rootSpaceWeightSpaceProduct R L H L χ₁ χ₂ χ₃ hχ
 
@@ -327,7 +344,7 @@ theorem root_space_product_tmul (χ₁ χ₂ χ₃ : H → R) (hχ : χ₁ + χ�
 
 /-- Given a nilpotent Lie subalgebra `H ⊆ L`, the root space of the zero map `0 : H → R` is a Lie
 subalgebra of `L`. -/
-def zero_root_subalgebra : LieSubalgebra R L :=
+def zeroRootSubalgebra : LieSubalgebra R L :=
   { (rootSpace H 0 : Submodule R L) with
     lie_mem' := fun x y hx hy => by
       let xy : root_space H 0 ⊗[R] root_space H 0 := ⟨x, hx⟩ ⊗ₜ ⟨y, hy⟩
@@ -406,7 +423,7 @@ However they are naturally Lie submodules over the (in general larger) Lie subal
 `zero_root_subalgebra R L H`. Even though it is often the case that
 `zero_root_subalgebra R L H = H`, it is likely to be useful to have the flexibility not to have
 to invoke this equality (as well as to work more generally). -/
-def weight_space' (χ : H → R) : LieSubmodule R (zeroRootSubalgebra R L H) M :=
+def weightSpace' (χ : H → R) : LieSubmodule R (zeroRootSubalgebra R L H) M :=
   { (weightSpace M χ : Submodule R M) with
     lie_mem := fun x m hm => by
       have hx : (x : L) ∈ root_space H 0 := by

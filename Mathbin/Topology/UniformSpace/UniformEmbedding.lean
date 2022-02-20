@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2017 Johannes Hölzl. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johannes Hölzl, Sébastien Gouëzel, Patrick Massot
+-/
 import Mathbin.Topology.UniformSpace.Cauchy
 import Mathbin.Topology.UniformSpace.Separation
 import Mathbin.Topology.DenseEmbedding
@@ -169,7 +174,7 @@ theorem UniformInducing.inducing {f : α → β} (h : UniformInducing f) : Induc
 theorem UniformInducing.prod {α' : Type _} {β' : Type _} [UniformSpace α'] [UniformSpace β'] {e₁ : α → α'} {e₂ : β → β'}
     (h₁ : UniformInducing e₁) (h₂ : UniformInducing e₂) : UniformInducing fun p : α × β => (e₁ p.1, e₂ p.2) :=
   ⟨by
-    simp [· ∘ ·, uniformity_prod, h₁.comap_uniformity.symm, h₂.comap_uniformity.symm, comap_inf, comap_comap]⟩
+    simp [(· ∘ ·), uniformity_prod, h₁.comap_uniformity.symm, h₂.comap_uniformity.symm, comap_inf, comap_comap]⟩
 
 theorem UniformInducing.dense_inducing {f : α → β} (h : UniformInducing f) (hd : DenseRange f) : DenseInducing f :=
   { dense := hd, induced := h.Inducing.induced }
@@ -218,7 +223,7 @@ theorem closure_image_mem_nhds_of_uniform_inducing {s : Set (α × α)} {e : α 
 theorem uniform_embedding_subtype_emb (p : α → Prop) {e : α → β} (ue : UniformEmbedding e) (de : DenseEmbedding e) :
     UniformEmbedding (DenseEmbedding.subtypeEmb p e) :=
   { comap_uniformity := by
-      simp [comap_comap, · ∘ ·, DenseEmbedding.subtypeEmb, uniformity_subtype, ue.comap_uniformity.symm],
+      simp [comap_comap, (· ∘ ·), DenseEmbedding.subtypeEmb, uniformity_subtype, ue.comap_uniformity.symm],
     inj := (de.Subtype p).inj }
 
 theorem UniformEmbedding.prod {α' : Type _} {β' : Type _} [UniformSpace α'] [UniformSpace β'] {e₁ : α → α'}
@@ -419,7 +424,7 @@ theorem uniform_continuous_uniformly_extend [cγ : CompleteSpace γ] : UniformCo
     rwa [h_e.comap_uniformity.symm] at this
   let ⟨t, ht, ts⟩ := this
   show Preimage (fun p : α × α => (ψ p.1, ψ p.2)) d ∈ 𝓤 α from
-    ((𝓤 α).sets_of_superset (interior_mem_uniformity ht)) fun ⟨x₁, x₂⟩ hx_t =>
+    ((𝓤 α).sets_of_superset (interior_mem_uniformity ht)) fun hx_t =>
       have : 𝓝 (x₁, x₂) ≤ 𝓟 (Interior t) := is_open_iff_nhds.mp is_open_interior (x₁, x₂) hx_t
       have : Interior t ∈ 𝓝 x₁ ×ᶠ 𝓝 x₂ := by
         rwa [nhds_prod_eq, le_principal_iff] at this

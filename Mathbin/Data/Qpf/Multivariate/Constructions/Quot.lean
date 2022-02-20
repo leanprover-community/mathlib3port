@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Jeremy Avigad. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Jeremy Avigad, Simon Hudon
+-/
 import Mathbin.Data.Qpf.Multivariate.Basic
 
 /-!
@@ -32,7 +37,7 @@ variable {FG_repr : ∀ {α}, G α → F α}
 /-- If `F` is a QPF then `G` is a QPF as well. Can be used to
 construct `mvqpf` instances by transporting them across
 surjective functions -/
-def quotient_qpf (FG_abs_repr : ∀ {α} x : G α, FG_abs (FG_repr x) = x)
+def quotientQpf (FG_abs_repr : ∀ {α} x : G α, FG_abs (FG_repr x) = x)
     (FG_abs_map : ∀ {α β} f : α ⟹ β x : F α, FG_abs (f <$$> x) = f <$$> FG_abs x) : Mvqpf G where
   p := q.p
   abs := fun α p => FG_abs (abs p)
@@ -49,10 +54,10 @@ section Rel
 variable (R : ∀ ⦃α⦄, F α → F α → Prop)
 
 /-- Functorial quotient type -/
-def quot1 (α : Typevec n) :=
+def Quot1 (α : Typevec n) :=
   Quot (@R α)
 
-instance quot1.inhabited {α : Typevec n} [Inhabited <| F α] : Inhabited (Quot1 R α) :=
+instance Quot1.inhabited {α : Typevec n} [Inhabited <| F α] : Inhabited (Quot1 R α) :=
   ⟨Quot.mk _ default⟩
 
 variable [Mvfunctor F] [q : Mvqpf F]
@@ -60,15 +65,15 @@ variable [Mvfunctor F] [q : Mvqpf F]
 variable (Hfunc : ∀ ⦃α β⦄ a b : F α f : α ⟹ β, R a b → R (f <$$> a) (f <$$> b))
 
 /-- `map` of the `quot1` functor -/
-def quot1.map ⦃α β⦄ (f : α ⟹ β) : Quot1.{u} R α → Quot1.{u} R β :=
+def Quot1.map ⦃α β⦄ (f : α ⟹ β) : Quot1.{u} R α → Quot1.{u} R β :=
   (Quot.lift fun x : F α => Quot.mk _ (f <$$> x : F β)) fun a b h => Quot.sound <| Hfunc a b _ h
 
 /-- `mvfunctor` instance for `quot1` with well-behaved `R` -/
-def quot1.mvfunctor : Mvfunctor (Quot1 R) where
+def Quot1.mvfunctor : Mvfunctor (Quot1 R) where
   map := Quot1.map R Hfunc
 
 /-- `quot1` is a qpf -/
-noncomputable def rel_quot : @Mvqpf _ (Quot1 R) (Mvqpf.Quot1.mvfunctor R Hfunc) :=
+noncomputable def relQuot : @Mvqpf _ (Quot1 R) (Mvqpf.Quot1.mvfunctor R Hfunc) :=
   @quotientQpf n F _ q _ (Mvqpf.Quot1.mvfunctor R Hfunc) (fun α x => Quot.mk _ x) (fun α => Quot.out)
     (fun α x => Quot.out_eq _) fun α β f x => rfl
 

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Bhavik Mehta. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yaël Dillies, Bhavik Mehta
+-/
 import Mathbin.Data.Finset.Card
 
 /-!
@@ -59,6 +64,7 @@ theorem sup_sdiff_inj_on [GeneralizedBooleanAlgebra α] (u v : α) :
   rwa [sdiff_sdiff_comm, ha.1.symm.sup_sdiff_cancel_right, sdiff_sdiff_comm, hb.1.symm.sup_sdiff_cancel_right,
     sdiff_sup_cancel ha.2, sdiff_sup_cancel hb.2] at h
 
+-- The namespace is here to distinguish from other compressions.
 namespace Uv
 
 /-! ### UV-compression in generalized boolean algebras -/
@@ -66,7 +72,7 @@ namespace Uv
 
 section GeneralizedBooleanAlgebra
 
-variable [GeneralizedBooleanAlgebra α] [DecidableRel (@Disjoint α _ _)] [DecidableRel (· ≤ · : α → α → Prop)]
+variable [GeneralizedBooleanAlgebra α] [DecidableRel (@Disjoint α _ _)] [DecidableRel ((· ≤ ·) : α → α → Prop)]
   {s : Finset α} {u v a b : α}
 
 /-- To UV-compress `a`, if it doesn't touch `U` and does contain `V`, we remove `V` and
@@ -82,7 +88,7 @@ def compression (u v : α) (s : Finset α) :=
 localized [FinsetFamily] notation "𝓒 " => Uv.compression
 
 /-- `is_compressed u v s` expresses that `s` is UV-compressed. -/
-def is_compressed (u v : α) (s : Finset α) :=
+def IsCompressed (u v : α) (s : Finset α) :=
   𝓒 u v s = s
 
 theorem compress_of_disjoint_of_le (hua : Disjoint u a) (hva : v ≤ a) : compress u v a = (a⊔u) \ v :=
@@ -144,6 +150,7 @@ theorem compress_mem_compression (ha : a ∈ s) : compress u v a ∈ 𝓒 u v s 
   · exact Or.inr ⟨h, a, ha, rfl⟩
     
 
+-- This is a special case of `compress_mem_compression` once we have `compression_idem`.
 theorem compress_mem_compression_of_mem_compression (ha : a ∈ 𝓒 u v s) : compress u v a ∈ 𝓒 u v s := by
   rw [mem_compression] at ha⊢
   simp only [compress_idem, exists_prop]

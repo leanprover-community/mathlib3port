@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Eric Wieser. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Eric Wieser
+-/
 import Mathbin.Algebra.Algebra.Basic
 import Mathbin.Algebra.DirectSum.Module
 import Mathbin.Algebra.DirectSum.Ring
@@ -40,7 +45,7 @@ section
 
 /-- A graded version of `algebra`. An instance of `direct_sum.galgebra R A` endows `(⨁ i, A i)`
 with an `R`-algebra structure. -/
-class galgebra where
+class Galgebra where
   toFun : R →+ A 0
   map_one : to_fun 1 = GradedMonoid.GhasOne.one
   map_mul : ∀ r s, GradedMonoid.mk _ (to_fun (r * s)) = ⟨_, GradedMonoid.GhasMul.mul (to_fun r) (to_fun s)⟩
@@ -90,7 +95,7 @@ coercions such as `submodule.subtype (A i)`, and the `[gmonoid A]` structure ori
 `direct_sum.gmonoid.of_add_submodules`, in which case the proofs about `ghas_one` and `ghas_mul`
 can be discharged by `rfl`. -/
 @[simps]
-def to_algebra (f : ∀ i, A i →ₗ[R] B) (hone : f _ GradedMonoid.GhasOne.one = 1)
+def toAlgebra (f : ∀ i, A i →ₗ[R] B) (hone : f _ GradedMonoid.GhasOne.one = 1)
     (hmul : ∀ {i j} ai : A i aj : A j, f _ (GradedMonoid.GhasMul.mul ai aj) = f _ ai * f _ aj)
     (hcommutes : ∀ r, (f 0) (Galgebra.toFun r) = (algebraMap R B) r) : (⨁ i, A i) →ₐ[R] B :=
   { toSemiring (fun i => (f i).toAddMonoidHom) hone @hmul with

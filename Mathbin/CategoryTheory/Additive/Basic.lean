@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Luke Kershaw. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Luke Kershaw
+-/
 import Mathbin.CategoryTheory.Limits.Shapes.Biproducts
 
 /-!
@@ -28,7 +33,7 @@ variable (C : Type u) [Category C]
 /-- A preadditive category `C` is called additive if it has all finite biproducts.
 See https://stacks.math.columbia.edu/tag/0104.
 -/
-class additive_category extends Preadditive C, HasFiniteBiproducts C
+class AdditiveCategory extends Preadditive C, HasFiniteBiproducts C
 
 end CategoryTheory
 

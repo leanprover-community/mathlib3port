@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Bhavik Mehta. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Bhavik Mehta
+-/
 import Mathbin.CategoryTheory.Limits.Shapes.Equalizers
 import Mathbin.CategoryTheory.Limits.Shapes.KernelPair
 
@@ -34,22 +39,22 @@ variable {A B : C} {f g : A ⟶ B}
 
 /-- The pair `f g : A ⟶ B` is reflexive if there is a morphism `B ⟶ A` which is a section for both.
 -/
-class is_reflexive_pair (f g : A ⟶ B) : Prop where
+class IsReflexivePair (f g : A ⟶ B) : Prop where
   common_section {} : ∃ s : B ⟶ A, s ≫ f = 𝟙 B ∧ s ≫ g = 𝟙 B
 
 /-- The pair `f g : A ⟶ B` is coreflexive if there is a morphism `B ⟶ A` which is a retraction for both.
 -/
-class is_coreflexive_pair (f g : A ⟶ B) : Prop where
+class IsCoreflexivePair (f g : A ⟶ B) : Prop where
   common_retraction {} : ∃ s : B ⟶ A, f ≫ s = 𝟙 A ∧ g ≫ s = 𝟙 A
 
-theorem is_reflexive_pair.mk' (s : B ⟶ A) (sf : s ≫ f = 𝟙 B) (sg : s ≫ g = 𝟙 B) : IsReflexivePair f g :=
+theorem IsReflexivePair.mk' (s : B ⟶ A) (sf : s ≫ f = 𝟙 B) (sg : s ≫ g = 𝟙 B) : IsReflexivePair f g :=
   ⟨⟨s, sf, sg⟩⟩
 
-theorem is_coreflexive_pair.mk' (s : B ⟶ A) (fs : f ≫ s = 𝟙 A) (gs : g ≫ s = 𝟙 A) : IsCoreflexivePair f g :=
+theorem IsCoreflexivePair.mk' (s : B ⟶ A) (fs : f ≫ s = 𝟙 A) (gs : g ≫ s = 𝟙 A) : IsCoreflexivePair f g :=
   ⟨⟨s, fs, gs⟩⟩
 
 /-- Get the common section for a reflexive pair. -/
-noncomputable def common_section (f g : A ⟶ B) [IsReflexivePair f g] : B ⟶ A :=
+noncomputable def commonSection (f g : A ⟶ B) [IsReflexivePair f g] : B ⟶ A :=
   (IsReflexivePair.common_section f g).some
 
 @[simp, reassoc]
@@ -61,7 +66,7 @@ theorem section_comp_right (f g : A ⟶ B) [IsReflexivePair f g] : commonSection
   (IsReflexivePair.common_section f g).some_spec.2
 
 /-- Get the common retraction for a coreflexive pair. -/
-noncomputable def common_retraction (f g : A ⟶ B) [IsCoreflexivePair f g] : B ⟶ A :=
+noncomputable def commonRetraction (f g : A ⟶ B) [IsCoreflexivePair f g] : B ⟶ A :=
   (IsCoreflexivePair.common_retraction f g).some
 
 @[simp, reassoc]
@@ -73,16 +78,18 @@ theorem right_comp_retraction (f g : A ⟶ B) [IsCoreflexivePair f g] : g ≫ co
   (IsCoreflexivePair.common_retraction f g).some_spec.2
 
 /-- If `f,g` is a kernel pair for some morphism `q`, then it is reflexive. -/
-theorem is_kernel_pair.is_reflexive_pair {R : C} {f g : R ⟶ A} {q : A ⟶ B} (h : IsKernelPair q f g) :
+theorem IsKernelPair.is_reflexive_pair {R : C} {f g : R ⟶ A} {q : A ⟶ B} (h : IsKernelPair q f g) :
     IsReflexivePair f g :=
   IsReflexivePair.mk' _ (h.lift' _ _ rfl).2.1 (h.lift' _ _ _).2.2
 
 /-- If `f,g` is reflexive, then `g,f` is reflexive. -/
-theorem is_reflexive_pair.swap [IsReflexivePair f g] : IsReflexivePair g f :=
+-- This shouldn't be an instance as it would instantly loop.
+theorem IsReflexivePair.swap [IsReflexivePair f g] : IsReflexivePair g f :=
   IsReflexivePair.mk' _ (section_comp_right f g) (section_comp_left f g)
 
 /-- If `f,g` is coreflexive, then `g,f` is coreflexive. -/
-theorem is_coreflexive_pair.swap [IsCoreflexivePair f g] : IsCoreflexivePair g f :=
+-- This shouldn't be an instance as it would instantly loop.
+theorem IsCoreflexivePair.swap [IsCoreflexivePair f g] : IsCoreflexivePair g f :=
   IsCoreflexivePair.mk' _ (right_comp_retraction f g) (left_comp_retraction f g)
 
 variable {F : C ⥤ D} {G : D ⥤ C} (adj : F ⊣ G)
@@ -100,11 +107,11 @@ namespace Limits
 variable (C)
 
 /-- `C` has reflexive coequalizers if it has coequalizers for every reflexive pair. -/
-class has_reflexive_coequalizers : Prop where
+class HasReflexiveCoequalizers : Prop where
   has_coeq : ∀ ⦃A B : C⦄ f g : A ⟶ B [IsReflexivePair f g], HasCoequalizer f g
 
 /-- `C` has coreflexive equalizers if it has equalizers for every coreflexive pair. -/
-class has_coreflexive_equalizers : Prop where
+class HasCoreflexiveEqualizers : Prop where
   has_eq : ∀ ⦃A B : C⦄ f g : A ⟶ B [IsCoreflexivePair f g], HasEqualizer f g
 
 attribute [instance] has_reflexive_coequalizers.has_coeq

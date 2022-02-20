@@ -1,3 +1,8 @@
+/-
+Copyright (c) Sébastien Gouëzel. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Sébastien Gouëzel
+-/
 import Mathbin.Data.Complex.Determinant
 import Mathbin.Data.Complex.IsROrC
 
@@ -50,6 +55,7 @@ instance {R : Type _} [NormedField R] [NormedAlgebra R ℝ] : NormedAlgebra R �
   toAlgebra := Complex.algebra
 
 /-- The module structure from `module.complex_to_real` is a normed space. -/
+-- see Note [lower instance priority]
 instance (priority := 900) _root_.normed_space.complex_to_real {E : Type _} [NormedGroup E] [NormedSpace ℂ E] :
     NormedSpace ℝ E :=
   NormedSpace.restrictScalars ℝ ℂ E
@@ -109,7 +115,7 @@ theorem tendsto_norm_sq_cocompact_at_top : Filter.Tendsto normSq (Filter.cocompa
 open ContinuousLinearMap
 
 /-- Continuous linear map version of the real part function, from `ℂ` to `ℝ`. -/
-def re_clm : ℂ →L[ℝ] ℝ :=
+def reClm : ℂ →L[ℝ] ℝ :=
   reLm.mkContinuous 1 fun x => by
     simp [Real.norm_eq_abs, abs_re_le_abs]
 
@@ -138,7 +144,7 @@ theorem re_clm_norm : ∥re_clm∥ = 1 :=
       
 
 /-- Continuous linear map version of the real part function, from `ℂ` to `ℝ`. -/
-def im_clm : ℂ →L[ℝ] ℝ :=
+def imClm : ℂ →L[ℝ] ℝ :=
   imLm.mkContinuous 1 fun x => by
     simp [Real.norm_eq_abs, abs_im_le_abs]
 
@@ -180,7 +186,7 @@ theorem restrict_scalars_one_smul_right (x : ℂ) :
   apply mul_comm
 
 /-- The complex-conjugation function from `ℂ` to itself is an isometric linear equivalence. -/
-def conj_lie : ℂ ≃ₗᵢ[ℝ] ℂ :=
+def conjLie : ℂ ≃ₗᵢ[ℝ] ℂ :=
   ⟨conjAe.toLinearEquiv, abs_conj⟩
 
 @[simp]
@@ -216,7 +222,7 @@ theorem continuous_conj : Continuous (conj : ℂ → ℂ) :=
   conjLie.Continuous
 
 /-- Continuous linear equiv version of the conj function, from `ℂ` to `ℂ`. -/
-def conj_cle : ℂ ≃L[ℝ] ℂ :=
+def conjCle : ℂ ≃L[ℝ] ℂ :=
   conj_lie
 
 @[simp]
@@ -232,7 +238,7 @@ theorem conj_cle_norm : ∥(conjCle : ℂ →L[ℝ] ℂ)∥ = 1 :=
   conjLie.toLinearIsometry.norm_to_continuous_linear_map
 
 /-- Linear isometry version of the canonical embedding of `ℝ` in `ℂ`. -/
-def of_real_li : ℝ →ₗᵢ[ℝ] ℂ :=
+def ofRealLi : ℝ →ₗᵢ[ℝ] ℂ :=
   ⟨ofRealAm.toLinearMap, norm_real⟩
 
 theorem isometry_of_real : Isometry (coe : ℝ → ℂ) :=
@@ -243,7 +249,7 @@ theorem continuous_of_real : Continuous (coe : ℝ → ℂ) :=
   ofRealLi.Continuous
 
 /-- Continuous linear map version of the canonical embedding of `ℝ` in `ℂ`. -/
-def of_real_clm : ℝ →L[ℝ] ℂ :=
+def ofRealClm : ℝ →L[ℝ] ℂ :=
   ofRealLi.toContinuousLinearMap
 
 @[simp]
@@ -295,27 +301,29 @@ variable {α β γ : Type _} [AddCommMonoidₓ α] [TopologicalSpace α] [AddCom
 
 /-- The natural `add_equiv` from `ℂ` to `ℝ × ℝ`. -/
 @[simps (config := { simpRhs := true }) apply symm_apply_re symm_apply_im]
-def equiv_real_prod_add_hom : ℂ ≃+ ℝ × ℝ :=
+def equivRealProdAddHom : ℂ ≃+ ℝ × ℝ :=
   { equivRealProd with
     map_add' := by
       simp }
 
 /-- The natural `linear_equiv` from `ℂ` to `ℝ × ℝ`. -/
 @[simps (config := { simpRhs := true }) apply symm_apply_re symm_apply_im]
-def equiv_real_prod_add_hom_lm : ℂ ≃ₗ[ℝ] ℝ × ℝ :=
+def equivRealProdAddHomLm : ℂ ≃ₗ[ℝ] ℝ × ℝ :=
   { equivRealProdAddHom with
     map_smul' := by
       simp [equiv_real_prod_add_hom] }
 
 /-- The natural `continuous_linear_equiv` from `ℂ` to `ℝ × ℝ`. -/
 @[simps (config := { simpRhs := true }) apply symm_apply_re symm_apply_im]
-def equiv_real_prodₗ : ℂ ≃L[ℝ] ℝ × ℝ :=
+def equivRealProdₗ : ℂ ≃L[ℝ] ℝ × ℝ :=
   equivRealProdAddHomLm.toContinuousLinearEquiv
 
 end
 
 theorem has_sum_iff {α} (f : α → ℂ) (c : ℂ) :
     HasSum f c ↔ HasSum (fun x => (f x).re) c.re ∧ HasSum (fun x => (f x).im) c.im := by
+  -- For some reason, `continuous_linear_map.has_sum` is orders of magnitude faster than
+  -- `has_sum.mapL` here:
   refine' ⟨fun h => ⟨re_clm.has_sum h, im_clm.has_sum h⟩, _⟩
   rintro ⟨h₁, h₂⟩
   convert (h₁.prod_mk h₂).mapL equiv_real_prodₗ.symm.to_continuous_linear_map

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Kevin Kappelmann. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Kevin Kappelmann
+-/
 import Mathbin.Algebra.ContinuedFractions.Computation.Basic
 import Mathbin.Algebra.ContinuedFractions.Translations
 
@@ -37,6 +42,7 @@ namespace GeneralizedContinuedFraction
 
 open generalized_continued_fraction (of)
 
+-- Fix a discrete linear ordered floor field and a value `v`.
 variable {K : Type _} [LinearOrderedField K] [FloorRing K] {v : K}
 
 namespace IntFractPair
@@ -70,6 +76,7 @@ theorem succ_nth_stream_eq_none_iff :
   case option.some =>
     cases' ifp with _ fr
     by_cases' h : fr = 0
+    -- `finish [int_fract_pair.stream]` closes both goals
     · simp [int_fract_pair.stream, h, stream_nth_eq]
       
     · suffices ¬(int_fract_pair.of fr⁻¹ : Option <| int_fract_pair K) = none by
@@ -108,12 +115,15 @@ theorem succ_nth_stream_eq_some_iff {ifp_succ_n : IntFractPair K} :
     injection stream_succ_nth_eq
     
   · rintro ⟨⟨_⟩, ifp_n_props⟩
+    -- `finish [int_fract_pair.stream, ifp_n_props]` closes this goal
     simpa only [int_fract_pair.stream, ifp_n_props, Option.some_bindₓ, if_false]
     
 
 theorem exists_succ_nth_stream_of_fr_zero {ifp_succ_n : IntFractPair K}
     (stream_succ_nth_eq : IntFractPair.stream v (n + 1) = some ifp_succ_n) (succ_nth_fr_eq_zero : ifp_succ_n.fr = 0) :
     ∃ ifp_n : IntFractPair K, IntFractPair.stream v n = some ifp_n ∧ ifp_n.fr⁻¹ = ⌊ifp_n.fr⁻¹⌋ := by
+  -- get the witness from `succ_nth_stream_eq_some_iff` and prove that it has the additional
+  -- properties
   rcases succ_nth_stream_eq_some_iff.elim_left stream_succ_nth_eq with ⟨ifp_n, stream_nth_eq, nth_fr_ne_zero, _⟩
   exists ifp_n
   cases' ifp_n with _ ifp_n_fr
@@ -145,7 +155,7 @@ process.
 
 /-- The head term of the sequence with head of `v` is just the integer part of `v`. -/
 @[simp]
-theorem int_fract_pair.seq1_fst_eq_of : (IntFractPair.seq1 v).fst = IntFractPair.of v :=
+theorem IntFractPair.seq1_fst_eq_of : (IntFractPair.seq1 v).fst = IntFractPair.of v :=
   rfl
 
 theorem of_h_eq_int_fract_pair_seq1_fst_b : (of v).h = (IntFractPair.seq1 v).fst.b := by
@@ -173,8 +183,7 @@ sequence implies the termination of another sequence.
 
 variable {n : ℕ}
 
-theorem int_fract_pair.nth_seq1_eq_succ_nth_stream :
-    (IntFractPair.seq1 v).snd.nth n = (IntFractPair.stream v) (n + 1) :=
+theorem IntFractPair.nth_seq1_eq_succ_nth_stream : (IntFractPair.seq1 v).snd.nth n = (IntFractPair.stream v) (n + 1) :=
   rfl
 
 section Termination
@@ -208,7 +217,7 @@ Now let's show how the values of the sequences correspond to one another.
 -/
 
 
-theorem int_fract_pair.exists_succ_nth_stream_of_gcf_of_nth_eq_some {gp_n : Pair K}
+theorem IntFractPair.exists_succ_nth_stream_of_gcf_of_nth_eq_some {gp_n : Pair K}
     (s_nth_eq : (of v).s.nth n = some gp_n) :
     ∃ ifp : IntFractPair K, IntFractPair.stream v (n + 1) = some ifp ∧ (ifp.b : K) = gp_n.b := by
   obtain ⟨ifp, stream_succ_nth_eq, gp_n_eq⟩ :

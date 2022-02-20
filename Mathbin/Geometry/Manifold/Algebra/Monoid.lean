@@ -1,3 +1,8 @@
+/-
+Copyright © 2020 Nicolò Cavalleri. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Nicolò Cavalleri
+-/
 import Mathbin.Geometry.Manifold.TimesContMdiffMap
 
 /-!
@@ -35,6 +40,7 @@ we formulate the definitions and lemmas for any model.
 /-- Basic hypothesis to talk about a smooth (Lie) additive monoid or a smooth additive
 semigroup. A smooth additive monoid over `α`, for example, is obtained by requiring both the
 instances `add_monoid α` and `has_smooth_add α`. -/
+-- See note [Design choices about smooth algebraic structures]
 @[ancestor SmoothManifoldWithCorners]
 class HasSmoothAdd {𝕜 : Type _} [NondiscreteNormedField 𝕜] {H : Type _} [TopologicalSpace H] {E : Type _}
   [NormedGroup E] [NormedSpace 𝕜 E] (I : ModelWithCorners 𝕜 E H) (G : Type _) [Add G] [TopologicalSpace G]
@@ -44,6 +50,7 @@ class HasSmoothAdd {𝕜 : Type _} [NondiscreteNormedField 𝕜] {H : Type _} [T
 /-- Basic hypothesis to talk about a smooth (Lie) monoid or a smooth semigroup.
 A smooth monoid over `G`, for example, is obtained by requiring both the instances `monoid G`
 and `has_smooth_mul I G`. -/
+-- See note [Design choices about smooth algebraic structures]
 @[ancestor SmoothManifoldWithCorners, to_additive]
 class HasSmoothMul {𝕜 : Type _} [NondiscreteNormedField 𝕜] {H : Type _} [TopologicalSpace H] {E : Type _}
   [NormedGroup E] [NormedSpace 𝕜 E] (I : ModelWithCorners 𝕜 E H) (G : Type _) [Mul G] [TopologicalSpace G]
@@ -105,8 +112,10 @@ names. -/
 def smoothRightMul : C^∞⟮I, G; I, G⟯ :=
   ⟨rightMul g, smooth_mul_right⟩
 
+-- Left multiplication. The abbreviation is `MIL`.
 localized [LieGroup] notation "𝑳" => smoothLeftMul
 
+-- Right multiplication. The abbreviation is `MIR`.
 localized [LieGroup] notation "𝑹" => smoothRightMul
 
 open_locale LieGroup
@@ -143,6 +152,7 @@ theorem smooth_right_mul_one : (𝑹 I g') 1 = g' :=
 
 end
 
+-- Instance of product
 @[to_additive]
 instance HasSmoothMul.prod {𝕜 : Type _} [NondiscreteNormedField 𝕜] {E : Type _} [NormedGroup E] [NormedSpace 𝕜 E]
     {H : Type _} [TopologicalSpace H] (I : ModelWithCorners 𝕜 E H) (G : Type _) [TopologicalSpace G] [ChartedSpace H G]

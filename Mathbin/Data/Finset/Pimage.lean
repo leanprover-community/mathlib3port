@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Yury Kudryashov. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yury Kudryashov
+-/
 import Mathbin.Data.Finset.Option
 import Mathbin.Data.Pfun
 
@@ -18,7 +23,7 @@ variable {α β : Type _}
 namespace Part
 
 /-- Convert a `o : part α` with decidable `part.dom o` to `finset α`. -/
-def to_finset (o : Part α) [Decidable o.Dom] : Finset α :=
+def toFinset (o : Part α) [Decidable o.Dom] : Finset α :=
   o.toOption.toFinset
 
 @[simp]

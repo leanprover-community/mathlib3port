@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Mario Carneiro. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Mario Carneiro, Kenny Lau, Yury Kudryashov
+-/
 import Mathbin.Data.List.Pairwise
 import Mathbin.Logic.Relation
 
@@ -28,17 +33,17 @@ theorem rel_of_chain_cons {a b : α} {l : List α} (p : Chain R a (b :: l)) : R 
 theorem chain_of_chain_cons {a b : α} {l : List α} (p : Chain R a (b :: l)) : Chain R b l :=
   (chain_cons.1 p).2
 
-theorem chain.imp' {S : α → α → Prop} (HRS : ∀ ⦃a b⦄, R a b → S a b) {a b : α} (Hab : ∀ ⦃c⦄, R a c → S b c) {l : List α}
+theorem Chain.imp' {S : α → α → Prop} (HRS : ∀ ⦃a b⦄, R a b → S a b) {a b : α} (Hab : ∀ ⦃c⦄, R a c → S b c) {l : List α}
     (p : Chain R a l) : Chain S b l := by
   induction' p with _ a c l r p IH generalizing b <;> constructor <;> [exact Hab r, exact IH (@HRS _)]
 
-theorem chain.imp {S : α → α → Prop} (H : ∀ a b, R a b → S a b) {a : α} {l : List α} (p : Chain R a l) : Chain S a l :=
+theorem Chain.imp {S : α → α → Prop} (H : ∀ a b, R a b → S a b) {a : α} {l : List α} (p : Chain R a l) : Chain S a l :=
   p.imp' H (H a)
 
-theorem chain.iff {S : α → α → Prop} (H : ∀ a b, R a b ↔ S a b) {a : α} {l : List α} : Chain R a l ↔ Chain S a l :=
+theorem Chain.iff {S : α → α → Prop} (H : ∀ a b, R a b ↔ S a b) {a : α} {l : List α} : Chain R a l ↔ Chain S a l :=
   ⟨Chain.imp fun a b => (H a b).1, Chain.imp fun a b => (H a b).2⟩
 
-theorem chain.iff_mem {a : α} {l : List α} : Chain R a l ↔ Chain (fun x y => x ∈ a :: l ∧ y ∈ l ∧ R x y) a l :=
+theorem Chain.iff_mem {a : α} {l : List α} : Chain R a l ↔ Chain (fun x y => x ∈ a :: l ∧ y ∈ l ∧ R x y) a l :=
   ⟨fun p => by
     induction' p with _ a b l r p IH <;>
       constructor <;> [exact ⟨mem_cons_self _ _, mem_cons_self _ _, r⟩,
@@ -136,13 +141,13 @@ theorem chain_iff_nth_le {R} :
     convert h (i + 1) _ using 1
     exact lt_pred_iff.mp w
 
-theorem chain'.imp {S : α → α → Prop} (H : ∀ a b, R a b → S a b) {l : List α} (p : Chain' R l) : Chain' S l := by
+theorem Chain'.imp {S : α → α → Prop} (H : ∀ a b, R a b → S a b) {l : List α} (p : Chain' R l) : Chain' S l := by
   cases l <;> [trivial, exact p.imp H]
 
-theorem chain'.iff {S : α → α → Prop} (H : ∀ a b, R a b ↔ S a b) {l : List α} : Chain' R l ↔ Chain' S l :=
+theorem Chain'.iff {S : α → α → Prop} (H : ∀ a b, R a b ↔ S a b) {l : List α} : Chain' R l ↔ Chain' S l :=
   ⟨Chain'.imp fun a b => (H a b).1, Chain'.imp fun a b => (H a b).2⟩
 
-theorem chain'.iff_mem : ∀ {l : List α}, Chain' R l ↔ Chain' (fun x y => x ∈ l ∧ y ∈ l ∧ R x y) l
+theorem Chain'.iff_mem : ∀ {l : List α}, Chain' R l ↔ Chain' (fun x y => x ∈ l ∧ y ∈ l ∧ R x y) l
   | [] => Iff.rfl
   | x :: l =>
     ⟨fun h => (Chain.iff_mem.1 h).imp fun a b ⟨h₁, h₂, h₃⟩ => ⟨h₁, Or.inr h₂, h₃⟩, chain'.imp fun a b h => h.2.2⟩
@@ -170,7 +175,7 @@ theorem chain'_map_of_chain' {S : β → β → Prop} (f : α → β) (H : ∀ a
     (p : Chain' R l) : Chain' S (map f l) :=
   (chain'_map f).2 <| p.imp H
 
-theorem pairwise.chain' : ∀ {l : List α}, Pairwiseₓ R l → Chain' R l
+theorem Pairwiseₓ.chain' : ∀ {l : List α}, Pairwiseₓ R l → Chain' R l
   | [], _ => trivialₓ
   | a :: l, h => chain_of_pairwise h
 
@@ -182,29 +187,29 @@ theorem chain'_iff_pairwise (tr : Transitive R) : ∀ {l : List α}, Chain' R l 
 theorem chain'_cons {x y l} : Chain' R (x :: y :: l) ↔ R x y ∧ Chain' R (y :: l) :=
   chain_cons
 
-theorem chain'.cons {x y l} (h₁ : R x y) (h₂ : Chain' R (y :: l)) : Chain' R (x :: y :: l) :=
+theorem Chain'.cons {x y l} (h₁ : R x y) (h₂ : Chain' R (y :: l)) : Chain' R (x :: y :: l) :=
   chain'_cons.2 ⟨h₁, h₂⟩
 
-theorem chain'.tail : ∀ {l} h : Chain' R l, Chain' R l.tail
+theorem Chain'.tail : ∀ {l} h : Chain' R l, Chain' R l.tail
   | [], _ => trivialₓ
   | [x], _ => trivialₓ
   | x :: y :: l, h => (chain'_cons.mp h).right
 
-theorem chain'.rel_head {x y l} (h : Chain' R (x :: y :: l)) : R x y :=
+theorem Chain'.rel_head {x y l} (h : Chain' R (x :: y :: l)) : R x y :=
   rel_of_chain_cons h
 
-theorem chain'.rel_head' {x l} (h : Chain' R (x :: l)) ⦃y⦄ (hy : y ∈ head' l) : R x y := by
+theorem Chain'.rel_head' {x l} (h : Chain' R (x :: l)) ⦃y⦄ (hy : y ∈ head' l) : R x y := by
   rw [← cons_head'_tail hy] at h
   exact h.rel_head
 
-theorem chain'.cons' {x} : ∀ {l : List α}, Chain' R l → (∀, ∀ y ∈ l.head', ∀, R x y) → Chain' R (x :: l)
+theorem Chain'.cons' {x} : ∀ {l : List α}, Chain' R l → (∀, ∀ y ∈ l.head', ∀, R x y) → Chain' R (x :: l)
   | [], _, _ => chain'_singleton x
   | a :: l, hl, H => hl.cons <| H _ rfl
 
 theorem chain'_cons' {x l} : Chain' R (x :: l) ↔ (∀, ∀ y ∈ head' l, ∀, R x y) ∧ Chain' R l :=
   ⟨fun h => ⟨h.rel_head', h.tail⟩, fun ⟨h₁, h₂⟩ => h₂.cons' h₁⟩
 
-theorem chain'.drop : ∀ n {l} h : Chain' R l, Chain' R (dropₓ n l)
+theorem Chain'.drop : ∀ n {l} h : Chain' R l, Chain' R (dropₓ n l)
   | 0, _, h => h
   | _, [], _ => by
     rw [drop_nil]
@@ -215,7 +220,7 @@ theorem chain'.drop : ∀ n {l} h : Chain' R l, Chain' R (dropₓ n l)
     exact chain'_nil
   | n + 1, a :: b :: l, h => chain'.drop n (chain'_cons'.mp h).right
 
-theorem chain'.append :
+theorem Chain'.append :
     ∀ {l₁ l₂ : List α} h₁ : Chain' R l₁ h₂ : Chain' R l₂ h : ∀, ∀ x ∈ l₁.last', ∀, ∀ y ∈ l₂.head', ∀, R x y,
       Chain' R (l₁ ++ l₂)
   | [], l₂, h₁, h₂, h => h₂
@@ -228,7 +233,7 @@ theorem chain'.append :
 theorem chain'_pair {x y} : Chain' R [x, y] ↔ R x y := by
   simp only [chain'_singleton, chain'_cons, and_trueₓ]
 
-theorem chain'.imp_head {x y} (h : ∀ {z}, R x z → R y z) {l} (hl : Chain' R (x :: l)) : Chain' R (y :: l) :=
+theorem Chain'.imp_head {x y} (h : ∀ {z}, R x z → R y z) {l} (hl : Chain' R (x :: l)) : Chain' R (y :: l) :=
   hl.tail.cons' fun z hz => h <| hl.rel_head' hz
 
 theorem chain'_reverse : ∀ {l}, Chain' R (reverse l) ↔ Chain' (flip R) l
@@ -272,7 +277,7 @@ theorem chain'_iff_nth_le {R} :
 
 /-- If `l₁ l₂` and `l₃` are lists and `l₁ ++ l₂` and `l₂ ++ l₃` both satisfy
   `chain' R`, then so does `l₁ ++ l₂ ++ l₃` provided `l₂ ≠ []` -/
-theorem chain'.append_overlap :
+theorem Chain'.append_overlap :
     ∀ {l₁ l₂ l₃ : List α} h₁ : Chain' R (l₁ ++ l₂) h₂ : Chain' R (l₂ ++ l₃) hn : l₂ ≠ [], Chain' R (l₁ ++ l₂ ++ l₃)
   | [], l₂, l₃, h₁, h₂, hn => h₂
   | l₁, [], l₃, h₁, h₂, hn => (hn rfl).elim
@@ -305,7 +310,7 @@ theorem exists_chain_of_relation_refl_trans_gen (h : Relation.ReflTransGen r a b
 the predicate is true everywhere in the chain and at `a`.
 That is, we can propagate the predicate up the chain.
 -/
-theorem chain.induction (p : α → Prop) (l : List α) (h : Chain r a l) (hb : last (a :: l) (cons_ne_nil _ _) = b)
+theorem Chain.induction (p : α → Prop) (l : List α) (h : Chain r a l) (hb : last (a :: l) (cons_ne_nil _ _) = b)
     (carries : ∀ ⦃x y : α⦄, r x y → p y → p x) (final : p b) : ∀, ∀ i ∈ a :: l, ∀, p i := by
   induction l generalizing a
   · cases hb
@@ -322,7 +327,7 @@ the predicate is true at `a`.
 That is, we can propagate the predicate all the way up the chain.
 -/
 @[elab_as_eliminator]
-theorem chain.induction_head (p : α → Prop) (l : List α) (h : Chain r a l) (hb : last (a :: l) (cons_ne_nil _ _) = b)
+theorem Chain.induction_head (p : α → Prop) (l : List α) (h : Chain r a l) (hb : last (a :: l) (cons_ne_nil _ _) = b)
     (carries : ∀ ⦃x y : α⦄, r x y → p y → p x) (final : p b) : p a :=
   (Chain.induction p l h hb carries final) _ (mem_cons_selfₓ _ _)
 

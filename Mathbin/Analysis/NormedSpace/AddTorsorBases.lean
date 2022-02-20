@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Oliver Nash. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Oliver Nash
+-/
 import Mathbin.Analysis.NormedSpace.Banach
 import Mathbin.Analysis.NormedSpace.FiniteDimension
 import Mathbin.Analysis.Convex.Combination
@@ -51,14 +56,16 @@ convexity is generalised to this setting. -/
 theorem interior_convex_hull_aff_basis {ι E : Type _} [Fintype ι] [NormedGroup E] [NormedSpace ℝ E]
     (b : AffineBasis ι ℝ E) : Interior (convexHull ℝ (Range b.points)) = { x | ∀ i, 0 < b.Coord i x } := by
   cases' subsingleton_or_nontrivial ι with h h
-  · have := h
+  · -- The zero-dimensional case.
+    have := h
     suffices range b.points = univ by
       simp [this]
     refine' AffineSubspace.eq_univ_of_subsingleton_span_eq_top _ b.tot
     rw [← image_univ]
     exact subsingleton.image subsingleton_of_subsingleton b.points
     
-  · have : FiniteDimensional ℝ E := by
+  · -- The positive-dimensional case.
+    have : FiniteDimensional ℝ E := by
       classical
       obtain ⟨i⟩ := (inferInstance : Nonempty ι)
       exact FiniteDimensional.of_fintype_basis (b.basis_of i)
@@ -79,7 +86,7 @@ include V
 
 open AffineMap
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (y «expr ∉ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (y «expr ∉ » s)
 /-- Given a set `s` of affine-independent points belonging to an open set `u`, we may extend `s` to
 an affine basis, all of whose elements belong to `u`. -/
 theorem exists_subset_affine_independent_span_eq_top_of_open {s u : Set P} (hu : IsOpen u) (hsu : s ⊆ u)

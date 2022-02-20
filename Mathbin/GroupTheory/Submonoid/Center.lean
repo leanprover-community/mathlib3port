@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Eric Wieser. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Eric Wieser
+-/
 import Mathbin.GroupTheory.Submonoid.Operations
 import Mathbin.Data.Fintype.Basic
 
@@ -24,14 +29,14 @@ variable (M)
 
 /-- The center of a magma. -/
 @[to_additive add_center " The center of an additive magma. "]
-def center [Mul M] : Set M :=
+def Center [Mul M] : Set M :=
   { z | ∀ m, m * z = z * m }
 
 @[to_additive mem_add_center]
 theorem mem_center_iff [Mul M] {z : M} : z ∈ Center M ↔ ∀ g, g * z = z * g :=
   Iff.rfl
 
-instance decidable_mem_center [Mul M] [DecidableEq M] [Fintype M] : DecidablePred (· ∈ Center M) := fun _ =>
+instance decidableMemCenter [Mul M] [DecidableEq M] [Fintype M] : DecidablePred (· ∈ Center M) := fun _ =>
   decidableOfIff' _ (mem_center_iff M)
 
 @[simp, to_additive zero_mem_add_center]
@@ -129,7 +134,7 @@ variable {M}
 theorem mem_center_iff {z : M} : z ∈ center M ↔ ∀ g, g * z = z * g :=
   Iff.rfl
 
-instance decidable_mem_center [DecidableEq M] [Fintype M] : DecidablePred (· ∈ center M) := fun _ =>
+instance decidableMemCenter [DecidableEq M] [Fintype M] : DecidablePred (· ∈ center M) := fun _ =>
   decidableOfIff' _ mem_center_iff
 
 /-- The center of a monoid is commutative. -/

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Bhavik Mehta. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Bhavik Mehta
+-/
 import Mathbin.CategoryTheory.Adjunction.FullyFaithful
 import Mathbin.CategoryTheory.ReflectsIsomorphisms
 import Mathbin.CategoryTheory.EpiMono
@@ -26,12 +31,13 @@ variable [Category.{v₁} C] [Category.{v₂} D] [Category.{v₃} E]
 
 /-- A functor is *reflective*, or *a reflective inclusion*, if it is fully faithful and right adjoint.
 -/
-class reflective (R : D ⥤ C) extends IsRightAdjoint R, Full R, Faithful R
+class Reflective (R : D ⥤ C) extends IsRightAdjoint R, Full R, Faithful R
 
 variable {i : D ⥤ C}
 
 /-- For a reflective functor `i` (with left adjoint `L`), with unit `η`, we have `η_iL = iL η`.
 -/
+-- TODO: This holds more generally for idempotent adjunctions, not just reflective adjunctions.
 theorem unit_obj_eq_map_unit [Reflective i] (X : C) :
     (ofRightAdjoint i).Unit.app (i.obj ((leftAdjoint i).obj X)) =
       i.map ((leftAdjoint i).map ((ofRightAdjoint i).Unit.app X)) :=
@@ -57,7 +63,7 @@ reflection of `A`, with the isomorphism as `η_A`.
 
 (For any `B` in the reflective subcategory, we automatically have that `ε_B` is an iso.)
 -/
-theorem functor.ess_image.unit_is_iso [Reflective i] {A : C} (h : A ∈ i.EssImage) :
+theorem Functor.EssImage.unit_is_iso [Reflective i] {A : C} (h : A ∈ i.EssImage) :
     IsIso ((ofRightAdjoint i).Unit.app A) := by
   suffices
     (of_right_adjoint i).Unit.app A =
@@ -87,11 +93,11 @@ theorem mem_ess_image_of_unit_split_mono [Reflective i] {A : C} [SplitMono ((ofR
   exact mem_ess_image_of_unit_is_iso A
 
 /-- Composition of reflective functors. -/
-instance reflective.comp (F : C ⥤ D) (G : D ⥤ E) [Fr : Reflective F] [Gr : Reflective G] : Reflective (F ⋙ G) where
+instance Reflective.comp (F : C ⥤ D) (G : D ⥤ E) [Fr : Reflective F] [Gr : Reflective G] : Reflective (F ⋙ G) where
   to_faithful := Faithful.comp F G
 
 /-- (Implementation) Auxiliary definition for `unit_comp_partial_bijective`. -/
-def unit_comp_partial_bijective_aux [Reflective i] (A : C) (B : D) :
+def unitCompPartialBijectiveAux [Reflective i] (A : C) (B : D) :
     (A ⟶ i.obj B) ≃ (i.obj ((leftAdjoint i).obj A) ⟶ i.obj B) :=
   ((Adjunction.ofRightAdjoint i).homEquiv _ _).symm.trans (equivOfFullyFaithful i)
 
@@ -112,7 +118,7 @@ This establishes there is a natural bijection `(A ⟶ B) ≃ (i.obj (L.obj A) �
 from the point of view of objects in `D`, `A` and `i.obj (L.obj A)` look the same: specifically
 that `η.app A` is an isomorphism.
 -/
-def unit_comp_partial_bijective [Reflective i] (A : C) {B : C} (hB : B ∈ i.EssImage) :
+def unitCompPartialBijective [Reflective i] (A : C) {B : C} (hB : B ∈ i.EssImage) :
     (A ⟶ B) ≃ (i.obj ((leftAdjoint i).obj A) ⟶ B) :=
   calc
     (A ⟶ B) ≃ (A ⟶ i.obj hB.witness) := Iso.homCongr (Iso.refl _) hB.getIso.symm
@@ -138,7 +144,7 @@ theorem unit_comp_partial_bijective_natural [Reflective i] (A : C) {B B' : C} (h
 /-- If `i : D ⥤ C` is reflective, the inverse functor of `i ≌ F.ess_image` can be explicitly
 defined by the reflector. -/
 @[simps]
-def equiv_ess_image_of_reflective [Reflective i] : D ≌ i.EssImage where
+def equivEssImageOfReflective [Reflective i] : D ≌ i.EssImage where
   Functor := i.toEssImage
   inverse := i.essImageInclusion ⋙ (leftAdjoint i : _)
   unitIso :=

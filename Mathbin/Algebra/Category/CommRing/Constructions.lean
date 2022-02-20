@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Andrew Yang. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Andrew Yang
+-/
 import Mathbin.CategoryTheory.Limits.Shapes.Pullbacks
 import Mathbin.RingTheory.TensorProduct
 import Mathbin.Algebra.Category.CommRing.Limits
@@ -33,7 +38,7 @@ section Pushout
 variable {R A B : CommRingₓₓ.{u}} (f : R ⟶ A) (g : R ⟶ B)
 
 /-- The explicit cocone with tensor products as the fibered product in `CommRing`. -/
-def pushout_cocone : Limits.PushoutCocone f g := by
+def pushoutCocone : Limits.PushoutCocone f g := by
   let this' := RingHom.toAlgebra f
   let this' := RingHom.toAlgebra g
   apply limits.pushout_cocone.mk
@@ -75,7 +80,7 @@ theorem pushout_cocone_X :
   rfl
 
 /-- Verify that the `pushout_cocone` is indeed the colimit. -/
-def pushout_cocone_is_colimit : Limits.IsColimit (pushoutCocone f g) :=
+def pushoutCoconeIsColimit : Limits.IsColimit (pushoutCocone f g) :=
   Limits.PushoutCocone.isColimitAux' _ fun s => by
     let this' := RingHom.toAlgebra f
     let this' := RingHom.toAlgebra g
@@ -91,6 +96,7 @@ def pushout_cocone_is_colimit : Limits.IsColimit (pushoutCocone f g) :=
           change (g ≫ s.inr) r = (f ≫ s.inl) r
           congr 1
           exact (s.ι.naturality limits.walking_span.hom.snd).trans (s.ι.naturality limits.walking_span.hom.fst).symm }
+    -- The factor map is a ⊗ b ↦ f(a) * g(b).
     use AlgHom.toRingHom (Algebra.TensorProduct.productMap f' g')
     simp only [pushout_cocone_inl, pushout_cocone_inr]
     constructor
@@ -121,7 +127,7 @@ end Pushout
 section Terminal
 
 /-- The trivial ring is the (strict) terminal object of `CommRing`. -/
-def punit_is_terminal : IsTerminal (CommRingₓₓ.of.{u} PUnit) := by
+def punitIsTerminal : IsTerminal (CommRingₓₓ.of.{u} PUnit) := by
   apply is_terminal.of_unique with { instances := false }
   tidy
 
@@ -146,7 +152,7 @@ theorem subsingleton_of_is_terminal {X : CommRingₓₓ} (hX : IsTerminal X) : S
       infer_instance)
 
 /-- `ℤ` is the initial object of `CommRing`. -/
-def Z_is_initial : IsInitial (CommRingₓₓ.of ℤ) := by
+def zIsInitial : IsInitial (CommRingₓₓ.of ℤ) := by
   apply is_initial.of_unique with { instances := false }
   exact fun R => ⟨⟨Int.castRingHom R⟩, fun a => a.ext_int _⟩
 
@@ -158,11 +164,11 @@ variable (A B : CommRingₓₓ.{u})
 
 /-- The product in `CommRing` is the cartesian product. This is the binary fan. -/
 @[simps x]
-def prod_fan : BinaryFan A B :=
+def prodFan : BinaryFan A B :=
   BinaryFan.mk (CommRingₓₓ.ofHom <| RingHom.fst A B) (CommRingₓₓ.ofHom <| RingHom.snd A B)
 
 /-- The product in `CommRing` is the cartesian product. -/
-def prod_fan_is_limit : IsLimit (prodFan A B) where
+def prodFanIsLimit : IsLimit (prodFan A B) where
   lift := fun c => RingHom.prod (c.π.app WalkingPair.left) (c.π.app WalkingPair.right)
   fac' := fun c j => by
     ext
@@ -181,14 +187,14 @@ section Equalizer
 variable {A B : CommRingₓₓ.{u}} (f g : A ⟶ B)
 
 /-- The equalizer in `CommRing` is the equalizer as sets. This is the equalizer fork. -/
-def equalizer_fork : Fork f g :=
+def equalizerFork : Fork f g :=
   Fork.ofι (CommRingₓₓ.ofHom (RingHom.eqLocus f g).Subtype)
     (by
       ext ⟨x, e⟩
       simpa using e)
 
 /-- The equalizer in `CommRing` is the equalizer as sets. -/
-def equalizer_fork_is_limit : IsLimit (equalizerFork f g) := by
+def equalizerForkIsLimit : IsLimit (equalizerFork f g) := by
   fapply fork.is_limit.mk'
   intro s
   use s.ι.cod_restrict' _ fun x => (concrete_category.congr_hom s.condition x : _)

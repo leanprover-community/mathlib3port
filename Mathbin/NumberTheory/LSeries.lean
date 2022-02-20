@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Aaron Anderson. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Aaron Anderson
+-/
 import Mathbin.Analysis.PSeries
 import Mathbin.NumberTheory.ArithmeticFunction
 import Mathbin.Topology.Algebra.InfiniteSum
@@ -31,11 +36,11 @@ namespace Nat
 namespace ArithmeticFunction
 
 /-- The L-series of an `arithmetic_function`. -/
-def l_series (f : ArithmeticFunction ℂ) (z : ℂ) : ℂ :=
+def lSeries (f : ArithmeticFunction ℂ) (z : ℂ) : ℂ :=
   ∑' n, f n / n ^ z
 
 /-- `f.l_series_summable z` indicates that the L-series of `f` converges at `z`. -/
-def l_series_summable (f : ArithmeticFunction ℂ) (z : ℂ) : Prop :=
+def LSeriesSummable (f : ArithmeticFunction ℂ) (z : ℂ) : Prop :=
   Summable fun n => f n / n ^ z
 
 theorem l_series_eq_zero_of_not_l_series_summable (f : ArithmeticFunction ℂ) (z : ℂ) :

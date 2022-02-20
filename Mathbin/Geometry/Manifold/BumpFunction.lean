@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Yury Kudryashov. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yury Kudryashov
+-/
 import Mathbin.Analysis.Calculus.SpecificFunctions
 import Mathbin.Geometry.Manifold.TimesContMdiff
 
@@ -65,7 +70,7 @@ variable {c : M} (f : SmoothBumpFunction I c) {x : M} {I}
 
 /-- The function defined by `f : smooth_bump_function c`. Use automatic coercion to function
 instead. -/
-def to_fun : M → ℝ :=
+def toFun : M → ℝ :=
   indicator (chartAt H c).Source (f.toTimesContDiffBump ∘ extChartAt I c)
 
 instance : CoeFun (SmoothBumpFunction I c) fun _ => M → ℝ :=
@@ -89,11 +94,11 @@ theorem eventually_eq_of_mem_source (hx : x ∈ (chartAt H c).Source) :
 
 theorem one_of_dist_le (hs : x ∈ (chartAt H c).Source) (hd : dist (extChartAt I c x) (extChartAt I c c) ≤ f.R) :
     f x = 1 := by
-  simp only [f.eq_on_source hs, · ∘ ·, f.to_times_cont_diff_bump.one_of_mem_closed_ball hd]
+  simp only [f.eq_on_source hs, (· ∘ ·), f.to_times_cont_diff_bump.one_of_mem_closed_ball hd]
 
 theorem support_eq_inter_preimage : Support f = (chartAt H c).Source ∩ extChartAt I c ⁻¹' Ball (extChartAt I c c) f.r :=
   by
-  rw [coe_def, support_indicator, · ∘ ·, support_comp_eq_preimage, ← ext_chart_at_source I, ←
+  rw [coe_def, support_indicator, (· ∘ ·), support_comp_eq_preimage, ← ext_chart_at_source I, ←
     (extChartAt I c).symm_image_target_inter_eq', ← (extChartAt I c).symm_image_target_inter_eq',
     f.to_times_cont_diff_bump.support_eq]
 
@@ -208,7 +213,7 @@ theorem exists_r_pos_lt_subset_ball {s : Set M} (hsc : IsClosed s) (hs : s ⊆ S
   exact ⟨r, hrR, subset_inter hs.1 (image_subset_iff.1 hr)⟩
 
 /-- Replace `r` with another value in the interval `(0, f.R)`. -/
-def update_r (r : ℝ) (hr : r ∈ Ioo 0 f.r) : SmoothBumpFunction I c :=
+def updateR (r : ℝ) (hr : r ∈ Ioo 0 f.r) : SmoothBumpFunction I c :=
   ⟨⟨⟨r, f.r, hr.1, hr.2⟩⟩, f.closed_ball_subset⟩
 
 @[simp]
@@ -285,7 +290,7 @@ theorem nhds_basis_support {s : Set M} (hs : s ∈ 𝓝 c) :
 variable [SmoothManifoldWithCorners I M] {I}
 
 /-- A smooth bump function is infinitely smooth. -/
-protected theorem Smooth : Smooth I 𝓘(ℝ) f := by
+protected theorem smooth : Smooth I 𝓘(ℝ) f := by
   refine' times_cont_mdiff_of_support fun x hx => _
   have : x ∈ (chart_at H c).Source := f.closure_support_subset_chart_at_source hx
   refine'
@@ -293,10 +298,10 @@ protected theorem Smooth : Smooth I 𝓘(ℝ) f := by
       (f.eq_on_source.eventually_eq_of_mem <| IsOpen.mem_nhds (chart_at _ _).open_source this)
   exact f.to_times_cont_diff_bump.times_cont_diff_at.times_cont_mdiff_at.comp _ (times_cont_mdiff_at_ext_chart_at' this)
 
-protected theorem SmoothAt {x} : SmoothAt I 𝓘(ℝ) f x :=
+protected theorem smooth_at {x} : SmoothAt I 𝓘(ℝ) f x :=
   f.Smooth.SmoothAt
 
-protected theorem Continuous : Continuous f :=
+protected theorem continuous : Continuous f :=
   f.Smooth.Continuous
 
 /-- If `f : smooth_bump_function I c` is a smooth bump function and `g : M → G` is a function smooth

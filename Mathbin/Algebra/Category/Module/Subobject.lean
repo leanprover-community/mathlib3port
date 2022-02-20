@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Markus Himmel. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Markus Himmel
+-/
 import Mathbin.Algebra.Category.Module.EpiMono
 import Mathbin.CategoryTheory.Subobject.WellPowered
 
@@ -24,7 +29,7 @@ variable {R : Type u} [Ringₓ R] (M : ModuleCat.{v} R)
 
 /-- The categorical subobjects of a module `M` are in one-to-one correspondence with its
     submodules.-/
-noncomputable def subobject_Module : Subobject M ≃o Submodule R M :=
+noncomputable def subobjectModule : Subobject M ≃o Submodule R M :=
   OrderIso.symm
     { invFun := fun S => S.arrow.range, toFun := fun N => Subobject.mk (↾N.Subtype),
       right_inv := fun S =>

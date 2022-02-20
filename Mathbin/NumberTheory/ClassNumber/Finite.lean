@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Anne Baanen. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Anne Baanen
+-/
 import Mathbin.Analysis.SpecialFunctions.Pow
 import Mathbin.RingTheory.ClassGroup
 import Mathbin.RingTheory.Norm
@@ -49,7 +54,7 @@ variable {ι : Type _} [DecidableEq ι] [Fintype ι] (bS : Basis ι R S)
 /-- If `b` is an `R`-basis of `S` of cardinality `n`, then `norm_bound abv b` is an integer
 such that for every `R`-integral element `a : S` with coordinates `≤ y`,
 we have algebra.norm a ≤ norm_bound abv b * y ^ n`. (See also `norm_le` and `norm_lt`). -/
-noncomputable def norm_bound : ℤ :=
+noncomputable def normBound : ℤ :=
   let n := Fintype.card ι
   let i : ι := Nonempty.some bS.index_nonempty
   let m : ℤ :=
@@ -57,10 +62,10 @@ noncomputable def norm_bound : ℤ :=
       ⟨_, Finset.mem_image.mpr ⟨⟨i, i, i⟩, Finset.mem_univ _, rfl⟩⟩
   Nat.factorial n • (n • m) ^ n
 
--- ././Mathport/Syntax/Translate/Basic.lean:418:16: unsupported tactic `by_contra'
+-- ././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'
 theorem norm_bound_pos : 0 < normBound abv bS := by
   obtain ⟨i, j, k, hijk⟩ : ∃ i j k, Algebra.leftMulMatrix bS (bS i) j k ≠ 0 := by
-    "././Mathport/Syntax/Translate/Basic.lean:418:16: unsupported tactic `by_contra'"
+    "././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'"
     obtain ⟨i⟩ := bS.index_nonempty
     apply bS.ne_zero i
     apply (Algebra.leftMulMatrix bS).injective_iff.mp (Algebra.left_mul_matrix_injective bS)
@@ -157,19 +162,19 @@ noncomputable def cardM : ℕ :=
 variable [Infinite R]
 
 /-- In the following results, we need a large set of distinct elements of `R`. -/
-noncomputable def distinct_elems : Finₓ (cardM bS adm).succ ↪ R :=
+noncomputable def distinctElems : Finₓ (cardM bS adm).succ ↪ R :=
   Function.Embedding.trans (Finₓ.coeEmbedding _).toEmbedding (Infinite.natEmbedding R)
 
 variable [DecidableEq R]
 
 /-- `finset_approx` is a finite set such that each fractional ideal in the integral closure
 contains an element close to `finset_approx`. -/
-noncomputable def finset_approx : Finset R :=
+noncomputable def finsetApprox : Finset R :=
   ((Finset.univ.product Finset.univ).Image fun xy : _ × _ =>
         distinctElems bS adm xy.1 - distinctElems bS adm xy.2).erase
     0
 
-theorem finset_approx.zero_not_mem : (0 : R) ∉ finsetApprox bS adm :=
+theorem finsetApprox.zero_not_mem : (0 : R) ∉ finsetApprox bS adm :=
   Finset.not_mem_erase _ _
 
 @[simp]
@@ -330,7 +335,7 @@ omit iic ist
 /-- `class_group.mk_M_mem` is a specialization of `class_group.mk0` to (the finite set of)
 ideals that contain `M := ∏ m in finset_approx L f abs, m`.
 By showing this function is surjective, we prove that the class group is finite. -/
-noncomputable def mk_M_mem [IsFractionRing S L] [IsDedekindDomain S]
+noncomputable def mkMMem [IsFractionRing S L] [IsDedekindDomain S]
     (J : { J : Ideal S // algebraMap _ _ (∏ m in finsetApprox bS adm, m) ∈ J }) : ClassGroup S L :=
   ClassGroup.mk0 _ ⟨J.1, mem_non_zero_divisors_iff_ne_zero.mpr (ne_bot_of_prod_finset_approx_mem bS adm J.1 J.2)⟩
 
@@ -351,7 +356,7 @@ algebraic extension `L` is finite if there is an admissible absolute value.
 See also `class_group.fintype_of_admissible_of_finite` where `L` is a finite
 extension of `K = Frac(R)`, supplying most of the required assumptions automatically.
 -/
-noncomputable def fintype_of_admissible_of_algebraic [IsFractionRing S L] [IsDedekindDomain S]
+noncomputable def fintypeOfAdmissibleOfAlgebraic [IsFractionRing S L] [IsDedekindDomain S]
     (h : Algebra.IsAlgebraic R L) : Fintype (ClassGroup S L) :=
   @Fintype.ofSurjective _ _ _
     (@Fintype.ofEquiv _ { J // J ∣ Ideal.span ({algebraMap R S (∏ m : R in finsetApprox bS adm, m)} : Set S) }
@@ -372,7 +377,7 @@ absolute value.
 See also `class_group.fintype_of_admissible_of_algebraic` where `L` is an
 algebraic extension of `R`, that includes some extra assumptions.
 -/
-noncomputable def fintype_of_admissible_of_finite [IsDedekindDomain R] :
+noncomputable def fintypeOfAdmissibleOfFinite [IsDedekindDomain R] :
     Fintype (@ClassGroup S L _ _ _ (IsIntegralClosure.is_fraction_ring_of_finite_extension R K L S)) := by
   let this' := Classical.decEq L
   let this' := IsIntegralClosure.is_fraction_ring_of_finite_extension R K L S

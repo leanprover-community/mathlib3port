@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Adam Topaz. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Adam Topaz
+-/
 import Mathbin.CategoryTheory.Sites.Sheafification
 import Mathbin.CategoryTheory.Sites.Limits
 import Mathbin.CategoryTheory.Limits.FunctorCategory
@@ -30,7 +35,7 @@ namespace CategoryTheory.GrothendieckTopology
 /-- An auxiliary definition to be used in the proof of the fact that
 `J.diagram_functor D X` preserves limits. -/
 @[simps]
-def cone_comp_evaluation_of_cone_comp_diagram_functor_comp_evaluation {X : C} {K : Type max v u} [SmallCategory K]
+def coneCompEvaluationOfConeCompDiagramFunctorCompEvaluation {X : C} {K : Type max v u} [SmallCategory K]
     {F : K ⥤ Cᵒᵖ ⥤ D} {W : J.cover X} (i : W.arrow)
     (E : Cone (F ⋙ J.diagramFunctor D X ⋙ (evaluation (J.cover Xᵒᵖ) D).obj (op W))) :
     Cone (F ⋙ (evaluation _ _).obj (op i.y)) where
@@ -46,7 +51,7 @@ def cone_comp_evaluation_of_cone_comp_diagram_functor_comp_evaluation {X : C} {K
 
 /-- An auxiliary definition to be used in the proof of the fact that
 `J.diagram_functor D X` preserves limits. -/
-abbrev lift_to_diagram_limit_obj {X : C} {K : Type max v u} [SmallCategory K] [HasLimitsOfShape K D] {W : J.cover Xᵒᵖ}
+abbrev liftToDiagramLimitObj {X : C} {K : Type max v u} [SmallCategory K] [HasLimitsOfShape K D] {W : J.cover Xᵒᵖ}
     (F : K ⥤ Cᵒᵖ ⥤ D) (E : Cone (F ⋙ J.diagramFunctor D X ⋙ (evaluation (J.cover Xᵒᵖ) D).obj W)) :
     E.x ⟶ (J.diagram (limit F) X).obj W :=
   multiequalizer.lift _ _
@@ -107,7 +112,7 @@ variable [∀ X : C, PreservesColimitsOfShape (J.cover Xᵒᵖ) (forget D)]
 
 /-- An auxiliary definition to be used in the proof that `J.plus_functor D` commutes
 with finite limits. -/
-def lift_to_plus_obj_limit_obj {K : Type max v u} [SmallCategory K] [FinCategory K] [HasLimitsOfShape K D]
+def liftToPlusObjLimitObj {K : Type max v u} [SmallCategory K] [FinCategory K] [HasLimitsOfShape K D]
     [PreservesLimitsOfShape K (forget D)] [ReflectsLimitsOfShape K (forget D)] (F : K ⥤ Cᵒᵖ ⥤ D) (X : C)
     (S : Cone (F ⋙ J.plusFunctor D ⋙ (evaluation (Cᵒᵖ) D).obj (op X))) : S.x ⟶ (J.plusObj (limit F)).obj (op X) :=
   let e := colimitLimitIso (F ⋙ J.diagramFunctor D X)
@@ -127,6 +132,9 @@ def lift_to_plus_obj_limit_obj {K : Type max v u} [SmallCategory K] [FinCategory
         rfl)
   limit.lift _ S ≫ (HasLimit.isoOfNatIso s.symm).Hom ≫ e.inv ≫ p.inv
 
+-- This lemma should not be used directly. Instead, one should use the fact that
+-- `J.plus_functor D` preserves finite limits, along with the fact that
+-- evaluation preserves limits.
 theorem lift_to_plus_obj_limit_obj_fac {K : Type max v u} [SmallCategory K] [FinCategory K] [HasLimitsOfShape K D]
     [PreservesLimitsOfShape K (forget D)] [ReflectsLimitsOfShape K (forget D)] (F : K ⥤ Cᵒᵖ ⥤ D) (X : C)
     (S : Cone (F ⋙ J.plusFunctor D ⋙ (evaluation (Cᵒᵖ) D).obj (op X))) k :

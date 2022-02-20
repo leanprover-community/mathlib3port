@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2022 Riccardo Brasca. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Riccardo Brasca
+-/
 import Mathbin.RingTheory.EisensteinCriterion
 
 /-!
@@ -34,14 +39,14 @@ namespace Polynomial
 /-- Given an ideal `𝓟` of a commutative semiring `R`, we say that a polynomial `f : R[X]`
 is *weakly Eisenstein at `𝓟`* if `∀ n, n < f.nat_degree → f.coeff n ∈ 𝓟`. -/
 @[mk_iff]
-structure is_weakly_eisenstein_at [CommSemiringₓ R] (f : R[X]) (𝓟 : Ideal R) : Prop where
+structure IsWeaklyEisensteinAt [CommSemiringₓ R] (f : R[X]) (𝓟 : Ideal R) : Prop where
   Mem : ∀ {n}, n < f.natDegree → f.coeff n ∈ 𝓟
 
 /-- Given an ideal `𝓟` of a commutative semiring `R`, we say that a polynomial `f : R[X]`
 is *Eisenstein at `𝓟`* if `f.leading_coeff ∉ 𝓟`, `∀ n, n < f.nat_degree → f.coeff n ∈ 𝓟` and
 `f.coeff 0 ∉ 𝓟 ^ 2`. -/
 @[mk_iff]
-structure is_eisenstein_at [CommSemiringₓ R] (f : R[X]) (𝓟 : Ideal R) : Prop where
+structure IsEisensteinAt [CommSemiringₓ R] (f : R[X]) (𝓟 : Ideal R) : Prop where
   leading : f.leadingCoeff ∉ 𝓟
   Mem : ∀ {n}, n < f.natDegree → f.coeff n ∈ 𝓟
   not_mem : f.coeff 0 ∉ 𝓟 ^ 2
@@ -167,7 +172,7 @@ variable [CommRingₓ R] [IsDomain R] {𝓟 : Ideal R} {f : R[X]} (hf : f.IsEise
 
 /-- If a primitive `f` satisfies `f.is_eisenstein_at 𝓟`, where `𝓟.is_prime`, then `f` is
 irreducible. -/
-theorem Irreducible (hprime : 𝓟.IsPrime) (hu : f.IsPrimitive) (hfd0 : 0 < f.natDegree) : Irreducible f :=
+theorem irreducible (hprime : 𝓟.IsPrime) (hu : f.IsPrimitive) (hfd0 : 0 < f.natDegree) : Irreducible f :=
   irreducible_of_eisenstein_criterion hprime hf.leading (fun n hn => hf.Mem (coe_lt_degree.1 hn))
     (nat_degree_pos_iff_degree_pos.1 hfd0) hf.not_mem hu
 

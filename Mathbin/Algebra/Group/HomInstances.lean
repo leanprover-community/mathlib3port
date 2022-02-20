@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2018 Patrick Massot. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Patrick Massot, Kevin Buzzard, Scott Morrison, Johan Commelin, Chris Hughes,
+  Johannes Hölzl, Yury Kudryashov
+-/
 import Mathbin.Algebra.GroupPower.Basic
 
 /-!
@@ -21,7 +27,7 @@ variable {M : Type uM} {N : Type uN} {P : Type uP} {Q : Type uQ}
 /-- `(M →* N)` is a `comm_monoid` if `N` is commutative. -/
 @[to_additive "`(M →+ N)` is an `add_comm_monoid` if `N` is commutative."]
 instance [MulOneClassₓ M] [CommMonoidₓ N] : CommMonoidₓ (M →* N) where
-  mul := · * ·
+  mul := (· * ·)
   mul_assoc := by
     intros <;> ext <;> apply mul_assoc
   one := 1
@@ -142,7 +148,7 @@ Equivalently, `(λ g, monoid_hom.comp g f)` as a `monoid_hom`. -/
 @[to_additive
       "The expression `λ g m, g (f m)` as a `add_monoid_hom`.\nEquivalently, `(λ g, monoid_hom.comp g f)` as a `add_monoid_hom`.\n\nThis also exists in a `linear_map` version, `linear_map.lcomp`.",
   simps]
-def comp_hom' [MulOneClassₓ M] [MulOneClassₓ N] [CommMonoidₓ P] (f : M →* N) : (N →* P) →* M →* P :=
+def compHom' [MulOneClassₓ M] [MulOneClassₓ N] [CommMonoidₓ P] (f : M →* N) : (N →* P) →* M →* P :=
   flip <| eval.comp f
 
 /-- Composition of monoid morphisms (`monoid_hom.comp`) as a monoid morphism.
@@ -151,7 +157,7 @@ Note that unlike `monoid_hom.comp_hom'` this requires commutativity of `N`. -/
 @[to_additive
       "Composition of additive monoid morphisms (`add_monoid_hom.comp`) as an additive\nmonoid morphism.\n\nNote that unlike `add_monoid_hom.comp_hom'` this requires commutativity of `N`.\n\nThis also exists in a `linear_map` version, `linear_map.llcomp`.",
   simps]
-def comp_hom [MulOneClassₓ M] [CommMonoidₓ N] [CommMonoidₓ P] : (N →* P) →* (M →* N) →* M →* P where
+def compHom [MulOneClassₓ M] [CommMonoidₓ N] [CommMonoidₓ P] : (N →* P) →* (M →* N) →* M →* P where
   toFun := fun g => { toFun := g.comp, map_one' := comp_one g, map_mul' := comp_mul g }
   map_one' := by
     ext1 f
@@ -164,7 +170,7 @@ def comp_hom [MulOneClassₓ M] [CommMonoidₓ N] [CommMonoidₓ P] : (N →* P)
 @[to_additive
       "Flipping arguments of additive monoid morphisms (`add_monoid_hom.flip`)\nas an additive monoid morphism.",
   simps]
-def flip_hom {mM : MulOneClassₓ M} {mN : MulOneClassₓ N} {mP : CommMonoidₓ P} : (M →* N →* P) →* N →* M →* P where
+def flipHom {mM : MulOneClassₓ M} {mN : MulOneClassₓ N} {mP : CommMonoidₓ P} : (M →* N →* P) →* N →* M →* P where
   toFun := MonoidHom.flip
   map_one' := rfl
   map_mul' := fun f g => rfl

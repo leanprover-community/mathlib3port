@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Robert Y. Lewis. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Robert Y. Lewis
+-/
 import Mathbin.Data.Rat.MetaDefs
 import Mathbin.Tactic.NormNum
 import Mathbin.Data.Tree
@@ -119,9 +124,9 @@ unsafe def find_cancel_factor : expr → ℕ × Tree ℕ
   | quote.1 (-%%ₓe) => find_cancel_factor e
   | _ => (1, node 1 Tree.nil Tree.nil)
 
--- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
--- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
--- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:916:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:916:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:916:4: warning: unsupported (TODO): `[tacs]
 /-- `mk_prod_prf n tr e` produces a proof of `n*e = e'`, where numeric denominators have been
 canceled in `e'`, distributing `n` proportionally according to `tr`.
 -/
@@ -173,7 +178,7 @@ unsafe def derive (e : expr) : tactic (ℕ × expr) :=
   Prod.mk n <$> mk_prod_prf n t e <|>
     throwError "cancel_factors.derive failed to normalize {← e}. Are you sure this is well-behaved division?"
 
--- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:916:4: warning: unsupported (TODO): `[tacs]
 /-- Given `e`, a term with rational divison, produces a natural number `n` and a proof of `e = e' / n`,
 where `e'` has no divison. Assumes "well-behaved" division.
 -/
@@ -196,9 +201,9 @@ unsafe def find_comp_lemma : expr → Option (expr × expr × Name)
   | quote.1 ((%%ₓa) > %%ₓb) => (b, a, `` cancel_factors_lt)
   | _ => none
 
--- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
--- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
--- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:916:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:916:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:916:4: warning: unsupported (TODO): `[tacs]
 /-- `cancel_denominators_in_type h` assumes that `h` is of the form `lhs R rhs`,
 where `R ∈ {<, ≤, =, ≥, >}`.
 It produces an expression `h'` of the form `lhs' R rhs'` and a proof that `h = h'`.

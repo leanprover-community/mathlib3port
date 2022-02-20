@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Aaron Anderson, Jesse Michael Han, Floris van Doorn. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Aaron Anderson, Jesse Michael Han, Floris van Doorn
+-/
 import Mathbin.Data.Fin.Tuple.Basic
 
 /-!
@@ -43,15 +48,16 @@ namespace FirstOrder
 
 /-- A first-order language consists of a type of functions of every natural-number arity and a
   type of relations of every natural-number arity. -/
+-- intended to be used with explicit universe parameters
 @[nolint check_univs]
-structure language where
+structure Language where
   Functions : ℕ → Type u
   Relations : ℕ → Type v
 
 namespace Language
 
 /-- The empty language has no symbols. -/
-protected def Empty : Language :=
+protected def empty : Language :=
   ⟨fun _ => Pempty, fun _ => Pempty⟩
 
 instance : Inhabited Language :=
@@ -59,17 +65,17 @@ instance : Inhabited Language :=
 
 /-- The type of constants in a given language. -/
 @[nolint has_inhabited_instance]
-def const (L : Language) :=
+def Const (L : Language) :=
   L.Functions 0
 
 variable (L : Language.{u, v})
 
 /-- A language is relational when it has no function symbols. -/
-class is_relational : Prop where
+class IsRelational : Prop where
   empty_functions : ∀ n, L.Functions n → False
 
 /-- A language is algebraic when it has no relation symbols. -/
-class is_algebraic : Prop where
+class IsAlgebraic : Prop where
   empty_relations : ∀ n, L.Relations n → False
 
 variable {L}
@@ -110,7 +116,7 @@ open Structure
 /-- A homomorphism between first-order structures is a function that commutes with the
   interpretations of functions and maps tuples in one structure where a given relation is true to
   tuples in the second structure where that relation is still true. -/
-structure hom where
+structure Hom where
   toFun : M → N
   map_fun' : ∀ {n} f : L.Functions n x, to_fun (funMap f x) = funMap f (to_fun ∘ x) := by
     run_tac
@@ -123,7 +129,7 @@ localized [FirstOrder] notation:25 A " →[" L "] " B => L.Hom A B
 
 /-- An embedding of first-order structures is an embedding that commutes with the
   interpretations of functions and relations. -/
-structure embedding extends M ↪ N where
+structure Embedding extends M ↪ N where
   map_fun' : ∀ {n} f : L.Functions n x, to_fun (funMap f x) = funMap f (to_fun ∘ x) := by
     run_tac
       obviously
@@ -135,7 +141,7 @@ localized [FirstOrder] notation:25 A " ↪[" L "] " B => L.Embedding A B
 
 /-- An equivalence of first-order structures is an equivalence that commutes with the
   interpretations of functions and relations. -/
-structure Equivₓ extends M ≃ N where
+structure Equiv extends M ≃ N where
   map_fun' : ∀ {n} f : L.Functions n x, to_fun (funMap f x) = funMap f (to_fun ∘ x) := by
     run_tac
       obviously
@@ -160,7 +166,7 @@ theorem nonempty_of_nonempty_constants [h : Nonempty L.const] : Nonempty M :=
 
 namespace Hom
 
-instance CoeFun : CoeFun (M →[L] N) fun _ => M → N :=
+instance hasCoeToFun : CoeFun (M →[L] N) fun _ => M → N :=
   ⟨toFun⟩
 
 @[simp]
@@ -228,7 +234,7 @@ end Hom
 
 namespace Embedding
 
-instance CoeFun : CoeFun (M ↪[L] N) fun _ => M → N :=
+instance hasCoeToFun : CoeFun (M ↪[L] N) fun _ => M → N :=
   ⟨fun f => f.toFun⟩
 
 @[simp]
@@ -244,7 +250,7 @@ theorem map_rel (φ : M ↪[L] N) {n : ℕ} (r : L.Relations n) (x : Finₓ n �
   φ.map_rel' r x
 
 /-- A first-order embedding is also a first-order homomorphism. -/
-def to_hom (f : M ↪[L] N) : M →[L] N where
+def toHom (f : M ↪[L] N) : M →[L] N where
   toFun := f
 
 @[simp]
@@ -271,7 +277,7 @@ theorem injective (f : M ↪[L] N) : Function.Injective f :=
 
 /-- In an algebraic language, any injective homomorphism is an embedding. -/
 @[simps]
-def of_injective [L.IsAlgebraic] {f : M →[L] N} (hf : Function.Injective f) : M ↪[L] N :=
+def ofInjective [L.IsAlgebraic] {f : M →[L] N} (hf : Function.Injective f) : M ↪[L] N :=
   { f with inj' := hf, map_rel' := fun n r => (IsAlgebraic.empty_relations n r).elim }
 
 @[simp]
@@ -337,7 +343,7 @@ def symm (f : M ≃[L] N) : N ≃[L] M :=
       refine' (f.map_rel' r (f.to_equiv.symm ∘ x)).symm.trans _
       rw [← Function.comp.assoc, Equivₓ.to_fun_as_coe, Equivₓ.self_comp_symm, Function.comp.left_id] }
 
-instance CoeFun : CoeFun (M ≃[L] N) fun _ => M → N :=
+instance hasCoeToFun : CoeFun (M ≃[L] N) fun _ => M → N :=
   ⟨fun f => f.toFun⟩
 
 @[simp]
@@ -361,12 +367,12 @@ theorem map_rel (φ : M ≃[L] N) {n : ℕ} (r : L.Relations n) (x : Finₓ n �
   φ.map_rel' r x
 
 /-- A first-order equivalence is also a first-order embedding. -/
-def to_embedding (f : M ≃[L] N) : M ↪[L] N where
+def toEmbedding (f : M ≃[L] N) : M ↪[L] N where
   toFun := f
   inj' := f.toEquiv.Injective
 
 /-- A first-order equivalence is also a first-order homomorphism. -/
-def to_hom (f : M ≃[L] N) : M →[L] N where
+def toHom (f : M ≃[L] N) : M →[L] N where
   toFun := f
 
 @[simp]

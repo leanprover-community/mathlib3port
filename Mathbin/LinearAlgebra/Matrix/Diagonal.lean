@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Johannes Hölzl. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johannes Hölzl, Patrick Massot, Casper Putz, Anne Baanen
+-/
 import Mathbin.LinearAlgebra.Matrix.ToLin
 
 /-!
@@ -55,6 +60,7 @@ variable {m n : Type _} [Fintype m] [Fintype n]
 
 variable {K : Type u} [Field K]
 
+-- maybe try to relax the universe constraint
 theorem ker_diagonal_to_lin' [DecidableEq m] (w : m → K) :
     ker (diagonalₓ w).toLin' = ⨆ i ∈ { i | w i = 0 }, Range (LinearMap.stdBasis K (fun i => K) i) := by
   rw [← comap_bot, ← infi_ker_proj, comap_infi]

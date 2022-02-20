@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Simon Hudon. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Simon Hudon
+-/
 import Mathbin.CategoryTheory.Category.Basic
 
 /-!
@@ -181,7 +186,7 @@ unsafe def reassoc (del : parse (tk "!")?) (ns : parse (ident)*) : tactic Unit :
 
 end Interactive
 
-def calculated_Prop {α} (β : Prop) (hh : α) :=
+def CalculatedProp {α} (β : Prop) (hh : α) :=
   β
 
 unsafe def derive_reassoc_proof : tactic Unit := do

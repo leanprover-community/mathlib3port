@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2022 Yaël Dillies. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yaël Dillies
+-/
 import Mathbin.CategoryTheory.ConcreteCategory.Basic
 
 /-!
@@ -41,7 +46,7 @@ instance : Inhabited Pointed :=
 
 /-- Morphisms in `Pointed`. -/
 @[ext]
-protected structure hom (X Y : Pointed.{u}) : Type u where
+protected structure Hom (X Y : Pointed.{u}) : Type u where
   toFun : X → Y
   map_point : to_fun X.point = Y.point
 
@@ -63,7 +68,7 @@ def comp {X Y Z : Pointed.{u}} (f : Hom X Y) (g : Hom Y Z) : Hom X Z :=
 
 end Hom
 
-instance large_category : LargeCategory Pointed where
+instance largeCategory : LargeCategory Pointed where
   Hom := Hom
   id := Hom.id
   comp := @Hom.comp
@@ -71,14 +76,14 @@ instance large_category : LargeCategory Pointed where
   comp_id' := fun _ _ _ => Hom.ext _ _ rfl
   assoc' := fun _ _ _ _ _ _ _ => Hom.ext _ _ rfl
 
-instance concrete_category : ConcreteCategory Pointed where
+instance concreteCategory : ConcreteCategory Pointed where
   forget := { obj := Pointed.X, map := @Hom.toFun }
   forget_faithful := ⟨@Hom.ext⟩
 
 /-- Constructs a isomorphism between pointed types from an equivalence that preserves the point
 between them. -/
 @[simps]
-def iso.mk {α β : Pointed} (e : α ≃ β) (he : e α.point = β.point) : α ≅ β where
+def Iso.mk {α β : Pointed} (e : α ≃ β) (he : e α.point = β.point) : α ≅ β where
   Hom := ⟨e, he⟩
   inv := ⟨e.symm, e.symm_apply_eq.2 he.symm⟩
   hom_inv_id' := Pointed.Hom.ext _ _ e.symm_comp_self

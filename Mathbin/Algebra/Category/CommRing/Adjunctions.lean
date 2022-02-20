@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison, Johannes Hölzl
+-/
 import Mathbin.Algebra.Category.CommRing.Basic
 import Mathbin.Data.MvPolynomial.CommRing
 
@@ -25,6 +30,8 @@ polynomials with variables `x : X`.
 def free : Type u ⥤ CommRingₓₓ.{u} where
   obj := fun α => of (MvPolynomial α ℤ)
   map := fun X Y f => (↑(rename f : _ →ₐ[ℤ] _) : MvPolynomial X ℤ →+* MvPolynomial Y ℤ)
+  -- TODO these next two fields can be done by `tidy`, but the calls in `dsimp` and `simp` it
+  -- generates are too slow.
   map_id' := fun X => RingHom.ext <| rename_id
   map_comp' := fun X Y Z f g => RingHom.ext fun p => (rename_rename f g p).symm
 

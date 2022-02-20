@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Adam Topaz. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Adam Topaz
+-/
 import Mathbin.Data.Finset.Basic
 
 /-!
@@ -26,19 +31,20 @@ structure HasFiniteInter where
 
 namespace HasFiniteInter
 
+-- Satisfying the inhabited linter...
 instance : Inhabited (HasFiniteInter ({Set.Univ} : Set (Set α))) :=
   ⟨⟨by
       tauto, fun _ h1 _ h2 => by
       simp [Set.mem_singleton_iff.1 h1, Set.mem_singleton_iff.1 h2]⟩⟩
 
 /-- The smallest set of sets containing `S` which is closed under finite intersections. -/
-inductive finite_inter_closure : Set (Set α)
+inductive FiniteInterClosure : Set (Set α)
   | basic {s} : s ∈ S → finite_inter_closure s
   | univ : finite_inter_closure Set.Univ
   | inter {s t} : finite_inter_closure s → finite_inter_closure t → finite_inter_closure (s ∩ t)
 
 /-- Defines `has_finite_inter` for `finite_inter_closure S`. -/
-def finite_inter_closure_has_finite_inter : HasFiniteInter (FiniteInterClosure S) where
+def finiteInterClosureHasFiniteInter : HasFiniteInter (FiniteInterClosure S) where
   univ_mem := FiniteInterClosure.univ
   inter_mem := fun _ h _ => FiniteInterClosure.inter h
 
@@ -55,7 +61,7 @@ theorem finite_inter_mem (cond : HasFiniteInter S) (F : Finset (Set α)) : ↑F 
     exact cond.inter_mem (h3 (Finset.mem_insert_self a s)) (h2 fun x hx => h3 <| Finset.mem_insert_of_mem hx)
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (P «expr ∈ » finite_inter_closure (insert A S))
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (P «expr ∈ » finite_inter_closure (insert A S))
 theorem finite_inter_closure_insert {A : Set α} (cond : HasFiniteInter S) P (_ : P ∈ FiniteInterClosure (insert A S)) :
     P ∈ S ∨ ∃ Q ∈ S, P = A ∩ Q := by
   induction' H with S h T1 T2 _ _ h1 h2

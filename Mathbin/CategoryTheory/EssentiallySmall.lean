@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison
+-/
 import Mathbin.Logic.Small
 import Mathbin.CategoryTheory.Skeletal
 
@@ -24,28 +29,28 @@ namespace CategoryTheory
 
 /-- A category is `essentially_small.{w}` if there exists
 an equivalence to some `S : Type w` with `[small_category S]`. -/
-class essentially_small (C : Type u) [Category.{v} C] : Prop where
+class EssentiallySmall (C : Type u) [Category.{v} C] : Prop where
   equiv_small_category : ∃ (S : Type w)(_ : SmallCategory S), Nonempty (C ≌ S)
 
 /-- Constructor for `essentially_small C` from an explicit small category witness. -/
-theorem essentially_small.mk' {C : Type u} [Category.{v} C] {S : Type w} [SmallCategory S] (e : C ≌ S) :
+theorem EssentiallySmall.mk' {C : Type u} [Category.{v} C] {S : Type w} [SmallCategory S] (e : C ≌ S) :
     EssentiallySmall.{w} C :=
   ⟨⟨S, _, ⟨e⟩⟩⟩
 
 /-- An arbitrarily chosen small model for an essentially small category.
 -/
 @[nolint has_inhabited_instance]
-def small_model (C : Type u) [Category.{v} C] [EssentiallySmall.{w} C] : Type w :=
+def SmallModel (C : Type u) [Category.{v} C] [EssentiallySmall.{w} C] : Type w :=
   Classical.some (@EssentiallySmall.equiv_small_category C _ _)
 
-noncomputable instance small_category_small_model (C : Type u) [Category.{v} C] [EssentiallySmall.{w} C] :
+noncomputable instance smallCategorySmallModel (C : Type u) [Category.{v} C] [EssentiallySmall.{w} C] :
     SmallCategory (SmallModel C) :=
   Classical.some (Classical.some_spec (@EssentiallySmall.equiv_small_category C _ _))
 
 /-- The (noncomputable) categorical equivalence between
 an essentially small category and its small model.
 -/
-noncomputable def equiv_small_model (C : Type u) [Category.{v} C] [EssentiallySmall.{w} C] : C ≌ SmallModel C :=
+noncomputable def equivSmallModel (C : Type u) [Category.{v} C] [EssentiallySmall.{w} C] : C ≌ SmallModel C :=
   Nonempty.some (Classical.some_spec (Classical.some_spec (@EssentiallySmall.equiv_small_category C _ _)))
 
 theorem essentially_small_congr {C : Type u} [Category.{v} C] {D : Type u'} [Category.{v'} D] (e : C ≌ D) :
@@ -64,7 +69,7 @@ theorem essentially_small_congr {C : Type u} [Category.{v} C] {D : Type u'} [Cat
 
 See `shrink_homs C` for a category instance where every hom set has been replaced by a small model.
 -/
-class locally_small (C : Type u) [Category.{v} C] : Prop where
+class LocallySmall (C : Type u) [Category.{v} C] : Prop where
   hom_small : ∀ X Y : C, Small.{w} (X ⟶ Y) := by
     run_tac
       tactic.apply_instance
@@ -101,7 +106,7 @@ instance (priority := 100) locally_small_of_essentially_small (C : Type u) [Cate
 we'll put a `category.{w}` instance on `shrink_homs C`.
 -/
 @[nolint has_inhabited_instance]
-def shrink_homs (C : Type u) :=
+def ShrinkHoms (C : Type u) :=
   C
 
 namespace ShrinkHoms
@@ -111,11 +116,12 @@ section
 variable {C' : Type _}
 
 /-- Help the typechecker by explicitly translating from `C` to `shrink_homs C`. -/
-def to_shrink_homs {C' : Type _} (X : C') : ShrinkHoms C' :=
+-- a fresh variable with no category instance attached
+def toShrinkHoms {C' : Type _} (X : C') : ShrinkHoms C' :=
   X
 
 /-- Help the typechecker by explicitly translating from `shrink_homs C` to `C`. -/
-def from_shrink_homs {C' : Type _} (X : ShrinkHoms C') : C' :=
+def fromShrinkHoms {C' : Type _} (X : ShrinkHoms C') : C' :=
   X
 
 @[simp]
@@ -138,7 +144,7 @@ noncomputable instance : Category.{w} (ShrinkHoms C) where
 
 /-- Implementation of `shrink_homs.equivalence`. -/
 @[simps]
-noncomputable def Functor : C ⥤ ShrinkHoms C where
+noncomputable def functor : C ⥤ ShrinkHoms C where
   obj := fun X => toShrinkHoms X
   map := fun X Y f => equivShrink (X ⟶ Y) f
 
@@ -151,7 +157,7 @@ noncomputable def inverse : ShrinkHoms C ⥤ C where
 /-- The categorical equivalence between `C` and `shrink_homs C`, when `C` is locally small.
 -/
 @[simps]
-noncomputable def Equivalenceₓ : C ≌ ShrinkHoms C :=
+noncomputable def equivalence : C ≌ ShrinkHoms C :=
   Equivalence.mk (functor C) (inverse C)
     (NatIso.ofComponents (fun X => Iso.refl X)
       (by
@@ -168,6 +174,7 @@ and it is locally small.
 -/
 theorem essentially_small_iff (C : Type u) [Category.{v} C] :
     EssentiallySmall.{w} C ↔ Small.{w} (Skeleton C) ∧ LocallySmall.{w} C := by
+  -- This theorem is the only bit of real work in this file.
   fconstructor
   · intro h
     fconstructor

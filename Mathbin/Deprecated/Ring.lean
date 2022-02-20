@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Mario Carneiro. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Mario Carneiro
+-/
 import Mathbin.Deprecated.Group
 
 /-!
@@ -104,6 +109,7 @@ theorem id : IsRingHom (@id α) := by
   refine' { .. } <;> intros <;> rfl
 
 /-- The composition of two ring homomorphisms is a ring homomorphism. -/
+-- see Note [no instance on morphisms]
 theorem comp (hf : IsRingHom f) {γ} [Ringₓ γ] {g : β → γ} (hg : IsRingHom g) : IsRingHom (g ∘ f) :=
   { map_add := fun x y => by
       simp [map_add hf] <;> rw [map_add hg] <;> rfl,

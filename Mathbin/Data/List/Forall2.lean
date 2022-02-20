@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Mario Carneiro. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Mario Carneiro, Johannes Hölzl
+-/
 import Mathbin.Data.List.Infix
 
 /-!
@@ -23,16 +28,16 @@ theorem forall₂_cons {R : α → β → Prop} {a b l₁ l₂} : Forall₂ R (a
   ⟨fun h => by
     cases' h with h₁ h₂ <;> constructor <;> assumption, fun ⟨h₁, h₂⟩ => Forall₂.cons h₁ h₂⟩
 
-theorem forall₂.imp {R S : α → β → Prop} (H : ∀ a b, R a b → S a b) {l₁ l₂} (h : Forall₂ R l₁ l₂) : Forall₂ S l₁ l₂ :=
+theorem Forall₂.imp {R S : α → β → Prop} (H : ∀ a b, R a b → S a b) {l₁ l₂} (h : Forall₂ R l₁ l₂) : Forall₂ S l₁ l₂ :=
   by
   induction h <;> constructor <;> solve_by_elim
 
-theorem forall₂.mp {r q s : α → β → Prop} (h : ∀ a b, r a b → q a b → s a b) :
+theorem Forall₂.mp {r q s : α → β → Prop} (h : ∀ a b, r a b → q a b → s a b) :
     ∀ {l₁ l₂}, Forall₂ r l₁ l₂ → Forall₂ q l₁ l₂ → Forall₂ s l₁ l₂
   | [], [], forall₂.nil, forall₂.nil => Forall₂.nil
   | a :: l₁, b :: l₂, forall₂.cons hr hrs, forall₂.cons hq hqs => Forall₂.cons (h a b hr hq) (forall₂.mp hrs hqs)
 
-theorem forall₂.flip : ∀ {a b}, Forall₂ (flip r) b a → Forall₂ r a b
+theorem Forall₂.flip : ∀ {a b}, Forall₂ (flip r) b a → Forall₂ r a b
   | _, _, forall₂.nil => Forall₂.nil
   | a :: as, b :: bs, forall₂.cons h₁ h₂ => Forall₂.cons h₁ h₂.flip
 
@@ -43,7 +48,7 @@ theorem forall₂_same {r : α → α → Prop} : ∀ {l}, (∀, ∀ x ∈ l, �
 theorem forall₂_refl {r} [IsRefl α r] (l : List α) : Forall₂ r l l :=
   forall₂_same fun a h => IsRefl.refl _
 
-theorem forall₂_eq_eq_eq : Forall₂ (· = · : α → α → Prop) = (· = ·) := by
+theorem forall₂_eq_eq_eq : Forall₂ ((· = ·) : α → α → Prop) = (· = ·) := by
   funext a b
   apply propext
   constructor
@@ -246,7 +251,7 @@ theorem rel_prod [Monoidₓ α] [Monoidₓ β] (h : r 1 1) (hf : (r⇒r⇒r) (·
 
 /-- Given a relation `r`, `sublist_forall₂ r l₁ l₂` indicates that there is a sublist of `l₂` such
   that `forall₂ r l₁ l₂`. -/
-inductive sublist_forall₂ (r : α → β → Prop) : List α → List β → Prop
+inductive SublistForall₂ (r : α → β → Prop) : List α → List β → Prop
   | nil {l} : sublist_forall₂ [] l
   | cons {a₁ a₂ l₁ l₂} : r a₁ a₂ → sublist_forall₂ l₁ l₂ → sublist_forall₂ (a₁ :: l₁) (a₂ :: l₂)
   | cons_right {a l₁ l₂} : sublist_forall₂ l₁ l₂ → sublist_forall₂ l₁ (a :: l₂)
@@ -278,10 +283,10 @@ theorem sublist_forall₂_iff {l₁ : List α} {l₂ : List β} : SublistForall�
 
 variable {ra : α → α → Prop}
 
-instance sublist_forall₂.is_refl [IsRefl α ra] : IsRefl (List α) (SublistForall₂ ra) :=
+instance SublistForall₂.is_refl [IsRefl α ra] : IsRefl (List α) (SublistForall₂ ra) :=
   ⟨fun l => sublist_forall₂_iff.2 ⟨l, forall₂_refl l, Sublist.refl l⟩⟩
 
-instance sublist_forall₂.is_trans [IsTrans α ra] : IsTrans (List α) (SublistForall₂ ra) :=
+instance SublistForall₂.is_trans [IsTrans α ra] : IsTrans (List α) (SublistForall₂ ra) :=
   ⟨fun a b c => by
     revert a b
     induction' c with _ _ ih
@@ -305,7 +310,7 @@ instance sublist_forall₂.is_trans [IsTrans α ra] : IsTrans (List α) (Sublist
         
       ⟩
 
-theorem sublist.sublist_forall₂ {l₁ l₂ : List α} (h : l₁ <+ l₂) (r : α → α → Prop) [IsRefl α r] :
+theorem Sublist.sublist_forall₂ {l₁ l₂ : List α} (h : l₁ <+ l₂) (r : α → α → Prop) [IsRefl α r] :
     SublistForall₂ r l₁ l₂ :=
   sublist_forall₂_iff.2 ⟨l₁, forall₂_refl l₁, h⟩
 

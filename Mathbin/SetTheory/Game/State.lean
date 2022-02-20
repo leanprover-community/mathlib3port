@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison
+-/
 import Mathbin.SetTheory.Game.Short
 
 /-!
@@ -60,7 +65,7 @@ theorem turn_bound_of_right {s t : S} (m : t ∈ r s) (n : ℕ) (h : turnBound s
 /-- Construct a `pgame` from a state and a (not necessarily optimal) bound on the number of
 turns remaining.
 -/
-def of_aux : ∀ n : ℕ s : S h : turnBound s ≤ n, Pgame
+def ofAux : ∀ n : ℕ s : S h : turnBound s ≤ n, Pgame
   | 0, s, h =>
     Pgame.mk { t // t ∈ l s } { t // t ∈ r s }
       (fun t => by
@@ -74,7 +79,7 @@ def of_aux : ∀ n : ℕ s : S h : turnBound s ≤ n, Pgame
       of_aux n t (turn_bound_of_right t.2 n h)
 
 /-- Two different (valid) turn bounds give equivalent games. -/
-def of_aux_relabelling :
+def ofAuxRelabelling :
     ∀ s : S n m : ℕ hn : turnBound s ≤ n hm : turnBound s ≤ m, Relabelling (ofAux n s hn) (ofAux m s hm)
   | s, 0, 0, hn, hm => by
     dsimp [Pgame.ofAux]
@@ -139,27 +144,27 @@ def of (s : S) : Pgame :=
 
 /-- The equivalence between `left_moves` for a `pgame` constructed using `of_aux _ s _`, and `L s`.
 -/
-def left_moves_of_aux (n : ℕ) {s : S} (h : turnBound s ≤ n) : LeftMoves (ofAux n s h) ≃ { t // t ∈ l s } := by
+def leftMovesOfAux (n : ℕ) {s : S} (h : turnBound s ≤ n) : LeftMoves (ofAux n s h) ≃ { t // t ∈ l s } := by
   induction n <;> rfl
 
 /-- The equivalence between `left_moves` for a `pgame` constructed using `of s`, and `L s`.
 -/
-def left_moves_of (s : S) : LeftMoves (of s) ≃ { t // t ∈ l s } :=
+def leftMovesOf (s : S) : LeftMoves (of s) ≃ { t // t ∈ l s } :=
   leftMovesOfAux _ _
 
 /-- The equivalence between `right_moves` for a `pgame` constructed using `of_aux _ s _`, and `R s`.
 -/
-def right_moves_of_aux (n : ℕ) {s : S} (h : turnBound s ≤ n) : RightMoves (ofAux n s h) ≃ { t // t ∈ r s } := by
+def rightMovesOfAux (n : ℕ) {s : S} (h : turnBound s ≤ n) : RightMoves (ofAux n s h) ≃ { t // t ∈ r s } := by
   induction n <;> rfl
 
 /-- The equivalence between `right_moves` for a `pgame` constructed using `of s`, and `R s`. -/
-def right_moves_of (s : S) : RightMoves (of s) ≃ { t // t ∈ r s } :=
+def rightMovesOf (s : S) : RightMoves (of s) ≃ { t // t ∈ r s } :=
   rightMovesOfAux _ _
 
 /-- The relabelling showing `move_left` applied to a game constructed using `of_aux`
 has itself been constructed using `of_aux`.
 -/
-def relabelling_move_left_aux (n : ℕ) {s : S} (h : turnBound s ≤ n) (t : LeftMoves (ofAux n s h)) :
+def relabellingMoveLeftAux (n : ℕ) {s : S} (h : turnBound s ≤ n) (t : LeftMoves (ofAux n s h)) :
     Relabelling (moveLeft (ofAux n s h) t)
       (ofAux (n - 1) ((leftMovesOfAux n h) t : S)
         (turn_bound_of_left ((leftMovesOfAux n h) t).2 (n - 1) (Nat.le_transₓ h le_tsub_add))) :=
@@ -175,7 +180,7 @@ def relabelling_move_left_aux (n : ℕ) {s : S} (h : turnBound s ≤ n) (t : Lef
 /-- The relabelling showing `move_left` applied to a game constructed using `of`
 has itself been constructed using `of`.
 -/
-def relabelling_move_left (s : S) (t : LeftMoves (of s)) :
+def relabellingMoveLeft (s : S) (t : LeftMoves (of s)) :
     Relabelling (moveLeft (of s) t) (of ((leftMovesOf s).toFun t : S)) := by
   trans
   apply relabelling_move_left_aux
@@ -184,7 +189,7 @@ def relabelling_move_left (s : S) (t : LeftMoves (of s)) :
 /-- The relabelling showing `move_right` applied to a game constructed using `of_aux`
 has itself been constructed using `of_aux`.
 -/
-def relabelling_move_right_aux (n : ℕ) {s : S} (h : turnBound s ≤ n) (t : RightMoves (ofAux n s h)) :
+def relabellingMoveRightAux (n : ℕ) {s : S} (h : turnBound s ≤ n) (t : RightMoves (ofAux n s h)) :
     Relabelling (moveRight (ofAux n s h) t)
       (ofAux (n - 1) ((rightMovesOfAux n h) t : S)
         (turn_bound_of_right ((rightMovesOfAux n h) t).2 (n - 1) (Nat.le_transₓ h le_tsub_add))) :=
@@ -200,21 +205,21 @@ def relabelling_move_right_aux (n : ℕ) {s : S} (h : turnBound s ≤ n) (t : Ri
 /-- The relabelling showing `move_right` applied to a game constructed using `of`
 has itself been constructed using `of`.
 -/
-def relabelling_move_right (s : S) (t : RightMoves (of s)) :
+def relabellingMoveRight (s : S) (t : RightMoves (of s)) :
     Relabelling (moveRight (of s) t) (of ((rightMovesOf s).toFun t : S)) := by
   trans
   apply relabelling_move_right_aux
   apply of_aux_relabelling
 
-instance fintype_left_moves_of_aux (n : ℕ) (s : S) (h : turnBound s ≤ n) : Fintype (LeftMoves (ofAux n s h)) := by
+instance fintypeLeftMovesOfAux (n : ℕ) (s : S) (h : turnBound s ≤ n) : Fintype (LeftMoves (ofAux n s h)) := by
   apply Fintype.ofEquiv _ (left_moves_of_aux _ _).symm
   infer_instance
 
-instance fintype_right_moves_of_aux (n : ℕ) (s : S) (h : turnBound s ≤ n) : Fintype (RightMoves (ofAux n s h)) := by
+instance fintypeRightMovesOfAux (n : ℕ) (s : S) (h : turnBound s ≤ n) : Fintype (RightMoves (ofAux n s h)) := by
   apply Fintype.ofEquiv _ (right_moves_of_aux _ _).symm
   infer_instance
 
-instance short_of_aux : ∀ n : ℕ {s : S} h : turnBound s ≤ n, Short (ofAux n s h)
+instance shortOfAux : ∀ n : ℕ {s : S} h : turnBound s ≤ n, Short (ofAux n s h)
   | 0, s, h =>
     Short.mk'
       (fun i => by
@@ -229,7 +234,7 @@ instance short_of_aux : ∀ n : ℕ {s : S} h : turnBound s ≤ n, Short (ofAux 
     Short.mk' (fun i => shortOfRelabelling (relabellingMoveLeftAux (n + 1) h i).symm (short_of_aux n _)) fun j =>
       shortOfRelabelling (relabellingMoveRightAux (n + 1) h j).symm (short_of_aux n _)
 
-instance short_of (s : S) : Short (of s) := by
+instance shortOf (s : S) : Short (of s) := by
   dsimp [Pgame.of]
   infer_instance
 

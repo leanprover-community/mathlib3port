@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Anne Baanen. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johan Commelin, Anne Baanen
+-/
 import Mathbin.Logic.Function.Iterate
 import Mathbin.Order.GaloisConnection
 import Mathbin.Order.Hom.Basic
@@ -39,7 +44,7 @@ instance [SemilatticeInf β] : HasInf (α →o β) where
   inf := fun f g => ⟨fun a => f a⊓g a, f.mono.inf g.mono⟩
 
 instance [SemilatticeInf β] : SemilatticeInf (α →o β) :=
-  { (_ : PartialOrderₓ (α →o β)), (dualIso α β).symm.toGaloisInsertion.liftSemilatticeInf with inf := ·⊓· }
+  { (_ : PartialOrderₓ (α →o β)), (dualIso α β).symm.toGaloisInsertion.liftSemilatticeInf with inf := (·⊓·) }
 
 instance [Lattice β] : Lattice (α →o β) :=
   { (_ : SemilatticeSup (α →o β)), (_ : SemilatticeInf (α →o β)) with }

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison
+-/
 import Mathbin.Algebra.Category.CommRing.Basic
 import Mathbin.Topology.Category.Top.Basic
 import Mathbin.Topology.Algebra.Ring
@@ -37,8 +42,10 @@ instance : Category TopCommRing.{u} where
     ⟨RingHom.id R, by
       run_tac
         obviously⟩
+  -- TODO remove obviously?
   comp := fun R S T f g =>
     ⟨g.val.comp f.val, by
+      -- TODO automate
       cases f
       cases g
       dsimp
@@ -56,27 +63,27 @@ def of (X : Type u) [CommRingₓ X] [TopologicalSpace X] [TopologicalRing X] : T
 theorem coe_of (X : Type u) [CommRingₓ X] [TopologicalSpace X] [TopologicalRing X] : (of X : Type u) = X :=
   rfl
 
-instance forget_topological_space (R : TopCommRing) : TopologicalSpace ((forget TopCommRing).obj R) :=
+instance forgetTopologicalSpace (R : TopCommRing) : TopologicalSpace ((forget TopCommRing).obj R) :=
   R.isTopologicalSpace
 
-instance forget_comm_ring (R : TopCommRing) : CommRingₓ ((forget TopCommRing).obj R) :=
+instance forgetCommRing (R : TopCommRing) : CommRingₓ ((forget TopCommRing).obj R) :=
   R.isCommRing
 
 instance forget_topological_ring (R : TopCommRing) : TopologicalRing ((forget TopCommRing).obj R) :=
   R.is_topological_ring
 
-instance has_forget_to_CommRing : HasForget₂ TopCommRing CommRingₓₓ :=
+instance hasForgetToCommRing : HasForget₂ TopCommRing CommRingₓₓ :=
   HasForget₂.mk' (fun R => CommRingₓₓ.of R) (fun x => rfl) (fun R S f => f.val) fun R S f => HEq.rfl
 
-instance forget_to_CommRing_topological_space (R : TopCommRing) :
+instance forgetToCommRingTopologicalSpace (R : TopCommRing) :
     TopologicalSpace ((forget₂ TopCommRing CommRingₓₓ).obj R) :=
   R.isTopologicalSpace
 
 /-- The forgetful functor to Top. -/
-instance has_forget_to_Top : HasForget₂ TopCommRing Top :=
+instance hasForgetToTop : HasForget₂ TopCommRing Top :=
   HasForget₂.mk' (fun R => Top.of R) (fun x => rfl) (fun R S f => ⟨⇑f.1, f.2⟩) fun R S f => HEq.rfl
 
-instance forget_to_Top_comm_ring (R : TopCommRing) : CommRingₓ ((forget₂ TopCommRing Top).obj R) :=
+instance forgetToTopCommRing (R : TopCommRing) : CommRingₓ ((forget₂ TopCommRing Top).obj R) :=
   R.isCommRing
 
 instance forget_to_Top_topological_ring (R : TopCommRing) : TopologicalRing ((forget₂ TopCommRing Top).obj R) :=
@@ -88,8 +95,11 @@ but the forgetful functor from `TopCommRing` to `Top` does.
 instance : ReflectsIsomorphisms (forget₂ TopCommRing.{u} Top.{u}) where
   reflects := fun X Y f _ => by
     skip
+    -- We have an isomorphism in `Top`,
     let i_Top := as_iso ((forget₂ TopCommRing Top).map f)
+    -- and a `ring_equiv`.
     let e_Ring : X ≃+* Y := { f.1, ((forget Top).mapIso i_Top).toEquiv with }
+    -- Putting these together we obtain the isomorphism we're after:
     exact
       ⟨⟨⟨e_Ring.symm, i_Top.inv.2⟩,
           ⟨by

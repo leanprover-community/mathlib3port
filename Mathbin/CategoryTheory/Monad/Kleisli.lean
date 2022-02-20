@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Wojciech Nawrocki. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Wojciech Nawrocki, Bhavik Mehta
+-/
 import Mathbin.CategoryTheory.Adjunction.Basic
 import Mathbin.CategoryTheory.Monad.Basic
 
@@ -15,13 +20,14 @@ namespace CategoryTheory
 
 universe v u
 
+-- morphism levels before object levels. See note [category_theory universes].
 variable {C : Type u} [Category.{v} C]
 
 /-- The objects for the Kleisli category of the functor (usually monad) `T : C ⥤ C`, which are the same
 thing as objects of the base category `C`.
 -/
 @[nolint unused_arguments]
-def kleisli (T : Monad C) :=
+def Kleisli (T : Monad C) :=
   C
 
 namespace Kleisli
@@ -33,7 +39,7 @@ instance [Inhabited C] (T : Monad C) : Inhabited (Kleisli T) :=
 
 /-- The Kleisli category on a monad `T`.
     cf Definition 5.2.9 in [Riehl][riehl2017]. -/
-instance kleisli.category : Category (Kleisli T) where
+instance Kleisli.category : Category (Kleisli T) where
   Hom := fun X Y : C => X ⟶ (T : C ⥤ C).obj Y
   id := fun X => T.η.app X
   comp := fun X Y Z f g => f ≫ (T : C ⥤ C).map g ≫ T.μ.app Z
@@ -48,7 +54,7 @@ namespace Adjunction
 
 /-- The left adjoint of the adjunction which induces the monad `(T, η_ T, μ_ T)`. -/
 @[simps]
-def to_kleisli : C ⥤ Kleisli T where
+def toKleisli : C ⥤ Kleisli T where
   obj := fun X => (X : Kleisli T)
   map := fun X Y f => (f ≫ T.η.app Y : _)
   map_comp' := fun X Y Z f g => by
@@ -57,7 +63,7 @@ def to_kleisli : C ⥤ Kleisli T where
 
 /-- The right adjoint of the adjunction which induces the monad `(T, η_ T, μ_ T)`. -/
 @[simps]
-def from_kleisli : Kleisli T ⥤ C where
+def fromKleisli : Kleisli T ⥤ C where
   obj := fun X => T.obj X
   map := fun X Y f => T.map f ≫ T.μ.app Y
   map_id' := fun X => T.right_unit _
@@ -80,7 +86,7 @@ def adj : toKleisli T ⊣ fromKleisli T :=
         simp [monad.left_unit] }
 
 /-- The composition of the adjunction gives the original functor. -/
-def to_kleisli_comp_from_kleisli_iso_self : toKleisli T ⋙ fromKleisli T ≅ T :=
+def toKleisliCompFromKleisliIsoSelf : toKleisli T ⋙ fromKleisli T ≅ T :=
   NatIso.ofComponents (fun X => Iso.refl _) fun X Y f => by
     dsimp
     simp

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Julian Kuelshammer. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Julian Kuelshammer
+-/
 import Mathbin.RingTheory.Polynomial.Chebyshev
 import Mathbin.RingTheory.Localization
 import Mathbin.Data.Zmod.Basic
@@ -171,6 +176,11 @@ theorem dickson_one_one_comp_comm (m n : ℕ) :
   rw [← dickson_one_one_mul, mul_comm, dickson_one_one_mul]
 
 theorem dickson_one_one_zmod_p (p : ℕ) [Fact p.Prime] : dickson 1 (1 : Zmod p) p = X ^ p := by
+  -- Recall that `dickson_eval_add_inv` characterises `dickson 1 1 p`
+  -- as a polynomial that maps `x + x⁻¹` to `x ^ p + (x⁻¹) ^ p`.
+  -- Since `X ^ p` also satisfies this property in characteristic `p`,
+  -- we can use a variant on `polynomial.funext` to conclude that these polynomials are equal.
+  -- For this argument, we need an arbitrary infinite field of characteristic `p`.
   obtain ⟨K, _, _, H⟩ : ∃ (K : Type)(_ : Field K), ∃ _ : CharP K p, Infinite K := by
     let K := FractionRing (Polynomial (Zmod p))
     let f : Zmod p →+* K := (algebraMap _ (FractionRing _)).comp C
@@ -185,18 +195,26 @@ theorem dickson_one_one_zmod_p (p : ℕ) [Fact p.Prime] : dickson 1 (1 : Zmod p)
   apply map_injective (Zmod.castHom (dvd_refl p) K) (RingHom.injective _)
   rw [map_dickson, Polynomial.map_pow, map_X]
   apply eq_of_infinite_eval_eq
+  -- The two polynomials agree on all `x` of the form `x = y + y⁻¹`.
   apply @Set.Infinite.mono _ { x : K | ∃ y, x = y + y⁻¹ ∧ y ≠ 0 }
   · rintro _ ⟨x, rfl, hx⟩
     simp only [eval_X, eval_pow, Set.mem_set_of_eq, @add_pow_char K _ p,
       dickson_one_one_eval_add_inv _ _ (mul_inv_cancel hx), inv_pow₀, Zmod.cast_hom_apply, Zmod.cast_one']
     
+  -- Now we need to show that the set of such `x` is infinite.
+  -- If the set is finite, then we will show that `K` is also finite.
   · intro h
     rw [← Set.infinite_univ_iff] at H
     apply H
+    -- To each `x` of the form `x = y + y⁻¹`
+    -- we `bind` the set of `y` that solve the equation `x = y + y⁻¹`.
+    -- For every `x`, that set is finite (since it is governed by a quadratic equation).
+    -- For the moment, we claim that all these sets together cover `K`.
     suffices (Set.Univ : Set K) = { x : K | ∃ y : K, x = y + y⁻¹ ∧ y ≠ 0 } >>= fun x => { y | x = y + y⁻¹ ∨ y = 0 } by
       rw [this]
       clear this
       refine' h.bUnion fun x hx => _
+      -- The following quadratic polynomial has as solutions the `y` for which `x = y + y⁻¹`.
       let φ : K[X] := X ^ 2 - C x * X + 1
       have hφ : φ ≠ 0 := by
         intro H
@@ -215,6 +233,7 @@ theorem dickson_one_one_zmod_p (p : ℕ) [Fact p.Prime] : dickson 1 (1 : Zmod p)
       rw [← mul_left_inj' hy, eq_comm, ← sub_eq_zero, add_mulₓ, inv_mul_cancel hy]
       apply eq_iff_eq_cancel_right.mpr
       ring
+    -- Finally, we prove the claim that our finite union of finite sets covers all of `K`.
     · apply (Set.eq_univ_of_forall _).symm
       intro x
       simp only [exists_prop, Set.mem_Union, Set.bind_def, Ne.def, Set.mem_set_of_eq]

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Markus Himmel. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Markus Himmel
+-/
 import Mathbin.Algebra.Homology.ImageToKernel
 
 /-!
@@ -54,7 +59,10 @@ In an abelian category, this is equivalent to `image_to_kernel f g w` being an i
 and hence equivalent to the usual definition,
 `image_subobject f = kernel_subobject g`.
 -/
-class exact [HasZeroMorphisms V] [HasKernels V] {A B C : V} (f : A ⟶ B) (g : B ⟶ C) : Prop where
+-- One nice feature of this definition is that we have
+-- `epi f → exact g h → exact (f ≫ g) h` and `exact f g → mono h → exact f (g ≫ h)`,
+-- which do not necessarily hold in a non-abelian category with the usual definition of `exact`.
+class Exact [HasZeroMorphisms V] [HasKernels V] {A B C : V} (f : A ⟶ B) (g : B ⟶ C) : Prop where
   w : f ≫ g = 0
   Epi : Epi (imageToKernel f g w)
 
@@ -71,7 +79,7 @@ open_locale ZeroObject
 /-- In any preadditive category,
 composable morphisms `f g` are exact iff they compose to zero and the homology vanishes.
 -/
-theorem preadditive.exact_iff_homology_zero {A B C : V} (f : A ⟶ B) (g : B ⟶ C) :
+theorem Preadditive.exact_iff_homology_zero {A B C : V} (f : A ⟶ B) (g : B ⟶ C) :
     Exact f g ↔ ∃ w : f ≫ g = 0, Nonempty (homology f g w ≅ 0) :=
   ⟨fun h => ⟨h.w, ⟨cokernel.ofEpi _⟩⟩, fun h => by
     obtain ⟨w, ⟨i⟩⟩ := h
@@ -82,7 +90,7 @@ theorem preadditive.exact_iff_homology_zero {A B C : V} (f : A ⟶ B) (g : B ⟶
             (by
               ext))⟩⟩
 
-theorem preadditive.exact_of_iso_of_exact {A₁ B₁ C₁ A₂ B₂ C₂ : V} (f₁ : A₁ ⟶ B₁) (g₁ : B₁ ⟶ C₁) (f₂ : A₂ ⟶ B₂)
+theorem Preadditive.exact_of_iso_of_exact {A₁ B₁ C₁ A₂ B₂ C₂ : V} (f₁ : A₁ ⟶ B₁) (g₁ : B₁ ⟶ C₁) (f₂ : A₂ ⟶ B₂)
     (g₂ : B₂ ⟶ C₂) (α : Arrow.mk f₁ ≅ Arrow.mk f₂) (β : Arrow.mk g₁ ≅ Arrow.mk g₂) (p : α.Hom.right = β.Hom.left)
     (h : Exact f₁ g₁) : Exact f₂ g₂ := by
   rw [preadditive.exact_iff_homology_zero] at h⊢
@@ -94,7 +102,7 @@ theorem preadditive.exact_of_iso_of_exact {A₁ B₁ C₁ A₂ B₂ C₂ : V} (f
     p]
   simp only [arrow.mk_hom, is_iso.inv_hom_id_assoc, category.assoc, ← arrow.inv_right, is_iso.iso.inv_hom]
 
-theorem preadditive.exact_iff_exact_of_iso {A₁ B₁ C₁ A₂ B₂ C₂ : V} (f₁ : A₁ ⟶ B₁) (g₁ : B₁ ⟶ C₁) (f₂ : A₂ ⟶ B₂)
+theorem Preadditive.exact_iff_exact_of_iso {A₁ B₁ C₁ A₂ B₂ C₂ : V} (f₁ : A₁ ⟶ B₁) (g₁ : B₁ ⟶ C₁) (f₂ : A₂ ⟶ B₂)
     (g₂ : B₂ ⟶ C₂) (α : Arrow.mk f₁ ≅ Arrow.mk f₂) (β : Arrow.mk g₁ ≅ Arrow.mk g₂) (p : α.Hom.right = β.Hom.left) :
     Exact f₁ g₁ ↔ Exact f₂ g₂ :=
   ⟨Preadditive.exact_of_iso_of_exact _ _ _ _ _ _ p,
@@ -125,6 +133,7 @@ theorem image_to_kernel_is_iso_of_image_eq_kernel {A B C : V} (f : A ⟶ B) (g :
   simp only [subobject.of_le_comp_of_le, subobject.of_le_refl]
   simp
 
+-- We'll prove the converse later, when `V` is abelian.
 theorem exact_of_image_eq_kernel {A B C : V} (f : A ⟶ B) (g : B ⟶ C) (p : imageSubobject f = kernelSubobject g) :
     Exact f g :=
   { w := comp_eq_zero_of_image_eq_kernel f g p,

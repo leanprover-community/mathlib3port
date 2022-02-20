@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2018 Johannes Hölzl. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johannes Hölzl, Kenny Lau, Johan Commelin, Mario Carneiro, Kevin Buzzard,
+Amelia Livingston, Yury Kudryashov
+-/
 import Mathbin.GroupTheory.Submonoid.Operations
 import Mathbin.Algebra.BigOperators.Basic
 import Mathbin.Algebra.FreeMonoid
@@ -161,7 +167,7 @@ theorem supr_induction {ι : Sort _} (S : ι → Submonoid M) {C : M → Prop} {
 theorem supr_induction' {ι : Sort _} (S : ι → Submonoid M) {C : ∀ x, (x ∈ ⨆ i, S i) → Prop}
     (hp : ∀ i, ∀ x ∈ S i, ∀, C x (mem_supr_of_mem i ‹_›)) (h1 : C 1 (one_mem _))
     (hmul : ∀ x y hx hy, C x hx → C y hy → C (x * y) (mul_mem _ ‹_› ‹_›)) {x : M} (hx : x ∈ ⨆ i, S i) : C x hx := by
-  refine' Exists.elim _ fun hx : x ∈ ⨆ i, S i hc : C x hx => hc
+  refine' Exists.elim _ fun hc : C x hx => hc
   refine' supr_induction S hx (fun i x hx => _) _ fun x y => _
   · exact ⟨_, hp _ _ hx⟩
     
@@ -281,8 +287,7 @@ theorem log_pow_eq_self [DecidableEq M] {n : M} (h : Function.Injective fun m : 
 /-- The exponentiation map is an isomorphism from the additive monoid on natural numbers to powers
 when it is injective. The inverse is given by the logarithms. -/
 @[simps]
-def pow_log_equiv [DecidableEq M] {n : M} (h : Function.Injective fun m : ℕ => n ^ m) :
-    Multiplicative ℕ ≃* powers n where
+def powLogEquiv [DecidableEq M] {n : M} (h : Function.Injective fun m : ℕ => n ^ m) : Multiplicative ℕ ≃* powers n where
   toFun := fun m => pow n m.toAdd
   invFun := fun m => Multiplicative.ofAdd (log m)
   left_inv := log_pow_eq_self h

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Patrick Massot. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Patrick Massot
+-/
 import Mathbin.Analysis.SpecificLimits
 
 /-!
@@ -32,6 +37,7 @@ theorem hofer {X : Type _} [MetricSpace X] [CompleteSpace X] (x : X) (ε : ℝ) 
         (by
           norm_num)
         k
+  -- Now let's specialize to `ε/2^k`
   replace H : ∀ k : ℕ, ∀ x', d x' x ≤ 2 * ε ∧ 2 ^ k * ϕ x ≤ ϕ x' → ∃ y, d x' y ≤ ε / 2 ^ k ∧ 2 * ϕ x' < ϕ y
   · intro k x'
     push_neg  at H
@@ -46,14 +52,18 @@ theorem hofer {X : Type _} [MetricSpace X] [CompleteSpace X] (x : X) (ε : ℝ) 
   clear reformulation
   have : Nonempty X := ⟨x⟩
   choose! F hF using H
+  -- Use the axiom of choice
+  -- Now define u by induction starting at x, with u_{n+1} = F(n, u_n)
   let u : ℕ → X := fun n => Nat.recOn n x F
   have hu0 : u 0 = x := rfl
+  -- The properties of F translate to properties of u
   have hu :
     ∀ n, d (u n) x ≤ 2 * ε ∧ 2 ^ n * ϕ x ≤ ϕ (u n) → d (u n) (u <| n + 1) ≤ ε / 2 ^ n ∧ 2 * ϕ (u n) < ϕ (u <| n + 1) :=
     by
     intro n
     exact hF n (u n)
   clear hF
+  -- Key properties of u, to be proven by induction
   have key : ∀ n, d (u n) (u (n + 1)) ≤ ε / 2 ^ n ∧ 2 * ϕ (u n) < ϕ (u (n + 1)) := by
     intro n
     induction' n using Nat.case_strong_induction_onₓ with n IH
@@ -63,6 +73,7 @@ theorem hofer {X : Type _} [MetricSpace X] [CompleteSpace X] (x : X) (ε : ℝ) 
     have A : d (u (n + 1)) x ≤ 2 * ε := by
       rw [dist_comm]
       let r := range (n + 1)
+      -- range (n+1) = {0, ..., n}
       calc d (u 0) (u (n + 1)) ≤ ∑ i in r, d (u i) (u <| i + 1) :=
           dist_le_range_sum_dist u (n + 1)_ ≤ ∑ i in r, ε / 2 ^ i :=
           sum_le_sum fun i i_in =>
@@ -77,11 +88,14 @@ theorem hofer {X : Type _} [MetricSpace X] [CompleteSpace X] (x : X) (ε : ℝ) 
     exact hu (n + 1) ⟨A, B⟩
   cases' forall_and_distrib.mp key with key₁ key₂
   clear hu key
+  -- Hence u is Cauchy
   have cauchy_u : CauchySeq u := by
     refine' cauchy_seq_of_le_geometric _ ε one_half_lt_one fun n => _
     simpa only [one_div, inv_pow₀] using key₁ n
+  -- So u converges to some y
   obtain ⟨y, limy⟩ : ∃ y, tendsto u at_top (𝓝 y)
   exact CompleteSpace.complete cauchy_u
+  -- And ϕ ∘ u goes to +∞
   have lim_top : tendsto (ϕ ∘ u) at_top at_top := by
     let v := fun n => (ϕ ∘ u) (n + 1)
     suffices tendsto v at_top at_top by
@@ -92,6 +106,8 @@ theorem hofer {X : Type _} [MetricSpace X] [CompleteSpace X] (x : X) (ε : ℝ) 
           linarith _ < ϕ (u (0 + 1)) := key₂ 0
     apply tendsto_at_top_of_geom_le hv₀ one_lt_two
     exact fun n => (key₂ (n + 1)).le
+  -- But ϕ ∘ u also needs to go to ϕ(y)
   have lim : tendsto (ϕ ∘ u) at_top (𝓝 (ϕ y)) := tendsto.comp cont.continuous_at limy
+  -- So we have our contradiction!
   exact not_tendsto_at_top_of_tendsto_nhds limₓ lim_top
 

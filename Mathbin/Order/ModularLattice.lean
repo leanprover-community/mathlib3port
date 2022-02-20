@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Aaron Anderson. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Aaron Anderson
+-/
 import Mathbin.Order.RelIso
 import Mathbin.Order.LatticeIntervals
 import Mathbin.Order.GaloisConnection
@@ -86,9 +91,9 @@ theorem inf_lt_inf_of_lt_of_sup_le_sup (hxy : x < y) (hinf : y⊔z ≤ x⊔z) : 
 /-- A generalization of the theorem that if `N` is a submodule of `M` and
   `N` and `M / N` are both Artinian, then `M` is Artinian. -/
 theorem well_founded_lt_exact_sequence {β γ : Type _} [PartialOrderₓ β] [PartialOrderₓ γ]
-    (h₁ : WellFounded (· < · : β → β → Prop)) (h₂ : WellFounded (· < · : γ → γ → Prop)) (K : α) (f₁ : β → α)
+    (h₁ : WellFounded ((· < ·) : β → β → Prop)) (h₂ : WellFounded ((· < ·) : γ → γ → Prop)) (K : α) (f₁ : β → α)
     (f₂ : α → β) (g₁ : γ → α) (g₂ : α → γ) (gci : GaloisCoinsertion f₁ f₂) (gi : GaloisInsertion g₂ g₁)
-    (hf : ∀ a, f₁ (f₂ a) = a⊓K) (hg : ∀ a, g₁ (g₂ a) = a⊔K) : WellFounded (· < · : α → α → Prop) :=
+    (hf : ∀ a, f₁ (f₂ a) = a⊓K) (hg : ∀ a, g₁ (g₂ a) = a⊔K) : WellFounded ((· < ·) : α → α → Prop) :=
   Subrelation.wfₓ
     (fun A B hAB =>
       show Prod.Lex (· < ·) (· < ·) (f₂ A, g₂ A) (f₂ B, g₂ B) by
@@ -104,9 +109,9 @@ theorem well_founded_lt_exact_sequence {β γ : Type _} [PartialOrderₓ β] [Pa
 /-- A generalization of the theorem that if `N` is a submodule of `M` and
   `N` and `M / N` are both Noetherian, then `M` is Noetherian.  -/
 theorem well_founded_gt_exact_sequence {β γ : Type _} [PartialOrderₓ β] [PartialOrderₓ γ]
-    (h₁ : WellFounded (· > · : β → β → Prop)) (h₂ : WellFounded (· > · : γ → γ → Prop)) (K : α) (f₁ : β → α)
+    (h₁ : WellFounded ((· > ·) : β → β → Prop)) (h₂ : WellFounded ((· > ·) : γ → γ → Prop)) (K : α) (f₁ : β → α)
     (f₂ : α → β) (g₁ : γ → α) (g₂ : α → γ) (gci : GaloisCoinsertion f₁ f₂) (gi : GaloisInsertion g₂ g₁)
-    (hf : ∀ a, f₁ (f₂ a) = a⊓K) (hg : ∀ a, g₁ (g₂ a) = a⊔K) : WellFounded (· > · : α → α → Prop) :=
+    (hf : ∀ a, f₁ (f₂ a) = a⊓K) (hg : ∀ a, g₁ (g₂ a) = a⊔K) : WellFounded ((· > ·) : α → α → Prop) :=
   @well_founded_lt_exact_sequence (OrderDual α) _ _ (OrderDual γ) (OrderDual β) _ _ h₂ h₁ K g₁ g₂ f₁ f₂ gi.dual gci.dual
     hg hf
 
@@ -139,7 +144,7 @@ namespace IsCompl
 variable [Lattice α] [BoundedOrder α] [IsModularLattice α]
 
 /-- The diamond isomorphism between the intervals `set.Iic a` and `set.Ici b`. -/
-def Iic_order_iso_Ici {a b : α} (h : IsCompl a b) : Set.Iic a ≃o Set.Ici b :=
+def iicOrderIsoIci {a b : α} (h : IsCompl a b) : Set.Iic a ≃o Set.Ici b :=
   (OrderIso.setCongr (Set.Iic a) (Set.Icc (a⊓b) a) (h.inf_eq_bot.symm ▸ Set.Icc_bot.symm)).trans <|
     (infIccOrderIsoIccSup a b).trans (OrderIso.setCongr (Set.Icc b (a⊔b)) (Set.Ici b) (h.sup_eq_top.symm ▸ Set.Icc_top))
 
@@ -191,10 +196,12 @@ instance is_complemented_Iic : IsComplemented (Set.Iic a) :=
     ⟨⟨y⊓a, Set.mem_Iic.2 inf_le_right⟩, by
       constructor
       · change x⊓(y⊓a) ≤ ⊥
+        -- improve lattice subtype API
         rw [← inf_assoc]
         exact le_transₓ inf_le_left hy.1
         
       · change a ≤ x⊔y⊓a
+        -- improve lattice subtype API
         rw [← sup_inf_assoc_of_le _ (Set.mem_Iic.1 hx), top_le_iff.1 hy.2, top_inf_eq]
         ⟩⟩
 
@@ -204,9 +211,11 @@ instance is_complemented_Ici : IsComplemented (Set.Ici a) :=
     ⟨⟨y⊔a, Set.mem_Ici.2 le_sup_right⟩, by
       constructor
       · change x⊓(y⊔a) ≤ a
+        -- improve lattice subtype API
         rw [← inf_sup_assoc_of_le _ (Set.mem_Ici.1 hx), le_bot_iff.1 hy.1, bot_sup_eq]
         
       · change ⊤ ≤ x⊔(y⊔a)
+        -- improve lattice subtype API
         rw [← sup_assoc]
         exact le_transₓ hy.2 le_sup_left
         ⟩⟩

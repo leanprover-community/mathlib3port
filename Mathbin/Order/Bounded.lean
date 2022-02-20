@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2022 Violeta Hernández Palacios. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Violeta Hernández Palacios
+-/
 import Mathbin.Order.MinMax
 import Mathbin.Order.RelClasses
 import Mathbin.Data.Set.Intervals.Basic
@@ -18,10 +23,10 @@ variable {α : Type _} {r : α → α → Prop} {s t : Set α}
 /-! ### Subsets of bounded and unbounded sets -/
 
 
-theorem bounded.mono (hst : s ⊆ t) (hs : Bounded r t) : Bounded r s :=
+theorem Bounded.mono (hst : s ⊆ t) (hs : Bounded r t) : Bounded r s :=
   hs.imp fun a ha b hb => ha b (hst hb)
 
-theorem unbounded.mono (hst : s ⊆ t) (hs : Unbounded r s) : Unbounded r t := fun a =>
+theorem Unbounded.mono (hst : s ⊆ t) (hs : Unbounded r s) : Unbounded r t := fun a =>
   let ⟨b, hb, hb'⟩ := hs a
   ⟨b, hst hb, hb'⟩
 
@@ -67,14 +72,14 @@ theorem unbounded_gt_iff [LinearOrderₓ α] : Unbounded (· > ·) s ↔ ∀ a, 
 /-! #### Less and less or equal -/
 
 
-theorem bounded.rel_mono {r' : α → α → Prop} (h : Bounded r s) (hrr' : r ≤ r') : Bounded r' s :=
+theorem Bounded.rel_mono {r' : α → α → Prop} (h : Bounded r s) (hrr' : r ≤ r') : Bounded r' s :=
   let ⟨a, ha⟩ := h
   ⟨a, fun b hb => hrr' b a (ha b hb)⟩
 
 theorem bounded_le_of_bounded_lt [Preorderₓ α] (h : Bounded (· < ·) s) : Bounded (· ≤ ·) s :=
   h.rel_mono fun _ _ => le_of_ltₓ
 
-theorem unbounded.rel_mono {r' : α → α → Prop} (hr : r' ≤ r) (h : Unbounded r s) : Unbounded r' s := fun a =>
+theorem Unbounded.rel_mono {r' : α → α → Prop} (hr : r' ≤ r) (h : Unbounded r s) : Unbounded r' s := fun a =>
   let ⟨b, hb, hba⟩ := h a
   ⟨b, hb, fun hba' => hba (hr b a hba')⟩
 

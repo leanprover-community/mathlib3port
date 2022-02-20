@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison
+-/
 import Mathbin.LinearAlgebra.Matrix.Adjugate
 import Mathbin.RingTheory.MatrixAlgebra
 import Mathbin.RingTheory.PolynomialAlgebra
@@ -85,12 +90,25 @@ applied to the matrix itself, is zero.
 
 This holds over any commutative ring.
 -/
+-- This proof follows http://drorbn.net/AcademicPensieve/2015-12/CayleyHamilton.pdf
 theorem Matrix.aeval_self_charpoly (M : Matrix n n R) : aeval M M.charpoly = 0 := by
+  -- We begin with the fact $χ_M(t) I = adjugate (t I - M) * (t I - M)$,
+  -- as an identity in `matrix n n R[X]`.
   have h : M.charpoly • (1 : Matrix n n R[X]) = adjugate (charmatrix M) * charmatrix M := (adjugate_mul _).symm
+  -- Using the algebra isomorphism `matrix n n R[X] ≃ₐ[R] polynomial (matrix n n R)`,
+  -- we have the same identity in `polynomial (matrix n n R)`.
   apply_fun matPolyEquiv  at h
   simp only [mat_poly_equiv.map_mul, mat_poly_equiv_charmatrix] at h
+  -- Because the coefficient ring `matrix n n R` is non-commutative,
+  -- evaluation at `M` is not multiplicative.
+  -- However, any polynomial which is a product of the form $N * (t I - M)$
+  -- is sent to zero, because the evaluation function puts the polynomial variable
+  -- to the right of any coefficients, so everything telescopes.
   apply_fun fun p => p.eval M  at h
   rw [eval_mul_X_sub_C] at h
+  -- Now $χ_M (t) I$, when thought of as a polynomial of matrices
+  -- and evaluated at some `N` is exactly $χ_M (N)$.
   rw [mat_poly_equiv_smul_one, eval_map] at h
+  -- Thus we have $χ_M(M) = 0$, which is the desired result.
   exact h
 

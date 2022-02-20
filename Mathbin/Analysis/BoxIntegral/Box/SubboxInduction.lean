@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Yury Kudryashov. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yury Kudryashov
+-/
 import Mathbin.Analysis.BoxIntegral.Box.Basic
 import Mathbin.Analysis.SpecificLimits
 
@@ -37,7 +42,7 @@ variable {ι : Type _} {I J : Box ι}
 /-- For a box `I`, the hyperplanes passing through its center split `I` into `2 ^ card ι` boxes.
 `box_integral.box.split_center_box I s` is one of these boxes. See also
 `box_integral.partition.split_center` for the corresponding `box_integral.partition`. -/
-def split_center_box (I : Box ι) (s : Set ι) : Box ι where
+def splitCenterBox (I : Box ι) (s : Set ι) : Box ι where
   lower := s.piecewise (fun i => (I.lower i + I.upper i) / 2) I.lower
   upper := s.piecewise I.upper fun i => (I.lower i + I.upper i) / 2
   lower_lt_upper := fun i => by
@@ -74,7 +79,7 @@ theorem exists_mem_split_center_box {I : Box ι} {x : ι → ℝ} : (∃ s, x �
 
 /-- `box_integral.box.split_center_box` bundled as a `function.embedding`. -/
 @[simps]
-def split_center_box_emb (I : Box ι) : Set ι ↪ Box ι :=
+def splitCenterBoxEmb (I : Box ι) : Set ι ↪ Box ι :=
   ⟨splitCenterBox I, injective_split_center_box I⟩
 
 @[simp]
@@ -115,11 +120,13 @@ theorem subbox_induction_on' {p : Box ι → Prop} (I : Box ι) (H_ind : ∀, �
                     z ∈ J.Icc → J.Icc ⊆ U → (∀ i, J.upper i - J.lower i = (I.upper i - I.lower i) / 2 ^ m) → p J) :
     p I := by
   by_contra hpI
+  -- First we use `H_ind` to construct a decreasing sequence of boxes such that `∀ m, ¬p (J m)`.
   replace H_ind := fun J hJ => not_imp_not.2 (H_ind J hJ)
   simp only [exists_imp_distrib, not_forall] at H_ind
   choose! s hs using H_ind
   set J : ℕ → box ι := fun m => ((fun J => split_center_box J (s J))^[m]) I
   have J_succ : ∀ m, J (m + 1) = split_center_box (J m) (s <| J m) := fun m => iterate_succ_apply' _ _ _
+  -- Now we prove some properties of `J`
   have hJmono : Antitone J :=
     antitone_nat_of_succ_le fun n => by
       simpa [J_succ] using split_center_box_le _ _
@@ -134,8 +141,11 @@ theorem subbox_induction_on' {p : Box ι → Prop} (I : Box ι) (H_ind : ∀, �
       
     simp only [pow_succ'ₓ, J_succ, upper_sub_lower_split_center_box, ihm, div_div_eq_div_mul]
   have h0 : J 0 = I := rfl
+  -- Now we clear unneeded assumptions
   clear_value J
   clear hpI hs J_succ s
+  -- Let `z` be the unique common point of all `(J m).Icc`. Then `H_nhds` proves `p (J m)` for
+  -- sufficiently large `m`. This contradicts `hJp`.
   set z : ι → ℝ := ⨆ m, (J m).lower
   have hzJ : ∀ m, z ∈ (J m).Icc :=
     mem_Inter.1

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Mario Carneiro. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Mario Carneiro
+-/
 import Mathbin.Tactic.Ring
 import Mathbin.Data.Num.Lemmas
 import Mathbin.Data.Tree
@@ -21,7 +26,7 @@ protected unsafe def reflect' (u : level) (α : expr) : Tree expr → expr
 
 /-- Returns an element indexed by `n`, or zero if `n` isn't a valid index.
 See `tree.get`. -/
-protected def get_or_zero {α} [Zero α] (t : Tree α) (n : PosNum) : α :=
+protected def getOrZero {α} [Zero α] (t : Tree α) (n : PosNum) : α :=
   t.getOrElse n 0
 
 end Tree
@@ -31,8 +36,13 @@ namespace Tactic.Ring2
 /-- A reflected/meta representation of an expression in a commutative
 semiring. This representation is a direct translation of such
 expressions - see `horner_expr` for a normal form. -/
-inductive csring_expr
-  | atom : PosNum → csring_expr
+inductive CsringExpr/- (atom n) is an opaque element of the csring. For example,
+a local variable in the context. n indexes into a storage
+of such atoms - a `tree α`. -/
+
+  | atom : PosNum → csring_expr/- (const n) is technically the csring's one, added n times.
+Or the zero if n is 0. -/
+
   | const : Num → csring_expr
   | add : csring_expr → csring_expr → csring_expr
   | mul : csring_expr → csring_expr → csring_expr
@@ -61,8 +71,12 @@ semiring using the sparse Horner normal form. This type admits
 non-optimal instantiations (e.g. `P` can be represented as `P+0+0`),
 so to get good performance out of it, care must be taken to maintain
 an optimal, *canonical* form. -/
-inductive horner_expr
-  | const : Znum → horner_expr
+inductive HornerExpr/- (const n) is a constant n in the csring, similarly to the same
+constructor in `csring_expr`. This one, however, can be negative. -/
+
+  | const : Znum → horner_expr/- (horner a x n b) is a*xⁿ + b, where x is the x-th atom
+in the atom tree. -/
+
   | horner : horner_expr → PosNum → Num → horner_expr → horner_expr
   deriving DecidableEq
 
@@ -70,7 +84,7 @@ namespace HornerExpr
 
 /-- True iff the `horner_expr` argument is a valid `csring_expr`.
 For that to be the case, all its constants must be non-negative. -/
-def is_cs : HornerExpr → Prop
+def IsCs : HornerExpr → Prop
   | const n => ∃ m : Num, n = m.toZnum
   | horner a x n b => is_cs a ∧ is_cs b
 
@@ -101,7 +115,7 @@ def horner' (a : HornerExpr) (x : PosNum) (n : Num) (b : HornerExpr) : HornerExp
   | const q => if q = 0 then b else horner a x n b
   | horner a₁ x₁ n₁ b₁ => if x₁ = x ∧ b₁ = 0 then horner a₁ x (n₁ + n) b else horner a x n b
 
-def add_const (k : Znum) (e : HornerExpr) : HornerExpr :=
+def addConst (k : Znum) (e : HornerExpr) : HornerExpr :=
   if k = 0 then e
   else by
     induction' e with n a x n b A B
@@ -110,7 +124,7 @@ def add_const (k : Znum) (e : HornerExpr) : HornerExpr :=
     · exact horner a x n B
       
 
-def add_aux (a₁ : HornerExpr) (A₁ : HornerExpr → HornerExpr) (x₁ : PosNum) :
+def addAux (a₁ : HornerExpr) (A₁ : HornerExpr → HornerExpr) (x₁ : PosNum) :
     HornerExpr → Num → HornerExpr → (HornerExpr → HornerExpr) → HornerExpr
   | const n₂, n₁, b₁, B₁ => addConst n₂ (horner a₁ x₁ n₁ b₁)
   | horner a₂ x₂ n₂ b₂, n₁, b₁, B₁ =>
@@ -128,6 +142,26 @@ def add : HornerExpr → HornerExpr → HornerExpr
   | const n₁, e₂ => addConst n₁ e₂
   | horner a₁ x₁ n₁ b₁, e₂ => addAux a₁ (add a₁) x₁ e₂ n₁ b₁ (add b₁)
 
+/-begin
+  induction e₁ with n₁ a₁ x₁ n₁ b₁ A₁ B₁ generalizing e₂,
+  { exact add_const n₁ e₂ },
+  exact match e₂ with e₂ := begin
+    induction e₂ with n₂ a₂ x₂ n₂ b₂ A₂ B₂ generalizing n₁ b₁;
+    let e₁ := horner a₁ x₁ n₁ b₁,
+    { exact add_const n₂ e₁ },
+    let e₂ := horner a₂ x₂ n₂ b₂,
+    exact match pos_num.cmp x₁ x₂ with
+    | ordering.lt := horner a₁ x₁ n₁ (B₁ e₂)
+    | ordering.gt := horner a₂ x₂ n₂ (B₂ n₁ b₁)
+    | ordering.eq :=
+      match num.sub' n₁ n₂ with
+      | znum.zero := horner' (A₁ a₂) x₁ n₁ (B₁ b₂)
+      | (znum.pos k) := horner (A₂ k 0) x₁ n₂ (B₁ b₂)
+      | (znum.neg k) := horner (A₁ (horner a₂ x₁ k 0)) x₁ n₁ (B₁ b₂)
+      end
+    end
+  end end
+end-/
 def neg (e : HornerExpr) : HornerExpr := by
   induction' e with n a x n b A B
   · exact const (-n)
@@ -135,7 +169,7 @@ def neg (e : HornerExpr) : HornerExpr := by
   · exact horner A x n B
     
 
-def mul_const (k : Znum) (e : HornerExpr) : HornerExpr :=
+def mulConst (k : Znum) (e : HornerExpr) : HornerExpr :=
   if k = 0 then 0
   else
     if k = 1 then e
@@ -146,7 +180,7 @@ def mul_const (k : Znum) (e : HornerExpr) : HornerExpr :=
       · exact horner A x n B
         
 
-def mul_aux a₁ x₁ n₁ b₁ (A₁ B₁ : HornerExpr → HornerExpr) : HornerExpr → HornerExpr
+def mulAux a₁ x₁ n₁ b₁ (A₁ B₁ : HornerExpr → HornerExpr) : HornerExpr → HornerExpr
   | const n₂ => mulConst n₂ (horner a₁ x₁ n₁ b₁)
   | e₂@(horner a₂ x₂ n₂ b₂) =>
     match PosNum.cmp x₁ x₂ with
@@ -160,6 +194,20 @@ def mul : HornerExpr → HornerExpr → HornerExpr
   | const n₁ => mulConst n₁
   | horner a₁ x₁ n₁ b₁ => mulAux a₁ x₁ n₁ b₁ (mul a₁) (mul b₁)
 
+/-begin
+  induction e₁ with n₁ a₁ x₁ n₁ b₁ A₁ B₁ generalizing e₂,
+  { exact mul_const n₁ e₂ },
+  induction e₂ with n₂ a₂ x₂ n₂ b₂ A₂ B₂;
+  let e₁ := horner a₁ x₁ n₁ b₁,
+  { exact mul_const n₂ e₁ },
+  let e₂ := horner a₂ x₂ n₂ b₂,
+  cases pos_num.cmp x₁ x₂,
+  { exact horner (A₁ e₂) x₁ n₁ (B₁ e₂) },
+  { let haa := horner' A₂ x₁ n₂ 0,
+    exact if b₂ = 0 then haa else
+      haa.add (horner (A₁ b₂) x₁ n₁ (B₁ b₂)) },
+  { exact horner A₂ x₂ n₂ B₂ }
+end-/
 instance : Add HornerExpr :=
   ⟨add⟩
 
@@ -184,7 +232,7 @@ def inv (e : HornerExpr) : HornerExpr :=
   0
 
 /-- Brings expressions into Horner normal form. -/
-def of_csexpr : CsringExpr → HornerExpr
+def ofCsexpr : CsringExpr → HornerExpr
   | csring_expr.atom n => atom n
   | csring_expr.const n => const n.toZnum
   | csring_expr.add x y => (of_csexpr x).add (of_csexpr y)
@@ -474,11 +522,20 @@ unsafe def reflect_expr : expr → csring_expr × Dlist expr
     let (r₁, l₁) := reflect_expr e₁
     let (r₂, l₂) := reflect_expr e₂
     (r₁.add r₂, l₁ ++ l₂)
-  | quote.1 ((%%ₓe₁) * %%ₓe₂) =>
+  |/-| `(%%e₁ - %%e₂) :=
+        let (r₁, l₁) := reflect_expr e₁, (r₂, l₂) := reflect_expr e₂ in
+        (r₁.add r₂.neg, l₁ ++ l₂)
+      | `(- %%e) := let (r, l) := reflect_expr e in (r.neg, l)-/
+      quote.1
+      ((%%ₓe₁) * %%ₓe₂) =>
     let (r₁, l₁) := reflect_expr e₁
     let (r₂, l₂) := reflect_expr e₂
     (r₁.mul r₂, l₁ ++ l₂)
-  | e@(quote.1 ((%%ₓe₁) ^ %%ₓe₂)) =>
+  |/-| `(has_inv.inv %%e) := let (r, l) := reflect_expr e in (r.neg, l)
+      | `(%%e₁ / %%e₂) :=
+        let (r₁, l₁) := reflect_expr e₁, (r₂, l₂) := reflect_expr e₂ in
+        (r₁.mul r₂.inv, l₁ ++ l₂)-/
+      e@(quote.1 ((%%ₓe₁) ^ %%ₓe₂)) =>
     match reflect_expr e₁, expr.to_nat e₂ with
     | (r₁, l₁), some n₂ => (r₁.pow (Num.ofNat' n₂), l₁)
     | (r₁, l₁), none => (CsringExpr.atom 1, Dlist.singleton e)
@@ -503,6 +560,8 @@ unsafe def csring_expr.replace (t : Tree expr) : CsringExpr → StateTₓ (List 
   | csring_expr.mul x y => csring_expr.mul <$> x.replace <*> y.replace
   | csring_expr.pow x n => (fun x => CsringExpr.pow x n) <$> x.replace
 
+--| (csring_expr.neg x)   := csring_expr.neg <$> x.replace
+--| (csring_expr.inv x)   := csring_expr.inv <$> x.replace
 end Tactic.Ring2
 
 namespace Tactic
@@ -515,7 +574,7 @@ open Tactic.Ring2
 
 local postfix:9001 "?" => optionalₓ
 
--- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:916:4: warning: unsupported (TODO): `[tacs]
 /-- `ring2` solves equations in the language of rings.
 
 It supports only the commutative semiring operations, i.e. it does not normalize subtraction or

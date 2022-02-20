@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Yury Kudriashov. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yury Kudriashov
+-/
 import Mathbin.Algebra.BigOperators.Order
 import Mathbin.Analysis.Convex.Hull
 import Mathbin.LinearAlgebra.AffineSpace.Basis
@@ -430,7 +435,7 @@ theorem Set.Finite.convex_hull_eq_image {s : Set E} (hs : Finite s) :
       have := hs.fintype
       (⇑∑ x : s, (@LinearMap.proj R s _ (fun i => R) _ _ x).smulRight x.1) '' StdSimplex R s :=
   by
-  rw [← convex_hull_basis_eq_std_simplex, ← LinearMap.convex_hull_image, ← Set.range_comp, · ∘ ·]
+  rw [← convex_hull_basis_eq_std_simplex, ← LinearMap.convex_hull_image, ← Set.range_comp, (· ∘ ·)]
   apply congr_argₓ
   convert subtype.range_coe.symm
   ext x

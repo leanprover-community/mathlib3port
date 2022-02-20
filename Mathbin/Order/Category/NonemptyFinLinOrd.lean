@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Johan Commelin. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johan Commelin
+-/
 import Mathbin.Data.Fintype.Order
 import Mathbin.Order.Category.LinearOrder
 
@@ -60,13 +65,13 @@ instance : Inhabited NonemptyFinLinOrdₓ :=
 instance (α : NonemptyFinLinOrdₓ) : NonemptyFinLinOrd α :=
   α.str
 
-instance has_forget_to_LinearOrder : HasForget₂ NonemptyFinLinOrdₓ LinearOrderₓₓ :=
+instance hasForgetToLinearOrder : HasForget₂ NonemptyFinLinOrdₓ LinearOrderₓₓ :=
   BundledHom.forget₂ _ _
 
 /-- Constructs an equivalence between nonempty finite linear orders from an order isomorphism
 between them. -/
 @[simps]
-def iso.mk {α β : NonemptyFinLinOrdₓ.{u}} (e : α ≃o β) : α ≅ β where
+def Iso.mk {α β : NonemptyFinLinOrdₓ.{u}} (e : α ≃o β) : α ≅ β where
   hom := e
   inv := e.symm
   hom_inv_id' := by
@@ -78,13 +83,13 @@ def iso.mk {α β : NonemptyFinLinOrdₓ.{u}} (e : α ≃o β) : α ≅ β where
 
 /-- `order_dual` as a functor. -/
 @[simps]
-def to_dual : NonemptyFinLinOrdₓ ⥤ NonemptyFinLinOrdₓ where
+def toDual : NonemptyFinLinOrdₓ ⥤ NonemptyFinLinOrdₓ where
   obj := fun X => of (OrderDual X)
   map := fun X Y => OrderHom.dual
 
 /-- The equivalence between `FinPartialOrder` and itself induced by `order_dual` both ways. -/
 @[simps Functor inverse]
-def dual_equiv : NonemptyFinLinOrdₓ ≌ NonemptyFinLinOrdₓ :=
+def dualEquiv : NonemptyFinLinOrdₓ ≌ NonemptyFinLinOrdₓ :=
   Equivalence.mk toDual toDual ((NatIso.ofComponents fun X => iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
     ((NatIso.ofComponents fun X => iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
 

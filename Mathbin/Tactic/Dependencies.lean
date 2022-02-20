@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Jannis Limperg. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Jannis Limperg
+-/
 import Mathbin.Meta.RbMap
 import Mathbin.Tactic.Core
 
@@ -591,6 +596,8 @@ value. This fixes a bug in `tactic.revert_kdependencies` that does not revert
 local definitions for which `h` only appears in the value. Returns the number
 of reverted hypotheses.
 -/
+/- We cannot implement it as `revert e >> intro1` because that would change the
+local constant in the context. -/
 unsafe def revert_reverse_dependencies_of_hyp (h : expr) : tactic ℕ :=
   reverse_dependencies_of_hyp_name_set (mk_name_set.insert h.local_uniq_name) >>= revert_lst
 

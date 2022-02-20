@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Kenny Lau. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Kenny Lau, Mario Carneiro
+-/
 import Mathbin.LinearAlgebra.TensorProduct
 import Mathbin.Algebra.DirectSum.Module
 
@@ -34,7 +39,7 @@ variable [∀ i₁, Module R (M₁ i₁)] [∀ i₂, Module R (M₂ i₂)]
 
 /-- The linear equivalence `(⨁ i₁, M₁ i₁) ⊗ (⨁ i₂, M₂ i₂) ≃ (⨁ i₁, ⨁ i₂, M₁ i₁ ⊗ M₂ i₂)`, i.e.
 "tensor product distributes over direct sum". -/
-def DirectSum : ((⨁ i₁, M₁ i₁) ⊗[R] ⨁ i₂, M₂ i₂) ≃ₗ[R] ⨁ i : ι₁ × ι₂, M₁ i.1 ⊗[R] M₂ i.2 := by
+def directSum : ((⨁ i₁, M₁ i₁) ⊗[R] ⨁ i₂, M₂ i₂) ≃ₗ[R] ⨁ i : ι₁ × ι₂, M₁ i.1 ⊗[R] M₂ i.2 := by
   refine'
       LinearEquiv.ofLinear
         (lift <|

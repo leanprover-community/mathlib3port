@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Mario Carneiro
+-/
 import Mathbin.Algebra.GroupWithZero.Power
 import Mathbin.Data.List.ProdMonoid
 import Mathbin.Data.Multiset.Basic
@@ -27,7 +32,7 @@ variable [CommMonoidₓ α] {s t : Multiset α} {a : α} {m : Multiset ι} {f g 
 /-- Product of a multiset given a commutative monoid structure on `α`.
   `prod {a, b, c} = a * b * c` -/
 @[to_additive "Sum of a multiset given a commutative additive monoid structure on `α`.\n  `sum {a, b, c} = a + b + c`"]
-def Prod : Multiset α → α :=
+def prod : Multiset α → α :=
   foldr (· * ·)
     (fun x y z => by
       simp [mul_left_commₓ])
@@ -192,7 +197,7 @@ variable [AddCommMonoidₓ α]
 
 /-- `multiset.sum`, the sum of the elements of a multiset, promoted to a morphism of
 `add_comm_monoid`s. -/
-def sum_add_monoid_hom : Multiset α →+ α where
+def sumAddMonoidHom : Multiset α →+ α where
   toFun := sum
   map_zero' := sum_zero
   map_add' := sum_add

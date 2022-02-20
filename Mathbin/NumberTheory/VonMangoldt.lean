@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2022 Bhavik Mehta. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Bhavik Mehta
+-/
 import Mathbin.Algebra.IsPrimePow
 import Mathbin.NumberTheory.ArithmeticFunction
 import Mathbin.Analysis.SpecialFunctions.Log
@@ -52,7 +57,7 @@ smallest prime factor.
 
 In the `arithmetic_function` locale, we have the notation `Λ` for this function.
 -/
-noncomputable def von_mangoldt : ArithmeticFunction ℝ :=
+noncomputable def vonMangoldt : ArithmeticFunction ℝ :=
   ⟨fun n => if IsPrimePow n then Real.log (minFac n) else 0, if_neg not_is_prime_pow_zero⟩
 
 localized [ArithmeticFunction] notation "Λ" => Nat.ArithmeticFunction.vonMangoldt

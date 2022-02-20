@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2017 Simon Hudon. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Simon Hudon
+-/
 import Mathbin.Tactic.Ext
 import Mathbin.Tactic.Lint.Default
 
@@ -64,22 +69,22 @@ namespace Functor
 `α` has a monoid structure, `const α` has an `applicative` instance.
 (If `α` has an additive monoid structure, see `functor.add_const`.) -/
 @[nolint unused_arguments]
-def const (α : Type _) (β : Type _) :=
+def Const (α : Type _) (β : Type _) :=
   α
 
 /-- `const.mk` is the canonical map `α → const α β` (the identity), and
 it can be used as a pattern to extract this value. -/
 @[matchPattern]
-def const.mk {α β} (x : α) : Const α β :=
+def Const.mk {α β} (x : α) : Const α β :=
   x
 
 /-- `const.mk'` is `const.mk` but specialized to map `α` to
 `const α punit`, where `punit` is the terminal object in `Type*`. -/
-def const.mk' {α} (x : α) : Const α PUnit :=
+def Const.mk' {α} (x : α) : Const α PUnit :=
   x
 
 /-- Extract the element of `α` from the `const` functor. -/
-def const.run {α β} (x : Const α β) : α :=
+def Const.run {α β} (x : Const α β) : α :=
   x
 
 namespace Const
@@ -107,23 +112,23 @@ end Const
 every type to `α`. When `α` has a additive monoid structure,
 `add_const α` has an `applicative` instance. (If `α` has a
 multiplicative monoid structure, see `functor.const`.) -/
-def add_const (α : Type _) :=
+def AddConst (α : Type _) :=
   Const α
 
 /-- `add_const.mk` is the canonical map `α → add_const α β`, which is the identity,
 where `add_const α β = const α β`. It can be used as a pattern to extract this value. -/
 @[matchPattern]
-def add_const.mk {α β} (x : α) : AddConst α β :=
+def AddConst.mk {α β} (x : α) : AddConst α β :=
   x
 
 /-- Extract the element of `α` from the constant functor. -/
-def add_const.run {α β} : AddConst α β → α :=
+def AddConst.run {α β} : AddConst α β → α :=
   id
 
-instance add_const.functor {γ} : Functor (AddConst γ) :=
+instance AddConst.functor {γ} : Functor (AddConst γ) :=
   @Const.functor γ
 
-instance add_const.is_lawful_functor {γ} : IsLawfulFunctor (AddConst γ) :=
+instance AddConst.is_lawful_functor {γ} : IsLawfulFunctor (AddConst γ) :=
   @Const.is_lawful_functor γ
 
 instance {α β} [Inhabited α] : Inhabited (AddConst α β) :=
@@ -132,17 +137,17 @@ instance {α β} [Inhabited α] : Inhabited (AddConst α β) :=
 /-- `functor.comp` is a wrapper around `function.comp` for types.
     It prevents Lean's type class resolution mechanism from trying
     a `functor (comp F id)` when `functor F` would do. -/
-def comp (F : Type u → Type w) (G : Type v → Type u) (α : Type v) : Type w :=
+def Comp (F : Type u → Type w) (G : Type v → Type u) (α : Type v) : Type w :=
   F <| G α
 
 /-- Construct a term of `comp F G α` from a term of `F (G α)`, which is the same type.
 Can be used as a pattern to extract a term of `F (G α)`. -/
 @[matchPattern]
-def comp.mk {F : Type u → Type w} {G : Type v → Type u} {α : Type v} (x : F (G α)) : Comp F G α :=
+def Comp.mk {F : Type u → Type w} {G : Type v → Type u} {α : Type v} (x : F (G α)) : Comp F G α :=
   x
 
 /-- Extract a term of `F (G α)` from a term of `comp F G α`, which is the same type. -/
-def comp.run {F : Type u → Type w} {G : Type v → Type u} {α : Type v} (x : Comp F G α) : F (G α) :=
+def Comp.run {F : Type u → Type w} {G : Type v → Type u} {α : Type v} (x : Comp F G α) : F (G α) :=
   x
 
 namespace Comp
@@ -234,20 +239,20 @@ variable {F : Type u → Type u} [Functor F]
 
 /-- If we consider `x : F α` to, in some sense, contain values of type `α`,
 predicate `liftp p x` holds iff every value contained by `x` satisfies `p`. -/
-def liftp {α : Type u} (p : α → Prop) (x : F α) : Prop :=
+def Liftp {α : Type u} (p : α → Prop) (x : F α) : Prop :=
   ∃ u : F (Subtype p), Subtype.val <$> u = x
 
 /-- If we consider `x : F α` to, in some sense, contain values of type `α`, then
 `liftr r x y` relates `x` and `y` iff (1) `x` and `y` have the same shape and
 (2) we can pair values `a` from `x` and `b` from `y` so that `r a b` holds. -/
-def liftr {α : Type u} (r : α → α → Prop) (x y : F α) : Prop :=
+def Liftr {α : Type u} (r : α → α → Prop) (x y : F α) : Prop :=
   ∃ u : F { p : α × α // r p.fst p.snd },
     (fun t : { p : α × α // r p.fst p.snd } => t.val.fst) <$> u = x ∧
       (fun t : { p : α × α // r p.fst p.snd } => t.val.snd) <$> u = y
 
 /-- If we consider `x : F α` to, in some sense, contain values of type `α`, then
 `supp x` is the set of values of type `α` that `x` contains. -/
-def supp {α : Type u} (x : F α) : Set α :=
+def Supp {α : Type u} (x : F α) : Set α :=
   { y : α | ∀ ⦃p⦄, Liftp p x → p y }
 
 theorem of_mem_supp {α : Type u} {x : F α} {p : α → Prop} (h : Liftp p x) : ∀, ∀ y ∈ Supp x, ∀, p y := fun y hy => hy h

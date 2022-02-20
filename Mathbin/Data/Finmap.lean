@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Sean Leather. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Sean Leather, Mario Carneiro
+-/
 import Mathbin.Data.List.Alist
 import Mathbin.Data.Finset.Basic
 import Mathbin.Data.Part
@@ -27,7 +32,7 @@ theorem coe_keys {l : List (Sigma β)} : keys (l : Multiset (Sigma β)) = (l.key
   rfl
 
 /-- `nodupkeys s` means that `s` has no duplicate keys. -/
-def nodupkeys (s : Multiset (Sigma β)) : Prop :=
+def Nodupkeys (s : Multiset (Sigma β)) : Prop :=
   Quot.liftOn s List.Nodupkeys fun s t p => propext <| perm_nodupkeys p
 
 @[simp]
@@ -49,7 +54,7 @@ structure Finmap (β : α → Type v) : Type max u v where
 def Alist.toFinmap (s : Alist β) : Finmap β :=
   ⟨s.entries, s.Nodupkeys⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:343:9: unsupported: advanced prec syntax
+-- ././Mathport/Syntax/Translate/Basic.lean:462:9: unsupported: advanced prec syntax
 local notation:999 "⟦" a "⟧" => Alist.toFinmap a
 
 theorem Alist.to_finmap_eq {s₁ s₂ : Alist β} : ⟦s₁⟧ = ⟦s₂⟧ ↔ s₁.entries ~ s₂.entries := by
@@ -73,7 +78,7 @@ open Alist
 
 /-- Lift a permutation-respecting function on `alist` to `finmap`. -/
 @[elab_as_eliminator]
-def lift_on {γ} (s : Finmap β) (f : Alist β → γ) (H : ∀ a b : Alist β, a.entries ~ b.entries → f a = f b) : γ := by
+def liftOn {γ} (s : Finmap β) (f : Alist β → γ) (H : ∀ a b : Alist β, a.entries ~ b.entries → f a = f b) : γ := by
   refine'
     (Quotientₓ.liftOn s.1 (fun l => (⟨_, fun nd => f ⟨l, nd⟩⟩ : Part γ)) fun l₁ l₂ p => Part.ext' (perm_nodupkeys p) _ :
           Part γ).get
@@ -91,7 +96,7 @@ theorem lift_on_to_finmap {γ} (s : Alist β) (f : Alist β → γ) H : liftOn (
 
 /-- Lift a permutation-respecting function on 2 `alist`s to 2 `finmap`s. -/
 @[elab_as_eliminator]
-def lift_on₂ {γ} (s₁ s₂ : Finmap β) (f : Alist β → Alist β → γ)
+def liftOn₂ {γ} (s₁ s₂ : Finmap β) (f : Alist β → Alist β → γ)
     (H : ∀ a₁ b₁ a₂ b₂ : Alist β, a₁.entries ~ a₂.entries → b₁.entries ~ b₂.entries → f a₁ b₁ = f a₂ b₂) : γ :=
   liftOn s₁ (fun l₁ => liftOn s₂ (f l₁) fun b₁ b₂ p => H _ _ _ _ (Perm.refl _) p) fun a₁ a₂ p => by
     have H' : f a₁ = f a₂ := funext fun _ => H _ _ _ _ p (Perm.refl _)
@@ -207,7 +212,7 @@ section
 
 variable [DecidableEq α]
 
-instance has_decidable_eq [∀ a, DecidableEq (β a)] : DecidableEq (Finmap β)
+instance hasDecidableEq [∀ a, DecidableEq (β a)] : DecidableEq (Finmap β)
   | s₁, s₂ => decidableOfIff _ ext_iff
 
 /-! ### lookup -/
@@ -450,7 +455,7 @@ theorem mem_union {a} {s₁ s₂ : Finmap β} : a ∈ s₁ ∪ s₂ ↔ a ∈ s�
 
 @[simp]
 theorem union_to_finmap (s₁ s₂ : Alist β) : ⟦s₁⟧ ∪ ⟦s₂⟧ = ⟦s₁ ∪ s₂⟧ := by
-  simp [· ∪ ·, union]
+  simp [(· ∪ ·), union]
 
 theorem keys_union {s₁ s₂ : Finmap β} : (s₁ ∪ s₂).keys = s₁.keys ∪ s₂.keys :=
   (induction_on₂ s₁ s₂) fun s₁ s₂ =>
@@ -526,7 +531,7 @@ theorem disjoint_empty (x : Finmap β) : Disjoint ∅ x :=
 @[symm]
 theorem Disjoint.symm (x y : Finmap β) (h : Disjoint x y) : Disjoint y x := fun p hy hx => h p hx hy
 
-theorem disjoint.symm_iff (x y : Finmap β) : Disjoint x y ↔ Disjoint y x :=
+theorem Disjoint.symm_iff (x y : Finmap β) : Disjoint x y ↔ Disjoint y x :=
   ⟨Disjoint.symm x y, Disjoint.symm y x⟩
 
 section

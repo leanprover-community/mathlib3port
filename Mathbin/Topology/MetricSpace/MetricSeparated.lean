@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Yury Kudryashov. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yury Kudryashov
+-/
 import Mathbin.Topology.MetricSpace.EmetricSpace
 
 /-!
@@ -15,7 +20,7 @@ open Emetric Set
 
 noncomputable section
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (r «expr ≠ » 0)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (r «expr ≠ » 0)
 /-- Two sets in an (extended) metric space are called *metric separated* if the (extended) distance
 between `x ∈ s` and `y ∈ t` is bounded from below by a positive constant. -/
 def IsMetricSeparated {X : Type _} [EmetricSpace X] (s t : Set X) :=
@@ -41,7 +46,7 @@ theorem empty_left (s : Set X) : IsMetricSeparated ∅ s :=
 theorem empty_right (s : Set X) : IsMetricSeparated s ∅ :=
   (empty_left s).symm
 
-protected theorem Disjoint (h : IsMetricSeparated s t) : Disjoint s t :=
+protected theorem disjoint (h : IsMetricSeparated s t) : Disjoint s t :=
   let ⟨r, r0, hr⟩ := h
   fun x hx =>
   r0 <| by

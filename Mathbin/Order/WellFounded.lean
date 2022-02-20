@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Jeremy Avigad. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Jeremy Avigad, Mario Carneiro
+-/
 import Mathbin.Tactic.ByContra
 import Mathbin.Data.Set.Basic
 
@@ -68,7 +73,7 @@ theorem eq_iff_not_lt_of_le {α} [PartialOrderₓ α] {x y : α} : x ≤ y → y
     
 
 theorem well_founded_iff_has_max' [PartialOrderₓ α] :
-    WellFounded (· > · : α → α → Prop) ↔ ∀ p : Set α, p.Nonempty → ∃ m ∈ p, ∀, ∀ x ∈ p, ∀, m ≤ x → x = m := by
+    WellFounded ((· > ·) : α → α → Prop) ↔ ∀ p : Set α, p.Nonempty → ∃ m ∈ p, ∀, ∀ x ∈ p, ∀, m ≤ x → x = m := by
   simp only [eq_iff_not_lt_of_le, well_founded_iff_has_min]
 
 theorem well_founded_iff_has_min' [PartialOrderₓ α] :
@@ -122,7 +127,7 @@ protected theorem lt_succ_iff {α} {r : α → α → Prop} [wo : IsWellOrder α
 
 section LinearOrderₓ
 
-variable {β : Type _} [LinearOrderₓ β] (h : WellFounded (· < · : β → β → Prop)) {γ : Type _} [PartialOrderₓ γ]
+variable {β : Type _} [LinearOrderₓ β] (h : WellFounded ((· < ·) : β → β → Prop)) {γ : Type _} [PartialOrderₓ γ]
 
 private theorem eq_strict_mono_iff_eq_range_aux {f g : β → γ} (hf : StrictMono f) (hg : StrictMono g)
     (hfg : Set.Range f = Set.Range g) {b : β} (H : ∀, ∀ a < b, ∀, f a = g a) : f b ≤ g b := by
@@ -150,9 +155,9 @@ theorem eq_strict_mono_iff_eq_range {f g : β → γ} (hf : StrictMono f) (hg : 
         (eq_strict_mono_iff_eq_range_aux hg hf hfg.symm fun a hab => (H a hab).symm),
     congr_argₓ _⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:418:16: unsupported tactic `by_contra'
+-- ././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'
 theorem self_le_of_strict_mono {φ : β → β} (hφ : StrictMono φ) : ∀ n, n ≤ φ n := by
-  "././Mathport/Syntax/Translate/Basic.lean:418:16: unsupported tactic `by_contra'"
+  "././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'"
   have h₂ := h.min_mem _ h₁
   exact h.not_lt_min _ h₁ (hφ h₂) h₂
 
@@ -166,7 +171,7 @@ variable {β : Type _} (f : α → β)
 
 section LT
 
-variable [LT β] (h : WellFounded (· < · : β → β → Prop))
+variable [LT β] (h : WellFounded ((· < ·) : β → β → Prop))
 
 /-- Given a function `f : α → β` where `β` carries a well-founded `<`, this is an element of `α`
 whose image under `f` is minimal in the sense of `function.not_lt_argmin`. -/
@@ -179,7 +184,7 @@ theorem not_lt_argmin [Nonempty α] (a : α) : ¬f a < f (argmin f h) :=
 /-- Given a function `f : α → β` where `β` carries a well-founded `<`, and a non-empty subset `s`
 of `α`, this is an element of `s` whose image under `f` is minimal in the sense of
 `function.not_lt_argmin_on`. -/
-noncomputable def argmin_on (s : Set α) (hs : s.Nonempty) : α :=
+noncomputable def argminOn (s : Set α) (hs : s.Nonempty) : α :=
   WellFounded.min (InvImage.wfₓ f h) s hs
 
 @[simp]
@@ -195,7 +200,7 @@ end LT
 
 section LinearOrderₓ
 
-variable [LinearOrderₓ β] (h : WellFounded (· < · : β → β → Prop))
+variable [LinearOrderₓ β] (h : WellFounded ((· < ·) : β → β → Prop))
 
 @[simp]
 theorem argmin_le (a : α) [Nonempty α] : f (argmin f h) ≤ f a :=

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Yury Kudryashov. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yury Kudryashov
+-/
 import Mathbin.LinearAlgebra.Quotient
 import Mathbin.LinearAlgebra.Prod
 
@@ -59,7 +64,7 @@ namespace Submodule
 open LinearMap
 
 /-- If `q` is a complement of `p`, then `M/p ≃ q`. -/
-def quotient_equiv_of_is_compl (h : IsCompl p q) : (E ⧸ p) ≃ₗ[R] q :=
+def quotientEquivOfIsCompl (h : IsCompl p q) : (E ⧸ p) ≃ₗ[R] q :=
   LinearEquiv.symm <|
     LinearEquiv.ofBijective (p.mkq.comp q.Subtype)
       (by
@@ -84,9 +89,10 @@ theorem mk_quotient_equiv_of_is_compl_apply (h : IsCompl p q) (x : E ⧸ p) :
 
 /-- If `q` is a complement of `p`, then `p × q` is isomorphic to `E`. It is the unique
 linear map `f : E → p` such that `f x = x` for `x ∈ p` and `f x = 0` for `x ∈ q`. -/
-def prod_equiv_of_is_compl (h : IsCompl p q) : (p × q) ≃ₗ[R] E := by
+def prodEquivOfIsCompl (h : IsCompl p q) : (p × q) ≃ₗ[R] E := by
   apply LinearEquiv.ofBijective (p.subtype.coprod q.subtype)
   · simp only [← ker_eq_bot, ker_eq_bot', Prod.forall, subtype_apply, Prod.mk_eq_zero, coprod_apply]
+    -- TODO: if I add `submodule.forall`, it unfolds the outer `∀` but not the inner one.
     rintro ⟨x, hx⟩ ⟨y, hy⟩
     simp only [coe_mk, mk_eq_zero, ← eq_neg_iff_add_eq_zero]
     rintro rfl
@@ -136,7 +142,7 @@ theorem prod_comm_trans_prod_equiv_of_is_compl (h : IsCompl p q) :
   LinearEquiv.ext fun _ => add_commₓ _ _
 
 /-- Projection to a submodule along its complement. -/
-def linear_proj_of_is_compl (h : IsCompl p q) : E →ₗ[R] p :=
+def linearProjOfIsCompl (h : IsCompl p q) : E →ₗ[R] p :=
   LinearMap.fst R p q ∘ₗ ↑(prodEquivOfIsCompl p q h).symm
 
 variable {p q}
@@ -194,7 +200,7 @@ open Submodule
 
 /-- Given linear maps `φ` and `ψ` from complement submodules, `of_is_compl` is
 the induced linear map over the entire module. -/
-def of_is_compl {p q : Submodule R E} (h : IsCompl p q) (φ : p →ₗ[R] F) (ψ : q →ₗ[R] F) : E →ₗ[R] F :=
+def ofIsCompl {p q : Submodule R E} (h : IsCompl p q) (φ : p →ₗ[R] F) (ψ : q →ₗ[R] F) : E →ₗ[R] F :=
   LinearMap.coprod φ ψ ∘ₗ ↑(Submodule.prodEquivOfIsCompl _ _ h).symm
 
 variable {p q}
@@ -247,7 +253,7 @@ section
 variable {R₁ : Type _} [CommRingₓ R₁] [Module R₁ E] [Module R₁ F]
 
 /-- The linear map from `(p →ₗ[R₁] F) × (q →ₗ[R₁] F)` to `E →ₗ[R₁] F`. -/
-def of_is_compl_prod {p q : Submodule R₁ E} (h : IsCompl p q) : (p →ₗ[R₁] F) × (q →ₗ[R₁] F) →ₗ[R₁] E →ₗ[R₁] F where
+def ofIsComplProd {p q : Submodule R₁ E} (h : IsCompl p q) : (p →ₗ[R₁] F) × (q →ₗ[R₁] F) →ₗ[R₁] E →ₗ[R₁] F where
   toFun := fun φ => ofIsCompl h φ.1 φ.2
   map_add' := by
     intro φ ψ
@@ -262,7 +268,7 @@ theorem of_is_compl_prod_apply {p q : Submodule R₁ E} (h : IsCompl p q) (φ : 
   rfl
 
 /-- The natural linear equivalence between `(p →ₗ[R₁] F) × (q →ₗ[R₁] F)` and `E →ₗ[R₁] F`. -/
-def of_is_compl_prod_equiv {p q : Submodule R₁ E} (h : IsCompl p q) : ((p →ₗ[R₁] F) × (q →ₗ[R₁] F)) ≃ₗ[R₁] E →ₗ[R₁] F :=
+def ofIsComplProdEquiv {p q : Submodule R₁ E} (h : IsCompl p q) : ((p →ₗ[R₁] F) × (q →ₗ[R₁] F)) ≃ₗ[R₁] E →ₗ[R₁] F :=
   { ofIsComplProd h with invFun := fun φ => ⟨φ.domRestrict p, φ.domRestrict q⟩,
     left_inv := by
       intro φ
@@ -292,7 +298,7 @@ theorem linear_proj_of_is_compl_of_proj (f : E →ₗ[R] p) (hf : ∀ x : p, f x
 /-- If `f : E →ₗ[R] F` and `g : E →ₗ[R] G` are two surjective linear maps and
 their kernels are complement of each other, then `x ↦ (f x, g x)` defines
 a linear equivalence `E ≃ₗ[R] F × G`. -/
-def equiv_prod_of_surjective_of_is_compl (f : E →ₗ[R] F) (g : E →ₗ[R] G) (hf : f.range = ⊤) (hg : g.range = ⊤)
+def equivProdOfSurjectiveOfIsCompl (f : E →ₗ[R] F) (g : E →ₗ[R] G) (hf : f.range = ⊤) (hg : g.range = ⊤)
     (hfg : IsCompl f.ker g.ker) : E ≃ₗ[R] F × G :=
   LinearEquiv.ofBijective (f.Prod g)
     (by
@@ -318,7 +324,7 @@ open LinearMap
 
 /-- Equivalence between submodules `q` such that `is_compl p q` and linear maps `f : E →ₗ[R] p`
 such that `∀ x : p, f x = x`. -/
-def is_compl_equiv_proj : { q // IsCompl p q } ≃ { f : E →ₗ[R] p // ∀ x : p, f x = x } where
+def isComplEquivProj : { q // IsCompl p q } ≃ { f : E →ₗ[R] p // ∀ x : p, f x = x } where
   toFun := fun q => ⟨linearProjOfIsCompl p q q.2, linear_proj_of_is_compl_apply_left q.2⟩
   invFun := fun f => ⟨(f : E →ₗ[R] p).ker, is_compl_of_proj f.2⟩
   left_inv := fun ⟨q, hq⟩ => by

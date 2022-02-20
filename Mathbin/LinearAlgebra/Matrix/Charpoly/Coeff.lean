@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Aaron Anderson, Jalex Stark. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Aaron Anderson, Jalex Stark
+-/
 import Mathbin.Algebra.Polynomial.BigOperators
 import Mathbin.Data.Matrix.CharP
 import Mathbin.FieldTheory.Finite.Basic
@@ -157,11 +162,12 @@ theorem trace_eq_neg_charpoly_coeff [Nonempty n] (M : Matrix n n R) :
   rw [← Fintype.card, Fintype.card_pos_iff]
   infer_instance
 
+-- I feel like this should use polynomial.alg_hom_eval₂_algebra_map
 theorem mat_poly_equiv_eval (M : Matrix n n R[X]) (r : R) (i j : n) :
     (matPolyEquiv M).eval ((scalar n) r) i j = (M i j).eval r := by
   unfold Polynomial.eval
   unfold eval₂
-  trans Polynomial.sum (matPolyEquiv M) fun e : ℕ a : Matrix n n R => (a * (scalar n) r ^ e) i j
+  trans Polynomial.sum (matPolyEquiv M) fun a : Matrix n n R => (a * (scalar n) r ^ e) i j
   · unfold Polynomial.sum
     rw [sum_apply]
     dsimp
@@ -170,7 +176,7 @@ theorem mat_poly_equiv_eval (M : Matrix n n R[X]) (r : R) (i j : n) :
   · simp_rw [← RingHom.map_pow, ← (scalar.commute _ _).Eq]
     simp only [coe_scalar, Matrix.one_mul, RingHom.id_apply, Pi.smul_apply, smul_eq_mul, mul_eq_mul,
       Algebra.smul_mul_assoc]
-    have h : ∀ x : ℕ, (fun e : ℕ a : R => r ^ e * a) x 0 = 0 := by
+    have h : ∀ x : ℕ, (fun a : R => r ^ e * a) x 0 = 0 := by
       simp
     simp only [Polynomial.sum, mat_poly_equiv_coeff_apply, mul_comm]
     apply (Finset.sum_subset (support_subset_support_mat_poly_equiv _ _ _) _).symm
@@ -234,7 +240,8 @@ theorem FiniteField.Matrix.charpoly_pow_card {K : Type _} [Field K] [Fintype K] 
     · exact (C M).commute_X
       
     
-  · have : Subsingleton (Matrix n n K) := subsingleton_of_empty_right
+  · -- TODO[gh-6025]: remove this `haveI` once `subsingleton_of_empty_right` is a global instance
+    have : Subsingleton (Matrix n n K) := subsingleton_of_empty_right
     exact congr_argₓ _ (Subsingleton.elimₓ _ _)
     
 
@@ -255,7 +262,7 @@ theorem Zmod.trace_pow_card {p : ℕ} [Fact p.Prime] [Nonempty n] (M : Matrix n 
 
 namespace Matrix
 
-theorem IsIntegral : IsIntegral R M :=
+theorem is_integral : IsIntegral R M :=
   ⟨M.charpoly, ⟨charpoly_monic M, aeval_self_charpoly M⟩⟩
 
 theorem minpoly_dvd_charpoly {K : Type _} [Field K] (M : Matrix n n K) : minpoly K M ∣ M.charpoly :=

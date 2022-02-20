@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Reid Barton. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Reid Barton
+-/
 import Mathbin.Tactic.Tidy
 import Mathbin.Topology.ContinuousFunction.Basic
 import Mathbin.Topology.Homeomorph
@@ -43,10 +48,11 @@ variable {α : Type _} {β : Type _} {γ : Type _}
 variable [TopologicalSpace α] [TopologicalSpace β] [TopologicalSpace γ]
 
 /-- A generating set for the compact-open topology (when `s` is compact and `u` is open). -/
-def compact_open.gen (s : Set α) (u : Set β) : Set C(α, β) :=
+def CompactOpen.Gen (s : Set α) (u : Set β) : Set C(α, β) :=
   { f | f '' s ⊆ u }
 
-instance compact_open : TopologicalSpace C(α, β) :=
+-- The compact-open topology on the space of continuous maps α → β.
+instance compactOpen : TopologicalSpace C(α, β) :=
   TopologicalSpace.generateFrom
     { m | ∃ (s : Set α)(hs : IsCompact s)(u : Set β)(hu : IsOpen u), m = CompactOpen.Gen s u }
 
@@ -85,7 +91,7 @@ variable {α β}
 
 /-- The evaluation map `C(α, β) × α → β` is continuous if `α` is locally compact. -/
 theorem continuous_ev [LocallyCompactSpace α] : Continuous (ev α β) :=
-  continuous_iff_continuous_at.mpr fun ⟨f, x⟩ n hn =>
+  continuous_iff_continuous_at.mpr fun n hn =>
     let ⟨v, vn, vo, fxv⟩ := mem_nhds_iff.mp hn
     have : v ∈ 𝓝 (f x) := IsOpen.mem_nhds vo fxv
     let ⟨s, hs, sv, sc⟩ := LocallyCompactSpace.local_compact_nhds x (f ⁻¹' v) (f.Continuous.Tendsto x this)
@@ -186,6 +192,8 @@ theorem exists_tendsto_compact_open_iff_forall [LocallyCompactSpace α] [T2Space
     
   · intro h
     choose f hf using h
+    -- By uniqueness of limits in a `t2_space`, since `λ i, F i x` tends to both `f s₁ hs₁ x` and
+    -- `f s₂ hs₂ x`, we have `f s₁ hs₁ x = f s₂ hs₂ x`
     have h :
       ∀ s₁ hs₁ : IsCompact s₁ s₂ hs₂ : IsCompact s₂ x : α hxs₁ : x ∈ s₁ hxs₂ : x ∈ s₂,
         f s₁ hs₁ ⟨x, hxs₁⟩ = f s₂ hs₂ ⟨x, hxs₂⟩ :=
@@ -196,6 +204,8 @@ theorem exists_tendsto_compact_open_iff_forall [LocallyCompactSpace α] [T2Space
       have h₁ := (continuous_ev₁ (⟨x, hxs₁⟩ : s₁)).ContinuousAt.Tendsto.comp (hf s₁ hs₁)
       have h₂ := (continuous_ev₁ (⟨x, hxs₂⟩ : s₂)).ContinuousAt.Tendsto.comp (hf s₂ hs₂)
       exact tendsto_nhds_unique h₁ h₂
+    -- So glue the `f s hs` together and prove that this glued function `f₀` is a limit on each
+    -- compact set `s`
     have hs : ∀ x : α, ∃ (s : _)(hs : IsCompact s), s ∈ 𝓝 x := by
       intro x
       obtain ⟨s, hs, hs'⟩ := exists_compact_mem_nhds x
@@ -223,6 +233,7 @@ variable {α β}
 theorem image_coev {y : β} (s : Set α) : coev α β y '' s = ({y} : Set β) ×ˢ s := by
   tidy
 
+-- The coevaluation map β → C(α, β × α) is continuous (always).
 theorem continuous_coev : Continuous (coev α β) :=
   continuous_generated_from <| by
     rintro _ ⟨s, sc, u, uo, rfl⟩
@@ -331,7 +342,7 @@ def curry [LocallyCompactSpace α] [LocallyCompactSpace β] : C(α × β, γ) �
     continuous_curry, continuous_uncurry⟩
 
 /-- If `α` has a single element, then `β` is homeomorphic to `C(α, β)`. -/
-def continuous_map_of_unique [Unique α] : β ≃ₜ C(α, β) where
+def continuousMapOfUnique [Unique α] : β ≃ₜ C(α, β) where
   toFun := ContinuousMap.comp ⟨_, continuous_fst⟩ ∘ coev α β
   invFun := ev α β ∘ fun f => (f, default)
   left_inv := fun a => rfl

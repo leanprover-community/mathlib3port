@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Johan Commelin. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johan Commelin
+-/
 import Mathbin.Topology.Category.Profinite.Default
 import Mathbin.Topology.StoneCech
 import Mathbin.CategoryTheory.Preadditive.Projective
@@ -40,7 +45,7 @@ instance projective_ultrafilter (X : Type u) : Projective (of <| Ultrafilter X) 
     rw [comp.assoc, ultrafilter_extend_extends, ← comp.assoc, hg'.comp_eq_id, comp.left_id]
 
 /-- For any profinite `X`, the natural map `ultrafilter X → X` is a projective presentation. -/
-def projective_presentation (X : Profinite.{u}) : ProjectivePresentation X where
+def projectivePresentation (X : Profinite.{u}) : ProjectivePresentation X where
   P := of <| Ultrafilter X
   f := ⟨_, continuous_ultrafilter_extend id⟩
   Projective := Profinite.projective_ultrafilter X

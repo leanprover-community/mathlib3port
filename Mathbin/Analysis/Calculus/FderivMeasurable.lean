@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Sébastien Gouëzel. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Sébastien Gouëzel, Yury Kudryashov
+-/
 import Mathbin.Analysis.Calculus.Deriv
 import Mathbin.MeasureTheory.Constructions.BorelSpace
 import Mathbin.Tactic.RingExp
@@ -94,7 +99,7 @@ variable {f : E → F} (K : Set (E →L[𝕜] F))
 
 namespace FderivMeasurableAux
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (y z «expr ∈ » ball x r')
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (y z «expr ∈ » ball x r')
 /-- The set `A f L r ε` is the set of points `x` around which the function `f` is well approximated
 at scale `r` by the linear map `L`, up to an error `ε`. We tweak the definition to make sure that
 this is an open set.-/
@@ -261,7 +266,15 @@ theorem D_subset_differentiable_set {K : Set (E →L[𝕜] F)} (hK : IsComplete 
     simp only [mem_Inter, ge_iff_le] at hn
     rcases mem_Union.1 (hn p hp q hq) with ⟨L, hL⟩
     exact ⟨L, mem_Union.1 hL⟩
+  /- Recast the assumptions: for each `e`, there exist `n e` and linear maps `L e p q` in `K`
+    such that, for `p, q ≥ n e`, then `f` is well approximated by `L e p q` at scale `2 ^ (-p)` and
+    `2 ^ (-q)`, with an error `2 ^ (-e)`. -/
   choose! n L hn using this
+  /- All the operators `L e p q` that show up are close to each other. To prove this, we argue
+      that `L e p q` is close to `L e p r` (where `r` is large enough), as both approximate `f` at
+      scale `2 ^(- p)`. And `L e p r` is close to `L e' p' r` as both approximate `f` at scale
+      `2 ^ (- r)`. And `L e' p' r` is close to `L e' p' q'` as both approximate `f` at scale
+      `2 ^ (- p')`. -/
   have M :
     ∀ e p q e' p' q',
       n e ≤ p → n e ≤ q → n e' ≤ p' → n e' ≤ q' → e ≤ e' → ∥L e p q - L e' p' q'∥ ≤ 12 * ∥c∥ * (1 / 2) ^ e :=
@@ -296,6 +309,8 @@ theorem D_subset_differentiable_set {K : Set (E →L[𝕜] F)} (hK : IsComplete 
         by
         apply_rules [add_le_add]_ = 12 * ∥c∥ * (1 / 2) ^ e := by
         ring
+  /- For definiteness, use `L0 e = L e (n e) (n e)`, to have a single sequence. We claim that this
+    is a Cauchy sequence. -/
   let L0 : ℕ → E →L[𝕜] F := fun e => L e (n e) (n e)
   have : CauchySeq L0 := by
     rw [Metric.cauchy_seq_iff']
@@ -323,6 +338,7 @@ theorem D_subset_differentiable_set {K : Set (E →L[𝕜] F)} (hK : IsComplete 
             norm_num : (12 : ℝ) ≠ 0),
           ne_of_gtₓ cpos]
         ring
+  -- As it is Cauchy, the sequence `L0` converges, to a limit `f'` in `K`.
   obtain ⟨f', f'K, hf'⟩ : ∃ f' ∈ K, tendsto L0 at_top (𝓝 f') :=
     cauchy_seq_tendsto_of_is_complete hK (fun e => (hn e (n e) (n e) le_rfl le_rfl).1) this
   have Lf' : ∀ e p, n e ≤ p → ∥L e (n e) p - f'∥ ≤ 12 * ∥c∥ * (1 / 2) ^ e := by
@@ -330,8 +346,13 @@ theorem D_subset_differentiable_set {K : Set (E →L[𝕜] F)} (hK : IsComplete 
     apply le_of_tendsto (tendsto_const_nhds.sub hf').norm
     rw [eventually_at_top]
     exact ⟨e, fun e' he' => M _ _ _ _ _ _ le_rfl hp le_rfl le_rfl he'⟩
+  -- Let us show that `f` has derivative `f'` at `x`.
   have : HasFderivAt f f' x := by
     simp only [has_fderiv_at_iff_is_o_nhds_zero, is_o_iff]
+    /- to get an approximation with a precision `ε`, we will replace `f` with `L e (n e) m` for
+        some large enough `e` (yielding a small error by uniform approximation). As one can vary `m`,
+        this makes it possible to cover all scales, and thus to obtain a good linear approximation in
+        the whole ball of radius `(1/2)^(n e)`. -/
     intro ε εpos
     have pos : 0 < 4 + 12 * ∥c∥ :=
       add_pos_of_pos_of_nonneg
@@ -347,6 +368,8 @@ theorem D_subset_differentiable_set {K : Set (E →L[𝕜] F)} (hK : IsComplete 
           norm_num)
     rw [eventually_nhds_iff_ball]
     refine' ⟨(1 / 2) ^ (n e + 1), P, fun y hy => _⟩
+    -- We need to show that `f (x + y) - f x - f' y` is small. For this, we will work at scale
+    -- `k` where `k` is chosen with `∥y∥ ∼ 2 ^ (-k)`.
     by_cases' y_pos : y = 0
     · simp [y_pos]
       
@@ -360,12 +383,14 @@ theorem D_subset_differentiable_set {K : Set (E →L[𝕜] F)} (hK : IsComplete 
             norm_num)
           (by
             norm_num))
+    -- define the scale `k`.
     obtain ⟨k, hk, h'k⟩ : ∃ k : ℕ, (1 / 2) ^ (k + 1) < ∥y∥ ∧ ∥y∥ ≤ (1 / 2) ^ k :=
       exists_nat_pow_near_of_lt_one yzero yone
         (by
           norm_num : (0 : ℝ) < 1 / 2)
         (by
           norm_num : (1 : ℝ) / 2 < 1)
+    -- the scale is large enough (as `y` is small enough)
     have k_gt : n e < k := by
       have : ((1 : ℝ) / 2) ^ (k + 1) < (1 / 2) ^ (n e + 1) := lt_transₓ hk y_lt
       rw
@@ -380,6 +405,8 @@ theorem D_subset_differentiable_set {K : Set (E →L[𝕜] F)} (hK : IsComplete 
     have m_ge : n e ≤ m := Nat.le_pred_of_lt k_gt
     have km : k = m + 1 := (Nat.succ_pred_eq_of_posₓ (lt_of_le_of_ltₓ (zero_le _) k_gt)).symm
     rw [km] at hk h'k
+    -- `f` is well approximated by `L e (n e) k` at the relevant scale
+    -- (in fact, we use `m = k - 1` instead of `k` because of the precise definition of `A`).
     have J1 : ∥f (x + y) - f x - L e (n e) m (x + y - x)∥ ≤ (1 / 2) ^ e * (1 / 2) ^ m := by
       apply le_of_mem_A (hn e (n e) m le_rfl m_ge).2.2
       · simp only [mem_closed_ball, dist_self]
@@ -401,6 +428,7 @@ theorem D_subset_differentiable_set {K : Set (E →L[𝕜] F)} (hK : IsComplete 
                 norm_num)
               (le_of_ltₓ P))
         
+    -- use the previous estimates to see that `f (x + y) - f x - f' y` is small.
     calc ∥f (x + y) - f x - f' y∥ = ∥f (x + y) - f x - L e (n e) m y + (L e (n e) m - f') y∥ :=
         congr_argₓ _
           (by

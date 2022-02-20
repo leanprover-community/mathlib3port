@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Mario Carneiro. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Mario Carneiro
+-/
 import Mathbin.Data.Set.Basic
 
 /-!
@@ -64,7 +69,7 @@ def const {α : Type u} (a : α) : ∀ n, Arity α n
   | 0 => a
   | n + 1 => fun _ => const n
 
-instance arity.inhabited {α n} [Inhabited α] : Inhabited (Arity α n) :=
+instance Arity.inhabited {α n} [Inhabited α] : Inhabited (Arity α n) :=
   ⟨const default _⟩
 
 end Arity
@@ -79,7 +84,7 @@ inductive PSet : Type (u + 1)
 namespace PSet
 
 /-- The underlying type of a pre-set -/
-def type : PSet → Type u
+def Type : PSet → Type u
   | ⟨α, A⟩ => α
 
 /-- The underlying pre-set family of a pre-set -/
@@ -91,16 +96,16 @@ theorem mk_type_func : ∀ x : PSet, mk x.Type x.func = x
 
 /-- Two pre-sets are extensionally equivalent if every element of the first family is extensionally
 equivalent to some element of the second family and vice-versa. -/
-def Equivₓ (x y : PSet) : Prop :=
+def Equiv (x y : PSet) : Prop :=
   PSet.rec (fun α z m ⟨β, B⟩ => (∀ a, ∃ b, m a (B b)) ∧ ∀ b, ∃ a, m a (B b)) x y
 
-theorem Equivₓ.refl x : Equiv x x :=
+theorem Equiv.refl x : Equiv x x :=
   (PSet.recOn x) fun α A IH => ⟨fun a => ⟨a, IH a⟩, fun a => ⟨a, IH a⟩⟩
 
-theorem equiv.rfl : ∀ {x}, Equiv x x :=
+theorem Equiv.rfl : ∀ {x}, Equiv x x :=
   Equivₓ.refl
 
-theorem equiv.euc {x} : ∀ {y z}, Equiv x y → Equiv z y → Equiv x z :=
+theorem Equiv.euc {x} : ∀ {y z}, Equiv x y → Equiv z y → Equiv x z :=
   (PSet.recOn x) fun α A IH y =>
     (PSet.casesOn y) fun β B ⟨γ, Γ⟩ ⟨αβ, βα⟩ ⟨γβ, βγ⟩ =>
       ⟨fun a =>
@@ -112,24 +117,24 @@ theorem equiv.euc {x} : ∀ {y z}, Equiv x y → Equiv z y → Equiv x z :=
         let ⟨a, ba⟩ := βα b
         ⟨a, IH a ba cb⟩⟩
 
-theorem Equivₓ.symm {x y} : Equiv x y → Equiv y x :=
+theorem Equiv.symm {x y} : Equiv x y → Equiv y x :=
   (Equiv.refl y).euc
 
-theorem Equivₓ.trans {x y z} (h1 : Equiv x y) (h2 : Equiv y z) : Equiv x z :=
+theorem Equiv.trans {x y z} (h1 : Equiv x y) (h2 : Equiv y z) : Equiv x z :=
   h1.euc h2.symm
 
-instance Setoidₓ : Setoidₓ PSet :=
+instance setoid : Setoidₓ PSet :=
   ⟨PSet.Equiv, Equiv.refl, fun x y => Equiv.symm, fun x y z => Equiv.trans⟩
 
 /-- A pre-set is a subset of another pre-set if every element of the first family is extensionally
 equivalent to some element of the second family.-/
-protected def subset : PSet → PSet → Prop
+protected def Subset : PSet → PSet → Prop
   | ⟨α, A⟩, ⟨β, B⟩ => ∀ a, ∃ b, Equiv (A a) (B b)
 
 instance : HasSubset PSet :=
   ⟨PSet.Subset⟩
 
-theorem Equivₓ.ext : ∀ x y : PSet, Equiv x y ↔ x ⊆ y ∧ y ⊆ x
+theorem Equiv.ext : ∀ x y : PSet, Equiv x y ↔ x ⊆ y ∧ y ⊆ x
   | ⟨α, A⟩, ⟨β, B⟩ =>
     ⟨fun ⟨αβ, βα⟩ =>
       ⟨αβ, fun b =>
@@ -140,7 +145,7 @@ theorem Equivₓ.ext : ∀ x y : PSet, Equiv x y ↔ x ⊆ y ∧ y ⊆ x
         let ⟨a, h⟩ := βα b
         ⟨a, Equiv.symm h⟩⟩⟩
 
-theorem subset.congr_left : ∀ {x y z : PSet}, Equiv x y → (x ⊆ z ↔ y ⊆ z)
+theorem Subset.congr_left : ∀ {x y z : PSet}, Equiv x y → (x ⊆ z ↔ y ⊆ z)
   | ⟨α, A⟩, ⟨β, B⟩, ⟨γ, Γ⟩, ⟨αβ, βα⟩ =>
     ⟨fun αγ b =>
       let ⟨a, ba⟩ := βα b
@@ -151,7 +156,7 @@ theorem subset.congr_left : ∀ {x y z : PSet}, Equiv x y → (x ⊆ z ↔ y ⊆
       let ⟨c, bc⟩ := βγ b
       ⟨c, Equiv.trans ab bc⟩⟩
 
-theorem subset.congr_right : ∀ {x y z : PSet}, Equiv x y → (z ⊆ x ↔ z ⊆ y)
+theorem Subset.congr_right : ∀ {x y z : PSet}, Equiv x y → (z ⊆ x ↔ z ⊆ y)
   | ⟨α, A⟩, ⟨β, B⟩, ⟨γ, Γ⟩, ⟨αβ, βα⟩ =>
     ⟨fun γα c =>
       let ⟨a, ca⟩ := γα c
@@ -163,22 +168,22 @@ theorem subset.congr_right : ∀ {x y z : PSet}, Equiv x y → (z ⊆ x ↔ z �
       ⟨a, cb.trans (Equiv.symm ab)⟩⟩
 
 /-- `x ∈ y` as pre-sets if `x` is extensionally equivalent to a member of the family `y`. -/
-def mem : PSet → PSet → Prop
+def Mem : PSet → PSet → Prop
   | x, ⟨β, B⟩ => ∃ b, Equiv x (B b)
 
 instance : HasMem PSet.{u} PSet.{u} :=
   ⟨Mem⟩
 
-theorem mem.mk {α : Type u} (A : α → PSet) (a : α) : A a ∈ mk α A :=
+theorem Mem.mk {α : Type u} (A : α → PSet) (a : α) : A a ∈ mk α A :=
   ⟨a, Equiv.refl (A a)⟩
 
-theorem mem.ext : ∀ {x y : PSet.{u}}, (∀ w : PSet.{u}, w ∈ x ↔ w ∈ y) → Equiv x y
+theorem Mem.ext : ∀ {x y : PSet.{u}}, (∀ w : PSet.{u}, w ∈ x ↔ w ∈ y) → Equiv x y
   | ⟨α, A⟩, ⟨β, B⟩, h =>
     ⟨fun a => (h (A a)).1 (Mem.mk A a), fun b =>
       let ⟨a, ha⟩ := (h (B b)).2 (Mem.mk B b)
       ⟨a, ha.symm⟩⟩
 
-theorem mem.congr_right : ∀ {x y : PSet.{u}}, Equiv x y → ∀ {w : PSet.{u}}, w ∈ x ↔ w ∈ y
+theorem Mem.congr_right : ∀ {x y : PSet.{u}}, Equiv x y → ∀ {w : PSet.{u}}, w ∈ x ↔ w ∈ y
   | ⟨α, A⟩, ⟨β, B⟩, ⟨αβ, βα⟩, w =>
     ⟨fun ⟨a, ha⟩ =>
       let ⟨b, hb⟩ := αβ a
@@ -195,22 +200,22 @@ theorem equiv_iff_mem {x y : PSet.{u}} : Equiv x y ↔ ∀ {w : PSet.{u}}, w ∈
         let ⟨a, h⟩ := h.2 (Mem.mk B b)
         ⟨a, h.symm⟩⟩⟩
 
-theorem mem.congr_left : ∀ {x y : PSet.{u}}, Equiv x y → ∀ {w : PSet.{u}}, x ∈ w ↔ y ∈ w
+theorem Mem.congr_left : ∀ {x y : PSet.{u}}, Equiv x y → ∀ {w : PSet.{u}}, x ∈ w ↔ y ∈ w
   | x, y, h, ⟨α, A⟩ => ⟨fun ⟨a, ha⟩ => ⟨a, h.symm.trans ha⟩, fun ⟨a, ha⟩ => ⟨a, h.trans ha⟩⟩
 
 /-- Convert a pre-set to a `set` of pre-sets. -/
-def to_set (u : PSet.{u}) : Set PSet.{u} :=
+def ToSet (u : PSet.{u}) : Set PSet.{u} :=
   { x | x ∈ u }
 
 /-- Two pre-sets are equivalent iff they have the same members. -/
-theorem equiv.eq {x y : PSet} : Equiv x y ↔ ToSet x = ToSet y :=
+theorem Equiv.eq {x y : PSet} : Equiv x y ↔ ToSet x = ToSet y :=
   equiv_iff_mem.trans Set.ext_iff.symm
 
 instance : Coe PSet (Set PSet) :=
   ⟨ToSet⟩
 
 /-- The empty pre-set -/
-protected def Empty : PSet :=
+protected def empty : PSet :=
   ⟨Ulift Empty, fun e => nomatch e⟩
 
 instance : HasEmptyc PSet :=
@@ -235,7 +240,7 @@ instance : IsLawfulSingleton PSet PSet :=
   ⟨fun _ => rfl⟩
 
 /-- The n-th von Neumann ordinal -/
-def of_nat : ℕ → PSet
+def ofNat : ℕ → PSet
   | 0 => ∅
   | n + 1 => PSet.insert (of_nat n) (of_nat n)
 
@@ -263,7 +268,7 @@ theorem mem_powerset : ∀ {x y : PSet}, y ∈ powerset x ↔ y ⊆ x
         fun ⟨a, b, ba⟩ => ⟨b, ba⟩⟩⟩
 
 /-- The pre-set union operator -/
-def Union : PSet → PSet
+def union : PSet → PSet
   | ⟨α, A⟩ => ⟨Σ x, (A x).Type, fun ⟨x, y⟩ => (A x).func y⟩
 
 theorem mem_Union : ∀ {x y : PSet.{u}}, y ∈ union x ↔ ∃ z : PSet.{u}, ∃ _ : z ∈ x, y ∈ z
@@ -294,6 +299,7 @@ protected def lift : PSet.{u} → PSet.{max u v}
   | ⟨α, A⟩ => ⟨Ulift α, fun ⟨x⟩ => lift (A x)⟩
 
 /-- Embedding of one universe in another -/
+-- intended to be used with explicit universe parameters
 @[nolint check_univs]
 def embed : PSet.{max (u + 1) v} :=
   ⟨Ulift.{v, u + 1} PSet, fun ⟨x⟩ => PSet.lift.{u, max (u + 1) v} x⟩
@@ -302,39 +308,39 @@ theorem lift_mem_embed : ∀ x : PSet.{u}, PSet.lift.{u, max (u + 1) v} x ∈ em
 
 /-- Function equivalence is defined so that `f ~ g` iff `∀ x y, x ~ y → f x ~ g y`. This extends to
 equivalence of `n`-ary functions. -/
-def arity.equiv : ∀ {n}, Arity PSet.{u} n → Arity PSet.{u} n → Prop
+def Arity.Equiv : ∀ {n}, Arity PSet.{u} n → Arity PSet.{u} n → Prop
   | 0, a, b => Equiv a b
   | n + 1, a, b => ∀ x y, Equiv x y → arity.equiv (a x) (b y)
 
-theorem arity.equiv_const {a : PSet.{u}} : ∀ n, Arity.Equiv (Arity.const a n) (Arity.const a n)
+theorem Arity.equiv_const {a : PSet.{u}} : ∀ n, Arity.Equiv (Arity.const a n) (Arity.const a n)
   | 0 => Equiv.rfl
   | n + 1 => fun x y h => arity.equiv_const _
 
 /-- `resp n` is the collection of n-ary functions on `pSet` that respect
   equivalence, i.e. when the inputs are equivalent the output is as well. -/
-def resp n :=
+def Resp n :=
   { x : Arity PSet.{u} n // Arity.Equiv x x }
 
-instance resp.inhabited {n} : Inhabited (Resp n) :=
+instance Resp.inhabited {n} : Inhabited (Resp n) :=
   ⟨⟨Arity.const default _, Arity.equiv_const _⟩⟩
 
 /-- The `n`-ary image of a `(n + 1)`-ary function respecting equivalence as a function respecting
 equivalence. -/
-def resp.f {n} (f : Resp (n + 1)) (x : PSet) : Resp n :=
+def Resp.f {n} (f : Resp (n + 1)) (x : PSet) : Resp n :=
   ⟨f.1 x, f.2 _ _ <| Equiv.refl x⟩
 
 /-- Function equivalence for functions respecting equivalence. See `pSet.arity.equiv`. -/
-def resp.equiv {n} (a b : Resp n) : Prop :=
+def Resp.Equiv {n} (a b : Resp n) : Prop :=
   Arity.Equiv a.1 b.1
 
-theorem resp.refl {n} (a : Resp n) : Resp.Equiv a a :=
+theorem Resp.refl {n} (a : Resp n) : Resp.Equiv a a :=
   a.2
 
-theorem resp.euc : ∀ {n} {a b c : Resp n}, Resp.Equiv a b → Resp.Equiv c b → Resp.Equiv a c
+theorem Resp.euc : ∀ {n} {a b c : Resp n}, Resp.Equiv a b → Resp.Equiv c b → Resp.Equiv a c
   | 0, a, b, c, hab, hcb => hab.euc hcb
   | n + 1, a, b, c, hab, hcb => fun x y h => @resp.euc n (a.f x) (b.f y) (c.f y) (hab _ _ h) (hcb _ _ <| Equiv.refl y)
 
-instance resp.setoid {n} : Setoidₓ (Resp n) :=
+instance Resp.setoid {n} : Setoidₓ (Resp n) :=
   ⟨Resp.Equiv, Resp.refl, fun x y h => Resp.euc (Resp.refl y) h, fun x y z h1 h2 =>
     Resp.euc h1 <| Resp.euc (Resp.refl z) h2⟩
 
@@ -350,7 +356,7 @@ namespace PSet
 namespace Resp
 
 /-- Helper function for `pSet.eval`. -/
-def eval_aux : ∀ {n}, { f : Resp n → Arity Setₓ.{u} n // ∀ a b : Resp n, Resp.Equiv a b → f a = f b }
+def evalAux : ∀ {n}, { f : Resp n → Arity Setₓ.{u} n // ∀ a b : Resp n, Resp.Equiv a b → f a = f b }
   | 0 => ⟨fun a => ⟦a.1⟧, fun a b h => Quotientₓ.sound h⟩
   | n + 1 =>
     let F : Resp (n + 1) → Arity Setₓ (n + 1) := fun a =>
@@ -372,20 +378,20 @@ end Resp
 /-- A set function is "definable" if it is the image of some n-ary pre-set
   function. This isn't exactly definability, but is useful as a sufficient
   condition for functions that have a computable image. -/
-class inductive definable n : Arity Setₓ.{u} n → Type (u + 1)
+class inductive Definable n : Arity Setₓ.{u} n → Type (u + 1)
   | mk f : definable (Resp.eval _ f)
 
 attribute [instance] definable.mk
 
 /-- The evaluation of a function respecting equivalence is definable, by that same function. -/
-def definable.eq_mk {n} f : ∀ {s : Arity Setₓ.{u} n} H : Resp.eval _ f = s, Definable n s
+def Definable.eqMk {n} f : ∀ {s : Arity Setₓ.{u} n} H : Resp.eval _ f = s, Definable n s
   | _, rfl => ⟨f⟩
 
 /-- Turns a definable function into a function that respects equivalence. -/
-def definable.resp {n} : ∀ s : Arity Setₓ.{u} n [Definable n s], Resp n
+def Definable.resp {n} : ∀ s : Arity Setₓ.{u} n [Definable n s], Resp n
   | _, ⟨f⟩ => f
 
-theorem definable.eq {n} : ∀ s : Arity Setₓ.{u} n [H : Definable n s], (@Definable.resp n s H).eval _ = s
+theorem Definable.eq {n} : ∀ s : Arity Setₓ.{u} n [H : Definable n s], (@Definable.resp n s H).eval _ = s
   | _, ⟨f⟩ => rfl
 
 end PSet
@@ -395,7 +401,7 @@ namespace Classical
 open PSet
 
 /-- All functions are classically definable. -/
-noncomputable def all_definable : ∀ {n} F : Arity Setₓ.{u} n, Definable n F
+noncomputable def allDefinable : ∀ {n} F : Arity Setₓ.{u} n, Definable n F
   | 0, F =>
     let p := @Quotientₓ.exists_rep PSet _ F
     Definable.eqMk ⟨some p, Equiv.rfl⟩ (some_spec p)
@@ -430,21 +436,21 @@ theorem eval_mk {n f x} : (@Resp.eval (n + 1) f : Setₓ → Arity Setₓ n) (mk
   rfl
 
 /-- The membership relation for ZFC sets is inherited from the membership relation for pre-sets. -/
-def mem : Setₓ → Setₓ → Prop :=
+def Mem : Setₓ → Setₓ → Prop :=
   Quotientₓ.lift₂ PSet.Mem fun x y x' y' hx hy => propext ((Mem.congr_left hx).trans (Mem.congr_right hy))
 
 instance : HasMem Setₓ Setₓ :=
   ⟨Mem⟩
 
 /-- Convert a ZFC set into a `set` of ZFC sets -/
-def to_set (u : Setₓ.{u}) : Set Setₓ.{u} :=
+def ToSet (u : Setₓ.{u}) : Set Setₓ.{u} :=
   { x | x ∈ u }
 
 /-- `x ⊆ y` as ZFC sets means that all members of `x` are members of `y`. -/
-protected def subset (x y : Setₓ.{u}) :=
+protected def Subset (x y : Setₓ.{u}) :=
   ∀ ⦃z⦄, z ∈ x → z ∈ y
 
-instance HasSubset : HasSubset Setₓ :=
+instance hasSubset : HasSubset Setₓ :=
   ⟨Setₓ.Subset⟩
 
 theorem subset_def {x y : Setₓ.{u}} : x ⊆ y ↔ ∀ ⦃z⦄, z ∈ x → z ∈ y :=
@@ -465,7 +471,7 @@ theorem ext_iff {x y : Setₓ.{u}} : (∀ z : Setₓ.{u}, z ∈ x ↔ z ∈ y) �
     simp [h]⟩
 
 /-- The empty ZFC set -/
-def Empty : Setₓ :=
+def empty : Setₓ :=
   mk ∅
 
 instance : HasEmptyc Setₓ :=
@@ -565,7 +571,7 @@ instance : HasSep Setₓ Setₓ :=
 
 @[simp]
 theorem mem_sep {p : Setₓ.{u} → Prop} {x y : Setₓ.{u}} : y ∈ { y ∈ x | p y } ↔ y ∈ x ∧ p y :=
-  Quotientₓ.induction_on₂ x y fun ⟨α, A⟩ y =>
+  Quotientₓ.induction_on₂ x y fun y =>
     ⟨fun ⟨⟨a, pa⟩, h⟩ =>
       ⟨⟨a, h⟩, by
         rw [@Quotientₓ.sound PSet _ _ _ h]
@@ -616,7 +622,7 @@ theorem Union_lem {α β : Type u} (A : α → PSet) (B : β → PSet) (αβ : �
       ⟨⟨b, Eq.ndrec d (Eq.symm eb)⟩, this⟩
 
 /-- The union operator, the collection of elements of elements of a ZFC set -/
-def Union : Setₓ → Setₓ :=
+def union : Setₓ → Setₓ :=
   Resp.eval 1
     ⟨PSet.union, fun ⟨α, A⟩ ⟨β, B⟩ ⟨αβ, βα⟩ =>
       ⟨Union_lem A B αβ, fun a =>
@@ -640,7 +646,7 @@ theorem singleton_inj {x y : Setₓ.{u}} (H : ({x} : Setₓ) = {y}) : x = y := b
   rwa [Union_singleton, Union_singleton] at this
 
 /-- The binary union operation -/
-protected def union (x y : Setₓ.{u}) : Setₓ.{u} :=
+protected def unionₓ (x y : Setₓ.{u}) : Setₓ.{u} :=
   ⋃ {x, y}
 
 /-- The binary intersection operation -/
@@ -699,7 +705,7 @@ theorem regularity (x : Setₓ.{u}) (h : x ≠ ∅) : ∃ y ∈ x, x ∩ y = ∅
   Classical.by_contradiction fun ne =>
     h <|
       (eq_empty x).2 fun y =>
-        (induction_on y) fun z IH : ∀ w : Setₓ.{u}, w ∈ z → w ∉ x =>
+        (induction_on y) fun IH : ∀ w : Setₓ.{u}, w ∈ z → w ∉ x =>
           show z ∉ x from fun zx =>
             Ne
               ⟨z, zx,
@@ -720,13 +726,13 @@ def image (f : Setₓ → Setₓ) [H : Definable 1 f] : Setₓ → Setₓ :=
             Iff.symm (mem_image r.2)⟩
 
 theorem image.mk : ∀ f : Setₓ.{u} → Setₓ.{u} [H : Definable 1 f] x {y} h : y ∈ x, f y ∈ @image f H x
-  | _, ⟨F⟩, x, y => (Quotientₓ.induction_on₂ x y) fun ⟨α, A⟩ y ⟨a, ya⟩ => ⟨a, F.2 _ _ ya⟩
+  | _, ⟨F⟩, x, y => (Quotientₓ.induction_on₂ x y) fun y ⟨a, ya⟩ => ⟨a, F.2 _ _ ya⟩
 
 @[simp]
 theorem mem_image :
     ∀ {f : Setₓ.{u} → Setₓ.{u}} [H : Definable 1 f] {x y : Setₓ.{u}}, y ∈ @image f H x ↔ ∃ z ∈ x, f z = y
   | _, ⟨F⟩, x, y =>
-    (Quotientₓ.induction_on₂ x y) fun ⟨α, A⟩ y =>
+    (Quotientₓ.induction_on₂ x y) fun y =>
       ⟨fun ⟨a, ya⟩ => ⟨⟦A a⟧, Mem.mk A a, Eq.symm <| Quotientₓ.sound ya⟩, fun ⟨z, hz, e⟩ => e ▸ image.mk _ _ hz⟩
 
 /-- Kuratowski ordered pair -/
@@ -734,7 +740,7 @@ def pair (x y : Setₓ.{u}) : Setₓ.{u} :=
   {{x}, {x, y}}
 
 /-- A subset of pairs `{(a, b) ∈ x × y | p a b}` -/
-def pair_sep (p : Setₓ.{u} → Setₓ.{u} → Prop) (x y : Setₓ.{u}) : Setₓ.{u} :=
+def pairSep (p : Setₓ.{u} → Setₓ.{u} → Prop) (x y : Setₓ.{u}) : Setₓ.{u} :=
   { z ∈ powerset (powerset (x ∪ y)) | ∃ a ∈ x, ∃ b ∈ y, z = pair a b ∧ p a b }
 
 @[simp]
@@ -810,7 +816,7 @@ theorem pair_inj {x y x' y' : Setₓ.{u}} (H : pair x y = pair x' y') : x = x' �
     
 
 /-- The cartesian product, `{(a, b) | a ∈ x, b ∈ y}` -/
-def Prod : Setₓ.{u} → Setₓ.{u} → Setₓ.{u} :=
+def prod : Setₓ.{u} → Setₓ.{u} → Setₓ.{u} :=
   pairSep fun a b => True
 
 @[simp]
@@ -827,7 +833,7 @@ theorem pair_mem_prod {x y a b : Setₓ.{u}} : pair a b ∈ prod x y ↔ a ∈ x
 
 /-- `is_func x y f` is the assertion that `f` is a subset of `x × y` which relates to each element
 of `x` a unique element of `y`, so that we can consider `f`as a ZFC function `x → y`. -/
-def is_func (x y f : Setₓ.{u}) : Prop :=
+def IsFunc (x y f : Setₓ.{u}) : Prop :=
   f ⊆ prod x y ∧ ∀ z : Setₓ.{u}, z ∈ x → ∃! w, pair z w ∈ f
 
 /-- `funs x y` is `y ^ x`, the set of all set functions `x → y` -/
@@ -838,7 +844,8 @@ def funs (x y : Setₓ.{u}) : Setₓ.{u} :=
 theorem mem_funs {x y f : Setₓ.{u}} : f ∈ funs x y ↔ IsFunc x y f := by
   simp [funs, is_func]
 
-noncomputable instance map_definable_aux (f : Setₓ → Setₓ) [H : Definable 1 f] : Definable 1 fun y => pair y (f y) :=
+-- TODO(Mario): Prove this computably
+noncomputable instance mapDefinableAux (f : Setₓ → Setₓ) [H : Definable 1 f] : Definable 1 fun y => pair y (f y) :=
   @Classical.allDefinable 1 _
 
 /-- Graph of a function: `map f x` is the ZFC function which maps `a ∈ x` to `f a` -/
@@ -859,7 +866,7 @@ theorem map_unique {f : Setₓ.{u} → Setₓ.{u}} [H : Definable 1 f] {x z : Se
 @[simp]
 theorem map_is_func {f : Setₓ → Setₓ} [H : Definable 1 f] {x y : Setₓ} :
     IsFunc x y (map f x) ↔ ∀, ∀ z ∈ x, ∀, f z ∈ y :=
-  ⟨fun ⟨ss, h⟩ z zx =>
+  ⟨fun z zx =>
     let ⟨t, t1, t2⟩ := h z zx
     (t2 (f z) (image.mk _ _ zx)).symm ▸ (pair_mem_prod.1 (ss t1)).right,
     fun h =>
@@ -904,22 +911,22 @@ instance : HasSdiff Class :=
   ⟨Set.Diff⟩
 
 /-- Coerce a ZFC set into a class -/
-def of_Set (x : Setₓ.{u}) : Class.{u} :=
+def OfSet (x : Setₓ.{u}) : Class.{u} :=
   { y | y ∈ x }
 
 instance : Coe Setₓ Class :=
   ⟨OfSet⟩
 
 /-- The universal class -/
-def univ : Class :=
+def Univ : Class :=
   Set.Univ
 
 /-- Assert that `A` is a ZFC set satisfying `p` -/
-def to_Set (p : Setₓ.{u} → Prop) (A : Class.{u}) : Prop :=
+def ToSet (p : Setₓ.{u} → Prop) (A : Class.{u}) : Prop :=
   ∃ x, ↑x = A ∧ p x
 
 /-- `A ∈ B` if `A` is a ZFC set which is a member of `B` -/
-protected def mem (A B : Class.{u}) : Prop :=
+protected def Mem (A B : Class.{u}) : Prop :=
   ToSet.{u} B A
 
 instance : HasMem Class Class :=
@@ -929,15 +936,15 @@ theorem mem_univ {A : Class.{u}} : A ∈ univ.{u} ↔ ∃ x : Setₓ.{u}, ↑x =
   exists_congr fun x => and_trueₓ _
 
 /-- Convert a conglomerate (a collection of classes) into a class -/
-def Cong_to_Class (x : Set Class.{u}) : Class.{u} :=
+def CongToClass (x : Set Class.{u}) : Class.{u} :=
   { y | ↑y ∈ x }
 
 /-- Convert a class into a conglomerate (a collection of classes) -/
-def Class_to_Cong (x : Class.{u}) : Set Class.{u} :=
+def ClassToCong (x : Class.{u}) : Set Class.{u} :=
   { y | y ∈ x }
 
 /-- The power class of a class is the class of all subclasses that are ZFC sets -/
-def powerset (x : Class) : Class :=
+def Powerset (x : Class) : Class :=
   CongToClass (Set.Powerset x)
 
 /-- The union of a class is the class of all members of ZFC sets in the class -/
@@ -946,7 +953,7 @@ def Union (x : Class) : Class :=
 
 notation "⋃" => Union
 
-theorem of_Set.inj {x y : Setₓ.{u}} (h : (x : Class.{u}) = y) : x = y :=
+theorem OfSet.inj {x y : Setₓ.{u}} (h : (x : Class.{u}) = y) : x = y :=
   Setₓ.ext fun z => by
     change (x : Class.{u}) z ↔ (y : Class.{u}) z
     rw [h]
@@ -1003,7 +1010,7 @@ theorem Union_hom (x : Setₓ.{u}) : Union.{u} x = Setₓ.union x :=
     exact ⟨fun ⟨_, ⟨a, rfl, ax⟩, za⟩ => ⟨a, ax, za⟩, fun ⟨a, ax, za⟩ => ⟨_, ⟨a, rfl, ax⟩, za⟩⟩
 
 /-- The definite description operator, which is `{x}` if `{a | p a} = {x}` and `∅` otherwise. -/
-def iota (p : Setₓ → Prop) : Class :=
+def Iota (p : Setₓ → Prop) : Class :=
   Union { x | ∀ y, p y ↔ y = x }
 
 theorem iota_val (p : Setₓ → Prop) (x : Setₓ) (H : ∀ y, p y ↔ y = x) : Iota p = ↑x :=
@@ -1020,7 +1027,7 @@ theorem iota_ex p : Iota.{u} p ∈ univ.{u} :=
       ⟨∅, Set.ext fun z => empty_hom.symm ▸ ⟨False.ndrec _, fun ⟨_, ⟨x, rfl, H⟩, zA⟩ => hn ⟨x, H⟩⟩⟩
 
 /-- Function value -/
-def fval (F A : Class.{u}) : Class.{u} :=
+def Fval (F A : Class.{u}) : Class.{u} :=
   Iota fun y => ToSet (fun x => F (Setₓ.pair x y)) A
 
 infixl:100 "′" => Fval

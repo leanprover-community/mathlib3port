@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Rémy Degenne. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Rémy Degenne
+-/
 import Mathbin.MeasureTheory.MeasurableSpace
 
 /-!
@@ -76,7 +81,7 @@ end MemAeSeqSet
 theorem ae_seq_set_measurable_set {hf : ∀ i, AeMeasurable (f i) μ} : MeasurableSet (AeSeqSet hf p) :=
   (measurable_set_to_measurable _ _).Compl
 
-theorem Measurable (hf : ∀ i, AeMeasurable (f i) μ) (p : α → (ι → β) → Prop) (i : ι) : Measurable (aeSeq hf p i) :=
+theorem measurable (hf : ∀ i, AeMeasurable (f i) μ) (p : α → (ι → β) → Prop) (i : ι) : Measurable (aeSeq hf p i) :=
   Measurable.ite ae_seq_set_measurable_set (hf i).measurable_mk <| measurable_const' fun x y => rfl
 
 theorem measure_compl_ae_seq_set_eq_zero [Encodable ι] (hf : ∀ i, AeMeasurable (f i) μ)

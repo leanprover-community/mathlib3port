@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison
+-/
 import Mathbin.CategoryTheory.Monoidal.Functor
 import Mathbin.CategoryTheory.Functorial
 
@@ -41,18 +46,24 @@ variable {C : Type u₁} [Category.{v₁} C] [MonoidalCategory.{v₁} C] {D : Ty
   [MonoidalCategory.{v₂} D]
 
 /-- An unbundled description of lax monoidal functors. -/
-class lax_monoidal (F : C → D) [Functorial.{v₁, v₂} F] where
+-- Perhaps in the future we'll redefine `lax_monoidal_functor` in terms of this,
+-- but that isn't the immediate plan.
+class LaxMonoidal (F : C → D) [Functorial.{v₁, v₂} F] where
+  -- unit morphism
   ε {} : 𝟙_ D ⟶ F (𝟙_ C)
+  -- tensorator
   μ {} : ∀ X Y : C, F X ⊗ F Y ⟶ F (X ⊗ Y)
   μ_natural' : ∀ {X Y X' Y' : C} f : X ⟶ Y g : X' ⟶ Y', (map F f ⊗ map F g) ≫ μ Y Y' = μ X X' ≫ map F (f ⊗ g) := by
     run_tac
       obviously
+  -- associativity of the tensorator
   associativity' :
     ∀ X Y Z : C,
       (μ X Y ⊗ 𝟙 (F Z)) ≫ μ (X ⊗ Y) Z ≫ map F (α_ X Y Z).Hom =
         (α_ (F X) (F Y) (F Z)).Hom ≫ (𝟙 (F X) ⊗ μ Y Z) ≫ μ X (Y ⊗ Z) := by
     run_tac
       obviously
+  -- unitality
   left_unitality' : ∀ X : C, (λ_ (F X)).Hom = (ε ⊗ 𝟙 (F X)) ≫ μ (𝟙_ C) X ≫ map F (λ_ X).Hom := by
     run_tac
       obviously
@@ -68,6 +79,8 @@ restate_axiom lax_monoidal.left_unitality'
 
 restate_axiom lax_monoidal.right_unitality'
 
+-- The unitality axioms cannot be used as simp lemmas because they require
+-- higher-order matching to figure out the `F` and `X` from `F X`.
 restate_axiom lax_monoidal.associativity'
 
 attribute [simp] lax_monoidal.associativity
@@ -88,11 +101,13 @@ instance (F : LaxMonoidalFunctor.{v₁, v₂} C D) : LaxMonoidal.{v₁, v₂} F.
 
 section
 
-instance lax_monoidal_id : LaxMonoidal.{v₁, v₁} (id : C → C) where
+instance laxMonoidalId : LaxMonoidal.{v₁, v₁} (id : C → C) where
   ε := 𝟙 _
   μ := fun X Y => 𝟙 _
 
 end
 
+-- TODO instances for composition, as required
+-- TODO `strong_monoidal`, as well as `lax_monoidal`
 end CategoryTheory
 

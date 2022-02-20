@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Heather Macbeth. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Heather Macbeth
+-/
 import Mathbin.Analysis.Complex.Circle
 import Mathbin.Analysis.InnerProductSpace.Calculus
 import Mathbin.Analysis.InnerProductSpace.PiL2
@@ -176,6 +181,7 @@ theorem stereo_left_inv (hv : ∥v∥ = 1) {x : Sphere (0 : E) 1} (hx : (x : E) 
     stereoInvFun hv (stereoToFun v x) = x := by
   ext
   simp only [stereo_to_fun_apply, stereo_inv_fun_apply, smul_add]
+  -- name two frequently-occuring quantities and write down their basic properties
   set a : ℝ := innerSL v x
   set y := orthogonalProjection (ℝ∙v)ᗮ x
   have split : ↑x = a • v + ↑y := by
@@ -192,6 +198,7 @@ theorem stereo_left_inv (hv : ∥v∥ = 1) {x : Sphere (0 : E) 1} (hx : (x : E) 
       
     · exact sq _
       
+  -- two facts which will be helpful for clearing denominators in the main calculation
   have ha : 1 - a ≠ 0 := by
     have : a < 1 :=
       (inner_lt_one_iff_real_of_norm_one hv
@@ -204,6 +211,7 @@ theorem stereo_left_inv (hv : ∥v∥ = 1) {x : Sphere (0 : E) 1} (hx : (x : E) 
     have := norm_nonneg (y : E)
     have : 0 < (1 - a) ^ 2 := sq_pos_of_ne_zero (1 - a) ha
     nlinarith
+  -- the core of the problem is these two algebraic identities:
   have h₁ : (2 ^ 2 / (1 - a) ^ 2 * ∥y∥ ^ 2 + 4)⁻¹ * 4 * (2 / (1 - a)) = 1 := by
     field_simp
     simp only [Submodule.coe_norm] at *
@@ -216,6 +224,7 @@ theorem stereo_left_inv (hv : ∥v∥ = 1) {x : Sphere (0 : E) 1} (hx : (x : E) 
       nlinarith
       
     ring
+  -- deduce the result
   convert congr_arg2ₓ Add.add (congr_argₓ (fun t => t • (y : E)) h₁) (congr_argₓ (fun t => t • v) h₂) using 1
   · simp [inner_add_right, inner_smul_right, hvy, real_inner_self_eq_norm_mul_norm, hv, mul_smul, mul_powₓ,
       Real.norm_eq_abs, sq_abs, norm_smul]
@@ -408,6 +417,7 @@ theorem TimesContMdiff.cod_restrict_sphere {n : ℕ} [Fact (finrank ℝ E = n + 
 /-- The antipodal map is smooth. -/
 theorem times_cont_mdiff_neg_sphere {n : ℕ} [Fact (finrank ℝ E = n + 1)] :
     TimesContMdiff (𝓡 n) (𝓡 n) ∞ fun x : Sphere (0 : E) 1 => -x := by
+  -- this doesn't elaborate well in term mode
   apply TimesContMdiff.cod_restrict_sphere
   apply times_cont_diff_neg.times_cont_mdiff.comp _
   exact times_cont_mdiff_coe_sphere
@@ -439,7 +449,9 @@ instance : LieGroup (𝓡 1) circle where
     suffices h₁ : TimesContMdiff _ _ _ (Prod.map c c)
     · apply h₂.comp h₁
       
-    apply TimesContMdiff.prod_map <;> exact times_cont_mdiff_coe_sphere
+    -- this elaborates much faster with `apply`
+      apply TimesContMdiff.prod_map <;>
+      exact times_cont_mdiff_coe_sphere
   smooth_inv := by
     apply TimesContMdiff.cod_restrict_sphere
     exact complex.conj_cle.times_cont_diff.times_cont_mdiff.comp times_cont_mdiff_coe_sphere

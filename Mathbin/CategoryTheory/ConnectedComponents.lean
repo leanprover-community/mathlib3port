@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Bhavik Mehta. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Bhavik Mehta
+-/
 import Mathbin.Data.List.Chain
 import Mathbin.CategoryTheory.Punit
 import Mathbin.CategoryTheory.IsConnected
@@ -32,19 +37,19 @@ variable {J : Type u₁} [Category.{v₁} J]
 variable {C : Type u₂} [Category.{u₁} C]
 
 /-- This type indexes the connected components of the category `J`. -/
-def connected_components (J : Type u₁) [Category.{v₁} J] : Type u₁ :=
+def ConnectedComponents (J : Type u₁) [Category.{v₁} J] : Type u₁ :=
   Quotientₓ (Zigzag.setoid J)
 
 instance [Inhabited J] : Inhabited (ConnectedComponents J) :=
   ⟨Quotientₓ.mk' default⟩
 
 /-- Given an index for a connected component, produce the actual component as a full subcategory. -/
-def component (j : ConnectedComponents J) : Type u₁ :=
+def Component (j : ConnectedComponents J) : Type u₁ :=
   { k : J // Quotientₓ.mk' k = j }deriving Category
 
 /-- The inclusion functor from a connected component to the whole category. -/
 @[simps (config := { rhsMd := semireducible })]
-def component.ι j : Component j ⥤ J :=
+def Component.ι j : Component j ⥤ J :=
   fullSubcategoryInclusion _ deriving Full, Faithful
 
 /-- Each connected component of the category is nonempty. -/
@@ -58,11 +63,16 @@ instance (j : ConnectedComponents J) : Inhabited (Component j) :=
 
 /-- Each connected component of the category is connected. -/
 instance (j : ConnectedComponents J) : IsConnected (Component j) := by
+  -- Show it's connected by constructing a zigzag (in `component j`) between any two objects
   apply is_connected_of_zigzag
   rintro ⟨j₁, hj₁⟩ ⟨j₂, rfl⟩
+  -- We know that the underlying objects j₁ j₂ have some zigzag between them in `J`
   have h₁₂ : zigzag j₁ j₂ := Quotientₓ.exact' hj₁
+  -- Get an explicit zigzag as a list
   rcases List.exists_chain_of_relation_refl_trans_gen h₁₂ with ⟨l, hl₁, hl₂⟩
+  -- Everything which has a zigzag to j₂ can be lifted to the same component as `j₂`.
   let f : ∀ x, zigzag x j₂ → component (Quotientₓ.mk' j₂) := fun x h => ⟨x, Quotientₓ.sound' h⟩
+  -- Everything in our chosen zigzag from `j₁` to `j₂` has a zigzag to `j₂`.
   have hf : ∀ a : J, a ∈ l → zigzag a j₂ := by
     intro i hi
     apply List.Chain.induction (fun t => zigzag t j₂) _ hl₁ hl₂ _ _ _ (Or.inr hi)
@@ -71,6 +81,7 @@ instance (j : ConnectedComponents J) : IsConnected (Component j) := by
       
     · apply Relation.ReflTransGen.refl
       
+  -- Now lift the zigzag from `j₁` to `j₂` in `J` to the same thing in `component j`.
   refine' ⟨l.pmap f hf, _, _⟩
   · refine' @List.chain_pmap_of_chain _ _ _ f (fun x y _ _ h => _) hl₁ h₁₂ _
     exact zag_of_zag_obj (component.ι _) h
@@ -87,18 +98,19 @@ instance (j : ConnectedComponents J) : IsConnected (Component j) := by
 category structure.
 This category is equivalent to `J`.
 -/
-abbrev decomposed (J : Type u₁) [Category.{v₁} J] :=
+abbrev Decomposed (J : Type u₁) [Category.{v₁} J] :=
   Σ j : ConnectedComponents J, Component j
 
 /-- The inclusion of each component into the decomposed category. This is just `sigma.incl` but having
 this abbreviation helps guide typeclass search to get the right category instance on `decomposed J`.
 -/
+-- This name may cause clashes further down the road, and so might need to be changed.
 abbrev inclusion (j : ConnectedComponents J) : Component j ⥤ Decomposed J :=
   Sigma.incl _
 
 /-- The forward direction of the equivalence between the decomposed category and the original. -/
 @[simps (config := { rhsMd := semireducible })]
-def decomposed_to (J : Type u₁) [Category.{v₁} J] : Decomposed J ⥤ J :=
+def decomposedTo (J : Type u₁) [Category.{v₁} J] : Decomposed J ⥤ J :=
   Sigma.desc Component.ι
 
 @[simp]
@@ -136,7 +148,7 @@ instance : IsEquivalence (decomposedTo J) :=
 
 /-- This gives that any category is equivalent to a disjoint union of connected categories. -/
 @[simps (config := { rhsMd := semireducible }) Functor]
-def decomposed_equiv : Decomposed J ≌ J :=
+def decomposedEquiv : Decomposed J ≌ J :=
   (decomposedTo J).asEquivalence
 
 end CategoryTheory

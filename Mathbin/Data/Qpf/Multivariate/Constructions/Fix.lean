@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Jeremy Avigad. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Jeremy Avigad, Simon Hudon
+-/
 import Mathbin.Data.Pfunctor.Multivariate.W
 import Mathbin.Data.Qpf.Multivariate.Basic
 
@@ -122,7 +127,7 @@ theorem Wequiv.symm {α : Typevec n} (x y : q.p.W α) : Wequiv x y → Wequiv y 
     exact Mvqpf.Wequiv.trans _ _ _ ih₂ ih₁
 
 /-- maps every element of the W type to a canonical representative -/
-def Wrepr {α : Typevec n} : q.p.W α → q.p.W α :=
+def wrepr {α : Typevec n} : q.p.W α → q.p.W α :=
   recF (q.p.wMk' ∘ reprₓ)
 
 theorem Wrepr_W_mk {α : Typevec n} (a : q.p.A) (f' : q.p.drop.B a ⟹ α) (f : q.p.last.B a → q.p.W α) :
@@ -161,7 +166,7 @@ theorem Wequiv_map {α β : Typevec n} (g : α ⟹ β) (x y : q.p.W α) : Wequiv
 
 /-- Define the fixed point as the quotient of trees under the equivalence relation.
 -/
-def W_setoid (α : Typevec n) : Setoidₓ (q.p.W α) :=
+def wSetoid (α : Typevec n) : Setoidₓ (q.p.W α) :=
   ⟨Wequiv, @Wequiv.refl _ _ _ _ _, @Wequiv.symm _ _ _ _ _, @Wequiv.trans _ _ _ _ _⟩
 
 attribute [local instance] W_setoid
@@ -173,37 +178,37 @@ than the input. For `F a b c` a ternary functor, fix F is a binary functor such 
 fix F a b = F a b (fix F a b)
 ```
 -/
-def fix {n : ℕ} (F : Typevec (n + 1) → Type _) [Mvfunctor F] [q : Mvqpf F] (α : Typevec n) :=
+def Fix {n : ℕ} (F : Typevec (n + 1) → Type _) [Mvfunctor F] [q : Mvqpf F] (α : Typevec n) :=
   Quotientₓ (wSetoid α : Setoidₓ (q.p.W α))
 
 attribute [nolint has_inhabited_instance] fix
 
 /-- `fix F` is a functor -/
-def fix.map {α β : Typevec n} (g : α ⟹ β) : Fix F α → Fix F β :=
+def Fix.map {α β : Typevec n} (g : α ⟹ β) : Fix F α → Fix F β :=
   Quotientₓ.lift (fun x : q.p.W α => ⟦q.p.wMap g x⟧) fun a b h => Quot.sound (Wequiv_map _ _ _ h)
 
-instance fix.mvfunctor : Mvfunctor (Fix F) where
+instance Fix.mvfunctor : Mvfunctor (Fix F) where
   map := @Fix.map _ _ _ _
 
 variable {α : Typevec.{u} n}
 
 /-- Recursor for `fix F` -/
-def fix.rec {β : Type u} (g : F (α ::: β) → β) : Fix F α → β :=
+def Fix.rec {β : Type u} (g : F (α ::: β) → β) : Fix F α → β :=
   Quot.lift (recF g) (recF_eq_of_Wequiv α g)
 
 /-- Access W-type underlying `fix F`  -/
-def fix_to_W : Fix F α → q.p.W α :=
+def fixToW : Fix F α → q.p.W α :=
   Quotientₓ.lift wrepr (recF_eq_of_Wequiv α fun x => q.p.wMk' (repr x))
 
 /-- Constructor for `fix F` -/
-def fix.mk (x : F (Append1 α (Fix F α))) : Fix F α :=
+def Fix.mk (x : F (Append1 α (Fix F α))) : Fix F α :=
   Quot.mk _ (q.p.wMk' (appendFun id fixToW <$$> repr x))
 
 /-- Destructor for `fix F` -/
-def fix.dest : Fix F α → F (Append1 α (Fix F α)) :=
+def Fix.dest : Fix F α → F (Append1 α (Fix F α)) :=
   Fix.rec (Mvfunctor.map (appendFun id Fix.mk))
 
-theorem fix.rec_eq {β : Type u} (g : F (Append1 α β) → β) (x : F (Append1 α (Fix F α))) :
+theorem Fix.rec_eq {β : Type u} (g : F (Append1 α β) → β) (x : F (Append1 α (Fix F α))) :
     Fix.rec g (Fix.mk x) = g (appendFun id (Fix.rec g) <$$> x) := by
   have : recF g ∘ fix_to_W = Fix.rec g := by
     apply funext
@@ -216,7 +221,7 @@ theorem fix.rec_eq {β : Type u} (g : F (Append1 α β) → β) (x : F (Append1 
   rw [Mvpfunctor.map_eq, recF_eq', ← Mvpfunctor.map_eq, Mvpfunctor.W_dest'_W_mk']
   rw [← Mvpfunctor.comp_map, abs_map, ← h, abs_repr, ← append_fun_comp, id_comp, this]
 
-theorem fix.ind_aux (a : q.p.A) (f' : q.p.drop.B a ⟹ α) (f : q.p.last.B a → q.p.W α) :
+theorem Fix.ind_aux (a : q.p.A) (f' : q.p.drop.B a ⟹ α) (f : q.p.last.B a → q.p.W α) :
     Fix.mk (abs ⟨a, q.p.appendContents f' fun x => ⟦f x⟧⟩) = ⟦q.p.wMk a f' f⟧ := by
   have : Fix.mk (abs ⟨a, q.p.appendContents f' fun x => ⟦f x⟧⟩) = ⟦wrepr (q.p.wMk a f' f)⟧ := by
     apply Quot.sound
@@ -231,7 +236,7 @@ theorem fix.ind_aux (a : q.p.A) (f' : q.p.drop.B a ⟹ α) (f : q.p.last.B a →
   apply Quot.sound
   apply Wrepr_equiv
 
-theorem fix.ind_rec {β : Type _} (g₁ g₂ : Fix F α → β)
+theorem Fix.ind_rec {β : Type _} (g₁ g₂ : Fix F α → β)
     (h :
       ∀ x : F (Append1 α (Fix F α)), appendFun id g₁ <$$> x = appendFun id g₂ <$$> x → g₁ (Fix.mk x) = g₂ (Fix.mk x)) :
     ∀ x, g₁ x = g₂ x := by
@@ -250,14 +255,14 @@ theorem fix.ind_rec {β : Type _} (g₁ g₂ : Fix F α → β)
     exact ih x
   rw [this]
 
-theorem fix.rec_unique {β : Type _} (g : F (Append1 α β) → β) (h : Fix F α → β)
+theorem Fix.rec_unique {β : Type _} (g : F (Append1 α β) → β) (h : Fix F α → β)
     (hyp : ∀ x, h (Fix.mk x) = g (appendFun id h <$$> x)) : Fix.rec g = h := by
   ext x
   apply fix.ind_rec
   intro x hyp'
   rw [hyp, ← hyp', fix.rec_eq]
 
-theorem fix.mk_dest (x : Fix F α) : Fix.mk (Fix.dest x) = x := by
+theorem Fix.mk_dest (x : Fix F α) : Fix.mk (Fix.dest x) = x := by
   change (fix.mk ∘ fix.dest) x = x
   apply fix.ind_rec
   intro x
@@ -268,7 +273,7 @@ theorem fix.mk_dest (x : Fix F α) : Fix.mk (Fix.dest x) = x := by
   show fix.mk (append_fun id id <$$> x) = fix.mk x
   rw [append_fun_id_id, Mvfunctor.id_map]
 
-theorem fix.dest_mk (x : F (Append1 α (Fix F α))) : Fix.dest (Fix.mk x) = x := by
+theorem Fix.dest_mk (x : F (Append1 α (Fix F α))) : Fix.dest (Fix.mk x) = x := by
   unfold fix.dest
   rw [fix.rec_eq, ← fix.dest, ← comp_map]
   conv => rhs rw [← Mvfunctor.id_map x]
@@ -278,7 +283,7 @@ theorem fix.dest_mk (x : F (Append1 α (Fix F α))) : Fix.dest (Fix.mk x) = x :=
     apply fix.mk_dest
   rw [this, append_fun_id_id]
 
-theorem fix.ind {α : Typevec n} (p : Fix F α → Prop)
+theorem Fix.ind {α : Typevec n} (p : Fix F α → Prop)
     (h : ∀ x : F (α.Append1 (Fix F α)), Liftp (PredLast α p) x → p (Fix.mk x)) : ∀ x, p x := by
   apply Quot.ind
   intro x
@@ -296,7 +301,7 @@ theorem fix.ind {α : Typevec n} (p : Fix F α → Prop)
   · trivial
     
 
-instance mvqpf_fix : Mvqpf (Fix F) where
+instance mvqpfFix : Mvqpf (Fix F) where
   p := q.p.wp
   abs := fun α => Quot.mk Wequiv
   repr := fun α => fixToW
@@ -314,7 +319,7 @@ instance mvqpf_fix : Mvqpf (Fix F) where
     apply Wequiv.refl
 
 /-- Dependent recursor for `fix F` -/
-def fix.drec {β : Fix F α → Type u} (g : ∀ x : F (α ::: Sigma β), β (fix.mk <| (id ::: Sigma.fst) <$$> x))
+def Fix.drec {β : Fix F α → Type u} (g : ∀ x : F (α ::: Sigma β), β (fix.mk <| (id ::: Sigma.fst) <$$> x))
     (x : Fix F α) : β x :=
   let y := @Fix.rec _ F _ _ α (Sigma β) (fun i => ⟨_, g i⟩) x
   have : x = y.1 := by

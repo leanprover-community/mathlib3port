@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2017 Johannes Hölzl. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johannes Hölzl, Yury Kudryashov
+-/
 import Mathbin.Data.Real.Nnreal
 
 /-!
@@ -80,6 +85,7 @@ localized [Ennreal] notation "ℝ≥0∞" => Ennreal
 
 localized [Ennreal] notation "∞" => (⊤ : Ennreal)
 
+-- TODO: why are the two covariant instances necessary? why aren't they inferred?
 instance covariant_class_mul : CovariantClass ℝ≥0∞ ℝ≥0∞ (· * ·) (· ≤ ·) :=
   CanonicallyOrderedCommSemiring.to_covariant_mul_le
 
@@ -110,16 +116,16 @@ theorem some_eq_coe (a : ℝ≥0 ) : (some a : ℝ≥0∞) = (↑a : ℝ≥0∞)
   rfl
 
 /-- `to_nnreal x` returns `x` if it is real, otherwise 0. -/
-protected def to_nnreal : ℝ≥0∞ → ℝ≥0
+protected def toNnreal : ℝ≥0∞ → ℝ≥0
   | some r => r
   | none => 0
 
 /-- `to_real x` returns `x` if it is real, `0` otherwise. -/
-protected def to_real (a : ℝ≥0∞) : Real :=
+protected def toReal (a : ℝ≥0∞) : Real :=
   coe a.toNnreal
 
 /-- `of_real x` returns `x` if it is nonnegative, `0` otherwise. -/
-protected noncomputable def of_real (r : Real) : ℝ≥0∞ :=
+protected noncomputable def ofReal (r : Real) : ℝ≥0∞ :=
   coe (Real.toNnreal r)
 
 @[simp, norm_cast]
@@ -214,16 +220,16 @@ theorem of_real_to_real_le {a : ℝ≥0∞} : Ennreal.ofReal a.toReal ≤ a :=
   if ha : a = ∞ then ha.symm ▸ le_top else le_of_eqₓ (of_real_to_real ha)
 
 theorem forall_ennreal {p : ℝ≥0∞ → Prop} : (∀ a, p a) ↔ (∀ r : ℝ≥0 , p r) ∧ p ∞ :=
-  ⟨fun h => ⟨fun r => h _, h _⟩, fun ⟨h₁, h₂⟩ a =>
+  ⟨fun h => ⟨fun r => h _, h _⟩, fun a =>
     match a with
     | some r => h₁ _
     | none => h₂⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (a «expr ≠ » «expr∞»())
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (a «expr ≠ » «expr∞»())
 theorem forall_ne_top {p : ℝ≥0∞ → Prop} : (∀ a _ : a ≠ ∞, p a) ↔ ∀ r : ℝ≥0 , p r :=
   Option.ball_ne_none
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (a «expr ≠ » «expr∞»())
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (a «expr ≠ » «expr∞»())
 theorem exists_ne_top {p : ℝ≥0∞ → Prop} : (∃ (a : _)(_ : a ≠ ∞), p a) ↔ ∃ r : ℝ≥0 , p r :=
   Option.bex_ne_none
 
@@ -371,7 +377,7 @@ instance _root_.fact_one_le_top_ennreal : Fact ((1 : ℝ≥0∞) ≤ ∞) :=
   ⟨le_top⟩
 
 /-- The set of numbers in `ℝ≥0∞` that are not equal to `∞` is equivalent to `ℝ≥0`. -/
-def ne_top_equiv_nnreal : { a | a ≠ ∞ } ≃ ℝ≥0 where
+def neTopEquivNnreal : { a | a ≠ ∞ } ≃ ℝ≥0 where
   toFun := fun x => Ennreal.toNnreal x
   invFun := fun x => ⟨x, coe_ne_top⟩
   left_inv := fun ⟨x, hx⟩ => Subtype.eq <| coe_to_nnreal hx
@@ -380,14 +386,14 @@ def ne_top_equiv_nnreal : { a | a ≠ ∞ } ≃ ℝ≥0 where
 theorem cinfi_ne_top [HasInfₓ α] (f : ℝ≥0∞ → α) : (⨅ x : { x // x ≠ ∞ }, f x) = ⨅ x : ℝ≥0 , f x :=
   Eq.symm <| (infi_congr _ neTopEquivNnreal.symm.Surjective) fun x => rfl
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (x «expr ≠ » «expr∞»())
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (x «expr ≠ » «expr∞»())
 theorem infi_ne_top [CompleteLattice α] (f : ℝ≥0∞ → α) : (⨅ (x) (_ : x ≠ ∞), f x) = ⨅ x : ℝ≥0 , f x := by
   rw [infi_subtype', cinfi_ne_top]
 
 theorem csupr_ne_top [HasSupₓ α] (f : ℝ≥0∞ → α) : (⨆ x : { x // x ≠ ∞ }, f x) = ⨆ x : ℝ≥0 , f x :=
   @cinfi_ne_top (OrderDual α) _ _
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (x «expr ≠ » «expr∞»())
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (x «expr ≠ » «expr∞»())
 theorem supr_ne_top [CompleteLattice α] (f : ℝ≥0∞ → α) : (⨆ (x) (_ : x ≠ ∞), f x) = ⨆ x : ℝ≥0 , f x :=
   @infi_ne_top (OrderDual α) _ _
 
@@ -407,7 +413,7 @@ theorem top_add : ∞ + a = ∞ :=
   top_add _
 
 /-- Coercion `ℝ≥0 → ℝ≥0∞` as a `ring_hom`. -/
-noncomputable def of_nnreal_hom : ℝ≥0 →+* ℝ≥0∞ :=
+noncomputable def ofNnrealHom : ℝ≥0 →+* ℝ≥0∞ :=
   ⟨coe, coe_one, fun _ _ => coe_mul, coe_zero, fun _ _ => coe_add⟩
 
 @[simp]
@@ -445,13 +451,14 @@ noncomputable instance {M : Type _} [AddCommMonoidₓ M] [Module ℝ≥0∞ M] :
 
 /-- An `algebra` over `ℝ≥0∞` restricts to an `algebra` over `ℝ≥0`. -/
 noncomputable instance {A : Type _} [Semiringₓ A] [Algebra ℝ≥0∞ A] : Algebra ℝ≥0 A where
-  smul := · • ·
+  smul := (· • ·)
   commutes' := fun r x => by
     simp [Algebra.commutes]
   smul_def' := fun r x => by
     simp [← Algebra.smul_def (r : ℝ≥0∞) x, smul_def]
   toRingHom := (algebraMap ℝ≥0∞ A).comp (ofNnrealHom : ℝ≥0 →+* ℝ≥0∞)
 
+-- verify that the above produces instances we might care about
 noncomputable example : Algebra ℝ≥0 ℝ≥0∞ := by
   infer_instance
 
@@ -956,10 +963,10 @@ theorem cancel_of_lt' {a b : ℝ≥0∞} (h : a < b) : AddLeCancellable a :=
 theorem cancel_coe {a : ℝ≥0 } : AddLeCancellable (a : ℝ≥0∞) :=
   cancel_of_ne coe_ne_top
 
-theorem add_right_injₓ (h : a ≠ ∞) : a + b = a + c ↔ b = c :=
+theorem add_right_inj (h : a ≠ ∞) : a + b = a + c ↔ b = c :=
   (cancel_of_ne h).inj
 
-theorem add_left_injₓ (h : a ≠ ∞) : b + a = c + a ↔ b = c :=
+theorem add_left_inj (h : a ≠ ∞) : b + a = c + a ↔ b = c :=
   (cancel_of_ne h).inj_left
 
 end Cancel
@@ -1179,14 +1186,14 @@ theorem inv_zero : (0 : ℝ≥0∞)⁻¹ = ∞ :=
 @[simp]
 theorem inv_top : ∞⁻¹ = 0 :=
   bot_unique <|
-    le_of_forall_le_of_dense fun a h : a > 0 =>
+    le_of_forall_le_of_dense fun h : a > 0 =>
       Inf_le <| by
         simp [*, ne_of_gtₓ h, top_mul]
 
 @[simp, norm_cast]
 theorem coe_inv (hr : r ≠ 0) : (↑r⁻¹ : ℝ≥0∞) = (↑r)⁻¹ :=
   le_antisymmₓ
-    (le_Inf fun b hb : 1 ≤ ↑r * b =>
+    (le_Inf fun hb : 1 ≤ ↑r * b =>
       coe_le_iff.2 <| by
         rintro b rfl <;> rwa [← coe_mul, ← coe_one, coe_le_coe, ← Nnreal.inv_le hr] at hb)
     (Inf_le <| by
@@ -1301,6 +1308,7 @@ theorem inv_lt_iff_inv_lt : a⁻¹ < b ↔ b⁻¹ < a := by
 theorem lt_inv_iff_lt_inv : a < b⁻¹ ↔ b < a⁻¹ := by
   simpa only [inv_invₓ] using @inv_lt_inv a⁻¹ b
 
+-- higher than le_inv_iff_mul_le
 @[simp]
 theorem inv_le_inv : a⁻¹ ≤ b⁻¹ ↔ b ≤ a := by
   simp only [le_iff_lt_or_eqₓ, inv_lt_inv, inv_inj, eq_comm]
@@ -1547,6 +1555,7 @@ theorem half_lt_self {a : ℝ≥0∞} (hz : a ≠ 0) (ht : a ≠ ∞) : a / 2 < 
   have h : (2 : ℝ≥0∞) = ((2 : ℝ≥0 ) : ℝ≥0∞) := rfl
   have h' : (2 : ℝ≥0 ) ≠ 0 := _root_.two_ne_zero'
   rw [h, ← coe_div h', coe_lt_coe]
+  -- `norm_cast` fails to apply `coe_div`
   norm_cast  at hz
   exact Nnreal.half_lt_self hz
 
@@ -1966,7 +1975,7 @@ protected theorem dichotomy (p : ℝ≥0∞) [Fact (1 ≤ p)] : p = ∞ ∨ 1 �
   this.imp_right fun h => h.2
 
 /-- `ennreal.to_nnreal` as a `monoid_hom`. -/
-def to_nnreal_hom : ℝ≥0∞ →* ℝ≥0 where
+def toNnrealHom : ℝ≥0∞ →* ℝ≥0 where
   toFun := Ennreal.toNnreal
   map_one' := to_nnreal_coe
   map_mul' := by
@@ -1998,7 +2007,7 @@ theorem to_nnreal_div (a b : ℝ≥0∞) : (a / b).toNnreal = a.toNnreal / b.toN
   rw [div_eq_mul_inv, to_nnreal_mul, to_nnreal_inv, div_eq_mul_inv]
 
 /-- `ennreal.to_real` as a `monoid_hom`. -/
-def to_real_hom : ℝ≥0∞ →* ℝ :=
+def toRealHom : ℝ≥0∞ →* ℝ :=
   (Nnreal.toRealHom : ℝ≥0 →* ℝ).comp toNnrealHom
 
 theorem to_real_mul : (a * b).toReal = a.toReal * b.toReal :=
@@ -2084,7 +2093,7 @@ theorem Inf_add {s : Set ℝ≥0∞} : inf s + a = ⨅ b ∈ s, b + a := by
 theorem add_infi {a : ℝ≥0∞} : a + infi f = ⨅ b, a + f b := by
   rw [add_commₓ, infi_add] <;> simp [add_commₓ]
 
--- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (a a')
+-- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (a a')
 theorem infi_add_infi (h : ∀ i j, ∃ k, f k + g k ≤ f i + g j) : infi f + infi g = ⨅ a, f a + g a :=
   suffices (⨅ a, f a + g a) ≤ infi f + infi g from
     le_antisymmₓ (le_infi fun a => add_le_add (infi_le _ _) (infi_le _ _)) this

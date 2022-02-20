@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Yakov Pechersky. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yakov Pechersky
+-/
 import Mathbin.LinearAlgebra.Matrix.NonsingularInverse
 
 /-!
@@ -276,7 +281,7 @@ theorem zpow_mul' (A : M) (h : IsUnit A.det) (m n : ℤ) : A ^ (m * n) = (A ^ n)
   rw [mul_comm, zpow_mul _ h]
 
 @[simp, norm_cast]
-theorem units.coe_inv'' (u : (M)ˣ) : ((u⁻¹ : (M)ˣ) : M) = u⁻¹ := by
+theorem Units.coe_inv'' (u : (M)ˣ) : ((u⁻¹ : (M)ˣ) : M) = u⁻¹ := by
   refine' (inv_eq_left_inv _).symm
   rw [← mul_eq_mul, ← Units.coe_mul, inv_mul_selfₓ, Units.coe_one]
 

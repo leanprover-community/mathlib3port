@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Johan Commelin. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johan Commelin
+-/
 import Mathbin.RingTheory.WittVector.Basic
 import Mathbin.RingTheory.WittVector.IsPoly
 
@@ -20,6 +25,7 @@ variable {p : ℕ} {R S : Type _} [hp : Fact p.Prime] [CommRingₓ R] [CommRing�
 
 local notation "𝕎" => WittVector p
 
+-- type as `\bbW`
 noncomputable section
 
 /-- `verschiebung_fun x` shifts the coefficients of `x` up by one,
@@ -28,7 +34,7 @@ by inserting 0 as the 0th coefficient.
 
 `verschiebung_fun` is the underlying function of the additive monoid hom `witt_vector.verschiebung`.
 -/
-def verschiebung_fun (x : 𝕎 R) : 𝕎 R :=
+def verschiebungFun (x : 𝕎 R) : 𝕎 R :=
   (mk p) fun n => if n = 0 then 0 else x.coeff (n - 1)
 
 theorem verschiebung_fun_coeff (x : 𝕎 R) (n : ℕ) : (verschiebungFun x).coeff n = if n = 0 then 0 else x.coeff (n - 1) :=
@@ -63,7 +69,7 @@ omit hp
 /-- The 0th Verschiebung polynomial is 0. For `n > 0`, the `n`th Verschiebung polynomial is the
 variable `X (n-1)`.
 -/
-def verschiebung_poly (n : ℕ) : MvPolynomial ℕ ℤ :=
+def verschiebungPoly (n : ℕ) : MvPolynomial ℕ ℤ :=
   if n = 0 then 0 else x (n - 1)
 
 @[simp]
@@ -134,6 +140,7 @@ theorem ghost_component_verschiebung (x : 𝕎 R) (n : ℕ) :
 theorem verschiebung_coeff_zero (x : 𝕎 R) : (verschiebung x).coeff 0 = 0 :=
   rfl
 
+-- simp_nf complains if this is simp
 theorem verschiebung_coeff_add_one (x : 𝕎 R) (n : ℕ) : (verschiebung x).coeff (n + 1) = x.coeff n :=
   rfl
 

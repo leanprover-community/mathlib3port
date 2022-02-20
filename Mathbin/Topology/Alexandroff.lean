@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Yourong Zang. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yourong Zang, Yury Kudryashov
+-/
 import Mathbin.Topology.Separation
 import Mathbin.Topology.Opens
 
@@ -63,7 +68,7 @@ instance : Inhabited (Alexandroff X) :=
 instance [Fintype X] : Fintype (Alexandroff X) :=
   Option.fintype
 
-instance Infinite [Infinite X] : Infinite (Alexandroff X) :=
+instance infinite [Infinite X] : Infinite (Alexandroff X) :=
   Option.infinite
 
 theorem coe_injective : Function.Injective (coe : X → Alexandroff X) :=
@@ -200,7 +205,7 @@ theorem is_closed_image_coe {s : Set X} : IsClosed (coe '' s : Set (Alexandroff 
   rw [← is_open_compl_iff, is_open_compl_image_coe]
 
 /-- An open set in `alexandroff X` constructed from a closed compact set in `X` -/
-def opens_of_compl (s : Set X) (h₁ : IsClosed s) (h₂ : IsCompact s) : TopologicalSpace.Opens (Alexandroff X) :=
+def opensOfCompl (s : Set X) (h₁ : IsClosed s) (h₂ : IsCompact s) : TopologicalSpace.Opens (Alexandroff X) :=
   ⟨(coe '' s)ᶜ, is_open_compl_image_coe.2 ⟨h₁, h₂⟩⟩
 
 theorem infty_mem_opens_of_compl {s : Set X} (h₁ : IsClosed s) (h₂ : IsCompact s) : ∞ ∈ opensOfCompl s h₁ h₂ :=

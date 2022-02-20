@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Julian Kuelshammer. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Julian Kuelshammer
+-/
 import Mathbin.Data.Zmod.Basic
 import Mathbin.Data.Nat.Basic
 import Mathbin.Tactic.IntervalCases
@@ -144,7 +149,7 @@ private def fintype_helper : Sum (Zmod (2 * n)) (Zmod (2 * n)) ≃ QuaternionGro
 
 /-- The special case that more or less by definition `quaternion_group 0` is isomorphic to the
 infinite dihedral group. -/
-def quaternion_group_zero_equiv_dihedral_group_zero : QuaternionGroup 0 ≃* DihedralGroup 0 where
+def quaternionGroupZeroEquivDihedralGroupZero : QuaternionGroup 0 ≃* DihedralGroup 0 where
   toFun := fun i => QuaternionGroup.recOn i DihedralGroup.r DihedralGroup.sr
   invFun := fun i =>
     match i with
@@ -225,7 +230,7 @@ theorem order_of_xa [hpos : Fact (0 < n)] (i : Zmod (2 * n)) : orderOf (xa i) = 
     simp only [pow_oneₓ, xa_sq] at h
     injection h with h'
     apply_fun Zmod.val  at h'
-    apply_fun · / n  at h'
+    apply_fun (· / n)  at h'
     simp only [Zmod.val_nat_cast, Zmod.val_zero, Nat.zero_divₓ, Nat.mod_mul_left_div_self, Nat.div_selfₓ hpos.1] at h'
     norm_num  at h'
     

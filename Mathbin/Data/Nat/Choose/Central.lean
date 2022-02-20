@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Patrick Stevens. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Patrick Stevens, Thomas Browning
+-/
 import Mathbin.Data.Nat.Choose.Basic
 import Mathbin.Tactic.NormNum
 import Mathbin.Tactic.Linarith.Default
@@ -21,7 +26,7 @@ namespace Nat
 
 /-- The central binomial coefficient, `nat.choose (2 * n) n`.
 -/
-def central_binom (n : ℕ) :=
+def centralBinom (n : ℕ) :=
   (2 * n).choose n
 
 theorem central_binom_eq_two_mul_choose (n : ℕ) : centralBinom n = (2 * n).choose n :=

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison
+-/
 import Mathbin.CategoryTheory.Monoidal.Braided
 import Mathbin.CategoryTheory.FunctorCategory
 import Mathbin.CategoryTheory.Const
@@ -32,7 +37,7 @@ variable (F G F' G' : C ⥤ D)
 Tensor product of functors `C ⥤ D`, when `D` is monoidal.
  -/
 @[simps]
-def tensor_obj : C ⥤ D where
+def tensorObj : C ⥤ D where
   obj := fun X => F.obj X ⊗ G.obj X
   map := fun X Y f => F.map f ⊗ G.map f
   map_id' := fun X => by
@@ -48,7 +53,7 @@ variable (α : F ⟶ G) (β : F' ⟶ G')
 Tensor product of natural transformations into `D`, when `D` is monoidal.
 -/
 @[simps]
-def tensor_hom : tensorObj F F' ⟶ tensorObj G G' where
+def tensorHom : tensorObj F F' ⟶ tensorObj G G' where
   app := fun X => α.app X ⊗ β.app X
   naturality' := fun X Y f => by
     dsimp
@@ -62,7 +67,7 @@ open CategoryTheory.Monoidal.FunctorCategory
 the functor category `C ⥤ D` has a natural pointwise monoidal structure,
 where `(F ⊗ G).obj X = F.obj X ⊗ G.obj X`.
 -/
-instance functor_category_monoidal : MonoidalCategory (C ⥤ D) where
+instance functorCategoryMonoidal : MonoidalCategory (C ⥤ D) where
   tensorObj := fun F G => tensorObj F G
   tensorHom := fun F G F' G' α β => tensorHom α β
   tensor_id' := fun F G => by
@@ -163,7 +168,7 @@ variable [BraidedCategory.{v₂} D]
 the natural pointwise monoidal structure on the functor category `C ⥤ D`
 is also braided.
 -/
-instance functor_category_braided : BraidedCategory (C ⥤ D) where
+instance functorCategoryBraided : BraidedCategory (C ⥤ D) where
   braiding := fun F G =>
     NatIso.ofComponents (fun X => β_ _ _)
       (by
@@ -190,7 +195,7 @@ variable [SymmetricCategory.{v₂} D]
 the natural pointwise monoidal structure on the functor category `C ⥤ D`
 is also symmetric.
 -/
-instance functor_category_symmetric : SymmetricCategory (C ⥤ D) where
+instance functorCategorySymmetric : SymmetricCategory (C ⥤ D) where
   symmetry' := fun F G => by
     ext X
     apply symmetry

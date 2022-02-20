@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Mario Carneiro. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Mario Carneiro, Sean Leather
+-/
 import Mathbin.Data.List.Range
 import Mathbin.Data.List.Perm
 
@@ -70,13 +75,13 @@ theorem not_eq_key {a} {l : List (Sigma β)} : a ∉ l.keys ↔ ∀ s : Sigma β
 
 
 /-- Determines whether the store uses a key several times. -/
-def nodupkeys (l : List (Sigma β)) : Prop :=
+def Nodupkeys (l : List (Sigma β)) : Prop :=
   l.keys.Nodup
 
 theorem nodupkeys_iff_pairwise {l} : Nodupkeys l ↔ Pairwiseₓ (fun s s' : Sigma β => s.1 ≠ s'.1) l :=
   pairwise_map _
 
-theorem nodupkeys.pairwise_ne {l} (h : Nodupkeys l) : Pairwiseₓ (fun s s' : Sigma β => s.1 ≠ s'.1) l :=
+theorem Nodupkeys.pairwise_ne {l} (h : Nodupkeys l) : Pairwiseₓ (fun s s' : Sigma β => s.1 ≠ s'.1) l :=
   nodupkeys_iff_pairwise.1 h
 
 @[simp]
@@ -87,12 +92,12 @@ theorem nodupkeys_nil : @Nodupkeys α β [] :=
 theorem nodupkeys_cons {s : Sigma β} {l : List (Sigma β)} : Nodupkeys (s :: l) ↔ s.1 ∉ l.keys ∧ Nodupkeys l := by
   simp [keys, nodupkeys]
 
-theorem nodupkeys.eq_of_fst_eq {l : List (Sigma β)} (nd : Nodupkeys l) {s s' : Sigma β} (h : s ∈ l) (h' : s' ∈ l) :
+theorem Nodupkeys.eq_of_fst_eq {l : List (Sigma β)} (nd : Nodupkeys l) {s s' : Sigma β} (h : s ∈ l) (h' : s' ∈ l) :
     s.1 = s'.1 → s = s' :=
   @forall_of_forall_of_pairwise _ (fun s s' : Sigma β => s.1 = s'.1 → s = s') (fun s s' H h => (H h.symm).symm) _
     (fun x h _ => rfl) ((nodupkeys_iff_pairwise.1 nd).imp fun s s' h h' => (h h').elim) _ h _ h'
 
-theorem nodupkeys.eq_of_mk_mem {a : α} {b b' : β a} {l : List (Sigma β)} (nd : Nodupkeys l) (h : Sigma.mk a b ∈ l)
+theorem Nodupkeys.eq_of_mk_mem {a : α} {b b' : β a} {l : List (Sigma β)} (nd : Nodupkeys l) (h : Sigma.mk a b ∈ l)
     (h' : Sigma.mk a b' ∈ l) : b = b' := by
   cases nd.eq_of_fst_eq h h' rfl <;> rfl
 
@@ -201,7 +206,7 @@ variable [DecidableEq α]
 
 /-- `lookup a l` is the first value in `l` corresponding to the key `a`,
   or `none` if no such element exists. -/
-def lookup (a : α) : List (Sigma β) → Option (β a)
+def lookupₓ (a : α) : List (Sigma β) → Option (β a)
   | [] => none
   | ⟨a', b⟩ :: l => if h : a' = a then some (Eq.recOnₓ h b) else lookup l
 
@@ -273,7 +278,7 @@ theorem lookup_ext {l₀ l₁ : List (Sigma β)} (nd₀ : l₀.Nodupkeys) (nd₁
 
 
 /-- `lookup_all a l` is the list of all values in `l` corresponding to the key `a`. -/
-def lookup_all (a : α) : List (Sigma β) → List (β a)
+def lookupAll (a : α) : List (Sigma β) → List (β a)
   | [] => []
   | ⟨a', b⟩ :: l => if h : a' = a then Eq.recOnₓ h b :: lookup_all l else lookup_all l
 
@@ -406,7 +411,7 @@ theorem keys_kreplace (a : α) (b : β a) : ∀ l : List (Sigma β), (kreplace a
 theorem kreplace_nodupkeys (a : α) (b : β a) {l : List (Sigma β)} : (kreplace a b l).Nodupkeys ↔ l.Nodupkeys := by
   simp [nodupkeys, keys_kreplace]
 
-theorem perm.kreplace {a : α} {b : β a} {l₁ l₂ : List (Sigma β)} (nd : l₁.Nodupkeys) :
+theorem Perm.kreplace {a : α} {b : β a} {l₁ l₂ : List (Sigma β)} (nd : l₁.Nodupkeys) :
     l₁ ~ l₂ → kreplace a b l₁ ~ kreplace a b l₂ :=
   perm_lookmap _ <| by
     refine' nd.pairwise_ne.imp _
@@ -510,7 +515,7 @@ theorem kerase_kerase {a a'} {l : List (Sigma β)} : (kerase a' l).kerase a = (k
 theorem kerase_nodupkeys (a : α) {l : List (Sigma β)} : Nodupkeys l → (kerase a l).Nodupkeys :=
   nodupkeys_of_sublist <| kerase_sublist _ _
 
-theorem perm.kerase {a : α} {l₁ l₂ : List (Sigma β)} (nd : l₁.Nodupkeys) : l₁ ~ l₂ → kerase a l₁ ~ kerase a l₂ :=
+theorem Perm.kerase {a : α} {l₁ l₂ : List (Sigma β)} (nd : l₁.Nodupkeys) : l₁ ~ l₂ → kerase a l₁ ~ kerase a l₂ :=
   Perm.erasep _ <|
     (nodupkeys_iff_pairwise.1 nd).imp <| by
       rintro x y h rfl <;> exact h
@@ -612,7 +617,7 @@ theorem mem_keys_kinsert {a a'} {b' : β a'} {l : List (Sigma β)} : a ∈ (kins
 theorem kinsert_nodupkeys a (b : β a) {l : List (Sigma β)} (nd : l.Nodupkeys) : (kinsert a b l).Nodupkeys :=
   nodupkeys_cons.mpr ⟨not_mem_keys_kerase a nd, kerase_nodupkeys a nd⟩
 
-theorem perm.kinsert {a} {b : β a} {l₁ l₂ : List (Sigma β)} (nd₁ : l₁.Nodupkeys) (p : l₁ ~ l₂) :
+theorem Perm.kinsert {a} {b : β a} {l₁ l₂ : List (Sigma β)} (nd₁ : l₁.Nodupkeys) (p : l₁ ~ l₂) :
     kinsert a b l₁ ~ kinsert a b l₂ :=
   (p.kerase nd₁).cons _
 
@@ -653,7 +658,7 @@ theorem kextract_eq_lookup_kerase (a : α) : ∀ l : List (Sigma β), kextract a
 
 
 /-- Remove entries with duplicate keys from `l : list (sigma β)`. -/
-def erase_dupkeys : List (Sigma β) → List (Sigma β) :=
+def eraseDupkeys : List (Sigma β) → List (Sigma β) :=
   List.foldr (fun x => kinsert x.1 x.2) []
 
 theorem erase_dupkeys_cons {x : Sigma β} (l : List (Sigma β)) :
@@ -749,7 +754,7 @@ theorem kunion_nodupkeys {l₁ l₂ : List (Sigma β)} (nd₁ : l₁.Nodupkeys) 
     simp at nd₁
     simp [not_or_distrib, nd₁.1, nd₂, ih nd₁.2 (kerase_nodupkeys s.1 nd₂)]
 
-theorem perm.kunion_right {l₁ l₂ : List (Sigma β)} (p : l₁ ~ l₂) l : kunion l₁ l ~ kunion l₂ l := by
+theorem Perm.kunion_right {l₁ l₂ : List (Sigma β)} (p : l₁ ~ l₂) l : kunion l₁ l ~ kunion l₂ l := by
   induction p generalizing l
   case list.perm.nil =>
     rfl
@@ -760,12 +765,12 @@ theorem perm.kunion_right {l₁ l₂ : List (Sigma β)} (p : l₁ ~ l₂) l : ku
   case list.perm.trans l₁ l₂ l₃ p₁₂ p₂₃ ih₁₂ ih₂₃ =>
     exact perm.trans (ih₁₂ l) (ih₂₃ l)
 
-theorem perm.kunion_left : ∀ l {l₁ l₂ : List (Sigma β)}, l₁.Nodupkeys → l₁ ~ l₂ → kunion l l₁ ~ kunion l l₂
+theorem Perm.kunion_left : ∀ l {l₁ l₂ : List (Sigma β)}, l₁.Nodupkeys → l₁ ~ l₂ → kunion l l₁ ~ kunion l l₂
   | [], _, _, _, p => p
   | s :: l, l₁, l₂, nd₁, p => by
     simp [((p.kerase nd₁).kunion_left l (kerase_nodupkeys s.1 nd₁)).cons s]
 
-theorem perm.kunion {l₁ l₂ l₃ l₄ : List (Sigma β)} (nd₃ : l₃.Nodupkeys) (p₁₂ : l₁ ~ l₂) (p₃₄ : l₃ ~ l₄) :
+theorem Perm.kunion {l₁ l₂ l₃ l₄ : List (Sigma β)} (nd₃ : l₃.Nodupkeys) (p₁₂ : l₁ ~ l₂) (p₃₄ : l₃ ~ l₄) :
     kunion l₁ l₃ ~ kunion l₂ l₄ :=
   (p₁₂.kunion_right l₃).trans (p₃₄.kunion_left l₂ nd₃)
 

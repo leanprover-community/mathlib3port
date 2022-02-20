@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Frédéric Dupuis. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Frédéric Dupuis
+-/
 import Mathbin.LinearAlgebra.AffineSpace.AffineMap
 import Mathbin.Topology.Algebra.Group
 import Mathbin.Topology.Algebra.MulAction
@@ -51,7 +56,7 @@ end Ringₓ
 
 section CommRingₓ
 
-variable [CommRingₓ R] [Module R F] [TopologicalSpace R] [HasContinuousSmul R F]
+variable [CommRingₓ R] [Module R F] [HasContinuousConstSmul R F]
 
 @[continuity]
 theorem homothety_continuous (x : F) (t : R) : Continuous <| homothety x t := by
@@ -65,7 +70,7 @@ end CommRingₓ
 
 section Field
 
-variable [Field R] [Module R F] [TopologicalSpace R] [HasContinuousSmul R F]
+variable [Field R] [Module R F] [HasContinuousConstSmul R F]
 
 theorem homothety_is_open_map (x : F) (t : R) (ht : t ≠ 0) : IsOpenMap <| homothety x t := by
   apply IsOpenMap.of_inverse (homothety_continuous x t⁻¹) <;>

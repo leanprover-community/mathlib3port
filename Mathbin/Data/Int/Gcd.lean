@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Guy Leroy. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Sangwoo Jo (aka Jason), Guy Leroy, Johannes Hölzl, Mario Carneiro
+-/
 import Mathbin.Data.Nat.Prime
 import Mathbin.Data.Int.Order
 
@@ -26,7 +31,7 @@ Bézout's lemma, Bezout's lemma
 namespace Nat
 
 /-- Helper function for the extended GCD algorithm (`nat.xgcd`). -/
-def xgcd_aux : ℕ → ℤ → ℤ → ℕ → ℤ → ℤ → ℕ × ℤ × ℤ
+def xgcdAux : ℕ → ℤ → ℤ → ℕ → ℤ → ℤ → ℕ × ℤ × ℤ
   | 0, s, t, r', s', t' => (r', s', t')
   | r@(succ _), s, t, r', s', t' =>
     have : r' % r < r := mod_ltₓ _ <| succ_posₓ _
@@ -50,11 +55,11 @@ def xgcd (x y : ℕ) : ℤ × ℤ :=
   (xgcdAux x 1 0 y 0 1).2
 
 /-- The extended GCD `a` value in the equation `gcd x y = x * a + y * b`. -/
-def gcd_a (x y : ℕ) : ℤ :=
+def gcdA (x y : ℕ) : ℤ :=
   (xgcd x y).1
 
 /-- The extended GCD `b` value in the equation `gcd x y = x * a + y * b`. -/
-def gcd_b (x y : ℕ) : ℤ :=
+def gcdB (x y : ℕ) : ℤ :=
   (xgcd x y).2
 
 @[simp]
@@ -156,12 +161,12 @@ protected theorem coe_nat_gcd (m n : ℕ) : Int.gcdₓ ↑m ↑n = Nat.gcdₓ m 
   rfl
 
 /-- The extended GCD `a` value in the equation `gcd x y = x * a + y * b`. -/
-def gcd_a : ℤ → ℤ → ℤ
+def gcdA : ℤ → ℤ → ℤ
   | of_nat m, n => m.gcdA n.natAbs
   | -[1+ m], n => -m.succ.gcdA n.natAbs
 
 /-- The extended GCD `b` value in the equation `gcd x y = x * a + y * b`. -/
-def gcd_b : ℤ → ℤ → ℤ
+def gcdB : ℤ → ℤ → ℤ
   | m, of_nat n => m.natAbs.gcdB n
   | m, -[1+ n] => -m.natAbs.gcdB n.succ
 
@@ -218,7 +223,7 @@ theorem dvd_of_mul_dvd_mul_left {i j k : ℤ} (k_non_zero : k ≠ 0) (H : k * i 
 theorem dvd_of_mul_dvd_mul_right {i j k : ℤ} (k_non_zero : k ≠ 0) (H : i * k ∣ j * k) : i ∣ j := by
   rw [mul_comm i k, mul_comm j k] at H <;> exact dvd_of_mul_dvd_mul_left k_non_zero H
 
-theorem prime.dvd_nat_abs_of_coe_dvd_sq {p : ℕ} (hp : p.Prime) (k : ℤ) (h : ↑p ∣ k ^ 2) : p ∣ k.natAbs := by
+theorem Prime.dvd_nat_abs_of_coe_dvd_sq {p : ℕ} (hp : p.Prime) (k : ℤ) (h : ↑p ∣ k ^ 2) : p ∣ k.natAbs := by
   apply @Nat.Prime.dvd_of_dvd_pow _ _ 2 hp
   rwa [sq, ← nat_abs_mul, ← coe_nat_dvd_left, ← sq]
 

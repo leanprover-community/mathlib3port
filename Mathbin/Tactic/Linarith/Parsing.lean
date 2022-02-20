@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Robert Y. Lewis. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Robert Y. Lewis
+-/
 import Mathbin.Tactic.Linarith.Datatypes
 
 /-!
@@ -48,7 +53,7 @@ unsafe instance : LT monom :=
 
 /-- Linear combinations of monomials are represented by mapping monomials to coefficients. -/
 @[reducible]
-unsafe def Sum : Type :=
+unsafe def sum : Type :=
   rb_map monom ℤ
 
 /-- `1` is represented as the singleton sum of the monomial `monom.one` with coefficient 1. -/

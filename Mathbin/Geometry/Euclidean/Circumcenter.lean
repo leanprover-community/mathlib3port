@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Joseph Myers. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Joseph Myers
+-/
 import Mathbin.Geometry.Euclidean.Basic
 import Mathbin.LinearAlgebra.AffineSpace.FiniteDimensional
 import Mathbin.Tactic.DeriveFintype
@@ -259,7 +264,7 @@ variable {V : Type _} {P : Type _} [InnerProductSpace ℝ V] [MetricSpace P] [No
 include V
 
 /-- The pair (circumcenter, circumradius) of a simplex. -/
-def circumcenter_circumradius {n : ℕ} (s : Simplex ℝ P n) : P × ℝ :=
+def circumcenterCircumradius {n : ℕ} (s : Simplex ℝ P n) : P × ℝ :=
   s.Independent.exists_unique_dist_eq.some
 
 /-- The property satisfied by the (circumcenter, circumradius) pair. -/
@@ -407,18 +412,18 @@ This is for use in calculations where it is convenient to work with
 affine combinations of vertices together with the circumcenter.  (An
 equivalent form sometimes used in the literature is placing the
 circumcenter at the origin and working with vectors for the vertices.) -/
-inductive points_with_circumcenter_index (n : ℕ)
+inductive PointsWithCircumcenterIndex (n : ℕ)
   | point_index : Finₓ (n + 1) → points_with_circumcenter_index
   | circumcenter_index : points_with_circumcenter_index
   deriving Fintype
 
 open PointsWithCircumcenterIndex
 
-instance points_with_circumcenter_index_inhabited (n : ℕ) : Inhabited (PointsWithCircumcenterIndex n) :=
+instance pointsWithCircumcenterIndexInhabited (n : ℕ) : Inhabited (PointsWithCircumcenterIndex n) :=
   ⟨circumcenter_index⟩
 
 /-- `point_index` as an embedding. -/
-def point_index_embedding (n : ℕ) : Finₓ (n + 1) ↪ PointsWithCircumcenterIndex n :=
+def pointIndexEmbedding (n : ℕ) : Finₓ (n + 1) ↪ PointsWithCircumcenterIndex n :=
   ⟨fun i => point_index i, fun _ _ h => by
     injection h⟩
 
@@ -442,7 +447,7 @@ theorem sum_points_with_circumcenter {α : Type _} [AddCommMonoidₓ α] {n : �
 include V
 
 /-- The vertices of a simplex plus its circumcenter. -/
-def points_with_circumcenter {n : ℕ} (s : Simplex ℝ P n) : PointsWithCircumcenterIndex n → P
+def pointsWithCircumcenter {n : ℕ} (s : Simplex ℝ P n) : PointsWithCircumcenterIndex n → P
   | point_index i => s.points i
   | circumcenter_index => s.circumcenter
 
@@ -464,7 +469,7 @@ omit V
 
 /-- The weights for a single vertex of a simplex, in terms of
 `points_with_circumcenter`. -/
-def point_weights_with_circumcenter {n : ℕ} (i : Finₓ (n + 1)) : PointsWithCircumcenterIndex n → ℝ
+def pointWeightsWithCircumcenter {n : ℕ} (i : Finₓ (n + 1)) : PointsWithCircumcenterIndex n → ℝ
   | point_index j => if j = i then 1 else 0
   | circumcenter_index => 0
 
@@ -506,7 +511,7 @@ omit V
 
 /-- The weights for the centroid of some vertices of a simplex, in
 terms of `points_with_circumcenter`. -/
-def centroid_weights_with_circumcenter {n : ℕ} (fs : Finset (Finₓ (n + 1))) : PointsWithCircumcenterIndex n → ℝ
+def centroidWeightsWithCircumcenter {n : ℕ} (fs : Finset (Finₓ (n + 1))) : PointsWithCircumcenterIndex n → ℝ
   | point_index i => if i ∈ fs then (card fs : ℝ)⁻¹ else 0
   | circumcenter_index => 0
 
@@ -542,7 +547,7 @@ omit V
 
 /-- The weights for the circumcenter of a simplex, in terms of
 `points_with_circumcenter`. -/
-def circumcenter_weights_with_circumcenter (n : ℕ) : PointsWithCircumcenterIndex n → ℝ
+def circumcenterWeightsWithCircumcenter (n : ℕ) : PointsWithCircumcenterIndex n → ℝ
   | point_index i => 0
   | circumcenter_index => 1
 
@@ -573,7 +578,7 @@ omit V
 
 /-- The weights for the reflection of the circumcenter in an edge of a
 simplex.  This definition is only valid with `i₁ ≠ i₂`. -/
-def reflection_circumcenter_weights_with_circumcenter {n : ℕ} (i₁ i₂ : Finₓ (n + 1)) : PointsWithCircumcenterIndex n → ℝ
+def reflectionCircumcenterWeightsWithCircumcenter {n : ℕ} (i₁ i₂ : Finₓ (n + 1)) : PointsWithCircumcenterIndex n → ℝ
   | point_index i => if i = i₁ ∨ i = i₂ then 1 else 0
   | circumcenter_index => -1
 

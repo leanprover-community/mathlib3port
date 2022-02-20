@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Neil Strickland. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Neil Strickland, Yury Kudryashov
+-/
 import Mathbin.Algebra.Group.Semiconj
 
 /-!
@@ -33,7 +38,7 @@ variable {S : Type _} [Mul S]
 
 /-- Equality behind `commute a b`; useful for rewriting. -/
 @[to_additive]
-protected theorem Eq {a b : S} (h : Commute a b) : a * b = b * a :=
+protected theorem eq {a b : S} (h : Commute a b) : a * b = b * a :=
   h
 
 /-- Any element commutes with itself. -/
@@ -47,7 +52,7 @@ protected theorem symm {a b : S} (h : Commute a b) : Commute b a :=
   Eq.symm h
 
 @[to_additive]
-protected theorem SemiconjBy {a b : S} (h : Commute a b) : SemiconjBy a b b :=
+protected theorem semiconj_by {a b : S} (h : Commute a b) : SemiconjBy a b b :=
   h
 
 @[to_additive]
@@ -201,7 +206,7 @@ theorem inv_left_iff : Commute a⁻¹ b ↔ Commute a b :=
   SemiconjBy.inv_symm_left_iff
 
 @[to_additive]
-theorem inv_invₓ : Commute a b → Commute a⁻¹ b⁻¹ :=
+theorem inv_inv : Commute a b → Commute a⁻¹ b⁻¹ :=
   SemiconjBy.inv_inv_symm
 
 @[simp, to_additive]

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2017 Mario Carneiro. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Mario Carneiro
+-/
 import Mathbin.Data.List.Sort
 import Mathbin.Data.Multiset.Basic
 import Mathbin.Data.String.Basic
@@ -25,7 +30,7 @@ def sort (s : Multiset α) : List α :=
       (sorted_merge_sort r _)
 
 @[simp]
-theorem coeSort (l : List α) : sort r l = mergeSort r l :=
+theorem coe_sort (l : List α) : sort r l = mergeSort r l :=
   rfl
 
 @[simp]

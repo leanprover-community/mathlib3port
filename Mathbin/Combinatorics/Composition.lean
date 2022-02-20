@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Sébastien Gouëzel. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Sébastien Gouëzel
+-/
 import Mathbin.Data.Fintype.Card
 import Mathbin.Data.Finset.Sort
 import Mathbin.Algebra.BigOperators.Order
@@ -134,7 +139,7 @@ theorem blocks_length : c.blocks.length = c.length :=
 
 /-- The blocks of a composition, seen as a function on `fin c.length`. When composing analytic
 functions using compositions, this is the main player. -/
-def blocks_fun : Finₓ c.length → ℕ := fun i => nthLe c.blocks i i.2
+def blocksFun : Finₓ c.length → ℕ := fun i => nthLe c.blocks i i.2
 
 theorem of_fn_blocks_fun : ofFnₓ c.blocksFun = c.blocks :=
   of_fn_nth_le _
@@ -170,7 +175,7 @@ theorem length_pos_of_pos (h : 0 < n) : 0 < c.length := by
   exact c.blocks_sum
 
 /-- The sum of the sizes of the blocks in a composition up to `i`. -/
-def size_up_to (i : ℕ) : ℕ :=
+def sizeUpTo (i : ℕ) : ℕ :=
   (c.blocks.take i).Sum
 
 @[simp]
@@ -230,7 +235,7 @@ theorem card_boundaries_eq_succ_length : c.boundaries.card = c.length + 1 := by
 
 /-- To `c : composition n`, one can associate a `composition_as_set n` by registering the leftmost
 point of each block, and adding a virtual point at the right of the last block. -/
-def to_composition_as_set : CompositionAsSet n where
+def toCompositionAsSet : CompositionAsSet n where
   boundaries := c.boundaries
   zero_mem := by
     simp only [boundaries, Finset.mem_univ, exists_prop_of_true, Finset.mem_map]
@@ -279,13 +284,13 @@ def index (j : Finₓ n) : Finₓ c.length :=
 theorem lt_size_up_to_index_succ (j : Finₓ n) : (j : ℕ) < c.sizeUpTo (c.index j).succ :=
   (Nat.find_specₓ (c.index_exists j.2)).1
 
--- ././Mathport/Syntax/Translate/Basic.lean:418:16: unsupported tactic `by_contra'
+-- ././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'
 theorem size_up_to_index_le (j : Finₓ n) : c.sizeUpTo (c.index j) ≤ j := by
   by_contra H
   set i := c.index j with hi
   push_neg  at H
   have i_pos : (0 : ℕ) < i := by
-    "././Mathport/Syntax/Translate/Basic.lean:418:16: unsupported tactic `by_contra'"
+    "././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'"
     revert H
     simp [nonpos_iff_eq_zero.1 i_pos, c.size_up_to_zero]
   let i₁ := (i : ℕ).pred
@@ -297,7 +302,7 @@ theorem size_up_to_index_le (j : Finₓ n) : c.sizeUpTo (c.index j) ≤ j := by
 
 /-- Mapping an element `j` of `fin n` to the element in the block containing it, identified with
 `fin (c.blocks_fun (c.index j))` through the canonical increasing bijection. -/
-def inv_embedding (j : Finₓ n) : Finₓ (c.blocksFun (c.index j)) :=
+def invEmbedding (j : Finₓ n) : Finₓ (c.blocksFun (c.index j)) :=
   ⟨j - c.sizeUpTo (c.index j), by
     rw [tsub_lt_iff_right, add_commₓ, ← size_up_to_succ']
     · exact lt_size_up_to_index_succ _ _
@@ -379,7 +384,7 @@ theorem inv_embedding_comp (i : Finₓ c.length) (j : Finₓ (c.blocksFun i)) :
 
 /-- Equivalence between the disjoint union of the blocks (each of them seen as
 `fin (c.blocks_fun i)`) with `fin n`. -/
-def blocks_fin_equiv : (Σ i : Finₓ c.length, Finₓ (c.blocksFun i)) ≃ Finₓ n where
+def blocksFinEquiv : (Σ i : Finₓ c.length, Finₓ (c.blocksFun i)) ≃ Finₓ n where
   toFun := fun x => c.Embedding x.1 x.2
   invFun := fun j => ⟨c.index j, c.invEmbedding j⟩
   left_inv := fun x => by
@@ -579,7 +584,7 @@ namespace List
 variable {α : Type _}
 
 /-- Auxiliary for `list.split_wrt_composition`. -/
-def split_wrt_composition_aux : List α → List ℕ → List (List α)
+def splitWrtCompositionAux : List α → List ℕ → List (List α)
   | l, [] => []
   | l, n :: ns =>
     let (l₁, l₂) := l.splitAt n
@@ -588,7 +593,7 @@ def split_wrt_composition_aux : List α → List ℕ → List (List α)
 /-- Given a list of length `n` and a composition `[i₁, ..., iₖ]` of `n`, split `l` into a list of
 `k` lists corresponding to the blocks of the composition, of respective lengths `i₁`, ..., `iₖ`.
 This makes sense mostly when `n = l.length`, but this is not necessary for the definition. -/
-def split_wrt_composition (l : List α) (c : Composition n) : List (List α) :=
+def splitWrtComposition (l : List α) (c : Composition n) : List (List α) :=
   splitWrtCompositionAux l c.blocks
 
 attribute [local simp] split_wrt_composition_aux.equations._eqn_1
@@ -805,7 +810,7 @@ theorem boundary_length : c.boundary ⟨c.length, c.length_lt_card_boundaries⟩
   exact le_antisymmₓ (Finset.le_max' _ _ c.last_mem) (Finₓ.le_last _)
 
 /-- Size of the `i`-th block in a `composition_as_set`, seen as a function on `fin c.length`. -/
-def blocks_fun (i : Finₓ c.length) : ℕ :=
+def blocksFun (i : Finₓ c.length) : ℕ :=
   c.boundary ⟨(i : ℕ) + 1, c.lt_length i⟩ - c.boundary ⟨i, c.lt_length' i⟩
 
 theorem blocks_fun_pos (i : Finₓ c.length) : 0 < c.blocksFun i :=
@@ -863,7 +868,7 @@ theorem blocks_sum : c.blocks.Sum = n := by
 
 /-- Associating a `composition n` to a `composition_as_set n`, by registering the sizes of the
 blocks as a list of positive integers. -/
-def to_composition : Composition n where
+def toComposition : Composition n where
   blocks := c.blocks
   blocks_pos := by
     simp only [blocks, forall_mem_of_fn_iff, blocks_fun_pos c, forall_true_iff]

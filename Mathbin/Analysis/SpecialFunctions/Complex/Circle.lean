@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Yury G. Kudryashov. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yury G. Kudryashov
+-/
 import Mathbin.Analysis.Complex.Circle
 import Mathbin.Analysis.SpecialFunctions.Complex.Log
 
@@ -37,7 +42,7 @@ namespace circle
 /-- `complex.arg ∘ coe` and `exp_map_circle` define a local equivalence between `circle and `ℝ` with
 `source = set.univ` and `target = set.Ioc (-π) π`. -/
 @[simps (config := { fullyApplied := false })]
-noncomputable def arg_local_equiv : LocalEquiv circle ℝ where
+noncomputable def argLocalEquiv : LocalEquiv circle ℝ where
   toFun := arg ∘ coe
   invFun := expMapCircle
   Source := Univ
@@ -49,7 +54,7 @@ noncomputable def arg_local_equiv : LocalEquiv circle ℝ where
 
 /-- `complex.arg` and `exp_map_circle` define an equivalence between `circle and `(-π, π]`. -/
 @[simps (config := { fullyApplied := false })]
-noncomputable def arg_equiv : circle ≃ Ioc (-π) π where
+noncomputable def argEquiv : circle ≃ Ioc (-π) π where
   toFun := fun z => ⟨arg z, neg_pi_lt_arg _, arg_le_pi _⟩
   invFun := expMapCircle ∘ coe
   left_inv := fun z => argLocalEquiv.left_inv trivialₓ

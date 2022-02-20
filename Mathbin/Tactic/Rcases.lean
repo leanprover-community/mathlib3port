@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2017 Mario Carneiro. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Mario Carneiro
+-/
 import Leanbin.Data.Dlist
 import Mathbin.Tactic.Core
 import Mathbin.Tactic.Clear
@@ -76,12 +81,12 @@ annotations in reported types.
 
 /-- A list, with a disjunctive meaning (like a list of inductive constructors, or subgoals) -/
 @[reducible]
-def list_Sigma :=
+def ListSigma :=
   List
 
 /-- A list, with a conjunctive meaning (like a list of constructor arguments, or hypotheses) -/
 @[reducible]
-def list_Pi :=
+def ListPi :=
   List
 
 local notation "listΣ" => ListSigma
@@ -121,11 +126,11 @@ unsafe inductive rcases_patt : Type
 
 namespace RcasesPatt
 
-unsafe instance Inhabited : Inhabited rcases_patt :=
+unsafe instance inhabited : Inhabited rcases_patt :=
   ⟨one `_⟩
 
 /-- Get the name from a pattern, if provided -/
-unsafe def Name : rcases_patt → Option Name
+unsafe def name : rcases_patt → Option Name
   | one `_ => none
   | one `rfl => none
   | one n => some n
@@ -248,7 +253,11 @@ unsafe def rcases.process_constructor : Nat → listΠ rcases_patt → listΠ Na
   | 0, ps => ([], [])
   | 1, [] => ([`_], [default])
   | 1, [p] => ([p.Name.getOrElse `_], [p])
-  | 1, ps => ([`_], [rcases_patt.tuple ps])
+  |-- The interesting case: we matched the last field against multiple
+    -- patterns, so split off the remaining patterns into a subsequent
+    -- match. This handles matching `α × β × γ` against `⟨a, b, c⟩`.
+    1,
+    ps => ([`_], [rcases_patt.tuple ps])
   | n + 1, ps =>
     let hd := ps.head
     let (ns, tl) := rcases.process_constructor n ps.tail
@@ -265,7 +274,11 @@ unsafe def rcases.process_constructors (params : Nat) :
     let n ← mk_const c >>= get_arity
     let (h, t) :=
       (match cs, ps.tail with
-      | [], _ :: _ => ([rcases_patt.alts ps], [])
+      |-- We matched the last constructor against multiple patterns,
+        -- so split off the remaining constructors. This handles matching
+        -- `α ⊕ β ⊕ γ` against `a|b|c`.
+        [],
+        _ :: _ => ([rcases_patt.alts ps], [])
       | _, _ => (ps.head.as_tuple, ps.tail) :
         _)
     let (ns, ps) := rcases.process_constructor (n - params) h
@@ -305,7 +318,11 @@ mutual
       let (t, e) ← get_local_and_type e
       subst' e
       List.map (Prod.mk []) <$> get_goals
-    | rcases_patt.one _, _ => List.map (Prod.mk []) <$> get_goals
+    |-- If the pattern is any other name, we already bound the name in the
+        -- top-level `cases` tactic, so there is no more work to do for it.
+        rcases_patt.one
+        _,
+      _ => List.map (Prod.mk []) <$> get_goals
     | rcases_patt.clear, e => do
       let m ← try_core (get_local_and_type e)
       List.map (Prod.mk <| m [] fun ⟨_, e⟩ => [e]) <$> get_goals
@@ -336,9 +353,16 @@ mutual
             let (ids, r) ← rcases.process_constructors 2 [`quot.mk] pat
             let [(_, d)] ← induction e ids.toList `quot.induction_on |
               fail f! "quotient induction on {e} failed. Maybe goal is not in Prop?"
-            pure (ids, r, [(`quot.mk, d)])
+            -- the result from `induction` is missing the information that the original constructor was
+                -- `quot.mk` so we fix this up:
+                pure
+                (ids, r, [(`quot.mk, d)])
       let gs ← get_goals
-      let ls := align (fun a : Name × _ b : _ × Name × _ => a.1 = b.2.1) r (gs.zip l)
+      let-- `cases_core` may not generate a new goal for every constructor,
+      -- as some constructors may be impossible for type reasons. (See its
+      -- documentation.) Match up the new goals with our remaining work
+      -- by constructor name.
+      ls := align (fun b : _ × Name × _ => a.1 = b.2.1) r (gs.zip l)
       List.join <$> ls fun ⟨⟨_, ps⟩, g, _, hs, _⟩ => set_goals [g] >> rcases.continue (ps hs)
   /-- * `rcases_core p e` will match a pattern `p` against a local hypothesis `e`.
     It returns the list of subgoals that were produced.
@@ -440,7 +464,7 @@ unsafe def rintro (ids : listΠ rcases_patt) : tactic Unit := do
 
 /-- Like `zip_with`, but if the lists don't match in length, the excess elements will be put at the
 end of the result. -/
-def merge_list {α} (m : α → α → α) : List α → List α → List α
+def mergeList {α} (m : α → α → α) : List α → List α → List α
   | [], l₂ => l₂
   | l₁, [] => l₁
   | a :: l₁, b :: l₂ => m a b :: merge_list l₁ l₂
@@ -550,7 +574,7 @@ mutual
       let (p, gs) ← rcases_hint_core depth e
       let (ps, gs') ←
         gs.mfoldl
-            (fun r : listΠ rcases_patt × List expr g => do
+            (fun g => do
               let (ps, gs') ← set_goals [g] >> rcases_hint.continue depth es
               pure (merge_list rcases_patt.merge r.1 ps, r.2 ++ gs'))
             ([], [])
@@ -709,8 +733,11 @@ mutual
   -/
   unsafe def rcases_patt_parse_list_rest : rcases_patt → parser (listΣ rcases_patt)
     | pat =>
-      tk "|" *> List.cons pat <$> rcases_patt_parse_list' <|>
-        tk "|-" *> List.cons pat <$> rcases_patt_parse_list_rest rcases_patt.clear <|> pure [pat]
+      tk "|" *> List.cons pat <$> rcases_patt_parse_list' <|>-- hack to support `-|-` patterns, because `|-` is a token
+              tk
+              "|-" *>
+            List.cons pat <$> rcases_patt_parse_list_rest rcases_patt.clear <|>
+          pure [pat]
 end
 
 /-- `rcases_patt_parse_hi` will parse a high precedence `rcases` pattern, `patt_hi`.
@@ -744,7 +771,7 @@ patt_med ::= (patt_hi "|")* patt_hi
 unsafe def rcases_patt_parse_list :=
   with_desc "patt_med" rcases_patt_parse_list'
 
--- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr ?»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr ?»
 /-- Parse the optional depth argument `(: n)?` of `rcases?` and `rintro?`, with default depth 5. -/
 unsafe def rcases_parse_depth : parser Nat := do
   let o ← «expr ?» (tk ":" *> small_nat)
@@ -762,8 +789,8 @@ unsafe inductive rcases_args
   | rcases_many (tgt : listΠ pexpr) (pat : rcases_patt)
   deriving has_reflect
 
--- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr ?»
--- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr ?»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr ?»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr ?»
 /-- Syntax for a `rcases` pattern:
 * `rcases? expr (: n)?`
 * `rcases (h :)? expr (with patt_list (: expr)?)?`. -/
@@ -789,7 +816,7 @@ unsafe def rcases_parse : parser rcases_args :=
         let depth ← rcases_parse_depth
         pure <| rcases_args.hint p depth
 
--- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr *»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr *»
 mutual
   /-- `rintro_patt_parse_hi` and `rintro_patt_parse` are like `rcases_patt_parse`, but is used for
   parsing top level `rintro` patterns, which allow sequences like `(x y : t)` in addition to simple
@@ -992,8 +1019,8 @@ add_tactic_doc
 
 setup_tactic_parser
 
--- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr ?»
--- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr ?»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr ?»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr ?»
 /-- Parses `patt? (: expr)? (:= expr)?`, the arguments for `obtain`.
  (This is almost the same as `rcases_patt_parse`,
 but it allows the pattern part to be empty.) -/

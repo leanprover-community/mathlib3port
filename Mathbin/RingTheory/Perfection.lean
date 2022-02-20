@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Kenny Lau. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Kenny Lau
+-/
 import Mathbin.Algebra.CharP.Pi
 import Mathbin.Algebra.CharP.Quotient
 import Mathbin.Algebra.CharP.Subring
@@ -66,10 +71,10 @@ instance : CommSemiringₓ (Ringₓ.Perfection R p) :=
 instance : CharP (Ringₓ.Perfection R p) p :=
   CharP.subsemiring (ℕ → R) p (Ringₓ.perfectionSubsemiring R p)
 
-instance Ringₓ (R : Type u₁) [CommRingₓ R] [CharP R p] : Ringₓ (Ringₓ.Perfection R p) :=
+instance ring (R : Type u₁) [CommRingₓ R] [CharP R p] : Ringₓ (Ringₓ.Perfection R p) :=
   (Ringₓ.perfectionSubring R p).toRing
 
-instance CommRingₓ (R : Type u₁) [CommRingₓ R] [CharP R p] : CommRingₓ (Ringₓ.Perfection R p) :=
+instance commRing (R : Type u₁) [CommRingₓ R] [CharP R p] : CommRingₓ (Ringₓ.Perfection R p) :=
   (Ringₓ.perfectionSubring R p).toCommRing
 
 instance : Inhabited (Ringₓ.Perfection R p) :=
@@ -118,6 +123,7 @@ theorem coeff_pow_p' (f : Ringₓ.Perfection R p) (n : ℕ) : coeff R p (n + 1) 
 theorem coeff_frobenius (f : Ringₓ.Perfection R p) (n : ℕ) : coeff R p (n + 1) (frobenius _ p f) = coeff R p n f := by
   apply coeff_pow_p f n
 
+-- `coeff_pow_p f n` also works but is slow!
 theorem coeff_iterate_frobenius (f : Ringₓ.Perfection R p) (n m : ℕ) :
     coeff R p (n + m) ((frobenius _ p^[m]) f) = coeff R p n f :=
   (Nat.recOn m rfl) fun m ih => by
@@ -151,7 +157,7 @@ theorem coeff_ne_zero_of_le {f : Ringₓ.Perfection R p} {m n : ℕ} (hfm : coef
 
 variable (R p)
 
-instance PerfectRing : PerfectRing (Ringₓ.Perfection R p) p where
+instance perfectRing : PerfectRing (Ringₓ.Perfection R p) p where
   pthRoot' := pthRoot R p
   frobenius_pth_root' := congr_funₓ <| congr_argₓ RingHom.toFun <| @frobenius_pth_root R _ p _ _
   pth_root_frobenius' := congr_funₓ <| congr_argₓ RingHom.toFun <| @pth_root_frobenius R _ p _ _
@@ -248,7 +254,7 @@ theorem id [PerfectRing R p] : PerfectionMap p (RingHom.id R) :=
 variable {p R P}
 
 /-- A perfection map induces an isomorphism to the prefection. -/
-noncomputable def Equivₓ {π : P →+* R} (m : PerfectionMap p π) : P ≃+* Ringₓ.Perfection R p :=
+noncomputable def equiv {π : P →+* R} (m : PerfectionMap p π) : P ≃+* Ringₓ.Perfection R p :=
   RingEquiv.ofBijective (Perfection.lift p P R π)
     ⟨fun x y hxy => m.Injective fun n => (congr_argₓ (Perfection.coeff R p n) hxy : _), fun f =>
       let ⟨x, hx⟩ := m.Surjective f.1 f.2
@@ -315,6 +321,7 @@ theorem map_map {π : P →+* R} (m : PerfectionMap p π) {σ : Q →+* S} (n : 
     σ (map p m n φ x) = φ (π x) :=
   RingHom.ext_iff.1 (comp_map p m n φ) x
 
+-- Why is this slow?
 theorem map_eq_map (φ : R →+* S) : @map p _ R _ _ _ _ _ _ S _ _ _ _ _ _ _ (of p R) _ (of p S) φ = Perfection.map p φ :=
   (hom_ext _ (of p S)) fun f => by
     rw [map_map, Perfection.coeff_map]
@@ -359,7 +366,7 @@ omit hp hvp
 
 /-- For a field `K` with valuation `v : K → ℝ≥0` and ring of integers `O`,
 a function `O/(p) → ℝ≥0` that sends `0` to `0` and `x + (p)` to `v(x)` as long as `x ∉ (p)`. -/
-noncomputable def pre_val (x : ModP K v O hv p) : ℝ≥0 :=
+noncomputable def preVal (x : ModP K v O hv p) : ℝ≥0 :=
   if x = 0 then 0 else v (algebraMap O K x.out')
 
 variable {K v O hv p}
@@ -494,7 +501,7 @@ open Perfection
 /-- The valuation `Perfection(O/(p)) → ℝ≥0` as a function.
 Given `f ∈ Perfection(O/(p))`, if `f = 0` then output `0`;
 otherwise output `pre_val(f(n))^(p^n)` for any `n` such that `f(n) ≠ 0`. -/
-noncomputable def val_aux (f : PreTilt K v O hv p) : ℝ≥0 :=
+noncomputable def valAux (f : PreTilt K v O hv p) : ℝ≥0 :=
   if h : ∃ n, coeff _ _ n f ≠ 0 then ModP.preVal K v O hv p (coeff _ _ (Nat.findₓ h) f) ^ p ^ Nat.findₓ h else 0
 
 variable {K v O hv p}

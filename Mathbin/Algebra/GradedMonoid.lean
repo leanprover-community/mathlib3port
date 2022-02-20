@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Eric Wieser. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Eric Wieser
+-/
 import Mathbin.Algebra.Group.InjSurj
 import Mathbin.Data.List.BigOperators
 import Mathbin.Data.List.ProdMonoid
@@ -100,20 +105,20 @@ section Defs
 variable (A : ι → Type _)
 
 /-- A graded version of `has_one`, which must be of grade 0. -/
-class ghas_one [Zero ι] where
+class GhasOne [Zero ι] where
   one : A 0
 
 /-- `ghas_one` implies `has_one (graded_monoid A)` -/
-instance ghas_one.to_has_one [Zero ι] [GhasOne A] : One (GradedMonoid A) :=
+instance GhasOne.toHasOne [Zero ι] [GhasOne A] : One (GradedMonoid A) :=
   ⟨⟨_, GhasOne.one⟩⟩
 
 /-- A graded version of `has_mul`. Multiplication combines grades additively, like
 `add_monoid_algebra`. -/
-class ghas_mul [Add ι] where
+class GhasMul [Add ι] where
   mul {i j} : A i → A j → A (i + j)
 
 /-- `ghas_mul` implies `has_mul (graded_monoid A)`. -/
-instance ghas_mul.to_has_mul [Add ι] [GhasMul A] : Mul (GradedMonoid A) :=
+instance GhasMul.toHasMul [Add ι] [GhasMul A] : Mul (GradedMonoid A) :=
   ⟨fun x y : GradedMonoid A => ⟨_, GhasMul.mul x.snd y.snd⟩⟩
 
 theorem mk_mul_mk [Add ι] [GhasMul A] {i j} (a : A i) (b : A j) : mk i a * mk j b = mk (i + j) (GhasMul.mul a b) :=
@@ -125,7 +130,7 @@ variable {A} [AddMonoidₓ ι] [GhasMul A] [GhasOne A]
 
 /-- A default implementation of power on a graded monoid, like `npow_rec`.
 `gmonoid.gnpow` should be used instead. -/
-def gnpow_rec : ∀ n : ℕ {i}, A i → A (n • i)
+def gnpowRec : ∀ n : ℕ {i}, A i → A (n • i)
   | 0, i, a => cast (congr_argₓ A (zero_nsmul i).symm) GhasOne.one
   | n + 1, i, a => cast (congr_argₓ A (succ_nsmul i n).symm) (GhasMul.mul a <| gnpow_rec _ a)
 
@@ -133,7 +138,7 @@ def gnpow_rec : ∀ n : ℕ {i}, A i → A (n • i)
 theorem gnpow_rec_zero (a : GradedMonoid A) : GradedMonoid.mk _ (gnpowRec 0 a.snd) = 1 :=
   Sigma.ext (zero_nsmul _) (heq_of_cast_eq _ rfl).symm
 
--- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:916:4: warning: unsupported (TODO): `[tacs]
 /-- Tactic used to autofill `graded_monoid.gmonoid.gnpow_zero'` when the default
 `graded_monoid.gmonoid.gnpow_rec` is used. -/
 unsafe def apply_gnpow_rec_zero_tac : tactic Unit :=
@@ -144,7 +149,7 @@ theorem gnpow_rec_succ (n : ℕ) (a : GradedMonoid A) :
     (GradedMonoid.mk _ <| gnpowRec n.succ a.snd) = a * ⟨_, gnpowRec n a.snd⟩ :=
   Sigma.ext (succ_nsmul _ _) (heq_of_cast_eq _ rfl).symm
 
--- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:916:4: warning: unsupported (TODO): `[tacs]
 /-- Tactic used to autofill `graded_monoid.gmonoid.gnpow_succ'` when the default
 `graded_monoid.gmonoid.gnpow_rec` is used. -/
 unsafe def apply_gnpow_rec_succ_tac : tactic Unit :=
@@ -156,7 +161,7 @@ end Gmonoid
 
 Like `monoid.npow`, this has an optional `gmonoid.gnpow` field to allow definitional control of
 natural powers of a graded monoid. -/
-class gmonoid [AddMonoidₓ ι] extends GhasMul A, GhasOne A where
+class Gmonoid [AddMonoidₓ ι] extends GhasMul A, GhasOne A where
   one_mul (a : GradedMonoid A) : 1 * a = a
   mul_one (a : GradedMonoid A) : a * 1 = a
   mul_assoc (a b c : GradedMonoid A) : a * b * c = a * (b * c)
@@ -169,9 +174,9 @@ class gmonoid [AddMonoidₓ ι] extends GhasMul A, GhasOne A where
       gmonoid.apply_gnpow_rec_succ_tac
 
 /-- `gmonoid` implies a `monoid (graded_monoid A)`. -/
-instance gmonoid.to_monoid [AddMonoidₓ ι] [Gmonoid A] : Monoidₓ (GradedMonoid A) where
+instance Gmonoid.toMonoid [AddMonoidₓ ι] [Gmonoid A] : Monoidₓ (GradedMonoid A) where
   one := 1
-  mul := · * ·
+  mul := (· * ·)
   npow := fun n a => GradedMonoid.mk _ (Gmonoid.gnpow n a.snd)
   npow_zero' := fun a => Gmonoid.gnpow_zero' a
   npow_succ' := fun n a => Gmonoid.gnpow_succ' n a
@@ -189,12 +194,12 @@ theorem mk_pow [AddMonoidₓ ι] [Gmonoid A] {i} (a : A i) (n : ℕ) : mk i a ^ 
     
 
 /-- A graded version of `comm_monoid`. -/
-class gcomm_monoid [AddCommMonoidₓ ι] extends Gmonoid A where
+class GcommMonoid [AddCommMonoidₓ ι] extends Gmonoid A where
   mul_comm (a : GradedMonoid A) (b : GradedMonoid A) : a * b = b * a
 
 /-- `gcomm_monoid` implies a `comm_monoid (graded_monoid A)`, although this is only used as an
 instance locally to define notation in `gmonoid` and similar typeclasses. -/
-instance gcomm_monoid.to_comm_monoid [AddCommMonoidₓ ι] [GcommMonoid A] : CommMonoidₓ (GradedMonoid A) :=
+instance GcommMonoid.toCommMonoid [AddCommMonoidₓ ι] [GcommMonoid A] : CommMonoidₓ (GradedMonoid A) :=
   { Gmonoid.toMonoid A with mul_comm := GcommMonoid.mul_comm }
 
 end Defs
@@ -216,7 +221,7 @@ variable [Zero ι] [GhasOne A]
 
 /-- `1 : A 0` is the value provided in `ghas_one.one`. -/
 @[nolint unused_arguments]
-instance grade_zero.has_one : One (A 0) :=
+instance GradeZero.hasOne : One (A 0) :=
   ⟨GhasOne.one⟩
 
 end One
@@ -228,14 +233,14 @@ variable [AddMonoidₓ ι] [GhasMul A]
 /-- `(•) : A 0 → A i → A i` is the value provided in `graded_monoid.ghas_mul.mul`, composed with
 an `eq.rec` to turn `A (0 + i)` into `A i`.
 -/
-instance grade_zero.has_scalar (i : ι) : HasScalar (A 0) (A i) where
+instance GradeZero.hasScalar (i : ι) : HasScalar (A 0) (A i) where
   smul := fun x y => (zero_addₓ i).rec (GhasMul.mul x y)
 
 /-- `(*) : A 0 → A 0 → A 0` is the value provided in `graded_monoid.ghas_mul.mul`, composed with
 an `eq.rec` to turn `A (0 + 0)` into `A 0`.
 -/
-instance grade_zero.has_mul : Mul (A 0) where
-  mul := · • ·
+instance GradeZero.hasMul : Mul (A 0) where
+  mul := (· • ·)
 
 variable {A}
 
@@ -244,7 +249,7 @@ theorem mk_zero_smul {i} (a : A 0) (b : A i) : mk _ (a • b) = mk _ a * mk _ b 
   Sigma.ext (zero_addₓ _).symm <| eq_rec_heqₓ _ _
 
 @[simp]
-theorem grade_zero.smul_eq_mul (a b : A 0) : a • b = a * b :=
+theorem GradeZero.smul_eq_mul (a b : A 0) : a • b = a * b :=
   rfl
 
 end Mul
@@ -254,7 +259,7 @@ section Monoidₓ
 variable [AddMonoidₓ ι] [Gmonoid A]
 
 /-- The `monoid` structure derived from `gmonoid A`. -/
-instance grade_zero.monoid : Monoidₓ (A 0) :=
+instance GradeZero.monoid : Monoidₓ (A 0) :=
   Function.Injective.monoid (mk 0) sigma_mk_injective rfl mk_zero_smul
 
 end Monoidₓ
@@ -264,7 +269,7 @@ section Monoidₓ
 variable [AddCommMonoidₓ ι] [GcommMonoid A]
 
 /-- The `comm_monoid` structure derived from `gcomm_monoid A`. -/
-instance grade_zero.comm_monoid : CommMonoidₓ (A 0) :=
+instance GradeZero.commMonoid : CommMonoidₓ (A 0) :=
   Function.Injective.commMonoid (mk 0) sigma_mk_injective rfl mk_zero_smul
 
 end Monoidₓ
@@ -275,13 +280,13 @@ variable [AddMonoidₓ ι] [Gmonoid A]
 
 /-- `graded_monoid.mk 0` is a `monoid_hom`, using the `graded_monoid.grade_zero.monoid` structure.
 -/
-def mk_zero_monoid_hom : A 0 →* GradedMonoid A where
+def mkZeroMonoidHom : A 0 →* GradedMonoid A where
   toFun := mk 0
   map_one' := rfl
   map_mul' := mk_zero_smul
 
 /-- Each grade `A i` derives a `A 0`-action structure from `gmonoid A`. -/
-instance grade_zero.mul_action {i} : MulAction (A 0) (A i) := by
+instance GradeZero.mulAction {i} : MulAction (A 0) (A i) := by
   let this' := MulAction.compHom (GradedMonoid A) (mk_zero_monoid_hom A)
   exact Function.Injective.mulAction (mk i) sigma_mk_injective mk_zero_smul
 
@@ -331,6 +336,8 @@ def List.dprod (l : List α) (fι : α → ι) (fA : ∀ a, A (fι a)) : A (l.dp
 theorem List.dprod_nil (fι : α → ι) (fA : ∀ a, A (fι a)) : (List.nil : List α).dprod fι fA = GradedMonoid.GhasOne.one :=
   rfl
 
+-- the `( : _)` in this lemma statement results in the type on the RHS not being unfolded, which
+-- is nicer in the goal view.
 @[simp]
 theorem List.dprod_cons (fι : α → ι) (fA : ∀ a, A (fι a)) (a : α) (l : List α) :
     (a :: l).dprod fι fA = (GradedMonoid.GhasMul.mul (fA a) (l.dprod fι fA) : _) :=
@@ -371,7 +378,7 @@ instance One.ghasOne [Zero ι] [One R] : GradedMonoid.GhasOne fun i : ι => R wh
 
 @[simps mul]
 instance Mul.ghasMul [Add ι] [Mul R] : GradedMonoid.GhasMul fun i : ι => R where
-  mul := fun i j => · * ·
+  mul := fun i j => (· * ·)
 
 /-- If all grades are the same type and themselves form a monoid, then there is a trivial grading
 structure. -/

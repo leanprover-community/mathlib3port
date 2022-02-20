@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Christopher Hoskin. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Christopher Hoskin
+-/
 import Mathbin.Topology.Algebra.Order.Basic
 import Mathbin.Topology.Constructions
 
@@ -36,10 +41,12 @@ class HasContinuousInf (L : Type _) [TopologicalSpace L] [HasInf L] : Prop where
 class HasContinuousSup (L : Type _) [TopologicalSpace L] [HasSup L] : Prop where
   continuous_sup : Continuous fun p : L × L => p.1⊔p.2
 
+-- see Note [lower instance priority]
 instance (priority := 100) OrderDual.has_continuous_sup (L : Type _) [TopologicalSpace L] [HasInf L]
     [HasContinuousInf L] : HasContinuousSup (OrderDual L) where
   continuous_sup := @HasContinuousInf.continuous_inf L _ _ _
 
+-- see Note [lower instance priority]
 instance (priority := 100) OrderDual.has_continuous_inf (L : Type _) [TopologicalSpace L] [HasSup L]
     [HasContinuousSup L] : HasContinuousInf (OrderDual L) where
   continuous_inf := @HasContinuousSup.continuous_sup L _ _ _
@@ -49,6 +56,7 @@ Then `L` is said to be a *topological lattice*.
 -/
 class TopologicalLattice (L : Type _) [TopologicalSpace L] [Lattice L] extends HasContinuousInf L, HasContinuousSup L
 
+-- see Note [lower instance priority]
 instance (priority := 100) OrderDual.topologicalLattice (L : Type _) [TopologicalSpace L] [Lattice L]
     [TopologicalLattice L] : TopologicalLattice (OrderDual L) :=
   {  }

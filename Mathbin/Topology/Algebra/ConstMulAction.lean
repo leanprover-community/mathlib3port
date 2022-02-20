@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Alex Kontorovich, Heather Macbeth. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Alex Kontorovich, Heather Macbeth
+-/
 import Mathbin.Topology.Homeomorph
 import Mathbin.GroupTheory.GroupAction.Basic
 
@@ -82,7 +87,7 @@ theorem ContinuousAt.const_smul (hg : ContinuousAt g b) (c : M) : ContinuousAt (
 theorem ContinuousOn.const_smul (hg : ContinuousOn g s) (c : M) : ContinuousOn (fun x => c • g x) s := fun x hx =>
   (hg x hx).const_smul c
 
-@[to_additive]
+@[continuity, to_additive]
 theorem Continuous.const_smul (hg : Continuous g) (c : M) : Continuous fun x => c • g x :=
   (continuous_const_smul _).comp hg
 

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Eric Wieser. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Eric Wieser, Utensil Song
+-/
 import Mathbin.Algebra.RingQuot
 import Mathbin.LinearAlgebra.TensorAlgebra.Basic
 import Mathbin.LinearAlgebra.ExteriorAlgebra.Basic
@@ -56,12 +61,12 @@ open TensorAlgebra
 
 The Clifford algebra of `M` is defined as the quotient modulo this relation.
 -/
-inductive rel : TensorAlgebra R M → TensorAlgebra R M → Prop
+inductive Rel : TensorAlgebra R M → TensorAlgebra R M → Prop
   | of (m : M) : rel (ι R m * ι R m) (algebraMap R _ (Q m))
 
 end CliffordAlgebra
 
--- ././Mathport/Syntax/Translate/Basic.lean:859:9: unsupported derive handler algebra R
+-- ././Mathport/Syntax/Translate/Basic.lean:981:9: unsupported derive handler algebra R
 /-- The Clifford algebra of an `R`-module `M` equipped with a quadratic_form `Q`.
 -/
 def CliffordAlgebra :=
@@ -96,7 +101,7 @@ from `clifford_algebra Q` to `A`.
 def lift : { f : M →ₗ[R] A // ∀ m, f m * f m = algebraMap _ _ (Q m) } ≃ (CliffordAlgebra Q →ₐ[R] A) where
   toFun := fun f =>
     RingQuot.liftAlgHom R
-      ⟨TensorAlgebra.lift R (f : M →ₗ[R] A), fun x y h : Rel Q x y => by
+      ⟨TensorAlgebra.lift R (f : M →ₗ[R] A), fun h : Rel Q x y => by
         induction h
         rw [AlgHom.commutes, AlgHom.map_mul, TensorAlgebra.lift_ι_apply, f.prop]⟩
   invFun := fun F =>
@@ -148,22 +153,26 @@ theorem hom_ext {A : Type _} [Semiringₓ A] [Algebra R A] {f g : CliffordAlgebr
 /-- If `C` holds for the `algebra_map` of `r : R` into `clifford_algebra Q`, the `ι` of `x : M`,
 and is preserved under addition and muliplication, then it holds for all of `clifford_algebra Q`.
 -/
+-- This proof closely follows `tensor_algebra.induction`
 @[elab_as_eliminator]
 theorem induction {C : CliffordAlgebra Q → Prop} (h_grade0 : ∀ r, C (algebraMap R (CliffordAlgebra Q) r))
     (h_grade1 : ∀ x, C (ι Q x)) (h_mul : ∀ a b, C a → C b → C (a * b)) (h_add : ∀ a b, C a → C b → C (a + b))
     (a : CliffordAlgebra Q) : C a := by
+  -- the arguments are enough to construct a subalgebra, and a mapping into it from M
   let s : Subalgebra R (CliffordAlgebra Q) :=
     { Carrier := C, mul_mem' := h_mul, add_mem' := h_add, algebra_map_mem' := h_grade0 }
   let of : { f : M →ₗ[R] s // ∀ m, f m * f m = algebraMap _ _ (Q m) } :=
     ⟨(ι Q).codRestrict s.to_submodule h_grade1, fun m => Subtype.eq <| ι_sq_scalar Q m⟩
+  -- the mapping through the subalgebra is the identity
   have of_id : AlgHom.id R (CliffordAlgebra Q) = s.val.comp (lift Q of) := by
     ext
     simp [of]
+  -- finding a proof is finding an element of the subalgebra
   convert Subtype.prop (lift Q of a)
   exact AlgHom.congr_fun of_id a
 
 /-- A Clifford algebra with a zero quadratic form is isomorphic to an `exterior_algebra` -/
-def as_exterior : CliffordAlgebra (0 : QuadraticForm R M) ≃ₐ[R] ExteriorAlgebra R M :=
+def asExterior : CliffordAlgebra (0 : QuadraticForm R M) ≃ₐ[R] ExteriorAlgebra R M :=
   AlgEquiv.ofAlgHom
     (CliffordAlgebra.lift 0
       ⟨ExteriorAlgebra.ι R, by
@@ -237,7 +246,7 @@ variable {Q₁ Q₂ Q₃}
 /-- Two `clifford_algebra`s are equivalent as algebras if their quadratic forms are
 equivalent. -/
 @[simps apply]
-def equiv_of_isometry (e : Q₁.Isometry Q₂) : CliffordAlgebra Q₁ ≃ₐ[R] CliffordAlgebra Q₂ :=
+def equivOfIsometry (e : Q₁.Isometry Q₂) : CliffordAlgebra Q₁ ≃ₐ[R] CliffordAlgebra Q₂ :=
   AlgEquiv.ofAlgHom (map Q₁ Q₂ e e.map_app) (map Q₂ Q₁ e.symm e.symm.map_app)
     ((map_comp_map _ _ _ _ _ _ _).trans <| by
       convert map_id _ using 2
@@ -273,7 +282,7 @@ variable {Q}
 
 /-- The canonical image of the `tensor_algebra` in the `clifford_algebra`, which maps
 `tensor_algebra.ι R x` to `clifford_algebra.ι Q x`. -/
-def to_clifford : TensorAlgebra R M →ₐ[R] CliffordAlgebra Q :=
+def toClifford : TensorAlgebra R M →ₐ[R] CliffordAlgebra Q :=
   TensorAlgebra.lift R (CliffordAlgebra.ι Q)
 
 @[simp]

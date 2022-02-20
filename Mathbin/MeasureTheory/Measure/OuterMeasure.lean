@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2017 Johannes Hölzl. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johannes Hölzl, Mario Carneiro
+-/
 import Mathbin.Analysis.SpecificLimits
 import Mathbin.MeasureTheory.PiSystem
 import Mathbin.Data.Fin.VecNotation
@@ -57,7 +62,7 @@ open_locale Classical BigOperators Nnreal TopologicalSpace Ennreal
 namespace MeasureTheory
 
 /-- An outer measure is a countably subadditive monotone function that sends `∅` to `0`. -/
-structure outer_measure (α : Type _) where
+structure OuterMeasure (α : Type _) where
   measureOf : Set α → ℝ≥0∞
   Empty : measure_of ∅ = 0
   mono : ∀ {s₁ s₂}, s₁ ⊆ s₂ → measure_of s₁ ≤ measure_of s₂
@@ -112,7 +117,7 @@ protected theorem Union_finset (m : OuterMeasure α) (s : β → Set α) (t : Fi
 protected theorem union (m : OuterMeasure α) (s₁ s₂ : Set α) : m (s₁ ∪ s₂) ≤ m s₁ + m s₂ :=
   rel_sup_add m m.Empty (· ≤ ·) m.Union_nat s₁ s₂
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (t «expr ⊆ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (t «expr ⊆ » s)
 /-- If a set has zero measure in a neighborhood of each of its points, then it has zero measure
 in a second-countable space. -/
 theorem null_of_locally_null [TopologicalSpace α] [SecondCountableTopology α] (m : OuterMeasure α) (s : Set α)
@@ -156,6 +161,7 @@ theorem Union_nat_of_monotone_of_tsum_ne_top (m : OuterMeasure α) {s : ℕ → 
   refine' m.Union_of_tendsto_zero at_top _
   refine' tendsto_nhds_bot_mono' (Ennreal.tendsto_sum_nat_add _ h0) fun n => _
   refine' (m.mono _).trans (m.Union _)
+  -- Current goal: `(⋃ k, s k) \ s n ⊆ ⋃ k, s (k + n + 1) \ s (k + n)`
   have h' : Monotone s := @monotone_nat_of_le_succ (Set α) _ _ h_mono
   simp only [diff_subset_iff, Union_subset_iff]
   intro i x hx
@@ -185,7 +191,7 @@ theorem diff_null (m : OuterMeasure α) (s : Set α) {t : Set α} (ht : m t = 0)
 theorem union_null (m : OuterMeasure α) {s₁ s₂ : Set α} (h₁ : m s₁ = 0) (h₂ : m s₂ = 0) : m (s₁ ∪ s₂) = 0 := by
   simpa [h₁, h₂] using m.union s₁ s₂
 
-theorem coe_fn_injective : Injective fun μ : OuterMeasure α s : Set α => μ s := fun μ₁ μ₂ h => by
+theorem coe_fn_injective : Injective fun s : Set α => μ s := fun μ₁ μ₂ h => by
   cases μ₁
   cases μ₂
   congr
@@ -235,9 +241,9 @@ theorem coe_add (m₁ m₂ : OuterMeasure α) : ⇑(m₁ + m₂) = m₁ + m₂ :
 theorem add_apply (m₁ m₂ : OuterMeasure α) (s : Set α) : (m₁ + m₂) s = m₁ s + m₂ s :=
   rfl
 
-instance AddCommMonoidₓ : AddCommMonoidₓ (OuterMeasure α) :=
+instance addCommMonoid : AddCommMonoidₓ (OuterMeasure α) :=
   { Injective.addCommMonoid (show OuterMeasure α → Set α → ℝ≥0∞ from coeFn) coe_fn_injective rfl fun _ _ => rfl with
-    zero := 0, add := · + · }
+    zero := 0, add := (· + ·) }
 
 instance : HasScalar ℝ≥0∞ (OuterMeasure α) :=
   ⟨fun c m =>
@@ -259,7 +265,7 @@ theorem smul_apply (c : ℝ≥0∞) (m : OuterMeasure α) (s : Set α) : (c • 
 instance : Module ℝ≥0∞ (OuterMeasure α) :=
   { Injective.module ℝ≥0∞ ⟨show OuterMeasure α → Set α → ℝ≥0∞ from coeFn, coe_zero, coe_add⟩ coe_fn_injective
       coe_smul with
-    smul := · • · }
+    smul := (· • ·) }
 
 instance : HasBot (OuterMeasure α) :=
   ⟨0⟩
@@ -268,13 +274,13 @@ instance : HasBot (OuterMeasure α) :=
 theorem coe_bot : (⊥ : OuterMeasure α) = 0 :=
   rfl
 
-instance outer_measure.partial_order : PartialOrderₓ (OuterMeasure α) where
+instance OuterMeasure.partialOrder : PartialOrderₓ (OuterMeasure α) where
   le := fun m₁ m₂ => ∀ s, m₁ s ≤ m₂ s
   le_refl := fun a s => le_rfl
   le_trans := fun a b c hab hbc s => le_transₓ (hab s) (hbc s)
   le_antisymm := fun a b hab hba => ext fun s => le_antisymmₓ (hab s) (hba s)
 
-instance outer_measure.order_bot : OrderBot (OuterMeasure α) :=
+instance OuterMeasure.orderBot : OrderBot (OuterMeasure α) :=
   { OuterMeasure.hasBot with
     bot_le := fun a s => by
       simp only [coe_zero, Pi.zero_apply, coe_bot, zero_le] }
@@ -391,7 +397,7 @@ theorem dirac_apply (a : α) (s : Set α) : dirac a s = indicator s (fun _ => 1)
   rfl
 
 /-- The sum of an (arbitrary) collection of outer measures. -/
-def Sum {ι} (f : ι → OuterMeasure α) : OuterMeasure α where
+def sum {ι} (f : ι → OuterMeasure α) : OuterMeasure α where
   measureOf := fun s => ∑' i, f i s
   Empty := by
     simp
@@ -519,7 +525,7 @@ end Basic
 
 section OfFunction
 
--- ././Mathport/Syntax/Translate/Basic.lean:169:40: warning: unsupported option eqn_compiler.zeta
+-- ././Mathport/Syntax/Translate/Basic.lean:211:40: warning: unsupported option eqn_compiler.zeta
 set_option eqn_compiler.zeta true
 
 variable {α : Type _} (m : Set α → ℝ≥0∞) (m_empty : m ∅ = 0)
@@ -528,7 +534,7 @@ include m_empty
 
 /-- Given any function `m` assigning measures to sets satisying `m ∅ = 0`, there is
   a unique maximal outer measure `μ` satisfying `μ s ≤ m s` for all `s : set α`. -/
-protected def of_function : OuterMeasure α :=
+protected def ofFunction : OuterMeasure α :=
   let μ := fun s => ⨅ (f : ℕ → Set α) (h : s ⊆ ⋃ i, f i), ∑' i, m (f i)
   { measureOf := μ,
     Empty :=
@@ -597,7 +603,7 @@ theorem is_greatest_of_function :
 theorem of_function_eq_Sup : OuterMeasure.ofFunction m m_empty = sup { μ | ∀ s, μ s ≤ m s } :=
   (@is_greatest_of_function α m m_empty).IsLub.Sup_eq.symm
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (u «expr ⊆ » «expr ∪ »(s, t))
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (u «expr ⊆ » «expr ∪ »(s, t))
 /-- If `m u = ∞` for any set `u` that has nonempty intersection both with `s` and `t`, then
 `μ (s ∪ t) = μ s + μ t`, where `μ = measure_theory.outer_measure.of_function m m_empty`.
 
@@ -699,7 +705,7 @@ variable {α : Type _} (m : Set α → ℝ≥0∞)
 /-- Given any function `m` assigning measures to sets, there is a unique maximal outer measure `μ`
   satisfying `μ s ≤ m s` for all `s : set α`. This is the same as `outer_measure.of_function`,
   except that it doesn't require `m ∅ = 0`. -/
-def bounded_by : OuterMeasure α :=
+def boundedBy : OuterMeasure α :=
   OuterMeasure.ofFunction (fun s => ⨆ h : s.Nonempty, m s)
     (by
       simp [empty_not_nonempty])
@@ -782,7 +788,7 @@ variable {s s₁ s₂ : Set α}
 
 /-- A set `s` is Carathéodory-measurable for an outer measure `m` if for all sets `t` we have
   `m t = m (t ∩ s) + m (t \ s)`. -/
-def is_caratheodory (s : Set α) : Prop :=
+def IsCaratheodory (s : Set α) : Prop :=
   ∀ t, m t = m (t ∩ s) + m (t \ s)
 
 theorem is_caratheodory_iff_le' {s : Set α} : is_caratheodory s ↔ ∀ t, m (t ∩ s) + m (t \ s) ≤ m t :=
@@ -832,7 +838,7 @@ theorem is_caratheodory_sum {s : ℕ → Set α} (h : ∀ i, is_caratheodory (s 
     rw [bUnion_lt_succ, Finset.sum_range_succ, Set.union_comm, is_caratheodory_sum, m.measure_inter_union _ (h n),
       add_commₓ]
     intro a
-    simpa using fun h₁ : a ∈ s n i hi : i < n h₂ => hd _ _ (ne_of_gtₓ hi) ⟨h₁, h₂⟩
+    simpa using fun h₂ => hd _ _ (ne_of_gtₓ hi) ⟨h₁, h₂⟩
 
 theorem is_caratheodory_Union_nat {s : ℕ → Set α} (h : ∀ i, is_caratheodory (s i)) (hd : Pairwise (Disjoint on s)) :
     is_caratheodory (⋃ i, s i) :=
@@ -860,7 +866,7 @@ theorem f_Union {s : ℕ → Set α} (h : ∀ i, is_caratheodory (s i)) (hd : Pa
   exact m.mono (Union₂_subset fun i _ => subset_Union _ i)
 
 /-- The Carathéodory-measurable sets for an outer measure `m` form a Dynkin system.  -/
-def caratheodory_dynkin : MeasurableSpace.DynkinSystem α where
+def caratheodoryDynkin : MeasurableSpace.DynkinSystem α where
   Has := is_caratheodory
   has_empty := is_caratheodory_empty
   HasCompl := fun s => is_caratheodory_compl
@@ -929,7 +935,7 @@ theorem top_caratheodory : (⊤ : OuterMeasure α).caratheodory = ⊤ :=
         simp only [ht, top_apply, le_top]
 
 theorem le_add_caratheodory (m₁ m₂ : OuterMeasure α) :
-    m₁.caratheodory⊓m₂.caratheodory ≤ (m₁ + m₂ : OuterMeasure α).caratheodory := fun s ⟨hs₁, hs₂⟩ t => by
+    m₁.caratheodory⊓m₂.caratheodory ≤ (m₁ + m₂ : OuterMeasure α).caratheodory := fun t => by
   simp [hs₁ t, hs₂ t, add_left_commₓ, add_assocₓ]
 
 theorem le_sum_caratheodory {ι} (m : ι → OuterMeasure α) : (⨅ i, (m i).caratheodory) ≤ (sum m).caratheodory :=
@@ -954,7 +960,7 @@ section InfGen
   infimum of `μ(s)` for the outer measures `μ` in the collection. We ensure that this
   function is defined to be `0` on `∅`, even if the collection of outer measures is empty.
   The outer measure generated by this function is the infimum of the given outer measures. -/
-def Inf_gen (m : Set (OuterMeasure α)) (s : Set α) : ℝ≥0∞ :=
+def infGen (m : Set (OuterMeasure α)) (s : Set α) : ℝ≥0∞ :=
   ⨅ (μ : OuterMeasure α) (h : μ ∈ m), μ s
 
 theorem Inf_gen_def (m : Set (OuterMeasure α)) (t : Set α) : infGen m t = ⨅ (μ : OuterMeasure α) (h : μ ∈ m), μ t :=
@@ -1131,6 +1137,7 @@ theorem le_extend {s : α} (h : P s) : m s h ≤ extend m s := by
   intro
   rfl'
 
+-- TODO: why this is a bad `congr` lemma?
 theorem extend_congr {β : Type _} {Pb : β → Prop} {mb : ∀ s : β, Pb s → ℝ≥0∞} {sa : α} {sb : β} (hP : P sa ↔ Pb sb)
     (hm : ∀ ha : P sa hb : Pb sb, m sa ha = mb sb hb) : extend m sa = extend mb sb :=
   infi_congr_Prop hP fun h => hm _ _
@@ -1219,7 +1226,7 @@ variable (m)
 
 /-- Given an arbitrary function on a subset of sets, we can define the outer measure corresponding
   to it (this is the unique maximal outer measure that is at most `m` on the domain of `m`). -/
-def induced_outer_measure : OuterMeasure α :=
+def inducedOuterMeasure : OuterMeasure α :=
   OuterMeasure.ofFunction (extend m) (extend_empty P0 m0)
 
 variable {m P0 m0}
@@ -1459,14 +1466,14 @@ theorem exists_measurable_superset_forall_eq_trim {ι} [Encodable ι] (μ : ι �
   refine' ⟨⋂ i, t i, hst, ht, fun i => le_antisymmₓ _ _⟩
   exacts[hμt i ▸ (μ i).mono (Inter_subset _ _), (mono' _ hst).trans_eq ((μ i).trim_eq ht)]
 
--- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»
 /-- If `m₁ s = op (m₂ s) (m₃ s)` for all `s`, then the same is true for `m₁.trim`, `m₂.trim`,
 and `m₃ s`. -/
 theorem trim_binop {m₁ m₂ m₃ : OuterMeasure α} {op : ℝ≥0∞ → ℝ≥0∞ → ℝ≥0∞} (h : ∀ s, m₁ s = op (m₂ s) (m₃ s))
     (s : Set α) : m₁.trim s = op (m₂.trim s) (m₃.trim s) := by
   rcases exists_measurable_superset_forall_eq_trim
-      («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»") s with
+      («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»") s with
     ⟨t, hst, ht, htm⟩
   simp only [Finₓ.forall_fin_succ, Matrix.cons_val_zero, Matrix.cons_val_succ] at htm
   rw [← htm.1, ← htm.2.1, ← htm.2.2.1, h]

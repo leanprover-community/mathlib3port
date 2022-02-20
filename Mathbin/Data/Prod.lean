@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2017 Johannes Hölzl. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johannes Hölzl
+-/
 import Mathbin.Tactic.Basic
 
 /-!
@@ -26,7 +31,7 @@ theorem exists {p : α × β → Prop} : (∃ x, p x) ↔ ∃ a b, p (a, b) :=
 theorem forall' {p : α → β → Prop} : (∀ x : α × β, p x.1 x.2) ↔ ∀ a b, p a b :=
   Prod.forall
 
-theorem exists' {p : α → β → Prop} : (∃ x : α × β, p x.1 x.2) ↔ ∃ a b, p a b :=
+theorem exists'ₓ {p : α → β → Prop} : (∃ x : α × β, p x.1 x.2) ↔ ∃ a b, p a b :=
   Prod.exists
 
 @[simp]
@@ -38,37 +43,37 @@ theorem fst_comp_mk (x : α) : Prod.fst ∘ (Prod.mk x : β → α × β) = Func
   rfl
 
 @[simp]
-theorem map_mk (f : α → γ) (g : β → δ) (a : α) (b : β) : map f g (a, b) = (f a, g b) :=
+theorem map_mkₓ (f : α → γ) (g : β → δ) (a : α) (b : β) : map f g (a, b) = (f a, g b) :=
   rfl
 
 theorem map_fst (f : α → γ) (g : β → δ) (p : α × β) : (map f g p).1 = f p.1 :=
   rfl
 
-theorem map_snd (f : α → γ) (g : β → δ) (p : α × β) : (map f g p).2 = g p.2 :=
+theorem map_sndₓ (f : α → γ) (g : β → δ) (p : α × β) : (map f g p).2 = g p.2 :=
   rfl
 
-theorem map_fst' (f : α → γ) (g : β → δ) : Prod.fst ∘ map f g = f ∘ Prod.fst :=
+theorem map_fst'ₓ (f : α → γ) (g : β → δ) : Prod.fst ∘ map f g = f ∘ Prod.fst :=
   funext <| map_fst f g
 
-theorem map_snd' (f : α → γ) (g : β → δ) : Prod.snd ∘ map f g = g ∘ Prod.snd :=
+theorem map_snd'ₓ (f : α → γ) (g : β → δ) : Prod.snd ∘ map f g = g ∘ Prod.snd :=
   funext <| map_sndₓ f g
 
 /-- Composing a `prod.map` with another `prod.map` is equal to
 a single `prod.map` of composed functions.
 -/
-theorem map_comp_map {ε ζ : Type _} (f : α → β) (f' : γ → δ) (g : β → ε) (g' : δ → ζ) :
+theorem map_comp_mapₓ {ε ζ : Type _} (f : α → β) (f' : γ → δ) (g : β → ε) (g' : δ → ζ) :
     Prod.map g g' ∘ Prod.map f f' = Prod.map (g ∘ f) (g' ∘ f') :=
   rfl
 
 /-- Composing a `prod.map` with another `prod.map` is equal to
 a single `prod.map` of composed functions, fully applied.
 -/
-theorem map_map {ε ζ : Type _} (f : α → β) (f' : γ → δ) (g : β → ε) (g' : δ → ζ) (x : α × γ) :
+theorem map_mapₓ {ε ζ : Type _} (f : α → β) (f' : γ → δ) (g : β → ε) (g' : δ → ζ) (x : α × γ) :
     Prod.map g g' (Prod.map f f' x) = Prod.map (g ∘ f) (g' ∘ f') x :=
   rfl
 
 @[simp]
-theorem mk.inj_iff {a₁ a₂ : α} {b₁ b₂ : β} : (a₁, b₁) = (a₂, b₂) ↔ a₁ = a₂ ∧ b₁ = b₂ :=
+theorem mk.inj_iffₓ {a₁ a₂ : α} {b₁ b₂ : β} : (a₁, b₁) = (a₂, b₂) ↔ a₁ = a₂ ∧ b₁ = b₂ :=
   ⟨Prod.mk.inj, by
     cc⟩
 
@@ -85,20 +90,20 @@ theorem ext_iff {p q : α × β} : p = q ↔ p.1 = q.1 ∧ p.2 = q.2 := by
   rw [← @mk.eta _ _ p, ← @mk.eta _ _ q, mk.inj_iff]
 
 @[ext]
-theorem ext {α β} {p q : α × β} (h₁ : p.1 = q.1) (h₂ : p.2 = q.2) : p = q :=
+theorem extₓ {α β} {p q : α × β} (h₁ : p.1 = q.1) (h₂ : p.2 = q.2) : p = q :=
   ext_iff.2 ⟨h₁, h₂⟩
 
-theorem map_def {f : α → γ} {g : β → δ} : Prod.map f g = fun p : α × β => (f p.1, g p.2) :=
+theorem map_defₓ {f : α → γ} {g : β → δ} : Prod.map f g = fun p : α × β => (f p.1, g p.2) :=
   funext fun p => extₓ (map_fst f g p) (map_sndₓ f g p)
 
 theorem id_prod : (fun p : α × α => (p.1, p.2)) = id :=
   funext fun ⟨a, b⟩ => rfl
 
-theorem fst_surjective [h : Nonempty β] : Function.Surjective (@fst α β) := fun x => h.elim fun y => ⟨⟨x, y⟩, rfl⟩
+theorem fst_surjectiveₓ [h : Nonempty β] : Function.Surjective (@fst α β) := fun x => h.elim fun y => ⟨⟨x, y⟩, rfl⟩
 
 theorem snd_surjective [h : Nonempty α] : Function.Surjective (@snd α β) := fun y => h.elim fun x => ⟨⟨x, y⟩, rfl⟩
 
-theorem fst_injective [Subsingleton β] : Function.Injective (@fst α β) := fun x y h => extₓ h (Subsingleton.elimₓ _ _)
+theorem fst_injectiveₓ [Subsingleton β] : Function.Injective (@fst α β) := fun x y h => extₓ h (Subsingleton.elimₓ _ _)
 
 theorem snd_injective [Subsingleton α] : Function.Injective (@snd α β) := fun x y h => extₓ (Subsingleton.elimₓ _ _) h
 
@@ -118,11 +123,11 @@ theorem snd_swap {p : α × β} : (swap p).2 = p.1 :=
   rfl
 
 @[simp]
-theorem swap_prod_mk {a : α} {b : β} : swap (a, b) = (b, a) :=
+theorem swap_prod_mkₓ {a : α} {b : β} : swap (a, b) = (b, a) :=
   rfl
 
 @[simp]
-theorem swap_swap_eq : swap ∘ swap = @id (α × β) :=
+theorem swap_swap_eqₓ : swap ∘ swap = @id (α × β) :=
   funext swap_swap
 
 @[simp]
@@ -167,7 +172,7 @@ theorem lex_def (r : α → α → Prop) (s : β → β → Prop) {p q : α × �
     | (a, b), (c, d), Or.inr ⟨e, h⟩ => by
       change a = c at e <;> subst e <;> exact lex.right _ h⟩
 
-instance lex.decidable [DecidableEq α] (r : α → α → Prop) (s : β → β → Prop) [DecidableRel r] [DecidableRel s] :
+instance Lex.decidable [DecidableEq α] (r : α → α → Prop) (s : β → β → Prop) [DecidableRel r] [DecidableRel s] :
     DecidableRel (Prod.Lex r s) := fun p q =>
   decidableOfDecidableOfIff
     (by
@@ -175,21 +180,21 @@ instance lex.decidable [DecidableEq α] (r : α → α → Prop) (s : β → β 
     (lex_def r s).symm
 
 @[refl]
-theorem lex.refl_left (r : α → α → Prop) (s : β → β → Prop) [IsRefl α r] : ∀ x, Prod.Lex r s x x
+theorem Lex.refl_left (r : α → α → Prop) (s : β → β → Prop) [IsRefl α r] : ∀ x, Prod.Lex r s x x
   | (x₁, x₂) => Lex.left _ _ (refl _)
 
 instance is_refl_left {r : α → α → Prop} {s : β → β → Prop} [IsRefl α r] : IsRefl (α × β) (Lex r s) :=
   ⟨Lex.refl_left _ _⟩
 
 @[refl]
-theorem lex.refl_right (r : α → α → Prop) (s : β → β → Prop) [IsRefl β s] : ∀ x, Prod.Lex r s x x
+theorem Lex.refl_right (r : α → α → Prop) (s : β → β → Prop) [IsRefl β s] : ∀ x, Prod.Lex r s x x
   | (x₁, x₂) => Lex.right _ (refl _)
 
 instance is_refl_right {r : α → α → Prop} {s : β → β → Prop} [IsRefl β s] : IsRefl (α × β) (Lex r s) :=
   ⟨Lex.refl_right _ _⟩
 
 @[trans]
-theorem lex.trans {r : α → α → Prop} {s : β → β → Prop} [IsTrans α r] [IsTrans β s] :
+theorem Lex.trans {r : α → α → Prop} {s : β → β → Prop} [IsTrans α r] [IsTrans β s] :
     ∀ {x y z : α × β}, Prod.Lex r s x y → Prod.Lex r s y z → Prod.Lex r s x z
   | (x₁, x₂), (y₁, y₂), (z₁, z₂), lex.left _ _ hxy₁, lex.left _ _ hyz₁ => Lex.left _ _ (trans hxy₁ hyz₁)
   | (x₁, x₂), (y₁, y₂), (z₁, z₂), lex.left _ _ hxy₁, lex.right _ hyz₂ => Lex.left _ _ hxy₁

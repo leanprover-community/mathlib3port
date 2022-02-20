@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Andrew Yang. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Andrew Yang
+-/
 import Mathbin.Topology.Category.Top.Default
 import Mathbin.CategoryTheory.GlueData
 import Mathbin.CategoryTheory.ConcreteCategory.Elementwise
@@ -75,7 +80,7 @@ Most of the times it would be easier to use the constructor `Top.glue_data.mk'` 
 are stated in a less categorical way.
 -/
 @[nolint has_inhabited_instance]
-structure glue_data extends GlueData Top where
+structure GlueData extends GlueData Top where
   f_open : ∀ i j, OpenEmbedding (f i j)
   f_mono := fun i j => (Top.mono_iff_injective _).mpr (f_open i j).toEmbedding.inj
 
@@ -285,7 +290,7 @@ such that
 We can then glue the topological spaces `U i` together by identifying `V i j` with `V j i`.
 -/
 @[nolint has_inhabited_instance]
-structure mk_core where
+structure MkCore where
   {J : Type u}
   U : J → Top.{u}
   V : ∀ i, J → Opens (U i)
@@ -297,7 +302,7 @@ structure mk_core where
     ∀ i j k x : V i j h : ↑x ∈ V i k,
       @coe (V k j) (U k) _ (t j k ⟨↑(t i j x), t_inter k x h⟩) = @coe (V k i) (U k) _ (t i k ⟨x, h⟩)
 
-theorem mk_core.t_inv (h : MkCore) (i j : h.J) (x : h.V j i) : h.t i j ((h.t j i) x) = x := by
+theorem MkCore.t_inv (h : MkCore) (i j : h.J) (x : h.V j i) : h.t i j ((h.t j i) x) = x := by
   have := h.cocycle j i j x _
   rw [h.t_id] at this
   convert Subtype.eq this
@@ -314,7 +319,7 @@ instance (h : MkCore.{u}) (i j : h.J) : IsIso (h.t i j) := by
   exacts[h.t_inv _ _ _, h.t_inv _ _ _]
 
 /-- (Implementation) the restricted transition map to be fed into `glue_data`. -/
-def mk_core.t' (h : MkCore.{u}) (i j k : h.J) :
+def MkCore.t' (h : MkCore.{u}) (i j k : h.J) :
     pullback (h.V i j).inclusion (h.V i k).inclusion ⟶ pullback (h.V j k).inclusion (h.V j i).inclusion := by
   refine' (pullback_iso_prod_subtype _ _).Hom ≫ ⟨_, _⟩ ≫ (pullback_iso_prod_subtype _ _).inv
   · intro x
@@ -365,7 +370,7 @@ include U
 
 /-- We may construct a glue data from a family of open sets. -/
 @[simps to_glue_data_J to_glue_data_U to_glue_data_V to_glue_data_t to_glue_data_f]
-def of_open_subsets : Top.GlueData.{u} :=
+def ofOpenSubsets : Top.GlueData.{u} :=
   mk'.{u}
     { J, U := fun i => (opens.to_Top <| Top.of α).obj (U i), V := fun i j => (opens.map <| Opens.inclusion _).obj (U j),
       t := fun i j =>
@@ -384,7 +389,7 @@ def of_open_subsets : Top.GlueData.{u} :=
 This map is an open embedding (`from_open_subsets_glue_open_embedding`),
 and its range is `⋃ i, (U i : set α)` (`range_from_open_subsets_glue`).
 -/
-def from_open_subsets_glue : (ofOpenSubsets U).toGlueData.glued ⟶ Top.of α :=
+def fromOpenSubsetsGlue : (ofOpenSubsets U).toGlueData.glued ⟶ Top.of α :=
   multicoequalizer.desc _ _ (fun x => Opens.inclusion _)
     (by
       rintro ⟨i, j⟩
@@ -445,7 +450,7 @@ theorem range_from_open_subsets_glue : Set.Range (fromOpenSubsetsGlue U) = ⋃ i
     
 
 /-- The gluing of an open cover is homeomomorphic to the original space. -/
-def open_cover_glue_homeo (h : (⋃ i, (U i : Set α)) = Set.Univ) : (ofOpenSubsets U).toGlueData.glued ≃ₜ α :=
+def openCoverGlueHomeo (h : (⋃ i, (U i : Set α)) = Set.Univ) : (ofOpenSubsets U).toGlueData.glued ≃ₜ α :=
   Homeomorph.homeomorphOfContinuousOpen
     (Equivₓ.ofBijective (fromOpenSubsetsGlue U)
       ⟨from_open_subsets_glue_injective U, Set.range_iff_surjective.mp ((range_from_open_subsets_glue U).symm ▸ h)⟩)

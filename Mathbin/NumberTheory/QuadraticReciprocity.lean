@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Chris Hughes. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Chris Hughes
+-/
 import Mathbin.FieldTheory.Finite.Basic
 import Mathbin.Data.Zmod.Basic
 import Mathbin.Data.Nat.Parity
@@ -349,7 +354,7 @@ private theorem sum_Ico_eq_card_lt {p q : ℕ} :
               (fun ⟨_, _⟩ ⟨_, _⟩ => by
                 simp (config := { contextual := true })only [Prod.mk.inj_iffₓ, eq_self_iff_true, and_selfₓ, heq_iff_eq,
                   forall_true_iff])
-              fun ⟨b₁, b₂⟩ h =>
+              fun h =>
               ⟨⟨b₁, b₂⟩, by
                 revert h <;>
                   simp (config := { contextual := true })only [mem_filter, eq_self_iff_true, exists_prop_of_true,
@@ -371,7 +376,7 @@ private theorem sum_mul_div_add_sum_mul_div_eq_mul (p q : ℕ) [hp : Fact p.Prim
       (fun ⟨_, _⟩ ⟨_, _⟩ => by
         simp (config := { contextual := true })only [Prod.mk.inj_iffₓ, eq_self_iff_true, and_selfₓ, Prod.swap_prod_mkₓ,
           forall_true_iff])
-      fun ⟨x₁, x₂⟩ h =>
+      fun h =>
       ⟨⟨x₂, x₁⟩, by
         revert h <;>
           simp (config := { contextual := true })only [mem_filter, eq_self_iff_true, and_selfₓ, exists_prop_of_true,
@@ -414,7 +419,7 @@ namespace Zmod
 * `-1` otherwise.
 
 -/
-def legendre_sym (a : ℤ) (p : ℕ) : ℤ :=
+def legendreSym (a : ℤ) (p : ℕ) : ℤ :=
   if (a : Zmod p) = 0 then 0 else if (a : Zmod p) ^ (p / 2) = 1 then 1 else -1
 
 theorem legendre_sym_eq_pow (a p : ℕ) [hp : Fact p.Prime] : (legendreSym a p : Zmod p) = a ^ (p / 2) := by

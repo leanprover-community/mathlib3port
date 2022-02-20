@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Bolton Bailey. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Bolton Bailey
+-/
 import Mathbin.Algebra.Periodic
 import Mathbin.Data.Nat.Count
 import Mathbin.Data.Nat.Interval

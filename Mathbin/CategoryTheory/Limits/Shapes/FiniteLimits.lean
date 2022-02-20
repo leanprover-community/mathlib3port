@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison
+-/
 import Mathbin.CategoryTheory.FinCategory
 import Mathbin.CategoryTheory.Limits.Shapes.BinaryProducts
 import Mathbin.CategoryTheory.Limits.Shapes.Equalizers
@@ -25,7 +30,9 @@ has a limit.
 
 This is often called 'finitely complete'.
 -/
-class has_finite_limits : Prop where
+-- We can't just made this an `abbreviation`
+-- because of https://github.com/leanprover-community/lean/issues/429
+class HasFiniteLimits : Prop where
   out (J : Type v) [𝒥 : SmallCategory J] [@FinCategory J 𝒥] : @HasLimitsOfShape J 𝒥 C _
 
 instance (priority := 100) has_limits_of_shape_of_has_finite_limits (J : Type v) [SmallCategory J] [FinCategory J]
@@ -46,7 +53,7 @@ has a colimit.
 
 This is often called 'finitely cocomplete'.
 -/
-class has_finite_colimits : Prop where
+class HasFiniteColimits : Prop where
   out (J : Type v) [𝒥 : SmallCategory J] [@FinCategory J 𝒥] : @HasColimitsOfShape J 𝒥 C _
 
 instance (priority := 100) has_limits_of_shape_of_has_finite_colimits (J : Type v) [SmallCategory J] [FinCategory J]
@@ -67,7 +74,7 @@ section
 
 open WalkingParallelPair WalkingParallelPairHom
 
-instance fintype_walking_parallel_pair : Fintype WalkingParallelPair where
+instance fintypeWalkingParallelPair : Fintype WalkingParallelPair where
   elems := [WalkingParallelPair.zero, WalkingParallelPair.one].toFinset
   complete := fun x => by
     cases x <;> simp
@@ -102,11 +109,11 @@ attribute [local tidy] tactic.case_bash
 
 namespace WidePullbackShape
 
-instance fintype_obj [Fintype J] : Fintype (WidePullbackShape J) := by
+instance fintypeObj [Fintype J] : Fintype (WidePullbackShape J) := by
   rw [wide_pullback_shape]
   infer_instance
 
-instance fintype_hom [DecidableEq J] (j j' : WidePullbackShape J) : Fintype (j ⟶ j') where
+instance fintypeHom [DecidableEq J] (j j' : WidePullbackShape J) : Fintype (j ⟶ j') where
   elems := by
     cases j'
     · cases j
@@ -129,11 +136,11 @@ end WidePullbackShape
 
 namespace WidePushoutShape
 
-instance fintype_obj [Fintype J] : Fintype (WidePushoutShape J) := by
+instance fintypeObj [Fintype J] : Fintype (WidePushoutShape J) := by
   rw [wide_pushout_shape]
   infer_instance
 
-instance fintype_hom [DecidableEq J] (j j' : WidePushoutShape J) : Fintype (j ⟶ j') where
+instance fintypeHom [DecidableEq J] (j j' : WidePushoutShape J) : Fintype (j ⟶ j') where
   elems := by
     cases j
     · cases j'
@@ -154,16 +161,18 @@ instance fintype_hom [DecidableEq J] (j j' : WidePushoutShape J) : Fintype (j �
 
 end WidePushoutShape
 
-instance fin_category_wide_pullback [DecidableEq J] [Fintype J] : FinCategory (WidePullbackShape J) where
+instance finCategoryWidePullback [DecidableEq J] [Fintype J] : FinCategory (WidePullbackShape J) where
   fintypeHom := WidePullbackShape.fintypeHom
 
-instance fin_category_wide_pushout [DecidableEq J] [Fintype J] : FinCategory (WidePushoutShape J) where
+instance finCategoryWidePushout [DecidableEq J] [Fintype J] : FinCategory (WidePushoutShape J) where
   fintypeHom := WidePushoutShape.fintypeHom
 
 /-- `has_finite_wide_pullbacks` represents a choice of wide pullback
 for every finite collection of morphisms
 -/
-class has_finite_wide_pullbacks : Prop where
+-- We can't just made this an `abbreviation`
+-- because of https://github.com/leanprover-community/lean/issues/429
+class HasFiniteWidePullbacks : Prop where
   out (J : Type v) [DecidableEq J] [Fintype J] : HasLimitsOfShape (WidePullbackShape J) C
 
 instance has_limits_of_shape_wide_pullback_shape (J : Type v) [Fintype J] [HasFiniteWidePullbacks C] :
@@ -174,7 +183,7 @@ instance has_limits_of_shape_wide_pullback_shape (J : Type v) [Fintype J] [HasFi
 /-- `has_finite_wide_pushouts` represents a choice of wide pushout
 for every finite collection of morphisms
 -/
-class has_finite_wide_pushouts : Prop where
+class HasFiniteWidePushouts : Prop where
   out (J : Type v) [DecidableEq J] [Fintype J] : HasColimitsOfShape (WidePushoutShape J) C
 
 instance has_colimits_of_shape_wide_pushout_shape (J : Type v) [Fintype J] [HasFiniteWidePushouts C] :
@@ -194,7 +203,7 @@ it also has finite wide pushouts
 theorem has_finite_wide_pushouts_of_has_finite_limits [HasFiniteColimits C] : HasFiniteWidePushouts C :=
   ⟨fun J _ _ => has_finite_colimits.out _⟩
 
-instance fintype_walking_pair : Fintype WalkingPair where
+instance fintypeWalkingPair : Fintype WalkingPair where
   elems := {WalkingPair.left, WalkingPair.right}
   complete := fun x => by
     cases x <;> simp

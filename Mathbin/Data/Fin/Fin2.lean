@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2017 Mario Carneiro. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Mario Carneiro
+-/
 
 /-!
 # Inductive type variant of `fin`
@@ -46,12 +51,12 @@ def elim0 {C : Fin2 0 → Sort u} : ∀ i : Fin2 0, C i :=
   fun.
 
 /-- Converts a `fin2` into a natural. -/
-def to_nat : ∀ {n}, Fin2 n → ℕ
+def toNat : ∀ {n}, Fin2 n → ℕ
   | _, @fz n => 0
   | _, @fs n i => succ (to_nat i)
 
 /-- Converts a natural into a `fin2` if it is in range -/
-def opt_of_nat : ∀ {n} k : ℕ, Option (Fin2 n)
+def optOfNat : ∀ {n} k : ℕ, Option (Fin2 n)
   | 0, _ => none
   | succ n, 0 => some fz
   | succ n, succ k => fs <$> @opt_of_nat n k
@@ -70,7 +75,7 @@ def left k : ∀ {n}, Fin2 n → Fin2 (k + n)
   * `insert_perm a i = i+1` if `i < a`
   * `insert_perm a a = 0`
   * `insert_perm a i = i` if `i > a` -/
-def insert_perm : ∀ {n}, Fin2 n → Fin2 n → Fin2 n
+def insertPerm : ∀ {n}, Fin2 n → Fin2 n → Fin2 n
   | _, @fz n, @fz _ => fz
   | _, @fz n, @fs _ j => fs j
   | _, @fs (succ n) i, @fz _ => fs fz
@@ -82,30 +87,30 @@ def insert_perm : ∀ {n}, Fin2 n → Fin2 n → Fin2 n
 /-- `remap_left f k : fin2 (m + k) → fin2 (n + k)` applies the function
   `f : fin2 m → fin2 n` to inputs less than `m`, and leaves the right part
   on the right (that is, `remap_left f k (m + i) = n + i`). -/
-def remap_left {m n} (f : Fin2 m → Fin2 n) : ∀ k, Fin2 (m + k) → Fin2 (n + k)
+def remapLeft {m n} (f : Fin2 m → Fin2 n) : ∀ k, Fin2 (m + k) → Fin2 (n + k)
   | 0, i => f i
   | succ k, @fz _ => fz
   | succ k, @fs _ i => fs (remap_left _ i)
 
 /-- This is a simple type class inference prover for proof obligations
   of the form `m < n` where `m n : ℕ`. -/
-class is_lt (m n : ℕ) where
+class IsLt (m n : ℕ) where
   h : m < n
 
-instance is_lt.zero n : IsLt 0 (succ n) :=
+instance IsLt.zero n : IsLt 0 (succ n) :=
   ⟨succ_posₓ _⟩
 
-instance is_lt.succ m n [l : IsLt m n] : IsLt (succ m) (succ n) :=
+instance IsLt.succ m n [l : IsLt m n] : IsLt (succ m) (succ n) :=
   ⟨succ_lt_succₓ l.h⟩
 
 /-- Use type class inference to infer the boundedness proof, so that we can directly convert a
 `nat` into a `fin2 n`. This supports notation like `&1 : fin 3`. -/
-def of_nat' : ∀ {n} m [IsLt m n], Fin2 n
+def ofNat' : ∀ {n} m [IsLt m n], Fin2 n
   | 0, m, ⟨h⟩ => absurd h (Nat.not_lt_zeroₓ _)
   | succ n, 0, ⟨h⟩ => fz
   | succ n, succ m, ⟨h⟩ => fs (@of_nat' n m ⟨lt_of_succ_lt_succₓ h⟩)
 
--- ././Mathport/Syntax/Translate/Basic.lean:343:9: unsupported: advanced prec syntax
+-- ././Mathport/Syntax/Translate/Basic.lean:462:9: unsupported: advanced prec syntax
 local prefix:999 "&" => ofNat'
 
 instance : Inhabited (Fin2 1) :=

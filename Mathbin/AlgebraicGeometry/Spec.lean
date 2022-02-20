@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison, Justus Springer
+-/
 import Mathbin.AlgebraicGeometry.LocallyRingedSpace
 import Mathbin.AlgebraicGeometry.StructureSheaf
 import Mathbin.Data.Equiv.TransferInstance
@@ -41,12 +46,12 @@ open StructureSheaf
 
 /-- The spectrum of a commutative ring, as a topological space.
 -/
-def Spec.Top_obj (R : CommRingₓₓ) : Top :=
+def Spec.topObj (R : CommRingₓₓ) : Top :=
   Top.of (PrimeSpectrum R)
 
 /-- The induced map of a ring homomorphism on the ring spectra, as a morphism of topological spaces.
 -/
-def Spec.Top_map {R S : CommRingₓₓ} (f : R ⟶ S) : Spec.topObj S ⟶ Spec.topObj R :=
+def Spec.topMap {R S : CommRingₓₓ} (f : R ⟶ S) : Spec.topObj S ⟶ Spec.topObj R :=
   PrimeSpectrum.comap f
 
 @[simp]
@@ -60,7 +65,7 @@ theorem Spec.Top_map_comp {R S T : CommRingₓₓ} (f : R ⟶ S) (g : S ⟶ T) :
 /-- The spectrum, as a contravariant functor from commutative rings to topological spaces.
 -/
 @[simps]
-def Spec.to_Top : CommRingₓₓᵒᵖ ⥤ Top where
+def Spec.toTop : CommRingₓₓᵒᵖ ⥤ Top where
   obj := fun R => Spec.topObj (unop R)
   map := fun R S f => Spec.topMap f.unop
   map_id' := fun R => by
@@ -71,7 +76,7 @@ def Spec.to_Top : CommRingₓₓᵒᵖ ⥤ Top where
 /-- The spectrum of a commutative ring, as a `SheafedSpace`.
 -/
 @[simps]
-def Spec.SheafedSpace_obj (R : CommRingₓₓ) : SheafedSpace CommRingₓₓ where
+def Spec.sheafedSpaceObj (R : CommRingₓₓ) : SheafedSpace CommRingₓₓ where
   Carrier := Spec.topObj R
   Presheaf := (structureSheaf R).1
   IsSheaf := (structureSheaf R).2
@@ -79,7 +84,7 @@ def Spec.SheafedSpace_obj (R : CommRingₓₓ) : SheafedSpace CommRingₓₓ whe
 /-- The induced map of a ring homomorphism on the ring spectra, as a morphism of sheafed spaces.
 -/
 @[simps]
-def Spec.SheafedSpace_map {R S : CommRingₓₓ.{u}} (f : R ⟶ S) : Spec.sheafedSpaceObj S ⟶ Spec.sheafedSpaceObj R where
+def Spec.sheafedSpaceMap {R S : CommRingₓₓ.{u}} (f : R ⟶ S) : Spec.sheafedSpaceObj S ⟶ Spec.sheafedSpaceObj R where
   base := Spec.topMap f
   c :=
     { app := fun U => comap f (unop U) ((TopologicalSpace.Opens.map (Spec.topMap f)).obj (unop U)) fun p => id,
@@ -111,7 +116,7 @@ theorem Spec.SheafedSpace_map_comp {R S T : CommRingₓₓ} (f : R ⟶ S) (g : S
 /-- Spec, as a contravariant functor from commutative rings to sheafed spaces.
 -/
 @[simps]
-def Spec.to_SheafedSpace : CommRingₓₓᵒᵖ ⥤ SheafedSpace CommRingₓₓ where
+def Spec.toSheafedSpace : CommRingₓₓᵒᵖ ⥤ SheafedSpace CommRingₓₓ where
   obj := fun R => Spec.sheafedSpaceObj (unop R)
   map := fun R S f => Spec.sheafedSpaceMap f.unop
   map_id' := fun R => by
@@ -121,7 +126,7 @@ def Spec.to_SheafedSpace : CommRingₓₓᵒᵖ ⥤ SheafedSpace CommRingₓₓ 
 
 /-- Spec, as a contravariant functor from commutative rings to presheafed spaces.
 -/
-def Spec.to_PresheafedSpace : CommRingₓₓᵒᵖ ⥤ PresheafedSpace CommRingₓₓ :=
+def Spec.toPresheafedSpace : CommRingₓₓᵒᵖ ⥤ PresheafedSpace CommRingₓₓ :=
   Spec.to_SheafedSpace ⋙ SheafedSpace.forget_to_PresheafedSpace
 
 @[simp]
@@ -165,7 +170,7 @@ theorem Spec.basic_open_hom_ext {X : RingedSpace} {R : CommRingₓₓ} {α β : 
 /-- The spectrum of a commutative ring, as a `LocallyRingedSpace`.
 -/
 @[simps]
-def Spec.LocallyRingedSpace_obj (R : CommRingₓₓ) : LocallyRingedSpace :=
+def Spec.locallyRingedSpaceObj (R : CommRingₓₓ) : LocallyRingedSpace :=
   { Spec.sheafedSpaceObj R with
     LocalRing := fun x =>
       @RingEquiv.local_ring _
@@ -200,10 +205,12 @@ theorem local_ring_hom_comp_stalk_iso {R S : CommRingₓₓ} (f : R ⟶ S) (p : 
 /-- The induced map of a ring homomorphism on the prime spectra, as a morphism of locally ringed spaces.
 -/
 @[simps]
-def Spec.LocallyRingedSpace_map {R S : CommRingₓₓ} (f : R ⟶ S) :
+def Spec.locallyRingedSpaceMap {R S : CommRingₓₓ} (f : R ⟶ S) :
     Spec.locallyRingedSpaceObj S ⟶ Spec.locallyRingedSpaceObj R :=
   (Subtype.mk (Spec.sheafedSpaceMap f)) fun p =>
     IsLocalRingHom.mk fun a ha => by
+      -- Here, we are showing that the map on prime spectra induced by `f` is really a morphism of
+      -- *locally* ringed spaces, i.e. that the induced map on the stalks is a local ring homomorphism.
       rw [← local_ring_hom_comp_stalk_iso_apply] at ha
       replace ha := (stalk_iso S p).Hom.is_unit_map ha
       rw [coe_inv_hom_id] at ha
@@ -227,7 +234,7 @@ theorem Spec.LocallyRingedSpace_map_comp {R S T : CommRingₓₓ} (f : R ⟶ S) 
 /-- Spec, as a contravariant functor from commutative rings to locally ringed spaces.
 -/
 @[simps]
-def Spec.to_LocallyRingedSpace : CommRingₓₓᵒᵖ ⥤ LocallyRingedSpace where
+def Spec.toLocallyRingedSpace : CommRingₓₓᵒᵖ ⥤ LocallyRingedSpace where
   obj := fun R => Spec.locallyRingedSpaceObj (unop R)
   map := fun R S f => Spec.locallyRingedSpaceMap f.unop
   map_id' := fun R => by
@@ -241,7 +248,7 @@ open AlgebraicGeometry.LocallyRingedSpace
 
 /-- The counit morphism `R ⟶ Γ(Spec R)` given by `algebraic_geometry.structure_sheaf.to_open`.  -/
 @[simps]
-def to_Spec_Γ (R : CommRingₓₓ) : R ⟶ Γ.obj (op (Spec.toLocallyRingedSpace.obj (op R))) :=
+def toSpecΓ (R : CommRingₓₓ) : R ⟶ Γ.obj (op (Spec.toLocallyRingedSpace.obj (op R))) :=
   structureSheaf.toOpen R ⊤
 
 instance is_iso_to_Spec_Γ (R : CommRingₓₓ) : IsIso (toSpecΓ R) := by
@@ -257,7 +264,7 @@ theorem Spec_Γ_naturality {R S : CommRingₓₓ} (f : R ⟶ S) :
 
 /-- The counit (`Spec_Γ_identity.inv.op`) of the adjunction `Γ ⊣ Spec` is an isomorphism. -/
 @[simps hom_app inv_app]
-def Spec_Γ_identity : Spec.toLocallyRingedSpace.rightOp ⋙ Γ ≅ 𝟭 _ :=
+def specΓIdentity : Spec.toLocallyRingedSpace.rightOp ⋙ Γ ≅ 𝟭 _ :=
   iso.symm <| NatIso.ofComponents (fun R => asIso (toSpecΓ R) : _) fun _ _ => Spec_Γ_naturality
 
 end SpecΓ
@@ -271,6 +278,7 @@ theorem Spec_map_localization_is_iso (R : CommRingₓₓ) (M : Submonoid R) (x :
   apply is_iso.comp_is_iso with { instances := false }
   infer_instance
   apply is_iso.comp_is_iso with { instances := false }
+  -- I do not know why this is defeq to the goal, but I'm happy to accept that it is.
   exact
     show
       is_iso (IsLocalization.localizationLocalizationAtPrimeIsoLocalization M x.as_ideal).toRingEquiv.toCommRingIso.Hom

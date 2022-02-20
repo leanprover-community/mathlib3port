@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Floris van Doorn. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Floris van Doorn
+-/
 import Mathbin.MeasureTheory.Constructions.Prod
 import Mathbin.MeasureTheory.Group.Measure
 
@@ -158,7 +163,7 @@ variable {m : ∀ i, OuterMeasure (α i)}
   of the measures of these images.
   For measurable boxes it is equal to the correct measure. -/
 @[simp]
-def pi_premeasure (m : ∀ i, OuterMeasure (α i)) (s : Set (∀ i, α i)) : ℝ≥0∞ :=
+def piPremeasure (m : ∀ i, OuterMeasure (α i)) (s : Set (∀ i, α i)) : ℝ≥0∞ :=
   ∏ i, m i (eval i '' s)
 
 theorem pi_premeasure_pi {s : ∀ i, Set (α i)} (hs : (pi Univ s).Nonempty) :
@@ -223,6 +228,7 @@ open List
 variable {δ : Type _} {π : δ → Type _} [∀ x, MeasurableSpace (π x)]
 
 /-- A product of measures in `tprod α l`. -/
+-- for some reason the equation compiler doesn't like this definition
 protected def tprod (l : List δ) (μ : ∀ i, Measure (π i)) : Measure (Tprod π l) := by
   induction' l with i l ih
   exact dirac PUnit.unit
@@ -326,7 +332,7 @@ theorem pi_pi_aux [∀ i, SigmaFinite (μ i)] (s : ∀ i, Set (α i)) (hs : ∀ 
 variable {μ}
 
 /-- `measure.pi μ` has finite spanning sets in rectangles of finite spanning sets. -/
-def finite_spanning_sets_in.pi {C : ∀ i, Set (Set (α i))} (hμ : ∀ i, (μ i).FiniteSpanningSetsIn (C i)) :
+def FiniteSpanningSetsIn.pi {C : ∀ i, Set (Set (α i))} (hμ : ∀ i, (μ i).FiniteSpanningSetsIn (C i)) :
     (Measure.pi μ).FiniteSpanningSetsIn (pi Univ '' pi Univ C) := by
   have := fun i => (hμ i).SigmaFinite
   have := Fintype.encodable ι
@@ -404,10 +410,12 @@ theorem pi_of_empty {α : Type _} [IsEmpty α] {β : α → Type _} {m : ∀ a, 
   exact isEmptyElim
 
 theorem pi_eval_preimage_null {i : ι} {s : Set (α i)} (hs : μ i s = 0) : Measure.pi μ (eval i ⁻¹' s) = 0 := by
+  -- WLOG, `s` is measurable
   rcases exists_measurable_superset_of_null hs with ⟨t, hst, htm, hμt⟩
   suffices : measure.pi μ (eval i ⁻¹' t) = 0
   exact measure_mono_null (preimage_mono hst) this
   clear! s
+  -- Now rewrite it as `set.pi`, and apply `pi_pi`
   rw [← univ_pi_update_univ, pi_pi]
   apply Finset.prod_eq_zero (Finset.mem_univ i)
   simp [hμt]
@@ -427,11 +435,11 @@ theorem ae_pi_le_pi : (Measure.pi μ).ae ≤ Filter.pi fun i => (μ i).ae :=
   le_infi fun i => tendsto_eval_ae_ae.le_comap
 
 theorem ae_eq_pi {β : ι → Type _} {f f' : ∀ i, α i → β i} (h : ∀ i, f i =ᵐ[μ i] f' i) :
-    (fun x : ∀ i, α i i => f i (x i)) =ᵐ[Measure.pi μ] fun x i => f' i (x i) :=
+    (fun i => f i (x i)) =ᵐ[Measure.pi μ] fun x i => f' i (x i) :=
   (eventually_all.2 fun i => tendsto_eval_ae_ae.Eventually (h i)).mono fun x hx => funext hx
 
 theorem ae_le_pi {β : ι → Type _} [∀ i, Preorderₓ (β i)] {f f' : ∀ i, α i → β i} (h : ∀ i, f i ≤ᵐ[μ i] f' i) :
-    (fun x : ∀ i, α i i => f i (x i)) ≤ᵐ[Measure.pi μ] fun x i => f' i (x i) :=
+    (fun i => f i (x i)) ≤ᵐ[Measure.pi μ] fun x i => f' i (x i) :=
   (eventually_all.2 fun i => tendsto_eval_ae_ae.Eventually (h i)).mono fun x hx => hx
 
 theorem ae_le_set_pi {I : Set ι} {s t : ∀ i, Set (α i)} (h : ∀, ∀ i ∈ I, ∀, s i ≤ᵐ[μ i] t i) :
@@ -560,7 +568,7 @@ instance pi.is_mul_left_invariant [∀ i, Groupₓ (α i)] [∀ i, HasMeasurable
 
 end Measureₓ
 
-instance measure_space.pi [∀ i, MeasureSpace (α i)] : MeasureSpace (∀ i, α i) :=
+instance MeasureSpace.pi [∀ i, MeasureSpace (α i)] : MeasureSpace (∀ i, α i) :=
   ⟨Measure.pi fun i => volume⟩
 
 theorem volume_pi [∀ i, MeasureSpace (α i)] : (volume : Measure (∀ i, α i)) = Measure.pi fun i => volume :=
@@ -582,7 +590,7 @@ theorem volume_pi_closed_ball [∀ i, MeasureSpace (α i)] [∀ i, SigmaFinite (
 open Measureₓ
 
 @[to_additive]
-instance pi.is_mul_left_invariant_volume [∀ i, Groupₓ (α i)] [∀ i, MeasureSpace (α i)]
+instance Pi.is_mul_left_invariant_volume [∀ i, Groupₓ (α i)] [∀ i, MeasureSpace (α i)]
     [∀ i, SigmaFinite (volume : Measure (α i))] [∀ i, HasMeasurableMul (α i)]
     [∀ i, IsMulLeftInvariant (volume : Measure (α i))] : IsMulLeftInvariant (volume : Measure (∀ i, α i)) :=
   pi.is_mul_left_invariant _
@@ -625,19 +633,19 @@ theorem volume_preserving_pi_fin_two (α : Finₓ 2 → Type u) [∀ i, MeasureS
     [∀ i, SigmaFinite (volume : Measure (α i))] : MeasurePreserving (MeasurableEquiv.piFinTwo α) volume volume :=
   measure_preserving_pi_fin_two _
 
--- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»
 theorem measure_preserving_fin_two_arrow_vec {α : Type u} {m : MeasurableSpace α} (μ ν : Measure α) [SigmaFinite μ]
     [SigmaFinite ν] :
     MeasurePreserving MeasurableEquiv.finTwoArrow
-      (Measure.pi («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»"))
+      (Measure.pi («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»"))
       (μ.Prod ν) :=
   have :
     ∀ i,
       sigma_finite
-        ((«expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»") i) :=
+        ((«expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»") i) :=
     Finₓ.forall_fin_two.2 ⟨‹_›, ‹_›⟩
   measure_preserving_pi_fin_two _
 

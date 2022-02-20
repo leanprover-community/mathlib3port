@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Sébastien Gouëzel. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Sébastien Gouëzel
+-/
 import Mathbin.Analysis.MeanInequalities
 
 /-!
@@ -81,7 +86,7 @@ variable (p : ℝ) [fact_one_le_p : Fact (1 ≤ p)] (α : ι → Type _) (β : �
 
 /-- Canonical bijection between `pi_Lp p α` and the original Pi type. We introduce it to be able
 to compare the `L^p` and `L^∞` distances through it. -/
-protected def Equivₓ : PiLp p α ≃ ∀ i : ι, α i :=
+protected def equiv : PiLp p α ≃ ∀ i : ι, α i :=
   Equivₓ.refl _
 
 section
@@ -111,7 +116,7 @@ with the product one. Therefore, we do not register it as an instance. Using thi
 pseudoemetric space instance, we will show that the uniform structure is equal (but not defeq) to
 the product one, and then register an instance in which we replace the uniform structure by the
 product one using this pseudoemetric space and `pseudo_emetric_space.replace_uniformity`. -/
-def pseudo_emetric_aux : PseudoEmetricSpace (PiLp p β) :=
+def pseudoEmetricAux : PseudoEmetricSpace (PiLp p β) :=
   have pos : 0 < p := lt_of_lt_of_leₓ zero_lt_one fact_one_le_p.out
   { edist := fun f g => (∑ i : ι, edist (f i) (g i) ^ p) ^ (1 / p),
     edist_self := fun f => by
@@ -135,7 +140,7 @@ product one. Therefore, we do not register it as an instance. Using this as a te
 space instance, we will show that the uniform structure is equal (but not defeq) to the product
 one, and then register an instance in which we replace the uniform structure by the product one
 using this emetric space and `emetric_space.replace_uniformity`. -/
-def emetric_aux : EmetricSpace (PiLp p α) :=
+def emetricAux : EmetricSpace (PiLp p α) :=
   { pseudoEmetricAux p α with
     eq_of_edist_eq_zero := fun f g hfg => by
       have pos : 0 < p := lt_of_lt_of_leₓ zero_lt_one fact_one_le_p.out
@@ -191,7 +196,7 @@ end
 /-! ### Instances on finite `L^p` products -/
 
 
-instance UniformSpace [∀ i, UniformSpace (β i)] : UniformSpace (PiLp p β) :=
+instance uniformSpace [∀ i, UniformSpace (β i)] : UniformSpace (PiLp p β) :=
   Pi.uniformSpace _
 
 variable [Fintype ι]
@@ -219,6 +224,9 @@ include fact_one_le_p
 /-- pseudometric space instance on the product of finitely many psuedometric spaces, using the
 `L^p` distance, and having as uniformity the product uniformity. -/
 instance [∀ i, PseudoMetricSpace (β i)] : PseudoMetricSpace (PiLp p β) := by
+  /- we construct the instance from the pseudo emetric space instance to avoid checking again that
+    the uniformity is the same as the product uniformity, but we register nevertheless a nice formula
+    for the distance -/
   have pos : 0 < p := lt_of_lt_of_leₓ zero_lt_one fact_one_le_p.out
   refine'
     PseudoEmetricSpace.toPseudoMetricSpaceOfDist (fun f g => (∑ i : ι, dist (f i) (g i) ^ p) ^ (1 / p)) (fun f g => _)
@@ -233,6 +241,9 @@ instance [∀ i, PseudoMetricSpace (β i)] : PseudoMetricSpace (PiLp p β) := by
 /-- metric space instance on the product of finitely many metric spaces, using the `L^p` distance,
 and having as uniformity the product uniformity. -/
 instance [∀ i, MetricSpace (α i)] : MetricSpace (PiLp p α) := by
+  /- we construct the instance from the emetric space instance to avoid checking again that the
+    uniformity is the same as the product uniformity, but we register nevertheless a nice formula
+    for the distance -/
   have pos : 0 < p := lt_of_lt_of_leₓ zero_lt_one fact_one_le_p.out
   refine'
     EmetricSpace.toMetricSpaceOfDist (fun f g => (∑ i : ι, dist (f i) (g i) ^ p) ^ (1 / p)) (fun f g => _) fun f g => _
@@ -253,13 +264,13 @@ include fact_one_le_p
 
 /-- seminormed group instance on the product of finitely many normed groups, using the `L^p`
 norm. -/
-instance SemiNormedGroup [∀ i, SemiNormedGroup (β i)] : SemiNormedGroup (PiLp p β) :=
+instance semiNormedGroup [∀ i, SemiNormedGroup (β i)] : SemiNormedGroup (PiLp p β) :=
   { Pi.addCommGroup with norm := fun f => (∑ i : ι, norm (f i) ^ p) ^ (1 / p),
     dist_eq := fun x y => by
       simp [PiLp.dist, dist_eq_norm, sub_eq_add_neg] }
 
 /-- normed group instance on the product of finitely many normed groups, using the `L^p` norm. -/
-instance NormedGroup [∀ i, NormedGroup (α i)] : NormedGroup (PiLp p α) :=
+instance normedGroup [∀ i, NormedGroup (α i)] : NormedGroup (PiLp p α) :=
   { PiLp.semiNormedGroup p α with }
 
 omit fact_one_le_p
@@ -277,7 +288,7 @@ include fact_one_le_p
 variable (𝕜 : Type _) [NormedField 𝕜]
 
 /-- The product of finitely many normed spaces is a normed space, with the `L^p` norm. -/
-instance NormedSpace [∀ i, SemiNormedGroup (β i)] [∀ i, NormedSpace 𝕜 (β i)] : NormedSpace 𝕜 (PiLp p β) :=
+instance normedSpace [∀ i, SemiNormedGroup (β i)] [∀ i, NormedSpace 𝕜 (β i)] : NormedSpace 𝕜 (PiLp p β) :=
   { Pi.module ι β 𝕜 with
     norm_smul_le := by
       intro c f
@@ -286,6 +297,8 @@ instance NormedSpace [∀ i, SemiNormedGroup (β i)] [∀ i, NormedSpace 𝕜 (�
       rw [mul_rpow (rpow_nonneg_of_nonneg (norm_nonneg _) _), ← rpow_mul (norm_nonneg _), this, rpow_one]
       exact Finset.sum_nonneg fun i hi => rpow_nonneg_of_nonneg (norm_nonneg _) _ }
 
+/- Register simplification lemmas for the applications of `pi_Lp` elements, as the usual lemmas
+for Pi types will not trigger. -/
 variable {𝕜 p α} [∀ i, SemiNormedGroup (β i)] [∀ i, NormedSpace 𝕜 (β i)] (c : 𝕜) (x y : PiLp p β) (i : ι)
 
 @[simp]

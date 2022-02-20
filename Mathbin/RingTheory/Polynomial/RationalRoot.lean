@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Anne Baanen. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Anne Baanen
+-/
 import Mathbin.RingTheory.IntegrallyClosed
 import Mathbin.RingTheory.Polynomial.ScaleRoots
 
@@ -113,6 +118,7 @@ namespace UniqueFactorizationMonoid
 theorem integer_of_integral {x : K} : IsIntegral A x → IsInteger A x := fun ⟨p, hp, hx⟩ =>
   is_integer_of_is_root_of_monic hp hx
 
+-- See library note [lower instance priority]
 instance (priority := 100) : IsIntegrallyClosed A :=
   ⟨fun x => integer_of_integral⟩
 

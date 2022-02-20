@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Praneeth Kolichala. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Praneeth Kolichala
+-/
 import Mathbin.Topology.Homotopy.Basic
 import Mathbin.Topology.Constructions
 import Mathbin.Topology.Homotopy.Path
@@ -70,7 +75,7 @@ variable {I : Type _} {X : I → Type _} [∀ i, TopologicalSpace (X i)] {A : Ty
 
 /-- The product homotopy of `homotopies` between functions `f` and `g` -/
 @[simps]
-def homotopy.pi (homotopies : ∀ i, Homotopy (f i) (g i)) : Homotopy (pi f) (pi g) where
+def Homotopy.pi (homotopies : ∀ i, Homotopy (f i) (g i)) : Homotopy (pi f) (pi g) where
   toFun := fun t i => homotopies i t
   to_fun_zero := by
     intro t
@@ -83,7 +88,7 @@ def homotopy.pi (homotopies : ∀ i, Homotopy (f i) (g i)) : Homotopy (pi f) (pi
 
 /-- The relative product homotopy of `homotopies` between functions `f` and `g` -/
 @[simps]
-def homotopy_rel.pi (homotopies : ∀ i : I, HomotopyRel (f i) (g i) S) : HomotopyRel (pi f) (pi g) S :=
+def HomotopyRel.pi (homotopies : ∀ i : I, HomotopyRel (f i) (g i) S) : HomotopyRel (pi f) (pi g) S :=
   { Homotopy.pi fun i => (homotopies i).toHomotopy with
     prop' := by
       intro t x hx
@@ -102,7 +107,7 @@ variable {α β : Type _} [TopologicalSpace α] [TopologicalSpace β] {A : Type 
 /-- The product of homotopies `F` and `G`,
   where `F` takes `f₀` to `f₁`  and `G` takes `g₀` to `g₁` -/
 @[simps]
-def homotopy.prod (F : Homotopy f₀ f₁) (G : Homotopy g₀ g₁) : Homotopy (prodMk f₀ g₀) (prodMk f₁ g₁) where
+def Homotopy.prod (F : Homotopy f₀ f₁) (G : Homotopy g₀ g₁) : Homotopy (prodMk f₀ g₀) (prodMk f₁ g₁) where
   toFun := fun t => (F t, G t)
   to_fun_zero := by
     intro
@@ -114,7 +119,7 @@ def homotopy.prod (F : Homotopy f₀ f₁) (G : Homotopy g₀ g₁) : Homotopy (
 /-- The relative product of homotopies `F` and `G`,
   where `F` takes `f₀` to `f₁`  and `G` takes `g₀` to `g₁` -/
 @[simps]
-def homotopy_rel.prod (F : HomotopyRel f₀ f₁ S) (G : HomotopyRel g₀ g₁ S) :
+def HomotopyRel.prod (F : HomotopyRel f₀ f₁ S) (G : HomotopyRel g₀ g₁ S) :
     HomotopyRel (prodMk f₀ g₀) (prodMk f₁ g₁) S :=
   { Homotopy.prod F.toHomotopy G.toHomotopy with
     prop' := by
@@ -139,7 +144,7 @@ section Pi
 variable {ι : Type _} {X : ι → Type _} [∀ i, TopologicalSpace (X i)] {as bs cs : ∀ i, X i}
 
 /-- The product of a family of path homotopies. This is just a specialization of `homotopy_rel` -/
-def pi_homotopy (γ₀ γ₁ : ∀ i, Path (as i) (bs i)) (H : ∀ i, Path.Homotopy (γ₀ i) (γ₁ i)) :
+def piHomotopy (γ₀ γ₁ : ∀ i, Path (as i) (bs i)) (H : ∀ i, Path.Homotopy (γ₀ i) (γ₁ i)) :
     Path.Homotopy (Path.pi γ₀) (Path.pi γ₁) :=
   ContinuousMap.HomotopyRel.pi H
 
@@ -199,11 +204,11 @@ variable {α β : Type _} [TopologicalSpace α] [TopologicalSpace β] {a₁ a₂
 
 /-- The product of homotopies h₁ and h₂.
     This is `homotopy_rel.prod` specialized for path homotopies. -/
-def prod_homotopy (h₁ : Path.Homotopy p₁ p₁') (h₂ : Path.Homotopy p₂ p₂') : Path.Homotopy (p₁.Prod p₂) (p₁'.Prod p₂') :=
+def prodHomotopy (h₁ : Path.Homotopy p₁ p₁') (h₂ : Path.Homotopy p₂ p₂') : Path.Homotopy (p₁.Prod p₂) (p₁'.Prod p₂') :=
   ContinuousMap.HomotopyRel.prod h₁ h₂
 
 /-- The product of path classes q₁ and q₂. This is `path.prod` descended to the quotient -/
-def Prod (q₁ : Path.Homotopic.Quotient a₁ a₂) (q₂ : Path.Homotopic.Quotient b₁ b₂) :
+def prod (q₁ : Path.Homotopic.Quotient a₁ a₂) (q₂ : Path.Homotopic.Quotient b₁ b₂) :
     Path.Homotopic.Quotient (a₁, b₁) (a₂, b₂) :=
   Quotientₓ.map₂ Path.prod (fun p₁ p₁' h₁ p₂ p₂' h₂ => Nonempty.map2 prodHomotopy h₁ h₂) q₁ q₂
 
@@ -226,12 +231,12 @@ variable {c₁ c₂ : α × β}
 
 /-- Abbreviation for projection onto the left coordinate of a path class -/
 @[reducible]
-def proj_left (p : Path.Homotopic.Quotient c₁ c₂) : Path.Homotopic.Quotient c₁.1 c₂.1 :=
+def projLeft (p : Path.Homotopic.Quotient c₁ c₂) : Path.Homotopic.Quotient c₁.1 c₂.1 :=
   p.mapFn ⟨_, continuous_fst⟩
 
 /-- Abbreviation for projection onto the right coordinate of a path class -/
 @[reducible]
-def proj_right (p : Path.Homotopic.Quotient c₁ c₂) : Path.Homotopic.Quotient c₁.2 c₂.2 :=
+def projRight (p : Path.Homotopic.Quotient c₁ c₂) : Path.Homotopic.Quotient c₁.2 c₂.2 :=
   p.mapFn ⟨_, continuous_snd⟩
 
 /-- Lemmas showing projection is the inverse of product -/
@@ -295,7 +300,7 @@ theorem proj_map (i : I) (x₀ x₁ : (πₓ (Top.of (∀ i, X i))).α) (p : x�
 groupoid of the pi product. This is actually an isomorphism (see `pi_iso`)
 -/
 @[simps]
-def pi_to_pi_Top : (∀ i, (πₓ (X i)).α) ⥤ (πₓ (Top.of (∀ i, X i))).α where
+def piToPiTop : (∀ i, (πₓ (X i)).α) ⥤ (πₓ (Top.of (∀ i, X i))).α where
   obj := fun g => g
   map := fun v₁ v₂ p => Path.Homotopic.pi p
   map_id' := by
@@ -309,7 +314,7 @@ def pi_to_pi_Top : (∀ i, (πₓ (X i)).α) ⥤ (πₓ (Top.of (∀ i, X i))).�
 of the induced projections. This shows that `fundamental_groupoid_functor` preserves products.
 -/
 @[simps]
-def pi_iso : CategoryTheory.Groupoidₓ.of (∀ i : I, (πₓ (X i)).α) ≅ πₓ (Top.of (∀ i, X i)) where
+def piIso : CategoryTheory.Groupoidₓ.of (∀ i : I, (πₓ (X i)).α) ≅ πₓ (Top.of (∀ i, X i)) where
   hom := piToPiTop X
   inv := CategoryTheory.Functor.pi' (proj X)
   hom_inv_id' := by
@@ -336,7 +341,7 @@ section Preserves
 open CategoryTheory
 
 /-- Equivalence between the categories of cones over the objects `π Xᵢ` written in two ways -/
-def cone_discrete_comp : Limits.Cone (Discrete.functor X ⋙ π) ≌ Limits.Cone (Discrete.functor fun i => πₓ (X i)) :=
+def coneDiscreteComp : Limits.Cone (Discrete.functor X ⋙ π) ≌ Limits.Cone (Discrete.functor fun i => πₓ (X i)) :=
   Limits.Cones.postcomposeEquivalence (Discrete.compNatIsoDiscrete X π)
 
 theorem cone_discrete_comp_obj_map_cone :
@@ -344,8 +349,7 @@ theorem cone_discrete_comp_obj_map_cone :
   rfl
 
 /-- This is `pi_iso.inv` as a cone morphism (in fact, isomorphism) -/
-def pi_Top_to_pi_cone :
-    Limits.Fan.mk (πₓ (Top.of (∀ i, X i))) (proj X) ⟶ Groupoidₓ.piLimitFan fun i : I => πₓ (X i) where
+def piTopToPiCone : Limits.Fan.mk (πₓ (Top.of (∀ i, X i))) (proj X) ⟶ Groupoidₓ.piLimitFan fun i : I => πₓ (X i) where
   hom := CategoryTheory.Functor.pi' (proj X)
 
 instance : IsIso (piTopToPiCone X) :=
@@ -353,7 +357,7 @@ instance : IsIso (piTopToPiCone X) :=
   limits.cones.cone_iso_of_hom_iso (pi_Top_to_pi_cone X)
 
 /-- The fundamental groupoid functor preserves products -/
-def preserves_product : Limits.PreservesLimit (Discrete.functor X) π := by
+def preservesProduct : Limits.PreservesLimit (Discrete.functor X) π := by
   apply limits.preserves_limit_of_preserves_limit_cone (Top.piFanIsLimit X)
   apply (limits.is_limit.of_cone_equiv (cone_discrete_comp X)).toFun
   simp only [cone_discrete_comp_obj_map_cone]
@@ -369,11 +373,11 @@ section Prod
 variable (A B : Top.{u})
 
 /-- The induced map of the left projection map X × Y → X -/
-def proj_left : (πₓ (Top.of (A × B))).α ⥤ (πₓ A).α :=
+def projLeft : (πₓ (Top.of (A × B))).α ⥤ (πₓ A).α :=
   πₘ ⟨_, continuous_fst⟩
 
 /-- The induced map of the right projection map X × Y → Y -/
-def proj_right : (πₓ (Top.of (A × B))).α ⥤ (πₓ B).α :=
+def projRight : (πₓ (Top.of (A × B))).α ⥤ (πₓ B).α :=
   πₘ ⟨_, continuous_snd⟩
 
 @[simp]
@@ -390,7 +394,7 @@ theorem proj_right_map (x₀ x₁ : (πₓ (Top.of (A × B))).α) (p : x₀ ⟶ 
 of the two topological spaces. This is in fact an isomorphism (see `prod_iso`).
 -/
 @[simps]
-def prod_to_prod_Top : (πₓ A).α × (πₓ B).α ⥤ (πₓ (Top.of (A × B))).α where
+def prodToProdTop : (πₓ A).α × (πₓ B).α ⥤ (πₓ (Top.of (A × B))).α where
   obj := fun g => g
   map := fun x y p =>
     match x, y, p with
@@ -409,7 +413,7 @@ def prod_to_prod_Top : (πₓ A).α × (πₓ B).α ⥤ (πₓ (Top.of (A × B))
 of the induced left and right projections.
 -/
 @[simps]
-def prod_iso : CategoryTheory.Groupoidₓ.of ((πₓ A).α × (πₓ B).α) ≅ πₓ (Top.of (A × B)) where
+def prodIso : CategoryTheory.Groupoidₓ.of ((πₓ A).α × (πₓ B).α) ≅ πₓ (Top.of (A × B)) where
   hom := prodToProdTop A B
   inv := (projLeft A B).prod' (projRight A B)
   hom_inv_id' := by

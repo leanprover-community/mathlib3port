@@ -1,8 +1,16 @@
+/-
+Copyright (c) 2019 Seul Baek. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Seul Baek
+-/
 import Mathbin.Tactic.Omega.ProveUnsats
 import Mathbin.Tactic.Omega.Nat.Dnf
 import Mathbin.Tactic.Omega.Nat.NegElim
 import Mathbin.Tactic.Omega.Nat.SubElim
 
+/-
+Main procedure for linear natural number arithmetic.
+-/
 open Tactic
 
 namespace Omega
@@ -17,7 +25,7 @@ run_cmd
 attribute [sugar_nat]
   Ne not_leₓ not_ltₓ Nat.lt_iff_add_one_le Nat.succ_eq_add_one or_falseₓ false_orₓ and_trueₓ true_andₓ Ge Gt mul_addₓ add_mulₓ mul_comm one_mulₓ mul_oneₓ imp_iff_not_or iff_iff_not_or_and_or_not
 
--- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:916:4: warning: unsupported (TODO): `[tacs]
 unsafe def desugar :=
   sorry
 

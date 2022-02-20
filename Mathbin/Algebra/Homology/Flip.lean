@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison
+-/
 import Mathbin.Algebra.Homology.HomologicalComplex
 
 /-!
@@ -26,7 +31,7 @@ variable {ι : Type _} {c : ComplexShape ι} {ι' : Type _} {c' : ComplexShape �
 exchanging the horizontal and vertical directions.
 -/
 @[simps]
-def flip_obj (C : HomologicalComplex (HomologicalComplex V c) c') : HomologicalComplex (HomologicalComplex V c') c where
+def flipObj (C : HomologicalComplex (HomologicalComplex V c) c') : HomologicalComplex (HomologicalComplex V c') c where
   x := fun i =>
     { x := fun j => (C.x j).x i, d := fun j j' => (C.d j j').f i,
       shape' := fun j j' w => by
@@ -48,7 +53,7 @@ def flip : HomologicalComplex (HomologicalComplex V c) c' ⥤ HomologicalComplex
 
 /-- Auxiliary definition for `homological_complex.flip_equivalence` .-/
 @[simps]
-def flip_equivalence_unit_iso : 𝟭 (HomologicalComplex (HomologicalComplex V c) c') ≅ flip V c c' ⋙ flip V c' c :=
+def flipEquivalenceUnitIso : 𝟭 (HomologicalComplex (HomologicalComplex V c) c') ≅ flip V c c' ⋙ flip V c' c :=
   NatIso.ofComponents
     (fun C =>
       { Hom :=
@@ -70,7 +75,7 @@ def flip_equivalence_unit_iso : 𝟭 (HomologicalComplex (HomologicalComplex V c
 
 /-- Auxiliary definition for `homological_complex.flip_equivalence` .-/
 @[simps]
-def flip_equivalence_counit_iso : flip V c' c ⋙ flip V c c' ≅ 𝟭 (HomologicalComplex (HomologicalComplex V c') c) :=
+def flipEquivalenceCounitIso : flip V c' c ⋙ flip V c c' ≅ 𝟭 (HomologicalComplex (HomologicalComplex V c') c) :=
   NatIso.ofComponents
     (fun C =>
       { Hom :=
@@ -92,7 +97,7 @@ def flip_equivalence_counit_iso : flip V c' c ⋙ flip V c c' ≅ 𝟭 (Homologi
 
 /-- Flipping a complex of complexes over the diagonal, as an equivalence of categories. -/
 @[simps]
-def flip_equivalence :
+def flipEquivalence :
     HomologicalComplex (HomologicalComplex V c) c' ≌ HomologicalComplex (HomologicalComplex V c') c where
   Functor := flip V c c'
   inverse := flip V c' c

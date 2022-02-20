@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2017 Sebastian Ullrich. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Sebastian Ullrich
+-/
 import Mathbin.Tactic.Core
 
 open Expr
@@ -20,7 +25,8 @@ private unsafe def match_subexpr (p : pattern) : expr → tactic (List expr)
 private unsafe def match_exact : pexpr → expr → tactic (List expr)
   | p, e => do
     let app p₁ p₂ ← pure p | match_expr p e
-    if pexpr.is_placeholder p₁ then do
+    if pexpr.is_placeholder p₁ then -- `_ p` pattern ~> match `p` recursively
+      do
         let p ← pexpr_to_pattern p₂
         match_subexpr p e
       else match_expr p e
@@ -85,3 +91,7 @@ unsafe def find_cmd (_ : parse <| tk "#find") : lean.parser Unit := do
 
 add_tactic_doc { Name := "#find", category := DocCategory.cmd, declNames := [`find_cmd], tags := ["search"] }
 
+-- #find (_ : nat) + _ = _ + _
+-- #find _ + _ = _ + _
+-- #find _ (_ + _) → _ + _ = _ + _   -- TODO(Mario): no results
+-- #find add_group _ → _ + _ = _ + _ -- TODO(Mario): no results

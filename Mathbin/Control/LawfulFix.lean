@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Simon Hudon. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Simon Hudon
+-/
 import Mathbin.Tactic.Apply
 import Mathbin.Control.Fix
 import Mathbin.Order.OmegaCompletePartialOrder
@@ -113,12 +118,12 @@ theorem exists_fix_le_approx (x : α) : ∃ i, Part.fix f x ≤ approx f i x := 
 include f
 
 /-- The series of approximations of `fix f` (see `approx`) as a `chain` -/
-def approx_chain : Chain (∀ a, Part <| β a) :=
+def approxChain : Chain (∀ a, Part <| β a) :=
   ⟨approx f, approx_mono f⟩
 
 theorem le_f_of_mem_approx {x} (hx : x ∈ approxChain f) : x ≤ f x := by
   revert hx
-  simp [· ∈ ·]
+  simp [(· ∈ ·)]
   intro i hx
   subst x
   apply approx_mono'
@@ -184,6 +189,7 @@ theorem fix_eq : Part.fix f = f (Part.fix f) := by
     intro i
     exists i
     intro x
+    -- intros x y hx,
     apply le_f_of_mem_approx _ ⟨i, rfl⟩
     
   · apply ωSup_le_ωSup_of_le _
@@ -198,9 +204,9 @@ namespace Part
 
 /-- `to_unit` as a monotone function -/
 @[simps]
-def to_unit_mono (f : Part α →o Part α) : (Unit → Part α) →o Unit → Part α where
+def toUnitMono (f : Part α →o Part α) : (Unit → Part α) →o Unit → Part α where
   toFun := fun x u => f (x u)
-  monotone' := fun x y h : x ≤ y u => f.Monotone <| h u
+  monotone' := fun u => f.Monotone <| h u
 
 theorem to_unit_cont (f : Part α →o Part α) (hc : Continuous f) : Continuous (toUnitMono f)
   | c => by
@@ -231,13 +237,13 @@ variable (α β γ)
 
 /-- `sigma.curry` as a monotone function. -/
 @[simps]
-def monotone_curry [∀ x y, Preorderₓ <| γ x y] : (∀ x : Σ a, β a, γ x.1 x.2) →o ∀ a b : β a, γ a b where
+def monotoneCurry [∀ x y, Preorderₓ <| γ x y] : (∀ x : Σ a, β a, γ x.1 x.2) →o ∀ a b : β a, γ a b where
   toFun := curry
   monotone' := fun x y h a b => h ⟨a, b⟩
 
 /-- `sigma.uncurry` as a monotone function. -/
 @[simps]
-def monotone_uncurry [∀ x y, Preorderₓ <| γ x y] : (∀ a b : β a, γ a b) →o ∀ x : Σ a, β a, γ x.1 x.2 where
+def monotoneUncurry [∀ x y, Preorderₓ <| γ x y] : (∀ a b : β a, γ a b) →o ∀ x : Σ a, β a, γ x.1 x.2 where
   toFun := uncurry
   monotone' := fun x y h a => h a.1 a.2
 
@@ -277,7 +283,7 @@ theorem uncurry_curry_continuous : continuous <| (monotoneUncurry α β γ).comp
 
 end Curry
 
-instance pi.lawful_fix' [LawfulFix <| ∀ x : Sigma β, γ x.1 x.2] : LawfulFix (∀ x y, γ x y) where
+instance Pi.lawfulFix' [LawfulFix <| ∀ x : Sigma β, γ x.1 x.2] : LawfulFix (∀ x y, γ x y) where
   fix_eq := fun f hc => by
     dsimp [fix]
     conv => lhs erw [LawfulFix.fix_eq (uncurry_curry_continuous hc)]

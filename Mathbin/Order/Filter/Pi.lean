@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Yury G. Kudryashov. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yury G. Kudryashov, Alex Kontorovich
+-/
 import Mathbin.Order.Filter.Bases
 
 /-!
@@ -122,7 +127,7 @@ theorem pi_inf_principal_pi_ne_bot [∀ i, NeBot (f i)] {I : Set ι} :
     NeBot (pi f⊓𝓟 (I.pi s)) ↔ ∀, ∀ i ∈ I, ∀, NeBot (f i⊓𝓟 (s i)) := by
   simp [ne_bot_iff]
 
-instance pi_inf_principal_pi.ne_bot [h : ∀ i, NeBot (f i⊓𝓟 (s i))] {I : Set ι} : NeBot (pi f⊓𝓟 (I.pi s)) :=
+instance PiInfPrincipalPi.ne_bot [h : ∀ i, NeBot (f i⊓𝓟 (s i))] {I : Set ι} : NeBot (pi f⊓𝓟 (I.pi s)) :=
   (pi_inf_principal_univ_pi_ne_bot.2 ‹_›).mono <| inf_le_inf_left _ <| principal_mono.2 fun x hx i hi => hx i trivialₓ
 
 @[simp]
@@ -144,7 +149,7 @@ end Pi
 section Coprod
 
 /-- Coproduct of filters. -/
-protected def Coprod (f : ∀ i, Filter (α i)) : Filter (∀ i, α i) :=
+protected def coprodₓ (f : ∀ i, Filter (α i)) : Filter (∀ i, α i) :=
   ⨆ i : ι, comap (eval i) (f i)
 
 theorem mem_Coprod_iff {s : Set (∀ i, α i)} : s ∈ Filter.coprodₓ f ↔ ∀ i : ι, ∃ t₁ ∈ f i, eval i ⁻¹' t₁ ⊆ s := by
@@ -163,7 +168,7 @@ theorem Coprod_ne_bot_iff' : NeBot (Filter.coprodₓ f) ↔ (∀ i, Nonempty (α
 theorem Coprod_ne_bot_iff [∀ i, Nonempty (α i)] : NeBot (Filter.coprodₓ f) ↔ ∃ d, NeBot (f d) := by
   simp [Coprod_ne_bot_iff', *]
 
-theorem ne_bot.Coprod [∀ i, Nonempty (α i)] {i : ι} (h : NeBot (f i)) : NeBot (Filter.coprodₓ f) :=
+theorem NeBot.Coprod [∀ i, Nonempty (α i)] {i : ι} (h : NeBot (f i)) : NeBot (Filter.coprodₓ f) :=
   Coprod_ne_bot_iff.2 ⟨i, h⟩
 
 @[instance]
@@ -184,7 +189,7 @@ theorem map_pi_map_Coprod_le :
   obtain ⟨t, H, hH⟩ := h i
   exact ⟨{ x : α i | m i x ∈ t }, H, fun x hx => hH hx⟩
 
-theorem tendsto.pi_map_Coprod {g : ∀ i, Filter (β i)} (h : ∀ i, Tendsto (m i) (f i) (g i)) :
+theorem Tendsto.pi_map_Coprod {g : ∀ i, Filter (β i)} (h : ∀ i, Tendsto (m i) (f i) (g i)) :
     Tendsto (fun k : ∀ i, α i => fun i => m i (k i)) (Filter.coprodₓ f) (Filter.coprodₓ g) :=
   map_pi_map_Coprod_le.trans (Coprod_mono h)
 

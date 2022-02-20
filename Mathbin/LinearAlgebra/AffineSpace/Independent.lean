@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Joseph Myers. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Joseph Myers
+-/
 import Mathbin.Data.Finset.Sort
 import Mathbin.Data.Fin.VecNotation
 import Mathbin.LinearAlgebra.AffineSpace.Combination
@@ -491,7 +496,7 @@ theorem exists_subset_affine_independent_affine_span_eq_top {s : Set P} (h : Aff
 
 variable (k V)
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (t «expr ⊆ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (t «expr ⊆ » s)
 theorem exists_affine_independent (s : Set P) :
     ∃ (t : _)(_ : t ⊆ s), affineSpan k t = affineSpan k s ∧ AffineIndependent k (coe : t → P) := by
   rcases s.eq_empty_or_nonempty with (rfl | ⟨p, hp⟩)
@@ -523,23 +528,23 @@ theorem exists_affine_independent (s : Set P) :
 
 variable (k) {V P}
 
--- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»
 -- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
--- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»
 /-- Two different points are affinely independent. -/
 theorem affine_independent_of_ne {p₁ p₂ : P} (h : p₁ ≠ p₂) :
     AffineIndependent k
-      («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»") :=
+      («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»") :=
   by
   rw
     [affine_independent_iff_linear_independent_vsub k
-      («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»") 0]
+      («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»") 0]
   let i₁ : { x // x ≠ (0 : Finₓ 2) } :=
     ⟨1, by
       norm_num⟩
@@ -551,8 +556,8 @@ theorem affine_independent_of_ne {p₁ p₂ : P} (h : p₁ ≠ p₂) :
       
   have : Unique { x // x ≠ (0 : Finₓ 2) } := ⟨⟨i₁⟩, he'⟩
   have hz :
-    ((«expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»") ↑default -ᵥ
-        («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»") 0 :
+    ((«expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»") ↑default -ᵥ
+        («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»") 0 :
         V) ≠
       0 :=
     by
@@ -572,12 +577,12 @@ include V
 
 /-- A `simplex k P n` is a collection of `n + 1` affinely
 independent points. -/
-structure simplex (n : ℕ) where
+structure Simplex (n : ℕ) where
   points : Finₓ (n + 1) → P
   Independent : AffineIndependent k points
 
 /-- A `triangle k P` is a collection of three affinely independent points. -/
-abbrev triangle :=
+abbrev Triangle :=
   Simplex k P 2
 
 namespace Simplex
@@ -585,7 +590,7 @@ namespace Simplex
 variable {P}
 
 /-- Construct a 0-simplex from a point. -/
-def mk_of_point (p : P) : Simplex k P 0 :=
+def mkOfPoint (p : P) : Simplex k P 0 :=
   ⟨fun _ => p, affine_independent_of_subsingleton k _⟩
 
 /-- The point in a simplex constructed with `mk_of_point`. -/
@@ -596,7 +601,7 @@ theorem mk_of_point_points (p : P) (i : Finₓ 1) : (mkOfPoint k p).points i = p
 instance [Inhabited P] : Inhabited (Simplex k P 0) :=
   ⟨mkOfPoint k default⟩
 
-instance Nonempty : Nonempty (Simplex k P 0) :=
+instance nonempty : Nonempty (Simplex k P 0) :=
   ⟨mkOfPoint k <| AddTorsor.nonempty.some⟩
 
 variable {k V}

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Mario Carneiro. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Mario Carneiro, Floris van Doorn, Yury Kudryashov
+-/
 import Mathbin.Topology.Algebra.Order.MonotoneContinuity
 import Mathbin.Topology.Instances.Nnreal
 
@@ -92,7 +97,7 @@ theorem sqrt_mul (x y : ℝ≥0 ) : sqrt (x * y) = sqrt x * sqrt y := by
   rw [sqrt_eq_iff_sq_eq, mul_mul_mul_commₓ, mul_self_sqrt, mul_self_sqrt]
 
 /-- `nnreal.sqrt` as a `monoid_with_zero_hom`. -/
-noncomputable def sqrt_hom : ℝ≥0 →*₀ ℝ≥0 :=
+noncomputable def sqrtHom : ℝ≥0 →*₀ ℝ≥0 :=
   ⟨sqrt, sqrt_zero, sqrt_one, sqrt_mul⟩
 
 theorem sqrt_inv (x : ℝ≥0 ) : sqrt x⁻¹ = (sqrt x)⁻¹ :=
@@ -110,7 +115,7 @@ namespace Real
 
 /-- An auxiliary sequence of rational numbers that converges to `real.sqrt (mk f)`.
 Currently this sequence is not used in `mathlib`.  -/
-def sqrt_aux (f : CauSeq ℚ abs) : ℕ → ℚ
+def sqrtAux (f : CauSeq ℚ abs) : ℕ → ℚ
   | 0 => Rat.mkNat (f 0).num.toNat.sqrt (f 0).denom.sqrt
   | n + 1 =>
     let s := sqrt_aux n
@@ -122,10 +127,32 @@ theorem sqrt_aux_nonneg (f : CauSeq ℚ abs) : ∀ i : ℕ, 0 ≤ sqrtAux f i
   | n + 1 => le_max_leftₓ _ _
 
 /-- The square root of a real number. This returns 0 for negative inputs. -/
+/- TODO(Mario): finish the proof
+theorem sqrt_aux_converges (f : cau_seq ℚ abs) : ∃ h x, 0 ≤ x ∧ x * x = max 0 (mk f) ∧
+  mk ⟨sqrt_aux f, h⟩ = x :=
+begin
+  rcases sqrt_exists (le_max_left 0 (mk f)) with ⟨x, x0, hx⟩,
+  suffices : ∃ h, mk ⟨sqrt_aux f, h⟩ = x,
+  { exact this.imp (λ h e, ⟨x, x0, hx, e⟩) },
+  apply of_near,
+
+  suffices : ∃ δ > 0, ∀ i, abs (↑(sqrt_aux f i) - x) < δ / 2 ^ i,
+  { rcases this with ⟨δ, δ0, hδ⟩,
+    intros }
+end -/
 @[pp_nodot]
 noncomputable def sqrt (x : ℝ) : ℝ :=
   Nnreal.sqrt (Real.toNnreal x)
 
+/-quotient.lift_on x
+  (λ f, mk ⟨sqrt_aux f, (sqrt_aux_converges f).fst⟩)
+  (λ f g e, begin
+    rcases sqrt_aux_converges f with ⟨hf, x, x0, xf, xs⟩,
+    rcases sqrt_aux_converges g with ⟨hg, y, y0, yg, ys⟩,
+    refine xs.trans (eq.trans _ ys.symm),
+    rw [← @mul_self_inj_of_nonneg ℝ _ x y x0 y0, xf, yg],
+    congr' 1, exact quotient.sound e
+  end)-/
 variable {x y : ℝ}
 
 @[simp, norm_cast]
@@ -230,6 +257,8 @@ theorem sqrt_le_iff : sqrt x ≤ y ↔ 0 ≤ y ∧ x ≤ y ^ 2 := by
   rw [← and_iff_right_of_imp fun h => (sqrt_nonneg x).trans h, And.congr_right_iff]
   exact sqrt_le_left
 
+/- note: if you want to conclude `x ≤ sqrt y`, then use `le_sqrt_of_sq_le`.
+   if you have `x > 0`, consider using `le_sqrt'` -/
 theorem le_sqrt (hx : 0 ≤ x) (hy : 0 ≤ y) : x ≤ sqrt y ↔ x ^ 2 ≤ y := by
   rw [mul_self_le_mul_self_iff hx (sqrt_nonneg _), sq, mul_self_sqrt hy]
 

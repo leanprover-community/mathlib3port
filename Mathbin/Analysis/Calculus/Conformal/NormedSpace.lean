@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Yourong Zang. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yourong Zang
+-/
 import Mathbin.Analysis.NormedSpace.ConformalLinearMap
 import Mathbin.Analysis.Calculus.Fderiv
 
@@ -78,7 +83,7 @@ theorem conformal_at_iff_is_conformal_map_fderiv {f : X → Y} {x : X} :
 
 namespace ConformalAt
 
-theorem DifferentiableAt {f : X → Y} {x : X} (h : ConformalAt f x) : DifferentiableAt ℝ f x :=
+theorem differentiable_at {f : X → Y} {x : X} (h : ConformalAt f x) : DifferentiableAt ℝ f x :=
   let ⟨_, h₁, _⟩ := h
   h₁.DifferentiableAt
 
@@ -112,10 +117,10 @@ theorem conformal_const_smul {c : ℝ} (h : c ≠ 0) : Conformal fun x : X => c 
 
 namespace Conformal
 
-theorem ConformalAt {f : X → Y} (h : Conformal f) (x : X) : ConformalAt f x :=
+theorem conformal_at {f : X → Y} (h : Conformal f) (x : X) : ConformalAt f x :=
   h x
 
-theorem Differentiable {f : X → Y} (h : Conformal f) : Differentiable ℝ f := fun x => (h x).DifferentiableAt
+theorem differentiable {f : X → Y} (h : Conformal f) : Differentiable ℝ f := fun x => (h x).DifferentiableAt
 
 theorem comp {f : X → Y} {g : Y → Z} (hf : Conformal f) (hg : Conformal g) : Conformal (g ∘ f) := fun x =>
   (hg <| f x).comp x (hf x)

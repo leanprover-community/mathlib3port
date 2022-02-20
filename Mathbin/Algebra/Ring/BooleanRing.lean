@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Bryan Gin-ge Chen. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Bryan Gin-ge Chen
+-/
 import Mathbin.Tactic.Ring
 import Mathbin.Tactic.Abel
 
@@ -96,45 +101,47 @@ namespace BooleanRing
 
 variable {α : Type _} [BooleanRing α]
 
+-- Note [lower instance priority]
 instance (priority := 100) : CommRingₓ α :=
   { (inferInstance : BooleanRing α) with
     mul_comm := fun a b => by
       rw [← add_eq_zero, mul_add_mul] }
 
 /-- The join operation in a Boolean ring is `x + y + x*y`. -/
-def HasSup : HasSup α :=
+def hasSup : HasSup α :=
   ⟨fun x y => x + y + x * y⟩
 
 /-- The meet operation in a Boolean ring is `x * y`. -/
-def HasInf : HasInf α :=
-  ⟨· * ·⟩
+def hasInf : HasInf α :=
+  ⟨(· * ·)⟩
 
+-- Note [lower instance priority]
 localized [BooleanAlgebraOfBooleanRing] attribute [instance] BooleanRing.hasSup
 
 localized [BooleanAlgebraOfBooleanRing] attribute [instance] BooleanRing.hasInf
 
 theorem sup_comm (a b : α) : a⊔b = b⊔a := by
-  dsimp only [·⊔·]
+  dsimp only [(·⊔·)]
   ring
 
 theorem inf_comm (a b : α) : a⊓b = b⊓a := by
-  dsimp only [·⊓·]
+  dsimp only [(·⊓·)]
   ring
 
 theorem sup_assoc (a b c : α) : a⊔b⊔c = a⊔(b⊔c) := by
-  dsimp only [·⊔·]
+  dsimp only [(·⊔·)]
   ring
 
 theorem inf_assoc (a b c : α) : a⊓b⊓c = a⊓(b⊓c) := by
-  dsimp only [·⊓·]
+  dsimp only [(·⊓·)]
   ring
 
 theorem sup_inf_self (a b : α) : a⊔a⊓b = a := by
-  dsimp only [·⊔·, ·⊓·]
+  dsimp only [(·⊔·), (·⊓·)]
   assoc_rw [mul_self, add_self, add_zeroₓ]
 
 theorem inf_sup_self (a b : α) : a⊓(a⊔b) = a := by
-  dsimp only [·⊔·, ·⊓·]
+  dsimp only [(·⊔·), (·⊓·)]
   assoc_rw [mul_addₓ, mul_addₓ, mul_self, mul_self, add_self, add_zeroₓ]
 
 theorem le_sup_inf_aux (a b c : α) : (a + b + a * b) * (a + c + a * c) = a + b * c + a * (b * c) :=
@@ -148,15 +155,15 @@ theorem le_sup_inf_aux (a b c : α) : (a + b + a * b) * (a + c + a * c) = a + b 
     
 
 theorem le_sup_inf (a b c : α) : (a⊔b)⊓(a⊔c)⊔(a⊔b⊓c) = a⊔b⊓c := by
-  dsimp only [·⊔·, ·⊓·]
+  dsimp only [(·⊔·), (·⊓·)]
   rw [le_sup_inf_aux, add_self, mul_self, zero_addₓ]
 
 /-- The "set difference" operation in a Boolean ring is `x * (1 + y)`. -/
-def HasSdiff : HasSdiff α :=
+def hasSdiff : HasSdiff α :=
   ⟨fun a b => a * (1 + b)⟩
 
 /-- The bottom element of a Boolean ring is `0`. -/
-def HasBot : HasBot α :=
+def hasBot : HasBot α :=
   ⟨0⟩
 
 localized [BooleanAlgebraOfBooleanRing] attribute [instance] BooleanRing.hasSdiff
@@ -194,7 +201,7 @@ The data is defined so that:
 * `aᶜ` unfolds to `1 + a`
 * `a \ b` unfolds to `a * (1 + b)`
 -/
-def to_boolean_algebra : BooleanAlgebra α :=
+def toBooleanAlgebra : BooleanAlgebra α :=
   { Lattice.mk' sup_comm sup_assoc inf_comm inf_assoc sup_inf_self inf_sup_self, hasSdiff, hasBot with
     le_sup_inf := le_sup_inf, top := 1,
     le_top := fun a =>

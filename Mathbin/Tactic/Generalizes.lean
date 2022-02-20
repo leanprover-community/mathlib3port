@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Jannis Limperg. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Jannis Limperg
+-/
 import Mathbin.Tactic.Core
 
 /-!
@@ -139,7 +144,7 @@ unsafe def generalizes' (args : List (Name × Option Name × expr)) (md := semir
   let stage1_args := args.map fun ⟨n, _, j⟩ => (n, j)
   let ⟨e, ks⟩ ← step1 md unify tgt stage1_args
   let stage2_args : List (Option (Name × expr × expr)) :=
-    args.map₂ (fun ⟨_, eq_name, j⟩ k => eq_name.map fun eq_name => (eq_name, j, k)) ks
+    args.map₂ (fun k => eq_name.map fun eq_name => (eq_name, j, k)) ks
   let stage2_args := stage2_args.reduceOption
   let eqs_and_proofs ← step2 md stage2_args
   let eqs := eqs_and_proofs.map Prod.fst

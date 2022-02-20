@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Reid Barton. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Reid Barton
+-/
 import Mathbin.Tactic.AutoCases
 import Mathbin.Tactic.Tidy
 import Mathbin.Tactic.WithLocalReducibility
@@ -28,15 +33,18 @@ unsafe def continuity : user_attribute where
   Name := `continuity
   descr := "lemmas usable to prove continuity"
 
+-- Mark some continuity lemmas already defined in `topology.basic`
 attribute [continuity] continuous_id continuous_const
 
+-- As we will be using `apply_rules` with `md := semireducible`,
+-- we need another version of `continuous_id`.
 @[continuity]
 theorem continuous_id' {α : Type _} [TopologicalSpace α] : Continuous fun a : α => a :=
   continuous_id
 
 namespace Tactic
 
--- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:916:4: warning: unsupported (TODO): `[tacs]
 /-- Tactic to apply `continuous.comp` when appropriate.
 
 Applying `continuous.comp` is not always a good idea, so we have some

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Anatole Dedecker. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Anatole Dedecker
+-/
 import Mathbin.Analysis.Calculus.MeanValue
 
 /-!
@@ -106,6 +111,7 @@ theorem lhopital_zero_left_on_Ioo (hff' : ∀, ∀ x ∈ Ioo a b, ∀, HasDerivA
     (hfb : Tendsto f (nhdsWithin b (Iio b)) (𝓝 0)) (hgb : Tendsto g (nhdsWithin b (Iio b)) (𝓝 0))
     (hdiv : Tendsto (fun x => f' x / g' x) (nhdsWithin b (Iio b)) l) :
     Tendsto (fun x => f x / g x) (nhdsWithin b (Iio b)) l := by
+  -- Here, we essentially compose by `has_neg.neg`. The following is mostly technical details.
   have hdnf : ∀, ∀ x ∈ -Ioo a b, ∀, HasDerivAt (f ∘ Neg.neg) (f' (-x) * -1) x := fun x hx =>
     comp x (hff' (-x) hx) (has_deriv_at_neg x)
   have hdng : ∀, ∀ x ∈ -Ioo a b, ∀, HasDerivAt (g ∘ Neg.neg) (g' (-x) * -1) x := fun x hx =>
@@ -181,6 +187,7 @@ theorem lhopital_zero_at_bot_on_Iio (hff' : ∀, ∀ x ∈ Iio a, ∀, HasDerivA
     (hgg' : ∀, ∀ x ∈ Iio a, ∀, HasDerivAt g (g' x) x) (hg' : ∀, ∀ x ∈ Iio a, ∀, g' x ≠ 0)
     (hfbot : Tendsto f atBot (𝓝 0)) (hgbot : Tendsto g atBot (𝓝 0)) (hdiv : Tendsto (fun x => f' x / g' x) atBot l) :
     Tendsto (fun x => f x / g x) atBot l := by
+  -- Here, we essentially compose by `has_neg.neg`. The following is mostly technical details.
   have hdnf : ∀, ∀ x ∈ -Iio a, ∀, HasDerivAt (f ∘ Neg.neg) (f' (-x) * -1) x := fun x hx =>
     comp x (hff' (-x) hx) (has_deriv_at_neg x)
   have hdng : ∀, ∀ x ∈ -Iio a, ∀, HasDerivAt (g ∘ Neg.neg) (g' (-x) * -1) x := fun x hx =>

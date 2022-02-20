@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Yury G. Kudryashov. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yury G. Kudryashov
+-/
 import Mathbin.Algebra.IterateHom
 import Mathbin.Analysis.SpecificLimits
 import Mathbin.Order.Iterate
@@ -141,7 +146,7 @@ theorem coe_mk f h₁ h₂ : ⇑mk f h₁ h₂ = f :=
 
 variable (f g : CircleDeg1Lift)
 
-protected theorem Monotone : Monotone f :=
+protected theorem monotone : Monotone f :=
   f.monotone'
 
 @[mono]
@@ -159,7 +164,7 @@ theorem map_add_one : ∀ x, f (x + 1) = f x + 1 :=
 theorem map_one_add (x : ℝ) : f (1 + x) = 1 + f x := by
   rw [add_commₓ, map_add_one, add_commₓ]
 
-theorem coe_inj : ∀ ⦃f g : CircleDeg1Lift⦄, (f : ℝ → ℝ) = g → f = g := fun ⟨f, fm, fd⟩ ⟨g, gm, gd⟩ h => by
+theorem coe_inj : ∀ ⦃f g : CircleDeg1Lift⦄, (f : ℝ → ℝ) = g → f = g := fun h => by
   congr <;> exact h
 
 @[ext]
@@ -193,7 +198,7 @@ theorem mul_apply x : (f * g) x = f (g x) :=
 theorem coe_one : ⇑(1 : CircleDeg1Lift) = id :=
   rfl
 
-instance units_has_coe_to_fun : CoeFun (CircleDeg1Lift)ˣ fun _ => ℝ → ℝ :=
+instance unitsHasCoeToFun : CoeFun (CircleDeg1Lift)ˣ fun _ => ℝ → ℝ :=
   ⟨fun f => ⇑(f : CircleDeg1Lift)⟩
 
 @[simp, norm_cast]
@@ -209,7 +214,7 @@ theorem units_apply_inv_apply (f : (CircleDeg1Lift)ˣ) (x : ℝ) : f ((f⁻¹ : 
   simp only [← units_coe, ← mul_apply, f.mul_inv, coe_one, id]
 
 /-- If a lift of a circle map is bijective, then it is an order automorphism of the line. -/
-def to_order_iso : (CircleDeg1Lift)ˣ →* ℝ ≃o ℝ where
+def toOrderIso : (CircleDeg1Lift)ˣ →* ℝ ≃o ℝ where
   toFun := fun f =>
     { toFun := f, invFun := ⇑f⁻¹, left_inv := units_inv_apply_apply f, right_inv := units_apply_inv_apply f,
       map_rel_iff' := fun x y =>
@@ -366,7 +371,8 @@ theorem map_fract_sub_fract_eq (x : ℝ) : f (fract x) - fract x = f x - x := by
 /-- Monotone circle maps form a lattice with respect to the pointwise order -/
 noncomputable instance : Lattice CircleDeg1Lift where
   sup := fun f g =>
-    { toFun := fun x => max (f x) (g x), monotone' := fun x y h => max_le_max (f.mono h) (g.mono h),
+    { toFun := fun x => max (f x) (g x),
+      monotone' := fun x y h => max_le_max (f.mono h) (g.mono h),-- TODO: generalize to `monotone.max`
       map_add_one' := fun x => by
         simp [max_add_add_right] }
   le := fun f g => ∀ x, f x ≤ g x
@@ -558,15 +564,17 @@ theorem mul_floor_map_zero_le_floor_iterate_zero (n : ℕ) : ↑n * ⌊f 0⌋ �
 noncomputable section
 
 /-- An auxiliary sequence used to define the translation number. -/
-def transnum_aux_seq (n : ℕ) : ℝ :=
+def transnumAuxSeq (n : ℕ) : ℝ :=
   (f ^ 2 ^ n) 0 / 2 ^ n
 
 /-- The translation number of a `circle_deg1_lift`, $τ(f)=\lim_{n→∞}\frac{f^n(x)-x}{n}$. We use
 an auxiliary sequence `\frac{f^{2^n}(0)}{2^n}` to define `τ(f)` because some proofs are simpler
 this way. -/
-def translation_number : ℝ :=
+def translationNumber : ℝ :=
   limₓ atTop f.transnumAuxSeq
 
+-- TODO: choose two different symbols for `circle_deg1_lift.translation_number` and the future
+-- `circle_mono_homeo.rotation_number`, then make them `localized notation`s
 local notation "τ" => translationNumber
 
 theorem transnum_aux_seq_def : f.transnumAuxSeq = fun n : ℕ => (f ^ 2 ^ n) 0 / 2 ^ n :=
@@ -577,7 +585,7 @@ theorem translation_number_eq_of_tendsto_aux {τ' : ℝ} (h : Tendsto f.transnum
 
 theorem translation_number_eq_of_tendsto₀ {τ' : ℝ} (h : Tendsto (fun n : ℕ => (f^[n]) 0 / n) atTop (𝓝 τ')) : τ f = τ' :=
   f.translation_number_eq_of_tendsto_aux <| by
-    simpa [· ∘ ·, transnum_aux_seq_def, coe_pow] using h.comp (Nat.tendsto_pow_at_top_at_top_of_one_lt one_lt_two)
+    simpa [(· ∘ ·), transnum_aux_seq_def, coe_pow] using h.comp (Nat.tendsto_pow_at_top_at_top_of_one_lt one_lt_two)
 
 theorem translation_number_eq_of_tendsto₀' {τ' : ℝ} (h : Tendsto (fun n : ℕ => (f^[n + 1]) 0 / (n + 1)) atTop (𝓝 τ')) :
     τ f = τ' :=
@@ -798,16 +806,16 @@ theorem lt_translation_number_of_forall_add_lt (hf : Continuous f) {z : ℝ} (hz
   simp only [← le_sub_iff_add_le']
   exact f.forall_map_sub_of_Icc _ hx
 
--- ././Mathport/Syntax/Translate/Basic.lean:418:16: unsupported tactic `by_contra'
--- ././Mathport/Syntax/Translate/Basic.lean:418:16: unsupported tactic `by_contra'
+-- ././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'
+-- ././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'
 /-- If `f` is a continuous monotone map `ℝ → ℝ`, `f (x + 1) = f x + 1`, then there exists `x`
 such that `f x = x + τ f`. -/
 theorem exists_eq_add_translation_number (hf : Continuous f) : ∃ x, f x = x + τ f := by
   obtain ⟨a, ha⟩ : ∃ x, f x ≤ x + f.translation_number := by
-    "././Mathport/Syntax/Translate/Basic.lean:418:16: unsupported tactic `by_contra'"
+    "././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'"
     exact lt_irreflₓ _ (f.lt_translation_number_of_forall_add_lt hf H)
   obtain ⟨b, hb⟩ : ∃ x, x + τ f ≤ f x := by
-    "././Mathport/Syntax/Translate/Basic.lean:418:16: unsupported tactic `by_contra'"
+    "././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'"
     exact lt_irreflₓ _ (f.translation_number_lt_of_forall_lt_add hf H)
   exact intermediate_value_univ₂ hf (continuous_id.add continuous_const) ha hb
 
@@ -834,6 +842,8 @@ This is a version of Proposition 5.4 from [Étienne Ghys, Groupes d'homeomorphis
 cohomologie bornee][ghys87:groupes]. -/
 theorem semiconj_of_group_action_of_forall_translation_number_eq {G : Type _} [Groupₓ G] (f₁ f₂ : G →* CircleDeg1Lift)
     (h : ∀ g, τ (f₁ g) = τ (f₂ g)) : ∃ F : CircleDeg1Lift, ∀ g, Semiconj F (f₁ g) (f₂ g) := by
+  -- Equality of translation number guarantees that for each `x`
+  -- the set `{f₂ g⁻¹ (f₁ g x) | g : G}` is bounded above.
   have : ∀ x, BddAbove (range fun g => f₂ g⁻¹ (f₁ g x)) := by
     refine' fun x => ⟨x + 2, _⟩
     rintro _ ⟨g, rfl⟩
@@ -845,12 +855,15 @@ theorem semiconj_of_group_action_of_forall_translation_number_eq {G : Type _} [G
         mono
         exact (map_lt_add_translation_number_add_one _ _).le _ = x + 2 := by
         simp [this, bit0, add_assocₓ]
+  -- We have a theorem about actions by `order_iso`, so we introduce auxiliary maps
+  -- to `ℝ ≃o ℝ`.
   set F₁ := to_order_iso.comp f₁.to_hom_units
   set F₂ := to_order_iso.comp f₂.to_hom_units
   have hF₁ : ∀ g, ⇑F₁ g = f₁ g := fun _ => rfl
   have hF₂ : ∀ g, ⇑F₂ g = f₂ g := fun _ => rfl
   simp only [← hF₁, ← hF₂]
-  refine' ⟨⟨_, fun x y hxy => _, fun x => _⟩, cSup_div_semiconj F₂ F₁ fun x => _⟩ <;>
+  -- Now we apply `cSup_div_semiconj` and go back to `f₁` and `f₂`.
+    refine' ⟨⟨_, fun x y hxy => _, fun x => _⟩, cSup_div_semiconj F₂ F₁ fun x => _⟩ <;>
     simp only [hF₁, hF₂, ← MonoidHom.map_inv, coe_mk]
   · refine' csupr_le_csupr (this y) fun g => _
     exact mono _ (mono _ hxy)

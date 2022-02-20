@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Jeremy Avigad. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Jeremy Avigad
+-/
 import Mathbin.Order.GaloisConnection
 
 /-!
@@ -35,24 +40,24 @@ namespace Rel
 variable {δ : Type _} (r : Rel α β)
 
 /-- The inverse relation : `r.inv x y ↔ r y x`. Note that this is *not* a groupoid inverse. -/
-def inv : Rel β α :=
+def Inv : Rel β α :=
   flip r
 
 theorem inv_def (x : α) (y : β) : r.inv y x ↔ r x y :=
   Iff.rfl
 
-theorem inv_invₓ : Inv (Inv r) = r := by
+theorem inv_inv : Inv (Inv r) = r := by
   ext x y
   rfl
 
 /-- Domain of a relation -/
-def dom :=
+def Dom :=
   { x | ∃ y, r x y }
 
 theorem dom_mono {r s : Rel α β} (h : r ≤ s) : Dom r ⊆ Dom s := fun a ⟨b, hx⟩ => ⟨b, h a b hx⟩
 
 /-- Codomain aka range of a relation -/
-def codom :=
+def Codom :=
   { y | ∃ x, r x y }
 
 theorem codom_inv : r.inv.Codom = r.Dom := by
@@ -64,7 +69,7 @@ theorem dom_inv : r.inv.Dom = r.Codom := by
   rfl
 
 /-- Composition of relation; note that it follows the `category_theory/` order of arguments. -/
-def comp (r : Rel α β) (s : Rel β γ) : Rel α γ := fun x z => ∃ y, r x y ∧ s y z
+def Comp (r : Rel α β) (s : Rel β γ) : Rel α γ := fun x z => ∃ y, r x y ∧ s y z
 
 local infixr:0 " ∘ " => Rel.Comp
 
@@ -99,13 +104,13 @@ theorem inv_comp (r : Rel α β) (s : Rel β γ) : Inv (r ∘ s) = (Inv s ∘ In
   simp [comp, inv, flip, And.comm]
 
 /-- Image of a set under a relation -/
-def image (s : Set α) : Set β :=
+def Image (s : Set α) : Set β :=
   { y | ∃ x ∈ s, r x y }
 
 theorem mem_image (y : β) (s : Set α) : y ∈ Image r s ↔ ∃ x ∈ s, r x y :=
   Iff.rfl
 
-theorem image_subset : (· ⊆ ·⇒· ⊆ ·) r.Image r.Image := fun s t h y ⟨x, xs, rxy⟩ => ⟨x, h xs, rxy⟩
+theorem image_subset : ((· ⊆ ·)⇒(· ⊆ ·)) r.Image r.Image := fun s t h y ⟨x, xs, rxy⟩ => ⟨x, h xs, rxy⟩
 
 theorem image_mono : Monotone r.Image :=
   r.image_subset
@@ -137,7 +142,7 @@ theorem image_univ : r.Image Set.Univ = r.Codom := by
   simp [mem_image, codom]
 
 /-- Preimage of a set under a relation `r`. Same as the image of `s` under `r.inv` -/
-def preimage (s : Set β) : Set α :=
+def Preimage (s : Set β) : Set α :=
   r.inv.Image s
 
 theorem mem_preimage (x : α) (s : Set β) : x ∈ r.Preimage s ↔ ∃ y ∈ s, r x y :=
@@ -166,13 +171,13 @@ theorem preimage_univ : r.Preimage Set.Univ = r.Dom := by
 
 /-- Core of a set `s : set β` w.r.t `r : rel α β` is the set of `x : α` that are related *only*
 to elements of `s`. Other generalization of `function.preimage`. -/
-def core (s : Set β) :=
+def Core (s : Set β) :=
   { x | ∀ y, r x y → y ∈ s }
 
 theorem mem_core (x : α) (s : Set β) : x ∈ r.Core s ↔ ∀ y, r x y → y ∈ s :=
   Iff.rfl
 
-theorem core_subset : (· ⊆ ·⇒· ⊆ ·) r.Core r.Core := fun s t h x h' y rxy => h (h' y rxy)
+theorem core_subset : ((· ⊆ ·)⇒(· ⊆ ·)) r.Core r.Core := fun s t h x h' y rxy => h (h' y rxy)
 
 theorem core_mono : Monotone r.Core :=
   r.core_subset
@@ -204,7 +209,7 @@ theorem core_comp (s : Rel β γ) (t : Set γ) : Core (r ∘ s) t = Core r (Core
     
 
 /-- Restrict the domain of a relation to a subtype. -/
-def restrict_domain (s : Set α) : Rel { x // x ∈ s } β := fun x y => r x.val y
+def RestrictDomain (s : Set α) : Rel { x // x ∈ s } β := fun x y => r x.val y
 
 theorem image_subset_iff (s : Set α) (t : Set β) : Image r s ⊆ t ↔ s ⊆ Core r t :=
   Iff.intro (fun h x xs y rxy => h ⟨x, xs, rxy⟩) fun h y ⟨x, xs, rxy⟩ => h xs y rxy
@@ -217,12 +222,14 @@ end Rel
 namespace Function
 
 /-- The graph of a function as a relation. -/
-def graph (f : α → β) : Rel α β := fun x y => f x = y
+def Graph (f : α → β) : Rel α β := fun x y => f x = y
 
 end Function
 
 namespace Set
 
+-- TODO: if image were defined with bounded quantification in corelib, the next two would
+-- be definitional
 theorem image_eq (f : α → β) (s : Set α) : f '' s = (Function.Graph f).Image s := by
   simp [Set.Image, Function.Graph, Rel.Image]
 

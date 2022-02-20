@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Yury Kudryashov. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yury Kudryashov
+-/
 import Mathbin.MeasureTheory.Integral.IntervalIntegral
 import Mathbin.Analysis.NormedSpace.Pointwise
 import Mathbin.Analysis.SpecialFunctions.NonIntegrable
@@ -112,7 +117,7 @@ theorem circle_map_mem_closed_ball (c : ℂ) {R : ℝ} (hR : 0 ≤ R) (θ : ℝ)
 theorem range_circle_map (c : ℂ) (R : ℝ) : Range (circleMap c R) = Sphere c (abs R) :=
   calc
     Range (circleMap c R) = c +ᵥ R • Range fun θ : ℝ => exp (θ * I) := by
-      simp only [← image_vadd, ← image_smul, ← range_comp, vadd_eq_add, circleMap, · ∘ ·, real_smul]
+      simp only [← image_vadd, ← image_smul, ← range_comp, vadd_eq_add, circleMap, (· ∘ ·), real_smul]
     _ = Sphere c (abs R) := by
       simp [smul_sphere R (0 : ℂ) zero_le_one, Real.norm_eq_abs]
     
@@ -137,6 +142,8 @@ theorem has_deriv_at_circle_map (c : ℂ) (R : ℝ) (θ : ℝ) : HasDerivAt (cir
   simpa only [mul_assoc, one_mulₓ, of_real_clm_apply, circleMap, of_real_one, zero_addₓ] using
     ((of_real_clm.has_deriv_at.mul_const I).cexp_real.const_mul (R : ℂ)).const_add c
 
+/- TODO: prove `times_cont_diff ℝ (circle_map c R)`. This needs a version of `times_cont_diff.mul`
+for multiplication in a normed algebra over the base field. -/
 theorem differentiable_circle_map (c : ℂ) (R : ℝ) : Differentiable ℝ (circleMap c R) := fun θ =>
   (has_deriv_at_circle_map c R θ).DifferentiableAt
 
@@ -233,7 +240,7 @@ theorem ContinuousOn.circle_integrable [BorelSpace E] {f : ℂ → E} {c : ℂ} 
     (hf : ContinuousOn f (Sphere c R)) : CircleIntegrable f c R :=
   ContinuousOn.circle_integrable' <| (abs_of_nonneg hR).symm ▸ hf
 
--- ././Mathport/Syntax/Translate/Basic.lean:696:47: unsupported (impossible)
+-- ././Mathport/Syntax/Translate/Basic.lean:815:47: unsupported (impossible)
 /-- The function `λ z, (z - w) ^ n`, `n : ℤ`, is circle integrable on the circle with center `c` and
 radius `|R|` if and only if `R = 0` or `0 ≤ n`, or `w` does not belong to this circle. -/
 @[simp]
@@ -246,7 +253,7 @@ theorem circle_integrable_sub_zpow_iff {c w : ℂ} {R : ℝ} {n : ℤ} :
     simp only [circle_integrable_iff hR, deriv_circle_map]
     rw [← image_circle_map_Ioc] at hw
     rcases hw with ⟨θ, hθ, rfl⟩
-    replace hθ : θ ∈ "././Mathport/Syntax/Translate/Basic.lean:696:47: unsupported (impossible)"
+    replace hθ : θ ∈ "././Mathport/Syntax/Translate/Basic.lean:815:47: unsupported (impossible)"
     exact Icc_subset_interval (Ioc_subset_Icc_self hθ)
     refine' not_interval_integrable_of_sub_inv_is_O_punctured _ real.two_pi_pos.ne hθ
     set f : ℝ → ℂ := fun θ' => circleMap c R θ' - circleMap c R θ

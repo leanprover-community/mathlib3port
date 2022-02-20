@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2017 Johannes Hölzl. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johannes Hölzl, Kenny Lau, Yury Kudryashov
+-/
 import Mathbin.Dynamics.FixedPoints.Basic
 import Mathbin.Order.Hom.Order
 
@@ -122,6 +127,7 @@ section Eqn
 
 variable [CompleteLattice α] [CompleteLattice β] (f : β →o α) (g : α →o β)
 
+-- Rolling rule
 theorem map_lfp_comp : f (lfp (g.comp f)) = lfp (f.comp g) :=
   le_antisymmₓ ((f.comp g).map_lfp ▸ f.mono (lfp_le_fixed _ <| congr_argₓ g (f.comp g).map_lfp)) <|
     lfp_le _ (congr_argₓ f (g.comp f).map_lfp).le
@@ -129,6 +135,7 @@ theorem map_lfp_comp : f (lfp (g.comp f)) = lfp (f.comp g) :=
 theorem map_gfp_comp : f (g.comp f).gfp = (f.comp g).gfp :=
   f.dual.map_lfp_comp g.dual
 
+-- Diagonal rule
 theorem lfp_lfp (h : α →o α →o α) : lfp (lfp.comp h) = lfp h.onDiag := by
   let a := lfp (lfp.comp h)
   refine' (lfp_le _ _).antisymm (lfp_le _ (Eq.le _))
@@ -153,7 +160,7 @@ theorem gfp_const_inf_le (x : α) : gfp (const α x⊓f) ≤ x :=
 /-- Previous fixed point of a monotone map. If `f` is a monotone self-map of a complete lattice and
 `x` is a point such that `f x ≤ x`, then `f.prev_fixed x hx` is the greatest fixed point of `f`
 that is less than or equal to `x`. -/
-def prev_fixed (x : α) (hx : f x ≤ x) : FixedPoints f :=
+def prevFixed (x : α) (hx : f x ≤ x) : FixedPoints f :=
   ⟨gfp (const α x⊓f),
     calc
       f (gfp (const α x⊓f)) = x⊓f (gfp (const α x⊓f)) :=
@@ -164,7 +171,7 @@ def prev_fixed (x : α) (hx : f x ≤ x) : FixedPoints f :=
 /-- Next fixed point of a monotone map. If `f` is a monotone self-map of a complete lattice and
 `x` is a point such that `x ≤ f x`, then `f.next_fixed x hx` is the least fixed point of `f`
 that is greater than or equal to `x`. -/
-def next_fixed (x : α) (hx : x ≤ f x) : FixedPoints f :=
+def nextFixed (x : α) (hx : x ≤ f x) : FixedPoints f :=
   { f.dual.prevFixed x hx with val := (const α x⊔f).lfp }
 
 theorem prev_fixed_le {x : α} (hx : f x ≤ x) : ↑(f.prevFixed x hx) ≤ x :=

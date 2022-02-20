@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2014 Jeremy Avigad. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Jeremy Avigad, Leonardo de Moura, Simon Hudon, Mario Carneiro
+-/
 import Mathbin.Algebra.Group.ToAdditive
 import Mathbin.Tactic.Basic
 
@@ -61,6 +66,26 @@ attribute [to_additive HasScalar.smul] Pow.pow
 
 universe u
 
+/- Additive "sister" structures.
+   Example, add_semigroup mirrors semigroup.
+   These structures exist just to help automation.
+   In an alternative design, we could have the binary operation as an
+   extra argument for semigroup, monoid, group, etc. However, the lemmas
+   would be hard to index since they would not contain any constant.
+   For example, mul_assoc would be
+
+   lemma mul_assoc {α : Type u} {op : α → α → α} [semigroup α op] :
+                   ∀ a b c : α, op (op a b) c = op a (op b c) :=
+    semigroup.mul_assoc
+
+   The simplifier cannot effectively use this lemma since the pattern for
+   the left-hand-side would be
+
+        ?op (?op ?a ?b) ?c
+
+   Remark: we use a tactic for transporting theorems from the multiplicative fragment
+   to the additive one.
+-/
 section Mul
 
 variable {G : Type u} [Mul G]
@@ -253,6 +278,8 @@ variable {M : Type u}
 
 /-- The fundamental power operation in a monoid. `npow_rec n a = a*a*...*a` n times.
 Use instead `a ^ n`,  which has better definitional behavior. -/
+-- use `x * npow_rec n x` and not `npow_rec n x * x` in the definition to make sure that
+-- definitional unfolding of `npow_rec` is blocked, to avoid deep recursion issues.
 def npowRec [One M] [Mul M] : ℕ → M → M
   | 0, a => 1
   | n + 1, a => a * npowRec n a
@@ -319,7 +346,7 @@ analysis](https://hal.inria.fr/hal-02463336).
 -/
 
 
--- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:916:4: warning: unsupported (TODO): `[tacs]
 /-- `try_refl_tac` solves goals of the form `∀ a b, f a b = g a b`,
 if they hold by definition. -/
 unsafe def try_refl_tac : tactic Unit :=
@@ -398,6 +425,7 @@ variable {M : Type _} [Monoidₓ M]
 theorem npow_eq_powₓ (n : ℕ) (x : M) : Monoidₓ.npow n x = x ^ n :=
   rfl
 
+-- the attributes are intentionally out of order. `zero_smul` proves `zero_nsmul`.
 @[to_additive zero_nsmul, simp]
 theorem pow_zeroₓ (a : M) : a ^ 0 = 1 :=
   Monoidₓ.npow_zero' _
@@ -474,6 +502,7 @@ class AddCancelCommMonoid (M : Type u) extends AddLeftCancelMonoid M, AddCommMon
 @[protect_proj, ancestor LeftCancelMonoid CommMonoidₓ, to_additive AddCancelCommMonoid]
 class CancelCommMonoid (M : Type u) extends LeftCancelMonoid M, CommMonoidₓ M
 
+-- see Note [lower instance priority]
 @[to_additive]
 instance (priority := 100) CancelCommMonoid.toCancelMonoid (M : Type u) [CancelCommMonoid M] : CancelMonoid M :=
   { ‹CancelCommMonoid M› with
@@ -616,7 +645,8 @@ theorem div_eq_mul_inv {G : Type u} [DivInvMonoidₓ G] : ∀ a b : G, a / b = a
 
 section
 
--- ././Mathport/Syntax/Translate/Basic.lean:169:40: warning: unsupported option extends_priority
+-- ././Mathport/Syntax/Translate/Basic.lean:211:40: warning: unsupported option extends_priority
+-- ensure that we don't go via these typeclasses to find `has_inv` on groups and groups with zero
 set_option extends_priority 50
 
 /-- Auxiliary typeclass for types with an involutive `has_inv`. -/
@@ -712,6 +742,7 @@ theorem mul_inv_selfₓ (a : G) : a * a⁻¹ = 1 :=
 theorem mul_inv_cancel_rightₓ (a b : G) : a * b * b⁻¹ = a := by
   rw [mul_assoc, mul_right_invₓ, mul_oneₓ]
 
+-- see Note [lower instance priority]
 @[to_additive]
 instance (priority := 100) Groupₓ.toCancelMonoid : CancelMonoid G :=
   { ‹Groupₓ G› with
@@ -754,6 +785,7 @@ section CommGroupₓ
 
 variable {G : Type u} [CommGroupₓ G]
 
+-- see Note [lower instance priority]
 @[to_additive]
 instance (priority := 100) CommGroupₓ.toCancelCommMonoid : CancelCommMonoid G :=
   { ‹CommGroupₓ G›, Groupₓ.toCancelMonoid with }

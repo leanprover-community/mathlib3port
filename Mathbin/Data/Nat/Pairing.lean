@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Leonardo de Moura, Mario Carneiro
+-/
 import Mathbin.Data.Nat.Sqrt
 import Mathbin.Data.Set.Lattice
 
@@ -68,7 +73,7 @@ theorem unpair_mkpair (a b : ℕ) : unpair (mkpair a b) = (a, b) := by
 
 /-- An equivalence between `ℕ × ℕ` and `ℕ`. -/
 @[simps (config := { fullyApplied := false })]
-def mkpair_equiv : ℕ × ℕ ≃ ℕ :=
+def mkpairEquiv : ℕ × ℕ ≃ ℕ :=
   ⟨uncurry mkpair, unpair, fun ⟨a, b⟩ => unpair_mkpair a b, mkpair_unpair⟩
 
 theorem surjective_unpair : Surjective unpair :=
@@ -143,12 +148,12 @@ open Nat
 
 section CompleteLattice
 
--- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (i j)
 theorem supr_unpair {α} [CompleteLattice α] (f : ℕ → ℕ → α) :
     (⨆ n : ℕ, f n.unpair.1 n.unpair.2) = ⨆ (i : ℕ) (j : ℕ), f i j := by
   rw [← (supr_prod : (⨆ i : ℕ × ℕ, f i.1 i.2) = _), ← nat.surjective_unpair.supr_comp]
 
--- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (i j)
 theorem infi_unpair {α} [CompleteLattice α] (f : ℕ → ℕ → α) :
     (⨅ n : ℕ, f n.unpair.1 n.unpair.2) = ⨅ (i : ℕ) (j : ℕ), f i j :=
   supr_unpair (show ℕ → ℕ → OrderDual α from f)
@@ -163,11 +168,11 @@ theorem Union_unpair_prod {α β} {s : ℕ → Set α} {t : ℕ → Set β} :
   convert surjective_unpair.Union_comp _
   rfl
 
--- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (i j)
 theorem Union_unpair {α} (f : ℕ → ℕ → Set α) : (⋃ n : ℕ, f n.unpair.1 n.unpair.2) = ⋃ (i : ℕ) (j : ℕ), f i j :=
   supr_unpair f
 
--- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (i j)
 theorem Inter_unpair {α} (f : ℕ → ℕ → Set α) : (⋂ n : ℕ, f n.unpair.1 n.unpair.2) = ⋂ (i : ℕ) (j : ℕ), f i j :=
   infi_unpair f
 

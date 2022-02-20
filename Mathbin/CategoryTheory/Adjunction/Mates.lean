@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Bhavik Mehta. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Bhavik Mehta
+-/
 import Mathbin.CategoryTheory.Adjunction.Basic
 import Mathbin.CategoryTheory.Conj
 
@@ -70,7 +75,7 @@ This can be seen as a bijection of the 2-cells:
 
 Note that if one of the transformations is an iso, it does not imply the other is an iso.
 -/
-def transfer_nat_trans : (G ⋙ L₂ ⟶ L₁ ⋙ H) ≃ (R₁ ⋙ G ⟶ H ⋙ R₂) where
+def transferNatTrans : (G ⋙ L₂ ⟶ L₁ ⋙ H) ≃ (R₁ ⋙ G ⟶ H ⋙ R₂) where
   toFun := fun h =>
     { app := fun X => adj₂.Unit.app _ ≫ R₂.map (h.app _ ≫ H.map (adj₁.counit.app _)),
       naturality' := fun X Y f => by
@@ -92,6 +97,7 @@ def transfer_nat_trans : (G ⋙ L₂ ⟶ L₁ ⋙ H) ≃ (R₁ ⋙ G ⟶ H ⋙ R
       h.naturality_assoc, functor.comp_map L₁, ← H.map_comp, adj₁.left_triangle_components]
     dsimp
     simp
+  -- See library note [dsimp, simp].
   right_inv := fun h => by
     ext X
     dsimp
@@ -111,6 +117,7 @@ theorem unit_transfer_nat_trans (f : G ⋙ L₂ ⟶ L₁ ⋙ H) (X : C) :
   dsimp
   simp
 
+-- See library note [dsimp, simp]
 end Square
 
 section Self
@@ -130,7 +137,7 @@ iff its image under the bijection is an iso, see eg `category_theory.transfer_na
 This is in contrast to the general case `transfer_nat_trans` which does not in general have this
 property.
 -/
-def transfer_nat_trans_self : (L₂ ⟶ L₁) ≃ (R₁ ⟶ R₂) :=
+def transferNatTransSelf : (L₂ ⟶ L₁) ≃ (R₁ ⟶ R₂) :=
   calc
     (L₂ ⟶ L₁) ≃ _ := (Iso.homCongr L₂.leftUnitor L₁.rightUnitor).symm
     _ ≃ _ := transferNatTrans adj₁ adj₂
@@ -161,6 +168,7 @@ theorem transfer_nat_trans_self_id : transferNatTransSelf adj₁ adj₁ (𝟙 _)
   dsimp [transfer_nat_trans_self, transfer_nat_trans]
   simp
 
+-- See library note [dsimp, simp]
 @[simp]
 theorem transfer_nat_trans_self_symm_id : (transferNatTransSelf adj₁ adj₁).symm (𝟙 _) = 𝟙 _ := by
   rw [Equivₓ.symm_apply_eq]

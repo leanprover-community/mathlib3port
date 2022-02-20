@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison
+-/
 import Mathbin.CategoryTheory.Monoidal.Discrete
 import Mathbin.CategoryTheory.Limits.Shapes.Terminal
 import Mathbin.Algebra.PunitInstances
@@ -29,6 +34,10 @@ structure Mon_ where
   mul_one' : (𝟙 X ⊗ one) ≫ mul = (ρ_ X).Hom := by
     run_tac
       obviously
+  -- Obviously there is some flexibility stating this axiom.
+  -- This one has left- and right-hand sides matching the statement of `monoid.mul_assoc`,
+  -- and chooses to place the associator on the right-hand side.
+  -- The heuristic is that unitors and associators "don't have much weight".
   mul_assoc' : (mul ⊗ 𝟙 X) ≫ mul = (α_ X X X).Hom ≫ (𝟙 X ⊗ mul) ≫ mul := by
     run_tac
       obviously
@@ -41,6 +50,7 @@ restate_axiom Mon_.mul_assoc'
 
 attribute [reassoc] Mon_.one_mul Mon_.mul_one
 
+-- We prove a more general `@[simp]` lemma below.
 attribute [simp, reassoc] Mon_.mul_assoc
 
 namespace Mon_
@@ -48,7 +58,7 @@ namespace Mon_
 /-- The trivial monoid object. We later show this is initial in `Mon_ C`.
 -/
 @[simps]
-def trivialₓ : Mon_ C where
+def trivial : Mon_ C where
   x := 𝟙_ C
   one := 𝟙 _
   mul := (λ_ _).Hom
@@ -75,7 +85,7 @@ theorem assoc_flip : (𝟙 M.x ⊗ M.mul) ≫ M.mul = (α_ M.x M.x M.x).inv ≫ 
 
 /-- A morphism of monoid objects. -/
 @[ext]
-structure hom (M N : Mon_ C) where
+structure Hom (M N : Mon_ C) where
   Hom : M.x ⟶ N.x
   one_hom' : M.one ≫ hom = N.one := by
     run_tac
@@ -95,7 +105,7 @@ attribute [simp, reassoc] hom.one_hom hom.mul_hom
 def id (M : Mon_ C) : Hom M M where
   Hom := 𝟙 M.x
 
-instance hom_inhabited (M : Mon_ C) : Inhabited (Hom M M) :=
+instance homInhabited (M : Mon_ C) : Inhabited (Hom M M) :=
   ⟨id M⟩
 
 /-- Composition of morphisms of monoid objects. -/
@@ -144,7 +154,7 @@ instance : ReflectsIsomorphisms (forget C) where
         by
         tidy⟩⟩
 
-instance unique_hom_from_trivial (A : Mon_ C) : Unique (trivial C ⟶ A) where
+instance uniqueHomFromTrivial (A : Mon_ C) : Unique (trivial C ⟶ A) where
   default :=
     { Hom := A.one,
       one_hom' := by
@@ -174,8 +184,9 @@ variable {C} {D : Type u₂} [Category.{v₂} D] [MonoidalCategory.{v₂} D]
 
 That is, a lax monoidal functor `F : C ⥤ D` induces a functor `Mon_ C ⥤ Mon_ D`.
 -/
+-- TODO: map_Mod F A : Mod A ⥤ Mod (F.map_Mon A)
 @[simps]
-def map_Mon (F : LaxMonoidalFunctor C D) : Mon_ C ⥤ Mon_ D where
+def mapMon (F : LaxMonoidalFunctor C D) : Mon_ C ⥤ Mon_ D where
   obj := fun A =>
     { x := F.obj A.x, one := F.ε ≫ F.map A.one, mul := F.μ _ _ ≫ F.map A.mul,
       one_mul' := by
@@ -219,7 +230,7 @@ def map_Mon (F : LaxMonoidalFunctor C D) : Mon_ C ⥤ Mon_ D where
 variable (C D)
 
 /-- `map_Mon` is functorial in the lax monoidal functor. -/
-def map_Mon_functor : LaxMonoidalFunctor C D ⥤ Mon_ C ⥤ Mon_ D where
+def mapMonFunctor : LaxMonoidalFunctor C D ⥤ Mon_ C ⥤ Mon_ D where
   obj := mapMon
   map := fun F G α => { app := fun A => { Hom := α.app A.x } }
 
@@ -233,13 +244,13 @@ namespace EquivLaxMonoidalFunctorPunit
 
 /-- Implementation of `Mon_.equiv_lax_monoidal_functor_punit`. -/
 @[simps]
-def lax_monoidal_to_Mon : LaxMonoidalFunctor (Discrete PUnit.{u + 1}) C ⥤ Mon_ C where
+def laxMonoidalToMon : LaxMonoidalFunctor (Discrete PUnit.{u + 1}) C ⥤ Mon_ C where
   obj := fun F => (F.mapMon : Mon_ _ ⥤ Mon_ C).obj (trivial (Discrete PUnit))
   map := fun F G α => ((mapMonFunctor (Discrete PUnit) C).map α).app _
 
 /-- Implementation of `Mon_.equiv_lax_monoidal_functor_punit`. -/
 @[simps]
-def Mon_to_lax_monoidal : Mon_ C ⥤ LaxMonoidalFunctor (Discrete PUnit.{u + 1}) C where
+def monToLaxMonoidal : Mon_ C ⥤ LaxMonoidalFunctor (Discrete PUnit.{u + 1}) C where
   obj := fun A =>
     { obj := fun _ => A.x, map := fun _ _ _ => 𝟙 _, ε := A.one, μ := fun _ _ => A.mul, map_id' := fun _ => rfl,
       map_comp' := fun _ _ _ _ _ => (Category.id_comp (𝟙 A.x)).symm }
@@ -252,7 +263,7 @@ def Mon_to_lax_monoidal : Mon_ C ⥤ LaxMonoidalFunctor (Discrete PUnit.{u + 1})
 
 /-- Implementation of `Mon_.equiv_lax_monoidal_functor_punit`. -/
 @[simps]
-def unit_iso : 𝟭 (LaxMonoidalFunctor (Discrete PUnit.{u + 1}) C) ≅ laxMonoidalToMon C ⋙ monToLaxMonoidal C :=
+def unitIso : 𝟭 (LaxMonoidalFunctor (Discrete PUnit.{u + 1}) C) ≅ laxMonoidalToMon C ⋙ monToLaxMonoidal C :=
   NatIso.ofComponents
     (fun F =>
       MonoidalNatIso.ofComponents
@@ -272,7 +283,7 @@ def unit_iso : 𝟭 (LaxMonoidalFunctor (Discrete PUnit.{u + 1}) C) ≅ laxMonoi
 
 /-- Implementation of `Mon_.equiv_lax_monoidal_functor_punit`. -/
 @[simps]
-def counit_iso : monToLaxMonoidal C ⋙ laxMonoidalToMon C ≅ 𝟭 (Mon_ C) :=
+def counitIso : monToLaxMonoidal C ⋙ laxMonoidalToMon C ≅ 𝟭 (Mon_ C) :=
   NatIso.ofComponents (fun F => { Hom := { Hom := 𝟙 _ }, inv := { Hom := 𝟙 _ } })
     (by
       tidy)
@@ -284,7 +295,7 @@ open EquivLaxMonoidalFunctorPunit
 /-- Monoid objects in `C` are "just" lax monoidal functors from the trivial monoidal category to `C`.
 -/
 @[simps]
-def equiv_lax_monoidal_functor_punit : LaxMonoidalFunctor (Discrete PUnit.{u + 1}) C ≌ Mon_ C where
+def equivLaxMonoidalFunctorPunit : LaxMonoidalFunctor (Discrete PUnit.{u + 1}) C ≌ Mon_ C where
   Functor := laxMonoidalToMon C
   inverse := monToLaxMonoidal C
   unitIso := unitIso C

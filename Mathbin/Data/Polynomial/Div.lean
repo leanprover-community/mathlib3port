@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Chris Hughes. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Chris Hughes, Johannes Hölzl, Scott Morrison, Jens Wagemaker
+-/
 import Mathbin.Data.Polynomial.Inductions
 import Mathbin.Data.Polynomial.Monic
 import Mathbin.RingTheory.Multiplicity
@@ -90,7 +95,7 @@ theorem div_wf_lemma (h : degree q ≤ degree p ∧ p ≠ 0) (hq : Monic q) :
       rw [leading_coeff_mul_monic hq, leading_coeff_mul_X_pow, leading_coeff_C])
 
 /-- See `div_by_monic`. -/
-noncomputable def div_mod_by_monic_aux : ∀ p : R[X] {q : R[X]}, Monic q → R[X] × R[X]
+noncomputable def divModByMonicAux : ∀ p : R[X] {q : R[X]}, Monic q → R[X] × R[X]
   | p => fun q hq =>
     if h : degree q ≤ degree p ∧ p ≠ 0 then
       let z := c (leadingCoeff p) * X ^ (natDegree p - natDegree q)
@@ -100,11 +105,11 @@ noncomputable def div_mod_by_monic_aux : ∀ p : R[X] {q : R[X]}, Monic q → R[
     else ⟨0, p⟩
 
 /-- `div_by_monic` gives the quotient of `p` by a monic polynomial `q`. -/
-def div_by_monic (p q : R[X]) : R[X] :=
+def divByMonic (p q : R[X]) : R[X] :=
   if hq : Monic q then (divModByMonicAux p hq).1 else 0
 
 /-- `mod_by_monic` gives the remainder of `p` by a monic polynomial `q`. -/
-def mod_by_monic (p q : R[X]) : R[X] :=
+def modByMonic (p q : R[X]) : R[X] :=
   if hq : Monic q then (divModByMonicAux p hq).2 else p
 
 infixl:70 " /ₘ " => divByMonic
@@ -212,9 +217,9 @@ theorem div_by_monic_eq_zero_iff [Nontrivial R] (hq : Monic q) : p /ₘ q = 0 �
 theorem degree_add_div_by_monic (hq : Monic q) (h : degree q ≤ degree p) : degree q + degree (p /ₘ q) = degree p := by
   nontriviality R
   have hdiv0 : p /ₘ q ≠ 0 := by
-    rwa [· ≠ ·, div_by_monic_eq_zero_iff hq, not_ltₓ]
+    rwa [(· ≠ ·), div_by_monic_eq_zero_iff hq, not_ltₓ]
   have hlc : leading_coeff q * leading_coeff (p /ₘ q) ≠ 0 := by
-    rwa [monic.def.1 hq, one_mulₓ, · ≠ ·, leading_coeff_eq_zero]
+    rwa [monic.def.1 hq, one_mulₓ, (· ≠ ·), leading_coeff_eq_zero]
   have hmod : degree (p %ₘ q) < degree (q * (p /ₘ q)) :=
     calc
       degree (p %ₘ q) < degree q := degree_mod_by_monic_lt _ hq
@@ -439,7 +444,7 @@ section multiplicity
 The algorithm is "compute `p %ₘ q` and compare to `0`". `
 See `polynomial.mod_by_monic` for the algorithm that computes `%ₘ`.
  -/
-def decidable_dvd_monic (p : R[X]) (hq : Monic q) : Decidable (q ∣ p) :=
+def decidableDvdMonic (p : R[X]) (hq : Monic q) : Decidable (q ∣ p) :=
   decidableOfIff (p %ₘ q = 0) (dvd_iff_mod_by_monic_eq_zero hq)
 
 open_locale Classical
@@ -458,7 +463,7 @@ theorem multiplicity_X_sub_C_finite (a : R) (h0 : p ≠ 0) : multiplicity.Finite
 
 /-- The largest power of `X - C a` which divides `p`.
 This is computable via the divisibility algorithm `decidable_dvd_monic`. -/
-def root_multiplicity (a : R) (p : R[X]) : ℕ :=
+def rootMultiplicity (a : R) (p : R[X]) : ℕ :=
   if h0 : p = 0 then 0
   else
     let I : DecidablePred fun n : ℕ => ¬(X - c a) ^ (n + 1) ∣ p := fun n =>

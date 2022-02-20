@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Neil Strickland. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Neil Strickland
+-/
 import Mathbin.Data.Pnat.Prime
 import Mathbin.Data.Multiset.Sort
 
@@ -24,7 +29,7 @@ def PrimeMultiset :=
 namespace PrimeMultiset
 
 /-- The multiset consisting of a single prime -/
-def of_prime (p : Nat.Primes) : PrimeMultiset :=
+def ofPrime (p : Nat.Primes) : PrimeMultiset :=
   ({p} : Multiset Nat.Primes)
 
 theorem card_of_prime (p : Nat.Primes) : Multiset.card (ofPrime p) = 1 :=
@@ -38,14 +43,14 @@ theorem card_of_prime (p : Nat.Primes) : Multiset.card (ofPrime p) = 1 :=
  as a multiset of primes.  The next block of results records
  obvious properties of these coercions.
 -/
-def to_nat_multiset : PrimeMultiset → Multiset ℕ := fun v => v.map fun p => (p : ℕ)
+def toNatMultiset : PrimeMultiset → Multiset ℕ := fun v => v.map fun p => (p : ℕ)
 
-instance coe_nat : Coe PrimeMultiset (Multiset ℕ) :=
+instance coeNat : Coe PrimeMultiset (Multiset ℕ) :=
   ⟨toNatMultiset⟩
 
 /-- `prime_multiset.coe`, the coercion from a multiset of primes to a multiset of
 naturals, promoted to an `add_monoid_hom`. -/
-def coe_nat_monoid_hom : PrimeMultiset →+ Multiset ℕ :=
+def coeNatMonoidHom : PrimeMultiset →+ Multiset ℕ :=
   { Multiset.mapAddMonoidHom coe with toFun := coe }
 
 @[simp]
@@ -63,14 +68,14 @@ theorem coe_nat_prime (v : PrimeMultiset) (p : ℕ) (h : p ∈ (v : Multiset ℕ
   exact h_eq ▸ hp'
 
 /-- Converts a `prime_multiset` to a `multiset ℕ+`. -/
-def to_pnat_multiset : PrimeMultiset → Multiset ℕ+ := fun v => v.map fun p => (p : ℕ+)
+def toPnatMultiset : PrimeMultiset → Multiset ℕ+ := fun v => v.map fun p => (p : ℕ+)
 
-instance coe_pnat : Coe PrimeMultiset (Multiset ℕ+) :=
+instance coePnat : Coe PrimeMultiset (Multiset ℕ+) :=
   ⟨toPnatMultiset⟩
 
 /-- `coe_pnat`, the coercion from a multiset of primes to a multiset of positive
 naturals, regarded as an `add_monoid_hom`. -/
-def coe_pnat_monoid_hom : PrimeMultiset →+ Multiset ℕ+ :=
+def coePnatMonoidHom : PrimeMultiset →+ Multiset ℕ+ :=
   { Multiset.mapAddMonoidHom coe with toFun := coe }
 
 @[simp]
@@ -87,16 +92,16 @@ theorem coe_pnat_prime (v : PrimeMultiset) (p : ℕ+) (h : p ∈ (v : Multiset �
   rcases multiset.mem_map.mp h with ⟨⟨p', hp'⟩, ⟨h_mem, h_eq⟩⟩
   exact h_eq ▸ hp'
 
-instance coe_multiset_pnat_nat : Coe (Multiset ℕ+) (Multiset ℕ) :=
+instance coeMultisetPnatNat : Coe (Multiset ℕ+) (Multiset ℕ) :=
   ⟨fun v => v.map fun n => (n : ℕ)⟩
 
-theorem coePnatNat (v : PrimeMultiset) : ((v : Multiset ℕ+) : Multiset ℕ) = (v : Multiset ℕ) := by
+theorem coe_pnat_nat (v : PrimeMultiset) : ((v : Multiset ℕ+) : Multiset ℕ) = (v : Multiset ℕ) := by
   change (v.map (coe : Nat.Primes → ℕ+)).map Subtype.val = v.map Subtype.val
   rw [Multiset.map_map]
   congr
 
 /-- The product of a `prime_multiset`, as a `ℕ+`. -/
-def Prod (v : PrimeMultiset) : ℕ+ :=
+def prod (v : PrimeMultiset) : ℕ+ :=
   (v : Multiset Pnat).Prod
 
 theorem coe_prod (v : PrimeMultiset) : (v.Prod : ℕ) = (v : Multiset ℕ).Prod := by
@@ -110,13 +115,13 @@ theorem prod_of_prime (p : Nat.Primes) : (ofPrime p).Prod = (p : ℕ+) :=
   Multiset.prod_singleton _
 
 /-- If a `multiset ℕ` consists only of primes, it can be recast as a `prime_multiset`. -/
-def of_nat_multiset (v : Multiset ℕ) (h : ∀ p : ℕ, p ∈ v → p.Prime) : PrimeMultiset :=
+def ofNatMultiset (v : Multiset ℕ) (h : ∀ p : ℕ, p ∈ v → p.Prime) : PrimeMultiset :=
   @Multiset.pmap ℕ Nat.Primes Nat.Prime (fun p hp => ⟨p, hp⟩) v h
 
 theorem to_of_nat_multiset (v : Multiset ℕ) h : (ofNatMultiset v h : Multiset ℕ) = v := by
   unfold_coes
   dsimp [of_nat_multiset, to_nat_multiset]
-  have : (fun p : ℕ h : p.Prime => ((⟨p, h⟩ : Nat.Primes) : ℕ)) = fun p h => id p := by
+  have : (fun h : p.Prime => ((⟨p, h⟩ : Nat.Primes) : ℕ)) = fun p h => id p := by
     funext p h
     rfl
   rw [Multiset.map_pmap, this, Multiset.pmap_eq_map, Multiset.map_id]
@@ -125,13 +130,13 @@ theorem prod_of_nat_multiset (v : Multiset ℕ) h : ((ofNatMultiset v h).Prod : 
   rw [coe_prod, to_of_nat_multiset]
 
 /-- If a `multiset ℕ+` consists only of primes, it can be recast as a `prime_multiset`. -/
-def of_pnat_multiset (v : Multiset ℕ+) (h : ∀ p : ℕ+, p ∈ v → p.Prime) : PrimeMultiset :=
+def ofPnatMultiset (v : Multiset ℕ+) (h : ∀ p : ℕ+, p ∈ v → p.Prime) : PrimeMultiset :=
   @Multiset.pmap ℕ+ Nat.Primes Pnat.Prime (fun p hp => ⟨(p : ℕ), hp⟩) v h
 
 theorem to_of_pnat_multiset (v : Multiset ℕ+) h : (ofPnatMultiset v h : Multiset ℕ+) = v := by
   unfold_coes
   dsimp [of_pnat_multiset, to_pnat_multiset]
-  have : (fun p : ℕ+ h : p.Prime => (coe : Nat.Primes → ℕ+) ⟨p, h⟩) = fun p h => id p := by
+  have : (fun h : p.Prime => (coe : Nat.Primes → ℕ+) ⟨p, h⟩) = fun p h => id p := by
     funext p h
     apply Subtype.eq
     rfl
@@ -143,7 +148,7 @@ theorem prod_of_pnat_multiset (v : Multiset ℕ+) h : ((ofPnatMultiset v h).Prod
 
 /-- Lists can be coerced to multisets; here we have some results
 about how this interacts with our constructions on multisets. -/
-def of_nat_list (l : List ℕ) (h : ∀ p : ℕ, p ∈ l → p.Prime) : PrimeMultiset :=
+def ofNatList (l : List ℕ) (h : ∀ p : ℕ, p ∈ l → p.Prime) : PrimeMultiset :=
   ofNatMultiset (l : Multiset ℕ) h
 
 theorem prod_of_nat_list (l : List ℕ) h : ((ofNatList l h).Prod : ℕ) = l.Prod := by
@@ -153,7 +158,7 @@ theorem prod_of_nat_list (l : List ℕ) h : ((ofNatList l h).Prod : ℕ) = l.Pro
 
 /-- If a `list ℕ+` consists only of primes, it can be recast as a `prime_multiset` with
 the coercion from lists to multisets. -/
-def of_pnat_list (l : List ℕ+) (h : ∀ p : ℕ+, p ∈ l → p.Prime) : PrimeMultiset :=
+def ofPnatList (l : List ℕ+) (h : ∀ p : ℕ+, p ∈ l → p.Prime) : PrimeMultiset :=
   ofPnatMultiset (l : Multiset ℕ+) h
 
 theorem prod_of_pnat_list (l : List ℕ+) h : (ofPnatList l h).Prod = l.Prod := by
@@ -182,7 +187,7 @@ end PrimeMultiset
 namespace Pnat
 
 /-- The prime factors of n, regarded as a multiset -/
-def factor_multiset (n : ℕ+) : PrimeMultiset :=
+def factorMultiset (n : ℕ+) : PrimeMultiset :=
   PrimeMultiset.ofNatList (Nat.factors n) (@Nat.prime_of_mem_factors n)
 
 /-- The product of the factors is the original number -/
@@ -219,7 +224,7 @@ end PrimeMultiset
 namespace Pnat
 
 /-- Positive integers biject with multisets of primes. -/
-def factor_multiset_equiv : ℕ+ ≃ PrimeMultiset where
+def factorMultisetEquiv : ℕ+ ≃ PrimeMultiset where
   toFun := factorMultiset
   invFun := PrimeMultiset.prod
   left_inv := prod_factor_multiset

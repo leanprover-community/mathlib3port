@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2017 Johannes Hölzl. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johannes Hölzl, Devon Tuma
+-/
 import Mathbin.Topology.Instances.Ennreal
 import Mathbin.MeasureTheory.Measure.MeasureSpace
 
@@ -53,7 +58,7 @@ theorem tsum_coe (p : Pmf α) : (∑' a, p a) = 1 :=
   p.has_sum_coe_one.tsum_eq
 
 /-- The support of a `pmf` is the set where it is nonzero. -/
-def support (p : Pmf α) : Set α :=
+def Support (p : Pmf α) : Set α :=
   Function.Support p
 
 @[simp]
@@ -76,7 +81,7 @@ open MeasureTheory MeasureTheory.OuterMeasure
 
 /-- Construct an `outer_measure` from a `pmf`, by assigning measure to each set `s : set α` equal
   to the sum of `p x` for for each `x ∈ α` -/
-def to_outer_measure (p : Pmf α) : OuterMeasure α :=
+def toOuterMeasure (p : Pmf α) : OuterMeasure α :=
   OuterMeasure.sum fun x : α => p x • dirac x
 
 variable (p : Pmf α) (s t : Set α)
@@ -147,7 +152,7 @@ open MeasureTheory
 
 /-- Since every set is Carathéodory-measurable under `pmf.to_outer_measure`,
   we can further extend this `outer_measure` to a `measure` on `α` -/
-def to_measure [MeasurableSpace α] (p : Pmf α) : Measureₓ α :=
+def toMeasure [MeasurableSpace α] (p : Pmf α) : Measureₓ α :=
   p.toOuterMeasure.toMeasure ((to_outer_measure_caratheodory p).symm ▸ le_top)
 
 variable [MeasurableSpace α] (p : Pmf α) (s t : Set α)
@@ -201,7 +206,7 @@ theorem to_measure_apply_fintype [Fintype α] : p.toMeasure s = ↑(∑ x, s.ind
 end MeasurableSingletonClass
 
 /-- The measure associated to a `pmf` by `to_measure` is a probability measure -/
-instance to_measure.is_probability_measure (p : Pmf α) : IsProbabilityMeasure p.toMeasure :=
+instance toMeasure.is_probability_measure (p : Pmf α) : IsProbabilityMeasure p.toMeasure :=
   ⟨by
     simpa only [MeasurableSet.univ, to_measure_apply_eq_to_outer_measure_apply, Set.indicator_univ,
       to_outer_measure_apply', Ennreal.coe_eq_one] using tsum_coe p⟩

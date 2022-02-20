@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2017 Johannes Hölzl. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johannes Hölzl
+-/
 import Mathbin.Data.Set.Basic
 import Mathbin.Order.Lattice
 import Mathbin.Order.Max
@@ -116,6 +121,7 @@ theorem directed_on_univ_iff : DirectedOn r Set.Univ ↔ IsDirected α r :=
       ⟨c, hc⟩⟩,
     @directed_on_univ _ _⟩
 
+-- see Note [lower instance priority]
 instance (priority := 100) IsTotal.to_is_directed [IsTotal α r] : IsDirected α r :=
   ⟨fun a b => Or.cases_on (total_of r a b) (fun h => ⟨b, h, refl _⟩) fun h => ⟨a, refl _, h⟩⟩
 
@@ -156,15 +162,19 @@ theorem is_top_iff_is_max [IsDirected α (· ≤ ·)] : IsTop a ↔ IsMax a :=
 
 end Preorderₓ
 
+-- see Note [lower instance priority]
 instance (priority := 100) SemilatticeSup.to_is_directed_le [SemilatticeSup α] : IsDirected α (· ≤ ·) :=
   ⟨fun a b => ⟨a⊔b, le_sup_left, le_sup_right⟩⟩
 
+-- see Note [lower instance priority]
 instance (priority := 100) SemilatticeInf.to_is_directed_ge [SemilatticeInf α] : IsDirected α (swap (· ≤ ·)) :=
   ⟨fun a b => ⟨a⊓b, inf_le_left, inf_le_right⟩⟩
 
+-- see Note [lower instance priority]
 instance (priority := 100) OrderTop.to_is_directed_le [LE α] [OrderTop α] : IsDirected α (· ≤ ·) :=
   ⟨fun a b => ⟨⊤, le_top, le_top⟩⟩
 
+-- see Note [lower instance priority]
 instance (priority := 100) OrderBot.to_is_directed_ge [LE α] [OrderBot α] : IsDirected α (swap (· ≤ ·)) :=
   ⟨fun a b => ⟨⊥, bot_le, bot_le⟩⟩
 

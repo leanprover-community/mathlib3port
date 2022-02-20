@@ -1,3 +1,10 @@
+/-
+Copyright (c) 2019 Yury Kudryashov. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yury Kudryashov
+
+Some proofs and docs came from `algebra/commute` (c) Neil Strickland
+-/
 import Mathbin.Algebra.Group.Units
 
 /-!
@@ -31,7 +38,7 @@ namespace SemiconjBy
 
 /-- Equality behind `semiconj_by a x y`; useful for rewriting. -/
 @[to_additive]
-protected theorem Eq {S : Type u} [Mul S] {a x y : S} (h : SemiconjBy a x y) : a * x = y * a :=
+protected theorem eq {S : Type u} [Mul S] {a x y : S} (h : SemiconjBy a x y) : a * x = y * a :=
   h
 
 section Semigroupₓ
@@ -53,7 +60,7 @@ theorem mul_left (ha : SemiconjBy a y z) (hb : SemiconjBy b x y) : SemiconjBy (a
 is transitive. -/
 @[to_additive
       "The relation “there exists an element that semiconjugates `a` to `b`” on an additive\nsemigroup is transitive."]
-protected theorem Transitive : Transitive fun a b : S => ∃ c, SemiconjBy c a b := fun a b c ⟨x, hx⟩ ⟨y, hy⟩ =>
+protected theorem transitive : Transitive fun a b : S => ∃ c, SemiconjBy c a b := fun a b c ⟨x, hx⟩ ⟨y, hy⟩ =>
   ⟨y * x, hy.mul_left hx⟩
 
 end Semigroupₓ
@@ -76,7 +83,7 @@ theorem one_left (x : M) : SemiconjBy 1 x x :=
 generally, on ` mul_one_class` type) is reflexive. -/
 @[to_additive
       "The relation “there exists an element that semiconjugates `a` to `b`” on an additive\nmonoid (or, more generally, on a `add_zero_class` type) is reflexive."]
-protected theorem Reflexive : Reflexive fun a b : M => ∃ c, SemiconjBy c a b := fun a => ⟨1, one_left a⟩
+protected theorem reflexive : Reflexive fun a b : M => ∃ c, SemiconjBy c a b := fun a => ⟨1, one_left a⟩
 
 end MulOneClassₓ
 
@@ -160,6 +167,7 @@ theorem inv_symm_left : SemiconjBy a x y → SemiconjBy a⁻¹ y x :=
 theorem inv_inv_symm (h : SemiconjBy a x y) : SemiconjBy a⁻¹ y⁻¹ x⁻¹ :=
   h.inv_right.inv_symm_left
 
+-- this is not a simp lemma because it can be deduced from other simp lemmas
 @[to_additive]
 theorem inv_inv_symm_iff : SemiconjBy a⁻¹ y⁻¹ x⁻¹ ↔ SemiconjBy a x y :=
   inv_right_iff.trans inv_symm_left_iff

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Kenny Lau. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Kenny Lau, Mario Carneiro
+-/
 import Mathbin.LinearAlgebra.Basic
 
 /-!
@@ -28,6 +33,7 @@ namespace LinearMap
 
 section Semiringₓ
 
+-- the `ₗ` subscript variables are for special cases about linear (as opposed to semilinear) maps
 variable {R : Type _} [Semiringₓ R] {S : Type _} [Semiringₓ S]
 
 variable {R₂ : Type _} [Semiringₓ R₂] {S₂ : Type _} [Semiringₓ S₂]
@@ -242,7 +248,7 @@ variable (R M Nₗ Pₗ)
 def llcomp : (Nₗ →ₗ[R] Pₗ) →ₗ[R] (M →ₗ[R] Nₗ) →ₗ[R] M →ₗ[R] Pₗ :=
   flip
     { toFun := lcomp R Pₗ, map_add' := fun f f' => ext₂ fun g x => g.map_add _ _,
-      map_smul' := fun c : R f => ext₂ fun g x => g.map_smul _ _ }
+      map_smul' := fun f => ext₂ fun g x => g.map_smul _ _ }
 
 variable {R M Nₗ Pₗ}
 

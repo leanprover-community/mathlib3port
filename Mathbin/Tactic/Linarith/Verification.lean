@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Robert Y. Lewis. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Robert Y. Lewis
+-/
 import Mathbin.Tactic.Linarith.Elimination
 import Mathbin.Tactic.Linarith.Parsing
 
@@ -143,30 +148,49 @@ set of hypotheses.
 unsafe def prove_false_by_linarith (cfg : linarith_config) : List expr → tactic expr
   | [] => fail "no args to linarith"
   | l@(h :: t) => do
-    let l' ← add_neg_eq_pfs l
+    let l'
+      ←-- for the elimination to work properly, we must add a proof of `-1 < 0` to the list,
+          -- along with negated equality proofs.
+          add_neg_eq_pfs
+          l
     let hz ← ineq_prf_tp h >>= mk_neg_one_lt_zero_pf
     let inputs := hz :: l'
-    let (comps, max_var) ← linear_forms_and_max_var cfg.Transparency inputs
+    let-- perform the elimination and fail if no contradiction is found.
+      (comps, max_var)
+      ← linear_forms_and_max_var cfg.Transparency inputs
     let certificate ←
       cfg.oracle.getOrElse fourier_motzkin.produce_certificate comps max_var <|>
           fail "linarith failed to find a contradiction"
     linarith_trace "linarith has found a contradiction"
     let enum_inputs := inputs.enum
-    let zip := enum_inputs.filterMap fun ⟨n, e⟩ => Prod.mk e <$> certificate.find n
+    let-- construct a list pairing nonzero coeffs with the proof of their corresponding comparison
+    zip := enum_inputs.filterMap fun ⟨n, e⟩ => Prod.mk e <$> certificate.find n
     let mls ←
       zip.mmap fun ⟨e, n⟩ => do
           let e ← term_of_ineq_prf e
           return (mul_expr n e)
-    let sm ← to_expr <| add_exprs mls
+    let sm
+      ←-- `sm` is the sum of input terms, scaled to cancel out all variables.
+          to_expr <|
+          add_exprs mls
     (f!"The expression
             {← sm}
           should be both 0 and negative") >>=
         linarith_trace
-    let sm_eq_zero ← prove_eq_zero_using cfg.discharger sm
+    let sm_eq_zero
+      ←-- we prove that `sm = 0`, typically with `ring`.
+          prove_eq_zero_using
+          cfg.discharger sm
     linarith_trace "We have proved that it is zero"
-    let sm_lt_zero ← mk_lt_zero_pf zip
+    let sm_lt_zero
+      ←-- we also prove that `sm < 0`.
+          mk_lt_zero_pf
+          zip
     linarith_trace "We have proved that it is negative"
-    let pftp ← infer_type sm_lt_zero
+    let pftp
+      ←-- this is a contradiction.
+          infer_type
+          sm_lt_zero
     let (_, nep, _) ← rewrite_core sm_eq_zero pftp
     let pf' ← mk_eq_mp nep sm_lt_zero
     mk_app `lt_irrefl [pf']

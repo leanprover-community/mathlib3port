@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Joseph Myers. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Joseph Myers
+-/
 import Mathbin.Algebra.Invertible
 import Mathbin.Algebra.IndicatorFunction
 import Mathbin.LinearAlgebra.AffineSpace.AffineMap
@@ -62,7 +67,7 @@ interest are where the sum of the weights is 0, in which case the sum
 is independent of the choice of base point, and where the sum of the
 weights is 1, in which case the sum added to the base point is
 independent of the choice of base point. -/
-def weighted_vsub_of_point (p : ι → P) (b : P) : (ι → k) →ₗ[k] V :=
+def weightedVsubOfPoint (p : ι → P) (b : P) : (ι → k) →ₗ[k] V :=
   ∑ i in s, (LinearMap.proj i : (ι → k) →ₗ[k] k).smulRight (p i -ᵥ b)
 
 @[simp]
@@ -162,7 +167,7 @@ theorem sum_smul_const_vsub_eq_sub_weighted_vsub_of_point (w : ι → k) (p₂ :
 from the given points, as a linear map on the weights.  This is
 intended to be used when the sum of the weights is 0; that condition
 is specified as a hypothesis on those lemmas that require it. -/
-def weighted_vsub (p : ι → P) : (ι → k) →ₗ[k] V :=
+def weightedVsub (p : ι → P) : (ι → k) →ₗ[k] V :=
   s.weightedVsubOfPoint p (Classical.choice S.Nonempty)
 
 /-- Applying `weighted_vsub` with given weights.  This is for the case
@@ -230,7 +235,7 @@ the weights.  This is intended to be used when the sum of the weights
 is 1, in which case it is an affine combination (barycenter) of the
 points with the given weights; that condition is specified as a
 hypothesis on those lemmas that require it. -/
-def affine_combination (p : ι → P) : (ι → k) →ᵃ[k] P where
+def affineCombination (p : ι → P) : (ι → k) →ᵃ[k] P where
   toFun := fun w => s.weightedVsubOfPoint p (Classical.choice S.Nonempty) w +ᵥ Classical.choice S.Nonempty
   linear := s.weightedVsub p
   map_vadd' := fun w₁ w₂ => by
@@ -428,7 +433,7 @@ variable (k : Type _) {V : Type _} {P : Type _} [DivisionRing k] [AddCommGroup�
 variable [affine_space V P] {ι : Type _} (s : Finset ι) {ι₂ : Type _} (s₂ : Finset ι₂)
 
 /-- The weights for the centroid of some points. -/
-def centroid_weights : ι → k :=
+def centroidWeights : ι → k :=
   Function.const ι (card s : k)⁻¹
 
 /-- `centroid_weights` at any point. -/
@@ -528,7 +533,7 @@ whose centroid is being taken.  This function gives the weights in a
 form suitable for summing over a larger set of points, as an indicator
 function that is zero outside the set whose centroid is being taken.
 In the case of a `fintype`, the sum may be over `univ`. -/
-def centroid_weights_indicator : ι → k :=
+def centroidWeightsIndicator : ι → k :=
   Set.indicator (↑s) (s.centroidWeights k)
 
 /-- The definition of `centroid_weights_indicator`. -/
@@ -569,7 +574,7 @@ theorem centroid_eq_affine_combination_fintype [Fintype ι] (p : ι → P) :
     s.centroid k p = univ.affineCombination p (s.centroidWeightsIndicator k) :=
   affine_combination_indicator_subset _ _ (subset_univ _)
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (i j «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (i j «expr ∈ » s)
 /-- An indexed family of points that is injective on the given
 `finset` has the same centroid as the image of that `finset`.  This is
 stated in terms of a set equal to the image to provide control of
@@ -603,8 +608,8 @@ theorem centroid_eq_centroid_image_of_inj_on {p : ι → P} (hi : ∀ i j _ : i 
   change p (f' x) = ↑x
   rw [(hf' x).2]
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (i j «expr ∈ » s)
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (i j «expr ∈ » s₂)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (i j «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (i j «expr ∈ » s₂)
 /-- Two indexed families of points that are injective on the given
 `finset`s and with the same points in the image of those `finset`s
 have the same centroid. -/
@@ -859,7 +864,8 @@ variable [affine_space V P] {ι : Type _} (s : Finset ι)
 include V
 
 /-- A weighted sum, as an affine map on the points involved. -/
-def weighted_vsub_of_point (w : ι → k) : (ι → P) × P →ᵃ[k] V where
+-- TODO: define `affine_map.proj`, `affine_map.fst`, `affine_map.snd`
+def weightedVsubOfPoint (w : ι → k) : (ι → P) × P →ᵃ[k] V where
   toFun := fun p => s.weightedVsubOfPoint p.fst p.snd w
   linear := ∑ i in s, w i • ((LinearMap.proj i).comp (LinearMap.fst _ _ _) - LinearMap.snd _ _ _)
   map_vadd' := by

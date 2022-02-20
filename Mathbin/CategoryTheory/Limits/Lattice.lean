@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison, Justus Springer
+-/
 import Mathbin.Order.CompleteLattice
 import Mathbin.CategoryTheory.Limits.Shapes.Pullbacks
 import Mathbin.CategoryTheory.Category.Preorder
@@ -25,20 +30,22 @@ variable {J : Type u} [SmallCategory J] [FinCategory J]
 
 /-- The limit cone over any functor from a finite diagram into a `semilattice_inf` with `order_top`.
 -/
-def finite_limit_cone [SemilatticeInf α] [OrderTop α] (F : J ⥤ α) : LimitCone F where
+def finiteLimitCone [SemilatticeInf α] [OrderTop α] (F : J ⥤ α) : LimitCone F where
   Cone := { x := Finset.univ.inf F.obj, π := { app := fun j => homOfLe (Finset.inf_le (Fintype.complete _)) } }
   IsLimit := { lift := fun s => homOfLe (Finset.le_inf fun j _ => (s.π.app j).down.down) }
 
 /-- The colimit cocone over any functor from a finite diagram into a `semilattice_sup` with `order_bot`.
 -/
-def finite_colimit_cocone [SemilatticeSup α] [OrderBot α] (F : J ⥤ α) : ColimitCocone F where
+def finiteColimitCocone [SemilatticeSup α] [OrderBot α] (F : J ⥤ α) : ColimitCocone F where
   Cocone := { x := Finset.univ.sup F.obj, ι := { app := fun i => homOfLe (Finset.le_sup (Fintype.complete _)) } }
   IsColimit := { desc := fun s => homOfLe (Finset.sup_le fun j _ => (s.ι.app j).down.down) }
 
+-- see Note [lower instance priority]
 instance (priority := 100) has_finite_limits_of_semilattice_inf_order_top [SemilatticeInf α] [OrderTop α] :
     HasFiniteLimits α :=
   ⟨fun J 𝒥₁ 𝒥₂ => { HasLimit := fun F => has_limit.mk (finite_limit_cone F) }⟩
 
+-- see Note [lower instance priority]
 instance (priority := 100) has_finite_colimits_of_semilattice_sup_order_bot [SemilatticeSup α] [OrderBot α] :
     HasFiniteColimits α :=
   ⟨fun J 𝒥₁ 𝒥₂ => { HasColimit := fun F => has_colimit.mk (finite_colimit_cocone F) }⟩
@@ -79,7 +86,10 @@ theorem prod_eq_inf [SemilatticeInf α] [OrderTop α] (x y : α) : Limits.prod x
     _ = Finset.univ.inf (pair x y).obj := by
       rw [finite_limit_eq_finset_univ_inf (pair x y)]
     _ = x⊓(y⊓⊤) := rfl
-    _ = x⊓y := by
+    -- Note: finset.inf is realized as a fold, hence the definitional equality
+        _ =
+        x⊓y :=
+      by
       rw [inf_top_eq]
     
 
@@ -93,7 +103,10 @@ theorem coprod_eq_sup [SemilatticeSup α] [OrderBot α] (x y : α) : Limits.copr
     _ = Finset.univ.sup (pair x y).obj := by
       rw [finite_colimit_eq_finset_univ_sup (pair x y)]
     _ = x⊔(y⊔⊥) := rfl
-    _ = x⊔y := by
+    -- Note: finset.sup is realized as a fold, hence the definitional equality
+        _ =
+        x⊔y :=
+      by
       rw [sup_bot_eq]
     
 
@@ -135,7 +148,7 @@ variable {J : Type u} [SmallCategory J]
 
 /-- The limit cone over any functor into a complete lattice.
 -/
-def limit_cone (F : J ⥤ α) : LimitCone F where
+def limitCone (F : J ⥤ α) : LimitCone F where
   Cone := { x := infi F.obj, π := { app := fun j => homOfLe (CompleteLattice.Inf_le _ _ (Set.mem_range_self _)) } }
   IsLimit :=
     { lift := fun s =>
@@ -147,7 +160,7 @@ def limit_cone (F : J ⥤ α) : LimitCone F where
 
 /-- The colimit cocone over any functor into a complete lattice.
 -/
-def colimit_cocone (F : J ⥤ α) : ColimitCocone F where
+def colimitCocone (F : J ⥤ α) : ColimitCocone F where
   Cocone := { x := supr F.obj, ι := { app := fun j => homOfLe (CompleteLattice.le_Sup _ _ (Set.mem_range_self _)) } }
   IsColimit :=
     { desc := fun s =>
@@ -157,9 +170,13 @@ def colimit_cocone (F : J ⥤ α) : ColimitCocone F where
               rintro _ ⟨j, rfl⟩
               exact (s.ι.app j).le)) }
 
+-- It would be nice to only use the `Inf` half of the complete lattice, but
+-- this seems not to have been described separately.
+-- see Note [lower instance priority]
 instance (priority := 100) has_limits_of_complete_lattice : HasLimits α where
   HasLimitsOfShape := fun J 𝒥 => { HasLimit := fun F => has_limit.mk (limit_cone F) }
 
+-- see Note [lower instance priority]
 instance (priority := 100) has_colimits_of_complete_lattice : HasColimits α where
   HasColimitsOfShape := fun J 𝒥 => { HasColimit := fun F => has_colimit.mk (colimit_cocone F) }
 

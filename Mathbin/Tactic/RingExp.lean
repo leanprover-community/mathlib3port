@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Tim Baanen. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Tim Baanen
+-/
 import Mathbin.Tactic.NormNum
 import Mathbin.Control.Traversable.Basic
 
@@ -74,6 +79,9 @@ ring, semiring, exponent, power
 -/
 
 
+-- The base ring `α` will have a universe level `u`.
+-- We do not introduce `α` as a variable yet,
+-- in order to make it explicit or implicit as required.
 universe u
 
 namespace Tactic.RingExp
@@ -105,7 +113,7 @@ ignoring their `value`s.
 The invariants on `atom` ensure indices are unique per value.
 Thus, `eq` indicates equality as long as the `atom`s come from the same context.
 -/
-unsafe def Eq (a b : atom) : Bool :=
+unsafe def eq (a b : atom) : Bool :=
   a.index = b.index
 
 /-- We order `atom`s on the order of appearance in the main expression.
@@ -139,12 +147,12 @@ allowing for easier modification of the data structures.
 The modifications might be caching of the result of `expr.of_rat`,
 or using a different meta representation of numerals.
 -/
-structure coeff : Type where
+structure Coeff : Type where
   value : ℚ
   deriving DecidableEq, Inhabited
 
 /-- The values in `ex_type` are used as parameters to `ex` to control the expression's structure. -/
-inductive ex_type : Type
+inductive ExType : Type
   | base : ex_type
   | Sum : ex_type
   | Prod : ex_type
@@ -266,7 +274,7 @@ unsafe def ex.set_info : ∀ {et : ExType} ps : ex et, Option expr → Option ex
   | base, ex.sum_b i ps, o, pf => ex.sum_b (i.Set o pf) ps
   | exp, ex.exp i p ps, o, pf => ex.exp (i.Set o pf) p ps
 
-instance coeff_has_repr : HasRepr Coeff :=
+instance coeffHasRepr : HasRepr Coeff :=
   ⟨fun x => reprₓ x.1⟩
 
 /-- Convert an `ex` to a `string`. -/
@@ -351,12 +359,15 @@ and the `context` combines the two types, one for bases and one for exponents.
 unsafe structure eval_info where
   α : expr
   Univ : level
+  -- Cache the instances for optimization and consistency
   csr_instance : expr
   ha_instance : expr
   hm_instance : expr
   hp_instance : expr
+  -- Optional instances (only required for (-) and (/) respectively)
   ring_instance : Option expr
   dr_instance : Option expr
+  -- Cache common constants.
   zero : expr
   one : expr
 
@@ -403,7 +414,7 @@ unsafe def mk_app_class (f : Name) (inst : expr) (args : List expr) : ring_exp_m
   let ctx ← get_context
   pure <| (@expr.const tt f [ctx] ctx inst).mk_app args
 
--- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `ctx
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `ctx
 /-- Specialized version of `mk_app` where the first two arguments are `{α}` `[comm_semiring α]`.
 Should be faster because it can use the cached instances.
  -/
@@ -630,7 +641,9 @@ with the proof of `expr.of_rat p * expr.of_rat q = expr.of_rat (p * q)`.
 -/
 unsafe def mul_coeff (p_p q_p : expr) (p q : Coeff) : ring_exp_m (ex Prod) :=
   match p.1, q.1 with
-  | ⟨1, 1, _, _⟩, _ => do
+  |-- Special case to speed up multiplication with 1.
+    ⟨1, 1, _, _⟩,
+    _ => do
     let ctx ← get_context
     let pq_o ← mk_mul [p_p, q_p]
     let pf ← mk_app_csr `` mul_coeff_pf_one_mul [q_p]
@@ -1121,7 +1134,10 @@ unsafe def pow_p : ex Sum → ex Prod → ring_exp_m (ex Sum)
     let pf ← mk_proof `` pow_p_pf_succ [ps.orig, pqqs.pretty, qs.orig, qs'.pretty] [qs.info, pqqs.info]
     pure <| pqqs pqqs_o pf
   | pps, qqs => do
-    let pps' ← ex_sum_b pps
+    let pps'
+      ←-- fallback: treat them as atoms
+          ex_sum_b
+          pps
     let psqs ← ex_exp pps' qqs
     let psqs_o ← pow_orig pps qqs
     let pf ←

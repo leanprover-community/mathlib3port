@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Sébastien Gouëzel. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Sébastien Gouëzel
+-/
 import Mathbin.Analysis.Calculus.Deriv
 import Mathbin.Analysis.Calculus.MeanValue
 import Mathbin.Analysis.Convex.Topology
@@ -66,7 +71,11 @@ theorem Convex.taylor_approx_two_segment {v w : E} (hv : x + v ∈ Interior s) (
     IsOₓ (fun h : ℝ => f (x + h • v + h • w) - f (x + h • v) - h • f' x w - h ^ 2 • f'' v w - (h ^ 2 / 2) • f'' w w)
       (fun h => h ^ 2) (𝓝[>] (0 : ℝ)) :=
   by
+  -- it suffices to check that the expression is bounded by `ε * ((∥v∥ + ∥w∥) * ∥w∥) * h^2` for
+  -- small enough `h`, for any positive `ε`.
   apply is_o.trans_is_O (is_o_iff.2 fun ε εpos => _) (is_O_const_mul_self ((∥v∥ + ∥w∥) * ∥w∥) _ _)
+  -- consider a ball of radius `δ` around `x` in which the Taylor approximation for `f''` is
+  -- good up to `δ`.
   rw [HasFderivWithinAt, HasFderivAtFilter, is_o_iff] at hx
   rcases Metric.mem_nhds_within_iff.1 (hx εpos) with ⟨δ, δpos, sδ⟩
   have E1 : ∀ᶠ h in 𝓝[>] (0 : ℝ), h * (∥v∥ + ∥w∥) < δ := by
@@ -79,6 +88,8 @@ theorem Convex.taylor_approx_two_segment {v w : E} (hv : x + v ∈ Interior s) (
       ⟨(1 : ℝ), by
         simp only [mem_Ioi, zero_lt_one], fun x hx => hx.2⟩
   filter_upwards [E1, E2, self_mem_nhds_within] with h hδ h_lt_1 hpos
+  -- we consider `h` small enough that all points under consideration belong to this ball,
+  -- and also with `0 < h < 1`.
   replace hpos : 0 < h := hpos
   have xt_mem : ∀, ∀ t ∈ Icc (0 : ℝ) 1, ∀, x + h • v + (t * h) • w ∈ Interior s := by
     intro t ht
@@ -88,9 +99,14 @@ theorem Convex.taylor_approx_two_segment {v w : E} (hv : x + v ∈ Interior s) (
     rw [add_assocₓ] at hw
     convert s_conv.add_smul_mem_interior xs hw ⟨hpos, h_lt_1.le⟩ using 1
     simp only [add_assocₓ, smul_add]
+  -- define a function `g` on `[0,1]` (identified with `[v, v + w]`) such that `g 1 - g 0` is the
+  -- quantity to be estimated. We will check that its derivative is given by an explicit
+  -- expression `g'`, that we can bound. Then the desired bound for `g 1 - g 0` follows from the
+  -- mean value inequality.
   let g := fun t => f (x + h • v + (t * h) • w) - (t * h) • f' x w - (t * h ^ 2) • f'' v w - ((t * h) ^ 2 / 2) • f'' w w
   set g' := fun t => f' (x + h • v + (t * h) • w) (h • w) - h • f' x w - h ^ 2 • f'' v w - (t * h ^ 2) • f'' w w with
     hg'
+  -- check that `g'` is the derivative of `g`, by a straightforward computation
   have g_deriv : ∀, ∀ t ∈ Icc (0 : ℝ) 1, ∀, HasDerivWithinAt g (g' t) (Icc 0 1) t := by
     intro t ht
     apply_rules [HasDerivWithinAt.sub, HasDerivWithinAt.add]
@@ -113,6 +129,7 @@ theorem Convex.taylor_approx_two_segment {v w : E} (hv : x + v ∈ Interior s) (
       apply_rules [HasDerivAt.has_deriv_within_at, HasDerivAt.smul_const, has_deriv_at_id', HasDerivAt.pow,
         HasDerivAt.mul_const]
       
+  -- check that `g'` is uniformly bounded, with a suitable bound `ε * ((∥v∥ + ∥w∥) * ∥w∥) * h^2`.
   have g'_bound : ∀, ∀ t ∈ Ico (0 : ℝ) 1, ∀, ∥g' t∥ ≤ ε * ((∥v∥ + ∥w∥) * ∥w∥) * h ^ 2 := by
     intro t ht
     have I : ∥h • v + (t * h) • w∥ ≤ h * (∥v∥ + ∥w∥) :=
@@ -149,6 +166,7 @@ theorem Convex.taylor_approx_two_segment {v w : E} (hv : x + v ∈ Interior s) (
         by
         simp only [norm_smul, Real.norm_eq_abs, abs_mul, abs_of_nonneg, hpos.le]
         ring
+  -- conclude using the mean value inequality
   have I : ∥g 1 - g 0∥ ≤ ε * ((∥v∥ + ∥w∥) * ∥w∥) * h ^ 2 := by
     simpa only [mul_oneₓ, sub_zero] using
       norm_image_sub_le_of_norm_deriv_le_segment' g_deriv g'_bound 1 (right_mem_Icc.2 zero_le_one)
@@ -264,6 +282,10 @@ derivative at a point of this convex set, then this second derivative is symmetr
 theorem Convex.second_derivative_within_at_symmetric {s : Set E} (s_conv : Convex ℝ s) (hne : (Interior s).Nonempty)
     {f : E → F} {f' : E → E →L[ℝ] F} {f'' : E →L[ℝ] E →L[ℝ] F} (hf : ∀, ∀ x ∈ Interior s, ∀, HasFderivAt f (f' x) x)
     {x : E} (xs : x ∈ s) (hx : HasFderivWithinAt f' f'' (Interior s) x) (v w : E) : f'' v w = f'' w v := by
+  /- we work around a point `x + 4 z` in the interior of `s`. For any vector `m`,
+    then `x + 4 (z + t m)` also belongs to the interior of `s` for small enough `t`. This means that
+    we will be able to apply `second_derivative_within_at_symmetric_of_mem_interior` to show
+    that `f''` is symmetric, after cancelling all the contributions due to `z`. -/
   rcases hne with ⟨y, hy⟩
   obtain ⟨z, hz⟩ : ∃ z, z = ((1 : ℝ) / 4) • (y - x) := ⟨((1 : ℝ) / 4) • (y - x), rfl⟩
   have A : ∀ m : E, Filter.Tendsto (fun t : ℝ => x + (4 : ℝ) • (z + t • m)) (𝓝 0) (𝓝 y) := by
@@ -281,7 +303,11 @@ theorem Convex.second_derivative_within_at_symmetric {s : Set E} (s_conv : Conve
     apply A m
     rw [mem_interior_iff_mem_nhds] at hy
     exact interior_mem_nhds.2 hy
+  -- we choose `t m > 0` such that `x + 4 (z + (t m) m)` belongs to the interior of `s`, for any
+  -- vector `m`.
   choose t ts tpos using fun m => ((B m).And self_mem_nhds_within).exists
+  -- applying `second_derivative_within_at_symmetric_of_mem_interior` to the vectors `z`
+  -- and `z + (t m) m`, we deduce that `f'' m z = f'' z m` for all `m`.
   have C : ∀ m : E, f'' m z = f'' z m := by
     intro m
     have : f'' (z + t m • m) (z + t 0 • 0) = f'' (z + t 0 • 0) (z + t m • m) :=
@@ -290,6 +316,9 @@ theorem Convex.second_derivative_within_at_symmetric {s : Set E} (s_conv : Conve
       Pi.smul_apply, ContinuousLinearMap.coe_smul', add_zeroₓ, ContinuousLinearMap.zero_apply, smul_zero,
       ContinuousLinearMap.map_zero] at this
     exact smul_right_injective F (tpos m).ne' this
+  -- applying `second_derivative_within_at_symmetric_of_mem_interior` to the vectors `z + (t v) v`
+  -- and `z + (t w) w`, we deduce that `f'' v w = f'' w v`. Cross terms involving `z` can be
+  -- eliminated thanks to the fact proved above that `f'' m z = f'' z m`.
   have : f'' (z + t v • v) (z + t w • w) = f'' (z + t w • w) (z + t v • v) :=
     s_conv.second_derivative_within_at_symmetric_of_mem_interior hf xs hx (ts w) (ts v)
   simp only [ContinuousLinearMap.map_add, ContinuousLinearMap.map_smul, smul_add, smul_smul,

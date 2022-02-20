@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Damiano Testa. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Damiano Testa
+-/
 import Mathbin.Data.Polynomial.EraseLead
 import Mathbin.Data.Polynomial.Eval
 
@@ -28,6 +33,7 @@ The definition asserts the existence of an element `D` of `R` and an
 element `bi = 1 / i b` of `K` such that clearing the denominators of
 the fraction equals `i D`.
 -/
+-- TODO: use hypothesis (ub : is_unit (i b)) to work with localizations.
 def DenomsClearable (a b : R) (N : ℕ) (f : R[X]) (i : R →+* K) : Prop :=
   ∃ (D : R)(bi : K), bi * i b = 1 ∧ i D = i b ^ N * eval (i a * bi) (f.map i)
 

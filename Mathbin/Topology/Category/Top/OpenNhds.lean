@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison
+-/
 import Mathbin.Topology.Category.Top.Opens
 
 /-!
@@ -33,7 +38,7 @@ variable {X Y : Top.{u}} (f : X ⟶ Y)
 namespace TopologicalSpace
 
 /-- The type of open neighbourhoods of a point `x` in a (bundled) topological space. -/
-def open_nhds (x : X) :=
+def OpenNhds (x : X) :=
   { U : Opens X // x ∈ U }
 
 namespace OpenNhds
@@ -58,21 +63,21 @@ instance (x : X) : OrderTop (OpenNhds x) where
 instance (x : X) : Inhabited (OpenNhds x) :=
   ⟨⊤⟩
 
-instance open_nhds_category (x : X) : Category.{u} (OpenNhds x) := by
+instance openNhdsCategory (x : X) : Category.{u} (OpenNhds x) := by
   unfold open_nhds
   infer_instance
 
-instance opens_nhds_hom_has_coe_to_fun {x : X} {U V : OpenNhds x} : CoeFun (U ⟶ V) fun _ => U.1 → V.1 :=
+instance opensNhdsHomHasCoeToFun {x : X} {U V : OpenNhds x} : CoeFun (U ⟶ V) fun _ => U.1 → V.1 :=
   ⟨fun f x => ⟨x, f.le x.2⟩⟩
 
 /-- The inclusion `U ⊓ V ⟶ U` as a morphism in the category of open sets.
 -/
-def inf_le_left {x : X} (U V : OpenNhds x) : U⊓V ⟶ U :=
+def infLeLeft {x : X} (U V : OpenNhds x) : U⊓V ⟶ U :=
   homOfLe inf_le_left
 
 /-- The inclusion `U ⊓ V ⟶ V` as a morphism in the category of open sets.
 -/
-def inf_le_right {x : X} (U V : OpenNhds x) : U⊓V ⟶ V :=
+def infLeRight {x : X} (U V : OpenNhds x) : U⊓V ⟶ V :=
   homOfLe inf_le_right
 
 /-- The inclusion functor from open neighbourhoods of `x`
@@ -84,7 +89,7 @@ def inclusion (x : X) : OpenNhds x ⥤ Opens X :=
 theorem inclusion_obj (x : X) U p : (inclusion x).obj ⟨U, p⟩ = U :=
   rfl
 
-theorem OpenEmbedding {x : X} (U : OpenNhds x) : OpenEmbedding U.1.inclusion :=
+theorem open_embedding {x : X} (U : OpenNhds x) : OpenEmbedding U.1.inclusion :=
   U.1.OpenEmbedding
 
 def map (x : X) : OpenNhds (f x) ⥤ OpenNhds x where
@@ -118,7 +123,7 @@ theorem op_map_id_obj (x : X) (U : OpenNhds xᵒᵖ) : (map (𝟙 X) x).op.obj U
 
 /-- `opens.map f` and `open_nhds.map f` form a commuting square (up to natural isomorphism)
 with the inclusion functors into `opens X`. -/
-def inclusion_map_iso (x : X) : inclusion (f x) ⋙ Opens.map f ≅ map f x ⋙ inclusion x :=
+def inclusionMapIso (x : X) : inclusion (f x) ⋙ Opens.map f ≅ map f x ⋙ inclusion x :=
   NatIso.ofComponents
     (fun U => by
       constructor
@@ -148,13 +153,13 @@ variable {f}
 /-- An open map `f : X ⟶ Y` induces a functor `open_nhds x ⥤ open_nhds (f x)`.
 -/
 @[simps]
-def functor_nhds (h : IsOpenMap f) (x : X) : OpenNhds x ⥤ OpenNhds (f x) where
+def functorNhds (h : IsOpenMap f) (x : X) : OpenNhds x ⥤ OpenNhds (f x) where
   obj := fun U => ⟨h.Functor.obj U.1, ⟨x, U.2, rfl⟩⟩
   map := fun U V i => h.Functor.map i
 
 /-- An open map `f : X ⟶ Y` induces an adjunction between `open_nhds x` and `open_nhds (f x)`.
 -/
-def adjunction_nhds (h : IsOpenMap f) (x : X) : IsOpenMap.functorNhds h x ⊣ OpenNhds.map f x :=
+def adjunctionNhds (h : IsOpenMap f) (x : X) : IsOpenMap.functorNhds h x ⊣ OpenNhds.map f x :=
   Adjunction.mkOfUnitCounit
     { Unit := { app := fun U => hom_of_le fun x hxU => ⟨x, hxU, rfl⟩ },
       counit := { app := fun V => hom_of_le fun y ⟨x, hfxV, hxy⟩ => hxy ▸ hfxV } }

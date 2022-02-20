@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Reid Barton. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Reid Barton, Scott Morrison
+-/
 import Mathbin.CategoryTheory.FinCategory
 import Mathbin.CategoryTheory.Limits.Cones
 import Mathbin.CategoryTheory.Adjunction.Basic
@@ -48,6 +53,7 @@ open Function
 
 universe v v₁ u u₁
 
+-- declare the `v`'s first; see `category_theory.category` for an explanation
 namespace CategoryTheory
 
 variable (C : Type u) [Category.{v} C]
@@ -57,7 +63,7 @@ variable (C : Type u) [Category.{v} C]
 2. for every pair of parallel morphisms there exists a morphism to the right so the compositions
    are equal.
 -/
-class is_filtered_or_empty : Prop where
+class IsFilteredOrEmpty : Prop where
   cocone_objs : ∀ X Y : C, ∃ (Z : _)(f : X ⟶ Z)(g : Y ⟶ Z), True
   cocone_maps : ∀ ⦃X Y : C⦄ f g : X ⟶ Y, ∃ (Z : _)(h : Y ⟶ Z), f ≫ h = g ≫ h
 
@@ -69,7 +75,7 @@ class is_filtered_or_empty : Prop where
 
 See https://stacks.math.columbia.edu/tag/002V. (They also define a diagram being filtered.)
 -/
-class is_filtered extends IsFilteredOrEmpty C : Prop where
+class IsFiltered extends IsFilteredOrEmpty C : Prop where
   [Nonempty : Nonempty C]
 
 instance (priority := 100) is_filtered_or_empty_of_semilattice_sup (α : Type u) [SemilatticeSup α] :
@@ -96,6 +102,7 @@ instance (priority := 100) is_filtered_of_directed_le_nonempty (α : Type u) [Pr
     [Nonempty α] : IsFiltered α :=
   {  }
 
+-- Sanity checks
 example (α : Type u) [SemilatticeSup α] [OrderBot α] : IsFiltered α := by
   infer_instance
 
@@ -115,13 +122,13 @@ noncomputable def max (j j' : C) : C :=
 /-- `left_to_max j j'` is an arbitrarily choice of morphism from `j` to `max j j'`,
 whose existence is ensured by `is_filtered`.
 -/
-noncomputable def left_to_max (j j' : C) : j ⟶ max j j' :=
+noncomputable def leftToMax (j j' : C) : j ⟶ max j j' :=
   (IsFilteredOrEmpty.cocone_objs j j').some_spec.some
 
 /-- `right_to_max j j'` is an arbitrarily choice of morphism from `j'` to `max j j'`,
 whose existence is ensured by `is_filtered`.
 -/
-noncomputable def right_to_max (j j' : C) : j' ⟶ max j j' :=
+noncomputable def rightToMax (j j' : C) : j' ⟶ max j j' :=
   (IsFilteredOrEmpty.cocone_objs j j').some_spec.some_spec.some
 
 /-- `coeq f f'`, for morphisms `f f' : j ⟶ j'`, is an arbitrary choice of object
@@ -137,7 +144,7 @@ noncomputable def coeq {j j' : C} (f f' : j ⟶ j') : C :=
 `coeq_condition : f ≫ coeq_hom f f' = f' ≫ coeq_hom f f'`.
 Its existence is ensured by `is_filtered`.
 -/
-noncomputable def coeq_hom {j j' : C} (f f' : j ⟶ j') : j' ⟶ coeq f f' :=
+noncomputable def coeqHom {j j' : C} (f f' : j ⟶ j') : j' ⟶ coeq f f' :=
   (IsFilteredOrEmpty.cocone_maps f f').some_spec.some
 
 /-- `coeq_condition f f'`, for morphisms `f f' : j ⟶ j'`, is the proof that
@@ -168,10 +175,10 @@ theorem sup_objs_exists (O : Finset C) : ∃ S : C, ∀ {X}, X ∈ O → Nonempt
       
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (X Y)
+-- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (X Y)
 variable (O : Finset C) (H : Finset (Σ' (X : C) (Y : C) (mX : X ∈ O) (mY : Y ∈ O), X ⟶ Y))
 
--- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (X Y)
+-- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (X Y)
 /-- Given any `finset` of objects `{X, ...}` and
 indexed collection of `finset`s of morphisms `{f, ...}` in `C`,
 there exists an object `S`, with a morphism `T X : X ⟶ S` from each `X`,
@@ -222,10 +229,10 @@ noncomputable def sup : C :=
 
 /-- The morphisms to `sup O H`.
 -/
-noncomputable def to_sup {X : C} (m : X ∈ O) : X ⟶ sup O H :=
+noncomputable def toSup {X : C} (m : X ∈ O) : X ⟶ sup O H :=
   (sup_exists O H).some_spec.some m
 
--- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (X Y)
+-- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (X Y)
 /-- The triangles of consisting of a morphism in `H` and the maps to `sup O H` commute.
 -/
 theorem to_sup_commutes {X Y : C} (mX : X ∈ O) (mY : Y ∈ O) {f : X ⟶ Y}
@@ -235,7 +242,7 @@ theorem to_sup_commutes {X Y : C} (mX : X ∈ O) (mY : Y ∈ O) {f : X ⟶ Y}
 
 variable {J : Type v} [SmallCategory J] [FinCategory J]
 
--- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (X Y)
+-- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (X Y)
 /-- If we have `is_filtered C`, then for any functor `F : J ⥤ C` with `fin_category J`,
 there exists a cocone over `F`.
 -/
@@ -301,19 +308,19 @@ noncomputable def max₃ (j₁ j₂ j₃ : C) : C :=
 /-- `first_to_max₃ j₁ j₂ j₃` is an arbitrarily choice of morphism from `j₁` to `max₃ j₁ j₂ j₃`,
 whose existence is ensured by `is_filtered`.
 -/
-noncomputable def first_to_max₃ (j₁ j₂ j₃ : C) : j₁ ⟶ max₃ j₁ j₂ j₃ :=
+noncomputable def firstToMax₃ (j₁ j₂ j₃ : C) : j₁ ⟶ max₃ j₁ j₂ j₃ :=
   leftToMax j₁ j₂ ≫ leftToMax (max j₁ j₂) j₃
 
 /-- `second_to_max₃ j₁ j₂ j₃` is an arbitrarily choice of morphism from `j₂` to `max₃ j₁ j₂ j₃`,
 whose existence is ensured by `is_filtered`.
 -/
-noncomputable def second_to_max₃ (j₁ j₂ j₃ : C) : j₂ ⟶ max₃ j₁ j₂ j₃ :=
+noncomputable def secondToMax₃ (j₁ j₂ j₃ : C) : j₂ ⟶ max₃ j₁ j₂ j₃ :=
   rightToMax j₁ j₂ ≫ leftToMax (max j₁ j₂) j₃
 
 /-- `third_to_max₃ j₁ j₂ j₃` is an arbitrarily choice of morphism from `j₃` to `max₃ j₁ j₂ j₃`,
 whose existence is ensured by `is_filtered`.
 -/
-noncomputable def third_to_max₃ (j₁ j₂ j₃ : C) : j₃ ⟶ max₃ j₁ j₂ j₃ :=
+noncomputable def thirdToMax₃ (j₁ j₂ j₃ : C) : j₃ ⟶ max₃ j₁ j₂ j₃ :=
   rightToMax (max j₁ j₂) j₃
 
 /-- `coeq₃ f g h`, for morphisms `f g h : j₁ ⟶ j₂`, is an arbitrary choice of object
@@ -328,7 +335,7 @@ noncomputable def coeq₃ {j₁ j₂ : C} (f g h : j₁ ⟶ j₂) : C :=
 `j₂ ⟶ coeq₃ f g h` such that `coeq₃_condition₁`, `coeq₃_condition₂` and `coeq₃_condition₃`
 are satisfied. Its existence is ensured by `is_filtered`.
 -/
-noncomputable def coeq₃_hom {j₁ j₂ : C} (f g h : j₁ ⟶ j₂) : j₂ ⟶ coeq₃ f g h :=
+noncomputable def coeq₃Hom {j₁ j₂ : C} (f g h : j₁ ⟶ j₂) : j₂ ⟶ coeq₃ f g h :=
   coeqHom f g ≫
     leftToMax (coeq f g) (coeq g h) ≫
       coeqHom (coeqHom f g ≫ leftToMax (coeq f g) (coeq g h)) (coeqHom g h ≫ rightToMax (coeq f g) (coeq g h))
@@ -437,7 +444,7 @@ end IsFiltered
 2. for every pair of parallel morphisms there exists a morphism to the left so the compositions
    are equal.
 -/
-class is_cofiltered_or_empty : Prop where
+class IsCofilteredOrEmpty : Prop where
   cocone_objs : ∀ X Y : C, ∃ (W : _)(f : W ⟶ X)(g : W ⟶ Y), True
   cocone_maps : ∀ ⦃X Y : C⦄ f g : X ⟶ Y, ∃ (W : _)(h : W ⟶ X), h ≫ f = h ≫ g
 
@@ -449,7 +456,7 @@ class is_cofiltered_or_empty : Prop where
 
 See https://stacks.math.columbia.edu/tag/04AZ.
 -/
-class is_cofiltered extends IsCofilteredOrEmpty C : Prop where
+class IsCofiltered extends IsCofilteredOrEmpty C : Prop where
   [Nonempty : Nonempty C]
 
 instance (priority := 100) is_cofiltered_or_empty_of_semilattice_inf (α : Type u) [SemilatticeInf α] :
@@ -476,6 +483,7 @@ instance (priority := 100) is_cofiltered_of_directed_ge_nonempty (α : Type u) [
     [IsDirected α (swap (· ≤ ·))] [Nonempty α] : IsCofiltered α :=
   {  }
 
+-- Sanity checks
 example (α : Type u) [SemilatticeInf α] [OrderBot α] : IsCofiltered α := by
   infer_instance
 
@@ -495,13 +503,13 @@ noncomputable def min (j j' : C) : C :=
 /-- `min_to_left j j'` is an arbitrarily choice of morphism from `min j j'` to `j`,
 whose existence is ensured by `is_cofiltered`.
 -/
-noncomputable def min_to_left (j j' : C) : min j j' ⟶ j :=
+noncomputable def minToLeft (j j' : C) : min j j' ⟶ j :=
   (IsCofilteredOrEmpty.cocone_objs j j').some_spec.some
 
 /-- `min_to_right j j'` is an arbitrarily choice of morphism from `min j j'` to `j'`,
 whose existence is ensured by `is_cofiltered`.
 -/
-noncomputable def min_to_right (j j' : C) : min j j' ⟶ j' :=
+noncomputable def minToRight (j j' : C) : min j j' ⟶ j' :=
   (IsCofilteredOrEmpty.cocone_objs j j').some_spec.some_spec.some
 
 /-- `eq f f'`, for morphisms `f f' : j ⟶ j'`, is an arbitrary choice of object
@@ -509,7 +517,7 @@ which admits a morphism `eq_hom f f' : eq f f' ⟶ j` such that
 `eq_condition : eq_hom f f' ≫ f = eq_hom f f' ≫ f'`.
 Its existence is ensured by `is_cofiltered`.
 -/
-noncomputable def Eq {j j' : C} (f f' : j ⟶ j') : C :=
+noncomputable def eq {j j' : C} (f f' : j ⟶ j') : C :=
   (IsCofilteredOrEmpty.cocone_maps f f').some
 
 /-- `eq_hom f f'`, for morphisms `f f' : j ⟶ j'`, is an arbitrary choice of morphism
@@ -517,7 +525,7 @@ noncomputable def Eq {j j' : C} (f f' : j ⟶ j') : C :=
 `eq_condition : eq_hom f f' ≫ f = eq_hom f f' ≫ f'`.
 Its existence is ensured by `is_cofiltered`.
 -/
-noncomputable def eq_hom {j j' : C} (f f' : j ⟶ j') : eq f f' ⟶ j :=
+noncomputable def eqHom {j j' : C} (f f' : j ⟶ j') : eq f f' ⟶ j :=
   (IsCofilteredOrEmpty.cocone_maps f f').some_spec.some
 
 /-- `eq_condition f f'`, for morphisms `f f' : j ⟶ j'`, is the proof that
@@ -548,10 +556,10 @@ theorem inf_objs_exists (O : Finset C) : ∃ S : C, ∀ {X}, X ∈ O → Nonempt
       
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (X Y)
+-- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (X Y)
 variable (O : Finset C) (H : Finset (Σ' (X : C) (Y : C) (mX : X ∈ O) (mY : Y ∈ O), X ⟶ Y))
 
--- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (X Y)
+-- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (X Y)
 /-- Given any `finset` of objects `{X, ...}` and
 indexed collection of `finset`s of morphisms `{f, ...}` in `C`,
 there exists an object `S`, with a morphism `T X : S ⟶ X` from each `X`,
@@ -602,10 +610,10 @@ noncomputable def inf : C :=
 
 /-- The morphisms from `inf O H`.
 -/
-noncomputable def inf_to {X : C} (m : X ∈ O) : inf O H ⟶ X :=
+noncomputable def infTo {X : C} (m : X ∈ O) : inf O H ⟶ X :=
   (inf_exists O H).some_spec.some m
 
--- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (X Y)
+-- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (X Y)
 /-- The triangles consisting of a morphism in `H` and the maps from `inf O H` commute.
 -/
 theorem inf_to_commutes {X Y : C} (mX : X ∈ O) (mY : Y ∈ O) {f : X ⟶ Y}
@@ -615,7 +623,7 @@ theorem inf_to_commutes {X Y : C} (mX : X ∈ O) (mY : Y ∈ O) {f : X ⟶ Y}
 
 variable {J : Type v} [SmallCategory J] [FinCategory J]
 
--- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (X Y)
+-- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (X Y)
 /-- If we have `is_cofiltered C`, then for any functor `F : J ⥤ C` with `fin_category J`,
 there exists a cone over `F`.
 -/

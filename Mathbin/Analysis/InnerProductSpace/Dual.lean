@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Frédéric Dupuis. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Frédéric Dupuis
+-/
 import Mathbin.Analysis.InnerProductSpace.Projection
 import Mathbin.Analysis.NormedSpace.Dual
 import Mathbin.Analysis.NormedSpace.Star.Basic
@@ -54,7 +59,7 @@ into `dual 𝕜 E`.
 If `E` is complete, this operation is surjective, hence a conjugate-linear isometric equivalence;
 see `to_dual`.
 -/
-def to_dual_map : E →ₗᵢ⋆[𝕜] NormedSpace.Dual 𝕜 E :=
+def toDualMap : E →ₗᵢ⋆[𝕜] NormedSpace.Dual 𝕜 E :=
   { innerSL with norm_map' := fun _ => innerSL_apply_norm }
 
 variable {E}
@@ -107,7 +112,7 @@ variable (𝕜) (E) [CompleteSpace E]
 /-- Fréchet-Riesz representation: any `ℓ` in the dual of a Hilbert space `E` is of the form
 `λ u, ⟪y, u⟫` for some `y : E`, i.e. `to_dual_map` is surjective.
 -/
-def to_dual : E ≃ₗᵢ⋆[𝕜] NormedSpace.Dual 𝕜 E :=
+def toDual : E ≃ₗᵢ⋆[𝕜] NormedSpace.Dual 𝕜 E :=
   LinearIsometryEquiv.ofSurjective (toDualMap 𝕜 E)
     (by
       intro ℓ
@@ -177,7 +182,7 @@ variable {E 𝕜}
 given by interpreting the form as a map `B : E →L⋆[𝕜] normed_space.dual 𝕜 E`
 and dualizing the result using `to_dual`.
 -/
-def continuous_linear_map_of_bilin (B : E →L⋆[𝕜] E →L[𝕜] 𝕜) : E →L[𝕜] E :=
+def continuousLinearMapOfBilin (B : E →L⋆[𝕜] E →L[𝕜] 𝕜) : E →L[𝕜] E :=
   comp (toDual 𝕜 E).symm.toContinuousLinearEquiv.toContinuousLinearMap B
 
 local postfix:1025 "♯" => continuousLinearMapOfBilin

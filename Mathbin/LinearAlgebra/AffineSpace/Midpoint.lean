@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Yury Kudryashov. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yury Kudryashov
+-/
 import Mathbin.Algebra.CharP.Invertible
 import Mathbin.LinearAlgebra.AffineSpace.AffineEquiv
 
@@ -196,7 +201,7 @@ variable (R R' : Type _) {E F : Type _} [Ringₓ R] [Invertible (2 : R)] [AddCom
   [Invertible (2 : R')] [AddCommGroupₓ F] [Module R' F]
 
 /-- A map `f : E → F` sending zero to zero and midpoints to midpoints is an `add_monoid_hom`. -/
-def of_map_midpoint (f : E → F) (h0 : f 0 = 0) (hm : ∀ x y, f (midpoint R x y) = midpoint R' (f x) (f y)) : E →+ F where
+def ofMapMidpoint (f : E → F) (h0 : f 0 = 0) (hm : ∀ x y, f (midpoint R x y) = midpoint R' (f x) (f y)) : E →+ F where
   toFun := f
   map_zero' := h0
   map_add' := fun x y =>

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Heather Macbeth. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Heather Macbeth, Yury Kudryashov
+-/
 import Mathbin.Topology.Algebra.Order.Basic
 
 /-!
@@ -53,6 +58,7 @@ instance OrderDual.Inf_convergence_class [Preorderₓ α] [TopologicalSpace α] 
     InfConvergenceClass (OrderDual α) :=
   ⟨‹SupConvergenceClass α›.1⟩
 
+-- see Note [lower instance priority]
 instance (priority := 100) LinearOrderₓ.Sup_convergence_class [TopologicalSpace α] [LinearOrderₓ α] [OrderTopology α] :
     SupConvergenceClass α := by
   refine' ⟨fun a s ha => tendsto_order.2 ⟨fun b hb => _, fun b hb => _⟩⟩
@@ -63,6 +69,7 @@ instance (priority := 100) LinearOrderₓ.Sup_convergence_class [TopologicalSpac
   · exact eventually_of_forall fun x => (ha.1 x.2).trans_lt hb
     
 
+-- see Note [lower instance priority]
 instance (priority := 100) LinearOrderₓ.Inf_convergence_class [TopologicalSpace α] [LinearOrderₓ α] [OrderTopology α] :
     InfConvergenceClass α :=
   show InfConvergenceClass (OrderDual <| OrderDual α) from OrderDual.Inf_convergence_class
@@ -259,7 +266,7 @@ theorem supr_eq_supr_subseq_of_monotone {ι₁ ι₂ α : Type _} [Preorderₓ �
     {f : ι₂ → α} {φ : ι₁ → ι₂} (hf : Monotone f) (hφ : Tendsto φ l atTop) : (⨆ i, f i) = ⨆ i, f (φ i) :=
   le_antisymmₓ
     (supr_le_supr2 fun i =>
-      exists_imp_exists (fun j hj : i ≤ φ j => hf hj) (hφ.Eventually <| eventually_ge_at_top i).exists)
+      exists_imp_exists (fun hj : i ≤ φ j => hf hj) (hφ.Eventually <| eventually_ge_at_top i).exists)
     (supr_le_supr2 fun i => ⟨φ i, le_rfl⟩)
 
 theorem infi_eq_infi_subseq_of_monotone {ι₁ ι₂ α : Type _} [Preorderₓ ι₂] [CompleteLattice α] {l : Filter ι₁} [l.ne_bot]

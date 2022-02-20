@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Gabriel Ebner. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Gabriel Ebner
+-/
 
 /-!
 # Changing universes of types in meta-code
@@ -60,6 +65,7 @@ unsafe def up {α} (a : uchange α) : α :=
 
 end Uchange
 
+-- Sanity check
 #eval do
   guardₓ <| (uchange.down.{0} 42).up = 42
   tactic.skip

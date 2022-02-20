@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Adam Topaz. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Adam Topaz
+-/
 import Mathbin.CategoryTheory.Limits.Shapes.Products
 import Mathbin.CategoryTheory.Limits.Shapes.Equalizers
 import Mathbin.CategoryTheory.Limits.ConeCategory
@@ -31,13 +36,13 @@ universe v u
 
 /-- The type underlying the multiequalizer diagram. -/
 @[nolint unused_arguments]
-inductive walking_multicospan {L R : Type v} (fst snd : R → L) : Type v
+inductive WalkingMulticospan {L R : Type v} (fst snd : R → L) : Type v
   | left : L → walking_multicospan
   | right : R → walking_multicospan
 
 /-- The type underlying the multiecoqualizer diagram. -/
 @[nolint unused_arguments]
-inductive walking_multispan {L R : Type v} (fst snd : L → R) : Type v
+inductive WalkingMultispan {L R : Type v} (fst snd : L → R) : Type v
   | left : L → walking_multispan
   | right : R → walking_multispan
 
@@ -49,7 +54,7 @@ instance [Inhabited L] : Inhabited (WalkingMulticospan fst snd) :=
   ⟨left default⟩
 
 /-- Morphisms for `walking_multicospan`. -/
-inductive hom : ∀ a b : WalkingMulticospan fst snd, Type v
+inductive Hom : ∀ a b : WalkingMulticospan fst snd, Type v
   | id A : hom A A
   | fst b : hom (left (fst b)) (right b)
   | snd b : hom (left (snd b)) (right b)
@@ -58,7 +63,7 @@ instance {a : WalkingMulticospan fst snd} : Inhabited (Hom a a) :=
   ⟨Hom.id _⟩
 
 /-- Composition of morphisms for `walking_multicospan`. -/
-def hom.comp : ∀ {A B C : WalkingMulticospan fst snd} f : Hom A B g : Hom B C, Hom A C
+def Hom.comp : ∀ {A B C : WalkingMulticospan fst snd} f : Hom A B g : Hom B C, Hom A C
   | _, _, _, hom.id X, f => f
   | _, _, _, hom.fst b, hom.id X => Hom.fst b
   | _, _, _, hom.snd b, hom.id X => Hom.snd b
@@ -87,7 +92,7 @@ instance [Inhabited L] : Inhabited (WalkingMultispan fst snd) :=
   ⟨left default⟩
 
 /-- Morphisms for `walking_multispan`. -/
-inductive hom : ∀ a b : WalkingMultispan fst snd, Type v
+inductive Hom : ∀ a b : WalkingMultispan fst snd, Type v
   | id A : hom A A
   | fst a : hom (left a) (right (fst a))
   | snd a : hom (left a) (right (snd a))
@@ -96,7 +101,7 @@ instance {a : WalkingMultispan fst snd} : Inhabited (Hom a a) :=
   ⟨Hom.id _⟩
 
 /-- Composition of morphisms for `walking_multispan`. -/
-def hom.comp : ∀ {A B C : WalkingMultispan fst snd} f : Hom A B g : Hom B C, Hom A C
+def Hom.comp : ∀ {A B C : WalkingMultispan fst snd} f : Hom A B g : Hom B C, Hom A C
   | _, _, _, hom.id X, f => f
   | _, _, _, hom.fst a, hom.id X => Hom.fst a
   | _, _, _, hom.snd a, hom.id X => Hom.snd a
@@ -119,7 +124,7 @@ end WalkingMultispan
 
 /-- This is a structure encapsulating the data necessary to define a `multicospan`. -/
 @[nolint has_inhabited_instance]
-structure multicospan_index (C : Type u) [Category.{v} C] where
+structure MulticospanIndex (C : Type u) [Category.{v} C] where
   (L R : Type v)
   (fstTo sndTo : R → L)
   left : L → C
@@ -129,7 +134,7 @@ structure multicospan_index (C : Type u) [Category.{v} C] where
 
 /-- This is a structure encapsulating the data necessary to define a `multispan`. -/
 @[nolint has_inhabited_instance]
-structure multispan_index (C : Type u) [Category.{v} C] where
+structure MultispanIndex (C : Type u) [Category.{v} C] where
   (L R : Type v)
   (fstFrom sndFrom : L → R)
   left : L → C
@@ -178,11 +183,11 @@ theorem multicospan_map_snd b : I.multicospan.map (WalkingMulticospan.Hom.snd b)
 variable [HasProduct I.left] [HasProduct I.right]
 
 /-- The induced map `∏ I.left ⟶ ∏ I.right` via `I.fst`. -/
-noncomputable def fst_pi_map : ∏ I.left ⟶ ∏ I.right :=
+noncomputable def fstPiMap : ∏ I.left ⟶ ∏ I.right :=
   Pi.lift fun b => Pi.π I.left (I.fstTo b) ≫ I.fst b
 
 /-- The induced map `∏ I.left ⟶ ∏ I.right` via `I.snd`. -/
-noncomputable def snd_pi_map : ∏ I.left ⟶ ∏ I.right :=
+noncomputable def sndPiMap : ∏ I.left ⟶ ∏ I.right :=
   Pi.lift fun b => Pi.π I.left (I.sndTo b) ≫ I.snd b
 
 @[simp, reassoc]
@@ -197,7 +202,7 @@ theorem snd_pi_map_π b : I.sndPiMap ≫ Pi.π I.right b = Pi.π I.left _ ≫ I.
 the two morphsims `∏ I.left ⇉ ∏ I.right`. This is the diagram of the latter.
 -/
 @[simps]
-protected noncomputable def parallel_pair_diagram :=
+protected noncomputable def parallelPairDiagram :=
   parallelPair I.fstPiMap I.sndPiMap
 
 end MulticospanIndex
@@ -243,11 +248,11 @@ theorem multispan_map_snd a : I.multispan.map (WalkingMultispan.Hom.snd a) = I.s
 variable [HasCoproduct I.left] [HasCoproduct I.right]
 
 /-- The induced map `∐ I.left ⟶ ∐ I.right` via `I.fst`. -/
-noncomputable def fst_sigma_map : ∐ I.left ⟶ ∐ I.right :=
+noncomputable def fstSigmaMap : ∐ I.left ⟶ ∐ I.right :=
   Sigma.desc fun b => I.fst b ≫ Sigma.ι _ (I.fstFrom b)
 
 /-- The induced map `∐ I.left ⟶ ∐ I.right` via `I.snd`. -/
-noncomputable def snd_sigma_map : ∐ I.left ⟶ ∐ I.right :=
+noncomputable def sndSigmaMap : ∐ I.left ⟶ ∐ I.right :=
   Sigma.desc fun b => I.snd b ≫ Sigma.ι _ (I.sndFrom b)
 
 @[simp, reassoc]
@@ -261,7 +266,7 @@ theorem ι_snd_sigma_map b : Sigma.ι I.left b ≫ I.sndSigmaMap = I.snd b ≫ S
 /-- Taking the multicoequalizer over the multispan index is equivalent to taking the coequalizer over
 the two morphsims `∐ I.left ⇉ ∐ I.right`. This is the diagram of the latter.
 -/
-protected noncomputable abbrev parallel_pair_diagram :=
+protected noncomputable abbrev parallelPairDiagram :=
   parallelPair I.fstSigmaMap I.sndSigmaMap
 
 end MultispanIndex
@@ -270,12 +275,12 @@ variable {C : Type u} [Category.{v} C]
 
 /-- A multifork is a cone over a multicospan. -/
 @[nolint has_inhabited_instance]
-abbrev multifork (I : MulticospanIndex C) :=
+abbrev Multifork (I : MulticospanIndex C) :=
   Cone I.multicospan
 
 /-- A multicofork is a cocone over a multispan. -/
 @[nolint has_inhabited_instance]
-abbrev multicofork (I : MultispanIndex C) :=
+abbrev Multicofork (I : MultispanIndex C) :=
   Cocone I.multispan
 
 namespace Multifork
@@ -306,7 +311,7 @@ theorem app_left_snd b :
 -- ././Mathport/Syntax/Translate/Tactic/Basic.lean:59:31: expecting tactic arg
 /-- Construct a multifork using a collection `ι` of morphisms. -/
 @[simps]
-def of_ι (I : MulticospanIndex C) (P : C) (ι : ∀ a, P ⟶ I.left a)
+def ofι (I : MulticospanIndex C) (P : C) (ι : ∀ a, P ⟶ I.left a)
     (w : ∀ b, ι (I.fstTo b) ≫ I.fst b = ι (I.sndTo b) ≫ I.snd b) : Multifork I where
   x := P
   π :=
@@ -333,7 +338,7 @@ theorem condition b : K.ι (I.fstTo b) ≫ I.fst b = K.ι (I.sndTo b) ≫ I.snd 
 
 /-- This definition provides a convenient way to show that a multifork is a limit. -/
 @[simps]
-def is_limit.mk (lift : ∀ E : Multifork I, E.x ⟶ K.x) (fac : ∀ E : Multifork I i : I.L, lift E ≫ K.ι i = E.ι i)
+def IsLimit.mk (lift : ∀ E : Multifork I, E.x ⟶ K.x) (fac : ∀ E : Multifork I i : I.L, lift E ≫ K.ι i = E.ι i)
     (uniq : ∀ E : Multifork I m : E.x ⟶ K.x, (∀ i : I.L, m ≫ K.ι i = E.ι i) → m = lift E) : IsLimit K :=
   { lift,
     fac' := by
@@ -361,7 +366,7 @@ theorem pi_condition : Pi.lift K.ι ≫ I.fstPiMap = Pi.lift K.ι ≫ I.sndPiMap
 -- ././Mathport/Syntax/Translate/Tactic/Basic.lean:59:31: expecting tactic arg
 /-- Given a multifork, we may obtain a fork over `∏ I.left ⇉ ∏ I.right`. -/
 @[simps x]
-noncomputable def to_pi_fork (K : Multifork I) : Fork I.fstPiMap I.sndPiMap where
+noncomputable def toPiFork (K : Multifork I) : Fork I.fstPiMap I.sndPiMap where
   x := K.x
   π :=
     { app := fun x =>
@@ -390,7 +395,7 @@ variable (I)
 -- ././Mathport/Syntax/Translate/Tactic/Basic.lean:59:31: expecting tactic arg
 /-- Given a fork over `∏ I.left ⇉ ∏ I.right`, we may obtain a multifork. -/
 @[simps x]
-noncomputable def of_pi_fork (c : Fork I.fstPiMap I.sndPiMap) : Multifork I where
+noncomputable def ofPiFork (c : Fork I.fstPiMap I.sndPiMap) : Multifork I where
   x := c.x
   π :=
     { app := fun x =>
@@ -429,13 +434,13 @@ attribute [local tidy] tactic.case_bash
 
 /-- `multifork.to_pi_fork` is functorial. -/
 @[simps]
-noncomputable def to_pi_fork_functor : Multifork I ⥤ Fork I.fstPiMap I.sndPiMap where
+noncomputable def toPiForkFunctor : Multifork I ⥤ Fork I.fstPiMap I.sndPiMap where
   obj := Multifork.toPiFork
   map := fun K₁ K₂ f => { Hom := f.Hom }
 
 /-- `multifork.of_pi_fork` is functorial. -/
 @[simps]
-noncomputable def of_pi_fork_functor : Fork I.fstPiMap I.sndPiMap ⥤ Multifork I where
+noncomputable def ofPiForkFunctor : Fork I.fstPiMap I.sndPiMap ⥤ Multifork I where
   obj := Multifork.ofPiFork I
   map := fun K₁ K₂ f =>
     { Hom := f.Hom,
@@ -447,7 +452,7 @@ It then follows from `category_theory.is_limit_of_preserves_cone_terminal` (or `
 preserves and reflects limit cones.
 -/
 @[simps]
-noncomputable def multifork_equiv_pi_fork : Multifork I ≌ Fork I.fstPiMap I.sndPiMap where
+noncomputable def multiforkEquivPiFork : Multifork I ≌ Fork I.fstPiMap I.sndPiMap where
   Functor := toPiForkFunctor I
   inverse := ofPiForkFunctor I
   unitIso :=
@@ -501,7 +506,7 @@ theorem snd_app_right a :
 -- ././Mathport/Syntax/Translate/Tactic/Basic.lean:59:31: expecting tactic arg
 /-- Construct a multicofork using a collection `π` of morphisms. -/
 @[simps]
-def of_π (I : MultispanIndex C) (P : C) (π : ∀ b, I.right b ⟶ P)
+def ofπ (I : MultispanIndex C) (P : C) (π : ∀ b, I.right b ⟶ P)
     (w : ∀ a, I.fst a ≫ π (I.fstFrom a) = I.snd a ≫ π (I.sndFrom a)) : Multicofork I where
   x := P
   ι :=
@@ -528,7 +533,7 @@ theorem condition a : I.fst a ≫ K.π (I.fstFrom a) = I.snd a ≫ K.π (I.sndFr
 
 /-- This definition provides a convenient way to show that a multicofork is a colimit. -/
 @[simps]
-def is_colimit.mk (desc : ∀ E : Multicofork I, K.x ⟶ E.x) (fac : ∀ E : Multicofork I i : I.R, K.π i ≫ desc E = E.π i)
+def IsColimit.mk (desc : ∀ E : Multicofork I, K.x ⟶ E.x) (fac : ∀ E : Multicofork I i : I.R, K.π i ≫ desc E = E.π i)
     (uniq : ∀ E : Multicofork I m : K.x ⟶ E.x, (∀ i : I.R, K.π i ≫ m = E.π i) → m = desc E) : IsColimit K :=
   { desc,
     fac' := by
@@ -556,7 +561,7 @@ theorem sigma_condition : I.fstSigmaMap ≫ Sigma.desc K.π = I.sndSigmaMap ≫ 
 -- ././Mathport/Syntax/Translate/Tactic/Basic.lean:59:31: expecting tactic arg
 /-- Given a multicofork, we may obtain a cofork over `∐ I.left ⇉ ∐ I.right`. -/
 @[simps x]
-noncomputable def to_sigma_cofork (K : Multicofork I) : Cofork I.fstSigmaMap I.sndSigmaMap where
+noncomputable def toSigmaCofork (K : Multicofork I) : Cofork I.fstSigmaMap I.sndSigmaMap where
   x := K.x
   ι :=
     { app := fun x =>
@@ -585,7 +590,7 @@ variable (I)
 -- ././Mathport/Syntax/Translate/Tactic/Basic.lean:59:31: expecting tactic arg
 /-- Given a cofork over `∐ I.left ⇉ ∐ I.right`, we may obtain a multicofork. -/
 @[simps x]
-noncomputable def of_sigma_cofork (c : Cofork I.fstSigmaMap I.sndSigmaMap) : Multicofork I where
+noncomputable def ofSigmaCofork (c : Cofork I.fstSigmaMap I.sndSigmaMap) : Multicofork I where
   x := c.x
   ι :=
     { app := fun x =>
@@ -626,13 +631,13 @@ attribute [local tidy] tactic.case_bash
 
 /-- `multicofork.to_sigma_cofork` is functorial. -/
 @[simps]
-noncomputable def to_sigma_cofork_functor : Multicofork I ⥤ Cofork I.fstSigmaMap I.sndSigmaMap where
+noncomputable def toSigmaCoforkFunctor : Multicofork I ⥤ Cofork I.fstSigmaMap I.sndSigmaMap where
   obj := Multicofork.toSigmaCofork
   map := fun K₁ K₂ f => { Hom := f.Hom }
 
 /-- `multicofork.of_sigma_cofork` is functorial. -/
 @[simps]
-noncomputable def of_sigma_cofork_functor : Cofork I.fstSigmaMap I.sndSigmaMap ⥤ Multicofork I where
+noncomputable def ofSigmaCoforkFunctor : Cofork I.fstSigmaMap I.sndSigmaMap ⥤ Multicofork I where
   obj := Multicofork.ofSigmaCofork I
   map := fun K₁ K₂ f =>
     { Hom := f.Hom,
@@ -644,7 +649,7 @@ It then follows from `category_theory.is_colimit_of_preserves_cocone_initial` (o
 it preserves and reflects colimit cocones.
 -/
 @[simps]
-noncomputable def multicofork_equiv_sigma_cofork : Multicofork I ≌ Cofork I.fstSigmaMap I.sndSigmaMap where
+noncomputable def multicoforkEquivSigmaCofork : Multicofork I ≌ Cofork I.fstSigmaMap I.sndSigmaMap where
   Functor := toSigmaCoforkFunctor I
   inverse := ofSigmaCoforkFunctor I
   unitIso :=
@@ -673,7 +678,7 @@ end MultispanIndex
 
 /-- For `I : multicospan_index C`, we say that it has a multiequalizer if the associated
   multicospan has a limit. -/
-abbrev has_multiequalizer (I : MulticospanIndex C) :=
+abbrev HasMultiequalizer (I : MulticospanIndex C) :=
   HasLimit I.multicospan
 
 noncomputable section
@@ -684,7 +689,7 @@ abbrev multiequalizer (I : MulticospanIndex C) [HasMultiequalizer I] : C :=
 
 /-- For `I : multispan_index C`, we say that it has a multicoequalizer if
   the associated multicospan has a limit. -/
-abbrev has_multicoequalizer (I : MultispanIndex C) :=
+abbrev HasMulticoequalizer (I : MultispanIndex C) :=
   HasColimit I.multispan
 
 /-- The multiecoqualizer of `I : multispan_index C`. -/
@@ -742,11 +747,11 @@ instance : HasEqualizer I.fstPiMap I.sndPiMap :=
   ⟨⟨⟨_, IsLimit.ofPreservesConeTerminal I.multiforkEquivPiFork.Functor (limit.isLimit _)⟩⟩⟩
 
 /-- The multiequalizer is isomorphic to the equalizer of `∏ I.left ⇉ ∏ I.right`. -/
-def iso_equalizer : multiequalizer I ≅ equalizer I.fstPiMap I.sndPiMap :=
+def isoEqualizer : multiequalizer I ≅ equalizer I.fstPiMap I.sndPiMap :=
   limit.isoLimitCone ⟨_, IsLimit.ofPreservesConeTerminal I.multiforkEquivPiFork.inverse (limit.isLimit _)⟩
 
 /-- The canonical injection `multiequalizer I ⟶ ∏ I.left`. -/
-def ι_pi : multiequalizer I ⟶ ∏ I.left :=
+def ιPi : multiequalizer I ⟶ ∏ I.left :=
   (isoEqualizer I).Hom ≫ equalizer.ι I.fstPiMap I.sndPiMap
 
 @[simp, reassoc]
@@ -811,12 +816,12 @@ instance : HasCoequalizer I.fstSigmaMap I.sndSigmaMap :=
   ⟨⟨⟨_, IsColimit.ofPreservesCoconeInitial I.multicoforkEquivSigmaCofork.Functor (colimit.isColimit _)⟩⟩⟩
 
 /-- The multicoequalizer is isomorphic to the coequalizer of `∐ I.left ⇉ ∐ I.right`. -/
-def iso_coequalizer : multicoequalizer I ≅ coequalizer I.fstSigmaMap I.sndSigmaMap :=
+def isoCoequalizer : multicoequalizer I ≅ coequalizer I.fstSigmaMap I.sndSigmaMap :=
   colimit.isoColimitCocone
     ⟨_, IsColimit.ofPreservesCoconeInitial I.multicoforkEquivSigmaCofork.inverse (colimit.isColimit _)⟩
 
 /-- The canonical projection `∐ I.right ⟶ multicoequalizer I`. -/
-def sigma_π : ∐ I.right ⟶ multicoequalizer I :=
+def sigmaπ : ∐ I.right ⟶ multicoequalizer I :=
   coequalizer.π I.fstSigmaMap I.sndSigmaMap ≫ (isoCoequalizer I).inv
 
 @[simp, reassoc]

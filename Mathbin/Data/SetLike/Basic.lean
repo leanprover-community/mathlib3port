@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Eric Wieser. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Eric Wieser
+-/
 import Mathbin.Data.Set.Basic
 import Mathbin.Tactic.Monotonicity.Basic
 
@@ -93,6 +98,7 @@ instance : CoeTₓ A (Set B) :=
 instance (priority := 100) : HasMem B A :=
   ⟨fun x p => x ∈ (p : Set B)⟩
 
+-- `dangerous_instance` does not know that `B` is used only as an `out_param`
 @[nolint dangerous_instance]
 instance (priority := 100) : CoeSort A (Type _) :=
   ⟨fun p => { x : B // x ∈ p }⟩
@@ -150,6 +156,7 @@ theorem coe_mem (x : p) : (x : B) ∈ p :=
 protected theorem eta (x : p) (hx : (x : B) ∈ p) : (⟨x, hx⟩ : p) = x :=
   Subtype.eta x hx
 
+-- `dangerous_instance` does not know that `B` is used only as an `out_param`
 @[nolint dangerous_instance]
 instance (priority := 100) : PartialOrderₓ A :=
   { PartialOrderₓ.lift (coe : A → Set B) coe_injective with le := fun H K => ∀ ⦃x⦄, x ∈ H → x ∈ K }

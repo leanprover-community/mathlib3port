@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Joseph Myers. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Joseph Myers
+-/
 import Mathbin.LinearAlgebra.Determinant
 
 /-!
@@ -265,7 +270,7 @@ theorem units_smul_of_pos [Nontrivial R] (u : (R)ˣ) (hu : 0 < (u : R)) (v : Mod
   exact same_ray_pos_smul_left _ hu
 
 /-- An arbitrary `ray_vector` giving a ray. -/
-def some_ray_vector [Nontrivial R] (x : Module.Ray R M) : RayVector M :=
+def someRayVector [Nontrivial R] (x : Module.Ray R M) : RayVector M :=
   Quotientₓ.out x
 
 /-- The ray of `some_ray_vector`. -/
@@ -274,7 +279,7 @@ theorem some_ray_vector_ray [Nontrivial R] (x : Module.Ray R M) : (⟦x.someRayV
   Quotientₓ.out_eq _
 
 /-- An arbitrary nonzero vector giving a ray. -/
-def some_vector [Nontrivial R] (x : Module.Ray R M) : M :=
+def someVector [Nontrivial R] (x : Module.Ray R M) : M :=
   x.someRayVector
 
 /-- `some_vector` is nonzero. -/
@@ -394,7 +399,7 @@ namespace Basis
 variable {R} {ι : Type _} [Fintype ι] [DecidableEq ι]
 
 /-- The orientation given by a basis. -/
-protected def Orientation [Nontrivial R] (e : Basis ι R M) : Orientation R M ι :=
+protected def orientation [Nontrivial R] (e : Basis ι R M) : Orientation R M ι :=
   rayOfNeZero R _ e.det_ne_zero
 
 theorem orientation_map [Nontrivial R] (e : Basis ι R M) (f : M ≃ₗ[R] N) :
@@ -557,7 +562,7 @@ theorem orientation_neg_single [Nontrivial R] (e : Basis ι R M) (i : ι) :
 
 /-- Given a basis and an orientation, return a basis giving that orientation: either the original
 basis, or one constructed by negating a single (arbitrary) basis vector. -/
-def adjust_to_orientation [Nontrivial R] [Nonempty ι] (e : Basis ι R M) (x : Orientation R M ι) : Basis ι R M :=
+def adjustToOrientation [Nontrivial R] [Nonempty ι] (e : Basis ι R M) (x : Orientation R M ι) : Basis ι R M :=
   have := Classical.decEq (Orientation R M ι)
   if e.orientation = x then e else e.units_smul (Function.update 1 (Classical.arbitrary ι) (-1))
 
@@ -657,7 +662,7 @@ theorem map_eq_neg_iff_det_neg (x : Orientation R M ι) (f : M ≃ₗ[R] M) (h :
 
 /-- If the index type has cardinality equal to the finite dimension, a basis with the given
 orientation. -/
-def some_basis [Nonempty ι] (x : Orientation R M ι) (h : Fintype.card ι = finrank R M) : Basis ι R M :=
+def someBasis [Nonempty ι] (x : Orientation R M ι) (h : Fintype.card ι = finrank R M) : Basis ι R M :=
   ((finBasis R M).reindex (Fintype.equivFinOfCardEq h).symm).adjustToOrientation x
 
 /-- `some_basis` gives a basis with the required orientation. -/

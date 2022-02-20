@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Patrick MAssot. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Patrick Massot
+-/
 import Mathbin.Topology.UniformSpace.AbsoluteValue
 import Mathbin.Topology.Instances.Real
 import Mathbin.Topology.UniformSpace.Completion
@@ -101,15 +106,15 @@ instance : UniformSpace Q :=
 def Bourbakiℝ : Type :=
   Completion Q deriving Inhabited
 
-instance bourbaki.uniform_space : UniformSpace Bourbakiℝ :=
+instance Bourbaki.uniformSpace : UniformSpace Bourbakiℝ :=
   Completion.uniformSpace Q
 
 /-- Bourbaki reals packaged as a completion of Q using the general theory. -/
-def Bourbaki_pkg : AbstractCompletion Q :=
+def bourbakiPkg : AbstractCompletion Q :=
   completion.cpkg
 
 /-- The equivalence between Bourbaki and Cauchy reals-/
-noncomputable def compare_equiv : Bourbakiℝ ≃ ℝ :=
+noncomputable def compareEquiv : Bourbakiℝ ≃ ℝ :=
   bourbakiPkg.compareEquiv rationalCauSeqPkg
 
 theorem compare_uc : UniformContinuous compareEquiv :=

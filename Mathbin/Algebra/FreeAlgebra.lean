@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Adam Topaz. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison, Adam Topaz
+-/
 import Mathbin.Algebra.Algebra.Subalgebra
 import Mathbin.Algebra.MonoidAlgebra.Basic
 
@@ -49,7 +54,7 @@ namespace FreeAlgebra
 
 /-- This inductive type is used to express representatives of the free algebra.
 -/
-inductive pre
+inductive Pre
   | of : X → pre
   | of_scalar : R → pre
   | add : pre → pre → pre
@@ -61,33 +66,34 @@ instance : Inhabited (Pre R X) :=
   ⟨of_scalar 0⟩
 
 /-- Coercion from `X` to `pre R X`. Note: Used for notation only. -/
-def has_coe_generator : Coe X (Pre R X) :=
+-- Note: These instances are only used to simplify the notation.
+def hasCoeGenerator : Coe X (Pre R X) :=
   ⟨of⟩
 
 /-- Coercion from `R` to `pre R X`. Note: Used for notation only. -/
-def has_coe_semiring : Coe R (Pre R X) :=
+def hasCoeSemiring : Coe R (Pre R X) :=
   ⟨of_scalar⟩
 
 /-- Multiplication in `pre R X` defined as `pre.mul`. Note: Used for notation only. -/
-def Mul : Mul (Pre R X) :=
+def hasMul : Mul (Pre R X) :=
   ⟨mul⟩
 
 /-- Addition in `pre R X` defined as `pre.add`. Note: Used for notation only. -/
-def Add : Add (Pre R X) :=
+def hasAdd : Add (Pre R X) :=
   ⟨add⟩
 
 /-- Zero in `pre R X` defined as the image of `0` from `R`. Note: Used for notation only. -/
-def Zero : Zero (Pre R X) :=
+def hasZero : Zero (Pre R X) :=
   ⟨of_scalar 0⟩
 
 /-- One in `pre R X` defined as the image of `1` from `R`. Note: Used for notation only. -/
-def One : One (Pre R X) :=
+def hasOne : One (Pre R X) :=
   ⟨of_scalar 1⟩
 
 /-- Scalar multiplication defined as multiplication by the image of elements from `R`.
 Note: Used for notation only.
 -/
-def HasScalar : HasScalar R (Pre R X) :=
+def hasScalar : HasScalar R (Pre R X) :=
   ⟨fun r m => mul (of_scalar r) m⟩
 
 end Pre
@@ -98,26 +104,32 @@ attribute [local instance]
 /-- Given a function from `X` to an `R`-algebra `A`, `lift_fun` provides a lift of `f` to a function
 from `pre R X` to `A`. This is mainly used in the construction of `free_algebra.lift`.
 -/
-def lift_fun {A : Type _} [Semiringₓ A] [Algebra R A] (f : X → A) : Pre R X → A := fun t =>
-  Pre.recOn t f (algebraMap _ _) (fun _ _ => · + ·) fun _ _ => · * ·
+def liftFun {A : Type _} [Semiringₓ A] [Algebra R A] (f : X → A) : Pre R X → A := fun t =>
+  Pre.recOn t f (algebraMap _ _) (fun _ _ => (· + ·)) fun _ _ => (· * ·)
 
 /-- An inductively defined relation on `pre R X` used to force the initial algebra structure on
 the associated quotient.
 -/
-inductive rel : Pre R X → Pre R X → Prop
+inductive Rel : Pre R X → Pre R X → Prop-- force `of_scalar` to be a central semiring morphism
+
   | add_scalar {r s : R} : rel (↑(r + s)) (↑r + ↑s)
   | mul_scalar {r s : R} : rel (↑(r * s)) (↑r * ↑s)
-  | central_scalar {r : R} {a : Pre R X} : rel (r * a) (a * r)
+  | central_scalar {r : R} {a : Pre R X} : rel (r * a) (a * r)-- commutative additive semigroup
+
   | add_assocₓ {a b c : Pre R X} : rel (a + b + c) (a + (b + c))
   | add_commₓ {a b : Pre R X} : rel (a + b) (b + a)
-  | zero_addₓ {a : Pre R X} : rel (0 + a) a
+  | zero_addₓ {a : Pre R X} : rel (0 + a) a-- multiplicative monoid
+
   | mul_assoc {a b c : Pre R X} : rel (a * b * c) (a * (b * c))
   | one_mulₓ {a : Pre R X} : rel (1 * a) a
-  | mul_oneₓ {a : Pre R X} : rel (a * 1) a
+  | mul_oneₓ {a : Pre R X} : rel (a * 1) a-- distributivity
+
   | left_distrib {a b c : Pre R X} : rel (a * (b + c)) (a * b + a * c)
-  | right_distrib {a b c : Pre R X} : rel ((a + b) * c) (a * c + b * c)
+  | right_distrib {a b c : Pre R X} : rel ((a + b) * c) (a * c + b * c)-- other relations needed for semiring
+
   | zero_mul {a : Pre R X} : rel (0 * a) 0
-  | mul_zero {a : Pre R X} : rel (a * 0) 0
+  | mul_zero {a : Pre R X} : rel (a * 0) 0-- compatibility
+
   | add_compat_left {a b c : Pre R X} : rel a b → rel (a + c) (b + c)
   | add_compat_right {a b c : Pre R X} : rel a b → rel (c + a) (c + b)
   | mul_compat_left {a b c : Pre R X} : rel a b → rel (a * c) (b * c)
@@ -331,6 +343,9 @@ definition.
 -/
 
 
+-- Marking `free_algebra` irreducible makes `ring` instances inaccessible on quotients.
+-- https://leanprover.zulipchat.com/#narrow/stream/113488-general/topic/algebra.2Esemiring_to_ring.20breaks.20semimodule.20typeclass.20lookup/near/212580241
+-- For now, we avoid this by not marking it irreducible.
 @[simp]
 theorem lift_comp_ι (g : FreeAlgebra R X →ₐ[R] A) : lift R ((g : FreeAlgebra R X → A) ∘ ι R) = g := by
   rw [← lift_symm_apply]
@@ -348,7 +363,7 @@ theorem hom_ext {f g : FreeAlgebra R X →ₐ[R] A}
 This would be useful when constructing linear maps out of a free algebra,
 for example.
 -/
-noncomputable def equiv_monoid_algebra_free_monoid : FreeAlgebra R X ≃ₐ[R] MonoidAlgebra R (FreeMonoid X) :=
+noncomputable def equivMonoidAlgebraFreeMonoid : FreeAlgebra R X ≃ₐ[R] MonoidAlgebra R (FreeMonoid X) :=
   AlgEquiv.ofAlgHom (lift R fun x => (MonoidAlgebra.of R (FreeMonoid X)) (FreeMonoid.of x))
     ((MonoidAlgebra.lift R (FreeMonoid X) (FreeAlgebra R X)) (FreeMonoid.lift (ι R)))
     (by
@@ -374,7 +389,7 @@ section
 open_locale Classical
 
 /-- The left-inverse of `algebra_map`. -/
-def algebra_map_inv : FreeAlgebra R X →ₐ[R] R :=
+def algebraMapInv : FreeAlgebra R X →ₐ[R] R :=
   lift R (0 : X → R)
 
 theorem algebra_map_left_inverse : Function.LeftInverse algebraMapInv (algebraMap R <| FreeAlgebra R X) := fun x => by
@@ -392,6 +407,7 @@ theorem algebra_map_eq_zero_iff (x : R) : algebraMap R (FreeAlgebra R X) x = 0 �
 theorem algebra_map_eq_one_iff (x : R) : algebraMap R (FreeAlgebra R X) x = 1 ↔ x = 1 :=
   map_eq_one_iff (algebraMap _ _) algebra_map_left_inverse.Injective
 
+-- this proof is copied from the approach in `free_abelian_group.of_injective`
 theorem ι_injective [Nontrivial R] : Function.Injective (ι R : X → FreeAlgebra R X) := fun x y hoxy =>
   Classical.by_contradiction fun hxy : x ≠ y =>
     let f : FreeAlgebra R X →ₐ[R] R := lift R fun z => if x = z then (1 : R) else 0
@@ -426,6 +442,8 @@ end
 
 end FreeAlgebra
 
+/- There is something weird in the above namespace that breaks the typeclass resolution of
+`has_coe_to_sort` below. Closing it and reopening it fixes it... -/
 namespace FreeAlgebra
 
 /-- An induction principle for the free algebra.
@@ -437,12 +455,15 @@ preserved under addition and muliplication, then it holds for all of `free_algeb
 theorem induction {C : FreeAlgebra R X → Prop} (h_grade0 : ∀ r, C (algebraMap R (FreeAlgebra R X) r))
     (h_grade1 : ∀ x, C (ι R x)) (h_mul : ∀ a b, C a → C b → C (a * b)) (h_add : ∀ a b, C a → C b → C (a + b))
     (a : FreeAlgebra R X) : C a := by
+  -- the arguments are enough to construct a subalgebra, and a mapping into it from X
   let s : Subalgebra R (FreeAlgebra R X) :=
     { Carrier := C, mul_mem' := h_mul, add_mem' := h_add, algebra_map_mem' := h_grade0 }
   let of : X → s := Subtype.coind (ι R) h_grade1
+  -- the mapping through the subalgebra is the identity
   have of_id : AlgHom.id R (FreeAlgebra R X) = s.val.comp (lift R of) := by
     ext
     simp [of, Subtype.coind]
+  -- finding a proof is finding an element of the subalgebra
   convert Subtype.prop (lift R of a)
   simp [AlgHom.ext_iff] at of_id
   exact of_id a
@@ -468,7 +489,7 @@ theorem star_algebra_map (r : R) : star (algebraMap R (FreeAlgebra R X) r) = alg
   simp [star, HasStar.star]
 
 /-- `star` as an `alg_equiv` -/
-def star_hom : FreeAlgebra R X ≃ₐ[R] FreeAlgebra R Xᵐᵒᵖ :=
+def starHom : FreeAlgebra R X ≃ₐ[R] FreeAlgebra R Xᵐᵒᵖ :=
   { starRingEquiv with
     commutes' := fun r => by
       simp [star_algebra_map] }

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Adam Topaz. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Adam Topaz
+-/
 import Mathbin.CategoryTheory.Sites.CompatiblePlus
 
 /-!
@@ -49,12 +54,12 @@ Use the lemmas `whisker_right_to_sheafify_sheafify_comp_iso_hom`,
 `to_sheafify_comp_sheafify_comp_iso_inv` and `sheafify_comp_iso_inv_eq_sheafify_lift` to reduce
 the components of this isomorphisms to a state that can be handled using the universal property
 of sheafification. -/
-def sheafify_comp_iso : J.sheafify P ⋙ F ≅ J.sheafify (P ⋙ F) :=
+def sheafifyCompIso : J.sheafify P ⋙ F ≅ J.sheafify (P ⋙ F) :=
   J.plusCompIso _ _ ≪≫ (J.plusFunctor _).mapIso (J.plusCompIso _ _)
 
 /-- The isomorphism between the sheafification of `P` composed with `F` and
 the sheafification of `P ⋙ F`, functorially in `F`. -/
-def sheafification_whisker_left_iso (P : Cᵒᵖ ⥤ D) [∀ F : D ⥤ E X : C, PreservesColimitsOfShape (J.cover Xᵒᵖ) F]
+def sheafificationWhiskerLeftIso (P : Cᵒᵖ ⥤ D) [∀ F : D ⥤ E X : C, PreservesColimitsOfShape (J.cover Xᵒᵖ) F]
     [∀ F : D ⥤ E X : C W : J.cover X P : Cᵒᵖ ⥤ D, PreservesLimit (W.index P).multicospan F] :
     (whiskeringLeft _ _ E).obj (J.sheafify P) ≅ (whiskeringLeft _ _ _).obj P ⋙ J.sheafification E := by
   refine' J.plus_functor_whisker_left_iso _ ≪≫ _ ≪≫ functor.associator _ _ _
@@ -79,7 +84,7 @@ theorem sheafification_whisker_left_iso_inv_app (P : Cᵒᵖ ⥤ D) (F : D ⥤ E
 
 /-- The isomorphism between the sheafification of `P` composed with `F` and
 the sheafification of `P ⋙ F`, functorially in `P`. -/
-def sheafification_whisker_right_iso :
+def sheafificationWhiskerRightIso :
     J.sheafification D ⋙ (whiskeringRight _ _ _).obj F ≅ (whiskeringRight _ _ _).obj F ⋙ J.sheafification E := by
   refine' functor.associator _ _ _ ≪≫ _
   refine' iso_whisker_left (J.plus_functor D) (J.plus_functor_whisker_right_iso _) ≪≫ _
@@ -119,6 +124,7 @@ theorem to_sheafify_comp_sheafify_comp_iso_inv :
 
 section
 
+-- We will sheafify `D`-valued presheaves in this section.
 variable [ConcreteCategory.{max v u} D] [PreservesLimits (forget D)]
   [∀ X : C, PreservesColimitsOfShape (J.cover Xᵒᵖ) (forget D)] [ReflectsIsomorphisms (forget D)]
 

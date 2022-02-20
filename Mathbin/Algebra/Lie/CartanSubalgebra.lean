@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Oliver Nash. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Oliver Nash
+-/
 import Mathbin.Algebra.Lie.Nilpotent
 
 /-!
@@ -105,7 +110,7 @@ theorem normalizer_eq_self_iff : H.normalizer = H ↔ (LieModule.maxTrivSubmodul
     
 
 /-- A Cartan subalgebra is a nilpotent, self-normalizing subalgebra. -/
-class is_cartan_subalgebra : Prop where
+class IsCartanSubalgebra : Prop where
   nilpotent : LieAlgebra.IsNilpotent R H
   self_normalizing : H.normalizer = H
 

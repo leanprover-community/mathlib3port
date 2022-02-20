@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Damiano Testa. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Damiano Testa
+-/
 import Mathbin.Algebra.Order.MonoidLemmas
 import Mathbin.Algebra.GroupWithZero.Basic
 import Mathbin.Logic.Embedding

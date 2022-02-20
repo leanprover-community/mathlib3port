@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Patrick Massot. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Patrick Massot
+-/
 import Mathbin.Topology.Algebra.Valuation
 import Mathbin.Topology.Algebra.WithZeroTopology
 import Mathbin.Topology.Algebra.UniformField
@@ -37,6 +42,10 @@ section InversionEstimate
 
 variable {Γ₀ : Type _} [LinearOrderedCommGroupWithZero Γ₀] (v : Valuation K Γ₀)
 
+-- The following is the main technical lemma ensuring that inversion is continuous
+-- in the topology induced by a valuation on a division ring (ie the next instance)
+-- and the fact that a valued field is completable
+-- [BouAC, VI.5.1 Lemme 1]
 theorem Valuation.inversion_estimate {x y : K} {γ : (Γ₀)ˣ} (y_ne : y ≠ 0)
     (h : v (x - y) < min (γ * (v y * v y)) (v y)) : v (x⁻¹ - y⁻¹) < γ := by
   have hyp1 : v (x - y) < γ * (v y * v y) := lt_of_lt_of_leₓ h (min_le_leftₓ _ _)
@@ -198,7 +207,7 @@ attribute [local instance] LinearOrderedCommGroupWithZero.topologicalSpace
 noncomputable def Valued.extension : hat K → Γ₀ K :=
   Completion.dense_inducing_coe.extend (v : K → Γ₀ K)
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (x y «expr ∈ » V')
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (x y «expr ∈ » V')
 theorem Valued.continuous_extension : Continuous (Valued.extension : hat K → Γ₀ K) := by
   refine' completion.dense_inducing_coe.continuous_extend _
   intro x₀

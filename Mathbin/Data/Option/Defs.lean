@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Mario Carneiro. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Mario Carneiro
+-/
 
 /-!
 # Extra definitions on `option`
@@ -20,7 +25,7 @@ protected def elim : Option α → β → (α → β) → β
   | some x, y, f => f x
   | none, y, f => y
 
-instance HasMem : HasMem α (Option α) :=
+instance hasMem : HasMem α (Option α) :=
   ⟨fun a b => b = some a⟩
 
 @[simp]
@@ -45,17 +50,17 @@ This is not an instance because it is not definitionally equal to `option.decida
 Try to use `o.is_none` or `o.is_some` instead.
 -/
 @[inline]
-def decidable_eq_none {o : Option α} : Decidable (o = none) :=
+def decidableEqNone {o : Option α} : Decidable (o = none) :=
   decidableOfDecidableOfIff (Bool.decidableEq _ _) is_none_iff_eq_none
 
-instance decidable_forall_mem {p : α → Prop} [DecidablePred p] : ∀ o : Option α, Decidable (∀, ∀ a ∈ o, ∀, p a)
+instance decidableForallMem {p : α → Prop} [DecidablePred p] : ∀ o : Option α, Decidable (∀, ∀ a ∈ o, ∀, p a)
   | none =>
     isTrue
       (by
         simp [false_implies_iff])
   | some a => if h : p a then is_true fun o e => some_inj.1 e ▸ h else is_false <| mt (fun H => H _ rfl) h
 
-instance decidable_exists_mem {p : α → Prop} [DecidablePred p] : ∀ o : Option α, Decidable (∃ a ∈ o, p a)
+instance decidableExistsMem {p : α → Prop} [DecidablePred p] : ∀ o : Option α, Decidable (∃ a ∈ o, p a)
   | none =>
     isFalse fun ⟨a, ⟨h, _⟩⟩ => by
       cases h
@@ -72,16 +77,16 @@ theorem iget_some [Inhabited α] {a : α} : (some a).iget = a :=
   rfl
 
 /-- `guard p a` returns `some a` if `p a` holds, otherwise `none`. -/
-def guardₓ (p : α → Prop) [DecidablePred p] (a : α) : Option α :=
+def guard (p : α → Prop) [DecidablePred p] (a : α) : Option α :=
   if p a then some a else none
 
 /-- `filter p o` returns `some a` if `o` is `some a` and `p a` holds, otherwise `none`. -/
-def filter (p : α → Prop) [DecidablePred p] (o : Option α) : Option α :=
+def filterₓ (p : α → Prop) [DecidablePred p] (o : Option α) : Option α :=
   o.bind (guard p)
 
 /-- Cast of `option` to `list `. Returns `[a]` if the input is `some a`, and `[]` if it is
 `none`. -/
-def to_list : Option α → List α
+def toList : Option α → List α
   | none => []
   | some a => [a]
 
@@ -91,12 +96,18 @@ theorem mem_to_list {a : α} {o : Option α} : a ∈ toList o ↔ a ∈ o := by
 
 /-- Two arguments failsafe function. Returns `f a b` if the inputs are `some a` and `some b`, and
 "does nothing" otherwise. -/
-def lift_or_get (f : α → α → α) : Option α → Option α → Option α
+def liftOrGet (f : α → α → α) : Option α → Option α → Option α
   | none, none => none
   | some a, none => some a
-  | none, some b => some b
-  | some a, some b => some (f a b)
+  |-- get a
+    none,
+    some b => some b
+  |-- get b
+      some
+      a,
+    some b => some (f a b)
 
+-- lift f
 instance lift_or_get_comm (f : α → α → α) [h : IsCommutative α f] : IsCommutative (Option α) (liftOrGet f) :=
   ⟨fun a b => by
     cases a <;> cases b <;> simp [lift_or_get, h.comm]⟩
@@ -119,7 +130,7 @@ instance lift_or_get_is_right_id (f : α → α → α) : IsRightId (Option α) 
 
 /-- Lifts a relation `α → β → Prop` to a relation `option α → option β → Prop` by just adding
 `none ~ none`. -/
-inductive rel (r : α → β → Prop) : Option α → Option β → Prop
+inductive Rel (r : α → β → Prop) : Option α → Option β → Prop
   | /-- If `a ~ b`, then `some a ~ some b` -/
   some {a b} : r a b → rel (some a) (some b)
   | /-- `none ~ none` -/
@@ -146,7 +157,7 @@ def pmap {p : α → Prop} (f : ∀ a : α, p a → β) : ∀ x : Option α, (�
 @[simp]
 def join : Option (Option α) → Option α := fun x => bind x id
 
-protected def traverse.{u, v} {F : Type u → Type v} [Applicativeₓ F] {α β : Type _} (f : α → F β) :
+protected def traverseₓₓ.{u, v} {F : Type u → Type v} [Applicativeₓ F] {α β : Type _} (f : α → F β) :
     Option α → F (Option β)
   | none => pure none
   | some x => some <$> f x
@@ -154,21 +165,22 @@ protected def traverse.{u, v} {F : Type u → Type v} [Applicativeₓ F] {α β 
 /-- If you maybe have a monadic computation in a `[monad m]` which produces a term of type `α`, then
 there is a naturally associated way to always perform a computation in `m` which maybe produces a
 result. -/
-def maybe.{u, v} {m : Type u → Type v} [Monadₓ m] {α : Type u} : Option (m α) → m (Option α)
+-- By analogy with `monad.sequence` in `init/category/combinators.lean`.
+def maybeₓ.{u, v} {m : Type u → Type v} [Monadₓ m] {α : Type u} : Option (m α) → m (Option α)
   | none => return none
   | some fn => some <$> fn
 
 /-- Map a monadic function `f : α → m β` over an `o : option α`, maybe producing a result. -/
-def mmap.{u, v, w} {m : Type u → Type v} [Monadₓ m] {α : Type w} {β : Type u} (f : α → m β) (o : Option α) :
+def mmapₓ.{u, v, w} {m : Type u → Type v} [Monadₓ m] {α : Type w} {β : Type u} (f : α → m β) (o : Option α) :
     m (Option β) :=
   (o.map f).maybe
 
 /-- A monadic analogue of `option.elim`. -/
-def melim {α β : Type _} {m : Type _ → Type _} [Monadₓ m] (x : m (Option α)) (y : m β) (z : α → m β) : m β :=
+def melimₓ {α β : Type _} {m : Type _ → Type _} [Monadₓ m] (x : m (Option α)) (y : m β) (z : α → m β) : m β :=
   x >>= fun o => Option.elim o y z
 
 /-- A monadic analogue of `option.get_or_else`. -/
-def mget_or_else {α : Type _} {m : Type _ → Type _} [Monadₓ m] (x : m (Option α)) (y : m α) : m α :=
+def mgetOrElse {α : Type _} {m : Type _ → Type _} [Monadₓ m] (x : m (Option α)) (y : m α) : m α :=
   melimₓ x y pure
 
 end Option

@@ -1,5 +1,13 @@
+/-
+Copyright (c) 2019 Seul Baek. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Seul Baek
+-/
 import Mathbin.Tactic.Omega.Clause
 
+/-
+Linear combination of constraints.
+-/
 namespace Omega
 
 /-- Linear combination of constraints. The second
@@ -7,7 +15,7 @@ namespace Omega
     argument is the list of conefficients by which the
     constraints are multiplied -/
 @[simp]
-def lin_comb : List Nat → List Term → Term
+def linComb : List Nat → List Term → Term
   | [], [] => ⟨0, []⟩
   | [], _ :: _ => ⟨0, []⟩
   | _ :: _, [] => ⟨0, []⟩
@@ -34,7 +42,7 @@ theorem lin_comb_holds {v : Nat → Int} : ∀ {ts} ns, (∀, ∀ t ∈ ts, ∀,
 
 /-- `unsat_lin_comb ns ts` asserts that the linear combination
     `lin_comb ns ts` is unsatisfiable  -/
-def unsat_lin_comb (ns : List Nat) (ts : List Term) : Prop :=
+def UnsatLinComb (ns : List Nat) (ts : List Term) : Prop :=
   (linComb ns ts).fst < 0 ∧ ∀, ∀ x ∈ (linComb ns ts).snd, ∀, x = (0 : Int)
 
 theorem unsat_lin_comb_of (ns : List Nat) (ts : List Term) :

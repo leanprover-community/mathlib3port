@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2017 Johannes Hölzl. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johannes Hölzl
+-/
 import Mathbin.Data.Bool.Set
 import Mathbin.Data.Nat.Basic
 import Mathbin.Order.Bounds
@@ -122,6 +127,7 @@ theorem Sup_le_Sup_of_forall_exists_le (h : ∀, ∀ x ∈ s, ∀, ∃ y ∈ t, 
       let ⟨c, hct, hac⟩ := h a ha
       hac.trans (hb hct)
 
+-- We will generalize this to conditionally complete lattices in `cSup_singleton`.
 theorem Sup_singleton {a : α} : sup {a} = a :=
   is_lub_singleton.Sup_eq
 
@@ -178,6 +184,7 @@ theorem Inf_le_Inf_of_forall_exists_le (h : ∀, ∀ x ∈ s, ∀, ∃ y ∈ t, 
       rcases h _ h₁ with ⟨y, hy, hy'⟩
       solve_by_elim [le_transₓ _ hy'])
 
+-- We will generalize this to conditionally complete lattices in `cInf_singleton`.
 theorem Inf_singleton {a : α} : inf {a} = a :=
   is_glb_singleton.Inf_eq
 
@@ -191,6 +198,7 @@ class CompleteLattice (α : Type _) extends Lattice α, CompleteSemilatticeSup �
   le_top : ∀ x : α, x ≤ ⊤
   bot_le : ∀ x : α, ⊥ ≤ x
 
+-- see Note [lower instance priority]
 instance (priority := 100) CompleteLattice.toBoundedOrder [h : CompleteLattice α] : BoundedOrder α :=
   { h with }
 
@@ -284,10 +292,10 @@ see the doc-string on `complete_lattice_of_Sup`.
 def completeLatticeOfCompleteSemilatticeSup (α : Type _) [CompleteSemilatticeSup α] : CompleteLattice α :=
   completeLatticeOfSup α fun s => is_lub_Sup s
 
--- ././Mathport/Syntax/Translate/Basic.lean:1165:11: unsupported: advanced extends in structure
+-- ././Mathport/Syntax/Translate/Basic.lean:1287:11: unsupported: advanced extends in structure
 /-- A complete linear order is a linear order whose lattice structure is complete. -/
 class CompleteLinearOrder (α : Type _) extends CompleteLattice α,
-  "././Mathport/Syntax/Translate/Basic.lean:1165:11: unsupported: advanced extends in structure"
+  "././Mathport/Syntax/Translate/Basic.lean:1287:11: unsupported: advanced extends in structure"
 
 namespace OrderDual
 
@@ -316,6 +324,9 @@ theorem Sup_union {s t : Set α} : sup (s ∪ t) = sup s⊔sup t :=
 theorem Sup_inter_le {s t : Set α} : sup (s ∩ t) ≤ sup s⊓sup t :=
   Sup_le fun b hb => le_inf (le_Sup hb.1) (le_Sup hb.2)
 
+/-
+  Sup_le (assume a ⟨a_s, a_t⟩, le_inf (le_Sup a_s) (le_Sup a_t))
+-/
 theorem Inf_union {s t : Set α} : inf (s ∪ t) = inf s⊓inf t :=
   ((is_glb_Inf s).union (is_glb_Inf t)).Inf_eq
 
@@ -338,6 +349,7 @@ theorem Sup_univ : sup Univ = (⊤ : α) :=
 theorem Inf_univ : inf Univ = (⊥ : α) :=
   (@is_glb_univ α _ _).Inf_eq
 
+-- TODO(Jeremy): get this automatically
 @[simp]
 theorem Sup_insert {a : α} {s : Set α} : sup (insert a s) = a⊔sup s :=
   ((is_lub_Sup s).insert a).Sup_eq
@@ -385,6 +397,7 @@ theorem Sup_eq_of_forall_le_of_forall_lt_exists_gt (_ : ∀, ∀ a ∈ s, ∀, a
   have h : sup s < b ∨ sup s = b := lt_or_eq_of_leₓ (Sup_le ‹∀, ∀ a ∈ s, ∀, a ≤ b›)
   have : ¬sup s < b := fun this : sup s < b =>
     let ⟨a, _, _⟩ := H (sup s) ‹sup s < b›
+    -- a ∈ s, Sup s < a
     have : sup s < sup s := lt_of_lt_of_leₓ ‹sup s < a› (le_Sup ‹a ∈ s›)
     show False from lt_irreflₓ _ this
   show sup s = b from Or.resolve_left h this
@@ -411,7 +424,7 @@ theorem lt_Sup_iff : b < sup s ↔ ∃ a ∈ s, b < a :=
 
 theorem Sup_eq_top : sup s = ⊤ ↔ ∀, ∀ b < ⊤, ∀, ∃ a ∈ s, b < a :=
   Iff.intro
-    (fun h : sup s = ⊤ b hb => by
+    (fun b hb => by
       rwa [← h, lt_Sup_iff] at hb)
     fun h =>
     top_unique <|
@@ -430,10 +443,15 @@ theorem infi_lt_iff {f : ι → α} : infi f < a ↔ ∃ i, f i < a :=
 
 end CompleteLinearOrder
 
+/-
+### supr & infi
+-/
 section
 
 variable [CompleteLattice α] {s t : ι → α} {a b : α}
 
+-- TODO: this declaration gives error when starting smt state
+--@[ematch]
 theorem le_supr (s : ι → α) (i : ι) : s i ≤ supr s :=
   le_Sup ⟨i, rfl⟩
 
@@ -441,6 +459,11 @@ theorem le_supr (s : ι → α) (i : ι) : s i ≤ supr s :=
 theorem le_supr' (s : ι → α) (i : ι) : s i ≤ supr s :=
   le_Sup ⟨i, rfl⟩
 
+/- TODO: this version would be more powerful, but, alas, the pattern matcher
+   doesn't accept it.
+@[ematch] theorem le_supr' (s : ι → α) (i : ι) : (: s i :) ≤ (: supr s :) :=
+le_Sup ⟨i, rfl⟩
+-/
 theorem is_lub_supr : IsLub (Range s) (⨆ j, s j) :=
   is_lub_Sup _
 
@@ -456,11 +479,11 @@ theorem IsGlb.infi_eq (h : IsGlb (Range s) a) : (⨅ j, s j) = a :=
 theorem le_supr_of_le (i : ι) (h : a ≤ s i) : a ≤ supr s :=
   le_transₓ h (le_supr _ i)
 
--- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (i hi)
+-- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (i hi)
 theorem le_bsupr {p : ι → Prop} {f : ∀ i h : p i, α} (i : ι) (hi : p i) : f i hi ≤ ⨆ (i) (hi), f i hi :=
   le_supr_of_le i <| le_supr (f i) hi
 
--- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (i hi)
+-- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (i hi)
 theorem le_bsupr_of_le {p : ι → Prop} {f : ∀ i h : p i, α} (i : ι) (hi : p i) (h : a ≤ f i hi) :
     a ≤ ⨆ (i) (hi), f i hi :=
   le_transₓ h (le_bsupr i hi)
@@ -480,8 +503,8 @@ theorem supr_le_supr (h : ∀ i, s i ≤ t i) : supr s ≤ supr t :=
 theorem supr_le_supr2 {t : ι₂ → α} (h : ∀ i, ∃ j, s i ≤ t j) : supr s ≤ supr t :=
   supr_le fun j => Exists.elim (h j) le_supr_of_le
 
--- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (i hi)
--- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (i hi)
+-- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (i hi)
+-- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (i hi)
 theorem bsupr_le_bsupr {p : ι → Prop} {f g : ∀ i hi : p i, α} (h : ∀ i hi, f i hi ≤ g i hi) :
     (⨆ (i) (hi), f i hi) ≤ ⨆ (i) (hi), g i hi :=
   bsupr_le fun i hi => le_transₓ (h i hi) (le_bsupr i hi)
@@ -520,7 +543,7 @@ theorem Sup_sUnion {s : Set (Set α)} : sup (⋃₀s) = ⨆ t ∈ s, sup t := by
 theorem Monotone.le_map_supr [CompleteLattice β] {f : α → β} (hf : Monotone f) : (⨆ i, f (s i)) ≤ f (supr s) :=
   supr_le fun i => hf <| le_supr _ _
 
--- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (i h)
+-- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (i h)
 theorem Monotone.le_map_supr2 [CompleteLattice β] {f : α → β} (hf : Monotone f) {ι' : ι → Sort _} (s : ∀ i, ι' i → α) :
     (⨆ (i) (h : ι' i), f (s i h)) ≤ f (⨆ (i) (h : ι' i), s i h) :=
   calc
@@ -556,6 +579,7 @@ theorem supr_congr {α : Type _} [HasSupₓ α] {f : ι → α} {g : ι₂ → �
   convert h1.supr_comp g
   exact (funext h2).symm
 
+-- TODO: finish doesn't do well here.
 @[congr]
 theorem supr_congr_Prop {α : Type _} [HasSupₓ α] {p q : Prop} {f₁ : p → α} {f₂ : q → α} (pq : p ↔ q)
     (f : ∀ x, f₁ (pq.mpr x) = f₂ x) : supr f₁ = supr f₂ := by
@@ -574,11 +598,11 @@ theorem infi_le' (s : ι → α) (i : ι) : infi s ≤ s i :=
 theorem infi_le_of_le (i : ι) (h : s i ≤ a) : infi s ≤ a :=
   le_transₓ (infi_le _ i) h
 
--- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (i hi)
+-- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (i hi)
 theorem binfi_le {p : ι → Prop} {f : ∀ i hi : p i, α} (i : ι) (hi : p i) : (⨅ (i) (hi), f i hi) ≤ f i hi :=
   infi_le_of_le i <| infi_le (f i) hi
 
--- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (i hi)
+-- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (i hi)
 theorem binfi_le_of_le {p : ι → Prop} {f : ∀ i hi : p i, α} (i : ι) (hi : p i) (h : f i hi ≤ a) :
     (⨅ (i) (hi), f i hi) ≤ a :=
   le_transₓ (binfi_le i hi) h
@@ -586,7 +610,7 @@ theorem binfi_le_of_le {p : ι → Prop} {f : ∀ i hi : p i, α} (i : ι) (hi :
 theorem le_infi (h : ∀ i, a ≤ s i) : a ≤ infi s :=
   le_Inf fun b ⟨i, Eq⟩ => Eq ▸ h i
 
--- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (i hi)
+-- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (i hi)
 theorem le_binfi {p : ι → Prop} {f : ∀ i h : p i, α} (h : ∀ i hi, a ≤ f i hi) : a ≤ ⨅ (i) (hi), f i hi :=
   le_infi fun i => le_infi <| h i
 
@@ -599,8 +623,8 @@ theorem infi_le_infi (h : ∀ i, s i ≤ t i) : infi s ≤ infi t :=
 theorem infi_le_infi2 {t : ι₂ → α} (h : ∀ j, ∃ i, s i ≤ t j) : infi s ≤ infi t :=
   le_infi fun j => Exists.elim (h j) infi_le_of_le
 
--- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (i hi)
--- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (i hi)
+-- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (i hi)
+-- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (i hi)
 theorem binfi_le_binfi {p : ι → Prop} {f g : ∀ i h : p i, α} (h : ∀ i hi, f i hi ≤ g i hi) :
     (⨅ (i) (hi), f i hi) ≤ ⨅ (i) (hi), g i hi :=
   le_binfi fun i hi => le_transₓ (binfi_le i hi) (h i hi)
@@ -661,9 +685,11 @@ theorem supr_const_le {x : α} : (⨆ h : ι, x) ≤ x :=
 theorem le_infi_const {x : α} : x ≤ ⨅ h : ι, x :=
   le_infi fun _ => le_rfl
 
+-- We will generalize this to conditionally complete lattices in `cinfi_const`.
 theorem infi_const [Nonempty ι] {a : α} : (⨅ b : ι, a) = a := by
   rw [infi, range_const, Inf_singleton]
 
+-- We will generalize this to conditionally complete lattices in `csupr_const`.
 theorem supr_const [Nonempty ι] {a : α} : (⨆ b : ι, a) = a :=
   @infi_const (OrderDual α) _ _ _ _
 
@@ -727,10 +753,23 @@ theorem infi_eq_dif {p : Prop} [Decidable p] (a : p → α) : (⨅ h : p, a h) =
 theorem infi_eq_if {p : Prop} [Decidable p] (a : α) : (⨅ h : p, a) = if p then a else ⊤ :=
   infi_eq_dif fun _ => a
 
+-- TODO: should this be @[simp]?
 theorem infi_comm {f : ι → ι₂ → α} : (⨅ i, ⨅ j, f i j) = ⨅ j, ⨅ i, f i j :=
   le_antisymmₓ (le_infi fun i => le_infi fun j => infi_le_of_le j <| infi_le _ i)
     (le_infi fun j => le_infi fun i => infi_le_of_le i <| infi_le _ j)
 
+/- TODO: this is strange. In the proof below, we get exactly the desired
+   among the equalities, but close does not get it.
+begin
+  apply @le_antisymm,
+    simp, intros,
+    begin [smt]
+      ematch, ematch, ematch, trace_state, have := le_refl (f i_1 i),
+      trace_state, close
+    end
+end
+-/
+-- TODO: should this be @[simp]?
 theorem supr_comm {f : ι → ι₂ → α} : (⨆ i, ⨆ j, f i j) = ⨆ j, ⨆ i, f i j :=
   @infi_comm (OrderDual α) _ _ _ _
 
@@ -774,6 +813,14 @@ theorem infi_inf_eq {f g : ι → α} : (⨅ x, f x⊓g x) = (⨅ x, f x)⊓⨅ 
   le_antisymmₓ (le_inf (le_infi fun i => infi_le_of_le i inf_le_left) (le_infi fun i => infi_le_of_le i inf_le_right))
     (le_infi fun i => le_inf (inf_le_of_left_le <| infi_le _ _) (inf_le_of_right_le <| infi_le _ _))
 
+/- TODO: here is another example where more flexible pattern matching
+   might help.
+
+begin
+  apply @le_antisymm,
+  safe, pose h := f a ⊓ g a, begin [smt] ematch, ematch  end
+end
+-/
 theorem infi_inf [h : Nonempty ι] {f : ι → α} {a : α} : (⨅ x, f x)⊓a = ⨅ x, f x⊓a := by
   rw [infi_inf_eq, infi_const]
 
@@ -826,7 +873,7 @@ theorem infi_exists {p : ι → Prop} {f : Exists p → α} : (⨅ x, f x) = ⨅
 theorem supr_exists {p : ι → Prop} {f : Exists p → α} : (⨆ x, f x) = ⨆ i, ⨆ h : p i, f ⟨i, h⟩ :=
   @infi_exists (OrderDual α) _ _ _ _
 
--- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (h₁ h₂)
+-- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (h₁ h₂)
 theorem infi_and {p q : Prop} {s : p ∧ q → α} : infi s = ⨅ (h₁) (h₂), s ⟨h₁, h₂⟩ :=
   le_antisymmₓ (le_infi fun i => le_infi fun j => infi_le _ _) (le_infi fun ⟨i, h⟩ => infi_le_of_le i <| infi_le _ _)
 
@@ -835,7 +882,7 @@ theorem infi_and' {p q : Prop} {s : p → q → α} : (⨅ (h₁ : p) (h₂ : q)
   symm
   exact infi_and
 
--- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (h₁ h₂)
+-- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (h₁ h₂)
 theorem supr_and {p q : Prop} {s : p ∧ q → α} : supr s = ⨆ (h₁) (h₂), s ⟨h₁, h₂⟩ :=
   @infi_and (OrderDual α) _ _ _ _
 
@@ -906,6 +953,9 @@ theorem Inf_image {s : Set β} {f : β → α} : inf (f '' s) = ⨅ a ∈ s, f a
 theorem Sup_image {s : Set β} {f : β → α} : sup (f '' s) = ⨆ a ∈ s, f a :=
   @Inf_image (OrderDual α) _ _ _ _
 
+/-
+### supr and infi under set constructions
+-/
 theorem infi_emptyset {f : β → α} : (⨅ x ∈ (∅ : Set β), f x) = ⊤ := by
   simp
 
@@ -1021,12 +1071,12 @@ theorem infi_sigma {p : β → Type _} {f : Sigma p → α} : (⨅ x, f x) = ⨅
 theorem supr_sigma {p : β → Type _} {f : Sigma p → α} : (⨆ x, f x) = ⨆ (i) (h : p i), f ⟨i, h⟩ :=
   @infi_sigma (OrderDual α) _ _ _ _
 
--- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (i j)
 theorem infi_prod {γ : Type _} {f : β × γ → α} : (⨅ x, f x) = ⨅ (i) (j), f (i, j) :=
   eq_of_forall_le_iff fun c => by
     simp only [le_infi_iff, Prod.forall]
 
--- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (i j)
 theorem supr_prod {γ : Type _} {f : β × γ → α} : (⨆ x, f x) = ⨆ (i) (j), f (i, j) :=
   @infi_prod (OrderDual α) _ _ _ _
 
@@ -1259,7 +1309,7 @@ variable [CompleteLattice α]
 
 /-- An independent set of elements in a complete lattice is one in which every element is disjoint
   from the `Sup` of the rest. -/
-def set_independent (s : Set α) : Prop :=
+def SetIndependent (s : Set α) : Prop :=
   ∀ ⦃a⦄, a ∈ s → Disjoint a (sup (s \ {a}))
 
 variable {s : Set α} (hs : SetIndependent s)
@@ -1267,11 +1317,11 @@ variable {s : Set α} (hs : SetIndependent s)
 @[simp]
 theorem set_independent_empty : SetIndependent (∅ : Set α) := fun x hx => (Set.not_mem_empty x hx).elim
 
-theorem set_independent.mono {t : Set α} (hst : t ⊆ s) : SetIndependent t := fun a ha =>
+theorem SetIndependent.mono {t : Set α} (hst : t ⊆ s) : SetIndependent t := fun a ha =>
   (hs (hst ha)).mono_right (Sup_le_Sup (diff_subset_diff_left hst))
 
 /-- If the elements of a set are independent, then any pair within that set is disjoint. -/
-theorem set_independent.disjoint {x y : α} (hx : x ∈ s) (hy : y ∈ s) (h : x ≠ y) : Disjoint x y :=
+theorem SetIndependent.disjoint {x y : α} (hx : x ∈ s) (hy : y ∈ s) (h : x ≠ y) : Disjoint x y :=
   disjoint_Sup_right (hs hx)
     ((mem_diff y).mpr
       ⟨hy, by
@@ -1281,7 +1331,7 @@ include hs
 
 /-- If the elements of a set are independent, then any element is disjoint from the `Sup` of some
 subset of the rest. -/
-theorem set_independent.disjoint_Sup {x : α} {y : Set α} (hx : x ∈ s) (hy : y ⊆ s) (hxy : x ∉ y) : Disjoint x (sup y) :=
+theorem SetIndependent.disjoint_Sup {x : α} {y : Set α} (hx : x ∈ s) (hy : y ⊆ s) (hxy : x ∉ y) : Disjoint x (sup y) :=
   by
   have := (hs.mono <| insert_subset.mpr ⟨hx, hy⟩) (mem_insert x _)
   rw [insert_diff_of_mem _ (mem_singleton _), diff_singleton_eq_self hxy] at this
@@ -1289,7 +1339,7 @@ theorem set_independent.disjoint_Sup {x : α} {y : Set α} (hx : x ∈ s) (hy : 
 
 omit hs
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (j «expr ≠ » i)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (j «expr ≠ » i)
 /-- An independent indexed family of elements in a complete lattice is one in which every element
   is disjoint from the `supr` of the rest.
 
@@ -1299,7 +1349,7 @@ omit hs
 
   Example: an indexed family of submodules of a module is independent in this sense if
   and only the natural map from the direct sum of the submodules to the module is injective. -/
-def independent {ι : Sort _} {α : Type _} [CompleteLattice α] (t : ι → α) : Prop :=
+def Independent {ι : Sort _} {α : Type _} [CompleteLattice α] (t : ι → α) : Prop :=
   ∀ i : ι, Disjoint (t i) (⨆ (j) (_ : j ≠ i), t j)
 
 theorem set_independent_iff {α : Type _} [CompleteLattice α] (s : Set α) :
@@ -1312,7 +1362,7 @@ theorem set_independent_iff {α : Type _} [CompleteLattice α] (s : Set α) :
 
 variable {t : ι → α} (ht : Independent t)
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (j «expr ≠ » i)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (j «expr ≠ » i)
 theorem independent_def : Independent t ↔ ∀ i : ι, Disjoint (t i) (⨆ (j) (_ : j ≠ i), t j) :=
   Iff.rfl
 
@@ -1320,7 +1370,7 @@ theorem independent_def' {ι : Type _} {t : ι → α} : Independent t ↔ ∀ i
   simp_rw [Sup_image]
   rfl
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (j «expr ≠ » i)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (j «expr ≠ » i)
 theorem independent_def'' {ι : Type _} {t : ι → α} :
     Independent t ↔ ∀ i, Disjoint (t i) (sup { a | ∃ (j : _)(_ : j ≠ i), t j = a }) := by
   rw [independent_def']
@@ -1335,17 +1385,17 @@ theorem independent_pempty (t : Pempty → α) : Independent t :=
   fun.
 
 /-- If the elements of a set are independent, then any pair within that set is disjoint. -/
-theorem independent.disjoint {x y : ι} (h : x ≠ y) : Disjoint (t x) (t y) :=
+theorem Independent.disjoint {x y : ι} (h : x ≠ y) : Disjoint (t x) (t y) :=
   disjoint_Sup_right (ht x)
     ⟨y, by
       simp [h.symm]⟩
 
-theorem independent.mono {ι : Type _} {α : Type _} [CompleteLattice α] {s t : ι → α} (hs : Independent s)
+theorem Independent.mono {ι : Type _} {α : Type _} [CompleteLattice α] {s t : ι → α} (hs : Independent s)
     (hst : t ≤ s) : Independent t := fun i => (hs i).mono (hst i) (supr_le_supr fun j => supr_le_supr fun _ => hst j)
 
 /-- Composing an independent indexed family with an injective function on the index results in
 another indepedendent indexed family. -/
-theorem independent.comp {ι ι' : Sort _} {α : Type _} [CompleteLattice α] {s : ι → α} (hs : Independent s) (f : ι' → ι)
+theorem Independent.comp {ι ι' : Sort _} {α : Type _} [CompleteLattice α] {s : ι → α} (hs : Independent s) (f : ι' → ι)
     (hf : Function.Injective f) : Independent (s ∘ f) := fun i =>
   (hs (f i)).mono_right
     (by
@@ -1354,7 +1404,7 @@ theorem independent.comp {ι ι' : Sort _} {α : Type _} [CompleteLattice α] {s
 
 /-- Composing an indepedent indexed family with an order isomorphism on the elements results in
 another indepedendent indexed family. -/
-theorem independent.map_order_iso {ι : Sort _} {α β : Type _} [CompleteLattice α] [CompleteLattice β] (f : α ≃o β)
+theorem Independent.map_order_iso {ι : Sort _} {α β : Type _} [CompleteLattice α] [CompleteLattice β] (f : α ≃o β)
     {a : ι → α} (ha : Independent a) : Independent (f ∘ a) := fun i =>
   ((ha i).map_order_iso f).mono_right (f.Monotone.le_map_supr2 _)
 
@@ -1368,7 +1418,7 @@ theorem independent_map_order_iso_iff {ι : Sort _} {α β : Type _} [CompleteLa
 
 /-- If the elements of a set are independent, then any element is disjoint from the `supr` of some
 subset of the rest. -/
-theorem independent.disjoint_bsupr {ι : Type _} {α : Type _} [CompleteLattice α] {t : ι → α} (ht : Independent t)
+theorem Independent.disjoint_bsupr {ι : Type _} {α : Type _} [CompleteLattice α] {t : ι → α} (ht : Independent t)
     {x : ι} {y : Set ι} (hx : x ∉ y) : Disjoint (t x) (⨆ i ∈ y, t i) :=
   Disjoint.mono_right (bsupr_le_bsupr' fun i hi => (ne_of_mem_of_not_mem hi hx : _)) (ht x)
 

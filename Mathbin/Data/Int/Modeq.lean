@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Chris Hughes. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Chris Hughes
+-/
 import Mathbin.Data.Nat.Modeq
 import Mathbin.Tactic.Ring
 
@@ -19,7 +24,7 @@ modeq, congruence, mod, MOD, modulo, integers
 namespace Int
 
 /-- `a ≡ b [ZMOD n]` when `a % n = b % n`. -/
-def modeq (n a b : ℤ) :=
+def Modeq (n a b : ℤ) :=
   a % n = b % n deriving Decidable
 
 notation:50 a " ≡ " b " [ZMOD " n "]" => Modeq n a b
@@ -60,7 +65,7 @@ theorem _root_.has_dvd.dvd.zero_modeq_int (h : n ∣ a) : 0 ≡ a [ZMOD n] :=
 theorem modeq_iff_dvd : a ≡ b [ZMOD n] ↔ n ∣ b - a := by
   rw [modeq, eq_comm] <;> simp [mod_eq_mod_iff_mod_sub_eq_zero, dvd_iff_mod_eq_zero, -EuclideanDomain.mod_eq_zero]
 
-theorem modeq.dvd : a ≡ b [ZMOD n] → n ∣ b - a :=
+theorem Modeq.dvd : a ≡ b [ZMOD n] → n ∣ b - a :=
   modeq_iff_dvd.1
 
 theorem modeq_of_dvd : n ∣ b - a → a ≡ b [ZMOD n] :=
@@ -95,7 +100,7 @@ protected theorem add_left (c : ℤ) (h : a ≡ b [ZMOD n]) : c + a ≡ c + b [Z
 protected theorem add_right (c : ℤ) (h : a ≡ b [ZMOD n]) : a + c ≡ b + c [ZMOD n] :=
   h.add Modeq.rfl
 
-protected theorem add_left_cancelₓ (h₁ : a ≡ b [ZMOD n]) (h₂ : a + c ≡ b + d [ZMOD n]) : c ≡ d [ZMOD n] :=
+protected theorem add_left_cancel (h₁ : a ≡ b [ZMOD n]) (h₂ : a + c ≡ b + d [ZMOD n]) : c ≡ d [ZMOD n] :=
   have : d - c = b + d - (a + c) - (b - a) := by
     ring
   modeq_iff_dvd.2 <| by
@@ -105,7 +110,7 @@ protected theorem add_left_cancelₓ (h₁ : a ≡ b [ZMOD n]) (h₂ : a + c ≡
 protected theorem add_left_cancel' (c : ℤ) (h : c + a ≡ c + b [ZMOD n]) : a ≡ b [ZMOD n] :=
   Modeq.rfl.add_left_cancel h
 
-protected theorem add_right_cancelₓ (h₁ : c ≡ d [ZMOD n]) (h₂ : a + c ≡ b + d [ZMOD n]) : a ≡ b [ZMOD n] := by
+protected theorem add_right_cancel (h₁ : c ≡ d [ZMOD n]) (h₂ : a + c ≡ b + d [ZMOD n]) : a ≡ b [ZMOD n] := by
   rw [add_commₓ a, add_commₓ b] at h₂
   exact h₁.add_left_cancel h₂
 

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Aaron Anderson. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Aaron Anderson
+-/
 import Mathbin.Data.SetLike.Basic
 import Mathbin.Data.Fintype.Basic
 import Mathbin.ModelTheory.TermsAndFormulas
@@ -35,7 +40,7 @@ variable (L) {α : Type} [Fintype α]
 
 /-- A subset of a finite Cartesian product of a structure is definable when membership in
   the set is given by a first-order formula. -/
-structure is_definable (s : Set (α → M)) : Prop where
+structure IsDefinable (s : Set (α → M)) : Prop where
   exists_formula : ∃ φ : L.Formula α, s = SetOf (RealizeFormula M φ)
 
 variable {L}
@@ -53,7 +58,7 @@ theorem is_definable_univ : L.IsDefinable (Set.Univ : Set (α → M)) :=
       simp ⟩⟩
 
 @[simp]
-theorem is_definable.inter {f g : Set (α → M)} (hf : L.IsDefinable f) (hg : L.IsDefinable g) : L.IsDefinable (f ∩ g) :=
+theorem IsDefinable.inter {f g : Set (α → M)} (hf : L.IsDefinable f) (hg : L.IsDefinable g) : L.IsDefinable (f ∩ g) :=
   ⟨by
     rcases hf.exists_formula with ⟨φ, hφ⟩
     rcases hg.exists_formula with ⟨θ, hθ⟩
@@ -62,7 +67,7 @@ theorem is_definable.inter {f g : Set (α → M)} (hf : L.IsDefinable f) (hg : L
     simp [hφ, hθ]⟩
 
 @[simp]
-theorem is_definable.union {f g : Set (α → M)} (hf : L.IsDefinable f) (hg : L.IsDefinable g) : L.IsDefinable (f ∪ g) :=
+theorem IsDefinable.union {f g : Set (α → M)} (hf : L.IsDefinable f) (hg : L.IsDefinable g) : L.IsDefinable (f ∪ g) :=
   ⟨by
     rcases hf.exists_formula with ⟨φ, hφ⟩
     rcases hg.exists_formula with ⟨θ, hθ⟩
@@ -73,7 +78,7 @@ theorem is_definable.union {f g : Set (α → M)} (hf : L.IsDefinable f) (hg : L
     tauto⟩
 
 @[simp]
-theorem is_definable.compl {s : Set (α → M)} (hf : L.IsDefinable s) : L.IsDefinable (sᶜ) :=
+theorem IsDefinable.compl {s : Set (α → M)} (hf : L.IsDefinable s) : L.IsDefinable (sᶜ) :=
   ⟨by
     rcases hf.exists_formula with ⟨φ, hφ⟩
     refine' ⟨bd_not φ, _⟩
@@ -81,14 +86,14 @@ theorem is_definable.compl {s : Set (α → M)} (hf : L.IsDefinable s) : L.IsDef
     rfl⟩
 
 @[simp]
-theorem is_definable.sdiff {s t : Set (α → M)} (hs : L.IsDefinable s) (ht : L.IsDefinable t) : L.IsDefinable (s \ t) :=
+theorem IsDefinable.sdiff {s t : Set (α → M)} (hs : L.IsDefinable s) (ht : L.IsDefinable t) : L.IsDefinable (s \ t) :=
   hs.inter ht.Compl
 
 variable (L) (M) (α)
 
 /-- Definable sets are subsets of finite Cartesian products of a structure such that membership is
   given by a first-order formula. -/
-def definable_set :=
+def DefinableSet :=
   Subtype fun s : Set (α → M) => IsDefinable L s
 
 namespace DefinableSet

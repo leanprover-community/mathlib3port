@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison, Simon Hudon
+-/
 import Mathbin.CategoryTheory.Monoidal.Braided
 import Mathbin.CategoryTheory.Limits.Shapes.BinaryProducts
 import Mathbin.CategoryTheory.Limits.Shapes.Terminal
@@ -40,7 +45,7 @@ section
 attribute [local tidy] tactic.case_bash
 
 /-- A category with a terminal object and binary products has a natural monoidal structure. -/
-def monoidal_of_has_finite_products [HasTerminal C] [HasBinaryProducts C] : MonoidalCategory C where
+def monoidalOfHasFiniteProducts [HasTerminal C] [HasBinaryProducts C] : MonoidalCategory C where
   tensorUnit := ⊤_ C
   tensorObj := fun X Y => X ⨯ Y
   tensorHom := fun _ _ _ _ f g => Limits.prod.map f g
@@ -62,7 +67,7 @@ open MonoidalCategory
 /-- The monoidal structure coming from finite products is symmetric.
 -/
 @[simps]
-def symmetric_of_has_finite_products [HasTerminal C] [HasBinaryProducts C] : SymmetricCategory C where
+def symmetricOfHasFiniteProducts [HasTerminal C] [HasBinaryProducts C] : SymmetricCategory C where
   braiding := fun X Y => Limits.prod.braiding X Y
   braiding_naturality' := fun X X' Y Y' f g => by
     dsimp [tensor_hom]
@@ -110,6 +115,9 @@ theorem right_unitor_hom (X : C) : (ρ_ X).Hom = limits.prod.fst :=
 theorem right_unitor_inv (X : C) : (ρ_ X).inv = prod.lift (𝟙 _) (terminal.from X) :=
   rfl
 
+-- We don't mark this as a simp lemma, even though in many particular
+-- categories the right hand side will simplify significantly further.
+-- For now, we'll plan to create specialised simp lemmas in each particular category.
 theorem associator_hom (X Y Z : C) :
     (α_ X Y Z).Hom =
       prod.lift (limits.prod.fst ≫ limits.prod.fst) (prod.lift (limits.prod.fst ≫ limits.prod.snd) Limits.prod.snd) :=
@@ -122,7 +130,7 @@ section
 attribute [local tidy] tactic.case_bash
 
 /-- A category with an initial object and binary coproducts has a natural monoidal structure. -/
-def monoidal_of_has_finite_coproducts [HasInitial C] [HasBinaryCoproducts C] : MonoidalCategory C where
+def monoidalOfHasFiniteCoproducts [HasInitial C] [HasBinaryCoproducts C] : MonoidalCategory C where
   tensorUnit := ⊥_ C
   tensorObj := fun X Y => X ⨿ Y
   tensorHom := fun _ _ _ _ f g => Limits.coprod.map f g
@@ -144,7 +152,7 @@ open MonoidalCategory
 /-- The monoidal structure coming from finite coproducts is symmetric.
 -/
 @[simps]
-def symmetric_of_has_finite_coproducts [HasInitial C] [HasBinaryCoproducts C] : SymmetricCategory C where
+def symmetricOfHasFiniteCoproducts [HasInitial C] [HasBinaryCoproducts C] : SymmetricCategory C where
   braiding := Limits.coprod.braiding
   braiding_naturality' := fun X X' Y Y' f g => by
     dsimp [tensor_hom]
@@ -192,6 +200,9 @@ theorem left_unitor_inv (X : C) : (λ_ X).inv = limits.coprod.inr :=
 theorem right_unitor_inv (X : C) : (ρ_ X).inv = limits.coprod.inl :=
   rfl
 
+-- We don't mark this as a simp lemma, even though in many particular
+-- categories the right hand side will simplify significantly further.
+-- For now, we'll plan to create specialised simp lemmas in each particular category.
 theorem associator_hom (X Y Z : C) :
     (α_ X Y Z).Hom = coprod.desc (coprod.desc coprod.inl (coprod.inl ≫ coprod.inr)) (coprod.inr ≫ coprod.inr) :=
   rfl

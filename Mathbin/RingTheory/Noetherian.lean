@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Mario Carneiro, Kevin Buzzard. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Mario Carneiro, Kevin Buzzard
+-/
 import Mathbin.GroupTheory.Finiteness
 import Mathbin.Data.Multiset.FinsetOps
 import Mathbin.Algebra.Algebra.Tower
@@ -63,7 +68,7 @@ namespace Submodule
 variable {R : Type _} {M : Type _} [Semiringₓ R] [AddCommMonoidₓ M] [Module R M]
 
 /-- A submodule of `M` is finitely generated if it is the span of a finite subset of `M`. -/
-def fg (N : Submodule R M) : Prop :=
+def Fg (N : Submodule R M) : Prop :=
   ∃ S : Finset M, Submodule.span R ↑S = N
 
 theorem fg_def {N : Submodule R M} : N.Fg ↔ ∃ S : Set M, Finite S ∧ span R S = N :=
@@ -193,7 +198,7 @@ variable {P : Type _} [AddCommMonoidₓ P] [Module R P]
 
 variable (f : M →ₗ[R] P)
 
-theorem fg.map {N : Submodule R M} (hs : N.Fg) : (N.map f).Fg :=
+theorem Fg.map {N : Submodule R M} (hs : N.Fg) : (N.map f).Fg :=
   let ⟨t, ht⟩ := fg_def.1 hs
   fg_def.2
     ⟨f '' t, ht.1.Image _, by
@@ -370,7 +375,9 @@ theorem _root_.ideal.fg_ker_comp {R S A : Type _} [CommRingₓ R] [CommRingₓ S
 /-- Finitely generated submodules are precisely compact elements in the submodule lattice. -/
 theorem fg_iff_compact (s : Submodule R M) : s.Fg ↔ CompleteLattice.IsCompactElement s := by
   classical
+  -- Introduce shorthand for span of an element
   let sp : M → Submodule R M := fun a => span R {a}
+  -- Trivial rewrite lemma; a small hack since simp (only) & rw can't accomplish this smoothly.
   have supr_rw : ∀ t : Finset M, (⨆ x ∈ t, sp x) = ⨆ x ∈ (↑t : Set M), sp x := fun t => by
     rfl
   constructor
@@ -380,8 +387,10 @@ theorem fg_iff_compact (s : Submodule R M) : s.Fg ↔ CompleteLattice.IsCompactE
     exact fun n _ => singleton_span_is_compact_element n
     
   · intro h
+    -- s is the Sup of the spans of its elements.
     have sSup : s = Sup (sp '' ↑s) := by
       rw [Sup_eq_supr, supr_image, ← span_eq_supr_of_singleton_spans, eq_comm, span_eq]
+    -- by h, s is then below (and equal to) the sup of the spans of finitely many elements.
     obtain ⟨u, ⟨huspan, husup⟩⟩ := h (sp '' ↑s) (le_of_eqₓ sSup)
     have ssup : s = u.sup id := by
       suffices : u.sup id ≤ s
@@ -600,14 +609,14 @@ variable {R M P : Type _} {N : Type w} [Semiringₓ R] [AddCommMonoidₓ M] [Mod
   [AddCommMonoidₓ P] [Module R P]
 
 theorem is_noetherian_iff_well_founded :
-    IsNoetherian R M ↔ WellFounded (· > · : Submodule R M → Submodule R M → Prop) := by
+    IsNoetherian R M ↔ WellFounded ((· > ·) : Submodule R M → Submodule R M → Prop) := by
   rw [(CompleteLattice.well_founded_characterisations <| Submodule R M).out 0 3]
   exact ⟨fun ⟨h⟩ => fun k => (fg_iff_compact k).mp (h k), fun h => ⟨fun k => (fg_iff_compact k).mpr (h k)⟩⟩
 
 variable (R M)
 
 theorem well_founded_submodule_gt R M [Semiringₓ R] [AddCommMonoidₓ M] [Module R M] :
-    ∀ [IsNoetherian R M], WellFounded (· > · : Submodule R M → Submodule R M → Prop) :=
+    ∀ [IsNoetherian R M], WellFounded ((· > ·) : Submodule R M → Submodule R M → Prop) :=
   is_noetherian_iff_well_founded.mp
 
 variable {R M}
@@ -651,7 +660,7 @@ theorem finite_of_linear_independent [Nontrivial R] [IsNoetherian R M] {s : Set 
     intro a b
     rw [span_le_span_iff hs (this a) (this b), Set.image_subset_image_iff (subtype.coe_injective.comp f.injective),
       Set.subset_def]
-    exact ⟨fun hab x hxa : x ≤ a => le_transₓ hxa hab, fun hx => hx a (le_reflₓ a)⟩
+    exact ⟨fun hxa : x ≤ a => le_transₓ hxa hab, fun hx => hx a (le_reflₓ a)⟩
   exact
     ⟨⟨fun n => span R (coe ∘ f '' { m | m ≤ n }), fun x y => by
         simp (config := { contextual := true })[le_antisymm_iffₓ, (this _ _).symm]⟩,
@@ -714,6 +723,7 @@ is eventually zero.
 -/
 theorem IsNoetherian.disjoint_partial_sups_eventually_bot [I : IsNoetherian R M] (f : ℕ → Submodule R M)
     (h : ∀ n, Disjoint (partialSups f n) (f (n + 1))) : ∃ n : ℕ, ∀ m, n ≤ m → f m = ⊥ := by
+  -- A little off-by-one cleanup first:
   suffices t : ∃ n : ℕ, ∀ m, n ≤ m → f (m + 1) = ⊥
   · obtain ⟨n, w⟩ := t
     use n + 1
@@ -753,6 +763,7 @@ theorem is_noetherian_ring_iff {R} [Semiringₓ R] : IsNoetherianRing R ↔ IsNo
 theorem is_noetherian_ring_iff_ideal_fg (R : Type _) [CommSemiringₓ R] : IsNoetherianRing R ↔ ∀ I : Ideal R, I.Fg :=
   is_noetherian_ring_iff.trans is_noetherian_def
 
+-- see Note [lower instance priority]
 instance (priority := 80) Ringₓ.is_noetherian_of_fintype R M [Fintype M] [Semiringₓ R] [AddCommMonoidₓ M] [Module R M] :
     IsNoetherian R M := by
   let this' := Classical.dec <;>

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Heather Macbeth. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Heather Macbeth
+-/
 import Mathbin.Data.Set.Intervals.Basic
 import Mathbin.Data.Set.Function
 
@@ -50,6 +55,7 @@ theorem surj_on_Ioc_of_monotone_surjective (h_mono : Monotone f) (h_surj : Funct
     SurjOn f (Ioc a b) (Ioc (f a) (f b)) := by
   simpa using surj_on_Ico_of_monotone_surjective h_mono.dual h_surj (to_dual b) (to_dual a)
 
+-- to see that the hypothesis `a ≤ b` is necessary, consider a constant function
 theorem surj_on_Icc_of_monotone_surjective (h_mono : Monotone f) (h_surj : Function.Surjective f) {a b : α}
     (hab : a ≤ b) : SurjOn f (Icc a b) (Icc (f a) (f b)) := by
   rcases lt_or_eq_of_leₓ hab with (hab | hab)

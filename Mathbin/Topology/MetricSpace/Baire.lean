@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Sébastien Gouëzel. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Sébastien Gouëzel
+-/
 import Mathbin.Analysis.SpecificLimits
 import Mathbin.Order.Filter.CountableInter
 import Mathbin.Topology.GDelta
@@ -45,6 +50,10 @@ theorem dense_Inter_of_open_nat {f : ℕ → Set α} (ho : ∀ n, IsOpen (f n)) 
     intro n
     simp only [B, one_div, one_mulₓ, Ennreal.inv_pos]
     exact pow_ne_top two_ne_top
+  /- Translate the density assumption into two functions `center` and `radius` associating
+    to any n, x, δ, δpos a center and a positive radius such that
+    `closed_ball center radius` is included both in `f n` and in `closed_ball x δ`.
+    We can also require `radius ≤ (1/2)^(n+1)`, to ensure we get a Cauchy sequence later. -/
   have : ∀ n x δ, δ ≠ 0 → ∃ y r, 0 < r ∧ r ≤ B (n + 1) ∧ closed_ball y r ⊆ closed_ball x δ ∩ f n := by
     intro n x δ δpos
     have : x ∈ Closure (f n) := hd n x
@@ -74,6 +83,11 @@ theorem dense_Inter_of_open_nat {f : ℕ → Set α} (ho : ∀ n, IsOpen (f n)) 
           )
   choose! center radius Hpos HB Hball using this
   refine' fun x => (mem_closure_iff_nhds_basis nhds_basis_closed_eball).2 fun ε εpos => _
+  /- `ε` is positive. We have to find a point in the ball of radius `ε` around `x` belonging to all
+    `f n`. For this, we construct inductively a sequence `F n = (c n, r n)` such that the closed ball
+    `closed_ball (c n) (r n)` is included in the previous ball and in `f n`, and such that
+    `r n` is small enough to ensure that `c n` is a Cauchy sequence. Then `c n` converges to a
+    limit which belongs to all the `f n`. -/
   let F : ℕ → α × ℝ≥0∞ := fun n =>
     Nat.recOn n (Prod.mk x (min ε (B 0))) fun n p => Prod.mk (center n p.1 p.2) (radius n p.1 p.2)
   let c : ℕ → α := fun n => (F n).1
@@ -102,7 +116,10 @@ theorem dense_Inter_of_open_nat {f : ℕ → Set α} (ho : ∀ n, IsOpen (f n)) 
         
     exact I A
   have : CauchySeq c := cauchy_seq_of_edist_le_geometric_two _ one_ne_top cdist
+  -- as the sequence `c n` is Cauchy in a complete space, it converges to a limit `y`.
   rcases cauchy_seq_tendsto_of_complete this with ⟨y, ylim⟩
+  -- this point `y` will be the desired point. We will check that it belongs to all
+  -- `f n` and to `ball x ε`.
   use y
   simp only [exists_prop, Set.mem_Inter]
   have I : ∀ n, ∀, ∀ m ≥ n, ∀, closed_ball (c m) (r m) ⊆ closed_ball (c n) (r n) := by
@@ -168,8 +185,11 @@ theorem dense_Inter_of_open [Encodable β] {f : β → Set α} (ho : ∀ s, IsOp
 /-- Baire theorem: a countable intersection of dense Gδ sets is dense. Formulated here with ⋂₀. -/
 theorem dense_sInter_of_Gδ {S : Set (Set α)} (ho : ∀, ∀ s ∈ S, ∀, IsGδ s) (hS : Countable S)
     (hd : ∀, ∀ s ∈ S, ∀, Dense s) : Dense (⋂₀ S) := by
+  -- the result follows from the result for a countable intersection of dense open sets,
+  -- by rewriting each set as a countable intersection of open sets, which are of course dense.
   choose T hTo hTc hsT using ho
   have : ⋂₀ S = ⋂₀ ⋃ s ∈ S, T s ‹_› := by
+    -- := (sInter_bUnion (λs hs, (hT s hs).2.2)).symm,
     simp only [sInter_Union, (hsT _ _).symm, ← sInter_eq_bInter]
   rw [this]
   refine' dense_sInter_of_open _ (hS.bUnion hTc) _ <;> simp only [mem_Union] <;> rintro t ⟨s, hs, tTs⟩
@@ -219,7 +239,7 @@ theorem eventually_residual {p : α → Prop} :
       simp [and_assoc]
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (t «expr ⊆ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (t «expr ⊆ » s)
 /-- A set is residual (comeagre) if and only if it includes a dense `Gδ` set. -/
 theorem mem_residual {s : Set α} : s ∈ residual α ↔ ∃ (t : _)(_ : t ⊆ s), IsGδ t ∧ Dense t :=
   (@eventually_residual α _ _ fun x => x ∈ s).trans <|

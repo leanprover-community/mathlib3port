@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Jeremy Avigad. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Jeremy Avigad, Sébastien Gouëzel, Yury Kudryashov
+-/
 import Mathbin.Analysis.Asymptotics.AsymptoticEquivalent
 import Mathbin.Analysis.Calculus.TangentCone
 import Mathbin.Analysis.NormedSpace.BoundedLinearMaps
@@ -212,6 +217,9 @@ i.e., `n (f (x + (1/n) v) - f x)` converges to `f' v`. More generally, if `c n` 
 and `c n * d n` tends to `v`, then `c n * (f (x + d n) - f x)` tends to `f' v`. This lemma expresses
 this fact, for functions having a derivative within a set. Its specific formulation is useful for
 tangent cone related discussions. -/
+/- In this section, we discuss the uniqueness of the derivative.
+We prove that the definitions `unique_diff_within_at` and `unique_diff_on` indeed imply the
+uniqueness of the derivative. -/
 theorem HasFderivWithinAt.lim (h : HasFderivWithinAt f f' s x) {α : Type _} (l : Filter α) {c : α → 𝕜} {d : α → E}
     {v : E} (dtop : ∀ᶠ n in l, x + d n ∈ s) (clim : Tendsto (fun n => ∥c n∥) l atTop)
     (cdlim : Tendsto (fun n => c n • d n) l (𝓝 v)) : Tendsto (fun n => c n • (f (x + d n) - f x)) l (𝓝 (f' v)) := by
@@ -280,7 +288,7 @@ theorem has_fderiv_at_iff_tendsto :
 theorem has_fderiv_at_iff_is_o_nhds_zero :
     HasFderivAt f f' x ↔ IsOₓ (fun h => f (x + h) - f x - f' h) (fun h => h) (𝓝 0) := by
   rw [HasFderivAt, HasFderivAtFilter, ← map_add_left_nhds_zero x, is_o_map]
-  simp [· ∘ ·]
+  simp [(· ∘ ·)]
 
 /-- Converse to the mean value inequality: if `f` is differentiable at `x₀` and `C`-lipschitz
 on a neighborhood of `x₀` then it its derivative at `x₀` has norm bounded by `C`. This version
@@ -924,6 +932,8 @@ theorem HasFderivAtFilter.comp {g : F → G} {g' : F →L[𝕜] G} {L' : Filter 
   refine' eq₂.triangle (eq₁.congr_left fun x' => _)
   simp
 
+/- A readable version of the previous theorem,
+   a general form of the chain rule. -/
 example {g : F → G} {g' : F →L[𝕜] G} (hg : HasFderivAtFilter g g' (f x) (L.map f)) (hf : HasFderivAtFilter f f' x L) :
     HasFderivAtFilter (g ∘ f) (g'.comp f') x L := by
   unfold HasFderivAtFilter  at hg
@@ -1270,7 +1280,7 @@ end CartesianProduct
 
 section ConstSmul
 
-variable {R : Type _} [Semiringₓ R] [Module R F] [TopologicalSpace R] [SmulCommClass 𝕜 R F] [HasContinuousSmul R F]
+variable {R : Type _} [Semiringₓ R] [Module R F] [SmulCommClass 𝕜 R F] [HasContinuousConstSmul R F]
 
 /-! ### Derivative of a function multiplied by a constant -/
 
@@ -1608,6 +1618,7 @@ theorem differentiable_on_pi : DifferentiableOn 𝕜 Φ s ↔ ∀ i, Differentia
 theorem differentiable_pi : Differentiable 𝕜 Φ ↔ ∀ i, Differentiable 𝕜 fun x => Φ x i :=
   ⟨fun h i x => differentiable_at_pi.1 (h x) i, fun h x => differentiable_at_pi.2 fun i => h i x⟩
 
+-- TODO: find out which version (`φ` or `Φ`) works better with `rw`/`simp`
 theorem fderiv_within_pi (h : ∀ i, DifferentiableWithinAt 𝕜 (φ i) s x) (hs : UniqueDiffWithinAt 𝕜 s x) :
     fderivWithin 𝕜 (fun x i => φ i x) s x = Pi fun i => fderivWithin 𝕜 (φ i) s x :=
   (has_fderiv_within_at_pi.2 fun i => (h i).HasFderivWithinAt).fderivWithin hs
@@ -1849,7 +1860,7 @@ theorem IsBoundedBilinearMap.has_strict_fderiv_at (h : IsBoundedBilinearMap 𝕜
   set T := (E × F) × E × F
   have : is_o (fun q : T => b (q.1 - q.2)) (fun q : T => ∥q.1 - q.2∥ * 1) (𝓝 (p, p)) := by
     refine' (h.is_O'.comp_tendsto le_top).trans_is_o _
-    simp only [· ∘ ·]
+    simp only [(· ∘ ·)]
     refine' (is_O_refl (fun q : T => ∥q.1 - q.2∥) _).mul_is_o (is_o.norm_left <| (is_o_one_iff _).2 _)
     rw [← sub_self p]
     exact continuous_at_fst.sub continuous_at_snd
@@ -2279,30 +2290,30 @@ namespace ContinuousLinearEquiv
 
 variable (iso : E ≃L[𝕜] F)
 
-protected theorem HasStrictFderivAt : HasStrictFderivAt iso (iso : E →L[𝕜] F) x :=
+protected theorem has_strict_fderiv_at : HasStrictFderivAt iso (iso : E →L[𝕜] F) x :=
   iso.toContinuousLinearMap.HasStrictFderivAt
 
-protected theorem HasFderivWithinAt : HasFderivWithinAt iso (iso : E →L[𝕜] F) s x :=
+protected theorem has_fderiv_within_at : HasFderivWithinAt iso (iso : E →L[𝕜] F) s x :=
   iso.toContinuousLinearMap.HasFderivWithinAt
 
-protected theorem HasFderivAt : HasFderivAt iso (iso : E →L[𝕜] F) x :=
+protected theorem has_fderiv_at : HasFderivAt iso (iso : E →L[𝕜] F) x :=
   iso.toContinuousLinearMap.HasFderivAtFilter
 
-protected theorem DifferentiableAt : DifferentiableAt 𝕜 iso x :=
+protected theorem differentiable_at : DifferentiableAt 𝕜 iso x :=
   iso.HasFderivAt.DifferentiableAt
 
-protected theorem DifferentiableWithinAt : DifferentiableWithinAt 𝕜 iso s x :=
+protected theorem differentiable_within_at : DifferentiableWithinAt 𝕜 iso s x :=
   iso.DifferentiableAt.DifferentiableWithinAt
 
 protected theorem fderiv : fderiv 𝕜 iso x = iso :=
   iso.HasFderivAt.fderiv
 
-protected theorem fderivWithin (hxs : UniqueDiffWithinAt 𝕜 s x) : fderivWithin 𝕜 iso s x = iso :=
+protected theorem fderiv_within (hxs : UniqueDiffWithinAt 𝕜 s x) : fderivWithin 𝕜 iso s x = iso :=
   iso.toContinuousLinearMap.fderivWithin hxs
 
-protected theorem Differentiable : Differentiable 𝕜 iso := fun x => iso.DifferentiableAt
+protected theorem differentiable : Differentiable 𝕜 iso := fun x => iso.DifferentiableAt
 
-protected theorem DifferentiableOn : DifferentiableOn 𝕜 iso s :=
+protected theorem differentiable_on : DifferentiableOn 𝕜 iso s :=
   iso.Differentiable.DifferentiableOn
 
 theorem comp_differentiable_within_at_iff {f : G → E} {s : Set G} {x : G} :
@@ -2376,30 +2387,30 @@ namespace LinearIsometryEquiv
 
 variable (iso : E ≃ₗᵢ[𝕜] F)
 
-protected theorem HasStrictFderivAt : HasStrictFderivAt iso (iso : E →L[𝕜] F) x :=
+protected theorem has_strict_fderiv_at : HasStrictFderivAt iso (iso : E →L[𝕜] F) x :=
   (iso : E ≃L[𝕜] F).HasStrictFderivAt
 
-protected theorem HasFderivWithinAt : HasFderivWithinAt iso (iso : E →L[𝕜] F) s x :=
+protected theorem has_fderiv_within_at : HasFderivWithinAt iso (iso : E →L[𝕜] F) s x :=
   (iso : E ≃L[𝕜] F).HasFderivWithinAt
 
-protected theorem HasFderivAt : HasFderivAt iso (iso : E →L[𝕜] F) x :=
+protected theorem has_fderiv_at : HasFderivAt iso (iso : E →L[𝕜] F) x :=
   (iso : E ≃L[𝕜] F).HasFderivAt
 
-protected theorem DifferentiableAt : DifferentiableAt 𝕜 iso x :=
+protected theorem differentiable_at : DifferentiableAt 𝕜 iso x :=
   iso.HasFderivAt.DifferentiableAt
 
-protected theorem DifferentiableWithinAt : DifferentiableWithinAt 𝕜 iso s x :=
+protected theorem differentiable_within_at : DifferentiableWithinAt 𝕜 iso s x :=
   iso.DifferentiableAt.DifferentiableWithinAt
 
 protected theorem fderiv : fderiv 𝕜 iso x = iso :=
   iso.HasFderivAt.fderiv
 
-protected theorem fderivWithin (hxs : UniqueDiffWithinAt 𝕜 s x) : fderivWithin 𝕜 iso s x = iso :=
+protected theorem fderiv_within (hxs : UniqueDiffWithinAt 𝕜 s x) : fderivWithin 𝕜 iso s x = iso :=
   (iso : E ≃L[𝕜] F).fderivWithin hxs
 
-protected theorem Differentiable : Differentiable 𝕜 iso := fun x => iso.DifferentiableAt
+protected theorem differentiable : Differentiable 𝕜 iso := fun x => iso.DifferentiableAt
 
-protected theorem DifferentiableOn : DifferentiableOn 𝕜 iso s :=
+protected theorem differentiable_on : DifferentiableOn 𝕜 iso s :=
   iso.Differentiable.DifferentiableOn
 
 theorem comp_differentiable_within_at_iff {f : G → E} {s : Set G} {x : G} :
@@ -2469,7 +2480,7 @@ theorem HasStrictFderivAt.of_local_left_inverse {f : E → F} {f' : E ≃L[𝕜]
     
   · refine' (hf.is_O_sub_rev.comp_tendsto hg).congr' (eventually_of_forall fun _ => rfl) (hfg.mono _)
     rintro p ⟨hp1, hp2⟩
-    simp only [· ∘ ·, hp1, hp2]
+    simp only [(· ∘ ·), hp1, hp2]
     
 
 /-- If `f (g y) = y` for `y` in some neighborhood of `a`, `g` is continuous at `a`, and `f` has an
@@ -2491,7 +2502,7 @@ theorem HasFderivAt.of_local_left_inverse {f : E → F} {f' : E ≃L[𝕜] F} {g
     
   · refine' ((hf.is_O_sub_rev f'.antilipschitz).comp_tendsto hg).congr' (eventually_of_forall fun _ => rfl) (hfg.mono _)
     rintro p hp
-    simp only [· ∘ ·, hp, hfg.self_of_nhds]
+    simp only [(· ∘ ·), hp, hfg.self_of_nhds]
     
 
 /-- If `f` is a local homeomorphism defined on a neighbourhood of `f.symm a`, and `f` has an
@@ -2529,6 +2540,11 @@ end
 
 section
 
+/-
+  In the special case of a normed space over the reals,
+  we can use  scalar multiplication in the `tendsto` characterization
+  of the Fréchet derivative.
+-/
 variable {E : Type _} [NormedGroup E] [NormedSpace ℝ E]
 
 variable {F : Type _} [NormedGroup F] [NormedSpace ℝ F]

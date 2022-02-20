@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2014 Floris van Doorn (c) 2016 Microsoft Corporation. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Floris van Doorn, Leonardo de Moura, Jeremy Avigad, Mario Carneiro
+-/
 import Mathbin.Algebra.GroupPower.Order
 
 /-! # `nat.pow`
@@ -11,10 +16,13 @@ namespace Nat
 /-! ### `pow` -/
 
 
-protected theorem pow_le_pow_of_le_left {x y : ℕ} (H : x ≤ y) : ∀ i : ℕ, x ^ i ≤ y ^ i :=
+-- This is redundant with `pow_le_pow_of_le_left'`,
+-- We leave a version in the `nat` namespace as well.
+-- (The global `pow_le_pow_of_le_left` needs an extra hypothesis `0 ≤ x`.)
+protected theorem pow_le_pow_of_le_leftₓ {x y : ℕ} (H : x ≤ y) : ∀ i : ℕ, x ^ i ≤ y ^ i :=
   pow_le_pow_of_le_left' H
 
-theorem pow_le_pow_of_le_right {x : ℕ} (H : 0 < x) {i j : ℕ} (h : i ≤ j) : x ^ i ≤ x ^ j :=
+theorem pow_le_pow_of_le_rightₓ {x : ℕ} (H : 0 < x) {i j : ℕ} (h : i ≤ j) : x ^ i ≤ x ^ j :=
   pow_le_pow' H h
 
 theorem pow_lt_pow_of_lt_left {x y : ℕ} (H : x < y) {i} (h : 0 < i) : x ^ i < y ^ i :=
@@ -139,17 +147,24 @@ theorem mod_pow_succ {b : ℕ} (w m : ℕ) : m % b ^ succ w = b * (m / b % b ^ w
   clear m
   intro p IH
   cases' lt_or_geₓ p (b ^ succ w) with h₁ h₁
+  -- base case: p < b^succ w
   · have h₂ : p / b < b ^ w := by
       rw [div_lt_iff_lt_mul p _ b_pos]
       simpa [pow_succ'ₓ] using h₁
     rw [mod_eq_of_lt h₁, mod_eq_of_lt h₂]
     simp [div_add_mod]
     
-  · have h₂ : p - b ^ succ w < p := tsub_lt_self ((pow_pos b_pos _).trans_le h₁) (pow_pos b_pos _)
+  -- step: p ≥ b^succ w
+  · -- Generate condition for induction hypothesis
+    have h₂ : p - b ^ succ w < p := tsub_lt_self ((pow_pos b_pos _).trans_le h₁) (pow_pos b_pos _)
+    -- Apply induction
     rw [mod_eq_sub_mod h₁, IH _ h₂]
+    -- Normalize goal and h1
     simp only [pow_succₓ]
     simp only [Ge, pow_succₓ] at h₁
+    -- Pull subtraction outside mod and div
     rw [sub_mul_mod _ _ _ h₁, sub_mul_div _ _ _ h₁]
+    -- Cancel subtraction inside mod b^w
     have p_b_ge : b ^ w ≤ p / b := by
       rw [le_div_iff_mul_le _ _ b_pos, mul_comm]
       exact h₁

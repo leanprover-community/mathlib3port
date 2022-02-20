@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Heather Macbeth. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Heather Macbeth
+-/
 import Mathbin.Topology.Algebra.MulAction
 import Mathbin.Topology.MetricSpace.Lipschitz
 
@@ -59,6 +64,7 @@ theorem lipschitz_with_lipschitz_const_mul :
   rw [← lipschitz_with_iff_dist_le_mul]
   exact lipschitz_with_lipschitz_const_mul_edist
 
+-- see Note [lower instance priority]
 @[to_additive]
 instance (priority := 100) HasLipschitzMul.has_continuous_mul : HasContinuousMul β :=
   ⟨lipschitz_with_lipschitz_const_mul_edist.Continuous⟩
@@ -70,6 +76,8 @@ instance Submonoid.has_lipschitz_mul (s : Submonoid β) : HasLipschitzMul s wher
       rintro ⟨x₁, x₂⟩ ⟨y₁, y₂⟩
       convert lipschitz_with_lipschitz_const_mul_edist ⟨(x₁ : β), x₂⟩ ⟨y₁, y₂⟩ using 1⟩
 
+-- this instance could be deduced from `normed_group.has_lipschitz_add`, but we prove it separately
+-- here so that it is available earlier in the hierarchy
 instance Real.has_lipschitz_add : HasLipschitzAdd ℝ where
   lipschitz_add :=
     ⟨2, by
@@ -83,6 +91,8 @@ instance Real.has_lipschitz_add : HasLipschitzAdd ℝ where
       have := le_max_rightₓ (abs (p.1 - q.1)) (abs (p.2 - q.2))
       linarith⟩
 
+-- this instance has the same proof as `add_submonoid.has_lipschitz_add`, but the former can't
+-- directly be applied here since `ℝ≥0` is a subtype of `ℝ`, not an additive submonoid.
 instance Nnreal.has_lipschitz_add : HasLipschitzAdd ℝ≥0 where
   lipschitz_add :=
     ⟨HasLipschitzAdd.c ℝ, by
@@ -113,6 +123,7 @@ theorem dist_pair_smul (x₁ x₂ : α) (y : β) : dist (x₁ • y) (x₂ • y
 
 /-- The typeclass `has_bounded_smul` on a metric-space scalar action implies continuity of the
 action. -/
+-- see Note [lower instance priority]
 instance (priority := 100) HasBoundedSmul.has_continuous_smul : HasContinuousSmul α β where
   continuous_smul := by
     rw [Metric.continuous_iff]
@@ -147,6 +158,8 @@ instance (priority := 100) HasBoundedSmul.has_continuous_smul : HasContinuousSmu
       nlinarith
       
 
+-- this instance could be deduced from `normed_space.has_bounded_smul`, but we prove it separately
+-- here so that it is available earlier in the hierarchy
 instance Real.has_bounded_smul : HasBoundedSmul ℝ ℝ where
   dist_smul_pair' := fun x y₁ y₂ => by
     simpa [Real.dist_eq, mul_sub] using (abs_mul x (y₁ - y₂)).le

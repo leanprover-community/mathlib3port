@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Johan Commelin. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johan Commelin, Julian Kuelshammer, Heather Macbeth
+-/
 import Mathbin.Data.Polynomial.Derivative
 import Mathbin.Tactic.LinearCombination
 
@@ -56,7 +61,7 @@ open_locale Polynomial
 variable (R S : Type _) [CommRingₓ R] [CommRingₓ S]
 
 /-- `T n` is the `n`-th Chebyshev polynomial of the first kind -/
-noncomputable def T : ℕ → R[X]
+noncomputable def t : ℕ → R[X]
   | 0 => 1
   | 1 => x
   | n + 2 => 2 * X * T (n + 1) - T n
@@ -95,7 +100,7 @@ theorem map_T (f : R →+* S) : ∀ n : ℕ, map f (t R n) = t S n
 variable (R S)
 
 /-- `U n` is the `n`-th Chebyshev polynomial of the second kind -/
-noncomputable def U : ℕ → R[X]
+noncomputable def u : ℕ → R[X]
   | 0 => 1
   | 1 => 2 * X
   | n + 2 => 2 * X * U (n + 1) - U n
@@ -244,7 +249,7 @@ theorem add_one_mul_T_eq_poly_in_U (n : ℕ) :
 
 variable (R)
 
--- ././Mathport/Syntax/Translate/Basic.lean:418:16: unsupported tactic `linear_combination
+-- ././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `linear_combination
 /-- The product of two Chebyshev polynomials is the sum of two other Chebyshev polynomials. -/
 theorem mul_T : ∀ m : ℕ, ∀ k, 2 * t R m * t R (m + k) = t R (2 * m + k) + t R k
   | 0 => by
@@ -253,28 +258,34 @@ theorem mul_T : ∀ m : ℕ, ∀ k, 2 * t R m * t R (m + k) = t R (2 * m + k) + 
     simp [add_commₓ]
   | m + 2 => by
     intro k
+    -- clean up the `T` nat indices in the goal
     suffices 2 * T R (m + 2) * T R (m + k + 2) = T R (2 * m + k + 4) + T R k by
       have h_nat₁ : 2 * (m + 2) + k = 2 * m + k + 4 := by
         ring
       have h_nat₂ : m + 2 + k = m + k + 2 := by
         simp [add_commₓ, add_assocₓ]
       simpa [h_nat₁, h_nat₂] using this
+    -- clean up the `T` nat indices in the inductive hypothesis applied to `m + 1` and
+    -- `k + 1`
     have H₁ : 2 * T R (m + 1) * T R (m + k + 2) = T R (2 * m + k + 3) + T R (k + 1) := by
       have h_nat₁ : m + 1 + (k + 1) = m + k + 2 := by
         ring
       have h_nat₂ : 2 * (m + 1) + (k + 1) = 2 * m + k + 3 := by
         ring
       simpa [h_nat₁, h_nat₂] using mul_T (m + 1) (k + 1)
+    -- clean up the `T` nat indices in the inductive hypothesis applied to `m` and `k + 2`
     have H₂ : 2 * T R m * T R (m + k + 2) = T R (2 * m + k + 2) + T R (k + 2) := by
       have h_nat₁ : 2 * m + (k + 2) = 2 * m + k + 2 := by
         simp [add_assocₓ]
       have h_nat₂ : m + (k + 2) = m + k + 2 := by
         simp [add_assocₓ]
       simpa [h_nat₁, h_nat₂] using mul_T m (k + 2)
+    -- state the `T` recurrence relation for a few useful indices
     have h₁ := T_add_two R m
     have h₂ := T_add_two R (2 * m + k + 2)
     have h₃ := T_add_two R k
-    "././Mathport/Syntax/Translate/Basic.lean:418:16: unsupported tactic `linear_combination"
+    -- the desired identity is an appropriate linear combination of H₁, H₂, h₁, h₂, h₃
+    "././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `linear_combination"
 
 /-- The `(m * n)`-th Chebyshev polynomial is the composition of the `m`-th and `n`-th -/
 theorem T_mul : ∀ m : ℕ, ∀ n : ℕ, t R (m * n) = (t R m).comp (t R n)

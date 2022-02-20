@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Jean Lo. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Jean Lo
+-/
 import Mathbin.Topology.Algebra.Group
 import Mathbin.Logic.Function.Iterate
 
@@ -97,7 +102,7 @@ theorem ext : ∀ {ϕ₁ ϕ₂ : Flow τ α}, (∀ t x, ϕ₁ t x = ϕ₂ t x) �
     exact h _ _
 
 @[continuity]
-protected theorem Continuous {β : Type _} [TopologicalSpace β] {t : β → τ} (ht : Continuous t) {f : β → α}
+protected theorem continuous {β : Type _} [TopologicalSpace β] {t : β → τ} (ht : Continuous t) {f : β → α}
     (hf : Continuous f) : Continuous fun x => ϕ (t x) (f x) :=
   ϕ.cont'.comp (ht.prod_mk hf)
 
@@ -115,7 +120,7 @@ theorem map_zero_apply (x : α) : ϕ 0 x = x :=
 
 /-- Iterations of a continuous function from a topological space `α`
     to itself defines a semiflow by `ℕ` on `α`. -/
-def from_iter {g : α → α} (h : Continuous g) : Flow ℕ α where
+def fromIter {g : α → α} (h : Continuous g) : Flow ℕ α where
   toFun := fun n x => (g^[n]) x
   cont' := continuous_uncurry_of_discrete_topology_left (Continuous.iterate h)
   map_add' := iterate_add_apply _
@@ -156,7 +161,7 @@ def reverse : Flow τ α where
     rw [neg_zero, map_zero_apply]
 
 /-- The map `ϕ t` as a homeomorphism. -/
-def to_homeomorph (t : τ) : α ≃ₜ α where
+def toHomeomorph (t : τ) : α ≃ₜ α where
   toFun := ϕ t
   invFun := ϕ (-t)
   left_inv := fun x => by

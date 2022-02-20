@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Bhavik Mehta. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Bhavik Mehta
+-/
 import Mathbin.CategoryTheory.Limits.Shapes.Reflexive
 import Mathbin.CategoryTheory.Limits.Shapes.SplitCoequalizer
 import Mathbin.CategoryTheory.Monad.Algebra
@@ -35,22 +40,22 @@ Show that any algebra is a coequalizer of free algebras.
 
 /-- The top map in the coequalizer diagram we will construct. -/
 @[simps]
-def free_coequalizer.top_map : (Monad.free T).obj (T.obj X.A) ⟶ (Monad.free T).obj X.A :=
+def FreeCoequalizer.topMap : (Monad.free T).obj (T.obj X.A) ⟶ (Monad.free T).obj X.A :=
   (Monad.free T).map X.a
 
 /-- The bottom map in the coequalizer diagram we will construct. -/
 @[simps]
-def free_coequalizer.bottom_map : (Monad.free T).obj (T.obj X.A) ⟶ (Monad.free T).obj X.A where
+def FreeCoequalizer.bottomMap : (Monad.free T).obj (T.obj X.A) ⟶ (Monad.free T).obj X.A where
   f := T.μ.app X.A
   h' := T.assoc X.A
 
 /-- The cofork map in the coequalizer diagram we will construct. -/
 @[simps]
-def free_coequalizer.π : (Monad.free T).obj X.A ⟶ X where
+def FreeCoequalizer.π : (Monad.free T).obj X.A ⟶ X where
   f := X.a
   h' := X.assoc.symm
 
-theorem free_coequalizer.condition :
+theorem FreeCoequalizer.condition :
     FreeCoequalizer.topMap X ≫ FreeCoequalizer.π X = FreeCoequalizer.bottomMap X ≫ FreeCoequalizer.π X :=
   Algebra.Hom.ext _ _ X.assoc.symm
 
@@ -69,13 +74,13 @@ instance : IsReflexivePair (FreeCoequalizer.topMap X) (FreeCoequalizer.bottomMap
 coequalizer.
 -/
 @[simps]
-def beck_algebra_cofork : Cofork (FreeCoequalizer.topMap X) (FreeCoequalizer.bottomMap X) :=
+def beckAlgebraCofork : Cofork (FreeCoequalizer.topMap X) (FreeCoequalizer.bottomMap X) :=
   Cofork.ofπ _ (FreeCoequalizer.condition X)
 
 /-- The cofork constructed is a colimit. This shows that any algebra is a (reflexive) coequalizer of
 free algebras.
 -/
-def beck_algebra_coequalizer : IsColimit (beckAlgebraCofork X) :=
+def beckAlgebraCoequalizer : IsColimit (beckAlgebraCofork X) :=
   (Cofork.IsColimit.mk' _) fun s => by
     have h₁ : (T : C ⥤ C).map X.a ≫ s.π.f = T.μ.app X.A ≫ s.π.f := congr_argₓ monad.algebra.hom.f s.condition
     have h₂ : (T : C ⥤ C).map s.π.f ≫ s.X.a = T.μ.app X.A ≫ s.π.f := s.π.h
@@ -95,16 +100,16 @@ def beck_algebra_coequalizer : IsColimit (beckAlgebraCofork X) :=
       
 
 /-- The Beck cofork is a split coequalizer. -/
-def beck_split_coequalizer : IsSplitCoequalizer (T.map X.a) (T.μ.app _) X.a :=
+def beckSplitCoequalizer : IsSplitCoequalizer (T.map X.a) (T.μ.app _) X.a :=
   ⟨T.η.app _, T.η.app _, X.assoc.symm, X.Unit, T.left_unit _, (T.η.naturality _).symm⟩
 
 /-- This is the Beck cofork. It is a split coequalizer, in particular a coequalizer. -/
 @[simps]
-def beck_cofork : Cofork (T.map X.a) (T.μ.app _) :=
+def beckCofork : Cofork (T.map X.a) (T.μ.app _) :=
   (beckSplitCoequalizer X).asCofork
 
 /-- The Beck cofork is a coequalizer. -/
-def beck_coequalizer : IsColimit (beckCofork X) :=
+def beckCoequalizer : IsColimit (beckCofork X) :=
   (beckSplitCoequalizer X).isCoequalizer
 
 end Monadₓ

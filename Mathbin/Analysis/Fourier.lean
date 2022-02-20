@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Heather Macbeth. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Heather Macbeth
+-/
 import Mathbin.Analysis.Complex.Circle
 import Mathbin.Analysis.InnerProductSpace.L2Space
 import Mathbin.MeasureTheory.Function.ContinuousMapDense

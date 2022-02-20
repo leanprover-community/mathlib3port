@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Zhouhang Zhou. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Zhouhang Zhou
+-/
 import Mathbin.Algebra.CharP.Invertible
 import Mathbin.Order.Filter.AtTopBot
 import Mathbin.Tactic.Linarith.Default
@@ -128,6 +133,7 @@ variable {K : Type _} [LinearOrderedField K] {a b c : K}
 theorem discrim_le_zero (h : ∀ x : K, 0 ≤ a * x * x + b * x + c) : discrim a b c ≤ 0 := by
   rw [discrim, sq]
   obtain ha | rfl | ha : a < 0 ∨ a = 0 ∨ 0 < a := lt_trichotomyₓ a 0
+  -- if a < 0
   · have : tendsto (fun x => (a * x + b) * x + c) at_top at_bot :=
       tendsto_at_bot_add_const_right _ c
         ((tendsto_at_bot_add_const_right _ b (tendsto_id.neg_const_mul_at_top ha)).at_bot_mul_at_top tendsto_id)
@@ -137,6 +143,7 @@ theorem discrim_le_zero (h : ∀ x : K, 0 ≤ a * x * x + b * x + c) : discrim a
         ((h x).not_lt <| by
           rwa [← add_mulₓ])
     
+  -- if a = 0
   · rcases em (b = 0) with (rfl | hb)
     · simp
       
@@ -145,6 +152,7 @@ theorem discrim_le_zero (h : ∀ x : K, 0 ≤ a * x * x + b * x + c) : discrim a
       linarith
       
     
+  -- if a > 0
   · have :=
       calc
         4 * a * (a * (-(b / a) * (1 / 2)) * (-(b / a) * (1 / 2)) + b * (-(b / a) * (1 / 2)) + c) =

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2017 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Stephen Morgan, Scott Morrison, Johannes Hölzl, Reid Barton
+-/
 import Mathbin.Combinatorics.Quiver.Basic
 import Mathbin.Tactic.Basic
 
@@ -70,13 +75,15 @@ namespace CategoryTheory
 
 /-- A preliminary structure on the way to defining a category,
 containing the data, but none of the axioms. -/
-class category_struct (obj : Type u) extends Quiver.{v + 1} obj : Type max u (v + 1) where
+class CategoryStruct (obj : Type u) extends Quiver.{v + 1} obj : Type max u (v + 1) where
   id : ∀ X : obj, hom X X
   comp : ∀ {X Y Z : obj}, (X ⟶ Y) → (Y ⟶ Z) → (X ⟶ Z)
 
 notation "𝟙" => CategoryStruct.id
 
-infixr:80 " ≫ " => CategoryStruct.comp
+infixr:80
+  " ≫ " =>-- type as \b1
+  CategoryStruct.comp
 
 /-- The typeclass `category C` describes morphisms associated to objects of type `C`.
 The universe levels of the objects and morphisms are unconstrained, and will often need to be
@@ -84,7 +91,8 @@ specified explicitly, as `category.{v} C`. (See also `large_category` and `small
 
 See https://stacks.math.columbia.edu/tag/0014.
 -/
-class category (obj : Type u) extends CategoryStruct.{v} obj : Type max u (v + 1) where
+-- type as \gg
+class Category (obj : Type u) extends CategoryStruct.{v} obj : Type max u (v + 1) where
   id_comp' : ∀ {X Y : obj} f : hom X Y, 𝟙 X ≫ f = f := by
     run_tac
       obviously
@@ -95,6 +103,9 @@ class category (obj : Type u) extends CategoryStruct.{v} obj : Type max u (v + 1
     run_tac
       obviously
 
+-- `restate_axiom` is a command that creates a lemma from a structure field,
+-- discarding any auto_param wrappers from the type.
+-- (It removes a backtick from the name, if it finds one, and otherwise adds "_lemma".)
 restate_axiom category.id_comp'
 
 restate_axiom category.comp_id'
@@ -109,12 +120,12 @@ attribute [trans] category_struct.comp
 the morphisms. It is useful for examples such as the category of types, or the category
 of groups, etc.
 -/
-abbrev large_category (C : Type (u + 1)) : Type (u + 1) :=
+abbrev LargeCategory (C : Type (u + 1)) : Type (u + 1) :=
   Category.{u} C
 
 /-- A `small_category` has objects and morphisms in the same universe level.
 -/
-abbrev small_category (C : Type u) : Type (u + 1) :=
+abbrev SmallCategory (C : Type u) : Type (u + 1) :=
   Category.{u} C
 
 section
@@ -144,13 +155,11 @@ theorem eq_of_comp_right_eq {f g : Y ⟶ Z} (w : ∀ {X : C} h : X ⟶ Y, h ≫ 
   convert w (𝟙 Y)
   tidy
 
-theorem eq_of_comp_left_eq' (f g : X ⟶ Y) (w : (fun {Z : C} h : Y ⟶ Z => f ≫ h) = fun {Z : C} h : Y ⟶ Z => g ≫ h) :
-    f = g :=
+theorem eq_of_comp_left_eq' (f g : X ⟶ Y) (w : (fun h : Y ⟶ Z => f ≫ h) = fun h : Y ⟶ Z => g ≫ h) : f = g :=
   eq_of_comp_left_eq fun Z h => by
     convert congr_funₓ (congr_funₓ w Z) h
 
-theorem eq_of_comp_right_eq' (f g : Y ⟶ Z) (w : (fun {X : C} h : X ⟶ Y => h ≫ f) = fun {X : C} h : X ⟶ Y => h ≫ g) :
-    f = g :=
+theorem eq_of_comp_right_eq' (f g : Y ⟶ Z) (w : (fun h : X ⟶ Y => h ≫ f) = fun h : X ⟶ Y => h ≫ g) : f = g :=
   eq_of_comp_right_eq fun X h => by
     convert congr_funₓ (congr_funₓ w X) h
 
@@ -175,7 +184,7 @@ theorem dite_comp {P : Prop} [Decidable P] {X Y Z : C} (f : P → (X ⟶ Y)) (f'
 
 See https://stacks.math.columbia.edu/tag/003B.
 -/
-class epi (f : X ⟶ Y) : Prop where
+class Epi (f : X ⟶ Y) : Prop where
   left_cancellation : ∀ {Z : C} g h : Y ⟶ Z w : f ≫ g = f ≫ h, g = h
 
 /-- A morphism `f` is a monomorphism if it can be "cancelled" when postcomposed:
@@ -183,7 +192,7 @@ class epi (f : X ⟶ Y) : Prop where
 
 See https://stacks.math.columbia.edu/tag/003B.
 -/
-class mono (f : X ⟶ Y) : Prop where
+class Mono (f : X ⟶ Y) : Prop where
   right_cancellation : ∀ {Z : C} g h : Z ⟶ X w : g ≫ f = h ≫ f, g = h
 
 instance (X : C) : Epi (𝟙 X) :=
@@ -259,11 +268,12 @@ variable [Category.{v} C]
 
 universe u'
 
-instance ulift_category : Category.{v} (Ulift.{u'} C) where
+instance uliftCategory : Category.{v} (Ulift.{u'} C) where
   Hom := fun X Y => X.down ⟶ Y.down
   id := fun X => 𝟙 X.down
   comp := fun _ _ _ f g => f ≫ g
 
+-- We verify that this previous instance can lift small categories to large categories.
 example (D : Type u) [SmallCategory D] : LargeCategory (Ulift.{u + 1} D) := by
   infer_instance
 

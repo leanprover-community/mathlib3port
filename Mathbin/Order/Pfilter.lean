@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Mathieu Guay-Paquet. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Mathieu Guay-Paquet
+-/
 import Mathbin.Order.Ideal
 
 /-!
@@ -38,21 +43,21 @@ variable {P : Type _}
   - nonempty
   - downward directed
   - upward closed. -/
-structure pfilter (P) [Preorderₓ P] where
+structure Pfilter (P) [Preorderₓ P] where
   dual : Ideal (OrderDual P)
 
 /-- A predicate for when a subset of `P` is a filter. -/
-def is_pfilter [Preorderₓ P] (F : Set P) : Prop :=
+def IsPfilter [Preorderₓ P] (F : Set P) : Prop :=
   @IsIdeal (OrderDual P) _ F
 
-theorem is_pfilter.of_def [Preorderₓ P] {F : Set P} (nonempty : F.Nonempty) (directed : DirectedOn (· ≥ ·) F)
+theorem IsPfilter.of_def [Preorderₓ P] {F : Set P} (nonempty : F.Nonempty) (directed : DirectedOn (· ≥ ·) F)
     (mem_of_le : ∀ {x y : P}, x ≤ y → x ∈ F → y ∈ F) : IsPfilter F := by
   use Nonempty, Directed
   exact fun _ _ _ _ => mem_of_le ‹_› ‹_›
 
 /-- Create an element of type `order.pfilter` from a set satisfying the predicate
 `order.is_pfilter`. -/
-def is_pfilter.to_pfilter [Preorderₓ P] {F : Set P} (h : IsPfilter F) : Pfilter P :=
+def IsPfilter.toPfilter [Preorderₓ P] {F : Set P} (h : IsPfilter F) : Pfilter P :=
   ⟨h.toIdeal⟩
 
 namespace Pfilter
@@ -76,10 +81,10 @@ theorem mem_coe : x ∈ (F : Set P) ↔ x ∈ F :=
 theorem is_pfilter : IsPfilter (F : Set P) :=
   F.dual.IsIdeal
 
-theorem Nonempty : (F : Set P).Nonempty :=
+theorem nonempty : (F : Set P).Nonempty :=
   F.dual.Nonempty
 
-theorem Directed : DirectedOn (· ≥ ·) (F : Set P) :=
+theorem directed : DirectedOn (· ≥ ·) (F : Set P) :=
   F.dual.Directed
 
 theorem mem_of_le {F : Pfilter P} : x ≤ y → x ∈ F → y ∈ F := fun h => F.dual.mem_of_le h
@@ -135,7 +140,7 @@ section SemilatticeInf
 
 variable [SemilatticeInf P] {x y : P} {F : Pfilter P}
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (x y «expr ∈ » F)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (x y «expr ∈ » F)
 /-- A specific witness of `pfilter.directed` when `P` has meets. -/
 theorem inf_mem x y (_ : x ∈ F) (_ : y ∈ F) : x⊓y ∈ F :=
   Ideal.sup_mem x ‹x ∈ F› y ‹y ∈ F›

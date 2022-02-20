@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2022 Alex Kontorovich and Heather Macbeth. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Alex Kontorovich, Heather Macbeth
+-/
 import Mathbin.MeasureTheory.Measure.Haar
 import Mathbin.MeasureTheory.Group.FundamentalDomain
 import Mathbin.Topology.CompactOpen
@@ -38,7 +43,7 @@ variable {G : Type _} [Groupₓ G] [MeasurableSpace G] [TopologicalSpace G] [Top
 theorem Subgroup.smul_invariant_measure [μ.IsMulRightInvariant] : SmulInvariantMeasure Γ.opposite G μ :=
   { measure_preimage_smul := by
       rintro ⟨c, hc⟩ s hs
-      dsimp [· • ·]
+      dsimp [(· • ·)]
       refine' measure_preimage_mul_right μ (MulOpposite.unop c) s }
 
 /-- Measurability of the action of the topological group `G` on the left-coset space `G/Γ`. -/
@@ -112,7 +117,7 @@ theorem MeasureTheory.IsFundamentalDomain.smul_invariant_measure_map [μ.IsMulLe
       ext
       have : π (x * MulOpposite.unop γ) = π x := by
         simpa [QuotientGroup.eq'] using γ_in_Γ
-      simp [· • ·, this] }
+      simp [(· • ·), this] }
 
 /-- Assuming `Γ` is a normal subgroup of a topological group `G`, the pushforward to the quotient
   group `G ⧸ Γ` of the restriction of a both left- and right-invariant measure on `G` to a
@@ -155,6 +160,8 @@ theorem MeasureTheory.IsFundamentalDomain.map_restrict_quotient [Subgroup.Normal
     ⟨by
       rw [measure.restrict_apply' 𝓕meas, univ_inter]
       exact h𝓕_finite⟩
+  -- the measure is left-invariant, so by the uniqueness of Haar measure it's enough to show that
+  -- it has the stated size on the reference compact set `K`.
   have : (measure.map (QuotientGroup.mk' Γ) (μ.restrict 𝓕)).IsMulLeftInvariant := h𝓕.is_mul_left_invariant_map
   rw [measure.haar_measure_unique (measure.map (QuotientGroup.mk' Γ) (μ.restrict 𝓕)) K, measure.map_apply meas_π,
     measure.restrict_apply' 𝓕meas, inter_comm]

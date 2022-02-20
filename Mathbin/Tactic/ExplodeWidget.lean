@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Minchao Wu. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Minchao Wu
+-/
 import Mathbin.Tactic.Explode
 import Mathbin.Tactic.InteractiveExpr
 
@@ -100,13 +105,13 @@ unsafe def mk {γ} (tooltip : Tc subexpr γ) : Tc expr γ :=
   let tooltip_comp :=
     (component.with_should_update fun x y : tactic_state × expr × Expr.Address => x.2.2 ≠ y.2.2) <|
       component.map_action action.on_tooltip_action tooltip
-  (component.filter_map_action fun _ a : Sum γ widget.effect => Sum.casesOn a some fun _ => none) <|
-    (component.with_effects fun _ a : Sum γ widget.effect =>
+  (component.filter_map_action fun a : Sum γ widget.effect => Sum.casesOn a some fun _ => none) <|
+    (component.with_effects fun a : Sum γ widget.effect =>
         match a with
         | Sum.inl g => []
         | Sum.inr s => [s]) <|
       tc.mk_simple (action γ) (Option subexpr × Option subexpr) (fun e => pure <| (none, none))
-        (fun e ⟨ca, sa⟩ act =>
+        (fun act =>
           pure <|
             match act with
             | action.on_mouse_enter ⟨e, ea⟩ => ((ca, some (e, ea)), none)

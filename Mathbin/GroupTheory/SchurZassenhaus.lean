@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Thomas Browning. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Thomas Browning
+-/
 import Mathbin.GroupTheory.Complement
 import Mathbin.GroupTheory.GroupAction.Basic
 import Mathbin.GroupTheory.Sylow
@@ -111,14 +116,14 @@ theorem smul_diff [H.Normal] (h : H) : diff (h • α) β = h ^ H.index * diff �
 
 variable (H)
 
-instance setoid_diff [H.Normal] : Setoidₓ (LeftTransversals (H : Set G)) :=
+instance setoidDiff [H.Normal] : Setoidₓ (LeftTransversals (H : Set G)) :=
   Setoidₓ.mk (fun α β => diff α β = 1)
     ⟨fun α => diff_self α, fun α β h₁ => by
       rw [← diff_inv, h₁, one_inv], fun α β γ h₁ h₂ => by
       rw [← diff_mul_diff, h₁, h₂, one_mulₓ]⟩
 
 /-- The quotient of the transversals of an abelian normal `N` by the `diff` relation -/
-def quotient_diff [H.Normal] :=
+def QuotientDiff [H.Normal] :=
   Quotientₓ H.setoidDiff
 
 instance [H.Normal] : Inhabited H.QuotientDiff :=

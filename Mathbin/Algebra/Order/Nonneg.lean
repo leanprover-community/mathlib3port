@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Floris van Doorn. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Floris van Doorn
+-/
 import Mathbin.Algebra.Order.Archimedean
 import Mathbin.Algebra.Order.Sub
 import Mathbin.Algebra.Order.WithZero
@@ -40,24 +45,24 @@ namespace Nonneg
 /-- This instance uses data fields from `subtype.partial_order` to help type-class inference.
 The `set.Ici` data fields are definitionally equal, but that requires unfolding semireducible
 definitions, so type-class inference won't see this. -/
-instance OrderBot [Preorderₓ α] {a : α} : OrderBot { x : α // a ≤ x } :=
+instance orderBot [Preorderₓ α] {a : α} : OrderBot { x : α // a ≤ x } :=
   { Set.Ici.orderBot with }
 
 theorem bot_eq [Preorderₓ α] {a : α} : (⊥ : { x : α // a ≤ x }) = ⟨a, le_rfl⟩ :=
   rfl
 
-instance NoMaxOrder [PartialOrderₓ α] [NoMaxOrder α] {a : α} : NoMaxOrder { x : α // a ≤ x } :=
+instance no_max_order [PartialOrderₓ α] [NoMaxOrder α] {a : α} : NoMaxOrder { x : α // a ≤ x } :=
   Set.Ici.no_max_order
 
-instance SemilatticeInf [SemilatticeInf α] {a : α} : SemilatticeInf { x : α // a ≤ x } :=
+instance semilatticeInf [SemilatticeInf α] {a : α} : SemilatticeInf { x : α // a ≤ x } :=
   Set.Ici.semilatticeInf
 
-instance DenselyOrdered [Preorderₓ α] [DenselyOrdered α] {a : α} : DenselyOrdered { x : α // a ≤ x } :=
+instance densely_ordered [Preorderₓ α] [DenselyOrdered α] {a : α} : DenselyOrdered { x : α // a ≤ x } :=
   show DenselyOrdered (Ici a) from Set.densely_ordered
 
 /-- If `Sup ∅ ≤ a` then `{x : α // a ≤ x}` is a `conditionally_complete_linear_order`. -/
 @[reducible]
-protected noncomputable def ConditionallyCompleteLinearOrder [ConditionallyCompleteLinearOrder α] {a : α} :
+protected noncomputable def conditionallyCompleteLinearOrder [ConditionallyCompleteLinearOrder α] {a : α} :
     ConditionallyCompleteLinearOrder { x : α // a ≤ x } :=
   { @ordConnectedSubsetConditionallyCompleteLinearOrder α (Set.Ici a) _ ⟨⟨a, le_rfl⟩⟩ _ with }
 
@@ -67,7 +72,7 @@ This instance uses data fields from `subtype.linear_order` to help type-class in
 The `set.Ici` data fields are definitionally equal, but that requires unfolding semireducible
 definitions, so type-class inference won't see this. -/
 @[reducible]
-protected noncomputable def ConditionallyCompleteLinearOrderBot [ConditionallyCompleteLinearOrder α] {a : α}
+protected noncomputable def conditionallyCompleteLinearOrderBot [ConditionallyCompleteLinearOrder α] {a : α}
     (h : sup ∅ ≤ a) : ConditionallyCompleteLinearOrderBot { x : α // a ≤ x } :=
   { Nonneg.orderBot, Nonneg.conditionallyCompleteLinearOrder with
     cSup_empty :=
@@ -79,10 +84,10 @@ protected noncomputable def ConditionallyCompleteLinearOrderBot [ConditionallyCo
             
           simp [h2] }
 
-instance Inhabited [Preorderₓ α] {a : α} : Inhabited { x : α // a ≤ x } :=
+instance inhabited [Preorderₓ α] {a : α} : Inhabited { x : α // a ≤ x } :=
   ⟨⟨a, le_rfl⟩⟩
 
-instance Zero [Zero α] [Preorderₓ α] : Zero { x : α // 0 ≤ x } :=
+instance hasZero [Zero α] [Preorderₓ α] : Zero { x : α // 0 ≤ x } :=
   ⟨⟨0, le_rfl⟩⟩
 
 @[simp, norm_cast]
@@ -93,7 +98,7 @@ protected theorem coe_zero [Zero α] [Preorderₓ α] : ((0 : { x : α // 0 ≤ 
 theorem mk_eq_zero [Zero α] [Preorderₓ α] {x : α} (hx : 0 ≤ x) : (⟨x, hx⟩ : { x : α // 0 ≤ x }) = 0 ↔ x = 0 :=
   Subtype.ext_iff
 
-instance Add [AddZeroClass α] [Preorderₓ α] [CovariantClass α α (· + ·) (· ≤ ·)] : Add { x : α // 0 ≤ x } :=
+instance hasAdd [AddZeroClass α] [Preorderₓ α] [CovariantClass α α (· + ·) (· ≤ ·)] : Add { x : α // 0 ≤ x } :=
   ⟨fun x y => ⟨x + y, add_nonneg x.2 y.2⟩⟩
 
 @[simp]
@@ -106,35 +111,35 @@ protected theorem coe_add [AddZeroClass α] [Preorderₓ α] [CovariantClass α 
     (a b : { x : α // 0 ≤ x }) : ((a + b : { x : α // 0 ≤ x }) : α) = a + b :=
   rfl
 
-instance OrderedAddCommMonoid [OrderedAddCommMonoid α] : OrderedAddCommMonoid { x : α // 0 ≤ x } :=
+instance orderedAddCommMonoid [OrderedAddCommMonoid α] : OrderedAddCommMonoid { x : α // 0 ≤ x } :=
   Subtype.coe_injective.OrderedAddCommMonoid (coe : { x : α // 0 ≤ x } → α) rfl fun x y => rfl
 
-instance LinearOrderedAddCommMonoid [LinearOrderedAddCommMonoid α] : LinearOrderedAddCommMonoid { x : α // 0 ≤ x } :=
+instance linearOrderedAddCommMonoid [LinearOrderedAddCommMonoid α] : LinearOrderedAddCommMonoid { x : α // 0 ≤ x } :=
   Subtype.coe_injective.LinearOrderedAddCommMonoid (coe : { x : α // 0 ≤ x } → α) rfl fun x y => rfl
 
-instance OrderedCancelAddCommMonoid [OrderedCancelAddCommMonoid α] : OrderedCancelAddCommMonoid { x : α // 0 ≤ x } :=
+instance orderedCancelAddCommMonoid [OrderedCancelAddCommMonoid α] : OrderedCancelAddCommMonoid { x : α // 0 ≤ x } :=
   Subtype.coe_injective.OrderedCancelAddCommMonoid (coe : { x : α // 0 ≤ x } → α) rfl fun x y => rfl
 
-instance LinearOrderedCancelAddCommMonoid [LinearOrderedCancelAddCommMonoid α] :
+instance linearOrderedCancelAddCommMonoid [LinearOrderedCancelAddCommMonoid α] :
     LinearOrderedCancelAddCommMonoid { x : α // 0 ≤ x } :=
   Subtype.coe_injective.LinearOrderedCancelAddCommMonoid (coe : { x : α // 0 ≤ x } → α) rfl fun x y => rfl
 
 /-- Coercion `{x : α // 0 ≤ x} → α` as a `add_monoid_hom`. -/
-def coe_add_monoid_hom [OrderedAddCommMonoid α] : { x : α // 0 ≤ x } →+ α :=
+def coeAddMonoidHom [OrderedAddCommMonoid α] : { x : α // 0 ≤ x } →+ α :=
   ⟨coe, Nonneg.coe_zero, Nonneg.coe_add⟩
 
 @[norm_cast]
 theorem nsmul_coe [OrderedAddCommMonoid α] (n : ℕ) (r : { x : α // 0 ≤ x }) : ↑(n • r) = n • (r : α) :=
   Nonneg.coeAddMonoidHom.map_nsmul _ _
 
-instance Archimedean [OrderedAddCommMonoid α] [Archimedean α] : Archimedean { x : α // 0 ≤ x } :=
+instance archimedean [OrderedAddCommMonoid α] [Archimedean α] : Archimedean { x : α // 0 ≤ x } :=
   ⟨fun x y pos_y =>
     let ⟨n, hr⟩ := Archimedean.arch (x : α) (pos_y : (0 : α) < y)
     ⟨n,
       show (x : α) ≤ (n • y : { x : α // 0 ≤ x }) by
         simp [*, -nsmul_eq_mul, nsmul_coe]⟩⟩
 
-instance One [OrderedSemiring α] : One { x : α // 0 ≤ x } where
+instance hasOne [OrderedSemiring α] : One { x : α // 0 ≤ x } where
   one := ⟨1, zero_le_one⟩
 
 @[simp, norm_cast]
@@ -145,7 +150,7 @@ protected theorem coe_one [OrderedSemiring α] : ((1 : { x : α // 0 ≤ x }) : 
 theorem mk_eq_one [OrderedSemiring α] {x : α} (hx : 0 ≤ x) : (⟨x, hx⟩ : { x : α // 0 ≤ x }) = 1 ↔ x = 1 :=
   Subtype.ext_iff
 
-instance Mul [OrderedSemiring α] : Mul { x : α // 0 ≤ x } where
+instance hasMul [OrderedSemiring α] : Mul { x : α // 0 ≤ x } where
   mul := fun x y => ⟨x * y, mul_nonneg x.2 y.2⟩
 
 @[simp, norm_cast]
@@ -157,34 +162,36 @@ theorem mk_mul_mk [OrderedSemiring α] {x y : α} (hx : 0 ≤ x) (hy : 0 ≤ y) 
     (⟨x, hx⟩ : { x : α // 0 ≤ x }) * ⟨y, hy⟩ = ⟨x * y, mul_nonneg hx hy⟩ :=
   rfl
 
-instance OrderedSemiring [OrderedSemiring α] : OrderedSemiring { x : α // 0 ≤ x } :=
+instance orderedSemiring [OrderedSemiring α] : OrderedSemiring { x : α // 0 ≤ x } :=
   Subtype.coe_injective.OrderedSemiring (coe : { x : α // 0 ≤ x } → α) rfl rfl (fun x y => rfl) fun x y => rfl
 
-instance OrderedCommSemiring [OrderedCommSemiring α] : OrderedCommSemiring { x : α // 0 ≤ x } :=
+instance orderedCommSemiring [OrderedCommSemiring α] : OrderedCommSemiring { x : α // 0 ≤ x } :=
   Subtype.coe_injective.OrderedCommSemiring (coe : { x : α // 0 ≤ x } → α) rfl rfl (fun x y => rfl) fun x y => rfl
 
-instance MonoidWithZeroₓ [OrderedSemiring α] : MonoidWithZeroₓ { x : α // 0 ≤ x } := by
+-- These prevent noncomputable instances being found, as it does not require `linear_order` which
+-- is frequently non-computable.
+instance monoidWithZero [OrderedSemiring α] : MonoidWithZeroₓ { x : α // 0 ≤ x } := by
   infer_instance
 
-instance CommMonoidWithZero [OrderedCommSemiring α] : CommMonoidWithZero { x : α // 0 ≤ x } := by
+instance commMonoidWithZero [OrderedCommSemiring α] : CommMonoidWithZero { x : α // 0 ≤ x } := by
   infer_instance
 
-instance Nontrivial [LinearOrderedSemiring α] : Nontrivial { x : α // 0 ≤ x } :=
+instance nontrivial [LinearOrderedSemiring α] : Nontrivial { x : α // 0 ≤ x } :=
   ⟨⟨0, 1, fun h => zero_ne_one (congr_argₓ Subtype.val h)⟩⟩
 
-instance LinearOrderedSemiring [LinearOrderedSemiring α] : LinearOrderedSemiring { x : α // 0 ≤ x } :=
+instance linearOrderedSemiring [LinearOrderedSemiring α] : LinearOrderedSemiring { x : α // 0 ≤ x } :=
   Subtype.coe_injective.LinearOrderedSemiring (coe : { x : α // 0 ≤ x } → α) rfl rfl (fun x y => rfl) fun x y => rfl
 
-instance LinearOrderedCommMonoidWithZero [LinearOrderedCommRing α] :
+instance linearOrderedCommMonoidWithZero [LinearOrderedCommRing α] :
     LinearOrderedCommMonoidWithZero { x : α // 0 ≤ x } :=
   { Nonneg.linearOrderedSemiring, Nonneg.orderedCommSemiring with
     mul_le_mul_left := fun a b h c => mul_le_mul_of_nonneg_left h c.2 }
 
 /-- Coercion `{x : α // 0 ≤ x} → α` as a `ring_hom`. -/
-def coe_ring_hom [OrderedSemiring α] : { x : α // 0 ≤ x } →+* α :=
+def coeRingHom [OrderedSemiring α] : { x : α // 0 ≤ x } →+* α :=
   ⟨coe, Nonneg.coe_one, Nonneg.coe_mul, Nonneg.coe_zero, Nonneg.coe_add⟩
 
-instance Inv [LinearOrderedField α] : Inv { x : α // 0 ≤ x } where
+instance hasInv [LinearOrderedField α] : Inv { x : α // 0 ≤ x } where
   inv := fun x => ⟨x⁻¹, inv_nonneg.mpr x.2⟩
 
 @[simp, norm_cast]
@@ -196,7 +203,7 @@ theorem inv_mk [LinearOrderedField α] {x : α} (hx : 0 ≤ x) :
     (⟨x, hx⟩ : { x : α // 0 ≤ x })⁻¹ = ⟨x⁻¹, inv_nonneg.mpr hx⟩ :=
   rfl
 
-instance LinearOrderedCommGroupWithZero [LinearOrderedField α] : LinearOrderedCommGroupWithZero { x : α // 0 ≤ x } :=
+instance linearOrderedCommGroupWithZero [LinearOrderedField α] : LinearOrderedCommGroupWithZero { x : α // 0 ≤ x } :=
   { Nonneg.nontrivial, Nonneg.hasInv, Nonneg.linearOrderedCommMonoidWithZero with
     inv_zero := by
       ext
@@ -208,7 +215,7 @@ instance LinearOrderedCommGroupWithZero [LinearOrderedField α] : LinearOrderedC
       ext
       exact h }
 
-instance Div [LinearOrderedField α] : Div { x : α // 0 ≤ x } where
+instance hasDiv [LinearOrderedField α] : Div { x : α // 0 ≤ x } where
   div := fun x y => ⟨x / y, div_nonneg x.2 y.2⟩
 
 @[simp, norm_cast]
@@ -221,19 +228,19 @@ theorem mk_div_mk [LinearOrderedField α] {x y : α} (hx : 0 ≤ x) (hy : 0 ≤ 
     (⟨x, hx⟩ : { x : α // 0 ≤ x }) / ⟨y, hy⟩ = ⟨x / y, div_nonneg hx hy⟩ :=
   rfl
 
-instance CanonicallyOrderedAddMonoid [OrderedRing α] : CanonicallyOrderedAddMonoid { x : α // 0 ≤ x } :=
+instance canonicallyOrderedAddMonoid [OrderedRing α] : CanonicallyOrderedAddMonoid { x : α // 0 ≤ x } :=
   { Nonneg.orderedAddCommMonoid, Nonneg.orderBot with
     le_iff_exists_add := fun ⟨a, ha⟩ ⟨b, hb⟩ => by
       simpa only [mk_add_mk, Subtype.exists, Subtype.mk_eq_mk] using le_iff_exists_nonneg_add a b }
 
-instance CanonicallyOrderedCommSemiring [OrderedCommRing α] [NoZeroDivisors α] :
+instance canonicallyOrderedCommSemiring [OrderedCommRing α] [NoZeroDivisors α] :
     CanonicallyOrderedCommSemiring { x : α // 0 ≤ x } :=
   { Nonneg.canonicallyOrderedAddMonoid, Nonneg.orderedCommSemiring with
     eq_zero_or_eq_zero_of_mul_eq_zero := by
       rintro ⟨a, ha⟩ ⟨b, hb⟩
       simp }
 
-instance CanonicallyLinearOrderedAddMonoid [LinearOrderedRing α] :
+instance canonicallyLinearOrderedAddMonoid [LinearOrderedRing α] :
     CanonicallyLinearOrderedAddMonoid { x : α // 0 ≤ x } :=
   { Subtype.linearOrder _, Nonneg.canonicallyOrderedAddMonoid with }
 
@@ -242,7 +249,7 @@ section LinearOrderₓ
 variable [Zero α] [LinearOrderₓ α]
 
 /-- The function `a ↦ max a 0` of type `α → {x : α // 0 ≤ x}`. -/
-def to_nonneg (a : α) : { x : α // 0 ≤ x } :=
+def toNonneg (a : α) : { x : α // 0 ≤ x } :=
   ⟨max a 0, le_max_rightₓ _ _⟩
 
 @[simp]
@@ -268,7 +275,7 @@ theorem to_nonneg_lt {a : { x : α // 0 ≤ x }} {b : α} : a < toNonneg b ↔ �
   cases' a with a ha
   simp [to_nonneg, ha.not_lt]
 
-instance Sub [Sub α] : Sub { x : α // 0 ≤ x } :=
+instance hasSub [Sub α] : Sub { x : α // 0 ≤ x } :=
   ⟨fun x y => toNonneg (x - y)⟩
 
 @[simp]
@@ -278,7 +285,7 @@ theorem mk_sub_mk [Sub α] {x y : α} (hx : 0 ≤ x) (hy : 0 ≤ y) :
 
 end LinearOrderₓ
 
-instance HasOrderedSub [LinearOrderedRing α] : HasOrderedSub { x : α // 0 ≤ x } :=
+instance hasOrderedSub [LinearOrderedRing α] : HasOrderedSub { x : α // 0 ≤ x } :=
   ⟨by
     rintro ⟨a, ha⟩ ⟨b, hb⟩ ⟨c, hc⟩
     simp only [sub_le_iff_le_add, Subtype.mk_le_mk, mk_sub_mk, mk_add_mk, to_nonneg_le, Subtype.coe_mk]⟩

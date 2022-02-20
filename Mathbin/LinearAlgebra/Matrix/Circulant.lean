@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Lu-Ming Zhang. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Lu-Ming Zhang
+-/
 import Mathbin.LinearAlgebra.Matrix.Symmetric
 
 /-!
@@ -48,7 +53,7 @@ theorem circulant_injective [AddGroupₓ n] : Injective (circulant : (n → α) 
   ext k
   rw [← circulant_col_zero_eq v, ← circulant_col_zero_eq w, h]
 
-theorem fin.circulant_injective : ∀ n, Injective fun v : Finₓ n → α => circulant v
+theorem Fin.circulant_injective : ∀ n, Injective fun v : Finₓ n → α => circulant v
   | 0 => by
     decide
   | n + 1 => circulant_injective
@@ -58,7 +63,7 @@ theorem circulant_inj [AddGroupₓ n] {v w : n → α} : circulant v = circulant
   circulant_injective.eq_iff
 
 @[simp]
-theorem fin.circulant_inj {n} {v w : Finₓ n → α} : circulant v = circulant w ↔ v = w :=
+theorem Fin.circulant_inj {n} {v w : Finₓ n → α} : circulant v = circulant w ↔ v = w :=
   (Fin.circulant_injective n).eq_iff
 
 theorem transpose_circulant [AddGroupₓ n] (v : n → α) : (circulant v)ᵀ = circulant fun i => v (-i) := by
@@ -68,12 +73,12 @@ theorem conj_transpose_circulant [HasStar α] [AddGroupₓ n] (v : n → α) :
     (circulant v)ᴴ = circulant (star fun i => v (-i)) := by
   ext <;> simp
 
-theorem fin.transpose_circulant : ∀ {n} v : Finₓ n → α, (circulant v)ᵀ = circulant fun i => v (-i)
+theorem Fin.transpose_circulant : ∀ {n} v : Finₓ n → α, (circulant v)ᵀ = circulant fun i => v (-i)
   | 0 => by
     decide
   | n + 1 => transpose_circulant
 
-theorem fin.conj_transpose_circulant [HasStar α] :
+theorem Fin.conj_transpose_circulant [HasStar α] :
     ∀ {n} v : Finₓ n → α, (circulant v)ᴴ = circulant (star fun i => v (-i))
   | 0 => by
     decide
@@ -105,7 +110,7 @@ theorem circulant_mul [Semiringₓ α] [Fintype n] [AddGroupₓ n] (v w : n → 
   intro x
   simp only [Equivₓ.sub_right_apply, sub_sub_sub_cancel_right]
 
-theorem fin.circulant_mul [Semiringₓ α] :
+theorem Fin.circulant_mul [Semiringₓ α] :
     ∀ {n} v w : Finₓ n → α, circulant v ⬝ circulant w = circulant (mulVecₓ (circulant v) w)
   | 0 => by
     decide
@@ -125,7 +130,7 @@ theorem circulant_mul_comm [CommSemigroupₓ α] [AddCommMonoidₓ α] [Fintype 
     abel
     
 
-theorem fin.circulant_mul_comm [CommSemigroupₓ α] [AddCommMonoidₓ α] :
+theorem Fin.circulant_mul_comm [CommSemigroupₓ α] [AddCommMonoidₓ α] :
     ∀ {n} v w : Finₓ n → α, circulant v ⬝ circulant w = circulant w ⬝ circulant v
   | 0 => by
     decide
@@ -149,7 +154,7 @@ theorem circulant_single n [Semiringₓ α] [DecidableEq n] [AddGroupₓ n] [Fin
 
 /-- Note we use `↑i = 0` instead of `i = 0` as `fin 0` has no `0`.
 This means that we cannot state this with `pi.single` as we did with `matrix.circulant_single`. -/
-theorem fin.circulant_ite α [Zero α] [One α] : ∀ n, circulant (fun i => ite (↑i = 0) 1 0 : Finₓ n → α) = 1
+theorem Fin.circulant_ite α [Zero α] [One α] : ∀ n, circulant (fun i => ite (↑i = 0) 1 0 : Finₓ n → α) = 1
   | 0 => by
     decide
   | n + 1 => by
@@ -162,7 +167,7 @@ theorem fin.circulant_ite α [Zero α] [One α] : ∀ n, circulant (fun i => ite
 theorem circulant_is_symm_iff [AddGroupₓ n] {v : n → α} : (circulant v).IsSymm ↔ ∀ i, v (-i) = v i := by
   rw [IsSymm, transpose_circulant, circulant_inj, funext_iff]
 
-theorem fin.circulant_is_symm_iff : ∀ {n} {v : Finₓ n → α}, (circulant v).IsSymm ↔ ∀ i, v (-i) = v i
+theorem Fin.circulant_is_symm_iff : ∀ {n} {v : Finₓ n → α}, (circulant v).IsSymm ↔ ∀ i, v (-i) = v i
   | 0 => fun v => by
     simp [is_symm.ext_iff, IsEmpty.forall_iff]
   | n + 1 => fun v => circulant_is_symm_iff
@@ -171,7 +176,7 @@ theorem fin.circulant_is_symm_iff : ∀ {n} {v : Finₓ n → α}, (circulant v)
 theorem circulant_is_symm_apply [AddGroupₓ n] {v : n → α} (h : (circulant v).IsSymm) (i : n) : v (-i) = v i :=
   circulant_is_symm_iff.1 h i
 
-theorem fin.circulant_is_symm_apply {n} {v : Finₓ n → α} (h : (circulant v).IsSymm) (i : Finₓ n) : v (-i) = v i :=
+theorem Fin.circulant_is_symm_apply {n} {v : Finₓ n → α} (h : (circulant v).IsSymm) (i : Finₓ n) : v (-i) = v i :=
   Fin.circulant_is_symm_iff.1 h i
 
 end Matrix

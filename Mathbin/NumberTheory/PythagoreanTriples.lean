@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Paul van Wamelen. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Paul van Wamelen
+-/
 import Mathbin.Algebra.Field.Basic
 import Mathbin.RingTheory.Int.Basic
 import Mathbin.Algebra.GroupWithZero.Power
@@ -56,7 +61,7 @@ variable {x y z : ℤ} (h : PythagoreanTriple x y z)
 
 include h
 
-theorem Eq : x * x + y * y = z * z :=
+theorem eq : x * x + y * y = z * z :=
   h
 
 @[symm]
@@ -93,7 +98,7 @@ either
  * `x = k * (m ^ 2 - n ^ 2)` and `y = k * (2 * m * n)`, or
  * `x = k * (2 * m * n)` and `y = k * (m ^ 2 - n ^ 2)`. -/
 @[nolint unused_arguments]
-def is_classified :=
+def IsClassified :=
   ∃ k m n : ℤ,
     (x = k * (m ^ 2 - n ^ 2) ∧ y = k * (2 * m * n) ∨ x = k * (2 * m * n) ∧ y = k * (m ^ 2 - n ^ 2)) ∧ Int.gcdₓ m n = 1
 
@@ -103,7 +108,7 @@ def is_classified :=
  * `x = 2 * m * n` and `y = m ^ 2 - n ^ 2`.
 -/
 @[nolint unused_arguments]
-def is_primitive_classified :=
+def IsPrimitiveClassified :=
   ∃ m n : ℤ,
     (x = m ^ 2 - n ^ 2 ∧ y = 2 * m * n ∨ x = 2 * m * n ∧ y = m ^ 2 - n ^ 2) ∧
       Int.gcdₓ m n = 1 ∧ (m % 2 = 0 ∧ n % 2 = 1 ∨ m % 2 = 1 ∧ n % 2 = 0)
@@ -123,7 +128,8 @@ theorem mul_is_classified (k : ℤ) (hc : h.IsClassified) : (h.mul k).IsClassifi
 
 theorem even_odd_of_coprime (hc : Int.gcdₓ x y = 1) : x % 2 = 0 ∧ y % 2 = 1 ∨ x % 2 = 1 ∧ y % 2 = 0 := by
   cases' Int.mod_two_eq_zero_or_one x with hx hx <;> cases' Int.mod_two_eq_zero_or_one y with hy hy
-  · exfalso
+  · -- x even, y even
+    exfalso
     apply
       Nat.not_coprime_of_dvd_of_dvdₓ
         (by
@@ -139,10 +145,13 @@ theorem even_odd_of_coprime (hc : Int.gcdₓ x y = 1) : x % 2 = 0 ∧ y % 2 = 1 
   · left
     exact ⟨hx, hy⟩
     
+  -- x even, y odd
   · right
     exact ⟨hx, hy⟩
     
-  · exfalso
+  -- x odd, y even
+  · -- x odd, y odd
+    exfalso
     obtain ⟨x0, y0, rfl, rfl⟩ : ∃ x0 y0, x = x0 * 2 + 1 ∧ y = y0 * 2 + 1 := by
       cases' exists_eq_mul_left_of_dvd (Int.dvd_sub_of_mod_eq hx) with x0 hx2
       cases' exists_eq_mul_left_of_dvd (Int.dvd_sub_of_mod_eq hy) with y0 hy2
@@ -535,26 +544,30 @@ theorem is_primitive_classified_of_coprime_of_odd_of_pos (hc : Int.gcdₓ x y = 
     rw [Int.gcd_comm]
     exact hnmcp
   cases' Int.mod_two_eq_zero_or_one m with hm2 hm2 <;> cases' Int.mod_two_eq_zero_or_one n with hn2 hn2
-  · exfalso
+  · -- m even, n even
+    exfalso
     have h1 : 2 ∣ (Int.gcdₓ n m : ℤ) := Int.dvd_gcd (Int.dvd_of_mod_eq_zero hn2) (Int.dvd_of_mod_eq_zero hm2)
     rw [hnmcp] at h1
     revert h1
     norm_num
     
-  · apply h.is_primitive_classified_aux hc hzpos hm2n2 hv2 hw2 _ hmncp
+  · -- m even, n odd
+    apply h.is_primitive_classified_aux hc hzpos hm2n2 hv2 hw2 _ hmncp
     · apply Or.intro_left
       exact And.intro hm2 hn2
       
     · apply coprime_sq_sub_sq_add_of_even_odd hmncp hm2 hn2
       
     
-  · apply h.is_primitive_classified_aux hc hzpos hm2n2 hv2 hw2 _ hmncp
+  · -- m odd, n even
+    apply h.is_primitive_classified_aux hc hzpos hm2n2 hv2 hw2 _ hmncp
     · apply Or.intro_rightₓ
       exact And.intro hm2 hn2
       
     apply coprime_sq_sub_sq_add_of_odd_even hmncp hm2 hn2
     
-  · exfalso
+  · -- m odd, n odd
+    exfalso
     have h1 :
       2 ∣ m ^ 2 + n ^ 2 ∧
         2 ∣ m ^ 2 - n ^ 2 ∧ (m ^ 2 - n ^ 2) / 2 % 2 = 0 ∧ Int.gcdₓ ((m ^ 2 - n ^ 2) / 2) ((m ^ 2 + n ^ 2) / 2) = 1 :=

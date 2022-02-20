@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Yury G. Kudryashov. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yury G. Kudryashov, Johannes Hölzl
+-/
 import Mathbin.Order.ConditionallyCompleteLattice
 import Mathbin.Logic.Function.Iterate
 import Mathbin.Order.RelIso
@@ -49,7 +54,7 @@ protected theorem id : LeftOrdContinuous (id : α → α) := fun s x h => by
 
 variable {α}
 
-protected theorem OrderDual (hf : LeftOrdContinuous f) : @RightOrdContinuous (OrderDual α) (OrderDual β) _ _ f :=
+protected theorem order_dual (hf : LeftOrdContinuous f) : @RightOrdContinuous (OrderDual α) (OrderDual β) _ _ f :=
   hf
 
 theorem map_is_greatest (hf : LeftOrdContinuous f) {s : Set α} {x : α} (h : IsGreatest s x) :
@@ -87,7 +92,7 @@ theorem lt_iff (hf : LeftOrdContinuous f) (h : Injective f) {x y} : f x < f y �
 variable (f)
 
 /-- Convert an injective left order continuous function to an order embedding. -/
-def to_order_embedding (hf : LeftOrdContinuous f) (h : Injective f) : α ↪o β :=
+def toOrderEmbedding (hf : LeftOrdContinuous f) (h : Injective f) : α ↪o β :=
   ⟨⟨f, h⟩, fun x y => hf.le_iff h⟩
 
 variable {f}
@@ -139,7 +144,7 @@ protected theorem id : RightOrdContinuous (id : α → α) := fun s x h => by
 
 variable {α}
 
-protected theorem OrderDual (hf : RightOrdContinuous f) : @LeftOrdContinuous (OrderDual α) (OrderDual β) _ _ f :=
+protected theorem order_dual (hf : RightOrdContinuous f) : @LeftOrdContinuous (OrderDual α) (OrderDual β) _ _ f :=
   hf
 
 theorem map_is_least (hf : RightOrdContinuous f) {s : Set α} {x : α} (h : IsLeast s x) : IsLeast (f '' s) (f x) :=
@@ -172,7 +177,7 @@ theorem lt_iff (hf : RightOrdContinuous f) (h : Injective f) {x y} : f x < f y �
 variable (f)
 
 /-- Convert an injective left order continuous function to a `order_embedding`. -/
-def to_order_embedding (hf : RightOrdContinuous f) (h : Injective f) : α ↪o β :=
+def toOrderEmbedding (hf : RightOrdContinuous f) (h : Injective f) : α ↪o β :=
   ⟨⟨f, h⟩, fun x y => hf.le_iff h⟩
 
 variable {f}
@@ -219,11 +224,11 @@ section Preorderₓ
 
 variable [Preorderₓ α] [Preorderₓ β] (e : α ≃o β) {s : Set α} {x : α}
 
-protected theorem LeftOrdContinuous : LeftOrdContinuous e := fun s x hx =>
+protected theorem left_ord_continuous : LeftOrdContinuous e := fun s x hx =>
   ⟨Monotone.mem_upper_bounds_image (fun x y => e.map_rel_iff.2) hx.1, fun y hy =>
     e.rel_symm_apply.1 <| (is_lub_le_iff hx).2 fun x' hx' => e.rel_symm_apply.2 <| hy <| mem_image_of_mem _ hx'⟩
 
-protected theorem RightOrdContinuous : RightOrdContinuous e :=
+protected theorem right_ord_continuous : RightOrdContinuous e :=
   OrderIso.left_ord_continuous e.dual
 
 end Preorderₓ

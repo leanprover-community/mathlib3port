@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Yaël Dillies. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yaël Dillies
+-/
 import Mathbin.Data.Finset.Prod
 import Mathbin.Data.Sym.Sym2
 
@@ -36,7 +41,7 @@ section Sym2
 variable {m : Sym2 α}
 
 /-- Lifts a finset to `sym2 α`. `s.sym2` is the finset of all pairs with elements in `s`. -/
-protected def Sym2 (s : Finset α) : Finset (Sym2 α) :=
+protected def sym2 (s : Finset α) : Finset (Sym2 α) :=
   (s.product s).Image Quotientₓ.mk
 
 @[simp]
@@ -92,7 +97,7 @@ variable {n : ℕ} {m : Sym α n}
 
 /-- Lifts a finset to `sym α n`. `s.sym n` is the finset of all unordered tuples of cardinality `n`
 with elements in `s`. -/
-protected def Sym (s : Finset α) : ∀ n, Finset (Sym α n)
+protected def sym (s : Finset α) : ∀ n, Finset (Sym α n)
   | 0 => {∅}
   | n + 1 => s.sup fun a => (Sym n).Image <| Sym.cons a
 
@@ -134,7 +139,7 @@ theorem repeat_mem_sym (ha : a ∈ s) (n : ℕ) : Sym.repeat a n ∈ s.Sym n :=
   mem_sym_iff.2 fun b hb => by
     rwa [(Sym.mem_repeat.1 hb).2]
 
-protected theorem nonempty.sym (h : s.Nonempty) (n : ℕ) : (s.Sym n).Nonempty :=
+protected theorem Nonempty.sym (h : s.Nonempty) (n : ℕ) : (s.Sym n).Nonempty :=
   let ⟨a, ha⟩ := h
   ⟨_, repeat_mem_sym ha n⟩
 

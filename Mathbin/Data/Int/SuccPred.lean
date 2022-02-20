@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Yaël Dillies. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yaël Dillies
+-/
 import Mathbin.Data.Int.Basic
 import Mathbin.Order.SuccPred.Basic
 
@@ -10,10 +15,12 @@ In this file, we show that `ℤ` is both an archimedean `succ_order` and an arch
 
 open Function Int
 
+-- so that Lean reads `int.succ` through `succ_order.succ`
 @[reducible]
 instance : SuccOrder ℤ :=
   { SuccOrder.ofSuccLeIff succ fun a b => Iff.rfl with succ := succ }
 
+-- so that Lean reads `int.pred` through `pred_order.pred`
 @[reducible]
 instance : PredOrder ℤ where
   pred := pred

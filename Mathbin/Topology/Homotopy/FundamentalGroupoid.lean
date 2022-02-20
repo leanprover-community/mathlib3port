@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Shing Tak Lam. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Shing Tak Lam
+-/
 import Mathbin.CategoryTheory.Category.Groupoid
 import Mathbin.CategoryTheory.Groupoid
 import Mathbin.Topology.Category.Top.Basic
@@ -30,7 +35,7 @@ namespace Homotopy
 section
 
 /-- Auxilliary function for `refl_trans_symm` -/
-def refl_trans_symm_aux (x : I × I) : ℝ :=
+def reflTransSymmAux (x : I × I) : ℝ :=
   if (x.2 : ℝ) ≤ 1 / 2 then x.1 * 2 * x.2 else x.1 * (2 - 2 * x.2)
 
 @[continuity]
@@ -93,7 +98,7 @@ theorem refl_trans_symm_aux_mem_I (x : I × I) : reflTransSymmAux x ∈ I := by
 
 /-- For any path `p` from `x₀` to `x₁`, we have a homotopy from the constant path based at `x₀` to
   `p.trans p.symm`. -/
-def refl_trans_symm (p : Path x₀ x₁) : Homotopy (Path.refl x₀) (p.trans p.symm) where
+def reflTransSymm (p : Path x₀ x₁) : Homotopy (Path.refl x₀) (p.trans p.symm) where
   toFun := fun x => p ⟨reflTransSymmAux x, refl_trans_symm_aux_mem_I x⟩
   continuous_to_fun := by
     continuity
@@ -131,7 +136,7 @@ def refl_trans_symm (p : Path x₀ x₁) : Homotopy (Path.refl x₀) (p.trans p.
 
 /-- For any path `p` from `x₀` to `x₁`, we have a homotopy from the constant path based at `x₁` to
   `p.symm.trans p`. -/
-def refl_symm_trans (p : Path x₀ x₁) : Homotopy (Path.refl x₁) (p.symm.trans p) :=
+def reflSymmTrans (p : Path x₀ x₁) : Homotopy (Path.refl x₁) (p.symm.trans p) :=
   (reflTransSymm p.symm).cast rfl <| congr_argₓ _ Path.symm_symm
 
 end
@@ -139,7 +144,7 @@ end
 section TransRefl
 
 /-- Auxilliary function for `trans_refl_reparam` -/
-def trans_refl_reparam_aux (t : I) : ℝ :=
+def transReflReparamAux (t : I) : ℝ :=
   if (t : ℝ) ≤ 1 / 2 then 2 * t else 1
 
 @[continuity]
@@ -177,7 +182,7 @@ theorem trans_refl_reparam (p : Path x₀ x₁) :
 
 /-- For any path `p` from `x₀` to `x₁`, we have a homotopy from `p.trans (path.refl x₁)` to `p`.
 -/
-def trans_refl (p : Path x₀ x₁) : Homotopy (p.trans (Path.refl x₁)) p :=
+def transRefl (p : Path x₀ x₁) : Homotopy (p.trans (Path.refl x₁)) p :=
   ((Homotopy.reparam p (fun t => ⟨transReflReparamAux t, trans_refl_reparam_aux_mem_I t⟩)
           (by
             continuity)
@@ -186,7 +191,7 @@ def trans_refl (p : Path x₀ x₁) : Homotopy (p.trans (Path.refl x₁)) p :=
 
 /-- For any path `p` from `x₀` to `x₁`, we have a homotopy from `(path.refl x₀).trans p` to `p`.
 -/
-def refl_trans (p : Path x₀ x₁) : Homotopy ((Path.refl x₀).trans p) p :=
+def reflTrans (p : Path x₀ x₁) : Homotopy ((Path.refl x₀).trans p) p :=
   (transRefl p.symm).symm₂.cast
     (by
       simp )
@@ -198,7 +203,7 @@ end TransRefl
 section Assoc
 
 /-- Auxilliary function for `trans_assoc_reparam`. -/
-def trans_assoc_reparam_aux (t : I) : ℝ :=
+def transAssocReparamAux (t : I) : ℝ :=
   if (t : ℝ) ≤ 1 / 4 then 2 * t else if (t : ℝ) ≤ 1 / 2 then t + 1 / 4 else 1 / 2 * (t + 1)
 
 @[continuity]
@@ -231,6 +236,7 @@ theorem trans_assoc_reparam {x₀ x₁ x₂ x₃ : X} (p : Path x₀ x₁) (q : 
   ext
   simp only [trans_assoc_reparam_aux, Path.trans_apply, mul_inv_cancel_left₀, not_leₓ, Function.comp_app, Ne.def,
     not_false_iff, bit0_eq_zero, one_ne_zero, mul_ite, Subtype.coe_mk, Path.coe_to_fun]
+  -- TODO: why does split_ifs not reduce the ifs??????
   split_ifs with h₁ h₂ h₃ h₄ h₅
   · simp [h₂, h₃, -one_div]
     
@@ -262,7 +268,7 @@ theorem trans_assoc_reparam {x₀ x₁ x₂ x₃ : X} (p : Path x₀ x₁) (q : 
 
 /-- For paths `p q r`, we have a homotopy from `(p.trans q).trans r` to `p.trans (q.trans r)`.
 -/
-def trans_assoc {x₀ x₁ x₂ x₃ : X} (p : Path x₀ x₁) (q : Path x₁ x₂) (r : Path x₂ x₃) :
+def transAssoc {x₀ x₁ x₂ x₃ : X} (p : Path x₀ x₁) (q : Path x₁ x₂) (r : Path x₂ x₃) :
     Homotopy ((p.trans q).trans r) (p.trans (q.trans r)) :=
   ((Homotopy.reparam (p.trans (q.trans r)) (fun t => ⟨transAssocReparamAux t, trans_assoc_reparam_aux_mem_I t⟩)
           (by
@@ -326,7 +332,7 @@ theorem id_eq_path_refl (x : FundamentalGroupoid X) : 𝟙 x = ⟦Path.refl x⟧
 
 /-- The functor sending a topological space `X` to its fundamental groupoid.
 -/
-def fundamental_groupoid_functor : Top ⥤ CategoryTheory.Groupoidₓ where
+def fundamentalGroupoidFunctor : Top ⥤ CategoryTheory.Groupoidₓ where
   obj := fun X => { α := FundamentalGroupoid X }
   map := fun X Y f =>
     { obj := f, map := fun x y p => p.mapFn f, map_id' := fun X => rfl,
@@ -359,25 +365,25 @@ localized [FundamentalGroupoid] notation "πₘ" => FundamentalGroupoid.fundamen
 /-- Help the typechecker by converting a point in a groupoid back to a point in
 the underlying topological space. -/
 @[reducible]
-def to_top {X : Top} (x : (πₓ X).α) : X :=
+def toTop {X : Top} (x : (πₓ X).α) : X :=
   x
 
 /-- Help the typechecker by converting a point in a topological space to a
 point in the fundamental groupoid of that space -/
 @[reducible]
-def from_top {X : Top} (x : X) : (πₓ X).α :=
+def fromTop {X : Top} (x : X) : (πₓ X).α :=
   x
 
 /-- Help the typechecker by converting an arrow in the fundamental groupoid of
 a topological space back to a path in that space (i.e., `path.homotopic.quotient`). -/
 @[reducible]
-def to_path {X : Top} {x₀ x₁ : (πₓ X).α} (p : x₀ ⟶ x₁) : Path.Homotopic.Quotient x₀ x₁ :=
+def toPath {X : Top} {x₀ x₁ : (πₓ X).α} (p : x₀ ⟶ x₁) : Path.Homotopic.Quotient x₀ x₁ :=
   p
 
 /-- Help the typechecker by convering a path in a topological space to an arrow in the
 fundamental groupoid of that space. -/
 @[reducible]
-def from_path {X : Top} {x₀ x₁ : X} (p : Path.Homotopic.Quotient x₀ x₁) : x₀ ⟶ x₁ :=
+def fromPath {X : Top} {x₀ x₁ : X} (p : Path.Homotopic.Quotient x₀ x₁) : x₀ ⟶ x₁ :=
   p
 
 end FundamentalGroupoid

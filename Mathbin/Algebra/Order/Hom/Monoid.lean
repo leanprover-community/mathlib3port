@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2022 Yaël Dillies. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yaël Dillies
+-/
 import Mathbin.Algebra.Group.Hom
 import Mathbin.Algebra.Order.WithZero
 import Mathbin.Order.Hom.Basic
@@ -73,6 +78,7 @@ class OrderAddMonoidHomClass (F : Type _) (α β : outParam <| Type _) [Preorder
   [AddZeroClass β] extends AddMonoidHomClass F α β where
   Monotone (f : F) : Monotone f
 
+-- Instances and lemmas are defined below through `@[to_additive]`.
 end AddMonoidₓ
 
 section Monoidₓ
@@ -102,6 +108,7 @@ class OrderMonoidHomClass (F : Type _) (α β : outParam <| Type _) [Preorderₓ
   [MulOneClassₓ β] extends MonoidHomClass F α β where
   Monotone (f : F) : Monotone f
 
+-- See note [lower instance priority]
 @[to_additive]
 instance (priority := 100) OrderMonoidHomClass.toOrderHomClass [OrderMonoidHomClass F α β] : OrderHomClass F α β where
   map_rel := OrderMonoidHomClass.monotone
@@ -139,6 +146,7 @@ class OrderMonoidWithZeroHomClass (F : Type _) (α β : outParam <| Type _) [Pre
   [MulZeroOneClassₓ α] [MulZeroOneClassₓ β] extends MonoidWithZeroHomClass F α β where
   Monotone (f : F) : Monotone f
 
+-- See note [lower instance priority]
 instance (priority := 100) OrderMonoidWithZeroHomClass.toOrderMonoidHomClass [OrderMonoidWithZeroHomClass F α β] :
     OrderMonoidHomClass F α β :=
   { ‹OrderMonoidWithZeroHomClass F α β› with }
@@ -174,6 +182,7 @@ directly. -/
 instance : CoeFun (α →*o β) fun _ => α → β :=
   FunLike.hasCoeToFun
 
+-- Other lemmas should be accessed through the `fun_like` API
 @[ext, to_additive]
 theorem ext (h : ∀ a, f a = g a) : f = g :=
   FunLike.ext f g h
@@ -193,7 +202,7 @@ theorem mk_coe (f : α →*o β) h : OrderMonoidHom.mk (f : α →* β) h = f :=
 
 /-- Reinterpret an ordered monoid homomorphism as an order homomorphism. -/
 @[to_additive "Reinterpret an ordered additive monoid homomorphism as an order homomorphism."]
-def to_order_hom (f : α →*o β) : α →o β :=
+def toOrderHom (f : α →*o β) : α →o β :=
   { f with }
 
 @[simp, to_additive]
@@ -393,6 +402,7 @@ directly. -/
 instance : CoeFun (α →*₀o β) fun _ => α → β :=
   FunLike.hasCoeToFun
 
+-- Other lemmas should be accessed through the `fun_like` API
 @[ext]
 theorem ext (h : ∀ a, f a = g a) : f = g :=
   FunLike.ext f g h
@@ -410,7 +420,7 @@ theorem mk_coe (f : α →*₀o β) h : OrderMonoidWithZeroHom.mk (f : α →*�
   rfl
 
 /-- Reinterpret an ordered monoid with zero homomorphism as an order monoid homomorphism. -/
-def to_order_monoid_hom (f : α →*₀o β) : α →*o β :=
+def toOrderMonoidHom (f : α →*₀o β) : α →*o β :=
   { f with }
 
 @[simp]

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Mario Carneiro. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Mario Carneiro
+-/
 import Mathbin.Algebra.Order.AbsoluteValue
 import Mathbin.Algebra.BigOperators.Order
 
@@ -79,7 +84,8 @@ namespace IsCauSeq
 
 variable {α : Type _} [LinearOrderedField α] {β : Type _} [Ringₓ β] {abv : β → α} [IsAbsoluteValue abv] {f : ℕ → β}
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (j k «expr ≥ » i)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (j k «expr ≥ » i)
+-- see Note [nolint_ge]
 @[nolint ge_or_gt]
 theorem cauchy₂ (hf : IsCauSeq abv f) {ε : α} (ε0 : 0 < ε) : ∃ i, ∀ j k _ : j ≥ i _ : k ≥ i, abv (f j - f k) < ε := by
   refine' (hf _ (half_pos ε0)).imp fun i hi j ij k ik => _
@@ -125,13 +131,14 @@ theorem cauchy (f : CauSeq β abv) : ∀ {ε}, 0 < ε → ∃ i, ∀, ∀ j ≥ 
 
 /-- Given a Cauchy sequence `f`, create a Cauchy sequence from a sequence `g` with
 the same values as `f`. -/
-def of_eq (f : CauSeq β abv) (g : ℕ → β) (e : ∀ i, f i = g i) : CauSeq β abv :=
+def ofEq (f : CauSeq β abv) (g : ℕ → β) (e : ∀ i, f i = g i) : CauSeq β abv :=
   ⟨g, fun ε => by
     rw [show g = f from (funext e).symm] <;> exact f.cauchy⟩
 
 variable [IsAbsoluteValue abv]
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (j k «expr ≥ » i)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (j k «expr ≥ » i)
+-- see Note [nolint_ge]
 @[nolint ge_or_gt]
 theorem cauchy₂ (f : CauSeq β abv) {ε} : 0 < ε → ∃ i, ∀ j k _ : j ≥ i _ : k ≥ i, abv (f j - f k) < ε :=
   f.2.cauchy₂
@@ -264,9 +271,9 @@ theorem const_sub (x y : β) : const (x - y) = const x - const y :=
 
 instance : Ringₓ (CauSeq β abv) := by
   refine_struct
-      { neg := Neg.neg, add := · + ·, zero := (0 : CauSeq β abv), mul := · * ·, one := 1, sub := Sub.sub,
-        npow := @npowRec (CauSeq β abv) ⟨1⟩ ⟨· * ·⟩, nsmul := @nsmulRec (CauSeq β abv) ⟨0⟩ ⟨· + ·⟩,
-        zsmul := @zsmulRec (CauSeq β abv) ⟨0⟩ ⟨· + ·⟩ ⟨Neg.neg⟩ } <;>
+      { neg := Neg.neg, add := (· + ·), zero := (0 : CauSeq β abv), mul := (· * ·), one := 1, sub := Sub.sub,
+        npow := @npowRec (CauSeq β abv) ⟨1⟩ ⟨(· * ·)⟩, nsmul := @nsmulRec (CauSeq β abv) ⟨0⟩ ⟨(· + ·)⟩,
+        zsmul := @zsmulRec (CauSeq β abv) ⟨0⟩ ⟨(· + ·)⟩ ⟨Neg.neg⟩ } <;>
     intros <;>
       try
           rfl <;>
@@ -278,7 +285,7 @@ instance {β : Type _} [CommRingₓ β] {abv : β → α} [IsAbsoluteValue abv] 
       intros <;> apply ext <;> simp [mul_left_commₓ, mul_comm] }
 
 /-- `lim_zero f` holds when `f` approaches 0. -/
-def lim_zero {abv : β → α} (f : CauSeq β abv) : Prop :=
+def LimZero {abv : β → α} (f : CauSeq β abv) : Prop :=
   ∀, ∀ ε > 0, ∀, ∃ i, ∀, ∀ j ≥ i, ∀, abv (f j) < ε
 
 theorem add_lim_zero {f g : CauSeq β abv} (hf : LimZero f) (hg : LimZero g) : LimZero (f + g)
@@ -323,7 +330,7 @@ theorem const_lim_zero {x : β} : LimZero (const x) ↔ x = 0 :=
         le_of_ltₓ <| hi _ le_rfl,
     fun e => e.symm ▸ zero_lim_zero⟩
 
-instance Equivₓ : Setoidₓ (CauSeq β abv) :=
+instance equiv : Setoidₓ (CauSeq β abv) :=
   ⟨fun f g => LimZero (f - g),
     ⟨fun f => by
       simp [zero_lim_zero], fun f g h => by
@@ -557,11 +564,11 @@ theorem lt_of_lt_of_eq {f g h : CauSeq α abs} (fg : f < g) (gh : g ≈ h) : f <
 theorem lt_of_eq_of_lt {f g h : CauSeq α abs} (fg : f ≈ g) (gh : g < h) : f < h := by
   have := pos_add_lim_zero gh (neg_lim_zero fg) <;> rwa [← sub_eq_add_neg, sub_sub_sub_cancel_right] at this
 
-theorem lt_transₓ {f g h : CauSeq α abs} (fg : f < g) (gh : g < h) : f < h :=
+theorem lt_trans {f g h : CauSeq α abs} (fg : f < g) (gh : g < h) : f < h :=
   show Pos (h - f) by
     simpa [sub_eq_add_neg, add_commₓ, add_left_commₓ] using add_pos fg gh
 
-theorem lt_irreflₓ {f : CauSeq α abs} : ¬f < f
+theorem lt_irrefl {f : CauSeq α abs} : ¬f < f
   | h =>
     not_lim_zero_of_pos h
       (by
@@ -574,7 +581,7 @@ theorem le_of_le_of_eq {f g h : CauSeq α abs} (hfg : f ≤ g) (hgh : g ≈ h) :
   hfg.elim (fun h => Or.inl (CauSeq.lt_of_lt_of_eq h hgh)) fun h => Or.inr (Setoidₓ.trans h hgh)
 
 instance : Preorderₓ (CauSeq α abs) where
-  lt := · < ·
+  lt := (· < ·)
   le := fun f g => f < g ∨ f ≈ g
   le_refl := fun f => Or.inr (Setoidₓ.refl _)
   le_trans := fun f g h fg =>
@@ -587,7 +594,7 @@ instance : Preorderₓ (CauSeq α abs) where
     ⟨fun h => ⟨Or.inl h, not_orₓ (mt (lt_trans h) lt_irrefl) (not_lim_zero_of_pos h)⟩, fun ⟨h₁, h₂⟩ =>
       h₁.resolve_right (mt (fun h => Or.inr (Setoidₓ.symm h)) h₂)⟩
 
-theorem le_antisymmₓ {f g : CauSeq α abs} (fg : f ≤ g) (gf : g ≤ f) : f ≈ g :=
+theorem le_antisymm {f g : CauSeq α abs} (fg : f ≤ g) (gf : g ≤ f) : f ≈ g :=
   fg.resolve_left (not_lt_of_le gf)
 
 theorem lt_total (f g : CauSeq α abs) : f < g ∨ f ≈ g ∨ g < f :=
@@ -595,7 +602,7 @@ theorem lt_total (f g : CauSeq α abs) : f < g ∨ f ≈ g ∨ g < f :=
     h.imp (fun h => Setoidₓ.symm h) fun h => by
       rwa [neg_sub] at h
 
-theorem le_totalₓ (f g : CauSeq α abs) : f ≤ g ∨ g ≤ f :=
+theorem le_total (f g : CauSeq α abs) : f ≤ g ∨ g ≤ f :=
   (Or.assoc.2 (lt_total f g)).imp_right Or.inl
 
 theorem const_lt {x y : α} : const x < const y ↔ x < y :=

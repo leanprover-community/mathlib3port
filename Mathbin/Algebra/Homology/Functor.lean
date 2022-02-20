@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Johan Commelin. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johan Commelin
+-/
 import Mathbin.Algebra.Homology.HomologicalComplex
 
 /-!
@@ -26,7 +31,7 @@ variable {ι : Type _} {c : ComplexShape ι}
 
 /-- A complex of functors gives a functor to complexes. -/
 @[simps obj map]
-def as_functor {T : Type _} [Category T] (C : HomologicalComplex (T ⥤ V) c) : T ⥤ HomologicalComplex V c where
+def asFunctor {T : Type _} [Category T] (C : HomologicalComplex (T ⥤ V) c) : T ⥤ HomologicalComplex V c where
   obj := fun t =>
     { x := fun i => (C.x i).obj t, d := fun i j => (C.d i j).app t,
       d_comp_d' := fun i j k hij hjk => by
@@ -48,8 +53,9 @@ def as_functor {T : Type _} [Category T] (C : HomologicalComplex (T ⥤ V) c) : 
     rw [functor.map_comp]
 
 /-- The functorial version of `homological_complex.as_functor`. -/
+-- TODO in fact, this is an equivalence of categories.
 @[simps]
-def complex_of_functors_to_functor_to_complex {T : Type _} [Category T] :
+def complexOfFunctorsToFunctorToComplex {T : Type _} [Category T] :
     HomologicalComplex (T ⥤ V) c ⥤ T ⥤ HomologicalComplex V c where
   obj := fun C => C.asFunctor
   map := fun C D f =>

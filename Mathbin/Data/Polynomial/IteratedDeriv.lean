@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Jujian Zhang. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Jujian Zhang
+-/
 import Mathbin.Data.Nat.Interval
 import Mathbin.Data.Polynomial.Derivative
 import Mathbin.Tactic.Linarith.Default
@@ -25,7 +30,7 @@ section Semiringₓ
 variable [Semiringₓ R] (r : R) (f p q : R[X]) (n k : ℕ)
 
 /-- `iterated_deriv f n` is the `n`-th formal derivative of the polynomial `f` -/
-def iterated_deriv : R[X] :=
+def iteratedDeriv : R[X] :=
   (derivative^[n]) f
 
 @[simp]

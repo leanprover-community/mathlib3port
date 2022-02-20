@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Ashvni Narayanan. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Ashvni Narayanan
+-/
 import Mathbin.Data.Polynomial.AlgebraMap
 import Mathbin.Data.Nat.Choose.Cast
 import Mathbin.NumberTheory.Bernoulli
@@ -55,6 +60,9 @@ theorem bernoulli_def (n : ℕ) :
   rw [mem_range_succ_iff] at hx
   rw [choose_symm hx, tsub_tsub_cancel_of_le hx]
 
+/-
+### examples
+-/
 section Examples
 
 @[simp]
@@ -117,16 +125,24 @@ open PowerSeries
 variable {A : Type _} [CommRingₓ A] [Algebra ℚ A]
 
 /-- The theorem that `∑ Bₙ(t)X^n/n!)(e^X-1)=Xe^{tX}`  -/
+-- TODO: define exponential generating functions, and use them here
+-- This name should probably be updated afterwards
 theorem bernoulli_generating_function (t : A) :
     (mk fun n => aeval t ((1 / n ! : ℚ) • bernoulli n)) * (exp A - 1) = PowerSeries.x * rescale t (exp A) := by
+  -- check equality of power series by checking coefficients of X^n
   ext n
+  -- n = 0 case solved by `simp`
   cases n
   · simp
     
+  -- n ≥ 1, the coefficients is a sum to n+2, so use `sum_range_succ` to write as
+  -- last term plus sum to n+1
   rw [coeff_succ_X_mul, coeff_rescale, coeff_exp, PowerSeries.coeff_mul, nat.sum_antidiagonal_eq_sum_range_succ_mk,
     sum_range_succ]
+  -- last term is zero so kill with `add_zero`
   simp only [RingHom.map_sub, tsub_self, constant_coeff_one, constant_coeff_exp, coeff_zero_eq_constant_coeff, mul_zero,
     sub_self, add_zeroₓ]
+  -- Let's multiply both sides by (n+1)! (OK because it's a unit)
   set u : Units ℚ :=
     ⟨(n + 1)!, (n + 1)!⁻¹,
       mul_inv_cancel
@@ -137,17 +153,25 @@ theorem bernoulli_generating_function (t : A) :
           exact_mod_cast factorial_ne_zero (n + 1))⟩ with
     hu
   rw [← Units.mul_right_inj (Units.map (algebraMap ℚ A).toMonoidHom u)]
+  -- now tidy up unit mess and generally do trivial rearrangements
+  -- to make RHS (n+1)*t^n
   rw [Units.coe_map, mul_left_commₓ, RingHom.to_monoid_hom_eq_coe, RingHom.coe_monoid_hom, ← RingHom.map_mul, hu,
     Units.coe_mk]
   change _ = t ^ n * algebraMap ℚ A (((n + 1) * n ! : ℕ) * (1 / n !))
   rw [cast_mul, mul_assoc, mul_one_div_cancel (show (n ! : ℚ) ≠ 0 from cast_ne_zero.2 (factorial_ne_zero n)), mul_oneₓ,
     mul_comm (t ^ n), ← Polynomial.aeval_monomial, cast_add, cast_one]
+  -- But this is the RHS of `sum_bernoulli_poly`
   rw [← sum_bernoulli, Finset.mul_sum, AlgHom.map_sum]
+  -- and now we have to prove a sum is a sum, but all the terms are equal.
   apply Finset.sum_congr rfl
+  -- The rest is just trivialities, hampered by the fact that we're coercing
+  -- factorials and binomial coefficients between ℕ and ℚ and A.
   intro i hi
+  -- deal with coefficients of e^X-1
   simp only [Nat.cast_choose ℚ (mem_range_le hi), coeff_mk, if_neg (mem_range_sub_ne_zero hi), one_div, AlgHom.map_smul,
     PowerSeries.coeff_one, Units.coe_mk, coeff_exp, sub_zero, LinearMap.map_sub, Algebra.smul_mul_assoc,
     Algebra.smul_def, mul_right_commₓ _ ((aeval t) _), ← mul_assoc, ← RingHom.map_mul, succ_eq_add_one]
+  -- finally cancel the Bernoulli polynomial and the algebra_map
   congr
   apply congr_argₓ
   rw [mul_assoc, div_eq_mul_inv, ← mul_inv₀]

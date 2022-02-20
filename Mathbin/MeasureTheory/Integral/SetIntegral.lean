@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Zhouhang Zhou. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Zhouhang Zhou, Yury Kudryashov
+-/
 import Mathbin.MeasureTheory.Integral.IntegrableOn
 import Mathbin.MeasureTheory.Integral.Bochner
 import Mathbin.Order.Filter.IndicatorFunction
@@ -267,12 +272,12 @@ theorem _root_.closed_embedding.set_integral_map [TopologicalSpace α] [BorelSpa
     (∫ y in s, f y ∂Measure.map g μ) = ∫ x in g ⁻¹' s, f (g x) ∂μ :=
   hg.MeasurableEmbedding.set_integral_map _ _
 
-theorem measure_preserving.set_integral_preimage_emb {β} {_ : MeasurableSpace β} {f : α → β} {ν}
+theorem MeasurePreserving.set_integral_preimage_emb {β} {_ : MeasurableSpace β} {f : α → β} {ν}
     (h₁ : MeasurePreserving f μ ν) (h₂ : MeasurableEmbedding f) (g : β → E) (s : Set β) :
     (∫ x in f ⁻¹' s, g (f x) ∂μ) = ∫ y in s, g y ∂ν :=
   (h₁.restrict_preimage_emb h₂ s).integral_comp h₂ _
 
-theorem measure_preserving.set_integral_image_emb {β} {_ : MeasurableSpace β} {f : α → β} {ν}
+theorem MeasurePreserving.set_integral_image_emb {β} {_ : MeasurableSpace β} {f : α → β} {ν}
     (h₁ : MeasurePreserving f μ ν) (h₂ : MeasurableEmbedding f) (g : β → E) (s : Set α) :
     (∫ y in f '' s, g y ∂ν) = ∫ x in s, g (f x) ∂μ :=
   Eq.symm <| (h₁.restrict_image_emb h₂ s).integral_comp h₂ _
@@ -362,6 +367,7 @@ theorem set_integral_mono_on (hs : MeasurableSet s) (h : ∀, ∀ x ∈ s, ∀, 
 
 include hf hg
 
+-- why do I need this include, but we don't need it in other lemmas?
 theorem set_integral_mono_on_ae (hs : MeasurableSet s) (h : ∀ᵐ x ∂μ, x ∈ s → f x ≤ g x) :
     (∫ a in s, f a ∂μ) ≤ ∫ a in s, g a ∂μ := by
   refine' set_integral_mono_ae_restrict hf hg _
@@ -429,7 +435,7 @@ section TendstoMono
 variable {μ : Measure α} [MeasurableSpace E] [NormedGroup E] [BorelSpace E] [CompleteSpace E] [NormedSpace ℝ E]
   [SecondCountableTopology E] {s : ℕ → Set α} {f : α → E}
 
--- ././Mathport/Syntax/Translate/Basic.lean:417:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:181:22: unsupported: parse error
+-- ././Mathport/Syntax/Translate/Basic.lean:536:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:224:22: unsupported: parse error
 theorem _root_.antitone.tendsto_set_integral (hsm : ∀ i, MeasurableSet (s i)) (h_anti : Antitone s)
     (hfi : IntegrableOn f (s 0) μ) : Tendsto (fun i => ∫ a in s i, f a ∂μ) atTop (𝓝 (∫ a in ⋂ n, s n, f a ∂μ)) := by
   let bound : α → ℝ := indicator (s 0) fun a => ∥f a∥
@@ -449,7 +455,7 @@ theorem _root_.antitone.tendsto_set_integral (hsm : ∀ i, MeasurableSet (s i)) 
     refine' fun n => eventually_of_forall fun x => _
     exact indicator_le_indicator_of_subset (h_anti (zero_le n)) (fun a => norm_nonneg _) _
     
-  · "././Mathport/Syntax/Translate/Basic.lean:417:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:181:22: unsupported: parse error"
+  · "././Mathport/Syntax/Translate/Basic.lean:536:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:224:22: unsupported: parse error"
     
 
 end TendstoMono
@@ -503,7 +509,7 @@ variable (α F 𝕜)
 
 /-- Continuous linear map sending a function of `Lp F p μ` to the same function in
 `Lp F p (μ.restrict s)`. -/
-def Lp_to_Lp_restrict_clm (μ : Measure α) (p : ℝ≥0∞) [hp : Fact (1 ≤ p)] (s : Set α) :
+def lpToLpRestrictClm (μ : Measure α) (p : ℝ≥0∞) [hp : Fact (1 ≤ p)] (s : Set α) :
     lp F p μ →L[𝕜] lp F p (μ.restrict s) :=
   @LinearMap.mkContinuous 𝕜 𝕜 (lp F p μ) (lp F p (μ.restrict s)) _ _ _ _ _ _ (RingHom.id 𝕜)
     ⟨fun f => Memℒp.toLp f ((lp.mem_ℒp f).restrict s), fun f g => Lp_to_Lp_restrict_add f g s, fun c f =>

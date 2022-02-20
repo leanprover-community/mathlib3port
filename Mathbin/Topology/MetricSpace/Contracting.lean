@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Rohan Mitta. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Rohan Mitta, Kevin Buzzard, Alistair Tucker, Johannes Hölzl, Yury Kudryashov
+-/
 import Mathbin.Analysis.SpecificLimits
 import Mathbin.Data.Setoid.Basic
 import Mathbin.Dynamics.FixedPoints.Topology
@@ -103,7 +108,8 @@ variable (f)
 /-- Let `x` be a point of a complete emetric space. Suppose that `f` is a contracting map,
 and `edist x (f x) ≠ ∞`. Then `efixed_point` is the unique fixed point of `f`
 in `emetric.ball x ∞`. -/
-noncomputable def efixed_point (hf : ContractingWith K f) (x : α) (hx : edist x (f x) ≠ ∞) : α :=
+-- avoid `efixed_point _` in pretty printer
+noncomputable def efixedPoint (hf : ContractingWith K f) (x : α) (hx : edist x (f x) ≠ ∞) : α :=
   Classical.some <| hf.exists_fixed_point x hx
 
 variable {f}
@@ -156,7 +162,7 @@ theorem exists_fixed_point' {s : Set α} (hsc : IsComplete s) (hsf : MapsTo f s 
   refine' ⟨y, y.2, Subtype.ext_iff_val.1 hfy, _, fun n => _⟩
   · convert (continuous_subtype_coe.tendsto _).comp h_tendsto
     ext n
-    simp only [· ∘ ·, maps_to.iterate_restrict, maps_to.coe_restrict_apply, Subtype.coe_mk]
+    simp only [(· ∘ ·), maps_to.iterate_restrict, maps_to.coe_restrict_apply, Subtype.coe_mk]
     
   · convert hle n
     rw [maps_to.iterate_restrict, eq_comm, maps_to.coe_restrict_apply, Subtype.coe_mk]
@@ -167,7 +173,8 @@ variable (f)
 /-- Let `s` be a complete forward-invariant set of a self-map `f`. If `f` contracts on `s`
 and `x ∈ s` satisfies `edist x (f x) ≠ ∞`, then `efixed_point'` is the unique fixed point
 of the restriction of `f` to `s ∩ emetric.ball x ∞`. -/
-noncomputable def efixed_point' {s : Set α} (hsc : IsComplete s) (hsf : MapsTo f s s)
+-- avoid `efixed_point _` in pretty printer
+noncomputable def efixedPoint' {s : Set α} (hsc : IsComplete s) (hsf : MapsTo f s s)
     (hf : ContractingWith K <| hsf.restrict f s s) (x : α) (hxs : x ∈ s) (hx : edist x (f x) ≠ ∞) : α :=
   Classical.some <| hf.exists_fixed_point' hsc hsf hxs hx
 
@@ -275,7 +282,7 @@ variable [Nonempty α] [CompleteSpace α]
 variable (f)
 
 /-- The unique fixed point of a contracting map in a nonempty complete metric space. -/
-def fixed_point : α :=
+def fixedPoint : α :=
   efixedPoint f hf _ (edist_ne_top (Classical.choice ‹Nonempty α›) _)
 
 variable {f}

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Yakov Pechersky. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yakov Pechersky
+-/
 import Mathbin.GroupTheory.Perm.List
 import Mathbin.Data.List.Cycle
 import Mathbin.GroupTheory.Perm.CycleType
@@ -129,8 +134,8 @@ variable {α : Type _} [DecidableEq α] (s s' : Cycle α)
 /-- A cycle `s : cycle α` , given `nodup s` can be interpreted as a `equiv.perm α`
 where each element in the list is permuted to the next one, defined as `form_perm`.
 -/
-def form_perm : ∀ s : Cycle α h : Nodup s, Equivₓ.Perm α := fun s =>
-  Quot.hrecOnₓ s (fun l h => formPerm l) fun l₁ l₂ h : l₁ ~r l₂ => by
+def formPerm : ∀ s : Cycle α h : Nodup s, Equivₓ.Perm α := fun s =>
+  Quot.hrecOnₓ s (fun l h => formPerm l) fun h : l₁ ~r l₂ => by
     ext
     · exact h.nodup_iff
       
@@ -198,7 +203,7 @@ variable [Fintype α] [DecidableEq α] (p : Equivₓ.Perm α) (x : α)
 /-- `equiv.perm.to_list (f : perm α) (x : α)` generates the list `[x, f x, f (f x), ...]`
 until looping. That means when `f x = x`, `to_list f x = []`.
 -/
-def to_list : List α :=
+def toList : List α :=
   (List.range (cycleOf p x).support.card).map fun k => (p ^ k) x
 
 @[simp]
@@ -303,7 +308,7 @@ theorem to_list_pow_apply_eq_rotate (p : Perm α) (x : α) (k : ℕ) : p.toList 
       pow_addₓ, mul_apply]
     
 
-theorem same_cycle.to_list_is_rotated {f : Perm α} {x y : α} (h : SameCycle f x y) : toList f x ~r toList f y := by
+theorem SameCycle.to_list_is_rotated {f : Perm α} {x y : α} (h : SameCycle f x y) : toList f x ~r toList f y := by
   by_cases' hx : x ∈ f.support
   · obtain ⟨_ | k, hk, hy⟩ := h.nat_of_mem_support _ hx
     · simp only [coe_one, id.def, pow_zeroₓ] at hy
@@ -376,7 +381,7 @@ theorem form_perm_to_list (f : Perm α) (x : α) : formPerm (toList f x) = f.cyc
     simp [mem_to_list_iff, hy]
     
 
-theorem is_cycle.exists_unique_cycle {f : Perm α} (hf : IsCycle f) : ∃! s : Cycle α, ∃ h : s.Nodup, s.formPerm h = f :=
+theorem IsCycle.exists_unique_cycle {f : Perm α} (hf : IsCycle f) : ∃! s : Cycle α, ∃ h : s.Nodup, s.formPerm h = f :=
   by
   obtain ⟨x, hx, hy⟩ := id hf
   refine' ⟨f.to_list x, ⟨nodup_to_list f x, _⟩, _⟩
@@ -397,14 +402,14 @@ theorem is_cycle.exists_unique_cycle {f : Perm α} (hf : IsCycle f) : ∃! s : C
       
     
 
-theorem is_cycle.exists_unique_cycle_subtype {f : Perm α} (hf : IsCycle f) :
+theorem IsCycle.exists_unique_cycle_subtype {f : Perm α} (hf : IsCycle f) :
     ∃! s : { s : Cycle α // s.Nodup }, (s : Cycle α).formPerm s.Prop = f := by
   obtain ⟨s, ⟨hs, rfl⟩, hs'⟩ := hf.exists_unique_cycle
   refine' ⟨⟨s, hs⟩, rfl, _⟩
   rintro ⟨t, ht⟩ ht'
   simpa using hs' _ ⟨ht, ht'⟩
 
-theorem is_cycle.exists_unique_cycle_nontrivial_subtype {f : Perm α} (hf : IsCycle f) :
+theorem IsCycle.exists_unique_cycle_nontrivial_subtype {f : Perm α} (hf : IsCycle f) :
     ∃! s : { s : Cycle α // s.Nodup ∧ s.Nontrivial }, (s : Cycle α).formPerm s.Prop.left = f := by
   obtain ⟨⟨s, hn⟩, hs, hs'⟩ := hf.exists_unique_cycle_subtype
   refine' ⟨⟨s, hn, _⟩, _, _⟩
@@ -425,7 +430,7 @@ of application of `f`. Implemented by finding an element `x : α`
 in the support of `f` in `finset.univ`, and iterating on using
 `equiv.perm.to_list f x`.
 -/
-def to_cycle (f : Perm α) (hf : IsCycle f) : Cycle α :=
+def toCycle (f : Perm α) (hf : IsCycle f) : Cycle α :=
   Multiset.recOn (Finset.univ : Finset α).val (Quot.mk _ []) (fun x s l => if f x = x then l else toList f x)
     (by
       intro x y m s
@@ -455,7 +460,7 @@ theorem nontrivial_to_cycle (f : Perm α) (hf : IsCycle f) : (toCycle f hf).Nont
 that corresponds to repeated application of `f`.
 The forward direction is implemented by `equiv.perm.to_cycle`.
 -/
-def iso_cycle : { f : Perm α // IsCycle f } ≃ { s : Cycle α // s.Nodup ∧ s.Nontrivial } where
+def isoCycle : { f : Perm α // IsCycle f } ≃ { s : Cycle α // s.Nodup ∧ s.Nontrivial } where
   toFun := fun f => ⟨toCycle (f : Perm α) f.Prop, nodup_to_cycle f f.Prop, nontrivial_to_cycle _ f.Prop⟩
   invFun := fun s => ⟨(s : Cycle α).formPerm s.Prop.left, (s : Cycle α).is_cycle_form_perm _ s.Prop.right⟩
   left_inv := fun f => by
@@ -483,7 +488,7 @@ def iso_cycle : { f : Perm α // IsCycle f } ≃ { s : Cycle α // s.Nodup ∧ s
 that corresponds to repeated application of `f`.
 The forward direction is implemented by finding this `cycle α` using `fintype.choose`.
 -/
-def iso_cycle' : { f : Perm α // IsCycle f } ≃ { s : Cycle α // s.Nodup ∧ s.Nontrivial } where
+def isoCycle' : { f : Perm α // IsCycle f } ≃ { s : Cycle α // s.Nodup ∧ s.Nontrivial } where
   toFun := fun f => Fintype.choose _ f.Prop.exists_unique_cycle_nontrivial_subtype
   invFun := fun s => ⟨(s : Cycle α).formPerm s.Prop.left, (s : Cycle α).is_cycle_form_perm _ s.Prop.right⟩
   left_inv := fun f => by
@@ -494,18 +499,21 @@ def iso_cycle' : { f : Perm α // IsCycle f } ≃ { s : Cycle α // s.Nodup ∧ 
     ext ⟨s', hs', ht'⟩
     simp [Cycle.form_perm_eq_form_perm_iff, iff_not_comm.mp hs.nontrivial_iff, iff_not_comm.mp hs'.nontrivial_iff, ht]
 
--- ././Mathport/Syntax/Translate/Basic.lean:1257:9: unsupported: advanced notation (l:(foldr `, ` (h t, list.cons h t) list.nil `]`))
+-- ././Mathport/Syntax/Translate/Basic.lean:1379:9: unsupported: advanced notation (l:(foldr `, ` (h t, list.cons h t) list.nil `]`))
 notation3 "c["  =>
   Cycle.formPerm (↑l)
     (Cycle.nodup_coe_iff.mpr
       (by
         decide))
 
-instance repr_perm [HasRepr α] : HasRepr (Perm α) :=
+instance reprPerm [HasRepr α] : HasRepr (Perm α) :=
   ⟨fun f =>
     reprₓ
-      (Multiset.pmap (fun g : Perm α hg : g.IsCycle => isoCycle ⟨g, hg⟩) (Perm.cycleFactorsFinset f).val fun g hg =>
-        (mem_cycle_factors_finset_iff.mp (Finset.mem_def.mpr hg)).left)⟩
+      (Multiset.pmap (fun hg : g.IsCycle => isoCycle ⟨g, hg⟩)
+        (-- to_cycle is faster?
+            Perm.cycleFactorsFinset
+            f).val
+        fun g hg => (mem_cycle_factors_finset_iff.mp (Finset.mem_def.mpr hg)).left)⟩
 
 end Equivₓ.Perm
 

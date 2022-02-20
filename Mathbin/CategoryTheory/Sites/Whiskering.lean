@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Adam Topaz. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Adam Topaz
+-/
 import Mathbin.CategoryTheory.Sites.Sheaf
 
 /-!
@@ -45,7 +50,7 @@ variable (P : Cᵒᵖ ⥤ A) {X : C} (S : J.cover X)
 /-- The multicospan associated to a cover `S : J.cover X` and a presheaf of the form `P ⋙ F`
 is isomorphic to the composition of the multicospan associated to `S` and `P`,
 composed with `F`. -/
-def multicospan_comp : (S.index (P ⋙ F)).multicospan ≅ (S.index P).multicospan ⋙ F :=
+def multicospanComp : (S.index (P ⋙ F)).multicospan ≅ (S.index P).multicospan ⋙ F :=
   NatIso.ofComponents
     (fun t =>
       match t with
@@ -87,7 +92,7 @@ theorem multicospan_comp_hom_inv_right (P : Cᵒᵖ ⥤ A) {X : C} (S : J.cover 
 /-- Mapping the multifork associated to a cover `S : J.cover X` and a presheaf `P` with
 respect to a functor `F` is isomorphic (upto a natural isomorphism of the underlying functors)
 to the multifork associated to `S` and `P ⋙ F`. -/
-def map_multifork :
+def mapMultifork :
     F.mapCone (S.Multifork P) ≅ (Limits.Cones.postcompose (S.multicospanComp F P).Hom).obj (S.Multifork (P ⋙ F)) :=
   Cones.ext (eqToIso rfl)
     (by
@@ -105,7 +110,7 @@ end GrothendieckTopology.Cover
 
 variable [∀ X : C S : J.cover X P : Cᵒᵖ ⥤ A, PreservesLimit (S.index P).multicospan F]
 
-theorem presheaf.is_sheaf.comp {P : Cᵒᵖ ⥤ A} (hP : Presheaf.IsSheaf J P) : Presheaf.IsSheaf J (P ⋙ F) := by
+theorem Presheaf.IsSheaf.comp {P : Cᵒᵖ ⥤ A} (hP : Presheaf.IsSheaf J P) : Presheaf.IsSheaf J (P ⋙ F) := by
   rw [presheaf.is_sheaf_iff_multifork] at hP⊢
   intro X S
   obtain ⟨h⟩ := hP X S
@@ -118,7 +123,7 @@ variable (J)
 /-- Composing a sheaf with a functor preserving the appropriate limits yields a functor
 between sheaf categories. -/
 @[simps]
-def Sheaf_compose : Sheaf J A ⥤ Sheaf J B where
+def sheafCompose : Sheaf J A ⥤ Sheaf J B where
   obj := fun G => ⟨G.val ⋙ F, Presheaf.IsSheaf.comp _ G.2⟩
   map := fun G H η => ⟨whiskerRight η.val _⟩
   map_id' := fun G => Sheaf.Hom.ext _ _ <| whisker_right_id _

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2017 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Stephen Morgan, Scott Morrison, Johannes Hölzl
+-/
 import Mathbin.CategoryTheory.EpiMono
 import Mathbin.CategoryTheory.FullyFaithful
 import Mathbin.Data.Equiv.Basic
@@ -28,8 +33,11 @@ We prove some basic facts about the category `Type`:
 
 namespace CategoryTheory
 
+-- morphism levels before object levels. See note [category_theory universes].
 universe v v' w u u'
 
+/- The `@[to_additive]` attribute is just a hint that expressions involving this instance can
+  still be additivized. -/
 @[to_additive CategoryTheory.types]
 instance types : LargeCategory (Type u) where
   Hom := fun a b => a → b
@@ -62,13 +70,17 @@ theorem inv_hom_id_apply {X Y : Type u} (f : X ≅ Y) (y : Y) : f.Hom (f.inv y) 
   congr_funₓ f.inv_hom_id y
 
 /-- `as_hom f` helps Lean type check a function as a morphism in the category `Type`. -/
-abbrev as_hom {α β : Type u} (f : α → β) : α ⟶ β :=
+-- Unfortunately without this wrapper we can't use `category_theory` idioms, such as `is_iso f`.
+abbrev asHom {α β : Type u} (f : α → β) : α ⟶ β :=
   f
 
+-- If you don't mind some notation you can use fewer keystrokes:
 localized [CategoryTheory.Type] notation "↾" f:200 => CategoryTheory.asHom f
 
+-- type as \upr in VScode
 section
 
+-- We verify the expected type checking behaviour of `as_hom`.
 variable (α β γ : Type u) (f : α → β) (g : β → γ)
 
 example : α → γ :=
@@ -92,7 +104,7 @@ such that `F.map f (u j) = u j` for every morphism `f : j ⟶ j'`.
 
 We later use these to define limits in `Type` and in many concrete categories.
 -/
-def sections (F : J ⥤ Type w) : Set (∀ j, F.obj j) :=
+def Sections (F : J ⥤ Type w) : Set (∀ j, F.obj j) :=
   { u | ∀ {j j'} f : j ⟶ j', F.map f (u j) = u j' }
 
 end Functor
@@ -145,13 +157,13 @@ end FunctorToTypes
 /-- The isomorphism between a `Type` which has been `ulift`ed to the same universe,
 and the original type.
 -/
-def ulift_trivial (V : Type u) : Ulift.{u} V ≅ V := by
+def uliftTrivial (V : Type u) : Ulift.{u} V ≅ V := by
   tidy
 
 /-- The functor embedding `Type u` into `Type (max u v)`.
 Write this as `ulift_functor.{5 2}` to get `Type 2 ⥤ Type 5`.
 -/
-def ulift_functor : Type u ⥤ Type max u v where
+def uliftFunctor : Type u ⥤ Type max u v where
   obj := fun X => Ulift.{v} X
   map := fun X Y f => fun x : Ulift.{v} X => Ulift.up (f x.down)
 
@@ -159,7 +171,7 @@ def ulift_functor : Type u ⥤ Type max u v where
 theorem ulift_functor_map {X Y : Type u} (f : X ⟶ Y) (x : Ulift.{v} X) : uliftFunctor.map f x = Ulift.up (f x.down) :=
   rfl
 
-instance ulift_functor_full : Full.{u} uliftFunctor where
+instance uliftFunctorFull : Full.{u} uliftFunctor where
   Preimage := fun X Y f x => (f (Ulift.up x)).down
 
 instance ulift_functor_faithful : Faithful uliftFunctor where
@@ -168,13 +180,15 @@ instance ulift_functor_faithful : Faithful uliftFunctor where
 
 /-- The functor embedding `Type u` into `Type u` via `ulift` is isomorphic to the identity functor.
  -/
-def ulift_functor_trivial : ulift_functor.{u, u} ≅ 𝟭 _ :=
+def uliftFunctorTrivial : ulift_functor.{u, u} ≅ 𝟭 _ :=
   NatIso.ofComponents uliftTrivial
     (by
       tidy)
 
 /-- Any term `x` of a type `X` corresponds to a morphism `punit ⟶ X`. -/
-def hom_of_element {X : Type u} (x : X) : PUnit ⟶ X := fun _ => x
+-- TODO We should connect this to a general story about concrete categories
+-- whose forgetful functor is representable.
+def homOfElement {X : Type u} (x : X) : PUnit ⟶ X := fun _ => x
 
 theorem hom_of_element_eq_iff {X : Type u} (x y : X) : homOfElement x = homOfElement y ↔ x = y :=
   ⟨fun H => congr_funₓ H PUnit.unit, by
@@ -220,7 +234,7 @@ section
 
 /-- `of_type_functor m` converts from Lean's `Type`-based `category` to `category_theory`. This
 allows us to use these functors in category theory. -/
-def of_type_functor (m : Type u → Type v) [Functor m] [IsLawfulFunctor m] : Type u ⥤ Type v where
+def ofTypeFunctor (m : Type u → Type v) [Functor m] [IsLawfulFunctor m] : Type u ⥤ Type v where
   obj := m
   map := fun α β => Functor.map
   map_id' := fun α => Functor.map_id
@@ -240,6 +254,7 @@ end
 
 end CategoryTheory
 
+-- Isomorphisms in Type and equivalences.
 namespace Equivₓ
 
 universe u
@@ -249,7 +264,7 @@ variable {X Y : Type u}
 /-- Any equivalence between types in the same universe gives
 a categorical isomorphism between those types.
 -/
-def to_iso (e : X ≃ Y) : X ≅ Y where
+def toIso (e : X ≃ Y) : X ≅ Y where
   Hom := e.toFun
   inv := e.invFun
   hom_inv_id' := funext e.left_inv
@@ -275,7 +290,7 @@ variable {X Y : Type u}
 
 /-- Any isomorphism between types gives an equivalence.
 -/
-def to_equiv (i : X ≅ Y) : X ≃ Y where
+def toEquiv (i : X ≅ Y) : X ≃ Y where
   toFun := i.Hom
   invFun := i.inv
   left_inv := fun x => congr_funₓ i.hom_inv_id x
@@ -314,6 +329,8 @@ end CategoryTheory
 
 /-- Equivalences (between types in the same universe) are the same as (isomorphic to) isomorphisms
 of types. -/
+-- We prove `equiv_iso_iso` and then use that to sneakily construct `equiv_equiv_iso`.
+-- (In this order the proofs are handled by `obviously`.)
 @[simps]
 def equivIsoIso {X Y : Type u} : X ≃ Y ≅ X ≅ Y where
   Hom := fun e => e.toIso

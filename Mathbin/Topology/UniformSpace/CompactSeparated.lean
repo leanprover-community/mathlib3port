@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Patrick Massot. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Patrick Massot
+-/
 import Mathbin.Topology.UniformSpace.Separation
 import Mathbin.Topology.UniformSpace.UniformConvergence
 
@@ -74,9 +79,9 @@ theorem unique_uniformity_of_compact_t2 [t : TopologicalSpace γ] [CompactSpace 
     rwa [separated_iff_t2, h']
   rw [compact_space_uniformity, compact_space_uniformity, h, h']
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (U₁ V₁ «expr ∈ » expr𝓝() x)
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (U₂ V₂ «expr ∈ » expr𝓝() y)
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (y «expr ≠ » x)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (U₁ V₁ «expr ∈ » expr𝓝() x)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (U₂ V₂ «expr ∈ » expr𝓝() y)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (y «expr ≠ » x)
 /-- The unique uniform structure inducing a given compact Hausdorff topological structure. -/
 def uniformSpaceOfCompactT2 [TopologicalSpace γ] [CompactSpace γ] [T2Space γ] : UniformSpace γ where
   uniformity := ⨆ x, 𝓝 (x, x)
@@ -90,13 +95,23 @@ def uniformSpaceOfCompactT2 [TopologicalSpace γ] [CompactSpace γ] [T2Space γ]
     congr with x : 1
     erw [nhds_prod_eq, ← prod_comm]
   comp := by
+    /-
+        This is the difficult part of the proof. We need to prove that, for each neighborhood W
+        of the diagonal Δ, W ○ W is still a neighborhood of the diagonal.
+        -/
     set 𝓝Δ := ⨆ x : γ, 𝓝 (x, x)
+    -- The filter of neighborhoods of Δ
     set F := 𝓝Δ.lift' fun s : Set (γ × γ) => s ○ s
+    -- Compositions of neighborhoods of Δ
+    -- If this weren't true, then there would be V ∈ 𝓝Δ such that F ⊓ 𝓟 Vᶜ ≠ ⊥
     rw [le_iff_forall_inf_principal_compl]
     intro V V_in
     by_contra H
     have : ne_bot (F⊓𝓟 (Vᶜ)) := ⟨H⟩
+    -- Hence compactness would give us a cluster point (x, y) for F ⊓ 𝓟 Vᶜ
     obtain ⟨⟨x, y⟩, hxy⟩ : ∃ p : γ × γ, ClusterPt p (F⊓𝓟 (Vᶜ)) := cluster_point_of_compact _
+    -- In particular (x, y) is a cluster point of 𝓟 Vᶜ, hence is not in the interior of V,
+    -- and a fortiori not in Δ, so x ≠ y
     have clV : ClusterPt (x, y) (𝓟 <| Vᶜ) := hxy.of_inf_right
     have : (x, y) ∉ Interior V := by
       have : (x, y) ∈ Closure (Vᶜ) := by
@@ -111,11 +126,16 @@ def uniformSpaceOfCompactT2 [TopologicalSpace γ] [CompactSpace γ] [T2Space γ]
       apply this
       apply diag_subset
       simp [h]
+    -- Since γ is compact and Hausdorff, it is normal, hence regular.
     have : NormalSpace γ := normal_of_compact_t2
+    -- So there are closed neighboords V₁ and V₂ of x and y contained in disjoint open neighborhoods
+    -- U₁ and U₂.
     obtain ⟨U₁, U₁_in, V₁, V₁_in, U₂, U₂_in₂, V₂, V₂_in, V₁_cl, V₂_cl, U₁_op, U₂_op, VU₁, VU₂, hU₁₂⟩ :
       ∃ (U₁ V₁ : _)(_ : U₁ ∈ 𝓝 x)(_ : V₁ ∈ 𝓝 x)(U₂ V₂ : _)(_ : U₂ ∈ 𝓝 y)(_ : V₂ ∈ 𝓝 y),
         IsClosed V₁ ∧ IsClosed V₂ ∧ IsOpen U₁ ∧ IsOpen U₂ ∧ V₁ ⊆ U₁ ∧ V₂ ⊆ U₂ ∧ U₁ ∩ U₂ = ∅ :=
       disjoint_nested_nhds x_ne_y
+    -- We set U₃ := (V₁ ∪ V₂)ᶜ so that W := U₁ ×ˢ U₁ ∪ U₂ ×ˢ U₂ ∪ U₃ ×ˢ U₃ is an open
+    -- neighborhood of Δ.
     let U₃ := (V₁ ∪ V₂)ᶜ
     have U₃_op : IsOpen U₃ := is_open_compl_iff.mpr (IsClosed.union V₁_cl V₂_cl)
     let W := U₁ ×ˢ U₁ ∪ U₂ ×ˢ U₂ ∪ U₃ ×ˢ U₃
@@ -134,11 +154,20 @@ def uniformSpaceOfCompactT2 [TopologicalSpace γ] [CompactSpace γ] [T2Space γ]
         
       all_goals
         simp only [IsOpen.prod, *]
+    -- So W ○ W ∈ F by definition of F
     have : W ○ W ∈ F := by
       simpa only using mem_lift' W_in
+    -- And V₁ ×ˢ V₂ ∈ 𝓝 (x, y)
     have hV₁₂ : V₁ ×ˢ V₂ ∈ 𝓝 (x, y) := ProdIsOpen.mem_nhds V₁_in V₂_in
+    -- But (x, y) is also a cluster point of F so (V₁ ×ˢ V₂) ∩ (W ○ W) ≠ ∅
     have clF : ClusterPt (x, y) F := hxy.of_inf_left
     obtain ⟨p, p_in⟩ : ∃ p, p ∈ V₁ ×ˢ V₂ ∩ (W ○ W) := cluster_pt_iff.mp clF hV₁₂ this
+    -- However the construction of W implies (V₁ ×ˢ V₂) ∩ (W ○ W) = ∅.
+    -- Indeed assume for contradiction there is some (u, v) in the intersection.
+    -- So u ∈ V₁, v ∈ V₂, and there exists some w such that (u, w) ∈ W and (w ,v) ∈ W.
+    -- Because u is in V₁ which is disjoint from U₂ and U₃, (u, w) ∈ W forces (u, w) ∈ U₁ ×ˢ U₁.
+    -- Similarly, because v ∈ V₂, (w ,v) ∈ W forces (w, v) ∈ U₂ ×ˢ U₂.
+    -- Hence w ∈ U₁ ∩ U₂ which is empty.
     have inter_empty : V₁ ×ˢ V₂ ∩ (W ○ W) = ∅ := by
       rw [eq_empty_iff_forall_not_mem]
       rintro ⟨u, v⟩ ⟨⟨u_in, v_in⟩, w, huw, hwv⟩
@@ -154,8 +183,11 @@ def uniformSpaceOfCompactT2 [TopologicalSpace γ] [CompactSpace γ] [T2Space γ]
             rwa [hU₁₂] at this)
       have : w ∈ U₁ ∩ U₂ := ⟨uw_in.2, wv_in.1⟩
       rwa [hU₁₂] at this
+    -- So we have a contradiction
     rwa [inter_empty] at p_in
   is_open_uniformity := by
+    -- Here we need to prove the topology induced by the constructed uniformity is the
+    -- topology we started with.
     suffices ∀ x : γ, Filter.comap (Prod.mk x) (⨆ y, 𝓝 (y, y)) = 𝓝 x by
       intro s
       change IsOpen s ↔ _

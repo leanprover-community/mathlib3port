@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2017 Mario Carneiro. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Mario Carneiro
+-/
 import Mathbin.Data.Int.Basic
 import Mathbin.Data.Nat.Cast
 
@@ -30,7 +35,7 @@ theorem nat_cast_eq_coe_nat :
   | n + 1 => congr_argₓ (· + (1 : ℤ)) (nat_cast_eq_coe_nat n)
 
 /-- Coercion `ℕ → ℤ` as a `ring_hom`. -/
-def of_nat_hom : ℕ →+* ℤ :=
+def ofNatHom : ℕ →+* ℤ :=
   ⟨coe, rfl, Int.of_nat_mul, rfl, Int.of_nat_add⟩
 
 section cast
@@ -46,7 +51,8 @@ protected def cast : ℤ → α
   | (n : ℕ) => n
   | -[1+ n] => -(n + 1)
 
-instance (priority := 900) cast_coe : CoeTₓ ℤ α :=
+-- see Note [coercion into rings]
+instance (priority := 900) castCoe : CoeTₓ ℤ α :=
   ⟨Int.cast⟩
 
 @[simp, norm_cast]
@@ -129,7 +135,7 @@ theorem cast_mul [Ringₓ α] : ∀ m n, ((m * n : ℤ) : α) = m * n
       rw [Nat.cast_mulₓ, Nat.cast_add_one, Nat.cast_add_one, neg_mul_neg]
 
 /-- `coe : ℤ → α` as an `add_monoid_hom`. -/
-def cast_add_hom (α : Type _) [AddGroupₓ α] [One α] : ℤ →+ α :=
+def castAddHom (α : Type _) [AddGroupₓ α] [One α] : ℤ →+ α :=
   ⟨coe, cast_zero, cast_add⟩
 
 @[simp]
@@ -137,7 +143,7 @@ theorem coe_cast_add_hom [AddGroupₓ α] [One α] : ⇑castAddHom α = coe :=
   rfl
 
 /-- `coe : ℤ → α` as a `ring_hom`. -/
-def cast_ring_hom (α : Type _) [Ringₓ α] : ℤ →+* α :=
+def castRingHom (α : Type _) [Ringₓ α] : ℤ →+* α :=
   ⟨coe, cast_one, cast_mul, cast_zero, cast_add⟩
 
 @[simp]
@@ -339,7 +345,7 @@ theorem map_int_cast (f : α →+* β) (n : ℤ) : f n = n :=
 theorem ext_int {R : Type _} [Semiringₓ R] (f g : ℤ →+* R) : f = g :=
   coe_add_monoid_hom_injective <| AddMonoidHom.ext_int <| f.map_one.trans g.map_one.symm
 
-instance int.subsingleton_ring_hom {R : Type _} [Semiringₓ R] : Subsingleton (ℤ →+* R) :=
+instance Int.subsingleton_ring_hom {R : Type _} [Semiringₓ R] : Subsingleton (ℤ →+* R) :=
   ⟨RingHom.ext_int⟩
 
 end RingHom

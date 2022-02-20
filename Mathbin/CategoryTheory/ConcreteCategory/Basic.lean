@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison, Johannes Hölzl, Reid Barton, Sean Leather, Yury Kudryashov
+-/
 import Mathbin.CategoryTheory.Types
 import Mathbin.CategoryTheory.EpiMono
 
@@ -42,7 +47,7 @@ Note that `concrete_category` potentially depends on three independent universe 
 * the universe level `u` of the objects (i.e `C : Type u`)
 They are specified that order, to avoid unnecessary universe annotations.
 -/
-class concrete_category (C : Type u) [Category.{v} C] where
+class ConcreteCategory (C : Type u) [Category.{v} C] where
   forget {} : C ⥤ Type w
   [forget_faithful : Faithful forget]
 
@@ -53,7 +58,7 @@ attribute [instance] concrete_category.forget_faithful
 def forget (C : Type v) [Category C] [ConcreteCategory.{u} C] : C ⥤ Type u :=
   ConcreteCategory.forget C
 
-instance concrete_category.types : ConcreteCategory (Type u) where
+instance ConcreteCategory.types : ConcreteCategory (Type u) where
   forget := 𝟭 _
 
 /-- Provide a coercion to `Type u` for a concrete category. This is not marked as an instance
@@ -64,7 +69,7 @@ You can use it on particular examples as:
 instance : has_coe_to_sort X := concrete_category.has_coe_to_sort X
 ```
 -/
-def concrete_category.has_coe_to_sort (C : Type v) [Category C] [ConcreteCategory C] : CoeSort C (Type u) :=
+def ConcreteCategory.hasCoeToSort (C : Type v) [Category C] [ConcreteCategory C] : CoeSort C (Type u) :=
   ⟨(ConcreteCategory.forget C).obj⟩
 
 section
@@ -79,13 +84,13 @@ theorem forget_obj_eq_coe {X : C} : (forget C).obj X = X :=
 
 /-- Usually a bundled hom structure already has a coercion to function
 that works with different universes. So we don't use this as a global instance. -/
-def concrete_category.has_coe_to_fun {X Y : C} : CoeFun (X ⟶ Y) fun f => X → Y :=
+def ConcreteCategory.hasCoeToFun {X Y : C} : CoeFun (X ⟶ Y) fun f => X → Y :=
   ⟨fun f => (forget _).map f⟩
 
 attribute [local instance] concrete_category.has_coe_to_fun
 
 /-- In any concrete category, we can test equality of morphisms by pointwise evaluations.-/
-theorem concrete_category.hom_ext {X Y : C} (f g : X ⟶ Y) (w : ∀ x : X, f x = g x) : f = g := by
+theorem ConcreteCategory.hom_ext {X Y : C} (f g : X ⟶ Y) (w : ∀ x : X, f x = g x) : f = g := by
   apply faithful.map_injective (forget C)
   ext
   exact w x
@@ -122,22 +127,22 @@ theorem coe_hom_inv_id {X Y : C} (f : X ≅ Y) (x : X) : f.inv (f.Hom x) = x :=
 theorem coe_inv_hom_id {X Y : C} (f : X ≅ Y) (y : Y) : f.Hom (f.inv y) = y :=
   congr_funₓ ((forget C).mapIso f).inv_hom_id y
 
-theorem concrete_category.congr_hom {X Y : C} {f g : X ⟶ Y} (h : f = g) (x : X) : f x = g x :=
+theorem ConcreteCategory.congr_hom {X Y : C} {f g : X ⟶ Y} (h : f = g) (x : X) : f x = g x :=
   congr_funₓ (congr_argₓ (fun f : X ⟶ Y => (f : X → Y)) h) x
 
-theorem concrete_category.congr_arg {X Y : C} (f : X ⟶ Y) {x x' : X} (h : x = x') : f x = f x' :=
+theorem ConcreteCategory.congr_arg {X Y : C} (f : X ⟶ Y) {x x' : X} (h : x = x') : f x = f x' :=
   congr_argₓ (f : X → Y) h
 
 /-- In any concrete category, injective morphisms are monomorphisms. -/
-theorem concrete_category.mono_of_injective {X Y : C} (f : X ⟶ Y) (i : Function.Injective f) : Mono f :=
+theorem ConcreteCategory.mono_of_injective {X Y : C} (f : X ⟶ Y) (i : Function.Injective f) : Mono f :=
   faithful_reflects_mono (forget C) ((mono_iff_injective f).2 i)
 
 /-- In any concrete category, surjective morphisms are epimorphisms. -/
-theorem concrete_category.epi_of_surjective {X Y : C} (f : X ⟶ Y) (s : Function.Surjective f) : Epi f :=
+theorem ConcreteCategory.epi_of_surjective {X Y : C} (f : X ⟶ Y) (s : Function.Surjective f) : Epi f :=
   faithful_reflects_epi (forget C) ((epi_iff_surjective f).2 s)
 
 @[simp]
-theorem concrete_category.has_coe_to_fun_Type {X Y : Type u} (f : X ⟶ Y) : coeFn f = f :=
+theorem ConcreteCategory.has_coe_to_fun_Type {X Y : Type u} (f : X ⟶ Y) : coeFn f = f :=
   rfl
 
 end
@@ -145,7 +150,7 @@ end
 /-- `has_forget₂ C D`, where `C` and `D` are both concrete categories, provides a functor
 `forget₂ C D : C ⥤ D` and a proof that `forget₂ ⋙ (forget D) = forget C`.
 -/
-class has_forget₂ (C : Type v) (D : Type v') [Category C] [ConcreteCategory.{u} C] [Category D]
+class HasForget₂ (C : Type v) (D : Type v') [Category C] [ConcreteCategory.{u} C] [Category D]
   [ConcreteCategory.{u} D] where
   forget₂ : C ⥤ D
   forget_comp : forget₂ ⋙ forget D = forget C := by
@@ -163,11 +168,11 @@ instance forget_faithful (C : Type v) (D : Type v') [Category C] [ConcreteCatego
     [HasForget₂ C D] : Faithful (forget₂ C D) :=
   HasForget₂.forget_comp.faithful_of_comp
 
-instance induced_category.concrete_category {C : Type v} {D : Type v'} [Category D] [ConcreteCategory D] (f : C → D) :
+instance InducedCategory.concreteCategory {C : Type v} {D : Type v'} [Category D] [ConcreteCategory D] (f : C → D) :
     ConcreteCategory (InducedCategory D f) where
   forget := inducedFunctor f ⋙ forget D
 
-instance induced_category.has_forget₂ {C : Type v} {D : Type v'} [Category D] [ConcreteCategory D] (f : C → D) :
+instance InducedCategory.hasForget₂ {C : Type v} {D : Type v'} [Category D] [ConcreteCategory D] (f : C → D) :
     HasForget₂ (InducedCategory D f) D where
   forget₂ := inducedFunctor f
   forget_comp := rfl
@@ -175,14 +180,14 @@ instance induced_category.has_forget₂ {C : Type v} {D : Type v'} [Category D] 
 /-- In order to construct a “partially forgetting” functor, we do not need to verify functor laws;
 it suffices to ensure that compositions agree with `forget₂ C D ⋙ forget D = forget C`.
 -/
-def has_forget₂.mk' {C : Type v} {D : Type v'} [Category C] [ConcreteCategory C] [Category D] [ConcreteCategory D]
+def HasForget₂.mk' {C : Type v} {D : Type v'} [Category C] [ConcreteCategory C] [Category D] [ConcreteCategory D]
     (obj : C → D) (h_obj : ∀ X, (forget D).obj (obj X) = (forget C).obj X) (map : ∀ {X Y}, (X ⟶ Y) → (obj X ⟶ obj Y))
     (h_map : ∀ {X Y} {f : X ⟶ Y}, HEq ((forget D).map (map f)) ((forget C).map f)) : HasForget₂ C D where
   forget₂ := Faithful.div _ _ _ @h_obj _ @h_map
   forget_comp := by
     apply faithful.div_comp
 
-instance has_forget_to_Type (C : Type v) [Category C] [ConcreteCategory C] : HasForget₂ C (Type u) where
+instance hasForgetToType (C : Type v) [Category C] [ConcreteCategory C] : HasForget₂ C (Type u) where
   forget₂ := forget C
   forget_comp := Functor.comp_id _
 

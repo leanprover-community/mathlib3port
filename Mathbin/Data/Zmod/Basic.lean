@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Chris Hughes. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Chris Hughes
+-/
 import Mathbin.Algebra.CharP.Basic
 import Mathbin.RingTheory.Ideal.Operations
 import Mathbin.Tactic.FinCases
@@ -79,7 +84,7 @@ def Zmod : ℕ → Type
 
 namespace Zmod
 
-instance Fintype : ∀ n : ℕ [Fact (0 < n)], Fintype (Zmod n)
+instance fintype : ∀ n : ℕ [Fact (0 < n)], Fintype (Zmod n)
   | 0, h => False.elim <| Nat.not_lt_zeroₓ 0 h.1
   | n + 1, _ => Finₓ.fintype (n + 1)
 
@@ -92,19 +97,19 @@ theorem card (n : ℕ) [Fact (0 < n)] : Fintype.card (Zmod n) = n := by
   · exact Fintype.card_fin (n + 1)
     
 
-instance DecidableEq : ∀ n : ℕ, DecidableEq (Zmod n)
+instance decidableEq : ∀ n : ℕ, DecidableEq (Zmod n)
   | 0 => Int.decidableEq
   | n + 1 => Finₓ.decidableEq _
 
-instance HasRepr : ∀ n : ℕ, HasRepr (Zmod n)
+instance hasRepr : ∀ n : ℕ, HasRepr (Zmod n)
   | 0 => Int.hasRepr
   | n + 1 => Finₓ.hasRepr _
 
-instance CommRingₓ : ∀ n : ℕ, CommRingₓ (Zmod n)
+instance commRing : ∀ n : ℕ, CommRingₓ (Zmod n)
   | 0 => Int.commRing
   | n + 1 => Finₓ.commRing n
 
-instance Inhabited (n : ℕ) : Inhabited (Zmod n) :=
+instance inhabited (n : ℕ) : Inhabited (Zmod n) :=
   ⟨0⟩
 
 /-- `val a` is a natural number defined as:
@@ -185,6 +190,7 @@ def cast : ∀ {n : ℕ}, Zmod n → R
   | 0 => Int.cast
   | n + 1 => fun i => i.val
 
+-- see Note [coercion into rings]
 instance (priority := 900) (n : ℕ) : CoeTₓ (Zmod n) R :=
   ⟨cast⟩
 
@@ -332,7 +338,7 @@ theorem cast_mul (h : m ∣ n) (a b : Zmod n) : ((a * b : Zmod n) : R) = a * b :
 
 See also `zmod.lift` (in `data.zmod.quotient`) for a generalized version working in `add_group`s.
 -/
-def cast_hom (h : m ∣ n) (R : Type _) [Ringₓ R] [CharP R m] : Zmod n →+* R where
+def castHom (h : m ∣ n) (R : Type _) [Ringₓ R] [CharP R m] : Zmod n →+* R where
   toFun := coe
   map_zero' := cast_zero
   map_one' := cast_one h
@@ -421,7 +427,7 @@ theorem cast_hom_bijective [Fintype R] (h : Fintype.card R = n) : Function.Bijec
 
 /-- The unique ring isomorphism between `zmod n` and a ring `R`
 of characteristic `n` and cardinality `n`. -/
-noncomputable def RingEquiv [Fintype R] (h : Fintype.card R = n) : Zmod n ≃+* R :=
+noncomputable def ringEquiv [Fintype R] (h : Fintype.card R = n) : Zmod n ≃+* R :=
   RingEquiv.ofBijective _ (Zmod.cast_hom_bijective R h)
 
 end CharEq
@@ -502,7 +508,7 @@ theorem val_mul {n : ℕ} (a b : Zmod n) : (a * b).val = a.val * b.val % n := by
   · apply Finₓ.val_mul
     
 
-instance Nontrivial (n : ℕ) [Fact (1 < n)] : Nontrivial (Zmod n) :=
+instance nontrivial (n : ℕ) [Fact (1 < n)] : Nontrivial (Zmod n) :=
   ⟨⟨0, 1, fun h =>
       zero_ne_one <|
         calc
@@ -562,7 +568,7 @@ theorem coe_mul_inv_eq_one {n : ℕ} (x : ℕ) (h : Nat.Coprime x n) : (x * x⁻
 
 /-- `unit_of_coprime` makes an element of `(zmod n)ˣ` given
   a natural number `x` and a proof that `x` is coprime to `n`  -/
-def unit_of_coprime {n : ℕ} (x : ℕ) (h : Nat.Coprime x n) : (Zmod n)ˣ :=
+def unitOfCoprime {n : ℕ} (x : ℕ) (h : Nat.Coprime x n) : (Zmod n)ˣ :=
   ⟨x, x⁻¹, coe_mul_inv_eq_one x h, by
     rw [mul_comm, coe_mul_inv_eq_one x h]⟩
 
@@ -604,7 +610,7 @@ theorem inv_mul_of_unit {n : ℕ} (a : Zmod n) (h : IsUnit a) : a⁻¹ * a = 1 :
 
 /-- Equivalence between the units of `zmod n` and
 the subtype of terms `x : zmod n` for which `x.val` is comprime to `n` -/
-def units_equiv_coprime {n : ℕ} [Fact (0 < n)] : (Zmod n)ˣ ≃ { x : Zmod n // Nat.Coprime x.val n } where
+def unitsEquivCoprime {n : ℕ} [Fact (0 < n)] : (Zmod n)ˣ ≃ { x : Zmod n // Nat.Coprime x.val n } where
   toFun := fun x => ⟨x, val_coe_unit_coprime x⟩
   invFun := fun x => unitOfCoprime x.1.val x.2
   left_inv := fun ⟨_, _, _, _⟩ => Units.ext (nat_cast_zmod_val _)
@@ -617,7 +623,7 @@ def units_equiv_coprime {n : ℕ} [Fact (0 < n)] : (Zmod n)ˣ ≃ { x : Zmod n /
 See `ideal.quotient_inf_ring_equiv_pi_quotient` for the Chinese remainder theorem for ideals in any
 ring.
 -/
-def chinese_remainder {m n : ℕ} (h : m.Coprime n) : Zmod (m * n) ≃+* Zmod m × Zmod n :=
+def chineseRemainder {m n : ℕ} (h : m.Coprime n) : Zmod (m * n) ≃+* Zmod m × Zmod n :=
   let to_fun : Zmod (m * n) → Zmod m × Zmod n :=
     Zmod.castHom
       (show m.lcm n ∣ m * n by
@@ -743,7 +749,7 @@ theorem neg_val {n : ℕ} [Fact (0 < n)] (a : Zmod n) : (-a).val = if a = 0 then
 
 /-- `val_min_abs x` returns the integer in the same equivalence class as `x` that is closest to `0`,
   The result will be in the interval `(-n/2, n/2]`. -/
-def val_min_abs : ∀ {n : ℕ}, Zmod n → ℤ
+def valMinAbs : ∀ {n : ℕ}, Zmod n → ℤ
   | 0, x => x
   | n@(_ + 1), x => if x.val ≤ n / 2 then x.val else (x.val : ℤ) - n
 
@@ -908,6 +914,7 @@ instance : Field (Zmod p) :=
 
 /-- `zmod p` is an integral domain when `p` is prime. -/
 instance (p : ℕ) [hp : Fact p.Prime] : IsDomain (Zmod p) := by
+  -- We need `cases p` here in order to resolve which `comm_ring` instance is being used.
   cases p
   · exact (Nat.not_prime_zero hp.out).elim
     
@@ -942,7 +949,7 @@ theorem ring_hom_map_cast [Ringₓ R] (f : R →+* Zmod n) (k : Zmod n) : f k = 
 theorem ring_hom_right_inverse [Ringₓ R] (f : R →+* Zmod n) : Function.RightInverse (coe : Zmod n → R) f :=
   ring_hom_map_cast f
 
-theorem RingHomSurjective [Ringₓ R] (f : R →+* Zmod n) : Function.Surjective f :=
+theorem ring_hom_surjective [Ringₓ R] (f : R →+* Zmod n) : Function.Surjective f :=
   (ring_hom_right_inverse f).Surjective
 
 theorem ring_hom_eq_of_ker_eq [CommRingₓ R] (f g : R →+* Zmod n) (h : f.ker = g.ker) : f = g := by

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison
+-/
 import Mathbin.CategoryTheory.Abelian.Basic
 import Mathbin.CategoryTheory.Preadditive.Opposite
 import Mathbin.CategoryTheory.Limits.Opposites
@@ -28,8 +33,10 @@ section
 variable {C} {X Y : C} (f : X ⟶ Y) {A B : Cᵒᵖ} (g : A ⟶ B)
 
 /-- The kernel of `f.op` is the opposite of `cokernel f`. -/
+-- TODO: Generalize (this will work whenever f has a cokernel)
+-- (The abelian case is probably sufficient for most applications.)
 @[simps]
-def kernel_op_unop : (kernel f.op).unop ≅ cokernel f where
+def kernelOpUnop : (kernel f.op).unop ≅ cokernel f where
   Hom :=
     (kernel.lift f.op (cokernel.π f).op <| by
         simp [← op_comp]).unop
@@ -49,8 +56,10 @@ def kernel_op_unop : (kernel f.op).unop ≅ cokernel f where
     simp [← unop_comp]
 
 /-- The cokernel of `f.op` is the opposite of `kernel f`. -/
+-- TODO: Generalize (this will work whenever f has a kernel)
+-- (The abelian case is probably sufficient for most applications.)
 @[simps]
-def cokernel_op_unop : (cokernel f.op).unop ≅ kernel f where
+def cokernelOpUnop : (cokernel f.op).unop ≅ kernel f where
   Hom :=
     kernel.lift f (cokernel.π f.op).unop <| by
       rw [← f.unop_op, ← unop_comp, f.unop_op]
@@ -71,32 +80,32 @@ def cokernel_op_unop : (cokernel f.op).unop ≅ kernel f where
 
 /-- The kernel of `g.unop` is the opposite of `cokernel g`. -/
 @[simps]
-def kernel_unop_op : Opposite.op (kernel g.unop) ≅ cokernel g :=
+def kernelUnopOp : Opposite.op (kernel g.unop) ≅ cokernel g :=
   (cokernelOpUnop g.unop).op
 
 /-- The cokernel of `g.unop` is the opposite of `kernel g`. -/
 @[simps]
-def cokernel_unop_op : Opposite.op (cokernel g.unop) ≅ kernel g :=
+def cokernelUnopOp : Opposite.op (cokernel g.unop) ≅ kernel g :=
   (kernelOpUnop g.unop).op
 
 /-- The kernel of `f.op` is the opposite of `cokernel f`. -/
 @[simps]
-def kernel_op_op : kernel f.op ≅ Opposite.op (cokernel f) :=
+def kernelOpOp : kernel f.op ≅ Opposite.op (cokernel f) :=
   (kernelOpUnop f).op.symm
 
 /-- The cokernel of `f.op` is the opposite of `kernel f`. -/
 @[simps]
-def cokernel_op_op : cokernel f.op ≅ Opposite.op (kernel f) :=
+def cokernelOpOp : cokernel f.op ≅ Opposite.op (kernel f) :=
   (cokernelOpUnop f).op.symm
 
 /-- The kernel of `g.unop` is the opposite of `cokernel g`. -/
 @[simps]
-def kernel_unop_unop : kernel g.unop ≅ (cokernel g).unop :=
+def kernelUnopUnop : kernel g.unop ≅ (cokernel g).unop :=
   (kernelUnopOp g).unop.symm
 
 /-- The cokernel of `g.unop` is the opposite of `kernel g`. -/
 @[simps]
-def cokernel_unop_unop : cokernel g.unop ≅ (kernel g).unop :=
+def cokernelUnopUnop : cokernel g.unop ≅ (kernel g).unop :=
   (cokernelUnopOp g).unop.symm
 
 end

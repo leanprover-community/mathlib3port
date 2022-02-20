@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Andrew Yang. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Andrew Yang
+-/
 import Mathbin.CategoryTheory.Sites.DenseSubsite
 
 /-!
@@ -42,7 +47,8 @@ variable (A : Type v) [Category.{u} A]
 /-- We say that a functor `C ⥤ D` into a site is "locally dense" if
 for each covering sieve `T` in `D`, `T ∩ mor(C)` generates a covering sieve in `D`.
 -/
-def locally_cover_dense (K : GrothendieckTopology D) (G : C ⥤ D) : Prop :=
+-- variables (A) [full G] [faithful G]
+def LocallyCoverDense (K : GrothendieckTopology D) (G : C ⥤ D) : Prop :=
   ∀ ⦃X⦄ T : K (G.obj X), (T.val.FunctorPullback G).FunctorPushforward G ∈ K (G.obj X)
 
 namespace LocallyCoverDense
@@ -65,7 +71,7 @@ theorem pushforward_cover_iff_cover_pullback {X : C} (S : Sieve X) :
 then the set `{ T ∩ mor(C) | T ∈ K }` is a grothendieck topology of `C`.
 -/
 @[simps]
-def induced_topology : GrothendieckTopology C where
+def inducedTopology : GrothendieckTopology C where
   Sieves := fun X S => K _ (S.FunctorPushforward G)
   top_mem' := fun X => by
     change K _ _
@@ -101,7 +107,7 @@ theorem induced_topology_cover_preserving : CoverPreserving Hld.inducedTopology 
 
 end LocallyCoverDense
 
-theorem cover_dense.locally_cover_dense [Full G] (H : CoverDense K G) : LocallyCoverDense K G := by
+theorem CoverDense.locally_cover_dense [Full G] (H : CoverDense K G) : LocallyCoverDense K G := by
   intro X T
   refine' K.superset_covering _ (K.bind_covering T.property fun Y f Hf => H.is_cover Y)
   rintro Y _ ⟨Z, _, f, hf, ⟨W, g, f', rfl : _ = _⟩, rfl⟩
@@ -114,7 +120,7 @@ theorem cover_dense.locally_cover_dense [Full G] (H : CoverDense K G) : LocallyC
 
 /-- Given a fully faithful cover-dense functor `G : C ⥤ (D, K)`, we may induce a topology on `C`.
 -/
-abbrev cover_dense.induced_topology [Full G] [Faithful G] (H : CoverDense K G) : GrothendieckTopology C :=
+abbrev CoverDense.inducedTopology [Full G] [Faithful G] (H : CoverDense K G) : GrothendieckTopology C :=
   H.LocallyCoverDense.inducedTopology
 
 variable (J)
@@ -146,7 +152,7 @@ variable (A : Type u) [Category.{v} A]
 This is known as the comparison lemma. It requires that the sites are small and the value category
 is complete.
 -/
-noncomputable def cover_dense.Sheaf_equiv [Full G] [Faithful G] (H : CoverDense K G) [HasLimits A] :
+noncomputable def CoverDense.sheafEquiv [Full G] [Faithful G] (H : CoverDense K G) [HasLimits A] :
     Sheaf H.inducedTopology A ≌ Sheaf K A :=
   H.sheafEquivOfCoverPreservingCoverLifting H.LocallyCoverDense.induced_topology_cover_preserving
     H.LocallyCoverDense.induced_topology_cover_lifting

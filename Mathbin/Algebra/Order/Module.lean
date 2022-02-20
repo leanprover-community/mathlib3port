@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Frédéric Dupuis. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Frédéric Dupuis, Yaël Dillies
+-/
 import Mathbin.Algebra.Module.Pi
 import Mathbin.Algebra.Module.Prod
 import Mathbin.Algebra.Order.Field
@@ -36,6 +41,9 @@ section Semiringₓ
 
 variable [OrderedSemiring k] [OrderedAddCommGroup M] [Module k M] [OrderedSmul k M] {a b : M} {c : k}
 
+/- can be generalized from `module k M` to `distrib_mul_action_with_zero k M` once it exists.
+where `distrib_mul_action_with_zero k M`is the conjunction of `distrib_mul_action k M` and
+`smul_with_zero k M`.-/
 theorem smul_neg_iff_of_pos (hc : 0 < c) : c • a < 0 ↔ a < 0 := by
   rw [← neg_negₓ a, smul_neg, neg_neg_iff_pos, neg_neg_iff_pos]
   exact smul_pos_iff_of_pos hc
@@ -126,8 +134,9 @@ def OrderIso.smulLeftDual {c : k} (hc : c < 0) : M ≃o OrderDual M where
 
 variable {M} [OrderedAddCommGroup N] [Module k N] [OrderedSmul k N]
 
+-- TODO: solve `prod.has_lt` and `prod.has_le` misalignment issue
 instance Prod.ordered_smul : OrderedSmul k (M × N) :=
-  OrderedSmul.mk' fun v u : M × N c : k h hc => ⟨smul_le_smul_of_nonneg h.1.1 hc.le, smul_le_smul_of_nonneg h.1.2 hc.le⟩
+  OrderedSmul.mk' fun h hc => ⟨smul_le_smul_of_nonneg h.1.1 hc.le, smul_le_smul_of_nonneg h.1.2 hc.le⟩
 
 instance Pi.ordered_smul {ι : Type _} {M : ι → Type _} [∀ i, OrderedAddCommGroup (M i)] [∀ i, MulActionWithZero k (M i)]
     [∀ i, OrderedSmul k (M i)] : OrderedSmul k (∀ i : ι, M i) := by
@@ -135,6 +144,8 @@ instance Pi.ordered_smul {ι : Type _} {M : ι → Type _} [∀ i, OrderedAddCom
   change c • v i ≤ c • u i
   exact smul_le_smul_of_nonneg (h.le i) hc.le
 
+-- Sometimes Lean fails to apply the dependent version to non-dependent functions,
+-- so we define another instance
 instance Pi.ordered_smul' {ι : Type _} {M : Type _} [OrderedAddCommGroup M] [MulActionWithZero k M] [OrderedSmul k M] :
     OrderedSmul k (ι → M) :=
   Pi.ordered_smul

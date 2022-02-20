@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Anne Baanen. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Anne Baanen
+-/
 import Mathbin.RingTheory.EuclideanDomain
 import Mathbin.RingTheory.LaurentSeries
 import Mathbin.RingTheory.Localization
@@ -127,7 +132,7 @@ we construct a value of `P` for such elements of `ratfunc K` by setting
 When `[is_domain K]`, one can use `ratfunc.lift_on'`, which has the stronger requirement
 of `∀ {p q a : K[X]} (hq : q ≠ 0) (ha : a ≠ 0), f (a * p) (a * q) = f p q)`.
 -/
-protected irreducible_def lift_on {P : Sort v} (x : Ratfunc K) (f : ∀ p q : K[X], P)
+protected irreducible_def liftOn {P : Sort v} (x : Ratfunc K) (f : ∀ p q : K[X], P)
   (H : ∀ {p q p' q'} hq : q ∈ K[X]⁰ hq' : q' ∈ K[X]⁰, p * q' = p' * q → f p q = f p' q') : P :=
   Localization.liftOn (toFractionRing x) (fun p q => f p q) fun p p' q q' h =>
     H q.2 q'.2
@@ -217,7 +222,8 @@ for all elements of `ratfunc K` by setting `lift_on' (p / q) f _ = f p q`.
 The value of `f p 0` for any `p` is never used and in principle this may be anything,
 although many usages of `lift_on'` assume `f p 0 = f 0 1`.
 -/
-protected irreducible_def lift_on' {P : Sort v} (x : Ratfunc K) (f : ∀ p q : K[X], P)
+-- f
+protected irreducible_def liftOn' {P : Sort v} (x : Ratfunc K) (f : ∀ p q : K[X], P)
   (H : ∀ {p q a} hq : q ≠ 0 ha : a ≠ 0, f (a * p) (a * q) = f p q) : P :=
   x.liftOn f fun p q p' q' hq hq' =>
     lift_on_condition_of_lift_on'_condition (@H) (nonZeroDivisors.ne_zero hq) (nonZeroDivisors.ne_zero hq')
@@ -227,7 +233,7 @@ theorem lift_on'_mk {P : Sort v} (p q : K[X]) (f : ∀ p q : K[X], P) (f0 : ∀ 
   rw [Ratfunc.liftOn', Ratfunc.lift_on_mk _ _ _ f0]
   exact lift_on_condition_of_lift_on'_condition @H
 
--- ././Mathport/Syntax/Translate/Basic.lean:1080:38: unsupported irreducible non-definition
+-- ././Mathport/Syntax/Translate/Basic.lean:1202:38: unsupported irreducible non-definition
 /-- Induction principle for `ratfunc K`: if `f p q : P (ratfunc.mk p q)` for all `p q`,
 then `P` holds on all elements of `ratfunc K`.
 
@@ -332,6 +338,7 @@ instance : Inv (Ratfunc K) :=
 theorem of_fraction_ring_inv (p : FractionRing K[X]) : of_fraction_ring p⁻¹ = (of_fraction_ring p)⁻¹ := by
   unfold Inv.inv Ratfunc.inv
 
+-- Auxiliary lemma for the `field` instance
 theorem mul_inv_cancel : ∀ {p : Ratfunc K} hp : p ≠ 0, p * p⁻¹ = 1
   | ⟨p⟩, h => by
     have : p ≠ 0 := fun hp =>
@@ -410,7 +417,7 @@ instance [Nontrivial K] : Nontrivial (Ratfunc K) :=
 This is an auxiliary definition; `simp`-normal form is `is_localization.alg_equiv`.
 -/
 @[simps apply]
-def to_fraction_ring_ring_equiv : Ratfunc K ≃+* FractionRing K[X] where
+def toFractionRingRingEquiv : Ratfunc K ≃+* FractionRing K[X] where
   toFun := toFractionRing
   invFun := of_fraction_ring
   left_inv := fun ⟨_⟩ => rfl
@@ -422,12 +429,12 @@ def to_fraction_ring_ring_equiv : Ratfunc K ≃+* FractionRing K[X] where
 
 omit hring
 
--- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:916:4: warning: unsupported (TODO): `[tacs]
 /-- Solve equations for `ratfunc K` by working in `fraction_ring K[X]`. -/
 unsafe def frac_tac : tactic Unit :=
   sorry
 
--- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:916:4: warning: unsupported (TODO): `[tacs]
 /-- Solve equations for `ratfunc K` by applying `ratfunc.induction_on`. -/
 unsafe def smul_tac : tactic Unit :=
   sorry
@@ -435,7 +442,7 @@ unsafe def smul_tac : tactic Unit :=
 include hring
 
 instance : CommRingₓ (Ratfunc K) where
-  add := · + ·
+  add := (· + ·)
   add_assoc := by
     run_tac
       frac_tac
@@ -457,7 +464,7 @@ instance : CommRingₓ (Ratfunc K) where
   sub_eq_add_neg := by
     run_tac
       frac_tac
-  mul := · * ·
+  mul := (· * ·)
   mul_assoc := by
     run_tac
       frac_tac
@@ -477,14 +484,14 @@ instance : CommRingₓ (Ratfunc K) where
   mul_one := by
     run_tac
       frac_tac
-  nsmul := · • ·
+  nsmul := (· • ·)
   nsmul_zero' := by
     run_tac
       smul_tac
   nsmul_succ' := fun _ => by
     run_tac
       smul_tac
-  zsmul := · • ·
+  zsmul := (· • ·)
   zsmul_zero' := by
     run_tac
       smul_tac
@@ -567,7 +574,7 @@ theorem map_injective [MonoidHomClass F R[X] S[X]] (φ : F) (hφ : R[X]⁰ ≤ S
 to a `ratfunc R →+* ratfunc S`,
 on the condition that `φ` maps non zero divisors to non zero divisors,
 by mapping both the numerator and denominator and quotienting them. -/
-def map_ring_hom [RingHomClass F R[X] S[X]] (φ : F) (hφ : R[X]⁰ ≤ S[X]⁰.comap φ) : Ratfunc R →+* Ratfunc S :=
+def mapRingHom [RingHomClass F R[X] S[X]] (φ : F) (hφ : R[X]⁰ ≤ S[X]⁰.comap φ) : Ratfunc R →+* Ratfunc S :=
   { map φ hφ with
     map_zero' := by
       simp_rw [MonoidHom.to_fun_eq_coe, ← of_fraction_ring_zero, ← Localization.mk_zero (1 : R[X]⁰), ←
@@ -592,7 +599,8 @@ theorem coe_map_ring_hom_eq_coe_map [RingHomClass F R[X] S[X]] (φ : F) (hφ : R
 /-- Lift an monoid with zero homomorphism `polynomial R →*₀ G₀` to a `ratfunc R →*₀ G₀`
 on the condition that `φ` maps non zero divisors to non zero divisors,
 by mapping both the numerator and denominator and quotienting them. --/
-def lift_monoid_with_zero_hom (φ : R[X] →*₀ G₀) (hφ : R[X]⁰ ≤ G₀⁰.comap φ) : Ratfunc R →*₀ G₀ where
+-- TODO: Generalize to `fun_like` classes,
+def liftMonoidWithZeroHom (φ : R[X] →*₀ G₀) (hφ : R[X]⁰ ≤ G₀⁰.comap φ) : Ratfunc R →*₀ G₀ where
   toFun := fun f =>
     (Ratfunc.liftOn f fun p q => φ p / φ q) fun p q p' q' hq hq' h => by
       cases' subsingleton_or_nontrivial R
@@ -641,7 +649,7 @@ theorem lift_monoid_with_zero_hom_injective [Nontrivial R] (φ : R[X] →*₀ G�
 
 /-- Lift an injective ring homomorphism `polynomial R →+* L` to a `ratfunc R →+* L`
 by mapping both the numerator and denominator and quotienting them. --/
-def lift_ring_hom (φ : R[X] →+* L) (hφ : R[X]⁰ ≤ L⁰.comap φ) : Ratfunc R →+* L :=
+def liftRingHom (φ : R[X] →+* L) (hφ : R[X]⁰ ≤ L⁰.comap φ) : Ratfunc R →+* L :=
   { liftMonoidWithZeroHom φ.toMonoidWithZeroHom hφ with
     map_add' := fun x y => by
       simp only [MonoidWithZeroHom.to_fun_eq_coe]
@@ -688,7 +696,7 @@ instance : Field (Ratfunc K) :=
     inv_zero := by
       run_tac
         frac_tac,
-    div := · / ·,
+    div := (· / ·),
     div_eq_mul_inv := by
       run_tac
         frac_tac,
@@ -713,7 +721,7 @@ instance (R : Type _) [CommSemiringₓ R] [Algebra R K[X]] : Algebra R (Ratfunc 
     simp only [mk_one', RingHom.map_one, of_fraction_ring_one]
   map_zero' := by
     simp only [mk_one', RingHom.map_zero, of_fraction_ring_zero]
-  smul := · • ·
+  smul := (· • ·)
   smul_def' := fun c x =>
     x.induction_on' fun p q hq => by
       simp_rw [mk_one', ← mk_smul, mk_def_of_ne (c • p) hq, mk_def_of_ne p hq, ← of_fraction_ring_mul,
@@ -805,7 +813,7 @@ variable {L R S : Type _} [Field L] [CommRingₓ R] [IsDomain R] [CommSemiring�
 to a `ratfunc K →ₐ[S] ratfunc R`,
 on the condition that `φ` maps non zero divisors to non zero divisors,
 by mapping both the numerator and denominator and quotienting them. -/
-def map_alg_hom (φ : K[X] →ₐ[S] R[X]) (hφ : K[X]⁰ ≤ R[X]⁰.comap φ) : Ratfunc K →ₐ[S] Ratfunc R :=
+def mapAlgHom (φ : K[X] →ₐ[S] R[X]) (hφ : K[X]⁰ ≤ R[X]⁰.comap φ) : Ratfunc K →ₐ[S] Ratfunc R :=
   { mapRingHom φ hφ with
     commutes' := fun r => by
       simp_rw [RingHom.to_fun_eq_coe, coe_map_ring_hom_eq_coe_map, algebra_map_apply r, map_apply_div, map_one,
@@ -817,7 +825,7 @@ theorem coe_map_alg_hom_eq_coe_map (φ : K[X] →ₐ[S] R[X]) (hφ : K[X]⁰ ≤
 
 /-- Lift an injective algebra homomorphism `polynomial K →ₐ[S] L` to a `ratfunc K →ₐ[S] L`
 by mapping both the numerator and denominator and quotienting them. --/
-def lift_alg_hom : Ratfunc K →ₐ[S] L :=
+def liftAlgHom : Ratfunc K →ₐ[S] L :=
   { liftRingHom φ.toRingHom hφ with
     commutes' := fun r => by
       simp_rw [RingHom.to_fun_eq_coe, AlgHom.to_ring_hom_eq_coe, algebra_map_apply r, lift_ring_hom_apply_div,
@@ -927,7 +935,7 @@ include hfield
 
 /-- `ratfunc.num_denom` are numerator and denominator of a rational function over a field,
 normalized such that the denominator is monic. -/
-def num_denom (x : Ratfunc K) : K[X] × K[X] :=
+def numDenom (x : Ratfunc K) : K[X] × K[X] :=
   x.liftOn'
     (fun p q =>
       if q = 0 then ⟨0, 1⟩
@@ -968,7 +976,7 @@ theorem num_denom_div (p : K[X]) {q : K[X]} (hq : q ≠ 0) :
 
 /-- `ratfunc.num` is the numerator of a rational function,
 normalized such that the denominator is monic. -/
-def Num (x : Ratfunc K) : K[X] :=
+def num (x : Ratfunc K) : K[X] :=
   x.num_denom.1
 
 @[simp]
@@ -1172,7 +1180,7 @@ section Eval
 include hdomain
 
 /-- `ratfunc.C a` is the constant rational function `a`. -/
-def C : K →+* Ratfunc K :=
+def c : K →+* Ratfunc K :=
   algebraMap _ _
 
 @[simp]
@@ -1191,7 +1199,7 @@ theorem smul_eq_C_mul (r : K) (x : Ratfunc K) : r • x = c r * x := by
   rw [Algebra.smul_def, algebra_map_eq_C]
 
 /-- `ratfunc.X` is the polynomial variable (aka indeterminate). -/
-def X : Ratfunc K :=
+def x : Ratfunc K :=
   algebraMap K[X] (Ratfunc K) Polynomial.x
 
 @[simp]
@@ -1315,11 +1323,11 @@ omit hring
 variable {F : Type u} [Field F] (p q : F[X]) (f g : Ratfunc F)
 
 /-- The coercion `ratfunc F → laurent_series F` as bundled alg hom. -/
-def coe_alg_hom (F : Type u) [Field F] : Ratfunc F →ₐ[Polynomial F] LaurentSeries F :=
+def coeAlgHom (F : Type u) [Field F] : Ratfunc F →ₐ[Polynomial F] LaurentSeries F :=
   liftAlgHom (Algebra.ofId _ _) <|
     non_zero_divisors_le_comap_non_zero_divisors_of_injective _ <| Polynomial.algebra_map_hahn_series_injective _
 
-instance coe_to_laurent_series : Coe (Ratfunc F) (LaurentSeries F) :=
+instance coeToLaurentSeries : Coe (Ratfunc F) (LaurentSeries F) :=
   ⟨coeAlgHom F⟩
 
 theorem coe_def : (f : LaurentSeries F) = coeAlgHom F f :=
@@ -1360,6 +1368,7 @@ theorem coe_C (r : F) : ((c r : Ratfunc F) : LaurentSeries F) = HahnSeries.c r :
   rw [coe_num_denom, num_C, denom_C, coe_coe, Polynomial.coe_C, coe_C, coe_coe, Polynomial.coe_one, PowerSeries.coe_one,
     div_one]
 
+-- TODO: generalize over other modules
 @[simp, norm_cast]
 theorem coe_smul (r : F) : ((r • f : Ratfunc F) : LaurentSeries F) = r • f := by
   rw [smul_eq_C_mul, ← C_mul_eq_smul, coe_mul, coe_C]

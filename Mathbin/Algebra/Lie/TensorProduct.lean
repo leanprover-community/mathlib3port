@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Oliver Nash. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Oliver Nash
+-/
 import Mathbin.Algebra.Lie.Abelian
 
 /-!
@@ -40,11 +45,11 @@ attribute [local ext] TensorProduct.ext
 /-- It is useful to define the bracket via this auxiliary function so that we have a type-theoretic
 expression of the fact that `L` acts by linear endomorphisms. It simplifies the proofs in
 `lie_ring_module` below. -/
-def has_bracket_aux (x : L) : Module.End R (M ⊗[R] N) :=
+def hasBracketAux (x : L) : Module.End R (M ⊗[R] N) :=
   (toEndomorphism R L M x).rtensor N + (toEndomorphism R L N x).ltensor M
 
 /-- The tensor product of two Lie modules is a Lie ring module. -/
-instance LieRingModule : LieRingModule L (M ⊗[R] N) where
+instance lieRingModule : LieRingModule L (M ⊗[R] N) where
   bracket := fun x => hasBracketAux x
   add_lie := fun x y t => by
     simp only [has_bracket_aux, LinearMap.ltensor_add, LinearMap.rtensor_add, LieHom.map_add, LinearMap.add_apply]
@@ -66,7 +71,7 @@ instance LieRingModule : LieRingModule L (M ⊗[R] N) where
     abel
 
 /-- The tensor product of two Lie modules is a Lie module. -/
-instance LieModule : LieModule R L (M ⊗[R] N) where
+instance lieModule : LieModule R L (M ⊗[R] N) where
   smul_lie := fun c x t => by
     change has_bracket_aux (c • x) _ = c • has_bracket_aux _ _
     simp only [has_bracket_aux, smul_add, LinearMap.rtensor_smul, LinearMap.smul_apply, LinearMap.ltensor_smul,
@@ -99,7 +104,7 @@ theorem lift_apply (f : M →ₗ[R] N →ₗ[R] P) (m : M) (n : N) : lift R L M 
 
 Note that maps `f` of type `M →ₗ⁅R,L⁆ N →ₗ[R] P` are exactly those `R`-bilinear maps satisfying
 `⁅x, f m n⁆ = f ⁅x, m⁆ n + f m ⁅x, n⁆` for all `x, m, n` (see e.g, `lie_module_hom.map_lie₂`). -/
-def lift_lie : (M →ₗ⁅R,L⁆ N →ₗ[R] P) ≃ₗ[R] M ⊗[R] N →ₗ⁅R,L⁆ P :=
+def liftLie : (M →ₗ⁅R,L⁆ N →ₗ[R] P) ≃ₗ[R] M ⊗[R] N →ₗ⁅R,L⁆ P :=
   maxTrivLinearMapEquivLieModuleHom.symm ≪≫ₗ ↑(maxTrivEquiv (lift R L M N P)) ≪≫ₗ
     max_triv_linear_map_equiv_lie_module_hom
 
@@ -143,7 +148,7 @@ theorem map_tmul (f : M →ₗ⁅R,L⁆ P) (g : N →ₗ⁅R,L⁆ Q) (m : M) (n 
   map_tmul f g m n
 
 /-- Given Lie submodules `M' ⊆ M` and `N' ⊆ N`, this is the natural map: `M' ⊗ N' → M ⊗ N`. -/
-def map_incl (M' : LieSubmodule R L M) (N' : LieSubmodule R L N) : M' ⊗[R] N' →ₗ⁅R,L⁆ M ⊗[R] N :=
+def mapIncl (M' : LieSubmodule R L M) (N' : LieSubmodule R L N) : M' ⊗[R] N' →ₗ⁅R,L⁆ M ⊗[R] N :=
   map M'.incl N'.incl
 
 @[simp]
@@ -165,7 +170,7 @@ variable [LieRing L] [LieAlgebra R L]
 variable [AddCommGroupₓ M] [Module R M] [LieRingModule L M] [LieModule R L M]
 
 /-- The action of the Lie algebra on one of its modules, regarded as a morphism of Lie modules. -/
-def to_module_hom : L ⊗[R] M →ₗ⁅R,L⁆ M :=
+def toModuleHom : L ⊗[R] M →ₗ⁅R,L⁆ M :=
   TensorProduct.LieModule.liftLie R L L M M
     { (toEndomorphism R L M : L →ₗ[R] M →ₗ[R] M) with
       map_lie' := fun x m => by

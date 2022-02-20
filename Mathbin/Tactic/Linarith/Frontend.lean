@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Robert Y. Lewis. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Robert Y. Lewis
+-/
 import Mathbin.Tactic.Linarith.Verification
 import Mathbin.Tactic.Linarith.Preprocessing
 
@@ -232,18 +237,29 @@ unsafe def tactic.linarith (reduce_semi : Bool) (only_on : Bool) (hyps : List pe
     tactic Unit :=
   focus1 <| do
     let t ← target
-    if t then
+    -- if the target is an equality, we run `linarith` twice, to prove ≤ and ≥.
+        if t then
         linarith_trace "target is an equality: splitting" >> seq' (applyc `` eq_of_not_lt_of_not_gt) tactic.linarith
       else do
         let hyps ← hyps fun e => i_to_expr e >>= note_anon none
         when cfg (linarith_trace "trying to split hypotheses" >> try auto.split_hyps)
-        let pref_type_and_new_var_from_tgt ← apply_contr_lemma
+        let pref_type_and_new_var_from_tgt
+          ←/- If we are proving a comparison goal (and not just `false`), we consider the type of the
+               elements in the comparison to be the "preferred" type. That is, if we find comparison
+               hypotheses in multiple types, we will run `linarith` on the goal type first.
+               In this case we also recieve a new variable from moving the goal to a hypothesis.
+               Otherwise, there is no preferred type and no new variable; we simply change the goal to `false`.
+            -/
+            apply_contr_lemma
         when pref_type_and_new_var_from_tgt <|
             if cfg then linarith_trace "using exfalso" >> exfalso
             else fail "linarith failed: target is not a valid comparison"
         let cfg := cfg reduce_semi
         let (pref_type, new_var) := pref_type_and_new_var_from_tgt (none, none) fun ⟨a, b⟩ => (some a, some b)
-        let hyps ← if only_on then return (new_var [] singleton ++ hyps) else (· ++ hyps) <$> local_context
+        let hyps
+          ←-- set up the list of hypotheses, considering the `only_on` and `restrict_type` options
+              if only_on then return (new_var [] singleton ++ hyps)
+            else (· ++ hyps) <$> local_context
         let hyps ←
           (do
                 let t ← get_restrict_type cfg

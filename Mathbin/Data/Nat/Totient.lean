@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Chris Hughes. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Chris Hughes
+-/
 import Mathbin.Algebra.BigOperators.Basic
 import Mathbin.Data.Nat.Prime
 import Mathbin.Data.Zmod.Basic
@@ -109,7 +114,7 @@ theorem _root_.zmod.card_units_eq_totient (n : ℕ) [Fact (0 < n)] [Fintype (Zmo
   calc
     Fintype.card (Zmod n)ˣ = Fintype.card { x : Zmod n // x.val.Coprime n } := Fintype.card_congr Zmod.unitsEquivCoprime
     _ = φ n := by
-      apply Finset.card_congr fun a : { x : Zmod n // x.val.coprime n } _ => a.1.val
+      apply Finset.card_congr fun _ => a.1.val
       · intro a
         simp (config := { contextual := true })[(a : Zmod n).val_lt, a.prop.symm]
         
@@ -298,6 +303,7 @@ theorem prime_iff_card_units (p : ℕ) [Fintype (Zmod p)ˣ] : p.Prime ↔ Fintyp
   by_cases' hp : p = 0
   · subst hp
     simp only [Zmod, not_prime_zero, false_iffₓ, zero_tsub]
+    -- the substI created an non-defeq but subsingleton instance diamond; resolve it
     suffices Fintype.card (ℤ)ˣ ≠ 0 by
       convert this
     simp
@@ -310,6 +316,56 @@ theorem totient_two : φ 2 = 1 :=
   (totient_prime prime_two).trans
     (by
       norm_num)
+
+/-! ### Euler's product formula for the totient function
+
+We prove several different statements of this formula. -/
+
+
+/-- Euler's product formula for the totient function. -/
+theorem totient_eq_prod_factorization {n : ℕ} (hn : n ≠ 0) :
+    φ n = n.factorization.Prod fun p k => p ^ (k - 1) * (p - 1) := by
+  rw [multiplicative_factorization φ (@totient_mul) totient_one hn]
+  apply Finsupp.prod_congr fun p hp => _
+  have h := zero_lt_iff.mpr (finsupp.mem_support_iff.mp hp)
+  rw [totient_prime_pow (prime_of_mem_factorization hp) h]
+
+/-- Euler's product formula for the totient function. -/
+theorem totient_mul_prod_factors (n : ℕ) :
+    (φ n * ∏ p in n.factors.toFinset, p) = n * ∏ p in n.factors.toFinset, p - 1 := by
+  by_cases' hn : n = 0
+  · simp [hn]
+    
+  rw [totient_eq_prod_factorization hn]
+  nth_rw 2[← factorization_prod_pow_eq_self hn]
+  simp only [← prod_factorization_eq_prod_factors, ← Finsupp.prod_mul]
+  refine' Finsupp.prod_congr fun p hp => _
+  rw [Finsupp.mem_support_iff, ← zero_lt_iff] at hp
+  rw [mul_comm, ← mul_assoc, ← pow_succₓ, Nat.sub_add_cancelₓ hp]
+
+/-- Euler's product formula for the totient function. -/
+theorem totient_eq_div_factors_mul (n : ℕ) :
+    φ n = (n / ∏ p in n.factors.toFinset, p) * ∏ p in n.factors.toFinset, p - 1 := by
+  rw [← mul_div_left n.totient, totient_mul_prod_factors, mul_comm, Nat.mul_div_assocₓ _ (prod_prime_factors_dvd n),
+    mul_comm]
+  simpa [prod_factorization_eq_prod_factors] using prod_pos fun p => pos_of_mem_factorization
+
+/-- Euler's product formula for the totient function. -/
+theorem totient_eq_mul_prod_factors (n : ℕ) : (φ n : ℚ) = n * ∏ p in n.factors.toFinset, 1 - p⁻¹ := by
+  by_cases' hn : n = 0
+  · simp [hn]
+    
+  have hn' : (n : ℚ) ≠ 0 := by
+    simp [hn]
+  have hpQ : (∏ p in n.factors.to_finset, (p : ℚ)) ≠ 0 := by
+    rw [← cast_prod, cast_ne_zero, ← zero_lt_iff, ← prod_factorization_eq_prod_factors]
+    exact prod_pos fun p hp => pos_of_mem_factorization hp
+  simp only [totient_eq_div_factors_mul n, prod_prime_factors_dvd n, cast_mul, cast_prod, cast_dvd_char_zero,
+    mul_comm_div', mul_right_inj' hn', div_eq_iff hpQ, ← prod_mul_distrib]
+  refine' prod_congr rfl fun p hp => _
+  have hp := pos_of_mem_factors (list.mem_to_finset.mp hp)
+  have hp' : (p : ℚ) ≠ 0 := cast_ne_zero.mpr hp.ne.symm
+  rw [sub_mul, one_mulₓ, mul_comm, mul_inv_cancel hp', cast_pred hp]
 
 end Nat
 

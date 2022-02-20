@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison
+-/
 import Mathbin.CategoryTheory.Limits.Shapes.FiniteProducts
 import Mathbin.CategoryTheory.Limits.Shapes.BinaryProducts
 import Mathbin.CategoryTheory.Preadditive.Default
@@ -61,7 +66,7 @@ variable {C : Type u} [Category.{v} C] [HasZeroMorphisms C]
 * such that `ι j ≫ π j'` is the identity when `j = j'` and zero otherwise.
 -/
 @[nolint has_inhabited_instance]
-structure bicone (F : J → C) where
+structure Bicone (F : J → C) where
   x : C
   π : ∀ j, X ⟶ F j
   ι : ∀ j, F j ⟶ X
@@ -81,13 +86,13 @@ namespace Bicone
 
 /-- Extract the cone from a bicone. -/
 @[simps]
-def to_cone (B : Bicone F) : Cone (Discrete.functor F) where
+def toCone (B : Bicone F) : Cone (Discrete.functor F) where
   x := B.x
   π := { app := fun j => B.π j }
 
 /-- Extract the cocone from a bicone. -/
 @[simps]
-def to_cocone (B : Bicone F) : Cocone (Discrete.functor F) where
+def toCocone (B : Bicone F) : Cocone (Discrete.functor F) where
   x := B.x
   ι := { app := fun j => B.ι j }
 
@@ -96,7 +101,7 @@ end Bicone
 /-- A bicone over `F : J → C`, which is both a limit cone and a colimit cocone.
 -/
 @[nolint has_inhabited_instance]
-structure limit_bicone (F : J → C) where
+structure LimitBicone (F : J → C) where
   Bicone : Bicone F
   IsLimit : IsLimit bicone.toCone
   IsColimit : IsColimit bicone.toCocone
@@ -104,26 +109,26 @@ structure limit_bicone (F : J → C) where
 /-- `has_biproduct F` expresses the mere existence of a bicone which is
 simultaneously a limit and a colimit of the diagram `F`.
 -/
-class has_biproduct (F : J → C) : Prop where mk' ::
+class HasBiproduct (F : J → C) : Prop where mk' ::
   exists_biproduct : Nonempty (LimitBicone F)
 
-theorem has_biproduct.mk {F : J → C} (d : LimitBicone F) : HasBiproduct F :=
+theorem HasBiproduct.mk {F : J → C} (d : LimitBicone F) : HasBiproduct F :=
   ⟨Nonempty.intro d⟩
 
 /-- Use the axiom of choice to extract explicit `biproduct_data F` from `has_biproduct F`. -/
-def get_biproduct_data (F : J → C) [HasBiproduct F] : LimitBicone F :=
+def getBiproductData (F : J → C) [HasBiproduct F] : LimitBicone F :=
   Classical.choice HasBiproduct.exists_biproduct
 
 /-- A bicone for `F` which is both a limit cone and a colimit cocone. -/
-def biproduct.bicone (F : J → C) [HasBiproduct F] : Bicone F :=
+def Biproduct.bicone (F : J → C) [HasBiproduct F] : Bicone F :=
   (getBiproductData F).Bicone
 
 /-- `biproduct.bicone F` is a limit cone. -/
-def biproduct.is_limit (F : J → C) [HasBiproduct F] : IsLimit (Biproduct.bicone F).toCone :=
+def Biproduct.isLimit (F : J → C) [HasBiproduct F] : IsLimit (Biproduct.bicone F).toCone :=
   (getBiproductData F).IsLimit
 
 /-- `biproduct.bicone F` is a colimit cocone. -/
-def biproduct.is_colimit (F : J → C) [HasBiproduct F] : IsColimit (Biproduct.bicone F).toCocone :=
+def Biproduct.isColimit (F : J → C) [HasBiproduct F] : IsColimit (Biproduct.bicone F).toCocone :=
   (getBiproductData F).IsColimit
 
 instance (priority := 100) has_product_of_has_biproduct [HasBiproduct F] : HasLimit (Discrete.functor F) :=
@@ -138,14 +143,14 @@ variable (J C)
 a limit and a colimit, with the same cone points,
 of every function `F : J → C`.
 -/
-class has_biproducts_of_shape : Prop where
+class HasBiproductsOfShape : Prop where
   HasBiproduct : ∀ F : J → C, HasBiproduct F
 
 attribute [instance] has_biproducts_of_shape.has_biproduct
 
 /-- `has_finite_biproducts C` represents a choice of biproduct for every family of objects in `C`
 indexed by a finite type with decidable equality. -/
-class has_finite_biproducts : Prop where
+class HasFiniteBiproducts : Prop where
   HasBiproductsOfShape : ∀ J : Type v [DecidableEq J] [Fintype J], HasBiproductsOfShape J C
 
 attribute [instance] has_finite_biproducts.has_biproducts_of_shape
@@ -163,7 +168,7 @@ variable {J C}
 /-- The isomorphism between the specified limit and the specified colimit for
 a functor with a bilimit.
 -/
-def biproduct_iso (F : J → C) [HasBiproduct F] : Limits.piObj F ≅ Limits.sigmaObj F :=
+def biproductIso (F : J → C) [HasBiproduct F] : Limits.piObj F ≅ Limits.sigmaObj F :=
   (IsLimit.conePointUniqueUpToIso (limit.isLimit _) (Biproduct.isLimit F)).trans <|
     IsColimit.coconePointUniqueUpToIso (Biproduct.isColimit F) (colimit.isColimit _)
 
@@ -292,7 +297,7 @@ theorem biproduct.lift_map [Fintype J] {f g : J → C} [HasFiniteBiproducts C] {
 /-- Given a collection of isomorphisms between corresponding summands of a pair of biproducts
 indexed by the same type, we obtain an isomorphism between the biproducts. -/
 @[simps]
-def biproduct.map_iso [Fintype J] {f g : J → C} [HasFiniteBiproducts C] (p : ∀ b, f b ≅ g b) : ⨁ f ≅ ⨁ g where
+def biproduct.mapIso [Fintype J] {f g : J → C} [HasFiniteBiproducts C] (p : ∀ b, f b ≅ g b) : ⨁ f ≅ ⨁ g where
   Hom := biproduct.map fun b => (p b).Hom
   inv := biproduct.map fun b => (p b).inv
 
@@ -334,7 +339,7 @@ theorem biproduct.components_matrix (m : ⨁ f ⟶ ⨁ g) : (biproduct.matrix fu
 
 /-- Morphisms between direct sums are matrices. -/
 @[simps]
-def biproduct.matrix_equiv : (⨁ f ⟶ ⨁ g) ≃ ∀ j k, f j ⟶ g k where
+def biproduct.matrixEquiv : (⨁ f ⟶ ⨁ g) ≃ ∀ j k, f j ⟶ g k where
   toFun := biproduct.components
   invFun := biproduct.matrix
   left_inv := biproduct.components_matrix
@@ -344,11 +349,11 @@ def biproduct.matrix_equiv : (⨁ f ⟶ ⨁ g) ≃ ∀ j k, f j ⟶ g k where
 
 end
 
-instance biproduct.ι_mono (f : J → C) [HasBiproduct f] (b : J) : SplitMono (biproduct.ι f b) where
+instance biproduct.ιMono (f : J → C) [HasBiproduct f] (b : J) : SplitMono (biproduct.ι f b) where
   retraction :=
     biproduct.desc fun b' => if h : b' = b then eqToHom (congr_argₓ f h) else biproduct.ι f b' ≫ biproduct.π f b
 
-instance biproduct.π_epi (f : J → C) [HasBiproduct f] (b : J) : SplitEpi (biproduct.π f b) where
+instance biproduct.πEpi (f : J → C) [HasBiproduct f] (b : J) : SplitEpi (biproduct.π f b) where
   section_ :=
     biproduct.lift fun b' => if h : b = b' then eqToHom (congr_argₓ f h) else biproduct.ι f b ≫ biproduct.π f b'
 
@@ -359,7 +364,7 @@ maps from `X` to both `P` and `Q`, and maps from both `P` and `Q` to `X`,
 so that `inl ≫ fst = 𝟙 P`, `inl ≫ snd = 0`, `inr ≫ fst = 0`, and `inr ≫ snd = 𝟙 Q`
 -/
 @[nolint has_inhabited_instance]
-structure binary_bicone (P Q : C) where
+structure BinaryBicone (P Q : C) where
   x : C
   fst : X ⟶ P
   snd : X ⟶ Q
@@ -393,7 +398,7 @@ namespace BinaryBicone
 variable {P Q : C}
 
 /-- Extract the cone from a binary bicone. -/
-def to_cone (c : BinaryBicone P Q) : Cone (pair P Q) :=
+def toCone (c : BinaryBicone P Q) : Cone (pair P Q) :=
   BinaryFan.mk c.fst c.snd
 
 @[simp]
@@ -409,7 +414,7 @@ theorem to_cone_π_app_right (c : BinaryBicone P Q) : c.toCone.π.app WalkingPai
   rfl
 
 /-- Extract the cocone from a binary bicone. -/
-def to_cocone (c : BinaryBicone P Q) : Cocone (pair P Q) :=
+def toCocone (c : BinaryBicone P Q) : Cocone (pair P Q) :=
   BinaryCofan.mk c.inl c.inr
 
 @[simp]
@@ -430,7 +435,7 @@ namespace Bicone
 
 /-- Convert a `bicone` over a function on `walking_pair` to a binary_bicone. -/
 @[simps]
-def to_binary_bicone {X Y : C} (b : Bicone (pair X Y).obj) : BinaryBicone X Y where
+def toBinaryBicone {X Y : C} (b : Bicone (pair X Y).obj) : BinaryBicone X Y where
   x := b.x
   fst := b.π WalkingPair.left
   snd := b.π WalkingPair.right
@@ -450,7 +455,7 @@ def to_binary_bicone {X Y : C} (b : Bicone (pair X Y).obj) : BinaryBicone X Y wh
 /-- If the cone obtained from a bicone over `pair X Y` is a limit cone,
 so is the cone obtained by converting that bicone to a binary_bicone, then to a cone.
 -/
-def to_binary_bicone_is_limit {X Y : C} {b : Bicone (pair X Y).obj} (c : IsLimit b.toCone) :
+def toBinaryBiconeIsLimit {X Y : C} {b : Bicone (pair X Y).obj} (c : IsLimit b.toCone) :
     IsLimit b.toBinaryBicone.toCone where
   lift := fun s => c.lift s
   fac' := fun s j => by
@@ -464,7 +469,7 @@ def to_binary_bicone_is_limit {X Y : C} {b : Bicone (pair X Y).obj} (c : IsLimit
 /-- If the cocone obtained from a bicone over `pair X Y` is a colimit cocone,
 so is the cocone obtained by converting that bicone to a binary_bicone, then to a cocone.
 -/
-def to_binary_bicone_is_colimit {X Y : C} {b : Bicone (pair X Y).obj} (c : IsColimit b.toCocone) :
+def toBinaryBiconeIsColimit {X Y : C} {b : Bicone (pair X Y).obj} (c : IsColimit b.toCocone) :
     IsColimit b.toBinaryBicone.toCocone where
   desc := fun s => c.desc s
   fac' := fun s j => by
@@ -480,7 +485,7 @@ end Bicone
 /-- A bicone over `P Q : C`, which is both a limit cone and a colimit cocone.
 -/
 @[nolint has_inhabited_instance]
-structure binary_biproduct_data (P Q : C) where
+structure BinaryBiproductData (P Q : C) where
   Bicone : BinaryBicone P Q
   IsLimit : IsLimit bicone.toCone
   IsColimit : IsColimit bicone.toCocone
@@ -488,27 +493,27 @@ structure binary_biproduct_data (P Q : C) where
 /-- `has_binary_biproduct P Q` expresses the mere existence of a bicone which is
 simultaneously a limit and a colimit of the diagram `pair P Q`.
 -/
-class has_binary_biproduct (P Q : C) : Prop where mk' ::
+class HasBinaryBiproduct (P Q : C) : Prop where mk' ::
   exists_binary_biproduct : Nonempty (BinaryBiproductData P Q)
 
-theorem has_binary_biproduct.mk {P Q : C} (d : BinaryBiproductData P Q) : HasBinaryBiproduct P Q :=
+theorem HasBinaryBiproduct.mk {P Q : C} (d : BinaryBiproductData P Q) : HasBinaryBiproduct P Q :=
   ⟨Nonempty.intro d⟩
 
 /-- Use the axiom of choice to extract explicit `binary_biproduct_data F` from `has_binary_biproduct F`.
 -/
-def get_binary_biproduct_data (P Q : C) [HasBinaryBiproduct P Q] : BinaryBiproductData P Q :=
+def getBinaryBiproductData (P Q : C) [HasBinaryBiproduct P Q] : BinaryBiproductData P Q :=
   Classical.choice HasBinaryBiproduct.exists_binary_biproduct
 
 /-- A bicone for `P Q ` which is both a limit cone and a colimit cocone. -/
-def binary_biproduct.bicone (P Q : C) [HasBinaryBiproduct P Q] : BinaryBicone P Q :=
+def BinaryBiproduct.bicone (P Q : C) [HasBinaryBiproduct P Q] : BinaryBicone P Q :=
   (getBinaryBiproductData P Q).Bicone
 
 /-- `binary_biproduct.bicone P Q` is a limit cone. -/
-def binary_biproduct.is_limit (P Q : C) [HasBinaryBiproduct P Q] : IsLimit (BinaryBiproduct.bicone P Q).toCone :=
+def BinaryBiproduct.isLimit (P Q : C) [HasBinaryBiproduct P Q] : IsLimit (BinaryBiproduct.bicone P Q).toCone :=
   (getBinaryBiproductData P Q).IsLimit
 
 /-- `binary_biproduct.bicone P Q` is a colimit cocone. -/
-def binary_biproduct.is_colimit (P Q : C) [HasBinaryBiproduct P Q] : IsColimit (BinaryBiproduct.bicone P Q).toCocone :=
+def BinaryBiproduct.isColimit (P Q : C) [HasBinaryBiproduct P Q] : IsColimit (BinaryBiproduct.bicone P Q).toCocone :=
   (getBinaryBiproductData P Q).IsColimit
 
 section
@@ -518,7 +523,7 @@ variable (C)
 /-- `has_binary_biproducts C` represents the existence of a bicone which is
 simultaneously a limit and a colimit of the diagram `pair P Q`, for every `P Q : C`.
 -/
-class has_binary_biproducts : Prop where
+class HasBinaryBiproducts : Prop where
   HasBinaryBiproduct : ∀ P Q : C, HasBinaryBiproduct P Q
 
 attribute [instance] has_binary_biproducts.has_binary_biproduct
@@ -539,10 +544,10 @@ end
 
 variable {P Q : C}
 
-instance has_binary_biproduct.has_limit_pair [HasBinaryBiproduct P Q] : HasLimit (pair P Q) :=
+instance HasBinaryBiproduct.has_limit_pair [HasBinaryBiproduct P Q] : HasLimit (pair P Q) :=
   HasLimit.mk ⟨_, BinaryBiproduct.isLimit P Q⟩
 
-instance has_binary_biproduct.has_colimit_pair [HasBinaryBiproduct P Q] : HasColimit (pair P Q) :=
+instance HasBinaryBiproduct.has_colimit_pair [HasBinaryBiproduct P Q] : HasColimit (pair P Q) :=
   HasColimit.mk ⟨_, BinaryBiproduct.isColimit P Q⟩
 
 instance (priority := 100) has_binary_products_of_has_binary_biproducts [HasBinaryBiproducts C] :
@@ -556,7 +561,7 @@ instance (priority := 100) has_binary_coproducts_of_has_binary_biproducts [HasBi
 /-- The isomorphism between the specified binary product and the specified binary coproduct for
 a pair for a binary biproduct.
 -/
-def biprod_iso (X Y : C) [HasBinaryBiproduct X Y] : Limits.prod X Y ≅ Limits.coprod X Y :=
+def biprodIso (X Y : C) [HasBinaryBiproduct X Y] : Limits.prod X Y ≅ Limits.coprod X Y :=
   (IsLimit.conePointUniqueUpToIso (limit.isLimit _) (BinaryBiproduct.isLimit X Y)).trans <|
     IsColimit.coconePointUniqueUpToIso (BinaryBiproduct.isColimit X Y) (colimit.isColimit _)
 
@@ -587,19 +592,19 @@ section
 variable {X Y : C} [HasBinaryBiproduct X Y]
 
 @[simp]
-theorem binary_biproduct.bicone_fst : (BinaryBiproduct.bicone X Y).fst = biprod.fst :=
+theorem BinaryBiproduct.bicone_fst : (BinaryBiproduct.bicone X Y).fst = biprod.fst :=
   rfl
 
 @[simp]
-theorem binary_biproduct.bicone_snd : (BinaryBiproduct.bicone X Y).snd = biprod.snd :=
+theorem BinaryBiproduct.bicone_snd : (BinaryBiproduct.bicone X Y).snd = biprod.snd :=
   rfl
 
 @[simp]
-theorem binary_biproduct.bicone_inl : (BinaryBiproduct.bicone X Y).inl = biprod.inl :=
+theorem BinaryBiproduct.bicone_inl : (BinaryBiproduct.bicone X Y).inl = biprod.inl :=
   rfl
 
 @[simp]
-theorem binary_biproduct.bicone_inr : (BinaryBiproduct.bicone X Y).inr = biprod.inr :=
+theorem BinaryBiproduct.bicone_inr : (BinaryBiproduct.bicone X Y).inr = biprod.inr :=
   rfl
 
 end
@@ -713,16 +718,16 @@ theorem biprod.map_eq_map' {W X Y Z : C} [HasBinaryBiproduct W X] [HasBinaryBipr
     simp
     
 
-instance biprod.inl_mono {X Y : C} [HasBinaryBiproduct X Y] : SplitMono (biprod.inl : X ⟶ X ⊞ Y) where
+instance biprod.inlMono {X Y : C} [HasBinaryBiproduct X Y] : SplitMono (biprod.inl : X ⟶ X ⊞ Y) where
   retraction := biprod.desc (𝟙 X) (biprod.inr ≫ biprod.fst)
 
-instance biprod.inr_mono {X Y : C} [HasBinaryBiproduct X Y] : SplitMono (biprod.inr : Y ⟶ X ⊞ Y) where
+instance biprod.inrMono {X Y : C} [HasBinaryBiproduct X Y] : SplitMono (biprod.inr : Y ⟶ X ⊞ Y) where
   retraction := biprod.desc (biprod.inl ≫ biprod.snd) (𝟙 Y)
 
-instance biprod.fst_epi {X Y : C} [HasBinaryBiproduct X Y] : SplitEpi (biprod.fst : X ⊞ Y ⟶ X) where
+instance biprod.fstEpi {X Y : C} [HasBinaryBiproduct X Y] : SplitEpi (biprod.fst : X ⊞ Y ⟶ X) where
   section_ := biprod.lift (𝟙 X) (biprod.inl ≫ biprod.snd)
 
-instance biprod.snd_epi {X Y : C} [HasBinaryBiproduct X Y] : SplitEpi (biprod.snd : X ⊞ Y ⟶ Y) where
+instance biprod.sndEpi {X Y : C} [HasBinaryBiproduct X Y] : SplitEpi (biprod.snd : X ⊞ Y ⟶ Y) where
   section_ := biprod.lift (biprod.inr ≫ biprod.fst) (𝟙 Y)
 
 @[simp, reassoc]
@@ -735,6 +740,8 @@ theorem biprod.map_snd {W X Y Z : C} [HasBinaryBiproduct W X] [HasBinaryBiproduc
     biprod.map f g ≫ biprod.snd = biprod.snd ≫ g :=
   IsLimit.map_π _ _ _ WalkingPair.right
 
+-- Because `biprod.map` is defined in terms of `lim` rather than `colim`,
+-- we need to provide additional `simp` lemmas.
 @[simp, reassoc]
 theorem biprod.inl_map {W X Y Z : C} [HasBinaryBiproduct W X] [HasBinaryBiproduct Y Z] (f : W ⟶ Y) (g : X ⟶ Z) :
     biprod.inl ≫ biprod.map f g = f ≫ biprod.inl := by
@@ -750,7 +757,7 @@ theorem biprod.inr_map {W X Y Z : C} [HasBinaryBiproduct W X] [HasBinaryBiproduc
 /-- Given a pair of isomorphisms between the summands of a pair of binary biproducts,
 we obtain an isomorphism between the binary biproducts. -/
 @[simps]
-def biprod.map_iso {W X Y Z : C} [HasBinaryBiproduct W X] [HasBinaryBiproduct Y Z] (f : W ≅ Y) (g : X ≅ Z) :
+def biprod.mapIso {W X Y Z : C} [HasBinaryBiproduct W X] [HasBinaryBiproduct Y Z] (f : W ≅ Y) (g : X ≅ Z) :
     W ⊞ X ≅ Y ⊞ Z where
   Hom := biprod.map f.Hom g.Hom
   inv := biprod.map f.inv g.inv
@@ -799,6 +806,9 @@ theorem biprod.symmetry (P Q : C) : (biprod.braiding P Q).Hom ≫ (biprod.braidi
 
 end
 
+-- TODO:
+-- If someone is interested, they could provide the constructions:
+--   has_binary_biproducts ↔ has_finite_biproducts
 end CategoryTheory.Limits
 
 namespace CategoryTheory.Limits
@@ -830,6 +840,7 @@ theorem has_biproduct_of_total {f : J → C} (b : Bicone f) (total : (∑ j : J,
             erw [reassoc_of (h j)],
           fac' := fun s j => by
             simp only [sum_comp, category.assoc, bicone.to_cone_π_app, b.ι_π, comp_dite]
+            -- See note [dsimp, simp].
             dsimp
             simp },
       IsColimit :=
@@ -846,7 +857,7 @@ theorem has_biproduct_of_total {f : J → C} (b : Bicone f) (total : (∑ j : J,
 
 /-- In a preadditive category, if the product over `f : J → C` exists,
     then the biproduct over `f` exists. -/
-theorem has_biproduct.of_has_product (f : J → C) [HasProduct f] : HasBiproduct f :=
+theorem HasBiproduct.of_has_product (f : J → C) [HasProduct f] : HasBiproduct f :=
   has_biproduct_of_total
     { x := piObj f, π := Limits.Pi.π f,
       ι := fun j => Pi.lift fun j' => if h : j = j' then eqToHom (congr_argₓ f h) else 0,
@@ -858,7 +869,7 @@ theorem has_biproduct.of_has_product (f : J → C) [HasProduct f] : HasBiproduct
 
 /-- In a preadditive category, if the coproduct over `f : J → C` exists,
     then the biproduct over `f` exists. -/
-theorem has_biproduct.of_has_coproduct (f : J → C) [HasCoproduct f] : HasBiproduct f :=
+theorem HasBiproduct.of_has_coproduct (f : J → C) [HasCoproduct f] : HasBiproduct f :=
   has_biproduct_of_total
     { x := sigmaObj f, π := fun j => Sigma.desc fun j' => if h : j' = j then eqToHom (congr_argₓ f h) else 0,
       ι := Limits.Sigma.ι f,
@@ -871,11 +882,11 @@ theorem has_biproduct.of_has_coproduct (f : J → C) [HasCoproduct f] : HasBipro
       simp only [dite_comp, Finset.sum_dite_eq, Finset.mem_univ, if_true, category.id_comp, eq_to_hom_refl, zero_comp])
 
 /-- A preadditive category with finite products has finite biproducts. -/
-theorem has_finite_biproducts.of_has_finite_products [HasFiniteProducts C] : HasFiniteBiproducts C :=
+theorem HasFiniteBiproducts.of_has_finite_products [HasFiniteProducts C] : HasFiniteBiproducts C :=
   ⟨fun J _ _ => { HasBiproduct := fun F => has_biproduct.of_has_product _ }⟩
 
 /-- A preadditive category with finite coproducts has finite biproducts. -/
-theorem has_finite_biproducts.of_has_finite_coproducts [HasFiniteCoproducts C] : HasFiniteBiproducts C :=
+theorem HasFiniteBiproducts.of_has_finite_coproducts [HasFiniteCoproducts C] : HasFiniteBiproducts C :=
   ⟨fun J _ _ => { HasBiproduct := fun F => has_biproduct.of_has_coproduct _ }⟩
 
 section
@@ -964,7 +975,7 @@ theorem has_binary_biproduct_of_total {X Y : C} (b : BinaryBicone X Y) (total : 
 
 /-- In a preadditive category, if the product of `X` and `Y` exists, then the
     binary biproduct of `X` and `Y` exists. -/
-theorem has_binary_biproduct.of_has_binary_product (X Y : C) [HasBinaryProduct X Y] : HasBinaryBiproduct X Y :=
+theorem HasBinaryBiproduct.of_has_binary_product (X Y : C) [HasBinaryProduct X Y] : HasBinaryBiproduct X Y :=
   has_binary_biproduct_of_total
     { x := X ⨯ Y, fst := CategoryTheory.Limits.prod.fst, snd := CategoryTheory.Limits.prod.snd,
       inl := prod.lift (𝟙 X) 0, inr := prod.lift 0 (𝟙 Y) }
@@ -972,12 +983,12 @@ theorem has_binary_biproduct.of_has_binary_product (X Y : C) [HasBinaryProduct X
       ext <;> simp [add_comp])
 
 /-- In a preadditive category, if all binary products exist, then all binary biproducts exist. -/
-theorem has_binary_biproducts.of_has_binary_products [HasBinaryProducts C] : HasBinaryBiproducts C :=
+theorem HasBinaryBiproducts.of_has_binary_products [HasBinaryProducts C] : HasBinaryBiproducts C :=
   { HasBinaryBiproduct := fun X Y => HasBinaryBiproduct.of_has_binary_product X Y }
 
 /-- In a preadditive category, if the coproduct of `X` and `Y` exists, then the
     binary biproduct of `X` and `Y` exists. -/
-theorem has_binary_biproduct.of_has_binary_coproduct (X Y : C) [HasBinaryCoproduct X Y] : HasBinaryBiproduct X Y :=
+theorem HasBinaryBiproduct.of_has_binary_coproduct (X Y : C) [HasBinaryCoproduct X Y] : HasBinaryBiproduct X Y :=
   has_binary_biproduct_of_total
     { x := X ⨿ Y, fst := coprod.desc (𝟙 X) 0, snd := coprod.desc 0 (𝟙 Y), inl := CategoryTheory.Limits.coprod.inl,
       inr := CategoryTheory.Limits.coprod.inr }
@@ -985,7 +996,7 @@ theorem has_binary_biproduct.of_has_binary_coproduct (X Y : C) [HasBinaryCoprodu
       ext <;> simp [add_comp])
 
 /-- In a preadditive category, if all binary coproducts exist, then all binary biproducts exist. -/
-theorem has_binary_biproducts.of_has_binary_coproducts [HasBinaryCoproducts C] : HasBinaryBiproducts C :=
+theorem HasBinaryBiproducts.of_has_binary_coproducts [HasBinaryCoproducts C] : HasBinaryBiproducts C :=
   { HasBinaryBiproduct := fun X Y => HasBinaryBiproduct.of_has_binary_coproduct X Y }
 
 section

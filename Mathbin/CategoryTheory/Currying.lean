@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2017 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison
+-/
 import Mathbin.CategoryTheory.Products.Bifunctor
 
 /-!
@@ -36,7 +41,7 @@ def uncurry : (C ⥤ D ⥤ E) ⥤ C × D ⥤ E where
 
 /-- The object level part of the currying functor. (See `curry` for the functorial version.)
 -/
-def curry_obj (F : C × D ⥤ E) : C ⥤ D ⥤ E where
+def curryObj (F : C × D ⥤ E) : C ⥤ D ⥤ E where
   obj := fun X => { obj := fun Y => F.obj (X, Y), map := fun Y Y' g => F.map (𝟙 X, g) }
   map := fun X X' f => { app := fun Y => F.map (f, 𝟙 Y) }
 
@@ -87,6 +92,7 @@ theorem curry.map_app_app {F G : C × D ⥤ E} {α : F ⟶ G} {X} {Y} : ((curry.
 
 /-- The equivalence of functor categories given by currying/uncurrying.
 -/
+-- create projection simp lemmas even though this isn't a `{ .. }`.
 @[simps]
 def currying : C ⥤ D ⥤ E ≌ C × D ⥤ E :=
   Equivalence.mk uncurry curry
@@ -115,7 +121,7 @@ def currying : C ⥤ D ⥤ E ≌ C × D ⥤ E :=
 
 /-- `F.flip` is isomorphic to uncurrying `F`, swapping the variables, and currying. -/
 @[simps]
-def flip_iso_curry_swap_uncurry (F : C ⥤ D ⥤ E) : F.flip ≅ curry.obj (prod.swap _ _ ⋙ uncurry.obj F) :=
+def flipIsoCurrySwapUncurry (F : C ⥤ D ⥤ E) : F.flip ≅ curry.obj (prod.swap _ _ ⋙ uncurry.obj F) :=
   (NatIso.ofComponents fun d =>
       (NatIso.ofComponents fun c => eqToIso rfl) <| by
         tidy) <|

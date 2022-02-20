@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Markus Himmel, Scott Morrison
+-/
 import Mathbin.Algebra.Group.Ext
 import Mathbin.CategoryTheory.Simple
 import Mathbin.CategoryTheory.Linear.Default
@@ -71,6 +76,14 @@ variable [IsAlgClosed 𝕜] [Linear 𝕜 C]
 If `X ⟶ X` is finite dimensional, and every nonzero endomorphism is invertible,
 then `X ⟶ X` is 1-dimensional.
 -/
+-- In the proof below we have some difficulty using `I : finite_dimensional 𝕜 (X ⟶ X)`
+-- where we need a `finite_dimensional 𝕜 (End X)`.
+-- These are definitionally equal, but without eta reduction Lean can't see this.
+-- To get around this, we use `convert I`,
+-- then check the various instances agree field-by-field,
+-- We prove this with the explicit `is_iso_iff_nonzero` assumption,
+-- rather than just `[simple X]`, as this form is useful for
+-- Müger's formulation of semisimplicity.
 theorem finrank_endomorphism_eq_one {X : C} (is_iso_iff_nonzero : ∀ f : X ⟶ X, IsIso f ↔ f ≠ 0)
     [I : FiniteDimensional 𝕜 (X ⟶ X)] : finrank 𝕜 (X ⟶ X) = 1 := by
   have id_nonzero :=
@@ -115,6 +128,8 @@ if hom spaces are finite dimensional, then the hom space between simples is at m
 See `finrank_hom_simple_simple_eq_one_iff` and `finrank_hom_simple_simple_eq_zero_iff` below
 for the refinements when we know whether or not the simples are isomorphic.
 -/
+-- We don't really need `[∀ X Y : C, finite_dimensional 𝕜 (X ⟶ Y)]` here,
+-- just at least one of `[finite_dimensional 𝕜 (X ⟶ X)]` or `[finite_dimensional 𝕜 (Y ⟶ Y)]`.
 theorem finrank_hom_simple_simple_le_one (X Y : C) [∀ X Y : C, FiniteDimensional 𝕜 (X ⟶ Y)] [Simple.{v} X]
     [Simple.{v} Y] : finrank 𝕜 (X ⟶ Y) ≤ 1 := by
   cases' subsingleton_or_nontrivial (X ⟶ Y) with h

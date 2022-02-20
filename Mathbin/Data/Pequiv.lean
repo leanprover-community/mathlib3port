@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Chris Hughes. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Chris Hughes
+-/
 import Mathbin.Data.Set.Basic
 
 /-!
@@ -175,7 +180,7 @@ section OfSet
 variable (s : Set α) [DecidablePred (· ∈ s)]
 
 /-- Creates a `pequiv` that is the identity on `s`, and `none` outside of it. -/
-def of_set (s : Set α) [DecidablePred (· ∈ s)] : α ≃. α where
+def ofSet (s : Set α) [DecidablePred (· ∈ s)] : α ≃. α where
   toFun := fun a => if a ∈ s then some a else none
   invFun := fun a => if a ∈ s then some a else none
   inv := fun a b => by
@@ -366,7 +371,8 @@ instance : OrderBot (α ≃. β) :=
   { Pequiv.hasBot with bot_le := fun _ _ _ h => (not_mem_none _ h).elim }
 
 instance [DecidableEq α] [DecidableEq β] : SemilatticeInf (α ≃. β) :=
-  { Pequiv.partialOrder with
+  { -- `split_ifs; finish` closes this goal from here
+    Pequiv.partialOrder with
     inf := fun f g =>
       { toFun := fun a => if f a = g a then f a else none,
         invFun := fun b => if f.symm b = g.symm b then f.symm b else none,
@@ -412,7 +418,7 @@ namespace Equivₓ
 variable {α : Type _} {β : Type _} {γ : Type _}
 
 /-- Turns an `equiv` into a `pequiv` of the whole type. -/
-def to_pequiv (f : α ≃ β) : α ≃. β where
+def toPequiv (f : α ≃ β) : α ≃. β where
   toFun := some ∘ f
   invFun := some ∘ f.symm
   inv := by

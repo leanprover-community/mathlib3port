@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Yury Kudryashov All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yury Kudryashov, Frédéric Dupuis
+-/
 import Mathbin.Analysis.Convex.Hull
 import Mathbin.Analysis.InnerProductSpace.Basic
 
@@ -148,8 +153,8 @@ theorem mem_top (x : E) : x ∈ (⊤ : ConvexCone 𝕜 E) :=
   mem_univ x
 
 instance : CompleteLattice (ConvexCone 𝕜 E) :=
-  { PartialOrderₓ.lift (coe : ConvexCone 𝕜 E → Set E) fun a b => ext' with le := · ≤ ·, lt := · < ·, bot := ⊥,
-    bot_le := fun S x => False.elim, top := ⊤, le_top := fun S x hx => mem_top 𝕜 x, inf := ·⊓·, inf := HasInfₓ.inf,
+  { PartialOrderₓ.lift (coe : ConvexCone 𝕜 E → Set E) fun a b => ext' with le := (· ≤ ·), lt := (· < ·), bot := ⊥,
+    bot_le := fun S x => False.elim, top := ⊤, le_top := fun S x hx => mem_top 𝕜 x, inf := (·⊓·), inf := HasInfₓ.inf,
     sup := fun a b => inf { x | a ≤ x ∧ b ≤ x }, sup := fun s => inf { T | ∀, ∀ S ∈ s, ∀, S ≤ T },
     le_sup_left := fun a b => fun x hx => mem_Inf.2 fun s hs => hs.1 hx,
     le_sup_right := fun a b => fun x hx => mem_Inf.2 fun s hs => hs.2 hx,
@@ -167,7 +172,7 @@ section Module
 
 variable [Module 𝕜 E] (S : ConvexCone 𝕜 E)
 
-protected theorem Convex : Convex 𝕜 (S : Set E) :=
+protected theorem convex : Convex 𝕜 (S : Set E) :=
   convex_iff_forall_pos.2 fun x y hx hy a b ha hb hab => S.add_mem (S.smul_mem ha hx) (S.smul_mem hb hy)
 
 end Module
@@ -199,8 +204,7 @@ variable [Module 𝕜 E] [Module 𝕜 F] [Module 𝕜 G]
 def map (f : E →ₗ[𝕜] F) (S : ConvexCone 𝕜 E) : ConvexCone 𝕜 F where
   Carrier := f '' S
   smul_mem' := fun c hc y ⟨x, hx, hy⟩ => hy ▸ f.map_smul c x ▸ mem_image_of_mem f (S.smul_mem hc hx)
-  add_mem' := fun y₁ ⟨x₁, hx₁, hy₁⟩ y₂ ⟨x₂, hx₂, hy₂⟩ =>
-    hy₁ ▸ hy₂ ▸ f.map_add x₁ x₂ ▸ mem_image_of_mem f (S.add_mem hx₁ hx₂)
+  add_mem' := fun y₂ ⟨x₂, hx₂, hy₂⟩ => hy₁ ▸ hy₂ ▸ f.map_add x₁ x₂ ▸ mem_image_of_mem f (S.add_mem hx₁ hx₂)
 
 theorem map_map (g : F →ₗ[𝕜] G) (f : E →ₗ[𝕜] F) (S : ConvexCone 𝕜 E) : (S.map f).map g = S.map (g.comp f) :=
   ext' <| image_image g f S
@@ -264,11 +268,11 @@ section AddCommMonoidₓ
 variable [AddCommMonoidₓ E] [HasScalar 𝕜 E] (S : ConvexCone 𝕜 E)
 
 /-- A convex cone is pointed if it includes `0`. -/
-def pointed (S : ConvexCone 𝕜 E) : Prop :=
+def Pointed (S : ConvexCone 𝕜 E) : Prop :=
   (0 : E) ∈ S
 
 /-- A convex cone is blunt if it doesn't include `0`. -/
-def blunt (S : ConvexCone 𝕜 E) : Prop :=
+def Blunt (S : ConvexCone 𝕜 E) : Prop :=
   (0 : E) ∉ S
 
 theorem pointed_iff_not_blunt (S : ConvexCone 𝕜 E) : S.Pointed ↔ ¬S.Blunt :=
@@ -284,11 +288,11 @@ section AddCommGroupₓ
 variable [AddCommGroupₓ E] [HasScalar 𝕜 E] (S : ConvexCone 𝕜 E)
 
 /-- A convex cone is flat if it contains some nonzero vector `x` and its opposite `-x`. -/
-def flat : Prop :=
+def Flat : Prop :=
   ∃ x ∈ S, x ≠ (0 : E) ∧ -x ∈ S
 
 /-- A convex cone is salient if it doesn't include `x` and `-x` for any nonzero `x`. -/
-def salient : Prop :=
+def Salient : Prop :=
   ∀, ∀ x ∈ S, ∀, x ≠ (0 : E) → -x ∉ S
 
 theorem salient_iff_not_flat (S : ConvexCone 𝕜 E) : S.Salient ↔ ¬S.Flat := by
@@ -303,18 +307,18 @@ theorem salient_iff_not_flat (S : ConvexCone 𝕜 E) : S.Salient ↔ ¬S.Flat :=
     
 
 /-- A flat cone is always pointed (contains `0`). -/
-theorem flat.pointed {S : ConvexCone 𝕜 E} (hS : S.Flat) : S.Pointed := by
+theorem Flat.pointed {S : ConvexCone 𝕜 E} (hS : S.Flat) : S.Pointed := by
   obtain ⟨x, hx, _, hxneg⟩ := hS
   rw [pointed, ← add_neg_selfₓ x]
   exact add_mem S hx hxneg
 
 /-- A blunt cone (one not containing `0`) is always salient. -/
-theorem blunt.salient {S : ConvexCone 𝕜 E} : S.Blunt → S.Salient := by
+theorem Blunt.salient {S : ConvexCone 𝕜 E} : S.Blunt → S.Salient := by
   rw [salient_iff_not_flat, blunt_iff_not_pointed]
   exact mt flat.pointed
 
 /-- A pointed convex cone defines a preorder. -/
-def to_preorder (h₁ : S.Pointed) : Preorderₓ E where
+def toPreorder (h₁ : S.Pointed) : Preorderₓ E where
   le := fun x y => y - x ∈ S
   le_refl := fun x => by
     change x - x ∈ S <;> rw [sub_self x] <;> exact h₁
@@ -322,7 +326,7 @@ def to_preorder (h₁ : S.Pointed) : Preorderₓ E where
     simpa using add_mem S zy xy
 
 /-- A pointed and salient cone defines a partial order. -/
-def to_partial_order (h₁ : S.Pointed) (h₂ : S.Salient) : PartialOrderₓ E :=
+def toPartialOrder (h₁ : S.Pointed) (h₂ : S.Salient) : PartialOrderₓ E :=
   { toPreorder S h₁ with
     le_antisymm := by
       intro a b ab ba
@@ -333,7 +337,7 @@ def to_partial_order (h₁ : S.Pointed) (h₂ : S.Salient) : PartialOrderₓ E :
       exact H ba }
 
 /-- A pointed and salient cone defines an `ordered_add_comm_group`. -/
-def to_ordered_add_comm_group (h₁ : S.Pointed) (h₂ : S.Salient) : OrderedAddCommGroup E :=
+def toOrderedAddCommGroup (h₁ : S.Pointed) (h₂ : S.Salient) : OrderedAddCommGroup E :=
   { toPartialOrder S h₁ h₂,
     show AddCommGroupₓ E by
       infer_instance with
@@ -357,13 +361,13 @@ variable (𝕜 E) [OrderedSemiring 𝕜] [OrderedAddCommGroup E] [Module 𝕜 E]
 /-- The positive cone is the convex cone formed by the set of nonnegative elements in an ordered
 module.
 -/
-def positive_cone : ConvexCone 𝕜 E where
+def positiveCone : ConvexCone 𝕜 E where
   Carrier := { x | 0 ≤ x }
   smul_mem' := by
     rintro c hc x (hx : _ ≤ _)
     rw [← smul_zero c]
     exact smul_le_smul_of_nonneg hx hc.le
-  add_mem' := fun x hx : _ ≤ _ y hy : _ ≤ _ => add_nonneg hx hy
+  add_mem' := fun hy : _ ≤ _ => add_nonneg hx hy
 
 /-- The positive cone of an ordered module is always salient. -/
 theorem salient_positive_cone : Salient (positiveCone 𝕜 E) := fun x xs hx hx' =>
@@ -392,7 +396,7 @@ variable [LinearOrderedField 𝕜] [OrderedAddCommGroup E] [Module 𝕜 E]
 namespace Convex
 
 /-- The set of vectors proportional to those in a convex set forms a convex cone. -/
-def to_cone (s : Set E) (hs : Convex 𝕜 s) : ConvexCone 𝕜 E := by
+def toCone (s : Set E) (hs : Convex 𝕜 s) : ConvexCone 𝕜 E := by
   apply ConvexCone.mk (⋃ (c : 𝕜) (H : 0 < c), c • s) <;> simp only [mem_Union, mem_smul_set]
   · rintro c c_pos _ ⟨c', c'_pos, x, hx, rfl⟩
     exact ⟨c * c', mul_pos c_pos c'_pos, x, hx, (smul_smul _ _ _).symm⟩

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2017 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Tim Baumann, Stephen Morgan, Scott Morrison, Floris van Doorn
+-/
 import Mathbin.CategoryTheory.FunctorCategory
 import Mathbin.CategoryTheory.Isomorphism
 
@@ -28,6 +33,7 @@ namespace so that they are available using dot notation.
 
 open CategoryTheory
 
+-- declare the `v`'s first; see `category_theory.category` for an explanation
 universe v₁ v₂ v₃ v₄ u₁ u₂ u₃ u₄
 
 namespace CategoryTheory
@@ -164,7 +170,7 @@ theorem is_iso_inv_app (α : F ⟶ G) [IsIso α] X : (inv α).app X = inv (α.ap
 /-- Construct a natural isomorphism between functors by giving object level isomorphisms,
 and checking naturality only in the forward direction.
 -/
-def of_components (app : ∀ X : C, F.obj X ≅ G.obj X)
+def ofComponents (app : ∀ X : C, F.obj X ≅ G.obj X)
     (naturality : ∀ {X Y : C} f : X ⟶ Y, F.map f ≫ (app Y).Hom = (app X).Hom ≫ G.map f) : F ≅ G where
   Hom := { app := fun X => (app X).Hom }
   inv :=
@@ -175,22 +181,23 @@ def of_components (app : ∀ X : C, F.obj X ≅ G.obj X)
         exact h }
 
 @[simp]
-theorem of_components.app (app' : ∀ X : C, F.obj X ≅ G.obj X) naturality X :
+theorem ofComponents.app (app' : ∀ X : C, F.obj X ≅ G.obj X) naturality X :
     (ofComponents app' naturality).app X = app' X := by
   tidy
 
 @[simp]
-theorem of_components.hom_app (app : ∀ X : C, F.obj X ≅ G.obj X) naturality X :
+theorem ofComponents.hom_app (app : ∀ X : C, F.obj X ≅ G.obj X) naturality X :
     (ofComponents app naturality).Hom.app X = (app X).Hom :=
   rfl
 
 @[simp]
-theorem of_components.inv_app (app : ∀ X : C, F.obj X ≅ G.obj X) naturality X :
+theorem ofComponents.inv_app (app : ∀ X : C, F.obj X ≅ G.obj X) naturality X :
     (ofComponents app naturality).inv.app X = (app X).inv := by
   simp [of_components]
 
 /-- A natural transformation is an isomorphism if all its components are isomorphisms.
 -/
+-- Making this an instance would cause a typeclass inference loop with `is_iso_app_of_is_iso`.
 theorem is_iso_of_is_iso_app (α : F ⟶ G) [∀ X : C, IsIso (α.app X)] : IsIso α :=
   ⟨(IsIso.of_iso
         (ofComponents (fun X => asIso (α.app X))

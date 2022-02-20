@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Kenny Lau. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Kenny Lau, Yury Kudryashov
+-/
 import Mathbin.Algebra.Algebra.Basic
 
 /-!
@@ -140,7 +145,7 @@ variable [CommSemiringₓ R] [Algebra R S]
 
 /-- `R ⟶ S` induces `S-Alg ⥤ R-Alg` -/
 instance : Algebra R (RestrictScalars R S A) :=
-  { (algebraMap S A).comp (algebraMap R S) with smul := · • ·, commutes' := fun r x => Algebra.commutes _ _,
+  { (algebraMap S A).comp (algebraMap R S) with smul := (· • ·), commutes' := fun r x => Algebra.commutes _ _,
     smul_def' := fun _ _ => Algebra.smul_def _ _ }
 
 end Algebra

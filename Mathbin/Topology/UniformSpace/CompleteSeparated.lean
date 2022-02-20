@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Sébastien Gouëzel. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Sébastien Gouëzel
+-/
 import Mathbin.Topology.UniformSpace.Cauchy
 import Mathbin.Topology.UniformSpace.Separation
 import Mathbin.Topology.DenseEmbedding
@@ -15,6 +20,7 @@ open_locale TopologicalSpace Filter
 
 variable {α : Type _}
 
+--In a separated space, a complete set is closed
 theorem IsComplete.is_closed [UniformSpace α] [SeparatedSpace α] {s : Set α} (h : IsComplete s) : IsClosed s :=
   is_closed_iff_cluster_pt.2 fun a ha => by
     let f := 𝓝[s] a

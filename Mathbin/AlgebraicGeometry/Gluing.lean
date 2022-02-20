@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2022 Andrew Yang. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Andrew Yang
+-/
 import Mathbin.AlgebraicGeometry.PresheafedSpace.Gluing
 
 /-!
@@ -74,7 +79,7 @@ We can then glue the schemes `U i` together by identifying `V i j` with `V j i`,
 that the `U i`'s are open subschemes of the glued space.
 -/
 @[nolint has_inhabited_instance]
-structure glue_data extends CategoryTheory.GlueData Scheme where
+structure GlueData extends CategoryTheory.GlueData Scheme where
   f_open : ∀ i j, IsOpenImmersion (f i j)
 
 attribute [instance] glue_data.f_open
@@ -88,12 +93,12 @@ include D
 local notation "𝖣" => D.toGlueData
 
 /-- The glue data of locally ringed spaces spaces associated to a family of glue data of schemes. -/
-abbrev to_LocallyRingedSpace_glue_data : LocallyRingedSpace.GlueData :=
+abbrev toLocallyRingedSpaceGlueData : LocallyRingedSpace.GlueData :=
   { f_open := D.f_open, toGlueData := 𝖣.mapGlueData forgetToLocallyRingedSpace }
 
 /-- (Implementation). The glued scheme of a glue data.
 This should not be used outside this file. Use `Scheme.glue_data.glued` instead. -/
-def glued_Scheme : Scheme := by
+def gluedScheme : Scheme := by
   apply LocallyRingedSpace.is_open_immersion.Scheme D.to_LocallyRingedSpace_glue_data.to_glue_data.glued
   intro x
   obtain ⟨i, y, rfl⟩ := D.to_LocallyRingedSpace_glue_data.ι_jointly_surjective x
@@ -129,7 +134,7 @@ abbrev ι (i : D.J) : D.U i ⟶ D.glued :=
   𝖣.ι i
 
 /-- The gluing as sheafed spaces is isomorphic to the gluing as presheafed spaces. -/
-abbrev iso_LocallyRingedSpace : D.glued.toLocallyRingedSpace ≅ D.toLocallyRingedSpaceGlueData.toGlueData.glued :=
+abbrev isoLocallyRingedSpace : D.glued.toLocallyRingedSpace ≅ D.toLocallyRingedSpaceGlueData.toGlueData.glued :=
   𝖣.gluedIso forgetToLocallyRingedSpace
 
 theorem ι_iso_LocallyRingedSpace_inv (i : D.J) :
@@ -149,7 +154,7 @@ theorem glue_condition (i j : D.J) : D.t i j ≫ D.f j i ≫ D.ι j = D.f i j �
 
 /-- The pullback cone spanned by `V i j ⟶ U i` and `V i j ⟶ U j`.
 This is a pullback diagram (`V_pullback_cone_is_limit`). -/
-def V_pullback_cone (i j : D.J) : PullbackCone (D.ι i) (D.ι j) :=
+def vPullbackCone (i j : D.J) : PullbackCone (D.ι i) (D.ι j) :=
   PullbackCone.mk (D.f i j) (D.t i j ≫ D.f j i)
     (by
       simp )
@@ -161,12 +166,12 @@ Vᵢⱼ ⟶ Uᵢ
  ↓      ↓
  Uⱼ ⟶ X
 -/
-def V_pullback_cone_is_limit (i j : D.J) : IsLimit (D.vPullbackCone i j) :=
+def vPullbackConeIsLimit (i j : D.J) : IsLimit (D.vPullbackCone i j) :=
   𝖣.vPullbackConeIsLimitOfMap forgetToLocallyRingedSpace i j (D.toLocallyRingedSpaceGlueData.vPullbackConeIsLimit _ _)
 
 /-- The underlying topological space of the glued scheme is isomorphic to the gluing of the
 underlying spacess -/
-def iso_carrier :
+def isoCarrier :
     D.glued.Carrier ≅
       D.toLocallyRingedSpaceGlueData.toSheafedSpaceGlueData.toPresheafedSpaceGlueData.toTopGlueData.toGlueData.glued :=
   by
@@ -214,7 +219,7 @@ theorem is_open_iff (U : Set D.glued.Carrier) : IsOpen U ↔ ∀ i, IsOpen ((D.�
   erw [← Set.preimage_comp, ← coe_comp, ι_iso_carrier_inv]
 
 /-- The open cover of the glued space given by the glue data. -/
-def open_cover (D : Scheme.GlueData) : OpenCover D.glued where
+def openCover (D : Scheme.GlueData) : OpenCover D.glued where
   J := D.J
   obj := D.U
   map := D.ι
@@ -228,7 +233,7 @@ namespace OpenCover
 variable {X : Scheme.{u}} (𝒰 : OpenCover.{u} X)
 
 /-- (Implementation) the transition maps in the glue data associated with an open cover. -/
-def glued_cover_t' (x y z : 𝒰.J) :
+def gluedCoverT' (x y z : 𝒰.J) :
     pullback (pullback.fst : pullback (𝒰.map x) (𝒰.map y) ⟶ _) (pullback.fst : pullback (𝒰.map x) (𝒰.map z) ⟶ _) ⟶
       pullback (pullback.fst : pullback (𝒰.map y) (𝒰.map z) ⟶ _) (pullback.fst : pullback (𝒰.map y) (𝒰.map x) ⟶ _) :=
   by
@@ -282,7 +287,7 @@ theorem glued_cover_cocycle (x y z : 𝒰.J) : gluedCoverT' 𝒰 x y z ≫ glued
 /-- The glue data associated with an open cover.
 The canonical isomorphism `𝒰.glued_cover.glued ⟶ X` is provided by `𝒰.from_glued`. -/
 @[simps]
-def glued_cover : Scheme.GlueData.{u} where
+def gluedCover : Scheme.GlueData.{u} where
   J := 𝒰.J
   U := 𝒰.obj
   V := fun ⟨x, y⟩ => pullback (𝒰.map x) (𝒰.map y)
@@ -294,12 +299,13 @@ def glued_cover : Scheme.GlueData.{u} where
   t' := fun x y z => gluedCoverT' 𝒰 x y z
   t_fac := fun x y z => by
     apply pullback.hom_ext <;> simp
+  -- The `cocycle` field could have been `by tidy` but lean timeouts.
   cocycle := fun x y z => glued_cover_cocycle 𝒰 x y z
   f_open := fun x => inferInstance
 
 /-- The canonical morphism from the gluing of an open cover of `X` into `X`.
 This is an isomorphism, as witnessed by an `is_iso` instance. -/
-def from_glued : 𝒰.gluedCover.glued ⟶ X := by
+def fromGlued : 𝒰.gluedCover.glued ⟶ X := by
   fapply multicoequalizer.desc
   exact fun x => 𝒰.map x
   rintro ⟨x, y⟩
@@ -395,7 +401,7 @@ together into a morphism `X ⟶ Y`.
 Note:
 If `X` is exactly (defeq to) the gluing of `U i`, then using `multicoequalizer.desc` suffices.
 -/
-def glue_morphisms {Y : Scheme} (f : ∀ x, 𝒰.obj x ⟶ Y)
+def glueMorphisms {Y : Scheme} (f : ∀ x, 𝒰.obj x ⟶ Y)
     (hf : ∀ x y, (pullback.fst : pullback (𝒰.map x) (𝒰.map y) ⟶ _) ≫ f x = pullback.snd ≫ f y) : X ⟶ Y := by
   refine' inv 𝒰.from_glued ≫ _
   fapply multicoequalizer.desc

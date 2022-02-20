@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Adam Topaz. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johan Commelin, Adam Topaz
+-/
 import Mathbin.AlgebraicTopology.SimplexCategory
 import Mathbin.Topology.Category.Top.Basic
 import Mathbin.Topology.Instances.Nnreal
@@ -21,18 +26,18 @@ attribute [local instance] CategoryTheory.ConcreteCategory.hasCoeToSort Category
 
 /-- The topological simplex associated to `x : simplex_category`.
   This is the object part of the functor `simplex_category.to_Top`. -/
-def to_Top_obj (x : SimplexCategory) :=
+def ToTopObj (x : SimplexCategory) :=
   { f : x → ℝ≥0 | (∑ i, f i) = 1 }
 
 instance (x : SimplexCategory) : CoeFun x.ToTopObj fun _ => x → ℝ≥0 :=
   ⟨fun f => (f : x → ℝ≥0 )⟩
 
 @[ext]
-theorem to_Top_obj.ext {x : SimplexCategory} (f g : x.ToTopObj) : (f : x → ℝ≥0 ) = g → f = g :=
+theorem ToTopObj.ext {x : SimplexCategory} (f g : x.ToTopObj) : (f : x → ℝ≥0 ) = g → f = g :=
   Subtype.ext
 
 /-- A morphism in `simplex_category` induces a map on the associated topological spaces. -/
-def to_Top_map {x y : SimplexCategory} (f : x ⟶ y) : x.ToTopObj → y.ToTopObj := fun g =>
+def toTopMap {x y : SimplexCategory} (f : x ⟶ y) : x.ToTopObj → y.ToTopObj := fun g =>
   ⟨fun i => ∑ j in Finset.univ.filter fun k => f k = i, g j, by
     dsimp [to_Top_obj]
     simp only [Finset.filter_congr_decidable, Finset.sum_congr]
@@ -65,7 +70,7 @@ theorem continuous_to_Top_map {x y : SimplexCategory} (f : x ⟶ y) : Continuous
 
 /-- The functor associating the topological `n`-simplex to `[n] : simplex_category`. -/
 @[simps]
-def to_Top : SimplexCategory ⥤ Top where
+def toTop : SimplexCategory ⥤ Top where
   obj := fun x => Top.of x.ToTopObj
   map := fun x y f => ⟨toTopMap f⟩
   map_id' := by

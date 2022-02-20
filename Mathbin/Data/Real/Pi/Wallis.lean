@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Hanting Zhang. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Hanting Zhang
+-/
 import Mathbin.Analysis.SpecialFunctions.Integrals
 
 /-! ### The Wallis Product for Pi -/

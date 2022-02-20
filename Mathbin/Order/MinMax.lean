@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2017 Mario Carneiro. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Mario Carneiro
+-/
 import Mathbin.Order.Lattice
 
 /-!
@@ -21,6 +26,7 @@ section
 
 variable [LinearOrderₓ α] [LinearOrderₓ β] {f : α → β} {s : Set α} {a b c d : α}
 
+-- translate from lattices to linear orders (sup → max, inf → min)
 @[simp]
 theorem le_min_iff : c ≤ min a b ↔ c ≤ a ∧ c ≤ b :=
   le_inf_iff
@@ -127,9 +133,11 @@ instance max_idem : IsIdempotent α max := by
   infer_instance
 
 /-- An instance asserting that `min a a = a` -/
+-- short-circuit type class inference
 instance min_idem : IsIdempotent α min := by
   infer_instance
 
+-- short-circuit type class inference
 @[simp]
 theorem max_lt_iff : max a b < c ↔ a < c ∧ b < c :=
   sup_lt_iff

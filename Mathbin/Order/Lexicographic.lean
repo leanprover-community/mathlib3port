@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison, Minchao Wu
+-/
 import Mathbin.Data.Equiv.Basic
 import Mathbin.Data.Prod
 import Mathbin.Tactic.Basic
@@ -79,17 +84,17 @@ notation:35 α " ×ₗ " β:34 => Lex (Prod α β)
 unsafe instance [has_to_format α] [has_to_format β] : has_to_format (α ×ₗ β) :=
   prod.has_to_format
 
-instance DecidableEq (α β : Type _) [DecidableEq α] [DecidableEq β] : DecidableEq (α ×ₗ β) :=
+instance decidableEq (α β : Type _) [DecidableEq α] [DecidableEq β] : DecidableEq (α ×ₗ β) :=
   Prod.decidableEq
 
-instance Inhabited (α β : Type _) [Inhabited α] [Inhabited β] : Inhabited (α ×ₗ β) :=
+instance inhabited (α β : Type _) [Inhabited α] [Inhabited β] : Inhabited (α ×ₗ β) :=
   Prod.inhabited
 
 /-- Dictionary / lexicographic ordering on pairs.  -/
-instance LE (α β : Type _) [LT α] [LE β] : LE (α ×ₗ β) where
+instance hasLe (α β : Type _) [LT α] [LE β] : LE (α ×ₗ β) where
   le := Prod.Lex (· < ·) (· ≤ ·)
 
-instance LT (α β : Type _) [LT α] [LT β] : LT (α ×ₗ β) where
+instance hasLt (α β : Type _) [LT α] [LT β] : LT (α ×ₗ β) where
   lt := Prod.Lex (· < ·) (· < ·)
 
 theorem le_iff [LT α] [LE β] (a b : α × β) : toLex a ≤ toLex b ↔ a.1 < b.1 ∨ a.1 = b.1 ∧ a.2 ≤ b.2 :=
@@ -99,7 +104,7 @@ theorem lt_iff [LT α] [LT β] (a b : α × β) : toLex a < toLex b ↔ a.1 < b.
   Prod.lex_def (· < ·) (· < ·)
 
 /-- Dictionary / lexicographic preorder for pairs. -/
-instance Preorderₓ (α β : Type _) [Preorderₓ α] [Preorderₓ β] : Preorderₓ (α ×ₗ β) :=
+instance preorder (α β : Type _) [Preorderₓ α] [Preorderₓ β] : Preorderₓ (α ×ₗ β) :=
   { Prod.Lex.hasLe α β, Prod.Lex.hasLt α β with
     le_refl :=
       have : IsRefl β (· ≤ ·) := ⟨le_reflₓ⟩
@@ -159,7 +164,7 @@ instance Preorderₓ (α β : Type _) [Preorderₓ α] [Preorderₓ β] : Preord
            }
 
 /-- Dictionary / lexicographic partial_order for pairs. -/
-instance PartialOrderₓ (α β : Type _) [PartialOrderₓ α] [PartialOrderₓ β] : PartialOrderₓ (α ×ₗ β) :=
+instance partialOrder (α β : Type _) [PartialOrderₓ α] [PartialOrderₓ β] : PartialOrderₓ (α ×ₗ β) :=
   { Prod.Lex.preorder α β with
     le_antisymm := by
       have : IsStrictOrder α (· < ·) := { irrefl := lt_irreflₓ, trans := fun _ _ _ => lt_transₓ }
@@ -167,7 +172,7 @@ instance PartialOrderₓ (α β : Type _) [PartialOrderₓ α] [PartialOrderₓ 
       exact @antisymm _ (Prod.Lex _ _) _ }
 
 /-- Dictionary / lexicographic linear_order for pairs. -/
-instance LinearOrderₓ (α β : Type _) [LinearOrderₓ α] [LinearOrderₓ β] : LinearOrderₓ (α ×ₗ β) :=
+instance linearOrder (α β : Type _) [LinearOrderₓ α] [LinearOrderₓ β] : LinearOrderₓ (α ×ₗ β) :=
   { Prod.Lex.partialOrder α β with le_total := total_of (Prod.Lex _ _), decidableLe := Prod.Lex.decidable _ _,
     decidableLt := Prod.Lex.decidable _ _, DecidableEq := Lex.decidableEq _ _ }
 

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2014 Jeremy Avigad. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Jeremy Avigad, Mario Carneiro
+-/
 import Mathbin.Data.Prod
 import Mathbin.Data.Subtype
 
@@ -103,13 +108,13 @@ namespace Eq
 
 /-- If `x = y` then `y ≤ x`. Note: this lemma uses `y ≤ x` instead of `x ≥ y`, because `le` is used
 almost exclusively in mathlib. -/
-protected theorem Ge [Preorderₓ α] {x y : α} (h : x = y) : y ≤ x :=
+protected theorem ge [Preorderₓ α] {x y : α} (h : x = y) : y ≤ x :=
   h.symm.le
 
 theorem trans_le [Preorderₓ α] {x y z : α} (h1 : x = y) (h2 : y ≤ z) : x ≤ z :=
   h1.le.trans h2
 
-theorem not_ltₓ [PartialOrderₓ α] {x y : α} (h : x = y) : ¬x < y := fun h' => h'.Ne h
+theorem not_lt [PartialOrderₓ α] {x y : α} (h : x = y) : ¬x < y := fun h' => h'.Ne h
 
 theorem not_gt [PartialOrderₓ α] {x y : α} (h : x = y) : ¬y < x :=
   h.symm.not_lt
@@ -118,8 +123,9 @@ end Eq
 
 namespace LE.le
 
+-- see Note [nolint_ge]
 @[nolint ge_or_gt]
-protected theorem Ge [LE α] {x y : α} (h : x ≤ y) : y ≥ x :=
+protected theorem ge [LE α] {x y : α} (h : x ≤ y) : y ≥ x :=
   h
 
 theorem trans_eq [Preorderₓ α] {x y z : α} (h1 : x ≤ y) (h2 : y = z) : x ≤ z :=
@@ -131,10 +137,10 @@ theorem lt_iff_ne [PartialOrderₓ α] {x y : α} (h : x ≤ y) : x < y ↔ x �
 theorem le_iff_eq [PartialOrderₓ α] {x y : α} (h : x ≤ y) : y ≤ x ↔ y = x :=
   ⟨fun h' => h'.antisymm h, Eq.le⟩
 
-theorem lt_or_leₓ [LinearOrderₓ α] {a b : α} (h : a ≤ b) (c : α) : a < c ∨ c ≤ b :=
+theorem lt_or_le [LinearOrderₓ α] {a b : α} (h : a ≤ b) (c : α) : a < c ∨ c ≤ b :=
   ((lt_or_geₓ a c).imp id) fun hc => le_transₓ hc h
 
-theorem le_or_ltₓ [LinearOrderₓ α] {a b : α} (h : a ≤ b) (c : α) : a ≤ c ∨ c < b :=
+theorem le_or_lt [LinearOrderₓ α] {a b : α} (h : a ≤ b) (c : α) : a ≤ c ∨ c < b :=
   ((le_or_gtₓ a c).imp id) fun hc => lt_of_lt_of_leₓ hc h
 
 theorem le_or_le [LinearOrderₓ α] {a b : α} (h : a ≤ b) (c : α) : a ≤ c ∨ c ≤ b :=
@@ -144,11 +150,12 @@ end LE.le
 
 namespace LT.lt
 
+-- see Note [nolint_ge]
 @[nolint ge_or_gt]
-protected theorem Gt [LT α] {x y : α} (h : x < y) : y > x :=
+protected theorem gt [LT α] {x y : α} (h : x < y) : y > x :=
   h
 
-protected theorem False [Preorderₓ α] {x : α} : x < x → False :=
+protected theorem false [Preorderₓ α] {x : α} : x < x → False :=
   lt_irreflₓ x
 
 theorem ne' [Preorderₓ α] {x y : α} (h : x < y) : y ≠ x :=
@@ -159,22 +166,27 @@ theorem lt_or_lt [LinearOrderₓ α] {x y : α} (h : x < y) (z : α) : x < z ∨
 
 end LT.lt
 
+-- see Note [nolint_ge]
 @[nolint ge_or_gt]
 protected theorem Ge.le [LE α] {x y : α} (h : x ≥ y) : y ≤ x :=
   h
 
+-- see Note [nolint_ge]
 @[nolint ge_or_gt]
 protected theorem Gt.lt [LT α] {x y : α} (h : x > y) : y < x :=
   h
 
+-- see Note [nolint_ge]
 @[nolint ge_or_gt]
 theorem ge_of_eq [Preorderₓ α] {a b : α} (h : a = b) : a ≥ b :=
   h.Ge
 
+-- see Note [nolint_ge]
 @[simp, nolint ge_or_gt]
 theorem ge_iff_le [Preorderₓ α] {a b : α} : a ≥ b ↔ b ≤ a :=
   Iff.rfl
 
+-- see Note [nolint_ge]
 @[simp, nolint ge_or_gt]
 theorem gt_iff_lt [Preorderₓ α] {a b : α} : a > b ↔ b < a :=
   Iff.rfl
@@ -190,6 +202,7 @@ alias not_lt_of_le ← LE.le.not_lt
 
 theorem ne_of_not_le [Preorderₓ α] {a b : α} (h : ¬a ≤ b) : a ≠ b := fun hab => h (le_of_eqₓ hab)
 
+-- See Note [decidable namespace]
 protected theorem Decidable.le_iff_eq_or_lt [PartialOrderₓ α] [@DecidableRel α (· ≤ ·)] {a b : α} :
     a ≤ b ↔ a = b ∨ a < b :=
   Decidable.le_iff_lt_or_eqₓ.trans Or.comm
@@ -200,6 +213,7 @@ theorem le_iff_eq_or_lt [PartialOrderₓ α] {a b : α} : a ≤ b ↔ a = b ∨ 
 theorem lt_iff_le_and_ne [PartialOrderₓ α] {a b : α} : a < b ↔ a ≤ b ∧ a ≠ b :=
   ⟨fun h => ⟨le_of_ltₓ h, ne_of_ltₓ h⟩, fun ⟨h1, h2⟩ => h1.lt_of_ne h2⟩
 
+-- See Note [decidable namespace]
 protected theorem Decidable.eq_iff_le_not_lt [PartialOrderₓ α] [@DecidableRel α (· ≤ ·)] {a b : α} :
     a = b ↔ a ≤ b ∧ ¬a < b :=
   ⟨fun h => ⟨h.le, h ▸ lt_irreflₓ _⟩, fun ⟨h₁, h₂⟩ =>
@@ -236,6 +250,7 @@ alias eq_of_ge_of_not_gt ← LE.le.eq_of_not_gt
 theorem Ne.le_iff_lt [PartialOrderₓ α] {a b : α} (h : a ≠ b) : a ≤ b ↔ a < b :=
   ⟨fun h' => lt_of_le_of_neₓ h' h, fun h => h.le⟩
 
+-- See Note [decidable namespace]
 protected theorem Decidable.ne_iff_lt_iff_le [PartialOrderₓ α] [@DecidableRel α (· ≤ ·)] {a b : α} :
     (a ≠ b ↔ a < b) ↔ a ≤ b :=
   ⟨fun h => Decidable.byCases le_of_eqₓ (le_of_ltₓ ∘ h.mp), fun h => ⟨lt_of_le_of_neₓ h, ne_of_ltₓ⟩⟩
@@ -322,7 +337,7 @@ theorem Preorderₓ.to_has_le_injective {α : Type _} : Function.Injective (@Pre
   injection h with h_le
   have : A_lt = B_lt := by
     funext a b
-    dsimp [· ≤ ·]  at A_lt_iff_le_not_le B_lt_iff_le_not_le h_le
+    dsimp [(· ≤ ·)]  at A_lt_iff_le_not_le B_lt_iff_le_not_le h_le
     simp [A_lt_iff_le_not_le, B_lt_iff_le_not_le, h_le]
   congr
 
@@ -414,6 +429,8 @@ instance (α : Type _) [LT α] : LT (OrderDual α) :=
 instance (α : Type _) [Zero α] : Zero (OrderDual α) :=
   ⟨(0 : α)⟩
 
+-- `dual_le` and `dual_lt` should not be simp lemmas:
+-- they cause a loop since `α` and `order_dual α` are definitionally equal
 theorem dual_le [LE α] {a b : α} : @LE.le (OrderDual α) _ a b ↔ @LE.le α _ b a :=
   Iff.rfl
 
@@ -439,10 +456,10 @@ instance : ∀ [Inhabited α], Inhabited (OrderDual α) :=
 theorem preorder.dual_dual (α : Type _) [H : Preorderₓ α] : OrderDual.preorder (OrderDual α) = H :=
   Preorderₓ.ext fun _ _ => Iff.rfl
 
-theorem partial_order.dual_dual (α : Type _) [H : PartialOrderₓ α] : OrderDual.partialOrder (OrderDual α) = H :=
+theorem partialOrder.dual_dual (α : Type _) [H : PartialOrderₓ α] : OrderDual.partialOrder (OrderDual α) = H :=
   PartialOrderₓ.ext fun _ _ => Iff.rfl
 
-theorem linear_order.dual_dual (α : Type _) [H : LinearOrderₓ α] : OrderDual.linearOrder (OrderDual α) = H :=
+theorem linearOrder.dual_dual (α : Type _) [H : LinearOrderₓ α] : OrderDual.linearOrder (OrderDual α) = H :=
   LinearOrderₓ.ext fun _ _ => Iff.rfl
 
 end OrderDual
@@ -463,17 +480,17 @@ theorem Pi.lt_def {ι : Type u} {α : ι → Type v} [∀ i, Preorderₓ (α i)]
     x < y ↔ x ≤ y ∧ ∃ i, x i < y i := by
   simp (config := { contextual := true })[lt_iff_le_not_leₓ, Pi.le_def]
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (j «expr ≠ » i)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (j «expr ≠ » i)
 theorem le_update_iff {ι : Type u} {α : ι → Type v} [∀ i, Preorderₓ (α i)] [DecidableEq ι] {x y : ∀ i, α i} {i : ι}
     {a : α i} : x ≤ Function.update y i a ↔ x i ≤ a ∧ ∀ j _ : j ≠ i, x j ≤ y j :=
   Function.forall_update_iff _ fun j z => x j ≤ z
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (j «expr ≠ » i)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (j «expr ≠ » i)
 theorem update_le_iff {ι : Type u} {α : ι → Type v} [∀ i, Preorderₓ (α i)] [DecidableEq ι] {x y : ∀ i, α i} {i : ι}
     {a : α i} : Function.update x i a ≤ y ↔ a ≤ y i ∧ ∀ j _ : j ≠ i, x j ≤ y j :=
   Function.forall_update_iff _ fun j z => z ≤ y j
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (j «expr ≠ » i)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (j «expr ≠ » i)
 theorem update_le_update_iff {ι : Type u} {α : ι → Type v} [∀ i, Preorderₓ (α i)] [DecidableEq ι] {x y : ∀ i, α i}
     {i : ι} {a b : α i} : Function.update x i a ≤ Function.update y i b ↔ a ≤ b ∧ ∀ j _ : j ≠ i, x j ≤ y j := by
   simp (config := { contextual := true })[update_le_iff]

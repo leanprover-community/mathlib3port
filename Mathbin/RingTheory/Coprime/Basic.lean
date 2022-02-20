@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Kenny Lau. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Kenny Lau, Ken Lee, Chris Hughes
+-/
 import Mathbin.Tactic.Ring
 import Mathbin.Algebra.Ring.Basic
 
@@ -267,7 +272,7 @@ theorem neg_right {x y : R} (h : IsCoprime x y) : IsCoprime x (-y) :=
 theorem neg_right_iff (x y : R) : IsCoprime x (-y) ↔ IsCoprime x y :=
   ⟨fun h => neg_negₓ y ▸ h.neg_right, neg_right⟩
 
-theorem neg_negₓ {x y : R} (h : IsCoprime x y) : IsCoprime (-x) (-y) :=
+theorem neg_neg {x y : R} (h : IsCoprime x y) : IsCoprime (-x) (-y) :=
   h.neg_left.neg_right
 
 theorem neg_neg_iff (x y : R) : IsCoprime (-x) (-y) ↔ IsCoprime x y :=

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2017 Johannes Hölzl. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johannes Hölzl, Mario Carneiro
+-/
 import Mathbin.Topology.Tactic
 
 /-!
@@ -48,18 +53,21 @@ namespace TopologicalSpace
 variable {α : Type u}
 
 /-- The open sets of the least topology containing a collection of basic sets. -/
-inductive generate_open (g : Set (Set α)) : Set α → Prop
+inductive GenerateOpen (g : Set (Set α)) : Set α → Prop
   | basic : ∀, ∀ s ∈ g, ∀, generate_open s
   | univ : generate_open Univ
   | inter : ∀ s t, generate_open s → generate_open t → generate_open (s ∩ t)
   | sUnion : ∀ k, (∀, ∀ s ∈ k, ∀, generate_open s) → generate_open (⋃₀k)
 
 /-- The smallest topological space containing the collection `g` of basic sets -/
-def generate_from (g : Set (Set α)) : TopologicalSpace α where
+def generateFrom (g : Set (Set α)) : TopologicalSpace α where
   IsOpen := GenerateOpen g
   is_open_univ := GenerateOpen.univ
   is_open_inter := GenerateOpen.inter
   is_open_sUnion := GenerateOpen.sUnion
+
+theorem is_open_generate_from_of_mem {g : Set (Set α)} {s : Set α} (hs : s ∈ g) : @IsOpen _ (generateFrom g) s :=
+  GenerateOpen.basic s hs
 
 theorem nhds_generate_from {g : Set (Set α)} {a : α} : @nhds α (generateFrom g) a = ⨅ s ∈ { s | a ∈ s ∧ s ∈ g }, 𝓟 s :=
   by
@@ -95,7 +103,7 @@ theorem tendsto_nhds_generate_from {β : Type _} {m : α → β} {f : Filter α}
     exact tendsto_infi.2 fun s => tendsto_infi.2 fun ⟨hbs, hsg⟩ => tendsto_principal.2 <| h s hsg hbs
 
 /-- Construct a topology on α given the filter of neighborhoods of each point of α. -/
-protected def mk_of_nhds (n : α → Filter α) : TopologicalSpace α where
+protected def mkOfNhds (n : α → Filter α) : TopologicalSpace α where
   IsOpen := fun s => ∀, ∀ a ∈ s, ∀, s ∈ n a
   is_open_univ := fun x h => univ_mem
   is_open_inter := fun s t hs ht x ⟨hxs, hxt⟩ => inter_mem (hs x hxs) (ht x hxt)
@@ -108,7 +116,7 @@ theorem nhds_mk_of_nhds (n : α → Filter α) (a : α) (h₀ : pure ≤ n)
   refine' le_antisymmₓ (fun s hs => _) fun s hs => _
   · have h₀ : { b | s ∈ n b } ⊆ s := fun b hb => mem_pure.1 <| h₀ b hb
     have h₁ : { b | s ∈ n b } ∈ 𝓝 a := by
-      refine' IsOpen.mem_nhds (fun b hb : s ∈ n b => _) hs
+      refine' IsOpen.mem_nhds (fun hb : s ∈ n b => _) hs
       rcases h₁ hb with ⟨t, ht, hts, h⟩
       exact mem_of_superset ht h
     exact mem_of_superset h₁ h₀
@@ -146,6 +154,7 @@ def tmpOrder : PartialOrderₓ (TopologicalSpace α) where
 
 attribute [local instance] tmpOrder
 
+-- We'll later restate this lemma in terms of the correct order on `topological_space α`.
 private theorem generate_from_le_iff_subset_is_open {g : Set (Set α)} {t : TopologicalSpace α} :
     TopologicalSpace.generateFrom g ≤ t ↔ g ⊆ { s | t.IsOpen s } :=
   Iff.intro (fun ht s hs => ht _ <| TopologicalSpace.GenerateOpen.basic s hs) fun hg s hs =>
@@ -413,6 +422,7 @@ theorem coinduced_compose [tα : TopologicalSpace α] {f : α → β} {g : β �
 
 end GaloisConnection
 
+-- constructions using the complete lattice structure
 section Constructions
 
 open TopologicalSpace
@@ -532,7 +542,7 @@ theorem is_open_singleton_nhds_adjoint {α : Type _} {a b : α} (f : Filter α) 
   rw [is_open_singleton_iff_nhds_eq_pure]
   exact nhds_adjoint_nhds_of_ne a f hb
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (b «expr ≠ » a)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (b «expr ≠ » a)
 theorem le_nhds_adjoint_iff' {α : Type _} (a : α) (f : Filter α) (t : TopologicalSpace α) :
     t ≤ nhdsAdjoint a f ↔ @nhds α t a ≤ pure a⊔f ∧ ∀ b _ : b ≠ a, @nhds α t b = pure b := by
   rw [le_iff_nhds]
@@ -688,6 +698,7 @@ theorem continuous_bot {t : tspace β} : cont ⊥ t f :=
 theorem continuous_top {t : tspace α} : cont t ⊤ f :=
   continuous_iff_coinduced_le.2 <| le_top
 
+-- 𝓝 in the induced topology
 theorem mem_nhds_induced [T : TopologicalSpace α] (f : β → α) (a : β) (s : Set β) :
     s ∈ @nhds β (TopologicalSpace.induced f T) a ↔ ∃ u ∈ 𝓝 (f a), f ⁻¹' u ⊆ s := by
   simp only [mem_nhds_iff, is_open_induced_iff, exists_prop, Set.mem_set_of_eq]
@@ -760,7 +771,7 @@ theorem continuous_Prop {p : α → Prop} : Continuous p ↔ IsOpen { x | p x } 
   ⟨fun h : Continuous p => by
     have : IsOpen (p ⁻¹' {True}) := is_open_singleton_true.Preimage h
     simp [preimage, eq_trueₓ] at this <;> assumption, fun h : IsOpen { x | p x } =>
-    continuous_generated_from fun s hs : s ∈ {{True}} => by
+    continuous_generated_from fun hs : s ∈ {{True}} => by
       simp at hs <;> simp [hs, preimage, eq_trueₓ, h]⟩
 
 theorem is_open_iff_continuous_mem {s : Set α} : IsOpen s ↔ Continuous fun x => x ∈ s :=

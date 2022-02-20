@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Patrick Massot. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Patrick Massot
+-/
 import Mathbin.Algebra.Order.AbsoluteValue
 import Mathbin.Topology.UniformSpace.Basic
 
@@ -36,19 +41,19 @@ variable {𝕜 : Type _} [LinearOrderedField 𝕜]
 variable {R : Type _} [CommRingₓ R] (abv : R → 𝕜) [IsAbsoluteValue abv]
 
 /-- The uniformity coming from an absolute value. -/
-def uniform_space_core : UniformSpace.Core R where
+def uniformSpaceCore : UniformSpace.Core R where
   uniformity := ⨅ ε > 0, 𝓟 { p : R × R | abv (p.2 - p.1) < ε }
   refl :=
     le_infi fun ε =>
       le_infi fun ε_pos =>
-        principal_mono.2 fun ⟨x, y⟩ h => by
+        principal_mono.2 fun h => by
           simpa [show x = y from h, abv_zero abv]
   symm :=
     tendsto_infi.2 fun ε =>
       tendsto_infi.2 fun h =>
         tendsto_infi' ε <|
           tendsto_infi' h <|
-            tendsto_principal_principal.2 fun ⟨x, y⟩ h => by
+            tendsto_principal_principal.2 fun h => by
               have h : abv (y - x) < ε := by
                 simpa [-sub_eq_add_neg] using h
               rwa [abv_sub abv] at h
@@ -67,7 +72,7 @@ def uniform_space_core : UniformSpace.Core R where
           simpa [CompRel]
 
 /-- The uniform structure coming from an absolute value. -/
-def UniformSpace : UniformSpace R :=
+def uniformSpace : UniformSpace R :=
   UniformSpace.ofCore (uniformSpaceCore abv)
 
 theorem mem_uniformity {s : Set (R × R)} :
@@ -81,7 +86,7 @@ theorem mem_uniformity {s : Set (R × R)} :
   · rintro ⟨r, hr⟩ ⟨p, hp⟩
     exact
       ⟨⟨min r p, lt_minₓ hr hp⟩, by
-        simp (config := { contextual := true })[lt_min_iff, · ≥ ·]⟩
+        simp (config := { contextual := true })[lt_min_iff, (· ≥ ·)]⟩
     
 
 end IsAbsoluteValue

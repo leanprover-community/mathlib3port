@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Kenny Lau. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Kenny Lau
+-/
 import Mathbin.RingTheory.Polynomial.Basic
 import Mathbin.RingTheory.PrincipalIdealDomain
 import Mathbin.Data.MvPolynomial.Basic
@@ -84,7 +89,7 @@ variable [CommSemiringₓ R] [Semiringₓ A] [Algebra R A] [Semiringₓ B] [Alge
 
 /-- A subalgebra `S` is finitely generated if there exists `t : finset A` such that
 `algebra.adjoin R t = S`. -/
-def fg (S : Subalgebra R A) : Prop :=
+def Fg (S : Subalgebra R A) : Prop :=
   ∃ t : Finset A, Algebra.adjoin R ↑t = S
 
 theorem fg_adjoin_finset (s : Finset A) : (Algebra.adjoin R (↑s : Set A)).Fg :=

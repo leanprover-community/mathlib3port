@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Kevin Kappelmann. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Kevin Kappelmann
+-/
 import Mathbin.Algebra.ContinuedFractions.Computation.Approximations
 import Mathbin.Algebra.ContinuedFractions.ConvergentsEquiv
 import Mathbin.Algebra.Order.Archimedean
@@ -74,8 +79,10 @@ open Nat
 
 theorem of_convergence_epsilon : ∀, ∀ ε > (0 : K), ∀, ∃ N : ℕ, ∀, ∀ n ≥ N, ∀, abs (v - (of v).convergents n) < ε := by
   intro ε ε_pos
+  -- use the archimedean property to obtian a suitable N
   rcases(exists_nat_gt (1 / ε) : ∃ N' : ℕ, 1 / ε < N') with ⟨N', one_div_ε_lt_N'⟩
   let N := max N' 5
+  -- set minimum to 5 to have N ≤ fib N work
   exists N
   intro n n_ge_N
   let g := of v
@@ -90,6 +97,7 @@ theorem of_convergence_epsilon : ∀, ∀ ε > (0 : K), ∀, ∃ N : ℕ, ∀, �
     have abs_v_sub_conv_le : abs (v - g.convergents n) ≤ 1 / (B * nB) := abs_sub_convergents_le not_terminated_at_n
     suffices : 1 / (B * nB) < ε
     exact lt_of_le_of_ltₓ abs_v_sub_conv_le this
+    -- show that `0 < (B * nB)` and then multiply by `B * nB` to get rid of the division
     have nB_ineq : (fib (n + 2) : K) ≤ nB :=
       have : ¬g.terminated_at (n + 1 - 1) := not_terminated_at_n
       succ_nth_fib_le_of_nth_denom (Or.inr this)
@@ -108,6 +116,7 @@ theorem of_convergence_epsilon : ∀, ∀ ε > (0 : K), ∀, ∃ N : ℕ, ∀, �
       solve_by_elim [mul_pos]
     suffices : 1 < ε * (B * nB)
     exact (div_lt_iff zero_lt_mul_conts).elim_right this
+    -- use that `N ≥ n` was obtained from the archimedean property to show the following
     have one_lt_ε_mul_N : 1 < ε * n := by
       have one_lt_ε_mul_N' : 1 < ε * (N' : K) := (div_lt_iff' ε_pos).elim_left one_div_ε_lt_N'
       have : (N' : K) ≤ N := by
@@ -120,6 +129,7 @@ theorem of_convergence_epsilon : ∀, ∀ ε > (0 : K), ∀, ∃ N : ℕ, ∀, �
       exact lt_of_lt_of_leₓ one_lt_ε_mul_N' this
     suffices : ε * n ≤ ε * (B * nB)
     exact lt_of_lt_of_leₓ one_lt_ε_mul_N this
+    -- cancel `ε`
     suffices : (n : K) ≤ B * nB
     exact (mul_le_mul_left ε_pos).elim_right this
     show (n : K) ≤ B * nB

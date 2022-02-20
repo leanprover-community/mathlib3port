@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Anne Baanen. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Anne Baanen
+-/
 import Mathbin.NumberTheory.ClassNumber.AdmissibleCardPowDegree
 import Mathbin.NumberTheory.ClassNumber.Finite
 import Mathbin.NumberTheory.FunctionField
@@ -41,7 +46,7 @@ noncomputable instance : Fintype (ClassGroup (ringOfIntegers Fq F) F) :=
 end RingOfIntegers
 
 /-- The class number in a function field is the (finite) cardinality of the class group. -/
-noncomputable def class_number : ℕ :=
+noncomputable def classNumber : ℕ :=
   Fintype.card (ClassGroup (ringOfIntegers Fq F) F)
 
 /-- The class number of a function field is `1` iff the ring of integers is a PID. -/

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2017 Mario Carneiro. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Mario Carneiro
+-/
 import Mathbin.Data.Multiset.Nodup
 
 /-!
@@ -15,7 +20,7 @@ variable {α β : Type _} [DecidableEq α]
 
 
 /-- `erase_dup s` removes duplicates from `s`, yielding a `nodup` multiset. -/
-def erase_dup (s : Multiset α) : Multiset α :=
+def eraseDup (s : Multiset α) : Multiset α :=
   Quot.liftOn s (fun l => (l.eraseDup : Multiset α)) fun s t p => Quot.sound p.eraseDup
 
 @[simp]
@@ -88,7 +93,7 @@ theorem erase_dup_nsmul {s : Multiset α} {n : ℕ} (h0 : n ≠ 0) : (n • s).e
   ext a
   by_cases' h : a ∈ s <;> simp [h, h0]
 
-theorem nodup.le_erase_dup_iff_le {s t : Multiset α} (hno : s.Nodup) : s ≤ t.eraseDup ↔ s ≤ t := by
+theorem Nodup.le_erase_dup_iff_le {s t : Multiset α} (hno : s.Nodup) : s ≤ t.eraseDup ↔ s ≤ t := by
   simp [le_erase_dup, hno]
 
 end Multiset

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Johan Commelin. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Kevin Buzzard, Johan Commelin, Patrick Massot
+-/
 import Mathbin.Algebra.Order.WithZero
 import Mathbin.Algebra.PunitInstances
 import Mathbin.RingTheory.Ideal.Operations
@@ -58,6 +63,7 @@ open Function Ideal
 
 variable {F R : Type _}
 
+-- This will be a ring, assumed commutative in some sections
 section
 
 variable (F R) (Γ₀ : Type _) [LinearOrderedCommMonoidWithZero Γ₀] [Ringₓ R]
@@ -180,7 +186,9 @@ theorem ext_iff {v₁ v₂ : Valuation R Γ₀} : v₁ = v₂ ↔ ∀ r, v₁ r 
   FunLike.ext_iff
 
 /-- A valuation gives a preorder on the underlying ring. -/
-def to_preorder : Preorderₓ R :=
+-- The following definition is not an instance, because we have more than one `v` on a given `R`.
+-- In addition, type class inference would not be able to infer `v`.
+def toPreorder : Preorderₓ R :=
   Preorderₓ.lift v
 
 /-- If `v` is a valuation on a division ring then `v(x) = 0` iff `x = 0`. -/
@@ -281,7 +289,7 @@ theorem map_eq_of_sub_lt (h : v (y - x) < v x) : v y = v x := by
   simpa using this
 
 /-- The subgroup of elements whose valuation is less than a certain unit.-/
-def lt_add_subgroup (v : Valuation R Γ₀) (γ : (Γ₀)ˣ) : AddSubgroup R where
+def ltAddSubgroup (v : Valuation R Γ₀) (γ : (Γ₀)ˣ) : AddSubgroup R where
   Carrier := { x | v x < γ }
   zero_mem' := by
     have h := Units.ne_zero γ
@@ -295,6 +303,7 @@ end Groupₓ
 
 end Basic
 
+-- end of section
 namespace IsEquiv
 
 variable [Ringₓ R]
@@ -342,6 +351,7 @@ theorem ne_zero (h : v₁.IsEquiv v₂) {r : R} : v₁ r ≠ 0 ↔ v₂ r ≠ 0 
 
 end IsEquiv
 
+-- end of namespace
 section
 
 theorem is_equiv_of_map_strict_mono [LinearOrderedCommMonoidWithZero Γ₀] [LinearOrderedCommMonoidWithZero Γ'₀] [Ringₓ R]
@@ -406,6 +416,7 @@ theorem mem_supp_iff (x : R) : x ∈ supp v ↔ v x = 0 :=
   Iff.rfl
 
 /-- The support of a valuation is a prime ideal. -/
+-- @[simp] lemma mem_supp_iff' (x : R) : x ∈ (supp v : set R) ↔ v x = 0 := iff.rfl
 instance [Nontrivial Γ₀] [NoZeroDivisors Γ₀] : Ideal.IsPrime (supp v) :=
   ⟨fun h : v.Supp = ⊤ =>
     one_ne_zero <|
@@ -437,7 +448,7 @@ theorem map_add_supp (a : R) {s : R} (h : s ∈ supp v) : v (a + s) = v a := by
 
 /-- If `hJ : J ⊆ supp v` then `on_quot_val hJ` is the induced function on R/J as a function.
 Note: it's just the function; the valuation is `on_quot hJ`. -/
-def on_quot_val {J : Ideal R} (hJ : J ≤ supp v) : R ⧸ J → Γ₀ := fun q =>
+def onQuotVal {J : Ideal R} (hJ : J ≤ supp v) : R ⧸ J → Γ₀ := fun q =>
   (Quotientₓ.liftOn' q v) fun a b h =>
     calc
       v a = v (b + (a - b)) := by
@@ -446,7 +457,7 @@ def on_quot_val {J : Ideal R} (hJ : J ≤ supp v) : R ⧸ J → Γ₀ := fun q =
       
 
 /-- The extension of valuation v on R to valuation on R/J if J ⊆ supp v -/
-def on_quot {J : Ideal R} (hJ : J ≤ supp v) : Valuation (R ⧸ J) Γ₀ where
+def onQuot {J : Ideal R} (hJ : J ≤ supp v) : Valuation (R ⧸ J) Γ₀ where
   toFun := v.onQuotVal hJ
   map_zero' := v.map_zero
   map_one' := v.map_one
@@ -494,6 +505,7 @@ theorem supp_quot_supp : supp (v.onQuot le_rfl) = 0 := by
 
 end Supp
 
+-- end of section
 end Valuation
 
 section AddMonoidₓ
@@ -594,7 +606,9 @@ theorem ext_iff {v₁ v₂ : AddValuation R Γ₀} : v₁ = v₂ ↔ ∀ r, v₁
   Valuation.ext_iff
 
 /-- A valuation gives a preorder on the underlying ring. -/
-def to_preorder : Preorderₓ R :=
+-- The following definition is not an instance, because we have more than one `v` on a given `R`.
+-- In addition, type class inference would not be able to infer `v`.
+def toPreorder : Preorderₓ R :=
   Preorderₓ.lift v
 
 /-- If `v` is an additive valuation on a division ring then `v(x) = ⊤` iff `x = 0`. -/
@@ -728,11 +742,11 @@ theorem map_add_supp (a : R) {s : R} (h : s ∈ supp v) : v (a + s) = v a :=
 
 /-- If `hJ : J ⊆ supp v` then `on_quot_val hJ` is the induced function on R/J as a function.
 Note: it's just the function; the valuation is `on_quot hJ`. -/
-def on_quot_val {J : Ideal R} (hJ : J ≤ supp v) : R ⧸ J → Γ₀ :=
+def onQuotVal {J : Ideal R} (hJ : J ≤ supp v) : R ⧸ J → Γ₀ :=
   v.onQuotVal hJ
 
 /-- The extension of valuation v on R to valuation on R/J if J ⊆ supp v -/
-def on_quot {J : Ideal R} (hJ : J ≤ supp v) : AddValuation (R ⧸ J) Γ₀ :=
+def onQuot {J : Ideal R} (hJ : J ≤ supp v) : AddValuation (R ⧸ J) Γ₀ :=
   v.onQuot hJ
 
 @[simp]
@@ -759,5 +773,6 @@ theorem supp_quot_supp : supp (v.onQuot le_rfl) = 0 :=
 
 end Supp
 
+-- end of section
 end AddValuation
 

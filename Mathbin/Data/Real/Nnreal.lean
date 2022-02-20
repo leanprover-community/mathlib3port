@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Johan Commelin. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johan Commelin
+-/
 import Mathbin.Algebra.BigOperators.Ring
 import Mathbin.Data.Real.Basic
 import Mathbin.Algebra.IndicatorFunction
@@ -46,6 +51,7 @@ This file defines `ℝ≥0` as a localized notation for `nnreal`.
 open_locale Classical BigOperators
 
 /-- Nonnegative real numbers. -/
+-- to ensure these instance are computable
 def Nnreal :=
   { r : ℝ // 0 ≤ r }deriving OrderedSemiring, CommMonoidWithZero, SemilatticeInf, DenselyOrdered, OrderBot,
   CanonicallyLinearOrderedAddMonoid, LinearOrderedCommGroupWithZero, Archimedean, LinearOrderedSemiring,
@@ -58,6 +64,7 @@ namespace Nnreal
 instance : Coe ℝ≥0 ℝ :=
   ⟨Subtype.val⟩
 
+-- Simp lemma to put back `n.val` into the normal form given by the coercion.
 @[simp]
 theorem val_eq_coe (n : ℝ≥0 ) : n.val = n :=
   rfl
@@ -67,7 +74,7 @@ instance : CanLift ℝ ℝ≥0 where
   cond := fun r => 0 ≤ r
   prf := fun x hx => ⟨⟨x, hx⟩, rfl⟩
 
-protected theorem Eq {n m : ℝ≥0 } : (n : ℝ) = (m : ℝ) → n = m :=
+protected theorem eq {n m : ℝ≥0 } : (n : ℝ) = (m : ℝ) → n = m :=
   Subtype.eq
 
 protected theorem eq_iff {n m : ℝ≥0 } : (n : ℝ) = (m : ℝ) ↔ n = m :=
@@ -165,6 +172,7 @@ protected theorem coe_sub {r₁ r₂ : ℝ≥0 } (h : r₂ ≤ r₁) : ((r₁ - 
     le_sub.2 <| by
       simp [show (r₂ : ℝ) ≤ r₁ from h]
 
+-- TODO: setup semifield!
 @[simp, norm_cast]
 protected theorem coe_eq_zero (r : ℝ≥0 ) : ↑r = (0 : ℝ) ↔ r = 0 := by
   rw [← Nnreal.coe_zero, Nnreal.coe_eq]
@@ -180,7 +188,7 @@ example : CommSemiringₓ ℝ≥0 := by
   infer_instance
 
 /-- Coercion `ℝ≥0 → ℝ` as a `ring_hom`. -/
-def to_real_hom : ℝ≥0 →+* ℝ :=
+def toRealHom : ℝ≥0 →+* ℝ :=
   ⟨coe, Nnreal.coe_one, Nnreal.coe_mul, Nnreal.coe_zero, Nnreal.coe_add⟩
 
 @[simp]
@@ -218,13 +226,14 @@ instance {M : Type _} [AddCommMonoidₓ M] [Module ℝ M] : Module ℝ≥0 M :=
 
 /-- An `algebra` over `ℝ` restricts to an `algebra` over `ℝ≥0`. -/
 instance {A : Type _} [Semiringₓ A] [Algebra ℝ A] : Algebra ℝ≥0 A where
-  smul := · • ·
+  smul := (· • ·)
   commutes' := fun r x => by
     simp [Algebra.commutes]
   smul_def' := fun r x => by
     simp [← Algebra.smul_def (r : ℝ) x, smul_def]
   toRingHom := (algebraMap ℝ A).comp (toRealHom : ℝ≥0 →+* ℝ)
 
+-- verify that the above produces instances we might care about
 example : Algebra ℝ≥0 ℝ := by
   infer_instance
 
@@ -336,6 +345,8 @@ theorem to_nnreal_coe_nat (n : ℕ) : Real.toNnreal n = n :=
 noncomputable def gi : GaloisInsertion Real.toNnreal coe :=
   GaloisInsertion.monotoneIntro Nnreal.coe_mono Real.to_nnreal_mono Real.le_coe_to_nnreal fun _ => Real.to_nnreal_coe
 
+-- note that anything involving the (decidability of the) linear order, including `⊔`/`⊓` (min, max)
+-- will be noncomputable, everything else should not be.
 example : OrderBot ℝ≥0 := by
   infer_instance
 
@@ -384,7 +395,7 @@ example : NoMaxOrder ℝ≥0 := by
 theorem bdd_above_coe {s : Set ℝ≥0 } : BddAbove ((coe : ℝ≥0 → ℝ) '' s) ↔ BddAbove s :=
   Iff.intro
     (fun ⟨b, hb⟩ =>
-      ⟨Real.toNnreal b, fun ⟨y, hy⟩ hys => show y ≤ max b 0 from le_max_of_le_left <| hb <| Set.mem_image_of_mem _ hys⟩)
+      ⟨Real.toNnreal b, fun hys => show y ≤ max b 0 from le_max_of_le_left <| hb <| Set.mem_image_of_mem _ hys⟩)
     fun ⟨b, hb⟩ => ⟨b, fun y ⟨x, hx, Eq⟩ => Eq ▸ hb hx⟩
 
 theorem bdd_below_coe (s : Set ℝ≥0 ) : BddBelow ((coe : ℝ≥0 → ℝ) '' s) :=
@@ -402,6 +413,7 @@ theorem coe_Inf (s : Set ℝ≥0 ) : (↑(inf s) : ℝ) = inf ((coe : ℝ≥0 �
 example : Archimedean ℝ≥0 := by
   infer_instance
 
+-- TODO: why are these three instances necessary? why aren't they inferred?
 instance covariant_add : CovariantClass ℝ≥0 ℝ≥0 (· + ·) (· ≤ ·) :=
   OrderedAddCommMonoid.to_covariant_class_left ℝ≥0
 
@@ -416,6 +428,7 @@ theorem le_of_forall_pos_le_add {a b : ℝ≥0 } (h : ∀ ε, 0 < ε → a ≤ b
     rcases le_iff_exists_add.1 (le_of_ltₓ hxb) with ⟨ε, rfl⟩
     exact h _ ((lt_add_iff_pos_right b).1 hxb)
 
+-- TODO: generalize to some ordered add_monoids, based on #6145
 theorem le_of_add_le_left {a b c : ℝ≥0 } (h : a + b ≤ c) : a ≤ c := by
   refine' le_transₓ _ h
   exact (le_add_iff_nonneg_right _).mpr zero_le'
@@ -738,7 +751,7 @@ theorem le_of_forall_lt_one_mul_le {x y : ℝ≥0 } (h : ∀, ∀ a < 1, ∀, a 
   le_of_forall_ge_of_dense fun a ha => by
     have hx : x ≠ 0 := pos_iff_ne_zero.1 (lt_of_le_of_ltₓ (zero_le _) ha)
     have hx' : x⁻¹ ≠ 0 := by
-      rwa [· ≠ ·, inv_eq_zero]
+      rwa [(· ≠ ·), inv_eq_zero]
     have : a * x⁻¹ < 1 := by
       rwa [← lt_inv_iff_mul_lt hx', inv_invₓ]
     have : a * x⁻¹ * x ≤ y := h _ this

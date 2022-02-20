@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Johannes Hölzl. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johannes Hölzl, Patrick Massot, Casper Putz, Anne Baanen
+-/
 import Mathbin.LinearAlgebra.Matrix.Reindex
 import Mathbin.LinearAlgebra.Matrix.ToLin
 
@@ -60,7 +65,8 @@ theorem to_matrix_eq_to_matrix_constr [Fintype ι] [DecidableEq ι] (v : ι → 
   ext
   rw [Basis.to_matrix_apply, LinearMap.to_matrix_apply, Basis.constr_basis]
 
-theorem coe_pi_basis_fun.to_matrix_eq_transpose [Fintype ι] :
+-- TODO (maybe) Adjust the definition of `basis.to_matrix` to eliminate the transpose.
+theorem CoePiBasisFun.to_matrix_eq_transpose [Fintype ι] :
     ((Pi.basisFun R ι).toMatrix : Matrix ι ι R → Matrix ι ι R) = Matrix.transposeₓ := by
   ext M i j
   rfl
@@ -114,7 +120,7 @@ theorem to_lin_to_matrix [Fintype ι] [Fintype ι'] [DecidableEq ι'] (v : Basis
 
 /-- From a basis `e : ι → M`, build a linear equivalence between families of vectors `v : ι → M`,
 and matrices, making the matrix whose columns are the vectors `v i` written in the basis `e`. -/
-def to_matrix_equiv [Fintype ι] (e : Basis ι R M) : (ι → M) ≃ₗ[R] Matrix ι ι R where
+def toMatrixEquiv [Fintype ι] (e : Basis ι R M) : (ι → M) ≃ₗ[R] Matrix ι ι R where
   toFun := e.toMatrix
   map_add' := fun v w => by
     ext i j

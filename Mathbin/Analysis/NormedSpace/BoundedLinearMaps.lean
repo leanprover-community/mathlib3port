@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Patrick Massot. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Patrick Massot, Johannes Hölzl
+-/
 import Mathbin.Analysis.NormedSpace.Multilinear
 import Mathbin.Analysis.NormedSpace.Units
 import Mathbin.Analysis.Asymptotics.Asymptotics
@@ -76,11 +81,11 @@ theorem ContinuousLinearMap.is_bounded_linear_map (f : E →L[𝕜] F) : IsBound
 namespace IsBoundedLinearMap
 
 /-- Construct a linear map from a function `f` satisfying `is_bounded_linear_map 𝕜 f`. -/
-def to_linear_map (f : E → F) (h : IsBoundedLinearMap 𝕜 f) : E →ₗ[𝕜] F :=
+def toLinearMap (f : E → F) (h : IsBoundedLinearMap 𝕜 f) : E →ₗ[𝕜] F :=
   IsLinearMap.mk' _ h.to_is_linear_map
 
 /-- Construct a continuous linear map from is_bounded_linear_map -/
-def to_continuous_linear_map {f : E → F} (hf : IsBoundedLinearMap 𝕜 f) : E →L[𝕜] F :=
+def toContinuousLinearMap {f : E → F} (hf : IsBoundedLinearMap 𝕜 f) : E →L[𝕜] F :=
   { toLinearMap f hf with
     cont :=
       let ⟨C, Cpos, hC⟩ := hf.bound
@@ -152,7 +157,7 @@ protected theorem tendsto (x : E) (hf : IsBoundedLinearMap 𝕜 f) : Tendsto f (
         simpa
       tendsto_const_nhds.mul (tendsto_norm_sub_self _))
 
-theorem Continuous (hf : IsBoundedLinearMap 𝕜 f) : Continuous f :=
+theorem continuous (hf : IsBoundedLinearMap 𝕜 f) : Continuous f :=
   continuous_iff_continuous_at.2 fun _ => hf.Tendsto _
 
 theorem lim_zero_bounded_linear_map (hf : IsBoundedLinearMap 𝕜 f) : Tendsto f (𝓝 0) (𝓝 0) :=
@@ -556,7 +561,7 @@ spaces is an open subset of the space of linear maps between them.
 -/
 
 
-protected theorem IsOpen [CompleteSpace E] : IsOpen (Range (coe : (E ≃L[𝕜] F) → E →L[𝕜] F)) := by
+protected theorem is_open [CompleteSpace E] : IsOpen (Range (coe : (E ≃L[𝕜] F) → E →L[𝕜] F)) := by
   rw [is_open_iff_mem_nhds, forall_range_iff]
   refine' fun e => IsOpen.mem_nhds _ (mem_range_self _)
   let O : (E →L[𝕜] F) → E →L[𝕜] E := fun f => (e.symm : F →L[𝕜] E).comp f

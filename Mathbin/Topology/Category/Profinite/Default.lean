@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Kevin Buzzard. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Kevin Buzzard, Calle Sönne
+-/
 import Mathbin.Topology.Category.CompHaus.Default
 import Mathbin.Topology.Connected
 import Mathbin.Topology.SubsetProperties
@@ -59,10 +64,10 @@ instance : Inhabited Profinite :=
 instance category : Category Profinite :=
   InducedCategory.category toCompHaus
 
-instance concrete_category : ConcreteCategory Profinite :=
+instance concreteCategory : ConcreteCategory Profinite :=
   InducedCategory.concreteCategory _
 
-instance has_forget₂ : HasForget₂ Profinite Top :=
+instance hasForget₂ : HasForget₂ Profinite Top :=
   InducedCategory.hasForget₂ _
 
 instance : CoeSort Profinite (Type _) :=
@@ -71,6 +76,7 @@ instance : CoeSort Profinite (Type _) :=
 instance {X : Profinite} : TotallyDisconnectedSpace X :=
   X.IsTotallyDisconnected
 
+-- We check that we automatically infer that Profinite sets are compact and Hausdorff.
 example {X : Profinite} : CompactSpace X :=
   inferInstance
 
@@ -112,6 +118,8 @@ section Profinite
 to Profinite spaces, given by quotienting a space by its connected components.
 See: https://stacks.math.columbia.edu/tag/0900
 -/
+-- Without explicit universe annotations here, Lean introduces two universe variables and
+-- unhelpfully defines a function `CompHaus.{max u₁ u₂} → Profinite.{max u₁ u₂}`.
 def CompHaus.toProfiniteObj (X : CompHaus.{u}) : Profinite.{u} where
   toCompHaus :=
     { toTop := Top.of (ConnectedComponents X), IsCompact := Quotientₓ.compact_space,
@@ -162,7 +170,7 @@ namespace Profinite
 
 /-- An explicit limit cone for a functor `F : J ⥤ Profinite`, defined in terms of
 `Top.limit_cone`. -/
-def limit_cone {J : Type u} [SmallCategory J] (F : J ⥤ Profinite.{u}) : Limits.Cone F where
+def limitCone {J : Type u} [SmallCategory J] (F : J ⥤ Profinite.{u}) : Limits.Cone F where
   x :=
     { toCompHaus := (CompHaus.limitCone (F ⋙ profiniteToCompHaus)).x,
       IsTotallyDisconnected := by
@@ -171,25 +179,25 @@ def limit_cone {J : Type u} [SmallCategory J] (F : J ⥤ Profinite.{u}) : Limits
   π := { app := (CompHaus.limitCone (F ⋙ profiniteToCompHaus)).π.app }
 
 /-- The limit cone `Profinite.limit_cone F` is indeed a limit cone. -/
-def limit_cone_is_limit {J : Type u} [SmallCategory J] (F : J ⥤ Profinite.{u}) : Limits.IsLimit (limitCone F) where
+def limitConeIsLimit {J : Type u} [SmallCategory J] (F : J ⥤ Profinite.{u}) : Limits.IsLimit (limitCone F) where
   lift := fun S => (CompHaus.limitConeIsLimit (F ⋙ profiniteToCompHaus)).lift (profiniteToCompHaus.mapCone S)
   uniq' := fun S m h => (CompHaus.limitConeIsLimit _).uniq (profiniteToCompHaus.mapCone S) _ h
 
 /-- The adjunction between CompHaus.to_Profinite and Profinite.to_CompHaus -/
-def to_Profinite_adj_to_CompHaus : CompHaus.toProfinite ⊣ profiniteToCompHaus :=
+def toProfiniteAdjToCompHaus : CompHaus.toProfinite ⊣ profiniteToCompHaus :=
   Adjunction.adjunctionOfEquivLeft _ _
 
 /-- The category of profinite sets is reflective in the category of compact hausdroff spaces -/
-instance to_CompHaus.reflective : Reflective profiniteToCompHaus where
+instance toCompHaus.reflective : Reflective profiniteToCompHaus where
   toIsRightAdjoint := ⟨CompHaus.toProfinite, Profinite.toProfiniteAdjToCompHaus⟩
 
-noncomputable instance to_CompHaus.creates_limits : CreatesLimits profiniteToCompHaus :=
+noncomputable instance toCompHaus.createsLimits : CreatesLimits profiniteToCompHaus :=
   monadicCreatesLimits _
 
-noncomputable instance to_Top.reflective : Reflective Profinite.toTop :=
+noncomputable instance toTop.reflective : Reflective Profinite.toTop :=
   Reflective.comp profiniteToCompHaus compHausToTop
 
-noncomputable instance to_Top.creates_limits : CreatesLimits Profinite.toTop :=
+noncomputable instance toTop.createsLimits : CreatesLimits Profinite.toTop :=
   monadicCreatesLimits _
 
 instance has_limits : Limits.HasLimits Profinite :=
@@ -198,13 +206,13 @@ instance has_limits : Limits.HasLimits Profinite :=
 instance has_colimits : Limits.HasColimits Profinite :=
   has_colimits_of_reflective profiniteToCompHaus
 
-noncomputable instance forget_preserves_limits : Limits.PreservesLimits (forget Profinite) := by
+noncomputable instance forgetPreservesLimits : Limits.PreservesLimits (forget Profinite) := by
   apply limits.comp_preserves_limits Profinite.toTop (forget Top)
 
 variable {X Y : Profinite.{u}} (f : X ⟶ Y)
 
 /-- Any morphism of profinite spaces is a closed map. -/
-theorem IsClosedMap : IsClosedMap f :=
+theorem is_closed_map : IsClosedMap f :=
   CompHaus.is_closed_map _
 
 /-- Any continuous bijection of profinite spaces induces an isomorphism. -/
@@ -213,7 +221,7 @@ theorem is_iso_of_bijective (bij : Function.Bijective f) : IsIso f :=
   is_iso_of_fully_faithful profiniteToCompHaus _
 
 /-- Any continuous bijection of profinite spaces induces an isomorphism. -/
-noncomputable def iso_of_bijective (bij : Function.Bijective f) : X ≅ Y := by
+noncomputable def isoOfBijective (bij : Function.Bijective f) : X ≅ Y := by
   let this' := Profinite.is_iso_of_bijective f bij <;> exact as_iso f
 
 instance forget_reflects_isomorphisms : ReflectsIsomorphisms (forget Profinite) :=
@@ -222,7 +230,7 @@ instance forget_reflects_isomorphisms : ReflectsIsomorphisms (forget Profinite) 
 
 /-- Construct an isomorphism from a homeomorphism. -/
 @[simps Hom inv]
-def iso_of_homeo (f : X ≃ₜ Y) : X ≅ Y where
+def isoOfHomeo (f : X ≃ₜ Y) : X ≅ Y where
   Hom := ⟨f, f.Continuous⟩
   inv := ⟨f.symm, f.symm.Continuous⟩
   hom_inv_id' := by
@@ -234,7 +242,7 @@ def iso_of_homeo (f : X ≃ₜ Y) : X ≅ Y where
 
 /-- Construct a homeomorphism from an isomorphism. -/
 @[simps]
-def homeo_of_iso (f : X ≅ Y) : X ≃ₜ Y where
+def homeoOfIso (f : X ≅ Y) : X ≃ₜ Y where
   toFun := f.Hom
   invFun := f.inv
   left_inv := fun x => by
@@ -249,7 +257,7 @@ def homeo_of_iso (f : X ≅ Y) : X ≃ₜ Y where
 /-- The equivalence between isomorphisms in `Profinite` and homeomorphisms
 of topological spaces. -/
 @[simps]
-def iso_equiv_homeo : (X ≅ Y) ≃ (X ≃ₜ Y) where
+def isoEquivHomeo : (X ≅ Y) ≃ (X ≃ₜ Y) where
   toFun := homeoOfIso
   invFun := isoOfHomeo
   left_inv := fun f => by

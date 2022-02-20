@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Mario Carneiro. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Mario Carneiro, Kenny Lau
+-/
 import Mathbin.Data.List.BigOperators
 
 /-!
@@ -270,7 +275,7 @@ theorem revzip_swap (l : List α) : (revzipₓ l).map Prod.swap = revzipₓ l.re
 theorem nth_zip_with (f : α → β → γ) (l₁ : List α) (l₂ : List β) (i : ℕ) :
     (zipWithₓ f l₁ l₂).nth i = ((l₁.nth i).map f).bind fun g => (l₂.nth i).map g := by
   induction l₁ generalizing l₂ i
-  · simp [zip_with, · <*> ·]
+  · simp [zip_with, (· <*> ·)]
     
   · cases l₂ <;> simp only [zip_with, Seqₓ.seq, Functor.map, nth, Option.map_none'ₓ]
     · cases (l₁_hd :: l₁_tl).nth i <;> rfl

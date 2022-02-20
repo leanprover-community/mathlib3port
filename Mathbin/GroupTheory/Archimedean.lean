@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Heather Macbeth, Patrick Massot. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Heather Macbeth, Patrick Massot
+-/
 import Mathbin.Algebra.Order.Archimedean
 import Mathbin.GroupTheory.Subgroup.Basic
 

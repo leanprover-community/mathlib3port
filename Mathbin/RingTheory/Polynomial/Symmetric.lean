@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Hanting Zhang. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Hanting Zhang, Johan Commelin
+-/
 import Mathbin.Data.Fintype.Card
 import Mathbin.Data.MvPolynomial.Rename
 import Mathbin.Data.MvPolynomial.CommRing
@@ -50,13 +55,13 @@ variable {τ : Type _} {S : Type _}
 
 /-- A `mv_polynomial φ` is symmetric if it is invariant under
 permutations of its variables by the  `rename` operation -/
-def is_symmetric [CommSemiringₓ R] (φ : MvPolynomial σ R) : Prop :=
+def IsSymmetric [CommSemiringₓ R] (φ : MvPolynomial σ R) : Prop :=
   ∀ e : Perm σ, rename e φ = φ
 
 variable (σ R)
 
 /-- The subalgebra of symmetric `mv_polynomial`s. -/
-def symmetric_subalgebra [CommSemiringₓ R] : Subalgebra R (MvPolynomial σ R) where
+def symmetricSubalgebra [CommSemiringₓ R] : Subalgebra R (MvPolynomial σ R) where
   Carrier := SetOf IsSymmetric
   algebra_map_mem' := fun r e => rename_C e r
   mul_mem' := fun a b ha hb e => by

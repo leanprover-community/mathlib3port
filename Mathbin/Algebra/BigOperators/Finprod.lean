@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Kexing Ying and Kevin Buzzard. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Kexing Ying, Kevin Buzzard, Yury Kudryashov
+-/
 import Mathbin.Algebra.BigOperators.Order
 import Mathbin.Algebra.IndicatorFunction
 
@@ -78,6 +83,8 @@ open_locale BigOperators
 
 section
 
+/- Note: we use classical logic only for these definitions, to ensure that we do not write lemmas
+with `classical.dec` in their statement. -/
 open_locale Classical
 
 /-- Sum of `f x` as `x` ranges over the elements of the support of `f`, if it's finite. Zero
@@ -125,7 +132,7 @@ theorem finprod_of_is_empty [IsEmpty α] (f : α → M) : (∏ᶠ i, f i) = 1 :=
 theorem finprod_false (f : False → M) : (∏ᶠ i, f i) = 1 :=
   finprod_of_is_empty _
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (x «expr ≠ » a)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (x «expr ≠ » a)
 @[to_additive]
 theorem finprod_eq_single (f : α → M) (a : α) (ha : ∀ x _ : x ≠ a, f x = 1) : (∏ᶠ x, f x) = f a := by
   have : mul_support (f ∘ Plift.down) ⊆ ({Plift.up a} : Finset (Plift α)) := by
@@ -314,7 +321,7 @@ theorem finprod_cond_eq_prod_of_cond_iff (f : α → M) {p : α → Prop} {t : F
   contrapose! hxs
   exact (h hxs).2 hx
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (i «expr ≠ » a)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (i «expr ≠ » a)
 @[to_additive]
 theorem finprod_cond_ne (f : α → M) (a : α) [DecidableEq α] (hf : Finite (MulSupport f)) :
     (∏ᶠ (i) (_ : i ≠ a), f i) = ∏ i in hf.toFinset.erase a, f i := by
@@ -453,12 +460,12 @@ theorem finprod_mem_of_eq_on_one (hf : EqOn f 1 s) : (∏ᶠ i ∈ s, f i) = 1 :
   rw [← finprod_mem_one s]
   exact finprod_mem_congr rfl hf
 
--- ././Mathport/Syntax/Translate/Basic.lean:418:16: unsupported tactic `by_contra'
+-- ././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'
 /-- If the product of `f i` over `i ∈ s` is not equal to one, then there is some `x ∈ s`
 such that `f x ≠ 1`. -/
 @[to_additive]
 theorem exists_ne_one_of_finprod_mem_ne_one (h : (∏ᶠ i ∈ s, f i) ≠ 1) : ∃ x ∈ s, f x ≠ 1 := by
-  "././Mathport/Syntax/Translate/Basic.lean:418:16: unsupported tactic `by_contra'"
+  "././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'"
   exact h (finprod_mem_of_eq_on_one h')
 
 /-- Given a finite set `s`, the product of `f i * g i` over `i ∈ s` equals the product of `f i`
@@ -577,7 +584,7 @@ theorem finprod_mem_union'' (hst : Disjoint (s ∩ MulSupport f) (t ∩ MulSuppo
 theorem finprod_mem_singleton : (∏ᶠ i ∈ ({a} : Set α), f i) = f a := by
   rw [← Finset.coe_singleton, finprod_mem_coe_finset, Finset.prod_singleton]
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (i «expr = » a)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (i «expr = » a)
 @[simp, to_additive]
 theorem finprod_cond_eq_left : (∏ᶠ (i) (_ : i = a), f i) = f a :=
   finprod_mem_singleton
@@ -762,7 +769,7 @@ theorem finprod_mem_sUnion {t : Set (Set α)} (h : t.PairwiseDisjoint id) (ht₀
   rw [Set.sUnion_eq_bUnion]
   exact finprod_mem_bUnion h ht₀ ht₁
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (i «expr ≠ » a)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (i «expr ≠ » a)
 @[to_additive]
 theorem mul_finprod_cond_ne (a : α) (hf : Finite (MulSupport f)) : (f a * ∏ᶠ (i) (_ : i ≠ a), f i) = ∏ᶠ i, f i := by
   classical
@@ -855,7 +862,7 @@ theorem Finset.mul_support_of_fiberwise_prod_subset_image [DecidableEq β] (s : 
     simpa only [s.fiber_nonempty_iff_mem_image g b, Finset.mem_image, exists_prop]
   exact Finset.nonempty_of_prod_ne_one h
 
--- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (a b)
+-- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (a b)
 /-- Note that `b ∈ (s.filter (λ ab, prod.fst ab = a)).image prod.snd` iff `(a, b) ∈ s` so we can
 simplify the right hand side of this lemma. However the form stated here is more useful for
 iterating this lemma, e.g., if we have `f : α × β × γ → M`. -/
@@ -868,7 +875,7 @@ theorem finprod_mem_finset_product' [DecidableEq α] [DecidableEq β] (s : Finse
       (∏ i : β in (s.filter fun ab => Prod.fst ab = a).Image Prod.snd, f (a, i)) =
         (Finset.filter (fun ab => Prod.fst ab = a) s).Prod f :=
     by
-    refine' fun a => Finset.prod_bij (fun b _ => (a, b)) _ _ _ _ <;>
+    refine' fun a => Finset.prod_bij (fun b _ => (a, b)) _ _ _ _ <;>-- `finish` closes these goals
       try
         simp
         done
@@ -880,10 +887,11 @@ theorem finprod_mem_finset_product' [DecidableEq α] [DecidableEq β] (s : Finse
   simp_rw [finprod_mem_finset_eq_prod, this]
   rw [finprod_eq_prod_of_mul_support_subset _ (s.mul_support_of_fiberwise_prod_subset_image f Prod.fst), ←
     Finset.prod_fiberwise_of_maps_to _ f]
+  -- `finish` could close the goal here
   simp only [Finset.mem_image, Prod.mk.eta]
   exact fun x hx => ⟨x, hx, rfl⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (a b)
+-- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (a b)
 /-- See also `finprod_mem_finset_product'`. -/
 @[to_additive]
 theorem finprod_mem_finset_product (s : Finset (α × β)) (f : α × β → M) :
@@ -892,7 +900,7 @@ theorem finprod_mem_finset_product (s : Finset (α × β)) (f : α × β → M) 
   rw [finprod_mem_finset_product']
   simp
 
--- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (a b c)
+-- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (a b c)
 @[to_additive]
 theorem finprod_mem_finset_product₃ {γ : Type _} (s : Finset (α × β × γ)) (f : α × β × γ → M) :
     (∏ᶠ (abc) (h : abc ∈ s), f abc) = ∏ᶠ (a) (b) (c) (h : (a, b, c) ∈ s), f (a, b, c) := by
@@ -901,7 +909,7 @@ theorem finprod_mem_finset_product₃ {γ : Type _} (s : Finset (α × β × γ)
   simp_rw [finprod_mem_finset_product']
   simp
 
--- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (a b)
+-- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (a b)
 @[to_additive]
 theorem finprod_curry (f : α × β → M) (hf : (MulSupport f).Finite) : (∏ᶠ ab, f ab) = ∏ᶠ (a) (b), f (a, b) := by
   have h₁ : ∀ a, (∏ᶠ h : a ∈ hf.to_finset, f a) = f a := by
@@ -910,7 +918,7 @@ theorem finprod_curry (f : α × β → M) (hf : (MulSupport f).Finite) : (∏�
     simp
   simp_rw [h₂, finprod_mem_finset_product, h₁]
 
--- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (a b c)
+-- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (a b c)
 @[to_additive]
 theorem finprod_curry₃ {γ : Type _} (f : α × β × γ → M) (h : (MulSupport f).Finite) :
     (∏ᶠ abc, f abc) = ∏ᶠ (a) (b) (c), f (a, b, c) := by

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2017 Johannes Hölzl. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johannes Hölzl, Johan Commelin, Mario Carneiro
+-/
 import Mathbin.RingTheory.Adjoin.Basic
 import Mathbin.Data.Finsupp.Antidiagonal
 import Mathbin.Algebra.MonoidAlgebra.Basic
@@ -98,8 +103,7 @@ section CommSemiringₓ
 
 section Instances
 
-instance decidable_eq_mv_polynomial [CommSemiringₓ R] [DecidableEq σ] [DecidableEq R] :
-    DecidableEq (MvPolynomial σ R) :=
+instance decidableEqMvPolynomial [CommSemiringₓ R] [DecidableEq σ] [DecidableEq R] : DecidableEq (MvPolynomial σ R) :=
   Finsupp.decidableEq
 
 instance [CommSemiringₓ R] : CommSemiringₓ (MvPolynomial σ R) :=
@@ -133,12 +137,14 @@ instance [Monoidₓ R] [CommSemiringₓ S₁] [DistribMulAction R S₁] [Distrib
 instance [CommSemiringₓ R] [CommSemiringₓ S₁] [Algebra R S₁] : Algebra R (MvPolynomial σ S₁) :=
   AddMonoidAlgebra.algebra
 
+-- Register with high priority to avoid timeout in `data.mv_polynomial.pderiv`
 instance is_scalar_tower' [CommSemiringₓ R] [CommSemiringₓ S₁] [Algebra R S₁] :
     IsScalarTower R (MvPolynomial σ S₁) (MvPolynomial σ S₁) :=
   IsScalarTower.right
 
 /-- If `R` is a subsingleton, then `mv_polynomial σ R` has a unique element -/
-protected def Unique [CommSemiringₓ R] [Subsingleton R] : Unique (MvPolynomial σ R) :=
+-- TODO[gh-6025]: make this an instance once safe to do so
+protected def unique [CommSemiringₓ R] [Subsingleton R] : Unique (MvPolynomial σ R) :=
   AddMonoidAlgebra.unique
 
 end Instances
@@ -156,7 +162,7 @@ theorem mul_def : p * q = p.Sum fun m a => q.Sum fun n b => monomial (m + n) (a 
   rfl
 
 /-- `C a` is the constant polynomial with value `a` -/
-def C : R →+* MvPolynomial σ R :=
+def c : R →+* MvPolynomial σ R :=
   { singleZeroRingHom with toFun := monomial 0 }
 
 variable (R σ)
@@ -167,7 +173,7 @@ theorem algebra_map_eq : algebraMap R (MvPolynomial σ R) = C :=
 variable {R σ}
 
 /-- `X n` is the degree `1` monomial $X_n$. -/
-def X (n : σ) : MvPolynomial σ R :=
+def x (n : σ) : MvPolynomial σ R :=
   monomial (single n 1) 1
 
 theorem C_apply : (c a : MvPolynomial σ R) = monomial 0 a :=
@@ -238,7 +244,7 @@ theorem monomial_mul {s s' : σ →₀ ℕ} {a b : R} : monomial s a * monomial 
 variable (σ R)
 
 /-- `λ s, monomial s 1` as a homomorphism. -/
-def monomial_one_hom : Multiplicative (σ →₀ ℕ) →* MvPolynomial σ R :=
+def monomialOneHom : Multiplicative (σ →₀ ℕ) →* MvPolynomial σ R :=
   AddMonoidAlgebra.of _ _
 
 variable {σ R}
@@ -479,7 +485,7 @@ theorem coeff_zero_X (i : σ) : coeff 0 (x i : MvPolynomial σ R) = 0 :=
 
 /-- `mv_polynomial.coeff m` but promoted to an `add_monoid_hom`. -/
 @[simps]
-def coeff_add_monoid_hom (m : σ →₀ ℕ) : MvPolynomial σ R →+ R where
+def coeffAddMonoidHom (m : σ →₀ ℕ) : MvPolynomial σ R →+ R where
   toFun := coeff m
   map_zero' := coeff_zero m
   map_add' := coeff_add m
@@ -610,6 +616,7 @@ theorem coeff_mul_monomial' m (s : σ →₀ ℕ) (r : R) (p : MvPolynomial σ R
 
 theorem coeff_monomial_mul' m (s : σ →₀ ℕ) (r : R) (p : MvPolynomial σ R) :
     coeff m (monomial s r * p) = if s ≤ m then r * coeff (m - s) p else 0 := by
+  -- note that if we allow `R` to be non-commutative we will have to duplicate the proof above.
   rw [mul_comm, mul_comm r]
   exact coeff_mul_monomial' _ _ _ _
 
@@ -664,7 +671,7 @@ section ConstantCoeff
 /-- `constant_coeff p` returns the constant term of the polynomial `p`, defined as `coeff 0 p`.
 This is a ring homomorphism.
 -/
-def constant_coeff : MvPolynomial σ R →+* R where
+def constantCoeff : MvPolynomial σ R →+* R where
   toFun := coeff 0
   map_one' := by
     simp [coeff, AddMonoidAlgebra.one_def]
@@ -804,7 +811,7 @@ theorem eval₂_pow {p : MvPolynomial σ R} : ∀ {n : ℕ}, (p ^ n).eval₂ f g
     rw [pow_addₓ, pow_oneₓ, pow_addₓ, pow_oneₓ, eval₂_mul, eval₂_pow]
 
 /-- `mv_polynomial.eval₂` as a `ring_hom`. -/
-def eval₂_hom (f : R →+* S₁) (g : σ → S₁) : MvPolynomial σ R →+* S₁ where
+def eval₂Hom (f : R →+* S₁) (g : σ → S₁) : MvPolynomial σ R →+* S₁ where
   toFun := eval₂ f g
   map_one' := eval₂_one _ _
   map_mul' := fun p q => eval₂_mul _ _
@@ -1133,7 +1140,7 @@ theorem map_map_range_eq_iff (f : R →+* S₁) (g : S₁ → R) (hg : g 0 = 0) 
 
 /-- If `f : S₁ →ₐ[R] S₂` is a morphism of `R`-algebras, then so is `mv_polynomial.map f`. -/
 @[simps]
-def map_alg_hom [CommSemiringₓ S₂] [Algebra R S₁] [Algebra R S₂] (f : S₁ →ₐ[R] S₂) :
+def mapAlgHom [CommSemiringₓ S₂] [Algebra R S₁] [Algebra R S₂] (f : S₁ →ₐ[R] S₂) :
     MvPolynomial σ S₁ →ₐ[R] MvPolynomial σ S₂ :=
   { map ↑f with toFun := map ↑f,
     commutes' := fun r => by
@@ -1243,7 +1250,7 @@ theorem aeval_prod {ι : Type _} (s : Finset ι) (φ : ι → MvPolynomial σ R)
 variable (R)
 
 theorem _root_.algebra.adjoin_range_eq_range_aeval : Algebra.adjoin R (Set.Range f) = (MvPolynomial.aeval f).range := by
-  simp only [← Algebra.map_top, ← MvPolynomial.adjoin_range_X, AlgHom.map_adjoin, ← Set.range_comp, · ∘ ·,
+  simp only [← Algebra.map_top, ← MvPolynomial.adjoin_range_X, AlgHom.map_adjoin, ← Set.range_comp, (· ∘ ·),
     MvPolynomial.aeval_X]
 
 theorem _root_.algebra.adjoin_eq_range (s : Set S₁) : Algebra.adjoin R s = (MvPolynomial.aeval (coe : s → S₁)).range :=
@@ -1260,7 +1267,7 @@ variable [Algebra S R] [Algebra S A] [Algebra S B]
 
 /-- Version of `aeval` for defining algebra homs out of `mv_polynomial σ R` over a smaller base ring
   than `R`. -/
-def aeval_tower (f : R →ₐ[S] A) (x : σ → A) : MvPolynomial σ R →ₐ[S] A :=
+def aevalTower (f : R →ₐ[S] A) (x : σ → A) : MvPolynomial σ R →ₐ[S] A :=
   { eval₂Hom (↑f) x with
     commutes' := fun r => by
       simp [IsScalarTower.algebra_map_eq S R (MvPolynomial σ R), algebra_map_eq] }

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Devon Tuma. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Devon Tuma
+-/
 import Mathbin.RingTheory.Localization
 import Mathbin.RingTheory.Ideal.Over
 import Mathbin.RingTheory.JacobsonIdeal
@@ -42,13 +47,13 @@ variable {R S : Type _} [CommRingₓ R] [CommRingₓ S] {I : Ideal R}
 /-- A ring is a Jacobson ring if for every radical ideal `I`,
  the Jacobson radical of `I` is equal to `I`.
  See `is_jacobson_iff_prime_eq` and `is_jacobson_iff_Inf_maximal` for equivalent definitions. -/
-class is_jacobson (R : Type _) [CommRingₓ R] : Prop where
+class IsJacobson (R : Type _) [CommRingₓ R] : Prop where
   out' : ∀ I : Ideal R, I.radical = I → I.jacobson = I
 
 theorem is_jacobson_iff {R} [CommRingₓ R] : IsJacobson R ↔ ∀ I : Ideal R, I.radical = I → I.jacobson = I :=
   ⟨fun h => h.1, fun h => ⟨h⟩⟩
 
-theorem is_jacobson.out {R} [CommRingₓ R] : IsJacobson R → ∀ {I : Ideal R}, I.radical = I → I.jacobson = I :=
+theorem IsJacobson.out {R} [CommRingₓ R] : IsJacobson R → ∀ {I : Ideal R}, I.radical = I → I.jacobson = I :=
   is_jacobson_iff.1
 
 /-- A ring is a Jacobson ring if and only if for all prime ideals `P`,
@@ -206,7 +211,7 @@ theorem is_maximal_of_is_maximal_disjoint [IsJacobson R] (I : Ideal R) (hI : I.I
 
 /-- If `R` is a Jacobson ring, then maximal ideals in the localization at `y`
 correspond to maximal ideals in the original ring `R` that don't contain `y` -/
-def order_iso_of_maximal [IsJacobson R] : { p : Ideal S // p.IsMaximal } ≃o { p : Ideal R // p.IsMaximal ∧ y ∉ p } where
+def orderIsoOfMaximal [IsJacobson R] : { p : Ideal S // p.IsMaximal } ≃o { p : Ideal R // p.IsMaximal ∧ y ∉ p } where
   toFun := fun p => ⟨Ideal.comap (algebraMap R S) p.1, (is_maximal_iff_is_maximal_disjoint S y p.1).1 p.2⟩
   invFun := fun p => ⟨Ideal.map (algebraMap R S) p.1, is_maximal_of_is_maximal_disjoint y p.1 p.2.1 p.2.2⟩
   left_inv := fun J => Subtype.eq (map_comap (powers y) S J)
@@ -352,6 +357,7 @@ theorem jacobson_bot_of_integral_localization {R : Type _} [CommRingₓ R] [IsDo
           let ⟨J, hJ⟩ := hj
           hJ.2 ▸ this J hJ.1.2⟩
   intros I hI
+  -- Remainder of the proof is pulling and pushing ideals around the square and the quotient square
   have : (I.comap (algebraMap S Sₘ)).IsPrime := comap_is_prime _ I
   have : (I.comap φ').IsPrime := comap_is_prime φ' I
   have : (⊥ : Ideal (S ⧸ I.comap (algebraMap S Sₘ))).IsPrime := bot_prime
@@ -396,6 +402,7 @@ private theorem is_jacobson_polynomial_of_domain (R : Type _) [CommRingₓ R] [I
       jacobson_bot_of_integral_localization (Localization.Away x)
         (Localization ((Submonoid.powers x).map (P.quotient_map C le_rfl) : Submonoid (R[X] ⧸ P)))
         (quotient_map P C le_rfl) quotient_map_injective x hx _
+    -- `convert` is noticeably faster than `exact` here:
     convert is_integral_is_localization_polynomial_quotient P p pP
     
 
@@ -518,7 +525,8 @@ private theorem quotient_mk_comp_C_is_integral_of_jacobson' [Nontrivial R] (hR :
           (localization_map_bijective_of_field hM
               ((quotient.maximal_ideal_iff_is_field_quotient _).mp (is_maximal_comap_C_of_is_maximal P hP'))).2
       
-    · convert is_integral_is_localization_polynomial_quotient P pX hpX
+    · -- `convert` here is faster than `exact`, and this proof is near the time limit.
+      convert is_integral_is_localization_polynomial_quotient P pX hpX
       
     
 
@@ -568,6 +576,7 @@ theorem comp_C_integral_of_surjective_of_jacobson {S : Type _} [Field S] (f : R[
   rw [← hfg, RingHom.comp_assoc]
   refine'
     RingHom.is_integral_trans _ g (quotient_mk_comp_C_is_integral_of_jacobson f.ker) (g.is_integral_of_surjective _)
+  --(quotient.lift_surjective f.ker f _ hf)),
   rw [← hfg] at hf
   exact Function.Surjective.of_comp hf
 

@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2018 Sébastien Gouëzel. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Isometries of emetric and metric spaces
+Authors: Sébastien Gouëzel
+-/
 import Mathbin.Topology.MetricSpace.Antilipschitz
 
 /-!
@@ -121,6 +127,7 @@ theorem Isometry.comp_continuous_iff {γ} [TopologicalSpace γ] (hf : Isometry f
 
 end PseudoEmetricIsometry
 
+--section
 section EmetricIsometry
 
 variable [EmetricSpace α]
@@ -140,6 +147,7 @@ theorem Isometry.closed_embedding [CompleteSpace α] [EmetricSpace β] {f : α �
 
 end EmetricIsometry
 
+--section
 namespace Isometry
 
 variable [PseudoMetricSpace α] [PseudoMetricSpace β] {f : α → β}
@@ -167,6 +175,7 @@ theorem maps_to_closed_ball (hf : Isometry f) (x : α) (r : ℝ) :
 end Isometry
 
 /-- `α` and `β` are isometric if there is an isometric bijection between them. -/
+-- such a bijection need not exist
 @[nolint has_inhabited_instance]
 structure Isometric (α : Type _) (β : Type _) [PseudoEmetricSpace α] [PseudoEmetricSpace β] extends α ≃ β where
   isometry_to_fun : Isometry to_fun
@@ -189,7 +198,7 @@ theorem coe_eq_to_equiv (h : α ≃ᵢ β) (a : α) : h a = h.toEquiv a :=
 theorem coe_to_equiv (h : α ≃ᵢ β) : ⇑h.toEquiv = h :=
   rfl
 
-protected theorem Isometry (h : α ≃ᵢ β) : Isometry h :=
+protected theorem isometry (h : α ≃ᵢ β) : Isometry h :=
   h.isometry_to_fun
 
 protected theorem bijective (h : α ≃ᵢ β) : Bijective h :=
@@ -208,7 +217,7 @@ protected theorem dist_eq {α β : Type _} [PseudoMetricSpace α] [PseudoMetricS
     dist (h x) (h y) = dist x y :=
   h.Isometry.dist_eq x y
 
-protected theorem Continuous (h : α ≃ᵢ β) : Continuous h :=
+protected theorem continuous (h : α ≃ᵢ β) : Continuous h :=
   h.Isometry.Continuous
 
 @[simp]
@@ -252,11 +261,11 @@ protected def symm (h : α ≃ᵢ β) : β ≃ᵢ α where
 
 /-- See Note [custom simps projection]. We need to specify this projection explicitly in this case,
   because it is a composition of multiple projections. -/
-def simps.apply (h : α ≃ᵢ β) : α → β :=
+def Simps.apply (h : α ≃ᵢ β) : α → β :=
   h
 
 /-- See Note [custom simps projection] -/
-def simps.symm_apply (h : α ≃ᵢ β) : β → α :=
+def Simps.symmApply (h : α ≃ᵢ β) : β → α :=
   h.symm
 
 initialize_simps_projections Isometric (to_equiv_to_fun → apply, to_equiv_inv_fun → symmApply)
@@ -328,7 +337,7 @@ theorem image_emetric_closed_ball (h : α ≃ᵢ β) (x : α) (r : ℝ≥0∞) :
 
 /-- The (bundled) homeomorphism associated to an isometric isomorphism. -/
 @[simps toEquiv]
-protected def to_homeomorph (h : α ≃ᵢ β) : α ≃ₜ β where
+protected def toHomeomorph (h : α ≃ᵢ β) : α ≃ₜ β where
   continuous_to_fun := h.Continuous
   continuous_inv_fun := h.symm.Continuous
   toEquiv := h.toEquiv
@@ -383,7 +392,7 @@ theorem inv_apply_self (e : α ≃ᵢ α) (x : α) : e⁻¹ (e x) = x :=
 theorem apply_inv_self (e : α ≃ᵢ α) (x : α) : e (e⁻¹ x) = x :=
   e.apply_symm_apply x
 
-protected theorem CompleteSpace [CompleteSpace β] (e : α ≃ᵢ β) : CompleteSpace α :=
+protected theorem complete_space [CompleteSpace β] (e : α ≃ᵢ β) : CompleteSpace α :=
   complete_space_of_is_complete_univ <|
     is_complete_of_complete_image e.Isometry.UniformInducing <| by
       rwa [Set.image_univ, Isometric.range_eq_univ, ← complete_space_iff_is_complete_univ]

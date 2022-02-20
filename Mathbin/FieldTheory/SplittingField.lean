@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Chris Hughes. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Chris Hughes
+-/
 import Mathbin.FieldTheory.Minpoly
 import Mathbin.RingTheory.AdjoinRoot
 import Mathbin.LinearAlgebra.FiniteDimensional
@@ -58,7 +63,7 @@ section Splits
 variable (i : K →+* L)
 
 /-- A polynomial `splits` iff it is zero or all of its irreducible factors have `degree` 1. -/
-def splits (f : K[X]) : Prop :=
+def Splits (f : K[X]) : Prop :=
   f = 0 ∨ ∀ {g : L[X]}, Irreducible g → g ∣ f.map i → degree g = 1
 
 @[simp]
@@ -253,7 +258,7 @@ theorem exists_multiset_of_splits {f : K[X]} :
         mul_inv_cancel (show p.leading_coeff ≠ 0 from mt leading_coeff_eq_zero.1 hp.ne_zero), one_mulₓ]⟩
 
 /-- Pick a root of a polynomial that splits. -/
-def root_of_splits {f : K[X]} (hf : f.Splits i) (hfd : f.degree ≠ 0) : L :=
+def rootOfSplits {f : K[X]} (hf : f.Splits i) (hfd : f.degree ≠ 0) : L :=
   Classical.some <| exists_root_of_splits i hf hfd
 
 theorem map_root_of_splits {f : K[X]} (hf : f.Splits i) hfd : f.eval₂ i (rootOfSplits i hf hfd) = 0 :=
@@ -272,7 +277,7 @@ theorem roots_map {f : K[X]} (hf : f.Splits <| RingHom.id K) : (f.map i).roots =
     rw [map_mul] at hmf0⊢
     rw [roots_mul hf0, roots_mul hmf0, map_C, roots_C, zero_addₓ, roots_C, zero_addₓ, map_multiset_prod,
       Multiset.map_map]
-    simp_rw [· ∘ ·, map_sub, map_X, map_C]
+    simp_rw [(· ∘ ·), map_sub, map_X, map_C]
     rw [roots_multiset_prod _ h2, Multiset.bind_map, roots_multiset_prod _ h1, Multiset.bind_map]
     simp_rw [roots_X_sub_C]
     rw [Multiset.bind_singleton, Multiset.bind_singleton, Multiset.map_id']
@@ -642,7 +647,7 @@ theorem factor_dvd_of_nat_degree_ne_zero {f : K[X]} (hf : f.natDegree ≠ 0) : f
   factor_dvd_of_degree_ne_zero (mt nat_degree_eq_of_degree_eq_some hf)
 
 /-- Divide a polynomial f by X - C r where r is a root of f in a bigger field extension. -/
-def remove_factor (f : K[X]) : Polynomial (AdjoinRoot <| factor f) :=
+def removeFactor (f : K[X]) : Polynomial (AdjoinRoot <| factor f) :=
   map (AdjoinRoot.of f.factor) f /ₘ (X - c (AdjoinRoot.root f.factor))
 
 theorem X_sub_C_mul_remove_factor (f : K[X]) (hf : f.natDegree ≠ 0) :
@@ -658,7 +663,7 @@ theorem nat_degree_remove_factor' {f : K[X]} {n : ℕ} (hfn : f.natDegree = n + 
   rw [nat_degree_remove_factor, hfn, n.add_sub_cancel]
 
 /-- Auxiliary construction to a splitting field of a polynomial. Uses induction on the degree. -/
-def splitting_field_aux (n : ℕ) : ∀ {K : Type u} [Field K], ∀ f : K[X], f.natDegree = n → Type u :=
+def SplittingFieldAux (n : ℕ) : ∀ {K : Type u} [Field K], ∀ f : K[X], f.natDegree = n → Type u :=
   (Nat.recOn n fun K _ _ _ => K) fun n ih K _ f hf => ih f.remove_factor (nat_degree_remove_factor' hf)
 
 namespace SplittingFieldAux
@@ -667,19 +672,39 @@ theorem succ (n : ℕ) (f : K[X]) (hfn : f.natDegree = n + 1) :
     SplittingFieldAux (n + 1) f hfn = SplittingFieldAux n f.removeFactor (nat_degree_remove_factor' hfn) :=
   rfl
 
-instance Field (n : ℕ) :
+instance field (n : ℕ) :
     ∀ {K : Type u} [Field K], ∀ {f : K[X]} hfn : f.natDegree = n, Field (splitting_field_aux n f hfn) :=
   (Nat.recOn n fun K _ _ _ => ‹Field K›) fun n ih K _ f hf => ih _
 
-instance Inhabited {n : ℕ} {f : K[X]} (hfn : f.natDegree = n) : Inhabited (SplittingFieldAux n f hfn) :=
+instance inhabited {n : ℕ} {f : K[X]} (hfn : f.natDegree = n) : Inhabited (SplittingFieldAux n f hfn) :=
   ⟨37⟩
 
-instance Algebra (n : ℕ) :
+/-
+Note that the recursive nature of this definition and `splitting_field_aux.field` creates
+non-definitionally-equal diamonds in the `ℕ`- and `ℤ`- actions.
+```lean
+example (n : ℕ) {K : Type u} [field K] {f : K[X]} (hfn : f.nat_degree = n) :
+    (add_comm_monoid.nat_module : module ℕ (splitting_field_aux n f hfn)) =
+  @algebra.to_module _ _ _ _ (splitting_field_aux.algebra n _ hfn) :=
+rfl  -- fails
+```
+It's not immediately clear whether this _can_ be fixed; the failure is much the same as the reason
+that the following fails:
+```lean
+def cases_twice {α} (a₀ aₙ : α) : ℕ → α × α
+| 0 := (a₀, a₀)
+| (n + 1) := (aₙ, aₙ)
+
+example (x : ℕ) {α} (a₀ aₙ : α) : (cases_twice a₀ aₙ x).1 = (cases_twice a₀ aₙ x).2 := rfl  -- fails
+```
+We don't really care at this point because this is an implementation detail (which is why this is
+not a docstring), but we do in `splitting_field.algebra'` below. -/
+instance algebra (n : ℕ) :
     ∀ R : Type _ {K : Type u} [CommSemiringₓ R] [Field K],
       ∀ [Algebra R K] {f : K[X]} hfn : f.natDegree = n, Algebra R (splitting_field_aux n f hfn) :=
   (Nat.recOn n fun R K _ _ _ _ _ => ‹Algebra R K›) fun n ih R K _ _ _ f hfn => ih R (nat_degree_remove_factor' hfn)
 
-instance IsScalarTower (n : ℕ) :
+instance is_scalar_tower (n : ℕ) :
     ∀ R₁ R₂ : Type _ {K : Type u} [CommSemiringₓ R₁] [CommSemiringₓ R₂] [HasScalar R₁ R₂] [Field K],
       ∀ [Algebra R₁ K] [Algebra R₂ K],
         ∀ [IsScalarTower R₁ R₂ K] {f : K[X]} hfn : f.natDegree = n, IsScalarTower R₁ R₂ (splitting_field_aux n f hfn) :=
@@ -700,7 +725,8 @@ instance algebra'' {n : ℕ} {f : K[X]} (hfn : f.natDegree = n + 1) :
 
 instance scalar_tower' {n : ℕ} {f : K[X]} (hfn : f.natDegree = n + 1) :
     IsScalarTower K (AdjoinRoot f.factor) (SplittingFieldAux n f.removeFactor (nat_degree_remove_factor' hfn)) :=
-  have : IsScalarTower K (AdjoinRoot f.factor) (AdjoinRoot f.factor) := IsScalarTower.right
+  have-- finding this instance ourselves makes things faster
+   : IsScalarTower K (AdjoinRoot f.factor) (AdjoinRoot f.factor) := IsScalarTower.right
   splitting_field_aux.is_scalar_tower n K (AdjoinRoot f.factor) (nat_degree_remove_factor' hfn)
 
 instance scalar_tower {n : ℕ} {f : K[X]} (hfn : f.natDegree = n + 1) :
@@ -782,7 +808,7 @@ theorem adjoin_roots (n : ℕ) :
 end SplittingFieldAux
 
 /-- A splitting field of a polynomial. -/
-def splitting_field (f : K[X]) :=
+def SplittingField (f : K[X]) :=
   SplittingFieldAux _ f rfl
 
 namespace SplittingField
@@ -792,7 +818,7 @@ variable (f : K[X])
 instance : Field (SplittingField f) :=
   SplittingFieldAux.field _ _
 
-instance Inhabited : Inhabited (SplittingField f) :=
+instance inhabited : Inhabited (SplittingField f) :=
   ⟨37⟩
 
 /-- This should be an instance globally, but it creates diamonds with the `ℕ` and `ℤ` actions:
@@ -847,7 +873,7 @@ end SplittingField
 variable (K L) [Algebra K L]
 
 /-- Typeclass characterising splitting fields. -/
-class is_splitting_field (f : K[X]) : Prop where
+class IsSplittingField (f : K[X]) : Prop where
   Splits {} : Splits (algebraMap K L) f
   adjoin_roots {} : Algebra.adjoin K (↑(f.map (algebraMap K L)).roots.toFinset : Set L) = ⊤
 
@@ -928,7 +954,7 @@ def lift [Algebra K F] (f : K[X]) [IsSplittingField K L f] (hf : Polynomial.Spli
                 splits_of_splits_of_dvd _ hf0 hf <| minpoly.dvd _ _ this⟩))
       Algebra.toTop
 
-theorem FiniteDimensional (f : K[X]) [IsSplittingField K L f] : FiniteDimensional K L :=
+theorem finite_dimensional (f : K[X]) [IsSplittingField K L f] : FiniteDimensional K L :=
   ⟨@Algebra.top_to_submodule K L _ _ _ ▸
       adjoin_roots L f ▸
         fg_adjoin_of_finite (Set.finite_mem_finset _) fun y hy =>
@@ -943,7 +969,7 @@ instance (f : K[X]) : FiniteDimensional K f.SplittingField :=
   finite_dimensional f.SplittingField f
 
 /-- Any splitting field is isomorphic to `splitting_field f`. -/
-def AlgEquiv (f : K[X]) [IsSplittingField K L f] : L ≃ₐ[K] SplittingField f := by
+def algEquiv (f : K[X]) [IsSplittingField K L f] : L ≃ₐ[K] SplittingField f := by
   refine'
     AlgEquiv.ofBijective (lift L f <| splits (splitting_field f) f)
       ⟨RingHom.injective (lift L f <| splits (splitting_field f) f).toRingHom, _⟩

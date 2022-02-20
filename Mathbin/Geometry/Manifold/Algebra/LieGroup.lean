@@ -1,3 +1,8 @@
+/-
+Copyright © 2020 Nicolò Cavalleri. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Nicolò Cavalleri
+-/
 import Mathbin.Geometry.Manifold.Algebra.Monoid
 
 /-!
@@ -37,6 +42,7 @@ open_locale Manifold
 
 /-- A Lie (additive) group is a group and a smooth manifold at the same time in which
 the addition and negation operations are smooth. -/
+-- See note [Design choices about smooth algebraic structures]
 @[ancestor HasSmoothAdd]
 class LieAddGroup {𝕜 : Type _} [NondiscreteNormedField 𝕜] {H : Type _} [TopologicalSpace H] {E : Type _} [NormedGroup E]
   [NormedSpace 𝕜 E] (I : ModelWithCorners 𝕜 E H) (G : Type _) [AddGroupₓ G] [TopologicalSpace G]
@@ -45,6 +51,7 @@ class LieAddGroup {𝕜 : Type _} [NondiscreteNormedField 𝕜] {H : Type _} [To
 
 /-- A Lie group is a group and a smooth manifold at the same time in which
 the multiplication and inverse operations are smooth. -/
+-- See note [Design choices about smooth algebraic structures]
 @[ancestor HasSmoothMul, to_additive]
 class LieGroup {𝕜 : Type _} [NondiscreteNormedField 𝕜] {H : Type _} [TopologicalSpace H] {E : Type _} [NormedGroup E]
   [NormedSpace 𝕜 E] (I : ModelWithCorners 𝕜 E H) (G : Type _) [Groupₓ G] [TopologicalSpace G] [ChartedSpace H G] extends
@@ -101,6 +108,7 @@ end LieGroup
 
 section ProdLieGroup
 
+-- Instance of product group
 @[to_additive]
 instance {𝕜 : Type _} [NondiscreteNormedField 𝕜] {H : Type _} [TopologicalSpace H] {E : Type _} [NormedGroup E]
     [NormedSpace 𝕜 E] {I : ModelWithCorners 𝕜 E H} {G : Type _} [TopologicalSpace G] [ChartedSpace H G] [Groupₓ G]

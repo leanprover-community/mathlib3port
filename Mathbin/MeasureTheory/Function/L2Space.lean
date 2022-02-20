@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Rémy Degenne. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Rémy Degenne
+-/
 import Mathbin.Analysis.InnerProductSpace.Basic
 import Mathbin.MeasureTheory.Integral.SetIntegral
 
@@ -131,7 +136,7 @@ private theorem smul_left' (f g : α →₂[μ] E) (r : 𝕜) : ⟪r • f, g⟫
   congr
   rwa [Pi.smul_apply] at hx
 
-instance InnerProductSpace : InnerProductSpace 𝕜 (α →₂[μ] E) where
+instance innerProductSpace : InnerProductSpace 𝕜 (α →₂[μ] E) where
   norm_sq_eq_inner := norm_sq_eq_inner'
   conj_sym := fun _ _ => by
     simp_rw [inner_def, ← integral_conj, inner_conj_sym]
@@ -203,7 +208,7 @@ local notation "⟪" x ", " y "⟫" => @inner 𝕜 (α →₂[μ] 𝕜) _ x y
 
 /-- For bounded continuous functions `f`, `g` on a finite-measure topological space `α`, the L^2
 inner product is the integral of their pointwise inner product. -/
-theorem bounded_continuous_function.inner_to_Lp (f g : α →ᵇ 𝕜) :
+theorem BoundedContinuousFunction.inner_to_Lp (f g : α →ᵇ 𝕜) :
     ⟪BoundedContinuousFunction.toLp 2 μ 𝕜 f, BoundedContinuousFunction.toLp 2 μ 𝕜 g⟫ = ∫ x, conj (f x) * g x ∂μ := by
   apply integral_congr_ae
   have hf_ae := f.coe_fn_to_Lp μ
@@ -216,7 +221,7 @@ variable [CompactSpace α]
 
 /-- For continuous functions `f`, `g` on a compact, finite-measure topological space `α`, the L^2
 inner product is the integral of their pointwise inner product. -/
-theorem continuous_map.inner_to_Lp (f g : C(α, 𝕜)) :
+theorem ContinuousMap.inner_to_Lp (f g : C(α, 𝕜)) :
     ⟪ContinuousMap.toLp 2 μ 𝕜 f, ContinuousMap.toLp 2 μ 𝕜 g⟫ = ∫ x, conj (f x) * g x ∂μ := by
   apply integral_congr_ae
   have hf_ae := f.coe_fn_to_Lp μ

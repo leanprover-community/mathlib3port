@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison, Bhavik Mehta
+-/
 import Mathbin.CategoryTheory.Limits.Preserves.Basic
 
 /-!
@@ -47,7 +52,7 @@ variable [HasLimit F] [HasLimit (F ⋙ G)]
 /-- If `G` preserves limits, we have an isomorphism from the image of the limit of a functor `F`
 to the limit of the functor `F ⋙ G`.
 -/
-def preserves_limit_iso : G.obj (limit F) ≅ limit (F ⋙ G) :=
+def preservesLimitIso : G.obj (limit F) ≅ limit (F ⋙ G) :=
   (PreservesLimit.preserves (limit.isLimit _)).conePointUniqueUpToIso (limit.isLimit _)
 
 @[simp, reassoc]
@@ -69,7 +74,7 @@ variable [PreservesLimitsOfShape J G] [HasLimitsOfShape J D] [HasLimitsOfShape J
 /-- If `C, D` has all limits of shape `J`, and `G` preserves them, then `preserves_limit_iso` is
 functorial wrt `F`. -/
 @[simps]
-def preserves_limit_nat_iso : lim ⋙ G ≅ (whiskeringRight J C D).obj G ⋙ lim :=
+def preservesLimitNatIso : lim ⋙ G ≅ (whiskeringRight J C D).obj G ⋙ lim :=
   NatIso.ofComponents (fun F => preservesLimitIso G F)
     (by
       intro _ _ f
@@ -96,7 +101,8 @@ variable [HasColimit F] [HasColimit (F ⋙ G)]
 /-- If `G` preserves colimits, we have an isomorphism from the image of the colimit of a functor `F`
 to the colimit of the functor `F ⋙ G`.
 -/
-def preserves_colimit_iso : G.obj (colimit F) ≅ colimit (F ⋙ G) :=
+-- TODO: think about swapping the order here
+def preservesColimitIso : G.obj (colimit F) ≅ colimit (F ⋙ G) :=
   (PreservesColimit.preserves (colimit.isColimit _)).coconePointUniqueUpToIso (colimit.isColimit _)
 
 @[simp, reassoc]
@@ -119,7 +125,7 @@ variable [PreservesColimitsOfShape J G] [HasColimitsOfShape J D] [HasColimitsOfS
 /-- If `C, D` has all colimits of shape `J`, and `G` preserves them, then `preserves_colimit_iso`
 is functorial wrt `F`. -/
 @[simps]
-def preserves_colimit_nat_iso : colim ⋙ G ≅ (whiskeringRight J C D).obj G ⋙ colim :=
+def preservesColimitNatIso : colim ⋙ G ≅ (whiskeringRight J C D).obj G ⋙ colim :=
   NatIso.ofComponents (fun F => preservesColimitIso G F)
     (by
       intro _ _ f

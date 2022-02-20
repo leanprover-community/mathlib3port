@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 David Wärn. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: David Wärn
+-/
 import Mathbin.Topology.StoneCech
 import Mathbin.Topology.Algebra.Semigroup
 import Mathbin.Data.Stream.Init
@@ -45,6 +50,8 @@ def Ultrafilter.hasMul {M} [Mul M] : Mul (Ultrafilter M) where
 
 attribute [local instance] Ultrafilter.hasMul Ultrafilter.hasAdd
 
+/- We could have taken this as the definition of `U * V`, but then we would have to prove that it
+defines an ultrafilter. -/
 @[to_additive]
 theorem Ultrafilter.eventually_mul {M} [Mul M] (U V : Ultrafilter M) (p : M → Prop) :
     (∀ᶠ m in ↑(U * V), p m) ↔ ∀ᶠ m in U, ∀ᶠ m' in V, p (m * m') :=
@@ -61,6 +68,7 @@ def Ultrafilter.semigroup {M} [Semigroupₓ M] : Semigroupₓ (Ultrafilter M) :=
 
 attribute [local instance] Ultrafilter.semigroup Ultrafilter.addSemigroup
 
+-- We don't prove `continuous_mul_right`, because in general it is false!
 @[to_additive]
 theorem Ultrafilter.continuous_mul_left {M} [Semigroupₓ M] (V : Ultrafilter M) : Continuous (· * V) :=
   TopologicalSpace.IsTopologicalBasis.continuous ultrafilter_basis_is_basis _ <|
@@ -146,6 +154,11 @@ theorem exists_idempotent_ultrafilter_le_FP {M} [Semigroupₓ M] (a : Streamₓ 
 @[to_additive exists_FS_of_large]
 theorem exists_FP_of_large {M} [Semigroupₓ M] (U : Ultrafilter M) (U_idem : U * U = U) (s₀ : Set M) (sU : s₀ ∈ U) :
     ∃ a, FP a ⊆ s₀ := by
+  /- Informally: given a `U`-large set `s₀`, the set `s₀ ∩ { m | ∀ᶠ m' in U, m * m' ∈ s₀ }` is also
+  `U`-large (since `U` is idempotent). Thus in particular there is an `a₀` in this intersection. Now
+  let `s₁` be the intersection `s₀ ∩ { m | a₀ * m ∈ s₀ }`. By choice of `a₀`, this is again `U`-large,
+  so we can repeat the argument starting from `s₁`, obtaining `a₁`, `s₂`, etc. This gives the desired
+  infinite sequence. -/
   have exists_elem : ∀ {s : Set M} hs : s ∈ U, (s ∩ { m | ∀ᶠ m' in U, m * m' ∈ s }).Nonempty := fun s hs =>
     Ultrafilter.nonempty_of_mem
       (inter_mem hs <| by

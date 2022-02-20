@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Heather Macbeth. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Heather Macbeth
+-/
 import Mathbin.Analysis.MeanInequalities
 import Mathbin.Analysis.MeanInequalitiesPow
 import Mathbin.Analysis.Normed.Group.Pointwise
@@ -147,10 +152,10 @@ namespace Memℓp
 theorem finite_dsupport {f : ∀ i, E i} (hf : Memℓp f 0) : Set.Finite { i | f i ≠ 0 } :=
   mem_ℓp_zero_iff.1 hf
 
-theorem BddAbove {f : ∀ i, E i} (hf : Memℓp f ∞) : BddAbove (Set.Range fun i => ∥f i∥) :=
+theorem bdd_above {f : ∀ i, E i} (hf : Memℓp f ∞) : BddAbove (Set.Range fun i => ∥f i∥) :=
   mem_ℓp_infty_iff.1 hf
 
-theorem Summable (hp : 0 < p.toReal) {f : ∀ i, E i} (hf : Memℓp f p) : Summable fun i => ∥f i∥ ^ p.toReal :=
+theorem summable (hp : 0 < p.toReal) {f : ∀ i, E i} (hf : Memℓp f p) : Summable fun i => ∥f i∥ ^ p.toReal :=
   (mem_ℓp_gen_iff hp).1 hf
 
 theorem neg {f : ∀ i, E i} (hf : Memℓp f p) : Memℓp (-f) p := by
@@ -169,7 +174,7 @@ theorem neg {f : ∀ i, E i} (hf : Memℓp f p) : Memℓp (-f) p := by
 theorem neg_iff {f : ∀ i, E i} : Memℓp (-f) p ↔ Memℓp f p :=
   ⟨fun h => neg_negₓ f ▸ h.neg, Memℓp.neg⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (i «expr ∉ » hfq.finite_dsupport.to_finset)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (i «expr ∉ » hfq.finite_dsupport.to_finset)
 theorem of_exponent_ge {p q : ℝ≥0∞} {f : ∀ i, E i} (hfq : Memℓp f q) (hpq : q ≤ p) : Memℓp f p := by
   rcases Ennreal.trichotomy₂ hpq with (⟨rfl, rfl⟩ | ⟨rfl, rfl⟩ | ⟨rfl, hp⟩ | ⟨rfl, rfl⟩ | ⟨hq, rfl⟩ | ⟨hq, hp, hpq'⟩)
   · exact hfq
@@ -221,8 +226,8 @@ theorem of_exponent_ge {p q : ℝ≥0∞} {f : ∀ i, E i} (hfq : Memℓp f q) (
       
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»
 theorem add {f g : ∀ i, E i} (hf : Memℓp f p) (hg : Memℓp g p) : Memℓp (f + g) p := by
   rcases p.trichotomy with (rfl | rfl | hp)
   · apply mem_ℓp_zero
@@ -250,7 +255,7 @@ theorem add {f g : ∀ i, E i} (hf : Memℓp f p) (hg : Memℓp g p) : Memℓp (
     · simpa using Nnreal.coe_le_coe.2 (Nnreal.rpow_add_le_add_rpow ∥f i∥₊ ∥g i∥₊ hp h.le)
       
     · let F : Finₓ 2 → ℝ≥0 :=
-        «expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»"
+        «expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»"
       have : ∀ i, (0 : ℝ) ≤ F i := fun i => (F i).coe_nonneg
       simp only [not_ltₓ] at h
       simpa [F, Finₓ.sum_univ_succ] using
@@ -348,9 +353,9 @@ protected theorem ext_iff {f g : lp E p} : f = g ↔ (f : ∀ i, E i) = g :=
 theorem eq_zero' [IsEmpty α] (f : lp E p) : f = 0 :=
   Subsingleton.elimₓ f 0
 
-protected theorem Monotone {p q : ℝ≥0∞} (hpq : q ≤ p) : lp E q ≤ lp E p := fun f hf => Memℓp.of_exponent_ge hf hpq
+protected theorem monotone {p q : ℝ≥0∞} (hpq : q ≤ p) : lp E q ≤ lp E p := fun f hf => Memℓp.of_exponent_ge hf hpq
 
-protected theorem Memℓp (f : lp E p) : Memℓp f p :=
+protected theorem mem_ℓp (f : lp E p) : Memℓp f p :=
   f.Prop
 
 variable (E p)
@@ -518,6 +523,7 @@ instance [hp : Fact (1 ≤ p)] : NormedGroup (lp E p) :=
           have hg₁ : ∀ i, 0 ≤ ∥g i∥ := fun i => norm_nonneg _
           have hf₂ := lp.has_sum_norm hp'' f
           have hg₂ := lp.has_sum_norm hp'' g
+          -- apply Minkowski's inequality
           obtain ⟨C, hC₁, hC₂, hCfg⟩ :=
             Real.Lp_add_le_has_sum_of_nonneg hp' hf₁ hg₁ (norm_nonneg' _) (norm_nonneg' _) hf₂ hg₂
           refine' le_transₓ _ hC₂
@@ -529,6 +535,8 @@ instance [hp : Fact (1 ≤ p)] : NormedGroup (lp E p) :=
       norm_neg := norm_neg }
 
 /-- Hölder inequality -/
+-- TODO: define an `ennreal` version of `is_conjugate_exponent`, and then express this inequality
+-- in a better version which also covers the case `p = 1, q = ∞`.
 protected theorem tsum_mul_le_mul_norm {p q : ℝ≥0∞} (hpq : p.toReal.IsConjugateExponent q.toReal) (f : lp E p)
     (g : lp E q) : (Summable fun i => ∥f i∥ * ∥g i∥) ∧ (∑' i, ∥f i∥ * ∥g i∥) ≤ ∥f∥ * ∥g∥ := by
   have hf₁ : ∀ i, 0 ≤ ∥f i∥ := fun i => norm_nonneg _
@@ -604,7 +612,7 @@ variable (E p 𝕜)
 
 /-- The `𝕜`-submodule of elements of `Π i : α, E i` whose `lp` norm is finite.  This is `lp E p`,
 with extra structure. -/
-def lp_submodule : Submodule 𝕜 (PreLp E) :=
+def lpSubmodule : Submodule 𝕜 (PreLp E) :=
   { lp E p with
     smul_mem' := fun c f hf => by
       simpa using mem_lp_const_smul c ⟨f, hf⟩ }
@@ -708,7 +716,7 @@ protected theorem single_smul p (i : α) (a : E i) (c : 𝕜) : lp.single p i (c
   · simp [lp.single_apply_ne p i _ hi]
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (i «expr ∉ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (i «expr ∉ » s)
 protected theorem norm_sum_single (hp : 0 < p.toReal) (f : ∀ i, E i) (s : Finset α) :
     ∥∑ i in s, lp.single p i (f i)∥ ^ p.toReal = ∑ i in s, ∥f i∥ ^ p.toReal := by
   refine' (has_sum_norm hp (∑ i in s, lp.single p i (f i))).unique _
@@ -725,7 +733,7 @@ protected theorem norm_single (hp : 0 < p.toReal) (f : ∀ i, E i) (i : α) : �
   refine' Real.rpow_left_inj_on hp.ne' (norm_nonneg' _) (norm_nonneg _) _
   simpa using lp.norm_sum_single hp f {i}
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (i «expr ∉ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (i «expr ∉ » s)
 protected theorem norm_sub_norm_compl_sub_single (hp : 0 < p.toReal) (f : lp E p) (s : Finset α) :
     ∥f∥ ^ p.toReal - ∥f - ∑ i in s, lp.single p i (f i)∥ ^ p.toReal = ∑ i in s, ∥f i∥ ^ p.toReal := by
   refine' ((has_sum_norm hp f).sub (has_sum_norm hp (f - ∑ i in s, lp.single p i (f i)))).unique _
@@ -871,8 +879,11 @@ instance : CompleteSpace (lp E p) :=
   Metric.complete_of_cauchy_seq_tendsto
     (by
       intro F hF
+      -- A Cauchy sequence in `lp E p` is pointwise convergent; let `f` be the pointwise limit.
       obtain ⟨f, hf⟩ := cauchy_seq_tendsto_of_complete (uniform_continuous_coe.comp_cauchy_seq hF)
+      -- Since the Cauchy sequence is bounded, its pointwise limit `f` is in `lp E p`.
       have hf' : Memℓp f p := mem_ℓp_of_tendsto hF.bounded_range hf
+      -- And therefore `f` is its limit in the `lp E p` topology as well as pointwise.
       exact ⟨⟨f, hf'⟩, tendsto_lp_of_tendsto_pi hF hf⟩)
 
 end Topology

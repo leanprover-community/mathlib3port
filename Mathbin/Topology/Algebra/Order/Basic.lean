@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2017 Johannes Hölzl. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johannes Hölzl, Mario Carneiro, Yury Kudryashov
+-/
 import Mathbin.Algebra.GroupWithZero.Power
 import Mathbin.Data.Set.Intervals.Pi
 import Mathbin.Order.Filter.Interval
@@ -241,6 +246,7 @@ include t
 private theorem is_closed_eq_aux : IsClosed { p : α × α | p.1 = p.2 } := by
   simp only [le_antisymm_iffₓ] <;> exact IsClosed.inter t.is_closed_le' (is_closed_le continuous_snd continuous_fst)
 
+-- see Note [lower instance priority]
 instance (priority := 90) OrderClosedTopology.to_t2_space : T2Space α where
   t2 :=
     have : IsOpen { p : α × α | p.1 ≠ p.2 } := is_closed_eq_aux.is_open_compl
@@ -816,6 +822,7 @@ instance order_topology_of_ord_connected {α : Type u} [ta : TopologicalSpace α
       intro y
       revert hx
       contrapose!
+      -- here we use the `ord_connected` hypothesis
       exact fun hx => ht.out y.2 a.2 ⟨le_of_not_gtₓ hx, le_of_ltₓ h⟩
       
     · refine' le_infi fun x => le_infi fun h => le_principal_iff.2 _
@@ -831,6 +838,7 @@ instance order_topology_of_ord_connected {α : Type u} [ta : TopologicalSpace α
       intro y
       revert hx
       contrapose!
+      -- here we use the `ord_connected` hypothesis
       exact fun hx => ht.out a.2 y.2 ⟨le_of_ltₓ h, le_of_not_gtₓ hx⟩
       
     
@@ -899,12 +907,14 @@ theorem exists_Ioc_subset_of_mem_nhds' {a : α} {s : Set α} (hs : s ∈ 𝓝 a)
     ∃ l' ∈ Ico l a, Ioc l' a ⊆ s := by
   rw [nhds_eq_order a] at hs
   rcases hs with ⟨t₁, ht₁, t₂, ht₂, rfl⟩
+  -- First we show that `t₂` includes `(-∞, a]`, so it suffices to show `(l', ∞) ⊆ t₁`
   suffices ∃ l' ∈ Ico l a, Ioi l' ⊆ t₁ by
     have A : 𝓟 (Iic a) ≤ ⨅ b ∈ Ioi a, 𝓟 (Iio b) :=
       le_infi fun b => le_infi fun hb => principal_mono.2 <| Iic_subset_Iio.2 hb
     have B : t₁ ∩ Iic a ⊆ t₁ ∩ t₂ := inter_subset_inter_right _ (A ht₂)
     exact this.imp fun l' => Exists.impₓ fun hl' hl x hx => B ⟨hl hx.1, hx.2⟩
   clear ht₂ t₂
+  -- Now we find `l` such that `(l', ∞) ⊆ t₁`
   rw [mem_binfi_of_directed] at ht₁
   · rcases ht₁ with ⟨b, hb, hb'⟩
     exact ⟨max b l, ⟨le_max_rightₓ _ _, max_ltₓ hb hl⟩, fun x hx => hb' <| Ioi_subset_Ioi (le_max_leftₓ _ _) hx⟩
@@ -959,10 +969,11 @@ theorem order_separated {a₁ a₂ : α} (h : a₁ < a₂) :
         _ ≤ b₂ := h₁ _ hb₂
         ⟩
 
+-- see Note [lower instance priority]
 instance (priority := 100) OrderTopology.to_order_closed_topology : OrderClosedTopology α where
   is_closed_le' :=
     is_open_compl_iff.1 <|
-      is_open_prod_iff.mpr fun a₁ a₂ h : ¬a₁ ≤ a₂ =>
+      is_open_prod_iff.mpr fun h : ¬a₁ ≤ a₂ =>
         have h : a₂ < a₁ := lt_of_not_geₓ h
         let ⟨u, v, hu, hv, ha₁, ha₂, h⟩ := order_separated h
         ⟨v, u, hv, hu, ha₂, ha₁, fun ⟨b₁, b₂⟩ ⟨h₁, h₂⟩ => not_le_of_gtₓ <| h b₂ h₂ b₁ h₁⟩
@@ -970,6 +981,7 @@ instance (priority := 100) OrderTopology.to_order_closed_topology : OrderClosedT
 theorem OrderTopology.t2_space : T2Space α := by
   infer_instance
 
+-- see Note [lower instance priority]
 instance (priority := 100) OrderTopology.regular_space : RegularSpace α :=
   { OrderTopology.t2_space with
     regular := fun s a hs ha =>
@@ -983,12 +995,12 @@ instance (priority := 100) OrderTopology.regular_space : RegularSpace α :=
               ⟨{ a | a < b }, is_open_gt' _, fun c hcs hca =>
                 show c < b from lt_of_not_geₓ fun hbc => h ⟨lt_of_lt_of_leₓ hb₁ hbc, le_of_ltₓ hca⟩ hcs,
                 inf_principal_eq_bot.2 <|
-                  ((𝓝 a).sets_of_superset ((is_open_lt' _).mem_nhds hb₂)) fun x hx : b < x =>
+                  ((𝓝 a).sets_of_superset ((is_open_lt' _).mem_nhds hb₂)) fun hx : b < x =>
                     show ¬x < b from not_ltₓ.2 <| le_of_ltₓ hx⟩
             | Or.inr ⟨h₁, h₂⟩ =>
               ⟨{ a' | a' < a }, is_open_gt' _, fun b hbs hba => hba,
                 inf_principal_eq_bot.2 <|
-                  ((𝓝 a).sets_of_superset ((is_open_lt' _).mem_nhds hl)) fun x hx : l < x =>
+                  ((𝓝 a).sets_of_superset ((is_open_lt' _).mem_nhds hl)) fun hx : l < x =>
                     show ¬x < a from not_ltₓ.2 <| h₁ _ hx⟩)
           fun this : ¬∃ l, l < a => ⟨∅, is_open_empty, fun l _ hl => (this ⟨l, hl⟩).elim, nhds_within_empty _⟩
       let ⟨t₁, ht₁o, ht₁s, ht₁a⟩ := this
@@ -1001,12 +1013,12 @@ instance (priority := 100) OrderTopology.regular_space : RegularSpace α :=
               ⟨{ a | b < a }, is_open_lt' _, fun c hcs hca =>
                 show c > b from lt_of_not_geₓ fun hbc => h ⟨le_of_ltₓ hca, lt_of_le_of_ltₓ hbc hb₂⟩ hcs,
                 inf_principal_eq_bot.2 <|
-                  ((𝓝 a).sets_of_superset ((is_open_gt' _).mem_nhds hb₁)) fun x hx : b > x =>
+                  ((𝓝 a).sets_of_superset ((is_open_gt' _).mem_nhds hb₁)) fun hx : b > x =>
                     show ¬x > b from not_ltₓ.2 <| le_of_ltₓ hx⟩
             | Or.inr ⟨h₁, h₂⟩ =>
               ⟨{ a' | a' > a }, is_open_lt' _, fun b hbs hba => hba,
                 inf_principal_eq_bot.2 <|
-                  ((𝓝 a).sets_of_superset ((is_open_gt' _).mem_nhds hu)) fun x hx : u > x =>
+                  ((𝓝 a).sets_of_superset ((is_open_gt' _).mem_nhds hu)) fun hx : u > x =>
                     show ¬x > a from not_ltₓ.2 <| h₂ _ hx⟩)
           fun this : ¬∃ u, u > a => ⟨∅, is_open_empty, fun l _ hl => (this ⟨l, hl⟩).elim, nhds_within_empty _⟩
       let ⟨t₂, ht₂o, ht₂s, ht₂a⟩ := this
@@ -1172,8 +1184,18 @@ intervals to the right or to the left of `a`. We give now these characterization
 2. `s` is a neighborhood of `a` within `(a, b)`
 3. `s` includes `(a, u)` for some `u ∈ (a, b]`
 4. `s` includes `(a, u)` for some `u > a` -/
+-- NB: If you extend the list, append to the end please to avoid breaking the API
 theorem tfae_mem_nhds_within_Ioi {a b : α} (hab : a < b) (s : Set α) :
-    Tfae [s ∈ 𝓝[>] a, s ∈ 𝓝[Ioc a b] a, s ∈ 𝓝[Ioo a b] a, ∃ u ∈ Ioc a b, Ioo a u ⊆ s, ∃ u ∈ Ioi a, Ioo a u ⊆ s] := by
+    Tfae
+      [s ∈ 𝓝[>] a,-- 0 : `s` is a neighborhood of `a` within `(a, +∞)`
+          s ∈
+          𝓝[Ioc a b] a,-- 1 : `s` is a neighborhood of `a` within `(a, b]`
+          s ∈
+          𝓝[Ioo a b] a,-- 2 : `s` is a neighborhood of `a` within `(a, b)`
+        ∃ u ∈ Ioc a b, Ioo a u ⊆ s,-- 3 : `s` includes `(a, u)` for some `u ∈ (a, b]`
+        ∃ u ∈ Ioi a, Ioo a u ⊆ s] :=
+  by
+  -- 4 : `s` includes `(a, u)` for some `u > a`
   tfae_have 1 ↔ 2
   · rw [nhds_within_Ioc_eq_nhds_within_Ioi hab]
     
@@ -1235,7 +1257,16 @@ theorem mem_nhds_within_Ioi_iff_exists_Ioc_subset [NoMaxOrder α] [DenselyOrdere
 3. `s` includes `(l, b)` for some `l ∈ [a, b)`
 4. `s` includes `(l, b)` for some `l < b` -/
 theorem tfae_mem_nhds_within_Iio {a b : α} (h : a < b) (s : Set α) :
-    Tfae [s ∈ 𝓝[<] b, s ∈ 𝓝[Ico a b] b, s ∈ 𝓝[Ioo a b] b, ∃ l ∈ Ico a b, Ioo l b ⊆ s, ∃ l ∈ Iio b, Ioo l b ⊆ s] := by
+    Tfae
+      [s ∈ 𝓝[<] b,-- 0 : `s` is a neighborhood of `b` within `(-∞, b)`
+          s ∈
+          𝓝[Ico a b] b,-- 1 : `s` is a neighborhood of `b` within `[a, b)`
+          s ∈
+          𝓝[Ioo a b] b,-- 2 : `s` is a neighborhood of `b` within `(a, b)`
+        ∃ l ∈ Ico a b, Ioo l b ⊆ s,-- 3 : `s` includes `(l, b)` for some `l ∈ [a, b)`
+        ∃ l ∈ Iio b, Ioo l b ⊆ s] :=
+  by
+  -- 4 : `s` includes `(l, b)` for some `l < b`
   simpa only [exists_prop, OrderDual.exists, dual_Ioi, dual_Ioc, dual_Ioo] using
     tfae_mem_nhds_within_Ioi h.dual (of_dual ⁻¹' s)
 
@@ -1271,7 +1302,16 @@ theorem mem_nhds_within_Iio_iff_exists_Ico_subset [NoMinOrder α] [DenselyOrdere
 3. `s` includes `[a, u)` for some `u ∈ (a, b]`
 4. `s` includes `[a, u)` for some `u > a` -/
 theorem tfae_mem_nhds_within_Ici {a b : α} (hab : a < b) (s : Set α) :
-    Tfae [s ∈ 𝓝[≥] a, s ∈ 𝓝[Icc a b] a, s ∈ 𝓝[Ico a b] a, ∃ u ∈ Ioc a b, Ico a u ⊆ s, ∃ u ∈ Ioi a, Ico a u ⊆ s] := by
+    Tfae
+      [s ∈ 𝓝[≥] a,-- 0 : `s` is a neighborhood of `a` within `[a, +∞)`
+          s ∈
+          𝓝[Icc a b] a,-- 1 : `s` is a neighborhood of `a` within `[a, b]`
+          s ∈
+          𝓝[Ico a b] a,-- 2 : `s` is a neighborhood of `a` within `[a, b)`
+        ∃ u ∈ Ioc a b, Ico a u ⊆ s,-- 3 : `s` includes `[a, u)` for some `u ∈ (a, b]`
+        ∃ u ∈ Ioi a, Ico a u ⊆ s] :=
+  by
+  -- 4 : `s` includes `[a, u)` for some `u > a`
   tfae_have 1 ↔ 2
   · rw [nhds_within_Icc_eq_nhds_within_Ici hab]
     
@@ -1341,7 +1381,16 @@ theorem mem_nhds_within_Ici_iff_exists_Icc_subset' [NoMaxOrder α] [DenselyOrder
 3. `s` includes `(l, b]` for some `l ∈ [a, b)`
 4. `s` includes `(l, b]` for some `l < b` -/
 theorem tfae_mem_nhds_within_Iic {a b : α} (h : a < b) (s : Set α) :
-    Tfae [s ∈ 𝓝[≤] b, s ∈ 𝓝[Icc a b] b, s ∈ 𝓝[Ioc a b] b, ∃ l ∈ Ico a b, Ioc l b ⊆ s, ∃ l ∈ Iio b, Ioc l b ⊆ s] := by
+    Tfae
+      [s ∈ 𝓝[≤] b,-- 0 : `s` is a neighborhood of `b` within `(-∞, b]`
+          s ∈
+          𝓝[Icc a b] b,-- 1 : `s` is a neighborhood of `b` within `[a, b]`
+          s ∈
+          𝓝[Ioc a b] b,-- 2 : `s` is a neighborhood of `b` within `(a, b]`
+        ∃ l ∈ Ico a b, Ioc l b ⊆ s,-- 3 : `s` includes `(l, b]` for some `l ∈ [a, b)`
+        ∃ l ∈ Iio b, Ioc l b ⊆ s] :=
+  by
+  -- 4 : `s` includes `(l, b]` for some `l < b`
   simpa only [exists_prop, OrderDual.exists, dual_Ici, dual_Ioc, dual_Icc, dual_Ico] using
     tfae_mem_nhds_within_Ici h.dual (of_dual ⁻¹' s)
 
@@ -1460,19 +1509,22 @@ theorem eventually_abs_sub_lt (a : α) {ε : α} (hε : 0 < ε) : ∀ᶠ x in �
       (mem_infi_of_mem hε <| by
         simp only [abs_sub_comm, mem_principal_self])
 
+-- see Note [lower instance priority]
 instance (priority := 100) LinearOrderedAddCommGroup.topological_add_group : TopologicalAddGroup α where
   continuous_add := by
     refine' continuous_iff_continuous_at.2 _
     rintro ⟨a, b⟩
     refine' LinearOrderedAddCommGroup.tendsto_nhds.2 fun ε ε0 => _
     rcases dense_or_discrete 0 ε with (⟨δ, δ0, δε⟩ | ⟨h₁, h₂⟩)
-    · filter_upwards [ProdIsOpen.mem_nhds (eventually_abs_sub_lt a δ0) (eventually_abs_sub_lt b (sub_pos.2 δε))]
+    · -- If there exists `δ ∈ (0, ε)`, then we choose `δ`-nhd of `a` and `(ε-δ)`-nhd of `b`
+      filter_upwards [ProdIsOpen.mem_nhds (eventually_abs_sub_lt a δ0) (eventually_abs_sub_lt b (sub_pos.2 δε))]
       rintro ⟨x, y⟩ ⟨hx : abs (x - a) < δ, hy : abs (y - b) < ε - δ⟩
       rw [add_sub_comm]
       calc abs (x - a + (y - b)) ≤ abs (x - a) + abs (y - b) := abs_add _ _ _ < δ + (ε - δ) := add_lt_add hx hy _ = ε :=
           add_sub_cancel'_right _ _
       
-    · have hε : ∀ {x y}, abs (x - y) < ε → x = y := by
+    · -- Otherewise `ε`-nhd of each point `a` is `{a}`
+      have hε : ∀ {x y}, abs (x - y) < ε → x = y := by
         intro x y h
         simpa [sub_eq_zero] using h₂ _ h
       filter_upwards [ProdIsOpen.mem_nhds (eventually_abs_sub_lt a ε0) (eventually_abs_sub_lt b ε0)]
@@ -1607,7 +1659,7 @@ variable {l : Filter β} {f g : β → α}
 
 section continuous_mul
 
-theorem mul_tendsto_nhds_zero_right (x : α) : Tendsto (uncurry (· * · : α → α → α)) (𝓝 0 ×ᶠ 𝓝 x) <| 𝓝 0 := by
+theorem mul_tendsto_nhds_zero_right (x : α) : Tendsto (uncurry ((· * ·) : α → α → α)) (𝓝 0 ×ᶠ 𝓝 x) <| 𝓝 0 := by
   have hx : 0 < 2 * (1 + abs x) :=
     mul_pos zero_lt_two <| lt_of_lt_of_leₓ zero_lt_one <| le_add_of_le_of_nonneg le_rfl (abs_nonneg x)
   rw [((nhds_basis_zero_abs_sub_lt α).Prod <| nhds_basis_abs_sub_lt x).tendsto_iff (nhds_basis_zero_abs_sub_lt α)]
@@ -1621,7 +1673,7 @@ theorem mul_tendsto_nhds_zero_right (x : α) : Tendsto (uncurry (· * · : α �
       add_le_add_right (le_of_ltₓ h') (abs x)_ ≤ 2 * (1 + abs x) := by
       linarith
 
-theorem mul_tendsto_nhds_zero_left (x : α) : Tendsto (uncurry (· * · : α → α → α)) (𝓝 x ×ᶠ 𝓝 0) <| 𝓝 0 := by
+theorem mul_tendsto_nhds_zero_left (x : α) : Tendsto (uncurry ((· * ·) : α → α → α)) (𝓝 x ×ᶠ 𝓝 0) <| 𝓝 0 := by
   intro s hs
   have := mul_tendsto_nhds_zero_right x hs
   rw [Filter.mem_map, mem_prod_iff] at this⊢
@@ -1659,7 +1711,7 @@ theorem nhds_eq_map_mul_left_nhds_one {x₀ : α} (hx₀ : x₀ ≠ 0) : 𝓝 x�
 theorem nhds_eq_map_mul_right_nhds_one {x₀ : α} (hx₀ : x₀ ≠ 0) : 𝓝 x₀ = map (fun x => x * x₀) (𝓝 1) := by
   simp_rw [mul_comm _ x₀, nhds_eq_map_mul_left_nhds_one hx₀]
 
-theorem mul_tendsto_nhds_one_nhds_one : Tendsto (uncurry (· * · : α → α → α)) (𝓝 1 ×ᶠ 𝓝 1) <| 𝓝 1 := by
+theorem mul_tendsto_nhds_one_nhds_one : Tendsto (uncurry ((· * ·) : α → α → α)) (𝓝 1 ×ᶠ 𝓝 1) <| 𝓝 1 := by
   rw
     [((nhds_basis_Ioo_pos (1 : α)).Prod <| nhds_basis_Ioo_pos (1 : α)).tendsto_iff
       (nhds_basis_Ioo_pos_of_pos (zero_lt_one : (0 : α) < 1))]
@@ -1749,7 +1801,7 @@ theorem Filter.Tendsto.mul_at_top {C : α} (hC : 0 < C) (hf : Tendsto f l (𝓝 
 a negative constant `C` then `f * g` tends to `at_bot`. -/
 theorem Filter.Tendsto.at_top_mul_neg {C : α} (hC : C < 0) (hf : Tendsto f l atTop) (hg : Tendsto g l (𝓝 C)) :
     Tendsto (fun x => f x * g x) l atBot := by
-  simpa only [· ∘ ·, neg_mul_eq_mul_neg, neg_negₓ] using
+  simpa only [(· ∘ ·), neg_mul_eq_mul_neg, neg_negₓ] using
     tendsto_neg_at_top_at_bot.comp (hf.at_top_mul (neg_pos.2 hC) hg.neg)
 
 /-- In a linearly ordered field with the order topology, if `f` tends to a negative constant `C` and
@@ -1762,13 +1814,13 @@ theorem Filter.Tendsto.neg_mul_at_top {C : α} (hC : C < 0) (hf : Tendsto f l (�
 a positive constant `C` then `f * g` tends to `at_bot`. -/
 theorem Filter.Tendsto.at_bot_mul {C : α} (hC : 0 < C) (hf : Tendsto f l atBot) (hg : Tendsto g l (𝓝 C)) :
     Tendsto (fun x => f x * g x) l atBot := by
-  simpa [· ∘ ·] using tendsto_neg_at_top_at_bot.comp ((tendsto_neg_at_bot_at_top.comp hf).at_top_mul hC hg)
+  simpa [(· ∘ ·)] using tendsto_neg_at_top_at_bot.comp ((tendsto_neg_at_bot_at_top.comp hf).at_top_mul hC hg)
 
 /-- In a linearly ordered field with the order topology, if `f` tends to `at_bot` and `g` tends to
 a negative constant `C` then `f * g` tends to `at_top`. -/
 theorem Filter.Tendsto.at_bot_mul_neg {C : α} (hC : C < 0) (hf : Tendsto f l atBot) (hg : Tendsto g l (𝓝 C)) :
     Tendsto (fun x => f x * g x) l atTop := by
-  simpa [· ∘ ·] using tendsto_neg_at_bot_at_top.comp ((tendsto_neg_at_bot_at_top.comp hf).at_top_mul_neg hC hg)
+  simpa [(· ∘ ·)] using tendsto_neg_at_bot_at_top.comp ((tendsto_neg_at_bot_at_top.comp hf).at_top_mul_neg hC hg)
 
 /-- In a linearly ordered field with the order topology, if `f` tends to a positive constant `C` and
 `g` tends to `at_bot` then `f * g` tends to `at_bot`. -/
@@ -1949,6 +2001,8 @@ theorem IsLub.mem_upper_bounds_of_tendsto [Preorderₓ γ] [TopologicalSpace γ]
   refine' ge_of_tendsto (hb.mono_left (nhds_within_mono _ (inter_subset_left s (Ici x)))) _
   exact mem_of_superset self_mem_nhds_within fun y hy => hf hx hy.1 hy.2
 
+-- For a version of this theorem in which the convergence considered on the domain `α` is as `x : α`
+-- tends to infinity, rather than tending to a point `x` in `α`, see `is_lub_of_tendsto_at_top`
 theorem IsLub.is_lub_of_tendsto [Preorderₓ γ] [TopologicalSpace γ] [OrderClosedTopology γ] {f : α → γ} {s : Set α}
     {a : α} {b : γ} (hf : MonotoneOn f s) (ha : IsLub s a) (hs : s.Nonempty) (hb : Tendsto f (𝓝[s] a) (𝓝 b)) :
     IsLub (f '' s) b :=
@@ -1961,6 +2015,9 @@ theorem IsGlb.mem_lower_bounds_of_tendsto [Preorderₓ γ] [TopologicalSpace γ]
     b ∈ LowerBounds (f '' s) :=
   @IsLub.mem_upper_bounds_of_tendsto (OrderDual α) (OrderDual γ) _ _ _ _ _ _ _ _ _ _ hf.dual ha hb
 
+-- For a version of this theorem in which the convergence considered on the domain `α` is as
+-- `x : α` tends to negative infinity, rather than tending to a point `x` in `α`, see
+-- `is_glb_of_tendsto_at_bot`
 theorem IsGlb.is_glb_of_tendsto [Preorderₓ γ] [TopologicalSpace γ] [OrderClosedTopology γ] {f : α → γ} {s : Set α}
     {a : α} {b : γ} (hf : MonotoneOn f s) : IsGlb s a → s.Nonempty → Tendsto f (𝓝[s] a) (𝓝 b) → IsGlb (f '' s) b :=
   @IsLub.is_lub_of_tendsto (OrderDual α) (OrderDual γ) _ _ _ _ _ _ f s a b hf.dual
@@ -2113,7 +2170,7 @@ theorem exists_seq_tendsto_Inf {α : Type _} [ConditionallyCompleteLinearOrder �
 theorem IsCompact.bdd_below {α : Type u} [TopologicalSpace α] [LinearOrderₓ α] [OrderClosedTopology α] [Nonempty α]
     {s : Set α} (hs : IsCompact s) : BddBelow s := by
   by_contra H
-  rcases hs.elim_finite_subcover_image (fun x _ : x ∈ s => @is_open_Ioi _ _ _ _ x) _ with ⟨t, st, ft, ht⟩
+  rcases hs.elim_finite_subcover_image (fun _ : x ∈ s => @is_open_Ioi _ _ _ _ x) _ with ⟨t, st, ft, ht⟩
   · refine' H (ft.bdd_below.imp fun C hC y hy => _)
     rcases mem_Union₂.1 (ht hy) with ⟨x, hx, xy⟩
     exact le_transₓ (hC hx) (le_of_ltₓ xy)
@@ -2369,6 +2426,7 @@ theorem map_coe_at_top_of_Ioo_subset (hb : s ⊆ Iio b) (hs : ∀, ∀ a' < b, �
 
 theorem map_coe_at_bot_of_Ioo_subset (ha : s ⊆ Ioi a) (hs : ∀, ∀ b' > a, ∀, ∃ b > a, Ioo a b ⊆ s) :
     map (coe : s → α) atBot = 𝓝[>] a := by
+  -- the elaborator gets stuck without `(... : _)`
   refine' (map_coe_at_top_of_Ioo_subset (show of_dual ⁻¹' s ⊆ Iio (to_dual a) from ha) fun b' hb' => _ : _)
   simpa only [OrderDual.exists, dual_Ioo] using hs b' hb'
 
@@ -2463,7 +2521,7 @@ instance (x : α) [Nontrivial α] : NeBot (𝓝[≠] x) := by
   obtain ⟨z, hz⟩ : ∃ z, a < z ∧ z < x := exists_between hy.1
   exact ⟨z, us ⟨hab ⟨hz.1, hz.2.trans hy.2⟩, hz.2.Ne⟩⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (t «expr ⊆ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (t «expr ⊆ » s)
 /-- Let `s` be a dense set in a nontrivial dense linear order `α`. If `s` is a
 separable space (e.g., if `α` has a second countable topology), then there exists a countable
 dense subset `t ⊆ s` such that `t` does not contain bottom/top elements of `α`. -/
@@ -2521,7 +2579,11 @@ theorem IsClosed.Inf_mem {α : Type u} [TopologicalSpace α] [CompleteLinearOrde
 the supremum of the image of this set. -/
 theorem map_Sup_of_continuous_at_of_monotone' {f : α → β} {s : Set α} (Cf : ContinuousAt f (sup s)) (Mf : Monotone f)
     (hs : s.Nonempty) : f (sup s) = sup (f '' s) :=
-  ((is_lub_Sup _).is_lub_of_tendsto (fun x hx y hy xy => Mf xy) hs <| Cf.mono_left inf_le_left).Sup_eq.symm
+  ((--This is a particular case of the more general is_lub.is_lub_of_tendsto
+              is_lub_Sup
+              _).is_lub_of_tendsto
+          (fun x hx y hy xy => Mf xy) hs <|
+        Cf.mono_left inf_le_left).Sup_eq.symm
 
 /-- A monotone function `s` sending `bot` to `bot` and continuous at the supremum of a set sends
 this supremum to the supremum of the image of this set. -/

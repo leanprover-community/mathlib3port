@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Chris Hughes. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Chris Hughes
+-/
 import Mathbin.RingTheory.Finiteness
 import Mathbin.LinearAlgebra.Dimension
 
@@ -17,6 +22,8 @@ namespace IsNoetherian
 
 variable {K : Type u} {V : Type v} [DivisionRing K] [AddCommGroupₓ V] [Module K V]
 
+-- PROJECT: Show all division rings are noetherian.
+-- This is currently annoying because we only have ideal of commutative rings.
 variable [IsNoetherianRing K]
 
 /-- A module over a division ring is noetherian if and only if
@@ -45,7 +52,7 @@ theorem dim_lt_omega : ∀ [IsNoetherian K V], Module.rank K V < ω :=
 variable {K V}
 
 /-- In a noetherian module over a division ring, all bases are indexed by a finite type. -/
-noncomputable def fintype_basis_index {ι : Type _} [IsNoetherian K V] (b : Basis ι K V) : Fintype ι :=
+noncomputable def fintypeBasisIndex {ι : Type _} [IsNoetherian K V] (b : Basis ι K V) : Fintype ι :=
   b.fintypeIndexOfDimLtOmega (dim_lt_omega K V)
 
 /-- In a noetherian module over a division ring,
@@ -62,7 +69,7 @@ variable (K V)
 
 /-- In a noetherian module over a division ring,
 there exists a finite basis. This is the indexing `finset`. -/
-noncomputable def finset_basis_index [IsNoetherian K V] : Finset V :=
+noncomputable def finsetBasisIndex [IsNoetherian K V] : Finset V :=
   (finite_basis_index (Basis.ofVectorSpace K V)).toFinset
 
 @[simp]
@@ -79,7 +86,7 @@ This is indexed by the `finset` `finite_dimensional.finset_basis_index`.
 This is in contrast to the result `finite_basis_index (basis.of_vector_space K V)`,
 which provides a set and a `set.finite`.
 -/
-noncomputable def finset_basis [IsNoetherian K V] : Basis (finsetBasisIndex K V) K V :=
+noncomputable def finsetBasis [IsNoetherian K V] : Basis (finsetBasisIndex K V) K V :=
   (Basis.ofVectorSpace K V).reindex
     (by
       simp )

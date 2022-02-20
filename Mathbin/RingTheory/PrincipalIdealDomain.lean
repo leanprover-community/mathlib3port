@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Chris Hughes. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Chris Hughes, Morenikeji Neri
+-/
 import Mathbin.RingTheory.UniqueFactorizationDomain
 
 /-!
@@ -111,11 +116,13 @@ theorem prime_generator_of_is_prime (S : Ideal R) [Submodule.IsPrincipal S] [is_
     is_prime.ne_top (S.eq_top_of_is_unit_mem (generator_mem S) h), by
     simpa only [← mem_iff_generator_dvd S] using is_prime.2⟩
 
+-- Note that the converse may not hold if `ϕ` is not injective.
 theorem generator_map_dvd_of_mem {N : Submodule R M} (ϕ : M →ₗ[R] R) [(N.map ϕ).IsPrincipal] {x : M} (hx : x ∈ N) :
     generator (N.map ϕ) ∣ ϕ x := by
   rw [← mem_iff_generator_dvd, Submodule.mem_map]
   exact ⟨x, hx, rfl⟩
 
+-- Note that the converse may not hold if `ϕ` is not injective.
 theorem generator_submodule_image_dvd_of_mem {N O : Submodule R M} (hNO : N ≤ O) (ϕ : O →ₗ[R] R)
     [(ϕ.submoduleImage N).IsPrincipal] {x : M} (hx : x ∈ N) : generator (ϕ.submoduleImage N) ∣ ϕ ⟨x, hNO hx⟩ := by
   rw [← mem_iff_generator_dvd, LinearMap.mem_submodule_image_of_le hNO]
@@ -129,6 +136,10 @@ namespace IsPrime
 
 open Submodule.IsPrincipal Ideal
 
+-- TODO -- for a non-ID one could perhaps prove that if p < q are prime then q maximal;
+-- 0 isn't prime in a non-ID PIR but the Krull dimension is still <= 1.
+-- The below result follows from this, but we could also use the below result to
+-- prove this (quotient out by p).
 theorem to_maximal_ideal [CommRingₓ R] [IsDomain R] [IsPrincipalIdealRing R] {S : Ideal R} [hpi : IsPrime S]
     (hS : S ≠ ⊥) : IsMaximal S :=
   is_maximal_iff.2
@@ -157,6 +168,7 @@ theorem mod_mem_iff {S : Ideal R} {x y : R} (hy : y ∈ S) : x % y ∈ S ↔ x �
   ⟨fun hxy => div_add_mod x y ▸ S.add_mem (S.mul_mem_right _ hy) hxy, fun hx =>
     (mod_eq_sub_mul_div x y).symm ▸ S.sub_mem hx (S.mul_mem_right _ hy)⟩
 
+-- see Note [lower instance priority]
 instance (priority := 100) EuclideanDomain.to_principal_ideal_domain : IsPrincipalIdealRing R where
   principal := fun S =>
     ⟨if h : { x : R | x ∈ S ∧ x ≠ 0 }.Nonempty then
@@ -196,7 +208,8 @@ namespace PrincipalIdealRing
 
 open IsPrincipalIdealRing
 
-instance (priority := 100) IsNoetherianRing [Ringₓ R] [IsPrincipalIdealRing R] : IsNoetherianRing R :=
+-- see Note [lower instance priority]
+instance (priority := 100) is_noetherian_ring [Ringₓ R] [IsPrincipalIdealRing R] : IsNoetherianRing R :=
   is_noetherian_ring_iff.2
     ⟨fun s : Ideal R => by
       rcases(IsPrincipalIdealRing.principal s).principal with ⟨a, rfl⟩
@@ -251,6 +264,7 @@ theorem ring_hom_mem_submonoid_of_factors_subset_of_units_subset {R S : Type _} 
   mem_submonoid_of_factors_subset_of_units_subset (s.comap f.toMonoidHom) ha h hf
 
 /-- A principal ideal domain has unique factorization -/
+-- see Note [lower instance priority]
 instance (priority := 100) to_unique_factorization_monoid : UniqueFactorizationMonoid R :=
   { (IsNoetherianRing.wf_dvd_monoid : WfDvdMonoid R) with
     irreducible_iff_prime := fun _ => PrincipalIdealRing.irreducible_iff_prime }
@@ -326,6 +340,7 @@ theorem exists_gcd_eq_mul_add_mul (a b : R) : ∃ x y, gcd a b = a * x + b * y :
 theorem gcd_is_unit_iff (x y : R) : IsUnit (gcd x y) ↔ IsCoprime x y := by
   rw [IsCoprime, ← mem_span_pair, ← span_gcd, ← span_singleton_eq_top, eq_top_iff_one]
 
+-- this should be proved for UFDs surely?
 theorem is_coprime_of_dvd (x y : R) (nonzero : ¬(x = 0 ∧ y = 0)) (H : ∀, ∀ z ∈ Nonunits R, ∀, z ≠ 0 → z ∣ x → ¬z ∣ y) :
     IsCoprime x y := by
   rw [← gcd_is_unit_iff]
@@ -333,6 +348,7 @@ theorem is_coprime_of_dvd (x y : R) (nonzero : ¬(x = 0 ∧ y = 0)) (H : ∀, �
   refine' H _ h _ (gcd_dvd_left _ _) (gcd_dvd_right _ _)
   rwa [Ne, gcd_eq_zero_iff]
 
+-- this should be proved for UFDs surely?
 theorem dvd_or_coprime (x y : R) (h : Irreducible x) : x ∣ y ∨ IsCoprime x y := by
   refine' or_iff_not_imp_left.2 fun h' => _
   apply is_coprime_of_dvd

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Sébastien Gouëzel. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Sébastien Gouëzel, Yury Kudryashov
+-/
 import Mathbin.Analysis.Calculus.FormalMultilinearSeries
 import Mathbin.Data.Equiv.Fin
 
@@ -216,7 +221,7 @@ theorem summable_nnnorm_mul_pow (p : FormalMultilinearSeries 𝕜 E F) {r : ℝ�
   push_cast
   exact p.summable_norm_mul_pow h
 
-protected theorem Summable [CompleteSpace F] (p : FormalMultilinearSeries 𝕜 E F) {x : E}
+protected theorem summable [CompleteSpace F] (p : FormalMultilinearSeries 𝕜 E F) {x : E}
     (hx : x ∈ Emetric.Ball (0 : E) p.radius) : Summable fun n : ℕ => p n fun _ => x :=
   summable_of_summable_norm (p.summable_norm_apply hx)
 
@@ -267,16 +272,16 @@ theorem radius_neg (p : FormalMultilinearSeries 𝕜 E F) : (-p).radius = p.radi
 
 /-- Given a formal multilinear series `p` and a vector `x`, then `p.sum x` is the sum `Σ pₙ xⁿ`. A
 priori, it only behaves well when `∥x∥ < p.radius`. -/
-protected def Sum (p : FormalMultilinearSeries 𝕜 E F) (x : E) : F :=
+protected def sum (p : FormalMultilinearSeries 𝕜 E F) (x : E) : F :=
   ∑' n : ℕ, p n fun i => x
 
-protected theorem HasSum [CompleteSpace F] (p : FormalMultilinearSeries 𝕜 E F) {x : E}
+protected theorem has_sum [CompleteSpace F] (p : FormalMultilinearSeries 𝕜 E F) {x : E}
     (hx : x ∈ Emetric.Ball (0 : E) p.radius) : HasSum (fun n : ℕ => p n fun _ => x) (p.Sum x) :=
   (p.Summable hx).HasSum
 
 /-- Given a formal multilinear series `p` and a vector `x`, then `p.partial_sum n x` is the sum
 `Σ pₖ xᵏ` for `k ∈ {0,..., n-1}`. -/
-def partial_sum (p : FormalMultilinearSeries 𝕜 E F) (n : ℕ) (x : E) : F :=
+def partialSum (p : FormalMultilinearSeries 𝕜 E F) (n : ℕ) (x : E) : F :=
   ∑ k in Finset.range n, p k fun i : Finₓ k => x
 
 /-- The partial sums of a formal multilinear series are continuous. -/
@@ -385,7 +390,7 @@ theorem HasFpowerSeriesAt.sub (hf : HasFpowerSeriesAt f pf x) (hg : HasFpowerSer
 theorem AnalyticAt.sub (hf : AnalyticAt 𝕜 f x) (hg : AnalyticAt 𝕜 g x) : AnalyticAt 𝕜 (f - g) x := by
   simpa only [sub_eq_add_neg] using hf.add hg.neg
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (i «expr ≠ » 0)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (i «expr ≠ » 0)
 theorem HasFpowerSeriesOnBall.coeff_zero (hf : HasFpowerSeriesOnBall f pf x r) (v : Finₓ 0 → E) : pf 0 v = f x := by
   have v_eq : v = fun i => 0 := Subsingleton.elimₓ _ _
   have zero_mem : (0 : E) ∈ Emetric.Ball (0 : E) r := by
@@ -471,6 +476,7 @@ theorem HasFpowerSeriesAt.is_O_sub_partial_sum_pow (hf : HasFpowerSeriesAt f p x
   filter_upwards [Metric.ball_mem_nhds (0 : E) r'0] with y hy
   simpa [mul_powₓ, mul_div_assoc, mul_assoc, div_mul_eq_mul_div] using hp y hy n
 
+-- hack to speed up simp when dealing with complicated types
 attribute [-instance] Unique.subsingleton Pi.subsingleton
 
 /-- If `f` has formal power series `∑ n, pₙ` on a ball of radius `r`, then for `y, z` in any smaller
@@ -532,7 +538,7 @@ theorem HasFpowerSeriesOnBall.is_O_image_sub_image_sub_deriv_principal (hf : Has
   simp_rw [L, mul_right_commₓ _ (_ * _)]
   exact (is_O_refl _ _).const_mul_left _
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (y z «expr ∈ » emetric.ball x r')
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (y z «expr ∈ » emetric.ball x r')
 /-- If `f` has formal power series `∑ n, pₙ` on a ball of radius `r`, then for `y, z` in any smaller
 ball, the norm of the difference `f y - f z - p 1 (λ _, y - z)` is bounded above by
 `C * (max ∥y - x∥ ∥z - x∥) * ∥y - z∥`. -/
@@ -589,7 +595,7 @@ theorem HasFpowerSeriesOnBall.tendsto_uniformly_on' {r' : ℝ≥0 } (hf : HasFpo
     (h : (r' : ℝ≥0∞) < r) : TendstoUniformlyOn (fun n y => p.partialSum n (y - x)) f atTop (Metric.Ball (x : E) r') :=
   by
   convert (hf.tendsto_uniformly_on h).comp fun y => y - x
-  · simp [· ∘ ·]
+  · simp [(· ∘ ·)]
     
   · ext z
     simp [dist_eq_norm]
@@ -806,7 +812,7 @@ Given a formal multilinear series `p` and a point `x` in its ball of convergence
 is itself an analytic function of `x` given by the series `p.change_origin_series`. Each term in
 `change_origin_series` is the sum of `change_origin_series_term`'s over all `s` of cardinality `l`.
 -/
-def change_origin_series_term (k l : ℕ) (s : Finset (Finₓ (k + l))) (hs : s.card = l) : E[×l]→L[𝕜] E[×k]→L[𝕜] F :=
+def changeOriginSeriesTerm (k l : ℕ) (s : Finset (Finₓ (k + l))) (hs : s.card = l) : E[×l]→L[𝕜] E[×k]→L[𝕜] F :=
   ContinuousMultilinearMap.curryFinFinset 𝕜 E F hs
     (by
       erw [Finset.card_compl, Fintype.card_fin, hs, add_tsub_cancel_right])
@@ -837,7 +843,7 @@ theorem nnnorm_change_origin_series_term_apply_le (k l : ℕ) (s : Finset (Fin�
 Given a formal multilinear series `p` and a point `x` in its ball of convergence,
 `p.change_origin x` is a formal multilinear series such that
 `p.sum (x+y) = (p.change_origin x).sum y` when this makes sense. -/
-def change_origin_series (k : ℕ) : FormalMultilinearSeries 𝕜 E (E[×k]→L[𝕜] F) := fun l =>
+def changeOriginSeries (k : ℕ) : FormalMultilinearSeries 𝕜 E (E[×k]→L[𝕜] F) := fun l =>
   ∑ s : { s : Finset (Finₓ (k + l)) // Finset.card s = l }, p.changeOriginSeriesTerm k l s s.2
 
 theorem nnnorm_change_origin_series_le_tsum (k l : ℕ) :
@@ -855,10 +861,10 @@ theorem nnnorm_change_origin_series_apply_le_tsum (k l : ℕ) (x : E) :
 /-- Changing the origin of a formal multilinear series `p`, so that
 `p.sum (x+y) = (p.change_origin x).sum y` when this makes sense.
 -/
-def change_origin (x : E) : FormalMultilinearSeries 𝕜 E F := fun k => (p.changeOriginSeries k).Sum x
+def changeOrigin (x : E) : FormalMultilinearSeries 𝕜 E F := fun k => (p.changeOriginSeries k).Sum x
 
--- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (k l)
--- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (k l)
+-- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (k l)
+-- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (k l)
 /-- An auxiliary equivalence useful in the proofs about
 `formal_multilinear_series.change_origin_series`: the set of triples `(k, l, s)`, where `s` is a
 `finset (fin (k + l))` of cardinality `l` is equivalent to the set of pairs `(n, s)`, where `s` is a
@@ -868,7 +874,7 @@ The forward map sends `(k, l, s)` to `(k + l, s)` and the inverse map sends `(n,
 `(n - finset.card s, finset.card s, s)`. The actual definition is less readable because of problems
 with non-definitional equalities. -/
 @[simps]
-def change_origin_index_equiv :
+def changeOriginIndexEquiv :
     (Σ (k : ℕ) (l : ℕ), { s : Finset (Finₓ (k + l)) // s.card = l }) ≃ Σ n : ℕ, Finset (Finₓ n) where
   toFun := fun s => ⟨s.1 + s.2.1, s.2.2⟩
   invFun := fun s =>
@@ -878,6 +884,8 @@ def change_origin_index_equiv :
   left_inv := by
     rintro ⟨k, l, ⟨s : Finset (Finₓ <| k + l), hs : s.card = l⟩⟩
     dsimp only [Subtype.coe_mk]
+    -- Lean can't automatically generalize `k' = k + l - s.card`, `l' = s.card`, so we explicitly
+    -- formulate the generalized goal
     suffices
       ∀ k' l',
         k' = k →
@@ -895,19 +903,20 @@ def change_origin_index_equiv :
     rintro ⟨n, s⟩
     simp [tsub_add_cancel_of_le (card_finset_fin_le s), Finₓ.cast_to_equiv]
 
--- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (k l)
+-- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (k l)
 theorem change_origin_series_summable_aux₁ {r r' : ℝ≥0 } (hr : (r + r' : ℝ≥0∞) < p.radius) :
     Summable fun s : Σ (k : ℕ) (l : ℕ), { s : Finset (Finₓ (k + l)) // s.card = l } =>
       ∥p (s.1 + s.2.1)∥₊ * r ^ s.2.1 * r' ^ s.1 :=
   by
   rw [← change_origin_index_equiv.symm.summable_iff]
-  dsimp only [· ∘ ·, change_origin_index_equiv_symm_apply_fst, change_origin_index_equiv_symm_apply_snd_fst]
+  dsimp only [(· ∘ ·), change_origin_index_equiv_symm_apply_fst, change_origin_index_equiv_symm_apply_snd_fst]
   have :
     ∀ n : ℕ,
       HasSum (fun s : Finset (Finₓ n) => ∥p (n - s.card + s.card)∥₊ * r ^ s.card * r' ^ (n - s.card))
         (∥p n∥₊ * (r + r') ^ n) :=
     by
     intro n
+    -- TODO: why `simp only [tsub_add_cancel_of_le (card_finset_fin_le _)]` fails?
     convert_to HasSum (fun s : Finset (Finₓ n) => ∥p n∥₊ * (r ^ s.card * r' ^ (n - s.card))) _
     · ext1 s
       rw [tsub_add_cancel_of_le (card_finset_fin_le _), mul_assoc]
@@ -959,6 +968,8 @@ theorem change_origin_radius : p.radius - ∥x∥₊ ≤ (p.changeOrigin x).radi
 
 end
 
+-- From this point on, assume that the space is complete, to make sure that series that converge
+-- in norm also converge in `F`.
 variable [CompleteSpace F] (p : FormalMultilinearSeries 𝕜 E F) {x y : E} {r R : ℝ≥0 }
 
 theorem has_fpower_series_on_ball_change_origin (k : ℕ) (hr : 0 < p.radius) :
@@ -966,7 +977,7 @@ theorem has_fpower_series_on_ball_change_origin (k : ℕ) (hr : 0 < p.radius) :
   have := p.le_change_origin_series_radius k
   ((p.changeOriginSeries k).HasFpowerSeriesOnBall (hr.trans_le this)).mono hr this
 
--- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (k l)
+-- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (k l)
 /-- Summing the series `p.change_origin x` at a point `y` gives back `p (x + y)`-/
 theorem change_origin_eval (h : (∥x∥₊ + ∥y∥₊ : ℝ≥0∞) < p.radius) : (p.changeOrigin x).Sum y = p.Sum (x + y) := by
   have radius_pos : 0 < p.radius := lt_of_le_of_ltₓ (zero_le _) h
@@ -1008,7 +1019,7 @@ theorem change_origin_eval (h : (∥x∥₊ + ∥y∥₊ : ℝ≥0∞) < p.radiu
   erw [(p n).map_add_univ (fun _ => x) fun _ => y]
   convert has_sum_fintype _
   ext1 s
-  dsimp only [f, change_origin_series_term, · ∘ ·, change_origin_index_equiv_symm_apply_fst,
+  dsimp only [f, change_origin_series_term, (· ∘ ·), change_origin_index_equiv_symm_apply_fst,
     change_origin_index_equiv_symm_apply_snd_fst, change_origin_index_equiv_symm_apply_snd_snd_coe]
   rw [ContinuousMultilinearMap.curry_fin_finset_apply_const]
   have :

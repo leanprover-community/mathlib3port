@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Kenny Lau. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Kenny Lau
+-/
 import Mathbin.Algebra.Module.Basic
 import Mathbin.Algebra.GcdMonoid.Basic
 import Mathbin.GroupTheory.GroupAction.Defs
@@ -114,7 +119,7 @@ protected theorem le : x ≤ y :=
   trivialₓ
 
 @[simp]
-theorem not_ltₓ : ¬x < y :=
+theorem not_lt : ¬x < y :=
   not_false
 
 instance : CanonicallyOrderedAddMonoid PUnit := by
@@ -160,6 +165,7 @@ instance [Monoidₓ R] : MulDistribMulAction R PUnit := by
 /-! TODO: provide `mul_semiring_action R punit` -/
 
 
+-- importing it here currently causes timeouts elsewhere due to the import order changing
 instance [MonoidWithZeroₓ R] : MulActionWithZero R PUnit :=
   { PUnit.mulAction, PUnit.smulWithZero with }
 

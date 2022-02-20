@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Mario Carneiro. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Mario Carneiro
+-/
 import Mathbin.Data.List.Count
 import Mathbin.Data.List.Lex
 import Mathbin.Data.List.Sublists
@@ -38,16 +43,16 @@ theorem rel_of_pairwise_cons {a : α} {l : List α} (p : Pairwiseₓ R (a :: l))
 theorem pairwise_of_pairwise_cons {a : α} {l : List α} (p : Pairwiseₓ R (a :: l)) : Pairwiseₓ R l :=
   (pairwise_cons.1 p).2
 
-theorem pairwise.tail : ∀ {l : List α} p : Pairwiseₓ R l, Pairwiseₓ R l.tail
+theorem Pairwiseₓ.tail : ∀ {l : List α} p : Pairwiseₓ R l, Pairwiseₓ R l.tail
   | [], h => h
   | a :: l, h => pairwise_of_pairwise_cons h
 
-theorem pairwise.drop : ∀ {l : List α} {n : ℕ}, List.Pairwiseₓ R l → List.Pairwiseₓ R (l.drop n)
+theorem Pairwiseₓ.drop : ∀ {l : List α} {n : ℕ}, List.Pairwiseₓ R l → List.Pairwiseₓ R (l.drop n)
   | _, 0, h => h
   | [], n + 1, h => List.Pairwiseₓ.nil
   | a :: l, n + 1, h => pairwise.drop (pairwise_cons.mp h).right
 
-theorem pairwise.imp_of_mem {S : α → α → Prop} {l : List α} (H : ∀ {a b}, a ∈ l → b ∈ l → R a b → S a b)
+theorem Pairwiseₓ.imp_of_mem {S : α → α → Prop} {l : List α} (H : ∀ {a b}, a ∈ l → b ∈ l → R a b → S a b)
     (p : Pairwiseₓ R l) : Pairwiseₓ S l := by
   induction' p with a l r p IH generalizing H <;> constructor
   · exact Ball.imp_right (fun x h => H (mem_cons_self _ _) (mem_cons_of_mem _ h)) r
@@ -55,36 +60,36 @@ theorem pairwise.imp_of_mem {S : α → α → Prop} {l : List α} (H : ∀ {a b
   · exact IH fun a b m m' => H (mem_cons_of_mem _ m) (mem_cons_of_mem _ m')
     
 
-theorem pairwise.imp {S : α → α → Prop} (H : ∀ a b, R a b → S a b) {l : List α} : Pairwiseₓ R l → Pairwiseₓ S l :=
+theorem Pairwiseₓ.imp {S : α → α → Prop} (H : ∀ a b, R a b → S a b) {l : List α} : Pairwiseₓ R l → Pairwiseₓ S l :=
   Pairwiseₓ.imp_of_mem fun a b _ _ => H a b
 
-theorem pairwise.and {S : α → α → Prop} {l : List α} :
+theorem Pairwiseₓ.and {S : α → α → Prop} {l : List α} :
     Pairwiseₓ (fun a b => R a b ∧ S a b) l ↔ Pairwiseₓ R l ∧ Pairwiseₓ S l :=
   ⟨fun h => ⟨h.imp fun a b h => h.1, h.imp fun a b h => h.2⟩, fun ⟨hR, hS⟩ => by
     clear_
     induction' hR with a l R1 R2 IH <;> simp only [pairwise.nil, pairwise_cons] at *
     exact ⟨fun b bl => ⟨R1 b bl, hS.1 b bl⟩, IH hS.2⟩⟩
 
-theorem pairwise.imp₂ {S : α → α → Prop} {T : α → α → Prop} (H : ∀ a b, R a b → S a b → T a b) {l : List α}
+theorem Pairwiseₓ.imp₂ {S : α → α → Prop} {T : α → α → Prop} (H : ∀ a b, R a b → S a b → T a b) {l : List α}
     (hR : Pairwiseₓ R l) (hS : Pairwiseₓ S l) : Pairwiseₓ T l :=
   (Pairwiseₓ.and.2 ⟨hR, hS⟩).imp fun a b => And.ndrec (H a b)
 
-theorem pairwise.iff_of_mem {S : α → α → Prop} {l : List α} (H : ∀ {a b}, a ∈ l → b ∈ l → (R a b ↔ S a b)) :
+theorem Pairwiseₓ.iff_of_mem {S : α → α → Prop} {l : List α} (H : ∀ {a b}, a ∈ l → b ∈ l → (R a b ↔ S a b)) :
     Pairwiseₓ R l ↔ Pairwiseₓ S l :=
   ⟨Pairwiseₓ.imp_of_mem fun a b m m' => (H m m').1, Pairwiseₓ.imp_of_mem fun a b m m' => (H m m').2⟩
 
-theorem pairwise.iff {S : α → α → Prop} (H : ∀ a b, R a b ↔ S a b) {l : List α} : Pairwiseₓ R l ↔ Pairwiseₓ S l :=
+theorem Pairwiseₓ.iff {S : α → α → Prop} (H : ∀ a b, R a b ↔ S a b) {l : List α} : Pairwiseₓ R l ↔ Pairwiseₓ S l :=
   Pairwiseₓ.iff_of_mem fun a b _ _ => H a b
 
 theorem pairwise_of_forall {l : List α} (H : ∀ x y, R x y) : Pairwiseₓ R l := by
   induction l <;> [exact pairwise.nil, simp only [*, pairwise_cons, forall_2_true_iff, and_trueₓ]]
 
-theorem pairwise.and_mem {l : List α} : Pairwiseₓ R l ↔ Pairwiseₓ (fun x y => x ∈ l ∧ y ∈ l ∧ R x y) l :=
+theorem Pairwiseₓ.and_mem {l : List α} : Pairwiseₓ R l ↔ Pairwiseₓ (fun x y => x ∈ l ∧ y ∈ l ∧ R x y) l :=
   Pairwiseₓ.iff_of_mem
     (by
       simp (config := { contextual := true })only [true_andₓ, iff_selfₓ, forall_2_true_iff])
 
-theorem pairwise.imp_mem {l : List α} : Pairwiseₓ R l ↔ Pairwiseₓ (fun x y => x ∈ l → y ∈ l → R x y) l :=
+theorem Pairwiseₓ.imp_mem {l : List α} : Pairwiseₓ R l ↔ Pairwiseₓ (fun x y => x ∈ l → y ∈ l → R x y) l :=
   Pairwiseₓ.iff_of_mem
     (by
       simp (config := { contextual := true })only [forall_prop_of_true, iff_selfₓ, forall_2_true_iff])
@@ -201,7 +206,7 @@ theorem pairwise_pmap {p : β → Prop} {f : ∀ b, p b → α} {l : List β} (h
   rintro H _ b hb rfl
   exact H b hb _ _
 
-theorem pairwise.pmap {l : List α} (hl : Pairwiseₓ R l) {p : α → Prop} {f : ∀ a, p a → β} (h : ∀, ∀ x ∈ l, ∀, p x)
+theorem Pairwiseₓ.pmap {l : List α} (hl : Pairwiseₓ R l) {p : α → Prop} {f : ∀ a, p a → β} (h : ∀, ∀ x ∈ l, ∀, p x)
     {S : β → β → Prop} (hS : ∀ ⦃x⦄ hx : p x ⦃y⦄ hy : p y, R x y → S (f x hx) (f y hy)) : Pairwiseₓ S (l.pmap f h) := by
   refine' (pairwise_pmap h).2 (pairwise.imp_of_mem _ hl)
   intros
@@ -231,7 +236,7 @@ theorem pairwise_reverse : ∀ {R} {l : List α}, Pairwiseₓ R (reverse l) ↔ 
     simpa only [reverse_cons, pairwise_append, IH, pairwise_cons, forall_prop_of_false (not_mem_nil _), forall_true_iff,
       pairwise.nil, mem_reverse, mem_singleton, forall_eq, true_andₓ] using h]
 
-theorem Pairwise.set_pairwise {l : List α} (h : Pairwiseₓ R l) (hr : Symmetric R) : Set.Pairwise { x | x ∈ l } R := by
+theorem Pairwiseₓ.set_pairwise {l : List α} (h : Pairwiseₓ R l) (hr : Symmetric R) : Set.Pairwise { x | x ∈ l } R := by
   induction' h with hd tl imp h IH
   · simp
     

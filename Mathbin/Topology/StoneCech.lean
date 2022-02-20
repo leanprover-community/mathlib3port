@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Reid Barton. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Reid Barton
+-/
 import Mathbin.Topology.Bases
 import Mathbin.Topology.DenseEmbedding
 
@@ -21,6 +26,8 @@ universe u v
 section Ultrafilter
 
 /-- Basis for the topology on `ultrafilter α`. -/
+/- The set of ultrafilters on α carries a natural topology which makes
+  it the Stone-Čech compactification of α (viewed as a discrete space). -/
 def UltrafilterBasis (α : Type u) : Set (Set (Ultrafilter α)) :=
   range fun s : Set α => { u | s ∈ u }
 
@@ -118,6 +125,7 @@ theorem dense_inducing_pure : @DenseInducing _ _ ⊥ _ (pure : α → Ultrafilte
   let this' : TopologicalSpace α := ⊥ <;> exact ⟨⟨induced_topology_pure.symm⟩, dense_range_pure⟩
 
 /-- `pure : α → ultrafilter α` defines a dense embedding of `α` in `ultrafilter α`. -/
+-- The following refined version will never be used
 theorem dense_embedding_pure : @DenseEmbedding _ _ ⊥ _ (pure : α → Ultrafilter α) := by
   let this' : TopologicalSpace α := ⊥ <;> exact { dense_inducing_pure with inj := ultrafilter_pure_injective }
 
@@ -125,6 +133,11 @@ end Embedding
 
 section Extension
 
+/- Goal: Any function `α → γ` to a compact Hausdorff space `γ` has a
+  unique extension to a continuous function `ultrafilter α → γ`. We
+  already know it must be unique because `α → ultrafilter α` is a
+  dense embedding and `γ` is Hausdorff. For existence, we will invoke
+  `dense_embedding.continuous_extend`. -/
 variable {γ : Type _} [TopologicalSpace γ]
 
 /-- The extension of a function `α → γ` to a function `ultrafilter α → γ`.
@@ -143,6 +156,7 @@ variable [CompactSpace γ]
 
 theorem continuous_ultrafilter_extend (f : α → γ) : Continuous (Ultrafilter.extend f) := by
   have : ∀ b : Ultrafilter α, ∃ c, Tendsto f (comap pure (𝓝 b)) (𝓝 c) := fun b =>
+    -- b.map f is an ultrafilter on γ, which is compact, so it converges to some c in γ.
     let ⟨c, _, h⟩ :=
       compact_univ.ultrafilter_le_nhds (b.map f)
         (by
@@ -157,6 +171,8 @@ theorem continuous_ultrafilter_extend (f : α → γ) : Continuous (Ultrafilter.
 theorem ultrafilter_extend_eq_iff {f : α → γ} {b : Ultrafilter α} {c : γ} :
     Ultrafilter.extend f b = c ↔ ↑(b.map f) ≤ 𝓝 c :=
   ⟨fun h => by
+    -- Write b as an ultrafilter limit of pure ultrafilters, and use
+    -- the facts that ultrafilter.extend is a continuous extension of f.
     let b' : Ultrafilter (Ultrafilter α) := b.map pure
     have t : ↑b' ≤ 𝓝 b := ultrafilter_converges_iff.mpr (bind_pureₓ _).symm
     rw [← h]
@@ -174,6 +190,12 @@ end Ultrafilter
 
 section StoneCech
 
+/- Now, we start with a (not necessarily discrete) topological space α
+  and we want to construct its Stone-Čech compactification. We can
+  build it as a quotient of `ultrafilter α` by the relation which
+  identifies two points if the extension of every continuous function
+  α → γ to a compact Hausdorff space sends the two points to the same
+  point of γ. -/
 variable (α : Type u) [TopologicalSpace α]
 
 instance stoneCechSetoid : Setoidₓ (Ultrafilter α) where
@@ -254,7 +276,7 @@ instance StoneCech.t2_space : T2Space (StoneCech α) := by
   skip
   let ff := stoneCechExtend hf
   change ff (⟦x⟧) = ff (⟦y⟧)
-  have lim := fun z : Ultrafilter α gz : (g : Filter (StoneCech α)) ≤ 𝓝 (⟦z⟧) =>
+  have lim := fun gz : (g : Filter (StoneCech α)) ≤ 𝓝 (⟦z⟧) =>
     ((continuous_stone_cech_extend hf).Tendsto _).mono_left gz
   exact tendsto_nhds_unique (limₓ x gx) (limₓ y gy)
 

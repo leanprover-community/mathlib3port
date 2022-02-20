@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Yury G. Kudryashov. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yury G. Kudryashov, Heather Macbeth
+-/
 import Mathbin.Topology.Algebra.Order.Basic
 import Mathbin.Topology.Algebra.Order.LeftRight
 
@@ -254,7 +259,7 @@ namespace OrderIso
 variable {α β : Type _} [PartialOrderₓ α] [PartialOrderₓ β] [TopologicalSpace α] [TopologicalSpace β] [OrderTopology α]
   [OrderTopology β]
 
-protected theorem Continuous (e : α ≃o β) : Continuous e := by
+protected theorem continuous (e : α ≃o β) : Continuous e := by
   rw [‹OrderTopology β›.topology_eq_generate_intervals]
   refine' continuous_generated_from fun s hs => _
   rcases hs with ⟨a, rfl | rfl⟩
@@ -266,7 +271,7 @@ protected theorem Continuous (e : α ≃o β) : Continuous e := by
     
 
 /-- An order isomorphism between two linear order `order_topology` spaces is a homeomorphism. -/
-def to_homeomorph (e : α ≃o β) : α ≃ₜ β :=
+def toHomeomorph (e : α ≃o β) : α ≃ₜ β :=
   { e with continuous_to_fun := e.Continuous, continuous_inv_fun := e.symm.Continuous }
 
 @[simp]

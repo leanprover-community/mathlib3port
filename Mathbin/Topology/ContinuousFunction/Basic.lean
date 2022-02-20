@@ -1,3 +1,8 @@
+/-
+Copyright © 2020 Nicolò Cavalleri. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Nicolò Cavalleri
+-/
 import Mathbin.Data.Set.UnionLift
 import Mathbin.Topology.Homeomorph
 
@@ -36,7 +41,7 @@ theorem to_fun_eq_coe {f : C(α, β)} : f.toFun = (f : α → β) :=
 variable {α β} {f g : ContinuousMap α β}
 
 @[continuity]
-protected theorem Continuous (f : C(α, β)) : Continuous f :=
+protected theorem continuous (f : C(α, β)) : Continuous f :=
   f.continuous_to_fun
 
 @[continuity]
@@ -45,16 +50,16 @@ theorem continuous_set_coe (s : Set C(α, β)) (f : s) : Continuous f := by
   rw [@coe_fn_coe_base']
   continuity
 
-protected theorem ContinuousAt (f : C(α, β)) (x : α) : ContinuousAt f x :=
+protected theorem continuous_at (f : C(α, β)) (x : α) : ContinuousAt f x :=
   f.Continuous.ContinuousAt
 
-protected theorem ContinuousWithinAt (f : C(α, β)) (s : Set α) (x : α) : ContinuousWithinAt f s x :=
+protected theorem continuous_within_at (f : C(α, β)) (s : Set α) (x : α) : ContinuousWithinAt f s x :=
   f.Continuous.ContinuousWithinAt
 
-protected theorem congr_funₓ {f g : C(α, β)} (H : f = g) (x : α) : f x = g x :=
+protected theorem congr_fun {f g : C(α, β)} (H : f = g) (x : α) : f x = g x :=
   H ▸ rfl
 
-protected theorem congr_argₓ (f : C(α, β)) {x y : α} (h : x = y) : f x = f y :=
+protected theorem congr_arg (f : C(α, β)) {x y : α} (h : x = y) : f x = f y :=
   h ▸ rfl
 
 @[ext]
@@ -81,7 +86,7 @@ variable (α β)
 /-- The continuous functions from `α` to `β` are the same as the plain functions when `α` is discrete.
 -/
 @[simps]
-def equiv_fn_of_discrete [DiscreteTopology α] : C(α, β) ≃ (α → β) :=
+def equivFnOfDiscrete [DiscreteTopology α] : C(α, β) ≃ (α → β) :=
   ⟨fun f => f, fun f => ⟨f, continuous_of_discrete_topology⟩, fun f => by
     ext
     rfl, fun f => by
@@ -146,12 +151,12 @@ section Prod
 variable {α₁ α₂ β₁ β₂ : Type _} [TopologicalSpace α₁] [TopologicalSpace α₂] [TopologicalSpace β₁] [TopologicalSpace β₂]
 
 /-- Given two continuous maps `f` and `g`, this is the continuous map `x ↦ (f x, g x)`. -/
-def prod_mk (f : C(α, β₁)) (g : C(α, β₂)) : C(α, β₁ × β₂) where
+def prodMk (f : C(α, β₁)) (g : C(α, β₂)) : C(α, β₁ × β₂) where
   toFun := fun x => (f x, g x)
   continuous_to_fun := Continuous.prod_mk f.Continuous g.Continuous
 
 /-- Given two continuous maps `f` and `g`, this is the continuous map `(x, y) ↦ (f x, g y)`. -/
-def prod_mapₓ (f : C(α₁, α₂)) (g : C(β₁, β₂)) : C(α₁ × β₁, α₂ × β₂) where
+def prodMap (f : C(α₁, α₂)) (g : C(β₁, β₂)) : C(α₁ × β₁, α₂ × β₂) where
   toFun := Prod.map f g
   continuous_to_fun := Continuous.prod_map f.Continuous g.Continuous
 
@@ -167,7 +172,7 @@ variable {I A : Type _} {X : I → Type _} [TopologicalSpace A] [∀ i, Topologi
 
 /-- Abbreviation for product of continuous maps, which is continuous -/
 def pi (f : ∀ i, C(A, X i)) : C(A, ∀ i, X i) where
-  toFun := fun a : A i : I => f i a
+  toFun := fun i : I => f i a
 
 @[simp]
 theorem pi_eval (f : ∀ i, C(A, X i)) (a : A) : (pi f) a = fun i : I => (f i) a :=
@@ -199,7 +204,7 @@ include hφ hS
 /-- A family `φ i` of continuous maps `C(S i, β)`, where the domains `S i` contain a neighbourhood
 of each point in `α` and the functions `φ i` agree pairwise on intersections, can be glued to
 construct a continuous map in `C(α, β)`. -/
-noncomputable def lift_cover : C(α, β) := by
+noncomputable def liftCover : C(α, β) := by
   have H : (⋃ i, S i) = Set.Univ := by
     rw [Set.eq_univ_iff_forall]
     intro x
@@ -233,7 +238,7 @@ include hF hA
 /-- A family `F s` of continuous maps `C(s, β)`, where (1) the domains `s` are taken from a set `A`
 of sets in `α` which contain a neighbourhood of each point in `α` and (2) the functions `F s` agree
 pairwise on intersections, can be glued to construct a continuous map in `C(α, β)`. -/
-noncomputable def lift_cover' : C(α, β) := by
+noncomputable def liftCover' : C(α, β) := by
   let S : A → Set α := coe
   let F : ∀ i : A, C(i, β) := fun i => F i i.Prop
   refine' lift_cover S F (fun i j => hF i i.Prop j j.Prop) _

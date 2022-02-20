@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison
+-/
 import Mathbin.CategoryTheory.Subobject.Basic
 import Mathbin.CategoryTheory.EssentiallySmall
 
@@ -31,7 +36,7 @@ variable (C : Type u₁) [Category.{v} C]
 We show in `well_powered_of_mono_over_essentially_small` and `mono_over_essentially_small`
 that this is the case if and only if `mono_over X` is `v`-essentially small for every `X`.
 -/
-class well_powered : Prop where
+class WellPowered : Prop where
   subobject_small : ∀ X : C, Small.{v} (Subobject X) := by
     run_tac
       tactic.apply_instance

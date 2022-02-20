@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Oliver Nash. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Oliver Nash
+-/
 import Mathbin.Topology.Algebra.ContinuousAffineMap
 import Mathbin.Analysis.NormedSpace.AddTorsor
 import Mathbin.Analysis.NormedSpace.AffineIsometry
@@ -52,7 +57,7 @@ variable [NondiscreteNormedField 𝕜] [NormedSpace 𝕜 V] [NormedSpace 𝕜 W]
 include V W
 
 /-- The linear map underlying a continuous affine map is continuous. -/
-def cont_linear (f : P →A[R] Q) : V →L[R] W :=
+def contLinear (f : P →A[R] Q) : V →L[R] W :=
   { f.linear with toFun := f.linear,
     cont := by
       rw [AffineMap.continuous_linear_iff]
@@ -150,7 +155,7 @@ variable (f : V →A[𝕜] W)
 
 /-- Note that unlike the operator norm for linear maps, this norm is _not_ submultiplicative:
 we do _not_ necessarily have `∥f.comp g∥ ≤ ∥f∥ * ∥g∥`. See `norm_comp_le` for what we can say. -/
-noncomputable instance HasNorm : HasNorm (V →A[𝕜] W) :=
+noncomputable instance hasNorm : HasNorm (V →A[𝕜] W) :=
   ⟨fun f => max ∥f 0∥ ∥f.contLinear∥⟩
 
 theorem norm_def : ∥f∥ = max ∥f 0∥ ∥f.contLinear∥ :=
@@ -228,7 +233,7 @@ variable (𝕜 V W)
 /-- The space of affine maps between two normed spaces is linearly isometric to the product of the
 codomain with the space of linear maps, by taking the value of the affine map at `(0 : V)` and the
 linear part. -/
-noncomputable def to_const_prod_continuous_linear_map : (V →A[𝕜] W) ≃ₗᵢ[𝕜] W × (V →L[𝕜] W) where
+noncomputable def toConstProdContinuousLinearMap : (V →A[𝕜] W) ≃ₗᵢ[𝕜] W × (V →L[𝕜] W) where
   toFun := fun f => ⟨f 0, f.contLinear⟩
   invFun := fun p => p.2.toContinuousAffineMap + const 𝕜 V p.1
   left_inv := fun f => by

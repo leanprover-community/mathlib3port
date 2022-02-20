@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Johan Commelin. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johan Commelin
+-/
 import Mathbin.Topology.SubsetProperties
 import Mathbin.Topology.Connected
 import Mathbin.Topology.Algebra.Monoid
@@ -83,7 +88,7 @@ theorem exists_open {f : X → Y} (hf : IsLocallyConstant f) (x : X) :
 protected theorem eventually_eq {f : X → Y} (hf : IsLocallyConstant f) (x : X) : ∀ᶠ y in 𝓝 x, f y = f x :=
   (iff_eventually_eq f).1 hf x
 
-protected theorem Continuous [TopologicalSpace Y] {f : X → Y} (hf : IsLocallyConstant f) : Continuous f :=
+protected theorem continuous [TopologicalSpace Y] {f : X → Y} (hf : IsLocallyConstant f) : Continuous f :=
   ⟨fun U hU => hf _⟩
 
 theorem iff_continuous {_ : TopologicalSpace Y} [DiscreteTopology Y] (f : X → Y) : IsLocallyConstant f ↔ Continuous f :=
@@ -193,10 +198,10 @@ theorem to_fun_eq_coe (f : LocallyConstant X Y) : f.toFun = f :=
 theorem coe_mk (f : X → Y) h : ⇑(⟨f, h⟩ : LocallyConstant X Y) = f :=
   rfl
 
-theorem congr_funₓ {f g : LocallyConstant X Y} (h : f = g) (x : X) : f x = g x :=
+theorem congr_fun {f g : LocallyConstant X Y} (h : f = g) (x : X) : f x = g x :=
   congr_argₓ (fun h : LocallyConstant X Y => h x) h
 
-theorem congr_argₓ (f : LocallyConstant X Y) {x y : X} (h : x = y) : f x = f y :=
+theorem congr_arg (f : LocallyConstant X Y) {x y : X} (h : x = y) : f x = f y :=
   congr_argₓ (fun x : X => f x) h
 
 theorem coe_injective : @Function.Injective (LocallyConstant X Y) (X → Y) coeFn
@@ -219,11 +224,11 @@ section CodomainTopologicalSpace
 
 variable [TopologicalSpace Y] (f : LocallyConstant X Y)
 
-protected theorem Continuous : Continuous f :=
+protected theorem continuous : Continuous f :=
   f.IsLocallyConstant.Continuous
 
 /-- We can turn a locally-constant function into a bundled `continuous_map`. -/
-def to_continuous_map : C(X, Y) :=
+def toContinuousMap : C(X, Y) :=
   ⟨f, f.Continuous⟩
 
 /-- As a shorthand, `locally_constant.to_continuous_map` is available as a coercion -/
@@ -253,7 +258,7 @@ theorem coe_const (y : Y) : (const X y : X → Y) = Function.const X y :=
 
 -- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
 /-- The locally constant function to `fin 2` associated to a clopen set. -/
-def of_clopen {X : Type _} [TopologicalSpace X] {U : Set X} [∀ x, Decidable (x ∈ U)] (hU : IsClopen U) :
+def ofClopen {X : Type _} [TopologicalSpace X] {U : Set X} [∀ x, Decidable (x ∈ U)] (hU : IsClopen U) :
     LocallyConstant X (Finₓ 2) where
   toFun := fun x => if x ∈ U then 0 else 1
   IsLocallyConstant := by
@@ -345,7 +350,7 @@ def unflip {X α β : Type _} [Fintype α] [TopologicalSpace X] (f : α → Loca
   IsLocallyConstant := by
     rw [(IsLocallyConstant.tfae fun x a => f a x).out 0 3]
     intro g
-    have : (fun x : X a : α => f a x) ⁻¹' {g} = ⋂ a : α, f a ⁻¹' {g a} := by
+    have : (fun a : α => f a x) ⁻¹' {g} = ⋂ a : α, f a ⁻¹' {g a} := by
       tidy
     rw [this]
     apply is_open_Inter

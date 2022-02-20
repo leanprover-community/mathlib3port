@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison
+-/
 import Mathbin.CategoryTheory.Subobject.Limits
 
 /-!
@@ -50,6 +55,8 @@ theorem image_to_kernel_arrow (w : f ≫ g = 0) :
     imageToKernel f g w ≫ (kernelSubobject g).arrow = (imageSubobject f).arrow := by
   simp [imageToKernel]
 
+-- This is less useful as a `simp` lemma than it initially appears,
+-- as it "loses" the information the morphism factors through the image.
 theorem factor_thru_image_subobject_comp_image_to_kernel (w : f ≫ g = 0) :
     factorThruImageSubobject f ≫ imageToKernel f g w = factorThruKernelSubobject g f w := by
   ext
@@ -318,7 +325,7 @@ section
 variable {A B C : V} {f : A ⟶ B} {g : B ⟶ C} (w : f ≫ g = 0) {f' : A ⟶ B} {g' : B ⟶ C} (w' : f' ≫ g' = 0) [HasKernels V]
   [HasCokernels V] [HasImages V] [HasImageMaps V]
 
--- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:916:4: warning: unsupported (TODO): `[tacs]
 /-- Custom tactic to golf and speedup boring proofs in `homology.congr`. -/
 private unsafe def aux_tac : tactic Unit :=
   sorry

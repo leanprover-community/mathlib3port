@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Chris Hughes. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Chris Hughes, Abhimanyu Pallavi Sudhir, Jean Lo, Calle Sönne
+-/
 import Mathbin.Analysis.SpecialFunctions.Log
 import Mathbin.Analysis.SpecialFunctions.ExpDeriv
 
@@ -174,7 +179,7 @@ theorem tendsto_mul_log_one_plus_div_at_top (t : ℝ) : Tendsto (fun x => x * lo
           simp )
   have h₂ : tendsto (fun x : ℝ => x⁻¹) at_top (𝓝[≠] 0) :=
     tendsto_inv_at_top_zero'.mono_right (nhds_within_mono _ fun x hx => (set.mem_Ioi.mp hx).ne')
-  simpa only [· ∘ ·, inv_invₓ] using h₁.comp h₂
+  simpa only [(· ∘ ·), inv_invₓ] using h₁.comp h₂
 
 open_locale BigOperators
 
@@ -184,7 +189,10 @@ expansion of the logarithm, in `has_sum_pow_div_log_of_abs_lt_1`.
 -/
 theorem abs_log_sub_add_sum_range_le {x : ℝ} (h : abs x < 1) (n : ℕ) :
     abs ((∑ i in Range n, x ^ (i + 1) / (i + 1)) + log (1 - x)) ≤ abs x ^ (n + 1) / (1 - abs x) := by
+  /- For the proof, we show that the derivative of the function to be estimated is small,
+    and then apply the mean value inequality. -/
   let F : ℝ → ℝ := fun x => (∑ i in range n, x ^ (i + 1) / (i + 1)) + log (1 - x)
+  -- First step: compute the derivative of `F`
   have A : ∀, ∀ y ∈ Ioo (-1 : ℝ) 1, ∀, deriv F y = -(y ^ n) / (1 - y) := by
     intro y hy
     have : (∑ i in range n, (↑i + 1) * y ^ i / (↑i + 1)) = ∑ i in range n, y ^ i := by
@@ -193,6 +201,7 @@ theorem abs_log_sub_add_sum_range_le {x : ℝ} (h : abs x < 1) (n : ℕ) :
     field_simp [F, this, ← geom_sum_def, geom_sum_eq (ne_of_ltₓ hy.2), sub_ne_zero_of_ne (ne_of_gtₓ hy.2),
       sub_ne_zero_of_ne (ne_of_ltₓ hy.2)]
     ring
+  -- second step: show that the derivative of `F` is small
   have B : ∀, ∀ y ∈ Icc (-abs x) (abs x), ∀, abs (deriv F y) ≤ abs x ^ n / (1 - abs x) := by
     intro y hy
     have : y ∈ Ioo (-(1 : ℝ)) 1 := ⟨lt_of_lt_of_leₓ (neg_lt_neg h) hy.1, lt_of_le_of_ltₓ hy.2 h⟩
@@ -208,6 +217,7 @@ theorem abs_log_sub_add_sum_range_le {x : ℝ} (h : abs x < 1) (n : ℕ) :
             (le_abs_self _)
         simp only [← pow_abs, abs_div, abs_neg]
         apply_rules [div_le_div, pow_nonneg, abs_nonneg, pow_le_pow_of_le_left]
+  -- third step: apply the mean value inequality
   have C : ∥F x - F 0∥ ≤ abs x ^ n / (1 - abs x) * ∥x - 0∥ := by
     have : ∀, ∀ y ∈ Icc (-abs x) (abs x), ∀, DifferentiableAt ℝ F y := by
       intro y hy
@@ -218,6 +228,7 @@ theorem abs_log_sub_add_sum_range_le {x : ℝ} (h : abs x < 1) (n : ℕ) :
       
     · simp [le_abs_self x, neg_le.mp (neg_le_abs_self x)]
       
+  -- fourth step: conclude by massaging the inequality of the third step
   simpa [F, norm_eq_abs, div_mul_eq_mul_div, pow_succ'ₓ] using C
 
 /-- Power series expansion of the logarithm around `1`. -/

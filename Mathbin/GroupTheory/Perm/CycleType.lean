@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Thomas Browning. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Thomas Browning
+-/
 import Mathbin.Algebra.GcdMonoid.Multiset
 import Mathbin.Combinatorics.Partition
 import Mathbin.GroupTheory.Perm.Cycles
@@ -36,7 +41,7 @@ section CycleType
 variable [DecidableEq α]
 
 /-- The cycle type of a permutation -/
-def cycle_type (σ : Perm α) : Multiset ℕ :=
+def cycleType (σ : Perm α) : Multiset ℕ :=
   σ.cycleFactorsFinset.1.map (Finset.card ∘ support)
 
 theorem cycle_type_def (σ : Perm α) : σ.cycleType = σ.cycleFactorsFinset.1.map (Finset.card ∘ support) :=
@@ -85,7 +90,7 @@ theorem two_le_of_mem_cycle_type {σ : Perm α} {n : ℕ} (h : n ∈ σ.cycleTyp
 theorem one_lt_of_mem_cycle_type {σ : Perm α} {n : ℕ} (h : n ∈ σ.cycleType) : 1 < n :=
   two_le_of_mem_cycle_type h
 
-theorem is_cycle.cycle_type {σ : Perm α} (hσ : IsCycle σ) : σ.cycleType = [σ.support.card] :=
+theorem IsCycle.cycle_type {σ : Perm α} (hσ : IsCycle σ) : σ.cycleType = [σ.support.card] :=
   cycle_type_eq [σ] (mul_oneₓ σ) (fun τ hτ => (congr_argₓ IsCycle (List.mem_singleton.mp hτ)).mpr hσ)
     (pairwise_singleton Disjoint σ)
 
@@ -102,7 +107,7 @@ theorem card_cycle_type_eq_one {σ : Perm α} : σ.cycleType.card = 1 ↔ σ.IsC
     simp [h]
     
 
-theorem disjoint.cycle_type {σ τ : Perm α} (h : Disjoint σ τ) : (σ * τ).cycleType = σ.cycleType + τ.cycleType := by
+theorem Disjoint.cycle_type {σ τ : Perm α} (h : Disjoint σ τ) : (σ * τ).cycleType = σ.cycleType + τ.cycleType := by
   rw [cycle_type_def, cycle_type_def, cycle_type_def, h.cycle_factors_finset_mul_eq_union, ← Multiset.map_add,
     Finset.union_val, multiset.add_eq_union_iff_disjoint.mpr _]
   rw [← Finset.disjoint_val]
@@ -366,7 +371,7 @@ section Cauchy
 variable (G : Type _) [Groupₓ G] (n : ℕ)
 
 /-- The type of vectors with terms from `G`, length `n`, and product equal to `1:G`. -/
-def vectors_prod_eq_one : Set (Vector G n) :=
+def VectorsProdEqOne : Set (Vector G n) :=
   { v | v.toList.Prod = 1 }
 
 namespace VectorsProdEqOne
@@ -381,18 +386,18 @@ theorem one_eq : VectorsProdEqOne G 1 = {Vector.nil.cons 1} := by
   simp_rw [Set.eq_singleton_iff_unique_mem, mem_iff, Vector.to_list_singleton, List.prod_singleton, Vector.head_cons]
   exact ⟨rfl, fun v hv => v.cons_head_tail.symm.trans (congr_arg2ₓ Vector.cons hv v.tail.eq_nil)⟩
 
-instance zero_unique : Unique (VectorsProdEqOne G 0) := by
+instance zeroUnique : Unique (VectorsProdEqOne G 0) := by
   rw [zero_eq]
   exact Set.uniqueSingleton Vector.nil
 
-instance one_unique : Unique (VectorsProdEqOne G 1) := by
+instance oneUnique : Unique (VectorsProdEqOne G 1) := by
   rw [one_eq]
   exact Set.uniqueSingleton (vector.nil.cons 1)
 
 /-- Given a vector `v` of length `n`, make a vector of length `n + 1` whose product is `1`,
 by appending the inverse of the product of `v`. -/
 @[simps]
-def vector_equiv : Vector G n ≃ VectorsProdEqOne G (n + 1) where
+def vectorEquiv : Vector G n ≃ VectorsProdEqOne G (n + 1) where
   toFun := fun v =>
     ⟨v.toList.Prod⁻¹::ᵥv, by
       rw [mem_iff, Vector.to_list_cons, List.prod_cons, inv_mul_selfₓ]⟩
@@ -410,7 +415,7 @@ def vector_equiv : Vector G n ≃ VectorsProdEqOne G (n + 1) where
 
 /-- Given a vector `v` of length `n` whose product is 1, make a vector of length `n - 1`,
 by deleting the last entry of `v`. -/
-def equiv_vector : VectorsProdEqOne G n ≃ Vector G (n - 1) :=
+def equivVector : VectorsProdEqOne G n ≃ Vector G (n - 1) :=
   ((vectorEquiv G (n - 1)).trans
       (if hn : n = 0 then
         show VectorsProdEqOne G (n - 1 + 1) ≃ VectorsProdEqOne G n by
@@ -534,7 +539,7 @@ end Partition
 
 
 /-- A three-cycle is a cycle of length 3. -/
-def is_three_cycle [DecidableEq α] (σ : Perm α) : Prop :=
+def IsThreeCycle [DecidableEq α] (σ : Perm α) : Prop :=
   σ.cycleType = {3}
 
 namespace IsThreeCycle
@@ -578,7 +583,7 @@ theorem inv_iff {f : Perm α} : IsThreeCycle f⁻¹ ↔ IsThreeCycle f :=
     rw [← inv_invₓ f]
     apply inv, inv⟩
 
-theorem orderOf {g : Perm α} (ht : IsThreeCycle g) : orderOf g = 3 := by
+theorem order_of {g : Perm α} (ht : IsThreeCycle g) : orderOf g = 3 := by
   rw [← lcm_cycle_type, ht.cycle_type, Multiset.lcm_singleton, normalize_eq]
 
 theorem is_three_cycle_sq {g : Perm α} (ht : IsThreeCycle g) : IsThreeCycle (g * g) := by
@@ -626,7 +631,7 @@ theorem swap_mul_swap_same_mem_closure_three_cycles {a b c : α} (ab : a ≠ b) 
     
   exact subset_closure (is_three_cycle_swap_mul_swap_same ab ac bc)
 
-theorem is_swap.mul_mem_closure_three_cycles {σ τ : Perm α} (hσ : IsSwap σ) (hτ : IsSwap τ) :
+theorem IsSwap.mul_mem_closure_three_cycles {σ τ : Perm α} (hσ : IsSwap σ) (hτ : IsSwap τ) :
     σ * τ ∈ closure { σ : Perm α | IsThreeCycle σ } := by
   obtain ⟨a, b, ab, rfl⟩ := hσ
   obtain ⟨c, d, cd, rfl⟩ := hτ

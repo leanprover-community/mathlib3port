@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Simon Hudon. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Simon Hudon, Jesse Michael Han
+-/
 import Mathbin.Tactic.Rcases
 import Mathbin.Logic.Function.Basic
 
@@ -336,17 +341,24 @@ defined later.
 -/
 
 
+-- We mark some existing extensionality lemmas.
 attribute [ext] Arrayₓ.ext propext Function.hfunext
 
 attribute [ext Thunkₓ] _root_.funext
 
+-- This line is equivalent to:
+--   attribute [ext (→)] _root_.funext
+-- but (→) is not actually a binary relation with a constant at the head,
+-- so we use the special name [anon].0 to represent (→).
 run_cmd
   add_ext_lemma (Name.mk_numeral 0 Name.anonymous) `` _root_.funext true
 
+-- We create some extensionality lemmas for existing structures.
 attribute [ext] Ulift
 
 namespace Plift
 
+-- This is stronger than the one generated automatically.
 @[ext]
 theorem ext {P : Prop} (a b : Plift P) : a = b := by
   cases a
@@ -355,6 +367,8 @@ theorem ext {P : Prop} (a b : Plift P) : a = b := by
 
 end Plift
 
+-- Conservatively, we'll only add extensionality lemmas for `has_*` structures
+-- as they become useful.
 attribute [ext] Zero
 
 @[ext]

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Markus Himmel. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Markus Himmel
+-/
 import Mathbin.CategoryTheory.Monoidal.Free.Basic
 import Mathbin.CategoryTheory.Groupoid
 import Mathbin.CategoryTheory.DiscreteCategory
@@ -47,7 +52,7 @@ variable (C)
 /-- We say an object in the free monoidal category is in normal form if it is of the form
     `(((𝟙_ C) ⊗ X₁) ⊗ X₂) ⊗ ⋯`. -/
 @[nolint has_inhabited_instance]
-inductive normal_monoidal_object : Type u
+inductive NormalMonoidalObject : Type u
   | Unit : normal_monoidal_object
   | tensor : normal_monoidal_object → C → normal_monoidal_object
 
@@ -61,7 +66,7 @@ local infixr:10 " ⟶ᵐ " => Hom
 
 /-- Auxiliary definition for `inclusion`. -/
 @[simp]
-def inclusion_obj : NormalMonoidalObject C → F C
+def inclusionObj : NormalMonoidalObject C → F C
   | normal_monoidal_object.unit => unit
   | normal_monoidal_object.tensor n a => tensor (inclusion_obj n) (of a)
 
@@ -72,7 +77,7 @@ def inclusion : N C ⥤ F C :=
 
 /-- Auxiliary definition for `normalize`. -/
 @[simp]
-def normalize_obj : F C → NormalMonoidalObject C → NormalMonoidalObject C
+def normalizeObj : F C → NormalMonoidalObject C → NormalMonoidalObject C
   | Unit, n => n
   | of X, n => NormalMonoidalObject.tensor n X
   | tensor X Y, n => normalize_obj Y (normalize_obj X n)
@@ -92,7 +97,7 @@ open Hom
 /-- Auxiliary definition for `normalize`. Here we prove that objects that are related by
     associators and unitors map to the same normal form. -/
 @[simp]
-def normalize_map_aux :
+def normalizeMapAux :
     ∀ {X Y : F C}, (X ⟶ᵐ Y) → ((Discrete.functor (normalizeObj X) : _ ⥤ N C) ⟶ Discrete.functor (normalizeObj Y))
   | _, _, id _ => 𝟙 _
   | _, _, α_hom _ _ _ => ⟨fun X => 𝟙 _⟩
@@ -134,14 +139,14 @@ def normalize' : F C ⥤ N C ⥤ F C :=
   normalize C ⋙ (whiskeringRight _ _ _).obj inclusion
 
 /-- The normalization functor for the free monoidal category over `C`. -/
-def full_normalize : F C ⥤ N C where
+def fullNormalize : F C ⥤ N C where
   obj := fun X => ((normalize C).obj X).obj NormalMonoidalObject.unit
   map := fun X Y f => ((normalize C).map f).app NormalMonoidalObject.unit
 
 /-- Given an object `X` of the free monoidal category and an object `n` in normal form, taking
     the tensor product `n ⊗ X` in the free monoidal category is functorial in both `X` and `n`. -/
 @[simp]
-def tensor_func : F C ⥤ N C ⥤ F C where
+def tensorFunc : F C ⥤ N C ⥤ F C where
   obj := fun X => Discrete.functor fun n => inclusion.obj n ⊗ X
   map := fun X Y f =>
     ⟨fun n => 𝟙 _ ⊗ f, by
@@ -157,7 +162,7 @@ theorem tensor_func_obj_map (Z : F C) {n n' : N C} (f : n ⟶ n') :
 /-- Auxiliary definition for `normalize_iso`. Here we construct the isomorphism between
     `n ⊗ X` and `normalize X n`. -/
 @[simp]
-def normalize_iso_app : ∀ X : F C n : N C, ((tensorFunc C).obj X).obj n ≅ ((normalize' C).obj X).obj n
+def normalizeIsoApp : ∀ X : F C n : N C, ((tensorFunc C).obj X).obj n ≅ ((normalize' C).obj X).obj n
   | of X, n => Iso.refl _
   | Unit, n => ρ_ _
   | tensor X Y, n => (α_ _ _ _).symm ≪≫ tensorIso (normalize_iso_app X n) (Iso.refl _) ≪≫ normalize_iso_app _ _
@@ -174,7 +179,7 @@ theorem normalize_iso_app_unitor (n : N C) : normalizeIsoApp C (𝟙_ (F C)) n =
 
 /-- Auxiliary definition for `normalize_iso`. -/
 @[simp]
-def normalize_iso_aux (X : F C) : (tensorFunc C).obj X ≅ (normalize' C).obj X :=
+def normalizeIsoAux (X : F C) : (tensorFunc C).obj X ≅ (normalize' C).obj X :=
   NatIso.ofComponents (normalizeIsoApp C X)
     (by
       tidy)
@@ -182,7 +187,7 @@ def normalize_iso_aux (X : F C) : (tensorFunc C).obj X ≅ (normalize' C).obj X 
 /-- The isomorphism between `n ⊗ X` and `normalize X n` is natural (in both `X` and `n`, but
     naturality in `n` is trivial and was "proved" in `normalize_iso_aux`). This is the real heart
     of our proof of the coherence theorem. -/
-def normalize_iso : tensorFunc C ≅ normalize' C :=
+def normalizeIso : tensorFunc C ≅ normalize' C :=
   NatIso.ofComponents (normalizeIsoAux C)
     (by
       rintro X Y f
@@ -251,7 +256,7 @@ def normalize_iso : tensorFunc C ≅ normalize' C :=
         )
 
 /-- The isomorphism between an object and its normal form is natural. -/
-def full_normalize_iso : 𝟭 (F C) ≅ fullNormalize C ⋙ inclusion :=
+def fullNormalizeIso : 𝟭 (F C) ≅ fullNormalize C ⋙ inclusion :=
   NatIso.ofComponents (fun X => (λ_ X).symm ≪≫ ((normalizeIso C).app X).app NormalMonoidalObject.unit)
     (by
       intro X Y f
@@ -276,7 +281,7 @@ open Hom
 
 /-- Auxiliary construction for showing that the free monoidal category is a groupoid. Do not use
     this, use `is_iso.inv` instead. -/
-def inverse_aux : ∀ {X Y : F C}, (X ⟶ᵐ Y) → (Y ⟶ᵐ X)
+def inverseAux : ∀ {X Y : F C}, (X ⟶ᵐ Y) → (Y ⟶ᵐ X)
   | _, _, id X => id X
   | _, _, α_hom _ _ _ => α_inv _ _ _
   | _, _, α_inv _ _ _ => α_hom _ _ _

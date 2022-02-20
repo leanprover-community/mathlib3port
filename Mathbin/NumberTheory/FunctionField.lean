@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Anne Baanen. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Anne Baanen, Ashvni Narayanan
+-/
 import Mathbin.FieldTheory.Ratfunc
 import Mathbin.RingTheory.Algebraic
 import Mathbin.RingTheory.DedekindDomain
@@ -77,7 +82,7 @@ namespace FunctionField
 We don't actually assume `F` is a function field over `Fq` in the definition,
 only when proving its properties.
 -/
-def ring_of_integers [Algebra Fq[X] F] :=
+def ringOfIntegers [Algebra Fq[X] F] :=
   integralClosure Fq[X] F
 
 namespace RingOfIntegers

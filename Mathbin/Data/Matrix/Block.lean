@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Ellen Arlt. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Ellen Arlt, Blair Shi, Sean Leather, Mario Carneiro, Johan Commelin
+-/
 import Mathbin.Data.Matrix.Basic
 
 /-!
@@ -25,7 +30,7 @@ section BlockMatrices
 
 /-- We can form a single large matrix by flattening smaller 'block' matrices of compatible
 dimensions. -/
-def from_blocks (A : Matrix n l α) (B : Matrix n m α) (C : Matrix o l α) (D : Matrix o m α) :
+def fromBlocks (A : Matrix n l α) (B : Matrix n m α) (C : Matrix o l α) (D : Matrix o m α) :
     Matrix (Sum n o) (Sum l m) α :=
   Sum.elim (fun i => Sum.elim (A i) (B i)) fun i => Sum.elim (C i) (D i)
 
@@ -51,19 +56,19 @@ theorem from_blocks_apply₂₂ (A : Matrix n l α) (B : Matrix n m α) (C : Mat
 
 /-- Given a matrix whose row and column indexes are sum types, we can extract the corresponding
 "top left" submatrix. -/
-def to_blocks₁₁ (M : Matrix (Sum n o) (Sum l m) α) : Matrix n l α := fun i j => M (Sum.inl i) (Sum.inl j)
+def toBlocks₁₁ (M : Matrix (Sum n o) (Sum l m) α) : Matrix n l α := fun i j => M (Sum.inl i) (Sum.inl j)
 
 /-- Given a matrix whose row and column indexes are sum types, we can extract the corresponding
 "top right" submatrix. -/
-def to_blocks₁₂ (M : Matrix (Sum n o) (Sum l m) α) : Matrix n m α := fun i j => M (Sum.inl i) (Sum.inr j)
+def toBlocks₁₂ (M : Matrix (Sum n o) (Sum l m) α) : Matrix n m α := fun i j => M (Sum.inl i) (Sum.inr j)
 
 /-- Given a matrix whose row and column indexes are sum types, we can extract the corresponding
 "bottom left" submatrix. -/
-def to_blocks₂₁ (M : Matrix (Sum n o) (Sum l m) α) : Matrix o l α := fun i j => M (Sum.inr i) (Sum.inl j)
+def toBlocks₂₁ (M : Matrix (Sum n o) (Sum l m) α) : Matrix o l α := fun i j => M (Sum.inr i) (Sum.inl j)
 
 /-- Given a matrix whose row and column indexes are sum types, we can extract the corresponding
 "bottom right" submatrix. -/
-def to_blocks₂₂ (M : Matrix (Sum n o) (Sum l m) α) : Matrix o m α := fun i j => M (Sum.inr i) (Sum.inr j)
+def toBlocks₂₂ (M : Matrix (Sum n o) (Sum l m) α) : Matrix o m α := fun i j => M (Sum.inr i) (Sum.inr j)
 
 theorem from_blocks_to_blocks (M : Matrix (Sum n o) (Sum l m) α) :
     fromBlocks M.toBlocks₁₁ M.toBlocks₁₂ M.toBlocks₂₁ M.toBlocks₂₂ = M := by
@@ -105,12 +110,12 @@ theorem from_blocks_conj_transpose [HasStar α] (A : Matrix n l α) (B : Matrix 
   simp only [conj_transpose, from_blocks_transpose, from_blocks_map]
 
 /-- A 2x2 block matrix is block diagonal if the blocks outside of the diagonal vanish -/
-def is_two_block_diagonal [Zero α] (A : Matrix (Sum n o) (Sum l m) α) : Prop :=
+def IsTwoBlockDiagonal [Zero α] (A : Matrix (Sum n o) (Sum l m) α) : Prop :=
   toBlocks₁₂ A = 0 ∧ toBlocks₂₁ A = 0
 
 /-- Let `p` pick out certain rows and `q` pick out certain columns of a matrix `M`. Then
   `to_block M p q` is the corresponding block matrix. -/
-def to_block (M : Matrix m n α) (p : m → Prop) (q : n → Prop) : Matrix { a // p a } { a // q a } α :=
+def toBlock (M : Matrix m n α) (p : m → Prop) (q : n → Prop) : Matrix { a // p a } { a // q a } α :=
   M.minor coe coe
 
 @[simp]
@@ -120,7 +125,7 @@ theorem to_block_apply (M : Matrix m n α) (p : m → Prop) (q : n → Prop) (i 
 
 /-- Let `b` map rows and columns of a square matrix `M` to blocks. Then
   `to_square_block M b k` is the block `k` matrix. -/
-def to_square_block (M : Matrix m m α) {n : Nat} (b : m → Finₓ n) (k : Finₓ n) :
+def toSquareBlock (M : Matrix m m α) {n : Nat} (b : m → Finₓ n) (k : Finₓ n) :
     Matrix { a // b a = k } { a // b a = k } α :=
   M.minor coe coe
 
@@ -131,7 +136,7 @@ theorem to_square_block_def (M : Matrix m m α) {n : Nat} (b : m → Finₓ n) (
 
 /-- Alternate version with `b : m → nat`. Let `b` map rows and columns of a square matrix `M` to
   blocks. Then `to_square_block' M b k` is the block `k` matrix. -/
-def to_square_block' (M : Matrix m m α) (b : m → Nat) (k : Nat) : Matrix { a // b a = k } { a // b a = k } α :=
+def toSquareBlock' (M : Matrix m m α) (b : m → Nat) (k : Nat) : Matrix { a // b a = k } { a // b a = k } α :=
   M.minor coe coe
 
 @[simp]
@@ -140,7 +145,7 @@ theorem to_square_block_def' (M : Matrix m m α) (b : m → Nat) (k : Nat) : toS
 
 /-- Let `p` pick out certain rows and columns of a square matrix `M`. Then
   `to_square_block_prop M p` is the corresponding block matrix. -/
-def to_square_block_prop (M : Matrix m m α) (p : m → Prop) : Matrix { a // p a } { a // p a } α :=
+def toSquareBlockProp (M : Matrix m m α) (p : m → Prop) : Matrix { a // p a } { a // p a } α :=
   M.minor coe coe
 
 @[simp]
@@ -200,7 +205,7 @@ the diagonal and zero elsewhere.
 
 See also `matrix.block_diagonal'` if the matrices may not have the same size everywhere.
 -/
-def block_diagonal : Matrix (m × o) (n × o) α
+def blockDiagonal : Matrix (m × o) (n × o) α
   | ⟨i, k⟩, ⟨j, k'⟩ => if k = k' then M k i j else 0
 
 theorem block_diagonal_apply ik jk : blockDiagonal M ik jk = if ik.2 = jk.2 then M ik.2 ik.1 jk.1 else 0 := by
@@ -302,7 +307,7 @@ variable [Zero α] [Zero β]
 and zero elsewhere.
 
 This is the dependently-typed version of `matrix.block_diagonal`. -/
-def block_diagonal' : Matrix (Σ i, m' i) (Σ i, n' i) α
+def blockDiagonal' : Matrix (Σ i, m' i) (Σ i, n' i) α
   | ⟨k, i⟩, ⟨k', j⟩ => if h : k = k' then M k i (cast (congr_argₓ n' h.symm) j) else 0
 
 theorem block_diagonal'_eq_block_diagonal (M : o → Matrix m n α) {k k'} i j :

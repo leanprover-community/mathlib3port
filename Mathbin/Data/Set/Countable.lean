@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2017 Johannes Hölzl. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johannes Hölzl
+-/
 import Mathbin.Data.Equiv.List
 import Mathbin.Data.Set.Finite
 
@@ -25,7 +30,7 @@ An encoding is an injection with a partial inverse, which can be viewed as a
 constructive analogue of countability. (For the most part, theorems about
 `countable` will be classical and `encodable` will be constructive.)
 -/
-def countable (s : Set α) : Prop :=
+def Countable (s : Set α) : Prop :=
   Nonempty (Encodable s)
 
 theorem countable_iff_exists_injective {s : Set α} : Countable s ↔ ∃ f : s → ℕ, Injective f :=
@@ -71,7 +76,7 @@ theorem countable_iff_exists_surjective_to_subtype {s : Set α} (hs : s.Nonempty
   constructor <;> assumption
 
 /-- Convert `countable s` to `encodable s` (noncomputable). -/
-def countable.to_encodable {s : Set α} : Countable s → Encodable s :=
+def Countable.toEncodable {s : Set α} : Countable s → Encodable s :=
   Classical.choice
 
 theorem countable_encodable' (s : Set α) [H : Encodable s] : Countable s :=
@@ -83,7 +88,7 @@ theorem countable_encodable [Encodable α] (s : Set α) : Countable s :=
 
 /-- If `s : set α` is a nonempty countable set, then there exists a map
 `f : ℕ → α` such that `s = range f`. -/
-theorem countable.exists_surjective {s : Set α} (hc : Countable s) (hs : s.Nonempty) : ∃ f : ℕ → α, s = Range f := by
+theorem Countable.exists_surjective {s : Set α} (hc : Countable s) (hs : s.Nonempty) : ∃ f : ℕ → α, s = Range f := by
   let this' : Encodable s := countable.to_encodable hc
   let this' : Nonempty s := hs.to_subtype
   have : countable (univ : Set s) := countable_encodable _
@@ -100,26 +105,26 @@ theorem countable_empty : Countable (∅ : Set α) :=
 theorem countable_singleton (a : α) : Countable ({a} : Set α) :=
   ⟨ofEquiv _ (Equivₓ.Set.singleton a)⟩
 
-theorem countable.mono {s₁ s₂ : Set α} (h : s₁ ⊆ s₂) : Countable s₂ → Countable s₁
+theorem Countable.mono {s₁ s₂ : Set α} (h : s₁ ⊆ s₂) : Countable s₂ → Countable s₁
   | ⟨H⟩ => ⟨@ofInj _ _ H _ (embeddingOfSubset _ _ h).2⟩
 
-theorem countable.image {s : Set α} (hs : Countable s) (f : α → β) : Countable (f '' s) :=
+theorem Countable.image {s : Set α} (hs : Countable s) (f : α → β) : Countable (f '' s) :=
   have : Surjective ((maps_to_image f s).restrict _ _ _) := surjective_maps_to_image_restrict f s
   ⟨@Encodable.ofInj _ _ hs.toEncodable (surjInv this) (injective_surj_inv this)⟩
 
 theorem countable_range [Encodable α] (f : α → β) : Countable (Range f) := by
   rw [← image_univ] <;> exact (countable_encodable _).Image _
 
-theorem maps_to.countable_of_inj_on {s : Set α} {t : Set β} {f : α → β} (hf : MapsTo f s t) (hf' : InjOn f s)
+theorem MapsTo.countable_of_inj_on {s : Set α} {t : Set β} {f : α → β} (hf : MapsTo f s t) (hf' : InjOn f s)
     (ht : Countable t) : Countable s :=
   have : Injective (hf.restrict f s t) := (inj_on_iff_injective.1 hf').codRestrict _
   ⟨@Encodable.ofInj _ _ ht.toEncodable _ this⟩
 
-theorem countable.preimage_of_inj_on {s : Set β} (hs : Countable s) {f : α → β} (hf : InjOn f (f ⁻¹' s)) :
+theorem Countable.preimage_of_inj_on {s : Set β} (hs : Countable s) {f : α → β} (hf : InjOn f (f ⁻¹' s)) :
     Countable (f ⁻¹' s) :=
   (maps_to_preimage f s).countable_of_inj_on hf hs
 
-protected theorem countable.preimage {s : Set β} (hs : Countable s) {f : α → β} (hf : Injective f) :
+protected theorem Countable.preimage {s : Set β} (hs : Countable s) {f : α → β} (hf : Injective f) :
     Countable (f ⁻¹' s) :=
   hs.preimage_of_inj_on (hf.InjOn _)
 
@@ -156,7 +161,7 @@ theorem countable_of_injective_of_countable_image {s : Set α} {f : α → β} (
 theorem countable_Union {t : α → Set β} [Encodable α] (ht : ∀ a, Countable (t a)) : Countable (⋃ a, t a) := by
   have := fun a => (ht a).toEncodable <;> rw [Union_eq_range_sigma] <;> apply countable_range
 
-theorem countable.bUnion {s : Set α} {t : ∀, ∀ x ∈ s, ∀, Set β} (hs : Countable s)
+theorem Countable.bUnion {s : Set α} {t : ∀, ∀ x ∈ s, ∀, Set β} (hs : Countable s)
     (ht : ∀, ∀ a ∈ s, ∀, Countable (t a ‹_›)) : Countable (⋃ a ∈ s, t a ‹_›) := by
   rw [bUnion_eq_Union]
   have := hs.to_encodable
@@ -165,13 +170,13 @@ theorem countable.bUnion {s : Set α} {t : ∀, ∀ x ∈ s, ∀, Set β} (hs : 
       (by
         simpa using ht)
 
-theorem countable.sUnion {s : Set (Set α)} (hs : Countable s) (h : ∀, ∀ a ∈ s, ∀, Countable a) : Countable (⋃₀s) := by
+theorem Countable.sUnion {s : Set (Set α)} (hs : Countable s) (h : ∀, ∀ a ∈ s, ∀, Countable a) : Countable (⋃₀s) := by
   rw [sUnion_eq_bUnion] <;> exact hs.bUnion h
 
 theorem countable_Union_Prop {p : Prop} {t : p → Set β} (ht : ∀ h : p, Countable (t h)) : Countable (⋃ h : p, t h) := by
   by_cases' p <;> simp [h, ht]
 
-theorem countable.union {s₁ s₂ : Set α} (h₁ : Countable s₁) (h₂ : Countable s₂) : Countable (s₁ ∪ s₂) := by
+theorem Countable.union {s₁ s₂ : Set α} (h₁ : Countable s₁) (h₂ : Countable s₂) : Countable (s₁ ∪ s₂) := by
   rw [union_eq_Union] <;> exact countable_Union (Bool.forall_bool.2 ⟨h₂, h₁⟩)
 
 @[simp]
@@ -182,13 +187,13 @@ theorem countable_union {s t : Set α} : Countable (s ∪ t) ↔ Countable s ∧
 theorem countable_insert {s : Set α} {a : α} : Countable (insert a s) ↔ Countable s := by
   simp only [insert_eq, countable_union, countable_singleton, true_andₓ]
 
-theorem countable.insert {s : Set α} (a : α) (h : Countable s) : Countable (insert a s) :=
+theorem Countable.insert {s : Set α} (a : α) (h : Countable s) : Countable (insert a s) :=
   countable_insert.2 h
 
-theorem finite.countable {s : Set α} : Finite s → Countable s
+theorem Finite.countable {s : Set α} : Finite s → Countable s
   | ⟨h⟩ => Trunc.nonempty (trunc_encodable_of_fintype s)
 
-theorem subsingleton.countable {s : Set α} (hs : s.Subsingleton) : Countable s :=
+theorem Subsingleton.countable {s : Set α} (hs : s.Subsingleton) : Countable s :=
   hs.Finite.Countable
 
 theorem countable_is_top (α : Type _) [PartialOrderₓ α] : Countable { x : α | IsTop x } :=
@@ -217,13 +222,13 @@ theorem countable_pi {π : α → Type _} [Fintype α] {s : ∀ a, Set (π a)} (
     have : Trunc (Encodable (∀ a : α, s a)) := @Encodable.fintypePi α _ _ _ fun a => (hs a).toEncodable
     (Trunc.induction_on this) fun h => @countable_range _ _ h _
 
-protected theorem countable.prod {s : Set α} {t : Set β} (hs : Countable s) (ht : Countable t) : Countable (s ×ˢ t) :=
+protected theorem Countable.prod {s : Set α} {t : Set β} (hs : Countable s) (ht : Countable t) : Countable (s ×ˢ t) :=
   by
   have : Encodable s := hs.to_encodable
   have : Encodable t := ht.to_encodable
   exact ⟨of_equiv (s × t) (Equivₓ.Set.prod _ _)⟩
 
-theorem countable.image2 {s : Set α} {t : Set β} (hs : Countable s) (ht : Countable t) (f : α → β → γ) :
+theorem Countable.image2 {s : Set α} {t : Set β} (hs : Countable s) (ht : Countable t) (f : α → β → γ) :
     Countable (Image2 f s t) := by
   rw [← image_prod]
   exact (hs.prod ht).Image _
@@ -231,7 +236,7 @@ theorem countable.image2 {s : Set α} {t : Set β} (hs : Countable s) (ht : Coun
 section Enumerate
 
 /-- Enumerate elements in a countable set.-/
-def enumerate_countable {s : Set α} (h : Countable s) (default : α) : ℕ → α := fun n =>
+def enumerateCountable {s : Set α} (h : Countable s) (default : α) : ℕ → α := fun n =>
   match @Encodable.decode s h.toEncodable n with
   | some y => y
   | none => default

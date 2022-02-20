@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Aaron Anderson. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Aaron Anderson, Jalex Stark, Lu-Ming Zhang
+-/
 import Mathbin.Combinatorics.SimpleGraph.Basic
 import Mathbin.Data.Rel
 import Mathbin.LinearAlgebra.Matrix.Trace
@@ -39,7 +44,7 @@ namespace Matrix
     (1) every entry of `A` is `0` or `1`,
     (2) `A` is symmetric,
     (3) every diagonal entry of `A` is `0`. -/
-structure is_adj_matrix [Zero α] [One α] (A : Matrix V V α) : Prop where
+structure IsAdjMatrix [Zero α] [One α] (A : Matrix V V α) : Prop where
   zero_or_one : ∀ i j, A i j = 0 ∨ A i j = 1 := by
     run_tac
       obviously
@@ -71,7 +76,7 @@ theorem apply_ne_zero_iff [MulZeroOneClassₓ α] [Nontrivial α] (h : IsAdjMatr
 /-- For `A : matrix V V α` and `h : is_adj_matrix A`,
     `h.to_graph` is the simple graph whose adjacency matrix is `A`. -/
 @[simps]
-def to_graph [MulZeroOneClassₓ α] [Nontrivial α] (h : IsAdjMatrix A) : SimpleGraph V where
+def toGraph [MulZeroOneClassₓ α] [Nontrivial α] (h : IsAdjMatrix A) : SimpleGraph V where
   Adj := fun i j => A i j = 1
   symm := fun i j hij => by
     rwa [h.symm.apply i j]
@@ -140,7 +145,7 @@ variable (α)
 
 /-- `adj_matrix G α` is the matrix `A` such that `A i j = (1 : α)` if `i` and `j` are
   adjacent in the simple graph `G`, and otherwise `A i j = 0`. -/
-def adj_matrix [Zero α] [One α] : Matrix V V α
+def adjMatrix [Zero α] [One α] : Matrix V V α
   | i, j => if G.Adj i j then 1 else 0
 
 variable {α}

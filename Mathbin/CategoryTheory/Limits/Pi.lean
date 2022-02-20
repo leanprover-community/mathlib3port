@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison
+-/
 import Mathbin.CategoryTheory.Pi.Basic
 import Mathbin.CategoryTheory.Limits.HasLimits
 
@@ -28,19 +33,19 @@ variable {F : J ⥤ ∀ i, C i}
 
 /-- A cone over `F : J ⥤ Π i, C i` has as its components cones over each of the `F ⋙ pi.eval C i`.
 -/
-def cone_comp_eval (c : Cone F) (i : I) : Cone (F ⋙ pi.eval C i) where
+def coneCompEval (c : Cone F) (i : I) : Cone (F ⋙ pi.eval C i) where
   x := c.x i
   π := { app := fun j => c.π.app j i, naturality' := fun j j' f => congr_funₓ (c.π.naturality f) i }
 
 /-- A cocone over `F : J ⥤ Π i, C i` has as its components cocones over each of the `F ⋙ pi.eval C i`.
 -/
-def cocone_comp_eval (c : Cocone F) (i : I) : Cocone (F ⋙ pi.eval C i) where
+def coconeCompEval (c : Cocone F) (i : I) : Cocone (F ⋙ pi.eval C i) where
   x := c.x i
   ι := { app := fun j => c.ι.app j i, naturality' := fun j j' f => congr_funₓ (c.ι.naturality f) i }
 
 /-- Given a family of cones over the `F ⋙ pi.eval C i`, we can assemble these together as a `cone F`.
 -/
-def cone_of_cone_comp_eval (c : ∀ i, Cone (F ⋙ pi.eval C i)) : Cone F where
+def coneOfConeCompEval (c : ∀ i, Cone (F ⋙ pi.eval C i)) : Cone F where
   x := fun i => (c i).x
   π :=
     { app := fun j i => (c i).π.app j,
@@ -51,7 +56,7 @@ def cone_of_cone_comp_eval (c : ∀ i, Cone (F ⋙ pi.eval C i)) : Cone F where
 /-- Given a family of cocones over the `F ⋙ pi.eval C i`,
 we can assemble these together as a `cocone F`.
 -/
-def cocone_of_cocone_comp_eval (c : ∀ i, Cocone (F ⋙ pi.eval C i)) : Cocone F where
+def coconeOfCoconeCompEval (c : ∀ i, Cocone (F ⋙ pi.eval C i)) : Cocone F where
   x := fun i => (c i).x
   ι :=
     { app := fun j i => (c i).ι.app j,
@@ -62,7 +67,7 @@ def cocone_of_cocone_comp_eval (c : ∀ i, Cocone (F ⋙ pi.eval C i)) : Cocone 
 /-- Given a family of limit cones over the `F ⋙ pi.eval C i`,
 assembling them together as a `cone F` produces a limit cone.
 -/
-def cone_of_cone_eval_is_limit {c : ∀ i, Cone (F ⋙ pi.eval C i)} (P : ∀ i, IsLimit (c i)) :
+def coneOfConeEvalIsLimit {c : ∀ i, Cone (F ⋙ pi.eval C i)} (P : ∀ i, IsLimit (c i)) :
     IsLimit (coneOfConeCompEval c) where
   lift := fun s i => (P i).lift (coneCompEval s i)
   fac' := fun s j => by
@@ -75,7 +80,7 @@ def cone_of_cone_eval_is_limit {c : ∀ i, Cone (F ⋙ pi.eval C i)} (P : ∀ i,
 /-- Given a family of colimit cocones over the `F ⋙ pi.eval C i`,
 assembling them together as a `cocone F` produces a colimit cocone.
 -/
-def cocone_of_cocone_eval_is_colimit {c : ∀ i, Cocone (F ⋙ pi.eval C i)} (P : ∀ i, IsColimit (c i)) :
+def coconeOfCoconeEvalIsColimit {c : ∀ i, Cocone (F ⋙ pi.eval C i)} (P : ∀ i, IsColimit (c i)) :
     IsColimit (coconeOfCoconeCompEval c) where
   desc := fun s i => (P i).desc (coconeCompEval s i)
   fac' := fun s j => by

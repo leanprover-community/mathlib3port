@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Kenny Lau. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Kenny Lau
+-/
 import Mathbin.GroupTheory.GroupAction.Basic
 import Mathbin.Algebra.GroupRingAction
 
@@ -83,7 +88,7 @@ theorem ext_iff {f g : X →[M'] Y} : f = g ↔ ∀ x, f x = g x :=
   ⟨fun H x => by
     rw [H], ext⟩
 
-protected theorem congr_funₓ {f g : X →[M'] Y} (h : f = g) (x : X) : f x = g x :=
+protected theorem congr_fun {f g : X →[M'] Y} (h : f = g) (x : X) : f x = g x :=
   h ▸ rfl
 
 variable (M M') {X}
@@ -140,7 +145,7 @@ def inverse (f : A →[M] B) (g : B → A) (h₁ : Function.LeftInverse g f) (h�
 variable {G} (H)
 
 /-- The canonical map to the left cosets. -/
-def to_quotient : G →[G] G ⧸ H :=
+def toQuotient : G →[G] G ⧸ H :=
   ⟨coe, fun g x => rfl⟩
 
 @[simp]
@@ -162,10 +167,10 @@ notation:25 A " →+[" M:25 "] " B:0 => DistribMulActionHom M A B
 
 namespace DistribMulActionHom
 
-instance Coe : Coe (A →+[M] B) (A →+ B) :=
+instance hasCoe : Coe (A →+[M] B) (A →+ B) :=
   ⟨toAddMonoidHom⟩
 
-instance has_coe' : Coe (A →+[M] B) (A →[M] B) :=
+instance hasCoe' : Coe (A →+[M] B) (A →[M] B) :=
   ⟨toMulActionHom⟩
 
 instance : CoeFun (A →+[M] B) fun _ => A → B :=
@@ -195,7 +200,7 @@ theorem ext_iff {f g : A →+[M] B} : f = g ↔ ∀ x, f x = g x :=
   ⟨fun H x => by
     rw [H], ext⟩
 
-protected theorem congr_funₓ {f g : A →+[M] B} (h : f = g) (x : A) : f x = g x :=
+protected theorem congr_fun {f g : A →+[M] B} (h : f = g) (x : A) : f x = g x :=
   h ▸ rfl
 
 theorem to_mul_action_hom_injective {f g : A →+[M] B} (h : (f : A →[M] B) = (g : A →[M] B)) : f = g := by
@@ -316,10 +321,10 @@ notation:25 R " →+*[" M:25 "] " S:0 => MulSemiringActionHom M R S
 
 namespace MulSemiringActionHom
 
-instance Coe : Coe (R →+*[M] S) (R →+* S) :=
+instance hasCoe : Coe (R →+*[M] S) (R →+* S) :=
   ⟨toRingHom⟩
 
-instance has_coe' : Coe (R →+*[M] S) (R →+[M] S) :=
+instance hasCoe' : Coe (R →+*[M] S) (R →+[M] S) :=
   ⟨toDistribMulActionHom⟩
 
 instance : CoeFun (R →+*[M] S) fun _ => R → S :=

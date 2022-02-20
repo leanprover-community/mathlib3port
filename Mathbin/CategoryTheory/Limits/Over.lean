@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Johan Commelin. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johan Commelin, Reid Barton, Bhavik Mehta
+-/
 import Mathbin.CategoryTheory.Over
 import Mathbin.CategoryTheory.Adjunction.Opposites
 import Mathbin.CategoryTheory.Limits.Preserves.Basic
@@ -23,6 +28,7 @@ noncomputable section
 
 universe v u
 
+-- morphism levels before object levels. See note [category_theory universes].
 open CategoryTheory CategoryTheory.Limits
 
 variable {J : Type v} [SmallCategory J]
@@ -42,9 +48,10 @@ instance [HasColimitsOfShape J C] : HasColimitsOfShape J (Over X) :=
 instance [HasColimits C] : HasColimits (Over X) :=
   ⟨inferInstance⟩
 
-instance creates_colimits : CreatesColimits (forget X) :=
+instance createsColimits : CreatesColimits (forget X) :=
   costructured_arrow.creates_colimits
 
+-- We can automatically infer that the forgetful functor preserves and reflects colimits.
 example [HasColimits C] : PreservesColimits (forget X) :=
   inferInstance
 
@@ -71,7 +78,7 @@ def pullback {X Y : C} (f : X ⟶ Y) : Over Y ⥤ Over X where
         tidy)
 
 /-- `over.map f` is left adjoint to `over.pullback f`. -/
-def map_pullback_adj {A B : C} (f : A ⟶ B) : Over.map f ⊣ pullback f :=
+def mapPullbackAdj {A B : C} (f : A ⟶ B) : Over.map f ⊣ pullback f :=
   Adjunction.mkOfHomEquiv
     { homEquiv := fun g h =>
         { toFun := fun X => Over.homMk (pullback.lift X.left g.Hom (Over.w X)) (pullback.lift_snd _ _ _),
@@ -94,15 +101,15 @@ def map_pullback_adj {A B : C} (f : A ⟶ B) : Over.map f ⊣ pullback f :=
             rfl } }
 
 /-- pullback (𝟙 A) : over A ⥤ over A is the identity functor. -/
-def pullback_id {A : C} : pullback (𝟙 A) ≅ 𝟭 _ :=
+def pullbackId {A : C} : pullback (𝟙 A) ≅ 𝟭 _ :=
   Adjunction.rightAdjointUniq (mapPullbackAdj _) (Adjunction.id.ofNatIsoLeft Over.mapId.symm)
 
 /-- pullback commutes with composition (up to natural isomorphism). -/
-def pullback_comp {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z) : pullback (f ≫ g) ≅ pullback g ⋙ pullback f :=
+def pullbackComp {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z) : pullback (f ≫ g) ≅ pullback g ⋙ pullback f :=
   Adjunction.rightAdjointUniq (mapPullbackAdj _)
     (((mapPullbackAdj _).comp _ _ (mapPullbackAdj _)).ofNatIsoLeft (Over.mapComp _ _).symm)
 
-instance pullback_is_right_adjoint {A B : C} (f : A ⟶ B) : IsRightAdjoint (pullback f) :=
+instance pullbackIsRightAdjoint {A B : C} (f : A ⟶ B) : IsRightAdjoint (pullback f) :=
   ⟨_, mapPullbackAdj f⟩
 
 end
@@ -120,9 +127,10 @@ instance [HasLimitsOfShape J C] : HasLimitsOfShape J (Under X) :=
 instance [HasLimits C] : HasLimits (Under X) :=
   ⟨inferInstance⟩
 
-instance creates_limits : CreatesLimits (forget X) :=
+instance createsLimits : CreatesLimits (forget X) :=
   structured_arrow.creates_limits
 
+-- We can automatically infer that the forgetful functor preserves and reflects limits.
 example [HasLimits C] : PreservesLimits (forget X) :=
   inferInstance
 

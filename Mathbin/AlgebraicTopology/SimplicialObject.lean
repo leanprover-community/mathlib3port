@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johan Commelin, Scott Morrison, Adam Topaz
+-/
 import Mathbin.AlgebraicTopology.SimplexCategory
 import Mathbin.CategoryTheory.Arrow
 import Mathbin.CategoryTheory.Limits.FunctorCategory
@@ -30,7 +35,7 @@ variable (C : Type u) [Category.{v} C]
 /-- The category of simplicial objects valued in a category `C`.
 This is the category of contravariant functors from `simplex_category` to `C`. -/
 @[nolint has_inhabited_instance]
-def simplicial_object :=
+def SimplicialObject :=
   SimplexCategory.{v}ᵒᵖ ⥤ C deriving Category
 
 namespace SimplicialObject
@@ -63,7 +68,7 @@ def σ {n} (i : Finₓ (n + 1)) : X _[n] ⟶ X _[n + 1] :=
   X.map (SimplexCategory.σ i).op
 
 /-- Isomorphisms from identities in ℕ. -/
-def eq_to_iso {n m : ℕ} (h : n = m) : X _[n] ≅ X _[m] :=
+def eqToIso {n m : ℕ} (h : n = m) : X _[n] ≅ X _[m] :=
   X.mapIso
     (eqToIso
       (by
@@ -120,7 +125,7 @@ def whiskering (D : Type _) [Category.{v} D] : (C ⥤ D) ⥤ SimplicialObject C 
 
 /-- Truncated simplicial objects. -/
 @[nolint has_inhabited_instance]
-def truncated (n : ℕ) :=
+def Truncated (n : ℕ) :=
   SimplexCategory.Truncated.{v} nᵒᵖ ⥤ C deriving Category
 
 variable {C}
@@ -170,7 +175,7 @@ abbrev const : C ⥤ SimplicialObject C :=
 
 /-- The category of augmented simplicial objects, defined as a comma category. -/
 @[nolint has_inhabited_instance]
-def augmented :=
+def Augmented :=
   Comma (𝟭 (SimplicialObject C)) (const C)deriving Category
 
 variable {C}
@@ -189,7 +194,7 @@ def point : Augmented C ⥤ C :=
 
 /-- The functor from augmented objects to arrows. -/
 @[simps]
-def to_arrow : Augmented C ⥤ Arrow C where
+def toArrow : Augmented C ⥤ Arrow C where
   obj := fun X => { left := drop.obj X _[0], right := point.obj X, Hom := X.Hom.app _ }
   map := fun X Y η =>
     { left := (drop.map η).app _, right := point.map η,
@@ -203,7 +208,7 @@ variable (C)
 
 /-- Functor composition induces a functor on augmented simplicial objects. -/
 @[simp]
-def whiskering_obj (D : Type _) [Category.{v} D] (F : C ⥤ D) : Augmented C ⥤ Augmented D where
+def whiskeringObj (D : Type _) [Category.{v} D] (F : C ⥤ D) : Augmented C ⥤ Augmented D where
   obj := fun X =>
     { left := ((whiskering _ _).obj F).obj (drop.obj X), right := F.obj (point.obj X),
       Hom := whiskerRight X.Hom F ≫ (Functor.constComp _ _ _).Hom }
@@ -251,7 +256,7 @@ end SimplicialObject
 
 /-- Cosimplicial objects. -/
 @[nolint has_inhabited_instance]
-def cosimplicial_object :=
+def CosimplicialObject :=
   SimplexCategory.{v} ⥤ C deriving Category
 
 namespace CosimplicialObject
@@ -284,7 +289,7 @@ def σ {n} (i : Finₓ (n + 1)) : X _[n + 1] ⟶ X _[n] :=
   X.map (SimplexCategory.σ i)
 
 /-- Isomorphisms from identities in ℕ. -/
-def eq_to_iso {n m : ℕ} (h : n = m) : X _[n] ≅ X _[m] :=
+def eqToIso {n m : ℕ} (h : n = m) : X _[n] ≅ X _[m] :=
   X.mapIso
     (eqToIso
       (by
@@ -341,7 +346,7 @@ def whiskering (D : Type _) [Category.{v} D] : (C ⥤ D) ⥤ CosimplicialObject 
 
 /-- Truncated cosimplicial objects. -/
 @[nolint has_inhabited_instance]
-def truncated (n : ℕ) :=
+def Truncated (n : ℕ) :=
   SimplexCategory.Truncated.{v} n ⥤ C deriving Category
 
 variable {C}
@@ -391,7 +396,7 @@ abbrev const : C ⥤ CosimplicialObject C :=
 
 /-- Augmented cosimplicial objects. -/
 @[nolint has_inhabited_instance]
-def augmented :=
+def Augmented :=
   Comma (const C) (𝟭 (CosimplicialObject C))deriving Category
 
 variable {C}
@@ -410,7 +415,7 @@ def point : Augmented C ⥤ C :=
 
 /-- The functor from augmented objects to arrows. -/
 @[simps]
-def to_arrow : Augmented C ⥤ Arrow C where
+def toArrow : Augmented C ⥤ Arrow C where
   obj := fun X => { left := point.obj X, right := drop.obj X _[0], Hom := X.Hom.app _ }
   map := fun X Y η =>
     { left := point.map η, right := (drop.map η).app _,
@@ -424,7 +429,7 @@ variable (C)
 
 /-- Functor composition induces a functor on augmented cosimplicial objects. -/
 @[simp]
-def whiskering_obj (D : Type _) [Category.{v} D] (F : C ⥤ D) : Augmented C ⥤ Augmented D where
+def whiskeringObj (D : Type _) [Category.{v} D] (F : C ⥤ D) : Augmented C ⥤ Augmented D where
   obj := fun X =>
     { left := F.obj (point.obj X), right := ((whiskering _ _).obj F).obj (drop.obj X),
       Hom := (Functor.constComp _ _ _).inv ≫ whiskerRight X.Hom F }
@@ -471,7 +476,7 @@ end CosimplicialObject
 
 /-- The anti-equivalence between simplicial objects and cosimplicial objects. -/
 @[simps]
-def simplicial_cosimplicial_equiv : SimplicialObject Cᵒᵖ ≌ CosimplicialObject (Cᵒᵖ) :=
+def simplicialCosimplicialEquiv : SimplicialObject Cᵒᵖ ≌ CosimplicialObject (Cᵒᵖ) :=
   Functor.leftOpRightOpEquiv _ _
 
 variable {C}
@@ -479,7 +484,7 @@ variable {C}
 /-- Construct an augmented cosimplicial object in the opposite
 category from an augmented simplicial object. -/
 @[simps]
-def simplicial_object.augmented.right_op (X : SimplicialObject.Augmented C) : CosimplicialObject.Augmented (Cᵒᵖ) where
+def SimplicialObject.Augmented.rightOp (X : SimplicialObject.Augmented C) : CosimplicialObject.Augmented (Cᵒᵖ) where
   left := Opposite.op X.right
   right := X.left.rightOp
   Hom := X.Hom.rightOp
@@ -487,7 +492,7 @@ def simplicial_object.augmented.right_op (X : SimplicialObject.Augmented C) : Co
 /-- Construct an augmented simplicial object from an augmented cosimplicial
 object in the opposite category. -/
 @[simps]
-def cosimplicial_object.augmented.left_op (X : CosimplicialObject.Augmented (Cᵒᵖ)) : SimplicialObject.Augmented C where
+def CosimplicialObject.Augmented.leftOp (X : CosimplicialObject.Augmented (Cᵒᵖ)) : SimplicialObject.Augmented C where
   left := X.right.leftOp
   right := X.left.unop
   Hom := X.Hom.leftOp
@@ -495,7 +500,7 @@ def cosimplicial_object.augmented.left_op (X : CosimplicialObject.Augmented (C�
 /-- Converting an augmented simplicial object to an augmented cosimplicial
 object and back is isomorphic to the given object. -/
 @[simps]
-def simplicial_object.augmented.right_op_left_op_iso (X : SimplicialObject.Augmented C) : X.rightOp.leftOp ≅ X :=
+def SimplicialObject.Augmented.rightOpLeftOpIso (X : SimplicialObject.Augmented C) : X.rightOp.leftOp ≅ X :=
   Comma.isoMk X.left.rightOpLeftOpIso
     (eq_to_iso <| by
       simp )
@@ -505,8 +510,7 @@ def simplicial_object.augmented.right_op_left_op_iso (X : SimplicialObject.Augme
 /-- Converting an augmented cosimplicial object to an augmented simplicial
 object and back is isomorphic to the given object. -/
 @[simps]
-def cosimplicial_object.augmented.left_op_right_op_iso (X : CosimplicialObject.Augmented (Cᵒᵖ)) :
-    X.leftOp.rightOp ≅ X :=
+def CosimplicialObject.Augmented.leftOpRightOpIso (X : CosimplicialObject.Augmented (Cᵒᵖ)) : X.leftOp.rightOp ≅ X :=
   Comma.isoMk
     (eq_to_iso <| by
       simp )
@@ -518,7 +522,7 @@ variable (C)
 
 /-- A functorial version of `simplicial_object.augmented.right_op`. -/
 @[simps]
-def simplicial_to_cosimplicial_augmented : SimplicialObject.Augmented Cᵒᵖ ⥤ CosimplicialObject.Augmented (Cᵒᵖ) where
+def simplicialToCosimplicialAugmented : SimplicialObject.Augmented Cᵒᵖ ⥤ CosimplicialObject.Augmented (Cᵒᵖ) where
   obj := fun X => X.unop.rightOp
   map := fun X Y f =>
     { left := f.unop.right.op, right := f.unop.left.rightOp,
@@ -531,7 +535,7 @@ def simplicial_to_cosimplicial_augmented : SimplicialObject.Augmented Cᵒᵖ �
 
 /-- A functorial version of `cosimplicial_object.augmented.left_op`. -/
 @[simps]
-def cosimplicial_to_simplicial_augmented : CosimplicialObject.Augmented (Cᵒᵖ) ⥤ SimplicialObject.Augmented Cᵒᵖ where
+def cosimplicialToSimplicialAugmented : CosimplicialObject.Augmented (Cᵒᵖ) ⥤ SimplicialObject.Augmented Cᵒᵖ where
   obj := fun X => Opposite.op X.leftOp
   map := fun X Y f =>
     Quiver.Hom.op <|
@@ -546,7 +550,7 @@ def cosimplicial_to_simplicial_augmented : CosimplicialObject.Augmented (Cᵒᵖ
 /-- The contravariant categorical equivalence between augmented simplicial
 objects and augmented cosimplicial objects in the opposite category. -/
 @[simps]
-def simplicial_cosimplicial_augmented_equiv : SimplicialObject.Augmented Cᵒᵖ ≌ CosimplicialObject.Augmented (Cᵒᵖ) where
+def simplicialCosimplicialAugmentedEquiv : SimplicialObject.Augmented Cᵒᵖ ≌ CosimplicialObject.Augmented (Cᵒᵖ) where
   Functor := simplicialToCosimplicialAugmented _
   inverse := cosimplicialToSimplicialAugmented _
   unitIso :=

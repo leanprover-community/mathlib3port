@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2017 Johannes Hölzl. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johannes Hölzl, Floris van Doorn, Sébastien Gouëzel
+-/
 import Mathbin.Data.List.Basic
 
 /-!
@@ -312,9 +317,11 @@ theorem length_le_sum_of_one_le (L : List ℕ) (h : ∀, ∀ i ∈ L, ∀, 1 ≤
   exact add_le_add (h _ (Set.mem_insert _ _)) (IH fun i hi => h i (Set.mem_union_right _ hi))
 
 /-- A list with positive sum must have positive length. -/
+-- This is an easy consequence of `length_pos_of_sum_ne_zero`, but often useful in applications.
 theorem length_pos_of_sum_pos [OrderedCancelAddCommMonoid M] (L : List M) (h : 0 < L.Sum) : 0 < L.length :=
   length_pos_of_sum_ne_zero L h.ne'
 
+-- TODO: develop theory of tropical rings
 theorem sum_le_foldr_max [AddMonoidₓ M] [AddMonoidₓ N] [LinearOrderₓ N] (f : M → N) (h0 : f 0 ≤ 0)
     (hadd : ∀ x y, f (x + y) ≤ max (f x) (f y)) (l : List M) : f l.Sum ≤ (l.map f).foldr max 0 := by
   induction' l with hd tl IH

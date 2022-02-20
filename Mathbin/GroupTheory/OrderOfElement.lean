@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Johannes Hölzl. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johannes Hölzl, Julian Kuelshammer
+-/
 import Mathbin.Data.Nat.Modeq
 import Mathbin.Algebra.IterateHom
 import Mathbin.Algebra.Pointwise
@@ -164,14 +169,17 @@ then `x` has order `n` in `G`.
 @[to_additive add_order_of_eq_of_nsmul_and_div_prime_nsmul]
 theorem order_of_eq_of_pow_and_pow_div_prime (hn : 0 < n) (hx : x ^ n = 1)
     (hd : ∀ p : ℕ, p.Prime → p ∣ n → x ^ (n / p) ≠ 1) : orderOf x = n := by
+  -- Let `a` be `n/(order_of x)`, and show `a = 1`
   cases' exists_eq_mul_right_of_dvd (order_of_dvd_of_pow_eq_one hx) with a ha
   suffices a = 1 by
     simp [this, ha]
+  -- Assume `a` is not one...
   by_contra
   have a_min_fac_dvd_p_sub_one : a.min_fac ∣ n := by
     obtain ⟨b, hb⟩ : ∃ b : ℕ, a = b * a.min_fac := exists_eq_mul_left_of_dvd a.min_fac_dvd
     rw [hb, ← mul_assoc] at ha
     exact Dvd.intro_left (orderOf x * b) ha.symm
+  -- Use the minimum prime factor of `a` as `p`.
   refine' hd a.min_fac (Nat.min_fac_prime h) a_min_fac_dvd_p_sub_one _
   rw [← order_of_dvd_iff_pow_eq_one, Nat.dvd_div_iff a_min_fac_dvd_p_sub_one, ha, mul_comm,
     Nat.mul_dvd_mul_iff_left (order_of_pos' _)]
@@ -247,6 +255,7 @@ theorem order_of_eq_prime_pow (hnot : ¬x ^ p ^ n = 1) (hfin : x ^ p ^ (n + 1) =
 
 omit hp
 
+-- An example on how to determine the order of an element of a finite group.
 example : orderOf (-1 : (ℤ)ˣ) = 2 :=
   order_of_eq_prime (Int.units_sq _)
     (by
@@ -322,7 +331,7 @@ theorem zpow_eq_mod_order_of : x ^ i = x ^ (i % orderOf x) :=
       simp [zpow_add, zpow_mul, pow_order_of_eq_one]
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:169:40: warning: unsupported option pp.all
+-- ././Mathport/Syntax/Translate/Basic.lean:211:40: warning: unsupported option pp.all
 set_option pp.all true
 
 @[to_additive nsmul_inj_iff_of_add_order_of_eq_zero]
@@ -392,8 +401,10 @@ end FiniteMonoid
 
 section FiniteCancelMonoid
 
+-- TODO: Of course everything also works for right_cancel_monoids.
 variable [LeftCancelMonoid G] [AddLeftCancelMonoid A]
 
+-- TODO: Use this to show that a finite left cancellative monoid is a group.
 @[to_additive exists_nsmul_eq_zero]
 theorem exists_pow_eq_one (x : G) : IsOfFinOrder x := by
   refine' (is_of_fin_order_iff_pow_eq_one _).mpr _
@@ -440,8 +451,8 @@ noncomputable instance decidablePowers [DecidableEq G] : DecidablePred (· ∈ S
       "The equivalence between `fin (add_order_of a)` and\n`add_submonoid.multiples a`, sending `i` to `i • a`."]
 noncomputable def finEquivPowers (x : G) : Finₓ (orderOf x) ≃ (Submonoid.powers x : Set G) :=
   Equivₓ.ofBijective (fun n => ⟨x ^ ↑n, ⟨n, rfl⟩⟩)
-    ⟨fun ⟨i, hi⟩ ⟨j, hj⟩ ij => Subtype.mk_eq_mk.2 (pow_injective_of_lt_order_of x hi hj (Subtype.mk_eq_mk.1 ij)),
-      fun ⟨_, i, rfl⟩ => ⟨⟨i % orderOf x, mod_ltₓ i (order_of_pos x)⟩, Subtype.eq pow_eq_mod_order_of.symm⟩⟩
+    ⟨fun ij => Subtype.mk_eq_mk.2 (pow_injective_of_lt_order_of x hi hj (Subtype.mk_eq_mk.1 ij)), fun ⟨_, i, rfl⟩ =>
+      ⟨⟨i % orderOf x, mod_ltₓ i (order_of_pos x)⟩, Subtype.eq pow_eq_mod_order_of.symm⟩⟩
 
 @[simp, to_additive fin_equiv_multiples_apply]
 theorem fin_equiv_powers_apply {x : G} {n : Finₓ (orderOf x)} : finEquivPowers x n = ⟨x ^ ↑n, n, rfl⟩ :=
@@ -548,6 +559,7 @@ theorem order_eq_card_zpowers [DecidableEq G] : orderOf x = Fintype.card (Subgro
 
 open QuotientGroup
 
+-- TODO: use cardinal theory, introduce `card : set G → ℕ`, or setup decidability for cosets
 @[to_additive add_order_of_dvd_card_univ]
 theorem order_of_dvd_card_univ : orderOf x ∣ Fintype.card G := by
   classical

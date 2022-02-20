@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2017 Mario Carneiro. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Mario Carneiro
+-/
 import Mathbin.Data.Semiquot
 import Mathbin.Data.Rat.Floor
 
@@ -12,11 +17,12 @@ def Int.shift2 (a b : ℕ) : ℤ → ℕ × ℕ
 
 namespace Fp
 
-inductive rmode
+inductive Rmode
   | NE
   deriving Inhabited
 
-class float_cfg where
+-- round to nearest even
+class FloatCfg where
   (prec emax : ℕ)
   prec_pos : 0 < prec
   prec_max : prec ≤ emax
@@ -34,28 +40,28 @@ def emax :=
 def emin : ℤ :=
   1 - C.emax
 
-def valid_finite (e : ℤ) (m : ℕ) : Prop :=
+def ValidFinite (e : ℤ) (m : ℕ) : Prop :=
   emin ≤ e + prec - 1 ∧ e + prec - 1 ≤ emax ∧ e = max (e + m.size - prec) emin
 
-instance dec_valid_finite e m : Decidable (ValidFinite e m) := by
+instance decValidFinite e m : Decidable (ValidFinite e m) := by
   unfold valid_finite <;> infer_instance
 
-inductive float
+inductive Float
   | inf : Bool → float
   | nan : float
   | finite : Bool → ∀ e m, ValidFinite e m → float
 
-def float.is_finite : Float → Bool
+def Float.isFinite : Float → Bool
   | float.finite s e m f => true
   | _ => false
 
-def to_rat : ∀ f : Float, f.isFinite → ℚ
+def toRat : ∀ f : Float, f.isFinite → ℚ
   | float.finite s e m f, _ =>
     let (n, d) := Int.shift2 m 1 e
     let r := Rat.mkNat n d
     if s then -r else r
 
-theorem float.zero.valid : ValidFinite emin 0 :=
+theorem Float.Zero.valid : ValidFinite emin 0 :=
   ⟨by
     rw [add_sub_assoc]
     apply le_add_of_nonneg_right
@@ -75,35 +81,36 @@ theorem float.zero.valid : ValidFinite emin 0 :=
     by
     rw [max_eq_rightₓ] <;> simp [sub_eq_add_neg]⟩
 
-def float.zero (s : Bool) : Float :=
+def Float.zero (s : Bool) : Float :=
   Float.finite s emin 0 Float.Zero.valid
 
 instance : Inhabited Float :=
   ⟨Float.zero true⟩
 
-protected def float.sign' : Float → Semiquot Bool
+protected def Float.sign' : Float → Semiquot Bool
   | float.inf s => pure s
   | float.nan => ⊤
   | float.finite s e m f => pure s
 
-protected def float.sign : Float → Bool
+protected def Float.sign : Float → Bool
   | float.inf s => s
   | float.nan => false
   | float.finite s e m f => s
 
-protected def float.is_zero : Float → Bool
+protected def Float.isZero : Float → Bool
   | float.finite s e 0 f => true
   | _ => false
 
-protected def float.neg : Float → Float
+protected def Float.neg : Float → Float
   | float.inf s => Float.inf (bnot s)
   | float.nan => Float.nan
   | float.finite s e m f => Float.finite (bnot s) e m f
 
-def div_nat_lt_two_pow (n d : ℕ) : ℤ → Bool
+def divNatLtTwoPowₓ (n d : ℕ) : ℤ → Bool
   | Int.ofNat e => n < d.shiftl e
   | -[1+ e] => n.shiftl e.succ < d
 
+-- TODO(Mario): Prove these and drop 'meta'
 unsafe def of_pos_rat_dn (n : ℕ+) (d : ℕ+) : float × Bool := by
   let e₁ : ℤ := n.1.size - d.1.size - prec
   cases' h₁ : Int.shift2 d.1 n.1 (e₁ + prec) with d₁ n₁

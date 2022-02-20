@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Kyle Miller All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Kyle Miller
+-/
 import Mathbin.Data.Sym.Basic
 import Mathbin.Tactic.Linarith.Default
 
@@ -47,28 +52,28 @@ namespace Sym2
 
 /-- This is the relation capturing the notion of pairs equivalent up to permutations.
 -/
-inductive rel (α : Type u) : α × α → α × α → Prop
+inductive Rel (α : Type u) : α × α → α × α → Prop
   | refl (x y : α) : rel (x, y) (x, y)
   | swap (x y : α) : rel (x, y) (y, x)
 
 attribute [refl] rel.refl
 
 @[symm]
-theorem rel.symm {x y : α × α} : Rel α x y → Rel α y x := by
+theorem Rel.symm {x y : α × α} : Rel α x y → Rel α y x := by
   rintro ⟨_, _⟩ <;> constructor
 
 @[trans]
-theorem rel.trans {x y z : α × α} : Rel α x y → Rel α y z → Rel α x z := by
+theorem Rel.trans {x y z : α × α} : Rel α x y → Rel α y z → Rel α x z := by
   intro a b
   casesm* rel _ _ _ <;>
     first |
       apply rel.refl|
       apply rel.swap
 
-theorem rel.is_equivalence : Equivalenceₓ (Rel α) := by
+theorem Rel.is_equivalence : Equivalenceₓ (Rel α) := by
   tidy <;> apply rel.trans <;> assumption
 
-instance rel.setoid (α : Type u) : Setoidₓ (α × α) :=
+instance Rel.setoid (α : Type u) : Setoidₓ (α × α) :=
   ⟨Rel α, Rel.is_equivalence⟩
 
 end Sym2
@@ -190,7 +195,7 @@ section Membership
 symmetric square.  From this point of view, the symmetric square is the subtype of
 cardinality-two multisets on `α`.
 -/
-def mem (x : α) (z : Sym2 α) : Prop :=
+def Mem (x : α) (z : Sym2 α) : Prop :=
   ∃ y : α, z = ⟦(x, y)⟧
 
 instance : HasMem α (Sym2 α) :=
@@ -233,7 +238,7 @@ theorem ball {p : α → Prop} {a b : α} : (∀, ∀ c ∈ ⟦(a, b)⟧, ∀, p
 /-- Given an element of the unordered pair, give the other element using `classical.some`.
 See also `mem.other'` for the computable version.
 -/
-noncomputable def mem.other {a : α} {z : Sym2 α} (h : a ∈ z) : α :=
+noncomputable def Mem.other {a : α} {z : Sym2 α} (h : a ∈ z) : α :=
   Classical.some h
 
 @[simp]
@@ -290,7 +295,7 @@ protected theorem ext (z z' : Sym2 α) (h : ∀ x, x ∈ z ↔ x ∈ z') : z = z
                     subst y' <;>
                   simp only [eq_self_iff_true, and_selfₓ, or_selfₓ, true_orₓ, or_trueₓ]
 
-instance mem.decidable [DecidableEq α] (x : α) (z : Sym2 α) : Decidable (x ∈ z) :=
+instance Mem.decidable [DecidableEq α] (x : α) (z : Sym2 α) : Decidable (x ∈ z) :=
   Quotientₓ.recOnSubsingleton z fun ⟨y₁, y₂⟩ => decidableOfIff' _ mem_iff
 
 end Membership
@@ -306,7 +311,7 @@ theorem diag_injective : Function.Injective (Sym2.diag : α → Sym2 α) := fun 
 
 /-- A predicate for testing whether an element of `sym2 α` is on the diagonal.
 -/
-def is_diag : Sym2 α → Prop :=
+def IsDiag : Sym2 α → Prop :=
   lift ⟨Eq, fun _ _ => propext eq_comm⟩
 
 theorem mk_is_diag_iff {x y : α} : IsDiag (⟦(x, y)⟧) ↔ x = y :=
@@ -320,7 +325,7 @@ theorem is_diag_iff_proj_eq (z : α × α) : IsDiag (⟦z⟧) ↔ z.1 = z.2 :=
 theorem diag_is_diag (a : α) : IsDiag (diag a) :=
   Eq.refl a
 
-theorem is_diag.mem_range_diag {z : Sym2 α} : IsDiag z → z ∈ Set.Range (@diag α) := by
+theorem IsDiag.mem_range_diag {z : Sym2 α} : IsDiag z → z ∈ Set.Range (@diag α) := by
   induction z using Quotientₓ.induction_on
   cases z
   rintro (rfl : z_fst = z_snd)
@@ -329,7 +334,7 @@ theorem is_diag.mem_range_diag {z : Sym2 α} : IsDiag z → z ∈ Set.Range (@di
 theorem is_diag_iff_mem_range_diag (z : Sym2 α) : IsDiag z ↔ z ∈ Set.Range (@diag α) :=
   ⟨IsDiag.mem_range_diag, fun ⟨i, hi⟩ => hi ▸ diag_is_diag i⟩
 
-instance is_diag.decidable_pred (α : Type u) [DecidableEq α] : DecidablePred (@IsDiag α) := by
+instance IsDiag.decidablePred (α : Type u) [DecidableEq α] : DecidablePred (@IsDiag α) := by
   refine' fun z => Quotientₓ.recOnSubsingleton z fun a => _
   erw [is_diag_iff_proj_eq]
   infer_instance
@@ -352,7 +357,7 @@ variable {r : α → α → Prop}
 /-- Symmetric relations define a set on `sym2 α` by taking all those pairs
 of elements that are related.
 -/
-def from_rel (sym : Symmetric r) : Set (Sym2 α) :=
+def FromRel (sym : Symmetric r) : Set (Sym2 α) :=
   SetOf (lift ⟨r, fun x y => propext ⟨fun h => Sym h, fun h => Sym h⟩⟩)
 
 @[simp]
@@ -374,12 +379,12 @@ theorem mem_from_rel_irrefl_other_ne {sym : Symmetric r} (irrefl : Irreflexive r
     (hz : z ∈ FromRel Sym) (h : a ∈ z) : h.other ≠ a :=
   other_ne (from_rel_irreflexive.mp irrefl hz) h
 
-instance from_rel.decidable_pred (sym : Symmetric r) [h : DecidableRel r] : DecidablePred (· ∈ Sym2.FromRel Sym) :=
+instance FromRel.decidablePred (sym : Symmetric r) [h : DecidableRel r] : DecidablePred (· ∈ Sym2.FromRel Sym) :=
   fun z => Quotientₓ.recOnSubsingleton z fun x => h _ _
 
 /-- The inverse to `sym2.from_rel`. Given a set on `sym2 α`, give a symmetric relation on `α`
 (see `sym2.to_rel_symmetric`). -/
-def to_rel (s : Set (Sym2 α)) (x y : α) : Prop :=
+def ToRel (s : Set (Sym2 α)) (x y : α) : Prop :=
   ⟦(x, y)⟧ ∈ s
 
 @[simp]
@@ -418,7 +423,7 @@ private theorem perm_card_two_iff {a₁ b₁ a₂ b₂ : α} : [a₁, b₁].Perm
 
 /-- The symmetric square is equivalent to length-2 vectors up to permutations.
 -/
-def sym2_equiv_sym' : Equivₓ (Sym2 α) (Sym' α 2) where
+def sym2EquivSym' : Equivₓ (Sym2 α) (Sym' α 2) where
   toFun :=
     Quotientₓ.map (fun x : α × α => ⟨[x.1, x.2], rfl⟩)
       (by
@@ -481,14 +486,14 @@ def sym2_equiv_sym' : Equivₓ (Sym2 α) (Sym' α 2) where
 
 /-- The symmetric square is equivalent to the second symmetric power.
 -/
-def equiv_sym (α : Type _) : Sym2 α ≃ Sym α 2 :=
+def equivSym (α : Type _) : Sym2 α ≃ Sym α 2 :=
   Equivₓ.trans sym2EquivSym' symEquivSym'.symm
 
 /-- The symmetric square is equivalent to multisets of cardinality
 two. (This is currently a synonym for `equiv_sym`, but it's provided
 in case the definition for `sym` changes.)
 -/
-def equiv_multiset (α : Type _) : Sym2 α ≃ { s : Multiset α // s.card = 2 } :=
+def equivMultiset (α : Type _) : Sym2 α ≃ { s : Multiset α // s.card = 2 } :=
   equivSym α
 
 end SymEquiv
@@ -497,7 +502,7 @@ section Decidable
 
 /-- An algorithm for computing `sym2.rel`.
 -/
-def rel_bool [DecidableEq α] (x y : α × α) : Bool :=
+def relBool [DecidableEq α] (x y : α × α) : Bool :=
   if x.1 = y.1 then x.2 = y.2 else if x.1 = y.2 then x.2 = y.1 else false
 
 theorem rel_bool_spec [DecidableEq α] (x y : α × α) : ↥relBool x y ↔ Rel α x y := by
@@ -533,7 +538,7 @@ private def pair_other [DecidableEq α] (a : α) (z : α × α) : α :=
 /-- Get the other element of the unordered pair using the decidable equality.
 This is the computable version of `mem.other`.
 -/
-def mem.other' [DecidableEq α] {a : α} {z : Sym2 α} (h : a ∈ z) : α :=
+def Mem.other' [DecidableEq α] {a : α} {z : Sym2 α} (h : a ∈ z) : α :=
   Quot.recₓ (fun x h' => pairOther a x)
     (by
       clear h z

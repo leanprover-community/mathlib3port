@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Sébastien Gouëzel. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Sébastien Gouëzel
+-/
 import Mathbin.Topology.MetricSpace.Isometry
 
 /-!
@@ -61,7 +66,7 @@ variable [MetricSpace X] [MetricSpace Y] {Φ : Z → X} {Ψ : Z → Y} {ε : ℝ
 open _root_.sum (inl inr)
 
 /-- Define a predistance on `X ⊕ Y`, for which `Φ p` and `Ψ p` are at distance `ε` -/
-def glue_dist (Φ : Z → X) (Ψ : Z → Y) (ε : ℝ) : Sum X Y → Sum X Y → ℝ
+def glueDist (Φ : Z → X) (Ψ : Z → Y) (ε : ℝ) : Sum X Y → Sum X Y → ℝ
   | inl x, inl y => dist x y
   | inr x, inr y => dist x y
   | inl x, inr y => (⨅ p, dist x (Φ p) + dist y (Ψ p)) + ε
@@ -240,7 +245,7 @@ private theorem glue_eq_of_dist_eq_zero (Φ : Z → X) (Ψ : Z → Y) (ε : ℝ)
 `Φ p` and `Φ q`, and between `Ψ p` and `Ψ q`, coincide up to `2 ε` where `ε > 0`, one can almost
 glue the two spaces `X` and `Y` along the images of `Φ` and `Ψ`, so that `Φ p` and `Ψ p` are
 at distance `ε`. -/
-def glue_metric_approx (Φ : Z → X) (Ψ : Z → Y) (ε : ℝ) (ε0 : 0 < ε)
+def glueMetricApprox (Φ : Z → X) (Ψ : Z → Y) (ε : ℝ) (ε0 : 0 < ε)
     (H : ∀ p q, abs (dist (Φ p) (Φ q) - dist (Ψ p) (Ψ q)) ≤ 2 * ε) : MetricSpace (Sum X Y) where
   dist := glueDist Φ Ψ ε
   dist_self := glue_dist_self Φ Ψ ε
@@ -252,6 +257,10 @@ end ApproxGluing
 
 section Sum
 
+/- A particular case of the previous construction is when one uses basepoints in `X` and `Y` and one
+glues only along the basepoints, putting them at distance 1. We give a direct definition of
+the distance, without infi, as it is easier to use in applications, and show that it is equal to
+the gluing distance defined above to take advantage of the lemmas we have already proved. -/
 variable {X : Type u} {Y : Type v} {Z : Type w}
 
 variable [MetricSpace X] [MetricSpace Y]
@@ -268,13 +277,13 @@ We embed isometrically each factor, set the basepoints at distance 1,
 arbitrarily, and say that the distance from `a` to `b` is the sum of the distances of `a` and `b` to
 their respective basepoints, plus the distance 1 between the basepoints.
 Since there is an arbitrary choice in this construction, it is not an instance by default. -/
-def sum.dist : Sum X Y → Sum X Y → ℝ
+def Sum.dist : Sum X Y → Sum X Y → ℝ
   | inl a, inl a' => dist a a'
   | inr b, inr b' => dist b b'
   | inl a, inr b => dist a (Nonempty.some ⟨a⟩) + 1 + dist (Nonempty.some ⟨b⟩) b
   | inr b, inl a => dist b (Nonempty.some ⟨b⟩) + 1 + dist (Nonempty.some ⟨a⟩) a
 
-theorem sum.dist_eq_glue_dist {p q : Sum X Y} (x : X) (y : Y) :
+theorem Sum.dist_eq_glue_dist {p q : Sum X Y} (x : X) (y : Y) :
     Sum.dist p q = glueDist (fun _ : Unit => Nonempty.some ⟨x⟩) (fun _ : Unit => Nonempty.some ⟨y⟩) 1 p q := by
   cases p <;>
     cases q <;>
@@ -285,10 +294,10 @@ theorem sum.dist_eq_glue_dist {p q : Sum X Y} (x : X) (y : Y) :
 private theorem sum.dist_comm (x y : Sum X Y) : Sum.dist x y = Sum.dist y x := by
   cases x <;> cases y <;> simp only [sum.dist, dist_comm, add_commₓ, add_left_commₓ]
 
-theorem sum.one_dist_le {x : X} {y : Y} : 1 ≤ Sum.dist (inl x) (inr y) :=
+theorem Sum.one_dist_le {x : X} {y : Y} : 1 ≤ Sum.dist (inl x) (inr y) :=
   le_transₓ (le_add_of_nonneg_right dist_nonneg) <| add_le_add_right (le_add_of_nonneg_left dist_nonneg) _
 
-theorem sum.one_dist_le' {x : X} {y : Y} : 1 ≤ Sum.dist (inr y) (inl x) := by
+theorem Sum.one_dist_le' {x : X} {y : Y} : 1 ≤ Sum.dist (inr y) (inl x) := by
   rw [sum.dist_comm] <;> exact sum.one_dist_le
 
 private theorem sum.mem_uniformity (s : Set (Sum X Y × Sum X Y)) :
@@ -315,7 +324,7 @@ private theorem sum.mem_uniformity (s : Set (Sum X Y × Sum X Y)) :
 /-- The distance on the disjoint union indeed defines a metric space. All the distance properties
 follow from our choice of the distance. The harder work is to show that the uniform structure
 defined by the distance coincides with the disjoint union uniform structure. -/
-def metric_space_sum : MetricSpace (Sum X Y) where
+def metricSpaceSum : MetricSpace (Sum X Y) where
   dist := Sum.dist
   dist_self := fun x => by
     cases x <;> simp only [sum.dist, dist_self]
@@ -387,7 +396,7 @@ def metric_space_sum : MetricSpace (Sum X Y) where
 
 attribute [local instance] metric_space_sum
 
-theorem sum.dist_eq {x y : Sum X Y} : dist x y = Sum.dist x y :=
+theorem Sum.dist_eq {x y : Sum X Y} : dist x y = Sum.dist x y :=
   rfl
 
 /-- The left injection of a space in a disjoint union is an isometry -/
@@ -402,6 +411,8 @@ end Sum
 
 namespace Sigma
 
+/- Copy of the previous paragraph, but for arbitrary disjoint unions instead of the disjoint union
+of two spaces. I.e., work with sigma types instead of sum types. -/
 variable {ι : Type _} {E : ι → Type _} [∀ i, MetricSpace (E i)]
 
 open_locale Classical
@@ -427,7 +438,7 @@ We embed isometrically each factor, set the basepoints at distance 1, arbitraril
 and say that the distance from `a` to `b` is the sum of the distances of `a` and `b` to
 their respective basepoints, plus the distance 1 between the basepoints.
 Since there is an arbitrary choice in this construction, it is not an instance by default. -/
-def HasDist : HasDist (Σ i, E i) :=
+def hasDist : HasDist (Σ i, E i) :=
   ⟨Sigma.dist⟩
 
 attribute [local instance] sigma.has_dist
@@ -524,7 +535,7 @@ We embed isometrically each factor, set the basepoints at distance 1, arbitraril
 and say that the distance from `a` to `b` is the sum of the distances of `a` and `b` to
 their respective basepoints, plus the distance 1 between the basepoints.
 Since there is an arbitrary choice in this construction, it is not an instance by default. -/
-protected def MetricSpace : MetricSpace (Σ i, E i) := by
+protected def metricSpace : MetricSpace (Σ i, E i) := by
   refine' MetricSpace.ofMetrizable sigma.dist _ _ sigma.dist_triangle sigma.is_open_iff _
   · rintro ⟨i, x⟩
     simp [sigma.dist]
@@ -562,7 +573,7 @@ theorem isometry_mk (i : ι) : Isometry (Sigma.mk i : E i → Σ k, E k) :=
       simp )
 
 /-- A disjoint union of complete metric spaces is complete. -/
-protected theorem CompleteSpace [∀ i, CompleteSpace (E i)] : CompleteSpace (Σ i, E i) := by
+protected theorem complete_space [∀ i, CompleteSpace (E i)] : CompleteSpace (Σ i, E i) := by
   set s : ι → Set (Σ i, E i) := fun i => Sigma.fst ⁻¹' {i}
   set U := { p : (Σ k, E k) × Σ k, E k | dist p.1 p.2 < 1 }
   have hc : ∀ i, IsComplete (s i) := by
@@ -579,6 +590,7 @@ end Sigma
 
 section Gluing
 
+-- Exact gluing of two metric spaces along isometric subsets.
 variable {X : Type u} {Y : Type v} {Z : Type w}
 
 variable [Nonempty Z] [MetricSpace Z] [MetricSpace X] [MetricSpace Y] {Φ : Z → X} {Ψ : Z → Y} {ε : ℝ}
@@ -589,7 +601,7 @@ attribute [local instance] PseudoMetric.distSetoid
 
 /-- Given two isometric embeddings `Φ : Z → X` and `Ψ : Z → Y`, we define a pseudo metric space
 structure on `X ⊕ Y` by declaring that `Φ x` and `Ψ x` are at distance `0`. -/
-def glue_premetric (hΦ : Isometry Φ) (hΨ : Isometry Ψ) : PseudoMetricSpace (Sum X Y) where
+def gluePremetric (hΦ : Isometry Φ) (hΨ : Isometry Ψ) : PseudoMetricSpace (Sum X Y) where
   dist := glueDist Φ Ψ 0
   dist_self := glue_dist_self Φ Ψ 0
   dist_comm := glue_dist_comm Φ Ψ 0
@@ -599,24 +611,24 @@ def glue_premetric (hΦ : Isometry Φ) (hΨ : Isometry Ψ) : PseudoMetricSpace (
 
 /-- Given two isometric embeddings `Φ : Z → X` and `Ψ : Z → Y`, we define a
 space  `glue_space hΦ hΨ` by identifying in `X ⊕ Y` the points `Φ x` and `Ψ x`. -/
-def glue_space (hΦ : Isometry Φ) (hΨ : Isometry Ψ) : Type _ :=
+def GlueSpace (hΦ : Isometry Φ) (hΨ : Isometry Ψ) : Type _ :=
   @PseudoMetricQuot _ (gluePremetric hΦ hΨ)
 
-instance metric_space_glue_space (hΦ : Isometry Φ) (hΨ : Isometry Ψ) : MetricSpace (GlueSpace hΦ hΨ) :=
+instance metricSpaceGlueSpace (hΦ : Isometry Φ) (hΨ : Isometry Ψ) : MetricSpace (GlueSpace hΦ hΨ) :=
   @metricSpaceQuot _ (gluePremetric hΦ hΨ)
 
 /-- The canonical map from `X` to the space obtained by gluing isometric subsets in `X` and `Y`. -/
-def to_glue_l (hΦ : Isometry Φ) (hΨ : Isometry Ψ) (x : X) : GlueSpace hΦ hΨ := by
+def toGlueL (hΦ : Isometry Φ) (hΨ : Isometry Ψ) (x : X) : GlueSpace hΦ hΨ := by
   let this' : PseudoMetricSpace (Sum X Y) := glue_premetric hΦ hΨ <;> exact ⟦inl x⟧
 
 /-- The canonical map from `Y` to the space obtained by gluing isometric subsets in `X` and `Y`. -/
-def to_glue_r (hΦ : Isometry Φ) (hΨ : Isometry Ψ) (y : Y) : GlueSpace hΦ hΨ := by
+def toGlueR (hΦ : Isometry Φ) (hΨ : Isometry Ψ) (y : Y) : GlueSpace hΦ hΨ := by
   let this' : PseudoMetricSpace (Sum X Y) := glue_premetric hΦ hΨ <;> exact ⟦inr y⟧
 
-instance inhabited_left (hΦ : Isometry Φ) (hΨ : Isometry Ψ) [Inhabited X] : Inhabited (GlueSpace hΦ hΨ) :=
+instance inhabitedLeft (hΦ : Isometry Φ) (hΨ : Isometry Ψ) [Inhabited X] : Inhabited (GlueSpace hΦ hΨ) :=
   ⟨toGlueL _ _ default⟩
 
-instance inhabited_right (hΦ : Isometry Φ) (hΨ : Isometry Ψ) [Inhabited Y] : Inhabited (GlueSpace hΦ hΨ) :=
+instance inhabitedRight (hΦ : Isometry Φ) (hΨ : Isometry Ψ) [Inhabited Y] : Inhabited (GlueSpace hΦ hΨ) :=
   ⟨toGlueR _ _ default⟩
 
 theorem to_glue_commute (hΦ : Isometry Φ) (hΨ : Isometry Ψ) : toGlueL hΦ hΨ ∘ Φ = toGlueR hΦ hΨ ∘ Ψ := by
@@ -633,14 +645,23 @@ theorem to_glue_r_isometry (hΦ : Isometry Φ) (hΨ : Isometry Ψ) : Isometry (t
 
 end Gluing
 
+--section
 section InductiveLimit
 
+/- In this section, we define the inductive limit of
+     f 0        f 1        f 2        f 3
+X 0 -----> X 1 -----> X 2 -----> X 3 -----> ...
+where the X n are metric spaces and f n isometric embeddings. We do it by defining a premetric
+space structure on Σ n, X n, where the predistance dist x y is obtained by pushing x and y in a
+common X k using composition by the f n, and taking the distance there. This does not depend on
+the choice of k as the f n are isometries. The metric space associated to this premetric space
+is the desired inductive limit.-/
 open Nat
 
 variable {X : ℕ → Type u} [∀ n, MetricSpace (X n)] {f : ∀ n, X n → X (n + 1)}
 
 /-- Predistance on the disjoint union `Σ n, X n`. -/
-def inductive_limit_dist (f : ∀ n, X n → X (n + 1)) (x y : Σ n, X n) : ℝ :=
+def inductiveLimitDist (f : ∀ n, X n → X (n + 1)) (x y : Σ n, X n) : ℝ :=
   dist (leRecOn (le_max_leftₓ x.1 y.1) f x.2 : X (max x.1 y.1))
     (leRecOn (le_max_rightₓ x.1 y.1) f y.2 : X (max x.1 y.1))
 
@@ -674,7 +695,7 @@ theorem inductive_limit_dist_eq_dist (I : ∀ n, Isometry (f n)) (x y : Σ n, X 
     
 
 /-- Premetric space structure on `Σ n, X n`.-/
-def inductive_premetric (I : ∀ n, Isometry (f n)) : PseudoMetricSpace (Σ n, X n) where
+def inductivePremetric (I : ∀ n, Isometry (f n)) : PseudoMetricSpace (Σ n, X n) where
   dist := inductiveLimitDist f
   dist_self := fun x => by
     simp [dist, inductive_limit_dist]
@@ -700,15 +721,15 @@ def inductive_premetric (I : ∀ n, Isometry (f n)) : PseudoMetricSpace (Σ n, X
 attribute [local instance] inductive_premetric PseudoMetric.distSetoid
 
 /-- The type giving the inductive limit in a metric space context. -/
-def inductive_limit (I : ∀ n, Isometry (f n)) : Type _ :=
+def InductiveLimit (I : ∀ n, Isometry (f n)) : Type _ :=
   @PseudoMetricQuot _ (inductivePremetric I)
 
 /-- Metric space structure on the inductive limit. -/
-instance metric_space_inductive_limit (I : ∀ n, Isometry (f n)) : MetricSpace (InductiveLimit I) :=
+instance metricSpaceInductiveLimit (I : ∀ n, Isometry (f n)) : MetricSpace (InductiveLimit I) :=
   @metricSpaceQuot _ (inductivePremetric I)
 
 /-- Mapping each `X n` to the inductive limit. -/
-def to_inductive_limit (I : ∀ n, Isometry (f n)) (n : ℕ) (x : X n) : Metric.InductiveLimit I := by
+def toInductiveLimit (I : ∀ n, Isometry (f n)) (n : ℕ) (x : X n) : Metric.InductiveLimit I := by
   let this' : PseudoMetricSpace (Σ n, X n) := inductive_premetric I <;> exact ⟦Sigma.mk n x⟧
 
 instance (I : ∀ n, Isometry (f n)) [Inhabited (X 0)] : Inhabited (InductiveLimit I) :=
@@ -735,5 +756,7 @@ theorem to_inductive_limit_commute (I : ∀ n, Isometry (f n)) (n : ℕ) :
 
 end InductiveLimit
 
+--section
 end Metric
 
+--namespace

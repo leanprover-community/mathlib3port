@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2022 Bhavik Mehta. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Bhavik Mehta
+-/
 import Mathbin.Algebra.Associated
 import Mathbin.Data.Nat.Factorization
 import Mathbin.NumberTheory.Divisors
@@ -72,6 +77,9 @@ section Nat
 theorem is_prime_pow_nat_iff (n : ℕ) : IsPrimePow n ↔ ∃ p k : ℕ, Nat.Prime p ∧ 0 < k ∧ p ^ k = n := by
   simp only [is_prime_pow_def, Nat.prime_iff]
 
+theorem Nat.Prime.is_prime_pow {p : ℕ} (hp : p.Prime) : IsPrimePow p :=
+  (Nat.prime_iff.mp hp).IsPrimePow
+
 theorem is_prime_pow_nat_iff_bounded (n : ℕ) :
     IsPrimePow n ↔ ∃ p : ℕ, p ≤ n ∧ ∃ k : ℕ, k ≤ n ∧ p.Prime ∧ 0 < k ∧ p ^ k = n := by
   rw [is_prime_pow_nat_iff]
@@ -123,6 +131,7 @@ theorem is_prime_pow_iff_unique_prime_dvd {n : ℕ} : IsPrimePow n ↔ ∃! p : 
     exact (Nat.prime_dvd_prime_iff_eq hq hp).1 (hq.dvd_of_dvd_pow hq')
     
   rintro ⟨p, ⟨hp, hn⟩, hq⟩
+  -- Take care of the n = 0 case
   rcases eq_or_ne n 0 with (rfl | hn₀)
   · obtain ⟨q, hq', hq''⟩ := Nat.exists_infinite_primes (p + 1)
     cases
@@ -131,9 +140,11 @@ theorem is_prime_pow_iff_unique_prime_dvd {n : ℕ} : IsPrimePow n ↔ ∃! p : 
           simp ⟩
     simpa using hq'
     
+  -- So assume 0 < n
   refine' ⟨p, n.factorization p, hp, hp.factorization_pos_of_dvd hn₀ hn, _⟩
   simp only [and_imp] at hq
   apply Nat.dvd_antisymm (Nat.pow_factorization_dvd _ _)
+  -- We need to show n ∣ p ^ n.factorization p
   apply Nat.dvd_of_factors_subperm hn₀
   rw [hp.factors_pow, List.subperm_ext_iff]
   intro q hq'

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2022 Yuma Mizuno. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yuma Mizuno
+-/
 import Mathbin.CategoryTheory.Bicategory.NaturalTransformation
 
 /-!
@@ -26,7 +31,7 @@ namespace OplaxNatTrans
 
 /-- Left whiskering of an oplax natural transformation and a modification. -/
 @[simps]
-def whisker_left (η : F ⟶ G) {θ ι : G ⟶ H} (Γ : θ ⟶ ι) : η ≫ θ ⟶ η ≫ ι where
+def whiskerLeft (η : F ⟶ G) {θ ι : G ⟶ H} (Γ : θ ⟶ ι) : η ≫ θ ⟶ η ≫ ι where
   app := fun a => η.app a ◁ Γ.app a
   naturality' := fun a b f => by
     dsimp
@@ -36,7 +41,7 @@ def whisker_left (η : F ⟶ G) {θ ι : G ⟶ H} (Γ : θ ⟶ ι) : η ≫ θ �
 
 /-- Right whiskering of an oplax natural transformation and a modification. -/
 @[simps]
-def whisker_right {η θ : F ⟶ G} (Γ : η ⟶ θ) (ι : G ⟶ H) : η ≫ ι ⟶ θ ≫ ι where
+def whiskerRight {η θ : F ⟶ G} (Γ : η ⟶ θ) (ι : G ⟶ H) : η ≫ ι ⟶ θ ≫ ι where
   app := fun a => Γ.app a ▷ ι.app a
   naturality' := fun a b f => by
     dsimp
@@ -58,7 +63,7 @@ def associator (η : F ⟶ G) (θ : G ⟶ H) (ι : H ⟶ I) : (η ≫ θ) ≫ ι
 
 /-- Left unitor for the vertical composition of oplax natural transformations. -/
 @[simps]
-def left_unitor (η : F ⟶ G) : 𝟙 F ≫ η ≅ η :=
+def leftUnitor (η : F ⟶ G) : 𝟙 F ≫ η ≅ η :=
   ModificationIso.ofComponents (fun a => λ_ (η.app a))
     (by
       intro a b f
@@ -69,7 +74,7 @@ def left_unitor (η : F ⟶ G) : 𝟙 F ≫ η ≅ η :=
 
 /-- Right unitor for the vertical composition of oplax natural transformations. -/
 @[simps]
-def right_unitor (η : F ⟶ G) : η ≫ 𝟙 G ≅ η :=
+def rightUnitor (η : F ⟶ G) : η ≫ 𝟙 G ≅ η :=
   ModificationIso.ofComponents (fun a => ρ_ (η.app a))
     (by
       intro a b f
@@ -84,7 +89,7 @@ variable (B C)
 
 /-- A bicategory structure on the oplax functors between bicategories. -/
 @[simps]
-instance oplax_functor.bicategory : Bicategory (OplaxFunctor B C) where
+instance OplaxFunctor.bicategory : Bicategory (OplaxFunctor B C) where
   whiskerLeft := fun F G H η _ _ Γ => OplaxNatTrans.whiskerLeft η Γ
   whiskerRight := fun F G H _ _ Γ η => OplaxNatTrans.whiskerRight Γ η
   associator := fun F G H I => OplaxNatTrans.associator

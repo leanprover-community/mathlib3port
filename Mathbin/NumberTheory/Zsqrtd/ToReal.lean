@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Eric Wieser. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Eric Wieser
+-/
 import Mathbin.Data.Real.Sqrt
 import Mathbin.NumberTheory.Zsqrtd.Basic
 
@@ -15,7 +20,7 @@ namespace Zsqrtd
 
 If the negative root is desired, use `to_real h a.conj`. -/
 @[simps]
-noncomputable def to_real {d : ℤ} (h : 0 ≤ d) : ℤ√d →+* ℝ :=
+noncomputable def toReal {d : ℤ} (h : 0 ≤ d) : ℤ√d →+* ℝ :=
   lift ⟨Real.sqrt d, Real.mul_self_sqrt (Int.cast_nonneg.mpr h)⟩
 
 theorem to_real_injective {d : ℤ} (h0d : 0 ≤ d) (hd : ∀ n : ℤ, d ≠ n * n) : Function.Injective (toReal h0d) :=

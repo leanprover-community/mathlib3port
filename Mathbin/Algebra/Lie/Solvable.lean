@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Oliver Nash. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Oliver Nash
+-/
 import Mathbin.Algebra.Lie.Abelian
 import Mathbin.Algebra.Lie.IdealOperations
 import Mathbin.Order.Hom.Basic
@@ -45,7 +50,7 @@ derived series are also ideals of the enclosing algebra.
 
 See also `lie_ideal.derived_series_eq_derived_series_of_ideal_comap` and
 `lie_ideal.derived_series_eq_derived_series_of_ideal_map` below. -/
-def derived_series_of_ideal (k : ℕ) : LieIdeal R L → LieIdeal R L :=
+def derivedSeriesOfIdeal (k : ℕ) : LieIdeal R L → LieIdeal R L :=
   (fun I => ⁅I,I⁆)^[k]
 
 @[simp]
@@ -58,7 +63,7 @@ theorem derived_series_of_ideal_succ (k : ℕ) :
   Function.iterate_succ_apply' (fun I => ⁅I,I⁆) k I
 
 /-- The derived series of Lie ideals of a Lie algebra. -/
-abbrev derived_series (k : ℕ) : LieIdeal R L :=
+abbrev derivedSeries (k : ℕ) : LieIdeal R L :=
   derivedSeriesOfIdeal R L k ⊤
 
 theorem derived_series_def (k : ℕ) : derivedSeries R L k = derivedSeriesOfIdeal R L k ⊤ :=
@@ -185,7 +190,7 @@ end LieIdeal
 namespace LieAlgebra
 
 /-- A Lie algebra is solvable if its derived series reaches 0 (in a finite number of steps). -/
-class is_solvable : Prop where
+class IsSolvable : Prop where
   solvable : ∃ k, derivedSeries R L k = ⊥
 
 instance is_solvable_bot : IsSolvable R (↥(⊥ : LieIdeal R L)) :=
@@ -205,14 +210,14 @@ namespace Function
 
 open LieAlgebra
 
-theorem injective.lie_algebra_is_solvable [h₁ : IsSolvable R L] (h₂ : Injective f) : IsSolvable R L' := by
+theorem Injective.lie_algebra_is_solvable [h₁ : IsSolvable R L] (h₂ : Injective f) : IsSolvable R L' := by
   obtain ⟨k, hk⟩ := id h₁
   use k
   apply LieIdeal.bot_of_map_eq_bot h₂
   rw [eq_bot_iff, ← hk]
   apply LieIdeal.derived_series_map_le
 
-theorem surjective.lie_algebra_is_solvable [h₁ : IsSolvable R L'] (h₂ : Surjective f) : IsSolvable R L := by
+theorem Surjective.lie_algebra_is_solvable [h₁ : IsSolvable R L'] (h₂ : Surjective f) : IsSolvable R L := by
   obtain ⟨k, hk⟩ := id h₁
   use k
   rw [← LieIdeal.derived_series_map_eq k h₂, hk]
@@ -258,7 +263,7 @@ instance radical_is_solvable [IsNoetherian R L] : IsSolvable R (radical R L) := 
     
 
 /-- The `→` direction of this lemma is actually true without the `is_noetherian` assumption. -/
-theorem lie_ideal.solvable_iff_le_radical [IsNoetherian R L] (I : LieIdeal R L) : IsSolvable R I ↔ I ≤ radical R L :=
+theorem LieIdeal.solvable_iff_le_radical [IsNoetherian R L] (I : LieIdeal R L) : IsSolvable R I ↔ I ≤ radical R L :=
   ⟨fun h => le_Sup h, fun h => le_solvable_ideal_solvable h inferInstance⟩
 
 theorem center_le_radical : center R L ≤ radical R L :=
@@ -270,13 +275,13 @@ theorem center_le_radical : center R L ≤ radical R L :=
 natural number `k` (the number of inclusions).
 
 For a non-solvable ideal, the value is 0. -/
-noncomputable def derived_length_of_ideal (I : LieIdeal R L) : ℕ :=
+noncomputable def derivedLengthOfIdeal (I : LieIdeal R L) : ℕ :=
   inf { k | derivedSeriesOfIdeal R L k I = ⊥ }
 
 /-- The derived length of a Lie algebra is the derived length of its 'top' Lie ideal.
 
 See also `lie_algebra.derived_length_eq_derived_length_of_ideal`. -/
-noncomputable abbrev derived_length : ℕ :=
+noncomputable abbrev derivedLength : ℕ :=
   derivedLengthOfIdeal R L ⊤
 
 theorem derived_series_of_derived_length_succ (I : LieIdeal R L) (k : ℕ) :
@@ -310,7 +315,7 @@ variable {R L}
 `k-1`th term in the derived series (and is therefore an Abelian ideal contained in `I`).
 
 For a non-solvable ideal, this is the zero ideal, `⊥`. -/
-noncomputable def derived_abelian_of_ideal (I : LieIdeal R L) : LieIdeal R L :=
+noncomputable def derivedAbelianOfIdeal (I : LieIdeal R L) : LieIdeal R L :=
   match derivedLengthOfIdeal R L I with
   | 0 => ⊥
   | k + 1 => derivedSeriesOfIdeal R L k I

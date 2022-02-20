@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Yury Kudryashov. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yury Kudryashov
+-/
 import Mathbin.CategoryTheory.ConcreteCategory.Bundled
 import Mathbin.CategoryTheory.DiscreteCategory
 import Mathbin.CategoryTheory.Types
@@ -22,6 +27,7 @@ universe v u
 namespace CategoryTheory
 
 /-- Category of categories. -/
+-- intended to be used with explicit universe parameters
 @[nolint check_univs]
 def Cat :=
   Bundled Category.{v, u}
@@ -75,7 +81,7 @@ def objects : Cat.{v, u} ⥤ Type u where
   map := fun C D F => F.obj
 
 /-- Any isomorphism in `Cat` induces an equivalence of the underlying categories. -/
-def equiv_of_iso {C D : Cat} (γ : C ≅ D) : C ≌ D where
+def equivOfIso {C D : Cat} (γ : C ≅ D) : C ≌ D where
   Functor := γ.Hom
   inverse := γ.inv
   unitIso := eq_to_iso <| Eq.symm γ.hom_inv_id
@@ -88,7 +94,7 @@ end Cat
 This ought to be modelled as a 2-functor!
 -/
 @[simps]
-def Type_to_Cat : Type u ⥤ Cat where
+def typeToCat : Type u ⥤ Cat where
   obj := fun X => Cat.of (Discrete X)
   map := fun X Y f => Discrete.functor f
   map_id' := fun X => by

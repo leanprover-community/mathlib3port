@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Alexander Bentkamp. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Alexander Bentkamp, François Dupuis
+-/
 import Mathbin.Analysis.Convex.Basic
 import Mathbin.Order.OrderDual
 import Mathbin.Tactic.FieldSimp
@@ -584,6 +589,8 @@ section Module
 
 variable [Module 𝕜 E] [Module 𝕜 β] [OrderedSmul 𝕜 β] {s : Set E} {f g : E → β}
 
+/- The following lemmas don't require `module 𝕜 E` if you add the hypothesis `x ≠ y`. At the time of
+the writing, we decided the resulting lemmas wouldn't be useful. Feel free to reintroduce them. -/
 theorem StrictConvexOn.lt_left_of_right_lt' (hf : StrictConvexOn 𝕜 s f) {x y : E} (hx : x ∈ s) (hy : y ∈ s) {a b : 𝕜}
     (ha : 0 < a) (hb : 0 < b) (hab : a + b = 1) (hfy : f y < f (a • x + b • y)) : f (a • x + b • y) < f x :=
   not_leₓ.1 fun h =>

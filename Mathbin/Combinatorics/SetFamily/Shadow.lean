@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Bhavik Mehta. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Bhavik Mehta, Alena Gusakov, Yaël Dillies
+-/
 import Mathbin.Data.Finset.Slice
 import Mathbin.Logic.Function.Iterate
 
@@ -72,12 +77,12 @@ theorem erase_mem_shadow (hs : s ∈ 𝒜) (ha : a ∈ s) : erase s a ∈ (∂ )
   mem_shadow_iff.2 ⟨s, hs, a, ha, rfl⟩
 
 /-- The shadow of a family of `r`-sets is a family of `r - 1`-sets. -/
-protected theorem sized.shadow (h𝒜 : (𝒜 : Set (Finset α)).Sized r) : ((∂ ) 𝒜 : Set (Finset α)).Sized (r - 1) := by
+protected theorem Sized.shadow (h𝒜 : (𝒜 : Set (Finset α)).Sized r) : ((∂ ) 𝒜 : Set (Finset α)).Sized (r - 1) := by
   intro A h
   obtain ⟨A, hA, i, hi, rfl⟩ := mem_shadow_iff.1 h
   rw [card_erase_of_mem hi, h𝒜 hA]
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (a «expr ∉ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (a «expr ∉ » s)
 /-- `t` is in the shadow of `𝒜` iff we can add an element to it so that the resulting finset is in
 `𝒜`. -/
 theorem mem_shadow_iff_insert_mem : s ∈ (∂ ) 𝒜 ↔ ∃ (a : _)(_ : a ∉ s), insert a s ∈ 𝒜 := by
@@ -152,7 +157,7 @@ variable [DecidableEq α] [Fintype α] {𝒜 : Finset (Finset α)} {s t : Finset
 /-- The upper shadow of a set family `𝒜` is all sets we can get by adding one element to any set in
 `𝒜`, and the (`k` times) iterated upper shadow (`up_shadow^[k]`) is all sets we can get by adding
 `k` elements from any set in `𝒜`. -/
-def up_shadow (𝒜 : Finset (Finset α)) : Finset (Finset α) :=
+def upShadow (𝒜 : Finset (Finset α)) : Finset (Finset α) :=
   𝒜.sup fun s => sᶜ.Image fun a => insert a s
 
 localized [FinsetFamily] notation:90 "∂⁺ " => Finset.upShadow
@@ -166,7 +171,7 @@ theorem up_shadow_empty : (∂⁺ ) (∅ : Finset (Finset α)) = ∅ :=
 @[mono]
 theorem up_shadow_monotone : Monotone (upShadow : Finset (Finset α) → Finset (Finset α)) := fun 𝒜 ℬ => sup_mono
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (a «expr ∉ » t)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (a «expr ∉ » t)
 /-- `s` is in the upper shadow of `𝒜` iff there is an `t ∈ 𝒜` from which we can remove one element
 to get `s`. -/
 theorem mem_up_shadow_iff : s ∈ (∂⁺ ) 𝒜 ↔ ∃ t ∈ 𝒜, ∃ (a : _)(_ : a ∉ t), insert a t = s := by
@@ -176,7 +181,7 @@ theorem insert_mem_up_shadow (hs : s ∈ 𝒜) (ha : a ∉ s) : insert a s ∈ (
   mem_up_shadow_iff.2 ⟨s, hs, a, ha, rfl⟩
 
 /-- The upper shadow of a family of `r`-sets is a family of `r + 1`-sets. -/
-protected theorem sized.up_shadow (h𝒜 : (𝒜 : Set (Finset α)).Sized r) : ((∂⁺ ) 𝒜 : Set (Finset α)).Sized (r + 1) := by
+protected theorem Sized.up_shadow (h𝒜 : (𝒜 : Set (Finset α)).Sized r) : ((∂⁺ ) 𝒜 : Set (Finset α)).Sized (r + 1) := by
   intro A h
   obtain ⟨A, hA, i, hi, rfl⟩ := mem_up_shadow_iff.1 h
   rw [card_insert_of_not_mem hi, h𝒜 hA]

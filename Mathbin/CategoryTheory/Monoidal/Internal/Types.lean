@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison
+-/
 import Mathbin.Algebra.Category.Mon.Basic
 import Mathbin.CategoryTheory.Monoidal.CommMon_
 import Mathbin.CategoryTheory.Monoidal.Types
@@ -18,7 +23,7 @@ open CategoryTheory
 
 namespace monTypeEquivalenceMon
 
-instance Mon_monoid (A : Mon_ (Type u)) : Monoidₓ A.x where
+instance monMonoid (A : Mon_ (Type u)) : Monoidₓ A.x where
   one := A.one PUnit.unit
   mul := fun x y => A.mul (x, y)
   one_mul := fun x => by
@@ -30,7 +35,7 @@ instance Mon_monoid (A : Mon_ (Type u)) : Monoidₓ A.x where
 
 /-- Converting a monoid object in `Type` to a bundled monoid.
 -/
-def Functor : Mon_ (Type u) ⥤ Mon.{u} where
+def functor : Mon_ (Type u) ⥤ Mon.{u} where
   obj := fun A => ⟨A.x⟩
   map := fun A B f =>
     { toFun := f.Hom, map_one' := congr_funₓ f.OneHom PUnit.unit, map_mul' := fun x y => congr_funₓ f.MulHom (x, y) }
@@ -80,14 +85,14 @@ instance monTypeInhabited : Inhabited (Mon_ (Type u)) :=
 
 namespace commMonTypeEquivalenceCommMon
 
-instance CommMon_comm_monoid (A : CommMon_ (Type u)) : CommMonoidₓ A.x :=
+instance commMonCommMonoid (A : CommMon_ (Type u)) : CommMonoidₓ A.x :=
   { MonTypeEquivalenceMon.monMonoid A.toMon_ with
     mul_comm := fun x y => by
       convert congr_funₓ A.mul_comm (y, x) }
 
 /-- Converting a commutative monoid object in `Type` to a bundled commutative monoid.
 -/
-def Functor : CommMon_ (Type u) ⥤ CommMon.{u} where
+def functor : CommMon_ (Type u) ⥤ CommMon.{u} where
   obj := fun A => ⟨A.x⟩
   map := fun A B f => MonTypeEquivalenceMon.functor.map f
 

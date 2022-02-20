@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Frédéric Dupuis. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Frédéric Dupuis, Heather Macbeth
+-/
 import Mathbin.Analysis.InnerProductSpace.Dual
 import Mathbin.Analysis.InnerProductSpace.PiL2
 
@@ -53,7 +58,7 @@ variable [CompleteSpace E] [CompleteSpace G]
 /-- The adjoint, as a continuous conjugate-linear map.  This is only meant as an auxiliary
 definition for the main definition `adjoint`, where this is bundled as a conjugate-linear isometric
 equivalence. -/
-def adjoint_aux : (E →L[𝕜] F) →L⋆[𝕜] F →L[𝕜] E :=
+def adjointAux : (E →L[𝕜] F) →L⋆[𝕜] F →L[𝕜] E :=
   (ContinuousLinearMap.compSL _ _ _ _ _ ((toDual 𝕜 E).symm : NormedSpace.Dual 𝕜 E →L⋆[𝕜] E)).comp
     (toSesqForm : (E →L[𝕜] F) →L[𝕜] F →L⋆[𝕜] NormedSpace.Dual 𝕜 E)
 

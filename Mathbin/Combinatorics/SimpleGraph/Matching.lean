@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Alena Gusakov. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Alena Gusakov, Arthur Paulino, Kyle Miller
+-/
 import Mathbin.Combinatorics.SimpleGraph.DegreeSum
 import Mathbin.Combinatorics.SimpleGraph.Subgraph
 
@@ -44,35 +49,35 @@ namespace Subgraph
 /-- The subgraph `M` of `G` is a matching if every vertex of `M` is incident to exactly one edge in `M`.
 We say that the vertices in `M.support` are *matched* or *saturated*.
 -/
-def is_matching : Prop :=
+def IsMatching : Prop :=
   ∀ ⦃v⦄, v ∈ M.Verts → ∃! w, M.Adj v w
 
 /-- Given a vertex, returns the unique edge of the matching it is incident to. -/
-noncomputable def is_matching.to_edge {M : Subgraph G} (h : M.IsMatching) (v : M.Verts) : M.EdgeSet :=
+noncomputable def IsMatching.toEdge {M : Subgraph G} (h : M.IsMatching) (v : M.Verts) : M.EdgeSet :=
   ⟨⟦(v, (h v.property).some)⟧, (h v.property).some_spec.1⟩
 
-theorem is_matching.to_edge_eq_of_adj {M : Subgraph G} (h : M.IsMatching) {v w : V} (hv : v ∈ M.Verts)
+theorem IsMatching.to_edge_eq_of_adj {M : Subgraph G} (h : M.IsMatching) {v w : V} (hv : v ∈ M.Verts)
     (hvw : M.Adj v w) : h.toEdge ⟨v, hv⟩ = ⟨⟦(v, w)⟧, hvw⟩ := by
   simp only [is_matching.to_edge, Subtype.mk_eq_mk]
   congr
   exact ((h (M.edge_vert hvw)).some_spec.2 w hvw).symm
 
-theorem is_matching.to_edge.surjective {M : Subgraph G} (h : M.IsMatching) : Function.Surjective h.toEdge := by
+theorem IsMatching.toEdge.surjective {M : Subgraph G} (h : M.IsMatching) : Function.Surjective h.toEdge := by
   rintro ⟨e, he⟩
   refine' Sym2.ind (fun x y he => _) e he
   exact ⟨⟨x, M.edge_vert he⟩, h.to_edge_eq_of_adj _ he⟩
 
-theorem is_matching.to_edge_eq_to_edge_of_adj {M : Subgraph G} {v w : V} (h : M.IsMatching) (hv : v ∈ M.Verts)
+theorem IsMatching.to_edge_eq_to_edge_of_adj {M : Subgraph G} {v w : V} (h : M.IsMatching) (hv : v ∈ M.Verts)
     (hw : w ∈ M.Verts) (ha : M.Adj v w) : h.toEdge ⟨v, hv⟩ = h.toEdge ⟨w, hw⟩ := by
   rw [h.to_edge_eq_of_adj hv ha, h.to_edge_eq_of_adj hw (M.symm ha), Subtype.mk_eq_mk, Sym2.eq_swap]
 
 /-- The subgraph `M` of `G` is a perfect matching on `G` if it's a matching and every vertex `G` is
 matched.
 -/
-def is_perfect_matching : Prop :=
+def IsPerfectMatching : Prop :=
   M.IsMatching ∧ M.IsSpanning
 
-theorem is_matching.support_eq_verts {M : Subgraph G} (h : M.IsMatching) : M.Support = M.Verts := by
+theorem IsMatching.support_eq_verts {M : Subgraph G} (h : M.IsMatching) : M.Support = M.Verts := by
   refine' M.support_subset_verts.antisymm fun v hv => _
   obtain ⟨w, hvw, -⟩ := h hv
   exact ⟨_, hvw⟩
@@ -81,7 +86,7 @@ theorem is_matching_iff_forall_degree {M : Subgraph G} [∀ v : V, Fintype (M.Ne
     M.IsMatching ↔ ∀ v : V, v ∈ M.Verts → M.degree v = 1 := by
   simpa [degree_eq_one_iff_unique_adj]
 
-theorem is_matching.even_card {M : Subgraph G} [Fintype M.Verts] (h : M.IsMatching) : Even M.Verts.toFinset.card := by
+theorem IsMatching.even_card {M : Subgraph G} [Fintype M.Verts] (h : M.IsMatching) : Even M.Verts.toFinset.card := by
   classical
   rw [is_matching_iff_forall_degree] at h
   use M.coe.edge_finset.card
@@ -101,8 +106,7 @@ theorem is_perfect_matching_iff_forall_degree {M : Subgraph G} [∀ v, Fintype (
     M.IsPerfectMatching ↔ ∀ v, M.degree v = 1 := by
   simp [degree_eq_one_iff_unique_adj, is_perfect_matching_iff]
 
-theorem is_perfect_matching.even_card {M : Subgraph G} [Fintype V] (h : M.IsPerfectMatching) : Even (Fintype.card V) :=
-  by
+theorem IsPerfectMatching.even_card {M : Subgraph G} [Fintype V] (h : M.IsPerfectMatching) : Even (Fintype.card V) := by
   classical
   simpa [h.2.card_verts] using is_matching.even_card h.1
 

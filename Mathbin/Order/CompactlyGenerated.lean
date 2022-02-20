@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Oliver Nash. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Oliver Nash
+-/
 import Mathbin.Tactic.Tfae
 import Mathbin.Order.Atoms
 import Mathbin.Order.OrderIsoNat
@@ -48,21 +53,21 @@ namespace CompleteLattice
 
 variable (α)
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (a b «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (a b «expr ∈ » s)
 /-- A compactness property for a complete lattice is that any `sup`-closed non-empty subset
 contains its `Sup`. -/
-def is_sup_closed_compact : Prop :=
+def IsSupClosedCompact : Prop :=
   ∀ s : Set α h : s.Nonempty, (∀ a b _ : a ∈ s _ : b ∈ s, a⊔b ∈ s) → sup s ∈ s
 
 /-- A compactness property for a complete lattice is that any subset has a finite subset with the
 same `Sup`. -/
-def is_Sup_finite_compact : Prop :=
+def IsSupFiniteCompact : Prop :=
   ∀ s : Set α, ∃ t : Finset α, ↑t ⊆ s ∧ sup s = t.sup id
 
 /-- An element `k` of a complete lattice is said to be compact if any set with `Sup`
 above `k` has a finite subset with `Sup` above `k`.  Such an element is also called
 "finite" or "S-compact". -/
-def is_compact_element {α : Type _} [CompleteLattice α] (k : α) :=
+def IsCompactElement {α : Type _} [CompleteLattice α] (k : α) :=
   ∀ s : Set α, k ≤ sup s → ∃ t : Finset α, ↑t ⊆ s ∧ k ≤ t.sup id
 
 /-- An element `k` is compact if and only if any directed set with `Sup` above
@@ -73,12 +78,15 @@ theorem is_compact_element_iff_le_of_directed_Sup_le (k : α) :
   constructor
   · intro hk s hne hdir hsup
     obtain ⟨t, ht⟩ := hk s hsup
+    -- certainly every element of t is below something in s, since ↑t ⊆ s.
     have t_below_s : ∀, ∀ x ∈ t, ∀, ∃ y ∈ s, x ≤ y := fun x hxt => ⟨x, ht.left hxt, le_rfl⟩
     obtain ⟨x, ⟨hxs, hsupx⟩⟩ := Finset.sup_le_of_le_directed s hne hdir t t_below_s
     exact ⟨x, ⟨hxs, le_transₓ ht.right hsupx⟩⟩
     
   · intro hk s hsup
+    -- Consider the set of finite joins of elements of the (plain) set s.
     let S : Set α := { x | ∃ t : Finset α, ↑t ⊆ s ∧ x = t.sup id }
+    -- S is directed, nonempty, and still has sup above k.
     have dir_US : DirectedOn (· ≤ ·) S := by
       rintro x ⟨c, hc⟩ y ⟨d, hd⟩
       use x⊔y
@@ -102,6 +110,7 @@ theorem is_compact_element_iff_le_of_directed_Sup_le (k : α) :
       exact Set.nonempty_of_mem this
       use ∅
       simp only [Set.empty_subset, Finset.coe_empty, Finset.sup_empty, eq_self_iff_true, and_selfₓ]
+    -- Now apply the defn of compact and finish.
     obtain ⟨j, ⟨hjS, hjk⟩⟩ := hk S Sne dir_US (le_transₓ hsup sup_S)
     obtain ⟨t, ⟨htS, htsup⟩⟩ := hjS
     use t
@@ -112,7 +121,7 @@ theorem is_compact_element_iff_le_of_directed_Sup_le (k : α) :
 
 /-- A compact element `k` has the property that any directed set lying strictly below `k` has
 its Sup strictly below `k`. -/
-theorem is_compact_element.directed_Sup_lt_of_lt {α : Type _} [CompleteLattice α] {k : α} (hk : IsCompactElement k)
+theorem IsCompactElement.directed_Sup_lt_of_lt {α : Type _} [CompleteLattice α] {k : α} (hk : IsCompactElement k)
     {s : Set α} (hemp : s.Nonempty) (hdir : DirectedOn (· ≤ ·) s) (hbelow : ∀, ∀ x ∈ s, ∀, x < k) : sup s < k := by
   rw [is_compact_element_iff_le_of_directed_Sup_le] at hk
   by_contra
@@ -137,7 +146,7 @@ theorem finset_sup_compact_of_compact {α β : Type _} [CompleteLattice α] {f :
   specialize h d hemp hdir (le_transₓ (Finset.le_sup hps) hsup)
   simpa only [exists_prop]
 
-theorem well_founded.is_Sup_finite_compact (h : WellFounded (· > · : α → α → Prop)) : IsSupFiniteCompact α := by
+theorem WellFounded.is_Sup_finite_compact (h : WellFounded ((· > ·) : α → α → Prop)) : IsSupFiniteCompact α := by
   intro s
   let p : Set α := { x | ∃ t : Finset α, ↑t ⊆ s ∧ t.sup id = x }
   have hp : p.nonempty := by
@@ -165,7 +174,7 @@ theorem well_founded.is_Sup_finite_compact (h : WellFounded (· > · : α → α
     exact Sup_le_Sup ht₁
     
 
-theorem is_Sup_finite_compact.is_sup_closed_compact (h : IsSupFiniteCompact α) : IsSupClosedCompact α := by
+theorem IsSupFiniteCompact.is_sup_closed_compact (h : IsSupFiniteCompact α) : IsSupClosedCompact α := by
   intro s hne hsc
   obtain ⟨t, ht₁, ht₂⟩ := h s
   clear h
@@ -179,7 +188,7 @@ theorem is_Sup_finite_compact.is_sup_closed_compact (h : IsSupFiniteCompact α) 
     exact t.sup_closed_of_sup_closed h ht₁ hsc
     
 
-theorem is_sup_closed_compact.well_founded (h : IsSupClosedCompact α) : WellFounded (· > · : α → α → Prop) := by
+theorem IsSupClosedCompact.well_founded (h : IsSupClosedCompact α) : WellFounded ((· > ·) : α → α → Prop) := by
   refine' rel_embedding.well_founded_iff_no_descending_seq.mpr ⟨fun a => _⟩
   suffices Sup (Set.Range a) ∈ Set.Range a by
     obtain ⟨n, hn⟩ := set.mem_range.mp this
@@ -221,7 +230,7 @@ theorem is_Sup_finite_compact_iff_all_elements_compact : IsSupFiniteCompact α �
 
 theorem well_founded_characterisations :
     Tfae
-      [WellFounded (· > · : α → α → Prop), IsSupFiniteCompact α, IsSupClosedCompact α, ∀ k : α, IsCompactElement k] :=
+      [WellFounded ((· > ·) : α → α → Prop), IsSupFiniteCompact α, IsSupClosedCompact α, ∀ k : α, IsCompactElement k] :=
   by
   tfae_have 1 → 2
   · exact well_founded.is_Sup_finite_compact α
@@ -237,13 +246,13 @@ theorem well_founded_characterisations :
     
   tfae_finish
 
-theorem well_founded_iff_is_Sup_finite_compact : WellFounded (· > · : α → α → Prop) ↔ IsSupFiniteCompact α :=
+theorem well_founded_iff_is_Sup_finite_compact : WellFounded ((· > ·) : α → α → Prop) ↔ IsSupFiniteCompact α :=
   (well_founded_characterisations α).out 0 1
 
 theorem is_Sup_finite_compact_iff_is_sup_closed_compact : IsSupFiniteCompact α ↔ IsSupClosedCompact α :=
   (well_founded_characterisations α).out 1 2
 
-theorem is_sup_closed_compact_iff_well_founded : IsSupClosedCompact α ↔ WellFounded (· > · : α → α → Prop) :=
+theorem is_sup_closed_compact_iff_well_founded : IsSupClosedCompact α ↔ WellFounded ((· > ·) : α → α → Prop) :=
   (well_founded_characterisations α).out 2 0
 
 alias well_founded_iff_is_Sup_finite_compact ↔ _ IsSupFiniteCompact.well_founded
@@ -349,8 +358,9 @@ end
 
 namespace CompleteLattice
 
-theorem compactly_generated_of_well_founded (h : WellFounded (· > · : α → α → Prop)) : IsCompactlyGenerated α := by
+theorem compactly_generated_of_well_founded (h : WellFounded ((· > ·) : α → α → Prop)) : IsCompactlyGenerated α := by
   rw [well_founded_iff_is_Sup_finite_compact, is_Sup_finite_compact_iff_all_elements_compact] at h
+  -- x is the join of the set of compact elements {x}
   exact ⟨fun x => ⟨{x}, ⟨fun x _ => h x, Sup_singleton⟩⟩⟩
 
 /-- A compact element `k` has the property that any `b < `k lies below a "maximal element below

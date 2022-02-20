@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Yury Kudryashov. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yury Kudryashov
+-/
 import Mathbin.Analysis.NormedSpace.Banach
 import Mathbin.Analysis.NormedSpace.FiniteDimension
 
@@ -40,7 +45,7 @@ variable [CompleteSpace E] [CompleteSpace (F × G)]
 /-- If `f : E →L[R] F` and `g : E →L[R] G` are two surjective linear maps and
 their kernels are complement of each other, then `x ↦ (f x, g x)` defines
 a linear equivalence `E ≃L[R] F × G`. -/
-def equiv_prod_of_surjective_of_is_compl (f : E →L[𝕜] F) (g : E →L[𝕜] G) (hf : f.range = ⊤) (hg : g.range = ⊤)
+def equivProdOfSurjectiveOfIsCompl (f : E →L[𝕜] F) (g : E →L[𝕜] G) (hf : f.range = ⊤) (hg : g.range = ⊤)
     (hfg : IsCompl f.ker g.ker) : E ≃L[𝕜] F × G :=
   ((f : E →ₗ[𝕜] F).equivProdOfSurjectiveOfIsCompl (↑g) hf hg hfg).toContinuousLinearEquivOfContinuous
     (f.Continuous.prod_mk g.Continuous)
@@ -72,7 +77,7 @@ open continuous_linear_map (subtype_val)
 
 /-- If `q` is a closed complement of a closed subspace `p`, then `p × q` is continuously
 isomorphic to `E`. -/
-def prod_equiv_of_closed_compl (h : IsCompl p q) (hp : IsClosed (p : Set E)) (hq : IsClosed (q : Set E)) :
+def prodEquivOfClosedCompl (h : IsCompl p q) (hp : IsClosed (p : Set E)) (hq : IsClosed (q : Set E)) :
     (p × q) ≃L[𝕜] E := by
   have := hp.complete_space_coe
   have := hq.complete_space_coe
@@ -80,7 +85,7 @@ def prod_equiv_of_closed_compl (h : IsCompl p q) (hp : IsClosed (p : Set E)) (hq
   exact ((subtype_val p).coprod (subtype_val q)).Continuous
 
 /-- Projection to a closed submodule along a closed complement. -/
-def linear_proj_of_closed_compl (h : IsCompl p q) (hp : IsClosed (p : Set E)) (hq : IsClosed (q : Set E)) : E →L[𝕜] p :=
+def linearProjOfClosedCompl (h : IsCompl p q) (hp : IsClosed (p : Set E)) (hq : IsClosed (q : Set E)) : E →L[𝕜] p :=
   ContinuousLinearMap.fst 𝕜 p q ∘L ↑(prodEquivOfClosedCompl p q h hp hq).symm
 
 variable {p q}

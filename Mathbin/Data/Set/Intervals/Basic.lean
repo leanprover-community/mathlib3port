@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2017 Johannes Hölzl. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johannes Hölzl, Mario Carneiro, Patrick Massot, Yury Kudryashov, Rémy Degenne
+-/
 import Mathbin.Algebra.Order.Group
 import Mathbin.Order.RelIso
 
@@ -384,16 +389,16 @@ theorem Iio_subset_Iic_self : Iio a ⊆ Iic a := fun x hx => le_of_ltₓ hx
 theorem Ico_subset_Ici_self : Ico a b ⊆ Ici a := fun x => And.left
 
 theorem Icc_subset_Icc_iff (h₁ : a₁ ≤ b₁) : Icc a₁ b₁ ⊆ Icc a₂ b₂ ↔ a₂ ≤ a₁ ∧ b₁ ≤ b₂ :=
-  ⟨fun h => ⟨(h ⟨le_rfl, h₁⟩).1, (h ⟨h₁, le_rfl⟩).2⟩, fun ⟨h, h'⟩ x ⟨hx, hx'⟩ => ⟨h.trans hx, hx'.trans h'⟩⟩
+  ⟨fun h => ⟨(h ⟨le_rfl, h₁⟩).1, (h ⟨h₁, le_rfl⟩).2⟩, fun x ⟨hx, hx'⟩ => ⟨h.trans hx, hx'.trans h'⟩⟩
 
 theorem Icc_subset_Ioo_iff (h₁ : a₁ ≤ b₁) : Icc a₁ b₁ ⊆ Ioo a₂ b₂ ↔ a₂ < a₁ ∧ b₁ < b₂ :=
-  ⟨fun h => ⟨(h ⟨le_rfl, h₁⟩).1, (h ⟨h₁, le_rfl⟩).2⟩, fun ⟨h, h'⟩ x ⟨hx, hx'⟩ => ⟨h.trans_le hx, hx'.trans_lt h'⟩⟩
+  ⟨fun h => ⟨(h ⟨le_rfl, h₁⟩).1, (h ⟨h₁, le_rfl⟩).2⟩, fun x ⟨hx, hx'⟩ => ⟨h.trans_le hx, hx'.trans_lt h'⟩⟩
 
 theorem Icc_subset_Ico_iff (h₁ : a₁ ≤ b₁) : Icc a₁ b₁ ⊆ Ico a₂ b₂ ↔ a₂ ≤ a₁ ∧ b₁ < b₂ :=
-  ⟨fun h => ⟨(h ⟨le_rfl, h₁⟩).1, (h ⟨h₁, le_rfl⟩).2⟩, fun ⟨h, h'⟩ x ⟨hx, hx'⟩ => ⟨h.trans hx, hx'.trans_lt h'⟩⟩
+  ⟨fun h => ⟨(h ⟨le_rfl, h₁⟩).1, (h ⟨h₁, le_rfl⟩).2⟩, fun x ⟨hx, hx'⟩ => ⟨h.trans hx, hx'.trans_lt h'⟩⟩
 
 theorem Icc_subset_Ioc_iff (h₁ : a₁ ≤ b₁) : Icc a₁ b₁ ⊆ Ioc a₂ b₂ ↔ a₂ < a₁ ∧ b₁ ≤ b₂ :=
-  ⟨fun h => ⟨(h ⟨le_rfl, h₁⟩).1, (h ⟨h₁, le_rfl⟩).2⟩, fun ⟨h, h'⟩ x ⟨hx, hx'⟩ => ⟨h.trans_le hx, hx'.trans h'⟩⟩
+  ⟨fun h => ⟨(h ⟨le_rfl, h₁⟩).1, (h ⟨h₁, le_rfl⟩).2⟩, fun x ⟨hx, hx'⟩ => ⟨h.trans_le hx, hx'.trans h'⟩⟩
 
 theorem Icc_subset_Iio_iff (h₁ : a₁ ≤ b₁) : Icc a₁ b₁ ⊆ Iio b₂ ↔ b₁ < b₂ :=
   ⟨fun h => h ⟨h₁, le_rfl⟩, fun h x ⟨hx, hx'⟩ => hx'.trans_lt h⟩
@@ -1589,6 +1594,8 @@ theorem sub_mem_Ioc_iff_right : a - b ∈ Set.Ioc c d ↔ b ∈ Set.Ico (a - d) 
 theorem sub_mem_Ioo_iff_right : a - b ∈ Set.Ioo c d ↔ b ∈ Set.Ioo (a - d) (a - c) :=
   (and_comm _ _).trans <| and_congr sub_lt lt_sub
 
+-- I think that symmetric intervals deserve attention and API: they arise all the time,
+-- for instance when considering metric balls in `ℝ`.
 theorem mem_Icc_iff_abs_le {R : Type _} [LinearOrderedAddCommGroup R] {x y z : R} :
     abs (x - y) ≤ z ↔ y ∈ Icc (x - z) (x + z) :=
   abs_le.trans <| (and_comm _ _).trans <| and_congr sub_le neg_le_sub_iff_le_add
@@ -1695,13 +1702,13 @@ theorem image_Icc (e : α ≃o β) (a b : α) : e '' Icc a b = Icc (e a) (e b) :
 end Preorderₓ
 
 /-- Order isomorphism between `Iic (⊤ : α)` and `α` when `α` has a top element -/
-def Iic_top [Preorderₓ α] [OrderTop α] : Set.Iic (⊤ : α) ≃o α :=
+def iicTop [Preorderₓ α] [OrderTop α] : Set.Iic (⊤ : α) ≃o α :=
   { @Equivₓ.subtypeUnivEquiv α (Set.Iic (⊤ : α)) fun x => le_top with
     map_rel_iff' := fun x y => by
       rfl }
 
 /-- Order isomorphism between `Ici (⊥ : α)` and `α` when `α` has a bottom element -/
-def Ici_bot [Preorderₓ α] [OrderBot α] : Set.Ici (⊥ : α) ≃o α :=
+def iciBot [Preorderₓ α] [OrderBot α] : Set.Ici (⊥ : α) ≃o α :=
   { @Equivₓ.subtypeUnivEquiv α (Set.Ici (⊥ : α)) fun x => bot_le with
     map_rel_iff' := fun x y => by
       rfl }

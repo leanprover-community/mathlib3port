@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Oliver Nash. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Oliver Nash
+-/
 import Mathbin.Algebra.Lie.Submodule
 
 /-!
@@ -45,7 +50,7 @@ section LieIdealOperations
 
 /-- Given a Lie module `M` over a Lie algebra `L`, the set of Lie ideals of `L` acts on the set
 of submodules of `M`. -/
-instance HasBracket : HasBracket (LieIdeal R L) (LieSubmodule R L M) :=
+instance hasBracket : HasBracket (LieIdeal R L) (LieSubmodule R L M) :=
   ⟨fun I N => lieSpan R L { m | ∃ (x : I)(n : N), ⁅(x : L),(n : M)⁆ = m }⟩
 
 theorem lie_ideal_oper_eq_span : ⁅I,N⁆ = lieSpan R L { m | ∃ (x : I)(n : N), ⁅(x : L),(n : M)⁆ = m } :=

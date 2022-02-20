@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2017 Johannes Hölzl. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johannes Hölzl, Johan Commelin, Mario Carneiro
+-/
 import Mathbin.Algebra.BigOperators.Order
 import Mathbin.Data.MvPolynomial.Monad
 
@@ -422,7 +427,7 @@ section DegreeOf
 
 
 /-- `degree_of n p` gives the highest power of X_n that appears in `p` -/
-def degree_of (n : σ) (p : MvPolynomial σ R) : ℕ :=
+def degreeOf (n : σ) (p : MvPolynomial σ R) : ℕ :=
   p.degrees.count n
 
 theorem degree_of_eq_sup (n : σ) (f : MvPolynomial σ R) : degreeOf n f = f.support.sup fun m => m n := by
@@ -461,6 +466,7 @@ theorem monomial_le_degree_of (i : σ) {f : MvPolynomial σ R} {m : σ →₀ �
   rw [degree_of_eq_sup i]
   apply Finset.le_sup h_m
 
+-- TODO we can prove equality here if R is a domain
 theorem degree_of_mul_le (i : σ) (f g : MvPolynomial σ R) : degreeOf i (f * g) ≤ degreeOf i f + degreeOf i g := by
   repeat'
     rw [degree_of]
@@ -478,6 +484,7 @@ theorem degree_of_mul_X_ne {i j : σ} (f : MvPolynomial σ R) (h : i ≠ j) : de
     ite_eq_right_iff, coe_add]
   cc
 
+-- TODO in the following we have equality iff f ≠ 0
 theorem degree_of_mul_X_eq (j : σ) (f : MvPolynomial σ R) : degreeOf j (f * x j) ≤ degreeOf j f + 1 := by
   repeat'
     rw [degree_of]
@@ -498,7 +505,7 @@ section TotalDegree
 
 
 /-- `total_degree p` gives the maximum |s| over the monomials X^s in `p` -/
-def total_degree (p : MvPolynomial σ R) : ℕ :=
+def totalDegree (p : MvPolynomial σ R) : ℕ :=
   p.support.sup fun s => s.Sum fun n e => e
 
 theorem total_degree_eq (p : MvPolynomial σ R) : p.totalDegree = p.support.sup fun m => m.toMultiset.card := by
@@ -768,7 +775,11 @@ theorem vars_bind₁ (f : σ → MvPolynomial τ R) (φ : MvPolynomial σ R) :
       vars_sum_subset _ _ _ = φ.support.bUnion fun d : σ →₀ ℕ => (C (coeff d φ) * ∏ i in d.support, f i ^ d i).vars :=
       by
       simp only [bind₁_monomial]_ ≤ φ.support.bUnion fun d : σ →₀ ℕ => d.support.bUnion fun i => (f i).vars :=
-      _ _ ≤ φ.vars.bUnion fun i : σ => (f i).vars := _
+      _-- proof below
+        _ ≤
+        φ.vars.bUnion fun i : σ => (f i).vars :=
+      _
+  -- proof below
   · apply Finset.bUnion_mono
     intro d hd
     calc

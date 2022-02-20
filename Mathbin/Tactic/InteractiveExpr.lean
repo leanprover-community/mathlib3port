@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 E.W.Ayers. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: E.W.Ayers
+-/
 
 /-!
 # Widgets used for tactic state and term-mode goal display
@@ -80,7 +85,10 @@ unsafe def sf.flatten : sf → sf
     | sf.compose x (sf.of_string sy1), sf.compose (sf.of_string sy2) z =>
       sf.compose x (sf.compose (sf.of_string (sy1 ++ sy2)) z)
     | x, y => sf.compose x y
-  | sf.of_string s => sf.of_string (s.toList.map fun c => if c = '\n' then ' ' else c).asString
+  |
+  sf.of_string s =>-- replace newline by space
+      sf.of_string
+      (s.toList.map fun c => if c = '\n' then ' ' else c).asString
   | sf.block i (sf.block j a) => (sf.block (i + j) a).flatten
   | sf.block i a => sf.block i a.flatten
   | sf.highlight i a => sf.highlight i a.flatten
@@ -215,13 +223,13 @@ unsafe def mk {γ} (tooltip : Tc subexpr γ) : Tc expr γ :=
   let tooltip_comp :=
     (component.with_should_update fun x y : tactic_state × expr × Expr.Address => x.2.2 ≠ y.2.2) <|
       component.map_action action.on_tooltip_action tooltip
-  (component.filter_map_action fun _ a : Sum γ widget.effect => Sum.casesOn a some fun _ => none) <|
-    (component.with_effects fun _ a : Sum γ widget.effect =>
+  (component.filter_map_action fun a : Sum γ widget.effect => Sum.casesOn a some fun _ => none) <|
+    (component.with_effects fun a : Sum γ widget.effect =>
         match a with
         | Sum.inl g => []
         | Sum.inr s => [s]) <|
       tc.mk_simple (action γ) (Option subexpr × Option subexpr) (fun e => pure <| (none, none))
-        (fun e ⟨ca, sa⟩ act =>
+        (fun act =>
           pure <|
             match act with
             | action.on_mouse_enter ⟨e, ea⟩ => ((ca, some (e, ea)), none)
@@ -234,7 +242,8 @@ unsafe def mk {γ} (tooltip : Tc subexpr γ) : Tc expr γ :=
         let m ← sf.of_eformat <$> tactic.pp_tagged e
         let m := m.elim_part_apps
         let m := m.flatten
-        let m := m.tag_expr [] e
+        let-- [hack] in pp.cpp I forgot to add an expr-boundary for the root expression.
+        m := m.tag_expr [] e
         let v ← view tooltip_comp (Prod.snd <$> ca) (Prod.snd <$> sa) ⟨e, []⟩ m
         pure <| [h "span" [className "expr", key e, on_mouse_leave fun _ => action.on_mouse_leave_all] <| v]
 
@@ -255,7 +264,11 @@ unsafe def type_tooltip : Tc subexpr Empty :=
     let y_comp ← mk type_tooltip y
     let implicit_args ← implicit_arg_list type_tooltip e
     pure
-        [h "div" [style [("minWidth", "8rem"), ("textIndent", "0")]]
+        [h "div"
+            [style
+                [("minWidth", "8rem"),-- [note]: textIndent is inherited, and we might
+                  -- be in an expression here where textIndent is set
+                  ("textIndent", "0")]]
             [h "div" [cn "pl1"] [y_comp], h "hr" [] [], implicit_args]]
 
 end InteractiveExpression
@@ -370,11 +383,11 @@ unsafe def goals_accomplished_message {α} : html α :=
 /-- Component that displays all goals, together with the `$n goals` message. -/
 unsafe def tactic_view_component {γ} (local_c : Tc local_collection γ) (target_c : Tc expr γ) : Tc Unit γ :=
   tc.mk_simple (tactic_view_action γ) filter_type (fun _ => pure <| filter_type.none)
-    (fun ⟨⟩ ft a =>
+    (fun ft a =>
       match a with
       | tactic_view_action.out a => pure (ft, some a)
       | tactic_view_action.filter ft => pure (ft, none))
-    fun ⟨⟩ ft => do
+    fun ft => do
     let gs ← get_goals
     let hs ←
       gs.mmap fun g => do

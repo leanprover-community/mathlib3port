@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Yury G. Kudryashov. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yury G. Kudryashov
+-/
 import Mathbin.Geometry.Manifold.Diffeomorph
 import Mathbin.Geometry.Manifold.Instances.Real
 import Mathbin.Geometry.Manifold.PartitionOfUnity
@@ -46,7 +51,7 @@ In this section we prove a version of the Whitney embedding theorem: for any com
 variable [T2Space M] [Fintype ι] {s : Set M} (f : SmoothBumpCovering ι I M s)
 
 /-- Smooth embedding of `M` into `(E × ℝ) ^ ι`. -/
-def embedding_pi_tangent : C^∞⟮I, M; 𝓘(ℝ, ι → E × ℝ), ι → E × ℝ⟯ where
+def embeddingPiTangent : C^∞⟮I, M; 𝓘(ℝ, ι → E × ℝ), ι → E × ℝ⟯ where
   toFun := fun x i => (f i x • extChartAt I (f.c i) x, f i x)
   times_cont_mdiff_to_fun :=
     times_cont_mdiff_pi_space.2 fun i => ((f i).smooth_smul times_cont_mdiff_on_ext_chart_at).prod_mk_space (f i).Smooth
@@ -80,7 +85,7 @@ theorem comp_embedding_pi_tangent_mfderiv (x : M) (hx : x ∈ s) :
   convert has_mfderiv_at_unique this _
   refine' (has_mfderiv_at_ext_chart_at I (f.mem_chart_at_ind_source x hx)).congr_of_eventually_eq _
   refine' (f.eventually_eq_one x hx).mono fun y hy => _
-  simp only [embedding_pi_tangent_coe, ContinuousLinearMap.coe_comp', · ∘ ·, ContinuousLinearMap.coe_fst',
+  simp only [embedding_pi_tangent_coe, ContinuousLinearMap.coe_comp', (· ∘ ·), ContinuousLinearMap.coe_fst',
     ContinuousLinearMap.proj_apply]
   rw [hy, Pi.one_apply, one_smul]
 
@@ -121,7 +126,7 @@ theorem exists_embedding_euclidean_of_compact [T2Space M] [CompactSpace M] :
     ∃ (n : ℕ)(e : M → EuclideanSpace ℝ (Finₓ n)),
       Smooth I (𝓡 n) e ∧ ClosedEmbedding e ∧ ∀ x : M, Injective (mfderiv I (𝓡 n) e x) :=
   by
-  rcases SmoothBumpCovering.exists_is_subordinate I is_closed_univ fun x : M _ => univ_mem with ⟨ι, f, -⟩
+  rcases SmoothBumpCovering.exists_is_subordinate I is_closed_univ fun _ => univ_mem with ⟨ι, f, -⟩
   have := f.fintype
   rcases f.exists_immersion_euclidean with ⟨n, e, hsmooth, hinj, hinj_mfderiv⟩
   exact ⟨n, e, hsmooth, hsmooth.continuous.closed_embedding hinj, hinj_mfderiv⟩

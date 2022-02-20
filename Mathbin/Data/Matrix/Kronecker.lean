@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Filippo A. E. Nuccio. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Filippo A. E. Nuccio, Eric Wieser
+-/
 import Mathbin.Data.Matrix.Basic
 import Mathbin.LinearAlgebra.TensorProduct
 import Mathbin.RingTheory.TensorProduct
@@ -46,7 +51,7 @@ section KroneckerMap
 
 /-- Produce a matrix with `f` applied to every pair of elements from `A` and `B`. -/
 @[simp]
-def kronecker_map (f : α → β → γ) (A : Matrix l m α) (B : Matrix n p β) : Matrix (l × n) (m × p) γ
+def kroneckerMapₓ (f : α → β → γ) (A : Matrix l m α) (B : Matrix n p β) : Matrix (l × n) (m × p) γ
   | i, j => f (A i.1 j.1) (B i.2 j.2)
 
 theorem kronecker_map_transpose (f : α → β → γ) (A : Matrix l m α) (B : Matrix n p β) :
@@ -142,7 +147,7 @@ theorem kronecker_map_assoc₁ {δ ξ ω : Type _} (f : α → β → γ) (g : �
 
 /-- When `f` is bilinear then `matrix.kronecker_map f` is also bilinear. -/
 @[simps]
-def kronecker_map_bilinear [CommSemiringₓ R] [AddCommMonoidₓ α] [AddCommMonoidₓ β] [AddCommMonoidₓ γ] [Module R α]
+def kroneckerMapBilinear [CommSemiringₓ R] [AddCommMonoidₓ α] [AddCommMonoidₓ β] [AddCommMonoidₓ γ] [Module R α]
     [Module R β] [Module R γ] (f : α →ₗ[R] β →ₗ[R] γ) :
     Matrix l m α →ₗ[R] Matrix n p β →ₗ[R] Matrix (l × n) (m × p) γ :=
   LinearMap.mk₂ R (kroneckerMapₓ fun r s => f r s) (kronecker_map_add_left _ <| f.map_add₂)
@@ -187,7 +192,7 @@ theorem kronecker_apply [Mul α] (A : Matrix l m α) (B : Matrix n p α) i₁ i�
   rfl
 
 /-- `matrix.kronecker` as a bilinear map. -/
-def kronecker_bilinear [CommSemiringₓ R] [Semiringₓ α] [Algebra R α] :
+def kroneckerBilinear [CommSemiringₓ R] [Semiringₓ α] [Algebra R α] :
     Matrix l m α →ₗ[R] Matrix n p α →ₗ[R] Matrix (l × n) (m × p) α :=
   kroneckerMapBilinear (Algebra.lmul R α).toLinearMap
 
@@ -257,7 +262,7 @@ variable [Module R α] [Module R β] [Module R γ]
 /-- The Kronecker tensor product. This is just a shorthand for `kronecker_map (⊗ₜ)`.
 Prefer the notation `⊗ₖₜ` rather than this definition. -/
 @[simp]
-def kronecker_tmul : Matrix l m α → Matrix n p β → Matrix (l × n) (m × p) (α ⊗[R] β) :=
+def kroneckerTmul : Matrix l m α → Matrix n p β → Matrix (l × n) (m × p) (α ⊗[R] β) :=
   kroneckerMapₓ (· ⊗ₜ ·)
 
 localized [Kronecker] infixl:100 " ⊗ₖₜ " => Matrix.kroneckerMapₓ (· ⊗ₜ ·)
@@ -270,7 +275,7 @@ theorem kronecker_tmul_apply (A : Matrix l m α) (B : Matrix n p β) i₁ i₂ j
   rfl
 
 /-- `matrix.kronecker` as a bilinear map. -/
-def kronecker_tmul_bilinear : Matrix l m α →ₗ[R] Matrix n p β →ₗ[R] Matrix (l × n) (m × p) (α ⊗[R] β) :=
+def kroneckerTmulBilinear : Matrix l m α →ₗ[R] Matrix n p β →ₗ[R] Matrix (l × n) (m × p) (α ⊗[R] β) :=
   kroneckerMapBilinear (TensorProduct.mk R α β)
 
 /-! What follows is a copy, in order, of every `matrix.kronecker_map` lemma above that has
@@ -328,6 +333,7 @@ theorem mul_kronecker_tmul_mul [Fintype m] [Fintype m'] (A : Matrix l m α) (B :
 
 end Algebra
 
+-- insert lemmas specific to `kronecker_tmul` below this line
 end KroneckerTmul
 
 end Matrix

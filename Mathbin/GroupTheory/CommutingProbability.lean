@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2022 Thomas Browning. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Thomas Browning
+-/
 import Mathbin.GroupTheory.Abelianization
 import Mathbin.GroupTheory.GroupAction.ConjAct
 import Mathbin.GroupTheory.Index
@@ -41,7 +46,7 @@ theorem comm_prob_le_one : commProb M ≤ 1 := by
 
 variable {M}
 
-theorem comm_prob_eq_one_iff [h : Nonempty M] : commProb M = 1 ↔ Commutative (· * · : M → M → M) := by
+theorem comm_prob_eq_one_iff [h : Nonempty M] : commProb M = 1 ↔ Commutative ((· * ·) : M → M → M) := by
   change (card { p : M × M | p.1 * p.2 = p.2 * p.1 } : ℚ) / _ = 1 ↔ _
   rw [div_eq_one_iff_eq, ← Nat.cast_powₓ, Nat.cast_inj, sq, ← card_prod, set_fintype_card_eq_univ_iff,
     Set.eq_univ_iff_forall]
@@ -76,6 +81,8 @@ theorem comm_prob_def' : commProb G = card (ConjClasses G) / card G := by
 variable {G} (H : Subgroup G)
 
 theorem Subgroup.comm_prob_subgroup_le : commProb H ≤ commProb G * H.index ^ 2 := by
+  /- After rewriting with `comm_prob_def`, we reduce to showing that `G` has at least as many
+      commuting pairs as `H`. -/
   rw [comm_prob_def, comm_prob_def, div_le_iff, mul_assoc, ← mul_powₓ, ← Nat.cast_mulₓ, H.index_mul_card,
     div_mul_cancel, Nat.cast_le]
   · apply card_le_of_injective _ _
@@ -89,6 +96,8 @@ theorem Subgroup.comm_prob_subgroup_le : commProb H ≤ commProb G * H.index ^ 2
     
 
 theorem Subgroup.comm_prob_quotient_le [H.Normal] : commProb (G ⧸ H) ≤ commProb G * card H := by
+  /- After rewriting with `comm_prob_def'`, we reduce to showing that `G` has at least as many
+      conjugacy classes as `G ⧸ H`. -/
   rw [comm_prob_def', comm_prob_def', div_le_iff, mul_assoc, ← Nat.cast_mulₓ, mul_comm (card H), ←
     Subgroup.card_eq_card_quotient_mul_card_subgroup, div_mul_cancel, Nat.cast_le]
   · exact

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Heather Macbeth. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Heather Macbeth
+-/
 import Mathbin.Analysis.SpecificLimits
 
 /-!
@@ -34,7 +39,7 @@ namespace Units
 /-- In a complete normed ring, a perturbation of `1` by an element `t` of distance less than `1`
 from `1` is a unit.  Here we construct its `units` structure.  -/
 @[simps coe]
-def one_sub (t : R) (h : ∥t∥ < 1) : (R)ˣ where
+def oneSub (t : R) (h : ∥t∥ < 1) : (R)ˣ where
   val := 1 - t
   inv := ∑' n : ℕ, t ^ n
   val_inv := mul_neg_geom_series t h
@@ -45,7 +50,8 @@ def one_sub (t : R) (h : ∥t∥ < 1) : (R)ˣ where
 @[simps coe]
 def add (x : (R)ˣ) (t : R) (h : ∥t∥ < ∥(↑x⁻¹ : R)∥⁻¹) : (R)ˣ :=
   Units.copy
-    (x *
+    (-- to make `coe_add` true definitionally, for convenience
+      x *
       Units.oneSub (-(↑x⁻¹ * t))
         (by
           nontriviality R using zero_lt_one
@@ -61,14 +67,14 @@ def add (x : (R)ˣ) (t : R) (h : ∥t∥ < ∥(↑x⁻¹ : R)∥⁻¹) : (R)ˣ :
 /-- In a complete normed ring, an element `y` of distance less than `∥x⁻¹∥⁻¹` from `x` is a unit.
 Here we construct its `units` structure. -/
 @[simps coe]
-def unit_of_nearby (x : (R)ˣ) (y : R) (h : ∥y - x∥ < ∥(↑x⁻¹ : R)∥⁻¹) : (R)ˣ :=
+def unitOfNearby (x : (R)ˣ) (y : R) (h : ∥y - x∥ < ∥(↑x⁻¹ : R)∥⁻¹) : (R)ˣ :=
   Units.copy (x.add (y - x : R) h) y
     (by
       simp )
     _ rfl
 
 /-- The group of units of a complete normed ring is an open subset of the ring. -/
-protected theorem IsOpen : IsOpen { x : R | IsUnit x } := by
+protected theorem is_open : IsOpen { x : R | IsUnit x } := by
   nontriviality R
   apply metric.is_open_iff.mpr
   rintro x' ⟨x, rfl⟩
@@ -249,7 +255,7 @@ theorem inverse_continuous_at (x : (R)ˣ) : ContinuousAt inverse (x : R) := by
     refine' tendsto_zero_iff_norm_tendsto_zero.mpr _
     exact tendsto_iff_norm_tendsto_zero.mp tendsto_id
   rw [ContinuousAt, tendsto_iff_norm_tendsto_zero, inverse_unit]
-  simpa [· ∘ ·] using h_is_o.norm_left.tendsto_div_nhds_zero.comp h_lim
+  simpa [(· ∘ ·)] using h_is_o.norm_left.tendsto_div_nhds_zero.comp h_lim
 
 end NormedRing
 

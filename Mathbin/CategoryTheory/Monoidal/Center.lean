@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison
+-/
 import Mathbin.CategoryTheory.Monoidal.Braided
 import Mathbin.CategoryTheory.ReflectsIsomorphisms
 
@@ -44,7 +49,7 @@ transformations (in the pseudo- sense) of the identity 2-functor on `C`, which s
 `0`-morphism to `X`.
 -/
 @[nolint has_inhabited_instance]
-structure half_braiding (X : C) where
+structure HalfBraiding (X : C) where
   β : ∀ U, X ⊗ U ≅ U ⊗ X
   monoidal' :
     ∀ U U',
@@ -60,6 +65,7 @@ restate_axiom half_braiding.monoidal'
 
 attribute [reassoc, simp] half_braiding.monoidal
 
+-- the reassoc lemma is redundant as a simp lemma
 restate_axiom half_braiding.naturality'
 
 attribute [simp, reassoc] half_braiding.naturality
@@ -70,7 +76,7 @@ variable (C)
 and `b` is a half-braiding on `X`.
 -/
 @[nolint has_inhabited_instance]
-def center :=
+def Center :=
   Σ X : C, HalfBraiding X
 
 namespace Center
@@ -79,7 +85,7 @@ variable {C}
 
 /-- A morphism in the Drinfeld center of `C`. -/
 @[ext, nolint has_inhabited_instance]
-structure hom (X Y : Center C) where
+structure Hom (X Y : Center C) where
   f : X.1 ⟶ Y.1
   comm' : ∀ U, (f ⊗ 𝟙 U) ≫ (Y.2.β U).Hom = (X.2.β U).Hom ≫ (𝟙 U ⊗ f) := by
     run_tac
@@ -113,7 +119,7 @@ theorem ext {X Y : Center C} (f g : X ⟶ Y) (w : f.f = g.f) : f = g := by
 a morphism whose underlying morphism is an isomorphism.
 -/
 @[simps]
-def iso_mk {X Y : Center C} (f : X ⟶ Y) [IsIso f.f] : X ≅ Y where
+def isoMk {X Y : Center C} (f : X ⟶ Y) [IsIso f.f] : X ≅ Y where
   Hom := f
   inv :=
     ⟨inv f.f, fun U => by
@@ -125,7 +131,7 @@ instance is_iso_of_f_is_iso {X Y : Center C} (f : X ⟶ Y) [IsIso f.f] : IsIso f
 
 /-- Auxiliary definition for the `monoidal_category` instance on `center C`. -/
 @[simps]
-def tensor_obj (X Y : Center C) : Center C :=
+def tensorObj (X Y : Center C) : Center C :=
   ⟨X.1 ⊗ Y.1,
     { β := fun U => α_ _ _ _ ≪≫ (Iso.refl X.1 ⊗ Y.2.β U) ≪≫ (α_ _ _ _).symm ≪≫ (X.2.β U ⊗ Iso.refl Y.1) ≪≫ α_ _ _ _,
       monoidal' := fun U U' => by
@@ -149,7 +155,7 @@ def tensor_obj (X Y : Center C) : Center C :=
 
 /-- Auxiliary definition for the `monoidal_category` instance on `center C`. -/
 @[simps]
-def tensor_hom {X₁ Y₁ X₂ Y₂ : Center C} (f : X₁ ⟶ Y₁) (g : X₂ ⟶ Y₂) : tensorObj X₁ X₂ ⟶ tensorObj Y₁ Y₂ where
+def tensorHom {X₁ Y₁ X₂ Y₂ : Center C} (f : X₁ ⟶ Y₁) (g : X₂ ⟶ Y₂) : tensorObj X₁ X₂ ⟶ tensorObj Y₁ Y₂ where
   f := f.f ⊗ g.f
   comm' := fun U => by
     dsimp
@@ -162,7 +168,7 @@ def tensor_hom {X₁ Y₁ X₂ Y₂ : Center C} (f : X₁ ⟶ Y₁) (g : X₂ �
 
 /-- Auxiliary definition for the `monoidal_category` instance on `center C`. -/
 @[simps]
-def tensor_unit : Center C :=
+def tensorUnit : Center C :=
   ⟨𝟙_ C,
     { β := fun U => λ_ U ≪≫ (ρ_ U).symm,
       monoidal' := fun U U' => by
@@ -183,7 +189,7 @@ def associator (X Y Z : Center C) : tensorObj (tensorObj X Y) Z ≅ tensorObj X 
         is_iso.iso.inv_inv, pentagon_assoc, iso.hom_inv_id_assoc, ← tensor_id, ← associator_naturality_assoc]⟩
 
 /-- Auxiliary definition for the `monoidal_category` instance on `center C`. -/
-def left_unitor (X : Center C) : tensorObj tensorUnit X ≅ X :=
+def leftUnitor (X : Center C) : tensorObj tensorUnit X ≅ X :=
   isoMk
     ⟨(λ_ X.1).Hom, fun U => by
       dsimp
@@ -192,7 +198,7 @@ def left_unitor (X : Center C) : tensorObj tensorUnit X ≅ X :=
       rw [← left_unitor_tensor, left_unitor_naturality, left_unitor_tensor'_assoc]⟩
 
 /-- Auxiliary definition for the `monoidal_category` instance on `center C`. -/
-def right_unitor (X : Center C) : tensorObj X tensorUnit ≅ X :=
+def rightUnitor (X : Center C) : tensorObj X tensorUnit ≅ X :=
   isoMk
     ⟨(ρ_ X.1).Hom, fun U => by
       dsimp
@@ -296,13 +302,14 @@ def braiding (X Y : Center C) : X ⊗ Y ≅ Y ⊗ X :=
         half_braiding.monoidal]
       simp ⟩
 
-instance braided_category_center : BraidedCategory (Center C) where
+instance braidedCategoryCenter : BraidedCategory (Center C) where
   braiding := braiding
   braiding_naturality' := fun X Y X' Y' f g => by
     ext
     dsimp
     rw [← tensor_id_comp_id_tensor, category.assoc, half_braiding.naturality, f.comm_assoc, id_tensor_comp_tensor_id]
 
+-- `obviously` handles the hexagon axioms
 section
 
 variable [BraidedCategory C]
@@ -311,7 +318,7 @@ open BraidedCategory
 
 /-- Auxiliary construction for `of_braided`. -/
 @[simps]
-def of_braided_obj (X : C) : Center C :=
+def ofBraidedObj (X : C) : Center C :=
   ⟨X,
     { β := fun Y => β_ X Y,
       monoidal' := fun U U' => by
@@ -323,7 +330,7 @@ variable (C)
 /-- The functor lifting a braided category to its center, using the braiding as the half-braiding.
 -/
 @[simps]
-def of_braided : MonoidalFunctor C (Center C) where
+def ofBraided : MonoidalFunctor C (Center C) where
   obj := ofBraidedObj
   map := fun X X' f => { f, comm' := fun U => braiding_naturality _ _ }
   ε :=

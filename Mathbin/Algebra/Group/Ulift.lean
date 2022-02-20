@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison
+-/
 import Mathbin.Data.Equiv.MulAdd
 
 /-!
@@ -21,7 +26,7 @@ variable {α : Type u} {x y : Ulift.{v} α}
 namespace Ulift
 
 @[to_additive]
-instance One [One α] : One (Ulift α) :=
+instance hasOne [One α] : One (Ulift α) :=
   ⟨⟨1⟩⟩
 
 @[simp, to_additive]
@@ -29,7 +34,7 @@ theorem one_down [One α] : (1 : Ulift α).down = 1 :=
   rfl
 
 @[to_additive]
-instance Mul [Mul α] : Mul (Ulift α) :=
+instance hasMul [Mul α] : Mul (Ulift α) :=
   ⟨fun f g => ⟨f.down * g.down⟩⟩
 
 @[simp, to_additive]
@@ -37,7 +42,7 @@ theorem mul_down [Mul α] : (x * y).down = x.down * y.down :=
   rfl
 
 @[to_additive]
-instance Div [Div α] : Div (Ulift α) :=
+instance hasDiv [Div α] : Div (Ulift α) :=
   ⟨fun f g => ⟨f.down / g.down⟩⟩
 
 @[simp, to_additive]
@@ -45,7 +50,7 @@ theorem div_down [Div α] : (x / y).down = x.down / y.down :=
   rfl
 
 @[to_additive]
-instance Inv [Inv α] : Inv (Ulift α) :=
+instance hasInv [Inv α] : Inv (Ulift α) :=
   ⟨fun f => ⟨f.down⁻¹⟩⟩
 
 @[simp, to_additive]
@@ -59,69 +64,71 @@ def _root_.mul_equiv.ulift [Mul α] : Ulift α ≃* α :=
   { Equivₓ.ulift with map_mul' := fun x y => rfl }
 
 @[to_additive]
-instance Semigroupₓ [Semigroupₓ α] : Semigroupₓ (Ulift α) :=
+instance semigroup [Semigroupₓ α] : Semigroupₓ (Ulift α) :=
   (MulEquiv.ulift.Injective.Semigroup _) fun x y => rfl
 
 @[to_additive]
-instance CommSemigroupₓ [CommSemigroupₓ α] : CommSemigroupₓ (Ulift α) :=
+instance commSemigroup [CommSemigroupₓ α] : CommSemigroupₓ (Ulift α) :=
   (Equivₓ.ulift.Injective.CommSemigroup _) fun x y => rfl
 
 @[to_additive]
-instance MulOneClassₓ [MulOneClassₓ α] : MulOneClassₓ (Ulift α) :=
+instance mulOneClass [MulOneClassₓ α] : MulOneClassₓ (Ulift α) :=
   (Equivₓ.ulift.Injective.MulOneClass _ rfl) fun x y => rfl
 
 @[to_additive HasVadd]
-instance HasScalar {β : Type _} [HasScalar α β] : HasScalar α (Ulift β) :=
+instance hasScalar {β : Type _} [HasScalar α β] : HasScalar α (Ulift β) :=
   ⟨fun n x => up (n • x.down)⟩
 
 @[to_additive HasScalar, to_additive_reorder 1]
-instance Pow {β : Type _} [Pow α β] : Pow (Ulift α) β :=
+instance hasPow {β : Type _} [Pow α β] : Pow (Ulift α) β :=
   ⟨fun x n => up (x.down ^ n)⟩
 
 @[to_additive]
-instance Monoidₓ [Monoidₓ α] : Monoidₓ (Ulift α) :=
+instance monoid [Monoidₓ α] : Monoidₓ (Ulift α) :=
   Equivₓ.ulift.Injective.monoidPow _ rfl (fun _ _ => rfl) fun _ _ => rfl
 
 @[to_additive]
-instance CommMonoidₓ [CommMonoidₓ α] : CommMonoidₓ (Ulift α) :=
+instance commMonoid [CommMonoidₓ α] : CommMonoidₓ (Ulift α) :=
   { Ulift.monoid, Ulift.commSemigroup with }
 
 @[to_additive]
-instance DivInvMonoidₓ [DivInvMonoidₓ α] : DivInvMonoidₓ (Ulift α) :=
+instance divInvMonoid [DivInvMonoidₓ α] : DivInvMonoidₓ (Ulift α) :=
   Equivₓ.ulift.Injective.divInvMonoidPow _ rfl (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl)
     fun _ _ => rfl
 
 @[to_additive]
-instance Groupₓ [Groupₓ α] : Groupₓ (Ulift α) :=
+instance group [Groupₓ α] : Groupₓ (Ulift α) :=
   Equivₓ.ulift.Injective.groupPow _ rfl (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl) fun _ _ => rfl
 
 @[to_additive]
-instance CommGroupₓ [CommGroupₓ α] : CommGroupₓ (Ulift α) :=
+instance commGroup [CommGroupₓ α] : CommGroupₓ (Ulift α) :=
   { Ulift.group, Ulift.commSemigroup with }
 
 @[to_additive AddLeftCancelSemigroup]
-instance LeftCancelSemigroup [LeftCancelSemigroup α] : LeftCancelSemigroup (Ulift α) :=
+instance leftCancelSemigroup [LeftCancelSemigroup α] : LeftCancelSemigroup (Ulift α) :=
   Equivₓ.ulift.Injective.LeftCancelSemigroup _ fun _ _ => rfl
 
 @[to_additive AddRightCancelSemigroup]
-instance RightCancelSemigroup [RightCancelSemigroup α] : RightCancelSemigroup (Ulift α) :=
+instance rightCancelSemigroup [RightCancelSemigroup α] : RightCancelSemigroup (Ulift α) :=
   Equivₓ.ulift.Injective.RightCancelSemigroup _ fun _ _ => rfl
 
 @[to_additive AddLeftCancelMonoid]
-instance LeftCancelMonoid [LeftCancelMonoid α] : LeftCancelMonoid (Ulift α) :=
+instance leftCancelMonoid [LeftCancelMonoid α] : LeftCancelMonoid (Ulift α) :=
   { Ulift.monoid, Ulift.leftCancelSemigroup with }
 
 @[to_additive AddRightCancelMonoid]
-instance RightCancelMonoid [RightCancelMonoid α] : RightCancelMonoid (Ulift α) :=
+instance rightCancelMonoid [RightCancelMonoid α] : RightCancelMonoid (Ulift α) :=
   { Ulift.monoid, Ulift.rightCancelSemigroup with }
 
 @[to_additive AddCancelMonoid]
-instance CancelMonoid [CancelMonoid α] : CancelMonoid (Ulift α) :=
+instance cancelMonoid [CancelMonoid α] : CancelMonoid (Ulift α) :=
   { Ulift.leftCancelMonoid, Ulift.rightCancelSemigroup with }
 
 @[to_additive AddCancelMonoid]
-instance CancelCommMonoid [CancelCommMonoid α] : CancelCommMonoid (Ulift α) :=
+instance cancelCommMonoid [CancelCommMonoid α] : CancelCommMonoid (Ulift α) :=
   { Ulift.cancelMonoid, Ulift.commSemigroup with }
 
+-- TODO we don't do `ordered_cancel_comm_monoid` or `ordered_comm_group`
+-- We'd need to add instances for `ulift` in `order.basic`.
 end Ulift
 

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2022 Riccardo Brasca. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Alex Best, Riccardo Brasca, Eric Rodriguez
+-/
 import Mathbin.Algebra.IsPrimePow
 import Mathbin.NumberTheory.Cyclotomic.Basic
 import Mathbin.RingTheory.Adjoin.PowerBasis
@@ -101,7 +106,7 @@ namespace IsPrimitiveRoot
 
 /-- The `power_basis` given by a primitive root `ζ`. -/
 @[simps]
-noncomputable def PowerBasis : PowerBasis K L :=
+noncomputable def powerBasis : PowerBasis K L :=
   PowerBasis.map (Algebra.adjoin.powerBasis <| integral {n} K L ζ) <|
     (Subalgebra.equivOfEq _ _ (IsCyclotomicExtension.adjoin_primitive_root_eq_top n _ hζ)).trans topEquiv
 
@@ -109,7 +114,7 @@ variable {K}
 
 /-- The equivalence between `L →ₐ[K] A` and `primitive_roots n A` given by a primitive root `ζ`. -/
 @[simps]
-noncomputable def embeddings_equiv_primitive_roots [IsDomain C] [NeZero ((n : ℕ) : K)]
+noncomputable def embeddingsEquivPrimitiveRoots [IsDomain C] [NeZero ((n : ℕ) : K)]
     (hirr : Irreducible (cyclotomic n K)) : (L →ₐ[K] C) ≃ primitiveRoots n C :=
   (hζ.PowerBasis K).liftEquiv.trans
     { toFun := fun x => by
@@ -184,7 +189,7 @@ theorem sub_one_norm_eq_eval_cyclotomic [IsCyclotomicExtension {n} K L] (h : 2 <
 
 /-- If `is_prime_pow (n : ℕ)`, `n ≠ 2` and `irreducible (cyclotomic n K)` (in particular for
 `K = ℚ`), then the norm of `ζ - 1` is `(n : ℕ).min_fac`. -/
-theorem sub_one_norm.is_prime_pow (hn : IsPrimePow (n : ℕ)) [IsCyclotomicExtension {n} K L]
+theorem SubOneNorm.is_prime_pow (hn : IsPrimePow (n : ℕ)) [IsCyclotomicExtension {n} K L]
     (hirr : Irreducible (cyclotomic (n : ℕ) K)) (h : n ≠ 2) : norm K (ζ - 1) = (n : ℕ).minFac := by
   have :=
     (coe_lt_coe 2 _).1
@@ -202,7 +207,7 @@ omit hζ
 
 /-- If `irreducible (cyclotomic (p ^ (k + 1)) K)` (in particular for `K = ℚ`) and `p` is an odd
 prime, then the norm of `ζ - 1` is `p`. -/
-theorem prime_ne_two_pow.sub_one_norm {p : ℕ+} [NeZero ((p : ℕ) : K)] (k : ℕ) (hζ : IsPrimitiveRoot ζ ↑(p ^ (k + 1)))
+theorem PrimeNeTwoPow.sub_one_norm {p : ℕ+} [NeZero ((p : ℕ) : K)] (k : ℕ) (hζ : IsPrimitiveRoot ζ ↑(p ^ (k + 1)))
     [hpri : Fact (p : ℕ).Prime] [IsCyclotomicExtension {p ^ (k + 1)} K L]
     (hirr : Irreducible (cyclotomic (↑(p ^ (k + 1)) : ℕ) K)) (h : p ≠ 2) : norm K (ζ - 1) = p := by
   have : NeZero ((↑(p ^ (k + 1)) : ℕ) : K) := by
@@ -220,7 +225,7 @@ theorem prime_ne_two_pow.sub_one_norm {p : ℕ+} [NeZero ((p : ℕ) : K)] (k : �
 
 /-- If `irreducible (cyclotomic p K)` (in particular for `K = ℚ`) and `p` is an odd prime,
 then the norm of `ζ - 1` is `p`. -/
-theorem sub_one_norm.prime {p : ℕ+} [NeZero ((p : ℕ) : K)] [hpri : Fact (p : ℕ).Prime]
+theorem SubOneNorm.prime {p : ℕ+} [NeZero ((p : ℕ) : K)] [hpri : Fact (p : ℕ).Prime]
     [hcyc : IsCyclotomicExtension {p} K L] (hζ : IsPrimitiveRoot ζ p) (hirr : Irreducible (cyclotomic p K))
     (h : p ≠ 2) : norm K (ζ - 1) = p := by
   replace hirr : Irreducible (cyclotomic (↑(p ^ (0 + 1)) : ℕ) K) := by
@@ -236,7 +241,7 @@ theorem sub_one_norm.prime {p : ℕ+} [NeZero ((p : ℕ) : K)] [hpri : Fact (p :
 
 /-- If `irreducible (cyclotomic (2 ^ k) K)` (in particular for `K = ℚ`) and `k` is at least `2`,
 then the norm of `ζ - 1` is `2`. -/
-theorem sub_one_norm.pow_two [NeZero (2 : K)] {k : ℕ} (hk : 2 ≤ k) [IsCyclotomicExtension {2 ^ k} K L]
+theorem SubOneNorm.pow_two [NeZero (2 : K)] {k : ℕ} (hk : 2 ≤ k) [IsCyclotomicExtension {2 ^ k} K L]
     (hζ : IsPrimitiveRoot ζ (2 ^ k)) (hirr : Irreducible (cyclotomic (2 ^ k) K)) : norm K (ζ - 1) = 2 := by
   have : NeZero (((2 ^ k : ℕ+) : ℕ) : K) := by
     refine' ⟨fun hzero => _⟩
@@ -272,14 +277,14 @@ variable {K} (L) [Field K] [Field L] [Algebra K L] [NeZero ((n : ℕ) : K)]
 
 /-- If `is_prime_pow (n : ℕ)`, `n ≠ 2` and `irreducible (cyclotomic n K)` (in particular for
 `K = ℚ`), then the norm of `zeta n K L - 1` is `(n : ℕ).min_fac`. -/
-theorem is_prime_pow.norm_zeta_sub_one (hn : IsPrimePow (n : ℕ)) [IsCyclotomicExtension {n} K L]
+theorem IsPrimePow.norm_zeta_sub_one (hn : IsPrimePow (n : ℕ)) [IsCyclotomicExtension {n} K L]
     (hirr : Irreducible (cyclotomic (n : ℕ) K)) (h : n ≠ 2) : norm K (zeta n K L - 1) = (n : ℕ).minFac :=
   have := NeZero.of_no_zero_smul_divisors K L n
   sub_one_norm.is_prime_pow (zeta_primitive_root n K L) hn hirr h
 
 /-- If `irreducible (cyclotomic (p ^ (k + 1)) K)` (in particular for `K = ℚ`) and `p` is an odd
 prime, then the norm of `zeta (p ^ (k + 1)) K L - 1` is `p`. -/
-theorem prime_ne_two_pow.norm_zeta_sub_one {p : ℕ+} [NeZero ((p : ℕ) : K)] (k : ℕ) [hpri : Fact (p : ℕ).Prime]
+theorem PrimeNeTwoPow.norm_zeta_sub_one {p : ℕ+} [NeZero ((p : ℕ) : K)] (k : ℕ) [hpri : Fact (p : ℕ).Prime]
     [IsCyclotomicExtension {p ^ (k + 1)} K L] (hirr : Irreducible (cyclotomic (↑(p ^ (k + 1)) : ℕ) K)) (h : p ≠ 2) :
     norm K (zeta (p ^ (k + 1)) K L - 1) = p := by
   have := NeZero.of_no_zero_smul_divisors K L p
@@ -291,7 +296,7 @@ theorem prime_ne_two_pow.norm_zeta_sub_one {p : ℕ+} [NeZero ((p : ℕ) : K)] (
 
 /-- If `irreducible (cyclotomic p K)` (in particular for `K = ℚ`) and `p` is an odd prime,
 then the norm of `zeta p K L - 1` is `p`. -/
-theorem prime_ne_two.norm_zeta_sub_one {p : ℕ+} [NeZero ((p : ℕ) : K)] [hpri : Fact (p : ℕ).Prime]
+theorem PrimeNeTwo.norm_zeta_sub_one {p : ℕ+} [NeZero ((p : ℕ) : K)] [hpri : Fact (p : ℕ).Prime]
     [hcyc : IsCyclotomicExtension {p} K L] (hirr : Irreducible (cyclotomic p K)) (h : p ≠ 2) :
     norm K (zeta p K L - 1) = p :=
   have := NeZero.of_no_zero_smul_divisors K L p
@@ -299,7 +304,7 @@ theorem prime_ne_two.norm_zeta_sub_one {p : ℕ+} [NeZero ((p : ℕ) : K)] [hpri
 
 /-- If `irreducible (cyclotomic (2 ^ k) K)` (in particular for `K = ℚ`) and `k` is at least `2`,
 then the norm of `zeta (2 ^ k) K L - 1` is `2`. -/
-theorem two_pow.norm_zeta_sub_one [NeZero (2 : K)] {k : ℕ} (hk : 2 ≤ k) [IsCyclotomicExtension {2 ^ k} K L]
+theorem TwoPow.norm_zeta_sub_one [NeZero (2 : K)] {k : ℕ} (hk : 2 ≤ k) [IsCyclotomicExtension {2 ^ k} K L]
     (hirr : Irreducible (cyclotomic (2 ^ k) K)) : norm K (zeta (2 ^ k) K L - 1) = 2 := by
   have : NeZero (((2 ^ k : ℕ+) : ℕ) : L) := by
     refine' ⟨fun hzero => _⟩

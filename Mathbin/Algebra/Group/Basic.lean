@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2014 Jeremy Avigad. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Jeremy Avigad, Leonardo de Moura, Simon Hudon, Mario Carneiro
+-/
 import Mathbin.Algebra.Group.Defs
 import Mathbin.Logic.Function.Basic
 
@@ -49,7 +54,7 @@ is equal to a multiplication on the right by `y * x`.
 -/
 @[simp,
   to_additive "Composing two additions on the right by `y` and `x`\nis equal to a addition on the right by `y + x`."]
-theorem comp_mul_right [Semigroupₓ α] (x y : α) : (· * x) ∘ (· * y) = · * (y * x) :=
+theorem comp_mul_right [Semigroupₓ α] (x y : α) : (· * x) ∘ (· * y) = (· * (y * x)) :=
   comp_assoc_right _ _ _
 
 end Semigroupₓ
@@ -78,7 +83,7 @@ theorem one_mul_eq_id : (· * ·) (1 : M) = id :=
   funext one_mulₓ
 
 @[to_additive]
-theorem mul_one_eq_id : · * (1 : M) = id :=
+theorem mul_one_eq_id : (· * (1 : M)) = id :=
   funext mul_oneₓ
 
 end MulOneClassₓ
@@ -465,6 +470,8 @@ theorem div_ne_one : a / b ≠ 1 ↔ a ≠ b :=
 theorem div_eq_self : a / b = a ↔ b = 1 := by
   rw [div_eq_mul_inv, mul_right_eq_self, inv_eq_one]
 
+-- The unprimed version is used by `group_with_zero`.  This is the preferred choice.
+-- See https://leanprover.zulipchat.com/#narrow/stream/113488-general/topic/.60div_one'.60
 @[simp, to_additive sub_zero]
 theorem div_one' (a : G) : a / 1 = a :=
   div_eq_self.2 rfl
@@ -615,6 +622,9 @@ theorem mul_div_cancel'_right (a b : G) : a * (b / a) = b := by
 theorem div_mul_cancel'' (a b : G) : a / (a * b) = b⁻¹ := by
   rw [← inv_div', mul_div_cancel''']
 
+-- This lemma is in the `simp` set under the name `mul_inv_cancel_comm_assoc`,
+-- along with the additive version `add_neg_cancel_comm_assoc`,
+-- defined  in `algebra/group/commute`
 @[to_additive]
 theorem mul_mul_inv_cancel'_right (a b : G) : a * (b * a⁻¹) = b := by
   rw [← div_eq_mul_inv, mul_div_cancel'_right a b]

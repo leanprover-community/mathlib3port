@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Eric Wieser. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Eric Wieser
+-/
 import Mathbin.Algebra.Star.Basic
 import Mathbin.Algebra.Ring.Pi
 import Mathbin.Algebra.Module.Pi
@@ -14,8 +19,10 @@ universe u v w
 
 variable {I : Type u}
 
+-- The indexing type
 variable {f : I → Type v}
 
+-- The family of types already equipped with instances
 namespace Pi
 
 instance [∀ i, HasStar (f i)] : HasStar (∀ i, f i) where

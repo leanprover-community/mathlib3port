@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Leonardo de Moura, Mario Carneiro
+-/
 import Mathbin.Algebra.Group.Pi
 import Mathbin.Algebra.GroupPower.Lemmas
 
@@ -16,7 +21,7 @@ variable {α : Type u} {β : Type v}
 
 namespace Perm
 
-instance perm_group : Groupₓ (Perm α) where
+instance permGroup : Groupₓ (Perm α) where
   mul := fun f g => Equivₓ.trans g f
   one := Equivₓ.refl α
   inv := Equivₓ.symm
@@ -133,7 +138,7 @@ theorem sum_congr_one {α β : Type _} : sumCongr (1 : Perm α) (1 : Perm β) = 
 This is particularly useful for its `monoid_hom.range` projection, which is the subgroup of
 permutations which do not exchange elements between `α` and `β`. -/
 @[simps]
-def sum_congr_hom (α β : Type _) : Perm α × Perm β →* Perm (Sum α β) where
+def sumCongrHom (α β : Type _) : Perm α × Perm β →* Perm (Sum α β) where
   toFun := fun a => sumCongr a.1 a.2
   map_one' := sum_congr_one
   map_mul' := fun a b => (sum_congr_mul _ _ _ _).symm
@@ -179,7 +184,7 @@ theorem sigma_congr_right_one {α : Type _} {β : α → Type _} : sigmaCongrRig
 This is particularly useful for its `monoid_hom.range` projection, which is the subgroup of
 permutations which do not exchange elements between fibers. -/
 @[simps]
-def sigma_congr_right_hom {α : Type _} (β : α → Type _) : (∀ a, Perm (β a)) →* Perm (Σ a, β a) where
+def sigmaCongrRightHom {α : Type _} (β : α → Type _) : (∀ a, Perm (β a)) →* Perm (Σ a, β a) where
   toFun := sigmaCongrRight
   map_one' := sigma_congr_right_one
   map_mul' := fun a b => (sigma_congr_right_mul _ _).symm
@@ -191,7 +196,7 @@ theorem sigma_congr_right_hom_injective {α : Type _} {β : α → Type _} : Fun
 
 /-- `equiv.perm.subtype_congr` as a `monoid_hom`. -/
 @[simps]
-def subtype_congr_hom (p : α → Prop) [DecidablePred p] : Perm { a // p a } × Perm { a // ¬p a } →* Perm α where
+def subtypeCongrHom (p : α → Prop) [DecidablePred p] : Perm { a // p a } × Perm { a // ¬p a } →* Perm α where
   toFun := fun pair => Perm.subtypeCongr pair.fst pair.snd
   map_one' := Perm.subtypeCongr.refl
   map_mul' := fun _ _ => (Perm.subtypeCongr.trans _ _ _ _).symm
@@ -228,7 +233,7 @@ theorem extend_domain_mul (e e' : Perm α) : e.extendDomain f * e'.extendDomain 
 
 /-- `extend_domain` as a group homomorphism -/
 @[simps]
-def extend_domain_hom : Perm α →* Perm β where
+def extendDomainHom : Perm α →* Perm β where
   toFun := fun e => extendDomain e f
   map_one' := extend_domain_one f
   map_mul' := fun e e' => (extend_domain_mul f e e').symm
@@ -245,7 +250,7 @@ end ExtendDomain
 
 /-- If the permutation `f` fixes the subtype `{x // p x}`, then this returns the permutation
   on `{x // p x}` induced by `f`. -/
-def subtype_perm (f : Perm α) {p : α → Prop} (h : ∀ x, p x ↔ p (f x)) : Perm { x // p x } :=
+def subtypePerm (f : Perm α) {p : α → Prop} (h : ∀ x, p x ↔ p (f x)) : Perm { x // p x } :=
   ⟨fun x => ⟨f x, (h _).1 x.2⟩, fun x =>
     ⟨f⁻¹ x,
       (h (f⁻¹ x)).2 <| by
@@ -265,7 +270,7 @@ theorem subtype_perm_one (p : α → Prop) (h : ∀ x, p x ↔ p ((1 : Perm α) 
 
 /-- The inclusion map of permutations on a subtype of `α` into permutations of `α`,
   fixing the other points. -/
-def of_subtype {p : α → Prop} [DecidablePred p] : Perm (Subtype p) →* Perm α where
+def ofSubtype {p : α → Prop} [DecidablePred p] : Perm (Subtype p) →* Perm α where
   toFun := fun f =>
     ⟨fun x => if h : p x then f ⟨x, h⟩ else x, fun x => if h : p x then f⁻¹ ⟨x, h⟩ else x, fun x => by
       have h : ∀ h : p x, p (f ⟨x, h⟩) := fun h => (f ⟨x, h⟩).2
@@ -333,7 +338,7 @@ theorem default_perm {n : Type _} : (default : Perm n) = 1 :=
 /-- Permutations on a subtype are equivalent to permutations on the original type that fix pointwise
 the rest. -/
 @[simps]
-protected def subtype_equiv_subtype_perm (p : α → Prop) [DecidablePred p] :
+protected def subtypeEquivSubtypePerm (p : α → Prop) [DecidablePred p] :
     Perm (Subtype p) ≃ { f : Perm α // ∀ a, ¬p a → f a = a } where
   toFun := fun f => ⟨f.ofSubtype, fun a => f.of_subtype_apply_of_not_mem⟩
   invFun := fun f =>
@@ -357,7 +362,7 @@ variable (e : Perm α) (ι : α ↪ β)
 open_locale Classical
 
 /-- Noncomputable version of `equiv.perm.via_fintype_embedding` that does not assume `fintype` -/
-noncomputable def via_embedding : Perm β :=
+noncomputable def viaEmbedding : Perm β :=
   extendDomain e (ofInjective ι.1 ι.2)
 
 theorem via_embedding_apply (x : α) : e.viaEmbedding ι (ι x) = ι (e x) :=
@@ -367,7 +372,7 @@ theorem via_embedding_apply_of_not_mem (x : β) (hx : x ∉ Set.Range ι) : e.vi
   extend_domain_apply_not_subtype e (ofInjective ι.1 ι.2) hx
 
 /-- `via_embedding` as a group homomorphism -/
-noncomputable def via_embedding_hom : Perm α →* Perm β :=
+noncomputable def viaEmbeddingHom : Perm α →* Perm β :=
   extendDomainHom (ofInjective ι.1 ι.2)
 
 theorem via_embedding_hom_apply : viaEmbeddingHom ι e = viaEmbedding e ι :=

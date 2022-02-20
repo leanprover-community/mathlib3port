@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Patrick Massot. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Patrick Massot, Scott Morrison
+-/
 import Mathbin.Topology.Instances.Real
 import Mathbin.Topology.Algebra.Field
 import Mathbin.Data.Set.Intervals.ProjIcc
@@ -34,7 +39,7 @@ theorem mem_iff_one_sub_mem {t : ℝ} : t ∈ I ↔ 1 - t ∈ I := by
   rw [mem_Icc, mem_Icc]
   constructor <;> intro <;> constructor <;> linarith
 
-instance Zero : Zero I :=
+instance hasZero : Zero I :=
   ⟨⟨0, by
       constructor <;> norm_num⟩⟩
 
@@ -51,7 +56,7 @@ theorem coe_eq_zero {x : I} : (x : ℝ) = 0 ↔ x = 0 := by
   symm
   exact Subtype.ext_iff
 
-instance One : One I :=
+instance hasOne : One I :=
   ⟨⟨1, by
       constructor <;> norm_num⟩⟩
 
@@ -87,6 +92,7 @@ instance : Mul I :=
 theorem coe_mul {x y : I} : ((x * y : I) : ℝ) = x * y :=
   rfl
 
+-- todo: we could set up a `linear_ordered_comm_monoid_with_zero I` instance
 theorem mul_le_left {x y : I} : x * y ≤ x :=
   Subtype.coe_le_coe.mp <| (mul_le_mul_of_nonneg_left y.2.2 x.2.1).trans_eq <| mul_oneₓ x
 
@@ -174,12 +180,12 @@ theorem proj_Icc_eq_one {x : ℝ} : projIcc (0 : ℝ) 1 zero_le_one x = 1 ↔ 1 
 
 namespace Tactic.Interactive
 
--- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
--- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
--- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
--- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:916:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:916:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:916:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:916:4: warning: unsupported (TODO): `[tacs]
 /-- A tactic that solves `0 ≤ ↑x`, `0 ≤ 1 - ↑x`, `↑x ≤ 1`, and `1 - ↑x ≤ 1` for `x : I`. -/
-unsafe def UnitInterval : tactic Unit :=
+unsafe def unit_interval : tactic Unit :=
   sorry <|> sorry <|> sorry <|> sorry
 
 end Tactic.Interactive
@@ -190,6 +196,8 @@ variable {𝕜 : Type _} [LinearOrderedField 𝕜] [TopologicalSpace 𝕜] [Topo
 
 /-- The image of `[0,1]` under the homeomorphism `λ x, a * x + b` is `[b, a+b]`.
 -/
+-- We only need the ordering on `𝕜` here to avoid talking about flipping the interval over.
+-- At the end of the day I only care about `ℝ`, so I'm hesitant to put work into generalizing.
 theorem affine_homeomorph_image_I (a b : 𝕜) (h : 0 < a) :
     affineHomeomorph a b h.Ne.symm '' Set.Icc 0 1 = Set.Icc b (a + b) := by
   simp [h]

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Floris van Doorn. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Floris van Doorn, Robert Y. Lewis
+-/
 import Mathbin.Data.Bool.Basic
 import Mathbin.Meta.RbMap
 import Mathbin.Tactic.Lint.Basic
@@ -31,7 +36,7 @@ open Tactic Expr
 private unsafe def illegal_ge_gt : List Name :=
   [`gt, `ge]
 
--- ././Mathport/Syntax/Translate/Basic.lean:169:40: warning: unsupported option eqn_compiler.max_steps
+-- ././Mathport/Syntax/Translate/Basic.lean:211:40: warning: unsupported option eqn_compiler.max_steps
 set_option eqn_compiler.max_steps 20000
 
 /-- Checks whether `≥` and `>` occurs in an illegal way in the expression.
@@ -76,6 +81,21 @@ private unsafe def ge_or_gt_in_statement (d : declaration) : tactic (Option Stri
     else none
 
 /-- A linter for checking whether illegal constants (≥, >) appear in a declaration's type. -/
+-- TODO: the commented out code also checks for classicality in statements, but needs fixing
+-- TODO: this probably needs to also check whether the argument is a variable or @eq <var> _ _
+-- meta def illegal_constants_in_statement (d : declaration) : tactic (option string) :=
+-- return $ if d.type.contains_constant (λ n, (n.get_prefix = `classical ∧
+--   n.last ∈ ["prop_decidable", "dec", "dec_rel", "dec_eq"]) ∨ n ∈ [`gt, `ge])
+-- then
+--   let illegal1 := [`classical.prop_decidable, `classical.dec, `classical.dec_rel,
+--     `classical.dec_eq],
+--       illegal2 := [`gt, `ge],
+--       occur1 := illegal1.filter (λ n, d.type.contains_constant (eq n)),
+--       occur2 := illegal2.filter (λ n, d.type.contains_constant (eq n)) in
+--   some $ sformat!"the type contains the following declarations: {occur1 ++ occur2}." ++
+--     (if occur1 = [] then "" else " Add decidability type-class arguments instead.") ++
+--     (if occur2 = [] then "" else " Use ≤/< instead.")
+-- else none
 @[linter]
 unsafe def linter.ge_or_gt : linter where
   test := ge_or_gt_in_statement
@@ -235,13 +255,19 @@ private unsafe def incorrect_def_lemma (d : declaration) : tactic (Option String
     let is_instance_d ← is_instance d.to_name
     if is_instance_d then return none
       else do
-        let expr.sort n ← infer_type d
+        let-- the following seems to be a little quicker than `is_prop d.type`.
+            expr.sort
+            n
+          ← infer_type d
         let is_pattern ← has_attribute' `pattern d
         return <|
             if d ↔ n = level.zero then none
             else
               if d then "is a lemma/theorem, should be a def"
-              else if is_pattern then none else "is a def, should be a lemma/theorem"
+              else
+                if is_pattern then none
+                else-- declarations with `@[pattern]` are allowed to be a `def`.
+                  "is a def, should be a lemma/theorem"
 
 /-- A linter for checking whether the correct declaration constructor (definition or theorem)
 has been used. -/
@@ -360,6 +386,7 @@ unsafe def syn_taut (d : declaration) : tactic (Option Stringₓ) :=
 unsafe def linter.syn_taut : linter where
   test := syn_taut
   auto_decls := false
+  -- many false positives with this enabled
   no_errors_found := "No declarations are syntactic tautologies."
   errors_found :=
     "THE FOLLOWING DECLARATIONS ARE SYNTACTIC TAUTOLOGIES. " ++
@@ -395,10 +422,16 @@ unsafe def find_unused_have_suffices_macros : expr → tactic (List Stringₓ)
   | elet var_name type assignment body =>
     (· ++ ·) <$> find_unused_have_suffices_macros assignment <*> find_unused_have_suffices_macros body
   | m@(macro md [l@(lam ppnm bi vt bd)]) => do
-    (· ++ ·) (if m = `have ∧ ¬bd then ["unnecessary have " ++ ppnm ++ " : " ++ vt] else []) <$>
+    -- term mode have statements are tagged with a macro
+          -- if the macro annotation is `have then this lambda came from a term mode have statement
+          (· ++ ·)
+          (if m = `have ∧ ¬bd then ["unnecessary have " ++ ppnm ++ " : " ++ vt] else []) <$>
         find_unused_have_suffices_macros l
   | m@(macro md [app (l@(lam ppnm bi vt bd)) arg]) => do
-    (· ++ ·) (if m = `suffices ∧ ¬bd then ["unnecessary suffices " ++ ppnm ++ " : " ++ vt] else []) <$>
+    -- term mode suffices statements are tagged with a macro
+          -- if the macro annotation is `suffices then this lambda came from a term mode suffices statement
+          (· ++ ·)
+          (if m = `suffices ∧ ¬bd then ["unnecessary suffices " ++ ppnm ++ " : " ++ vt] else []) <$>
         ((· ++ ·) <$> find_unused_have_suffices_macros l <*> find_unused_have_suffices_macros arg)
   | macro md l => List.join <$> l.mmap find_unused_have_suffices_macros
   | _ => return []

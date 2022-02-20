@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 David Wärn. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: David Wärn
+-/
 import Mathbin.Data.Fintype.Basic
 import Mathbin.Algebra.BigOperators.Basic
 
@@ -69,17 +74,18 @@ Formally, a line is represented by the function `l.idx_fun : ι → option α` w
 `l.idx_fun i = some y`).
 
 When `α` has size `1` there can be many elements of `line α ι` defining the same function. -/
-structure line (α ι : Type _) where
+structure Line (α ι : Type _) where
   idxFun : ι → Option α
   proper : ∃ i, idx_fun i = none
 
 namespace Line
 
+-- This lets us treat a line `l : line α ι` as a function `α → ι → α`.
 instance α ι : CoeFun (Line α ι) fun _ => α → ι → α :=
   ⟨fun l x i => (l.idxFun i).getOrElse x⟩
 
 /-- A line is monochromatic if all its points are the same color. -/
-def is_mono {α ι κ} (C : (ι → α) → κ) (l : Line α ι) : Prop :=
+def IsMono {α ι κ} (C : (ι → α) → κ) (l : Line α ι) : Prop :=
   ∃ c, ∀ x, C (l x) = c
 
 /-- The diagonal line. It is the identity at every coordinate. -/
@@ -91,7 +97,7 @@ instance α ι [Nonempty ι] : Inhabited (Line α ι) :=
   ⟨diagonal α ι⟩
 
 /-- The type of lines that are only one color except possibly at their endpoints. -/
-structure almost_mono {α ι κ : Type _} (C : (ι → Option α) → κ) where
+structure AlmostMono {α ι κ : Type _} (C : (ι → Option α) → κ) where
   line : Line (Option α) ι
   Color : κ
   has_color : ∀ x : α, C (line (some x)) = color
@@ -104,7 +110,7 @@ instance {α ι κ : Type _} [Nonempty ι] [Inhabited κ] : Inhabited (AlmostMon
 - the lines all have the same endpoint
 - the colors of the lines are distinct.
 Used in the proof `exists_mono_in_high_dimension`. -/
-structure color_focused {α ι κ : Type _} (C : (ι → Option α) → κ) where
+structure ColorFocused {α ι κ : Type _} (C : (ι → Option α) → κ) where
   lines : Multiset (AlmostMono C)
   focus : ι → Option α
   is_focused : ∀, ∀ p ∈ lines, ∀, AlmostMono.line p none = focus
@@ -132,7 +138,7 @@ def horizontal {α ι ι'} (l : Line α ι) (v : ι' → α) : Line α (Sum ι �
   proper := ⟨Sum.inl l.proper.some, l.proper.some_spec⟩
 
 /-- One line in `ι → α` and one in `ι' → α` together determine a line in `ι ⊕ ι' → α`. -/
-def Prod {α ι ι'} (l : Line α ι) (l' : Line α ι') : Line α (Sum ι ι') where
+def prod {α ι ι'} (l : Line α ι) (l' : Line α ι') : Line α (Sum ι ι') where
   idxFun := Sum.elim l.idxFun l'.idxFun
   proper := ⟨Sum.inl l.proper.some, l.proper.some_spec⟩
 
@@ -173,8 +179,10 @@ for the proof. See `exists_mono_in_high_dimension` for a fully universe-polymorp
 private theorem exists_mono_in_high_dimension' :
     ∀ α : Type u [Fintype α] κ : Type max v u [Fintype κ],
       ∃ (ι : Type)(_ : Fintype ι), ∀ C : (ι → α) → κ, ∃ l : Line α ι, l.IsMono C :=
-  Fintype.induction_empty_option
-    (fun α α' e =>
+  -- The proof proceeds by induction on `α`.
+    Fintype.induction_empty_option
+    (-- We have to show that the theorem is invariant under `α ≃ α'` for the induction to work.
+    fun α α' e =>
       forall_imp fun κ =>
         forall_imp fun _ =>
           Exists.impₓ fun ι =>
@@ -184,6 +192,7 @@ private theorem exists_mono_in_high_dimension' :
                 e.forall_congr_left.mp fun x => by
                   rw [← lc x, line.map_apply]⟩)
     (by
+      -- This deals with the degenerate case where `α` is empty.
       intros κ _
       by_cases' h : Nonempty κ
       · skip
@@ -192,17 +201,24 @@ private theorem exists_mono_in_high_dimension' :
       · exact ⟨Empty, inferInstance, fun C => (h ⟨C (Empty.rec _)⟩).elim⟩
         )
     (by
+      -- Now we have to show that the theorem holds for `option α` if it holds for `α`.
       intros α _ ihα κ _
+      -- Later we'll need `α` to be nonempty. So we first deal with the trivial case where `α` is empty.
+      -- Then `option α` has only one element, so any line is monochromatic.
       by_cases' h : Nonempty α
       on_goal 1 =>
         refine' ⟨Unit, inferInstance, fun C => ⟨diagonal _ _, C fun _ => none, _⟩⟩
         rintro (_ | ⟨a⟩)
         rfl
         exact (h ⟨a⟩).elim
+      -- The key idea is to show that for every `r`, in high dimension we can either find
+      -- `r` color focused lines or a monochromatic line.
       suffices key :
         ∀ r : ℕ,
           ∃ (ι : Type)(_ : Fintype ι),
             ∀ C : (ι → Option α) → κ, (∃ s : color_focused C, s.lines.card = r) ∨ ∃ l, is_mono C l
+      -- Given the key claim, we simply take `r = |κ| + 1`. We cannot have this many distinct colors so
+      -- we must be in the second case, where there is a monochromatic line.
       · obtain ⟨ι, _inst, hι⟩ := key (Fintype.card κ + 1)
         refine' ⟨ι, _inst, fun C => (hι C).resolve_left _⟩
         rintro ⟨s, sr⟩
@@ -210,44 +226,65 @@ private theorem exists_mono_in_high_dimension' :
         rw [← Nat.add_one, ← sr, ← Multiset.card_map, ← Finset.card_mk]
         exact Finset.card_le_univ ⟨_, s.distinct_colors⟩
         
+      -- We now prove the key claim, by induction on `r`.
       intro r
       induction' r with r ihr
+      -- The base case `r = 0` is trivial as the empty collection is color-focused.
       · exact ⟨Empty, inferInstance, fun C => Or.inl ⟨default, Multiset.card_zero⟩⟩
         
+      -- Supposing the key claim holds for `r`, we need to show it for `r+1`. First pick a high enough
+      -- dimension `ι` for `r`.
       obtain ⟨ι, _inst, hι⟩ := ihr
       skip
+      -- Then since the theorem holds for `α` with any number of colors, pick a dimension `ι'` such that
+      -- `ι' → α` always has a monochromatic line whenever it is `(ι → option α) → κ`-colored.
       specialize ihα ((ι → Option α) → κ)
       obtain ⟨ι', _inst, hι'⟩ := ihα
       skip
+      -- We claim that `ι ⊕ ι'` works for `option α` and `κ`-coloring.
       refine' ⟨Sum ι ι', inferInstance, _⟩
       intro C
+      -- A `κ`-coloring of `ι ⊕ ι' → option α` induces an `(ι → option α) → κ`-coloring of `ι' → α`.
       specialize hι' fun v' v => C (Sum.elim v (some ∘ v'))
+      -- By choice of `ι'` this coloring has a monochromatic line `l'` with color class `C'`, where
+      -- `C'` is a `κ`-coloring of `ι → α`.
       obtain ⟨l', C', hl'⟩ := hι'
+      -- If `C'` has a monochromatic line, then so does `C`. We use this in two places below.
       have mono_of_mono : (∃ l, is_mono C' l) → ∃ l, is_mono C l := by
         rintro ⟨l, c, hl⟩
         refine' ⟨l.horizontal (some ∘ l' (Classical.arbitrary α)), c, fun x => _⟩
         rw [line.horizontal_apply, ← hl, ← hl']
+      -- By choice of `ι`, `C'` either has `r` color-focused lines or a monochromatic line.
       specialize hι C'
       rcases hι with (⟨s, sr⟩ | _)
+      -- By above, we are done if `C'` has a monochromatic line.
       on_goal 1 =>
         exact Or.inr (mono_of_mono hι)
+      -- Here we assume `C'` has `r` color focused lines. We split into cases depending on whether one of
+      -- these `r` lines has the same color as the focus point.
       by_cases' h : ∃ p ∈ s.lines, (p : almost_mono _).Color = C' s.focus
+      -- If so then this is a `C'`-monochromatic line and we are done.
       · obtain ⟨p, p_mem, hp⟩ := h
         refine' Or.inr (mono_of_mono ⟨p.line, p.color, _⟩)
         rintro (_ | _)
         rw [hp, s.is_focused p p_mem]
         apply p.has_color
         
+      -- If not, we get `r+1` color focused lines by taking the product of the `r` lines with `l'` and
+      -- adding to this the vertical line obtained by the focus point and `l`.
       refine'
         Or.inl
           ⟨⟨(s.lines.map _).cons ⟨(l'.map some).vertical s.focus, C' s.focus, fun x => _⟩,
               Sum.elim s.focus (l'.map some none), _, _⟩,
             _⟩
+      -- The vertical line is almost monochromatic.
       · rw [vertical_apply, ← congr_funₓ (hl' x), line.map_apply]
         
       · refine' fun p => ⟨p.line.prod (l'.map some), p.Color, fun x => _⟩
+        -- The product lines are almost monochromatic.
         rw [line.prod_apply, line.map_apply, ← p.has_color, ← congr_funₓ (hl' x)]
         
+      -- Our `r+1` lines have the same endpoint.
       · simp_rw [Multiset.mem_cons, Multiset.mem_map]
         rintro _ (rfl | ⟨q, hq, rfl⟩)
         · rw [line.vertical_apply]
@@ -255,9 +292,11 @@ private theorem exists_mono_in_high_dimension' :
         · rw [line.prod_apply, s.is_focused q hq]
           
         
+      -- Our `r+1` lines have distinct colors (this is why we needed to split into cases above).
       · rw [Multiset.map_cons, Multiset.map_map, Multiset.nodup_cons, Multiset.mem_map]
         exact ⟨fun ⟨q, hq, he⟩ => h ⟨q, hq, he⟩, s.distinct_colors⟩
         
+      -- Finally, we really do have `r+1` lines!
       · rw [Multiset.card_cons, Multiset.card_map, sr]
         )
 

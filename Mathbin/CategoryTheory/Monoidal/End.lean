@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison, Andrew Yang
+-/
 import Mathbin.CategoryTheory.Monoidal.Functor
 
 /-!
@@ -23,7 +28,7 @@ variable (C : Type u) [Category.{v} C]
 with tensor product given by composition of functors
 (and horizontal composition of natural transformations).
 -/
-def endofunctor_monoidal_category : MonoidalCategory (C ⥤ C) where
+def endofunctorMonoidalCategory : MonoidalCategory (C ⥤ C) where
   tensorObj := fun F G => F ⋙ G
   tensorHom := fun F G F' G' α β => α ◫ β
   tensorUnit := 𝟭 C
@@ -40,8 +45,12 @@ attribute [local reducible] endofunctor_monoidal_category
 /-- Tensoring on the right gives a monoidal functor from `C` into endofunctors of `C`.
 -/
 @[simps]
-def tensoring_right_monoidal [MonoidalCategory.{v} C] : MonoidalFunctor C (C ⥤ C) :=
-  { tensoringRight C with ε := (rightUnitorNatIso C).inv,
+def tensoringRightMonoidal [MonoidalCategory.{v} C] : MonoidalFunctor C (C ⥤ C) :=
+  { -- We could avoid needing to do this explicitly by
+      -- constructing a partially applied analogue of `associator_nat_iso`.
+      tensoringRight
+      C with
+    ε := (rightUnitorNatIso C).inv,
     μ := fun X Y =>
       { app := fun Z => (α_ Z X Y).Hom,
         naturality' := fun Z Z' f => by
@@ -110,11 +119,13 @@ theorem μ_naturality {m n : M} {X Y : C} (f : X ⟶ Y) :
     (F.obj n).map ((F.obj m).map f) ≫ (F.μ m n).app Y = (F.μ m n).app X ≫ (F.obj _).map f :=
   (F.toLaxMonoidalFunctor.μ m n).naturality f
 
+-- This is a simp lemma in the reverse direction via `nat_trans.naturality`.
 @[reassoc]
 theorem μ_inv_naturality {m n : M} {X Y : C} (f : X ⟶ Y) :
     (F.μIso m n).inv.app X ≫ (F.obj n).map ((F.obj m).map f) = (F.obj _).map f ≫ (F.μIso m n).inv.app Y :=
   ((F.μIso m n).inv.naturality f).symm
 
+-- This is not a simp lemma since it could be proved by the lemmas later.
 @[reassoc]
 theorem μ_naturality₂ {m n m' n' : M} (f : m ⟶ m') (g : n ⟶ n') (X : C) :
     (F.map g).app ((F.obj m).obj X) ≫ (F.obj n').map ((F.map f).app X) ≫ (F.μ m' n').app X =
@@ -259,13 +270,13 @@ theorem obj_μ_zero_app (m₁ m₂ : M) (X : C) :
 
 /-- If `m ⊗ n ≅ 𝟙_M`, then `F.obj m` is a left inverse of `F.obj n`. -/
 @[simps]
-noncomputable def unit_of_tensor_iso_unit (m n : M) (h : m ⊗ n ≅ 𝟙_ M) : F.obj m ⋙ F.obj n ≅ 𝟭 C :=
+noncomputable def unitOfTensorIsoUnit (m n : M) (h : m ⊗ n ≅ 𝟙_ M) : F.obj m ⋙ F.obj n ≅ 𝟭 C :=
   F.μIso m n ≪≫ F.toFunctor.mapIso h ≪≫ F.εIso.symm
 
 /-- If `m ⊗ n ≅ 𝟙_M` and `n ⊗ m ≅ 𝟙_M` (subject to some commuting constraints),
   then `F.obj m` and `F.obj n` forms a self-equivalence of `C`. -/
 @[simps]
-noncomputable def equiv_of_tensor_iso_unit (m n : M) (h₁ : m ⊗ n ≅ 𝟙_ M) (h₂ : n ⊗ m ≅ 𝟙_ M)
+noncomputable def equivOfTensorIsoUnit (m n : M) (h₁ : m ⊗ n ≅ 𝟙_ M) (h₂ : n ⊗ m ≅ 𝟙_ M)
     (H : (h₁.Hom ⊗ 𝟙 m) ≫ (λ_ m).Hom = (α_ m n m).Hom ≫ (𝟙 m ⊗ h₂.Hom) ≫ (ρ_ m).Hom) : C ≌ C where
   Functor := F.obj m
   inverse := F.obj n

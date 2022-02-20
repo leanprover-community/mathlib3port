@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Sébastien Gouëzel. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Sébastien Gouëzel
+-/
 import Mathbin.Topology.FiberBundle
 import Mathbin.Geometry.Manifold.SmoothManifoldWithCorners
 
@@ -123,14 +128,14 @@ instance : Inhabited (BasicSmoothBundleCore I M F) :=
   ⟨trivialBasicSmoothBundleCore I M F⟩
 
 /-- Fiber bundle core associated to a basic smooth bundle core -/
-def to_topological_fiber_bundle_core : TopologicalFiberBundleCore (Atlas H M) M F where
+def toTopologicalFiberBundleCore : TopologicalFiberBundleCore (Atlas H M) M F where
   BaseSet := fun i => i.1.Source
   is_open_base_set := fun i => i.1.open_source
   indexAt := fun x => ⟨chartAt H x, chart_mem_atlas H x⟩
   mem_base_set_at := fun x => mem_chart_source H x
   coordChange := fun i j x v => Z.coordChange i j (i.1 x) v
   coord_change_self := fun i x hx v => Z.coord_change_self i (i.1 x) (i.1.map_source hx) v
-  coord_change_comp := fun i j k x ⟨⟨hx1, hx2⟩, hx3⟩ v => by
+  coord_change_comp := fun v => by
     have := Z.coord_change_comp i j k (i.1 x) _ v
     convert this using 2
     · simp' only [hx1] with mfld_simps
@@ -184,7 +189,7 @@ theorem chart_target (e : LocalHomeomorph M H) (he : e ∈ Atlas H M) :
 
 /-- The total space of a basic smooth bundle is endowed with a charted space structure, where the
 charts are in bijection with the charts of the basis. -/
-instance to_charted_space : ChartedSpace (ModelProd H F) Z.toTopologicalFiberBundleCore.TotalSpace where
+instance toChartedSpace : ChartedSpace (ModelProd H F) Z.toTopologicalFiberBundleCore.TotalSpace where
   Atlas := ⋃ (e : LocalHomeomorph M H) (he : e ∈ Atlas H M), {Z.chart he}
   chartAt := fun p => Z.chart (chart_mem_atlas H p.1)
   mem_chart_source := fun p => by
@@ -221,6 +226,9 @@ theorem coe_chart_at_symm_fst (p : H × F) (q : Z.toTopologicalFiberBundleCore.T
 
 /-- Smooth manifold structure on the total space of a basic smooth bundle -/
 instance to_smooth_manifold : SmoothManifoldWithCorners (I.Prod 𝓘(𝕜, F)) Z.toTopologicalFiberBundleCore.TotalSpace := by
+  /- We have to check that the charts belong to the smooth groupoid, i.e., they are smooth on their
+    source, and their inverses are smooth on the target. Since both objects are of the same kind, it
+    suffices to prove the first statement in A below, and then glue back the pieces at the end. -/
   let J := ModelWithCorners.toLocalEquiv (I.prod 𝓘(𝕜, F))
   have A :
     ∀ e e' : LocalHomeomorph M H he : e ∈ atlas H M he' : e' ∈ atlas H M,
@@ -235,11 +243,14 @@ instance to_smooth_manifold : SmoothManifoldWithCorners (I.Prod 𝓘(𝕜, F)) Z
       simp only [J, chart, ModelWithCorners.prod]
       mfld_set_tac
     rw [this]
+    -- check separately that the two components of the coordinate change are smooth
     apply TimesContDiffOn.prod
     show
       TimesContDiffOn 𝕜 ∞ (fun p : E × F => (I ∘ e' ∘ e.symm ∘ I.symm) p.1)
         ((I.symm ⁻¹' (e.symm.trans e').Source ∩ range I) ×ˢ (univ : Set F))
-    · have A : TimesContDiffOn 𝕜 ∞ (I ∘ e.symm.trans e' ∘ I.symm) (I.symm ⁻¹' (e.symm.trans e').Source ∩ range I) :=
+    · -- the coordinate change on the base is just a coordinate change for `M`, smooth since
+      -- `M` is smooth
+      have A : TimesContDiffOn 𝕜 ∞ (I ∘ e.symm.trans e' ∘ I.symm) (I.symm ⁻¹' (e.symm.trans e').Source ∩ range I) :=
         (HasGroupoid.compatible (timesContDiffGroupoid ∞ I) he he').1
       have B :
         TimesContDiffOn 𝕜 ∞ (fun p : E × F => p.1)
@@ -254,7 +265,11 @@ instance to_smooth_manifold : SmoothManifoldWithCorners (I.Prod 𝓘(𝕜, F)) Z
             ((chart_at H (e.symm (I.symm p.1)) : M → H) (e.symm (I.symm p.1)))
             (Z.coord_change ⟨e, he⟩ ⟨chart_at H (e.symm (I.symm p.1)), _⟩ (e (e.symm (I.symm p.1))) p.2))
         ((I.symm ⁻¹' (e.symm.trans e').Source ∩ range I) ×ˢ (univ : Set F))
-    · have := Z.coord_change_smooth ⟨e, he⟩ ⟨e', he'⟩
+    · /- The coordinate change in the fiber is more complicated as its definition involves the
+            reference chart chosen at each point. However, it appears with its inverse, so using the
+            cocycle property one can get rid of it, and then conclude using the smoothness of the
+            cocycle as given in the definition of basic smooth bundles. -/
+      have := Z.coord_change_smooth ⟨e, he⟩ ⟨e', he'⟩
       rw [I.image_eq] at this
       apply TimesContDiffOn.congr this
       rintro ⟨x, v⟩ hx
@@ -287,6 +302,8 @@ fiber corresponds to the derivative of the coordinate change in `M`. -/
 def tangentBundleCore : BasicSmoothBundleCore I M E where
   coordChange := fun i j x v => (fderivWithin 𝕜 (I ∘ j.1 ∘ i.1.symm ∘ I.symm) (Range I) (I x) : E → E) v
   coord_change_smooth := fun i j => by
+    /- To check that the coordinate change of the bundle is smooth, one should just use the
+        smoothness of the charts, and thus the smoothness of their derivatives. -/
     rw [I.image_eq]
     have A : TimesContDiffOn 𝕜 ∞ (I ∘ i.1.symm.trans j.1 ∘ I.symm) (I.symm ⁻¹' (i.1.symm.trans j.1).Source ∩ range I) :=
       (HasGroupoid.compatible (timesContDiffGroupoid ∞ I) i.2 j.2).1
@@ -321,6 +338,9 @@ def tangentBundleCore : BasicSmoothBundleCore I M E where
     rw [this, D x E]
     rfl
   coord_change_self := fun i x hx v => by
+    /- Locally, a self-change of coordinate is just the identity, thus its derivative is the
+        identity. One just needs to write this carefully, paying attention to the sets where the
+        functions are defined. -/
     have A : I.symm ⁻¹' (i.1.symm.trans i.1).Source ∩ range I ∈ 𝓝[range I] I x := by
       rw [inter_comm]
       apply inter_mem_nhds_within
@@ -341,6 +361,10 @@ def tangentBundleCore : BasicSmoothBundleCore I M E where
     rw [C]
     rfl
   coord_change_comp := fun i j u x hx => by
+    /- The cocycle property is just the fact that the derivative of a composition is the product of
+        the derivatives. One needs however to check that all the functions one considers are smooth, and
+        to pay attention to the domains where these functions are defined, making this proof a little
+        bit cumbersome although there is nothing complicated here. -/
     have M : I x ∈ I.symm ⁻¹' ((i.1.symm.trans j.1).trans (j.1.symm.trans u.1)).Source ∩ range I :=
       ⟨by
         simpa only [mem_preimage, ModelWithCorners.left_inv] using hx, mem_range_self _⟩
@@ -462,6 +486,7 @@ variable (M)
 `(tangent_bundle_core I M).to_topological_fiber_bundle_core.total_space`, but instead we use the
 (definitionally equal) `Σ (x : M), tangent_space I x`, to make sure that rcasing an element of the
 tangent bundle gives a second component in the tangent space. -/
+-- is empty if the base manifold is empty
 @[nolint has_inhabited_instance, reducible]
 def TangentBundle :=
   Σ x : M, TangentSpace I x
@@ -479,6 +504,9 @@ theorem TangentBundle.proj_apply (x : M) (v : TangentSpace I x) : TangentBundle.
 
 section TangentBundleInstances
 
+/- In general, the definition of tangent_bundle and tangent_space are not reducible, so that type
+class inference does not pick wrong instances. In this section, we record the right instances for
+them, noting in particular that the tangent bundle is a smooth manifold. -/
 variable (M)
 
 instance : TopologicalSpace (TangentBundle I M) :=

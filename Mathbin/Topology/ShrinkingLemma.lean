@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Yury Kudryashov. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yury Kudryashov, Reid Barton
+-/
 import Mathbin.Topology.Separation
 
 /-!
@@ -32,7 +37,7 @@ variable {ι X : Type _} [TopologicalSpace X] [NormalSpace X]
 
 namespace ShrinkingLemma
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (i «expr ∉ » carrier)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (i «expr ∉ » carrier)
 /-- Auxiliary definition for the proof of `shrinking_lemma`. A partial refinement of a covering
 `⋃ i, u i` of a set `s` is a map `v : ι → set X` and a set `carrier : set ι` such that
 
@@ -44,8 +49,9 @@ namespace ShrinkingLemma
 This type is equipped with the folowing partial order: `v ≤ v'` if `v.carrier ⊆ v'.carrier`
 and `v i = v' i` for `i ∈ v.carrier`. We will use Zorn's lemma to prove that this type has
 a maximal element, then show that the maximal element must have `carrier = univ`. -/
+-- the trivial refinement needs `u` to be a covering
 @[nolint has_inhabited_instance]
-structure partial_refinement (u : ι → Set X) (s : Set X) where
+structure PartialRefinement (u : ι → Set X) (s : Set X) where
   toFun : ι → Set X
   Carrier : Set ι
   is_open' : ∀ i, IsOpen (to_fun i)
@@ -69,7 +75,7 @@ theorem closure_subset (v : PartialRefinement u s) {i : ι} (hi : i ∈ v.Carrie
 theorem apply_eq (v : PartialRefinement u s) {i : ι} (hi : i ∉ v.Carrier) : v i = u i :=
   v.apply_eq' i hi
 
-protected theorem IsOpen (v : PartialRefinement u s) (i : ι) : IsOpen (v i) :=
+protected theorem is_open (v : PartialRefinement u s) (i : ι) : IsOpen (v i) :=
   v.is_open' i
 
 protected theorem subset (v : PartialRefinement u s) (i : ι) : v i ⊆ u i :=
@@ -97,7 +103,7 @@ theorem apply_eq_of_chain {c : Set (PartialRefinement u s)} (hc : Chain (· ≤ 
 
 /-- The carrier of the least upper bound of a non-empty chain of partial refinements
 is the union of their carriers. -/
-def chain_Sup_carrier (c : Set (PartialRefinement u s)) : Set ι :=
+def ChainSupCarrier (c : Set (PartialRefinement u s)) : Set ι :=
   ⋃ v ∈ c, Carrier v
 
 /-- Choice of an element of a nonempty chain of partial refinements. If `i` belongs to one of
@@ -125,9 +131,9 @@ theorem find_apply_of_mem {c : Set (PartialRefinement u s)} (hc : Chain (· ≤ 
     (hi : i ∈ Carrier v) : find c Ne i i = v i :=
   apply_eq_of_chain hc (find_mem _ _) hv ((mem_find_carrier_iff _).2 <| mem_Union₂.2 ⟨v, hv, hi⟩) hi
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (i «expr ∉ » chain_Sup_carrier c)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (i «expr ∉ » chain_Sup_carrier c)
 /-- Least upper bound of a nonempty chain of partial refinements. -/
-def chain_Sup (c : Set (PartialRefinement u s)) (hc : Chain (· ≤ ·) c) (ne : c.Nonempty)
+def chainSup (c : Set (PartialRefinement u s)) (hc : Chain (· ≤ ·) c) (ne : c.Nonempty)
     (hfin : ∀, ∀ x ∈ s, ∀, Finite { i | x ∈ u i }) (hU : s ⊆ ⋃ i, u i) : PartialRefinement u s := by
   refine'
     ⟨fun i => find c Ne i i, chain_Sup_carrier c, fun i => (find _ _ _).IsOpen i, fun x hxs => mem_Union.2 _,
@@ -155,9 +161,9 @@ theorem le_chain_Sup {c : Set (PartialRefinement u s)} (hc : Chain (· ≤ ·) c
     v ≤ chainSup c hc Ne hfin hU :=
   ⟨fun i hi => mem_bUnion hv hi, fun i hi => (find_apply_of_mem hc _ hv hi).symm⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (j «expr ≠ » i)
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (j «expr ≠ » i)
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (j «expr ≠ » i)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (j «expr ≠ » i)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (j «expr ≠ » i)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (j «expr ≠ » i)
 /-- If `s` is a closed set, `v` is a partial refinement, and `i` is an index such that
 `i ∉ v.carrier`, then there exists a partial refinement that is strictly greater than `v`. -/
 theorem exists_gt (v : PartialRefinement u s) (hs : IsClosed s) (i : ι) (hi : i ∉ v.Carrier) :

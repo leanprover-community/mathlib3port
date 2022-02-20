@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2017 Simon Hudon All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Simon Hudon
+-/
 import Mathbin.Data.Pfunctor.Univariate.Basic
 
 /-!
@@ -29,12 +34,12 @@ namespace Pfunctor
 namespace Approx
 
 /-- `cofix_a F n` is an `n` level approximation of a M-type -/
-inductive cofix_a : ℕ → Type u
+inductive CofixA : ℕ → Type u
   | continue : cofix_a 0
   | intro {n} : ∀ a, (F.B a → cofix_a n) → cofix_a (succ n)
 
 /-- default inhabitant of `cofix_a` -/
-protected def cofix_a.default [Inhabited F.A] : ∀ n, CofixA F n
+protected def CofixA.default [Inhabited F.A] : ∀ n, CofixA F n
   | 0 => CofixA.continue
   | succ n => (CofixA.intro default) fun _ => cofix_a.default n
 
@@ -61,7 +66,7 @@ theorem approx_eta {n : ℕ} (x : CofixA F (n + 1)) : x = CofixA.intro (head' x)
 
 /-- Relation between two approximations of the cofix of a pfunctor
 that state they both contain the same data until one of them is truncated -/
-inductive agree : ∀ {n : ℕ}, CofixA F n → CofixA F (n + 1) → Prop
+inductive Agree : ∀ {n : ℕ}, CofixA F n → CofixA F (n + 1) → Prop
   | continue (x : CofixA F 0) (y : CofixA F 1) : agree x y
   | intro {n} {a} (x : F.B a → CofixA F n) (x' : F.B a → CofixA F (n + 1)) :
     (∀ i : F.B a, agree (x i) (x' i)) → agree (CofixA.intro a x) (CofixA.intro a x')
@@ -69,7 +74,7 @@ inductive agree : ∀ {n : ℕ}, CofixA F n → CofixA F (n + 1) → Prop
 /-- Given an infinite series of approximations `approx`,
 `all_agree approx` states that they are all consistent with each other.
 -/
-def all_agree (x : ∀ n, CofixA F n) :=
+def AllAgree (x : ∀ n, CofixA F n) :=
   ∀ n, Agree (x n) (x (succ n))
 
 @[simp]
@@ -105,7 +110,7 @@ variable (f : X → F.Obj X)
 
 /-- `s_corec f i n` creates an approximation of height `n`
 of the final coalgebra of `f` -/
-def s_corec : ∀ i : X n, CofixA F n
+def sCorec : ∀ i : X n, CofixA F n
   | _, 0 => CofixA.continue
   | j, succ n => CofixA.intro (f j).1 fun i => s_corec ((f j).2 i) _
 
@@ -118,10 +123,10 @@ theorem P_corec (i : X) (n : ℕ) : Agree (sCorec f i n) (sCorec f i (succ n)) :
   apply n_ih
 
 /-- `path F` provides indices to access internal nodes in `corec F` -/
-def path (F : Pfunctor.{u}) :=
+def Path (F : Pfunctor.{u}) :=
   List F.Idx
 
-instance path.inhabited : Inhabited (Path F) :=
+instance Path.inhabited : Inhabited (Path F) :=
   ⟨[]⟩
 
 open List Nat
@@ -166,7 +171,7 @@ open Approx
 /-- Internal definition for `M`. It is needed to avoid name clashes
 between `M.mk` and `M.cases_on` and the declarations generated for
 the structure -/
-structure M_intl where
+structure MIntl where
   approx : ∀ n, CofixA F n
   consistent : AllAgree approx
 
@@ -181,7 +186,7 @@ theorem M.default_consistent [Inhabited F.A] : ∀ n, Agree (default : CofixA F 
 instance M.inhabited [Inhabited F.A] : Inhabited (M F) :=
   ⟨{ approx := fun n => default, consistent := M.default_consistent _ }⟩
 
-instance M_intl.inhabited [Inhabited F.A] : Inhabited (MIntl F) :=
+instance MIntl.inhabited [Inhabited F.A] : Inhabited (MIntl F) :=
   show Inhabited (M F) by
     infer_instance
 
@@ -259,7 +264,7 @@ def dest : M F → F.Obj (M F)
 namespace Approx
 
 /-- generates the approximations needed for `M.mk` -/
-protected def s_mk (x : F.Obj <| M F) : ∀ n, CofixA F n
+protected def sMk (x : F.Obj <| M F) : ∀ n, CofixA F n
   | 0 => CofixA.continue
   | succ n => CofixA.intro x.1 fun i => (x.2 i).approx n
 
@@ -280,7 +285,7 @@ protected def mk (x : F.Obj <| M F) : M F where
 
 /-- `agree' n` relates two trees of type `M F` that
 are the same up to dept `n` -/
-inductive agree' : ℕ → M F → M F → Prop
+inductive Agree' : ℕ → M F → M F → Prop
   | trivialₓ (x y : M F) : agree' 0 x y
   | step {n : ℕ} {a} (x y : F.B a → M F) {x' y'} :
     x' = M.mk ⟨a, x⟩ → y' = M.mk ⟨a, y⟩ → (∀ i, agree' n (x i) (y i)) → agree' (succ n) x' y'
@@ -336,12 +341,12 @@ protected def cases {r : M F → Sort w} (f : ∀ x : F.Obj <| M F, r (M.mk x)) 
   f _
 
 /-- destructor for M-types -/
-protected def cases_on {r : M F → Sort w} (x : M F) (f : ∀ x : F.Obj <| M F, r (M.mk x)) : r x :=
+protected def casesOn {r : M F → Sort w} (x : M F) (f : ∀ x : F.Obj <| M F, r (M.mk x)) : r x :=
   M.cases f x
 
 /-- destructor for M-types, similar to `cases_on` but also
 gives access directly to the root and subtrees on an M-type -/
-protected def cases_on' {r : M F → Sort w} (x : M F) (f : ∀ a f, r (M.mk ⟨a, f⟩)) : r x :=
+protected def casesOn' {r : M F → Sort w} (x : M F) (f : ∀ a f, r (M.mk ⟨a, f⟩)) : r x :=
   M.casesOn x fun ⟨a, g⟩ => f a _
 
 theorem approx_mk (a : F.A) (f : F.B a → M F) (i : ℕ) :
@@ -418,7 +423,7 @@ theorem cases_on_mk' {r : M F → Sort _} {a} (x : F.B a → M F) (f : ∀ a f :
   cases_mk ⟨_, x⟩ _
 
 /-- `is_path p x` tells us if `p` is a valid path through `x` -/
-inductive is_path : Path F → M F → Prop
+inductive IsPath : Path F → M F → Prop
   | nil (x : M F) : is_path [] x
   | cons (xs : Path F) {a} (x : M F) (f : F.B a → M F) (i : F.B a) :
     x = M.mk ⟨a, f⟩ → is_path xs (f i) → is_path (⟨a, i⟩ :: xs) x
@@ -544,7 +549,7 @@ theorem corec_def {X} (f : X → F.Obj X) (x₀ : X) : M.corec f x₀ = M.mk (M.
     
   · dsimp only [s_corec, approx.s_mk]
     cases h : f x₀
-    dsimp only [· <$> ·, Pfunctor.map]
+    dsimp only [(· <$> ·), Pfunctor.map]
     congr
     
 
@@ -616,7 +621,7 @@ local infixl:50 " ~ " => R
 
 /-- Bisimulation is the standard proof technique for equality between
 infinite tree-like structures -/
-structure is_bisimulation : Prop where
+structure IsBisimulation : Prop where
   head : ∀ {a a'} {f f'}, M.mk ⟨a, f⟩ ~ M.mk ⟨a', f'⟩ → a = a'
   tail : ∀ {a} {f f' : F.B a → M F}, M.mk ⟨a, f⟩ ~ M.mk ⟨a, f'⟩ → ∀ i : F.B a, f i ~ f' i
 
@@ -671,7 +676,7 @@ end Bisim
 universe u' v'
 
 /-- corecursor for `M F` with swapped arguments -/
-def corec_on {X : Type _} (x₀ : X) (f : X → F.Obj X) : M F :=
+def corecOn {X : Type _} (x₀ : X) (f : X → F.Obj X) : M F :=
   M.corec f x₀
 
 variable {P : Pfunctor.{u}} {α : Type u}
@@ -710,6 +715,7 @@ theorem bisim' {α : Type _} (Q : α → Prop) (u v : α → M P)
       ⟨a, f, f', xeq.symm ▸ ux'eq, yeq.symm ▸ vx'eq, h'⟩)
     _ _ ⟨x, Qx, rfl, rfl⟩
 
+-- for the record, show M_bisim follows from _bisim'
 theorem bisim_equiv (R : M P → M P → Prop)
     (h : ∀ x y, R x y → ∃ a f f', M.dest x = ⟨a, f⟩ ∧ M.dest y = ⟨a, f'⟩ ∧ ∀ i, R (f i) (f' i)) :
     ∀ x y, R x y → x = y := fun x y Rxy =>
@@ -743,7 +749,7 @@ def corec₁ {α : Type u} (F : ∀ X, (α → X) → α → P.Obj X) : α → M
 of the computation -/
 def corec' {α : Type u} (F : ∀ {X : Type u}, (α → X) → α → Sum (M P) (P.Obj X)) (x : α) : M P :=
   corec₁
-    (fun X rec a : Sum (M P) α =>
+    (fun a : Sum (M P) α =>
       let y := a >>= F (rec ∘ Sum.inr)
       match y with
       | Sum.inr y => y

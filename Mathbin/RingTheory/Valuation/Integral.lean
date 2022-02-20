@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Kenny Lau. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Kenny Lau
+-/
 import Mathbin.RingTheory.IntegrallyClosed
 import Mathbin.RingTheory.Valuation.Integers
 
@@ -43,7 +48,7 @@ theorem mem_of_integral {x : R} (hx : IsIntegral O x) : x ∈ v.integer :=
       exact pow_lt_pow₀ hvx (Finset.mem_range.1 hi)
       
 
-protected theorem integralClosure : integralClosure O R = ⊥ :=
+protected theorem integral_closure : integralClosure O R = ⊥ :=
   bot_unique fun r hr =>
     let ⟨x, hx⟩ := hv.3 (hv.mem_of_integral hr)
     Algebra.mem_bot.2 ⟨x, hx⟩

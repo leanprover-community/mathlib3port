@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2022 Markus Himmel. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Markus Himmel
+-/
 import Mathbin.Data.Opposite
 import Mathbin.Data.Set.Basic
 
@@ -15,11 +20,11 @@ open Opposite
 namespace Set
 
 /-- The opposite of a set `s` is the set obtained by taking the opposite of each member of `s`. -/
-protected def op (s : Set α) : Set (αᵒᵖ) :=
+protected def Op (s : Set α) : Set (αᵒᵖ) :=
   unop ⁻¹' s
 
 /-- The unop of a set `s` is the set obtained by taking the unop of each member of `s`. -/
-protected def unop (s : Set (αᵒᵖ)) : Set α :=
+protected def Unop (s : Set (αᵒᵖ)) : Set α :=
   op ⁻¹' s
 
 @[simp]
@@ -52,7 +57,7 @@ theorem unop_op (s : Set (αᵒᵖ)) : s.unop.op = s :=
 
 /-- Taking opposites as an equivalence of powersets. -/
 @[simps]
-def op_equiv : Set α ≃ Set (αᵒᵖ) :=
+def opEquiv : Set α ≃ Set (αᵒᵖ) :=
   ⟨Set.Op, Set.Unop, op_unop, unop_op⟩
 
 @[simp]

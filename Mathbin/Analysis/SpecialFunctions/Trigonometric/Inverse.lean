@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Chris Hughes. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Chris Hughes, Abhimanyu Pallavi Sudhir, Jean Lo, Calle Sönne, Benjamin Davidson
+-/
 import Mathbin.Analysis.SpecialFunctions.Trigonometric.Basic
 import Mathbin.Topology.Algebra.Order.ProjIcc
 
@@ -223,7 +228,7 @@ theorem maps_to_sin_Ioo : MapsTo sin (Ioo (-(π / 2)) (π / 2)) (Ioo (-1) 1) := 
 
 /-- `real.sin` as a `local_homeomorph` between `(-π / 2, π / 2)` and `(-1, 1)`. -/
 @[simp]
-def sin_local_homeomorph : LocalHomeomorph ℝ ℝ where
+def sinLocalHomeomorph : LocalHomeomorph ℝ ℝ where
   toFun := sin
   invFun := arcsin
   Source := Ioo (-(π / 2)) (π / 2)

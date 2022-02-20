@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2017 Johannes Hölzl. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johannes Hölzl, Mario Carneiro
+-/
 import Mathbin.Algebra.IndicatorFunction
 import Mathbin.Data.Equiv.Fin
 import Mathbin.Data.Tprod
@@ -296,6 +301,7 @@ instance : MeasurableSpace Empty :=
 instance : MeasurableSpace PUnit :=
   ⊤
 
+-- this also works for `unit`
 instance : MeasurableSpace Bool :=
   ⊤
 
@@ -457,7 +463,7 @@ theorem Measurable.subtype_coe {p : β → Prop} {f : α → Subtype p} (hf : Me
 theorem Measurable.subtype_mk {p : β → Prop} {f : α → β} (hf : Measurable f) {h : ∀ x, p (f x)} :
     Measurable fun x => (⟨f x, h x⟩ : Subtype p) := fun t ⟨s, hs⟩ =>
   hs.2 ▸ by
-    simp only [← preimage_comp, · ∘ ·, Subtype.coe_mk, hf hs.1]
+    simp only [← preimage_comp, (· ∘ ·), Subtype.coe_mk, hf hs.1]
 
 theorem MeasurableSet.subtype_image {s : Set α} {t : Set s} (hs : MeasurableSet s) :
     MeasurableSet t → MeasurableSet ((coe : s → α) '' t)
@@ -692,6 +698,8 @@ theorem measurable_update (f : ∀ a : δ, π a) {a : δ} [DecidableEq δ] : Mea
   simp_rw [update_noteq hx]
   apply measurable_const
 
+/- Even though we cannot use projection notation, we still keep a dot to be consistent with similar
+  lemmas, like `measurable_set.prod`. -/
 @[measurability]
 theorem MeasurableSet.pi {s : Set δ} {t : ∀ i : δ, Set (π i)} (hs : Countable s)
     (ht : ∀, ∀ i ∈ s, ∀, MeasurableSet (t i)) : MeasurableSet (s.pi t) := by
@@ -973,7 +981,7 @@ theorem coe_to_equiv (e : α ≃ᵐ β) : (e.toEquiv : α → β) = e :=
   rfl
 
 @[measurability]
-protected theorem Measurable (e : α ≃ᵐ β) : Measurable (e : α → β) :=
+protected theorem measurable (e : α ≃ᵐ β) : Measurable (e : α → β) :=
   e.measurable_to_fun
 
 @[simp]
@@ -1007,11 +1015,11 @@ theorem coe_to_equiv_symm (e : α ≃ᵐ β) : (e.toEquiv.symm : β → α) = e.
 
 /-- See Note [custom simps projection]. We need to specify this projection explicitly in this case,
   because it is a composition of multiple projections. -/
-def simps.apply (h : α ≃ᵐ β) : α → β :=
+def Simps.apply (h : α ≃ᵐ β) : α → β :=
   h
 
 /-- See Note [custom simps projection] -/
-def simps.symm_apply (h : α ≃ᵐ β) : β → α :=
+def Simps.symmApply (h : α ≃ᵐ β) : β → α :=
   h.symm
 
 initialize_simps_projections MeasurableEquiv (to_equiv_to_fun → apply, to_equiv_inv_fun → symmApply)
@@ -1085,7 +1093,7 @@ theorem measurable_set_image (e : α ≃ᵐ β) {s : Set α} : MeasurableSet (e 
   rw [image_eq_preimage, measurable_set_preimage]
 
 /-- A measurable equivalence is a measurable embedding. -/
-protected theorem MeasurableEmbedding (e : α ≃ᵐ β) : MeasurableEmbedding e :=
+protected theorem measurable_embedding (e : α ≃ᵐ β) : MeasurableEmbedding e :=
   { Injective := e.Injective, Measurable := e.Measurable, measurable_set_image' := fun s => e.measurable_set_image.2 }
 
 /-- Equal measurable spaces are equivalent. -/
@@ -1108,13 +1116,13 @@ protected theorem measurable_comp_iff {f : β → γ} (e : α ≃ᵐ β) : Measu
     fun h => h.comp e.Measurable
 
 /-- Any two types with unique elements are measurably equivalent. -/
-def of_unique_of_unique (α β : Type _) [MeasurableSpace α] [MeasurableSpace β] [Unique α] [Unique β] : α ≃ᵐ β where
+def ofUniqueOfUnique (α β : Type _) [MeasurableSpace α] [MeasurableSpace β] [Unique α] [Unique β] : α ≃ᵐ β where
   toEquiv := equivOfUniqueOfUnique
   measurable_to_fun := Subsingleton.measurable
   measurable_inv_fun := Subsingleton.measurable
 
 /-- Products of equivalent measurable spaces are equivalent. -/
-def prod_congr (ab : α ≃ᵐ β) (cd : γ ≃ᵐ δ) : α × γ ≃ᵐ β × δ where
+def prodCongr (ab : α ≃ᵐ β) (cd : γ ≃ᵐ δ) : α × γ ≃ᵐ β × δ where
   toEquiv := prodCongr ab.toEquiv cd.toEquiv
   measurable_to_fun :=
     (ab.measurable_to_fun.comp measurable_id.fst).prod_mk (cd.measurable_to_fun.comp measurable_id.snd)
@@ -1122,19 +1130,19 @@ def prod_congr (ab : α ≃ᵐ β) (cd : γ ≃ᵐ δ) : α × γ ≃ᵐ β × �
     (ab.measurable_inv_fun.comp measurable_id.fst).prod_mk (cd.measurable_inv_fun.comp measurable_id.snd)
 
 /-- Products of measurable spaces are symmetric. -/
-def prod_comm : α × β ≃ᵐ β × α where
+def prodComm : α × β ≃ᵐ β × α where
   toEquiv := prodComm α β
   measurable_to_fun := measurable_id.snd.prod_mk measurable_id.fst
   measurable_inv_fun := measurable_id.snd.prod_mk measurable_id.fst
 
 /-- Products of measurable spaces are associative. -/
-def prod_assoc : (α × β) × γ ≃ᵐ α × β × γ where
+def prodAssoc : (α × β) × γ ≃ᵐ α × β × γ where
   toEquiv := prodAssoc α β γ
   measurable_to_fun := measurable_fst.fst.prod_mk <| measurable_fst.snd.prod_mk measurable_snd
   measurable_inv_fun := (measurable_fst.prod_mk measurable_snd.fst).prod_mk measurable_snd.snd
 
 /-- Sums of measurable spaces are symmetric. -/
-def sum_congr (ab : α ≃ᵐ β) (cd : γ ≃ᵐ δ) : Sum α γ ≃ᵐ Sum β δ where
+def sumCongr (ab : α ≃ᵐ β) (cd : γ ≃ᵐ δ) : Sum α γ ≃ᵐ Sum β δ where
   toEquiv := sumCongr ab.toEquiv cd.toEquiv
   measurable_to_fun := by
     cases' ab with ab' abm
@@ -1150,26 +1158,26 @@ def sum_congr (ab : α ≃ᵐ β) (cd : γ ≃ᵐ δ) : Sum α γ ≃ᵐ Sum β 
     refine' measurable_sum (measurable_inl.comp abm) (measurable_inr.comp cdm)
 
 /-- `s ×ˢ t ≃ (s × t)` as measurable spaces. -/
-def set.prod (s : Set α) (t : Set β) : ↥(s ×ˢ t) ≃ᵐ s × t where
+def Set.prod (s : Set α) (t : Set β) : ↥(s ×ˢ t) ≃ᵐ s × t where
   toEquiv := Equivₓ.Set.prod s t
   measurable_to_fun := measurable_id.subtype_coe.fst.subtype_mk.prod_mk measurable_id.subtype_coe.snd.subtype_mk
   measurable_inv_fun := Measurable.subtype_mk <| measurable_id.fst.subtype_coe.prod_mk measurable_id.snd.subtype_coe
 
 /-- `univ α ≃ α` as measurable spaces. -/
-def Set.Univ (α : Type _) [MeasurableSpace α] : (Univ : Set α) ≃ᵐ α where
+def Set.univ (α : Type _) [MeasurableSpace α] : (Univ : Set α) ≃ᵐ α where
   toEquiv := Equivₓ.Set.univ α
   measurable_to_fun := measurable_id.subtype_coe
   measurable_inv_fun := measurable_id.subtype_mk
 
 /-- `{a} ≃ unit` as measurable spaces. -/
-def set.singleton (a : α) : ({a} : Set α) ≃ᵐ Unit where
+def Set.singleton (a : α) : ({a} : Set α) ≃ᵐ Unit where
   toEquiv := Equivₓ.Set.singleton a
   measurable_to_fun := measurable_const
   measurable_inv_fun := measurable_const
 
 /-- A set is equivalent to its image under a function `f` as measurable spaces,
   if `f` is an injective measurable function that sends measurable sets to measurable sets. -/
-noncomputable def Set.Image (f : α → β) (s : Set α) (hf : Injective f) (hfm : Measurable f)
+noncomputable def Set.image (f : α → β) (s : Set α) (hf : Injective f) (hfm : Measurable f)
     (hfi : ∀ s, MeasurableSet s → MeasurableSet (f '' s)) : s ≃ᵐ f '' s where
   toEquiv := Equivₓ.Set.image f s hf
   measurable_to_fun := (hfm.comp measurable_id.subtype_coe).subtype_mk
@@ -1180,7 +1188,7 @@ noncomputable def Set.Image (f : α → β) (s : Set α) (hf : Injective f) (hfm
 
 /-- The domain of `f` is equivalent to its range as measurable spaces,
   if `f` is an injective measurable function that sends measurable sets to measurable sets. -/
-noncomputable def Set.Range (f : α → β) (hf : Injective f) (hfm : Measurable f)
+noncomputable def Set.range (f : α → β) (hf : Injective f) (hfm : Measurable f)
     (hfi : ∀ s, MeasurableSet s → MeasurableSet (f '' s)) : α ≃ᵐ Range f :=
   (MeasurableEquiv.Set.univ _).symm.trans <|
     (MeasurableEquiv.Set.image f Univ hf hfm hfi).trans <|
@@ -1191,7 +1199,7 @@ noncomputable def Set.Range (f : α → β) (hf : Injective f) (hfm : Measurable
           rw [image_univ])
 
 /-- `α` is equivalent to its image in `α ⊕ β` as measurable spaces. -/
-def set.range_inl : (Range Sum.inl : Set (Sum α β)) ≃ᵐ α where
+def Set.rangeInl : (Range Sum.inl : Set (Sum α β)) ≃ᵐ α where
   toFun := fun ab =>
     match ab with
     | ⟨Sum.inl a, _⟩ => a
@@ -1205,14 +1213,14 @@ def set.range_inl : (Range Sum.inl : Set (Sum α β)) ≃ᵐ α where
     rintro ⟨ab, a, rfl⟩
     rfl
   right_inv := fun a => rfl
-  measurable_to_fun := fun s hs : MeasurableSet s => by
+  measurable_to_fun := fun hs : MeasurableSet s => by
     refine' ⟨_, hs.inl_image, Set.ext _⟩
     rintro ⟨ab, a, rfl⟩
     simp [set.range_inl._match_1]
   measurable_inv_fun := Measurable.subtype_mk measurable_inl
 
 /-- `β` is equivalent to its image in `α ⊕ β` as measurable spaces. -/
-def set.range_inr : (Range Sum.inr : Set (Sum α β)) ≃ᵐ β where
+def Set.rangeInr : (Range Sum.inr : Set (Sum α β)) ≃ᵐ β where
   toFun := fun ab =>
     match ab with
     | ⟨Sum.inr b, _⟩ => b
@@ -1226,14 +1234,14 @@ def set.range_inr : (Range Sum.inr : Set (Sum α β)) ≃ᵐ β where
     rintro ⟨ab, b, rfl⟩
     rfl
   right_inv := fun b => rfl
-  measurable_to_fun := fun s hs : MeasurableSet s => by
+  measurable_to_fun := fun hs : MeasurableSet s => by
     refine' ⟨_, measurable_set_inr_image hs, Set.ext _⟩
     rintro ⟨ab, b, rfl⟩
     simp [set.range_inr._match_1]
   measurable_inv_fun := Measurable.subtype_mk measurable_inr
 
 /-- Products distribute over sums (on the right) as measurable spaces. -/
-def sum_prod_distrib α β γ [MeasurableSpace α] [MeasurableSpace β] [MeasurableSpace γ] :
+def sumProdDistrib α β γ [MeasurableSpace α] [MeasurableSpace β] [MeasurableSpace γ] :
     Sum α β × γ ≃ᵐ Sum (α × γ) (β × γ) where
   toEquiv := sumProdDistrib α β γ
   measurable_to_fun := by
@@ -1245,14 +1253,14 @@ def sum_prod_distrib α β γ [MeasurableSpace α] [MeasurableSpace β] [Measura
         _ _
     · refine' (set.prod (range Sum.inl) univ).symm.measurable_comp_iff.1 _
       refine' (prod_congr set.range_inl (Set.Univ _)).symm.measurable_comp_iff.1 _
-      dsimp [· ∘ ·]
+      dsimp [(· ∘ ·)]
       convert measurable_inl
       ext ⟨a, c⟩
       rfl
       
     · refine' (set.prod (range Sum.inr) univ).symm.measurable_comp_iff.1 _
       refine' (prod_congr set.range_inr (Set.Univ _)).symm.measurable_comp_iff.1 _
-      dsimp [· ∘ ·]
+      dsimp [(· ∘ ·)]
       convert measurable_inr
       ext ⟨b, c⟩
       rfl
@@ -1262,12 +1270,12 @@ def sum_prod_distrib α β γ [MeasurableSpace α] [MeasurableSpace β] [Measura
       ((measurable_inr.comp measurable_fst).prod_mk measurable_snd)
 
 /-- Products distribute over sums (on the left) as measurable spaces. -/
-def prod_sum_distrib α β γ [MeasurableSpace α] [MeasurableSpace β] [MeasurableSpace γ] :
+def prodSumDistrib α β γ [MeasurableSpace α] [MeasurableSpace β] [MeasurableSpace γ] :
     α × Sum β γ ≃ᵐ Sum (α × β) (α × γ) :=
   prodComm.trans <| (sumProdDistrib _ _ _).trans <| sumCongr prodComm prodComm
 
 /-- Products distribute over sums as measurable spaces. -/
-def sum_prod_sum α β γ δ [MeasurableSpace α] [MeasurableSpace β] [MeasurableSpace γ] [MeasurableSpace δ] :
+def sumProdSum α β γ δ [MeasurableSpace α] [MeasurableSpace β] [MeasurableSpace γ] [MeasurableSpace δ] :
     Sum α β × Sum γ δ ≃ᵐ Sum (Sum (α × γ) (α × δ)) (Sum (β × γ) (β × δ)) :=
   (sumProdDistrib _ _ _).trans <| sumCongr (prodSumDistrib _ _ _) (prodSumDistrib _ _ _)
 
@@ -1275,14 +1283,14 @@ variable {π π' : δ' → Type _} [∀ x, MeasurableSpace (π x)] [∀ x, Measu
 
 /-- A family of measurable equivalences `Π a, β₁ a ≃ᵐ β₂ a` generates a measurable equivalence
   between  `Π a, β₁ a` and `Π a, β₂ a`. -/
-def Pi_congr_right (e : ∀ a, π a ≃ᵐ π' a) : (∀ a, π a) ≃ᵐ ∀ a, π' a where
+def piCongrRight (e : ∀ a, π a ≃ᵐ π' a) : (∀ a, π a) ≃ᵐ ∀ a, π' a where
   toEquiv := piCongrRight fun a => (e a).toEquiv
   measurable_to_fun := measurable_pi_lambda _ fun i => (e i).measurable_to_fun.comp (measurable_pi_apply i)
   measurable_inv_fun := measurable_pi_lambda _ fun i => (e i).measurable_inv_fun.comp (measurable_pi_apply i)
 
 /-- Pi-types are measurably equivalent to iterated products. -/
 @[simps (config := { fullyApplied := false })]
-def pi_measurable_equiv_tprod [DecidableEq δ'] {l : List δ'} (hnd : l.Nodup) (h : ∀ i, i ∈ l) :
+def piMeasurableEquivTprod [DecidableEq δ'] {l : List δ'} (hnd : l.Nodup) (h : ∀ i, i ∈ l) :
     (∀ i, π i) ≃ᵐ List.Tprod π l where
   toEquiv := List.Tprod.piEquivTprod hnd h
   measurable_to_fun := measurable_tprod_mk l
@@ -1290,21 +1298,21 @@ def pi_measurable_equiv_tprod [DecidableEq δ'] {l : List δ'} (hnd : l.Nodup) (
 
 /-- If `α` has a unique term, then the type of function `α → β` is measurably equivalent to `β`. -/
 @[simps (config := { fullyApplied := false })]
-def fun_unique (α β : Type _) [Unique α] [MeasurableSpace β] : (α → β) ≃ᵐ β where
+def funUnique (α β : Type _) [Unique α] [MeasurableSpace β] : (α → β) ≃ᵐ β where
   toEquiv := Equivₓ.funUnique α β
   measurable_to_fun := measurable_pi_apply _
   measurable_inv_fun := measurable_pi_iff.2 fun b => measurable_id
 
 /-- The space `Π i : fin 2, α i` is measurably equivalent to `α 0 × α 1`. -/
 @[simps (config := { fullyApplied := false })]
-def pi_fin_two (α : Finₓ 2 → Type _) [∀ i, MeasurableSpace (α i)] : (∀ i, α i) ≃ᵐ α 0 × α 1 where
+def piFinTwo (α : Finₓ 2 → Type _) [∀ i, MeasurableSpace (α i)] : (∀ i, α i) ≃ᵐ α 0 × α 1 where
   toEquiv := piFinTwoEquiv α
   measurable_to_fun := Measurable.prod (measurable_pi_apply _) (measurable_pi_apply _)
   measurable_inv_fun := measurable_pi_iff.2 <| Finₓ.forall_fin_two.2 ⟨measurable_fst, measurable_snd⟩
 
 /-- The space `fin 2 → α` is measurably equivalent to `α × α`. -/
 @[simps (config := { fullyApplied := false })]
-def fin_two_arrow : (Finₓ 2 → α) ≃ᵐ α × α :=
+def finTwoArrow : (Finₓ 2 → α) ≃ᵐ α × α :=
   piFinTwo fun _ => α
 
 end MeasurableEquiv
@@ -1315,7 +1323,7 @@ variable [MeasurableSpace α] [MeasurableSpace β] [MeasurableSpace γ] {f : α 
 
 /-- A measurable embedding defines a measurable equivalence between its domain
 and its range. -/
-noncomputable def equiv_range (f : α → β) (hf : MeasurableEmbedding f) : α ≃ᵐ Range f where
+noncomputable def equivRange (f : α → β) (hf : MeasurableEmbedding f) : α ≃ᵐ Range f where
   toEquiv := Equivₓ.ofInjective f hf.Injective
   measurable_to_fun := hf.Measurable.subtype_mk
   measurable_inv_fun := by
@@ -1339,7 +1347,7 @@ namespace Filter
 variable [MeasurableSpace α]
 
 /-- A filter `f` is measurably generates if each `s ∈ f` includes a measurable `t ∈ f`. -/
-class is_measurably_generated (f : Filter α) : Prop where
+class IsMeasurablyGenerated (f : Filter α) : Prop where
   exists_measurable_subset : ∀ ⦃s⦄, s ∈ f → ∃ t ∈ f, MeasurableSet t ∧ t ⊆ s
 
 instance is_measurably_generated_bot : IsMeasurablyGenerated (⊥ : Filter α) :=
@@ -1348,11 +1356,11 @@ instance is_measurably_generated_bot : IsMeasurablyGenerated (⊥ : Filter α) :
 instance is_measurably_generated_top : IsMeasurablyGenerated (⊤ : Filter α) :=
   ⟨fun s hs => ⟨Univ, univ_mem, MeasurableSet.univ, fun x _ => hs x⟩⟩
 
-theorem eventually.exists_measurable_mem {f : Filter α} [IsMeasurablyGenerated f] {p : α → Prop} (h : ∀ᶠ x in f, p x) :
+theorem Eventually.exists_measurable_mem {f : Filter α} [IsMeasurablyGenerated f] {p : α → Prop} (h : ∀ᶠ x in f, p x) :
     ∃ s ∈ f, MeasurableSet s ∧ ∀, ∀ x ∈ s, ∀, p x :=
   IsMeasurablyGenerated.exists_measurable_subset h
 
-theorem eventually.exists_measurable_mem_of_lift' {f : Filter α} [IsMeasurablyGenerated f] {p : Set α → Prop}
+theorem Eventually.exists_measurable_mem_of_lift' {f : Filter α} [IsMeasurablyGenerated f] {p : Set α → Prop}
     (h : ∀ᶠ s in f.lift' Powerset, p s) : ∃ s ∈ f, MeasurableSet s ∧ p s :=
   let ⟨s, hsf, hs⟩ := eventually_lift'_powerset.1 h
   let ⟨t, htf, htm, hts⟩ := IsMeasurablyGenerated.exists_measurable_subset hsf
@@ -1482,10 +1490,10 @@ instance : PartialOrderₓ (Subtype (MeasurableSet : Set α → Prop)) :=
   PartialOrderₓ.lift _ Subtype.coe_injective
 
 instance : DistribLattice (Subtype (MeasurableSet : Set α → Prop)) :=
-  { MeasurableSet.Subtype.partialOrder with sup := · ∪ ·,
+  { MeasurableSet.Subtype.partialOrder with sup := (· ∪ ·),
     le_sup_left := fun a b => show (a : Set α) ≤ a⊔b from le_sup_left,
     le_sup_right := fun a b => show (b : Set α) ≤ a⊔b from le_sup_right,
-    sup_le := fun a b c ha hb => show (a⊔b : Set α) ≤ c from sup_le ha hb, inf := · ∩ ·,
+    sup_le := fun a b c ha hb => show (a⊔b : Set α) ≤ c from sup_le ha hb, inf := (· ∩ ·),
     inf_le_left := fun a b => show (a⊓b : Set α) ≤ a from inf_le_left,
     inf_le_right := fun a b => show (a⊓b : Set α) ≤ b from inf_le_right,
     le_inf := fun a b c ha hb => show (a : Set α) ≤ b⊓c from le_inf ha hb,
@@ -1498,7 +1506,7 @@ instance : BoundedOrder (Subtype (MeasurableSet : Set α → Prop)) where
   bot_le := fun a => show (⊥ : Set α) ≤ a from bot_le
 
 instance : BooleanAlgebra (Subtype (MeasurableSet : Set α → Prop)) :=
-  { MeasurableSet.Subtype.boundedOrder, MeasurableSet.Subtype.distribLattice with sdiff := · \ ·,
+  { MeasurableSet.Subtype.boundedOrder, MeasurableSet.Subtype.distribLattice with sdiff := (· \ ·),
     sup_inf_sdiff := fun a b => Subtype.eq <| sup_inf_sdiff a b,
     inf_inf_sdiff := fun a b => Subtype.eq <| inf_inf_sdiff a b, Compl := HasCompl.compl,
     inf_compl_le_bot := fun a => BooleanAlgebra.inf_compl_le_bot (a : Set α),

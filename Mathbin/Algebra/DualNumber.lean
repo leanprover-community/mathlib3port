@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Eric Wieser. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Eric Wieser
+-/
 import Mathbin.Algebra.TrivSqZeroExt
 
 /-!
@@ -94,10 +99,12 @@ def lift : { e : A // e * e = 0 } ≃ ((R)[ε] →ₐ[R] A) :=
             simpa using h 1 1⟩)
     TrivSqZeroExt.lift
 
+-- When applied to `ε`, `dual_number.lift` produces the element of `A` that squares to 0.
 @[simp]
 theorem lift_apply_eps (e : { e : A // e * e = 0 }) : lift e (ε : (R)[ε]) = e :=
   (TrivSqZeroExt.lift_aux_apply_inr _ _ _).trans <| one_smul _ _
 
+-- Lifting `dual_number.eps` itself gives the identity.
 @[simp]
 theorem lift_eps : lift ⟨ε, eps_mul_eps⟩ = AlgHom.id R (R)[ε] :=
   alg_hom_ext <| lift_apply_eps _

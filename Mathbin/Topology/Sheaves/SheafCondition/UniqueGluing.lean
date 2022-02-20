@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Justus Springer. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Justus Springer
+-/
 import Mathbin.Topology.Sheaves.Forget
 import Mathbin.CategoryTheory.Limits.Shapes.Types
 import Mathbin.Topology.Sheaves.Sheaf
@@ -65,13 +70,13 @@ variable {X : Top.{v}} (F : Presheaf C X) {ι : Type v} (U : ι → Opens X)
 /-- A family of sections `sf` is compatible, if the restrictions of `sf i` and `sf j` to `U i ⊓ U j`
 agree, for all `i` and `j`
 -/
-def is_compatible (sf : ∀ i : ι, F.obj (op (U i))) : Prop :=
+def IsCompatible (sf : ∀ i : ι, F.obj (op (U i))) : Prop :=
   ∀ i j : ι, F.map (inf_le_left (U i) (U j)).op (sf i) = F.map (inf_le_right (U i) (U j)).op (sf j)
 
 /-- A section `s` is a gluing for a family of sections `sf` if it restricts to `sf i` on `U i`,
 for all `i`
 -/
-def is_gluing (sf : ∀ i : ι, F.obj (op (U i))) (s : F.obj (op (supr U))) : Prop :=
+def IsGluing (sf : ∀ i : ι, F.obj (op (U i))) (s : F.obj (op (supr U))) : Prop :=
   ∀ i : ι, F.map (Opens.leSupr U i).op s = sf i
 
 /-- The sheaf condition in terms of unique gluings. A presheaf `F : presheaf C X` satisfies this sheaf
@@ -81,7 +86,7 @@ there exists a unique gluing `s : F.obj (op (supr U))`.
 We prove this to be equivalent to the usual one below in
 `is_sheaf_iff_is_sheaf_unique_gluing`
 -/
-def is_sheaf_unique_gluing : Prop :=
+def IsSheafUniqueGluing : Prop :=
   ∀ ⦃ι : Type v⦄ U : ι → Opens X sf : ∀ i : ι, F.obj (op (U i)),
     IsCompatible F U sf → ∃! s : F.obj (op (supr U)), IsGluing F U sf s
 
@@ -93,7 +98,7 @@ variable {X : Top.{v}} (F : Presheaf (Type v) X) {ι : Type v} (U : ι → Opens
 
 /-- For presheaves of types, terms of `pi_opens F U` are just families of sections.
 -/
-def pi_opens_iso_sections_family : piOpens F U ≅ ∀ i : ι, F.obj (op (U i)) :=
+def piOpensIsoSectionsFamily : piOpens F U ≅ ∀ i : ι, F.obj (op (U i)) :=
   Limits.IsLimit.conePointUniqueUpToIso (limit.isLimit (Discrete.functor fun i : ι => F.obj (op (U i))))
     (Types.productLimitCone fun i : ι => F.obj (op (U i))).IsLimit
 

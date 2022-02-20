@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Joël Riou. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Joël Riou, Adam Topaz, Johan Commelin
+-/
 import Mathbin.Algebra.Homology.HomologicalComplex
 import Mathbin.AlgebraicTopology.SimplicialObject
 import Mathbin.AlgebraicTopology.MooreComplex
@@ -57,12 +62,13 @@ variable (Y : SimplicialObject C)
 /-- The differential on the alternating face map complex is the alternate
 sum of the face maps -/
 @[simp]
-def obj_d (n : ℕ) : X _[n + 1] ⟶ X _[n] :=
+def objD (n : ℕ) : X _[n + 1] ⟶ X _[n] :=
   ∑ i : Finₓ (n + 2), (-1 : ℤ) ^ (i : ℕ) • X.δ i
 
 /-- ## The chain complex relation `d ≫ d`
 -/
 theorem d_squared (n : ℕ) : objD X (n + 1) ≫ objD X n = 0 := by
+  -- we start by expanding d ≫ d as a double sum
   dsimp
   rw [comp_sum]
   let d_l := fun j : Finₓ (n + 3) => (-1 : ℤ) ^ (j : ℕ) • X.δ j
@@ -72,6 +78,7 @@ theorem d_squared (n : ℕ) : objD X (n + 1) ≫ objD X n = 0 := by
       ext i
       rw [sum_comp]]
   rw [← Finset.sum_product']
+  -- then, we decompose the index set P into a subet S and its complement Sᶜ
   let P := Finₓ (n + 2) × Finₓ (n + 3)
   let S := finset.univ.filter fun ij : P => (ij.2 : ℕ) ≤ (ij.1 : ℕ)
   let term := fun ij : P => d_l ij.2 ≫ d_r ij.1
@@ -79,15 +86,20 @@ theorem d_squared (n : ℕ) : objD X (n + 1) ≫ objD X n = 0 := by
     [show (∑ ij : P, term ij) = (∑ ij in S, term ij) + ∑ ij in Sᶜ, term ij by
       rw [Finset.sum_add_sum_compl]]
   rw [← eq_neg_iff_add_eq_zero, ← Finset.sum_neg_distrib]
+  /- we are reduced to showing that two sums are equal, and this is obtained
+    by constructing a bijection φ : S -> Sᶜ, which maps (i,j) to (j,i+1),
+    and by comparing the terms -/
   let φ : ∀ ij : P, ij ∈ S → P := fun ij hij =>
     (Finₓ.castLt ij.2 (lt_of_le_of_ltₓ (finset.mem_filter.mp hij).right (Finₓ.is_lt ij.1)), ij.1.succ)
   apply Finset.sum_bij φ
-  · intro ij hij
+  · -- φ(S) is contained in Sᶜ
+    intro ij hij
     simp only [Finset.mem_univ, Finset.compl_filter, Finset.mem_filter, true_andₓ, Finₓ.coe_succ, Finₓ.coe_cast_lt] at
       hij⊢
     linarith
     
-  · rintro ⟨i, j⟩ hij
+  · -- identification of corresponding terms in both sums
+    rintro ⟨i, j⟩ hij
     simp only [term, d_l, d_r, φ, comp_zsmul, zsmul_comp, ← neg_smul, ← mul_smul, pow_addₓ, neg_mul, mul_oneₓ,
       Finₓ.coe_cast_lt, Finₓ.coe_succ, pow_oneₓ, mul_neg, neg_negₓ]
     let jj : Finₓ (n + 2) := (φ (i, j) hij).1
@@ -96,7 +108,8 @@ theorem d_squared (n : ℕ) : objD X (n + 1) ≫ objD X n = 0 := by
       simpa using hij
     rw [CategoryTheory.SimplicialObject.δ_comp_δ X ineq, Finₓ.cast_succ_cast_lt, mul_comm]
     
-  · rintro ⟨i, j⟩ ⟨i', j'⟩ hij hij' h
+  · -- φ : S → Sᶜ is injective
+    rintro ⟨i, j⟩ ⟨i', j'⟩ hij hij' h
     rw [Prod.mk.inj_iffₓ]
     refine'
       ⟨by
@@ -104,7 +117,8 @@ theorem d_squared (n : ℕ) : objD X (n + 1) ≫ objD X n = 0 := by
     have h1 := congr_argₓ Finₓ.castSucc (congr_argₓ Prod.fst h)
     simpa [Finₓ.cast_succ_cast_lt] using h1
     
-  · rintro ⟨i', j'⟩ hij'
+  · -- φ : S → Sᶜ is surjective
+    rintro ⟨i', j'⟩ hij'
     simp only [true_andₓ, Finset.mem_univ, Finset.compl_filter, not_leₓ, Finset.mem_filter] at hij'
     refine' ⟨(j'.pred _, Finₓ.castSucc i'), _, _⟩
     · intro H
@@ -147,7 +161,7 @@ variable (C : Type _) [Category C] [Preadditive C]
 
 /-- The alternating face map complex, as a functor -/
 @[simps]
-def alternating_face_map_complex : SimplicialObject C ⥤ ChainComplex C ℕ where
+def alternatingFaceMapComplex : SimplicialObject C ⥤ ChainComplex C ℕ where
   obj := AlternatingFaceMapComplex.obj
   map := fun X Y f => AlternatingFaceMapComplex.map f
 
@@ -159,9 +173,13 @@ def alternating_face_map_complex : SimplicialObject C ⥤ ChainComplex C ℕ whe
 variable {A : Type _} [Category A] [Abelian A]
 
 /-- The inclusion map of the Moore complex in the alternating face map complex -/
-def inclusion_of_Moore_complex_map (X : SimplicialObject A) :
+def inclusionOfMooreComplexMap (X : SimplicialObject A) :
     (normalizedMooreComplex A).obj X ⟶ (alternatingFaceMapComplex A).obj X :=
   ChainComplex.ofHom _ _ _ _ _ _ (fun n => (NormalizedMooreComplex.objX X n).arrow) fun n => by
+    /- we have to show the compatibility of the differentials on the alternating
+             face map complex with those defined on the normalized Moore complex:
+             we first get rid of the terms of the alternating sum that are obviously
+             zero on the normalized_Moore_complex -/
     simp only [alternating_face_map_complex.obj_d]
     rw [comp_sum]
     let t := fun j : Finₓ (n + 2) => (normalized_Moore_complex.obj_X X (n + 1)).arrow ≫ ((-1 : ℤ) ^ (j : ℕ) • X.δ j)
@@ -184,6 +202,7 @@ def inclusion_of_Moore_complex_map (X : SimplicialObject A) :
       simp only [comp_zero]
     rw [Fintype.sum_eq_zero _ null]
     simp only [add_zeroₓ]
+    -- finally, we study the remaining term which is induced by X.δ 0
     let eq := def_t 0
     rw
       [show (-1 : ℤ) ^ ((0 : Finₓ (n + 2)) : ℕ) = 1 by
@@ -203,7 +222,7 @@ variable (A)
 /-- The inclusion map of the Moore complex in the alternating face map complex,
 as a natural transformation -/
 @[simps]
-def inclusion_of_Moore_complex : normalizedMooreComplex A ⟶ alternatingFaceMapComplex A where
+def inclusionOfMooreComplex : normalizedMooreComplex A ⟶ alternatingFaceMapComplex A where
   app := inclusionOfMooreComplexMap
 
 end AlgebraicTopology

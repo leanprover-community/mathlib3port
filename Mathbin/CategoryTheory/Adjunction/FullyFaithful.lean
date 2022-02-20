@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison
+-/
 import Mathbin.CategoryTheory.Adjunction.Basic
 import Mathbin.CategoryTheory.Conj
 import Mathbin.CategoryTheory.Yoneda
@@ -83,7 +88,7 @@ theorem inv_map_unit {X : C} [IsIso (h.Unit.app X)] : inv (L.map (h.Unit.app X))
 
 /-- If the unit is an isomorphism, bundle one has an isomorphism `L ⋙ R ⋙ L ≅ L`. -/
 @[simps]
-noncomputable def whisker_left_L_counit_iso_of_is_iso_unit [IsIso h.Unit] : L ⋙ R ⋙ L ≅ L :=
+noncomputable def whiskerLeftLCounitIsoOfIsIsoUnit [IsIso h.Unit] : L ⋙ R ⋙ L ≅ L :=
   (L.associator R L).symm ≪≫ isoWhiskerRight (asIso h.Unit).symm L ≪≫ Functor.leftUnitor _
 
 /-- If the counit of an adjunction is an isomorphism, then its inverse on the image of R is given
@@ -94,11 +99,11 @@ theorem inv_counit_map {X : D} [IsIso (h.counit.app X)] : inv (R.map (h.counit.a
 
 /-- If the counit of an is an isomorphism, one has an isomorphism `(R ⋙ L ⋙ R) ≅ R`. -/
 @[simps]
-noncomputable def whisker_left_R_unit_iso_of_is_iso_counit [IsIso h.counit] : R ⋙ L ⋙ R ≅ R :=
+noncomputable def whiskerLeftRUnitIsoOfIsIsoCounit [IsIso h.counit] : R ⋙ L ⋙ R ≅ R :=
   (R.associator L R).symm ≪≫ isoWhiskerRight (asIso h.counit) R ≪≫ Functor.leftUnitor _
 
 /-- If the unit is an isomorphism, then the left adjoint is full-/
-noncomputable def L_full_of_unit_is_iso [IsIso h.Unit] : Full L where
+noncomputable def lFullOfUnitIsIso [IsIso h.Unit] : Full L where
   Preimage := fun X Y f => h.homEquiv X (L.obj Y) f ≫ inv (h.Unit.app Y)
 
 /-- If the unit is an isomorphism, then the left adjoint is faithful-/
@@ -108,7 +113,7 @@ theorem L_faithful_of_unit_is_iso [IsIso h.Unit] : Faithful L :=
       simpa using H =≫ inv (h.unit.app Y) }
 
 /-- If the counit is an isomorphism, then the right adjoint is full-/
-noncomputable def R_full_of_counit_is_iso [IsIso h.counit] : Full R where
+noncomputable def rFullOfCounitIsIso [IsIso h.counit] : Full R where
   Preimage := fun X Y f => inv (h.counit.app X) ≫ (h.homEquiv (R.obj X) Y).symm f
 
 /-- If the counit is an isomorphism, then the right adjoint is faithful-/
@@ -141,6 +146,7 @@ instance whisker_right_unit_iso_of_R_fully_faithful [Full R] [Faithful R] : IsIs
   rw [this]
   infer_instance
 
+-- TODO also do the statements from Riehl 4.5.13 for full and faithful separately?
 universe v₃ v₄ u₃ u₄
 
 variable {C' : Type u₃} [Category.{v₃} C']
@@ -153,7 +159,9 @@ The construction here is slightly more general, in that `C` is required only to 
 faithful "inclusion" functor `iC : C ⥤ C'` (and similarly `iD : D ⥤ D'`) which commute (up to
 natural isomorphism) with the proposed restrictions.
 -/
-def adjunction.restrict_fully_faithful (iC : C ⥤ C') (iD : D ⥤ D') {L' : C' ⥤ D'} {R' : D' ⥤ C'} (adj : L' ⊣ R')
+-- TODO: This needs some lemmas describing the produced adjunction, probably in terms of `adj`,
+-- `iC` and `iD`.
+def Adjunction.restrictFullyFaithful (iC : C ⥤ C') (iD : D ⥤ D') {L' : C' ⥤ D'} {R' : D' ⥤ C'} (adj : L' ⊣ R')
     {L : C ⥤ D} {R : D ⥤ C} (comm1 : iC ⋙ L' ≅ L ⋙ iD) (comm2 : iD ⋙ R' ≅ R ⋙ iC) [Full iC] [Faithful iC] [Full iD]
     [Faithful iD] : L ⊣ R :=
   Adjunction.mkOfHomEquiv

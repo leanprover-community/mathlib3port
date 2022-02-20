@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2017 Johannes Hölzl. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johannes Hölzl
+-/
 import Mathbin.Data.Matrix.Basis
 import Mathbin.LinearAlgebra.Basis
 import Mathbin.LinearAlgebra.Pi
@@ -40,7 +45,7 @@ variable (R : Type _) {ι : Type _} [Semiringₓ R] (φ : ι → Type _) [∀ i,
   [DecidableEq ι]
 
 /-- The standard basis of the product of `φ`. -/
-def std_basis : ∀ i : ι, φ i →ₗ[R] ∀ i, φ i :=
+def stdBasis : ∀ i : ι, φ i →ₗ[R] ∀ i, φ i :=
   single
 
 theorem std_basis_apply (i : ι) (b : φ i) : stdBasis R φ i b = update 0 i b :=
@@ -195,7 +200,9 @@ open LinearEquiv
 
 /-- `pi.basis (s : ∀ j, basis (ιs j) R (Ms j))` is the `Σ j, ιs j`-indexed basis on `Π j, Ms j`
 given by `s j` on each component. -/
-protected noncomputable def Basis (s : ∀ j, Basis (ιs j) R (Ms j)) : Basis (Σ j, ιs j) R (∀ j, Ms j) := by
+protected noncomputable def basis (s : ∀ j, Basis (ιs j) R (Ms j)) : Basis (Σ j, ιs j) R (∀ j, Ms j) := by
+  -- The `add_comm_monoid (Π j, Ms j)` instance was hard to find.
+  -- Defining this in tactic mode seems to shake up instance search enough that it works by itself.
   refine' Basis.of_repr (_ ≪≫ₗ (Finsupp.sigmaFinsuppLequivPiFinsupp R).symm)
   exact LinearEquiv.piCongrRight fun j => (s j).repr
 
@@ -208,9 +215,7 @@ theorem basis_repr_std_basis [DecidableEq η] (s : ∀ j, Basis (ιs j) R (Ms j)
     simp only [Pi.basis, LinearEquiv.trans_apply, Basis.repr_self, std_basis_same, LinearEquiv.Pi_congr_right_apply,
       Finsupp.sigma_finsupp_lequiv_pi_finsupp_symm_apply]
     symm
-    exact
-      Basis.Finsupp.single_apply_left (fun i i' h : (⟨j, i⟩ : Σ j, ιs j) = ⟨j, i'⟩ => eq_of_heq (Sigma.mk.inj h).2) _ _
-        _
+    exact Basis.Finsupp.single_apply_left (fun h : (⟨j, i⟩ : Σ j, ιs j) = ⟨j, i'⟩ => eq_of_heq (Sigma.mk.inj h).2) _ _ _
     
   simp only [Pi.basis, LinearEquiv.trans_apply, Finsupp.sigma_finsupp_lequiv_pi_finsupp_symm_apply,
     LinearEquiv.Pi_congr_right_apply]
@@ -237,7 +242,7 @@ section
 variable (R η)
 
 /-- The basis on `η → R` where the `i`th basis vector is `function.update 0 i 1`. -/
-noncomputable def basis_fun : Basis η R (∀ j : η, R) :=
+noncomputable def basisFun : Basis η R (∀ j : η, R) :=
   Basis.ofEquivFun (LinearEquiv.refl _ _)
 
 @[simp]
@@ -245,6 +250,7 @@ theorem basis_fun_apply [DecidableEq η] i : basisFun R η i = stdBasis R (fun i
   simp only [basis_fun, Basis.coe_of_equiv_fun, LinearEquiv.refl_symm, LinearEquiv.refl_apply, std_basis_apply]
   congr
 
+-- Get rid of a `decidable_eq` mismatch.
 @[simp]
 theorem basis_fun_repr (x : η → R) (i : η) : (Pi.basisFun R η).repr x i = x i := by
   simp [basis_fun]
@@ -260,7 +266,7 @@ namespace Matrix
 variable (R : Type _) (n : Type _) (m : Type _) [Fintype m] [Fintype n] [Semiringₓ R]
 
 /-- The standard basis of `matrix n m R`. -/
-noncomputable def std_basis : Basis (n × m) R (Matrix n m R) :=
+noncomputable def stdBasis : Basis (n × m) R (Matrix n m R) :=
   Basis.reindex (Pi.basis fun i : n => Pi.basisFun R m) (Equivₓ.sigmaEquivProd _ _)
 
 variable {n m}

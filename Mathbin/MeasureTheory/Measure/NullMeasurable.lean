@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2017 Johannes Hölzl. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johannes Hölzl, Mario Carneiro, Yury Kudryashov
+-/
 import Mathbin.MeasureTheory.Measure.AeDisjoint
 
 /-!
@@ -57,7 +62,7 @@ namespace MeasureTheory
 
 /-- A type tag for `α` with `measurable_set` given by `null_measurable_set`. -/
 @[nolint unused_arguments]
-def null_measurable_space (α : Type _) [MeasurableSpace α]
+def NullMeasurableSpace (α : Type _) [MeasurableSpace α]
     (μ : Measure α := by
       run_tac
         volume_tac) :
@@ -84,7 +89,7 @@ instance : MeasurableSpace (NullMeasurableSpace α μ) where
 
 /-- A set is called `null_measurable_set` if it can be approximated by a measurable set up to
 a set of null measure. -/
-def null_measurable_set [MeasurableSpace α] (s : Set α)
+def NullMeasurableSet [MeasurableSpace α] (s : Set α)
     (μ : Measure α := by
       run_tac
         volume_tac) :
@@ -200,7 +205,7 @@ protected theorem insert [MeasurableSingletonClass (NullMeasurableSpace α μ)] 
     NullMeasurableSet (insert a s) μ :=
   hs.insert a
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (t «expr ⊇ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (t «expr ⊇ » s)
 theorem exists_measurable_superset_ae_eq (h : NullMeasurableSet s μ) :
     ∃ (t : _)(_ : t ⊇ s), MeasurableSet t ∧ t =ᵐ[μ] s := by
   rcases h with ⟨t, htm, hst⟩
@@ -219,7 +224,7 @@ theorem to_measurable_ae_eq (h : NullMeasurableSet s μ) : ToMeasurable μ s =�
 theorem compl_to_measurable_compl_ae_eq (h : NullMeasurableSet s μ) : ToMeasurable μ (sᶜ)ᶜ =ᵐ[μ] s := by
   simpa only [compl_compl] using h.compl.to_measurable_ae_eq.compl
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (t «expr ⊆ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (t «expr ⊆ » s)
 theorem exists_measurable_subset_ae_eq (h : NullMeasurableSet s μ) :
     ∃ (t : _)(_ : t ⊆ s), MeasurableSet t ∧ t =ᵐ[μ] s :=
   ⟨ToMeasurable μ (sᶜ)ᶜ, compl_subset_comm.2 <| subset_to_measurable _ _, (measurable_set_to_measurable _ _).Compl,
@@ -349,7 +354,7 @@ variable [MeasurableSpace α] [MeasurableSpace β] [MeasurableSpace γ] {f : α 
 
 /-- A function `f : α → β` is null measurable if the preimage of a measurable set is a null
 measurable set. -/
-def null_measurable (f : α → β)
+def NullMeasurable (f : α → β)
     (μ : Measure α := by
       run_tac
         volume_tac) :
@@ -359,15 +364,14 @@ def null_measurable (f : α → β)
 protected theorem _root_.measurable.null_measurable (h : Measurable f) : NullMeasurable f μ := fun s hs =>
   (h hs).NullMeasurableSet
 
-protected theorem null_measurable.measurable' (h : NullMeasurable f μ) :
-    @Measurable (NullMeasurableSpace α μ) β _ _ f :=
+protected theorem NullMeasurable.measurable' (h : NullMeasurable f μ) : @Measurable (NullMeasurableSpace α μ) β _ _ f :=
   h
 
-theorem measurable.comp_null_measurable {g : β → γ} (hg : Measurable g) (hf : NullMeasurable f μ) :
+theorem Measurable.comp_null_measurable {g : β → γ} (hg : Measurable g) (hf : NullMeasurable f μ) :
     NullMeasurable (g ∘ f) μ :=
   hg.comp hf
 
-theorem null_measurable.congr {g : α → β} (hf : NullMeasurable f μ) (hg : f =ᵐ[μ] g) : NullMeasurable g μ := fun s hs =>
+theorem NullMeasurable.congr {g : α → β} (hf : NullMeasurable f μ) (hg : f =ᵐ[μ] g) : NullMeasurable g μ := fun s hs =>
   (hf hs).congr <|
     eventually_eq_set.2 <|
       hg.mono fun x hx => by
@@ -381,25 +385,25 @@ section IsComplete
   A null set is a subset of a measurable set with measure `0`.
   Since every measure is defined as a special case of an outer measure, we can more simply state
   that a set `s` is null if `μ s = 0`. -/
-class measure.is_complete {_ : MeasurableSpace α} (μ : Measure α) : Prop where
+class Measure.IsComplete {_ : MeasurableSpace α} (μ : Measure α) : Prop where
   out' : ∀ s, μ s = 0 → MeasurableSet s
 
 variable {m0 : MeasurableSpace α} {μ : Measure α} {s t : Set α}
 
-theorem measure.is_complete_iff : μ.IsComplete ↔ ∀ s, μ s = 0 → MeasurableSet s :=
+theorem Measure.is_complete_iff : μ.IsComplete ↔ ∀ s, μ s = 0 → MeasurableSet s :=
   ⟨fun h => h.1, fun h => ⟨h⟩⟩
 
-theorem measure.is_complete.out (h : μ.IsComplete) : ∀ s, μ s = 0 → MeasurableSet s :=
+theorem Measure.IsComplete.out (h : μ.IsComplete) : ∀ s, μ s = 0 → MeasurableSet s :=
   h.1
 
 theorem measurable_set_of_null [μ.IsComplete] (hs : μ s = 0) : MeasurableSet s :=
   MeasureTheory.Measure.IsComplete.out' s hs
 
-theorem null_measurable_set.measurable_of_complete (hs : NullMeasurableSet s μ) [μ.IsComplete] : MeasurableSet s :=
+theorem NullMeasurableSet.measurable_of_complete (hs : NullMeasurableSet s μ) [μ.IsComplete] : MeasurableSet s :=
   diff_diff_cancel_left (subset_to_measurable μ s) ▸
     (measurable_set_to_measurable _ _).diff (measurable_set_of_null (ae_le_set.1 hs.to_measurable_ae_eq.le))
 
-theorem null_measurable.measurable_of_complete [μ.IsComplete] {m1 : MeasurableSpace β} {f : α → β}
+theorem NullMeasurable.measurable_of_complete [μ.IsComplete] {m1 : MeasurableSpace β} {f : α → β}
     (hf : NullMeasurable f μ) : Measurable f := fun s hs => (hf hs).measurable_of_complete
 
 theorem _root_.measurable.congr_ae {α β} [MeasurableSpace α] [MeasurableSpace β] {μ : Measure α} [hμ : μ.IsComplete]

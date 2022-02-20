@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Chris Hughes. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Chris Hughes
+-/
 import Mathbin.GroupTheory.Perm.Support
 import Mathbin.Data.Fintype.Basic
 import Mathbin.GroupTheory.OrderOfElement
@@ -31,7 +36,7 @@ namespace Equivₓ.Perm
 We use this to partition permutations in `matrix.det_zero_of_row_eq`, such that each partition
 sums up to `0`.
 -/
-def mod_swap [DecidableEq α] (i j : α) : Setoidₓ (Perm α) :=
+def modSwap [DecidableEq α] (i j : α) : Setoidₓ (Perm α) :=
   ⟨fun σ τ => σ = τ ∨ σ = swap i j * τ, fun σ => Or.inl (refl σ), fun σ τ h =>
     Or.cases_on h (fun h => Or.inl h.symm) fun h =>
       Or.inr
@@ -48,7 +53,7 @@ instance {α : Type _} [Fintype α] [DecidableEq α] (i j : α) : DecidableRel (
 
 theorem perm_inv_on_of_perm_on_finset {s : Finset α} {f : Perm α} (h : ∀, ∀ x ∈ s, ∀, f x ∈ s) {y : α} (hy : y ∈ s) :
     f⁻¹ y ∈ s := by
-  have h0 : ∀, ∀ y ∈ s, ∀, ∃ (x : _)(hx : x ∈ s), y = (fun i hi : i ∈ s => f i) x hx :=
+  have h0 : ∀, ∀ y ∈ s, ∀, ∃ (x : _)(hx : x ∈ s), y = (fun hi : i ∈ s => f i) x hx :=
     Finset.surj_on_of_inj_on_of_card_le (fun x hx => (fun i hi => f i) x hx) (fun a ha => h a ha)
       (fun a₁ a₂ ha₁ ha₂ heq => (Equivₓ.apply_eq_iff_eq f).mp HEq) rfl.ge
   obtain ⟨y2, hy2, heq⟩ := h0 y hy
@@ -75,7 +80,7 @@ theorem perm_inv_on_of_perm_on_fintype {f : Perm α} {p : α → Prop} [Fintype 
 /-- If the permutation `f` maps `{x // p x}` into itself, then this returns the permutation
   on `{x // p x}` induced by `f`. Note that the `h` hypothesis is weaker than for
   `equiv.perm.subtype_perm`. -/
-abbrev subtype_perm_of_fintype (f : Perm α) {p : α → Prop} [Fintype { x // p x }] (h : ∀ x, p x → p (f x)) :
+abbrev subtypePermOfFintype (f : Perm α) {p : α → Prop} [Fintype { x // p x }] (h : ∀ x, p x → p (f x)) :
     Perm { x // p x } :=
   f.subtypePerm fun x => ⟨h x, fun h₂ => f.inv_apply_self x ▸ perm_inv_on_of_perm_on_fintype h h₂⟩
 
@@ -148,14 +153,14 @@ theorem mem_sum_congr_hom_range_of_perm_maps_to_inl {m n : Type _} [Fintype m] [
     rw [of_injective_apply, Subtype.coe_mk, Subtype.coe_mk]
     
 
-theorem disjoint.order_of {σ τ : Perm α} (hστ : Disjoint σ τ) : orderOf (σ * τ) = Nat.lcmₓ (orderOf σ) (orderOf τ) :=
+theorem Disjoint.order_of {σ τ : Perm α} (hστ : Disjoint σ τ) : orderOf (σ * τ) = Nat.lcmₓ (orderOf σ) (orderOf τ) :=
   have h : ∀ n : ℕ, (σ * τ) ^ n = 1 ↔ σ ^ n = 1 ∧ τ ^ n = 1 := fun n => by
     rw [hστ.commute.mul_pow, disjoint.mul_eq_one_iff (hστ.pow_disjoint_pow n n)]
   Nat.dvd_antisymm hστ.commute.order_of_mul_dvd_lcm
     (Nat.lcm_dvdₓ (order_of_dvd_of_pow_eq_one ((h (orderOf (σ * τ))).mp (pow_order_of_eq_one (σ * τ))).1)
       (order_of_dvd_of_pow_eq_one ((h (orderOf (σ * τ))).mp (pow_order_of_eq_one (σ * τ))).2))
 
-theorem disjoint.extend_domain {α : Type _} {p : β → Prop} [DecidablePred p] (f : α ≃ Subtype p) {σ τ : Perm α}
+theorem Disjoint.extend_domain {α : Type _} {p : β → Prop} [DecidablePred p] (f : α ≃ Subtype p) {σ τ : Perm α}
     (h : Disjoint σ τ) : Disjoint (σ.extendDomain f) (τ.extendDomain f) := by
   intro b
   by_cases' pb : p b
@@ -182,7 +187,7 @@ end Fintype
 
 /-- Given a list `l : list α` and a permutation `f : perm α` such that the nonfixed points of `f`
   are in `l`, recursively factors `f` as a product of transpositions. -/
-def swap_factors_aux :
+def swapFactorsAux :
     ∀ l : List α f : Perm α, (∀ {x}, f x ≠ x → x ∈ l) → { l : List (Perm α) // l.Prod = f ∧ ∀, ∀ g ∈ l, ∀, IsSwap g }
   | [] => fun f h =>
     ⟨[],
@@ -210,13 +215,13 @@ def swap_factors_aux :
 /-- `swap_factors` represents a permutation as a product of a list of transpositions.
 The representation is non unique and depends on the linear order structure.
 For types without linear order `trunc_swap_factors` can be used. -/
-def swap_factors [Fintype α] [LinearOrderₓ α] (f : Perm α) :
+def swapFactors [Fintype α] [LinearOrderₓ α] (f : Perm α) :
     { l : List (Perm α) // l.Prod = f ∧ ∀, ∀ g ∈ l, ∀, IsSwap g } :=
   swapFactorsAux ((@univ α _).sort (· ≤ ·)) f fun _ _ => (mem_sort _).2 (mem_univ _)
 
 /-- This computably represents the fact that any permutation can be represented as the product of
   a list of transpositions. -/
-def trunc_swap_factors [Fintype α] (f : Perm α) : Trunc { l : List (Perm α) // l.Prod = f ∧ ∀, ∀ g ∈ l, ∀, IsSwap g } :=
+def truncSwapFactors [Fintype α] (f : Perm α) : Trunc { l : List (Perm α) // l.Prod = f ∧ ∀, ∀ g ∈ l, ∀, IsSwap g } :=
   Quotientₓ.recOnSubsingleton (@univ α _).1 (fun l h => Trunc.mk (swapFactorsAux l f h))
     (show ∀ x, f x ≠ x → x ∈ (@univ α _).1 from fun _ _ => mem_univ _)
 
@@ -267,7 +272,7 @@ theorem is_conj_swap {w x y z : α} (hwx : w ≠ x) (hyz : y ≠ z) : IsConj (sw
     else ⟨swap w y * swap x z, h hyz hwz⟩)
 
 /-- set of all pairs (⟨a, b⟩ : Σ a : fin n, fin n) such that b < a -/
-def fin_pairs_lt (n : ℕ) : Finset (Σ a : Finₓ n, Finₓ n) :=
+def finPairsLt (n : ℕ) : Finset (Σ a : Finₓ n, Finₓ n) :=
   (univ : Finset (Finₓ n)).Sigma fun a => (range a).attachFin fun m hm => (mem_range.1 hm).trans a.2
 
 theorem mem_fin_pairs_lt {n : ℕ} {a : Σ a : Finₓ n, Finₓ n} : a ∈ finPairsLt n ↔ a.2 < a.1 := by
@@ -275,7 +280,7 @@ theorem mem_fin_pairs_lt {n : ℕ} {a : Σ a : Finₓ n, Finₓ n} : a ∈ finPa
 
 /-- `sign_aux σ` is the sign of a permutation on `fin n`, defined as the parity of the number of
   pairs `(x₁, x₂)` such that `x₂ < x₁` but `σ x₁ ≤ σ x₂` -/
-def sign_aux {n : ℕ} (a : Perm (Finₓ n)) : (ℤ)ˣ :=
+def signAux {n : ℕ} (a : Perm (Finₓ n)) : (ℤ)ˣ :=
   ∏ x in finPairsLt n, if a x.1 ≤ a x.2 then -1 else 1
 
 @[simp]
@@ -285,19 +290,19 @@ theorem sign_aux_one (n : ℕ) : signAux (1 : Perm (Finₓ n)) = 1 := by
   exact Finset.prod_congr rfl fun a ha => if_neg (mem_fin_pairs_lt.1 ha).not_le
 
 /-- `sign_bij_aux f ⟨a, b⟩` returns the pair consisting of `f a` and `f b` in decreasing order. -/
-def sign_bij_aux {n : ℕ} (f : Perm (Finₓ n)) (a : Σ a : Finₓ n, Finₓ n) : Σ a : Finₓ n, Finₓ n :=
+def signBijAux {n : ℕ} (f : Perm (Finₓ n)) (a : Σ a : Finₓ n, Finₓ n) : Σ a : Finₓ n, Finₓ n :=
   if hxa : f a.2 < f a.1 then ⟨f a.1, f a.2⟩ else ⟨f a.2, f a.1⟩
 
 theorem sign_bij_aux_inj {n : ℕ} {f : Perm (Finₓ n)} :
     ∀ a b : Σ a : Finₓ n, Finₓ n, a ∈ finPairsLt n → b ∈ finPairsLt n → signBijAux f a = signBijAux f b → a = b :=
-  fun ⟨a₁, a₂⟩ ⟨b₁, b₂⟩ ha hb h => by
+  fun ha hb h => by
   unfold sign_bij_aux  at h
   rw [mem_fin_pairs_lt] at *
   have : ¬b₁ < b₂ := hb.le.not_lt
   split_ifs  at h <;> simp_all only [(Equivₓ.injective f).eq_iff, eq_self_iff_true, and_selfₓ, heq_iff_eq]
 
 theorem sign_bij_aux_surj {n : ℕ} {f : Perm (Finₓ n)} :
-    ∀, ∀ a ∈ finPairsLt n, ∀, ∃ b ∈ finPairsLt n, a = signBijAux f b := fun ⟨a₁, a₂⟩ ha =>
+    ∀, ∀ a ∈ finPairsLt n, ∀, ∃ b ∈ finPairsLt n, a = signBijAux f b := fun ha =>
   if hxa : f⁻¹ a₂ < f⁻¹ a₁ then
     ⟨⟨f⁻¹ a₁, f⁻¹ a₂⟩, mem_fin_pairs_lt.2 hxa, by
       dsimp [sign_bij_aux]
@@ -312,7 +317,7 @@ theorem sign_bij_aux_surj {n : ℕ} {f : Perm (Finₓ n)} :
       rw [apply_inv_self, apply_inv_self, if_neg (mem_fin_pairs_lt.1 ha).le.not_lt]⟩
 
 theorem sign_bij_aux_mem {n : ℕ} {f : Perm (Finₓ n)} :
-    ∀ a : Σ a : Finₓ n, Finₓ n, a ∈ finPairsLt n → signBijAux f a ∈ finPairsLt n := fun ⟨a₁, a₂⟩ ha => by
+    ∀ a : Σ a : Finₓ n, Finₓ n, a ∈ finPairsLt n → signBijAux f a ∈ finPairsLt n := fun ha => by
   unfold sign_bij_aux
   split_ifs with h
   · exact mem_fin_pairs_lt.2 h
@@ -323,7 +328,7 @@ theorem sign_bij_aux_mem {n : ℕ} {f : Perm (Finₓ n)} :
 @[simp]
 theorem sign_aux_inv {n : ℕ} (f : Perm (Finₓ n)) : signAux f⁻¹ = signAux f :=
   prod_bij (fun a ha => signBijAux f⁻¹ a) sign_bij_aux_mem
-    (fun ⟨a, b⟩ hab =>
+    (fun hab =>
       if h : f⁻¹ b < f⁻¹ a then by
         rw [sign_bij_aux, dif_pos h, if_neg h.not_le, apply_inv_self, apply_inv_self,
           if_neg (mem_fin_pairs_lt.1 hab).not_le]
@@ -380,12 +385,14 @@ private theorem sign_aux_swap_zero_one' (n : ℕ) : signAux (swap (0 : Finₓ (n
       have : 1 < a₁ := lt_of_le_of_neₓ (Nat.succ_le_of_ltₓ ha₁) (Ne.symm ha₂)
       have h01 : Equivₓ.swap (0 : Finₓ (n + 2)) 1 0 = 1 := by
         simp
+      -- TODO : fix properly
       norm_num [swap_apply_of_ne_of_ne (ne_of_gtₓ H) ha₂, this.not_le, h01]
       
     · have le : 1 ≤ a₂ := Nat.succ_le_of_ltₓ H'
       have lt : 1 < a₁ := le.trans_lt ha₁
       have h01 : Equivₓ.swap (0 : Finₓ (n + 2)) 1 1 = 0 := by
         simp
+      -- TODO
       rcases le.eq_or_lt with (rfl | lt')
       · norm_num [swap_apply_of_ne_of_ne H.ne' lt.ne', H.not_le, h01]
         
@@ -435,7 +442,7 @@ theorem sign_aux_swap : ∀ {n : ℕ} {x y : Finₓ n} hxy : x ≠ y, signAux (s
 
 /-- When the list `l : list α` contains all nonfixed points of the permutation `f : perm α`,
   `sign_aux2 l f` recursively calculates the sign of `f`. -/
-def sign_aux2 : List α → Perm α → (ℤ)ˣ
+def signAux2 : List α → Perm α → (ℤ)ˣ
   | [], f => 1
   | x :: l, f => if x = f x then sign_aux2 l f else -sign_aux2 l (swap x (f x) * f)
 
@@ -449,7 +456,7 @@ theorem sign_aux_eq_sign_aux2 {n : ℕ} :
     by_cases' hfx : x = f x
     · rw [if_pos hfx]
       exact
-        sign_aux_eq_sign_aux2 l f _ fun y hy : f y ≠ y =>
+        sign_aux_eq_sign_aux2 l f _ fun hy : f y ≠ y =>
           List.mem_of_ne_of_memₓ
             (fun h : y = x => by
               simpa [h, hfx.symm] using hy)
@@ -467,7 +474,7 @@ theorem sign_aux_eq_sign_aux2 {n : ℕ} :
 
 /-- When the multiset `s : multiset α` contains all nonfixed points of the permutation `f : perm α`,
   `sign_aux2 f _` recursively calculates the sign of `f`. -/
-def sign_aux3 [Fintype α] (f : Perm α) {s : Multiset α} : (∀ x, x ∈ s) → (ℤ)ˣ :=
+def signAux3 [Fintype α] (f : Perm α) {s : Multiset α} : (∀ x, x ∈ s) → (ℤ)ˣ :=
   Quotientₓ.hrecOn s (fun l h => signAux2 l f)
     (Trunc.induction_on (Fintype.truncEquivFin α) fun e l₁ l₂ h =>
       Function.hfunext
@@ -539,7 +546,7 @@ theorem sign_swap' {x y : α} : (swap x y).sign = if x = y then 1 else -1 :=
   else by
     simp [sign_swap H, H]
 
-theorem is_swap.sign_eq {f : Perm α} (h : f.IsSwap) : sign f = -1 :=
+theorem IsSwap.sign_eq {f : Perm α} (h : f.IsSwap) : sign f = -1 :=
   let ⟨x, y, hxy⟩ := h
   hxy.2.symm ▸ sign_swap hxy.1
 
@@ -661,7 +668,7 @@ theorem sign_bij [DecidableEq β] [Fintype β] {f : Perm α} {g : Perm β} (i : 
               rw [← h _ x.2 this]
               exact mt (hi _ _ this x.2) x.2⟩ :
               { y // g y ≠ y }))
-          ⟨fun ⟨x, hx⟩ ⟨y, hy⟩ h => Subtype.eq (hi _ _ _ _ (Subtype.mk.injₓ h)), fun ⟨y, hy⟩ =>
+          ⟨fun h => Subtype.eq (hi _ _ _ _ (Subtype.mk.injₓ h)), fun ⟨y, hy⟩ =>
             let ⟨x, hfx, hx⟩ := hg y hy
             ⟨⟨x, hfx⟩, Subtype.eq hx⟩⟩)
         fun ⟨x, _⟩ => Subtype.eq (h x _ _)
@@ -673,6 +680,8 @@ we get `prod_congr_right σ`. -/
 theorem prod_prod_extend_right {α : Type _} [DecidableEq α] (σ : α → Perm β) {l : List α} (hl : l.Nodup)
     (mem_l : ∀ a, a ∈ l) : (l.map fun a => prodExtendRight a (σ a)).Prod = prodCongrRight σ := by
   ext ⟨a, b⟩ : 1
+  -- We'll use induction on the list of elements,
+  -- but we have to keep track of whether we already passed `a` in the list.
   suffices
     a ∈ l ∧ (l.map fun a => prod_extend_right a (σ a)).Prod (a, b) = (a, σ a b) ∨
       a ∉ l ∧ (l.map fun a => prod_extend_right a (σ a)).Prod (a, b) = (a, b)
@@ -704,10 +713,10 @@ variable [DecidableEq β] [Fintype β]
 
 @[simp]
 theorem sign_prod_extend_right (a : α) (σ : Perm β) : (prodExtendRight a σ).sign = σ.sign :=
-  sign_bij (fun ab : α × β _ => ab.snd)
-    (fun ⟨a', b⟩ hab hab' => by
+  sign_bij (fun _ => ab.snd)
+    (fun hab hab' => by
       simp [eq_of_prod_extend_right_ne hab])
-    (fun ⟨a₁, b₁⟩ ⟨a₂, b₂⟩ hab₁ hab₂ h => by
+    (fun hab₁ hab₂ h => by
       simpa [eq_of_prod_extend_right_ne hab₁, eq_of_prod_extend_right_ne hab₂] using h)
     fun y hy =>
     ⟨(a, y), by

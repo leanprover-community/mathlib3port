@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Johan Commelin All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johan Commelin, Chris Hughes, Kevin Buzzard
+-/
 import Mathbin.Algebra.Group.Hom
 
 /-!
@@ -41,7 +46,7 @@ theorem map_id : map (MonoidHom.id M) = MonoidHom.id (M)ˣ := by
 
 /-- Coercion `Mˣ → M` as a monoid homomorphism. -/
 @[to_additive "Coercion `add_units M → M` as an add_monoid homomorphism."]
-def coe_hom : (M)ˣ →* M :=
+def coeHom : (M)ˣ →* M :=
   ⟨coe, coe_one, coe_mul⟩
 
 variable {M}
@@ -62,7 +67,7 @@ theorem coe_zpow {G} [Groupₓ G] (u : (G)ˣ) (n : ℤ) : ((u ^ n : (G)ˣ) : G) 
 this map is a monoid homomorphism too. -/
 @[to_additive
       "If a map `g : M → add_units N` agrees with a homomorphism `f : M →+ N`, then this map\nis an add_monoid homomorphism too."]
-def lift_right (f : M →* N) (g : M → (N)ˣ) (h : ∀ x, ↑(g x) = f x) : M →* (N)ˣ where
+def liftRight (f : M →* N) (g : M → (N)ˣ) (h : ∀ x, ↑(g x) = f x) : M →* (N)ˣ where
   toFun := g
   map_one' := Units.ext <| (h 1).symm ▸ f.map_one
   map_mul' := fun x y =>
@@ -92,7 +97,7 @@ then its image lies in the units of `M`,
 and `f.to_hom_units` is the corresponding monoid homomorphism from `G` to `Mˣ`. -/
 @[to_additive
       "If `f` is a homomorphism from an additive group `G` to an additive monoid `M`,\nthen its image lies in the `add_units` of `M`,\nand `f.to_hom_units` is the corresponding homomorphism from `G` to `add_units M`."]
-def to_hom_units {G M : Type _} [Groupₓ G] [Monoidₓ M] (f : G →* M) : G →* (M)ˣ where
+def toHomUnits {G M : Type _} [Groupₓ G] [Monoidₓ M] (f : G →* M) : G →* (M)ˣ where
   toFun := fun g =>
     ⟨f g, f g⁻¹, by
       rw [← f.map_mul, mul_inv_selfₓ, f.map_one], by

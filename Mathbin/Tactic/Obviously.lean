@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2017 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison
+-/
 import Mathbin.Tactic.Tidy
 import Mathbin.Tactic.Replacer
 
@@ -19,6 +24,16 @@ In the past it had been used by an external category theory library which wanted
 -/
 
 
+/-
+The propositional fields of `category` are annotated with the auto_param `obviously`,
+which is defined here as a
+[`replacer` tactic](https://leanprover-community.github.io/mathlib_docs/commands.html#def_replacer).
+We then immediately set up `obviously` to call `tidy`. Later, this can be replaced with more
+powerful tactics.
+
+(In fact, at present this mechanism is not actually used, and the implementation of
+`obviously` below stays in place throughout mathlib.)
+-/
 def_replacer obviously
 
 /-- The default implementation of `obviously`

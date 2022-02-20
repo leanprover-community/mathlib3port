@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Floris van Doorn. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Floris van Doorn
+-/
 import Mathbin.SetTheory.Continuum
 import Mathbin.Analysis.SpecificLimits
 import Mathbin.Data.Rat.Denumerable
@@ -49,7 +54,7 @@ variable {c : ℝ} {f g : ℕ → Bool} {n : ℕ}
 /-- The body of the sum in `cantor_function`.
 `cantor_function_aux c f n = c ^ n` if `f n = tt`;
 `cantor_function_aux c f n = 0` if `f n = ff`. -/
-def cantor_function_aux (c : ℝ) (f : ℕ → Bool) (n : ℕ) : ℝ :=
+def cantorFunctionAux (c : ℝ) (f : ℕ → Bool) (n : ℕ) : ℝ :=
   cond (f n) (c ^ n) 0
 
 @[simp]
@@ -79,7 +84,7 @@ theorem summable_cantor_function (f : ℕ → Bool) (h1 : 0 ≤ c) (h2 : c < 1) 
 
 /-- `cantor_function c (f : ℕ → bool)` is `Σ n, f n * c ^ n`, where `tt` is interpreted as `1` and
 `ff` is interpreted as `0`. It is implemented using `cantor_function_aux`. -/
-def cantor_function (c : ℝ) (f : ℕ → Bool) : ℝ :=
+def cantorFunction (c : ℝ) (f : ℕ → Bool) : ℝ :=
   ∑' n, cantorFunctionAux c f n
 
 theorem cantor_function_le (h1 : 0 ≤ c) (h2 : c < 1) (h3 : ∀ n, f n → g n) : cantorFunction c f ≤ cantorFunction c g :=

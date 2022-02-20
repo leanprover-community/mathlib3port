@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Amelia Livingston. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Amelia Livingston, Bryan Gin-ge Chen, Patrick Massot
+-/
 import Mathbin.Data.Fintype.Basic
 import Mathbin.Data.Set.Finite
 import Mathbin.Data.Setoid.Basic
@@ -38,7 +43,7 @@ theorem eq_of_mem_eqv_class {c : Set (Set α)} (H : ∀ a, ∃! b ∈ c, a ∈ b
   (H x).unique2 hc hb hc' hb'
 
 /-- Makes an equivalence relation from a set of sets partitioning α. -/
-def mk_classes (c : Set (Set α)) (H : ∀ a, ∃! b ∈ c, a ∈ b) : Setoidₓ α :=
+def mkClasses (c : Set (Set α)) (H : ∀ a, ∃! b ∈ c, a ∈ b) : Setoidₓ α :=
   ⟨fun x y => ∀, ∀ s ∈ c, ∀, x ∈ s → y ∈ s,
     ⟨fun _ _ _ hx => hx, fun x y h s hs hy =>
       (H x).elim2 fun t ht hx _ =>
@@ -52,7 +57,7 @@ def mk_classes (c : Set (Set α)) (H : ∀ a, ∃! b ∈ c, a ∈ b) : Setoidₓ
           (hst.trans htt').symm ▸ hz⟩⟩
 
 /-- Makes the equivalence classes of an equivalence relation. -/
-def classes (r : Setoidₓ α) : Set (Set α) :=
+def Classes (r : Setoidₓ α) : Set (Set α) :=
   { s | ∃ y, s = { x | r.Rel x y } }
 
 theorem mem_classes (r : Setoidₓ α) y : { x | r.Rel x y } ∈ r.Classes :=
@@ -138,8 +143,7 @@ theorem eqv_classes_of_disjoint_union {c : Set (Set α)} (hu : Set.SUnion c = @S
   (ExistsUnique.intro2 b hc ha) fun b' hc' ha' => H.elim_set hc' hc a ha' ha
 
 /-- Makes an equivalence relation from a set of disjoints sets covering α. -/
-def setoid_of_disjoint_union {c : Set (Set α)} (hu : Set.SUnion c = @Set.Univ α) (H : c.PairwiseDisjoint id) :
-    Setoidₓ α :=
+def setoidOfDisjointUnion {c : Set (Set α)} (hu : Set.SUnion c = @Set.Univ α) (H : c.PairwiseDisjoint id) : Setoidₓ α :=
   Setoidₓ.mkClasses c <| eqv_classes_of_disjoint_union hu H
 
 /-- The equivalence relation made from the equivalence classes of an equivalence
@@ -157,7 +161,7 @@ section Partition
 
 /-- A collection `c : set (set α)` of sets is a partition of `α` into pairwise
 disjoint sets if `∅ ∉ c` and each element `a : α` belongs to a unique set `b ∈ c`. -/
-def is_partition (c : Set (Set α)) :=
+def IsPartition (c : Set (Set α)) :=
   ∅ ∉ c ∧ ∀ a, ∃! b ∈ c, a ∈ b
 
 /-- A partition of `α` does not contain the empty set. -/
@@ -167,10 +171,10 @@ theorem nonempty_of_mem_partition {c : Set (Set α)} (hc : IsPartition c) {s} (h
 theorem is_partition_classes (r : Setoidₓ α) : IsPartition r.Classes :=
   ⟨empty_not_mem_classes, classes_eqv_classes⟩
 
-theorem is_partition.pairwise_disjoint {c : Set (Set α)} (hc : IsPartition c) : c.PairwiseDisjoint id :=
+theorem IsPartition.pairwise_disjoint {c : Set (Set α)} (hc : IsPartition c) : c.PairwiseDisjoint id :=
   eqv_classes_disjoint hc.2
 
-theorem is_partition.sUnion_eq_univ {c : Set (Set α)} (hc : IsPartition c) : ⋃₀c = Set.Univ :=
+theorem IsPartition.sUnion_eq_univ {c : Set (Set α)} (hc : IsPartition c) : ⋃₀c = Set.Univ :=
   Set.eq_univ_of_forall fun x =>
     Set.mem_sUnion.2 <|
       let ⟨t, ht⟩ := hc.2 x
@@ -199,13 +203,13 @@ theorem classes_mk_classes (c : Set (Set α)) (hc : IsPartition c) : (mkClasses 
       exists_of_mem_partition hc⟩
 
 /-- Defining `≤` on partitions as the `≤` defined on their induced equivalence relations. -/
-instance partition.le : LE (Subtype (@IsPartition α)) :=
+instance Partition.le : LE (Subtype (@IsPartition α)) :=
   ⟨fun x y => mkClasses x.1 x.2.2 ≤ mkClasses y.1 y.2.2⟩
 
 /-- Defining a partial order on partitions as the partial order on their induced
     equivalence relations. -/
-instance partition.partial_order : PartialOrderₓ (Subtype (@IsPartition α)) where
-  le := · ≤ ·
+instance Partition.partialOrder : PartialOrderₓ (Subtype (@IsPartition α)) where
+  le := (· ≤ ·)
   lt := fun x y => x ≤ y ∧ ¬y ≤ x
   le_refl := fun _ => @le_reflₓ (Setoidₓ α) _ _
   le_trans := fun _ _ _ => @le_transₓ (Setoidₓ α) _ _ _ _
@@ -218,7 +222,7 @@ variable (α)
 
 /-- The order-preserving bijection between equivalence relations on a type `α`, and
   partitions of `α` into subsets. -/
-protected def partition.order_iso : Setoidₓ α ≃o { C : Set (Set α) // IsPartition C } where
+protected def Partition.orderIso : Setoidₓ α ≃o { C : Set (Set α) // IsPartition C } where
   toFun := fun r => ⟨r.Classes, empty_not_mem_classes, classes_eqv_classes⟩
   invFun := fun C => mkClasses C.1 C.2.2
   left_inv := mk_classes_classes
@@ -232,7 +236,7 @@ variable {α}
 
 /-- A complete lattice instance for partitions; there is more infrastructure for the
     equivalent complete lattice on equivalence relations. -/
-instance partition.complete_lattice : CompleteLattice (Subtype (@IsPartition α)) :=
+instance Partition.completeLattice : CompleteLattice (Subtype (@IsPartition α)) :=
   GaloisInsertion.liftCompleteLattice <|
     @OrderIso.toGaloisInsertion _ (Subtype (@IsPartition α)) _ (PartialOrderₓ.toPreorder _) <| Partition.orderIso α
 
@@ -286,17 +290,17 @@ theorem Union : (⋃ i, s i) = univ := by
   ext x
   simp [hs.exists_mem x]
 
-theorem Disjoint : ∀ {i j}, i ≠ j → Disjoint (s i) (s j) := fun i j h x ⟨hxi, hxj⟩ => h (hs.eq_of_mem hxi hxj)
+theorem disjoint : ∀ {i j}, i ≠ j → Disjoint (s i) (s j) := fun i j h x ⟨hxi, hxj⟩ => h (hs.eq_of_mem hxi hxj)
 
 theorem mem_iff_index_eq {x i} : x ∈ s i ↔ hs.index x = i :=
   ⟨fun hxi => (hs.eq_of_mem hxi (hs.mem_index x)).symm, fun h => h ▸ hs.mem_index _⟩
 
-theorem Eq i : s i = { x | hs.index x = i } :=
+theorem eq i : s i = { x | hs.index x = i } :=
   Set.ext fun _ => hs.mem_iff_index_eq
 
 /-- The equivalence relation associated to an indexed partition. Two
 elements are equivalent if they belong to the same set of the partition. -/
-protected abbrev Setoidₓ (hs : IndexedPartition s) : Setoidₓ α :=
+protected abbrev setoid (hs : IndexedPartition s) : Setoidₓ α :=
   Setoidₓ.ker hs.index
 
 @[simp]
@@ -307,7 +311,7 @@ theorem some_index (x : α) : hs.Setoid.Rel (hs.some (hs.index x)) x :=
   hs.index_some (hs.index x)
 
 /-- The quotient associated to an indexed partition. -/
-protected def Quotientₓ :=
+protected def Quotient :=
   Quotientₓ hs.Setoid
 
 /-- The projection onto the quotient associated to an indexed partition. -/
@@ -326,7 +330,7 @@ theorem proj_some_index (x : α) : hs.proj (hs.some (hs.index x)) = hs.proj x :=
 
 /-- The obvious equivalence between the quotient associated to an indexed partition and
 the indexing type. -/
-def equiv_quotient : ι ≃ hs.Quotient :=
+def equivQuotient : ι ≃ hs.Quotient :=
   (Setoidₓ.quotientKerEquivOfRightInverse hs.index hs.some <| hs.index_some).symm
 
 @[simp]

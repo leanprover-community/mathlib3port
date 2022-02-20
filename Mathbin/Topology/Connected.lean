@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2017 Johannes Hölzl. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johannes Hölzl, Mario Carneiro, Yury Kudryashov
+-/
 import Mathbin.Data.Int.SuccPred
 import Mathbin.Data.Nat.SuccPred
 import Mathbin.Order.PartialSups
@@ -78,7 +83,7 @@ theorem is_preconnected_singleton {x} : IsPreconnected ({x} : Set α) :=
 theorem Set.Subsingleton.is_preconnected {s : Set α} (hs : s.Subsingleton) : IsPreconnected s :=
   hs.induction_on is_preconnected_empty fun x => is_preconnected_singleton
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (t «expr ⊆ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (t «expr ⊆ » s)
 /-- If any point of a set is joined to a fixed point by a preconnected subset,
 then the original set is preconnected as well. -/
 theorem is_preconnected_of_forall {s : Set α} (x : α)
@@ -92,8 +97,8 @@ theorem is_preconnected_of_forall {s : Set α} (x : α)
   have := ht u v hu hv (subset.trans ts hs) ⟨x, xt, xu⟩ ⟨y, yt, yv⟩
   exact this.imp fun z hz => ⟨ts hz.1, hz.2⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (x y «expr ∈ » s)
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (t «expr ⊆ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (x y «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (t «expr ⊆ » s)
 /-- If any two points of a set are contained in a preconnected subset,
 then the original set is preconnected as well. -/
 theorem is_preconnected_of_forall_pair {s : Set α}
@@ -143,9 +148,9 @@ theorem IsPreconnected.sUnion_directed {S : Set (Set α)} (K : DirectedOn (· �
   have Kruv : r ∩ (u ∩ v) ⊆ ⋃₀S ∩ (u ∩ v) := inter_subset_inter_left _ (subset_sUnion_of_mem hrS)
   exact Hnuv.mono Kruv
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (i j «expr ∈ » t)
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (p «expr ⊆ » t)
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (i j «expr ∈ » t)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (i j «expr ∈ » t)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (p «expr ⊆ » t)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (i j «expr ∈ » t)
 /-- The bUnion of a family of preconnected sets is preconnected if the graph determined by
 whether two sets intersect is preconnected. -/
 theorem IsPreconnected.bUnion_of_refl_trans_gen {ι : Type _} {t : Set ι} {s : ι → Set α}
@@ -178,7 +183,7 @@ theorem IsPreconnected.bUnion_of_refl_trans_gen {ι : Type _} {t : Set ι} {s : 
   obtain ⟨p, hpt, hip, hjp, hp⟩ := P i hi j hj (K i hi j hj)
   exact ⟨⋃ j ∈ p, s j, bUnion_subset_bUnion_left hpt, mem_bUnion hip hxi, mem_bUnion hjp hyj, hp⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (i j «expr ∈ » t)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (i j «expr ∈ » t)
 /-- The bUnion of a family of preconnected sets is preconnected if the graph determined by
 whether two sets intersect is preconnected. -/
 theorem IsConnected.bUnion_of_refl_trans_gen {ι : Type _} {t : Set ι} {s : ι → Set α} (ht : t.Nonempty)
@@ -282,15 +287,18 @@ theorem IsConnected.closure {s : Set α} (H : IsConnected s) : IsConnected (Clos
 /-- The image of a (pre)connected set is (pre)connected as well. -/
 theorem IsPreconnected.image [TopologicalSpace β] {s : Set α} (H : IsPreconnected s) (f : α → β)
     (hf : ContinuousOn f s) : IsPreconnected (f '' s) := by
+  -- Unfold/destruct definitions in hypotheses
   rintro u v hu hv huv ⟨_, ⟨x, xs, rfl⟩, xu⟩ ⟨_, ⟨y, ys, rfl⟩, yv⟩
   rcases continuous_on_iff'.1 hf u hu with ⟨u', hu', u'_eq⟩
   rcases continuous_on_iff'.1 hf v hv with ⟨v', hv', v'_eq⟩
+  -- Reformulate `huv : f '' s ⊆ u ∪ v` in terms of `u'` and `v'`
   replace huv : s ⊆ u' ∪ v'
   · rw [image_subset_iff, preimage_union] at huv
     replace huv := subset_inter huv (subset.refl _)
     rw [inter_distrib_right, u'_eq, v'_eq, ← inter_distrib_right] at huv
     exact (subset_inter_iff.1 huv).1
     
+  -- Now `s ⊆ u' ∪ v'`, so we can apply `‹is_preconnected s›`
   obtain ⟨z, hz⟩ : (s ∩ (u' ∩ v')).Nonempty := by
     refine' H u' v' hu' hv' huv ⟨x, _⟩ ⟨y, _⟩ <;> rw [inter_comm]
     exacts[u'_eq ▸ ⟨xu, xs⟩, v'_eq ▸ ⟨yv, ys⟩]
@@ -340,6 +348,8 @@ theorem Inducing.is_preconnected_image [TopologicalSpace β] {s : Set α} {f : �
     ⟨_, ⟨z, hzs, rfl⟩, hzuv⟩
   exact ⟨z, hzs, hzuv⟩
 
+/- TODO: The following lemmas about connection of preimages hold more generally for strict maps
+(the quotient and subspace topologies of the image agree) whose fibers are preconnected. -/
 theorem IsPreconnected.preimage_of_open_map [TopologicalSpace β] {s : Set β} (hs : IsPreconnected s) {f : α → β}
     (hinj : Function.Injective f) (hf : IsOpenMap f) (hsf : s ⊆ Range f) : IsPreconnected (f ⁻¹' s) :=
   fun u v hu hv hsuv hsu hsv => by
@@ -614,6 +624,7 @@ class ConnectedSpace (α : Type u) [TopologicalSpace α] extends PreconnectedSpa
 
 attribute [instance] ConnectedSpace.to_nonempty
 
+-- see Note [lower instance priority]
 theorem is_preconnected_range [TopologicalSpace β] [PreconnectedSpace α] {f : α → β} (h : Continuous f) :
     IsPreconnected (Range f) :=
   @image_univ _ _ f ▸ is_preconnected_univ.Image _ h.ContinuousOn
@@ -680,10 +691,12 @@ instance [∀ i, TopologicalSpace (π i)] [∀ i, ConnectedSpace (π i)] : Conne
   ⟨Classical.nonempty_piₓ.2 fun i => by
       infer_instance⟩
 
+-- see Note [lower instance priority]
 instance (priority := 100) PreirreducibleSpace.preconnected_space (α : Type u) [TopologicalSpace α]
     [PreirreducibleSpace α] : PreconnectedSpace α :=
   ⟨(PreirreducibleSpace.is_preirreducible_univ α).IsPreconnected⟩
 
+-- see Note [lower instance priority]
 instance (priority := 100) IrreducibleSpace.connected_space (α : Type u) [TopologicalSpace α] [IrreducibleSpace α] :
     ConnectedSpace α where
   to_nonempty := IrreducibleSpace.to_nonempty α
@@ -936,6 +949,8 @@ and a subset is closed iff the preimage is. -/
 theorem preimage_connected_component_connected [TopologicalSpace β] {f : α → β}
     (connected_fibers : ∀ t : β, IsConnected (f ⁻¹' {t})) (hcl : ∀ T : Set β, IsClosed T ↔ IsClosed (f ⁻¹' T)) (t : β) :
     IsConnected (f ⁻¹' ConnectedComponent t) := by
+  -- The following proof is essentially https://stacks.math.columbia.edu/tag/0377
+  -- although the statement is slightly different
   have hf : surjective f := surjective.of_comp fun t : β => (connected_fibers t).1
   constructor
   · cases' hf t with s hs
@@ -944,8 +959,13 @@ theorem preimage_connected_component_connected [TopologicalSpace β] {f : α →
     exact mem_connected_component
     
   have hT : IsClosed (f ⁻¹' ConnectedComponent t) := (hcl (ConnectedComponent t)).1 is_closed_connected_component
+  -- To show it's preconnected we decompose (f ⁻¹' connected_component t) as a subset of two
+  -- closed disjoint sets in α. We want to show that it's a subset of either.
   rw [is_preconnected_iff_subset_of_fully_disjoint_closed hT]
   intro u v hu hv huv uv_disj
+  -- To do this we decompose connected_component t into T₁ and T₂
+  -- we will show that connected_component t is a subset of either and hence
+  -- (f ⁻¹' connected_component t) is a subset of u or v
   let T₁ := { t' ∈ ConnectedComponent t | f ⁻¹' {t'} ⊆ u }
   let T₂ := { t' ∈ ConnectedComponent t | f ⁻¹' {t'} ⊆ v }
   have fiber_decomp : ∀, ∀ t' ∈ ConnectedComponent t, ∀, f ⁻¹' {t'} ⊆ u ∨ f ⁻¹' {t'} ⊆ v := by
@@ -974,6 +994,7 @@ theorem preimage_connected_component_connected [TopologicalSpace β] {f : α →
       rw [← not_nonempty_iff_eq_empty] at uv_disj
       exact uv_disj (nonempty_of_mem (mem_inter hau (h rfl)))
       
+  -- This proof is exactly the same as the above (modulo some symmetry)
   have T₂_v : f ⁻¹' T₂ = f ⁻¹' ConnectedComponent t ∩ v := by
     apply eq_of_subset_of_subset
     · rw [← bUnion_preimage_singleton]
@@ -993,6 +1014,7 @@ theorem preimage_connected_component_connected [TopologicalSpace β] {f : α →
       
     · exact h
       
+  -- Now we show T₁, T₂ are closed, cover connected_component t and are disjoint.
   have hT₁ : IsClosed T₁ := (hcl T₁).2 (T₁_u.symm ▸ IsClosed.inter hT hu)
   have hT₂ : IsClosed T₂ := (hcl T₂).2 (T₂_v.symm ▸ IsClosed.inter hT hv)
   have T_decomp : ConnectedComponent t ⊆ T₁ ∪ T₂ := by
@@ -1013,6 +1035,8 @@ theorem preimage_connected_component_connected [TopologicalSpace β] {f : α →
     rw [inter_comm] at uv_disj
     conv => congr rw [inter_assoc]congr skip rw [← inter_assoc, inter_comm, ← inter_assoc, uv_disj, empty_inter]
     exact inter_empty _
+  -- Now we do cases on whether (connected_component t) is a subset of T₁ or T₂ to show
+  -- that the preimage is a subset of u or v.
   cases
     (is_preconnected_iff_subset_of_fully_disjoint_closed is_closed_connected_component).1
       is_preconnected_connected_component T₁ T₂ hT₁ hT₂ T_decomp T_disjoint
@@ -1172,10 +1196,12 @@ covering the whole space. -/
 class TotallySeparatedSpace (α : Type u) [TopologicalSpace α] : Prop where
   is_totally_separated_univ {} : IsTotallySeparated (Univ : Set α)
 
+-- see Note [lower instance priority]
 instance (priority := 100) TotallySeparatedSpace.totally_disconnected_space (α : Type u) [TopologicalSpace α]
     [TotallySeparatedSpace α] : TotallyDisconnectedSpace α :=
   ⟨is_totally_disconnected_of_is_totally_separated <| TotallySeparatedSpace.is_totally_separated_univ α⟩
 
+-- see Note [lower instance priority]
 instance (priority := 100) TotallySeparatedSpace.of_discrete (α : Type _) [TopologicalSpace α] [DiscreteTopology α] :
     TotallySeparatedSpace α :=
   ⟨fun a _ b _ h =>

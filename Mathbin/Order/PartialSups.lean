@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison
+-/
 import Mathbin.Data.Finset.Lattice
 import Mathbin.Data.Set.Pairwise
 import Mathbin.Order.Hom.Basic
@@ -36,7 +41,7 @@ variable [SemilatticeSup α]
 
 /-- The monotone sequence whose value at `n` is the supremum of the `f m` where `m ≤ n`. -/
 def partialSups (f : ℕ → α) : ℕ →o α :=
-  ⟨@Nat.rec (fun _ => α) (f 0) fun n : ℕ a : α => a⊔f (n + 1), monotone_nat_of_le_succ fun n => le_sup_left⟩
+  ⟨@Nat.rec (fun _ => α) (f 0) fun a : α => a⊔f (n + 1), monotone_nat_of_le_succ fun n => le_sup_left⟩
 
 @[simp]
 theorem partial_sups_zero (f : ℕ → α) : partialSups f 0 = f 0 :=
@@ -118,6 +123,8 @@ theorem partial_sups_eq_sup_range [SemilatticeSup α] [OrderBot α] (f : ℕ →
     rw [Finset.range_succ, Finset.sup_insert, sup_comm, ih]
     
 
+/- Note this lemma requires a distributive lattice, so is not useful (or true) in situations such as
+submodules. -/
 theorem partial_sups_disjoint_of_disjoint [DistribLattice α] [OrderBot α] (f : ℕ → α) (h : Pairwise (Disjoint on f))
     {m n : ℕ} (hmn : m < n) : Disjoint (partialSups f m) (f n) := by
   induction' m with m ih

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Markus Himmel. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Markus Himmel
+-/
 import Mathbin.RingTheory.Ideal.Operations
 
 /-!
@@ -17,7 +22,7 @@ variable {R : Type u} {S : Type v} [Ringₓ R] [Ringₓ S] (I I' : Ideal R) (J J
 namespace Ideal
 
 /-- `I × J` as an ideal of `R × S`. -/
-def Prod : Ideal (R × S) where
+def prod : Ideal (R × S) where
   Carrier := { x | x.fst ∈ I ∧ x.snd ∈ J }
   zero_mem' := by
     simp
@@ -73,7 +78,7 @@ theorem map_prod_comm_prod : map (↑(RingEquiv.prodComm : R × S ≃+* S × R))
 
 /-- Ideals of `R × S` are in one-to-one correspondence with pairs of ideals of `R` and ideals of
     `S`. -/
-def ideal_prod_equiv : Ideal (R × S) ≃ Ideal R × Ideal S where
+def idealProdEquiv : Ideal (R × S) ≃ Ideal R × Ideal S where
   toFun := fun I => ⟨map (RingHom.fst R S) I, map (RingHom.snd R S) I⟩
   invFun := fun I => prod I.1 I.2
   left_inv := fun I => (ideal_prod_eq I).symm
@@ -84,7 +89,7 @@ def ideal_prod_equiv : Ideal (R × S) ≃ Ideal R × Ideal S where
 theorem ideal_prod_equiv_symm_apply (I : Ideal R) (J : Ideal S) : idealProdEquiv.symm ⟨I, J⟩ = prod I J :=
   rfl
 
-theorem Prod.ext_iff {I I' : Ideal R} {J J' : Ideal S} : prod I J = prod I' J' ↔ I = I' ∧ J = J' := by
+theorem prod.ext_iff {I I' : Ideal R} {J J' : Ideal S} : prod I J = prod I' J' ↔ I = I' ∧ J = J' := by
   simp only [← ideal_prod_equiv_symm_apply, ideal_prod_equiv.symm.injective.eq_iff, Prod.mk.inj_iffₓ]
 
 theorem is_prime_of_is_prime_prod_top {I : Ideal R} (h : (Ideal.prod I (⊤ : Ideal S)).IsPrime) : I.IsPrime := by
@@ -126,7 +131,7 @@ theorem is_prime_ideal_prod_top' {I : Ideal S} [h : I.IsPrime] : (prod (⊤ : Id
 theorem ideal_prod_prime_aux {I : Ideal R} {J : Ideal S} : (Ideal.prod I J).IsPrime → I = ⊤ ∨ J = ⊤ := by
   contrapose!
   simp only [ne_top_iff_one, is_prime_iff, not_and, not_forall, not_or_distrib]
-  exact fun ⟨hI, hJ⟩ hIJ =>
+  exact fun hIJ =>
     ⟨⟨0, 1⟩, ⟨1, 0⟩, by
       simp , by
       simp [hJ], by
@@ -168,7 +173,7 @@ variable (R S)
 
 /-- The prime ideals of `R × S` are in bijection with the disjoint union of the prime ideals
     of `R` and the prime ideals of `S`. -/
-noncomputable def prime_ideals_equiv :
+noncomputable def primeIdealsEquiv :
     { K : Ideal (R × S) // K.IsPrime } ≃ Sum { I : Ideal R // I.IsPrime } { J : Ideal S // J.IsPrime } :=
   Equivₓ.symm <|
     Equivₓ.ofBijective primeIdealsEquivImpl

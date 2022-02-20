@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2022 Yuma Mizuno. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yuma Mizuno
+-/
 import Mathbin.CategoryTheory.Bicategory.Basic
 
 /-!
@@ -45,7 +50,7 @@ variable (C : Type u₂) [Quiver.{v₂ + 1} C] [∀ a b : C, Quiver.{w₂ + 1} (
 /-- A prelax functor between bicategories consists of functions between objects,
 1-morphisms, and 2-morphisms. This structure will be extended to define `oplax_functor`.
 -/
-structure prelax_functor extends Prefunctor B C : Type max w₁ w₂ v₁ v₂ u₁ u₂ where
+structure PrelaxFunctor extends Prefunctor B C : Type max w₁ w₂ v₁ v₂ u₁ u₂ where
   map₂ {a b : B} {f g : a ⟶ b} : (f ⟶ g) → (map f ⟶ map g)
 
 /-- The prefunctor between the underlying quivers. -/
@@ -93,8 +98,12 @@ variable {B : Type u₁} [Bicategory.{w₁, v₁} B] {C : Type u₂} [Bicategory
 /-- This auxiliary definition states that oplax functors preserve the associators
 modulo some adjustments of domains and codomains of 2-morphisms.
 -/
+/-
+We use this auxiliary definition instead of writing it directly in the definition
+of oplax functors because doing so will cause a timeout.
+-/
 @[simp]
-def oplax_functor.map₂_associator_aux (obj : B → C) (map : ∀ {X Y : B}, (X ⟶ Y) → (obj X ⟶ obj Y))
+def OplaxFunctor.Map₂AssociatorAux (obj : B → C) (map : ∀ {X Y : B}, (X ⟶ Y) → (obj X ⟶ obj Y))
     (map₂ : ∀ {a b : B} {f g : a ⟶ b}, (f ⟶ g) → (map f ⟶ map g))
     (map_comp : ∀ {a b c : B} f : a ⟶ b g : b ⟶ c, map (f ≫ g) ⟶ map f ≫ map g) {a b c d : B} (f : a ⟶ b) (g : b ⟶ c)
     (h : c ⟶ d) : Prop :=
@@ -114,7 +123,7 @@ Functions between 2-morphisms strictly commute with compositions and preserve th
 They also preserve the associator, the left unitor, and the right unitor modulo some adjustments
 of domains and codomains of 2-morphisms.
 -/
-structure oplax_functor extends PrelaxFunctor B C : Type max w₁ w₂ v₁ v₂ u₁ u₂ where
+structure OplaxFunctor extends PrelaxFunctor B C : Type max w₁ w₂ v₁ v₂ u₁ u₂ where
   map_id (a : B) : map (𝟙 a) ⟶ 𝟙 (obj a)
   map_comp {a b c : B} (f : a ⟶ b) (g : b ⟶ c) : map (f ≫ g) ⟶ map f ≫ map g
   map_comp_naturality_left' :
@@ -177,7 +186,7 @@ variable (F : OplaxFunctor B C) (G : OplaxFunctor C D)
 
 /-- Function between 1-morphisms as a functor. -/
 @[simps]
-def map_functor (a b : B) : (a ⟶ b) ⥤ (F.obj a ⟶ F.obj b) where
+def mapFunctor (a b : B) : (a ⟶ b) ⥤ (F.obj a ⟶ F.obj b) where
   obj := fun f => F.map f
   map := fun f g η => F.map₂ η
 

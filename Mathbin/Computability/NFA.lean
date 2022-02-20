@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Fox Thomson. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Fox Thomson
+-/
 import Mathbin.Computability.DFA
 import Mathbin.Data.Set.Functor
 
@@ -32,27 +37,27 @@ instance : Inhabited (NFA α σ) :=
   ⟨NFA.mk (fun _ _ => ∅) ∅ ∅⟩
 
 /-- `M.step_set S a` is the union of `M.step s a` for all `s ∈ S`. -/
-def step_set : Set σ → α → Set σ := fun Ss a => Ss >>= fun S => M.step S a
+def StepSet : Set σ → α → Set σ := fun Ss a => Ss >>= fun S => M.step S a
 
 theorem mem_step_set (s : σ) (S : Set σ) (a : α) : s ∈ M.StepSet S a ↔ ∃ t ∈ S, s ∈ M.step t a := by
   simp only [step_set, Set.mem_Union, Set.bind_def]
 
 /-- `M.eval_from S x` computes all possible paths though `M` with input `x` starting at an element
   of `S`. -/
-def eval_from (start : Set σ) : List α → Set σ :=
+def EvalFrom (start : Set σ) : List α → Set σ :=
   List.foldlₓ M.StepSet start
 
 /-- `M.eval x` computes all possible paths though `M` with input `x` starting at an element of
   `M.start`. -/
-def eval :=
+def Eval :=
   M.evalFrom M.start
 
 /-- `M.accepts` is the language of `x` such that there is an accept state in `M.eval x`. -/
-def accepts : Language α := fun x => ∃ S ∈ M.accept, S ∈ M.eval x
+def Accepts : Language α := fun x => ∃ S ∈ M.accept, S ∈ M.eval x
 
 /-- `M.to_DFA` is an `DFA` constructed from a `NFA` `M` using the subset construction. The
   states is the type of `set`s of `M.state` and the step function is `M.step_set`. -/
-def to_DFA : DFA α (Set σ) where
+def toDFA : DFA α (Set σ) where
   step := M.StepSet
   start := M.start
   accept := { S | ∃ s ∈ S, s ∈ M.accept }
@@ -80,7 +85,7 @@ namespace DFA
 
 /-- `M.to_NFA` is an `NFA` constructed from a `DFA` `M` by using the same start and accept
   states and a transition function which sends `s` with input `a` to the singleton `M.step s a`. -/
-def to_NFA (M : DFA α σ') : NFA α σ' where
+def toNFA (M : DFA α σ') : NFA α σ' where
   step := fun s a => {M.step s a}
   start := {M.start}
   accept := M.accept

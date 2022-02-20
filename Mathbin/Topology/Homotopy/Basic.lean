@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Shing Tak Lam. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Shing Tak Lam
+-/
 import Mathbin.Topology.Algebra.Order.ProjIcc
 import Mathbin.Topology.ContinuousFunction.Ordered
 import Mathbin.Topology.CompactOpen
@@ -62,7 +67,7 @@ namespace ContinuousMap
 
 /-- The type of homotopies between two functions.
 -/
-structure homotopy (f₀ f₁ : C(X, Y)) extends C(I × X, Y) where
+structure Homotopy (f₀ f₁ : C(X, Y)) extends C(I × X, Y) where
   to_fun_zero : ∀ x, to_fun (0, x) = f₀ x
   to_fun_one : ∀ x, to_fun (1, x) = f₁ x
 
@@ -85,13 +90,13 @@ theorem ext {F G : Homotopy f₀ f₁} (h : ∀ x, F x = G x) : F = G :=
 
 /-- See Note [custom simps projection]. We need to specify this projection explicitly in this case,
 because it is a composition of multiple projections. -/
-def simps.apply (F : Homotopy f₀ f₁) : I × X → Y :=
+def Simps.apply (F : Homotopy f₀ f₁) : I × X → Y :=
   F
 
 initialize_simps_projections Homotopy (to_continuous_map_to_fun → apply, -toContinuousMap)
 
 @[continuity]
-protected theorem Continuous (F : Homotopy f₀ f₁) : Continuous F :=
+protected theorem continuous (F : Homotopy f₀ f₁) : Continuous F :=
   F.continuous_to_fun
 
 @[simp]
@@ -136,10 +141,10 @@ theorem extend_apply_coe (F : Homotopy f₀ f₁) (t : I) (x : X) : F.extend t x
 theorem extend_apply_of_mem_I (F : Homotopy f₀ f₁) {t : ℝ} (ht : t ∈ I) (x : X) : F.extend t x = F (⟨t, ht⟩, x) :=
   ContinuousMap.congr_fun (Set.Icc_extend_of_mem (@zero_le_one ℝ _) F.curry ht) x
 
-theorem congr_funₓ {F G : Homotopy f₀ f₁} (h : F = G) (x : I × X) : F x = G x :=
+theorem congr_fun {F G : Homotopy f₀ f₁} (h : F = G) (x : I × X) : F x = G x :=
   ContinuousMap.congr_fun (congr_argₓ _ h) x
 
-theorem congr_argₓ (F : Homotopy f₀ f₁) {x y : I × X} (h : x = y) : F x = F y :=
+theorem congr_arg (F : Homotopy f₀ f₁) {x y : I × X} (h : x = y) : F x = F y :=
   F.toContinuousMap.congr_arg h
 
 end
@@ -256,7 +261,7 @@ end Homotopy
 /-- Given continuous maps `f₀` and `f₁`, we say `f₀` and `f₁` are homotopic if there exists a
 `homotopy f₀ f₁`.
 -/
-def homotopic (f₀ f₁ : C(X, Y)) : Prop :=
+def Homotopic (f₀ f₁ : C(X, Y)) : Prop :=
   Nonempty (Homotopy f₀ f₁)
 
 namespace Homotopic
@@ -277,7 +282,7 @@ theorem hcomp {f₀ f₁ : C(X, Y)} {g₀ g₁ : C(Y, Z)} (h₀ : Homotopic f₀
     Homotopic (g₀.comp f₀) (g₁.comp f₁) :=
   h₀.map2 Homotopy.hcomp h₁
 
-theorem Equivalenceₓ : Equivalenceₓ (@Homotopic X Y _ _) :=
+theorem equivalence : Equivalenceₓ (@Homotopic X Y _ _) :=
   ⟨refl, symm, trans⟩
 
 end Homotopic
@@ -285,7 +290,7 @@ end Homotopic
 /-- The type of homotopies between `f₀ f₁ : C(X, Y)`, where the intermediate maps satisfy the predicate
 `P : C(X, Y) → Prop`
 -/
-structure homotopy_with (f₀ f₁ : C(X, Y)) (P : C(X, Y) → Prop) extends Homotopy f₀ f₁ where
+structure HomotopyWith (f₀ f₁ : C(X, Y)) (P : C(X, Y) → Prop) extends Homotopy f₀ f₁ where
   prop' : ∀ t, P ⟨fun x => to_fun (t, x), Continuous.comp continuous_to_fun (continuous_const.prod_mk continuous_id')⟩
 
 namespace HomotopyWith
@@ -307,13 +312,13 @@ theorem ext {F G : HomotopyWith f₀ f₁ P} (h : ∀ x, F x = G x) : F = G :=
 
 /-- See Note [custom simps projection]. We need to specify this projection explicitly in this case,
 because it is a composition of multiple projections. -/
-def simps.apply (F : HomotopyWith f₀ f₁ P) : I × X → Y :=
+def Simps.apply (F : HomotopyWith f₀ f₁ P) : I × X → Y :=
   F
 
 initialize_simps_projections HomotopyWith (to_homotopy_to_continuous_map_to_fun → apply, -to_homotopy_to_continuous_map)
 
 @[continuity]
-protected theorem Continuous (F : HomotopyWith f₀ f₁ P) : Continuous F :=
+protected theorem continuous (F : HomotopyWith f₀ f₁ P) : Continuous F :=
   F.continuous_to_fun
 
 @[simp]
@@ -417,7 +422,7 @@ end HomotopyWith
 /-- Given continuous maps `f₀` and `f₁`, we say `f₀` and `f₁` are homotopic with respect to the
 predicate `P` if there exists a `homotopy_with f₀ f₁ P`.
 -/
-def homotopic_with (f₀ f₁ : C(X, Y)) (P : C(X, Y) → Prop) : Prop :=
+def HomotopicWith (f₀ f₁ : C(X, Y)) (P : C(X, Y) → Prop) : Prop :=
   Nonempty (HomotopyWith f₀ f₁ P)
 
 namespace HomotopicWith
@@ -440,7 +445,7 @@ end HomotopicWith
 
 /-- A `homotopy_rel f₀ f₁ S` is a homotopy between `f₀` and `f₁` which is fixed on the points in `S`.
 -/
-abbrev homotopy_rel (f₀ f₁ : C(X, Y)) (S : Set X) :=
+abbrev HomotopyRel (f₀ f₁ : C(X, Y)) (S : Set X) :=
   HomotopyWith f₀ f₁ fun f => ∀, ∀ x ∈ S, ∀, f x = f₀ x ∧ f x = f₁ x
 
 namespace HomotopyRel
@@ -519,7 +524,7 @@ end HomotopyRel
 /-- Given continuous maps `f₀` and `f₁`, we say `f₀` and `f₁` are homotopic relative to a set `S` if
 there exists a `homotopy_rel f₀ f₁ S`.
 -/
-def homotopic_rel (f₀ f₁ : C(X, Y)) (S : Set X) : Prop :=
+def HomotopicRel (f₀ f₁ : C(X, Y)) (S : Set X) : Prop :=
   Nonempty (HomotopyRel f₀ f₁ S)
 
 namespace HomotopicRel
@@ -538,7 +543,7 @@ theorem symm ⦃f g : C(X, Y)⦄ (h : HomotopicRel f g S) : HomotopicRel g f S :
 theorem trans ⦃f g h : C(X, Y)⦄ (h₀ : HomotopicRel f g S) (h₁ : HomotopicRel g h S) : HomotopicRel f h S :=
   h₀.map2 HomotopyRel.trans h₁
 
-theorem Equivalenceₓ : Equivalenceₓ fun f g : C(X, Y) => HomotopicRel f g S :=
+theorem equivalence : Equivalenceₓ fun f g : C(X, Y) => HomotopicRel f g S :=
   ⟨refl, symm, trans⟩
 
 end HomotopicRel

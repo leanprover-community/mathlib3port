@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Damiano Testa. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Damiano Testa
+-/
 import Mathbin.Algebra.SmulWithZero
 import Mathbin.Algebra.Regular.Basic
 
@@ -68,10 +73,10 @@ is `M`-regular. -/
 theorem smul_iff (b : S) (ha : IsSmulRegular M a) : IsSmulRegular M (a • b) ↔ IsSmulRegular M b :=
   ⟨of_smul _, ha.smul⟩
 
-theorem IsLeftRegular [Mul R] {a : R} (h : IsSmulRegular R a) : IsLeftRegular a :=
+theorem is_left_regular [Mul R] {a : R} (h : IsSmulRegular R a) : IsLeftRegular a :=
   h
 
-theorem IsRightRegular [Mul R] {a : R} (h : IsSmulRegular R (MulOpposite.op a)) : IsRightRegular a :=
+theorem is_right_regular [Mul R] {a : R} (h : IsSmulRegular R (MulOpposite.op a)) : IsRightRegular a :=
   h
 
 end HasScalar
@@ -135,7 +140,7 @@ variable [MonoidWithZeroₓ R] [MonoidWithZeroₓ S] [Zero M] [MulActionWithZero
   [MulActionWithZero S M] [IsScalarTower R S M]
 
 /-- The element `0` is `M`-regular if and only if `M` is trivial. -/
-protected theorem Subsingleton (h : IsSmulRegular M (0 : R)) : Subsingleton M :=
+protected theorem subsingleton (h : IsSmulRegular M (0 : R)) : Subsingleton M :=
   ⟨fun a b =>
     h
       (by

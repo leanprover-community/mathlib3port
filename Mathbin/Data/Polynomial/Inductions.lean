@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Damiano Testa. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Chris Hughes, Johannes Hölzl, Scott Morrison, Damiano Testa, Jens Wagemaker
+-/
 import Mathbin.Data.Nat.Interval
 import Mathbin.Data.Polynomial.Degree.Definitions
 
@@ -26,7 +31,7 @@ variable [Semiringₓ R] {p q : R[X]}
 
 /-- `div_X p` returns a polynomial `q` such that `q * X + C (p.coeff 0) = p`.
   It can be used in a semiring where the usual division algorithm is not possible -/
-def div_X (p : R[X]) : R[X] :=
+def divX (p : R[X]) : R[X] :=
   ∑ n in ico 0 p.natDegree, monomial n (p.coeff (n + 1))
 
 @[simp]
@@ -91,7 +96,7 @@ theorem degree_div_X_lt (hp0 : p ≠ 0) : (divX p).degree < p.degree := by
 
 /-- An induction principle for polynomials, valued in Sort* instead of Prop. -/
 @[elab_as_eliminator]
-noncomputable def rec_on_horner {M : R[X] → Sort _} :
+noncomputable def recOnHornerₓ {M : R[X] → Sort _} :
     ∀ p : R[X], M 0 → (∀ p a, coeff p 0 = 0 → a ≠ 0 → M p → M (p + c a)) → (∀ p, p ≠ 0 → M p → M (p * X)) → M p
   | p => fun M0 MC MX =>
     if hp : p = 0 then Eq.recOnₓ hp.symm M0

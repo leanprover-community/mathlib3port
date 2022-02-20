@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Yury G. Kudryashov. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yury G. Kudryashov
+-/
 import Mathbin.Analysis.SpecialFunctions.Pow
 
 /-!
@@ -143,6 +148,8 @@ if and only if `1 < p`. -/
 @[simp]
 theorem Real.summable_nat_rpow_inv {p : ℝ} : Summable (fun n => (n ^ p)⁻¹ : ℕ → ℝ) ↔ 1 < p := by
   cases' le_or_ltₓ 0 p with hp hp
+  /- Cauchy condensation test applies only to antitone sequences, so we consider the
+    cases `0 ≤ p` and `p < 0` separately. -/
   · rw [← summable_condensed_iff_of_nonneg]
     · simp_rw [Nat.cast_powₓ, Nat.cast_two, ← rpow_nat_cast, ← rpow_mul zero_lt_two.le, mul_comm _ p,
         rpow_mul zero_lt_two.le, rpow_nat_cast, ← inv_pow₀, ← mul_powₓ, summable_geometric_iff_norm_lt_1]
@@ -158,6 +165,7 @@ theorem Real.summable_nat_rpow_inv {p : ℝ} : Summable (fun n => (n ^ p)⁻¹ :
       exact inv_le_inv_of_le (rpow_pos_of_pos (Nat.cast_pos.2 hm) _) (rpow_le_rpow m.cast_nonneg (Nat.cast_le.2 hmn) hp)
       
     
+  -- If `p < 0`, then `1 / n ^ p` tends to infinity, thus the series diverges.
   · suffices ¬Summable (fun n => (n ^ p)⁻¹ : ℕ → ℝ) by
       have : ¬1 < p := fun hp₁ => hp.not_le (zero_le_one.trans hp₁.le)
       simpa [this, -one_div]

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Johan Commelin. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johan Commelin
+-/
 import Mathbin.Data.MvPolynomial.Rename
 
 /-!
@@ -81,7 +86,7 @@ theorem comap_rename (f : σ → τ) (x : τ → R) : comap (rename f) x = x ∘
 /-- If two polynomial types over the same coefficient ring `R` are equivalent,
 there is a bijection between the types of functions from their variable types to `R`.
 -/
-noncomputable def comap_equiv (f : MvPolynomial σ R ≃ₐ[R] MvPolynomial τ R) : (τ → R) ≃ (σ → R) where
+noncomputable def comapEquiv (f : MvPolynomial σ R ≃ₐ[R] MvPolynomial τ R) : (τ → R) ≃ (σ → R) where
   toFun := comap f
   invFun := comap f.symm
   left_inv := by

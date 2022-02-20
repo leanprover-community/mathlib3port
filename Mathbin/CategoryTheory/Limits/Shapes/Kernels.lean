@@ -1,4 +1,9 @@
-import Mathbin.CategoryTheory.Limits.Shapes.Zero
+/-
+Copyright (c) 2019 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison, Markus Himmel
+-/
+import Mathbin.CategoryTheory.Limits.Preserves.Shapes.Zero
 
 /-!
 # Kernels and cokernels
@@ -55,11 +60,11 @@ variable {C : Type u} [Category.{v} C]
 variable [HasZeroMorphisms C]
 
 /-- A morphism `f` has a kernel if the functor `parallel_pair f 0` has a limit. -/
-abbrev has_kernel {X Y : C} (f : X ⟶ Y) : Prop :=
+abbrev HasKernel {X Y : C} (f : X ⟶ Y) : Prop :=
   HasLimit (parallelPair f 0)
 
 /-- A morphism `f` has a cokernel if the functor `parallel_pair f 0` has a colimit. -/
-abbrev has_cokernel {X Y : C} (f : X ⟶ Y) : Prop :=
+abbrev HasCokernel {X Y : C} (f : X ⟶ Y) : Prop :=
   HasColimit (parallelPair f 0)
 
 variable {X Y : C} (f : X ⟶ Y)
@@ -67,26 +72,26 @@ variable {X Y : C} (f : X ⟶ Y)
 section
 
 /-- A kernel fork is just a fork where the second morphism is a zero morphism. -/
-abbrev kernel_fork :=
+abbrev KernelFork :=
   Fork f 0
 
 variable {f}
 
 @[simp, reassoc]
-theorem kernel_fork.condition (s : KernelFork f) : Fork.ι s ≫ f = 0 := by
+theorem KernelFork.condition (s : KernelFork f) : Fork.ι s ≫ f = 0 := by
   erw [fork.condition, has_zero_morphisms.comp_zero]
 
 @[simp]
-theorem kernel_fork.app_one (s : KernelFork f) : s.π.app one = 0 := by
+theorem KernelFork.app_one (s : KernelFork f) : s.π.app one = 0 := by
   rw [← fork.app_zero_left, kernel_fork.condition]
 
 /-- A morphism `ι` satisfying `ι ≫ f = 0` determines a kernel fork over `f`. -/
-abbrev kernel_fork.of_ι {Z : C} (ι : Z ⟶ X) (w : ι ≫ f = 0) : KernelFork f :=
+abbrev KernelFork.ofι {Z : C} (ι : Z ⟶ X) (w : ι ≫ f = 0) : KernelFork f :=
   Fork.ofι ι <| by
     rw [w, has_zero_morphisms.comp_zero]
 
 @[simp]
-theorem kernel_fork.ι_of_ι {X Y P : C} (f : X ⟶ Y) (ι : P ⟶ X) (w : ι ≫ f = 0) : Fork.ι (KernelFork.ofι ι w) = ι :=
+theorem KernelFork.ι_of_ι {X Y P : C} (f : X ⟶ Y) (ι : P ⟶ X) (w : ι ≫ f = 0) : Fork.ι (KernelFork.ofι ι w) = ι :=
   rfl
 
 section
@@ -94,12 +99,12 @@ section
 attribute [local tidy] tactic.case_bash
 
 /-- Every kernel fork `s` is isomorphic (actually, equal) to `fork.of_ι (fork.ι s) _`. -/
-def iso_of_ι (s : Fork f 0) : s ≅ Fork.ofι (Fork.ι s) (Fork.condition s) :=
+def isoOfι (s : Fork f 0) : s ≅ Fork.ofι (Fork.ι s) (Fork.condition s) :=
   Cones.ext (Iso.refl _) <| by
     tidy
 
 /-- If `ι = ι'`, then `fork.of_ι ι _` and `fork.of_ι ι' _` are isomorphic. -/
-def of_ι_congr {P : C} {ι ι' : P ⟶ X} {w : ι ≫ f = 0} (h : ι = ι') :
+def ofιCongr {P : C} {ι ι' : P ⟶ X} {w : ι ≫ f = 0} (h : ι = ι') :
     KernelFork.ofι ι w ≅
       KernelFork.ofι ι'
         (by
@@ -109,7 +114,7 @@ def of_ι_congr {P : C} {ι ι' : P ⟶ X} {w : ι ≫ f = 0} (h : ι = ι') :
 
 /-- If `F` is an equivalence, then applying `F` to a diagram indexing a (co)kernel of `f` yields
     the diagram indexing the (co)kernel of `F.map f`. -/
-def comp_nat_iso {D : Type u'} [Category.{v} D] [HasZeroMorphisms D] (F : C ⥤ D) [IsEquivalence F] :
+def compNatIso {D : Type u'} [Category.{v} D] [HasZeroMorphisms D] (F : C ⥤ D) [IsEquivalence F] :
     parallelPair f 0 ⋙ F ≅ parallelPair (F.map f) 0 :=
   (NatIso.ofComponents fun j =>
       match j with
@@ -122,14 +127,13 @@ end
 
 /-- If `s` is a limit kernel fork and `k : W ⟶ X` satisfies ``k ≫ f = 0`, then there is some
     `l : W ⟶ s.X` such that `l ≫ fork.ι s = k`. -/
-def kernel_fork.is_limit.lift' {s : KernelFork f} (hs : IsLimit s) {W : C} (k : W ⟶ X) (h : k ≫ f = 0) :
+def KernelFork.IsLimit.lift' {s : KernelFork f} (hs : IsLimit s) {W : C} (k : W ⟶ X) (h : k ≫ f = 0) :
     { l : W ⟶ s.x // l ≫ Fork.ι s = k } :=
   ⟨hs.lift <| KernelFork.ofι _ h, hs.fac _ _⟩
 
 /-- This is a slightly more convenient method to verify that a kernel fork is a limit cone. It
     only asks for a proof of facts that carry any mathematical content -/
-def is_limit_aux (t : KernelFork f) (lift : ∀ s : KernelFork f, s.x ⟶ t.x)
-    (fac : ∀ s : KernelFork f, lift s ≫ t.ι = s.ι)
+def isLimitAux (t : KernelFork f) (lift : ∀ s : KernelFork f, s.x ⟶ t.x) (fac : ∀ s : KernelFork f, lift s ≫ t.ι = s.ι)
     (uniq : ∀ s : KernelFork f m : s.x ⟶ t.x w : m ≫ t.ι = s.ι, m = lift s) : IsLimit t :=
   { lift,
     fac' := fun s j => by
@@ -143,7 +147,7 @@ def is_limit_aux (t : KernelFork f) (lift : ∀ s : KernelFork f, s.x ⟶ t.x)
 /-- This is a more convenient formulation to show that a `kernel_fork` constructed using
 `kernel_fork.of_ι` is a limit cone.
 -/
-def is_limit.of_ι {W : C} (g : W ⟶ X) (eq : g ≫ f = 0) (lift : ∀ {W' : C} g' : W' ⟶ X eq' : g' ≫ f = 0, W' ⟶ W)
+def IsLimit.ofι {W : C} (g : W ⟶ X) (eq : g ≫ f = 0) (lift : ∀ {W' : C} g' : W' ⟶ X eq' : g' ≫ f = 0, W' ⟶ W)
     (fac : ∀ {W' : C} g' : W' ⟶ X eq' : g' ≫ f = 0, lift g' eq' ≫ g = g')
     (uniq : ∀ {W' : C} g' : W' ⟶ X eq' : g' ≫ f = 0 m : W' ⟶ W w : m ≫ g = g', m = lift g' eq') :
     IsLimit (KernelFork.ofι g Eq) :=
@@ -234,7 +238,7 @@ theorem eq_zero_of_epi_kernel [Epi (kernel.ι f)] : f = 0 :=
       simp )
 
 /-- The kernel of a zero morphism is isomorphic to the source. -/
-def kernel_zero_iso_source : kernel (0 : X ⟶ Y) ≅ X :=
+def kernelZeroIsoSource : kernel (0 : X ⟶ Y) ≅ X :=
   equalizer.isoSourceOfSelf 0
 
 @[simp]
@@ -252,7 +256,7 @@ theorem kernel_zero_iso_source_inv :
   simp [kernel_zero_iso_source]
 
 /-- If two morphisms are known to be equal, then their kernels are isomorphic. -/
-def kernel_iso_of_eq {f g : X ⟶ Y} [HasKernel f] [HasKernel g] (h : f = g) : kernel f ≅ kernel g :=
+def kernelIsoOfEq {f g : X ⟶ Y} [HasKernel f] [HasKernel g] (h : f = g) : kernel f ≅ kernel g :=
   HasLimit.isoOfNatIso
     (by
       simp [h])
@@ -279,6 +283,7 @@ theorem kernel_not_iso_of_nonzero (w : f ≠ 0) : IsIso (kernel.ι f) → False 
     skip
     infer_instance
 
+-- TODO the remainder of this section has obvious generalizations to `has_equalizer f g`.
 instance has_kernel_comp_mono {X Y Z : C} (f : X ⟶ Y) [HasKernel f] (g : Y ⟶ Z) [Mono g] : HasKernel (f ≫ g) where
   exists_limit :=
     ⟨{ Cone :=
@@ -300,7 +305,7 @@ instance has_kernel_comp_mono {X Y Z : C} (f : X ⟶ Y) [HasKernel f] (g : Y ⟶
 /-- When `g` is a monomorphism, the kernel of `f ≫ g` is isomorphic to the kernel of `f`.
 -/
 @[simps]
-def kernel_comp_mono {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z) [HasKernel f] [Mono g] : kernel (f ≫ g) ≅ kernel f where
+def kernelCompMono {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z) [HasKernel f] [Mono g] : kernel (f ≫ g) ≅ kernel f where
   Hom :=
     kernel.lift _ (kernel.ι _)
       (by
@@ -333,7 +338,7 @@ instance has_kernel_iso_comp {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z) [IsIso f] [
 /-- When `f` is an isomorphism, the kernel of `f ≫ g` is isomorphic to the kernel of `g`.
 -/
 @[simps]
-def kernel_is_iso_comp {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z) [IsIso f] [HasKernel g] : kernel (f ≫ g) ≅ kernel g where
+def kernelIsIsoComp {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z) [IsIso f] [HasKernel g] : kernel (f ≫ g) ≅ kernel g where
   Hom :=
     kernel.lift _ (kernel.ι _ ≫ f)
       (by
@@ -352,12 +357,12 @@ variable [HasZeroObject C]
 open_locale ZeroObject
 
 /-- The morphism from the zero object determines a cone on a kernel diagram -/
-def kernel.zero_cone : Cone (parallelPair f 0) where
+def kernel.zeroCone : Cone (parallelPair f 0) where
   x := 0
   π := { app := fun j => 0 }
 
 /-- The map from the zero object is a kernel of a monomorphism -/
-def kernel.is_limit_cone_zero_cone [Mono f] : IsLimit (kernel.zeroCone f) :=
+def kernel.isLimitConeZeroCone [Mono f] : IsLimit (kernel.zeroCone f) :=
   Fork.IsLimit.mk _ (fun s => 0)
     (fun s => by
       erw [zero_comp]
@@ -366,7 +371,7 @@ def kernel.is_limit_cone_zero_cone [Mono f] : IsLimit (kernel.zeroCone f) :=
     fun _ _ _ => zero_of_to_zero _
 
 /-- The kernel of a monomorphism is isomorphic to the zero object -/
-def kernel.of_mono [HasKernel f] [Mono f] : kernel f ≅ 0 :=
+def kernel.ofMono [HasKernel f] [Mono f] : kernel f ≅ 0 :=
   Functor.mapIso (Cones.forget _) <|
     IsLimit.uniqueUpToIso (limit.isLimit (parallelPair f 0)) (kernel.isLimitConeZeroCone f)
 
@@ -379,7 +384,7 @@ end HasZeroObject
 section Transport
 
 /-- If `i` is an isomorphism such that `l ≫ i.hom = f`, then any kernel of `f` is a kernel of `l`.-/
-def is_kernel.of_comp_iso {Z : C} (l : X ⟶ Z) (i : Z ≅ Y) (h : l ≫ i.Hom = f) {s : KernelFork f} (hs : IsLimit s) :
+def IsKernel.ofCompIso {Z : C} (l : X ⟶ Z) (i : Z ≅ Y) (h : l ≫ i.Hom = f) {s : KernelFork f} (hs : IsLimit s) :
     IsLimit
       (KernelFork.ofι (Fork.ι s) <|
         show Fork.ι s ≫ l = 0 by
@@ -396,7 +401,7 @@ def is_kernel.of_comp_iso {Z : C} (l : X ⟶ Z) (i : Z ≅ Y) (h : l ≫ i.Hom =
     simpa using h walking_parallel_pair.zero
 
 /-- If `i` is an isomorphism such that `l ≫ i.hom = f`, then the kernel of `f` is a kernel of `l`.-/
-def kernel.of_comp_iso [HasKernel f] {Z : C} (l : X ⟶ Z) (i : Z ≅ Y) (h : l ≫ i.Hom = f) :
+def kernel.ofCompIso [HasKernel f] {Z : C} (l : X ⟶ Z) (i : Z ≅ Y) (h : l ≫ i.Hom = f) :
     IsLimit
       (KernelFork.ofι (kernel.ι f) <|
         show kernel.ι f ≫ l = 0 by
@@ -405,7 +410,7 @@ def kernel.of_comp_iso [HasKernel f] {Z : C} (l : X ⟶ Z) (i : Z ≅ Y) (h : l 
 
 /-- If `s` is any limit kernel cone over `f` and if  `i` is an isomorphism such that
     `i.hom ≫ s.ι  = l`, then `l` is a kernel of `f`. -/
-def is_kernel.iso_kernel {Z : C} (l : Z ⟶ X) {s : KernelFork f} (hs : IsLimit s) (i : Z ≅ s.x)
+def IsKernel.isoKernel {Z : C} (l : Z ⟶ X) {s : KernelFork f} (hs : IsLimit s) (i : Z ≅ s.x)
     (h : i.Hom ≫ Fork.ι s = l) :
     IsLimit
       (KernelFork.ofι l <|
@@ -420,7 +425,7 @@ def is_kernel.iso_kernel {Z : C} (l : Z ⟶ X) {s : KernelFork f} (hs : IsLimit 
         
 
 /-- If `i` is an isomorphism such that `i.hom ≫ kernel.ι f = l`, then `l` is a kernel of `f`. -/
-def kernel.iso_kernel [HasKernel f] {Z : C} (l : Z ⟶ X) (i : Z ≅ kernel f) (h : i.Hom ≫ kernel.ι f = l) :
+def kernel.isoKernel [HasKernel f] {Z : C} (l : Z ⟶ X) (i : Z ≅ kernel f) (h : i.Hom ≫ kernel.ι f = l) :
     IsLimit
       (KernelFork.ofι l <| by
         simp [← h]) :=
@@ -441,36 +446,36 @@ end
 section
 
 /-- A cokernel cofork is just a cofork where the second morphism is a zero morphism. -/
-abbrev cokernel_cofork :=
+abbrev CokernelCofork :=
   Cofork f 0
 
 variable {f}
 
 @[simp, reassoc]
-theorem cokernel_cofork.condition (s : CokernelCofork f) : f ≫ Cofork.π s = 0 := by
+theorem CokernelCofork.condition (s : CokernelCofork f) : f ≫ Cofork.π s = 0 := by
   rw [cofork.condition, zero_comp]
 
 @[simp]
-theorem cokernel_cofork.app_zero (s : CokernelCofork f) : s.ι.app zero = 0 := by
+theorem CokernelCofork.app_zero (s : CokernelCofork f) : s.ι.app zero = 0 := by
   rw [← cofork.left_app_one, cokernel_cofork.condition]
 
 /-- A morphism `π` satisfying `f ≫ π = 0` determines a cokernel cofork on `f`. -/
-abbrev cokernel_cofork.of_π {Z : C} (π : Y ⟶ Z) (w : f ≫ π = 0) : CokernelCofork f :=
+abbrev CokernelCofork.ofπ {Z : C} (π : Y ⟶ Z) (w : f ≫ π = 0) : CokernelCofork f :=
   Cofork.ofπ π <| by
     rw [w, zero_comp]
 
 @[simp]
-theorem cokernel_cofork.π_of_π {X Y P : C} (f : X ⟶ Y) (π : Y ⟶ P) (w : f ≫ π = 0) :
+theorem CokernelCofork.π_of_π {X Y P : C} (f : X ⟶ Y) (π : Y ⟶ P) (w : f ≫ π = 0) :
     Cofork.π (CokernelCofork.ofπ π w) = π :=
   rfl
 
 /-- Every cokernel cofork `s` is isomorphic (actually, equal) to `cofork.of_π (cofork.π s) _`. -/
-def iso_of_π (s : Cofork f 0) : s ≅ Cofork.ofπ (Cofork.π s) (Cofork.condition s) :=
+def isoOfπ (s : Cofork f 0) : s ≅ Cofork.ofπ (Cofork.π s) (Cofork.condition s) :=
   (Cocones.ext (Iso.refl _)) fun j => by
     cases j <;> tidy
 
 /-- If `π = π'`, then `cokernel_cofork.of_π π _` and `cokernel_cofork.of_π π' _` are isomorphic. -/
-def of_π_congr {P : C} {π π' : Y ⟶ P} {w : f ≫ π = 0} (h : π = π') :
+def ofπCongr {P : C} {π π' : Y ⟶ P} {w : f ≫ π = 0} (h : π = π') :
     CokernelCofork.ofπ π w ≅
       CokernelCofork.ofπ π'
         (by
@@ -480,13 +485,13 @@ def of_π_congr {P : C} {π π' : Y ⟶ P} {w : f ≫ π = 0} (h : π = π') :
 
 /-- If `s` is a colimit cokernel cofork, then every `k : Y ⟶ W` satisfying `f ≫ k = 0` induces
     `l : s.X ⟶ W` such that `cofork.π s ≫ l = k`. -/
-def cokernel_cofork.is_colimit.desc' {s : CokernelCofork f} (hs : IsColimit s) {W : C} (k : Y ⟶ W) (h : f ≫ k = 0) :
+def CokernelCofork.IsColimit.desc' {s : CokernelCofork f} (hs : IsColimit s) {W : C} (k : Y ⟶ W) (h : f ≫ k = 0) :
     { l : s.x ⟶ W // Cofork.π s ≫ l = k } :=
   ⟨hs.desc <| CokernelCofork.ofπ _ h, hs.fac _ _⟩
 
 /-- This is a slightly more convenient method to verify that a cokernel cofork is a colimit cocone.
 It only asks for a proof of facts that carry any mathematical content -/
-def is_colimit_aux (t : CokernelCofork f) (desc : ∀ s : CokernelCofork f, t.x ⟶ s.x)
+def isColimitAux (t : CokernelCofork f) (desc : ∀ s : CokernelCofork f, t.x ⟶ s.x)
     (fac : ∀ s : CokernelCofork f, t.π ≫ desc s = s.π)
     (uniq : ∀ s : CokernelCofork f m : t.x ⟶ s.x w : t.π ≫ m = s.π, m = desc s) : IsColimit t :=
   { desc,
@@ -501,7 +506,7 @@ def is_colimit_aux (t : CokernelCofork f) (desc : ∀ s : CokernelCofork f, t.x 
 /-- This is a more convenient formulation to show that a `cokernel_cofork` constructed using
 `cokernel_cofork.of_π` is a limit cone.
 -/
-def is_colimit.of_π {Z : C} (g : Y ⟶ Z) (eq : f ≫ g = 0) (desc : ∀ {Z' : C} g' : Y ⟶ Z' eq' : f ≫ g' = 0, Z ⟶ Z')
+def IsColimit.ofπ {Z : C} (g : Y ⟶ Z) (eq : f ≫ g = 0) (desc : ∀ {Z' : C} g' : Y ⟶ Z' eq' : f ≫ g' = 0, Z ⟶ Z')
     (fac : ∀ {Z' : C} g' : Y ⟶ Z' eq' : f ≫ g' = 0, g ≫ desc g' eq' = g')
     (uniq : ∀ {Z' : C} g' : Y ⟶ Z' eq' : f ≫ g' = 0 m : Z ⟶ Z' w : g ≫ m = g', m = desc g' eq') :
     IsColimit (CokernelCofork.ofπ g Eq) :=
@@ -592,7 +597,7 @@ theorem eq_zero_of_mono_cokernel [Mono (cokernel.π f)] : f = 0 :=
       simp )
 
 /-- The cokernel of a zero morphism is isomorphic to the target. -/
-def cokernel_zero_iso_target : cokernel (0 : X ⟶ Y) ≅ Y :=
+def cokernelZeroIsoTarget : cokernel (0 : X ⟶ Y) ≅ Y :=
   coequalizer.isoTargetOfSelf 0
 
 @[simp]
@@ -610,7 +615,7 @@ theorem cokernel_zero_iso_target_inv : cokernelZeroIsoTarget.inv = cokernel.π (
   rfl
 
 /-- If two morphisms are known to be equal, then their cokernels are isomorphic. -/
-def cokernel_iso_of_eq {f g : X ⟶ Y} [HasCokernel f] [HasCokernel g] (h : f = g) : cokernel f ≅ cokernel g :=
+def cokernelIsoOfEq {f g : X ⟶ Y} [HasCokernel f] [HasCokernel g] (h : f = g) : cokernel f ≅ cokernel g :=
   HasColimit.isoOfNatIso
     (by
       simp [h])
@@ -637,6 +642,7 @@ theorem cokernel_not_iso_of_nonzero (w : f ≠ 0) : IsIso (cokernel.π f) → Fa
     skip
     infer_instance
 
+-- TODO the remainder of this section has obvious generalizations to `has_coequalizer f g`.
 instance has_cokernel_comp_iso {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z) [HasCokernel f] [IsIso g] : HasCokernel (f ≫ g) where
   exists_colimit :=
     ⟨{ Cocone :=
@@ -659,7 +665,7 @@ instance has_cokernel_comp_iso {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z) [HasCoker
 /-- When `g` is an isomorphism, the cokernel of `f ≫ g` is isomorphic to the cokernel of `f`.
 -/
 @[simps]
-def cokernel_comp_is_iso {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z) [HasCokernel f] [IsIso g] :
+def cokernelCompIsIso {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z) [HasCokernel f] [IsIso g] :
     cokernel (f ≫ g) ≅ cokernel f where
   Hom :=
     cokernel.desc _ (inv g ≫ cokernel.π f)
@@ -692,7 +698,7 @@ instance has_cokernel_epi_comp {X Y Z : C} (f : X ⟶ Y) [Epi f] (g : Y ⟶ Z) [
 /-- When `f` is an epimorphism, the cokernel of `f ≫ g` is isomorphic to the cokernel of `g`.
 -/
 @[simps]
-def cokernel_epi_comp {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z) [Epi f] [HasCokernel g] : cokernel (f ≫ g) ≅ cokernel g where
+def cokernelEpiComp {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z) [Epi f] [HasCokernel g] : cokernel (f ≫ g) ≅ cokernel g where
   Hom :=
     cokernel.desc _ (cokernel.π g)
       (by
@@ -712,12 +718,12 @@ variable [HasZeroObject C]
 open_locale ZeroObject
 
 /-- The morphism to the zero object determines a cocone on a cokernel diagram -/
-def cokernel.zero_cocone : Cocone (parallelPair f 0) where
+def cokernel.zeroCocone : Cocone (parallelPair f 0) where
   x := 0
   ι := { app := fun j => 0 }
 
 /-- The morphism to the zero object is a cokernel of an epimorphism -/
-def cokernel.is_colimit_cocone_zero_cocone [Epi f] : IsColimit (cokernel.zeroCocone f) :=
+def cokernel.isColimitCoconeZeroCocone [Epi f] : IsColimit (cokernel.zeroCocone f) :=
   Cofork.IsColimit.mk _ (fun s => 0)
     (fun s => by
       erw [zero_comp]
@@ -726,7 +732,7 @@ def cokernel.is_colimit_cocone_zero_cocone [Epi f] : IsColimit (cokernel.zeroCoc
     fun _ _ _ => zero_of_from_zero _
 
 /-- The cokernel of an epimorphism is isomorphic to the zero object -/
-def cokernel.of_epi [HasCokernel f] [Epi f] : cokernel f ≅ 0 :=
+def cokernel.ofEpi [HasCokernel f] [Epi f] : cokernel f ≅ 0 :=
   Functor.mapIso (Cocones.forget _) <|
     IsColimit.uniqueUpToIso (colimit.isColimit (parallelPair f 0)) (cokernel.isColimitCoconeZeroCocone f)
 
@@ -744,7 +750,7 @@ section HasImage
 This holds in any category with equalizers.)
 -/
 @[simps]
-def cokernel_image_ι {X Y : C} (f : X ⟶ Y) [HasImage f] [HasCokernel (image.ι f)] [HasCokernel f]
+def cokernelImageι {X Y : C} (f : X ⟶ Y) [HasImage f] [HasCokernel (image.ι f)] [HasCokernel f]
     [Epi (factorThruImage f)] : cokernel (image.ι f) ≅ cokernel f where
   Hom :=
     cokernel.desc _ (cokernel.π f)
@@ -793,8 +799,7 @@ section Transport
 
 /-- If `i` is an isomorphism such that `i.hom ≫ l = f`, then any cokernel of `f` is a cokernel of
     `l`. -/
-def is_cokernel.of_iso_comp {Z : C} (l : Z ⟶ Y) (i : X ≅ Z) (h : i.Hom ≫ l = f) {s : CokernelCofork f}
-    (hs : IsColimit s) :
+def IsCokernel.ofIsoComp {Z : C} (l : Z ⟶ Y) (i : X ≅ Z) (h : i.Hom ≫ l = f) {s : CokernelCofork f} (hs : IsColimit s) :
     IsColimit
       (CokernelCofork.ofπ (Cofork.π s) <|
         show l ≫ Cofork.π s = 0 by
@@ -812,7 +817,7 @@ def is_cokernel.of_iso_comp {Z : C} (l : Z ⟶ Y) (i : X ≅ Z) (h : i.Hom ≫ l
 
 /-- If `i` is an isomorphism such that `i.hom ≫ l = f`, then the cokernel of `f` is a cokernel of
     `l`. -/
-def cokernel.of_iso_comp [HasCokernel f] {Z : C} (l : Z ⟶ Y) (i : X ≅ Z) (h : i.Hom ≫ l = f) :
+def cokernel.ofIsoComp [HasCokernel f] {Z : C} (l : Z ⟶ Y) (i : X ≅ Z) (h : i.Hom ≫ l = f) :
     IsColimit
       (CokernelCofork.ofπ (cokernel.π f) <|
         show l ≫ cokernel.π f = 0 by
@@ -821,7 +826,7 @@ def cokernel.of_iso_comp [HasCokernel f] {Z : C} (l : Z ⟶ Y) (i : X ≅ Z) (h 
 
 /-- If `s` is any colimit cokernel cocone over `f` and `i` is an isomorphism such that
     `s.π ≫ i.hom = l`, then `l` is a cokernel of `f`. -/
-def is_cokernel.cokernel_iso {Z : C} (l : Y ⟶ Z) {s : CokernelCofork f} (hs : IsColimit s) (i : s.x ≅ Z)
+def IsCokernel.cokernelIso {Z : C} (l : Y ⟶ Z) {s : CokernelCofork f} (hs : IsColimit s) (i : s.x ≅ Z)
     (h : Cofork.π s ≫ i.Hom = l) :
     IsColimit
       (CokernelCofork.ofπ l <|
@@ -836,7 +841,7 @@ def is_cokernel.cokernel_iso {Z : C} (l : Y ⟶ Z) {s : CokernelCofork f} (hs : 
         
 
 /-- If `i` is an isomorphism such that `cokernel.π f ≫ i.hom = l`, then `l` is a cokernel of `f`. -/
-def cokernel.cokernel_iso [HasCokernel f] {Z : C} (l : Y ⟶ Z) (i : cokernel f ≅ Z) (h : cokernel.π f ≫ i.Hom = l) :
+def cokernel.cokernelIso [HasCokernel f] {Z : C} (l : Y ⟶ Z) (i : cokernel f ≅ Z) (h : cokernel.π f ≫ i.Hom = l) :
     IsColimit
       (CokernelCofork.ofπ l <| by
         simp [← h]) :=
@@ -853,13 +858,13 @@ variable (C : Type u) [Category.{v} C]
 variable [HasZeroMorphisms C]
 
 /-- `has_kernels` represents the existence of kernels for every morphism. -/
-class has_kernels : Prop where
+class HasKernels : Prop where
   HasLimit : ∀ {X Y : C} f : X ⟶ Y, HasKernel f := by
     run_tac
       tactic.apply_instance
 
 /-- `has_cokernels` represents the existence of cokernels for every morphism. -/
-class has_cokernels : Prop where
+class HasCokernels : Prop where
   HasColimit : ∀ {X Y : C} f : X ⟶ Y, HasCokernel f := by
     run_tac
       tactic.apply_instance

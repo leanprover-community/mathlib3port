@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Simon Hudon. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Simon Hudon
+-/
 import Mathbin.Tactic.Hint
 
 namespace Tactic
@@ -262,6 +267,7 @@ The variant `tauto!` uses the law of excluded middle.
 `tauto {closer := tac}` will use `tac` on any subgoals created by `tauto`
 that it is unable to solve before failing.
 -/
+-- Now define a shorter name for the tactic `tautology`.
 unsafe def tauto (c : parse <| (tk "!")?) (cfg : tactic.tauto_cfg := {  }) : tactic Unit :=
   tautology c cfg
 

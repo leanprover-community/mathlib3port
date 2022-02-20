@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Eric Wieser. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Simon Hudon, Patrick Massot, Eric Wieser
+-/
 import Mathbin.Tactic.SplitIfs
 import Mathbin.Tactic.Simpa
 import Mathbin.Tactic.Congr
@@ -19,8 +24,10 @@ universe u v₁ v₂ v₃
 
 variable {I : Type u}
 
+-- The indexing type
 variable {α β γ : Type _}
 
+-- The families of types already equipped with instances
 variable {f : I → Type v₁} {g : I → Type v₂} {h : I → Type v₃}
 
 variable (x y : ∀ i, f i) (i : I)
@@ -31,7 +38,7 @@ namespace Pi
 
 
 @[to_additive]
-instance One [∀ i, One <| f i] : One (∀ i : I, f i) :=
+instance hasOne [∀ i, One <| f i] : One (∀ i : I, f i) :=
   ⟨fun _ => 1⟩
 
 @[simp, to_additive]
@@ -55,7 +62,7 @@ theorem comp_one [One β] (x : β → γ) : x ∘ 1 = const α (x 1) :=
   rfl
 
 @[to_additive]
-instance Mul [∀ i, Mul <| f i] : Mul (∀ i : I, f i) :=
+instance hasMul [∀ i, Mul <| f i] : Mul (∀ i : I, f i) :=
   ⟨fun f g i => f i * g i⟩
 
 @[simp, to_additive]
@@ -83,7 +90,7 @@ theorem bit1_apply [∀ i, Add <| f i] [∀ i, One <| f i] : (bit1 x) i = bit1 (
   rfl
 
 @[to_additive]
-instance Inv [∀ i, Inv <| f i] : Inv (∀ i : I, f i) :=
+instance hasInv [∀ i, Inv <| f i] : Inv (∀ i : I, f i) :=
   ⟨fun f i => (f i)⁻¹⟩
 
 @[simp, to_additive]
@@ -103,7 +110,7 @@ theorem inv_comp [Inv γ] (x : β → γ) (y : α → β) : x⁻¹ ∘ y = (x �
   rfl
 
 @[to_additive]
-instance Div [∀ i, Div <| f i] : Div (∀ i : I, f i) :=
+instance hasDiv [∀ i, Div <| f i] : Div (∀ i : I, f i) :=
   ⟨fun f g i => f i / g i⟩
 
 @[simp, to_additive]
@@ -130,7 +137,7 @@ variable [∀ i, One (f i)] [∀ i, One (g i)] [∀ i, One (h i)]
 
 /-- The function supported at `i`, with value `x` there, and `1` elsewhere. -/
 @[to_additive Pi.single "The function supported at `i`, with value `x` there, and `0` elsewhere."]
-def mul_single (i : I) (x : f i) : ∀ i, f i :=
+def mulSingle (i : I) (x : f i) : ∀ i, f i :=
   Function.update 1 i x
 
 @[simp, to_additive]
@@ -200,7 +207,7 @@ end
 
 /-- The mapping into a product type built from maps into each component. -/
 @[simp]
-protected def Prod (f' : ∀ i, f i) (g' : ∀ i, g i) (i : I) : f i × g i :=
+protected def prod (f' : ∀ i, f i) (g' : ∀ i, g i) (i : I) : f i × g i :=
   (f' i, g' i)
 
 @[simp]

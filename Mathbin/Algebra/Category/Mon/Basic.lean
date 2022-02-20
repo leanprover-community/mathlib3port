@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison
+-/
 import Mathbin.Tactic.Elementwise
 import Mathbin.CategoryTheory.ConcreteCategory.BundledHom
 import Mathbin.Algebra.PunitInstances
@@ -33,14 +38,13 @@ namespace Mon
 theory machinery work. -/
 @[to_additive
       "`add_monoid_hom` doesn't actually assume associativity. This alias is needed to make\nthe category theory machinery work."]
-abbrev assoc_monoid_hom (M N : Type _) [Monoidₓ M] [Monoidₓ N] :=
+abbrev AssocMonoidHom (M N : Type _) [Monoidₓ M] [Monoidₓ N] :=
   MonoidHom M N
 
 @[to_additive]
-instance bundled_hom : BundledHom AssocMonoidHom :=
-  ⟨fun M N [Monoidₓ M] [Monoidₓ N] => @MonoidHom.toFun M N _ _, fun M [Monoidₓ M] => @MonoidHom.id M _,
-    fun M N P [Monoidₓ M] [Monoidₓ N] [Monoidₓ P] => @MonoidHom.comp M N P _ _ _, fun M N [Monoidₓ M] [Monoidₓ N] =>
-    @MonoidHom.coe_inj M N _ _⟩
+instance bundledHom : BundledHom AssocMonoidHom :=
+  ⟨fun [Monoidₓ N] => @MonoidHom.toFun M N _ _, fun [Monoidₓ M] => @MonoidHom.id M _, fun [Monoidₓ P] =>
+    @MonoidHom.comp M N P _ _ _, fun [Monoidₓ N] => @MonoidHom.coe_inj M N _ _⟩
 
 deriving instance LargeCategory, ConcreteCategory for Mon
 
@@ -60,7 +64,7 @@ add_decl_doc AddMon.of
 
 /-- Typecheck a `monoid_hom` as a morphism in `Mon`. -/
 @[to_additive]
-def of_hom {X Y : Type u} [Monoidₓ X] [Monoidₓ Y] (f : X →* Y) : of X ⟶ of Y :=
+def ofHom {X Y : Type u} [Monoidₓ X] [Monoidₓ Y] (f : X →* Y) : of X ⟶ of Y :=
   f
 
 /-- Typecheck a `add_monoid_hom` as a morphism in `AddMon`. -/
@@ -68,7 +72,11 @@ add_decl_doc AddMon.ofHom
 
 @[to_additive]
 instance : Inhabited Mon :=
-  ⟨@of PUnit <| @Groupₓ.toMonoid _ <| @CommGroupₓ.toGroup _ PUnit.commGroup⟩
+  ⟨-- The default instance for `monoid punit` is derived via `punit.comm_ring`,
+        -- which breaks to_additive.
+        @of
+        PUnit <|
+      @Groupₓ.toMonoid _ <| @CommGroupₓ.toGroup _ PUnit.commGroup⟩
 
 @[to_additive]
 instance (M : Mon) : Monoidₓ M :=
@@ -112,7 +120,11 @@ add_decl_doc AddCommMon.of
 
 @[to_additive]
 instance : Inhabited CommMon :=
-  ⟨@of PUnit <| @CommGroupₓ.toCommMonoid _ PUnit.commGroup⟩
+  ⟨-- The default instance for `comm_monoid punit` is derived via `punit.comm_ring`,
+        -- which breaks to_additive.
+        @of
+        PUnit <|
+      @CommGroupₓ.toCommMonoid _ PUnit.commGroup⟩
 
 @[to_additive]
 instance (M : CommMon) : CommMonoidₓ M :=
@@ -123,17 +135,21 @@ theorem coe_of (R : Type u) [CommMonoidₓ R] : (CommMon.of R : Type u) = R :=
   rfl
 
 @[to_additive has_forget_to_AddMon]
-instance has_forget_to_Mon : HasForget₂ CommMon Mon :=
+instance hasForgetToMon : HasForget₂ CommMon Mon :=
   BundledHom.forget₂ _ _
 
 end CommMon
 
+-- We verify that the coercions of morphisms to functions work correctly:
 example {R S : Mon} (f : R ⟶ S) : (R : Type) → (S : Type) :=
   f
 
 example {R S : CommMon} (f : R ⟶ S) : (R : Type) → (S : Type) :=
   f
 
+-- We verify that when constructing a morphism in `CommMon`,
+-- when we construct the `to_fun` field, the types are presented as `↥R`,
+-- rather than `R.α` or (as we used to have) `↥(bundled.map comm_monoid.to_monoid R)`.
 example (R : CommMon.{u}) : R ⟶ R :=
   { toFun := fun x => by
       match_target(R : Type u)
@@ -178,12 +194,12 @@ namespace CategoryTheory.Iso
 
 /-- Build a `mul_equiv` from an isomorphism in the category `Mon`. -/
 @[to_additive AddMon_iso_to_add_equiv "Build an `add_equiv` from an isomorphism in the category\n`AddMon`."]
-def Mon_iso_to_mul_equiv {X Y : Mon} (i : X ≅ Y) : X ≃* Y :=
+def monIsoToMulEquiv {X Y : Mon} (i : X ≅ Y) : X ≃* Y :=
   i.Hom.toMulEquiv i.inv i.hom_inv_id i.inv_hom_id
 
 /-- Build a `mul_equiv` from an isomorphism in the category `CommMon`. -/
 @[to_additive "Build an `add_equiv` from an isomorphism in the category\n`AddCommMon`."]
-def CommMon_iso_to_mul_equiv {X Y : CommMon} (i : X ≅ Y) : X ≃* Y :=
+def commMonIsoToMulEquiv {X Y : CommMon} (i : X ≅ Y) : X ≃* Y :=
   i.Hom.toMulEquiv i.inv i.hom_inv_id i.inv_hom_id
 
 end CategoryTheory.Iso

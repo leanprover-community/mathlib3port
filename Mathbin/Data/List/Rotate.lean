@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Chris Hughes. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Chris Hughes, Yakov Pechersky
+-/
 import Mathbin.Data.List.Perm
 import Mathbin.Data.List.Range
 
@@ -291,6 +296,7 @@ theorem rotate_injective (n : ℕ) : Function.Injective fun l : List α => l.rot
   · rw [length_drop, length_drop, hle]
     
 
+-- possibly easier to find in doc-gen, otherwise not that useful.
 theorem rotate_eq_rotate {l l' : List α} {n : ℕ} : l.rotate n = l'.rotate n ↔ l = l' :=
   (rotate_injective n).eq_iff
 
@@ -356,7 +362,7 @@ theorem map_rotate {β : Type _} (f : α → β) (l : List α) (n : ℕ) : map f
       
     
 
-theorem nodup.rotate_eq_self_iff {l : List α} (hl : l.Nodup) {n : ℕ} : l.rotate n = l ↔ n % l.length = 0 ∨ l = [] := by
+theorem Nodupₓ.rotate_eq_self_iff {l : List α} (hl : l.Nodup) {n : ℕ} : l.rotate n = l ↔ n % l.length = 0 ∨ l = [] := by
   constructor
   · intro h
     cases' l.length.zero_le.eq_or_lt with hl' hl'
@@ -376,7 +382,7 @@ theorem nodup.rotate_eq_self_iff {l : List α} (hl : l.Nodup) {n : ℕ} : l.rota
       
     
 
-theorem nodup.rotate_congr {l : List α} (hl : l.Nodup) (hn : l ≠ []) (i j : ℕ) (h : l.rotate i = l.rotate j) :
+theorem Nodupₓ.rotate_congr {l : List α} (hl : l.Nodup) (hn : l ≠ []) (i j : ℕ) (h : l.rotate i = l.rotate j) :
     i % l.length = j % l.length := by
   have hi : i % l.length < l.length := mod_lt _ (length_pos_of_ne_nil hn)
   have hj : j % l.length < l.length := mod_lt _ (length_pos_of_ne_nil hn)
@@ -390,7 +396,7 @@ variable (l l' : List α)
 
 /-- `is_rotated l₁ l₂` or `l₁ ~r l₂` asserts that `l₁` and `l₂` are cyclic permutations
   of each other. This is defined by claiming that `∃ n, l.rotate n = l'`. -/
-def is_rotated : Prop :=
+def IsRotated : Prop :=
   ∃ n, l.rotate n = l'
 
 infixr:1000 " ~r " => IsRotated
@@ -398,12 +404,12 @@ infixr:1000 " ~r " => IsRotated
 variable {l l'}
 
 @[refl]
-theorem is_rotated.refl (l : List α) : l ~r l :=
+theorem IsRotated.refl (l : List α) : l ~r l :=
   ⟨0, by
     simp ⟩
 
 @[symm]
-theorem is_rotated.symm (h : l ~r l') : l' ~r l := by
+theorem IsRotated.symm (h : l ~r l') : l' ~r l := by
   obtain ⟨n, rfl⟩ := h
   cases' l with hd tl
   · simp
@@ -420,31 +426,31 @@ theorem is_rotated_comm : l ~r l' ↔ l' ~r l :=
   ⟨IsRotated.symm, IsRotated.symm⟩
 
 @[simp]
-protected theorem is_rotated.forall (l : List α) (n : ℕ) : l.rotate n ~r l :=
+protected theorem IsRotated.forall (l : List α) (n : ℕ) : l.rotate n ~r l :=
   IsRotated.symm ⟨n, rfl⟩
 
 @[trans]
-theorem is_rotated.trans {l'' : List α} (h : l ~r l') (h' : l' ~r l'') : l ~r l'' := by
+theorem IsRotated.trans {l'' : List α} (h : l ~r l') (h' : l' ~r l'') : l ~r l'' := by
   obtain ⟨n, rfl⟩ := h
   obtain ⟨m, rfl⟩ := h'
   rw [rotate_rotate]
   use n + m
 
-theorem is_rotated.eqv : Equivalenceₓ (@IsRotated α) :=
+theorem IsRotated.eqv : Equivalenceₓ (@IsRotated α) :=
   mk_equivalence _ IsRotated.refl (fun _ _ => IsRotated.symm) fun _ _ _ => IsRotated.trans
 
 /-- The relation `list.is_rotated l l'` forms a `setoid` of cycles. -/
-def is_rotated.setoid (α : Type _) : Setoidₓ (List α) where
+def IsRotated.setoid (α : Type _) : Setoidₓ (List α) where
   R := IsRotated
   iseqv := IsRotated.eqv
 
-theorem is_rotated.perm (h : l ~r l') : l ~ l' :=
+theorem IsRotated.perm (h : l ~r l') : l ~ l' :=
   Exists.elim h fun _ hl => hl ▸ (rotate_perm _ _).symm
 
-theorem is_rotated.nodup_iff (h : l ~r l') : Nodupₓ l ↔ Nodupₓ l' :=
+theorem IsRotated.nodup_iff (h : l ~r l') : Nodupₓ l ↔ Nodupₓ l' :=
   h.Perm.nodup_iff
 
-theorem is_rotated.mem_iff (h : l ~r l') {a : α} : a ∈ l ↔ a ∈ l' :=
+theorem IsRotated.mem_iff (h : l ~r l') {a : α} : a ∈ l ↔ a ∈ l' :=
   h.Perm.mem_iff
 
 @[simp]
@@ -478,7 +484,7 @@ theorem is_rotated_append : (l ++ l') ~r (l' ++ l) :=
   ⟨l.length, by
     simp ⟩
 
-theorem is_rotated.reverse (h : l ~r l') : l.reverse ~r l'.reverse := by
+theorem IsRotated.reverse (h : l ~r l') : l.reverse ~r l'.reverse := by
   obtain ⟨n, rfl⟩ := h
   exact ⟨_, (reverse_rotate _ _).symm⟩
 
@@ -508,7 +514,7 @@ theorem is_rotated_iff_mem_map_range : l ~r l' ↔ l' ∈ (List.range (l.length 
   exact ⟨fun ⟨n, hn, h⟩ => ⟨n, Nat.lt_succ_of_leₓ hn, h⟩, fun ⟨n, hn, h⟩ => ⟨n, Nat.le_of_lt_succₓ hn, h⟩⟩
 
 @[congr]
-theorem is_rotated.map {β : Type _} {l₁ l₂ : List α} (h : l₁ ~r l₂) (f : α → β) : map f l₁ ~r map f l₂ := by
+theorem IsRotated.map {β : Type _} {l₁ l₂ : List α} (h : l₁ ~r l₂) (f : α → β) : map f l₁ ~r map f l₂ := by
   obtain ⟨n, rfl⟩ := h
   rw [map_rotate]
   use n
@@ -522,7 +528,7 @@ The proof that every cyclic permutant of `l` is in the list is `list.mem_cyclic_
      cyclic_permutations [1, 2, 3, 2, 4] =
        [[1, 2, 3, 2, 4], [2, 3, 2, 4, 1], [3, 2, 4, 1, 2],
         [2, 4, 1, 2, 3], [4, 1, 2, 3, 2]] -/
-def cyclic_permutations : List α → List (List α)
+def cyclicPermutations : List α → List (List α)
   | [] => [[]]
   | l@(_ :: _) => init (zipWithₓ (· ++ ·) (tails l) (inits l))
 
@@ -605,7 +611,7 @@ theorem cyclic_permutations_eq_singleton_iff {l : List α} {x : α} : cyclicPerm
   rw [eq_comm, ← is_rotated_singleton_iff', ← mem_cyclic_permutations_iff, h, mem_singleton]
 
 /-- If a `l : list α` is `nodup l`, then all of its cyclic permutants are distinct. -/
-theorem nodup.cyclic_permutations {l : List α} (hn : Nodupₓ l) : Nodupₓ (cyclicPermutations l) := by
+theorem Nodupₓ.cyclic_permutations {l : List α} (hn : Nodupₓ l) : Nodupₓ (cyclicPermutations l) := by
   cases' l with x l
   · simp
     
@@ -632,7 +638,7 @@ theorem cyclic_permutations_rotate (l : List α) (k : ℕ) :
   rw [nth_le_cyclic_permutations, nth_le_rotate, nth_le_cyclic_permutations, rotate_rotate, ← rotate_mod, add_commₓ]
   cases l <;> simp
 
-theorem is_rotated.cyclic_permutations {l l' : List α} (h : l ~r l') : l.cyclicPermutations ~r l'.cyclicPermutations :=
+theorem IsRotated.cyclic_permutations {l l' : List α} (h : l ~r l') : l.cyclicPermutations ~r l'.cyclicPermutations :=
   by
   obtain ⟨k, rfl⟩ := h
   exact
@@ -657,7 +663,7 @@ section Decidable
 
 variable [DecidableEq α]
 
-instance is_rotated_decidable (l l' : List α) : Decidable (l ~r l') :=
+instance isRotatedDecidable (l l' : List α) : Decidable (l ~r l') :=
   decidableOfIff' _ is_rotated_iff_mem_map_range
 
 instance {l l' : List α} : Decidable (@Setoidₓ.R _ (IsRotated.setoid α) l l') :=

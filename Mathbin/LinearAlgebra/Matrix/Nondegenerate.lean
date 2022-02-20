@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Anne Baanen. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Anne Baanen
+-/
 import Mathbin.Data.Matrix.Basic
 import Mathbin.LinearAlgebra.Matrix.Determinant
 import Mathbin.LinearAlgebra.Matrix.Adjugate
@@ -18,16 +23,16 @@ namespace Matrix
 variable {m R A : Type _} [Fintype m] [CommRingₓ R]
 
 /-- A matrix `M` is nondegenerate if for all `v ≠ 0`, there is a `w ≠ 0` with `w ⬝ M ⬝ v ≠ 0`. -/
-def nondegenerate (M : Matrix m m R) :=
+def Nondegenerate (M : Matrix m m R) :=
   ∀ v, (∀ w, Matrix.dotProduct v (mulVecₓ M w) = 0) → v = 0
 
 /-- If `M` is nondegenerate and `w ⬝ M ⬝ v = 0` for all `w`, then `v = 0`. -/
-theorem nondegenerate.eq_zero_of_ortho {M : Matrix m m R} (hM : Nondegenerate M) {v : m → R}
+theorem Nondegenerate.eq_zero_of_ortho {M : Matrix m m R} (hM : Nondegenerate M) {v : m → R}
     (hv : ∀ w, Matrix.dotProduct v (mulVecₓ M w) = 0) : v = 0 :=
   hM v hv
 
 /-- If `M` is nondegenerate and `v ≠ 0`, then there is some `w` such that `w ⬝ M ⬝ v ≠ 0`. -/
-theorem nondegenerate.exists_not_ortho_of_ne_zero {M : Matrix m m R} (hM : Nondegenerate M) {v : m → R} (hv : v ≠ 0) :
+theorem Nondegenerate.exists_not_ortho_of_ne_zero {M : Matrix m m R} (hM : Nondegenerate M) {v : m → R} (hv : v ≠ 0) :
     ∃ w, Matrix.dotProduct v (mulVecₓ M w) ≠ 0 :=
   not_forall.mp (mt hM.eq_zero_of_ortho hv)
 

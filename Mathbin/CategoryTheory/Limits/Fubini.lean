@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison
+-/
 import Mathbin.CategoryTheory.Limits.HasLimits
 import Mathbin.CategoryTheory.Products.Basic
 import Mathbin.CategoryTheory.Currying
@@ -45,7 +50,8 @@ variable (F : J ⥤ K ⥤ C)
 
 /-- A structure carrying a diagram of cones over the functors `F.obj j`.
 -/
-structure diagram_of_cones where
+-- We could try introducing a "dependent functor type" to handle this?
+structure DiagramOfCones where
   obj : ∀ j : J, Cone (F.obj j)
   map : ∀ {j j' : J} f : j ⟶ j', (Cones.postcompose (F.map f)).obj (obj j) ⟶ obj j'
   id : ∀ j : J, (map (𝟙 j)).Hom = 𝟙 _ := by
@@ -61,7 +67,7 @@ variable {F}
 from a `diagram_of_cones`.
 -/
 @[simps]
-def diagram_of_cones.cone_points (D : DiagramOfCones F) : J ⥤ C where
+def DiagramOfCones.conePoints (D : DiagramOfCones F) : J ⥤ C where
   obj := fun j => (D.obj j).x
   map := fun j j' f => (D.map f).Hom
   map_id' := fun j => D.id j
@@ -71,7 +77,7 @@ def diagram_of_cones.cone_points (D : DiagramOfCones F) : J ⥤ C where
 we can construct a cone over the diagram consisting of the cone points from `D`.
 -/
 @[simps]
-def cone_of_cone_uncurry {D : DiagramOfCones F} (Q : ∀ j, IsLimit (D.obj j)) (c : Cone (uncurry.obj F)) :
+def coneOfConeUncurry {D : DiagramOfCones F} (Q : ∀ j, IsLimit (D.obj j)) (c : Cone (uncurry.obj F)) :
     Cone D.conePoints where
   x := c.x
   π :=
@@ -101,7 +107,7 @@ def cone_of_cone_uncurry {D : DiagramOfCones F} (Q : ∀ j, IsLimit (D.obj j)) (
 
 /-- `cone_of_cone_uncurry Q c` is a limit cone when `c` is a limit cone.`
 -/
-def cone_of_cone_uncurry_is_limit {D : DiagramOfCones F} (Q : ∀ j, IsLimit (D.obj j)) {c : Cone (uncurry.obj F)}
+def coneOfConeUncurryIsLimit {D : DiagramOfCones F} (Q : ∀ j, IsLimit (D.obj j)) {c : Cone (uncurry.obj F)}
     (P : IsLimit c) : IsLimit (coneOfConeUncurry Q c) where
   lift := fun s =>
     P.lift
@@ -148,15 +154,16 @@ we can construct a diagram consisting of the limit cone over each functor `F.obj
 and the universal cone morphisms between these.
 -/
 @[simps]
-noncomputable def diagram_of_cones.mk_of_has_limits : DiagramOfCones F where
+noncomputable def DiagramOfCones.mkOfHasLimits : DiagramOfCones F where
   obj := fun j => Limit.cone (F.obj j)
   map := fun j j' f => { Hom := lim.map (F.map f) }
 
-noncomputable instance diagram_of_cones_inhabited : Inhabited (DiagramOfCones F) :=
+-- Satisfying the inhabited linter.
+noncomputable instance diagramOfConesInhabited : Inhabited (DiagramOfCones F) :=
   ⟨DiagramOfCones.mkOfHasLimits F⟩
 
 @[simp]
-theorem diagram_of_cones.mk_of_has_limits_cone_points : (DiagramOfCones.mkOfHasLimits F).conePoints = F ⋙ lim :=
+theorem DiagramOfCones.mk_of_has_limits_cone_points : (DiagramOfCones.mkOfHasLimits F).conePoints = F ⋙ lim :=
   rfl
 
 variable [HasLimit (uncurry.obj F)]
@@ -167,7 +174,7 @@ variable [HasLimit (F ⋙ lim)]
 showing that the limit of `uncurry.obj F` can be computed as
 the limit of the limits of the functors `F.obj j`.
 -/
-noncomputable def limit_uncurry_iso_limit_comp_lim : limit (uncurry.obj F) ≅ limit (F ⋙ lim) := by
+noncomputable def limitUncurryIsoLimitCompLim : limit (uncurry.obj F) ≅ limit (F ⋙ lim) := by
   let c := limit.cone (uncurry.obj F)
   let P : is_limit c := limit.is_limit _
   let G := diagram_of_cones.mk_of_has_limits F
@@ -206,7 +213,7 @@ variable [HasLimit (curry.obj G ⋙ lim)]
 showing that the limit of `G` can be computed as
 the limit of the limits of the functors `G.obj (j, _)`.
 -/
-noncomputable def limit_iso_limit_curry_comp_lim : limit G ≅ limit (curry.obj G ⋙ lim) := by
+noncomputable def limitIsoLimitCurryCompLim : limit G ≅ limit (curry.obj G ⋙ lim) := by
   have i : G ≅ uncurry.obj ((@curry J _ K _ C _).obj G) := currying.symm.unit_iso.app G
   have : limits.has_limit (uncurry.obj ((@curry J _ K _ C _).obj G)) := has_limit_of_iso i
   trans limit (uncurry.obj ((@curry J _ K _ C _).obj G))
@@ -230,12 +237,13 @@ section
 
 variable [HasLimits C]
 
+-- Certainly one could weaken the hypotheses here.
 open CategoryTheory.prod
 
 /-- A variant of the Fubini theorem for a functor `G : J × K ⥤ C`,
 showing that $\lim_k \lim_j G(j,k) ≅ \lim_j \lim_k G(j,k)$.
 -/
-noncomputable def limit_curry_swap_comp_lim_iso_limit_curry_comp_lim :
+noncomputable def limitCurrySwapCompLimIsoLimitCurryCompLim :
     limit (curry.obj (swap K J ⋙ G) ⋙ lim) ≅ limit (curry.obj G ⋙ lim) :=
   calc
     limit (curry.obj (swap K J ⋙ G) ⋙ lim) ≅ limit (swap K J ⋙ G) := (limitIsoLimitCurryCompLim _).symm
@@ -250,6 +258,7 @@ theorem limit_curry_swap_comp_lim_iso_limit_curry_comp_lim_hom_π_π {j} {k} :
   simp only [iso.refl_hom, braiding_counit_iso_hom_app, limits.has_limit.iso_of_equivalence_hom_π, iso.refl_inv,
     limit_iso_limit_curry_comp_lim_hom_π_π, eq_to_iso_refl, category.assoc]
   erw [nat_trans.id_app]
+  -- Why can't `simp` do this`?
   dsimp
   simp
 
@@ -260,6 +269,7 @@ theorem limit_curry_swap_comp_lim_iso_limit_curry_comp_lim_inv_π_π {j} {k} :
   simp only [iso.refl_hom, braiding_counit_iso_hom_app, limits.has_limit.iso_of_equivalence_inv_π, iso.refl_inv,
     limit_iso_limit_curry_comp_lim_hom_π_π, eq_to_iso_refl, category.assoc]
   erw [nat_trans.id_app]
+  -- Why can't `simp` do this`?
   dsimp
   simp
 

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Johannes Hölzl. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johannes Hölzl, Jens Wagemaker
+-/
 import Mathbin.Algebra.Divisibility
 import Mathbin.Algebra.GroupPower.Basic
 import Mathbin.Algebra.Invertible
@@ -22,7 +27,7 @@ theorem is_unit_iff_forall_dvd [CommMonoidₓ α] {x : α} : IsUnit x ↔ ∀ y,
 theorem is_unit_of_dvd_unit {α} [CommMonoidₓ α] {x y : α} (xy : x ∣ y) (hu : IsUnit y) : IsUnit x :=
   is_unit_iff_dvd_one.2 <| xy.trans <| is_unit_iff_dvd_one.1 hu
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (a «expr ∣ » 1)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (a «expr ∣ » 1)
 theorem is_unit_of_dvd_one [CommMonoidₓ α] : ∀ a _ : a ∣ 1, IsUnit (a : α)
   | a, ⟨b, Eq⟩ => ⟨Units.mkOfMulEqOne a b Eq.symm, rfl⟩
 
@@ -267,7 +272,7 @@ protected theorem trans [Monoidₓ α] : ∀ {x y z : α}, x ~ᵤ y → y ~ᵤ z
       rw [Units.coe_mul, mul_assoc]⟩
 
 /-- The setoid of the relation `x ~ᵤ y` iff there is a unit `u` such that `x * u = y` -/
-protected def Setoidₓ (α : Type _) [Monoidₓ α] : Setoidₓ α where
+protected def setoid (α : Type _) [Monoidₓ α] : Setoidₓ α where
   R := Associated
   iseqv := ⟨Associated.refl, fun a b => Associated.symm, fun a b c => Associated.trans⟩
 
@@ -552,7 +557,7 @@ theorem mk_mul_mk {x y : α} : Associates.mk x * Associates.mk y = Associates.mk
 
 instance : CommMonoidₓ (Associates α) where
   one := 1
-  mul := · * ·
+  mul := (· * ·)
   mul_one := fun a' =>
     (Quotientₓ.induction_on a') fun a =>
       show ⟦a * 1⟧ = ⟦a⟧ by
@@ -583,7 +588,7 @@ theorem mk_one : Associates.mk (1 : α) = 1 :=
   rfl
 
 /-- `associates.mk` as a `monoid_hom`. -/
-protected def mk_monoid_hom : α →* Associates α :=
+protected def mkMonoidHom : α →* Associates α :=
   ⟨Associates.mk, mk_one, fun x y => mk_mul_mk⟩
 
 @[simp]
@@ -597,7 +602,7 @@ theorem associated_map_mk {f : Associates α →* α} (hinv : Function.RightInve
 theorem mk_pow (a : α) (n : ℕ) : Associates.mk (a ^ n) = Associates.mk a ^ n := by
   induction n <;> simp [*, pow_succₓ, associates.mk_mul_mk.symm]
 
-theorem dvd_eq_le : (· ∣ · : Associates α → Associates α → Prop) = (· ≤ ·) :=
+theorem dvd_eq_le : ((· ∣ ·) : Associates α → Associates α → Prop) = (· ≤ ·) :=
   rfl
 
 theorem mul_eq_one_iff {x y : Associates α} : x * y = 1 ↔ x = 1 ∧ y = 1 :=
@@ -614,7 +619,7 @@ theorem mul_eq_one_iff {x y : Associates α} : x * y = 1 ↔ x = 1 ∧ y = 1 :=
 theorem units_eq_one (u : (Associates α)ˣ) : u = 1 :=
   Units.ext (mul_eq_one_iff.1 u.val_inv).1
 
-instance unique_units : Unique (Associates α)ˣ where
+instance uniqueUnits : Unique (Associates α)ˣ where
   default := 1
   uniq := Associates.units_eq_one
 
@@ -725,7 +730,7 @@ theorem mk_le_mk_iff_dvd_iff {a b : α} : Associates.mk a ≤ Associates.mk b �
 theorem mk_dvd_mk {a b : α} : Associates.mk a ∣ Associates.mk b ↔ a ∣ b :=
   Iff.intro dvd_of_mk_le_mk mk_le_mk_of_dvd
 
-theorem prime.le_or_le {p : Associates α} (hp : Prime p) {a b : Associates α} (h : p ≤ a * b) : p ≤ a ∨ p ≤ b :=
+theorem Prime.le_or_le {p : Associates α} (hp : Prime p) {a b : Associates α} (h : p ≤ a * b) : p ≤ a ∨ p ≤ b :=
   hp.2.2 a b h
 
 theorem prime_mk (p : α) : Prime (Associates.mk p) ↔ Prime p := by

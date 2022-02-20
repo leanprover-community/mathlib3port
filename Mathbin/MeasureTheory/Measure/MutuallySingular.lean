@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Kexing Ying. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Kexing Ying, Yury Kudryashov
+-/
 import Mathbin.MeasureTheory.Measure.MeasureSpace
 
 /-! # Mutually singular measures
@@ -29,7 +34,7 @@ variable {α : Type _} {m0 : MeasurableSpace α} {μ μ₁ μ₂ ν ν₁ ν₂ 
 
 /-- Two measures `μ`, `ν` are said to be mutually singular if there exists a measurable set `s`
 such that `μ s = 0` and `ν sᶜ = 0`. -/
-def mutually_singular {m0 : MeasurableSpace α} (μ ν : Measure α) : Prop :=
+def MutuallySingular {m0 : MeasurableSpace α} (μ ν : Measure α) : Prop :=
   ∃ s : Set α, MeasurableSet s ∧ μ s = 0 ∧ ν (sᶜ) = 0
 
 localized [MeasureTheory] infixl:60 " ⊥ₘ " => MeasureTheory.Measure.MutuallySingular

@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2018 Johannes Hölzl. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johannes Hölzl, Kenny Lau, Johan Commelin, Mario Carneiro, Kevin Buzzard,
+Amelia Livingston, Yury Kudryashov
+-/
 import Mathbin.GroupTheory.Submonoid.Basic
 import Mathbin.Data.Equiv.MulAdd
 import Mathbin.Algebra.Group.Prod
@@ -276,7 +282,7 @@ include hf
 
 /-- `map f` and `comap f` form a `galois_coinsertion` when `f` is injective. -/
 @[to_additive " `map f` and `comap f` form a `galois_coinsertion` when `f` is injective. "]
-def gci_map_comap : GaloisCoinsertion (map f) (comap f) :=
+def gciMapComap : GaloisCoinsertion (map f) (comap f) :=
   (gc_map_comap f).toGaloisCoinsertion fun S x => by
     simp [mem_comap, mem_map, hf.eq_iff]
 
@@ -326,7 +332,7 @@ include hf
 
 /-- `map f` and `comap f` form a `galois_insertion` when `f` is surjective. -/
 @[to_additive " `map f` and `comap f` form a `galois_insertion` when `f` is surjective. "]
-def gi_map_comap : GaloisInsertion (map f) (comap f) :=
+def giMapComap : GaloisInsertion (map f) (comap f) :=
   (gc_map_comap f).toGaloisInsertion fun S x h =>
     let ⟨y, hy⟩ := hf x
     mem_map.2
@@ -373,12 +379,12 @@ end GaloisInsertion
 
 /-- A submonoid of a monoid inherits a multiplication. -/
 @[to_additive "An `add_submonoid` of an `add_monoid` inherits an addition."]
-instance Mul : Mul S :=
+instance hasMul : Mul S :=
   ⟨fun a b => ⟨a.1 * b.1, S.mul_mem a.2 b.2⟩⟩
 
 /-- A submonoid of a monoid inherits a 1. -/
 @[to_additive "An `add_submonoid` of an `add_monoid` inherits a zero."]
-instance One : One S :=
+instance hasOne : One S :=
   ⟨⟨_, S.one_mem⟩⟩
 
 @[simp, norm_cast, to_additive]
@@ -403,54 +409,54 @@ theorem one_def : (1 : S) = ⟨1, S.one_mem⟩ :=
 
 /-- A submonoid of a unital magma inherits a unital magma structure. -/
 @[to_additive "An `add_submonoid` of an unital additive magma inherits an unital additive magma\nstructure."]
-instance to_mul_one_class {M : Type _} [MulOneClassₓ M] (S : Submonoid M) : MulOneClassₓ S :=
+instance toMulOneClass {M : Type _} [MulOneClassₓ M] (S : Submonoid M) : MulOneClassₓ S :=
   Subtype.coe_injective.MulOneClass coe rfl fun _ _ => rfl
 
 /-- A submonoid of a monoid inherits a monoid structure. -/
 @[to_additive "An `add_submonoid` of an `add_monoid` inherits an `add_monoid`\nstructure."]
-instance to_monoid {M : Type _} [Monoidₓ M] (S : Submonoid M) : Monoidₓ S :=
+instance toMonoid {M : Type _} [Monoidₓ M] (S : Submonoid M) : Monoidₓ S :=
   Subtype.coe_injective.Monoid coe rfl fun _ _ => rfl
 
 /-- A submonoid of a `comm_monoid` is a `comm_monoid`. -/
 @[to_additive "An `add_submonoid` of an `add_comm_monoid` is\nan `add_comm_monoid`."]
-instance to_comm_monoid {M} [CommMonoidₓ M] (S : Submonoid M) : CommMonoidₓ S :=
+instance toCommMonoid {M} [CommMonoidₓ M] (S : Submonoid M) : CommMonoidₓ S :=
   Subtype.coe_injective.CommMonoid coe rfl fun _ _ => rfl
 
 /-- A submonoid of an `ordered_comm_monoid` is an `ordered_comm_monoid`. -/
 @[to_additive "An `add_submonoid` of an `ordered_add_comm_monoid` is\nan `ordered_add_comm_monoid`."]
-instance to_ordered_comm_monoid {M} [OrderedCommMonoid M] (S : Submonoid M) : OrderedCommMonoid S :=
+instance toOrderedCommMonoid {M} [OrderedCommMonoid M] (S : Submonoid M) : OrderedCommMonoid S :=
   Subtype.coe_injective.OrderedCommMonoid coe rfl fun _ _ => rfl
 
 /-- A submonoid of a `linear_ordered_comm_monoid` is a `linear_ordered_comm_monoid`. -/
 @[to_additive "An `add_submonoid` of a `linear_ordered_add_comm_monoid` is\na `linear_ordered_add_comm_monoid`."]
-instance to_linear_ordered_comm_monoid {M} [LinearOrderedCommMonoid M] (S : Submonoid M) : LinearOrderedCommMonoid S :=
+instance toLinearOrderedCommMonoid {M} [LinearOrderedCommMonoid M] (S : Submonoid M) : LinearOrderedCommMonoid S :=
   Subtype.coe_injective.LinearOrderedCommMonoid coe rfl fun _ _ => rfl
 
 /-- A submonoid of an `ordered_cancel_comm_monoid` is an `ordered_cancel_comm_monoid`. -/
 @[to_additive "An `add_submonoid` of an `ordered_cancel_add_comm_monoid` is\nan `ordered_cancel_add_comm_monoid`."]
-instance to_ordered_cancel_comm_monoid {M} [OrderedCancelCommMonoid M] (S : Submonoid M) : OrderedCancelCommMonoid S :=
+instance toOrderedCancelCommMonoid {M} [OrderedCancelCommMonoid M] (S : Submonoid M) : OrderedCancelCommMonoid S :=
   Subtype.coe_injective.OrderedCancelCommMonoid coe rfl fun _ _ => rfl
 
 /-- A submonoid of a `linear_ordered_cancel_comm_monoid` is a `linear_ordered_cancel_comm_monoid`.
 -/
 @[to_additive
       "An `add_submonoid` of a `linear_ordered_cancel_add_comm_monoid` is\na `linear_ordered_cancel_add_comm_monoid`."]
-instance to_linear_ordered_cancel_comm_monoid {M} [LinearOrderedCancelCommMonoid M] (S : Submonoid M) :
+instance toLinearOrderedCancelCommMonoid {M} [LinearOrderedCancelCommMonoid M] (S : Submonoid M) :
     LinearOrderedCancelCommMonoid S :=
   Subtype.coe_injective.LinearOrderedCancelCommMonoid coe rfl fun _ _ => rfl
 
 /-- The natural monoid hom from a submonoid of monoid `M` to `M`. -/
 @[to_additive "The natural monoid hom from an `add_submonoid` of `add_monoid` `M` to `M`."]
-def Subtype : S →* M :=
+def subtype : S →* M :=
   ⟨coe, rfl, fun _ _ => rfl⟩
 
 @[simp, to_additive]
-theorem coeSubtype : ⇑S.Subtype = coe :=
+theorem coe_subtype : ⇑S.Subtype = coe :=
   rfl
 
 /-- A submonoid is isomorphic to its image under an injective function -/
 @[to_additive "An additive submonoid is isomorphic to its image under an injective function"]
-noncomputable def equiv_map_of_injective (f : M →* N) (hf : Function.Injective f) : S ≃* S.map f :=
+noncomputable def equivMapOfInjective (f : M →* N) (hf : Function.Injective f) : S ≃* S.map f :=
   { Equivₓ.Set.image f S hf with map_mul' := fun _ _ => Subtype.ext (f.map_mul _ _) }
 
 @[simp, to_additive]
@@ -474,7 +480,7 @@ theorem closure_closure_coe_preimage {s : Set M} : closure ((coe : closure s →
 of `M × N`. -/
 @[to_additive Prod
       "Given `add_submonoid`s `s`, `t` of `add_monoid`s `A`, `B` respectively, `s × t`\nas an `add_submonoid` of `A × B`."]
-def Prod (s : Submonoid M) (t : Submonoid N) : Submonoid (M × N) where
+def prod (s : Submonoid M) (t : Submonoid N) : Submonoid (M × N) where
   Carrier := (s : Set M) ×ˢ (t : Set N)
   one_mem' := ⟨s.one_mem, t.one_mem⟩
   mul_mem' := fun p q hp hq => ⟨s.mul_mem hp.1 hq.1, t.mul_mem hp.2 hq.2⟩
@@ -512,7 +518,7 @@ theorem bot_prod_bot : (⊥ : Submonoid M).Prod (⊥ : Submonoid N) = ⊥ :=
 
 /-- The product of submonoids is isomorphic to their product as monoids. -/
 @[to_additive prod_equiv "The product of additive submonoids is isomorphic to their product\nas additive monoids"]
-def prod_equiv (s : Submonoid M) (t : Submonoid N) : s.Prod t ≃* s × t :=
+def prodEquiv (s : Submonoid M) (t : Submonoid N) : s.Prod t ≃* s × t :=
   { Equivₓ.Set.prod ↑s ↑t with map_mul' := fun x y => rfl }
 
 open MonoidHom
@@ -692,14 +698,14 @@ theorem mrestrict_apply {N : Type _} [MulOneClassₓ N] (f : M →* N) (x : S) :
 
 /-- Restriction of a monoid hom to a submonoid of the codomain. -/
 @[to_additive "Restriction of an `add_monoid` hom to an `add_submonoid` of the codomain.", simps]
-def cod_mrestrict (f : M →* N) (S : Submonoid N) (h : ∀ x, f x ∈ S) : M →* S where
+def codMrestrict (f : M →* N) (S : Submonoid N) (h : ∀ x, f x ∈ S) : M →* S where
   toFun := fun n => ⟨f n, h n⟩
   map_one' := Subtype.eq f.map_one
   map_mul' := fun x y => Subtype.eq (f.map_mul x y)
 
 /-- Restriction of a monoid hom to its range interpreted as a submonoid. -/
 @[to_additive "Restriction of an `add_monoid` hom to its range interpreted as a submonoid."]
-def mrange_restrict {N} [MulOneClassₓ N] (f : M →* N) : M →* f.mrange :=
+def mrangeRestrict {N} [MulOneClassₓ N] (f : M →* N) : M →* f.mrange :=
   (f.codMrestrict f.mrange) fun x => ⟨x, rfl⟩
 
 @[simp, to_additive]
@@ -722,7 +728,7 @@ theorem coe_mker (f : M →* N) : (f.mker : Set M) = (f : M → N) ⁻¹' {1} :=
   rfl
 
 @[to_additive]
-instance decidable_mem_mker [DecidableEq N] (f : M →* N) : DecidablePred (· ∈ f.mker) := fun x =>
+instance decidableMemMker [DecidableEq N] (f : M →* N) : DecidablePred (· ∈ f.mker) := fun x =>
   decidableOfIff (f x = 1) f.mem_mker
 
 @[to_additive]
@@ -766,7 +772,7 @@ theorem mker_inr : (inr M N).mker = ⊥ := by
 
 /-- The `monoid_hom` from the preimage of a submonoid to itself. -/
 @[to_additive "the `add_monoid_hom` from the preimage of an additive submonoid to itself.", simps]
-def submonoid_comap (f : M →* N) (N' : Submonoid N) : N'.comap f →* N' where
+def submonoidComap (f : M →* N) (N' : Submonoid N) : N'.comap f →* N' where
   toFun := fun x => ⟨f x, x.Prop⟩
   map_one' := Subtype.eq f.map_one
   map_mul' := fun x y => Subtype.eq (f.map_mul x y)
@@ -776,7 +782,7 @@ See `mul_equiv.submonoid_map` for a variant for `mul_equiv`s. -/
 @[to_additive
       "the `add_monoid_hom` from an additive submonoid to its image. See\n`add_equiv.add_submonoid_map` for a variant for `add_equiv`s.",
   simps]
-def submonoid_map (f : M →* N) (M' : Submonoid M) : M' →* M'.map f where
+def submonoidMap (f : M →* N) (M' : Submonoid M) : M' →* M'.map f where
   toFun := fun x => ⟨f x, ⟨x, x.Prop, rfl⟩⟩
   map_one' := Subtype.eq <| f.map_one
   map_mul' := fun x y => Subtype.eq <| f.map_mul x y
@@ -874,17 +880,18 @@ variable {S} {T : Submonoid M}
 /-- Makes the identity isomorphism from a proof that two submonoids of a multiplicative
     monoid are equal. -/
 @[to_additive "Makes the identity additive isomorphism from a proof two\nsubmonoids of an additive monoid are equal."]
-def submonoid_congr (h : S = T) : S ≃* T :=
+def submonoidCongr (h : S = T) : S ≃* T :=
   { Equivₓ.setCongr <| congr_argₓ _ h with map_mul' := fun _ _ => rfl }
 
 /-- A monoid homomorphism `f : M →* N` with a left-inverse `g : N → M` defines a multiplicative
 equivalence between `M` and `f.mrange`.
 
 This is a bidirectional version of `monoid_hom.mrange_restrict`. -/
+-- this name is primed so that the version to `f.range` instead of `f.mrange` can be unprimed.
 @[to_additive
       "\nAn additive monoid homomorphism `f : M →+ N` with a left-inverse `g : N → M` defines an additive\nequivalence between `M` and `f.mrange`.\n\nThis is a bidirectional version of `add_monoid_hom.mrange_restrict`. ",
   simps (config := { simpRhs := true })]
-def of_left_inverse' (f : M →* N) {g : N → M} (h : Function.LeftInverse g f) : M ≃* f.mrange :=
+def ofLeftInverse' (f : M →* N) {g : N → M} (h : Function.LeftInverse g f) : M ≃* f.mrange :=
   { f.mrangeRestrict with toFun := f.mrangeRestrict, invFun := g ∘ f.mrange.Subtype, left_inv := h,
     right_inv := fun x =>
       Subtype.ext <|
@@ -898,8 +905,11 @@ See `monoid_hom.submonoid_map` for a variant for `monoid_hom`s. -/
 @[to_additive
       "An `add_equiv` `φ` between two additive monoids `M` and `N` induces an `add_equiv`\nbetween a submonoid `S ≤ M` and the submonoid `φ(S) ≤ N`. See `add_monoid_hom.add_submonoid_map`\nfor a variant for `add_monoid_hom`s.",
   simps]
-def submonoid_map (e : M ≃* N) (S : Submonoid M) : S ≃* S.map e.toMonoidHom :=
-  { e.toMonoidHom.submonoidMap S, e.toEquiv.Image S with toFun := fun x => ⟨e x, _⟩, invFun := fun x => ⟨e.symm x, _⟩ }
+def submonoidMap (e : M ≃* N) (S : Submonoid M) : S ≃* S.map e.toMonoidHom :=
+  { -- we restate this for `simps` to avoid `⇑e.symm.to_equiv x`
+          e.toMonoidHom.submonoidMap
+      S,
+    e.toEquiv.Image S with toFun := fun x => ⟨e x, _⟩, invFun := fun x => ⟨e.symm x, _⟩ }
 
 end MulEquiv
 

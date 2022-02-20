@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Damiano Testa. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Damiano Testa
+-/
 import Mathbin.AlgebraicGeometry.PrimeSpectrum.Basic
 import Mathbin.RingTheory.Polynomial.Basic
 
@@ -24,11 +29,11 @@ variable {R : Type _} [CommRingₓ R] {f : R[X]}
 of the coefficients of `f` does not vanish.  Lemma `image_of_Df_eq_comap_C_compl_zero_locus`
 proves that `image_of_Df` is the image of `(zero_locus {f})ᶜ` under the morphism
 `comap C : Spec R[x] → Spec R`. -/
-def image_of_Df f : Set (PrimeSpectrum R) :=
+def ImageOfDf f : Set (PrimeSpectrum R) :=
   { p : PrimeSpectrum R | ∃ i : ℕ, coeff f i ∉ p.asIdeal }
 
 theorem is_open_image_of_Df : IsOpen (ImageOfDf f) := by
-  rw [image_of_Df, set_of_exists fun i x : PrimeSpectrum R => coeff f i ∉ x.val]
+  rw [image_of_Df, set_of_exists fun x : PrimeSpectrum R => coeff f i ∉ x.val]
   exact is_open_Union fun i => is_open_basic_open
 
 /-- If a point of `Spec R[x]` is not contained in the vanishing set of `f`, then its image in

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Jireh Loreaux. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Jireh Loreaux
+-/
 import Mathbin.Tactic.NoncommRing
 import Mathbin.FieldTheory.IsAlgClosed.Basic
 
@@ -44,6 +49,7 @@ variable [CommSemiringₓ R] [Ringₓ A] [Algebra R A]
 /-- Given a commutative ring `R` and an `R`-algebra `A`, the *resolvent set* of `a : A`
 is the `set R` consisting of those `r : R` for which `r•1 - a` is a unit of the
 algebra `A`.  -/
+-- definition and basic properties
 def ResolventSet (a : A) : Set R :=
   { r : R | IsUnit (algebraMap R A r - a) }
 
@@ -65,6 +71,7 @@ noncomputable def resolvent (a : A) (r : R) : A :=
 
 end Defs
 
+-- products of scalar units and algebra units
 theorem IsUnit.smul_sub_iff_sub_inv_smul {R : Type u} {A : Type v} [CommRingₓ R] [Ringₓ A] [Algebra R A] {r : (R)ˣ}
     {a : A} : IsUnit (r • 1 - a) ↔ IsUnit (1 - r⁻¹ • a) := by
   have a_eq : a = r • r⁻¹ • a := by
@@ -143,6 +150,7 @@ theorem left_add_coset_eq (a : A) (r : R) : LeftAddCoset r (σ a) = σ (↑ₐ r
   rw [mem_left_add_coset_iff, neg_add_eq_sub, add_mem_iff]
   nth_rw 1[← sub_add_cancel x r]
 
+-- `r ∈ σ(a*b) ↔ r ∈ σ(b*a)` for any `r : Rˣ`
 theorem unit_mem_mul_iff_mem_swap_mul {a b : A} {r : (R)ˣ} : ↑r ∈ σ (a * b) ↔ ↑r ∈ σ (b * a) := by
   apply not_iff_not.mpr
   simp only [mem_resolvent_set_iff, Algebra.algebra_map_eq_smul_one]
@@ -287,7 +295,9 @@ is necessary in case `σ a = ∅`, for then the left-hand side is `∅` and the 
 assuming `[nontrivial A]`, is `{k}` where `p = polynomial.C k`. -/
 theorem map_polynomial_aeval_of_degree_pos [IsAlgClosed 𝕜] (a : A) (p : 𝕜[X]) (hdeg : 0 < degree p) :
     σ (aeval a p) = (fun k => eval k p) '' σ a := by
+  -- handle the easy direction via `spectrum.subset_polynomial_aeval`
   refine' Set.eq_of_subset_of_subset (fun k hk => _) (subset_polynomial_aeval a p)
+  -- write `C k - p` product of linear factors and a constant; show `C k - p ≠ 0`.
   have hprod := eq_prod_roots_of_splits_id (IsAlgClosed.splits (C k - p))
   have h_ne : C k - p ≠ 0 :=
     ne_zero_of_degree_gt
@@ -295,6 +305,8 @@ theorem map_polynomial_aeval_of_degree_pos [IsAlgClosed 𝕜] (a : A) (p : 𝕜[
         rwa [degree_sub_eq_right_of_degree_lt (lt_of_le_of_ltₓ degree_C_le hdeg)])
   have lead_ne := leading_coeff_ne_zero.mpr h_ne
   have lead_unit := (Units.map ↑ₐ.toMonoidHom (Units.mk0 _ lead_ne)).IsUnit
+  /- leading coefficient is a unit so product of linear factors is not a unit;
+    apply `exists_mem_of_not_is_unit_aeval_prod`. -/
   have p_a_eq : aeval a (C k - p) = ↑ₐ k - aeval a p := by
     simp only [aeval_C, AlgHom.map_sub, sub_left_inj]
   rw [mem_iff, ← p_a_eq, hprod, aeval_mul, ((Commute.all _ _).map (aeval a)).is_unit_mul_iff, aeval_C] at hk
@@ -320,6 +332,7 @@ variable (𝕜)
 
 /-- Every element `a` in a nontrivial finite-dimensional algebra `A`
 over an algebraically closed field `𝕜` has non-empty spectrum. -/
+-- We will use this both to show eigenvalues exist, and to prove Schur's lemma.
 theorem nonempty_of_is_alg_closed_of_finite_dimensional [IsAlgClosed 𝕜] [Nontrivial A] [I : FiniteDimensional 𝕜 A]
     (a : A) : ∃ k : 𝕜, k ∈ σ a := by
   obtain ⟨p, ⟨h_mon, h_eval_p⟩⟩ := is_integral_of_noetherian (IsNoetherian.iff_fg.2 I) a

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Yury Kudryashov. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yury Kudryashov
+-/
 import Mathbin.Data.Set.Intervals.Monotone
 import Mathbin.Topology.Algebra.Order.MonotoneConvergence
 import Mathbin.Topology.MetricSpace.Basic
@@ -62,7 +67,7 @@ variable {ι : Type _}
 
 /-- A nontrivial rectangular box in `ι → ℝ` with corners `lower` and `upper`. Repesents the product
 of half-open intervals `(lower i, upper i]`. -/
-structure box (ι : Type _) where
+structure Box (ι : Type _) where
   (lower upper : ι → ℝ)
   lower_lt_upper : ∀ i, lower i < upper i
 
@@ -170,10 +175,10 @@ theorem ne_of_disjoint_coe (h : Disjoint (I : Set (ι → ℝ)) J) : I ≠ J :=
   mt coe_inj.2 <| h.Ne I.coe_ne_empty
 
 instance : PartialOrderₓ (Box ι) :=
-  { PartialOrderₓ.lift (coe : Box ι → Set (ι → ℝ)) injective_coe with le := · ≤ · }
+  { PartialOrderₓ.lift (coe : Box ι → Set (ι → ℝ)) injective_coe with le := (· ≤ ·) }
 
 /-- Closed box corresponding to `I : box_integral.box ι`. -/
-protected def Icc : Box ι ↪o Set (ι → ℝ) :=
+protected def icc : Box ι ↪o Set (ι → ℝ) :=
   OrderEmbedding.ofMapLeIff (fun I : Box ι => Icc I.lower I.upper) fun I J => (le_tfae I J).out 2 0
 
 theorem Icc_def : I.Icc = Icc I.lower I.upper :=
@@ -227,7 +232,7 @@ In this section we define coercion from `with_bot (box ι)` to `set (ι → ℝ)
 -/
 
 
-instance with_bot_coe : CoeTₓ (WithBot (Box ι)) (Set (ι → ℝ)) :=
+instance withBotCoe : CoeTₓ (WithBot (Box ι)) (Set (ι → ℝ)) :=
   ⟨fun o => o.elim ∅ coe⟩
 
 @[simp, norm_cast]
@@ -381,7 +386,7 @@ theorem continuous_on_face_Icc {X} [TopologicalSpace X] {n} {f : (Finₓ (n + 1)
 
 
 /-- The interior of a box. -/
-protected def Ioo : Box ι →o Set (ι → ℝ) where
+protected def ioo : Box ι →o Set (ι → ℝ) where
   toFun := fun I => pi Univ fun i => Ioo (I.lower i) (I.upper i)
   monotone' := fun I J h => pi_mono fun i hi => Ioo_subset_Ioo ((le_iff_bounds.1 h).1 i) ((le_iff_bounds.1 h).2 i)
 

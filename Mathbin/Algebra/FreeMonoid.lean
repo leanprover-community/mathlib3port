@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Simon Hudon. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Simon Hudon, Yury Kudryashov
+-/
 import Mathbin.Algebra.Star.Basic
 
 /-!
@@ -60,7 +65,7 @@ theorem of_injective : Function.Injective (@of α) := fun a b => List.head_eq_of
 /-- Recursor for `free_monoid` using `1` and `of x * xs` instead of `[]` and `x :: xs`. -/
 @[elab_as_eliminator,
   to_additive "Recursor for `free_add_monoid` using `0` and `of x + xs` instead of `[]` and `x :: xs`."]
-def rec_on {C : FreeMonoid α → Sort _} (xs : FreeMonoid α) (h0 : C 1) (ih : ∀ x xs, C xs → C (of x * xs)) : C xs :=
+def recOn {C : FreeMonoid α → Sort _} (xs : FreeMonoid α) (h0 : C 1) (ih : ∀ x xs, C xs → C (of x * xs)) : C xs :=
   List.recOn xs h0 ih
 
 @[ext, to_additive]

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2017 Mario Carneiro All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Mario Carneiro, Floris van Doorn
+-/
 import Mathbin.Tactic.Core
 
 namespace Tactic
@@ -8,7 +13,10 @@ namespace Tactic
    `tt`; if `p` is `none`, the copied attribute is made persistent iff it is persistent on `src`  -/
 unsafe def copy_attribute' (attr_name : Name) (src : Name) (tgt : Name) (p : Option Bool := none) : tactic Unit := do
   get_decl tgt <|> throwError "unknown declaration {← tgt}"
-  mwhen (succeeds (has_attribute attr_name src)) <| do
+  -- if the source doesn't have the attribute we do not error and simply return
+        mwhen
+        (succeeds (has_attribute attr_name src)) <|
+      do
       let (p', prio) ← has_attribute attr_name src
       let p := p p'
       let s ← try_or_report_error (set_basic_attribute attr_name tgt p prio)
@@ -34,7 +42,8 @@ unsafe def additive_test_aux (f : Name → Option Name) (ignore : name_map <| Li
   | b, mvar n m t => true
   | b, local_const n m bi t => true
   | b, app e f =>
-    additive_test_aux true e &&
+    additive_test_aux true e &&-- this might be inefficient.
+      -- If it becomes a performance problem: we can give this info for the recursive call to `e`.
       match ignore.find e.get_app_fn.const_name with
       | some l => if e.get_app_num_args + 1 ∈ l then true else additive_test_aux false f
       | none => additive_test_aux false f
@@ -65,7 +74,9 @@ declaration. -/
 unsafe def transform_decl_with_prefix_fun_aux (f : Name → Option Name) (replace_all trace : Bool)
     (relevant : name_map ℕ) (ignore reorder : name_map <| List ℕ) (pre tgt_pre : Name) : Name → Tactic Unit :=
   fun src => do
-  let tt ← return (src = pre ∨ src.is_internal : Bool) |
+  let-- if this declaration is not `pre` or an internal declaration, we do nothing.
+    tt
+    ← return (src = pre ∨ src.is_internal : Bool) |
     if (f src).isSome then skip
       else
         throwError "@[to_additive] failed.
@@ -75,13 +86,23 @@ unsafe def transform_decl_with_prefix_fun_aux (f : Name → Option Name) (replac
             pre)}, but does not have the `@[to_additive]` attribute. This is not supported. Workaround: move {←
             src} to a different namespace."
   let env ← get_env
-  let tgt := src.mapPrefix fun n => if n = pre then some tgt_pre else none
-  let ff ← return <| env.contains tgt | skip
+  let-- we find the additive name of `src`
+  tgt := src.mapPrefix fun n => if n = pre then some tgt_pre else none
+  let-- we skip if we already transformed this declaration before
+    ff
+    ← return <| env.contains tgt | skip
   let decl ← get_decl src
+  (-- we first transform all the declarations of the form `pre._proof_i`
+          decl
+          pre).mfold
+      () fun n _ => transform_decl_with_prefix_fun_aux n
   (decl pre).mfold () fun n _ => transform_decl_with_prefix_fun_aux n
-  (decl pre).mfold () fun n _ => transform_decl_with_prefix_fun_aux n
-  let decl := decl.update_with_fun env (Name.mapPrefix f) (additive_test f replace_all ignore) relevant reorder tgt
-  let pp_decl ← pp decl
+  let-- we transform `decl` using `f` and the configuration options.
+  decl := decl.update_with_fun env (Name.mapPrefix f) (additive_test f replace_all ignore) relevant reorder tgt
+  let pp_decl
+    ←-- o ← get_options, set_options $ o.set_bool `pp.all tt, -- print with pp.all (for debugging)
+        pp
+        decl
   when trace <|
       ← do
         dbg_trace "[to_additive] > generating
@@ -96,7 +117,11 @@ unsafe def transform_decl_with_prefix_fun_aux (f : Name → Option Name) (replac
             ").toString <|
       do
       if env src then add_protected_decl decl else add_decl decl
-      decorate_error "proof doesn't type-check. " <| type_check decl
+      -- we test that the declaration value type-checks, so that we get the decorated error message
+            -- without this line, the type-checking might fail outside the `decorate_error`.
+            decorate_error
+            "proof doesn't type-check. " <|
+          type_check decl
 
 /-- Make a new copy of a declaration,
 replacing fragments of the names of identifiers in the type and the body using the function `f`.
@@ -104,17 +129,29 @@ This is used to implement `@[to_additive]`.
 -/
 unsafe def transform_decl_with_prefix_fun (f : Name → Option Name) (replace_all trace : Bool) (relevant : name_map ℕ)
     (ignore reorder : name_map <| List ℕ) (src tgt : Name) (attrs : List Name) : Tactic Unit := do
-  transform_decl_with_prefix_fun_aux f replace_all trace relevant ignore reorder src tgt src
+  -- In order to ensure that attributes are copied correctly we must transform declarations and
+      -- attributes in the right order:
+      -- first generate the transformed main declaration
+      transform_decl_with_prefix_fun_aux
+      f replace_all trace relevant ignore reorder src tgt src
   let ls ← get_eqn_lemmas_for true src
-  ls <| transform_decl_with_prefix_fun_aux f replace_all trace relevant ignore reorder src tgt
-  ls fun src_eqn => do
+  -- now transform all of the equational lemmas
+      ls <|
+      transform_decl_with_prefix_fun_aux f replace_all trace relevant ignore reorder src tgt
+  -- copy attributes for the equational lemmas so that they know if they are refl lemmas
+      ls
+      fun src_eqn => do
       let tgt_eqn := src_eqn fun n => if n = src then some tgt else none
       attrs fun n => copy_attribute' n src_eqn tgt_eqn
-  ls fun src_eqn => do
+  -- set the transformed equation lemmas as equation lemmas for the new declaration
+      ls
+      fun src_eqn => do
       let e ← get_env
       let tgt_eqn := src_eqn fun n => if n = src then some tgt else none
       set_env (e tgt_eqn)
-  attrs fun n => copy_attribute' n src tgt
+  -- copy attributes for the main declaration, this needs the equational lemmas to exist already
+      attrs
+      fun n => copy_attribute' n src tgt
 
 /-- Make a new copy of a declaration, replacing fragments of the names of identifiers in the type and
 the body using the dictionary `dict`.

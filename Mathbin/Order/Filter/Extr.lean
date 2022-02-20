@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Yury Kudryashov. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yury Kudryashov
+-/
 import Mathbin.Order.Filter.Basic
 
 /-!
@@ -280,19 +285,20 @@ theorem IsMaxOn.comp_antitone (hf : IsMaxOn f s a) {g : β → γ} (hg : Antiton
 theorem IsExtrOn.comp_antitone (hf : IsExtrOn f s a) {g : β → γ} (hg : Antitone g) : IsExtrOn (g ∘ f) s a :=
   hf.comp_antitone hg
 
-theorem IsMinFilter.bicomp_mono [Preorderₓ δ] {op : β → γ → δ} (hop : (· ≤ ·⇒· ≤ ·⇒· ≤ ·) op op)
+theorem IsMinFilter.bicomp_mono [Preorderₓ δ] {op : β → γ → δ} (hop : ((· ≤ ·)⇒(· ≤ ·)⇒(· ≤ ·)) op op)
     (hf : IsMinFilter f l a) {g : α → γ} (hg : IsMinFilter g l a) : IsMinFilter (fun x => op (f x) (g x)) l a :=
   (mem_of_superset (inter_mem hf hg)) fun x ⟨hfx, hgx⟩ => hop hfx hgx
 
-theorem IsMaxFilter.bicomp_mono [Preorderₓ δ] {op : β → γ → δ} (hop : (· ≤ ·⇒· ≤ ·⇒· ≤ ·) op op)
+theorem IsMaxFilter.bicomp_mono [Preorderₓ δ] {op : β → γ → δ} (hop : ((· ≤ ·)⇒(· ≤ ·)⇒(· ≤ ·)) op op)
     (hf : IsMaxFilter f l a) {g : α → γ} (hg : IsMaxFilter g l a) : IsMaxFilter (fun x => op (f x) (g x)) l a :=
   (mem_of_superset (inter_mem hf hg)) fun x ⟨hfx, hgx⟩ => hop hfx hgx
 
-theorem IsMinOn.bicomp_mono [Preorderₓ δ] {op : β → γ → δ} (hop : (· ≤ ·⇒· ≤ ·⇒· ≤ ·) op op) (hf : IsMinOn f s a)
+-- No `extr` version because we need `hf` and `hg` to be of the same kind
+theorem IsMinOn.bicomp_mono [Preorderₓ δ] {op : β → γ → δ} (hop : ((· ≤ ·)⇒(· ≤ ·)⇒(· ≤ ·)) op op) (hf : IsMinOn f s a)
     {g : α → γ} (hg : IsMinOn g s a) : IsMinOn (fun x => op (f x) (g x)) s a :=
   hf.bicomp_mono hop hg
 
-theorem IsMaxOn.bicomp_mono [Preorderₓ δ] {op : β → γ → δ} (hop : (· ≤ ·⇒· ≤ ·⇒· ≤ ·) op op) (hf : IsMaxOn f s a)
+theorem IsMaxOn.bicomp_mono [Preorderₓ δ] {op : β → γ → δ} (hop : ((· ≤ ·)⇒(· ≤ ·)⇒(· ≤ ·)) op op) (hf : IsMaxOn f s a)
     {g : α → γ} (hg : IsMaxOn g s a) : IsMaxOn (fun x => op (f x) (g x)) s a :=
   hf.bicomp_mono hop hg
 

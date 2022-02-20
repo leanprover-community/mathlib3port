@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2017 Simon Hudon. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Simon Hudon
+-/
 import Mathbin.Algebra.Group.Defs
 import Mathbin.Control.Functor
 
@@ -86,12 +91,12 @@ theorem map_pure (f : α → β) (x : α) : (f <$> pure x : Comp F G β) = pure 
 
 theorem seq_pure (f : Comp F G (α → β)) (x : α) : f <*> pure x = (fun g : α → β => g x) <$> f :=
   comp.ext <| by
-    simp' [· ∘ ·] with functor_norm
+    simp' [(· ∘ ·)] with functor_norm
 
 theorem seq_assoc (x : Comp F G α) (f : Comp F G (α → β)) (g : Comp F G (β → γ)) :
     g <*> (f <*> x) = @Function.comp α β γ <$> g <*> f <*> x :=
   comp.ext <| by
-    simp' [· ∘ ·] with functor_norm
+    simp' [(· ∘ ·)] with functor_norm
 
 theorem pure_seq_eq_map (f : α → β) (x : Comp F G α) : pure f <*> x = f <$> x :=
   comp.ext <| by
@@ -121,7 +126,7 @@ instance {f : Type u → Type w} {g : Type v → Type u} [Applicativeₓ f] [App
   casesm* comp _ _ _
   simp' [map, Seqₓ.seq] with functor_norm
   rw [commutative_map]
-  simp' [comp.mk, flip, · ∘ ·] with functor_norm
+  simp' [comp.mk, flip, (· ∘ ·)] with functor_norm
   congr
   funext
   rw [commutative_map]
@@ -143,12 +148,12 @@ instance {α} [One α] [Mul α] : Applicativeₓ (Const α) where
   seq := fun β γ f x => (f * x : α)
 
 instance {α} [Monoidₓ α] : IsLawfulApplicative (Const α) := by
-  refine' { .. } <;> intros <;> simp [mul_assoc, · <$> ·, · <*> ·, pure]
+  refine' { .. } <;> intros <;> simp [mul_assoc, (· <$> ·), (· <*> ·), pure]
 
 instance {α} [Zero α] [Add α] : Applicativeₓ (AddConst α) where
   pure := fun β x => (0 : α)
   seq := fun β γ f x => (f + x : α)
 
 instance {α} [AddMonoidₓ α] : IsLawfulApplicative (AddConst α) := by
-  refine' { .. } <;> intros <;> simp [add_assocₓ, · <$> ·, · <*> ·, pure]
+  refine' { .. } <;> intros <;> simp [add_assocₓ, (· <$> ·), (· <*> ·), pure]
 

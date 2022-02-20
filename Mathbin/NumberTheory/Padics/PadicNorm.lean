@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Robert Y. Lewis. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Robert Y. Lewis
+-/
 import Mathbin.Algebra.Order.AbsoluteValue
 import Mathbin.Algebra.FieldPower
 import Mathbin.RingTheory.Int.Basic
@@ -156,6 +161,8 @@ theorem padic_val_nat_def {p : ℕ} [hp : Fact p.Prime] {n : ℕ} (hn : n ≠ 0)
   by
   have n_nonzero : (n : ℚ) ≠ 0 := by
     simpa only [cast_eq_zero, Ne.def]
+  -- Infinite loop with @simp padic_val_rat_of_nat unless we restrict the available lemmas here,
+  -- hence the very long list
   simpa only [int.coe_nat_multiplicity p n, Rat.coe_nat_denom n, (padic_val_rat_of_nat p n).symm, Int.coe_nat_zero,
     Int.coe_nat_inj', sub_zero, get_one_right, Int.coe_nat_succ, zero_addₓ, Rat.coe_nat_num] using
     padic_val_rat_def p n_nonzero

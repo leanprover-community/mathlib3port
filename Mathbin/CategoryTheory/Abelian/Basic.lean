@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Markus Himmel. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Markus Himmel
+-/
 import Mathbin.CategoryTheory.Limits.Constructions.Pullbacks
 import Mathbin.CategoryTheory.Limits.Shapes.Biproducts
 import Mathbin.CategoryTheory.Limits.Shapes.Images
@@ -97,7 +102,7 @@ and every epimorphism is the cokernel of some morphism.
 finite products give a terminal object, and in a preadditive category
 any terminal object is a zero object.)
 -/
-class abelian extends Preadditive C, NormalMonoCategory C, NormalEpiCategory C where
+class Abelian extends Preadditive C, NormalMonoCategory C, NormalEpiCategory C where
   [HasFiniteProducts : HasFiniteProducts C]
   [HasKernels : HasKernels C]
   [HasCokernels : HasCokernels C]
@@ -121,13 +126,13 @@ instance (priority := 100) has_finite_biproducts : HasFiniteBiproducts C :=
 instance (priority := 100) has_binary_biproducts : HasBinaryBiproducts C :=
   Limits.has_binary_biproducts_of_finite_biproducts _
 
-instance (priority := 100) has_zero_object : HasZeroObject C :=
+instance (priority := 100) hasZeroObject : HasZeroObject C :=
   has_zero_object_of_has_initial_object
 
 section ToNonPreadditiveAbelian
 
 /-- Every abelian category is, in particular, `non_preadditive_abelian`. -/
-def non_preadditive_abelian : NonPreadditiveAbelian C :=
+def nonPreadditiveAbelian : NonPreadditiveAbelian C :=
   { ‹Abelian C› with }
 
 end ToNonPreadditiveAbelian
@@ -179,7 +184,7 @@ protected abbrev image.ι : Images.image f ⟶ Q :=
   kernel.ι (cokernel.π f)
 
 /-- There is a canonical epimorphism `p : P ⟶ image f` for every `f`. -/
-protected abbrev factor_thru_image : P ⟶ Images.image f :=
+protected abbrev factorThruImage : P ⟶ Images.image f :=
   kernel.lift (cokernel.π f) f <| cokernel.condition f
 
 /-- `f` factors through its image via the canonical morphism `p`. -/
@@ -210,7 +215,7 @@ instance is_iso_factor_thru_image [Mono f] : IsIso (Images.factorThruImage f) :=
 
 /-- Factoring through the image is a strong epi-mono factorisation. -/
 @[simps]
-def image_strong_epi_mono_factorisation : StrongEpiMonoFactorisation f where
+def imageStrongEpiMonoFactorisation : StrongEpiMonoFactorisation f where
   i := Images.image f
   m := image.ι f
   m_mono := by
@@ -231,7 +236,7 @@ protected abbrev coimage.π : P ⟶ Coimages.coimage f :=
   cokernel.π (kernel.ι f)
 
 /-- There is a canonical monomorphism `i : coimage f ⟶ Q`. -/
-protected abbrev factor_thru_coimage : Coimages.coimage f ⟶ Q :=
+protected abbrev factorThruCoimage : Coimages.coimage f ⟶ Q :=
   cokernel.desc (kernel.ι f) f <| kernel.condition f
 
 /-- `f` factors through its coimage via the canonical morphism `p`. -/
@@ -261,7 +266,7 @@ instance is_iso_factor_thru_coimage [Epi f] : IsIso (Coimages.factorThruCoimage 
 
 /-- Factoring through the coimage is a strong epi-mono factorisation. -/
 @[simps]
-def coimage_strong_epi_mono_factorisation : StrongEpiMonoFactorisation f where
+def coimageStrongEpiMonoFactorisation : StrongEpiMonoFactorisation f where
   i := Coimages.coimage f
   m := Coimages.factorThruCoimage f
   m_mono := by
@@ -279,6 +284,7 @@ section HasStrongEpiMonoFactorisations
 instance (priority := 100) : HasStrongEpiMonoFactorisations C :=
   has_strong_epi_mono_factorisations.mk fun X Y f => Images.imageStrongEpiMonoFactorisation f
 
+-- In particular, this means that it has well-behaved images.
 example : HasImages C := by
   infer_instance
 
@@ -292,18 +298,18 @@ section Images
 variable {X Y : C} (f : X ⟶ Y)
 
 /-- There is a canonical isomorphism between the coimage and the image of a morphism. -/
-abbrev coimage_iso_image : Coimages.coimage f ≅ Images.image f :=
+abbrev coimageIsoImage : Coimages.coimage f ≅ Images.image f :=
   IsImage.isoExt (Coimages.coimageStrongEpiMonoFactorisation f).toMonoIsImage
     (Images.imageStrongEpiMonoFactorisation f).toMonoIsImage
 
 /-- There is a canonical isomorphism between the abelian image and the categorical image of a
     morphism. -/
-abbrev image_iso_image : Images.image f ≅ image f :=
+abbrev imageIsoImage : Images.image f ≅ image f :=
   IsImage.isoExt (Images.imageStrongEpiMonoFactorisation f).toMonoIsImage (Image.isImage f)
 
 /-- There is a canonical isomorphism between the abelian coimage and the categorical image of a
     morphism. -/
-abbrev coimage_iso_image' : Coimages.coimage f ≅ image f :=
+abbrev coimageIsoImage' : Coimages.coimage f ≅ image f :=
   IsImage.isoExt (Coimages.coimageStrongEpiMonoFactorisation f).toMonoIsImage (Image.isImage f)
 
 theorem full_image_factorisation : Coimages.coimage.π f ≫ (coimageIsoImage f).Hom ≫ Images.image.ι f = f := by
@@ -321,14 +327,14 @@ attribute [local instance] non_preadditive_abelian
 /-- In an abelian category, an epi is the cokernel of its kernel. More precisely:
     If `f` is an epimorphism and `s` is some limit kernel cone on `f`, then `f` is a cokernel
     of `fork.ι s`. -/
-def epi_is_cokernel_of_kernel [Epi f] (s : Fork f 0) (h : IsLimit s) :
+def epiIsCokernelOfKernel [Epi f] (s : Fork f 0) (h : IsLimit s) :
     IsColimit (CokernelCofork.ofπ f (KernelFork.condition s)) :=
   NonPreadditiveAbelian.epiIsCokernelOfKernel s h
 
 /-- In an abelian category, a mono is the kernel of its cokernel. More precisely:
     If `f` is a monomorphism and `s` is some colimit cokernel cocone on `f`, then `f` is a kernel
     of `cofork.π s`. -/
-def mono_is_kernel_of_cokernel [Mono f] (s : Cofork f 0) (h : IsColimit s) :
+def monoIsKernelOfCokernel [Mono f] (s : Cofork f 0) (h : IsColimit s) :
     IsLimit (KernelFork.ofι f (CokernelCofork.condition s)) :=
   NonPreadditiveAbelian.monoIsKernelOfCokernel s h
 
@@ -371,20 +377,20 @@ variable [Limits.HasPullbacks C] {X Y Z : C} (f : X ⟶ Z) (g : Y ⟶ Z)
 
 
 /-- The canonical map `pullback f g ⟶ X ⊞ Y` -/
-abbrev pullback_to_biproduct : pullback f g ⟶ X ⊞ Y :=
+abbrev pullbackToBiproduct : pullback f g ⟶ X ⊞ Y :=
   biprod.lift pullback.fst pullback.snd
 
 /-- The canonical map `pullback f g ⟶ X ⊞ Y` induces a kernel cone on the map
     `biproduct X Y ⟶ Z` induced by `f` and `g`. A slightly more intuitive way to think of
     this may be that it induces an equalizer fork on the maps induced by `(f, 0)` and
     `(0, g)`. -/
-abbrev pullback_to_biproduct_fork : KernelFork (biprod.desc f (-g)) :=
+abbrev pullbackToBiproductFork : KernelFork (biprod.desc f (-g)) :=
   KernelFork.ofι (pullbackToBiproduct f g) <| by
     rw [biprod.lift_desc, comp_neg, pullback.condition, add_right_negₓ]
 
 /-- The canonical map `pullback f g ⟶ X ⊞ Y` is a kernel of the map induced by
     `(f, -g)`. -/
-def is_limit_pullback_to_biproduct : IsLimit (pullbackToBiproductFork f g) :=
+def isLimitPullbackToBiproduct : IsLimit (pullbackToBiproductFork f g) :=
   Fork.IsLimit.mk _
     (fun s =>
       pullback.lift (Fork.ι s ≫ biprod.fst) (Fork.ι s ≫ biprod.snd) <|
@@ -407,18 +413,18 @@ namespace BiproductToPushoutIsCokernel
 variable [Limits.HasPushouts C] {W X Y Z : C} (f : X ⟶ Y) (g : X ⟶ Z)
 
 /-- The canonical map `Y ⊞ Z ⟶ pushout f g` -/
-abbrev biproduct_to_pushout : Y ⊞ Z ⟶ pushout f g :=
+abbrev biproductToPushout : Y ⊞ Z ⟶ pushout f g :=
   biprod.desc pushout.inl pushout.inr
 
 /-- The canonical map `Y ⊞ Z ⟶ pushout f g` induces a cokernel cofork on the map
     `X ⟶ Y ⊞ Z` induced by `f` and `-g`. -/
-abbrev biproduct_to_pushout_cofork : CokernelCofork (biprod.lift f (-g)) :=
+abbrev biproductToPushoutCofork : CokernelCofork (biprod.lift f (-g)) :=
   CokernelCofork.ofπ (biproductToPushout f g) <| by
     rw [biprod.lift_desc, neg_comp, pushout.condition, add_right_negₓ]
 
 /-- The cofork induced by the canonical map `Y ⊞ Z ⟶ pushout f g` is in fact a colimit cokernel
     cofork. -/
-def is_colimit_biproduct_to_pushout : IsColimit (biproductToPushoutCofork f g) :=
+def isColimitBiproductToPushout : IsColimit (biproductToPushoutCofork f g) :=
   Cofork.IsColimit.mk _
     (fun s =>
       pushout.desc (biprod.inl ≫ Cofork.π s) (biprod.inr ≫ Cofork.π s) <|
@@ -439,22 +445,34 @@ variable [Limits.HasPullbacks C] {W X Y Z : C} (f : X ⟶ Z) (g : Y ⟶ Z)
 /-- In an abelian category, the pullback of an epimorphism is an epimorphism.
     Proof from [aluffi2016, IX.2.3], cf. [borceux-vol2, 1.7.6] -/
 instance epi_pullback_of_epi_f [Epi f] : Epi (pullback.snd : pullback f g ⟶ Y) :=
-  (epi_of_cancel_zero _) fun R e h => by
+  (-- It will suffice to consider some morphism e : Y ⟶ R such that
+      -- pullback.snd ≫ e = 0 and show that e = 0.
+      epi_of_cancel_zero
+      _)
+    fun R e h => by
+    -- Consider the morphism u := (0, e) : X ⊞ Y⟶ R.
     let u := biprod.desc (0 : X ⟶ R) e
+    -- The composite pullback f g ⟶ X ⊞ Y ⟶ R is zero by assumption.
     have hu : pullback_to_biproduct_is_kernel.pullback_to_biproduct f g ≫ u = 0 := by
       simpa
+    -- pullback_to_biproduct f g is a kernel of (f, -g), so (f, -g) is a
+    -- cokernel of pullback_to_biproduct f g
     have := epi_is_cokernel_of_kernel _ (pullback_to_biproduct_is_kernel.is_limit_pullback_to_biproduct f g)
+    -- We use this fact to obtain a factorization of u through (f, -g) via some d : Z ⟶ R.
     obtain ⟨d, hd⟩ := cokernel_cofork.is_colimit.desc' this u hu
     change Z ⟶ R at d
     change biprod.desc f (-g) ≫ d = u at hd
+    -- But then f ≫ d = 0:
     have : f ≫ d = 0
     calc f ≫ d = (biprod.inl ≫ biprod.desc f (-g)) ≫ d := by
         rw [biprod.inl_desc]_ = biprod.inl ≫ u := by
         rw [category.assoc, hd]_ = 0 := biprod.inl_desc _ _
+    -- But f is an epimorphism, so d = 0...
     have : d = 0 :=
       (cancel_epi f).1
         (by
           simpa)
+    -- ...or, in other words, e = 0.
     calc e = biprod.inr ≫ u := by
         rw [biprod.inr_desc]_ = biprod.inr ≫ biprod.desc f (-g) ≫ d := by
         rw [← hd]_ = biprod.inr ≫ biprod.desc f (-g) ≫ 0 := by
@@ -463,22 +481,34 @@ instance epi_pullback_of_epi_f [Epi f] : Epi (pullback.snd : pullback f g ⟶ Y)
 
 /-- In an abelian category, the pullback of an epimorphism is an epimorphism. -/
 instance epi_pullback_of_epi_g [Epi g] : Epi (pullback.fst : pullback f g ⟶ X) :=
-  (epi_of_cancel_zero _) fun R e h => by
+  (-- It will suffice to consider some morphism e : X ⟶ R such that
+      -- pullback.fst ≫ e = 0 and show that e = 0.
+      epi_of_cancel_zero
+      _)
+    fun R e h => by
+    -- Consider the morphism u := (e, 0) : X ⊞ Y ⟶ R.
     let u := biprod.desc e (0 : Y ⟶ R)
+    -- The composite pullback f g ⟶ X ⊞ Y ⟶ R is zero by assumption.
     have hu : pullback_to_biproduct_is_kernel.pullback_to_biproduct f g ≫ u = 0 := by
       simpa
+    -- pullback_to_biproduct f g is a kernel of (f, -g), so (f, -g) is a
+    -- cokernel of pullback_to_biproduct f g
     have := epi_is_cokernel_of_kernel _ (pullback_to_biproduct_is_kernel.is_limit_pullback_to_biproduct f g)
+    -- We use this fact to obtain a factorization of u through (f, -g) via some d : Z ⟶ R.
     obtain ⟨d, hd⟩ := cokernel_cofork.is_colimit.desc' this u hu
     change Z ⟶ R at d
     change biprod.desc f (-g) ≫ d = u at hd
+    -- But then (-g) ≫ d = 0:
     have : -g ≫ d = 0
     calc -g ≫ d = (biprod.inr ≫ biprod.desc f (-g)) ≫ d := by
         rw [biprod.inr_desc]_ = biprod.inr ≫ u := by
         rw [category.assoc, hd]_ = 0 := biprod.inr_desc _ _
+    -- But g is an epimorphism, thus so is -g, so d = 0...
     have : d = 0 :=
       (cancel_epi (-g)).1
         (by
           simpa)
+    -- ...or, in other words, e = 0.
     calc e = biprod.inl ≫ u := by
         rw [biprod.inl_desc]_ = biprod.inl ≫ biprod.desc f (-g) ≫ d := by
         rw [← hd]_ = biprod.inl ≫ biprod.desc f (-g) ≫ 0 := by
@@ -590,7 +620,15 @@ variable (C : Type u) [Category.{v} C] [NonPreadditiveAbelian C]
 
 /-- Every non_preadditive_abelian category can be promoted to an abelian category. -/
 def abelian : Abelian C :=
-  { NonPreadditiveAbelian.preadditive with
+  { /- We need the `convert`s here because the instances we have are slightly different from the
+       instances we need: `has_kernels` depends on an instance of `has_zero_morphisms`. In the
+       case of `non_preadditive_abelian`, this instance is an explicit argument. However, in the case
+       of `abelian`, the `has_zero_morphisms` instance is derived from `preadditive`. So we need to
+       transform an instance of "has kernels with non_preadditive_abelian.has_zero_morphisms" to an
+       instance of "has kernels with non_preadditive_abelian.preadditive.has_zero_morphisms". Luckily,
+       we have a `subsingleton` instance for `has_zero_morphisms`, so `convert` can immediately close
+       the goal it creates for the two instances of `has_zero_morphisms`, and the proof is complete. -/
+    NonPreadditiveAbelian.preadditive with
     HasFiniteProducts := by
       infer_instance,
     HasKernels := by

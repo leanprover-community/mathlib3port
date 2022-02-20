@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Bhavik Mehta. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Bhavik Mehta
+-/
 import Mathbin.CategoryTheory.Limits.Shapes.BinaryProducts
 import Mathbin.CategoryTheory.Monad.Products
 import Mathbin.CategoryTheory.Over
@@ -16,6 +21,7 @@ noncomputable section
 
 universe v u
 
+-- declare the `v`'s first; see `category_theory.category` for an explanation
 namespace CategoryTheory
 
 open Category Limits Comonad
@@ -33,7 +39,7 @@ def star [HasBinaryProducts C] : C ⥤ Over X :=
 Note that the binary products assumption is necessary: the existence of a right adjoint to
 `over.forget X` is equivalent to the existence of each binary product `X ⨯ -`.
 -/
-def forget_adj_star [HasBinaryProducts C] : Over.forget X ⊣ star X :=
+def forgetAdjStar [HasBinaryProducts C] : Over.forget X ⊣ star X :=
   (coalgebraEquivOver X).symm.toAdjunction.comp _ _ (adj _)
 
 /-- Note that the binary products assumption is necessary: the existence of a right adjoint to

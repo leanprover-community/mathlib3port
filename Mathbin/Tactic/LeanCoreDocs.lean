@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Kevin Buzzard. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Kevin Buzzard, Bryan Gin-ge Chen, Robert Y. Lewis, Scott Morrison
+-/
 import Mathbin.Tactic.DocCommands
 
 /-!
@@ -508,6 +513,7 @@ add_tactic_doc
 /-- Navigate to the left-hand-side of a relation.
 A goal of `| a = b` will turn into the goal `| a`.
 -/
+-- conv mode tactics
 add_tactic_doc
   { Name := "conv: to_lhs", category := DocCategory.tactic, declNames := [`conv.interactive.to_lhs], tags := ["conv"] }
 

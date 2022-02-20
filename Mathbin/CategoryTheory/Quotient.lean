@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 David Wärn. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: David Wärn
+-/
 import Mathbin.CategoryTheory.NaturalIsomorphism
 import Mathbin.CategoryTheory.Equivalence
 import Mathbin.CategoryTheory.EqToHom
@@ -26,7 +31,7 @@ include r
 
 /-- A `hom_rel` is a congruence when it's an equivalence on every hom-set, and it can be composed
 from left and right. -/
-class congruence : Prop where
+class Congruence : Prop where
   IsEquiv : ∀ {X Y}, IsEquiv _ (@r X Y)
   compLeft : ∀ {X Y Z} f : X ⟶ Y {g g' : Y ⟶ Z}, r g g' → r (f ≫ g) (f ≫ g')
   compRight : ∀ {X Y Z} {f f' : X ⟶ Y} g : Y ⟶ Z, r f f' → r (f ≫ g) (f' ≫ g)
@@ -35,7 +40,7 @@ attribute [instance] congruence.is_equiv
 
 /-- A type synonym for `C`, thought of as the objects of the quotient category. -/
 @[ext]
-structure Quotientₓ where
+structure Quotient where
   as : C
 
 instance [Inhabited C] : Inhabited (Quotient r) :=
@@ -44,7 +49,7 @@ instance [Inhabited C] : Inhabited (Quotient r) :=
 namespace Quotientₓ
 
 /-- Generates the closure of a family of relations w.r.t. composition from left and right. -/
-inductive comp_closure ⦃s t : C⦄ : (s ⟶ t) → (s ⟶ t) → Prop
+inductive CompClosure ⦃s t : C⦄ : (s ⟶ t) → (s ⟶ t) → Prop
   | intro {a b} (f : s ⟶ a) (m₁ m₂ : a ⟶ b) (g : b ⟶ t) (h : r m₁ m₂) : comp_closure (f ≫ m₁ ≫ g) (f ≫ m₂ ≫ g)
 
 theorem comp_left {a b c : C} (f : a ⟶ b) : ∀ g₁ g₂ : b ⟶ c h : CompClosure r g₁ g₂, CompClosure r (f ≫ g₁) (f ≫ g₂)
@@ -56,7 +61,7 @@ theorem comp_right {a b c : C} (g : b ⟶ c) : ∀ f₁ f₂ : a ⟶ b h : CompC
     simpa using comp_closure.intro x m₁ m₂ (y ≫ g) h
 
 /-- Hom-sets of the quotient category. -/
-def hom (s t : Quotient r) :=
+def Hom (s t : Quotient r) :=
   Quot <| @CompClosure C _ r s.as t.as
 
 instance (a : Quotient r) : Inhabited (Hom r a a) :=
@@ -80,7 +85,7 @@ instance category : Category (Quotient r) where
 
 /-- The functor from a category to its quotient. -/
 @[simps]
-def Functor : C ⥤ Quotient r where
+def functor : C ⥤ Quotient r where
   obj := fun a => { as := a }
   map := fun _ _ f => Quot.mk _ f
 
@@ -144,7 +149,7 @@ def lift : Quotient r ⥤ D where
     exact F.map_comp f g
 
 /-- The original functor factors through the induced functor. -/
-def lift.is_lift : functor r ⋙ lift r F H ≅ F :=
+def lift.isLift : functor r ⋙ lift r F H ≅ F :=
   NatIso.ofComponents (fun X => Iso.refl _)
     (by
       tidy)

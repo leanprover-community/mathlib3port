@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 David Wärn. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: David Wärn
+-/
 import Mathbin.Algebra.FreeMonoid
 import Mathbin.GroupTheory.Congruence
 import Mathbin.Data.List.Chain
@@ -70,7 +75,7 @@ namespace FreeProduct
 /-- The type of reduced words. A reduced word cannot contain a letter `1`, and no two adjacent
 letters can come from the same summand. -/
 @[ext]
-structure word where
+structure Word where
   toList : List (Σ i, M i)
   ne_one : ∀, ∀ l ∈ to_list, ∀, Sigma.snd l ≠ 1
   chain_ne : to_list.Chain' fun l l' => Sigma.fst l ≠ Sigma.fst l'
@@ -175,7 +180,7 @@ end Groupₓ
 namespace Word
 
 /-- The empty reduced word. -/
-def Empty : Word M where
+def empty : Word M where
   toList := []
   ne_one := fun _ => False.elim
   chain_ne := List.chain'_nil
@@ -184,7 +189,7 @@ instance : Inhabited (Word M) :=
   ⟨empty⟩
 
 /-- A reduced word determines an element of the free product, given by multiplication. -/
-def Prod (w : Word M) : FreeProduct M :=
+def prod (w : Word M) : FreeProduct M :=
   List.prod (w.toList.map fun l => of l.snd)
 
 @[simp]
@@ -193,7 +198,7 @@ theorem prod_nil : prod (empty : Word M) = 1 :=
 
 /-- `fst_idx w` is `some i` if the first letter of `w` is `⟨i, m⟩` with `m : M i`. If `w` is empty
 then it's `none`. -/
-def fst_idx (w : Word M) : Option ι :=
+def fstIdx (w : Word M) : Option ι :=
   w.toList.head'.map Sigma.fst
 
 theorem fst_idx_ne_iff {w : Word M} {i} : fstIdx w ≠ some i ↔ ∀, ∀ l ∈ w.toList.head', ∀, i ≠ Sigma.fst l :=
@@ -207,7 +212,7 @@ variable (M)
 By prepending `head` to `tail`, one obtains a new word. We'll show that any word can be uniquely
 obtained in this way. -/
 @[ext]
-structure pair (i : ι) where
+structure Pair (i : ι) where
   head : M i
   tail : Word M
   fst_idx_ne : fstIdx tail ≠ some i
@@ -278,6 +283,8 @@ theorem rcons_inj {i} : Function.Injective (rcons : Pair M i → Word M) := by
 variable [DecidableEq ι]
 
 /-- Given `i : ι`, any reduced word can be decomposed into a pair `p` such that `w = rcons p`. -/
+-- This definition is computable but not very nice to look at. Thankfully we don't have to inspect
+-- it, since `rcons` is known to be injective.
 private def equiv_pair_aux i : ∀ w : Word M, { p : Pair M i // rcons p = w }
   | w@⟨[], _, _⟩ =>
     ⟨⟨1, w, by
@@ -295,7 +302,7 @@ private def equiv_pair_aux i : ∀ w : Word M, { p : Pair M i // rcons p = w }
 
 /-- The equivalence between words and pairs. Given a word, it decomposes it as a pair by removing
 the first letter if it comes from `M i`. Given a pair, it prepends the head to the tail. -/
-def equiv_pair i : Word M ≃ Pair M i where
+def equivPair i : Word M ≃ Pair M i where
   toFun := fun w => (equivPairAux i w).val
   invFun := rcons
   left_inv := fun w => (equivPairAux i w).property
@@ -307,7 +314,7 @@ theorem equiv_pair_symm i (p : Pair M i) : (equivPair i).symm p = rcons p :=
 theorem equiv_pair_eq_of_fst_idx_ne {i} {w : Word M} (h : fstIdx w ≠ some i) : equivPair i w = ⟨1, w, h⟩ :=
   (equivPair i).apply_eq_iff_eq_symm_apply.mpr <| Eq.symm (dif_pos rfl)
 
-instance summand_action i : MulAction (M i) (Word M) where
+instance summandAction i : MulAction (M i) (Word M) where
   smul := fun m w => rcons { equivPair i w with head := m * (equivPair i w).head }
   one_smul := fun w => by
     simp_rw [one_mulₓ]
@@ -350,7 +357,7 @@ theorem prod_smul m : ∀ w : Word M, prod (m • w) = m * prod w := by
     
 
 /-- Each element of the free product corresponds to a unique reduced word. -/
-def Equivₓ : FreeProduct M ≃ Word M where
+def equiv : FreeProduct M ≃ Word M where
   toFun := fun m => m • Empty
   invFun := fun w => prod w
   left_inv := fun m => by

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Robert Y. Lewis. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Robert Y. Lewis
+-/
 import Mathbin.Data.List.Defs
 
 /-!
@@ -17,7 +22,7 @@ namespace Native
 
 namespace RbSet
 
-unsafe instance {key} [LT key] [DecidableRel (· < · : key → key → Prop)] : Inhabited (rb_set key) :=
+unsafe instance {key} [LT key] [DecidableRel ((· < ·) : key → key → Prop)] : Inhabited (rb_set key) :=
   ⟨mk_rb_set⟩
 
 /-- `filter s P` returns the subset of elements of `s` satisfying `P`. -/
@@ -47,7 +52,7 @@ unsafe def of_list_core {key} (base : rb_set key) : List key → rb_map key Unit
 /-- `of_list l` transforms a list `l : list key` into an `rb_set`,
 inferring an order on the type `key`.
 -/
-unsafe def of_list {key} [LT key] [DecidableRel (· < · : key → key → Prop)] : List key → rb_set key :=
+unsafe def of_list {key} [LT key] [DecidableRel ((· < ·) : key → key → Prop)] : List key → rb_set key :=
   of_list_core mk_rb_set
 
 /-- `sdiff s1 s2` returns the set of elements that are in `s1` but not in `s2`.
@@ -69,7 +74,7 @@ end RbSet
 
 namespace RbMap
 
-unsafe instance {key data : Type} [LT key] [DecidableRel (· < · : key → key → Prop)] : Inhabited (rb_map key data) :=
+unsafe instance {key data : Type} [LT key] [DecidableRel ((· < ·) : key → key → Prop)] : Inhabited (rb_map key data) :=
   ⟨mk_rb_map⟩
 
 /-- `find_def default m k` returns the value corresponding to `k` in `m`, if it exists.
@@ -98,17 +103,17 @@ variable {m : Type → Type _} [Monadₓ m]
 open Function
 
 /-- `mfilter P s` filters `s` by the monadic predicate `P` on keys and values. -/
-unsafe def mfilter {key val} [LT key] [DecidableRel (· < · : key → key → Prop)] (P : key → val → m Bool)
+unsafe def mfilter {key val} [LT key] [DecidableRel ((· < ·) : key → key → Prop)] (P : key → val → m Bool)
     (s : rb_map key val) : m (rb_map.{0, 0} key val) :=
   rb_map.of_list <$> s.toList.mfilter (uncurry P)
 
 /-- `mmap f s` maps the monadic function `f` over values in `s`. -/
-unsafe def mmap {key val val'} [LT key] [DecidableRel (· < · : key → key → Prop)] (f : val → m val')
+unsafe def mmap {key val val'} [LT key] [DecidableRel ((· < ·) : key → key → Prop)] (f : val → m val')
     (s : rb_map key val) : m (rb_map.{0, 0} key val') :=
   rb_map.of_list <$> s.toList.mmap fun ⟨a, b⟩ => Prod.mk a <$> f b
 
 /-- `scale b m` multiplies every value in `m` by `b`. -/
-unsafe def scale {key value} [LT key] [DecidableRel (· < · : key → key → Prop)] [Mul value] (b : value)
+unsafe def scale {key value} [LT key] [DecidableRel ((· < ·) : key → key → Prop)] [Mul value] (b : value)
     (m : rb_map key value) : rb_map key value :=
   m.map ((· * ·) b)
 
@@ -141,19 +146,19 @@ end RbMap
 
 namespace RbLmap
 
-unsafe instance (key : Type) [LT key] [DecidableRel (· < · : key → key → Prop)] (data : Type) :
+unsafe instance (key : Type) [LT key] [DecidableRel ((· < ·) : key → key → Prop)] (data : Type) :
     Inhabited (rb_lmap key data) :=
   ⟨rb_lmap.mk _ _⟩
 
 /-- Construct a rb_lmap from a list of key-data pairs -/
-protected unsafe def of_list {key : Type} {data : Type} [LT key] [DecidableRel (· < · : key → key → Prop)] :
+protected unsafe def of_list {key : Type} {data : Type} [LT key] [DecidableRel ((· < ·) : key → key → Prop)] :
     List (key × data) → rb_lmap key data
   | [] => rb_lmap.mk key data
   | (k, v) :: ls => (of_list ls).insert k v
 
 /-- Returns the list of values of an `rb_lmap`. -/
 protected unsafe def values {key data} (m : rb_lmap key data) : List data :=
-  m.fold [] fun _ => · ++ ·
+  m.fold [] fun _ => (· ++ ·)
 
 end RbLmap
 

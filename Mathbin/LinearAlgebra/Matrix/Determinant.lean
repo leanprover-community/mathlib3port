@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Kenny Lau. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Kenny Lau, Chris Hughes, Tim Baanen
+-/
 import Mathbin.Data.Matrix.Pequiv
 import Mathbin.Data.Matrix.Block
 import Mathbin.Data.Fintype.Card
@@ -45,11 +50,11 @@ variable {m n : Type _} [DecidableEq n] [Fintype n] [DecidableEq m] [Fintype m]
 
 variable {R : Type v} [CommRingₓ R]
 
--- ././Mathport/Syntax/Translate/Basic.lean:343:9: unsupported: advanced prec syntax
+-- ././Mathport/Syntax/Translate/Basic.lean:462:9: unsupported: advanced prec syntax
 local notation "ε" σ:999 => ((sign σ : ℤ) : R)
 
 /-- `det` is an `alternating_map` in the rows of the matrix. -/
-def det_row_alternating : AlternatingMap R (n → R) R n :=
+def detRowAlternating : AlternatingMap R (n → R) R n :=
   ((MultilinearMap.mkPiAlgebra R n R).compLinearMap LinearMap.proj).alternatization
 
 /-- The determinant of a matrix given by the Leibniz formula. -/
@@ -59,6 +64,7 @@ abbrev det (M : Matrix n n R) : R :=
 theorem det_apply (M : Matrix n n R) : M.det = ∑ σ : Perm n, σ.sign • ∏ i, M (σ i) i :=
   MultilinearMap.alternatization_apply _ M
 
+-- This is what the old definition was. We use it to avoid having to change the old proofs below
 theorem det_apply' (M : Matrix n n R) : M.det = ∑ σ : Perm n, ε σ * ∏ i, M (σ i) i := by
   simp [det_apply, Units.smul_def]
 
@@ -170,7 +176,7 @@ theorem det_mul (M N : Matrix n n R) : det (M ⬝ N) = det M * det N :=
     
 
 /-- The determinant of a matrix, as a monoid homomorphism. -/
-def det_monoid_hom : Matrix n n R →* R where
+def detMonoidHom : Matrix n n R →* R where
   toFun := det
   map_one' := det_one
   map_mul' := det_mul
@@ -507,17 +513,19 @@ end DetEq
 @[simp]
 theorem det_block_diagonal {o : Type _} [Fintype o] [DecidableEq o] (M : o → Matrix n n R) :
     (blockDiagonal M).det = ∏ k, (M k).det := by
+  -- Rewrite the determinants as a sum over permutations.
   simp_rw [det_apply']
+  -- The right hand side is a product of sums, rewrite it as a sum of products.
   rw [Finset.prod_sum]
   simp_rw [Finset.mem_univ, Finset.prod_attach_univ, Finset.univ_pi_univ]
+  -- We claim that the only permutations contributing to the sum are those that
+  -- preserve their second component.
   let preserving_snd : Finset (Equivₓ.Perm (n × o)) := finset.univ.filter fun σ => ∀ x, (σ x).snd = x.snd
   have mem_preserving_snd : ∀ {σ : Equivₓ.Perm (n × o)}, σ ∈ preserving_snd ↔ ∀ x, (σ x).snd = x.snd := fun σ =>
     finset.mem_filter.trans ⟨fun h => h.2, fun h => ⟨Finset.mem_univ _, h⟩⟩
   rw [← Finset.sum_subset (Finset.subset_univ preserving_snd) _]
-  rw
-    [(Finset.sum_bij
-        (fun σ : ∀ k : o, k ∈ Finset.univ → Equivₓ.Perm n _ => prod_congr_left fun k => σ k (Finset.mem_univ k)) _ _ _
-        _).symm]
+  -- And that these are in bijection with `o → equiv.perm m`.
+  rw [(Finset.sum_bij (fun _ => prod_congr_left fun k => σ k (Finset.mem_univ k)) _ _ _ _).symm]
   · intro σ _
     rw [mem_preserving_snd]
     rintro ⟨k, x⟩
@@ -593,7 +601,7 @@ theorem upper_two_block_triangular_det (A : Matrix m m R) (B : Matrix m n R) (D 
   convert (sum_subset (subset_univ ((sum_congr_hom m n).range : Set (perm (Sum m n))).toFinset) _).symm
   rw [sum_mul_sum]
   simp_rw [univ_product_univ]
-  rw [(sum_bij (fun σ : perm m × perm n _ => Equivₓ.sumCongr σ.fst σ.snd) _ _ _ _).symm]
+  rw [(sum_bij (fun _ => Equivₓ.sumCongr σ.fst σ.snd) _ _ _ _).symm]
   · intro σ₁₂ h
     simp only
     erw [Set.mem_to_finset, MonoidHom.mem_range]
@@ -660,10 +668,14 @@ theorem det_succ_column_zero {n : ℕ} (A : Matrix (Finₓ n.succ) (Finₓ n.suc
       Finₓ.coe_zero, one_mulₓ, Equivₓ.Perm.decomposeFin.symm_sign, Equivₓ.swap_self, if_true, id.def, eq_self_iff_true,
       Equivₓ.Perm.decompose_fin_symm_apply_succ, Finₓ.succ_above_zero, Equivₓ.coe_refl, pow_zeroₓ, mul_smul_comm]
     
+  -- `univ_perm_fin_succ` gives a different embedding of `perm (fin n)` into
+  -- `perm (fin n.succ)` than the determinant of the submatrix we want,
+  -- permute `A` so that we get the correct one.
   have : (-1 : R) ^ (i : ℕ) = i.cycle_range.sign := by
     simp [Finₓ.sign_cycle_range]
   rw [Finₓ.coe_succ, pow_succₓ, this, mul_assoc, mul_assoc, mul_left_commₓ ↑(Equivₓ.Perm.sign _), ← det_permute,
     Matrix.det_apply, Finset.mul_sum, Finset.mul_sum]
+  -- now we just need to move the corresponding parts to the same place
   refine' Finset.sum_congr rfl fun σ _ => _
   rw [Equivₓ.Perm.decomposeFin.symm_sign, if_neg (Finₓ.succ_ne_zero i)]
   calc

@@ -1,3 +1,10 @@
+/-
+Copyright (c) 2018 Johannes Hölzl. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johannes Hölzl
+
+Without loss of generality tactic.
+-/
 import Mathbin.Data.List.Perm
 
 open Expr
@@ -15,7 +22,9 @@ private unsafe def elim_or : ℕ → expr → tactic (List expr)
   | 1, h => return [h]
   | n + 1, h => do
     let [(_, [hl], []), (_, [hr], [])] ← induction h
-    let [gl, gr] ← get_goals
+    let-- there should be no dependent terms
+      [gl, gr]
+      ← get_goals
     set_goals [gr]
     let hsr ← elim_or n hr
     let gsr ← get_goals
@@ -42,7 +51,10 @@ private unsafe def match_perms (pat : pattern) : expr → tactic (List <| List e
 
 unsafe def wlog (vars' : List expr) (h_cases fst_case : expr) (perms : List (List expr)) : tactic Unit := do
   guardₓ h_cases
-  let nr ← revert_lst (vars' ++ [h_cases])
+  let nr
+    ←-- reorder s.t. context is Γ ⬝ vars ⬝ cases ⊢ ∀deps, …
+        revert_lst
+        (vars' ++ [h_cases])
   let vars ← intron' vars'.length
   let h_cases ← intro h_cases.local_pp_name
   let cases ← infer_type h_cases

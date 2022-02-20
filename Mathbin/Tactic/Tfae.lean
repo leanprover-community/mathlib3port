@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Johan Commelin. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johan Commelin, Reid Barton, Simon Hudon
+-/
 import Mathbin.Data.List.Tfae
 import Mathbin.Tactic.Scc
 
@@ -15,7 +20,7 @@ export List (Tfae)
 
 namespace Tfae
 
-inductive arrow : Type
+inductive Arrow : Type
   | right : arrow
   | left_right : arrow
   | left : arrow

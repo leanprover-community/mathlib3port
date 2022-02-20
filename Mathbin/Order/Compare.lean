@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2017 Mario Carneiro. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Mario Carneiro
+-/
 import Mathbin.Order.Basic
 
 /-!
@@ -37,7 +42,7 @@ namespace Ordering
 /-- `compares o a b` means that `a` and `b` have the ordering relation `o` between them, assuming
 that the relation `a < b` is defined. -/
 @[simp]
-def compares [LT α] : Ordering → α → α → Prop
+def Compares [LT α] : Ordering → α → α → Prop
   | lt, a, b => a < b
   | Eq, a, b => a = b
   | Gt, a, b => a > b
@@ -53,7 +58,7 @@ theorem swap_eq_iff_eq_swap {o o' : Ordering} : o.swap = o' ↔ o = o'.swap :=
     rw [← swap_swap o, h], fun h => by
     rw [← swap_swap o', h]⟩
 
-theorem compares.eq_lt [Preorderₓ α] : ∀ {o} {a b : α}, Compares o a b → (o = lt ↔ a < b)
+theorem Compares.eq_lt [Preorderₓ α] : ∀ {o} {a b : α}, Compares o a b → (o = lt ↔ a < b)
   | lt, a, b, h => ⟨fun _ => h, fun _ => rfl⟩
   | Eq, a, b, h =>
     ⟨fun h => by
@@ -62,7 +67,7 @@ theorem compares.eq_lt [Preorderₓ α] : ∀ {o} {a b : α}, Compares o a b →
     ⟨fun h => by
       injection h, fun h' => (lt_asymmₓ h h').elim⟩
 
-theorem compares.ne_lt [Preorderₓ α] : ∀ {o} {a b : α}, Compares o a b → (o ≠ lt ↔ b ≤ a)
+theorem Compares.ne_lt [Preorderₓ α] : ∀ {o} {a b : α}, Compares o a b → (o ≠ lt ↔ b ≤ a)
   | lt, a, b, h => ⟨absurd rfl, fun h' => (not_le_of_lt h h').elim⟩
   | Eq, a, b, h =>
     ⟨fun _ => ge_of_eq h, fun _ h => by
@@ -71,7 +76,7 @@ theorem compares.ne_lt [Preorderₓ α] : ∀ {o} {a b : α}, Compares o a b →
     ⟨fun _ => le_of_ltₓ h, fun _ h => by
       injection h⟩
 
-theorem compares.eq_eq [Preorderₓ α] : ∀ {o} {a b : α}, Compares o a b → (o = Eq ↔ a = b)
+theorem Compares.eq_eq [Preorderₓ α] : ∀ {o} {a b : α}, Compares o a b → (o = Eq ↔ a = b)
   | lt, a, b, h =>
     ⟨fun h => by
       injection h, fun h' => (ne_of_ltₓ h h').elim⟩
@@ -80,23 +85,23 @@ theorem compares.eq_eq [Preorderₓ α] : ∀ {o} {a b : α}, Compares o a b →
     ⟨fun h => by
       injection h, fun h' => (ne_of_gtₓ h h').elim⟩
 
-theorem compares.eq_gt [Preorderₓ α] {o} {a b : α} (h : Compares o a b) : o = Gt ↔ b < a :=
+theorem Compares.eq_gt [Preorderₓ α] {o} {a b : α} (h : Compares o a b) : o = Gt ↔ b < a :=
   swap_eq_iff_eq_swap.symm.trans h.swap.eq_lt
 
-theorem compares.ne_gt [Preorderₓ α] {o} {a b : α} (h : Compares o a b) : o ≠ Gt ↔ a ≤ b :=
+theorem Compares.ne_gt [Preorderₓ α] {o} {a b : α} (h : Compares o a b) : o ≠ Gt ↔ a ≤ b :=
   (not_congr swap_eq_iff_eq_swap.symm).trans h.swap.ne_lt
 
-theorem compares.le_total [Preorderₓ α] {a b : α} : ∀ {o}, Compares o a b → a ≤ b ∨ b ≤ a
+theorem Compares.le_total [Preorderₓ α] {a b : α} : ∀ {o}, Compares o a b → a ≤ b ∨ b ≤ a
   | lt, h => Or.inl (le_of_ltₓ h)
   | Eq, h => Or.inl (le_of_eqₓ h)
   | Gt, h => Or.inr (le_of_ltₓ h)
 
-theorem compares.le_antisymm [Preorderₓ α] {a b : α} : ∀ {o}, Compares o a b → a ≤ b → b ≤ a → a = b
+theorem Compares.le_antisymm [Preorderₓ α] {a b : α} : ∀ {o}, Compares o a b → a ≤ b → b ≤ a → a = b
   | lt, h, _, hba => (not_le_of_lt h hba).elim
   | Eq, h, _, _ => h
   | Gt, h, hab, _ => (not_le_of_lt h hab).elim
 
-theorem compares.inj [Preorderₓ α] {o₁} : ∀ {o₂} {a b : α}, Compares o₁ a b → Compares o₂ a b → o₁ = o₂
+theorem Compares.inj [Preorderₓ α] {o₁} : ∀ {o₂} {a b : α}, Compares o₁ a b → Compares o₂ a b → o₁ = o₂
   | lt, a, b, h₁, h₂ => h₁.eq_lt.2 h₂
   | Eq, a, b, h₁, h₂ => h₁.eq_eq.2 h₂
   | Gt, a, b, h₁, h₂ => h₁.eq_gt.2 h₂

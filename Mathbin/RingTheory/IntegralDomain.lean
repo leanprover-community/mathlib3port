@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Johan Commelin. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johan Commelin, Chris Hughes
+-/
 import Mathbin.Data.Fintype.Card
 import Mathbin.Data.Polynomial.RingDivision
 import Mathbin.GroupTheory.SpecificGroups.Cyclic
@@ -28,6 +33,7 @@ open_locale BigOperators Nat
 
 section CancelMonoidWithZero
 
+-- There doesn't seem to be a better home for these right now
 variable {M : Type _} [CancelMonoidWithZero M] [Fintype M]
 
 theorem mul_right_bijective_of_fintype₀ {a : M} (ha : a ≠ 0) : Bijective fun b => a * b :=
@@ -147,19 +153,27 @@ theorem sum_hom_units_eq_zero (f : G →* R) (hf : f ≠ 1) : (∑ g : G, f g) =
   calc (∑ g : G, f g) = ∑ g : G, f.to_hom_units g :=
       rfl _ = ∑ u : (R)ˣ in univ.image f.to_hom_units, (univ.filter fun g => f.to_hom_units g = u).card • u :=
       sum_comp (coe : (R)ˣ → R) f.to_hom_units _ = ∑ u : (R)ˣ in univ.image f.to_hom_units, c • u :=
-      sum_congr rfl fun u hu => congr_arg2ₓ _ _ rfl _ = ∑ b : MonoidHom.range f.to_hom_units, c • ↑b :=
+      sum_congr rfl fun u hu => congr_arg2ₓ _ _ rfl-- remaining goal 1, proven below
+        _ =
+        ∑ b : MonoidHom.range f.to_hom_units, c • ↑b :=
       Finset.sum_subtype _
         (by
           simp )
         _ _ = c • ∑ b : MonoidHom.range f.to_hom_units, (b : R) :=
-      smul_sum.symm _ = c • 0 := congr_arg2ₓ _ rfl _ _ = 0 := smul_zero _
-  · show (univ.filter fun g : G => f.to_hom_units g = u).card = c
+      smul_sum.symm _ = c • 0 :=
+      congr_arg2ₓ _ rfl _-- remaining goal 2, proven below
+        _ =
+        0 :=
+      smul_zero _
+  · -- remaining goal 1
+    show (univ.filter fun g : G => f.to_hom_units g = u).card = c
     apply card_fiber_eq_of_mem_range f.to_hom_units
     · simpa only [mem_image, mem_univ, exists_prop_of_true, Set.mem_range] using hu
       
     · exact ⟨1, f.to_hom_units.map_one⟩
       
     
+  -- remaining goal 2
   show (∑ b : MonoidHom.range f.to_hom_units, (b : R)) = 0
   calc (∑ b : MonoidHom.range f.to_hom_units, (b : R)) = ∑ n in range (orderOf x), x ^ n :=
       Eq.symm <|

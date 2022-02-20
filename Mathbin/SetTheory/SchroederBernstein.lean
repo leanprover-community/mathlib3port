@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2017 Johannes Hölzl. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johannes Hölzl, Mario Carneiro
+-/
 import Mathbin.Order.FixedPoints
 import Mathbin.Order.Zorn
 
@@ -101,7 +106,7 @@ theorem min_injective (I : Nonempty ι) : ∃ i, Nonempty (∀ j, β i ↪ β j)
   let ⟨s, hs, ms⟩ :=
     show ∃ s ∈ sets, ∀, ∀ a ∈ sets, ∀, s ⊆ a → a = s from
       Zorn.zorn_subset sets fun c hc hcc =>
-        ⟨⋃₀c, fun x ⟨p, hpc, hxp⟩ y ⟨q, hqc, hyq⟩ i hi =>
+        ⟨⋃₀c, fun i hi =>
           (hcc.Total hpc hqc).elim (fun h => hc hqc x (h hxp) y hyq i hi) fun h => hc hpc x hxp y (h hyq) i hi, fun _ =>
           subset_sUnion_of_mem⟩
   let ⟨i, e⟩ :=
@@ -138,7 +143,7 @@ end Wo
 
 /-- The cardinals are totally ordered. See `cardinal.linear_order` for (one of) the lattice
 instance. -/
-theorem Total {α : Type u} {β : Type v} : Nonempty (α ↪ β) ∨ Nonempty (β ↪ α) :=
+theorem total {α : Type u} {β : Type v} : Nonempty (α ↪ β) ∨ Nonempty (β ↪ α) :=
   match @min_injective Bool (fun b => cond b (Ulift α) (Ulift.{max u v, v} β)) ⟨true⟩ with
   | ⟨tt, ⟨h⟩⟩ =>
     let ⟨f, hf⟩ := h false

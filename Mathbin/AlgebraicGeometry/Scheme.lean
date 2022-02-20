@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison
+-/
 import Mathbin.AlgebraicGeometry.Spec
 
 /-!
@@ -24,7 +29,7 @@ open Opposite
 
 namespace AlgebraicGeometry
 
--- ././Mathport/Syntax/Translate/Basic.lean:1165:11: unsupported: advanced extends in structure
+-- ././Mathport/Syntax/Translate/Basic.lean:1287:11: unsupported: advanced extends in structure
 /-- We define `Scheme` as a `X : LocallyRingedSpace`,
 along with a proof that every point has an open neighbourhood `U`
 so that that the restriction of `X` to `U` is isomorphic,
@@ -32,7 +37,7 @@ as a locally ringed space, to `Spec.to_LocallyRingedSpace.obj (op R)`
 for some `R : CommRing`.
 -/
 structure Scheme extends
-  "././Mathport/Syntax/Translate/Basic.lean:1165:11: unsupported: advanced extends in structure" where
+  "././Mathport/Syntax/Translate/Basic.lean:1287:11: unsupported: advanced extends in structure" where
   local_affine :
     ∀ x : to_LocallyRingedSpace,
       ∃ (U : OpenNhds x)(R : CommRingₓₓ),
@@ -51,7 +56,7 @@ protected abbrev sheaf (X : Scheme) :=
 
 /-- The forgetful functor from `Scheme` to `LocallyRingedSpace`. -/
 @[simps]
-def forget_to_LocallyRingedSpace : Scheme ⥤ LocallyRingedSpace :=
+def forgetToLocallyRingedSpace : Scheme ⥤ LocallyRingedSpace :=
   inducedFunctor _ deriving Full, Faithful
 
 @[simp]
@@ -61,7 +66,7 @@ theorem forget_to_LocallyRingedSpace_preimage {X Y : Scheme} (f : X ⟶ Y) :
 
 /-- The forgetful functor from `Scheme` to `Top`. -/
 @[simps]
-def forget_to_Top : Scheme ⥤ Top :=
+def forgetToTop : Scheme ⥤ Top :=
   Scheme.forget_to_LocallyRingedSpace ⋙ LocallyRingedSpace.forget_to_Top
 
 instance {X Y : Scheme} : HasLiftT (X ⟶ Y) (X.toSheafedSpace ⟶ Y.toSheafedSpace) :=
@@ -144,7 +149,7 @@ theorem inv_val_c_app {X Y : Scheme} (f : X ⟶ Y) [IsIso f] (U : Opens X.Carrie
 
 /-- The spectrum of a commutative ring, as a scheme.
 -/
-def Spec_obj (R : CommRingₓₓ) : Scheme where
+def specObj (R : CommRingₓₓ) : Scheme where
   local_affine := fun x => ⟨⟨⊤, trivialₓ⟩, R, ⟨(Spec.toLocallyRingedSpace.obj (op R)).restrictTopIso⟩⟩
   toLocallyRingedSpace := Spec.locallyRingedSpaceObj R
 
@@ -155,7 +160,7 @@ theorem Spec_obj_to_LocallyRingedSpace (R : CommRingₓₓ) :
 
 /-- The induced map of a ring homomorphism on the ring spectra, as a morphism of schemes.
 -/
-def Spec_map {R S : CommRingₓₓ} (f : R ⟶ S) : specObj S ⟶ specObj R :=
+def specMap {R S : CommRingₓₓ} (f : R ⟶ S) : specObj S ⟶ specObj R :=
   (Spec.locallyRingedSpaceMap f : Spec.locallyRingedSpaceObj S ⟶ Spec.locallyRingedSpaceObj R)
 
 @[simp]
@@ -168,7 +173,7 @@ theorem Spec_map_comp {R S T : CommRingₓₓ} (f : R ⟶ S) (g : S ⟶ T) : spe
 /-- The spectrum, as a contravariant functor from commutative rings to schemes.
 -/
 @[simps]
-def Spec : CommRingₓₓᵒᵖ ⥤ Scheme where
+def spec : CommRingₓₓᵒᵖ ⥤ Scheme where
   obj := fun R => specObj (unop R)
   map := fun R S f => specMap f.unop
   map_id' := fun R => by
@@ -178,7 +183,7 @@ def Spec : CommRingₓₓᵒᵖ ⥤ Scheme where
 
 /-- The empty scheme, as `Spec 0`.
 -/
-def Empty : Scheme :=
+def empty : Scheme :=
   specObj (CommRingₓₓ.of PUnit)
 
 instance : HasEmptyc Scheme :=
@@ -214,7 +219,7 @@ section BasicOpen
 variable (X : Scheme) {V U : Opens X.Carrier} (f g : X.Presheaf.obj (op U))
 
 /-- The subset of the underlying space where the given section does not vanish. -/
-def basic_open : Opens X.Carrier :=
+def basicOpen : Opens X.Carrier :=
   X.toLocallyRingedSpace.toRingedSpace.basicOpen f
 
 @[simp]
@@ -230,6 +235,7 @@ theorem mem_basic_open_top (f : X.Presheaf.obj (op ⊤)) (x : X.Carrier) :
 theorem basic_open_res (i : op U ⟶ op V) : X.basicOpen (X.Presheaf.map i f) = V ∩ X.basicOpen f :=
   RingedSpace.basic_open_res _ i f
 
+-- This should fire before `basic_open_res`.
 @[simp]
 theorem basic_open_res_eq (i : op U ⟶ op V) [IsIso i] : X.basicOpen (X.Presheaf.map i f) = X.basicOpen f :=
   RingedSpace.basic_open_res_eq _ i f

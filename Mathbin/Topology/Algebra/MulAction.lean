@@ -1,7 +1,11 @@
-import Mathbin.Topology.Algebra.Monoid
+/-
+Copyright (c) 2021 Yury Kudryashov. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yury Kudryashov
+-/
+import Mathbin.Topology.Algebra.Constructions
 import Mathbin.GroupTheory.GroupAction.Prod
 import Mathbin.GroupTheory.GroupAction.Basic
-import Mathbin.Topology.Homeomorph
 import Mathbin.Topology.Algebra.ConstMulAction
 
 /-!
@@ -113,11 +117,6 @@ instance Units.has_continuous_smul : HasContinuousSmul (M)ˣ X where
       continuous_smul.comp ((Units.continuous_coe.comp continuous_fst).prod_mk continuous_snd)
 
 end Monoidₓ
-
-@[to_additive]
-instance HasContinuousMul.has_continuous_smul {M : Type _} [Monoidₓ M] [TopologicalSpace M] [HasContinuousMul M] :
-    HasContinuousSmul M M :=
-  ⟨continuous_mul⟩
 
 @[to_additive]
 instance [HasScalar M X] [HasScalar M Y] [HasContinuousSmul M X] [HasContinuousSmul M Y] :

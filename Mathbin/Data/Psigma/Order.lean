@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison, Minchao Wu
+-/
 import Mathbin.Data.Sigma.Lex
 import Mathbin.Order.Lexicographic
 
@@ -36,14 +41,14 @@ namespace Psigma
 notation3 "Σₗ' " (...) ", " r:(scoped p => Lex Psigma p) => r
 
 /-- The lexicographical `≤` on a sigma type. -/
-instance lex.has_le [LT ι] [∀ i, LE (α i)] : LE (Σₗ' i, α i) where
-  le := Lex (· < ·) fun i => · ≤ ·
+instance Lex.hasLe [LT ι] [∀ i, LE (α i)] : LE (Σₗ' i, α i) where
+  le := Lex (· < ·) fun i => (· ≤ ·)
 
 /-- The lexicographical `<` on a sigma type. -/
-instance lex.has_lt [LT ι] [∀ i, LT (α i)] : LT (Σₗ' i, α i) where
-  lt := Lex (· < ·) fun i => · < ·
+instance Lex.hasLt [LT ι] [∀ i, LT (α i)] : LT (Σₗ' i, α i) where
+  lt := Lex (· < ·) fun i => (· < ·)
 
-instance lex.preorder [Preorderₓ ι] [∀ i, Preorderₓ (α i)] : Preorderₓ (Σₗ' i, α i) :=
+instance Lex.preorder [Preorderₓ ι] [∀ i, Preorderₓ (α i)] : Preorderₓ (Σₗ' i, α i) :=
   { Lex.hasLe, Lex.hasLt with le_refl := fun ⟨i, a⟩ => Lex.right _ le_rfl,
     le_trans := by
       rintro ⟨a₁, b₁⟩ ⟨a₂, b₂⟩ ⟨a₃, b₃⟩ ⟨h₁l, h₁r⟩ ⟨h₂l, h₂r⟩
@@ -83,7 +88,7 @@ instance lex.preorder [Preorderₓ ι] [∀ i, Preorderₓ (α i)] : Preorderₓ
          }
 
 /-- Dictionary / lexicographic partial_order for dependent pairs. -/
-instance lex.partial_order [PartialOrderₓ ι] [∀ i, PartialOrderₓ (α i)] : PartialOrderₓ (Σₗ' i, α i) :=
+instance Lex.partialOrder [PartialOrderₓ ι] [∀ i, PartialOrderₓ (α i)] : PartialOrderₓ (Σₗ' i, α i) :=
   { Lex.preorder with
     le_antisymm := by
       rintro ⟨a₁, b₁⟩ ⟨a₂, b₂⟩ (⟨_, _, _, _, hlt₁⟩ | ⟨_, _, _, hlt₁⟩) (⟨_, _, _, _, hlt₂⟩ | ⟨_, _, _, hlt₂⟩)
@@ -97,7 +102,7 @@ instance lex.partial_order [PartialOrderₓ ι] [∀ i, PartialOrderₓ (α i)] 
          }
 
 /-- Dictionary / lexicographic linear_order for pairs. -/
-instance lex.linear_order [LinearOrderₓ ι] [∀ i, LinearOrderₓ (α i)] : LinearOrderₓ (Σₗ' i, α i) :=
+instance Lex.linearOrder [LinearOrderₓ ι] [∀ i, LinearOrderₓ (α i)] : LinearOrderₓ (Σₗ' i, α i) :=
   { Lex.partialOrder with
     le_total := by
       rintro ⟨i, a⟩ ⟨j, b⟩

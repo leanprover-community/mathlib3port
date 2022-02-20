@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Yaël Dillies. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yaël Dillies
+-/
 import Mathbin.Data.Finset.LocallyFinite
 
 /-!
@@ -128,6 +133,7 @@ theorem card_fintype_Iic : Fintype.card (Set.Iic b) = b + 1 := by
 theorem card_fintype_Iio : Fintype.card (Set.Iio b) = b := by
   rw [Fintype.card_of_finset, card_Iio]
 
+-- TODO@Yaël: Generalize all the following lemmas to `succ_order`
 theorem Icc_succ_left : icc a.succ b = ioc a b := by
   ext x
   rw [mem_Icc, mem_Ioc, succ_le_iff]

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Johan Commelin. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johan Commelin, Eric Wieser
+-/
 import Mathbin.Algebra.DirectSum.Internal
 import Mathbin.Algebra.GradedMonoid
 import Mathbin.Data.Fintype.Card
@@ -28,13 +33,18 @@ variable {σ : Type _} {τ : Type _} {R : Type _} {S : Type _}
 
 /-- A multivariate polynomial `φ` is homogeneous of degree `n`
 if all monomials occuring in `φ` have degree `n`. -/
-def is_homogeneous [CommSemiringₓ R] (φ : MvPolynomial σ R) (n : ℕ) :=
+/-
+TODO
+* create definition for `∑ i in d.support, d i`
+* show that `mv_polynomial σ R ≃ₐ[R] ⨁ i, homogeneous_submodule σ R i`
+-/
+def IsHomogeneous [CommSemiringₓ R] (φ : MvPolynomial σ R) (n : ℕ) :=
   ∀ ⦃d⦄, coeff d φ ≠ 0 → (∑ i in d.support, d i) = n
 
 variable (σ R)
 
 /-- The submodule of homogeneous `mv_polynomial`s of degree `n`. -/
-noncomputable def homogeneous_submodule [CommSemiringₓ R] (n : ℕ) : Submodule R (MvPolynomial σ R) where
+noncomputable def homogeneousSubmodule [CommSemiringₓ R] (n : ℕ) : Submodule R (MvPolynomial σ R) where
   Carrier := { x | x.IsHomogeneous n }
   smul_mem' := fun r a ha c hc => by
     rw [coeff_smul] at hc
@@ -118,6 +128,7 @@ variable (σ) {R}
 
 theorem is_homogeneous_of_total_degree_zero {p : MvPolynomial σ R} (hp : p.totalDegree = 0) : IsHomogeneous p 0 := by
   erw [total_degree, Finset.sup_eq_bot_iff] at hp
+  -- we have to do this in two steps to stop simp changing bot to zero
   simp_rw [mem_support_iff]  at hp
   exact hp
 
@@ -158,14 +169,14 @@ theorem inj_right (hm : IsHomogeneous φ m) (hn : IsHomogeneous φ n) (hφ : φ 
 theorem add (hφ : IsHomogeneous φ n) (hψ : IsHomogeneous ψ n) : IsHomogeneous (φ + ψ) n :=
   (homogeneousSubmodule σ R n).add_mem hφ hψ
 
-theorem Sum {ι : Type _} (s : Finset ι) (φ : ι → MvPolynomial σ R) (n : ℕ) (h : ∀, ∀ i ∈ s, ∀, IsHomogeneous (φ i) n) :
+theorem sum {ι : Type _} (s : Finset ι) (φ : ι → MvPolynomial σ R) (n : ℕ) (h : ∀, ∀ i ∈ s, ∀, IsHomogeneous (φ i) n) :
     IsHomogeneous (∑ i in s, φ i) n :=
   (homogeneousSubmodule σ R n).sum_mem h
 
 theorem mul (hφ : IsHomogeneous φ m) (hψ : IsHomogeneous ψ n) : IsHomogeneous (φ * ψ) (m + n) :=
   homogeneous_submodule_mul m n <| Submodule.mul_mem_mul hφ hψ
 
-theorem Prod {ι : Type _} (s : Finset ι) (φ : ι → MvPolynomial σ R) (n : ι → ℕ)
+theorem prod {ι : Type _} (s : Finset ι) (φ : ι → MvPolynomial σ R) (n : ι → ℕ)
     (h : ∀, ∀ i ∈ s, ∀, IsHomogeneous (φ i) (n i)) : IsHomogeneous (∏ i in s, φ i) (∑ i in s, n i) := by
   classical
   revert h
@@ -196,7 +207,7 @@ theorem total_degree (hφ : IsHomogeneous φ n) (h : φ ≠ 0) : totalDegree φ 
 
 /-- The homogeneous submodules form a graded ring. This instance is used by `direct_sum.comm_semiring`
 and `direct_sum.algebra`. -/
-instance homogeneous_submodule.gcomm_semiring : SetLike.GradedMonoid (homogeneousSubmodule σ R) where
+instance HomogeneousSubmodule.gcomm_semiring : SetLike.GradedMonoid (homogeneousSubmodule σ R) where
   one_mem := is_homogeneous_one σ R
   mul_mem := fun i j xi xj => IsHomogeneous.mul
 
@@ -221,7 +232,7 @@ open Finset
 /-- `homogeneous_component n φ` is the part of `φ` that is homogeneous of degree `n`.
 See `sum_homogeneous_component` for the statement that `φ` is equal to the sum
 of all its homogeneous components. -/
-def homogeneous_component [CommSemiringₓ R] (n : ℕ) : MvPolynomial σ R →ₗ[R] MvPolynomial σ R :=
+def homogeneousComponent [CommSemiringₓ R] (n : ℕ) : MvPolynomial σ R →ₗ[R] MvPolynomial σ R :=
   (Submodule.subtype _).comp <| Finsupp.restrictDom _ _ { d | (∑ i in d.support, d i) = n }
 
 section HomogeneousComponent

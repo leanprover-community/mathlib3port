@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Yakov Pechersky. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yakov Pechersky
+-/
 import Mathbin.Data.Multiset.Sort
 import Mathbin.Data.Fintype.List
 import Mathbin.Data.List.Rotate
@@ -23,10 +28,13 @@ namespace List
 variable {α : Type _} [DecidableEq α]
 
 /-- Return the `z` such that `x :: z :: _` appears in `xs`, or `default` if there is no such `z`. -/
-def next_or : ∀ xs : List α x default : α, α
+def nextOr : ∀ xs : List α x default : α, α
   | [], x, default => default
   | [y], x, default => default
-  | y :: z :: xs, x, default => if x = y then z else next_or (z :: xs) x default
+  |-- Handles the not-found and the wraparound case
+      y ::
+      z :: xs,
+    x, default => if x = y then z else next_or (z :: xs) x default
 
 @[simp]
 theorem next_or_nil (x d : α) : nextOr [] x d = d :=
@@ -484,8 +492,8 @@ instance : Inhabited (Cycle α) :=
 
 /-- For `x : α`, `s : cycle α`, `x ∈ s` indicates that `x` occurs at least once in `s`.
 -/
-def mem (a : α) (s : Cycle α) : Prop :=
-  Quot.liftOn s (fun l => a ∈ l) fun l₁ l₂ e : l₁ ~r l₂ => propext <| e.mem_iff
+def Mem (a : α) (s : Cycle α) : Prop :=
+  Quot.liftOn s (fun l => a ∈ l) fun e : l₁ ~r l₂ => propext <| e.mem_iff
 
 instance : HasMem α (Cycle α) :=
   ⟨Mem⟩
@@ -503,7 +511,7 @@ instance [DecidableEq α] (x : α) (s : Cycle α) : Decidable (x ∈ s) :=
 /-- Reverse a `s : cycle α` by reversing the underlying `list`.
 -/
 def reverse (s : Cycle α) : Cycle α :=
-  Quot.map reverse (fun l₁ l₂ e : l₁ ~r l₂ => e.reverse) s
+  Quot.map reverse (fun e : l₁ ~r l₂ => e.reverse) s
 
 @[simp]
 theorem reverse_coe (l : List α) : (l : Cycle α).reverse = l.reverse :=
@@ -521,7 +529,7 @@ theorem reverse_reverse (s : Cycle α) : s.reverse.reverse = s :=
 /-- The length of the `s : cycle α`, which is the number of elements, counting duplicates.
 -/
 def length (s : Cycle α) : ℕ :=
-  Quot.liftOn s length fun l₁ l₂ e : l₁ ~r l₂ => e.Perm.length_eq
+  Quot.liftOn s length fun e : l₁ ~r l₂ => e.Perm.length_eq
 
 @[simp]
 theorem length_coe (l : List α) : length (l : Cycle α) = l.length :=
@@ -543,7 +551,7 @@ theorem length_subsingleton_iff {s : Cycle α} : Subsingleton s ↔ length s ≤
 theorem subsingleton_reverse_iff {s : Cycle α} : s.reverse.Subsingleton ↔ s.Subsingleton := by
   simp [length_subsingleton_iff]
 
-theorem subsingleton.congr {s : Cycle α} (h : Subsingleton s) : ∀ ⦃x⦄ hx : x ∈ s ⦃y⦄ hy : y ∈ s, x = y := by
+theorem Subsingleton.congr {s : Cycle α} (h : Subsingleton s) : ∀ ⦃x⦄ hx : x ∈ s ⦃y⦄ hy : y ∈ s, x = y := by
   induction' s using Quot.induction_on with l
   simp only [length_subsingleton_iff, length_coe, mk_eq_coe, le_iff_lt_or_eqₓ, Nat.lt_add_one_iff, length_eq_zero,
     length_eq_one, Nat.not_lt_zeroₓ, false_orₓ] at h
@@ -588,8 +596,8 @@ theorem length_nontrivial {s : Cycle α} (h : Nontrivial s) : 2 ≤ length s := 
 
 /-- The `s : cycle α` contains no duplicates.
 -/
-def nodup (s : Cycle α) : Prop :=
-  Quot.liftOn s Nodupₓ fun l₁ l₂ e : l₁ ~r l₂ => propext <| e.nodup_iff
+def Nodup (s : Cycle α) : Prop :=
+  Quot.liftOn s Nodupₓ fun e : l₁ ~r l₂ => propext <| e.nodup_iff
 
 @[simp]
 theorem nodup_coe_iff {l : List α} : Nodup (l : Cycle α) ↔ l.Nodup :=
@@ -599,7 +607,7 @@ theorem nodup_coe_iff {l : List α} : Nodup (l : Cycle α) ↔ l.Nodup :=
 theorem nodup_reverse_iff {s : Cycle α} : s.reverse.Nodup ↔ s.Nodup :=
   Quot.induction_on s fun _ => nodup_reverse
 
-theorem subsingleton.nodup {s : Cycle α} (h : Subsingleton s) : Nodup s := by
+theorem Subsingleton.nodup {s : Cycle α} (h : Subsingleton s) : Nodup s := by
   induction' s using Quot.induction_on with l
   cases' l with hd tl
   · simp
@@ -609,7 +617,7 @@ theorem subsingleton.nodup {s : Cycle α} (h : Subsingleton s) : Nodup s := by
     simp [this]
     
 
-theorem nodup.nontrivial_iff {s : Cycle α} (h : Nodup s) : Nontrivial s ↔ ¬Subsingleton s := by
+theorem Nodup.nontrivial_iff {s : Cycle α} (h : Nodup s) : Nontrivial s ↔ ¬Subsingleton s := by
   rw [length_subsingleton_iff]
   induction s using Quotientₓ.induction_on'
   simp only [mk'_eq_coe, nodup_coe_iff] at h
@@ -617,8 +625,8 @@ theorem nodup.nontrivial_iff {s : Cycle α} (h : Nodup s) : Nontrivial s ↔ ¬S
 
 /-- The `s : cycle α` as a `multiset α`.
 -/
-def to_multiset (s : Cycle α) : Multiset α :=
-  Quotientₓ.liftOn' s (fun l => (l : Multiset α)) fun l₁ l₂ h : l₁ ~r l₂ => Multiset.coe_eq_coe.mpr h.Perm
+def toMultiset (s : Cycle α) : Multiset α :=
+  Quotientₓ.liftOn' s (fun l => (l : Multiset α)) fun h : l₁ ~r l₂ => Multiset.coe_eq_coe.mpr h.Perm
 
 /-- The lift of `list.map`.
 -/
@@ -628,7 +636,7 @@ def map {β : Type _} (f : α → β) : Cycle α → Cycle β :=
 /-- The `multiset` of lists that can make the cycle.
 -/
 def lists (s : Cycle α) : Multiset (List α) :=
-  (Quotientₓ.liftOn' s fun l => (l.cyclicPermutations : Multiset (List α))) fun l₁ l₂ h : l₁ ~r l₂ => by
+  (Quotientₓ.liftOn' s fun l => (l.cyclicPermutations : Multiset (List α))) fun h : l₁ ~r l₂ => by
     simpa using h.cyclic_permutations.perm
 
 @[simp]
@@ -643,7 +651,7 @@ variable [DecidableEq α]
 
 /-- Auxiliary decidability algorithm for lists that contain at least two unique elements.
 -/
-def decidable_nontrivial_coe : ∀ l : List α, Decidable (Nontrivial (l : Cycle α))
+def decidableNontrivialCoe : ∀ l : List α, Decidable (Nontrivial (l : Cycle α))
   | [] =>
     isFalse
       (by
@@ -670,7 +678,7 @@ instance {s : Cycle α} : Decidable (Nontrivial s) :=
 instance {s : Cycle α} : Decidable (Nodup s) :=
   Quot.recOnSubsingletonₓ s fun l : List α => List.nodupDecidableₓ l
 
-instance fintype_nodup_cycle [Fintype α] : Fintype { s : Cycle α // s.Nodup } :=
+instance fintypeNodupCycle [Fintype α] : Fintype { s : Cycle α // s.Nodup } :=
   Fintype.ofSurjective
     (fun l : { l : List α // l.Nodup } =>
       ⟨l.val, by
@@ -681,7 +689,7 @@ instance fintype_nodup_cycle [Fintype α] : Fintype { s : Cycle α // s.Nodup } 
       ⟨⟨s, hs⟩, by
         simp ⟩
 
-instance fintype_nodup_nontrivial_cycle [Fintype α] : Fintype { s : Cycle α // s.Nodup ∧ s.Nontrivial } :=
+instance fintypeNodupNontrivialCycle [Fintype α] : Fintype { s : Cycle α // s.Nodup ∧ s.Nontrivial } :=
   Fintype.subtype
     (((Finset.univ : Finset { s : Cycle α // s.Nodup }).map (Function.Embedding.subtype _)).filter Cycle.Nontrivial)
     (by
@@ -689,12 +697,12 @@ instance fintype_nodup_nontrivial_cycle [Fintype α] : Fintype { s : Cycle α //
 
 /-- The `s : cycle α` as a `finset α`.
 -/
-def to_finset (s : Cycle α) : Finset α :=
+def toFinset (s : Cycle α) : Finset α :=
   s.toMultiset.toFinset
 
 /-- Given a `s : cycle α` such that `nodup s`, retrieve the next element after `x ∈ s`. -/
 def next : ∀ s : Cycle α hs : Nodup s x : α hx : x ∈ s, α := fun s =>
-  Quot.hrecOnₓ s (fun l hn x hx => next l x hx) fun l₁ l₂ h : l₁ ~r l₂ =>
+  Quot.hrecOnₓ s (fun l hn x hx => next l x hx) fun h : l₁ ~r l₂ =>
     Function.hfunext (propext h.nodup_iff) fun h₁ h₂ he =>
       Function.hfunext rfl fun x y hxy =>
         Function.hfunext
@@ -708,7 +716,7 @@ def next : ∀ s : Cycle α hs : Nodup s x : α hx : x ∈ s, α := fun s =>
 
 /-- Given a `s : cycle α` such that `nodup s`, retrieve the previous element before `x ∈ s`. -/
 def prev : ∀ s : Cycle α hs : Nodup s x : α hx : x ∈ s, α := fun s =>
-  Quot.hrecOnₓ s (fun l hn x hx => prev l x hx) fun l₁ l₂ h : l₁ ~r l₂ =>
+  Quot.hrecOnₓ s (fun l hn x hx => prev l x hx) fun h : l₁ ~r l₂ =>
     Function.hfunext (propext h.nodup_iff) fun h₁ h₂ he =>
       Function.hfunext rfl fun x y hxy =>
         Function.hfunext

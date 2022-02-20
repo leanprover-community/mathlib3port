@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Reid Barton. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Reid Barton
+-/
 import Mathbin.Tactic.Core
 
 /-!
@@ -12,7 +17,7 @@ namespace Tactic
 
 /-- Possible reducibility attributes for a declaration:
 reducible, semireducible (the default), irreducible. -/
-inductive decl_reducibility
+inductive DeclReducibility
   | reducible
   | semireducible
   | irreducible
@@ -35,13 +40,16 @@ unsafe def get_decl_reducibility (n : Name) : tactic DeclReducibility := do
           if e n then pure decl_reducibility.semireducible else fail f! "get_decl_reducibility: no declaration {n}"
 
 /-- Return the attribute (as a `name`) corresponding to a reducibility level. -/
-def decl_reducibility.to_attribute : DeclReducibility → Name
+def DeclReducibility.toAttribute : DeclReducibility → Name
   | decl_reducibility.reducible => `reducible
   | decl_reducibility.semireducible => `semireducible
   | decl_reducibility.irreducible => `irreducible
 
 /-- Set the reducibility attribute of a declaration.
 If `persistent := ff`, this is scoped to the enclosing `section`, like `local attribute`. -/
+-- Note: even though semireducible definitions don't have the `semireducible` attribute
+-- (according to `has_attribute`), setting `semireducible` still has the intended effect
+-- of clearing `reducible`/`irreducible`.
 unsafe def set_decl_reducibility (n : Name) (r : DeclReducibility) (persistent := false) : tactic Unit :=
   set_basic_attribute r.toAttribute n persistent
 

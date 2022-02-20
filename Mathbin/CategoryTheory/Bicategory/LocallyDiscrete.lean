@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2022 Yuma Mizuno. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yuma Mizuno
+-/
 import Mathbin.CategoryTheory.DiscreteCategory
 import Mathbin.CategoryTheory.Bicategory.Functor
 import Mathbin.CategoryTheory.Bicategory.Strict
@@ -26,7 +31,7 @@ variable (C : Type u)
 /-- A type alias for promoting any category to a bicategory,
 with the only 2-morphisms being equalities.
 -/
-def locally_discrete :=
+def LocallyDiscrete :=
   C
 
 namespace LocallyDiscrete
@@ -50,7 +55,7 @@ variable (C) [Category.{v} C]
 1-morphisms are the same as those in the underlying category, and the 2-morphisms are the
 equalities between 1-morphisms.
 -/
-instance locally_discrete_bicategory : Bicategory (LocallyDiscrete C) where
+instance locallyDiscreteBicategory : Bicategory (LocallyDiscrete C) where
   whiskerLeft := fun X Y Z f g h η => eqToHom (congr_arg2ₓ (· ≫ ·) rfl (eq_of_hom η))
   whiskerRight := fun X Y Z f g η h => eqToHom (congr_arg2ₓ (· ≫ ·) (eq_of_hom η) rfl)
   associator := fun W X Y Z f g h => eqToIso (Category.assoc f g h)
@@ -58,7 +63,7 @@ instance locally_discrete_bicategory : Bicategory (LocallyDiscrete C) where
   rightUnitor := fun X Y f => eqToIso (Category.comp_id f)
 
 /-- A locally discrete bicategory is strict. -/
-instance locally_discrete_bicategory.strict : Strict (LocallyDiscrete C) :=
+instance locallyDiscreteBicategory.strict : Strict (LocallyDiscrete C) :=
   {  }
 
 variable {I : Type u₁} [Category.{v₁} I] {B : Type u₂} [Bicategory.{w₂, v₂} B] [Strict B]
@@ -67,7 +72,7 @@ variable {I : Type u₁} [Category.{v₁} I] {B : Type u₂} [Bicategory.{w₂, 
 be promoted to an oplax functor from `locally_discrete I` to `B`.
 -/
 @[simps]
-def functor.to_oplax_functor (F : I ⥤ B) : OplaxFunctor (LocallyDiscrete I) B :=
+def Functor.toOplaxFunctor (F : I ⥤ B) : OplaxFunctor (LocallyDiscrete I) B :=
   { F with map₂ := fun i j f g η => eqToHom (congr_argₓ _ (eq_of_hom η)), map_id := fun i => eqToHom (F.map_id i),
     map_comp := fun i j k f g => eqToHom (F.map_comp f g) }
 

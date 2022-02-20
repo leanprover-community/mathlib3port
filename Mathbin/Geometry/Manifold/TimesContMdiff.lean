@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Sébastien Gouëzel. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Sébastien Gouëzel
+-/
 import Mathbin.Geometry.Manifold.Mfderiv
 import Mathbin.Geometry.Manifold.LocalInvariantProperties
 
@@ -49,15 +54,26 @@ open_locale TopologicalSpace Manifold
 /-! ### Definition of smooth functions between manifolds -/
 
 
-variable {𝕜 : Type _} [NondiscreteNormedField 𝕜] {E : Type _} [NormedGroup E] [NormedSpace 𝕜 E] {H : Type _}
-  [TopologicalSpace H] (I : ModelWithCorners 𝕜 E H) {M : Type _} [TopologicalSpace M] [ChartedSpace H M]
-  [Is : SmoothManifoldWithCorners I M] {E' : Type _} [NormedGroup E'] [NormedSpace 𝕜 E'] {H' : Type _}
-  [TopologicalSpace H'] (I' : ModelWithCorners 𝕜 E' H') {M' : Type _} [TopologicalSpace M'] [ChartedSpace H' M']
-  [I's : SmoothManifoldWithCorners I' M'] {F : Type _} [NormedGroup F] [NormedSpace 𝕜 F] {G : Type _}
-  [TopologicalSpace G] {J : ModelWithCorners 𝕜 F G} {N : Type _} [TopologicalSpace N] [ChartedSpace G N]
-  [Js : SmoothManifoldWithCorners J N] {F' : Type _} [NormedGroup F'] [NormedSpace 𝕜 F'] {G' : Type _}
-  [TopologicalSpace G'] {J' : ModelWithCorners 𝕜 F' G'} {N' : Type _} [TopologicalSpace N'] [ChartedSpace G' N']
-  [J's : SmoothManifoldWithCorners J' N'] {f f₁ : M → M'} {s s₁ t : Set M} {x : M} {m n : WithTop ℕ}
+variable {𝕜 : Type _} [NondiscreteNormedField 𝕜]
+  -- declare a smooth manifold `M` over the pair `(E, H)`.
+  {E : Type _}
+  [NormedGroup E] [NormedSpace 𝕜 E] {H : Type _} [TopologicalSpace H] (I : ModelWithCorners 𝕜 E H) {M : Type _}
+  [TopologicalSpace M] [ChartedSpace H M] [Is : SmoothManifoldWithCorners I M]
+  -- declare a smooth manifold `M'` over the pair `(E', H')`.
+  {E' : Type _}
+  [NormedGroup E'] [NormedSpace 𝕜 E'] {H' : Type _} [TopologicalSpace H'] (I' : ModelWithCorners 𝕜 E' H') {M' : Type _}
+  [TopologicalSpace M'] [ChartedSpace H' M'] [I's : SmoothManifoldWithCorners I' M']
+  -- declare a smooth manifold `N` over the pair `(F, G)`.
+  {F : Type _}
+  [NormedGroup F] [NormedSpace 𝕜 F] {G : Type _} [TopologicalSpace G] {J : ModelWithCorners 𝕜 F G} {N : Type _}
+  [TopologicalSpace N] [ChartedSpace G N] [Js : SmoothManifoldWithCorners J N]
+  -- declare a smooth manifold `N'` over the pair `(F', G')`.
+  {F' : Type _}
+  [NormedGroup F'] [NormedSpace 𝕜 F'] {G' : Type _} [TopologicalSpace G'] {J' : ModelWithCorners 𝕜 F' G'} {N' : Type _}
+  [TopologicalSpace N'] [ChartedSpace G' N'] [J's : SmoothManifoldWithCorners J' N']
+  -- declare functions, sets, points and smoothness indices
+  {f f₁ : M → M'}
+  {s s₁ t : Set M} {x : M} {m n : WithTop ℕ}
 
 /-- Property in the model space of a model with corners of being `C^n` within at set at a point,
 when read in the model vector space. This property will be lifted to manifolds to define smooth
@@ -610,6 +626,8 @@ theorem times_cont_mdiff_within_at_iff_times_cont_mdiff_on_nhds {n : ℕ} :
     TimesContMdiffWithinAt I I' n f s x ↔ ∃ u ∈ 𝓝[insert x s] x, TimesContMdiffOn I I' n f u := by
   constructor
   · intro h
+    -- the property is true in charts. We will pull such a good neighborhood in the chart to the
+    -- manifold. For this, we need to restrict to a small enough set where everything makes sense
     obtain ⟨o, o_open, xo, ho, h'o⟩ :
       ∃ o : Set M, IsOpen o ∧ x ∈ o ∧ o ⊆ (chart_at H x).Source ∧ o ∩ s ⊆ f ⁻¹' (chart_at H' (f x)).Source := by
       have : (chart_at H' (f x)).Source ∈ 𝓝 (f x) :=
@@ -626,7 +644,10 @@ theorem times_cont_mdiff_within_at_iff_times_cont_mdiff_on_nhds {n : ℕ} :
         
     have h' : TimesContMdiffWithinAt I I' n f (s ∩ o) x := h.mono (inter_subset_left _ _)
     simp only [TimesContMdiffWithinAt, lift_prop_within_at, TimesContDiffWithinAtProp] at h'
+    -- let `u` be a good neighborhood in the chart where the function is smooth
     rcases h.2.TimesContDiffOn le_rfl with ⟨u, u_nhds, u_subset, hu⟩
+    -- pull it back to the manifold, and intersect with a suitable neighborhood of `x`, to get the
+    -- desired good neighborhood `v`.
     let v := insert x s ∩ o ∩ extChartAt I x ⁻¹' u
     have v_incl : v ⊆ (chart_at H x).Source := fun y hy => ho hy.1.2
     have v_incl' : ∀, ∀ y ∈ v, ∀, f y ∈ (chart_at H' (f x)).Source := by
@@ -786,14 +807,14 @@ theorem TimesContMdiffWithinAt.comp {t : Set M'} {g : M' → M''} (x : M) (hg : 
       _ _
   · filter_upwards [A]
     rintro x' ⟨hx', ht, hfx', hgfx'⟩
-    simp only [*, mem_preimage, writtenInExtChartAt, · ∘ ·, mem_inter_eq, e'.left_inv, true_andₓ]
+    simp only [*, mem_preimage, writtenInExtChartAt, (· ∘ ·), mem_inter_eq, e'.left_inv, true_andₓ]
     exact mem_range_self _
     
   · filter_upwards [A]
     rintro x' ⟨hx', ht, hfx', hgfx'⟩
-    simp only [*, · ∘ ·, writtenInExtChartAt, e'.left_inv]
+    simp only [*, (· ∘ ·), writtenInExtChartAt, e'.left_inv]
     
-  · simp only [writtenInExtChartAt, · ∘ ·, mem_ext_chart_source, e.left_inv, e'.left_inv]
+  · simp only [writtenInExtChartAt, (· ∘ ·), mem_ext_chart_source, e.left_inv, e'.left_inv]
     
 
 /-- The composition of `C^n` functions on domains is `C^n`. -/
@@ -915,7 +936,7 @@ variable {c : M'}
 theorem times_cont_mdiff_const : TimesContMdiff I I' n fun x : M => c := by
   intro x
   refine' ⟨continuous_within_at_const, _⟩
-  simp only [TimesContDiffWithinAtProp, · ∘ ·]
+  simp only [TimesContDiffWithinAtProp, (· ∘ ·)]
   exact times_cont_diff_within_at_const
 
 @[to_additive]
@@ -1130,6 +1151,7 @@ theorem TimesContMdiffOn.times_cont_mdiff_on_tangent_map_within_aux {f : H → H
     TimesContDiffOn 𝕜 m
       (fun p : E × E => ((I' (f (I.symm p.fst)), (mfderivWithin I I' f s (I.symm p.fst) : E → E') p.snd) : E' × E'))
       ((range I ∩ I.symm ⁻¹' s) ×ˢ (univ : Set E))
+  -- check that all bits in this formula are `C^n`
   have hf' := times_cont_mdiff_on_iff.1 hf
   have A : TimesContDiffOn 𝕜 m (I' ∘ f ∘ I.symm) (range I ∩ I.symm ⁻¹' s) := by
     simpa only with mfld_simps using (hf'.2 (I.symm 0) (I'.symm 0)).of_le m_le_n
@@ -1161,6 +1183,23 @@ is `C^m` when `m+1 ≤ n`. -/
 theorem TimesContMdiffOn.times_cont_mdiff_on_tangent_map_within (hf : TimesContMdiffOn I I' n f s) (hmn : m + 1 ≤ n)
     (hs : UniqueMdiffOn I s) :
     TimesContMdiffOn I.tangent I'.tangent m (tangentMapWithin I I' f s) (TangentBundle.proj I M ⁻¹' s) := by
+  /- The strategy of the proof is to avoid unfolding the definitions, and reduce by functoriality
+    to the case of functions on the model spaces, where we have already proved the result.
+    Let `l` and `r` be the charts to the left and to the right, so that we have
+    ```
+       l^{-1}      f       r
+    H --------> M ---> M' ---> H'
+    ```
+    Then the tangent map `T(r ∘ f ∘ l)` is smooth by a previous result. Consider the composition
+    ```
+        Tl        T(r ∘ f ∘ l^{-1})         Tr^{-1}
+    TM -----> TH -------------------> TH' ---------> TM'
+    ```
+    where `Tr^{-1}` and `Tl` are the tangent maps of `r^{-1}` and `l`. Writing `Tl` and `Tr^{-1}` as
+    composition of charts (called `Dl` and `il` for `l` and `Dr` and `ir` in the proof below), it
+    follows that they are smooth. The composition of all these maps is `Tf`, and is therefore smooth
+    as a composition of smooth maps.
+    -/
   have m_le_n : m ≤ n := by
     apply le_transₓ _ hmn
     have : m + 0 ≤ m + 1 := add_le_add_left (zero_le _) _
@@ -1169,6 +1208,7 @@ theorem TimesContMdiffOn.times_cont_mdiff_on_tangent_map_within (hf : TimesContM
     apply le_transₓ _ hmn
     change 0 + 1 ≤ m + 1
     exact add_le_add_right (zero_le _) _
+  -- First step: local reduction on the space, to a set `s'` which is contained in chart domains.
   refine' times_cont_mdiff_on_of_locally_times_cont_mdiff_on fun p hp => _
   have hf' := times_cont_mdiff_on_iff.1 hf
   simp [TangentBundle.proj] at hp
@@ -1202,6 +1242,10 @@ theorem TimesContMdiffOn.times_cont_mdiff_on_tangent_map_within (hf : TimesContM
       exact h
       
     
+  /- Second step: check that all functions are smooth, and use the chain rule to write the bundled
+    derivative as a composition of a function between model spaces and of charts.
+    Convention: statements about the differentiability of `a ∘ b ∘ c` are named `diff_abc`. Statements
+    about differentiability in the bundle have a `_lift` suffix. -/
   have U' : UniqueMdiffOn I s' := by
     apply UniqueMdiffOn.inter _ l.open_source
     rw [ho, inter_comm]
@@ -1237,6 +1281,7 @@ theorem TimesContMdiffOn.times_cont_mdiff_on_tangent_map_within (hf : TimesContM
     apply TimesContMdiffOn.comp A diff_irrfl_lift fun p hp => _
     simp' only [s'l_lift, TangentBundle.proj] with mfld_simps  at hp
     simp' only [ir, @LocalEquiv.refl_coe (ModelProd H' E'), hp] with mfld_simps
+  -- conclusion of this step: the composition of all the maps above is smooth
   have diff_DrirrflilDl :
     TimesContMdiffOn I.tangent I'.tangent m (Dr.symm ∘ (ir ∘ tangentMapWithin I I' (r ∘ f ∘ l.symm) s'l) ∘ il.symm ∘ Dl)
       s'_lift :=
@@ -1253,6 +1298,8 @@ theorem TimesContMdiffOn.times_cont_mdiff_on_tangent_map_within (hf : TimesContM
     apply TimesContMdiffOn.comp diff_Drirrfl_lift C fun p hp => _
     simp' only [s'_lift, TangentBundle.proj] with mfld_simps  at hp
     simp' only [il, s'l_lift, hp, TangentBundle.proj] with mfld_simps
+  /- Third step: check that the composition of all the maps indeed coincides with the derivative we
+    are looking for -/
   have eq_comp :
     ∀,
       ∀ q ∈ s'_lift,
@@ -1337,7 +1384,7 @@ theorem TimesContMdiffOn.times_cont_mdiff_on_tangent_map_within (hf : TimesContM
           U'q _
       apply hf.mdifferentiable_on one_le_n
       simp' only [hq] with mfld_simps
-    simp only [· ∘ ·, A, B, C, D, E.symm]
+    simp only [(· ∘ ·), A, B, C, D, E.symm]
   exact diff_DrirrflilDl.congr eq_comp
 
 /-- If a function is `C^n` on a domain with unique derivatives, with `1 ≤ n`, then its bundled
@@ -1376,7 +1423,7 @@ theorem times_cont_mdiff_proj : TimesContMdiff (I.Prod 𝓘(𝕜, E')) I n Z.toT
   intro x
   rw [TimesContMdiffAt, times_cont_mdiff_within_at_iff]
   refine' ⟨Z.to_topological_fiber_bundle_core.continuous_proj.continuous_at.continuous_within_at, _⟩
-  simp' only [· ∘ ·, chart_at, chart] with mfld_simps
+  simp' only [(· ∘ ·), chart_at, chart] with mfld_simps
   apply times_cont_diff_within_at_fst.congr
   · rintro ⟨a, b⟩ hab
     simp' only with mfld_simps  at hab
@@ -1481,7 +1528,7 @@ theorem smooth_within_at_proj {s : Set (TangentBundle I M)} {p : TangentBundle I
 variable (I M)
 
 /-- The zero section of the tangent bundle -/
-def zero_section : M → TangentBundle I M := fun x => ⟨x, 0⟩
+def zeroSection : M → TangentBundle I M := fun x => ⟨x, 0⟩
 
 variable {I M}
 
@@ -1765,7 +1812,7 @@ theorem times_cont_mdiff_within_at_pi_space :
       ∀ i, TimesContMdiffWithinAt I 𝓘(𝕜, Fi i) n (fun x => φ x i) s x :=
   by
   simp only [times_cont_mdiff_within_at_iff'', continuous_within_at_pi, times_cont_diff_within_at_pi,
-    forall_and_distrib, writtenInExtChartAt, ext_chart_model_space_eq_id, · ∘ ·, LocalEquiv.refl_coe, id]
+    forall_and_distrib, writtenInExtChartAt, ext_chart_model_space_eq_id, (· ∘ ·), LocalEquiv.refl_coe, id]
 
 theorem times_cont_mdiff_on_pi_space :
     TimesContMdiffOn I 𝓘(𝕜, ∀ i, Fi i) n φ s ↔ ∀ i, TimesContMdiffOn I 𝓘(𝕜, Fi i) n (fun x => φ x i) s :=

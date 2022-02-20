@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Michael Howes. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Michael Howes
+-/
 import Mathbin.GroupTheory.FreeGroup
 import Mathbin.GroupTheory.QuotientGroup
 
@@ -40,6 +45,11 @@ def of {rels : Set (FreeGroup α)} (x : α) : PresentedGroup rels :=
 
 section ToGroup
 
+/-
+Presented groups satisfy a universal property. If `G` is a group and `f : α → G` is a map such that
+the images of `f` satisfy all the given relations, then `f` extends uniquely to a group homomorphism
+from `presented_group rels` to `G`.
+-/
 variable {G : Type} [Groupₓ G] {f : α → G} {rels : Set (FreeGroup α)}
 
 local notation "F" => FreeGroup.lift f
@@ -54,14 +64,14 @@ theorem to_group_eq_one_of_mem_closure : ∀, ∀ x ∈ Subgroup.normalClosure r
 
 /-- The extension of a map `f : α → G` that satisfies the given relations to a group homomorphism
 from `presented_group rels → G`. -/
-def to_group : PresentedGroup rels →* G :=
+def toGroup : PresentedGroup rels →* G :=
   QuotientGroup.lift (Subgroup.normalClosure rels) F (to_group_eq_one_of_mem_closure h)
 
 @[simp]
-theorem to_group.of {x : α} : toGroup h (of x) = f x :=
+theorem toGroup.of {x : α} : toGroup h (of x) = f x :=
   FreeGroup.lift.of
 
-theorem to_group.unique (g : PresentedGroup rels →* G) (hg : ∀ x : α, g (of x) = f x) : ∀ {x}, g x = toGroup h x :=
+theorem toGroup.unique (g : PresentedGroup rels →* G) (hg : ∀ x : α, g (of x) = f x) : ∀ {x}, g x = toGroup h x :=
   fun x => QuotientGroup.induction_on x fun _ => FreeGroup.lift.unique (g.comp (QuotientGroup.mk' _)) hg
 
 end ToGroup

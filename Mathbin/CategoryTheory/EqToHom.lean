@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Reid Barton. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Reid Barton, Scott Morrison
+-/
 import Mathbin.CategoryTheory.Opposites
 
 /-!
@@ -22,6 +27,7 @@ result in the various `eq_to_hom` morphisms to drop out at the appropriate momen
 
 universe v₁ v₂ u₁ u₂
 
+-- morphism levels before object levels. See note [category_theory universes].
 namespace CategoryTheory
 
 open Opposite
@@ -33,7 +39,7 @@ variable {C : Type u₁} [Category.{v₁} C]
 It is typically better to use this, rather than rewriting by the equality then using `𝟙 _`
 which usually leads to dependent type theory hell.
 -/
-def eq_to_hom {X Y : C} (p : X = Y) : X ⟶ Y := by
+def eqToHom {X Y : C} (p : X = Y) : X ⟶ Y := by
   rw [p] <;> exact 𝟙 _
 
 @[simp]
@@ -77,17 +83,17 @@ theorem congr_arg_mpr_hom_right {X Y Z : C} (p : X ⟶ Y) (q : Z = Y) :
 It is typically better to use this, rather than rewriting by the equality then using `iso.refl _`
 which usually leads to dependent type theory hell.
 -/
-def eq_to_iso {X Y : C} (p : X = Y) : X ≅ Y :=
+def eqToIso {X Y : C} (p : X = Y) : X ≅ Y :=
   ⟨eqToHom p, eqToHom p.symm, by
     simp , by
     simp ⟩
 
 @[simp]
-theorem eq_to_iso.hom {X Y : C} (p : X = Y) : (eqToIso p).Hom = eqToHom p :=
+theorem eqToIso.hom {X Y : C} (p : X = Y) : (eqToIso p).Hom = eqToHom p :=
   rfl
 
 @[simp]
-theorem eq_to_iso.inv {X Y : C} (p : X = Y) : (eqToIso p).inv = eqToHom p.symm :=
+theorem eqToIso.inv {X Y : C} (p : X = Y) : (eqToIso p).inv = eqToHom p.symm :=
   rfl
 
 @[simp]
@@ -145,6 +151,7 @@ theorem hext {F G : C ⥤ D} (h_obj : ∀ X, F.obj X = G.obj X) (h_map : ∀ X Y
   funext X Y f
   exact eq_of_heq (h_map X Y f)
 
+-- Using equalities between functors.
 theorem congr_obj {F G : C ⥤ D} (h : F = G) X : F.obj X = G.obj X := by
   subst h
 
@@ -167,7 +174,7 @@ theorem eq_to_hom_app {F G : C ⥤ D} (h : F = G) (X : C) : (eqToHom h : F ⟶ G
   by
   subst h <;> rfl
 
-theorem nat_trans.congr {F G : C ⥤ D} (α : F ⟶ G) {X Y : C} (h : X = Y) :
+theorem NatTrans.congr {F G : C ⥤ D} (α : F ⟶ G) {X Y : C} (h : X = Y) :
     α.app X = F.map (eqToHom h) ≫ α.app Y ≫ G.map (eqToHom h.symm) := by
   rw [α.naturality_assoc]
   simp

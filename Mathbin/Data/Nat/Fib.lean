@@ -1,5 +1,12 @@
+/-
+Copyright (c) 2019 Kevin Kappelmann. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Kevin Kappelmann
+-/
 import Mathbin.Data.Nat.Gcd
 import Mathbin.Logic.Function.Iterate
+import Mathbin.Data.Finset.NatAntidiagonal
+import Mathbin.Algebra.BigOperators.Basic
 import Mathbin.Tactic.Ring
 
 /-!
@@ -11,12 +18,13 @@ Definition of the Fibonacci sequence `F₀ = 0, F₁ = 1, Fₙ₊₂ = Fₙ + F�
 
 ## Main Definitions
 
-- `fib` returns the stream of Fibonacci numbers.
+- `nat.fib` returns the stream of Fibonacci numbers.
 
 ## Main Statements
 
-- `fib_add_two` : shows that `fib` indeed satisfies the Fibonacci recurrence `Fₙ₊₂ = Fₙ + Fₙ₊₁.`.
-- `fib_gcd`     : `fib n` is a strong divisibility sequence.
+- `nat.fib_add_two`: shows that `fib` indeed satisfies the Fibonacci recurrence `Fₙ₊₂ = Fₙ + Fₙ₊₁.`.
+- `nat.fib_gcd`: `fib n` is a strong divisibility sequence.
+- `nat.fib_succ_eq_sum_choose`: `fib` is given by the sum of `nat.choose` along an antidiagonal.
 
 ## Implementation Notes
 
@@ -27,6 +35,8 @@ For efficiency purposes, the sequence is defined using `stream.iterate`.
 fib, fibonacci
 -/
 
+
+open_locale BigOperators
 
 namespace Nat
 
@@ -84,9 +94,11 @@ theorem fib_add_two_strict_mono : StrictMono fun n => fib (n + 2) := by
 
 theorem le_fib_self {n : ℕ} (five_le_n : 5 ≤ n) : n ≤ fib n := by
   induction' five_le_n with n five_le_n IH
-  · rfl
+  · -- 5 ≤ fib 5
+    rfl
     
-  · rw [succ_le_iff]
+  · -- n + 1 ≤ fib (n + 1) for 5 ≤ n
+    rw [succ_le_iff]
     calc n ≤ fib n := IH _ < fib (n + 1) :=
         fib_lt_fib_succ
           (le_transₓ
@@ -153,6 +165,11 @@ theorem fib_gcd (m n : ℕ) : fib (gcdₓ m n) = gcdₓ (fib m) (fib n) := by
 
 theorem fib_dvd (m n : ℕ) (h : m ∣ n) : fib m ∣ fib n := by
   rwa [gcd_eq_left_iff_dvd, ← fib_gcd, gcd_eq_left_iff_dvd.mp]
+
+theorem fib_succ_eq_sum_choose : ∀ n : ℕ, fib (n + 1) = ∑ p in Finset.Nat.antidiagonal n, choose p.1 p.2 :=
+  twoStepInduction rfl rfl fun n h1 h2 => by
+    rw [fib_add_two, h1, h2, Finset.Nat.antidiagonal_succ_succ', Finset.Nat.antidiagonal_succ']
+    simp [choose_succ_succ, Finset.sum_add_distrib, add_left_commₓ]
 
 end Nat
 

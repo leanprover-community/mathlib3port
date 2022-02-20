@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Eric Wieser. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Eric Wieser
+-/
 import Mathbin.Data.Dfinsupp.Basic
 import Mathbin.Data.Equiv.Module
 import Mathbin.Data.Finsupp.Basic
@@ -215,7 +220,7 @@ noncomputable def finsuppLequivDfinsupp [DecidableEq ι] [Semiringₓ R] [AddCom
 
 section Sigma
 
--- ././Mathport/Syntax/Translate/Basic.lean:1406:4: ignoring doc comment on noncomputable theory
+-- ././Mathport/Syntax/Translate/Basic.lean:1528:4: ignoring doc comment on noncomputable theory
 noncomputable section
 
 open_locale Classical
@@ -279,6 +284,7 @@ theorem sigma_finsupp_equiv_dfinsupp_single [Zero N] (a : Σ i, η i) (n : N) :
     simp [h]
   rw [Finsupp.single_apply, if_neg H]
 
+-- Without this Lean fails to find the `add_zero_class` instance on `Π₀ i, (η i →₀ N)`.
 attribute [-instance] Finsupp.hasZero
 
 @[simp]
@@ -297,6 +303,7 @@ def sigmaFinsuppAddEquivDfinsupp [AddZeroClass N] : ((Σ i, η i) →₀ N) ≃+
 
 attribute [-instance] Finsupp.addZeroClass
 
+--tofix: r • (sigma_finsupp_equiv_dfinsupp f) doesn't work.
 @[simp]
 theorem sigma_finsupp_equiv_dfinsupp_smul {R} [Monoidₓ R] [AddMonoidₓ N] [DistribMulAction R N] (r : R)
     (f : (Σ i, η i) →₀ N) :

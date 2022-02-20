@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Kenny Lau. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Kenny Lau
+-/
 import Mathbin.Algebra.CharP.Basic
 import Mathbin.Data.MvPolynomial.CommRing
 import Mathbin.Data.MvPolynomial.Equiv
@@ -35,11 +40,11 @@ instance {R : Type u} [Semiringₓ R] (p : ℕ) [h : CharP R p] : CharP R[X] p :
 variable (R : Type u) [CommRingₓ R]
 
 /-- The `R`-submodule of `R[X]` consisting of polynomials of degree ≤ `n`. -/
-def degree_le (n : WithBot ℕ) : Submodule R R[X] :=
+def degreeLe (n : WithBot ℕ) : Submodule R R[X] :=
   ⨅ k : ℕ, ⨅ h : ↑k > n, (lcoeff R k).ker
 
 /-- The `R`-submodule of `R[X]` consisting of polynomials of degree < `n`. -/
-def degree_lt (n : ℕ) : Submodule R R[X] :=
+def degreeLt (n : ℕ) : Submodule R R[X] :=
   ⨅ k : ℕ, ⨅ h : k ≥ n, (lcoeff R k).ker
 
 variable {R}
@@ -100,7 +105,7 @@ theorem degree_lt_eq_span_X_pow {n : ℕ} :
   exact lt_of_le_of_ltₓ (degree_X_pow_le _) (WithBot.coe_lt_coe.2 <| Finset.mem_range.1 hk)
 
 /-- The first `n` coefficients on `degree_lt n` form a linear equivalence with `fin n → F`. -/
-def degree_lt_equiv (F : Type _) [Field F] (n : ℕ) : degreeLt F n ≃ₗ[F] Finₓ n → F where
+def degreeLtEquiv (F : Type _) [Field F] (n : ℕ) : degreeLt F n ≃ₗ[F] Finₓ n → F where
   toFun := fun p n => (↑p : F[X]).coeff n
   invFun := fun f =>
     ⟨∑ i : Finₓ n, monomial i (f i),
@@ -236,7 +241,7 @@ variable (p : R[X]) (T : Subring R)
 
 /-- Given a polynomial `p` and a subring `T` that contains the coefficients of `p`,
 return the corresponding polynomial whose coefficients are in `T. -/
-def to_subring (hp : (↑p.frange : Set R) ⊆ T) : T[X] :=
+def toSubring (hp : (↑p.frange : Set R) ⊆ T) : T[X] :=
   ∑ i in p.support,
     monomial i (⟨p.coeff i, if H : p.coeff i = 0 then H.symm ▸ T.zero_mem else hp (p.coeff_mem_frange _ H)⟩ : T)
 
@@ -314,7 +319,7 @@ variable (T : Subring R)
 
 /-- Given a polynomial whose coefficients are in some subring, return
 the corresponding polynomial whose coefficients are in the ambient ring. -/
-def of_subring (p : T[X]) : R[X] :=
+def ofSubring (p : T[X]) : R[X] :=
   ∑ i in p.support, monomial i (p.coeff i : R)
 
 theorem coeff_of_subring (p : T[X]) (n : ℕ) : coeff (ofSubring T p) n = (coeff p n : T) := by
@@ -424,8 +429,7 @@ theorem eval₂_C_mk_eq_zero {I : Ideal R} :
 /-- If `I` is an ideal of `R`, then the ring polynomials over the quotient ring `I.quotient` is
 isomorphic to the quotient of `polynomial R` by the ideal `map C I`,
 where `map C I` contains exactly the polynomials whose coefficients all lie in `I` -/
-def polynomial_quotient_equiv_quotient_polynomial (I : Ideal R) :
-    Polynomial (R ⧸ I) ≃+* R[X] ⧸ (map c I : Ideal R[X]) where
+def polynomialQuotientEquivQuotientPolynomial (I : Ideal R) : Polynomial (R ⧸ I) ≃+* R[X] ⧸ (map c I : Ideal R[X]) where
   toFun :=
     eval₂RingHom (Quotient.lift I ((Quotient.mk (map c I : Ideal R[X])).comp c) quotient_map_C_eq_zero)
       (Quotient.mk (map c I : Ideal R[X]) x)
@@ -539,7 +543,7 @@ theorem eq_zero_of_constant_mem_of_maximal (hR : IsField R) (I : Ideal R[X]) [hI
   rw [smul_eq_mul, ← C.map_mul, mul_comm y x, hy, RingHom.map_one]
 
 /-- Transport an ideal of `R[X]` to an `R`-submodule of `R[X]`. -/
-def of_polynomial (I : Ideal R[X]) : Submodule R R[X] where
+def ofPolynomial (I : Ideal R[X]) : Submodule R R[X] where
   Carrier := I.Carrier
   zero_mem' := I.zero_mem
   add_mem' := fun _ _ => I.add_mem
@@ -556,12 +560,12 @@ variable (I)
 
 /-- Given an ideal `I` of `R[X]`, make the `R`-submodule of `I`
 consisting of polynomials of degree ≤ `n`. -/
-def degree_le (n : WithBot ℕ) : Submodule R R[X] :=
+def degreeLe (n : WithBot ℕ) : Submodule R R[X] :=
   degreeLe R n⊓I.ofPolynomial
 
 /-- Given an ideal `I` of `R[X]`, make the ideal in `R` of
 leading coefficients of polynomials in `I` with degree ≤ `n`. -/
-def leading_coeff_nth (n : ℕ) : Ideal R :=
+def leadingCoeffNth (n : ℕ) : Ideal R :=
   (I.degreeLe n).map <| lcoeff R n
 
 theorem mem_leading_coeff_nth (n : ℕ) x : x ∈ I.leadingCoeffNth n ↔ ∃ p ∈ I, degree p ≤ n ∧ leadingCoeff p = x := by
@@ -609,7 +613,7 @@ theorem leading_coeff_nth_mono {m n : ℕ} (H : m ≤ n) : I.leadingCoeffNth m �
 
 /-- Given an ideal `I` in `R[X]`, make the ideal in `R` of the
 leading coefficients in `I`. -/
-def leading_coeff : Ideal R :=
+def leadingCoeff : Ideal R :=
   ⨆ n : ℕ, I.leadingCoeffNth n
 
 theorem mem_leading_coeff x : x ∈ I.leadingCoeff ↔ ∃ p ∈ I, Polynomial.leadingCoeff p = x := by
@@ -856,7 +860,7 @@ theorem is_noetherian_ring_fin [IsNoetherianRing R] : ∀ {n : ℕ}, IsNoetheria
 
 /-- The multivariate polynomial ring in finitely many variables over a noetherian ring
 is itself a noetherian ring. -/
-instance IsNoetherianRing [Fintype σ] [IsNoetherianRing R] : IsNoetherianRing (MvPolynomial σ R) :=
+instance is_noetherian_ring [Fintype σ] [IsNoetherianRing R] : IsNoetherianRing (MvPolynomial σ R) :=
   @is_noetherian_ring_of_ring_equiv (MvPolynomial (Finₓ (Fintype.card σ)) R) _ _ _
     (renameEquiv R (Fintype.equivFin σ).symm).toRingEquiv is_noetherian_ring_fin
 
@@ -1000,7 +1004,7 @@ theorem eval₂_C_mk_eq_zero {I : Ideal R} {a : MvPolynomial σ R} (ha : a ∈ (
 
 /-- If `I` is an ideal of `R`, then the ring `mv_polynomial σ I.quotient` is isomorphic as an
 `R`-algebra to the quotient of `mv_polynomial σ R` by the ideal generated by `I`. -/
-def quotient_equiv_quotient_mv_polynomial (I : Ideal R) :
+def quotientEquivQuotientMvPolynomial (I : Ideal R) :
     MvPolynomial σ (R ⧸ I) ≃ₐ[R] MvPolynomial σ R ⧸ (Ideal.map c I : Ideal (MvPolynomial σ R)) where
   toFun :=
     eval₂Hom
@@ -1053,7 +1057,7 @@ open UniqueFactorizationMonoid
 
 variable {D : Type u} [CommRingₓ D] [IsDomain D] [UniqueFactorizationMonoid D]
 
-instance (priority := 100) UniqueFactorizationMonoid : UniqueFactorizationMonoid (Polynomial D) := by
+instance (priority := 100) unique_factorization_monoid : UniqueFactorizationMonoid (Polynomial D) := by
   have := arbitrary (NormalizationMonoid D)
   have := to_normalized_gcd_monoid D
   exact ufm_of_gcd_of_wf_dvd_monoid

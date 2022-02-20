@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Jalex Stark. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Jalex Stark, Scott Morrison, Eric Wieser, Oliver Nash
+-/
 import Mathbin.Data.Matrix.Basic
 import Mathbin.LinearAlgebra.Matrix.Trace
 
@@ -26,7 +31,7 @@ variable [Semiringₓ α]
 /-- `std_basis_matrix i j a` is the matrix with `a` in the `i`-th row, `j`-th column,
 and zeroes elsewhere.
 -/
-def std_basis_matrix (i : m) (j : n) (a : α) : Matrix m n α := fun i' j' => if i = i' ∧ j = j' then a else 0
+def stdBasisMatrix (i : m) (j : n) (a : α) : Matrix m n α := fun i' j' => if i = i' ∧ j = j' then a else 0
 
 @[simp]
 theorem smul_std_basis_matrix (i : m) (j : n) (a b : α) : b • stdBasisMatrix i j a = stdBasisMatrix i j (b • a) := by
@@ -59,12 +64,16 @@ theorem matrix_eq_sum_std_basis (x : Matrix n m α) [Fintype n] [Fintype m] :
     simp [std_basis_matrix, hj]
     
 
+-- TODO: tie this up with the `basis` machinery of linear algebra
+-- this is not completely trivial because we are indexing by two types, instead of one
+-- TODO: add `std_basis_vec`
 theorem std_basis_eq_basis_mul_basis (i : m) (j : n) :
     stdBasisMatrix i j 1 = vecMulVecₓ (fun i' => ite (i = i') 1 0) fun j' => ite (j = j') 1 0 := by
   ext
   norm_num [std_basis_matrix, vec_mul_vec]
   exact ite_and _ _ _ _
 
+-- todo: the old proof used fintypes, I don't know `finsupp` but this feels generalizable
 @[elab_as_eliminator]
 protected theorem induction_on' [Fintype m] [Fintype n] {P : Matrix m n α → Prop} (M : Matrix m n α) (h_zero : P 0)
     (h_add : ∀ p q, P p → P q → P (p + q)) (h_std_basis : ∀ i : m j : n x : α, P (stdBasisMatrix i j x)) : P M := by

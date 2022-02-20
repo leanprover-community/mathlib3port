@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Kevin Buzzard. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Kevin Buzzard, Ines Wright, Joachim Breitner
+-/
 import Mathbin.GroupTheory.GeneralCommutator
 import Mathbin.GroupTheory.QuotientGroup
 import Mathbin.GroupTheory.Solvable
@@ -147,6 +152,7 @@ theorem mem_upper_central_series_succ_iff (n : ℕ) (x : G) :
   Iff.rfl
 
 /-- A group `G` is nilpotent if its upper central series is eventually `G`. -/
+-- is_nilpotent is already defined in the root namespace (for elements of rings).
 class Groupₓ.IsNilpotent (G : Type _) [Groupₓ G] : Prop where
   nilpotent {} : ∃ n : ℕ, upperCentralSeries G n = ⊤
 
@@ -262,8 +268,8 @@ theorem lower_central_series_zero : lowerCentralSeries G 0 = ⊤ :=
   rfl
 
 @[simp]
-theorem lower_central_series_one : lowerCentralSeries G 1 = commutator G := by
-  simp [lowerCentralSeries]
+theorem lower_central_series_one : lowerCentralSeries G 1 = commutator G :=
+  rfl
 
 theorem mem_lower_central_series_succ_iff (n : ℕ) (q : G) :
     q ∈ lowerCentralSeries G (n + 1) ↔
@@ -545,6 +551,7 @@ theorem nilpotency_class_quotient_le (H : Subgroup G) [H.Normal] [h : IsNilpoten
     Groupₓ.nilpotencyClass (G ⧸ H) ≤ Groupₓ.nilpotencyClass G :=
   nilpotency_class_le_of_surjective _ _
 
+-- This technical lemma helps with rewriting the subgroup, which occurs in indices
 private theorem comap_center_subst {H₁ H₂ : Subgroup G} [Normal H₁] [Normal H₂] (h : H₁ = H₂) :
     comap (mk' H₁) (center (G ⧸ H₁)) = comap (mk' H₂) (center (G ⧸ H₂)) := by
   subst h
@@ -702,6 +709,7 @@ section Classical
 open_locale Classical
 
 /-- A p-group is nilpotent -/
+-- to get the fintype instance for quotient groups
 theorem IsPGroup.is_nilpotent {G : Type _} [hG : Groupₓ G] [hf : Fintype G] {p : ℕ} (hp : Fact (Nat.Prime p))
     (h : IsPGroup p G) : IsNilpotent G := by
   revert hG
@@ -723,6 +731,7 @@ theorem IsPGroup.is_nilpotent {G : Type _} [hG : Groupₓ G] [hf : Fintype G] {p
 end Classical
 
 theorem normalizer_condition_of_is_nilpotent [h : IsNilpotent G] : NormalizerCondition G := by
+  -- roughly based on https://groupprops.subwiki.org/wiki/Nilpotent_implies_normalizer_condition
   rw [normalizer_condition_iff_only_full_group_self_normalizing]
   induction' h using nilpotent_center_quotient_ind with G' _ _ G' _ _ ih <;> clear _inst_1 G <;> rename' G' => G
   · rintro H -

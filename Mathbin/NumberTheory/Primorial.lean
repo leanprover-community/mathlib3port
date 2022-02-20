@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Patrick Stevens. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Patrick Stevens
+-/
 import Mathbin.Tactic.RingExp
 import Mathbin.Data.Nat.Parity
 import Mathbin.Data.Nat.Choose.Sum

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison, Nicolò Cavalleri
+-/
 import Mathbin.Topology.Algebra.Module.Basic
 import Mathbin.Topology.ContinuousFunction.Ordered
 import Mathbin.Topology.Algebra.UniformGroup
@@ -42,7 +47,7 @@ variable {α : Type _} {β : Type _} {γ : Type _}
 variable [TopologicalSpace α] [TopologicalSpace β] [TopologicalSpace γ]
 
 @[to_additive]
-instance Mul [Mul β] [HasContinuousMul β] : Mul C(α, β) :=
+instance hasMul [Mul β] [HasContinuousMul β] : Mul C(α, β) :=
   ⟨fun f g => ⟨f * g, continuous_mul.comp (f.Continuous.prod_mk g.Continuous : _)⟩⟩
 
 @[simp, norm_cast, to_additive]
@@ -67,11 +72,11 @@ theorem coe_one [One β] : ((1 : C(α, β)) : α → β) = (1 : α → β) :=
 theorem one_comp [One γ] (g : C(α, β)) : (1 : C(β, γ)).comp g = 1 :=
   rfl
 
-instance has_nsmul [AddMonoidₓ β] [HasContinuousAdd β] : HasScalar ℕ C(α, β) :=
+instance hasNsmul [AddMonoidₓ β] [HasContinuousAdd β] : HasScalar ℕ C(α, β) :=
   ⟨fun n f => ⟨n • f, f.Continuous.nsmul n⟩⟩
 
 @[to_additive has_nsmul]
-instance Pow [Monoidₓ β] [HasContinuousMul β] : Pow C(α, β) ℕ :=
+instance hasPow [Monoidₓ β] [HasContinuousMul β] : Pow C(α, β) ℕ :=
   ⟨fun f n => ⟨f ^ n, f.Continuous.pow n⟩⟩
 
 @[simp, norm_cast, to_additive coe_nsmul]
@@ -106,11 +111,11 @@ theorem coe_div [Div β] [HasContinuousDiv β] (f g : C(α, β)) : ⇑(f / g) = 
 theorem div_comp [Div γ] [HasContinuousDiv γ] (f g : C(β, γ)) (h : C(α, β)) : (f / g).comp h = f.comp h / g.comp h :=
   rfl
 
-instance has_zsmul [AddGroupₓ β] [TopologicalAddGroup β] : HasScalar ℤ C(α, β) where
+instance hasZsmul [AddGroupₓ β] [TopologicalAddGroup β] : HasScalar ℤ C(α, β) where
   smul := fun z f => ⟨z • f, f.Continuous.zsmul z⟩
 
 @[to_additive]
-instance has_zpow [Groupₓ β] [TopologicalGroup β] : Pow C(α, β) ℤ where
+instance hasZpow [Groupₓ β] [TopologicalGroup β] : Pow C(α, β) ℤ where
   pow := fun f z => ⟨f ^ z, f.Continuous.zpow z⟩
 
 @[simp, norm_cast, to_additive]
@@ -192,7 +197,7 @@ instance {α : Type _} {β : Type _} [TopologicalSpace α] [TopologicalSpace β]
 
 /-- Coercion to a function as an `monoid_hom`. Similar to `monoid_hom.coe_fn`. -/
 @[to_additive "Coercion to a function as an `add_monoid_hom`. Similar to `add_monoid_hom.coe_fn`.", simps]
-def coe_fn_monoid_hom {α : Type _} {β : Type _} [TopologicalSpace α] [TopologicalSpace β] [Monoidₓ β]
+def coeFnMonoidHom {α : Type _} {β : Type _} [TopologicalSpace α] [TopologicalSpace β] [Monoidₓ β]
     [HasContinuousMul β] : C(α, β) →* α → β where
   toFun := coeFn
   map_one' := coe_one
@@ -212,8 +217,8 @@ protected def _root_.monoid_hom.comp_left_continuous (α : Type _) {β : Type _}
 
 /-- Composition on the right as a `monoid_hom`. Similar to `monoid_hom.comp_hom'`. -/
 @[to_additive "Composition on the right as an `add_monoid_hom`. Similar to\n`add_monoid_hom.comp_hom'`.", simps]
-def comp_monoid_hom' {α : Type _} {β : Type _} {γ : Type _} [TopologicalSpace α] [TopologicalSpace β]
-    [TopologicalSpace γ] [MulOneClassₓ γ] [HasContinuousMul γ] (g : C(α, β)) : C(β, γ) →* C(α, γ) where
+def compMonoidHom' {α : Type _} {β : Type _} {γ : Type _} [TopologicalSpace α] [TopologicalSpace β] [TopologicalSpace γ]
+    [MulOneClassₓ γ] [HasContinuousMul γ] (g : C(α, β)) : C(β, γ) →* C(α, γ) where
   toFun := fun f => f.comp g
   map_one' := one_comp g
   map_mul' := fun f₁ f₂ => mul_comp f₁ f₂ g
@@ -323,7 +328,7 @@ protected def _root_.ring_hom.comp_left_continuous (α : Type _) {β : Type _} {
 
 /-- Coercion to a function as a `ring_hom`. -/
 @[simps]
-def coe_fn_ring_hom {α : Type _} {β : Type _} [TopologicalSpace α] [TopologicalSpace β] [Ringₓ β] [TopologicalRing β] :
+def coeFnRingHom {α : Type _} {β : Type _} [TopologicalSpace α] [TopologicalSpace β] [Ringₓ β] [TopologicalRing β] :
     C(α, β) →+* α → β :=
   { (coeFnMonoidHom : C(α, β) →* _), (coeFnAddMonoidHom : C(α, β) →+ _) with toFun := coeFn }
 
@@ -407,7 +412,7 @@ variable [HasContinuousAdd M] [Module R M] [HasContinuousConstSmul R M]
 
 variable [HasContinuousAdd M₂] [Module R M₂] [HasContinuousConstSmul R M₂]
 
-instance Module : Module R C(α, M) :=
+instance module : Module R C(α, M) :=
   Function.Injective.module R coeFnAddMonoidHom coe_injective coe_smul
 
 variable (R)
@@ -422,7 +427,7 @@ protected def _root_.continuous_linear_map.comp_left_continuous (α : Type _) [T
 
 /-- Coercion to a function as a `linear_map`. -/
 @[simps]
-def coe_fn_linear_map : C(α, M) →ₗ[R] α → M :=
+def coeFnLinearMap : C(α, M) →ₗ[R] α → M :=
   { (coeFnAddMonoidHom : C(α, M) →+ _) with toFun := coeFn, map_smul' := coe_smul }
 
 end ContinuousMap
@@ -496,6 +501,7 @@ protected def AlgHom.compLeftContinuous {α : Type _} [TopologicalSpace α] (g :
 def ContinuousMap.coeFnAlgHom : C(α, A) →ₐ[R] α → A where
   toFun := coeFn
   commutes' := fun r => rfl
+  -- `..(continuous_map.coe_fn_ring_hom : C(α, A) →+* _)` times out for some reason
   map_zero' := ContinuousMap.coe_zero
   map_one' := ContinuousMap.coe_one
   map_add' := ContinuousMap.coe_add
@@ -563,6 +569,9 @@ theorem Subalgebra.SeparatesPoints.strongly {s : Subalgebra 𝕜 C(α, 𝕜)} (h
   let f' := ((b - a) * (f x - f y)⁻¹) • (ContinuousMap.c (f x) - f) + ContinuousMap.c a
   refine' ⟨⟨f', _⟩, _, _⟩
   · simp only [f', SetLike.mem_coe, Subalgebra.mem_to_submodule]
+    -- TODO should there be a tactic for this?
+    -- We could add an attribute `@[subobject_mem]`, and a tactic
+    -- ``def subobject_mem := `[solve_by_elim with subobject_mem { max_depth := 10 }]``
     solve_by_elim(config := { max_depth := 6 }) [Subalgebra.add_mem, Subalgebra.smul_mem, Subalgebra.sub_mem,
       Subalgebra.algebra_map_mem]
     
@@ -573,6 +582,7 @@ theorem Subalgebra.SeparatesPoints.strongly {s : Subalgebra 𝕜 C(α, 𝕜)} (h
 
 end ContinuousMap
 
+-- TODO[gh-6025]: make this an instance once safe to do so
 theorem ContinuousMap.subsingleton_subalgebra (α : Type _) [TopologicalSpace α] (R : Type _) [CommSemiringₓ R]
     [TopologicalSpace R] [TopologicalRing R] [Subsingleton α] : Subsingleton (Subalgebra R C(α, R)) := by
   fconstructor
@@ -608,14 +618,14 @@ is naturally a module over the ring of continuous functions from `α` to `R`. -/
 
 namespace ContinuousMap
 
-instance has_scalar' {α : Type _} [TopologicalSpace α] {R : Type _} [Semiringₓ R] [TopologicalSpace R] {M : Type _}
+instance hasScalar' {α : Type _} [TopologicalSpace α] {R : Type _} [Semiringₓ R] [TopologicalSpace R] {M : Type _}
     [TopologicalSpace M] [AddCommMonoidₓ M] [Module R M] [HasContinuousSmul R M] : HasScalar C(α, R) C(α, M) :=
   ⟨fun f g => ⟨fun x => f x • g x, Continuous.smul f.2 g.2⟩⟩
 
 instance module' {α : Type _} [TopologicalSpace α] (R : Type _) [Ringₓ R] [TopologicalSpace R] [TopologicalRing R]
     (M : Type _) [TopologicalSpace M] [AddCommMonoidₓ M] [HasContinuousAdd M] [Module R M] [HasContinuousSmul R M] :
     Module C(α, R) C(α, M) where
-  smul := · • ·
+  smul := (· • ·)
   smul_add := fun c f g => by
     ext x <;> exact smul_add (c x) (f x) (g x)
   add_smul := fun c₁ c₂ f => by
@@ -643,6 +653,11 @@ section
 
 variable {R : Type _} [LinearOrderedField R]
 
+-- TODO:
+-- This lemma (and the next) could go all the way back in `algebra.order.field`,
+-- except that it is tedious to prove without tactics.
+-- Rather than stranding it at some intermediate location,
+-- it's here, immediately prior to the point of use.
 theorem min_eq_half_add_sub_abs_sub {x y : R} : min x y = 2⁻¹ * (x + y - abs (x - y)) := by
   cases' le_totalₓ x y with h h <;> field_simp [h, abs_of_nonneg, abs_of_nonpos, mul_two] <;> abel
 
@@ -663,6 +678,7 @@ theorem inf_eq (f g : C(α, β)) : f⊓g = (2⁻¹ : β) • (f + g - abs (f - g
   ext fun x => by
     simpa using min_eq_half_add_sub_abs_sub
 
+-- Not sure why this is grosser than `inf_eq`:
 theorem sup_eq (f g : C(α, β)) : f⊔g = (2⁻¹ : β) • (f + g + abs (f - g)) :=
   ext fun x => by
     simpa [mul_addₓ] using @max_eq_half_add_add_abs_sub _ _ (f x) (g x)

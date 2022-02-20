@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Yury Kudryashov. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yury Kudryashov
+-/
 import Mathbin.Logic.Function.Conjugate
 
 /-!
@@ -74,13 +79,13 @@ theorem iterate_fixed {x} (h : f x = x) (n : ℕ) : (f^[n]) x = x :=
   (Nat.recOn n rfl) fun n ihn => by
     rw [iterate_succ_apply, h, ihn]
 
-theorem injective.iterate (Hinj : Injective f) (n : ℕ) : Injective (f^[n]) :=
+theorem Injective.iterate (Hinj : Injective f) (n : ℕ) : Injective (f^[n]) :=
   (Nat.recOn n injective_id) fun n ihn => ihn.comp Hinj
 
-theorem surjective.iterate (Hsurj : Surjective f) (n : ℕ) : Surjective (f^[n]) :=
+theorem Surjective.iterate (Hsurj : Surjective f) (n : ℕ) : Surjective (f^[n]) :=
   (Nat.recOn n surjective_id) fun n ihn => ihn.comp Hsurj
 
-theorem bijective.iterate (Hbij : Bijective f) (n : ℕ) : Bijective (f^[n]) :=
+theorem Bijective.iterate (Hbij : Bijective f) (n : ℕ) : Bijective (f^[n]) :=
   ⟨Hbij.1.iterate n, Hbij.2.iterate n⟩
 
 namespace Semiconj
@@ -138,7 +143,7 @@ theorem iterate_iterate_self (m n : ℕ) : Commute (f^[m]) (f^[n]) :=
 
 end Commute
 
-theorem semiconj₂.iterate {f : α → α} {op : α → α → α} (hf : Semiconj₂ f op op) (n : ℕ) : Semiconj₂ (f^[n]) op op :=
+theorem Semiconj₂.iterate {f : α → α} {op : α → α → α} (hf : Semiconj₂ f op op) (n : ℕ) : Semiconj₂ (f^[n]) op op :=
   Nat.recOn n (Semiconj₂.id_left op) fun n ihn => ihn.comp hf
 
 variable (f)
@@ -156,25 +161,25 @@ theorem comp_iterate_pred_of_pos {n : ℕ} (hn : 0 < n) : f ∘ f^[n.pred] = f^[
   rw [← iterate_succ', Nat.succ_pred_eq_of_posₓ hn]
 
 /-- A recursor for the iterate of a function. -/
-def iterate.rec (p : α → Sort _) {f : α → α} (h : ∀ a, p a → p (f a)) {a : α} (ha : p a) (n : ℕ) : p ((f^[n]) a) :=
+def Iterate.rec (p : α → Sort _) {f : α → α} (h : ∀ a, p a → p (f a)) {a : α} (ha : p a) (n : ℕ) : p ((f^[n]) a) :=
   Nat.rec ha
     (fun m => by
       rw [iterate_succ']
       exact h _)
     n
 
-theorem iterate.rec_zero (p : α → Sort _) {f : α → α} (h : ∀ a, p a → p (f a)) {a : α} (ha : p a) :
+theorem Iterate.rec_zero (p : α → Sort _) {f : α → α} (h : ∀ a, p a → p (f a)) {a : α} (ha : p a) :
     Iterate.rec p h ha 0 = ha :=
   rfl
 
 variable {f}
 
-theorem left_inverse.iterate {g : α → α} (hg : LeftInverse g f) (n : ℕ) : LeftInverse (g^[n]) (f^[n]) :=
+theorem LeftInverse.iterate {g : α → α} (hg : LeftInverse g f) (n : ℕ) : LeftInverse (g^[n]) (f^[n]) :=
   (Nat.recOn n fun _ => rfl) fun n ihn => by
     rw [iterate_succ', iterate_succ]
     exact ihn.comp hg
 
-theorem right_inverse.iterate {g : α → α} (hg : RightInverse g f) (n : ℕ) : RightInverse (g^[n]) (f^[n]) :=
+theorem RightInverse.iterate {g : α → α} (hg : RightInverse g f) (n : ℕ) : RightInverse (g^[n]) (f^[n]) :=
   hg.iterate n
 
 theorem iterate_comm (f : α → α) (m n : ℕ) : f^[n]^[m] = f^[m]^[n] :=

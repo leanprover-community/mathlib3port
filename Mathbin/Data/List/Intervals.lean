@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison
+-/
 import Mathbin.Data.List.Lattice
 import Mathbin.Data.List.Range
 
@@ -26,7 +31,7 @@ namespace List
 See also `data/set/intervals.lean` for `set.Ico`, modelling intervals in general preorders, and
 `multiset.Ico` and `finset.Ico` for `n ≤ x < m` as a multiset or as a finset.
  -/
-def Ico (n m : ℕ) : List ℕ :=
+def ico (n m : ℕ) : List ℕ :=
   range' n (m - n)
 
 namespace Ico

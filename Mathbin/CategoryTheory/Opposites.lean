@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2017 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Stephen Morgan, Scott Morrison
+-/
 import Mathbin.CategoryTheory.Equivalence
 
 /-!
@@ -19,6 +24,7 @@ there are quite a few variations that are needed in practice.
 
 universe v₁ v₂ u₁ u₂
 
+-- morphism levels before object levels. See note [category_theory universes].
 open Opposite
 
 variable {C : Type u₁}
@@ -51,7 +57,7 @@ variable [Category.{v₁} C]
 
 See https://stacks.math.columbia.edu/tag/001M.
 -/
-instance category.opposite : Category.{v₁} (Cᵒᵖ) where
+instance Category.opposite : Category.{v₁} (Cᵒᵖ) where
   comp := fun _ _ _ f g => (g.unop ≫ f.unop).op
   id := fun X => (𝟙 (unop X)).op
 
@@ -85,19 +91,19 @@ variable (C)
 
 /-- The functor from the double-opposite of a category to the underlying category. -/
 @[simps]
-def op_op : Cᵒᵖᵒᵖ ⥤ C where
+def opOp : Cᵒᵖᵒᵖ ⥤ C where
   obj := fun X => unop (unop X)
   map := fun X Y f => f.unop.unop
 
 /-- The functor from a category to its double-opposite.  -/
 @[simps]
-def unop_unop : C ⥤ Cᵒᵖᵒᵖ where
+def unopUnop : C ⥤ Cᵒᵖᵒᵖ where
   obj := fun X => op (op X)
   map := fun X Y f => f.op.op
 
 /-- The double opposite category is equivalent to the original. -/
 @[simps]
-def op_op_equivalence : Cᵒᵖᵒᵖ ≌ C where
+def opOpEquivalence : Cᵒᵖᵒᵖ ≌ C where
   Functor := opOp C
   inverse := unopUnop C
   unitIso := Iso.refl (𝟭 (Cᵒᵖᵒᵖ))
@@ -172,14 +178,14 @@ protected def unop (F : Cᵒᵖ ⥤ Dᵒᵖ) : C ⥤ D where
 
 /-- The isomorphism between `F.op.unop` and `F`. -/
 @[simps]
-def op_unop_iso (F : C ⥤ D) : F.op.unop ≅ F :=
+def opUnopIso (F : C ⥤ D) : F.op.unop ≅ F :=
   NatIso.ofComponents (fun X => Iso.refl _)
     (by
       tidy)
 
 /-- The isomorphism between `F.unop.op` and `F`. -/
 @[simps]
-def unop_op_iso (F : Cᵒᵖ ⥤ Dᵒᵖ) : F.unop.op ≅ F :=
+def unopOpIso (F : Cᵒᵖ ⥤ Dᵒᵖ) : F.unop.op ≅ F :=
   NatIso.ofComponents (fun X => Iso.refl _)
     (by
       tidy)
@@ -189,7 +195,7 @@ variable (C D)
 /-- Taking the opposite of a functor is functorial.
 -/
 @[simps]
-def op_hom : (C ⥤ D)ᵒᵖ ⥤ Cᵒᵖ ⥤ Dᵒᵖ where
+def opHom : (C ⥤ D)ᵒᵖ ⥤ Cᵒᵖ ⥤ Dᵒᵖ where
   obj := fun F => (unop F).op
   map := fun F G α =>
     { app := fun X => (α.unop.app (unop X)).op,
@@ -198,7 +204,7 @@ def op_hom : (C ⥤ D)ᵒᵖ ⥤ Cᵒᵖ ⥤ Dᵒᵖ where
 /-- Take the "unopposite" of a functor is functorial.
 -/
 @[simps]
-def op_inv : (Cᵒᵖ ⥤ Dᵒᵖ) ⥤ (C ⥤ D)ᵒᵖ where
+def opInv : (Cᵒᵖ ⥤ Dᵒᵖ) ⥤ (C ⥤ D)ᵒᵖ where
   obj := fun F => op F.unop
   map := fun F G α =>
     Quiver.Hom.op
@@ -210,7 +216,7 @@ variable {C D}
 In informal mathematics no distinction is made.
 -/
 @[simps]
-protected def left_op (F : C ⥤ Dᵒᵖ) : Cᵒᵖ ⥤ D where
+protected def leftOp (F : C ⥤ Dᵒᵖ) : Cᵒᵖ ⥤ D where
   obj := fun X => unop (F.obj (unop X))
   map := fun X Y f => (F.map f.unop).unop
 
@@ -218,7 +224,7 @@ protected def left_op (F : C ⥤ Dᵒᵖ) : Cᵒᵖ ⥤ D where
 In informal mathematics no distinction is made.
 -/
 @[simps]
-protected def right_op (F : Cᵒᵖ ⥤ D) : C ⥤ Dᵒᵖ where
+protected def rightOp (F : Cᵒᵖ ⥤ D) : C ⥤ Dᵒᵖ where
   obj := fun X => op (F.obj (op X))
   map := fun X Y f => (F.map f.op).op
 
@@ -240,14 +246,14 @@ instance left_op_faithful {F : C ⥤ Dᵒᵖ} [Faithful F] : Faithful F.leftOp w
 
 /-- The isomorphism between `F.left_op.right_op` and `F`. -/
 @[simps]
-def left_op_right_op_iso (F : C ⥤ Dᵒᵖ) : F.leftOp.rightOp ≅ F :=
+def leftOpRightOpIso (F : C ⥤ Dᵒᵖ) : F.leftOp.rightOp ≅ F :=
   NatIso.ofComponents (fun X => Iso.refl _)
     (by
       tidy)
 
 /-- The isomorphism between `F.right_op.left_op` and `F`. -/
 @[simps]
-def right_op_left_op_iso (F : Cᵒᵖ ⥤ D) : F.rightOp.leftOp ≅ F :=
+def rightOpLeftOpIso (F : Cᵒᵖ ⥤ D) : F.rightOp.leftOp ≅ F :=
   NatIso.ofComponents (fun X => Iso.refl _)
     (by
       tidy)
@@ -292,7 +298,7 @@ theorem unop_id (F : Cᵒᵖ ⥤ Dᵒᵖ) : NatTrans.unop (𝟙 F) = 𝟙 F.unop
 we can take the "unopposite" of each component obtaining a natural transformation `G ⟶ F`.
 -/
 @[simps]
-protected def remove_op (α : F.op ⟶ G.op) : G ⟶ F where
+protected def removeOp (α : F.op ⟶ G.op) : G ⟶ F where
   app := fun X => (α.app (op X)).unop
   naturality' := by
     intro X Y f
@@ -314,7 +320,7 @@ variable {F G H : C ⥤ Dᵒᵖ}
 taking `unop` of each component gives a natural transformation `G.left_op ⟶ F.left_op`.
 -/
 @[simps]
-protected def left_op (α : F ⟶ G) : G.leftOp ⟶ F.leftOp where
+protected def leftOp (α : F ⟶ G) : G.leftOp ⟶ F.leftOp where
   app := fun X => (α.app (unop X)).unop
   naturality' := by
     intro X Y f
@@ -333,7 +339,7 @@ theorem left_op_comp (α : F ⟶ G) (β : G ⟶ H) : (α ≫ β).leftOp = β.lef
 taking `op` of each component gives a natural transformation `G ⟶ F`.
 -/
 @[simps]
-protected def remove_left_op (α : F.leftOp ⟶ G.leftOp) : G ⟶ F where
+protected def removeLeftOp (α : F.leftOp ⟶ G.leftOp) : G ⟶ F where
   app := fun X => (α.app (op X)).op
   naturality' := by
     intro X Y f
@@ -351,7 +357,7 @@ variable {F G H : Cᵒᵖ ⥤ D}
 taking `op` of each component gives a natural transformation `G.right_op ⟶ F.right_op`.
 -/
 @[simps]
-protected def right_op (α : F ⟶ G) : G.rightOp ⟶ F.rightOp where
+protected def rightOp (α : F ⟶ G) : G.rightOp ⟶ F.rightOp where
   app := fun X => (α.app _).op
   naturality' := by
     intro X Y f
@@ -370,7 +376,7 @@ theorem right_op_comp (α : F ⟶ G) (β : G ⟶ H) : (α ≫ β).rightOp = β.r
 taking `unop` of each component gives a natural transformation `G ⟶ F`.
 -/
 @[simps]
-protected def remove_right_op (α : F.rightOp ⟶ G.rightOp) : G ⟶ F where
+protected def removeRightOp (α : F.rightOp ⟶ G.rightOp) : G ⟶ F where
   app := fun X => (α.app X.unop).unop
   naturality' := by
     intro X Y f
@@ -443,7 +449,7 @@ protected def op (α : F ≅ G) : G.op ≅ F.op where
 /-- The natural isomorphism between functors `G ≅ F` induced by a natural isomorphism
 between the opposite functors `F.op ≅ G.op`. -/
 @[simps]
-protected def remove_op (α : F.op ≅ G.op) : G ≅ F where
+protected def removeOp (α : F.op ≅ G.op) : G ≅ F where
   Hom := NatTrans.removeOp α.Hom
   inv := NatTrans.removeOp α.inv
   hom_inv_id' := by
@@ -527,7 +533,7 @@ op_equiv _ _
 ```
 -/
 @[simps]
-def op_equiv (A B : Cᵒᵖ) : (A ⟶ B) ≃ (B.unop ⟶ A.unop) where
+def opEquiv (A B : Cᵒᵖ) : (A ⟶ B) ≃ (B.unop ⟶ A.unop) where
   toFun := fun f => f.unop
   invFun := fun g => g.op
   left_inv := fun _ => rfl
@@ -536,7 +542,7 @@ def op_equiv (A B : Cᵒᵖ) : (A ⟶ B) ≃ (B.unop ⟶ A.unop) where
 instance subsingleton_of_unop (A B : Cᵒᵖ) [Subsingleton (unop B ⟶ unop A)] : Subsingleton (A ⟶ B) :=
   (opEquiv A B).Subsingleton
 
-instance decidable_eq_of_unop (A B : Cᵒᵖ) [DecidableEq (unop B ⟶ unop A)] : DecidableEq (A ⟶ B) :=
+instance decidableEqOfUnop (A B : Cᵒᵖ) [DecidableEq (unop B ⟶ unop A)] : DecidableEq (A ⟶ B) :=
   (opEquiv A B).DecidableEq
 
 namespace Functor
@@ -548,7 +554,7 @@ variable (D : Type u₂) [Category.{v₂} D]
 /-- The equivalence of functor categories induced by `op` and `unop`.
 -/
 @[simps]
-def op_unop_equiv : (C ⥤ D)ᵒᵖ ≌ Cᵒᵖ ⥤ Dᵒᵖ where
+def opUnopEquiv : (C ⥤ D)ᵒᵖ ≌ Cᵒᵖ ⥤ Dᵒᵖ where
   Functor := opHom _ _
   inverse := opInv _ _
   unitIso :=
@@ -570,7 +576,7 @@ def op_unop_equiv : (C ⥤ D)ᵒᵖ ≌ Cᵒᵖ ⥤ Dᵒᵖ where
 /-- The equivalence of functor categories induced by `left_op` and `right_op`.
 -/
 @[simps]
-def left_op_right_op_equiv : (Cᵒᵖ ⥤ D)ᵒᵖ ≌ C ⥤ Dᵒᵖ where
+def leftOpRightOpEquiv : (Cᵒᵖ ⥤ D)ᵒᵖ ≌ C ⥤ Dᵒᵖ where
   Functor := { obj := fun F => F.unop.rightOp, map := fun F G η => η.unop.rightOp }
   inverse := { obj := fun F => op F.leftOp, map := fun F G η => η.leftOp.op }
   unitIso :=

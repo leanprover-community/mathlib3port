@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Jeremy Avigad. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Jeremy Avigad
+-/
 import Mathbin.Data.W.Basic
 
 /-!
@@ -30,13 +35,13 @@ instance : Inhabited Pfunctor :=
 variable (P : Pfunctor) {α β : Type u}
 
 /-- Applying `P` to an object of `Type` -/
-def obj (α : Type _) :=
+def Obj (α : Type _) :=
   Σ x : P.A, P.B x → α
 
 /-- Applying `P` to a morphism of `Type` -/
 def map {α β : Type _} (f : α → β) : P.Obj α → P.Obj β := fun ⟨a, g⟩ => ⟨a, f ∘ g⟩
 
-instance obj.inhabited [Inhabited P.A] [Inhabited α] : Inhabited (P.Obj α) :=
+instance Obj.inhabited [Inhabited P.A] [Inhabited α] : Inhabited (P.Obj α) :=
   ⟨⟨default, fun _ => default⟩⟩
 
 instance : Functor P.Obj where
@@ -60,6 +65,9 @@ adapt it to a packaged definition of polynomial functor -/
 def W :=
   WType P.B
 
+/- inhabitants of W types is awkward to encode as an instance
+assumption because there needs to be a value `a : P.A`
+such that `P.B a` is empty to yield a finite tree -/
 attribute [nolint has_inhabited_instance] W
 
 variable {P}
@@ -103,7 +111,7 @@ variable {P}
 
 /-- `x.iget i` takes the component of `x` designated by `i` if any is or returns
 a default value -/
-def obj.iget [DecidableEq P.A] {α} [Inhabited α] (x : P.Obj α) (i : P.Idx) : α :=
+def Obj.iget [DecidableEq P.A] {α} [Inhabited α] (x : P.Obj α) (i : P.Idx) : α :=
   if h : i.1 = x.1 then x.2 (cast (congr_argₓ _ h) i.2) else default
 
 @[simp]
@@ -119,6 +127,9 @@ theorem iget_map [DecidableEq P.A] {α β : Type u} [Inhabited α] [Inhabited β
 
 end Pfunctor
 
+/-
+Composition of polynomial functors.
+-/
 namespace Pfunctor
 
 /-- functor composition for polynomial functors -/
@@ -135,6 +146,9 @@ def comp.get (P₂ P₁ : Pfunctor.{u}) {α : Type} (x : (comp P₂ P₁).Obj α
 
 end Pfunctor
 
+/-
+Lifting predicates and relations.
+-/
 namespace Pfunctor
 
 variable {P : Pfunctor.{u}}

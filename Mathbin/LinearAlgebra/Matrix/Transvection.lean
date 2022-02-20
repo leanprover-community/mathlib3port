@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Sébastien Gouëzel. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Sébastien Gouëzel
+-/
 import Mathbin.Data.Matrix.Basis
 import Mathbin.Data.Matrix.Dmatrix
 import Mathbin.LinearAlgebra.Matrix.Determinant
@@ -140,7 +145,7 @@ variable (R n)
 This structure is easier to manipulate than transvections as one has a direct access to all the
 relevant fields. -/
 @[nolint has_inhabited_instance]
-structure transvection_struct where
+structure TransvectionStruct where
   (i j : n)
   hij : i ≠ j
   c : R
@@ -154,7 +159,7 @@ namespace TransvectionStruct
 variable {R n}
 
 /-- Associating to a `transvection_struct` the corresponding transvection matrix. -/
-def to_matrix (t : TransvectionStruct n R) : Matrix n n R :=
+def toMatrix (t : TransvectionStruct n R) : Matrix n n R :=
   transvection t.i t.j t.c
 
 @[simp]
@@ -231,7 +236,7 @@ open Sum
 
 /-- Given a `transvection_struct` on `n`, define the corresponding `transvection_struct` on `n ⊕ p`
 using the identity on `p`. -/
-def sum_inl (t : TransvectionStruct n R) : TransvectionStruct (Sum n p) R where
+def sumInl (t : TransvectionStruct n R) : TransvectionStruct (Sum n p) R where
   i := inl t.i
   j := inl t.j
   hij := by
@@ -275,7 +280,7 @@ variable {p}
 
 /-- Given a `transvection_struct` on `n` and an equivalence between `n` and `p`, define the
 corresponding `transvection_struct` on `p`. -/
-def reindex_equiv (e : n ≃ p) (t : TransvectionStruct n R) : TransvectionStruct p R where
+def reindexEquiv (e : n ≃ p) (t : TransvectionStruct n R) : TransvectionStruct p R where
   i := e t.i
   j := e t.j
   hij := by
@@ -332,12 +337,12 @@ open Sum Unit Finₓ TransvectionStruct
 
 /-- A list of transvections such that multiplying on the left with these transvections will replace
 the last column with zeroes. -/
-def list_transvec_col : List (Matrix (Sum (Finₓ r) Unit) (Sum (Finₓ r) Unit) 𝕜) :=
+def listTransvecCol : List (Matrix (Sum (Finₓ r) Unit) (Sum (Finₓ r) Unit) 𝕜) :=
   List.ofFnₓ fun i : Finₓ r => transvection (inl i) (inr star) <| -M (inl i) (inr star) / M (inr star) (inr star)
 
 /-- A list of transvections such that multiplying on the right with these transvections will replace
 the last row with zeroes. -/
-def list_transvec_row : List (Matrix (Sum (Finₓ r) Unit) (Sum (Finₓ r) Unit) 𝕜) :=
+def listTransvecRow : List (Matrix (Sum (Finₓ r) Unit) (Sum (Finₓ r) Unit) 𝕜) :=
   List.ofFnₓ fun i : Finₓ r => transvection (inr star) (inl i) <| -M (inr star) (inl i) / M (inr star) (inr star)
 
 /-- Multiplying by some of the matrices in `list_transvec_col M` does not change the last row. -/
@@ -546,9 +551,9 @@ theorem exists_is_two_block_diagonal_of_ne_zero (hM : M (inr star) (inr star) �
         simp , -M (inr star) (inl i) / M (inr star) (inr star)⟩
   refine' ⟨L, L', _⟩
   have A : L.map to_matrix = list_transvec_col M := by
-    simp [L, list_transvec_col, · ∘ ·]
+    simp [L, list_transvec_col, (· ∘ ·)]
   have B : L'.map to_matrix = list_transvec_row M := by
-    simp [L, list_transvec_row, · ∘ ·]
+    simp [L, list_transvec_row, (· ∘ ·)]
   rw [A, B]
   exact is_two_block_diagonal_list_transvec_col_mul_mul_list_transvec_row M hM
 
@@ -564,9 +569,13 @@ theorem exists_is_two_block_diagonal_list_transvec_mul_mul_list_transvec
       ⟨List.nil, List.nil, by
         simpa using H⟩
     
+  -- we have already proved this when the last coefficient is nonzero
   by_cases' hM : M (inr star) (inr star) ≠ 0
   · exact exists_is_two_block_diagonal_of_ne_zero M hM
     
+  -- when the last coefficient is zero but there is a nonzero coefficient on the last row or the
+  -- last column, we will first put this nonzero coefficient in last position, and then argue as
+  -- above.
   push_neg  at hM
   simp [not_and_distrib, is_two_block_diagonal, to_blocks₁₂, to_blocks₂₁] at H
   have : ∃ i : Finₓ r, M (inl i) (inr star) ≠ 0 ∨ M (inr star) (inl i) ≠ 0 := by

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Johan Commelin. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johan Commelin
+-/
 import Mathbin.RingTheory.WittVector.Frobenius
 import Mathbin.RingTheory.WittVector.Verschiebung
 import Mathbin.RingTheory.WittVector.MulP
@@ -27,6 +32,7 @@ variable {p : ℕ} {R : Type _} [hp : Fact p.Prime] [CommRingₓ R]
 
 local notation "𝕎" => WittVector p
 
+-- type as `\bbW`
 include hp
 
 noncomputable section

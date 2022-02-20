@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Yury G. Kudryashov. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yury G. Kudryashov, Patrick Massot
+-/
 import Mathbin.Data.Set.Intervals.Basic
 
 /-!
@@ -21,7 +26,7 @@ open Function
 namespace Set
 
 /-- Projection of `α` to the closed interval `[a, b]`. -/
-def proj_Icc (a b : α) (h : a ≤ b) (x : α) : Icc a b :=
+def projIcc (a b : α) (h : a ≤ b) (x : α) : Icc a b :=
   ⟨max a (min b x), le_max_leftₓ _ _, max_leₓ h (min_le_leftₓ _ _)⟩
 
 variable {a b : α} (h : a ≤ b) {x : α}
@@ -77,7 +82,7 @@ theorem strict_mono_on_proj_Icc : StrictMonoOn (projIcc a b h) (Icc a b) := fun 
   simpa only [proj_Icc_of_mem, hx, hy]
 
 /-- Extend a function `[a, b] → β` to a map `α → β`. -/
-def Icc_extend {a b : α} (h : a ≤ b) (f : Icc a b → β) : α → β :=
+def iccExtend {a b : α} (h : a ≤ b) (f : Icc a b → β) : α → β :=
   f ∘ projIcc a b h
 
 @[simp]

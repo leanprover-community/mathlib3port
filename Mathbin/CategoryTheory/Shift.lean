@@ -1,4 +1,9 @@
-import Mathbin.CategoryTheory.Limits.Shapes.Zero
+/-
+Copyright (c) 2020 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison, Johan Commelin, Andrew Yang
+-/
+import Mathbin.CategoryTheory.Limits.Preserves.Shapes.Zero
 import Mathbin.CategoryTheory.Monoidal.End
 import Mathbin.CategoryTheory.Monoidal.Discrete
 
@@ -80,7 +85,7 @@ variable {A C}
 /-- A monoidal functor from a group `A` into `C ⥤ C` induces
 a self-equivalence of `C` for each `n : A`. -/
 @[simps Functor inverse unit_iso_hom unit_iso_inv counit_iso_hom counit_iso_inv]
-def add_neg_equiv [AddGroupₓ A] (F : MonoidalFunctor (Discrete A) (C ⥤ C)) (n : A) : C ≌ C :=
+def addNegEquiv [AddGroupₓ A] (F : MonoidalFunctor (Discrete A) (C ⥤ C)) (n : A) : C ≌ C :=
   equivOfTensorIsoUnit F n (-n : A) (eqToIso (add_neg_selfₓ n)) (eqToIso (neg_add_selfₓ n)) (Subsingleton.elimₓ _ _)
 
 section Defs
@@ -89,12 +94,12 @@ variable (A C) [AddMonoidₓ A]
 
 /-- A category has a shift indexed by an additive monoid `A`
 if there is a monoidal functor from `A` to `C ⥤ C`. -/
-class has_shift (C : Type u) (A : Type _) [Category.{v} C] [AddMonoidₓ A] where
+class HasShift (C : Type u) (A : Type _) [Category.{v} C] [AddMonoidₓ A] where
   shift : MonoidalFunctor (Discrete A) (C ⥤ C)
 
 /-- A helper structure to construct the shift functor `(discrete A) ⥤ (C ⥤ C)`. -/
 @[nolint has_inhabited_instance]
-structure shift_mk_core where
+structure ShiftMkCore where
   f : A → C ⥤ C
   ε : 𝟭 C ≅ F 0
   μ : ∀ n m : A, F n ⋙ F m ≅ F (n + m)
@@ -130,7 +135,7 @@ structure shift_mk_core where
 
 /-- Constructs a `has_shift C A` instance from `shift_mk_core`. -/
 @[simps]
-def has_shift_mk (h : ShiftMkCore C A) : HasShift C A :=
+def hasShiftMk (h : ShiftMkCore C A) : HasShift C A :=
   ⟨{ Discrete.functor h.f with ε := h.ε.Hom, μ := fun m n => (h.μ m n).Hom,
       μ_natural' := by
         rintro _ _ _ _ ⟨⟨rfl⟩⟩ ⟨⟨rfl⟩⟩
@@ -160,26 +165,30 @@ def has_shift_mk (h : ShiftMkCore C A) : HasShift C A :=
 variable [HasShift C A]
 
 /-- The monoidal functor from `A` to `C ⥤ C` given a `has_shift` instance. -/
-def shift_monoidal_functor : MonoidalFunctor (Discrete A) (C ⥤ C) :=
+def shiftMonoidalFunctor : MonoidalFunctor (Discrete A) (C ⥤ C) :=
   has_shift.shift
 
 variable {A}
 
 /-- The shift autoequivalence, moving objects and morphisms 'up'. -/
-abbrev shift_functor (i : A) : C ⥤ C :=
+abbrev shiftFunctor (i : A) : C ⥤ C :=
   (shiftMonoidalFunctor C A).obj i
 
 /-- Shifting by `i + j` is the same as shifting by `i` and then shifting by `j`. -/
-abbrev shift_functor_add (i j : A) : shiftFunctor C (i + j) ≅ shiftFunctor C i ⋙ shiftFunctor C j :=
+abbrev shiftFunctorAdd (i j : A) : shiftFunctor C (i + j) ≅ shiftFunctor C i ⋙ shiftFunctor C j :=
   ((shiftMonoidalFunctor C A).μIso i j).symm
 
 variable (A)
 
 /-- Shifting by zero is the identity functor. -/
-abbrev shift_functor_zero : shiftFunctor C (0 : A) ≅ 𝟭 C :=
+abbrev shiftFunctorZero : shiftFunctor C (0 : A) ≅ 𝟭 C :=
   (shiftMonoidalFunctor C A).εIso.symm
 
-notation X "⟦" n "⟧" => (shiftFunctor _ n).obj X
+notation X "⟦" n "⟧" =>
+  (-- Any better notational suggestions?
+        shiftFunctor
+        _ n).obj
+    X
 
 notation f "⟦" n "⟧'" => (shiftFunctor _ n).map f
 
@@ -202,11 +211,11 @@ section AddMonoidₓ
 variable {C A} [AddMonoidₓ A] [HasShift C A] (X Y : C) (f : X ⟶ Y)
 
 @[simp]
-theorem has_shift.shift_obj_obj (n : A) (X : C) : (HasShift.shift.obj n).obj X = X⟦n⟧ :=
+theorem HasShift.shift_obj_obj (n : A) (X : C) : (HasShift.shift.obj n).obj X = X⟦n⟧ :=
   rfl
 
 /-- Shifting by `i + j` is the same as shifting by `i` and then shifting by `j`. -/
-abbrev shift_add (i j : A) : X⟦i + j⟧ ≅ X⟦i⟧⟦j⟧ :=
+abbrev shiftAdd (i j : A) : X⟦i + j⟧ ≅ X⟦i⟧⟦j⟧ :=
   (shiftFunctorAdd C i j).app _
 
 @[reassoc]
@@ -298,7 +307,7 @@ theorem shift_shift' (i j : A) : f⟦i⟧'⟦j⟧' = (shiftAdd X i j).inv ≫ f�
 variable (A)
 
 /-- Shifting by zero is the identity functor. -/
-abbrev shift_zero : X⟦0⟧ ≅ X :=
+abbrev shiftZero : X⟦0⟧ ≅ X :=
   (shiftFunctorZero C A).app _
 
 theorem shift_zero' : f⟦(0 : A)⟧' = (shiftZero A X).Hom ≫ f ≫ (shiftZero A Y).inv := by
@@ -313,7 +322,7 @@ variable {ι : Type _} {i j k : ι}
 
 /-- This definition is used instead of `eq_to_iso` so that the proof of `i = j` is visible
 to the simplifier -/
-def opaque_eq_to_iso (h : i = j) : @Iso (Discrete ι) _ i j :=
+def opaqueEqToIso (h : i = j) : @Iso (Discrete ι) _ i j :=
   eqToIso h
 
 @[simp]
@@ -341,11 +350,11 @@ variable (C) {A} [AddGroupₓ A] [HasShift C A]
 variable (X Y : C) (f : X ⟶ Y)
 
 /-- Shifting by `i` and then shifting by `-i` is the identity. -/
-abbrev shift_functor_comp_shift_functor_neg (i : A) : shiftFunctor C i ⋙ shiftFunctor C (-i) ≅ 𝟭 C :=
+abbrev shiftFunctorCompShiftFunctorNeg (i : A) : shiftFunctor C i ⋙ shiftFunctor C (-i) ≅ 𝟭 C :=
   unitOfTensorIsoUnit (shiftMonoidalFunctor C A) i (-i : A) (opaqueEqToIso (add_neg_selfₓ i))
 
 /-- Shifting by `-i` and then shifting by `i` is the identity. -/
-abbrev shift_functor_neg_comp_shift_functor (i : A) : shiftFunctor C (-i) ⋙ shiftFunctor C i ≅ 𝟭 C :=
+abbrev shiftFunctorNegCompShiftFunctor (i : A) : shiftFunctor C (-i) ⋙ shiftFunctor C i ≅ 𝟭 C :=
   unitOfTensorIsoUnit (shiftMonoidalFunctor C A) (-i : A) i (opaqueEqToIso (neg_add_selfₓ i))
 
 section
@@ -357,7 +366,7 @@ instance shift_functor_faithful (i : A) : Faithful (shiftFunctor C i) :=
   Faithful.of_comp_iso (shiftFunctorCompShiftFunctorNeg C i)
 
 /-- Shifting by `n` is a full functor. -/
-instance shift_functor_full (i : A) : Full (shiftFunctor C i) :=
+instance shiftFunctorFull (i : A) : Full (shiftFunctor C i) :=
   have : full (shift_functor C i ⋙ shift_functor C (-i)) := full.of_iso (shift_functor_comp_shift_functor_neg C i).symm
   full.of_comp_faithful _ (shift_functor C (-i))
 
@@ -366,7 +375,7 @@ instance shift_functor_ess_surj (i : A) : EssSurj (shiftFunctor C i) where
   mem_ess_image := fun Y => ⟨Y⟦-i⟧, ⟨(shiftFunctorNegCompShiftFunctor C i).app Y⟩⟩
 
 /-- Shifting by `n` is an equivalence. -/
-noncomputable instance shift_functor_is_equivalence (n : A) : IsEquivalence (shiftFunctor C n) :=
+noncomputable instance shiftFunctorIsEquivalence (n : A) : IsEquivalence (shiftFunctor C n) :=
   Equivalence.ofFullyFaithfullyEssSurj _
 
 end
@@ -374,11 +383,11 @@ end
 variable {C}
 
 /-- Shifting by `i` and then shifting by `-i` is the identity. -/
-abbrev shift_shift_neg (i : A) : X⟦i⟧⟦-i⟧ ≅ X :=
+abbrev shiftShiftNeg (i : A) : X⟦i⟧⟦-i⟧ ≅ X :=
   (shiftFunctorCompShiftFunctorNeg C i).app _
 
 /-- Shifting by `-i` and then shifting by `i` is the identity. -/
-abbrev shift_neg_shift (i : A) : X⟦-i⟧⟦i⟧ ≅ X :=
+abbrev shiftNegShift (i : A) : X⟦-i⟧⟦i⟧ ≅ X :=
   (shiftFunctorNegCompShiftFunctor C i).app _
 
 variable {X Y}
@@ -410,7 +419,7 @@ variable (C)
 
 /-- Shifting by `n` and shifting by `-n` forms an equivalence. -/
 @[simps]
-def shift_equiv (n : A) : C ≌ C :=
+def shiftEquiv (n : A) : C ≌ C :=
   { addNegEquiv (shiftMonoidalFunctor C A) n with Functor := shiftFunctor C n, inverse := shiftFunctor C (-n) }
 
 variable {C}
@@ -419,9 +428,8 @@ open CategoryTheory.Limits
 
 variable [HasZeroMorphisms C]
 
-@[simp]
-theorem shift_zero_eq_zero (X Y : C) (n : A) : (0 : X ⟶ Y)⟦n⟧' = (0 : X⟦n⟧ ⟶ Y⟦n⟧) := by
-  apply is_equivalence_preserves_zero_morphisms _ (shift_functor C n)
+theorem shift_zero_eq_zero (X Y : C) (n : A) : (0 : X ⟶ Y)⟦n⟧' = (0 : X⟦n⟧ ⟶ Y⟦n⟧) :=
+  CategoryTheory.Functor.map_zero _ _ _
 
 end AddGroupₓ
 
@@ -432,7 +440,7 @@ variable {C A} [AddCommMonoidₓ A] [HasShift C A]
 variable (X Y : C) (f : X ⟶ Y)
 
 /-- When shifts are indexed by an additive commutative monoid, then shifts commute. -/
-def shift_comm (i j : A) : X⟦i⟧⟦j⟧ ≅ X⟦j⟧⟦i⟧ :=
+def shiftComm (i j : A) : X⟦i⟧⟦j⟧ ≅ X⟦j⟧⟦i⟧ :=
   (shiftAdd X i j).symm ≪≫
     ((shiftMonoidalFunctor C A).toFunctor.mapIso (opaque_eq_to_iso <| add_commₓ i j : _)).app X ≪≫ shiftAdd X j i
 

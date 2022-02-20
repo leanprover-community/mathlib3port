@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2017 Johannes Hölzl. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johannes Hölzl
+-/
 import Mathbin.Algebra.GeomSum
 import Mathbin.Analysis.Asymptotics.Asymptotics
 import Mathbin.Order.Filter.Archimedean
@@ -160,6 +165,7 @@ theorem tfae_exists_lt_is_o_pow (f : ℕ → ℝ) (R : ℝ) :
   by
   have A : Ico 0 R ⊆ Ioo (-R) R := fun x hx => ⟨(neg_lt_zero.2 (hx.1.trans_lt hx.2)).trans_le hx.1, hx.2⟩
   have B : Ioo 0 R ⊆ Ioo (-R) R := subset.trans Ioo_subset_Ico_self A
+  -- First we prove that 1-4 are equivalent using 2 → 3 → 4, 1 → 3, and 2 → 1
   tfae_have 1 → 3
   exact fun ⟨a, ha, H⟩ => ⟨a, ha, H.IsO⟩
   tfae_have 2 → 1
@@ -174,6 +180,7 @@ theorem tfae_exists_lt_is_o_pow (f : ℕ → ℝ) (R : ℝ) :
   exact fun ⟨a, ha, H⟩ => ⟨a, ha, H.IsO⟩
   tfae_have 4 → 3
   exact fun ⟨a, ha, H⟩ => ⟨a, B ha, H⟩
+  -- Add 5 and 6 using 4 → 6 → 5 → 3
   tfae_have 4 → 6
   · rintro ⟨a, ha, H⟩
     rcases bound_of_is_O_nat_at_top H with ⟨C, hC₀, hC⟩
@@ -193,6 +200,7 @@ theorem tfae_exists_lt_is_o_pow (f : ℕ → ℝ) (R : ℝ) :
       
     exact ⟨a, A ⟨ha₀, ha⟩, is_O_of_le' _ fun n => (H n).trans <| mul_le_mul_of_nonneg_left (le_abs_self _) hC₀.le⟩
     
+  -- Add 7 and 8 using 2 → 8 → 7 → 3
   tfae_have 2 → 8
   · rintro ⟨a, ha, H⟩
     refine' ⟨a, ha, (H.def zero_lt_one).mono fun n hn => _⟩
@@ -788,7 +796,7 @@ end NormedRingGeometric
 /-! ### Summability tests based on comparison with geometric series -/
 
 
--- ././Mathport/Syntax/Translate/Basic.lean:418:16: unsupported tactic `by_contra'
+-- ././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'
 theorem summable_of_ratio_norm_eventually_le {α : Type _} [SemiNormedGroup α] [CompleteSpace α] {f : ℕ → α} {r : ℝ}
     (hr₁ : r < 1) (h : ∀ᶠ n in at_top, ∥f (n + 1)∥ ≤ r * ∥f n∥) : Summable f := by
   by_cases' hr₀ : 0 ≤ r
@@ -807,7 +815,7 @@ theorem summable_of_ratio_norm_eventually_le {α : Type _} [SemiNormedGroup α] 
     refine' summable_of_norm_bounded_eventually 0 summable_zero _
     rw [Nat.cofinite_eq_at_top]
     filter_upwards [h] with _ hn
-    "././Mathport/Syntax/Translate/Basic.lean:418:16: unsupported tactic `by_contra'"
+    "././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'"
     exact not_lt.mpr (norm_nonneg _) (lt_of_le_of_ltₓ hn <| mul_neg_of_neg_of_pos hr₀ h)
     
 
@@ -982,13 +990,16 @@ theorem tendsto_factorial_div_pow_self_at_top : Tendsto (fun n => n ! / n ^ n : 
 for a version that also works in `ℂ`, and `exp_series_summable'` for a version that works in
 any normed algebra over `ℝ` or `ℂ`. -/
 theorem Real.summable_pow_div_factorial (x : ℝ) : Summable (fun n => x ^ n / n ! : ℕ → ℝ) := by
+  -- We start with trivial extimates
   have A : (0 : ℝ) < ⌊∥x∥⌋₊ + 1 :=
     zero_lt_one.trans_le
       (by
         simp )
   have B : ∥x∥ / (⌊∥x∥⌋₊ + 1) < 1 := (div_lt_one A).2 (Nat.lt_floor_add_one _)
+  -- Then we apply the ratio test. The estimate works for `n ≥ ⌊∥x∥⌋₊`.
   suffices : ∀, ∀ n ≥ ⌊∥x∥⌋₊, ∀, ∥x ^ (n + 1) / (n + 1)!∥ ≤ ∥x∥ / (⌊∥x∥⌋₊ + 1) * ∥x ^ n / ↑n !∥
   exact summable_of_ratio_norm_eventually_le B (eventually_at_top.2 ⟨⌊∥x∥⌋₊, this⟩)
+  -- Finally, we prove the upper estimate
   intro n hn
   calc ∥x ^ (n + 1) / (n + 1)!∥ = ∥x∥ / (n + 1) * ∥x ^ n / n !∥ := by
       rw [pow_succₓ, Nat.factorial_succ, Nat.cast_mulₓ, ← div_mul_div, NormedField.norm_mul, NormedField.norm_div,

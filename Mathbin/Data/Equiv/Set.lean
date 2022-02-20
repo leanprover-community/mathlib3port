@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Leonardo de Moura, Mario Carneiro
+-/
 import Mathbin.Data.Equiv.Basic
 import Mathbin.Data.Set.Function
 
@@ -123,6 +128,8 @@ theorem prod_assoc_symm_preimage {α β γ} {s : Set α} {t : Set β} {u : Set �
   ext
   simp [and_assoc]
 
+-- `@[simp]` doesn't like these lemmas, as it uses `set.image_congr'` to turn `equiv.prod_assoc`
+-- into a lambda expression and then unfold it.
 theorem prod_assoc_image {α β γ} {s : Set α} {t : Set β} {u : Set γ} :
     Equivₓ.prodAssoc α β γ '' (s ×ˢ t ×ˢ u) = s ×ˢ (t ×ˢ u) := by
   simpa only [Equivₓ.image_eq_preimage] using prod_assoc_symm_preimage
@@ -132,7 +139,7 @@ theorem prod_assoc_symm_image {α β γ} {s : Set α} {t : Set β} {u : Set γ} 
   simpa only [Equivₓ.image_eq_preimage] using prod_assoc_preimage
 
 /-- A set `s` in `α × β` is equivalent to the sigma-type `Σ x, {y | (x, y) ∈ s}`. -/
-def set_prod_equiv_sigma {α β : Type _} (s : Set (α × β)) : s ≃ Σ x : α, { y | (x, y) ∈ s } where
+def setProdEquivSigma {α β : Type _} (s : Set (α × β)) : s ≃ Σ x : α, { y | (x, y) ∈ s } where
   toFun := fun x =>
     ⟨x.1.1, x.1.2, by
       simp ⟩
@@ -142,11 +149,13 @@ def set_prod_equiv_sigma {α β : Type _} (s : Set (α × β)) : s ≃ Σ x : α
 
 /-- The subtypes corresponding to equal sets are equivalent. -/
 @[simps apply]
-def set_congr {α : Type _} {s t : Set α} (h : s = t) : s ≃ t :=
+def setCongr {α : Type _} {s t : Set α} (h : s = t) : s ≃ t :=
   subtypeEquivProp h
 
 /-- A set is equivalent to its image under an equivalence.
 -/
+-- We could construct this using `equiv.set.image e s e.injective`,
+-- but this definition provides an explicit inverse.
 @[simps]
 def image {α β : Type _} (e : α ≃ β) (s : Set α) : s ≃ e '' s where
   toFun := fun x =>
@@ -171,11 +180,11 @@ protected def univ α : @Univ α ≃ α :=
   ⟨coe, fun a => ⟨a, trivialₓ⟩, fun ⟨a, _⟩ => rfl, fun a => rfl⟩
 
 /-- An empty set is equivalent to the `empty` type. -/
-protected def Empty α : (∅ : Set α) ≃ Empty :=
+protected def empty α : (∅ : Set α) ≃ Empty :=
   equivEmpty _
 
 /-- An empty set is equivalent to a `pempty` type. -/
-protected def Pempty α : (∅ : Set α) ≃ Pempty :=
+protected def pempty α : (∅ : Set α) ≃ Pempty :=
   equivPempty _
 
 /-- If sets `s` and `t` are separated by a decidable predicate, then `s ∪ t` is equivalent to
@@ -224,7 +233,7 @@ protected def singleton {α} (a : α) : ({a} : Set α) ≃ PUnit.{u} :=
 
 /-- Equal sets are equivalent. -/
 @[simps apply symmApply]
-protected def of_eq {α : Type u} {s t : Set α} (h : s = t) : s ≃ t where
+protected def ofEq {α : Type u} {s t : Set α} (h : s = t) : s ≃ t where
   toFun := fun x => ⟨x, h ▸ x.2⟩
   invFun := fun x => ⟨x, h.symm ▸ x.2⟩
   left_inv := fun _ => Subtype.eq rfl
@@ -265,7 +274,7 @@ theorem insert_apply_right {α} {s : Set.{u} α} [DecidablePred (· ∈ s)] {a :
   (Equivₓ.Set.insert H).apply_eq_iff_eq_symm_apply.2 rfl
 
 /-- If `s : set α` is a set with decidable membership, then `s ⊕ sᶜ` is equivalent to `α`. -/
-protected def sum_compl {α} (s : Set α) [DecidablePred (· ∈ s)] : Sum s (sᶜ : Set α) ≃ α :=
+protected def sumCompl {α} (s : Set α) [DecidablePred (· ∈ s)] : Sum s (sᶜ : Set α) ≃ α :=
   calc
     Sum s (sᶜ : Set α) ≃ ↥(s ∪ sᶜ) :=
       (Equivₓ.Set.union
@@ -312,7 +321,7 @@ theorem sum_compl_symm_apply_compl {α : Type _} {s : Set α} [DecidablePred (·
 
 /-- `sum_diff_subset s t` is the natural equivalence between
 `s ⊕ (t \ s)` and `t`, where `s` and `t` are two sets. -/
-protected def sum_diff_subset {α} {s t : Set α} (h : s ⊆ t) [DecidablePred (· ∈ s)] : Sum s (t \ s : Set α) ≃ t :=
+protected def sumDiffSubset {α} {s t : Set α} (h : s ⊆ t) [DecidablePred (· ∈ s)] : Sum s (t \ s : Set α) ≃ t :=
   calc
     Sum s (t \ s : Set α) ≃ (s ∪ t \ s : Set α) :=
       (Equivₓ.Set.union
@@ -348,7 +357,7 @@ theorem sum_diff_subset_symm_apply_of_not_mem {α} {s t : Set α} (h : s ⊆ t) 
 
 /-- If `s` is a set with decidable membership, then the sum of `s ∪ t` and `s ∩ t` is equivalent
 to `s ⊕ t`. -/
-protected def union_sum_inter {α : Type u} (s t : Set α) [DecidablePred (· ∈ s)] :
+protected def unionSumInter {α : Type u} (s t : Set α) [DecidablePred (· ∈ s)] :
     Sum (s ∪ t : Set α) (s ∩ t : Set α) ≃ Sum s t :=
   calc
     Sum (s ∪ t : Set α) (s ∩ t : Set α) ≃ Sum (s ∪ t \ s : Set α) (s ∩ t : Set α) := by
@@ -402,11 +411,11 @@ protected def compl {α : Type u} {β : Type v} {s : Set α} {t : Set β} [Decid
         Equivₓ.coe_trans, Subtype.coe_eta, Subtype.coe_mk, set.sum_compl_symm_apply_compl]
 
 /-- The set product of two sets is equivalent to the type product of their coercions to types. -/
-protected def Prod {α β} (s : Set α) (t : Set β) : ↥(s ×ˢ t) ≃ s × t :=
+protected def prod {α β} (s : Set α) (t : Set β) : ↥(s ×ˢ t) ≃ s × t :=
   @subtypeProdEquivProd α β s t
 
 /-- If a function `f` is injective on a set `s`, then `s` is equivalent to `f '' s`. -/
-protected noncomputable def image_of_inj_on {α β} (f : α → β) (s : Set α) (H : InjOn f s) : s ≃ f '' s :=
+protected noncomputable def imageOfInjOn {α β} (f : α → β) (s : Set α) (H : InjOn f s) : s ≃ f '' s :=
   ⟨fun p => ⟨f p, mem_image_of_mem f p.2⟩, fun p => ⟨Classical.some p.2, (Classical.some_spec p.2).1⟩, fun ⟨x, h⟩ =>
     Subtype.eq (H (Classical.some_spec (mem_image_of_mem f h)).1 h (Classical.some_spec (mem_image_of_mem f h)).2),
     fun ⟨y, h⟩ => Subtype.eq (Classical.some_spec h).2⟩
@@ -452,7 +461,7 @@ protected def powerset {α} (S : Set α) : 𝒫 S ≃ Set S where
 then its image under `range_splitting f` is in bijection (via `f`) with `s`.
 -/
 @[simps]
-noncomputable def range_splitting_image_equiv {α β : Type _} (f : α → β) (s : Set (Range f)) :
+noncomputable def rangeSplittingImageEquiv {α β : Type _} (f : α → β) (s : Set (Range f)) :
     rangeSplitting f '' s ≃ s where
   toFun := fun x =>
     ⟨⟨f x, by
@@ -477,7 +486,7 @@ empty too. This hypothesis is absent on analogous definitions on stronger `equiv
 `linear_equiv.of_left_inverse` and `ring_equiv.of_left_inverse` as their typeclass assumptions
 are already sufficient to ensure non-emptiness. -/
 @[simps]
-def of_left_inverse {α β : Sort _} (f : α → β) (f_inv : Nonempty α → β → α)
+def ofLeftInverse {α β : Sort _} (f : α → β) (f_inv : Nonempty α → β → α)
     (hf : ∀ h : Nonempty α, LeftInverse (f_inv h) f) : α ≃ Set.Range f where
   toFun := fun a => ⟨f a, a, rfl⟩
   invFun := fun b => f_inv (nonempty_of_exists b.2) b
@@ -488,12 +497,12 @@ def of_left_inverse {α β : Sort _} (f : α → β) (f_inv : Nonempty α → β
 
 Note that if `α` is empty, no such `f_inv` exists and so this definition can't be used, unlike
 the stronger but less convenient `of_left_inverse`. -/
-abbrev of_left_inverse' {α β : Sort _} (f : α → β) (f_inv : β → α) (hf : LeftInverse f_inv f) : α ≃ Set.Range f :=
+abbrev ofLeftInverse' {α β : Sort _} (f : α → β) (f_inv : β → α) (hf : LeftInverse f_inv f) : α ≃ Set.Range f :=
   ofLeftInverse f (fun _ => f_inv) fun _ => hf
 
 /-- If `f : α → β` is an injective function, then domain `α` is equivalent to the range of `f`. -/
 @[simps apply]
-noncomputable def of_injective {α β} (f : α → β) (hf : Injective f) : α ≃ Set.Range f :=
+noncomputable def ofInjective {α β} (f : α → β) (hf : Injective f) : α ≃ Set.Range f :=
   Equivₓ.ofLeftInverse f (fun h => Function.invFun f) fun h => Function.left_inverse_inv_funₓ hf
 
 theorem apply_of_injective_symm {α β} {f : α → β} (hf : Injective f) (b : Set.Range f) :

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Yury Kudryashov All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yury Kudryashov, Heather Macbeth
+-/
 import Mathbin.Analysis.Convex.Cone
 import Mathbin.Analysis.NormedSpace.IsROrC
 import Mathbin.Analysis.NormedSpace.Extend
@@ -59,12 +64,17 @@ theorem exists_extension_norm_eq (p : Subspace 𝕜 F) (f : p →L[𝕜] 𝕜) :
   let this' : Module ℝ F := RestrictScalars.module ℝ 𝕜 F
   let this' : IsScalarTower ℝ 𝕜 F := RestrictScalars.is_scalar_tower _ _ _
   let this' : NormedSpace ℝ F := NormedSpace.restrictScalars _ 𝕜 _
+  -- Let `fr: p →L[ℝ] ℝ` be the real part of `f`.
   let fr := re_clm.comp (f.restrict_scalars ℝ)
   have fr_apply : ∀ x, fr x = re (f x) := by
     intro x
     rfl
+  -- Use the real version to get a norm-preserving extension of `fr`, which
+  -- we'll call `g : F →L[ℝ] ℝ`.
   rcases Real.exists_extension_norm_eq (p.restrict_scalars ℝ) fr with ⟨g, ⟨hextends, hnormeq⟩⟩
+  -- Now `g` can be extended to the `F →L[𝕜] 𝕜` we need.
   refine' ⟨g.extend_to_𝕜, _⟩
+  -- It is an extension of `f`.
   have h : ∀ x : p, g.extend_to_𝕜 x = f x := by
     intro x
     rw [ContinuousLinearMap.extend_to_𝕜_apply, ← Submodule.coe_smul, hextends, hextends]
@@ -79,6 +89,7 @@ theorem exists_extension_norm_eq (p : Subspace 𝕜 F) (f : p →L[𝕜] 𝕜) :
     · simp only [Algebra.id.smul_eq_mul, I_re, of_real_im, AddMonoidHom.map_add, zero_sub, I_im', zero_mul, of_real_re,
         mul_neg, mul_im, zero_addₓ, of_real_neg, mul_re, sub_neg_eq_add, ContinuousLinearMap.map_smul]
       
+  -- And we derive the equality of the norms by bounding on both sides.
   refine' ⟨h, le_antisymmₓ _ _⟩
   · calc ∥g.extend_to_𝕜∥ ≤ ∥g∥ := g.extend_to_𝕜.op_norm_le_bound g.op_norm_nonneg (norm_bound _)_ = ∥fr∥ :=
         hnormeq _ ≤ ∥re_clm∥ * ∥f∥ := ContinuousLinearMap.op_norm_comp_le _ _ _ = ∥f∥ := by

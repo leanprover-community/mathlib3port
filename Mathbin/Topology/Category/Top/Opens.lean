@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison
+-/
 import Mathbin.Topology.Opens
 import Mathbin.CategoryTheory.Category.Preorder
 import Mathbin.CategoryTheory.EqToHom
@@ -43,7 +48,7 @@ the morphisms `U ⟶ V` are not just proofs `U ≤ V`, but rather
 -/
 
 
-instance opens_hom_has_coe_to_fun {U V : Opens X} : CoeFun (U ⟶ V) fun f => U → V :=
+instance opensHomHasCoeToFun {U V : Opens X} : CoeFun (U ⟶ V) fun f => U → V :=
   ⟨fun f x => ⟨x, f.le x.2⟩⟩
 
 /-!
@@ -53,29 +58,32 @@ We now construct as morphisms various inclusions of open sets.
 
 /-- The inclusion `U ⊓ V ⟶ U` as a morphism in the category of open sets.
 -/
-def inf_le_left (U V : Opens X) : U⊓V ⟶ U :=
+-- This is tedious, but necessary because we decided not to allow Prop as morphisms in a category...
+def infLeLeft (U V : Opens X) : U⊓V ⟶ U :=
   inf_le_left.hom
 
 /-- The inclusion `U ⊓ V ⟶ V` as a morphism in the category of open sets.
 -/
-def inf_le_right (U V : Opens X) : U⊓V ⟶ V :=
+def infLeRight (U V : Opens X) : U⊓V ⟶ V :=
   inf_le_right.hom
 
 /-- The inclusion `U i ⟶ supr U` as a morphism in the category of open sets.
 -/
-def le_supr {ι : Type _} (U : ι → Opens X) (i : ι) : U i ⟶ supr U :=
+def leSupr {ι : Type _} (U : ι → Opens X) (i : ι) : U i ⟶ supr U :=
   (le_supr U i).hom
 
 /-- The inclusion `⊥ ⟶ U` as a morphism in the category of open sets.
 -/
-def bot_le (U : Opens X) : ⊥ ⟶ U :=
+def botLe (U : Opens X) : ⊥ ⟶ U :=
   bot_le.hom
 
 /-- The inclusion `U ⟶ ⊤` as a morphism in the category of open sets.
 -/
-def le_top (U : Opens X) : U ⟶ ⊤ :=
+def leTop (U : Opens X) : U ⟶ ⊤ :=
   le_top.hom
 
+-- We do not mark this as a simp lemma because it breaks open `x`.
+-- Nevertheless, it is useful in `sheaf_of_functions`.
 theorem inf_le_left_apply (U V : Opens X) x : (infLeLeft U V) x = ⟨x.1, (@inf_le_left _ _ U V : _ ≤ _) x.2⟩ :=
   rfl
 
@@ -90,7 +98,7 @@ theorem le_supr_apply_mk {ι : Type _} (U : ι → Opens X) (i : ι) x m : (leSu
 /-- The functor from open sets in `X` to `Top`,
 realising each open set as a topological space itself.
 -/
-def to_Top (X : Top.{u}) : Opens X ⥤ Top where
+def toTop (X : Top.{u}) : Opens X ⥤ Top where
   obj := fun U => ⟨U.val, inferInstance⟩
   map := fun U V i =>
     ⟨fun x => ⟨x.1, i.le x.2⟩, (Embedding.continuous_iff embedding_subtype_coe).2 continuous_induced_dom⟩
@@ -106,12 +114,12 @@ def inclusion {X : Top.{u}} (U : Opens X) : (toTop X).obj U ⟶ X where
   toFun := _
   continuous_to_fun := continuous_subtype_coe
 
-theorem OpenEmbedding {X : Top.{u}} (U : Opens X) : OpenEmbedding (inclusion U) :=
+theorem open_embedding {X : Top.{u}} (U : Opens X) : OpenEmbedding (inclusion U) :=
   IsOpen.open_embedding_subtype_coe U.2
 
 /-- The inclusion of the top open subset (i.e. the whole space) is an isomorphism.
 -/
-def inclusion_top_iso (X : Top.{u}) : (toTop X).obj ⊤ ≅ X where
+def inclusionTopIso (X : Top.{u}) : (toTop X).obj ⊤ ≅ X where
   hom := inclusion ⊤
   inv := ⟨fun x => ⟨x, trivialₓ⟩, continuous_def.2 fun U ⟨S, hS, hSU⟩ => hSU ▸ hS⟩
 
@@ -145,7 +153,7 @@ theorem op_map_id_obj (U : Opens Xᵒᵖ) : (map (𝟙 X)).op.obj U = U := by
 
 /-- The inclusion `U ⟶ (map f).obj ⊤` as a morphism in the category of open sets.
 -/
-def le_map_top (f : X ⟶ Y) (U : Opens X) : U ⟶ (map f).obj ⊤ :=
+def leMapTop (f : X ⟶ Y) (U : Opens X) : U ⟶ (map f).obj ⊤ :=
   leTop U
 
 @[simp]
@@ -183,7 +191,7 @@ variable (X)
 is naturally isomorphic to the identity functor.
 -/
 @[simps]
-def map_id : map (𝟙 X) ≅ 𝟭 (Opens X) where
+def mapId : map (𝟙 X) ≅ 𝟭 (Opens X) where
   hom := { app := fun U => eqToHom (map_id_obj U) }
   inv := { app := fun U => eqToHom (map_id_obj U).symm }
 
@@ -200,7 +208,7 @@ end
 of taking preimages under `g`, then preimages under `f`.
 -/
 @[simps]
-def map_comp (f : X ⟶ Y) (g : Y ⟶ Z) : map (f ≫ g) ≅ map g ⋙ map f where
+def mapComp (f : X ⟶ Y) (g : Y ⟶ Z) : map (f ≫ g) ≅ map g ⋙ map f where
   hom := { app := fun U => eqToHom (map_comp_obj f g U) }
   inv := { app := fun U => eqToHom (map_comp_obj f g U).symm }
 
@@ -210,7 +218,9 @@ theorem map_comp_eq (f : X ⟶ Y) (g : Y ⟶ Z) : map (f ≫ g) = map g ⋙ map 
 /-- If two continuous maps `f g : X ⟶ Y` are equal,
 then the functors `opens Y ⥤ opens X` they induce are isomorphic.
 -/
-def map_iso (f g : X ⟶ Y) (h : f = g) : map f ≅ map g :=
+-- We could make `f g` implicit here, but it's nice to be able to see when
+-- they are the identity (often!)
+def mapIso (f g : X ⟶ Y) (h : f = g) : map f ≅ map g :=
   NatIso.ofComponents (fun U => eqToIso (congr_funₓ (congr_argₓ Functor.obj (congr_argₓ map h)) U))
     (by
       run_tac
@@ -240,7 +250,7 @@ theorem map_iso_inv_app (f g : X ⟶ Y) (h : f = g) (U : Opens Y) :
 
 /-- A homeomorphism of spaces gives an equivalence of categories of open sets. -/
 @[simps]
-def map_map_iso {X Y : Top.{u}} (H : X ≅ Y) : Opens Y ≌ Opens X where
+def mapMapIso {X Y : Top.{u}} (H : X ≅ Y) : Opens Y ≌ Opens X where
   Functor := map H.hom
   inverse := map H.inv
   unitIso :=

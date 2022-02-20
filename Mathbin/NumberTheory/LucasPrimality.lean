@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Bolton Bailey. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Bolton Bailey
+-/
 import Mathbin.Data.Fintype.Basic
 import Mathbin.GroupTheory.OrderOfElement
 import Mathbin.Tactic.Zify
@@ -47,6 +52,7 @@ theorem lucas_primality (p : ℕ) (a : Zmod p) (ha : a ^ (p - 1) = 1)
     exact tsub_pos_of_lt hp1
   have fhp0 : Fact (0 < p) := ⟨h0.bot_lt⟩
   rw [Nat.prime_iff_card_units]
+  -- Prove cardinality of `units` of `zmod p` is both `≤ p-1` and `≥ p-1`
   refine' le_antisymmₓ (Nat.card_units_zmod_lt_sub_one hp1) _
   have hp' : p - 2 + 1 = p - 1 := tsub_add_eq_add_tsub hp1
   let a' : (Zmod p)ˣ :=

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Johan Commelin. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johan Commelin
+-/
 import Mathbin.Algebra.Polynomial.BigOperators
 import Mathbin.Data.Nat.Choose.Cast
 import Mathbin.Data.Nat.Choose.Vandermonde
@@ -48,7 +53,7 @@ variable {R : Type _} [Semiringₓ R] (k : ℕ) (f : R[X])
 
 /-- The `k`th Hasse derivative of a polynomial `∑ a_i X^i` is `∑ (i.choose k) a_i X^(i-k)`.
 It satisfies `k! * (hasse_deriv k f) = derivative^[k] f`. -/
-def hasse_deriv (k : ℕ) : R[X] →ₗ[R] R[X] :=
+def hasseDeriv (k : ℕ) : R[X] →ₗ[R] R[X] :=
   lsum fun i => monomial (i - k) ∘ₗ DistribMulAction.toLinearMap R R (i.choose k)
 
 theorem hasse_deriv_apply : hasseDeriv k f = f.Sum fun i r => monomial (i - k) (↑(i.choose k) * r) := by
@@ -140,6 +145,7 @@ theorem factorial_smul_hasse_deriv : ⇑(k ! • @hasseDeriv R _ k) = @derivativ
   have h2 : k + 1 ≤ n + k + 1 := succ_le_succ le_add_self
   have H : ∀ n : ℕ, (n ! : ℚ) ≠ 0 := by
     exact_mod_cast factorial_ne_zero
+  -- why can't `field_simp` help me here?
   simp' only [cast_mul, cast_choose ℚ, h1, h2, -one_div, -mul_eq_zero, succ_sub_succ_eq_sub, add_tsub_cancel_right,
     add_tsub_cancel_left] with field_simps
   rw [eq_div_iff_mul_eq (mul_ne_zero (H _) (H _)), eq_comm, div_mul_eq_mul_div,
@@ -172,6 +178,7 @@ theorem hasse_deriv_comp (k l : ℕ) : (@hasseDeriv R _ k).comp (hasseDeriv l) =
   have h3 : k ≤ k + l := le_self_add
   have H : ∀ n : ℕ, (n ! : ℚ) ≠ 0 := by
     exact_mod_cast factorial_ne_zero
+  -- why can't `field_simp` help me here?
   simp' only [cast_mul, cast_choose ℚ, h1, h2, h3, hikl, -one_div, -mul_eq_zero, succ_sub_succ_eq_sub,
     add_tsub_cancel_right, add_tsub_cancel_left] with field_simps
   rw [eq_div_iff_mul_eq, eq_comm, div_mul_eq_mul_div, eq_div_iff_mul_eq, ← tsub_add_eq_tsub_tsub, add_commₓ l k]
@@ -209,6 +216,7 @@ theorem nat_degree_hasse_deriv [NoZeroSmulDivisors ℕ R] (p : R[X]) (n : ℕ) :
     · classical
       simp only [ite_eq_right_iff, Ne.def, nat_degree_monomial, hasse_deriv_monomial]
       intro k c c0 hh
+      -- this is where we use the `smul_eq_zero` from `no_zero_smul_divisors`
       rw [← nsmul_eq_mul, smul_eq_zero, Nat.choose_eq_zero_iff] at hh
       exact (tsub_eq_zero_of_le (Or.resolve_right hh c0).le).symm
       

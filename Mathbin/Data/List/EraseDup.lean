@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Mario Carneiro. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Mario Carneiro
+-/
 import Mathbin.Data.List.Nodup
 
 /-!
@@ -58,7 +63,7 @@ theorem nodup_erase_dup : ∀ l : List α, Nodupₓ (eraseDupₓ l) :=
 theorem erase_dup_eq_self {l : List α} : eraseDupₓ l = l ↔ Nodupₓ l :=
   pw_filter_eq_self
 
-protected theorem nodup.erase_dup {l : List α} (h : l.Nodup) : l.eraseDup = l :=
+protected theorem Nodupₓ.erase_dup {l : List α} (h : l.Nodup) : l.eraseDup = l :=
   List.erase_dup_eq_self.2 h
 
 @[simp]

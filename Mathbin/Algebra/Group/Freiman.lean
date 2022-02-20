@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2022 Yaël Dillies. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yaël Dillies
+-/
 import Mathbin.Algebra.BigOperators.Multiset
 import Mathbin.Data.FunLike.Basic
 
@@ -95,13 +100,13 @@ theorem map_prod_eq_map_prod [FreimanHomClass F A β n] (f : F) {s t : Multiset 
 namespace FreimanHom
 
 @[to_additive]
-instance FunLike : FunLike (A →*[n] β) α fun _ => β where
+instance funLike : FunLike (A →*[n] β) α fun _ => β where
   coe := toFun
   coe_injective' := fun f g h => by
     cases f <;> cases g <;> congr
 
 @[to_additive]
-instance FreimanHomClass : FreimanHomClass (A →*[n] β) A β n where
+instance freimanHomClass : FreimanHomClass (A →*[n] β) A β n where
   map_prod_eq_map_prod' := map_prod_eq_map_prod'
 
 /-- Helper instance for when there's too many metavariables to apply
@@ -283,7 +288,7 @@ theorem div_comp (f₁ f₂ : B →*[n] G) (g : A →*[n] β) {hf hf₁ hf₂} :
 /-- `A →*[n] β` is a `comm_monoid`. -/
 @[to_additive "`α →+[n] β` is an `add_comm_monoid`."]
 instance : CommMonoidₓ (A →*[n] β) where
-  mul := · * ·
+  mul := (· * ·)
   mul_assoc := fun a b c => by
     ext
     apply mul_assoc
@@ -344,6 +349,8 @@ end FreimanHom
 
 We can't leave the domain `A : set α` of the `freiman_hom` a free variable, since it wouldn't be
 inferrable. -/
+--TODO: change to `monoid_hom_class F A β → freiman_hom_class F A β n` once `map_multiset_prod` is
+-- generalized
 @[to_additive]
 instance MonoidHom.freimanHomClass : FreimanHomClass (α →* β) Set.Univ β n where
   map_prod_eq_map_prod' := fun f s t _ _ _ _ h => by
@@ -387,6 +394,7 @@ theorem map_prod_eq_map_prod_of_le [FreimanHomClass F A β n] (f : F) {s t : Mul
   refine' map_prod_eq_map_prod f (fun x hx => _) (fun x hx => _) _ _ _
   rotate_left 2
   assumption
+  -- Can't infer `A` and `n` from the context, so do it manually.
   · rw [mem_add] at hx
     refine' hx.elim (hsA _) fun h => _
     rwa [eq_of_mem_repeat h]

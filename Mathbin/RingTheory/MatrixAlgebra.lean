@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison
+-/
 import Mathbin.Data.Matrix.Basis
 import Mathbin.RingTheory.TensorProduct
 
@@ -31,13 +36,13 @@ namespace matrixEquivTensor
 /-- (Implementation detail).
 The bare function underlying `(A ⊗[R] matrix n n R) →ₐ[R] matrix n n A`, on pure tensors.
 -/
-def to_fun (a : A) (m : Matrix n n R) : Matrix n n A := fun i j => a * algebraMap R A (m i j)
+def toFun (a : A) (m : Matrix n n R) : Matrix n n A := fun i j => a * algebraMap R A (m i j)
 
 /-- (Implementation detail).
 The function underlying `(A ⊗[R] matrix n n R) →ₐ[R] matrix n n A`,
 as an `R`-linear map in the second tensor factor.
 -/
-def to_fun_right_linear (a : A) : Matrix n n R →ₗ[R] Matrix n n A where
+def toFunRightLinear (a : A) : Matrix n n R →ₗ[R] Matrix n n A where
   toFun := toFun R A n a
   map_add' := fun x y => by
     dsimp only [to_fun]
@@ -54,7 +59,7 @@ def to_fun_right_linear (a : A) : Matrix n n R →ₗ[R] Matrix n n A where
 The function underlying `(A ⊗[R] matrix n n R) →ₐ[R] matrix n n A`,
 as an `R`-bilinear map.
 -/
-def to_fun_bilinear : A →ₗ[R] Matrix n n R →ₗ[R] Matrix n n A where
+def toFunBilinear : A →ₗ[R] Matrix n n R →ₗ[R] Matrix n n A where
   toFun := toFunRightLinear R A n
   map_add' := fun x y => by
     ext
@@ -67,14 +72,14 @@ def to_fun_bilinear : A →ₗ[R] Matrix n n R →ₗ[R] Matrix n n A where
 The function underlying `(A ⊗[R] matrix n n R) →ₐ[R] matrix n n A`,
 as an `R`-linear map.
 -/
-def to_fun_linear : A ⊗[R] Matrix n n R →ₗ[R] Matrix n n A :=
+def toFunLinear : A ⊗[R] Matrix n n R →ₗ[R] Matrix n n A :=
   TensorProduct.lift (toFunBilinear R A n)
 
 variable [DecidableEq n] [Fintype n]
 
 /-- The function `(A ⊗[R] matrix n n R) →ₐ[R] matrix n n A`, as an algebra homomorphism.
 -/
-def to_fun_alg_hom : A ⊗[R] Matrix n n R →ₐ[R] Matrix n n A :=
+def toFunAlgHom : A ⊗[R] Matrix n n R →ₐ[R] Matrix n n A :=
   algHomOfLinearMapTensorProduct (toFunLinear R A n)
     (by
       intros
@@ -104,7 +109,7 @@ theorem to_fun_alg_hom_apply (a : A) (m : Matrix n n R) :
 The bare function `matrix n n A → A ⊗[R] matrix n n R`.
 (We don't need to show that it's an algebra map, thankfully --- just that it's an inverse.)
 -/
-def inv_fun (M : Matrix n n A) : A ⊗[R] Matrix n n R :=
+def invFun (M : Matrix n n A) : A ⊗[R] Matrix n n R :=
   ∑ p : n × n, M p.1 p.2 ⊗ₜ stdBasisMatrix p.1 p.2 1
 
 @[simp]
@@ -149,7 +154,7 @@ theorem left_inv (M : A ⊗[R] Matrix n n R) : invFun R A n (toFunAlgHom R A n M
 
 The equivalence, ignoring the algebra structure, `(A ⊗[R] matrix n n R) ≃ matrix n n A`.
 -/
-def Equivₓ : A ⊗[R] Matrix n n R ≃ Matrix n n A where
+def equiv : A ⊗[R] Matrix n n R ≃ Matrix n n A where
   toFun := toFunAlgHom R A n
   invFun := invFun R A n
   left_inv := left_inv R A n

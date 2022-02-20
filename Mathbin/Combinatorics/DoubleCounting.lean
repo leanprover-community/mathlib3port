@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2022 Yaël Dillies. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yaël Dillies
+-/
 import Mathbin.Algebra.BigOperators.Order
 
 /-!
@@ -37,11 +42,11 @@ variable {α β : Type _} (r : α → β → Prop) (s : Finset α) (t : Finset �
   [∀ a, Decidable (r a b)] {m n : ℕ}
 
 /-- Elements of `s` which are "below" `b` according to relation `r`. -/
-def bipartite_below : Finset α :=
+def bipartiteBelow : Finset α :=
   s.filter fun a => r a b
 
 /-- Elements of `t` which are "above" `a` according to relation `r`. -/
-def bipartite_above : Finset β :=
+def bipartiteAbove : Finset β :=
   t.filter (r a)
 
 theorem bipartite_below_swap : t.bipartiteBelow (swap r) a = t.bipartiteAbove r a :=

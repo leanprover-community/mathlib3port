@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Yaël Dillies. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yaël Dillies
+-/
 import Mathbin.Data.Sigma.Lex
 import Mathbin.Order.BoundedOrder
 import Mathbin.Order.Lexicographic
@@ -44,11 +49,11 @@ variable {ι : Type _} {α : ι → Type _}
 
 
 /-- Disjoint sum of orders. `⟨i, a⟩ ≤ ⟨j, b⟩` iff `i = j` and `a ≤ b`. -/
-inductive le [∀ i, LE (α i)] : ∀ a b : Σ i, α i, Prop
+inductive Le [∀ i, LE (α i)] : ∀ a b : Σ i, α i, Prop
   | fiber (i : ι) (a b : α i) : a ≤ b → le ⟨i, a⟩ ⟨i, b⟩
 
 /-- Disjoint sum of orders. `⟨i, a⟩ < ⟨j, b⟩` iff `i = j` and `a < b`. -/
-inductive lt [∀ i, LT (α i)] : ∀ a b : Σ i, α i, Prop
+inductive Lt [∀ i, LT (α i)] : ∀ a b : Σ i, α i, Prop
   | fiber (i : ι) (a b : α i) : a < b → lt ⟨i, a⟩ ⟨i, b⟩
 
 instance [∀ i, LE (α i)] : LE (Σ i, α i) :=
@@ -116,17 +121,17 @@ namespace Lex
 notation3 "Σₗ " (...) ", " r:(scoped p => Lex Sigma p) => r
 
 /-- The lexicographical `≤` on a sigma type. -/
-instance LE [LT ι] [∀ i, LE (α i)] : LE (Σₗ i, α i) :=
-  ⟨Lex (· < ·) fun i => · ≤ ·⟩
+instance hasLe [LT ι] [∀ i, LE (α i)] : LE (Σₗ i, α i) :=
+  ⟨Lex (· < ·) fun i => (· ≤ ·)⟩
 
 /-- The lexicographical `<` on a sigma type. -/
-instance LT [LT ι] [∀ i, LT (α i)] : LT (Σₗ i, α i) :=
-  ⟨Lex (· < ·) fun i => · < ·⟩
+instance hasLt [LT ι] [∀ i, LT (α i)] : LT (Σₗ i, α i) :=
+  ⟨Lex (· < ·) fun i => (· < ·)⟩
 
 /-- The lexicographical preorder on a sigma type. -/
-instance Preorderₓ [Preorderₓ ι] [∀ i, Preorderₓ (α i)] : Preorderₓ (Σₗ i, α i) :=
+instance preorder [Preorderₓ ι] [∀ i, Preorderₓ (α i)] : Preorderₓ (Σₗ i, α i) :=
   { Lex.hasLe, Lex.hasLt with le_refl := fun ⟨i, a⟩ => Lex.right a a le_rfl,
-    le_trans := fun _ _ _ => trans_of ((Lex (· < ·)) fun _ => · ≤ ·),
+    le_trans := fun _ _ _ => trans_of ((Lex (· < ·)) fun _ => (· ≤ ·)),
     lt_iff_le_not_le := by
       refine' fun a b => ⟨fun hab => ⟨hab.mono_right fun i a b => le_of_ltₓ, _⟩, _⟩
       · rintro (⟨j, i, b, a, hji⟩ | ⟨i, b, a, hba⟩) <;> obtain ⟨_, _, _, _, hij⟩ | ⟨_, _, _, hab⟩ := hab
@@ -147,16 +152,16 @@ instance Preorderₓ [Preorderₓ ι] [∀ i, Preorderₓ (α i)] : Preorderₓ 
          }
 
 /-- The lexicographical partial order on a sigma type. -/
-instance PartialOrderₓ [Preorderₓ ι] [∀ i, PartialOrderₓ (α i)] : PartialOrderₓ (Σₗ i, α i) :=
-  { Lex.preorder with le_antisymm := fun _ _ => antisymm_of ((Lex (· < ·)) fun _ => · ≤ ·) }
+instance partialOrder [Preorderₓ ι] [∀ i, PartialOrderₓ (α i)] : PartialOrderₓ (Σₗ i, α i) :=
+  { Lex.preorder with le_antisymm := fun _ _ => antisymm_of ((Lex (· < ·)) fun _ => (· ≤ ·)) }
 
 /-- The lexicographical linear order on a sigma type. -/
-instance LinearOrderₓ [LinearOrderₓ ι] [∀ i, LinearOrderₓ (α i)] : LinearOrderₓ (Σₗ i, α i) :=
-  { Lex.partialOrder with le_total := total_of ((Lex (· < ·)) fun _ => · ≤ ·), DecidableEq := Sigma.decidableEq,
+instance linearOrder [LinearOrderₓ ι] [∀ i, LinearOrderₓ (α i)] : LinearOrderₓ (Σₗ i, α i) :=
+  { Lex.partialOrder with le_total := total_of ((Lex (· < ·)) fun _ => (· ≤ ·)), DecidableEq := Sigma.decidableEq,
     decidableLe := Lex.decidable _ _ }
 
 /-- The lexicographical linear order on a sigma type. -/
-instance OrderBot [PartialOrderₓ ι] [OrderBot ι] [∀ i, Preorderₓ (α i)] [OrderBot (α ⊥)] : OrderBot (Σₗ i, α i) where
+instance orderBot [PartialOrderₓ ι] [OrderBot ι] [∀ i, Preorderₓ (α i)] [OrderBot (α ⊥)] : OrderBot (Σₗ i, α i) where
   bot := ⟨⊥, ⊥⟩
   bot_le := fun ⟨a, b⟩ => by
     obtain rfl | ha := eq_bot_or_bot_lt a
@@ -166,7 +171,7 @@ instance OrderBot [PartialOrderₓ ι] [OrderBot ι] [∀ i, Preorderₓ (α i)]
       
 
 /-- The lexicographical linear order on a sigma type. -/
-instance OrderTop [PartialOrderₓ ι] [OrderTop ι] [∀ i, Preorderₓ (α i)] [OrderTop (α ⊤)] : OrderTop (Σₗ i, α i) where
+instance orderTop [PartialOrderₓ ι] [OrderTop ι] [∀ i, Preorderₓ (α i)] [OrderTop (α ⊤)] : OrderTop (Σₗ i, α i) where
   top := ⟨⊤, ⊤⟩
   le_top := fun ⟨a, b⟩ => by
     obtain rfl | ha := eq_top_or_lt_top a
@@ -176,7 +181,7 @@ instance OrderTop [PartialOrderₓ ι] [OrderTop ι] [∀ i, Preorderₓ (α i)]
       
 
 /-- The lexicographical linear order on a sigma type. -/
-instance BoundedOrder [PartialOrderₓ ι] [BoundedOrder ι] [∀ i, Preorderₓ (α i)] [OrderBot (α ⊥)] [OrderTop (α ⊤)] :
+instance boundedOrder [PartialOrderₓ ι] [BoundedOrder ι] [∀ i, Preorderₓ (α i)] [OrderBot (α ⊥)] [OrderTop (α ⊤)] :
     BoundedOrder (Σₗ i, α i) :=
   { Lex.orderBot, Lex.orderTop with }
 

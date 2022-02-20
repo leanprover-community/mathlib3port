@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Yakov Pechersky All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yakov Pechersky, Mario Carneiro
+-/
 import Mathbin.Tactic.NormNum
 
 /-!
@@ -25,7 +30,7 @@ open NormNum
 /-- `normalize_fin n a b` means that `a : fin n` is equivalent to `b : ℕ` in the modular sense -
 that is, `↑a ≡ b (mod n)`. This is used for translating the algebraic operations: addition,
 multiplication, zero and one, which use modulo for reduction. -/
-def normalize_fin (n : ℕ) (a : Finₓ n) (b : ℕ) :=
+def NormalizeFin (n : ℕ) (a : Finₓ n) (b : ℕ) :=
   a.1 = b % n
 
 /-- `normalize_fin_lt n a b` means that `a : fin n` is equivalent to `b : ℕ` in the embedding
@@ -35,103 +40,103 @@ function, but it does not lift to a map `zmod n → zmod (n+1)`; this addition o
 the input is strictly less than `n`.
 
 `normalize_fin_lt n a b` is equivalent to `normalize_fin n a b ∧ b < n`. -/
-def normalize_fin_lt (n : ℕ) (a : Finₓ n) (b : ℕ) :=
+def NormalizeFinLt (n : ℕ) (a : Finₓ n) (b : ℕ) :=
   a.1 = b
 
-theorem normalize_fin_lt.coe {n} {a : Finₓ n} {b : ℕ} (h : NormalizeFinLt n a b) : ↑a = b :=
+theorem NormalizeFinLt.coe {n} {a : Finₓ n} {b : ℕ} (h : NormalizeFinLt n a b) : ↑a = b :=
   h
 
 theorem normalize_fin_iff {n} [Fact (0 < n)] {a b} : NormalizeFin n a b ↔ a = Finₓ.ofNat' b :=
   Iff.symm (Finₓ.eq_iff_veq _ _)
 
-theorem normalize_fin_lt.mk {n a b n'} (hn : n = n') (h : NormalizeFin n a b) (h2 : b < n') : NormalizeFinLt n a b :=
+theorem NormalizeFinLt.mk {n a b n'} (hn : n = n') (h : NormalizeFin n a b) (h2 : b < n') : NormalizeFinLt n a b :=
   h.trans <|
     Nat.mod_eq_of_ltₓ <| by
       rw [hn] <;> exact h2
 
-theorem normalize_fin_lt.lt {n a b} (h : NormalizeFinLt n a b) : b < n := by
+theorem NormalizeFinLt.lt {n a b} (h : NormalizeFinLt n a b) : b < n := by
   rw [← h.coe] <;> exact a.2
 
-theorem normalize_fin_lt.of {n a b} (h : NormalizeFinLt n a b) : NormalizeFin n a b :=
+theorem NormalizeFinLt.of {n a b} (h : NormalizeFinLt n a b) : NormalizeFin n a b :=
   h.trans <| Eq.symm <| Nat.mod_eq_of_ltₓ h.lt
 
-theorem normalize_fin.zero n : NormalizeFin (n + 1) 0 0 := by
+theorem NormalizeFin.zero n : NormalizeFin (n + 1) 0 0 := by
   rw [normalize_fin]
   norm_num
 
-theorem normalize_fin_lt.zero n : NormalizeFinLt (n + 1) 0 0 :=
+theorem NormalizeFinLt.zero n : NormalizeFinLt (n + 1) 0 0 :=
   refl _
 
-theorem normalize_fin.one n : NormalizeFin (n + 1) 1 1 :=
+theorem NormalizeFin.one n : NormalizeFin (n + 1) 1 1 :=
   refl _
 
-theorem normalize_fin.add {n} {a b : Finₓ n} {a' b' c' : ℕ} (ha : NormalizeFin n a a') (hb : NormalizeFin n b b')
+theorem NormalizeFin.add {n} {a b : Finₓ n} {a' b' c' : ℕ} (ha : NormalizeFin n a a') (hb : NormalizeFin n b b')
     (h : a' + b' = c') : NormalizeFin n (a + b) c' := by
   simp only [normalize_fin, ← h] at * <;> rw [Nat.add_modₓ, ← ha, ← hb, Finₓ.add_def]
 
-theorem normalize_fin.mul {n} {a b : Finₓ n} {a' b' c' : ℕ} (ha : NormalizeFin n a a') (hb : NormalizeFin n b b')
+theorem NormalizeFin.mul {n} {a b : Finₓ n} {a' b' c' : ℕ} (ha : NormalizeFin n a a') (hb : NormalizeFin n b b')
     (h : a' * b' = c') : NormalizeFin n (a * b) c' := by
   simp only [normalize_fin, ← h] at * <;> rw [Nat.mul_modₓ, ← ha, ← hb, Finₓ.mul_def]
 
-theorem normalize_fin.bit0 {n} {a : Finₓ n} {a' : ℕ} (h : NormalizeFin n a a') : NormalizeFin n (bit0 a) (bit0 a') :=
+theorem NormalizeFin.bit0 {n} {a : Finₓ n} {a' : ℕ} (h : NormalizeFin n a a') : NormalizeFin n (bit0 a) (bit0 a') :=
   h.add h rfl
 
-theorem normalize_fin.bit1 {n} {a : Finₓ (n + 1)} {a' : ℕ} (h : NormalizeFin (n + 1) a a') :
+theorem NormalizeFin.bit1 {n} {a : Finₓ (n + 1)} {a' : ℕ} (h : NormalizeFin (n + 1) a a') :
     NormalizeFin (n + 1) (bit1 a) (bit1 a') :=
   h.bit0.add (NormalizeFin.one _) rfl
 
-theorem normalize_fin_lt.succ {n} {a : Finₓ n} {a' b : ℕ} (h : NormalizeFinLt n a a') (e : a' + 1 = b) :
+theorem NormalizeFinLt.succ {n} {a : Finₓ n} {a' b : ℕ} (h : NormalizeFinLt n a a') (e : a' + 1 = b) :
     NormalizeFinLt n.succ (Finₓ.succ a) b := by
   simpa [normalize_fin_lt, ← e] using h
 
-theorem normalize_fin_lt.cast_lt {n m} {a : Finₓ m} {ha} {a' : ℕ} (h : NormalizeFinLt m a a') :
+theorem NormalizeFinLt.cast_lt {n m} {a : Finₓ m} {ha} {a' : ℕ} (h : NormalizeFinLt m a a') :
     NormalizeFinLt n (Finₓ.castLt a ha) a' := by
   simpa [normalize_fin_lt] using h
 
-theorem normalize_fin_lt.cast_le {n m} {nm} {a : Finₓ m} {a' : ℕ} (h : NormalizeFinLt m a a') :
+theorem NormalizeFinLt.cast_le {n m} {nm} {a : Finₓ m} {a' : ℕ} (h : NormalizeFinLt m a a') :
     NormalizeFinLt n (Finₓ.castLe nm a) a' := by
   simpa [normalize_fin_lt] using h
 
-theorem normalize_fin_lt.cast {n m} {nm} {a : Finₓ m} {a' : ℕ} (h : NormalizeFinLt m a a') :
+theorem NormalizeFinLt.cast {n m} {nm} {a : Finₓ m} {a' : ℕ} (h : NormalizeFinLt m a a') :
     NormalizeFinLt n (Finₓ.cast nm a) a' := by
   simpa [normalize_fin_lt] using h
 
-theorem normalize_fin.cast {n m} {nm} {a : Finₓ m} {a' : ℕ} (h : NormalizeFin m a a') :
+theorem NormalizeFin.cast {n m} {nm} {a : Finₓ m} {a' : ℕ} (h : NormalizeFin m a a') :
     NormalizeFin n (Finₓ.cast nm a) a' := by
   convert ← normalize_fin_lt.cast h
 
-theorem normalize_fin_lt.cast_add {n m} {a : Finₓ n} {a' : ℕ} (h : NormalizeFinLt n a a') :
+theorem NormalizeFinLt.cast_add {n m} {a : Finₓ n} {a' : ℕ} (h : NormalizeFinLt n a a') :
     NormalizeFinLt (n + m) (Finₓ.castAdd m a) a' := by
   simpa [normalize_fin_lt] using h
 
-theorem normalize_fin_lt.cast_succ {n} {a : Finₓ n} {a' : ℕ} (h : NormalizeFinLt n a a') :
+theorem NormalizeFinLt.cast_succ {n} {a : Finₓ n} {a' : ℕ} (h : NormalizeFinLt n a a') :
     NormalizeFinLt (n + 1) (Finₓ.castSucc a) a' :=
   NormalizeFinLt.cast_add h
 
-theorem normalize_fin_lt.add_nat {n m m'} (hm : m = m') {a : Finₓ n} {a' b : ℕ} (h : NormalizeFinLt n a a')
+theorem NormalizeFinLt.add_nat {n m m'} (hm : m = m') {a : Finₓ n} {a' b : ℕ} (h : NormalizeFinLt n a a')
     (e : a' + m' = b) : NormalizeFinLt (n + m) (@Finₓ.addNat n m a) b := by
   simpa [normalize_fin_lt, ← e, ← hm] using h
 
-theorem normalize_fin_lt.nat_add {n m n'} (hn : n = n') {a : Finₓ m} {a' b : ℕ} (h : NormalizeFinLt m a a')
+theorem NormalizeFinLt.nat_add {n m n'} (hn : n = n') {a : Finₓ m} {a' b : ℕ} (h : NormalizeFinLt m a a')
     (e : n' + a' = b) : NormalizeFinLt (n + m) (@Finₓ.natAdd n m a) b := by
   simpa [normalize_fin_lt, ← e, ← hn] using h
 
-theorem normalize_fin.reduce {n} {a : Finₓ n} {n' a' b k nk : ℕ} (hn : n = n') (h : NormalizeFin n a a')
+theorem NormalizeFin.reduce {n} {a : Finₓ n} {n' a' b k nk : ℕ} (hn : n = n') (h : NormalizeFin n a a')
     (e1 : n' * k = nk) (e2 : nk + b = a') : NormalizeFin n a b := by
   rwa [← e2, ← e1, ← hn, normalize_fin, add_commₓ, Nat.add_mul_mod_self_leftₓ] at h
 
-theorem normalize_fin_lt.reduce {n} {a : Finₓ n} {n' a' b k nk : ℕ} (hn : n = n') (h : NormalizeFin n a a')
+theorem NormalizeFinLt.reduce {n} {a : Finₓ n} {n' a' b k nk : ℕ} (hn : n = n') (h : NormalizeFin n a a')
     (e1 : n' * k = nk) (e2 : nk + b = a') (hl : b < n') : NormalizeFinLt n a b :=
   NormalizeFinLt.mk hn (h.reduce hn e1 e2) hl
 
-theorem normalize_fin.eq {n} {a b : Finₓ n} {c : ℕ} (ha : NormalizeFin n a c) (hb : NormalizeFin n b c) : a = b :=
+theorem NormalizeFin.eq {n} {a b : Finₓ n} {c : ℕ} (ha : NormalizeFin n a c) (hb : NormalizeFin n b c) : a = b :=
   Finₓ.eq_of_veq <| ha.trans hb.symm
 
-theorem normalize_fin.lt {n} {a b : Finₓ n} {a' b' : ℕ} (ha : NormalizeFin n a a') (hb : NormalizeFinLt n b b')
+theorem NormalizeFin.lt {n} {a b : Finₓ n} {a' b' : ℕ} (ha : NormalizeFin n a a') (hb : NormalizeFinLt n b b')
     (h : a' < b') : a < b := by
   have ha' := normalize_fin_lt.mk rfl ha (h.trans hb.lt) <;> rwa [← hb.coe, ← ha'.coe] at h
 
-theorem normalize_fin.le {n} {a b : Finₓ n} {a' b' : ℕ} (ha : NormalizeFin n a a') (hb : NormalizeFinLt n b b')
+theorem NormalizeFin.le {n} {a b : Finₓ n} {a' b' : ℕ} (ha : NormalizeFin n a a') (hb : NormalizeFinLt n b b')
     (h : a' ≤ b') : a ≤ b := by
   have ha' := normalize_fin_lt.mk rfl ha (h.trans_lt hb.lt) <;> rwa [← hb.coe, ← ha'.coe] at h
 
@@ -196,21 +201,35 @@ unsafe def eval_fin_m.run {α} (m : eval_fin_m α) : tactic α := do
 direct expr pattern match because expr pattern matches generate very large terms under the
 hood so going via an intermediate inductive type like this is more efficient. -/
 unsafe inductive match_fin_result
-  | zero (n : expr)
-  | one (n : expr)
-  | add (n a b : expr)
-  | mul (n a b : expr)
-  | bit0 (n a : expr)
-  | bit1 (n a : expr)
-  | succ (n a : expr)
-  | cast_lt (n m i h : expr)
-  | cast_le (n m h a : expr)
-  | cast (n m h a : expr)
-  | cast_add (n m a : expr)
-  | cast_succ (n a : expr)
-  | add_nat (n m a : expr)
+  | zero (n : expr)-- `(0 : fin (n+1))`
+
+  | one (n : expr)-- `(1 : fin (n+1))`
+
+  | add (n a b : expr)-- `(a + b : fin n)`
+
+  | mul (n a b : expr)-- `(a * b : fin n)`
+
+  | bit0 (n a : expr)-- `(bit0 a : fin n)`
+
+  | bit1 (n a : expr)-- `(bit1 a : fin (n+1))`
+
+  | succ (n a : expr)-- `(fin.succ a : fin n.succ)`
+
+  | cast_lt (n m i h : expr)-- `(fin.cast_lt (i : fin m) (h : i.val < n) : fin n)`
+
+  | cast_le (n m h a : expr)-- `(fin.cast_le (h : n ≤ m) (a : fin n) : fin m)`
+
+  | cast (n m h a : expr)-- `(fin.cast_le (h : n = m) (a : fin n) : fin m)`
+
+  | cast_add (n m a : expr)-- `(fin.cast_add m (a : fin n) : fin (n + m))`
+
+  | cast_succ (n a : expr)-- `(fin.cast_succ (a : fin n) : fin (n + 1))`
+
+  | add_nat (n m a : expr)-- `(fin.add_nat m (a : fin n) : fin (n + m))`
+
   | nat_add (n m a : expr)
 
+-- `(fin.nat_add n (a : fin m) : fin (n + m))`
 section
 
 open MatchFinResult

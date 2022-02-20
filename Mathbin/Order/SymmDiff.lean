@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Bryan Gin-ge Chen. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Adam Topaz, Bryan Gin-ge Chen
+-/
 import Mathbin.Order.BooleanAlgebra
 
 /-!
@@ -54,25 +59,25 @@ section GeneralizedBooleanAlgebra
 variable {α : Type _} [GeneralizedBooleanAlgebra α] (a b c : α)
 
 theorem symm_diff_comm : a Δ b = b Δ a := by
-  simp only [· Δ ·, sup_comm]
+  simp only [(· Δ ·), sup_comm]
 
 instance symm_diff_is_comm : IsCommutative α (· Δ ·) :=
   ⟨symm_diff_comm⟩
 
 @[simp]
 theorem symm_diff_self : a Δ a = ⊥ := by
-  rw [· Δ ·, sup_idem, sdiff_self]
+  rw [(· Δ ·), sup_idem, sdiff_self]
 
 @[simp]
 theorem symm_diff_bot : a Δ ⊥ = a := by
-  rw [· Δ ·, sdiff_bot, bot_sdiff, sup_bot_eq]
+  rw [(· Δ ·), sdiff_bot, bot_sdiff, sup_bot_eq]
 
 @[simp]
 theorem bot_symm_diff : ⊥ Δ a = a := by
   rw [symm_diff_comm, symm_diff_bot]
 
 theorem symm_diff_eq_sup_sdiff_inf : a Δ b = (a⊔b) \ (a⊓b) := by
-  simp [sup_sdiff, sdiff_inf, sup_comm, · Δ ·]
+  simp [sup_sdiff, sdiff_inf, sup_comm, (· Δ ·)]
 
 theorem disjoint_symm_diff_inf : Disjoint (a Δ b) (a⊓b) := by
   rw [symm_diff_eq_sup_sdiff_inf]
@@ -83,7 +88,7 @@ theorem symm_diff_le_sup : a Δ b ≤ a⊔b := by
   exact sdiff_le
 
 theorem sdiff_symm_diff : c \ a Δ b = c⊓a⊓b⊔c \ a⊓c \ b := by
-  simp only [· Δ ·, sdiff_sdiff_sup_sdiff']
+  simp only [(· Δ ·), sdiff_sdiff_sup_sdiff']
 
 theorem sdiff_symm_diff' : c \ a Δ b = c⊓a⊓b⊔c \ (a⊔b) := by
   rw [sdiff_symm_diff, sdiff_sup, sup_comm]
@@ -120,7 +125,7 @@ theorem symm_diff_eq_iff_sdiff_eq {a b c : α} (ha : a ≤ c) : a Δ b = c ↔ c
     
 
 theorem Disjoint.symm_diff_eq_sup {a b : α} (h : Disjoint a b) : a Δ b = a⊔b := by
-  rw [· Δ ·, h.sdiff_eq_left, h.sdiff_eq_right]
+  rw [(· Δ ·), h.sdiff_eq_left, h.sdiff_eq_right]
 
 theorem symm_diff_eq_sup : a Δ b = a⊔b ↔ Disjoint a b := by
   constructor <;> intro h
@@ -209,7 +214,7 @@ section BooleanAlgebra
 variable {α : Type _} [BooleanAlgebra α] (a b c : α)
 
 theorem symm_diff_eq : a Δ b = a⊓bᶜ⊔b⊓aᶜ := by
-  simp only [· Δ ·, sdiff_eq]
+  simp only [(· Δ ·), sdiff_eq]
 
 @[simp]
 theorem symm_diff_top : a Δ ⊤ = aᶜ := by

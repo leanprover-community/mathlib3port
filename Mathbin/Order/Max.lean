@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2014 Jeremy Avigad. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Jeremy Avigad, Yury Kudryashov, Yaël Dillies
+-/
 import Mathbin.Order.OrderDual
 
 /-!
@@ -70,9 +75,11 @@ instance OrderDual.no_min_order (α : Type _) [LT α] [NoMaxOrder α] : NoMinOrd
 instance OrderDual.no_max_order (α : Type _) [LT α] [NoMinOrder α] : NoMaxOrder (OrderDual α) :=
   ⟨fun a => @exists_lt α _ _ a⟩
 
+-- See note [lower instance priority]
 instance (priority := 100) NoMinOrder.to_no_bot_order (α : Type _) [Preorderₓ α] [NoMinOrder α] : NoBotOrder α :=
   ⟨fun a => (exists_lt a).imp fun _ => not_le_of_lt⟩
 
+-- See note [lower instance priority]
 instance (priority := 100) NoMaxOrder.to_no_top_order (α : Type _) [Preorderₓ α] [NoMaxOrder α] : NoTopOrder α :=
   ⟨fun a => (exists_gt a).imp fun _ => not_le_of_lt⟩
 
@@ -212,14 +219,14 @@ namespace Subsingleton
 
 variable [Subsingleton α]
 
-protected theorem IsBot (a : α) : IsBot a := fun _ => (Subsingleton.elimₓ _ _).le
+protected theorem is_bot (a : α) : IsBot a := fun _ => (Subsingleton.elimₓ _ _).le
 
-protected theorem IsTop (a : α) : IsTop a := fun _ => (Subsingleton.elimₓ _ _).le
+protected theorem is_top (a : α) : IsTop a := fun _ => (Subsingleton.elimₓ _ _).le
 
-protected theorem IsMin (a : α) : IsMin a :=
+protected theorem is_min (a : α) : IsMin a :=
   (Subsingleton.is_bot _).IsMin
 
-protected theorem IsMax (a : α) : IsMax a :=
+protected theorem is_max (a : α) : IsMax a :=
   (Subsingleton.is_top _).IsMax
 
 end Subsingleton
@@ -248,6 +255,7 @@ section LinearOrderₓ
 
 variable [LinearOrderₓ α]
 
+--TODO: Delete in favor of the directed version
 theorem is_top_or_exists_gt (a : α) : IsTop a ∨ ∃ b, a < b := by
   simpa only [or_iff_not_imp_left, IsTop, not_forall, not_leₓ] using id
 

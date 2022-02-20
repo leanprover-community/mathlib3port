@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Adam Topaz. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Adam Topaz
+-/
 import Mathbin.CategoryTheory.Category.Basic
 import Mathbin.CategoryTheory.Equivalence
 import Mathbin.CategoryTheory.Filtered
@@ -41,19 +46,19 @@ variable {C : Type u₁} [Category.{v₁} C]
 
 /-- The functorial version of `ulift.up`. -/
 @[simps]
-def ulift.up_functor : C ⥤ Ulift.{u₂} C where
+def Ulift.upFunctor : C ⥤ Ulift.{u₂} C where
   obj := Ulift.up
   map := fun X Y f => f
 
 /-- The functorial version of `ulift.down`. -/
 @[simps]
-def ulift.down_functor : Ulift.{u₂} C ⥤ C where
+def Ulift.downFunctor : Ulift.{u₂} C ⥤ C where
   obj := Ulift.down
   map := fun X Y f => f
 
 /-- The categorical equivalence between `C` and `ulift C`. -/
 @[simps]
-def ulift.equivalence : C ≌ Ulift.{u₂} C where
+def Ulift.equivalence : C ≌ Ulift.{u₂} C where
   Functor := Ulift.upFunctor
   inverse := Ulift.downFunctor
   unitIso := { Hom := 𝟙 _, inv := 𝟙 _ }
@@ -91,18 +96,18 @@ section UliftHom
 /-- `ulift_hom.{w} C` is an alias for `C`, which is endowed with a category instance
   whose morphisms are obtained by applying `ulift.{w}` to the morphisms from `C`.
 -/
-def ulift_hom.{w, u} (C : Type u) :=
+def UliftHom.{w, u} (C : Type u) :=
   C
 
 instance {C} [Inhabited C] : Inhabited (UliftHom C) :=
   ⟨(arbitrary C : C)⟩
 
 /-- The obvious function `ulift_hom C → C`. -/
-def ulift_hom.obj_down {C} (A : UliftHom C) : C :=
+def UliftHom.objDown {C} (A : UliftHom C) : C :=
   A
 
 /-- The obvious function `C → ulift_hom C`. -/
-def ulift_hom.obj_up {C} (A : C) : UliftHom C :=
+def UliftHom.objUp {C} (A : C) : UliftHom C :=
   A
 
 @[simp]
@@ -120,18 +125,18 @@ instance : Category.{max v₂ v₁} (UliftHom.{v₂} C) where
 
 /-- One half of the quivalence between `C` and `ulift_hom C`. -/
 @[simps]
-def ulift_hom.up : C ⥤ UliftHom C where
+def UliftHom.up : C ⥤ UliftHom C where
   obj := UliftHom.objUp
   map := fun X Y f => ⟨f⟩
 
 /-- One half of the quivalence between `C` and `ulift_hom C`. -/
 @[simps]
-def ulift_hom.down : UliftHom C ⥤ C where
+def UliftHom.down : UliftHom C ⥤ C where
   obj := UliftHom.objDown
   map := fun X Y f => f.down
 
 /-- The equivalence between `C` and `ulift_hom C`. -/
-def ulift_hom.equiv : C ≌ UliftHom C where
+def UliftHom.equiv : C ≌ UliftHom C where
   Functor := UliftHom.up
   inverse := UliftHom.down
   unitIso :=
@@ -162,7 +167,7 @@ end UliftHom
   access to the universe level `v`.
 -/
 @[nolint unused_arguments]
-def as_small.{w, v, u} (C : Type u) [Category.{v} C] :=
+def AsSmall.{w, v, u} (C : Type u) [Category.{v} C] :=
   Ulift.{max w v} C
 
 instance : SmallCategory (AsSmall.{w₁} C) where
@@ -172,19 +177,19 @@ instance : SmallCategory (AsSmall.{w₁} C) where
 
 /-- One half of the equivalence between `C` and `as_small C`. -/
 @[simps]
-def as_small.up : C ⥤ AsSmall C where
+def AsSmall.up : C ⥤ AsSmall C where
   obj := fun X => ⟨X⟩
   map := fun X Y f => ⟨f⟩
 
 /-- One half of the equivalence between `C` and `as_small C`. -/
 @[simps]
-def as_small.down : AsSmall C ⥤ C where
+def AsSmall.down : AsSmall C ⥤ C where
   obj := fun X => X.down
   map := fun X Y f => f.down
 
 /-- The equivalence between `C` and `as_small C`. -/
 @[simps]
-def as_small.equiv : C ≌ AsSmall C where
+def AsSmall.equiv : C ≌ AsSmall C where
   Functor := AsSmall.up
   inverse := AsSmall.down
   unitIso :=
@@ -210,7 +215,7 @@ instance [IsCofiltered C] : IsCofiltered (AsSmall C) :=
   IsCofiltered.of_equivalence AsSmall.equiv
 
 /-- The equivalence between `C` and `ulift_hom (ulift C)`. -/
-def ulift_hom_ulift_category.equiv.{v', u', v, u} (C : Type u) [Category.{v} C] : C ≌ UliftHom.{v'} (Ulift.{u'} C) :=
+def UliftHomUliftCategory.equiv.{v', u', v, u} (C : Type u) [Category.{v} C] : C ≌ UliftHom.{v'} (Ulift.{u'} C) :=
   Ulift.equivalence.trans UliftHom.equiv
 
 end CategoryTheory

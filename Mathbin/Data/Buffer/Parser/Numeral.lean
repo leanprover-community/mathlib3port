@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Yakov Pechersky. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yakov Pechersky
+-/
 import Mathbin.Data.Buffer.Parser.Basic
 
 /-!
@@ -46,7 +51,7 @@ def numeral : Parser α :=
 which has a `[fintype α]` constraint. The parser ensures that the numeral parsed in
 is within the cardinality of the type `α`.
 -/
-def numeral.of_fintype [Fintype α] : Parser α := do
+def numeral.ofFintype [Fintype α] : Parser α := do
   let c ← nat
   decorate_error (s! "<numeral less than {toString (Fintype.card α)}>") (guardₓ (c < Fintype.card α))
   pure <| Nat.binCast c deriving Mono, Bounded, Prog
@@ -54,7 +59,7 @@ def numeral.of_fintype [Fintype α] : Parser α := do
 /-- Parse a string of digits as a numeral while casting it to target type `α`. The parsing starts
 at "1", so `"1"` is parsed in as `nat.cast 0`. Providing `"0"` to the parser causes a failure.
 -/
-def numeral.from_one : Parser α := do
+def numeral.fromOne : Parser α := do
   let c ← nat
   decorate_error "<positive numeral>" (guardₓ (0 < c))
   pure <| Nat.binCast (c - 1)deriving Mono, Bounded, Prog
@@ -64,7 +69,7 @@ which has a `[fintype α]` constraint. The parser ensures that the numeral parse
 is within the cardinality of the type `α`. The parsing starts
 at "1", so `"1"` is parsed in as `nat.cast 0`. Providing `"0"` to the parser causes a failure.
 -/
-def numeral.from_one.of_fintype [Fintype α] : Parser α := do
+def numeral.fromOne.ofFintype [Fintype α] : Parser α := do
   let c ← nat
   decorate_error (s! "<positive numeral less than or equal to {toString (Fintype.card α)}>")
       (guardₓ (0 < c ∧ c ≤ Fintype.card α))
@@ -86,7 +91,7 @@ The parser ensures that the character parsed in is greater or equal to `fromc` a
 and subtracts the value of `fromc` from the parsed in character. There is also a check
 that the resulting value is within the cardinality of the type `α`.
 -/
-def numeral.char.of_fintype [Fintype α] (fromc : Charₓ) : Parser α := do
+def numeral.char.ofFintype [Fintype α] (fromc : Charₓ) : Parser α := do
   let c ←
     decorateError
         (s! "<char from '{fromc.toString}' to '

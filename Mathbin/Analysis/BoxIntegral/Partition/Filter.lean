@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Yury Kudryashov. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yury Kudryashov
+-/
 import Mathbin.Analysis.BoxIntegral.Partition.SubboxInduction
 import Mathbin.Analysis.BoxIntegral.Partition.Split
 
@@ -184,7 +189,7 @@ used in the definition of a box-integrable function.
   divergence theorem only for the filter `⊥ = {bRiemann := ff, bHenstock := tt, bDistortion := tt}`.
 -/
 @[ext]
-structure integration_params : Type where
+structure IntegrationParams : Type where
   (bRiemann bHenstock bDistortion : Bool)
 
 variable {l l₁ l₂ : IntegrationParams}
@@ -192,7 +197,7 @@ variable {l l₁ l₂ : IntegrationParams}
 namespace IntegrationParams
 
 /-- Auxiliary equivalence with a product type used to lift an order. -/
-def equiv_prod : integration_params ≃ Bool × OrderDual Bool × OrderDual Bool where
+def equivProd : integration_params ≃ Bool × OrderDual Bool × OrderDual Bool where
   toFun := fun l => ⟨l.1, OrderDual.toDual l.2, OrderDual.toDual l.3⟩
   invFun := fun l => ⟨l.1, OrderDual.ofDual l.2.1, OrderDual.ofDual l.2.2⟩
   left_inv := fun ⟨a, b, c⟩ => rfl
@@ -202,7 +207,7 @@ instance : PartialOrderₓ IntegrationParams :=
   PartialOrderₓ.lift equivProd equivProd.Injective
 
 /-- Auxiliary `order_iso` with a product type used to lift a `bounded_order` structure. -/
-def iso_prod : integration_params ≃o Bool × OrderDual Bool × OrderDual Bool :=
+def isoProd : integration_params ≃o Bool × OrderDual Bool × OrderDual Bool :=
   ⟨equivProd, fun ⟨x, y, z⟩ => Iff.rfl⟩
 
 instance : BoundedOrder IntegrationParams :=
@@ -214,7 +219,7 @@ additional integrability assumptions, see the module docstring for details. -/
 instance : Inhabited IntegrationParams :=
   ⟨⊥⟩
 
-instance : DecidableRel (· ≤ · : IntegrationParams → IntegrationParams → Prop) := fun _ _ => And.decidable
+instance : DecidableRel ((· ≤ ·) : IntegrationParams → IntegrationParams → Prop) := fun _ _ => And.decidable
 
 instance : DecidableEq IntegrationParams := fun x y => decidableOfIff _ (ext_iff x y).symm
 
@@ -222,7 +227,7 @@ instance : DecidableEq IntegrationParams := fun x y => decidableOfIff _ (ext_iff
 corresponding filter, we require that the diameters of all boxes `J` of a tagged partition are
 bounded from above by a constant upper estimate that may not depend on the geometry of `J`, and each
 tag belongs to the corresponding closed box. -/
-def Riemann : IntegrationParams where
+def riemann : IntegrationParams where
   bRiemann := true
   bHenstock := true
   bDistortion := false
@@ -230,14 +235,14 @@ def Riemann : IntegrationParams where
 /-- The `box_integral.integration_params` corresponding to the Henstock-Kurzweil integral. In the
 corresponding filter, we require that the tagged partition is subordinate to a (possibly,
 discontinuous) positive function `r` and each tag belongs to the corresponding closed box. -/
-def Henstock : IntegrationParams :=
+def henstock : IntegrationParams :=
   ⟨false, true, false⟩
 
 /-- The `box_integral.integration_params` corresponding to the McShane integral. In the
 corresponding filter, we require that the tagged partition is subordinate to a (possibly,
 discontinuous) positive function `r`; the tags may be outside of the corresponding closed box
 (but still inside the ambient closed box `I.Icc`). -/
-def McShane : IntegrationParams :=
+def mcShane : IntegrationParams :=
   ⟨false, false, false⟩
 
 theorem Henstock_le_Riemann : Henstock ≤ Riemann := by
@@ -262,7 +267,7 @@ Sacks-Henstock inequality to compare two prepartitions covering the same part of
 It is also automatically satisfied for any `c > 1`, see TODO section of the module docstring for
 details. -/
 @[protect_proj]
-structure mem_base_set (l : IntegrationParams) (I : Box ι) (c : ℝ≥0 ) (r : (ι → ℝ) → ioi (0 : ℝ))
+structure MemBaseSet (l : IntegrationParams) (I : Box ι) (c : ℝ≥0 ) (r : (ι → ℝ) → ioi (0 : ℝ))
   (π : TaggedPrepartition I) : Prop where
   IsSubordinate : π.IsSubordinate r
   IsHenstock : l.bHenstock → π.IsHenstock
@@ -270,31 +275,31 @@ structure mem_base_set (l : IntegrationParams) (I : Box ι) (c : ℝ≥0 ) (r : 
   exists_compl : l.bDistortion → ∃ π' : Prepartition I, π'.Union = I \ π.Union ∧ π'.distortion ≤ c
 
 /-- A predicate saying that in case `l.bRiemann = tt`, the function `r` is a constant. -/
-def r_cond {ι : Type _} (l : IntegrationParams) (r : (ι → ℝ) → ioi (0 : ℝ)) : Prop :=
+def RCond {ι : Type _} (l : IntegrationParams) (r : (ι → ℝ) → ioi (0 : ℝ)) : Prop :=
   l.bRiemann → ∀ x, r x = r 0
 
 /-- A set `s : set (tagged_prepartition I)` belongs to `l.to_filter_distortion I c` if there exists
 a function `r : ℝⁿ → (0, ∞)` (or a constant `r` if `l.bRiemann = tt`) such that `s` contains each
 prepartition `π` such that `l.mem_base_set I c r π`. -/
-def to_filter_distortion (l : IntegrationParams) (I : Box ι) (c : ℝ≥0 ) : Filter (TaggedPrepartition I) :=
+def toFilterDistortion (l : IntegrationParams) (I : Box ι) (c : ℝ≥0 ) : Filter (TaggedPrepartition I) :=
   ⨅ (r : (ι → ℝ) → ioi (0 : ℝ)) (hr : l.RCond r), 𝓟 { π | l.MemBaseSet I c r π }
 
 /-- A set `s : set (tagged_prepartition I)` belongs to `l.to_filter I` if for any `c : ℝ≥0` there
 exists a function `r : ℝⁿ → (0, ∞)` (or a constant `r` if `l.bRiemann = tt`) such that
 `s` contains each prepartition `π` such that `l.mem_base_set I c r π`. -/
-def to_filter (l : IntegrationParams) (I : Box ι) : Filter (TaggedPrepartition I) :=
+def toFilter (l : IntegrationParams) (I : Box ι) : Filter (TaggedPrepartition I) :=
   ⨆ c : ℝ≥0 , l.toFilterDistortion I c
 
 /-- A set `s : set (tagged_prepartition I)` belongs to `l.to_filter_distortion_Union I c π₀` if
 there exists a function `r : ℝⁿ → (0, ∞)` (or a constant `r` if `l.bRiemann = tt`) such that `s`
 contains each prepartition `π` such that `l.mem_base_set I c r π` and `π.Union = π₀.Union`. -/
-def to_filter_distortion_Union (l : IntegrationParams) (I : Box ι) (c : ℝ≥0 ) (π₀ : Prepartition I) :=
+def toFilterDistortionUnion (l : IntegrationParams) (I : Box ι) (c : ℝ≥0 ) (π₀ : Prepartition I) :=
   l.toFilterDistortion I c⊓𝓟 { π | π.Union = π₀.Union }
 
 /-- A set `s : set (tagged_prepartition I)` belongs to `l.to_filter_Union I π₀` if for any `c : ℝ≥0`
 there exists a function `r : ℝⁿ → (0, ∞)` (or a constant `r` if `l.bRiemann = tt`) such that `s`
 contains each prepartition `π` such that `l.mem_base_set I c r π` and `π.Union = π₀.Union`. -/
-def to_filter_Union (l : IntegrationParams) (I : Box ι) (π₀ : Prepartition I) :=
+def toFilterUnion (l : IntegrationParams) (I : Box ι) (π₀ : Prepartition I) :=
   ⨆ c : ℝ≥0 , l.toFilterDistortionUnion I c π₀
 
 theorem r_cond_of_bRiemann_eq_ff {ι} (l : IntegrationParams) (hl : l.bRiemann = ff) {r : (ι → ℝ) → ioi (0 : ℝ)} :
@@ -305,17 +310,17 @@ theorem to_filter_inf_Union_eq (l : IntegrationParams) (I : Box ι) (π₀ : Pre
     l.toFilter I⊓𝓟 { π | π.Union = π₀.Union } = l.toFilterUnion I π₀ :=
   (supr_inf_principal _ _).symm
 
-theorem mem_base_set.mono' (I : Box ι) (h : l₁ ≤ l₂) (hc : c₁ ≤ c₂) {π : TaggedPrepartition I}
+theorem MemBaseSet.mono' (I : Box ι) (h : l₁ ≤ l₂) (hc : c₁ ≤ c₂) {π : TaggedPrepartition I}
     (hr : ∀, ∀ J ∈ π, ∀, r₁ (π.Tag J) ≤ r₂ (π.Tag J)) (hπ : l₁.MemBaseSet I c₁ r₁ π) : l₂.MemBaseSet I c₂ r₂ π :=
   ⟨hπ.1.mono' hr, fun h₂ => hπ.2 (le_iff_imp.1 h.2.1 h₂), fun hD => (hπ.3 (le_iff_imp.1 h.2.2 hD)).trans hc, fun hD =>
     (hπ.4 (le_iff_imp.1 h.2.2 hD)).imp fun π hπ => ⟨hπ.1, hπ.2.trans hc⟩⟩
 
 @[mono]
-theorem mem_base_set.mono (I : Box ι) (h : l₁ ≤ l₂) (hc : c₁ ≤ c₂) {π : TaggedPrepartition I}
+theorem MemBaseSet.mono (I : Box ι) (h : l₁ ≤ l₂) (hc : c₁ ≤ c₂) {π : TaggedPrepartition I}
     (hr : ∀, ∀ x ∈ I.Icc, ∀, r₁ x ≤ r₂ x) (hπ : l₁.MemBaseSet I c₁ r₁ π) : l₂.MemBaseSet I c₂ r₂ π :=
   (hπ.mono' I h hc) fun J hJ => hr _ <| π.tag_mem_Icc J
 
-theorem mem_base_set.exists_common_compl (h₁ : l.MemBaseSet I c₁ r₁ π₁) (h₂ : l.MemBaseSet I c₂ r₂ π₂)
+theorem MemBaseSet.exists_common_compl (h₁ : l.MemBaseSet I c₁ r₁ π₁) (h₂ : l.MemBaseSet I c₂ r₂ π₂)
     (hU : π₁.Union = π₂.Union) :
     ∃ π : Prepartition I,
       π.Union = I \ π₁.Union ∧ (l.bDistortion → π.distortion ≤ c₁) ∧ (l.bDistortion → π.distortion ≤ c₂) :=
@@ -332,7 +337,7 @@ theorem mem_base_set.exists_common_compl (h₁ : l.MemBaseSet I c₁ r₁ π₁)
     simpa [hU, and_comm] using this h₂ h₁ hU.symm
     
 
-protected theorem mem_base_set.union_compl_to_subordinate (hπ₁ : l.MemBaseSet I c r₁ π₁)
+protected theorem MemBaseSet.union_compl_to_subordinate (hπ₁ : l.MemBaseSet I c r₁ π₁)
     (hle : ∀, ∀ x ∈ I.Icc, ∀, r₂ x ≤ r₁ x) {π₂ : Prepartition I} (hU : π₂.Union = I \ π₁.Union)
     (hc : l.bDistortion → π₂.distortion ≤ c) : l.MemBaseSet I c r₁ (π₁.unionComplToSubordinate π₂ hU r₂) :=
   ⟨hπ₁.1.disjUnion ((π₂.is_subordinate_to_subordinate r₂).mono hle) _, fun h =>
@@ -341,8 +346,8 @@ protected theorem mem_base_set.union_compl_to_subordinate (hπ₁ : l.MemBaseSet
     ⟨⊥, by
       simp ⟩⟩
 
-protected theorem mem_base_set.filter (hπ : l.MemBaseSet I c r π) (p : Box ι → Prop) :
-    l.MemBaseSet I c r (π.filter p) := by
+protected theorem MemBaseSet.filter (hπ : l.MemBaseSet I c r π) (p : Box ι → Prop) : l.MemBaseSet I c r (π.filter p) :=
+  by
   refine'
     ⟨fun J hJ => hπ.1 J (π.mem_filter.1 hJ).1, fun hH J hJ => hπ.2 hH J (π.mem_filter.1 hJ).1, fun hD =>
       (distortion_filter_le _ _).trans (hπ.3 hD), fun hD => _⟩
@@ -383,10 +388,10 @@ theorem bUnion_tagged_mem_base_set {π : Prepartition I} {πi : ∀ J, TaggedPre
     
 
 @[mono]
-theorem r_cond.mono {ι : Type _} {r : (ι → ℝ) → ioi (0 : ℝ)} (h : l₁ ≤ l₂) (hr : l₂.RCond r) : l₁.RCond r := fun hR =>
+theorem RCond.mono {ι : Type _} {r : (ι → ℝ) → ioi (0 : ℝ)} (h : l₁ ≤ l₂) (hr : l₂.RCond r) : l₁.RCond r := fun hR =>
   hr (le_iff_imp.1 h.1 hR)
 
-theorem r_cond.min {ι : Type _} {r₁ r₂ : (ι → ℝ) → ioi (0 : ℝ)} (h₁ : l.RCond r₁) (h₂ : l.RCond r₂) :
+theorem RCond.min {ι : Type _} {r₁ r₂ : (ι → ℝ) → ioi (0 : ℝ)} (h₁ : l.RCond r₁) (h₂ : l.RCond r₂) :
     l.RCond fun x => min (r₁ x) (r₂ x) := fun hR x => congr_arg2ₓ min (h₁ hR x) (h₂ hR x)
 
 @[mono]

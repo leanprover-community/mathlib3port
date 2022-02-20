@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Yury G. Kudryashov. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yury G. Kudryashov
+-/
 import Mathbin.Data.Set.Intervals.OrdConnected
 import Mathbin.Order.Filter.Lift
 import Mathbin.Order.Filter.AtTopBot
@@ -57,22 +62,22 @@ n) (u₂ n)` is eventually included in `Iio a`.
 
 We mark `l₂` as an `out_param` so that Lean can automatically find an appropriate `l₂` based on
 `Ixx` and `l₁`. This way, e.g., `tendsto.Ico h₁ h₂` works without specifying explicitly `l₂`. -/
-class tendsto_Ixx_class (Ixx : α → α → Set α) (l₁ : Filter α) (l₂ : outParam <| Filter α) : Prop where
+class TendstoIxxClass (Ixx : α → α → Set α) (l₁ : Filter α) (l₂ : outParam <| Filter α) : Prop where
   tendsto_Ixx : Tendsto (fun p : α × α => Ixx p.1 p.2) (l₁ ×ᶠ l₁) (l₂.lift' Powerset)
 
-theorem tendsto.Icc {l₁ l₂ : Filter α} [TendstoIxxClass Icc l₁ l₂] {lb : Filter β} {u₁ u₂ : β → α}
+theorem Tendsto.Icc {l₁ l₂ : Filter α} [TendstoIxxClass Icc l₁ l₂] {lb : Filter β} {u₁ u₂ : β → α}
     (h₁ : Tendsto u₁ lb l₁) (h₂ : Tendsto u₂ lb l₁) : Tendsto (fun x => Icc (u₁ x) (u₂ x)) lb (l₂.lift' Powerset) :=
   TendstoIxxClass.tendsto_Ixx.comp <| h₁.prod_mk h₂
 
-theorem tendsto.Ioc {l₁ l₂ : Filter α} [TendstoIxxClass Ioc l₁ l₂] {lb : Filter β} {u₁ u₂ : β → α}
+theorem Tendsto.Ioc {l₁ l₂ : Filter α} [TendstoIxxClass Ioc l₁ l₂] {lb : Filter β} {u₁ u₂ : β → α}
     (h₁ : Tendsto u₁ lb l₁) (h₂ : Tendsto u₂ lb l₁) : Tendsto (fun x => Ioc (u₁ x) (u₂ x)) lb (l₂.lift' Powerset) :=
   TendstoIxxClass.tendsto_Ixx.comp <| h₁.prod_mk h₂
 
-theorem tendsto.Ico {l₁ l₂ : Filter α} [TendstoIxxClass Ico l₁ l₂] {lb : Filter β} {u₁ u₂ : β → α}
+theorem Tendsto.Ico {l₁ l₂ : Filter α} [TendstoIxxClass Ico l₁ l₂] {lb : Filter β} {u₁ u₂ : β → α}
     (h₁ : Tendsto u₁ lb l₁) (h₂ : Tendsto u₂ lb l₁) : Tendsto (fun x => Ico (u₁ x) (u₂ x)) lb (l₂.lift' Powerset) :=
   TendstoIxxClass.tendsto_Ixx.comp <| h₁.prod_mk h₂
 
-theorem tendsto.Ioo {l₁ l₂ : Filter α} [TendstoIxxClass Ioo l₁ l₂] {lb : Filter β} {u₁ u₂ : β → α}
+theorem Tendsto.Ioo {l₁ l₂ : Filter α} [TendstoIxxClass Ioo l₁ l₂] {lb : Filter β} {u₁ u₂ : β → α}
     (h₁ : Tendsto u₁ lb l₁) (h₂ : Tendsto u₂ lb l₁) : Tendsto (fun x => Ioo (u₁ x) (u₂ x)) lb (l₂.lift' Powerset) :=
   TendstoIxxClass.tendsto_Ixx.comp <| h₁.prod_mk h₂
 
@@ -90,7 +95,7 @@ theorem tendsto_Ixx_class_of_subset {l₁ l₂ : Filter α} {Ixx Ixx' : α → �
     [h' : TendstoIxxClass Ixx' l₁ l₂] : TendstoIxxClass Ixx l₁ l₂ :=
   ⟨tendsto_lift'_powerset_mono h'.1 <| eventually_of_forall <| Prod.forall.2 h⟩
 
-theorem has_basis.tendsto_Ixx_class {ι : Type _} {p : ι → Prop} {s} {l : Filter α} (hl : l.HasBasis p s)
+theorem HasBasis.tendsto_Ixx_class {ι : Type _} {p : ι → Prop} {s} {l : Filter α} (hl : l.HasBasis p s)
     {Ixx : α → α → Set α} (H : ∀ i, p i → ∀, ∀ x ∈ s i, ∀, ∀ y ∈ s i, ∀, Ixx x y ⊆ s i) : TendstoIxxClass Ixx l l :=
   ⟨(hl.prod_self.tendsto_iff (hl.lift' monotone_powerset)).2 fun i hi => ⟨i, hi, fun x hx => H i hi _ hx.1 _ hx.2⟩⟩
 
@@ -120,7 +125,7 @@ instance tendsto_Ioc_at_bot_at_bot : TendstoIxxClass Ioc (atBot : Filter α) atB
 instance tendsto_Ioo_at_bot_at_bot : TendstoIxxClass Ioo (atBot : Filter α) atBot :=
   tendsto_Ixx_class_of_subset fun _ _ => Ioo_subset_Icc_self
 
-instance ord_connected.tendsto_Icc {s : Set α} [hs : OrdConnected s] : TendstoIxxClass Icc (𝓟 s) (𝓟 s) :=
+instance OrdConnected.tendsto_Icc {s : Set α} [hs : OrdConnected s] : TendstoIxxClass Icc (𝓟 s) (𝓟 s) :=
   tendsto_Ixx_class_principal.2 hs.out
 
 instance tendsto_Ico_Ici_Ici {a : α} : TendstoIxxClass Ico (𝓟 (Ici a)) (𝓟 (Ici a)) :=
@@ -192,18 +197,18 @@ section LinearOrderₓ
 
 variable [LinearOrderₓ α]
 
--- ././Mathport/Syntax/Translate/Basic.lean:696:47: unsupported (impossible)
--- ././Mathport/Syntax/Translate/Basic.lean:696:47: unsupported (impossible)
+-- ././Mathport/Syntax/Translate/Basic.lean:815:47: unsupported (impossible)
+-- ././Mathport/Syntax/Translate/Basic.lean:815:47: unsupported (impossible)
 instance tendsto_Icc_interval_interval {a b : α} :
-    TendstoIxxClass Icc (𝓟 "././Mathport/Syntax/Translate/Basic.lean:696:47: unsupported (impossible)")
-      (𝓟 "././Mathport/Syntax/Translate/Basic.lean:696:47: unsupported (impossible)") :=
+    TendstoIxxClass Icc (𝓟 "././Mathport/Syntax/Translate/Basic.lean:815:47: unsupported (impossible)")
+      (𝓟 "././Mathport/Syntax/Translate/Basic.lean:815:47: unsupported (impossible)") :=
   Filter.tendsto_Icc_Icc_Icc
 
--- ././Mathport/Syntax/Translate/Basic.lean:696:47: unsupported (impossible)
--- ././Mathport/Syntax/Translate/Basic.lean:696:47: unsupported (impossible)
+-- ././Mathport/Syntax/Translate/Basic.lean:815:47: unsupported (impossible)
+-- ././Mathport/Syntax/Translate/Basic.lean:815:47: unsupported (impossible)
 instance tendsto_Ioc_interval_interval {a b : α} :
-    TendstoIxxClass Ioc (𝓟 "././Mathport/Syntax/Translate/Basic.lean:696:47: unsupported (impossible)")
-      (𝓟 "././Mathport/Syntax/Translate/Basic.lean:696:47: unsupported (impossible)") :=
+    TendstoIxxClass Ioc (𝓟 "././Mathport/Syntax/Translate/Basic.lean:815:47: unsupported (impossible)")
+      (𝓟 "././Mathport/Syntax/Translate/Basic.lean:815:47: unsupported (impossible)") :=
   Filter.tendsto_Ioc_Icc_Icc
 
 instance tendsto_interval_of_Icc {l : Filter α} [TendstoIxxClass Icc l l] : TendstoIxxClass Interval l l := by
@@ -219,10 +224,10 @@ instance tendsto_interval_of_Icc {l : Filter α} [TendstoIxxClass Icc l l] : Ten
     exact hts ⟨p.2, p.1⟩ ⟨hp.2, hp.1⟩
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:696:47: unsupported (impossible)
-theorem tendsto.interval {l : Filter α} [TendstoIxxClass Icc l l] {f g : β → α} {lb : Filter β} (hf : Tendsto f lb l)
+-- ././Mathport/Syntax/Translate/Basic.lean:815:47: unsupported (impossible)
+theorem Tendsto.interval {l : Filter α} [TendstoIxxClass Icc l l] {f g : β → α} {lb : Filter β} (hf : Tendsto f lb l)
     (hg : Tendsto g lb l) :
-    Tendsto (fun x => "././Mathport/Syntax/Translate/Basic.lean:696:47: unsupported (impossible)") lb
+    Tendsto (fun x => "././Mathport/Syntax/Translate/Basic.lean:815:47: unsupported (impossible)") lb
       (l.lift' Powerset) :=
   TendstoIxxClass.tendsto_Ixx.comp <| hf.prod_mk hg
 

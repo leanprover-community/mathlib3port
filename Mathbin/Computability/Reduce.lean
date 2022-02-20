@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Minchao Wu. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Minchao Wu, Mario Carneiro
+-/
 import Mathbin.Computability.Halting
 
 /-!
@@ -309,7 +314,7 @@ protected theorem ind_on {C : ManyOneDegree → Prop} (d : ManyOneDegree) (h : �
 /-- Lifts a function on sets of natural numbers to many-one degrees.
 -/
 @[elab_as_eliminator, reducible]
-protected def lift_on {φ} (d : ManyOneDegree) (f : Set ℕ → φ) (h : ∀ p q, ManyOneEquiv p q → f p = f q) : φ :=
+protected def liftOn {φ} (d : ManyOneDegree) (f : Set ℕ → φ) (h : ∀ p q, ManyOneEquiv p q → f p = f q) : φ :=
   Quotientₓ.liftOn' d f h
 
 @[simp]
@@ -320,7 +325,7 @@ protected theorem lift_on_eq {φ} (p : Set ℕ) (f : Set ℕ → φ) (h : ∀ p 
 /-- Lifts a binary function on sets of natural numbers to many-one degrees.
 -/
 @[elab_as_eliminator, reducible, simp]
-protected def lift_on₂ {φ} (d₁ d₂ : ManyOneDegree) (f : Set ℕ → Set ℕ → φ)
+protected def liftOn₂ {φ} (d₁ d₂ : ManyOneDegree) (f : Set ℕ → Set ℕ → φ)
     (h : ∀ p₁ p₂ q₁ q₂, ManyOneEquiv p₁ p₂ → ManyOneEquiv q₁ q₂ → f p₁ q₁ = f p₂ q₂) : φ :=
   d₁.liftOn
     (fun p =>
@@ -360,23 +365,23 @@ instance : LE ManyOneDegree :=
 theorem of_le_of {p : α → Prop} {q : β → Prop} : of p ≤ of q ↔ p ≤₀ q :=
   many_one_reducible_to_nat_to_nat
 
-private theorem le_reflₓ (d : ManyOneDegree) : d ≤ d := by
+private theorem le_refl (d : ManyOneDegree) : d ≤ d := by
   induction d using ManyOneDegree.ind_on <;> simp
 
-private theorem le_antisymmₓ {d₁ d₂ : ManyOneDegree} : d₁ ≤ d₂ → d₂ ≤ d₁ → d₁ = d₂ := by
+private theorem le_antisymm {d₁ d₂ : ManyOneDegree} : d₁ ≤ d₂ → d₂ ≤ d₁ → d₁ = d₂ := by
   induction d₁ using ManyOneDegree.ind_on
   induction d₂ using ManyOneDegree.ind_on
   intro hp hq
   simp_all only [ManyOneEquiv, of_le_of, of_eq_of, true_andₓ]
 
-private theorem le_transₓ {d₁ d₂ d₃ : ManyOneDegree} : d₁ ≤ d₂ → d₂ ≤ d₃ → d₁ ≤ d₃ := by
+private theorem le_trans {d₁ d₂ d₃ : ManyOneDegree} : d₁ ≤ d₂ → d₂ ≤ d₃ → d₁ ≤ d₃ := by
   induction d₁ using ManyOneDegree.ind_on
   induction d₂ using ManyOneDegree.ind_on
   induction d₃ using ManyOneDegree.ind_on
   apply ManyOneReducible.trans
 
 instance : PartialOrderₓ ManyOneDegree where
-  le := · ≤ ·
+  le := (· ≤ ·)
   le_refl := le_reflₓ
   le_trans := fun _ _ _ => le_transₓ
   le_antisymm := fun _ _ => le_antisymmₓ
@@ -422,7 +427,7 @@ protected theorem le_add_right (d₁ d₂ : ManyOneDegree) : d₂ ≤ d₁ + d�
         rfl)).2
 
 instance : SemilatticeSup ManyOneDegree :=
-  { ManyOneDegree.partialOrder with sup := · + ·, le_sup_left := ManyOneDegree.le_add_left,
+  { ManyOneDegree.partialOrder with sup := (· + ·), le_sup_left := ManyOneDegree.le_add_left,
     le_sup_right := ManyOneDegree.le_add_right, sup_le := fun a b c h₁ h₂ => ManyOneDegree.add_le.2 ⟨h₁, h₂⟩ }
 
 end ManyOneDegree

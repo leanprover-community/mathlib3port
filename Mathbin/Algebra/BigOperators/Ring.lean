@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2017 Johannes Hölzl. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johannes Hölzl
+-/
 import Mathbin.Algebra.BigOperators.Basic
 import Mathbin.Data.Finset.Pi
 import Mathbin.Data.Finset.Powerset
@@ -124,13 +129,13 @@ theorem prod_add (f g : α → β) (s : Finset α) :
         erw [prod_ite (fun a : { a // a ∈ s } => f a.1) fun a : { a // a ∈ s } => g a.1]
         refine'
             congr_arg2ₓ _
-              (prod_bij (fun a : α ha : a ∈ t => ⟨a, mem_powerset.1 ht ha⟩) _ _ _ fun b hb =>
+              (prod_bij (fun ha : a ∈ t => ⟨a, mem_powerset.1 ht ha⟩) _ _ _ fun b hb =>
                 ⟨b, by
                   cases b <;>
                     simpa only [true_andₓ, exists_prop, mem_filter, and_trueₓ, mem_attach, eq_self_iff_true,
                       Subtype.coe_mk] using hb⟩)
               (prod_bij
-                (fun a : α ha : a ∈ s \ t =>
+                (fun ha : a ∈ s \ t =>
                   ⟨a, by
                     simp_all ⟩)
                 _ _ _ fun b hb =>

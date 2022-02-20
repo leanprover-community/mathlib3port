@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Seul Baek. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Seul Baek
+-/
 import Mathbin.Data.List.ProdSigma
 import Mathbin.Tactic.Omega.Clause
 import Mathbin.Tactic.Omega.Int.Form
@@ -17,13 +22,13 @@ open_locale Omega.Int
     pushing the outermost negation all the way down,
     until it reaches either a negation or an atom -/
 @[simp]
-def push_neg : Preform → Preform
+def pushNeg : Preform → Preform
   | p ∨* q => push_neg p ∧* push_neg q
   | p ∧* q => push_neg p ∨* push_neg q
   | ¬* p => p
   | p => ¬* p
 
--- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:916:4: warning: unsupported (TODO): `[tacs]
 theorem push_neg_equiv : ∀ {p : Preform}, Preform.Equiv (pushNeg p) (¬* p) := by
   run_tac
     preform.induce sorry
@@ -41,7 +46,7 @@ def nnf : Preform → Preform
   | p ∧* q => nnf p ∧* nnf q
   | a => a
 
-def is_nnf : Preform → Prop
+def IsNnf : Preform → Prop
   | t =* s => True
   | t ≤* s => True
   | ¬* t =* s => True
@@ -50,7 +55,7 @@ def is_nnf : Preform → Prop
   | p ∧* q => is_nnf p ∧ is_nnf q
   | _ => False
 
--- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:916:4: warning: unsupported (TODO): `[tacs]
 theorem is_nnf_push_neg : ∀ p : Preform, IsNnf p → IsNnf (pushNeg p) := by
   run_tac
     preform.induce sorry
@@ -77,14 +82,14 @@ theorem is_nnf_push_neg : ∀ p : Preform, IsNnf p → IsNnf (pushNeg p) := by
     
 
 /-- Argument is free of negations -/
-def neg_free : Preform → Prop
+def NegFree : Preform → Prop
   | t =* s => True
   | t ≤* s => True
   | p ∨* q => neg_free p ∧ neg_free q
   | p ∧* q => neg_free p ∧ neg_free q
   | _ => False
 
--- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:916:4: warning: unsupported (TODO): `[tacs]
 theorem is_nnf_nnf : ∀ p : Preform, IsNnf (nnf p) := by
   run_tac
     preform.induce sorry
@@ -95,7 +100,7 @@ theorem is_nnf_nnf : ∀ p : Preform, IsNnf (nnf p) := by
   · constructor <;> assumption
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:916:4: warning: unsupported (TODO): `[tacs]
 theorem nnf_equiv : ∀ {p : Preform}, Preform.Equiv (nnf p) p := by
   run_tac
     preform.induce sorry
@@ -110,14 +115,14 @@ theorem nnf_equiv : ∀ {p : Preform}, Preform.Equiv (nnf p) p := by
 
 /-- Eliminate all negations from preform -/
 @[simp]
-def neg_elim : Preform → Preform
+def negElim : Preform → Preform
   | ¬* t =* s => (t.add_one ≤* s) ∨* s.add_one ≤* t
   | ¬* t ≤* s => s.add_one ≤* t
   | p ∨* q => neg_elim p ∨* neg_elim q
   | p ∧* q => neg_elim p ∧* neg_elim q
   | p => p
 
--- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:916:4: warning: unsupported (TODO): `[tacs]
 theorem neg_free_neg_elim : ∀ p : Preform, IsNnf p → NegFree (negElim p) := by
   run_tac
     preform.induce sorry
@@ -153,7 +158,7 @@ theorem le_and_le_iff_eq {α : Type} [PartialOrderₓ α] {a b : α} : a ≤ b �
   · constructor <;> apply le_of_eqₓ <;> rw [h1]
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:916:4: warning: unsupported (TODO): `[tacs]
 theorem implies_neg_elim : ∀ {p : Preform}, Preform.Implies p (negElim p) := by
   run_tac
     preform.induce sorry
@@ -183,7 +188,7 @@ theorem implies_neg_elim : ∀ {p : Preform}, Preform.Implies p (negElim p) := b
     
 
 @[simp]
-def dnf_core : Preform → List Clause
+def dnfCore : Preform → List Clause
   | p ∨* q => dnf_core p ++ dnf_core q
   | p ∧* q => (List.product (dnf_core p) (dnf_core q)).map fun pq => Clause.append pq.fst pq.snd
   | t =* s => [([Term.sub (canonize s) (canonize t)], [])]
@@ -194,7 +199,7 @@ def dnf_core : Preform → List Clause
 def dnf (p : Preform) : List Clause :=
   dnf_core <| neg_elim <| nnf p
 
--- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:916:4: warning: unsupported (TODO): `[tacs]
 theorem exists_clause_holds {v : Nat → Int} :
     ∀ {p : Preform}, NegFree p → p.Holds v → ∃ c ∈ dnfCore p, Clause.Holds v c := by
   run_tac

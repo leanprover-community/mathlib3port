@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Mario Carneiro. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Mario Carneiro
+-/
 import Mathbin.Data.List.Lex
 import Mathbin.Data.Char
 
@@ -27,12 +32,13 @@ def ltb : Iterator → Iterator → Bool
         ltb s₁.next s₂.next
       else s₁.curr < s₂.curr
 
-instance has_lt' : LT Stringₓ :=
+instance hasLt' : LT Stringₓ :=
   ⟨fun s₁ s₂ => ltb s₁.mkIterator s₂.mkIterator⟩
 
-instance decidable_lt : @DecidableRel Stringₓ (· < ·) := by
+instance decidableLt : @DecidableRel Stringₓ (· < ·) := by
   infer_instance
 
+-- short-circuit type class inference
 @[simp]
 theorem lt_iff_to_list_lt : ∀ {s₁ s₂ : Stringₓ}, s₁ < s₂ ↔ s₁.toList < s₂.toList
   | ⟨i₁⟩, ⟨i₂⟩ => by
@@ -59,12 +65,13 @@ theorem lt_iff_to_list_lt : ∀ {s₁ s₂ : Stringₓ}, s₁ < s₂ ↔ s₁.to
         
       
 
-instance LE : LE Stringₓ :=
+instance hasLe : LE Stringₓ :=
   ⟨fun s₁ s₂ => ¬s₂ < s₁⟩
 
-instance decidable_le : @DecidableRel Stringₓ (· ≤ ·) := by
+instance decidableLe : @DecidableRel Stringₓ (· ≤ ·) := by
   infer_instance
 
+-- short-circuit type class inference
 @[simp]
 theorem le_iff_to_list_le {s₁ s₂ : Stringₓ} : s₁ ≤ s₂ ↔ s₁.toList ≤ s₂.toList :=
   (not_congr lt_iff_to_list_lt).trans not_ltₓ
@@ -110,8 +117,8 @@ theorem popn_empty {n : ℕ} : "".popn n = "" := by
     
 
 instance : LinearOrderₓ Stringₓ where
-  lt := · < ·
-  le := · ≤ ·
+  lt := (· < ·)
+  le := (· ≤ ·)
   decidableLt := by
     infer_instance
   decidableLe := Stringₓ.decidableLe

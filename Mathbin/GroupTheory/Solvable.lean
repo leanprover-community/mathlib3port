@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Jordan Brown, Thomas Browning, Patrick Lutz. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Jordan Brown, Thomas Browning, Patrick Lutz
+-/
 import Mathbin.Data.Fin.VecNotation
 import Mathbin.GroupTheory.Abelianization
 import Mathbin.SetTheory.Cardinal
@@ -48,25 +53,8 @@ theorem derived_series_normal (n : ℕ) : (derivedSeries G n).Normal := by
     
 
 @[simp]
-theorem general_commutator_eq_commutator : ⁅(⊤ : Subgroup G),(⊤ : Subgroup G)⁆ = commutator G := by
-  rw [commutator, general_commutator_def']
-  apply le_antisymmₓ <;> apply normal_closure_mono
-  · exact fun x ⟨p, _, q, _, h⟩ => ⟨p, q, h⟩
-    
-  · exact fun x ⟨p, q, h⟩ => ⟨p, mem_top p, q, mem_top q, h⟩
-    
-
-theorem commutator_def' : commutator G = Subgroup.closure { x : G | ∃ p q, p * q * p⁻¹ * q⁻¹ = x } := by
-  rw [← general_commutator_eq_commutator, generalCommutator]
-  apply le_antisymmₓ <;> apply closure_mono
-  · exact fun x ⟨p, _, q, _, h⟩ => ⟨p, q, h⟩
-    
-  · exact fun x ⟨p, q, h⟩ => ⟨p, mem_top p, q, mem_top q, h⟩
-    
-
-@[simp]
 theorem derived_series_one : derivedSeries G 1 = commutator G :=
-  general_commutator_eq_commutator G
+  rfl
 
 end derivedSeries
 
@@ -206,10 +194,14 @@ variable [IsSimpleGroup G]
 
 theorem IsSimpleGroup.derived_series_succ {n : ℕ} : derivedSeries G n.succ = commutator G := by
   induction' n with n ih
-  · exact derived_series_one _
+  · exact derived_series_one G
     
   rw [derived_series_succ, ih]
-  cases' (commutator.normal G).eq_bot_or_eq_top with h h <;> simp [h]
+  cases' (commutator.normal G).eq_bot_or_eq_top with h h
+  · rw [h, general_commutator_bot]
+    
+  · rwa [h, ← commutator_def]
+    
 
 theorem IsSimpleGroup.comm_iff_is_solvable : (∀ a b : G, a * b = b * a) ↔ IsSolvable G :=
   ⟨is_solvable_of_comm, fun ⟨⟨n, hn⟩⟩ => by
@@ -223,8 +215,8 @@ theorem IsSimpleGroup.comm_iff_is_solvable : (∀ a b : G, a * b = b * a) ↔ Is
       
     · rw [IsSimpleGroup.derived_series_succ] at hn
       intro a b
-      rw [← mul_inv_eq_one, mul_inv_rev, ← mul_assoc, ← mem_bot, ← hn]
-      exact subset_normal_closure ⟨a, b, rfl⟩
+      rw [← mul_inv_eq_one, mul_inv_rev, ← mul_assoc, ← mem_bot, ← hn, commutator_eq_closure]
+      exact subset_closure ⟨a, b, rfl⟩
       ⟩
 
 end IsSimpleGroup
@@ -235,32 +227,32 @@ theorem not_solvable_of_mem_derived_series {g : G} (h1 : g ≠ 1) (h2 : ∀ n : 
   mt (is_solvable_def _).mp
     (not_exists_of_forall_not fun n h => h1 (Subgroup.mem_bot.mp ((congr_argₓ (HasMem.Mem g) h).mp (h2 n))))
 
--- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»
 theorem Equivₓ.Perm.fin_5_not_solvable : ¬IsSolvable (Equivₓ.Perm (Finₓ 5)) := by
   let x : Equivₓ.Perm (Finₓ 5) :=
-    ⟨«expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»",
-      «expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»", by
+    ⟨«expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»",
+      «expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»", by
       decide, by
       decide⟩
   let y : Equivₓ.Perm (Finₓ 5) :=
-    ⟨«expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»",
-      «expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»", by
+    ⟨«expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»",
+      «expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»", by
       decide, by
       decide⟩
   let z : Equivₓ.Perm (Finₓ 5) :=
-    ⟨«expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»",
-      «expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»", by
+    ⟨«expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»",
+      «expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»", by
       decide, by
       decide⟩
   have x_ne_one : x ≠ 1 := by

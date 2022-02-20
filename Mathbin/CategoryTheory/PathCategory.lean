@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison
+-/
 import Mathbin.CategoryTheory.EqToHom
 import Mathbin.Combinatorics.Quiver.Path
 
@@ -14,7 +19,7 @@ section
 
 /-- A type synonym for the category of paths in a quiver.
 -/
-def paths (V : Type u₁) : Type u₁ :=
+def Paths (V : Type u₁) : Type u₁ :=
   V
 
 instance (V : Type u₁) [Inhabited V] : Inhabited (Paths V) :=
@@ -24,7 +29,7 @@ variable (V : Type u₁) [Quiver.{v₁ + 1} V]
 
 namespace Paths
 
-instance category_paths : Category.{max u₁ v₁} (Paths V) where
+instance categoryPaths : Category.{max u₁ v₁} (Paths V) where
   Hom := fun X Y : V => Quiver.Path X Y
   id := fun X => Quiver.Path.nil
   comp := fun X Y Z f g => Quiver.Path.comp f g
@@ -63,8 +68,9 @@ end Paths
 
 variable (W : Type u₂) [Quiver.{v₂ + 1} W]
 
+-- A restatement of `prefunctor.map_path_comp` using `f ≫ g` instead of `f.comp g`.
 @[simp]
-theorem prefunctor.map_path_comp' (F : Prefunctor V W) {X Y Z : Paths V} (f : X ⟶ Y) (g : Y ⟶ Z) :
+theorem Prefunctor.map_path_comp' (F : Prefunctor V W) {X Y Z : Paths V} (f : X ⟶ Y) (g : Y ⟶ Z) :
     F.mapPath (f ≫ g) = (F.mapPath f).comp (F.mapPath g) :=
   Prefunctor.map_path_comp _ _ _
 
@@ -78,7 +84,7 @@ open Quiver
 
 /-- A path in a category can be composed to a single morphism. -/
 @[simp]
-def compose_path {X : C} : ∀ {Y : C} p : Path X Y, X ⟶ Y
+def composePathₓ {X : C} : ∀ {Y : C} p : Path X Y, X ⟶ Y
   | _, path.nil => 𝟙 X
   | _, path.cons p e => compose_path p ≫ e
 

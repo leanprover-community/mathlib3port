@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Simon Hudon. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Simon Hudon
+-/
 import Mathbin.Data.Nat.Basic
 
 /-!
@@ -25,7 +30,7 @@ natural numbers, up to and including the first value satisfying `p`.
 We will be particularly interested in the case where there exists a value
 satisfying `p`, because in this case the `>` relation is well-founded.  -/
 @[reducible]
-def upto (p : ℕ → Prop) : Type :=
+def Upto (p : ℕ → Prop) : Type :=
   { i : ℕ // ∀, ∀ j < i, ∀, ¬p j }
 
 namespace Upto

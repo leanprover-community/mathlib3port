@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Joseph Myers. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Joseph Myers
+-/
 import Mathbin.Algebra.AddTorsor
 import Mathbin.Data.Set.Intervals.UnorderedInterval
 import Mathbin.LinearAlgebra.AffineSpace.Basic
@@ -63,7 +68,7 @@ variable {k : Type _} {V₁ : Type _} {V₂ : Type _} [Ringₓ k] [AddCommGroup�
   [Module k V₂] (f : V₁ →ₗ[k] V₂)
 
 /-- Reinterpret a linear map as an affine map. -/
-def to_affine_map : V₁ →ᵃ[k] V₂ where
+def toAffineMap : V₁ →ᵃ[k] V₂ where
   toFun := f
   linear := f
   map_vadd' := fun p v => f.map_add v p
@@ -129,10 +134,10 @@ theorem ext_iff {f g : P1 →ᵃ[k] P2} : f = g ↔ ∀ p, f p = g p :=
 
 theorem coe_fn_injective : @Function.Injective (P1 →ᵃ[k] P2) (P1 → P2) coeFn := fun f g H => ext <| congr_funₓ H
 
-protected theorem congr_argₓ (f : P1 →ᵃ[k] P2) {x y : P1} (h : x = y) : f x = f y :=
+protected theorem congr_arg (f : P1 →ᵃ[k] P2) {x y : P1} (h : x = y) : f x = f y :=
   congr_argₓ _ h
 
-protected theorem congr_funₓ {f g : P1 →ᵃ[k] P2} (h : f = g) (x : P1) : f x = g x :=
+protected theorem congr_fun {f g : P1 →ᵃ[k] P2} (h : f = g) (x : P1) : f x = g x :=
   h ▸ rfl
 
 variable (k P1)
@@ -164,7 +169,7 @@ theorem linear_eq_zero_iff_exists_const (f : P1 →ᵃ[k] P2) : f.linear = 0 ↔
     exact const_linear k P1 q
     
 
-instance Nonempty : Nonempty (P1 →ᵃ[k] P2) :=
+instance nonempty : Nonempty (P1 →ᵃ[k] P2) :=
   (AddTorsor.nonempty : Nonempty P2).elim fun p => ⟨const k P1 p⟩
 
 /-- Construct an affine map by verifying the relation between the map and its linear part at one
@@ -381,7 +386,7 @@ theorem coe_one : ⇑(1 : P1 →ᵃ[k] P1) = _root_.id :=
 
 /-- `affine_map.linear` on endomorphisms is a `monoid_hom`. -/
 @[simps]
-def linear_hom : (P1 →ᵃ[k] P1) →* V1 →ₗ[k] V1 where
+def linearHom : (P1 →ᵃ[k] P1) →* V1 →ₗ[k] V1 where
   toFun := linear
   map_one' := rfl
   map_mul' := fun _ _ => rfl
@@ -421,7 +426,7 @@ omit V2
 
 
 /-- The affine map from `k` to `P1` sending `0` to `p₀` and `1` to `p₁`. -/
-def line_map (p₀ p₁ : P1) : k →ᵃ[k] P1 :=
+def lineMap (p₀ p₁ : P1) : k →ᵃ[k] P1 :=
   ((LinearMap.id : k →ₗ[k] k).smulRight (p₁ -ᵥ p₀)).toAffineMap +ᵥ const k k p₀
 
 theorem coe_line_map (p₀ p₁ : P1) : (lineMap p₀ p₁ : k → P1) = fun c => c • (p₁ -ᵥ p₀) +ᵥ p₀ :=
@@ -519,7 +524,8 @@ theorem line_map_vadd_line_map (v₁ v₂ : V1) (p₁ p₂ : P1) (c : k) :
 
 theorem line_map_vsub_line_map (p₁ p₂ p₃ p₄ : P1) (c : k) :
     lineMap p₁ p₂ c -ᵥ lineMap p₃ p₄ c = lineMap (p₁ -ᵥ p₃) (p₂ -ᵥ p₄) c := by
-  let this' : affine_space (V1 × V1) (P1 × P1) := Prod.addTorsor <;>
+  -- Why Lean fails to find this instance without a hint?
+    let this' : affine_space (V1 × V1) (P1 × P1) := Prod.addTorsor <;>
     exact ((fst : P1 × P1 →ᵃ[k] P1) -ᵥ (snd : P1 × P1 →ᵃ[k] P1)).apply_line_map (_, _) (_, _) c
 
 /-- Decomposition of an affine map in the special case when the point space and vector space
@@ -620,7 +626,7 @@ variable [Semiringₓ R] [Module R V2] [SmulCommClass k R V2]
 
 /-- The space of affine maps taking values in an `R`-module is an `R`-module. -/
 instance : Module R (P1 →ᵃ[k] V2) :=
-  { AffineMap.distribMulAction with smul := · • ·, add_smul := fun c₁ c₂ f => ext fun p => add_smul _ _ _,
+  { AffineMap.distribMulAction with smul := (· • ·), add_smul := fun c₁ c₂ f => ext fun p => add_smul _ _ _,
     zero_smul := fun f => ext fun p => zero_smul _ _ }
 
 variable (R)
@@ -631,7 +637,7 @@ linear part.
 
 See note [bundled maps over different rings]-/
 @[simps]
-def to_const_prod_linear_map : (V1 →ᵃ[k] V2) ≃ₗ[R] V2 × (V1 →ₗ[k] V2) where
+def toConstProdLinearMap : (V1 →ᵃ[k] V2) ≃ₗ[R] V2 × (V1 →ₗ[k] V2) where
   toFun := fun f => ⟨f 0, f.linear⟩
   invFun := fun p => p.2.toAffineMap + const k V1 p.1
   left_inv := fun f => by
@@ -695,7 +701,7 @@ theorem homothety_add (c : P1) (r₁ r₂ : k) : homothety c (r₁ + r₂) = r�
   simp only [homothety_def, add_smul, vadd_vadd]
 
 /-- `homothety` as a multiplicative monoid homomorphism. -/
-def homothety_hom (c : P1) : k →* P1 →ᵃ[k] P1 :=
+def homothetyHom (c : P1) : k →* P1 →ᵃ[k] P1 :=
   ⟨homothety c, homothety_one c, homothety_mul c⟩
 
 @[simp]
@@ -703,7 +709,7 @@ theorem coe_homothety_hom (c : P1) : ⇑(homothetyHom c : k →* _) = homothety 
   rfl
 
 /-- `homothety` as an affine map. -/
-def homothety_affine (c : P1) : k →ᵃ[k] P1 →ᵃ[k] P1 :=
+def homothetyAffine (c : P1) : k →ᵃ[k] P1 →ᵃ[k] P1 :=
   ⟨homothety c, (LinearMap.lsmul k _).flip (id k P1 -ᵥ const k P1 c), Function.swap (homothety_add c)⟩
 
 @[simp]

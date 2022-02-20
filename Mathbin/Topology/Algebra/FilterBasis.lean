@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Patrick Massot. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Patrick Massot
+-/
 import Mathbin.Order.Filter.Bases
 import Mathbin.Topology.Algebra.Module.Basic
 
@@ -136,7 +141,7 @@ theorem prod_subset_self (B : GroupFilterBasis G) {U : Set G} (h : U ∈ B) : U 
 
 /-- The neighborhood function of a `group_filter_basis` -/
 @[to_additive "The neighborhood function of a `add_group_filter_basis`"]
-def N (B : GroupFilterBasis G) : G → Filter G := fun x => map (fun y => x * y) B.toFilterBasis.filter
+def n (B : GroupFilterBasis G) : G → Filter G := fun x => map (fun y => x * y) B.toFilterBasis.filter
 
 @[simp, to_additive]
 theorem N_one (B : GroupFilterBasis G) : B.n 1 = B.toFilterBasis.filter := by
@@ -358,7 +363,7 @@ def topology' {R M : Type _} [CommRingₓ R] {tR : TopologicalSpace R} [AddCommG
 
 /-- If a module is endowed with a topological structure coming from
 a module filter basis then it's a topological module. -/
-instance (priority := 100) HasContinuousSmul [TopologicalRing R] : @HasContinuousSmul R M _ _ B.topology := by
+instance (priority := 100) has_continuous_smul [TopologicalRing R] : @HasContinuousSmul R M _ _ B.topology := by
   let B' := B.to_add_group_filter_basis
   let this' := B'.topology
   have basis := B'.nhds_zero_has_basis
@@ -384,7 +389,7 @@ instance (priority := 100) HasContinuousSmul [TopologicalRing R] : @HasContinuou
     
 
 /-- Build a module filter basis from compatible ring and additive group filter bases. -/
-def of_bases {R M : Type _} [CommRingₓ R] [AddCommGroupₓ M] [Module R M] (BR : RingFilterBasis R)
+def ofBases {R M : Type _} [CommRingₓ R] [AddCommGroupₓ M] [Module R M] (BR : RingFilterBasis R)
     (BM : AddGroupFilterBasis M) (smul : ∀ {U}, U ∈ BM → ∃ V ∈ BR, ∃ W ∈ BM, V • W ⊆ U)
     (smul_left : ∀ x₀ : R {U}, U ∈ BM → ∃ V ∈ BM, V ⊆ (fun x => x₀ • x) ⁻¹' U)
     (smul_right : ∀ m₀ : M {U}, U ∈ BM → ∃ V ∈ BR, V ⊆ (fun x => x • m₀) ⁻¹' U) :

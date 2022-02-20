@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Bhavik Mehta. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Bhavik Mehta, Alena Gusakov
+-/
 import Mathbin.Data.Fintype.Basic
 import Mathbin.Algebra.GeomSum
 
@@ -124,7 +129,7 @@ instance [LT α] : IsIrrefl (Finset.Colex α) (· < ·) :=
   ⟨fun A h => Exists.elim h fun _ ⟨_, a, b⟩ => a b⟩
 
 @[trans]
-theorem lt_transₓ [LinearOrderₓ α] {a b c : Finset.Colex α} : a < b → b < c → a < c := by
+theorem lt_trans [LinearOrderₓ α] {a b c : Finset.Colex α} : a < b → b < c → a < c := by
   rintro ⟨k₁, k₁z, notinA, inB⟩ ⟨k₂, k₂z, notinB, inC⟩
   cases lt_or_gt_of_neₓ (ne_of_mem_of_not_mem inB notinB)
   · refine'
@@ -143,13 +148,13 @@ theorem lt_transₓ [LinearOrderₓ α] {a b c : Finset.Colex α} : a < b → b 
     
 
 @[trans]
-theorem le_transₓ [LinearOrderₓ α] (a b c : Finset.Colex α) : a ≤ b → b ≤ c → a ≤ c := fun AB BC =>
+theorem le_trans [LinearOrderₓ α] (a b c : Finset.Colex α) : a ≤ b → b ≤ c → a ≤ c := fun AB BC =>
   AB.elim (fun k => BC.elim (fun t => Or.inl (lt_trans k t)) fun t => t ▸ AB) fun k => k.symm ▸ BC
 
 instance [LinearOrderₓ α] : IsTrans (Finset.Colex α) (· < ·) :=
   ⟨fun _ _ _ => Colex.lt_trans⟩
 
-theorem lt_trichotomyₓ [LinearOrderₓ α] (A B : Finset.Colex α) : A < B ∨ A = B ∨ B < A := by
+theorem lt_trichotomy [LinearOrderₓ α] (A B : Finset.Colex α) : A < B ∨ A = B ∨ B < A := by
   by_cases' h₁ : A = B
   · tauto
     
@@ -182,7 +187,7 @@ theorem lt_trichotomyₓ [LinearOrderₓ α] (A B : Finset.Colex α) : A < B ∨
 instance [LinearOrderₓ α] : IsTrichotomous (Finset.Colex α) (· < ·) :=
   ⟨lt_trichotomy⟩
 
-instance decidable_lt [LinearOrderₓ α] : ∀ {A B : Finset.Colex α}, Decidable (A < B) :=
+instance decidableLt [LinearOrderₓ α] : ∀ {A B : Finset.Colex α}, Decidable (A < B) :=
   show ∀ A B : Finset α, Decidable (A.toColex < B.toColex) from fun A B =>
     decidableOfIff' (∃ k ∈ B, (∀, ∀ x ∈ A ∪ B, ∀, k < x → (x ∈ A ↔ x ∈ B)) ∧ k ∉ A)
       (by
@@ -344,8 +349,8 @@ theorem colex_le_of_subset [LinearOrderₓ α] {A B : Finset α} (h : A ⊆ B) :
 
 /-- The function from finsets to finsets with the colex order is a relation homomorphism. -/
 @[simps]
-def to_colex_rel_hom [LinearOrderₓ α] :
-    (· ⊆ · : Finset α → Finset α → Prop) →r (· ≤ · : Finset.Colex α → Finset.Colex α → Prop) where
+def toColexRelHom [LinearOrderₓ α] :
+    ((· ⊆ ·) : Finset α → Finset α → Prop) →r ((· ≤ ·) : Finset.Colex α → Finset.Colex α → Prop) where
   toFun := Finset.toColex
   map_rel' := fun A B => colex_le_of_subset
 

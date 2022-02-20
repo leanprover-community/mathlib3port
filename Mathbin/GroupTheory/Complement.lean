@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Thomas Browning. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Thomas Browning
+-/
 import Mathbin.GroupTheory.OrderOfElement
 
 /-!
@@ -29,22 +34,22 @@ variable {G : Type _} [Groupₓ G] (H K : Subgroup G) (S T : Set G)
 /-- `S` and `T` are complements if `(*) : S × T → G` is a bijection.
   This notion generalizes left transversals, right transversals, and complementary subgroups. -/
 @[to_additive "`S` and `T` are complements if `(*) : S × T → G` is a bijection"]
-def is_complement : Prop :=
+def IsComplement : Prop :=
   Function.Bijective fun x : S × T => x.1.1 * x.2.1
 
 /-- `H` and `K` are complements if `(*) : H × K → G` is a bijection -/
 @[to_additive "`H` and `K` are complements if `(*) : H × K → G` is a bijection"]
-abbrev is_complement' :=
+abbrev IsComplement' :=
   IsComplement (H : Set G) (K : Set G)
 
 /-- The set of left-complements of `T : set G` -/
 @[to_additive "The set of left-complements of `T : set G`"]
-def left_transversals : Set (Set G) :=
+def LeftTransversals : Set (Set G) :=
   { S : Set G | IsComplement S T }
 
 /-- The set of right-complements of `S : set G` -/
 @[to_additive "The set of right-complements of `S : set G`"]
-def right_transversals : Set (Set G) :=
+def RightTransversals : Set (Set G) :=
   { T : Set G | IsComplement S T }
 
 variable {H K S T}
@@ -58,11 +63,11 @@ theorem is_complement_iff_exists_unique : IsComplement S T ↔ ∀ g : G, ∃! x
   Function.bijective_iff_exists_unique _
 
 @[to_additive]
-theorem is_complement.exists_unique (h : IsComplement S T) (g : G) : ∃! x : S × T, x.1.1 * x.2.1 = g :=
+theorem IsComplement.exists_unique (h : IsComplement S T) (g : G) : ∃! x : S × T, x.1.1 * x.2.1 = g :=
   is_complement_iff_exists_unique.mp h g
 
 @[to_additive]
-theorem is_complement'.symm (h : IsComplement' H K) : IsComplement' K H := by
+theorem IsComplement'.symm (h : IsComplement' H K) : IsComplement' K H := by
   let ϕ : H × K ≃ K × H :=
     Equivₓ.mk (fun x => ⟨x.2⁻¹, x.1⁻¹⟩) (fun x => ⟨x.2⁻¹, x.1⁻¹⟩) (fun x => Prod.extₓ (inv_invₓ _) (inv_invₓ _))
       fun x => Prod.extₓ (inv_invₓ _) (inv_invₓ _)
@@ -77,12 +82,12 @@ theorem is_complement'_comm : IsComplement' H K ↔ IsComplement' K H :=
 
 @[to_additive]
 theorem is_complement_top_singleton {g : G} : IsComplement (⊤ : Set G) {g} :=
-  ⟨fun ⟨x, _, rfl⟩ ⟨y, _, rfl⟩ h => Prod.extₓ (Subtype.ext (mul_right_cancelₓ h)) rfl, fun x =>
+  ⟨fun h => Prod.extₓ (Subtype.ext (mul_right_cancelₓ h)) rfl, fun x =>
     ⟨⟨⟨x * g⁻¹, ⟨⟩⟩, g, rfl⟩, inv_mul_cancel_right x g⟩⟩
 
 @[to_additive]
 theorem is_complement_singleton_top {g : G} : IsComplement ({g} : Set G) ⊤ :=
-  ⟨fun ⟨⟨_, rfl⟩, x⟩ ⟨⟨_, rfl⟩, y⟩ h => Prod.extₓ rfl (Subtype.ext (mul_left_cancelₓ h)), fun x =>
+  ⟨fun h => Prod.extₓ rfl (Subtype.ext (mul_left_cancelₓ h)), fun x =>
     ⟨⟨⟨g, rfl⟩, g⁻¹ * x, ⟨⟩⟩, mul_inv_cancel_left g x⟩⟩
 
 @[to_additive]
@@ -228,7 +233,7 @@ instance : Inhabited (RightTransversals (H : Set G)) :=
           rintro ⟨_, q₁, rfl⟩ ⟨_, q₂, rfl⟩ hg
           rw [(q₁.out_eq'.symm.trans hg).trans q₂.out_eq'], fun q => ⟨⟨q.out', q, rfl⟩, Quotientₓ.out_eq' q⟩⟩⟩⟩
 
-theorem is_complement'.is_compl (h : IsComplement' H K) : IsCompl H K := by
+theorem IsComplement'.is_compl (h : IsComplement' H K) : IsCompl H K := by
   refine'
     ⟨fun g ⟨p, q⟩ =>
       let x : H × K := ⟨⟨g, p⟩, 1⟩
@@ -238,17 +243,17 @@ theorem is_complement'.is_compl (h : IsComplement' H K) : IsCompl H K := by
   obtain ⟨⟨h, k⟩, rfl⟩ := h.2 g
   exact Subgroup.mul_mem_sup h.2 k.2
 
-theorem is_complement'.sup_eq_top (h : Subgroup.IsComplement' H K) : H⊔K = ⊤ :=
+theorem IsComplement'.sup_eq_top (h : Subgroup.IsComplement' H K) : H⊔K = ⊤ :=
   h.IsCompl.sup_eq_top
 
-theorem is_complement'.disjoint (h : IsComplement' H K) : Disjoint H K :=
+theorem IsComplement'.disjoint (h : IsComplement' H K) : Disjoint H K :=
   h.IsCompl.Disjoint
 
-theorem is_complement.card_mul [Fintype G] [Fintype S] [Fintype T] (h : IsComplement S T) :
+theorem IsComplement.card_mul [Fintype G] [Fintype S] [Fintype T] (h : IsComplement S T) :
     Fintype.card S * Fintype.card T = Fintype.card G :=
   (Fintype.card_prod _ _).symm.trans (Fintype.card_of_bijective h)
 
-theorem is_complement'.card_mul [Fintype G] [Fintype H] [Fintype K] (h : IsComplement' H K) :
+theorem IsComplement'.card_mul [Fintype G] [Fintype H] [Fintype K] (h : IsComplement' H K) :
     Fintype.card H * Fintype.card K = Fintype.card G :=
   h.card_mul
 

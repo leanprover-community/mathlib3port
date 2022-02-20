@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Johannes Hölzl. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johannes Hölzl, Patrick Massot, Casper Putz, Anne Baanen
+-/
 import Mathbin.LinearAlgebra.Matrix.Determinant
 import Mathbin.Tactic.FinCases
 
@@ -85,7 +90,7 @@ theorem to_square_block_det'' (M : Matrix m m R) {n : Nat} (b : m → Finₓ n) 
 
 /-- Let `b` map rows and columns of a square matrix `M` to `n` blocks. Then
   `block_triangular_matrix' M n b` says the matrix is block triangular. -/
-def block_triangular_matrix' {o : Type _} (M : Matrix o o R) {n : ℕ} (b : o → Finₓ n) : Prop :=
+def BlockTriangularMatrix' {o : Type _} (M : Matrix o o R) {n : ℕ} (b : o → Finₓ n) : Prop :=
   ∀ i j, b j < b i → M i j = 0
 
 -- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
@@ -119,7 +124,7 @@ theorem upper_two_block_triangular' {m n : Type _} (A : Matrix m m R) (B : Matri
 
 /-- Let `b` map rows and columns of a square matrix `M` to blocks indexed by `ℕ`s. Then
   `block_triangular_matrix M n b` says the matrix is block triangular. -/
-def block_triangular_matrix {o : Type _} (M : Matrix o o R) (b : o → ℕ) : Prop :=
+def BlockTriangularMatrix {o : Type _} (M : Matrix o o R) (b : o → ℕ) : Prop :=
   ∀ i j, b j < b i → M i j = 0
 
 theorem upper_two_block_triangular {m n : Type _} (A : Matrix m m R) (B : Matrix m n R) (D : Matrix n n R) :
@@ -250,7 +255,7 @@ theorem det_of_upper_triangular {n : ℕ} (M : Matrix (Finₓ n) (Finₓ n) R) (
 theorem det_of_lower_triangular {n : ℕ} (M : Matrix (Finₓ n) (Finₓ n) R) (h : ∀ i j : Finₓ n, i < j → M i j = 0) :
     M.det = ∏ i : Finₓ n, M i i := by
   rw [← det_transpose]
-  exact det_of_upper_triangular _ fun i j : Finₓ n hji : j < i => h j i hji
+  exact det_of_upper_triangular _ fun hji : j < i => h j i hji
 
 end Matrix
 

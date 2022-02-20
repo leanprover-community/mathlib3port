@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Simon Hudon. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Simon Hudon
+-/
 import Mathbin.Tactic.Core
 
 /-!
@@ -25,7 +30,7 @@ namespace Tactic
 /-- With `gs` a list of proof goals, `reorder_goals gs new_g` will use the `new_goals` policy
 `new_g` to rearrange the dependent goals to either drop them, push them to the end of the list
 or leave them in place. The `bool` values in `gs` indicates whether the goal is dependent or not. -/
-def reorder_goals {α} (gs : List (Bool × α)) : NewGoals → List α
+def reorderGoals {α} (gs : List (Bool × α)) : NewGoals → List α
   | new_goals.non_dep_first =>
     let ⟨dep, non_dep⟩ := gs.partition (coe ∘ Prod.fst)
     non_dep.map Prod.snd ++ dep.map Prod.snd
@@ -178,7 +183,7 @@ unsafe def symmetry' : parse location → tactic Unit
   | l@loc.wildcard => l.try_apply symmetry_hyp tactic.symmetry'
   | loc.ns hs => (Loc.ns hs.reverse).apply symmetry_hyp tactic.symmetry'
 
--- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr ?»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr ?»
 /-- Similar to `transitivity` with the difference that `apply'` is used instead of `apply`.
 -/
 unsafe def transitivity' (q : parse («expr ?» texpr)) : tactic Unit :=

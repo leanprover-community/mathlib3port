@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Chris Hughes. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Chris Hughes, Abhimanyu Pallavi Sudhir, Jean Lo, Calle Sönne, Benjamin Davidson
+-/
 import Mathbin.Analysis.SpecialFunctions.Trigonometric.Complex
 
 /-!
@@ -98,7 +103,7 @@ theorem image_tan_Ioo : tan '' Ioo (-(π / 2)) (π / 2) = univ :=
   univ_subset_iff.1 surj_on_tan
 
 /-- `real.tan` as an `order_iso` between `(-(π / 2), π / 2)` and `ℝ`. -/
-def tan_order_iso : Ioo (-(π / 2)) (π / 2) ≃o ℝ :=
+def tanOrderIso : Ioo (-(π / 2)) (π / 2) ≃o ℝ :=
   (strict_mono_on_tan.OrderIso _ _).trans <| (OrderIso.setCongr _ _ image_tan_Ioo).trans OrderIso.Set.univ
 
 /-- Inverse of the `tan` function, returns values in the range `-π / 2 < arctan x` and
@@ -169,7 +174,7 @@ theorem continuous_at_arctan {x : ℝ} : ContinuousAt arctan x :=
   continuous_arctan.ContinuousAt
 
 /-- `real.tan` as a `local_homeomorph` between `(-(π / 2), π / 2)` and the whole line. -/
-def tan_local_homeomorph : LocalHomeomorph ℝ ℝ where
+def tanLocalHomeomorph : LocalHomeomorph ℝ ℝ where
   toFun := tan
   invFun := arctan
   Source := Ioo (-(π / 2)) (π / 2)

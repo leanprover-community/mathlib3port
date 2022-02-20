@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison
+-/
 import Mathbin.CategoryTheory.Preadditive.AdditiveFunctor
 import Mathbin.CategoryTheory.Monoidal.Category
 
@@ -24,7 +29,7 @@ variable (C : Type _) [Category C] [Preadditive C] [MonoidalCategory C]
 Note we don't `extend preadditive C` here, as `abelian C` already extends it,
 and we'll need to have both typeclasses sometimes.
 -/
-class monoidal_preadditive where
+class MonoidalPreadditive where
   tensor_zero' : ∀ {W X Y Z : C} f : W ⟶ X, f ⊗ (0 : Y ⟶ Z) = 0 := by
     run_tac
       obviously

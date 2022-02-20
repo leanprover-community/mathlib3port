@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2020 Anne Baanen. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Nathaniel Thomas, Jeremy Avigad, Johannes Hölzl, Mario Carneiro, Anne Baanen,
+  Frédéric Dupuis, Heather Macbeth
+-/
 import Mathbin.Algebra.Group.Hom
 import Mathbin.Algebra.Module.Basic
 import Mathbin.Algebra.Module.Pi
@@ -120,7 +126,7 @@ instance : AddMonoidHomClass (M →ₛₗ[σ] M₃) M M₃ where
       simp
 
 /-- The `distrib_mul_action_hom` underlying a `linear_map`. -/
-def to_distrib_mul_action_hom (f : M →ₗ[R] M₂) : DistribMulActionHom R M M₂ :=
+def toDistribMulActionHom (f : M →ₗ[R] M₂) : DistribMulActionHom R M M₂ :=
   { f with map_zero' := show f 0 = 0 from map_zero f }
 
 /-- Helper instance for when there's too many metavariables to apply `to_fun.to_coe_fn` directly.
@@ -183,11 +189,11 @@ variable {fₗ gₗ f g σ}
 theorem coe_injective : @Injective (M →ₛₗ[σ] M₃) (M → M₃) coeFn :=
   FunLike.coe_injective
 
-protected theorem congr_argₓ {x x' : M} : x = x' → f x = f x' :=
+protected theorem congr_arg {x x' : M} : x = x' → f x = f x' :=
   FunLike.congr_arg f
 
 /-- If two linear maps are equal, they are equal at each point. -/
-protected theorem congr_funₓ (h : f = g) (x : M) : f x = g x :=
+protected theorem congr_fun (h : f = g) (x : M) : f x = g x :=
   FunLike.congr_fun h x
 
 theorem ext_iff : f = g ↔ ∀ x, f x = g x :=
@@ -215,6 +221,7 @@ theorem map_smul_inv {σ' : S →+* R} [RingHomInvPair σ σ'] (c : S) (x : M) :
 protected theorem map_zero : f 0 = 0 :=
   map_zero f
 
+-- TODO: generalize to `zero_hom_class`
 @[simp]
 theorem map_eq_zero_iff (h : Function.Injective f) {x : M} : f x = 0 ↔ x = 0 :=
   ⟨fun w => by
@@ -268,12 +275,12 @@ This typeclass is generated automatically from a `is_scalar_tower` instance, but
 we can also add an instance for `add_comm_group.int_module`, allowing `z •` to be moved even if
 `R` does not support negation.
 -/
-class compatible_smul (R S : Type _) [Semiringₓ S] [HasScalar R M] [Module S M] [HasScalar R M₂] [Module S M₂] where
+class CompatibleSmul (R S : Type _) [Semiringₓ S] [HasScalar R M] [Module S M] [HasScalar R M₂] [Module S M₂] where
   map_smul : ∀ fₗ : M →ₗ[S] M₂ c : R x : M, fₗ (c • x) = c • fₗ x
 
 variable {M M₂}
 
-instance (priority := 100) is_scalar_tower.compatible_smul {R S : Type _} [Semiringₓ S] [HasScalar R S] [HasScalar R M]
+instance (priority := 100) IsScalarTower.compatibleSmul {R S : Type _} [Semiringₓ S] [HasScalar R S] [HasScalar R M]
     [Module S M] [IsScalarTower R S M] [HasScalar R M₂] [Module S M₂] [IsScalarTower R S M₂] :
     CompatibleSmul M M₂ R S :=
   ⟨fun fₗ c x => by
@@ -285,7 +292,7 @@ theorem map_smul_of_tower {R S : Type _} [Semiringₓ S] [HasScalar R M] [Module
   CompatibleSmul.map_smul fₗ c x
 
 /-- convert a linear map to an additive map -/
-def to_add_monoid_hom : M →+ M₃ where
+def toAddMonoidHom : M →+ M₃ where
   toFun := f
   map_zero' := f.map_zero
   map_add' := f.map_add
@@ -304,7 +311,7 @@ map from `M` to `M₂` is `R`-linear.
 
 See also `linear_map.map_smul_of_tower`. -/
 @[simps]
-def restrict_scalars (fₗ : M →ₗ[S] M₂) : M →ₗ[R] M₂ where
+def restrictScalars (fₗ : M →ₗ[S] M₂) : M →ₗ[R] M₂ where
   toFun := fₗ
   map_add' := fₗ.map_add
   map_smul' := fₗ.map_smul_of_tower
@@ -427,7 +434,7 @@ protected theorem map_neg (x : M) : f (-x) = -f x :=
 protected theorem map_sub (x y : M) : f (x - y) = f x - f y :=
   map_sub f x y
 
-instance compatible_smul.int_module {S : Type _} [Semiringₓ S] [Module S M] [Module S M₂] : CompatibleSmul M M₂ ℤ S :=
+instance CompatibleSmul.intModule {S : Type _} [Semiringₓ S] [Module S M] [Module S M₂] : CompatibleSmul M M₂ ℤ S :=
   ⟨fun fₗ c x => by
     induction c using Int.induction_on
     case hz =>
@@ -437,7 +444,7 @@ instance compatible_smul.int_module {S : Type _} [Semiringₓ S] [Module S M] [M
     case hn n ih =>
       simp [sub_smul, ih]⟩
 
-instance compatible_smul.units {R S : Type _} [Monoidₓ R] [MulAction R M] [MulAction R M₂] [Semiringₓ S] [Module S M]
+instance CompatibleSmul.units {R S : Type _} [Monoidₓ R] [MulAction R M] [MulAction R M₂] [Semiringₓ S] [Module S M]
     [Module S M₂] [CompatibleSmul M M₂ R S] : CompatibleSmul M M₂ (R)ˣ S :=
   ⟨fun fₗ c x => (CompatibleSmul.map_smul fₗ (c : R) x : _)⟩
 
@@ -449,7 +456,7 @@ namespace Module
 
 /-- `g : R →+* S` is `R`-linear when the module structure on `S` is `module.comp_hom S g` . -/
 @[simps]
-def comp_hom.to_linear_map {R S : Type _} [Semiringₓ R] [Semiringₓ S] (g : R →+* S) :
+def compHom.toLinearMap {R S : Type _} [Semiringₓ R] [Semiringₓ S] (g : R →+* S) :
     have := comp_hom S g
     R →ₗ[R] S where
   toFun := (g : R → S)
@@ -463,7 +470,7 @@ namespace DistribMulActionHom
 variable [Semiringₓ R] [AddCommMonoidₓ M] [AddCommMonoidₓ M₂] [Module R M] [Module R M₂]
 
 /-- A `distrib_mul_action_hom` between two modules is a linear map. -/
-def to_linear_map (fₗ : M →+[R] M₂) : M →ₗ[R] M₂ :=
+def toLinearMap (fₗ : M →+[R] M₂) : M →ₗ[R] M₂ :=
   { fₗ with }
 
 instance : Coe (M →+[R] M₂) (M →ₗ[R] M₂) :=
@@ -665,7 +672,7 @@ theorem comp_add (f g : M →ₛₗ[σ₁₂] M₂) (h : M₂ →ₛₗ[σ₂₃
 /-- The type of linear maps is an additive monoid. -/
 instance : AddCommMonoidₓ (M →ₛₗ[σ₁₂] M₂) where
   zero := 0
-  add := · + ·
+  add := (· + ·)
   add_assoc := fun f g h => LinearMap.ext fun x => add_assocₓ _ _ _
   zero_add := fun f => LinearMap.ext fun x => zero_addₓ _
   add_zero := fun f => LinearMap.ext fun x => add_zeroₓ _
@@ -730,7 +737,7 @@ omit σ₁₃
 
 /-- The type of linear maps is an additive group. -/
 instance : AddCommGroupₓ (M →ₛₗ[σ₁₂] N₂) :=
-  { LinearMap.addCommMonoid with zero := 0, add := · + ·, neg := Neg.neg, sub := Sub.sub,
+  { LinearMap.addCommMonoid with zero := 0, add := (· + ·), neg := Neg.neg, sub := Sub.sub,
     sub_eq_add_neg := fun f g => LinearMap.ext fun m => sub_eq_add_neg _ _,
     add_left_neg := fun f => LinearMap.ext fun m => add_left_negₓ _,
     nsmul := fun n f =>
@@ -787,6 +794,8 @@ theorem coe_smul (a : S) (f : M →ₛₗ[σ₁₂] M₂) : ⇑(a • f) = a •
 instance [SmulCommClass S T M₂] : SmulCommClass S T (M →ₛₗ[σ₁₂] M₂) :=
   ⟨fun a b f => ext fun x => smul_comm _ _ _⟩
 
+-- example application of this instance: if S -> T -> R are homomorphisms of commutative rings and
+-- M and M₂ are R-modules then the S-module and T-module structures on Hom_R(M,M₂) are compatible.
 instance [HasScalar S T] [IsScalarTower S T M₂] : IsScalarTower S T (M →ₛₗ[σ₁₂] M₂) where
   smul_assoc := fun _ _ _ => ext fun _ => smul_assoc _ _ _
 
@@ -807,6 +816,7 @@ theorem smul_comp (a : S₃) (g : M₂ →ₛₗ[σ₂₃] M₃) (f : M →ₛ�
 
 omit σ₁₃
 
+-- TODO: generalize this to semilinear maps
 theorem comp_smul [Module R M₂] [Module R M₃] [SmulCommClass R S M₂] [DistribMulAction S M₃] [SmulCommClass R S M₃]
     [CompatibleSmul M₃ M₂ S R] (g : M₃ →ₗ[R] M₂) (a : S) (f : M →ₗ[R] M₃) : g.comp (a • f) = a • g.comp f :=
   ext fun x => g.map_smul_of_tower _ _
@@ -866,15 +876,15 @@ theorem coe_mul (f g : Module.End R M) : ⇑(f * g) = f ∘ g :=
   rfl
 
 instance _root_.module.End.monoid : Monoidₓ (Module.End R M) where
-  mul := · * ·
+  mul := (· * ·)
   one := (1 : M →ₗ[R] M)
   mul_assoc := fun f g h => LinearMap.ext fun x => rfl
   mul_one := comp_id
   one_mul := id_comp
 
 instance _root_.module.End.semiring : Semiringₓ (Module.End R M) :=
-  { Module.End.monoid, LinearMap.addCommMonoid with mul := · * ·, one := (1 : M →ₗ[R] M), zero := 0, add := · + ·,
-    npow := @npowRec _ ⟨(1 : M →ₗ[R] M)⟩ ⟨· * ·⟩, mul_zero := comp_zero, zero_mul := zero_comp,
+  { Module.End.monoid, LinearMap.addCommMonoid with mul := (· * ·), one := (1 : M →ₗ[R] M), zero := 0, add := (· + ·),
+    npow := @npowRec _ ⟨(1 : M →ₗ[R] M)⟩ ⟨(· * ·)⟩, mul_zero := comp_zero, zero_mul := zero_comp,
     left_distrib := fun f g h => comp_add _ _ _, right_distrib := fun f g h => add_comp _ _ _ }
 
 instance _root_.module.End.ring : Ringₓ (Module.End R N₁) :=
@@ -903,8 +913,8 @@ end
 /-- The tautological action by `module.End R M` (aka `M →ₗ[R] M`) on `M`.
 
 This generalizes `function.End.apply_mul_action`. -/
-instance apply_module : Module (Module.End R M) M where
-  smul := · <| ·
+instance applyModule : Module (Module.End R M) M where
+  smul := (· <| ·)
   smul_zero := LinearMap.map_zero
   smul_add := LinearMap.map_add
   add_smul := LinearMap.add_apply
@@ -947,7 +957,7 @@ variable [Monoidₓ S] [DistribMulAction S M] [SmulCommClass S R M]
 
 This is a stronger version of `distrib_mul_action.to_add_monoid_hom`. -/
 @[simps]
-def to_linear_map (s : S) : M →ₗ[R] M where
+def toLinearMap (s : S) : M →ₗ[R] M where
   toFun := HasScalar.smul s
   map_add' := smul_add s
   map_smul' := fun a b => smul_comm _ _ _
@@ -956,7 +966,7 @@ def to_linear_map (s : S) : M →ₗ[R] M where
 
 This is a stronger version of `distrib_mul_action.to_add_monoid_End`. -/
 @[simps]
-def to_module_End : S →* Module.End R M where
+def toModuleEnd : S →* Module.End R M where
   toFun := toLinearMap R M
   map_one' := LinearMap.ext <| one_smul _
   map_mul' := fun a b => LinearMap.ext <| mul_smul _ _
@@ -973,7 +983,7 @@ variable [Semiringₓ S] [Module S M] [SmulCommClass S R M]
 
 This is a stronger version of `distrib_mul_action.to_module_End`. -/
 @[simps]
-def to_module_End : S →+* Module.End R M :=
+def toModuleEnd : S →+* Module.End R M :=
   { DistribMulAction.toModuleEnd R M with toFun := DistribMulAction.toLinearMap R M,
     map_zero' := LinearMap.ext <| zero_smul _, map_add' := fun f g => LinearMap.ext <| add_smul _ _ }
 

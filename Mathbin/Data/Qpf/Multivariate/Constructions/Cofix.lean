@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Jeremy Avigad. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Jeremy Avigad, Simon Hudon
+-/
 import Mathbin.Control.Functor.Multivariate
 import Mathbin.Data.Pfunctor.Multivariate.Basic
 import Mathbin.Data.Pfunctor.Multivariate.M
@@ -59,7 +64,7 @@ theorem corecF_eq {α : Typevec n} {β : Type _} (g : β → F (α.Append1 β)) 
   rw [corecF, M.dest_corec]
 
 /-- Characterization of desirable equivalence relations on M-types -/
-def is_precongr {α : Typevec n} (r : q.p.M α → q.p.M α → Prop) : Prop :=
+def IsPrecongr {α : Typevec n} (r : q.p.M α → q.p.M α → Prop) : Prop :=
   ∀ ⦃x y⦄, r x y → abs (appendFun id (Quot.mk r) <$$> M.dest q.p x) = abs (appendFun id (Quot.mk r) <$$> M.dest q.p y)
 
 /-- Equivalence relation on M-types representing a value of type `cofix F` -/
@@ -73,18 +78,18 @@ than the input. For `F a b c` a ternary functor, fix F is a binary functor such 
 cofix F a b = F a b (cofix F a b)
 ```
 -/
-def cofix (F : Typevec (n + 1) → Type u) [Mvfunctor F] [q : Mvqpf F] (α : Typevec n) :=
+def Cofix (F : Typevec (n + 1) → Type u) [Mvfunctor F] [q : Mvqpf F] (α : Typevec n) :=
   Quot (@Mcongr _ F _ q α)
 
 instance {α : Typevec n} [Inhabited q.p.A] [∀ i : Fin2 n, Inhabited (α i)] : Inhabited (Cofix F α) :=
   ⟨Quot.mk _ default⟩
 
 /-- maps every element of the W type to a canonical representative -/
-def Mrepr {α : Typevec n} : q.p.M α → q.p.M α :=
+def mrepr {α : Typevec n} : q.p.M α → q.p.M α :=
   corecF (abs ∘ M.dest q.p)
 
 /-- the map function for the functor `cofix F` -/
-def cofix.map {α β : Typevec n} (g : α ⟹ β) : Cofix F α → Cofix F β :=
+def Cofix.map {α β : Typevec n} (g : α ⟹ β) : Cofix F α → Cofix F β :=
   Quot.lift (fun x : q.p.M α => Quot.mk Mcongr (g <$$> x))
     (by
       rintro aa₁ aa₂ ⟨r, pr, ra₁a₂⟩
@@ -110,15 +115,15 @@ def cofix.map {α β : Typevec n} (g : α ⟹ β) : Cofix F α → Cofix F β :=
       show r' (g <$$> aa₁) (g <$$> aa₂)
       exact ⟨aa₁, aa₂, ra₁a₂, rfl, rfl⟩)
 
-instance cofix.mvfunctor : Mvfunctor (Cofix F) where
+instance Cofix.mvfunctor : Mvfunctor (Cofix F) where
   map := @Cofix.map _ _ _ _
 
 /-- Corecursor for `cofix F` -/
-def cofix.corec {α : Typevec n} {β : Type u} (g : β → F (α.Append1 β)) : β → Cofix F α := fun x =>
+def Cofix.corec {α : Typevec n} {β : Type u} (g : β → F (α.Append1 β)) : β → Cofix F α := fun x =>
   Quot.mk _ (corecF g x)
 
 /-- Destructor for `cofix F` -/
-def cofix.dest {α : Typevec n} : Cofix F α → F (α.Append1 (Cofix F α)) :=
+def Cofix.dest {α : Typevec n} : Cofix F α → F (α.Append1 (Cofix F α)) :=
   Quot.lift (fun x => appendFun id (Quot.mk Mcongr) <$$> abs (M.dest q.p x))
     (by
       rintro x y ⟨r, pr, rxy⟩
@@ -131,30 +136,30 @@ def cofix.dest {α : Typevec n} : Cofix F α → F (α.Append1 (Cofix F α)) :=
       conv => lhs rw [append_fun_comp_id, comp_map, ← abs_map, pr rxy, abs_map, ← comp_map, ← append_fun_comp_id])
 
 /-- Abstraction function for `cofix F α` -/
-def cofix.abs {α} : q.p.M α → Cofix F α :=
+def Cofix.abs {α} : q.p.M α → Cofix F α :=
   Quot.mk _
 
 /-- Representation function for `cofix F α` -/
-def cofix.repr {α} : Cofix F α → q.p.M α :=
+def Cofix.repr {α} : Cofix F α → q.p.M α :=
   M.corec _ <| reprₓ ∘ cofix.dest
 
 /-- Corecursor for `cofix F` -/
-def cofix.corec'₁ {α : Typevec n} {β : Type u} (g : ∀ {X}, (β → X) → F (α.Append1 X)) (x : β) : Cofix F α :=
+def Cofix.corec'₁ {α : Typevec n} {β : Type u} (g : ∀ {X}, (β → X) → F (α.Append1 X)) (x : β) : Cofix F α :=
   Cofix.corec (fun x => g id) x
 
 /-- More flexible corecursor for `cofix F`. Allows the return of a fully formed
 value instead of making a recursive call -/
-def cofix.corec' {α : Typevec n} {β : Type u} (g : β → F (α.Append1 (Sum (Cofix F α) β))) (x : β) : Cofix F α :=
+def Cofix.corec' {α : Typevec n} {β : Type u} (g : β → F (α.Append1 (Sum (Cofix F α) β))) (x : β) : Cofix F α :=
   let f : (α ::: Cofix F α) ⟹ (α ::: Sum (Cofix F α) β) := id ::: Sum.inl
   Cofix.corec (Sum.elim (Mvfunctor.map f ∘ cofix.dest) g) (Sum.inr x : Sum (Cofix F α) β)
 
 /-- Corecursor for `cofix F`. The shape allows recursive calls to
 look like recursive calls. -/
-def cofix.corec₁ {α : Typevec n} {β : Type u} (g : ∀ {X}, (Cofix F α → X) → (β → X) → β → F (α ::: X)) (x : β) :
+def Cofix.corec₁ {α : Typevec n} {β : Type u} (g : ∀ {X}, (Cofix F α → X) → (β → X) → β → F (α ::: X)) (x : β) :
     Cofix F α :=
   Cofix.corec' (fun x => g Sum.inl Sum.inr x) x
 
-theorem cofix.dest_corec {α : Typevec n} {β : Type u} (g : β → F (α.Append1 β)) (x : β) :
+theorem Cofix.dest_corec {α : Typevec n} {β : Type u} (g : β → F (α.Append1 β)) (x : β) :
     Cofix.dest (Cofix.corec g x) = appendFun id (Cofix.corec g) <$$> g x := by
   conv => lhs rw [cofix.dest, cofix.corec]
   dsimp
@@ -162,7 +167,7 @@ theorem cofix.dest_corec {α : Typevec n} {β : Type u} (g : β → F (α.Append
   rfl
 
 /-- constructor for `cofix F` -/
-def cofix.mk {α : Typevec n} : F (α.Append1 <| Cofix F α) → Cofix F α :=
+def Cofix.mk {α : Typevec n} : F (α.Append1 <| Cofix F α) → Cofix F α :=
   Cofix.corec fun x => (appendFun id fun i : Cofix F α => Cofix.dest.{u} i) <$$> x
 
 /-!
@@ -223,7 +228,7 @@ private theorem cofix.bisim_aux {α : Typevec n} (r : Cofix F α → Cofix F α 
   refine' ⟨r', this, rxy⟩
 
 /-- Bisimulation principle using `map` and `quot.mk` to match and relate children of two trees. -/
-theorem cofix.bisim_rel {α : Typevec n} (r : Cofix F α → Cofix F α → Prop)
+theorem Cofix.bisim_rel {α : Typevec n} (r : Cofix F α → Cofix F α → Prop)
     (h : ∀ x y, r x y → appendFun id (Quot.mk r) <$$> Cofix.dest x = appendFun id (Quot.mk r) <$$> Cofix.dest y) :
     ∀ x y, r x y → x = y := by
   let r' x y := x = y ∨ r x y
@@ -248,7 +253,7 @@ theorem cofix.bisim_rel {α : Typevec n} (r : Cofix F α → Cofix F α → Prop
   exact rxy
 
 /-- Bisimulation principle using `liftr` to match and relate children of two trees. -/
-theorem cofix.bisim {α : Typevec n} (r : Cofix F α → Cofix F α → Prop)
+theorem Cofix.bisim {α : Typevec n} (r : Cofix F α → Cofix F α → Prop)
     (h : ∀ x y, r x y → Liftr (RelLast α r) (Cofix.dest x) (Cofix.dest y)) : ∀ x y, r x y → x = y := by
   apply cofix.bisim_rel
   intro x y rxy
@@ -269,7 +274,7 @@ theorem cofix.bisim {α : Typevec n} (r : Cofix F α → Cofix F α → Prop)
 open Mvfunctor
 
 /-- Bisimulation principle using `liftr'` to match and relate children of two trees. -/
-theorem cofix.bisim₂ {α : Typevec n} (r : Cofix F α → Cofix F α → Prop)
+theorem Cofix.bisim₂ {α : Typevec n} (r : Cofix F α → Cofix F α → Prop)
     (h : ∀ x y, r x y → Liftr' (relLast' α r) (Cofix.dest x) (Cofix.dest y)) : ∀ x y, r x y → x = y :=
   Cofix.bisim _ <| by
     intros <;> rw [← liftr_last_rel_iff] <;> apply h <;> assumption
@@ -277,7 +282,7 @@ theorem cofix.bisim₂ {α : Typevec n} (r : Cofix F α → Cofix F α → Prop)
 /-- Bisimulation principle the values `⟨a,f⟩` of the polynomial functor representing
 `cofix F α` as well as an invariant `Q : β → Prop` and a state `β` generating the
 left-hand side and right-hand side of the equality through functions `u v : β → cofix F α` -/
-theorem cofix.bisim' {α : Typevec n} {β : Type _} (Q : β → Prop) (u v : β → Cofix F α)
+theorem Cofix.bisim' {α : Typevec n} {β : Type _} (Q : β → Prop) (u v : β → Cofix F α)
     (h :
       ∀ x,
         Q x →
@@ -300,7 +305,7 @@ theorem cofix.bisim' {α : Typevec n} {β : Type _} (Q : β → Prop) (u v : β 
         )
     _ _ ⟨x, Qx, rfl, rfl⟩
 
-theorem cofix.mk_dest {α : Typevec n} (x : Cofix F α) : Cofix.mk (Cofix.dest x) = x := by
+theorem Cofix.mk_dest {α : Typevec n} (x : Cofix F α) : Cofix.mk (Cofix.dest x) = x := by
   apply cofix.bisim_rel (fun x y : cofix F α => x = cofix.mk (cofix.dest y)) _ _ _ rfl
   dsimp
   intro x y h
@@ -312,15 +317,15 @@ theorem cofix.mk_dest {α : Typevec n} (x : Cofix F α) : Cofix.mk (Cofix.dest x
   apply Quot.sound
   rfl
 
-theorem cofix.dest_mk {α : Typevec n} (x : F (α.Append1 <| Cofix F α)) : Cofix.dest (Cofix.mk x) = x := by
+theorem Cofix.dest_mk {α : Typevec n} (x : F (α.Append1 <| Cofix F α)) : Cofix.dest (Cofix.mk x) = x := by
   have : cofix.mk ∘ cofix.dest = @_root_.id (cofix F α) := funext cofix.mk_dest
   rw [cofix.mk, cofix.dest_corec, ← comp_map, ← cofix.mk, ← append_fun_comp, this, id_comp, append_fun_id_id,
     Mvfunctor.id_map]
 
-theorem cofix.ext {α : Typevec n} (x y : Cofix F α) (h : x.dest = y.dest) : x = y := by
+theorem Cofix.ext {α : Typevec n} (x y : Cofix F α) (h : x.dest = y.dest) : x = y := by
   rw [← cofix.mk_dest x, h, cofix.mk_dest]
 
-theorem cofix.ext_mk {α : Typevec n} (x y : F (α ::: Cofix F α)) (h : Cofix.mk x = Cofix.mk y) : x = y := by
+theorem Cofix.ext_mk {α : Typevec n} (x y : F (α ::: Cofix F α)) (h : Cofix.mk x = Cofix.mk y) : x = y := by
   rw [← cofix.dest_mk x, h, cofix.dest_mk]
 
 /-!
@@ -379,7 +384,7 @@ theorem liftr_map_last' [IsLawfulMvfunctor F] {α : Typevec n} {ι} (R : ι → 
 
 end LiftrMap
 
-theorem cofix.abs_repr {α} (x : Cofix F α) : Quot.mk _ (Cofix.repr x) = x := by
+theorem Cofix.abs_repr {α} (x : Cofix F α) : Quot.mk _ (Cofix.repr x) = x := by
   let R := fun x y : cofix F α => cofix.abs (cofix.repr y) = x
   refine' cofix.bisim₂ R _ _ _ rfl
   clear x
@@ -459,18 +464,18 @@ theorem corec_roll {α : Typevec n} {X Y} {x₀ : X} (f : X → Y) (g : Y → F 
   intro a
   refine' ⟨a, rfl, rfl⟩
 
-theorem cofix.dest_corec' {α : Typevec n} {β : Type u} (g : β → F (α.Append1 (Sum (Cofix F α) β))) (x : β) :
+theorem Cofix.dest_corec' {α : Typevec n} {β : Type u} (g : β → F (α.Append1 (Sum (Cofix F α) β))) (x : β) :
     Cofix.dest (Cofix.corec' g x) = appendFun id (Sum.elim id (Cofix.corec' g)) <$$> g x := by
   rw [cofix.corec', cofix.dest_corec]
   dsimp
   congr with (i | i) <;> rw [corec_roll] <;> dsimp [cofix.corec']
   · mv_bisim i
     rw [Ha, Hb, cofix.dest_corec]
-    dsimp [· ∘ ·]
+    dsimp [(· ∘ ·)]
     repeat'
       rw [Mvfunctor.map_map, ← append_fun_comp_id]
     apply liftr_map_last'
-    dsimp [· ∘ ·, R]
+    dsimp [(· ∘ ·), R]
     intros
     exact ⟨_, rfl, rfl⟩
     
@@ -479,12 +484,12 @@ theorem cofix.dest_corec' {α : Typevec n} {β : Type u} (g : β → F (α.Appen
     simp [Mvfunctor.id_map]
     
 
-theorem cofix.dest_corec₁ {α : Typevec n} {β : Type u} (g : ∀ {X}, (Cofix F α → X) → (β → X) → β → F (α.Append1 X))
+theorem Cofix.dest_corec₁ {α : Typevec n} {β : Type u} (g : ∀ {X}, (Cofix F α → X) → (β → X) → β → F (α.Append1 X))
     (x : β) (h : ∀ X Y f : Cofix F α → X f' : β → X k : X → Y, g (k ∘ f) (k ∘ f') x = (id ::: k) <$$> g f f' x) :
     Cofix.dest (Cofix.corec₁ (@g) x) = g id (Cofix.corec₁ @g) x := by
   rw [cofix.corec₁, cofix.dest_corec', ← h] <;> rfl
 
-instance mvqpf_cofix : Mvqpf (Cofix F) where
+instance mvqpfCofix : Mvqpf (Cofix F) where
   p := q.p.mp
   abs := fun α => Quot.mk Mcongr
   repr := fun α => Cofix.repr

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Bhavik Mehta. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Bhavik Mehta
+-/
 import Mathbin.CategoryTheory.Closed.Cartesian
 import Mathbin.CategoryTheory.Limits.Preserves.Shapes.BinaryProducts
 import Mathbin.CategoryTheory.Adjunction.FullyFaithful
@@ -51,7 +56,7 @@ of the adjunction.
 We will show that if `C` and `D` are cartesian closed, then this morphism is an isomorphism for all
 `A` iff `F` is a cartesian closed functor, i.e. it preserves exponentials.
 -/
-def frobenius_morphism (h : L ⊣ F) (A : C) : prod.functor.obj (F.obj A) ⋙ L ⟶ L ⋙ prod.functor.obj A :=
+def frobeniusMorphism (h : L ⊣ F) (A : C) : prod.functor.obj (F.obj A) ⋙ L ⟶ L ⋙ prod.functor.obj A :=
   prodComparisonNatTrans L (F.obj A) ≫ whiskerLeft _ (prod.functor.map (h.counit.app _))
 
 /-- If `F` is full and faithful and has a left adjoint `L` which preserves binary products, then the
@@ -71,7 +76,7 @@ variable [PreservesLimitsOfShape (Discrete.{v} WalkingPair) F]
 /-- The exponential comparison map.
 `F` is a cartesian closed functor if this is an iso for all `A`.
 -/
-def exp_comparison (A : C) : exp A ⋙ F ⟶ F ⋙ exp (F.obj A) :=
+def expComparison (A : C) : exp A ⋙ F ⟶ F ⋙ exp (F.obj A) :=
   transferNatTrans (exp.adjunction A) (exp.adjunction (F.obj A)) (prodComparisonNatIso F A).inv
 
 theorem exp_comparison_ev (A B : C) :
@@ -108,7 +113,7 @@ theorem exp_comparison_whisker_left {A A' : C} (f : A' ⟶ A) :
 /-- The functor `F` is cartesian closed (ie preserves exponentials) if each natural transformation
 `exp_comparison F A` is an isomorphism
 -/
-class cartesian_closed_functor where
+class CartesianClosedFunctor where
   comparison_iso : ∀ A, IsIso (expComparison F A)
 
 attribute [instance] cartesian_closed_functor.comparison_iso
@@ -154,7 +159,7 @@ cartesian closed.
 TODO: Show the converse, that if `F` is cartesian closed and its left adjoint preserves binary
 products, then it is full and faithful.
 -/
-def cartesian_closed_functor_of_left_adjoint_preserves_binary_products (h : L ⊣ F) [Full F] [Faithful F]
+def cartesianClosedFunctorOfLeftAdjointPreservesBinaryProducts (h : L ⊣ F) [Full F] [Faithful F]
     [PreservesLimitsOfShape (Discrete.{v} WalkingPair) L] : CartesianClosedFunctor F where
   comparison_iso := fun A => exp_comparison_iso_of_frobenius_morphism_iso F h _
 

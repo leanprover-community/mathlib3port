@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison
+-/
 import Mathbin.Data.Fintype.Basic
 import Mathbin.Tactic.NormNum
 
@@ -37,17 +42,25 @@ unsafe def expr_list_to_list_expr : ∀ e : expr, tactic (List expr)
   | quote.1 [] => return []
   | _ => failed
 
--- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:916:4: warning: unsupported (TODO): `[tacs]
 private unsafe def fin_cases_at_aux : ∀ with_list : List expr e : expr, tactic Unit
   | with_list, e => do
     let result ← cases_core e
     match result with
-      | [(_, [s], _), (_, [e], _)] => do
+      |-- We have a goal with an equation `s`, and a second goal with a smaller `e : x ∈ _`.
+        [(_, [s], _), (_, [e], _)] =>
+        do
         let sn := local_pp_name s
         let ng ← num_goals
-        match with_list 0 with
-          | some h => tactic.interactive.conv (some sn) none (to_rhs >> conv.interactive.change (to_pexpr h))
-          | _ =>
+        -- tidy up the new value
+          match with_list 0 with
+          |-- If an explicit value was specified via the `with` keyword, use that.
+              some
+              h =>
+            tactic.interactive.conv (some sn) none (to_rhs >> conv.interactive.change (to_pexpr h))
+          |-- Otherwise, call `norm_num`. We let `norm_num` unfold `max` and `min`
+            -- because it's helpful for the `interval_cases` tactic.
+            _ =>
             try <|
               tactic.interactive.conv (some sn) none <|
                 to_rhs >>
@@ -58,7 +71,9 @@ private unsafe def fin_cases_at_aux : ∀ with_list : List expr e : expr, tactic
         let ng' ← num_goals
         when (ng = ng') (rotate_left 1)
         fin_cases_at_aux with_list e
-      | [] => skip
+      |-- No cases; we're done.
+        [] =>
+        skip
       | _ => failed
 
 /-- `fin_cases_at with_list e` performs case analysis on `e : α`, where `α` is a fintype.
@@ -70,14 +85,16 @@ unsafe def fin_cases_at (nm : Option Name) : ∀ with_list : Option pexpr e : ex
   | with_list, e => do
     let ty ← try_core <| guard_mem_fin e
     match ty with
-      | none => do
+      | none =>-- Deal with `x : A`, where `[fintype A]` is available:
+      do
         let ty ← infer_type e
         let i ← to_expr (pquote.1 (Fintype (%%ₓty))) >>= mk_instance <|> fail "Failed to find `fintype` instance."
         let t ← to_expr (pquote.1 ((%%ₓe) ∈ @Fintype.elems (%%ₓty) (%%ₓi)))
         let v ← to_expr (pquote.1 (@Fintype.complete (%%ₓty) (%%ₓi) (%%ₓe)))
         let h ← assertv (nm `this) t v
         fin_cases_at with_list h
-      | some ty => do
+      | some ty =>-- Deal with `x ∈ A` hypotheses:
+      do
         let with_list ←
           match with_list with
             | some e => do

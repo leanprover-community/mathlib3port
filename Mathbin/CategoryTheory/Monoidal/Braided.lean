@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison
+-/
 import Mathbin.CategoryTheory.Monoidal.NaturalTransformation
 import Mathbin.CategoryTheory.Monoidal.Discrete
 
@@ -32,12 +37,14 @@ namespace CategoryTheory
 which is natural in both arguments,
 and also satisfies the two hexagon identities.
 -/
-class braided_category (C : Type u) [Category.{v} C] [MonoidalCategory.{v} C] where
+class BraidedCategory (C : Type u) [Category.{v} C] [MonoidalCategory.{v} C] where
+  -- braiding natural iso:
   braiding : ∀ X Y : C, X ⊗ Y ≅ Y ⊗ X
   braiding_naturality' :
     ∀ {X X' Y Y' : C} f : X ⟶ Y g : X' ⟶ Y', (f ⊗ g) ≫ (braiding Y Y').Hom = (braiding X X').Hom ≫ (g ⊗ f) := by
     run_tac
       obviously
+  -- hexagon identities:
   hexagon_forward' :
     ∀ X Y Z : C,
       (α_ X Y Z).Hom ≫ (braiding X (Y ⊗ Z)).Hom ≫ (α_ Y Z X).Hom =
@@ -173,7 +180,8 @@ end
 
 See https://stacks.math.columbia.edu/tag/0FFW.
 -/
-class symmetric_category (C : Type u) [Category.{v} C] [MonoidalCategory.{v} C] extends BraidedCategory.{v} C where
+class SymmetricCategory (C : Type u) [Category.{v} C] [MonoidalCategory.{v} C] extends BraidedCategory.{v} C where
+  -- braiding symmetric:
   symmetry' : ∀ X Y : C, (β_ X Y).Hom ≫ (β_ Y X).Hom = 𝟙 (X ⊗ Y) := by
     run_tac
       obviously
@@ -191,7 +199,7 @@ variable (E : Type u₃) [Category.{v₃} E] [MonoidalCategory E] [BraidedCatego
 /-- A lax braided functor between braided monoidal categories is a lax monoidal functor
 which preserves the braiding.
 -/
-structure lax_braided_functor extends LaxMonoidalFunctor C D where
+structure LaxBraidedFunctor extends LaxMonoidalFunctor C D where
   braided' : ∀ X Y : C, μ X Y ≫ map (β_ X Y).Hom = (β_ (obj X) (obj Y)).Hom ≫ μ Y X := by
     run_tac
       obviously
@@ -220,7 +228,7 @@ def comp (F : LaxBraidedFunctor C D) (G : LaxBraidedFunctor D E) : LaxBraidedFun
       slice_lhs 1 2 => rw [G.braided]
       simp only [category.assoc] }
 
-instance category_lax_braided_functor : Category (LaxBraidedFunctor C D) :=
+instance categoryLaxBraidedFunctor : Category (LaxBraidedFunctor C D) :=
   InducedCategory.category LaxBraidedFunctor.toLaxMonoidalFunctor
 
 @[simp]
@@ -232,7 +240,7 @@ theorem comp_to_nat_trans {F G H : LaxBraidedFunctor C D} {α : F ⟶ G} {β : G
 isomorphism of the lax braided monoidal functors.
 -/
 @[simps]
-def mk_iso {F G : LaxBraidedFunctor C D} (i : F.toLaxMonoidalFunctor ≅ G.toLaxMonoidalFunctor) : F ≅ G :=
+def mkIso {F G : LaxBraidedFunctor C D} (i : F.toLaxMonoidalFunctor ≅ G.toLaxMonoidalFunctor) : F ≅ G :=
   { i with }
 
 end LaxBraidedFunctor
@@ -240,7 +248,10 @@ end LaxBraidedFunctor
 /-- A braided functor between braided monoidal categories is a monoidal functor
 which preserves the braiding.
 -/
-structure braided_functor extends MonoidalFunctor C D where
+structure BraidedFunctor extends MonoidalFunctor C D where
+  -- Note this is stated differently than for `lax_braided_functor`.
+  -- We move the `μ X Y` to the right hand side,
+  -- so that this makes a good `@[simp]` lemma.
   braided' : ∀ X Y : C, map (β_ X Y).Hom = inv (μ X Y) ≫ (β_ (obj X) (obj Y)).Hom ≫ μ Y X := by
     run_tac
       obviously
@@ -253,7 +264,7 @@ namespace BraidedFunctor
 
 /-- Turn a braided functor into a lax braided functor. -/
 @[simps]
-def to_lax_braided_functor (F : BraidedFunctor C D) : LaxBraidedFunctor C D :=
+def toLaxBraidedFunctor (F : BraidedFunctor C D) : LaxBraidedFunctor C D :=
   { F with
     braided' := fun X Y => by
       rw [F.braided]
@@ -274,7 +285,7 @@ variable {C D E}
 def comp (F : BraidedFunctor C D) (G : BraidedFunctor D E) : BraidedFunctor C E :=
   { MonoidalFunctor.comp F.toMonoidalFunctor G.toMonoidalFunctor with }
 
-instance category_braided_functor : Category (BraidedFunctor C D) :=
+instance categoryBraidedFunctor : Category (BraidedFunctor C D) :=
   InducedCategory.category BraidedFunctor.toMonoidalFunctor
 
 @[simp]
@@ -286,7 +297,7 @@ theorem comp_to_nat_trans {F G H : BraidedFunctor C D} {α : F ⟶ G} {β : G �
 isomorphism of the braided monoidal functors.
 -/
 @[simps]
-def mk_iso {F G : BraidedFunctor C D} (i : F.toMonoidalFunctor ≅ G.toMonoidalFunctor) : F ≅ G :=
+def mkIso {F G : BraidedFunctor C D} (i : F.toMonoidalFunctor ≅ G.toMonoidalFunctor) : F ≅ G :=
   { i with }
 
 end BraidedFunctor
@@ -295,7 +306,7 @@ section CommMonoidₓ
 
 variable (M : Type u) [CommMonoidₓ M]
 
-instance comm_monoid_discrete : CommMonoidₓ (Discrete M) := by
+instance commMonoidDiscrete : CommMonoidₓ (Discrete M) := by
   dsimp [discrete]
   infer_instance
 
@@ -308,7 +319,7 @@ variable {M} {N : Type u} [CommMonoidₓ N]
 the corresponding discrete braided monoidal categories.
 -/
 @[simps]
-def discrete.braided_functor (F : M →* N) : BraidedFunctor (Discrete M) (Discrete N) :=
+def Discrete.braidedFunctor (F : M →* N) : BraidedFunctor (Discrete M) (Discrete N) :=
   { Discrete.monoidalFunctor F with }
 
 end CommMonoidₓ

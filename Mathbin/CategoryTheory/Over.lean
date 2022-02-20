@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Johan Commelin. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johan Commelin, Bhavik Mehta
+-/
 import Mathbin.CategoryTheory.StructuredArrow
 import Mathbin.CategoryTheory.Punit
 import Mathbin.CategoryTheory.ReflectsIsomorphisms
@@ -22,6 +27,7 @@ namespace CategoryTheory
 
 universe v₁ v₂ u₁ u₂
 
+-- morphism levels before object levels. See note [category_theory universes].
 variable {T : Type u₁} [Category.{v₁} T]
 
 /-- The over category has as objects arrows in `T` with codomain `X` and as morphisms commutative
@@ -29,10 +35,11 @@ triangles.
 
 See https://stacks.math.columbia.edu/tag/001G.
 -/
-def over (X : T) :=
+def Over (X : T) :=
   CostructuredArrow (𝟭 T) X deriving Category
 
-instance over.inhabited [Inhabited T] : Inhabited (Over (default : T)) where
+-- Satisfying the inhabited linter
+instance Over.inhabited [Inhabited T] : Inhabited (Over (default : T)) where
   default := { left := default, Hom := 𝟙 _ }
 
 namespace Over
@@ -40,7 +47,7 @@ namespace Over
 variable {X : T}
 
 @[ext]
-theorem over_morphism.ext {X : T} {U V : Over X} {f g : U ⟶ V} (h : f.left = g.left) : f = g := by
+theorem OverMorphism.ext {X : T} {U V : Over X} {f g : U ⟶ V} (h : f.left = g.left) : f = g := by
   tidy
 
 @[simp]
@@ -66,7 +73,7 @@ def mk {X Y : T} (f : Y ⟶ X) : Over X :=
 
 /-- We can set up a coercion from arrows with codomain `X` to `over X`. This most likely should not
     be a global instance, but it is sometimes useful. -/
-def coe_from_hom {X Y : T} : Coe (Y ⟶ X) (Over X) where
+def coeFromHom {X Y : T} : Coe (Y ⟶ X) (Over X) where
   coe := mk
 
 section
@@ -82,7 +89,7 @@ end
 /-- To give a morphism in the over category, it suffices to give an arrow fitting in a commutative
     triangle. -/
 @[simps]
-def hom_mk {U V : Over X} (f : U.left ⟶ V.left)
+def homMk {U V : Over X} (f : U.left ⟶ V.left)
     (w : f ≫ V.Hom = U.Hom := by
       run_tac
         obviously) :
@@ -93,7 +100,7 @@ def hom_mk {U V : Over X} (f : U.left ⟶ V.left)
 direction gives a commutative triangle.
 -/
 @[simps]
-def iso_mk {f g : Over X} (hl : f.left ≅ g.left)
+def isoMk {f g : Over X} (hl : f.left ≅ g.left)
     (hw : hl.Hom ≫ g.Hom = f.Hom := by
       run_tac
         obviously) :
@@ -123,7 +130,7 @@ theorem forget_map {U V : Over X} {f : U ⟶ V} : (forget X).map f = f.left :=
 
 /-- The natural cocone over the forgetful functor `over X ⥤ T` with cocone point `X`. -/
 @[simps]
-def forget_cocone (X : T) : Limits.Cocone (forget X) :=
+def forgetCocone (X : T) : Limits.Cocone (forget X) :=
   { x, ι := { app := Comma.hom } }
 
 /-- A morphism `f : X ⟶ Y` induces a functor `over X ⥤ over Y` in the obvious way.
@@ -150,7 +157,7 @@ theorem map_map_left : ((map f).map g).left = g.left :=
   rfl
 
 /-- Mapping by the identity morphism is just the identity functor. -/
-def map_id : map (𝟙 Y) ≅ 𝟭 _ :=
+def mapId : map (𝟙 Y) ≅ 𝟭 _ :=
   NatIso.ofComponents
     (fun X =>
       isoMk (Iso.refl _)
@@ -160,7 +167,7 @@ def map_id : map (𝟙 Y) ≅ 𝟭 _ :=
       tidy)
 
 /-- Mapping by the composite morphism `f ≫ g` is the same as mapping by `f` then by `g`. -/
-def map_comp {Y Z : T} (f : X ⟶ Y) (g : Y ⟶ Z) : map (f ≫ g) ≅ map f ⋙ map g :=
+def mapComp {Y Z : T} (f : X ⟶ Y) (g : Y ⟶ Z) : map (f ≫ g) ≅ map f ⋙ map g :=
   NatIso.ofComponents
     (fun X =>
       isoMk (Iso.refl _)
@@ -183,6 +190,7 @@ instance forget_faithful : Faithful (forget X) :=
 epimorphisms.
 The converse does not hold without additional assumptions on the underlying category.
 -/
+-- TODO: Show the converse holds if `T` has binary products or pushouts.
 theorem epi_of_epi_left {f g : Over X} (k : f ⟶ g) [hk : Epi k.left] : Epi k :=
   faithful_reflects_epi (forget X) hk
 
@@ -200,7 +208,7 @@ monomorphisms.
 The converse of `category_theory.over.mono_of_mono_left`.
 -/
 instance mono_left_of_mono {f g : Over X} (k : f ⟶ g) [Mono k] : Mono k.left := by
-  refine' ⟨fun Y : T l m a => _⟩
+  refine' ⟨fun l m a => _⟩
   let l' : mk (m ≫ f.hom) ⟶ f :=
     hom_mk l
       (by
@@ -218,7 +226,7 @@ variable (f : Over X)
 
 /-- Given f : Y ⟶ X, this is the obvious functor from (T/X)/f to T/Y -/
 @[simps]
-def iterated_slice_forward : Over f ⥤ Over f.left where
+def iteratedSliceForward : Over f ⥤ Over f.left where
   obj := fun α => Over.mk α.Hom.left
   map := fun α β κ =>
     Over.homMk κ.left.left
@@ -229,13 +237,13 @@ def iterated_slice_forward : Over f ⥤ Over f.left where
 
 /-- Given f : Y ⟶ X, this is the obvious functor from T/Y to (T/X)/f -/
 @[simps]
-def iterated_slice_backward : Over f.left ⥤ Over f where
+def iteratedSliceBackward : Over f.left ⥤ Over f where
   obj := fun g => mk (homMk g.Hom : mk (g.Hom ≫ f.Hom) ⟶ f)
   map := fun g h α => homMk (homMk α.left (w_assoc α f.Hom)) (OverMorphism.ext (w α))
 
 /-- Given f : Y ⟶ X, we have an equivalence between (T/X)/f and T/Y -/
 @[simps]
-def iterated_slice_equiv : Over f ≌ Over f.left where
+def iteratedSliceEquiv : Over f ≌ Over f.left where
   Functor := iteratedSliceForward f
   inverse := iteratedSliceBackward f
   unitIso :=
@@ -289,10 +297,11 @@ end Over
 
 /-- The under category has as objects arrows with domain `X` and as morphisms commutative
     triangles. -/
-def under (X : T) :=
+def Under (X : T) :=
   StructuredArrow X (𝟭 T)deriving Category
 
-instance under.inhabited [Inhabited T] : Inhabited (Under (default : T)) where
+-- Satisfying the inhabited linter
+instance Under.inhabited [Inhabited T] : Inhabited (Under (default : T)) where
   default := { right := default, Hom := 𝟙 _ }
 
 namespace Under
@@ -300,7 +309,7 @@ namespace Under
 variable {X : T}
 
 @[ext]
-theorem under_morphism.ext {X : T} {U V : Under X} {f g : U ⟶ V} (h : f.right = g.right) : f = g := by
+theorem UnderMorphism.ext {X : T} {U V : Under X} {f g : U ⟶ V} (h : f.right = g.right) : f = g := by
   tidy
 
 @[simp]
@@ -327,7 +336,7 @@ def mk {X Y : T} (f : X ⟶ Y) : Under X :=
 /-- To give a morphism in the under category, it suffices to give a morphism fitting in a
     commutative triangle. -/
 @[simps]
-def hom_mk {U V : Under X} (f : U.right ⟶ V.right)
+def homMk {U V : Under X} (f : U.right ⟶ V.right)
     (w : U.Hom ≫ f = V.Hom := by
       run_tac
         obviously) :
@@ -337,7 +346,7 @@ def hom_mk {U V : Under X} (f : U.right ⟶ V.right)
 /-- Construct an isomorphism in the over category given isomorphisms of the objects whose forward
 direction gives a commutative triangle.
 -/
-def iso_mk {f g : Under X} (hr : f.right ≅ g.right) (hw : f.Hom ≫ hr.Hom = g.Hom) : f ≅ g :=
+def isoMk {f g : Under X} (hr : f.right ≅ g.right) (hw : f.Hom ≫ hr.Hom = g.Hom) : f ≅ g :=
   StructuredArrow.isoMk hr hw
 
 @[simp]
@@ -370,7 +379,7 @@ theorem forget_map {U V : Under X} {f : U ⟶ V} : (forget X).map f = f.right :=
 
 /-- The natural cone over the forgetful functor `under X ⥤ T` with cone point `X`. -/
 @[simps]
-def forget_cone (X : T) : Limits.Cone (forget X) :=
+def forgetCone (X : T) : Limits.Cone (forget X) :=
   { x, π := { app := Comma.hom } }
 
 /-- A morphism `X ⟶ Y` induces a functor `under Y ⥤ under X` in the obvious way. -/
@@ -394,7 +403,7 @@ theorem map_map_right : ((map f).map g).right = g.right :=
   rfl
 
 /-- Mapping by the identity morphism is just the identity functor. -/
-def map_id : map (𝟙 Y) ≅ 𝟭 _ :=
+def mapId : map (𝟙 Y) ≅ 𝟭 _ :=
   NatIso.ofComponents
     (fun X =>
       isoMk (Iso.refl _)
@@ -404,7 +413,7 @@ def map_id : map (𝟙 Y) ≅ 𝟭 _ :=
       tidy)
 
 /-- Mapping by the composite morphism `f ≫ g` is the same as mapping by `f` then by `g`. -/
-def map_comp {Y Z : T} (f : X ⟶ Y) (g : Y ⟶ Z) : map (f ≫ g) ≅ map g ⋙ map f :=
+def mapComp {Y Z : T} (f : X ⟶ Y) (g : Y ⟶ Z) : map (f ≫ g) ≅ map g ⋙ map f :=
   NatIso.ofComponents
     (fun X =>
       isoMk (Iso.refl _)

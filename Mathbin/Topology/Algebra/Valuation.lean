@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Patrick Massot. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Patrick Massot
+-/
 import Mathbin.Topology.Algebra.Nonarchimedean.Bases
 import Mathbin.Topology.Algebra.UniformFilterBasis
 import Mathbin.RingTheory.Valuation.Basic
@@ -97,14 +102,14 @@ theorem loc_const {x : R} (h : v x ≠ 0) : { y : R | v y = v x } ∈ 𝓝 x := 
   exact Valuation.map_eq_of_sub_lt _ y_in
 
 /-- The uniform structure on a valued ring.-/
-instance (priority := 100) UniformSpace : UniformSpace R :=
+instance (priority := 100) uniformSpace : UniformSpace R :=
   TopologicalAddGroup.toUniformSpace R
 
 /-- A valued ring is a uniform additive group.-/
-instance (priority := 100) UniformAddGroup : UniformAddGroup R :=
+instance (priority := 100) uniform_add_group : UniformAddGroup R :=
   topological_add_group_is_uniform
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (x y «expr ∈ » M)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (x y «expr ∈ » M)
 theorem cauchy_iff {F : Filter R} :
     Cauchy F ↔ F.ne_bot ∧ ∀ γ : (Γ₀ R)ˣ, ∃ M ∈ F, ∀ x y _ : x ∈ M _ : y ∈ M, v (y - x) < γ := by
   rw [AddGroupFilterBasis.cauchy_iff]

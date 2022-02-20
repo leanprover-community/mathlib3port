@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Simon Hudon. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Simon Hudon
+-/
 import Mathbin.Control.Functor
 
 /-!
@@ -88,10 +93,10 @@ theorem app_eq_coe (η : ApplicativeTransformation F G) : η.app = η :=
 theorem coe_mk (f : ∀ α : Type u, F α → G α) pp ps : ⇑ApplicativeTransformation.mk f pp ps = f :=
   rfl
 
-protected theorem congr_funₓ (η η' : ApplicativeTransformation F G) (h : η = η') {α : Type u} (x : F α) : η x = η' x :=
+protected theorem congr_fun (η η' : ApplicativeTransformation F G) (h : η = η') {α : Type u} (x : F α) : η x = η' x :=
   congr_argₓ (fun η'' : ApplicativeTransformation F G => η'' x) h
 
-protected theorem congr_argₓ (η : ApplicativeTransformation F G) {α : Type u} {x y : F α} (h : x = y) : η x = η y :=
+protected theorem congr_arg (η : ApplicativeTransformation F G) {α : Type u} {x y : F α} (h : x = y) : η x = η y :=
   congr_argₓ (fun z : F α => η z) h
 
 theorem coe_inj ⦃η η' : ApplicativeTransformation F G⦄ (h : (η : ∀ α, F α → G α) = η') : η = η' := by
@@ -132,7 +137,7 @@ theorem preserves_map' {α β} (x : α → β) : @η _ ∘ Functor.map x = Funct
 end Preserves
 
 /-- The identity applicative transformation from an applicative functor to itself. -/
-def id_transformation : ApplicativeTransformation F F where
+def idTransformation : ApplicativeTransformation F F where
   app := fun α => id
   preserves_pure' := by
     simp
@@ -248,7 +253,7 @@ variable [Applicativeₓ F]
 
 /-- Defines a `traverse` function on the second component of a sum type.
 This is used to give a `traversable` instance for the functor `σ ⊕ -`. -/
-protected def traverse {α β} (f : α → F β) : Sum σ α → F (Sum σ β)
+protected def traverseₓ {α β} (f : α → F β) : Sum σ α → F (Sum σ β)
   | Sum.inl x => pure (Sum.inl x)
   | Sum.inr x => Sum.inr <$> f x
 

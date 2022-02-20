@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Bhavik Mehta. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Bhavik Mehta
+-/
 import Mathbin.CategoryTheory.Sites.SheafOfTypes
 
 /-!
@@ -123,7 +128,7 @@ theorem is_sheaf_for_trans (P : Cᵒᵖ ⥤ Type v) (R S : Sieve X) (hR : Presie
     apply (hS (R.downward_closed hf _)).IsSeparatedFor
     
   · intro Y f hf
-    have : sieve.pullback f (bind R fun T k : T ⟶ X hf : R k => pullback k S) = R.pullback f := by
+    have : sieve.pullback f (bind R fun hf : R k => pullback k S) = R.pullback f := by
       ext Z g
       constructor
       · rintro ⟨W, k, l, hl, _, comm⟩
@@ -143,7 +148,7 @@ theorem is_sheaf_for_trans (P : Cᵒᵖ ⥤ Type v) (R S : Sieve X) (hR : Presie
 This is a special case of https://stacks.math.columbia.edu/tag/00Z9, but following a different
 proof (see the comments there).
 -/
-def finest_topology_single (P : Cᵒᵖ ⥤ Type v) : GrothendieckTopology C where
+def finestTopologySingle (P : Cᵒᵖ ⥤ Type v) : GrothendieckTopology C where
   Sieves := fun X S => ∀ Y f : Y ⟶ X, Presieve.IsSheafFor P (S.pullback f)
   top_mem' := fun X Y f => by
     rw [sieve.pullback_top]
@@ -152,6 +157,8 @@ def finest_topology_single (P : Cᵒᵖ ⥤ Type v) : GrothendieckTopology C whe
     rw [← pullback_comp]
     apply hS
   transitive' := fun X S hS R hR Z g => by
+    -- This is the hard part of the construction, showing that the given set of sieves satisfies
+    -- the transitivity axiom.
     refine' is_sheaf_for_trans P (pullback g S) _ (hS Z g) _ _
     · intro Y f hf
       rw [← pullback_comp]
@@ -167,7 +174,7 @@ def finest_topology_single (P : Cᵒᵖ ⥤ Type v) : GrothendieckTopology C whe
 
 This is equal to the construction of https://stacks.math.columbia.edu/tag/00Z9.
 -/
-def finest_topology (Ps : Set (Cᵒᵖ ⥤ Type v)) : GrothendieckTopology C :=
+def finestTopology (Ps : Set (Cᵒᵖ ⥤ Type v)) : GrothendieckTopology C :=
   inf (finest_topology_single '' Ps)
 
 /-- Check that if `P ∈ Ps`, then `P` is indeed a sheaf for the finest topology on `Ps`. -/
@@ -181,6 +188,7 @@ theorem le_finest_topology (Ps : Set (Cᵒᵖ ⥤ Type v)) (J : GrothendieckTopo
     (hJ : ∀, ∀ P ∈ Ps, ∀, Presieve.IsSheaf J P) : J ≤ finestTopology Ps := by
   rintro X S hS _ ⟨⟨_, _, ⟨P, hP, rfl⟩, rfl⟩, rfl⟩
   intro Y f
+  -- this can't be combined with the previous because the `subst` is applied at the end
   exact hJ P hP (S.pullback f) (J.pullback_stable f hS)
 
 /-- The `canonical_topology` on a category is the finest (largest) topology for which every
@@ -188,7 +196,7 @@ representable presheaf is a sheaf.
 
 See https://stacks.math.columbia.edu/tag/00ZA
 -/
-def canonical_topology (C : Type u) [Category.{v} C] : GrothendieckTopology C :=
+def canonicalTopology (C : Type u) [Category.{v} C] : GrothendieckTopology C :=
   finestTopology (Set.Range yoneda.obj)
 
 /-- `yoneda.obj X` is a sheaf for the canonical topology. -/
@@ -202,7 +210,7 @@ theorem is_sheaf_of_representable (P : Cᵒᵖ ⥤ Type v) [P.Representable] : P
 /-- A subcanonical topology is a topology which is smaller than the canonical topology.
 Equivalently, a topology is subcanonical iff every representable is a sheaf.
 -/
-def subcanonical (J : GrothendieckTopology C) : Prop :=
+def Subcanonical (J : GrothendieckTopology C) : Prop :=
   J ≤ canonicalTopology C
 
 namespace Subcanonical

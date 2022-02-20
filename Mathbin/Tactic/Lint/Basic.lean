@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Floris van Doorn. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Floris van Doorn, Robert Y. Lewis, Gabriel Ebner
+-/
 import Mathbin.Tactic.Core
 
 /-!
@@ -35,7 +40,7 @@ private unsafe def parse_name_list (e : expr) : List Name :=
 
 attribute [local instance] reflect_name_list
 
--- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr *»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr *»
 /-- Defines the user attribute `nolint` for skipping `#lint` -/
 @[user_attribute]
 unsafe def nolint_attr : user_attribute (name_map (List Name)) (List Name) where

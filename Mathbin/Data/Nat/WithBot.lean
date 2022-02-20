@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Chris Hughes. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Chris Hughes
+-/
 import Mathbin.Data.Nat.Basic
 import Mathbin.Algebra.Order.Group
 
@@ -10,7 +15,7 @@ Lemmas about the type of natural numbers with a bottom element adjoined.
 
 namespace Nat
 
-theorem with_bot.add_eq_zero_iff : ∀ {n m : WithBot ℕ}, n + m = 0 ↔ n = 0 ∧ m = 0
+theorem WithBot.add_eq_zero_iff : ∀ {n m : WithBot ℕ}, n + m = 0 ↔ n = 0 ∧ m = 0
   | none, m =>
     iff_of_false
       (by
@@ -34,7 +39,7 @@ theorem with_bot.add_eq_zero_iff : ∀ {n m : WithBot ℕ}, n + m = 0 ↔ n = 0 
       rw [← WithBot.coe_add, WithBot.coe_eq_coe, WithBot.coe_eq_coe, WithBot.coe_eq_coe,
         add_eq_zero_iff' (Nat.zero_leₓ _) (Nat.zero_leₓ _)]
 
-theorem with_bot.add_eq_one_iff : ∀ {n m : WithBot ℕ}, n + m = 1 ↔ n = 0 ∧ m = 1 ∨ n = 1 ∧ m = 0
+theorem WithBot.add_eq_one_iff : ∀ {n m : WithBot ℕ}, n + m = 1 ↔ n = 0 ∧ m = 1 ∨ n = 1 ∧ m = 0
   | none, none => by
     decide
   | none, some m => by
@@ -60,11 +65,11 @@ theorem with_bot.add_eq_one_iff : ∀ {n m : WithBot ℕ}, n + m = 1 ↔ n = 0 �
       simp [Nat.add_succ, Nat.succ_inj', Nat.succ_ne_zero]
 
 @[simp]
-theorem with_bot.coe_nonneg {n : ℕ} : 0 ≤ (n : WithBot ℕ) := by
+theorem WithBot.coe_nonneg {n : ℕ} : 0 ≤ (n : WithBot ℕ) := by
   rw [← WithBot.coe_zero, WithBot.coe_le_coe] <;> exact Nat.zero_leₓ _
 
 @[simp]
-theorem with_bot.lt_zero_iff (n : WithBot ℕ) : n < 0 ↔ n = ⊥ :=
+theorem WithBot.lt_zero_iff (n : WithBot ℕ) : n < 0 ↔ n = ⊥ :=
   Option.casesOn n
     (by
       decide)
@@ -74,7 +79,7 @@ theorem with_bot.lt_zero_iff (n : WithBot ℕ) : n < 0 ↔ n = ⊥ :=
         simp [WithBot.some_eq_coe])
       fun h => Option.noConfusion h
 
-theorem with_bot.one_le_iff_zero_lt {x : WithBot ℕ} : 1 ≤ x ↔ 0 < x := by
+theorem WithBot.one_le_iff_zero_lt {x : WithBot ℕ} : 1 ≤ x ↔ 0 < x := by
   refine' ⟨fun h => lt_of_lt_of_leₓ (with_bot.coe_lt_coe.mpr zero_lt_one) h, fun h => _⟩
   induction x using WithBot.recBotCoe
   · exact (not_lt_bot h).elim
@@ -82,7 +87,7 @@ theorem with_bot.one_le_iff_zero_lt {x : WithBot ℕ} : 1 ≤ x ↔ 0 < x := by
   · exact with_bot.coe_le_coe.mpr (nat.succ_le_iff.mpr (with_bot.coe_lt_coe.mp h))
     
 
-theorem with_bot.lt_one_iff_le_zero {x : WithBot ℕ} : x < 1 ↔ x ≤ 0 :=
+theorem WithBot.lt_one_iff_le_zero {x : WithBot ℕ} : x < 1 ↔ x ≤ 0 :=
   not_iff_not.mp
     (by
       simpa using with_bot.one_le_iff_zero_lt)

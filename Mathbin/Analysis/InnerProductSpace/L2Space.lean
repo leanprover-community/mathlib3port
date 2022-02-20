@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2022 Heather Macbeth. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Heather Macbeth
+-/
 import Mathbin.Analysis.InnerProductSpace.Projection
 import Mathbin.Analysis.NormedSpace.LpSpace
 
@@ -89,10 +94,12 @@ notation "ℓ²(" ι "," 𝕜 ")" => lp (fun i : ι => 𝕜) 2
 namespace lp
 
 theorem summable_inner (f g : lp G 2) : Summable fun i => ⟪f i, g i⟫ := by
+  -- Apply the Direct Comparison Test, comparing with ∑' i, ∥f i∥ * ∥g i∥ (summable by Hölder)
   refine' summable_of_norm_bounded (fun i => ∥f i∥ * ∥g i∥) (lp.summable_mul _ f g) _
   · rw [Real.is_conjugate_exponent_iff] <;> norm_num
     
   intro i
+  -- Then apply Cauchy-Schwarz pointwise
   exact norm_inner_le_norm _ _
 
 instance : InnerProductSpace 𝕜 (lp G 2) :=
@@ -172,7 +179,7 @@ protected theorem summable_of_lp (f : lp G 2) : Summable fun i => V i (f i) := b
 
 /-- A mutually orthogonal family of subspaces of `E` induce a linear isometry from `lp 2` of the
 subspaces into `E`. -/
-protected def LinearIsometry : lp G 2 →ₗᵢ[𝕜] E where
+protected def linearIsometry : lp G 2 →ₗᵢ[𝕜] E where
   toFun := fun f => ∑' i, V i (f i)
   map_add' := fun f g => by
     simp only [tsum_add (hV.summable_of_lp f) (hV.summable_of_lp g), lp.coe_fn_add, Pi.add_apply,
@@ -181,6 +188,7 @@ protected def LinearIsometry : lp G 2 →ₗᵢ[𝕜] E where
     simpa only [LinearIsometry.map_smul, Pi.smul_apply, lp.coe_fn_smul] using tsum_const_smul (hV.summable_of_lp f)
   norm_map' := fun f => by
     classical
+    -- needed for lattice instance on `finset ι`, for `filter.at_top_ne_bot`
     have H : 0 < (2 : ℝ≥0∞).toReal := by
       norm_num
     suffices ∥∑' i : ι, V i (f i)∥ ^ (2 : ℝ≥0∞).toReal = ∥f∥ ^ (2 : ℝ≥0∞).toReal by
@@ -244,7 +252,7 @@ protected theorem range_linear_isometry [∀ i, CompleteSpace (G i)] :
 a isometric isomorphism from E to `lp 2` of the subspaces.
 
 Note that this goes in the opposite direction from `orthogonal_family.linear_isometry`. -/
-noncomputable def LinearIsometryEquiv [∀ i, CompleteSpace (G i)]
+noncomputable def linearIsometryEquiv [∀ i, CompleteSpace (G i)]
     (hV' : (⨆ i, (V i).toLinearMap.range).topologicalClosure = ⊤) : E ≃ₗᵢ[𝕜] lp G 2 :=
   LinearIsometryEquiv.symm <|
     LinearIsometryEquiv.ofSurjective hV.LinearIsometry
@@ -336,7 +344,7 @@ protected theorem repr_apply_apply (b : HilbertBasis ι 𝕜 E) (v : E) (i : ι)
   simp
 
 @[simp]
-protected theorem Orthonormal (b : HilbertBasis ι 𝕜 E) : Orthonormal 𝕜 b := by
+protected theorem orthonormal (b : HilbertBasis ι 𝕜 E) : Orthonormal 𝕜 b := by
   rw [orthonormal_iff_ite]
   intro i j
   rw [← b.repr.inner_map_map (b i) (b j), b.repr_self, b.repr_self, lp.inner_single_left, lp.single_apply]
@@ -394,7 +402,7 @@ protected theorem coe_mk (hsp : (span 𝕜 (Set.Range v)).topologicalClosure = �
 
 /-- An orthonormal family of vectors whose span has trivial orthogonal complement is a Hilbert
 basis. -/
-protected def mk_of_orthogonal_eq_bot (hsp : (span 𝕜 (Set.Range v))ᗮ = ⊥) : HilbertBasis ι 𝕜 E :=
+protected def mkOfOrthogonalEqBot (hsp : (span 𝕜 (Set.Range v))ᗮ = ⊥) : HilbertBasis ι 𝕜 E :=
   HilbertBasis.mk hv
     (by
       rw [← orthogonal_orthogonal_eq_closure, orthogonal_eq_top_iff, hsp])

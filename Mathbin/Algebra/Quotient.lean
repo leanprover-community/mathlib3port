@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Anne Baanen. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Anne Baanen
+-/
 import Mathbin.Data.SetLike.Basic
 
 /-!
@@ -44,6 +49,7 @@ class HasQuotient (A : outParam <| Type u) (B : Type v) where
 This differs from `has_quotient.quotient'` in that the `A` argument is explicit, which is necessary
 to make Lean show the notation in the goal state.
 -/
+-- Will be provided by e.g. `ideal.quotient.inhabited`
 @[reducible, nolint has_inhabited_instance]
 def HasQuotient.Quotient (A : outParam <| Type u) {B : Type v} [HasQuotient A B] (b : B) : Type max u v :=
   HasQuotient.Quotient' b

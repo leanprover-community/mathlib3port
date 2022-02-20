@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Kenny Lau. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Kenny Lau, Chris Hughes, Mario Carneiro
+-/
 import Mathbin.Algebra.Algebra.Basic
 import Mathbin.Algebra.Category.CommRing.Basic
 import Mathbin.RingTheory.Ideal.Operations
@@ -63,13 +68,13 @@ theorem nonunits_add {x y} (hx : x ∈ Nonunits R) (hy : y ∈ Nonunits R) : x +
 variable (R)
 
 /-- The ideal of elements that are not units. -/
-def maximal_ideal : Ideal R where
+def maximalIdeal : Ideal R where
   Carrier := Nonunits R
   zero_mem' := zero_mem_nonunits.2 <| zero_ne_one
   add_mem' := fun x y hx hy => nonunits_add hx hy
   smul_mem' := fun a x => mul_mem_nonunits_right
 
-instance maximal_ideal.is_maximal : (maximalIdeal R).IsMaximal := by
+instance maximalIdeal.is_maximal : (maximalIdeal R).IsMaximal := by
   rw [Ideal.is_maximal_iff]
   constructor
   · intro h
@@ -103,7 +108,7 @@ end LocalRing
 
 variable {R : Type u} {S : Type v} {T : Type w}
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (x y «expr ∈ » nonunits R)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (x y «expr ∈ » nonunits R)
 theorem local_of_nonunits_ideal [CommRingₓ R] (hnze : (0 : R) ≠ 1)
     (h : ∀ x y _ : x ∈ Nonunits R _ : y ∈ Nonunits R, x + y ∈ Nonunits R) : LocalRing R :=
   { exists_pair_ne := ⟨0, 1, hnze⟩,
@@ -207,6 +212,7 @@ theorem is_local_ring_hom_of_iso {R S : CommRingₓₓ} (f : R ≅ S) : IsLocalR
       convert f.inv.is_unit_map ha
       rw [CategoryTheory.coe_hom_inv_id] }
 
+-- see Note [lower instance priority]
 instance (priority := 100) is_local_ring_hom_of_is_iso {R S : CommRingₓₓ} (f : R ⟶ S) [IsIso f] : IsLocalRingHom f :=
   is_local_ring_hom_of_iso (asIso f)
 
@@ -260,10 +266,10 @@ theorem local_hom_tfae (f : R →+* S) :
 variable (R)
 
 /-- The residue field of a local ring is the quotient of the ring by its maximal ideal. -/
-def residue_field :=
+def ResidueField :=
   R ⧸ maximalIdeal R
 
-noncomputable instance residue_field.field : Field (ResidueField R) :=
+noncomputable instance ResidueField.field : Field (ResidueField R) :=
   Ideal.Quotient.field (maximalIdeal R)
 
 noncomputable instance : Inhabited (ResidueField R) :=
@@ -273,7 +279,7 @@ noncomputable instance : Inhabited (ResidueField R) :=
 def residue : R →+* ResidueField R :=
   Ideal.Quotient.mk _
 
-noncomputable instance residue_field.algebra : Algebra R (ResidueField R) :=
+noncomputable instance ResidueField.algebra : Algebra R (ResidueField R) :=
   (residue R).toAlgebra
 
 namespace ResidueField
@@ -302,6 +308,7 @@ variable [Field R]
 
 open_locale Classical
 
+-- see Note [lower instance priority]
 instance (priority := 100) : LocalRing R where
   is_local := fun a =>
     if h : a = 0 then

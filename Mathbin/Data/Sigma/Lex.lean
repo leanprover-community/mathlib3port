@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Yaël Dillies. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yaël Dillies
+-/
 import Mathbin.Data.Sigma.Basic
 import Mathbin.Order.RelClasses
 
@@ -30,7 +35,7 @@ variable {ι : Type _} {α : ι → Type _} {r r₁ r₂ : ι → ι → Prop} {
 /-- The lexicographical order on a sigma type. It takes in a relation on the index type and a
 relation for each summand. `a` is related to `b` iff their summands are related or they are in the
 same summand and are related through the summand's relation. -/
-inductive lex (r : ι → ι → Prop) (s : ∀ i, α i → α i → Prop) : ∀ a b : Σ i, α i, Prop
+inductive Lex (r : ι → ι → Prop) (s : ∀ i, α i → α i → Prop) : ∀ a b : Σ i, α i, Prop
   | left {i j : ι} (a : α i) (b : α j) : r i j → lex ⟨i, a⟩ ⟨j, b⟩
   | right {i : ι} (a b : α i) : s i a b → lex ⟨i, a⟩ ⟨i, b⟩
 
@@ -52,11 +57,11 @@ theorem lex_iff : Lex r s a b ↔ r a.1 b.1 ∨ ∃ h : a.1 = b.1, s _ (h.rec a.
       
     
 
-instance lex.decidable (r : ι → ι → Prop) (s : ∀ i, α i → α i → Prop) [DecidableEq ι] [DecidableRel r]
+instance Lex.decidable (r : ι → ι → Prop) (s : ∀ i, α i → α i → Prop) [DecidableEq ι] [DecidableRel r]
     [∀ i, DecidableRel (s i)] : DecidableRel (Lex r s) := fun a b =>
   decidableOfDecidableOfIff inferInstance lex_iff.symm
 
-theorem lex.mono (hr : ∀ a b, r₁ a b → r₂ a b) (hs : ∀ i a b, s₁ i a b → s₂ i a b) {a b : Σ i, α i}
+theorem Lex.mono (hr : ∀ a b, r₁ a b → r₂ a b) (hs : ∀ i a b, s₁ i a b → s₂ i a b) {a b : Σ i, α i}
     (h : Lex r₁ s₁ a b) : Lex r₂ s₂ a b := by
   obtain ⟨i, j, a, b, hij⟩ | ⟨i, a, b, hab⟩ := h
   · exact lex.left _ _ (hr _ _ hij)
@@ -64,10 +69,10 @@ theorem lex.mono (hr : ∀ a b, r₁ a b → r₂ a b) (hs : ∀ i a b, s₁ i a
   · exact lex.right _ _ (hs _ _ _ hab)
     
 
-theorem lex.mono_left (hr : ∀ a b, r₁ a b → r₂ a b) {a b : Σ i, α i} (h : Lex r₁ s a b) : Lex r₂ s a b :=
+theorem Lex.mono_left (hr : ∀ a b, r₁ a b → r₂ a b) {a b : Σ i, α i} (h : Lex r₁ s a b) : Lex r₂ s a b :=
   (h.mono hr) fun _ _ _ => id
 
-theorem lex.mono_right (hs : ∀ i a b, s₁ i a b → s₂ i a b) {a b : Σ i, α i} (h : Lex r s₁ a b) : Lex r s₂ a b :=
+theorem Lex.mono_right (hs : ∀ i a b, s₁ i a b → s₂ i a b) {a b : Σ i, α i} (h : Lex r s₁ a b) : Lex r s₂ a b :=
   h.mono (fun _ _ => id) hs
 
 instance [∀ i, IsRefl (α i) (s i)] : IsRefl _ (Lex r s) :=
@@ -174,11 +179,11 @@ theorem lex_iff {a b : Σ' i, α i} : Lex r s a b ↔ r a.1 b.1 ∨ ∃ h : a.1 
       
     
 
-instance lex.decidable (r : ι → ι → Prop) (s : ∀ i, α i → α i → Prop) [DecidableEq ι] [DecidableRel r]
+instance Lex.decidable (r : ι → ι → Prop) (s : ∀ i, α i → α i → Prop) [DecidableEq ι] [DecidableRel r]
     [∀ i, DecidableRel (s i)] : DecidableRel (Lex r s) := fun a b =>
   decidableOfDecidableOfIff inferInstance lex_iff.symm
 
-theorem lex.mono {r₁ r₂ : ι → ι → Prop} {s₁ s₂ : ∀ i, α i → α i → Prop} (hr : ∀ a b, r₁ a b → r₂ a b)
+theorem Lex.mono {r₁ r₂ : ι → ι → Prop} {s₁ s₂ : ∀ i, α i → α i → Prop} (hr : ∀ a b, r₁ a b → r₂ a b)
     (hs : ∀ i a b, s₁ i a b → s₂ i a b) {a b : Σ' i, α i} (h : Lex r₁ s₁ a b) : Lex r₂ s₂ a b := by
   obtain ⟨i, j, a, b, hij⟩ | ⟨i, a, b, hab⟩ := h
   · exact lex.left _ _ (hr _ _ hij)
@@ -186,11 +191,11 @@ theorem lex.mono {r₁ r₂ : ι → ι → Prop} {s₁ s₂ : ∀ i, α i → �
   · exact lex.right _ (hs _ _ _ hab)
     
 
-theorem lex.mono_left {r₁ r₂ : ι → ι → Prop} {s : ∀ i, α i → α i → Prop} (hr : ∀ a b, r₁ a b → r₂ a b) {a b : Σ' i, α i}
+theorem Lex.mono_left {r₁ r₂ : ι → ι → Prop} {s : ∀ i, α i → α i → Prop} (hr : ∀ a b, r₁ a b → r₂ a b) {a b : Σ' i, α i}
     (h : Lex r₁ s a b) : Lex r₂ s a b :=
   (h.mono hr) fun _ _ _ => id
 
-theorem lex.mono_right {r : ι → ι → Prop} {s₁ s₂ : ∀ i, α i → α i → Prop} (hs : ∀ i a b, s₁ i a b → s₂ i a b)
+theorem Lex.mono_right {r : ι → ι → Prop} {s₁ s₂ : ∀ i, α i → α i → Prop} (hs : ∀ i a b, s₁ i a b → s₂ i a b)
     {a b : Σ' i, α i} (h : Lex r s₁ a b) : Lex r s₂ a b :=
   h.mono (fun _ _ => id) hs
 

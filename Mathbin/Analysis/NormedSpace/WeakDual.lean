@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Kalle Kytölä. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Kalle Kytölä
+-/
 import Mathbin.Topology.Algebra.Module.WeakDual
 import Mathbin.Analysis.NormedSpace.Dual
 import Mathbin.Analysis.NormedSpace.OperatorNorm
@@ -120,7 +125,7 @@ theorem to_weak_dual_continuous : Continuous fun x' : Dual 𝕜 E => x'.toWeakDu
 /-- For a normed space `E`, according to `to_weak_dual_continuous` the "identity mapping"
 `dual 𝕜 E → weak_dual 𝕜 E` is continuous. This definition implements it as a continuous linear
 map. -/
-def continuous_linear_map_to_weak_dual : Dual 𝕜 E →L[𝕜] WeakDual 𝕜 E :=
+def continuousLinearMapToWeakDual : Dual 𝕜 E →L[𝕜] WeakDual 𝕜 E :=
   { toWeakDual with cont := to_weak_dual_continuous }
 
 /-- The weak-star topology is coarser than the dual-norm topology. -/
@@ -139,7 +144,7 @@ end NormedSpace.Dual
 
 namespace WeakDual
 
-theorem to_normed_dual.preimage_closed_unit_ball :
+theorem toNormedDual.preimage_closed_unit_ball :
     to_normed_dual ⁻¹' Metric.ClosedBall (0 : Dual 𝕜 E) 1 = { x' : WeakDual 𝕜 E | ∥x'.toNormedDual∥ ≤ 1 } := by
   have eq : Metric.ClosedBall (0 : dual 𝕜 E) 1 = { x' : dual 𝕜 E | ∥x'∥ ≤ 1 } := by
     ext x'

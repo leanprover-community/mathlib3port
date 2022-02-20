@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Frédéric Dupuis. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Frédéric Dupuis, Heather Macbeth
+-/
 import Mathbin.Algebra.Ring.Basic
 import Mathbin.Data.Equiv.Ring
 
@@ -140,6 +145,7 @@ theorem RingHom.is_surjective (σ : R₁ →+* R₂) [t : RingHomSurjective σ] 
 
 namespace RingHomSurjective
 
+-- The linter gives a false positive, since `σ₂` is an out_param
 @[nolint dangerous_instance]
 instance (priority := 100) inv_pair {σ₁ : R₁ →+* R₂} {σ₂ : R₂ →+* R₁} [RingHomInvPair σ₁ σ₂] : RingHomSurjective σ₁ :=
   ⟨fun x => ⟨σ₂ x, RingHomInvPair.comp_apply_eq₂⟩⟩

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Fox Thomson. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Fox Thomson
+-/
 import Mathbin.Data.List.Join
 import Mathbin.Data.Set.Lattice
 
@@ -15,9 +20,9 @@ universe u v
 
 variable {α : Type u}
 
--- ././Mathport/Syntax/Translate/Basic.lean:859:9: unsupported derive handler has_mem (list α)
--- ././Mathport/Syntax/Translate/Basic.lean:859:9: unsupported derive handler has_singleton (list α)
--- ././Mathport/Syntax/Translate/Basic.lean:859:9: unsupported derive handler has_insert (list α)
+-- ././Mathport/Syntax/Translate/Basic.lean:981:9: unsupported derive handler has_mem (list α)
+-- ././Mathport/Syntax/Translate/Basic.lean:981:9: unsupported derive handler has_singleton (list α)
+-- ././Mathport/Syntax/Translate/Basic.lean:981:9: unsupported derive handler has_insert (list α)
 /-- A language is a set of strings over an alphabet. -/
 def Language α :=
   Set (List α)deriving [anonymous], [anonymous], [anonymous], CompleteBooleanAlgebra
@@ -58,7 +63,7 @@ theorem mul_def (l m : Language α) : l * m = Set.Image2 (· ++ ·) l m :=
 
 /-- The star of a language `L` is the set of all strings which can be written by concatenating
   strings from `L`. -/
-def star (l : Language α) : Language α :=
+def Star (l : Language α) : Language α :=
   { x | ∃ S : List (List α), x = S.join ∧ ∀, ∀ y ∈ S, ∀, y ∈ l }
 
 theorem star_def (l : Language α) : l.star = { x | ∃ S : List (List α), x = S.join ∧ ∀, ∀ y ∈ S, ∀, y ∈ l } :=
@@ -79,13 +84,13 @@ theorem mem_star (l : Language α) (x : List α) : x ∈ l.star ↔ ∃ S : List
   Iff.rfl
 
 instance : Semiringₓ (Language α) where
-  add := · + ·
+  add := (· + ·)
   add_assoc := Set.union_assoc
   zero := 0
   zero_add := Set.empty_union
   add_zero := Set.union_empty
   add_comm := Set.union_comm
-  mul := · * ·
+  mul := (· * ·)
   mul_assoc := fun l m n => by
     simp only [mul_def, Set.image2_image2_left, Set.image2_image2_right, List.append_assoc]
   zero_mul := by

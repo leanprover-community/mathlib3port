@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Bhavik Mehta. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Bhavik Mehta
+-/
 import Mathbin.CategoryTheory.Limits.Shapes.BinaryProducts
 import Mathbin.CategoryTheory.Limits.Shapes.Terminal
 import Mathbin.CategoryTheory.Subobject.MonoOver
@@ -33,22 +38,22 @@ open Limits Category
 variable {C : Type u₁} [Category.{v₁} C] {A : C}
 
 /-- An object `A` is subterminal iff for any `Z`, there is at most one morphism `Z ⟶ A`. -/
-def is_subterminal (A : C) : Prop :=
+def IsSubterminal (A : C) : Prop :=
   ∀ ⦃Z : C⦄ f g : Z ⟶ A, f = g
 
-theorem is_subterminal.def : IsSubterminal A ↔ ∀ ⦃Z : C⦄ f g : Z ⟶ A, f = g :=
+theorem IsSubterminal.def : IsSubterminal A ↔ ∀ ⦃Z : C⦄ f g : Z ⟶ A, f = g :=
   Iff.rfl
 
 /-- If `A` is subterminal, the unique morphism from it to a terminal object is a monomorphism.
 The converse of `is_subterminal_of_mono_is_terminal_from`.
 -/
-theorem is_subterminal.mono_is_terminal_from (hA : IsSubterminal A) {T : C} (hT : IsTerminal T) : Mono (hT.from A) :=
+theorem IsSubterminal.mono_is_terminal_from (hA : IsSubterminal A) {T : C} (hT : IsTerminal T) : Mono (hT.from A) :=
   { right_cancellation := fun Z g h _ => hA _ _ }
 
 /-- If `A` is subterminal, the unique morphism from it to the terminal object is a monomorphism.
 The converse of `is_subterminal_of_mono_terminal_from`.
 -/
-theorem is_subterminal.mono_terminal_from [HasTerminal C] (hA : IsSubterminal A) : Mono (terminal.from A) :=
+theorem IsSubterminal.mono_terminal_from [HasTerminal C] (hA : IsSubterminal A) : Mono (terminal.from A) :=
   hA.mono_is_terminal_from terminalIsTerminal
 
 /-- If the unique morphism from `A` to a terminal object is a monomorphism, `A` is subterminal.
@@ -74,7 +79,7 @@ theorem is_subterminal_of_terminal [HasTerminal C] : IsSubterminal (⊤_ C) := f
 /-- If `A` is subterminal, its diagonal morphism is an isomorphism.
 The converse of `is_subterminal_of_is_iso_diag`.
 -/
-theorem is_subterminal.is_iso_diag (hA : IsSubterminal A) [HasBinaryProduct A A] : IsIso (diag A) :=
+theorem IsSubterminal.is_iso_diag (hA : IsSubterminal A) [HasBinaryProduct A A] : IsIso (diag A) :=
   ⟨⟨Limits.prod.fst,
       ⟨by
         simp , by
@@ -91,7 +96,7 @@ theorem is_subterminal_of_is_iso_diag [HasBinaryProduct A A] [IsIso (diag A)] : 
 
 /-- If `A` is subterminal, it is isomorphic to `A ⨯ A`. -/
 @[simps]
-def is_subterminal.iso_diag (hA : IsSubterminal A) [HasBinaryProduct A A] : A ⨯ A ≅ A := by
+def IsSubterminal.isoDiag (hA : IsSubterminal A) [HasBinaryProduct A A] : A ⨯ A ≅ A := by
   let this' := is_subterminal.is_iso_diag hA
   apply (as_iso (diag A)).symm
 
@@ -102,7 +107,7 @@ TODO: If `C` is the category of sheaves on a topological space `X`, this categor
 to the lattice of open subsets of `X`. More generally, if `C` is a topos, this is the lattice of
 "external truth values".
 -/
-def subterminals (C : Type u₁) [Category.{v₁} C] :=
+def Subterminals (C : Type u₁) [Category.{v₁} C] :=
   { A : C // IsSubterminal A }deriving Category
 
 instance [HasTerminal C] : Inhabited (Subterminals C) :=
@@ -110,7 +115,7 @@ instance [HasTerminal C] : Inhabited (Subterminals C) :=
 
 /-- The inclusion of the subterminal objects into the original category. -/
 @[simps]
-def subterminal_inclusion : Subterminals C ⥤ C :=
+def subterminalInclusion : Subterminals C ⥤ C :=
   fullSubcategoryInclusion _ deriving Full, Faithful
 
 instance subterminals_thin (X Y : Subterminals C) : Subsingleton (X ⟶ Y) :=
@@ -120,7 +125,7 @@ instance subterminals_thin (X Y : Subterminals C) : Subsingleton (X ⟶ Y) :=
 object (which is in turn equivalent to the subobjects of the terminal object).
 -/
 @[simps]
-def subterminals_equiv_mono_over_terminal [HasTerminal C] : Subterminals C ≌ MonoOver (⊤_ C) where
+def subterminalsEquivMonoOverTerminal [HasTerminal C] : Subterminals C ≌ MonoOver (⊤_ C) where
   Functor :=
     { obj := fun X => ⟨Over.mk (terminal.from X.1), X.2.mono_terminal_from⟩,
       map := fun X Y f =>

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Bhavik Mehta. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Bhavik Mehta, Scott Morrison
+-/
 import Mathbin.CategoryTheory.Limits.Shapes.Equalizers
 import Mathbin.CategoryTheory.Limits.Shapes.FiniteProducts
 import Mathbin.CategoryTheory.Limits.Preserves.Shapes.Products
@@ -32,6 +37,7 @@ variable {C : Type u} [Category.{v} C]
 
 variable {J : Type v} [SmallCategory J]
 
+-- We hide the "implementation details" inside a namespace
 namespace HasLimitOfHasProductsOfHasEqualizers
 
 variable {F : J ⥤ C} {c₁ : Fan F.obj} {c₂ : Fan fun f : Σ p : J × J, p.1 ⟶ p.2 => F.obj f.1.2} (s t : c₁.x ⟶ c₂.x)
@@ -44,7 +50,7 @@ include hs ht
 limiting if the given cones are also.
 -/
 @[simps]
-def build_limit : Cone F where
+def buildLimit : Cone F where
   x := i.x
   π :=
     { app := fun j => i.ι ≫ c₁.π.app _,
@@ -57,7 +63,7 @@ variable {i}
 /-- (Implementation) Show the cone constructed in `build_limit` is limiting, provided the cones used in
 its construction are.
 -/
-def build_is_limit (t₁ : IsLimit c₁) (t₂ : IsLimit c₂) (hi : IsLimit i) : IsLimit (buildLimit s t hs ht i) where
+def buildIsLimit (t₁ : IsLimit c₁) (t₂ : IsLimit c₂) (hi : IsLimit i) : IsLimit (buildLimit s t hs ht i) where
   lift := fun q => by
     refine' hi.lift (fork.of_ι _ _)
     · refine' t₁.lift (fan.mk _ fun j => _)
@@ -120,7 +126,7 @@ variable (G : C ⥤ D) [PreservesLimitsOfShape WalkingParallelPair.{v} G] [Prese
   [PreservesLimitsOfShape (Discrete.{v} (Σ p : J × J, p.1 ⟶ p.2)) G]
 
 /-- If a functor preserves equalizers and the appropriate products, it preserves limits. -/
-def preserves_limit_of_preserves_equalizers_and_product : PreservesLimitsOfShape J G where
+def preservesLimitOfPreservesEqualizersAndProduct : PreservesLimitsOfShape J G where
   PreservesLimit := fun K => by
     let P := ∏ K.obj
     let Q := ∏ fun f : Σ p : J × J, p.fst ⟶ p.snd => K.obj f.1.2
@@ -168,16 +174,17 @@ def preserves_limit_of_preserves_equalizers_and_product : PreservesLimitsOfShape
     dsimp
     simp
 
+-- See note [dsimp, simp].
 end
 
 /-- If G preserves equalizers and finite products, it preserves finite limits. -/
-def preserves_finite_limits_of_preserves_equalizers_and_finite_products [HasEqualizers C] [HasFiniteProducts C]
-    (G : C ⥤ D) [PreservesLimitsOfShape WalkingParallelPair.{v} G]
-    [∀ J [Fintype J], PreservesLimitsOfShape (Discrete.{v} J) G] : PreservesFiniteLimits G :=
+def preservesFiniteLimitsOfPreservesEqualizersAndFiniteProducts [HasEqualizers C] [HasFiniteProducts C] (G : C ⥤ D)
+    [PreservesLimitsOfShape WalkingParallelPair.{v} G] [∀ J [Fintype J], PreservesLimitsOfShape (Discrete.{v} J) G] :
+    PreservesFiniteLimits G :=
   ⟨fun _ _ _ => preserves_limit_of_preserves_equalizers_and_product G⟩
 
 /-- If G preserves equalizers and products, it preserves all limits. -/
-def preserves_limits_of_preserves_equalizers_and_products [HasEqualizers C] [HasProducts C] (G : C ⥤ D)
+def preservesLimitsOfPreservesEqualizersAndProducts [HasEqualizers C] [HasProducts C] (G : C ⥤ D)
     [PreservesLimitsOfShape WalkingParallelPair.{v} G] [∀ J, PreservesLimitsOfShape (Discrete.{v} J) G] :
     PreservesLimits G where
   PreservesLimitsOfShape := fun J 𝒥 => preserves_limit_of_preserves_equalizers_and_product G
@@ -187,6 +194,7 @@ We now dualize the above constructions, resorting to copy-paste.
 -/
 
 
+-- We hide the "implementation details" inside a namespace
 namespace HasColimitOfHasCoproductsOfHasCoequalizers
 
 variable {F : J ⥤ C} {c₁ : Cofan fun f : Σ p : J × J, p.1 ⟶ p.2 => F.obj f.1.1} {c₂ : Cofan F.obj} (s t : c₁.x ⟶ c₂.x)
@@ -199,7 +207,7 @@ include hs ht
 build the cocone for `F` which is colimiting if the given cocones are also.
 -/
 @[simps]
-def build_colimit : Cocone F where
+def buildColimit : Cocone F where
   x := i.x
   ι :=
     { app := fun j => c₂.ι.app _ ≫ i.π,
@@ -212,7 +220,7 @@ variable {i}
 /-- (Implementation) Show the cocone constructed in `build_colimit` is colimiting,
 provided the cocones used in its construction are.
 -/
-def build_is_colimit (t₁ : IsColimit c₁) (t₂ : IsColimit c₂) (hi : IsColimit i) :
+def buildIsColimit (t₁ : IsColimit c₁) (t₂ : IsColimit c₂) (hi : IsColimit i) :
     IsColimit (buildColimit s t hs ht i) where
   desc := fun q => by
     refine' hi.desc (cofork.of_π _ _)
@@ -276,7 +284,7 @@ variable (G : C ⥤ D) [PreservesColimitsOfShape WalkingParallelPair.{v} G] [Pre
   [PreservesColimitsOfShape (Discrete.{v} (Σ p : J × J, p.1 ⟶ p.2)) G]
 
 /-- If a functor preserves coequalizers and the appropriate coproducts, it preserves colimits. -/
-def preserves_colimit_of_preserves_coequalizers_and_coproduct : PreservesColimitsOfShape J G where
+def preservesColimitOfPreservesCoequalizersAndCoproduct : PreservesColimitsOfShape J G where
   PreservesColimit := fun K => by
     let P := ∐ K.obj
     let Q := ∐ fun f : Σ p : J × J, p.fst ⟶ p.snd => K.obj f.1.1
@@ -324,16 +332,17 @@ def preserves_colimit_of_preserves_coequalizers_and_coproduct : PreservesColimit
     dsimp
     simp
 
+-- See note [dsimp, simp].
 end
 
 /-- If G preserves coequalizers and finite coproducts, it preserves finite colimits. -/
-def preserves_finite_colimits_of_preserves_coequalizers_and_finite_coproducts [HasCoequalizers C]
-    [HasFiniteCoproducts C] (G : C ⥤ D) [PreservesColimitsOfShape WalkingParallelPair.{v} G]
+def preservesFiniteColimitsOfPreservesCoequalizersAndFiniteCoproducts [HasCoequalizers C] [HasFiniteCoproducts C]
+    (G : C ⥤ D) [PreservesColimitsOfShape WalkingParallelPair.{v} G]
     [∀ J [Fintype J], PreservesColimitsOfShape (Discrete.{v} J) G] : PreservesFiniteColimits G :=
   ⟨fun _ _ _ => preserves_colimit_of_preserves_coequalizers_and_coproduct G⟩
 
 /-- If G preserves coequalizers and coproducts, it preserves all colimits. -/
-def preserves_colimits_of_preserves_coequalizers_and_coproducts [HasCoequalizers C] [HasCoproducts C] (G : C ⥤ D)
+def preservesColimitsOfPreservesCoequalizersAndCoproducts [HasCoequalizers C] [HasCoproducts C] (G : C ⥤ D)
     [PreservesColimitsOfShape WalkingParallelPair.{v} G] [∀ J, PreservesColimitsOfShape (Discrete.{v} J) G] :
     PreservesColimits G where
   PreservesColimitsOfShape := fun J 𝒥 => preserves_colimit_of_preserves_coequalizers_and_coproduct G

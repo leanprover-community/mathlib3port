@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2022 Sebastian Monnet. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Sebastian Monnet
+-/
 import Mathbin.FieldTheory.Galois
 import Mathbin.Topology.Algebra.FilterBasis
 import Mathbin.Algebra.Algebra.Subalgebra

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison, Bhavik Mehta
+-/
 import Mathbin.CategoryTheory.Monad.Basic
 import Mathbin.CategoryTheory.Adjunction.Basic
 import Mathbin.CategoryTheory.ReflectsIsomorphisms
@@ -23,13 +28,14 @@ open Category
 
 universe v₁ u₁
 
+-- morphism levels before object levels. See note [category_theory universes].
 variable {C : Type u₁} [Category.{v₁} C]
 
 namespace Monadₓ
 
 /-- An Eilenberg-Moore algebra for a monad `T`.
     cf Definition 5.2.3 in [Riehl][riehl2017]. -/
-structure algebra (T : Monad C) : Type max u₁ v₁ where
+structure Algebra (T : Monad C) : Type max u₁ v₁ where
   a : C
   a : (T : C ⥤ C).obj A ⟶ A
   unit' : T.η.app A ≫ a = 𝟙 A := by
@@ -51,7 +57,7 @@ variable {T : Monad C}
 
 /-- A morphism of Eilenberg–Moore algebras for the monad `T`. -/
 @[ext]
-structure hom (A B : Algebra T) where
+structure Hom (A B : Algebra T) where
   f : A.a ⟶ B.a
   h' : (T : C ⥤ C).map f ≫ B.a = A.a ≫ f := by
     run_tac
@@ -99,14 +105,14 @@ theorem comp_f {A A' A'' : Algebra T} (f : A ⟶ A') (g : A' ⟶ A'') : (f ≫ g
 
 /-- The category of Eilenberg-Moore algebras for a monad.
     cf Definition 5.2.4 in [Riehl][riehl2017]. -/
-instance EilenbergMoore : Category (Algebra T) :=
+instance eilenbergMoore : Category (Algebra T) :=
   {  }
 
 /-- To construct an isomorphism of algebras, it suffices to give an isomorphism of the carriers which
 commutes with the structure morphisms.
 -/
 @[simps]
-def iso_mk {A B : Algebra T} (h : A.a ≅ B.a) (w : (T : C ⥤ C).map h.Hom ≫ B.a = A.a ≫ h.Hom) : A ≅ B where
+def isoMk {A B : Algebra T} (h : A.a ≅ B.a) (w : (T : C ⥤ C).map h.Hom ≫ B.a = A.a ≫ h.Hom) : A ≅ B where
   Hom := { f := h.Hom }
   inv :=
     { f := h.inv,
@@ -135,6 +141,8 @@ instance [Inhabited C] : Inhabited (Algebra T) :=
 
 /-- The adjunction between the free and forgetful constructions for Eilenberg-Moore algebras for
   a monad. cf Lemma 5.2.8 of [Riehl][riehl2017]. -/
+-- The other two `simps` projection lemmas can be derived from these two, so `simp_nf` complains if
+-- those are added too
 @[simps Unit counit]
 def adj : T.free ⊣ T.forget :=
   Adjunction.mkOfHomEquiv
@@ -185,7 +193,7 @@ theorem of_right_adjoint_forget : Adjunction.ofRightAdjoint T.forget = T.adj :=
 `T₂`.
 -/
 @[simps]
-def algebra_functor_of_monad_hom {T₁ T₂ : Monad C} (h : T₂ ⟶ T₁) : Algebra T₁ ⥤ Algebra T₂ where
+def algebraFunctorOfMonadHom {T₁ T₂ : Monad C} (h : T₂ ⟶ T₁) : Algebra T₁ ⥤ Algebra T₂ where
   obj := fun A =>
     { a := A.a, a := h.app A.a ≫ A.a,
       unit' := by
@@ -199,7 +207,7 @@ def algebra_functor_of_monad_hom {T₁ T₂ : Monad C} (h : T₂ ⟶ T₁) : Alg
 /-- The identity monad morphism induces the identity functor from the category of algebras to itself.
 -/
 @[simps (config := { rhsMd := semireducible })]
-def algebra_functor_of_monad_hom_id {T₁ : Monad C} : algebraFunctorOfMonadHom (𝟙 T₁) ≅ 𝟭 _ :=
+def algebraFunctorOfMonadHomId {T₁ : Monad C} : algebraFunctorOfMonadHom (𝟙 T₁) ≅ 𝟭 _ :=
   NatIso.ofComponents
     (fun X =>
       Algebra.isoMk (Iso.refl _)
@@ -214,7 +222,7 @@ def algebra_functor_of_monad_hom_id {T₁ : Monad C} : algebraFunctorOfMonadHom 
 /-- A composition of monad morphisms gives the composition of corresponding functors.
 -/
 @[simps (config := { rhsMd := semireducible })]
-def algebra_functor_of_monad_hom_comp {T₁ T₂ T₃ : Monad C} (f : T₁ ⟶ T₂) (g : T₂ ⟶ T₃) :
+def algebraFunctorOfMonadHomComp {T₁ T₂ T₃ : Monad C} (f : T₁ ⟶ T₂) (g : T₂ ⟶ T₃) :
     algebraFunctorOfMonadHom (f ≫ g) ≅ algebraFunctorOfMonadHom g ⋙ algebraFunctorOfMonadHom f :=
   NatIso.ofComponents
     (fun X =>
@@ -233,7 +241,7 @@ We define it like this as opposed to using `eq_to_iso` so that the components ar
 lemmas about.
 -/
 @[simps (config := { rhsMd := semireducible })]
-def algebra_functor_of_monad_hom_eq {T₁ T₂ : Monad C} {f g : T₁ ⟶ T₂} (h : f = g) :
+def algebraFunctorOfMonadHomEq {T₁ T₂ : Monad C} {f g : T₁ ⟶ T₂} (h : f = g) :
     algebraFunctorOfMonadHom f ≅ algebraFunctorOfMonadHom g :=
   NatIso.ofComponents
     (fun X =>
@@ -250,7 +258,7 @@ def algebra_functor_of_monad_hom_eq {T₁ T₂ : Monad C} {f g : T₁ ⟶ T₂} 
 categories over `C`, that is, we have `algebra_equiv_of_iso_monads h ⋙ forget = forget`.
 -/
 @[simps]
-def algebra_equiv_of_iso_monads {T₁ T₂ : Monad C} (h : T₁ ≅ T₂) : Algebra T₁ ≌ Algebra T₂ where
+def algebraEquivOfIsoMonads {T₁ T₂ : Monad C} (h : T₁ ≅ T₂) : Algebra T₁ ≌ Algebra T₂ where
   Functor := algebraFunctorOfMonadHom h.inv
   inverse := algebraFunctorOfMonadHom h.Hom
   unitIso :=
@@ -277,7 +285,7 @@ namespace Comonad
 
 /-- An Eilenberg-Moore coalgebra for a comonad `T`. -/
 @[nolint has_inhabited_instance]
-structure coalgebra (G : Comonad C) : Type max u₁ v₁ where
+structure Coalgebra (G : Comonad C) : Type max u₁ v₁ where
   a : C
   a : A ⟶ (G : C ⥤ C).obj A
   counit' : a ≫ G.ε.app A = 𝟙 A := by
@@ -299,7 +307,7 @@ variable {G : Comonad C}
 
 /-- A morphism of Eilenberg-Moore coalgebras for the comonad `G`. -/
 @[ext, nolint has_inhabited_instance]
-structure hom (A B : Coalgebra G) where
+structure Hom (A B : Coalgebra G) where
   f : A.a ⟶ B.a
   h' : A.a ≫ (G : C ⥤ C).map f = f ≫ B.a := by
     run_tac
@@ -344,14 +352,14 @@ theorem comp_f {A A' A'' : Coalgebra G} (f : A ⟶ A') (g : A' ⟶ A'') : (f ≫
   rfl
 
 /-- The category of Eilenberg-Moore coalgebras for a comonad. -/
-instance EilenbergMoore : Category (Coalgebra G) :=
+instance eilenbergMoore : Category (Coalgebra G) :=
   {  }
 
 /-- To construct an isomorphism of coalgebras, it suffices to give an isomorphism of the carriers which
 commutes with the structure morphisms.
 -/
 @[simps]
-def iso_mk {A B : Coalgebra G} (h : A.a ≅ B.a) (w : A.a ≫ (G : C ⥤ C).map h.Hom = h.Hom ≫ B.a) : A ≅ B where
+def isoMk {A B : Coalgebra G} (h : A.a ≅ B.a) (w : A.a ≫ (G : C ⥤ C).map h.Hom = h.Hom ≫ B.a) : A ≅ B where
   Hom := { f := h.Hom }
   inv :=
     { f := h.inv,
@@ -380,6 +388,8 @@ def cofree : C ⥤ Coalgebra G where
 /-- The adjunction between the cofree and forgetful constructions for Eilenberg-Moore coalgebras
 for a comonad.
 -/
+-- The other two `simps` projection lemmas can be derived from these two, so `simp_nf` complains if
+-- those are added too
 @[simps Unit counit]
 def adj : G.forget ⊣ G.cofree :=
   Adjunction.mkOfHomEquiv

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 David Wärn. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: David Wärn, Eric Wieser
+-/
 import Mathbin.GroupTheory.FreeGroup
 
 /-!
@@ -63,6 +68,7 @@ theorem lift'_of (f : Generators G → H) (a : Generators G) : (lift' f) (of a) 
 
 @[simp]
 theorem lift'_eq_free_group_lift {A : Type u} : @lift' (FreeGroup A) H _ _ _ = FreeGroup.lift := by
+  -- TODO: `apply equiv.symm_bijective.injective`,
   rw [← free_group.lift.symm_symm, ← (@lift' (FreeGroup A) H _ _ _).symm_symm]
   congr 1
   ext
@@ -77,7 +83,7 @@ theorem ext_hom' ⦃f g : G →* H⦄ (h : ∀ a, f (of a) = g (of a)) : f = g :
   lift'.symm.Injective <| funext h
 
 /-- Being a free group transports across group isomorphisms within a universe. -/
-def of_mul_equiv (h : G ≃* H) : IsFreeGroup H where
+def ofMulEquiv (h : G ≃* H) : IsFreeGroup H where
   Generators := Generators G
   of := h ∘ of
   unique_lift' := by
@@ -108,7 +114,7 @@ variable (G)
 
 /-- Any free group is isomorphic to "the" free group. -/
 @[simps]
-def to_free_group : G ≃* FreeGroup (Generators G) where
+def toFreeGroup : G ≃* FreeGroup (Generators G) where
   toFun := lift' FreeGroup.of
   invFun := FreeGroup.lift of
   left_inv := by
@@ -157,6 +163,7 @@ theorem lift_of (f : Generators G → X) (a : Generators G) : (lift f) (of a) = 
 
 @[simp]
 theorem lift_eq_free_group_lift {A : Type u} : @lift (FreeGroup A) H _ _ _ = FreeGroup.lift := by
+  -- TODO: `apply equiv.symm_bijective.injective`,
   rw [← free_group.lift.symm_symm, ← (@lift (FreeGroup A) H _ _ _).symm_symm]
   congr 1
   ext

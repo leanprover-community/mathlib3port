@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison
+-/
 import Mathbin.Algebra.Homology.ImageToKernel
 import Mathbin.Algebra.Homology.HomologicalComplex
 import Mathbin.CategoryTheory.GradedObject
@@ -53,7 +58,7 @@ theorem cycles_eq_kernel_subobject {i j : ι} (r : c.Rel i j) : C.cycles i = ker
 /-- The underlying object of `C.cycles i` is isomorphic to `kernel (C.d i j)`,
 for any `j` such that `rel i j`.
 -/
-def cycles_iso_kernel {i j : ι} (r : c.Rel i j) : (C.cycles i : V) ≅ kernel (C.d i j) :=
+def cyclesIsoKernel {i j : ι} (r : c.Rel i j) : (C.cycles i : V) ≅ kernel (C.d i j) :=
   Subobject.isoOfEq _ _ (C.cycles_eq_kernel_subobject r) ≪≫ kernelSubobjectIso (C.d i j)
 
 theorem cycles_eq_top {i} (h : c.next i = none) : C.cycles i = ⊤ := by
@@ -78,7 +83,7 @@ theorem boundaries_eq_image_subobject [HasEqualizers V] {i j : ι} (r : c.Rel i 
 /-- The underlying object of `C.boundaries j` is isomorphic to `image (C.d i j)`,
 for any `i` such that `rel i j`.
 -/
-def boundaries_iso_image [HasEqualizers V] {i j : ι} (r : c.Rel i j) : (C.boundaries j : V) ≅ image (C.d i j) :=
+def boundariesIsoImage [HasEqualizers V] {i j : ι} (r : c.Rel i j) : (C.boundaries j : V) ≅ image (C.d i j) :=
   Subobject.isoOfEq _ _ (C.boundaries_eq_image_subobject r) ≪≫ imageSubobjectIso (C.d i j)
 
 theorem boundaries_eq_bot {j} (h : c.prev j = none) : C.boundaries j = ⊥ := by
@@ -97,7 +102,7 @@ theorem boundaries_le_cycles (C : HomologicalComplex V c) (i : ι) : C.boundarie
 
 /-- The canonical map from `boundaries i` to `cycles i`.
 -/
-abbrev boundaries_to_cycles (C : HomologicalComplex V c) (i : ι) : (C.boundaries i : V) ⟶ (C.cycles i : V) :=
+abbrev boundariesToCycles (C : HomologicalComplex V c) (i : ι) : (C.boundaries i : V) ⟶ (C.cycles i : V) :=
   imageToKernel _ _ (C.d_to_comp_d_from i)
 
 /-- Prefer `boundaries_to_cycles`. -/
@@ -216,6 +221,9 @@ def boundariesToCyclesNatTrans (i : ι) : boundariesFunctor V c i ⟶ cyclesFunc
 /-- The `i`-th homology, as a functor to `V`. -/
 @[simps]
 def homologyFunctor [HasCokernels V] (i : ι) : HomologicalComplex V c ⥤ V where
+  -- It would be nice if we could just write
+  -- `cokernel (boundaries_to_cycles_nat_trans V c i)`
+  -- here, but universe implementation details get in the way...
   obj := fun C => C.homology i
   map := fun C₁ C₂ f => homology.map _ _ (f.sqTo i) (f.sqFrom i) rfl
   map_id' := by

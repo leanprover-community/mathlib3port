@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Fox Thomson. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Fox Thomson
+-/
 import Mathbin.SetTheory.Pgame
 
 /-!
@@ -14,19 +19,19 @@ namespace Pgame
 local infixl:0 " ≈ " => Equiv
 
 /-- The player who goes first loses -/
-def first_loses (G : Pgame) : Prop :=
+def FirstLoses (G : Pgame) : Prop :=
   G ≤ 0 ∧ 0 ≤ G
 
 /-- The player who goes first wins -/
-def first_wins (G : Pgame) : Prop :=
+def FirstWins (G : Pgame) : Prop :=
   0 < G ∧ G < 0
 
 /-- The left player can always win -/
-def left_wins (G : Pgame) : Prop :=
+def LeftWins (G : Pgame) : Prop :=
   0 < G ∧ 0 ≤ G
 
 /-- The right player can always win -/
-def right_wins (G : Pgame) : Prop :=
+def RightWins (G : Pgame) : Prop :=
   G ≤ 0 ∧ G < 0
 
 theorem zero_first_loses : FirstLoses 0 := by

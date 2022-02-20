@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Yury Kudryashov. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johannes Hölzl, Chris Hughes, Mario Carneiro, Yury Kudryashov
+-/
 import Mathbin.Algebra.Group.Prod
 import Mathbin.Algebra.Ring.Basic
 import Mathbin.Data.Equiv.Ring
@@ -86,7 +91,7 @@ variable [NonAssocSemiringₓ T] (f : R →+* S) (g : R →+* T)
 
 /-- Combine two ring homomorphisms `f : R →+* S`, `g : R →+* T` into `f.prod g : R →+* S × T`
 given by `(f.prod g) x = (f x, g x)` -/
-protected def Prod (f : R →+* S) (g : R →+* T) : R →+* S × T :=
+protected def prod (f : R →+* S) (g : R →+* T) : R →+* S × T :=
   { MonoidHom.prod (f : R →* S) (g : R →* T), AddMonoidHom.prod (f : R →+ S) (g : R →+ T) with
     toFun := fun x => (f x, g x) }
 
@@ -115,7 +120,7 @@ variable [NonAssocSemiringₓ R'] [NonAssocSemiringₓ S'] [NonAssocSemiringₓ 
 variable (f : R →+* R') (g : S →+* S')
 
 /-- `prod.map` as a `ring_hom`. -/
-def prod_mapₓ : R × S →* R' × S' :=
+def prodMap : R × S →* R' × S' :=
   (f.comp (fst R S)).Prod (g.comp (snd R S))
 
 theorem prod_map_def : prodMap f g = (f.comp (fst R S)).Prod (g.comp (snd R S)) :=
@@ -138,7 +143,7 @@ namespace RingEquiv
 variable {R S} [NonAssocSemiringₓ R] [NonAssocSemiringₓ S]
 
 /-- Swapping components as an equivalence of (semi)rings. -/
-def prod_comm : R × S ≃+* S × R :=
+def prodComm : R × S ≃+* S × R :=
   { AddEquiv.prodComm, MulEquiv.prodComm with }
 
 @[simp]
@@ -161,7 +166,7 @@ variable (R S) [Subsingleton S]
 
 /-- A ring `R` is isomorphic to `R × S` when `S` is the zero ring -/
 @[simps]
-def prod_zero_ring : R ≃+* R × S where
+def prodZeroRing : R ≃+* R × S where
   toFun := fun x => (x, 0)
   invFun := Prod.fst
   map_add' := by
@@ -174,7 +179,7 @@ def prod_zero_ring : R ≃+* R × S where
 
 /-- A ring `R` is isomorphic to `S × R` when `S` is the zero ring -/
 @[simps]
-def zero_ring_prod : R ≃+* S × R where
+def zeroRingProd : R ≃+* S × R where
   toFun := fun x => (0, x)
   invFun := Prod.snd
   map_add' := by

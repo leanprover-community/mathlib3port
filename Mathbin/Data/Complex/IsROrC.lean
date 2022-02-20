@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Frédéric Dupuis. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Frédéric Dupuis
+-/
 import Mathbin.Data.Real.Sqrt
 import Mathbin.FieldTheory.Tower
 import Mathbin.Analysis.NormedSpace.FiniteDimension
@@ -46,6 +51,7 @@ class IsROrC (K : Type _) extends NondiscreteNormedField K, StarRing K, NormedAl
   re : K →+ ℝ
   im : K →+ ℝ
   i : K
+  -- Meant to be set to 0 for K=ℝ
   I_re_ax : re I = 0
   I_mul_I_ax : I = 0 ∨ I * I = -1
   re_add_im_ax : ∀ z : K, 𝓚 (re z) + 𝓚 (im z) * I = z
@@ -65,13 +71,15 @@ end
 
 mk_simp_attribute is_R_or_C_simps := "Simp attribute for lemmas about `is_R_or_C`"
 
-namespace IsROrC
-
 variable {K : Type _} [IsROrC K]
+
+namespace IsROrC
 
 open_locale ComplexConjugate
 
-noncomputable instance (priority := 900) algebra_map_coe : CoeTₓ ℝ K :=
+/- The priority must be set at 900 to ensure that coercions are tried in the right order.
+See Note [coercion into rings], or `data/nat/cast.lean` for more details. -/
+noncomputable instance (priority := 900) algebraMapCoe : CoeTₓ ℝ K :=
   ⟨algebraMap ℝ K⟩
 
 theorem of_real_alg (x : ℝ) : (x : K) = x • (1 : K) :=
@@ -177,6 +185,7 @@ theorem of_real_bit1 (r : ℝ) : ((bit1 r : ℝ) : K) = bit1 (r : K) :=
   ext_iff.2 <| by
     simp [bit1]
 
+-- Note: This can be proven by `norm_num` once K is proven to be of characteristic zero below.
 theorem two_ne_zero : (2 : K) ≠ 0 := by
   intro h
   rw
@@ -301,11 +310,15 @@ theorem eq_conj_iff_real {z : K} : conj z = z ↔ ∃ r : ℝ, z = (r : K) := by
     apply conj_of_real
     
 
+@[simp]
+theorem star_def : (HasStar.star : K → K) = conj :=
+  rfl
+
 variable (K)
 
 /-- Conjugation as a ring equivalence. This is used to convert the inner product into a
 sesquilinear product. -/
-abbrev conj_to_ring_equiv : K ≃+* Kᵐᵒᵖ :=
+abbrev conjToRingEquiv : K ≃+* Kᵐᵒᵖ :=
   starRingEquiv
 
 variable {K}
@@ -316,7 +329,7 @@ theorem eq_conj_iff_re {z : K} : conj z = z ↔ (re z : K) = z :=
       rintro ⟨r, rfl⟩ <;> simp , fun h => ⟨_, h.symm⟩⟩
 
 /-- The norm squared function. -/
-def norm_sq : K →*₀ ℝ where
+def normSq : K →*₀ ℝ where
   toFun := fun z => re z * re z + im z * im z
   map_zero' := by
     simp only [add_zeroₓ, mul_zero, map_zero]
@@ -389,11 +402,11 @@ theorem add_conj (z : K) : z + conj z = 2 * re z := by
     conj_re, and_selfₓ]
 
 /-- The pseudo-coercion `of_real` as a `ring_hom`. -/
-noncomputable def of_real_hom : ℝ →+* K :=
+noncomputable def ofRealHom : ℝ →+* K :=
   algebraMap ℝ K
 
 /-- The coercion from reals as a `ring_hom`. -/
-noncomputable def coe_hom : ℝ →+* K :=
+noncomputable def coeHom : ℝ →+* K :=
   ⟨coe, of_real_one, of_real_mul, of_real_zero, of_real_add⟩
 
 @[simp, norm_cast, is_R_or_C_simps]
@@ -457,6 +470,10 @@ theorem div_re (z w : K) : re (z / w) = re z * re w / normSq w + im z * im w / n
 theorem div_im (z w : K) : im (z / w) = im z * re w / normSq w - re z * im w / normSq w := by
   simp' only [div_eq_mul_inv, mul_assoc, sub_eq_add_neg, add_commₓ, neg_mul, mul_neg, map_neg] with is_R_or_C_simps
 
+@[simp, is_R_or_C_simps]
+theorem conj_inv (x : K) : conj x⁻¹ = (conj x)⁻¹ :=
+  star_inv' _
+
 @[simp, norm_cast, is_R_or_C_simps]
 theorem of_real_div (r s : ℝ) : ((r / s : ℝ) : K) = r / s :=
   (@IsROrC.coeHom K _).map_div r s
@@ -512,6 +529,8 @@ instance (priority := 100) : CstarRing K where
 theorem of_real_nat_cast (n : ℕ) : ((n : ℝ) : K) = n :=
   show (algebraMap ℝ K) n = n from map_nat_cast ofRealHom n
 
+--of_real_hom.map_nat_cast n
+--@[simp, norm_cast, priority 900] theorem of_real_nat_cast (n : ℕ) : ((n : ℝ) : K) = n :=
 @[simp, is_R_or_C_simps, norm_cast]
 theorem nat_cast_re (n : ℕ) : re (n : K) = n := by
   rw [← of_real_nat_cast, of_real_re]
@@ -547,16 +566,13 @@ theorem rat_cast_im (q : ℚ) : im (q : K) = 0 := by
 /-! ### Characteristic zero -/
 
 
-/-- ℝ and ℂ are both of characteristic zero.
-
-Note: This is not registered as an instance to avoid having multiple instances on ℝ and ℂ.
--/
-theorem char_zero_R_or_C : CharZero K :=
+/-- ℝ and ℂ are both of characteristic zero.  -/
+-- see Note [lower instance priority]
+instance (priority := 100) char_zero_R_or_C : CharZero K :=
   char_zero_of_inj_zero fun n h => by
     rwa [← of_real_nat_cast, of_real_eq_zero, Nat.cast_eq_zero] at h
 
 theorem re_eq_add_conj (z : K) : ↑(re z) = (z + conj z) / 2 := by
-  have : CharZero K := char_zero_R_or_C
   rw [add_conj, mul_div_cancel_left (re z : K) two_ne_zero']
 
 theorem im_eq_conj_sub (z : K) : ↑(im z) = I * (conj z - z) / 2 := by
@@ -772,11 +788,11 @@ theorem is_cau_seq_im (f : CauSeq K abs) : IsCauSeq abs' fun n => im (f n) := fu
       (H _ ij)
 
 /-- The real part of a K Cauchy sequence, as a real Cauchy sequence. -/
-noncomputable def cau_seq_re (f : CauSeq K abs) : CauSeq ℝ abs' :=
+noncomputable def cauSeqRe (f : CauSeq K abs) : CauSeq ℝ abs' :=
   ⟨_, is_cau_seq_re f⟩
 
 /-- The imaginary part of a K Cauchy sequence, as a real Cauchy sequence. -/
-noncomputable def cau_seq_im (f : CauSeq K abs) : CauSeq ℝ abs' :=
+noncomputable def cauSeqIm (f : CauSeq K abs) : CauSeq ℝ abs' :=
   ⟨_, is_cau_seq_im f⟩
 
 theorem is_cau_seq_abs {f : ℕ → K} (hf : IsCauSeq abs f) : IsCauSeq abs' (abs ∘ f) := fun ε ε0 =>
@@ -804,8 +820,6 @@ theorem of_real_finsupp_prod {α M : Type _} [Zero M] (f : α →₀ M) (g : α 
 end IsROrC
 
 namespace FiniteDimensional
-
-variable {K : Type _} [IsROrC K]
 
 open_locale Classical
 
@@ -842,7 +856,7 @@ theorem proper_is_R_or_C [FiniteDimensional K E] : ProperSpace E := by
 
 variable {E}
 
-instance is_R_or_C.proper_space_span_singleton (x : E) : ProperSpace (K∙x) :=
+instance IsROrC.proper_space_span_singleton (x : E) : ProperSpace (K∙x) :=
   proper_is_R_or_C K (K∙x)
 
 end FiniteDimensional
@@ -932,10 +946,8 @@ end CleanupLemmas
 
 section LinearMaps
 
-variable {K : Type _} [IsROrC K]
-
 /-- The real part in a `is_R_or_C` field, as a linear map. -/
-noncomputable def re_lm : K →ₗ[ℝ] ℝ :=
+noncomputable def reLm : K →ₗ[ℝ] ℝ :=
   { re with map_smul' := smul_re }
 
 @[simp, is_R_or_C_simps]
@@ -943,7 +955,7 @@ theorem re_lm_coe : (reLm : K → ℝ) = re :=
   rfl
 
 /-- The real part in a `is_R_or_C` field, as a continuous linear map. -/
-noncomputable def re_clm : K →L[ℝ] ℝ :=
+noncomputable def reClm : K →L[ℝ] ℝ :=
   LinearMap.mkContinuous reLm 1 <| by
     simp only [norm_eq_abs, re_lm_coe, one_mulₓ, abs_to_real]
     exact abs_re_le_abs
@@ -970,7 +982,7 @@ theorem continuous_re : Continuous (re : K → ℝ) :=
   reClm.Continuous
 
 /-- The imaginary part in a `is_R_or_C` field, as a linear map. -/
-noncomputable def im_lm : K →ₗ[ℝ] ℝ :=
+noncomputable def imLm : K →ₗ[ℝ] ℝ :=
   { im with map_smul' := smul_im }
 
 @[simp, is_R_or_C_simps]
@@ -978,7 +990,7 @@ theorem im_lm_coe : (imLm : K → ℝ) = im :=
   rfl
 
 /-- The imaginary part in a `is_R_or_C` field, as a continuous linear map. -/
-noncomputable def im_clm : K →L[ℝ] ℝ :=
+noncomputable def imClm : K →L[ℝ] ℝ :=
   LinearMap.mkContinuous imLm 1 <| by
     simp only [norm_eq_abs, re_lm_coe, one_mulₓ, abs_to_real]
     exact abs_im_le_abs
@@ -996,7 +1008,7 @@ theorem continuous_im : Continuous (im : K → ℝ) :=
   imClm.Continuous
 
 /-- Conjugate as an `ℝ`-algebra equivalence -/
-noncomputable def conj_ae : K ≃ₐ[ℝ] K :=
+noncomputable def conjAe : K ≃ₐ[ℝ] K :=
   { conj with invFun := conj, left_inv := conj_conj, right_inv := conj_conj, commutes' := conj_of_real }
 
 @[simp, is_R_or_C_simps]
@@ -1004,7 +1016,7 @@ theorem conj_ae_coe : (conjAe : K → K) = conj :=
   rfl
 
 /-- Conjugate as a linear isometry -/
-noncomputable def conj_lie : K ≃ₗᵢ[ℝ] K :=
+noncomputable def conjLie : K ≃ₗᵢ[ℝ] K :=
   ⟨conjAe.toLinearEquiv, fun z => by
     simp' [norm_eq_abs] with is_R_or_C_simps⟩
 
@@ -1013,7 +1025,7 @@ theorem conj_lie_apply : (conjLie : K → K) = conj :=
   rfl
 
 /-- Conjugate as a continuous linear equivalence -/
-noncomputable def conj_cle : K ≃L[ℝ] K :=
+noncomputable def conjCle : K ≃L[ℝ] K :=
   @conjLie K _
 
 @[simp, is_R_or_C_simps]
@@ -1033,7 +1045,7 @@ theorem continuous_conj : Continuous (conj : K → K) :=
   conjLie.Continuous
 
 /-- The `ℝ → K` coercion, as a linear map -/
-noncomputable def of_real_am : ℝ →ₐ[ℝ] K :=
+noncomputable def ofRealAm : ℝ →ₐ[ℝ] K :=
   Algebra.ofId ℝ K
 
 @[simp, is_R_or_C_simps]
@@ -1041,7 +1053,7 @@ theorem of_real_am_coe : (ofRealAm : ℝ → K) = coe :=
   rfl
 
 /-- The ℝ → K coercion, as a linear isometry -/
-noncomputable def of_real_li : ℝ →ₗᵢ[ℝ] K where
+noncomputable def ofRealLi : ℝ →ₗᵢ[ℝ] K where
   toLinearMap := ofRealAm.toLinearMap
   norm_map' := by
     simp [norm_eq_abs]
@@ -1051,7 +1063,7 @@ theorem of_real_li_apply : (ofRealLi : ℝ → K) = coe :=
   rfl
 
 /-- The `ℝ → K` coercion, as a continuous linear map -/
-noncomputable def of_real_clm : ℝ →L[ℝ] K :=
+noncomputable def ofRealClm : ℝ →L[ℝ] K :=
   ofRealLi.toContinuousLinearMap
 
 @[simp, is_R_or_C_simps]

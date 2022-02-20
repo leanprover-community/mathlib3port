@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison
+-/
 import Mathbin.Algebra.Star.Basic
 import Mathbin.Analysis.SpecialFunctions.Pow
 
@@ -101,6 +106,8 @@ theorem CHSH_inequality_of_comm [OrderedCommRing R] [StarOrderedRing R] [Algebra
   let P := 2 - A₀ * B₀ - A₀ * B₁ - A₁ * B₀ + A₁ * B₁
   have i₁ : 0 ≤ P := by
     have idem : P * P = 4 * P := by
+      -- If we had a Gröbner basis algorithm, this would be trivial.
+      -- Without one, it is somewhat tedious!
       dsimp [P]
       simp only [add_mulₓ, mul_addₓ, sub_mul, mul_sub, mul_comm, mul_assoc, add_assocₓ]
       repeat'
@@ -165,6 +172,8 @@ we prepare some easy lemmas about √2.
 -/
 
 
+-- This calculation, which we need for Tsirelson's bound,
+-- defeated me. Thanks for the rescue from Shing Tak Lam!
 theorem tsirelson_inequality_aux : √2 * √2 ^ 3 = √2 * (2 * √2⁻¹ + 4 * (√2⁻¹ * 2⁻¹)) := by
   ring_nf
   field_simp [(@Real.sqrt_pos 2).2
@@ -197,20 +206,28 @@ of the difference.
 -/
 theorem tsirelson_inequality [OrderedRing R] [StarOrderedRing R] [Algebra ℝ R] [OrderedSmul ℝ R] [StarModule ℝ R]
     (A₀ A₁ B₀ B₁ : R) (T : IsCHSHTuple A₀ A₁ B₀ B₁) : A₀ * B₀ + A₀ * B₁ + A₁ * B₀ - A₁ * B₁ ≤ √2 ^ 3 • 1 := by
+  -- abel will create `ℤ` multiplication. We will `simp` them away to `ℝ` multiplication.
   have M : ∀ m : ℤ a : ℝ x : R, m • a • x = ((m : ℝ) * a) • x := fun m a x => by
     rw [zsmul_eq_smul_cast ℝ, ← mul_smul]
   let P := √2⁻¹ • (A₁ + A₀) - B₀
   let Q := √2⁻¹ • (A₁ - A₀) + B₁
   have w : √2 ^ 3 • 1 - A₀ * B₀ - A₀ * B₁ - A₁ * B₀ + A₁ * B₁ = √2⁻¹ • (P ^ 2 + Q ^ 2) := by
     dsimp [P, Q]
+    -- distribute out all the powers and products appearing on the RHS
     simp only [sq, sub_mul, mul_sub, add_mulₓ, mul_addₓ, smul_add, smul_sub]
+    -- pull all coefficients out to the front, and combine `√2`s where possible
     simp only [Algebra.mul_smul_comm, Algebra.smul_mul_assoc, ← mul_smul, sqrt_two_inv_mul_self]
+    -- replace Aᵢ * Aᵢ = 1 and Bᵢ * Bᵢ = 1
     simp only [← sq, T.A₀_inv, T.A₁_inv, T.B₀_inv, T.B₁_inv]
+    -- move Aᵢ to the left of Bᵢ
     simp only [← T.A₀B₀_commutes, ← T.A₀B₁_commutes, ← T.A₁B₀_commutes, ← T.A₁B₁_commutes]
+    -- collect terms, simplify coefficients, and collect terms again:
     abel
+    -- all terms coincide, but the last one. Simplify all other terms
     simp only [M]
     simp only [neg_mul, Int.cast_bit0, one_mulₓ, mul_inv_cancel_of_invertible, Int.cast_one, one_smul, Int.cast_neg,
       add_right_injₓ, neg_smul, ← add_smul]
+    -- just look at the coefficients now:
     congr
     exact
       mul_left_cancel₀
@@ -237,6 +254,7 @@ theorem tsirelson_inequality [OrderedRing R] [StarOrderedRing R] [Algebra ℝ R]
         (le_of_ltₓ
           (show 0 < √2⁻¹ by
             norm_num))
+    -- `norm_num` can't directly show `0 ≤ √2⁻¹`
     simp
   apply le_of_sub_nonneg
   simpa only [sub_add_eq_sub_sub, ← sub_add, w] using Pos

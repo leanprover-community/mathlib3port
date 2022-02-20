@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2022 Yaël Dillies. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yaël Dillies
+-/
 import Mathbin.Data.Finset.Card
 import Mathbin.Data.Multiset.Sum
 
@@ -20,7 +25,7 @@ namespace Finset
 variable {α β : Type _} (s : Finset α) (t : Finset β)
 
 /-- Disjoint sum of finsets. -/
-def disj_sum : Finset (Sum α β) :=
+def disjSum : Finset (Sum α β) :=
   ⟨s.1.disjSum t.1, s.2.disjSum t.2⟩
 
 @[simp]

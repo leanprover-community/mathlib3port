@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison
+-/
 import Mathbin.Algebra.Homology.Homology
 import Mathbin.Algebra.Homology.Single
 import Mathbin.CategoryTheory.Preadditive.AdditiveFunctor
@@ -58,6 +63,10 @@ theorem neg_f_apply (f : C ⟶ D) (i : ι) : (-f).f i = -f.f i :=
 theorem sub_f_apply (f g : C ⟶ D) (i : ι) : (f - g).f i = f.f i - g.f i :=
   rfl
 
+/- TODO(jmc/Scott): the instance below doesn't have the correct defeq for `nsmul` and `zsmul`.
+We should generalize `function.injective.add_comm_group` and friends.
+For the `R`-linear version, it will be very convenient to have
+a good definition of `nsmul` and `zsmul` that matches `smul`. -/
 instance : AddCommGroupₓ (C ⟶ D) :=
   Function.Injective.addCommGroup Hom.f HomologicalComplex.hom_f_injective
     (by
@@ -74,7 +83,7 @@ instance : Preadditive (HomologicalComplex V c) :=
 
 /-- The `i`-th component of a chain map, as an additive map from chain maps to morphisms. -/
 @[simps]
-def hom.f_add_monoid_hom {C₁ C₂ : HomologicalComplex V c} (i : ι) : (C₁ ⟶ C₂) →+ (C₁.x i ⟶ C₂.x i) :=
+def Hom.fAddMonoidHom {C₁ C₂ : HomologicalComplex V c} (i : ι) : (C₁ ⟶ C₂) →+ (C₁.x i ⟶ C₂.x i) :=
   AddMonoidHom.mk' (fun f => Hom.f f i) fun _ _ => rfl
 
 end HomologicalComplex
@@ -115,7 +124,7 @@ variable {W : Type _} [Category W] [Preadditive W]
 This is sometimes called the "prolongation".
 -/
 @[simps]
-def functor.map_homological_complex (F : V ⥤ W) [F.Additive] (c : ComplexShape ι) :
+def Functor.mapHomologicalComplex (F : V ⥤ W) [F.Additive] (c : ComplexShape ι) :
     HomologicalComplex V c ⥤ HomologicalComplex W c where
   obj := fun C =>
     { x := fun i => F.obj (C.x i), d := fun i j => F.map (C.d i j),
@@ -129,7 +138,7 @@ def functor.map_homological_complex (F : V ⥤ W) [F.Additive] (c : ComplexShape
         dsimp
         rw [← F.map_comp, ← F.map_comp, f.comm] }
 
-instance functor.map_homogical_complex_additive (F : V ⥤ W) [F.Additive] (c : ComplexShape ι) :
+instance Functor.map_homogical_complex_additive (F : V ⥤ W) [F.Additive] (c : ComplexShape ι) :
     (F.mapHomologicalComplex c).Additive :=
   {  }
 
@@ -137,17 +146,17 @@ instance functor.map_homogical_complex_additive (F : V ⥤ W) [F.Additive] (c : 
 between those functors applied to homological complexes.
 -/
 @[simps]
-def nat_trans.map_homological_complex {F G : V ⥤ W} [F.Additive] [G.Additive] (α : F ⟶ G) (c : ComplexShape ι) :
+def NatTrans.mapHomologicalComplex {F G : V ⥤ W} [F.Additive] [G.Additive] (α : F ⟶ G) (c : ComplexShape ι) :
     F.mapHomologicalComplex c ⟶ G.mapHomologicalComplex c where
   app := fun C => { f := fun i => α.app _ }
 
 @[simp]
-theorem nat_trans.map_homological_complex_id (c : ComplexShape ι) (F : V ⥤ W) [F.Additive] :
+theorem NatTrans.map_homological_complex_id (c : ComplexShape ι) (F : V ⥤ W) [F.Additive] :
     NatTrans.mapHomologicalComplex (𝟙 F) c = 𝟙 (F.mapHomologicalComplex c) := by
   tidy
 
 @[simp]
-theorem nat_trans.map_homological_complex_comp (c : ComplexShape ι) {F G H : V ⥤ W} [F.Additive] [G.Additive]
+theorem NatTrans.map_homological_complex_comp (c : ComplexShape ι) {F G H : V ⥤ W} [F.Additive] [G.Additive]
     [H.Additive] (α : F ⟶ G) (β : G ⟶ H) :
     NatTrans.mapHomologicalComplex (α ≫ β) c =
       NatTrans.mapHomologicalComplex α c ≫ NatTrans.mapHomologicalComplex β c :=
@@ -155,7 +164,7 @@ theorem nat_trans.map_homological_complex_comp (c : ComplexShape ι) {F G H : V 
   tidy
 
 @[simp, reassoc]
-theorem nat_trans.map_homological_complex_naturality {c : ComplexShape ι} {F G : V ⥤ W} [F.Additive] [G.Additive]
+theorem NatTrans.map_homological_complex_naturality {c : ComplexShape ι} {F G : V ⥤ W} [F.Additive] [G.Additive]
     (α : F ⟶ G) {C D : HomologicalComplex V c} (f : C ⟶ D) :
     (F.mapHomologicalComplex c).map f ≫ (NatTrans.mapHomologicalComplex α c).app D =
       (NatTrans.mapHomologicalComplex α c).app C ≫ (G.mapHomologicalComplex c).map f :=
@@ -171,7 +180,7 @@ namespace HomologicalComplex
 /-- Turning an object into a complex supported at `j` then applying a functor is
 the same as applying the functor then forming the complex.
 -/
-def single_map_homological_complex (F : V ⥤ W) [F.Additive] (c : ComplexShape ι) (j : ι) :
+def singleMapHomologicalComplex (F : V ⥤ W) [F.Additive] (c : ComplexShape ι) (j : ι) :
     single V c j ⋙ F.mapHomologicalComplex _ ≅ F ⋙ single W c j :=
   NatIso.ofComponents
     (fun X =>
@@ -249,7 +258,8 @@ namespace ChainComplex
 /-- Turning an object into a chain complex supported at zero then applying a functor is
 the same as applying the functor then forming the complex.
 -/
-def single₀_map_homological_complex (F : V ⥤ W) [F.Additive] : single₀ V ⋙ F.mapHomologicalComplex _ ≅ F ⋙ single₀ W :=
+-- TODO: dualize to cochain complexes
+def single₀MapHomologicalComplex (F : V ⥤ W) [F.Additive] : single₀ V ⋙ F.mapHomologicalComplex _ ≅ F ⋙ single₀ W :=
   NatIso.ofComponents
     (fun X =>
       { Hom :=

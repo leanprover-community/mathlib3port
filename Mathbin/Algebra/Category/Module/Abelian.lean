@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Markus Himmel. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Markus Himmel
+-/
 import Mathbin.LinearAlgebra.Isomorphisms
 import Mathbin.Algebra.Category.Module.Kernels
 import Mathbin.Algebra.Category.Module.Limits
@@ -23,12 +28,21 @@ namespace ModuleCat
 variable {R : Type u} [Ringₓ R] {M N : ModuleCat.{v} R} (f : M ⟶ N)
 
 /-- In the category of modules, every monomorphism is normal. -/
-def normal_mono (hf : Mono f) : NormalMono f where
+def normalMono (hf : Mono f) : NormalMono f where
   z := of R (N ⧸ f.range)
   g := f.range.mkq
   w := LinearMap.range_mkq_comp _
-  IsLimit :=
-    IsKernel.isoKernel _ _ (kernelIsLimit _)
+  IsLimit :=/- The following [invalid Lean code](https://github.com/leanprover-community/lean/issues/341)
+                might help you understand what's going on here:
+                ```
+                calc
+                M   ≃ₗ[R] f.ker.quotient  : (submodule.quot_equiv_of_eq_bot _ (ker_eq_bot_of_mono _)).symm
+                ... ≃ₗ[R] f.range         : linear_map.quot_ker_equiv_range f
+                ... ≃ₗ[R] r.range.mkq.ker : linear_equiv.of_eq _ _ (submodule.ker_mkq _).symm
+                ```
+              -/
+        IsKernel.isoKernel
+        _ _ (kernelIsLimit _)
         (LinearEquiv.toModuleIso'
           ((Submodule.quotEquivOfEqBot _ (ker_eq_bot_of_mono _)).symm ≪≫ₗ
             (LinearMap.quotKerEquivRange f ≪≫ₗ LinearEquiv.ofEq _ _ (Submodule.ker_mkq _).symm))) <|
@@ -37,12 +51,20 @@ def normal_mono (hf : Mono f) : NormalMono f where
       rfl
 
 /-- In the category of modules, every epimorphism is normal. -/
-def normal_epi (hf : Epi f) : NormalEpi f where
+def normalEpi (hf : Epi f) : NormalEpi f where
   w := of R f.ker
   g := f.ker.Subtype
   w := LinearMap.comp_ker_subtype _
-  IsColimit :=
-    IsCokernel.cokernelIso _ _ (cokernelIsColimit _)
+  IsColimit :=/- The following invalid Lean code might help you understand what's going on here:
+                ```
+                calc f.ker.subtype.range.quotient
+                    ≃ₗ[R] f.ker.quotient : submodule.quot_equiv_of_eq _ _ (submodule.range_subtype _)
+                ... ≃ₗ[R] f.range        : linear_map.quot_ker_equiv_range f
+                ... ≃ₗ[R] N              : linear_equiv.of_top _ (range_eq_top_of_epi _)
+                ```
+              -/
+        IsCokernel.cokernelIso
+        _ _ (cokernelIsColimit _)
         (LinearEquiv.toModuleIso'
           (Submodule.quotEquivOfEq _ _ (Submodule.range_subtype _) ≪≫ₗ LinearMap.quotKerEquivRange f ≪≫ₗ
             LinearEquiv.ofTop _ (range_eq_top_of_epi _))) <|

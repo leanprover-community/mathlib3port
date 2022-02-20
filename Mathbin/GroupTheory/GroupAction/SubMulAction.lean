@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Eric Wieser. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Eric Wieser
+-/
 import Mathbin.Algebra.GroupActionHom
 import Mathbin.Algebra.Module.Basic
 import Mathbin.Data.SetLike.Basic
@@ -102,7 +107,7 @@ theorem coe_mk (x : M) (hx : x ∈ p) : ((⟨x, hx⟩ : p) : M) = x :=
 variable (p)
 
 /-- Embedding of a submodule `p` to the ambient space `M`. -/
-protected def Subtype : p →[R] M := by
+protected def subtype : p →[R] M := by
   refine' { toFun := coe, .. } <;> simp [coe_smul]
 
 @[simp]
@@ -128,7 +133,7 @@ theorem smul_of_tower_mem (s : S) {x : M} (h : x ∈ p) : s • x ∈ p := by
   rw [← one_smul R x, ← smul_assoc]
   exact p.smul_mem _ h
 
-instance has_scalar' : HasScalar S p where
+instance hasScalar' : HasScalar S p where
   smul := fun c x => ⟨c • x.1, smul_of_tower_mem _ c x.2⟩
 
 instance : IsScalarTower S R p where
@@ -156,8 +161,8 @@ variable [Monoidₓ S] [HasScalar S R] [MulAction S M] [IsScalarTower S R M]
 variable (p : SubMulAction R M)
 
 /-- If the scalar product forms a `mul_action`, then the subset inherits this action -/
-instance mul_action' : MulAction S p where
-  smul := · • ·
+instance mulAction' : MulAction S p where
+  smul := (· • ·)
   one_smul := fun x => Subtype.ext <| one_smul _ x
   mul_smul := fun c₁ c₂ x => Subtype.ext <| mul_smul c₁ c₂ x
 
@@ -171,7 +176,11 @@ theorem coe_image_orbit {p : SubMulAction R M} (m : p) : coe '' MulAction.Orbit 
   (Set.range_comp _ _).symm
 
 /-- Stabilizers in monoid sub_mul_action coincide with stabilizers in the ambient space -/
-theorem stabilizer_of_sub_mul.submonoid {p : SubMulAction R M} (m : p) :
+/- -- Previously, the relatively useless :
+lemma orbit_of_sub_mul {p : sub_mul_action R M} (m : p) :
+  (mul_action.orbit R m : set M) = mul_action.orbit R (m : M) := rfl
+-/
+theorem StabilizerOfSubMul.submonoid {p : SubMulAction R M} (m : p) :
     MulAction.Stabilizer.submonoid R m = MulAction.Stabilizer.submonoid R (m : M) := by
   ext
   simp only [MulAction.mem_stabilizer_submonoid_iff, ← SubMulAction.coe_smul, SetLike.coe_eq_coe]

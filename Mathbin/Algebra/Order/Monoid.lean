@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2016 Jeremy Avigad. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Jeremy Avigad, Leonardo de Moura, Mario Carneiro, Johannes Hölzl
+-/
 import Mathbin.Algebra.Group.WithOne
 import Mathbin.Algebra.Group.TypeTags
 import Mathbin.Algebra.Group.Prod
@@ -48,11 +53,16 @@ instance OrderedCommMonoid.to_covariant_class_left (M : Type _) [OrderedCommMono
     CovariantClass M M (· * ·) (· ≤ ·) where
   elim := fun a b c bc => OrderedCommMonoid.mul_le_mul_left _ _ bc a
 
+/- This instance can be proven with `by apply_instance`.  However, `with_bot ℕ` does not
+pick up a `covariant_class M M (function.swap (*)) (≤)` instance without it (see PR #7940). -/
 @[to_additive]
 instance OrderedCommMonoid.to_covariant_class_right (M : Type _) [OrderedCommMonoid M] :
     CovariantClass M M (swap (· * ·)) (· ≤ ·) :=
   covariant_swap_mul_le_of_covariant_mul_le M
 
+/- This is not an instance, to avoid creating a loop in the type-class system: in a
+`left_cancel_semigroup` with a `partial_order`, assuming `covariant_class M M (*) (≤)`
+implies `covariant_class M M (*) (<)` . -/
 @[to_additive]
 theorem Mul.to_covariant_class_left (M : Type _) [Mul M] [LinearOrderₓ M] [CovariantClass M M (· * ·) (· < ·)] :
     CovariantClass M M (· * ·) (· ≤ ·) :=
@@ -63,6 +73,9 @@ theorem Mul.to_covariant_class_left (M : Type _) [Mul M] [LinearOrderₓ M] [Cov
       · exact (mul_lt_mul_left' bc a).le
          }
 
+/- This is not an instance, to avoid creating a loop in the type-class system: in a
+`right_cancel_semigroup` with a `partial_order`, assuming `covariant_class M M (swap (*)) (<)`
+implies `covariant_class M M (swap (*)) (≤)` . -/
 @[to_additive]
 theorem Mul.to_covariant_class_right (M : Type _) [Mul M] [LinearOrderₓ M] [CovariantClass M M (swap (· * ·)) (· < ·)] :
     CovariantClass M M (swap (· * ·)) (· ≤ ·) :=
@@ -112,6 +125,7 @@ class LinearOrderedAddCommMonoidWithTop (α : Type _) extends LinearOrderedAddCo
   le_top : ∀ x : α, x ≤ ⊤
   top_add' : ∀ x : α, ⊤ + x = ⊤
 
+-- see Note [lower instance priority]
 instance (priority := 100) LinearOrderedAddCommMonoidWithTop.toOrderTop (α : Type u)
     [h : LinearOrderedAddCommMonoidWithTop α] : OrderTop α :=
   { h with }
@@ -251,7 +265,14 @@ instance [OrderedCommMonoid α] : OrderedCommMonoid (WithZero α) :=
 
 /-- If `0` is the least element in `α`, then `with_zero α` is an `ordered_add_comm_monoid`.
 -/
-def OrderedAddCommMonoid [OrderedAddCommMonoid α] (zero_le : ∀ a : α, 0 ≤ a) : OrderedAddCommMonoid (WithZero α) := by
+/-
+Note 1 : the below is not an instance because it requires `zero_le`. It seems
+like a rather pathological definition because α already has a zero.
+Note 2 : there is no multiplicative analogue because it does not seem necessary.
+Mathematicians might be more likely to use the order-dual version, where all
+elements are ≤ 1 and then 1 is the top element.
+-/
+def orderedAddCommMonoid [OrderedAddCommMonoid α] (zero_le : ∀ a : α, 0 ≤ a) : OrderedAddCommMonoid (WithZero α) := by
   suffices
   refine' { WithZero.partialOrder, WithZero.addCommMonoid with add_le_add_left := this, .. }
   · intro a b h c ca h₂
@@ -412,7 +433,7 @@ instance [LinearOrderedAddCommMonoid α] : LinearOrderedAddCommMonoidWithTop (Wi
     top_add' := fun x => WithTop.top_add }
 
 /-- Coercion from `α` to `with_top α` as an `add_monoid_hom`. -/
-def coe_add_hom [AddMonoidₓ α] : α →+ WithTop α :=
+def coeAddHom [AddMonoidₓ α] : α →+ WithTop α :=
   ⟨coe, rfl, fun _ _ => rfl⟩
 
 @[simp]
@@ -467,21 +488,27 @@ instance [OrderedAddCommMonoid α] : OrderedAddCommMonoid (WithBot α) := by
 instance [LinearOrderedAddCommMonoid α] : LinearOrderedAddCommMonoid (WithBot α) :=
   { WithBot.linearOrder, WithBot.orderedAddCommMonoid with }
 
+-- `by norm_cast` proves this lemma, so I did not tag it with `norm_cast`
 theorem coe_zero [Zero α] : ((0 : α) : WithBot α) = 0 :=
   rfl
 
+-- `by norm_cast` proves this lemma, so I did not tag it with `norm_cast`
 theorem coe_one [One α] : ((1 : α) : WithBot α) = 1 :=
   rfl
 
+-- `by norm_cast` proves this lemma, so I did not tag it with `norm_cast`
 theorem coe_eq_zero {α : Type _} [AddMonoidₓ α] {a : α} : (a : WithBot α) = 0 ↔ a = 0 := by
   norm_cast
 
+-- `by norm_cast` proves this lemma, so I did not tag it with `norm_cast`
 theorem coe_add [AddSemigroupₓ α] (a b : α) : ((a + b : α) : WithBot α) = a + b := by
   norm_cast
 
+-- `by norm_cast` proves this lemma, so I did not tag it with `norm_cast`
 theorem coe_bit0 [AddSemigroupₓ α] {a : α} : ((bit0 a : α) : WithBot α) = bit0 a := by
   norm_cast
 
+-- `by norm_cast` proves this lemma, so I did not tag it with `norm_cast`
 theorem coe_bit1 [AddSemigroupₓ α] [One α] {a : α} : ((bit1 a : α) : WithBot α) = bit1 a := by
   norm_cast
 
@@ -509,6 +536,7 @@ class CanonicallyOrderedAddMonoid (α : Type _) extends OrderedAddCommMonoid α,
   bot_le : ∀ x : α, ⊥ ≤ x
   le_iff_exists_add : ∀ a b : α, a ≤ b ↔ ∃ c, b = a + c
 
+-- see Note [lower instance priority]
 instance (priority := 100) CanonicallyOrderedAddMonoid.toOrderBot (α : Type u) [h : CanonicallyOrderedAddMonoid α] :
     OrderBot α :=
   { h with }
@@ -527,6 +555,7 @@ class CanonicallyOrderedMonoid (α : Type _) extends OrderedCommMonoid α, HasBo
   bot_le : ∀ x : α, ⊥ ≤ x
   le_iff_exists_mul : ∀ a b : α, a ≤ b ↔ ∃ c, b = a * c
 
+-- see Note [lower instance priority]
 @[to_additive]
 instance (priority := 100) CanonicallyOrderedMonoid.toOrderBot (α : Type u) [h : CanonicallyOrderedMonoid α] :
     OrderBot α :=
@@ -618,6 +647,7 @@ theorem lt_iff_exists_mul [CovariantClass α α (· * ·) (· < ·)] : a < b ↔
     
 
 /-- Adding a new zero to a canonically ordered additive monoid produces another one. -/
+-- This instance looks absurd: a monoid already has a zero
 instance WithZero.canonicallyOrderedAddMonoid {α : Type u} [CanonicallyOrderedAddMonoid α] :
     CanonicallyOrderedAddMonoid (WithZero α) :=
   { WithZero.orderBot, WithZero.orderedAddCommMonoid zero_le with
@@ -698,6 +728,7 @@ section CanonicallyLinearOrderedMonoid
 
 variable [CanonicallyLinearOrderedMonoid α]
 
+-- see Note [lower instance priority]
 @[to_additive]
 instance (priority := 100) CanonicallyLinearOrderedMonoid.semilatticeSup : SemilatticeSup α :=
   { LinearOrderₓ.toLattice with }
@@ -762,11 +793,16 @@ instance OrderedCancelCommMonoid.to_contravariant_class_left (M : Type _) [Order
     ContravariantClass M M (· * ·) (· < ·) where
   elim := fun a b c => OrderedCancelCommMonoid.lt_of_mul_lt_mul_left _ _ _
 
+/- This instance can be proven with `by apply_instance`.  However, by analogy with the
+instance `ordered_cancel_comm_monoid.to_covariant_class_right` above, I imagine that without
+this instance, some Type would not have a `contravariant_class M M (function.swap (*)) (<)`
+instance. -/
 @[to_additive]
 instance OrderedCancelCommMonoid.to_contravariant_class_right (M : Type _) [OrderedCancelCommMonoid M] :
     ContravariantClass M M (swap (· * ·)) (· < ·) :=
   contravariant_swap_mul_lt_of_contravariant_mul_lt M
 
+-- see Note [lower instance priority]
 @[to_additive]
 instance (priority := 100) OrderedCancelCommMonoid.toOrderedCommMonoid : OrderedCommMonoid α :=
   { ‹OrderedCancelCommMonoid α› with }
@@ -779,7 +815,7 @@ See note [reducible non-instances]. -/
 def Function.Injective.orderedCancelCommMonoid {β : Type _} [One β] [Mul β] (f : β → α) (hf : Function.Injective f)
     (one : f 1 = 1) (mul : ∀ x y, f (x * y) = f x * f y) : OrderedCancelCommMonoid β :=
   { hf.LeftCancelSemigroup f mul, hf.OrderedCommMonoid f one mul with
-    le_of_mul_le_mul_left := fun a b c bc : f (a * b) ≤ f (a * c) =>
+    le_of_mul_le_mul_left := fun bc : f (a * b) ≤ f (a * c) =>
       (mul_le_mul_iff_left (f a)).mp
         (by
           rwa [← mul, ← mul]) }
@@ -950,7 +986,7 @@ instance [OrderedCommMonoid α] : OrderedCommMonoid (OrderDual α) :=
   { OrderDual.partialOrder α, OrderDual.commMonoid with mul_le_mul_left := fun a b h c => mul_le_mul_left' h c }
 
 @[to_additive OrderedCancelAddCommMonoid.to_contravariant_class]
-instance ordered_cancel_comm_monoid.to_contravariant_class [OrderedCancelCommMonoid α] :
+instance OrderedCancelCommMonoid.to_contravariant_class [OrderedCancelCommMonoid α] :
     ContravariantClass (OrderDual α) (OrderDual α) Mul.mul LE.le where
   elim := fun a b c bc => OrderedCancelCommMonoid.le_of_mul_le_mul_left a c b (dual_le.mp bc)
 

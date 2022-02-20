@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Chris Hughes. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Chris Hughes, Abhimanyu Pallavi Sudhir, Jean Lo, Calle Sönne, Benjamin Davidson
+-/
 import Mathbin.Analysis.SpecialFunctions.Complex.Log
 import Mathbin.Analysis.SpecialFunctions.ExpDeriv
 
@@ -18,7 +23,7 @@ open_locale Real TopologicalSpace
 /-- `complex.exp` as a `local_homeomorph` with `source = {z | -π < im z < π}` and
 `target = {z | 0 < re z} ∪ {z | im z ≠ 0}`. This definition is used to prove that `complex.log`
 is complex differentiable at all points but the negative real semi-axis. -/
-def exp_local_homeomorph : LocalHomeomorph ℂ ℂ :=
+def expLocalHomeomorph : LocalHomeomorph ℂ ℂ :=
   LocalHomeomorph.ofContinuousOpen
     { toFun := exp, invFun := log, Source := { z : ℂ | z.im ∈ Ioo (-π) π },
       Target := { z : ℂ | 0 < z.re } ∪ { z : ℂ | z.im ≠ 0 },

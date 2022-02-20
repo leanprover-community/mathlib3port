@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2017 Johannes Hölzl. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johannes Hölzl
+-/
 import Mathbin.Algebra.Group.Pi
 import Mathbin.Algebra.Ring.Opposite
 import Mathbin.Data.Equiv.MulAdd
@@ -43,7 +48,7 @@ namespace Finset
 as `x` ranges over the elements of the finite set `s`.
 -/
 @[to_additive "`∑ x in s, f x` is the sum of `f x` as `x` ranges over the elements\nof the finite set `s`."]
-protected def Prod [CommMonoidₓ β] (s : Finset α) (f : α → β) : β :=
+protected def prod [CommMonoidₓ β] (s : Finset α) (f : α → β) : β :=
   (s.1.map f).Prod
 
 @[simp, to_additive]
@@ -143,6 +148,8 @@ theorem MonoidHom.coe_finset_prod [MulOneClassₓ β] [CommMonoidₓ γ] (f : α
     (⇑∏ x in s, f x) = ∏ x in s, f x :=
   (MonoidHom.coeFn β γ).map_prod _ _
 
+-- See also `finset.prod_apply`, with the same conclusion
+-- but with the weaker hypothesis `f : α → β → γ`.
 @[simp, to_additive]
 theorem MonoidHom.finset_prod_apply [MulOneClassₓ β] [CommMonoidₓ γ] (f : α → β →* γ) (s : Finset α) (b : β) :
     (∏ x in s, f x) b = ∏ x in s, f x b :=
@@ -206,7 +213,7 @@ theorem prod_image [DecidableEq α] {s : Finset γ} {g : γ → α} :
   fold_image
 
 @[simp, to_additive]
-theorem prod_mapₓ (s : Finset α) (e : α ↪ γ) (f : γ → β) : (∏ x in s.map e, f x) = ∏ x in s, f (e x) := by
+theorem prod_map (s : Finset α) (e : α ↪ γ) (f : γ → β) : (∏ x in s.map e, f x) = ∏ x in s, f (e x) := by
   rw [Finset.prod, Finset.map_val, Multiset.map_map] <;> rfl
 
 @[congr, to_additive]
@@ -501,6 +508,8 @@ theorem prod_filter_of_ne {p : α → Prop} [DecidablePred p] (hp : ∀, ∀ x �
     rw [not_imp_comm, mem_filter]
     exact fun h₁ h₂ => ⟨h₁, hp _ h₁ h₂⟩
 
+-- If we use `[decidable_eq β]` here, some rewrites fail because they find a wrong `decidable`
+-- instance first; `{∀ x, decidable (f x ≠ 1)}` doesn't work with `rw ← prod_filter_ne_one`
 @[to_additive]
 theorem prod_filter_ne_one [∀ x, Decidable (f x ≠ 1)] : (∏ x in s.filter fun x => f x ≠ 1, f x) = ∏ x in s, f x :=
   prod_filter_of_ne fun _ _ => id

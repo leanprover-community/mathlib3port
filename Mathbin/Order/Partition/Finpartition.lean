@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2022 Yaël Dillies, Bhavik Mehta. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yaël Dillies, Bhavik Mehta
+-/
 import Mathbin.Algebra.BigOperators.Basic
 import Mathbin.Order.LocallyFinite
 import Mathbin.Order.Atoms
@@ -71,7 +76,7 @@ variable [Lattice α] [OrderBot α]
 
 /-- A `finpartition` constructor which does not insist on `⊥` not being a part. -/
 @[simps]
-def of_erase [DecidableEq α] {a : α} (parts : Finset α) (sup_indep : parts.SupIndep id) (sup_parts : parts.sup id = a) :
+def ofErase [DecidableEq α] {a : α} (parts : Finset α) (sup_indep : parts.SupIndep id) (sup_parts : parts.sup id = a) :
     Finpartition a where
   parts := parts.erase ⊥
   SupIndep := sup_indep.Subset (erase_subset _ _)
@@ -80,7 +85,7 @@ def of_erase [DecidableEq α] {a : α} (parts : Finset α) (sup_indep : parts.Su
 
 /-- A `finpartition` constructor from a bigger existing finpartition. -/
 @[simps]
-def of_subset {a b : α} (P : Finpartition a) {parts : Finset α} (subset : parts ⊆ P.parts)
+def ofSubset {a b : α} (P : Finpartition a) {parts : Finset α} (subset : parts ⊆ P.parts)
     (sup_parts : parts.sup id = b) : Finpartition b :=
   { parts, SupIndep := P.SupIndep.Subset subset, sup_parts, not_bot_mem := fun h => P.not_bot_mem (subset h) }
 
@@ -96,7 +101,7 @@ variable (α)
 
 /-- The empty finpartition. -/
 @[simps]
-protected def Empty : Finpartition (⊥ : α) where
+protected def empty : Finpartition (⊥ : α) where
   parts := ∅
   SupIndep := sup_indep_empty _
   sup_parts := Finset.sup_empty
@@ -126,7 +131,7 @@ protected theorem le {b : α} (hb : b ∈ P.parts) : b ≤ a :=
 
 theorem ne_bot {b : α} (hb : b ∈ P.parts) : b ≠ ⊥ := fun h => P.not_bot_mem <| h.subst hb
 
-protected theorem Disjoint : (P.parts : Set α).PairwiseDisjoint id :=
+protected theorem disjoint : (P.parts : Set α).PairwiseDisjoint id :=
   P.SupIndep.PairwiseDisjoint
 
 variable {P}
@@ -153,6 +158,7 @@ instance : Unique (Finpartition (⊥ : α)) :=
       exact iff_of_false (fun h => P.ne_bot h <| le_bot_iff.1 <| P.le h) (not_mem_empty a) }
 
 /-- There's a unique partition of an atom. -/
+-- See note [reducible non instances]
 @[reducible]
 def _root_.is_atom.unique_finpartition (ha : IsAtom a) : Unique (Finpartition a) where
   default := indiscrete ha.1
@@ -271,9 +277,9 @@ instance : SemilatticeInf (Finpartition a) :=
 
 end Inf
 
--- ././Mathport/Syntax/Translate/Basic.lean:418:16: unsupported tactic `by_contra'
+-- ././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'
 theorem exists_le_of_le {a b : α} {P Q : Finpartition a} (h : P ≤ Q) (hb : b ∈ Q.parts) : ∃ c ∈ P.parts, c ≤ b := by
-  "././Mathport/Syntax/Translate/Basic.lean:418:16: unsupported tactic `by_contra'"
+  "././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'"
   refine' Q.ne_bot hb (disjoint_self.1 <| Disjoint.mono_right (Q.le hb) _)
   rw [← P.sup_parts, Finset.disjoint_sup_right]
   rintro c hc
@@ -476,7 +482,7 @@ def atomise (s : Finset α) (F : Finset (Finset α)) : Finpartition s :=
 
 variable {F : Finset (Finset α)}
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (Q «expr ⊆ » F)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (Q «expr ⊆ » F)
 theorem mem_atomise {t : Finset α} :
     t ∈ (atomise s F).parts ↔ t.Nonempty ∧ ∃ (Q : _)(_ : Q ⊆ F), (s.filter fun i => ∀, ∀ u ∈ F, ∀, u ∈ Q ↔ i ∈ u) = t :=
   by

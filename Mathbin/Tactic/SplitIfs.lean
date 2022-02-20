@@ -1,3 +1,10 @@
+/-
+Copyright (c) 2018 Gabriel Ebner. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Gabriel Ebner
+
+Tactic to split if-then-else-expressions.
+-/
 import Mathbin.Tactic.Hint
 
 open Expr Tactic

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 David Wärn. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: David Wärn
+-/
 import Mathbin.Topology.Separation
 
 /-!
@@ -11,17 +16,21 @@ We also state a corresponding lemma guaranteeing that a subset of `M` contains a
 -/
 
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (m m' «expr ∈ » N)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (m m' «expr ∈ » N)
 /-- Any nonempty compact Hausdorff semigroup where right-multiplication is continuous contains
 an idempotent, i.e. an `m` such that `m * m = m`. -/
 @[to_additive
       "Any nonempty compact Hausdorff additive semigroup where right-addition is continuous\ncontains an idempotent, i.e. an `m` such that `m + m = m`"]
 theorem exists_idempotent_of_compact_t2_of_continuous_mul_left {M} [Nonempty M] [Semigroupₓ M] [TopologicalSpace M]
     [CompactSpace M] [T2Space M] (continuous_mul_left : ∀ r : M, Continuous (· * r)) : ∃ m : M, m * m = m := by
+  /- We apply Zorn's lemma to the poset of nonempty closed subsemigroups of `M`. It will turn out that
+  any minimal element is `{m}` for an idempotent `m : M`. -/
   let S : Set (Set M) := { N : Set M | IsClosed N ∧ N.Nonempty ∧ ∀ m m' _ : m ∈ N _ : m' ∈ N, m * m' ∈ N }
   suffices ∃ N ∈ S, ∀, ∀ N' ∈ S, ∀, N' ⊆ N → N' = N by
     rcases this with ⟨N, ⟨N_closed, ⟨m, hm⟩, N_mul⟩, N_minimal⟩
     use m
+    /- We now have an element `m : M` of a minimal subsemigroup `N`, and want to show `m + m = m`.
+    We first show that every element of `N` is of the form `m' + m`.-/
     have scaling_eq_self : (· * m) '' N = N := by
       apply N_minimal
       · refine' ⟨(continuous_mul_left m).IsClosedMap _ N_closed, ⟨_, ⟨m, hm, rfl⟩⟩, _⟩
@@ -31,6 +40,8 @@ theorem exists_idempotent_of_compact_t2_of_continuous_mul_left {M} [Nonempty M] 
       · rintro _ ⟨m', hm', rfl⟩
         exact N_mul _ hm' _ hm
         
+    /- In particular, this means that `m' * m = m` for some `m'`. We now use minimality again to show
+    that this holds for _all_ `m' ∈ N`. -/
     have absorbing_eq_self : N ∩ { m' | m' * m = m } = N := by
       apply N_minimal
       · refine' ⟨N_closed.inter ((T1Space.t1 m).Preimage (continuous_mul_left m)), _, _⟩
@@ -43,6 +54,7 @@ theorem exists_idempotent_of_compact_t2_of_continuous_mul_left {M} [Nonempty M] 
           
         
       apply Set.inter_subset_left
+    -- Thus `m * m = m` as desired.
     rw [← absorbing_eq_self] at hm
     exact hm.2
   apply Zorn.zorn_superset
@@ -79,7 +91,7 @@ theorem exists_idempotent_of_compact_t2_of_continuous_mul_left {M} [Nonempty M] 
     exact Set.sInter_subset_of_mem hs
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (x y «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (x y «expr ∈ » s)
 /-- A version of `exists_idempotent_of_compact_t2_of_continuous_mul_left` where the idempotent lies
 in some specified nonempty compact subsemigroup. -/
 @[to_additive exists_idempotent_in_compact_add_subsemigroup

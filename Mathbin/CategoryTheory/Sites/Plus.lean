@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Adam Topaz. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Adam Topaz
+-/
 import Mathbin.CategoryTheory.Sites.Sheaf
 
 /-!
@@ -49,7 +54,7 @@ def diagram (X : C) : J.cover Xᵒᵖ ⥤ D where
 
 /-- A helper definition used to define the morphisms for `plus`. -/
 @[simps]
-def diagram_pullback {X Y : C} (f : X ⟶ Y) : J.diagram P Y ⟶ (J.pullback f).op ⋙ J.diagram P X where
+def diagramPullback {X Y : C} (f : X ⟶ Y) : J.diagram P Y ⟶ (J.pullback f).op ⋙ J.diagram P X where
   app := fun S =>
     (multiequalizer.lift _ _ fun I => multiequalizer.ι (S.unop.index P) I.base) fun I =>
       multiequalizer.condition (S.unop.index P) I.base
@@ -61,7 +66,7 @@ def diagram_pullback {X Y : C} (f : X ⟶ Y) : J.diagram P Y ⟶ (J.pullback f).
 /-- A natural transformation `P ⟶ Q` induces a natural transformation
 between diagrams whose colimits define the values of `plus`. -/
 @[simps]
-def diagram_nat_trans {P Q : Cᵒᵖ ⥤ D} (η : P ⟶ Q) (X : C) : J.diagram P X ⟶ J.diagram Q X where
+def diagramNatTrans {P Q : Cᵒᵖ ⥤ D} (η : P ⟶ Q) (X : C) : J.diagram P X ⟶ J.diagram Q X where
   app := fun W =>
     multiequalizer.lift _ _ (fun i => multiequalizer.ι _ i ≫ η.app _)
       (by
@@ -92,7 +97,7 @@ variable (D)
 
 /-- `J.diagram P`, as a functor in `P`. -/
 @[simps]
-def diagram_functor (X : C) : (Cᵒᵖ ⥤ D) ⥤ J.cover Xᵒᵖ ⥤ D where
+def diagramFunctor (X : C) : (Cᵒᵖ ⥤ D) ⥤ J.cover Xᵒᵖ ⥤ D where
   obj := fun P => J.diagram P X
   map := fun P Q η => J.diagramNatTrans η X
   map_id' := fun P => J.diagram_nat_trans_id _ _
@@ -104,7 +109,7 @@ variable [∀ X : C, HasColimitsOfShape (J.cover Xᵒᵖ) D]
 
 /-- The plus construction, associating a presheaf to any presheaf.
 See `plus_functor` below for a functorial version. -/
-def plus_obj : Cᵒᵖ ⥤ D where
+def plusObj : Cᵒᵖ ⥤ D where
   obj := fun X => colimit (J.diagram P X.unop)
   map := fun X Y f => colimMap (J.diagramPullback P f.unop) ≫ colimit.pre _ _
   map_id' := by
@@ -141,7 +146,7 @@ def plus_obj : Cᵒᵖ ⥤ D where
     simp
 
 /-- An auxiliary definition used in `plus` below. -/
-def plus_map {P Q : Cᵒᵖ ⥤ D} (η : P ⟶ Q) : J.plusObj P ⟶ J.plusObj Q where
+def plusMap {P Q : Cᵒᵖ ⥤ D} (η : P ⟶ Q) : J.plusObj P ⟶ J.plusObj Q where
   app := fun X => colimMap (J.diagramNatTrans η X.unop)
   naturality' := by
     intro X Y f
@@ -176,7 +181,7 @@ variable (D)
 
 /-- The plus construction, a functor sending `P` to `J.plus_obj P`. -/
 @[simps]
-def plus_functor : (Cᵒᵖ ⥤ D) ⥤ Cᵒᵖ ⥤ D where
+def plusFunctor : (Cᵒᵖ ⥤ D) ⥤ Cᵒᵖ ⥤ D where
   obj := fun P => J.plusObj P
   map := fun P Q η => J.plusMap η
   map_id' := fun _ => plus_map_id _ _
@@ -186,7 +191,7 @@ variable {D}
 
 /-- The canonical map from `P` to `J.plus.obj P`.
 See `to_plus` for a functorial version. -/
-def to_plus : P ⟶ J.plusObj P where
+def toPlus : P ⟶ J.plusObj P where
   app := fun X => Cover.toMultiequalizer (⊤ : J.cover X.unop) P ≫ colimit.ι (J.diagram P X.unop) (op ⊤)
   naturality' := by
     intro X Y f
@@ -219,7 +224,7 @@ variable (D)
 
 /-- The natural transformation from the identity functor to `plus`. -/
 @[simps]
-def to_plus_nat_trans : 𝟭 (Cᵒᵖ ⥤ D) ⟶ J.plusFunctor D where
+def toPlusNatTrans : 𝟭 (Cᵒᵖ ⥤ D) ⟶ J.plusFunctor D where
   app := fun P => J.toPlus P
   naturality' := fun _ _ _ => to_plus_naturality _ _
 
@@ -283,7 +288,7 @@ theorem is_iso_to_plus_of_is_sheaf (hP : Presheaf.IsSheaf J P) : IsIso (J.toPlus
   infer_instance
 
 /-- The natural isomorphism between `P` and `P⁺` when `P` is a sheaf. -/
-def iso_to_plus (hP : Presheaf.IsSheaf J P) : P ≅ J.plusObj P := by
+def isoToPlus (hP : Presheaf.IsSheaf J P) : P ≅ J.plusObj P := by
   let this' := is_iso_to_plus_of_is_sheaf J P hP <;> exact as_iso (J.to_plus P)
 
 @[simp]
@@ -291,7 +296,7 @@ theorem iso_to_plus_hom (hP : Presheaf.IsSheaf J P) : (J.isoToPlus P hP).Hom = J
   rfl
 
 /-- Lift a morphism `P ⟶ Q` to `P⁺ ⟶ Q` when `Q` is a sheaf. -/
-def plus_lift {P Q : Cᵒᵖ ⥤ D} (η : P ⟶ Q) (hQ : Presheaf.IsSheaf J Q) : J.plusObj P ⟶ Q :=
+def plusLift {P Q : Cᵒᵖ ⥤ D} (η : P ⟶ Q) (hQ : Presheaf.IsSheaf J Q) : J.plusObj P ⟶ Q :=
   J.plusMap η ≫ (J.isoToPlus Q hQ).inv
 
 @[simp, reassoc]

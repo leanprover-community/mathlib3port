@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Markus Himmel. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Markus Himmel, Scott Morrison
+-/
 import Mathbin.CategoryTheory.Abelian.Exact
 import Mathbin.CategoryTheory.Preadditive.ProjectiveResolution
 
@@ -55,7 +60,7 @@ variable [Abelian C] [EnoughProjectives C]
 
 /-- Auxiliary definition for `ProjectiveResolution.of`. -/
 @[simps]
-def of_complex (Z : C) : ChainComplex C ℕ :=
+def ofComplex (Z : C) : ChainComplex C ℕ :=
   ChainComplex.mk' (Projective.over Z) (Projective.syzygies (Projective.π Z)) (Projective.d (Projective.π Z))
     fun ⟨X, Y, f⟩ => ⟨Projective.syzygies f, Projective.d f, (exact_d_f f).w⟩
 

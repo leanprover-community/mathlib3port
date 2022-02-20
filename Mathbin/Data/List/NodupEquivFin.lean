@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Yury G. Kudryashov. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yury G. Kudryashov
+-/
 import Mathbin.Data.Fin.Basic
 import Mathbin.Data.List.Sort
 import Mathbin.Data.List.Duplicate
@@ -32,7 +37,7 @@ namespace Nodup
 a bijection `fin l.length → α`.  See `list.nodup.nth_le_equiv_of_forall_mem_list`
 for a version giving an equivalence when there is decidable equality. -/
 @[simps]
-def nth_le_bijection_of_forall_mem_list (l : List α) (nd : l.Nodup) (h : ∀ x : α, x ∈ l) :
+def nthLeBijectionOfForallMemList (l : List α) (nd : l.Nodup) (h : ∀ x : α, x ∈ l) :
     { f : Finₓ l.length → α // Function.Bijective f } :=
   ⟨fun i => l.nthLe i i.property, fun i j h => Finₓ.ext <| (nd.nth_le_inj_iff _ _).1 h, fun x =>
     let ⟨i, hi, hl⟩ := List.mem_iff_nth_le.1 (h x)
@@ -43,7 +48,7 @@ variable [DecidableEq α]
 /-- If `l` has no duplicates, then `list.nth_le` defines an equivalence between `fin (length l)` and
 the set of elements of `l`. -/
 @[simps]
-def nth_le_equiv (l : List α) (H : Nodupₓ l) : Finₓ (length l) ≃ { x // x ∈ l } where
+def nthLeEquiv (l : List α) (H : Nodupₓ l) : Finₓ (length l) ≃ { x // x ∈ l } where
   toFun := fun i => ⟨nthLe l i i.2, nth_le_mem l i i.2⟩
   invFun := fun x => ⟨indexOfₓ (↑x) l, index_of_lt_length.2 x.2⟩
   left_inv := fun i => by
@@ -57,7 +62,7 @@ an equivalence between `fin l.length` and `α`.
 See `list.nodup.nth_le_bijection_of_forall_mem_list` for a version without
 decidable equality. -/
 @[simps]
-def nth_le_equiv_of_forall_mem_list (l : List α) (nd : l.Nodup) (h : ∀ x : α, x ∈ l) : Finₓ l.length ≃ α where
+def nthLeEquivOfForallMemList (l : List α) (nd : l.Nodup) (h : ∀ x : α, x ∈ l) : Finₓ l.length ≃ α where
   toFun := fun i => l.nthLe i i.2
   invFun := fun a => ⟨_, index_of_lt_length.2 (h a)⟩
   left_inv := fun i => by
@@ -81,7 +86,7 @@ variable [DecidableEq α]
 
 /-- If `l` is a list sorted w.r.t. `(<)`, then `list.nth_le` defines an order isomorphism between
 `fin (length l)` and the set of elements of `l`. -/
-def nth_le_iso (l : List α) (H : Sorted (· < ·) l) : Finₓ (length l) ≃o { x // x ∈ l } where
+def nthLeIso (l : List α) (H : Sorted (· < ·) l) : Finₓ (length l) ≃o { x // x ∈ l } where
   toEquiv := H.Nodup.nthLeEquiv l
   map_rel_iff' := fun i j => H.nth_le_strict_mono.le_iff_le
 

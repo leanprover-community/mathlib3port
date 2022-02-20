@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Bhavik Mehta. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Bhavik Mehta
+-/
 import Mathbin.CategoryTheory.Limits.Preserves.Shapes.Equalizers
 import Mathbin.CategoryTheory.Limits.Shapes.Reflexive
 import Mathbin.CategoryTheory.Monad.Coequalizer
@@ -42,16 +47,21 @@ open Limits
 
 noncomputable section
 
+-- Hide the implementation details in this namespace.
 namespace MonadicityInternal
 
 section
 
+-- We use these parameters and notations to simplify the statements of internal constructions
+-- here.
 parameter {C : Type u₁}{D : Type u₂}
 
 parameter [Category.{v₁} C][Category.{v₁} D]
 
 parameter {G : D ⥤ C}[IsRightAdjoint G]
 
+-- An unfortunate consequence of the local notation is that it is only recognised if there is an
+-- extra space after the reference.
 local notation "F" => leftAdjoint G
 
 local notation "adj" => Adjunction.ofRightAdjoint G
@@ -77,14 +87,14 @@ instance main_pair_G_split (A : adj.toMonad.Algebra) : G.IsSplitPair (F.map A.a)
   splittable := ⟨_, _, ⟨beckSplitCoequalizer A⟩⟩
 
 /-- The object function for the left adjoint to the comparison functor. -/
-def comparison_left_adjoint_obj (A : adj.toMonad.Algebra) [HasCoequalizer (F.map A.a) (adj.counit.app _)] : D :=
+def comparisonLeftAdjointObj (A : adj.toMonad.Algebra) [HasCoequalizer (F.map A.a) (adj.counit.app _)] : D :=
   coequalizer (F.map A.a) (adj.counit.app _)
 
 /-- We have a bijection of homsets which will be used to construct the left adjoint to the comparison
 functor.
 -/
 @[simps]
-def comparison_left_adjoint_hom_equiv (A : adj.toMonad.Algebra) (B : D)
+def comparisonLeftAdjointHomEquiv (A : adj.toMonad.Algebra) (B : D)
     [HasCoequalizer (F.map A.a) (adj.counit.app (F.obj A.A))] :
     (comparison_left_adjoint_obj A ⟶ B) ≃ (A ⟶ (comparison adj).obj B) :=
   calc
@@ -110,7 +120,7 @@ def comparison_left_adjoint_hom_equiv (A : adj.toMonad.Algebra) (B : D)
 
 /-- Construct the adjunction to the comparison functor.
 -/
-def left_adjoint_comparison [∀ A : adj.toMonad.Algebra, HasCoequalizer (F.map A.a) (adj.counit.app (F.obj A.A))] :
+def leftAdjointComparison [∀ A : adj.toMonad.Algebra, HasCoequalizer (F.map A.a) (adj.counit.app (F.obj A.A))] :
     adj.toMonad.Algebra ⥤ D := by
   refine'
     @adjunction.left_adjoint_of_equiv _ _ _ _ (comparison adj) (fun A => comparison_left_adjoint_obj A) (fun A B => _) _
@@ -125,7 +135,7 @@ def left_adjoint_comparison [∀ A : adj.toMonad.Algebra, HasCoequalizer (F.map 
 /-- Provided we have the appropriate coequalizers, we have an adjunction to the comparison functor.
 -/
 @[simps counit]
-def comparison_adjunction [∀ A : adj.toMonad.Algebra, HasCoequalizer (F.map A.a) (adj.counit.app (F.obj A.A))] :
+def comparisonAdjunction [∀ A : adj.toMonad.Algebra, HasCoequalizer (F.map A.a) (adj.counit.app (F.obj A.A))] :
     left_adjoint_comparison ⊣ comparison adj :=
   Adjunction.adjunctionOfEquivLeft _ _
 
@@ -139,7 +149,7 @@ theorem comparison_adjunction_unit_f_aux
 coequalizer to this cofork is the unit for the adjunction on the comparison functor.
 -/
 @[simps]
-def unit_cofork (A : adj.toMonad.Algebra) [HasCoequalizer (F.map A.a) (adj.counit.app (F.obj A.A))] :
+def unitCofork (A : adj.toMonad.Algebra) [HasCoequalizer (F.map A.a) (adj.counit.app (F.obj A.A))] :
     Cofork (G.map (F.map A.a)) (G.map (adj.counit.app (F.obj A.A))) :=
   Cofork.ofπ (G.map (coequalizer.π (F.map A.a) (adj.counit.app (F.obj A.A))))
     (by
@@ -160,17 +170,17 @@ theorem comparison_adjunction_unit_f
 this pair to this morphism is the counit.
 -/
 @[simps]
-def counit_cofork (B : D) : Cofork (F.map (G.map (adj.counit.app B))) (adj.counit.app (F.obj (G.obj B))) :=
+def counitCofork (B : D) : Cofork (F.map (G.map (adj.counit.app B))) (adj.counit.app (F.obj (G.obj B))) :=
   Cofork.ofπ (adj.counit.app B) (adj.counit_naturality _)
 
 /-- The unit cofork is a colimit provided `G` preserves it.  -/
-def unit_colimit_of_preserves_coequalizer (A : adj.toMonad.Algebra)
+def unitColimitOfPreservesCoequalizer (A : adj.toMonad.Algebra)
     [HasCoequalizer (F.map A.a) (adj.counit.app (F.obj A.A))]
     [PreservesColimit (parallelPair (F.map A.a) (adj.counit.app (F.obj A.A))) G] : IsColimit (unit_cofork A) :=
   isColimitOfHasCoequalizerOfPreservesColimit G _ _
 
 /-- The counit cofork is a colimit provided `G` reflects it. -/
-def counit_coequalizer_of_reflects_coequalizer (B : D)
+def counitCoequalizerOfReflectsCoequalizer (B : D)
     [ReflectsColimit (parallelPair (F.map (G.map (adj.counit.app B))) (adj.counit.app (F.obj (G.obj B)))) G] :
     IsColimit (counit_cofork B) :=
   isColimitOfIsColimitCoforkMap G _ (beckCoequalizer ((comparison adj).obj B))
@@ -200,7 +210,7 @@ variable (G : D ⥤ C)
 /-- If `G` is monadic, it creates colimits of `G`-split pairs. This is the "boring" direction of Beck's
 monadicity theorem, the converse is given in `monadic_of_creates_G_split_coequalizers`.
 -/
-def creates_G_split_coequalizers_of_monadic [MonadicRightAdjoint G] ⦃A B⦄ (f g : A ⟶ B) [G.IsSplitPair f g] :
+def createsGSplitCoequalizersOfMonadic [MonadicRightAdjoint G] ⦃A B⦄ (f g : A ⟶ B) [G.IsSplitPair f g] :
     CreatesColimit (parallelPair f g) G := by
   apply monadic_creates_colimit_of_preserves_colimit _ _
   infer_instance
@@ -220,7 +230,7 @@ section BeckMonadicity
 /-- To show `G` is a monadic right adjoint, we can show it preserves and reflects `G`-split
 coequalizers, and `C` has them.
 -/
-def monadic_of_has_preserves_reflects_G_split_coequalizers [∀ ⦃A B⦄ f g : A ⟶ B [G.IsSplitPair f g], HasCoequalizer f g]
+def monadicOfHasPreservesReflectsGSplitCoequalizers [∀ ⦃A B⦄ f g : A ⟶ B [G.IsSplitPair f g], HasCoequalizer f g]
     [∀ ⦃A B⦄ f g : A ⟶ B [G.IsSplitPair f g], PreservesColimit (parallelPair f g) G]
     [∀ ⦃A B⦄ f g : A ⟶ B [G.IsSplitPair f g], ReflectsColimit (parallelPair f g) G] : MonadicRightAdjoint G := by
   let L : (adjunction.of_right_adjoint G).toMonad.Algebra ⥤ D := left_adjoint_comparison
@@ -257,8 +267,8 @@ def monadic_of_has_preserves_reflects_G_split_coequalizers [∀ ⦃A B⦄ f g : 
 then it is monadic.
 This is the converse of `creates_G_split_of_monadic`.
 -/
-def monadic_of_creates_G_split_coequalizers
-    [∀ ⦃A B⦄ f g : A ⟶ B [G.IsSplitPair f g], CreatesColimit (parallelPair f g) G] : MonadicRightAdjoint G := by
+def monadicOfCreatesGSplitCoequalizers [∀ ⦃A B⦄ f g : A ⟶ B [G.IsSplitPair f g], CreatesColimit (parallelPair f g) G] :
+    MonadicRightAdjoint G := by
   let : ∀ ⦃A B⦄ f g : A ⟶ B [G.is_split_pair f g], has_colimit (parallel_pair f g ⋙ G)
   · intros A B f g i
     apply has_colimit_of_iso (diagramIsoParallelPair.{v₁} _)
@@ -281,7 +291,7 @@ def monadic_of_creates_G_split_coequalizers
 /-- An alternate version of Beck's monadicity theorem. If `G` reflects isomorphisms, preserves
 coequalizers of `G`-split pairs and `C` has coequalizers of `G`-split pairs, then it is monadic.
 -/
-def monadic_of_has_preserves_G_split_coequalizers_of_reflects_isomorphisms [ReflectsIsomorphisms G]
+def monadicOfHasPreservesGSplitCoequalizersOfReflectsIsomorphisms [ReflectsIsomorphisms G]
     [∀ ⦃A B⦄ f g : A ⟶ B [G.IsSplitPair f g], HasCoequalizer f g]
     [∀ ⦃A B⦄ f g : A ⟶ B [G.IsSplitPair f g], PreservesColimit (parallelPair f g) G] : MonadicRightAdjoint G := by
   apply monadic_of_has_preserves_reflects_G_split_coequalizers _
@@ -306,7 +316,7 @@ variable [∀ ⦃A B⦄ f g : A ⟶ B [IsReflexivePair f g], PreservesColimit (p
 /-- Reflexive (crude) monadicity theorem. If `G` has a right adjoint, `D` has and `G` preserves
 reflexive coequalizers and `G` reflects isomorphisms, then `G` is monadic.
 -/
-def monadic_of_has_preserves_reflexive_coequalizers_of_reflects_isomorphisms : MonadicRightAdjoint G := by
+def monadicOfHasPreservesReflexiveCoequalizersOfReflectsIsomorphisms : MonadicRightAdjoint G := by
   let L : (adjunction.of_right_adjoint G).toMonad.Algebra ⥤ D := left_adjoint_comparison
   let i : is_right_adjoint (comparison (adjunction.of_right_adjoint G)) := ⟨_, comparison_adjunction⟩
   constructor

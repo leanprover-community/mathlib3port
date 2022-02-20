@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2022 Joël Riou. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Joël Riou
+-/
 import Mathbin.CategoryTheory.Abelian.Basic
 
 /-!
@@ -42,7 +47,7 @@ variable (C : Type _) [Category C]
 
 /-- A category is idempotent complete iff all idempotents endomorphisms `p`
 split as a composition `p = e ≫ i` with `i ≫ e = 𝟙 _` -/
-class is_idempotent_complete : Prop where
+class IsIdempotentComplete : Prop where
   idempotents_split : ∀ X : C p : X ⟶ X, p ≫ p = p → ∃ (Y : C)(i : Y ⟶ X)(e : X ⟶ Y), i ≫ e = 𝟙 Y ∧ e ≫ i = p
 
 namespace Idempotents
@@ -155,7 +160,7 @@ theorem split_iff_of_iso {X X' : C} (φ : X ≅ X') (p : X ⟶ X) (p' : X' ⟶ X
     simpa only [id_comp]
     
 
-theorem equivalence.is_idempotent_complete {D : Type _} [Category D] (ε : C ≌ D) (h : IsIdempotentComplete C) :
+theorem Equivalence.is_idempotent_complete {D : Type _} [Category D] (ε : C ≌ D) (h : IsIdempotentComplete C) :
     IsIdempotentComplete D := by
   refine' ⟨_⟩
   intro X' p hp

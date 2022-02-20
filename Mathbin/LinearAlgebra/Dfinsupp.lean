@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Kenny Lau. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johannes Hölzl, Kenny Lau
+-/
 import Mathbin.Data.Finsupp.ToDfinsupp
 import Mathbin.LinearAlgebra.Basis
 
@@ -91,7 +96,7 @@ section Lsum
 /-- Typeclass inference can't find `dfinsupp.add_comm_monoid` without help for this case.
 This instance allows it to be found where it is needed on the LHS of the colon in
 `dfinsupp.module_of_linear_map`. -/
-instance add_comm_monoid_of_linear_map : AddCommMonoidₓ (Π₀ i : ι, M i →ₗ[R] N) :=
+instance addCommMonoidOfLinearMap : AddCommMonoidₓ (Π₀ i : ι, M i →ₗ[R] N) :=
   @Dfinsupp.addCommMonoid _ (fun i => M i →ₗ[R] N) _
 
 /-- Typeclass inference can't find `dfinsupp.module` without help for this case.
@@ -100,7 +105,7 @@ This is needed to define `dfinsupp.lsum` below.
 The cause seems to be an inability to unify the `Π i, add_comm_monoid (M i →ₗ[R] N)` instance that
 we have with the `Π i, has_zero (M i →ₗ[R] N)` instance which appears as a parameter to the
 `dfinsupp` type. -/
-instance module_of_linear_map [Semiringₓ S] [Module S N] [SmulCommClass R S N] : Module S (Π₀ i : ι, M i →ₗ[R] N) :=
+instance moduleOfLinearMap [Semiringₓ S] [Module S N] [SmulCommClass R S N] : Module S (Π₀ i : ι, M i →ₗ[R] N) :=
   @Dfinsupp.module _ _ (fun i => M i →ₗ[R] N) _ _ _
 
 variable (S)
@@ -166,16 +171,16 @@ theorem map_range_smul (f : ∀ i, β₁ i → β₂ i) (hf : ∀ i, f i 0 = 0) 
 
 /-- `dfinsupp.map_range` as an `linear_map`. -/
 @[simps apply]
-def map_range.linear_map (f : ∀ i, β₁ i →ₗ[R] β₂ i) : (Π₀ i, β₁ i) →ₗ[R] Π₀ i, β₂ i :=
+def mapRange.linearMap (f : ∀ i, β₁ i →ₗ[R] β₂ i) : (Π₀ i, β₁ i) →ₗ[R] Π₀ i, β₂ i :=
   { mapRange.addMonoidHom fun i => (f i).toAddMonoidHom with
     toFun := mapRange (fun i x => f i x) fun i => (f i).map_zero,
     map_smul' := fun r => map_range_smul _ _ _ fun i => (f i).map_smul r }
 
 @[simp]
-theorem map_range.linear_map_id : (mapRange.linearMap fun i => (LinearMap.id : β₂ i →ₗ[R] _)) = LinearMap.id :=
+theorem mapRange.linear_map_id : (mapRange.linearMap fun i => (LinearMap.id : β₂ i →ₗ[R] _)) = LinearMap.id :=
   LinearMap.ext map_range_id
 
-theorem map_range.linear_map_comp (f : ∀ i, β₁ i →ₗ[R] β₂ i) (f₂ : ∀ i, β i →ₗ[R] β₁ i) :
+theorem mapRange.linear_map_comp (f : ∀ i, β₁ i →ₗ[R] β₂ i) (f₂ : ∀ i, β i →ₗ[R] β₁ i) :
     (mapRange.linearMap fun i => (f i).comp (f₂ i)) = (mapRange.linearMap f).comp (mapRange.linearMap f₂) :=
   LinearMap.ext <| map_range_comp (fun i x => f i x) (fun i x => f₂ i x) _ _ _
 
@@ -195,22 +200,22 @@ omit dec_ι
 
 /-- `dfinsupp.map_range.linear_map` as an `linear_equiv`. -/
 @[simps apply]
-def map_range.linear_equiv (e : ∀ i, β₁ i ≃ₗ[R] β₂ i) : (Π₀ i, β₁ i) ≃ₗ[R] Π₀ i, β₂ i :=
+def mapRange.linearEquiv (e : ∀ i, β₁ i ≃ₗ[R] β₂ i) : (Π₀ i, β₁ i) ≃ₗ[R] Π₀ i, β₂ i :=
   { mapRange.addEquiv fun i => (e i).toAddEquiv, mapRange.linearMap fun i => (e i).toLinearMap with
     toFun := mapRange (fun i x => e i x) fun i => (e i).map_zero,
     invFun := mapRange (fun i x => (e i).symm x) fun i => (e i).symm.map_zero }
 
 @[simp]
-theorem map_range.linear_equiv_refl :
+theorem mapRange.linear_equiv_refl :
     (map_range.linear_equiv fun i => LinearEquiv.refl R (β₁ i)) = LinearEquiv.refl _ _ :=
   LinearEquiv.ext map_range_id
 
-theorem map_range.linear_equiv_trans (f : ∀ i, β i ≃ₗ[R] β₁ i) (f₂ : ∀ i, β₁ i ≃ₗ[R] β₂ i) :
+theorem mapRange.linear_equiv_trans (f : ∀ i, β i ≃ₗ[R] β₁ i) (f₂ : ∀ i, β₁ i ≃ₗ[R] β₂ i) :
     (mapRange.linearEquiv fun i => (f i).trans (f₂ i)) = (mapRange.linearEquiv f).trans (mapRange.linearEquiv f₂) :=
   LinearEquiv.ext <| map_range_comp (fun i x => f₂ i x) (fun i x => f i x) _ _ _
 
 @[simp]
-theorem map_range.linear_equiv_symm (e : ∀ i, β₁ i ≃ₗ[R] β₂ i) :
+theorem mapRange.linear_equiv_symm (e : ∀ i, β₁ i ≃ₗ[R] β₂ i) :
     (mapRange.linearEquiv e).symm = mapRange.linearEquiv fun i => (e i).symm :=
   rfl
 
@@ -221,7 +226,7 @@ section Basis
 /-- The direct sum of free modules is free.
 
 Note that while this is stated for `dfinsupp` not `direct_sum`, the types are defeq. -/
-noncomputable def Basis {η : ι → Type _} (b : ∀ i, Basis (η i) R (M i)) : Basis (Σ i, η i) R (Π₀ i, M i) :=
+noncomputable def basis {η : ι → Type _} (b : ∀ i, Basis (η i) R (M i)) : Basis (Σ i, η i) R (Π₀ i, M i) :=
   Basis.of_repr ((mapRange.linearEquiv fun i => (b i).repr).trans (sigmaFinsuppLequivDfinsupp R).symm)
 
 end Basis
@@ -321,6 +326,8 @@ theorem independent_iff_forall_dfinsupp (p : ι → Submodule R N) :
   simp_rw [Submodule.coe_eq_zero]
   rfl
 
+/- If `dfinsupp.lsum` applied with `submodule.subtype` is injective then the submodules are
+independent. -/
 theorem independent_of_dfinsupp_lsum_injective (p : ι → Submodule R N)
     (h : Function.Injective (lsum ℕ fun i => (p i).Subtype)) : Independent p := by
   rw [independent_iff_forall_dfinsupp]
@@ -331,6 +338,8 @@ theorem independent_of_dfinsupp_lsum_injective (p : ι → Submodule R N)
   have := dfinsupp.ext_iff.mp (h hv) i
   simpa [eq_comm] using this
 
+/- If `dfinsupp.sum_add_hom` applied with `add_submonoid.subtype` is injective then the additive
+submonoids are independent. -/
 theorem independent_of_dfinsupp_sum_add_hom_injective (p : ι → AddSubmonoid N)
     (h : Function.Injective (sumAddHom fun i => (p i).Subtype)) : Independent p := by
   rw [← independent_map_order_iso_iff (AddSubmonoid.toNatSubmodule : AddSubmonoid N ≃o _)]
@@ -353,6 +362,8 @@ section Ringₓ
 
 variable [Ringₓ R] [AddCommGroupₓ N] [Module R N]
 
+/- If `dfinsupp.sum_add_hom` applied with `add_submonoid.subtype` is injective then the additive
+subgroups are independent. -/
 theorem independent_of_dfinsupp_sum_add_hom_injective' (p : ι → AddSubgroup N)
     (h : Function.Injective (sumAddHom fun i => (p i).Subtype)) : Independent p := by
   rw [← independent_map_order_iso_iff (AddSubgroup.toIntSubmodule : AddSubgroup N ≃o _)]
@@ -365,16 +376,19 @@ Note that this is not generally true for `[semiring R]`, for instance when `A` i
 `ℕ`-submodules of the positive and negative integers.
 
 See `counterexamples/direct_sum_is_internal.lean` for a proof of this fact. -/
-theorem independent.dfinsupp_lsum_injective {p : ι → Submodule R N} (h : Independent p) :
+theorem Independent.dfinsupp_lsum_injective {p : ι → Submodule R N} (h : Independent p) :
     Function.Injective (lsum ℕ fun i => (p i).Subtype) := by
+  -- simplify everything down to binders over equalities in `N`
   rw [independent_iff_forall_dfinsupp] at h
   suffices (lsum ℕ fun i => (p i).Subtype).ker = ⊥ by
+    -- Lean can't find this without our help
     let this' : AddCommGroupₓ (Π₀ i, p i) := @Dfinsupp.addCommGroup _ (fun i => p i) _
     rw [LinearMap.ker_eq_bot] at this
     exact this
   rw [LinearMap.ker_eq_bot']
   intro m hm
   ext i : 1
+  -- split `m` into the piece at `i` and the pieces elsewhere, to match `h`
   rw [Dfinsupp.zero_apply, ← neg_eq_zero]
   refine' h i (-m i) m _
   rwa [← erase_add_single i m, LinearMap.map_add, lsum_single, Submodule.subtype_apply, add_eq_zero_iff_eq_neg, ←
@@ -382,7 +396,7 @@ theorem independent.dfinsupp_lsum_injective {p : ι → Submodule R N} (h : Inde
 
 /-- The canonical map out of a direct sum of a family of additive subgroups is injective when the
 additive subgroups are `complete_lattice.independent`. -/
-theorem independent.dfinsupp_sum_add_hom_injective {p : ι → AddSubgroup N} (h : Independent p) :
+theorem Independent.dfinsupp_sum_add_hom_injective {p : ι → AddSubgroup N} (h : Independent p) :
     Function.Injective (sumAddHom fun i => (p i).Subtype) := by
   rw [← independent_map_order_iso_iff (AddSubgroup.toIntSubmodule : AddSubgroup N ≃o _)] at h
   exact h.dfinsupp_lsum_injective
@@ -406,7 +420,7 @@ omit dec_ι
 
 /-- If a family of submodules is `independent`, then a choice of nonzero vector from each submodule
 forms a linearly independent family. -/
-theorem independent.linear_independent [NoZeroSmulDivisors R N] (p : ι → Submodule R N)
+theorem Independent.linear_independent [NoZeroSmulDivisors R N] (p : ι → Submodule R N)
     (hp : CompleteLattice.Independent p) {v : ι → N} (hv : ∀ i, v i ∈ p i) (hv' : ∀ i, v i ≠ 0) :
     LinearIndependent R v := by
   classical

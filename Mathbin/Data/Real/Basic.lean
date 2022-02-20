@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Mario Carneiro. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Mario Carneiro, Floris van Doorn
+-/
 import Mathbin.Algebra.Module.Basic
 import Mathbin.Algebra.Bounds
 import Mathbin.Algebra.Order.Archimedean
@@ -39,9 +44,10 @@ theorem ext_cauchy {x y : Real} : x.cauchy = y.cauchy → x = y :=
   ext_cauchy_iff.2
 
 /-- The real numbers are isomorphic to the quotient of Cauchy sequences on the rationals. -/
-def equiv_Cauchy : ℝ ≃ CauSeq.Completion.Cauchy :=
+def equivCauchy : ℝ ≃ CauSeq.Completion.Cauchy :=
   ⟨Real.cauchy, Real.of_cauchy, fun ⟨_⟩ => rfl, fun _ => rfl⟩
 
+-- irreducible doesn't work for instances: https://github.com/leanprover-community/lean/issues/511
 private irreducible_def zero : ℝ :=
   ⟨0⟩
 
@@ -94,9 +100,9 @@ theorem mul_cauchy {a b} : (⟨a⟩ * ⟨b⟩ : ℝ) = ⟨a * b⟩ :=
 
 instance : CommRingₓ ℝ := by
   refine_struct
-      { zero := (0 : ℝ), one := (1 : ℝ), mul := · * ·, add := · + ·, neg := @Neg.neg ℝ _, sub := fun a b => a + -b,
-        npow := @npowRec ℝ ⟨1⟩ ⟨· * ·⟩, nsmul := @nsmulRec ℝ ⟨0⟩ ⟨· + ·⟩,
-        zsmul := @zsmulRec ℝ ⟨0⟩ ⟨· + ·⟩ ⟨@Neg.neg ℝ _⟩ } <;>
+      { zero := (0 : ℝ), one := (1 : ℝ), mul := (· * ·), add := (· + ·), neg := @Neg.neg ℝ _, sub := fun a b => a + -b,
+        npow := @npowRec ℝ ⟨1⟩ ⟨(· * ·)⟩, nsmul := @nsmulRec ℝ ⟨0⟩ ⟨(· + ·)⟩,
+        zsmul := @zsmulRec ℝ ⟨0⟩ ⟨(· + ·)⟩ ⟨@Neg.neg ℝ _⟩ } <;>
     repeat'
         rintro ⟨_⟩ <;>
       try
@@ -188,7 +194,7 @@ instance : HasTrivialStar ℝ :=
 
 /-- Coercion `ℚ` → `ℝ` as a `ring_hom`. Note that this
 is `cau_seq.completion.of_rat`, not `rat.cast`. -/
-def of_rat : ℚ →+* ℝ := by
+def ofRat : ℚ →+* ℝ := by
   refine_struct { toFun := of_cauchy ∘ of_rat } <;>
     simp [of_rat_one, of_rat_zero, of_rat_mul, of_rat_add, one_cauchy, zero_cauchy, ← mul_cauchy, ← add_cauchy]
 
@@ -268,8 +274,8 @@ theorem add_lt_add_iff_left {a b : ℝ} (c : ℝ) : c + a < c + b ↔ a < b := b
   rw [add_sub_add_left_eq_sub]
 
 instance : PartialOrderₓ ℝ where
-  le := · ≤ ·
-  lt := · < ·
+  le := (· ≤ ·)
+  lt := (· < ·)
   lt_iff_le_not_le := fun a b =>
     (Real.ind_mk a) fun a =>
       (Real.ind_mk b) fun b => by
@@ -352,6 +358,7 @@ noncomputable instance : LinearOrderₓ ℝ :=
 noncomputable instance : LinearOrderedCommRing ℝ :=
   { Real.nontrivial, Real.orderedRing, Real.commRing, Real.linearOrder with }
 
+-- Extra instances to short-circuit type class resolution
 noncomputable instance : LinearOrderedRing ℝ := by
   infer_instance
 
@@ -381,10 +388,11 @@ noncomputable instance : LinearOrderedField ℝ :=
     inv_zero := by
       simp [← zero_cauchy, inv_cauchy] }
 
+-- Extra instances to short-circuit type class resolution
 noncomputable instance : LinearOrderedAddCommGroup ℝ := by
   infer_instance
 
-noncomputable instance Field : Field ℝ := by
+noncomputable instance field : Field ℝ := by
   infer_instance
 
 noncomputable instance : DivisionRing ℝ := by
@@ -408,13 +416,13 @@ noncomputable instance : HasInf ℝ := by
 noncomputable instance : HasSup ℝ := by
   infer_instance
 
-noncomputable instance decidable_lt (a b : ℝ) : Decidable (a < b) := by
+noncomputable instance decidableLt (a b : ℝ) : Decidable (a < b) := by
   infer_instance
 
-noncomputable instance decidable_le (a b : ℝ) : Decidable (a ≤ b) := by
+noncomputable instance decidableLe (a b : ℝ) : Decidable (a ≤ b) := by
   infer_instance
 
-noncomputable instance DecidableEq (a b : ℝ) : Decidable (a = b) := by
+noncomputable instance decidableEq (a b : ℝ) : Decidable (a = b) := by
   infer_instance
 
 open Rat
@@ -490,7 +498,7 @@ theorem exists_floor (x : ℝ) : ∃ ub : ℤ, (ub : ℝ) ≤ x ∧ ∀ z : ℤ,
     (let ⟨n, hn⟩ := exists_int_lt x
     ⟨n, le_of_ltₓ hn⟩)
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (j k «expr ≥ » «expr⌈ ⌉₊»(«expr ⁻¹»(ε)))
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (j k «expr ≥ » «expr⌈ ⌉₊»(«expr ⁻¹»(ε)))
 theorem exists_is_lub (S : Set ℝ) (hne : S.Nonempty) (hbdd : BddAbove S) : ∃ x, IsLub S x := by
   rcases hne, hbdd with ⟨⟨L, hL⟩, ⟨U, hU⟩⟩
   have : ∀ d : ℕ, BddAbove { m : ℤ | ∃ y ∈ S, (m : ℝ) ≤ y * d } := by

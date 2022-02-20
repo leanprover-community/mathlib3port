@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Yaël Dillies. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yaël Dillies
+-/
 import Mathbin.Data.Finset.Preimage
 
 /-!
@@ -114,7 +119,7 @@ class LocallyFiniteOrder (α : Type _) [Preorderₓ α] where
 /-- A constructor from a definition of `finset.Icc` alone, the other ones being derived by removing
 the ends. As opposed to `locally_finite_order.of_Icc`, this one requires `decidable_rel (≤)` but
 only `preorder`. -/
-def LocallyFiniteOrder.ofIcc' (α : Type _) [Preorderₓ α] [DecidableRel (· ≤ · : α → α → Prop)]
+def LocallyFiniteOrder.ofIcc' (α : Type _) [Preorderₓ α] [DecidableRel ((· ≤ ·) : α → α → Prop)]
     (finset_Icc : α → α → Finset α) (mem_Icc : ∀ a b x, x ∈ finset_Icc a b ↔ a ≤ x ∧ x ≤ b) : LocallyFiniteOrder α :=
   { finsetIcc, finsetIco := fun a b => (finset_Icc a b).filter fun x => ¬b ≤ x,
     finsetIoc := fun a b => (finset_Icc a b).filter fun x => ¬x ≤ a,
@@ -154,22 +159,22 @@ variable [Preorderₓ α] [LocallyFiniteOrder α] {a b x : α}
 
 /-- The finset of elements `x` such that `a ≤ x` and `x ≤ b`. Basically `set.Icc a b` as a finset.
 -/
-def Icc (a b : α) : Finset α :=
+def icc (a b : α) : Finset α :=
   LocallyFiniteOrder.finsetIcc a b
 
 /-- The finset of elements `x` such that `a ≤ x` and `x < b`. Basically `set.Ico a b` as a finset.
 -/
-def Ico (a b : α) : Finset α :=
+def ico (a b : α) : Finset α :=
   LocallyFiniteOrder.finsetIco a b
 
 /-- The finset of elements `x` such that `a < x` and `x ≤ b`. Basically `set.Ioc a b` as a finset.
 -/
-def Ioc (a b : α) : Finset α :=
+def ioc (a b : α) : Finset α :=
   LocallyFiniteOrder.finsetIoc a b
 
 /-- The finset of elements `x` such that `a < x` and `x < b`. Basically `set.Ioo a b` as a finset.
 -/
-def Ioo (a b : α) : Finset α :=
+def ioo (a b : α) : Finset α :=
   LocallyFiniteOrder.finsetIoo a b
 
 @[simp]
@@ -211,11 +216,11 @@ section OrderTop
 variable [Preorderₓ α] [OrderTop α] [LocallyFiniteOrder α] {a x : α}
 
 /-- The finset of elements `x` such that `a ≤ x`. Basically `set.Ici a` as a finset. -/
-def Ici (a : α) : Finset α :=
+def ici (a : α) : Finset α :=
   icc a ⊤
 
 /-- The finset of elements `x` such that `a < x`. Basically `set.Ioi a` as a finset. -/
-def Ioi (a : α) : Finset α :=
+def ioi (a : α) : Finset α :=
   ioc a ⊤
 
 theorem Ici_eq_Icc (a : α) : ici a = icc a ⊤ :=
@@ -247,11 +252,11 @@ section OrderBot
 variable [Preorderₓ α] [OrderBot α] [LocallyFiniteOrder α] {b x : α}
 
 /-- The finset of elements `x` such that `x ≤ b`. Basically `set.Iic b` as a finset. -/
-def Iic (b : α) : Finset α :=
+def iic (b : α) : Finset α :=
   icc ⊥ b
 
 /-- The finset of elements `x` such that `x < b`. Basically `set.Iio b` as a finset. -/
-def Iio (b : α) : Finset α :=
+def iio (b : α) : Finset α :=
   ico ⊥ b
 
 theorem Iic_eq_Icc : Iic = icc (⊥ : α) :=
@@ -291,22 +296,22 @@ variable [Preorderₓ α] [LocallyFiniteOrder α]
 
 /-- The multiset of elements `x` such that `a ≤ x` and `x ≤ b`. Basically `set.Icc a b` as a
 multiset. -/
-def Icc (a b : α) : Multiset α :=
+def icc (a b : α) : Multiset α :=
   (Finset.icc a b).val
 
 /-- The multiset of elements `x` such that `a ≤ x` and `x < b`. Basically `set.Ico a b` as a
 multiset. -/
-def Ico (a b : α) : Multiset α :=
+def ico (a b : α) : Multiset α :=
   (Finset.ico a b).val
 
 /-- The multiset of elements `x` such that `a < x` and `x ≤ b`. Basically `set.Ioc a b` as a
 multiset. -/
-def Ioc (a b : α) : Multiset α :=
+def ioc (a b : α) : Multiset α :=
   (Finset.ioc a b).val
 
 /-- The multiset of elements `x` such that `a < x` and `x < b`. Basically `set.Ioo a b` as a
 multiset. -/
-def Ioo (a b : α) : Multiset α :=
+def ioo (a b : α) : Multiset α :=
   (Finset.ioo a b).val
 
 @[simp]
@@ -332,11 +337,11 @@ section OrderTop
 variable [Preorderₓ α] [OrderTop α] [LocallyFiniteOrder α]
 
 /-- The multiset of elements `x` such that `a ≤ x`. Basically `set.Ici a` as a multiset. -/
-def Ici (a : α) : Multiset α :=
+def ici (a : α) : Multiset α :=
   (Finset.ici a).val
 
 /-- The multiset of elements `x` such that `a < x`. Basically `set.Ioi a` as a multiset. -/
-def Ioi (a : α) : Multiset α :=
+def ioi (a : α) : Multiset α :=
   (Finset.ioi a).val
 
 @[simp]
@@ -354,11 +359,11 @@ section OrderBot
 variable [Preorderₓ α] [OrderBot α] [LocallyFiniteOrder α]
 
 /-- The multiset of elements `x` such that `x ≤ b`. Basically `set.Iic b` as a multiset. -/
-def Iic (b : α) : Multiset α :=
+def iic (b : α) : Multiset α :=
   (Finset.iic b).val
 
 /-- The multiset of elements `x` such that `x < b`. Basically `set.Iio b` as a multiset. -/
-def Iio (b : α) : Multiset α :=
+def iio (b : α) : Multiset α :=
   (Finset.iio b).val
 
 @[simp]
@@ -382,19 +387,19 @@ section Preorderₓ
 
 variable [Preorderₓ α] [LocallyFiniteOrder α] (a b : α)
 
-instance fintype_Icc : Fintype (Icc a b) :=
+instance fintypeIcc : Fintype (Icc a b) :=
   Fintype.ofFinset (Finset.icc a b) fun x => by
     rw [Finset.mem_Icc, mem_Icc]
 
-instance fintype_Ico : Fintype (Ico a b) :=
+instance fintypeIco : Fintype (Ico a b) :=
   Fintype.ofFinset (Finset.ico a b) fun x => by
     rw [Finset.mem_Ico, mem_Ico]
 
-instance fintype_Ioc : Fintype (Ioc a b) :=
+instance fintypeIoc : Fintype (Ioc a b) :=
   Fintype.ofFinset (Finset.ioc a b) fun x => by
     rw [Finset.mem_Ioc, mem_Ioc]
 
-instance fintype_Ioo : Fintype (Ioo a b) :=
+instance fintypeIoo : Fintype (Ioo a b) :=
   Fintype.ofFinset (Finset.ioo a b) fun x => by
     rw [Finset.mem_Ioo, mem_Ioo]
 
@@ -416,11 +421,11 @@ section OrderTop
 
 variable [Preorderₓ α] [OrderTop α] [LocallyFiniteOrder α] (a : α)
 
-instance fintype_Ici : Fintype (Ici a) :=
+instance fintypeIci : Fintype (Ici a) :=
   Fintype.ofFinset (Finset.ici a) fun x => by
     rw [Finset.mem_Ici, mem_Ici]
 
-instance fintype_Ioi : Fintype (Ioi a) :=
+instance fintypeIoi : Fintype (Ioi a) :=
   Fintype.ofFinset (Finset.ioi a) fun x => by
     rw [Finset.mem_Ioi, mem_Ioi]
 
@@ -436,11 +441,11 @@ section OrderBot
 
 variable [Preorderₓ α] [OrderBot α] [LocallyFiniteOrder α] (b : α)
 
-instance fintype_Iic : Fintype (Iic b) :=
+instance fintypeIic : Fintype (Iic b) :=
   Fintype.ofFinset (Finset.iic b) fun x => by
     rw [Finset.mem_Iic, mem_Iic]
 
-instance fintype_Iio : Fintype (Iio b) :=
+instance fintypeIio : Fintype (Iio b) :=
   Fintype.ofFinset (Finset.iio b) fun x => by
     rw [Finset.mem_Iio, mem_Iio]
 
@@ -504,6 +509,7 @@ instance : Subsingleton (LocallyFiniteOrder α) :=
 variable [Preorderₓ β] [LocallyFiniteOrder β]
 
 /-- Given an order embedding `α ↪o β`, pulls back the `locally_finite_order` on `β` to `α`. -/
+-- Should this be called `locally_finite_order.lift`?
 noncomputable def OrderEmbedding.locallyFiniteOrder (f : α ↪o β) : LocallyFiniteOrder α where
   finsetIcc := fun a b => (icc (f a) (f b)).Preimage f (f.toEmbedding.Injective.InjOn _)
   finsetIco := fun a b => (ico (f a) (f b)).Preimage f (f.toEmbedding.Injective.InjOn _)
@@ -563,7 +569,7 @@ theorem Ioo_to_dual : ioo (toDual a) (toDual b) = (ioo b a).map toDual.toEmbeddi
   rw [mem_Ioo, mem_Ioo]
   exact and_comm _ _
 
-instance [DecidableRel (· ≤ · : α × β → α × β → Prop)] : LocallyFiniteOrder (α × β) :=
+instance [DecidableRel ((· ≤ ·) : α × β → α × β → Prop)] : LocallyFiniteOrder (α × β) :=
   LocallyFiniteOrder.ofIcc' (α × β) (fun a b => (icc a.fst b.fst).product (icc a.snd b.snd)) fun a b x => by
     rw [mem_product, mem_Icc, mem_Icc, and_and_and_comm]
     rfl

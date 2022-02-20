@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Johannes Hölzl. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johannes Hölzl, Patrick Massot, Casper Putz, Anne Baanen
+-/
 import Mathbin.LinearAlgebra.Multilinear.Basis
 import Mathbin.LinearAlgebra.Matrix.Reindex
 import Mathbin.RingTheory.AlgebraTower
@@ -71,7 +76,7 @@ namespace Matrix
 
 /-- If `M` and `M'` are each other's inverse matrices, they are square matrices up to
 equivalence of types. -/
-def index_equiv_of_inv [IsDomain A] [DecidableEq m] [DecidableEq n] {M : Matrix m n A} {M' : Matrix n m A}
+def indexEquivOfInv [IsDomain A] [DecidableEq m] [DecidableEq n] {M : Matrix m n A} {M' : Matrix n m A}
     (hMM' : M ⬝ M' = 1) (hM'M : M' ⬝ M = 1) : m ≃ n :=
   equivOfPiLequivPi (toLin'OfInv hMM' hM'M)
 
@@ -82,7 +87,11 @@ theorem det_comm [DecidableEq n] (M N : Matrix n n A) : det (M ⬝ N) = det (N �
 then `det (N ⬝ M) = det (M ⬝ N)`. -/
 theorem det_comm' [IsDomain A] [DecidableEq m] [DecidableEq n] {M : Matrix n m A} {N : Matrix m n A} {M' : Matrix m n A}
     (hMM' : M ⬝ M' = 1) (hM'M : M' ⬝ M = 1) : det (M ⬝ N) = det (N ⬝ M) := by
-  let e := indexEquivOfInv hMM' hM'M
+  let
+    e :=-- Although `m` and `n` are different a priori, we will show they have the same cardinality.
+      -- This turns the problem into one for square matrices, which is easy.
+      indexEquivOfInv
+      hMM' hM'M
   rw [← det_minor_equiv_self e, ← minor_mul_equiv _ _ _ (Equivₓ.refl n) _, det_comm, minor_mul_equiv, Equivₓ.coe_refl,
     minor_id_id]
 
@@ -120,7 +129,7 @@ there is no good way to generalize over universe parameters, so we can't fully s
 type that it does not depend on the choice of basis. Instead you can use the `det_aux_def'` lemma,
 or avoid mentioning a basis at all using `linear_map.det`.
 -/
-def det_aux : Trunc (Basis ι A M) → (M →ₗ[A] M) →* A :=
+def detAux : Trunc (Basis ι A M) → (M →ₗ[A] M) →* A :=
   Trunc.lift (fun b : Basis ι A M => detMonoidHom.comp (toMatrixAlgEquiv b : (M →ₗ[A] M) →* Matrix ι ι A)) fun b c =>
     MonoidHom.ext <| det_to_matrix_eq_det_to_matrix b c
 
@@ -132,6 +141,7 @@ theorem det_aux_def (b : Basis ι A M) (f : M →ₗ[A] M) :
     LinearMap.detAux (Trunc.mk b) f = Matrix.det (LinearMap.toMatrix b b f) :=
   rfl
 
+-- Discourage the elaborator from unfolding `det_aux` and producing a huge term.
 theorem det_aux_def' {ι' : Type _} [Fintype ι'] [DecidableEq ι'] (tb : Trunc <| Basis ι A M) (b' : Basis ι' A M)
     (f : M →ₗ[A] M) : LinearMap.detAux tb f = Matrix.det (LinearMap.toMatrix b' b' f) := by
   apply Trunc.induction_on tb
@@ -155,6 +165,8 @@ open_locale Classical
 
 If there is no finite basis on `M`, the result is `1` instead.
 -/
+-- Discourage the elaborator from unfolding `det` and producing a huge term by marking it
+-- as irreducible.
 protected irreducible_def det : (M →ₗ[A] M) →* A :=
   if H : ∃ s : Finset M, Nonempty (Basis s A M) then LinearMap.detAux (Trunc.mk H.some_spec.some) else 1
 
@@ -167,10 +179,13 @@ theorem coe_det [DecidableEq M] :
   split_ifs
   · congr
     
+  -- use the correct `decidable_eq` instance
   rfl
 
 end
 
+-- Auxiliary lemma, the `simp` normal form goes in the other direction
+-- (using `linear_map.det_to_matrix`)
 theorem det_eq_det_to_matrix_of_finset [DecidableEq M] {s : Finset M} (b : Basis s A M) (f : M →ₗ[A] M) :
     f.det = Matrix.det (LinearMap.toMatrix b b f) := by
   have : ∃ s : Finset M, Nonempty (Basis s A M) := ⟨s, ⟨b⟩⟩
@@ -342,6 +357,7 @@ theorem LinearEquiv.det_symm_mul_det {A : Type _} [CommRingₓ A] [IsDomain A] [
     (f.symm : M →ₗ[A] M).det * (f : M →ₗ[A] M).det = 1 := by
   simp [← LinearMap.det_comp]
 
+-- Cannot be stated using `linear_map.det` because `f` is not an endomorphism.
 theorem LinearEquiv.is_unit_det (f : M ≃ₗ[R] M') (v : Basis ι R M) (v' : Basis ι R M') :
     IsUnit (LinearMap.toMatrix v v' f).det := by
   apply is_unit_det_of_left_inverse

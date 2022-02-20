@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Heather Macbeth. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Heather Macbeth
+-/
 import Mathbin.Analysis.NormedSpace.HahnBanach
 import Mathbin.Analysis.NormedSpace.IsROrC
 
@@ -44,9 +49,9 @@ variable (E : Type _) [SemiNormedGroup E] [NormedSpace 𝕜 E]
 
 variable (F : Type _) [NormedGroup F] [NormedSpace 𝕜 F]
 
--- ././Mathport/Syntax/Translate/Basic.lean:859:9: unsupported derive handler normed_space 𝕜
+-- ././Mathport/Syntax/Translate/Basic.lean:981:9: unsupported derive handler normed_space 𝕜
 /-- The topological dual of a seminormed space `E`. -/
-def dual :=
+def Dual :=
   E →L[𝕜] 𝕜 deriving Inhabited, SemiNormedGroup, [anonymous]
 
 instance : AddMonoidHomClass (Dual 𝕜 E) E 𝕜 :=
@@ -63,7 +68,7 @@ instance [FiniteDimensional 𝕜 E] : FiniteDimensional 𝕜 (Dual 𝕜 E) :=
 
 /-- The inclusion of a normed space in its double (topological) dual, considered
    as a bounded linear map. -/
-def inclusion_in_double_dual : E →L[𝕜] Dual 𝕜 (Dual 𝕜 E) :=
+def inclusionInDoubleDual : E →L[𝕜] Dual 𝕜 (Dual 𝕜 E) :=
   ContinuousLinearMap.apply 𝕜 𝕜
 
 @[simp]
@@ -113,7 +118,7 @@ theorem eq_iff_forall_dual_eq {x y : E} : x = y ↔ ∀ g : Dual 𝕜 E, g x = g
   simp [sub_eq_zero]
 
 /-- The inclusion of a normed space in its double dual is an isometry onto its image.-/
-def inclusion_in_double_dual_li : E →ₗᵢ[𝕜] Dual 𝕜 (Dual 𝕜 E) :=
+def inclusionInDoubleDualLi : E →ₗᵢ[𝕜] Dual 𝕜 (Dual 𝕜 E) :=
   { inclusionInDoubleDual 𝕜 E with
     norm_map' := by
       intro x

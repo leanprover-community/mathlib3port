@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Jean Lo. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Jean Lo, Bhavik Mehta, Yaël Dillies
+-/
 import Mathbin.Analysis.Convex.Function
 import Mathbin.Analysis.Convex.Star
 import Mathbin.Analysis.NormedSpace.Ordered
@@ -349,7 +354,7 @@ section HasScalar
 
 variable [HasScalar 𝕜 E]
 
-instance FunLike : FunLike (Seminorm 𝕜 E) E fun _ => ℝ where
+instance funLike : FunLike (Seminorm 𝕜 E) E fun _ => ℝ where
   coe := Seminorm.toFun
   coe_injective' := fun f g h => by
     cases f <;> cases g <;> congr
@@ -423,9 +428,10 @@ instance : AddMonoidₓ (Seminorm 𝕜 E) :=
   FunLike.coe_injective.addMonoidSmul _ rfl coe_add fun p n => coe_smul n p
 
 instance : OrderedCancelAddCommMonoid (Seminorm 𝕜 E) :=
-  { Seminorm.addMonoid,
+  { -- to avoid introducing a diamond
+    Seminorm.addMonoid,
     (FunLike.coe_injective.OrderedCancelAddCommMonoid _ rfl coe_add : OrderedCancelAddCommMonoid (Seminorm 𝕜 E)) with
-    nsmul := · • · }
+    nsmul := (· • ·) }
 
 instance [Monoidₓ R] [MulAction R ℝ] [HasScalar R ℝ≥0 ] [IsScalarTower R ℝ≥0 ℝ] : MulAction R (Seminorm 𝕜 E) :=
   FunLike.coe_injective.MulAction _ coe_smul
@@ -435,7 +441,7 @@ variable (𝕜 E)
 /-- `coe_fn` as an `add_monoid_hom`. Helper definition for showing that `seminorm 𝕜 E` is
 a module. -/
 @[simps]
-def coe_fn_add_monoid_hom : AddMonoidHom (Seminorm 𝕜 E) (E → ℝ) :=
+def coeFnAddMonoidHom : AddMonoidHom (Seminorm 𝕜 E) (E → ℝ) :=
   ⟨coeFn, coe_zero, coe_add⟩
 
 theorem coe_fn_add_monoid_hom_injective : Function.Injective (coeFnAddMonoidHom 𝕜 E) :=
@@ -450,6 +456,8 @@ instance [Monoidₓ R] [DistribMulAction R ℝ] [HasScalar R ℝ≥0 ] [IsScalar
 instance [Semiringₓ R] [Module R ℝ] [HasScalar R ℝ≥0 ] [IsScalarTower R ℝ≥0 ℝ] : Module R (Seminorm 𝕜 E) :=
   (coe_fn_add_monoid_hom_injective 𝕜 E).Module R _ coe_smul
 
+-- TODO: define `has_Sup` too, from the skeleton at
+-- https://github.com/leanprover-community/mathlib/pull/11329#issuecomment-1008915345
 noncomputable instance : HasSup (Seminorm 𝕜 E) where
   sup := fun p q =>
     { toFun := p⊔q,
@@ -651,7 +659,7 @@ variable [HasScalar 𝕜 E] (p : Seminorm 𝕜 E)
 
 /-- The ball of radius `r` at `x` with respect to seminorm `p` is the set of elements `y` with
 `p (y - x) < `r`. -/
-def ball (x : E) (r : ℝ) :=
+def Ball (x : E) (r : ℝ) :=
   { y : E | p (y - x) < r }
 
 variable {x y : E} {r : ℝ}
@@ -688,7 +696,7 @@ theorem ball_finset_sup' (p : ι → Seminorm 𝕜 E) (s : Finset ι) (H : s.Non
   · rw [Finset.sup'_cons hs, Finset.inf'_cons hs, ball_sup, inf_eq_inter, ih]
     
 
-theorem ball_mono {p : Seminorm 𝕜 E} {r₁ r₂ : ℝ} (h : r₁ ≤ r₂) : p.ball x r₁ ⊆ p.ball x r₂ := fun _ hx : _ < _ =>
+theorem ball_mono {p : Seminorm 𝕜 E} {r₁ r₂ : ℝ} (h : r₁ ≤ r₂) : p.ball x r₁ ⊆ p.ball x r₂ := fun hx : _ < _ =>
   hx.trans_le h
 
 theorem ball_antitone {p q : Seminorm 𝕜 E} (h : q ≤ p) : p.ball x r ⊆ q.ball x r := fun _ => (h _).trans_lt
@@ -803,7 +811,7 @@ section HasScalar
 variable [HasScalar ℝ E] [IsScalarTower ℝ 𝕜 E] (p : Seminorm 𝕜 E)
 
 /-- A seminorm is convex. Also see `convex_on_norm`. -/
-protected theorem ConvexOn : ConvexOn ℝ Univ p := by
+protected theorem convex_on : ConvexOn ℝ Univ p := by
   refine' ⟨convex_univ, fun x y _ _ a b ha hb hab => _⟩
   calc p (a • x + b • y) ≤ p (a • x) + p (b • y) := p.triangle _ _ _ = ∥a • (1 : 𝕜)∥ * p x + ∥b • (1 : 𝕜)∥ * p y := by
       rw [← p.smul, ← p.smul, smul_one_smul, smul_one_smul]_ = a * p x + b * p y := by
@@ -826,6 +834,7 @@ end Module
 
 end NormedLinearOrderedField
 
+-- TODO: convexity and absorbent/balanced sets in vector spaces over ℝ
 end Seminorm
 
 /-! ### The norm as a seminorm -/
@@ -1299,7 +1308,7 @@ section FilterBasis
 variable [NormedField 𝕜] [AddCommGroupₓ E] [Module 𝕜 E]
 
 /-- A filter basis for the neighborhood filter of 0. -/
-def seminorm_basis_zero (p : ι → Seminorm 𝕜 E) : Set (Set E) :=
+def SeminormBasisZero (p : ι → Seminorm 𝕜 E) : Set (Set E) :=
   ⋃ (s : Finset ι) (r) (hr : 0 < r), singleton <| Ball (s.sup p) (0 : E) r
 
 theorem seminorm_basis_zero_iff (p : ι → Seminorm 𝕜 E) (U : Set E) :
@@ -1354,7 +1363,7 @@ theorem seminorm_basis_zero_neg (p : ι → Seminorm 𝕜 E) U (hU' : U ∈ Semi
   exact ⟨U, hU', Eq.subset hU⟩
 
 /-- The `add_group_filter_basis` induced by the filter basis `seminorm_basis_zero`. -/
-def seminorm_add_group_filter_basis [Nonempty ι] (p : ι → Seminorm 𝕜 E) : AddGroupFilterBasis E :=
+def seminormAddGroupFilterBasis [Nonempty ι] (p : ι → Seminorm 𝕜 E) : AddGroupFilterBasis E :=
   addGroupFilterBasisOfComm (SeminormBasisZero p) (seminorm_basis_zero_nonempty p) (seminorm_basis_zero_intersect p)
     (seminorm_basis_zero_zero p) (seminorm_basis_zero_add p) (seminorm_basis_zero_neg p)
 
@@ -1395,7 +1404,7 @@ theorem seminorm_basis_zero_smul_left (p : ι → Seminorm 𝕜 E) (x : 𝕜) (U
     preimage_const_of_mem, zero_smul]
 
 /-- The `module_filter_basis` induced by the filter basis `seminorm_basis_zero`. -/
-def seminorm_module_filter_basis (p : ι → Seminorm 𝕜 E) : ModuleFilterBasis 𝕜 E where
+def seminormModuleFilterBasis (p : ι → Seminorm 𝕜 E) : ModuleFilterBasis 𝕜 E where
   toAddGroupFilterBasis := seminormAddGroupFilterBasis p
   smul' := seminorm_basis_zero_smul p
   smul_left' := seminorm_basis_zero_smul_left p
@@ -1408,7 +1417,7 @@ section Bounded
 variable [NormedField 𝕜] [AddCommGroupₓ E] [Module 𝕜 E] [AddCommGroupₓ F] [Module 𝕜 F]
 
 /-- The proposition that a linear map is bounded between spaces with families of seminorms. -/
-def is_bounded (p : ι → Seminorm 𝕜 E) (q : ι' → Seminorm 𝕜 F) (f : E →ₗ[𝕜] F) : Prop :=
+def IsBounded (p : ι → Seminorm 𝕜 E) (q : ι' → Seminorm 𝕜 F) (f : E →ₗ[𝕜] F) : Prop :=
   ∀ i, ∃ s : Finset ι, ∃ C : ℝ≥0 , C ≠ 0 ∧ (q i).comp f ≤ C • s.sup p
 
 theorem is_bounded_const (ι' : Type _) [Nonempty ι'] {p : ι → Seminorm 𝕜 E} {q : Seminorm 𝕜 F} (f : E →ₗ[𝕜] F) :
@@ -1449,6 +1458,7 @@ theorem is_bounded_sup {p : ι → Seminorm 𝕜 E} {q : ι' → Seminorm 𝕜 F
     exact Finset.sup_mono (Finset.subset_bUnion_of_mem fₛ hi)
   refine' le_transₓ (comp_mono f (finset_sup_le_sum q s')) _
   simp_rw [← pullback_apply, AddMonoidHom.map_sum, pullback_apply]
+  --improve this
   refine' le_transₓ (Finset.sum_le_sum hs) _
   rw [Finset.sum_const, smul_assoc]
   exact le_rfl
@@ -1462,7 +1472,7 @@ variable [NormedField 𝕜] [AddCommGroupₓ E] [Module 𝕜 E] [AddCommGroupₓ
 variable [Nonempty ι] [Nonempty ι']
 
 /-- The proposition that the topology of `E` is induced by a family of seminorms `p`. -/
-class with_seminorms (p : ι → Seminorm 𝕜 E) [t : TopologicalSpace E] : Prop where
+class WithSeminorms (p : ι → Seminorm 𝕜 E) [t : TopologicalSpace E] : Prop where
   topology_eq_with_seminorms : t = (seminormModuleFilterBasis p).topology
 
 theorem with_seminorms_eq (p : ι → Seminorm 𝕜 E) [t : TopologicalSpace E] [WithSeminorms p] :
@@ -1529,7 +1539,7 @@ open LocallyConvexSpace
 variable [Nonempty ι] [NormedLinearOrderedField 𝕜] [NormedSpace ℝ 𝕜] [AddCommGroupₓ E] [Module 𝕜 E] [Module ℝ E]
   [IsScalarTower ℝ 𝕜 E] [TopologicalSpace E] [TopologicalAddGroup E]
 
-theorem with_seminorms.to_locally_convex_space (p : ι → Seminorm 𝕜 E) [WithSeminorms p] : LocallyConvexSpace ℝ E := by
+theorem WithSeminorms.to_locally_convex_space (p : ι → Seminorm 𝕜 E) [WithSeminorms p] : LocallyConvexSpace ℝ E := by
   apply of_basis_zero ℝ E id fun s => s ∈ seminorm_basis_zero p
   · rw [with_seminorms_eq p, AddGroupFilterBasis.nhds_eq _, AddGroupFilterBasis.N_zero]
     exact FilterBasis.has_basis _

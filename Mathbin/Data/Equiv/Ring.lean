@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Johannes Hölzl. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johannes Hölzl, Callum Sutton, Yury Kudryashov
+-/
 import Mathbin.Data.Equiv.MulAdd
 import Mathbin.Algebra.Field.Basic
 import Mathbin.Algebra.Ring.Opposite
@@ -50,11 +55,43 @@ add_decl_doc RingEquiv.toAddEquiv
 /-- The equivalence of multiplicative monoids underlying an equivalence of (semi)rings. -/
 add_decl_doc RingEquiv.toMulEquiv
 
+/-- `ring_equiv_class F R S` states that `F` is a type of ring structure preserving equivalences.
+You should extend this class when you extend `ring_equiv`. -/
+class RingEquivClass (F : Type _) (R S : outParam (Type _)) [Mul R] [Add R] [Mul S] [Add S] extends
+  MulEquivClass F R S where
+  map_add : ∀ f : F a b, f (a + b) = f a + f b
+
+namespace RingEquivClass
+
+-- See note [lower instance priority]
+instance (priority := 100) toAddEquivClass (F R S : Type _) [Mul R] [Add R] [Mul S] [Add S] [h : RingEquivClass F R S] :
+    AddEquivClass F R S :=
+  { h with coe := coeFn }
+
+-- See note [lower instance priority]
+instance (priority := 100) toRingHomClass (F R S : Type _) [NonAssocSemiringₓ R] [NonAssocSemiringₓ S]
+    [h : RingEquivClass F R S] : RingHomClass F R S :=
+  { h with coe := coeFn, coe_injective' := FunLike.coe_injective, map_zero := map_zero, map_one := map_one }
+
+end RingEquivClass
+
 namespace RingEquiv
 
 section Basic
 
 variable [Mul R] [Add R] [Mul S] [Add S] [Mul S'] [Add S']
+
+instance : RingEquivClass (R ≃+* S) R S where
+  coe := toFun
+  inv := invFun
+  coe_injective' := fun e f h₁ h₂ => by
+    cases e
+    cases f
+    congr
+  map_add := map_add'
+  map_mul := map_mul'
+  left_inv := RingEquiv.left_inv
+  right_inv := RingEquiv.right_inv
 
 instance : CoeFun (R ≃+* S) fun _ => R → S :=
   ⟨RingEquiv.toFun⟩
@@ -64,27 +101,18 @@ theorem to_fun_eq_coe (f : R ≃+* S) : f.toFun = f :=
   rfl
 
 /-- A ring isomorphism preserves multiplication. -/
-@[simp]
-theorem map_mul (e : R ≃+* S) (x y : R) : e (x * y) = e x * e y :=
-  e.map_mul' x y
+protected theorem map_mul (e : R ≃+* S) (x y : R) : e (x * y) = e x * e y :=
+  map_mul e x y
 
 /-- A ring isomorphism preserves addition. -/
-@[simp]
-theorem map_add (e : R ≃+* S) (x y : R) : e (x + y) = e x + e y :=
-  e.map_add' x y
+protected theorem map_add (e : R ≃+* S) (x y : R) : e (x + y) = e x + e y :=
+  map_add e x y
 
 /-- Two ring isomorphisms agree if they are defined by the
     same underlying function. -/
 @[ext]
-theorem ext {f g : R ≃+* S} (h : ∀ x, f x = g x) : f = g := by
-  have h₁ : f.to_equiv = g.to_equiv := Equivₓ.ext h
-  cases f
-  cases g
-  congr
-  · exact funext h
-    
-  · exact congr_argₓ Equivₓ.invFun h₁
-    
+theorem ext {f g : R ≃+* S} (h : ∀ x, f x = g x) : f = g :=
+  FunLike.ext f g h
 
 @[simp]
 theorem coe_mk e e' h₁ h₂ h₃ h₄ : ⇑(⟨e, e', h₁, h₂, h₃, h₄⟩ : R ≃+* S) = e :=
@@ -94,19 +122,19 @@ theorem coe_mk e e' h₁ h₂ h₃ h₄ : ⇑(⟨e, e', h₁, h₂, h₃, h₄�
 theorem mk_coe (e : R ≃+* S) e' h₁ h₂ h₃ h₄ : (⟨e, e', h₁, h₂, h₃, h₄⟩ : R ≃+* S) = e :=
   ext fun _ => rfl
 
-protected theorem congr_argₓ {f : R ≃+* S} : ∀ {x x' : R}, x = x' → f x = f x'
-  | _, _, rfl => rfl
+protected theorem congr_arg {f : R ≃+* S} {x x' : R} : x = x' → f x = f x' :=
+  FunLike.congr_arg f
 
-protected theorem congr_funₓ {f g : R ≃+* S} (h : f = g) (x : R) : f x = g x :=
-  h ▸ rfl
+protected theorem congr_fun {f g : R ≃+* S} (h : f = g) (x : R) : f x = g x :=
+  FunLike.congr_fun h x
 
-theorem ext_iff {f g : R ≃+* S} : f = g ↔ ∀ x, f x = g x :=
-  ⟨fun h x => h ▸ rfl, ext⟩
+protected theorem ext_iff {f g : R ≃+* S} : f = g ↔ ∀ x, f x = g x :=
+  FunLike.ext_iff
 
-instance has_coe_to_mul_equiv : Coe (R ≃+* S) (R ≃* S) :=
+instance hasCoeToMulEquiv : Coe (R ≃+* S) (R ≃* S) :=
   ⟨RingEquiv.toMulEquiv⟩
 
-instance has_coe_to_add_equiv : Coe (R ≃+* S) (R ≃+ S) :=
+instance hasCoeToAddEquiv : Coe (R ≃+* S) (R ≃+ S) :=
   ⟨RingEquiv.toAddEquiv⟩
 
 @[simp]
@@ -126,7 +154,7 @@ theorem coe_to_add_equiv (f : R ≃+* S) : ⇑(f : R ≃+ S) = f :=
   rfl
 
 /-- The `ring_equiv` between two semirings with a unique element. -/
-def ring_equiv_of_unique_of_unique {M N} [Unique M] [Unique N] [Add M] [Mul M] [Add N] [Mul N] : M ≃+* N :=
+def ringEquivOfUniqueOfUnique {M N} [Unique M] [Unique N] [Add M] [Mul M] [Add N] [Mul N] : M ≃+* N :=
   { AddEquiv.addEquivOfUniqueOfUnique, MulEquiv.mulEquivOfUniqueOfUnique with }
 
 instance {M N} [Unique M] [Unique N] [Add M] [Mul M] [Add N] [Mul N] : Unique (M ≃+* N) where
@@ -163,7 +191,7 @@ protected def symm (e : R ≃+* S) : S ≃+* R :=
   { e.toMulEquiv.symm, e.toAddEquiv.symm with }
 
 /-- See Note [custom simps projection] -/
-def simps.symm_apply (e : R ≃+* S) : S → R :=
+def Simps.symmApply (e : R ≃+* S) : S → R :=
   e.symm
 
 initialize_simps_projections RingEquiv (toFun → apply, invFun → symmApply)
@@ -198,13 +226,13 @@ theorem trans_apply (e₁ : R ≃+* S) (e₂ : S ≃+* S') (a : R) : e₁.trans 
   rfl
 
 protected theorem bijective (e : R ≃+* S) : Function.Bijective e :=
-  e.toEquiv.Bijective
+  EquivLike.bijective e
 
 protected theorem injective (e : R ≃+* S) : Function.Injective e :=
-  e.toEquiv.Injective
+  EquivLike.injective e
 
 protected theorem surjective (e : R ≃+* S) : Function.Surjective e :=
-  e.toEquiv.Surjective
+  EquivLike.surjective e
 
 @[simp]
 theorem apply_symm_apply (e : R ≃+* S) : ∀ x, e (e.symm x) = x :=
@@ -245,7 +273,7 @@ section CommSemiringₓ
 variable (R) [CommSemiringₓ R]
 
 /-- A commutative ring is isomorphic to its opposite. -/
-def to_opposite : R ≃+* Rᵐᵒᵖ :=
+def toOpposite : R ≃+* Rᵐᵒᵖ :=
   { MulOpposite.opEquiv with map_add' := fun x y => rfl, map_mul' := fun x y => mul_comm (op y) (op x) }
 
 @[simp]
@@ -265,18 +293,16 @@ section NonUnitalSemiringₓ
 variable [NonUnitalNonAssocSemiringₓ R] [NonUnitalNonAssocSemiringₓ S] (f : R ≃+* S) (x y : R)
 
 /-- A ring isomorphism sends zero to zero. -/
-@[simp]
-theorem map_zero : f 0 = 0 :=
-  (f : R ≃+ S).map_zero
+protected theorem map_zero : f 0 = 0 :=
+  map_zero f
 
 variable {x}
 
-@[simp]
-theorem map_eq_zero_iff : f x = 0 ↔ x = 0 :=
-  (f : R ≃+ S).map_eq_zero_iff
+protected theorem map_eq_zero_iff : f x = 0 ↔ x = 0 :=
+  AddEquivClass.map_eq_zero_iff f
 
 theorem map_ne_zero_iff : f x ≠ 0 ↔ x ≠ 0 :=
-  (f : R ≃+ S).map_ne_zero_iff
+  AddEquivClass.map_ne_zero_iff f
 
 end NonUnitalSemiringₓ
 
@@ -285,21 +311,19 @@ section Semiringₓ
 variable [NonAssocSemiringₓ R] [NonAssocSemiringₓ S] (f : R ≃+* S) (x y : R)
 
 /-- A ring isomorphism sends one to one. -/
-@[simp]
-theorem map_one : f 1 = 1 :=
-  (f : R ≃* S).map_one
+protected theorem map_one : f 1 = 1 :=
+  map_one f
 
 variable {x}
 
-@[simp]
-theorem map_eq_one_iff : f x = 1 ↔ x = 1 :=
-  (f : R ≃* S).map_eq_one_iff
+protected theorem map_eq_one_iff : f x = 1 ↔ x = 1 :=
+  MulEquivClass.map_eq_one_iff f
 
 theorem map_ne_one_iff : f x ≠ 1 ↔ x ≠ 1 :=
-  (f : R ≃* S).map_ne_one_iff
+  MulEquivClass.map_ne_one_iff f
 
 /-- Produce a ring isomorphism from a bijective ring homomorphism. -/
-noncomputable def of_bijective (f : R →+* S) (hf : Function.Bijective f) : R ≃+* S :=
+noncomputable def ofBijective (f : R →+* S) (hf : Function.Bijective f) : R ≃+* S :=
   { Equivₓ.ofBijective f hf, f with }
 
 @[simp]
@@ -315,13 +339,11 @@ section
 
 variable [Ringₓ R] [Ringₓ S] (f : R ≃+* S) (x y : R)
 
-@[simp]
-theorem map_neg : f (-x) = -f x :=
-  (f : R ≃+ S).map_neg x
+protected theorem map_neg : f (-x) = -f x :=
+  map_neg f x
 
-@[simp]
-theorem map_sub : f (x - y) = f x - f y :=
-  (f : R ≃+ S).map_sub x y
+protected theorem map_sub : f (x - y) = f x - f y :=
+  map_sub f x y
 
 @[simp]
 theorem map_neg_one : f (-1) = -1 :=
@@ -334,13 +356,13 @@ section SemiringHom
 variable [NonAssocSemiringₓ R] [NonAssocSemiringₓ S] [NonAssocSemiringₓ S']
 
 /-- Reinterpret a ring equivalence as a ring homomorphism. -/
-def to_ring_hom (e : R ≃+* S) : R →+* S :=
+def toRingHom (e : R ≃+* S) : R →+* S :=
   { e.toMulEquiv.toMonoidHom, e.toAddEquiv.toAddMonoidHom with }
 
 theorem to_ring_hom_injective : Function.Injective (toRingHom : R ≃+* S → R →+* S) := fun f g h =>
   RingEquiv.ext (RingHom.ext_iff.1 h)
 
-instance has_coe_to_ring_hom : Coe (R ≃+* S) (R →+* S) :=
+instance hasCoeToRingHom : Coe (R ≃+* S) (R →+* S) :=
   ⟨RingEquiv.toRingHom⟩
 
 theorem to_ring_hom_eq_coe (f : R ≃+* S) : f.toRingHom = ↑f :=
@@ -355,11 +377,11 @@ theorem coe_ring_hom_inj_iff {R S : Type _} [NonAssocSemiringₓ R] [NonAssocSem
   ⟨congr_argₓ _, fun h => ext <| RingHom.ext_iff.mp h⟩
 
 /-- Reinterpret a ring equivalence as a monoid homomorphism. -/
-abbrev to_monoid_hom (e : R ≃+* S) : R →* S :=
+abbrev toMonoidHom (e : R ≃+* S) : R →* S :=
   e.toRingHom.toMonoidHom
 
 /-- Reinterpret a ring equivalence as an `add_monoid` homomorphism. -/
-abbrev to_add_monoid_hom (e : R ≃+* S) : R →+ S :=
+abbrev toAddMonoidHom (e : R ≃+* S) : R →+ S :=
   e.toRingHom.toAddMonoidHom
 
 /-- The two paths coercion can take to an `add_monoid_hom` are equivalent -/
@@ -410,7 +432,7 @@ theorem symm_to_ring_hom_comp_to_ring_hom (e : R ≃+* S) : e.symm.toRingHom.com
 
 /-- Construct an equivalence of rings from homomorphisms in both directions, which are inverses.
 -/
-def of_hom_inv (hom : R →+* S) (inv : S →+* R) (hom_inv_id : inv.comp hom = RingHom.id R)
+def ofHomInv (hom : R →+* S) (inv : S →+* R) (hom_inv_id : inv.comp hom = RingHom.id R)
     (inv_hom_id : hom.comp inv = RingHom.id S) : R ≃+* S :=
   { hom with invFun := inv, left_inv := fun x => RingHom.congr_fun hom_inv_id x,
     right_inv := fun x => RingHom.congr_fun inv_hom_id x }
@@ -474,9 +496,8 @@ section GroupPower
 
 variable [Semiringₓ R] [Semiringₓ S]
 
-@[simp]
-theorem map_pow (f : R ≃+* S) a : ∀ n : ℕ, f (a ^ n) = f a ^ n :=
-  f.toRingHom.map_pow a
+protected theorem map_pow (f : R ≃+* S) a : ∀ n : ℕ, f (a ^ n) = f a ^ n :=
+  map_pow f a
 
 end GroupPower
 
@@ -485,7 +506,7 @@ end RingEquiv
 namespace MulEquiv
 
 /-- Gives a `ring_equiv` from a `mul_equiv` preserving addition.-/
-def to_ring_equiv {R : Type _} {S : Type _} [Add R] [Add S] [Mul R] [Mul S] (h : R ≃* S)
+def toRingEquiv {R : Type _} {S : Type _} [Add R] [Add S] [Mul R] [Mul S] (h : R ≃* S)
     (H : ∀ x y : R, h (x + y) = h x + h y) : R ≃+* S :=
   { h.toEquiv, h, AddEquiv.mk' h.toEquiv H with }
 
@@ -504,7 +525,7 @@ theorem symm_trans_self (e : R ≃+* S) : e.symm.trans e = RingEquiv.refl S :=
   ext e.4
 
 /-- If two rings are isomorphic, and the second is a domain, then so is the first. -/
-protected theorem IsDomain {A : Type _} (B : Type _) [Ringₓ A] [Ringₓ B] [IsDomain B] (e : A ≃+* B) : IsDomain A :=
+protected theorem is_domain {A : Type _} (B : Type _) [Ringₓ A] [Ringₓ B] [IsDomain B] (e : A ≃+* B) : IsDomain A :=
   { eq_zero_or_eq_zero_of_mul_eq_zero := fun x y hxy => by
       have : e x * e y = 0 := by
         rw [← e.map_mul, hxy, e.map_zero]

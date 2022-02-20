@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 . All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Chris Hughes
+-/
 import Mathbin.GroupTheory.GroupAction.Basic
 import Mathbin.GroupTheory.Subgroup.Basic
 
@@ -58,11 +63,11 @@ instance : Inhabited (ConjAct G) :=
   ⟨1⟩
 
 /-- Reinterpret `g : conj_act G` as an element of `G`. -/
-def of_conj_act : ConjAct G ≃* G :=
+def ofConjAct : ConjAct G ≃* G :=
   ⟨id, id, fun _ => rfl, fun _ => rfl, fun _ _ => rfl⟩
 
 /-- Reinterpret `g : G` as an element of `conj_act G`. -/
-def to_conj_act : G ≃* ConjAct G :=
+def toConjAct : G ≃* ConjAct G :=
   ofConjAct.symm
 
 /-- A recursor for `conj_act`, for use as `induction x using conj_act.rec` when `x : conj_act G`. -/
@@ -134,7 +139,7 @@ theorem to_conj_act_zero : toConjAct (0 : G) = 0 :=
   rfl
 
 instance : MulAction (ConjAct G) G where
-  smul := · • ·
+  smul := (· • ·)
   one_smul := by
     simp [smul_def]
   mul_smul := by
@@ -145,7 +150,7 @@ end GroupWithZeroₓ
 variable [Groupₓ G]
 
 instance : MulDistribMulAction (ConjAct G) G where
-  smul := · • ·
+  smul := (· • ·)
   smul_mul := by
     simp [smul_def, mul_assoc]
   smul_one := by
@@ -165,13 +170,13 @@ theorem fixed_points_eq_center : FixedPoints (ConjAct G) G = center G := by
 
 /-- As normal subgroups are closed under conjugation, they inherit the conjugation action
   of the underlying group. -/
-instance subgroup.conj_action {H : Subgroup G} [hH : H.Normal] : HasScalar (ConjAct G) H :=
+instance Subgroup.conjAction {H : Subgroup G} [hH : H.Normal] : HasScalar (ConjAct G) H :=
   ⟨fun g h => ⟨g • h, hH.conj_mem h.1 h.2 (ofConjAct g)⟩⟩
 
-theorem subgroup.coe_conj_smul {H : Subgroup G} [hH : H.Normal] (g : ConjAct G) (h : H) : ↑(g • h) = g • (h : G) :=
+theorem Subgroup.coe_conj_smul {H : Subgroup G} [hH : H.Normal] (g : ConjAct G) (h : H) : ↑(g • h) = g • (h : G) :=
   rfl
 
-instance subgroup.conj_mul_distrib_mul_action {H : Subgroup G} [hH : H.Normal] : MulDistribMulAction (ConjAct G) H :=
+instance Subgroup.conjMulDistribMulAction {H : Subgroup G} [hH : H.Normal] : MulDistribMulAction (ConjAct G) H :=
   Subtype.coe_injective.MulDistribMulAction H.Subtype Subgroup.coe_conj_smul
 
 /-- Group conjugation on a normal subgroup. Analogous to `mul_aut.conj`. -/

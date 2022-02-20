@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2022 Yaël Dillies. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yaël Dillies
+-/
 import Mathbin.Data.Multiset.Nodup
 
 /-!
@@ -19,7 +24,7 @@ namespace Multiset
 variable {α β : Type _} (s : Multiset α) (t : Multiset β)
 
 /-- Disjoint sum of multisets. -/
-def disj_sum : Multiset (Sum α β) :=
+def disjSum : Multiset (Sum α β) :=
   s.map inl + t.map inr
 
 @[simp]
@@ -74,7 +79,7 @@ theorem disj_sum_strict_mono_left (t : Multiset β) : StrictMono fun s : Multise
 theorem disj_sum_strict_mono_right (s : Multiset α) : StrictMono (s.disjSum : Multiset β → Multiset (Sum α β)) :=
   fun s₁ s₂ => disj_sum_lt_disj_sum_of_le_of_lt le_rfl
 
-protected theorem nodup.disj_sum (hs : s.Nodup) (ht : t.Nodup) : (s.disjSum t).Nodup := by
+protected theorem Nodup.disj_sum (hs : s.Nodup) (ht : t.Nodup) : (s.disjSum t).Nodup := by
   refine'
     (Multiset.nodup_add_of_nodup (Multiset.nodup_map inl_injective hs) <| Multiset.nodup_map inr_injective ht).2
       fun x hs ht => _

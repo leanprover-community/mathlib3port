@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2014 Floris van Doorn. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Floris van Doorn, Jeremy Avigad
+-/
 import Mathbin.Data.Nat.Basic
 
 /-!
@@ -93,6 +98,16 @@ theorem dist_mul_right (n k m : ℕ) : dist (n * k) (m * k) = dist n m * k := by
 theorem dist_mul_left (k n m : ℕ) : dist (k * n) (k * m) = k * dist n m := by
   rw [mul_comm k n, mul_comm k m, dist_mul_right, mul_comm]
 
+-- TODO(Jeremy): do when we have max and minx
+--theorem dist_eq_max_sub_min {i j : nat} : dist i j = (max i j) - min i j :=
+--sorry
+/-
+or.elim (lt_or_ge i j)
+  (assume : i < j,
+    by rw [max_eq_right_of_lt this, min_eq_left_of_lt this, dist_eq_sub_of_lt this])
+  (assume : i ≥ j,
+    by rw [max_eq_left this , min_eq_right this, dist_eq_sub_of_le_right this])
+-/
 theorem dist_succ_succ {i j : Nat} : dist (succ i) (succ j) = dist i j := by
   simp [dist.def, succ_sub_succ]
 

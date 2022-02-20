@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2022 Alex J. Best, Yaël Dillies. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Alex J. Best, Yaël Dillies
+-/
 import Mathbin.Algebra.Order.Hom.Monoid
 import Mathbin.Algebra.Order.Ring
 
@@ -44,10 +49,12 @@ class OrderRingHomClass (F : Type _) (α β : outParam <| Type _) [OrderedSemiri
   RingHomClass F α β where
   Monotone (f : F) : Monotone f
 
+-- See note [lower priority instance]
 instance (priority := 100) OrderRingHomClass.toOrderAddMonoidHomClass [OrderedSemiring α] [OrderedSemiring β]
     [OrderRingHomClass F α β] : OrderAddMonoidHomClass F α β :=
   { ‹OrderRingHomClass F α β› with }
 
+-- See note [lower priority instance]
 instance (priority := 100) OrderRingHomClass.toOrderMonoidWithZeroHomClass [OrderedSemiring α] [OrderedSemiring β]
     [OrderRingHomClass F α β] : OrderMonoidWithZeroHomClass F α β :=
   { ‹OrderRingHomClass F α β› with }
@@ -65,11 +72,11 @@ namespace OrderRingHom
 variable [OrderedSemiring α] [OrderedSemiring β] [OrderedSemiring γ] [OrderedSemiring δ]
 
 /-- Reinterpret an ordered ring homomorphism as an ordered additive monoid homomorphism. -/
-def to_order_add_monoid_hom (f : α →+*o β) : α →+o β :=
+def toOrderAddMonoidHom (f : α →+*o β) : α →+o β :=
   { f with }
 
 /-- Reinterpret an ordered ring homomorphism as an order homomorphism. -/
-def to_order_monoid_with_zero_hom (f : α →+*o β) : α →*₀o β :=
+def toOrderMonoidWithZeroHom (f : α →+*o β) : α →*₀o β :=
   { f with }
 
 instance : OrderRingHomClass (α →+*o β) α β where

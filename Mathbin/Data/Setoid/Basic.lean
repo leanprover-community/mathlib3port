@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Amelia Livingston. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Amelia Livingston, Bryan Gin-ge Chen
+-/
 import Mathbin.Logic.Relation
 import Mathbin.Order.GaloisConnection
 
@@ -76,7 +81,7 @@ theorem comm' (s : Setoidₓ α) {x y} : s.Rel x y ↔ s.Rel y x :=
 
 /-- The kernel of a function is an equivalence relation. -/
 def ker (f : α → β) : Setoidₓ α :=
-  ⟨· = · on f, eq_equivalence.comap f⟩
+  ⟨(· = ·) on f, eq_equivalence.comap f⟩
 
 /-- The kernel of the quotient map induced by an equivalence relation r equals r. -/
 @[simp]
@@ -99,7 +104,7 @@ theorem ker_def {f : α → β} {x y : α} : (ker f).Rel x y ↔ f x = f y :=
 /-- Given types `α`, `β`, the product of two equivalence relations `r` on `α` and `s` on `β`:
     `(x₁, x₂), (y₁, y₂) ∈ α × β` are related by `r.prod s` iff `x₁` is related to `y₁`
     by `r` and `x₂` is related to `y₂` by `s`. -/
-protected def Prod (r : Setoidₓ α) (s : Setoidₓ β) : Setoidₓ (α × β) where
+protected def prod (r : Setoidₓ α) (s : Setoidₓ β) : Setoidₓ (α × β) where
   R := fun x y => r.Rel x.1 y.1 ∧ s.Rel x.2 y.2
   iseqv :=
     ⟨fun x => ⟨r.refl' x.1, s.refl' x.2⟩, fun _ _ h => ⟨r.symm' h.1, s.symm' h.2⟩, fun _ _ _ h1 h2 =>
@@ -135,7 +140,7 @@ theorem Inf_def {s : Set (Setoidₓ α)} : (inf s).Rel = inf (rel '' s) := by
   rfl
 
 instance : PartialOrderₓ (Setoidₓ α) where
-  le := · ≤ ·
+  le := (· ≤ ·)
   lt := fun r s => r ≤ s ∧ ¬s ≤ r
   le_refl := fun _ _ _ => id
   le_trans := fun _ _ _ hr hs _ _ h => hs <| hr h
@@ -144,13 +149,13 @@ instance : PartialOrderₓ (Setoidₓ α) where
 
 /-- The complete lattice of equivalence relations on a type, with bottom element `=`
     and top element the trivial equivalence relation. -/
-instance CompleteLattice : CompleteLattice (Setoidₓ α) :=
+instance completeLattice : CompleteLattice (Setoidₓ α) :=
   { (completeLatticeOfInf (Setoidₓ α)) fun s => ⟨fun r hr x y h => h _ hr, fun r hr x y h r' hr' => hr hr' h⟩ with
     inf := HasInf.inf, inf_le_left := fun _ _ _ _ h => h.1, inf_le_right := fun _ _ _ _ h => h.2,
     le_inf := fun _ _ _ h1 h2 _ _ h => ⟨h1 h, h2 h⟩,
     top := ⟨fun _ _ => True, ⟨fun _ => trivialₓ, fun _ _ h => h, fun _ _ _ h1 h2 => h1⟩⟩,
     le_top := fun _ _ _ _ => trivialₓ,
-    bot := ⟨· = ·, ⟨fun _ => rfl, fun _ _ h => h.symm, fun _ _ _ h1 h2 => h1.trans h2⟩⟩,
+    bot := ⟨(· = ·), ⟨fun _ => rfl, fun _ _ h => h.symm, fun _ _ _ h1 h2 => h1.trans h2⟩⟩,
     bot_le := fun r x y h => h ▸ r.2.1 x }
 
 @[simp]
@@ -242,7 +247,7 @@ theorem ker_iff_mem_preimage {f : α → β} {x y} : (ker f).Rel x y ↔ x ∈ f
 
 /-- Equivalence between functions `α → β` such that `r x y → f x = f y` and functions
 `quotient r → β`. -/
-def lift_equiv (r : Setoidₓ α) : { f : α → β // r ≤ ker f } ≃ (Quotientₓ r → β) where
+def liftEquiv (r : Setoidₓ α) : { f : α → β // r ≤ ker f } ≃ (Quotientₓ r → β) where
   toFun := fun f => Quotientₓ.lift (f : α → β) f.2
   invFun := fun f =>
     ⟨f ∘ Quotientₓ.mk, fun x y h => by
@@ -273,7 +278,7 @@ variable (r : Setoidₓ α) (f : α → β)
 
 /-- The first isomorphism theorem for sets: the quotient of α by the kernel of a function f
     bijects with f's image. -/
-noncomputable def quotient_ker_equiv_range : Quotientₓ (ker f) ≃ Set.Range f :=
+noncomputable def quotientKerEquivRange : Quotientₓ (ker f) ≃ Set.Range f :=
   Equivₓ.ofBijective
     ((@Quotientₓ.lift _ (Set.Range f) (ker f) fun x => ⟨f x, Set.mem_range_self x⟩) fun _ _ h => Subtype.ext_val h)
     ⟨fun x y h =>
@@ -286,7 +291,7 @@ noncomputable def quotient_ker_equiv_range : Quotientₓ (ker f) ≃ Set.Range f
 /-- If `f` has a computable right-inverse, then the quotient by its kernel is equivalent to its
 domain. -/
 @[simps]
-def quotient_ker_equiv_of_right_inverse (g : β → α) (hf : Function.RightInverse g f) : Quotientₓ (ker f) ≃ β where
+def quotientKerEquivOfRightInverse (g : β → α) (hf : Function.RightInverse g f) : Quotientₓ (ker f) ≃ β where
   toFun := fun a => (Quotientₓ.liftOn' a f) fun _ _ => id
   invFun := fun b => Quotientₓ.mk' (g b)
   left_inv := fun a => (Quotientₓ.induction_on' a) fun a => Quotientₓ.sound' <| hf (f a)
@@ -296,7 +301,7 @@ def quotient_ker_equiv_of_right_inverse (g : β → α) (hf : Function.RightInve
 
 If a specific right-inverse of `f` is known, `setoid.quotient_ker_equiv_of_right_inverse` can be
 definitionally more useful. -/
-noncomputable def quotient_ker_equiv_of_surjective (hf : Surjective f) : Quotientₓ (ker f) ≃ β :=
+noncomputable def quotientKerEquivOfSurjective (hf : Surjective f) : Quotientₓ (ker f) ≃ β :=
   quotientKerEquivOfRightInverse _ (Function.surjInv hf) (right_inverse_surj_inv hf)
 
 variable {r f}
@@ -310,7 +315,7 @@ def map (r : Setoidₓ α) (f : α → β) : Setoidₓ β :=
 /-- Given a surjective function f whose kernel is contained in an equivalence relation r, the
     equivalence relation on f's codomain defined by x ≈ y ↔ the elements of f⁻¹(x) are related to
     the elements of f⁻¹(y) by r. -/
-def map_of_surjective r (f : α → β) (h : ker f ≤ r) (hf : Surjective f) : Setoidₓ β :=
+def mapOfSurjective r (f : α → β) (h : ker f ≤ r) (hf : Surjective f) : Setoidₓ β :=
   ⟨fun x y => ∃ a b, f a = x ∧ f b = y ∧ r.Rel a b,
     ⟨fun x =>
       let ⟨y, hy⟩ := hf x
@@ -346,14 +351,14 @@ theorem comap_eq {f : α → β} {r : Setoidₓ β} : comap f r = ker (@Quotient
       rw [Quotientₓ.eq] <;> rfl
 
 /-- The second isomorphism theorem for sets. -/
-noncomputable def comap_quotient_equiv (f : α → β) (r : Setoidₓ β) :
+noncomputable def comapQuotientEquiv (f : α → β) (r : Setoidₓ β) :
     Quotientₓ (comap f r) ≃ Set.Range (@Quotientₓ.mk _ r ∘ f) :=
   (Quotientₓ.congrRight <| ext_iff.1 comap_eq).trans <| quotient_ker_equiv_range <| Quotientₓ.mk ∘ f
 
 variable (r f)
 
 /-- The third isomorphism theorem for sets. -/
-def quotient_quotient_equiv_quotient (s : Setoidₓ α) (h : r ≤ s) : Quotientₓ (ker (Quot.mapRight h)) ≃ Quotientₓ s where
+def quotientQuotientEquivQuotient (s : Setoidₓ α) (h : r ≤ s) : Quotientₓ (ker (Quot.mapRight h)) ≃ Quotientₓ s where
   toFun := fun x =>
     (Quotientₓ.liftOn' x fun w => (Quotientₓ.liftOn' w (@Quotientₓ.mk _ s)) fun x y H => Quotientₓ.sound <| h H)
       fun x y => (Quotientₓ.induction_on₂' x y) fun w z H => show @Quot.mk _ _ _ = @Quot.mk _ _ _ from H

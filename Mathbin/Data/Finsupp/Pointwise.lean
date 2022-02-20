@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison
+-/
 import Mathbin.Data.Finsupp.Basic
 
 /-!
@@ -59,6 +64,8 @@ end
 instance [SemigroupWithZeroₓ β] : SemigroupWithZeroₓ (α →₀ β) :=
   Finsupp.coe_fn_injective.SemigroupWithZero _ coe_zero coe_mul
 
+-- note we cannot use `function.injective.non_unital_non_assoc_semiring` here as it creates
+-- a conflicting `nsmul` field
 instance [NonUnitalNonAssocSemiringₓ β] : NonUnitalNonAssocSemiringₓ (α →₀ β) :=
   { (Function.Injective.distrib _ Finsupp.coe_fn_injective coe_add coe_mul : Distribₓ (α →₀ β)),
     (Finsupp.mulZeroClass : MulZeroClassₓ (α →₀ β)), (Finsupp.addCommMonoid : AddCommMonoidₓ (α →₀ β)) with }
@@ -69,7 +76,10 @@ instance [NonUnitalSemiringₓ β] : NonUnitalSemiringₓ (α →₀ β) :=
 instance [NonUnitalNonAssocRing β] : NonUnitalNonAssocRing (α →₀ β) :=
   { (inferInstance : NonUnitalNonAssocSemiringₓ (α →₀ β)), (inferInstance : AddCommGroupₓ (α →₀ β)) with }
 
-instance pointwise_scalar [Semiringₓ β] : HasScalar (α → β) (α →₀ β) where
+-- TODO can this be generalized in the direction of `pi.has_scalar'`
+-- (i.e. dependent functions and finsupps)
+-- TODO in theory this could be generalised, we only really need `smul_zero` for the definition
+instance pointwiseScalar [Semiringₓ β] : HasScalar (α → β) (α →₀ β) where
   smul := fun f g =>
     Finsupp.ofSupportFinite (fun a => f a • g a)
       (by
@@ -84,7 +94,7 @@ theorem coe_pointwise_smul [Semiringₓ β] (f : α → β) (g : α →₀ β) :
   rfl
 
 /-- The pointwise multiplicative action of functions on finitely supported functions -/
-instance pointwise_module [Semiringₓ β] : Module (α → β) (α →₀ β) :=
+instance pointwiseModule [Semiringₓ β] : Module (α → β) (α →₀ β) :=
   Function.Injective.module _ coeFnAddHom coe_fn_injective coe_pointwise_smul
 
 end Finsupp

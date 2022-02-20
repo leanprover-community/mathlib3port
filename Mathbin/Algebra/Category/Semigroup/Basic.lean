@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Julian Kuelshammer. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Julian Kuelshammer
+-/
 import Mathbin.Algebra.PemptyInstances
 import Mathbin.CategoryTheory.ConcreteCategory.BundledHom
 import Mathbin.CategoryTheory.ReflectsIsomorphisms
@@ -36,7 +41,7 @@ add_decl_doc AddMagma
 namespace Magma
 
 @[to_additive]
-instance bundled_hom : BundledHom @MulHom :=
+instance bundledHom : BundledHom @MulHom :=
   ⟨@MulHom.toFun, @MulHom.id, @MulHom.comp, @MulHom.coe_inj⟩
 
 deriving instance LargeCategory, ConcreteCategory for Magma
@@ -57,7 +62,7 @@ add_decl_doc AddMagma.of
 
 /-- Typecheck a `mul_hom` as a morphism in `Magma`. -/
 @[to_additive]
-def of_hom {X Y : Type u} [Mul X] [Mul Y] (f : MulHom X Y) : of X ⟶ of Y :=
+def ofHom {X Y : Type u} [Mul X] [Mul Y] (f : MulHom X Y) : of X ⟶ of Y :=
   f
 
 /-- Typecheck a `add_hom` as a morphism in `AddMagma`. -/
@@ -109,7 +114,7 @@ add_decl_doc AddSemigroupₓₓ.of
 
 /-- Typecheck a `mul_hom` as a morphism in `Semigroup`. -/
 @[to_additive]
-def of_hom {X Y : Type u} [Semigroupₓ X] [Semigroupₓ Y] (f : MulHom X Y) : of X ⟶ of Y :=
+def ofHom {X Y : Type u} [Semigroupₓ X] [Semigroupₓ Y] (f : MulHom X Y) : of X ⟶ of Y :=
   f
 
 /-- Typecheck a `add_hom` as a morphism in `AddSemigroup`. -/
@@ -128,7 +133,7 @@ theorem coe_of (R : Type u) [Semigroupₓ R] : (Semigroupₓₓ.of R : Type u) =
   rfl
 
 @[to_additive has_forget_to_AddMagma]
-instance has_forget_to_Magma : HasForget₂ Semigroupₓₓ Magma :=
+instance hasForgetToMagma : HasForget₂ Semigroupₓₓ Magma :=
   BundledHom.forget₂ _ _
 
 end Semigroupₓₓ
@@ -167,7 +172,7 @@ namespace CategoryTheory.Iso
 
 /-- Build a `mul_equiv` from an isomorphism in the category `Magma`. -/
 @[to_additive AddMagma_iso_to_add_equiv "Build an `add_equiv` from an isomorphism in the category\n`AddMagma`."]
-def Magma_iso_to_mul_equiv {X Y : Magma} (i : X ≅ Y) : X ≃* Y where
+def magmaIsoToMulEquiv {X Y : Magma} (i : X ≅ Y) : X ≃* Y where
   toFun := i.Hom
   invFun := i.inv
   left_inv := by
@@ -182,7 +187,7 @@ def Magma_iso_to_mul_equiv {X Y : Magma} (i : X ≅ Y) : X ≃* Y where
 
 /-- Build a `mul_equiv` from an isomorphism in the category `Semigroup`. -/
 @[to_additive "Build an `add_equiv` from an isomorphism in the category\n`AddSemigroup`."]
-def Semigroup_iso_to_mul_equiv {X Y : Semigroupₓₓ} (i : X ≅ Y) : X ≃* Y where
+def semigroupIsoToMulEquiv {X Y : Semigroupₓₓ} (i : X ≅ Y) : X ≃* Y where
   toFun := i.Hom
   invFun := i.inv
   left_inv := by

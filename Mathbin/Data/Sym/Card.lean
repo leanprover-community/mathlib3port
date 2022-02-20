@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Yaël Dillies, Bhavik Mehta. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yaël Dillies, Bhavik Mehta
+-/
 import Mathbin.Algebra.BigOperators.Basic
 import Mathbin.Data.Finset.Sym
 
@@ -64,6 +69,7 @@ theorem two_mul_card_image_off_diag (s : Finset α) : 2 * (s.offDiag.Image Quoti
     ext ⟨x₁, y₁⟩
     rw [mem_filter, mem_insert, mem_singleton, Sym2.eq_iff, Prod.mk.inj_iffₓ, Prod.mk.inj_iffₓ, and_iff_right_iff_imp]
     rintro (⟨rfl, rfl⟩ | ⟨rfl, rfl⟩) <;> rw [mem_off_diag] <;> exact ⟨‹_›, ‹_›, ‹_›⟩
+  -- hxy' is used here
   rw [this, card_insert_of_not_mem, card_singleton]
   simp only [not_and, Prod.mk.inj_iffₓ, mem_singleton]
   exact fun _ => hxy'

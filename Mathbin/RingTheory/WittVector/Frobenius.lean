@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Johan Commelin. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johan Commelin
+-/
 import Mathbin.Data.Nat.Multiplicity
 import Mathbin.RingTheory.WittVector.Basic
 import Mathbin.RingTheory.WittVector.IsPoly
@@ -45,6 +50,7 @@ variable {p : ℕ} {R S : Type _} [hp : Fact p.Prime] [CommRingₓ R] [CommRing�
 
 local notation "𝕎" => WittVector p
 
+-- type as `\bbW`
 noncomputable section
 
 open MvPolynomial Finset
@@ -59,7 +65,7 @@ include hp
 in terms of the coefficients of `x`.
 These polynomials actually have integral coefficients,
 see `frobenius_poly` and `map_frobenius_poly`. -/
-def frobenius_poly_rat (n : ℕ) : MvPolynomial ℕ ℚ :=
+def frobeniusPolyRat (n : ℕ) : MvPolynomial ℕ ℚ :=
   bind₁ (wittPolynomial p ℚ ∘ fun n => n + 1) (xInTermsOfW p ℚ n)
 
 theorem bind₁_frobenius_poly_rat_witt_polynomial (n : ℕ) :
@@ -78,7 +84,7 @@ local notation "v" => pnatMultiplicity
 `p * (frobenius_poly_aux p n) + X n ^ p = frobenius_poly p n`.
 This makes it easy to show that `frobenius_poly p n` is congruent to `X n ^ p`
 modulo `p`. -/
-noncomputable def frobenius_poly_aux : ℕ → MvPolynomial ℕ ℤ
+noncomputable def frobeniusPolyAux : ℕ → MvPolynomial ℕ ℤ
   | n =>
     x (n + 1) -
       ∑ i : Finₓ n,
@@ -105,12 +111,21 @@ theorem frobenius_poly_aux_eq (n : ℕ) :
 
 /-- The polynomials that give the coefficients of `frobenius x`,
 in terms of the coefficients of `x`. -/
-def frobenius_poly (n : ℕ) : MvPolynomial ℕ ℤ :=
+def frobeniusPoly (n : ℕ) : MvPolynomial ℕ ℤ :=
   x n ^ p + c ↑p * frobeniusPolyAux p n
 
 /-- A key divisibility fact for the proof of `witt_vector.map_frobenius_poly`. -/
-theorem map_frobenius_poly.key₁ (n j : ℕ) (hj : j < p ^ n) :
-    p ^ (n - v p ⟨j + 1, j.succ_pos⟩) ∣ (p ^ n).choose (j + 1) := by
+/-
+Our next goal is to prove
+```
+lemma map_frobenius_poly (n : ℕ) :
+  mv_polynomial.map (int.cast_ring_hom ℚ) (frobenius_poly p n) = frobenius_poly_rat p n
+```
+This lemma has a rather long proof, but it mostly boils down to applying induction,
+and then using the following two key facts at the right point.
+-/
+theorem MapFrobeniusPoly.key₁ (n j : ℕ) (hj : j < p ^ n) : p ^ (n - v p ⟨j + 1, j.succ_pos⟩) ∣ (p ^ n).choose (j + 1) :=
+  by
   apply multiplicity.pow_dvd_of_le_multiplicity
   have aux : (multiplicity p ((p ^ n).choose (j + 1))).Dom := by
     rw [← multiplicity.finite_iff_dom, multiplicity.finite_nat_iff]
@@ -120,7 +135,7 @@ theorem map_frobenius_poly.key₁ (n j : ℕ) (hj : j < p ^ n) :
   exact (hp.1.multiplicity_choose_prime_pow hj j.succ_pos).Ge
 
 /-- A key numerical identity needed for the proof of `witt_vector.map_frobenius_poly`. -/
-theorem map_frobenius_poly.key₂ {n i j : ℕ} (hi : i < n) (hj : j < p ^ (n - i)) :
+theorem MapFrobeniusPoly.key₂ {n i j : ℕ} (hi : i < n) (hj : j < p ^ (n - i)) :
     j - v p ⟨j + 1, j.succ_pos⟩ + n = i + j + (n - i - v p ⟨j + 1, j.succ_pos⟩) := by
   generalize h : v p ⟨j + 1, j.succ_pos⟩ = m
   suffices m ≤ n - i ∧ m ≤ j by
@@ -213,7 +228,7 @@ variable {p}
 
 /-- `frobenius_fun` is the function underlying the ring endomorphism
 `frobenius : 𝕎 R →+* frobenius 𝕎 R`. -/
-def frobenius_fun (x : 𝕎 R) : 𝕎 R :=
+def frobeniusFun (x : 𝕎 R) : 𝕎 R :=
   (mk p) fun n => MvPolynomial.aeval x.coeff (frobeniusPoly p n)
 
 theorem coeff_frobenius_fun (x : 𝕎 R) (n : ℕ) :
@@ -284,6 +299,7 @@ variable [CharP R p]
 @[simp]
 theorem coeff_frobenius_char_p (x : 𝕎 R) (n : ℕ) : coeff (frobenius x) n = x.coeff n ^ p := by
   rw [coeff_frobenius]
+  -- outline of the calculation, proofs follow below
   calc
     aeval (fun k => x.coeff k) (frobenius_poly p n) =
         aeval (fun k => x.coeff k) (MvPolynomial.map (Int.castRingHom (Zmod p)) (frobenius_poly p n)) :=

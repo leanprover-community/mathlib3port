@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Mario Carneiro. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Mario Carneiro
+-/
 import Mathbin.Data.Fintype.Basic
 
 /-!
@@ -105,15 +110,15 @@ namespace DeriveFintype
 /-- A step in the construction of `finset.univ` for a finite inductive type.
 We will set `enum` to the discriminant of the inductive type, so a `finset_above`
 represents a finset that enumerates all elements in a tail of the constructor list. -/
-def finset_above α (enum : α → ℕ) (n : ℕ) :=
+def FinsetAbove α (enum : α → ℕ) (n : ℕ) :=
   { s : Finset α // ∀, ∀ x ∈ s, ∀, n ≤ enum x }
 
 /-- Construct a fintype instance from a completed `finset_above`. -/
-def mk_fintype {α} (enum : α → ℕ) (s : FinsetAbove α enum 0) (H : ∀ x, x ∈ s.1) : Fintype α :=
+def mkFintype {α} (enum : α → ℕ) (s : FinsetAbove α enum 0) (H : ∀ x, x ∈ s.1) : Fintype α :=
   ⟨s.1, H⟩
 
 /-- This is the case for a simple variant (no arguments) in an inductive type. -/
-def finset_above.cons {α} {enum : α → ℕ} n (a : α) (h : enum a = n) (s : FinsetAbove α enum (n + 1)) :
+def FinsetAbove.cons {α} {enum : α → ℕ} n (a : α) (h : enum a = n) (s : FinsetAbove α enum (n + 1)) :
     FinsetAbove α enum n := by
   refine' ⟨Finset.cons a s.1 _, _⟩
   · intro h'
@@ -129,15 +134,15 @@ def finset_above.cons {α} {enum : α → ℕ} n (a : α) (h : enum a = n) (s : 
       
     
 
-theorem finset_above.mem_cons_self {α} {enum : α → ℕ} {n a h s} : a ∈ (@FinsetAbove.cons α enum n a h s).1 :=
+theorem FinsetAbove.mem_cons_self {α} {enum : α → ℕ} {n a h s} : a ∈ (@FinsetAbove.cons α enum n a h s).1 :=
   Multiset.mem_cons_self _ _
 
-theorem finset_above.mem_cons_of_mem {α} {enum : α → ℕ} {n a h s b} :
+theorem FinsetAbove.mem_cons_of_mem {α} {enum : α → ℕ} {n a h s b} :
     b ∈ (s : FinsetAbove _ _ _).1 → b ∈ (@FinsetAbove.cons α enum n a h s).1 :=
   Multiset.mem_cons_of_mem
 
 /-- The base case is when we run out of variants; we just put an empty finset at the end. -/
-def finset_above.nil {α} {enum : α → ℕ} n : FinsetAbove α enum n :=
+def FinsetAbove.nil {α} {enum : α → ℕ} n : FinsetAbove α enum n :=
   ⟨∅, by
     rintro _ ⟨⟩⟩
 
@@ -148,7 +153,7 @@ instance α enum n : Inhabited (FinsetAbove α enum n) :=
 The property `P` here is `λ a, enum a = n` where `n` is the discriminant for the current
 variant. -/
 @[nolint has_inhabited_instance]
-def finset_in {α} (P : α → Prop) :=
+def FinsetIn {α} (P : α → Prop) :=
   { s : Finset α // ∀, ∀ x ∈ s, ∀, P x }
 
 /-- To construct the finset, we use an injective map from the type `Γ`, which will be the
@@ -156,18 +161,18 @@ sigma over all constructor arguments. We use sigma instances and existing fintyp
 to prove that `Γ` is a fintype, and construct the function `f` that maps `⟨a, b, c, ...⟩`
 to `C_n a b c ...` where `C_n` is the nth constructor, and `mem` asserts
 `enum (C_n a b c ...) = n`. -/
-def finset_in.mk {α} {P : α → Prop} Γ [Fintype Γ] (f : Γ → α) (inj : Function.Injective f) (mem : ∀ x, P (f x)) :
+def FinsetIn.mk {α} {P : α → Prop} Γ [Fintype Γ] (f : Γ → α) (inj : Function.Injective f) (mem : ∀ x, P (f x)) :
     FinsetIn P :=
   ⟨Finset.univ.map ⟨f, inj⟩, fun x h => by
     rcases Finset.mem_map.1 h with ⟨x, _, rfl⟩ <;> exact mem x⟩
 
-theorem finset_in.mem_mk {α} {P : α → Prop} {Γ} {s : Fintype Γ} {f : Γ → α} {inj mem a} b (H : f b = a) :
+theorem FinsetIn.mem_mk {α} {P : α → Prop} {Γ} {s : Fintype Γ} {f : Γ → α} {inj mem a} b (H : f b = a) :
     a ∈ (@FinsetIn.mk α P Γ s f inj mem).1 :=
   Finset.mem_map.2 ⟨_, Finset.mem_univ _, H⟩
 
 /-- For nontrivial variants, we split the constructor list into a `finset_in` component for the
 current constructor and a `finset_above` for the rest. -/
-def finset_above.union {α} {enum : α → ℕ} n (s : FinsetIn fun a => enum a = n) (t : FinsetAbove α enum (n + 1)) :
+def FinsetAbove.union {α} {enum : α → ℕ} n (s : FinsetIn fun a => enum a = n) (t : FinsetAbove α enum (n + 1)) :
     FinsetAbove α enum n := by
   refine' ⟨Finset.disjUnion s.1 t.1 _, _⟩
   · intro a hs ht
@@ -183,11 +188,11 @@ def finset_above.union {α} {enum : α → ℕ} n (s : FinsetIn fun a => enum a 
       
     
 
-theorem finset_above.mem_union_left {α} {enum : α → ℕ} {n s t a} (H : a ∈ (s : FinsetIn _).1) :
+theorem FinsetAbove.mem_union_left {α} {enum : α → ℕ} {n s t a} (H : a ∈ (s : FinsetIn _).1) :
     a ∈ (@FinsetAbove.union α enum n s t).1 :=
   Multiset.mem_add.2 (Or.inl H)
 
-theorem finset_above.mem_union_right {α} {enum : α → ℕ} {n s t a} (H : a ∈ (t : FinsetAbove _ _ _).1) :
+theorem FinsetAbove.mem_union_right {α} {enum : α → ℕ} {n s t a} (H : a ∈ (t : FinsetAbove _ _ _).1) :
     a ∈ (@FinsetAbove.union α enum n s t).1 :=
   Multiset.mem_add.2 (Or.inr H)
 

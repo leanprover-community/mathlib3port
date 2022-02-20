@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Bhavik Mehta. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Bhavik Mehta
+-/
 import Mathbin.CategoryTheory.Sites.SheafOfTypes
 import Mathbin.Order.Closure
 
@@ -66,7 +71,7 @@ every open set which it covers.
 
 Note this has no relation to a closed subset of a topological space.
 -/
-def is_closed {X : C} (S : Sieve X) : Prop :=
+def IsClosed {X : C} (S : Sieve X) : Prop :=
   ∀ ⦃Y : C⦄ f : Y ⟶ X, J₁.Covers S f → S f
 
 /-- If `S` is `J₁`-closed, then `S` covers exactly the arrows it contains. -/
@@ -149,7 +154,7 @@ theorem close_eq_top_iff_mem {X : C} (S : Sieve X) : J₁.close S = ⊤ ↔ S �
 
 /-- A Grothendieck topology induces a natural family of closure operators on sieves. -/
 @[simps (config := { rhsMd := semireducible })]
-def ClosureOperator (X : C) : ClosureOperator (Sieve X) :=
+def closureOperator (X : C) : ClosureOperator (Sieve X) :=
   ClosureOperator.mk' J₁.close
     (fun S₁ S₂ h => J₁.le_close_of_is_closed (h.trans (J₁.le_close _)) (J₁.close_is_closed S₂)) J₁.le_close fun S =>
     J₁.le_close_of_is_closed le_rfl (J₁.close_is_closed S)
@@ -164,7 +169,7 @@ end GrothendieckTopology
 (and will turn out to be a subobject classifier for the category of `J`-sheaves).
 -/
 @[simps]
-def functor.closed_sieves : Cᵒᵖ ⥤ Type max v u where
+def Functor.closedSieves : Cᵒᵖ ⥤ Type max v u where
   obj := fun X => { S : Sieve X.unop // J₁.IsClosed S }
   map := fun X Y f S => ⟨S.1.pullback f.unop, J₁.is_closed_pullback f.unop _ S.2⟩
 
@@ -271,7 +276,7 @@ induces a Grothendieck topology.
 In fact, such operations are in bijection with Grothendieck topologies.
 -/
 @[simps]
-def topology_of_closure_operator (c : ∀ X : C, ClosureOperator (Sieve X))
+def topologyOfClosureOperator (c : ∀ X : C, ClosureOperator (Sieve X))
     (hc : ∀ ⦃X Y : C⦄ f : Y ⟶ X S : Sieve X, c _ (S.pullback f) = (c _ S).pullback f) : GrothendieckTopology C where
   Sieves := fun X => { S | c X S = ⊤ }
   top_mem' := fun X => top_unique ((c X).le_closure _)

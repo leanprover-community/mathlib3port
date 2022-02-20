@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Chris Hughes. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Chris Hughes, Johannes Hölzl, Scott Morrison, Jens Wagemaker
+-/
 import Mathbin.Data.Polynomial.Derivative
 import Mathbin.Tactic.RingExp
 
@@ -22,7 +27,12 @@ section Identities
 
 /-- `(x + y)^n` can be expressed as `x^n + n*x^(n-1)*y + k * y^2` for some `k` in the ring.
 -/
-def pow_add_expansion {R : Type _} [CommSemiringₓ R] (x y : R) :
+/- @TODO: pow_add_expansion and pow_sub_pow_factor are not specific to polynomials.
+  These belong somewhere else. But not in group_power because they depend on tactic.ring_exp
+
+Maybe use data.nat.choose to prove it.
+ -/
+def powAddExpansion {R : Type _} [CommSemiringₓ R] (x y : R) :
     ∀ n : ℕ, { k // (x + y) ^ n = x ^ n + n * x ^ (n - 1) * y + k * y ^ 2 }
   | 0 =>
     ⟨0, by
@@ -65,7 +75,7 @@ private theorem poly_binom_aux3 (f : R[X]) (x y : R) :
 the evaluation of `f` at `x`, plus `y` times the (polynomial) derivative of `f` at `x`,
 plus some element `k : R` times `y^2`.
 -/
-def binom_expansion (f : R[X]) (x y : R) :
+def binomExpansion (f : R[X]) (x y : R) :
     { k : R // f.eval (x + y) = f.eval x + f.derivative.eval x * y + k * y ^ 2 } := by
   exists f.sum fun e a => a * (poly_binom_aux1 x y e a).val
   rw [poly_binom_aux3]
@@ -80,7 +90,7 @@ def binom_expansion (f : R[X]) (x y : R) :
 
 /-- `x^n - y^n` can be expressed as `z * (x - y)` for some `z` in the ring.
 -/
-def pow_sub_pow_factor (x y : R) : ∀ i : ℕ, { z : R // x ^ i - y ^ i = z * (x - y) }
+def powSubPowFactor (x y : R) : ∀ i : ℕ, { z : R // x ^ i - y ^ i = z * (x - y) }
   | 0 =>
     ⟨0, by
       simp ⟩
@@ -98,7 +108,7 @@ def pow_sub_pow_factor (x y : R) : ∀ i : ℕ, { z : R // x ^ i - y ^ i = z * (
 /-- For any polynomial `f`, `f.eval x - f.eval y` can be expressed as `z * (x - y)`
 for some `z` in the ring.
 -/
-def eval_sub_factor (f : R[X]) (x y : R) : { z : R // f.eval x - f.eval y = z * (x - y) } := by
+def evalSubFactor (f : R[X]) (x y : R) : { z : R // f.eval x - f.eval y = z * (x - y) } := by
   refine' ⟨f.sum fun i r => r * (pow_sub_pow_factor x y i).val, _⟩
   delta' eval eval₂
   simp only [Sum, ← Finset.sum_sub_distrib, Finset.sum_mul]

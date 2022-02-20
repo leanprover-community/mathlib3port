@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Oliver Nash. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Oliver Nash
+-/
 import Mathbin.Algebra.Invertible
 import Mathbin.Data.Matrix.Basis
 import Mathbin.Data.Matrix.Dmatrix
@@ -98,7 +103,7 @@ variable {n} [Fintype n] (i j : n)
 
 /-- When j ≠ i, the elementary matrices are elements of sl n R, in fact they are part of a natural
 basis of sl n R. -/
-def Eb (h : j ≠ i) : sl n R :=
+def eb (h : j ≠ i) : sl n R :=
   ⟨Matrix.stdBasisMatrix i j (1 : R),
     show Matrix.stdBasisMatrix i j (1 : R) ∈ LinearMap.ker (Matrix.trace n R R) from
       Matrix.stdBasisMatrix.trace_zero i j (1 : R) h⟩
@@ -124,7 +129,7 @@ end SpecialLinear
 namespace Symplectic
 
 /-- The matrix defining the canonical skew-symmetric bilinear form. -/
-def J : Matrix (Sum l l) (Sum l l) R :=
+def j : Matrix (Sum l l) (Sum l l) R :=
   Matrix.fromBlocks 0 (-1) 1 0
 
 /-- The symplectic Lie algebra: skew-adjoint matrices with respect to the canonical skew-symmetric
@@ -147,7 +152,7 @@ theorem mem_so [Fintype n] (A : Matrix n n R) : A ∈ so n R ↔ (A)ᵀ = -A := 
   simp only [Matrix.IsSkewAdjoint, Matrix.IsAdjointPair, Matrix.mul_one, Matrix.one_mul]
 
 /-- The indefinite diagonal matrix with `p` 1s and `q` -1s. -/
-def indefinite_diagonal : Matrix (Sum p q) (Sum p q) R :=
+def indefiniteDiagonal : Matrix (Sum p q) (Sum p q) R :=
   Matrix.diagonalₓ <| Sum.elim (fun _ => 1) fun _ => -1
 
 /-- The indefinite orthogonal Lie subalgebra: skew-adjoint matrices with respect to the symmetric
@@ -157,7 +162,7 @@ def so' [Fintype p] [Fintype q] : LieSubalgebra R (Matrix (Sum p q) (Sum p q) R)
 
 /-- A matrix for transforming the indefinite diagonal bilinear form into the definite one, provided
 the parameter `i` is a square root of -1. -/
-def Pso (i : R) : Matrix (Sum p q) (Sum p q) R :=
+def pso (i : R) : Matrix (Sum p q) (Sum p q) R :=
   Matrix.diagonalₓ <| Sum.elim (fun _ => 1) fun _ => i
 
 variable [Fintype p] [Fintype q]
@@ -165,35 +170,47 @@ variable [Fintype p] [Fintype q]
 theorem Pso_inv {i : R} (hi : i * i = -1) : pso p q R i * pso p q R (-i) = 1 := by
   ext x y
   rcases x with ⟨⟩ <;> rcases y with ⟨⟩
-  · by_cases' h : x = y <;> simp [Pso, indefinite_diagonal, h]
+  · -- x y : p
+      by_cases' h : x = y <;>
+      simp [Pso, indefinite_diagonal, h]
     
-  · simp [Pso, indefinite_diagonal]
+  · -- x : p, y : q
+    simp [Pso, indefinite_diagonal]
     
-  · simp [Pso, indefinite_diagonal]
+  · -- x : q, y : p
+    simp [Pso, indefinite_diagonal]
     
-  · by_cases' h : x = y <;> simp [Pso, indefinite_diagonal, h, hi]
+  · -- x y : q
+      by_cases' h : x = y <;>
+      simp [Pso, indefinite_diagonal, h, hi]
     
 
 /-- There is a constructive inverse of `Pso p q R i`. -/
-def invertible_Pso {i : R} (hi : i * i = -1) : Invertible (pso p q R i) :=
+def invertiblePso {i : R} (hi : i * i = -1) : Invertible (pso p q R i) :=
   invertibleOfRightInverse _ _ (Pso_inv p q R hi)
 
 theorem indefinite_diagonal_transform {i : R} (hi : i * i = -1) :
     (pso p q R i)ᵀ ⬝ indefiniteDiagonal p q R ⬝ pso p q R i = 1 := by
   ext x y
   rcases x with ⟨⟩ <;> rcases y with ⟨⟩
-  · by_cases' h : x = y <;> simp [Pso, indefinite_diagonal, h]
+  · -- x y : p
+      by_cases' h : x = y <;>
+      simp [Pso, indefinite_diagonal, h]
     
-  · simp [Pso, indefinite_diagonal]
+  · -- x : p, y : q
+    simp [Pso, indefinite_diagonal]
     
-  · simp [Pso, indefinite_diagonal]
+  · -- x : q, y : p
+    simp [Pso, indefinite_diagonal]
     
-  · by_cases' h : x = y <;> simp [Pso, indefinite_diagonal, h, hi]
+  · -- x y : q
+      by_cases' h : x = y <;>
+      simp [Pso, indefinite_diagonal, h, hi]
     
 
 /-- An equivalence between the indefinite and definite orthogonal Lie algebras, over a ring
 containing a square root of -1. -/
-def so_indefinite_equiv {i : R} (hi : i * i = -1) : so' p q R ≃ₗ⁅R⁆ so (Sum p q) R := by
+def soIndefiniteEquiv {i : R} (hi : i * i = -1) : so' p q R ≃ₗ⁅R⁆ so (Sum p q) R := by
   apply
     (skewAdjointMatricesLieSubalgebraEquiv (indefinite_diagonal p q R) (Pso p q R i) (invertible_Pso p q R hi)).trans
   apply LieEquiv.ofEq
@@ -214,12 +231,12 @@ It looks like this as a `2l x 2l` matrix of `l x l` blocks:
    [ 0 1 ]
    [ 1 0 ]
 -/
-def JD : Matrix (Sum l l) (Sum l l) R :=
+def jD : Matrix (Sum l l) (Sum l l) R :=
   Matrix.fromBlocks 0 1 1 0
 
 /-- The classical Lie algebra of type D as a Lie subalgebra of matrices associated to the matrix
 `JD`. -/
-def type_D [Fintype l] :=
+def typeD [Fintype l] :=
   skewAdjointMatricesLieSubalgebra (jD l R)
 
 /-- A matrix transforming the bilinear form defined by the matrix `JD` into a split-signature
@@ -230,11 +247,11 @@ It looks like this as a `2l x 2l` matrix of `l x l` blocks:
    [ 1 -1 ]
    [ 1  1 ]
 -/
-def PD : Matrix (Sum l l) (Sum l l) R :=
+def pD : Matrix (Sum l l) (Sum l l) R :=
   Matrix.fromBlocks 1 (-1) 1 1
 
 /-- The split-signature diagonal matrix. -/
-def S :=
+def s :=
   indefiniteDiagonal l l R
 
 theorem S_as_blocks : s l R = Matrix.fromBlocks 1 0 0 (-1) := by
@@ -253,11 +270,11 @@ theorem PD_inv [Fintype l] [Invertible (2 : R)] : pD l R * ⅟ (2 : R) • (pD l
   erw [Matrix.from_blocks_transpose, Matrix.from_blocks_smul, Matrix.mul_eq_mul, Matrix.from_blocks_multiply]
   simp [h]
 
-instance invertible_PD [Fintype l] [Invertible (2 : R)] : Invertible (pD l R) :=
+instance invertiblePD [Fintype l] [Invertible (2 : R)] : Invertible (pD l R) :=
   invertibleOfRightInverse _ _ (PD_inv l R)
 
 /-- An equivalence between two possible definitions of the classical Lie algebra of type D. -/
-def type_D_equiv_so' [Fintype l] [Invertible (2 : R)] : typeD l R ≃ₗ⁅R⁆ so' l l R := by
+def typeDEquivSo' [Fintype l] [Invertible (2 : R)] : typeD l R ≃ₗ⁅R⁆ so' l l R := by
   apply
     (skewAdjointMatricesLieSubalgebraEquiv (JD l R) (PD l R)
         (by
@@ -282,12 +299,12 @@ where sizes of the blocks are:
    [`l x 1` `l x l` `l x l`]
    [`l x 1` `l x l` `l x l`]
 -/
-def JB :=
+def jB :=
   Matrix.fromBlocks ((2 : R) • 1 : Matrix Unit Unit R) 0 0 (jD l R)
 
 /-- The classical Lie algebra of type B as a Lie subalgebra of matrices associated to the matrix
 `JB`. -/
-def type_B [Fintype l] :=
+def typeB [Fintype l] :=
   skewAdjointMatricesLieSubalgebra (jB l R)
 
 /-- A matrix transforming the bilinear form defined by the matrix `JB` into an
@@ -305,7 +322,7 @@ where sizes of the blocks are:
    [`l x 1` `l x l` `l x l`]
    [`l x 1` `l x l` `l x l`]
 -/
-def PB :=
+def pB :=
   Matrix.fromBlocks (1 : Matrix Unit Unit R) 0 0 (pD l R)
 
 variable [Fintype l]
@@ -314,7 +331,7 @@ theorem PB_inv [Invertible (2 : R)] : pB l R * Matrix.fromBlocks 1 0 0 (⅟ (pD 
   rw [PB, Matrix.mul_eq_mul, Matrix.from_blocks_multiply, Matrix.mul_inv_of_self]
   simp only [Matrix.mul_zero, Matrix.mul_one, Matrix.zero_mul, zero_addₓ, add_zeroₓ, Matrix.from_blocks_one]
 
-instance invertible_PB [Invertible (2 : R)] : Invertible (pB l R) :=
+instance invertiblePB [Invertible (2 : R)] : Invertible (pB l R) :=
   invertibleOfRightInverse _ _ (PB_inv l R)
 
 theorem JB_transform : (pB l R)ᵀ ⬝ jB l R ⬝ pB l R = (2 : R) • Matrix.fromBlocks 1 0 0 (s l R) := by
@@ -335,7 +352,7 @@ theorem indefinite_diagonal_assoc :
         congr
 
 /-- An equivalence between two possible definitions of the classical Lie algebra of type B. -/
-def type_B_equiv_so' [Invertible (2 : R)] : typeB l R ≃ₗ⁅R⁆ so' (Sum Unit l) l R := by
+def typeBEquivSo' [Invertible (2 : R)] : typeB l R ≃ₗ⁅R⁆ so' (Sum Unit l) l R := by
   apply
     (skewAdjointMatricesLieSubalgebraEquiv (JB l R) (PB l R)
         (by

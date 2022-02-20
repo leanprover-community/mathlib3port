@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Markus Himmel. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Markus Himmel
+-/
 import Mathbin.Tactic.Linarith.Default
 
 /-!
@@ -205,7 +210,7 @@ theorem zero_lor (n : ℕ) : lorₓ 0 n = n := by
 theorem lor_zero (n : ℕ) : lorₓ n 0 = n := by
   simp [lor]
 
--- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:916:4: warning: unsupported (TODO): `[tacs]
 /-- Proving associativity of bitwise operations in general essentially boils down to a huge case
     distinction, so it is shorter to use this tactic instead of proving it in the general case. -/
 unsafe def bitwise_assoc_tac : tactic Unit :=
@@ -249,6 +254,7 @@ theorem lxor_eq_zero {n m : ℕ} : lxor n m = 0 ↔ n = m :=
 
 theorem lxor_trichotomy {a b c : ℕ} (h : lxor a (lxor b c) ≠ 0) : lxor b c < a ∨ lxor a c < b ∨ lxor a b < c := by
   set v := lxor a (lxor b c) with hv
+  -- The xor of any two of `a`, `b`, `c` is the xor of `v` and the third.
   have hab : lxor a b = lxor c v := by
     rw [hv]
     conv_rhs => rw [lxor_comm]simp [lxor_assoc]
@@ -258,12 +264,16 @@ theorem lxor_trichotomy {a b c : ℕ} (h : lxor a (lxor b c) ≠ 0) : lxor b c <
     rw [← lxor_assoc, ← lxor_assoc, lxor_self, zero_lxor, lxor_comm]
   have hbc : lxor b c = lxor a v := by
     simp [hv, ← lxor_assoc]
+  -- If `i` is the position of the most significant bit of `v`, then at least one of `a`, `b`, `c`
+  -- has a one bit at position `i`.
   obtain ⟨i, ⟨hi, hi'⟩⟩ := exists_most_significant_bit h
   have : test_bit a i = tt ∨ test_bit b i = tt ∨ test_bit c i = tt := by
     contrapose! hi
     simp only [eq_ff_eq_not_eq_tt, Ne, test_bit_lxor] at hi⊢
     rw [hi.1, hi.2.1, hi.2.2, bxor_ff, bxor_ff]
-  rcases this with (h | h | h) <;>
+  -- If, say, `a` has a one bit at position `i`, then `a xor v` has a zero bit at position `i`, but
+      -- the same bits as `a` in positions greater than `j`, so `a xor v < a`.
+      rcases this with (h | h | h) <;>
       [· left
         rw [hbc]
         ,

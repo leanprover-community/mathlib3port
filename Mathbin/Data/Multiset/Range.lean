@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Mario Carneiro
+-/
 import Mathbin.Data.Multiset.Basic
 import Mathbin.Data.List.Range
 
@@ -10,6 +15,7 @@ namespace Multiset
 
 /-- `range n` is the multiset lifted from the list `range n`,
   that is, the set `{0, 1, ..., n-1}`. -/
+-- range
 def range (n : ℕ) : Multiset ℕ :=
   range n
 

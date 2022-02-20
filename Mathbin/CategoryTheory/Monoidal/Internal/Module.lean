@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison
+-/
 import Mathbin.Algebra.Category.Module.Monoidal
 import Mathbin.Algebra.Category.Algebra.Basic
 import Mathbin.CategoryTheory.Monoidal.Mon_
@@ -65,13 +70,13 @@ instance (A : Mon_ (ModuleCat.{u} R)) : Algebra R A.x :=
       simp }
 
 @[simp]
-theorem algebraMap (A : Mon_ (ModuleCat.{u} R)) (r : R) : algebraMap R A.x r = A.one r :=
+theorem algebra_map (A : Mon_ (ModuleCat.{u} R)) (r : R) : algebraMap R A.x r = A.one r :=
   rfl
 
 /-- Converting a monoid object in `Module R` to a bundled algebra.
 -/
 @[simps]
-def Functor : Mon_ (ModuleCat.{u} R) ⥤ AlgebraCat R where
+def functor : Mon_ (ModuleCat.{u} R) ⥤ AlgebraCat R where
   obj := fun A => AlgebraCat.of R A.x
   map := fun A B f =>
     { f.Hom.toAddMonoidHom with toFun := f.Hom, map_one' := LinearMap.congr_fun f.OneHom (1 : R),
@@ -81,7 +86,7 @@ def Functor : Mon_ (ModuleCat.{u} R) ⥤ AlgebraCat R where
 /-- Converting a bundled algebra to a monoid object in `Module R`.
 -/
 @[simps]
-def inverse_obj (A : AlgebraCat.{u} R) : Mon_ (ModuleCat.{u} R) where
+def inverseObj (A : AlgebraCat.{u} R) : Mon_ (ModuleCat.{u} R) where
   x := ModuleCat.of R A
   one := Algebra.linearMap R A
   mul := @Algebra.lmul' R A _ _ _
@@ -125,7 +130,7 @@ open MonModuleEquivalenceAlgebra
 /-- The category of internal monoid objects in `Module R`
 is equivalent to the category of "native" bundled `R`-algebras.
 -/
-def Mon_Module_equivalence_Algebra : Mon_ (ModuleCat.{u} R) ≌ AlgebraCat R where
+def monModuleEquivalenceAlgebra : Mon_ (ModuleCat.{u} R) ≌ AlgebraCat R where
   Functor := Functor
   inverse := inverse
   unitIso :=
@@ -161,7 +166,7 @@ def Mon_Module_equivalence_Algebra : Mon_ (ModuleCat.{u} R) ≌ AlgebraCat R whe
 /-- The equivalence `Mon_ (Module R) ≌ Algebra R`
 is naturally compatible with the forgetful functors to `Module R`.
 -/
-def Mon_Module_equivalence_Algebra_forget :
+def monModuleEquivalenceAlgebraForget :
     Mon_Module_equivalence_Algebra.functor ⋙ forget₂ (AlgebraCat.{u} R) (ModuleCat.{u} R) ≅
       Mon_.forget (ModuleCat.{u} R) :=
   NatIso.ofComponents

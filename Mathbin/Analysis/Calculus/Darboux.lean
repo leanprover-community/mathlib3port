@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Yury Kudryashov. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yury Kudryashov
+-/
 import Mathbin.Analysis.Calculus.LocalExtr
 
 /-!
@@ -32,6 +37,7 @@ theorem exists_has_deriv_within_at_eq_of_gt_of_lt (hab : a ≤ b)
   exact is_compact_Icc.exists_forall_le (nonempty_Icc.2 <| hab) fun x hx => (hg x hx).ContinuousWithinAt
   have cmem' : c ∈ Ioo a b := by
     cases' eq_or_lt_of_le cmem.1 with hac hac
+    -- Show that `c` can't be equal to `a`
     · subst c
       refine' absurd (sub_nonneg.1 <| nonneg_of_mul_nonneg_left _ (sub_pos.2 hab')) (not_le_of_lt hma)
       have : b - a ∈ PosTangentConeAt (Icc a b) a :=
@@ -40,6 +46,7 @@ theorem exists_has_deriv_within_at_eq_of_gt_of_lt (hab : a ≤ b)
         hc.localize.has_fderiv_within_at_nonneg (hg a (left_mem_Icc.2 hab)) this
       
     cases' eq_or_lt_of_le cmem.2 with hbc hbc
+    -- Show that `c` can't be equal to `b`
     · subst c
       refine' absurd (sub_nonpos.1 <| nonpos_of_mul_nonneg_right _ (sub_lt_zero.2 hab')) (not_le_of_lt hmb)
       have : a - b ∈ PosTangentConeAt (Icc a b) b :=

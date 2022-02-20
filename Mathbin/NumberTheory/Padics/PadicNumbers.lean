@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Robert Y. Lewis. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Robert Y. Lewis
+-/
 import Mathbin.Analysis.NormedSpace.Basic
 import Mathbin.NumberTheory.Padics.PadicNorm
 
@@ -90,7 +95,7 @@ theorem stationary {f : CauSeq ℚ (padicNorm p)} (hf : ¬f ≈ 0) :
     apply _root_.lt_irrefl _ this⟩
 
 /-- For all n ≥ stationary_point f hf, the p-adic norm of f n is the same. -/
-def stationary_point {f : PadicSeq p} (hf : ¬f ≈ 0) : ℕ :=
+def stationaryPoint {f : PadicSeq p} (hf : ¬f ≈ 0) : ℕ :=
   Classical.some <| stationary hf
 
 theorem stationary_point_spec {f : PadicSeq p} (hf : ¬f ≈ 0) :
@@ -207,7 +212,7 @@ variable {p : ℕ} [Fact p.Prime]
 /-- The `p`-adic valuation on `ℚ` lifts to `padic_seq p`.
 `valuation f` is defined to be the valuation of the (`ℚ`-valued) stationary point of `f`.
 -/
-def Valuation (f : PadicSeq p) : ℤ :=
+def valuation (f : PadicSeq p) : ℤ :=
   if hf : f ≈ 0 then 0 else padicValRat p (f (stationaryPoint hf))
 
 theorem norm_eq_pow_val {f : PadicSeq p} (hf : ¬f ≈ 0) : f.norm = p ^ (-f.Valuation : ℤ) := by
@@ -461,12 +466,13 @@ section Completion
 variable {p : ℕ} [Fact p.Prime]
 
 /-- The discrete field structure on `ℚ_p` is inherited from the Cauchy completion construction. -/
-instance Field : Field ℚ_[p] :=
+instance field : Field ℚ_[p] :=
   CauSeq.Completion.field
 
 instance : Inhabited ℚ_[p] :=
   ⟨0⟩
 
+-- short circuits
 instance : Zero ℚ_[p] := by
   infer_instance
 
@@ -508,7 +514,7 @@ theorem mk_eq {f g : PadicSeq p} : mk f = mk g ↔ f ≈ g :=
   Quotientₓ.eq
 
 /-- Embeds the rational numbers in the p-adic numbers. -/
-def of_rat : ℚ → ℚ_[p] :=
+def ofRat : ℚ → ℚ_[p] :=
   CauSeq.Completion.ofRat
 
 @[simp]
@@ -722,7 +728,7 @@ section Complete
 
 open PadicSeq Padic
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (m n «expr ≥ » N)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (m n «expr ≥ » N)
 theorem rat_dense' {p : ℕ} [Fact p.Prime] (q : ℚ_[p]) {ε : ℚ} (hε : 0 < ε) : ∃ r : ℚ, padicNormE (q - r) < ε :=
   (Quotientₓ.induction_on q) fun q' =>
     have : ∃ N, ∀ m n _ : m ≥ N _ : n ≥ N, padicNorm p (q' m - q' n) < ε := cauchy₂ _ hε
@@ -760,7 +766,7 @@ private theorem div_nat_pos (n : ℕ) : 0 < 1 / (n + 1 : ℚ) :=
 
 /-- `lim_seq f`, for `f` a Cauchy sequence of `p`-adic numbers,
 is a sequence of rationals with the same limit point as `f`. -/
-def lim_seq : ℕ → ℚ := fun n => Classical.some (rat_dense' (f n) (div_nat_pos n))
+def limSeq : ℕ → ℚ := fun n => Classical.some (rat_dense' (f n) (div_nat_pos n))
 
 theorem exi_rat_seq_conv {ε : ℚ} (hε : 0 < ε) : ∃ N, ∀, ∀ i ≥ N, ∀, padicNormE (f i - ((limSeq f) i : ℚ_[p])) < ε := by
   refine' (exists_nat_gt (1 / ε)).imp fun N hN i hi => _
@@ -830,7 +836,7 @@ theorem exi_rat_seq_conv_cauchy : IsCauSeq (padicNorm p) (limSeq f) := fun ε h�
 private def lim' : PadicSeq p :=
   ⟨_, exi_rat_seq_conv_cauchy f⟩
 
-private def limₓ : ℚ_[p] :=
+private def lim : ℚ_[p] :=
   ⟦lim' f⟧
 
 theorem complete' : ∃ q : ℚ_[p], ∀, ∀ ε > 0, ∀, ∃ N, ∀, ∀ i ≥ N, ∀, padicNormE (q - f i) < ε :=
@@ -901,7 +907,7 @@ instance : NormedField ℚ_[p] where
   norm_mul' := by
     simp [HasNorm.norm, padicNormE.mul']
 
-instance IsAbsoluteValue : IsAbsoluteValue fun a : ℚ_[p] => ∥a∥ where
+instance is_absolute_value : IsAbsoluteValue fun a : ℚ_[p] => ∥a∥ where
   abv_nonneg := norm_nonneg
   abv_eq_zero := fun _ => norm_eq_zero
   abv_add := norm_add_le
@@ -994,7 +1000,7 @@ protected theorem is_rat (q : ℚ_[p]) : ∃ q' : ℚ, ∥q∥ = ↑q' :=
 /-- `rat_norm q`, for a `p`-adic number `q` is the `p`-adic norm of `q`, as rational number.
 
 The lemma `padic_norm_e.eq_rat_norm` asserts `∥q∥ = rat_norm q`. -/
-def rat_norm (q : ℚ_[p]) : ℚ :=
+def ratNorm (q : ℚ_[p]) : ℚ :=
   Classical.some (padicNormE.is_rat q)
 
 theorem eq_rat_norm (q : ℚ_[p]) : ∥q∥ = ratNorm q :=
@@ -1103,7 +1109,7 @@ variable {p : ℕ} [hp_prime : Fact p.Prime]
 
 include hp_prime
 
--- ././Mathport/Syntax/Translate/Basic.lean:169:40: warning: unsupported option eqn_compiler.zeta
+-- ././Mathport/Syntax/Translate/Basic.lean:211:40: warning: unsupported option eqn_compiler.zeta
 set_option eqn_compiler.zeta true
 
 instance complete : CauSeq.IsComplete ℚ_[p] norm := by
@@ -1147,7 +1153,7 @@ theorem padic_norm_e_lim_le {f : CauSeq ℚ_[p] norm} {a : ℝ} (ha : 0 < a) (hf
 
 /-- `padic.valuation` lifts the p-adic valuation on rationals to `ℚ_[p]`.
 -/
-def Valuation : ℚ_[p] → ℤ :=
+def valuation : ℚ_[p] → ℤ :=
   Quotientₓ.lift (@PadicSeq.valuation p _) fun f g h => by
     by_cases' hf : f ≈ 0
     · have hg : g ≈ 0 := Setoidₓ.trans (Setoidₓ.symm h) hf

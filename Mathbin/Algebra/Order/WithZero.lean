@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Kenny Lau. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Kenny Lau, Johan Commelin, Patrick Massot
+-/
 import Mathbin.Algebra.Order.Group
 import Mathbin.Tactic.Abel
 
@@ -147,6 +152,9 @@ variable [LinearOrderedCommMonoidWithZero α]
 
 /-- Pullback a `linear_ordered_comm_monoid_with_zero` under an injective map.
 See note [reducible non-instances]. -/
+/-
+The following facts are true more generally in a (linearly) ordered commutative monoid.
+-/
 @[reducible]
 def Function.Injective.linearOrderedCommMonoidWithZero {β : Type _} [Zero β] [One β] [Mul β] (f : β → α)
     (hf : Function.Injective f) (zero : f 0 = 0) (one : f 1 = 1) (mul : ∀ x y, f (x * y) = f x * f y) :

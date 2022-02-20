@@ -1,6 +1,15 @@
+/-
+Copyright (c) 2019 Seul Baek. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Seul Baek
+-/
 import Mathbin.Tactic.Omega.Term
 import Mathbin.Data.List.MinMax
 
+/-
+Tactic for performing Fourier–Motzkin elimination to find
+a contradictory linear combination of input constraints.
+-/
 open List.Func
 
 namespace Omega

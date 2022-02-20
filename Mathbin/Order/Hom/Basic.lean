@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Johan Commelin. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johan Commelin
+-/
 import Mathbin.Order.RelIso
 import Mathbin.Tactic.Monotonicity.Basic
 
@@ -74,7 +79,7 @@ infixr:25 " →o " => OrderHom
 
 /-- `order_hom_class F α b` asserts that `F` is a type of `≤`-preserving morphisms. -/
 abbrev OrderHomClass (F : Type _) (α β : outParam (Type _)) [Preorderₓ α] [Preorderₓ β] :=
-  RelHomClass F (· ≤ · : α → α → Prop) (· ≤ · : β → β → Prop)
+  RelHomClass F ((· ≤ ·) : α → α → Prop) ((· ≤ ·) : β → β → Prop)
 
 /-- An order embedding is an embedding `f : α ↪ β` such that `a ≤ b ↔ (f a) ≤ (f b)`.
 This definition is an abbreviation of `rel_embedding (≤) (≤)`. -/
@@ -96,7 +101,7 @@ namespace OrderHomClass
 
 variable {F : Type _} [Preorderₓ α] [Preorderₓ β] [OrderHomClass F α β]
 
-protected theorem Monotone (f : F) : Monotone (f : α → β) := fun _ _ => map_rel f
+protected theorem monotone (f : F) : Monotone (f : α → β) := fun _ _ => map_rel f
 
 protected theorem mono (f : F) : Monotone (f : α → β) := fun _ _ => map_rel f
 
@@ -116,7 +121,7 @@ instance : CoeFun (α →o β) fun _ => α → β :=
 
 initialize_simps_projections OrderHom (toFun → coe)
 
-protected theorem Monotone (f : α →o β) : Monotone f :=
+protected theorem monotone (f : α →o β) : Monotone f :=
   f.monotone'
 
 protected theorem mono (f : α →o β) : Monotone f :=
@@ -138,6 +143,7 @@ theorem to_fun_eq_coe {f : α →o β} : f.toFun = f :=
 theorem coe_fun_mk {f : α → β} (hf : Monotone f) : (mk f hf : α → β) = f :=
   rfl
 
+-- See library note [partially-applied ext lemmas]
 @[ext]
 theorem ext (f g : α →o β) (h : (f : α → β) = g) : f = g :=
   FunLike.coe_injective h
@@ -246,7 +252,7 @@ theorem comp_const (γ : Type _) [Preorderₓ γ] (f : α →o β) (c : α) : f.
 /-- Given two bundled monotone maps `f`, `g`, `f.prod g` is the map `x ↦ (f x, g x)` bundled as a
 `order_hom`. -/
 @[simps]
-protected def Prod (f : α →o β) (g : α →o γ) : α →o β × γ :=
+protected def prod (f : α →o β) (g : α →o γ) : α →o β × γ :=
   ⟨fun x => (f x, g x), fun x y h => ⟨f.mono h, g.mono h⟩⟩
 
 @[mono]
@@ -269,7 +275,7 @@ def diag : α →o α × α :=
 
 /-- Restriction of `f : α →o α →o β` to the diagonal. -/
 @[simps (config := { simpRhs := true })]
-def on_diag (f : α →o α →o β) : α →o β :=
+def onDiag (f : α →o α →o β) : α →o β :=
   (curry.symm f).comp diag
 
 /-- `prod.fst` as a `order_hom`. -/
@@ -298,7 +304,7 @@ theorem snd_comp_prod (f : α →o β) (g : α →o γ) : snd.comp (f.Prod g) = 
 /-- Order isomorphism between the space of monotone maps to `β × γ` and the product of the spaces
 of monotone maps to `β` and `γ`. -/
 @[simps]
-def prod_iso : (α →o β × γ) ≃o (α →o β) × (α →o γ) where
+def prodIso : (α →o β × γ) ≃o (α →o β) × (α →o γ) where
   toFun := fun f => (fst.comp f, snd.comp f)
   invFun := fun f => f.1.Prod f.2
   left_inv := fun f => by
@@ -309,7 +315,7 @@ def prod_iso : (α →o β × γ) ≃o (α →o β) × (α →o γ) where
 
 /-- `prod.map` of two `order_hom`s as a `order_hom`. -/
 @[simps]
-def prod_mapₓ (f : α →o β) (g : γ →o δ) : α × γ →o β × δ :=
+def prodMap (f : α →o β) (g : γ →o δ) : α × γ →o β × δ :=
   ⟨Prod.map f g, fun x y h => ⟨f.mono h.1, g.mono h.2⟩⟩
 
 variable {ι : Type _} {π : ι → Type _} [∀ i, Preorderₓ (π i)]
@@ -322,7 +328,7 @@ def _root_.pi.eval_order_hom (i : ι) : (∀ j, π j) →o π i :=
 /-- The "forgetful functor" from `α →o β` to `α → β` that takes the underlying function,
 is monotone. -/
 @[simps (config := { fullyApplied := false })]
-def coe_fn_hom : (α →o β) →o α → β where
+def coeFnHom : (α →o β) →o α → β where
   toFun := fun f => f
   monotone' := fun x y h => h
 
@@ -341,7 +347,7 @@ def pi (f : ∀ i, α →o π i) : α →o ∀ i, π i :=
 /-- Order isomorphism between bundled monotone maps `α →o Π i, π i` and families of bundled monotone
 maps `Π i, α →o π i`. -/
 @[simps]
-def pi_iso : (α →o ∀ i, π i) ≃o ∀ i, α →o π i where
+def piIso : (α →o ∀ i, π i) ≃o ∀ i, α →o π i where
   toFun := fun f i => (Pi.evalOrderHom i).comp f
   invFun := pi
   left_inv := fun f => by
@@ -358,8 +364,9 @@ def Subtype.val (p : α → Prop) : Subtype p →o α :=
   ⟨Subtype.val, fun x y h => h⟩
 
 /-- There is a unique monotone map from a subsingleton to itself. -/
+-- TODO[gh-6025]: make this a global instance once safe to do so
 @[local instance]
-def Unique [Subsingleton α] : Unique (α →o α) where
+def unique [Subsingleton α] : Unique (α →o α) where
   default := OrderHom.id
   uniq := fun a => ext _ _ (Subsingleton.elimₓ _ _)
 
@@ -375,7 +382,7 @@ protected def dual : (α →o β) ≃ (OrderDual α →o OrderDual β) where
   right_inv := fun f => ext _ _ rfl
 
 /-- `order_hom.dual` as an order isomorphism. -/
-def dual_iso (α β : Type _) [Preorderₓ α] [Preorderₓ β] : (α →o β) ≃o OrderDual (OrderDual α →o OrderDual β) where
+def dualIso (α β : Type _) [Preorderₓ α] [Preorderₓ β] : (α →o β) ≃o OrderDual (OrderDual α →o OrderDual β) where
   toEquiv := OrderHom.dual.trans OrderDual.toDual
   map_rel_iff' := fun f g => Iff.rfl
 
@@ -383,7 +390,7 @@ end OrderHom
 
 /-- Embeddings of partial orders that preserve `<` also preserve `≤`. -/
 def RelEmbedding.orderEmbeddingOfLtEmbedding [PartialOrderₓ α] [PartialOrderₓ β]
-    (f : (· < · : α → α → Prop) ↪r (· < · : β → β → Prop)) : α ↪o β :=
+    (f : ((· < ·) : α → α → Prop) ↪r ((· < ·) : β → β → Prop)) : α ↪o β :=
   { f with
     map_rel_iff' := by
       intros
@@ -391,7 +398,7 @@ def RelEmbedding.orderEmbeddingOfLtEmbedding [PartialOrderₓ α] [PartialOrder�
 
 @[simp]
 theorem RelEmbedding.order_embedding_of_lt_embedding_apply [PartialOrderₓ α] [PartialOrderₓ β]
-    {f : (· < · : α → α → Prop) ↪r (· < · : β → β → Prop)} {x : α} :
+    {f : ((· < ·) : α → α → Prop) ↪r ((· < ·) : β → β → Prop)} {x : α} :
     RelEmbedding.orderEmbeddingOfLtEmbedding f x = f x :=
   rfl
 
@@ -400,7 +407,7 @@ namespace OrderEmbedding
 variable [Preorderₓ α] [Preorderₓ β] (f : α ↪o β)
 
 /-- `<` is preserved by order embeddings of preorders. -/
-def lt_embedding : (· < · : α → α → Prop) ↪r (· < · : β → β → Prop) :=
+def ltEmbedding : ((· < ·) : α → α → Prop) ↪r ((· < ·) : β → β → Prop) :=
   { f with
     map_rel_iff' := by
       intros <;> simp [lt_iff_le_not_leₓ, f.map_rel_iff] }
@@ -421,18 +428,18 @@ theorem lt_iff_lt {a b} : f a < f b ↔ a < b :=
 theorem eq_iff_eq {a b} : f a = f b ↔ a = b :=
   f.Injective.eq_iff
 
-protected theorem Monotone : Monotone f :=
+protected theorem monotone : Monotone f :=
   OrderHomClass.monotone f
 
-protected theorem StrictMono : StrictMono f := fun x y => f.lt_iff_lt.2
+protected theorem strict_mono : StrictMono f := fun x y => f.lt_iff_lt.2
 
-protected theorem Acc (a : α) : Acc (· < ·) (f a) → Acc (· < ·) a :=
+protected theorem acc (a : α) : Acc (· < ·) (f a) → Acc (· < ·) a :=
   f.ltEmbedding.Acc a
 
-protected theorem WellFounded : WellFounded (· < · : β → β → Prop) → WellFounded (· < · : α → α → Prop) :=
+protected theorem well_founded : WellFounded ((· < ·) : β → β → Prop) → WellFounded ((· < ·) : α → α → Prop) :=
   f.ltEmbedding.WellFounded
 
-protected theorem IsWellOrder [IsWellOrder β (· < ·)] : IsWellOrder α (· < ·) :=
+protected theorem is_well_order [IsWellOrder β (· < ·)] : IsWellOrder α (· < ·) :=
   f.ltEmbedding.IsWellOrder
 
 /-- An order embedding is also an order embedding between dual orders. -/
@@ -442,7 +449,7 @@ protected def dual : OrderDual α ↪o OrderDual β :=
 /-- To define an order embedding from a partial order to a preorder it suffices to give a function
 together with a proof that it satisfies `f a ≤ f b ↔ a ≤ b`.
 -/
-def of_map_le_iff {α β} [PartialOrderₓ α] [Preorderₓ β] (f : α → β) (hf : ∀ a b, f a ≤ f b ↔ a ≤ b) : α ↪o β :=
+def ofMapLeIff {α β} [PartialOrderₓ α] [Preorderₓ β] (f : α → β) (hf : ∀ a b, f a ≤ f b ↔ a ≤ b) : α ↪o β :=
   RelEmbedding.ofMapRelIff f hf
 
 @[simp]
@@ -450,7 +457,7 @@ theorem coe_of_map_le_iff {α β} [PartialOrderₓ α] [Preorderₓ β] {f : α 
   rfl
 
 /-- A strictly monotone map from a linear order is an order embedding. --/
-def of_strict_mono {α β} [LinearOrderₓ α] [Preorderₓ β] (f : α → β) (h : StrictMono f) : α ↪o β :=
+def ofStrictMono {α β} [LinearOrderₓ α] [Preorderₓ β] (f : α → β) (h : StrictMono f) : α ↪o β :=
   ofMapLeIff f fun _ _ => h.le_iff_le
 
 @[simp]
@@ -460,12 +467,12 @@ theorem coe_of_strict_mono {α β} [LinearOrderₓ α] [Preorderₓ β] {f : α 
 
 /-- Embedding of a subtype into the ambient type as an `order_embedding`. -/
 @[simps (config := { fullyApplied := false })]
-def Subtype (p : α → Prop) : Subtype p ↪o α :=
+def subtype (p : α → Prop) : Subtype p ↪o α :=
   ⟨Function.Embedding.subtype p, fun x y => Iff.rfl⟩
 
 /-- Convert an `order_embedding` to a `order_hom`. -/
 @[simps (config := { fullyApplied := false })]
-def to_order_hom {X Y : Type _} [Preorderₓ X] [Preorderₓ Y] (f : X ↪o Y) : X →o Y where
+def toOrderHom {X Y : Type _} [Preorderₓ X] [Preorderₓ Y] (f : X ↪o Y) : X →o Y where
   toFun := f
   monotone' := f.Monotone
 
@@ -477,19 +484,20 @@ variable [PartialOrderₓ α] [Preorderₓ β]
 
 namespace RelHom
 
-variable (f : (· < · : α → α → Prop) →r (· < · : β → β → Prop))
+variable (f : ((· < ·) : α → α → Prop) →r ((· < ·) : β → β → Prop))
 
 /-- A bundled expression of the fact that a map between partial orders that is strictly monotone
 is weakly monotone. -/
 @[simps (config := { fullyApplied := false })]
-def to_order_hom : α →o β where
+def toOrderHom : α →o β where
   toFun := f
   monotone' := StrictMono.monotone fun x y => f.map_rel
 
 end RelHom
 
-theorem RelEmbedding.to_order_hom_injective (f : (· < · : α → α → Prop) ↪r (· < · : β → β → Prop)) :
-    Function.Injective (f : (· < · : α → α → Prop) →r (· < · : β → β → Prop)).toOrderHom := fun _ _ h => f.Injective h
+theorem RelEmbedding.to_order_hom_injective (f : ((· < ·) : α → α → Prop) ↪r ((· < ·) : β → β → Prop)) :
+    Function.Injective (f : ((· < ·) : α → α → Prop) →r ((· < ·) : β → β → Prop)).toOrderHom := fun _ _ h =>
+  f.Injective h
 
 end RelHom
 
@@ -500,7 +508,7 @@ section LE
 variable [LE α] [LE β] [LE γ]
 
 /-- Reinterpret an order isomorphism as an order embedding. -/
-def to_order_embedding (e : α ≃o β) : α ↪o β :=
+def toOrderEmbedding (e : α ≃o β) : α ↪o β :=
   e.toRelEmbedding
 
 @[simp]
@@ -606,7 +614,7 @@ def trans (e : α ≃o β) (e' : β ≃o γ) : α ≃o γ :=
   e.trans e'
 
 @[simp]
-theorem coeTransₓ (e : α ≃o β) (e' : β ≃o γ) : ⇑e.trans e' = e' ∘ e :=
+theorem coe_trans (e : α ≃o β) (e' : β ≃o γ) : ⇑e.trans e' = e' ∘ e :=
   rfl
 
 theorem trans_apply (e : α ≃o β) (e' : β ≃o γ) (x : α) : e.trans e' x = e' (e x) :=
@@ -625,7 +633,7 @@ theorem trans_refl (e : α ≃o β) : e.trans (refl β) = e := by
 variable (α)
 
 /-- The order isomorphism between a type and its double dual. -/
-def dual_dual : α ≃o OrderDual (OrderDual α) :=
+def dualDual : α ≃o OrderDual (OrderDual α) :=
   refl α
 
 @[simp]
@@ -668,10 +676,10 @@ end Le
 
 variable [Preorderₓ α] [Preorderₓ β] [Preorderₓ γ]
 
-protected theorem Monotone (e : α ≃o β) : Monotone e :=
+protected theorem monotone (e : α ≃o β) : Monotone e :=
   e.toOrderEmbedding.Monotone
 
-protected theorem StrictMono (e : α ≃o β) : StrictMono e :=
+protected theorem strict_mono (e : α ≃o β) : StrictMono e :=
   e.toOrderEmbedding.StrictMono
 
 @[simp]
@@ -680,7 +688,7 @@ theorem lt_iff_lt (e : α ≃o β) {x y : α} : e x < e y ↔ x < y :=
 
 /-- To show that `f : α → β`, `g : β → α` make up an order isomorphism of linear orders,
     it suffices to prove `cmp a (g b) = cmp (f a) b`. --/
-def of_cmp_eq_cmp {α β} [LinearOrderₓ α] [LinearOrderₓ β] (f : α → β) (g : β → α)
+def ofCmpEqCmp {α β} [LinearOrderₓ α] [LinearOrderₓ β] (f : α → β) (g : β → α)
     (h : ∀ a : α b : β, cmp a (g b) = cmp (f a) b) : α ≃o β :=
   have gf : ∀ a : α, a = g (f a) := by
     intro
@@ -696,18 +704,18 @@ def of_cmp_eq_cmp {α β} [LinearOrderₓ α] [LinearOrderₓ β] (f : α → β
       apply gf }
 
 /-- Order isomorphism between two equal sets. -/
-def set_congr (s t : Set α) (h : s = t) : s ≃o t where
+def setCongr (s t : Set α) (h : s = t) : s ≃o t where
   toEquiv := Equivₓ.setCongr h
   map_rel_iff' := fun x y => Iff.rfl
 
 /-- Order isomorphism between `univ : set α` and `α`. -/
-def Set.Univ : (Set.Univ : Set α) ≃o α where
+def Set.univ : (Set.Univ : Set α) ≃o α where
   toEquiv := Equivₓ.Set.univ α
   map_rel_iff' := fun x y => Iff.rfl
 
 /-- Order isomorphism between `α → β` and `β`, where `α` has a unique element. -/
 @[simps toEquiv apply]
-def fun_unique (α β : Type _) [Unique α] [Preorderₓ β] : (α → β) ≃o β where
+def funUnique (α β : Type _) [Unique α] [Preorderₓ β] : (α → β) ≃o β where
   toEquiv := Equivₓ.funUnique α β
   map_rel_iff' := fun f g => by
     simp [Pi.le_def, Unique.forall_iff]
@@ -725,7 +733,7 @@ variable [Preorderₓ α] [Preorderₓ β]
 
 /-- If `e` is an equivalence with monotone forward and inverse maps, then `e` is an
 order isomorphism. -/
-def to_order_iso (e : α ≃ β) (h₁ : Monotone e) (h₂ : Monotone e.symm) : α ≃o β :=
+def toOrderIso (e : α ≃ β) (h₁ : Monotone e) (h₂ : Monotone e.symm) : α ≃o β :=
   ⟨e, fun x y =>
     ⟨fun h => by
       simpa only [e.symm_apply_apply] using h₂ h, fun h => h₁ h⟩⟩

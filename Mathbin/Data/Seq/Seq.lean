@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2017 Mario Carneiro. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Mario Carneiro
+-/
 import Mathbin.Data.LazyList
 import Mathbin.Data.Nat.Basic
 import Mathbin.Data.Stream.Init
@@ -6,6 +11,11 @@ import Mathbin.Data.Seq.Computation
 universe u v w
 
 /-- A stream `s : option α` is a sequence if `s.nth n = none` implies `s.nth (n + 1) = none`.
+-/
+/-
+coinductive seq (α : Type u) : Type u
+| nil : seq α
+| cons : α → seq α → seq α
 -/
 def Streamₓ.IsSeq {α : Type u} (s : Streamₓ (Option α)) : Prop :=
   ∀ {n : ℕ}, s n = none → s (n + 1) = none
@@ -44,16 +54,16 @@ def nth : Seqₓₓ α → ℕ → Option α :=
   Subtype.val
 
 /-- A sequence has terminated at position `n` if the value at position `n` equals `none`. -/
-def terminated_at (s : Seqₓₓ α) (n : ℕ) : Prop :=
+def TerminatedAt (s : Seqₓₓ α) (n : ℕ) : Prop :=
   s.nth n = none
 
 /-- It is decidable whether a sequence terminates at a given position. -/
-instance terminated_at_decidable (s : Seqₓₓ α) (n : ℕ) : Decidable (s.TerminatedAt n) :=
+instance terminatedAtDecidable (s : Seqₓₓ α) (n : ℕ) : Decidable (s.TerminatedAt n) :=
   decidableOfIff' (s.nth n).isNone <| by
     unfold terminated_at <;> cases s.nth n <;> simp
 
 /-- A sequence terminates if there is some position `n` at which it has terminated. -/
-def terminates (s : Seqₓₓ α) : Prop :=
+def Terminates (s : Seqₓₓ α) : Prop :=
   ∃ n : ℕ, s.TerminatedAt n
 
 /-- Functorial action of the functor `option (α × _)` -/
@@ -70,7 +80,7 @@ def head (s : Seqₓₓ α) : Option α :=
 def tail : Seqₓₓ α → Seqₓₓ α
   | ⟨f, al⟩ => ⟨f.tail, fun n => al⟩
 
-protected def mem (a : α) (s : Seqₓₓ α) :=
+protected def Mem (a : α) (s : Seqₓₓ α) :=
   some a ∈ s.1
 
 instance : HasMem α (Seqₓₓ α) :=
@@ -182,7 +192,7 @@ theorem tail_nil : tail (nil : Seqₓₓ α) = nil :=
 theorem tail_cons (a : α) s : tail (cons a s) = s := by
   cases' s with f al <;> apply Subtype.eq <;> dsimp [tail, cons] <;> rw [Streamₓ.tail_cons]
 
-def cases_on {C : Seqₓₓ α → Sort v} (s : Seqₓₓ α) (h1 : C nil) (h2 : ∀ x s, C (cons x s)) : C s := by
+def casesOn {C : Seqₓₓ α → Sort v} (s : Seqₓₓ α) (h1 : C nil) (h2 : ∀ x s, C (cons x s)) : C s := by
   induction' H : destruct s with v v
   · rw [destruct_eq_nil H]
     apply h1
@@ -214,7 +224,7 @@ theorem mem_rec_on {C : Seqₓₓ α → Prop} {a s} (M : a ∈ s) (h1 : ∀ b s
     apply h1 _ _ (Or.inr (IH e))
     
 
-def corec.F (f : β → Option (α × β)) : Option β → Option α × Option β
+def Corec.f (f : β → Option (α × β)) : Option β → Option α × Option β
   | none => (none, none)
   | some b =>
     match f b with
@@ -267,7 +277,7 @@ theorem corec_eq (f : β → Option (α × β)) (b : β) : destruct (corec f b) 
   rfl
 
 /-- Embed a list as a sequence -/
-def of_list (l : List α) : Seqₓₓ α :=
+def ofList (l : List α) : Seqₓₓ α :=
   ⟨List.nth l, fun n h => by
     induction' l with a l IH generalizing n
     rfl
@@ -278,7 +288,7 @@ def of_list (l : List α) : Seqₓₓ α :=
     · apply IH _ h
       ⟩
 
-instance coe_list : Coe (List α) (Seqₓₓ α) :=
+instance coeList : Coe (List α) (Seqₓₓ α) :=
   ⟨ofList⟩
 
 section Bisim
@@ -287,16 +297,17 @@ variable (R : Seqₓₓ α → Seqₓₓ α → Prop)
 
 local infixl:50 " ~ " => R
 
-def bisim_o : Option (Seq1 α) → Option (Seq1 α) → Prop
+def BisimO : Option (Seq1 α) → Option (Seq1 α) → Prop
   | none, none => True
   | some (a, s), some (a', s') => a = a' ∧ R s s'
   | _, _ => False
 
 attribute [simp] bisim_o
 
-def is_bisimulation :=
+def IsBisimulation :=
   ∀ ⦃s₁ s₂⦄, s₁ ~ s₂ → BisimO R (destruct s₁) (destruct s₂)
 
+-- If two streams are bisimilar, then they are equal
 theorem eq_of_bisim (bisim : IsBisimulation R) {s₁ s₂} (r : s₁ ~ s₂) : s₁ = s₂ := by
   apply Subtype.eq
   apply Streamₓ.eq_of_bisim fun x y => ∃ s s' : Seqₓₓ α, s.1 = x ∧ s'.1 = y ∧ R s s'
@@ -351,23 +362,23 @@ theorem coinduction2 s (f g : Seqₓₓ α → Seqₓₓ β)
   apply H
 
 /-- Embed an infinite stream as a sequence -/
-def of_stream (s : Streamₓ α) : Seqₓₓ α :=
+def ofStream (s : Streamₓ α) : Seqₓₓ α :=
   ⟨s.map some, fun n h => by
     contradiction⟩
 
-instance coe_stream : Coe (Streamₓ α) (Seqₓₓ α) :=
+instance coeStream : Coe (Streamₓ α) (Seqₓₓ α) :=
   ⟨ofStream⟩
 
 /-- Embed a `lazy_list α` as a sequence. Note that even though this
   is non-meta, it will produce infinite sequences if used with
   cyclic `lazy_list`s created by meta constructions. -/
-def of_lazy_list : LazyList α → Seqₓₓ α :=
+def ofLazyList : LazyList α → Seqₓₓ α :=
   corec fun l =>
     match l with
     | LazyList.nil => none
     | LazyList.cons a l' => some (a, l' ())
 
-instance coe_lazy_list : Coe (LazyList α) (Seqₓₓ α) :=
+instance coeLazyList : Coe (LazyList α) (Seqₓₓ α) :=
   ⟨ofLazyList⟩
 
 /-- Translate a sequence into a `lazy_list`. Since `lazy_list` and `list`
@@ -445,7 +456,7 @@ def take : ℕ → Seqₓₓ α → List α
 
 /-- Split a sequence at `n`, producing a finite initial segment
   and an infinite tail. -/
-def split_at : ℕ → Seqₓₓ α → List α × Seqₓₓ α
+def splitAt : ℕ → Seqₓₓ α → List α × Seqₓₓ α
   | 0, s => ([], s)
   | n + 1, s =>
     match destruct s with
@@ -457,7 +468,7 @@ def split_at : ℕ → Seqₓₓ α → List α × Seqₓₓ α
 section ZipWith
 
 /-- Combine two sequences with a function -/
-def zip_with (f : α → β → γ) : Seqₓₓ α → Seqₓₓ β → Seqₓₓ γ
+def zipWith (f : α → β → γ) : Seqₓₓ α → Seqₓₓ β → Seqₓₓ γ
   | ⟨f₁, a₁⟩, ⟨f₂, a₂⟩ =>
     ⟨fun n =>
       match f₁ n, f₂ n with
@@ -510,16 +521,16 @@ def unzip (s : Seqₓₓ (α × β)) : Seqₓₓ α × Seqₓₓ β :=
   (map Prod.fst s, map Prod.snd s)
 
 /-- Convert a sequence which is known to terminate into a list -/
-def to_list (s : Seqₓₓ α) (h : ∃ n, ¬(nth s n).isSome) : List α :=
+def toList (s : Seqₓₓ α) (h : ∃ n, ¬(nth s n).isSome) : List α :=
   take (Nat.findₓ h) s
 
 /-- Convert a sequence which is known not to terminate into a stream -/
-def to_stream (s : Seqₓₓ α) (h : ∀ n, (nth s n).isSome) : Streamₓ α := fun n => Option.getₓ (h n)
+def toStream (s : Seqₓₓ α) (h : ∀ n, (nth s n).isSome) : Streamₓ α := fun n => Option.getₓ (h n)
 
 /-- Convert a sequence into either a list or a stream depending on whether
   it is finite or infinite. (Without decidability of the infiniteness predicate,
   this is not constructively possible.) -/
-def to_list_or_stream (s : Seqₓₓ α) [Decidable (∃ n, ¬(nth s n).isSome)] : Sum (List α) (Streamₓ α) :=
+def toListOrStream (s : Seqₓₓ α) [Decidable (∃ n, ¬(nth s n).isSome)] : Sum (List α) (Streamₓ α) :=
   if h : ∃ n, ¬(nth s n).isSome then Sum.inl (toList s h)
   else Sum.inr (toStream s fun n => Decidable.by_contradiction fun hn => h ⟨n, hn⟩)
 
@@ -733,7 +744,7 @@ theorem of_stream_append (l : List α) (s : Streamₓ α) : ofStream (l++ₛs) =
 /-- Convert a sequence into a list, embedded in a computation to allow for
   the possibility of infinite sequences (in which case the computation
   never returns anything). -/
-def to_list' {α} (s : Seqₓₓ α) : Computation (List α) :=
+def toList' {α} (s : Seqₓₓ α) : Computation (List α) :=
   @Computation.corec (List α) (List α × Seqₓₓ α)
     (fun ⟨l, s⟩ =>
       match destruct s with
@@ -755,6 +766,7 @@ theorem nth_tail : ∀ s : Seqₓₓ α n, nth (tail s) n = nth s (n + 1)
 protected theorem ext (s s' : Seqₓₓ α) (hyp : ∀ n : ℕ, s.nth n = s'.nth n) : s = s' := by
   let ext := fun s s' : Seqₓₓ α => ∀ n, s.nth n = s'.nth n
   apply Seqₓₓ.eq_of_bisim ext _ hyp
+  -- we have to show that ext is a bisimulation
   clear hyp s s'
   intro s s'(hyp : ext s s')
   unfold Seqₓₓ.destruct
@@ -762,7 +774,9 @@ protected theorem ext (s s' : Seqₓₓ α) (hyp : ∀ n : ℕ, s.nth n = s'.nth
   cases s'.nth 0
   · simp [Seqₓₓ.BisimO]
     
-  · suffices ext s.tail s'.tail by
+  -- option.none
+  · -- option.some
+    suffices ext s.tail s'.tail by
       simpa
     intro n
     simp only [Seqₓₓ.nth_tail _ n, hyp <| n + 1]
@@ -827,10 +841,10 @@ variable {α : Type u} {β : Type v} {γ : Type w}
 open Seqₓₓ
 
 /-- Convert a `seq1` to a sequence. -/
-def to_seq : Seq1 α → Seqₓₓ α
+def toSeq : Seq1 α → Seqₓₓ α
   | (a, s) => cons a s
 
-instance coe_seq : Coe (Seq1 α) (Seqₓₓ α) :=
+instance coeSeq : Coe (Seq1 α) (Seqₓₓ α) :=
   ⟨toSeq⟩
 
 /-- Map a function on a `seq1` -/

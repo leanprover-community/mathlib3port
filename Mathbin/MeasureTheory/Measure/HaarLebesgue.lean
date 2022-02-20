@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Floris van Doorn. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Floris van Doorn, Sébastien Gouëzel
+-/
 import Mathbin.MeasureTheory.Measure.Lebesgue
 import Mathbin.MeasureTheory.Measure.Haar
 import Mathbin.LinearAlgebra.FiniteDimensional
@@ -163,6 +168,8 @@ linear equiv maps Haar measure to Haar measure.
 
 theorem map_linear_map_add_haar_pi_eq_smul_add_haar {ι : Type _} [Fintype ι] {f : (ι → ℝ) →ₗ[ℝ] ι → ℝ} (hf : f.det ≠ 0)
     (μ : Measure (ι → ℝ)) [IsAddHaarMeasure μ] : Measure.map f μ = Ennreal.ofReal (abs f.det⁻¹) • μ := by
+  /- We have already proved the result for the Lebesgue product measure, using matrices.
+    We deduce it for any Haar measure by uniqueness (up to scalar multiplication). -/
   have := add_haar_measure_unique μ (pi_Icc01 ι)
   rw [this]
   simp [add_haar_measure_eq_volume_pi, Real.map_linear_map_volume_pi_eq_smul_volume_pi hf, smul_smul, mul_comm]
@@ -170,12 +177,15 @@ theorem map_linear_map_add_haar_pi_eq_smul_add_haar {ι : Type _} [Fintype ι] {
 theorem map_linear_map_add_haar_eq_smul_add_haar {E : Type _} [NormedGroup E] [NormedSpace ℝ E] [MeasurableSpace E]
     [BorelSpace E] [FiniteDimensional ℝ E] (μ : Measure E) [IsAddHaarMeasure μ] {f : E →ₗ[ℝ] E} (hf : f.det ≠ 0) :
     Measure.map f μ = Ennreal.ofReal (abs f.det⁻¹) • μ := by
+  -- we reduce to the case of `E = ι → ℝ`, for which we have already proved the result using
+  -- matrices in `map_linear_map_add_haar_pi_eq_smul_add_haar`.
   let ι := Finₓ (finrank ℝ E)
   have : FiniteDimensional ℝ (ι → ℝ) := by
     infer_instance
   have : finrank ℝ E = finrank ℝ (ι → ℝ) := by
     simp
   have e : E ≃ₗ[ℝ] ι → ℝ := linear_equiv.of_finrank_eq E (ι → ℝ) this
+  -- next line is to avoid `g` getting reduced by `simp`.
   obtain ⟨g, hg⟩ : ∃ g, g = (e : E →ₗ[ℝ] ι → ℝ).comp (f.comp (e.symm : (ι → ℝ) →ₗ[ℝ] E)) := ⟨_, rfl⟩
   have gdet : g.det = f.det := by
     rw [hg]
@@ -558,7 +568,7 @@ theorem tendsto_add_haar_inter_smul_zero_of_density_zero (s : Set E) (x : E)
     (h : Tendsto (fun r => μ (s ∩ ClosedBall x r) / μ (ClosedBall x r)) (𝓝[>] 0) (𝓝 0)) (t : Set E)
     (ht : MeasurableSet t) (h''t : μ t ≠ ∞) :
     Tendsto (fun r : ℝ => μ (s ∩ ({x} + r • t)) / μ ({x} + r • t)) (𝓝[>] 0) (𝓝 0) := by
-  refine' tendsto_order.2 ⟨fun a' ha' => (Ennreal.not_lt_zero ha').elim, fun ε εpos : 0 < ε => _⟩
+  refine' tendsto_order.2 ⟨fun a' ha' => (Ennreal.not_lt_zero ha').elim, fun εpos : 0 < ε => _⟩
   rcases eq_or_ne (μ t) 0 with (h't | h't)
   · apply eventually_of_forall fun r => _
     suffices H : μ (s ∩ ({x} + r • t)) = 0

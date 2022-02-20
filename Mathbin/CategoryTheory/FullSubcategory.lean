@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2017 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison, Reid Barton
+-/
 import Mathbin.CategoryTheory.FullyFaithful
 
 /-!
@@ -32,6 +37,7 @@ namespace CategoryTheory
 
 universe v u₁ u₂
 
+-- morphism levels before object levels. See note [category_theory universes].
 section Induced
 
 variable {C : Type u₁} (D : Type u₂) [Category.{v} D]
@@ -45,15 +51,15 @@ which provides a category structure so that the morphisms `X ⟶ Y` are the morp
 in `D` from `F X` to `F Y`.
 -/
 @[nolint has_inhabited_instance unused_arguments]
-def induced_category : Type u₁ :=
+def InducedCategory : Type u₁ :=
   C
 
 variable {D}
 
-instance induced_category.has_coe_to_sort {α : Sort _} [CoeSort D α] : CoeSort (InducedCategory D F) α :=
+instance InducedCategory.hasCoeToSort {α : Sort _} [CoeSort D α] : CoeSort (InducedCategory D F) α :=
   ⟨fun c => ↥F c⟩
 
-instance induced_category.category : Category.{v} (InducedCategory D F) where
+instance InducedCategory.category : Category.{v} (InducedCategory D F) where
   Hom := fun X Y => F X ⟶ F Y
   id := fun X => 𝟙 (F X)
   comp := fun _ _ _ f g => f ≫ g
@@ -62,20 +68,21 @@ instance induced_category.category : Category.{v} (InducedCategory D F) where
 forgetting the extra data.
 -/
 @[simps]
-def induced_functor : InducedCategory D F ⥤ D where
+def inducedFunctor : InducedCategory D F ⥤ D where
   obj := F
   map := fun x y f => f
 
-instance induced_category.full : Full (inducedFunctor F) where
+instance InducedCategory.full : Full (inducedFunctor F) where
   Preimage := fun x y f => f
 
-instance induced_category.faithful : Faithful (inducedFunctor F) :=
+instance InducedCategory.faithful : Faithful (inducedFunctor F) :=
   {  }
 
 end Induced
 
 section FullSubcategory
 
+-- A full subcategory is the special case of an induced category with F = subtype.val.
 variable {C : Type u₂} [Category.{v} C]
 
 variable (Z : C → Prop)
@@ -84,27 +91,27 @@ variable (Z : C → Prop)
 
 See https://stacks.math.columbia.edu/tag/001D. We do not define 'strictly full' subcategories.
 -/
-instance full_subcategory : Category.{v} { X : C // Z X } :=
+instance fullSubcategory : Category.{v} { X : C // Z X } :=
   InducedCategory.category Subtype.val
 
 /-- The forgetful functor from a full subcategory into the original category
 ("forgetting" the condition).
 -/
-def full_subcategory_inclusion : { X : C // Z X } ⥤ C :=
+def fullSubcategoryInclusion : { X : C // Z X } ⥤ C :=
   inducedFunctor Subtype.val
 
 @[simp]
-theorem full_subcategory_inclusion.obj {X} : (fullSubcategoryInclusion Z).obj X = X.val :=
+theorem fullSubcategoryInclusion.obj {X} : (fullSubcategoryInclusion Z).obj X = X.val :=
   rfl
 
 @[simp]
-theorem full_subcategory_inclusion.map {X Y} {f : X ⟶ Y} : (fullSubcategoryInclusion Z).map f = f :=
+theorem fullSubcategoryInclusion.map {X Y} {f : X ⟶ Y} : (fullSubcategoryInclusion Z).map f = f :=
   rfl
 
-instance full_subcategory.full : Full (fullSubcategoryInclusion Z) :=
+instance fullSubcategory.full : Full (fullSubcategoryInclusion Z) :=
   InducedCategory.full Subtype.val
 
-instance full_subcategory.faithful : Faithful (fullSubcategoryInclusion Z) :=
+instance fullSubcategory.faithful : Faithful (fullSubcategoryInclusion Z) :=
   InducedCategory.faithful Subtype.val
 
 end FullSubcategory

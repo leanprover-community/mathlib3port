@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Johannes Hölzl. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johannes Hölzl, Mario Carneiro
+-/
 import Mathbin.Data.Rat.Order
 import Mathbin.Data.Int.CharZero
 
@@ -33,7 +38,8 @@ variable [DivisionRing α]
   division ring. If the field has positive characteristic `p`,
   we define `1 / p = 1 / 0 = 0` for consistency with our
   division by zero convention. -/
-instance (priority := 900) cast_coe : CoeTₓ ℚ α :=
+-- see Note [coercion into rings]
+instance (priority := 900) castCoe : CoeTₓ ℚ α :=
   ⟨fun r => r.1 / r.2⟩
 
 theorem cast_def (r : ℚ) : (r : α) = r.num / r.denom :=
@@ -97,7 +103,7 @@ theorem cast_mk_of_ne_zero (a b : ℤ) (b0 : (b : α) ≠ 0) : (a /. b : α) = a
 
 @[norm_cast]
 theorem cast_add_of_ne_zero : ∀ {m n : ℚ}, (m.denom : α) ≠ 0 → (n.denom : α) ≠ 0 → ((m + n : ℚ) : α) = m + n
-  | ⟨n₁, d₁, h₁, c₁⟩, ⟨n₂, d₂, h₂, c₂⟩ => fun d₁0 : (d₁ : α) ≠ 0 d₂0 : (d₂ : α) ≠ 0 => by
+  | ⟨n₁, d₁, h₁, c₁⟩, ⟨n₂, d₂, h₂, c₂⟩ => fun d₂0 : (d₂ : α) ≠ 0 => by
     have d₁0' : (d₁ : ℤ) ≠ 0 :=
       Int.coe_nat_ne_zero.2 fun e => by
         rw [e] at d₁0 <;> exact d₁0 rfl
@@ -129,7 +135,7 @@ theorem cast_sub_of_ne_zero {m n : ℚ} (m0 : (m.denom : α) ≠ 0) (n0 : (n.den
 
 @[norm_cast]
 theorem cast_mul_of_ne_zero : ∀ {m n : ℚ}, (m.denom : α) ≠ 0 → (n.denom : α) ≠ 0 → ((m * n : ℚ) : α) = m * n
-  | ⟨n₁, d₁, h₁, c₁⟩, ⟨n₂, d₂, h₂, c₂⟩ => fun d₁0 : (d₁ : α) ≠ 0 d₂0 : (d₂ : α) ≠ 0 => by
+  | ⟨n₁, d₁, h₁, c₁⟩, ⟨n₂, d₂, h₂, c₂⟩ => fun d₂0 : (d₂ : α) ≠ 0 => by
     have d₁0' : (d₁ : ℤ) ≠ 0 :=
       Int.coe_nat_ne_zero.2 fun e => by
         rw [e] at d₁0 <;> exact d₁0 rfl
@@ -163,7 +169,7 @@ theorem cast_inv_int (n : ℤ) : ((n⁻¹ : ℚ) : α) = n⁻¹ := by
 
 @[norm_cast]
 theorem cast_inv_of_ne_zero : ∀ {n : ℚ}, (n.num : α) ≠ 0 → (n.denom : α) ≠ 0 → ((n⁻¹ : ℚ) : α) = n⁻¹
-  | ⟨n, d, h, c⟩ => fun n0 : (n : α) ≠ 0 d0 : (d : α) ≠ 0 => by
+  | ⟨n, d, h, c⟩ => fun d0 : (d : α) ≠ 0 => by
     have n0' : (n : ℤ) ≠ 0 := fun e => by
       rw [e] at n0 <;> exact n0 rfl
     have d0' : (d : ℤ) ≠ 0 :=
@@ -229,7 +235,7 @@ theorem cast_bit1 [CharZero α] (n : ℚ) : ((bit1 n : ℚ) : α) = bit1 n := by
 variable (α)
 
 /-- Coercion `ℚ → α` as a `ring_hom`. -/
-def cast_hom [CharZero α] : ℚ →+* α :=
+def castHom [CharZero α] : ℚ →+* α :=
   ⟨coe, cast_one, cast_mul, cast_zero, cast_add⟩
 
 variable {α}
@@ -312,6 +318,8 @@ theorem RingHom.eq_rat_cast {k} [DivisionRing k] (f : ℚ →+* k) (r : ℚ) : f
       rw [map_nat_cast, map_int_cast]
     
 
+-- This seems to be true for a `[char_p k]` too because `k'` must have the same characteristic
+-- but the proof would be much longer
 theorem RingHom.map_rat_cast {k k'} [DivisionRing k] [CharZero k] [DivisionRing k'] (f : k →+* k') (r : ℚ) : f r = r :=
   (f.comp (castHom k)).eq_rat_cast r
 

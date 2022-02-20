@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison
+-/
 import Mathbin.CategoryTheory.ConcreteCategory.Basic
 import Mathbin.Tactic.FreshNames
 import Mathbin.Tactic.ReassocAxiom
@@ -63,6 +68,7 @@ otherwise.
 Returns the type and proof of this lemma,
 and the universe parameter `w` for the `concrete_category` instance, if it was not synthesized.
 -/
+-- This is closely modelled on `reassoc_axiom`.
 unsafe def prove_elementwise (h : expr) : tactic (expr × expr × Option Name) := do
   let (vs, t) ← infer_type h >>= open_pis
   let (f, g) ← match_eq t
@@ -77,7 +83,10 @@ unsafe def prove_elementwise (h : expr) : tactic (expr × expr × Option Name) :
         do
         let CC ← mk_local' `I BinderInfo.inst_implicit CC_type
         pure (CC, ff)
-  let CC_type ← instantiate_mvars CC_type
+  let CC_type
+    ←-- This is need to fill in universe levels fixed by `mk_instance`:
+        instantiate_mvars
+        CC_type
   let x_type ←
     to_expr (pquote.1 (@coeSort (%%ₓC) _ (@CategoryTheory.ConcreteCategory.hasCoeToSort (%%ₓC) (%%ₓS) (%%ₓCC)) (%%ₓX)))
   let x ← mk_local_def `x x_type
@@ -90,9 +99,13 @@ unsafe def prove_elementwise (h : expr) : tactic (expr × expr × Option Name) :
               (@CategoryTheory.ConcreteCategory.hasCoeToFun (%%ₓC) (%%ₓS) (%%ₓCC) (%%ₓX) (%%ₓY)) (%%ₓg) (%%ₓx)))
   let c' := h.mk_app vs
   let (_, pr) ← solve_aux t' (andthen (rewrite_target c') reflexivity)
-  let [w, _, _] ← pure CC_type.get_app_fn.univ_levels
-  let n ←
-    match w with
+  let-- The codomain of forget lives in a new universe, which may be now a universe metavariable
+    -- if we didn't synthesize an instance:
+    [w, _, _]
+    ← pure CC_type.get_app_fn.univ_levels
+  let n
+    ←-- We unify that with a fresh universe parameter.
+      match w with
       | level.mvar _ => do
         let n ← get_unused_name_reserved [`w] mk_name_set
         unify (expr.sort (level.param n)) (expr.sort w)
@@ -101,12 +114,15 @@ unsafe def prove_elementwise (h : expr) : tactic (expr × expr × Option Name) :
   let t' ← instantiate_mvars t'
   let CC ← instantiate_mvars CC
   let x ← instantiate_mvars x
-  let s := simp_lemmas.mk
+  let-- Now the key step: replace morphism composition with function composition,
+  -- and identity morphisms with nothing.
+  s := simp_lemmas.mk
   let s ← s.add_simp `` id_apply
   let s ← s.add_simp `` comp_apply
   let (t'', pr', _) ← simplify s [] t' { failIfUnchanged := false }
   let pr' ← mk_eq_mp pr' pr
-  let s := simp_lemmas.mk
+  let-- Further, if we're in `Type`, get rid of the coercions entirely.
+  s := simp_lemmas.mk
   let s ← s.add_simp `` concrete_category.has_coe_to_fun_Type
   let (t'', pr'', _) ← simplify s [] t'' { failIfUnchanged := false }
   let pr'' ← mk_eq_mp pr'' pr'

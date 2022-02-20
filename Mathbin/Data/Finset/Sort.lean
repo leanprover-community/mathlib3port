@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2017 Mario Carneiro. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Mario Carneiro
+-/
 import Mathbin.Data.Fintype.Basic
 import Mathbin.Data.Multiset.Sort
 import Mathbin.Data.List.NodupEquivFin
@@ -124,7 +129,7 @@ theorem max'_eq_sorted_last {s : Finset α} {h : s.Nonempty} :
 is the increasing bijection between `fin k` and `s` as an `order_iso`. Here, `h` is a proof that
 the cardinality of `s` is `k`. We use this instead of an iso `fin s.card ≃o s` to avoid
 casting issues in further uses of this function. -/
-def order_iso_of_fin (s : Finset α) {k : ℕ} (h : s.card = k) : Finₓ k ≃o s :=
+def orderIsoOfFin (s : Finset α) {k : ℕ} (h : s.card = k) : Finₓ k ≃o s :=
   OrderIso.trans (Finₓ.cast ((length_sort (· ≤ ·)).trans h).symm) <|
     (s.sort_sorted_lt.nthLeIso _).trans <| OrderIso.setCongr _ _ <| Set.ext fun x => mem_sort _
 
@@ -132,7 +137,7 @@ def order_iso_of_fin (s : Finset α) {k : ℕ} (h : s.card = k) : Finₓ k ≃o 
 the increasing bijection between `fin k` and `s` as an order embedding into `α`. Here, `h` is a
 proof that the cardinality of `s` is `k`. We use this instead of an embedding `fin s.card ↪o α` to
 avoid casting issues in further uses of this function. -/
-def order_emb_of_fin (s : Finset α) {k : ℕ} (h : s.card = k) : Finₓ k ↪o α :=
+def orderEmbOfFin (s : Finset α) {k : ℕ} (h : s.card = k) : Finₓ k ↪o α :=
   (orderIsoOfFin s h).toOrderEmbedding.trans (OrderEmbedding.subtype _)
 
 @[simp]
@@ -206,13 +211,13 @@ theorem order_emb_of_fin_eq_order_emb_of_fin_iff {k l : ℕ} {s : Finset α} {i 
 /-- Given a finset `s` of size at least `k` in a linear order `α`, the map `order_emb_of_card_le`
 is an order embedding from `fin k` to `α` whose image is contained in `s`. Specifically, it maps
 `fin k` to an initial segment of `s`. -/
-def order_emb_of_card_le (s : Finset α) {k : ℕ} (h : k ≤ s.card) : Finₓ k ↪o α :=
+def orderEmbOfCardLe (s : Finset α) {k : ℕ} (h : k ≤ s.card) : Finₓ k ↪o α :=
   (Finₓ.castLe h).trans (s.orderEmbOfFin rfl)
 
 theorem order_emb_of_card_le_mem (s : Finset α) {k : ℕ} (h : k ≤ s.card) a : orderEmbOfCardLe s h a ∈ s := by
   simp only [order_emb_of_card_le, RelEmbedding.coe_trans, Finset.order_emb_of_fin_mem]
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (x y «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (x y «expr ∈ » s)
 theorem card_le_of_interleaved {s t : Finset α} (h : ∀ x y _ : x ∈ s _ : y ∈ s, x < y → ∃ z ∈ t, x < z ∧ z < y) :
     s.card ≤ t.card + 1 := by
   have h1 : ∀ i : Finₓ (s.card - 1), ↑i + 1 < (s.sort (· ≤ ·)).length := by

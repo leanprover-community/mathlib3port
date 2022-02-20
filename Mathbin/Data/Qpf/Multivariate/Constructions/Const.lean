@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Simon Hudon All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Simon Hudon
+-/
 import Mathbin.Control.Functor.Multivariate
 import Mathbin.Data.Qpf.Multivariate.Basic
 
@@ -22,10 +27,10 @@ variable (n : ℕ)
 
 /-- Constant multivariate functor -/
 @[nolint unused_arguments]
-def const (A : Type _) (v : Typevec.{u} n) : Type _ :=
+def Const (A : Type _) (v : Typevec.{u} n) : Type _ :=
   A
 
-instance const.inhabited {A α} [Inhabited A] : Inhabited (Const n A α) :=
+instance Const.inhabited {A α} [Inhabited A] : Inhabited (Const n A α) :=
   ⟨(default : A)⟩
 
 namespace Const
@@ -62,7 +67,7 @@ theorem map_mk (x : A) : f <$$> Const.mk x = Const.mk x :=
 theorem get_map (x : (Const n A) α) : Const.get (f <$$> x) = Const.get x :=
   rfl
 
-instance Mvqpf : @Mvqpf _ (Const n A) Mvqpf.Const.mvfunctor where
+instance mvqpf : @Mvqpf _ (Const n A) Mvqpf.Const.mvfunctor where
   p := Mvpfunctor.const n A
   abs := fun α x => Mvpfunctor.const.get x
   repr := fun α x => Mvpfunctor.const.mk n x

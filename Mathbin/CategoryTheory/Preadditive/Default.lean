@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Markus Himmel. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Markus Himmel
+-/
 import Mathbin.Algebra.Group.Hom
 import Mathbin.CategoryTheory.Limits.Shapes.Kernels
 import Mathbin.Algebra.BigOperators.Basic
@@ -50,7 +55,7 @@ variable (C : Type u) [Category.{v} C]
 
 /-- A category is called preadditive if `P ⟶ Q` is an abelian group such that composition is
     linear in both variables. -/
-class preadditive where
+class Preadditive where
   homGroup : ∀ P Q : C, AddCommGroupₓ (P ⟶ Q) := by
     run_tac
       tactic.apply_instance
@@ -71,6 +76,7 @@ attribute [simp, reassoc] preadditive.add_comp
 
 attribute [reassoc] preadditive.comp_add
 
+-- (the linter doesn't like `simp` on this lemma)
 attribute [simp] preadditive.comp_add
 
 end CategoryTheory
@@ -93,7 +99,7 @@ universe u'
 
 variable {C} {D : Type u'} (F : D → C)
 
-instance induced_category.category : Preadditive.{v} (InducedCategory C F) where
+instance InducedCategory.category : Preadditive.{v} (InducedCategory C F) where
   homGroup := fun P Q => @Preadditive.homGroup C _ _ (F P) (F Q)
   add_comp' := fun P Q R f f' g => add_comp' _ _ _ _ _ _
   comp_add' := fun P Q R f g g' => comp_add' _ _ _ _ _ _
@@ -110,25 +116,26 @@ instance (X : C) : Ringₓ (End X) :=
     right_distrib := fun f g h => Preadditive.comp_add X X X h f g }
 
 /-- Composition by a fixed left argument as a group homomorphism -/
-def left_comp {P Q : C} (R : C) (f : P ⟶ Q) : (Q ⟶ R) →+ (P ⟶ R) :=
+def leftComp {P Q : C} (R : C) (f : P ⟶ Q) : (Q ⟶ R) →+ (P ⟶ R) :=
   (mk' fun g => f ≫ g) fun g g' => by
     simp
 
 /-- Composition by a fixed right argument as a group homomorphism -/
-def right_comp (P : C) {Q R : C} (g : Q ⟶ R) : (P ⟶ Q) →+ (P ⟶ R) :=
+def rightComp (P : C) {Q R : C} (g : Q ⟶ R) : (P ⟶ Q) →+ (P ⟶ R) :=
   (mk' fun f => f ≫ g) fun f f' => by
     simp
 
 variable {P Q R : C} (f f' : P ⟶ Q) (g g' : Q ⟶ R)
 
 /-- Composition as a bilinear group homomorphism -/
-def comp_hom : (P ⟶ Q) →+ (Q ⟶ R) →+ (P ⟶ R) :=
+def compHom : (P ⟶ Q) →+ (Q ⟶ R) →+ (P ⟶ R) :=
   (AddMonoidHom.mk' fun f => leftComp _ f) fun f₁ f₂ => AddMonoidHom.ext fun g => (rightComp _ g).map_add f₁ f₂
 
 @[simp, reassoc]
 theorem sub_comp : (f - f') ≫ g = f ≫ g - f' ≫ g :=
   map_sub (rightComp P g) f f'
 
+-- The redundant simp lemma linter says that simp can prove the reassoc version of this lemma.
 @[reassoc, simp]
 theorem comp_sub : f ≫ (g - g') = f ≫ g - f ≫ g' :=
   map_sub (leftComp R f) g g'
@@ -137,6 +144,7 @@ theorem comp_sub : f ≫ (g - g') = f ≫ g - f ≫ g' :=
 theorem neg_comp : -f ≫ g = -(f ≫ g) :=
   map_neg (rightComp P g) f
 
+-- The redundant simp lemma linter says that simp can prove the reassoc version of this lemma.
 @[reassoc, simp]
 theorem comp_neg : f ≫ -g = -(f ≫ g) :=
   map_neg (leftComp R f) g
@@ -175,12 +183,12 @@ instance {P Q : C} {f : P ⟶ Q} [Mono f] : Mono (-f) :=
   ⟨fun R g g' H => by
     rwa [comp_neg, comp_neg, ← neg_comp, ← neg_comp, cancel_mono, neg_inj] at H⟩
 
-instance (priority := 100) preadditive_has_zero_morphisms : HasZeroMorphisms C where
+instance (priority := 100) preadditiveHasZeroMorphisms : HasZeroMorphisms C where
   HasZero := inferInstance
   comp_zero' := fun P Q f R => show leftComp R f 0 = 0 from map_zero _
   zero_comp' := fun P Q R f => show rightComp P f 0 = 0 from map_zero _
 
-instance module_End_right {X Y : C} : Module (End Y) (X ⟶ Y) where
+instance moduleEndRight {X Y : C} : Module (End Y) (X ⟶ Y) where
   smul_add := fun r f g => add_comp _ _ _ _ _ _
   smul_zero := fun r => zero_comp
   add_smul := fun r s f => comp_add _ _ _ _ _ _

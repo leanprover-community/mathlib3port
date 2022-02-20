@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Markus Himmel. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Markus Himmel
+-/
 import Mathbin.CategoryTheory.Abelian.Exact
 import Mathbin.CategoryTheory.Over
 
@@ -93,7 +98,7 @@ theorem app_hom {P Q : C} (f : P ⟶ Q) (a : Over P) : (app f a).Hom = a.Hom ≫
 
 /-- Two arrows `f : X ⟶ P` and `g : Y ⟶ P` are called pseudo-equal if there is some object
     `R` and epimorphisms `p : R ⟶ X` and `q : R ⟶ Y` such that `p ≫ f = q ≫ g`. -/
-def pseudo_equal (P : C) (f g : Over P) : Prop :=
+def PseudoEqual (P : C) (f g : Over P) : Prop :=
   ∃ (R : C)(p : R ⟶ f.1)(q : R ⟶ g.1)(_ : Epi p)(_ : Epi q), p ≫ f.Hom = q ≫ g.Hom
 
 theorem pseudo_equal_refl {P : C} : Reflexive (PseudoEqual P) := fun f =>
@@ -126,20 +131,20 @@ theorem pseudo_equal_trans {P : C} : Transitive (PseudoEqual P) :=
 end
 
 /-- The arrows with codomain `P` equipped with the equivalence relation of being pseudo-equal. -/
-def pseudoelement.setoid (P : C) : Setoidₓ (Over P) :=
+def Pseudoelement.setoid (P : C) : Setoidₓ (Over P) :=
   ⟨_, ⟨pseudo_equal_refl, pseudo_equal_symm, pseudo_equal_trans⟩⟩
 
 attribute [local instance] pseudoelement.setoid
 
 /-- A `pseudoelement` of `P` is just an equivalence class of arrows ending in `P` by being
     pseudo-equal. -/
-def pseudoelement (P : C) : Type max u v :=
+def Pseudoelement (P : C) : Type max u v :=
   Quotientₓ (Pseudoelement.setoid P)
 
 namespace Pseudoelement
 
 /-- A coercion from an object of an abelian category to its pseudoelements. -/
-def object_to_sort : CoeSort C (Type max u v) :=
+def objectToSort : CoeSort C (Type max u v) :=
   ⟨fun P => Pseudoelement P⟩
 
 attribute [local instance] object_to_sort
@@ -147,7 +152,7 @@ attribute [local instance] object_to_sort
 localized [Pseudoelement] attribute [instance] CategoryTheory.Abelian.Pseudoelement.objectToSort
 
 /-- A coercion from an arrow with codomain `P` to its associated pseudoelement. -/
-def over_to_sort {P : C} : Coe (Over P) (Pseudoelement P) :=
+def overToSort {P : C} : Coe (Over P) (Pseudoelement P) :=
   ⟨Quot.mk (PseudoEqual P)⟩
 
 attribute [local instance] over_to_sort
@@ -163,11 +168,11 @@ theorem pseudo_apply_aux {P Q : C} (f : P ⟶ Q) (a b : Over P) : a ≈ b → ap
       rw [reassoc_of comm]⟩
 
 /-- A morphism `f` induces a function `pseudo_apply f` on pseudoelements. -/
-def pseudo_apply {P Q : C} (f : P ⟶ Q) : P → Q :=
+def pseudoApply {P Q : C} (f : P ⟶ Q) : P → Q :=
   Quotientₓ.map (fun g : Over P => app f g) (pseudo_apply_aux f)
 
 /-- A coercion from morphisms to functions on pseudoelements -/
-def hom_to_fun {P Q : C} : CoeFun (P ⟶ Q) fun _ => P → Q :=
+def homToFun {P Q : C} : CoeFun (P ⟶ Q) fun _ => P → Q :=
   ⟨pseudoApply⟩
 
 attribute [local instance] hom_to_fun
@@ -221,14 +226,14 @@ theorem zero_eq_zero' {P Q R : C} : ⟦((0 : Q ⟶ P) : Over P)⟧ = ⟦((0 : R 
   Quotientₓ.sound <| (pseudo_zero_aux R _).2 rfl
 
 /-- The zero pseudoelement is the class of a zero morphism -/
-def pseudo_zero {P : C} : P :=
+def pseudoZero {P : C} : P :=
   ⟦(0 : P ⟶ P)⟧
 
 /-- We can not use `pseudo_zero` as a global `has_zero` instance,
 as it would trigger on any type class search for `has_zero` applied to a `coe_sort`.
 This would be too expensive.
 -/
-def Zero {P : C} : Zero P :=
+def hasZero {P : C} : Zero P :=
   ⟨pseudoZero⟩
 
 localized [Pseudoelement] attribute [instance] CategoryTheory.Abelian.Pseudoelement.hasZero
@@ -344,13 +349,19 @@ theorem pseudo_exact_of_exact {P Q R : C} {f : P ⟶ Q} {g : Q ⟶ R} [Exact f g
     exact zero_apply _ _, fun b' =>
     (Quotientₓ.induction_on b') fun b hb => by
       have hb' : b.Hom ≫ g = 0 := (pseudo_zero_iff _).1 hb
+      -- By exactness, b factors through im f = ker g via some c
       obtain ⟨c, hc⟩ := kernel_fork.is_limit.lift' (is_limit_image f g) _ hb'
+      -- We compute the pullback of the map into the image and c.
+      -- The pseudoelement induced by the first pullback map will be our preimage.
       use (pullback.fst : pullback (images.factor_thru_image f) c ⟶ P)
+      -- It remains to show that the image of this element under f is pseudo-equal to b.
       apply Quotientₓ.sound
+      -- pullback.snd is an epimorphism because the map onto the image is!
       refine'
         ⟨pullback (images.factor_thru_image f) c, 𝟙 _, pullback.snd, by
           infer_instance, by
           infer_instance, _⟩
+      -- Now we can verify that the diagram commutes.
       calc 𝟙 (pullback (images.factor_thru_image f) c) ≫ pullback.fst ≫ f = pullback.fst ≫ f :=
           category.id_comp _ _ = pullback.fst ≫ images.factor_thru_image f ≫ kernel.ι (cokernel.π f) := by
           rw [images.image.fac]_ = (pullback.snd ≫ c) ≫ kernel.ι (cokernel.π f) := by
@@ -372,19 +383,31 @@ theorem exact_of_pseudo_exact {P Q R : C} (f : P ⟶ Q) (g : Q ⟶ R) :
     ⟨(zero_morphism_ext _) fun a => by
         rw [comp_apply, h₁ a],
       by
+      -- If we apply g to the pseudoelement induced by its kernel, we get 0 (of course!).
       have : g (kernel.ι g) = 0 := apply_eq_zero_of_comp_eq_zero _ _ (kernel.condition _)
+      -- By pseudo-exactness, we get a preimage.
       obtain ⟨a', ha⟩ := h₂ _ this
       obtain ⟨a, ha'⟩ := Quotientₓ.exists_rep a'
       rw [← ha'] at ha
       obtain ⟨Z, r, q, er, eq, comm⟩ := Quotientₓ.exact ha
+      -- Consider the pullback of kernel.ι (cokernel.π f) and kernel.ι g.
+      -- The commutative diagram given by the pseudo-equality f a = b induces
+      -- a cone over this pullback, so we get a factorization z.
       obtain ⟨z, hz₁, hz₂⟩ :=
         @pullback.lift' _ _ _ _ _ _ (kernel.ι (cokernel.π f)) (kernel.ι g) _ (r ≫ a.hom ≫ images.factor_thru_image f) q
           (by
             simp only [category.assoc, images.image.fac]
             exact comm)
+      -- Let's give a name to the second pullback morphism.
       let j : pullback (kernel.ι (cokernel.π f)) (kernel.ι g) ⟶ kernel g := pullback.snd
+      -- Since q is an epimorphism, in particular this means that j is an epimorphism.
       have pe : epi j := epi_of_epi_fac hz₂
+      -- But is is also a monomorphism, because kernel.ι (cokernel.π f) is: A kernel is
+      -- always a monomorphism and the pullback of a monomorphism is a monomorphism.
+      -- But mono + epi = iso, so j is an isomorphism.
       have : is_iso j := is_iso_of_mono_of_epi _
+      -- But then kernel.ι g can be expressed using all of the maps of the pullback square, and we
+      -- are done.
       rw [(iso.eq_inv_comp (as_iso j)).2 pullback.condition.symm]
       simp only [category.assoc, kernel.condition, has_zero_morphisms.comp_zero]⟩
 
@@ -409,6 +432,7 @@ theorem sub_of_eq_image {P Q : C} (f : P ⟶ Q) (x y : P) :
             apply (epi_iff_cancel_zero _).1 ep' _ (a'.hom ≫ g)
             simpa using comm'
           apply Quotientₓ.sound
+          -- Can we prevent quotient.sound from giving us this weird `coe_b` thingy?
           change app g (a'' : over P) ≈ app g a
           exact
             ⟨R, 𝟙 R, p, by

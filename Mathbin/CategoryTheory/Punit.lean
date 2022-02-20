@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison, Bhavik Mehta
+-/
 import Mathbin.CategoryTheory.Const
 import Mathbin.CategoryTheory.DiscreteCategory
 
@@ -12,6 +17,7 @@ and construct the equivalence `(discrete punit ⥤ C) ≌ C`.
 
 universe v u
 
+-- morphism levels before object levels. See note [category_theory universes].
 namespace CategoryTheory
 
 namespace Functor
@@ -27,7 +33,7 @@ variable {C}
 
 /-- Any two functors to `discrete punit` are isomorphic. -/
 @[simps]
-def punit_ext (F G : C ⥤ Discrete PUnit) : F ≅ G :=
+def punitExt (F G : C ⥤ Discrete PUnit) : F ≅ G :=
   NatIso.ofComponents
     (fun _ =>
       eqToIso
@@ -47,12 +53,12 @@ theorem punit_ext' (F G : C ⥤ Discrete PUnit) : F = G :=
     decide
 
 /-- The functor from `discrete punit` sending everything to the given object. -/
-abbrev from_punit (X : C) : Discrete PUnit.{v + 1} ⥤ C :=
+abbrev fromPunit (X : C) : Discrete PUnit.{v + 1} ⥤ C :=
   (Functor.const _).obj X
 
 /-- Functors from `discrete punit` are equivalent to the category itself. -/
 @[simps]
-def Equivₓ : Discrete PUnit ⥤ C ≌ C where
+def equiv : Discrete PUnit ⥤ C ≌ C where
   Functor := { obj := fun F => F.obj PUnit.unit, map := fun F G θ => θ.app PUnit.unit }
   inverse := Functor.const _
   unitIso := by
@@ -70,6 +76,7 @@ def Equivₓ : Discrete PUnit ⥤ C ≌ C where
     dsimp
     simp
 
+-- See note [dsimp, simp].
 end Functor
 
 end CategoryTheory

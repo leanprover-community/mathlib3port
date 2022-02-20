@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Simon Hudon. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Simon Hudon, Patrick Massot
+-/
 import Mathbin.Algebra.BigOperators.Basic
 import Mathbin.Algebra.Ring.Pi
 
@@ -55,6 +60,7 @@ variable {I : Type _} [DecidableEq I] {Z : I → Type _}
 
 variable [∀ i, AddCommMonoidₓ (Z i)]
 
+-- As we only defined `single` into `add_monoid`, we only prove the `finset.sum` version here.
 theorem Finset.univ_sum_single [Fintype I] (f : ∀ i, Z i) : (∑ i, Pi.single i (f i)) = f := by
   ext a
   simp
@@ -71,7 +77,9 @@ note [partially-applied ext lemmas]. -/
 theorem AddMonoidHom.functions_ext' [Fintype I] (M : Type _) [AddCommMonoidₓ M] (g h : (∀ i, Z i) →+ M)
     (H : ∀ i, g.comp (AddMonoidHom.single Z i) = h.comp (AddMonoidHom.single Z i)) : g = h :=
   have := fun i => AddMonoidHom.congr_fun (H i)
-  g.functions_ext M h this
+  -- elab without an expected type
+      g.functions_ext
+    M h this
 
 end Single
 

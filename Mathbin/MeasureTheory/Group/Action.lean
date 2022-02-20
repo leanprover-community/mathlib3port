@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Yury G. Kudryashov. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yury G. Kudryashov
+-/
 import Mathbin.MeasureTheory.Group.MeasurableEquiv
 import Mathbin.MeasureTheory.Measure.Regular
 import Mathbin.Dynamics.Ergodic.MeasurePreserving
@@ -24,14 +29,14 @@ variable {G M α : Type _}
 /-- A measure `μ : measure α` is invariant under an additive action of `M` on `α` if for any
 measurable set `s : set α` and `c : M`, the measure of its preimage under `λ x, c +ᵥ x` is equal to
 the measure of `s`. -/
-class vadd_invariant_measure (M α : Type _) [HasVadd M α] {_ : MeasurableSpace α} (μ : Measure α) : Prop where
+class VaddInvariantMeasure (M α : Type _) [HasVadd M α] {_ : MeasurableSpace α} (μ : Measure α) : Prop where
   measure_preimage_vadd {} : ∀ c : M ⦃s : Set α⦄, MeasurableSet s → μ ((fun x => c +ᵥ x) ⁻¹' s) = μ s
 
 /-- A measure `μ : measure α` is invariant under a multiplicative action of `M` on `α` if for any
 measurable set `s : set α` and `c : M`, the measure of its preimage under `λ x, c • x` is equal to
 the measure of `s`. -/
 @[to_additive]
-class smul_invariant_measure (M α : Type _) [HasScalar M α] {_ : MeasurableSpace α} (μ : Measure α) : Prop where
+class SmulInvariantMeasure (M α : Type _) [HasScalar M α] {_ : MeasurableSpace α} (μ : Measure α) : Prop where
   measure_preimage_smul {} : ∀ c : M ⦃s : Set α⦄, MeasurableSet s → μ ((fun x => c • x) ⁻¹' s) = μ s
 
 namespace SmulInvariantMeasure
@@ -142,8 +147,7 @@ theorem measure_smul_set (s : Set α) : μ (c • s) = μ s :=
 
 section IsMinimal
 
-variable (G) {μ} [TopologicalSpace G] [TopologicalSpace α] [HasContinuousSmul G α] [MulAction.IsMinimal G α]
-  {K U : Set α}
+variable (G) {μ} [TopologicalSpace α] [HasContinuousConstSmul G α] [MulAction.IsMinimal G α] {K U : Set α}
 
 /-- If measure `μ` is invariant under a group action and is nonzero on a compact set `K`, then it is
 positive on any nonempty open set. In case of a regular measure, one can assume `μ ≠ 0` instead of

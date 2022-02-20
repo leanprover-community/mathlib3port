@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2017 Mario Carneiro. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Mario Carneiro
+-/
 import Mathbin.Algebra.BigOperators.Multiset
 
 /-!
@@ -232,6 +237,7 @@ theorem coe_product (l₁ : List α) (l₂ : List β) : @product α β l₁ l₂
 theorem zero_product : @product α β 0 t = 0 :=
   rfl
 
+--TODO: Add `product_zero`
 @[simp]
 theorem cons_product : (a ::ₘ s).product t = map (Prod.mk a) t + s.product t := by
   simp [product]
@@ -256,7 +262,7 @@ theorem mem_product {s t} : ∀ {p : α × β}, p ∈ @product α β s t ↔ p.1
 
 @[simp]
 theorem card_product : (s.product t).card = s.card * t.card := by
-  simp [product, repeat, · ∘ ·, mul_comm]
+  simp [product, repeat, (· ∘ ·), mul_comm]
 
 end Product
 
@@ -269,7 +275,7 @@ variable {σ : α → Type _} (a : α) (s : Multiset α) (t : ∀ a, Multiset (�
 
 /-- `sigma s t` is the dependent version of `product`. It is the sum of
   `(a, b)` as `a` ranges over `s` and `b` ranges over `t a`. -/
-protected def Sigma (s : Multiset α) (t : ∀ a, Multiset (σ a)) : Multiset (Σ a, σ a) :=
+protected def sigma (s : Multiset α) (t : ∀ a, Multiset (σ a)) : Multiset (Σ a, σ a) :=
   s.bind fun a => (t a).map <| Sigma.mk a
 
 @[simp]
@@ -304,7 +310,7 @@ theorem mem_sigma {s t} : ∀ {p : Σ a, σ a}, p ∈ @Multiset.sigma α σ s t 
 
 @[simp]
 theorem card_sigma : card (s.Sigma t) = sum (map (fun a => card (t a)) s) := by
-  simp [Multiset.sigma, · ∘ ·]
+  simp [Multiset.sigma, (· ∘ ·)]
 
 end Sigma
 

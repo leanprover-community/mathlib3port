@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 David Wärn. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: David Wärn, Scott Morrison
+-/
 import Mathbin.Data.Opposite
 
 /-!
@@ -19,6 +24,8 @@ but it is also results in error-prone universe signatures when constraints requi
 
 open Opposite
 
+-- We use the same universe order as in category theory.
+-- See note [category_theory universes]
 universe v v₁ v₂ u u₁ u₂
 
 /-- A quiver `G` on a type `V` of vertices assigns to every pair `a b : V` of vertices
@@ -39,6 +46,7 @@ infixr:10 " ⟶ " => Quiver.Hom
 /-- A morphism of quivers. As we will later have categorical functors extend this structure,
 we call it a `prefunctor`.
 -/
+-- type as \h
 structure Prefunctor (V : Type u₁) [Quiver.{v₁} V] (W : Type u₂) [Quiver.{v₂} W] where
   obj {} : V → W
   map : ∀ {X Y : V}, (X ⟶ Y) → (obj X ⟶ obj Y)
@@ -68,17 +76,17 @@ end Prefunctor
 namespace Quiver
 
 /-- `Vᵒᵖ` reverses the direction of all arrows of `V`. -/
-instance Opposite {V} [Quiver V] : Quiver (Vᵒᵖ) :=
+instance opposite {V} [Quiver V] : Quiver (Vᵒᵖ) :=
   ⟨fun a b => unop b ⟶ unop a⟩
 
 /-- The opposite of an arrow in `V`.
 -/
-def hom.op {V} [Quiver V] {X Y : V} (f : X ⟶ Y) : op Y ⟶ op X :=
+def Hom.op {V} [Quiver V] {X Y : V} (f : X ⟶ Y) : op Y ⟶ op X :=
   f
 
 /-- Given an arrow in `Vᵒᵖ`, we can take the "unopposite" back in `V`.
 -/
-def hom.unop {V} [Quiver V] {X Y : Vᵒᵖ} (f : X ⟶ Y) : unop Y ⟶ unop X :=
+def Hom.unop {V} [Quiver V] {X Y : Vᵒᵖ} (f : X ⟶ Y) : unop Y ⟶ unop X :=
   f
 
 /-- A type synonym for a quiver with no arrows. -/
@@ -86,7 +94,7 @@ def hom.unop {V} [Quiver V] {X Y : Vᵒᵖ} (f : X ⟶ Y) : unop Y ⟶ unop X :=
 def Empty V : Type u :=
   V
 
-instance empty_quiver (V : Type u) : Quiver.{u} (Empty V) :=
+instance emptyQuiver (V : Type u) : Quiver.{u} (Empty V) :=
   ⟨fun a b => Pempty⟩
 
 @[simp]

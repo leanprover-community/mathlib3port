@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Peter Nelson. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Peter Nelson, Yaël Dillies
+-/
 import Mathbin.Data.Fintype.Basic
 import Mathbin.Order.ConditionallyCompleteLattice
 import Mathbin.Data.Finset.Order
@@ -49,20 +54,23 @@ section Nonempty
 variable (α) [Nonempty α]
 
 /-- Constructs the `⊥` of a finite nonempty `semilattice_inf`. -/
+-- See note [reducible non-instances]
 @[reducible]
-def to_order_bot [SemilatticeInf α] : OrderBot α where
+def toOrderBot [SemilatticeInf α] : OrderBot α where
   bot := univ.inf' univ_nonempty id
   bot_le := fun a => inf'_le _ <| mem_univ a
 
 /-- Constructs the `⊤` of a finite nonempty `semilattice_sup` -/
+-- See note [reducible non-instances]
 @[reducible]
-def to_order_top [SemilatticeSup α] : OrderTop α where
+def toOrderTop [SemilatticeSup α] : OrderTop α where
   top := univ.sup' univ_nonempty id
   le_top := fun a => le_sup' _ <| mem_univ a
 
 /-- Constructs the `⊤` and `⊥` of a finite nonempty `lattice`. -/
+-- See note [reducible non-instances]
 @[reducible]
-def to_bounded_order [Lattice α] : BoundedOrder α :=
+def toBoundedOrder [Lattice α] : BoundedOrder α :=
   { toOrderBot α, toOrderTop α with }
 
 end Nonempty
@@ -74,8 +82,9 @@ variable (α)
 open_locale Classical
 
 /-- A finite bounded lattice is complete. -/
+-- See note [reducible non-instances]
 @[reducible]
-noncomputable def to_complete_lattice [Lattice α] [BoundedOrder α] : CompleteLattice α :=
+noncomputable def toCompleteLattice [Lattice α] [BoundedOrder α] : CompleteLattice α :=
   { ‹Lattice α›, ‹BoundedOrder α› with sup := fun s => s.toFinset.sup id, inf := fun s => s.toFinset.inf id,
     le_Sup := fun _ _ ha => Finset.le_sup (Set.mem_to_finset.mpr ha),
     Sup_le := fun s _ ha => Finset.sup_le fun b hb => ha _ <| Set.mem_to_finset.mp hb,
@@ -83,8 +92,9 @@ noncomputable def to_complete_lattice [Lattice α] [BoundedOrder α] : CompleteL
     le_Inf := fun s _ ha => Finset.le_inf fun b hb => ha _ <| Set.mem_to_finset.mp hb }
 
 /-- A finite bounded distributive lattice is completely distributive. -/
+-- See note [reducible non-instances]
 @[reducible]
-noncomputable def to_complete_distrib_lattice [DistribLattice α] [BoundedOrder α] : CompleteDistribLattice α :=
+noncomputable def toCompleteDistribLattice [DistribLattice α] [BoundedOrder α] : CompleteDistribLattice α :=
   { toCompleteLattice α with
     infi_sup_le_sup_Inf := fun a s => by
       convert (Finset.inf_sup_distrib_left _ _ _).Ge
@@ -98,13 +108,15 @@ noncomputable def to_complete_distrib_lattice [DistribLattice α] [BoundedOrder 
       rfl }
 
 /-- A finite bounded linear order is complete. -/
+-- See note [reducible non-instances]
 @[reducible]
-noncomputable def to_complete_linear_order [LinearOrderₓ α] [BoundedOrder α] : CompleteLinearOrder α :=
+noncomputable def toCompleteLinearOrder [LinearOrderₓ α] [BoundedOrder α] : CompleteLinearOrder α :=
   { toCompleteLattice α, ‹LinearOrderₓ α› with }
 
 /-- A finite boolean algebra is complete. -/
+-- See note [reducible non-instances]
 @[reducible]
-noncomputable def to_complete_boolean_algebra [BooleanAlgebra α] : CompleteBooleanAlgebra α :=
+noncomputable def toCompleteBooleanAlgebra [BooleanAlgebra α] : CompleteBooleanAlgebra α :=
   { Fintype.toCompleteDistribLattice α, ‹BooleanAlgebra α› with }
 
 end BoundedOrder
@@ -115,15 +127,17 @@ variable (α) [Nonempty α]
 
 /-- A nonempty finite lattice is complete. If the lattice is already a `bounded_order`, then use
 `fintype.to_complete_lattice` instead, as this gives definitional equality for `⊥` and `⊤`. -/
+-- See note [reducible non-instances]
 @[reducible]
-noncomputable def to_complete_lattice_of_nonempty [Lattice α] : CompleteLattice α :=
+noncomputable def toCompleteLatticeOfNonempty [Lattice α] : CompleteLattice α :=
   @toCompleteLattice _ _ _ <| @toBoundedOrder α _ ⟨Classical.arbitrary α⟩ _
 
 /-- A nonempty finite linear order is complete. If the linear order is already a `bounded_order`,
 then use `fintype.to_complete_linear_order` instead, as this gives definitional equality for `⊥` and
 `⊤`. -/
+-- See note [reducible non-instances]
 @[reducible]
-noncomputable def to_complete_linear_order_of_nonempty [LinearOrderₓ α] : CompleteLinearOrder α :=
+noncomputable def toCompleteLinearOrderOfNonempty [LinearOrderₓ α] : CompleteLinearOrder α :=
   { toCompleteLatticeOfNonempty α, ‹LinearOrderₓ α› with }
 
 end Nonempty

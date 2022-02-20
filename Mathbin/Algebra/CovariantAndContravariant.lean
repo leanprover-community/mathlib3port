@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Damiano Testa. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Damiano Testa
+-/
 import Mathbin.Algebra.Group.Defs
 import Mathbin.Order.Basic
 import Mathbin.Order.Monotone
@@ -48,6 +53,13 @@ However, sometimes as a **non-typeclass** assumption, we prefer `flip (*)` (or `
 as it is easier to use. -/
 
 
+-- TODO: convert `has_exists_mul_of_le`, `has_exists_add_of_le`?
+-- TODO: relationship with `con/add_con`
+-- TODO: include equivalence of `left_cancel_semigroup` with
+-- `semigroup partial_order contravariant_class α α (*) (≤)`?
+-- TODO : use ⇒, as per Eric's suggestion?  See
+-- https://leanprover.zulipchat.com/#narrow/stream/116395-maths/topic/ordered.20stuff/near/236148738
+-- for a discussion.
 open Function
 
 section Variants
@@ -140,6 +152,7 @@ section IsTrans
 
 variable [IsTrans N r] (m n : M) {a b c d : N}
 
+--  Lemmas with 3 elements.
 theorem act_rel_of_rel_of_act_rel (ab : r a b) (rl : r (μ m b) c) : r (μ m a) c :=
   trans (act_rel_act_of_rel m ab) rl
 
@@ -150,6 +163,7 @@ end IsTrans
 
 end Covariant
 
+--  Lemma with 4 elements.
 section MEqN
 
 variable {M N μ r} {mu : N → N → N} [IsTrans N r] [CovariantClass N N mu r] [CovariantClass N N (swap mu) r]
@@ -171,6 +185,7 @@ section IsTrans
 
 variable [IsTrans N r] (m n : M) {a b c d : N}
 
+--  Lemmas with 3 elements.
 theorem act_rel_of_act_rel_of_rel_act_rel (ab : r (μ m a) b) (rl : r (μ m b) (μ m c)) : r (μ m a) c :=
   trans ab (rel_of_act_rel_act m rl)
 

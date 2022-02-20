@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Julian Kuelshammer. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Julian Kuelshammer
+-/
 import Mathbin.Algebra.Category.Mon.Basic
 import Mathbin.Algebra.Category.Semigroup.Basic
 import Mathbin.Algebra.Group.WithOne

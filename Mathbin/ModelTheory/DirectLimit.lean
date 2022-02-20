@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2022 Aaron Anderson. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Aaron Anderson
+-/
 import Mathbin.Data.Fintype.Order
 import Mathbin.Algebra.DirectLimit
 import Mathbin.ModelTheory.Quotients
@@ -72,7 +77,7 @@ variable (G)
 namespace DirectLimit
 
 /-- The directed limit glues together the structures along the embeddings. -/
-def Setoidₓ [DirectedSystem G fun i j h => f i j h] [IsDirected ι (· ≤ ·)] : Setoidₓ (Σ i, G i) where
+def setoid [DirectedSystem G fun i j h => f i j h] [IsDirected ι (· ≤ ·)] : Setoidₓ (Σ i, G i) where
   R := fun ⟨i, x⟩ ⟨j, y⟩ => ∃ (k : ι)(ik : i ≤ k)(jk : j ≤ k), f i k ik x = f j k jk y
   iseqv :=
     ⟨fun ⟨i, x⟩ => ⟨i, refl i, refl i, rfl⟩, fun ⟨i, x⟩ ⟨j, y⟩ ⟨k, ik, jk, h⟩ => ⟨k, jk, ik, h.symm⟩,
@@ -85,7 +90,7 @@ def Setoidₓ [DirectedSystem G fun i j h => f i j h] [IsDirected ι (· ≤ ·)
 
 /-- The structure on the `Σ`-type which becomes the structure on the direct limit after quotienting.
  -/
-noncomputable def sigma_structure [IsDirected ι (· ≤ ·)] [Nonempty ι] : L.Structure (Σ i, G i) where
+noncomputable def sigmaStructure [IsDirected ι (· ≤ ·)] [Nonempty ι] : L.Structure (Σ i, G i) where
   funMap := fun n F x =>
     ⟨_,
       funMap F
@@ -99,7 +104,7 @@ noncomputable def sigma_structure [IsDirected ι (· ≤ ·)] [Nonempty ι] : L.
 end DirectLimit
 
 /-- The direct limit of a directed system is the structures glued together along the embeddings. -/
-def direct_limit [DirectedSystem G fun i j h => f i j h] [IsDirected ι (· ≤ ·)] :=
+def DirectLimit [DirectedSystem G fun i j h => f i j h] [IsDirected ι (· ≤ ·)] :=
   Quotientₓ (DirectLimit.setoid G f)
 
 attribute [local instance] direct_limit.setoid
@@ -174,7 +179,7 @@ noncomputable instance prestructure : L.Prestructure (DirectLimit.setoid G f) wh
     rw [h]
 
 /-- The `L.Structure` on a direct limit of `L.Structure`s. -/
-noncomputable instance Structure : L.Structure (DirectLimit G f) :=
+noncomputable instance structure : L.Structure (DirectLimit G f) :=
   language.quotient_structure
 
 @[simp]

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Simon Hudon. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Simon Hudon
+-/
 import Mathbin.Control.Applicative
 import Mathbin.Control.Traversable.Basic
 
@@ -47,7 +52,7 @@ variable (f : β → γ)
 
 /-- The natural applicative transformation from the identity functor
 to `F`, defined by `pure : Π {α}, α → F α`. -/
-def pure_transformation : ApplicativeTransformation id F where
+def pureTransformation : ApplicativeTransformation id F where
   app := @pure F _
   preserves_pure' := fun α x => rfl
   preserves_seq' := fun α β f x => by
@@ -103,6 +108,7 @@ theorem traverse_eq_map_id' (f : β → γ) : traverse (id.mk ∘ f) = id.mk ∘
   ext
   exact traverse_eq_map_id _ _
 
+-- @[functor_norm]
 theorem traverse_map' (g : α → β) (h : β → G γ) : traverse (h ∘ g) = (traverse h ∘ map g : t α → G (t γ)) := by
   ext
   rw [comp_app, traverse_map]

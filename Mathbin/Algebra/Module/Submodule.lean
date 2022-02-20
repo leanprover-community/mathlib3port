@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2015 Nathaniel Thomas. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Nathaniel Thomas, Jeremy Avigad, Johannes Hölzl, Mario Carneiro
+-/
 import Mathbin.Algebra.Module.LinearMap
 import Mathbin.Data.Equiv.Module
 import Mathbin.GroupTheory.GroupAction.SubMulAction
@@ -132,6 +137,8 @@ section AddCommMonoidₓ
 
 variable [Semiringₓ R] [AddCommMonoidₓ M]
 
+-- We can infer the module structure implicitly from the bundled submodule,
+-- rather than via typeclass resolution.
 variable {module_M : Module R M}
 
 variable {p q : Submodule R M}
@@ -187,7 +194,7 @@ instance [HasScalar S R] [HasScalar S M] [IsScalarTower S R M] [HasScalar (Sᵐ�
     [IsScalarTower (Sᵐᵒᵖ) R M] [IsCentralScalar S M] : IsCentralScalar S p :=
   p.toSubMulAction.IsCentralScalar
 
-protected theorem Nonempty : (p : Set M).Nonempty :=
+protected theorem nonempty : (p : Set M).Nonempty :=
   ⟨0, p.zero_mem⟩
 
 @[simp]
@@ -228,10 +235,10 @@ theorem coe_mem (x : p) : (x : M) ∈ p :=
 variable (p)
 
 instance : AddCommMonoidₓ p :=
-  { p.toAddSubmonoid.toAddCommMonoid with add := · + ·, zero := 0 }
+  { p.toAddSubmonoid.toAddCommMonoid with add := (· + ·), zero := 0 }
 
 instance module' [Semiringₓ S] [HasScalar S R] [Module S M] [IsScalarTower S R M] : Module S p := by
-  refine' { p.to_sub_mul_action.mul_action' with smul := · • ·, .. } <;>
+  refine' { p.to_sub_mul_action.mul_action' with smul := (· • ·), .. } <;>
     · intros
       apply SetCoe.ext
       simp [smul_add, add_smul, mul_smul]
@@ -240,20 +247,20 @@ instance module' [Semiringₓ S] [HasScalar S R] [Module S M] [IsScalarTower S R
 instance : Module R p :=
   p.module'
 
-instance NoZeroSmulDivisors [NoZeroSmulDivisors R M] : NoZeroSmulDivisors R p :=
+instance no_zero_smul_divisors [NoZeroSmulDivisors R M] : NoZeroSmulDivisors R p :=
   ⟨fun c x h =>
     have : c = 0 ∨ (x : M) = 0 := eq_zero_or_eq_zero_of_smul_eq_zero (congr_argₓ coe h)
     this.imp_right (@Subtype.ext_iff _ _ x 0).mpr⟩
 
 /-- Embedding of a submodule `p` to the ambient space `M`. -/
-protected def Subtype : p →ₗ[R] M := by
+protected def subtype : p →ₗ[R] M := by
   refine' { toFun := coe, .. } <;> simp [coe_smul]
 
 theorem subtype_apply (x : p) : p.Subtype x = x :=
   rfl
 
 @[simp]
-theorem coeSubtype : (Submodule.subtype p : p → M) = coe :=
+theorem coe_subtype : (Submodule.subtype p : p → M) = coe :=
   rfl
 
 theorem injective_subtype : Injective p.Subtype :=
@@ -271,7 +278,7 @@ variable (S) [Semiringₓ S] [Module S M] [Module R M] [HasScalar S R] [IsScalar
 /-- `V.restrict_scalars S` is the `S`-submodule of the `S`-module given by restriction of scalars,
 corresponding to `V`, an `R`-submodule of the original `R`-module.
 -/
-def restrict_scalars (V : Submodule R M) : Submodule S M where
+def restrictScalars (V : Submodule R M) : Submodule S M where
   Carrier := V
   zero_mem' := V.zero_mem
   smul_mem' := fun c m h => V.smul_of_tower_mem c h
@@ -299,7 +306,7 @@ theorem restrict_scalars_inj {V₁ V₂ : Submodule R M} : restrictScalars S V�
   (restrict_scalars_injective S _ _).eq_iff
 
 /-- Even though `p.restrict_scalars S` has type `submodule S M`, it is still an `R`-module. -/
-instance restrict_scalars.orig_module (p : Submodule R M) : Module R (p.restrictScalars S) :=
+instance restrictScalars.origModule (p : Submodule R M) : Module R (p.restrictScalars S) :=
   (by
     infer_instance : Module R p)
 
@@ -309,7 +316,7 @@ instance (p : Submodule R M) : IsScalarTower S R (p.restrictScalars S) where
 /-- `restrict_scalars S` is an embedding of the lattice of `R`-submodules into
 the lattice of `S`-submodules. -/
 @[simps]
-def restrict_scalars_embedding : Submodule R M ↪o Submodule S M where
+def restrictScalarsEmbedding : Submodule R M ↪o Submodule S M where
   toFun := restrictScalars S
   inj' := restrict_scalars_injective S R M
   map_rel_iff' := fun p q => by
@@ -318,7 +325,7 @@ def restrict_scalars_embedding : Submodule R M ↪o Submodule S M where
 /-- Turning `p : submodule R M` into an `S`-submodule gives the same module structure
 as turning it into a type and adding a module structure. -/
 @[simps (config := { simpRhs := true })]
-def restrict_scalars_equiv (p : Submodule R M) : p.restrictScalars S ≃ₗ[R] p :=
+def restrictScalarsEquiv (p : Submodule R M) : p.restrictScalars S ≃ₗ[R] p :=
   { AddEquiv.refl p with toFun := id, invFun := id, map_smul' := fun c x => rfl }
 
 end RestrictScalars
@@ -339,7 +346,7 @@ theorem neg_mem (hx : x ∈ p) : -x ∈ p :=
   p.toSubMulAction.neg_mem hx
 
 /-- Reinterpret a submodule as an additive subgroup. -/
-def to_add_subgroup : AddSubgroup M :=
+def toAddSubgroup : AddSubgroup M :=
   { p.toAddSubmonoid with neg_mem' := fun _ => p.neg_mem }
 
 @[simp]
@@ -392,7 +399,7 @@ theorem coe_neg (x : p) : ((-x : p) : M) = -x :=
   rfl
 
 instance : AddCommGroupₓ p :=
-  { p.toAddSubgroup.toAddCommGroup with add := · + ·, zero := 0, neg := Neg.neg }
+  { p.toAddSubgroup.toAddCommGroup with add := (· + ·), zero := 0, neg := Neg.neg }
 
 @[simp, norm_cast]
 theorem coe_sub (x y : p) : (↑(x - y) : M) = ↑x - ↑y :=
@@ -422,24 +429,24 @@ section OrderedMonoid
 variable [Semiringₓ R]
 
 /-- A submodule of an `ordered_add_comm_monoid` is an `ordered_add_comm_monoid`. -/
-instance to_ordered_add_comm_monoid {M} [OrderedAddCommMonoid M] [Module R M] (S : Submodule R M) :
+instance toOrderedAddCommMonoid {M} [OrderedAddCommMonoid M] [Module R M] (S : Submodule R M) :
     OrderedAddCommMonoid S :=
   Subtype.coe_injective.OrderedAddCommMonoid coe rfl fun _ _ => rfl
 
 /-- A submodule of a `linear_ordered_add_comm_monoid` is a `linear_ordered_add_comm_monoid`. -/
-instance to_linear_ordered_add_comm_monoid {M} [LinearOrderedAddCommMonoid M] [Module R M] (S : Submodule R M) :
+instance toLinearOrderedAddCommMonoid {M} [LinearOrderedAddCommMonoid M] [Module R M] (S : Submodule R M) :
     LinearOrderedAddCommMonoid S :=
   Subtype.coe_injective.LinearOrderedAddCommMonoid coe rfl fun _ _ => rfl
 
 /-- A submodule of an `ordered_cancel_add_comm_monoid` is an `ordered_cancel_add_comm_monoid`. -/
-instance to_ordered_cancel_add_comm_monoid {M} [OrderedCancelAddCommMonoid M] [Module R M] (S : Submodule R M) :
+instance toOrderedCancelAddCommMonoid {M} [OrderedCancelAddCommMonoid M] [Module R M] (S : Submodule R M) :
     OrderedCancelAddCommMonoid S :=
   Subtype.coe_injective.OrderedCancelAddCommMonoid coe rfl fun _ _ => rfl
 
 /-- A submodule of a `linear_ordered_cancel_add_comm_monoid` is a
 `linear_ordered_cancel_add_comm_monoid`. -/
-instance to_linear_ordered_cancel_add_comm_monoid {M} [LinearOrderedCancelAddCommMonoid M] [Module R M]
-    (S : Submodule R M) : LinearOrderedCancelAddCommMonoid S :=
+instance toLinearOrderedCancelAddCommMonoid {M} [LinearOrderedCancelAddCommMonoid M] [Module R M] (S : Submodule R M) :
+    LinearOrderedCancelAddCommMonoid S :=
   Subtype.coe_injective.LinearOrderedCancelAddCommMonoid coe rfl fun _ _ => rfl
 
 end OrderedMonoid
@@ -449,13 +456,12 @@ section OrderedGroup
 variable [Ringₓ R]
 
 /-- A submodule of an `ordered_add_comm_group` is an `ordered_add_comm_group`. -/
-instance to_ordered_add_comm_group {M} [OrderedAddCommGroup M] [Module R M] (S : Submodule R M) :
-    OrderedAddCommGroup S :=
+instance toOrderedAddCommGroup {M} [OrderedAddCommGroup M] [Module R M] (S : Submodule R M) : OrderedAddCommGroup S :=
   Subtype.coe_injective.OrderedAddCommGroup coe rfl (fun _ _ => rfl) (fun _ => rfl) fun _ _ => rfl
 
 /-- A submodule of a `linear_ordered_add_comm_group` is a
 `linear_ordered_add_comm_group`. -/
-instance to_linear_ordered_add_comm_group {M} [LinearOrderedAddCommGroup M] [Module R M] (S : Submodule R M) :
+instance toLinearOrderedAddCommGroup {M} [LinearOrderedAddCommGroup M] [Module R M] (S : Submodule R M) :
     LinearOrderedAddCommGroup S :=
   Subtype.coe_injective.LinearOrderedAddCommGroup coe rfl (fun _ _ => rfl) (fun _ => rfl) fun _ _ => rfl
 

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2017 Johannes Hölzl. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johannes Hölzl, Devon Tuma
+-/
 import Mathbin.MeasureTheory.ProbabilityMassFunction.Monad
 
 /-!
@@ -106,13 +111,13 @@ end Seq
 
 section OfFinset
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (a «expr ∉ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (a «expr ∉ » s)
 /-- Given a finset `s` and a function `f : α → ℝ≥0` with sum `1` on `s`,
   such that `f a = 0` for `a ∉ s`, we get a `pmf` -/
-def of_finset (f : α → ℝ≥0 ) (s : Finset α) (h : (∑ a in s, f a) = 1) (h' : ∀ a _ : a ∉ s, f a = 0) : Pmf α :=
+def ofFinset (f : α → ℝ≥0 ) (s : Finset α) (h : (∑ a in s, f a) = 1) (h' : ∀ a _ : a ∉ s, f a = 0) : Pmf α :=
   ⟨f, h ▸ has_sum_sum_of_ne_finset_zero h'⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (a «expr ∉ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (a «expr ∉ » s)
 variable {f : α → ℝ≥0 } {s : Finset α} (h : (∑ a in s, f a) = 1) (h' : ∀ a _ : a ∉ s, f a = 0)
 
 @[simp]
@@ -150,7 +155,7 @@ end OfFinset
 section OfFintype
 
 /-- Given a finite type `α` and a function `f : α → ℝ≥0` with sum 1, we get a `pmf`. -/
-def of_fintype [Fintype α] (f : α → ℝ≥0 ) (h : (∑ a, f a) = 1) : Pmf α :=
+def ofFintype [Fintype α] (f : α → ℝ≥0 ) (h : (∑ a, f a) = 1) : Pmf α :=
   ofFinset f Finset.univ h fun a ha => absurd (Finset.mem_univ a) ha
 
 variable [Fintype α] {f : α → ℝ≥0 } (h : (∑ a, f a) = 1)
@@ -187,7 +192,7 @@ section OfMultiset
 
 /-- Given a non-empty multiset `s` we construct the `pmf` which sends `a` to the fraction of
   elements in `s` that are `a`. -/
-def of_multiset (s : Multiset α) (hs : s ≠ 0) : Pmf α :=
+def ofMultiset (s : Multiset α) (hs : s ≠ 0) : Pmf α :=
   ⟨fun a => s.count a / s.card, by
     have : (∑ a in s.toFinset, (s.count a : ℝ) / s.card) = 1 := by
       simp [div_eq_inv_mul, finset.mul_sum.symm, (Nat.cast_sum _ _).symm, hs]
@@ -246,7 +251,7 @@ section Uniform
 section UniformOfFinset
 
 /-- Uniform distribution taking the same non-zero probability on the nonempty finset `s` -/
-def uniform_of_finset (s : Finset α) (hs : s.Nonempty) : Pmf α :=
+def uniformOfFinset (s : Finset α) (hs : s.Nonempty) : Pmf α :=
   ofFinset (fun a => if a ∈ s then (s.card : ℝ≥0 )⁻¹ else 0) s
     (Exists.rec_on hs fun x hx =>
       calc
@@ -327,7 +332,7 @@ end UniformOfFinset
 section UniformOfFintype
 
 /-- The uniform pmf taking the same uniform value on all of the fintype `α` -/
-def uniform_of_fintype (α : Type _) [Fintype α] [Nonempty α] : Pmf α :=
+def uniformOfFintype (α : Type _) [Fintype α] [Nonempty α] : Pmf α :=
   uniformOfFinset Finset.univ Finset.univ_nonempty
 
 variable [Fintype α] [Nonempty α]
@@ -390,7 +395,7 @@ end normalize
 section Filter
 
 /-- Create new `pmf` by filtering on a set with non-zero measure and normalizing -/
-def Filter (p : Pmf α) (s : Set α) (h : ∃ a ∈ s, a ∈ p.Support) : Pmf α :=
+def filter (p : Pmf α) (s : Set α) (h : ∃ a ∈ s, a ∈ p.Support) : Pmf α :=
   Pmf.normalize (s.indicator p) <| Nnreal.tsum_indicator_ne_zero p.2.Summable h
 
 variable {p : Pmf α} {s : Set α} (h : ∃ a ∈ s, a ∈ p.Support)

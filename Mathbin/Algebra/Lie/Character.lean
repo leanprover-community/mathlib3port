@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Oliver Nash. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Oliver Nash
+-/
 import Mathbin.Algebra.Lie.Abelian
 import Mathbin.Algebra.Lie.Solvable
 import Mathbin.LinearAlgebra.Dual
@@ -27,7 +32,7 @@ namespace LieAlgebra
 variable (R : Type u) (L : Type v) [CommRingₓ R] [LieRing L] [LieAlgebra R L]
 
 /-- A character of a Lie algebra is a morphism to the scalars. -/
-abbrev lie_character :=
+abbrev LieCharacter :=
   L →ₗ⁅R⁆ R
 
 variable {R L}
@@ -54,7 +59,7 @@ theorem lie_character_apply_of_mem_derived (χ : LieCharacter R L) {x : L} (h : 
 
 /-- For an Abelian Lie algebra, characters are just linear forms. -/
 @[simps]
-def lie_character_equiv_linear_dual [IsLieAbelian L] : LieCharacter R L ≃ Module.Dual R L where
+def lieCharacterEquivLinearDual [IsLieAbelian L] : LieCharacter R L ≃ Module.Dual R L where
   toFun := fun χ => (χ : L →ₗ[R] R)
   invFun := fun ψ =>
     { ψ with

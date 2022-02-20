@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Johan Commelin. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johan Commelin, Robert Y. Lewis
+-/
 import Mathbin.Data.Fin.VecNotation
 import Mathbin.FieldTheory.Finite.Polynomial
 import Mathbin.NumberTheory.Basic
@@ -88,6 +93,9 @@ open finset (range)
 
 open finsupp (single)
 
+-- This lemma reduces a bundled morphism to a "mere" function,
+-- and consequently the simplifier cannot use a lot of powerful simp-lemmas.
+-- We disable this locally, and probably it should be disabled globally in mathlib.
 attribute [-simp] coe_eval₂_hom
 
 variable {p : ℕ} {R : Type _} {idx : Type _} [CommRingₓ R]
@@ -226,9 +234,11 @@ theorem C_p_pow_dvd_bind₁_rename_witt_polynomial_sub_sum (Φ : MvPolynomial id
   cases n
   · simp only [is_unit_one, Int.coe_nat_zero, Int.coe_nat_succ, zero_addₓ, pow_zeroₓ, C_1, IsUnit.dvd]
     
+  -- prepare a useful equation for rewriting
   have key := bind₁_rename_expand_witt_polynomial Φ n IH
   apply_fun map (Int.castRingHom (Zmod (p ^ (n + 1))))  at key
   conv_lhs at key => simp only [map_bind₁, map_rename, map_expand, map_witt_polynomial]
+  -- clean up and massage
   rw [Nat.succ_eq_add_one, C_dvd_iff_zmod, RingHom.map_sub, sub_eq_zero, map_bind₁]
   simp only [map_rename, map_witt_polynomial, witt_polynomial_zmod_self]
   rw [key]
@@ -249,6 +259,7 @@ theorem C_p_pow_dvd_bind₁_rename_witt_polynomial_sub_sum (Φ : MvPolynomial id
     [show p ^ (n + 1 - k) = p * p ^ (n - k) by
       rw [← pow_succₓ, ← tsub_add_eq_add_tsub hk]]
   rw [pow_mulₓ]
+  -- the machine!
   apply dvd_sub_pow_of_dvd_sub
   rw [← C_eq_coe_nat, Int.nat_cast_eq_coe_nat, C_dvd_iff_zmod, RingHom.map_sub, sub_eq_zero, map_expand,
     RingHom.map_pow, MvPolynomial.expand_zmod]
@@ -367,6 +378,8 @@ theorem constant_coeff_witt_structure_int (Φ : MvPolynomial idx ℤ) (h : const
 
 variable (R)
 
+-- we could relax the fintype on `idx`, but then we need to cast from finset to set.
+-- for our applications `idx` is always finite.
 theorem witt_structure_rat_vars [Fintype idx] (Φ : MvPolynomial idx ℚ) (n : ℕ) :
     (wittStructureRat p Φ n).vars ⊆ Finset.univ.product (Finset.range (n + 1)) := by
   rw [wittStructureRat]
@@ -380,6 +393,8 @@ theorem witt_structure_rat_vars [Fintype idx] (Φ : MvPolynomial idx ℚ) (n : �
   rw [Finset.mem_range] at hk
   exact lt_of_lt_of_leₓ hj hk
 
+-- we could relax the fintype on `idx`, but then we need to cast from finset to set.
+-- for our applications `idx` is always finite.
 theorem witt_structure_int_vars [Fintype idx] (Φ : MvPolynomial idx ℤ) (n : ℕ) :
     (wittStructureInt p Φ n).vars ⊆ Finset.univ.product (Finset.range (n + 1)) := by
   have : Function.Injective (Int.castRingHom ℚ) := Int.cast_injective

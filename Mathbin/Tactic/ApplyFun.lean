@@ -1,8 +1,13 @@
+/-
+Copyright (c) 2019 Patrick Massot. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Keeley Hoek, Patrick Massot
+-/
 import Mathbin.Tactic.Monotonicity.Default
 
 namespace Tactic
 
--- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:916:4: warning: unsupported (TODO): `[tacs]
 /-- Apply the function `f` given by `e : pexpr` to the local hypothesis `hyp`, which must either be
 of the form `a = b` or `a ≤ b`, replacing the type of `hyp` with `f a = f b` or `f a ≤ f b`. If
 `hyp` names an inequality then a new goal `monotone f` is created, unless the name of a proof of
@@ -23,7 +28,9 @@ unsafe def apply_fun_to_hyp (e : pexpr) (mono_lem : Option pexpr) (hyp : expr) :
             | none => do
               let n ← get_unused_name `mono
               to_expr (pquote.1 (Monotone (%%ₓe))) >>= assert n
-              swap
+              -- In order to resolve implicit arguments in `%%e`,
+                -- we build (and discard) the expression `%%n %%hyp` before calling the `mono` tactic.
+                swap
               let n ← get_local n
               to_expr (pquote.1 ((%%ₓn) (%%ₓhyp)))
               swap
@@ -36,7 +43,9 @@ unsafe def apply_fun_to_hyp (e : pexpr) (mono_lem : Option pexpr) (hyp : expr) :
       | _ => throwError "failed to apply {(← e)} at {← hyp}"
   clear hyp
   let hyp ← note hyp.local_pp_name none prf
-  try <| tactic.dsimp_hyp hyp simp_lemmas.mk [] { eta := False, beta := True }
+  -- let's try to force β-reduction at `h`
+      try <|
+      tactic.dsimp_hyp hyp simp_lemmas.mk [] { eta := False, beta := True }
 
 /-- Attempt to "apply" a function `f` represented by the argument `e : pexpr` to the goal.
 
@@ -57,14 +66,22 @@ unsafe def apply_fun_to_goal (e : pexpr) (lem : Option pexpr) : tactic Unit := d
     | quote.1 ((%%ₓl) = %%ₓr) =>
       focus1 do
         to_expr (pquote.1 ((%%ₓe) (%%ₓl)))
-        let n ← get_unused_name `inj
+        let n
+          ←-- build and discard an application, to fill in implicit arguments
+              get_unused_name
+              `inj
         to_expr (pquote.1 (Function.Injective (%%ₓe))) >>= assert n
-        (focus1 <|
+        (-- Attempt to discharge the `injective f` goal
+              -- We require that applying the lemma closes the goal, not just makes progress:
+              focus1 <|
               assumption <|>
                 (to_expr (pquote.1 Equivₓ.injective) >>= apply) >> done <|>
                   (lem fun l => to_expr l >>= apply) >> done) <|>
             swap
-        let n ← get_local n
+        let n
+          ←-- return to the main goal if we couldn't discharge `injective f`.
+              get_local
+              n
         apply n
         clear n
     | _ => throwError "failed to apply {← e} to the goal"

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2017 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Tim Baumann, Stephen Morgan, Scott Morrison, Floris van Doorn
+-/
 import Mathbin.CategoryTheory.NaturalTransformation
 import Mathbin.CategoryTheory.Isomorphism
 
@@ -17,6 +22,7 @@ this is a small category at the next higher level.
 
 namespace CategoryTheory
 
+-- declare the `v`'s first; see `category_theory.category` for an explanation
 universe v₁ v₂ v₃ u₁ u₂ u₃
 
 open NatTrans Category CategoryTheory.Functor
@@ -33,7 +39,7 @@ this is another small category at that level.
 However if `C` and `D` are both large categories at the same universe level,
 this is a small category at the next higher level.
 -/
-instance functor.category : Category.{max u₁ v₂} (C ⥤ D) where
+instance Functor.category : Category.{max u₁ v₂} (C ⥤ D) where
   Hom := fun F G => NatTrans F G
   id := fun F => NatTrans.id F
   comp := fun _ _ _ α β => vcomp α β
@@ -99,9 +105,14 @@ theorem hcomp_id_app {H : D ⥤ E} (α : F ⟶ G) (X : C) : (α ◫ 𝟙 H).app 
   dsimp
   simp
 
+-- See note [dsimp, simp].
 theorem id_hcomp_app {H : E ⥤ C} (α : F ⟶ G) (X : E) : (𝟙 H ◫ α).app X = α.app _ := by
   simp
 
+-- Note that we don't yet prove a `hcomp_assoc` lemma here: even stating it is painful, because we
+-- need to use associativity of functor composition. (It's true without the explicit associator,
+-- because functor composition is definitionally associative,
+-- but relying on the definitional equality causes bad problems with elaboration later.)
 theorem exchange {I J K : D ⥤ E} (α : F ⟶ G) (β : G ⟶ H) (γ : I ⟶ J) (δ : J ⟶ K) :
     (α ≫ β) ◫ (γ ≫ δ) = (α ◫ γ) ≫ β ◫ δ := by
   ext <;> simp

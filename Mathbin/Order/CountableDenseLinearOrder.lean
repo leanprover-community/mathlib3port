@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 David Wärn. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: David Wärn
+-/
 import Mathbin.Order.Ideal
 
 /-!
@@ -40,25 +45,32 @@ theorem exists_between_finsets {α : Type _} [LinearOrderₓ α] [DenselyOrdered
     ∃ m : α, (∀, ∀ x ∈ lo, ∀, x < m) ∧ ∀, ∀ y ∈ hi, ∀, m < y :=
   if nlo : lo.Nonempty then
     if nhi : hi.Nonempty then
-      Exists.elim (exists_between (lo_lt_hi _ (Finset.max'_mem _ nlo) _ (Finset.min'_mem _ nhi))) fun m hm =>
+      -- both sets are nonempty, use densely_ordered
+        Exists.elim
+        (exists_between (lo_lt_hi _ (Finset.max'_mem _ nlo) _ (Finset.min'_mem _ nhi))) fun m hm =>
         ⟨m, fun x hx => lt_of_le_of_ltₓ (Finset.le_max' lo x hx) hm.1, fun y hy =>
           lt_of_lt_of_leₓ hm.2 (Finset.min'_le hi y hy)⟩
-    else
-      Exists.elim (exists_gt (Finset.max' lo nlo)) fun m hm =>
+    else-- upper set is empty, use `no_max_order`
+        Exists.elim
+        (exists_gt (Finset.max' lo nlo)) fun m hm =>
         ⟨m, fun x hx => lt_of_le_of_ltₓ (Finset.le_max' lo x hx) hm, fun y hy => (nhi ⟨y, hy⟩).elim⟩
   else
     if nhi : hi.Nonempty then
-      Exists.elim (exists_lt (Finset.min' hi nhi)) fun m hm =>
+      -- lower set is empty, use `no_min_order`
+        Exists.elim
+        (exists_lt (Finset.min' hi nhi)) fun m hm =>
         ⟨m, fun x hx => (nlo ⟨x, hx⟩).elim, fun y hy => lt_of_lt_of_leₓ hm (Finset.min'_le hi y hy)⟩
-    else nonem.elim fun m => ⟨m, fun x hx => (nlo ⟨x, hx⟩).elim, fun y hy => (nhi ⟨y, hy⟩).elim⟩
+    else-- both sets are empty, use nonempty
+          nonem.elim
+        fun m => ⟨m, fun x hx => (nlo ⟨x, hx⟩).elim, fun y hy => (nhi ⟨y, hy⟩).elim⟩
 
 variable (α β : Type _) [LinearOrderₓ α] [LinearOrderₓ β]
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (p q «expr ∈ » f)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (p q «expr ∈ » f)
 /-- The type of partial order isomorphisms between `α` and `β` defined on finite subsets.
     A partial order isomorphism is encoded as a finite subset of `α × β`, consisting
     of pairs which should be identified. -/
-def partial_iso : Type _ :=
+def PartialIso : Type _ :=
   { f : Finset (α × β) // ∀ p q _ : p ∈ f _ : q ∈ f, cmp (Prod.fst p) (Prod.fst q) = cmp (Prod.snd p) (Prod.snd q) }
 
 namespace PartialIso
@@ -125,8 +137,7 @@ variable (β)
 
 /-- The set of partial isomorphisms defined at `a : α`, together with a proof that any
     partial isomorphism can be extended to one defined at `a`. -/
-def defined_at_left [DenselyOrdered β] [NoMinOrder β] [NoMaxOrder β] [Nonempty β] (a : α) :
-    Cofinal (PartialIso α β) where
+def definedAtLeft [DenselyOrdered β] [NoMinOrder β] [NoMaxOrder β] [Nonempty β] (a : α) : Cofinal (PartialIso α β) where
   Carrier := fun f => ∃ b : β, (a, b) ∈ f.val
   mem_gt := by
     intro f
@@ -149,7 +160,7 @@ variable (α) {β}
 
 /-- The set of partial isomorphisms defined at `b : β`, together with a proof that any
     partial isomorphism can be extended to include `b`. We prove this by symmetry. -/
-def defined_at_right [DenselyOrdered α] [NoMinOrder α] [NoMaxOrder α] [Nonempty α] (b : β) :
+def definedAtRight [DenselyOrdered α] [NoMinOrder α] [NoMaxOrder α] [Nonempty α] (b : β) :
     Cofinal (PartialIso α β) where
   Carrier := fun f => ∃ a, (a, b) ∈ f.val
   mem_gt := by
@@ -171,13 +182,13 @@ variable {α}
 
 /-- Given an ideal which intersects `defined_at_left β a`, pick `b : β` such that
     some partial function in the ideal maps `a` to `b`. -/
-def fun_of_ideal [DenselyOrdered β] [NoMinOrder β] [NoMaxOrder β] [Nonempty β] (a : α) (I : Ideal (PartialIso α β)) :
+def funOfIdeal [DenselyOrdered β] [NoMinOrder β] [NoMaxOrder β] [Nonempty β] (a : α) (I : Ideal (PartialIso α β)) :
     (∃ f, f ∈ definedAtLeft β a ∧ f ∈ I) → { b // ∃ f ∈ I, (a, b) ∈ Subtype.val f } :=
   Classical.indefiniteDescription _ ∘ fun ⟨f, ⟨b, hb⟩, hf⟩ => ⟨b, f, hf, hb⟩
 
 /-- Given an ideal which intersects `defined_at_right α b`, pick `a : α` such that
     some partial function in the ideal maps `a` to `b`. -/
-def inv_of_ideal [DenselyOrdered α] [NoMinOrder α] [NoMaxOrder α] [Nonempty α] (b : β) (I : Ideal (PartialIso α β)) :
+def invOfIdeal [DenselyOrdered α] [NoMinOrder α] [NoMaxOrder α] [Nonempty α] (b : β) (I : Ideal (PartialIso α β)) :
     (∃ f, f ∈ definedAtRight α b ∧ f ∈ I) → { a // ∃ f ∈ I, (a, b) ∈ Subtype.val f } :=
   Classical.indefiniteDescription _ ∘ fun ⟨f, ⟨a, ha⟩, hf⟩ => ⟨a, f, hf, ha⟩
 
@@ -188,7 +199,7 @@ open PartialIso
 variable (α β)
 
 /-- Any countable linear order embeds in any nonempty dense linear order without endpoints. -/
-def embedding_from_countable_to_dense [Encodable α] [DenselyOrdered β] [NoMinOrder β] [NoMaxOrder β] [Nonempty β] :
+def embeddingFromCountableToDense [Encodable α] [DenselyOrdered β] [NoMinOrder β] [NoMaxOrder β] [Nonempty β] :
     α ↪o β :=
   let our_ideal : Ideal (PartialIso α β) := idealOfCofinals default <| definedAtLeft β
   let F := fun a => funOfIdeal a our_ideal (cofinal_meets_ideal_of_cofinals _ _ a)
@@ -201,7 +212,7 @@ def embedding_from_countable_to_dense [Encodable α] [DenselyOrdered β] [NoMinO
       exact (lt_iff_lt_of_cmp_eq_cmp <| m.property (a₁, _) (fm ha₁) (a₂, _) (gm ha₂)).mp)
 
 /-- Any two countable dense, nonempty linear orders without endpoints are order isomorphic. -/
-def iso_of_countable_dense [Encodable α] [DenselyOrdered α] [NoMinOrder α] [NoMaxOrder α] [Nonempty α] [Encodable β]
+def isoOfCountableDense [Encodable α] [DenselyOrdered α] [NoMinOrder α] [NoMaxOrder α] [Nonempty α] [Encodable β]
     [DenselyOrdered β] [NoMinOrder β] [NoMaxOrder β] [Nonempty β] : α ≃o β :=
   let to_cofinal : Sum α β → Cofinal (PartialIso α β) := fun p => Sum.recOn p (definedAtLeft β) (definedAtRight α)
   let our_ideal : Ideal (PartialIso α β) := idealOfCofinals default to_cofinal

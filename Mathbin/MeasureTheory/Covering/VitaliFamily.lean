@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Sébastien Gouëzel. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Sébastien Gouëzel
+-/
 import Mathbin.MeasureTheory.Measure.MeasureSpace
 
 /-!
@@ -91,7 +96,7 @@ def mono (v : VitaliFamily μ) (ν : Measureₓ α) (hν : ν ≪ μ) : VitaliFa
 every point `x` in `s` belongs to arbitrarily small sets in `v.sets_at x ∩ f x`. This is precisely
 the subfamilies for which the Vitali family definition ensures that one can extract a disjoint
 covering of almost all `s`. -/
-def fine_subfamily_on (v : VitaliFamily μ) (f : α → Set (Set α)) (s : Set α) : Prop :=
+def FineSubfamilyOn (v : VitaliFamily μ) (f : α → Set (Set α)) (s : Set α) : Prop :=
   ∀, ∀ x ∈ s, ∀, ∀, ∀ ε > 0, ∀, ∃ a ∈ v.SetsAt x ∩ f x, a ⊆ ClosedBall x ε
 
 namespace FineSubfamilyOn
@@ -107,12 +112,12 @@ theorem exists_disjoint_covering_ae :
 
 /-- Given `h : v.fine_subfamily_on f s`, then `h.index` is a subset of `s` parametrizing a disjoint
 covering of almost every `s`. -/
-protected def index : Set α :=
+protected def Index : Set α :=
   h.exists_disjoint_covering_ae.some
 
 /-- Given `h : v.fine_subfamily_on f s`, then `h.covering x` is a set in the family,
 for `x ∈ h.index`, such that these sets form a disjoint covering of almost every `s`. -/
-protected def covering : α → Set α :=
+protected def Covering : α → Set α :=
   h.exists_disjoint_covering_ae.some_spec.some
 
 theorem index_subset : h.index ⊆ s :=
@@ -164,7 +169,7 @@ include v
 /-- Given a vitali family `v`, then `v.filter_at x` is the filter on `set α` made of those families
 that contain all sets of `v.sets_at x` of a sufficiently small diameter. This filter makes it
 possible to express limiting behavior when sets in `v.sets_at x` shrink to `x`. -/
-def filter_at (x : α) : Filter (Set α) :=
+def filterAt (x : α) : Filter (Set α) :=
   ⨅ ε ∈ Ioi (0 : ℝ), 𝓟 { a ∈ v.SetsAt x | a ⊆ ClosedBall x ε }
 
 theorem mem_filter_at_iff {x : α} {s : Set (Set α)} :

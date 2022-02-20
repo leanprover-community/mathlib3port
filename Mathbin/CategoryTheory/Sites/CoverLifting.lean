@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Andrew Yang. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Andrew Yang
+-/
 import Mathbin.CategoryTheory.Sites.Sheaf
 import Mathbin.CategoryTheory.Limits.KanExtension
 import Mathbin.CategoryTheory.Sites.CoverPreserving
@@ -65,7 +70,7 @@ variable {L : GrothendieckTopology E}
 if for all covering sieves `R` in `D`, `R.pullback G` is a covering sieve in `C`.
 -/
 @[nolint has_inhabited_instance]
-structure cover_lifting (G : C ⥤ D) : Prop where
+structure CoverLifting (G : C ⥤ D) : Prop where
   cover_lift : ∀ {U : C} {S : Sieve (G.obj U)} hS : S ∈ K (G.obj U), S.FunctorPullback G ∈ J U
 
 /-- The identity functor on a site is cover-lifting. -/
@@ -125,7 +130,7 @@ variable (x : S.Arrows.FamilyOfElements ((ran G.op).obj ℱ.val ⋙ coyoneda.obj
 variable (hx : x.Compatible)
 
 /-- The family of morphisms `X ⟶ 𝒢(G(Y')) ⟶ ℱ(Y')` defined on `{ Y' ⊆ Y : G(Y') ⊆ U ∈ S}`. -/
-def pulledback_family (Y : StructuredArrow (op U) G.op) :=
+def pulledbackFamily (Y : StructuredArrow (op U) G.op) :=
   ((x.pullback Y.Hom.unop).FunctorPullback G).compPresheafMap
     (show _ ⟶ _ from whiskerRight ((ran.adjunction A G.op).counit.app ℱ.val) (coyoneda.obj (op X)))
 
@@ -140,7 +145,7 @@ variable {x} {S}
 include hu hS hx
 
 /-- Given a `G(Y) ⊆ U`, we can find a unique section `X ⟶ ℱ(Y)` that agrees with `x`. -/
-def get_section (Y : StructuredArrow (op U) G.op) : X ⟶ ℱ.val.obj Y.right := by
+def getSection (Y : StructuredArrow (op U) G.op) : X ⟶ ℱ.val.obj Y.right := by
   let hom_sh := whisker_right ((Ran.adjunction A G.op).counit.app ℱ.val) (coyoneda.obj (op X))
   have S' := K.pullback_stable Y.hom.unop hS
   have hs' := ((hx.pullback Y.3.unop).FunctorPullback G).compPresheafMap hom_sh
@@ -179,7 +184,7 @@ theorem get_section_commute {Y Z : StructuredArrow (op U) G.op} (f : Y ⟶ Z) :
     
 
 /-- The limit cone in order to glue the sections obtained via `get_section`. -/
-def glued_limit_cone : Limits.Cone (Ran.diagram G.op ℱ.val (op U)) :=
+def gluedLimitCone : Limits.Cone (Ran.diagram G.op ℱ.val (op U)) :=
   { x,
     π :=
       { app := fun Y => getSection hu ℱ hS hx Y,
@@ -191,7 +196,7 @@ theorem glued_limit_cone_π_app W : (gluedLimitCone hu ℱ hS hx).π.app W = get
   rfl
 
 /-- The section obtained by passing `glued_limit_cone` into `category_theory.limits.limit.lift`. -/
-def glued_section : X ⟶ ((ran G.op).obj ℱ.val).obj (op U) :=
+def gluedSection : X ⟶ ((ran G.op).obj ℱ.val).obj (op U) :=
   limit.lift _ (gluedLimitCone hu ℱ hS hx)
 
 /-- A helper lemma for the following two lemmas. Basically stating that if the section `y : X ⟶ 𝒢(V)`
@@ -284,7 +289,7 @@ theorem Ran_is_sheaf_of_cover_lifting {G : C ⥤ D} (hG : CoverLifting J K G) (�
 variable (A)
 
 /-- A cover-lifting functor induces a morphism of sites in the same direction as the functor. -/
-def sites.copullback {G : C ⥤ D} (hG : CoverLifting J K G) : Sheaf J A ⥤ Sheaf K A where
+def Sites.copullback {G : C ⥤ D} (hG : CoverLifting J K G) : Sheaf J A ⥤ Sheaf K A where
   obj := fun ℱ => ⟨(ran G.op).obj ℱ.val, Ran_is_sheaf_of_cover_lifting hG ℱ⟩
   map := fun _ _ f => ⟨(ran G.op).map f.val⟩
   map_id' := fun ℱ => Sheaf.Hom.ext _ _ <| (ran G.op).map_id ℱ.val
@@ -294,8 +299,8 @@ def sites.copullback {G : C ⥤ D} (hG : CoverLifting J K G) : Sheaf J A ⥤ She
 the pullback and copullback along `G` are adjoint to each other
 -/
 @[simps unit_app_val counit_app_val]
-noncomputable def sites.pullback_copullback_adjunction {G : C ⥤ D} (Hp : CoverPreserving J K G)
-    (Hl : CoverLifting J K G) (Hc : CompatiblePreserving K G) : Sites.pullback A Hc Hp ⊣ Sites.copullback A Hl where
+noncomputable def Sites.pullbackCopullbackAdjunction {G : C ⥤ D} (Hp : CoverPreserving J K G) (Hl : CoverLifting J K G)
+    (Hc : CompatiblePreserving K G) : Sites.pullback A Hc Hp ⊣ Sites.copullback A Hl where
   homEquiv := fun X Y =>
     { toFun := fun f => ⟨(ran.adjunction A G.op).homEquiv X.val Y.val f.val⟩,
       invFun := fun f => ⟨((ran.adjunction A G.op).homEquiv X.val Y.val).symm f.val⟩,

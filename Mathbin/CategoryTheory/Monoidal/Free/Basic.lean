@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Markus Himmel. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Markus Himmel
+-/
 import Mathbin.CategoryTheory.Monoidal.Functor
 
 /-!
@@ -34,7 +39,7 @@ variable (C)
 (formal) tensor products of terms of `C` and a formal unit. Its morphisms are compositions and
 tensor products of identities, unitors and associators.
 -/
-inductive free_monoidal_category : Type u
+inductive FreeMonoidalCategory : Type u
   | of : C → free_monoidal_category
   | Unit : free_monoidal_category
   | tensor : free_monoidal_category → free_monoidal_category → free_monoidal_category
@@ -50,7 +55,7 @@ namespace FreeMonoidalCategory
     of the free monoidal category are obtained as a quotient of these formal morphisms by the
     relations defining a monoidal category. -/
 @[nolint has_inhabited_instance]
-inductive hom : F C → F C → Type u
+inductive Hom : F C → F C → Type u
   | id X : hom X X
   | α_hom (X Y Z : F C) : hom ((X.tensor Y).tensor Z) (X.tensor (Y.tensor Z))
   | α_inv (X Y Z : F C) : hom (X.tensor (Y.tensor Z)) ((X.tensor Y).tensor Z)
@@ -65,7 +70,7 @@ local infixr:10 " ⟶ᵐ " => Hom
 
 /-- The morphisms of the free monoidal category satisfy 21 relations ensuring that the resulting
     category is in fact a category and that it is monoidal. -/
-inductive hom_equiv : ∀ {X Y : F C}, (X ⟶ᵐ Y) → (X ⟶ᵐ Y) → Prop
+inductive HomEquiv : ∀ {X Y : F C}, (X ⟶ᵐ Y) → (X ⟶ᵐ Y) → Prop
   | refl {X Y} (f : X ⟶ᵐ Y) : hom_equiv f f
   | symm {X Y} (f g : X ⟶ᵐ Y) : hom_equiv f g → hom_equiv g f
   | trans {X Y} {f g h : X ⟶ᵐ Y} : hom_equiv f g → hom_equiv g h → hom_equiv f h
@@ -100,7 +105,7 @@ inductive hom_equiv : ∀ {X Y : F C}, (X ⟶ᵐ Y) → (X ⟶ᵐ Y) → Prop
 /-- We say that two formal morphisms in the free monoidal category are equivalent if they become
     equal if we apply the relations that are true in a monoidal category. Note that we will prove
     that there is only one equivalence class -- this is the monoidal coherence theorem. -/
-def setoid_hom (X Y : F C) : Setoidₓ (X ⟶ᵐ Y) :=
+def setoidHom (X Y : F C) : Setoidₓ (X ⟶ᵐ Y) :=
   ⟨HomEquiv, ⟨fun f => HomEquiv.refl f, fun f g => HomEquiv.symm f g, fun f g h hfg hgh => HomEquiv.trans hfg hgh⟩⟩
 
 attribute [instance] setoid_hom
@@ -109,7 +114,7 @@ section
 
 open FreeMonoidalCategory.HomEquiv
 
-instance category_free_monoidal_category : Category.{u} (F C) where
+instance categoryFreeMonoidalCategory : Category.{u} (F C) where
   Hom := fun X Y => Quotientₓ (FreeMonoidalCategory.setoidHom X Y)
   id := fun X => ⟦FreeMonoidalCategory.Hom.id _⟧
   comp := fun X Y Z f g =>
@@ -205,7 +210,7 @@ section Functor
 variable {D : Type u'} [Category.{v'} D] [MonoidalCategory D] (f : C → D)
 
 /-- Auxiliary definition for `free_monoidal_category.project`. -/
-def project_obj : F C → D
+def projectObjₓ : F C → D
   | free_monoidal_category.of X => f X
   | free_monoidal_category.unit => 𝟙_ D
   | free_monoidal_category.tensor X Y => project_obj X ⊗ project_obj Y
@@ -216,7 +221,7 @@ open Hom
 
 /-- Auxiliary definition for `free_monoidal_category.project`. -/
 @[simp]
-def project_map_aux : ∀ {X Y : F C}, (X ⟶ᵐ Y) → (projectObjₓ f X ⟶ projectObjₓ f Y)
+def projectMapAuxₓ : ∀ {X Y : F C}, (X ⟶ᵐ Y) → (projectObjₓ f X ⟶ projectObjₓ f Y)
   | _, _, id _ => 𝟙 _
   | _, _, α_hom _ _ _ => (α_ _ _ _).Hom
   | _, _, α_inv _ _ _ => (α_ _ _ _).inv
@@ -228,7 +233,7 @@ def project_map_aux : ∀ {X Y : F C}, (X ⟶ᵐ Y) → (projectObjₓ f X ⟶ p
   | _, _, hom.tensor f g => project_map_aux f ⊗ project_map_aux g
 
 /-- Auxiliary definition for `free_monoidal_category.project`. -/
-def project_map (X Y : F C) : (X ⟶ Y) → (projectObjₓ f X ⟶ projectObjₓ f Y) :=
+def projectMap (X Y : F C) : (X ⟶ Y) → (projectObjₓ f X ⟶ projectObjₓ f Y) :=
   Quotientₓ.lift (projectMapAuxₓ f)
     (by
       intro f g h

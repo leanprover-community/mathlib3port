@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Floris van Doorn. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Floris van Doorn, Yury Kudryashov, Sébastien Gouëzel, Chris Hughes
+-/
 import Mathbin.Data.Fin.Basic
 
 /-!
@@ -380,7 +385,7 @@ variable {α : Finₓ (n + 1) → Type u} {β : Type v}
 propositions, see also `fin.insert_nth` for a version without an `@[elab_as_eliminator]`
 attribute. -/
 @[elab_as_eliminator]
-def succ_above_cases {α : Finₓ (n + 1) → Sort u} (i : Finₓ (n + 1)) (x : α i) (p : ∀ j : Finₓ n, α (i.succAbove j))
+def succAboveCases {α : Finₓ (n + 1) → Sort u} (i : Finₓ (n + 1)) (x : α i) (p : ∀ j : Finₓ n, α (i.succAbove j))
     (j : Finₓ (n + 1)) : α j :=
   if hj : j = i then Eq.ndrec x hj.symm
   else
@@ -394,7 +399,7 @@ theorem forall_iff_succ_above {p : Finₓ (n + 1) → Prop} (i : Finₓ (n + 1))
 /-- Insert an element into a tuple at a given position. For `i = 0` see `fin.cons`,
 for `i = fin.last n` see `fin.snoc`. See also `fin.succ_above_cases` for a version elaborated
 as an eliminator. -/
-def insert_nth (i : Finₓ (n + 1)) (x : α i) (p : ∀ j : Finₓ n, α (i.succAbove j)) (j : Finₓ (n + 1)) : α j :=
+def insertNth (i : Finₓ (n + 1)) (x : α i) (p : ∀ j : Finₓ n, α (i.succAbove j)) (j : Finₓ (n + 1)) : α j :=
   succAboveCases i x p j
 
 @[simp]
@@ -485,17 +490,17 @@ theorem insert_nth_binop (op : ∀ j, α j → α j → α j) (i : Finₓ (n + 1
 @[simp]
 theorem insert_nth_mul [∀ j, Mul (α j)] (i : Finₓ (n + 1)) (x y : α i) (p q : ∀ j, α (i.succAbove j)) :
     i.insertNth (x * y) (p * q) = i.insertNth x p * i.insertNth y q :=
-  insert_nth_binop (fun _ => · * ·) i x y p q
+  insert_nth_binop (fun _ => (· * ·)) i x y p q
 
 @[simp]
 theorem insert_nth_add [∀ j, Add (α j)] (i : Finₓ (n + 1)) (x y : α i) (p q : ∀ j, α (i.succAbove j)) :
     i.insertNth (x + y) (p + q) = i.insertNth x p + i.insertNth y q :=
-  insert_nth_binop (fun _ => · + ·) i x y p q
+  insert_nth_binop (fun _ => (· + ·)) i x y p q
 
 @[simp]
 theorem insert_nth_div [∀ j, Div (α j)] (i : Finₓ (n + 1)) (x y : α i) (p q : ∀ j, α (i.succAbove j)) :
     i.insertNth (x / y) (p / q) = i.insertNth x p / i.insertNth y q :=
-  insert_nth_binop (fun _ => · / ·) i x y p q
+  insert_nth_binop (fun _ => (· / ·)) i x y p q
 
 @[simp]
 theorem insert_nth_sub [∀ j, Sub (α j)] (i : Finₓ (n + 1)) (x y : α i) (p q : ∀ j, α (i.succAbove j)) :

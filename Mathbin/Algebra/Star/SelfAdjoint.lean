@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Frédéric Dupuis. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Frédéric Dupuis
+-/
 import Mathbin.Algebra.Star.Basic
 import Mathbin.GroupTheory.Subgroup.Basic
 
@@ -35,10 +40,10 @@ variable (R : Type _) {A : Type _}
 def selfAdjoint [AddGroupₓ R] [StarAddMonoid R] : AddSubgroup R where
   Carrier := { x | star x = x }
   zero_mem' := star_zero R
-  add_mem' := fun x y hx : star x = x hy : star y = y =>
+  add_mem' := fun hy : star y = y =>
     show star (x + y) = x + y by
       simp only [star_add x y, hx, hy]
-  neg_mem' := fun x hx : star x = x =>
+  neg_mem' := fun hx : star x = x =>
     show star (-x) = -x by
       simp only [hx, star_neg]
 
@@ -48,10 +53,10 @@ def skewAdjoint [AddCommGroupₓ R] [StarAddMonoid R] : AddSubgroup R where
   zero_mem' :=
     show star (0 : R) = -0 by
       simp only [star_zero, neg_zero]
-  add_mem' := fun x y hx : star x = -x hy : star y = -y =>
+  add_mem' := fun hy : star y = -y =>
     show star (x + y) = -(x + y) by
       rw [star_add x y, hx, hy, neg_add]
-  neg_mem' := fun x hx : star x = -x =>
+  neg_mem' := fun hx : star x = -x =>
     show star (-x) = - -x by
       simp only [hx, star_neg]
 
@@ -131,10 +136,11 @@ theorem coe_pow (x : selfAdjoint R) (n : ℕ) : ↑(x ^ n) = (x : R) ^ n :=
   rfl
 
 instance : CommRingₓ (selfAdjoint R) :=
-  { (Function.Injective.monoidPow _ Subtype.coe_injective coe_one coe_mul coe_pow : Monoidₓ (selfAdjoint R)),
+  { -- note: we have to do this in four pieces because there is no `injective.comm_ring_pow`.
+    (Function.Injective.monoidPow _ Subtype.coe_injective coe_one coe_mul coe_pow : Monoidₓ (selfAdjoint R)),
     (Function.Injective.distrib _ Subtype.coe_injective (selfAdjoint R).coe_add coe_mul : Distribₓ (selfAdjoint R)),
     (Function.Injective.commSemigroup _ Subtype.coe_injective coe_mul : CommSemigroupₓ (selfAdjoint R)),
-    (selfAdjoint R).toAddCommGroup with npow := fun n x => x ^ n, nsmul := · • ·, zsmul := · • · }
+    (selfAdjoint R).toAddCommGroup with npow := fun n x => x ^ n, nsmul := (· • ·), zsmul := (· • ·) }
 
 end CommRingₓ
 
@@ -170,11 +176,12 @@ theorem coe_zpow (x : selfAdjoint R) (z : ℤ) : ↑(x ^ z) = (x : R) ^ z :=
   rfl
 
 instance : Field (selfAdjoint R) :=
-  { (Function.Injective.divInvMonoidPow _ Subtype.coe_injective _ _ coe_inv coe_div _ coe_zpow :
+  { -- note: we have to do this in three pieces because there is no `injective.field_pow`.
+    (Function.Injective.divInvMonoidPow _ Subtype.coe_injective _ _ coe_inv coe_div _ coe_zpow :
       DivInvMonoidₓ (selfAdjoint R)),
     (Function.Injective.groupWithZero _ Subtype.coe_injective (selfAdjoint R).coe_zero _ _ _ _ :
       GroupWithZeroₓ (selfAdjoint R)),
-    selfAdjoint.commRing with npow := fun n x => x ^ n, zpow := fun z x => x ^ z, nsmul := · • ·, zsmul := · • · }
+    selfAdjoint.commRing with npow := fun n x => x ^ n, zpow := fun z x => x ^ z, nsmul := (· • ·), zsmul := (· • ·) }
 
 end Field
 
@@ -182,10 +189,11 @@ section HasScalar
 
 variable [HasStar R] [HasTrivialStar R] [AddGroupₓ A] [StarAddMonoid A]
 
+theorem smul_mem [HasScalar R A] [StarModule R A] (r : R) {x : A} (h : x ∈ selfAdjoint A) : r • x ∈ selfAdjoint A := by
+  rw [mem_iff, star_smul, star_trivial, mem_iff.mp h]
+
 instance [HasScalar R A] [StarModule R A] : HasScalar R (selfAdjoint A) :=
-  ⟨fun r x =>
-    ⟨r • x, by
-      rw [mem_iff, star_smul, star_trivial, star_coe_eq]⟩⟩
+  ⟨fun r x => ⟨r • x, smul_mem r x.Prop⟩⟩
 
 @[simp, norm_cast]
 theorem coe_smul [HasScalar R A] [StarModule R A] (r : R) (x : selfAdjoint A) : ↑(r • x) = r • (x : A) :=
@@ -248,10 +256,12 @@ section HasScalar
 
 variable [HasStar R] [HasTrivialStar R] [AddCommGroupₓ A] [StarAddMonoid A]
 
+theorem smul_mem [Monoidₓ R] [DistribMulAction R A] [StarModule R A] (r : R) {x : A} (h : x ∈ skewAdjoint A) :
+    r • x ∈ skewAdjoint A := by
+  rw [mem_iff, star_smul, star_trivial, mem_iff.mp h, smul_neg r]
+
 instance [Monoidₓ R] [DistribMulAction R A] [StarModule R A] : HasScalar R (skewAdjoint A) :=
-  ⟨fun r x =>
-    ⟨r • x, by
-      rw [mem_iff, star_smul, star_trivial, star_coe_eq, smul_neg r]⟩⟩
+  ⟨fun r x => ⟨r • x, smul_mem r x.Prop⟩⟩
 
 @[simp, norm_cast]
 theorem coe_smul [Monoidₓ R] [DistribMulAction R A] [StarModule R A] (r : R) (x : skewAdjoint A) :

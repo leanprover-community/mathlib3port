@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2022 Yaël Dillies. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yaël Dillies
+-/
 import Mathbin.Data.Finset.Finsupp
 import Mathbin.Data.Finset.LocallyFinite
 import Mathbin.Data.Finsupp.Order
@@ -35,7 +40,7 @@ variable [Zero α] {f : ι →₀ α} {i : ι} {a : α}
 
 /-- Pointwise `finset.singleton` bundled as a `finsupp`. -/
 @[simps]
-def range_singleton (f : ι →₀ α) : ι →₀ Finset α where
+def rangeSingleton (f : ι →₀ α) : ι →₀ Finset α where
   toFun := fun i => {f i}
   Support := f.Support
   mem_support_to_fun := fun i => by
@@ -53,7 +58,7 @@ variable [Zero α] [PartialOrderₓ α] [LocallyFiniteOrder α] {f g : ι →₀
 
 /-- Pointwise `finset.Icc` bundled as a `finsupp`. -/
 @[simps]
-def range_Icc (f g : ι →₀ α) : ι →₀ Finset α where
+def rangeIcc (f g : ι →₀ α) : ι →₀ Finset α where
   toFun := fun i => icc (f i) (g i)
   Support := f.Support ∪ g.Support
   mem_support_to_fun := fun i => by

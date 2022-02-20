@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2017 Johannes Hölzl. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johannes Hölzl
+-/
 import Mathbin.Order.Monotone
 import Mathbin.Order.RelClasses
 import Mathbin.Tactic.Simps
@@ -52,10 +57,12 @@ universe u v w
 
 variable {α : Type u} {β : Type v}
 
+-- TODO: move this eventually, if we decide to use them
 attribute [ematch] le_transₓ lt_of_le_of_ltₓ lt_of_lt_of_leₓ lt_transₓ
 
 section
 
+-- TODO: this seems crazy, but it also seems to work reasonably well
 @[ematch]
 theorem le_antisymm' [PartialOrderₓ α] : ∀ {a b : α}, a ≤ b → b ≤ a → a = b :=
   @le_antisymmₓ _ _
@@ -63,6 +70,7 @@ theorem le_antisymm' [PartialOrderₓ α] : ∀ {a b : α}, a ≤ b → b ≤ a 
 end
 
 /-- Typeclass for the `⊔` (`\lub`) notation -/
+-- TODO: automatic construction of dual definitions / theorems
 @[notation_class]
 class HasSup (α : Type u) where
   sup : α → α → α
@@ -96,14 +104,14 @@ The partial order is defined so that `a ≤ b` unfolds to `a ⊔ b = b`; cf. `su
 -/
 def SemilatticeSup.mk' {α : Type _} [HasSup α] (sup_comm : ∀ a b : α, a⊔b = b⊔a)
     (sup_assoc : ∀ a b c : α, a⊔b⊔c = a⊔(b⊔c)) (sup_idem : ∀ a : α, a⊔a = a) : SemilatticeSup α where
-  sup := ·⊔·
+  sup := (·⊔·)
   le := fun a b => a⊔b = b
   le_refl := sup_idem
   le_trans := fun a b c hab hbc => by
-    dsimp only [· ≤ ·]  at *
+    dsimp only [(· ≤ ·)]  at *
     rwa [← hbc, ← sup_assoc, hab]
   le_antisymm := fun a b hab hba => by
-    dsimp only [· ≤ ·]  at *
+    dsimp only [(· ≤ ·)]  at *
     rwa [← hba, sup_comm]
   le_sup_left := fun a b =>
     show a⊔(a⊔b) = a⊔b by
@@ -112,14 +120,14 @@ def SemilatticeSup.mk' {α : Type _} [HasSup α] (sup_comm : ∀ a b : α, a⊔b
     show b⊔(a⊔b) = a⊔b by
       rw [sup_comm, sup_assoc, sup_idem]
   sup_le := fun a b c hac hbc => by
-    dsimp only [· ≤ ·, Preorderₓ.Le]  at *
+    dsimp only [(· ≤ ·), Preorderₓ.Le]  at *
     rwa [sup_assoc, hbc]
 
 instance (α : Type _) [HasInf α] : HasSup (OrderDual α) :=
-  ⟨(·⊓· : α → α → α)⟩
+  ⟨((·⊓·) : α → α → α)⟩
 
 instance (α : Type _) [HasSup α] : HasInf (OrderDual α) :=
-  ⟨(·⊔· : α → α → α)⟩
+  ⟨((·⊔·) : α → α → α)⟩
 
 section SemilatticeSup
 
@@ -573,7 +581,10 @@ def Lattice.mk' {α : Type _} [HasSup α] [HasInf α] (sup_comm : ∀ a b : α, 
       
   let semilatt_inf_inst := SemilatticeInf.mk' inf_comm inf_assoc inf_idem
   let semilatt_sup_inst := SemilatticeSup.mk' sup_comm sup_assoc sup_idem
-  let partial_order_inst := @SemilatticeSup.toPartialOrder _ semilatt_sup_inst
+  let
+    partial_order_inst :=-- here we help Lean to see that the two partial orders are equal
+      @SemilatticeSup.toPartialOrder
+      _ semilatt_sup_inst
   have partial_order_eq : partial_order_inst = @SemilatticeInf.toPartialOrder _ semilatt_inf_inst :=
     semilattice_sup_mk'_partial_order_eq_semilattice_inf_mk'_partial_order _ _ _ _ _ _ sup_inf_self inf_sup_self
   { partial_order_inst, semilatt_sup_inst, semilatt_inf_inst with
@@ -610,6 +621,7 @@ theorem inf_lt_sup : a⊓b < a⊔b ↔ a ≠ b := by
 -/
 
 
+-- TODO: better names?
 theorem sup_inf_le : a⊔b⊓c ≤ (a⊔b)⊓(a⊔c) :=
   le_inf (sup_le_sup_left inf_le_left _) (sup_le_sup_left inf_le_right _)
 
@@ -658,6 +670,8 @@ as a sublattice of a powerset lattice. -/
 class DistribLattice (α) extends Lattice α where
   le_sup_inf : ∀ x y z : α, (x⊔y)⊓(x⊔z) ≤ x⊔y⊓z
 
+/- TODO: alternative constructors from the other distributive properties,
+and perhaps a `tfae` statement -/
 section DistribLattice
 
 variable [DistribLattice α] {x y z : α}
@@ -713,6 +727,7 @@ end DistribLattice
 -/
 
 
+-- see Note [lower instance priority]
 instance (priority := 100) LinearOrderₓ.toLattice {α : Type u} [o : LinearOrderₓ α] : Lattice α :=
   { o with sup := max, le_sup_left := le_max_leftₓ, le_sup_right := le_max_rightₓ, sup_le := fun a b c => max_leₓ,
     inf := min, inf_le_left := min_le_leftₓ, inf_le_right := min_le_rightₓ, le_inf := fun a b c => le_minₓ }
@@ -723,26 +738,27 @@ theorem sup_eq_max [LinearOrderₓ α] {x y : α} : x⊔y = max x y :=
 theorem inf_eq_min [LinearOrderₓ α] {x y : α} : x⊓y = min x y :=
   rfl
 
-theorem sup_eq_max_default [SemilatticeSup α] [DecidableRel (· ≤ · : α → α → Prop)] [IsTotal α (· ≤ ·)] :
-    ·⊔· = (maxDefault : α → α → α) := by
+theorem sup_eq_max_default [SemilatticeSup α] [DecidableRel ((· ≤ ·) : α → α → Prop)] [IsTotal α (· ≤ ·)] :
+    (·⊔·) = (maxDefault : α → α → α) := by
   ext x y
   dunfold maxDefault
   split_ifs with h'
   exacts[sup_of_le_left h', sup_of_le_right <| (total_of (· ≤ ·) x y).resolve_right h']
 
-theorem inf_eq_min_default [SemilatticeInf α] [DecidableRel (· ≤ · : α → α → Prop)] [IsTotal α (· ≤ ·)] :
-    ·⊓· = (minDefault : α → α → α) :=
+theorem inf_eq_min_default [SemilatticeInf α] [DecidableRel ((· ≤ ·) : α → α → Prop)] [IsTotal α (· ≤ ·)] :
+    (·⊓·) = (minDefault : α → α → α) :=
   @sup_eq_max_default (OrderDual α) _ _ _
 
 /-- A lattice with total order is a linear order.
 
 See note [reducible non-instances]. -/
 @[reducible]
-def Lattice.toLinearOrder (α : Type u) [Lattice α] [DecidableEq α] [DecidableRel (· ≤ · : α → α → Prop)]
-    [DecidableRel (· < · : α → α → Prop)] [IsTotal α (· ≤ ·)] : LinearOrderₓ α :=
+def Lattice.toLinearOrder (α : Type u) [Lattice α] [DecidableEq α] [DecidableRel ((· ≤ ·) : α → α → Prop)]
+    [DecidableRel ((· < ·) : α → α → Prop)] [IsTotal α (· ≤ ·)] : LinearOrderₓ α :=
   { ‹Lattice α› with decidableLe := ‹_›, DecidableEq := ‹_›, decidableLt := ‹_›, le_total := total_of (· ≤ ·),
-    max := ·⊔·, max_def := sup_eq_max_default, min := ·⊓·, min_def := inf_eq_min_default }
+    max := (·⊔·), max_def := sup_eq_max_default, min := (·⊓·), min_def := inf_eq_min_default }
 
+-- see Note [lower instance priority]
 instance (priority := 100) LinearOrderₓ.toDistribLattice {α : Type u} [o : LinearOrderₓ α] : DistribLattice α :=
   { LinearOrderₓ.toLattice with
     le_sup_inf := fun a b c =>
@@ -781,12 +797,12 @@ theorem inf_def [∀ i, HasInf (α' i)] (f g : ∀ i, α' i) : f⊓g = fun i => 
   rfl
 
 instance [∀ i, SemilatticeSup (α' i)] : SemilatticeSup (∀ i, α' i) := by
-  refine_struct { Pi.partialOrder with sup := ·⊔· } <;>
+  refine_struct { Pi.partialOrder with sup := (·⊔·) } <;>
     run_tac
       tactic.pi_instance_derive_field
 
 instance [∀ i, SemilatticeInf (α' i)] : SemilatticeInf (∀ i, α' i) := by
-  refine_struct { Pi.partialOrder with inf := ·⊓· } <;>
+  refine_struct { Pi.partialOrder with inf := (·⊓·) } <;>
     run_tac
       tactic.pi_instance_derive_field
 
@@ -922,7 +938,7 @@ namespace Subtype
 /-- A subtype forms a `⊔`-semilattice if `⊔` preserves the property.
 See note [reducible non-instances]. -/
 @[reducible]
-protected def SemilatticeSup [SemilatticeSup α] {P : α → Prop} (Psup : ∀ ⦃x y⦄, P x → P y → P (x⊔y)) :
+protected def semilatticeSup [SemilatticeSup α] {P : α → Prop} (Psup : ∀ ⦃x y⦄, P x → P y → P (x⊔y)) :
     SemilatticeSup { x : α // P x } :=
   { Subtype.partialOrder P with sup := fun x y => ⟨x.1⊔y.1, Psup x.2 y.2⟩,
     le_sup_left := fun x y => @le_sup_left _ _ (x : α) y, le_sup_right := fun x y => @le_sup_right _ _ (x : α) y,
@@ -931,7 +947,7 @@ protected def SemilatticeSup [SemilatticeSup α] {P : α → Prop} (Psup : ∀ �
 /-- A subtype forms a `⊓`-semilattice if `⊓` preserves the property.
 See note [reducible non-instances]. -/
 @[reducible]
-protected def SemilatticeInf [SemilatticeInf α] {P : α → Prop} (Pinf : ∀ ⦃x y⦄, P x → P y → P (x⊓y)) :
+protected def semilatticeInf [SemilatticeInf α] {P : α → Prop} (Pinf : ∀ ⦃x y⦄, P x → P y → P (x⊓y)) :
     SemilatticeInf { x : α // P x } :=
   { Subtype.partialOrder P with inf := fun x y => ⟨x.1⊓y.1, Pinf x.2 y.2⟩,
     inf_le_left := fun x y => @inf_le_left _ _ (x : α) y, inf_le_right := fun x y => @inf_le_right _ _ (x : α) y,
@@ -940,7 +956,7 @@ protected def SemilatticeInf [SemilatticeInf α] {P : α → Prop} (Pinf : ∀ �
 /-- A subtype forms a lattice if `⊔` and `⊓` preserve the property.
 See note [reducible non-instances]. -/
 @[reducible]
-protected def Lattice [Lattice α] {P : α → Prop} (Psup : ∀ ⦃x y⦄, P x → P y → P (x⊔y))
+protected def lattice [Lattice α] {P : α → Prop} (Psup : ∀ ⦃x y⦄, P x → P y → P (x⊔y))
     (Pinf : ∀ ⦃x y⦄, P x → P y → P (x⊓y)) : Lattice { x : α // P x } :=
   { Subtype.semilatticeInf Pinf, Subtype.semilatticeSup Psup with }
 
@@ -1011,6 +1027,7 @@ protected def Function.Injective.distribLattice [HasSup α] [HasInf α] [Distrib
 
 end lift
 
+--To avoid noncomputability poisoning from `bool.complete_boolean_algebra`
 instance : DistribLattice Bool :=
   LinearOrderₓ.toDistribLattice
 

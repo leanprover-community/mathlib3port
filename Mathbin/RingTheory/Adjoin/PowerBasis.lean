@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Anne Baanen. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Anne Baanen
+-/
 import Mathbin.RingTheory.Adjoin.Basic
 import Mathbin.RingTheory.PowerBasis
 
@@ -21,7 +26,7 @@ open_locale BigOperators
 
 /-- The elements `1, x, ..., x ^ (d - 1)` for a basis for the `K`-module `K[x]`,
 where `d` is the degree of the minimal polynomial of `x`. -/
-noncomputable def adjoin.power_basis_aux {x : S} (hx : IsIntegral K x) :
+noncomputable def adjoin.powerBasisAux {x : S} (hx : IsIntegral K x) :
     Basis (Finₓ (minpoly K x).natDegree) K (adjoin K ({x} : Set S)) := by
   have hST : Function.Injective (algebraMap (adjoin K ({x} : Set S)) S) := Subtype.coe_injective
   have hx' : _root_.is_integral K (show adjoin K ({x} : Set S) from ⟨x, subset_adjoin (Set.mem_singleton x)⟩) := by
@@ -51,7 +56,7 @@ noncomputable def adjoin.power_basis_aux {x : S} (hx : IsIntegral K x) :
 /-- The power basis `1, x, ..., x ^ (d - 1)` for `K[x]`,
 where `d` is the degree of the minimal polynomial of `x`. -/
 @[simps gen dim]
-noncomputable def adjoin.power_basis {x : S} (hx : IsIntegral K x) : PowerBasis K (adjoin K ({x} : Set S)) where
+noncomputable def adjoin.powerBasis {x : S} (hx : IsIntegral K x) : PowerBasis K (adjoin K ({x} : Set S)) where
   gen := ⟨x, subset_adjoin (Set.mem_singleton x)⟩
   dim := (minpoly K x).natDegree
   Basis := adjoin.powerBasisAux hx

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Bhavik Mehta. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Bhavik Mehta
+-/
 import Mathbin.CategoryTheory.Limits.Shapes.BinaryProducts
 import Mathbin.CategoryTheory.Limits.Shapes.Equalizers
 import Mathbin.CategoryTheory.Limits.Shapes.WidePullbacks
@@ -43,7 +48,7 @@ instance wide_pushout_shape_connected (J : Type v₁) : IsConnected (WidePushout
   · rwa [← t (wide_pushout_shape.hom.init j)]
     
 
-instance parallel_pair_inhabited : Inhabited WalkingParallelPair :=
+instance parallelPairInhabited : Inhabited WalkingParallelPair :=
   ⟨WalkingParallelPair.one⟩
 
 instance parallel_pair_connected : IsConnected WalkingParallelPair := by
@@ -80,7 +85,7 @@ def γ₁ {K : J ⥤ C} (X : C) : K ⋙ prod.functor.obj X ⟶ (Functor.const J)
 /-- (Impl).
 Given a cone for (X × K -), produce a cone for K using the natural transformation `γ₂` -/
 @[simps]
-def forget_cone {X : C} {K : J ⥤ C} (s : Cone (K ⋙ prod.functor.obj X)) : Cone K where
+def forgetCone {X : C} {K : J ⥤ C} (s : Cone (K ⋙ prod.functor.obj X)) : Cone K where
   x := s.x
   π := s.π ≫ γ₂ X
 
@@ -93,7 +98,7 @@ Note that this functor does not preserve the two most obvious disconnected limit
 `(X × -)` does not preserve products or terminal object, eg `(X ⨯ A) ⨯ (X ⨯ B)` is not isomorphic to
 `X ⨯ (A ⨯ B)` and `X ⨯ 1` is not isomorphic to `1`.
 -/
-noncomputable def prod_preserves_connected_limits [IsConnected J] (X : C) :
+noncomputable def prodPreservesConnectedLimits [IsConnected J] (X : C) :
     PreservesLimitsOfShape J (prod.functor.obj X) where
   PreservesLimit := fun K =>
     { preserves := fun c l =>

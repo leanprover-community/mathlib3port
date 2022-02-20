@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Devon Tuma. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Kenny Lau, Devon Tuma
+-/
 import Mathbin.RingTheory.Ideal.Quotient
 import Mathbin.RingTheory.Polynomial.Basic
 
@@ -155,7 +160,7 @@ theorem eq_jacobson_iff_Inf_maximal' :
       let ⟨M, hM⟩ := h
       ⟨M, ⟨fun J hJ => Or.rec_on (Classical.em (J = ⊤)) (fun h => Or.inr h) fun h => Or.inl ⟨⟨h, hM.1 J hJ⟩⟩, hM.2⟩⟩⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (x «expr ∉ » I)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (x «expr ∉ » I)
 /-- An ideal `I` equals its Jacobson radical if and only if every element outside `I`
 also lies outside of a maximal ideal containing `I`. -/
 theorem eq_jacobson_iff_not_mem : I.jacobson = I ↔ ∀ x _ : x ∉ I, ∃ M : Ideal R, (I ≤ M ∧ M.IsMaximal) ∧ x ∉ M := by
@@ -312,7 +317,7 @@ end Polynomial
 section IsLocal
 
 /-- An ideal `I` is local iff its Jacobson radical is maximal. -/
-class is_local (I : Ideal R) : Prop where
+class IsLocal (I : Ideal R) : Prop where
   out : IsMaximal (jacobson I)
 
 theorem is_local_iff {I : Ideal R} : IsLocal I ↔ IsMaximal (jacobson I) :=
@@ -323,11 +328,11 @@ theorem is_local_of_is_maximal_radical {I : Ideal R} (hi : IsMaximal (radical I)
       le_antisymmₓ (le_Inf fun M ⟨him, hm⟩ => hm.IsPrime.radical_le_iff.2 him) (Inf_le ⟨le_radical, hi⟩)
     show IsMaximal (jacobson I) from this ▸ hi⟩
 
-theorem is_local.le_jacobson {I J : Ideal R} (hi : IsLocal I) (hij : I ≤ J) (hj : J ≠ ⊤) : J ≤ jacobson I :=
+theorem IsLocal.le_jacobson {I J : Ideal R} (hi : IsLocal I) (hij : I ≤ J) (hj : J ≠ ⊤) : J ≤ jacobson I :=
   let ⟨M, hm, hjm⟩ := exists_le_maximal J hj
   le_transₓ hjm <| le_of_eqₓ <| Eq.symm <| hi.1.eq_of_le hm.1.1 <| Inf_le ⟨le_transₓ hij hjm, hm⟩
 
-theorem is_local.mem_jacobson_or_exists_inv {I : Ideal R} (hi : IsLocal I) (x : R) :
+theorem IsLocal.mem_jacobson_or_exists_inv {I : Ideal R} (hi : IsLocal I) (x : R) :
     x ∈ jacobson I ∨ ∃ y, y * x - 1 ∈ I :=
   Classical.by_cases
     (fun h : I⊔span {x} = ⊤ =>

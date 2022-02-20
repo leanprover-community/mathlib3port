@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Adam Topaz. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Adam Topaz
+-/
 import Mathbin.CategoryTheory.Adjunction.Default
 import Mathbin.CategoryTheory.Whiskering
 
@@ -18,8 +23,9 @@ variable (C : Type _) {D E : Type _} [Category C] [Category D] [Category E] {F :
 
 /-- Given an adjunction `F ⊣ G`, this provides the natural adjunction
   `(whiskering_right C _ _).obj F ⊣ (whiskering_right C _ _).obj G`. -/
+--  `tidy` works for all the proofs in this definition, but it's fairly slow.
 @[simps unit_app_app counit_app_app]
-protected def whisker_right (adj : F ⊣ G) : (whiskeringRight C D E).obj F ⊣ (whiskeringRight C E D).obj G :=
+protected def whiskerRight (adj : F ⊣ G) : (whiskeringRight C D E).obj F ⊣ (whiskeringRight C E D).obj G :=
   mkOfUnitCounit
     { Unit :=
         { app := fun X => (Functor.rightUnitor _).inv ≫ whiskerLeft X adj.Unit ≫ (Functor.associator _ _ _).inv,
@@ -46,8 +52,9 @@ protected def whisker_right (adj : F ⊣ G) : (whiskeringRight C D E).obj F ⊣ 
 
 /-- Given an adjunction `F ⊣ G`, this provides the natural adjunction
   `(whiskering_left _ _ C).obj G ⊣ (whiskering_left _ _ C).obj F`. -/
+-- `tidy` gets stuck for `left_triangle'` and `right_triangle'`.
 @[simps unit_app_app counit_app_app]
-protected def whisker_left (adj : F ⊣ G) : (whiskeringLeft E D C).obj G ⊣ (whiskeringLeft D E C).obj F :=
+protected def whiskerLeft (adj : F ⊣ G) : (whiskeringLeft E D C).obj G ⊣ (whiskeringLeft D E C).obj F :=
   mkOfUnitCounit
     { Unit :=
         { app := fun X => (Functor.leftUnitor _).inv ≫ whiskerRight adj.Unit X ≫ (Functor.associator _ _ _).Hom,

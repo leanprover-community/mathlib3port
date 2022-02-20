@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison
+-/
 import Mathbin.CategoryTheory.StructuredArrow
 import Mathbin.CategoryTheory.Groupoid
 import Mathbin.CategoryTheory.Punit
@@ -37,13 +42,13 @@ variable {C : Type u} [Category.{v} C]
 is a pair `(X : C, x : F.obj X)`.
 -/
 @[nolint has_inhabited_instance]
-def functor.elements (F : C ⥤ Type w) :=
+def Functor.Elements (F : C ⥤ Type w) :=
   Σ c : C, F.obj c
 
 /-- The category structure on `F.elements`, for `F : C ⥤ Type`.
     A morphism `(X, x) ⟶ (Y, y)` is a morphism `f : X ⟶ Y` in `C`, so `F.map f` takes `x` to `y`.
  -/
-instance category_of_elements (F : C ⥤ Type w) : Category.{v} F.Elements where
+instance categoryOfElements (F : C ⥤ Type w) : Category.{v} F.Elements where
   Hom := fun p q => { f : p.1 ⟶ q.1 // (F.map f) p.2 = q.2 }
   id := fun p =>
     ⟨𝟙 p.1, by
@@ -70,7 +75,7 @@ theorem id_val {F : C ⥤ Type w} {p : F.Elements} : (𝟙 p : p ⟶ p).val = �
 
 end CategoryOfElements
 
-noncomputable instance groupoid_of_elements {G : Type u} [Groupoid.{v} G] (F : G ⥤ Type w) : Groupoid F.Elements where
+noncomputable instance groupoidOfElements {G : Type u} [Groupoid.{v} G] (F : G ⥤ Type w) : Groupoid F.Elements where
   inv := fun p q f =>
     ⟨inv f.val,
       calc
@@ -107,7 +112,7 @@ theorem map_π {F₁ F₂ : C ⥤ Type w} (α : F₁ ⟶ F₂) : map α ⋙ π F
   rfl
 
 /-- The forward direction of the equivalence `F.elements ≅ (*, F)`. -/
-def to_structured_arrow : F.Elements ⥤ StructuredArrow PUnit F where
+def toStructuredArrow : F.Elements ⥤ StructuredArrow PUnit F where
   obj := fun X => StructuredArrow.mk fun _ => X.2
   map := fun X Y f =>
     StructuredArrow.homMk f.val
@@ -124,7 +129,7 @@ theorem to_comma_map_right {X Y} (f : X ⟶ Y) : ((toStructuredArrow F).map f).r
   rfl
 
 /-- The reverse direction of the equivalence `F.elements ≅ (*, F)`. -/
-def from_structured_arrow : StructuredArrow PUnit F ⥤ F.Elements where
+def fromStructuredArrow : StructuredArrow PUnit F ⥤ F.Elements where
   obj := fun X => ⟨X.right, X.Hom PUnit.unit⟩
   map := fun X Y f => ⟨f.right, congr_funₓ f.w'.symm PUnit.unit⟩
 
@@ -140,7 +145,7 @@ theorem from_structured_arrow_map {X Y} (f : X ⟶ Y) :
 /-- The equivalence between the category of elements `F.elements`
     and the comma category `(*, F)`. -/
 @[simps]
-def structured_arrow_equivalence : F.Elements ≌ StructuredArrow PUnit F :=
+def structuredArrowEquivalence : F.Elements ≌ StructuredArrow PUnit F :=
   Equivalence.mk (toStructuredArrow F) (fromStructuredArrow F)
     (NatIso.ofComponents
       (fun X =>
@@ -159,7 +164,7 @@ open Opposite
 given by `category_theory.yoneda_sections`.
 -/
 @[simps]
-def to_costructured_arrow (F : Cᵒᵖ ⥤ Type v) : F.Elementsᵒᵖ ⥤ CostructuredArrow yoneda F where
+def toCostructuredArrow (F : Cᵒᵖ ⥤ Type v) : F.Elementsᵒᵖ ⥤ CostructuredArrow yoneda F where
   obj := fun X => CostructuredArrow.mk ((yonedaSections (unop (unop X).fst) F).inv (Ulift.up (unop X).2))
   map := fun X Y f => by
     fapply costructured_arrow.hom_mk
@@ -174,7 +179,7 @@ def to_costructured_arrow (F : Cᵒᵖ ⥤ Type v) : F.Elementsᵒᵖ ⥤ Costru
 given by `category_theory.yoneda_equiv`.
 -/
 @[simps]
-def from_costructured_arrow (F : Cᵒᵖ ⥤ Type v) : CostructuredArrow yoneda Fᵒᵖ ⥤ F.Elements where
+def fromCostructuredArrow (F : Cᵒᵖ ⥤ Type v) : CostructuredArrow yoneda Fᵒᵖ ⥤ F.Elements where
   obj := fun X => ⟨op (unop X).1, yonedaEquiv.1 (unop X).3⟩
   map := fun X Y f =>
     ⟨f.unop.1.op, by
@@ -250,7 +255,7 @@ theorem to_from_costructured_arrow_eq (F : Cᵒᵖ ⥤ Type v) :
 
 /-- The equivalence `F.elementsᵒᵖ ≅ (yoneda, F)` given by yoneda lemma. -/
 @[simps]
-def costructured_arrow_yoneda_equivalence (F : Cᵒᵖ ⥤ Type v) : F.Elementsᵒᵖ ≌ CostructuredArrow yoneda F :=
+def costructuredArrowYonedaEquivalence (F : Cᵒᵖ ⥤ Type v) : F.Elementsᵒᵖ ≌ CostructuredArrow yoneda F :=
   Equivalence.mk (toCostructuredArrow F) (fromCostructuredArrow F).rightOp
     (NatIso.op (eqToIso (from_to_costructured_arrow_eq F))) (eq_to_iso <| to_from_costructured_arrow_eq F)
 

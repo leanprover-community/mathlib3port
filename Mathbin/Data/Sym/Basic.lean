@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Kyle Miller All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Kyle Miller
+-/
 import Mathbin.Data.Multiset.Basic
 import Mathbin.Data.Vector.Basic
 import Mathbin.Data.Setoid.Basic
@@ -94,7 +99,7 @@ theorem of_vector_cons (a : α) (v : Vector α n) : ↑(Vector.cons a v) = a :: 
 instance : HasMem α (Sym α n) :=
   ⟨fun a s => a ∈ s.1⟩
 
-instance decidable_mem [DecidableEq α] (a : α) (s : Sym α n) : Decidable (a ∈ s) :=
+instance decidableMem [DecidableEq α] (a : α) (s : Sym α n) : Decidable (a ∈ s) :=
   s.1.decidableMem _
 
 @[simp]
@@ -127,17 +132,17 @@ theorem cons_erase [DecidableEq α] (s : Sym α (n + 1)) (a : α) (h : a ∈ s) 
 
 /-- Another definition of the nth symmetric power, using vectors modulo permutations. (See `sym`.)
 -/
-def sym' (α : Type u) (n : ℕ) :=
+def Sym' (α : Type u) (n : ℕ) :=
   Quotientₓ (Vector.Perm.isSetoid α n)
 
 /-- This is `cons` but for the alternative `sym'` definition.
 -/
 def cons' {α : Type u} {n : ℕ} : α → Sym' α n → Sym' α (Nat.succ n) := fun a =>
-  Quotientₓ.map (Vector.cons a) fun ⟨l₁, h₁⟩ ⟨l₂, h₂⟩ h => List.Perm.cons _ h
+  Quotientₓ.map (Vector.cons a) fun h => List.Perm.cons _ h
 
 /-- Multisets of cardinality n are equivalent to length-n vectors up to permutations.
 -/
-def sym_equiv_sym' {α : Type u} {n : ℕ} : Sym α n ≃ Sym' α n :=
+def symEquivSym' {α : Type u} {n : ℕ} : Sym α n ≃ Sym' α n :=
   Equivₓ.subtypeQuotientEquivQuotientSubtype _ _
     (fun _ => by
       rfl)
@@ -158,7 +163,7 @@ instance : HasEmptyc (Sym α 0) :=
 theorem eq_nil_of_card_zero (s : Sym α 0) : s = nil :=
   Subtype.ext <| Multiset.card_eq_zero.1 s.2
 
-instance unique_zero : Unique (Sym α 0) :=
+instance uniqueZero : Unique (Sym α 0) :=
   ⟨⟨nil⟩, eq_nil_of_card_zero⟩
 
 /-- `repeat a n` is the sym containing only `a` with multiplicity `n`. -/
@@ -204,10 +209,10 @@ instance [Subsingleton α] (n : ℕ) : Subsingleton (Sym α n) :=
       rw [eq_repeat_of_subsingleton b s', eq_repeat_of_subsingleton b s]
       ⟩
 
-instance inhabited_sym [Inhabited α] (n : ℕ) : Inhabited (Sym α n) :=
+instance inhabitedSym [Inhabited α] (n : ℕ) : Inhabited (Sym α n) :=
   ⟨repeat default n⟩
 
-instance inhabited_sym' [Inhabited α] (n : ℕ) : Inhabited (Sym' α n) :=
+instance inhabitedSym' [Inhabited α] (n : ℕ) : Inhabited (Sym' α n) :=
   ⟨Quotientₓ.mk' (Vector.repeat default n)⟩
 
 instance (n : ℕ) [IsEmpty α] : IsEmpty (Sym α n.succ) :=
@@ -257,7 +262,7 @@ theorem map_cons {α β : Type _} {n : ℕ} (f : α → β) (a : α) (s : Sym α
 /-- Mapping an equivalence `α ≃ β` using `sym.map` gives an equivalence between `sym α n` and
 `sym β n`. -/
 @[simps]
-def equiv_congr {β : Type u} (e : α ≃ β) : Sym α n ≃ Sym β n where
+def equivCongr {β : Type u} (e : α ≃ β) : Sym α n ≃ Sym β n where
   toFun := map e
   invFun := map e.symm
   left_inv := fun x => by

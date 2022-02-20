@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2017 Johannes Hölzl. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johannes Hölzl
+-/
 import Mathbin.Logic.Basic
 
 /-!
@@ -97,7 +102,7 @@ theorem Nonempty.exists {α} {p : Nonempty α → Prop} : (∃ h : Nonempty α, 
   Iff.intro (fun ⟨⟨a⟩, h⟩ => ⟨a, h⟩) fun ⟨a, h⟩ => ⟨⟨a⟩, h⟩
 
 theorem Classical.nonempty_piₓ {α} {β : α → Sort _} : Nonempty (∀ a : α, β a) ↔ ∀ a : α, Nonempty (β a) :=
-  Iff.intro (fun ⟨f⟩ a => ⟨f a⟩) fun f => ⟨fun a => Classical.choice <| f a⟩
+  Iff.intro (fun a => ⟨f a⟩) fun f => ⟨fun a => Classical.choice <| f a⟩
 
 /-- Using `classical.choice`, lifts a (`Prop`-valued) `nonempty` instance to a (`Type`-valued)
   `inhabited` instance. `classical.inhabited_of_nonempty` already exists, in
@@ -135,4 +140,9 @@ instance {α β} [h : Nonempty α] [h2 : Nonempty β] : Nonempty (α × β) :=
 
 theorem subsingleton_of_not_nonempty {α : Sort _} (h : ¬Nonempty α) : Subsingleton α :=
   ⟨fun x => False.elim <| not_nonempty_iff_imp_false.mp h x⟩
+
+theorem Function.Surjective.nonempty [h : Nonempty β] {f : α → β} (hf : Function.Surjective f) : Nonempty α :=
+  let ⟨y⟩ := h
+  let ⟨x, hx⟩ := hf y
+  ⟨x⟩
 

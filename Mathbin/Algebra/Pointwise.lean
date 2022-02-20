@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Johan Commelin. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johan Commelin, Floris van Doorn
+-/
 import Mathbin.Algebra.BigOperators.Basic
 import Mathbin.Algebra.Module.Basic
 import Mathbin.Data.Finset.Preimage
@@ -53,7 +58,7 @@ variable [One α] {s : Set α} {a : α}
 
 /-- The set `(1 : set α)` is defined as `{1}` in locale `pointwise`. -/
 @[to_additive "The set `(0 : set α)` is defined as `{0}` in locale `pointwise`. "]
-protected def One : One (Set α) :=
+protected def hasOne : One (Set α) :=
   ⟨{1}⟩
 
 localized [Pointwise] attribute [instance] Set.hasOne Set.hasZero
@@ -95,7 +100,7 @@ variable {s s₁ s₂ t t₁ t₂ u : Set α} {a b : α}
 
 /-- The set `(s * t : set α)` is defined as `{x * y | x ∈ s, y ∈ t}` in locale `pointwise`. -/
 @[to_additive " The set `(s + t : set α)` is defined as `{x + y | x ∈ s, y ∈ t}` in locale `pointwise`."]
-protected def Mul [Mul α] : Mul (Set α) :=
+protected def hasMul [Mul α] : Mul (Set α) :=
   ⟨Image2 Mul.mul⟩
 
 localized [Pointwise] attribute [instance] Set.hasMul Set.hasAdd
@@ -184,14 +189,14 @@ theorem Union_mul (s : ι → Set α) (t : Set α) : (⋃ i, s i) * t = ⋃ i, s
 theorem mul_Union (s : Set α) (t : ι → Set α) : (s * ⋃ i, t i) = ⋃ i, s * t i :=
   image2_Union_right _ _ _
 
--- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (i j)
--- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (i j)
 @[to_additive]
 theorem Union₂_mul (s : ∀ i, κ i → Set α) (t : Set α) : (⋃ (i) (j), s i j) * t = ⋃ (i) (j), s i j * t :=
   image2_Union₂_left _ _ _
 
--- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (i j)
--- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (i j)
 @[to_additive]
 theorem mul_Union₂ (s : Set α) (t : ∀ i, κ i → Set α) : (s * ⋃ (i) (j), t i j) = ⋃ (i) (j), s * t i j :=
   image2_Union₂_right _ _ _
@@ -204,14 +209,14 @@ theorem Inter_mul_subset (s : ι → Set α) (t : Set α) : (⋂ i, s i) * t ⊆
 theorem mul_Inter_subset (s : Set α) (t : ι → Set α) : (s * ⋂ i, t i) ⊆ ⋂ i, s * t i :=
   image2_Inter_subset_right _ _ _
 
--- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (i j)
--- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (i j)
 @[to_additive]
 theorem Inter₂_mul_subset (s : ∀ i, κ i → Set α) (t : Set α) : (⋂ (i) (j), s i j) * t ⊆ ⋂ (i) (j), s i j * t :=
   image2_Inter₂_subset_left _ _ _
 
--- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (i j)
--- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (i j)
 @[to_additive]
 theorem mul_Inter₂_subset (s : Set α) (t : ∀ i, κ i → Set α) : (s * ⋂ (i) (j), t i j) ⊆ ⋂ (i) (j), s * t i j :=
   image2_Inter₂_subset_right _ _ _
@@ -221,7 +226,7 @@ which preserves multiplication. -/
 @[to_additive
       "Under `[has_add A]`, the `singleton` map from `A` to `set A` as an `add_hom`,\nthat is, a map which preserves addition.",
   simps]
-def singleton_mul_hom : MulHom α (Set α) where
+def singletonMulHom : MulHom α (Set α) where
   toFun := singleton
   map_mul' := fun a b => singleton_mul_singleton.symm
 
@@ -273,7 +278,7 @@ protected theorem mul_comm [CommSemigroupₓ α] : s * t = t * s := by
 
 /-- `set α` is a `mul_one_class` under pointwise operations if `α` is. -/
 @[to_additive "`set α` is an `add_zero_class` under pointwise operations if `α` is."]
-protected def MulOneClassₓ [MulOneClassₓ α] : MulOneClassₓ (Set α) :=
+protected def mulOneClass [MulOneClassₓ α] : MulOneClassₓ (Set α) :=
   { Set.hasOne, Set.hasMul with
     mul_one := fun s => by
       simp only [← singleton_one, mul_singleton, mul_oneₓ, image_id'],
@@ -282,17 +287,17 @@ protected def MulOneClassₓ [MulOneClassₓ α] : MulOneClassₓ (Set α) :=
 
 /-- `set α` is a `semigroup` under pointwise operations if `α` is. -/
 @[to_additive "`set α` is an `add_semigroup` under pointwise operations if `α` is. "]
-protected def Semigroupₓ [Semigroupₓ α] : Semigroupₓ (Set α) :=
+protected def semigroup [Semigroupₓ α] : Semigroupₓ (Set α) :=
   { Set.hasMul with mul_assoc := fun _ _ _ => image2_assoc mul_assoc }
 
 /-- `set α` is a `monoid` under pointwise operations if `α` is. -/
 @[to_additive "`set α` is an `add_monoid` under pointwise operations if `α` is. "]
-protected def Monoidₓ [Monoidₓ α] : Monoidₓ (Set α) :=
+protected def monoid [Monoidₓ α] : Monoidₓ (Set α) :=
   { Set.semigroup, Set.mulOneClass with }
 
 /-- `set α` is a `comm_monoid` under pointwise operations if `α` is. -/
 @[to_additive "`set α` is an `add_comm_monoid` under pointwise operations if `α` is. "]
-protected def CommMonoidₓ [CommMonoidₓ α] : CommMonoidₓ (Set α) :=
+protected def commMonoid [CommMonoidₓ α] : CommMonoidₓ (Set α) :=
   { Set.monoid with mul_comm := fun _ _ => Set.mul_comm }
 
 localized [Pointwise]
@@ -313,10 +318,10 @@ theorem pow_mem_pow [Monoidₓ α] (ha : a ∈ s) (n : ℕ) : a ^ n ∈ s ^ n :=
 theorem empty_pow [Monoidₓ α] (n : ℕ) (hn : n ≠ 0) : (∅ : Set α) ^ n = ∅ := by
   rw [← tsub_add_cancel_of_le (Nat.succ_le_of_ltₓ <| Nat.pos_of_ne_zeroₓ hn), pow_succₓ, empty_mul]
 
-instance decidable_mem_mul [Monoidₓ α] [Fintype α] [DecidableEq α] [DecidablePred (· ∈ s)] [DecidablePred (· ∈ t)] :
+instance decidableMemMul [Monoidₓ α] [Fintype α] [DecidableEq α] [DecidablePred (· ∈ s)] [DecidablePred (· ∈ t)] :
     DecidablePred (· ∈ s * t) := fun _ => decidableOfIff _ mem_mul.symm
 
-instance decidable_mem_pow [Monoidₓ α] [Fintype α] [DecidableEq α] [DecidablePred (· ∈ s)] (n : ℕ) :
+instance decidableMemPow [Monoidₓ α] [Fintype α] [DecidableEq α] [DecidablePred (· ∈ s)] (n : ℕ) :
     DecidablePred (· ∈ s ^ n) := by
   induction' n with n ih
   · simp_rw [pow_zeroₓ, mem_one]
@@ -361,22 +366,22 @@ theorem univ_mul [Groupₓ α] (ht : t.Nonempty) : (Univ : Set α) * t = univ :=
 
 /-- `singleton` is a monoid hom. -/
 @[to_additive singleton_add_hom "singleton is an add monoid hom"]
-def singleton_hom [Monoidₓ α] : α →* Set α where
+def singletonHom [Monoidₓ α] : α →* Set α where
   toFun := singleton
   map_one' := rfl
   map_mul' := fun a b => singleton_mul_singleton.symm
 
 @[to_additive]
-theorem nonempty.mul [Mul α] : s.Nonempty → t.Nonempty → (s * t).Nonempty :=
+theorem Nonempty.mul [Mul α] : s.Nonempty → t.Nonempty → (s * t).Nonempty :=
   nonempty.image2
 
 @[to_additive]
-theorem finite.mul [Mul α] (hs : Finite s) (ht : Finite t) : Finite (s * t) :=
+theorem Finite.mul [Mul α] (hs : Finite s) (ht : Finite t) : Finite (s * t) :=
   hs.Image2 _ ht
 
 /-- multiplication preserves finiteness -/
 @[to_additive "addition preserves finiteness"]
-def fintype_mul [Mul α] [DecidableEq α] (s t : Set α) [hs : Fintype s] [ht : Fintype t] : Fintype (s * t : Set α) :=
+def fintypeMul [Mul α] [DecidableEq α] (s t : Set α) [hs : Fintype s] [ht : Fintype t] : Fintype (s * t : Set α) :=
   Set.fintypeImage2 _ s t
 
 @[to_additive]
@@ -475,7 +480,7 @@ variable {s t : Set α} {a : α}
 It is equal to `{x⁻¹ | x ∈ s}`, see `set.image_inv`. -/
 @[to_additive
       " The set `(-s : set α)` is defined as `{x | -x ∈ s}` in locale `pointwise`.\nIt is equal to `{-x | x ∈ s}`, see `set.image_neg`. "]
-protected def Inv [Inv α] : Inv (Set α) :=
+protected def hasInv [Inv α] : Inv (Set α) :=
   ⟨Preimage Inv.inv⟩
 
 localized [Pointwise] attribute [instance] Set.hasInv Set.hasNeg
@@ -493,7 +498,7 @@ theorem nonempty_inv [HasInvolutiveInv α] {s : Set α} : s⁻¹.Nonempty ↔ s.
   inv_involutive.Surjective.nonempty_preimage
 
 @[to_additive]
-theorem nonempty.inv [HasInvolutiveInv α] {s : Set α} (h : s.Nonempty) : s⁻¹.Nonempty :=
+theorem Nonempty.inv [HasInvolutiveInv α] {s : Set α} (h : s.Nonempty) : s⁻¹.Nonempty :=
   nonempty_inv.2 h
 
 @[simp, to_additive]
@@ -548,7 +553,7 @@ theorem inv_subset [HasInvolutiveInv α] {s t : Set α} : s⁻¹ ⊆ t ↔ s ⊆
   rw [← inv_subset_inv, inv_invₓ]
 
 @[to_additive]
-theorem finite.inv [HasInvolutiveInv α] {s : Set α} (hs : Finite s) : Finite s⁻¹ :=
+theorem Finite.inv [HasInvolutiveInv α] {s : Set α} (hs : Finite s) : Finite s⁻¹ :=
   hs.Preimage <| inv_injective.InjOn _
 
 @[to_additive]
@@ -572,14 +577,14 @@ section Smul
 in locale `pointwise`. -/
 @[to_additive has_vadd_set
       "The translation of a set `(x +ᵥ s : set β)` by a scalar `x ∶ α` is\ndefined as `{x +ᵥ y | y ∈ s}` in locale `pointwise`."]
-protected def has_scalar_set [HasScalar α β] : HasScalar α (Set β) :=
+protected def hasScalarSet [HasScalar α β] : HasScalar α (Set β) :=
   ⟨fun a => Image (HasScalar.smul a)⟩
 
 /-- The pointwise scalar multiplication `(s • t : set β)` by a set of scalars `s ∶ set α`
 is defined as `{x • y | x ∈ s, y ∈ t}` in locale `pointwise`. -/
 @[to_additive HasVadd
       "The pointwise translation `(s +ᵥ t : set β)` by a set of constants\n`s ∶ set α` is defined as `{x +ᵥ y | x ∈ s, y ∈ t}` in locale `pointwise`."]
-protected def HasScalar [HasScalar α β] : HasScalar (Set α) (Set β) :=
+protected def hasScalar [HasScalar α β] : HasScalar (Set α) (Set β) :=
   ⟨Image2 HasScalar.smul⟩
 
 localized [Pointwise] attribute [instance] Set.hasScalarSet Set.hasScalar
@@ -674,14 +679,14 @@ theorem Union_smul (s : ι → Set α) (t : Set β) : (⋃ i, s i) • t = ⋃ i
 theorem smul_Union (s : Set α) (t : ι → Set β) : (s • ⋃ i, t i) = ⋃ i, s • t i :=
   image2_Union_right _ _ _
 
--- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (i j)
--- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (i j)
 @[to_additive]
 theorem Union₂_smul (s : ∀ i, κ i → Set α) (t : Set β) : (⋃ (i) (j), s i j) • t = ⋃ (i) (j), s i j • t :=
   image2_Union₂_left _ _ _
 
--- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (i j)
--- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (i j)
 @[to_additive]
 theorem smul_Union₂ (s : Set α) (t : ∀ i, κ i → Set β) : (s • ⋃ (i) (j), t i j) = ⋃ (i) (j), s • t i j :=
   image2_Union₂_right _ _ _
@@ -694,14 +699,14 @@ theorem Inter_smul_subset (s : ι → Set α) (t : Set β) : (⋂ i, s i) • t 
 theorem smul_Inter_subset (s : Set α) (t : ι → Set β) : (s • ⋂ i, t i) ⊆ ⋂ i, s • t i :=
   image2_Inter_subset_right _ _ _
 
--- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (i j)
--- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (i j)
 @[to_additive]
 theorem Inter₂_smul_subset (s : ∀ i, κ i → Set α) (t : Set β) : (⋂ (i) (j), s i j) • t ⊆ ⋂ (i) (j), s i j • t :=
   image2_Inter₂_subset_left _ _ _
 
--- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (i j)
--- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (i j)
 @[to_additive]
 theorem smul_Inter₂_subset (s : Set α) (t : ∀ i, κ i → Set β) : (s • ⋂ (i) (j), t i j) ⊆ ⋂ (i) (j), s • t i j :=
   image2_Inter₂_subset_right _ _ _
@@ -752,8 +757,8 @@ theorem smul_set_inter_subset : a • (t₁ ∩ t₂) ⊆ a • t₁ ∩ a • t
 theorem smul_set_Union (a : α) (s : ι → Set β) : (a • ⋃ i, s i) = ⋃ i, a • s i :=
   image_Union
 
--- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (i j)
--- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (i j)
 @[to_additive]
 theorem smul_set_Union₂ (a : α) (s : ∀ i, κ i → Set β) : (a • ⋃ (i) (j), s i j) = ⋃ (i) (j), a • s i j :=
   image_Union₂ _ _
@@ -762,14 +767,14 @@ theorem smul_set_Union₂ (a : α) (s : ∀ i, κ i → Set β) : (a • ⋃ (i)
 theorem smul_set_Inter_subset (a : α) (t : ι → Set β) : (a • ⋂ i, t i) ⊆ ⋂ i, a • t i :=
   image_Inter_subset _ _
 
--- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (i j)
--- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (i j)
 @[to_additive]
 theorem smul_set_Inter₂_subset (a : α) (t : ∀ i, κ i → Set β) : (a • ⋂ (i) (j), t i j) ⊆ ⋂ (i) (j), a • t i j :=
   image_Inter₂_subset _ _
 
 @[to_additive]
-theorem finite.smul_set (hs : Finite s) : Finite (a • s) :=
+theorem Finite.smul_set (hs : Finite s) : Finite (a • s) :=
   hs.Image _
 
 end HasScalarSet
@@ -813,13 +818,13 @@ instance smul_comm_class_set' [HasScalar α γ] [HasScalar β γ] [SmulCommClass
   SmulCommClass.symm _ _ _
 
 @[to_additive]
-instance SmulCommClass [HasScalar α γ] [HasScalar β γ] [SmulCommClass α β γ] :
+instance smul_comm_class [HasScalar α γ] [HasScalar β γ] [SmulCommClass α β γ] :
     SmulCommClass (Set α) (Set β) (Set γ) where
   smul_comm := fun T T' T'' => by
     simp only [← image2_smul, image2_swap _ T]
     exact image2_assoc fun b c a => smul_comm a b c
 
-instance IsScalarTower [HasScalar α β] [HasScalar α γ] [HasScalar β γ] [IsScalarTower α β γ] :
+instance is_scalar_tower [HasScalar α β] [HasScalar α γ] [HasScalar β γ] [IsScalarTower α β γ] :
     IsScalarTower α β (Set γ) where
   smul_assoc := fun a b T => by
     simp only [← image_smul, image_image, smul_assoc]
@@ -833,7 +838,7 @@ instance is_scalar_tower'' [HasScalar α β] [HasScalar α γ] [HasScalar β γ]
     IsScalarTower (Set α) (Set β) (Set γ) where
   smul_assoc := fun T T' T'' => image2_assoc smul_assoc
 
-instance IsCentralScalar [HasScalar α β] [HasScalar (αᵐᵒᵖ) β] [IsCentralScalar α β] : IsCentralScalar α (Set β) :=
+instance is_central_scalar [HasScalar α β] [HasScalar (αᵐᵒᵖ) β] [IsCentralScalar α β] : IsCentralScalar α (Set β) :=
   ⟨fun a S => (congr_argₓ fun f => f '' S) <| funext fun _ => op_smul_eq_smul _ _⟩
 
 end Smul
@@ -844,7 +849,7 @@ variable {ι : Sort _} {κ : ι → Sort _} [HasVsub α β] {s s₁ s₂ t t₁ 
 
 include α
 
-instance HasVsub : HasVsub (Set α) (Set β) :=
+instance hasVsub : HasVsub (Set α) (Set β) :=
   ⟨Image2 (· -ᵥ ·)⟩
 
 @[simp]
@@ -916,13 +921,13 @@ theorem Union_vsub (s : ι → Set β) (t : Set β) : (⋃ i, s i) -ᵥ t = ⋃ 
 theorem vsub_Union (s : Set β) (t : ι → Set β) : (s -ᵥ ⋃ i, t i) = ⋃ i, s -ᵥ t i :=
   image2_Union_right _ _ _
 
--- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (i j)
--- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (i j)
 theorem Union₂_vsub (s : ∀ i, κ i → Set β) (t : Set β) : (⋃ (i) (j), s i j) -ᵥ t = ⋃ (i) (j), s i j -ᵥ t :=
   image2_Union₂_left _ _ _
 
--- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (i j)
--- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (i j)
 theorem vsub_Union₂ (s : Set β) (t : ∀ i, κ i → Set β) : (s -ᵥ ⋃ (i) (j), t i j) = ⋃ (i) (j), s -ᵥ t i j :=
   image2_Union₂_right _ _ _
 
@@ -932,17 +937,17 @@ theorem Inter_vsub_subset (s : ι → Set β) (t : Set β) : (⋂ i, s i) -ᵥ t
 theorem vsub_Inter_subset (s : Set β) (t : ι → Set β) : (s -ᵥ ⋂ i, t i) ⊆ ⋂ i, s -ᵥ t i :=
   image2_Inter_subset_right _ _ _
 
--- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (i j)
--- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (i j)
 theorem Inter₂_vsub_subset (s : ∀ i, κ i → Set β) (t : Set β) : (⋂ (i) (j), s i j) -ᵥ t ⊆ ⋂ (i) (j), s i j -ᵥ t :=
   image2_Inter₂_subset_left _ _ _
 
--- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (i j)
--- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (i j)
 theorem vsub_Inter₂_subset (s : Set β) (t : ∀ i, κ i → Set β) : (s -ᵥ ⋂ (i) (j), t i j) ⊆ ⋂ (i) (j), s -ᵥ t i j :=
   image2_Inter₂_subset_right _ _ _
 
-theorem finite.vsub (hs : Finite s) (ht : Finite t) : Finite (s -ᵥ t) :=
+theorem Finite.vsub (hs : Finite s) (ht : Finite t) : Finite (s -ᵥ t) :=
   hs.Image2 _ ht
 
 theorem vsub_self_mono (h : s ⊆ t) : s -ᵥ s ⊆ t -ᵥ t :=
@@ -981,15 +986,15 @@ section Monoidₓ
 
 /-- An alias for `set α`, which has a semiring structure given by `∪` as "addition" and pointwise
   multiplication `*` as "multiplication". -/
-def set_semiring (α : Type _) : Type _ :=
+def SetSemiring (α : Type _) : Type _ :=
   Set α deriving Inhabited, PartialOrderₓ, OrderBot
 
 /-- The identitiy function `set α → set_semiring α`. -/
-protected def up (s : Set α) : SetSemiring α :=
+protected def Up (s : Set α) : SetSemiring α :=
   s
 
 /-- The identitiy function `set_semiring α → set α`. -/
-protected def set_semiring.down (s : SetSemiring α) : Set α :=
+protected def SetSemiring.Down (s : SetSemiring α) : Set α :=
   s
 
 @[simp]
@@ -1000,9 +1005,11 @@ protected theorem down_up {s : Set α} : s.up.down = s :=
 protected theorem up_down {s : SetSemiring α} : s.down.up = s :=
   rfl
 
+-- This lemma is not tagged `simp`, since otherwise the linter complains.
 theorem up_le_up {s t : Set α} : s.up ≤ t.up ↔ s ⊆ t :=
   Iff.rfl
 
+-- This lemma is not tagged `simp`, since otherwise the linter complains.
 theorem up_lt_up {s t : Set α} : s.up < t.up ↔ s ⊂ t :=
   Iff.rfl
 
@@ -1014,7 +1021,7 @@ theorem down_subset_down {s t : SetSemiring α} : s.down ⊆ t.down ↔ s ≤ t 
 theorem down_ssubset_down {s t : SetSemiring α} : s.down ⊂ t.down ↔ s < t :=
   Iff.rfl
 
-instance set_semiring.add_comm_monoid : AddCommMonoidₓ (SetSemiring α) where
+instance SetSemiring.addCommMonoid : AddCommMonoidₓ (SetSemiring α) where
   add := fun s t => (s ∪ t : Set α)
   zero := (∅ : Set α)
   add_assoc := union_assoc
@@ -1022,27 +1029,27 @@ instance set_semiring.add_comm_monoid : AddCommMonoidₓ (SetSemiring α) where
   add_zero := union_empty
   add_comm := union_comm
 
-instance set_semiring.non_unital_non_assoc_semiring [Mul α] : NonUnitalNonAssocSemiringₓ (SetSemiring α) :=
+instance SetSemiring.nonUnitalNonAssocSemiring [Mul α] : NonUnitalNonAssocSemiringₓ (SetSemiring α) :=
   { Set.hasMul, SetSemiring.addCommMonoid with zero_mul := fun s => empty_mul, mul_zero := fun s => mul_empty,
     left_distrib := fun _ _ _ => mul_union, right_distrib := fun _ _ _ => union_mul }
 
-instance set_semiring.non_assoc_semiring [MulOneClassₓ α] : NonAssocSemiringₓ (SetSemiring α) :=
+instance SetSemiring.nonAssocSemiring [MulOneClassₓ α] : NonAssocSemiringₓ (SetSemiring α) :=
   { SetSemiring.nonUnitalNonAssocSemiring, Set.mulOneClass with }
 
-instance set_semiring.non_unital_semiring [Semigroupₓ α] : NonUnitalSemiringₓ (SetSemiring α) :=
+instance SetSemiring.nonUnitalSemiring [Semigroupₓ α] : NonUnitalSemiringₓ (SetSemiring α) :=
   { SetSemiring.nonUnitalNonAssocSemiring, Set.semigroup with }
 
-instance set_semiring.semiring [Monoidₓ α] : Semiringₓ (SetSemiring α) :=
+instance SetSemiring.semiring [Monoidₓ α] : Semiringₓ (SetSemiring α) :=
   { SetSemiring.nonAssocSemiring, SetSemiring.nonUnitalSemiring with }
 
-instance set_semiring.comm_semiring [CommMonoidₓ α] : CommSemiringₓ (SetSemiring α) :=
+instance SetSemiring.commSemiring [CommMonoidₓ α] : CommSemiringₓ (SetSemiring α) :=
   { Set.commMonoid, SetSemiring.semiring with }
 
 /-- A multiplicative action of a monoid on a type β gives also a
  multiplicative action on the subsets of β. -/
 @[to_additive
       "An additive action of an additive monoid on a type β gives also an additive action\non the subsets of β."]
-protected def mul_action_set [Monoidₓ α] [MulAction α β] : MulAction α (Set β) :=
+protected def mulActionSet [Monoidₓ α] [MulAction α β] : MulAction α (Set β) :=
   { Set.hasScalarSet with
     mul_smul := by
       intros
@@ -1066,18 +1073,20 @@ theorem preimage_mul_preimage_subset {s t : Set β} : m ⁻¹' s * m ⁻¹' t �
   rintro _ ⟨_, _, _, _, rfl⟩
   exact ⟨_, _, ‹_›, ‹_›, (m.map_mul _ _).symm⟩
 
-instance set_semiring.no_zero_divisors : NoZeroDivisors (SetSemiring α) :=
+instance SetSemiring.no_zero_divisors : NoZeroDivisors (SetSemiring α) :=
   ⟨fun a b ab =>
     a.eq_empty_or_nonempty.imp_right fun ha =>
       b.eq_empty_or_nonempty.resolve_right fun hb => Nonempty.ne_empty ⟨_, mul_mem_mul ha.some_mem hb.some_mem⟩ ab⟩
 
-instance set_semiring.covariant_class_add : CovariantClass (SetSemiring α) (SetSemiring α) (· + ·) (· ≤ ·) where
+/- Since addition on `set_semiring` is commutative (it is set union), there is no need
+to also have the instance `covariant_class (set_semiring α) (set_semiring α) (swap (+)) (≤)`. -/
+instance SetSemiring.covariant_class_add : CovariantClass (SetSemiring α) (SetSemiring α) (· + ·) (· ≤ ·) where
   elim := fun a b c => union_subset_union_right _
 
-instance set_semiring.covariant_class_mul_left : CovariantClass (SetSemiring α) (SetSemiring α) (· * ·) (· ≤ ·) where
+instance SetSemiring.covariant_class_mul_left : CovariantClass (SetSemiring α) (SetSemiring α) (· * ·) (· ≤ ·) where
   elim := fun a b c => mul_subset_mul_left
 
-instance set_semiring.covariant_class_mul_right :
+instance SetSemiring.covariant_class_mul_right :
     CovariantClass (SetSemiring α) (SetSemiring α) (swap (· * ·)) (· ≤ ·) where
   elim := fun a b c => mul_subset_mul_right
 
@@ -1085,7 +1094,7 @@ end MulHom
 
 /-- The image of a set under a multiplicative homomorphism is a ring homomorphism
 with respect to the pointwise operations on sets. -/
-def image_hom [Monoidₓ α] [Monoidₓ β] (f : α →* β) : SetSemiring α →+* SetSemiring β where
+def imageHom [Monoidₓ α] [Monoidₓ β] (f : α →* β) : SetSemiring α →+* SetSemiring β where
   toFun := Image f
   map_zero' := image_empty _
   map_one' := by
@@ -1253,7 +1262,7 @@ variable {a : α} {s s₁ s₂ t t₁ t₂ : Finset α}
 
 /-- The finset `(1 : finset α)` is defined as `{1}` in locale `pointwise`. -/
 @[to_additive "The finset `(0 : finset α)` is defined as `{0}` in locale `pointwise`. "]
-protected def One [One α] : One (Finset α) :=
+protected def hasOne [One α] : One (Finset α) :=
   ⟨{1}⟩
 
 localized [Pointwise] attribute [instance] Finset.hasOne Finset.hasZero
@@ -1273,7 +1282,7 @@ variable [DecidableEq α]
 /-- The pointwise product of two finite sets `s` and `t`:
 `st = s ⬝ t = s * t = { x * y | x ∈ s, y ∈ t }`. -/
 @[to_additive "The pointwise sum of two finite sets `s` and `t`:\n`s + t = { x + y | x ∈ s, y ∈ t }`. "]
-protected def Mul [Mul α] : Mul (Finset α) :=
+protected def hasMul [Mul α] : Mul (Finset α) :=
   ⟨fun s t => (s.product t).Image fun p : α × α => p.1 * p.2⟩
 
 localized [Pointwise] attribute [instance] Finset.hasMul Finset.hasAdd
@@ -1353,11 +1362,11 @@ theorem mul_zero_subset (s : Finset α) : s * 0 ⊆ 0 := by
 theorem zero_mul_subset (s : Finset α) : 0 * s ⊆ 0 := by
   simp [subset_iff, mem_mul]
 
-theorem nonempty.mul_zero (hs : s.Nonempty) : s * 0 = 0 :=
+theorem Nonempty.mul_zero (hs : s.Nonempty) : s * 0 = 0 :=
   s.mul_zero_subset.antisymm <| by
     simpa [Finset.mem_mul] using hs
 
-theorem nonempty.zero_mul (hs : s.Nonempty) : 0 * s = 0 :=
+theorem Nonempty.zero_mul (hs : s.Nonempty) : 0 * s = 0 :=
   s.zero_mul_subset.antisymm <| by
     simpa [Finset.mem_mul] using hs
 
@@ -1452,28 +1461,28 @@ protected theorem mul_comm [DecidableEq α] [CommSemigroupₓ α] : s * t = t * 
 
 /-- `finset α` is a `mul_one_class` under pointwise operations if `α` is. -/
 @[to_additive "`finset α` is an `add_zero_class` under pointwise operations if `α` is."]
-protected def MulOneClassₓ [DecidableEq α] [MulOneClassₓ α] : MulOneClassₓ (Finset α) :=
+protected def mulOneClass [DecidableEq α] [MulOneClassₓ α] : MulOneClassₓ (Finset α) :=
   Function.Injective.mulOneClass _ coe_injective (coe_singleton 1)
     (by
       simp )
 
 /-- `finset α` is a `semigroup` under pointwise operations if `α` is. -/
 @[to_additive "`finset α` is an `add_semigroup` under pointwise operations if `α` is. "]
-protected def Semigroupₓ [DecidableEq α] [Semigroupₓ α] : Semigroupₓ (Finset α) :=
+protected def semigroup [DecidableEq α] [Semigroupₓ α] : Semigroupₓ (Finset α) :=
   Function.Injective.semigroup _ coe_injective
     (by
       simp )
 
 /-- `finset α` is a `monoid` under pointwise operations if `α` is. -/
 @[to_additive "`finset α` is an `add_monoid` under pointwise operations if `α` is. "]
-protected def Monoidₓ [DecidableEq α] [Monoidₓ α] : Monoidₓ (Finset α) :=
+protected def monoid [DecidableEq α] [Monoidₓ α] : Monoidₓ (Finset α) :=
   Function.Injective.monoid _ coe_injective (coe_singleton 1)
     (by
       simp )
 
 /-- `finset α` is a `comm_monoid` under pointwise operations if `α` is. -/
 @[to_additive "`finset α` is an `add_comm_monoid` under pointwise operations if `α` is. "]
-protected def CommMonoidₓ [DecidableEq α] [CommMonoidₓ α] : CommMonoidₓ (Finset α) :=
+protected def commMonoid [DecidableEq α] [CommMonoidₓ α] : CommMonoidₓ (Finset α) :=
   Function.Injective.commMonoid _ coe_injective (coe_singleton 1)
     (by
       simp )

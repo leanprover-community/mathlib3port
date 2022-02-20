@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Yakov Pechersky. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yakov Pechersky
+-/
 import Mathbin.Data.List.Rotate
 import Mathbin.GroupTheory.Perm.Support
 
@@ -37,7 +42,7 @@ is permuted to the next one, defined as `form_perm`. When we have that `nodup l`
 we prove that `equiv.perm.support (form_perm l) = l.to_finset`, and that
 `form_perm l` is rotationally invariant, in `form_perm_rotate`.
 -/
-def form_perm : Equivₓ.Perm α :=
+def formPerm : Equivₓ.Perm α :=
   (zipWithₓ Equivₓ.swap l l.tail).Prod
 
 @[simp]
@@ -259,8 +264,10 @@ theorem form_perm_eq_of_is_rotated {l l' : List α} (hd : Nodupₓ l) (h : l ~r 
   exact (form_perm_rotate l hd n).symm
 
 theorem form_perm_reverse (l : List α) (h : Nodupₓ l) : formPerm l.reverse = (formPerm l)⁻¹ := by
+  -- Let's show `form_perm l` is an inverse to `form_perm l.reverse`.
   rw [eq_comm, inv_eq_iff_mul_eq_one]
   ext x
+  -- We only have to check for `x ∈ l` that `form_perm l (form_perm l.reverse x)`
   rw [mul_apply, one_apply]
   by_cases' hx : x ∈ l
   swap

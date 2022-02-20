@@ -1,3 +1,12 @@
+/-
+Copyright (c) 2019 Simon Hudon. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Simon Hudon
+
+Monad encapsulating continuation passing programming style, similar to
+Haskell's `Cont`, `ContT` and `MonadCont`:
+<http://hackage.haskell.org/package/mtl-2.2.2/docs/Control-Monad-Cont.html>
+-/
 import Mathbin.Control.Monad.Basic
 import Mathbin.Control.Monad.Writer
 
@@ -45,7 +54,7 @@ def map (f : m r → m r) (x : ContT r m α) : ContT r m α :=
 theorem run_cont_t_map_cont_t (f : m r → m r) (x : ContT r m α) : run (map f x) = f ∘ run x :=
   rfl
 
-def with_cont_t (f : (β → m r) → α → m r) (x : ContT r m α) : ContT r m β := fun g => x <| f g
+def withContT (f : (β → m r) → α → m r) (x : ContT r m α) : ContT r m β := fun g => x <| f g
 
 theorem run_with_cont_t (f : (β → m r) → α → m r) (x : ContT r m α) : run (withContT f x) = run x ∘ f :=
   rfl
@@ -71,7 +80,7 @@ instance : IsLawfulMonad (ContT r m) where
     ext
     rfl
 
-def monad_lift [Monadₓ m] {α} : m α → ContT r m α := fun x f => x >>= f
+def monadLift [Monadₓ m] {α} : m α → ContT r m α := fun x f => x >>= f
 
 instance [Monadₓ m] : HasMonadLift m (ContT r m) where
   monadLift := fun α => ContT.monadLift
@@ -79,7 +88,7 @@ instance [Monadₓ m] : HasMonadLift m (ContT r m) where
 theorem monad_lift_bind [Monadₓ m] [IsLawfulMonad m] {α β} (x : m α) (f : α → m β) :
     (monadLift (x >>= f) : ContT r m β) = monadLift x >>= monad_lift ∘ f := by
   ext
-  simp only [monad_lift, HasMonadLift.monadLift, · ∘ ·, · >>= ·, bind_assoc, id.def, run, ContT.monadLift]
+  simp only [monad_lift, HasMonadLift.monadLift, (· ∘ ·), (· >>= ·), bind_assoc, id.def, run, ContT.monadLift]
 
 instance : MonadCont (ContT r m) where
   callCc := fun α β f g => f ⟨fun x h => g x⟩ g
@@ -197,19 +206,19 @@ instance {σ} [MonadCont m] : MonadCont (StateTₓ σ m) where
 instance {σ} [MonadCont m] [IsLawfulMonadCont m] : IsLawfulMonadCont (StateTₓ σ m) where
   call_cc_bind_right := by
     intros
-    simp [call_cc, StateTₓ.callCc, call_cc_bind_right, · >>= ·, StateTₓ.bind]
+    simp [call_cc, StateTₓ.callCc, call_cc_bind_right, (· >>= ·), StateTₓ.bind]
     ext
     dsimp
     congr with ⟨x₀, x₁⟩
     rfl
   call_cc_bind_left := by
     intros
-    simp [call_cc, StateTₓ.callCc, call_cc_bind_left, · >>= ·, StateTₓ.bind, StateTₓ.goto_mk_label]
+    simp [call_cc, StateTₓ.callCc, call_cc_bind_left, (· >>= ·), StateTₓ.bind, StateTₓ.goto_mk_label]
     ext
     rfl
   call_cc_dummy := by
     intros
-    simp [call_cc, StateTₓ.callCc, call_cc_bind_right, · >>= ·, StateTₓ.bind, @call_cc_dummy m _]
+    simp [call_cc, StateTₓ.callCc, call_cc_bind_right, (· >>= ·), StateTₓ.bind, @call_cc_dummy m _]
     ext
     rfl
 

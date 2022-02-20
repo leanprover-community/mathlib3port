@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Mario Carneiro. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Mario Carneiro
+-/
 import Mathbin.Data.Fin.Basic
 import Mathbin.Data.List.Basic
 
@@ -102,6 +107,8 @@ theorem of_fn_nth_le : ∀ l : List α, (ofFnₓ fun i => nthLe l i i.2) = l
     simp only [Finₓ.coe_succ]
     exact of_fn_nth_le l
 
+-- not registered as a simp lemma, as otherwise it fires before `forall_mem_of_fn_iff` which
+-- is much more useful
 theorem mem_of_fn {n} (f : Finₓ n → α) (a : α) : a ∈ ofFnₓ f ↔ a ∈ Set.Range f := by
   simp only [mem_iff_nth_le, Set.mem_range, nth_le_of_fn']
   exact

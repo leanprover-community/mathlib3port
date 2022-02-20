@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Chris Hughes. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Chris Hughes, Johannes Hölzl, Scott Morrison, Jens Wagemaker
+-/
 import Mathbin.Data.Polynomial.Reverse
 import Mathbin.Algebra.Associated
 import Mathbin.Algebra.Regular.Smul
@@ -26,7 +31,7 @@ section Semiringₓ
 
 variable [Semiringₓ R] {p q r : R[X]}
 
-theorem monic.as_sum {p : R[X]} (hp : p.Monic) :
+theorem Monic.as_sum {p : R[X]} (hp : p.Monic) :
     p = X ^ p.natDegree + ∑ i in range p.natDegree, c (p.coeff i) * X ^ i := by
   conv_lhs => rw [p.as_sum_range_C_mul_X_pow, sum_range_succ_comm]
   suffices C (p.coeff p.nat_degree) = 1 by
@@ -230,7 +235,7 @@ theorem eq_one_of_is_unit_of_monic (hm : Monic p) (hpu : IsUnit p) : p = 1 := by
   rw [eq_C_of_degree_le_zero this, ← nat_degree_eq_zero_iff_degree_le_zero.2 this, ← leading_coeff, hm.leading_coeff,
     C_1]
 
-theorem monic.next_coeff_multiset_prod (t : Multiset ι) (f : ι → R[X]) (h : ∀, ∀ i ∈ t, ∀, Monic (f i)) :
+theorem Monic.next_coeff_multiset_prod (t : Multiset ι) (f : ι → R[X]) (h : ∀, ∀ i ∈ t, ∀, Monic (f i)) :
     nextCoeff (t.map f).Prod = (t.map fun i => nextCoeff (f i)).Sum := by
   revert h
   refine' Multiset.induction_on t _ fun a t ih ht => _
@@ -244,7 +249,7 @@ theorem monic.next_coeff_multiset_prod (t : Multiset ι) (f : ι → R[X]) (h : 
       monic_multiset_prod_of_monic _ _ fun b bs => ht _ (Multiset.mem_cons_of_mem bs)]
     
 
-theorem monic.next_coeff_prod (s : Finset ι) (f : ι → R[X]) (h : ∀, ∀ i ∈ s, ∀, Monic (f i)) :
+theorem Monic.next_coeff_prod (s : Finset ι) (f : ι → R[X]) (h : ∀, ∀ i ∈ s, ∀, Monic (f i)) :
     nextCoeff (∏ i in s, f i) = ∑ i in s, nextCoeff (f i) :=
   Monic.next_coeff_multiset_prod s.1 f h
 
@@ -344,9 +349,10 @@ end NonzeroSemiring
 
 section NotZeroDivisor
 
+-- TODO: using gh-8537, rephrase lemmas that involve commutation around `*` using the op-ring
 variable [Semiringₓ R] {p : R[X]}
 
-theorem monic.mul_left_ne_zero (hp : Monic p) {q : R[X]} (hq : q ≠ 0) : q * p ≠ 0 := by
+theorem Monic.mul_left_ne_zero (hp : Monic p) {q : R[X]} (hq : q ≠ 0) : q * p ≠ 0 := by
   by_cases' h : p = 1
   · simpa [h]
     
@@ -356,7 +362,7 @@ theorem monic.mul_left_ne_zero (hp : Monic p) {q : R[X]} (hq : q ≠ 0) : q * p 
   refine' (lt_transₓ _ h).ne'
   simp
 
-theorem monic.mul_right_ne_zero (hp : Monic p) {q : R[X]} (hq : q ≠ 0) : p * q ≠ 0 := by
+theorem Monic.mul_right_ne_zero (hp : Monic p) {q : R[X]} (hq : q ≠ 0) : p * q ≠ 0 := by
   by_cases' h : p = 1
   · simpa [h]
     
@@ -366,7 +372,7 @@ theorem monic.mul_right_ne_zero (hp : Monic p) {q : R[X]} (hq : q ≠ 0) : p * q
   refine' (lt_transₓ _ h).ne'
   simp
 
-theorem monic.mul_nat_degree_lt_iff (h : Monic p) {q : R[X]} : (p * q).natDegree < p.natDegree ↔ p ≠ 1 ∧ q = 0 := by
+theorem Monic.mul_nat_degree_lt_iff (h : Monic p) {q : R[X]} : (p * q).natDegree < p.natDegree ↔ p ≠ 1 ∧ q = 0 := by
   by_cases' hq : q = 0
   · suffices 0 < p.nat_degree ↔ p.nat_degree ≠ 0 by
       simpa [hq, ← h.nat_degree_eq_zero_iff_eq_one]
@@ -375,13 +381,13 @@ theorem monic.mul_nat_degree_lt_iff (h : Monic p) {q : R[X]} : (p * q).natDegree
   · simp [h.nat_degree_mul', hq]
     
 
-theorem monic.mul_right_eq_zero_iff (h : Monic p) {q : R[X]} : p * q = 0 ↔ q = 0 := by
+theorem Monic.mul_right_eq_zero_iff (h : Monic p) {q : R[X]} : p * q = 0 ↔ q = 0 := by
   by_cases' hq : q = 0 <;> simp [h.mul_right_ne_zero, hq]
 
-theorem monic.mul_left_eq_zero_iff (h : Monic p) {q : R[X]} : q * p = 0 ↔ q = 0 := by
+theorem Monic.mul_left_eq_zero_iff (h : Monic p) {q : R[X]} : q * p = 0 ↔ q = 0 := by
   by_cases' hq : q = 0 <;> simp [h.mul_left_ne_zero, hq]
 
-theorem monic.is_regular {R : Type _} [Ringₓ R] {p : R[X]} (hp : Monic p) : IsRegular p := by
+theorem Monic.is_regular {R : Type _} [Ringₓ R] {p : R[X]} (hp : Monic p) : IsRegular p := by
   constructor
   · intro q r h
     rw [← sub_eq_zero, ← hp.mul_right_eq_zero_iff, mul_sub, h, sub_self]

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Anatole Dedecker. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Anatole Dedecker, Bhavik Mehta
+-/
 import Mathbin.MeasureTheory.Integral.IntervalIntegral
 import Mathbin.Order.Filter.AtTopBot
 
@@ -68,7 +73,7 @@ variable {α ι : Type _} [MeasurableSpace α] (μ : Measure α) (l : Filter ι)
     See for example `measure_theory.ae_cover.lintegral_tendsto_of_countably_generated`,
     `measure_theory.ae_cover.integrable_of_integral_norm_tendsto` and
     `measure_theory.ae_cover.integral_tendsto_of_countably_generated`. -/
-structure ae_cover (φ : ι → Set α) : Prop where
+structure AeCover (φ : ι → Set α) : Prop where
   ae_eventually_mem : ∀ᵐ x ∂μ, ∀ᶠ i in l, x ∈ φ i
   Measurable : ∀ i, MeasurableSet <| φ i
 
@@ -132,7 +137,7 @@ theorem ae_cover_Iio [NoMaxOrder α] : AeCover μ l fun i => Iio <| b i :=
 
 end LinearOrderα
 
-theorem ae_cover.restrict {φ : ι → Set α} (hφ : AeCover μ l φ) {s : Set α} : AeCover (μ.restrict s) l φ :=
+theorem AeCover.restrict {φ : ι → Set α} (hφ : AeCover μ l φ) {s : Set α} : AeCover (μ.restrict s) l φ :=
   { ae_eventually_mem := ae_restrict_of_ae hφ.ae_eventually_mem, Measurable := hφ.Measurable }
 
 theorem ae_cover_restrict_of_ae_imp {s : Set α} {φ : ι → Set α} (hs : MeasurableSet s)
@@ -142,16 +147,16 @@ theorem ae_cover_restrict_of_ae_imp {s : Set α} {φ : ι → Set α} (hs : Meas
       rwa [ae_restrict_iff' hs],
     Measurable }
 
-theorem ae_cover.inter_restrict {φ : ι → Set α} (hφ : AeCover μ l φ) {s : Set α} (hs : MeasurableSet s) :
+theorem AeCover.inter_restrict {φ : ι → Set α} (hφ : AeCover μ l φ) {s : Set α} (hs : MeasurableSet s) :
     AeCover (μ.restrict s) l fun i => φ i ∩ s :=
   ae_cover_restrict_of_ae_imp hs (hφ.ae_eventually_mem.mono fun x hx hxs => hx.mono fun i hi => ⟨hi, hxs⟩) fun i =>
     (hφ.Measurable i).inter hs
 
-theorem ae_cover.ae_tendsto_indicator {β : Type _} [Zero β] [TopologicalSpace β] (f : α → β) {φ : ι → Set α}
+theorem AeCover.ae_tendsto_indicator {β : Type _} [Zero β] [TopologicalSpace β] (f : α → β) {φ : ι → Set α}
     (hφ : AeCover μ l φ) : ∀ᵐ x ∂μ, Tendsto (fun i => (φ i).indicator f x) l (𝓝 <| f x) :=
   hφ.ae_eventually_mem.mono fun x hx => tendsto_const_nhds.congr' <| hx.mono fun n hn => (indicator_of_mem hn _).symm
 
-theorem ae_cover.ae_measurable {β : Type _} [MeasurableSpace β] [l.IsCountablyGenerated] [l.ne_bot] {f : α → β}
+theorem AeCover.ae_measurable {β : Type _} [MeasurableSpace β] [l.IsCountablyGenerated] [l.ne_bot] {f : α → β}
     {φ : ι → Set α} (hφ : AeCover μ l φ) (hfm : ∀ i, AeMeasurable f (μ.restrict <| φ i)) : AeMeasurable f μ := by
   obtain ⟨u, hu⟩ := l.exists_seq_tendsto
   have := ae_measurable_Union_iff.mpr fun n : ℕ => hfm (u n)
@@ -161,7 +166,7 @@ theorem ae_cover.ae_measurable {β : Type _} [MeasurableSpace β] [l.IsCountably
 
 end AeCover
 
-theorem ae_cover.comp_tendsto {α ι ι' : Type _} [MeasurableSpace α] {μ : Measure α} {l : Filter ι} {l' : Filter ι'}
+theorem AeCover.comp_tendsto {α ι ι' : Type _} [MeasurableSpace α] {μ : Measure α} {l : Filter ι} {l' : Filter ι'}
     {φ : ι → Set α} (hφ : AeCover μ l φ) {u : ι' → ι} (hu : Tendsto u l' l) : AeCover μ l' (φ ∘ u) :=
   { ae_eventually_mem := hφ.ae_eventually_mem.mono fun x hx => hu.Eventually hx,
     Measurable := fun i => hφ.Measurable (u i) }
@@ -170,12 +175,12 @@ section AeCoverUnionInterEncodable
 
 variable {α ι : Type _} [Encodable ι] [MeasurableSpace α] {μ : Measure α}
 
-theorem ae_cover.bUnion_Iic_ae_cover [Preorderₓ ι] {φ : ι → Set α} (hφ : AeCover μ atTop φ) :
+theorem AeCover.bUnion_Iic_ae_cover [Preorderₓ ι] {φ : ι → Set α} (hφ : AeCover μ atTop φ) :
     AeCover μ atTop fun n : ι => ⋃ (k) (h : k ∈ Iic n), φ k :=
   { ae_eventually_mem := hφ.ae_eventually_mem.mono fun x h => h.mono fun i hi => mem_bUnion right_mem_Iic hi,
     Measurable := fun i => MeasurableSet.bUnion (countable_encodable _) fun n _ => hφ.Measurable n }
 
-theorem ae_cover.bInter_Ici_ae_cover [SemilatticeSup ι] [Nonempty ι] {φ : ι → Set α} (hφ : AeCover μ atTop φ) :
+theorem AeCover.bInter_Ici_ae_cover [SemilatticeSup ι] [Nonempty ι] {φ : ι → Set α} (hφ : AeCover μ atTop φ) :
     AeCover μ atTop fun n : ι => ⋂ (k) (h : k ∈ Ici n), φ k :=
   { ae_eventually_mem :=
       hφ.ae_eventually_mem.mono
@@ -203,7 +208,7 @@ private theorem lintegral_tendsto_of_monotone_of_nat {φ : ℕ → Set α} (hφ 
   have key₃ : ∀ᵐ x : α ∂μ, Tendsto (fun n => F n x) atTop (𝓝 (f x)) := hφ.ae_tendsto_indicator f
   (lintegral_tendsto_of_tendsto_of_monotone key₁ key₂ key₃).congr fun n => lintegral_indicator f (hφ.Measurable n)
 
-theorem ae_cover.lintegral_tendsto_of_nat {φ : ℕ → Set α} (hφ : AeCover μ atTop φ) {f : α → ℝ≥0∞}
+theorem AeCover.lintegral_tendsto_of_nat {φ : ℕ → Set α} (hφ : AeCover μ atTop φ) {f : α → ℝ≥0∞}
     (hfm : AeMeasurable f μ) : Tendsto (fun i => ∫⁻ x in φ i, f x ∂μ) atTop (𝓝 <| ∫⁻ x, f x ∂μ) := by
   have lim₁ :=
     lintegral_tendsto_of_monotone_of_nat hφ.bInter_Ici_ae_cover
@@ -215,16 +220,16 @@ theorem ae_cover.lintegral_tendsto_of_nat {φ : ℕ → Set α} (hφ : AeCover �
   have le₂ := fun n => lintegral_mono_set (subset_bUnion_of_mem right_mem_Iic)
   exact tendsto_of_tendsto_of_tendsto_of_le_of_le lim₁ lim₂ le₁ le₂
 
-theorem ae_cover.lintegral_tendsto_of_countably_generated [l.IsCountablyGenerated] {φ : ι → Set α} (hφ : AeCover μ l φ)
+theorem AeCover.lintegral_tendsto_of_countably_generated [l.IsCountablyGenerated] {φ : ι → Set α} (hφ : AeCover μ l φ)
     {f : α → ℝ≥0∞} (hfm : AeMeasurable f μ) : Tendsto (fun i => ∫⁻ x in φ i, f x ∂μ) l (𝓝 <| ∫⁻ x, f x ∂μ) :=
   tendsto_of_seq_tendsto fun u hu => (hφ.comp_tendsto hu).lintegral_tendsto_of_nat hfm
 
-theorem ae_cover.lintegral_eq_of_tendsto [l.ne_bot] [l.IsCountablyGenerated] {φ : ι → Set α} (hφ : AeCover μ l φ)
+theorem AeCover.lintegral_eq_of_tendsto [l.ne_bot] [l.IsCountablyGenerated] {φ : ι → Set α} (hφ : AeCover μ l φ)
     {f : α → ℝ≥0∞} (I : ℝ≥0∞) (hfm : AeMeasurable f μ) (htendsto : Tendsto (fun i => ∫⁻ x in φ i, f x ∂μ) l (𝓝 I)) :
     (∫⁻ x, f x ∂μ) = I :=
   tendsto_nhds_unique (hφ.lintegral_tendsto_of_countably_generated hfm) htendsto
 
-theorem ae_cover.supr_lintegral_eq_of_countably_generated [Nonempty ι] [l.ne_bot] [l.IsCountablyGenerated]
+theorem AeCover.supr_lintegral_eq_of_countably_generated [Nonempty ι] [l.ne_bot] [l.IsCountablyGenerated]
     {φ : ι → Set α} (hφ : AeCover μ l φ) {f : α → ℝ≥0∞} (hfm : AeMeasurable f μ) :
     (⨆ i : ι, ∫⁻ x in φ i, f x ∂μ) = ∫⁻ x, f x ∂μ := by
   have := hφ.lintegral_tendsto_of_countably_generated hfm
@@ -242,13 +247,13 @@ section Integrable
 variable {α ι E : Type _} [MeasurableSpace α] {μ : Measure α} {l : Filter ι} [NormedGroup E] [MeasurableSpace E]
   [OpensMeasurableSpace E]
 
-theorem ae_cover.integrable_of_lintegral_nnnorm_bounded [l.ne_bot] [l.IsCountablyGenerated] {φ : ι → Set α}
+theorem AeCover.integrable_of_lintegral_nnnorm_bounded [l.ne_bot] [l.IsCountablyGenerated] {φ : ι → Set α}
     (hφ : AeCover μ l φ) {f : α → E} (I : ℝ) (hfm : AeMeasurable f μ)
     (hbounded : ∀ᶠ i in l, (∫⁻ x in φ i, ∥f x∥₊ ∂μ) ≤ Ennreal.ofReal I) : Integrable f μ := by
   refine' ⟨hfm, (le_of_tendsto _ hbounded).trans_lt Ennreal.of_real_lt_top⟩
   exact hφ.lintegral_tendsto_of_countably_generated (measurable_nnnorm.comp_ae_measurable hfm).coe_nnreal_ennreal
 
-theorem ae_cover.integrable_of_lintegral_nnnorm_tendsto [l.ne_bot] [l.IsCountablyGenerated] {φ : ι → Set α}
+theorem AeCover.integrable_of_lintegral_nnnorm_tendsto [l.ne_bot] [l.IsCountablyGenerated] {φ : ι → Set α}
     (hφ : AeCover μ l φ) {f : α → E} (I : ℝ) (hfm : AeMeasurable f μ)
     (htendsto : Tendsto (fun i => ∫⁻ x in φ i, ∥f x∥₊ ∂μ) l (𝓝 <| Ennreal.ofReal I)) : Integrable f μ := by
   refine' hφ.integrable_of_lintegral_nnnorm_bounded (max 1 (I + 1)) hfm _
@@ -256,21 +261,21 @@ theorem ae_cover.integrable_of_lintegral_nnnorm_tendsto [l.ne_bot] [l.IsCountabl
   refine' (Ennreal.of_real_lt_of_real_iff (lt_max_of_lt_left zero_lt_one)).2 _
   exact lt_max_of_lt_right (lt_add_one I)
 
-theorem ae_cover.integrable_of_lintegral_nnnorm_bounded' [l.ne_bot] [l.IsCountablyGenerated] {φ : ι → Set α}
+theorem AeCover.integrable_of_lintegral_nnnorm_bounded' [l.ne_bot] [l.IsCountablyGenerated] {φ : ι → Set α}
     (hφ : AeCover μ l φ) {f : α → E} (I : ℝ≥0 ) (hfm : AeMeasurable f μ)
     (hbounded : ∀ᶠ i in l, (∫⁻ x in φ i, ∥f x∥₊ ∂μ) ≤ I) : Integrable f μ :=
   hφ.integrable_of_lintegral_nnnorm_bounded I hfm
     (by
       simpa only [Ennreal.of_real_coe_nnreal] using hbounded)
 
-theorem ae_cover.integrable_of_lintegral_nnnorm_tendsto' [l.ne_bot] [l.IsCountablyGenerated] {φ : ι → Set α}
+theorem AeCover.integrable_of_lintegral_nnnorm_tendsto' [l.ne_bot] [l.IsCountablyGenerated] {φ : ι → Set α}
     (hφ : AeCover μ l φ) {f : α → E} (I : ℝ≥0 ) (hfm : AeMeasurable f μ)
     (htendsto : Tendsto (fun i => ∫⁻ x in φ i, ∥f x∥₊ ∂μ) l (𝓝 I)) : Integrable f μ :=
   hφ.integrable_of_lintegral_nnnorm_tendsto I hfm
     (by
       simpa only [Ennreal.of_real_coe_nnreal] using htendsto)
 
-theorem ae_cover.integrable_of_integral_norm_bounded [l.ne_bot] [l.IsCountablyGenerated] {φ : ι → Set α}
+theorem AeCover.integrable_of_integral_norm_bounded [l.ne_bot] [l.IsCountablyGenerated] {φ : ι → Set α}
     (hφ : AeCover μ l φ) {f : α → E} (I : ℝ) (hfi : ∀ i, IntegrableOn f (φ i) μ)
     (hbounded : ∀ᶠ i in l, (∫ x in φ i, ∥f x∥ ∂μ) ≤ I) : Integrable f μ := by
   have hfm : AeMeasurable f μ := hφ.ae_measurable fun i => (hfi i).AeMeasurable
@@ -282,20 +287,20 @@ theorem ae_cover.integrable_of_integral_norm_bounded [l.ne_bot] [l.IsCountablyGe
   rw [← Ennreal.of_real_to_real (ne_top_of_lt (hfi i).2)]
   apply Ennreal.of_real_le_of_real hi
 
-theorem ae_cover.integrable_of_integral_norm_tendsto [l.ne_bot] [l.IsCountablyGenerated] {φ : ι → Set α}
+theorem AeCover.integrable_of_integral_norm_tendsto [l.ne_bot] [l.IsCountablyGenerated] {φ : ι → Set α}
     (hφ : AeCover μ l φ) {f : α → E} (I : ℝ) (hfi : ∀ i, IntegrableOn f (φ i) μ)
     (htendsto : Tendsto (fun i => ∫ x in φ i, ∥f x∥ ∂μ) l (𝓝 I)) : Integrable f μ :=
   let ⟨I', hI'⟩ := htendsto.is_bounded_under_le
   hφ.integrable_of_integral_norm_bounded I' hfi hI'
 
-theorem ae_cover.integrable_of_integral_bounded_of_nonneg_ae [l.ne_bot] [l.IsCountablyGenerated] {φ : ι → Set α}
+theorem AeCover.integrable_of_integral_bounded_of_nonneg_ae [l.ne_bot] [l.IsCountablyGenerated] {φ : ι → Set α}
     (hφ : AeCover μ l φ) {f : α → ℝ} (I : ℝ) (hfi : ∀ i, IntegrableOn f (φ i) μ) (hnng : ∀ᵐ x ∂μ, 0 ≤ f x)
     (hbounded : ∀ᶠ i in l, (∫ x in φ i, f x ∂μ) ≤ I) : Integrable f μ :=
   hφ.integrable_of_integral_norm_bounded I hfi <|
     hbounded.mono fun i hi =>
       (integral_congr_ae <| ae_restrict_of_ae <| hnng.mono fun x => Real.norm_of_nonneg).le.trans hi
 
-theorem ae_cover.integrable_of_integral_tendsto_of_nonneg_ae [l.ne_bot] [l.IsCountablyGenerated] {φ : ι → Set α}
+theorem AeCover.integrable_of_integral_tendsto_of_nonneg_ae [l.ne_bot] [l.IsCountablyGenerated] {φ : ι → Set α}
     (hφ : AeCover μ l φ) {f : α → ℝ} (I : ℝ) (hfi : ∀ i, IntegrableOn f (φ i) μ) (hnng : ∀ᵐ x ∂μ, 0 ≤ f x)
     (htendsto : Tendsto (fun i => ∫ x in φ i, f x ∂μ) l (𝓝 I)) : Integrable f μ :=
   let ⟨I', hI'⟩ := htendsto.is_bounded_under_le
@@ -308,7 +313,7 @@ section Integral
 variable {α ι E : Type _} [MeasurableSpace α] {μ : Measure α} {l : Filter ι} [NormedGroup E] [NormedSpace ℝ E]
   [MeasurableSpace E] [BorelSpace E] [CompleteSpace E] [SecondCountableTopology E]
 
-theorem ae_cover.integral_tendsto_of_countably_generated [l.IsCountablyGenerated] {φ : ι → Set α} (hφ : AeCover μ l φ)
+theorem AeCover.integral_tendsto_of_countably_generated [l.IsCountablyGenerated] {φ : ι → Set α} (hφ : AeCover μ l φ)
     {f : α → E} (hfi : Integrable f μ) : Tendsto (fun i => ∫ x in φ i, f x ∂μ) l (𝓝 <| ∫ x, f x ∂μ) :=
   suffices h : Tendsto (fun i => ∫ x : α, (φ i).indicator f x ∂μ) l (𝓝 (∫ x : α, f x ∂μ)) from by
     convert h
@@ -321,12 +326,12 @@ theorem ae_cover.integral_tendsto_of_countably_generated [l.IsCountablyGenerated
 
 /-- Slight reformulation of
     `measure_theory.ae_cover.integral_tendsto_of_countably_generated`. -/
-theorem ae_cover.integral_eq_of_tendsto [l.ne_bot] [l.IsCountablyGenerated] {φ : ι → Set α} (hφ : AeCover μ l φ)
+theorem AeCover.integral_eq_of_tendsto [l.ne_bot] [l.IsCountablyGenerated] {φ : ι → Set α} (hφ : AeCover μ l φ)
     {f : α → E} (I : E) (hfi : Integrable f μ) (h : Tendsto (fun n => ∫ x in φ n, f x ∂μ) l (𝓝 I)) :
     (∫ x, f x ∂μ) = I :=
   tendsto_nhds_unique (hφ.integral_tendsto_of_countably_generated hfi) h
 
-theorem ae_cover.integral_eq_of_tendsto_of_nonneg_ae [l.ne_bot] [l.IsCountablyGenerated] {φ : ι → Set α}
+theorem AeCover.integral_eq_of_tendsto_of_nonneg_ae [l.ne_bot] [l.IsCountablyGenerated] {φ : ι → Set α}
     (hφ : AeCover μ l φ) {f : α → ℝ} (I : ℝ) (hnng : 0 ≤ᵐ[μ] f) (hfi : ∀ n, IntegrableOn f (φ n) μ)
     (htendsto : Tendsto (fun n => ∫ x in φ n, f x ∂μ) l (𝓝 I)) : (∫ x, f x ∂μ) = I :=
   have hfi' : Integrable f μ := hφ.integrable_of_integral_tendsto_of_nonneg_ae I hfi hnng htendsto

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison, Bhavik Mehta
+-/
 import Mathbin.CategoryTheory.Limits.Shapes.Pullbacks
 import Mathbin.CategoryTheory.Limits.Shapes.StrongEpi
 import Mathbin.CategoryTheory.Limits.Shapes.Equalizers
@@ -33,7 +38,7 @@ variable {C : Type u₁} [Category.{v₁} C]
 variable {X Y : C}
 
 /-- A regular monomorphism is a morphism which is the equalizer of some parallel pair. -/
-class regular_mono (f : X ⟶ Y) where
+class RegularMono (f : X ⟶ Y) where
   z : C
   (left right : Y ⟶ Z)
   w : f ≫ left = f ≫ right
@@ -42,10 +47,10 @@ class regular_mono (f : X ⟶ Y) where
 attribute [reassoc] regular_mono.w
 
 /-- Every regular monomorphism is a monomorphism. -/
-instance (priority := 100) regular_mono.mono (f : X ⟶ Y) [RegularMono f] : Mono f :=
+instance (priority := 100) RegularMono.mono (f : X ⟶ Y) [RegularMono f] : Mono f :=
   mono_of_is_limit_parallel_pair RegularMono.isLimit
 
-instance equalizer_regular (g h : X ⟶ Y) [HasLimit (parallelPair g h)] : RegularMono (equalizer.ι g h) where
+instance equalizerRegular (g h : X ⟶ Y) [HasLimit (parallelPair g h)] : RegularMono (equalizer.ι g h) where
   z := Y
   left := g
   right := h
@@ -59,7 +64,7 @@ instance equalizer_regular (g h : X ⟶ Y) [HasLimit (parallelPair g h)] : Regul
       simp [← w]
 
 /-- Every split monomorphism is a regular monomorphism. -/
-instance (priority := 100) regular_mono.of_split_mono (f : X ⟶ Y) [SplitMono f] : RegularMono f where
+instance (priority := 100) RegularMono.ofSplitMono (f : X ⟶ Y) [SplitMono f] : RegularMono f where
   z := Y
   left := 𝟙 Y
   right := retraction f ≫ f
@@ -69,7 +74,7 @@ instance (priority := 100) regular_mono.of_split_mono (f : X ⟶ Y) [SplitMono f
 
 /-- If `f` is a regular mono, then any map `k : W ⟶ Y` equalizing `regular_mono.left` and
     `regular_mono.right` induces a morphism `l : W ⟶ X` such that `l ≫ f = k`. -/
-def regular_mono.lift' {W : C} (f : X ⟶ Y) [RegularMono f] (k : W ⟶ Y)
+def RegularMono.lift' {W : C} (f : X ⟶ Y) [RegularMono f] (k : W ⟶ Y)
     (h : k ≫ (RegularMono.left : Y ⟶ @RegularMono.z _ _ _ _ f _) = k ≫ regular_mono.right) :
     { l : W ⟶ X // l ≫ f = k } :=
   Fork.IsLimit.lift' RegularMono.isLimit _ h
@@ -79,8 +84,8 @@ def regular_mono.lift' {W : C} (f : X ⟶ Y) [RegularMono f] (k : W ⟶ Y)
 See also `pullback.snd_of_mono` for the basic monomorphism version, and
 `regular_of_is_pullback_fst_of_regular` for the flipped version.
 -/
-def regular_of_is_pullback_snd_of_regular {P Q R S : C} {f : P ⟶ Q} {g : P ⟶ R} {h : Q ⟶ S} {k : R ⟶ S}
-    [hr : RegularMono h] (comm : f ≫ h = g ≫ k) (t : IsLimit (PullbackCone.mk _ _ comm)) : RegularMono g where
+def regularOfIsPullbackSndOfRegular {P Q R S : C} {f : P ⟶ Q} {g : P ⟶ R} {h : Q ⟶ S} {k : R ⟶ S} [hr : RegularMono h]
+    (comm : f ≫ h = g ≫ k) (t : IsLimit (PullbackCone.mk _ _ comm)) : RegularMono g where
   z := hr.z
   left := k ≫ hr.left
   right := k ≫ hr.right
@@ -108,8 +113,8 @@ def regular_of_is_pullback_snd_of_regular {P Q R S : C} {f : P ⟶ Q} {g : P ⟶
 See also `pullback.fst_of_mono` for the basic monomorphism version, and
 `regular_of_is_pullback_snd_of_regular` for the flipped version.
 -/
-def regular_of_is_pullback_fst_of_regular {P Q R S : C} {f : P ⟶ Q} {g : P ⟶ R} {h : Q ⟶ S} {k : R ⟶ S}
-    [hr : RegularMono k] (comm : f ≫ h = g ≫ k) (t : IsLimit (PullbackCone.mk _ _ comm)) : RegularMono f :=
+def regularOfIsPullbackFstOfRegular {P Q R S : C} {f : P ⟶ Q} {g : P ⟶ R} {h : Q ⟶ S} {k : R ⟶ S} [hr : RegularMono k]
+    (comm : f ≫ h = g ≫ k) (t : IsLimit (PullbackCone.mk _ _ comm)) : RegularMono f :=
   regularOfIsPullbackSndOfRegular comm.symm (PullbackCone.flipIsLimit t)
 
 instance (priority := 100) strong_mono_of_regular_mono (f : X ⟶ Y) [RegularMono f] : StrongMono f where
@@ -133,18 +138,17 @@ section
 variable (C)
 
 /-- A regular mono category is a category in which every monomorphism is regular. -/
-class regular_mono_category where
+class RegularMonoCategory where
   regularMonoOfMono : ∀ {X Y : C} f : X ⟶ Y [Mono f], RegularMono f
 
 end
 
 /-- In a category in which every monomorphism is regular, we can express every monomorphism as
     an equalizer. This is not an instance because it would create an instance loop. -/
-def regular_mono_of_mono [RegularMonoCategory C] (f : X ⟶ Y) [Mono f] : RegularMono f :=
+def regularMonoOfMono [RegularMonoCategory C] (f : X ⟶ Y) [Mono f] : RegularMono f :=
   RegularMonoCategory.regularMonoOfMono _
 
-instance (priority := 100) regular_mono_category_of_split_mono_category [SplitMonoCategory C] :
-    RegularMonoCategory C where
+instance (priority := 100) regularMonoCategoryOfSplitMonoCategory [SplitMonoCategory C] : RegularMonoCategory C where
   regularMonoOfMono := fun _ _ f _ => by
     have := split_mono_of_mono f
     infer_instance
@@ -156,7 +160,7 @@ instance (priority := 100) strong_mono_category_of_regular_mono_category [Regula
     infer_instance
 
 /-- A regular epimorphism is a morphism which is the coequalizer of some parallel pair. -/
-class regular_epi (f : X ⟶ Y) where
+class RegularEpi (f : X ⟶ Y) where
   w : C
   (left right : W ⟶ X)
   w : left ≫ f = right ≫ f
@@ -165,10 +169,10 @@ class regular_epi (f : X ⟶ Y) where
 attribute [reassoc] regular_epi.w
 
 /-- Every regular epimorphism is an epimorphism. -/
-instance (priority := 100) regular_epi.epi (f : X ⟶ Y) [RegularEpi f] : Epi f :=
+instance (priority := 100) RegularEpi.epi (f : X ⟶ Y) [RegularEpi f] : Epi f :=
   epi_of_is_colimit_parallel_pair RegularEpi.isColimit
 
-instance coequalizer_regular (g h : X ⟶ Y) [HasColimit (parallelPair g h)] : RegularEpi (coequalizer.π g h) where
+instance coequalizerRegular (g h : X ⟶ Y) [HasColimit (parallelPair g h)] : RegularEpi (coequalizer.π g h) where
   w := X
   left := g
   right := h
@@ -182,7 +186,7 @@ instance coequalizer_regular (g h : X ⟶ Y) [HasColimit (parallelPair g h)] : R
       simp [← w]
 
 /-- Every split epimorphism is a regular epimorphism. -/
-instance (priority := 100) regular_epi.of_split_epi (f : X ⟶ Y) [SplitEpi f] : RegularEpi f where
+instance (priority := 100) RegularEpi.ofSplitEpi (f : X ⟶ Y) [SplitEpi f] : RegularEpi f where
   w := X
   left := 𝟙 X
   right := f ≫ section_ f
@@ -192,7 +196,7 @@ instance (priority := 100) regular_epi.of_split_epi (f : X ⟶ Y) [SplitEpi f] :
 
 /-- If `f` is a regular epi, then every morphism `k : X ⟶ W` coequalizing `regular_epi.left` and
     `regular_epi.right` induces `l : Y ⟶ W` such that `f ≫ l = k`. -/
-def regular_epi.desc' {W : C} (f : X ⟶ Y) [RegularEpi f] (k : X ⟶ W)
+def RegularEpi.desc' {W : C} (f : X ⟶ Y) [RegularEpi f] (k : X ⟶ W)
     (h : (RegularEpi.left : RegularEpi.w f ⟶ X) ≫ k = regular_epi.right ≫ k) : { l : Y ⟶ W // f ≫ l = k } :=
   Cofork.IsColimit.desc' RegularEpi.isColimit _ h
 
@@ -201,8 +205,8 @@ def regular_epi.desc' {W : C} (f : X ⟶ Y) [RegularEpi f] (k : X ⟶ W)
 See also `pushout.snd_of_epi` for the basic epimorphism version, and
 `regular_of_is_pushout_fst_of_regular` for the flipped version.
 -/
-def regular_of_is_pushout_snd_of_regular {P Q R S : C} {f : P ⟶ Q} {g : P ⟶ R} {h : Q ⟶ S} {k : R ⟶ S}
-    [gr : RegularEpi g] (comm : f ≫ h = g ≫ k) (t : IsColimit (PushoutCocone.mk _ _ comm)) : RegularEpi h where
+def regularOfIsPushoutSndOfRegular {P Q R S : C} {f : P ⟶ Q} {g : P ⟶ R} {h : Q ⟶ S} {k : R ⟶ S} [gr : RegularEpi g]
+    (comm : f ≫ h = g ≫ k) (t : IsColimit (PushoutCocone.mk _ _ comm)) : RegularEpi h where
   w := gr.w
   left := gr.left ≫ f
   right := gr.right ≫ f
@@ -231,8 +235,8 @@ def regular_of_is_pushout_snd_of_regular {P Q R S : C} {f : P ⟶ Q} {g : P ⟶ 
 See also `pushout.fst_of_epi` for the basic epimorphism version, and
 `regular_of_is_pushout_snd_of_regular` for the flipped version.
 -/
-def regular_of_is_pushout_fst_of_regular {P Q R S : C} {f : P ⟶ Q} {g : P ⟶ R} {h : Q ⟶ S} {k : R ⟶ S}
-    [fr : RegularEpi f] (comm : f ≫ h = g ≫ k) (t : IsColimit (PushoutCocone.mk _ _ comm)) : RegularEpi k :=
+def regularOfIsPushoutFstOfRegular {P Q R S : C} {f : P ⟶ Q} {g : P ⟶ R} {h : Q ⟶ S} {k : R ⟶ S} [fr : RegularEpi f]
+    (comm : f ≫ h = g ≫ k) (t : IsColimit (PushoutCocone.mk _ _ comm)) : RegularEpi k :=
   regularOfIsPushoutSndOfRegular comm.symm (PushoutCocone.flipIsColimit t)
 
 instance (priority := 100) strong_epi_of_regular_epi (f : X ⟶ Y) [RegularEpi f] : StrongEpi f where
@@ -260,17 +264,17 @@ section
 variable (C)
 
 /-- A regular epi category is a category in which every epimorphism is regular. -/
-class regular_epi_category where
+class RegularEpiCategory where
   regularEpiOfEpi : ∀ {X Y : C} f : X ⟶ Y [Epi f], RegularEpi f
 
 end
 
 /-- In a category in which every epimorphism is regular, we can express every epimorphism as
     a coequalizer. This is not an instance because it would create an instance loop. -/
-def regular_epi_of_epi [RegularEpiCategory C] (f : X ⟶ Y) [Epi f] : RegularEpi f :=
+def regularEpiOfEpi [RegularEpiCategory C] (f : X ⟶ Y) [Epi f] : RegularEpi f :=
   RegularEpiCategory.regularEpiOfEpi _
 
-instance (priority := 100) regular_epi_category_of_split_epi_category [SplitEpiCategory C] : RegularEpiCategory C where
+instance (priority := 100) regularEpiCategoryOfSplitEpiCategory [SplitEpiCategory C] : RegularEpiCategory C where
   regularEpiOfEpi := fun _ _ f _ => by
     have := split_epi_of_epi f
     infer_instance

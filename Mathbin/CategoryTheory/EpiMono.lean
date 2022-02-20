@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Reid Barton. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Reid Barton, Scott Morrison
+-/
 import Mathbin.CategoryTheory.Adjunction.Basic
 import Mathbin.CategoryTheory.Opposites
 import Mathbin.CategoryTheory.Groupoid
@@ -47,10 +52,10 @@ theorem right_adjoint_preserves_mono {F : C ⥤ D} {G : D ⥤ C} (adj : F ⊣ G)
   rwa [adj.hom_equiv_naturality_right_symm, adj.hom_equiv_naturality_right_symm, cancel_mono, Equivₓ.apply_eq_iff_eq] at
     H
 
-instance is_equivalence.epi_map {F : C ⥤ D} [IsLeftAdjoint F] {X Y : C} {f : X ⟶ Y} [h : Epi f] : Epi (F.map f) :=
+instance IsEquivalence.epi_map {F : C ⥤ D} [IsLeftAdjoint F] {X Y : C} {f : X ⟶ Y} [h : Epi f] : Epi (F.map f) :=
   left_adjoint_preserves_epi (Adjunction.ofLeftAdjoint F) h
 
-instance is_equivalence.mono_map {F : C ⥤ D} [IsRightAdjoint F] {X Y : C} {f : X ⟶ Y} [h : Mono f] : Mono (F.map f) :=
+instance IsEquivalence.mono_map {F : C ⥤ D} [IsRightAdjoint F] {X Y : C} {f : X ⟶ Y} [h : Mono f] : Mono (F.map f) :=
   right_adjoint_preserves_mono (Adjunction.ofRightAdjoint F) h
 
 theorem faithful_reflects_epi (F : C ⥤ D) [Faithful F] {X Y : C} {f : X ⟶ Y} (hf : Epi (F.map f)) : Epi f :=
@@ -70,7 +75,7 @@ such that `f ≫ retraction f = 𝟙 X`.
 
 Every split monomorphism is a monomorphism.
 -/
-class split_mono {X Y : C} (f : X ⟶ Y) where
+class SplitMono {X Y : C} (f : X ⟶ Y) where
   retraction : Y ⟶ X
   id' : f ≫ retraction = 𝟙 X := by
     run_tac
@@ -82,7 +87,7 @@ such that `section_ f ≫ f = 𝟙 Y`.
 
 Every split epimorphism is an epimorphism.
 -/
-class split_epi {X Y : C} (f : X ⟶ Y) where
+class SplitEpi {X Y : C} (f : X ⟶ Y) where
   section_ : Y ⟶ X
   id' : section_ ≫ f = 𝟙 Y := by
     run_tac
@@ -93,11 +98,11 @@ def retraction {X Y : C} (f : X ⟶ Y) [SplitMono f] : Y ⟶ X :=
   SplitMono.retraction f
 
 @[simp, reassoc]
-theorem split_mono.id {X Y : C} (f : X ⟶ Y) [SplitMono f] : f ≫ retraction f = 𝟙 X :=
+theorem SplitMono.id {X Y : C} (f : X ⟶ Y) [SplitMono f] : f ≫ retraction f = 𝟙 X :=
   split_mono.id'
 
 /-- The retraction of a split monomorphism is itself a split epimorphism. -/
-instance retraction_split_epi {X Y : C} (f : X ⟶ Y) [SplitMono f] : SplitEpi (retraction f) where
+instance retractionSplitEpi {X Y : C} (f : X ⟶ Y) [SplitMono f] : SplitEpi (retraction f) where
   section_ := f
 
 /-- A split mono which is epi is an iso. -/
@@ -114,11 +119,11 @@ def section_ {X Y : C} (f : X ⟶ Y) [SplitEpi f] : Y ⟶ X :=
   SplitEpi.section_ f
 
 @[simp, reassoc]
-theorem split_epi.id {X Y : C} (f : X ⟶ Y) [SplitEpi f] : section_ f ≫ f = 𝟙 Y :=
+theorem SplitEpi.id {X Y : C} (f : X ⟶ Y) [SplitEpi f] : section_ f ≫ f = 𝟙 Y :=
   split_epi.id'
 
 /-- The section of a split epimorphism is itself a split monomorphism. -/
-instance section_split_mono {X Y : C} (f : X ⟶ Y) [SplitEpi f] : SplitMono (section_ f) where
+instance sectionSplitMono {X Y : C} (f : X ⟶ Y) [SplitEpi f] : SplitMono (section_ f) where
   retraction := f
 
 /-- A split epi which is mono is an iso. -/
@@ -129,27 +134,27 @@ theorem is_iso_of_mono_of_split_epi {X Y : C} (f : X ⟶ Y) [Mono f] [SplitEpi f
         simp ⟩⟩⟩
 
 /-- Every iso is a split mono. -/
-noncomputable instance (priority := 100) split_mono.of_iso {X Y : C} (f : X ⟶ Y) [IsIso f] : SplitMono f where
+noncomputable instance (priority := 100) SplitMono.ofIso {X Y : C} (f : X ⟶ Y) [IsIso f] : SplitMono f where
   retraction := inv f
 
 /-- Every iso is a split epi. -/
-noncomputable instance (priority := 100) split_epi.of_iso {X Y : C} (f : X ⟶ Y) [IsIso f] : SplitEpi f where
+noncomputable instance (priority := 100) SplitEpi.ofIso {X Y : C} (f : X ⟶ Y) [IsIso f] : SplitEpi f where
   section_ := inv f
 
 /-- Every split mono is a mono. -/
-instance (priority := 100) split_mono.mono {X Y : C} (f : X ⟶ Y) [SplitMono f] : Mono f where
+instance (priority := 100) SplitMono.mono {X Y : C} (f : X ⟶ Y) [SplitMono f] : Mono f where
   right_cancellation := fun Z g h w => by
     replace w := w =≫ retraction f
     simpa using w
 
 /-- Every split epi is an epi. -/
-instance (priority := 100) split_epi.epi {X Y : C} (f : X ⟶ Y) [SplitEpi f] : Epi f where
+instance (priority := 100) SplitEpi.epi {X Y : C} (f : X ⟶ Y) [SplitEpi f] : Epi f where
   left_cancellation := fun Z g h w => by
     replace w := section_ f ≫= w
     simpa using w
 
 /-- Every split mono whose retraction is mono is an iso. -/
-theorem is_iso.of_mono_retraction {X Y : C} {f : X ⟶ Y} [SplitMono f] [mono <| retraction f] : IsIso f :=
+theorem IsIso.of_mono_retraction {X Y : C} {f : X ⟶ Y} [SplitMono f] [mono <| retraction f] : IsIso f :=
   ⟨⟨retraction f,
       ⟨by
         simp ,
@@ -158,7 +163,7 @@ theorem is_iso.of_mono_retraction {X Y : C} {f : X ⟶ Y} [SplitMono f] [mono <|
             simp )⟩⟩⟩
 
 /-- Every split epi whose section is epi is an iso. -/
-theorem is_iso.of_epi_section {X Y : C} {f : X ⟶ Y} [SplitEpi f] [epi <| section_ f] : IsIso f :=
+theorem IsIso.of_epi_section {X Y : C} {f : X ⟶ Y} [SplitEpi f] [epi <| section_ f] : IsIso f :=
   ⟨⟨section_ f,
       ⟨(cancel_epi_id <| section_ f).mp
           (by
@@ -167,7 +172,8 @@ theorem is_iso.of_epi_section {X Y : C} {f : X ⟶ Y} [SplitEpi f] [epi <| secti
         simp ⟩⟩⟩
 
 /-- A category where every morphism has a `trunc` retraction is computably a groupoid. -/
-noncomputable def groupoid.of_trunc_split_mono (all_split_mono : ∀ {X Y : C} f : X ⟶ Y, Trunc (SplitMono f)) :
+-- FIXME this has unnecessarily become noncomputable!
+noncomputable def Groupoid.ofTruncSplitMono (all_split_mono : ∀ {X Y : C} f : X ⟶ Y, Trunc (SplitMono f)) :
     Groupoid.{v₁} C := by
   apply groupoid.of_is_iso
   intro X Y f
@@ -180,23 +186,23 @@ section
 variable (C)
 
 /-- A split mono category is a category in which every monomorphism is split. -/
-class split_mono_category where
+class SplitMonoCategory where
   splitMonoOfMono : ∀ {X Y : C} f : X ⟶ Y [Mono f], SplitMono f
 
 /-- A split epi category is a category in which every epimorphism is split. -/
-class split_epi_category where
+class SplitEpiCategory where
   splitEpiOfEpi : ∀ {X Y : C} f : X ⟶ Y [Epi f], SplitEpi f
 
 end
 
 /-- In a category in which every monomorphism is split, every monomorphism splits. This is not an
     instance because it would create an instance loop. -/
-def split_mono_of_mono [SplitMonoCategory C] {X Y : C} (f : X ⟶ Y) [Mono f] : SplitMono f :=
+def splitMonoOfMono [SplitMonoCategory C] {X Y : C} (f : X ⟶ Y) [Mono f] : SplitMono f :=
   SplitMonoCategory.splitMonoOfMono _
 
 /-- In a category in which every epimorphism is split, every epimorphism splits. This is not an
     instance because it would create an instance loop. -/
-def split_epi_of_epi [SplitEpiCategory C] {X Y : C} (f : X ⟶ Y) [Epi f] : SplitEpi f :=
+def splitEpiOfEpi [SplitEpiCategory C] {X Y : C} (f : X ⟶ Y) [Epi f] : SplitEpi f :=
   SplitEpiCategory.splitEpiOfEpi _
 
 section

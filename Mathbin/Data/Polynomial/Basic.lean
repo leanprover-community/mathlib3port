@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Chris Hughes. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Chris Hughes, Johannes Hölzl, Scott Morrison, Jens Wagemaker
+-/
 import Mathbin.Algebra.MonoidAlgebra.Basic
 
 /-!
@@ -73,7 +78,7 @@ theorem exists_iff_exists_finsupp (P : R[X] → Prop) : (∃ p, P p) ↔ ∃ q :
   ⟨fun ⟨⟨p⟩, hp⟩ => ⟨p, hp⟩, fun ⟨q, hq⟩ => ⟨⟨q⟩, hq⟩⟩
 
 /-- The function version of `monomial`. Use `monomial` instead of this one. -/
-irreducible_def monomial_fun (n : ℕ) (a : R) : R[X] :=
+irreducible_def monomialFun (n : ℕ) (a : R) : R[X] :=
   ⟨Finsupp.single n a⟩
 
 private irreducible_def add : R[X] → R[X] → R[X]
@@ -135,7 +140,7 @@ instance : Inhabited R[X] :=
 
 instance : Semiringₓ R[X] := by
   refine_struct
-      { zero := (0 : R[X]), one := 1, mul := · * ·, add := · + ·, nsmul := · • ·, npow := npowRec,
+      { zero := (0 : R[X]), one := 1, mul := (· * ·), add := (· + ·), nsmul := (· • ·), npow := npowRec,
         npow_zero' := fun x => rfl, npow_succ' := fun n x => rfl } <;>
     · repeat'
           rintro ⟨_⟩ <;>
@@ -145,7 +150,7 @@ instance : Semiringₓ R[X] := by
       
 
 instance {S} [Monoidₓ S] [DistribMulAction S R] : DistribMulAction S R[X] where
-  smul := · • ·
+  smul := (· • ·)
   one_smul := by
     rintro ⟨⟩
     simp [smul_to_finsupp]
@@ -163,7 +168,7 @@ instance {S} [Monoidₓ S] [DistribMulAction S R] [HasFaithfulScalar S R] : HasF
   eq_of_smul_eq_smul := fun s₁ s₂ h => eq_of_smul_eq_smul fun a : ℕ →₀ R => congr_argₓ toFinsupp (h ⟨a⟩)
 
 instance {S} [Semiringₓ S] [Module S R] : Module S R[X] :=
-  { Polynomial.distribMulAction with smul := · • ·,
+  { Polynomial.distribMulAction with smul := (· • ·),
     add_smul := by
       rintro _ _ ⟨⟩
       simp [smul_to_finsupp, add_to_finsupp, add_smul],
@@ -202,7 +207,7 @@ variable (R)
 /-- Ring isomorphism between `R[X]` and `add_monoid_algebra R ℕ`. This is just an
 implementation detail, but it can be useful to transfer results from `finsupp` to polynomials. -/
 @[simps]
-def to_finsupp_iso : R[X] ≃+* AddMonoidAlgebra R ℕ where
+def toFinsuppIso : R[X] ≃+* AddMonoidAlgebra R ℕ where
   toFun := fun p => p.toFinsupp
   invFun := fun p => ⟨p⟩
   left_inv := fun ⟨p⟩ => rfl
@@ -216,7 +221,7 @@ def to_finsupp_iso : R[X] ≃+* AddMonoidAlgebra R ℕ where
 
 /-- Ring isomorphism between `R[X]ᵐᵒᵖ` and `R[X]ᵐᵒᵖ`. -/
 @[simps]
-def op_ring_equiv : R[X]ᵐᵒᵖ ≃+* Rᵐᵒᵖ[X] :=
+def opRingEquiv : R[X]ᵐᵒᵖ ≃+* Rᵐᵒᵖ[X] :=
   ((toFinsuppIso R).op.trans AddMonoidAlgebra.opRingEquiv).trans (toFinsuppIso _).symm
 
 variable {R}
@@ -254,9 +259,11 @@ def monomial (n : ℕ) : R →ₗ[R] R[X] where
 theorem monomial_zero_right (n : ℕ) : monomial n (0 : R) = 0 :=
   (monomial n).map_zero
 
+-- This is not a `simp` lemma as `monomial_zero_left` is more general.
 theorem monomial_zero_one : monomial 0 (1 : R) = 1 :=
   rfl
 
+-- TODO: can't we just delete this one?
 theorem monomial_add (n : ℕ) (r s : R) : monomial n (r + s) = monomial n r + monomial n s :=
   (monomial n).map_add _ _
 
@@ -301,7 +308,7 @@ theorem support_add : (p + q).Support ⊆ p.Support ∪ q.Support := by
 /-- `C a` is the constant polynomial `a`.
 `C` is provided as a ring homomorphism.
 -/
-def C : R →+* R[X] :=
+def c : R →+* R[X] :=
   { monomial 0 with
     map_one' := by
       simp [monomial_zero_one],
@@ -354,7 +361,7 @@ theorem monomial_mul_C : monomial n a * c b = monomial n (a * b) := by
   simp only [← monomial_zero_left, monomial_mul_monomial, add_zeroₓ]
 
 /-- `X` is the polynomial variable (aka indeterminate). -/
-def X : R[X] :=
+def x : R[X] :=
   monomial 1 1
 
 theorem monomial_one_one_eq_X : monomial 1 (1 : R) = X :=
@@ -466,7 +473,7 @@ theorem coeff_C_zero : coeff (c a) 0 = a :=
 theorem coeff_C_ne_zero (h : n ≠ 0) : (c a).coeff n = 0 := by
   rw [coeff_C, if_neg h]
 
-theorem nontrivial.of_polynomial_ne (h : p ≠ q) : Nontrivial R :=
+theorem Nontrivial.of_polynomial_ne (h : p ≠ q) : Nontrivial R :=
   ⟨⟨0, 1, fun h01 : 0 = 1 =>
       h <| by
         rw [← mul_oneₓ p, ← mul_oneₓ q, ← C_1, ← h01, C_0, mul_zero, mul_zero]⟩⟩
@@ -529,6 +536,7 @@ theorem lhom_ext' {M : Type _} [AddCommMonoidₓ M] [Module R M] {f g : R[X] →
     (h : ∀ n, f.comp (monomial n) = g.comp (monomial n)) : f = g :=
   LinearMap.to_add_monoid_hom_injective <| add_hom_ext fun n => LinearMap.congr_fun (h n)
 
+-- this has the same content as the subsingleton
 theorem eq_zero_of_eq_zero (h : (0 : R) = (1 : R)) (p : R[X]) : p = 0 := by
   rw [← one_smul R p, ← h, zero_smul]
 
@@ -573,7 +581,7 @@ theorem nat_cast_mul {R : Type _} [Semiringₓ R] (n : ℕ) (p : R[X]) : (n : R[
   (nsmul_eq_mul _ _).symm
 
 /-- Summing the values of a function applied to the coefficients of a polynomial -/
-def Sum {S : Type _} [AddCommMonoidₓ S] (p : R[X]) (f : ℕ → R → S) : S :=
+def sum {S : Type _} [AddCommMonoidₓ S] (p : R[X]) (f : ℕ → R → S) : S :=
   ∑ n in p.Support, f n (p.coeff n)
 
 theorem sum_def {S : Type _} [AddCommMonoidₓ S] (p : R[X]) (f : ℕ → R → S) :
@@ -610,6 +618,7 @@ theorem sum_monomial_index {S : Type _} [AddCommMonoidₓ S] (n : ℕ) (a : R) (
 theorem sum_C_index {a} {β} [AddCommMonoidₓ β] {f : ℕ → R → β} (h : f 0 0 = 0) : (c a).Sum f = f 0 a :=
   sum_monomial_index 0 a f h
 
+-- the assumption `hf` is only necessary when the ring is trivial
 @[simp]
 theorem sum_X_index {S : Type _} [AddCommMonoidₓ S] {f : ℕ → R → S} (hf : f 1 0 = 0) : (x : R[X]).Sum f = f 1 1 :=
   sum_monomial_index 1 1 f hf
@@ -736,7 +745,7 @@ instance : Ringₓ R[X] :=
     add_left_neg := by
       rintro ⟨⟩
       simp [neg_to_finsupp, add_to_finsupp, ← zero_to_finsupp],
-    zsmul := · • ·,
+    zsmul := (· • ·),
     zsmul_zero' := by
       rintro ⟨⟩
       simp [smul_to_finsupp, ← zero_to_finsupp],

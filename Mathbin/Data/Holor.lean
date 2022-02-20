@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Alexander Bentkamp. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Alexander Bentkamp
+-/
 import Mathbin.Algebra.Module.Pi
 import Mathbin.Algebra.BigOperators.Basic
 
@@ -51,10 +56,10 @@ theorem cast_type (is : List ℕ) (eq : ds₁ = ds₂) (h : Forall₂ (· < ·) 
     (cast (congr_argₓ HolorIndex Eq) ⟨is, h⟩).val = is := by
   subst eq <;> rfl
 
-def assoc_right : HolorIndex (ds₁ ++ ds₂ ++ ds₃) → HolorIndex (ds₁ ++ (ds₂ ++ ds₃)) :=
+def assocRight : HolorIndex (ds₁ ++ ds₂ ++ ds₃) → HolorIndex (ds₁ ++ (ds₂ ++ ds₃)) :=
   cast (congr_argₓ HolorIndex (append_assoc ds₁ ds₂ ds₃))
 
-def assoc_left : HolorIndex (ds₁ ++ (ds₂ ++ ds₃)) → HolorIndex (ds₁ ++ ds₂ ++ ds₃) :=
+def assocLeft : HolorIndex (ds₁ ++ (ds₂ ++ ds₃)) → HolorIndex (ds₁ ++ ds₂ ++ ds₃) :=
   cast (congr_argₓ HolorIndex (append_assoc ds₁ ds₂ ds₃).symm)
 
 theorem take_take : ∀ t : HolorIndex (ds₁ ++ ds₂ ++ ds₃), t.assocRight.take = t.take.take
@@ -97,35 +102,38 @@ instance [Neg α] : Neg (Holor α ds) :=
   ⟨fun a t => -a t⟩
 
 instance [AddSemigroupₓ α] : AddSemigroupₓ (Holor α ds) := by
-  refine_struct { add := · + ·, .. } <;>
+  refine_struct { add := (· + ·), .. } <;>
     run_tac
       tactic.pi_instance_derive_field
 
 instance [AddCommSemigroupₓ α] : AddCommSemigroupₓ (Holor α ds) := by
-  refine_struct { add := · + ·, .. } <;>
+  refine_struct { add := (· + ·), .. } <;>
     run_tac
       tactic.pi_instance_derive_field
 
 instance [AddMonoidₓ α] : AddMonoidₓ (Holor α ds) := by
-  refine_struct { zero := (0 : Holor α ds), add := · + ·, nsmul := fun n x i => n • x i } <;>
+  refine_struct { zero := (0 : Holor α ds), add := (· + ·), nsmul := fun n x i => n • x i } <;>
     run_tac
       tactic.pi_instance_derive_field
 
 instance [AddCommMonoidₓ α] : AddCommMonoidₓ (Holor α ds) := by
-  refine_struct { zero := (0 : Holor α ds), add := · + ·, nsmul := AddMonoidₓ.nsmul } <;>
+  refine_struct { zero := (0 : Holor α ds), add := (· + ·), nsmul := AddMonoidₓ.nsmul } <;>
     run_tac
       tactic.pi_instance_derive_field
 
 instance [AddGroupₓ α] : AddGroupₓ (Holor α ds) := by
-  refine_struct { zero := (0 : Holor α ds), add := · + ·, nsmul := AddMonoidₓ.nsmul, zsmul := fun n x i => n • x i } <;>
+  refine_struct
+      { zero := (0 : Holor α ds), add := (· + ·), nsmul := AddMonoidₓ.nsmul, zsmul := fun n x i => n • x i } <;>
     run_tac
       tactic.pi_instance_derive_field
 
 instance [AddCommGroupₓ α] : AddCommGroupₓ (Holor α ds) := by
-  refine_struct { zero := (0 : Holor α ds), add := · + ·, nsmul := AddMonoidₓ.nsmul, zsmul := SubNegMonoidₓ.zsmul } <;>
+  refine_struct
+      { zero := (0 : Holor α ds), add := (· + ·), nsmul := AddMonoidₓ.nsmul, zsmul := SubNegMonoidₓ.zsmul } <;>
     run_tac
       tactic.pi_instance_derive_field
 
+-- scalar product
 instance [Mul α] : HasScalar α (Holor α ds) :=
   ⟨fun a x => fun t => a * x t⟩
 
@@ -141,10 +149,10 @@ theorem cast_type (eq : ds₁ = ds₂) (a : Holor α ds₁) :
     cast (congr_argₓ (Holor α) Eq) a = fun t => a (cast (congr_argₓ HolorIndex Eq.symm) t) := by
   subst eq <;> rfl
 
-def assoc_right : Holor α (ds₁ ++ ds₂ ++ ds₃) → Holor α (ds₁ ++ (ds₂ ++ ds₃)) :=
+def assocRight : Holor α (ds₁ ++ ds₂ ++ ds₃) → Holor α (ds₁ ++ (ds₂ ++ ds₃)) :=
   cast (congr_argₓ (Holor α) (append_assoc ds₁ ds₂ ds₃))
 
-def assoc_left : Holor α (ds₁ ++ (ds₂ ++ ds₃)) → Holor α (ds₁ ++ ds₂ ++ ds₃) :=
+def assocLeft : Holor α (ds₁ ++ (ds₂ ++ ds₃)) → Holor α (ds₁ ++ ds₂ ++ ds₃) :=
   cast (congr_argₓ (Holor α) (append_assoc ds₁ ds₂ ds₃).symm)
 
 theorem mul_assoc0 [Semigroupₓ α] (x : Holor α ds₁) (y : Holor α ds₂) (z : Holor α ds₃) :
@@ -182,11 +190,12 @@ theorem mul_scalar_mul [Monoidₓ α] (x : Holor α []) (y : Holor α ds) : x �
   simp [mul, HasScalar.smul, HolorIndex.take, HolorIndex.drop]
 
 /-- A slice is a subholor consisting of all entries with initial index i. -/
+-- holor slices
 def slice (x : Holor α (d :: ds)) (i : ℕ) (h : i < d) : Holor α ds := fun is : HolorIndex ds =>
   x ⟨i :: is.1, Forall₂.cons h is.2⟩
 
 /-- The 1-dimensional "unit" holor with 1 in the `j`th position. -/
-def unit_vec [Monoidₓ α] [AddMonoidₓ α] (d : ℕ) (j : ℕ) : Holor α [d] := fun ti => if ti.1 = [j] then 1 else 0
+def unitVec [Monoidₓ α] [AddMonoidₓ α] (d : ℕ) (j : ℕ) : Holor α [d] := fun ti => if ti.1 = [j] then 1 else 0
 
 theorem holor_index_cons_decomp (p : HolorIndex (d :: ds) → Prop) :
     ∀ t : HolorIndex (d :: ds),
@@ -227,7 +236,7 @@ theorem slice_unit_vec_mul [Ringₓ α] {i : ℕ} {j : ℕ} (hid : i < d) (x : H
 theorem slice_add [Add α] (i : ℕ) (hid : i < d) (x : Holor α (d :: ds)) (y : Holor α (d :: ds)) :
     slice x i hid + slice y i hid = slice (x + y) i hid :=
   funext fun t => by
-    simp [slice, · + ·]
+    simp [slice, (· + ·)]
 
 theorem slice_zero [Zero α] (i : ℕ) (hid : i < d) : slice (0 : Holor α (d :: ds)) i hid = 0 :=
   rfl
@@ -266,13 +275,14 @@ theorem sum_unit_vec_mul_slice [Ringₓ α] (x : Holor α (d :: ds)) :
 
 /-- `cprank_max1 x` means `x` has CP rank at most 1, that is,
   it is the tensor product of 1-dimensional holors. -/
-inductive cprank_max1 [Mul α] : ∀ {ds}, Holor α ds → Prop
+-- CP rank
+inductive CprankMax1 [Mul α] : ∀ {ds}, Holor α ds → Prop
   | nil (x : Holor α []) : cprank_max1 x
   | cons {d} {ds} (x : Holor α [d]) (y : Holor α ds) : cprank_max1 y → cprank_max1 (x ⊗ y)
 
 /-- `cprank_max N x` means `x` has CP rank at most `N`, that is,
   it can be written as the sum of N holors of rank at most 1. -/
-inductive cprank_max [Mul α] [AddMonoidₓ α] : ℕ → ∀ {ds}, Holor α ds → Prop
+inductive CprankMax [Mul α] [AddMonoidₓ α] : ℕ → ∀ {ds}, Holor α ds → Prop
   | zero {ds} : cprank_max 0 (0 : Holor α ds)
   | succ n {ds} (x : Holor α ds) (y : Holor α ds) : CprankMax1 x → cprank_max n y → cprank_max (n + 1) (x + y)
 
@@ -352,7 +362,7 @@ theorem cprank_max_upper_bound [Ringₓ α] : ∀ {ds}, ∀ x : Holor α ds, Cpr
 noncomputable def cprank [Ringₓ α] (x : Holor α ds) : Nat :=
   @Nat.findₓ (fun n => CprankMax n x) (Classical.decPred _) ⟨ds.Prod, cprank_max_upper_bound x⟩
 
-theorem cprank_upper_bound [Ringₓ α] : ∀ {ds}, ∀ x : Holor α ds, cprank x ≤ ds.Prod := fun ds x : Holor α ds => by
+theorem cprank_upper_bound [Ringₓ α] : ∀ {ds}, ∀ x : Holor α ds, cprank x ≤ ds.Prod := fun x : Holor α ds => by
   let this' := Classical.decPred fun n : ℕ => cprank_max n x <;>
     exact
       Nat.find_min'ₓ ⟨ds.prod, show (fun n => cprank_max n x) ds.prod from cprank_max_upper_bound x⟩

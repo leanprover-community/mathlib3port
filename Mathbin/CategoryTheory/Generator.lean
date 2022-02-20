@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2022 Markus Himmel. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Markus Himmel
+-/
 import Mathbin.CategoryTheory.Balanced
 import Mathbin.CategoryTheory.Limits.Opposites
 import Mathbin.Data.Set.Opposite
@@ -55,23 +60,23 @@ variable {C : Type u} [Category.{v} C]
 
 /-- We say that `𝒢` is a separating set if the functors `C(G, -)` for `G ∈ 𝒢` are collectively
     faithful, i.e., if `h ≫ f = h ≫ g` for all `h` with domain in `𝒢` implies `f = g`. -/
-def is_separating (𝒢 : Set C) : Prop :=
+def IsSeparating (𝒢 : Set C) : Prop :=
   ∀ ⦃X Y : C⦄ f g : X ⟶ Y, (∀, ∀ G ∈ 𝒢, ∀ h : G ⟶ X, h ≫ f = h ≫ g) → f = g
 
 /-- We say that `𝒢` is a coseparating set if the functors `C(-, G)` for `G ∈ 𝒢` are collectively
     faithful, i.e., if `f ≫ h = g ≫ h` for all `h` with codomain in `𝒢` implies `f = g`. -/
-def is_coseparating (𝒢 : Set C) : Prop :=
+def IsCoseparating (𝒢 : Set C) : Prop :=
   ∀ ⦃X Y : C⦄ f g : X ⟶ Y, (∀, ∀ G ∈ 𝒢, ∀ h : Y ⟶ G, f ≫ h = g ≫ h) → f = g
 
 /-- We say that `𝒢` is a detecting set if the functors `C(G, -)` collectively reflect isomorphisms,
     i.e., if any `h` with domain in `𝒢` uniquely factors through `f`, then `f` is an isomorphism. -/
-def is_detecting (𝒢 : Set C) : Prop :=
+def IsDetecting (𝒢 : Set C) : Prop :=
   ∀ ⦃X Y : C⦄ f : X ⟶ Y, (∀, ∀ G ∈ 𝒢, ∀ h : G ⟶ Y, ∃! h' : G ⟶ X, h' ≫ f = h) → IsIso f
 
 /-- We say that `𝒢` is a codetecting set if the functors `C(-, G)` collectively reflect
     isomorphisms, i.e., if any `h` with codomain in `G` uniquely factors through `f`, then `f` is
     an isomorphism. -/
-def is_codetecting (𝒢 : Set C) : Prop :=
+def IsCodetecting (𝒢 : Set C) : Prop :=
   ∀ ⦃X Y : C⦄ f : X ⟶ Y, (∀, ∀ G ∈ 𝒢, ∀ h : X ⟶ G, ∃! h' : Y ⟶ G, f ≫ h' = h) → IsIso f
 
 section Dual
@@ -138,7 +143,7 @@ theorem is_codetecting_unop_iff {𝒢 : Set (Cᵒᵖ)} : IsCodetecting 𝒢.unop
 
 end Dual
 
-theorem is_detecting.is_separating [HasEqualizers C] {𝒢 : Set C} (h𝒢 : IsDetecting 𝒢) : IsSeparating 𝒢 :=
+theorem IsDetecting.is_separating [HasEqualizers C] {𝒢 : Set C} (h𝒢 : IsDetecting 𝒢) : IsSeparating 𝒢 :=
   fun X Y f g hfg =>
   have : IsIso (equalizer.ι f g) := h𝒢 _ fun G hG h => equalizer.exists_unique _ (hfg _ hG _)
   eq_of_epi_equalizer
@@ -147,12 +152,12 @@ section
 
 attribute [local instance] has_equalizers_opposite
 
-theorem is_codetecting.is_coseparating [HasCoequalizers C] {𝒢 : Set C} : IsCodetecting 𝒢 → IsCoseparating 𝒢 := by
+theorem IsCodetecting.is_coseparating [HasCoequalizers C] {𝒢 : Set C} : IsCodetecting 𝒢 → IsCoseparating 𝒢 := by
   simpa only [← is_separating_op_iff, ← is_detecting_op_iff] using is_detecting.is_separating
 
 end
 
-theorem is_separating.is_detecting [Balanced C] {𝒢 : Set C} (h𝒢 : IsSeparating 𝒢) : IsDetecting 𝒢 := by
+theorem IsSeparating.is_detecting [Balanced C] {𝒢 : Set C} (h𝒢 : IsSeparating 𝒢) : IsDetecting 𝒢 := by
   intro X Y f hf
   refine' (is_iso_iff_mono_and_epi _).2 ⟨⟨fun Z g h hgh => h𝒢 _ _ fun G hG i => _⟩, ⟨fun Z g h hgh => _⟩⟩
   · obtain ⟨t, -, ht⟩ := hf G hG (i ≫ g ≫ f)
@@ -167,7 +172,7 @@ section
 
 attribute [local instance] balanced_opposite
 
-theorem is_coseparating.is_codetecting [Balanced C] {𝒢 : Set C} : IsCoseparating 𝒢 → IsCodetecting 𝒢 := by
+theorem IsCoseparating.is_codetecting [Balanced C] {𝒢 : Set C} : IsCoseparating 𝒢 → IsCodetecting 𝒢 := by
   simpa only [← is_detecting_op_iff, ← is_separating_op_iff] using is_separating.is_detecting
 
 end
@@ -181,16 +186,16 @@ theorem is_codetecting_iff_is_coseparating [HasCoequalizers C] [Balanced C] {�
 
 section Mono
 
-theorem is_separating.mono {𝒢 : Set C} (h𝒢 : IsSeparating 𝒢) {ℋ : Set C} (h𝒢ℋ : 𝒢 ⊆ ℋ) : IsSeparating ℋ :=
+theorem IsSeparating.mono {𝒢 : Set C} (h𝒢 : IsSeparating 𝒢) {ℋ : Set C} (h𝒢ℋ : 𝒢 ⊆ ℋ) : IsSeparating ℋ :=
   fun X Y f g hfg => (h𝒢 _ _) fun G hG h => hfg _ (h𝒢ℋ hG) _
 
-theorem is_coseparating.mono {𝒢 : Set C} (h𝒢 : IsCoseparating 𝒢) {ℋ : Set C} (h𝒢ℋ : 𝒢 ⊆ ℋ) : IsCoseparating ℋ :=
+theorem IsCoseparating.mono {𝒢 : Set C} (h𝒢 : IsCoseparating 𝒢) {ℋ : Set C} (h𝒢ℋ : 𝒢 ⊆ ℋ) : IsCoseparating ℋ :=
   fun X Y f g hfg => (h𝒢 _ _) fun G hG h => hfg _ (h𝒢ℋ hG) _
 
-theorem is_detecting.mono {𝒢 : Set C} (h𝒢 : IsDetecting 𝒢) {ℋ : Set C} (h𝒢ℋ : 𝒢 ⊆ ℋ) : IsDetecting ℋ := fun X Y f hf =>
+theorem IsDetecting.mono {𝒢 : Set C} (h𝒢 : IsDetecting 𝒢) {ℋ : Set C} (h𝒢ℋ : 𝒢 ⊆ ℋ) : IsDetecting ℋ := fun X Y f hf =>
   (h𝒢 _) fun G hG h => hf _ (h𝒢ℋ hG) _
 
-theorem is_codetecting.mono {𝒢 : Set C} (h𝒢 : IsCodetecting 𝒢) {ℋ : Set C} (h𝒢ℋ : 𝒢 ⊆ ℋ) : IsCodetecting ℋ :=
+theorem IsCodetecting.mono {𝒢 : Set C} (h𝒢 : IsCodetecting 𝒢) {ℋ : Set C} (h𝒢ℋ : 𝒢 ⊆ ℋ) : IsCodetecting ℋ :=
   fun X Y f hf => (h𝒢 _) fun G hG h => hf _ (h𝒢ℋ hG) _
 
 end Mono
@@ -224,19 +229,19 @@ theorem is_codetecting_empty_of_groupoid [∀ {X Y : C} f : X ⟶ Y, IsIso f] : 
 end Empty
 
 /-- We say that `G` is a separator if the functor `C(G, -)` is faithful. -/
-def is_separator (G : C) : Prop :=
+def IsSeparator (G : C) : Prop :=
   IsSeparating ({G} : Set C)
 
 /-- We say that `G` is a coseparator if the functor `C(-, G)` is faithful. -/
-def is_coseparator (G : C) : Prop :=
+def IsCoseparator (G : C) : Prop :=
   IsCoseparating ({G} : Set C)
 
 /-- We say that `G` is a detector if the functor `C(G, -)` reflects isomorphisms. -/
-def is_detector (G : C) : Prop :=
+def IsDetector (G : C) : Prop :=
   IsDetecting ({G} : Set C)
 
 /-- We say that `G` is a codetector if the functor `C(-, G)` reflects isomorphisms. -/
-def is_codetector (G : C) : Prop :=
+def IsCodetector (G : C) : Prop :=
   IsCodetecting ({G} : Set C)
 
 section Dual
@@ -267,16 +272,16 @@ theorem is_detector_unop_iff (G : Cᵒᵖ) : IsDetector (unop G) ↔ IsCodetecto
 
 end Dual
 
-theorem is_detector.is_separator [HasEqualizers C] {G : C} : IsDetector G → IsSeparator G :=
+theorem IsDetector.is_separator [HasEqualizers C] {G : C} : IsDetector G → IsSeparator G :=
   is_detecting.is_separating
 
-theorem is_codetector.is_coseparator [HasCoequalizers C] {G : C} : IsCodetector G → IsCoseparator G :=
+theorem IsCodetector.is_coseparator [HasCoequalizers C] {G : C} : IsCodetector G → IsCoseparator G :=
   is_codetecting.is_coseparating
 
-theorem is_separator.is_detector [Balanced C] {G : C} : IsSeparator G → IsDetector G :=
+theorem IsSeparator.is_detector [Balanced C] {G : C} : IsSeparator G → IsDetector G :=
   is_separating.is_detecting
 
-theorem is_cospearator.is_codetector [Balanced C] {G : C} : IsCoseparator G → IsCodetector G :=
+theorem IsCospearator.is_codetector [Balanced C] {G : C} : IsCoseparator G → IsCodetector G :=
   is_coseparating.is_codetecting
 
 theorem is_separator_def {G : C} : IsSeparator G ↔ ∀ ⦃X Y : C⦄ f g : X ⟶ Y, (∀ h : G ⟶ X, h ≫ f = h ≫ g) → f = g :=
@@ -286,7 +291,7 @@ theorem is_separator_def {G : C} : IsSeparator G ↔ ∀ ⦃X Y : C⦄ f g : X �
       exact hfg h,
     fun hG X Y f g hfg => (hG _ _) fun h => hfg _ (Set.mem_singleton _) _⟩
 
-theorem is_separator.def {G : C} : IsSeparator G → ∀ ⦃X Y : C⦄ f g : X ⟶ Y, (∀ h : G ⟶ X, h ≫ f = h ≫ g) → f = g :=
+theorem IsSeparator.def {G : C} : IsSeparator G → ∀ ⦃X Y : C⦄ f g : X ⟶ Y, (∀ h : G ⟶ X, h ≫ f = h ≫ g) → f = g :=
   is_separator_def.1
 
 theorem is_coseparator_def {G : C} : IsCoseparator G ↔ ∀ ⦃X Y : C⦄ f g : X ⟶ Y, (∀ h : Y ⟶ G, f ≫ h = g ≫ h) → f = g :=
@@ -296,7 +301,7 @@ theorem is_coseparator_def {G : C} : IsCoseparator G ↔ ∀ ⦃X Y : C⦄ f g :
       exact hfg h,
     fun hG X Y f g hfg => (hG _ _) fun h => hfg _ (Set.mem_singleton _) _⟩
 
-theorem is_coseparator.def {G : C} : IsCoseparator G → ∀ ⦃X Y : C⦄ f g : X ⟶ Y, (∀ h : Y ⟶ G, f ≫ h = g ≫ h) → f = g :=
+theorem IsCoseparator.def {G : C} : IsCoseparator G → ∀ ⦃X Y : C⦄ f g : X ⟶ Y, (∀ h : Y ⟶ G, f ≫ h = g ≫ h) → f = g :=
   is_coseparator_def.1
 
 theorem is_detector_def {G : C} : IsDetector G ↔ ∀ ⦃X Y : C⦄ f : X ⟶ Y, (∀ h : G ⟶ Y, ∃! h', h' ≫ f = h) → IsIso f :=
@@ -306,7 +311,7 @@ theorem is_detector_def {G : C} : IsDetector G ↔ ∀ ⦃X Y : C⦄ f : X ⟶ Y
       exact hf h,
     fun hG X Y f hf => (hG _) fun h => hf _ (Set.mem_singleton _) _⟩
 
-theorem is_detector.def {G : C} : IsDetector G → ∀ ⦃X Y : C⦄ f : X ⟶ Y, (∀ h : G ⟶ Y, ∃! h', h' ≫ f = h) → IsIso f :=
+theorem IsDetector.def {G : C} : IsDetector G → ∀ ⦃X Y : C⦄ f : X ⟶ Y, (∀ h : G ⟶ Y, ∃! h', h' ≫ f = h) → IsIso f :=
   is_detector_def.1
 
 theorem is_codetector_def {G : C} :
@@ -317,8 +322,7 @@ theorem is_codetector_def {G : C} :
       exact hf h,
     fun hG X Y f hf => (hG _) fun h => hf _ (Set.mem_singleton _) _⟩
 
-theorem is_codetector.def {G : C} :
-    IsCodetector G → ∀ ⦃X Y : C⦄ f : X ⟶ Y, (∀ h : X ⟶ G, ∃! h', f ≫ h' = h) → IsIso f :=
+theorem IsCodetector.def {G : C} : IsCodetector G → ∀ ⦃X Y : C⦄ f : X ⟶ Y, (∀ h : X ⟶ G, ∃! h', f ≫ h' = h) → IsIso f :=
   is_codetector_def.1
 
 theorem is_separator_iff_faithful_coyoneda_obj {G : C} : IsSeparator G ↔ Faithful (coyoneda.obj (op G)) :=

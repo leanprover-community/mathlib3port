@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Devon Tuma. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johannes Hölzl, Devon Tuma
+-/
 import Mathbin.MeasureTheory.ProbabilityMassFunction.Basic
 
 /-!
@@ -73,7 +78,7 @@ end Pure
 
 section Bind
 
-protected theorem bind.summable (p : Pmf α) (f : α → Pmf β) (b : β) : Summable fun a : α => p a * f a b := by
+protected theorem Bind.summable (p : Pmf α) (f : α → Pmf β) (b : β) : Summable fun a : α => p a * f a b := by
   refine' Nnreal.summable_of_le (fun a => _) p.summable_coe
   suffices p a * f a b ≤ p a * 1 by
     simpa
@@ -112,7 +117,7 @@ theorem pure_bind (a : α) : (pure a).bind f = f a := by
   ext b <;> simp [this]
 
 @[simp]
-theorem bind_pureₓ : p.bind pure = p := by
+theorem bind_pure : p.bind pure = p := by
   have : ∀ a a', p a * ite (a' = a) 1 0 = ite (a = a') (p a') 0 := fun a a' => by
     split_ifs <;>
       try
@@ -187,7 +192,7 @@ instance : Monadₓ Pmf where
 
 section BindOnSupport
 
-protected theorem bind_on_support.summable (p : Pmf α) (f : ∀, ∀ a ∈ p.Support, ∀, Pmf β) (b : β) :
+protected theorem BindOnSupport.summable (p : Pmf α) (f : ∀, ∀ a ∈ p.Support, ∀, Pmf β) (b : β) :
     Summable fun a : α => p a * if h : p a = 0 then 0 else f a h b := by
   refine' Nnreal.summable_of_le (fun a => _) p.summable_coe
   split_ifs
@@ -200,7 +205,7 @@ protected theorem bind_on_support.summable (p : Pmf α) (f : ∀, ∀ a ∈ p.Su
 
 /-- Generalized version of `bind` allowing `f` to only be defined on the support of `p`.
   `p.bind f` is equivalent to `p.bind_on_support (λ a _, f a)`, see `bind_on_support_eq_bind` -/
-def bind_on_support (p : Pmf α) (f : ∀, ∀ a ∈ p.Support, ∀, Pmf β) : Pmf β :=
+def bindOnSupport (p : Pmf α) (f : ∀, ∀ a ∈ p.Support, ∀, Pmf β) : Pmf β :=
   ⟨fun b => ∑' a, p a * if h : p a = 0 then 0 else f a h b,
     Ennreal.has_sum_coe.1
       (by

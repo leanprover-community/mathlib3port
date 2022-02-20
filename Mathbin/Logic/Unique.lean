@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Johan Commelin. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johan Commelin
+-/
 import Mathbin.Tactic.Basic
 import Mathbin.Logic.IsEmpty
 
@@ -105,6 +110,7 @@ section
 
 variable [Unique α]
 
+-- see Note [lower instance priority]
 instance (priority := 100) : Inhabited α :=
   toInhabited ‹Unique α›
 
@@ -114,6 +120,7 @@ theorem eq_default (a : α) : a = default :=
 theorem default_eq (a : α) : default = a :=
   (uniq _ a).symm
 
+-- see Note [lower instance priority]
 instance (priority := 100) : Subsingleton α :=
   subsingleton_of_forall_eq _ eq_default
 
@@ -164,7 +171,7 @@ variable {f : α → β}
 
 /-- If the domain of a surjective function is a singleton,
 then the codomain is a singleton as well. -/
-protected def surjective.unique (hf : Surjective f) [Unique α] : Unique β where
+protected def Surjective.unique (hf : Surjective f) [Unique α] : Unique β where
   default := f default
   uniq := fun b =>
     let ⟨a, ha⟩ := hf b
@@ -172,11 +179,11 @@ protected def surjective.unique (hf : Surjective f) [Unique α] : Unique β wher
 
 /-- If the codomain of an injective function is a subsingleton, then the domain
 is a subsingleton as well. -/
-protected theorem injective.subsingleton (hf : Injective f) [Subsingleton β] : Subsingleton α :=
+protected theorem Injective.subsingleton (hf : Injective f) [Subsingleton β] : Subsingleton α :=
   ⟨fun x y => hf <| Subsingleton.elimₓ _ _⟩
 
 /-- If `α` is inhabited and admits an injective map to a subsingleton type, then `α` is `unique`. -/
-protected def injective.unique [Inhabited α] [Subsingleton β] (hf : Injective f) : Unique α :=
+protected def Injective.unique [Inhabited α] [Subsingleton β] (hf : Injective f) : Unique α :=
   @Unique.mk' _ _ hf.Subsingleton
 
 end Function

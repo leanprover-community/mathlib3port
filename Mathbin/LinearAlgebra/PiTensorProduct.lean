@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Frédéric Dupuis. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Frédéric Dupuis, Eric Wieser
+-/
 import Mathbin.GroupTheory.Congruence
 import Mathbin.LinearAlgebra.Multilinear.TensorProduct
 
@@ -77,7 +82,7 @@ variable (R) (s)
 
 /-- The relation on `free_add_monoid (R × Π i, s i)` that generates a congruence whose quotient is
 the tensor product. -/
-inductive eqv : FreeAddMonoid (R × ∀ i, s i) → FreeAddMonoid (R × ∀ i, s i) → Prop
+inductive Eqv : FreeAddMonoid (R × ∀ i, s i) → FreeAddMonoid (R × ∀ i, s i) → Prop
   | of_zero : ∀ r : R f : ∀ i, s i i : ι hf : f i = 0, eqv (FreeAddMonoid.of (r, f)) 0
   | of_zero_scalar : ∀ f : ∀ i, s i, eqv (FreeAddMonoid.of (0, f)) 0
   | of_add :
@@ -101,6 +106,7 @@ def PiTensorProduct : Type _ :=
 
 variable {R}
 
+-- This enables the notation `⨂[R] i : ι, s i` for the pi tensor product, given `s : ι → Type*`.
 localized [TensorProduct] notation3:100 "⨂[" R "] " (...) ", " r:(scoped f => PiTensorProduct R f) => r
 
 open_locale TensorProduct
@@ -122,7 +128,7 @@ variable (R) {s}
 /-- `tprod_coeff R r f` with `r : R` and `f : Π i, s i` is the tensor product of the vectors `f i`
 over all `i : ι`, multiplied by the coefficient `r`. Note that this is meant as an auxiliary
 definition for this file alone, and that one should use `tprod` defined below for most purposes. -/
-def tprod_coeff (r : R) (f : ∀ i, s i) : ⨂[R] i, s i :=
+def tprodCoeff (r : R) (f : ∀ i, s i) : ⨂[R] i, s i :=
   AddCon.mk' _ <| FreeAddMonoid.of (r, f)
 
 variable {R}
@@ -156,7 +162,7 @@ theorem smul_tprod_coeff (z : R) (f : ∀ i, s i) (i : ι) (r : R₁) [HasScalar
 
 /-- Construct an `add_monoid_hom` from `(⨂[R] i, s i)` to some space `F` from a function
 `φ : (R × Π i, s i) → F` with the appropriate properties. -/
-def lift_add_hom (φ : (R × ∀ i, s i) → F) (C0 : ∀ r : R f : ∀ i, s i i : ι hf : f i = 0, φ (r, f) = 0)
+def liftAddHom (φ : (R × ∀ i, s i) → F) (C0 : ∀ r : R f : ∀ i, s i i : ι hf : f i = 0, φ (r, f) = 0)
     (C0' : ∀ f : ∀ i, s i, φ (0, f) = 0)
     (C_add :
       ∀ r : R f : ∀ i, s i i : ι m₁ m₂ : s i, φ (r, update f i m₁) + φ (r, update f i m₂) = φ (r, update f i (m₁ + m₂)))
@@ -202,7 +208,9 @@ variable [Monoidₓ R₁] [DistribMulAction R₁ R] [SmulCommClass R₁ R R]
 
 variable [Monoidₓ R₂] [DistribMulAction R₂ R] [SmulCommClass R₂ R R]
 
-instance has_scalar' : HasScalar R₁ (⨂[R] i, s i) :=
+-- Most of the time we want the instance below this one, which is easier for typeclass resolution
+-- to find.
+instance hasScalar' : HasScalar R₁ (⨂[R] i, s i) :=
   ⟨fun r =>
     liftAddHom (fun f : R × ∀ i, s i => tprodCoeff R (r • f.1) f.2)
       (fun r' f i hf => by
@@ -225,8 +233,8 @@ theorem smul_tprod_coeff' (r : R₁) (z : R) (f : ∀ i, s i) : r • tprodCoeff
 protected theorem smul_add (r : R₁) (x y : ⨂[R] i, s i) : r • (x + y) = r • x + r • y :=
   AddMonoidHom.map_add _ _ _
 
-instance distrib_mul_action' : DistribMulAction R₁ (⨂[R] i, s i) where
-  smul := · • ·
+instance distribMulAction' : DistribMulAction R₁ (⨂[R] i, s i) where
+  smul := (· • ·)
   smul_add := fun r x y => AddMonoidHom.map_add _ _ _
   mul_smul := fun r r' x =>
     PiTensorProduct.induction_on' x
@@ -260,8 +268,10 @@ instance is_scalar_tower' [HasScalar R₁ R₂] [IsScalarTower R₁ R₂ R] : Is
 
 end DistribMulAction
 
+-- Most of the time we want the instance below this one, which is easier for typeclass resolution
+-- to find.
 instance module' [Semiringₓ R₁] [Module R₁ R] [SmulCommClass R₁ R R] : Module R₁ (⨂[R] i, s i) :=
-  { PiTensorProduct.distribMulAction' with smul := · • ·,
+  { PiTensorProduct.distribMulAction' with smul := (· • ·),
     add_smul := fun r r' x =>
       PiTensorProduct.induction_on' x
         (fun r f => by
@@ -276,6 +286,7 @@ instance module' [Semiringₓ R₁] [Module R₁ R] [SmulCommClass R₁ R R] : M
         fun x y ihx ihy => by
         rw [PiTensorProduct.smul_add, ihx, ihy, add_zeroₓ] }
 
+-- shortcut instances
 instance : Module R (⨂[R] i, s i) :=
   PiTensorProduct.module'
 
@@ -338,7 +349,7 @@ variable {s}
 /-- Auxiliary function to constructing a linear map `(⨂[R] i, s i) → E` given a
 `multilinear map R s E` with the property that its composition with the canonical
 `multilinear_map R s (⨂[R] i, s i)` is the given multilinear map. -/
-def lift_aux (φ : MultilinearMap R s E) : (⨂[R] i, s i) →+ E :=
+def liftAux (φ : MultilinearMap R s E) : (⨂[R] i, s i) →+ E :=
   liftAddHom (fun p : R × ∀ i, s i => p.1 • φ p.2)
     (fun z f i hf => by
       rw [map_coord_zero φ i hf, smul_zero])
@@ -359,7 +370,7 @@ theorem lift_aux_tprod_coeff (φ : MultilinearMap R s E) (z : R) (f : ∀ i, s i
     liftAux φ (tprodCoeff R z f) = z • φ f := by
   simp [lift_aux, lift_add_hom, tprod_coeff, FreeAddMonoid.lift_eval_of]
 
-theorem lift_aux.smul {φ : MultilinearMap R s E} (r : R) (x : ⨂[R] i, s i) : liftAux φ (r • x) = r • liftAux φ x := by
+theorem liftAux.smul {φ : MultilinearMap R s E} (r : R) (x : ⨂[R] i, s i) : liftAux φ (r • x) = r • liftAux φ x := by
   refine' PiTensorProduct.induction_on' x _ _
   · intro z f
     rw [smul_tprod_coeff' r z f, lift_aux_tprod_coeff, lift_aux_tprod_coeff, smul_assoc]
@@ -479,7 +490,7 @@ variable (ι)
 
 /-- The tensor product over an empty index type `ι` is isomorphic to the base ring. -/
 @[simps symmApply]
-def is_empty_equiv [IsEmpty ι] : (⨂[R] i : ι, M) ≃ₗ[R] R where
+def isEmptyEquiv [IsEmpty ι] : (⨂[R] i : ι, M) ≃ₗ[R] R where
   toFun := lift (constOfIsEmpty R 1)
   invFun := fun r => r • tprod R (@isEmptyElim _ _ _)
   left_inv := fun x => by
@@ -506,7 +517,7 @@ variable {ι}
 
 /-- The tensor product over an single index is isomorphic to the module -/
 @[simps symmApply]
-def subsingleton_equiv [Subsingleton ι] (i₀ : ι) : (⨂[R] i : ι, M) ≃ₗ[R] M where
+def subsingletonEquiv [Subsingleton ι] (i₀ : ι) : (⨂[R] i : ι, M) ≃ₗ[R] M where
   toFun := lift (MultilinearMap.ofSubsingleton R M i₀)
   invFun := fun m => tprod R fun v => m
   left_inv := fun x => by
@@ -550,7 +561,9 @@ private theorem tmul_apply (a : ι → M) (b : ι₂ → M) :
 
 /-- Expand `pi_tensor_product` into a `tensor_product` of two factors. -/
 private def tmul_symm : (⨂[R] i : Sum ι ι₂, M) →ₗ[R] (⨂[R] i : ι, M) ⊗[R] ⨂[R] i : ι₂, M :=
-  PiTensorProduct.lift <| by
+  -- by using tactic mode, we avoid the need for a lot of `@`s and `_`s
+    PiTensorProduct.lift <|
+    by
     apply MultilinearMap.domCoprod <;> [exact tprod R, exact tprod R]
 
 private theorem tmul_symm_apply (a : Sum ι ι₂ → M) :
@@ -566,11 +579,12 @@ attribute [local ext] TensorProduct.ext
 
 For simplicity, this is defined only for homogeneously- (rather than dependently-) typed components.
 -/
-def tmul_equiv : ((⨂[R] i : ι, M) ⊗[R] ⨂[R] i : ι₂, M) ≃ₗ[R] ⨂[R] i : Sum ι ι₂, M :=
+def tmulEquiv : ((⨂[R] i : ι, M) ⊗[R] ⨂[R] i : ι₂, M) ≃ₗ[R] ⨂[R] i : Sum ι ι₂, M :=
   LinearEquiv.ofLinear tmul tmulSymm
     (by
       ext x
       show tmul (tmul_symm (tprod R x)) = tprod R x
+      -- Speed up the call to `simp`.
       simp only [tmul_symm_apply, tmul_apply, Sum.elim_comp_inl_inr])
     (by
       ext x y
@@ -607,6 +621,8 @@ variable {ι : Type _} [DecidableEq ι] {R : Type _} [CommRingₓ R]
 
 variable {s : ι → Type _} [∀ i, AddCommGroupₓ (s i)] [∀ i, Module R (s i)]
 
+/- Unlike for the binary tensor product, we require `R` to be a `comm_ring` here, otherwise
+this is false in the case where `ι` is empty. -/
 instance : AddCommGroupₓ (⨂[R] i, s i) :=
   Module.addCommMonoidToAddCommGroup R
 

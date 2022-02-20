@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Rémy Degenne. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Rémy Degenne
+-/
 import Mathbin.MeasureTheory.Integral.Lebesgue
 import Mathbin.Analysis.MeanInequalities
 import Mathbin.Analysis.MeanInequalitiesPow
@@ -65,8 +70,7 @@ theorem lintegral_mul_le_one_of_lintegral_rpow_eq_one {p q : ℝ} (hpq : p.IsCon
         
 
 /-- Function multiplied by the inverse of its p-seminorm `(∫⁻ f^p ∂μ) ^ 1/p`-/
-def fun_mul_inv_snorm (f : α → ℝ≥0∞) (p : ℝ) (μ : Measureₓ α) : α → ℝ≥0∞ := fun a =>
-  f a * ((∫⁻ c, f c ^ p ∂μ) ^ (1 / p))⁻¹
+def funMulInvSnorm (f : α → ℝ≥0∞) (p : ℝ) (μ : Measureₓ α) : α → ℝ≥0∞ := fun a => f a * ((∫⁻ c, f c ^ p ∂μ) ^ (1 / p))⁻¹
 
 theorem fun_eq_fun_mul_inv_snorm_mul_snorm {p : ℝ} (f : α → ℝ≥0∞) (hf_nonzero : (∫⁻ a, f a ^ p ∂μ) ≠ 0)
     (hf_top : (∫⁻ a, f a ^ p ∂μ) ≠ ⊤) {a : α} : f a = funMulInvSnorm f p μ a * (∫⁻ c, f c ^ p ∂μ) ^ (1 / p) := by
@@ -163,6 +167,7 @@ theorem lintegral_mul_le_Lp_mul_Lq (μ : Measureₓ α) {p q : ℝ} (hpq : p.IsC
   · rw [mul_comm, mul_comm ((∫⁻ a : α, f a ^ p ∂μ) ^ (1 / p))]
     exact lintegral_mul_le_Lp_mul_Lq_of_ne_zero_of_eq_top hpq.symm.pos hpq.nonneg hg_top hf_zero
     
+  -- non-⊤ non-zero case
   exact Ennreal.lintegral_mul_le_Lp_mul_Lq_of_ne_zero_of_ne_top hpq hf hg hf_top hg_top hf_zero hg_zero
 
 theorem lintegral_rpow_add_lt_top_of_lintegral_rpow_lt_top {p : ℝ} {f g : α → ℝ≥0∞} (hf : AeMeasurable f μ)

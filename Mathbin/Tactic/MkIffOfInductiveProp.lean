@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Johannes Hölzl. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johannes Hölzl
+-/
 import Mathbin.Tactic.Core
 import Mathbin.Tactic.Lint.Default
 
@@ -51,6 +56,7 @@ unsafe def compact_relation : List expr → List (expr × expr) → List (Option
       let (bs, ps) := compact_relation (bs.map i) ((ps₁ ++ ps₂).map fun ⟨a, p⟩ => (a, i p))
       (none :: bs, ps)
 
+-- TODO: document
 @[nolint doc_blame]
 unsafe def constr_to_prop (univs : List level) (g : List expr) (idxs : List expr) (c : Name) :
     tactic ((List (Option expr) × Sum expr ℕ) × expr) := do
@@ -86,6 +92,7 @@ unsafe def constr_to_prop (univs : List level) (g : List expr) (idxs : List expr
         return (Sum.inr eqs, r)
   return ((bs, n), r)
 
+-- TODO: document
 @[nolint doc_blame]
 unsafe def to_cases (s : List <| List (Option expr) × Sum expr ℕ) : tactic Unit := do
   let h ← intro1
@@ -114,12 +121,13 @@ Example:
 list_option_merge [none, some (), none, some ()] [0, 1, 2, 3, 4] = [none, (some 0), none, (some 1)]
 ```
 -/
-def list_option_merge {α : Type _} {β : Type _} : List (Option α) → List β → List (Option β)
+def listOptionMerge {α : Type _} {β : Type _} : List (Option α) → List β → List (Option β)
   | [], _ => []
   | none :: xs, ys => none :: list_option_merge xs ys
   | some _ :: xs, y :: ys => some y :: list_option_merge xs ys
   | some _ :: xs, [] => []
 
+-- TODO: document
 @[nolint doc_blame]
 unsafe def to_inductive (cs : List Name) (gs : List expr) (s : List (List (Option expr) × Sum expr ℕ)) (h : expr) :
     tactic Unit :=
@@ -139,7 +147,11 @@ unsafe def to_inductive (cs : List Name) (gs : List expr) (s : List (List (Optio
               let (hs, h, _) ← elim_gen_prod n h [] []
               let (es, Eq, _) ← elim_gen_prod e h [] []
               let es := es ++ [Eq]
-              revert_lst es
+              /- `es.mmap' subst`: fails when we have dependent equalities (`heq`). `subst` will change the
+                          dependent hypotheses, so that the `uniq` local names in `es` are wrong afterwards. Instead
+                          we revert them and pull them out one-by-one. -/
+                  revert_lst
+                  es
               es fun _ => intro1 >>= subst
           let ctxt ← local_context
           let gs := ctxt gs
@@ -191,7 +203,10 @@ unsafe def mk_iff_of_inductive_prop (i : Name) (r : Name) : tactic Unit := do
   let type := decl.type
   let univ_names := decl.univ_params
   let univs := univ_names.map level.param
-  let (g, quote.1 Prop) ← open_pis type | fail "Inductive type is not a proposition"
+  let/- we use these names for our universe parameters, maybe we should construct a copy of them
+        using `uniq_name` -/
+    (g, quote.1 Prop)
+    ← open_pis type | fail "Inductive type is not a proposition"
   let lhs := (const i univs).mk_app g
   let shape_rhss ← constrs.mmap (constr_to_prop univs (g.take params) (g.drop params))
   let shape := shape_rhss.map Prod.fst
@@ -236,7 +251,7 @@ add_tactic_doc
   { Name := "mk_iff_of_inductive_prop", category := DocCategory.cmd, declNames := [`` mk_iff_of_inductive_prop_cmd],
     tags := ["logic", "environment"] }
 
--- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr ?»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr ?»
 /-- Applying the `mk_iff` attribute to an inductively-defined proposition `mk_iff` makes an `iff` rule
 `r` with the shape `∀ps is, i as ↔ ⋁_j, ∃cs, is = cs`, where `ps` are the type parameters, `is` are
 the indices, `j` ranges over all possible constructors, the `cs` are the parameters for each of the

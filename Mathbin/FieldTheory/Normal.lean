@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Kenny Lau. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Kenny Lau, Thomas Browning, Patrick Lutz
+-/
 import Mathbin.FieldTheory.Adjoin
 import Mathbin.FieldTheory.Tower
 import Mathbin.GroupTheory.Solvable
@@ -28,6 +33,7 @@ variable (F K : Type _) [Field F] [Field K] [Algebra F K]
 
 /-- Typeclass for normal field extension: `K` is a normal extension of `F` iff the minimal
 polynomial of every element `x` in `K` splits in `K`, i.e. every conjugate of `x` is in `K`. -/
+--TODO(Commelin): refactor normal to extend `is_algebraic`??
 class Normal : Prop where
   is_integral' (x : K) : IsIntegral F x
   splits' (x : K) : Splits (algebraMap F K) (minpoly F x)

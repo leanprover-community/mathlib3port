@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Chris Hughes. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Chris Hughes
+-/
 import Mathbin.Order.Lattice
 import Mathbin.Data.List.Sort
 import Mathbin.Data.Equiv.Fin
@@ -99,7 +104,7 @@ theorem is_maximal_of_eq_inf (x b : X) {a y : X} (ha : x⊓y = a) (hxy : x ≠ y
 theorem second_iso_of_eq {x y a b : X} (hm : IsMaximal x a) (ha : x⊔y = a) (hb : x⊓y = b) : Iso (x, a) (b, y) := by
   substs a b <;> exact second_iso hm
 
-theorem is_maximal.iso_refl {x y : X} (h : IsMaximal x y) : Iso (x, y) (x, y) :=
+theorem IsMaximal.iso_refl {x y : X} (h : IsMaximal x y) : Iso (x, y) (x, y) :=
   second_iso_of_eq h (sup_eq_right.2 (le_of_ltₓ (lt_of_is_maximal h))) (inf_eq_left.2 (le_of_ltₓ (lt_of_is_maximal h)))
 
 end JordanHolderLattice
@@ -145,7 +150,7 @@ theorem coe_fn_mk (length : ℕ) series step :
 theorem lt_succ (s : CompositionSeries X) (i : Finₓ s.length) : s i.cast_succ < s i.succ :=
   lt_of_is_maximal (s.step _)
 
-protected theorem StrictMono (s : CompositionSeries X) : StrictMono s :=
+protected theorem strict_mono (s : CompositionSeries X) : StrictMono s :=
   Finₓ.strict_mono_iff_lt_succ.2 fun i h => s.lt_succ ⟨i, Nat.lt_of_succ_lt_succₓ h⟩
 
 protected theorem injective (s : CompositionSeries X) : Function.Injective s :=
@@ -161,14 +166,14 @@ instance : HasMem X (CompositionSeries X) :=
 theorem mem_def {x : X} {s : CompositionSeries X} : x ∈ s ↔ x ∈ Set.Range s :=
   Iff.rfl
 
-theorem Total {s : CompositionSeries X} {x y : X} (hx : x ∈ s) (hy : y ∈ s) : x ≤ y ∨ y ≤ x := by
+theorem total {s : CompositionSeries X} {x y : X} (hx : x ∈ s) (hy : y ∈ s) : x ≤ y ∨ y ≤ x := by
   rcases Set.mem_range.1 hx with ⟨i, rfl⟩
   rcases Set.mem_range.1 hy with ⟨j, rfl⟩
   rw [s.strict_mono.le_iff_le, s.strict_mono.le_iff_le]
   exact le_totalₓ i j
 
 /-- The ordered `list X` of elements of a `composition_series X`. -/
-def to_list (s : CompositionSeries X) : List X :=
+def toList (s : CompositionSeries X) : List X :=
   List.ofFnₓ s
 
 /-- Two `composition_series` are equal if they are the same length and
@@ -189,7 +194,7 @@ theorem to_list_ne_nil (s : CompositionSeries X) : s.toList ≠ [] := by
   rw [← List.length_pos_iff_ne_nilₓ, length_to_list] <;> exact Nat.succ_posₓ _
 
 theorem to_list_injective : Function.Injective (@CompositionSeries.toList X _ _) :=
-  fun s₁ s₂ h : List.ofFnₓ s₁ = List.ofFnₓ s₂ => by
+  fun h : List.ofFnₓ s₁ = List.ofFnₓ s₂ => by
   have h₁ : s₁.length = s₂.length :=
     Nat.succ_injective ((List.length_of_fn s₁).symm.trans <| (congr_argₓ List.length h).trans <| List.length_of_fn s₂)
   have h₂ : ∀ i : Finₓ s₁.length.succ, s₁ i = s₂ (Finₓ.cast (congr_argₓ Nat.succ h₁) i) := by
@@ -229,7 +234,7 @@ theorem mem_to_list {s : CompositionSeries X} {x : X} : x ∈ s.toList ↔ x ∈
   rw [to_list, List.mem_of_fn, mem_def]
 
 /-- Make a `composition_series X` from the ordered list of its elements. -/
-def of_list (l : List X) (hl : l ≠ []) (hc : List.Chain' IsMaximal l) : CompositionSeries X where
+def ofList (l : List X) (hl : l ≠ []) (hc : List.Chain' IsMaximal l) : CompositionSeries X where
   length := l.length - 1
   series := fun i =>
     l.nthLe i
@@ -324,7 +329,7 @@ theorem forall_mem_eq_of_length_eq_zero {s : CompositionSeries X} (hs : s.length
 /-- Remove the largest element from a `composition_series`. If the series `s`
 has length zero, then `s.erase_top = s` -/
 @[simps]
-def erase_top (s : CompositionSeries X) : CompositionSeries X where
+def eraseTop (s : CompositionSeries X) : CompositionSeries X where
   length := s.length - 1
   series := fun i => s ⟨i, lt_of_lt_of_leₓ i.2 (Nat.succ_le_succₓ tsub_le_self)⟩
   step' := fun i => by
@@ -536,7 +541,7 @@ theorem snoc_erase_top_top {s : CompositionSeries X} (h : IsMaximal s.eraseTop.t
 /-- Two `composition_series X`, `s₁` and `s₂` are equivalent if there is a bijection
 `e : fin s₁.length ≃ fin s₂.length` such that for any `i`,
 `iso (s₁ i) (s₁ i.succ) (s₂ (e i), s₂ (e i.succ))` -/
-def equivalent (s₁ s₂ : CompositionSeries X) : Prop :=
+def Equivalent (s₁ s₂ : CompositionSeries X) : Prop :=
   ∃ f : Finₓ s₁.length ≃ Finₓ s₂.length,
     ∀ i : Finₓ s₁.length, Iso (s₁ i.cast_succ, s₁ i.succ) (s₂ (f i).cast_succ, s₂ (f i).succ)
 

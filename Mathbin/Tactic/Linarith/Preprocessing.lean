@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Robert Y. Lewis. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Robert Y. Lewis
+-/
 import Mathbin.Tactic.Linarith.Datatypes
 import Mathbin.Tactic.Zify
 import Mathbin.Tactic.CancelDenoms
@@ -29,7 +34,7 @@ namespace Linarith
 
 open Tactic
 
--- ././Mathport/Syntax/Translate/Basic.lean:169:40: warning: unsupported option eqn_compiler.max_steps
+-- ././Mathport/Syntax/Translate/Basic.lean:211:40: warning: unsupported option eqn_compiler.max_steps
 set_option eqn_compiler.max_steps 50000
 
 /-- If `prf` is a proof of `¬ e`, where `e` is a comparison,
@@ -158,11 +163,13 @@ To avoid adding the same nonnegativity facts many times, it is a global preproce
  -/
 unsafe def nat_to_int : global_preprocessor where
   Name := "move nats to ints"
-  transform := fun l => do
+  transform := fun l => -- we lock the tactic state here because a `simplify` call inside of
+  -- `zify_proof` corrupts the tactic state when run under `io.run_tactic`.
+  do
     let l ← lock_tactic_state <| l.mmap fun h => (infer_type h >>= guardb ∘ is_nat_prop) >> zify_proof [] h <|> return h
     let nonnegs ←
       l.mfoldl
-          (fun es : expr_set h => do
+          (fun h => do
             let (a, b) ← infer_type h >>= get_rel_sides
             return <| (es (get_nat_comps a)).insert_list (get_nat_comps b))
           mk_rb_set
@@ -234,7 +241,7 @@ unsafe def nlinarith_extras : global_preprocessor where
   transform := fun ls => do
     let s ← ls.mfoldr (fun h s' => infer_type h >>= find_squares s') mk_rb_set
     let new_es ←
-      (s.mfold ([] : List expr)) fun ⟨e, is_sq⟩ new_es =>
+      (s.mfold ([] : List expr)) fun new_es =>
           (do
               let p ← mk_app (if is_sq then `` sq_nonneg else `` mul_self_nonneg) [e]
               return <| p :: new_es) <|>

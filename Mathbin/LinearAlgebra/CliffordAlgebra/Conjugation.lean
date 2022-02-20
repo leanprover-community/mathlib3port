@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Eric Wieser. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Eric Wieser
+-/
 import Mathbin.LinearAlgebra.CliffordAlgebra.Basic
 import Mathbin.Algebra.Module.Opposites
 
@@ -91,6 +96,7 @@ theorem reverse_comp_reverse : reverse.comp reverse = (LinearMap.id : _ →ₗ[R
   ext m
   simp only [LinearMap.id_apply, LinearMap.comp_apply]
   induction m using CliffordAlgebra.induction
+  -- simp can close these goals, but is slow
   case h_grade0 =>
     rw [reverse.commutes, reverse.commutes]
   case h_grade1 =>

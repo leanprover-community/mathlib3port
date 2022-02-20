@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Bhavik Mehta. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Bhavik Mehta
+-/
 import Mathbin.Combinatorics.Composition
 import Mathbin.Data.Nat.Parity
 import Mathbin.Tactic.ApplyFun
@@ -44,7 +49,7 @@ namespace Nat
 
 /-- A partition of `n` is a multiset of positive integers summing to `n`. -/
 @[ext]
-structure partition (n : ℕ) where
+structure Partition (n : ℕ) where
   parts : Multiset ℕ
   parts_pos : ∀ {i}, i ∈ parts → 0 < i
   parts_sum : parts.Sum = n
@@ -53,7 +58,7 @@ structure partition (n : ℕ) where
 namespace Partition
 
 /-- A composition induces a partition (just convert the list to a multiset). -/
-def of_composition (n : ℕ) (c : Composition n) : Partition n where
+def ofComposition (n : ℕ) (c : Composition n) : Partition n where
   parts := c.blocks
   parts_pos := fun i hi => c.blocks_pos hi
   parts_sum := by
@@ -68,7 +73,9 @@ theorem of_composition_surj {n : ℕ} : Function.Surjective (ofComposition n) :=
 /-- Given a multiset which sums to `n`, construct a partition of `n` with the same multiset, but
 without the zeros.
 -/
-def of_sums (n : ℕ) (l : Multiset ℕ) (hl : l.Sum = n) : Partition n where
+-- The argument `n` is kept explicit here since it is useful in tactic mode proofs to generate the
+-- proof obligation `l.sum = n`.
+def ofSums (n : ℕ) (l : Multiset ℕ) (hl : l.Sum = n) : Partition n where
   parts := l.filter (· ≠ 0)
   parts_pos := fun i hi =>
     Nat.pos_of_ne_zeroₓ <| by
@@ -82,11 +89,11 @@ def of_sums (n : ℕ) (l : Multiset ℕ) (hl : l.Sum = n) : Partition n where
     simpa [lz, hl] using lt
 
 /-- A `multiset ℕ` induces a partition on its sum. -/
-def of_multiset (l : Multiset ℕ) : Partition l.Sum :=
+def ofMultiset (l : Multiset ℕ) : Partition l.Sum :=
   ofSums _ l rfl
 
 /-- The partition of exactly one part. -/
-def indiscrete_partition (n : ℕ) : Partition n :=
+def indiscretePartition (n : ℕ) : Partition n :=
   ofSums n {n} rfl
 
 instance {n : ℕ} : Inhabited (Partition n) :=
@@ -119,7 +126,7 @@ def distincts (n : ℕ) : Finset (Partition n) :=
   Finset.univ.filter fun c => c.parts.Nodup
 
 /-- The finset of those partitions in which every part is odd and used at most once. -/
-def odd_distincts (n : ℕ) : Finset (Partition n) :=
+def oddDistincts (n : ℕ) : Finset (Partition n) :=
   odds n ∩ distincts n
 
 end Partition

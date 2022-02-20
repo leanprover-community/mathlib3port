@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Simon Hudon. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Simon Hudon
+-/
 import Mathbin.Control.Random
 import Mathbin.Control.Uliftable
 
@@ -35,7 +40,7 @@ namespace SlimCheck
 It has a `nat` parameter so that the caller can decide on the
 size of the examples. -/
 @[reducible]
-def gen (α : Type u) :=
+def Gen (α : Type u) :=
   ReaderTₓ (Ulift ℕ) Rand α deriving Monadₓ, IsLawfulMonad
 
 variable (α : Type u)
@@ -44,7 +49,7 @@ local infixl:41 " .. " => Set.Icc
 
 /-- Execute a `gen` inside the `io` monad using `i` as the example
 size and with a fresh random number generator. -/
-def io.run_gen {α} (x : Gen α) (i : ℕ) : Io α :=
+def Io.runGen {α} (x : Gen α) (i : ℕ) : Io α :=
   Io.runRand (x.run ⟨i⟩)
 
 namespace Gen
@@ -52,7 +57,7 @@ namespace Gen
 section Rand
 
 /-- Lift `random.random` to the `gen` monad. -/
-def choose_any [Random α] : Gen α :=
+def chooseAny [Random α] : Gen α :=
   ⟨fun _ => Rand.random α⟩
 
 variable {α} [Preorderₓ α]
@@ -66,15 +71,15 @@ end Rand
 open Nat hiding choose
 
 /-- Generate a `nat` example between `x` and `y`. -/
-def choose_nat (x y : ℕ) (p : x ≤ y) : Gen (x .. y) :=
+def chooseNat (x y : ℕ) (p : x ≤ y) : Gen (x .. y) :=
   choose x y p
 
 /-- Generate a `nat` example between `x` and `y`. -/
-def choose_nat' (x y : ℕ) (p : x < y) : Gen (Set.Ico x y) :=
+def chooseNat' (x y : ℕ) (p : x < y) : Gen (Set.Ico x y) :=
   have : ∀ i, x < i → i ≤ y → i.pred < y := fun i h₀ h₁ =>
     show i.pred.succ ≤ y by
       rwa [succ_pred_eq_of_pos] <;> apply lt_of_le_of_ltₓ (Nat.zero_leₓ _) h₀
-  (Subtype.map pred fun i h : x + 1 ≤ i ∧ i ≤ y => ⟨le_pred_of_lt h.1, this _ h.1 h.2⟩) <$> choose (x + 1) y p
+  (Subtype.map pred fun h : x + 1 ≤ i ∧ i ≤ y => ⟨le_pred_of_lt h.1, this _ h.1 h.2⟩) <$> choose (x + 1) y p
 
 open Nat
 
@@ -99,13 +104,13 @@ def resize (f : ℕ → ℕ) (cmd : Gen α) : Gen α :=
   ⟨fun ⟨sz⟩ => ReaderTₓ.run cmd ⟨f sz⟩⟩
 
 /-- Create `n` examples using `cmd`. -/
-def vector_of : ∀ n : ℕ cmd : Gen α, Gen (Vector α n)
+def vectorOf : ∀ n : ℕ cmd : Gen α, Gen (Vector α n)
   | 0, _ => return Vector.nil
   | succ n, cmd => Vector.cons <$> cmd <*> vector_of n cmd
 
 /-- Create a list of examples using `cmd`. The size is controlled
 by the size parameter of `gen`. -/
-def list_of (cmd : Gen α) : Gen (List α) :=
+def listOf (cmd : Gen α) : Gen (List α) :=
   sized fun sz => do
     do
       let ⟨n⟩ ←
@@ -119,7 +124,7 @@ def list_of (cmd : Gen α) : Gen (List α) :=
 open Ulift
 
 /-- Given a list of example generators, choose one to create an example. -/
-def one_of (xs : List (Gen α)) (pos : 0 < xs.length) : Gen α := do
+def oneOf (xs : List (Gen α)) (pos : 0 < xs.length) : Gen α := do
   let ⟨⟨n, h, h'⟩⟩ ← Uliftable.up <| chooseNat' 0 xs.length Pos
   List.nthLe xs n h'
 
@@ -135,7 +140,7 @@ If we consider `freq_aux [(1, gena), (3, genb), (5, genc)] 4 _`, we choose a gen
 the interval 1-9 into 1-1, 2-4, 5-9 so that the width of each interval corresponds to one of the
 number in the list of generators. Then, we check which interval 4 falls into: it selects `genb`.
 -/
-def freq_aux : ∀ xs : List (ℕ+ × Gen α) i, i < (xs.map (Subtype.val ∘ Prod.fst)).Sum → Gen α
+def freqAux : ∀ xs : List (ℕ+ × Gen α) i, i < (xs.map (Subtype.val ∘ Prod.fst)).Sum → Gen α
   | [], i, h => False.elim (Nat.not_lt_zeroₓ _ h)
   | (i, x) :: xs, j, h =>
     if h' : j < i then x
@@ -166,7 +171,7 @@ def freq (xs : List (ℕ+ × Gen α)) (pos : 0 < xs.length) : Gen α :=
         rcases i with ⟨i, h₀, h₁⟩ <;> rwa [le_tsub_iff_right] at h₁ <;> exact ha)
 
 /-- Generate a random permutation of a given list. -/
-def permutation_of {α : Type u} : ∀ xs : List α, Gen (Subtype <| List.Perm xs)
+def permutationOf {α : Type u} : ∀ xs : List α, Gen (Subtype <| List.Perm xs)
   | [] => pure ⟨[], List.Perm.nil⟩
   | x :: xs => do
     let ⟨xs', h⟩ ← permutation_of xs

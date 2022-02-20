@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Yury Kudryashov. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yury Kudryashov
+-/
 import Mathbin.Analysis.BoxIntegral.Partition.Basic
 
 /-!
@@ -49,7 +54,7 @@ variable {I : Box ι} {i : ι} {x : ℝ} {y : ι → ℝ}
 `I` into two boxes. `box_integral.box.split_lower I i x` is the box `I ∩ {y | y i ≤ x}`
 (if it is nonempty). As usual, we represent a box that may be empty as
 `with_bot (box_integral.box ι)`. -/
-def split_lower (I : Box ι) (i : ι) (x : ℝ) : WithBot (Box ι) :=
+def splitLower (I : Box ι) (i : ι) (x : ℝ) : WithBot (Box ι) :=
   mk' I.lower (update I.upper i (min x (I.upper i)))
 
 @[simp]
@@ -85,7 +90,7 @@ theorem split_lower_def [DecidableEq ι] {i x} (h : x ∈ Ioo (I.lower i) (I.upp
 `I` into two boxes. `box_integral.box.split_upper I i x` is the box `I ∩ {y | x < y i}`
 (if it is nonempty). As usual, we represent a box that may be empty as
 `with_bot (box_integral.box ι)`. -/
-def split_upper (I : Box ι) (i : ι) (x : ℝ) : WithBot (Box ι) :=
+def splitUpper (I : Box ι) (i : ι) (x : ℝ) : WithBot (Box ι) :=
   mk' (update I.lower i (max x (I.lower i))) I.upper
 
 @[simp]
@@ -121,7 +126,7 @@ theorem disjoint_split_lower_split_upper (I : Box ι) (i : ι) (x : ℝ) : Disjo
   by
   rw [← disjoint_with_bot_coe, coe_split_lower, coe_split_upper]
   refine' (Disjoint.inf_left' _ _).inf_right' _
-  exact fun y hy : y i ≤ x ∧ x < y i => not_lt_of_le hy.1 hy.2
+  exact fun hy : y i ≤ x ∧ x < y i => not_lt_of_le hy.1 hy.2
 
 theorem split_lower_ne_split_upper (I : Box ι) (i : ι) (x : ℝ) : I.splitLower i x ≠ I.splitUpper i x := by
   cases le_or_ltₓ x (I.lower i)
@@ -208,7 +213,7 @@ theorem inf_split (π : Prepartition I) (i : ι) (x : ℝ) : π⊓split I i x = 
 
 /-- Split a box along many hyperplanes `{y | y i = x}`; each hyperplane is given by the pair
 `(i x)`. -/
-def split_many (I : Box ι) (s : Finset (ι × ℝ)) : Prepartition I :=
+def splitMany (I : Box ι) (s : Finset (ι × ℝ)) : Prepartition I :=
   s.inf fun p => split I p.1 p.2
 
 @[simp]
@@ -301,12 +306,12 @@ theorem eventually_split_many_inf_eq_filter (π : Prepartition I) :
 
 theorem exists_split_many_inf_eq_filter_of_finite (s : Set (Prepartition I)) (hs : s.Finite) :
     ∃ t : Finset (ι × ℝ), ∀, ∀ π ∈ s, ∀, π⊓splitMany I t = (splitMany I t).filter fun J => ↑J ⊆ π.Union :=
-  have := fun π hπ : π ∈ s => eventually_split_many_inf_eq_filter π
+  have := fun hπ : π ∈ s => eventually_split_many_inf_eq_filter π
   (hs.eventually_all.2 this).exists
 
 /-- If `π` is a partition of `I`, then there exists a finite set `s` of hyperplanes such that
 `split_many I s ≤ π`. -/
-theorem is_partition.exists_split_many_le {I : Box ι} {π : Prepartition I} (h : IsPartition π) :
+theorem IsPartition.exists_split_many_le {I : Box ι} {π : Prepartition I} (h : IsPartition π) :
     ∃ s, splitMany I s ≤ π :=
   (eventually_split_many_inf_eq_filter π).exists.imp fun s hs => by
     rwa [h.Union_eq, filter_of_true, inf_eq_right] at hs
@@ -335,7 +340,7 @@ theorem compl_congr {π₁ π₂ : Prepartition I} (h : π₁.Union = π₂.Unio
   congr 1
   rw [h]
 
-theorem is_partition.compl_eq_bot {π : Prepartition I} (h : IsPartition π) : π.Compl = ⊥ := by
+theorem IsPartition.compl_eq_bot {π : Prepartition I} (h : IsPartition π) : π.Compl = ⊥ := by
   rw [← Union_eq_empty, Union_compl, h.Union_eq, diff_self]
 
 @[simp]

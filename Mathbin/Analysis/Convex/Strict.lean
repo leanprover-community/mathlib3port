@@ -1,5 +1,9 @@
+/-
+Copyright (c) 2021 Yaël Dillies. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yaël Dillies
+-/
 import Mathbin.Analysis.Convex.Basic
-import Mathbin.Topology.Algebra.MulAction
 import Mathbin.Topology.Algebra.Order.Basic
 
 /-!
@@ -231,11 +235,11 @@ end OrderedSemiring
 
 section OrderedCommSemiring
 
-variable [OrderedCommSemiring 𝕜] [TopologicalSpace 𝕜] [TopologicalSpace E]
+variable [OrderedCommSemiring 𝕜] [TopologicalSpace E]
 
 section AddCommGroupₓ
 
-variable [AddCommGroupₓ E] [Module 𝕜 E] [NoZeroSmulDivisors 𝕜 E] [HasContinuousSmul 𝕜 E] {s : Set E}
+variable [AddCommGroupₓ E] [Module 𝕜 E] [NoZeroSmulDivisors 𝕜 E] [HasContinuousConstSmul 𝕜 E] {s : Set E}
 
 theorem StrictConvex.preimage_smul (hs : StrictConvex 𝕜 s) (c : 𝕜) : StrictConvex 𝕜 ((fun z => c • z) ⁻¹' s) := by
   classical
@@ -249,7 +253,7 @@ theorem StrictConvex.preimage_smul (hs : StrictConvex 𝕜 s) (c : 𝕜) : Stric
     
   refine' hs.linear_preimage (LinearMap.lsmul _ _ c) _ (smul_right_injective E hc)
   unfold LinearMap.lsmul LinearMap.mk₂ LinearMap.mk₂' LinearMap.mk₂'ₛₗ
-  exact continuous_const.smul continuous_id
+  exact continuous_const_smul _
 
 end AddCommGroupₓ
 
@@ -330,16 +334,15 @@ section AddCommGroupₓ
 
 variable [AddCommGroupₓ E] [AddCommGroupₓ F] [Module 𝕜 E] [Module 𝕜 F] {s : Set E} {x : E}
 
-theorem StrictConvex.smul [TopologicalSpace 𝕜] [HasContinuousSmul 𝕜 E] (hs : StrictConvex 𝕜 s) (c : 𝕜) :
-    StrictConvex 𝕜 (c • s) := by
+theorem StrictConvex.smul [HasContinuousConstSmul 𝕜 E] (hs : StrictConvex 𝕜 s) (c : 𝕜) : StrictConvex 𝕜 (c • s) := by
   obtain rfl | hc := eq_or_ne c 0
   · exact (subsingleton_zero_smul_set _).StrictConvex
     
   · exact hs.linear_image (LinearMap.lsmul _ _ c) (is_open_map_smul₀ hc)
     
 
-theorem StrictConvex.affinity [TopologicalSpace 𝕜] [HasContinuousAdd E] [HasContinuousSmul 𝕜 E] (hs : StrictConvex 𝕜 s)
-    (z : E) (c : 𝕜) : StrictConvex 𝕜 ((fun x => z + c • x) '' s) := by
+theorem StrictConvex.affinity [HasContinuousAdd E] [HasContinuousConstSmul 𝕜 E] (hs : StrictConvex 𝕜 s) (z : E)
+    (c : 𝕜) : StrictConvex 𝕜 ((fun x => z + c • x) '' s) := by
   have h := (hs.smul c).add_left z
   rwa [← image_smul, image_image] at h
 

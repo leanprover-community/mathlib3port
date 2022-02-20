@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Johan Commelin. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johan Commelin
+-/
 import Mathbin.LinearAlgebra.FiniteDimensional
 import Mathbin.LinearAlgebra.Basic
 import Mathbin.RingTheory.MvPolynomial.Basic
@@ -67,13 +72,13 @@ theorem eval_indicator_apply_eq_one (a : σ → K) : eval a (indicator a) = 1 :=
 
 theorem eval_indicator_apply_eq_zero (a b : σ → K) (h : a ≠ b) : eval a (indicator b) = 0 := by
   have : ∃ i, a i ≠ b i := by
-    rwa [· ≠ ·, Function.funext_iffₓ, not_forall] at h
+    rwa [(· ≠ ·), Function.funext_iffₓ, not_forall] at h
   rcases this with ⟨i, hi⟩
   simp only [indicator, (eval a).map_prod, RingHom.map_sub, (eval a).map_one, (eval a).map_pow, eval_X, eval_C,
     sub_self, Finset.prod_eq_zero_iff]
   refine' ⟨i, Finset.mem_univ _, _⟩
   rw [FiniteField.pow_card_sub_one_eq_one, sub_self]
-  rwa [· ≠ ·, sub_eq_zero]
+  rwa [(· ≠ ·), sub_eq_zero]
 
 theorem degrees_indicator (c : σ → K) : degrees (indicator c) ≤ ∑ s : σ, (Fintype.card K - 1) • {s} := by
   rw [indicator]
@@ -154,11 +159,11 @@ universe u
 
 variable (σ : Type u) (K : Type u) [Fintype σ] [Field K] [Fintype K]
 
--- ././Mathport/Syntax/Translate/Basic.lean:859:9: unsupported derive handler module K
+-- ././Mathport/Syntax/Translate/Basic.lean:981:9: unsupported derive handler module K
 def R : Type u :=
   restrictDegree σ K (Fintype.card K - 1)deriving AddCommGroupₓ, [anonymous], Inhabited
 
-noncomputable instance decidable_restrict_degree (m : ℕ) : DecidablePred (· ∈ { n : σ →₀ ℕ | ∀ i, n i ≤ m }) := by
+noncomputable instance decidableRestrictDegree (m : ℕ) : DecidablePred (· ∈ { n : σ →₀ ℕ | ∀ i, n i ≤ m }) := by
   simp only [Set.mem_set_of_eq] <;> infer_instance
 
 theorem dim_R : Module.rank K (R σ K) = Fintype.card (σ → K) :=

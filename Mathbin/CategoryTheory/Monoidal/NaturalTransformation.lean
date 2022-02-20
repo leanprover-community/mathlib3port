@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison
+-/
 import Mathbin.CategoryTheory.Monoidal.Functor
 import Mathbin.CategoryTheory.FullSubcategory
 
@@ -33,7 +38,7 @@ additionally satisfying:
 `F.μ X Y ≫ app (X ⊗ Y) = (app X ⊗ app Y) ≫ G.μ X Y`
 -/
 @[ext]
-structure monoidal_nat_trans (F G : LaxMonoidalFunctor C D) extends NatTrans F.toFunctor G.toFunctor where
+structure MonoidalNatTrans (F G : LaxMonoidalFunctor C D) extends NatTrans F.toFunctor G.toFunctor where
   unit' : F.ε ≫ app (𝟙_ C) = G.ε := by
     run_tac
       obviously
@@ -67,7 +72,7 @@ def vcomp {F G H : LaxMonoidalFunctor C D} (α : MonoidalNatTrans F G) (β : Mon
     MonoidalNatTrans F H :=
   { NatTrans.vcomp α.toNatTrans β.toNatTrans with }
 
-instance category_lax_monoidal_functor : Category (LaxMonoidalFunctor C D) where
+instance categoryLaxMonoidalFunctor : Category (LaxMonoidalFunctor C D) where
   Hom := MonoidalNatTrans
   id := id
   comp := fun F G H α β => vcomp α β
@@ -77,7 +82,7 @@ theorem comp_to_nat_trans_lax {F G H : LaxMonoidalFunctor C D} {α : F ⟶ G} {�
     (α ≫ β).toNatTrans = @CategoryStruct.comp (C ⥤ D) _ _ _ _ α.toNatTrans β.toNatTrans :=
   rfl
 
-instance category_monoidal_functor : Category (MonoidalFunctor C D) :=
+instance categoryMonoidalFunctor : Category (MonoidalFunctor C D) :=
   InducedCategory.category MonoidalFunctor.toLaxMonoidalFunctor
 
 @[simp]
@@ -111,7 +116,7 @@ variable {F G : LaxMonoidalFunctor C D}
 /-- Construct a monoidal natural isomorphism from object level isomorphisms,
 and the monoidal naturality in the forward direction.
 -/
-def of_components (app : ∀ X : C, F.obj X ≅ G.obj X)
+def ofComponents (app : ∀ X : C, F.obj X ≅ G.obj X)
     (naturality : ∀ {X Y : C} f : X ⟶ Y, F.map f ≫ (app Y).Hom = (app X).Hom ≫ G.map f)
     (unit : F.ε ≫ (app (𝟙_ C)).Hom = G.ε)
     (tensor : ∀ X Y, F.μ X Y ≫ (app (X ⊗ Y)).Hom = ((app X).Hom ⊗ (app Y).Hom) ≫ G.μ X Y) : F ≅ G where
@@ -126,12 +131,12 @@ def of_components (app : ∀ X : C, F.obj X ≅ G.obj X)
         rw [iso.comp_inv_eq, assoc, tensor, ← tensor_comp_assoc, iso.inv_hom_id, iso.inv_hom_id, tensor_id, id_comp] }
 
 @[simp]
-theorem of_components.hom_app (app : ∀ X : C, F.obj X ≅ G.obj X) naturality unit tensor X :
+theorem ofComponents.hom_app (app : ∀ X : C, F.obj X ≅ G.obj X) naturality unit tensor X :
     (ofComponents app naturality Unit tensor).Hom.app X = (app X).Hom :=
   rfl
 
 @[simp]
-theorem of_components.inv_app (app : ∀ X : C, F.obj X ≅ G.obj X) naturality unit tensor X :
+theorem ofComponents.inv_app (app : ∀ X : C, F.obj X ≅ G.obj X) naturality unit tensor X :
     (ofComponents app naturality Unit tensor).inv.app X = (app X).inv := by
   simp [of_components]
 

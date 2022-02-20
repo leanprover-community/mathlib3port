@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Yury Kudryashov. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yury Kudryashov
+-/
 import Mathbin.Analysis.InnerProductSpace.Calculus
 import Mathbin.Analysis.InnerProductSpace.PiL2
 
@@ -35,11 +40,11 @@ def dist (x y : E) : ℝ :=
   dist (toEuclidean x) (toEuclidean y)
 
 /-- Closed ball w.r.t. the euclidean distance. -/
-def closed_ball (x : E) (r : ℝ) : Set E :=
+def ClosedBall (x : E) (r : ℝ) : Set E :=
   { y | dist y x ≤ r }
 
 /-- Open ball w.r.t. the euclidean distance. -/
-def ball (x : E) (r : ℝ) : Set E :=
+def Ball (x : E) (r : ℝ) : Set E :=
   { y | dist y x < r }
 
 theorem ball_eq_preimage (x : E) (r : ℝ) : Ball x r = toEuclidean ⁻¹' Metric.Ball (toEuclidean x) r :=
@@ -49,7 +54,7 @@ theorem closed_ball_eq_preimage (x : E) (r : ℝ) :
     ClosedBall x r = toEuclidean ⁻¹' Metric.ClosedBall (toEuclidean x) r :=
   rfl
 
-theorem ball_subset_closed_ball {x : E} {r : ℝ} : Ball x r ⊆ ClosedBall x r := fun y hy : _ < _ => le_of_ltₓ hy
+theorem ball_subset_closed_ball {x : E} {r : ℝ} : Ball x r ⊆ ClosedBall x r := fun hy : _ < _ => le_of_ltₓ hy
 
 theorem is_open_ball {x : E} {r : ℝ} : IsOpen (Ball x r) :=
   Metric.is_open_ball.Preimage toEuclidean.Continuous

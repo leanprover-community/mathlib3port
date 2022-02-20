@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Yaël Dillies, Bhavik Mehta. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yaël Dillies, Bhavik Mehta
+-/
 import Mathbin.Algebra.BigOperators.Order
 import Mathbin.Data.Nat.Basic
 
@@ -23,7 +28,7 @@ variable {α β : Type _}
 namespace Set
 
 /-- A set is equitable if no element value is more than one bigger than another. -/
-def equitable_on [LE β] [Add β] [One β] (s : Set α) (f : α → β) : Prop :=
+def EquitableOn [LE β] [Add β] [One β] (s : Set α) (f : α → β) : Prop :=
   ∀ ⦃a₁ a₂⦄, a₁ ∈ s → a₂ ∈ s → f a₁ ≤ f a₂ + 1
 
 @[simp]
@@ -32,7 +37,7 @@ theorem equitable_on_empty [LE β] [Add β] [One β] (f : α → β) : Equitable
 
 theorem equitable_on_iff_exists_le_le_add_one {s : Set α} {f : α → ℕ} :
     s.EquitableOn f ↔ ∃ b, ∀, ∀ a ∈ s, ∀, b ≤ f a ∧ f a ≤ b + 1 := by
-  refine' ⟨_, fun ⟨b, hb⟩ x y hx hy => (hb x hx).2.trans (add_le_add_right (hb y hy).1 _)⟩
+  refine' ⟨_, fun x y hx hy => (hb x hx).2.trans (add_le_add_right (hb y hy).1 _)⟩
   obtain rfl | ⟨x, hx⟩ := s.eq_empty_or_nonempty
   · simp
     
@@ -58,7 +63,7 @@ section OrderedSemiring
 
 variable [OrderedSemiring β]
 
-theorem subsingleton.equitable_on {s : Set α} (hs : s.Subsingleton) (f : α → β) : s.EquitableOn f := fun i j hi hj => by
+theorem Subsingleton.equitable_on {s : Set α} (hs : s.Subsingleton) (f : α → β) : s.EquitableOn f := fun i j hi hj => by
   rw [hs hi hj]
   exact le_add_of_nonneg_right zero_le_one
 

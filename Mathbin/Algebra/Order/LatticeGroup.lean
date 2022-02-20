@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Christopher Hoskin. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Christopher Hoskin
+-/
 import Mathbin.Algebra.GroupPower.Basic
 import Mathbin.Algebra.Order.Group
 import Mathbin.Tactic.NthRewrite.Default
@@ -53,8 +58,12 @@ lattice, ordered, group
 -/
 
 
+-- Needed for squares
+-- Needed for squares
 universe u
 
+-- A linearly ordered additive commutative group is a lattice ordered commutative group
+-- see Note [lower instance priority]
 @[to_additive]
 instance (priority := 100) LinearOrderedCommGroup.to_covariant_class (α : Type u) [LinearOrderedCommGroup α] :
     CovariantClass α α (· * ·) (· ≤ ·) where
@@ -62,6 +71,8 @@ instance (priority := 100) LinearOrderedCommGroup.to_covariant_class (α : Type 
 
 variable {α : Type u} [Lattice α] [CommGroupₓ α]
 
+-- Special case of Bourbaki A.VI.9 (1)
+-- c + (a ⊔ b) = (c + a) ⊔ (c + b)
 @[to_additive]
 theorem mul_sup [CovariantClass α α (· * ·) (· ≤ ·)] (a b c : α) : c * (a⊔b) = c * a⊔c * b := by
   refine'
@@ -91,6 +102,8 @@ theorem mul_inf [CovariantClass α α (· * ·) (· ≤ ·)] (a b c : α) : c * 
       (by
         simp )
 
+-- Special case of Bourbaki A.VI.9 (2)
+-- -(a ⊔ b)=(-a) ⊓ (-b)
 @[to_additive]
 theorem inv_sup_eq_inv_inf_inv [CovariantClass α α (· * ·) (· ≤ ·)] (a b : α) : (a⊔b)⁻¹ = a⁻¹⊓b⁻¹ := by
   apply le_antisymmₓ
@@ -112,10 +125,13 @@ theorem inv_sup_eq_inv_inf_inv [CovariantClass α α (· * ·) (· ≤ ·)] (a b
       
     
 
+-- -(a ⊓ b) = -a ⊔ -b
 @[to_additive]
 theorem inv_inf_eq_sup_inv [CovariantClass α α (· * ·) (· ≤ ·)] (a b : α) : (a⊓b)⁻¹ = a⁻¹⊔b⁻¹ := by
   rw [← inv_invₓ (a⁻¹⊔b⁻¹), inv_sup_eq_inv_inf_inv a⁻¹ b⁻¹, inv_invₓ, inv_invₓ]
 
+-- Bourbaki A.VI.10 Prop 7
+-- a ⊓ b + (a ⊔ b) = a + b
 @[to_additive]
 theorem inf_mul_sup [CovariantClass α α (· * ·) (· ≤ ·)] (a b : α) : (a⊓b) * (a⊔b) = a * b :=
   calc
@@ -133,9 +149,10 @@ namespace LatticeOrderedCommGroup
 /-- Let `α` be a lattice ordered commutative group with identity `1`. For an element `a` of type `α`,
 the element `a ⊔ 1` is said to be the *positive component* of `a`, denoted `a⁺`.
 -/
+-- see Note [lower instance priority]
 @[to_additive
       "\nLet `α` be a lattice ordered commutative group with identity `0`. For an element `a` of type `α`,\nthe element `a ⊔ 0` is said to be the *positive component* of `a`, denoted `a⁺`.\n"]
-instance (priority := 100) has_one_lattice_has_pos_part : HasPosPart α :=
+instance (priority := 100) hasOneLatticeHasPosPart : HasPosPart α :=
   ⟨fun a => a⊔1⟩
 
 @[to_additive pos_part_def]
@@ -145,9 +162,10 @@ theorem m_pos_part_def (a : α) : a⁺ = a⊔1 :=
 /-- Let `α` be a lattice ordered commutative group with identity `1`. For an element `a` of type `α`,
 the element `(-a) ⊔ 1` is said to be the *negative component* of `a`, denoted `a⁻`.
 -/
+-- see Note [lower instance priority]
 @[to_additive
       "\nLet `α` be a lattice ordered commutative group with identity `0`. For an element `a` of type `α`,\nthe element `(-a) ⊔ 0` is said to be the *negative component* of `a`, denoted `a⁻`.\n"]
-instance (priority := 100) has_one_lattice_has_neg_part : HasNegPart α :=
+instance (priority := 100) hasOneLatticeHasNegPart : HasNegPart α :=
   ⟨fun a => a⁻¹⊔1⟩
 
 @[to_additive neg_part_def]
@@ -162,6 +180,7 @@ theorem pos_one : (1 : α)⁺ = 1 :=
 theorem neg_one : (1 : α)⁻ = 1 := by
   rw [m_neg_part_def, one_inv, sup_idem]
 
+-- a⁻ = -(a ⊓ 0)
 @[to_additive]
 theorem neg_eq_inv_inf_one [CovariantClass α α (· * ·) (· ≤ ·)] (a : α) : a⁻ = (a⊓1)⁻¹ := by
   rw [m_neg_part_def, ← inv_inj, inv_sup_eq_inv_inf_inv, inv_invₓ, inv_invₓ, one_inv]
@@ -170,23 +189,28 @@ theorem neg_eq_inv_inf_one [CovariantClass α α (· * ·) (· ≤ ·)] (a : α)
 theorem le_mabs (a : α) : a ≤ abs a :=
   le_sup_left
 
+-- -a ≤ |a|
 @[to_additive]
 theorem inv_le_abs (a : α) : a⁻¹ ≤ abs a :=
   le_sup_right
 
+-- 0 ≤ a⁺
 @[to_additive pos_nonneg]
 theorem one_le_pos (a : α) : 1 ≤ a⁺ :=
   le_sup_right
 
+-- 0 ≤ a⁻
 @[to_additive neg_nonneg]
 theorem one_le_neg (a : α) : 1 ≤ a⁻ :=
   le_sup_right
 
+-- pos_nonpos_iff
 @[to_additive]
 theorem pos_le_one_iff {a : α} : a⁺ ≤ 1 ↔ a ≤ 1 := by
   rw [m_pos_part_def, sup_le_iff]
   simp
 
+-- neg_nonpos_iff
 @[to_additive]
 theorem neg_le_one_iff {a : α} : a⁻ ≤ 1 ↔ a⁻¹ ≤ 1 := by
   rw [m_neg_part_def, sup_le_iff]
@@ -214,18 +238,24 @@ theorem neg_eq_one_iff [CovariantClass α α Mul.mul LE.le] {a : α} : a⁻ = 1 
 theorem m_le_pos (a : α) : a ≤ a⁺ :=
   le_sup_left
 
+-- -a ≤ a⁻
 @[to_additive]
 theorem inv_le_neg (a : α) : a⁻¹ ≤ a⁻ :=
   le_sup_left
 
+-- Bourbaki A.VI.12
+--  a⁻ = (-a)⁺
 @[to_additive]
 theorem neg_eq_pos_inv (a : α) : a⁻ = a⁻¹⁺ :=
   rfl
 
+-- a⁺ = (-a)⁻
 @[to_additive]
 theorem pos_eq_neg_inv (a : α) : a⁺ = a⁻¹⁻ := by
   simp [neg_eq_pos_inv]
 
+-- We use this in Bourbaki A.VI.12  Prop 9 a)
+-- c + (a ⊓ b) = (c + a) ⊓ (c + b)
 @[to_additive]
 theorem mul_inf_eq_mul_inf_mul [CovariantClass α α (· * ·) (· ≤ ·)] (a b c : α) : c * (a⊓b) = c * a⊓c * b := by
   refine'
@@ -236,6 +266,8 @@ theorem mul_inf_eq_mul_inf_mul [CovariantClass α α (· * ·) (· ≤ ·)] (a b
   rw [← mul_le_mul_iff_left c⁻¹, ← mul_assoc, inv_mul_selfₓ, one_mulₓ, le_inf_iff]
   simp
 
+-- Bourbaki A.VI.12  Prop 9 a)
+-- a = a⁺ - a⁻
 @[simp, to_additive]
 theorem pos_div_neg [CovariantClass α α (· * ·) (· ≤ ·)] (a : α) : a⁺ / a⁻ = a := by
   symm
@@ -243,11 +275,15 @@ theorem pos_div_neg [CovariantClass α α (· * ·) (· ≤ ·)] (a : α) : a⁺
   apply eq_mul_inv_of_mul_eq
   rw [m_neg_part_def, mul_sup, mul_oneₓ, mul_right_invₓ, sup_comm, m_pos_part_def]
 
+-- Bourbaki A.VI.12  Prop 9 a)
+-- a⁺ ⊓ a⁻ = 0 (`a⁺` and `a⁻` are co-prime, and, since they are positive, disjoint)
 @[to_additive]
 theorem pos_inf_neg_eq_one [CovariantClass α α (· * ·) (· ≤ ·)] (a : α) : a⁺⊓a⁻ = 1 := by
   rw [← mul_right_injₓ (a⁻)⁻¹, mul_inf_eq_mul_inf_mul, mul_oneₓ, mul_left_invₓ, mul_comm, ← div_eq_mul_inv, pos_div_neg,
     neg_eq_inv_inf_one, inv_invₓ]
 
+-- Bourbaki A.VI.12 (with a and b swapped)
+-- a⊔b = b + (a - b)⁺
 @[to_additive]
 theorem sup_eq_mul_pos_div [CovariantClass α α (· * ·) (· ≤ ·)] (a b : α) : a⊔b = b * (a / b)⁺ :=
   calc
@@ -257,6 +293,8 @@ theorem sup_eq_mul_pos_div [CovariantClass α α (· * ·) (· ≤ ·)] (a b : �
       rw [← mul_sup (a / b) 1 b]
     
 
+-- Bourbaki A.VI.12 (with a and b swapped)
+-- a⊓b = a - (a - b)⁺
 @[to_additive]
 theorem inf_eq_div_pos_div [CovariantClass α α (· * ·) (· ≤ ·)] (a b : α) : a⊓b = a / (a / b)⁺ :=
   calc
@@ -276,6 +314,7 @@ theorem inf_eq_div_pos_div [CovariantClass α α (· * ·) (· ≤ ·)] (a b : �
       rw [← inv_sup_eq_inv_inf_inv, ← div_eq_mul_inv]
     
 
+-- Bourbaki A.VI.12 Prop 9 c)
 @[to_additive le_iff_pos_le_neg_ge]
 theorem m_le_iff_pos_le_neg_ge [CovariantClass α α (· * ·) (· ≤ ·)] (a b : α) : a ≤ b ↔ a⁺ ≤ b⁺ ∧ b⁻ ≤ a⁻ := by
   constructor <;> intro h
@@ -317,6 +356,8 @@ theorem one_le_abs [CovariantClass α α (· * ·) (· ≤ ·)] (a : α) : 1 ≤
   rw [← m_pos_abs]
   exact one_le_pos _
 
+-- The proof from Bourbaki A.VI.12 Prop 9 d)
+-- |a| = a⁺ - a⁻
 @[to_additive]
 theorem pos_mul_neg [CovariantClass α α (· * ·) (· ≤ ·)] (a : α) : abs a = a⁺ * a⁻ := by
   refine' le_antisymmₓ _ _
@@ -337,6 +378,7 @@ theorem pos_mul_neg [CovariantClass α α (· * ·) (· ≤ ·)] (a : α) : abs 
       
     
 
+-- a ⊔ b - (a ⊓ b) = |b - a|
 @[to_additive]
 theorem sup_div_inf_eq_abs_div [CovariantClass α α (· * ·) (· ≤ ·)] (a b : α) : (a⊔b) / (a⊓b) = abs (b / a) := by
   rw [sup_eq_mul_pos_div, inf_comm, inf_eq_div_pos_div, div_eq_mul_inv]
@@ -345,11 +387,13 @@ theorem sup_div_inf_eq_abs_div [CovariantClass α α (· * ·) (· ≤ ·)] (a b
   nth_rw 1[div_eq_mul_inv]
   rw [mul_inv_rev, ← div_eq_mul_inv, inv_invₓ, ← pos_mul_neg]
 
+-- 2•(a ⊔ b) = a + b + |b - a|
 @[to_additive two_sup_eq_add_add_abs_sub]
 theorem sup_sq_eq_mul_mul_abs_div [CovariantClass α α (· * ·) (· ≤ ·)] (a b : α) : (a⊔b) ^ 2 = a * b * abs (b / a) := by
   rw [← inf_mul_sup a b, ← sup_div_inf_eq_abs_div, div_eq_mul_inv, ← mul_assoc, mul_comm, mul_assoc, ← pow_two,
     inv_mul_cancel_leftₓ]
 
+-- 2•(a ⊓ b) = a + b - |b - a|
 @[to_additive two_inf_eq_add_sub_abs_sub]
 theorem inf_sq_eq_mul_div_abs_div [CovariantClass α α (· * ·) (· ≤ ·)] (a b : α) : (a⊓b) ^ 2 = a * b / abs (b / a) := by
   rw [← inf_mul_sup a b, ← sup_div_inf_eq_abs_div, div_eq_mul_inv, div_eq_mul_inv, mul_inv_rev, inv_invₓ, mul_assoc,
@@ -358,7 +402,7 @@ theorem inf_sq_eq_mul_div_abs_div [CovariantClass α α (· * ·) (· ≤ ·)] (
 /-- Every lattice ordered commutative group is a distributive lattice
 -/
 @[to_additive "Every lattice ordered commutative additive group is a distributive lattice"]
-def lattice_ordered_comm_group_to_distrib_lattice (α : Type u) [s : Lattice α] [CommGroupₓ α]
+def latticeOrderedCommGroupToDistribLattice (α : Type u) [s : Lattice α] [CommGroupₓ α]
     [CovariantClass α α (· * ·) (· ≤ ·)] : DistribLattice α :=
   { s with
     le_sup_inf := by
@@ -382,6 +426,9 @@ def lattice_ordered_comm_group_to_distrib_lattice (α : Type u) [s : Lattice α]
           
          }
 
+-- See, e.g. Zaanen, Lectures on Riesz Spaces
+-- 3rd lecture
+-- |a ⊔ c - (b ⊔ c)| + |a ⊓ c-b ⊓ c| = |a - b|
 @[to_additive]
 theorem abs_div_sup_mul_abs_div_inf [CovariantClass α α (· * ·) (· ≤ ·)] (a b c : α) :
     abs ((a⊔c) / (b⊔c)) * abs ((a⊓c) / (b⊓c)) = abs (a / b) := by
@@ -402,11 +449,14 @@ theorem abs_div_sup_mul_abs_div_inf [CovariantClass α α (· * ·) (· ≤ ·)]
 /-- Let `α` be a lattice ordered commutative group and let `a` be a positive element in `α`. Then `a` is
 equal to its positive component `a⁺`.
 -/
+-- pos_of_nonneg
 @[to_additive]
 theorem pos_of_one_le (a : α) (h : 1 ≤ a) : a⁺ = a := by
   rw [m_pos_part_def]
   exact sup_of_le_left h
 
+-- 0 ≤ a implies a⁺ = a
+-- pos_of_nonpos
 @[to_additive]
 theorem pos_of_le_one (a : α) (h : a ≤ 1) : a⁺ = 1 :=
   pos_eq_one_iff.mpr h
@@ -416,20 +466,24 @@ theorem neg_of_one_le_inv (a : α) (h : 1 ≤ a⁻¹) : a⁻ = a⁻¹ := by
   rw [neg_eq_pos_inv]
   exact pos_of_one_le _ h
 
+-- neg_of_neg_nonpos
 @[to_additive]
 theorem neg_of_inv_le_one (a : α) (h : a⁻¹ ≤ 1) : a⁻ = 1 :=
   neg_eq_one_iff'.mpr h
 
+-- neg_of_nonpos
 @[to_additive]
 theorem neg_of_le_one [CovariantClass α α (· * ·) (· ≤ ·)] (a : α) (h : a ≤ 1) : a⁻ = a⁻¹ := by
   refine' neg_of_one_le_inv _ _
   rw [one_le_inv']
   exact h
 
+-- neg_of_nonneg'
 @[to_additive]
 theorem neg_of_one_le [CovariantClass α α (· * ·) (· ≤ ·)] (a : α) (h : 1 ≤ a) : a⁻ = 1 :=
   neg_eq_one_iff.mpr h
 
+-- 0 ≤ a implies |a| = a
 @[to_additive abs_of_nonneg]
 theorem mabs_of_one_le [CovariantClass α α (· * ·) (· ≤ ·)] (a : α) (h : 1 ≤ a) : abs a = a := by
   unfold HasAbs.abs
@@ -461,6 +515,9 @@ theorem mabs_inf_div_inf_le_mabs [CovariantClass α α (· * ·) (· ≤ ·)] (a
   · exact one_le_abs _
     
 
+-- Commutative case, Zaanen, 3rd lecture
+-- For the non-commutative case, see Birkhoff Theorem 19 (27)
+-- |(a ⊔ c) - (b ⊔ c)| ⊔ |(a ⊓ c) - (b ⊓ c)| ≤ |a - b|
 @[to_additive Birkhoff_inequalities]
 theorem m_Birkhoff_inequalities [CovariantClass α α (· * ·) (· ≤ ·)] (a b c : α) :
     abs ((a⊔c) / (b⊔c))⊔abs ((a⊓c) / (b⊓c)) ≤ abs (a / b) :=
@@ -468,6 +525,7 @@ theorem m_Birkhoff_inequalities [CovariantClass α α (· * ·) (· ≤ ·)] (a 
 
 /-- The absolute value satisfies the triangle inequality.
 -/
+-- Banasiak Proposition 2.12, Zaanen 2nd lecture
 @[to_additive abs_add_le]
 theorem mabs_mul_le [CovariantClass α α (· * ·) (· ≤ ·)] (a b : α) : abs (a * b) ≤ abs a * abs b := by
   apply sup_le
@@ -477,11 +535,13 @@ theorem mabs_mul_le [CovariantClass α α (· * ·) (· ≤ ·)] (a b : α) : ab
     exact mul_le_mul' (inv_le_abs _) (inv_le_abs _)
     
 
+-- |a - b| = |b - a|
 @[to_additive]
 theorem abs_inv_comm (a b : α) : abs (a / b) = abs (b / a) := by
   unfold HasAbs.abs
   rw [inv_div' a b, ← inv_invₓ (a / b), inv_div', sup_comm]
 
+-- | |a| - |b| | ≤ |a - b|
 @[to_additive]
 theorem abs_abs_div_abs_le [CovariantClass α α (· * ·) (· ≤ ·)] (a b : α) : abs (abs a / abs b) ≤ abs (a / b) := by
   unfold HasAbs.abs

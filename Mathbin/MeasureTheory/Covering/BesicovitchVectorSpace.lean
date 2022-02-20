@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Sébastien Gouëzel. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Sébastien Gouëzel
+-/
 import Mathbin.MeasureTheory.Measure.HaarLebesgue
 import Mathbin.MeasureTheory.Covering.Besicovitch
 
@@ -53,7 +58,7 @@ variable [NormedSpace ℝ E] {N : ℕ} {τ : ℝ} (a : SatelliteConfig E N τ)
 
 /-- Rescaling a satellite configuration in a vector space, to put the basepoint at `0` and the base
 radius at `1`. -/
-def center_and_rescale : SatelliteConfig E N τ where
+def centerAndRescale : SatelliteConfig E N τ where
   c := fun i => (a.R (last N))⁻¹ • (a.c i - a.c (last N))
   R := fun i => (a.R (last N))⁻¹ * a.R i
   rpos := fun i => mul_pos (inv_pos.2 (a.rpos _)) (a.rpos _)
@@ -131,6 +136,9 @@ useful to show that the supremum in the definition of `besicovitch.multiplicity 
 well behaved. -/
 theorem card_le_of_separated (s : Finset E) (hs : ∀, ∀ c ∈ s, ∀, ∥c∥ ≤ 2)
     (h : ∀, ∀ c ∈ s, ∀, ∀ d ∈ s, ∀, c ≠ d → 1 ≤ ∥c - d∥) : s.card ≤ 5 ^ finrank ℝ E := by
+  /- We consider balls of radius `1/2` around the points in `s`. They are disjoint, and all
+    contained in the ball of radius `5/2`. A volume argument gives `s.card * (1/2)^dim ≤ (5/2)^dim`,
+    i.e., `s.card ≤ 5^dim`. -/
   let this' : MeasurableSpace E := borel E
   let this' : BorelSpace E := ⟨rfl⟩
   let μ : Measureₓ E := measure.add_haar
@@ -195,7 +203,7 @@ theorem card_le_multiplicity {s : Finset E} (hs : ∀, ∀ c ∈ s, ∀, ∥c∥
 
 variable (E)
 
--- ././Mathport/Syntax/Translate/Basic.lean:418:16: unsupported tactic `by_contra'
+-- ././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'
 /-- If `δ` is small enough, a `(1-δ)`-separated set in the ball of radius `2` also has cardinality
 at most `multiplicity E`. -/
 theorem exists_good_δ :
@@ -205,8 +213,12 @@ theorem exists_good_δ :
           ∀ s : Finset E,
             (∀, ∀ c ∈ s, ∀, ∥c∥ ≤ 2) → (∀, ∀ c ∈ s, ∀, ∀ d ∈ s, ∀, c ≠ d → 1 - δ ≤ ∥c - d∥) → s.card ≤ multiplicity E :=
   by
+  /- This follows from a compactness argument: otherwise, one could extract a converging
+    subsequence, to obtain a `1`-separated set in the ball of radius `2` with cardinality
+    `N = multiplicity E + 1`. To formalize this, we work with functions `fin N → E`.
+     -/
   classical
-  "././Mathport/Syntax/Translate/Basic.lean:418:16: unsupported tactic `by_contra'"
+  "././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'"
   set N := multiplicity E + 1 with hN
   have : ∀ δ : ℝ, 0 < δ → ∃ f : Finₓ N → E, (∀ i : Finₓ N, ∥f i∥ ≤ 2) ∧ ∀ i j, i ≠ j → 1 - δ ≤ ∥f i - f j∥ := by
     intro δ hδ
@@ -226,7 +238,10 @@ theorem exists_good_δ :
           simp , fun i j hij => by
           simpa only [norm_zero, sub_nonpos, sub_self]⟩
       
+  -- For `δ > 0`, `F δ` is a function from `fin N` to the ball of radius `2` for which two points
+  -- in the image are separated by `1 - δ`.
   choose! F hF using this
+  -- Choose a converging subsequence when `δ → 0`.
   have : ∃ f : Finₓ N → E, (∀ i : Finₓ N, ∥f i∥ ≤ 2) ∧ ∀ i j, i ≠ j → 1 ≤ ∥f i - f j∥ := by
     obtain ⟨u, u_mono, zero_lt_u, hu⟩ :
       ∃ u : ℕ → ℝ, (∀ m n : ℕ, m < n → u n < u m) ∧ (∀ n : ℕ, 0 < u n) ∧ Filter.Tendsto u Filter.atTop (𝓝 0) :=
@@ -250,6 +265,7 @@ theorem exists_good_δ :
       exact le_of_tendsto_of_tendsto' B A fun n => (hF (u (φ n)) (zero_lt_u _)).2 i j hij
       
   rcases this with ⟨f, hf, h'f⟩
+  -- the range of `f` contradicts the definition of `multiplicity E`.
   have finj : Function.Injective f := by
     intro i j hij
     by_contra
@@ -276,7 +292,7 @@ theorem exists_good_δ :
 
 /-- A small positive number such that any `1 - δ`-separated set in the ball of radius `2` has
 cardinality at most `besicovitch.multiplicity E`. -/
-def good_δ : ℝ :=
+def goodδ : ℝ :=
   (exists_good_δ E).some
 
 theorem good_δ_lt_one : goodδ E < 1 :=
@@ -285,7 +301,7 @@ theorem good_δ_lt_one : goodδ E < 1 :=
 /-- A number `τ > 1`, but chosen close enough to `1` so that the construction in the Besicovitch
 covering theorem using this parameter `τ` will give the smallest possible number of covering
 families. -/
-def good_τ : ℝ :=
+def goodτ : ℝ :=
   1 + goodδ E / 4
 
 theorem one_lt_good_τ : 1 < goodτ E := by
@@ -537,6 +553,7 @@ theorem exists_normalized {N : ℕ} {τ : ℝ} (a : SatelliteConfig E N τ) (las
       
     by_cases' hi : ∥a.c i∥ = 0 <;> field_simp [norm_smul, hi]
   refine' ⟨c', fun n => norm_c'_le n, fun i j inej => _⟩
+  -- up to exchanging `i` and `j`, one can assume `∥c i∥ ≤ ∥c j∥`.
   wlog (discharger := tactic.skip) hij : ∥a.c i∥ ≤ ∥a.c j∥ := le_totalₓ ∥a.c i∥ ∥a.c j∥ using i j, j i
   swap
   · intro i_ne_j
@@ -544,16 +561,20 @@ theorem exists_normalized {N : ℕ} {τ : ℝ} (a : SatelliteConfig E N τ) (las
     exact this i_ne_j.symm
     
   rcases le_or_ltₓ ∥a.c j∥ 2 with (Hj | Hj)
+  -- case `∥c j∥ ≤ 2` (and therefore also `∥c i∥ ≤ 2`)
   · simp_rw [c', Hj, hij.trans Hj, if_true]
     exact exists_normalized_aux1 a lastr hτ δ hδ1 hδ2 i j inej
     
+  -- case `2 < ∥c j∥`
   · have H'j : ∥a.c j∥ ≤ 2 ↔ False := by
       simpa only [not_leₓ, iff_falseₓ] using Hj
     rcases le_or_ltₓ ∥a.c i∥ 2 with (Hi | Hi)
-    · simp_rw [c', Hi, if_true, H'j, if_false]
+    · -- case `∥c i∥ ≤ 2`
+      simp_rw [c', Hi, if_true, H'j, if_false]
       exact exists_normalized_aux2 a lastc lastr hτ δ hδ1 hδ2 i j inej Hi Hj
       
-    · have H'i : ∥a.c i∥ ≤ 2 ↔ False := by
+    · -- case `2 < ∥c i∥`
+      have H'i : ∥a.c i∥ ≤ 2 ↔ False := by
         simpa only [not_leₓ, iff_falseₓ] using Hi
       simp_rw [c', H'i, if_false, H'j, if_false]
       exact exists_normalized_aux3 a lastc lastr hτ δ hδ1 i j inej Hi hij

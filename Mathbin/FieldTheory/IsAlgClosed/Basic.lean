@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Kenny Lau. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Kenny Lau
+-/
 import Mathbin.FieldTheory.SplittingField
 import Mathbin.FieldTheory.PerfectClosure
 
@@ -160,6 +165,9 @@ theorem is_alg_closure_iff (K : Type v) [Field K] [Algebra k K] :
 
 namespace lift
 
+/- In this section, the homomorphism from any algebraic extension into an algebraically
+  closed extension is proven to exist. The assumption that M is algebraically closed could probably
+  easily be switched to an assumption that M contains all the roots of polynomials in K -/
 variable {K : Type u} {L : Type v} {M : Type w} [Field K] [Field L] [Algebra K L] [Field M] [Algebra K M]
   [IsAlgClosed M] (hL : Algebra.IsAlgebraic K L)
 
@@ -171,7 +179,7 @@ open Zorn Subalgebra AlgHom Function
 
 /-- This structure is used to prove the existence of a homomorphism from any algebraic extension
 into an algebraic closure -/
-structure subfield_with_hom where
+structure SubfieldWithHom where
   Carrier : Subalgebra K L
   emb : carrier →ₐ[K] M
 
@@ -196,7 +204,7 @@ theorem compat (h : E₁ ≤ E₂) : ∀ x, E₂.emb (inclusion h.fst x) = E₁.
   assumption
 
 instance : Preorderₓ (SubfieldWithHom K L M hL) where
-  le := · ≤ ·
+  le := (· ≤ ·)
   le_refl := fun E =>
     ⟨le_rfl, by
       simp ⟩
@@ -243,7 +251,7 @@ theorem exists_maximal_subfield_with_hom : ∃ E : SubfieldWithHom K L M hL, ∀
   Zorn.exists_maximal_of_chains_bounded maximal_subfield_with_hom_chain_bounded fun _ _ _ => le_transₓ
 
 /-- The maximal `subfield_with_hom`. We later prove that this is equal to `⊤`. -/
-noncomputable def maximal_subfield_with_hom : SubfieldWithHom K L M hL :=
+noncomputable def maximalSubfieldWithHom : SubfieldWithHom K L M hL :=
   Classical.some (exists_maximal_subfield_with_hom M hL)
 
 theorem maximal_subfield_with_hom_is_maximal :
@@ -319,7 +327,7 @@ noncomputable irreducible_def lift : S →ₐ[R] M := by
 
 omit hS
 
-noncomputable instance (priority := 100) PerfectRing (p : ℕ) [Fact p.Prime] [CharP k p] [IsAlgClosed k] :
+noncomputable instance (priority := 100) perfectRing (p : ℕ) [Fact p.Prime] [CharP k p] [IsAlgClosed k] :
     PerfectRing k p :=
   (PerfectRing.ofSurjective k p) fun x => IsAlgClosed.exists_pow_nat_eq _ <| Fact.out _
 
@@ -338,7 +346,7 @@ section
 variable [Algebra R L] [NoZeroSmulDivisors R L] [IsAlgClosure R L]
 
 /-- A (random) isomorphism between two algebraic closures of `R`. -/
-noncomputable def Equivₓ : L ≃ₐ[R] M :=
+noncomputable def equiv : L ≃ₐ[R] M :=
   let f : L →ₐ[R] M := IsAlgClosed.lift IsAlgClosure.algebraic
   AlgEquiv.ofBijective f
     ⟨RingHom.injective f.toRingHom, by
@@ -363,7 +371,7 @@ variable [Algebra K J] [Algebra J L] [IsAlgClosure J L] [Algebra K L] [IsScalarT
 
 /-- A (random) isomorphism between an algebraic closure of `R` and an algebraic closure of
   an algebraic extension of `R` -/
-noncomputable def equiv_of_algebraic' [Nontrivial S] [NoZeroSmulDivisors R S] (hRL : Algebra.IsAlgebraic R L) :
+noncomputable def equivOfAlgebraic' [Nontrivial S] [NoZeroSmulDivisors R S] (hRL : Algebra.IsAlgebraic R L) :
     L ≃ₐ[R] M := by
   let this' : NoZeroSmulDivisors R L :=
     NoZeroSmulDivisors.of_algebra_map_injective
@@ -380,7 +388,7 @@ noncomputable def equiv_of_algebraic' [Nontrivial S] [NoZeroSmulDivisors R S] (h
 
 /-- A (random) isomorphism between an algebraic closure of `K` and an algebraic closure
   of an algebraic extension of `K` -/
-noncomputable def equiv_of_algebraic (hKJ : Algebra.IsAlgebraic K J) : L ≃ₐ[K] M :=
+noncomputable def equivOfAlgebraic (hKJ : Algebra.IsAlgebraic K J) : L ≃ₐ[K] M :=
   equivOfAlgebraic' K J _ _ (Algebra.is_algebraic_trans hKJ IsAlgClosure.algebraic)
 
 end EquivOfAlgebraic
@@ -390,7 +398,7 @@ section EquivOfEquiv
 variable {R S}
 
 /-- Used in the definition of `equiv_of_equiv` -/
-noncomputable def equiv_of_equiv_aux (hSR : S ≃+* R) :
+noncomputable def equivOfEquivAux (hSR : S ≃+* R) :
     { e : L ≃+* M // e.toRingHom.comp (algebraMap S L) = (algebraMap R M).comp hSR.toRingHom } := by
   let this' : Algebra R S := RingHom.toAlgebra hSR.symm.to_ring_hom
   let this' : Algebra S R := RingHom.toAlgebra hSR.to_ring_hom
@@ -419,7 +427,7 @@ noncomputable def equiv_of_equiv_aux (hSR : S ≃+* R) :
   rw [AlgEquiv.commutes]
 
 /-- Algebraic closure of isomorphic fields are isomorphic -/
-noncomputable def equiv_of_equiv (hSR : S ≃+* R) : L ≃+* M :=
+noncomputable def equivOfEquiv (hSR : S ≃+* R) : L ≃+* M :=
   equivOfEquivAux L M hSR
 
 @[simp]

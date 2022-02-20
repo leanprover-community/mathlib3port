@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Lu-Ming Zhang. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Lu-Ming Zhang
+-/
 import Mathbin.Data.Matrix.Basic
 
 /-!
@@ -30,12 +35,12 @@ open_locale Matrix
 
 /-- `A.has_orthogonal_rows` means matrix `A` has orthogonal rows (with respect to
 `matrix.dot_product`). -/
-def has_orthogonal_rows [Fintype n] : Prop :=
+def HasOrthogonalRows [Fintype n] : Prop :=
   ∀ ⦃i₁ i₂⦄, i₁ ≠ i₂ → dotProduct (A i₁) (A i₂) = 0
 
 /-- `A.has_orthogonal_rows` means matrix `A` has orthogonal columns (with respect to
 `matrix.dot_product`). -/
-def has_orthogonal_cols [Fintype m] : Prop :=
+def HasOrthogonalCols [Fintype m] : Prop :=
   HasOrthogonalRows (A)ᵀ
 
 /-- `Aᵀ` has orthogonal rows iff `A` has orthogonal columns. -/
@@ -52,17 +57,17 @@ theorem transpose_has_orthogonal_cols_iff_has_orthogonal_rows [Fintype n] :
 
 variable {A}
 
-theorem has_orthogonal_rows.has_orthogonal_cols [Fintype m] (h : (A)ᵀ.HasOrthogonalRows) : A.HasOrthogonalCols :=
+theorem HasOrthogonalRows.has_orthogonal_cols [Fintype m] (h : (A)ᵀ.HasOrthogonalRows) : A.HasOrthogonalCols :=
   h
 
-theorem has_orthogonal_cols.transpose_has_orthogonal_rows [Fintype m] (h : A.HasOrthogonalCols) :
+theorem HasOrthogonalCols.transpose_has_orthogonal_rows [Fintype m] (h : A.HasOrthogonalCols) :
     (A)ᵀ.HasOrthogonalRows :=
   h
 
-theorem has_orthogonal_cols.has_orthogonal_rows [Fintype n] (h : (A)ᵀ.HasOrthogonalCols) : A.HasOrthogonalRows :=
+theorem HasOrthogonalCols.has_orthogonal_rows [Fintype n] (h : (A)ᵀ.HasOrthogonalCols) : A.HasOrthogonalRows :=
   h
 
-theorem has_orthogonal_rows.transpose_has_orthogonal_cols [Fintype n] (h : A.HasOrthogonalRows) :
+theorem HasOrthogonalRows.transpose_has_orthogonal_cols [Fintype n] (h : A.HasOrthogonalRows) :
     (A)ᵀ.HasOrthogonalCols :=
   h
 

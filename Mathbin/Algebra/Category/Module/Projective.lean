@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Markus Himmel. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Markus Himmel, Scott Morrison
+-/
 import Mathbin.Algebra.Category.Module.EpiMono
 import Mathbin.Algebra.Module.Projective
 import Mathbin.CategoryTheory.Preadditive.Projective
@@ -37,6 +42,7 @@ namespace ModuleCat
 variable {R : Type u} [Ringₓ R] {M : ModuleCat.{max u v} R}
 
 /-- Modules that have a basis are projective. -/
+-- We transport the corresponding result from `module.projective`.
 theorem projective_of_free {ι : Type _} (b : Basis ι R M) : Projective M :=
   Projective.of_iso (ModuleCat.ofSelfIso _) (IsProjective.iff_projective.mp (Module.projective_of_basis b))
 

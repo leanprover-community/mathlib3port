@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Johannes Hölzl. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johannes Hölzl, Callum Sutton, Yury Kudryashov
+-/
 import Mathbin.Data.Equiv.MulAddAut
 import Mathbin.Data.Equiv.Ring
 
@@ -49,15 +54,15 @@ instance : Inhabited (RingAut R) :=
   ⟨1⟩
 
 /-- Monoid homomorphism from ring automorphisms to additive automorphisms. -/
-def to_add_aut : RingAut R →* AddAut R := by
+def toAddAut : RingAut R →* AddAut R := by
   refine_struct { toFun := RingEquiv.toAddEquiv } <;> intros <;> rfl
 
 /-- Monoid homomorphism from ring automorphisms to multiplicative automorphisms. -/
-def to_mul_aut : RingAut R →* MulAut R := by
+def toMulAut : RingAut R →* MulAut R := by
   refine_struct { toFun := RingEquiv.toMulEquiv } <;> intros <;> rfl
 
 /-- Monoid homomorphism from ring automorphisms to permutations. -/
-def to_perm : RingAut R →* Equivₓ.Perm R := by
+def toPerm : RingAut R →* Equivₓ.Perm R := by
   refine_struct { toFun := RingEquiv.toEquiv } <;> intros <;> rfl
 
 end RingAut

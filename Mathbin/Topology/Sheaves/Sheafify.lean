@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison
+-/
 import Mathbin.Topology.Sheaves.LocalPredicate
 import Mathbin.Topology.Sheaves.Stalks
 
@@ -41,14 +46,14 @@ namespace Sheafify
 
 /-- The prelocal predicate on functions into the stalks, asserting that the function is equal to a germ.
 -/
-def is_germ : PrelocalPredicate fun x => F.stalk x where
+def isGerm : PrelocalPredicate fun x => F.stalk x where
   pred := fun U f => ∃ g : F.obj (op U), ∀ x : U, f x = F.germ x g
   res := fun V U i f ⟨g, p⟩ => ⟨F.map i.op g, fun x => (p (i x)).trans (F.germ_res_apply _ _ _).symm⟩
 
 /-- The local predicate on functions into the stalks,
 asserting that the function is locally equal to a germ.
 -/
-def is_locally_germ : LocalPredicate fun x => F.stalk x :=
+def isLocallyGerm : LocalPredicate fun x => F.stalk x :=
   (isGerm F).sheafify
 
 end Sheafify
@@ -63,7 +68,7 @@ def sheafify : Sheaf (Type v) X :=
 sending each section to its germs.
 (This forms the unit of the adjunction.)
 -/
-def to_sheafify : F ⟶ F.sheafify.1 where
+def toSheafify : F ⟶ F.sheafify.1 where
   app := fun U f => ⟨fun x => F.germ x f, PrelocalPredicate.sheafify_of ⟨f, fun x => rfl⟩⟩
   naturality' := fun U U' f => by
     ext x ⟨u, m⟩
@@ -72,7 +77,7 @@ def to_sheafify : F ⟶ F.sheafify.1 where
 /-- The natural morphism from the stalk of the sheafification to the original stalk.
 In `sheafify_stalk_iso` we show this is an isomorphism.
 -/
-def stalk_to_fiber (x : X) : F.sheafify.1.stalk x ⟶ F.stalk x :=
+def stalkToFiber (x : X) : F.sheafify.1.stalk x ⟶ F.stalk x :=
   stalkToFiber (Sheafify.isLocallyGerm F) x
 
 theorem stalk_to_fiber_surjective (x : X) : Function.Surjective (F.stalkToFiber x) := by
@@ -122,8 +127,9 @@ theorem stalk_to_fiber_injective (x : X) : Function.Injective (F.stalkToFiber x)
 
 /-- The isomorphism betweeen a stalk of the sheafification and the original stalk.
 -/
-def sheafify_stalk_iso (x : X) : F.sheafify.1.stalk x ≅ F.stalk x :=
+def sheafifyStalkIso (x : X) : F.sheafify.1.stalk x ≅ F.stalk x :=
   (Equivₓ.ofBijective _ ⟨stalk_to_fiber_injective _ _, stalk_to_fiber_surjective _ _⟩).toIso
 
+-- PROJECT functoriality, and that sheafification is the left adjoint of the forgetful functor.
 end Top.Presheaf
 

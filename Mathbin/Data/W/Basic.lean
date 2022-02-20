@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Jeremy Avigad. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Jeremy Avigad
+-/
 import Mathbin.Data.Equiv.List
 
 /-!
@@ -36,12 +41,12 @@ variable {α : Type _} {β : α → Type _}
 
 /-- The canonical map to the corresponding sigma type, returning the label of a node as an
   element `a` of `α`, and the children of the node as a function `β a → W_type β`. -/
-def to_sigma : WType β → Σ a : α, β a → WType β
+def toSigma : WType β → Σ a : α, β a → WType β
   | ⟨a, f⟩ => ⟨a, f⟩
 
 /-- The canonical map from the sigma type into a `W_type`. Given a node `a : α`, and
   its children as a function `β a → W_type β`, return the corresponding tree. -/
-def of_sigma : (Σ a : α, β a → WType β) → WType β
+def ofSigma : (Σ a : α, β a → WType β) → WType β
   | ⟨a, f⟩ => WType.mk a f
 
 @[simp]
@@ -57,7 +62,7 @@ variable (β)
 /-- The canonical bijection with the sigma type, showing that `W_type` is a fixed point of
   the polynomial `Σ a : α, β a → W_type β`.  -/
 @[simps]
-def equiv_sigma : WType β ≃ Σ a : α, β a → WType β where
+def equivSigma : WType β ≃ Σ a : α, β a → WType β where
   toFun := toSigma
   invFun := ofSigma
   left_inv := of_sigma_to_sigma
@@ -66,7 +71,7 @@ def equiv_sigma : WType β ≃ Σ a : α, β a → WType β where
 variable {β}
 
 /-- The canonical map from `W_type β` into any type `γ` given a map `(Σ a : α, β a → γ) → γ`. -/
-def elim (γ : Type _) (fγ : (Σ a : α, β a → γ) → γ) : WType β → γ
+def elimₓ (γ : Type _) (fγ : (Σ a : α, β a → γ) → γ) : WType β → γ
   | ⟨a, f⟩ => fγ ⟨a, fun b => elim (f b)⟩
 
 theorem elim_injective (γ : Type _) (fγ : (Σ a : α, β a → γ) → γ) (fγ_injective : Function.Injective fγ) :
@@ -113,6 +118,14 @@ theorem depth_lt_depth_mk (a : α) (f : β a → WType β) (i : β a) : depth (f
 
 end WType
 
+/-
+Show that W types are encodable when `α` is an encodable fintype and for every `a : α`, `β a` is
+encodable.
+
+We define an auxiliary type `W_type' β n` of trees of depth at most `n`, and then we show by
+induction on `n` that these are all encodable. These auxiliary constructions are not interesting in
+and of themselves, so we mark them as `private`.
+-/
 namespace Encodable
 
 @[reducible]

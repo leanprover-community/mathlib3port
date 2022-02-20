@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Eric Wieser. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Eric Wieser
+-/
 import Mathbin.GroupTheory.Subgroup.Basic
 import Mathbin.GroupTheory.Submonoid.Pointwise
 
@@ -30,7 +35,7 @@ variable [Monoidₓ α] [MulDistribMulAction α G]
 /-- The action on a subgroup corresponding to applying the action to every element.
 
 This is available as an instance in the `pointwise` locale. -/
-protected def pointwise_mul_action : MulAction α (Subgroup G) where
+protected def pointwiseMulAction : MulAction α (Subgroup G) where
   smul := fun a S => S.map (MulDistribMulAction.toMonoidEnd _ _ a)
   one_smul := fun S => (congr_argₓ (fun f => S.map f) (MonoidHom.map_one _)).trans S.map_id
   mul_smul := fun a₁ a₂ S => (congr_argₓ (fun f => S.map f) (MonoidHom.map_mul _ _ _)).trans (S.map_map _ _).symm
@@ -90,7 +95,7 @@ theorem subset_pointwise_smul_iff {a : α} {S T : Subgroup G} : S ≤ a • T �
 
 /-- Applying a `mul_distrib_mul_action` results in an isomorphic subgroup -/
 @[simps]
-def equiv_smul (a : α) (H : Subgroup G) : H ≃* (a • H : Subgroup G) :=
+def equivSmul (a : α) (H : Subgroup G) : H ≃* (a • H : Subgroup G) :=
   (MulDistribMulAction.toMulEquiv G a).subgroupMap H
 
 end Groupₓ
@@ -134,7 +139,7 @@ variable [Monoidₓ α] [DistribMulAction α A]
 /-- The action on an additive subgroup corresponding to applying the action to every element.
 
 This is available as an instance in the `pointwise` locale. -/
-protected def pointwise_mul_action : MulAction α (AddSubgroup A) where
+protected def pointwiseMulAction : MulAction α (AddSubgroup A) where
   smul := fun a S => S.map (DistribMulAction.toAddMonoidEnd _ _ a)
   one_smul := fun S => (congr_argₓ (fun f => S.map f) (MonoidHom.map_one _)).trans S.map_id
   mul_smul := fun a₁ a₂ S => (congr_argₓ (fun f => S.map f) (MonoidHom.map_mul _ _ _)).trans (S.map_map _ _).symm

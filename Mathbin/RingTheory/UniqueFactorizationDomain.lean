@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Johannes Hölzl. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johannes Hölzl, Jens Wagemaker, Aaron Anderson
+-/
 import Mathbin.Algebra.BigOperators.Associated
 import Mathbin.Algebra.GcdMonoid.Basic
 import Mathbin.Data.Finsupp.Multiset
@@ -33,6 +38,7 @@ class WfDvdMonoid (α : Type _) [CommMonoidWithZero α] : Prop where
 
 export WfDvdMonoid (well_founded_dvd_not_unit)
 
+-- see Note [lower instance priority]
 instance (priority := 100) IsNoetherianRing.wf_dvd_monoid [CommRingₓ α] [IsDomain α] [IsNoetherianRing α] :
     WfDvdMonoid α :=
   ⟨by
@@ -61,7 +67,7 @@ instance wf_dvd_monoid_associates : WfDvdMonoid (Associates α) :=
     intros
     rw [mk_dvd_not_unit_mk_iff]⟩
 
-theorem well_founded_associates : WellFounded (· < · : Associates α → Associates α → Prop) :=
+theorem well_founded_associates : WellFounded ((· < ·) : Associates α → Associates α → Prop) :=
   Subrelation.wfₓ (fun x y => dvd_not_unit_of_lt) WfDvdMonoid.well_founded_dvd_not_unit
 
 attribute [local elab_as_eliminator] WellFounded.fix
@@ -135,7 +141,7 @@ theorem exists_factors (a : α) : a ≠ 0 → ∃ f : Multiset α, (∀, ∀ b �
 end WfDvdMonoid
 
 theorem WfDvdMonoid.of_well_founded_associates [CancelCommMonoidWithZero α]
-    (h : WellFounded (· < · : Associates α → Associates α → Prop)) : WfDvdMonoid α :=
+    (h : WellFounded ((· < ·) : Associates α → Associates α → Prop)) : WfDvdMonoid α :=
   WfDvdMonoid.of_wf_dvd_monoid_associates
     ⟨by
       convert h
@@ -143,13 +149,13 @@ theorem WfDvdMonoid.of_well_founded_associates [CancelCommMonoidWithZero α]
       exact Associates.dvd_not_unit_iff_lt⟩
 
 theorem WfDvdMonoid.iff_well_founded_associates [CancelCommMonoidWithZero α] :
-    WfDvdMonoid α ↔ WellFounded (· < · : Associates α → Associates α → Prop) :=
+    WfDvdMonoid α ↔ WellFounded ((· < ·) : Associates α → Associates α → Prop) :=
   ⟨by
     apply WfDvdMonoid.well_founded_associates, WfDvdMonoid.of_well_founded_associates⟩
 
 section Prio
 
--- ././Mathport/Syntax/Translate/Basic.lean:169:40: warning: unsupported option default_priority
+-- ././Mathport/Syntax/Translate/Basic.lean:211:40: warning: unsupported option default_priority
 set_option default_priority 100
 
 /-- unique factorization monoids.
@@ -170,6 +176,7 @@ To define a UFD using the definition in terms of multisets
 of prime factors, use the definition `of_exists_prime_factors`
 
 -/
+-- see Note [default priority]
 class UniqueFactorizationMonoid (α : Type _) [CancelCommMonoidWithZero α] extends WfDvdMonoid α : Prop where
   irreducible_iff_prime : ∀ {a : α}, Irreducible a ↔ Prime a
 
@@ -234,7 +241,7 @@ theorem factors_unique :
             hf _
               (by
                 simp [hq]))
-          (fun q hq : q ∈ g.erase b => hg q (Multiset.mem_of_mem_erase hq))
+          (fun hq : q ∈ g.erase b => hg q (Multiset.mem_of_mem_erase hq))
           (Associated.of_mul_left
             (by
               rwa [← Multiset.prod_cons, ← Multiset.prod_cons, Multiset.cons_erase hbg])
@@ -275,7 +282,7 @@ theorem prime_factors_unique [CancelCommMonoidWithZero α] :
             hf _
               (by
                 simp [hq]))
-          (fun q hq : q ∈ g.erase b => hg q (Multiset.mem_of_mem_erase hq))
+          (fun hq : q ∈ g.erase b => hg q (Multiset.mem_of_mem_erase hq))
           (Associated.of_mul_left
             (by
               rwa [← Multiset.prod_cons, ← Multiset.prod_cons, Multiset.cons_erase hbg])
@@ -323,7 +330,7 @@ theorem WfDvdMonoid.of_exists_prime_factors : WfDvdMonoid α :=
   ⟨by
     classical
     refine'
-      RelHomClass.well_founded (RelHom.mk _ _ : (DvdNotUnit : α → α → Prop) →r (· < · : WithTop ℕ → WithTop ℕ → Prop))
+      RelHomClass.well_founded (RelHom.mk _ _ : (DvdNotUnit : α → α → Prop) →r ((· < ·) : WithTop ℕ → WithTop ℕ → Prop))
         (WithTop.well_founded_lt Nat.lt_wf)
     · intro a
       by_cases' h : a = 0
@@ -490,7 +497,7 @@ variable [CancelCommMonoidWithZero α] [DecidableEq α] [NormalizationMonoid α]
 variable [UniqueFactorizationMonoid α]
 
 /-- Noncomputably determines the multiset of prime factors. -/
-noncomputable def normalized_factors (a : α) : Multiset α :=
+noncomputable def normalizedFactors (a : α) : Multiset α :=
   Multiset.map normalize <| factors a
 
 theorem normalized_factors_prod {a : α} (ane0 : a ≠ 0) : Associated (normalizedFactors a).Prod a := by
@@ -636,7 +643,7 @@ noncomputable section
 variable [CancelCommMonoidWithZero α] [Nontrivial α] [UniqueFactorizationMonoid α]
 
 /-- Noncomputably defines a `normalization_monoid` structure on a `unique_factorization_monoid`. -/
-protected def NormalizationMonoid : NormalizationMonoid α :=
+protected def normalizationMonoid : NormalizationMonoid α :=
   normalizationMonoidOfMonoidHomRightInverse
     { toFun := fun a : Associates α =>
         if a = 0 then 0
@@ -711,7 +718,7 @@ theorem dvd_of_dvd_mul_right_of_no_prime_factors {a b c : R} (ha : a ≠ 0)
     (no_factors : ∀ {d}, d ∣ a → d ∣ b → ¬Prime d) : a ∣ b * c → a ∣ c := by
   simpa [mul_comm b c] using dvd_of_dvd_mul_left_of_no_prime_factors ha @no_factors
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (a «expr ≠ » (0 : R))
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (a «expr ≠ » (0 : R))
 /-- If `a ≠ 0, b` are elements of a unique factorization domain, then dividing
 out their common factor `c'` gives `a'` and `b'` with no factors in common. -/
 theorem exists_reduced_factors :
@@ -814,16 +821,16 @@ complete lattice struture. Infimum is the greatest common divisor and supremum i
 multiple.
 -/
 @[reducible]
-def factor_set.{u} (α : Type u) [CancelCommMonoidWithZero α] : Type u :=
+def FactorSet.{u} (α : Type u) [CancelCommMonoidWithZero α] : Type u :=
   WithTop (Multiset { a : Associates α // Irreducible a })
 
 attribute [local instance] Associated.setoid
 
-theorem factor_set.coe_add {a b : Multiset { a : Associates α // Irreducible a }} : (↑(a + b) : FactorSet α) = a + b :=
+theorem FactorSet.coe_add {a b : Multiset { a : Associates α // Irreducible a }} : (↑(a + b) : FactorSet α) = a + b :=
   by
   norm_cast
 
-theorem factor_set.sup_add_inf_eq_add [DecidableEq (Associates α)] : ∀ a b : FactorSet α, a⊔b + a⊓b = a + b
+theorem FactorSet.sup_add_inf_eq_add [DecidableEq (Associates α)] : ∀ a b : FactorSet α, a⊔b + a⊓b = a + b
   | none, b =>
     show ⊤⊔b + ⊤⊓b = ⊤ + b by
       simp
@@ -837,7 +844,7 @@ theorem factor_set.sup_add_inf_eq_add [DecidableEq (Associates α)] : ∀ a b : 
 
 /-- Evaluates the product of a `factor_set` to be the product of the corresponding multiset,
   or `0` if there is none. -/
-def factor_set.prod : FactorSet α → Associates α
+def FactorSet.prod : FactorSet α → Associates α
   | none => 0
   | some s => (s.map coe).Prod
 
@@ -870,7 +877,7 @@ theorem prod_mono : ∀ {a b : FactorSet α}, a ≤ b → a.Prod ≤ b.Prod
       simp <;> exact le_top
   | some a, some b, h => prod_le_prod <| Multiset.map_le_map <| WithTop.coe_le_coe.1 <| h
 
-theorem factor_set.prod_eq_zero_iff [Nontrivial α] (p : FactorSet α) : p.Prod = 0 ↔ p = ⊤ := by
+theorem FactorSet.prod_eq_zero_iff [Nontrivial α] (p : FactorSet α) : p.Prod = 0 ↔ p = ⊤ := by
   induction p using WithTop.recTopCoe
   · simp only [iff_selfₓ, eq_self_iff_true, Associates.prod_top]
     
@@ -914,7 +921,7 @@ theorem count_reducible [DecidableEq (Associates α)] {p : Associates α} (hp : 
 omit dec_irr
 
 /-- membership in a factor_set (bundled version) -/
-def bfactor_set_mem : { a : Associates α // Irreducible a } → FactorSet α → Prop
+def BfactorSetMem : { a : Associates α // Irreducible a } → FactorSet α → Prop
   | _, ⊤ => True
   | p, some l => p ∈ l
 
@@ -924,7 +931,7 @@ include dec_irr
 `s : factor_set α`.
 
 If `p` is not irreducible, `p` is not a member of any `factor_set`. -/
-def factor_set_mem (p : Associates α) (s : FactorSet α) : Prop :=
+def FactorSetMem (p : Associates α) (s : FactorSet α) : Prop :=
   if hp : Irreducible p then BfactorSetMem ⟨p, hp⟩ s else False
 
 instance : HasMem (Associates α) (FactorSet α) :=
@@ -967,7 +974,7 @@ theorem unique' {p q : Multiset (Associates α)} :
     
   simpa [quot_mk_eq_mk, prod_mk, mk_eq_mk_iff_associated] using Eq
 
-theorem factor_set.unique [Nontrivial α] {p q : FactorSet α} (h : p.Prod = q.Prod) : p = q := by
+theorem FactorSet.unique [Nontrivial α] {p q : FactorSet α} (h : p.Prod = q.Prod) : p = q := by
   induction p using WithTop.recTopCoe <;> induction q using WithTop.recTopCoe
   · rfl
     
@@ -1156,7 +1163,7 @@ noncomputable instance : HasInf (Associates α) :=
   ⟨fun a b => (a.factors⊓b.factors).Prod⟩
 
 noncomputable instance [Nontrivial α] : Lattice (Associates α) :=
-  { Associates.partialOrder with sup := ·⊔·, inf := ·⊓·,
+  { Associates.partialOrder with sup := (·⊔·), inf := (·⊓·),
     sup_le := fun a b c hac hbc => factors_prod c ▸ prod_mono (sup_le (factors_mono hac) (factors_mono hbc)),
     le_sup_left := fun a b => le_transₓ (le_of_eqₓ (factors_prod a).symm) <| prod_mono <| le_sup_left,
     le_sup_right := fun a b => le_transₓ (le_of_eqₓ (factors_prod b).symm) <| prod_mono <| le_sup_right,
@@ -1507,12 +1514,14 @@ namespace UniqueFactorizationMonoid
 
 /-- If `y` is a nonzero element of a unique factorization monoid with finitely
 many units (e.g. `ℤ`, `ideal (ring_of_integers K)`), it has finitely many divisors. -/
-noncomputable def fintype_subtype_dvd {M : Type _} [CancelCommMonoidWithZero M] [UniqueFactorizationMonoid M]
+noncomputable def fintypeSubtypeDvd {M : Type _} [CancelCommMonoidWithZero M] [UniqueFactorizationMonoid M]
     [Fintype (M)ˣ] (y : M) (hy : y ≠ 0) : Fintype { x // x ∣ y } := by
   have : Nontrivial M := ⟨⟨y, 0, hy⟩⟩
   have : NormalizationMonoid M := UniqueFactorizationMonoid.normalizationMonoid
   have := Classical.decEq M
   have := Classical.decEq (Associates M)
+  -- We'll show `λ (u : Mˣ) (f ⊆ factors y) → u * Π f` is injective
+  -- and has image exactly the divisors of `y`.
   refine'
     Fintype.ofFinset
       (((normalized_factors y).Powerset.toFinset.product (Finset.univ : Finset (M)ˣ)).Image fun s =>

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Aaron Anderson. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Aaron Anderson
+-/
 import Mathbin.Data.Polynomial.Degree.Definitions
 
 /-!
@@ -28,7 +33,7 @@ variable [CommRingₓ R] (p q : R[X])
 
 /-- `cancel_leads p q` is formed by multiplying `p` and `q` by monomials so that they
   have the same leading term, and then subtracting. -/
-def cancel_leads : R[X] :=
+def cancelLeads : R[X] :=
   c p.leadingCoeff * X ^ (p.natDegree - q.natDegree) * q - c q.leadingCoeff * X ^ (q.natDegree - p.natDegree) * p
 
 variable {p q}

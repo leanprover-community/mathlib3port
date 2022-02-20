@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison
+-/
 import Mathbin.CategoryTheory.Adjunction.Basic
 import Mathbin.CategoryTheory.Category.Cat
 import Mathbin.CategoryTheory.PathCategory
@@ -15,6 +20,7 @@ universe v u
 namespace CategoryTheory
 
 /-- Category of quivers. -/
+-- intended to be used with explicit universe parameters
 @[nolint check_univs]
 def Quiv :=
   Bundled Quiver.{v + 1, u}
@@ -85,6 +91,9 @@ def lift {V : Type u} [Quiver.{v + 1} V] {C : Type u} [Category.{v} C] (F : Pref
 
 /-- The adjunction between forming the free category on a quiver, and forgetting a category to a quiver.
 -/
+-- We might construct `of_lift_iso_self : paths.of ⋙ lift F ≅ F`
+-- (and then show that `lift F` is initial amongst such functors)
+-- but it would require lifting quite a bit of machinery to quivers!
 def adj : Cat.free ⊣ Quiv.forget :=
   Adjunction.mkOfHomEquiv
     { homEquiv := fun V C =>

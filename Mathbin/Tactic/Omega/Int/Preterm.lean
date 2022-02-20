@@ -1,5 +1,13 @@
+/-
+Copyright (c) 2019 Seul Baek. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Seul Baek
+-/
 import Mathbin.Tactic.Omega.Term
 
+/-
+Linear integer arithmetic terms in pre-normalized form.
+-/
 namespace Omega
 
 namespace Int
@@ -17,7 +25,7 @@ unsafe inductive exprterm : Type
 /-- Similar to `exprterm`, except that all exprs are now replaced with
 de Brujin indices of type `nat`. This is akin to generalizing over
 the terms represented by the said exprs. -/
-inductive preterm : Type
+inductive Preterm : Type
   | cst : Int → preterm
   | var : Int → Nat → preterm
   | add : preterm → preterm → preterm
@@ -39,16 +47,16 @@ def val (v : Nat → Int) : Preterm → Int
   | t1+*t2 => t1.val + t2.val
 
 /-- Fresh de Brujin index not used by any variable in argument -/
-def fresh_index : Preterm → Nat
+def freshIndex : Preterm → Nat
   | &_ => 0
   | i ** n => n + 1
   | t1+*t2 => max t1.freshIndex t2.freshIndex
 
 @[simp]
-def add_one (t : Preterm) : Preterm :=
+def addOne (t : Preterm) : Preterm :=
   t+*&1
 
-def reprₓ : Preterm → Stringₓ
+def repr : Preterm → Stringₓ
   | &i => i.repr
   | i ** n => i.repr ++ "*x" ++ n.repr
   | t1+*t2 => "(" ++ t1.repr ++ " + " ++ t2.repr ++ ")"
@@ -59,6 +67,7 @@ open_locale List.Func
 
 /-- Return a term (which is in canonical form by definition)
     that is equivalent to the input preterm -/
+-- get notation for list.func.set
 @[simp]
 def canonize : Preterm → Term
   | &i => ⟨i, []⟩

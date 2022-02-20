@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Sébastien Gouëzel. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Sébastien Gouëzel
+-/
 import Mathbin.Topology.MetricSpace.Isometry
 import Mathbin.Topology.Instances.Ennreal
 import Mathbin.Analysis.SpecificLimits
@@ -41,7 +46,7 @@ variable {α : Type u} {β : Type v} [PseudoEmetricSpace α] [PseudoEmetricSpace
 
 
 /-- The minimal edistance of a point to a set -/
-def inf_edist (x : α) (s : Set α) : ℝ≥0∞ :=
+def infEdist (x : α) (s : Set α) : ℝ≥0∞ :=
   ⨅ y ∈ s, edist x y
 
 @[simp]
@@ -104,7 +109,9 @@ theorem inf_edist_closure : infEdist x (Closure s) = infEdist x s := by
     simpa [pos_iff_ne_zero] using εpos
   have : inf_edist x (Closure s) < inf_edist x (Closure s) + ε / 2 := Ennreal.lt_add_right h.ne ε0.ne'
   rcases inf_edist_lt_iff.mp this with ⟨y, ycs, hy⟩
+  -- y : α,  ycs : y ∈ closure s,  hy : edist x y < inf_edist x (closure s) + ↑ε / 2
   rcases Emetric.mem_closure_iff.1 ycs (ε / 2) ε0 with ⟨z, zs, dyz⟩
+  -- z : α,  zs : z ∈ s,  dyz : edist y z < ↑ε / 2
   calc inf_edist x s ≤ edist x z := inf_edist_le_edist_of_mem zs _ ≤ edist x y + edist y z :=
       edist_triangle _ _ _ _ ≤ inf_edist x (Closure s) + ε / 2 + ε / 2 :=
       add_le_add (le_of_ltₓ hy) (le_of_ltₓ dyz)_ = inf_edist x (Closure s) + ↑ε := by
@@ -184,7 +191,8 @@ end InfEdist
 
 /-- The Hausdorff edistance between two sets is the smallest `r` such that each set
 is contained in the `r`-neighborhood of the other one -/
-irreducible_def Hausdorff_edist {α : Type u} [PseudoEmetricSpace α] (s t : Set α) : ℝ≥0∞ :=
+--section
+irreducible_def hausdorffEdist {α : Type u} [PseudoEmetricSpace α] (s t : Set α) : ℝ≥0∞ :=
   (⨆ x ∈ s, infEdist x t)⊔⨆ y ∈ t, infEdist y s
 
 theorem Hausdorff_edist_def {α : Type u} [PseudoEmetricSpace α] (s t : Set α) :
@@ -250,8 +258,10 @@ theorem inf_edist_le_inf_edist_add_Hausdorff_edist : infEdist x t ≤ infEdist x
       simpa [pos_iff_ne_zero] using εpos
     have : inf_edist x s < inf_edist x s + ε / 2 := Ennreal.lt_add_right (Ennreal.add_lt_top.1 h).1.Ne ε0
     rcases inf_edist_lt_iff.mp this with ⟨y, ys, dxy⟩
+    -- y : α,  ys : y ∈ s,  dxy : edist x y < inf_edist x s + ↑ε / 2
     have : Hausdorff_edist s t < Hausdorff_edist s t + ε / 2 := Ennreal.lt_add_right (Ennreal.add_lt_top.1 h).2.Ne ε0
     rcases exists_edist_lt_of_Hausdorff_edist_lt ys this with ⟨z, zt, dyz⟩
+    -- z : α,  zt : z ∈ t,  dyz : edist y z < Hausdorff_edist s t + ↑ε / 2
     calc inf_edist x t ≤ edist x z := inf_edist_le_edist_of_mem zt _ ≤ edist x y + edist y z :=
         edist_triangle _ _ _ _ ≤ inf_edist x s + ε / 2 + (Hausdorff_edist s t + ε / 2) :=
         add_le_add dxy.le dyz.le _ = inf_edist x s + Hausdorff_edist s t + ε := by
@@ -361,6 +371,7 @@ theorem empty_or_nonempty_of_Hausdorff_edist_ne_top (fin : hausdorffEdist s t �
 
 end HausdorffEdist
 
+-- section
 end Emetric
 
 /-! Now, we turn to the same notions in metric spaces. To avoid the difficulties related to
@@ -370,6 +381,7 @@ Then their properties follow readily from the corresponding properties in `ℝ�
 modulo some tedious rewriting of inequalities from one to the other. -/
 
 
+--namespace
 namespace Metric
 
 section
@@ -382,7 +394,7 @@ open Emetric
 
 
 /-- The minimal distance of a point to a set -/
-def inf_dist (x : α) (s : Set α) : ℝ :=
+def infDist (x : α) (s : Set α) : ℝ :=
   Ennreal.toReal (infEdist x s)
 
 /-- the minimal distance is always nonnegative -/
@@ -550,7 +562,7 @@ theorem closed_ball_inf_dist_compl_subset_closure {E : Type _} [NormedGroup E] [
 
 
 /-- The minimal distance of a point to a set as a `ℝ≥0` -/
-def inf_nndist (x : α) (s : Set α) : ℝ≥0 :=
+def infNndist (x : α) (s : Set α) : ℝ≥0 :=
   Ennreal.toNnreal (infEdist x s)
 
 @[simp]
@@ -575,7 +587,7 @@ theorem continuous_inf_nndist_pt (s : Set α) : Continuous fun x => infNndist x 
 /-- The Hausdorff distance between two sets is the smallest nonnegative `r` such that each set is
 included in the `r`-neighborhood of the other. If there is no such `r`, it is defined to
 be `0`, arbitrarily -/
-def Hausdorff_dist (s t : Set α) : ℝ :=
+def hausdorffDist (s t : Set α) : ℝ :=
   Ennreal.toReal (hausdorffEdist s t)
 
 /-- The Hausdorff distance is nonnegative -/
@@ -791,6 +803,7 @@ theorem _root_.is_closed.Hausdorff_dist_zero_iff_eq (hs : IsClosed s) (ht : IsCl
 
 end
 
+--section
 section Thickening
 
 variable {α : Type u} [PseudoEmetricSpace α]
@@ -799,7 +812,7 @@ open Emetric
 
 /-- The (open) `δ`-thickening `thickening δ E` of a subset `E` in a pseudo emetric space consists
 of those points that are at distance less than `δ` from some point of `E`. -/
-def thickening (δ : ℝ) (E : Set α) : Set α :=
+def Thickening (δ : ℝ) (E : Set α) : Set α :=
   { x : α | infEdist x E < Ennreal.ofReal δ }
 
 /-- The (open) thickening equals the preimage of an open interval under `inf_edist`. -/
@@ -856,7 +869,7 @@ theorem thickening_eq_bUnion_ball {δ : ℝ} {E : Set X} : Thickening δ E = ⋃
   rw [mem_Union₂]
   exact mem_thickening_iff E x
 
-theorem bounded.thickening {δ : ℝ} {E : Set X} (h : Bounded E) : Bounded (Thickening δ E) := by
+theorem Bounded.thickening {δ : ℝ} {E : Set X} (h : Bounded E) : Bounded (Thickening δ E) := by
   refine' bounded_iff_mem_bounded.2 fun x hx => _
   rcases h.subset_ball x with ⟨R, hR⟩
   refine' (bounded_iff_subset_ball x).2 ⟨R + δ, _⟩
@@ -868,6 +881,7 @@ theorem bounded.thickening {δ : ℝ} {E : Set X} (h : Bounded E) : Bounded (Thi
 
 end Thickening
 
+--section
 section Cthickening
 
 variable {α : Type _} [PseudoEmetricSpace α]
@@ -876,7 +890,7 @@ open Emetric
 
 /-- The closed `δ`-thickening `cthickening δ E` of a subset `E` in a pseudo emetric space consists
 of those points that are at infimum distance at most `δ` from `E`. -/
-def cthickening (δ : ℝ) (E : Set α) : Set α :=
+def Cthickening (δ : ℝ) (E : Set α) : Set α :=
   { x : α | infEdist x E ≤ Ennreal.ofReal δ }
 
 theorem mem_cthickening_of_edist_le (x y : α) (δ : ℝ) (E : Set α) (h : y ∈ E) (h' : edist x y ≤ Ennreal.ofReal δ) :
@@ -956,7 +970,7 @@ theorem thickening_subset_cthickening_of_le {δ₁ δ₂ : ℝ} (hle : δ₁ ≤
     Thickening δ₁ E ⊆ Cthickening δ₂ E :=
   (thickening_subset_cthickening δ₁ E).trans (cthickening_mono hle E)
 
-theorem bounded.cthickening {α : Type _} [PseudoMetricSpace α] {δ : ℝ} {E : Set α} (h : Bounded E) :
+theorem Bounded.cthickening {α : Type _} [PseudoMetricSpace α] {δ : ℝ} {E : Set α} (h : Bounded E) :
     Bounded (Cthickening δ E) := by
   have : bounded (thickening (max (δ + 1) 1) E) := h.thickening
   apply bounded.mono _ this
@@ -1103,5 +1117,7 @@ theorem _root_.is_compact.cthickening_eq_bUnion_closed_ball {α : Type _} [Pseud
 
 end Cthickening
 
+--section
 end Metric
 
+--namespace

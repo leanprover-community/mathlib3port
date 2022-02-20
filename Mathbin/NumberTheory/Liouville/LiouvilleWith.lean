@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Yury G. Kudryashov. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yury G. Kudryashov
+-/
 import Mathbin.Analysis.SpecialFunctions.Pow
 import Mathbin.NumberTheory.Liouville.Basic
 import Mathbin.Topology.Instances.Irrational
@@ -86,7 +91,7 @@ theorem frequently_lt_rpow_neg (h : LiouvilleWith p x) (hlt : q < p) :
     ∃ᶠ n : ℕ in at_top, ∃ m : ℤ, x ≠ m / n ∧ abs (x - m / n) < n ^ -q := by
   rcases h.exists_pos with ⟨C, hC₀, hC⟩
   have : ∀ᶠ n : ℕ in at_top, C < n ^ (p - q) := by
-    simpa only [· ∘ ·, neg_sub, one_div] using
+    simpa only [(· ∘ ·), neg_sub, one_div] using
       ((tendsto_rpow_at_top (sub_pos.2 hlt)).comp tendsto_coe_nat_at_top_at_top).Eventually (eventually_gt_at_top C)
   refine' (this.and_frequently hC).mono _
   rintro n ⟨hnC, hn, m, hne, hlt⟩
@@ -276,7 +281,7 @@ theorem ne_cast_int (h : LiouvilleWith p x) (hp : 1 < p) (m : ℤ) : x ≠ m := 
   exact_mod_cast hne
 
 /-- A number satisfying the Liouville condition with exponent `p > 1` is an irrational number. -/
-protected theorem Irrational (h : LiouvilleWith p x) (hp : 1 < p) : Irrational x := by
+protected theorem irrational (h : LiouvilleWith p x) (hp : 1 < p) : Irrational x := by
   rintro ⟨r, rfl⟩
   rcases eq_or_ne r 0 with (rfl | h0)
   · refine' h.ne_cast_int hp 0 _
@@ -326,7 +331,7 @@ theorem frequently_exists_num (hx : Liouville x) (n : ℕ) :
     
 
 /-- A Liouville number is a Liouville number with any real exponent. -/
-protected theorem LiouvilleWith (hx : Liouville x) (p : ℝ) : LiouvilleWith p x := by
+protected theorem liouville_with (hx : Liouville x) (p : ℝ) : LiouvilleWith p x := by
   suffices : LiouvilleWith ⌈p⌉₊ x
   exact this.mono (Nat.le_ceil p)
   refine' ⟨1, ((eventually_gt_at_top 1).and_frequently (hx.frequently_exists_num ⌈p⌉₊)).mono _⟩

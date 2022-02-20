@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2017 Johannes Hölzl. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johannes Hölzl, Bryan Gin-ge Chen
+-/
 import Mathbin.Order.BoundedOrder
 
 /-!
@@ -86,6 +91,8 @@ class GeneralizedBooleanAlgebra (α : Type u) extends DistribLattice α, HasSdif
   sup_inf_sdiff : ∀ a b : α, a⊓b⊔a \ b = a
   inf_inf_sdiff : ∀ a b : α, a⊓b⊓a \ b = ⊥
 
+-- We might want a `is_compl_of` predicate (for relative complements) generalizing `is_compl`,
+-- however we'd need another type class for lattices with bot, and all the API for that.
 section GeneralizedBooleanAlgebra
 
 variable [GeneralizedBooleanAlgebra α]
@@ -106,6 +113,7 @@ theorem sup_sdiff_inf (x y : α) : x \ y⊔x⊓y = x := by
 theorem inf_sdiff_inf (x y : α) : x \ y⊓(x⊓y) = ⊥ := by
   rw [inf_comm, inf_inf_sdiff]
 
+-- see Note [lower instance priority]
 instance (priority := 100) GeneralizedBooleanAlgebra.toOrderBot : OrderBot α :=
   { GeneralizedBooleanAlgebra.toHasBot α with
     bot_le := fun a => by
@@ -115,6 +123,7 @@ instance (priority := 100) GeneralizedBooleanAlgebra.toOrderBot : OrderBot α :=
 theorem disjoint_inf_sdiff : Disjoint (x⊓y) (x \ y) :=
   (inf_inf_sdiff x y).le
 
+-- TODO: in distributive lattices, relative complements are unique when they exist
 theorem sdiff_unique (s : x⊓y⊔z = x) (i : x⊓y⊓z = ⊥) : x \ y = z := by
   conv_rhs at s => rw [← sup_inf_sdiff x y, sup_comm]
   rw [sup_comm] at s
@@ -155,6 +164,7 @@ theorem inf_sdiff_right : x⊓x \ y = x \ y := by
 theorem inf_sdiff_left : x \ y⊓x = x \ y := by
   rw [inf_comm, inf_sdiff_right]
 
+-- cf. `is_compl_top_bot`
 @[simp]
 theorem sdiff_self : x \ x = ⊥ := by
   rw [← inf_inf_sdiff, inf_idem, inf_of_le_right (@sdiff_le _ x x _)]
@@ -259,6 +269,8 @@ theorem Disjoint.disjoint_sdiff_left (h : Disjoint x y) : Disjoint (x \ z) y :=
 theorem Disjoint.disjoint_sdiff_right (h : Disjoint x y) : Disjoint x (y \ z) :=
   h.mono_right sdiff_le
 
+/- TODO: we could make an alternative constructor for `generalized_boolean_algebra` using
+`disjoint x (y \ x)` and `x ⊔ (y \ x) = y` as axioms. -/
 theorem Disjoint.sdiff_eq_of_sup_eq (hi : Disjoint x z) (hs : x⊔z = y) : y \ x = z :=
   have h : y⊓x = x := inf_eq_right.2 <| le_sup_left.trans hs.le
   sdiff_unique
@@ -281,6 +293,7 @@ protected theorem Disjoint.sdiff_unique (hd : Disjoint x z) (hz : z ≤ y) (hs :
     (by
       rw [inf_assoc, hd.eq_bot, inf_bot_eq])
 
+-- cf. `is_compl.disjoint_left_iff` and `is_compl.disjoint_right_iff`
 theorem disjoint_sdiff_iff_le (hz : z ≤ y) (hx : x ≤ y) : Disjoint z (y \ x) ↔ z ≤ x :=
   ⟨fun H =>
     le_of_inf_le_sup_le (le_transₓ H bot_le)
@@ -290,13 +303,16 @@ theorem disjoint_sdiff_iff_le (hz : z ≤ y) (hx : x ≤ y) : Disjoint z (y \ x)
         rw [sup_eq_right.2 hz]),
     fun H => disjoint_sdiff_self_right.mono_left H⟩
 
+-- cf. `is_compl.le_left_iff` and `is_compl.le_right_iff`
 theorem le_iff_disjoint_sdiff (hz : z ≤ y) (hx : x ≤ y) : z ≤ x ↔ Disjoint z (y \ x) :=
   (disjoint_sdiff_iff_le hz hx).symm
 
+-- cf. `is_compl.inf_left_eq_bot_iff` and `is_compl.inf_right_eq_bot_iff`
 theorem inf_sdiff_eq_bot_iff (hz : z ≤ y) (hx : x ≤ y) : z⊓y \ x = ⊥ ↔ z ≤ x := by
   rw [← disjoint_iff]
   exact disjoint_sdiff_iff_le hz hx
 
+-- cf. `is_compl.left_le_iff` and `is_compl.right_le_iff`
 theorem le_iff_eq_sup_sdiff (hz : z ≤ y) (hx : x ≤ y) : x ≤ z ↔ y = z⊔y \ x :=
   ⟨fun H => by
     apply le_antisymmₓ
@@ -316,9 +332,11 @@ theorem le_iff_eq_sup_sdiff (hz : z ≤ y) (hx : x ≤ y) : x ≤ z ↔ y = z⊔
     rw [inf_sdiff_self_right]
     exact bot_le⟩
 
+-- cf. `set.union_diff_cancel'`
 theorem sup_sdiff_cancel' (hx : x ≤ z) (hz : z ≤ y) : z⊔y \ x = y :=
   ((le_iff_eq_sup_sdiff hz (hx.trans hz)).1 hx).symm
 
+-- cf. `is_compl.sup_inf`
 theorem sdiff_sup : y \ (x⊔z) = y \ x⊓y \ z :=
   sdiff_unique
     (calc
@@ -346,6 +364,7 @@ theorem sdiff_sup : y \ (x⊔z) = y \ x⊓y \ z :=
         rw [inf_inf_sdiff, bot_inf_eq, bot_sup_eq, @inf_comm _ _ (y \ z), inf_inf_sdiff, inf_bot_eq]
       )
 
+-- cf. `is_compl.inf_sup`
 theorem sdiff_inf : y \ (x⊓z) = y \ x⊔y \ z :=
   sdiff_unique
     (calc
@@ -399,6 +418,7 @@ theorem Disjoint.sdiff_eq_left (h : Disjoint x y) : x \ y = x := by
 theorem Disjoint.sdiff_eq_right (h : Disjoint x y) : y \ x = y :=
   h.symm.sdiff_eq_left
 
+-- cf. `is_compl_bot_top`
 @[simp]
 theorem sdiff_bot : x \ ⊥ = x :=
   disjoint_bot_right.sdiff_eq_left
@@ -420,6 +440,7 @@ theorem sdiff_lt (hx : y ≤ x) (hy : y ≠ ⊥) : x \ y < x := by
   rw [sdiff_eq_self_iff_disjoint', disjoint_iff] at h
   rw [← h, inf_eq_right.mpr hx]
 
+-- cf. `is_compl.antitone`
 theorem sdiff_le_sdiff_left (h : z ≤ x) : w \ x ≤ w \ z :=
   le_of_inf_le_sup_le
     (calc
@@ -738,7 +759,7 @@ class HasCompl (α : Type _) where
 
 export HasCompl (Compl)
 
--- ././Mathport/Syntax/Translate/Basic.lean:343:9: unsupported: advanced prec syntax
+-- ././Mathport/Syntax/Translate/Basic.lean:462:9: unsupported: advanced prec syntax
 postfix:999 "ᶜ" => compl
 
 /-- This class contains the core axioms of a Boolean algebra. The `boolean_algebra` class extends
@@ -755,6 +776,7 @@ class BooleanAlgebra.Core (α : Type u) extends DistribLattice α, HasCompl α, 
   le_top : ∀ a : α, a ≤ ⊤
   bot_le : ∀ a : α, ⊥ ≤ a
 
+-- see Note [lower instance priority]
 instance (priority := 100) BooleanAlgebra.Core.toBoundedOrder [h : BooleanAlgebra.Core α] : BoundedOrder α :=
   { h with }
 
@@ -890,9 +912,13 @@ satisfying `x \ y = x ⊓ yᶜ`.
 
 This is a generalization of (classical) logic of propositions, or
 the powerset lattice. -/
+-- Lean complains about metavariables in the type if the universe is not specified
 class BooleanAlgebra (α : Type u) extends GeneralizedBooleanAlgebra α, BooleanAlgebra.Core α where
   sdiff_eq : ∀ x y : α, x \ y = x⊓yᶜ
 
+-- TODO: is there a way to automatically fill in the proofs of sup_inf_sdiff and inf_inf_sdiff given
+-- everything in `boolean_algebra.core` and `sdiff_eq`? The following doesn't work:
+-- (sup_inf_sdiff := λ a b, by rw [sdiff_eq, ←inf_sup_left, sup_compl_eq_top, inf_top_eq])
 section OfCore
 
 /-- Create a `has_sdiff` instance from a `boolean_algebra.core` instance, defining `x \ y` to

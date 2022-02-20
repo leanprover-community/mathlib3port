@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Mario Carneiro. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Mario Carneiro
+-/
 import Mathbin.Tactic.Hint
 
 /-!
@@ -76,7 +81,7 @@ namespace Itauto
 
 /-- Different propositional constructors that are variants of "and" for the purposes of the
 theorem prover. -/
-inductive and_kind
+inductive AndKind
   | And
   | Iff
   | Eq
@@ -86,45 +91,51 @@ instance : Inhabited AndKind :=
   ⟨AndKind.and⟩
 
 /-- A reified inductive type for propositional logic. -/
-inductive prop : Type
-  | var : ℕ → prop
-  | True : prop
-  | False : prop
-  | and' : AndKind → prop → prop → prop
-  | Or : prop → prop → prop
+inductive Prop : Type
+  | var : ℕ → prop-- propositional atoms P_i
+
+  | True : prop-- ⊤
+
+  | False : prop-- ⊥
+
+  | and' : AndKind → prop → prop → prop-- p ∧ q, p ↔ q, p = q
+
+  | Or : prop → prop → prop-- p ∨ q
+
   | imp : prop → prop → prop
   deriving has_reflect, DecidableEq
 
 /-- Constructor for `p ∧ q`. -/
+-- p → q
 @[matchPattern]
-def prop.and : Prop → Prop → Prop :=
+def Prop.and : Prop → Prop → Prop :=
   Prop.and' AndKind.and
 
 /-- Constructor for `p ↔ q`. -/
 @[matchPattern]
-def prop.iff : Prop → Prop → Prop :=
+def Prop.iff : Prop → Prop → Prop :=
   Prop.and' AndKind.iff
 
 /-- Constructor for `p = q`. -/
 @[matchPattern]
-def prop.eq : Prop → Prop → Prop :=
+def Prop.eq : Prop → Prop → Prop :=
   Prop.and' AndKind.eq
 
 /-- Constructor for `¬ p`. -/
 @[matchPattern]
-def prop.not (a : Prop) : Prop :=
+def Prop.not (a : Prop) : Prop :=
   a.imp Prop.false
 
 /-- Constructor for `xor p q`. -/
 @[matchPattern]
-def prop.xor (a b : Prop) : Prop :=
+def Prop.xor (a b : Prop) : Prop :=
   (a.And b.Not).Or (b.And a.Not)
 
 instance : Inhabited Prop :=
   ⟨Prop.true⟩
 
 /-- Given the contents of an `and` variant, return the two conjuncts. -/
-def and_kind.sides : AndKind → Prop → Prop → prop × prop
+def AndKind.sides : AndKind → Prop → Prop → prop × prop
   | and_kind.and, A, B => (A, B)
   | _, A, B => (A.imp B, B.imp A)
 
@@ -147,12 +158,12 @@ section
 open Ordering
 
 /-- A comparator for `and_kind`. (There should really be a derive handler for this.) -/
-def and_kind.cmp (p q : AndKind) : Ordering := by
+def AndKind.cmp (p q : AndKind) : Ordering := by
   cases p <;> cases q
   exacts[Eq, lt, lt, Gt, Eq, lt, Gt, Gt, Eq]
 
 /-- A comparator for propositions. (There should really be a derive handler for this.) -/
-def prop.cmp (p q : Prop) : Ordering := by
+def Prop.cmp (p q : Prop) : Ordering := by
   induction' p with _ ap _ _ p₁ p₂ _ _ p₁ p₂ _ _ p₁ p₂ _ _ p₁ p₂ generalizing q <;> cases q
   case' var, var =>
     exact cmp p q
@@ -177,25 +188,59 @@ instance : DecidableRel (@LT.lt Prop _) := fun _ _ => Ordering.decidableEq _ _
 end
 
 /-- A reified inductive proof type for intuitionistic propositional logic. -/
-inductive proof
-  | sorry : proof
-  | hyp (n : Name) : proof
-  | triv : proof
-  | exfalso' (p : proof) : proof
-  | intro (x : Name) (p : proof) : proof
-  | and_left (ak : AndKind) (p : proof) : proof
-  | and_right (ak : AndKind) (p : proof) : proof
-  | and_intro (ak : AndKind) (p₁ p₂ : proof) : proof
-  | curry (ak : AndKind) (p : proof) : proof
-  | curry₂ (ak : AndKind) (p q : proof) : proof
-  | app' : proof → proof → proof
-  | or_imp_left (p : proof) : proof
-  | or_imp_right (p : proof) : proof
-  | or_inl (p : proof) : proof
-  | or_inr (p : proof) : proof
-  | or_elim' (p₁ : proof) (x : Name) (p₂ p₃ : proof) : proof
-  | decidable_elim (classical : Bool) (p₁ x : Name) (p₂ p₃ : proof) : proof
-  | em (classical : Bool) (p : Name) : proof
+inductive Proof-- ⊢ A, causes failure during reconstruction
+
+  | sorry : proof-- (n: A) ⊢ A
+
+  | hyp (n : Name) : proof-- ⊢ ⊤
+
+  | triv : proof-- (p: ⊥) ⊢ A
+
+  | exfalso' (p : proof) : proof-- (p: (x: A) ⊢ B) ⊢ A → B
+
+  | intro (x : Name) (p : proof) : proof-- ak = and:  (p: A ∧ B) ⊢ A
+-- ak = iff:  (p: A ↔ B) ⊢ A → B
+-- ak = eq:  (p: A = B) ⊢ A → B
+
+  | and_left (ak : AndKind) (p : proof) : proof-- ak = and:  (p: A ∧ B) ⊢ B
+-- ak = iff:  (p: A ↔ B) ⊢ B → A
+-- ak = eq:  (p: A = B) ⊢ B → A
+
+  | and_right (ak : AndKind) (p : proof) : proof-- ak = and:  (p₁: A) (p₂: B) ⊢ A ∧ B
+-- ak = iff:  (p₁: A → B) (p₁: B → A) ⊢ A ↔ B
+-- ak = eq:  (p₁: A → B) (p₁: B → A) ⊢ A = B
+
+  | and_intro (ak : AndKind) (p₁ p₂ : proof) : proof-- ak = and:  (p: A ∧ B → C) ⊢ A → B → C
+-- ak = iff:  (p: (A ↔ B) → C) ⊢ (A → B) → (B → A) → C
+-- ak = eq:  (p: (A = B) → C) ⊢ (A → B) → (B → A) → C
+
+  | curry (ak : AndKind) (p : proof) : proof-- This is a partial application of curry.
+-- ak = and:  (p: A ∧ B → C) (q : A) ⊢ B → C
+-- ak = iff:  (p: (A ↔ B) → C) (q: A → B) ⊢ (B → A) → C
+-- ak = eq:  (p: (A ↔ B) → C) (q: A → B) ⊢ (B → A) → C
+
+  | curry₂ (ak : AndKind) (p q : proof) : proof-- (p: A → B) (q: A) ⊢ B
+
+  | app' : proof → proof → proof-- (p: A ∨ B → C) ⊢ A → C
+
+  | or_imp_left (p : proof) : proof-- (p: A ∨ B → C) ⊢ B → C
+
+  | or_imp_right (p : proof) : proof-- (p: A) ⊢ A ∨ B
+
+  | or_inl (p : proof) : proof-- (p: B) ⊢ A ∨ B
+
+  | or_inr (p : proof) : proof-- (p: B) ⊢ A ∨ B
+-- (p₁: A ∨ B) (p₂: (x: A) ⊢ C) (p₃: (x: B) ⊢ C) ⊢ C
+
+  | or_elim' (p₁ : proof) (x : Name) (p₂ p₃ : proof) : proof-- (p₁: decidable A) (p₂: (x: A) ⊢ C) (p₃: (x: ¬ A) ⊢ C) ⊢ C
+
+  | decidable_elim (classical : Bool) (p₁ x : Name) (p₂ p₃ : proof) : proof-- classical = ff: (p: decidable A) ⊢ A ∨ ¬A
+-- classical = tt: (p: Prop) ⊢ p ∨ ¬p
+
+  | em (classical : Bool) (p : Name) :
+    proof-- The variable x here names the variable that will be used in the elaborated proof
+-- (p: ((x:A) → B) → C) ⊢ B → C
+
   | imp_imp_simp (x : Name) (p : proof) : proof
   deriving has_reflect
 
@@ -249,6 +294,55 @@ unsafe def proof.app : Proof → Proof → Proof
   | p, q => p.app' q
 
 /-- Get a new name in the pattern `h0, h1, h2, ...` -/
+-- Note(Mario): the typechecker is disabled because it requires proofs to carry around additional
+-- props. These can be retrieved from the git history if you want to re-enable this.
+/-
+/-- A typechecker for the `proof` type. This is not used by the tactic but can be used for
+debugging. -/
+meta def proof.check : name_map prop → proof → option prop
+| Γ (proof.hyp i) := Γ.find i
+| Γ proof.triv := some prop.true
+| Γ (proof.exfalso' A p) := guard (p.check Γ = some prop.false) $> A
+| Γ (proof.intro x A p) := do B ← p.check (Γ.insert x A), pure (prop.imp A B)
+| Γ (proof.and_left ak p) := do
+  prop.and' ak' A B ← p.check Γ | none,
+  guard (ak = ak') $> (ak.sides A B).1
+| Γ (proof.and_right ak p) := do
+  prop.and' ak' A B ← p.check Γ | none,
+  guard (ak = ak') $> (ak.sides A B).2
+| Γ (proof.and_intro and_kind.and p q) := do
+  A ← p.check Γ, B ← q.check Γ,
+  pure (A.and B)
+| Γ (proof.and_intro ak p q) := do
+  prop.imp A B ← p.check Γ | none,
+  C ← q.check Γ, guard (C = prop.imp B A) $> (A.and' ak B)
+| Γ (proof.curry ak p) := do
+  prop.imp (prop.and' ak' A B) C ← p.check Γ | none,
+  let (A', B') := ak.sides A B,
+  guard (ak = ak') $> (A'.imp $ B'.imp C)
+| Γ (proof.curry₂ ak p q) := do
+  prop.imp (prop.and' ak' A B) C ← p.check Γ | none,
+  A₂ ← q.check Γ,
+  let (A', B') := ak.sides A B,
+  guard (ak = ak' ∧ A₂ = A') $> (B'.imp C)
+| Γ (proof.app' p q) := do prop.imp A B ← p.check Γ | none, A' ← q.check Γ, guard (A = A') $> B
+| Γ (proof.or_imp_left B p) := do
+  prop.imp (prop.or A B') C ← p.check Γ | none,
+  guard (B = B') $> (A.imp C)
+| Γ (proof.or_imp_right A p) := do
+  prop.imp (prop.or A' B) C ← p.check Γ | none,
+  guard (A = A') $> (B.imp C)
+| Γ (proof.or_inl B p) := do A ← p.check Γ | none, pure (A.or B)
+| Γ (proof.or_inr A p) := do B ← p.check Γ | none, pure (A.or B)
+| Γ (proof.or_elim p x q r) := do
+  prop.or A B ← p.check Γ | none,
+  C ← q.check (Γ.insert x A),
+  C' ← r.check (Γ.insert x B),
+  guard (C = C') $> C
+| Γ (proof.imp_imp_simp x A p) := do
+  prop.imp (prop.imp A' B) C ← p.check Γ | none,
+  guard (A = A') $> (B.imp C)
+-/
 @[inline]
 unsafe def fresh_name : ℕ → Name × ℕ := fun n => (mkSimpleName ("h" ++ toString n), n + 1)
 
@@ -258,7 +352,11 @@ unsafe def context :=
 
 /-- Debug printer for the context. -/
 unsafe def context.to_format (Γ : context) : format :=
-  (Γ.fold "") fun P p f => P.to_format ++ ",\n" ++ f
+  (Γ.fold "") fun P p f =>
+    -- ++ " := " ++ p.to_format
+          P.to_format ++
+        ",\n" ++
+      f
 
 unsafe instance : has_to_format context :=
   ⟨context.to_format⟩
@@ -297,16 +395,16 @@ unsafe def context.with_add (Γ : context) (A : Prop) (p : Proof) (B : Prop) (f 
   | Except.error p => (true, p B, n)
 
 /-- Map a function over the proof (regardless of whether the proof is successful or not). -/
-def map_proof (f : Proof → Proof) : Bool × proof × ℕ → Bool × proof × ℕ
+def mapProof (f : Proof → Proof) : Bool × proof × ℕ → Bool × proof × ℕ
   | (b, p, n) => (b, f p, n)
 
 /-- Convert a value-with-success to an optional value. -/
-def is_ok {α} : Bool × α → Option α
+def isOk {α} : Bool × α → Option α
   | (ff, p) => none
   | (tt, p) => some p
 
 /-- Skip the continuation and return a failed proof if the boolean is false. -/
-def when_ok : Bool → (ℕ → Bool × proof × ℕ) → ℕ → Bool × proof × ℕ
+def whenOk : Bool → (ℕ → Bool × proof × ℕ) → ℕ → Bool × proof × ℕ
   | ff, f, n => (false, Proof.sorry, n)
   | tt, f, n => f n
 
@@ -595,7 +693,7 @@ unsafe def itauto (use_dec use_classical : Bool) (extra_dec : List expr) : tacti
       let hyps ← local_context
       let (Γ, decs) ←
         hyps.mfoldl
-            (fun Γ : Except (Prop → Proof) context × native.rb_map Prop (Bool × expr) h => do
+            (fun h => do
               let e ← infer_type h
               mcond (is_prop e)
                   (do
@@ -638,7 +736,7 @@ unsafe def itauto (use_dec use_classical : Bool) (extra_dec : List expr) : tacti
                 (ats.2.iterate (pure decs)) fun i e r => if decided i.1 then r else r >>= fun decs => add_dec ff decs e
           else pure decs
       let Γ ←
-        decs.fold (pure Γ) fun A ⟨cl, pf⟩ r =>
+        decs.fold (pure Γ) fun r =>
             r >>= fun Γ => do
               let n ← mk_fresh_name
               read_ref hs >>= fun Γ => write_ref hs (Γ n pf)
@@ -654,8 +752,8 @@ namespace Interactive
 
 setup_tactic_parser
 
--- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr ?»
--- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr ?»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr ?»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr ?»
 /-- A decision procedure for intuitionistic propositional logic. Unlike `finish` and `tauto!` this
 tactic never uses the law of excluded middle (without the `!` option), and the proof search is
 tailored for this use case. (`itauto!` will work as a classical SAT solver, but the algorithm is

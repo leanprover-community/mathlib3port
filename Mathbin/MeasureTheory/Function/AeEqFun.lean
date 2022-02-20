@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Johannes Hölzl, Zhouhang Zhou. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johannes Hölzl, Zhouhang Zhou
+-/
 import Mathbin.MeasureTheory.Integral.Lebesgue
 import Mathbin.Order.Filter.Germ
 import Mathbin.Topology.ContinuousFunction.Algebra
@@ -74,14 +79,14 @@ variable [MeasurableSpace β]
 variable (β)
 
 /-- The equivalence relation of being almost everywhere equal -/
-def measure.ae_eq_setoid (μ : Measure α) : Setoidₓ { f : α → β // AeMeasurable f μ } :=
+def Measure.aeEqSetoid (μ : Measure α) : Setoidₓ { f : α → β // AeMeasurable f μ } :=
   ⟨fun f g => (f : α → β) =ᵐ[μ] g, fun f => ae_eq_refl f, fun f g => ae_eq_symm, fun f g h => ae_eq_trans⟩
 
 variable (α)
 
 /-- The space of equivalence classes of measurable functions, where two measurable functions are
     equivalent if they agree almost everywhere, i.e., they differ on a set of measure `0`.  -/
-def ae_eq_fun (μ : Measure α) : Type _ :=
+def AeEqFun (μ : Measure α) : Type _ :=
   Quotientₓ (μ.aeEqSetoid β)
 
 variable {α β}
@@ -103,10 +108,10 @@ def mk (f : α → β) (hf : AeMeasurable f μ) : α →ₘ[μ] β :=
 instance : CoeFun (α →ₘ[μ] β) fun _ => α → β :=
   ⟨fun f => AeMeasurable.mk _ (Quotientₓ.out' f : { f : α → β // AeMeasurable f μ }).2⟩
 
-protected theorem Measurable (f : α →ₘ[μ] β) : Measurable f :=
+protected theorem measurable (f : α →ₘ[μ] β) : Measurable f :=
   AeMeasurable.measurable_mk _
 
-protected theorem AeMeasurable (f : α →ₘ[μ] β) : AeMeasurable f μ :=
+protected theorem ae_measurable (f : α →ₘ[μ] β) : AeMeasurable f μ :=
   f.Measurable.AeMeasurable
 
 @[simp]
@@ -226,7 +231,7 @@ theorem coe_fn_comp₂ {γ δ : Type _} [MeasurableSpace γ] [MeasurableSpace δ
 
 /-- Interpret `f : α →ₘ[μ] β` as a germ at `μ.ae` forgetting that `f` is almost everywhere
     measurable. -/
-def to_germ (f : α →ₘ[μ] β) : Germ μ.ae β :=
+def toGerm (f : α →ₘ[μ] β) : Germ μ.ae β :=
   (Quotientₓ.liftOn' f fun f => ((f : α → β) : Germ μ.ae β)) fun f g H => Germ.coe_eq.2 H
 
 @[simp]
@@ -252,12 +257,12 @@ theorem comp₂_to_germ (g : β → γ → δ) (hg : Measurable (uncurry g)) (f�
 
 /-- Given a predicate `p` and an equivalence class `[f]`, return true if `p` holds of `f a`
     for almost all `a` -/
-def lift_pred (p : β → Prop) (f : α →ₘ[μ] β) : Prop :=
+def LiftPred (p : β → Prop) (f : α →ₘ[μ] β) : Prop :=
   f.toGerm.lift_pred p
 
 /-- Given a relation `r` and equivalence class `[f]` and `[g]`, return true if `r` holds of
     `(f a, g a)` for almost all `a` -/
-def lift_rel (r : β → γ → Prop) (f : α →ₘ[μ] β) (g : α →ₘ[μ] γ) : Prop :=
+def LiftRel (r : β → γ → Prop) (f : α →ₘ[μ] β) (g : α →ₘ[μ] γ) : Prop :=
   f.toGerm.LiftRel r g.toGerm
 
 theorem lift_rel_mk_mk {r : β → γ → Prop} {f : α → β} {g : α → γ} {hf hg} :
@@ -413,7 +418,7 @@ instance : Monoidₓ (α →ₘ[μ] γ) :=
 end Monoidₓ
 
 @[to_additive]
-instance CommMonoidₓ [CommMonoidₓ γ] [HasMeasurableMul₂ γ] : CommMonoidₓ (α →ₘ[μ] γ) :=
+instance commMonoid [CommMonoidₓ γ] [HasMeasurableMul₂ γ] : CommMonoidₓ (α →ₘ[μ] γ) :=
   to_germ_injective.CommMonoid toGerm one_to_germ mul_to_germ
 
 section Groupₓ
@@ -534,7 +539,7 @@ variable [TopologicalSpace γ] [LinearOrderₓ γ] [OrderClosedTopology γ] [Sec
   [OpensMeasurableSpace γ]
 
 /-- Positive part of an `ae_eq_fun`. -/
-def pos_part (f : α →ₘ[μ] γ) : α →ₘ[μ] γ :=
+def posPart (f : α →ₘ[μ] γ) : α →ₘ[μ] γ :=
   comp (fun x => max x 0) (measurable_id.max measurable_const) f
 
 @[simp]
@@ -561,7 +566,7 @@ variable [TopologicalSpace β] [MeasurableSpace β] [BorelSpace β]
 
 /-- The equivalence class of `μ`-almost-everywhere measurable functions associated to a continuous
 map. -/
-def to_ae_eq_fun (f : C(α, β)) : α →ₘ[μ] β :=
+def toAeEqFun (f : C(α, β)) : α →ₘ[μ] β :=
   AeEqFun.mk f f.Continuous.Measurable.AeMeasurable
 
 theorem coe_fn_to_ae_eq_fun (f : C(α, β)) : f.toAeEqFun μ =ᵐ[μ] f :=
@@ -573,19 +578,19 @@ variable [Groupₓ β] [TopologicalGroup β] [SecondCountableTopology β]
 classes of `μ`-almost-everywhere measurable functions. -/
 @[to_additive
       "The `add_hom` from the group of continuous maps from `α` to `β` to the group of\nequivalence classes of `μ`-almost-everywhere measurable functions."]
-def to_ae_eq_fun_mul_hom : C(α, β) →* α →ₘ[μ] β where
+def toAeEqFunMulHom : C(α, β) →* α →ₘ[μ] β where
   toFun := ContinuousMap.toAeEqFun μ
   map_one' := rfl
   map_mul' := fun f g => AeEqFun.mk_mul_mk f g f.Continuous.Measurable.AeMeasurable g.Continuous.Measurable.AeMeasurable
 
-variable {𝕜 : Type _} [Semiringₓ 𝕜] [TopologicalSpace 𝕜] [MeasurableSpace 𝕜] [OpensMeasurableSpace 𝕜]
+variable {𝕜 : Type _} [Semiringₓ 𝕜] [MeasurableSpace 𝕜]
 
 variable [TopologicalSpace γ] [MeasurableSpace γ] [BorelSpace γ] [AddCommGroupₓ γ] [Module 𝕜 γ] [TopologicalAddGroup γ]
-  [HasContinuousSmul 𝕜 γ] [SecondCountableTopology γ]
+  [HasMeasurableSmul 𝕜 γ] [HasContinuousConstSmul 𝕜 γ] [SecondCountableTopology γ]
 
 /-- The linear map from the group of continuous maps from `α` to `β` to the group of equivalence
 classes of `μ`-almost-everywhere measurable functions. -/
-def to_ae_eq_fun_linear_map : C(α, γ) →ₗ[𝕜] α →ₘ[μ] γ :=
+def toAeEqFunLinearMap : C(α, γ) →ₗ[𝕜] α →ₘ[μ] γ :=
   { toAeEqFunAddHom μ with map_smul' := fun c f => AeEqFun.smul_mk c f f.Continuous.Measurable.AeMeasurable }
 
 end ContinuousMap

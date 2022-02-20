@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Apurva Nakade. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Apurva Nakade
+-/
 import Mathbin.Algebra.Algebra.Basic
 import Mathbin.RingTheory.Localization
 import Mathbin.SetTheory.Surreal.Basic
@@ -29,7 +34,7 @@ namespace Pgame
 `{ 0 | pow_half n }`. These are the explicit expressions of powers of `half`. By definition, we have
  `pow_half 0 = 0` and `pow_half 1 = half` and we prove later on that
 `pow_half (n + 1) + pow_half (n + 1) ≈ pow_half n`.-/
-def pow_half : ℕ → Pgame
+def powHalf : ℕ → Pgame
   | 0 => mk PUnit Pempty 0 Pempty.elimₓ
   | n + 1 => mk PUnit PUnit 0 fun _ => pow_half n
 
@@ -129,7 +134,7 @@ def half : Surreal :=
   ⟦⟨Pgame.half, Pgame.numeric_half⟩⟧
 
 /-- Powers of the surreal number `half`. -/
-def pow_half (n : ℕ) : Surreal :=
+def powHalf (n : ℕ) : Surreal :=
   ⟦⟨Pgame.powHalf n, Pgame.numeric_pow_half⟩⟧
 
 @[simp]
@@ -184,7 +189,7 @@ theorem dyadic_aux {m₁ m₂ : ℤ} {y₁ y₂ : ℕ} (h₂ : m₁ * 2 ^ y₁ =
     
 
 /-- The additive monoid morphism `dyadic_map` sends ⟦⟨m, 2^n⟩⟧ to m • half ^ n. -/
-def dyadic_map : Localization.Away (2 : ℤ) →+ Surreal where
+def dyadicMap : Localization.Away (2 : ℤ) →+ Surreal where
   toFun := fun x =>
     (Localization.liftOn x fun x y => x • powHalf (Submonoid.log y)) <| by
       intro m₁ m₂ n₁ n₂ h₁
@@ -232,8 +237,14 @@ theorem dyadic_map_apply_pow (m : ℤ) (n : ℕ) :
   rw [dyadic_map_apply, @Submonoid.log_pow_int_eq_self 2 one_lt_two]
 
 /-- We define dyadic surreals as the range of the map `dyadic_map`. -/
-def dyadic : Set Surreal :=
+def Dyadic : Set Surreal :=
   Set.Range dyadicMap
 
+-- We conclude with some ideas for further work on surreals; these would make fun projects.
+-- TODO show that the map from dyadic rationals to surreals is injective
+-- TODO map the reals into the surreals, using dyadic Dedekind cuts
+-- TODO show this is a group homomorphism, and injective
+-- TODO show the maps from the dyadic rationals and from the reals
+-- into the surreals are multiplicative
 end Surreal
 

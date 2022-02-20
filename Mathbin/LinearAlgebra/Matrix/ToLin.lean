@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Johannes Hölzl. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johannes Hölzl, Patrick Massot, Casper Putz, Anne Baanen
+-/
 import Mathbin.Data.Matrix.Block
 import Mathbin.LinearAlgebra.Matrix.FiniteDimensional
 import Mathbin.LinearAlgebra.StdBasis
@@ -517,7 +522,7 @@ theorem to_matrix_lsmul (x : R) i j : LinearMap.toMatrix b b (Algebra.lsmul R S 
 This definition is useful for doing (more) explicit computations with `algebra.lmul`,
 such as the trace form or norm map for algebras.
 -/
-noncomputable def left_mul_matrix : S →ₐ[R] Matrix m m R where
+noncomputable def leftMulMatrix : S →ₐ[R] Matrix m m R where
   toFun := fun x => LinearMap.toMatrix b b (Algebra.lmul R S x)
   map_zero' := by
     rw [AlgHom.map_zero, LinearEquiv.map_zero]
@@ -535,6 +540,8 @@ theorem left_mul_matrix_apply (x : S) : leftMulMatrix b x = LinearMap.toMatrix b
   rfl
 
 theorem left_mul_matrix_eq_repr_mul (x : S) i j : leftMulMatrix b x i j = b.repr (x * b j) i := by
+  -- This is defeq to just `to_matrix_lmul' b x i j`,
+  -- but the unfolding goes a lot faster with this explicit `rw`.
   rw [left_mul_matrix_apply, to_matrix_lmul' b x i j]
 
 theorem left_mul_matrix_mul_vec_repr (x y : S) : (leftMulMatrix b x).mulVec (b.repr y) = b.repr (x * y) :=

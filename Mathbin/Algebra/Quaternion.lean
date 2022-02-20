@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Yury Kudryashov. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yury Kudryashov
+-/
 import Mathbin.Tactic.RingExp
 import Mathbin.Algebra.Algebra.Basic
 import Mathbin.Algebra.Ring.Opposite
@@ -157,9 +162,9 @@ theorem mk_mul_mk (a₁ a₂ a₃ a₄ b₁ b₂ b₃ b₄ : R) :
 
 instance : Ringₓ ℍ[R,c₁,c₂] := by
   refine_struct
-      { add := · + ·, zero := (0 : ℍ[R,c₁,c₂]), neg := Neg.neg, sub := Sub.sub, mul := · * ·, one := 1,
-        nsmul := @nsmulRec _ ⟨(0 : ℍ[R,c₁,c₂])⟩ ⟨· + ·⟩, zsmul := @zsmulRec _ ⟨(0 : ℍ[R,c₁,c₂])⟩ ⟨· + ·⟩ ⟨Neg.neg⟩,
-        npow := @npowRec _ ⟨(1 : ℍ[R,c₁,c₂])⟩ ⟨· * ·⟩ } <;>
+      { add := (· + ·), zero := (0 : ℍ[R,c₁,c₂]), neg := Neg.neg, sub := Sub.sub, mul := (· * ·), one := 1,
+        nsmul := @nsmulRec _ ⟨(0 : ℍ[R,c₁,c₂])⟩ ⟨(· + ·)⟩, zsmul := @zsmulRec _ ⟨(0 : ℍ[R,c₁,c₂])⟩ ⟨(· + ·)⟩ ⟨Neg.neg⟩,
+        npow := @npowRec _ ⟨(1 : ℍ[R,c₁,c₂])⟩ ⟨(· * ·)⟩ } <;>
     intros <;>
       try
           rfl <;>
@@ -209,28 +214,28 @@ variable (R c₁ c₂)
 
 /-- `quaternion_algebra.re` as a `linear_map`-/
 @[simps]
-def re_lm : ℍ[R,c₁,c₂] →ₗ[R] R where
+def reLm : ℍ[R,c₁,c₂] →ₗ[R] R where
   toFun := re
   map_add' := fun x y => rfl
   map_smul' := fun r x => rfl
 
 /-- `quaternion_algebra.im_i` as a `linear_map`-/
 @[simps]
-def im_i_lm : ℍ[R,c₁,c₂] →ₗ[R] R where
+def imILm : ℍ[R,c₁,c₂] →ₗ[R] R where
   toFun := imI
   map_add' := fun x y => rfl
   map_smul' := fun r x => rfl
 
 /-- `quaternion_algebra.im_j` as a `linear_map`-/
 @[simps]
-def im_j_lm : ℍ[R,c₁,c₂] →ₗ[R] R where
+def imJLm : ℍ[R,c₁,c₂] →ₗ[R] R where
   toFun := imJ
   map_add' := fun x y => rfl
   map_smul' := fun r x => rfl
 
 /-- `quaternion_algebra.im_k` as a `linear_map`-/
 @[simps]
-def im_k_lm : ℍ[R,c₁,c₂] →ₗ[R] R where
+def imKLm : ℍ[R,c₁,c₂] →ₗ[R] R where
   toFun := imK
   map_add' := fun x y => rfl
   map_smul' := fun r x => rfl
@@ -372,6 +377,7 @@ theorem conj_fixed {R : Type _} [CommRingₓ R] [NoZeroDivisors R] [CharZero R] 
     conj a = a ↔ a = a.re := by
   simp [ext_iff, neg_eq_iff_add_eq_zero, add_self_eq_zero]
 
+-- Can't use `rw ← conj_fixed` in the proof without additional assumptions
 theorem conj_mul_eq_coe : conj a * a = (conj a * a).re := by
   ext <;> simp <;> ring_exp
 
@@ -401,7 +407,7 @@ theorem star_def (a : ℍ[R,c₁,c₂]) : star a = conj a :=
 open MulOpposite
 
 /-- Quaternion conjugate as an `alg_equiv` to the opposite ring. -/
-def conj_ae : ℍ[R,c₁,c₂] ≃ₐ[R] ℍ[R,c₁,c₂]ᵐᵒᵖ :=
+def conjAe : ℍ[R,c₁,c₂] ≃ₐ[R] ℍ[R,c₁,c₂]ᵐᵒᵖ :=
   { conj.toAddEquiv.trans opAddEquiv with toFun := op ∘ conj, invFun := conj ∘ unop,
     map_mul' := fun x y => by
       simp ,
@@ -738,7 +744,7 @@ theorem conj_sub : (a - b).conj = a.conj - b.conj :=
 open MulOpposite
 
 /-- Quaternion conjugate as an `alg_equiv` to the opposite ring. -/
-def conj_ae : ℍ[R] ≃ₐ[R] ℍ[R]ᵐᵒᵖ :=
+def conjAe : ℍ[R] ≃ₐ[R] ℍ[R]ᵐᵒᵖ :=
   QuaternionAlgebra.conjAe
 
 @[simp]
@@ -746,7 +752,7 @@ theorem coe_conj_ae : ⇑(conjAe : ℍ[R] ≃ₐ[R] ℍ[R]ᵐᵒᵖ) = op ∘ co
   rfl
 
 /-- Square of the norm. -/
-def norm_sq : ℍ[R] →*₀ R where
+def normSq : ℍ[R] →*₀ R where
   toFun := fun a => (a * a.conj).re
   map_zero' := by
     rw [conj_zero, zero_mul, zero_re]

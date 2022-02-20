@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Thomas Browning. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Thomas Browning
+-/
 import Mathbin.Topology.LocalHomeomorph
 
 /-!
@@ -51,10 +56,10 @@ theorem map_nhds_eq (hf : IsLocallyHomeomorph f) (x : X) : (𝓝 x).map f = 𝓝
   obtain ⟨e, hx, rfl⟩ := hf x
   exact e.map_nhds_eq hx
 
-protected theorem Continuous (hf : IsLocallyHomeomorph f) : Continuous f :=
+protected theorem continuous (hf : IsLocallyHomeomorph f) : Continuous f :=
   continuous_iff_continuous_at.mpr fun x => le_of_eqₓ (hf.map_nhds_eq x)
 
-theorem IsOpenMap (hf : IsLocallyHomeomorph f) : IsOpenMap f :=
+theorem is_open_map (hf : IsLocallyHomeomorph f) : IsOpenMap f :=
   IsOpenMap.of_nhds_le fun x => ge_of_eq (hf.map_nhds_eq x)
 
 protected theorem comp (hg : IsLocallyHomeomorph g) (hf : IsLocallyHomeomorph f) : IsLocallyHomeomorph (g ∘ f) := by

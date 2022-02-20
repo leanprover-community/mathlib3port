@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Sébastien Gouëzel. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Sébastien Gouëzel
+-/
 import Mathbin.Geometry.Manifold.ChartedSpace
 
 /-!
@@ -55,7 +60,7 @@ variable (G : StructureGroupoid H) (G' : StructureGroupoid H')
 `s` a set and `x` a point. Good behavior here means locality and invariance under given groupoids
 (both in the source and in the target). Given such a good behavior, the lift of this property
 to charted spaces admitting these groupoids will inherit the good behavior. -/
-structure local_invariant_prop (P : (H → H') → Set H → H → Prop) : Prop where
+structure LocalInvariantProp (P : (H → H') → Set H → H → Prop) : Prop where
   is_local : ∀ {s x u} {f : H → H'}, IsOpen u → x ∈ u → (P f s x ↔ P f (s ∩ u) x)
   right_invariance :
     ∀ {s x f} {e : LocalHomeomorph H H}, e ∈ G → x ∈ e.Source → P f s x → P (f ∘ e.symm) (e.Target ∩ e.symm ⁻¹' s) (e x)
@@ -490,7 +495,7 @@ open LocalHomeomorph
 /-- A function from a model space `H` to itself is a local structomorphism, with respect to a
 structure groupoid `G` for `H`, relative to a set `s` in `H`, if for all points `x` in the set, the
 function agrees with a `G`-structomorphism on `s` in a neighbourhood of `x`. -/
-def is_local_structomorph_within_at (f : H → H) (s : Set H) (x : H) : Prop :=
+def IsLocalStructomorphWithinAt (f : H → H) (s : Set H) (x : H) : Prop :=
   x ∈ s → ∃ e : LocalHomeomorph H H, e ∈ G ∧ EqOn f e.toFun (s ∩ e.Source) ∧ x ∈ e.Source
 
 /-- For a groupoid `G` which is `closed_under_restriction`, being a local structomorphism is a local

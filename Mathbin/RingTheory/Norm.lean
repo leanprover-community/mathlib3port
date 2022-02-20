@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Anne Baanen. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Anne Baanen
+-/
 import Mathbin.FieldTheory.PrimitiveElement
 import Mathbin.LinearAlgebra.Determinant
 import Mathbin.LinearAlgebra.Matrix.Charpoly.Coeff
@@ -72,6 +77,7 @@ theorem norm_eq_one_of_not_exists_basis (h : ¬∃ s : Finset S, Nonempty (Basis
 
 variable {R}
 
+-- Can't be a `simp` lemma because it depends on a choice of basis
 theorem norm_eq_matrix_det [DecidableEq ι] (b : Basis ι R S) (s : S) :
     norm R s = Matrix.det (Algebra.leftMulMatrix b s) := by
   rw [norm_apply, ← LinearMap.det_to_matrix b, to_matrix_lmul_eq]
@@ -105,13 +111,13 @@ section EqProdRoots
 
 /-- Given `pb : power_basis K S`, then the norm of `pb.gen` is
 `(-1) ^ pb.dim * coeff (minpoly K pb.gen) 0`. -/
-theorem power_basis.norm_gen_eq_coeff_zero_minpoly [Algebra K S] (pb : PowerBasis K S) :
+theorem PowerBasis.norm_gen_eq_coeff_zero_minpoly [Algebra K S] (pb : PowerBasis K S) :
     norm K pb.gen = -1 ^ pb.dim * coeff (minpoly K pb.gen) 0 := by
   rw [norm_eq_matrix_det pb.basis, det_eq_sign_charpoly_coeff, charpoly_left_mul_matrix, Fintype.card_fin]
 
 /-- Given `pb : power_basis K S`, then the norm of `pb.gen` is
 `((minpoly K pb.gen).map (algebra_map K F)).roots.prod`. -/
-theorem power_basis.norm_gen_eq_prod_roots [Algebra K S] (pb : PowerBasis K S)
+theorem PowerBasis.norm_gen_eq_prod_roots [Algebra K S] (pb : PowerBasis K S)
     (hf : (minpoly K pb.gen).Splits (algebraMap K F)) :
     algebraMap K F (norm K pb.gen) = ((minpoly K pb.gen).map (algebraMap K F)).roots.Prod := by
   rw [power_basis.norm_gen_eq_coeff_zero_minpoly, ← pb.nat_degree_minpoly, RingHom.map_mul, ← coeff_map,
@@ -164,24 +170,24 @@ open IntermediateField
 
 variable (K)
 
--- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr ⟮ , ⟯»
--- ././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr ⟮ , ⟯»
--- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr ⟮ , ⟯»
--- ././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr ⟮ , ⟯»
--- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr ⟮ , ⟯»
--- ././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr ⟮ , ⟯»
 theorem norm_eq_norm_adjoin [FiniteDimensional K L] [IsSeparable K L] (x : L) :
     norm K x =
       norm K (AdjoinSimple.gen K x) ^
-        finrank («expr ⟮ , ⟯» K "././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr ⟮ , ⟯»")
+        finrank («expr ⟮ , ⟯» K "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr ⟮ , ⟯»")
           L :=
   by
   let this' :=
     is_separable_tower_top_of_is_separable K
-      («expr ⟮ , ⟯» K "././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr ⟮ , ⟯»") L
+      («expr ⟮ , ⟯» K "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr ⟮ , ⟯»") L
   let pbL :=
     Field.powerBasisOfFiniteOfSeparable
-      («expr ⟮ , ⟯» K "././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr ⟮ , ⟯»") L
+      («expr ⟮ , ⟯» K "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr ⟮ , ⟯»") L
   let pbx := IntermediateField.adjoin.powerBasis (IsSeparable.is_integral K x)
   rw [← adjoin_simple.algebra_map_gen K x, norm_eq_matrix_det (pbx.basis.smul pbL.basis) _,
     smul_left_mul_matrix_algebra_map, det_block_diagonal, norm_eq_matrix_det pbx.basis]
@@ -193,8 +199,8 @@ variable {K}
 
 section IntermediateField
 
--- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr ⟮ , ⟯»
--- ././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr ⟮ , ⟯»
 theorem _root_.intermediate_field.adjoin_simple.norm_gen_eq_one {x : L} (hx : ¬IsIntegral K x) :
     norm K (AdjoinSimple.gen K x) = 1 := by
   rw [norm_eq_one_of_not_exists_basis]
@@ -203,21 +209,21 @@ theorem _root_.intermediate_field.adjoin_simple.norm_gen_eq_one {x : L} (hx : ¬
   refine'
     is_integral_of_mem_of_fg
       («expr ⟮ , ⟯» K
-          "././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr ⟮ , ⟯»").toSubalgebra
+          "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr ⟮ , ⟯»").toSubalgebra
       _ x _
   · exact (Submodule.fg_iff_finite_dimensional _).mpr (of_finset_basis b)
     
   · exact IntermediateField.subset_adjoin K _ (Set.mem_singleton x)
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr ⟮ , ⟯»
--- ././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr ⟮ , ⟯»
 theorem _root_.intermediate_field.adjoin_simple.norm_gen_eq_prod_roots (x : L)
     (hf : (minpoly K x).Splits (algebraMap K F)) :
     (algebraMap K F) (norm K (AdjoinSimple.gen K x)) = ((minpoly K x).map (algebraMap K F)).roots.Prod := by
   have injKxL :
     Function.Injective
-      (algebraMap («expr ⟮ , ⟯» K "././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr ⟮ , ⟯»")
+      (algebraMap («expr ⟮ , ⟯» K "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr ⟮ , ⟯»")
         L) :=
     RingHom.injective _
   by_cases' hx : _root_.is_integral K x
@@ -256,13 +262,13 @@ theorem norm_eq_prod_embeddings_gen (pb : PowerBasis K L) (hE : (minpoly K pb.ge
     rw [PowerBasis.lift_equiv'_apply_coe, id.def]
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr ⟮ , ⟯»
--- ././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr ⟮ , ⟯»
 theorem norm_eq_prod_roots [IsSeparable K L] [FiniteDimensional K L] {x : L}
     (hF : (minpoly K x).Splits (algebraMap K F)) :
     algebraMap K F (norm K x) =
       ((minpoly K x).map (algebraMap K F)).roots.Prod ^
-        finrank («expr ⟮ , ⟯» K "././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr ⟮ , ⟯»")
+        finrank («expr ⟮ , ⟯» K "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr ⟮ , ⟯»")
           L :=
   by
   rw [norm_eq_norm_adjoin K x, map_pow, IntermediateField.AdjoinSimple.norm_gen_eq_prod_roots _ hF]
@@ -293,8 +299,8 @@ theorem prod_embeddings_eq_finrank_pow [Algebra L F] [IsScalarTower K L F] [IsAl
 
 variable (K)
 
--- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr ⟮ , ⟯»
--- ././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr ⟮ , ⟯»
 /-- For `L/K` a finite separable extension of fields and `E` an algebraically closed extension
 of `K`, the norm (down to `K`) of an element `x` of `L` is equal to the product of the images
 of `x` over all the `K`-embeddings `σ`  of `L` into `E`. -/
@@ -307,7 +313,7 @@ theorem norm_eq_prod_embeddings [FiniteDimensional K L] [IsSeparable K L] [IsAlg
     
   · have :=
       is_separable_tower_bot_of_is_separable K
-        («expr ⟮ , ⟯» K "././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr ⟮ , ⟯»") L
+        («expr ⟮ , ⟯» K "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr ⟮ , ⟯»") L
     exact IsSeparable.separable K _
     
 

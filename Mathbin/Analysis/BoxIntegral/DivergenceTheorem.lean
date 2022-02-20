@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Yury Kudryashov. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yury Kudryashov
+-/
 import Mathbin.Analysis.BoxIntegral.Basic
 import Mathbin.Analysis.BoxIntegral.Partition.Additive
 import Mathbin.Analysis.Calculus.Fderiv
@@ -67,6 +72,13 @@ theorem norm_volume_sub_integral_face_upper_sub_lower_smul_le {f : ℝⁿ⁺¹ �
             integral (I.face i) ⊥ (f ∘ i.insertNth (I.lower i)) BoxAdditiveMap.volume)∥ ≤
       2 * ε * c * ∏ j, I.upper j - I.lower j :=
   by
+  /- **Plan of the proof**. The difference of the integrals of the affine function
+    `λ y, a + f' (y - x)` over the faces `x i = I.upper i` and `x i = I.lower i` is equal to the
+    volume of `I` multiplied by `f' (pi.single i 1)`, so it suffices to show that the integral of
+    `f y - a - f' (y - x)` over each of these faces is less than or equal to `ε * c * vol I`. We
+    integrate a function of the norm `≤ ε * diam I.Icc` over a box of volume
+    `∏ j ≠ i, (I.upper j - I.lower j)`. Since `diam I.Icc ≤ c * (I.upper i - I.lower i)`, we get the
+    required estimate.  -/
   have Hl : I.lower i ∈ Icc (I.lower i) (I.upper i) := Set.left_mem_Icc.2 (I.lower_le_upper i)
   have Hu : I.upper i ∈ Icc (I.lower i) (I.upper i) := Set.right_mem_Icc.2 (I.lower_le_upper i)
   have Hi :
@@ -74,6 +86,10 @@ theorem norm_volume_sub_integral_face_upper_sub_lower_smul_le {f : ℝⁿ⁺¹ �
       ∀ x ∈ Icc (I.lower i) (I.upper i),
         ∀, Integrable.{0, u, u} (I.face i) ⊥ (f ∘ i.insert_nth x) box_additive_map.volume :=
     fun x hx => integrable_of_continuous_on _ (box.continuous_on_face_Icc hfc hx) volume
+  /- We start with an estimate: the difference of the values of `f` at the corresponding points
+    of the faces `x i = I.lower i` and `x i = I.upper i` is `(2 * ε * diam I.Icc)`-close to the value
+    of `f'` on `pi.single i (I.upper i - I.lower i) = lᵢ • eᵢ`, where `lᵢ = I.upper i - I.lower i`
+    is the length of `i`-th edge of `I` and `eᵢ = pi.single i 1` is the `i`-th unit vector. -/
   have :
     ∀,
       ∀ y ∈ (I.face i).Icc,
@@ -118,9 +134,11 @@ theorem norm_volume_sub_integral_face_upper_sub_lower_smul_le {f : ℝⁿ⁺¹ �
       rw [← integral_sub (Hi _ Hu) (Hi _ Hl), ← box.volume_face_mul i, mul_smul, ← box.volume_apply, ←
         box_additive_map.to_smul_apply, ← integral_const, ← box_additive_map.volume, ←
         integral_sub (integrable_const _) ((Hi _ Hu).sub (Hi _ Hl))]
-      simp only [· ∘ ·, Pi.sub_def, ← f'.map_smul, ← Pi.single_smul', smul_eq_mul,
+      simp only [(· ∘ ·), Pi.sub_def, ← f'.map_smul, ← Pi.single_smul', smul_eq_mul,
         mul_oneₓ]_ ≤ (volume (I.face i : Set ℝⁿ)).toReal * (2 * ε * c * (I.upper i - I.lower i)) :=
       by
+      -- The hard part of the estimate was done above, here we just replace `diam I.Icc`
+      -- with `c * (I.upper i - I.lower i)`
       refine' norm_integral_le_of_le_const (fun y hy => (this y hy).trans _) volume
       rw [mul_assoc (2 * ε)]
       exact
@@ -130,7 +148,7 @@ theorem norm_volume_sub_integral_face_upper_sub_lower_smul_le {f : ℝⁿ⁺¹ �
       rw [← measure.to_box_additive_apply, box.volume_apply, ← I.volume_face_mul i]
       ac_rfl
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (y₁ y₂ «expr ∈ » «expr ∩ »(closed_ball x δ, I.Icc))
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (y₁ y₂ «expr ∈ » «expr ∩ »(closed_ball x δ, I.Icc))
 /-- If `f : ℝⁿ⁺¹ → E` is differentiable on a closed rectangular box `I` with derivative `f'`, then
 the partial derivative `λ x, f' x (pi.single i 1)` is Henstock-Kurzweil integrable with integral
 equal to the difference of integrals of `f` over the faces `x i = I.upper i` and `x i = I.lower i`.
@@ -148,6 +166,9 @@ theorem has_integral_bot_pderiv (f : ℝⁿ⁺¹ → E) (f' : ℝⁿ⁺¹ → �
       (integral.{0, u, u} (I.face i) ⊥ (fun x => f (i.insertNth (I.upper i) x)) BoxAdditiveMap.volume -
         integral.{0, u, u} (I.face i) ⊥ (fun x => f (i.insertNth (I.lower i) x)) BoxAdditiveMap.volume) :=
   by
+  /- Note that `f` is continuous on `I.Icc`, hence it is integrable on the faces of all boxes
+    `J ≤ I`, thus the difference of integrals over `x i = J.upper i` and `x i = J.lower i` is a
+    box-additive function of `J ≤ I`. -/
   have Hc : ContinuousOn f I.Icc := by
     intro x hx
     by_cases' hxs : x ∈ s
@@ -157,13 +178,19 @@ theorem has_integral_bot_pderiv (f : ℝⁿ⁺¹ → E) (f' : ℝⁿ⁺¹ → �
   set fb : Icc (I.lower i) (I.upper i) → Finₓ n →ᵇᵃ[↑(I.face i)] E := fun x =>
     (integrable_of_continuous_on ⊥ (box.continuous_on_face_Icc Hc x.2) volume).toBoxAdditive
   set F : Finₓ (n + 1) →ᵇᵃ[I] E := box_additive_map.upper_sub_lower I i fI fb fun x hx J => rfl
+  -- Thus our statement follows from some local estimates.
   change has_integral I ⊥ (fun x => f' x (Pi.single i 1)) _ (F I)
   refine' has_integral_of_le_Henstock_of_forall_is_o bot_le _ _ _ s hs _ _
-  · exact (volume : Measureₓ ℝⁿ⁺¹).toBoxAdditive.restrict _ le_top
+  · -- We use the volume as an upper estimate.
+    exact (volume : Measureₓ ℝⁿ⁺¹).toBoxAdditive.restrict _ le_top
     
   · exact fun J => Ennreal.to_real_nonneg
     
   · intro c x hx ε ε0
+    /- Near `x ∈ s` we choose `δ` so that both vectors are small. `volume J • eᵢ` is small because
+        `volume J ≤ (2 * δ) ^ (n + 1)` is small, and the difference of the integrals is small
+        because each of the integrals is close to `volume (J.face i) • f x`.
+        TODO: there should be a shorter and more readable way to formalize this simple proof. -/
     have :
       ∀ᶠ δ in 𝓝[>] (0 : ℝ),
         δ ∈ Ioc (0 : ℝ) (1 / 2) ∧
@@ -232,6 +259,8 @@ theorem has_integral_bot_pderiv (f : ℝⁿ⁺¹ → E) (f' : ℝⁿ⁺¹ → �
       
     
   · intro c x hx ε ε0
+    /- At a point `x ∉ s`, we unfold the definition of Fréchet differentiability, then use
+        an estimate we proved earlier in this file. -/
     rcases exists_pos_mul_lt ε0 (2 * c) with ⟨ε', ε'0, hlt⟩
     rcases(nhds_within_has_basis nhds_basis_closed_ball _).mem_iff.1 ((Hd x hx).def ε'0) with ⟨δ, δ0, Hδ⟩
     refine' ⟨δ, δ0, fun J hle hJδ hxJ hJc => _⟩

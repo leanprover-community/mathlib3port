@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2017 Johannes Hölzl. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johannes Hölzl, Jeremy Avigad, Yury Kudryashov
+-/
 import Mathbin.Order.Filter.Cofinite
 import Mathbin.Order.Zorn
 
@@ -39,7 +44,7 @@ instance : CoeTₓ (Ultrafilter α) (Filter α) :=
 instance : HasMem (Set α) (Ultrafilter α) :=
   ⟨fun s f => s ∈ (f : Filter α)⟩
 
-theorem Unique (f : Ultrafilter α) {g : Filter α} (h : g ≤ f)
+theorem unique (f : Ultrafilter α) {g : Filter α} (h : g ≤ f)
     (hne : NeBot g := by
       run_tac
         tactic.apply_instance) :
@@ -104,7 +109,7 @@ theorem diff_mem_iff (f : Ultrafilter α) : s \ t ∈ f ↔ s ∈ f ∧ t ∉ f 
 
 /-- If `sᶜ ∉ f ↔ s ∈ f`, then `f` is an ultrafilter. The other implication is given by
 `ultrafilter.compl_not_mem_iff`.  -/
-def of_compl_not_mem_iff (f : Filter α) (h : ∀ s, sᶜ ∉ f ↔ s ∈ f) : Ultrafilter α where
+def ofComplNotMemIff (f : Filter α) (h : ∀ s, sᶜ ∉ f ↔ s ∈ f) : Ultrafilter α where
   toFilter := f
   ne_bot' :=
     ⟨fun hf => by
@@ -214,20 +219,20 @@ def bind (f : Ultrafilter α) (m : α → Ultrafilter β) : Ultrafilter β :=
   (ofComplNotMemIff (bind ↑f fun x => ↑(m x))) fun s => by
     simp only [mem_bind', mem_coe, ← compl_mem_iff_not_mem, compl_set_of, compl_compl]
 
-instance Bind : Bind Ultrafilter :=
+instance hasBind : Bind Ultrafilter :=
   ⟨@Ultrafilter.bind⟩
 
-instance Functor : Functor Ultrafilter where
+instance functor : Functor Ultrafilter where
   map := @Ultrafilter.map
 
-instance Monadₓ : Monadₓ Ultrafilter where
+instance monad : Monadₓ Ultrafilter where
   map := @Ultrafilter.map
 
 section
 
 attribute [local instance] Filter.monad Filter.is_lawful_monad
 
-instance IsLawfulMonad : IsLawfulMonad Ultrafilter where
+instance is_lawful_monad : IsLawfulMonad Ultrafilter where
   id_map := fun α f => coe_injective (id_map f.1)
   pure_bind := fun α β a f => coe_injective (pure_bind a (coe ∘ f))
   bind_assoc := fun α β γ f m₁ m₂ => coe_injective (filter_eq rfl)
@@ -243,8 +248,7 @@ theorem exists_le (f : Filter α) [h : NeBot f] : ∃ u : Ultrafilter α, ↑u �
   let top : τ := ⟨f, h, le_reflₓ f⟩
   let sup : ∀ c : Set τ, chain r c → τ := fun c hc =>
     ⟨⨅ a : { a : τ // a ∈ insert top c }, a.1,
-      infi_ne_bot_of_directed (directed_of_chain <| (chain_insert hc) fun ⟨b, _, hb⟩ _ _ => Or.inl hb)
-        fun ⟨⟨a, ha, _⟩, _⟩ => ha,
+      infi_ne_bot_of_directed (directed_of_chain <| (chain_insert hc) fun _ _ => Or.inl hb) fun ⟨⟨a, ha, _⟩, _⟩ => ha,
       infi_le_of_le ⟨top, mem_insert _ _⟩ le_rfl⟩
   have : ∀ c hc : chain r c a ha : a ∈ c, r a (sup c hc) := fun c hc a ha =>
     infi_le_of_le ⟨a, mem_insert_of_mem _ ha⟩ le_rfl
@@ -371,7 +375,7 @@ theorem comap_inf_principal_ne_bot_of_image_mem (h : m '' s ∈ g) : (Filter.com
   Filter.comap_inf_principal_ne_bot_of_image_mem g.ne_bot h
 
 /-- Ultrafilter extending the inf of a comapped ultrafilter and a principal ultrafilter. -/
-noncomputable def of_comap_inf_principal (h : m '' s ∈ g) : Ultrafilter α :=
+noncomputable def ofComapInfPrincipal (h : m '' s ∈ g) : Ultrafilter α :=
   @of _ (Filter.comap m g⊓𝓟 s) (comap_inf_principal_ne_bot_of_image_mem h)
 
 theorem of_comap_inf_principal_mem (h : m '' s ∈ g) : s ∈ ofComapInfPrincipal h := by

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Justus Springer. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Justus Springer
+-/
 import Mathbin.CategoryTheory.Sites.Spaces
 import Mathbin.Topology.Sheaves.Sheaf
 import Mathbin.CategoryTheory.Sites.DenseSubsite
@@ -45,7 +50,7 @@ variable {X : Top.{v}} (F : Presheaf C X)
 /-- Given a presieve `R` on `U`, we obtain a covering family of open sets in `X`, by taking as index
 type the type of dependent pairs `(V, f)`, where `f : V ⟶ U` is in `R`.
 -/
-def covering_of_presieve (U : Opens X) (R : Presieve U) : (Σ V, { f : V ⟶ U // R f }) → Opens X := fun f => f.1
+def coveringOfPresieve (U : Opens X) (R : Presieve U) : (Σ V, { f : V ⟶ U // R f }) → Opens X := fun f => f.1
 
 @[simp]
 theorem covering_of_presieve_apply (U : Opens X) (R : Presieve U) (f : Σ V, { f : V ⟶ U // R f }) :
@@ -90,7 +95,7 @@ theorem supr_eq_of_mem_grothendieck (hR : Sieve.generate R ∈ Opens.grothendiec
 /-- The first object in the sites diagram is isomorphic to the first object in the spaces diagram.
 Actually, they are even definitionally equal, but it is convenient to give this isomorphism a name.
 -/
-def first_obj_iso_pi_opens : Presheaf.firstObj R F ≅ piOpens F (coveringOfPresieve U R) :=
+def firstObjIsoPiOpens : Presheaf.firstObj R F ≅ piOpens F (coveringOfPresieve U R) :=
   eqToIso rfl
 
 /-- The isomorphism `first_obj_iso_pi_opens` is compatible with canonical projections out of the
@@ -102,7 +107,7 @@ theorem first_obj_iso_pi_opens_π (f : Σ V, { f : V ⟶ U // R f }) :
 
 /-- The second object in the sites diagram is isomorphic to the second object in the spaces diagram.
 -/
-def second_obj_iso_pi_inters : Presheaf.secondObj R F ≅ piInters F (coveringOfPresieve U R) :=
+def secondObjIsoPiInters : Presheaf.secondObj R F ≅ piInters F (coveringOfPresieve U R) :=
   has_limit.iso_of_nat_iso <| discrete.nat_iso fun i => F.mapIso (eqToIso (CompleteLattice.pullback_eq_inf _ _).symm).op
 
 /-- The isomorphism `second_obj_iso_pi_inters` is compatible with canonical projections out of the
@@ -160,7 +165,7 @@ theorem first_obj_iso_comp_right_res_eq :
 
 /-- The natural isomorphism between the sites diagram and the spaces diagram. -/
 @[simps]
-def diagram_nat_iso :
+def diagramNatIso :
     parallelPair (Presheaf.firstMap R F) (Presheaf.secondMap R F) ≅ diagram F (coveringOfPresieve U R) :=
   (NatIso.ofComponents fun i =>
       WalkingParallelPair.casesOn i (firstObjIsoPiOpens F U R) (secondObjIsoPiInters F U R)) <|
@@ -191,7 +196,7 @@ diagrams gives us a fork of the _spaces_ diagram. We construct a morphism from t
 given fork of the _spaces_ diagram. This is shown to be an isomorphism below.
 -/
 @[simps]
-def postcompose_diagram_fork_hom (hR : Sieve.generate R ∈ Opens.grothendieckTopology X U) :
+def postcomposeDiagramForkHom (hR : Sieve.generate R ∈ Opens.grothendieckTopology X U) :
     (Cones.postcompose (diagramNatIso F U R).hom).obj (Fork.ofι _ (Presheaf.w R F)) ⟶ fork F (coveringOfPresieve U R) :=
   Fork.mkHom (F.map (eqToHom (supr_eq_of_mem_grothendieck U R hR)).op)
     (fork_map_comp_first_obj_iso_pi_opens_eq F U R hR).symm
@@ -206,7 +211,7 @@ instance is_iso_postcompose_diagram_fork_hom (hR : Sieve.generate R ∈ Opens.gr
   Cones.cone_iso_of_hom_iso _
 
 /-- See `postcompose_diagram_fork_hom`. -/
-def postcompose_diagram_fork_iso (hR : Sieve.generate R ∈ Opens.grothendieckTopology X U) :
+def postcomposeDiagramForkIso (hR : Sieve.generate R ∈ Opens.grothendieckTopology X U) :
     (Cones.postcompose (diagramNatIso F U R).hom).obj (Fork.ofι _ (Presheaf.w R F)) ≅ fork F (coveringOfPresieve U R) :=
   asIso (postcomposeDiagramForkHom F U R hR)
 
@@ -224,10 +229,10 @@ theorem is_sheaf_sites_of_is_sheaf_spaces (Fsh : F.IsSheaf) : Presheaf.IsSheaf (
 on `Y` by declaring that a morphism `f : V ⟶ Y` is a member of the presieve if and only if
 there exists an index `i : ι` such that `V = U i`.
 -/
-def presieve_of_covering_aux {ι : Type v} (U : ι → Opens X) (Y : Opens X) : Presieve Y := fun V f => ∃ i, V = U i
+def PresieveOfCoveringAux {ι : Type v} (U : ι → Opens X) (Y : Opens X) : Presieve Y := fun V f => ∃ i, V = U i
 
 /-- Take `Y` to be `supr U` and obtain a presieve over `supr U`. -/
-def presieve_of_covering {ι : Type v} (U : ι → Opens X) : Presieve (supr U) :=
+def PresieveOfCovering {ι : Type v} (U : ι → Opens X) : Presieve (supr U) :=
   PresieveOfCoveringAux U (supr U)
 
 /-- Given a presieve `R` on `Y`, if we take its associated family of opens via
@@ -272,13 +277,13 @@ theorem mem_grothendieck_topology : Sieve.generate (PresieveOfCovering U) ∈ Op
 /-- An index `i : ι` can be turned into a dependent pair `(V, f)`, where `V` is an open set and
 `f : V ⟶ supr U` is a member of `presieve_of_covering U f`.
 -/
-def hom_of_index (i : ι) : Σ V, { f : V ⟶ supr U // PresieveOfCovering U f } :=
+def homOfIndex (i : ι) : Σ V, { f : V ⟶ supr U // PresieveOfCovering U f } :=
   ⟨U i, Opens.leSupr U i, i, rfl⟩
 
 /-- By using the axiom of choice, a dependent pair `(V, f)` where `f : V ⟶ supr U` is a member of
 `presieve_of_covering U f` can be turned into an index `i : ι`, such that `V = U i`.
 -/
-def index_of_hom (f : Σ V, { f : V ⟶ supr U // PresieveOfCovering U f }) : ι :=
+def indexOfHom (f : Σ V, { f : V ⟶ supr U // PresieveOfCovering U f }) : ι :=
   f.2.2.some
 
 theorem index_of_hom_spec (f : Σ V, { f : V ⟶ supr U // PresieveOfCovering U f }) : f.1 = U (indexOfHom U f) :=
@@ -288,14 +293,14 @@ theorem index_of_hom_spec (f : Σ V, { f : V ⟶ supr U // PresieveOfCovering U 
 spaces diagram. Note that this is *not* an isomorphism, as the product `pi_opens F U` may contain
 duplicate factors, i.e. `U : ι → opens X` may not be injective.
 -/
-def first_obj_to_pi_opens : Presheaf.firstObj (PresieveOfCovering U) F ⟶ piOpens F U :=
+def firstObjToPiOpens : Presheaf.firstObj (PresieveOfCovering U) F ⟶ piOpens F U :=
   Pi.lift fun i => Pi.π _ (homOfIndex U i)
 
 /-- The canonical morphism from the first object in the spaces diagram to the first object in the
 sites diagram. Note that this is *not* an isomorphism, as the product `pi_opens F U` may contain
 duplicate factors, i.e. `U : ι → opens X` may not be injective.
 -/
-def pi_opens_to_first_obj : piOpens F U ⟶ Presheaf.firstObj.{v, v, u} (PresieveOfCovering U) F :=
+def piOpensToFirstObj : piOpens F U ⟶ Presheaf.firstObj.{v, v, u} (PresieveOfCovering U) F :=
   Pi.lift fun f => Pi.π _ (indexOfHom U f) ≫ F.map (eqToHom (index_of_hom_spec U f)).op
 
 /-- Even though `first_obj_to_pi_opens` and `pi_opens_to_first_obj` are not inverse to each other,
@@ -309,10 +314,16 @@ theorem fork_ι_comp_pi_opens_to_first_obj_to_pi_opens_eq (s : Limits.Fork (left
   ext j
   dunfold first_obj_to_pi_opens pi_opens_to_first_obj
   rw [category.assoc, category.assoc, limit.lift_π, fan.mk_π_app, limit.lift_π, fan.mk_π_app]
+  -- The issue here is that `index_of_hom U (hom_of_index U j)` need not be equal to `j`.
+  -- But `U j = U (index_of_hom U (hom_of_index U j))` and hence we obtain the following
+  -- `eq_to_hom` arrow:
   have i_eq : U j ⟶ U j⊓U (index_of_hom U (hom_of_index U j)) := by
     apply eq_to_hom
     rw [← index_of_hom_spec U]
     exact inf_idem.symm
+  -- Since `s` is a fork, we know that `s.ι ≫ left_res F U = s.ι ≫ right_res F U`.
+  -- We compose both sides of this equality with the canonical projection at the index pair
+  -- `(j, index_of_hom U (hom_of_index U j)` and the restriction along `i_eq`.
   have :=
     congr_argₓ
       (fun f =>
@@ -321,6 +332,7 @@ theorem fork_ι_comp_pi_opens_to_first_obj_to_pi_opens_eq (s : Limits.Fork (left
   dsimp  at this
   rw [category.assoc, category.assoc] at this
   symm
+  -- We claim that this is equality is our goal
   convert this using 2
   · dunfold left_res
     rw [limit.lift_π_assoc, fan.mk_π_app, category.assoc, ← F.map_comp]
@@ -335,7 +347,7 @@ theorem fork_ι_comp_pi_opens_to_first_obj_to_pi_opens_eq (s : Limits.Fork (left
 /-- The canonical morphism from the second object of the spaces diagram to the second object of the
 sites diagram.
 -/
-def pi_inters_to_second_obj : piInters F U ⟶ Presheaf.secondObj.{v, v, u} (PresieveOfCovering U) F :=
+def piIntersToSecondObj : piInters F U ⟶ Presheaf.secondObj.{v, v, u} (PresieveOfCovering U) F :=
   Pi.lift fun f =>
     Pi.π _ (indexOfHom U f.fst, indexOfHom U f.snd) ≫
       F.map
@@ -383,14 +395,20 @@ open PresieveOfCovering
 theorem is_sheaf_spaces_of_is_sheaf_sites (Fsh : Presheaf.IsSheaf (Opens.grothendieckTopology X) F) : F.IsSheaf := by
   intro ι U
   rw [presheaf.is_sheaf_iff_is_sheaf'] at Fsh
+  -- We know that the sites diagram for `presieve_of_covering U` is a limit fork
   obtain ⟨h_limit⟩ := Fsh (supr U) (presieve_of_covering U) (presieve_of_covering.mem_grothendieck_topology U)
   refine' ⟨fork.is_limit.mk' _ _⟩
+  -- Here, we are given an arbitrary fork of the spaces diagram and need to show that it factors
+  -- uniquely through our limit fork.
   intro s
+  -- Composing `s.ι` with `pi_opens_to_first_obj F U` gives a fork of the sites diagram, which
+  -- must factor through `presheaf.fork_map`.
   obtain ⟨l, hl⟩ := fork.is_limit.lift' h_limit (s.ι ≫ pi_opens_to_first_obj F U) _
   swap
   · rw [category.assoc, category.assoc, pi_opens_to_first_obj_comp_fist_map_eq,
       pi_opens_to_first_obj_comp_second_map_eq, ← category.assoc, ← category.assoc, s.condition]
     
+  -- We claim that `l` also gives a factorization of `s.ι`
   refine' ⟨l, _, _⟩
   · rw [← fork_ι_comp_pi_opens_to_first_obj_to_pi_opens_eq F U s, ← category.assoc, ← hl, category.assoc, fork.ι_of_ι,
       fork_map_comp_first_map_to_pi_opens_eq]
@@ -410,20 +428,20 @@ variable (C X)
 
 /-- Turn a sheaf on the site `opens X` into a sheaf on the space `X`. -/
 @[simps]
-def Sheaf_sites_to_sheaf_spaces : Sheaf (Opens.grothendieckTopology X) C ⥤ Sheaf C X where
+def sheafSitesToSheafSpaces : Sheaf (Opens.grothendieckTopology X) C ⥤ Sheaf C X where
   obj := fun F => ⟨F.1, is_sheaf_spaces_of_is_sheaf_sites F.1 F.2⟩
   map := fun F G f => f.val
 
 /-- Turn a sheaf on the space `X` into a sheaf on the site `opens X`. -/
 @[simps]
-def Sheaf_spaces_to_sheaf_sites : Sheaf C X ⥤ Sheaf (Opens.grothendieckTopology X) C where
+def sheafSpacesToSheafSites : Sheaf C X ⥤ Sheaf (Opens.grothendieckTopology X) C where
   obj := fun F => ⟨F.1, is_sheaf_sites_of_is_sheaf_spaces F.1 F.2⟩
   map := fun F G f => ⟨f⟩
 
 /-- The equivalence of categories between sheaves on the site `opens X` and sheaves on the space `X`.
 -/
 @[simps]
-def Sheaf_spaces_equiv_sheaf_sites : Sheaf (Opens.grothendieckTopology X) C ≌ Sheaf C X where
+def sheafSpacesEquivSheafSites : Sheaf (Opens.grothendieckTopology X) C ≌ Sheaf C X where
   Functor := sheafSitesToSheafSpaces C X
   inverse := sheafSpacesToSheafSites C X
   unitIso :=
@@ -452,14 +470,14 @@ def Sheaf_spaces_equiv_sheaf_sites : Sheaf (Opens.grothendieckTopology X) C ≌ 
       simp
 
 /-- The two forgetful functors are isomorphic via `Sheaf_spaces_equiv_sheaf_sites`. -/
-def Sheaf_spaces_equiv_sheaf_sites_functor_forget :
+def sheafSpacesEquivSheafSitesFunctorForget :
     (sheafSpacesEquivSheafSites C X).Functor ⋙ Sheaf.forget C X ≅ sheafToPresheaf _ _ :=
   NatIso.ofComponents (fun F => Iso.refl F.1) fun F G f => by
     erw [category.comp_id, category.id_comp]
     rfl
 
 /-- The two forgetful functors are isomorphic via `Sheaf_spaces_equiv_sheaf_sites`. -/
-def Sheaf_spaces_equiv_sheaf_sites_inverse_forget :
+def sheafSpacesEquivSheafSitesInverseForget :
     (sheafSpacesEquivSheafSites C X).inverse ⋙ sheafToPresheaf _ _ ≅ Sheaf.forget C X :=
   NatIso.ofComponents (fun F => Iso.refl F.1) fun F G f => by
     erw [category.comp_id, category.id_comp]
@@ -503,20 +521,20 @@ variable {X : Top.{v}} {ι : Type _} {B : ι → Opens X}
 variable (F : Presheaf C X) (F' : Sheaf C X) (h : Opens.IsBasis (Set.Range B))
 
 /-- The empty component of a sheaf is terminal -/
-def is_terminal_of_empty (F : Sheaf C X) : Limits.IsTerminal (F.val.obj (op ∅)) :=
+def isTerminalOfEmpty (F : Sheaf C X) : Limits.IsTerminal (F.val.obj (op ∅)) :=
   ((Presheaf.sheafSpacesToSheafSites C X).obj F).isTerminalOfBotCover ∅
     (by
       tidy)
 
 /-- A variant of `is_terminal_of_empty` that is easier to `apply`. -/
-def is_terminal_of_eq_empty (F : X.Sheaf C) {U : Opens X} (h : U = ∅) : Limits.IsTerminal (F.val.obj (op U)) := by
+def isTerminalOfEqEmpty (F : X.Sheaf C) {U : Opens X} (h : U = ∅) : Limits.IsTerminal (F.val.obj (op U)) := by
   convert F.is_terminal_of_empty
 
 /-- If a family `B` of open sets forms a basis of the topology on `X`, and if `F'`
     is a sheaf on `X`, then a homomorphism between a presheaf `F` on `X` and `F'`
     is equivalent to a homomorphism between their restrictions to the indexing type
     `ι` of `B`, with the induced category structure on `ι`. -/
-def restrict_hom_equiv_hom : ((inducedFunctor B).op ⋙ F ⟶ (inducedFunctor B).op ⋙ F'.1) ≃ (F ⟶ F'.1) :=
+def restrictHomEquivHom : ((inducedFunctor B).op ⋙ F ⟶ (inducedFunctor B).op ⋙ F'.1) ≃ (F ⟶ F'.1) :=
   @CoverDense.restrictHomEquivHom _ _ _ _ _ _ _ _ (Opens.cover_dense_induced_functor h) _ F
     ((Presheaf.sheafSpacesToSheafSites C X).obj F')
 

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Yury G. Kudryashov. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yury G. Kudryashov
+-/
 import Mathbin.Analysis.SpecialFunctions.Integrals
 import Mathbin.Topology.MetricSpace.Contracting
 
@@ -64,10 +69,11 @@ theorem t_min_le_t_max : v.tMin ≤ v.tMax :=
 protected theorem nonempty_Icc : (Icc v.tMin v.tMax).Nonempty :=
   nonempty_Icc.2 v.t_min_le_t_max
 
-protected theorem LipschitzOnWith {t} (ht : t ∈ Icc v.tMin v.tMax) : LipschitzOnWith v.l (v t) (ClosedBall v.x₀ v.r) :=
+protected theorem lipschitz_on_with {t} (ht : t ∈ Icc v.tMin v.tMax) :
+    LipschitzOnWith v.l (v t) (ClosedBall v.x₀ v.r) :=
   v.lipschitz' t ht
 
-protected theorem ContinuousOn : ContinuousOn (uncurry v) (Icc v.tMin v.tMax ×ˢ ClosedBall v.x₀ v.r) :=
+protected theorem continuous_on : ContinuousOn (uncurry v) (Icc v.tMin v.tMax ×ˢ ClosedBall v.x₀ v.r) :=
   have : ContinuousOn (uncurry (flip v)) (ClosedBall v.x₀ v.r ×ˢ Icc v.tMin v.tMax) :=
     continuous_on_prod_of_continuous_on_lipschitz_on _ v.l v.cont v.lipschitz'
   this.comp continuous_swap.ContinuousOn preimage_swap_prod.symm.Subset
@@ -76,7 +82,7 @@ theorem norm_le {t : ℝ} (ht : t ∈ Icc v.tMin v.tMax) {x : E} (hx : x ∈ Clo
   v.norm_le' _ ht _ hx
 
 /-- The maximum of distances from `t₀` to the endpoints of `[t_min, t_max]`. -/
-def t_dist : ℝ :=
+def tDist : ℝ :=
   max (v.tMax - v.t₀) (v.t₀ - v.tMin)
 
 theorem t_dist_nonneg : 0 ≤ v.tDist :=
@@ -111,7 +117,7 @@ theorem continuous_proj : Continuous v.proj :=
 Lipschitz continuous with constant $C$. The map sending $γ$ to
 $\mathbf Pγ(t)=x₀ + ∫_{t₀}^{t} v(τ, γ(τ))\,dτ$ is a contracting map on this space, and its fixed
 point is a solution of the ODE $\dot x=v(t, x)$. -/
-structure fun_space where
+structure FunSpace where
   toFun : Icc v.tMin v.tMax → E
   map_t₀' : to_fun v.t₀ = v.x₀
   lipschitz' : LipschitzWith v.c to_fun
@@ -129,11 +135,11 @@ instance : Inhabited v.FunSpace :=
 protected theorem lipschitz : LipschitzWith v.c f :=
   f.lipschitz'
 
-protected theorem Continuous : Continuous f :=
+protected theorem continuous : Continuous f :=
   f.lipschitz.Continuous
 
 /-- Each curve in `picard_lindelof.fun_space` is continuous. -/
-def to_continuous_map : v.FunSpace ↪ C(Icc v.tMin v.tMax, E) :=
+def toContinuousMap : v.FunSpace ↪ C(Icc v.tMin v.tMax, E) :=
   ⟨fun f => ⟨f, f.Continuous⟩, fun f g h => by
     cases f
     cases g
@@ -172,7 +178,7 @@ protected theorem mem_closed_ball (t : Icc v.tMin v.tMax) : f t ∈ ClosedBall v
 /-- Given a curve $γ \colon [t_{\min}, t_{\max}] → E$, `v_comp` is the function
 $F(t)=v(π t, γ(π t))$, where `π` is the projection $ℝ → [t_{\min}, t_{\max}]$. The integral of this
 function is the image of `γ` under the contracting map we are going to define below. -/
-def v_comp (t : ℝ) : E :=
+def vComp (t : ℝ) : E :=
   v (v.proj t) (f (v.proj t))
 
 theorem v_comp_apply_coe (t : Icc v.tMin v.tMax) : f.vComp t = v t (f t) := by
@@ -227,7 +233,7 @@ theorem next_apply (t : Icc v.tMin v.tMax) : f.next t = v.x₀ + ∫ τ : ℝ in
 theorem has_deriv_within_at_next (t : Icc v.tMin v.tMax) :
     HasDerivWithinAt (f.next ∘ v.proj) (v t (f t)) (Icc v.tMin v.tMax) t := by
   have : Fact ((t : ℝ) ∈ Icc v.t_min v.t_max) := ⟨t.2⟩
-  simp only [· ∘ ·, next_apply]
+  simp only [(· ∘ ·), next_apply]
   refine' HasDerivWithinAt.const_add _ _
   have : HasDerivWithinAt (fun t : ℝ => ∫ τ in v.t₀..t, f.v_comp τ) (f.v_comp t) (Icc v.t_min v.t_max) t :=
     integral_has_deriv_within_at_right (f.interval_integrable_v_comp _ _) (f.continuous_v_comp.measurable_at_filter _ _)
@@ -309,9 +315,9 @@ theorem exists_solution :
   have : BorelSpace E := ⟨rfl⟩
   rcases v.exists_fixed with ⟨f, hf⟩
   refine' ⟨f ∘ v.proj, _, fun t ht => _⟩
-  · simp only [· ∘ ·, proj_coe, f.map_t₀]
+  · simp only [(· ∘ ·), proj_coe, f.map_t₀]
     
-  · simp only [· ∘ ·, v.proj_of_mem ht]
+  · simp only [(· ∘ ·), v.proj_of_mem ht]
     lift t to Icc v.t_min v.t_max using ht
     simpa only [hf, v.proj_coe] using f.has_deriv_within_at_next t
     

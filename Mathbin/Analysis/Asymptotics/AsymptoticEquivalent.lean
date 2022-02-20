@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Anatole Dedecker. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Anatole Dedecker
+-/
 import Mathbin.Analysis.Asymptotics.Asymptotics
 import Mathbin.Analysis.NormedSpace.Ordered
 
@@ -57,41 +62,41 @@ variable {α β : Type _} [NormedGroup β]
 
 /-- Two functions `u` and `v` are said to be asymptotically equivalent along a filter `l` when
     `u x - v x = o(v x)` as x converges along `l`. -/
-def is_equivalent (u v : α → β) (l : Filter α) :=
+def IsEquivalent (u v : α → β) (l : Filter α) :=
   IsOₓ (u - v) v l
 
 localized [Asymptotics] notation:50 u " ~[" l:50 "] " v:50 => Asymptotics.IsEquivalent u v l
 
 variable {u v w : α → β} {l : Filter α}
 
-theorem is_equivalent.is_o (h : u ~[l] v) : IsOₓ (u - v) v l :=
+theorem IsEquivalent.is_o (h : u ~[l] v) : IsOₓ (u - v) v l :=
   h
 
-theorem is_equivalent.is_O (h : u ~[l] v) : IsO u v l :=
+theorem IsEquivalent.is_O (h : u ~[l] v) : IsO u v l :=
   (IsO.congr_of_sub h.IsO.symm).mp (is_O_refl _ _)
 
-theorem is_equivalent.is_O_symm (h : u ~[l] v) : IsO v u l := by
+theorem IsEquivalent.is_O_symm (h : u ~[l] v) : IsO v u l := by
   convert h.is_o.right_is_O_add
   ext
   simp
 
 @[refl]
-theorem is_equivalent.refl : u ~[l] u := by
+theorem IsEquivalent.refl : u ~[l] u := by
   rw [is_equivalent, sub_self]
   exact is_o_zero _ _
 
 @[symm]
-theorem is_equivalent.symm (h : u ~[l] v) : v ~[l] u :=
+theorem IsEquivalent.symm (h : u ~[l] v) : v ~[l] u :=
   (h.IsO.trans_is_O h.is_O_symm).symm
 
 @[trans]
-theorem is_equivalent.trans (huv : u ~[l] v) (hvw : v ~[l] w) : u ~[l] w :=
+theorem IsEquivalent.trans (huv : u ~[l] v) (hvw : v ~[l] w) : u ~[l] w :=
   (huv.IsO.trans_is_O hvw.IsO).triangle hvw.IsO
 
-theorem is_equivalent.congr_left {u v w : α → β} {l : Filter α} (huv : u ~[l] v) (huw : u =ᶠ[l] w) : w ~[l] v :=
+theorem IsEquivalent.congr_left {u v w : α → β} {l : Filter α} (huv : u ~[l] v) (huw : u =ᶠ[l] w) : w ~[l] v :=
   IsOₓ.congr' (huw.sub (EventuallyEq.refl _ _)) (EventuallyEq.refl _ _) huv
 
-theorem is_equivalent.congr_right {u v w : α → β} {l : Filter α} (huv : u ~[l] v) (hvw : v =ᶠ[l] w) : u ~[l] w :=
+theorem IsEquivalent.congr_right {u v w : α → β} {l : Filter α} (huv : u ~[l] v) (hvw : v =ᶠ[l] w) : u ~[l] w :=
   (huv.symm.congr_left hvw).symm
 
 theorem is_equivalent_zero_iff_eventually_zero : u ~[l] 0 ↔ u =ᶠ[l] 0 := by
@@ -118,14 +123,14 @@ theorem is_equivalent_const_iff_tendsto {c : β} (h : c ≠ 0) : u ~[l] const _ 
             ext <;>
           simp
 
-theorem is_equivalent.tendsto_const {c : β} (hu : u ~[l] const _ c) : Tendsto u l (𝓝 c) := by
+theorem IsEquivalent.tendsto_const {c : β} (hu : u ~[l] const _ c) : Tendsto u l (𝓝 c) := by
   rcases em <| c = 0 with ⟨rfl, h⟩
   · exact (tendsto_congr' <| is_equivalent_zero_iff_eventually_zero.mp hu).mpr tendsto_const_nhds
     
   · exact (is_equivalent_const_iff_tendsto h).mp hu
     
 
-theorem is_equivalent.tendsto_nhds {c : β} (huv : u ~[l] v) (hu : Tendsto u l (𝓝 c)) : Tendsto v l (𝓝 c) := by
+theorem IsEquivalent.tendsto_nhds {c : β} (huv : u ~[l] v) (hu : Tendsto u l (𝓝 c)) : Tendsto v l (𝓝 c) := by
   by_cases' h : c = 0
   · rw [h, ← is_o_one_iff ℝ] at *
     convert (huv.symm.is_o.trans hu).add hu
@@ -135,19 +140,19 @@ theorem is_equivalent.tendsto_nhds {c : β} (huv : u ~[l] v) (hu : Tendsto u l (
     exact huv.symm.trans hu
     
 
-theorem is_equivalent.tendsto_nhds_iff {c : β} (huv : u ~[l] v) : Tendsto u l (𝓝 c) ↔ Tendsto v l (𝓝 c) :=
+theorem IsEquivalent.tendsto_nhds_iff {c : β} (huv : u ~[l] v) : Tendsto u l (𝓝 c) ↔ Tendsto v l (𝓝 c) :=
   ⟨huv.tendsto_nhds, huv.symm.tendsto_nhds⟩
 
-theorem is_equivalent.add_is_o (huv : u ~[l] v) (hwv : IsOₓ w v l) : w + u ~[l] v := by
+theorem IsEquivalent.add_is_o (huv : u ~[l] v) (hwv : IsOₓ w v l) : w + u ~[l] v := by
   rw [is_equivalent] at *
   convert hwv.add huv
   ext
   simp [add_sub]
 
-theorem is_o.is_equivalent (huv : IsOₓ (u - v) v l) : u ~[l] v :=
+theorem IsOₓ.is_equivalent (huv : IsOₓ (u - v) v l) : u ~[l] v :=
   huv
 
-theorem is_equivalent.neg (huv : u ~[l] v) : (fun x => -u x) ~[l] fun x => -v x := by
+theorem IsEquivalent.neg (huv : u ~[l] v) : (fun x => -u x) ~[l] fun x => -v x := by
   rw [is_equivalent]
   convert huv.is_o.neg_left.neg_right
   ext
@@ -175,7 +180,7 @@ theorem is_equivalent_iff_exists_eq_mul : u ~[l] v ↔ ∃ (φ : α → β)(hφ 
   · convert h.sub (eventually_eq.refl l v) <;> ext <;> simp [sub_mul]
     
 
-theorem is_equivalent.exists_eq_mul (huv : u ~[l] v) : ∃ (φ : α → β)(hφ : Tendsto φ l (𝓝 1)), u =ᶠ[l] φ * v :=
+theorem IsEquivalent.exists_eq_mul (huv : u ~[l] v) : ∃ (φ : α → β)(hφ : Tendsto φ l (𝓝 1)), u =ᶠ[l] φ * v :=
   is_equivalent_iff_exists_eq_mul.mp huv
 
 theorem is_equivalent_of_tendsto_one (hz : ∀ᶠ x in l, v x = 0 → u x = 0) (huv : Tendsto (u / v) l (𝓝 1)) : u ~[l] v :=
@@ -207,8 +212,8 @@ end NormedField
 
 section Smul
 
-theorem is_equivalent.smul {α E 𝕜 : Type _} [NormedField 𝕜] [NormedGroup E] [NormedSpace 𝕜 E] {a b : α → 𝕜}
-    {u v : α → E} {l : Filter α} (hab : a ~[l] b) (huv : u ~[l] v) : (fun x => a x • u x) ~[l] fun x => b x • v x := by
+theorem IsEquivalent.smul {α E 𝕜 : Type _} [NormedField 𝕜] [NormedGroup E] [NormedSpace 𝕜 E] {a b : α → 𝕜} {u v : α → E}
+    {l : Filter α} (hab : a ~[l] b) (huv : u ~[l] v) : (fun x => a x • u x) ~[l] fun x => b x • v x := by
   rcases hab.exists_eq_mul with ⟨φ, hφ, habφ⟩
   have : ((fun x : α => a x • u x) - fun x : α => b x • v x) =ᶠ[l] fun x => b x • (φ x • u x - v x) := by
     convert (habφ.comp₂ (· • ·) <| eventually_eq.refl _ u).sub (eventually_eq.refl _ fun x => b x • v x)
@@ -258,10 +263,10 @@ section mul_inv
 
 variable {α β : Type _} [NormedField β] {t u v w : α → β} {l : Filter α}
 
-theorem is_equivalent.mul (htu : t ~[l] u) (hvw : v ~[l] w) : t * v ~[l] u * w :=
+theorem IsEquivalent.mul (htu : t ~[l] u) (hvw : v ~[l] w) : t * v ~[l] u * w :=
   htu.smul hvw
 
-theorem is_equivalent.inv (huv : u ~[l] v) : (fun x => (u x)⁻¹) ~[l] fun x => (v x)⁻¹ := by
+theorem IsEquivalent.inv (huv : u ~[l] v) : (fun x => (u x)⁻¹) ~[l] fun x => (v x)⁻¹ := by
   rw [is_equivalent_iff_exists_eq_mul] at *
   rcases huv with ⟨φ, hφ, h⟩
   rw [← inv_one]
@@ -275,7 +280,7 @@ theorem is_equivalent.inv (huv : u ~[l] v) : (fun x => (u x)⁻¹) ~[l] fun x =>
   ext
   simp [mul_inv₀]
 
-theorem is_equivalent.div (htu : t ~[l] u) (hvw : v ~[l] w) : (fun x => t x / v x) ~[l] fun x => u x / w x := by
+theorem IsEquivalent.div (htu : t ~[l] u) (hvw : v ~[l] w) : (fun x => t x / v x) ~[l] fun x => u x / w x := by
   simpa only [div_eq_mul_inv] using htu.mul hvw.inv
 
 end mul_inv
@@ -284,20 +289,20 @@ section NormedLinearOrderedField
 
 variable {α β : Type _} [NormedLinearOrderedField β] {u v : α → β} {l : Filter α}
 
-theorem is_equivalent.tendsto_at_top [OrderTopology β] (huv : u ~[l] v) (hu : Tendsto u l atTop) : Tendsto v l atTop :=
+theorem IsEquivalent.tendsto_at_top [OrderTopology β] (huv : u ~[l] v) (hu : Tendsto u l atTop) : Tendsto v l atTop :=
   let ⟨φ, hφ, h⟩ := huv.symm.exists_eq_mul
   Tendsto.congr' h.symm (mul_comm u φ ▸ hu.at_top_mul zero_lt_one hφ)
 
-theorem is_equivalent.tendsto_at_top_iff [OrderTopology β] (huv : u ~[l] v) : Tendsto u l atTop ↔ Tendsto v l atTop :=
+theorem IsEquivalent.tendsto_at_top_iff [OrderTopology β] (huv : u ~[l] v) : Tendsto u l atTop ↔ Tendsto v l atTop :=
   ⟨huv.tendsto_at_top, huv.symm.tendsto_at_top⟩
 
-theorem is_equivalent.tendsto_at_bot [OrderTopology β] (huv : u ~[l] v) (hu : Tendsto u l atBot) : Tendsto v l atBot :=
+theorem IsEquivalent.tendsto_at_bot [OrderTopology β] (huv : u ~[l] v) (hu : Tendsto u l atBot) : Tendsto v l atBot :=
   by
   convert tendsto_neg_at_top_at_bot.comp (huv.neg.tendsto_at_top <| tendsto_neg_at_bot_at_top.comp hu)
   ext
   simp
 
-theorem is_equivalent.tendsto_at_bot_iff [OrderTopology β] (huv : u ~[l] v) : Tendsto u l atBot ↔ Tendsto v l atBot :=
+theorem IsEquivalent.tendsto_at_bot_iff [OrderTopology β] (huv : u ~[l] v) : Tendsto u l atBot ↔ Tendsto v l atBot :=
   ⟨huv.tendsto_at_bot, huv.symm.tendsto_at_bot⟩
 
 end NormedLinearOrderedField

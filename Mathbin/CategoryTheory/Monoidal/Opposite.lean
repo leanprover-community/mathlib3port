@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison
+-/
 import Mathbin.CategoryTheory.Monoidal.Category
 
 /-!
@@ -17,12 +22,12 @@ open CategoryTheory.MonoidalCategory
 
 /-- A type synonym for the monoidal opposite. Use the notation `Cᴹᵒᵖ`. -/
 @[nolint has_inhabited_instance]
-def monoidal_opposite (C : Type u₁) :=
+def MonoidalOpposite (C : Type u₁) :=
   C
 
 namespace MonoidalOpposite
 
--- ././Mathport/Syntax/Translate/Basic.lean:343:9: unsupported: advanced prec syntax
+-- ././Mathport/Syntax/Translate/Basic.lean:462:9: unsupported: advanced prec syntax
 notation:999 C "ᴹᵒᵖ" => MonoidalOpposite C
 
 /-- Think of an object of `C` as an object of `Cᴹᵒᵖ`. -/
@@ -55,7 +60,7 @@ theorem mop_unmop (X : Cᴹᵒᵖ) : mop (unmop X) = X :=
 theorem unmop_mop (X : C) : unmop (mop X) = X :=
   rfl
 
-instance monoidal_opposite_category [I : Category.{v₁} C] : Category (Cᴹᵒᵖ) where
+instance monoidalOppositeCategory [I : Category.{v₁} C] : Category (Cᴹᵒᵖ) where
   Hom := fun X Y => unmop X ⟶ unmop Y
   id := fun X => 𝟙 (unmop X)
   comp := fun X Y Z f g => f ≫ g
@@ -136,7 +141,7 @@ variable [MonoidalCategory.{v₁} C]
 
 open Opposite MonoidalCategory
 
-instance monoidal_category_op : MonoidalCategory (Cᵒᵖ) where
+instance monoidalCategoryOp : MonoidalCategory (Cᵒᵖ) where
   tensorObj := fun X Y => op (unop X ⊗ unop Y)
   tensorHom := fun X₁ Y₁ X₂ Y₂ f g => (f.unop ⊗ g.unop).op
   tensorUnit := op (𝟙_ C)
@@ -172,7 +177,7 @@ theorem op_tensor_obj (X Y : Cᵒᵖ) : X ⊗ Y = op (unop X ⊗ unop Y) :=
 theorem op_tensor_unit : 𝟙_ (Cᵒᵖ) = op (𝟙_ C) :=
   rfl
 
-instance monoidal_category_mop : MonoidalCategory (Cᴹᵒᵖ) where
+instance monoidalCategoryMop : MonoidalCategory (Cᴹᵒᵖ) where
   tensorObj := fun X Y => mop (unmop Y ⊗ unmop X)
   tensorHom := fun X₁ Y₁ X₂ Y₂ f g => (g.unmop ⊗ f.unmop).mop
   tensorUnit := mop (𝟙_ C)

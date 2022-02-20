@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Aaron Anderson. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Aaron Anderson
+-/
 import Mathbin.RingTheory.Int.Basic
 import Mathbin.RingTheory.Localization
 
@@ -37,7 +42,7 @@ variable {f : R[X]} (hf : f.IsPrimitive)
 
 include hinj hf
 
-theorem is_primitive.is_unit_iff_is_unit_map_of_injective : IsUnit f ↔ IsUnit (map φ f) := by
+theorem IsPrimitive.is_unit_iff_is_unit_map_of_injective : IsUnit f ↔ IsUnit (map φ f) := by
   refine' ⟨(map_ring_hom φ).is_unit_map, fun h => _⟩
   rcases is_unit_iff.1 h with ⟨_, ⟨u, rfl⟩, hu⟩
   have hdeg := degree_C u.ne_zero
@@ -45,7 +50,7 @@ theorem is_primitive.is_unit_iff_is_unit_map_of_injective : IsUnit f ↔ IsUnit 
   rw [eq_C_of_degree_eq_zero hdeg, is_primitive_iff_content_eq_one, content_C, normalize_eq_one] at hf
   rwa [eq_C_of_degree_eq_zero hdeg, is_unit_C]
 
-theorem is_primitive.irreducible_of_irreducible_map_of_injective (h_irr : Irreducible (map φ f)) : Irreducible f := by
+theorem IsPrimitive.irreducible_of_irreducible_map_of_injective (h_irr : Irreducible (map φ f)) : Irreducible f := by
   refine' ⟨fun h => h_irr.not_unit (IsUnit.map (map_ring_hom φ).toMonoidHom h), _⟩
   intro a b h
   rcases h_irr.is_unit_or_is_unit
@@ -64,7 +69,7 @@ section FractionMap
 
 variable {K : Type _} [Field K] [Algebra R K] [IsFractionRing R K]
 
-theorem is_primitive.is_unit_iff_is_unit_map {p : R[X]} (hp : p.IsPrimitive) :
+theorem IsPrimitive.is_unit_iff_is_unit_map {p : R[X]} (hp : p.IsPrimitive) :
     IsUnit p ↔ IsUnit (p.map (algebraMap R K)) :=
   hp.is_unit_iff_is_unit_map_of_injective (IsFractionRing.injective _ _)
 
@@ -90,7 +95,7 @@ theorem is_unit_or_eq_zero_of_is_unit_integer_normalization_prim_part {p : K[X]}
 
 /-- **Gauss's Lemma** states that a primitive polynomial is irreducible iff it is irreducible in the
   fraction field. -/
-theorem is_primitive.irreducible_iff_irreducible_map_fraction_map {p : R[X]} (hp : p.IsPrimitive) :
+theorem IsPrimitive.irreducible_iff_irreducible_map_fraction_map {p : R[X]} (hp : p.IsPrimitive) :
     Irreducible p ↔ Irreducible (p.map (algebraMap R K)) := by
   refine'
     ⟨fun hi => ⟨fun h => hi.not_unit (hp.is_unit_iff_is_unit_map.2 h), fun a b hab => _⟩,
@@ -127,7 +132,7 @@ theorem is_primitive.irreducible_iff_irreducible_map_fraction_map {p : R[X]} (hp
     apply is_unit_or_eq_zero_of_is_unit_integer_normalization_prim_part h0.1 h
     
 
-theorem is_primitive.dvd_of_fraction_map_dvd_fraction_map {p q : R[X]} (hp : p.IsPrimitive) (hq : q.IsPrimitive)
+theorem IsPrimitive.dvd_of_fraction_map_dvd_fraction_map {p q : R[X]} (hp : p.IsPrimitive) (hq : q.IsPrimitive)
     (h_dvd : p.map (algebraMap R K) ∣ q.map (algebraMap R K)) : p ∣ q := by
   rcases h_dvd with ⟨r, hr⟩
   obtain ⟨⟨s, s0⟩, hs⟩ := integer_normalization_map_to_map R⁰ r
@@ -153,7 +158,7 @@ theorem is_primitive.dvd_of_fraction_map_dvd_fraction_map {p q : R[X]} (hp : p.I
 
 variable (K)
 
-theorem is_primitive.dvd_iff_fraction_map_dvd_fraction_map {p q : R[X]} (hp : p.IsPrimitive) (hq : q.IsPrimitive) :
+theorem IsPrimitive.dvd_iff_fraction_map_dvd_fraction_map {p q : R[X]} (hp : p.IsPrimitive) (hq : q.IsPrimitive) :
     p ∣ q ↔ p.map (algebraMap R K) ∣ q.map (algebraMap R K) :=
   ⟨fun ⟨a, b⟩ => ⟨a.map (algebraMap R K), b.symm ▸ map_mul (algebraMap R K)⟩, fun h =>
     hp.dvd_of_fraction_map_dvd_fraction_map hq h⟩
@@ -162,11 +167,11 @@ end FractionMap
 
 /-- **Gauss's Lemma** for `ℤ` states that a primitive integer polynomial is irreducible iff it is
   irreducible over `ℚ`. -/
-theorem is_primitive.int.irreducible_iff_irreducible_map_cast {p : ℤ[X]} (hp : p.IsPrimitive) :
+theorem IsPrimitive.Int.irreducible_iff_irreducible_map_cast {p : ℤ[X]} (hp : p.IsPrimitive) :
     Irreducible p ↔ Irreducible (p.map (Int.castRingHom ℚ)) :=
   hp.irreducible_iff_irreducible_map_fraction_map
 
-theorem is_primitive.int.dvd_iff_map_cast_dvd_map_cast (p q : ℤ[X]) (hp : p.IsPrimitive) (hq : q.IsPrimitive) :
+theorem IsPrimitive.Int.dvd_iff_map_cast_dvd_map_cast (p q : ℤ[X]) (hp : p.IsPrimitive) (hq : q.IsPrimitive) :
     p ∣ q ↔ p.map (Int.castRingHom ℚ) ∣ q.map (Int.castRingHom ℚ) :=
   hp.dvd_iff_fraction_map_dvd_fraction_map ℚ hq
 

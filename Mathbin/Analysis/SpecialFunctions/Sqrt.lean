@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Yury G. Kudryashov. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yury G. Kudryashov
+-/
 import Mathbin.Analysis.Calculus.TimesContDiff
 
 /-!
@@ -20,7 +25,7 @@ namespace Real
 
 /-- Local homeomorph between `(0, +∞)` and `(0, +∞)` with `to_fun = λ x, x ^ 2` and
 `inv_fun = sqrt`. -/
-noncomputable def sq_local_homeomorph : LocalHomeomorph ℝ ℝ where
+noncomputable def sqLocalHomeomorph : LocalHomeomorph ℝ ℝ where
   toFun := fun x => x ^ 2
   invFun := sqrt
   Source := Ioi 0
@@ -73,15 +78,15 @@ variable {f : ℝ → ℝ} {s : Set ℝ} {f' x : ℝ}
 
 theorem HasDerivWithinAt.sqrt (hf : HasDerivWithinAt f f' s x) (hx : f x ≠ 0) :
     HasDerivWithinAt (fun y => sqrt (f y)) (f' / (2 * sqrt (f x))) s x := by
-  simpa only [· ∘ ·, div_eq_inv_mul, mul_oneₓ] using (has_deriv_at_sqrt hx).comp_has_deriv_within_at x hf
+  simpa only [(· ∘ ·), div_eq_inv_mul, mul_oneₓ] using (has_deriv_at_sqrt hx).comp_has_deriv_within_at x hf
 
 theorem HasDerivAt.sqrt (hf : HasDerivAt f f' x) (hx : f x ≠ 0) :
     HasDerivAt (fun y => sqrt (f y)) (f' / (2 * sqrt (f x))) x := by
-  simpa only [· ∘ ·, div_eq_inv_mul, mul_oneₓ] using (has_deriv_at_sqrt hx).comp x hf
+  simpa only [(· ∘ ·), div_eq_inv_mul, mul_oneₓ] using (has_deriv_at_sqrt hx).comp x hf
 
 theorem HasStrictDerivAt.sqrt (hf : HasStrictDerivAt f f' x) (hx : f x ≠ 0) :
     HasStrictDerivAt (fun t => sqrt (f t)) (f' / (2 * sqrt (f x))) x := by
-  simpa only [· ∘ ·, div_eq_inv_mul, mul_oneₓ] using (has_strict_deriv_at_sqrt hx).comp x hf
+  simpa only [(· ∘ ·), div_eq_inv_mul, mul_oneₓ] using (has_strict_deriv_at_sqrt hx).comp x hf
 
 theorem deriv_within_sqrt (hf : DifferentiableWithinAt ℝ f s x) (hx : f x ≠ 0) (hxs : UniqueDiffWithinAt ℝ s x) :
     derivWithin (fun x => sqrt (f x)) s x = derivWithin f s x / (2 * sqrt (f x)) :=

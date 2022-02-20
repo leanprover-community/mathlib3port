@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2017 Mario Carneiro. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Mario Carneiro
+-/
 import Mathbin.Data.Nat.Modeq
 import Mathbin.NumberTheory.Zsqrtd.Basic
 
@@ -69,6 +74,7 @@ theorem d_pos : 0 < d :=
 
 /-- The Pell sequences, i.e. the sequence of integer solutions to `x ^ 2 - d * y ^ 2 = 1`, where
 `d = a ^ 2 - 1`, defined together in mutual recursion. -/
+-- TODO(lint): Fix double namespace issue
 @[nolint dup_namespace]
 def pell : ℕ → ℕ × ℕ := fun n => Nat.recOn n (1, 0) fun n xy => (xy.1 * a + d * xy.2, xy.1 + xy.2 * a)
 
@@ -147,7 +153,7 @@ theorem yz_succ (n : ℕ) : yz (n + 1) = xz n + yz n * az :=
   rfl
 
 /-- The Pell sequence can also be viewed as an element of `ℤ√d` -/
-def pell_zd (n : ℕ) : ℤ√d :=
+def pellZd (n : ℕ) : ℤ√d :=
   ⟨xn n, yn n⟩
 
 @[simp]
@@ -160,7 +166,7 @@ theorem pell_zd_im (n : ℕ) : (pell_zd n).im = yn n :=
 
 /-- The property of being a solution to the Pell equation, expressed
   as a property of elements of `ℤ√d`. -/
-def is_pell : ℤ√d → Prop
+def IsPell : ℤ√d → Prop
   | ⟨x, y⟩ => x * x - d * y * y = 1
 
 theorem is_pell_nat {x y : ℕ} : is_pell ⟨x, y⟩ ↔ x * x - d * y * y = 1 :=

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Ashvni Narayanan. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Ashvni Narayanan, Anne Baanen
+-/
 import Mathbin.Algebra.Field.Basic
 import Mathbin.Data.Rat.Basic
 import Mathbin.RingTheory.Algebraic
@@ -56,16 +61,17 @@ variable (K L : Type _) [Field K] [Field L] [nf : NumberField K]
 
 include nf
 
+-- See note [lower instance priority]
 attribute [instance] NumberField.to_char_zero NumberField.to_finite_dimensional
 
-protected theorem IsAlgebraic : Algebra.IsAlgebraic ℚ K :=
+protected theorem is_algebraic : Algebra.IsAlgebraic ℚ K :=
   Algebra.is_algebraic_of_finite _ _
 
 omit nf
 
 /-- The ring of integers (or number ring) corresponding to a number field
 is the integral closure of ℤ in the number field. -/
-def ring_of_integers :=
+def ringOfIntegers :=
   integralClosure ℤ K
 
 localized [NumberField] notation "𝓞" => NumberField.ringOfIntegers
@@ -73,7 +79,7 @@ localized [NumberField] notation "𝓞" => NumberField.ringOfIntegers
 theorem mem_ring_of_integers (x : K) : x ∈ 𝓞 K ↔ IsIntegral ℤ x :=
   Iff.rfl
 
-instance ring_of_integers_algebra [Algebra K L] : Algebra (𝓞 K) (𝓞 L) :=
+instance ringOfIntegersAlgebra [Algebra K L] : Algebra (𝓞 K) (𝓞 L) :=
   RingHom.toAlgebra
     { toFun := fun k => ⟨algebraMap K L k, IsIntegral.algebra_map k.2⟩,
       map_zero' :=
@@ -106,7 +112,7 @@ theorem is_integral_coe (x : 𝓞 K) : IsIntegral ℤ (x : K) :=
   x.2
 
 /-- The ring of integers of `K` are equivalent to any integral closure of `ℤ` in `K` -/
-protected noncomputable def Equivₓ (R : Type _) [CommRingₓ R] [Algebra R K] [IsIntegralClosure R ℤ K] : 𝓞 K ≃+* R :=
+protected noncomputable def equiv (R : Type _) [CommRingₓ R] [Algebra R K] [IsIntegralClosure R ℤ K] : 𝓞 K ≃+* R :=
   (IsIntegralClosure.equiv ℤ R K _).symm.toRingEquiv
 
 variable (K)
@@ -133,13 +139,17 @@ open NumberField
 
 attribute [local instance] subsingleton_rat_module
 
-instance rat.number_field : NumberField ℚ where
+instance Rat.number_field : NumberField ℚ where
   to_char_zero := inferInstance
-  to_finite_dimensional := by
+  to_finite_dimensional :=-- The vector space structure of `ℚ` over itself can arise in multiple ways:
+  -- all fields are vector spaces over themselves (used in `rat.finite_dimensional`)
+  -- all char 0 fields have a canonical embedding of `ℚ` (used in `number_field`).
+  -- Show that these coincide:
+  by
     convert (inferInstance : FiniteDimensional ℚ ℚ)
 
 /-- The ring of integers of `ℚ` as a number field is just `ℤ`. -/
-noncomputable def ring_of_integers_equiv : ringOfIntegers ℚ ≃+* ℤ :=
+noncomputable def ringOfIntegersEquiv : ringOfIntegers ℚ ≃+* ℤ :=
   ringOfIntegers.equiv ℤ
 
 end Rat

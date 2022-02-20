@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Mario Carneiro
+-/
 import Mathbin.Data.Multiset.Bind
 import Mathbin.Data.Multiset.Powerset
 import Mathbin.Data.Multiset.Range
@@ -15,7 +20,8 @@ variable {α β γ : Type _}
 
 /-- `nodup s` means that `s` has no duplicates, i.e. the multiplicity of
   any element is at most 1. -/
-def nodup (s : Multiset α) : Prop :=
+-- nodup
+def Nodup (s : Multiset α) : Prop :=
   Quot.liftOn s Nodupₓ fun s t p => propext p.nodup_iff
 
 @[simp]
@@ -117,7 +123,7 @@ theorem nodup_pmap {p : α → Prop} {f : ∀ a, p a → β} {s : Multiset α} {
     Nodup s → Nodup (pmap f s H) :=
   Quot.induction_on s (fun l H => nodup_pmap hf) H
 
-instance nodup_decidable [DecidableEq α] (s : Multiset α) : Decidable (Nodup s) :=
+instance nodupDecidable [DecidableEq α] (s : Multiset α) : Decidable (Nodup s) :=
   (Quotientₓ.recOnSubsingleton s) fun l => l.nodupDecidable
 
 theorem nodup_erase_eq_filter [DecidableEq α] (a : α) {s} : Nodup s → s.erase a = filter (· ≠ a) s :=

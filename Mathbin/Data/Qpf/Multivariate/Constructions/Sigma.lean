@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Simon Hudon. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Simon Hudon
+-/
 import Mathbin.Data.Pfunctor.Multivariate.Basic
 import Mathbin.Data.Qpf.Multivariate.Basic
 
@@ -23,7 +28,7 @@ def Sigma (v : Typevec.{u} n) : Type u :=
 
 /-- Dependent product of of an `n`-ary functor. The sum can range over
 data types like `ℕ` or over `Type.{u-1}` -/
-def pi (v : Typevec.{u} n) : Type u :=
+def Pi (v : Typevec.{u} n) : Type u :=
   ∀ α : A, F α v
 
 instance Sigma.inhabited {α} [Inhabited A] [Inhabited (F default α)] : Inhabited (Sigma F α) :=
@@ -42,7 +47,7 @@ instance : Mvfunctor (Sigma F) where
 variable [∀ α, Mvqpf <| F α]
 
 /-- polynomial functor representation of a dependent sum -/
-protected def P : Mvpfunctor n :=
+protected def p : Mvpfunctor n :=
   ⟨Σ a, (p (F a)).A, fun x => (p (F x.1)).B x.2⟩
 
 /-- abstraction function for dependent sums -/
@@ -50,7 +55,7 @@ protected def abs ⦃α⦄ : (Sigma.p F).Obj α → Sigma F α
   | ⟨a, f⟩ => ⟨a.1, Mvqpf.abs ⟨a.2, f⟩⟩
 
 /-- representation function for dependent sums -/
-protected def reprₓ ⦃α⦄ : Sigma F α → (Sigma.p F).Obj α
+protected def repr ⦃α⦄ : Sigma F α → (Sigma.p F).Obj α
   | ⟨a, f⟩ =>
     let x := Mvqpf.repr f
     ⟨⟨a, x.1⟩, x.2⟩
@@ -63,7 +68,7 @@ instance : Mvqpf (Sigma F) where
     rintro α ⟨x, f⟩ <;> simp [sigma.repr, sigma.abs, abs_repr]
   abs_map := by
     rintro α β f ⟨x, g⟩ <;>
-      simp [sigma.abs, Mvpfunctor.map_eq] <;> simp [· <$$> ·, mvfunctor._match_1, ← abs_map, ← Mvpfunctor.map_eq]
+      simp [sigma.abs, Mvpfunctor.map_eq] <;> simp [(· <$$> ·), mvfunctor._match_1, ← abs_map, ← Mvpfunctor.map_eq]
 
 end Sigma
 
@@ -75,7 +80,7 @@ instance : Mvfunctor (Pi F) where
 variable [∀ α, Mvqpf <| F α]
 
 /-- polynomial functor representation of a dependent product -/
-protected def P : Mvpfunctor n :=
+protected def p : Mvpfunctor n :=
   ⟨∀ a, (p (F a)).A, fun x i => Σ a : A, (p (F a)).B (x a) i⟩
 
 /-- abstraction function for dependent products -/
@@ -83,7 +88,7 @@ protected def abs ⦃α⦄ : (Pi.p F).Obj α → Pi F α
   | ⟨a, f⟩ => fun x => Mvqpf.abs ⟨a x, fun i y => f i ⟨_, y⟩⟩
 
 /-- representation function for dependent products -/
-protected def reprₓ ⦃α⦄ : Pi F α → (Pi.p F).Obj α
+protected def repr ⦃α⦄ : Pi F α → (Pi.p F).Obj α
   | f => ⟨fun a => (Mvqpf.repr (f a)).1, fun i a => (@Mvqpf.repr _ _ _ (_inst_2 _) _ (f _)).2 _ a.2⟩
 
 instance : Mvqpf (Pi F) where
@@ -95,7 +100,7 @@ instance : Mvqpf (Pi F) where
   abs_map := by
     rintro α β f ⟨x, g⟩ <;>
       simp only [pi.abs, Mvpfunctor.map_eq] <;>
-        ext <;> simp only [· <$$> ·] <;> simp only [← abs_map, Mvpfunctor.map_eq] <;> rfl
+        ext <;> simp only [(· <$$> ·)] <;> simp only [← abs_map, Mvpfunctor.map_eq] <;> rfl
 
 end Pi
 

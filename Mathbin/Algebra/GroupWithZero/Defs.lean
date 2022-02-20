@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Johan Commelin. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johan Commelin
+-/
 import Mathbin.Algebra.Group.Defs
 import Mathbin.Logic.Nontrivial
 
@@ -16,6 +21,8 @@ members.
 
 universe u
 
+-- We have to fix the universe of `G₀` here, since the default argument to
+-- `group_with_zero.div'` cannot contain a universe metavariable.
 variable {G₀ : Type u} {M₀ M₀' G₀' : Type _}
 
 section
@@ -54,6 +61,8 @@ and right absorbing. -/
 class SemigroupWithZeroₓ (S₀ : Type _) extends Semigroupₓ S₀, MulZeroClassₓ S₀
 
 /-- A typeclass for non-associative monoids with zero elements. -/
+/- By defining this _after_ `semigroup_with_zero`, we ensure that searches for `mul_zero_class` find
+this class first. -/
 @[protect_proj]
 class MulZeroOneClassₓ (M₀ : Type _) extends MulOneClassₓ M₀, MulZeroClassₓ M₀
 
@@ -62,6 +71,7 @@ and right absorbing. -/
 @[protect_proj]
 class MonoidWithZeroₓ (M₀ : Type _) extends Monoidₓ M₀, MulZeroOneClassₓ M₀
 
+-- see Note [lower instance priority]
 instance (priority := 100) MonoidWithZeroₓ.toSemigroupWithZero (M₀ : Type _) [MonoidWithZeroₓ M₀] :
     SemigroupWithZeroₓ M₀ :=
   { ‹MonoidWithZeroₓ M₀› with }

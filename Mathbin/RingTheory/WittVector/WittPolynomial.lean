@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Johan Commelin. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johan Commelin, Robert Y. Lewis
+-/
 import Mathbin.Algebra.CharP.Invertible
 import Mathbin.Data.Fintype.Card
 import Mathbin.Data.MvPolynomial.Variables
@@ -84,14 +89,19 @@ theorem witt_polynomial_eq_sum_C_mul_X_pow (n : ℕ) :
 This allows us to simply write `W n` or `W_ ℤ n`. -/
 
 
+-- Notation with ring of coefficients explicit
 localized [Witt] notation "W_" => wittPolynomial p
 
+-- Notation with ring of coefficients implicit
 localized [Witt] notation "W" => wittPolynomial p _
 
 open_locale Witt
 
 open MvPolynomial
 
+/- The first observation is that the Witt polynomial doesn't really depend on the coefficient ring.
+If we map the coefficients through a ring homomorphism, we obtain the corresponding Witt polynomial
+over the target ring. -/
 section
 
 variable {R} {S : Type _} [CommRingₓ S]
@@ -142,6 +152,7 @@ theorem witt_polynomial_zmod_self (n : ℕ) : W_ (Zmod (p ^ (n + 1))) (n + 1) = 
 
 section PPrime
 
+-- in fact, `0 < p` would be sufficient
 variable [hp : Fact p.Prime]
 
 include hp
@@ -279,7 +290,8 @@ theorem bind₁_witt_polynomial_X_in_terms_of_W [Invertible (p : R)] (n : ℕ) :
   have : (W_ R n - ∑ i in range n, C (p ^ i : R) * X i ^ p ^ (n - i)) = C (p ^ n : R) * X n := by
     simp only [witt_polynomial_eq_sum_C_mul_X_pow, tsub_self, sum_range_succ_comm, pow_oneₓ, add_sub_cancel, pow_zeroₓ]
   rw [sum_congr rfl, this]
-  · rw [mul_right_commₓ, ← C_mul, ← mul_powₓ, mul_inv_of_self, one_pow, C_1, one_mulₓ]
+  · -- this is really slow for some reason
+    rw [mul_right_commₓ, ← C_mul, ← mul_powₓ, mul_inv_of_self, one_pow, C_1, one_mulₓ]
     
   · intro i h
     rw [mem_range] at h

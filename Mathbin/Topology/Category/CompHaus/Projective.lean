@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Johan Commelin. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johan Commelin
+-/
 import Mathbin.Topology.Category.CompHaus.Default
 import Mathbin.Topology.StoneCech
 import Mathbin.CategoryTheory.Preadditive.Projective
@@ -43,7 +48,7 @@ instance projective_ultrafilter (X : Type _) : Projective (of <| Ultrafilter X) 
 
 /-- For any compact Hausdorff space `X`,
   the natural map `ultrafilter X → X` is a projective presentation. -/
-def projective_presentation (X : CompHaus) : ProjectivePresentation X where
+def projectivePresentation (X : CompHaus) : ProjectivePresentation X where
   P := of <| Ultrafilter X
   f := ⟨_, continuous_ultrafilter_extend id⟩
   Projective := CompHaus.projective_ultrafilter X

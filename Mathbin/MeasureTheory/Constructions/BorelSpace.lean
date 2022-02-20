@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2017 Johannes Hölzl. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johannes Hölzl, Yury Kudryashov
+-/
 import Mathbin.Analysis.Complex.Basic
 import Mathbin.Analysis.NormedSpace.FiniteDimension
 import Mathbin.MeasureTheory.Function.AeMeasurableSequence
@@ -67,7 +72,7 @@ theorem borel_eq_top_of_encodable [TopologicalSpace α] [T1Space α] [Encodable 
 theorem borel_eq_generate_from_of_subbasis {s : Set (Set α)} [t : TopologicalSpace α] [SecondCountableTopology α]
     (hs : t = generateFrom s) : borel α = generateFrom s :=
   le_antisymmₓ
-    (generate_from_le fun u hu : t.IsOpen u => by
+    (generate_from_le fun hu : t.IsOpen u => by
       rw [hs] at hu
       induction hu
       case generate_open.basic u hu =>
@@ -269,6 +274,7 @@ theorem MeasurableSet.nhds_within_is_measurably_generated {s : Set α} (hs : Mea
   have := hs.principal_is_measurably_generated
   Filter.inf_is_measurably_generated _ _
 
+-- see Note [lower instance priority]
 instance (priority := 100) OpensMeasurableSpace.to_measurable_singleton_class [T1Space α] :
     MeasurableSingletonClass α :=
   ⟨fun x => is_closed_singleton.MeasurableSet⟩
@@ -394,9 +400,9 @@ instance nhds_within_Ioi_is_measurably_generated : (𝓝[Ioi b] a).IsMeasurablyG
 instance nhds_within_Iio_is_measurably_generated : (𝓝[Iio b] a).IsMeasurablyGenerated :=
   measurable_set_Iio.nhds_within_is_measurably_generated _
 
--- ././Mathport/Syntax/Translate/Basic.lean:696:47: unsupported (impossible)
+-- ././Mathport/Syntax/Translate/Basic.lean:815:47: unsupported (impossible)
 instance nhds_within_interval_is_measurably_generated :
-    IsMeasurablyGenerated (𝓝["././Mathport/Syntax/Translate/Basic.lean:696:47: unsupported (impossible)"] x) :=
+    IsMeasurablyGenerated (𝓝["././Mathport/Syntax/Translate/Basic.lean:815:47: unsupported (impossible)"] x) :=
   nhds_within_Icc_is_measurably_generated
 
 @[measurability]
@@ -408,14 +414,14 @@ theorem measurable_set_lt [SecondCountableTopology α] {f g : δ → α} (hf : M
     MeasurableSet { a | f a < g a } :=
   hf.prod_mk hg measurable_set_lt'
 
--- ././Mathport/Syntax/Translate/Basic.lean:418:16: unsupported tactic `by_contra'
+-- ././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'
 theorem Set.OrdConnected.measurable_set (h : OrdConnected s) : MeasurableSet s := by
   let u := ⋃ (x ∈ s) (y ∈ s), Ioo x y
   have huopen : IsOpen u := is_open_bUnion fun x hx => is_open_bUnion fun y hy => is_open_Ioo
   have humeas : MeasurableSet u := huopen.measurable_set
   have hfinite : (s \ u).Finite := by
     refine' Set.finite_of_forall_between_eq_endpoints (s \ u) fun x hx y hy z hz hxy hyz => _
-    "././Mathport/Syntax/Translate/Basic.lean:418:16: unsupported tactic `by_contra'"
+    "././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'"
     exact hy.2 (mem_Union₂.mpr ⟨x, hx.1, mem_Union₂.mpr ⟨z, hz.1, lt_of_le_of_neₓ hxy h.1, lt_of_le_of_neₓ hyz h.2⟩⟩)
   have : u ⊆ s := Union₂_subset fun x hx => Union₂_subset fun y hy => Ioo_subset_Icc_self.trans (h.out hx hy)
   rw [← union_diff_cancel this]
@@ -690,7 +696,7 @@ instance (priority := 100) TopologicalGroup.has_measurable_inv [Groupₓ γ] [To
 instance (priority := 100) HasContinuousSmul.has_measurable_smul {M α} [TopologicalSpace M] [TopologicalSpace α]
     [MeasurableSpace M] [MeasurableSpace α] [OpensMeasurableSpace M] [BorelSpace α] [HasScalar M α]
     [HasContinuousSmul M α] : HasMeasurableSmul M α :=
-  ⟨fun c => (continuous_const.smul continuous_id).Measurable, fun y => (continuous_id.smul continuous_const).Measurable⟩
+  ⟨fun c => (continuous_const_smul _).Measurable, fun y => (continuous_id.smul continuous_const).Measurable⟩
 
 section Lattice
 
@@ -970,7 +976,7 @@ protected theorem Monotone.measurable [LinearOrderₓ β] [OrderClosedTopology �
 
 theorem ae_measurable_restrict_of_monotone_on [LinearOrderₓ β] [OrderClosedTopology β] {μ : Measureₓ β} {s : Set β}
     (hs : MeasurableSet s) {f : β → α} (hf : MonotoneOn f s) : AeMeasurable f (μ.restrict s) :=
-  have this : Monotone (f ∘ coe : s → α) := fun ⟨x, hx⟩ ⟨y, hy⟩ hxy : x ≤ y => hf hx hy hxy
+  have this : Monotone (f ∘ coe : s → α) := fun hxy : x ≤ y => hf hx hy hxy
   ae_measurable_restrict_of_measurable_subtype hs this.Measurable
 
 protected theorem Antitone.measurable [LinearOrderₓ β] [OrderClosedTopology β] {f : β → α} (hf : Antitone f) :
@@ -1149,6 +1155,8 @@ instance (priority := 900) IsROrC.measurableSpace {𝕜 : Type _} [IsROrC 𝕜] 
 instance (priority := 900) IsROrC.borel_space {𝕜 : Type _} [IsROrC 𝕜] : BorelSpace 𝕜 :=
   ⟨rfl⟩
 
+/- Instances on `real` and `complex` are special cases of `is_R_or_C` but without these instances,
+Lean fails to prove `borel_space (ι → ℝ)`, so we leave them here. -/
 instance Real.measurableSpace : MeasurableSpace ℝ :=
   borel ℝ
 
@@ -1378,20 +1386,20 @@ namespace Real
 
 open MeasurableSpace MeasureTheory
 
--- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (a b)
+-- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (a b)
 theorem borel_eq_generate_from_Ioo_rat : borel ℝ = generateFrom (⋃ (a : ℚ) (b : ℚ) (h : a < b), {Ioo a b}) :=
   is_topological_basis_Ioo_rat.borel_eq_generate_from
 
--- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (a b)
+-- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (a b)
 theorem is_pi_system_Ioo_rat : @IsPiSystem ℝ (⋃ (a : ℚ) (b : ℚ) (h : a < b), {Ioo a b}) := by
   convert is_pi_system_Ioo (coe : ℚ → ℝ) (coe : ℚ → ℝ)
   ext x
   simp [eq_comm]
 
--- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (a b)
+-- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (a b)
 /-- The intervals `(-(n + 1), (n + 1))` form a finite spanning sets in the set of open intervals
 with rational endpoints for a locally finite measure `μ` on `ℝ`. -/
-def finite_spanning_sets_in_Ioo_rat (μ : Measureₓ ℝ) [IsLocallyFiniteMeasure μ] :
+def finiteSpanningSetsInIooRat (μ : Measureₓ ℝ) [IsLocallyFiniteMeasure μ] :
     μ.FiniteSpanningSetsIn (⋃ (a : ℚ) (b : ℚ) (h : a < b), {Ioo a b}) where
   Set := fun n => Ioo (-(n + 1)) (n + 1)
   set_mem := fun n => by
@@ -1499,7 +1507,7 @@ theorem measurable_of_measurable_nnreal {f : ℝ≥0∞ → α} (h : Measurable 
   measurable_of_measurable_on_compl_singleton ∞ (MeasurableEquiv.ennrealEquivNnreal.symm.measurable_comp_iff.1 h)
 
 /-- `ℝ≥0∞` is `measurable_equiv` to `ℝ≥0 ⊕ unit`. -/
-def ennreal_equiv_sum : ℝ≥0∞ ≃ᵐ Sum ℝ≥0 Unit :=
+def ennrealEquivSum : ℝ≥0∞ ≃ᵐ Sum ℝ≥0 Unit :=
   { Equivₓ.optionEquivSumPunit ℝ≥0 with measurable_to_fun := measurable_of_measurable_nnreal measurable_inl,
     measurable_inv_fun := measurable_sum measurable_coe_nnreal_ennreal (@measurable_const ℝ≥0∞ Unit _ _ ∞) }
 
@@ -1822,7 +1830,7 @@ variable [OpensMeasurableSpace E]
 variable {F : Type _} [NormedGroup F] [NormedSpace 𝕜 F] [MeasurableSpace F] [BorelSpace F]
 
 @[measurability]
-protected theorem Measurable (L : E →L[𝕜] F) : Measurable L :=
+protected theorem measurable (L : E →L[𝕜] F) : Measurable L :=
   L.Continuous.Measurable
 
 theorem measurable_comp (L : E →L[𝕜] F) {φ : α → E} (φ_meas : Measurable φ) : Measurable fun a : α => L (φ a) :=
@@ -1848,11 +1856,11 @@ theorem measurable_apply [MeasurableSpace F] [BorelSpace F] (x : E) : Measurable
 
 @[measurability]
 theorem measurable_apply' [MeasurableSpace E] [OpensMeasurableSpace E] [MeasurableSpace F] [BorelSpace F] :
-    Measurable fun x : E f : E →L[𝕜] F => f x :=
+    Measurable fun f : E →L[𝕜] F => f x :=
   (measurable_pi_lambda _) fun f => f.Measurable
 
 @[measurability]
-theorem measurable_coe [MeasurableSpace F] [BorelSpace F] : Measurable fun f : E →L[𝕜] F x : E => f x :=
+theorem measurable_coe [MeasurableSpace F] [BorelSpace F] : Measurable fun x : E => f x :=
   measurable_pi_lambda _ measurable_apply
 
 end ContinuousLinearMap

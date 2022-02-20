@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Mario Carneiro. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Mario Carneiro, Minchao Wu
+-/
 import Mathbin.Meta.RbMap
 import Mathbin.Tactic.Core
 
@@ -15,7 +20,7 @@ namespace Tactic
 
 namespace Explode
 
-inductive status : Type
+inductive Status : Type
   | reg
   | intro
   | lam
@@ -46,7 +51,7 @@ unsafe structure entry : Type where
   deps : List Nat
 
 unsafe def pad_right (l : List Stringₓ) : List Stringₓ :=
-  let n := l.foldl (fun r s : Stringₓ => max r s.length) 0
+  let n := l.foldl (fun s : Stringₓ => max r s.length) 0
   l.map fun s => Nat.iterate (fun s => s.push ' ') (n - s.length) s
 
 unsafe structure entries : Type where mk' ::
@@ -119,7 +124,10 @@ mutual
         else do
           let en : entry := ⟨l, es, depth, status.intro, thm.name n, []⟩
           let es' ← explode.core b' si (depth + 1) (es en)
-          let deps' ← explode.append_dep filter es' b' []
+          let deps'
+            ←-- in case of a "have" clause, the b' here has an annotation
+                explode.append_dep
+                filter es' b' []
           let deps' ← explode.append_dep filter es' l deps'
           return <| es' ⟨e, es', depth, status.lam, thm.string "∀I", deps'⟩
     | e@(elet n t a b), si, depth, es => explode.core (reduce_lets e) si depth es
@@ -133,7 +141,10 @@ mutual
           return (es en)
         | (fn, args) => do
           let es' ← explode.core fn false depth es
-          let deps ← explode.append_dep filter es' fn.erase_annotations []
+          let deps
+            ←-- in case of a "have" clause, the fn here has an annotation
+                explode.append_dep
+                filter es' fn.erase_annotations []
           explode.args e args depth es' (thm.string "∀E") deps
   unsafe def explode.args (filter : expr → tactic Unit) :
       expr → List expr → Nat → entries → thm → List Nat → tactic entries

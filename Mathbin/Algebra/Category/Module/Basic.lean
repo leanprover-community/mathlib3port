@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Robert A. Spencer. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Robert A. Spencer, Markus Himmel
+-/
 import Mathbin.Algebra.Category.Group.Basic
 import Mathbin.CategoryTheory.Limits.Shapes.Kernels
 import Mathbin.CategoryTheory.Linear.Default
@@ -70,7 +75,7 @@ namespace ModuleCat
 instance : CoeSort (ModuleCat.{v} R) (Type v) :=
   ⟨ModuleCat.Carrier⟩
 
-instance Module_category : Category (ModuleCat.{v} R) where
+instance moduleCategory : Category (ModuleCat.{v} R) where
   Hom := fun M N => M →ₗ[R] N
   id := fun M => 1
   comp := fun A B C f g => g.comp f
@@ -78,13 +83,14 @@ instance Module_category : Category (ModuleCat.{v} R) where
   comp_id' := fun X Y f => LinearMap.comp_id _
   assoc' := fun W X Y Z f g h => LinearMap.comp_assoc _ _ _
 
-instance Module_concrete_category : ConcreteCategory.{v} (ModuleCat.{v} R) where
+instance moduleConcreteCategory : ConcreteCategory.{v} (ModuleCat.{v} R) where
   forget := { obj := fun R => R, map := fun R S f => (f : R → S) }
   forget_faithful := {  }
 
-instance has_forget_to_AddCommGroup : HasForget₂ (ModuleCat R) AddCommGroupₓₓ where
+instance hasForgetToAddCommGroup : HasForget₂ (ModuleCat R) AddCommGroupₓₓ where
   forget₂ := { obj := fun M => AddCommGroupₓₓ.of M, map := fun M₁ M₂ f => LinearMap.toAddMonoidHom f }
 
+-- TODO: instantiate `linear_map_class` once that gets defined
 instance (M N : ModuleCat R) : AddMonoidHomClass (M ⟶ N) M N :=
   { LinearMap.addMonoidHomClass with coe := fun f => f }
 
@@ -107,7 +113,7 @@ theorem forget₂_map (X Y : ModuleCat R) (f : X ⟶ Y) :
   rfl
 
 /-- Typecheck a `linear_map` as a morphism in `Module R`. -/
-def of_hom {R : Type u} [Ringₓ R] {X Y : Type u} [AddCommGroupₓ X] [Module R X] [AddCommGroupₓ Y] [Module R Y]
+def ofHom {R : Type u} [Ringₓ R] {X Y : Type u} [AddCommGroupₓ X] [Module R X] [AddCommGroupₓ Y] [Module R Y]
     (f : X →ₗ[R] Y) : of R X ⟶ of R Y :=
   f
 
@@ -126,7 +132,7 @@ variable {R}
 /-- Forgetting to the underlying type and then building the bundled object returns the original
 module. -/
 @[simps]
-def of_self_iso (M : ModuleCat R) : ModuleCat.of R M ≅ M where
+def ofSelfIso (M : ModuleCat R) : ModuleCat.of R M ≅ M where
   Hom := 𝟙 M
   inv := 𝟙 M
 
@@ -253,7 +259,7 @@ namespace CategoryTheory.Iso
 
 /-- Build a `linear_equiv` from an isomorphism in the category `Module R`. -/
 @[simps]
-def to_linear_equiv {X Y : ModuleCat R} (i : X ≅ Y) : X ≃ₗ[R] Y where
+def toLinearEquiv {X Y : ModuleCat R} (i : X ≅ Y) : X ≃ₗ[R] Y where
   toFun := i.Hom
   invFun := i.inv
   left_inv := by

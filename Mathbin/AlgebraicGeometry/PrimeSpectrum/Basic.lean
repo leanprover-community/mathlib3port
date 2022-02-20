@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Johan Commelin. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johan Commelin
+-/
 import Mathbin.Topology.Opens
 import Mathbin.RingTheory.Ideal.Prod
 import Mathbin.RingTheory.Ideal.Over
@@ -63,7 +68,7 @@ namespace PrimeSpectrum
 
 /-- A method to view a point in the prime spectrum of a commutative ring
 as an ideal of that ring. -/
-abbrev as_ideal (x : PrimeSpectrum R) : Ideal R :=
+abbrev asIdeal (x : PrimeSpectrum R) : Ideal R :=
   x.val
 
 instance is_prime (x : PrimeSpectrum R) : x.asIdeal.IsPrime :=
@@ -71,7 +76,7 @@ instance is_prime (x : PrimeSpectrum R) : x.asIdeal.IsPrime :=
 
 /-- The prime spectrum of the zero ring is empty.
 -/
-theorem PUnit (x : PrimeSpectrum PUnit) : False :=
+theorem punit (x : PrimeSpectrum PUnit) : False :=
   x.1.ne_top_iff_one.1 x.2.1 <| Subsingleton.elimₓ (0 : PUnit) 1 ▸ x.1.zero_mem
 
 section
@@ -80,7 +85,7 @@ variable (R) (S : Type v) [CommRingₓ S]
 
 /-- The prime spectrum of `R × S` is in bijection with the disjoint unions of the prime spectrum of
     `R` and the prime spectrum of `S`. -/
-noncomputable def prime_spectrum_prod : PrimeSpectrum (R × S) ≃ Sum (PrimeSpectrum R) (PrimeSpectrum S) :=
+noncomputable def primeSpectrumProd : PrimeSpectrum (R × S) ≃ Sum (PrimeSpectrum R) (PrimeSpectrum S) :=
   Ideal.primeIdealsEquiv R S
 
 variable {R S}
@@ -113,7 +118,7 @@ the function (i.e., element) `f` takes values in the quotient ring `R` modulo th
 In this manner, `zero_locus s` is exactly the subset of `prime_spectrum R`
 where all "functions" in `s` vanish simultaneously.
 -/
-def zero_locus (s : Set R) : Set (PrimeSpectrum R) :=
+def ZeroLocus (s : Set R) : Set (PrimeSpectrum R) :=
   { x | s ⊆ x.asIdeal }
 
 @[simp]
@@ -136,7 +141,7 @@ the function (i.e., element) `f` takes values in the quotient ring `R` modulo th
 In this manner, `vanishing_ideal t` is exactly the ideal of `R`
 consisting of all "functions" that vanish on all of `t`.
 -/
-def vanishing_ideal (t : Set (PrimeSpectrum R)) : Ideal R :=
+def vanishingIdeal (t : Set (PrimeSpectrum R)) : Ideal R :=
   ⨅ (x : PrimeSpectrum R) (h : x ∈ t), x.asIdeal
 
 theorem coe_vanishing_ideal (t : Set (PrimeSpectrum R)) :
@@ -336,7 +341,7 @@ theorem mem_compl_zero_locus_iff_not_mem {f : R} {I : PrimeSpectrum R} :
 /-- The Zariski topology on the prime spectrum of a commutative ring
 is defined via the closed sets of the topology:
 they are exactly those sets that are the zero locus of a subset of the ring. -/
-instance zariski_topology : TopologicalSpace (PrimeSpectrum R) :=
+instance zariskiTopology : TopologicalSpace (PrimeSpectrum R) :=
   TopologicalSpace.ofClosed (Set.Range PrimeSpectrum.ZeroLocus)
     ⟨Set.Univ, by
       simp ⟩
@@ -590,7 +595,7 @@ end Comap
 section BasicOpen
 
 /-- `basic_open r` is the open subset containing all prime ideals not containing `r`. -/
-def basic_open (r : R) : TopologicalSpace.Opens (PrimeSpectrum R) where
+def basicOpen (r : R) : TopologicalSpace.Opens (PrimeSpectrum R) where
   val := { x | r ∉ x.asIdeal }
   property := ⟨{r}, Set.ext fun x => Set.singleton_subset_iff.trans <| not_not.symm⟩
 
@@ -670,8 +675,10 @@ theorem is_compact_basic_open (f : R) : IsCompact (basicOpen f : Set (PrimeSpect
       exact subset_vanishing_ideal_zero_locus {f} (Set.mem_singleton f)
     rcases Submodule.exists_finset_of_mem_supr I hn with ⟨s, hs⟩
     use s
+    -- Using simp_rw here, because `hI` and `zero_locus_supr` need to be applied underneath binders
     simp_rw [basic_open_eq_zero_locus_compl f, Set.inter_comm, ← Set.diff_eq, Set.diff_eq_empty, hI, ← zero_locus_supr]
     rw [← zero_locus_radical]
+    -- this one can't be in `simp_rw` because it would loop
     apply zero_locus_anti_mono
     rw [Set.singleton_subset_iff]
     exact ⟨n, hs⟩
@@ -750,7 +757,7 @@ end Order
 
 /-- If `x` specializes to `y`, then there is a natural map from the localization of `y` to
 the localization of `x`. -/
-def localization_map_of_specializes {x y : PrimeSpectrum R} (h : x ⤳ y) :
+def localizationMapOfSpecializes {x y : PrimeSpectrum R} (h : x ⤳ y) :
     Localization.AtPrime y.asIdeal →+* Localization.AtPrime x.asIdeal :=
   @IsLocalization.lift _ _ _ _ _ _ _ _ Localization.is_localization (algebraMap R _)
     (by
@@ -767,7 +774,7 @@ variable (R) [LocalRing R]
 
 /-- The closed point in the prime spectrum of a local ring.
 -/
-def closed_point : PrimeSpectrum R :=
+def closedPoint : PrimeSpectrum R :=
   ⟨maximalIdeal R, (maximalIdeal.is_maximal R).IsPrime⟩
 
 variable {R}

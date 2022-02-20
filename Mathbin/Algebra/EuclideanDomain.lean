@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Louis Carlin. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Louis Carlin, Mario Carneiro
+-/
 import Mathbin.Data.Int.Basic
 import Mathbin.Algebra.Field.Basic
 
@@ -79,9 +84,11 @@ variable [EuclideanDomain R]
 
 local infixl:50 " ≺ " => EuclideanDomain.R
 
+-- see Note [lower instance priority]
 instance (priority := 70) : Div R :=
   ⟨EuclideanDomain.quotient⟩
 
+-- see Note [lower instance priority]
 instance (priority := 70) : Mod R :=
   ⟨EuclideanDomain.remainder⟩
 
@@ -199,6 +206,7 @@ theorem mul_div_assoc (x : R) {y z : R} (h : z ∣ y) : x * y / z = x * (y / z) 
   rcases h with ⟨p, rfl⟩
   rw [mul_div_cancel_left _ hz, mul_left_commₓ, mul_div_cancel_left _ hz]
 
+-- This generalizes `int.div_one`, see note [simp-normal form]
 @[simp]
 theorem div_one (p : R) : p / 1 = p :=
   (EuclideanDomain.eq_div_of_mul_eq_left (@one_ne_zero R _ _) (mul_oneₓ p)).symm
@@ -217,7 +225,7 @@ section
 open_locale Classical
 
 @[elab_as_eliminator]
-theorem gcd.induction {P : R → R → Prop} : ∀ a b : R, (∀ x, P 0 x) → (∀ a b, a ≠ 0 → P (b % a) a → P a b) → P a b
+theorem Gcd.induction {P : R → R → Prop} : ∀ a b : R, (∀ x, P 0 x) → (∀ a b, a ≠ 0 → P (b % a) a → P a b) → P a b
   | a => fun b H0 H1 =>
     if a0 : a = 0 then a0.symm ▸ H0 _
     else
@@ -305,7 +313,7 @@ The function `xgcd_aux` takes in two triples, and from these recursively compute
 xgcd_aux (r, s, t) (r', s', t') = xgcd_aux (r' % r, s' - (r' / r) * s, t' - (r' / r) * t) (r, s, t)
 ```
 -/
-def xgcd_aux : R → R → R → R → R → R → R × R × R
+def xgcdAux : R → R → R → R → R → R → R × R × R
   | r => fun s t r' s' t' =>
     if hr : r = 0 then (r', s', t')
     else
@@ -329,11 +337,11 @@ def xgcd (x y : R) : R × R :=
   (xgcdAux x 1 0 y 0 1).2
 
 /-- The extended GCD `a` value in the equation `gcd x y = x * a + y * b`. -/
-def gcd_a (x y : R) : R :=
+def gcdA (x y : R) : R :=
   (xgcd x y).1
 
 /-- The extended GCD `b` value in the equation `gcd x y = x * a + y * b`. -/
-def gcd_b (x y : R) : R :=
+def gcdB (x y : R) : R :=
   (xgcd x y).2
 
 @[simp]
@@ -388,6 +396,7 @@ theorem gcd_eq_gcd_ab (a b : R) : (gcd a b : R) = a * gcdA a b + b * gcdB a b :=
         rw [P, mul_oneₓ, mul_zero, zero_addₓ])
   rwa [xgcd_aux_val, xgcd_val] at this
 
+-- see Note [lower instance priority]
 instance (priority := 70) (R : Type _) [e : EuclideanDomain R] : IsDomain R :=
   have := Classical.decEq R
   { e with
@@ -521,8 +530,8 @@ end Div
 end EuclideanDomain
 
 instance Int.euclideanDomain : EuclideanDomain ℤ :=
-  { Int.commRing, Int.nontrivial with add := · + ·, mul := · * ·, one := 1, zero := 0, neg := Neg.neg,
-    Quotient := · / ·, quotient_zero := Int.div_zero, remainder := · % ·,
+  { Int.commRing, Int.nontrivial with add := (· + ·), mul := (· * ·), one := 1, zero := 0, neg := Neg.neg,
+    Quotient := (· / ·), quotient_zero := Int.div_zero, remainder := (· % ·),
     quotient_mul_add_remainder_eq := fun a b => Int.div_add_mod _ _, R := fun a b => a.natAbs < b.natAbs,
     r_well_founded := measure_wf fun a => Int.natAbs a,
     remainder_lt := fun a b b0 =>
@@ -534,8 +543,9 @@ instance Int.euclideanDomain : EuclideanDomain ℤ :=
         rw [← mul_oneₓ a.nat_abs, Int.nat_abs_mul]
         exact mul_le_mul_of_nonneg_left (Int.nat_abs_pos_of_ne_zero b0) (Nat.zero_leₓ _) }
 
+-- see Note [lower instance priority]
 instance (priority := 100) Field.toEuclideanDomain {K : Type u} [Field K] : EuclideanDomain K :=
-  { ‹Field K› with add := · + ·, mul := · * ·, one := 1, zero := 0, neg := Neg.neg, Quotient := · / ·,
+  { ‹Field K› with add := (· + ·), mul := (· * ·), one := 1, zero := 0, neg := Neg.neg, Quotient := (· / ·),
     remainder := fun a b => a - a * b / b, quotient_zero := div_zero,
     quotient_mul_add_remainder_eq := fun a b => by
       classical

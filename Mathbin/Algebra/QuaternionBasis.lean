@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Eric Wieser. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Eric Wieser
+-/
 import Mathbin.Algebra.Quaternion
 import Mathbin.Tactic.Ring
 
@@ -27,7 +32,7 @@ namespace QuaternionAlgebra
 
 Note that for definitional convenience, `k` is provided as a field even though `i_mul_j` fully
 determines it. -/
-structure basis {R : Type _} (A : Type _) [CommRingₓ R] [Ringₓ A] [Algebra R A] (c₁ c₂ : R) where
+structure Basis {R : Type _} (A : Type _) [CommRingₓ R] [Ringₓ A] [Algebra R A] (c₁ c₂ : R) where
   (i j k : A)
   i_mul_i : i * i = c₁ • 1
   j_mul_j : j * j = c₂ • 1
@@ -131,7 +136,7 @@ theorem lift_smul (r : R) (x : ℍ[R,c₁,c₂]) : q.lift (r • x) = r • q.li
 
 /-- A `quaternion_algebra.basis` implies an `alg_hom` from the quaternions. -/
 @[simps]
-def lift_hom : ℍ[R,c₁,c₂] →ₐ[R] A :=
+def liftHom : ℍ[R,c₁,c₂] →ₐ[R] A :=
   AlgHom.mk'
     { toFun := q.lift, map_zero' := q.lift_zero, map_one' := q.lift_one, map_add' := q.lift_add,
       map_mul' := q.lift_mul }
@@ -139,7 +144,7 @@ def lift_hom : ℍ[R,c₁,c₂] →ₐ[R] A :=
 
 /-- Transform a `quaternion_algebra.basis` through an `alg_hom`. -/
 @[simps i j k]
-def comp_hom (F : A →ₐ[R] B) : Basis B c₁ c₂ where
+def compHom (F : A →ₐ[R] B) : Basis B c₁ c₂ where
   i := F q.i
   i_mul_i := by
     rw [← F.map_mul, q.i_mul_i, F.map_smul, F.map_one]

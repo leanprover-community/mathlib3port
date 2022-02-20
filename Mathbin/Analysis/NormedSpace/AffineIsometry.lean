@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Heather Macbeth. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Heather Macbeth
+-/
 import Mathbin.Analysis.NormedSpace.AddTorsor
 import Mathbin.Analysis.NormedSpace.LinearIsometry
 
@@ -44,14 +49,15 @@ omit V V₂
 
 variable {𝕜 P P₂}
 
-notation:25 P " →ᵃⁱ[" 𝕜:25 "] " P₂:0 => AffineIsometry 𝕜 P P₂
+notation:25 P " →ᵃⁱ[" 𝕜-- `→ᵃᵢ` would be more consistent with the linear isometry notation, but it is uglier
+:25 "] " P₂:0 => AffineIsometry 𝕜 P P₂
 
 namespace AffineIsometry
 
 variable (f : P →ᵃⁱ[𝕜] P₂)
 
 /-- The underlying linear map of an affine isometry is in fact a linear isometry. -/
-protected def LinearIsometry : V →ₗᵢ[𝕜] V₂ :=
+protected def linearIsometry : V →ₗᵢ[𝕜] V₂ :=
   { f.linear with norm_map' := f.norm_map }
 
 @[simp]
@@ -91,7 +97,7 @@ namespace LinearIsometry
 variable (f : V →ₗᵢ[𝕜] V₂)
 
 /-- Reinterpret a linear isometry as an affine isometry. -/
-def to_affine_isometry : V →ᵃⁱ[𝕜] V₂ :=
+def toAffineIsometry : V →ᵃⁱ[𝕜] V₂ :=
   { f.toLinearMap.toAffineMap with norm_map := f.norm_map }
 
 @[simp]
@@ -103,6 +109,7 @@ theorem to_affine_isometry_linear_isometry : f.toAffineIsometry.LinearIsometry =
   ext
   rfl
 
+-- somewhat arbitrary choice of simp direction
 @[simp]
 theorem to_affine_isometry_to_affine_map : f.toAffineIsometry.toAffineMap = f.toLinearMap.toAffineMap :=
   rfl
@@ -133,7 +140,7 @@ theorem nndist_map (x y : P) : nndist (f x) (f y) = nndist x y := by
 theorem edist_map (x y : P) : edist (f x) (f y) = edist x y := by
   simp [edist_dist]
 
-protected theorem Isometry : Isometry f :=
+protected theorem isometry : Isometry f :=
   f.edist_map
 
 protected theorem injective : Injective f₁ :=
@@ -153,7 +160,7 @@ protected theorem antilipschitz : AntilipschitzWith 1 f :=
   f.Isometry.antilipschitz
 
 @[continuity]
-protected theorem Continuous : Continuous f :=
+protected theorem continuous : Continuous f :=
   f.Isometry.Continuous
 
 theorem ediam_image (s : Set P) : Emetric.diam (f '' s) = Emetric.diam s :=
@@ -237,6 +244,9 @@ theorem coe_mul (f g : P →ᵃⁱ[𝕜] P) : ⇑(f * g) = f ∘ g :=
 
 end AffineIsometry
 
+-- remark: by analogy with the `linear_isometry` file from which this is adapted, there should
+-- follow here a section defining an "inclusion" affine isometry from `p : affine_subspace 𝕜 P`
+-- into `P`; we omit this for now
 variable (𝕜 P P₂)
 
 include V V₂
@@ -249,14 +259,15 @@ variable {𝕜 P P₂}
 
 omit V V₂
 
-notation:25 P " ≃ᵃⁱ[" 𝕜:25 "] " P₂:0 => AffineIsometryEquiv 𝕜 P P₂
+notation:25 P " ≃ᵃⁱ[" 𝕜-- `≃ᵃᵢ` would be more consistent with the linear isometry equiv notation, but it is uglier
+:25 "] " P₂:0 => AffineIsometryEquiv 𝕜 P P₂
 
 namespace AffineIsometryEquiv
 
 variable (e : P ≃ᵃⁱ[𝕜] P₂)
 
 /-- The underlying linear equiv of an affine isometry equiv is in fact a linear isometry equiv. -/
-protected def LinearIsometryEquiv : V ≃ₗᵢ[𝕜] V₂ :=
+protected def linearIsometryEquiv : V ≃ₗᵢ[𝕜] V₂ :=
   { e.linear with norm_map' := e.norm_map }
 
 @[simp]
@@ -287,7 +298,7 @@ theorem ext {e e' : P ≃ᵃⁱ[𝕜] P₂} (h : ∀ x, e x = e' x) : e = e' :=
 omit V V₂
 
 /-- Reinterpret a `affine_isometry_equiv` as a `affine_isometry`. -/
-def to_affine_isometry : P →ᵃⁱ[𝕜] P₂ :=
+def toAffineIsometry : P →ᵃⁱ[𝕜] P₂ :=
   ⟨e.1.toAffineMap, e.2⟩
 
 @[simp]
@@ -317,7 +328,7 @@ namespace LinearIsometryEquiv
 variable (e : V ≃ₗᵢ[𝕜] V₂)
 
 /-- Reinterpret a linear isometry equiv as an affine isometry equiv. -/
-def to_affine_isometry_equiv : V ≃ᵃⁱ[𝕜] V₂ :=
+def toAffineIsometryEquiv : V ≃ᵃⁱ[𝕜] V₂ :=
   { e.toLinearEquiv.toAffineEquiv with norm_map := e.norm_map }
 
 @[simp]
@@ -329,11 +340,13 @@ theorem to_affine_isometry_equiv_linear_isometry_equiv : e.toAffineIsometryEquiv
   ext
   rfl
 
+-- somewhat arbitrary choice of simp direction
 @[simp]
 theorem to_affine_isometry_equiv_to_affine_equiv :
     e.toAffineIsometryEquiv.toAffineEquiv = e.toLinearEquiv.toAffineEquiv :=
   rfl
 
+-- somewhat arbitrary choice of simp direction
 @[simp]
 theorem to_affine_isometry_equiv_to_affine_isometry :
     e.toAffineIsometryEquiv.toAffineIsometry = e.toLinearIsometry.toAffineIsometry :=
@@ -345,11 +358,11 @@ namespace AffineIsometryEquiv
 
 variable (e : P ≃ᵃⁱ[𝕜] P₂)
 
-protected theorem Isometry : Isometry e :=
+protected theorem isometry : Isometry e :=
   e.toAffineIsometry.Isometry
 
 /-- Reinterpret a `affine_isometry_equiv` as an `isometric`. -/
-def to_isometric : P ≃ᵢ P₂ :=
+def toIsometric : P ≃ᵢ P₂ :=
   ⟨e.toAffineEquiv.toEquiv, e.Isometry⟩
 
 @[simp]
@@ -365,23 +378,23 @@ theorem range_eq_univ (e : P ≃ᵃⁱ[𝕜] P₂) : Set.Range e = Set.Univ := b
 omit V V₂
 
 /-- Reinterpret a `affine_isometry_equiv` as an `homeomorph`. -/
-def to_homeomorph : P ≃ₜ P₂ :=
+def toHomeomorph : P ≃ₜ P₂ :=
   e.toIsometric.toHomeomorph
 
 @[simp]
 theorem coe_to_homeomorph : ⇑e.toHomeomorph = e :=
   rfl
 
-protected theorem Continuous : Continuous e :=
+protected theorem continuous : Continuous e :=
   e.Isometry.Continuous
 
-protected theorem ContinuousAt {x} : ContinuousAt e x :=
+protected theorem continuous_at {x} : ContinuousAt e x :=
   e.Continuous.ContinuousAt
 
-protected theorem ContinuousOn {s} : ContinuousOn e s :=
+protected theorem continuous_on {s} : ContinuousOn e s :=
   e.Continuous.ContinuousOn
 
-protected theorem ContinuousWithinAt {s x} : ContinuousWithinAt e s x :=
+protected theorem continuous_within_at {s x} : ContinuousWithinAt e s x :=
   e.Continuous.ContinuousWithinAt
 
 variable (𝕜 P)
@@ -452,7 +465,7 @@ def trans (e' : P₂ ≃ᵃⁱ[𝕜] P₃) : P ≃ᵃⁱ[𝕜] P₃ :=
 include V V₂
 
 @[simp]
-theorem coeTransₓ (e₁ : P ≃ᵃⁱ[𝕜] P₂) (e₂ : P₂ ≃ᵃⁱ[𝕜] P₃) : ⇑e₁.trans e₂ = e₂ ∘ e₁ :=
+theorem coe_trans (e₁ : P ≃ᵃⁱ[𝕜] P₂) (e₂ : P₂ ≃ᵃⁱ[𝕜] P₃) : ⇑e₁.trans e₂ = e₂ ∘ e₁ :=
   rfl
 
 omit V V₂ V₃
@@ -572,7 +585,7 @@ section Constructions
 variable (𝕜)
 
 /-- The map `v ↦ v +ᵥ p` as an affine isometric equivalence between `V` and `P`. -/
-def vadd_const (p : P) : V ≃ᵃⁱ[𝕜] P :=
+def vaddConst (p : P) : V ≃ᵃⁱ[𝕜] P :=
   { AffineEquiv.vaddConst 𝕜 p with norm_map := fun x => rfl }
 
 variable {𝕜}
@@ -596,7 +609,7 @@ omit V
 variable (𝕜)
 
 /-- `p' ↦ p -ᵥ p'` as an affine isometric equivalence. -/
-def const_vsub (p : P) : P ≃ᵃⁱ[𝕜] V :=
+def constVsub (p : P) : P ≃ᵃⁱ[𝕜] V :=
   { AffineEquiv.constVsub 𝕜 p with norm_map := norm_neg }
 
 variable {𝕜}
@@ -619,7 +632,7 @@ variable (𝕜 P)
 
 /-- Translation by `v` (that is, the map `p ↦ v +ᵥ p`) as an affine isometric automorphism of `P`.
 -/
-def const_vadd (v : V) : P ≃ᵃⁱ[𝕜] P :=
+def constVadd (v : V) : P ≃ᵃⁱ[𝕜] P :=
   { AffineEquiv.constVadd 𝕜 P v with norm_map := fun x => rfl }
 
 variable {𝕜 P}
@@ -646,7 +659,7 @@ omit 𝕜
 variable (𝕜)
 
 /-- Point reflection in `x` as an affine isometric automorphism. -/
-def point_reflection (x : P) : P ≃ᵃⁱ[𝕜] P :=
+def pointReflection (x : P) : P ≃ᵃⁱ[𝕜] P :=
   (constVsub 𝕜 x).trans (vaddConst 𝕜 x)
 
 variable {𝕜}

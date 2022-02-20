@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Andrew Yang. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Andrew Yang
+-/
 import Mathbin.Tactic.Elementwise
 import Mathbin.CategoryTheory.Limits.Shapes.Multiequalizer
 import Mathbin.CategoryTheory.Limits.Constructions.EpiMono
@@ -39,7 +44,7 @@ such that
 10. `t' i j k ≫ t' j k i ≫ t' k i j = 𝟙 _`.
 -/
 @[nolint has_inhabited_instance]
-structure glue_data where
+structure GlueData where
   J : Type v
   U : J → C
   V : J × J → C
@@ -119,7 +124,7 @@ theorem t'_comp_eq_pullback_symmetry (i j k : D.J) :
     
 
 /-- (Implementation) The disjoint union of `U i`. -/
-def sigma_opens [HasCoproduct D.U] : C :=
+def sigmaOpens [HasCoproduct D.U] : C :=
   ∐ D.U
 
 /-- (Implementation) The diagram to take colimit of. -/
@@ -183,7 +188,7 @@ theorem glue_condition (i j : D.J) : D.t i j ≫ D.f j i ≫ D.ι j = D.f i j �
 
 /-- The pullback cone spanned by `V i j ⟶ U i` and `V i j ⟶ U j`.
 This will often be a pullback diagram. -/
-def V_pullback_cone (i j : D.J) : PullbackCone (D.ι i) (D.ι j) :=
+def vPullbackCone (i j : D.J) : PullbackCone (D.ι i) (D.ι j) :=
   PullbackCone.mk (D.f i j) (D.t i j ≫ D.f j i)
     (by
       simp )
@@ -225,7 +230,7 @@ instance (i j k : D.J) : HasPullback (F.map (D.f i j)) (F.map (D.f i k)) :=
 
 /-- A functor that preserves the pullbacks of `f i j` and `f i k` can map a family of glue data. -/
 @[simps]
-def map_glue_data : GlueData C' where
+def mapGlueData : GlueData C' where
   J := D.J
   U := fun i => F.obj (D.U i)
   V := fun i => F.obj (D.V i)
@@ -248,7 +253,7 @@ def map_glue_data : GlueData C' where
 /-- The diagram of the image of a `glue_data` under a functor `F` is naturally isomorphic to the
 original diagram of the `glue_data` via `F`.
 -/
-def diagram_iso : D.diagram.multispan ⋙ F ≅ (D.mapGlueData F).diagram.multispan :=
+def diagramIso : D.diagram.multispan ⋙ F ≅ (D.mapGlueData F).diagram.multispan :=
   NatIso.ofComponents
     (fun x =>
       match x with
@@ -310,7 +315,7 @@ theorem has_colimit_map_glue_data_diagram : HasMulticoequalizer (D.mapGlueData F
 attribute [local instance] has_colimit_map_glue_data_diagram
 
 /-- If `F` preserves the gluing, we obtain an iso between the glued objects. -/
-def glued_iso : F.obj D.glued ≅ (D.mapGlueData F).glued :=
+def gluedIso : F.obj D.glued ≅ (D.mapGlueData F).glued :=
   preservesColimitIso F D.diagram.multispan ≪≫ Limits.HasColimit.isoOfNatIso (D.diagramIso F)
 
 @[simp, reassoc]
@@ -326,7 +331,7 @@ theorem ι_glued_iso_inv (i : D.J) : (D.mapGlueData F).ι i ≫ (D.gluedIso F).i
 
 /-- If `F` preserves the gluing, and reflects the pullback of `U i ⟶ glued` and `U j ⟶ glued`,
 then `F` reflects the fact that `V_pullback_cone` is a pullback. -/
-def V_pullback_cone_is_limit_of_map (i j : D.J) [ReflectsLimit (cospan (D.ι i) (D.ι j)) F]
+def vPullbackConeIsLimitOfMap (i j : D.J) [ReflectsLimit (cospan (D.ι i) (D.ι j)) F]
     (hc : IsLimit ((D.mapGlueData F).vPullbackCone i j)) : IsLimit (D.vPullbackCone i j) := by
   apply is_limit_of_reflects F
   apply (is_limit_map_cone_pullback_cone_equiv _ _).symm _

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Yury G. Kudryashov. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yury G. Kudryashov
+-/
 import Mathbin.Data.Set.Intervals.Monotone
 import Mathbin.Topology.Algebra.Order.MonotoneContinuity
 import Mathbin.Topology.UrysohnsBounded
@@ -47,11 +52,16 @@ theorem tietze_extension_step (f : X →ᵇ ℝ) (e : C(X, Y)) (he : ClosedEmbed
     norm_num1
   have h23 : 0 < (2 / 3 : ℝ) := by
     norm_num1
+  -- In the trivial case `f = 0`, we take `g = 0`
   rcases eq_or_ne f 0 with (rfl | hf)
   · use 0
     simp
     
   replace hf : 0 < ∥f∥ := norm_pos_iff.2 hf
+  /- Otherwise, the closed sets `e '' (f ⁻¹' (Iic (-∥f∥ / 3)))` and `e '' (f ⁻¹' (Ici (∥f∥ / 3)))`
+    are disjoint, hence by Urysohn's lemma there exists a function `g` that is equal to `-∥f∥ / 3`
+    on the former set and is equal to `∥f∥ / 3` on the latter set. This function `g` satisfies the
+    assertions of the lemma. -/
   have hf3 : -∥f∥ / 3 < ∥f∥ / 3 := (div_lt_div_right h3).2 (Left.neg_lt_self hf)
   have hc₁ : IsClosed (e '' (f ⁻¹' Iic (-∥f∥ / 3))) := he.is_closed_map _ (is_closed_Iic.preimage f.continuous)
   have hc₂ : IsClosed (e '' (f ⁻¹' Ici (∥f∥ / 3))) := he.is_closed_map _ (is_closed_Ici.preimage f.continuous)
@@ -90,6 +100,8 @@ into a normal topological space and `f : X →ᵇ ℝ` is a bounded continuous f
 a bounded continuous function `g : Y →ᵇ ℝ` of the same norm such that `g ∘ e = f`. -/
 theorem exists_extension_norm_eq_of_closed_embedding' (f : X →ᵇ ℝ) (e : C(X, Y)) (he : ClosedEmbedding e) :
     ∃ g : Y →ᵇ ℝ, ∥g∥ = ∥f∥ ∧ g.comp_continuous e = f := by
+  /- For the proof, we iterate `tietze_extension_step`. Each time we apply it to the difference
+    between the previous approximation and `f`. -/
   choose F hF_norm hF_dist using fun f : X →ᵇ ℝ => tietze_extension_step f e he
   set g : ℕ → Y →ᵇ ℝ := fun n => ((fun g => g + F (f - g.comp_continuous e))^[n]) 0
   have g0 : g 0 = 0 := rfl
@@ -193,11 +205,14 @@ to a closed interval `[f x₁, f x₂]` for some `x₁` and `x₂`.  -/
 theorem exists_extension_forall_exists_le_ge_of_closed_embedding [Nonempty X] (f : X →ᵇ ℝ) {e : X → Y}
     (he : ClosedEmbedding e) : ∃ g : Y →ᵇ ℝ, (∀ y, ∃ x₁ x₂, g y ∈ Icc (f x₁) (f x₂)) ∧ g ∘ e = f := by
   inhabit X
+  -- Put `a = ⨅ x, f x` and `b = ⨆ x, f x`
   obtain ⟨a, ha⟩ : ∃ a, IsGlb (range f) a
   exact ⟨_, is_glb_cinfi (Real.bounded_iff_bdd_below_bdd_above.1 f.bounded_range).1⟩
   obtain ⟨b, hb⟩ : ∃ b, IsLub (range f) b
   exact ⟨_, is_lub_csupr (Real.bounded_iff_bdd_below_bdd_above.1 f.bounded_range).2⟩
+  -- Then `f x ∈ [a, b]` for all `x`
   have hmem : ∀ x, f x ∈ Icc a b := fun x => ⟨ha.1 ⟨x, rfl⟩, hb.1 ⟨x, rfl⟩⟩
+  -- Rule out the trivial case `a = b`
   have hle : a ≤ b := (hmem default).1.trans (hmem default).2
   rcases hle.eq_or_lt with (rfl | hlt)
   · have : ∀ x, f x = a := by
@@ -205,6 +220,7 @@ theorem exists_extension_forall_exists_le_ge_of_closed_embedding [Nonempty X] (f
     use const Y a
     simp [this, Function.funext_iffₓ]
     
+  -- Put `c = (a + b) / 2`. Then `a < c < b` and `c - a = b - c`.
   set c := (a + b) / 2
   have hac : a < c := left_lt_add_div_two.2 hlt
   have hcb : c < b := add_div_two_lt_right.2 hlt
@@ -212,11 +228,19 @@ theorem exists_extension_forall_exists_le_ge_of_closed_embedding [Nonempty X] (f
     simp only [c]
     field_simp
     ring
+  /- Due to `exists_extension_forall_mem_Icc_of_closed_embedding`, there exists an extension `g`
+    such that `g y ∈ [a, b]` for all `y`. However, if `a` and/or `b` do not belong to the range of
+    `f`, then we need to ensure that these points do not belong to the range of `g`. This is done
+    in two almost identical steps. First we deal with the case `∀ x, f x ≠ a`. -/
   obtain ⟨g, hg_mem, hgf⟩ : ∃ g : Y →ᵇ ℝ, (∀ y, ∃ x, g y ∈ Icc (f x) b) ∧ g ∘ e = f := by
     rcases exists_extension_forall_mem_Icc_of_closed_embedding f hmem hle he with ⟨g, hg_mem, hgf⟩
+    -- If `a ∈ range f`, then we are done.
     rcases em (∃ x, f x = a) with (⟨x, rfl⟩ | ha')
     · exact ⟨g, fun y => ⟨x, hg_mem _⟩, hgf⟩
       
+    /- Otherwise, `g ⁻¹' {a}` is disjoint with `range e ∪ g ⁻¹' (Ici c)`, hence there exists a
+        function `dg : Y → ℝ` such that `dg ∘ e = 0`, `dg y = 0` whenever `c ≤ g y`, `dg y = c - a`
+        whenever `g y = a`, and `0 ≤ dg y ≤ c - a` for all `y`.  -/
     have hd : Disjoint (range e ∪ g ⁻¹' Ici c) (g ⁻¹' {a}) := by
       refine' disjoint_union_left.2 ⟨_, disjoint_preimage _ _⟩
       · rintro _ ⟨⟨x, rfl⟩, rfl : g (e x) = a⟩
@@ -248,6 +272,8 @@ theorem exists_extension_forall_exists_le_ge_of_closed_embedding [Nonempty X] (f
             rw [hsub, add_sub_cancel'_right]
         
       
+  /- Now we deal with the case `∀ x, f x ≠ b`. The proof is the same as in the first case, with
+    minor modifications that make it hard to deduplicate code. -/
   choose xl hxl hgb using hg_mem
   rcases em (∃ x, f x = b) with (⟨x, rfl⟩ | hb')
   · exact ⟨g, fun y => ⟨xl y, x, hxl y, hgb y⟩, hgf⟩

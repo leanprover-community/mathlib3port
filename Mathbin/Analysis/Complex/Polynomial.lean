@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Chris Hughes All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Chris Hughes
+-/
 import Mathbin.Analysis.SpecialFunctions.Pow
 import Mathbin.FieldTheory.IsAlgClosed.Basic
 import Mathbin.Topology.Algebra.Polynomial
@@ -19,6 +24,9 @@ namespace Complex
 
 /-- **Fundamental theorem of algebra**: every non constant complex polynomial
   has a root -/
+/- The following proof uses the method given at
+<https://ncatlab.org/nlab/show/fundamental+theorem+of+algebra#classical_fta_via_advanced_calculus>
+-/
 theorem exists_root {f : Polynomial ℂ} (hf : 0 < degree f) : ∃ z : ℂ, IsRoot f z :=
   let ⟨z₀, hz₀⟩ := f.exists_forall_norm_le
   Exists.introₓ z₀ <|
@@ -108,7 +116,7 @@ theorem exists_root {f : Polynomial ℂ} (hf : 0 < degree f) : ∃ z : ℂ, IsRo
           _ = (f.eval z₀).abs := sub_add_cancel _ _
           
 
-instance IsAlgClosed : IsAlgClosed ℂ :=
+instance is_alg_closed : IsAlgClosed ℂ :=
   (IsAlgClosed.of_exists_root _) fun p _ hp => Complex.exists_root <| degree_pos_of_irreducible hp
 
 end Complex

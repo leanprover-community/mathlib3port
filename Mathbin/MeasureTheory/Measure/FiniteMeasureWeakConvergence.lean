@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Kalle Kytölä. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Kalle Kytölä
+-/
 import Mathbin.MeasureTheory.Measure.MeasureSpace
 import Mathbin.MeasureTheory.Integral.Bochner
 import Mathbin.Topology.ContinuousFunction.Bounded
@@ -93,7 +98,7 @@ variable {α : Type _} [MeasurableSpace α]
 
 /-- Finite measures are defined as the subtype of measures that have the property of being finite
 measures (i.e., their total mass is finite). -/
-def finite_measure (α : Type _) [MeasurableSpace α] : Type _ :=
+def FiniteMeasure (α : Type _) [MeasurableSpace α] : Type _ :=
   { μ : Measure α // IsFiniteMeasure μ }
 
 namespace FiniteMeasure
@@ -132,7 +137,7 @@ def mass (μ : FiniteMeasure α) : ℝ≥0 :=
 theorem ennreal_mass {μ : FiniteMeasure α} : (μ.mass : ℝ≥0∞) = (μ : Measure α) Univ :=
   ennreal_coe_fn_eq_coe_fn_to_measure μ Set.Univ
 
-instance Zero : Zero (FiniteMeasure α) where
+instance hasZero : Zero (FiniteMeasure α) where
   zero := ⟨0, MeasureTheory.is_finite_measure_zero⟩
 
 instance : Inhabited (FiniteMeasure α) :=
@@ -142,7 +147,7 @@ instance : Add (FiniteMeasure α) where
   add := fun μ ν => ⟨μ + ν, MeasureTheory.is_finite_measure_add⟩
 
 instance : HasScalar ℝ≥0 (FiniteMeasure α) where
-  smul := fun c : ℝ≥0 μ => ⟨c • μ, MeasureTheory.is_finite_measure_smul_nnreal⟩
+  smul := fun μ => ⟨c • μ, MeasureTheory.is_finite_measure_smul_nnreal⟩
 
 @[simp, norm_cast]
 theorem coe_zero : (coe : FiniteMeasure α → Measure α) 0 = 0 :=
@@ -177,7 +182,7 @@ instance : AddCommMonoidₓ (FiniteMeasure α) :=
 
 /-- Coercion is an `add_monoid_hom`. -/
 @[simps]
-def coe_add_monoid_hom : FiniteMeasure α →+ Measure α where
+def coeAddMonoidHom : FiniteMeasure α →+ Measure α where
   toFun := coe
   map_zero' := coe_zero
   map_add' := coe_add
@@ -190,7 +195,7 @@ variable [TopologicalSpace α]
 /-- The pairing of a finite (Borel) measure `μ` with a nonnegative bounded continuous
 function is obtained by (Lebesgue) integrating the (test) function against the measure.
 This is `finite_measure.test_against_nn`. -/
-def test_against_nn (μ : FiniteMeasure α) (f : α →ᵇ ℝ≥0 ) : ℝ≥0 :=
+def testAgainstNn (μ : FiniteMeasure α) (f : α →ᵇ ℝ≥0 ) : ℝ≥0 :=
   (∫⁻ x, f x ∂(μ : Measure α)).toNnreal
 
 theorem _root_.bounded_continuous_function.nnreal.to_ennreal_comp_measurable {α : Type _} [TopologicalSpace α]
@@ -280,7 +285,7 @@ theorem test_against_nn_lipschitz (μ : FiniteMeasure α) : LipschitzWith μ.mas
 
 /-- Finite measures yield elements of the `weak_dual` of bounded continuous nonnegative
 functions via `finite_measure.test_against_nn`, i.e., integration. -/
-def to_weak_dual_bounded_continuous_nnreal (μ : FiniteMeasure α) : WeakDual ℝ≥0 (α →ᵇ ℝ≥0 ) where
+def toWeakDualBoundedContinuousNnreal (μ : FiniteMeasure α) : WeakDual ℝ≥0 (α →ᵇ ℝ≥0 ) where
   toFun := fun f => μ.testAgainstNn f
   map_add' := test_against_nn_add μ
   map_smul' := test_against_nn_smul μ
@@ -290,7 +295,7 @@ end FiniteMeasure
 
 /-- Probability measures are defined as the subtype of measures that have the property of being
 probability measures (i.e., their total mass is one). -/
-def probability_measure (α : Type _) [MeasurableSpace α] : Type _ :=
+def ProbabilityMeasure (α : Type _) [MeasurableSpace α] : Type _ :=
   { μ : Measure α // IsProbabilityMeasure μ }
 
 namespace ProbabilityMeasure
@@ -324,7 +329,7 @@ theorem coe_fn_univ (ν : ProbabilityMeasure α) : ν Univ = 1 :=
   congr_argₓ Ennreal.toNnreal ν.Prop.measure_univ
 
 /-- A probability measure can be interpreted as a finite measure. -/
-def to_finite_measure (μ : ProbabilityMeasure α) : FiniteMeasure α :=
+def toFiniteMeasure (μ : ProbabilityMeasure α) : FiniteMeasure α :=
   ⟨μ, inferInstance⟩
 
 @[simp]
@@ -352,7 +357,7 @@ variable [TopologicalSpace α]
 /-- The pairing of a (Borel) probability measure `μ` with a nonnegative bounded continuous
 function is obtained by (Lebesgue) integrating the (test) function against the measure. This
 is `probability_measure.test_against_nn`. -/
-def test_against_nn (μ : ProbabilityMeasure α) (f : α →ᵇ ℝ≥0 ) : ℝ≥0 :=
+def testAgainstNn (μ : ProbabilityMeasure α) (f : α →ᵇ ℝ≥0 ) : ℝ≥0 :=
   (lintegral (μ : Measure α) ((coe : ℝ≥0 → ℝ≥0∞) ∘ f)).toNnreal
 
 theorem lintegral_lt_top_of_bounded_continuous_to_nnreal (μ : ProbabilityMeasure α) (f : α →ᵇ ℝ≥0 ) :
@@ -386,7 +391,7 @@ theorem test_against_nn_lipschitz (μ : ProbabilityMeasure α) : LipschitzWith 1
 
 /-- Probability measures yield elements of the `weak_dual` of bounded continuous nonnegative
 functions via `probability_measure.test_against_nn`, i.e., integration. -/
-def to_weak_dual_bounded_continuous_nnreal (μ : ProbabilityMeasure α) : WeakDual ℝ≥0 (α →ᵇ ℝ≥0 ) where
+def toWeakDualBoundedContinuousNnreal (μ : ProbabilityMeasure α) : WeakDual ℝ≥0 (α →ᵇ ℝ≥0 ) where
   toFun := fun f => μ.testAgainstNn f
   map_add' := μ.toFiniteMeasure.test_against_nn_add
   map_smul' := μ.toFiniteMeasure.test_against_nn_smul

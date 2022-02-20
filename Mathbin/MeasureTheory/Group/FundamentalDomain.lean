@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Yury G. Kudryashov. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yury G. Kudryashov
+-/
 import Mathbin.MeasureTheory.Group.Action
 import Mathbin.MeasureTheory.Group.Pointwise
 import Mathbin.MeasureTheory.Integral.SetIntegral
@@ -29,12 +34,12 @@ open MeasureTheory MeasureTheory.Measure Set Function TopologicalSpace Filter
 
 namespace MeasureTheory
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (g «expr ≠ » (0 : G))
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (g «expr ≠ » (0 : G))
 /-- A measurable set `s` is a *fundamental domain* for an additive action of an additive group `G`
 on a measurable space `α` with respect to a measure `α` if the sets `g +ᵥ s`, `g : G`, are pairwise
 a.e. disjoint and cover the whole space. -/
 @[protect_proj]
-structure is_add_fundamental_domain (G : Type _) {α : Type _} [Zero G] [HasVadd G α] [MeasurableSpace α] (s : Set α)
+structure IsAddFundamentalDomain (G : Type _) {α : Type _} [Zero G] [HasVadd G α] [MeasurableSpace α] (s : Set α)
   (μ : Measure α := by
     run_tac
       volume_tac) :
@@ -43,12 +48,12 @@ structure is_add_fundamental_domain (G : Type _) {α : Type _} [Zero G] [HasVadd
   ae_covers : ∀ᵐ x ∂μ, ∃ g : G, g +ᵥ x ∈ s
   AeDisjoint : ∀ g _ : g ≠ (0 : G), AeDisjoint μ (g +ᵥ s) s
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (g «expr ≠ » (1 : G))
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (g «expr ≠ » (1 : G))
 /-- A measurable set `s` is a *fundamental domain* for an action of a group `G` on a measurable
 space `α` with respect to a measure `α` if the sets `g • s`, `g : G`, are pairwise a.e. disjoint and
 cover the whole space. -/
 @[protect_proj, to_additive is_add_fundamental_domain]
-structure is_fundamental_domain (G : Type _) {α : Type _} [One G] [HasScalar G α] [MeasurableSpace α] (s : Set α)
+structure IsFundamentalDomain (G : Type _) {α : Type _} [One G] [HasScalar G α] [MeasurableSpace α] (s : Set α)
   (μ : Measure α := by
     run_tac
       volume_tac) :
@@ -203,7 +208,7 @@ protected theorem ae_measurable_on_iff {β : Type _} [MeasurableSpace β] (hs : 
       refine' forall_congrₓ fun g => _
       have he : MeasurableEmbedding ((· • ·) g⁻¹ : α → α) := measurable_embedding_const_smul _
       rw [← image_smul, ← ((measure_preserving_smul g⁻¹ μ).restrict_image_emb he _).ae_measurable_comp_iff he]
-      simp only [· ∘ ·, hf]
+      simp only [(· ∘ ·), hf]
     _ ↔ AeMeasurable f (μ.restrict t) := by
       simp only [← ae_measurable_sum_measure_iff, ← restrict_restrict (hs.measurable_set_smul _),
         hs.sum_restrict_of_ac restrict_le_self.absolutely_continuous]

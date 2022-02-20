@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Andrew Yang. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Andrew Yang
+-/
 import Mathbin.AlgebraicGeometry.LocallyRingedSpace
 import Mathbin.Algebra.Category.CommRing.Constructions
 import Mathbin.AlgebraicGeometry.OpenImmersion
@@ -58,12 +63,12 @@ noncomputable def coproduct : LocallyRingedSpace where
                 y)).symm.commRingIsoToRingEquiv.LocalRing
 
 /-- The explicit coproduct cofan for `F : discrete ι ⥤ LocallyRingedSpace`. -/
-noncomputable def coproduct_cofan : Cocone F where
+noncomputable def coproductCofan : Cocone F where
   x := coproduct F
   ι := { app := fun j => ⟨colimit.ι (F ⋙ forget_to_SheafedSpace) j, inferInstance⟩ }
 
 /-- The explicit coproduct cofan constructed in `coproduct_cofan` is indeed a colimit. -/
-noncomputable def coproduct_cofan_is_colimit : IsColimit (coproductCofan F) where
+noncomputable def coproductCofanIsColimit : IsColimit (coproductCofan F) where
   desc := fun s =>
     ⟨colimit.desc (F ⋙ forget_to_SheafedSpace) (forgetToSheafedSpace.mapCocone s), by
       intro x
@@ -127,7 +132,7 @@ variable (U : Opens (coequalizer f.1 g.1).Carrier)
 variable (s : (coequalizer f.1 g.1).Presheaf.obj (op U))
 
 /-- (Implementation). The basic open set of the section `π꙳ s`. -/
-noncomputable def image_basic_open : Opens Y :=
+noncomputable def imageBasicOpen : Opens Y :=
   Y.toRingedSpace.basicOpen (show Y.Presheaf.obj (op (unop _)) from ((coequalizer.π f.1 g.1).c.app (op U)) s)
 
 theorem image_basic_open_image_preimage :
@@ -206,7 +211,7 @@ noncomputable def coequalizer : LocallyRingedSpace where
     exact (PresheafedSpace.stalk_map (coequalizer.π f.val g.val : _) y).domain_local_ring
 
 /-- The explicit coequalizer cofork of locally ringed spaces. -/
-noncomputable def coequalizer_cofork : Cofork f g :=
+noncomputable def coequalizerCofork : Cofork f g :=
   @Cofork.ofπ _ _ _ _ f g (coequalizer f g) ⟨coequalizer.π f.1 g.1, inferInstance⟩
     (Subtype.eq (coequalizer.condition f.1 g.1))
 
@@ -216,7 +221,7 @@ theorem is_local_ring_hom_stalk_map_congr {X Y : RingedSpace} (f g : X ⟶ Y) (H
   infer_instance
 
 /-- The cofork constructed in `coequalizer_cofork` is indeed a colimit cocone. -/
-noncomputable def coequalizer_cofork_is_colimit : IsColimit (coequalizerCofork f g) := by
+noncomputable def coequalizerCoforkIsColimit : IsColimit (coequalizerCofork f g) := by
   apply cofork.is_colimit.mk'
   intro s
   have e : f.val ≫ s.π.val = g.val ≫ s.π.val := by
@@ -253,7 +258,7 @@ instance : HasCoequalizer f g :=
 instance : HasCoequalizers LocallyRingedSpace :=
   has_coequalizers_of_has_colimit_parallel_pair _
 
-noncomputable instance preserves_coequalizer :
+noncomputable instance preservesCoequalizer :
     PreservesColimitsOfShape WalkingParallelPair.{v} forgetToSheafedSpace.{v} :=
   ⟨fun F => by
     apply preserves_colimit_of_iso_diagram _ (diagram_iso_parallel_pair F).symm

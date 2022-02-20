@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Simon Hudon, Scott Morrison
+-/
 import Mathbin.CategoryTheory.NaturalIsomorphism
 import Mathbin.CategoryTheory.EqToHom
 
@@ -65,7 +70,7 @@ variable (I)
 pulling back a grading along the identity function,
 and the identity functor. -/
 @[simps]
-def comap_id : comap C (id : I → I) ≅ 𝟭 (∀ i, C i) where
+def comapId : comap C (id : I → I) ≅ 𝟭 (∀ i, C i) where
   Hom := { app := fun X => 𝟙 X }
   inv := { app := fun X => 𝟙 X }
 
@@ -78,13 +83,13 @@ pulling back along two successive functions, and
 pulling back along their composition
 -/
 @[simps]
-def comap_comp (f : K → J) (g : J → I) : comap C g ⋙ comap (C ∘ g) f ≅ comap C (g ∘ f) where
+def comapComp (f : K → J) (g : J → I) : comap C g ⋙ comap (C ∘ g) f ≅ comap C (g ∘ f) where
   Hom := { app := fun X b => 𝟙 (X (g (f b))) }
   inv := { app := fun X b => 𝟙 (X (g (f b))) }
 
 /-- The natural isomorphism between pulling back then evaluating, and just evaluating. -/
 @[simps]
-def comap_eval_iso_eval (h : J → I) (j : J) : comap C h ⋙ eval (C ∘ h) j ≅ eval C (h j) :=
+def comapEvalIsoEval (h : J → I) (j : J) : comap C h ⋙ eval (C ∘ h) j ≅ eval C (h j) :=
   NatIso.ofComponents (fun f => Iso.refl _)
     (by
       tidy)
@@ -95,7 +100,7 @@ section
 
 variable {J : Type w₀} {D : J → Type u₁} [∀ j, Category.{v₁} (D j)]
 
-instance sum_elim_category : ∀ s : Sum I J, Category.{v₁} (Sum.elim C D s)
+instance sumElimCategoryₓ : ∀ s : Sum I J, Category.{v₁} (Sum.elim C D s)
   | Sum.inl i => by
     dsimp
     infer_instance
@@ -107,7 +112,7 @@ instance sum_elim_category : ∀ s : Sum I J, Category.{v₁} (Sum.elim C D s)
 to obtain an `I ⊕ J`-indexed family of objects.
 -/
 @[simps]
-def Sum : (∀ i, C i) ⥤ (∀ j, D j) ⥤ ∀ s : Sum I J, Sum.elim C D s where
+def sum : (∀ i, C i) ⥤ (∀ j, D j) ⥤ ∀ s : Sum I J, Sum.elim C D s where
   obj := fun f => { obj := fun g s => Sum.rec f g s, map := fun g g' α s => Sum.rec (fun i => 𝟙 (f i)) α s }
   map := fun f f' α => { app := fun g s => Sum.rec α (fun j => 𝟙 (g j)) s }
 
@@ -118,7 +123,7 @@ variable {C}
 /-- An isomorphism between `I`-indexed objects gives an isomorphism between each
 pair of corresponding components. -/
 @[simps]
-def iso_app {X Y : ∀ i, C i} (f : X ≅ Y) (i : I) : X i ≅ Y i :=
+def isoApp {X Y : ∀ i, C i} (f : X ≅ Y) (i : I) : X i ≅ Y i :=
   ⟨f.Hom i, f.inv i, by
     dsimp
     rw [← comp_apply, iso.hom_inv_id, id_apply], by
@@ -170,6 +175,8 @@ theorem eq_to_hom_proj {x x' : ∀ i, C i} (h : x = x') (i : I) :
 
 end EqToHom
 
+-- One could add some natural isomorphisms showing
+-- how `functor.pi` commutes with `pi.eval` and `pi.comap`.
 @[simp]
 theorem pi'_eval (f : ∀ i, A ⥤ C i) (i : I) : pi' f ⋙ pi.eval C i = f i := by
   apply Functor.ext <;> intros

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Patrick Massot. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Patrick Massot, Johannes Hölzl
+-/
 import Mathbin.Topology.Algebra.GroupCompletion
 import Mathbin.Topology.Algebra.Ring
 
@@ -105,7 +110,7 @@ instance : Ringₓ (Completion α) :=
         rw [← coe_add, ← coe_mul, ← coe_mul, ← coe_mul, ← coe_add, add_mulₓ] }
 
 /-- The map from a uniform ring to its completion, as a ring homomorphism. -/
-def coe_ring_hom : α →+* Completion α :=
+def coeRingHom : α →+* Completion α :=
   ⟨coe, coe_one α, fun a b => coe_mul a b, coe_zero, fun a b => coe_add a b⟩
 
 theorem continuous_coe_ring_hom : Continuous (coeRingHom : α → Completion α) :=
@@ -115,8 +120,9 @@ variable {β : Type u} [UniformSpace β] [Ringₓ β] [UniformAddGroup β] [Topo
   (hf : Continuous f)
 
 /-- The completion extension as a ring morphism. -/
-def extension_hom [CompleteSpace β] [SeparatedSpace β] : Completion α →+* β :=
+def extensionHom [CompleteSpace β] [SeparatedSpace β] : Completion α →+* β :=
   have hf' : Continuous (f : α →+ β) := hf
+  -- helping the elaborator
   have hf : UniformContinuous f := uniform_continuous_add_monoid_hom_of_continuous hf'
   { toFun := Completion.extension f,
     map_zero' := by
@@ -141,7 +147,7 @@ instance top_ring_compl : TopologicalRing (Completion α) where
   continuous_mul := continuous_mul
 
 /-- The completion map as a ring morphism. -/
-def map_ring_hom (hf : Continuous f) : Completion α →+* Completion β :=
+def mapRingHom (hf : Continuous f) : Completion α →+* Completion β :=
   extensionHom (coeRingHom.comp f) (continuous_coe_ring_hom.comp hf)
 
 variable (R : Type _) [CommRingₓ R] [UniformSpace R] [UniformAddGroup R] [TopologicalRing R]
@@ -170,15 +176,16 @@ theorem ring_sep_quot (α : Type u) [r : CommRingₓ α] [UniformSpace α] [Unif
 /-- Given a topological ring `α` equipped with a uniform structure that makes subtraction uniformly
 continuous, get an equivalence between the separated quotient of `α` and the quotient ring
 corresponding to the closure of zero. -/
-def sep_quot_equiv_ring_quot α [r : CommRingₓ α] [UniformSpace α] [UniformAddGroup α] [TopologicalRing α] :
+def sepQuotEquivRingQuot α [r : CommRingₓ α] [UniformSpace α] [UniformAddGroup α] [TopologicalRing α] :
     Quotientₓ (separationSetoid α) ≃ α ⧸ (⊥ : Ideal α).closure :=
   Quotientₓ.congrRight fun x y => add_group_separation_rel x y
 
-instance CommRingₓ [CommRingₓ α] [UniformSpace α] [UniformAddGroup α] [TopologicalRing α] :
+-- TODO: use a form of transport a.k.a. lift definition a.k.a. transfer
+instance commRing [CommRingₓ α] [UniformSpace α] [UniformAddGroup α] [TopologicalRing α] :
     CommRingₓ (Quotientₓ (separationSetoid α)) := by
   rw [ring_sep_quot α] <;> infer_instance
 
-instance TopologicalRing [CommRingₓ α] [UniformSpace α] [UniformAddGroup α] [TopologicalRing α] :
+instance topological_ring [CommRingₓ α] [UniformSpace α] [UniformAddGroup α] [TopologicalRing α] :
     TopologicalRing (Quotientₓ (separationSetoid α)) := by
   convert topological_ring_quotient (⊥ : Ideal α).closure <;>
     try

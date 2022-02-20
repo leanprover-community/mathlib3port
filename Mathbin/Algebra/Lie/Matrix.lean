@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Oliver Nash. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Oliver Nash
+-/
 import Mathbin.Algebra.Lie.OfAssociative
 import Mathbin.LinearAlgebra.Matrix.Reindex
 import Mathbin.LinearAlgebra.Matrix.ToLinearEquiv

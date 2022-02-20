@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Aaron Anderson. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Aaron Anderson
+-/
 import Mathbin.RingTheory.HahnSeries
 import Mathbin.RingTheory.Localization
 
@@ -49,7 +54,7 @@ theorem coeff_coe_power_series (x : PowerSeries R) (n : ℕ) :
 /-- This is a power series that can be multiplied by an integer power of `X` to give our
   Laurent series. If the Laurent series is nonzero, `power_series_part` has a nonzero
   constant term.  -/
-def power_series_part (x : LaurentSeries R) : PowerSeries R :=
+def powerSeriesPart (x : LaurentSeries R) : PowerSeries R :=
   PowerSeries.mk fun n => x.coeff (x.order + n)
 
 @[simp]

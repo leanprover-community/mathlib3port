@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Eric Wieser. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Eric Wieser
+-/
 import Mathbin.GroupTheory.GroupAction.Opposite
 import Mathbin.Data.Equiv.Module
 
@@ -21,7 +26,7 @@ instance : Module R (MulOpposite M) :=
     zero_smul := fun x => unop_injective <| zero_smul _ (unop x) }
 
 /-- The function `op` is a linear equivalence. -/
-def op_linear_equiv : M ≃ₗ[R] Mᵐᵒᵖ :=
+def opLinearEquiv : M ≃ₗ[R] Mᵐᵒᵖ :=
   { opAddEquiv with map_smul' := MulOpposite.op_smul }
 
 @[simp]

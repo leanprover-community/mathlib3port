@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Chris Hughes. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Chris Hughes, Johan Commelin
+-/
 import Mathbin.Data.Polynomial.FieldDivision
 import Mathbin.RingTheory.IntegralClosure
 import Mathbin.RingTheory.Polynomial.GaussLemma
@@ -118,7 +123,7 @@ theorem min {p : A[X]} (pmonic : p.Monic) (hp : Polynomial.aeval x p = 0) : degr
     
 
 @[nontriviality]
-theorem Subsingleton [Subsingleton B] : minpoly A x = 1 := by
+theorem subsingleton [Subsingleton B] : minpoly A x = 1 := by
   nontriviality A
   have := minpoly.min A x monic_one (Subsingleton.elimₓ _ _)
   rw [degree_one] at this
@@ -216,7 +221,7 @@ theorem aeval_ne_zero_of_dvd_not_unit_minpoly {a : A[X]} (hx : IsIntegral A x) (
 variable [IsDomain B]
 
 /-- A minimal polynomial is irreducible. -/
-theorem Irreducible (hx : IsIntegral A x) : Irreducible (minpoly A x) := by
+theorem irreducible (hx : IsIntegral A x) : Irreducible (minpoly A x) := by
   cases' irreducible_or_factor (minpoly A x) (not_is_unit A x) with hirr hred
   · exact hirr
     
@@ -279,7 +284,7 @@ theorem degree_le_of_ne_zero {p : A[X]} (pnz : p ≠ 0) (hp : Polynomial.aeval x
 /-- The minimal polynomial of an element `x` is uniquely characterized by its defining property:
 if there is another monic polynomial of minimal degree that has `x` as a root,
 then this polynomial is equal to the minimal polynomial of `x`. -/
-theorem Unique {p : A[X]} (pmonic : p.Monic) (hp : Polynomial.aeval x p = 0)
+theorem unique {p : A[X]} (pmonic : p.Monic) (hp : Polynomial.aeval x p = 0)
     (pmin : ∀ q : A[X], q.Monic → Polynomial.aeval x q = 0 → degree p ≤ degree q) : p = minpoly A x := by
   have hx : IsIntegral A x := ⟨p, pmonic, hp⟩
   symm
@@ -433,7 +438,7 @@ variable [Ringₓ B] [IsDomain B] [Algebra A B]
 variable {x : B}
 
 /-- A minimal polynomial is prime. -/
-theorem Prime (hx : IsIntegral A x) : Prime (minpoly A x) := by
+theorem prime (hx : IsIntegral A x) : Prime (minpoly A x) := by
   refine' ⟨ne_zero hx, not_is_unit A x, _⟩
   rintro p q ⟨d, h⟩
   have : Polynomial.aeval x (p * q) = 0 := by

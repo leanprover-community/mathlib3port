@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Kenny Lau. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Kenny Lau
+-/
 import Mathbin.Algebra.Group.InjSurj
 import Mathbin.Algebra.Group.Commute
 import Mathbin.Algebra.Opposites
@@ -146,7 +151,7 @@ theorem _root_.commute.op [Mul α] {x y : α} (h : Commute x y) : Commute (op x)
   h.op
 
 @[to_additive]
-theorem commute.unop [Mul α] {x y : αᵐᵒᵖ} (h : Commute x y) : Commute (unop x) (unop y) :=
+theorem Commute.unop [Mul α] {x y : αᵐᵒᵖ} (h : Commute x y) : Commute (unop x) (unop y) :=
   h.unop
 
 @[simp, to_additive]
@@ -159,7 +164,7 @@ theorem commute_unop [Mul α] {x y : αᵐᵒᵖ} : Commute (unop x) (unop y) �
 
 /-- The function `mul_opposite.op` is an additive equivalence. -/
 @[simps (config := { fullyApplied := false, simpRhs := true })]
-def op_add_equiv [Add α] : α ≃+ αᵐᵒᵖ :=
+def opAddEquiv [Add α] : α ≃+ αᵐᵒᵖ :=
   { opEquiv with map_add' := fun a b => rfl }
 
 @[simp]
@@ -220,7 +225,7 @@ variable {α}
 
 /-- The function `add_opposite.op` is a multiplicative equivalence. -/
 @[simps (config := { fullyApplied := false, simpRhs := true })]
-def op_mul_equiv [Mul α] : α ≃* αᵃᵒᵖ :=
+def opMulEquiv [Mul α] : α ≃* αᵃᵒᵖ :=
   { opEquiv with map_mul' := fun a b => rfl }
 
 @[simp]

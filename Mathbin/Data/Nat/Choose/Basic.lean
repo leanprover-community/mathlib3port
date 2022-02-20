@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Chris Hughes. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Chris Hughes, Bhavik Mehta
+-/
 import Mathbin.Data.Nat.Factorial.Basic
 
 /-!
@@ -65,6 +70,7 @@ theorem choose_succ_self (n : ℕ) : choose n (succ n) = 0 :=
 theorem choose_one_right (n : ℕ) : choose n 1 = n := by
   induction n <;> simp [*, choose, add_commₓ]
 
+-- The `n+1`-st triangle number is `n` more than the `n`-th triangle number
 theorem triangle_succ (n : ℕ) : (n + 1) * (n + 1 - 1) / 2 = n * (n - 1) / 2 + n := by
   rw [← add_mul_div_left, mul_comm 2 n, ← mul_addₓ, add_tsub_cancel_right, mul_comm]
   cases n <;> rfl

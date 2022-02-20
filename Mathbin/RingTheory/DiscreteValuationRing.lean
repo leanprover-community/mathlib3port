@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Kevin Buzzard. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Kevin Buzzard
+-/
 import Mathbin.RingTheory.PrincipalIdealDomain
 import Mathbin.Order.ConditionallyCompleteLattice
 import Mathbin.RingTheory.Ideal.LocalRing
@@ -60,7 +65,7 @@ variable {R}
 
 open PrincipalIdealRing
 
--- ././Mathport/Syntax/Translate/Basic.lean:418:16: unsupported tactic `by_contra'
+-- ././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'
 /-- An element of a DVR is irreducible iff it is a uniformizer, that is, generates the
   maximal ideal of R -/
 theorem irreducible_iff_uniformizer (ϖ : R) : Irreducible ϖ ↔ maximalIdeal R = Ideal.span {ϖ} :=
@@ -69,7 +74,7 @@ theorem irreducible_iff_uniformizer (ϖ : R) : Irreducible ϖ ↔ maximalIdeal R
     have h2 : ¬IsUnit ϖ := show ϖ ∈ maximal_ideal R from h.symm ▸ Submodule.mem_span_singleton_self ϖ
     refine' ⟨h2, _⟩
     intro a b hab
-    "././Mathport/Syntax/Translate/Basic.lean:418:16: unsupported tactic `by_contra'"
+    "././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'"
     obtain ⟨ha : a ∈ maximal_ideal R, hb : b ∈ maximal_ideal R⟩ := h
     rw [h, mem_span_singleton'] at ha hb
     rcases ha with ⟨a, rfl⟩
@@ -148,7 +153,7 @@ namespace DiscreteValuationRing
 variable (R : Type _)
 
 /-- Alternative characterisation of discrete valuation rings. -/
-def has_unit_mul_pow_irreducible_factorization [CommRingₓ R] : Prop :=
+def HasUnitMulPowIrreducibleFactorization [CommRingₓ R] : Prop :=
   ∃ p : R, Irreducible p ∧ ∀ {x : R}, x ≠ 0 → ∃ n : ℕ, Associated (p ^ n) x
 
 namespace HasUnitMulPowIrreducibleFactorization
@@ -394,7 +399,7 @@ theorem unit_mul_pow_congr_unit {ϖ : R} (hirr : Irreducible ϖ) (u v : (R)ˣ) (
 open multiplicity
 
 /-- The `enat`-valued additive valuation on a DVR -/
-noncomputable def add_val (R : Type u) [CommRingₓ R] [IsDomain R] [DiscreteValuationRing R] : AddValuation R Enat :=
+noncomputable def addVal (R : Type u) [CommRingₓ R] [IsDomain R] [DiscreteValuationRing R] : AddValuation R Enat :=
   AddValuation (Classical.some_spec (exists_prime R))
 
 theorem add_val_def (r : R) (u : (R)ˣ) {ϖ : R} (hϖ : Irreducible ϖ) (n : ℕ) (hr : r = u * ϖ ^ n) : addVal R r = n := by

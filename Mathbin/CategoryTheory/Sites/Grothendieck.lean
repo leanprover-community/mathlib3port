@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Bhavik Mehta, E. W. Ayers. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Bhavik Mehta, E. W. Ayers
+-/
 import Mathbin.CategoryTheory.Sites.Sieves
 import Mathbin.CategoryTheory.Limits.Shapes.Pullbacks
 import Mathbin.CategoryTheory.Limits.Shapes.Multiequalizer
@@ -63,7 +68,7 @@ A sieve `S` on `X` is referred to as `J`-covering, (or just covering), if `S ∈
 See https://stacks.math.columbia.edu/tag/00Z4, or [nlab], or [MM92] Chapter III, Section 2,
 Definition 1.
 -/
-structure grothendieck_topology where
+structure GrothendieckTopology where
   Sieves : ∀ X : C, Set (Sieve X)
   top_mem' : ∀ X, ⊤ ∈ sieves X
   pullback_stable' : ∀ ⦃X Y : C⦄ ⦃S : Sieve X⦄ f : Y ⟶ X, S ∈ sieves X → S.pullback f ∈ sieves Y
@@ -94,15 +99,17 @@ theorem ext {J₁ J₂ : GrothendieckTopology C} (h : (J₁ : ∀ X : C, Set (Si
 theorem mem_sieves_iff_coe : S ∈ J.Sieves X ↔ S ∈ J X :=
   Iff.rfl
 
+-- Also known as the maximality axiom.
 @[simp]
 theorem top_mem (X : C) : ⊤ ∈ J X :=
   J.top_mem' X
 
+-- Also known as the stability axiom.
 @[simp]
 theorem pullback_stable (f : Y ⟶ X) (hS : S ∈ J X) : S.pullback f ∈ J Y :=
   J.pullback_stable' f hS
 
-theorem Transitive (hS : S ∈ J X) (R : Sieve X) (h : ∀ ⦃Y⦄ ⦃f : Y ⟶ X⦄, S f → R.pullback f ∈ J Y) : R ∈ J X :=
+theorem transitive (hS : S ∈ J X) (R : Sieve X) (h : ∀ ⦃Y⦄ ⦃f : Y ⟶ X⦄, S f → R.pullback f ∈ J Y) : R ∈ J X :=
   J.transitive' hS R h
 
 theorem covering_of_eq_top : S = ⊤ → S ∈ J X := fun h => h.symm ▸ J.top_mem X
@@ -140,7 +147,7 @@ theorem bind_covering {S : Sieve X} {R : ∀ ⦃Y : C⦄ ⦃f : Y ⟶ X⦄, S f 
 /-- The sieve `S` on `X` `J`-covers an arrow `f` to `X` if `S.pullback f ∈ J Y`.
 This definition is an alternate way of presenting a Grothendieck topology.
 -/
-def covers (S : Sieve X) (f : Y ⟶ X) : Prop :=
+def Covers (S : Sieve X) (f : Y ⟶ X) : Prop :=
   S.pullback f ∈ J Y
 
 theorem covers_iff (S : Sieve X) (f : Y ⟶ X) : J.Covers S f ↔ S.pullback f ∈ J Y :=
@@ -181,7 +188,7 @@ also known as the indiscrete, coarse, or chaotic topology.
 See [MM92] Chapter III, Section 2, example (a), or
 https://en.wikipedia.org/wiki/Grothendieck_topology#The_discrete_and_indiscrete_topologies
 -/
-def trivialₓ : GrothendieckTopology C where
+def trivial : GrothendieckTopology C where
   Sieves := fun X => {⊤}
   top_mem' := fun X => rfl
   pullback_stable' := fun X Y S f hf => by
@@ -322,7 +329,7 @@ theorem dense_covering : S ∈ dense X ↔ ∀ {Y} f : Y ⟶ X, ∃ (Z : _)(g : 
 NB. Any category with pullbacks obviously satisfies the right Ore condition, see
 `right_ore_of_pullbacks`.
 -/
-def right_ore_condition (C : Type u) [Category.{v} C] : Prop :=
+def RightOreCondition (C : Type u) [Category.{v} C] : Prop :=
   ∀ {X Y Z : C} yx : Y ⟶ X zx : Z ⟶ X, ∃ (W : _)(wy : W ⟶ Y)(wz : W ⟶ Z), wy ≫ yx = wz ≫ zx
 
 theorem right_ore_of_pullbacks [Limits.HasPullbacks C] : RightOreCondition C := fun X Y Z yx zx =>
@@ -348,7 +355,7 @@ def atomic (hro : RightOreCondition C) : GrothendieckTopology C where
 
 /-- `J.cover X` denotes the poset of covers of `X` with respect to the
 Grothendieck topology `J`. -/
-def cover (X : C) :=
+def Cover (X : C) :=
   { S : Sieve X // S ∈ J X }deriving Preorderₓ
 
 namespace Cover
@@ -387,14 +394,14 @@ instance : Inhabited (J.cover X) :=
 
 /-- An auxiliary structure, used to define `S.index` in `plus.lean`. -/
 @[nolint has_inhabited_instance, ext]
-structure arrow (S : J.cover X) where
+structure Arrow (S : J.cover X) where
   y : C
   f : Y ⟶ X
   hf : S f
 
 /-- An auxiliary structure, used to define `S.index` in `plus.lean`. -/
 @[nolint has_inhabited_instance, ext]
-structure relation (S : J.cover X) where
+structure Relation (S : J.cover X) where
   (y₁ y₂ z : C)
   g₁ : Z ⟶ Y₁
   g₂ : Z ⟶ Y₂
@@ -406,32 +413,32 @@ structure relation (S : J.cover X) where
 
 /-- Map a `arrow` along a refinement `S ⟶ T`. -/
 @[simps]
-def arrow.map {S T : J.cover X} (I : S.arrow) (f : S ⟶ T) : T.arrow :=
+def Arrow.map {S T : J.cover X} (I : S.arrow) (f : S ⟶ T) : T.arrow :=
   ⟨I.y, I.f, f.le _ I.hf⟩
 
 /-- Map a `relation` along a refinement `S ⟶ T`. -/
 @[simps]
-def Relation.Map {S T : J.cover X} (I : S.Relation) (f : S ⟶ T) : T.Relation :=
+def Relation.map {S T : J.cover X} (I : S.Relation) (f : S ⟶ T) : T.Relation :=
   ⟨_, _, _, I.g₁, I.g₂, I.f₁, I.f₂, f.le _ I.h₁, f.le _ I.h₂, I.w⟩
 
 /-- The first `arrow` associated to a `relation`.
 Used in defining `index` in `plus.lean`. -/
 @[simps]
-def relation.fst {S : J.cover X} (I : S.Relation) : S.arrow :=
+def Relation.fst {S : J.cover X} (I : S.Relation) : S.arrow :=
   ⟨I.y₁, I.f₁, I.h₁⟩
 
 /-- The second `arrow` associated to a `relation`.
 Used in defining `index` in `plus.lean`. -/
 @[simps]
-def relation.snd {S : J.cover X} (I : S.Relation) : S.arrow :=
+def Relation.snd {S : J.cover X} (I : S.Relation) : S.arrow :=
   ⟨I.y₂, I.f₂, I.h₂⟩
 
 @[simp]
-theorem relation.map_fst {S T : J.cover X} (I : S.Relation) (f : S ⟶ T) : I.fst.map f = (I.map f).fst :=
+theorem Relation.map_fst {S T : J.cover X} (I : S.Relation) (f : S ⟶ T) : I.fst.map f = (I.map f).fst :=
   rfl
 
 @[simp]
-theorem relation.map_snd {S T : J.cover X} (I : S.Relation) (f : S ⟶ T) : I.snd.map f = (I.map f).snd :=
+theorem Relation.map_snd {S T : J.cover X} (I : S.Relation) (f : S ⟶ T) : I.snd.map f = (I.map f).snd :=
   rfl
 
 /-- Pull back a cover along a morphism. -/
@@ -440,21 +447,21 @@ def pullback (S : J.cover X) (f : Y ⟶ X) : J.cover Y :=
 
 /-- An arrow of `S.pullback f` gives rise to an arrow of `S`. -/
 @[simps]
-def arrow.base {f : Y ⟶ X} {S : J.cover X} (I : (S.pullback f).arrow) : S.arrow :=
+def Arrow.base {f : Y ⟶ X} {S : J.cover X} (I : (S.pullback f).arrow) : S.arrow :=
   ⟨I.y, I.f ≫ f, I.hf⟩
 
 /-- A relation of `S.pullback f` gives rise to a relation of `S`. -/
 @[simps]
-def relation.base {f : Y ⟶ X} {S : J.cover X} (I : (S.pullback f).Relation) : S.Relation :=
+def Relation.base {f : Y ⟶ X} {S : J.cover X} (I : (S.pullback f).Relation) : S.Relation :=
   ⟨_, _, _, I.g₁, I.g₂, I.f₁ ≫ f, I.f₂ ≫ f, I.h₁, I.h₂, by
     simp [reassoc_of I.w]⟩
 
 @[simp]
-theorem relation.base_fst {f : Y ⟶ X} {S : J.cover X} (I : (S.pullback f).Relation) : I.fst.base = I.base.fst :=
+theorem Relation.base_fst {f : Y ⟶ X} {S : J.cover X} (I : (S.pullback f).Relation) : I.fst.base = I.base.fst :=
   rfl
 
 @[simp]
-theorem relation.base_snd {f : Y ⟶ X} {S : J.cover X} (I : (S.pullback f).Relation) : I.snd.base = I.base.snd :=
+theorem Relation.base_snd {f : Y ⟶ X} {S : J.cover X} (I : (S.pullback f).Relation) : I.snd.base = I.base.snd :=
   rfl
 
 @[simp]
@@ -462,14 +469,13 @@ theorem coe_pullback {Z : C} (f : Y ⟶ X) (g : Z ⟶ Y) (S : J.cover X) : (S.pu
   Iff.rfl
 
 /-- The isomorphism between `S` and the pullback of `S` w.r.t. the identity. -/
-def pullback_id (S : J.cover X) : S.pullback (𝟙 X) ≅ S :=
+def pullbackId (S : J.cover X) : S.pullback (𝟙 X) ≅ S :=
   eq_to_iso <|
     (Cover.ext _ _) fun Y f => by
       simp
 
 /-- Pulling back with respect to a composition is the composition of the pullbacks. -/
-def pullback_comp {X Y Z : C} (S : J.cover X) (f : Z ⟶ Y) (g : Y ⟶ X) :
-    S.pullback (f ≫ g) ≅ (S.pullback g).pullback f :=
+def pullbackComp {X Y Z : C} (S : J.cover X) (f : Z ⟶ Y) (g : Y ⟶ X) : S.pullback (f ≫ g) ≅ (S.pullback g).pullback f :=
   eq_to_iso <|
     (Cover.ext _ _) fun Y f => by
       simp
@@ -479,7 +485,7 @@ def bind {X : C} (S : J.cover X) (T : ∀ I : S.arrow, J.cover I.y) : J.cover X 
   ⟨Sieve.bind S fun Y f hf => T ⟨Y, f, hf⟩, J.bind_covering S.condition fun _ _ _ => (T _).condition⟩
 
 /-- The canonical moprhism from `S.bind T` to `T`. -/
-def bind_to_base {X : C} (S : J.cover X) (T : ∀ I : S.arrow, J.cover I.y) : S.bind T ⟶ S :=
+def bindToBase {X : C} (S : J.cover X) (T : ∀ I : S.arrow, J.cover I.y) : S.bind T ⟶ S :=
   hom_of_le <| by
     rintro Y f ⟨Z, e1, e2, h1, h2, h3⟩
     rw [← h3]
@@ -488,46 +494,48 @@ def bind_to_base {X : C} (S : J.cover X) (T : ∀ I : S.arrow, J.cover I.y) : S.
 
 /-- An arrow in bind has the form `A ⟶ B ⟶ X` where `A ⟶ B` is an arrow in `T I` for some `I`.
  and `B ⟶ X` is an arrow of `S`. This is the object `B`. -/
-noncomputable def arrow.middle {X : C} {S : J.cover X} {T : ∀ I : S.arrow, J.cover I.y} (I : (S.bind T).arrow) : C :=
+noncomputable def Arrow.middle {X : C} {S : J.cover X} {T : ∀ I : S.arrow, J.cover I.y} (I : (S.bind T).arrow) : C :=
   I.hf.some
 
 /-- An arrow in bind has the form `A ⟶ B ⟶ X` where `A ⟶ B` is an arrow in `T I` for some `I`.
  and `B ⟶ X` is an arrow of `S`. This is the hom `A ⟶ B`. -/
-noncomputable def arrow.to_middle_hom {X : C} {S : J.cover X} {T : ∀ I : S.arrow, J.cover I.y} (I : (S.bind T).arrow) :
+noncomputable def Arrow.toMiddleHom {X : C} {S : J.cover X} {T : ∀ I : S.arrow, J.cover I.y} (I : (S.bind T).arrow) :
     I.y ⟶ I.middle :=
   I.hf.some_spec.some
 
 /-- An arrow in bind has the form `A ⟶ B ⟶ X` where `A ⟶ B` is an arrow in `T I` for some `I`.
  and `B ⟶ X` is an arrow of `S`. This is the hom `B ⟶ X`. -/
-noncomputable def arrow.from_middle_hom {X : C} {S : J.cover X} {T : ∀ I : S.arrow, J.cover I.y}
-    (I : (S.bind T).arrow) : I.middle ⟶ X :=
+noncomputable def Arrow.fromMiddleHom {X : C} {S : J.cover X} {T : ∀ I : S.arrow, J.cover I.y} (I : (S.bind T).arrow) :
+    I.middle ⟶ X :=
   I.hf.some_spec.some_spec.some
 
-theorem arrow.from_middle_condition {X : C} {S : J.cover X} {T : ∀ I : S.arrow, J.cover I.y} (I : (S.bind T).arrow) :
+theorem Arrow.from_middle_condition {X : C} {S : J.cover X} {T : ∀ I : S.arrow, J.cover I.y} (I : (S.bind T).arrow) :
     S I.fromMiddleHom :=
   I.hf.some_spec.some_spec.some_spec.some
 
 /-- An arrow in bind has the form `A ⟶ B ⟶ X` where `A ⟶ B` is an arrow in `T I` for some `I`.
  and `B ⟶ X` is an arrow of `S`. This is the hom `B ⟶ X`, as an arrow. -/
-noncomputable def arrow.from_middle {X : C} {S : J.cover X} {T : ∀ I : S.arrow, J.cover I.y} (I : (S.bind T).arrow) :
+noncomputable def Arrow.fromMiddle {X : C} {S : J.cover X} {T : ∀ I : S.arrow, J.cover I.y} (I : (S.bind T).arrow) :
     S.arrow :=
   ⟨_, I.fromMiddleHom, I.from_middle_condition⟩
 
-theorem arrow.to_middle_condition {X : C} {S : J.cover X} {T : ∀ I : S.arrow, J.cover I.y} (I : (S.bind T).arrow) :
+theorem Arrow.to_middle_condition {X : C} {S : J.cover X} {T : ∀ I : S.arrow, J.cover I.y} (I : (S.bind T).arrow) :
     (T I.fromMiddle) I.toMiddleHom :=
   I.hf.some_spec.some_spec.some_spec.some_spec.1
 
 /-- An arrow in bind has the form `A ⟶ B ⟶ X` where `A ⟶ B` is an arrow in `T I` for some `I`.
  and `B ⟶ X` is an arrow of `S`. This is the hom `A ⟶ B`, as an arrow. -/
-noncomputable def arrow.to_middle {X : C} {S : J.cover X} {T : ∀ I : S.arrow, J.cover I.y} (I : (S.bind T).arrow) :
+noncomputable def Arrow.toMiddle {X : C} {S : J.cover X} {T : ∀ I : S.arrow, J.cover I.y} (I : (S.bind T).arrow) :
     (T I.fromMiddle).arrow :=
   ⟨_, I.toMiddleHom, I.to_middle_condition⟩
 
-theorem arrow.middle_spec {X : C} {S : J.cover X} {T : ∀ I : S.arrow, J.cover I.y} (I : (S.bind T).arrow) :
+theorem Arrow.middle_spec {X : C} {S : J.cover X} {T : ∀ I : S.arrow, J.cover I.y} (I : (S.bind T).arrow) :
     I.toMiddleHom ≫ I.fromMiddleHom = I.f :=
   I.hf.some_spec.some_spec.some_spec.some_spec.2
 
 /-- To every `S : J.cover X` and presheaf `P`, associate a `multicospan_index`. -/
+-- This is used extensively in `plus.lean`, etc.
+-- We place this definition here as it will be used in `sheaf.lean` as well.
 def index {D : Type w} [Category.{max v u} D] (S : J.cover X) (P : Cᵒᵖ ⥤ D) : Limits.MulticospanIndex D where
   L := S.arrow
   R := S.Relation
@@ -553,7 +561,7 @@ abbrev multifork {D : Type w} [Category.{max v u} D] (S : J.cover X) (P : Cᵒ�
 /-- The canonical map from `P.obj (op X)` to the multiequalizer associated to a covering sieve,
 assuming such a multiequalizer exists. This will be used in `sheaf.lean` to provide an equivalent
 sheaf condition in terms of multiequalizers. -/
-noncomputable abbrev to_multiequalizer {D : Type w} [Category.{max v u} D] (S : J.cover X) (P : Cᵒᵖ ⥤ D)
+noncomputable abbrev toMultiequalizer {D : Type w} [Category.{max v u} D] (S : J.cover X) (P : Cᵒᵖ ⥤ D)
     [Limits.HasMultiequalizer (S.index P)] : P.obj (Opposite.op X) ⟶ Limits.multiequalizer (S.index P) :=
   Limits.multiequalizer.lift _ _ (fun I => P.map I.f.op)
     (by
@@ -570,13 +578,13 @@ def pullback (f : Y ⟶ X) : J.cover X ⥤ J.cover Y where
   map := fun S T f => (Sieve.pullback_monotone _ f.le).Hom
 
 /-- Pulling back along the identity is naturally isomorphic to the identity functor. -/
-def pullback_id (X : C) : J.pullback (𝟙 X) ≅ 𝟭 _ :=
+def pullbackId (X : C) : J.pullback (𝟙 X) ≅ 𝟭 _ :=
   (NatIso.ofComponents fun S => S.pullback_id) <| by
     tidy
 
 /-- Pulling back along a composition is naturally isomorphic to
 the composition of the pullbacks. -/
-def pullback_comp {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z) : J.pullback (f ≫ g) ≅ J.pullback g ⋙ J.pullback f :=
+def pullbackComp {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z) : J.pullback (f ≫ g) ≅ J.pullback g ⋙ J.pullback f :=
   (NatIso.ofComponents fun S => S.pullback_comp f g) <| by
     tidy
 

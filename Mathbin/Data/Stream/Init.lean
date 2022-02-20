@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Leonardo de Moura
+-/
 import Mathbin.Data.Stream.Defs
 import Mathbin.Tactic.Ext
 
@@ -209,7 +214,7 @@ variable (R : Streamₓ α → Streamₓ α → Prop)
 
 local infixl:50 " ~ " => R
 
-def is_bisimulation :=
+def IsBisimulation :=
   ∀ ⦃s₁ s₂⦄, s₁ ~ s₂ → head s₁ = head s₂ ∧ tail s₁ ~ tail s₂
 
 theorem nth_of_bisim (bisim : IsBisimulation R) :
@@ -219,6 +224,7 @@ theorem nth_of_bisim (bisim : IsBisimulation R) :
     match bisim h with
     | ⟨h₁, trel⟩ => nth_of_bisim n trel
 
+-- If two streams are bisimilar, then they are equal
 theorem eq_of_bisim (bisim : IsBisimulation R) : ∀ {s₁ s₂}, s₁ ~ s₂ → s₁ = s₂ := fun s₁ s₂ r =>
   Streamₓ.ext fun n => And.elim_left (nth_of_bisim R bisim n r)
 
@@ -384,7 +390,7 @@ theorem even_interleave (s₁ s₂ : Streamₓ α) : even (s₁⋈s₂) = s₁ :
 
 theorem interleave_even_odd (s₁ : Streamₓ α) : even s₁⋈odd s₁ = s₁ :=
   eq_of_bisim (fun s' s => s' = even s⋈odd s)
-    (fun s' s h : s' = even s⋈odd s => by
+    (fun h : s' = even s⋈odd s => by
       rw [h]
       constructor
       · rfl
@@ -479,6 +485,8 @@ theorem append_take_drop : ∀ n : Nat s : Streamₓ α, appendStream (take n s)
     rw [take_succ, drop_succ, cons_append_stream, ih (tail s), Streamₓ.eta]
     
 
+-- Take theorem reduces a proof of equality of infinite streams to an
+-- induction over all their finite approximations.
 theorem take_theorem (s₁ s₂ : Streamₓ α) : (∀ n : Nat, take n s₁ = take n s₂) → s₁ = s₂ := by
   intro h
   apply Streamₓ.ext

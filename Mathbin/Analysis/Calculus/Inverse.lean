@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Yury Kudryashov. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yury Kudryashov, Heather Macbeth, Sébastien Gouëzel
+-/
 import Mathbin.Analysis.Calculus.TimesContDiff
 import Mathbin.Tactic.RingExp
 import Mathbin.Analysis.NormedSpace.Banach
@@ -153,10 +158,10 @@ theorem lipschitz_sub (hf : ApproximatesLinearOn f f' s c) : LipschitzWith c fun
 protected theorem lipschitz (hf : ApproximatesLinearOn f f' s c) : LipschitzWith (nnnorm f' + c) (s.restrict f) := by
   simpa only [restrict_apply, add_sub_cancel'_right] using (f'.lipschitz.restrict s).add hf.lipschitz_sub
 
-protected theorem Continuous (hf : ApproximatesLinearOn f f' s c) : Continuous (s.restrict f) :=
+protected theorem continuous (hf : ApproximatesLinearOn f f' s c) : Continuous (s.restrict f) :=
   hf.lipschitz.Continuous
 
-protected theorem ContinuousOn (hf : ApproximatesLinearOn f f' s c) : ContinuousOn f s :=
+protected theorem continuous_on (hf : ApproximatesLinearOn f f' s c) : ContinuousOn f s :=
   continuous_on_iff_continuous_restrict.2 hf.Continuous
 
 end
@@ -203,14 +208,31 @@ theorem surj_on_closed_ball_of_nonlinear_right_inverse (hf : ApproximatesLinearO
   have Jcf' : (1 : ℝ) - c * f'symm.nnnorm ≠ 0 := by
     apply ne_of_gtₓ
     linarith
+  /- We have to show that `y` can be written as `f x` for some `x ∈ closed_ball b ε`.
+    The idea of the proof is to apply the Banach contraction principle to the map
+    `g : x ↦ x + f'symm (y - f x)`, as a fixed point of this map satisfies `f x = y`.
+    When `f'symm` is a genuine linear inverse, `g` is a contracting map. In our case, since `f'symm`
+    is nonlinear, this map is not contracting (it is not even continuous), but still the proof of
+    the contraction theorem holds: `uₙ = gⁿ b` is a Cauchy sequence, converging exponentially fast
+    to the desired point `x`. Instead of appealing to general results, we check this by hand.
+  
+    The main point is that `f (u n)` becomes exponentially close to `y`, and therefore
+    `dist (u (n+1)) (u n)` becomes exponentally small, making it possible to get an inductive
+    bound on `dist (u n) b`, from which one checks that `u n` stays in the ball on which one has a
+    control. Therefore, the bound can be checked at the next step, and so on inductively.
+    -/
   set g := fun x => x + f'symm (y - f x) with hg
   set u := fun n : ℕ => (g^[n]) b with hu
   have usucc : ∀ n, u (n + 1) = g (u n) := by
     simp [hu, ← iterate_succ_apply' g _ b]
+  -- First bound: if `f z` is close to `y`, then `g z` is close to `z` (i.e., almost a fixed point).
   have A : ∀ z, dist (g z) z ≤ f'symm.nnnorm * dist (f z) y := by
     intro z
     rw [dist_eq_norm, hg, add_sub_cancel', dist_eq_norm']
     exact f'symm.bound _
+  -- Second bound: if `z` and `g z` are in the set with good control, then `f (g z)` becomes closer
+  -- to `y` than `f z` was (this uses the linear approximation property, and is the reason for the
+  -- choice of the formula for `g`).
   have B : ∀, ∀ z ∈ closed_ball b ε, ∀, g z ∈ closed_ball b ε → dist (f (g z)) y ≤ c * f'symm.nnnorm * dist (f z) y :=
     by
     intro z hz hgz
@@ -225,6 +247,9 @@ theorem surj_on_closed_ball_of_nonlinear_right_inverse (hf : ApproximatesLinearO
         apply mul_le_mul_of_nonneg_left _ (Nnreal.coe_nonneg c)
         simpa [hv, dist_eq_norm'] using f'symm.bound (y - f z)_ = c * f'symm.nnnorm * dist (f z) y := by
         ring
+  -- Third bound: a complicated bound on `dist w b` (that will show up in the induction) is enough
+  -- to check that `w` is in the ball on which one has controls. Will be used to check that `u n`
+  -- belongs to this ball for all `n`.
   have C :
     ∀ n : ℕ w : E,
       dist w b ≤ f'symm.nnnorm * (1 - (c * f'symm.nnnorm) ^ n) / (1 - c * f'symm.nnnorm) * dist (f b) y →
@@ -252,6 +277,10 @@ theorem surj_on_closed_ball_of_nonlinear_right_inverse (hf : ApproximatesLinearO
         by
         field_simp
         ring
+  /- Main inductive control: `f (u n)` becomes exponentially close to `y`, and therefore
+    `dist (u (n+1)) (u n)` becomes exponentally small, making it possible to get an inductive
+    bound on `dist (u n) b`, from which one checks that `u n` remains in the ball on which we
+    have estimates. -/
   have D :
     ∀ n : ℕ,
       dist (f (u n)) y ≤ (c * f'symm.nnnorm) ^ n * dist (f b) y ∧
@@ -282,6 +311,7 @@ theorem surj_on_closed_ball_of_nonlinear_right_inverse (hf : ApproximatesLinearO
           (mul_nonneg (Nnreal.coe_nonneg _) (Nnreal.coe_nonneg _))_ = (c * f'symm.nnnorm) ^ n.succ * dist (f b) y :=
         by
         ring_exp
+  -- Deduce from the inductive bound that `uₙ` is a Cauchy sequence, therefore converging.
   have : CauchySeq u :=
     have : ∀ n : ℕ, dist (u n) (u (n + 1)) ≤ f'symm.nnnorm * dist (f b) y * (c * f'symm.nnnorm) ^ n := by
       intro n
@@ -294,8 +324,11 @@ theorem surj_on_closed_ball_of_nonlinear_right_inverse (hf : ApproximatesLinearO
           ring
     cauchy_seq_of_le_geometric _ _ Icf' this
   obtain ⟨x, hx⟩ : ∃ x, tendsto u at_top (𝓝 x) := cauchy_seq_tendsto_of_complete this
+  -- As all the `uₙ` belong to the ball `closed_ball b ε`, so does their limit `x`.
   have xmem : x ∈ closed_ball b ε := is_closed_ball.mem_of_tendsto hx (eventually_of_forall fun n => C n _ (D n).2)
   refine' ⟨x, xmem, _⟩
+  -- It remains to check that `f x = y`. This follows from continuity of `f` on `closed_ball b ε`
+  -- and from the fact that `f uₙ` is converging to `y` by construction.
   have hx' : tendsto u at_top (𝓝[closed_ball b ε] x) := by
     simp only [nhdsWithin, tendsto_inf, hx, true_andₓ, ge_iff_le, tendsto_principal]
     exact eventually_of_forall fun n => C n _ (D n).2
@@ -320,7 +353,7 @@ theorem open_image (hf : ApproximatesLinearOn f f' s c) (f'symm : f'.NonlinearRi
   refine' ⟨(f'symm.nnnorm⁻¹ - c) * ε, mul_pos (sub_pos.2 hc) ε0, _⟩
   exact (hf.surj_on_closed_ball_of_nonlinear_right_inverse f'symm (le_of_ltₓ ε0) hε).mono hε (subset.refl _)
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (t «expr ⊆ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (t «expr ⊆ » s)
 theorem image_mem_nhds (hf : ApproximatesLinearOn f f' s c) (f'symm : f'.NonlinearRightInverse) {x : E} (hs : s ∈ 𝓝 x)
     (hc : Subsingleton F ∨ c < f'symm.nnnorm⁻¹) : f '' s ∈ 𝓝 (f x) := by
   obtain ⟨t, hts, ht, xt⟩ : ∃ (t : _)(_ : t ⊆ s), IsOpen t ∧ x ∈ t := _root_.mem_nhds_iff.1 hs
@@ -387,8 +420,7 @@ protected theorem surjective [CompleteSpace E] (hf : ApproximatesLinearOn f (f' 
 Should not be used outside of this file, because it is superseded by `to_local_homeomorph` below.
 
 This is a first step towards the inverse function. -/
-def to_local_equiv (hf : ApproximatesLinearOn f (f' : E →L[𝕜] F) s c) (hc : Subsingleton E ∨ c < N⁻¹) :
-    LocalEquiv E F :=
+def toLocalEquiv (hf : ApproximatesLinearOn f (f' : E →L[𝕜] F) s c) (hc : Subsingleton E ∨ c < N⁻¹) : LocalEquiv E F :=
   (hf.InjOn hc).toLocalEquiv _ _
 
 /-- The inverse function is continuous on `f '' s`. Use properties of `local_homeomorph` instead. -/
@@ -429,7 +461,7 @@ variable (f s)
 
 /-- Given a function `f` that approximates a linear equivalence on an open set `s`,
 returns a local homeomorph with `to_fun = f` and `source = s`. -/
-def to_local_homeomorph (hf : ApproximatesLinearOn f (f' : E →L[𝕜] F) s c) (hc : Subsingleton E ∨ c < N⁻¹)
+def toLocalHomeomorph (hf : ApproximatesLinearOn f (f' : E →L[𝕜] F) s c) (hc : Subsingleton E ∨ c < N⁻¹)
     (hs : IsOpen s) : LocalHomeomorph E F where
   toLocalEquiv := hf.toLocalEquiv hc
   open_source := hs
@@ -441,7 +473,7 @@ def to_local_homeomorph (hf : ApproximatesLinearOn f (f' : E →L[𝕜] F) s c) 
   continuous_inv_fun := hf.inverse_continuous_on hc
 
 /-- A function `f` that approximates a linear equivalence on the whole space is a homeomorphism. -/
-def to_homeomorph (hf : ApproximatesLinearOn f (f' : E →L[𝕜] F) Univ c) (hc : Subsingleton E ∨ c < N⁻¹) : E ≃ₜ F := by
+def toHomeomorph (hf : ApproximatesLinearOn f (f' : E →L[𝕜] F) Univ c) (hc : Subsingleton E ∨ c < N⁻¹) : E ≃ₜ F := by
   refine' (hf.to_local_homeomorph _ _ hc is_open_univ).toHomeomorphOfSourceEqUnivTargetEqUniv rfl _
   change f '' univ = univ
   rw [image_univ, range_iff_surjective]
@@ -456,6 +488,9 @@ theorem exists_homeomorph_extension {E : Type _} [NormedGroup E] [NormedSpace �
     (hf : ApproximatesLinearOn f (f' : E →L[ℝ] F) s c)
     (hc : Subsingleton E ∨ lipschitzExtensionConstant F * c < ∥(f'.symm : F →L[ℝ] E)∥₊⁻¹) : ∃ g : E ≃ₜ F, EqOn f g s :=
   by
+  -- the difference `f - f'` is Lipschitz on `s`. It can be extended to a Lipschitz function `u`
+  -- on the whole space, with a slightly worse Lipschitz constant. Then `f' + u` will be the
+  -- desired homeomorphism.
   obtain ⟨u, hu, uf⟩ : ∃ u : E → F, LipschitzWith (lipschitzExtensionConstant F * c) u ∧ eq_on (f - f') u s :=
     hf.lipschitz_on_with.extend_finite_dimension
   let g : E → F := fun x => f' x + u x
@@ -550,7 +585,7 @@ variable (f)
 with `to_fun = f` and `a ∈ source`. This is a part of the inverse function theorem.
 The other part `has_strict_fderiv_at.to_local_inverse` states that the inverse function
 of this `local_homeomorph` has derivative `f'.symm`. -/
-def to_local_homeomorph (hf : HasStrictFderivAt f (f' : E →L[𝕜] F) a) : LocalHomeomorph E F :=
+def toLocalHomeomorph (hf : HasStrictFderivAt f (f' : E →L[𝕜] F) a) : LocalHomeomorph E F :=
   ApproximatesLinearOn.toLocalHomeomorph f (Classical.some hf.approximates_deriv_on_open_nhds)
     (Classical.some_spec hf.approximates_deriv_on_open_nhds).snd
     ((f'.subsingleton_or_nnnorm_symm_pos.imp id) fun hf' => Nnreal.half_lt_self <| ne_of_gtₓ <| Nnreal.inv_pos.2 <| hf')
@@ -577,7 +612,7 @@ variable (f f' a)
 
 /-- Given a function `f` with an invertible derivative, returns a function that is locally inverse
 to `f`. -/
-def local_inverse (hf : HasStrictFderivAt f (f' : E →L[𝕜] F) a) : F → E :=
+def localInverse (hf : HasStrictFderivAt f (f' : E →L[𝕜] F) a) : F → E :=
   (hf.toLocalHomeomorph f).symm
 
 variable {f f' a}
@@ -653,7 +688,7 @@ variable (f f' a)
 
 /-- A function that is inverse to `f` near `a`. -/
 @[reducible]
-def local_inverse : 𝕜 → 𝕜 :=
+def localInverse : 𝕜 → 𝕜 :=
   (hf.has_strict_fderiv_at_equiv hf').localInverse _ _ _
 
 variable {f f' a}
@@ -692,7 +727,7 @@ variable [CompleteSpace E'] (f : E' → F') {f' : E' ≃L[𝕂] F'} {a : E'}
 
 /-- Given a `times_cont_diff` function over `𝕂` (which is `ℝ` or `ℂ`) with an invertible
 derivative at `a`, returns a `local_homeomorph` with `to_fun = f` and `a ∈ source`. -/
-def to_local_homeomorph {n : WithTop ℕ} (hf : TimesContDiffAt 𝕂 n f a) (hf' : HasFderivAt f (f' : E' →L[𝕂] F') a)
+def toLocalHomeomorph {n : WithTop ℕ} (hf : TimesContDiffAt 𝕂 n f a) (hf' : HasFderivAt f (f' : E' →L[𝕂] F') a)
     (hn : 1 ≤ n) : LocalHomeomorph E' F' :=
   (hf.has_strict_fderiv_at' hf' hn).toLocalHomeomorph f
 
@@ -713,7 +748,7 @@ theorem image_mem_to_local_homeomorph_target {n : WithTop ℕ} (hf : TimesContDi
 
 /-- Given a `times_cont_diff` function over `𝕂` (which is `ℝ` or `ℂ`) with an invertible derivative
 at `a`, returns a function that is locally inverse to `f`. -/
-def local_inverse {n : WithTop ℕ} (hf : TimesContDiffAt 𝕂 n f a) (hf' : HasFderivAt f (f' : E' →L[𝕂] F') a)
+def localInverse {n : WithTop ℕ} (hf : TimesContDiffAt 𝕂 n f a) (hf' : HasFderivAt f (f' : E' →L[𝕂] F') a)
     (hn : 1 ≤ n) : F' → E' :=
   (hf.has_strict_fderiv_at' hf' hn).localInverse f f' a
 

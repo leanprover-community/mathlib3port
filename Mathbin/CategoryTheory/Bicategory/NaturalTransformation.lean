@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2022 Yuma Mizuno. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yuma Mizuno
+-/
 import Mathbin.CategoryTheory.Bicategory.Functor
 
 /-!
@@ -34,7 +39,7 @@ variable {B : Type u₁} [Bicategory.{w₁, v₁} B] {C : Type u₂} [Bicategory
 These 2-morphisms satisfies the naturality condition, and preserve the identities and
 the compositions modulo some adjustments of domains and codomains of 2-morphisms.
 -/
-structure oplax_nat_trans (F G : OplaxFunctor B C) where
+structure OplaxNatTrans (F G : OplaxFunctor B C) where
   app (a : B) : F.obj a ⟶ G.obj a
   naturality {a b : B} (f : a ⟶ b) : F.map f ≫ app b ⟶ app a ≫ G.map f
   naturality_naturality' :
@@ -186,7 +191,7 @@ variable {F G : OplaxFunctor B C}
 for each 1-morphism `f : a ⟶ b`.
 -/
 @[ext]
-structure modification (η θ : F ⟶ G) where
+structure Modification (η θ : F ⟶ G) where
   app (a : B) : η.app a ⟶ θ.app a
   naturality' : ∀ {a b : B} f : a ⟶ b, (F.map f ◁ app b) ≫ θ.naturality f = η.naturality f ≫ (app a ▷ G.map f) := by
     run_tac
@@ -246,7 +251,7 @@ instance category (F G : OplaxFunctor B C) : Category (F ⟶ G) where
 by giving object level isomorphisms, and checking naturality only in the forward direction.
 -/
 @[simps]
-def modification_iso.of_components (app : ∀ a, η.app a ≅ θ.app a)
+def ModificationIso.ofComponents (app : ∀ a, η.app a ≅ θ.app a)
     (naturality :
       ∀ {a b} f : a ⟶ b, (F.map f ◁ (app b).Hom) ≫ θ.naturality f = η.naturality f ≫ ((app a).Hom ▷ G.map f)) :
     η ≅ θ where

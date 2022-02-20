@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2016 Jeremy Avigad. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Jeremy Avigad
+-/
 import Mathbin.Data.List.Perm
 
 /-!
@@ -26,10 +31,10 @@ variable {α : Type uu} {r : α → α → Prop}
 
 /-- `sorted r l` is the same as `pairwise r l`, preferred in the case that `r`
   is a `<` or `≤`-like relation (transitive and antisymmetric or asymmetric) -/
-def sorted :=
+def Sorted :=
   @Pairwiseₓ
 
-instance decidable_sorted [DecidableRel r] (l : List α) : Decidable (Sorted r l) :=
+instance decidableSorted [DecidableRel r] (l : List α) : Decidable (Sorted r l) :=
   List.decidablePairwiseₓ _
 
 @[simp]
@@ -39,7 +44,7 @@ theorem sorted_nil : Sorted r [] :=
 theorem sorted_of_sorted_cons {a : α} {l : List α} : Sorted r (a :: l) → Sorted r l :=
   pairwise_of_pairwise_cons
 
-theorem sorted.tail {r : α → α → Prop} {l : List α} (h : Sorted r l) : Sorted r l.tail :=
+theorem Sorted.tail {r : α → α → Prop} {l : List α} (h : Sorted r l) : Sorted r l.tail :=
   h.tail
 
 theorem rel_of_sorted_cons {a : α} {l : List α} : Sorted r (a :: l) → ∀, ∀ b ∈ l, ∀, r a b :=
@@ -49,7 +54,7 @@ theorem rel_of_sorted_cons {a : α} {l : List α} : Sorted r (a :: l) → ∀, �
 theorem sorted_cons {a : α} {l : List α} : Sorted r (a :: l) ↔ (∀, ∀ b ∈ l, ∀, r a b) ∧ Sorted r l :=
   pairwise_cons
 
-protected theorem sorted.nodup {r : α → α → Prop} [IsIrrefl α r] {l : List α} (h : Sorted r l) : Nodupₓ l :=
+protected theorem Sorted.nodup {r : α → α → Prop} [IsIrrefl α r] {l : List α} (h : Sorted r l) : Nodupₓ l :=
   h.Nodup
 
 theorem eq_of_perm_of_sorted [IsAntisymm α r] {l₁ l₂ : List α} (p : l₁ ~ l₂) (s₁ : Sorted r l₁) (s₂ : Sorted r l₂) :
@@ -88,11 +93,11 @@ theorem sublist_of_subperm_of_sorted [IsAntisymm α r] {l₁ l₂ : List α} (p 
 theorem sorted_singleton (a : α) : Sorted r [a] :=
   pairwise_singleton _ _
 
-theorem sorted.rel_nth_le_of_lt {l : List α} (h : l.Sorted r) {a b : ℕ} (ha : a < l.length) (hb : b < l.length)
+theorem Sorted.rel_nth_le_of_lt {l : List α} (h : l.Sorted r) {a b : ℕ} (ha : a < l.length) (hb : b < l.length)
     (hab : a < b) : r (l.nthLe a ha) (l.nthLe b hb) :=
   List.pairwise_iff_nth_le.1 h a b hb hab
 
-theorem sorted.rel_nth_le_of_le [IsRefl α r] {l : List α} (h : l.Sorted r) {a b : ℕ} (ha : a < l.length)
+theorem Sorted.rel_nth_le_of_le [IsRefl α r] {l : List α} (h : l.Sorted r) {a b : ℕ} (ha : a < l.length)
     (hb : b < l.length) (hab : a ≤ b) : r (l.nthLe a ha) (l.nthLe b hb) := by
   cases' eq_or_lt_of_le hab with H H
   · subst H
@@ -101,7 +106,7 @@ theorem sorted.rel_nth_le_of_le [IsRefl α r] {l : List α} (h : l.Sorted r) {a 
   · exact h.rel_nth_le_of_lt _ _ H
     
 
-theorem sorted.rel_of_mem_take_of_mem_drop {l : List α} (h : List.Sorted r l) {k : ℕ} {x y : α}
+theorem Sorted.rel_of_mem_take_of_mem_drop {l : List α} (h : List.Sorted r l) {k : ℕ} {x y : α}
     (hx : x ∈ List.takeₓ k l) (hy : y ∈ List.dropₓ k l) : r x y := by
   obtain ⟨iy, hiy, rfl⟩ := nth_le_of_mem hy
   obtain ⟨ix, hix, rfl⟩ := nth_le_of_mem hx
@@ -125,13 +130,13 @@ section InsertionSort
 /-- `ordered_insert a l` inserts `a` into `l` at such that
   `ordered_insert a l` is sorted if `l` is. -/
 @[simp]
-def ordered_insert (a : α) : List α → List α
+def orderedInsert (a : α) : List α → List α
   | [] => [a]
   | b :: l => if a ≼ b then a :: b :: l else b :: ordered_insert l
 
 /-- `insertion_sort l` returns `l` sorted using the insertion sort algorithm. -/
 @[simp]
-def insertion_sort : List α → List α
+def insertionSort : List α → List α
   | [] => []
   | b :: l => orderedInsert r b (insertion_sort l)
 
@@ -182,7 +187,7 @@ variable {r}
 
 /-- If `l` is already `list.sorted` with respect to `r`, then `insertion_sort` does not change
 it. -/
-theorem sorted.insertion_sort_eq : ∀ {l : List α} h : Sorted r l, insertionSort r l = l
+theorem Sorted.insertion_sort_eq : ∀ {l : List α} h : Sorted r l, insertionSort r l = l
   | [], _ => rfl
   | [a], _ => rfl
   | a :: b :: l, h => by
@@ -193,7 +198,7 @@ section TotalAndTransitive
 
 variable [IsTotal α r] [IsTrans α r]
 
-theorem sorted.ordered_insert (a : α) : ∀ l, Sorted r l → Sorted r (orderedInsert r a l)
+theorem Sorted.ordered_insert (a : α) : ∀ l, Sorted r l → Sorted r (orderedInsert r a l)
   | [], h => sorted_singleton a
   | b :: l, h => by
     by_cases' h' : a ≼ b
@@ -234,6 +239,8 @@ section MergeSort
 /-- Split `l` into two lists of approximately equal length.
 
      split [1, 2, 3, 4, 5] = ([1, 3, 5], [2, 4]) -/
+-- TODO(Jeremy): observation: if instead we write (a :: (split l).1, b :: (split l).2), the
+-- equation compiler can't prove the third equation
 @[simp]
 def split : List α → List α × List α
   | [] => ([], [])
@@ -280,7 +287,7 @@ def merge : List α → List α → List α
 include r
 
 /-- Implementation of a merge sort algorithm to sort a list. -/
-def merge_sort : List α → List α
+def mergeSort : List α → List α
   | [] => []
   | [a] => [a]
   | a :: b :: l => by
@@ -291,8 +298,7 @@ def merge_sort : List α → List α
 theorem merge_sort_cons_cons {a b} {l l₁ l₂ : List α} (h : split (a :: b :: l) = (l₁, l₂)) :
     mergeSort r (a :: b :: l) = merge r (mergeSort r l₁) (mergeSort r l₂) := by
   suffices
-    ∀ L : List α h1, @And.ndrec (fun a a _ : length l₁ < length l + 1 + 1 ∧ length l₂ < length l + 1 + 1 => L) h1 h1 = L
-    by
+    ∀ L : List α h1, @And.ndrec (fun _ : length l₁ < length l + 1 + 1 ∧ length l₂ < length l + 1 + 1 => L) h1 h1 = L by
     simp [merge_sort, h]
     apply this
   intros
@@ -337,7 +343,7 @@ section TotalAndTransitive
 
 variable {r} [IsTotal α r] [IsTrans α r]
 
-theorem sorted.merge : ∀ {l l' : List α}, Sorted r l → Sorted r l' → Sorted r (merge r l l')
+theorem Sorted.merge : ∀ {l l' : List α}, Sorted r l → Sorted r l' → Sorted r (merge r l l')
   | [], [], h₁, h₂ => by
     simp [merge]
   | [], b :: l', h₁, h₂ => by
@@ -404,5 +410,8 @@ end MergeSort
 
 end Sort
 
+-- try them out! 
+--#eval insertion_sort (λ m n : ℕ, m ≤ n) [5, 27, 221, 95, 17, 43, 7, 2, 98, 567, 23, 12]
+--#eval merge_sort     (λ m n : ℕ, m ≤ n) [5, 27, 221, 95, 17, 43, 7, 2, 98, 567, 23, 12]
 end List
 

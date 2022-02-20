@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2017 Johannes Hölzl. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johannes Hölzl, Mario Carneiro
+-/
 import Mathbin.MeasureTheory.Measure.OuterMeasure
 import Mathbin.Order.Filter.CountableInter
 import Mathbin.Data.Set.Accumulate
@@ -65,7 +70,7 @@ namespace MeasureTheory
 /-- A measure is defined to be an outer measure that is countably additive on
 measurable sets, with the additional assumption that the outer measure is the canonical
 extension of the restricted measure. -/
-structure Measureₓ (α : Type _) [MeasurableSpace α] extends OuterMeasure α where
+structure Measure (α : Type _) [MeasurableSpace α] extends OuterMeasure α where
   m_Union ⦃f : ℕ → Set α⦄ :
     (∀ i, MeasurableSet (f i)) → Pairwise (Disjoint on f) → measure_of (⋃ i, f i) = ∑' i, measure_of (f i)
   trimmed : to_outer_measure.trim = to_outer_measure
@@ -76,7 +81,7 @@ For measurable sets this returns the measure assigned by the `measure_of` field 
 But we can extend this to _all_ sets, but using the outer measure. This gives us monotonicity and
 subadditivity for all sets.
 -/
-instance measure.has_coe_to_fun [MeasurableSpace α] : CoeFun (Measure α) fun _ => Set α → ℝ≥0∞ :=
+instance Measure.hasCoeToFun [MeasurableSpace α] : CoeFun (Measure α) fun _ => Set α → ℝ≥0∞ :=
   ⟨fun m => m.toOuterMeasure⟩
 
 section
@@ -89,7 +94,7 @@ namespace Measureₓ
 
 
 /-- Obtain a measure by giving a countably additive function that sends `∅` to `0`. -/
-def of_measurable (m : ∀ s : Set α, MeasurableSet s → ℝ≥0∞) (m0 : m ∅ MeasurableSet.empty = 0)
+def ofMeasurable (m : ∀ s : Set α, MeasurableSet s → ℝ≥0∞) (m0 : m ∅ MeasurableSet.empty = 0)
     (mU :
       ∀ ⦃f : ℕ → Set α⦄ h : ∀ i, MeasurableSet (f i),
         Pairwise (Disjoint on f) → m (⋃ i, f i) (MeasurableSet.Union h) = ∑' i, m (f i) (h i)) :
@@ -115,8 +120,7 @@ theorem of_measurable_apply {m : ∀ s : Set α, MeasurableSet s → ℝ≥0∞}
     (s : Set α) (hs : MeasurableSet s) : ofMeasurable m m0 mU s = m s hs :=
   induced_outer_measure_eq m0 mU hs
 
-theorem to_outer_measure_injective : Injective (toOuterMeasure : Measure α → OuterMeasure α) :=
-  fun ⟨m₁, u₁, h₁⟩ ⟨m₂, u₂, h₂⟩ h => by
+theorem to_outer_measure_injective : Injective (toOuterMeasure : Measure α → OuterMeasure α) := fun h => by
   congr
   exact h
 
@@ -158,7 +162,7 @@ theorem to_outer_measure_eq_induced_outer_measure :
     μ.toOuterMeasure = inducedOuterMeasure (fun s _ => μ s) MeasurableSet.empty μ.Empty :=
   μ.trimmed.symm
 
-theorem measure_eq_extend (hs : MeasurableSet s) : μ s = extend (fun t ht : MeasurableSet t => μ t) s :=
+theorem measure_eq_extend (hs : MeasurableSet s) : μ s = extend (fun ht : MeasurableSet t => μ t) s :=
   (extend_eq _ hs).symm
 
 @[simp]
@@ -267,10 +271,10 @@ theorem measure_union_eq_top_iff : μ (s ∪ t) = ∞ ↔ μ s = ∞ ∨ μ t = 
   not_iff_not.1 <| by
     simp only [← lt_top_iff_ne_top, ← Ne.def, not_or_distrib, measure_union_lt_top_iff]
 
--- ././Mathport/Syntax/Translate/Basic.lean:418:16: unsupported tactic `by_contra'
+-- ././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'
 theorem exists_measure_pos_of_not_measure_Union_null [Encodable β] {s : β → Set α} (hs : μ (⋃ n, s n) ≠ 0) :
     ∃ n, 0 < μ (s n) := by
-  "././Mathport/Syntax/Translate/Basic.lean:418:16: unsupported tactic `by_contra'"
+  "././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'"
   simp_rw [nonpos_iff_eq_zero]  at h
   exact hs (measure_Union_null h)
 
@@ -290,7 +294,7 @@ theorem measure_inter_null_of_null_left {S : Set α} (T : Set α) (h : μ S = 0)
 
 
 /-- The “almost everywhere” filter of co-null sets. -/
-def measure.ae {α} {m : MeasurableSpace α} (μ : Measure α) : Filter α where
+def Measure.ae {α} {m : MeasurableSpace α} (μ : Measure α) : Filter α where
   Sets := { s | μ (sᶜ) = 0 }
   univ_sets := by
     simp
@@ -327,6 +331,9 @@ theorem measure_zero_iff_ae_nmem {s : Set α} : μ s = 0 ↔ ∀ᵐ a ∂μ, a �
 theorem ae_of_all {p : α → Prop} (μ : Measure α) : (∀ a, p a) → ∀ᵐ a ∂μ, p a :=
   eventually_of_forall
 
+--instance ae_is_measurably_generated : is_measurably_generated μ.ae :=
+--⟨λ s hs, let ⟨t, hst, htm, htμ⟩ := exists_measurable_superset_of_null hs in
+--  ⟨tᶜ, compl_mem_ae_iff.2 htμ, htm.compl, compl_subset_comm.1 hst⟩⟩
 instance : CountableInterFilter μ.ae :=
   ⟨by
     intro S hSc hS
@@ -426,8 +433,8 @@ alias measure_congr ← Filter.EventuallyEq.measure_eq
 theorem measure_mono_null_ae (H : s ≤ᵐ[μ] t) (ht : μ t = 0) : μ s = 0 :=
   nonpos_iff_eq_zero.1 <| ht ▸ H.measure_le
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (t «expr ⊇ » s)
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (t «expr ⊇ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (t «expr ⊇ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (t «expr ⊇ » s)
 /-- A measurable set `t ⊇ s` such that `μ t = μ s`. It even satisfies `μ (t ∩ u) = μ (s ∩ u)` for
 any measurable set `u` if `μ s ≠ ∞`, see `measure_to_measurable_inter`.
 (This property holds without the assumption `μ s ≠ ∞` when the space is sigma-finite,
@@ -435,7 +442,7 @@ see `measure_to_measurable_inter_of_sigma_finite`).
 If `s` is a null measurable set, then
 we also have `t =ᵐ[μ] s`, see `null_measurable_set.to_measurable_ae_eq`.
 This notion is sometimes called a "measurable hull" in the literature. -/
-irreducible_def to_measurable (μ : Measure α) (s : Set α) : Set α :=
+irreducible_def ToMeasurable (μ : Measure α) (s : Set α) : Set α :=
   if h : ∃ (t : _)(_ : t ⊇ s), MeasurableSet t ∧ t =ᵐ[μ] s then h.some
   else
     if h' : ∃ (t : _)(_ : t ⊇ s), MeasurableSet t ∧ ∀ u, MeasurableSet u → μ (t ∩ u) = μ (s ∩ u) then h'.some
@@ -468,7 +475,7 @@ theorem measure_to_measurable (s : Set α) : μ (ToMeasurable μ s) = μ s := by
 
 /-- A measure space is a measurable space equipped with a
   measure, referred to as `volume`. -/
-class measure_space (α : Type _) extends MeasurableSpace α where
+class MeasureSpace (α : Type _) extends MeasurableSpace α where
   volume : Measure α
 
 export MeasureSpace (volume)
@@ -484,7 +491,7 @@ notation3 "∀ᵐ " (...) ", " r:(scoped P =>
 notation3 "∃ᵐ " (...) ", " r:(scoped P =>
   Filter.Frequently P MeasureTheory.Measure.ae MeasureTheory.MeasureSpace.volume) => r
 
--- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:916:4: warning: unsupported (TODO): `[tacs]
 /-- The tactic `exact volume`, to be used in optional (`auto_param`) arguments. -/
 unsafe def volume_tac : tactic Unit :=
   sorry

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Simon Hudon. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Simon Hudon
+-/
 import Mathbin.Control.Traversable.Equiv
 import Mathbin.Control.Traversable.Instances
 import Mathbin.Data.LazyList
@@ -35,7 +40,7 @@ open Function
 -- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:377:22: warning: unsupported simp config option: iota_eqn
 -- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:377:22: warning: unsupported simp config option: iota_eqn
 /-- Isomorphism between strict and lazy lists. -/
-def list_equiv_lazy_list (α : Type _) : List α ≃ LazyList α where
+def listEquivLazyList (α : Type _) : List α ≃ LazyList α where
   toFun := LazyList.ofList
   invFun := LazyList.toList
   right_inv := by
@@ -144,7 +149,7 @@ def interleave {α} : LazyList α → LazyList α → LazyList α
 /-- `interleave_all (xs::ys::zs::xss)` creates a list where elements of `xs`, `ys`
 and `zs` and the rest alternate. Every other element of the resulting list is taken from
 `xs`, every fourth is taken from `ys`, every eighth is taken from `zs` and so on. -/
-def interleave_all {α} : List (LazyList α) → LazyList α
+def interleaveAll {α} : List (LazyList α) → LazyList α
   | [] => LazyList.nil
   | x :: xs => interleave x (interleave_all xs)
 
@@ -184,37 +189,37 @@ instance : IsLawfulMonad LazyList where
     apply append_nil
   bind_assoc := by
     intros
-    dsimp [· >>= ·]
+    dsimp [(· >>= ·)]
     induction x <;> simp [LazyList.bind, append_bind, *]
   id_map := by
     intros
-    simp [· <$> ·]
+    simp [(· <$> ·)]
     induction x <;> simp [LazyList.bind, *, singleton, append]
     ext ⟨⟩
     rfl
 
 /-- Try applying function `f` to every element of a `lazy_list` and
 return the result of the first attempt that succeeds. -/
-def mfirst {m} [Alternativeₓ m] {α β} (f : α → m β) : LazyList α → m β
+def mfirstₓ {m} [Alternativeₓ m] {α β} (f : α → m β) : LazyList α → m β
   | nil => failure
   | cons x xs => f x <|> mfirst (xs ())
 
 /-- Membership in lazy lists -/
-protected def mem {α} (x : α) : LazyList α → Prop
+protected def Mem {α} (x : α) : LazyList α → Prop
   | LazyList.nil => False
   | LazyList.cons y ys => x = y ∨ mem (ys ())
 
 instance {α} : HasMem α (LazyList α) :=
   ⟨LazyList.Mem⟩
 
-instance mem.decidable {α} [DecidableEq α] (x : α) : ∀ xs : LazyList α, Decidable (x ∈ xs)
+instance Mem.decidable {α} [DecidableEq α] (x : α) : ∀ xs : LazyList α, Decidable (x ∈ xs)
   | LazyList.nil => Decidable.false
   | LazyList.cons y ys =>
     if h : x = y then Decidable.isTrue (Or.inl h)
     else
       decidableOfDecidableOfIff (mem.decidable (ys ()))
         (by
-          simp [*, · ∈ ·, LazyList.Mem])
+          simp [*, (· ∈ ·), LazyList.Mem])
 
 @[simp]
 theorem mem_nil {α} (x : α) : x ∈ @LazyList.nil α ↔ False :=

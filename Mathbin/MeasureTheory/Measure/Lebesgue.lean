@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2017 Johannes Hölzl. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johannes Hölzl, Yury Kudryashov
+-/
 import Mathbin.Dynamics.Ergodic.MeasurePreserving
 import Mathbin.LinearAlgebra.Determinant
 import Mathbin.LinearAlgebra.Matrix.Diagonal
@@ -305,6 +310,7 @@ theorem map_volume_neg : Measure.map Neg.neg (volume : Measureₓ ℝ) = volume 
 -/
 
 
+-- for some reason `apply_instance` doesn't find this
 instance is_add_left_invariant_real_volume_pi (ι : Type _) [Fintype ι] :
     IsAddLeftInvariant (volume : Measureₓ (ι → ℝ)) :=
   pi.is_add_left_invariant_volume
@@ -343,6 +349,9 @@ theorem smul_map_diagonal_volume_pi [DecidableEq ι] {D : ι → ℝ} (h : det (
 /-- A transvection preserves Lebesgue measure. -/
 theorem map_transvection_volume_pi [DecidableEq ι] (t : TransvectionStruct ι ℝ) :
     Measure.map t.toMatrix.toLin' volume = volume := by
+  /- We separate the coordinate along which there is a shearing from the other ones, and apply
+    Fubini. Along this coordinate (and when all the other coordinates are fixed), it acts like a
+    translation, and therefore preserves Lebesgue. -/
   suffices H : measure_preserving t.to_matrix.to_lin' volume volume
   · exact H.2
     
@@ -386,6 +395,8 @@ theorem map_transvection_volume_pi [DecidableEq ι] (t : TransvectionStruct ι �
 determinant. -/
 theorem map_matrix_volume_pi_eq_smul_volume_pi [DecidableEq ι] {M : Matrix ι ι ℝ} (hM : det M ≠ 0) :
     Measure.map M.toLin' volume = Ennreal.ofReal (abs (det M)⁻¹) • volume := by
+  -- This follows from the cases we have already proved, of diagonal matrices and transvections,
+  -- as these matrices generate all invertible matrices.
   apply diagonal_transvection_induction_of_det_ne_zero _ M hM (fun D hD => _) (fun t => _) fun A B hA hB IHA IHB => _
   · conv_rhs => rw [← smul_map_diagonal_volume_pi hD]
     rw [smul_smul, ← Ennreal.of_real_mul (abs_nonneg _), ← abs_mul, inv_mul_cancel hD, abs_one, Ennreal.of_real_one,
@@ -408,6 +419,7 @@ theorem map_matrix_volume_pi_eq_smul_volume_pi [DecidableEq ι] {M : Matrix ι �
 determinant. -/
 theorem map_linear_map_volume_pi_eq_smul_volume_pi {f : (ι → ℝ) →ₗ[ℝ] ι → ℝ} (hf : f.det ≠ 0) :
     Measure.map f volume = Ennreal.ofReal (abs f.det⁻¹) • volume := by
+  -- this is deduced from the matrix case
   classical
   let M := f.to_matrix'
   have A : f.det = det M := by
@@ -521,3 +533,27 @@ theorem volume_region_between_eq_integral [SigmaFinite μ] (f_int : IntegrableOn
 
 end RegionBetween
 
+/-
+section vitali
+
+def vitali_aux_h (x : ℝ) (h : x ∈ Icc (0:ℝ) 1) :
+  ∃ y ∈ Icc (0:ℝ) 1, ∃ q:ℚ, ↑q = x - y :=
+⟨x, h, 0, by simp⟩
+
+def vitali_aux (x : ℝ) (h : x ∈ Icc (0:ℝ) 1) : ℝ :=
+classical.some (vitali_aux_h x h)
+
+theorem vitali_aux_mem (x : ℝ) (h : x ∈ Icc (0:ℝ) 1) : vitali_aux x h ∈ Icc (0:ℝ) 1 :=
+Exists.fst (classical.some_spec (vitali_aux_h x h):_)
+
+theorem vitali_aux_rel (x : ℝ) (h : x ∈ Icc (0:ℝ) 1) :
+ ∃ q:ℚ, ↑q = x - vitali_aux x h :=
+Exists.snd (classical.some_spec (vitali_aux_h x h):_)
+
+def vitali : set ℝ := {x | ∃ h, x = vitali_aux x h}
+
+theorem vitali_nonmeasurable : ¬ null_measurable_set measure_space.μ vitali :=
+sorry
+
+end vitali
+-/

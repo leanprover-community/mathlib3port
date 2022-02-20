@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2022 Heather Macbeth. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Heather Macbeth
+-/
 import Mathbin.Order.ConditionallyCompleteLattice
 import Mathbin.Data.Set.Intervals.OrdConnected
 
@@ -82,7 +87,12 @@ noncomputable def subsetConditionallyCompleteLinearOrder [Inhabited s]
     (h_Sup : ∀ {t : Set s} ht : t.Nonempty h_bdd : BddAbove t, sup (coe '' t : Set α) ∈ s)
     (h_Inf : ∀ {t : Set s} ht : t.Nonempty h_bdd : BddBelow t, inf (coe '' t : Set α) ∈ s) :
     ConditionallyCompleteLinearOrder s :=
-  { subsetHasSup s, subsetHasInf s, DistribLattice.toLattice s, (inferInstance : LinearOrderₓ s) with
+  { -- The following would be a more natural way to finish, but gives a "deep recursion" error:
+      -- simpa [subset_Sup_of_within (h_Sup t)] using
+      --   (strict_mono_coe s).monotone.le_cSup_image hct h_bdd,
+      subsetHasSup
+      s,
+    subsetHasInf s, DistribLattice.toLattice s, (inferInstance : LinearOrderₓ s) with
     le_cSup := by
       rintro t c h_bdd hct
       have := (Subtype.mono_coe s).le_cSup_image hct h_bdd

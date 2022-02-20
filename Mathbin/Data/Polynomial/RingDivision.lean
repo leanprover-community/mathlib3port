@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Chris Hughes. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Chris Hughes, Johannes Hölzl, Scott Morrison, Jens Wagemaker, Johan Commelin
+-/
 import Mathbin.Data.Polynomial.AlgebraMap
 import Mathbin.Data.Polynomial.Degree.Lemmas
 import Mathbin.Data.Polynomial.Div
@@ -62,7 +67,7 @@ theorem smul_mod_by_monic [Nontrivial R] (hq : q.Monic) (c : R) (p : R[X]) : c �
 /-- `polynomial.mod_by_monic_hom (hq : monic (q : R[X]))` is `_ %ₘ q` as a `R`-linear map.
 -/
 @[simps]
-def mod_by_monic_hom [Nontrivial R] (hq : q.Monic) : R[X] →ₗ[R] R[X] where
+def modByMonicHom [Nontrivial R] (hq : q.Monic) : R[X] →ₗ[R] R[X] where
   toFun := fun p => p %ₘ q
   map_add' := add_mod_by_monic hq
   map_smul' := smul_mod_by_monic hq
@@ -170,7 +175,7 @@ theorem prime_X : Prime (x : R[X]) := by
   convert prime_X_sub_C (0 : R)
   simp
 
-theorem monic.prime_of_degree_eq_one (hp1 : degree p = 1) (hm : Monic p) : Prime p :=
+theorem Monic.prime_of_degree_eq_one (hp1 : degree p = 1) (hm : Monic p) : Prime p :=
   have : p = X - c (-p.coeff 0) := by
     simpa [hm.leading_coeff] using eq_X_add_C_of_degree_eq_one hp1
   this.symm ▸ prime_X_sub_C _
@@ -181,7 +186,7 @@ theorem irreducible_X_sub_C (r : R) : Irreducible (X - c r) :=
 theorem irreducible_X : Irreducible (x : R[X]) :=
   Prime.irreducible prime_X
 
-theorem monic.irreducible_of_degree_eq_one (hp1 : degree p = 1) (hm : Monic p) : Irreducible p :=
+theorem Monic.irreducible_of_degree_eq_one (hp1 : degree p = 1) (hm : Monic p) : Irreducible p :=
   (hm.prime_of_degree_eq_one hp1).Irreducible
 
 theorem eq_of_monic_of_associated (hp : p.Monic) (hq : q.Monic) (hpq : Associated p q) : p = q := by
@@ -458,7 +463,7 @@ theorem roots_map_of_injective_card_eq_total_degree {K L : Type _} [CommRingₓ 
 section NthRoots
 
 /-- `nth_roots n a` noncomputably returns the solutions to `x ^ n = a`-/
-def nth_roots (n : ℕ) (a : R) : Multiset R :=
+def nthRoots (n : ℕ) (a : R) : Multiset R :=
   roots ((x : R[X]) ^ n - c a)
 
 @[simp]
@@ -484,7 +489,7 @@ theorem card_nth_roots (n : ℕ) (a : R) : (nthRoots n a).card ≤ n :=
       exact card_roots (X_pow_sub_C_ne_zero (Nat.pos_of_ne_zeroₓ hn) a)
 
 /-- The multiset `nth_roots ↑n (1 : R)` as a finset. -/
-def nth_roots_finset (n : ℕ) (R : Type _) [CommRingₓ R] [IsDomain R] : Finset R :=
+def nthRootsFinset (n : ℕ) (R : Type _) [CommRingₓ R] [IsDomain R] : Finset R :=
   Multiset.toFinset (nthRoots n (1 : R))
 
 @[simp]
@@ -603,7 +608,7 @@ variable [CommRingₓ T]
 
 If you have a non-separable polynomial, use `polynomial.roots` for the multiset
 where multiple roots have the appropriate multiplicity. -/
-def root_set (p : T[X]) S [CommRingₓ S] [IsDomain S] [Algebra T S] : Set S :=
+def RootSet (p : T[X]) S [CommRingₓ S] [IsDomain S] [Algebra T S] : Set S :=
   (p.map (algebraMap T S)).roots.toFinset
 
 theorem root_set_def (p : T[X]) S [CommRingₓ S] [IsDomain S] [Algebra T S] :
@@ -618,7 +623,7 @@ theorem root_set_zero S [CommRingₓ S] [IsDomain S] [Algebra T S] : (0 : T[X]).
 theorem root_set_C [CommRingₓ S] [IsDomain S] [Algebra T S] (a : T) : (c a).RootSet S = ∅ := by
   rw [root_set_def, map_C, roots_C, Multiset.to_finset_zero, Finset.coe_empty]
 
-instance root_set_fintype (p : T[X]) (S : Type _) [CommRingₓ S] [IsDomain S] [Algebra T S] : Fintype (p.RootSet S) :=
+instance rootSetFintype (p : T[X]) (S : Type _) [CommRingₓ S] [IsDomain S] [Algebra T S] : Fintype (p.RootSet S) :=
   FinsetCoe.fintype _
 
 theorem root_set_finite (p : T[X]) (S : Type _) [CommRingₓ S] [IsDomain S] [Algebra T S] : (p.RootSet S).Finite :=
@@ -734,7 +739,7 @@ variable [CommRingₓ R] [IsDomain R] [CommRingₓ S] [IsDomain S] (φ : R →+*
 A special case of this lemma is that a polynomial over `ℤ` is irreducible if
   it is monic and irreducible over `ℤ/pℤ` for some prime `p`.
 -/
-theorem monic.irreducible_of_irreducible_map (f : R[X]) (h_mon : Monic f) (h_irr : Irreducible (map φ f)) :
+theorem Monic.irreducible_of_irreducible_map (f : R[X]) (h_mon : Monic f) (h_irr : Irreducible (map φ f)) :
     Irreducible f := by
   fconstructor
   · intro h

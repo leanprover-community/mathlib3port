@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Yury Kudryashov. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yury Kudryashov, Sébastien Gouëzel
+-/
 import Mathbin.Analysis.Calculus.MeanValue
 import Mathbin.Analysis.SpecialFunctions.PowDeriv
 
@@ -79,7 +84,7 @@ theorem convex_on_pow (n : ℕ) : ConvexOn ℝ (Ici 0) fun x : ℝ => x ^ n := b
 theorem strict_convex_on_pow {n : ℕ} (hn : 2 ≤ n) : StrictConvexOn ℝ (Ici 0) fun x : ℝ => x ^ n := by
   apply StrictMonoOn.strict_convex_on_of_deriv (convex_Ici _) (continuous_on_pow _) differentiable_on_pow
   rw [deriv_pow', interior_Ici]
-  exact fun x hx : 0 < x y hy hxy =>
+  exact fun y hy hxy =>
     mul_lt_mul_of_pos_left (pow_lt_pow_of_lt_left hxy hx.le <| Nat.sub_pos_of_ltₓ hn)
       (Nat.cast_pos.2 <| zero_lt_two.trans_le hn)
 
@@ -208,20 +213,18 @@ theorem strict_convex_on_rpow {p : ℝ} (hp : 1 < p) : StrictConvexOn ℝ (Ici 0
   exact mul_pos (zero_lt_one.trans hp) (mul_pos (sub_pos_of_lt hp) (rpow_pos_of_pos hx _))
 
 theorem strict_concave_on_log_Ioi : StrictConcaveOn ℝ (Ioi 0) log := by
-  have h₁ : Ioi 0 ⊆ ({0} : Set ℝ)ᶜ := fun x hx : 0 < x hx' : x = 0 => hx.ne' hx'
+  have h₁ : Ioi 0 ⊆ ({0} : Set ℝ)ᶜ := fun hx' : x = 0 => hx.ne' hx'
   refine'
-    strict_concave_on_open_of_deriv2_neg (convex_Ioi 0) is_open_Ioi (differentiable_on_log.mono h₁) fun x hx : 0 < x =>
-      _
+    strict_concave_on_open_of_deriv2_neg (convex_Ioi 0) is_open_Ioi (differentiable_on_log.mono h₁) fun hx : 0 < x => _
   rw [Function.iterate_succ, Function.iterate_one]
   change (deriv (deriv log)) x < 0
   rw [deriv_log', deriv_inv]
   exact neg_neg_of_pos (inv_pos.2 <| sq_pos_of_ne_zero _ hx.ne')
 
 theorem strict_concave_on_log_Iio : StrictConcaveOn ℝ (Iio 0) log := by
-  have h₁ : Iio 0 ⊆ ({0} : Set ℝ)ᶜ := fun x hx : x < 0 hx' : x = 0 => hx.Ne hx'
+  have h₁ : Iio 0 ⊆ ({0} : Set ℝ)ᶜ := fun hx' : x = 0 => hx.Ne hx'
   refine'
-    strict_concave_on_open_of_deriv2_neg (convex_Iio 0) is_open_Iio (differentiable_on_log.mono h₁) fun x hx : x < 0 =>
-      _
+    strict_concave_on_open_of_deriv2_neg (convex_Iio 0) is_open_Iio (differentiable_on_log.mono h₁) fun hx : x < 0 => _
   rw [Function.iterate_succ, Function.iterate_one]
   change (deriv (deriv log)) x < 0
   rw [deriv_log', deriv_inv]

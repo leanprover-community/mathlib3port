@@ -1,5 +1,14 @@
+/-
+Copyright (c) 2019 Seul Baek. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Seul Baek
+-/
 import Mathbin.Tactic.Omega.Clause
 
+/-
+Correctness lemmas for equality elimination.
+See 5.5 of <http://www.decision-procedures.org/> for details.
+-/
 open List.Func
 
 namespace Omega
@@ -135,10 +144,10 @@ theorem rhs_correct {v : Nat → Int} {b : Int} {as : List Int} (n : Nat) :
           
       
 
-def sym_sym (m b : Int) : Int :=
+def symSym (m b : Int) : Int :=
   symdiv b m + symmod b m
 
-def coeffs_reduce : Nat → Int → List Int → Term
+def coeffsReduce : Nat → Int → List Int → Term
   | n, b, as =>
     let a := get n as
     let m := a + 1
@@ -242,6 +251,7 @@ theorem coeffs_reduce_correct {v : Nat → Int} {b : Int} {as : List Int} {n : N
       
   rw [← Int.mul_div_cancel (term.val _ _) h3, ← h4, Int.zero_div]
 
+-- Requires : t1.coeffs[m] = 1
 def cancel (m : Nat) (t1 t2 : Term) : Term :=
   Term.add (t1.mul (-get m t2.snd)) t2
 
@@ -262,7 +272,7 @@ theorem subst_correct {v : Nat → Int} {b : Int} {as : List Int} {t : Term} {n 
   ring
 
 /-- The type of equality elimination rules. -/
-inductive ee : Type
+inductive Ee : Type
   | drop : ee
   | nondiv : Int → ee
   | factor : Int → ee
@@ -273,7 +283,7 @@ inductive ee : Type
 
 namespace Ee
 
-def reprₓ : Ee → Stringₓ
+def repr : Ee → Stringₓ
   | drop => "↓"
   | nondiv i => i.repr ++ "∤"
   | factor i => "/" ++ i.repr
@@ -281,7 +291,7 @@ def reprₓ : Ee → Stringₓ
   | reduce n => "≻" ++ n.repr
   | cancel n => "+" ++ n.repr
 
-instance HasRepr : HasRepr Ee :=
+instance hasRepr : HasRepr Ee :=
   ⟨repr⟩
 
 unsafe instance has_to_format : has_to_format Ee :=
@@ -290,7 +300,7 @@ unsafe instance has_to_format : has_to_format Ee :=
 end Ee
 
 /-- Apply a given sequence of equality elimination steps to a clause. -/
-def eq_elim : List Ee → Clause → Clause
+def eqElim : List Ee → Clause → Clause
   | [], ([], les) => ([], les)
   | [], (_ :: _, les) => ([], [])
   | _ :: _, ([], les) => ([], [])

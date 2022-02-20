@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Kexing Ying. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Kexing Ying
+-/
 import Mathbin.MeasureTheory.Measure.VectorMeasure
 
 /-!
@@ -79,7 +84,7 @@ theorem _root_.measure_theory.signed_measure.im_to_complex_measure (s t : Signed
 
 /-- The complex measures form an equivalence to the type of pairs of signed measures. -/
 @[simps]
-def equiv_signed_measure : ComplexMeasure α ≃ SignedMeasure α × SignedMeasure α where
+def equivSignedMeasure : ComplexMeasure α ≃ SignedMeasure α × SignedMeasure α where
   toFun := fun c => ⟨c.re, c.im⟩
   invFun := fun ⟨s, t⟩ => s.toComplexMeasure t
   left_inv := fun c => c.to_complex_measure_to_signed_measure
@@ -89,11 +94,11 @@ section
 
 variable {R : Type _} [Semiringₓ R] [Module R ℝ]
 
-variable [TopologicalSpace R] [HasContinuousSmul R ℝ] [HasContinuousSmul R ℂ]
+variable [HasContinuousConstSmul R ℝ] [HasContinuousConstSmul R ℂ]
 
 /-- The complex measures form an linear isomorphism to the type of pairs of signed measures. -/
 @[simps]
-def equiv_signed_measureₗ : ComplexMeasure α ≃ₗ[R] SignedMeasure α × SignedMeasure α :=
+def equivSignedMeasureₗ : ComplexMeasure α ≃ₗ[R] SignedMeasure α × SignedMeasure α :=
   { equivSignedMeasure with
     map_add' := fun c d => by
       ext i hi <;> rfl,

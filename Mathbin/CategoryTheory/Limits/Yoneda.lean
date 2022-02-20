@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison, Bhavik Mehta
+-/
 import Mathbin.CategoryTheory.Limits.FunctorCategory
 
 /-!
@@ -27,7 +32,7 @@ variable {C : Type v} [SmallCategory C]
 /-- The colimit cocone over `coyoneda.obj X`, with cocone point `punit`.
 -/
 @[simps]
-def colimit_cocone (X : Cᵒᵖ) : Cocone (coyoneda.obj X) where
+def colimitCocone (X : Cᵒᵖ) : Cocone (coyoneda.obj X) where
   x := PUnit
   ι :=
     { app := by
@@ -36,7 +41,7 @@ def colimit_cocone (X : Cᵒᵖ) : Cocone (coyoneda.obj X) where
 /-- The proposed colimit cocone over `coyoneda.obj X` is a colimit cocone.
 -/
 @[simps]
-def colimit_cocone_is_colimit (X : Cᵒᵖ) : IsColimit (colimitCocone X) where
+def colimitCoconeIsColimit (X : Cᵒᵖ) : IsColimit (colimitCocone X) where
   desc := fun s x => s.ι.app (unop X) (𝟙 _)
   fac' := fun s Y => by
     ext f
@@ -52,7 +57,7 @@ instance (X : Cᵒᵖ) : HasColimit (coyoneda.obj X) :=
 
 /-- The colimit of `coyoneda.obj X` is isomorphic to `punit`.
 -/
-noncomputable def colimit_coyoneda_iso (X : Cᵒᵖ) : colimit (coyoneda.obj X) ≅ PUnit :=
+noncomputable def colimitCoyonedaIso (X : Cᵒᵖ) : colimit (coyoneda.obj X) ≅ PUnit :=
   colimit.isoColimitCocone { Cocone := _, IsColimit := colimitCoconeIsColimit X }
 
 end Coyoneda
@@ -62,7 +67,7 @@ variable {C : Type u} [Category.{v} C]
 open Limits
 
 /-- The yoneda embedding `yoneda.obj X : Cᵒᵖ ⥤ Type v` for `X : C` preserves limits. -/
-instance yoneda_preserves_limits (X : C) : PreservesLimits (yoneda.obj X) where
+instance yonedaPreservesLimits (X : C) : PreservesLimits (yoneda.obj X) where
   PreservesLimitsOfShape := fun J 𝒥 =>
     { PreservesLimit := fun K =>
         { preserves := fun c t =>
@@ -74,11 +79,12 @@ instance yoneda_preserves_limits (X : C) : PreservesLimits (yoneda.obj X) where
                   · dsimp
                     simp [← s.w α]
                     
+                  -- See library note [dsimp, simp]
                   · exact Quiver.Hom.unop_inj (congr_funₓ (w j) x)
                      } } }
 
 /-- The coyoneda embedding `coyoneda.obj X : C ⥤ Type v` for `X : Cᵒᵖ` preserves limits. -/
-instance coyoneda_preserves_limits (X : Cᵒᵖ) : PreservesLimits (coyoneda.obj X) where
+instance coyonedaPreservesLimits (X : Cᵒᵖ) : PreservesLimits (coyoneda.obj X) where
   PreservesLimitsOfShape := fun J 𝒥 =>
     { PreservesLimit := fun K =>
         { preserves := fun c t =>
@@ -86,7 +92,7 @@ instance coyoneda_preserves_limits (X : Cᵒᵖ) : PreservesLimits (coyoneda.obj
                 t.lift
                   ⟨unop X, fun j => s.π.app j x, fun j₁ j₂ α => by
                     dsimp
-                    simp [← s.w α]⟩,
+                    simp [← s.w α]⟩,-- See library note [dsimp, simp]
               fac' := fun s j => funext fun x => t.fac _ _,
               uniq' := fun s m w =>
                 funext fun x => by
@@ -94,7 +100,7 @@ instance coyoneda_preserves_limits (X : Cᵒᵖ) : PreservesLimits (coyoneda.obj
                   exact congr_funₓ (w j) x } } }
 
 /-- The yoneda embeddings jointly reflect limits. -/
-def yoneda_jointly_reflects_limits (J : Type v) [SmallCategory J] (K : J ⥤ Cᵒᵖ) (c : Cone K)
+def yonedaJointlyReflectsLimits (J : Type v) [SmallCategory J] (K : J ⥤ Cᵒᵖ) (c : Cone K)
     (t : ∀ X : C, IsLimit ((yoneda.obj X).mapCone c)) : IsLimit c :=
   let s' : ∀ s : Cone K, Cone (K ⋙ yoneda.obj s.x.unop) := fun s =>
     ⟨PUnit, fun j _ => (s.π.app j).unop, fun j₁ j₂ α => funext fun _ => Quiver.Hom.op_inj (s.w α).symm⟩
@@ -109,7 +115,7 @@ def yoneda_jointly_reflects_limits (J : Type v) [SmallCategory J] (K : J ⥤ C�
       exact Quiver.Hom.op_inj (w j) }
 
 /-- The coyoneda embeddings jointly reflect limits. -/
-def coyoneda_jointly_reflects_limits (J : Type v) [SmallCategory J] (K : J ⥤ C) (c : Cone K)
+def coyonedaJointlyReflectsLimits (J : Type v) [SmallCategory J] (K : J ⥤ C) (c : Cone K)
     (t : ∀ X : Cᵒᵖ, IsLimit ((coyoneda.obj X).mapCone c)) : IsLimit c :=
   let s' : ∀ s : Cone K, Cone (K ⋙ coyoneda.obj (op s.x)) := fun s =>
     ⟨PUnit, fun j _ => s.π.app j, fun j₁ j₂ α => funext fun _ => (s.w α).symm⟩
@@ -123,22 +129,22 @@ def coyoneda_jointly_reflects_limits (J : Type v) [SmallCategory J] (K : J ⥤ C
 
 variable {D : Type u} [SmallCategory D]
 
-instance yoneda_functor_preserves_limits : PreservesLimits (@yoneda D _) := by
+instance yonedaFunctorPreservesLimits : PreservesLimits (@yoneda D _) := by
   apply preserves_limits_of_evaluation
   intro K
   change preserves_limits (coyoneda.obj K)
   infer_instance
 
-instance coyoneda_functor_preserves_limits : PreservesLimits (@coyoneda D _) := by
+instance coyonedaFunctorPreservesLimits : PreservesLimits (@coyoneda D _) := by
   apply preserves_limits_of_evaluation
   intro K
   change preserves_limits (yoneda.obj K)
   infer_instance
 
-instance yoneda_functor_reflects_limits : ReflectsLimits (@yoneda D _) :=
+instance yonedaFunctorReflectsLimits : ReflectsLimits (@yoneda D _) :=
   Limits.fullyFaithfulReflectsLimits _
 
-instance coyoneda_functor_reflects_limits : ReflectsLimits (@coyoneda D _) :=
+instance coyonedaFunctorReflectsLimits : ReflectsLimits (@coyoneda D _) :=
   Limits.fullyFaithfulReflectsLimits _
 
 end CategoryTheory

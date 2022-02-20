@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Simon Hudon. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Simon Hudon, Patrick Massot
+-/
 import Mathbin.Algebra.Module.Basic
 import Mathbin.Algebra.Regular.Smul
 import Mathbin.Algebra.Ring.Pi
@@ -14,8 +19,10 @@ universe u v w
 
 variable {I : Type u}
 
+-- The indexing type
 variable {f : I → Type v}
 
+-- The family of types already equipped with instances
 variable (x y : ∀ i, f i) (i : I)
 
 namespace Pi
@@ -23,26 +30,26 @@ namespace Pi
 theorem _root_.is_smul_regular.pi {α : Type _} [∀ i, HasScalar α <| f i] {k : α} (hk : ∀ i, IsSmulRegular (f i) k) :
     IsSmulRegular (∀ i, f i) k := fun _ _ h => funext fun i => hk i (congr_funₓ h i : _)
 
-instance SmulWithZero α [Zero α] [∀ i, Zero (f i)] [∀ i, SmulWithZero α (f i)] : SmulWithZero α (∀ i, f i) :=
+instance smulWithZero α [Zero α] [∀ i, Zero (f i)] [∀ i, SmulWithZero α (f i)] : SmulWithZero α (∀ i, f i) :=
   { Pi.hasScalar with smul_zero := fun _ => funext fun _ => smul_zero' (f _) _,
     zero_smul := fun _ => funext fun _ => zero_smul _ _ }
 
-instance smul_with_zero' {g : I → Type _} [∀ i, Zero (g i)] [∀ i, Zero (f i)] [∀ i, SmulWithZero (g i) (f i)] :
+instance smulWithZero' {g : I → Type _} [∀ i, Zero (g i)] [∀ i, Zero (f i)] [∀ i, SmulWithZero (g i) (f i)] :
     SmulWithZero (∀ i, g i) (∀ i, f i) :=
   { Pi.hasScalar' with smul_zero := fun _ => funext fun _ => smul_zero' (f _) _,
     zero_smul := fun _ => funext fun _ => zero_smul _ _ }
 
-instance MulActionWithZero α [MonoidWithZeroₓ α] [∀ i, Zero (f i)] [∀ i, MulActionWithZero α (f i)] :
+instance mulActionWithZero α [MonoidWithZeroₓ α] [∀ i, Zero (f i)] [∀ i, MulActionWithZero α (f i)] :
     MulActionWithZero α (∀ i, f i) :=
   { Pi.mulAction _, Pi.smulWithZero _ with }
 
-instance mul_action_with_zero' {g : I → Type _} [∀ i, MonoidWithZeroₓ (g i)] [∀ i, Zero (f i)]
+instance mulActionWithZero' {g : I → Type _} [∀ i, MonoidWithZeroₓ (g i)] [∀ i, Zero (f i)]
     [∀ i, MulActionWithZero (g i) (f i)] : MulActionWithZero (∀ i, g i) (∀ i, f i) :=
   { Pi.mulAction', Pi.smulWithZero' with }
 
 variable (I f)
 
-instance Module α {r : Semiringₓ α} {m : ∀ i, AddCommMonoidₓ <| f i} [∀ i, Module α <| f i] :
+instance module α {r : Semiringₓ α} {m : ∀ i, AddCommMonoidₓ <| f i} [∀ i, Module α <| f i] :
     @Module α (∀ i : I, f i) r (@Pi.addCommMonoid I f m) :=
   { Pi.distribMulAction _ with add_smul := fun c f g => funext fun i => add_smul _ _ _,
     zero_smul := fun f => funext fun i => zero_smul α _ }

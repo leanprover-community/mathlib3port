@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Kenny Lau. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Kenny Lau
+-/
 import Mathbin.Algebra.Polynomial.BigOperators
 import Mathbin.Algebra.Squarefree
 import Mathbin.FieldTheory.Minpoly
@@ -33,7 +38,7 @@ section CommSemiringₓ
 variable {R : Type u} [CommSemiringₓ R] {S : Type v} [CommSemiringₓ S]
 
 /-- A polynomial is separable iff it is coprime with its derivative. -/
-def separable (f : R[X]) : Prop :=
+def Separable (f : R[X]) : Prop :=
   IsCoprime f f.derivative
 
 theorem separable_def (f : R[X]) : f.Separable ↔ IsCoprime f f.derivative :=
@@ -64,16 +69,16 @@ theorem separable_X : (x : R[X]).Separable := by
 theorem separable_C (r : R) : (c r).Separable ↔ IsUnit r := by
   rw [separable_def, derivative_C, is_coprime_zero_right, is_unit_C]
 
-theorem separable.of_mul_left {f g : R[X]} (h : (f * g).Separable) : f.Separable := by
+theorem Separable.of_mul_left {f g : R[X]} (h : (f * g).Separable) : f.Separable := by
   have := h.of_mul_left_left
   rw [derivative_mul] at this
   exact IsCoprime.of_mul_right_left (IsCoprime.of_add_mul_left_right this)
 
-theorem separable.of_mul_right {f g : R[X]} (h : (f * g).Separable) : g.Separable := by
+theorem Separable.of_mul_right {f g : R[X]} (h : (f * g).Separable) : g.Separable := by
   rw [mul_comm] at h
   exact h.of_mul_left
 
-theorem separable.of_dvd {f g : R[X]} (hf : f.Separable) (hfg : g ∣ f) : g.Separable := by
+theorem Separable.of_dvd {f g : R[X]} (hf : f.Separable) (hfg : g ∣ f) : g.Separable := by
   rcases hfg with ⟨f', rfl⟩
   exact separable.of_mul_left hf
 
@@ -85,23 +90,23 @@ theorem separable_gcd_right {F : Type _} [Field F] {g : F[X]} (f : F[X]) (hg : g
     (EuclideanDomain.gcd f g).Separable :=
   Separable.of_dvd hg (EuclideanDomain.gcd_dvd_right f g)
 
-theorem separable.is_coprime {f g : R[X]} (h : (f * g).Separable) : IsCoprime f g := by
+theorem Separable.is_coprime {f g : R[X]} (h : (f * g).Separable) : IsCoprime f g := by
   have := h.of_mul_left_left
   rw [derivative_mul] at this
   exact IsCoprime.of_mul_right_right (IsCoprime.of_add_mul_left_right this)
 
-theorem separable.of_pow' {f : R[X]} : ∀ {n : ℕ} h : (f ^ n).Separable, IsUnit f ∨ f.Separable ∧ n = 1 ∨ n = 0
+theorem Separable.of_pow' {f : R[X]} : ∀ {n : ℕ} h : (f ^ n).Separable, IsUnit f ∨ f.Separable ∧ n = 1 ∨ n = 0
   | 0 => fun h => Or.inr <| Or.inr rfl
   | 1 => fun h => Or.inr <| Or.inl ⟨pow_oneₓ f ▸ h, rfl⟩
   | n + 2 => fun h => by
     rw [pow_succₓ, pow_succₓ] at h
     exact Or.inl (is_coprime_self.1 h.is_coprime.of_mul_right_left)
 
-theorem separable.of_pow {f : R[X]} (hf : ¬IsUnit f) {n : ℕ} (hn : n ≠ 0) (hfs : (f ^ n).Separable) :
+theorem Separable.of_pow {f : R[X]} (hf : ¬IsUnit f) {n : ℕ} (hn : n ≠ 0) (hfs : (f ^ n).Separable) :
     f.Separable ∧ n = 1 :=
   (hfs.of_pow'.resolve_left hf).resolve_right hn
 
-theorem separable.map {p : R[X]} (h : p.Separable) {f : R →+* S} : (p.map f).Separable :=
+theorem Separable.map {p : R[X]} (h : p.Separable) {f : R →+* S} : (p.map f).Separable :=
   let ⟨a, b, H⟩ := h
   ⟨a.map f, b.map f, by
     rw [derivative_map, ← map_mul, ← map_mul, ← map_add, H, map_one]⟩
@@ -237,7 +242,7 @@ theorem nat_degree_expand (p : ℕ) (f : R[X]) : (expand R p f).natDegree = f.na
     exact mt leading_coeff_eq_zero.1 hf
     
 
-theorem monic.expand {p : ℕ} {f : R[X]} (hp : 0 < p) (h : f.Monic) : (expand R p f).Monic := by
+theorem Monic.expand {p : ℕ} {f : R[X]} (hp : 0 < p) (h : f.Monic) : (expand R p f).Monic := by
   rw [monic.def, leading_coeff, nat_degree_expand, coeff_expand hp]
   simp [hp, h]
 
@@ -347,7 +352,7 @@ theorem multiplicity_le_one_of_separable {p q : R[X]} (hq : ¬IsUnit q) (hsep : 
   apply multiplicity.pow_dvd_of_le_multiplicity
   simpa only [Nat.cast_oneₓ, Nat.cast_bit0] using Enat.add_one_le_of_lt hq
 
-theorem separable.squarefree {p : R[X]} (hsep : Separable p) : Squarefree p := by
+theorem Separable.squarefree {p : R[X]} (hsep : Separable p) : Squarefree p := by
   rw [multiplicity.squarefree_iff_multiplicity_le_one p]
   intro f
   by_cases' hunit : IsUnit f
@@ -364,7 +369,7 @@ variable {R : Type u} [CommRingₓ R]
 theorem separable_X_sub_C {x : R} : Separable (X - c x) := by
   simpa only [sub_eq_add_neg, C_neg] using separable_X_add_C (-x)
 
-theorem separable.mul {f g : R[X]} (hf : f.Separable) (hg : g.Separable) (h : IsCoprime f g) : (f * g).Separable := by
+theorem Separable.mul {f g : R[X]} (hf : f.Separable) (hg : g.Separable) (h : IsCoprime f g) : (f * g).Separable := by
   rw [separable_def, derivative_mul]
   exact ((hf.mul_right h).add_mul_left_right _).mul_left ((h.symm.mul_right hg).mul_add_right_right _)
 
@@ -382,14 +387,14 @@ theorem separable_prod {ι : Sort _} [Fintype ι] {f : ι → R[X]} (h1 : Pairwi
     (h2 : ∀ x, (f x).Separable) : (∏ x, f x).Separable :=
   separable_prod' (fun x hx y hy hxy => h1 x y hxy) fun x hx => h2 x
 
-theorem separable.inj_of_prod_X_sub_C [Nontrivial R] {ι : Sort _} {f : ι → R} {s : Finset ι}
+theorem Separable.inj_of_prod_X_sub_C [Nontrivial R] {ι : Sort _} {f : ι → R} {s : Finset ι}
     (hfs : (∏ i in s, X - c (f i)).Separable) {x y : ι} (hx : x ∈ s) (hy : y ∈ s) (hfxy : f x = f y) : x = y := by
   by_contra hxy
   rw [← insert_erase hx, prod_insert (not_mem_erase _ _), ← insert_erase (mem_erase_of_ne_of_mem (Ne.symm hxy) hy),
     prod_insert (not_mem_erase _ _), ← mul_assoc, hfxy, ← sq] at hfs
   cases (hfs.of_mul_left.of_pow (not_is_unit_X_sub_C _) two_ne_zero).2
 
-theorem separable.injective_of_prod_X_sub_C [Nontrivial R] {ι : Sort _} [Fintype ι] {f : ι → R}
+theorem Separable.injective_of_prod_X_sub_C [Nontrivial R] {ι : Sort _} [Fintype ι] {f : ι → R}
     (hfs : (∏ i, X - c (f i)).Separable) : Function.Injective f := fun x y hfxy =>
   hfs.inj_of_prod_X_sub_C (mem_univ _) (mem_univ _) hfxy
 
@@ -472,7 +477,7 @@ variable {F : Type u} [Field F] {K : Type v} [Field K]
 
 theorem separable_iff_derivative_ne_zero {f : F[X]} (hf : Irreducible f) : f.Separable ↔ f.derivative ≠ 0 :=
   ⟨fun h1 h2 => hf.not_unit <| is_coprime_zero_right.1 <| h2 ▸ h1, fun h =>
-    (EuclideanDomain.is_coprime_of_dvd (mt And.right h)) fun g hg1 hg2 ⟨p, hg3⟩ hg4 =>
+    (EuclideanDomain.is_coprime_of_dvd (mt And.right h)) fun hg4 =>
       let ⟨u, hu⟩ := (hf.is_unit_or_is_unit hg3).resolve_left hg1
       have : f ∣ f.derivative := by
         conv_lhs => rw [hg3, ← hu]
@@ -595,9 +600,12 @@ theorem separable_X_pow_sub_C {n : ℕ} (a : F) (hn : (n : F) ≠ 0) (ha : a ≠
   separable_X_pow_sub_C_unit (Units.mk0 a ha) (IsUnit.mk0 n hn)
 
 /-- In a field `F`, `X ^ n - 1` is separable iff `↑n ≠ 0`. -/
+-- this can possibly be strengthened to making `separable_X_pow_sub_C_unit` a
+-- bi-implication, but it is nontrivial!
 theorem X_pow_sub_one_separable_iff {n : ℕ} : (X ^ n - 1 : F[X]).Separable ↔ (n : F) ≠ 0 := by
   refine' ⟨_, fun h => separable_X_pow_sub_C_unit 1 (IsUnit.mk0 (↑n) h)⟩
   rw [separable_def', derivative_sub, derivative_X_pow, derivative_one, sub_zero]
+  -- Suppose `(n : F) = 0`, then the derivative is `0`, so `X ^ n - 1` is a unit, contradiction.
   rintro (h : IsCoprime _ _) hn'
   rw [← C_eq_nat_cast, hn', C.map_zero, zero_mul, is_coprime_zero_right] at h
   have := not_is_unit_X_pow_sub_one F n
@@ -674,6 +682,11 @@ the minimal polynomial of every `x : K` is separable.
 We define this for general (commutative) rings and only assume `F` and `K` are fields if this
 is needed for a proof.
 -/
+-- TODO: refactor to allow transcendental extensions?
+-- See: https://en.wikipedia.org/wiki/Separable_extension#Separability_of_transcendental_extensions
+-- Note that right now a Galois extension (class `is_galois`) is defined to be an extension which
+-- is separable and normal, so if the definition of separable changes here at some point
+-- to allow non-algebraic extensions, then the definition of `is_galois` must also be changed.
 class IsSeparable : Prop where
   is_integral' (x : K) : IsIntegral F x
   separable' (x : K) : (minpoly F x).Separable
@@ -700,6 +713,7 @@ instance is_separable_self (F : Type _) [Field F] : IsSeparable F F :=
     exact separable_X_sub_C⟩
 
 /-- A finite field extension in characteristic 0 is separable. -/
+-- See note [lower instance priority]
 instance (priority := 100) IsSeparable.of_finite (F K : Type _) [Field F] [Field K] [Algebra F K]
     [FiniteDimensional F K] [CharZero F] : IsSeparable F K :=
   have : ∀ x : K, IsIntegral F x := fun x => Algebra.is_integral_of_finite _ _ _

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Sébastien Gouëzel. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Sébastien Gouëzel
+-/
 import Mathbin.Topology.MetricSpace.Gluing
 import Mathbin.Topology.MetricSpace.HausdorffDistance
 import Mathbin.Topology.ContinuousFunction.Bounded
@@ -43,6 +48,11 @@ namespace GromovHausdorff
 
 section GromovHausdorffRealized
 
+/- This section shows that the Gromov-Hausdorff distance
+is realized. For this, we consider candidate distances on the disjoint union
+`X ⊕ Y` of two compact nonempty metric spaces, almost realizing the Gromov-Hausdorff
+distance, and show that they form a compact family by applying Arzela-Ascoli
+theorem. The existence of a minimizer follows. -/
 section Definitions
 
 variable (X : Type u) (Y : Type v) [MetricSpace X] [CompactSpace X] [Nonempty X] [MetricSpace Y] [CompactSpace Y]
@@ -69,7 +79,7 @@ private theorem one_le_max_var : 1 ≤ maxVar X Y :=
 
 /-- The set of functions on `X ⊕ Y` that are candidates distances to realize the
 minimum of the Hausdorff distances between `X` and `Y` in a coupling -/
-def candidates : Set (ProdSpaceFun X Y) :=
+def Candidates : Set (ProdSpaceFun X Y) :=
   { f |
     (((((∀ x y : X, f (Sum.inl x, Sum.inl y) = dist x y) ∧ ∀ x y : Y, f (Sum.inr x, Sum.inr y) = dist x y) ∧
             ∀ x y, f (x, y) = f (y, x)) ∧
@@ -84,6 +94,7 @@ private def candidates_b : Set (Cb X Y) :=
 
 end Definitions
 
+--section
 section Constructions
 
 variable {X : Type u} {Y : Type v} [MetricSpace X] [CompactSpace X] [Nonempty X] [MetricSpace Y] [CompactSpace Y]
@@ -210,7 +221,7 @@ private theorem candidates_lipschitz (fA : f ∈ Candidates X Y) : LipschitzWith
   exact candidates_lipschitz_aux fA
 
 /-- candidates give rise to elements of bounded_continuous_functions -/
-def candidates_b_of_candidates (f : ProdSpaceFun X Y) (fA : f ∈ Candidates X Y) : Cb X Y :=
+def candidatesBOfCandidates (f : ProdSpaceFun X Y) (fA : f ∈ Candidates X Y) : Cb X Y :=
   BoundedContinuousFunction.mkOfCompact ⟨f, (candidates_lipschitz fA).Continuous⟩
 
 theorem candidates_b_of_candidates_mem (f : ProdSpaceFun X Y) (fA : f ∈ Candidates X Y) :
@@ -230,7 +241,7 @@ private theorem dist_mem_candidates : (fun p : Sum X Y × Sum X Y => dist p.1 p.
       exact fun x y => max_var_bound
 
 /-- The distance on `X ⊕ Y` as a candidate -/
-def candidates_b_dist (X : Type u) (Y : Type v) [MetricSpace X] [CompactSpace X] [Inhabited X] [MetricSpace Y]
+def candidatesBDist (X : Type u) (Y : Type v) [MetricSpace X] [CompactSpace X] [Inhabited X] [MetricSpace Y]
     [CompactSpace Y] [Inhabited Y] : Cb X Y :=
   candidatesBOfCandidates _ dist_mem_candidates
 
@@ -240,11 +251,11 @@ theorem candidates_b_dist_mem_candidates_b : candidatesBDist X Y ∈ CandidatesB
 private theorem candidates_b_nonempty : (CandidatesB X Y).Nonempty :=
   ⟨_, candidates_b_dist_mem_candidates_b⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (x y)
--- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (x y)
--- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (x y)
--- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (x y z)
--- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (x y)
+-- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (x y)
+-- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (x y)
+-- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (x y)
+-- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (x y z)
+-- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (x y)
 /-- To apply Arzela-Ascoli, we need to check that the set of candidates is closed and
 equicontinuous. Equicontinuity follows from the Lipschitz control, we check closedness. -/
 private theorem closed_candidates_b : IsClosed (CandidatesB X Y) := by
@@ -303,9 +314,14 @@ private theorem compact_candidates_b : IsCompact (CandidatesB X Y) := by
 /-- We will then choose the candidate minimizing the Hausdorff distance. Except that we are not
 in a metric space setting, so we need to define our custom version of Hausdorff distance,
 called HD, and prove its basic properties. -/
-def HD (f : Cb X Y) :=
+def hD (f : Cb X Y) :=
   max (⨆ x, ⨅ y, f (inl x, inr y)) (⨆ y, ⨅ x, f (inl x, inr y))
 
+/- We will show that HD is continuous on bounded_continuous_functions, to deduce that its
+minimum on the compact set candidates_b is attained. Since it is defined in terms of
+infimum and supremum on `ℝ`, which is only conditionnally complete, we will need all the time
+to check that the defining sets are bounded below or above. This is done in the next few
+technical lemmas -/
 theorem HD_below_aux1 {f : Cb X Y} (C : ℝ) {x : X} : BddBelow (Range fun y : Y => f (inl x, inr y) + C) :=
   let ⟨cf, hcf⟩ := (Real.bounded_iff_bdd_below_bdd_above.1 f.bounded_range).1
   ⟨cf + C, forall_range_iff.2 fun i => add_le_add_right ((fun x => hcf (mem_range_self x)) _) _⟩
@@ -377,15 +393,21 @@ theorem HD_candidates_b_dist_le : hD (candidatesBDist X Y) ≤ diam (Univ : Set 
     exact le_transₓ A B
     
 
+/- To check that HD is continuous, we check that it is Lipschitz. As HD is a max, we
+prove separately inequalities controlling the two terms (relying too heavily on copy-paste...) -/
 private theorem HD_lipschitz_aux1 (f g : Cb X Y) :
     (⨆ x, ⨅ y, f (inl x, inr y)) ≤ (⨆ x, ⨅ y, g (inl x, inr y)) + dist f g := by
   rcases(Real.bounded_iff_bdd_below_bdd_above.1 g.bounded_range).1 with ⟨cg, hcg⟩
   have Hcg : ∀ x, cg ≤ g x := fun x => hcg (mem_range_self x)
   rcases(Real.bounded_iff_bdd_below_bdd_above.1 f.bounded_range).1 with ⟨cf, hcf⟩
   have Hcf : ∀ x, cf ≤ f x := fun x => hcf (mem_range_self x)
+  -- prove the inequality but with `dist f g` inside, by using inequalities comparing
+  -- supr to supr and infi to infi
   have Z : (⨆ x, ⨅ y, f (inl x, inr y)) ≤ ⨆ x, ⨅ y, g (inl x, inr y) + dist f g :=
     csupr_le_csupr (HD_bound_aux1 _ (dist f g)) fun x =>
       cinfi_le_cinfi ⟨cf, forall_range_iff.2 fun i => Hcf _⟩ fun y => coe_le_coe_add_dist
+  -- move the `dist f g` out of the infimum and the supremum, arguing that continuous monotone maps
+  -- (here the addition of `dist f g`) preserve infimum and supremum
   have E1 : ∀ x, (⨅ y, g (inl x, inr y)) + dist f g = ⨅ y, g (inl x, inr y) + dist f g := by
     intro x
     refine' map_cinfi_of_continuous_at_of_monotone (continuous_at_id.add continuous_at_const) _ _
@@ -402,6 +424,7 @@ private theorem HD_lipschitz_aux1 (f g : Cb X Y) :
       
     · simpa using HD_bound_aux1 _ 0
       
+  -- deduce the result from the above two steps
   simpa [E2, E1, Function.comp]
 
 private theorem HD_lipschitz_aux2 (f g : Cb X Y) :
@@ -410,9 +433,13 @@ private theorem HD_lipschitz_aux2 (f g : Cb X Y) :
   have Hcg : ∀ x, cg ≤ g x := fun x => hcg (mem_range_self x)
   rcases(Real.bounded_iff_bdd_below_bdd_above.1 f.bounded_range).1 with ⟨cf, hcf⟩
   have Hcf : ∀ x, cf ≤ f x := fun x => hcf (mem_range_self x)
+  -- prove the inequality but with `dist f g` inside, by using inequalities comparing
+  -- supr to supr and infi to infi
   have Z : (⨆ y, ⨅ x, f (inl x, inr y)) ≤ ⨆ y, ⨅ x, g (inl x, inr y) + dist f g :=
     csupr_le_csupr (HD_bound_aux2 _ (dist f g)) fun y =>
       cinfi_le_cinfi ⟨cf, forall_range_iff.2 fun i => Hcf _⟩ fun y => coe_le_coe_add_dist
+  -- move the `dist f g` out of the infimum and the supremum, arguing that continuous monotone maps
+  -- (here the addition of `dist f g`) preserve infimum and supremum
   have E1 : ∀ y, (⨅ x, g (inl x, inr y)) + dist f g = ⨅ x, g (inl x, inr y) + dist f g := by
     intro y
     refine' map_cinfi_of_continuous_at_of_monotone (continuous_at_id.add continuous_at_const) _ _
@@ -429,6 +456,7 @@ private theorem HD_lipschitz_aux2 (f g : Cb X Y) :
       
     · simpa using HD_bound_aux2 _ 0
       
+  -- deduce the result from the above two steps
   simpa [E2, E1]
 
 private theorem HD_lipschitz_aux3 (f g : Cb X Y) : hD f ≤ hD g + dist f g :=
@@ -441,11 +469,15 @@ private theorem HD_continuous : Continuous (hD : Cb X Y → ℝ) :=
 
 end Constructions
 
+--section
 section Consequences
 
 variable (X : Type u) (Y : Type v) [MetricSpace X] [CompactSpace X] [Nonempty X] [MetricSpace Y] [CompactSpace Y]
   [Nonempty Y]
 
+/- Now that we have proved that the set of candidates is compact, and that HD is continuous,
+we can finally select a candidate minimizing HD. This will be the candidate realizing the
+optimal coupling. -/
 private theorem exists_minimizer : ∃ f ∈ CandidatesB X Y, ∀, ∀ g ∈ CandidatesB X Y, ∀, hD f ≤ hD g :=
   compact_candidates_b.exists_forall_le candidates_b_nonempty HD_continuous.ContinuousOn
 
@@ -462,7 +494,7 @@ private theorem HD_optimal_GH_dist_le (g : Cb X Y) (hg : g ∈ CandidatesB X Y) 
 /-- With the optimal candidate, construct a premetric space structure on `X ⊕ Y`, on which the
 predistance is given by the candidate. Then, we will identify points at `0` predistance
 to obtain a genuine metric space -/
-def premetric_optimal_GH_dist : PseudoMetricSpace (Sum X Y) where
+def premetricOptimalGHDist : PseudoMetricSpace (Sum X Y) where
   dist := fun p q => optimalGHDist X Y (p, q)
   dist_self := fun x => candidates_refl (optimal_GH_dist_mem_candidates_b X Y)
   dist_comm := fun x y => candidates_symm (optimal_GH_dist_mem_candidates_b X Y)
@@ -472,11 +504,11 @@ attribute [local instance] premetric_optimal_GH_dist PseudoMetric.distSetoid
 
 /-- A metric space which realizes the optimal coupling between `X` and `Y` -/
 @[nolint has_inhabited_instance]
-def optimal_GH_coupling : Type _ :=
+def OptimalGHCoupling : Type _ :=
   PseudoMetricQuot (Sum X Y)deriving MetricSpace
 
 /-- Injection of `X` in the optimal coupling between `X` and `Y` -/
-def optimal_GH_injl (x : X) : OptimalGHCoupling X Y :=
+def optimalGHInjl (x : X) : OptimalGHCoupling X Y :=
   ⟦inl x⟧
 
 /-- The injection of `X` in the optimal coupling between `X` and `Y` is an isometry. -/
@@ -486,7 +518,7 @@ theorem isometry_optimal_GH_injl : Isometry (optimalGHInjl X Y) := by
   exact candidates_dist_inl (optimal_GH_dist_mem_candidates_b X Y) _ _
 
 /-- Injection of `Y` in the optimal coupling between `X` and `Y` -/
-def optimal_GH_injr (y : Y) : OptimalGHCoupling X Y :=
+def optimalGHInjr (y : Y) : OptimalGHCoupling X Y :=
   ⟦inr y⟧
 
 /-- The injection of `Y` in the optimal coupling between `X` and `Y` is an isometry. -/
@@ -568,6 +600,7 @@ theorem Hausdorff_dist_optimal_le_HD {f} (h : f ∈ CandidatesB X Y) :
 
 end Consequences
 
+-- We are done with the construction of the optimal coupling
 end GromovHausdorffRealized
 
 end GromovHausdorff

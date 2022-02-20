@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Yury Kudriashov. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yury Kudriashov, Malo Jaffré
+-/
 import Mathbin.Analysis.Convex.Function
 
 /-!

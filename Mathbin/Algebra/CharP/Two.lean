@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Eric Wieser. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Eric Wieser
+-/
 import Mathbin.Algebra.CharP.Basic
 
 /-!
@@ -45,7 +50,7 @@ theorem neg_eq' : Neg.neg = (id : R → R) :=
 theorem sub_eq_add (x y : R) : x - y = x + y := by
   rw [sub_eq_add_neg, neg_eq]
 
-theorem sub_eq_add' : Sub.sub = (· + · : R → R → R) :=
+theorem sub_eq_add' : Sub.sub = ((· + ·) : R → R → R) :=
   funext fun x => funext fun y => sub_eq_add x y
 
 end Ringₓ

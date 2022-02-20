@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 David Wärn. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: David Wärn
+-/
 import Mathbin.Data.Set.Basic
 import Mathbin.Combinatorics.Quiver.Basic
 
@@ -44,6 +49,7 @@ instance {V} [Quiver V] : Inhabited (WideSubquiver V) :=
   ⟨⊤⟩
 
 /-- `total V` is the type of _all_ arrows of `V`. -/
+-- TODO Unify with `category_theory.arrow`? (The fields have been named to match.)
 @[ext, nolint has_inhabited_instance]
 structure Total (V : Type u) [Quiver.{v} V] : Sort max (u + 1) v where
   left : V
@@ -51,7 +57,7 @@ structure Total (V : Type u) [Quiver.{v} V] : Sort max (u + 1) v where
   Hom : left ⟶ right
 
 /-- A wide subquiver of `G` can equivalently be viewed as a total set of arrows. -/
-def wide_subquiver_equiv_set_total {V} [Quiver V] : WideSubquiver V ≃ Set (Total V) where
+def wideSubquiverEquivSetTotal {V} [Quiver V] : WideSubquiver V ≃ Set (Total V) where
   toFun := fun H => { e | e.Hom ∈ H e.left e.right }
   invFun := fun S a b => { e | Total.mk a b e ∈ S }
   left_inv := fun H => rfl
@@ -62,7 +68,7 @@ def wide_subquiver_equiv_set_total {V} [Quiver V] : WideSubquiver V ≃ Set (Tot
     rfl
 
 /-- An `L`-labelling of a quiver assigns to every arrow an element of `L`. -/
-def labelling (V : Type u) [Quiver V] (L : Sort _) :=
+def Labelling (V : Type u) [Quiver V] (L : Sort _) :=
   ∀ ⦃a b : V⦄, (a ⟶ b) → L
 
 instance {V : Type u} [Quiver V] L [Inhabited L] : Inhabited (Labelling V L) :=

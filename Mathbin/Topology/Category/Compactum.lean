@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Adam Topaz. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Adam Topaz
+-/
 import Mathbin.CategoryTheory.Monad.Types
 import Mathbin.CategoryTheory.Monad.Limits
 import Mathbin.CategoryTheory.Equivalence
@@ -91,6 +96,7 @@ def free : Type _ ⥤ Compactum :=
 def adj : free ⊣ forget :=
   Monad.adj _
 
+-- Basic instances
 instance : ConcreteCategory Compactum where
   forget := forget
 
@@ -189,9 +195,10 @@ private theorem subset_cl {X : Compactum} (A : Set X) : A ⊆ Cl A := fun a ha =
   ⟨X.incl a, ha, by
     simp ⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (B C «expr ∈ » C0)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (B C «expr ∈ » C0)
 private theorem cl_cl {X : Compactum} (A : Set X) : Cl (Cl A) ⊆ Cl A := by
   rintro _ ⟨F, hF, rfl⟩
+  -- Notation to be used in this proof.
   let fsu := Finset (Set (Ultrafilter X))
   let ssu := Set (Set (Ultrafilter X))
   let ι : fsu → ssu := coe
@@ -199,16 +206,19 @@ private theorem cl_cl {X : Compactum} (A : Set X) : Cl (Cl A) ⊆ Cl A := by
   let AA := { G : Ultrafilter X | A ∈ G }
   let C1 := insert AA C0
   let C2 := finite_inter_closure C1
+  -- C0 is closed under intersections.
   have claim1 : ∀ B C _ : B ∈ C0 _ : C ∈ C0, B ∩ C ∈ C0 := by
     rintro B ⟨Q, hQ, rfl⟩ C ⟨R, hR, rfl⟩
     use Q ∩ R
     simp only [and_trueₓ, eq_self_iff_true, Set.preimage_inter, Subtype.val_eq_coe]
     exact inter_sets _ hQ hR
+  -- All sets in C0 are nonempty.
   have claim2 : ∀, ∀ B ∈ C0, ∀, Set.Nonempty B := by
     rintro B ⟨Q, hQ, rfl⟩
     obtain ⟨q⟩ := Filter.nonempty_of_mem hQ
     use X.incl q
     simpa
+  -- The intersection of AA with every set in C0 is nonempty.
   have claim3 : ∀, ∀ B ∈ C0, ∀, (AA ∩ B).Nonempty := by
     rintro B ⟨Q, hQ, rfl⟩
     have : (Q ∩ cl A).Nonempty := Filter.nonempty_of_mem (inter_mem hQ hF)
@@ -216,14 +226,18 @@ private theorem cl_cl {X : Compactum} (A : Set X) : Cl (Cl A) ⊆ Cl A := by
     refine' ⟨P, hq2, _⟩
     rw [← hq3] at hq1
     simpa
+  -- Suffices to show that the intersection of any finite subcollection of C1 is nonempty.
   suffices ∀ T : fsu, ι T ⊆ C1 → (⋂₀ ι T).Nonempty by
     obtain ⟨G, h1⟩ := exists_ultrafilter_of_finite_inter_nonempty _ this
     use X.join G
     have : G.map X.str = F := Ultrafilter.coe_le_coe.1 fun S hS => h1 (Or.inr ⟨S, hS, rfl⟩)
     rw [join_distrib, this]
     exact ⟨h1 (Or.inl rfl), rfl⟩
+  -- C2 is closed under finite intersections (by construction!).
   have claim4 := finite_inter_closure_has_finite_inter C1
+  -- C0 is closed under finite intersections by claim1.
   have claim5 : HasFiniteInter C0 := ⟨⟨_, univ_mem, Set.preimage_univ⟩, claim1⟩
+  -- Every element of C2 is nonempty.
   have claim6 : ∀, ∀ P ∈ C2, ∀, (P : Set (Ultrafilter X)).Nonempty := by
     suffices ∀, ∀ P ∈ C2, ∀, P ∈ C0 ∨ ∃ Q ∈ C0, P = AA ∩ Q by
       intro P hP
@@ -236,8 +250,10 @@ private theorem cl_cl {X : Compactum} (A : Set X) : Cl (Cl A) ⊆ Cl A := by
     intro P hP
     exact claim5.finite_inter_closure_insert _ hP
   intro T hT
+  -- Suffices to show that the intersection of the T's is contained in C2.
   suffices ⋂₀ ι T ∈ C2 by
     exact claim6 _ this
+  -- Finish
   apply claim4.finite_inter_mem
   intro t ht
   exact finite_inter_closure.basic (@hT t ht)
@@ -247,8 +263,9 @@ theorem is_closed_cl {X : Compactum} (A : Set X) : IsClosed (Cl A) := by
   intro F hF
   exact cl_cl _ ⟨F, hF, rfl⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (S1 S2 «expr ∈ » T0)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (S1 S2 «expr ∈ » T0)
 theorem str_eq_of_le_nhds {X : Compactum} (F : Ultrafilter X) (x : X) : ↑F ≤ 𝓝 x → X.str F = x := by
+  -- Notation to be used in this proof.
   let fsu := Finset (Set (Ultrafilter X))
   let ssu := Set (Set (Ultrafilter X))
   let ι : fsu → ssu := coe
@@ -257,6 +274,7 @@ theorem str_eq_of_le_nhds {X : Compactum} (F : Ultrafilter X) (x : X) : ↑F ≤
   let T1 := insert AA T0
   let T2 := finite_inter_closure T1
   intro cond
+  -- If F contains a closed set A, then x is contained in A.
   have claim1 : ∀ A : Set X, IsClosed A → A ∈ F → x ∈ A := by
     intro A hA h
     by_contra H
@@ -264,21 +282,26 @@ theorem str_eq_of_le_nhds {X : Compactum} (F : Ultrafilter X) (x : X) : ↑F ≤
     specialize cond (Aᶜ) H hA.is_open_compl
     rw [Ultrafilter.mem_coe, Ultrafilter.compl_mem_iff_not_mem] at cond
     contradiction
+  -- If A ∈ F, then x ∈ cl A.
   have claim2 : ∀ A : Set X, A ∈ F → x ∈ cl A := by
     intro A hA
     exact claim1 (cl A) (is_closed_cl A) (mem_of_superset hA (subset_cl A))
+  -- T0 is closed under intersections.
   have claim3 : ∀ S1 S2 _ : S1 ∈ T0 _ : S2 ∈ T0, S1 ∩ S2 ∈ T0 := by
     rintro S1 ⟨S1, hS1, rfl⟩ S2 ⟨S2, hS2, rfl⟩
     exact
       ⟨S1 ∩ S2, inter_mem hS1 hS2, by
         simp [basic_inter]⟩
+  -- For every S ∈ T0, the intersection AA ∩ S is nonempty.
   have claim4 : ∀, ∀ S ∈ T0, ∀, (AA ∩ S).Nonempty := by
     rintro S ⟨S, hS, rfl⟩
     rcases claim2 _ hS with ⟨G, hG, hG2⟩
     exact ⟨G, hG2, hG⟩
+  -- Every element of T0 is nonempty.
   have claim5 : ∀, ∀ S ∈ T0, ∀, Set.Nonempty S := by
     rintro S ⟨S, hS, rfl⟩
     exact ⟨F, hS⟩
+  -- Every element of T2 is nonempty.
   have claim6 : ∀, ∀ S ∈ T2, ∀, Set.Nonempty S := by
     suffices ∀, ∀ S ∈ T2, ∀, S ∈ T0 ∨ ∃ Q ∈ T0, S = AA ∩ Q by
       intro S hS
@@ -306,6 +329,7 @@ theorem str_eq_of_le_nhds {X : Compactum} (F : Ultrafilter X) (x : X) : ↑F ≤
       
     · exact hS
       
+  -- It suffices to show that the intersection of any finite subset of T1 is nonempty.
   suffices ∀ F : fsu, ↑F ⊆ T1 → (⋂₀ ι F).Nonempty by
     obtain ⟨G, h1⟩ := Ultrafilter.exists_ultrafilter_of_finite_inter_nonempty _ this
     have c1 : X.join G = F := Ultrafilter.coe_le_coe.1 fun P hP => h1 (Or.inr ⟨P, hP, rfl⟩)
@@ -315,6 +339,7 @@ theorem str_eq_of_le_nhds {X : Compactum} (F : Ultrafilter X) (x : X) : ↑F ≤
       rintro x ⟨rfl⟩
       exact hP
     simp [← c1, c2]
+  -- Finish...
   intro T hT
   refine' claim6 _ (finite_inter_mem (finite_inter_closure_has_finite_inter _) _ _)
   intro t ht
@@ -325,6 +350,7 @@ theorem le_nhds_of_str_eq {X : Compactum} (F : Ultrafilter X) (x : X) : X.str F 
     hs _ <| by
       rwa [h]
 
+-- All the hard work above boils down to this t2_space instance.
 instance {X : Compactum} : T2Space X := by
   rw [t2_iff_ultrafilter]
   intro _ _ F hx hy
@@ -355,7 +381,7 @@ theorem continuous_of_hom {X Y : Compactum} (f : X ⟶ Y) : Continuous f := by
   rw [← str_hom_commute, str_eq_of_le_nhds _ x h]
 
 /-- Given any compact Hausdorff space, we construct a Compactum. -/
-noncomputable def of_topological_space (X : Type _) [TopologicalSpace X] [CompactSpace X] [T2Space X] : Compactum where
+noncomputable def ofTopologicalSpace (X : Type _) [TopologicalSpace X] [CompactSpace X] [T2Space X] : Compactum where
   a := X
   a := Ultrafilter.lim
   unit' := by
@@ -389,7 +415,7 @@ noncomputable def of_topological_space (X : Type _) [TopologicalSpace X] [Compac
     exact c4
 
 /-- Any continuous map between Compacta is a morphism of compacta. -/
-def hom_of_continuous {X Y : Compactum} (f : X → Y) (cont : Continuous f) : X ⟶ Y :=
+def homOfContinuous {X Y : Compactum} (f : X → Y) (cont : Continuous f) : X ⟶ Y :=
   { f,
     h' := by
       rw [continuous_iff_ultrafilter] at cont
@@ -416,7 +442,7 @@ theorem faithful : Faithful compactumToCompHaus :=
   {  }
 
 /-- This definition is used to prove essential surjectivity of Compactum_to_CompHaus. -/
-noncomputable def iso_of_topological_space {D : CompHaus} :
+noncomputable def isoOfTopologicalSpace {D : CompHaus} :
     compactumToCompHaus.obj (Compactum.ofTopologicalSpace D) ≅ D where
   Hom :=
     { toFun := id,
@@ -437,7 +463,7 @@ theorem ess_surj : EssSurj compactumToCompHaus :=
   { mem_ess_image := fun X => ⟨Compactum.ofTopologicalSpace X, ⟨isoOfTopologicalSpace⟩⟩ }
 
 /-- The functor Compactum_to_CompHaus is an equivalence of categories. -/
-noncomputable instance is_equivalence : IsEquivalence compactumToCompHaus := by
+noncomputable instance isEquivalence : IsEquivalence compactumToCompHaus := by
   apply equivalence.of_fully_faithfully_ess_surj _
   exact compactumToCompHaus.full
   exact compactumToCompHaus.faithful
@@ -453,6 +479,13 @@ def compactumToCompHausCompForget : compactumToCompHaus ⋙ CategoryTheory.forge
     dsimp
     simpa
 
+/-
+TODO: `forget CompHaus` is monadic, as it is isomorphic to the composition
+of an equivalence with the monadic functor `forget Compactum`.
+Once we have the API to transfer monadicity of functors along such isomorphisms,
+the instance `creates_limits (forget CompHaus)` can be deduced from this
+monadicity.
+-/
 noncomputable instance CompHaus.forgetCreatesLimits : CreatesLimits (forget CompHaus) := by
   let e : forget CompHaus ≅ Compactum_to_CompHaus.inv ⋙ Compactum.forget :=
     _ ≪≫ iso_whisker_left _ compactumToCompHausCompForget

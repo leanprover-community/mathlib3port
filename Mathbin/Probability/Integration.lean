@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Martin Zinkevich. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Martin Zinkevich
+-/
 import Mathbin.MeasureTheory.Integral.Lebesgue
 import Mathbin.Probability.Independence
 
@@ -106,7 +111,7 @@ theorem lintegral_mul_eq_lintegral_mul_lintegral_of_independent_measurable_space
       
     · exact fun n => h_measM_f.mul (h_measM_f' n)
       
-    · exact fun n m h_le : n ≤ m a => Ennreal.mul_le_mul le_rfl (h_mono_f' h_le a)
+    · exact fun a => Ennreal.mul_le_mul le_rfl (h_mono_f' h_le a)
       
     
 

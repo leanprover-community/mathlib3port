@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Oliver Nash. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Oliver Nash
+-/
 import Mathbin.Data.Nat.Choose.Sum
 import Mathbin.Algebra.Algebra.Bilinear
 import Mathbin.RingTheory.Ideal.Operations
@@ -172,7 +177,7 @@ variable {M : Type v} [Ringₓ R] [AddCommGroupₓ M] [Module R M]
 
 variable {f : Module.End R M} {p : Submodule R M} (hp : p ≤ p.comap f)
 
-theorem is_nilpotent.mapq (hnp : IsNilpotent f) : IsNilpotent (p.mapq p f hp) := by
+theorem IsNilpotent.mapq (hnp : IsNilpotent f) : IsNilpotent (p.mapq p f hp) := by
   obtain ⟨k, hk⟩ := hnp
   use k
   simp [← p.mapq_pow, hk]

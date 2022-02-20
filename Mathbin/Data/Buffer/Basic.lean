@@ -1,3 +1,10 @@
+/-
+Copyright (c) 2018 Simon Hudon. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Simon Hudon
+
+General utility functions for buffers.
+-/
 import Leanbin.Data.Buffer
 import Mathbin.Data.Array.Lemmas
 import Mathbin.Control.Traversable.Instances
@@ -253,7 +260,7 @@ theorem read_singleton (c : α) :
 
 /-- The natural equivalence between lists and buffers, using
 `list.to_buffer` and `buffer.to_list`. -/
-def list_equiv_buffer (α : Type _) : List α ≃ Buffer α := by
+def listEquivBuffer (α : Type _) : List α ≃ Buffer α := by
   refine' { toFun := List.toBuffer, invFun := Buffer.toList, .. } <;> simp [left_inverse, Function.RightInverse]
 
 instance : Traversable Buffer :=

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Simon Hudon. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Mario Carneiro, Johannes Hölzl, Simon Hudon, Kenny Lau
+-/
 import Mathbin.Data.Multiset.Bind
 import Mathbin.Control.Traversable.Lemmas
 import Mathbin.Control.Traversable.Instances
@@ -45,14 +50,14 @@ def traverse : Multiset α' → F (Multiset β') :=
         simpa with functor_norm
       case perm.swap =>
         have :
-          (fun a b l : List β' => (↑(a :: b :: l) : Multiset β')) <$> f p_y <*> f p_x =
+          (fun l : List β' => (↑(a :: b :: l) : Multiset β')) <$> f p_y <*> f p_x =
             (fun a b l => ↑(a :: b :: l)) <$> f p_x <*> f p_y :=
           by
           rw [IsCommApplicative.commutative_map]
           congr
           funext a b l
           simpa [flip] using perm.swap b a l
-        simp' [· ∘ ·, this] with functor_norm
+        simp' [(· ∘ ·), this] with functor_norm
       case perm.trans =>
         simp [*])
 
@@ -64,7 +69,7 @@ theorem pure_def {α} : (pure : α → Multiset α) = singleton :=
   rfl
 
 @[simp]
-theorem bind_def {α β} : · >>= · = @bind α β :=
+theorem bind_def {α β} : (· >>= ·) = @bind α β :=
   rfl
 
 instance : IsLawfulMonad Multiset where
@@ -100,7 +105,7 @@ theorem comp_traverse {G H : Type _ → Type _} [Applicativeₓ G] [Applicative�
     traverse (comp.mk ∘ Functor.map h ∘ g) x = Comp.mk (Functor.map (traverse h) (traverse g x)) :=
   Quotientₓ.induction_on x
     (by
-      intro <;> simp' [traverse, comp_traverse] with functor_norm <;> simp' [· <$> ·, · ∘ ·] with functor_norm)
+      intro <;> simp' [traverse, comp_traverse] with functor_norm <;> simp' [(· <$> ·), (· ∘ ·)] with functor_norm)
 
 theorem map_traverse {G : Type _ → Type _} [Applicativeₓ G] [IsCommApplicative G] {α β γ : Type _} (g : α → G β)
     (h : β → γ) (x : Multiset α) : Functor.map (Functor.map h) (traverse g x) = traverse (Functor.map h ∘ g) x :=

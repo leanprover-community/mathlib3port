@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Justus Springer. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Justus Springer
+-/
 import Mathbin.Algebra.Category.Mon.Basic
 import Mathbin.CategoryTheory.Limits.ConcreteCategory
 import Mathbin.CategoryTheory.Limits.Preserves.Filtered
@@ -28,10 +33,13 @@ open CategoryTheory.Limits
 
 open CategoryTheory.IsFiltered renaming max → max'
 
+-- avoid name collision with `_root_.max`.
 namespace Mon.FilteredColimits
 
 section
 
+-- We use parameters here, mainly so we can have the abbreviations `M` and `M.mk` below, without
+-- passing around `F` all the time.
 parameter {J : Type v}[SmallCategory J](F : J ⥤ Mon.{v})
 
 /-- The colimit of `F ⋙ forget Mon` in the category of types.
@@ -59,7 +67,7 @@ variable [IsFiltered J]
 -/
 @[to_additive
       "As `J` is nonempty, we can pick an arbitrary object `j₀ : J`. We use this object to\ndefine the \"zero\" in the colimit as the equivalence class of `⟨j₀, 0 : F.obj j₀⟩`."]
-instance colimit_has_one : One M where
+instance colimitHasOne : One M where
   one := M.mk ⟨IsFiltered.nonempty.some, 1⟩
 
 /-- The definition of the "one" in the colimit is independent of the chosen object of `J`.
@@ -79,7 +87,7 @@ and multiply them there.
 -/
 @[to_additive
       "The \"unlifted\" version of addition in the colimit. To add two dependent pairs\n`⟨j₁, x⟩` and `⟨j₂, y⟩`, we pass to a common successor of `j₁` and `j₂` (given by `is_filtered.max`)\nand add them there."]
-def colimit_mul_aux (x y : Σ j, F.obj j) : M :=
+def colimitMulAux (x y : Σ j, F.obj j) : M :=
   M.mk ⟨max x.1 y.1, F.map (leftToMax x.1 y.1) x.2 * F.map (rightToMax x.1 y.1) y.2⟩
 
 /-- Multiplication in the colimit is well-defined in the left argument. -/
@@ -116,7 +124,7 @@ theorem colimit_mul_aux_eq_of_rel_right {x y y' : Σ j, F.obj j}
 
 /-- Multiplication in the colimit. See also `colimit_mul_aux`. -/
 @[to_additive "Addition in the colimit. See also `colimit_add_aux`."]
-instance colimit_has_mul : Mul M where
+instance colimitHasMul : Mul M where
   mul := fun x y => by
     refine' Quot.lift₂ (colimit_mul_aux F) _ _ x y
     · intro x y y' h
@@ -147,7 +155,7 @@ theorem colimit_mul_mk_eq (x y : Σ j, F.obj j) (k : J) (f : x.1 ⟶ k) (g : y.1
   simp_rw [MonoidHom.map_mul, ← comp_apply, ← F.map_comp, h₁, h₂]
 
 @[to_additive]
-instance colimit_monoid : Monoidₓ M :=
+instance colimitMonoid : Monoidₓ M :=
   { colimit_has_one, colimit_has_mul with
     one_mul := fun x => by
       apply Quot.induction_on x
@@ -184,7 +192,7 @@ def colimit : Mon :=
 /-- The monoid homomorphism from a given monoid in the diagram to the colimit monoid. -/
 @[to_additive
       "The additive monoid homomorphism from a given additive monoid in the diagram to the\ncolimit additive monoid."]
-def cocone_morphism (j : J) : F.obj j ⟶ colimit where
+def coconeMorphism (j : J) : F.obj j ⟶ colimit where
   toFun := (Types.colimitCocone (F ⋙ forget Mon)).ι.app j
   map_one' := (colimit_one_eq j).symm
   map_mul' := fun x y => by
@@ -198,7 +206,7 @@ theorem cocone_naturality {j j' : J} (f : j ⟶ j') : F.map f ≫ cocone_morphis
 
 /-- The cocone over the proposed colimit monoid. -/
 @[to_additive "The cocone over the proposed colimit additive monoid."]
-def colimit_cocone : cocone F where
+def colimitCocone : cocone F where
   x := colimit
   ι := { app := cocone_morphism }
 
@@ -208,7 +216,7 @@ The only thing left to see is that it is a monoid homomorphism.
 -/
 @[to_additive
       "Given a cocone `t` of `F`, the induced additive monoid homomorphism from the colimit\nto the cocone point. As a function, this is simply given by the induced map of the corresponding\ncocone in `Type`. The only thing left to see is that it is an additive monoid homomorphism."]
-def colimit_desc (t : cocone F) : colimit ⟶ t.x where
+def colimitDesc (t : cocone F) : colimit ⟶ t.x where
   toFun := (Types.colimitCoconeIsColimit (F ⋙ forget Mon)).desc ((forget Mon).mapCocone t)
   map_one' := by
     rw [colimit_one_eq F is_filtered.nonempty.some]
@@ -225,7 +233,7 @@ def colimit_desc (t : cocone F) : colimit ⟶ t.x where
 
 /-- The proposed colimit cocone is a colimit in `Mon`. -/
 @[to_additive "The proposed colimit cocone is a colimit in `AddMon`."]
-def colimit_cocone_is_colimit : IsColimit colimit_cocone where
+def colimitCoconeIsColimit : IsColimit colimit_cocone where
   desc := colimit_desc
   fac' := fun t j =>
     MonoidHom.coe_inj ((Types.colimitCoconeIsColimit (F ⋙ forget Mon)).fac ((forget Mon).mapCocone t) j)
@@ -235,7 +243,7 @@ def colimit_cocone_is_colimit : IsColimit colimit_cocone where
         funext fun x => MonoidHom.congr_fun (h j) x
 
 @[to_additive]
-instance forget_preserves_filtered_colimits : PreservesFilteredColimits (forget Mon) where
+instance forgetPreservesFilteredColimits : PreservesFilteredColimits (forget Mon) where
   PreservesFilteredColimits := fun J _ _ =>
     { PreservesColimit := fun F =>
         preserves_colimit_of_preserves_colimit_cocone (colimit_cocone_is_colimit F)
@@ -251,6 +259,8 @@ open Mon.filtered_colimits (colimit_mul_mk_eq)
 
 section
 
+-- We use parameters here, mainly so we can have the abbreviation `M` below, without
+-- passing around `F` all the time.
 parameter {J : Type v}[SmallCategory J][IsFiltered J](F : J ⥤ CommMon.{v})
 
 /-- The colimit of `F ⋙ forget₂ CommMon Mon` in the category `Mon`.
@@ -258,11 +268,11 @@ In the following, we will show that this has the structure of a _commutative_ mo
 -/
 @[to_additive
       "The colimit of `F ⋙ forget₂ AddCommMon AddMon` in the category `AddMon`. In the\nfollowing, we will show that this has the structure of a _commutative_ additive monoid."]
-abbrev M : Mon :=
+abbrev m : Mon :=
   Mon.FilteredColimits.colimit (F ⋙ forget₂ CommMon Mon.{v})
 
 @[to_additive]
-instance colimit_comm_monoid : CommMonoidₓ M :=
+instance colimitCommMonoid : CommMonoidₓ M :=
   { M.Monoid with
     mul_comm := fun x y => by
       apply Quot.induction_on₂ x y
@@ -282,13 +292,13 @@ def colimit : CommMon :=
 
 /-- The cocone over the proposed colimit commutative monoid. -/
 @[to_additive "The cocone over the proposed colimit additive commutative monoid."]
-def colimit_cocone : cocone F where
+def colimitCocone : cocone F where
   x := colimit
   ι := { (Mon.FilteredColimits.colimitCocone (F ⋙ forget₂ CommMon Mon.{v})).ι with }
 
 /-- The proposed colimit cocone is a colimit in `CommMon`. -/
 @[to_additive "The proposed colimit cocone is a colimit in `AddCommMon`."]
-def colimit_cocone_is_colimit : IsColimit colimit_cocone where
+def colimitCoconeIsColimit : IsColimit colimit_cocone where
   desc := fun t =>
     Mon.FilteredColimits.colimitDesc (F ⋙ forget₂ CommMon Mon.{v}) ((forget₂ CommMon Mon.{v}).mapCocone t)
   fac' := fun t j =>
@@ -299,14 +309,14 @@ def colimit_cocone_is_colimit : IsColimit colimit_cocone where
         funext fun x => MonoidHom.congr_fun (h j) x
 
 @[to_additive forget₂_AddMon_preserves_filtered_colimits]
-instance forget₂_Mon_preserves_filtered_colimits : PreservesFilteredColimits (forget₂ CommMon Mon.{v}) where
+instance forget₂MonPreservesFilteredColimits : PreservesFilteredColimits (forget₂ CommMon Mon.{v}) where
   PreservesFilteredColimits := fun J _ _ =>
     { PreservesColimit := fun F =>
         preserves_colimit_of_preserves_colimit_cocone (colimit_cocone_is_colimit F)
           (Mon.FilteredColimits.colimitCoconeIsColimit (F ⋙ forget₂ CommMon Mon.{v})) }
 
 @[to_additive]
-instance forget_preserves_filtered_colimits : PreservesFilteredColimits (forget CommMon) :=
+instance forgetPreservesFilteredColimits : PreservesFilteredColimits (forget CommMon) :=
   Limits.compPreservesFilteredColimits (forget₂ CommMon Mon) (forget Mon)
 
 end

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Johannes Hölzl. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johannes Hölzl, Floris van Doorn, Gabriel Ebner, Yury Kudryashov
+-/
 import Mathbin.Data.Nat.Enat
 import Mathbin.Order.ConditionallyCompleteLattice
 
@@ -194,8 +199,8 @@ namespace Enat
 open_locale Classical
 
 noncomputable instance : CompleteLinearOrder Enat :=
-  { Enat.lattice, withTopOrderIso.symm.toGaloisInsertion.liftCompleteLattice, Enat.linearOrder with inf := ·⊓·,
-    sup := ·⊔·, top := ⊤, bot := ⊥, le := · ≤ ·, lt := · < · }
+  { Enat.lattice, withTopOrderIso.symm.toGaloisInsertion.liftCompleteLattice, Enat.linearOrder with inf := (·⊓·),
+    sup := (·⊔·), top := ⊤, bot := ⊥, le := (· ≤ ·), lt := (· < ·) }
 
 end Enat
 

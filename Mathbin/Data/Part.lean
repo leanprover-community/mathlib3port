@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2017 Mario Carneiro. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Mario Carneiro, Jeremy Avigad, Simon Hudon
+-/
 import Mathbin.Data.Equiv.Basic
 import Mathbin.Data.Set.Basic
 
@@ -60,7 +65,7 @@ namespace Part
 variable {α : Type _} {β : Type _} {γ : Type _}
 
 /-- Convert a `part α` with a decidable domain to an option -/
-def to_option (o : Part α) [Decidable o.Dom] : Option α :=
+def toOption (o : Part α) [Decidable o.Dom] : Option α :=
   if h : Dom o then some (o.get h) else none
 
 /-- `part` extensionality -/
@@ -75,7 +80,7 @@ theorem eta : ∀ o : Part α, (⟨o.Dom, fun h => o.get h⟩ : Part α) = o
   | ⟨h, f⟩ => rfl
 
 /-- `a ∈ o` means that `o` is defined and equal to `a` -/
-protected def mem (a : α) (o : Part α) : Prop :=
+protected def Mem (a : α) (o : Part α) : Prop :=
   ∃ h, o.get h = a
 
 instance : HasMem α (Part α) :=
@@ -117,12 +122,12 @@ def some (a : α) : Part α :=
 theorem mem_unique : ∀ {a b : α} {o : Part α}, a ∈ o → b ∈ o → a = b
   | _, _, ⟨p, f⟩, ⟨h₁, rfl⟩, ⟨h₂, rfl⟩ => rfl
 
-theorem mem.left_unique : Relator.LeftUnique (· ∈ · : α → Part α → Prop) := fun a o b => mem_unique
+theorem Mem.left_unique : Relator.LeftUnique ((· ∈ ·) : α → Part α → Prop) := fun a o b => mem_unique
 
 theorem get_eq_of_mem {o : Part α} {a} (h : a ∈ o) h' : get o h' = a :=
   mem_unique ⟨_, rfl⟩ h
 
-protected theorem Subsingleton (o : Part α) : Set.Subsingleton { a | a ∈ o } := fun a ha b hb => mem_unique ha hb
+protected theorem subsingleton (o : Part α) : Set.Subsingleton { a | a ∈ o } := fun a ha b hb => mem_unique ha hb
 
 @[simp]
 theorem get_some {a : α} (ha : (some a).Dom) : get (some a) ha = a :=
@@ -203,15 +208,15 @@ theorem none_to_option [Decidable (@none α).Dom] : (none : Part α).toOption = 
 theorem some_to_option (a : α) [Decidable (some a).Dom] : (some a).toOption = Option.some a :=
   dif_pos trivialₓ
 
-instance none_decidable : Decidable (@none α).Dom :=
+instance noneDecidable : Decidable (@none α).Dom :=
   Decidable.false
 
-instance some_decidable (a : α) : Decidable (some a).Dom :=
+instance someDecidable (a : α) : Decidable (some a).Dom :=
   Decidable.true
 
 /-- Retrieves the value of `a : part α` if it exists, and return the provided default value
 otherwise. -/
-def get_or_else (a : Part α) [Decidable a.Dom] (d : α) :=
+def getOrElse (a : Part α) [Decidable a.Dom] (d : α) :=
   if ha : a.Dom then a.get ha else d
 
 @[simp]
@@ -231,7 +236,7 @@ theorem mem_to_option {o : Part α} [Decidable o.Dom] {a : α} : a ∈ toOption 
   · exact mt Exists.fst h
     
 
-protected theorem dom.to_option {o : Part α} [Decidable o.Dom] (h : o.Dom) : o.toOption = o.get h :=
+protected theorem Dom.to_option {o : Part α} [Decidable o.Dom] (h : o.Dom) : o.toOption = o.get h :=
   dif_pos h
 
 theorem to_option_eq_none_iff {a : Part α} [Decidable a.Dom] : a.toOption = Option.none ↔ ¬a.Dom :=
@@ -249,7 +254,7 @@ theorem elim_to_option {α β : Type _} (a : Part α) [Decidable a.Dom] (b : β)
     
 
 /-- Converts an `option α` into a `part α`. -/
-def of_option : Option α → Part α
+def ofOption : Option α → Part α
   | Option.none => none
   | Option.some a => some a
 
@@ -288,7 +293,7 @@ theorem coe_some (a : α) : (Option.some a : Part α) = some a :=
 protected theorem induction_on {P : Part α → Prop} (a : Part α) (hnone : P none) (hsome : ∀ a : α, P (some a)) : P a :=
   (Classical.em a.Dom).elim (fun h => Part.some_get h ▸ hsome _) fun h => (eq_none_iff'.2 h).symm ▸ hnone
 
-instance of_option_decidable : ∀ o : Option α, Decidable (ofOption o).Dom
+instance ofOptionDecidable : ∀ o : Option α, Decidable (ofOption o).Dom
   | Option.none => Part.noneDecidable
   | Option.some a => Part.someDecidable a
 
@@ -301,7 +306,7 @@ theorem of_to_option (o : Part α) [Decidable o.Dom] : ofOption (toOption o) = o
   ext fun a => mem_of_option.trans mem_to_option
 
 /-- `part α` is (classically) equivalent to `option α`. -/
-noncomputable def equiv_option : Part α ≃ Option α :=
+noncomputable def equivOption : Part α ≃ Option α :=
   have := Classical.dec
   ⟨fun o => to_option o, of_option, fun o => of_to_option o, fun o =>
     Eq.trans
@@ -409,14 +414,14 @@ theorem mem_bind_iff {f : Part α} {g : α → Part β} {b} : b ∈ f.bind g ↔
     | _, ⟨⟨h₁, h₂⟩, rfl⟩ => ⟨_, ⟨_, rfl⟩, ⟨_, rfl⟩⟩,
     fun ⟨a, h₁, h₂⟩ => mem_bind h₁ h₂⟩
 
-protected theorem dom.bind {o : Part α} (h : o.Dom) (f : α → Part β) : o.bind f = f (o.get h) := by
+protected theorem Dom.bind {o : Part α} (h : o.Dom) (f : α → Part β) : o.bind f = f (o.get h) := by
   ext b
   simp only [Part.mem_bind_iff, exists_prop]
   refine' ⟨_, fun hb => ⟨o.get h, Part.get_mem _, hb⟩⟩
   rintro ⟨a, ha, hb⟩
   rwa [Part.get_eq_of_mem ha]
 
-theorem dom.of_bind {f : α → Part β} {a : Part α} (h : (a.bind f).Dom) : a.Dom :=
+theorem Dom.of_bind {f : α → Part β} {a : Part α} (h : (a.bind f).Dom) : a.Dom :=
   h.some
 
 @[simp]
@@ -544,6 +549,7 @@ theorem bind_dom {f : Part α} {g : α → Part β} : (f.bind g).Dom ↔ ∃ h :
 
 section Instances
 
+-- We define several instances for constants and operations on `part α` inherited from `α`.
 @[to_additive]
 instance [One α] : One (Part α) where
   one := pure 1

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Johannes Hölzl. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johannes Hölzl, Mario Carneiro
+-/
 import Mathbin.Data.Equiv.Encodable.Basic
 import Mathbin.Algebra.EuclideanDomain
 import Mathbin.Data.Nat.Gcd
@@ -49,7 +54,7 @@ namespace Rat
 
 /-- String representation of a rational numbers, used in `has_repr`, `has_to_string`, and
 `has_to_format` instances. -/
-protected def reprₓ : ℚ → Stringₓ
+protected def repr : ℚ → Stringₓ
   | ⟨n, d, _, _⟩ => if d = 1 then reprₓ n else reprₓ n ++ "/" ++ reprₓ d
 
 instance : HasRepr ℚ :=
@@ -67,7 +72,7 @@ instance : Encodable ℚ :=
       rfl⟩
 
 /-- Embed an integer as a rational number -/
-def of_int (n : ℤ) : ℚ :=
+def ofInt (n : ℤ) : ℚ :=
   ⟨n, 1, Nat.one_posₓ, Nat.coprime_one_rightₓ _⟩
 
 instance : Zero ℚ :=
@@ -89,7 +94,7 @@ theorem ext {p q : ℚ} (hn : p.num = q.num) (hd : p.denom = q.denom) : p = q :=
   Rat.ext_iff.mpr ⟨hn, hd⟩
 
 /-- Form the quotient `n / d` where `n:ℤ` and `d:ℕ+` (not necessarily coprime) -/
-def mk_pnat (n : ℤ) : ℕ+ → ℚ
+def mkPnat (n : ℤ) : ℕ+ → ℚ
   | ⟨d, dpos⟩ =>
     let n' := n.natAbs
     let g := n'.gcd d
@@ -110,7 +115,7 @@ def mk_pnat (n : ℤ) : ℕ+ → ℚ
 
 /-- Form the quotient `n / d` where `n:ℤ` and `d:ℕ`. In the case `d = 0`, we
   define `n / 0 = 0` by convention. -/
-def mk_nat (n : ℤ) (d : ℕ) : ℚ :=
+def mkNat (n : ℤ) (d : ℕ) : ℚ :=
   if d0 : d = 0 then 0 else mkPnat n ⟨d, Nat.pos_of_ne_zeroₓ d0⟩
 
 /-- Form the quotient `n / d` where `n d : ℤ`. -/
@@ -272,14 +277,14 @@ theorem of_int_eq_mk (z : ℤ) : ofInt z = z /. 1 :=
 /-- Define a (dependent) function or prove `∀ r : ℚ, p r` by dealing with rational
 numbers of the form `n /. d` with `0 < d` and coprime `n`, `d`. -/
 @[elab_as_eliminator]
-def num_denom_cases_on.{u} {C : ℚ → Sort u} : ∀ a : ℚ H : ∀ n d, 0 < d → (Int.natAbs n).Coprime d → C (n /. d), C a
+def numDenomCasesOn.{u} {C : ℚ → Sort u} : ∀ a : ℚ H : ∀ n d, 0 < d → (Int.natAbs n).Coprime d → C (n /. d), C a
   | ⟨n, d, h, c⟩, H => by
     rw [num_denom'] <;> exact H n d h c
 
 /-- Define a (dependent) function or prove `∀ r : ℚ, p r` by dealing with rational
 numbers of the form `n /. d` with `d ≠ 0`. -/
 @[elab_as_eliminator]
-def num_denom_cases_on'.{u} {C : ℚ → Sort u} (a : ℚ) (H : ∀ n : ℤ d : ℕ, d ≠ 0 → C (n /. d)) : C a :=
+def numDenomCasesOn'.{u} {C : ℚ → Sort u} (a : ℚ) (H : ∀ n : ℤ d : ℕ, d ≠ 0 → C (n /. d)) : C a :=
   (numDenomCasesOn a) fun n d h c => H n d h.ne'
 
 theorem num_dvd a {b : ℤ} (b0 : b ≠ 0) : (a /. b).num ∣ a := by
@@ -440,26 +445,26 @@ theorem inv_def {a b : ℤ} : (a /. b)⁻¹ = b /. a := by
 
 variable (a b c : ℚ)
 
-protected theorem add_zeroₓ : a + 0 = a :=
+protected theorem add_zero : a + 0 = a :=
   (numDenomCasesOn' a) fun n d h => by
     rw [← zero_mk d] <;> simp [h, -zero_mk]
 
-protected theorem zero_addₓ : 0 + a = a :=
+protected theorem zero_add : 0 + a = a :=
   (numDenomCasesOn' a) fun n d h => by
     rw [← zero_mk d] <;> simp [h, -zero_mk]
 
-protected theorem add_commₓ : a + b = b + a :=
+protected theorem add_comm : a + b = b + a :=
   (numDenomCasesOn' a) fun n₁ d₁ h₁ =>
     (numDenomCasesOn' b) fun n₂ d₂ h₂ => by
       simp [h₁, h₂] <;> cc
 
-protected theorem add_assocₓ : a + b + c = a + (b + c) :=
+protected theorem add_assoc : a + b + c = a + (b + c) :=
   (numDenomCasesOn' a) fun n₁ d₁ h₁ =>
     (numDenomCasesOn' b) fun n₂ d₂ h₂ =>
       (numDenomCasesOn' c) fun n₃ d₃ h₃ => by
         simp [h₁, h₂, h₃, mul_ne_zero, mul_addₓ, mul_comm, mul_left_commₓ, add_left_commₓ, add_assocₓ]
 
-protected theorem add_left_negₓ : -a + a = 0 :=
+protected theorem add_left_neg : -a + a = 0 :=
   (numDenomCasesOn' a) fun n d h => by
     simp [h]
 
@@ -484,12 +489,12 @@ theorem mk_neg_one_one : -1 /. 1 = -1 :=
     simp
     rfl
 
-protected theorem mul_oneₓ : a * 1 = a :=
+protected theorem mul_one : a * 1 = a :=
   (numDenomCasesOn' a) fun n d h => by
     rw [← mk_one_one]
     simp [h, -mk_one_one]
 
-protected theorem one_mulₓ : 1 * a = a :=
+protected theorem one_mul : 1 * a = a :=
   (numDenomCasesOn' a) fun n d h => by
     rw [← mk_one_one]
     simp [h, -mk_one_one]
@@ -505,7 +510,7 @@ protected theorem mul_assoc : a * b * c = a * (b * c) :=
       (numDenomCasesOn' c) fun n₃ d₃ h₃ => by
         simp [h₁, h₂, h₃, mul_ne_zero, mul_comm, mul_left_commₓ]
 
-protected theorem add_mulₓ : (a + b) * c = a * c + b * c :=
+protected theorem add_mul : (a + b) * c = a * c + b * c :=
   (numDenomCasesOn' a) fun n₁ d₁ h₁ =>
     (numDenomCasesOn' b) fun n₂ d₂ h₂ =>
       (numDenomCasesOn' c) fun n₃ d₃ h₃ => by
@@ -513,7 +518,7 @@ protected theorem add_mulₓ : (a + b) * c = a * c + b * c :=
           refine' (div_mk_div_cancel_left (Int.coe_nat_ne_zero.2 h₃)).symm.trans _ <;>
             simp [mul_addₓ, mul_comm, mul_assoc, mul_left_commₓ]
 
-protected theorem mul_addₓ : a * (b + c) = a * b + a * c := by
+protected theorem mul_add : a * (b + c) = a * b + a * c := by
   rw [Rat.mul_comm, Rat.add_mul, Rat.mul_comm, Rat.mul_comm c a]
 
 protected theorem zero_ne_one : 0 ≠ (1 : ℚ) := by
@@ -560,18 +565,21 @@ instance : Field ℚ where
   mul_inv_cancel := Rat.mul_inv_cancel
   inv_zero := rfl
 
+-- Extra instances to short-circuit type class resolution
 instance : DivisionRing ℚ := by
   infer_instance
 
 instance : IsDomain ℚ := by
   infer_instance
 
+-- TODO(Mario): this instance slows down data.real.basic
 instance : Nontrivial ℚ := by
   infer_instance
 
 instance : CommRingₓ ℚ := by
   infer_instance
 
+--instance : ring ℚ             := by apply_instance
 instance : CommSemiringₓ ℚ := by
   infer_instance
 
@@ -865,6 +873,8 @@ theorem coe_nat_num (n : ℕ) : (n : ℚ).num = n := by
 theorem coe_nat_denom (n : ℕ) : (n : ℚ).denom = 1 := by
   rw [← Int.cast_coe_nat, coe_int_denom]
 
+-- Will be subsumed by `int.coe_inj` after we have defined
+-- `linear_ordered_field ℚ` (which implies characteristic zero).
 theorem coe_int_inj (m n : ℤ) : (m : ℚ) = n ↔ m = n :=
   ⟨fun h => by
     simpa using congr_argₓ num h, congr_argₓ _⟩

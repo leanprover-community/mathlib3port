@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Johan Commelin. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johan Commelin, Reid Barton, Bhavik Mehta
+-/
 import Mathbin.CategoryTheory.Over
 import Mathbin.CategoryTheory.Limits.Shapes.Pullbacks
 import Mathbin.CategoryTheory.Limits.Shapes.WidePullbacks
@@ -14,6 +19,7 @@ pullbacks, then `over B` has `J`-indexed products.
 
 universe v u
 
+-- morphism levels before object levels. See note [category_theory universes].
 open CategoryTheory CategoryTheory.Limits
 
 variable {J : Type v}
@@ -31,16 +37,18 @@ Given a product diagram in `C/B`, construct the corresponding wide pullback diag
 in `C`.
 -/
 @[reducible]
-def wide_pullback_diagram_of_diagram_over (B : C) {J : Type v} (F : Discrete J ⥤ Over B) : WidePullbackShape J ⥤ C :=
+def widePullbackDiagramOfDiagramOver (B : C) {J : Type v} (F : Discrete J ⥤ Over B) : WidePullbackShape J ⥤ C :=
   WidePullbackShape.wideCospan B (fun j => (F.obj j).left) fun j => (F.obj j).Hom
 
 /-- (Impl) A preliminary definition to avoid timeouts. -/
 @[simps]
-def cones_equiv_inverse_obj (B : C) {J : Type v} (F : Discrete J ⥤ Over B) (c : Cone F) :
+def conesEquivInverseObj (B : C) {J : Type v} (F : Discrete J ⥤ Over B) (c : Cone F) :
     Cone (widePullbackDiagramOfDiagramOver B F) where
   x := c.x.left
   π :=
-    { app := fun X => Option.casesOn X c.x.Hom fun j : J => (c.π.app j).left,
+    { app := fun X =>
+        Option.casesOn X c.x.Hom fun j : J =>
+          (c.π.app j).left,-- `tidy` can do this using `case_bash`, but let's try to be a good `-T50000` citizen:
       naturality' := fun X Y f => by
         dsimp
         cases X <;> cases Y <;> cases f
@@ -53,7 +61,7 @@ def cones_equiv_inverse_obj (B : C) {J : Type v} (F : Discrete J ⥤ Over B) (c 
 
 /-- (Impl) A preliminary definition to avoid timeouts. -/
 @[simps]
-def cones_equiv_inverse (B : C) {J : Type v} (F : Discrete J ⥤ Over B) :
+def conesEquivInverse (B : C) {J : Type v} (F : Discrete J ⥤ Over B) :
     Cone F ⥤ Cone (widePullbackDiagramOfDiagramOver B F) where
   obj := conesEquivInverseObj B F
   map := fun c₁ c₂ f =>
@@ -69,7 +77,7 @@ def cones_equiv_inverse (B : C) {J : Type v} (F : Discrete J ⥤ Over B) :
 
 /-- (Impl) A preliminary definition to avoid timeouts. -/
 @[simps]
-def cones_equiv_functor (B : C) {J : Type v} (F : Discrete J ⥤ Over B) :
+def conesEquivFunctor (B : C) {J : Type v} (F : Discrete J ⥤ Over B) :
     Cone (widePullbackDiagramOfDiagramOver B F) ⥤ Cone F where
   obj := fun c =>
     { x := Over.mk (c.π.app none),
@@ -84,7 +92,7 @@ attribute [local tidy] tactic.case_bash
 
 /-- (Impl) A preliminary definition to avoid timeouts. -/
 @[simp]
-def cones_equiv_unit_iso (B : C) (F : Discrete J ⥤ Over B) :
+def conesEquivUnitIso (B : C) (F : Discrete J ⥤ Over B) :
     𝟭 (Cone (widePullbackDiagramOfDiagramOver B F)) ≅ conesEquivFunctor B F ⋙ conesEquivInverse B F :=
   NatIso.ofComponents
     (fun _ =>
@@ -96,7 +104,7 @@ def cones_equiv_unit_iso (B : C) (F : Discrete J ⥤ Over B) :
 
 /-- (Impl) A preliminary definition to avoid timeouts. -/
 @[simp]
-def cones_equiv_counit_iso (B : C) (F : Discrete J ⥤ Over B) :
+def conesEquivCounitIso (B : C) (F : Discrete J ⥤ Over B) :
     conesEquivInverse B F ⋙ conesEquivFunctor B F ≅ 𝟭 (Cone F) :=
   NatIso.ofComponents
     (fun _ =>
@@ -108,8 +116,10 @@ def cones_equiv_counit_iso (B : C) (F : Discrete J ⥤ Over B) :
 
 /-- (Impl) Establish an equivalence between the category of cones for `F` and for the "grown" `F`.
 -/
+-- TODO: Can we add `. obviously` to the second arguments of `nat_iso.of_components` and
+--       `cones.ext`?
 @[simps]
-def cones_equiv (B : C) (F : Discrete J ⥤ Over B) : Cone (widePullbackDiagramOfDiagramOver B F) ≌ Cone F where
+def conesEquiv (B : C) (F : Discrete J ⥤ Over B) : Cone (widePullbackDiagramOfDiagramOver B F) ≌ Cone F where
   Functor := conesEquivFunctor B F
   inverse := conesEquivInverse B F
   unitIso := conesEquivUnitIso B F

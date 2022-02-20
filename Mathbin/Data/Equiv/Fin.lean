@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Kenny Lau. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Kenny Lau
+-/
 import Mathbin.Data.Fin.VecNotation
 import Mathbin.Data.Equiv.Basic
 import Mathbin.Tactic.NormNum
@@ -55,16 +60,16 @@ theorem Finₓ.preimage_apply_01_prod {α : Finₓ 2 → Type u} (s : Set (α 0)
   have : (Finₓ.cons s (Finₓ.cons t Finₓ.elim0) : ∀ i, Set (α i)) 1 = t := rfl
   simp [Finₓ.forall_fin_two, this]
 
--- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»
 theorem Finₓ.preimage_apply_01_prod' {α : Type u} (s t : Set α) :
     (fun f : Finₓ 2 → α => (f 0, f 1)) ⁻¹' (s ×ˢ t) =
       Set.Pi Set.Univ
-        («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»") :=
+        («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»") :=
   Finₓ.preimage_apply_01_prod s t
 
--- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»
 /-- A product space `α × β` is equivalent to the space `Π i : fin 2, γ i`, where
 `γ = fin.cons α (fin.cons β fin_zero_elim)`. See also `pi_fin_two_equiv` and
 `fin_two_arrow_equiv`. -/
@@ -72,18 +77,18 @@ theorem Finₓ.preimage_apply_01_prod' {α : Type u} (s t : Set α) :
 def prodEquivPiFinTwo (α β : Type u) :
     α × β ≃
       ∀ i : Finₓ 2,
-        («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»") i :=
+        («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»") i :=
   (piFinTwoEquiv (Finₓ.cons α (Finₓ.cons β finZeroElim))).symm
 
--- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»
 /-- The space of functions `fin 2 → α` is equivalent to `α × α`. See also `pi_fin_two_equiv` and
 `prod_equiv_pi_fin_two`. -/
 @[simps (config := { fullyApplied := false })]
 def finTwoArrowEquiv (α : Type _) : (Finₓ 2 → α) ≃ α × α :=
   { piFinTwoEquiv fun _ => α with
     invFun := fun x =>
-      «expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»" }
+      «expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»" }
 
 /-- `Π i : fin 2, α i` is order equivalent to `α 0 × α 1`. See also `order_iso.fin_two_arrow_equiv`
 for a non-dependent version. -/

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2022 Yaël Dillies. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yaël Dillies
+-/
 import Mathbin.CategoryTheory.Category.Pointed
 
 /-!
@@ -40,7 +45,7 @@ instance : Inhabited Bipointed :=
 
 /-- Morphisms in `Bipointed`. -/
 @[ext]
-protected structure hom (X Y : Bipointed.{u}) : Type u where
+protected structure Hom (X Y : Bipointed.{u}) : Type u where
   toFun : X → Y
   map_fst : to_fun X.toProd.1 = Y.toProd.1
   map_snd : to_fun X.toProd.2 = Y.toProd.2
@@ -64,7 +69,7 @@ def comp {X Y Z : Bipointed.{u}} (f : Hom X Y) (g : Hom Y Z) : Hom X Z :=
 
 end Hom
 
-instance large_category : LargeCategory Bipointed where
+instance largeCategory : LargeCategory Bipointed where
   Hom := Hom
   id := Hom.id
   comp := @Hom.comp
@@ -72,7 +77,7 @@ instance large_category : LargeCategory Bipointed where
   comp_id' := fun _ _ _ => Hom.ext _ _ rfl
   assoc' := fun _ _ _ _ _ _ _ => Hom.ext _ _ rfl
 
-instance concrete_category : ConcreteCategory Bipointed where
+instance concreteCategory : ConcreteCategory Bipointed where
   forget := { obj := Bipointed.X, map := @Hom.toFun }
   forget_faithful := ⟨@Hom.ext⟩
 
@@ -84,7 +89,7 @@ def swap : Bipointed ⥤ Bipointed where
 
 /-- The equivalence between `Bipointed` and itself induced by `prod.swap` both ways. -/
 @[simps]
-def swap_equiv : Bipointed ≌ Bipointed :=
+def swapEquiv : Bipointed ≌ Bipointed :=
   Equivalence.mk swap swap
     ((NatIso.ofComponents fun X => { Hom := ⟨id, rfl, rfl⟩, inv := ⟨id, rfl, rfl⟩ }) fun X Y f => rfl)
     ((NatIso.ofComponents fun X => { Hom := ⟨id, rfl, rfl⟩, inv := ⟨id, rfl, rfl⟩ }) fun X Y f => rfl)

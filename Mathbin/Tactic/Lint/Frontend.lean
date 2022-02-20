@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Floris van Doorn. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Floris van Doorn, Robert Y. Lewis, Gabriel Ebner
+-/
 import Mathbin.Meta.RbMap
 import Mathbin.Tactic.Lint.Basic
 
@@ -90,7 +95,7 @@ unsafe def lint_core (all_decls non_auto_decls : List declaration) (checks : Lis
             | result.exception msg _ _ => some <| "LINTER FAILED:\n" ++ msg "(no message)" fun msg => toString <| msg ()
       let results :=
         results
-          (fun results : rb_map Name Stringₓ warning =>
+          (fun warning =>
             match warning with
             | (decl_name, some w) => results decl_name w
             | (_, none) => results)
@@ -162,7 +167,10 @@ unsafe def grouped_by_filename (e : environment) (results : rb_map Name String�
 -/
 unsafe def format_linter_results (env : environment) (results : List (Name × linter × rb_map Name Stringₓ))
     (decls non_auto_decls : List declaration) (group_by_filename : Option ℕ) (where_desc : Stringₓ) (slow : Bool)
-    (verbose : LintVerbosity) (num_linters : ℕ) (emit_workflow_commands : Bool := false) : format := do
+    (verbose : LintVerbosity) (num_linters : ℕ)
+    -- whether to include codes understood by github to create file annotations
+    (emit_workflow_commands : Bool := false) :
+    format := do
   let formatted_results :=
     results.map fun ⟨linter_name, linter, results⟩ =>
       let report_str : format := to_fmt "/- The `" ++ to_fmt linter_name ++ "` linter reports: -/\n"
@@ -250,7 +258,7 @@ unsafe def lint_all (slow : Bool := true) (verbose : LintVerbosity := LintVerbos
   let l := e.get_decls
   lint_aux l (some 0) "in all imported files (including this one)" slow verbose checks
 
--- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr *»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr *»
 /-- Parses an optional `only`, followed by a sequence of zero or more identifiers.
 Prepends `linter.` to each of these identifiers. -/
 unsafe def parse_lint_additions : parser (Bool × List Name) :=
@@ -267,7 +275,10 @@ unsafe def lint_cmd_aux (scope : Bool → LintVerbosity → List Name → Bool �
   do
   let verbosity ← parse_verbosity
   let fast_only ← optionalₓ (tk "*")
-  let verbosity ← if verbosity.isSome then return verbosity else parse_verbosity
+  let verbosity
+    ←-- allow either order of *-
+        if verbosity.isSome then return verbosity
+      else parse_verbosity
   let verbosity := verbosity.getOrElse LintVerbosity.medium
   let (use_only, extra) ← parse_lint_additions
   let (failed, s) ← scope fast_only.isNone verbosity extra use_only

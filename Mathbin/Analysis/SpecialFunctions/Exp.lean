@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Chris Hughes. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Chris Hughes, Abhimanyu Pallavi Sudhir, Jean Lo, Calle Sönne
+-/
 import Mathbin.Analysis.Complex.Basic
 import Mathbin.Data.Complex.Exponential
 
@@ -206,7 +211,7 @@ theorem tendsto_div_pow_mul_exp_add_at_top (b c : ℝ) (n : ℕ) (hb : 0 ≠ b) 
     
 
 /-- `real.exp` as an order isomorphism between `ℝ` and `(0, +∞)`. -/
-def exp_order_iso : ℝ ≃o Ioi (0 : ℝ) :=
+def expOrderIso : ℝ ≃o Ioi (0 : ℝ) :=
   StrictMono.orderIsoOfSurjective _ (exp_strict_mono.codRestrict exp_pos) <|
     (continuous_subtype_mk _ continuous_exp).Surjective
       (by

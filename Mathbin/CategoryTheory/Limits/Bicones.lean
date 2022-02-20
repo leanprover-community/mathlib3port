@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Andrew Yang. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Andrew Yang
+-/
 import Mathbin.CategoryTheory.Limits.Cones
 import Mathbin.CategoryTheory.StructuredArrow
 import Mathbin.CategoryTheory.FinCategory
@@ -28,7 +33,7 @@ section Bicone
 variable (J : Type u₁)
 
 /-- Given a category `J`, construct a walking `bicone J` by adjoining two elements. -/
-inductive bicone
+inductive Bicone
   | left : bicone
   | right : bicone
   | diagram (val : J) : bicone
@@ -37,7 +42,7 @@ inductive bicone
 instance : Inhabited (Bicone J) :=
   ⟨Bicone.left⟩
 
-instance fin_bicone [Fintype J] [DecidableEq J] : Fintype (Bicone J) where
+instance finBicone [Fintype J] [DecidableEq J] : Fintype (Bicone J) where
   elems := [Bicone.left, Bicone.right].toFinset ∪ Finset.image Bicone.diagram (Fintype.elems J)
   complete := fun j => by
     cases j <;> simp
@@ -46,7 +51,7 @@ instance fin_bicone [Fintype J] [DecidableEq J] : Fintype (Bicone J) where
 variable [Category.{v₁} J] [∀ j k : J, DecidableEq (j ⟶ k)]
 
 /-- The homs for a walking `bicone J`. -/
-inductive bicone_hom : Bicone J → Bicone J → Type max u₁ v₁
+inductive BiconeHom : Bicone J → Bicone J → Type max u₁ v₁
   | left_id : bicone_hom Bicone.left Bicone.left
   | right_id : bicone_hom Bicone.right Bicone.right
   | left (j : J) : bicone_hom Bicone.left (Bicone.diagram j)
@@ -56,11 +61,11 @@ inductive bicone_hom : Bicone J → Bicone J → Type max u₁ v₁
 instance : Inhabited (BiconeHom J Bicone.left Bicone.left) :=
   ⟨BiconeHom.left_id⟩
 
-instance bicone_hom.decidable_eq {j k : Bicone J} : DecidableEq (BiconeHom J j k) := fun f g => by
+instance BiconeHom.decidableEq {j k : Bicone J} : DecidableEq (BiconeHom J j k) := fun f g => by
   cases f <;> cases g <;> simp <;> infer_instance
 
 @[simps]
-instance bicone_category_struct : CategoryStruct (Bicone J) where
+instance biconeCategoryStruct : CategoryStruct (Bicone J) where
   Hom := BiconeHom J
   id := fun j => Bicone.casesOn j BiconeHom.left_id BiconeHom.right_id fun k => BiconeHom.diagram (𝟙 k)
   comp := fun X Y Z f g => by
@@ -74,7 +79,7 @@ instance bicone_category_struct : CategoryStruct (Bicone J) where
     cases g
     exact bicone_hom.diagram (f_f ≫ g_f)
 
-instance bicone_category : Category (Bicone J) where
+instance biconeCategory : Category (Bicone J) where
   id_comp' := fun X Y f => by
     cases f <;> simp
   comp_id' := fun X Y f => by
@@ -91,7 +96,7 @@ variable (J : Type v₁) [SmallCategory J]
 /-- Given a diagram `F : J ⥤ C` and two `cone F`s, we can join them into a diagram `bicone J ⥤ C`.
 -/
 @[simps]
-def bicone_mk [∀ j k : J, DecidableEq (j ⟶ k)] {C : Type u₁} [Category.{v₁} C] {F : J ⥤ C} (c₁ c₂ : Cone F) :
+def biconeMk [∀ j k : J, DecidableEq (j ⟶ k)] {C : Type u₁} [Category.{v₁} C] {F : J ⥤ C} (c₁ c₂ : Cone F) :
     Bicone J ⥤ C where
   obj := fun X => Bicone.casesOn X c₁.x c₂.x fun j => F.obj j
   map := fun X Y f => by
@@ -114,7 +119,7 @@ def bicone_mk [∀ j k : J, DecidableEq (j ⟶ k)] {C : Type u₁} [Category.{v�
     cases g
     exact F.map_comp _ _
 
-instance fin_bicone_hom [FinCategory J] (j k : Bicone J) : Fintype (j ⟶ k) := by
+instance finBiconeHom [FinCategory J] (j k : Bicone J) : Fintype (j ⟶ k) := by
   cases j <;> cases k
   exact
     { elems := {bicone_hom.left_id},
@@ -160,10 +165,10 @@ instance fin_bicone_hom [FinCategory J] (j k : Bicone J) : Fintype (j ⟶ k) := 
         use f_f
         simpa using Fintype.complete _ }
 
-instance bicone_small_category [∀ j k : J, DecidableEq (j ⟶ k)] : SmallCategory (Bicone J) :=
+instance biconeSmallCategory [∀ j k : J, DecidableEq (j ⟶ k)] : SmallCategory (Bicone J) :=
   CategoryTheory.biconeCategory J
 
-instance bicone_fin_category [FinCategory J] : FinCategory (Bicone J) :=
+instance biconeFinCategory [FinCategory J] : FinCategory (Bicone J) :=
   {  }
 
 end SmallCategory

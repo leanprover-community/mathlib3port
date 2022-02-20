@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Yury Kudryashov. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yury Kudryashov
+-/
 import Mathbin.CategoryTheory.Endomorphism
 
 /-!
@@ -22,7 +27,7 @@ variable {C : Type u} [Category.{v} C]
 
 /-- If `X` is isomorphic to `X₁` and `Y` is isomorphic to `Y₁`, then
 there is a natural bijection between `X ⟶ Y` and `X₁ ⟶ Y₁`. See also `equiv.arrow_congr`. -/
-def hom_congr {X Y X₁ Y₁ : C} (α : X ≅ X₁) (β : Y ≅ Y₁) : (X ⟶ Y) ≃ (X₁ ⟶ Y₁) where
+def homCongr {X Y X₁ Y₁ : C} (α : X ≅ X₁) (β : Y ≅ Y₁) : (X ⟶ Y) ≃ (X₁ ⟶ Y₁) where
   toFun := fun f => α.inv ≫ f ≫ β.Hom
   invFun := fun f => α.Hom ≫ f ≫ β.inv
   left_inv := fun f =>
@@ -92,7 +97,7 @@ theorem conj_pow (f : End X) (n : ℕ) : α.conj (f ^ n) = α.conj f ^ n :=
   α.conj.toMonoidHom.map_pow f n
 
 /-- `conj` defines a group isomorphisms between groups of automorphisms -/
-def conj_Aut : Aut X ≃* Aut Y :=
+def conjAut : Aut X ≃* Aut Y :=
   (Aut.unitsEndEquivAut X).symm.trans <| (Units.mapEquiv α.conj).trans <| Aut.unitsEndEquivAut Y
 
 theorem conj_Aut_apply (f : Aut X) : α.conjAut f = α.symm ≪≫ f ≪≫ α := by
@@ -141,6 +146,7 @@ theorem map_conj_Aut (F : C ⥤ D) {X Y : C} (α : X ≅ Y) (f : Aut X) :
     F.mapIso (α.conjAut f) = (F.mapIso α).conjAut (F.mapIso f) := by
   ext <;> simp only [map_iso_hom, iso.conj_Aut_hom, F.map_conj]
 
+-- alternative proof: by simp only [iso.conj_Aut_apply, F.map_iso_trans, F.map_iso_symm]
 end Functor
 
 end CategoryTheory

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Abhimanyu Pallavi Sudhir. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Abhimanyu Pallavi Sudhir
+-/
 import Mathbin.Order.Filter.FilterProduct
 import Mathbin.Analysis.SpecificLimits
 
@@ -99,7 +104,7 @@ theorem coe_min (x y : ℝ) : ((min x y : ℝ) : ℝ*) = min x y :=
   Germ.const_min _ _
 
 /-- Construct a hyperreal number from a sequence of real numbers. -/
-noncomputable def of_seq (f : ℕ → ℝ) : ℝ* :=
+noncomputable def ofSeq (f : ℕ → ℝ) : ℝ* :=
   (↑f : Germ (hyperfilter ℕ : Filter ℕ) ℝ)
 
 /-- A sample infinitesimal hyperreal-/
@@ -168,22 +173,22 @@ theorem epsilon_lt_pos (x : ℝ) : 0 < x → ε < x :=
   lt_of_tendsto_zero_of_pos tendsto_inverse_at_top_nhds_0_nat
 
 /-- Standard part predicate -/
-def is_st (x : ℝ*) (r : ℝ) :=
+def IsSt (x : ℝ*) (r : ℝ) :=
   ∀ δ : ℝ, 0 < δ → (r - δ : ℝ*) < x ∧ x < r + δ
 
 /-- Standard part function: like a "round" to ℝ instead of ℤ -/
 noncomputable def st : ℝ* → ℝ := fun x => if h : ∃ r, IsSt x r then Classical.some h else 0
 
 /-- A hyperreal number is infinitesimal if its standard part is 0 -/
-def infinitesimal (x : ℝ*) :=
+def Infinitesimal (x : ℝ*) :=
   IsSt x 0
 
 /-- A hyperreal number is positive infinite if it is larger than all real numbers -/
-def infinite_pos (x : ℝ*) :=
+def InfinitePos (x : ℝ*) :=
   ∀ r : ℝ, ↑r < x
 
 /-- A hyperreal number is negative infinite if it is smaller than all real numbers -/
-def infinite_neg (x : ℝ*) :=
+def InfiniteNeg (x : ℝ*) :=
   ∀ r : ℝ, x < r
 
 /-- A hyperreal number is infinite if it is infinite positive or infinite negative -/
@@ -338,6 +343,7 @@ theorem is_st_neg {x : ℝ*} {r : ℝ} (hxr : IsSt x r) : IsSt (-x) (-r) := fun 
 theorem is_st_sub {x y : ℝ*} {r s : ℝ} : IsSt x r → IsSt y s → IsSt (x - y) (r - s) := fun hxr hys => by
   rw [sub_eq_add_neg, sub_eq_add_neg] <;> exact is_st_add hxr (is_st_neg hys)
 
+-- (st x < st y) → (x < y) → (x ≤ y) → (st x ≤ st y)
 theorem lt_of_is_st_lt {x y : ℝ*} {r s : ℝ} (hxr : IsSt x r) (hys : IsSt y s) : r < s → x < y := fun hrs => by
   have hrs' : 0 < (s - r) / 2 := half_pos (sub_pos.mpr hrs)
   have hxr' := (hxr _ hrs').2
@@ -613,6 +619,7 @@ private theorem is_st_mul' {x y : ℝ*} {r s : ℝ} (hxr : IsSt x r) (hys : IsSt
                 abs_nonneg _)
           _ = (d / 2 * (abs x / t) + d / 2 : ℝ*) := by
             push_cast [-Filter.Germ.const_div]
+            -- TODO: Why wasn't `hyperreal.coe_div` used?
             have : (abs s : ℝ*) ≠ 0 := by
               simpa
             have : (2 : ℝ*) ≠ 0 := two_ne_zero
@@ -644,11 +651,13 @@ theorem is_st_mul {x y : ℝ*} {r s : ℝ} (hxr : IsSt x r) (hys : IsSt y s) : I
         
       exact is_st_mul' hxr hys hs
 
+--AN INFINITE LEMMA THAT REQUIRES SOME MORE ST MACHINERY
 theorem not_infinite_mul {x y : ℝ*} (hx : ¬Infinite x) (hy : ¬Infinite y) : ¬Infinite (x * y) :=
   have hx' := exists_st_of_not_infinite hx
   have hy' := exists_st_of_not_infinite hy
   Exists.cases_on hx' <| (Exists.cases_on hy') fun r hr s hs => not_infinite_of_exists_st <| ⟨s * r, is_st_mul hs hr⟩
 
+---
 theorem st_add {x y : ℝ*} (hx : ¬Infinite x) (hy : ¬Infinite y) : st (x + y) = st x + st y :=
   have hx' := is_st_st' hx
   have hy' := is_st_st' hy
@@ -742,7 +751,7 @@ theorem infinite_pos_iff_infinitesimal_inv_pos {x : ℝ*} : InfinitePos x ↔ In
             (by
               convert hip r⁻¹)⟩,
       inv_pos.2 <| hip 0⟩,
-    fun ⟨hi, hp⟩ r =>
+    fun r =>
     (@Classical.by_cases (r = 0) (↑r < x) fun h => Eq.substr h (inv_pos.mp hp)) fun h =>
       lt_of_le_of_ltₓ (coe_le_coe.2 (le_abs_self r))
         ((inv_lt_inv (inv_pos.mp hp) (coe_lt_coe.2 (abs_pos.2 h))).mp

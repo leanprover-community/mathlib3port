@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2015 Joe Hendrix. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Joe Hendrix, Sebastian Ullrich
+-/
 import Mathbin.Data.Vector.Basic
 import Mathbin.Data.Nat.Basic
 
@@ -61,7 +66,7 @@ def shl (x : Bitvec n) (i : ℕ) : Bitvec n :=
 /-- `fill_shr x i fill` is the bitvector obtained by right-shifting `x` `i` times and then
 padding with `fill : bool`. If `x.length < i` then this will return the constant `fill`
 bitvector. -/
-def fill_shr (x : Bitvec n) (i : ℕ) (fill : Bool) : Bitvec n :=
+def fillShr (x : Bitvec n) (i : ℕ) (fill : Bool) : Bitvec n :=
   Bitvec.cong
       (by
         by_cases' i ≤ n
@@ -93,19 +98,19 @@ section Bitwise
 variable {n : ℕ}
 
 /-- bitwise not -/
-def Not : Bitvec n → Bitvec n :=
+def not : Bitvec n → Bitvec n :=
   map bnot
 
 /-- bitwise and -/
-def And : Bitvec n → Bitvec n → Bitvec n :=
+def and : Bitvec n → Bitvec n → Bitvec n :=
   map₂ band
 
 /-- bitwise or -/
-def Or : Bitvec n → Bitvec n → Bitvec n :=
+def or : Bitvec n → Bitvec n → Bitvec n :=
   map₂ bor
 
 /-- bitwise xor -/
-def Xorₓ : Bitvec n → Bitvec n → Bitvec n :=
+def xor : Bitvec n → Bitvec n → Bitvec n :=
   map₂ bxor
 
 end Bitwise
@@ -187,19 +192,19 @@ def uborrow (x y : Bitvec n) : Bool :=
   Prod.fst (sbb x y false)
 
 /-- unsigned less-than proposition -/
-def ult (x y : Bitvec n) : Prop :=
+def Ult (x y : Bitvec n) : Prop :=
   uborrow x y
 
 /-- unsigned greater-than proposition -/
-def ugt (x y : Bitvec n) : Prop :=
+def Ugt (x y : Bitvec n) : Prop :=
   Ult y x
 
 /-- unsigned less-than-or-equal-to proposition -/
-def ule (x y : Bitvec n) : Prop :=
+def Ule (x y : Bitvec n) : Prop :=
   ¬Ult y x
 
 /-- unsigned greater-than-or-equal-to proposition -/
-def uge (x y : Bitvec n) : Prop :=
+def Uge (x y : Bitvec n) : Prop :=
   Ule y x
 
 /-- `sborrow x y` returns `tt` iff `x < y` as two's complement integers -/
@@ -212,19 +217,19 @@ def sborrow : ∀ {n : ℕ}, Bitvec n → Bitvec n → Bool
     | _ => uborrow (tail x) (tail y)
 
 /-- signed less-than proposition -/
-def slt (x y : Bitvec n) : Prop :=
+def Slt (x y : Bitvec n) : Prop :=
   sborrow x y
 
 /-- signed greater-than proposition -/
-def sgt (x y : Bitvec n) : Prop :=
+def Sgt (x y : Bitvec n) : Prop :=
   Slt y x
 
 /-- signed less-than-or-equal-to proposition -/
-def sle (x y : Bitvec n) : Prop :=
+def Sle (x y : Bitvec n) : Prop :=
   ¬Slt y x
 
 /-- signed greater-than-or-equal-to proposition -/
-def sge (x y : Bitvec n) : Prop :=
+def Sge (x y : Bitvec n) : Prop :=
   Sle y x
 
 end Comparison
@@ -237,25 +242,25 @@ section Conversion
 variable {α : Type}
 
 /-- Create a bitvector from a `nat` -/
-protected def of_nat : ∀ n : ℕ, Nat → Bitvec n
+protected def ofNat : ∀ n : ℕ, Nat → Bitvec n
   | 0, x => nil
   | succ n, x => of_nat n (x / 2)++ₜtoBool (x % 2 = 1)::ᵥnil
 
 /-- Create a bitvector in the two's complement representation from an `int` -/
-protected def of_int : ∀ n : ℕ, Int → Bitvec (succ n)
+protected def ofInt : ∀ n : ℕ, Int → Bitvec (succ n)
   | n, Int.ofNat m => ff::ᵥBitvec.ofNat n m
   | n, Int.negSucc m => tt::ᵥnot (Bitvec.ofNat n m)
 
 /-- `add_lsb r b` is `r + r + 1` if `b` is `tt` and `r + r` otherwise. -/
-def add_lsb (r : ℕ) (b : Bool) :=
+def addLsb (r : ℕ) (b : Bool) :=
   r + r + cond b 1 0
 
 /-- Given a `list` of `bool`s, return the `nat` they represent as a list of binary digits. -/
-def bits_to_nat (v : List Bool) : Nat :=
+def bitsToNat (v : List Bool) : Nat :=
   v.foldl addLsb 0
 
 /-- Return the natural number encoded by the input bitvector -/
-protected def to_nat {n : Nat} (v : Bitvec n) : Nat :=
+protected def toNat {n : Nat} (v : Bitvec n) : Nat :=
   bitsToNat (toList v)
 
 theorem bits_to_nat_to_list {n : ℕ} (x : Bitvec n) : Bitvec.toNat x = bitsToNat (Vector.toList x) :=
@@ -265,12 +270,14 @@ attribute [local simp] Nat.add_comm Nat.add_assoc Nat.add_left_comm Nat.mul_comm
 
 attribute [local simp] Nat.zero_add Nat.add_zero Nat.one_mul Nat.mul_one Nat.zero_mul Nat.mul_zero
 
+-- mul_left_comm
 theorem to_nat_append {m : ℕ} (xs : Bitvec m) (b : Bool) :
     Bitvec.toNat (xs++ₜb::ᵥnil) = Bitvec.toNat xs * 2 + Bitvec.toNat (b::ᵥnil) := by
   cases' xs with xs P
   simp [bits_to_nat_to_list]
   clear P
   unfold bits_to_nat List.foldlₓ
+  -- generalize the accumulator of foldl
   generalize h : 0 = x
   conv in add_lsb x b => rw [← h]
   clear h
@@ -301,7 +308,7 @@ theorem to_nat_of_nat {k n : ℕ} : Bitvec.toNat (Bitvec.ofNat k n) = n % 2 ^ k 
     
 
 /-- Return the integer encoded by the input bitvector -/
-protected def to_int : ∀ {n : Nat}, Bitvec n → Int
+protected def toInt : ∀ {n : Nat}, Bitvec n → Int
   | 0, _ => 0
   | succ n, v => cond (head v) (Int.negSucc <| Bitvec.toNat <| Not <| tail v) (Int.ofNat <| Bitvec.toNat <| tail v)
 
@@ -310,7 +317,7 @@ end Conversion
 /-! ### Miscellaneous instances -/
 
 
-private def reprₓ {n : Nat} : Bitvec n → Stringₓ
+private def repr {n : Nat} : Bitvec n → Stringₓ
   | ⟨bs, p⟩ => "0b" ++ (bs.map fun b : Bool => if b then '1' else '0').asString
 
 instance (n : Nat) : HasRepr (Bitvec n) :=

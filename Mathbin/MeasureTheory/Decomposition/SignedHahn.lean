@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Kexing Ying. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Kexing Ying
+-/
 import Mathbin.MeasureTheory.Measure.VectorMeasure
 import Mathbin.Order.SymmDiff
 
@@ -157,7 +162,9 @@ For each `n : ℕ`,`s (restrict_nonpos_seq s i n)` is close to maximal among all
 `i \ ⋃ k ≤ n, restrict_nonpos_seq s i k`. -/
 private def restrict_nonpos_seq (s : SignedMeasure α) (i : Set α) : ℕ → Set α
   | 0 => SomeExistsOneDivLt s (i \ ∅)
-  | n + 1 =>
+  |-- I used `i \ ∅` instead of `i` to simplify some proofs
+      n +
+      1 =>
     SomeExistsOneDivLt s
       (i \
         ⋃ k ≤ n,
@@ -361,16 +368,16 @@ theorem exists_subset_restrict_nonpos (hi : s i < 0) : ∃ j : Set α, Measurabl
 end ExistsSubsetRestrictNonpos
 
 /-- The set of measures of the set of measurable negative sets. -/
-def measure_of_negatives (s : SignedMeasure α) : Set ℝ :=
+def MeasureOfNegatives (s : SignedMeasure α) : Set ℝ :=
   s '' { B | MeasurableSet B ∧ s ≤[B] 0 }
 
 theorem zero_mem_measure_of_negatives : (0 : ℝ) ∈ s.MeasureOfNegatives :=
   ⟨∅, ⟨MeasurableSet.empty, le_restrict_empty _ _⟩, s.Empty⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:418:16: unsupported tactic `by_contra'
+-- ././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'
 theorem bdd_below_measure_of_negatives : BddBelow s.MeasureOfNegatives := by
   simp_rw [BddBelow, Set.Nonempty, mem_lower_bounds]
-  "././Mathport/Syntax/Translate/Basic.lean:418:16: unsupported tactic `by_contra'"
+  "././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'"
   have h' : ∀ n : ℕ, ∃ y : ℝ, y ∈ s.measure_of_negatives ∧ y < -n := fun n => h (-n)
   choose f hf using h'
   have hf' : ∀ n : ℕ, ∃ B, MeasurableSet B ∧ s ≤[B] 0 ∧ s B < -n := by
@@ -395,7 +402,7 @@ theorem bdd_below_measure_of_negatives : BddBelow s.MeasureOfNegatives := by
   rcases exists_nat_gt (-s A) with ⟨n, hn⟩
   exact lt_irreflₓ _ ((neg_lt.1 hn).trans_le (hfalse n))
 
--- ././Mathport/Syntax/Translate/Basic.lean:418:16: unsupported tactic `by_contra'
+-- ././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'
 /-- Alternative formulation of `measure_theory.signed_measure.exists_is_compl_positive_negative`
 (the Hahn decomposition theorem) using set complements. -/
 theorem exists_compl_positive_negative (s : SignedMeasure α) : ∃ i : Set α, MeasurableSet i ∧ 0 ≤[i] s ∧ s ≤[iᶜ] 0 := by
@@ -430,7 +437,7 @@ theorem exists_compl_positive_negative (s : SignedMeasure α) : ∃ i : Set α, 
   refine' ⟨Aᶜ, hA₁.compl, _, (compl_compl A).symm ▸ hA₂⟩
   rw [restrict_le_restrict_iff _ _ hA₁.compl]
   intro C hC hC₁
-  "././Mathport/Syntax/Translate/Basic.lean:418:16: unsupported tactic `by_contra'"
+  "././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'"
   rcases exists_subset_restrict_nonpos hC₂ with ⟨D, hD₁, hD, hD₂, hD₃⟩
   have : s (A ∪ D) < Inf s.measure_of_negatives := by
     rw [← hA₃, of_union (Set.disjoint_of_subset_right (Set.Subset.trans hD hC₁) disjoint_compl_right) hA₁ hD₁]

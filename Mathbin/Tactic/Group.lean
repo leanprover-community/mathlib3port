@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Patrick Massot
+-/
 import Mathbin.Tactic.Ring
 import Mathbin.Tactic.DocCommands
 
@@ -17,6 +22,8 @@ group_theory
 -/
 
 
+-- The next four lemmas are not general purpose lemmas, they are intended for use only by
+-- the `group` tactic.
 @[to_additive]
 theorem Tactic.Group.zpow_trick {G : Type _} [Groupₓ G] (a b : G) (n m : ℤ) : a * b ^ n * b ^ m = a * b ^ (n + m) := by
   rw [mul_assoc, ← zpow_add]
@@ -69,7 +76,7 @@ setup_tactic_parser
 
 open Tactic
 
--- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:916:4: warning: unsupported (TODO): `[tacs]
 /-- Tactic for normalizing expressions in multiplicative groups, without assuming
 commutativity, using only the group axioms without any information about which group
 is manipulated.
@@ -86,7 +93,7 @@ begin
 end
 ```
 -/
-unsafe def Groupₓ (locat : parse location) : tactic Unit := do
+unsafe def group (locat : parse location) : tactic Unit := do
   when locat sorry
   try (aux_group₁ locat)
   repeat (andthen (aux_group₂ locat) (aux_group₁ locat))

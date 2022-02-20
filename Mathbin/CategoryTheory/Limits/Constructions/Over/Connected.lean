@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Johan Commelin. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johan Commelin, Reid Barton, Bhavik Mehta
+-/
 import Mathbin.CategoryTheory.Limits.Creates
 import Mathbin.CategoryTheory.Over
 import Mathbin.CategoryTheory.IsConnected
@@ -12,6 +17,7 @@ any connected limit which `C` has.
 
 universe v u
 
+-- morphism levels before object levels. See note [category_theory universes].
 noncomputable section
 
 open CategoryTheory CategoryTheory.Limits
@@ -29,7 +35,7 @@ namespace CreatesConnected
 /-- (Impl) Given a diagram in the over category, produce a natural transformation from the
 diagram legs to the specific object.
 -/
-def nat_trans_in_over {B : C} (F : J ⥤ Over B) : F ⋙ forget B ⟶ (CategoryTheory.Functor.const J).obj B where
+def natTransInOver {B : C} (F : J ⥤ Over B) : F ⋙ forget B ⟶ (CategoryTheory.Functor.const J).obj B where
   app := fun j => (F.obj j).Hom
 
 attribute [local tidy] tactic.case_bash
@@ -38,7 +44,7 @@ attribute [local tidy] tactic.case_bash
 where the connected assumption is used.
 -/
 @[simps]
-def raise_cone [IsConnected J] {B : C} {F : J ⥤ Over B} (c : Cone (F ⋙ forget B)) : Cone F where
+def raiseCone [IsConnected J] {B : C} {F : J ⥤ Over B} (c : Cone (F ⋙ forget B)) : Cone F where
   x := Over.mk (c.π.app (Classical.arbitrary J) ≫ (F.obj (Classical.arbitrary J)).Hom)
   π := { app := fun j => Over.homMk (c.π.app j) (nat_trans_from_is_connected (c.π ≫ natTransInOver F) j _) }
 
@@ -47,7 +53,7 @@ theorem raised_cone_lowers_to_original [IsConnected J] {B : C} {F : J ⥤ Over B
   tidy
 
 /-- (Impl) Show that the raised cone is a limit. -/
-def raised_cone_is_limit [IsConnected J] {B : C} {F : J ⥤ Over B} {c : Cone (F ⋙ forget B)} (t : IsLimit c) :
+def raisedConeIsLimit [IsConnected J] {B : C} {F : J ⥤ Over B} {c : Cone (F ⋙ forget B)} (t : IsLimit c) :
     IsLimit (raiseCone c) where
   lift := fun s =>
     Over.homMk (t.lift ((forget B).mapCone s))
@@ -63,7 +69,7 @@ def raised_cone_is_limit [IsConnected J] {B : C} {F : J ⥤ Over B} {c : Cone (F
 end CreatesConnected
 
 /-- The forgetful functor from the over category creates any connected limit. -/
-instance forget_creates_connected_limits [IsConnected J] {B : C} : CreatesLimitsOfShape J (forget B) where
+instance forgetCreatesConnectedLimits [IsConnected J] {B : C} : CreatesLimitsOfShape J (forget B) where
   CreatesLimit := fun K =>
     createsLimitOfReflectsIso fun c t =>
       { liftedCone := CreatesConnected.raiseCone c,

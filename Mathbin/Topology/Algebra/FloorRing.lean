@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Anatole Dedecker. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Anatole Dedecker
+-/
 import Mathbin.Algebra.Order.Floor
 import Mathbin.Topology.Algebra.Order.Basic
 
@@ -62,7 +67,7 @@ theorem tendsto_ceil_left' [OrderClosedTopology α] (n : ℤ) : Tendsto (fun x =
 theorem tendsto_floor_right [OrderClosedTopology α] (n : ℤ) : Tendsto (fun x => floor x : α → α) (𝓝[≥] n) (𝓝[≥] n) :=
   tendsto_nhds_within_of_tendsto_nhds_of_eventually_within _ (tendsto_floor_right' _)
     (by
-      refine' eventually_nhds_within_of_forall fun x hx : (n : α) ≤ x => _
+      refine' eventually_nhds_within_of_forall fun hx : (n : α) ≤ x => _
       change _ ≤ _
       norm_cast
       convert ← floor_mono hx
@@ -72,7 +77,7 @@ theorem tendsto_floor_right [OrderClosedTopology α] (n : ℤ) : Tendsto (fun x 
 theorem tendsto_ceil_left [OrderClosedTopology α] (n : ℤ) : Tendsto (fun x => ceil x : α → α) (𝓝[≤] n) (𝓝[≤] n) :=
   tendsto_nhds_within_of_tendsto_nhds_of_eventually_within _ (tendsto_ceil_left' _)
     (by
-      refine' eventually_nhds_within_of_forall fun x hx : x ≤ (n : α) => _
+      refine' eventually_nhds_within_of_forall fun hx : x ≤ (n : α) => _
       change _ ≤ _
       norm_cast
       convert ← ceil_mono hx

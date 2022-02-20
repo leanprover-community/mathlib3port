@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Seul Baek. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Seul Baek
+-/
 import Mathbin.Data.Nat.Basic
 
 /-!
@@ -44,7 +49,7 @@ variable [Inhabited α] [Inhabited β]
 elements
 -/
 @[simp]
-def Set (a : α) : List α → ℕ → List α
+def set (a : α) : List α → ℕ → List α
   | _ :: as, 0 => a :: as
   | [], 0 => [a]
   | h :: as, k + 1 => h :: Set as k
@@ -62,7 +67,7 @@ def get : ℕ → List α → α
 /-- Pointwise equality of lists. If lists are different lengths, compare with the default
 element.
 -/
-def Equivₓ (as1 as2 : List α) : Prop :=
+def Equiv (as1 as2 : List α) : Prop :=
   ∀ m : Nat, get m as1 = get m as2
 
 /-- Pointwise operations on lists. If lists are different lengths, use the default element. -/
@@ -81,6 +86,7 @@ def add {α : Type u} [Zero α] [Add α] : List α → List α → List α :=
 def sub {α : Type u} [Zero α] [Sub α] : List α → List α → List α :=
   @pointwise α α α ⟨0⟩ ⟨0⟩ (@Sub.sub α _)
 
+-- set
 theorem length_set : ∀ {m : ℕ} {as : List α}, as {m ↦ a}.length = max as.length (m + 1)
   | 0, [] => rfl
   | 0, a :: as => by
@@ -203,6 +209,7 @@ theorem forall_val_of_forall_mem {as : List α} {p : α → Prop} : p default �
     apply h1
     
 
+-- equiv
 theorem equiv_refl : Equiv as as := fun k => rfl
 
 theorem equiv_symm : Equiv as1 as2 → Equiv as2 as1 := fun h1 k => (h1 k).symm
@@ -232,8 +239,11 @@ theorem eq_of_equiv : ∀ {as1 as2 : List α}, as1.length = as2.length → Equiv
 
 end Func
 
+-- We want to drop the `inhabited` instances for a moment,
+-- so we close and open the namespace
 namespace Func
 
+-- neg
 @[simp]
 theorem get_neg [AddGroupₓ α] {k : ℕ} {as : List α} : @get α ⟨0⟩ k (neg as) = -@get α ⟨0⟩ k as := by
   unfold neg
@@ -246,6 +256,7 @@ theorem length_neg [Neg α] (as : List α) : (neg as).length = as.length := by
 
 variable [Inhabited α] [Inhabited β]
 
+-- pointwise
 theorem nil_pointwise {f : α → β → γ} : ∀ bs : List β, pointwise f [] bs = bs.map (f default)
   | [] => rfl
   | b :: bs => by
@@ -289,6 +300,7 @@ end Func
 
 namespace Func
 
+-- add
 @[simp]
 theorem get_add {α : Type u} [AddMonoidₓ α] {k : ℕ} {xs ys : List α} :
     @get α ⟨0⟩ k (add xs ys) = @get α ⟨0⟩ k xs + @get α ⟨0⟩ k ys := by
@@ -334,6 +346,7 @@ theorem map_add_map {α : Type u} [AddMonoidₓ α] (f g : α → α) {as : List
       apply h
   apply zero_addₓ
 
+-- sub
 @[simp]
 theorem get_sub {α : Type u} [AddGroupₓ α] {k : ℕ} {xs ys : List α} :
     @get α ⟨0⟩ k (sub xs ys) = @get α ⟨0⟩ k xs - @get α ⟨0⟩ k ys := by

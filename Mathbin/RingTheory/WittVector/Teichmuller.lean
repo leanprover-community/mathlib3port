@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Johan Commelin. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johan Commelin
+-/
 import Mathbin.RingTheory.WittVector.Basic
 
 /-!
@@ -32,7 +37,8 @@ local notation "𝕎" => WittVector p
 /-- The underlying function of the monoid hom `witt_vector.teichmuller`.
 The `0`-th coefficient of `teichmuller_fun p r` is `r`, and all others are `0`.
 -/
-def teichmuller_fun (r : R) : 𝕎 R :=
+-- type as `\bbW`
+def teichmullerFun (r : R) : 𝕎 R :=
   ⟨p, fun n => if n = 0 then r else 0⟩
 
 /-!

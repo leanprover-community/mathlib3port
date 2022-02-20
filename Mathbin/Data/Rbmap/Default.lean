@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2017 Microsoft Corporation. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Leonardo de Moura
+-/
 import Mathbin.Data.Rbtree.Default
 import Mathbin.Data.Rbmap.Basic
 
@@ -7,17 +12,19 @@ namespace Rbmap
 
 variable {α : Type u} {β : Type v} {lt : α → α → Prop}
 
+-- Auxiliary instances
 private def rbmap_lt_is_swo {α : Type u} {β : Type v} {lt : α → α → Prop} [IsStrictWeakOrder α lt] :
     IsStrictWeakOrder (α × β) (RbmapLt lt) where
   irrefl := fun _ => irrefl_of lt _
   trans := fun _ _ _ h₁ h₂ => trans_of lt h₁ h₂
   incomp_trans := fun _ _ _ h₁ h₂ => incomp_trans_of lt h₁ h₂
 
-private def rbmap_lt_dec {α : Type u} {β : Type v} {lt : α → α → Prop} [h : DecidableRel lt] :
+private def rbmapLtDec {α : Type u} {β : Type v} {lt : α → α → Prop} [h : DecidableRel lt] :
     DecidableRel (@RbmapLt α β lt) := fun a b => h a.1 b.1
 
 attribute [local instance] rbmap_lt_is_swo rbmap_lt_dec
 
+-- Helper lemmas for reusing rbtree results.
 private theorem to_rbtree_mem {k : α} {m : Rbmap α β lt} : k ∈ m → ∃ v : β, Rbtree.Mem (k, v) m := by
   cases' m with n p <;> cases n <;> intro h
   · exact False.elim h
@@ -67,6 +74,7 @@ theorem eq_some_of_to_value_eq_some {e : Option (α × β)} {v : β} : toValue e
 theorem eq_none_of_to_value_eq_none {e : Option (α × β)} : toValue e = none → e = none := by
   cases e <;> simp [to_value, false_implies_iff]
 
+-- Lemmas
 theorem not_mem_mk_rbmap : ∀ k : α, k ∉ mkRbmap α β lt := by
   simp [HasMem.Mem, mkRbmap, mkRbtree, Rbmap.Mem]
 

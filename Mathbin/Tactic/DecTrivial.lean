@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Johan Commelin. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johan Commelin
+-/
 import Mathbin.Tactic.Interactive
 
 /-!
@@ -16,7 +21,7 @@ open Tactic.Interactive
 
 setup_tactic_parser
 
--- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr ?»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr ?»
 /-- `dec_trivial` tries to use decidability to prove a goal
 (i.e., using `exact dec_trivial`).
 The variant `dec_trivial!` will revert all hypotheses on which the target depends,

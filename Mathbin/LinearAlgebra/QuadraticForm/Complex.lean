@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Anne Baanen. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Anne Baanen, Kexing Ying, Eric Wieser
+-/
 import Mathbin.LinearAlgebra.QuadraticForm.Basic
 import Mathbin.Analysis.SpecialFunctions.Pow
 
@@ -20,7 +25,7 @@ variable {ι : Type _} [Fintype ι]
 
 /-- The isometry between a weighted sum of squares on the complex numbers and the
 sum of squares, i.e. `weighted_sum_squares` with weights 1 or 0. -/
-noncomputable def isometry_sum_squares [DecidableEq ι] (w' : ι → ℂ) :
+noncomputable def isometrySumSquares [DecidableEq ι] (w' : ι → ℂ) :
     Isometry (weightedSumSquares ℂ w') (weightedSumSquares ℂ (fun i => if w' i = 0 then 0 else 1 : ι → ℂ)) := by
   let w := fun i => if h : w' i = 0 then (1 : Units ℂ) else Units.mk0 (w' i) h
   have hw' : ∀ i : ι, (w i : ℂ) ^ -(1 / 2 : ℂ) ≠ 0 := by
@@ -61,7 +66,7 @@ noncomputable def isometry_sum_squares [DecidableEq ι] (w' : ι → ℂ) :
 
 /-- The isometry between a weighted sum of squares on the complex numbers and the
 sum of squares, i.e. `weighted_sum_squares` with weight `λ i : ι, 1`. -/
-noncomputable def isometry_sum_squares_units [DecidableEq ι] (w : ι → Units ℂ) :
+noncomputable def isometrySumSquaresUnits [DecidableEq ι] (w : ι → Units ℂ) :
     Isometry (weightedSumSquares ℂ w) (weightedSumSquares ℂ (1 : ι → ℂ)) := by
   have hw1 : (fun i => if (w i : ℂ) = 0 then 0 else 1 : ι → ℂ) = 1 := by
     ext i : 1

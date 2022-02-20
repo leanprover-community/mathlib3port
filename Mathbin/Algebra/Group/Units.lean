@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2017 Kenny Lau. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Kenny Lau, Mario Carneiro, Johannes Hölzl, Chris Hughes, Jens Wagemaker
+-/
 import Mathbin.Algebra.Group.Basic
 import Mathbin.Logic.Nontrivial
 
@@ -43,6 +48,7 @@ postfix:1025 "ˣ" => Units
 An element of an `add_monoid` is a unit if it has a two-sided additive inverse.
 This version bundles the inverse element so that it can be computed.
 For a predicate see `is_add_unit`. -/
+-- We don't provide notation for the additive version, because its use is somewhat rare.
 structure AddUnits (α : Type u) [AddMonoidₓ α] where
   val : α
   neg : α
@@ -73,12 +79,12 @@ instance : Inv (α)ˣ :=
 
 /-- See Note [custom simps projection] -/
 @[to_additive " See Note [custom simps projection] "]
-def simps.coe (u : (α)ˣ) : α :=
+def Simps.coe (u : (α)ˣ) : α :=
   u
 
 /-- See Note [custom simps projection] -/
 @[to_additive " See Note [custom simps projection] "]
-def simps.coe_inv (u : (α)ˣ) : α :=
+def Simps.coeInv (u : (α)ˣ) : α :=
   ↑u⁻¹
 
 initialize_simps_projections Units (val → coe as_prefix, inv → coeInv as_prefix)
@@ -179,11 +185,11 @@ theorem mul_inv_cancel_left (a : (α)ˣ) (b : α) : (a : α) * (↑a⁻¹ * b) =
   rw [← mul_assoc, mul_inv, one_mulₓ]
 
 @[simp, to_additive]
-theorem inv_mul_cancel_leftₓ (a : (α)ˣ) (b : α) : (↑a⁻¹ : α) * (a * b) = b := by
+theorem inv_mul_cancel_left (a : (α)ˣ) (b : α) : (↑a⁻¹ : α) * (a * b) = b := by
   rw [← mul_assoc, inv_mul, one_mulₓ]
 
 @[simp, to_additive]
-theorem mul_inv_cancel_rightₓ (a : α) (b : (α)ˣ) : a * b * ↑b⁻¹ = a := by
+theorem mul_inv_cancel_right (a : α) (b : (α)ˣ) : a * b * ↑b⁻¹ = a := by
   rw [mul_assoc, mul_inv, mul_oneₓ]
 
 @[simp, to_additive]
@@ -203,12 +209,12 @@ instance [HasRepr α] : HasRepr (α)ˣ :=
   ⟨reprₓ ∘ val⟩
 
 @[simp, to_additive]
-theorem mul_right_injₓ (a : (α)ˣ) {b c : α} : (a : α) * b = a * c ↔ b = c :=
+theorem mul_right_inj (a : (α)ˣ) {b c : α} : (a : α) * b = a * c ↔ b = c :=
   ⟨fun h => by
     simpa only [inv_mul_cancel_leftₓ] using congr_argₓ ((· * ·) ↑(a⁻¹ : (α)ˣ)) h, congr_argₓ _⟩
 
 @[simp, to_additive]
-theorem mul_left_injₓ (a : (α)ˣ) {b c : α} : b * a = c * a ↔ b = c :=
+theorem mul_left_inj (a : (α)ˣ) {b c : α} : b * a = c * a ↔ b = c :=
   ⟨fun h => by
     simpa only [mul_inv_cancel_rightₓ] using congr_argₓ (· * ↑(a⁻¹ : (α)ˣ)) h, congr_argₓ _⟩
 
@@ -236,7 +242,7 @@ theorem mul_inv_eq_iff_eq_mul {a c : α} : a * ↑b⁻¹ = c ↔ a = c * b :=
     rw [← h, inv_mul_cancel_right], fun h => by
     rw [h, mul_inv_cancel_rightₓ]⟩
 
-theorem inv_eq_of_mul_eq_oneₓ {u : (α)ˣ} {a : α} (h : ↑u * a = 1) : ↑u⁻¹ = a :=
+theorem inv_eq_of_mul_eq_one {u : (α)ˣ} {a : α} (h : ↑u * a = 1) : ↑u⁻¹ = a :=
   calc
     ↑u⁻¹ = ↑u⁻¹ * 1 := by
       rw [mul_oneₓ]

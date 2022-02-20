@@ -432,6 +432,7 @@ import Mathbin.Analysis.NormedSpace.Pointwise
 import Mathbin.Analysis.NormedSpace.RieszLemma
 import Mathbin.Analysis.NormedSpace.Spectrum
 import Mathbin.Analysis.NormedSpace.Star.Basic
+import Mathbin.Analysis.NormedSpace.Star.Complex
 import Mathbin.Analysis.NormedSpace.Units
 import Mathbin.Analysis.NormedSpace.WeakDual
 import Mathbin.Analysis.PSeries
@@ -602,6 +603,7 @@ import Mathbin.CategoryTheory.Limits.Preserves.Shapes.Equalizers
 import Mathbin.CategoryTheory.Limits.Preserves.Shapes.Products
 import Mathbin.CategoryTheory.Limits.Preserves.Shapes.Pullbacks
 import Mathbin.CategoryTheory.Limits.Preserves.Shapes.Terminal
+import Mathbin.CategoryTheory.Limits.Preserves.Shapes.Zero
 import Mathbin.CategoryTheory.Limits.Presheaf
 import Mathbin.CategoryTheory.Limits.Punit
 import Mathbin.CategoryTheory.Limits.Shapes.BinaryProducts
@@ -1297,6 +1299,7 @@ import Mathbin.Geometry.Manifold.TimesContMdiffMap
 import Mathbin.Geometry.Manifold.WhitneyEmbedding
 import Mathbin.GroupTheory.Abelianization
 import Mathbin.GroupTheory.Archimedean
+import Mathbin.GroupTheory.Commensurable
 import Mathbin.GroupTheory.CommutingProbability
 import Mathbin.GroupTheory.Complement
 import Mathbin.GroupTheory.Congruence
@@ -1618,6 +1621,7 @@ import Mathbin.Order.BoundedOrder
 import Mathbin.Order.Bounds
 import Mathbin.Order.Category.BoundedOrder
 import Mathbin.Order.Category.DistribLattice
+import Mathbin.Order.Category.FinPartialOrder
 import Mathbin.Order.Category.Lattice
 import Mathbin.Order.Category.LinearOrder
 import Mathbin.Order.Category.NonemptyFinLinOrd
@@ -1971,6 +1975,7 @@ import Mathbin.Tactic.SplitIfs
 import Mathbin.Tactic.Squeeze
 import Mathbin.Tactic.SubtypeInstance
 import Mathbin.Tactic.Suggest
+import Mathbin.Tactic.SwapVar
 import Mathbin.Tactic.Tauto
 import Mathbin.Tactic.Tfae
 import Mathbin.Tactic.Tidy
@@ -1993,6 +1998,7 @@ import Mathbin.Topology.Alexandroff
 import Mathbin.Topology.Algebra.Affine
 import Mathbin.Topology.Algebra.Algebra
 import Mathbin.Topology.Algebra.ConstMulAction
+import Mathbin.Topology.Algebra.Constructions
 import Mathbin.Topology.Algebra.ContinuousAffineMap
 import Mathbin.Topology.Algebra.ContinuousMonoidHom
 import Mathbin.Topology.Algebra.Field
@@ -2076,6 +2082,7 @@ import Mathbin.Topology.Homotopy.Equiv
 import Mathbin.Topology.Homotopy.FundamentalGroupoid
 import Mathbin.Topology.Homotopy.Path
 import Mathbin.Topology.Homotopy.Product
+import Mathbin.Topology.Instances.Discrete
 import Mathbin.Topology.Instances.Ennreal
 import Mathbin.Topology.Instances.Ereal
 import Mathbin.Topology.Instances.Irrational

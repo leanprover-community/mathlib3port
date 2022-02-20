@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Calle Sönne. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Calle Sönne
+-/
 import Mathbin.Analysis.SpecialFunctions.Trigonometric.Basic
 
 /-!
@@ -15,12 +20,12 @@ noncomputable section
 namespace Real
 
 /-- The type of angles -/
-def angle : Type :=
+def Angle : Type :=
   ℝ ⧸ AddSubgroup.zmultiples (2 * π)
 
 namespace Angle
 
-instance angle.add_comm_group : AddCommGroupₓ Angle :=
+instance Angle.addCommGroup : AddCommGroupₓ Angle :=
   QuotientAddGroup.addCommGroup _
 
 instance : Inhabited Angle :=
@@ -30,7 +35,7 @@ instance : Coe ℝ Angle :=
   ⟨QuotientAddGroup.mk' _⟩
 
 /-- Coercion `ℝ → angle` as an additive homomorphism. -/
-def coe_hom : ℝ →+ angle :=
+def coeHom : ℝ →+ angle :=
   QuotientAddGroup.mk' _
 
 @[simp]

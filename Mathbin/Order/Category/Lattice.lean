@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2022 Yaël Dillies. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yaël Dillies
+-/
 import Mathbin.Order.Category.PartialOrder
 import Mathbin.Order.Hom.Lattice
 
@@ -51,13 +56,13 @@ instance : LargeCategory.{u} Latticeₓ :=
 instance : ConcreteCategory Latticeₓ :=
   BundledHom.concreteCategory LatticeHom
 
-instance has_forget_to_PartialOrder : HasForget₂ Latticeₓ PartialOrderₓₓ where
+instance hasForgetToPartialOrder : HasForget₂ Latticeₓ PartialOrderₓₓ where
   forget₂ := { obj := fun X => ⟨X⟩, map := fun X Y f => f }
   forget_comp := rfl
 
 /-- Constructs an isomorphism of lattices from an order isomorphism between them. -/
 @[simps]
-def iso.mk {α β : Latticeₓ.{u}} (e : α ≃o β) : α ≅ β where
+def Iso.mk {α β : Latticeₓ.{u}} (e : α ≃o β) : α ≅ β where
   Hom := e
   inv := e.symm
   hom_inv_id' := by
@@ -75,7 +80,7 @@ def dual : Latticeₓ ⥤ Latticeₓ where
 
 /-- The equivalence between `Lattice` and itself induced by `order_dual` both ways. -/
 @[simps Functor inverse]
-def dual_equiv : Latticeₓ ≌ Latticeₓ :=
+def dualEquiv : Latticeₓ ≌ Latticeₓ :=
   Equivalence.mk dual dual ((NatIso.ofComponents fun X => iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
     ((NatIso.ofComponents fun X => iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
 

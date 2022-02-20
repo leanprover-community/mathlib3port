@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Eric Wieser. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Eric Wieser, Kevin Buzzard, Jujian Zhang
+-/
 import Mathbin.Algebra.Algebra.Operations
 import Mathbin.Algebra.Algebra.Subalgebra
 import Mathbin.Algebra.DirectSum.Algebra
@@ -56,7 +61,7 @@ instance gsemiring [AddMonoidₓ ι] [Semiringₓ R] (A : ι → AddSubmonoid R)
     add_mul := fun i j _ _ _ => Subtype.ext (add_mulₓ _ _ _) }
 
 /-- Build a `gcomm_semiring` instance for a collection of `add_submonoid`s. -/
-instance gcomm_semiring [AddCommMonoidₓ ι] [CommSemiringₓ R] (A : ι → AddSubmonoid R) [SetLike.GradedMonoid A] :
+instance gcommSemiring [AddCommMonoidₓ ι] [CommSemiringₓ R] (A : ι → AddSubmonoid R) [SetLike.GradedMonoid A] :
     DirectSum.GcommSemiring fun i => A i :=
   { SetLike.gcommMonoid A, AddSubmonoid.gsemiring A with }
 
@@ -94,7 +99,7 @@ instance gsemiring [AddMonoidₓ ι] [Ringₓ R] (A : ι → AddSubgroup R) [h :
   AddSubmonoid.gsemiring fun i => (A i).toAddSubmonoid
 
 /-- Build a `gcomm_semiring` instance for a collection of `add_subgroup`s. -/
-instance gcomm_semiring [AddCommGroupₓ ι] [CommRingₓ R] (A : ι → AddSubgroup R) [h : SetLike.GradedMonoid A] :
+instance gcommSemiring [AddCommGroupₓ ι] [CommRingₓ R] (A : ι → AddSubgroup R) [h : SetLike.GradedMonoid A] :
     DirectSum.Gsemiring fun i => A i :=
   have i' : SetLike.GradedMonoid fun i => (A i).toAddSubmonoid := { h with }
   AddSubmonoid.gsemiring fun i => (A i).toAddSubmonoid
@@ -131,7 +136,7 @@ instance gsemiring [AddMonoidₓ ι] [CommSemiringₓ S] [Semiringₓ R] [Algebr
   AddSubmonoid.gsemiring fun i => (A i).toAddSubmonoid
 
 /-- Build a `gsemiring` instance for a collection of `submodule`s. -/
-instance gcomm_semiring [AddCommMonoidₓ ι] [CommSemiringₓ S] [CommSemiringₓ R] [Algebra S R] (A : ι → Submodule S R)
+instance gcommSemiring [AddCommMonoidₓ ι] [CommSemiringₓ S] [CommSemiringₓ R] [Algebra S R] (A : ι → Submodule S R)
     [h : SetLike.GradedMonoid A] : DirectSum.GcommSemiring fun i => A i :=
   have i' : SetLike.GradedMonoid fun i => (A i).toAddSubmonoid := { h with }
   AddSubmonoid.gcommSemiring fun i => (A i).toAddSubmonoid
@@ -148,8 +153,8 @@ instance galgebra [AddMonoidₓ ι] [CommSemiringₓ S] [Semiringₓ R] [Algebra
   smul_def := fun r ⟨i, xi⟩ => Sigma.subtype_ext (zero_addₓ i).symm <| Algebra.smul_def _ _
 
 @[simp]
-theorem set_like.coe_galgebra_to_fun [AddMonoidₓ ι] [CommSemiringₓ S] [Semiringₓ R] [Algebra S R]
-    (A : ι → Submodule S R) [h : SetLike.GradedMonoid A] (s : S) :
+theorem setLike.coe_galgebra_to_fun [AddMonoidₓ ι] [CommSemiringₓ S] [Semiringₓ R] [Algebra S R] (A : ι → Submodule S R)
+    [h : SetLike.GradedMonoid A] (s : S) :
     ↑(@DirectSum.Galgebra.toFun _ S (fun i => A i) _ _ _ _ _ _ _ s) = (algebraMap S R s : R) :=
   rfl
 

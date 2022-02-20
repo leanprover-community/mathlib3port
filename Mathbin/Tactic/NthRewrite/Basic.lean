@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Keeley Hoek. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johan Commelin, Keeley Hoek, Scott Morrison
+-/
 import Mathbin.Meta.ExprLens
 
 namespace Tactic
@@ -10,6 +15,7 @@ namespace NthRewrite
 unsafe structure cfg extends RewriteCfg where
   try_simp : Bool := false
   discharger : tactic Unit := skip
+  -- Warning: rewrite_search can't produce tactic scripts when the simplifier is used.
   simplifier : expr → tactic (expr × expr) := fun e => failed
 
 /-- A data structure to track rewrites of subexpressions.
@@ -18,6 +24,8 @@ while `proof` contains a proof that `exp` is equivalent to the expression that w
 unsafe structure tracked_rewrite where
   exp : expr
   proof : tactic expr
+  -- If `addr` is not provided by the underlying implementation of `nth_rewrite` (i.e. kabstract)
+  -- `rewrite_search` will not be able to produce tactic scripts.
   addr : Option (List ExprLens.Dir)
 
 namespace TrackedRewrite

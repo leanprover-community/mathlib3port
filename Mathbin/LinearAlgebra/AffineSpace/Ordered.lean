@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Yury G. Kudryashov. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yury G. Kudryashov
+-/
 import Mathbin.Algebra.Order.Invertible
 import Mathbin.Algebra.Order.Module
 import Mathbin.LinearAlgebra.AffineSpace.Midpoint

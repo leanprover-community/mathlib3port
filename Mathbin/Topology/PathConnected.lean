@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Patrick Massot. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Patrick Massot
+-/
 import Mathbin.Topology.Algebra.Order.ProjIcc
 import Mathbin.Topology.ContinuousFunction.Basic
 import Mathbin.Topology.UnitInterval
@@ -87,7 +92,7 @@ theorem coe_mk (f : I → X) h₁ h₂ h₃ : ⇑(mk ⟨f, h₁⟩ h₂ h₃ : P
 variable (γ : Path x y)
 
 @[continuity]
-protected theorem Continuous : Continuous γ :=
+protected theorem continuous : Continuous γ :=
   γ.continuous_to_fun
 
 @[simp]
@@ -100,7 +105,7 @@ protected theorem target : γ 1 = y :=
 
 /-- See Note [custom simps projection]. We need to specify this projection explicitly in this case,
 because it is a composition of multiple projections. -/
-def simps.apply : I → X :=
+def Simps.apply : I → X :=
   γ
 
 initialize_simps_projections Path (to_continuous_map_to_fun → simps.apply, -toContinuousMap)
@@ -110,7 +115,7 @@ theorem coe_to_continuous_map : ⇑γ.toContinuousMap = γ :=
   rfl
 
 /-- Any function `φ : Π (a : α), path (x a) (y a)` can be seen as a function `α × I → X`. -/
-instance has_uncurry_path {X α : Type _} [TopologicalSpace X] {x y : α → X} :
+instance hasUncurryPath {X α : Type _} [TopologicalSpace X] {x y : α → X} :
     HasUncurry (∀ a : α, Path (x a) (y a)) (α × I) X :=
   ⟨fun φ p => φ p.1 p.2⟩
 
@@ -213,7 +218,7 @@ theorem refl_extend {X : Type _} [TopologicalSpace X] {a : X} : (Path.refl a).ex
   rfl
 
 /-- The path obtained from a map defined on `ℝ` by restriction to the unit interval. -/
-def of_line {f : ℝ → X} (hf : ContinuousOn f I) (h₀ : f 0 = x) (h₁ : f 1 = y) : Path x y where
+def ofLine {f : ℝ → X} (hf : ContinuousOn f I) (h₀ : f 0 = x) (h₁ : f 1 = y) : Path x y where
   toFun := f ∘ coe
   continuous_to_fun := hf.comp_continuous continuous_subtype_coe Subtype.prop
   source' := h₀
@@ -235,6 +240,7 @@ def trans (γ : Path x y) (γ' : Path y z) : Path x z where
             (by
               norm_num)).comp
         continuous_subtype_coe
+    -- TODO: the following are provable by `continuity` but it is too slow
     exacts[γ.continuous_extend.comp (continuous_const.mul continuous_id),
       γ'.continuous_extend.comp ((continuous_const.mul continuous_id).sub continuous_const)]
   source' := by
@@ -424,7 +430,7 @@ theorem trans_continuous_family {X ι : Type _} [TopologicalSpace X] [Topologica
     Continuous (↿fun t => (γ₁ t).trans (γ₂ t)) := by
   have h₁' := Path.continuous_uncurry_extend_of_continuous_family γ₁ h₁
   have h₂' := Path.continuous_uncurry_extend_of_continuous_family γ₂ h₂
-  simp only [has_uncurry.uncurry, CoeFun.coe, coeFn, Path.trans, · ∘ ·]
+  simp only [has_uncurry.uncurry, CoeFun.coe, coeFn, Path.trans, (· ∘ ·)]
   refine' Continuous.if_le _ _ (continuous_subtype_coe.comp continuous_snd) continuous_const _
   · change Continuous ((fun p : ι × ℝ => (γ₁ p.1).extend p.2) ∘ Prod.map id (fun x => 2 * x : I → ℝ))
     exact h₁'.comp (continuous_id.prod_map <| continuous_const.mul continuous_subtype_coe)
@@ -445,7 +451,7 @@ variable {a₁ a₂ a₃ : X} {b₁ b₂ b₃ : Y}
 
 /-- Given a path in `X` and a path in `Y`, we can take their pointwise product to get a path in
 `X × Y`. -/
-protected def Prod (γ₁ : Path a₁ a₂) (γ₂ : Path b₁ b₂) : Path (a₁, b₁) (a₂, b₂) where
+protected def prod (γ₁ : Path a₁ a₂) (γ₂ : Path b₁ b₂) : Path (a₁, b₁) (a₂, b₂) where
   toContinuousMap := ContinuousMap.prodMk γ₁.toContinuousMap γ₂.toContinuousMap
   source' := by
     simp
@@ -550,7 +556,7 @@ def truncate {X : Type _} [TopologicalSpace X] {a b : X} (γ : Path a b) (t₀ t
 
 /-- `γ.truncate_of_le t₀ t₁ h`, where `h : t₀ ≤ t₁` is `γ.truncate t₀ t₁`
   casted as a path from `γ.extend t₀` to `γ.extend t₁`. -/
-def truncate_of_le {X : Type _} [TopologicalSpace X] {a b : X} (γ : Path a b) {t₀ t₁ : ℝ} (h : t₀ ≤ t₁) :
+def truncateOfLe {X : Type _} [TopologicalSpace X] {a b : X} (γ : Path a b) {t₀ t₁ : ℝ} (h : t₀ ≤ t₁) :
     Path (γ.extend t₀) (γ.extend t₁) :=
   (γ.truncate t₀ t₁).cast
     (by
@@ -573,6 +579,12 @@ theorem truncate_continuous_family {X : Type _} [TopologicalSpace X] {a b : X} (
     (((continuous_subtype_coe.comp (continuous_snd.comp continuous_snd)).max continuous_fst).min
       (continuous_fst.comp continuous_snd))
 
+/- TODO : When `continuity` gets quicker, change the proof back to :
+    `begin`
+      `simp only [has_coe_to_fun.coe, coe_fn, path.truncate],`
+      `continuity,`
+      `exact continuous_subtype_coe`
+    `end` -/
 @[continuity]
 theorem truncate_const_continuous_family {X : Type _} [TopologicalSpace X] {a b : X} (γ : Path a b) (t : ℝ) :
     Continuous (↿γ.truncate t) := by
@@ -856,13 +868,13 @@ theorem is_path_connected_iff_eq : IsPathConnected F ↔ ∃ x ∈ F, PathCompon
     rwa [← h] at y_in
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (x y «expr ∈ » F)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (x y «expr ∈ » F)
 theorem IsPathConnected.joined_in (h : IsPathConnected F) : ∀ x y _ : x ∈ F _ : y ∈ F, JoinedIn F x y :=
   fun x x_in x y_in =>
   let ⟨b, b_in, hb⟩ := h
   (hb x_in).symm.trans (hb y_in)
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (x y «expr ∈ » F)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (x y «expr ∈ » F)
 theorem is_path_connected_iff : IsPathConnected F ↔ F.Nonempty ∧ ∀ x y _ : x ∈ F _ : y ∈ F, JoinedIn F x y :=
   ⟨fun h =>
     ⟨let ⟨b, b_in, hb⟩ := h
@@ -1014,7 +1026,7 @@ namespace PathConnectedSpace
 variable [PathConnectedSpace X]
 
 /-- Use path-connectedness to build a path between two points. -/
-def some_path (x y : X) : Path x y :=
+def somePath (x y : X) : Path x y :=
   Nonempty.some (joined x y)
 
 end PathConnectedSpace
@@ -1052,6 +1064,7 @@ theorem path_connected_space_iff_univ : PathConnectedSpace X ↔ IsPathConnected
 theorem path_connected_space_iff_eq : PathConnectedSpace X ↔ ∃ x : X, PathComponent x = univ := by
   simp [path_connected_space_iff_univ, is_path_connected_iff_eq]
 
+-- see Note [lower instance priority]
 instance (priority := 100) PathConnectedSpace.connected_space [PathConnectedSpace X] : ConnectedSpace X := by
   rw [connected_space_iff_connected_component]
   rcases is_path_connected_iff_eq.mp (path_connected_space_iff_univ.mp ‹_›) with ⟨x, x_in, hx⟩

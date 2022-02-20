@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2017 Microsoft Corporation. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Leonardo de Moura
+-/
 import Mathbin.Data.Rbtree.Basic
 
 universe u
@@ -50,6 +55,7 @@ theorem find_correct {t : Rbnode α} {lt x} [DecidableRel lt] [IsStrictWeakOrder
   · simp
     
   iterate 2 
+    -- red and black cases are identical
     · cases hs
       apply Iff.intro
       · intro hm

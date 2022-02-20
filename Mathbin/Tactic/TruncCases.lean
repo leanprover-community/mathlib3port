@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison
+-/
 import Mathbin.Tactic.Chain
 import Mathbin.Data.Quot
 
@@ -5,15 +10,28 @@ namespace Tactic
 
 /-- Auxiliary tactic for `trunc_cases`. -/
 private unsafe def trunc_cases_subsingleton (e : expr) (ids : List Name) : tactic expr := do
-  let [(_, [e], _)] ← tactic.induction e ids `trunc.rec_on_subsingleton
+  let-- When the target is a subsingleton,
+    -- we can just use induction along `trunc.rec_on_subsingleton`,
+    -- generating just a single goal.
+    [(_, [e], _)]
+    ← tactic.induction e ids `trunc.rec_on_subsingleton
   return e
 
 /-- Auxiliary tactic for `trunc_cases`. -/
 private unsafe def trunc_cases_nondependent (e : expr) (ids : List Name) : tactic expr := do
-  to_expr (pquote.1 (Trunc.liftOn (%%ₓe))) >>= tactic.fapply
-  tactic.clear e
+  -- We may as well just use `trunc.lift_on`.
+        -- (It would be nice if we could use the `induction` tactic with non-dependent recursors, too?)
+        -- (In fact, the general strategy works just as well here,
+        -- except that it leaves a beta redex in the invariance goal.)
+        to_expr
+        (pquote.1 (Trunc.liftOn (%%ₓe))) >>=
+      tactic.fapply
+  -- Replace the hypothesis `e` with the unboxed version.
+      tactic.clear
+      e
   let e ← tactic.intro e.local_pp_name
-  tactic.swap
+  -- In the invariance goal, introduce the two arguments using the specified identifiers
+    tactic.swap
   match ids 1 with
     | some n => tactic.intro n
     | none => tactic.intro1
@@ -23,11 +41,17 @@ private unsafe def trunc_cases_nondependent (e : expr) (ids : List Name) : tacti
   tactic.swap
   return e
 
--- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:916:4: warning: unsupported (TODO): `[tacs]
 /-- Auxiliary tactic for `trunc_cases`. -/
 private unsafe def trunc_cases_dependent (e : expr) (ids : List Name) : tactic expr := do
-  let [(_, [e], _), (_, [e_a, e_b, e_p], _)] ← tactic.induction e ids
-  swap
+  let-- If all else fails, just use the general induction principle.
+    [(_, [e], _), (_, [e_a, e_b, e_p], _)]
+    ← tactic.induction e ids
+  -- However even now we can do something useful:
+    -- the invariance goal has a useless `e_p : true` hypothesis,
+    -- and after casing on that we may be able to simplify away
+    -- the `eq.rec`.
+    swap
   tactic.cases e_p >> sorry
   swap
   return e
@@ -57,19 +81,26 @@ Finally, if the new hypothesis from inside the `trunc` is a type class,
 -/
 unsafe def trunc_cases (e : parse texpr) (ids : parse with_ident_list) : tactic Unit := do
   let e ← to_expr e
-  let ids := if ids = [] ∧ e.is_local_constant then [e.local_pp_name] else ids
-  let e ←
-    if e.is_local_constant then return e
+  let-- If `ids = []` and `e` is a local constant, we'll want to give
+  -- the new unboxed hypothesis the same name.
+  ids := if ids = [] ∧ e.is_local_constant then [e.local_pp_name] else ids
+  let e
+    ←-- Make a note of the expr `e`, or reuse `e` if it is already a local constant.
+        if e.is_local_constant then return e
       else do
         let n ←
           match ids.nth 0 with
             | some n => pure n
             | none => mk_fresh_name
         note n none e
-  let tgt ← target
+  let tgt
+    ←-- Now check if the target is a subsingleton.
+      target
   let ss ← succeeds (mk_app `subsingleton [tgt] >>= mk_instance)
-  let e ←
-    if ss then trunc_cases_subsingleton e ids
+  let e
+    ←-- In each branch here, we're going to capture the name of the new unboxed hypothesis
+        -- so that we can later check if it's a typeclass and if so unfreeze local instances.
+        if ss then trunc_cases_subsingleton e ids
       else if e.occurs tgt then trunc_cases_dependent e ids else trunc_cases_nondependent e ids
   let c ← infer_type e >>= is_class
   when c reset_instance_cache

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Floris van Doorn. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Floris van Doorn, Robert Y. Lewis, Gabriel Ebner
+-/
 import Mathbin.Data.Bool.Basic
 import Mathbin.Meta.RbMap
 import Mathbin.Tactic.Lint.Basic
@@ -40,10 +45,12 @@ unsafe def print_arguments {α} [has_to_tactic_format α] (l : List (ℕ × α))
 private unsafe def instance_priority (d : declaration) : tactic (Option Stringₓ) := do
   let nm := d.to_name
   let b ← is_instance nm
-  if ¬b then return none
+  -- return `none` if `d` is not an instance
+      if ¬b then return none
     else do
       let (is_persistent, prio) ← has_attribute `instance nm
-      if prio < 1000 then return none
+      -- return `none` if `d` is has low priority
+          if prio < 1000 then return none
         else do
           let (_, tp) ← open_pis d
           let tp ← whnf tp transparency.none
@@ -51,7 +58,10 @@ private unsafe def instance_priority (d : declaration) : tactic (Option String�
           let cls ← get_decl fn
           let (pi_args, _) := cls
           guardₓ (args = pi_args)
-          let relevant_args :=
+          let/- List all the arguments of the class that block type-class inference from firing
+              (if they are metavariables). These are all the arguments except instance-arguments and
+              out-params. -/
+          relevant_args :=
             (args pi_args).filterMap fun ⟨e, ⟨_, info, tp⟩⟩ =>
               if info = BinderInfo.inst_implicit ∨ tp `out_param then none else some e
           let always_applies := relevant_args expr.is_local_constant ∧ relevant_args
@@ -147,8 +157,12 @@ unsafe def linter.impossible_instance : linter where
 private unsafe def incorrect_type_class_argument (d : declaration) : tactic (Option Stringₓ) := do
   let (binders, _) ← get_pi_binders d.type
   let instance_arguments := binders.indexesValues fun b : binder => b.info = BinderInfo.inst_implicit
-  let bad_arguments ←
-    instance_arguments.mfilter fun ⟨_, b⟩ => do
+  let bad_arguments
+    ←/- the head of the type should either unfold to a class, or be a local constant.
+            A local constant is allowed, because that could be a class when applied to the
+            proper arguments. -/
+          instance_arguments.mfilter
+        fun ⟨_, b⟩ => do
         let (_, head) ← open_pis b.type
         if head then return ff
           else do
@@ -223,17 +237,22 @@ unsafe def fails_quickly (max_steps : ℕ) (d : declaration) : tactic (Option St
     set_goals [g]
     intros
     let l@(_ :: _) ← find_nondep | return none
-    clear l
+    -- if all arguments occur in the goal, this instance is ok
+        clear
+        l
     reset_instance_cache
     let state ← read
     let state_msg := "\nState:\n" ++ toString State
     let tgt ← target >>= instantiate_mvars
     let Sum.inr msg ← retrieve_or_report_error <| tactic.try_for max_steps <| mk_instance tgt | return none
-    return <|
+    /- it's ok if type-class inference can find an instance with fewer hypotheses.
+            This happens a lot for `has_sizeof` and `has_well_founded`, but can also happen if there is a
+            noncomputable instance with fewer assumptions. -/
+        return <|
         if "tactic.mk_instance failed to generate instance for".isPrefixOf msg then none
         else
           some <|
-            · ++ state_msg <| if msg = "try_for tactic failed, timeout" then "type-class inference timed out" else msg
+            (· ++ state_msg) <| if msg = "try_for tactic failed, timeout" then "type-class inference timed out" else msg
 
 /-- A linter object for `fails_quickly`.
 We currently set the number of steps in the type-class search pretty high.
@@ -334,6 +353,9 @@ unsafe def linter.decidable_classical : linter where
   no_errors_found := "No uses of `decidable` arguments should be replaced with `classical`."
   errors_found := "USES OF `decidable` SHOULD BE REPLACED WITH `classical` IN THE PROOF."
 
+/- The file `logic/basic.lean` emphasizes the differences between what holds under classical
+and non-classical logic. It makes little sense to make all these lemmas classical, so we add them
+to the list of lemmas which are not checked by the linter `decidable_classical`. -/
 attribute [nolint decidable_classical] dec_em dec_em' Not.decidable_imp_symm
 
 private unsafe def has_coe_to_fun_linter (d : declaration) : tactic (Option Stringₓ) :=
@@ -381,7 +403,8 @@ unsafe def check_reducible_non_instances (d : declaration) : tactic (Option Stri
   let tt ← is_instance d.to_name | return none
   let ff ← is_prop d.type | return none
   let env ← get_env
-  let cls := d.type.pi_codomain.get_app_fn.const_name
+  let-- We only check if the class of the instance contains an `add` or a `mul` field.
+  cls := d.type.pi_codomain.get_app_fn.const_name
   let some constrs ← return <| env.structure_fields cls | return none
   let tt ← return <| constrs.Mem `add || constrs.Mem `mul | return none
   let l ←
@@ -390,14 +413,15 @@ unsafe def check_reducible_non_instances (d : declaration) : tactic (Option Stri
         let ff ← is_instance nm | return false
         let tt ← is_class d.type | return false
         let tt ← return d.is_definition | return false
-        let cls := d.type.pi_codomain.get_app_fn.const_name
+        let-- We only check if the class of the non-instance contains an `add` or a `mul` field.
+        cls := d.type.pi_codomain.get_app_fn.const_name
         let some constrs ← return <| env.structure_fields cls | return false
         let tt ← return <| constrs.Mem `add || constrs.Mem `mul | return false
         let ff ← has_attribute' `reducible nm | return false
         return tt
   if l then return none
-    else
-      if l = [d ++ `_main] then return none
+    else-- we currently ignore declarations that have a `foo._main` declaration.
+        if l = [d ++ `_main] then return none
       else
         return <|
           some <| "This instance contains the declarations " ++ toString l ++ ", which are semireducible non-instances."

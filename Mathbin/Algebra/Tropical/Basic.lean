@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Yakov Pechersky. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yakov Pechersky
+-/
 import Mathbin.Algebra.GroupPower.Order
 import Mathbin.Algebra.SmulWithZero
 
@@ -89,7 +94,7 @@ theorem right_inverse_trop : Function.RightInverse (trop : R → Tropical R) unt
 
 /-- Reinterpret `x : R` as an element of `tropical R`.
 See `tropical.trop_order_iso` for the order-preserving equivalence. -/
-def trop_equiv : R ≃ Tropical R where
+def tropEquiv : R ≃ Tropical R where
   toFun := trop
   invFun := untrop
   left_inv := untrop_trop
@@ -127,7 +132,7 @@ instance [Inhabited R] : Inhabited (Tropical R) :=
 /-- Recursing on a `x' : tropical R` is the same as recursing on an `x : R` reinterpreted
 as a term of `tropical R` via `trop x`. -/
 @[simp]
-def trop_rec {F : ∀ X : Tropical R, Sort v} (h : ∀ X, F (trop X)) : ∀ X, F X := fun X => h (untrop X)
+def tropRec {F : ∀ X : Tropical R, Sort v} (h : ∀ X, F (trop X)) : ∀ X, F X := fun X => h (untrop X)
 
 instance [DecidableEq R] : DecidableEq (Tropical R) := fun x y => decidableOfIff _ injective_untrop.eq_iff
 
@@ -140,8 +145,8 @@ instance [LE R] : LE (Tropical R) where
 theorem untrop_le_iff [LE R] {x y : Tropical R} : untrop x ≤ untrop y ↔ x ≤ y :=
   Iff.rfl
 
-instance decidable_le [LE R] [DecidableRel (· ≤ · : R → R → Prop)] :
-    DecidableRel (· ≤ · : Tropical R → Tropical R → Prop) := fun x y => ‹DecidableRel (· ≤ ·)› (untrop x) (untrop y)
+instance decidableLe [LE R] [DecidableRel ((· ≤ ·) : R → R → Prop)] :
+    DecidableRel ((· ≤ ·) : Tropical R → Tropical R → Prop) := fun x y => ‹DecidableRel (· ≤ ·)› (untrop x) (untrop y)
 
 instance [LT R] : LT (Tropical R) where
   lt := fun x y => untrop x < untrop y
@@ -150,15 +155,15 @@ instance [LT R] : LT (Tropical R) where
 theorem untrop_lt_iff [LT R] {x y : Tropical R} : untrop x < untrop y ↔ x < y :=
   Iff.rfl
 
-instance decidable_lt [LT R] [DecidableRel (· < · : R → R → Prop)] :
-    DecidableRel (· < · : Tropical R → Tropical R → Prop) := fun x y => ‹DecidableRel (· < ·)› (untrop x) (untrop y)
+instance decidableLt [LT R] [DecidableRel ((· < ·) : R → R → Prop)] :
+    DecidableRel ((· < ·) : Tropical R → Tropical R → Prop) := fun x y => ‹DecidableRel (· < ·)› (untrop x) (untrop y)
 
 instance [Preorderₓ R] : Preorderₓ (Tropical R) :=
   { Tropical.hasLe, Tropical.hasLt with le_refl := fun _ => le_rfl, le_trans := fun _ _ _ h h' => le_transₓ h h',
     lt_iff_le_not_le := fun _ _ => lt_iff_le_not_leₓ }
 
 /-- Reinterpret `x : R` as an element of `tropical R`, preserving the order. -/
-def trop_order_iso [Preorderₓ R] : R ≃o Tropical R :=
+def tropOrderIso [Preorderₓ R] : R ≃o Tropical R :=
   { tropEquiv with map_rel_iff' := fun _ _ => untrop_le_iff }
 
 @[simp]
@@ -212,7 +217,7 @@ instance : Add (Tropical R) :=
   ⟨fun x y => trop (min (untrop x) (untrop y))⟩
 
 instance : AddCommSemigroupₓ (Tropical R) where
-  add := · + ·
+  add := (· + ·)
   add_assoc := fun _ _ _ => untrop_injective (min_assocₓ _ _ _)
   add_comm := fun _ _ => untrop_injective (min_commₓ _ _)
 
@@ -238,7 +243,7 @@ instance : LinearOrderₓ (Tropical R) :=
     max_def := by
       ext x y
       rw [maxDefault, max_def, apply_ite trop, trop_untrop, trop_untrop, if_congr untrop_le_iff rfl rfl],
-    min := · + ·,
+    min := (· + ·),
     min_def := by
       ext x y
       rw [trop_add_def, minDefault, min_def, apply_ite trop, trop_untrop, trop_untrop, if_congr untrop_le_iff rfl rfl] }
@@ -252,11 +257,11 @@ theorem untrop_max (x y : Tropical R) : untrop (max x y) = max (untrop x) (untro
   rfl
 
 @[simp]
-theorem min_eq_add : (min : Tropical R → Tropical R → Tropical R) = · + · :=
+theorem min_eq_add : (min : Tropical R → Tropical R → Tropical R) = (· + ·) :=
   rfl
 
 @[simp]
-theorem inf_eq_add : (·⊓· : Tropical R → Tropical R → Tropical R) = · + · :=
+theorem inf_eq_add : ((·⊓·) : Tropical R → Tropical R → Tropical R) = (· + ·) :=
   rfl
 
 theorem trop_max_def (x y : Tropical R) : max x y = trop (max (untrop x) (untrop y)) :=
@@ -361,7 +366,7 @@ theorem untrop_div [Sub R] (x y : Tropical R) : untrop (x / y) = untrop x - untr
   rfl
 
 instance [AddSemigroupₓ R] : Semigroupₓ (Tropical R) where
-  mul := · * ·
+  mul := (· * ·)
   mul_assoc := fun _ _ _ => untrop_injective (add_assocₓ _ _ _)
 
 instance [AddCommSemigroupₓ R] : CommSemigroupₓ (Tropical R) :=
@@ -380,7 +385,7 @@ theorem trop_smul {α : Type _} [HasScalar α R] (x : R) (n : α) : trop (n • 
 
 instance [AddZeroClass R] : MulOneClassₓ (Tropical R) where
   one := 1
-  mul := · * ·
+  mul := (· * ·)
   one_mul := fun _ => untrop_injective <| zero_addₓ _
   mul_one := fun _ => untrop_injective <| add_zeroₓ _
 
@@ -448,8 +453,8 @@ instance covariant_swap_mul_lt [Preorderₓ R] [Add R] [CovariantClass R R (Func
 
 instance [LinearOrderₓ R] [Add R] [CovariantClass R R (· + ·) (· ≤ ·)]
     [CovariantClass R R (Function.swap (· + ·)) (· ≤ ·)] : Distribₓ (Tropical R) where
-  mul := · * ·
-  add := · + ·
+  mul := (· * ·)
+  add := (· + ·)
   left_distrib := fun _ _ _ => untrop_injective (min_add_add_left _ _ _).symm
   right_distrib := fun _ _ _ => untrop_injective (min_add_add_right _ _ _).symm
 
@@ -480,6 +485,10 @@ theorem succ_nsmul {R} [LinearOrderₓ R] [OrderTop R] (x : Tropical R) (n : ℕ
   · rw [add_nsmul, IH, one_nsmul, add_self]
     
 
+-- TODO: find/create the right classes to make this hold (for enat, ennreal, etc)
+-- Requires `zero_eq_bot` to be true
+-- lemma add_eq_zero_iff {a b : tropical R} :
+--   a + b = 1 ↔ a = 1 ∨ b = 1 := sorry
 @[simp]
 theorem mul_eq_zero_iff {R : Type _} [LinearOrderedAddCommMonoid R] {a b : Tropical (WithTop R)} :
     a * b = 0 ↔ a = 0 ∨ b = 0 := by

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Markus Himmel. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Markus Himmel
+-/
 import Mathbin.Algebra.Category.Module.EpiMono
 
 /-!
@@ -22,12 +27,12 @@ section
 variable {M N : ModuleCat.{v} R} (f : M ⟶ N)
 
 /-- The kernel cone induced by the concrete kernel. -/
-def kernel_cone : KernelFork f :=
+def kernelCone : KernelFork f :=
   KernelFork.ofι (asHom f.ker.Subtype) <| by
     tidy
 
 /-- The kernel of a linear map is a kernel in the categorical sense. -/
-def kernel_is_limit : IsLimit (kernelCone f) :=
+def kernelIsLimit : IsLimit (kernelCone f) :=
   Fork.IsLimit.mk _
     (fun s =>
       LinearMap.codRestrict f.ker (Fork.ι s) fun c =>
@@ -44,11 +49,11 @@ def kernel_is_limit : IsLimit (kernelCone f) :=
         convert @congr_funₓ _ _ _ _ h₁ x
 
 /-- The cokernel cocone induced by the projection onto the quotient. -/
-def cokernel_cocone : CokernelCofork f :=
+def cokernelCocone : CokernelCofork f :=
   CokernelCofork.ofπ (asHom f.range.mkq) <| LinearMap.range_mkq_comp _
 
 /-- The projection onto the quotient is a cokernel in the categorical sense. -/
-def cokernel_is_colimit : IsColimit (cokernelCocone f) :=
+def cokernelIsColimit : IsColimit (cokernelCocone f) :=
   Cofork.IsColimit.mk _
     (fun s => f.range.liftq (Cofork.π s) <| LinearMap.range_le_ker_iff.2 <| CokernelCofork.condition s)
     (fun s => f.range.liftq_mkq (Cofork.π s) _) fun s m h => by
@@ -78,9 +83,10 @@ variable {G H : ModuleCat.{v} R} (f : G ⟶ H)
 /-- The categorical kernel of a morphism in `Module`
 agrees with the usual module-theoretical kernel.
 -/
-noncomputable def kernel_iso_ker {G H : ModuleCat.{v} R} (f : G ⟶ H) : kernel f ≅ ModuleCat.of R f.ker :=
+noncomputable def kernelIsoKer {G H : ModuleCat.{v} R} (f : G ⟶ H) : kernel f ≅ ModuleCat.of R f.ker :=
   limit.isoLimitCone ⟨_, kernelIsLimit f⟩
 
+-- We now show this isomorphism commutes with the inclusion of the kernel into the source.
 @[simp, elementwise]
 theorem kernel_iso_ker_inv_kernel_ι : (kernelIsoKer f).inv ≫ kernel.ι f = f.ker.Subtype :=
   limit.iso_limit_cone_inv_π _ _
@@ -92,10 +98,11 @@ theorem kernel_iso_ker_hom_ker_subtype : (kernelIsoKer f).hom ≫ f.ker.Subtype 
 /-- The categorical cokernel of a morphism in `Module`
 agrees with the usual module-theoretical quotient.
 -/
-noncomputable def cokernel_iso_range_quotient {G H : ModuleCat.{v} R} (f : G ⟶ H) :
+noncomputable def cokernelIsoRangeQuotient {G H : ModuleCat.{v} R} (f : G ⟶ H) :
     cokernel f ≅ ModuleCat.of R (H ⧸ f.range) :=
   colimit.isoColimitCocone ⟨_, cokernelIsColimit f⟩
 
+-- We now show this isomorphism commutes with the projection of target to the cokernel.
 @[simp, elementwise]
 theorem cokernel_π_cokernel_iso_range_quotient_hom : cokernel.π f ≫ (cokernelIsoRangeQuotient f).hom = f.range.mkq := by
   convert colimit.iso_colimit_cocone_ι_hom _ _ <;> rfl

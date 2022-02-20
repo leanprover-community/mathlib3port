@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Bhavik Mehta. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Bhavik Mehta
+-/
 import Mathbin.Data.Set.Lattice
 import Mathbin.Order.Zorn
 import Mathbin.Tactic.ByContra
@@ -16,7 +21,7 @@ open Set Classical
 
 open_locale Classical
 
--- ././Mathport/Syntax/Translate/Basic.lean:418:16: unsupported tactic `by_contra'
+-- ././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'
 /-- Any partial order can be extended to a linear order.
 -/
 theorem extend_partial_order {α : Type u} (r : α → α → Prop) [IsPartialOrder α r] :
@@ -52,7 +57,7 @@ theorem extend_partial_order {α : Type u} (r : α → α → Prop) [IsPartialOr
   skip
   refine' ⟨s, { Total := _ }, rs⟩
   intro x y
-  "././Mathport/Syntax/Translate/Basic.lean:418:16: unsupported tactic `by_contra'"
+  "././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'"
   let s' := fun x' y' => s x' y' ∨ s x' x ∧ s y y'
   rw [← hs₂ s' _ fun _ _ => Or.inl] at h
   · apply h.1 (Or.inr ⟨refl _, refl _⟩)
@@ -85,18 +90,18 @@ def LinearExtension (α : Type u) : Type u :=
   α
 
 noncomputable instance {α : Type u} [PartialOrderₓ α] : LinearOrderₓ (LinearExtension α) where
-  le := (extend_partial_order (· ≤ · : α → α → Prop)).some
-  le_refl := (extend_partial_order (· ≤ · : α → α → Prop)).some_spec.some.1.1.1.1
-  le_trans := (extend_partial_order (· ≤ · : α → α → Prop)).some_spec.some.1.1.2.1
-  le_antisymm := (extend_partial_order (· ≤ · : α → α → Prop)).some_spec.some.1.2.1
-  le_total := (extend_partial_order (· ≤ · : α → α → Prop)).some_spec.some.2.1
+  le := (extend_partial_order ((· ≤ ·) : α → α → Prop)).some
+  le_refl := (extend_partial_order ((· ≤ ·) : α → α → Prop)).some_spec.some.1.1.1.1
+  le_trans := (extend_partial_order ((· ≤ ·) : α → α → Prop)).some_spec.some.1.1.2.1
+  le_antisymm := (extend_partial_order ((· ≤ ·) : α → α → Prop)).some_spec.some.1.2.1
+  le_total := (extend_partial_order ((· ≤ ·) : α → α → Prop)).some_spec.some.2.1
   decidableLe := Classical.decRel _
 
 /-- The embedding of `α` into `linear_extension α` as a relation homomorphism. -/
 def toLinearExtension {α : Type u} [PartialOrderₓ α] :
-    (· ≤ · : α → α → Prop) →r (· ≤ · : LinearExtension α → LinearExtension α → Prop) where
+    ((· ≤ ·) : α → α → Prop) →r ((· ≤ ·) : LinearExtension α → LinearExtension α → Prop) where
   toFun := fun x => x
-  map_rel' := fun a b => (extend_partial_order (· ≤ · : α → α → Prop)).some_spec.some_spec _ _
+  map_rel' := fun a b => (extend_partial_order ((· ≤ ·) : α → α → Prop)).some_spec.some_spec _ _
 
 instance {α : Type u} [Inhabited α] : Inhabited (LinearExtension α) :=
   ⟨(default : α)⟩

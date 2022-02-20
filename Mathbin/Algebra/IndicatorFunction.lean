@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Zhouhang Zhou. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Zhouhang Zhou
+-/
 import Mathbin.Algebra.Support
 
 /-!
@@ -40,7 +45,7 @@ def indicator {M} [Zero M] (s : Set α) (f : α → M) : α → M := fun x => if
 
 /-- `mul_indicator s f a` is `f a` if `a ∈ s`, `1` otherwise.  -/
 @[to_additive]
-def mul_indicator (s : Set α) (f : α → M) : α → M := fun x => if x ∈ s then f x else 1
+def mulIndicator (s : Set α) (f : α → M) : α → M := fun x => if x ∈ s then f x else 1
 
 @[simp, to_additive]
 theorem piecewise_eq_mul_indicator : s.piecewise f 1 = s.mulIndicator f :=
@@ -306,7 +311,7 @@ theorem mul_indicator_mul_eq_right {f g : α → M} (h : Disjoint (MulSupport f)
 
 /-- `set.mul_indicator` as a `monoid_hom`. -/
 @[to_additive "`set.indicator` as an `add_monoid_hom`."]
-def mul_indicator_hom {α} M [MulOneClassₓ M] (s : Set α) : (α → M) →* α → M where
+def mulIndicatorHom {α} M [MulOneClassₓ M] (s : Set α) : (α → M) →* α → M where
   toFun := mulIndicator s
   map_one' := mul_indicator_one M s
   map_mul' := mul_indicator_mul s
@@ -317,15 +322,23 @@ section DistribMulAction
 
 variable {A : Type _} [AddMonoidₓ A] [Monoidₓ M] [DistribMulAction M A]
 
-theorem indicator_smul_apply (s : Set α) (r : M) (f : α → A) (x : α) :
-    indicator s (fun x => r • f x) x = r • indicator s f x := by
+theorem indicator_smul_apply (s : Set α) (r : α → M) (f : α → A) (x : α) :
+    indicator s (fun x => r x • f x) x = r x • indicator s f x := by
   dunfold indicator
   split_ifs
-  exacts[rfl, (smul_zero r).symm]
+  exacts[rfl, (smul_zero (r x)).symm]
 
-theorem indicator_smul (s : Set α) (r : M) (f : α → A) :
-    (indicator s fun x : α => r • f x) = fun x : α => r • indicator s f x :=
+theorem indicator_smul (s : Set α) (r : α → M) (f : α → A) :
+    (indicator s fun x : α => r x • f x) = fun x : α => r x • indicator s f x :=
   funext <| indicator_smul_apply s r f
+
+theorem indicator_const_smul_apply (s : Set α) (r : M) (f : α → A) (x : α) :
+    indicator s (fun x => r • f x) x = r • indicator s f x :=
+  indicator_smul_apply s (fun x => r) f x
+
+theorem indicator_const_smul (s : Set α) (r : M) (f : α → A) :
+    (indicator s fun x : α => r • f x) = fun x : α => r • indicator s f x :=
+  funext <| indicator_const_smul_apply s r f
 
 end DistribMulAction
 
@@ -505,7 +518,7 @@ theorem mul_indicator_apply_le' (hfg : a ∈ s → f a ≤ y) (hg : a ∉ s → 
   else by
     simpa [ha] using hg ha
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (a «expr ∉ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (a «expr ∉ » s)
 @[to_additive]
 theorem mul_indicator_le' (hfg : ∀, ∀ a ∈ s, ∀, f a ≤ g a) (hg : ∀ a _ : a ∉ s, 1 ≤ g a) : mulIndicator s f ≤ g :=
   fun a => mul_indicator_apply_le' (hfg _) (hg _)
@@ -514,7 +527,7 @@ theorem mul_indicator_le' (hfg : ∀, ∀ a ∈ s, ∀, f a ≤ g a) (hg : ∀ a
 theorem le_mul_indicator_apply {y} (hfg : a ∈ s → y ≤ g a) (hf : a ∉ s → y ≤ 1) : y ≤ mulIndicator s g a :=
   @mul_indicator_apply_le' α (OrderDual M) ‹_› _ _ _ _ _ hfg hf
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (a «expr ∉ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (a «expr ∉ » s)
 @[to_additive]
 theorem le_mul_indicator (hfg : ∀, ∀ a ∈ s, ∀, f a ≤ g a) (hf : ∀ a _ : a ∉ s, f a ≤ 1) : f ≤ mulIndicator s g :=
   fun a => le_mul_indicator_apply (hfg _) (hf _)
@@ -547,7 +560,7 @@ theorem mul_indicator_le_mul_indicator_of_subset (h : s ⊆ t) (hf : ∀ a, 1 �
   mul_indicator_apply_le' (fun ha => le_mul_indicator_apply (fun _ => le_rfl) fun hat => (hat <| h ha).elim) fun ha =>
     one_le_mul_indicator_apply fun _ => hf _
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (x «expr ∉ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (x «expr ∉ » s)
 @[to_additive]
 theorem mul_indicator_le_self' (hf : ∀ x _ : x ∉ s, 1 ≤ f x) : mulIndicator s f ≤ f :=
   mul_indicator_le' (fun _ _ => le_rfl) hf

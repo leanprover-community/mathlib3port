@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Oliver Nash. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Oliver Nash
+-/
 import Mathbin.Tactic.NoncommRing
 import Mathbin.Data.Equiv.Module
 import Mathbin.Data.Bracket
@@ -248,7 +253,7 @@ instance : CoeFun (L₁ →ₗ⁅R⁆ L₂) fun _ => L₁ → L₂ :=
 
 /-- See Note [custom simps projection]. We need to specify this projection explicitly in this case,
   because it is a composition of multiple projections. -/
-def simps.apply (h : L₁ →ₗ⁅R⁆ L₂) : L₁ → L₂ :=
+def Simps.apply (h : L₁ →ₗ⁅R⁆ L₂) : L₁ → L₂ :=
   h
 
 initialize_simps_projections LieHom (to_linear_map_to_fun → apply)
@@ -335,7 +340,7 @@ theorem ext_iff {f g : L₁ →ₗ⁅R⁆ L₂} : f = g ↔ ∀ x, f x = g x :=
     rintro rfl x
     rfl, ext⟩
 
-theorem congr_funₓ {f g : L₁ →ₗ⁅R⁆ L₂} (h : f = g) (x : L₁) : f x = g x :=
+theorem congr_fun {f g : L₁ →ₗ⁅R⁆ L₂} (h : f = g) (x : L₁) : f x = g x :=
   h ▸ rfl
 
 @[simp]
@@ -455,13 +460,13 @@ variable [CommRingₓ R] [LieRing L₁] [LieRing L₂] [LieRing L₃]
 variable [LieAlgebra R L₁] [LieAlgebra R L₂] [LieAlgebra R L₃]
 
 /-- Consider an equivalence of Lie algebras as a linear equivalence. -/
-def to_linear_equiv (f : L₁ ≃ₗ⁅R⁆ L₂) : L₁ ≃ₗ[R] L₂ :=
+def toLinearEquiv (f : L₁ ≃ₗ⁅R⁆ L₂) : L₁ ≃ₗ[R] L₂ :=
   { f.toLieHom, f with }
 
-instance has_coe_to_lie_hom : Coe (L₁ ≃ₗ⁅R⁆ L₂) (L₁ →ₗ⁅R⁆ L₂) :=
+instance hasCoeToLieHom : Coe (L₁ ≃ₗ⁅R⁆ L₂) (L₁ →ₗ⁅R⁆ L₂) :=
   ⟨toLieHom⟩
 
-instance has_coe_to_linear_equiv : Coe (L₁ ≃ₗ⁅R⁆ L₂) (L₁ ≃ₗ[R] L₂) :=
+instance hasCoeToLinearEquiv : Coe (L₁ ≃ₗ⁅R⁆ L₂) (L₁ ≃ₗ[R] L₂) :=
   ⟨toLinearEquiv⟩
 
 /-- see Note [function coercion] -/
@@ -566,7 +571,7 @@ protected theorem surjective (e : L₁ ≃ₗ⁅R⁆ L₂) : Function.Surjective
 
 /-- A bijective morphism of Lie algebras yields an equivalence of Lie algebras. -/
 @[simps]
-noncomputable def of_bijective (f : L₁ →ₗ⁅R⁆ L₂) (h₁ : Function.Injective f) (h₂ : Function.Surjective f) :
+noncomputable def ofBijective (f : L₁ →ₗ⁅R⁆ L₂) (h₁ : Function.Injective f) (h₂ : Function.Surjective f) :
     L₁ ≃ₗ⁅R⁆ L₂ :=
   { LinearEquiv.ofBijective (f : L₁ →ₗ[R] L₂) h₁ h₂ with toFun := f, map_lie' := f.map_lie }
 
@@ -681,7 +686,7 @@ theorem ext_iff {f g : M →ₗ⁅R,L⁆ N} : f = g ↔ ∀ m, f m = g m :=
     rintro rfl m
     rfl, ext⟩
 
-theorem congr_funₓ {f g : M →ₗ⁅R,L⁆ N} (h : f = g) (x : M) : f x = g x :=
+theorem congr_fun {f g : M →ₗ⁅R,L⁆ N} (h : f = g) (x : M) : f x = g x :=
   h ▸ rfl
 
 @[simp]
@@ -772,7 +777,7 @@ theorem neg_apply (f : M →ₗ⁅R,L⁆ N) (m : M) : (-f) m = -f m :=
 
 instance : AddCommGroupₓ (M →ₗ⁅R,L⁆ N) :=
   { (coe_injective.AddCommGroup _ coe_zero coe_add coe_neg coe_sub : AddCommGroupₓ (M →ₗ⁅R,L⁆ N)) with zero := 0,
-    add := · + ·, neg := Neg.neg, sub := Sub.sub,
+    add := (· + ·), neg := Neg.neg, sub := Sub.sub,
     nsmul := fun n f =>
       { n • (f : M →ₗ[R] N) with
         map_lie' := fun x m => by
@@ -819,21 +824,21 @@ variable {R L M N P}
 
 /-- View an equivalence of Lie modules as a linear equivalence. -/
 @[ancestor]
-def to_linear_equiv (e : M ≃ₗ⁅R,L⁆ N) : M ≃ₗ[R] N :=
+def toLinearEquiv (e : M ≃ₗ⁅R,L⁆ N) : M ≃ₗ[R] N :=
   { e with }
 
 /-- View an equivalence of Lie modules as a type level equivalence. -/
 @[ancestor]
-def to_equiv (e : M ≃ₗ⁅R,L⁆ N) : M ≃ N :=
+def toEquiv (e : M ≃ₗ⁅R,L⁆ N) : M ≃ N :=
   { e with }
 
-instance has_coe_to_equiv : Coe (M ≃ₗ⁅R,L⁆ N) (M ≃ N) :=
+instance hasCoeToEquiv : Coe (M ≃ₗ⁅R,L⁆ N) (M ≃ N) :=
   ⟨toEquiv⟩
 
-instance has_coe_to_lie_module_hom : Coe (M ≃ₗ⁅R,L⁆ N) (M →ₗ⁅R,L⁆ N) :=
+instance hasCoeToLieModuleHom : Coe (M ≃ₗ⁅R,L⁆ N) (M →ₗ⁅R,L⁆ N) :=
   ⟨toLieModuleHom⟩
 
-instance has_coe_to_linear_equiv : Coe (M ≃ₗ⁅R,L⁆ N) (M ≃ₗ[R] N) :=
+instance hasCoeToLinearEquiv : Coe (M ≃ₗ⁅R,L⁆ N) (M ≃ₗ[R] N) :=
   ⟨toLinearEquiv⟩
 
 /-- see Note [function coercion] -/

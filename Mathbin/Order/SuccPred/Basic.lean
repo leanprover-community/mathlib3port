@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Yaël Dillies. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yaël Dillies
+-/
 import Mathbin.Order.BoundedOrder
 import Mathbin.Order.CompleteLattice
 import Mathbin.Order.Cover
@@ -72,7 +77,7 @@ section Preorderₓ
 variable [Preorderₓ α]
 
 /-- A constructor for `succ_order α` usable when `α` has no maximal element. -/
-def of_succ_le_iff_of_le_lt_succ (succ : α → α) (hsucc_le_iff : ∀ {a b}, succ a ≤ b ↔ a < b)
+def ofSuccLeIffOfLeLtSucc (succ : α → α) (hsucc_le_iff : ∀ {a b}, succ a ≤ b ↔ a < b)
     (hle_of_lt_succ : ∀ {a b}, a < succ b → a ≤ b) : SuccOrder α :=
   { succ, le_succ := fun a => (hsucc_le_iff.1 le_rfl).le,
     maximal_of_succ_le := fun a ha => (lt_irreflₓ a (hsucc_le_iff.1 ha)).elim,
@@ -111,18 +116,27 @@ protected theorem _root_.has_lt.lt.covby_succ {a b : α} (h : a < b) : a ⋖ suc
 theorem covby_succ_of_nonempty_Ioi {a : α} (h : (Set.Ioi a).Nonempty) : a ⋖ succ a :=
   LT.lt.covby_succ h.some_mem
 
+theorem lt_succ_of_not_is_max {a : α} (ha : ¬IsMax a) : a < SuccOrder.succ a :=
+  (le_succ a).lt_of_not_le fun h => not_exists.2 (maximal_of_succ_le h) (not_is_max_iff.mp ha)
+
+theorem lt_succ_iff_of_not_is_max {a b : α} (ha : ¬IsMax a) : b < SuccOrder.succ a ↔ b ≤ a :=
+  ⟨le_of_lt_succ, fun h_le => h_le.trans_lt (lt_succ_of_not_is_max ha)⟩
+
+theorem succ_le_iff_of_not_is_max {a b : α} (ha : ¬IsMax a) : succ a ≤ b ↔ a < b :=
+  ⟨(lt_succ_of_not_is_max ha).trans_le, succ_le_of_lt⟩
+
 section NoMaxOrder
 
 variable [NoMaxOrder α] {a b : α}
 
 theorem lt_succ (a : α) : a < succ a :=
-  (le_succ a).lt_of_not_le fun h => not_exists.2 (maximal_of_succ_le h) (exists_gt a)
+  lt_succ_of_not_is_max (not_is_max a)
 
 theorem lt_succ_iff : a < succ b ↔ a ≤ b :=
-  ⟨le_of_lt_succ, fun h => h.trans_lt <| lt_succ b⟩
+  lt_succ_iff_of_not_is_max (not_is_max b)
 
 theorem succ_le_iff : succ a ≤ b ↔ a < b :=
-  ⟨(lt_succ a).trans_le, succ_le_of_lt⟩
+  succ_le_iff_of_not_is_max (not_is_max a)
 
 @[simp]
 theorem succ_le_succ_iff : succ a ≤ succ b ↔ a ≤ b :=
@@ -255,7 +269,7 @@ section LinearOrderₓ
 variable [LinearOrderₓ α]
 
 /-- A constructor for `succ_order α` usable when `α` is a linear order with no maximal element. -/
-def of_succ_le_iff (succ : α → α) (hsucc_le_iff : ∀ {a b}, succ a ≤ b ↔ a < b) : SuccOrder α :=
+def ofSuccLeIff (succ : α → α) (hsucc_le_iff : ∀ {a b}, succ a ≤ b ↔ a < b) : SuccOrder α :=
   { succ, le_succ := fun a => (hsucc_le_iff.1 le_rfl).le,
     maximal_of_succ_le := fun a ha => (lt_irreflₓ a (hsucc_le_iff.1 ha)).elim,
     succ_le_of_lt := fun a b => hsucc_le_iff.2,
@@ -276,6 +290,28 @@ theorem succ_eq_infi (a : α) : succ a = ⨅ (b : α) (h : a < b), b := by
   exact binfi_le _ (lt_succ_iff_ne_top.2 ha)
 
 end CompleteLattice
+
+section Intervals
+
+variable [Preorderₓ α] [SuccOrder α]
+
+theorem Iic_eq_Iio_succ' {a : α} (ha : ¬IsMax a) : Set.Iic a = Set.Iio (SuccOrder.succ a) := by
+  ext1 x
+  rw [Set.mem_Iic, Set.mem_Iio]
+  exact (lt_succ_iff_of_not_is_max ha).symm
+
+theorem Iic_eq_Iio_succ [NoMaxOrder α] (a : α) : Set.Iic a = Set.Iio (SuccOrder.succ a) :=
+  Iic_eq_Iio_succ' (not_is_max a)
+
+theorem Ioi_eq_Ici_succ' {a : α} (ha : ¬IsMax a) : Set.Ioi a = Set.Ici (SuccOrder.succ a) := by
+  ext1 x
+  rw [Set.mem_Ioi, Set.mem_Ici]
+  exact (succ_le_iff_of_not_is_max ha).symm
+
+theorem Ioi_eq_Ici_succ [NoMaxOrder α] (a : α) : Set.Ioi a = Set.Ici (SuccOrder.succ a) :=
+  Ioi_eq_Ici_succ' (not_is_max a)
+
+end Intervals
 
 end SuccOrder
 
@@ -298,7 +334,7 @@ section Preorderₓ
 variable [Preorderₓ α]
 
 /-- A constructor for `pred_order α` usable when `α` has no minimal element. -/
-def of_le_pred_iff_of_pred_le_pred (pred : α → α) (hle_pred_iff : ∀ {a b}, a ≤ pred b ↔ a < b)
+def ofLePredIffOfPredLePred (pred : α → α) (hle_pred_iff : ∀ {a b}, a ≤ pred b ↔ a < b)
     (hle_of_pred_lt : ∀ {a b}, pred a < b → a ≤ b) : PredOrder α :=
   { pred, pred_le := fun a => (hle_pred_iff.1 le_rfl).le,
     minimal_of_le_pred := fun a ha => (lt_irreflₓ a (hle_pred_iff.1 ha)).elim,
@@ -337,18 +373,27 @@ protected theorem _root_.has_lt.lt.pred_covby {a b : α} (h : b < a) : pred a �
 theorem pred_covby_of_nonempty_Iio {a : α} (h : (Set.Iio a).Nonempty) : pred a ⋖ a :=
   LT.lt.pred_covby h.some_mem
 
+theorem pred_lt_of_not_is_min {a : α} (ha : ¬IsMin a) : PredOrder.pred a < a :=
+  (pred_le a).lt_of_not_le fun h => not_exists.2 (minimal_of_le_pred h) (not_is_min_iff.mp ha)
+
+theorem pred_lt_iff_of_not_is_min {a b : α} (ha : ¬IsMin a) : PredOrder.pred a < b ↔ a ≤ b :=
+  ⟨le_of_pred_lt, fun h_le => (pred_lt_of_not_is_min ha).trans_le h_le⟩
+
+theorem le_pred_iff_of_not_is_min {a b : α} (hb : ¬IsMin b) : a ≤ pred b ↔ a < b :=
+  ⟨fun h => h.trans_lt (pred_lt_of_not_is_min hb), le_pred_of_lt⟩
+
 section NoMinOrder
 
 variable [NoMinOrder α] {a b : α}
 
 theorem pred_lt (a : α) : pred a < a :=
-  (pred_le a).lt_of_not_le fun h => not_exists.2 (minimal_of_le_pred h) (exists_lt a)
+  pred_lt_of_not_is_min (not_is_min a)
 
 theorem pred_lt_iff : pred a < b ↔ a ≤ b :=
-  ⟨le_of_pred_lt, (pred_lt a).trans_le⟩
+  pred_lt_iff_of_not_is_min (not_is_min a)
 
 theorem le_pred_iff : a ≤ pred b ↔ a < b :=
-  ⟨fun h => h.trans_lt (pred_lt b), le_pred_of_lt⟩
+  le_pred_iff_of_not_is_min (not_is_min b)
 
 @[simp]
 theorem pred_le_pred_iff : pred a ≤ pred b ↔ a ≤ b :=
@@ -479,7 +524,7 @@ section LinearOrderₓ
 variable [LinearOrderₓ α] {a b : α}
 
 /-- A constructor for `pred_order α` usable when `α` is a linear order with no maximal element. -/
-def of_le_pred_iff (pred : α → α) (hle_pred_iff : ∀ {a b}, a ≤ pred b ↔ a < b) : PredOrder α :=
+def ofLePredIff (pred : α → α) (hle_pred_iff : ∀ {a b}, a ≤ pred b ↔ a < b) : PredOrder α :=
   { pred, pred_le := fun a => (hle_pred_iff.1 le_rfl).le,
     minimal_of_le_pred := fun a ha => (lt_irreflₓ a (hle_pred_iff.1 ha)).elim,
     le_pred_of_lt := fun a b => hle_pred_iff.2,
@@ -500,6 +545,28 @@ theorem pred_eq_supr (a : α) : pred a = ⨆ (b : α) (h : b < a), b := by
   exact @le_bsupr _ _ _ (fun b => b < a) (fun a _ => a) (pred a) (pred_lt_iff_ne_bot.2 ha)
 
 end CompleteLattice
+
+section Intervals
+
+variable [Preorderₓ α] [PredOrder α]
+
+theorem Ici_eq_Ioi_pred' {a : α} (ha : ¬IsMin a) : Set.Ici a = Set.Ioi (PredOrder.pred a) := by
+  ext1 x
+  rw [Set.mem_Ici, Set.mem_Ioi]
+  exact (pred_lt_iff_of_not_is_min ha).symm
+
+theorem Ici_eq_Ioi_pred [NoMinOrder α] (a : α) : Set.Ici a = Set.Ioi (PredOrder.pred a) :=
+  Ici_eq_Ioi_pred' (not_is_min a)
+
+theorem Iio_eq_Iic_pred' {a : α} (ha : ¬IsMin a) : Set.Iio a = Set.Iic (PredOrder.pred a) := by
+  ext1 x
+  rw [Set.mem_Iio, Set.mem_Iic]
+  exact (le_pred_iff_of_not_is_min ha).symm
+
+theorem Iio_eq_Iic_pred [NoMinOrder α] (a : α) : Set.Iio a = Set.Iic (PredOrder.pred a) :=
+  Iio_eq_Iic_pred' (not_is_min a)
+
+end Intervals
 
 end PredOrder
 
@@ -589,7 +656,7 @@ instance [DecidableEq α] [PartialOrderₓ α] [OrderTop α] [SuccOrder α] : Su
     cases a
     · exact le_top
       
-    change (· ≤ · : WithTop α → WithTop α → Prop) _ (ite _ _ _)
+    change ((· ≤ ·) : WithTop α → WithTop α → Prop) _ (ite _ _ _)
     split_ifs
     · exact le_top
       
@@ -599,7 +666,7 @@ instance [DecidableEq α] [PartialOrderₓ α] [OrderTop α] [SuccOrder α] : Su
     cases a
     · exact not_top_lt h
       
-    change (· ≤ · : WithTop α → WithTop α → Prop) (ite _ _ _) _ at ha
+    change ((· ≤ ·) : WithTop α → WithTop α → Prop) (ite _ _ _) _ at ha
     split_ifs  at ha with ha'
     · exact not_top_lt (ha.trans_lt h)
       
@@ -614,7 +681,7 @@ instance [DecidableEq α] [PartialOrderₓ α] [OrderTop α] [SuccOrder α] : Su
     · exact (not_top_lt h).elim
       
     rw [some_lt_some] at h
-    change (· ≤ · : WithTop α → WithTop α → Prop) (ite _ _ _) _
+    change ((· ≤ ·) : WithTop α → WithTop α → Prop) (ite _ _ _) _
     split_ifs with ha
     · rw [ha] at h
       exact (not_top_lt h).elim
@@ -628,7 +695,7 @@ instance [DecidableEq α] [PartialOrderₓ α] [OrderTop α] [SuccOrder α] : Su
     cases b
     · exact le_top
       
-    change (· < · : WithTop α → WithTop α → Prop) _ (ite _ _ _) at h
+    change ((· < ·) : WithTop α → WithTop α → Prop) _ (ite _ _ _) at h
     rw [some_le_some]
     split_ifs  at h with hb
     · rw [hb]
@@ -789,7 +856,7 @@ instance [DecidableEq α] [PartialOrderₓ α] [OrderBot α] [PredOrder α] : Pr
     cases a
     · exact not_lt_bot h
       
-    change (· ≤ · : WithBot α → WithBot α → Prop) _ (ite _ _ _) at ha
+    change ((· ≤ ·) : WithBot α → WithBot α → Prop) _ (ite _ _ _) at ha
     split_ifs  at ha with ha'
     · exact not_lt_bot (h.trans_le ha)
       
@@ -804,7 +871,7 @@ instance [DecidableEq α] [PartialOrderₓ α] [OrderBot α] [PredOrder α] : Pr
     · exact (not_lt_bot h).elim
       
     rw [some_lt_some] at h
-    change (· ≤ · : WithBot α → WithBot α → Prop) _ (ite _ _ _)
+    change ((· ≤ ·) : WithBot α → WithBot α → Prop) _ (ite _ _ _)
     split_ifs with hb
     · rw [hb] at h
       exact (not_lt_bot h).elim
@@ -818,7 +885,7 @@ instance [DecidableEq α] [PartialOrderₓ α] [OrderBot α] [PredOrder α] : Pr
     cases a
     · exact bot_le
       
-    change (· < · : WithBot α → WithBot α → Prop) (ite _ _ _) _ at h
+    change ((· < ·) : WithBot α → WithBot α → Prop) (ite _ _ _) _ at h
     rw [some_le_some]
     split_ifs  at h with ha
     · rw [ha]

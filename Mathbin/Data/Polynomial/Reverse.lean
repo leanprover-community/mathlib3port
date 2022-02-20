@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Damiano Testa. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Damiano Testa
+-/
 import Mathbin.Data.Polynomial.Degree.TrailingDegree
 import Mathbin.Data.Polynomial.EraseLead
 import Mathbin.Data.Polynomial.Eval
@@ -26,7 +31,7 @@ variable {R : Type _} [Semiringₓ R] {f : R[X]}
 /-- If `i ≤ N`, then `rev_at_fun N i` returns `N - i`, otherwise it returns `i`.
 This is the map used by the embedding `rev_at`.
 -/
-def rev_at_fun (N i : ℕ) : ℕ :=
+def revAtFun (N i : ℕ) : ℕ :=
   ite (i ≤ N) (N - i) i
 
 theorem rev_at_fun_invol {N i : ℕ} : revAtFun N (revAtFun N i) = i := by
@@ -49,7 +54,7 @@ theorem rev_at_fun_inj {N : ℕ} : Function.Injective (revAtFun N) := by
 Essentially, this embedding is only used for `i ≤ N`.
 The advantage of `rev_at N i` over `N - i` is that `rev_at` is an involution.
 -/
-def rev_at (N : ℕ) : Function.Embedding ℕ ℕ where
+def revAt (N : ℕ) : Function.Embedding ℕ ℕ where
   toFun := fun i => ite (i ≤ N) (N - i) i
   inj' := rev_at_fun_inj
 
@@ -149,11 +154,14 @@ theorem reflect_mul_induction (cf cg : ℕ) :
             f.natDegree ≤ N → g.natDegree ≤ O → reflect (N + O) (f * g) = reflect N f * reflect O g :=
   by
   induction' cf with cf hcf
+  --first induction (left): base case
   · induction' cg with cg hcg
+    -- second induction (right): base case
     · intro N O f g Cf Cg Nf Og
       rw [← C_mul_X_pow_eq_self Cf, ← C_mul_X_pow_eq_self Cg]
       simp only [mul_assoc, X_pow_mul, ← pow_addₓ X, reflect_C_mul, reflect_monomial, add_commₓ, rev_at_add Nf Og]
       
+    -- second induction (right): induction step
     · intro N O f g Cf Cg Nf Og
       by_cases' g0 : g = 0
       · rw [g0, reflect_zero, mul_zero, mul_zero, reflect_zero]
@@ -171,6 +179,7 @@ theorem reflect_mul_induction (cf cg : ℕ) :
         
       
     
+  --first induction (left): induction step
   · intro N O f g Cf Cg Nf Og
     by_cases' f0 : f = 0
     · rw [f0, reflect_zero, zero_mul, zero_mul, reflect_zero]

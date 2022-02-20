@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison
+-/
 import Mathbin.Data.Fintype.Basic
 
 /-!
@@ -49,17 +54,17 @@ theorem map_map {M : Dmatrix m n α} {β : m → n → Type w} {γ : m → n →
   simp
 
 /-- The transpose of a dmatrix. -/
-def transpose (M : Dmatrix m n α) : Dmatrix n m fun j i => α i j
+def transposeₓ (M : Dmatrix m n α) : Dmatrix n m fun j i => α i j
   | x, y => M y x
 
 localized [Dmatrix] postfix:1500 "ᵀ" => Dmatrix.transposeₓ
 
 /-- `dmatrix.col u` is the column matrix whose entries are given by `u`. -/
-def col {α : m → Type v} (w : ∀ i, α i) : Dmatrix m Unit fun i j => α i
+def colₓ {α : m → Type v} (w : ∀ i, α i) : Dmatrix m Unit fun i j => α i
   | x, y => w x
 
 /-- `dmatrix.row u` is the row matrix whose entries are given by `u`. -/
-def row {α : n → Type v} (v : ∀ j, α j) : Dmatrix Unit n fun i j => α j
+def rowₓ {α : n → Type v} (v : ∀ j, α j) : Dmatrix Unit n fun i j => α j
   | x, y => v y
 
 instance [∀ i j, Inhabited (α i j)] : Inhabited (Dmatrix m n α) :=
@@ -134,11 +139,13 @@ theorem map_sub [∀ i j, AddGroupₓ (α i j)] {β : m → n → Type w} [∀ i
   ext
   simp
 
+-- TODO[gh-6025]: make this an instance once safe to do so
 theorem subsingleton_of_empty_left [IsEmpty m] : Subsingleton (Dmatrix m n α) :=
   ⟨fun M N => by
     ext
     exact isEmptyElim i⟩
 
+-- TODO[gh-6025]: make this an instance once safe to do so
 theorem subsingleton_of_empty_right [IsEmpty n] : Subsingleton (Dmatrix m n α) :=
   ⟨fun M N => by
     ext

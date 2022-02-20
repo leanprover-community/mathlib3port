@@ -1,7 +1,16 @@
+/-
+Copyright (c) 2019 Seul Baek. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Seul Baek
+-/
 import Mathbin.Data.List.Func
 import Mathbin.Tactic.Ring
 import Mathbin.Tactic.Omega.Misc
 
+/-
+Non-constant terms of linear constraints are represented
+by storing their coefficients in integer lists.
+-/
 namespace Omega
 
 namespace Coeffs
@@ -14,7 +23,7 @@ variable {v : Nat → Int}
     obtained taking the term represented by `(0, as)` and dropping all
     subterms that include variables outside the range `[l,l+o)` -/
 @[simp]
-def val_between (v : Nat → Int) (as : List Int) (l : Nat) : Nat → Int
+def valBetween (v : Nat → Int) (as : List Int) (l : Nat) : Nat → Int
   | 0 => 0
   | o + 1 => val_between o + get (l + o) as * v (l + o)
 
@@ -159,11 +168,11 @@ theorem val_sub {is js : List Int} : val v (sub is js) = val v is - val v js := 
 /-- `val_except k v as` is the value (under valuation `v`) of the term
     obtained taking the term represented by `(0, as)` and dropping the
     subterm that includes the `k`th variable. -/
-def val_except (k : Nat) (v : Nat → Int) as :=
+def valExcept (k : Nat) (v : Nat → Int) as :=
   valBetween v as 0 k + valBetween v as (k + 1) (as.length - (k + 1))
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (x «expr ≠ » k)
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (x «expr ≠ » k)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (x «expr ≠ » k)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (x «expr ≠ » k)
 theorem val_except_eq_val_except {k : Nat} {is js : List Int} {v w : Nat → Int} :
     (∀ x _ : x ≠ k, v x = w x) → (∀ x _ : x ≠ k, get x is = get x js) → valExcept k v is = valExcept k w js := by
   intro h1 h2

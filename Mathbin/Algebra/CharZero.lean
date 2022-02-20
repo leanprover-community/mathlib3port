@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2014 Mario Carneiro. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Mario Carneiro
+-/
 import Mathbin.Data.Nat.Cast
 import Mathbin.Data.Fintype.Basic
 import Mathbin.Tactic.Wlog
@@ -47,6 +52,7 @@ and this would risk forming a loop. -/
 theorem OrderedSemiring.to_char_zero {R : Type _} [OrderedSemiring R] [Nontrivial R] : CharZero R :=
   ⟨Nat.strict_mono_cast.Injective⟩
 
+-- see Note [lower instance priority]
 instance (priority := 100) LinearOrderedSemiring.to_char_zero {R : Type _} [LinearOrderedSemiring R] : CharZero R :=
   OrderedSemiring.to_char_zero
 
@@ -59,7 +65,7 @@ theorem cast_injective : Function.Injective (coe : ℕ → R) :=
 
 /-- `nat.cast` as an embedding into monoids of characteristic `0`. -/
 @[simps]
-def cast_embedding : ℕ ↪ R :=
+def castEmbedding : ℕ ↪ R :=
   ⟨coe, cast_injective⟩
 
 @[simp, norm_cast]
@@ -93,6 +99,7 @@ section
 
 variable (M : Type _) [AddMonoidₓ M] [One M] [CharZero M]
 
+-- see Note [lower instance priority]
 instance (priority := 100) CharZero.infinite : Infinite M :=
   Infinite.of_injective coe Nat.cast_injective
 

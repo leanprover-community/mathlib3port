@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Aaron Anderson. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Aaron Anderson
+-/
 import Mathbin.Order.Bounds
 
 /-!
@@ -34,7 +39,7 @@ instance [SemilatticeInf α] : SemilatticeInf (Ico a b) :=
 
 /-- `Ico a b` has a bottom element whenever `a < b`. -/
 @[reducible]
-protected def OrderBot [PartialOrderₓ α] (h : a < b) : OrderBot (Ico a b) :=
+protected def orderBot [PartialOrderₓ α] (h : a < b) : OrderBot (Ico a b) :=
   (is_least_Ico h).OrderBot
 
 end Ico
@@ -55,7 +60,7 @@ instance [SemilatticeSup α] : SemilatticeSup (Ioc a b) :=
 
 /-- `Ioc a b` has a top element whenever `a < b`. -/
 @[reducible]
-protected def OrderTop [PartialOrderₓ α] (h : a < b) : OrderTop (Ioc a b) :=
+protected def orderTop [PartialOrderₓ α] (h : a < b) : OrderTop (Ioc a b) :=
   (is_greatest_Ioc h).OrderTop
 
 end Ioc
@@ -158,17 +163,17 @@ instance [Lattice α] {a b : α} : Lattice (Icc a b) :=
 
 /-- `Icc a b` has a bottom element whenever `a ≤ b`. -/
 @[reducible]
-protected def OrderBot [Preorderₓ α] {a b : α} (h : a ≤ b) : OrderBot (Icc a b) :=
+protected def orderBot [Preorderₓ α] {a b : α} (h : a ≤ b) : OrderBot (Icc a b) :=
   (is_least_Icc h).OrderBot
 
 /-- `Icc a b` has a top element whenever `a ≤ b`. -/
 @[reducible]
-protected def OrderTop [Preorderₓ α] {a b : α} (h : a ≤ b) : OrderTop (Icc a b) :=
+protected def orderTop [Preorderₓ α] {a b : α} (h : a ≤ b) : OrderTop (Icc a b) :=
   (is_greatest_Icc h).OrderTop
 
 /-- `Icc a b` is a `bounded_order` whenever `a ≤ b`. -/
 @[reducible]
-protected def BoundedOrder [Preorderₓ α] {a b : α} (h : a ≤ b) : BoundedOrder (Icc a b) :=
+protected def boundedOrder [Preorderₓ α] {a b : α} (h : a ≤ b) : BoundedOrder (Icc a b) :=
   { Icc.orderTop h, Icc.orderBot h with }
 
 end Icc

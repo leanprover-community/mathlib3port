@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2022 Andrew Yang. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Andrew Yang
+-/
 import Mathbin.AlgebraicGeometry.Gluing
 import Mathbin.CategoryTheory.Limits.Opposites
 import Mathbin.AlgebraicGeometry.GammaSpecAdjunction
@@ -35,7 +40,7 @@ variable {X Y Z : Scheme.{u}} (𝒰 : OpenCover.{u} X) (f : X ⟶ Z) (g : Y ⟶ 
 variable [∀ i, HasPullback (𝒰.map i ≫ f) g]
 
 /-- The intersection of `Uᵢ ×[Z] Y` and `Uⱼ ×[Z] Y` is given by (Uᵢ ×[Z] Y) ×[X] Uⱼ -/
-def V (i j : 𝒰.J) : Scheme :=
+def v (i j : 𝒰.J) : Scheme :=
   pullback ((pullback.fst : pullback (𝒰.map i ≫ f) g ⟶ _) ≫ 𝒰.map i) (𝒰.map j)
 
 /-- The canonical transition map `(Uᵢ ×[Z] Y) ×[X] Uⱼ ⟶ (Uⱼ ×[Z] Y) ×[X] Uᵢ` given by the fact
@@ -167,6 +172,7 @@ theorem cocycle_snd_snd (i j k : 𝒰.J) :
     t' 𝒰 f g i j k ≫ t' 𝒰 f g j k i ≫ t' 𝒰 f g k i j ≫ pullback.snd ≫ pullback.snd = pullback.snd ≫ pullback.snd := by
   simp
 
+-- `by tidy` should solve it, but it times out.
 theorem cocycle (i j k : 𝒰.J) : t' 𝒰 f g i j k ≫ t' 𝒰 f g j k i ≫ t' 𝒰 f g k i j = 𝟙 _ := by
   apply pullback.hom_ext <;> rw [category.id_comp]
   · apply pullback.hom_ext
@@ -202,6 +208,7 @@ def gluing : Scheme.GlueData.{u} where
   J := 𝒰.J
   U := fun i => pullback (𝒰.map i ≫ f) g
   V := fun ⟨i, j⟩ => v 𝒰 f g i j
+  -- `p⁻¹(Uᵢ ∩ Uⱼ)` where `p : Uᵢ ×[Z] Y ⟶ Uᵢ ⟶ X`.
   f := fun i j => pullback.fst
   f_id := fun i => inferInstance
   f_open := inferInstance
@@ -248,7 +255,7 @@ variable (s : PullbackCone f g)
 The canonical map `(s.X ×[X] Uᵢ) ×[s.X] (s.X ×[X] Uⱼ) ⟶ (Uᵢ ×[Z] Y) ×[X] Uⱼ`
 
 This is used in `glued_lift`. -/
-def glued_lift_pullback_map (i j : 𝒰.J) :
+def gluedLiftPullbackMap (i j : 𝒰.J) :
     pullback ((𝒰.pullbackCover s.fst).map i) ((𝒰.pullbackCover s.fst).map j) ⟶ (gluing 𝒰 f g).V ⟨i, j⟩ := by
   change pullback pullback.fst pullback.fst ⟶ pullback _ _
   refine' (pullback_right_pullback_fst_iso _ _ _).Hom ≫ _
@@ -285,7 +292,7 @@ to glue these into a map `s.X ⟶ Uᵢ ×[Z] Y`, we need to show that the maps a
 `(s.fst ⁻¹' Uᵢ) ×[s.X] (s.fst ⁻¹' Uⱼ) ⟶ Uᵢ ×[Z] Y`. This is achieved by showing that both of these
 maps factors through `glued_lift_pullback_map`.
 -/
-def glued_lift : s.x ⟶ (gluing 𝒰 f g).glued := by
+def gluedLift : s.x ⟶ (gluing 𝒰 f g).glued := by
   fapply (𝒰.pullback_cover s.fst).glueMorphisms
   · exact fun i =>
       (pullback_symmetry _ _).Hom ≫
@@ -340,7 +347,7 @@ The canonical map `(W ×[X] Uᵢ) ×[W] (Uⱼ ×[Z] Y) ⟶ (Uⱼ ×[Z] Y) ×[X] 
 the glued fibred product.
 
 This is used in `lift_comp_ι`. -/
-def pullback_fst_ι_to_V (i j : 𝒰.J) :
+def pullbackFstιToV (i j : 𝒰.J) :
     pullback (pullback.fst : pullback (p1 𝒰 f g) (𝒰.map i) ⟶ _) ((gluing 𝒰 f g).ι j) ⟶ v 𝒰 f g j i :=
   (pullbackSymmetry _ _ ≪≫ pullbackRightPullbackFstIso (p1 𝒰 f g) (𝒰.map i) _).Hom ≫
     (pullback.congrHom (multicoequalizer.π_desc _ _ _ _ _) rfl).Hom
@@ -394,7 +401,7 @@ theorem lift_comp_ι (i : 𝒰.J) :
 
 /-- The canonical isomorphism between `W ×[X] Uᵢ` and `Uᵢ ×[X] Y`. That is, the preimage of `Uᵢ` in
 `W` along `p1` is indeed `Uᵢ ×[X] Y`. -/
-def pullback_p1_iso (i : 𝒰.J) : pullback (p1 𝒰 f g) (𝒰.map i) ≅ pullback (𝒰.map i ≫ f) g := by
+def pullbackP1Iso (i : 𝒰.J) : pullback (p1 𝒰 f g) (𝒰.map i) ≅ pullback (𝒰.map i ≫ f) g := by
   fconstructor
   exact
     pullback.lift pullback.snd (pullback.fst ≫ p2 𝒰 f g)
@@ -443,7 +450,7 @@ theorem pullback_p1_iso_hom_ι (i : 𝒰.J) : (pullbackP1Iso 𝒰 f g i).Hom ≫
   rw [← pullback_p1_iso_inv_fst, iso.hom_inv_id_assoc]
 
 /-- The glued scheme (`(gluing 𝒰 f g).glued`) is indeed the pullback of `f` and `g`. -/
-def glued_is_limit : IsLimit (PullbackCone.mk _ _ (p_comm 𝒰 f g)) := by
+def gluedIsLimit : IsLimit (PullbackCone.mk _ _ (p_comm 𝒰 f g)) := by
   apply pullback_cone.is_limit_aux'
   intro s
   refine' ⟨glued_lift 𝒰 f g s, glued_lift_p1 𝒰 f g s, glued_lift_p2 𝒰 f g s, _⟩
@@ -515,7 +522,7 @@ instance : HasPullbacks Scheme :=
 
 /-- Given an open cover `{ Xᵢ }` of `X`, then `X ×[Z] Y` is covered by `Xᵢ ×[Z] Y`. -/
 @[simps J obj map]
-def open_cover_of_left (𝒰 : OpenCover X) (f : X ⟶ Z) (g : Y ⟶ Z) : OpenCover (pullback f g) := by
+def openCoverOfLeft (𝒰 : OpenCover X) (f : X ⟶ Z) (g : Y ⟶ Z) : OpenCover (pullback f g) := by
   fapply
     ((gluing 𝒰 f g).OpenCover.pushforwardIso (limit.iso_limit_cone ⟨_, glued_is_limit 𝒰 f g⟩).inv).copy 𝒰.J
       (fun i => pullback (𝒰.map i ≫ f) g)
@@ -537,7 +544,7 @@ def open_cover_of_left (𝒰 : OpenCover X) (f : X ⟶ Z) (g : Y ⟶ Z) : OpenCo
 
 /-- Given an open cover `{ Yᵢ }` of `Y`, then `X ×[Z] Y` is covered by `X ×[Z] Yᵢ`. -/
 @[simps J obj map]
-def open_cover_of_right (𝒰 : OpenCover Y) (f : X ⟶ Z) (g : Y ⟶ Z) : OpenCover (pullback f g) := by
+def openCoverOfRight (𝒰 : OpenCover Y) (f : X ⟶ Z) (g : Y ⟶ Z) : OpenCover (pullback f g) := by
   fapply
     ((open_cover_of_left 𝒰 g f).pushforwardIso (pullback_symmetry _ _).Hom).copy 𝒰.J (fun i => pullback f (𝒰.map i ≫ g))
       (fun i =>
@@ -551,7 +558,7 @@ def open_cover_of_right (𝒰 : OpenCover Y) (f : X ⟶ Z) (g : Y ⟶ Z) : OpenC
   apply pullback.hom_ext <;> simp
 
 /-- (Implementation). Use `open_cover_of_base` instead. -/
-def open_cover_of_base' (𝒰 : OpenCover Z) (f : X ⟶ Z) (g : Y ⟶ Z) : OpenCover (pullback f g) := by
+def openCoverOfBase' (𝒰 : OpenCover Z) (f : X ⟶ Z) (g : Y ⟶ Z) : OpenCover (pullback f g) := by
   apply (open_cover_of_left (𝒰.pullback_cover f) f g).bind
   intro i
   let Xᵢ := pullback f (𝒰.map i)
@@ -574,7 +581,7 @@ def open_cover_of_base' (𝒰 : OpenCover Z) (f : X ⟶ Z) (g : Y ⟶ Z) : OpenC
 /-- Given an open cover `{ Zᵢ }` of `Z`, then `X ×[Z] Y` is covered by `Xᵢ ×[Zᵢ] Yᵢ`, where
   `Xᵢ = X ×[Z] Zᵢ` and `Yᵢ = Y ×[Z] Zᵢ` is the preimage of `Zᵢ` in `X` and `Y`. -/
 @[simps J obj map]
-def open_cover_of_base (𝒰 : OpenCover Z) (f : X ⟶ Z) (g : Y ⟶ Z) : OpenCover (pullback f g) := by
+def openCoverOfBase (𝒰 : OpenCover Z) (f : X ⟶ Z) (g : Y ⟶ Z) : OpenCover (pullback f g) := by
   apply
     (open_cover_of_base' 𝒰 f g).copy 𝒰.J
       (fun i => pullback (pullback.snd : pullback f (𝒰.map i) ⟶ _) (pullback.snd : pullback g (𝒰.map i) ⟶ _))

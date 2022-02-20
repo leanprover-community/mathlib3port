@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2017 Johannes Hölzl. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johannes Hölzl
+-/
 import Mathbin.Data.Set.Pairwise
 
 /-!
@@ -80,15 +85,15 @@ parameter {α : Type u}(r : α → α → Prop)
 local infixl:50 " ≺ " => r
 
 /-- A chain is a subset `c` satisfying `x ≺ y ∨ x = y ∨ y ≺ x` for all `x y ∈ c`. -/
-def chain (c : Set α) :=
+def Chain (c : Set α) :=
   c.Pairwise fun x y => x ≺ y ∨ y ≺ x
 
 parameter {r}
 
-theorem chain.total_of_refl [IsRefl α r] {c} (H : chain c) {x y} (hx : x ∈ c) (hy : y ∈ c) : x ≺ y ∨ y ≺ x :=
+theorem Chain.total_of_refl [IsRefl α r] {c} (H : chain c) {x y} (hx : x ∈ c) (hy : y ∈ c) : x ≺ y ∨ y ≺ x :=
   if e : x = y then Or.inl (e ▸ refl _) else H hx hy e
 
-theorem chain.mono {c c'} : c' ⊆ c → chain c → chain c' :=
+theorem Chain.mono {c c'} : c' ⊆ c → chain c → chain c' :=
   Set.Pairwise.mono
 
 theorem chain_of_trichotomous [IsTrichotomous α r] (s : Set α) : chain s := by
@@ -106,7 +111,7 @@ theorem chain_univ_iff : chain (Univ : Set α) ↔ IsTrichotomous α r := by
   rw [Or.left_comm, or_iff_not_imp_left]
   exact h trivialₓ trivialₓ
 
-theorem chain.directed_on [IsRefl α r] {c} (H : chain c) : DirectedOn (· ≺ ·) c := fun x hx y hy =>
+theorem Chain.directed_on [IsRefl α r] {c} (H : chain c) : DirectedOn (· ≺ ·) c := fun x hx y hy =>
   match H.total_of_refl hx hy with
   | Or.inl h => ⟨y, hy, h, refl _⟩
   | Or.inr h => ⟨x, hx, refl _, h⟩
@@ -117,16 +122,16 @@ theorem chain_insert {c : Set α} {a : α} (hc : chain c) (ha : ∀, ∀ b ∈ c
     (forall_insert_of_forall (fun x hx hneq => (ha x hx) fun h' => hneq h'.symm) fun h => (h rfl).rec _)
 
 /-- `super_chain c₁ c₂` means that `c₂` is a chain that strictly includes `c₁`. -/
-def super_chain (c₁ c₂ : Set α) : Prop :=
+def SuperChain (c₁ c₂ : Set α) : Prop :=
   chain c₂ ∧ c₁ ⊂ c₂
 
 /-- A chain `c` is a maximal chain if there does not exists a chain strictly including `c`. -/
-def is_max_chain (c : Set α) :=
+def IsMaxChain (c : Set α) :=
   chain c ∧ ¬∃ c', super_chain c c'
 
 /-- Given a set `c`, if there exists a chain `c'` strictly including `c`, then `succ_chain c`
 is one of these chains. Otherwise it is `c`. -/
-def succ_chain (c : Set α) : Set α :=
+def SuccChain (c : Set α) : Set α :=
   if h : ∃ c', chain c ∧ super_chain c c' then some h else c
 
 theorem succ_spec {c : Set α} (h : ∃ c', chain c ∧ super_chain c c') : super_chain c (succ_chain c) := by
@@ -152,7 +157,7 @@ theorem succ_increasing {c : Set α} : c ⊆ succ_chain c :=
     simp [succ_chain, dif_neg, h, subset.refl]
 
 /-- Set of sets reachable from `∅` using `succ_chain` and `⋃₀`. -/
-inductive chain_closure : Set (Set α)
+inductive ChainClosure : Set (Set α)
   | succ : ∀ {s}, chain_closure s → chain_closure (succ_chain s)
   | union : ∀ {s}, (∀, ∀ a ∈ s, ∀, chain_closure a) → chain_closure (⋃₀s)
 
@@ -244,7 +249,7 @@ theorem chain_chain_closure (hc : c ∈ chain_closure) : chain c := by
     exact chain_succ h
   case union s hs h =>
     have h : ∀, ∀ c ∈ s, ∀, Zorn.Chain c := h
-    exact fun c₁ ⟨t₁, ht₁, (hc₁ : c₁ ∈ t₁)⟩ c₂ ⟨t₂, ht₂, (hc₂ : c₂ ∈ t₂)⟩ hneq =>
+    exact fun hneq =>
       have : t₁ ⊆ t₂ ∨ t₂ ⊆ t₁ := chain_closure_total (hs _ ht₁) (hs _ ht₂)
       Or.elim this (fun ht => h t₂ ht₂ (ht hc₁) hc₂ hneq) fun ht => h t₁ ht₁ hc₁ (ht hc₂) hneq
 
@@ -255,7 +260,7 @@ theorem _root_.set.subsingleton.chain (hc : Set.Subsingleton c) : chain c := fun
 
 /-- An explicit maximal chain. `max_chain` is taken to be the union of all sets in `chain_closure`.
 -/
-def max_chain :=
+def MaxChain :=
   ⋃₀chain_closure
 
 /-- Hausdorff's maximality principle
@@ -297,7 +302,8 @@ theorem exists_maximal_of_nonempty_chains_bounded [Nonempty α]
 end Chain
 
 /-- This can be used to turn `zorn.chain (≥)` into `zorn.chain (≤)` and vice-versa. -/
-theorem chain.symm {α : Type u} {s : Set α} {q : α → α → Prop} (h : Chain q s) : Chain (flip q) s :=
+--This lemma isn't under section `chain` because `parameters` messes up with it. Feel free to fix it
+theorem Chain.symm {α : Type u} {s : Set α} {q : α → α → Prop} (h : Chain q s) : Chain (flip q) s :=
   h.mono' fun _ _ => Or.symm
 
 theorem zorn_partial_order {α : Type u} [PartialOrderₓ α]
@@ -310,7 +316,7 @@ theorem zorn_nonempty_partial_order {α : Type u} [PartialOrderₓ α] [Nonempty
   let ⟨m, hm⟩ := @exists_maximal_of_nonempty_chains_bounded α (· ≤ ·) _ h fun a b c => le_transₓ
   ⟨m, fun a ha => le_antisymmₓ (hm a ha) ha⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (c «expr ⊆ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (c «expr ⊆ » s)
 theorem zorn_partial_order₀ {α : Type u} [PartialOrderₓ α] (s : Set α)
     (ih : ∀ c _ : c ⊆ s, Chain (· ≤ ·) c → ∃ ub ∈ s, ∀, ∀ z ∈ c, ∀, z ≤ ub) : ∃ m ∈ s, ∀, ∀ z ∈ s, ∀, m ≤ z → z = m :=
   let ⟨⟨m, hms⟩, h⟩ :=
@@ -319,10 +325,10 @@ theorem zorn_partial_order₀ {α : Type u} [PartialOrderₓ α] (s : Set α)
         ih (Subtype.val '' c) (fun _ ⟨⟨x, hx⟩, _, h⟩ => h ▸ hx)
           (by
             rintro _ ⟨p, hpc, rfl⟩ _ ⟨q, hqc, rfl⟩ hpq <;> refine' hc hpc hqc fun t => hpq (Subtype.ext_iff.1 t))
-      ⟨⟨ub, hubs⟩, fun ⟨y, hy⟩ hc => hub _ ⟨_, hc, rfl⟩⟩
+      ⟨⟨ub, hubs⟩, fun hc => hub _ ⟨_, hc, rfl⟩⟩
   ⟨m, hms, fun z hzs hmz => congr_argₓ Subtype.val (h ⟨z, hzs⟩ hmz)⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (c «expr ⊆ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (c «expr ⊆ » s)
 theorem zorn_nonempty_partial_order₀ {α : Type u} [PartialOrderₓ α] (s : Set α)
     (ih : ∀ c _ : c ⊆ s, Chain (· ≤ ·) c → ∀, ∀ y ∈ c, ∀, ∃ ub ∈ s, ∀, ∀ z ∈ c, ∀, z ≤ ub) (x : α) (hxs : x ∈ s) :
     ∃ m ∈ s, x ≤ m ∧ ∀, ∀ z ∈ s, ∀, m ≤ z → z = m :=
@@ -343,23 +349,23 @@ theorem zorn_nonempty_partial_order₀ {α : Type u} [PartialOrderₓ α] (s : S
         ⟨⟨ub, hubs, le_transₓ m.2.2 <| hub m.1 <| mem_image_of_mem _ hmc⟩, fun a hac => hub a.1 ⟨a, hac, rfl⟩⟩
   ⟨m, hms, hxm, fun z hzs hmz => congr_argₓ Subtype.val <| h ⟨z, hzs, le_transₓ hxm hmz⟩ hmz⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (c «expr ⊆ » S)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (c «expr ⊆ » S)
 theorem zorn_subset {α : Type u} (S : Set (Set α))
     (h : ∀ c _ : c ⊆ S, Chain (· ⊆ ·) c → ∃ ub ∈ S, ∀, ∀ s ∈ c, ∀, s ⊆ ub) : ∃ m ∈ S, ∀, ∀ a ∈ S, ∀, m ⊆ a → a = m :=
   zorn_partial_order₀ S h
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (c «expr ⊆ » S)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (c «expr ⊆ » S)
 theorem zorn_subset_nonempty {α : Type u} (S : Set (Set α))
     (H : ∀ c _ : c ⊆ S, Chain (· ⊆ ·) c → c.Nonempty → ∃ ub ∈ S, ∀, ∀ s ∈ c, ∀, s ⊆ ub) x (hx : x ∈ S) :
     ∃ m ∈ S, x ⊆ m ∧ ∀, ∀ a ∈ S, ∀, m ⊆ a → a = m :=
   zorn_nonempty_partial_order₀ _ (fun c cS hc y yc => H _ cS hc ⟨y, yc⟩) _ hx
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (c «expr ⊆ » S)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (c «expr ⊆ » S)
 theorem zorn_superset {α : Type u} (S : Set (Set α))
     (h : ∀ c _ : c ⊆ S, Chain (· ⊆ ·) c → ∃ lb ∈ S, ∀, ∀ s ∈ c, ∀, lb ⊆ s) : ∃ m ∈ S, ∀, ∀ a ∈ S, ∀, a ⊆ m → a = m :=
   (@zorn_partial_order₀ (OrderDual (Set α)) _ S) fun c cS hc => h c cS hc.symm
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (c «expr ⊆ » S)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (c «expr ⊆ » S)
 theorem zorn_superset_nonempty {α : Type u} (S : Set (Set α))
     (H : ∀ c _ : c ⊆ S, Chain (· ⊆ ·) c → c.Nonempty → ∃ lb ∈ S, ∀, ∀ s ∈ c, ∀, lb ⊆ s) x (hx : x ∈ S) :
     ∃ m ∈ S, m ⊆ x ∧ ∀, ∀ a ∈ S, ∀, a ⊆ m → a = m :=
@@ -367,7 +373,7 @@ theorem zorn_superset_nonempty {α : Type u} (S : Set (Set α))
 
 /-- Every chain is contained in a maximal chain. This generalizes Hausdorff's maximality principle.
 -/
-theorem chain.max_chain_of_chain {α r} {c : Set α} (hc : Zorn.Chain r c) : ∃ M, @Zorn.IsMaxChain _ r M ∧ c ⊆ M := by
+theorem Chain.max_chain_of_chain {α r} {c : Set α} (hc : Zorn.Chain r c) : ∃ M, @Zorn.IsMaxChain _ r M ∧ c ⊆ M := by
   obtain ⟨M, ⟨_, hM₀⟩, hM₁, hM₂⟩ := Zorn.zorn_subset_nonempty { s | c ⊆ s ∧ Zorn.Chain r s } _ c ⟨subset.rfl, hc⟩
   · refine' ⟨M, ⟨hM₀, _⟩, hM₁⟩
     rintro ⟨d, hd, hMd, hdM⟩
@@ -385,11 +391,11 @@ theorem chain.max_chain_of_chain {α r} {c : Set α} (hc : Zorn.Chain r c) : ∃
   · exact (hcs₀ hsy).right hysy (h hzsz) hyz
     
 
-theorem chain.total {α : Type u} [Preorderₓ α] {c : Set α} (H : Chain (· ≤ ·) c) :
+theorem Chain.total {α : Type u} [Preorderₓ α] {c : Set α} (H : Chain (· ≤ ·) c) :
     ∀ {x y}, x ∈ c → y ∈ c → x ≤ y ∨ y ≤ x := fun x y => H.total_of_refl
 
-theorem chain.image {α β : Type _} (r : α → α → Prop) (s : β → β → Prop) (f : α → β) (h : ∀ x y, r x y → s (f x) (f y))
-    {c : Set α} (hrc : Chain r c) : Chain s (f '' c) := fun x ⟨a, ha₁, ha₂⟩ y ⟨b, hb₁, hb₂⟩ =>
+theorem Chain.image {α β : Type _} (r : α → α → Prop) (s : β → β → Prop) (f : α → β) (h : ∀ x y, r x y → s (f x) (f y))
+    {c : Set α} (hrc : Chain r c) : Chain s (f '' c) := fun y ⟨b, hb₁, hb₂⟩ =>
   ha₂ ▸ hb₂ ▸ fun hxy => (hrc ha₁ hb₁ <| ne_of_apply_ne f hxy).elim (Or.inl ∘ h _ _) (Or.inr ∘ h _ _)
 
 end Zorn

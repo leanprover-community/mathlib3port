@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Junyan Xu. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Junyan Xu
+-/
 import Mathbin.AlgebraicGeometry.Scheme
 import Mathbin.CategoryTheory.Adjunction.Limits
 import Mathbin.CategoryTheory.Adjunction.Reflective
@@ -53,11 +58,11 @@ namespace LocallyRingedSpace
 variable (X : LocallyRingedSpace.{u})
 
 /-- The map from the global sections to a stalk. -/
-def Γ_to_stalk (x : X) : Γ.obj (op X) ⟶ X.Presheaf.stalk x :=
+def ΓToStalk (x : X) : Γ.obj (op X) ⟶ X.Presheaf.stalk x :=
   X.Presheaf.germ (⟨x, trivialₓ⟩ : (⊤ : Opens X))
 
 /-- The canonical map from the underlying set to the prime spectrum of `Γ(X)`. -/
-def to_Γ_Spec_fun : X → PrimeSpectrum (Γ.obj (op X)) := fun x =>
+def toΓSpecFun : X → PrimeSpectrum (Γ.obj (op X)) := fun x =>
   comap (X.ΓToStalk x) (LocalRing.closedPoint (X.Presheaf.stalk x))
 
 theorem not_mem_prime_iff_unit_in_stalk (r : Γ.obj (op X)) (x : X) :
@@ -82,14 +87,14 @@ theorem to_Γ_Spec_continuous : Continuous X.toΓSpecFun := by
 /-- The canonical (bundled) continuous map from the underlying topological
 space of `X` to the prime spectrum of its global sections. -/
 @[simps]
-def to_Γ_Spec_base : X.toTop ⟶ Spec.topObj (Γ.obj (op X)) where
+def toΓSpecBase : X.toTop ⟶ Spec.topObj (Γ.obj (op X)) where
   toFun := X.toΓSpecFun
   continuous_to_fun := X.to_Γ_Spec_continuous
 
 variable (r : Γ.obj (op X))
 
 /-- The preimage in `X` of a basic open in `Spec Γ(X)` (as an open set). -/
-abbrev to_Γ_Spec_map_basic_open : Opens X :=
+abbrev toΓSpecMapBasicOpen : Opens X :=
   (Opens.map X.toΓSpecBase).obj (basicOpen r)
 
 /-- The preimage is the basic open in `X` defined by the same element `r`. -/
@@ -97,7 +102,7 @@ theorem to_Γ_Spec_map_basic_open_eq : X.toΓSpecMapBasicOpen r = X.toRingedSpac
   Subtype.eq (X.to_Γ_Spec_preim_basic_open_eq r)
 
 /-- The map from the global sections `Γ(X)` to the sections on the (preimage of) a basic open. -/
-abbrev to_to_Γ_Spec_map_basic_open : X.Presheaf.obj (op ⊤) ⟶ X.Presheaf.obj (op <| X.toΓSpecMapBasicOpen r) :=
+abbrev toToΓSpecMapBasicOpen : X.Presheaf.obj (op ⊤) ⟶ X.Presheaf.obj (op <| X.toΓSpecMapBasicOpen r) :=
   X.Presheaf.map (X.toΓSpecMapBasicOpen r).le_top.op
 
 /-- `r` is a unit as a section on the basic open defined by `r`. -/
@@ -110,7 +115,7 @@ theorem is_unit_res_to_Γ_Spec_map_basic_open : IsUnit (X.toToΓSpecMapBasicOpen
   congr
 
 /-- Define the sheaf hom on individual basic opens for the unit. -/
-def to_Γ_Spec_c_app :
+def toΓSpecCApp :
     (structure_sheaf <| Γ.obj <| op X).val.obj (op <| basicOpen r) ⟶ X.Presheaf.obj (op <| X.toΓSpecMapBasicOpen r) :=
   IsLocalization.Away.lift r (is_unit_res_to_Γ_Spec_map_basic_open _ r)
 
@@ -136,7 +141,7 @@ theorem to_Γ_Spec_c_app_spec : toOpen _ (basicOpen r) ≫ X.toΓSpecCApp r = X.
   (X.to_Γ_Spec_c_app_iff r _).2 rfl
 
 /-- The sheaf hom on all basic opens, commuting with restrictions. -/
-def to_Γ_Spec_c_basic_opens :
+def toΓSpecCBasicOpens :
     (inducedFunctor basicOpen).op ⋙ (structureSheaf (Γ.obj (op X))).1 ⟶
       (inducedFunctor basicOpen).op ⋙ ((Top.Sheaf.pushforward X.toΓSpecBase).obj X.𝒪).1 where
   app := fun r => X.toΓSpecCApp r.unop
@@ -150,7 +155,7 @@ def to_Γ_Spec_c_basic_opens :
 
 /-- The canonical morphism of sheafed spaces from `X` to the spectrum of its global sections. -/
 @[simps]
-def to_Γ_Spec_SheafedSpace : X.toSheafedSpace ⟶ Spec.toSheafedSpace.obj (op (Γ.obj (op X))) where
+def toΓSpecSheafedSpace : X.toSheafedSpace ⟶ Spec.toSheafedSpace.obj (op (Γ.obj (op X))) where
   base := X.toΓSpecBase
   c := Top.Sheaf.restrictHomEquivHom (structureSheaf (Γ.obj (op X))).1 _ is_basis_basic_opens X.toΓSpecCBasicOpens
 
@@ -181,12 +186,13 @@ theorem to_stalk_stalk_map_to_Γ_Spec (x : X) :
 
 /-- The canonical morphism from `X` to the spectrum of its global sections. -/
 @[simps coeBase]
-def to_Γ_Spec : X ⟶ Spec.locallyRingedSpaceObj (Γ.obj (op X)) where
+def toΓSpec : X ⟶ Spec.locallyRingedSpaceObj (Γ.obj (op X)) where
   val := X.toΓSpecSheafedSpace
   property := by
     intro x
     let p : PrimeSpectrum (Γ.obj (op X)) := X.to_Γ_Spec_fun x
     constructor
+    -- show stalk map is local hom ↓
     let S := (structure_sheaf _).val.stalk p
     rintro (t : S) ht
     obtain ⟨⟨r, s⟩, he⟩ := IsLocalization.surj p.as_ideal.prime_compl t
@@ -232,7 +238,7 @@ theorem Γ_Spec_left_triangle : toSpecΓ (Γ.obj (op X)) ≫ X.toΓSpec.1.c.app 
 end LocallyRingedSpace
 
 /-- The unit as a natural transformation. -/
-def identity_to_Γ_Spec : 𝟭 LocallyRingedSpace.{u} ⟶ Γ.rightOp ⋙ Spec.to_LocallyRingedSpace where
+def identityToΓSpec : 𝟭 LocallyRingedSpace.{u} ⟶ Γ.rightOp ⋙ Spec.to_LocallyRingedSpace where
   app := LocallyRingedSpace.toΓSpec
   naturality' := fun X Y f => by
     symm
@@ -273,8 +279,9 @@ theorem right_triangle (R : CommRingₓₓ) :
     
 
 /-- The adjunction `Γ ⊣ Spec` from `CommRingᵒᵖ` to `LocallyRingedSpace`. -/
+-- Removing this makes the following definition time out.
 @[simps Unit counit]
-def LocallyRingedSpace_adjunction : Γ.rightOp ⊣ Spec.to_LocallyRingedSpace :=
+def locallyRingedSpaceAdjunction : Γ.rightOp ⊣ Spec.to_LocallyRingedSpace :=
   Adjunction.mkOfUnitCounit
     { Unit := identityToΓSpec, counit := (NatIso.op specΓIdentity).inv,
       left_triangle' := by
@@ -333,6 +340,9 @@ instance is_iso_adjunction_counit : IsIso ΓSpec.adjunction.counit := by
   rw [adjunction_counit_app]
   infer_instance
 
+-- This is just
+-- `(Γ_Spec.adjunction.unit.app X).1.c.app (op ⊤) = Spec_Γ_identity.hom.app (X.presheaf.obj (op ⊤))`
+-- But lean times out when trying to unify the types of the two sides.
 theorem adjunction_unit_app_app_top (X : Scheme) :
     @Eq
       ((Scheme.spec.obj (op <| X.Presheaf.obj (op ⊤))).Presheaf.obj (op ⊤) ⟶
@@ -356,7 +366,7 @@ end ΓSpec
 instance : Limits.PreservesLimits Spec.toLocallyRingedSpace :=
   ΓSpec.locallyRingedSpaceAdjunction.rightAdjointPreservesLimits
 
-instance Spec.preserves_limits : Limits.preservesLimits Scheme.spec :=
+instance Spec.preservesLimits : Limits.preservesLimits Scheme.spec :=
   ΓSpec.adjunction.rightAdjointPreservesLimits
 
 /-- Spec is a full functor. -/

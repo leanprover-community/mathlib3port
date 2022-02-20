@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Simon Hudon. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Simon Hudon, Patrick Massot
+-/
 import Mathbin.Algebra.Group.Pi
 import Mathbin.GroupTheory.GroupAction.Defs
 
@@ -12,14 +17,16 @@ universe u v w
 
 variable {I : Type u}
 
+-- The indexing type
 variable {f : I → Type v}
 
+-- The family of types already equipped with instances
 variable (x y : ∀ i, f i) (i : I)
 
 namespace Pi
 
 @[to_additive Pi.hasVadd]
-instance HasScalar {α : Type _} [∀ i, HasScalar α <| f i] : HasScalar α (∀ i : I, f i) :=
+instance hasScalar {α : Type _} [∀ i, HasScalar α <| f i] : HasScalar α (∀ i : I, f i) :=
   ⟨fun s x => fun i => s • x i⟩
 
 @[to_additive]
@@ -31,7 +38,7 @@ theorem smul_apply {α : Type _} [∀ i, HasScalar α <| f i] (s : α) : (s • 
   rfl
 
 @[to_additive Pi.hasVadd']
-instance has_scalar' {g : I → Type _} [∀ i, HasScalar (f i) (g i)] : HasScalar (∀ i, f i) (∀ i : I, g i) :=
+instance hasScalar' {g : I → Type _} [∀ i, HasScalar (f i) (g i)] : HasScalar (∀ i, f i) (∀ i : I, g i) :=
   ⟨fun s x => fun i => s i • x i⟩
 
 @[simp, to_additive]
@@ -39,7 +46,7 @@ theorem smul_apply' {g : I → Type _} [∀ i, HasScalar (f i) (g i)] (s : ∀ i
     (s • x) i = s i • x i :=
   rfl
 
-instance IsScalarTower {α β : Type _} [HasScalar α β] [∀ i, HasScalar β <| f i] [∀ i, HasScalar α <| f i]
+instance is_scalar_tower {α β : Type _} [HasScalar α β] [∀ i, HasScalar β <| f i] [∀ i, HasScalar α <| f i]
     [∀ i, IsScalarTower α β (f i)] : IsScalarTower α β (∀ i : I, f i) :=
   ⟨fun x y z => funext fun i => smul_assoc x y (z i)⟩
 
@@ -53,7 +60,7 @@ instance is_scalar_tower'' {g : I → Type _} {h : I → Type _} [∀ i, HasScal
   ⟨fun x y z => funext fun i => smul_assoc (x i) (y i) (z i)⟩
 
 @[to_additive]
-instance SmulCommClass {α β : Type _} [∀ i, HasScalar α <| f i] [∀ i, HasScalar β <| f i]
+instance smul_comm_class {α β : Type _} [∀ i, HasScalar α <| f i] [∀ i, HasScalar β <| f i]
     [∀ i, SmulCommClass α β (f i)] : SmulCommClass α β (∀ i : I, f i) :=
   ⟨fun x y z => funext fun i => smul_comm x y (z i)⟩
 
@@ -83,30 +90,30 @@ theorem has_faithful_scalar_at {α : Type _} [∀ i, HasScalar α <| f i] [∀ i
       simpa using this⟩
 
 @[to_additive Pi.has_faithful_vadd]
-instance HasFaithfulScalar {α : Type _} [Nonempty I] [∀ i, HasScalar α <| f i] [∀ i, Nonempty (f i)]
+instance has_faithful_scalar {α : Type _} [Nonempty I] [∀ i, HasScalar α <| f i] [∀ i, Nonempty (f i)]
     [∀ i, HasFaithfulScalar α (f i)] : HasFaithfulScalar α (∀ i, f i) :=
   let ⟨i⟩ := ‹Nonempty I›
   has_faithful_scalar_at i
 
 @[to_additive]
-instance MulAction α {m : Monoidₓ α} [∀ i, MulAction α <| f i] : @MulAction α (∀ i : I, f i) m where
-  smul := · • ·
+instance mulAction α {m : Monoidₓ α} [∀ i, MulAction α <| f i] : @MulAction α (∀ i : I, f i) m where
+  smul := (· • ·)
   mul_smul := fun r s f => funext fun i => mul_smul _ _ _
   one_smul := fun f => funext fun i => one_smul α _
 
 @[to_additive]
-instance mul_action' {g : I → Type _} {m : ∀ i, Monoidₓ (f i)} [∀ i, MulAction (f i) (g i)] :
+instance mulAction' {g : I → Type _} {m : ∀ i, Monoidₓ (f i)} [∀ i, MulAction (f i) (g i)] :
     @MulAction (∀ i, f i) (∀ i : I, g i) (@Pi.monoid I f m) where
-  smul := · • ·
+  smul := (· • ·)
   mul_smul := fun r s f => funext fun i => mul_smul _ _ _
   one_smul := fun f => funext fun i => one_smul _ _
 
-instance DistribMulAction α {m : Monoidₓ α} {n : ∀ i, AddMonoidₓ <| f i} [∀ i, DistribMulAction α <| f i] :
+instance distribMulAction α {m : Monoidₓ α} {n : ∀ i, AddMonoidₓ <| f i} [∀ i, DistribMulAction α <| f i] :
     @DistribMulAction α (∀ i : I, f i) m (@Pi.addMonoid I f n) :=
   { Pi.mulAction _ with smul_zero := fun c => funext fun i => smul_zero _,
     smul_add := fun c f g => funext fun i => smul_add _ _ _ }
 
-instance distrib_mul_action' {g : I → Type _} {m : ∀ i, Monoidₓ (f i)} {n : ∀ i, AddMonoidₓ <| g i}
+instance distribMulAction' {g : I → Type _} {m : ∀ i, Monoidₓ (f i)} {n : ∀ i, AddMonoidₓ <| g i}
     [∀ i, DistribMulAction (f i) (g i)] :
     @DistribMulAction (∀ i, f i) (∀ i : I, g i) (@Pi.monoid I f m) (@Pi.addMonoid I g n) where
   smul_add := by
@@ -131,14 +138,14 @@ theorem single_smul' {α β} [Monoidₓ α] [AddMonoidₓ β] [DistribMulAction 
 theorem single_smul₀ {g : I → Type _} [∀ i, MonoidWithZeroₓ (f i)] [∀ i, AddMonoidₓ (g i)]
     [∀ i, DistribMulAction (f i) (g i)] [DecidableEq I] (i : I) (r : f i) (x : g i) :
     single i (r • x) = single i r • single i x :=
-  single_op₂ (fun i : I => (· • · : f i → g i → g i)) (fun j => smul_zero _) _ _ _
+  single_op₂ (fun i : I => ((· • ·) : f i → g i → g i)) (fun j => smul_zero _) _ _ _
 
-instance MulDistribMulAction α {m : Monoidₓ α} {n : ∀ i, Monoidₓ <| f i} [∀ i, MulDistribMulAction α <| f i] :
+instance mulDistribMulAction α {m : Monoidₓ α} {n : ∀ i, Monoidₓ <| f i} [∀ i, MulDistribMulAction α <| f i] :
     @MulDistribMulAction α (∀ i : I, f i) m (@Pi.monoid I f n) :=
   { Pi.mulAction _ with smul_one := fun c => funext fun i => smul_one _,
     smul_mul := fun c f g => funext fun i => smul_mul' _ _ _ }
 
-instance mul_distrib_mul_action' {g : I → Type _} {m : ∀ i, Monoidₓ (f i)} {n : ∀ i, Monoidₓ <| g i}
+instance mulDistribMulAction' {g : I → Type _} {m : ∀ i, Monoidₓ (f i)} {n : ∀ i, Monoidₓ <| g i}
     [∀ i, MulDistribMulAction (f i) (g i)] :
     @MulDistribMulAction (∀ i, f i) (∀ i : I, g i) (@Pi.monoid I f m) (@Pi.monoid I g n) where
   smul_mul := by

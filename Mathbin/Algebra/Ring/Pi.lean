@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Simon Hudon. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Simon Hudon, Patrick Massot
+-/
 import Mathbin.Tactic.PiInstances
 import Mathbin.Algebra.Group.Pi
 import Mathbin.Algebra.Ring.Basic
@@ -15,62 +20,64 @@ universe u v w
 
 variable {I : Type u}
 
+-- The indexing type
 variable {f : I → Type v}
 
+-- The family of types already equipped with instances
 variable (x y : ∀ i, f i) (i : I)
 
-instance Distribₓ [∀ i, Distribₓ <| f i] : Distribₓ (∀ i : I, f i) := by
-  refine_struct { add := · + ·, mul := · * ·, .. } <;>
+instance distrib [∀ i, Distribₓ <| f i] : Distribₓ (∀ i : I, f i) := by
+  refine_struct { add := (· + ·), mul := (· * ·), .. } <;>
     run_tac
       tactic.pi_instance_derive_field
 
-instance NonUnitalNonAssocSemiringₓ [∀ i, NonUnitalNonAssocSemiringₓ <| f i] :
+instance nonUnitalNonAssocSemiring [∀ i, NonUnitalNonAssocSemiringₓ <| f i] :
     NonUnitalNonAssocSemiringₓ (∀ i : I, f i) := by
-  refine_struct { zero := (0 : ∀ i, f i), add := · + ·, mul := · * ·, .. } <;>
+  refine_struct { zero := (0 : ∀ i, f i), add := (· + ·), mul := (· * ·), .. } <;>
     run_tac
       tactic.pi_instance_derive_field
 
-instance NonUnitalSemiringₓ [∀ i, NonUnitalSemiringₓ <| f i] : NonUnitalSemiringₓ (∀ i : I, f i) := by
-  refine_struct { zero := (0 : ∀ i, f i), add := · + ·, mul := · * ·, .. } <;>
+instance nonUnitalSemiring [∀ i, NonUnitalSemiringₓ <| f i] : NonUnitalSemiringₓ (∀ i : I, f i) := by
+  refine_struct { zero := (0 : ∀ i, f i), add := (· + ·), mul := (· * ·), .. } <;>
     run_tac
       tactic.pi_instance_derive_field
 
-instance NonAssocSemiringₓ [∀ i, NonAssocSemiringₓ <| f i] : NonAssocSemiringₓ (∀ i : I, f i) := by
-  refine_struct { zero := (0 : ∀ i, f i), one := 1, add := · + ·, mul := · * ·, .. } <;>
+instance nonAssocSemiring [∀ i, NonAssocSemiringₓ <| f i] : NonAssocSemiringₓ (∀ i : I, f i) := by
+  refine_struct { zero := (0 : ∀ i, f i), one := 1, add := (· + ·), mul := (· * ·), .. } <;>
     run_tac
       tactic.pi_instance_derive_field
 
-instance Semiringₓ [∀ i, Semiringₓ <| f i] : Semiringₓ (∀ i : I, f i) := by
+instance semiring [∀ i, Semiringₓ <| f i] : Semiringₓ (∀ i : I, f i) := by
   refine_struct
-      { zero := (0 : ∀ i, f i), one := 1, add := · + ·, mul := · * ·, nsmul := AddMonoidₓ.nsmul,
+      { zero := (0 : ∀ i, f i), one := 1, add := (· + ·), mul := (· * ·), nsmul := AddMonoidₓ.nsmul,
         npow := Monoidₓ.npow } <;>
     run_tac
       tactic.pi_instance_derive_field
 
-instance CommSemiringₓ [∀ i, CommSemiringₓ <| f i] : CommSemiringₓ (∀ i : I, f i) := by
+instance commSemiring [∀ i, CommSemiringₓ <| f i] : CommSemiringₓ (∀ i : I, f i) := by
   refine_struct
-      { zero := (0 : ∀ i, f i), one := 1, add := · + ·, mul := · * ·, nsmul := AddMonoidₓ.nsmul,
+      { zero := (0 : ∀ i, f i), one := 1, add := (· + ·), mul := (· * ·), nsmul := AddMonoidₓ.nsmul,
         npow := Monoidₓ.npow } <;>
     run_tac
       tactic.pi_instance_derive_field
 
-instance NonUnitalNonAssocRing [∀ i, NonUnitalNonAssocRing <| f i] : NonUnitalNonAssocRing (∀ i : I, f i) := by
+instance nonUnitalNonAssocRing [∀ i, NonUnitalNonAssocRing <| f i] : NonUnitalNonAssocRing (∀ i : I, f i) := by
   refine_struct
-      { zero := (0 : ∀ i, f i), add := · + ·, mul := · * ·, neg := Neg.neg, nsmul := AddMonoidₓ.nsmul,
+      { zero := (0 : ∀ i, f i), add := (· + ·), mul := (· * ·), neg := Neg.neg, nsmul := AddMonoidₓ.nsmul,
         zsmul := SubNegMonoidₓ.zsmul } <;>
     run_tac
       tactic.pi_instance_derive_field
 
-instance Ringₓ [∀ i, Ringₓ <| f i] : Ringₓ (∀ i : I, f i) := by
+instance ring [∀ i, Ringₓ <| f i] : Ringₓ (∀ i : I, f i) := by
   refine_struct
-      { zero := (0 : ∀ i, f i), one := 1, add := · + ·, mul := · * ·, neg := Neg.neg, nsmul := AddMonoidₓ.nsmul,
+      { zero := (0 : ∀ i, f i), one := 1, add := (· + ·), mul := (· * ·), neg := Neg.neg, nsmul := AddMonoidₓ.nsmul,
         zsmul := SubNegMonoidₓ.zsmul, npow := Monoidₓ.npow } <;>
     run_tac
       tactic.pi_instance_derive_field
 
-instance CommRingₓ [∀ i, CommRingₓ <| f i] : CommRingₓ (∀ i : I, f i) := by
+instance commRing [∀ i, CommRingₓ <| f i] : CommRingₓ (∀ i : I, f i) := by
   refine_struct
-      { zero := (0 : ∀ i, f i), one := 1, add := · + ·, mul := · * ·, neg := Neg.neg, nsmul := AddMonoidₓ.nsmul,
+      { zero := (0 : ∀ i, f i), one := 1, add := (· + ·), mul := (· * ·), neg := Neg.neg, nsmul := AddMonoidₓ.nsmul,
         zsmul := SubNegMonoidₓ.zsmul, npow := Monoidₓ.npow } <;>
     run_tac
       tactic.pi_instance_derive_field
@@ -78,7 +85,7 @@ instance CommRingₓ [∀ i, CommRingₓ <| f i] : CommRingₓ (∀ i : I, f i) 
 /-- A family of ring homomorphisms `f a : γ →+* β a` defines a ring homomorphism
 `pi.ring_hom f : γ →+* Π a, β a` given by `pi.ring_hom f x b = f b x`. -/
 @[simps]
-protected def RingHom {γ : Type w} [∀ i, NonAssocSemiringₓ (f i)] [NonAssocSemiringₓ γ] (g : ∀ i, γ →+* f i) :
+protected def ringHom {γ : Type w} [∀ i, NonAssocSemiringₓ (f i)] [NonAssocSemiringₓ γ] (g : ∀ i, γ →+* f i) :
     γ →+* ∀ i, f i where
   toFun := fun x b => g b x
   map_add' := fun x y => funext fun z => (g z).map_add x y

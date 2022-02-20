@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Yury G. Kudryashov. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yury G. Kudryashov
+-/
 import Mathbin.Analysis.NormedSpace.Basic
 
 /-!
@@ -153,7 +158,7 @@ noncomputable instance : OrderTop (Enorm 𝕜 V) where
       simp [top_map h]
 
 noncomputable instance : SemilatticeSup (Enorm 𝕜 V) :=
-  { Enorm.partialOrder with le := · ≤ ·, lt := · < ·,
+  { Enorm.partialOrder with le := (· ≤ ·), lt := (· < ·),
     sup := fun e₁ e₂ =>
       { toFun := fun x => max (e₁ x) (e₂ x), eq_zero' := fun x h => e₁.eq_zero_iff.1 (Ennreal.max_eq_zero_iff.1 h).1,
         map_add_le' := fun x y =>
@@ -174,7 +179,7 @@ theorem max_map (e₁ e₂ : Enorm 𝕜 V) (x : V) : (e₁⊔e₂) x = max (e₁
   rfl
 
 /-- Structure of an `emetric_space` defined by an extended norm. -/
-def EmetricSpace : EmetricSpace V where
+def emetricSpace : EmetricSpace V where
   edist := fun x y => e (x - y)
   edist_self := fun x => by
     simp
@@ -189,12 +194,12 @@ def EmetricSpace : EmetricSpace V where
       
 
 /-- The subspace of vectors with finite enorm. -/
-def finite_subspace : Subspace 𝕜 V where
+def finiteSubspace : Subspace 𝕜 V where
   Carrier := { x | e x < ⊤ }
   zero_mem' := by
     simp
   add_mem' := fun x y hx hy => lt_of_le_of_ltₓ (e.map_add_le x y) (Ennreal.add_lt_top.2 ⟨hx, hy⟩)
-  smul_mem' := fun c x hx : _ < _ =>
+  smul_mem' := fun hx : _ < _ =>
     calc
       e (c • x) = nnnorm c * e x := e.map_smul c x
       _ < ⊤ := Ennreal.mul_lt_top Ennreal.coe_ne_top hx.Ne

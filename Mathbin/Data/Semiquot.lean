@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Mario Carneiro. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Mario Carneiro
+-/
 import Mathbin.Data.Set.Lattice
 
 /-! # Semiquotients
@@ -48,7 +53,7 @@ theorem exists_mem (q : Semiquot α) : ∃ a, a ∈ q :=
 theorem eq_mk_of_mem {q : Semiquot α} {a : α} (h : a ∈ q) : q = @mk _ a q.1 h :=
   ext_s.2 rfl
 
-theorem Nonempty (q : Semiquot α) : q.S.Nonempty :=
+theorem nonempty (q : Semiquot α) : q.S.Nonempty :=
   q.exists_mem
 
 /-- `pure a` is `a` reinterpreted as an unspecified element of `{a}`. -/
@@ -75,20 +80,20 @@ theorem mem_blur' (q : Semiquot α) {s : Set α} (h : q.S ⊆ s) {a : α} : a �
   Iff.rfl
 
 /-- Convert a `trunc α` to a `semiquot α`. -/
-def of_trunc (q : Trunc α) : Semiquot α :=
+def ofTrunc (q : Trunc α) : Semiquot α :=
   ⟨Set.Univ, q.map fun a => ⟨a, trivialₓ⟩⟩
 
 /-- Convert a `semiquot α` to a `trunc α`. -/
-def to_trunc (q : Semiquot α) : Trunc α :=
+def toTrunc (q : Semiquot α) : Trunc α :=
   q.2.map Subtype.val
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (a b «expr ∈ » q)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (a b «expr ∈ » q)
 /-- If `f` is a constant on `q.s`, then `q.lift_on f` is the value of `f`
 at any point of `q`. -/
-def lift_on (q : Semiquot α) (f : α → β) (h : ∀ a b _ : a ∈ q _ : b ∈ q, f a = f b) : β :=
+def liftOn (q : Semiquot α) (f : α → β) (h : ∀ a b _ : a ∈ q _ : b ∈ q, f a = f b) : β :=
   Trunc.liftOn q.2 (fun x => f x.1) fun x y => h _ x.2 _ y.2
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (a b «expr ∈ » q)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (a b «expr ∈ » q)
 theorem lift_on_of_mem (q : Semiquot α) (f : α → β) (h : ∀ a b _ : a ∈ q _ : b ∈ q, f a = f b) (a : α) (aq : a ∈ q) :
     liftOn q f h = f a := by
   revert h <;> rw [eq_mk_of_mem aq] <;> intro <;> rfl
@@ -115,11 +120,11 @@ instance : Monadₓ Semiquot where
   bind := @Semiquot.bind
 
 @[simp]
-theorem map_def {β} : (· <$> · : (α → β) → Semiquot α → Semiquot β) = map :=
+theorem map_def {β} : ((· <$> ·) : (α → β) → Semiquot α → Semiquot β) = map :=
   rfl
 
 @[simp]
-theorem bind_def {β} : (· >>= · : Semiquot α → (α → Semiquot β) → Semiquot β) = bind :=
+theorem bind_def {β} : ((· >>= ·) : Semiquot α → (α → Semiquot β) → Semiquot β) = bind :=
   rfl
 
 @[simp]
@@ -165,9 +170,9 @@ instance : SemilatticeSup (Semiquot α) :=
 theorem pure_le {a : α} {s : Semiquot α} : pure a ≤ s ↔ a ∈ s :=
   Set.singleton_subset_iff
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (a b «expr ∈ » q)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (a b «expr ∈ » q)
 /-- Assert that a `semiquot` contains only one possible value. -/
-def is_pure (q : Semiquot α) : Prop :=
+def IsPure (q : Semiquot α) : Prop :=
   ∀ a b _ : a ∈ q _ : b ∈ q, a = b
 
 /-- Extract the value from a `is_pure` semiquotient. -/
@@ -191,10 +196,10 @@ theorem pure_is_pure (a : α) : IsPure (pure a)
 theorem is_pure_iff {s : Semiquot α} : IsPure s ↔ ∃ a, s = pure a :=
   ⟨fun h => ⟨_, eq_pure h⟩, fun ⟨a, e⟩ => e.symm ▸ pure_is_pure _⟩
 
-theorem is_pure.mono {s t : Semiquot α} (st : s ≤ t) (h : IsPure t) : IsPure s
+theorem IsPure.mono {s t : Semiquot α} (st : s ≤ t) (h : IsPure t) : IsPure s
   | a, as, b, bs => h _ (st as) _ (st bs)
 
-theorem is_pure.min {s t : Semiquot α} (h : IsPure t) : s ≤ t ↔ s = t :=
+theorem IsPure.min {s t : Semiquot α} (h : IsPure t) : s ≤ t ↔ s = t :=
   ⟨fun st =>
     le_antisymmₓ st <| by
       rw [eq_pure h, eq_pure (h.mono st)] <;> simp <;> exact h _ (get_mem _) _ (st <| get_mem _),
@@ -221,7 +226,7 @@ theorem univ_unique (I J : Inhabited α) : @univ _ I = @univ _ J :=
 
 @[simp]
 theorem is_pure_univ [Inhabited α] : @IsPure α univ ↔ Subsingleton α :=
-  ⟨fun h => ⟨fun a b => h a trivialₓ b trivialₓ⟩, fun ⟨h⟩ a _ b _ => h a b⟩
+  ⟨fun h => ⟨fun a b => h a trivialₓ b trivialₓ⟩, fun a _ b _ => h a b⟩
 
 instance [Inhabited α] : OrderTop (Semiquot α) where
   top := univ

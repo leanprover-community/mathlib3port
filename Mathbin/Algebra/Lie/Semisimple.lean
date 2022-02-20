@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Oliver Nash. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Oliver Nash
+-/
 import Mathbin.Algebra.Lie.Solvable
 
 /-!
@@ -37,7 +42,7 @@ variable [CommRingₓ R] [LieRing L] [LieAlgebra R L]
 
 /-- A Lie algebra is simple if it is irreducible as a Lie module over itself via the adjoint
 action, and it is non-Abelian. -/
-class is_simple extends LieModule.IsIrreducible R L L : Prop where
+class IsSimple extends LieModule.IsIrreducible R L L : Prop where
   non_abelian : ¬IsLieAbelian L
 
 /-- A semisimple Lie algebra is one with trivial radical.
@@ -47,7 +52,7 @@ Note that the label 'semisimple' is apparently not universally agreed
 for general coefficients. We are following [Seligman, page 15](seligman1967) and using the label
 for the weakest of the various properties which are all equivalent over a field of characteristic
 zero. -/
-class is_semisimple : Prop where
+class IsSemisimple : Prop where
   semisimple : radical R L = ⊥
 
 theorem is_semisimple_iff_no_solvable_ideals : IsSemisimple R L ↔ ∀ I : LieIdeal R L, IsSolvable R I → I = ⊥ :=

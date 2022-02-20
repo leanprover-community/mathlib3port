@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Johannes Hölzl. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johannes Hölzl
+-/
 import Mathbin.Algebra.DirectSum.Finsupp
 import Mathbin.LinearAlgebra.Finsupp
 import Mathbin.LinearAlgebra.DirectSum.TensorProduct
@@ -58,6 +63,7 @@ theorem finsupp_tensor_finsupp_apply (R M N ι κ : Sort _) [CommRingₓ R] [Add
     · intro k' n
       simp only [finsupp_tensor_finsupp_single]
       simp only [Finsupp.single, Finsupp.coe_mk]
+      -- split_ifs; finish can close the goal from here
       by_cases' h1 : (i', k') = (i, k)
       · simp only [Prod.mk.inj_iffₓ] at h1
         simp [h1]

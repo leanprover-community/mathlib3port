@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Anne Baanen. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Anne Baanen
+-/
 import Mathbin.FieldTheory.Subfield
 import Mathbin.FieldTheory.Tower
 import Mathbin.RingTheory.Algebraic
@@ -52,7 +57,7 @@ variable {K L} (S : IntermediateField K L)
 namespace IntermediateField
 
 /-- Reinterpret an `intermediate_field` as a `subfield`. -/
-def to_subfield : Subfield L :=
+def toSubfield : Subfield L :=
   { S.toSubalgebra, S with }
 
 instance : SetLike (IntermediateField K L) L :=
@@ -214,7 +219,7 @@ def Subfield.toIntermediateField (S : Subfield L) (algebra_map_mem : ∀ x, alge
 namespace IntermediateField
 
 /-- An intermediate field inherits a field structure -/
-instance to_field : Field S :=
+instance toField : Field S :=
   S.toSubfield.toField
 
 @[simp, norm_cast]
@@ -273,10 +278,10 @@ theorem coe_prod {ι : Type _} [Fintype ι] (f : ι → S) : (↑(∏ i, f i) : 
 instance module' {R} [Semiringₓ R] [HasScalar R K] [Module R L] [IsScalarTower R K L] : Module R S :=
   S.toSubalgebra.module'
 
-instance Module : Module K S :=
+instance module : Module K S :=
   S.toSubalgebra.Module
 
-instance IsScalarTower {R} [Semiringₓ R] [HasScalar R K] [Module R L] [IsScalarTower R K L] : IsScalarTower R K S :=
+instance is_scalar_tower {R} [Semiringₓ R] [HasScalar R K] [Module R L] [IsScalarTower R K L] : IsScalarTower R K S :=
   S.toSubalgebra.IsScalarTower
 
 @[simp]
@@ -287,10 +292,10 @@ theorem coe_smul {R} [Semiringₓ R] [HasScalar R K] [Module R L] [IsScalarTower
 instance algebra' {K'} [CommSemiringₓ K'] [HasScalar K' K] [Algebra K' L] [IsScalarTower K' K L] : Algebra K' S :=
   S.toSubalgebra.algebra'
 
-instance Algebra : Algebra K S :=
+instance algebra : Algebra K S :=
   S.toSubalgebra.Algebra
 
-instance to_algebra {R : Type _} [Semiringₓ R] [Algebra L R] : Algebra S R :=
+instance toAlgebra {R : Type _} [Semiringₓ R] [Algebra L R] : Algebra S R :=
   S.toSubalgebra.toAlgebra
 
 instance is_scalar_tower_bot {R : Type _} [Semiringₓ R] [Algebra L R] : IsScalarTower S L R :=
@@ -324,7 +329,7 @@ theorem map_map {K L₁ L₂ L₃ : Type _} [Field K] [Field L₁] [Algebra K L�
 field `E` of `L/K`, `intermediate_field_equiv_map e E` is the induced equivalence
 between `E` and `E.map e` -/
 @[simps]
-def intermediate_field_map (e : L ≃ₐ[K] L') (E : IntermediateField K L) : E ≃ₐ[K] E.map e.toAlgHom :=
+def intermediateFieldMap (e : L ≃ₐ[K] L') (E : IntermediateField K L) : E ≃ₐ[K] E.map e.toAlgHom :=
   e.subalgebraMap E.toSubalgebra
 
 /-- The embedding from an intermediate field of `L / K` to `L`. -/
@@ -409,10 +414,10 @@ def lift2 {F : IntermediateField K L} (E : IntermediateField F L) : Intermediate
   inv_mem' := fun x => inv_mem E
   algebra_map_mem' := fun x => algebra_map_mem E (algebraMap K F x)
 
-instance has_lift1 {F : IntermediateField K L} : HasLiftT (IntermediateField K F) (IntermediateField K L) :=
+instance hasLift1 {F : IntermediateField K L} : HasLiftT (IntermediateField K F) (IntermediateField K L) :=
   ⟨lift1⟩
 
-instance has_lift2 {F : IntermediateField K L} : HasLiftT (IntermediateField F L) (IntermediateField K L) :=
+instance hasLift2 {F : IntermediateField K L} : HasLiftT (IntermediateField F L) (IntermediateField K L) :=
   ⟨lift2⟩
 
 @[simp]
@@ -432,7 +437,7 @@ instance lift2_tower {F : IntermediateField K L} {E : IntermediateField F L} : I
   E.IsScalarTower
 
 /-- `lift2` is isomorphic to the original `intermediate_field`. -/
-def lift2_alg_equiv {F : IntermediateField K L} (E : IntermediateField F L) : (↑E : IntermediateField K L) ≃ₐ[K] E :=
+def lift2AlgEquiv {F : IntermediateField K L} (E : IntermediateField F L) : (↑E : IntermediateField K L) ≃ₐ[K] E :=
   AlgEquiv.refl
 
 end Tower

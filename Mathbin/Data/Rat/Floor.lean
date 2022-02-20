@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Johannes Hölzl. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johannes Hölzl, Mario Carneiro, Kevin Kappelmann
+-/
 import Mathbin.Algebra.Order.Floor
 import Mathbin.Tactic.FieldSimp
 
@@ -108,7 +113,9 @@ theorem num_lt_succ_floor_mul_denom (q : ℚ) : q.num < (⌊q⌋ + 1) * q.denom 
         exact_mod_cast q.pos)
 
 theorem fract_inv_num_lt_num_of_pos {q : ℚ} (q_pos : 0 < q) : (fract q⁻¹).num < q.num := by
+  -- we know that the numerator must be positive
   have q_num_pos : 0 < q.num := rat.num_pos_iff_pos.elim_right q_pos
+  -- we will work with the absolute value of the numerator, which is equal to the numerator
   have q_num_abs_eq_q_num : (q.num.nat_abs : ℤ) = q.num := Int.nat_abs_of_nonneg q_num_pos.le
   set q_inv := (q.denom : ℚ) / q.num with q_inv_def
   have q_inv_eq : q⁻¹ = q_inv := Rat.inv_def'
@@ -117,6 +124,7 @@ theorem fract_inv_num_lt_num_of_pos {q : ℚ} (q_pos : 0 < q) : (fract q⁻¹).n
   suffices ((q.denom - q.num * ⌊q_inv⌋ : ℚ) / q.num).num < q.num by
     field_simp [this, ne_of_gtₓ q_num_pos]
   suffices (q.denom : ℤ) - q.num * ⌊q_inv⌋ < q.num by
+    -- use that `q.num` and `q.denom` are coprime to show that the numerator stays unreduced
     have : ((q.denom - q.num * ⌊q_inv⌋ : ℚ) / q.num).num = q.denom - q.num * ⌊q_inv⌋ := by
       suffices ((q.denom : ℤ) - q.num * ⌊q_inv⌋).natAbs.Coprime q.num.nat_abs by
         exact_mod_cast Rat.num_div_eq_of_coprime q_num_pos this
@@ -125,11 +133,14 @@ theorem fract_inv_num_lt_num_of_pos {q : ℚ} (q_pos : 0 < q) : (fract q⁻¹).n
       have tmp := Nat.coprime_sub_mul_floor_rat_div_of_coprime q.cop.symm
       simpa only [this, q_num_abs_eq_q_num] using tmp
     rwa [this]
+  -- to show the claim, start with the following inequality
   have q_inv_num_denom_ineq : q⁻¹.num - ⌊q⁻¹⌋ * q⁻¹.denom < q⁻¹.denom := by
     have : q⁻¹.num < (⌊q⁻¹⌋ + 1) * q⁻¹.denom := Rat.num_lt_succ_floor_mul_denom q⁻¹
     have : q⁻¹.num < ⌊q⁻¹⌋ * q⁻¹.denom + q⁻¹.denom := by
       rwa [right_distrib, one_mulₓ] at this
     rwa [← sub_lt_iff_lt_add'] at this
+  -- use that `q.num` and `q.denom` are coprime to show that q_inv is the unreduced reciprocal
+  -- of `q`
   have : q_inv.num = q.denom ∧ q_inv.denom = q.num.nat_abs := by
     have coprime_q_denom_q_num : q.denom.coprime q.num.nat_abs := q.cop.symm
     have : Int.natAbs q.denom = q.denom := by

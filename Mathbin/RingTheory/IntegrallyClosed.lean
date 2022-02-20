@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Anne Baanen. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Anne Baanen
+-/
 import Mathbin.RingTheory.IntegralClosure
 import Mathbin.RingTheory.Localization
 
@@ -118,6 +123,7 @@ variable (K : Type _) [Field K] [Algebra R K] [IsFractionRing R K]
 
 variable {L : Type _} [Field L] [Algebra K L] [Algebra R L] [IsScalarTower R K L]
 
+-- Can't be an instance because you need to supply `K`.
 theorem is_integrally_closed_of_finite_extension [FiniteDimensional K L] : IsIntegrallyClosed (integralClosure R L) :=
   by
   let this' : IsFractionRing (integralClosure R L) L := is_fraction_ring_of_finite_extension K L

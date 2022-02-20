@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Keeley Hoek, Scott Morrison
+-/
 import Mathbin.Tactic.Core
 import Mathbin.Tactic.NthRewrite.Basic
 
@@ -11,14 +16,18 @@ open NthRewrite
 metavariables in the tactic state, and without creating any metavariables which cannot be
 discharged by `cfg.discharger` in the process. -/
 unsafe def rewrite_without_new_mvars (r : expr) (e : expr) (cfg : nth_rewrite.cfg := {  }) : tactic (expr × expr) :=
-  lock_tactic_state <| do
+  lock_tactic_state <|-- This makes sure that we forget everything in between rewrites;
+  -- otherwise we don't correctly find everything!
+  do
     let (new_t, prf, metas) ← rewrite_core r e { cfg.to_rewrite_cfg with md := semireducible }
     try_apply_opt_auto_param cfg metas
     set_goals metas
     all_goals (try cfg)
     done
     let prf ← instantiate_mvars prf
-    return (new_t, prf)
+    -- This is necessary because of the locked tactic state.
+        return
+        (new_t, prf)
 
 /-- Returns true if the argument is a proof that the entire expression was rewritten.
 
@@ -41,7 +50,8 @@ it fails, it just returns the empty list. -/
 unsafe def rewrite_at_lens (cfg : nth_rewrite.cfg) (r : expr × Bool) (l : expr_lens) (e : expr) :
     tactic (List tracked_rewrite) := do
   let (v, pr) ← rewrite_without_new_mvars r.1 e { cfg with symm := r.2 }
-  if ¬rewrite_is_of_entire pr then return []
+  -- Now we determine whether the rewrite transforms the entire expression or not:
+      if ¬rewrite_is_of_entire pr then return []
     else do
       let w := l v
       let qr ← l pr

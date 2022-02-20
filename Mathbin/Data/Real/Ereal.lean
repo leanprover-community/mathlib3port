@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Kevin Buzzard. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Kevin Buzzard
+-/
 import Mathbin.Data.Real.Basic
 import Mathbin.Data.Real.Ennreal
 
@@ -59,6 +64,7 @@ def Real.toEreal : ℝ → Ereal :=
 
 namespace Ereal
 
+-- TODO: Provide explicitly, otherwise it is inferred noncomputably from `complete_linear_order`
 instance : HasBot Ereal :=
   ⟨some ⊥⟩
 
@@ -93,7 +99,7 @@ def _root_.ennreal.to_ereal : ℝ≥0∞ → Ereal
   | ⊤ => ⊤
   | some x => x.1
 
-instance has_coe_ennreal : Coe ℝ≥0∞ Ereal :=
+instance hasCoeEnnreal : Coe ℝ≥0∞ Ereal :=
   ⟨Ennreal.toEreal⟩
 
 instance : Zero Ereal :=
@@ -130,7 +136,7 @@ instance : CanLift Ereal ℝ where
       
 
 /-- The map from extended reals to reals sending infinities to zero. -/
-def to_real : Ereal → ℝ
+def toReal : Ereal → ℝ
   | ⊥ => 0
   | ⊤ => 0
   | (x : ℝ) => x
@@ -373,7 +379,7 @@ theorem lt_iff_exists_real_btwn {a b : Ereal} : a < b ↔ ∃ x : ℝ, a < x ∧
     fun ⟨x, ax, xb⟩ => ax.trans xb⟩
 
 /-- The set of numbers in `ereal` that are not equal to `±∞` is equivalent to `ℝ`. -/
-def ne_top_bot_equiv_real : ({⊥, ⊤} : Set Ereal).Compl ≃ ℝ where
+def neTopBotEquivReal : ({⊥, ⊤} : Set Ereal).Compl ≃ ℝ where
   toFun := fun x => Ereal.toReal x
   invFun := fun x =>
     ⟨x, by
@@ -564,7 +570,7 @@ theorem coe_neg (x : ℝ) : ((-x : ℝ) : Ereal) = -(x : Ereal) :=
   rfl
 
 /-- Negation as an order reversing isomorphism on `ereal`. -/
-def neg_order_iso : Ereal ≃o OrderDual Ereal :=
+def negOrderIso : Ereal ≃o OrderDual Ereal :=
   { Equivₓ.neg Ereal with toFun := fun x => OrderDual.toDual (-x), invFun := fun x => -x.ofDual,
     map_rel_iff' := fun x y => neg_le_neg_iff }
 

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Yaël Dillies. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yaël Dillies, Scott Morrison
+-/
 import Mathbin.Data.Finset.Lattice
 import Mathbin.Data.Multiset.Functor
 
@@ -145,7 +150,7 @@ instance : Monadₓ Finset :=
   { Finset.applicative with bind := fun α β => @sup _ _ _ _ }
 
 @[simp]
-theorem bind_def {α β} : · >>= · = @sup (Finset α) β _ _ :=
+theorem bind_def {α β} : (· >>= ·) = @sup (Finset α) β _ _ :=
   rfl
 
 instance : IsLawfulMonad Finset :=
@@ -165,7 +170,7 @@ section Alternativeₓ
 variable [∀ P, Decidable P]
 
 instance : Alternativeₓ Finset :=
-  { Finset.applicative with orelse := fun α => · ∪ ·, failure := fun α => ∅ }
+  { Finset.applicative with orelse := fun α => (· ∪ ·), failure := fun α => ∅ }
 
 end Alternativeₓ
 

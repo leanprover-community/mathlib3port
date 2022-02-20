@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Yury G. Kudryashov. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yury G. Kudryashov
+-/
 import Mathbin.Analysis.NormedSpace.AddTorsor
 import Mathbin.LinearAlgebra.AffineSpace.Ordered
 import Mathbin.Topology.ContinuousFunction.Basic
@@ -195,7 +200,7 @@ theorem approx_mono (c : CU X) (x : X) : Monotone fun n => c.approx n x :=
 * `0 ≤ f x ≤ 1` for all `x`;
 * `f` equals zero on `c.C` and equals one outside of `c.U`;
 -/
-protected noncomputable def limₓ (c : CU X) (x : X) : ℝ :=
+protected noncomputable def lim (c : CU X) (x : X) : ℝ :=
   ⨆ n, c.approx n x
 
 theorem tendsto_approx_at_top (c : CU X) (x : X) : Tendsto (fun n => c.approx n x) atTop (𝓝 <| c.lim x) :=
@@ -283,6 +288,7 @@ then there exists a continuous function `f : X → ℝ` such that
 -/
 theorem exists_continuous_zero_one_of_closed {s t : Set X} (hs : IsClosed s) (ht : IsClosed t) (hd : Disjoint s t) :
     ∃ f : C(X, ℝ), EqOn f 0 s ∧ EqOn f 1 t ∧ ∀ x, f x ∈ Icc (0 : ℝ) 1 := by
+  -- The actual proof is in the code above. Here we just repack it into the expected format.
   set c : Urysohns.CU X := ⟨s, tᶜ, hs, ht.is_open_compl, fun _ => disjoint_left.1 hd⟩
   exact ⟨⟨c.lim, c.continuous_lim⟩, c.lim_of_mem_C, fun x hx => c.lim_of_nmem_U _ fun h => h hx, c.lim_mem_Icc⟩
 

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Riccardo Brasca. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Riccardo Brasca
+-/
 import Mathbin.Algebra.Polynomial.BigOperators
 import Mathbin.Analysis.Complex.RootsOfUnity
 import Mathbin.Data.Polynomial.Lifts
@@ -369,7 +374,7 @@ theorem cyclotomic.dvd_X_pow_sub_one (n : ℕ) (R : Type _) [CommRingₓ R] : cy
 
 theorem prod_cyclotomic_eq_geom_sum {n : ℕ} (h : 0 < n) R [CommRingₓ R] [IsDomain R] :
     (∏ i in n.divisors \ {1}, cyclotomic i R) = geomSum x n := by
-  apply_fun · * cyclotomic 1 R using mul_left_injective₀ (cyclotomic_ne_zero 1 R)
+  apply_fun (· * cyclotomic 1 R) using mul_left_injective₀ (cyclotomic_ne_zero 1 R)
   have : (∏ i in {1}, cyclotomic i R) = cyclotomic 1 R := Finset.prod_singleton
   simp_rw [← this,
     Finset.prod_sdiff <|
@@ -491,6 +496,7 @@ theorem is_root_cyclotomic (hpos : 0 < n) {μ : R} (h : IsPrimitiveRoot μ n) : 
 
 private theorem is_root_cyclotomic_iff' {n : ℕ} {K : Type _} [Field K] {μ : K} [NeZero (n : K)] :
     IsRoot (cyclotomic n K) μ ↔ IsPrimitiveRoot μ n := by
+  -- in this proof, `o` stands for `order_of μ`
   have hnpos : 0 < n := (NeZero.of_ne_zero_coe K).out.bot_lt
   refine' ⟨fun hμ => _, is_root_cyclotomic hnpos⟩
   have hμn : μ ^ n = 1 := by

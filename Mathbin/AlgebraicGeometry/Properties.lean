@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Andrew Yang. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Andrew Yang
+-/
 import Mathbin.AlgebraicGeometry.AffineScheme
 import Mathbin.RingTheory.Nilpotent
 import Mathbin.Topology.Sheaves.SheafCondition.Sites
@@ -199,6 +204,7 @@ theorem eq_zero_of_basic_open_empty {X : Scheme} [hX : IsReduced X] {U : Opens X
   · intro R hX s hs x
     erw [basic_open_eq_of_affine', PrimeSpectrum.basic_open_eq_bot_iff] at hs
     replace hs := hs.map (Spec_Γ_identity.app R).inv
+    -- what the hell?!
     replace hs := @IsNilpotent.eq_zero _ _ _ _ (show _ from _) hs
     rw [coe_hom_inv_id] at hs
     rw [hs, map_zero]
@@ -277,12 +283,12 @@ instance is_irreducible_of_is_integral [IsIntegral X] : IrreducibleSpace X.Carri
       
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:418:16: unsupported tactic `by_contra'
+-- ././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'
 theorem is_integral_of_is_irreducible_is_reduced [IsReduced X] [H : IrreducibleSpace X.Carrier] : IsIntegral X := by
   constructor
   refine' fun U hU => ⟨fun a b e => _, (@LocallyRingedSpace.component_nontrivial X.to_LocallyRingedSpace U hU).1⟩
   simp_rw [← basic_open_eq_bot_iff, ← opens.not_nonempty_iff_eq_bot]
-  "././Mathport/Syntax/Translate/Basic.lean:418:16: unsupported tactic `by_contra'"
+  "././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'"
   obtain ⟨_, ⟨x, hx₁, rfl⟩, ⟨x, hx₂, e'⟩⟩ :=
     @nonempty_preirreducible_inter _ H.1 (X.basic_open a).2 (X.basic_open b).2 h.1 h.2
   replace e' := Subtype.eq e'

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Riccardo Brasca. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Riccardo Brasca
+-/
 import Mathbin.RingTheory.Polynomial.Cyclotomic.Basic
 import Mathbin.Topology.Algebra.Polynomial
 import Mathbin.FieldTheory.Finite.Basic
@@ -17,7 +22,7 @@ open Polynomial Nat Filter
 /-- For any positive `k : ℕ` there are infinitely many primes `p` such that `p ≡ 1 [MOD k]`. -/
 theorem exists_prime_ge_modeq_one (k n : ℕ) (hpos : 0 < k) : ∃ p : ℕ, Nat.Prime p ∧ n ≤ p ∧ p ≡ 1 [MOD k] := by
   have hli : tendsto (abs ∘ fun a : ℕ => abs (a : ℚ)) at_top at_top := by
-    simp only [· ∘ ·, abs_cast]
+    simp only [(· ∘ ·), abs_cast]
     exact nat.strict_mono_cast.monotone.tendsto_at_top_at_top exists_nat_ge
   have hcff : Int.castRingHom ℚ (cyclotomic k ℤ).leadingCoeff ≠ 0 := by
     simp only [cyclotomic.monic, RingHom.eq_int_cast, monic.leading_coeff, Int.cast_one, Ne.def, not_false_iff,

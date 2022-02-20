@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johan Commelin, Scott Morrison
+-/
 import Mathbin.Algebra.Homology.ComplexShape
 import Mathbin.CategoryTheory.Subobject.Limits
 import Mathbin.CategoryTheory.GradedObject
@@ -147,14 +152,14 @@ variable {V} {c : ComplexShape ι} (C : HomologicalComplex V c)
 commuting with the differentials.
 -/
 @[ext]
-structure hom (A B : HomologicalComplex V c) where
+structure Hom (A B : HomologicalComplex V c) where
   f : ∀ i, A.x i ⟶ B.x i
   comm' : ∀ i j, c.Rel i j → f i ≫ B.d i j = A.d i j ≫ f j := by
     run_tac
       obviously
 
 @[simp, reassoc]
-theorem hom.comm {A B : HomologicalComplex V c} (f : A.Hom B) (i j : ι) : f.f i ≫ B.d i j = A.d i j ≫ f.f j := by
+theorem Hom.comm {A B : HomologicalComplex V c} (f : A.Hom B) (i j : ι) : f.f i ≫ B.d i j = A.d i j ≫ f.f j := by
   by_cases' hij : c.rel i j
   · exact f.comm' i j hij
     
@@ -190,6 +195,7 @@ theorem id_f (C : HomologicalComplex V c) (i : ι) : Hom.f (𝟙 C) i = 𝟙 (C.
 theorem comp_f {C₁ C₂ C₃ : HomologicalComplex V c} (f : C₁ ⟶ C₂) (g : C₂ ⟶ C₃) (i : ι) : (f ≫ g).f i = f.f i ≫ g.f i :=
   rfl
 
+-- We'll use this later to show that `homological_complex V c` is preadditive when `V` is.
 theorem hom_f_injective {C₁ C₂ : HomologicalComplex V c} : Function.Injective fun f : Hom C₁ C₂ => f.f := by
   tidy
 
@@ -236,7 +242,7 @@ def forget : HomologicalComplex V c ⥤ GradedObject ι V where
 /-- Forgetting the differentials than picking out the `i`-th object is the same as
 just picking out the `i`-th object. -/
 @[simps]
-def forget_eval (i : ι) : forget V c ⋙ GradedObject.eval i ≅ eval V c i :=
+def forgetEval (i : ι) : forget V c ⋙ GradedObject.eval i ≅ eval V c i :=
   NatIso.ofComponents (fun X => Iso.refl _)
     (by
       tidy)
@@ -286,13 +292,13 @@ variable [HasZeroObject V]
 open_locale ZeroObject
 
 /-- Either `C.X i`, if there is some `i` with `c.rel i j`, or the zero object. -/
-def X_prev (j : ι) : V :=
+def xPrev (j : ι) : V :=
   match c.prev j with
   | none => 0
   | some ⟨i, _⟩ => C.x i
 
 /-- If `c.rel i j`, then `C.X_prev j` is isomorphic to `C.X i`. -/
-def X_prev_iso {i j : ι} (r : c.Rel i j) : C.xPrev j ≅ C.x i :=
+def xPrevIso {i j : ι} (r : c.Rel i j) : C.xPrev j ≅ C.x i :=
   eqToIso
     (by
       dsimp [X_prev]
@@ -300,7 +306,7 @@ def X_prev_iso {i j : ι} (r : c.Rel i j) : C.xPrev j ≅ C.x i :=
       rfl)
 
 /-- If there is no `i` so `c.rel i j`, then `C.X_prev j` is isomorphic to `0`. -/
-def X_prev_iso_zero {j : ι} (h : c.prev j = none) : C.xPrev j ≅ 0 :=
+def xPrevIsoZero {j : ι} (h : c.prev j = none) : C.xPrev j ≅ 0 :=
   eqToIso
     (by
       dsimp [X_prev]
@@ -308,13 +314,13 @@ def X_prev_iso_zero {j : ι} (h : c.prev j = none) : C.xPrev j ≅ 0 :=
       rfl)
 
 /-- Either `C.X j`, if there is some `j` with `c.rel i j`, or the zero object. -/
-def X_next (i : ι) : V :=
+def xNext (i : ι) : V :=
   match c.next i with
   | none => 0
   | some ⟨j, _⟩ => C.x j
 
 /-- If `c.rel i j`, then `C.X_next i` is isomorphic to `C.X j`. -/
-def X_next_iso {i j : ι} (r : c.Rel i j) : C.xNext i ≅ C.x j :=
+def xNextIso {i j : ι} (r : c.Rel i j) : C.xNext i ≅ C.x j :=
   eqToIso
     (by
       dsimp [X_next]
@@ -322,7 +328,7 @@ def X_next_iso {i j : ι} (r : c.Rel i j) : C.xNext i ≅ C.x j :=
       rfl)
 
 /-- If there is no `j` so `c.rel i j`, then `C.X_next i` is isomorphic to `0`. -/
-def X_next_iso_zero {i : ι} (h : c.next i = none) : C.xNext i ≅ 0 :=
+def xNextIsoZero {i : ι} (h : c.next i = none) : C.xNext i ≅ 0 :=
   eqToIso
     (by
       dsimp [X_next]
@@ -331,14 +337,14 @@ def X_next_iso_zero {i : ι} (h : c.next i = none) : C.xNext i ≅ 0 :=
 
 /-- The differential mapping into `C.X j`, or zero if there isn't one.
 -/
-def d_to (j : ι) : C.xPrev j ⟶ C.x j :=
+def dTo (j : ι) : C.xPrev j ⟶ C.x j :=
   match c.prev j with
   | none => (0 : C.xPrev j ⟶ C.x j)
   | some ⟨i, w⟩ => (C.xPrevIso w).Hom ≫ C.d i j
 
 /-- The differential mapping out of `C.X i`, or zero if there isn't one.
 -/
-def d_from (i : ι) : C.x i ⟶ C.xNext i :=
+def dFrom (i : ι) : C.x i ⟶ C.xNext i :=
   match c.next i with
   | none => (0 : C.x i ⟶ C.xNext i)
   | some ⟨j, w⟩ => C.d i j ≫ (C.xNextIso w).inv
@@ -415,13 +421,13 @@ variable {C₁ C₂ C₃ : HomologicalComplex V c}
 
 /-- The `i`-th component of an isomorphism of chain complexes. -/
 @[simps]
-def iso_app (f : C₁ ≅ C₂) (i : ι) : C₁.x i ≅ C₂.x i :=
+def isoApp (f : C₁ ≅ C₂) (i : ι) : C₁.x i ≅ C₂.x i :=
   (eval V c i).mapIso f
 
 /-- Construct an isomorphism of chain complexes from isomorphism of the objects
 which commute with the differentials. -/
 @[simps]
-def iso_of_components (f : ∀ i, C₁.x i ≅ C₂.x i) (hf : ∀ i j, c.Rel i j → (f i).Hom ≫ C₂.d i j = C₁.d i j ≫ (f j).Hom) :
+def isoOfComponents (f : ∀ i, C₁.x i ≅ C₂.x i) (hf : ∀ i j, c.Rel i j → (f i).Hom ≫ C₂.d i j = C₁.d i j ≫ (f j).Hom) :
     C₁ ≅ C₂ where
   Hom := { f := fun i => (f i).Hom, comm' := hf }
   inv :=
@@ -499,7 +505,7 @@ theorem comm_to (f : Hom C₁ C₂) (j : ι) : f.prev j ≫ C₂.dTo j = C₁.dT
 /-- A morphism of chain complexes
 induces a morphism of arrows of the differentials out of each object.
 -/
-def sq_from (f : Hom C₁ C₂) (i : ι) : Arrow.mk (C₁.dFrom i) ⟶ Arrow.mk (C₂.dFrom i) :=
+def sqFrom (f : Hom C₁ C₂) (i : ι) : Arrow.mk (C₁.dFrom i) ⟶ Arrow.mk (C₂.dFrom i) :=
   Arrow.homMk (f.comm_from i)
 
 @[simp]
@@ -551,7 +557,7 @@ theorem sq_from_comp (f : C₁ ⟶ C₂) (g : C₂ ⟶ C₃) (i : ι) : sqFrom (
 /-- A morphism of chain complexes
 induces a morphism of arrows of the differentials into each object.
 -/
-def sq_to (f : Hom C₁ C₂) (j : ι) : Arrow.mk (C₁.dTo j) ⟶ Arrow.mk (C₂.dTo j) :=
+def sqTo (f : Hom C₁ C₂) (j : ι) : Arrow.mk (C₁.dTo j) ⟶ Arrow.mk (C₂.dTo j) :=
   Arrow.homMk (f.comm_to j)
 
 @[simp]
@@ -619,7 +625,7 @@ variable (X : α → V) (d_X : ∀ n, X (n + 1) ⟶ X n) (sq_X : ∀ n, d_X (n +
 from a dependently typed collection of morphisms.
 -/
 @[simps]
-def of_hom (f : ∀ i : α, X i ⟶ Y i) (comm : ∀ i : α, f (i + 1) ≫ d_Y i = d_X i ≫ f i) : of X d_X sq_X ⟶ of Y d_Y sq_Y :=
+def ofHom (f : ∀ i : α, X i ⟶ Y i) (comm : ∀ i : α, f (i + 1) ≫ d_Y i = d_X i ≫ f i) : of X d_X sq_X ⟶ of Y d_Y sq_Y :=
   { f,
     comm' := fun n m => by
       by_cases' h : n = m + 1
@@ -639,7 +645,7 @@ This is purely an implementation detail: for some reason just using the dependen
 results in `mk_aux` taking much longer (well over the `-T100000` limit) to elaborate.
 -/
 @[nolint has_inhabited_instance]
-structure mk_struct where
+structure MkStruct where
   (x₀ x₁ x₂ : V)
   d₀ : X₁ ⟶ X₀
   d₁ : X₂ ⟶ X₁
@@ -647,19 +653,19 @@ structure mk_struct where
 
 variable {V}
 
--- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (X₀ X₁ X₂)
+-- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (X₀ X₁ X₂)
 /-- Flatten to a tuple. -/
-def mk_struct.flat (t : MkStruct V) : Σ' (X₀ : V) (X₁ : V) (X₂ : V) (d₀ : X₁ ⟶ X₀) (d₁ : X₂ ⟶ X₁), d₁ ≫ d₀ = 0 :=
+def MkStruct.flat (t : MkStruct V) : Σ' (X₀ : V) (X₁ : V) (X₂ : V) (d₀ : X₁ ⟶ X₀) (d₁ : X₂ ⟶ X₁), d₁ ≫ d₀ = 0 :=
   ⟨t.x₀, t.x₁, t.x₂, t.d₀, t.d₁, t.s⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (X₀ X₁ X₂)
+-- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (X₀ X₁ X₂)
 variable (X₀ X₁ X₂ : V) (d₀ : X₁ ⟶ X₀) (d₁ : X₂ ⟶ X₁) (s : d₁ ≫ d₀ = 0)
   (succ :
     ∀ t : Σ' (X₀ : V) (X₁ : V) (X₂ : V) (d₀ : X₁ ⟶ X₀) (d₁ : X₂ ⟶ X₁), d₁ ≫ d₀ = 0,
       Σ' (X₃ : V) (d₂ : X₃ ⟶ t.2.2.1), d₂ ≫ t.2.2.2.2.1 = 0)
 
 /-- Auxiliary definition for `mk`. -/
-def mk_aux : ∀ n : ℕ, MkStruct V
+def mkAuxₓ : ∀ n : ℕ, MkStruct V
   | 0 => ⟨X₀, X₁, X₂, d₀, d₁, s⟩
   | n + 1 =>
     let p := mk_aux n
@@ -699,19 +705,20 @@ theorem mk_d_2_0 : (mk X₀ X₁ X₂ d₀ d₁ s succ).d 2 1 = d₁ := by
   change ite (2 = 1 + 1) (𝟙 X₂ ≫ d₁) 0 = d₁
   rw [if_pos rfl, category.id_comp]
 
--- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (X₀ X₁)
+-- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (X₀ X₁)
 /-- A simpler inductive constructor for `ℕ`-indexed chain complexes.
 
 You provide explicitly the first differential,
 then a function which takes a differential,
 and returns the next object, its differential, and the fact it composes appropriately to zero.
 -/
+-- TODO simp lemmas for the inductive steps? It's not entirely clear that they are needed.
 def mk' (X₀ X₁ : V) (d : X₁ ⟶ X₀)
     (succ' : ∀ t : Σ (X₀ : V) (X₁ : V), X₁ ⟶ X₀, Σ' (X₂ : V) (d : X₂ ⟶ t.2.1), d ≫ t.2.2 = 0) : ChainComplex V ℕ :=
   mk X₀ X₁ (succ' ⟨X₀, X₁, d⟩).1 d (succ' ⟨X₀, X₁, d⟩).2.1 (succ' ⟨X₀, X₁, d⟩).2.2 fun t =>
     succ' ⟨t.2.1, t.2.2.1, t.2.2.2.2.1⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (X₀ X₁)
+-- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (X₀ X₁)
 variable (succ' : ∀ t : Σ (X₀ : V) (X₁ : V), X₁ ⟶ X₀, Σ' (X₂ : V) (d : X₂ ⟶ t.2.1), d ≫ t.2.2 = 0)
 
 @[simp]
@@ -727,6 +734,7 @@ theorem mk'_d_1_0 : (mk' X₀ X₁ d₀ succ').d 1 0 = d₀ := by
   change ite (1 = 0 + 1) (𝟙 X₁ ≫ d₀) 0 = d₀
   rw [if_pos rfl, category.id_comp]
 
+-- TODO simp lemmas for the inductive steps? It's not entirely clear that they are needed.
 end Mk
 
 section MkHom
@@ -744,7 +752,7 @@ but don't require at the type level that these successive commutative squares ac
 They do in fact agree, and we then capture that at the type level (i.e. by constructing a chain map)
 in `mk_hom`.
 -/
-def mk_hom_aux : ∀ n, Σ' (f : P.x n ⟶ Q.x n) (f' : P.x (n + 1) ⟶ Q.x (n + 1)), f' ≫ Q.d (n + 1) n = P.d (n + 1) n ≫ f
+def mkHomAuxₓ : ∀ n, Σ' (f : P.x n ⟶ Q.x n) (f' : P.x (n + 1) ⟶ Q.x (n + 1)), f' ≫ Q.d (n + 1) n = P.d (n + 1) n ≫ f
   | 0 => ⟨zero, one, one_zero_comm⟩
   | n + 1 => ⟨(mk_hom_aux n).2.1, (succ n (mk_hom_aux n)).1, (succ n (mk_hom_aux n)).2⟩
 
@@ -757,7 +765,7 @@ and then give a construction of each component,
 and the fact that it forms a commutative square with the previous component,
 using as an inductive hypothesis the data (and commutativity) of the previous two components.
 -/
-def mk_hom : P ⟶ Q where
+def mkHom : P ⟶ Q where
   f := fun n => (mkHomAuxₓ P Q zero one one_zero_comm succ n).1
   comm' := fun n m => by
     rintro (rfl : m + 1 = n)
@@ -841,7 +849,7 @@ variable (X : α → V) (d_X : ∀ n, X n ⟶ X (n + 1)) (sq_X : ∀ n, d_X n �
 from a dependently typed collection of morphisms.
 -/
 @[simps]
-def of_hom (f : ∀ i : α, X i ⟶ Y i) (comm : ∀ i : α, f i ≫ d_Y i = d_X i ≫ f (i + 1)) : of X d_X sq_X ⟶ of Y d_Y sq_Y :=
+def ofHom (f : ∀ i : α, X i ⟶ Y i) (comm : ∀ i : α, f i ≫ d_Y i = d_X i ≫ f (i + 1)) : of X d_X sq_X ⟶ of Y d_Y sq_Y :=
   { f,
     comm' := fun n m => by
       by_cases' h : n + 1 = m
@@ -861,7 +869,7 @@ This is purely an implementation detail: for some reason just using the dependen
 results in `mk_aux` taking much longer (well over the `-T100000` limit) to elaborate.
 -/
 @[nolint has_inhabited_instance]
-structure mk_struct where
+structure MkStruct where
   (x₀ x₁ x₂ : V)
   d₀ : X₀ ⟶ X₁
   d₁ : X₁ ⟶ X₂
@@ -869,19 +877,19 @@ structure mk_struct where
 
 variable {V}
 
--- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (X₀ X₁ X₂)
+-- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (X₀ X₁ X₂)
 /-- Flatten to a tuple. -/
-def mk_struct.flat (t : MkStruct V) : Σ' (X₀ : V) (X₁ : V) (X₂ : V) (d₀ : X₀ ⟶ X₁) (d₁ : X₁ ⟶ X₂), d₀ ≫ d₁ = 0 :=
+def MkStruct.flat (t : MkStruct V) : Σ' (X₀ : V) (X₁ : V) (X₂ : V) (d₀ : X₀ ⟶ X₁) (d₁ : X₁ ⟶ X₂), d₀ ≫ d₁ = 0 :=
   ⟨t.x₀, t.x₁, t.x₂, t.d₀, t.d₁, t.s⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (X₀ X₁ X₂)
+-- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (X₀ X₁ X₂)
 variable (X₀ X₁ X₂ : V) (d₀ : X₀ ⟶ X₁) (d₁ : X₁ ⟶ X₂) (s : d₀ ≫ d₁ = 0)
   (succ :
     ∀ t : Σ' (X₀ : V) (X₁ : V) (X₂ : V) (d₀ : X₀ ⟶ X₁) (d₁ : X₁ ⟶ X₂), d₀ ≫ d₁ = 0,
       Σ' (X₃ : V) (d₂ : t.2.2.1 ⟶ X₃), t.2.2.2.2.1 ≫ d₂ = 0)
 
 /-- Auxiliary definition for `mk`. -/
-def mk_aux : ∀ n : ℕ, MkStruct V
+def mkAuxₓ : ∀ n : ℕ, MkStruct V
   | 0 => ⟨X₀, X₁, X₂, d₀, d₁, s⟩
   | n + 1 =>
     let p := mk_aux n
@@ -921,19 +929,20 @@ theorem mk_d_2_0 : (mk X₀ X₁ X₂ d₀ d₁ s succ).d 1 2 = d₁ := by
   change ite (2 = 1 + 1) (d₁ ≫ 𝟙 X₂) 0 = d₁
   rw [if_pos rfl, category.comp_id]
 
--- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (X₀ X₁)
+-- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (X₀ X₁)
 /-- A simpler inductive constructor for `ℕ`-indexed cochain complexes.
 
 You provide explicitly the first differential,
 then a function which takes a differential,
 and returns the next object, its differential, and the fact it composes appropriately to zero.
 -/
+-- TODO simp lemmas for the inductive steps? It's not entirely clear that they are needed.
 def mk' (X₀ X₁ : V) (d : X₀ ⟶ X₁)
     (succ' : ∀ t : Σ (X₀ : V) (X₁ : V), X₀ ⟶ X₁, Σ' (X₂ : V) (d : t.2.1 ⟶ X₂), t.2.2 ≫ d = 0) : CochainComplex V ℕ :=
   mk X₀ X₁ (succ' ⟨X₀, X₁, d⟩).1 d (succ' ⟨X₀, X₁, d⟩).2.1 (succ' ⟨X₀, X₁, d⟩).2.2 fun t =>
     succ' ⟨t.2.1, t.2.2.1, t.2.2.2.2.1⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (X₀ X₁)
+-- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (X₀ X₁)
 variable (succ' : ∀ t : Σ (X₀ : V) (X₁ : V), X₀ ⟶ X₁, Σ' (X₂ : V) (d : t.2.1 ⟶ X₂), t.2.2 ≫ d = 0)
 
 @[simp]
@@ -949,6 +958,7 @@ theorem mk'_d_1_0 : (mk' X₀ X₁ d₀ succ').d 0 1 = d₀ := by
   change ite (1 = 0 + 1) (d₀ ≫ 𝟙 X₁) 0 = d₀
   rw [if_pos rfl, category.comp_id]
 
+-- TODO simp lemmas for the inductive steps? It's not entirely clear that they are needed.
 end Mk
 
 section MkHom
@@ -966,7 +976,7 @@ but don't require at the type level that these successive commutative squares ac
 They do in fact agree, and we then capture that at the type level (i.e. by constructing a chain map)
 in `mk_hom`.
 -/
-def mk_hom_aux : ∀ n, Σ' (f : P.x n ⟶ Q.x n) (f' : P.x (n + 1) ⟶ Q.x (n + 1)), f ≫ Q.d n (n + 1) = P.d n (n + 1) ≫ f'
+def mkHomAuxₓ : ∀ n, Σ' (f : P.x n ⟶ Q.x n) (f' : P.x (n + 1) ⟶ Q.x (n + 1)), f ≫ Q.d n (n + 1) = P.d n (n + 1) ≫ f'
   | 0 => ⟨zero, one, one_zero_comm⟩
   | n + 1 => ⟨(mk_hom_aux n).2.1, (succ n (mk_hom_aux n)).1, (succ n (mk_hom_aux n)).2⟩
 
@@ -979,7 +989,7 @@ and then give a construction of each component,
 and the fact that it forms a commutative square with the previous component,
 using as an inductive hypothesis the data (and commutativity) of the previous two components.
 -/
-def mk_hom : P ⟶ Q where
+def mkHom : P ⟶ Q where
   f := fun n => (mkHomAuxₓ P Q zero one one_zero_comm succ n).1
   comm' := fun n m => by
     rintro (rfl : n + 1 = m)

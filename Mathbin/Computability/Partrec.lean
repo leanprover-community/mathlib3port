@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Mario Carneiro. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Mario Carneiro
+-/
 import Mathbin.Computability.Primrec
 import Mathbin.Data.Nat.Psub
 import Mathbin.Data.Pfun
@@ -46,7 +51,7 @@ private def wf_lbp : WellFounded lbp :=
             rw [Nat.add_right_comm] <;> exact kn)
       ⟩
 
-def rfind_x : { n // tt ∈ p n ∧ ∀, ∀ m < n, ∀, ff ∈ p m } :=
+def rfindX : { n // tt ∈ p n ∧ ∀, ∀ m < n, ∀, ff ∈ p m } :=
   suffices ∀ k, (∀, ∀ n < k, ∀, ff ∈ p n) → { n // tt ∈ p n ∧ ∀, ∀ m < n, ∀, ff ∈ p m } from
     this 0 fun n => (Nat.not_lt_zeroₓ _).elim
   @WellFounded.fix _ _ lbp wf_lbp
@@ -120,7 +125,7 @@ theorem rfind_zero_none (p : ℕ →. Bool) (p0 : p 0 = none) : rfind p = none :
     let ⟨n, h₁, h₂⟩ := rfind_dom'.1 h.fst
     (p0 ▸ h₂ (zero_le _) : (@Part.none Bool).Dom)
 
-def rfind_opt {α} (f : ℕ → Option α) : Part α :=
+def rfindOpt {α} (f : ℕ → Option α) : Part α :=
   (rfind fun n => (f n).isSome).bind fun n => f n
 
 theorem rfind_opt_spec {α} {f : ℕ → Option α} {a} (h : a ∈ rfindOpt f) : ∃ n, a ∈ f n :=
@@ -216,7 +221,7 @@ theorem prec' {f g h} (hf : Partrec f) (hg : Partrec g) (hh : Partrec h) :
           h (mkpair a (mkpair y i)) :=
   ((prec hg hh).comp (pair Partrec.some hf)).of_eq fun a =>
     ext fun s => by
-      simp [· <*> ·] <;>
+      simp [(· <*> ·)] <;>
         exact
           ⟨fun ⟨n, h₁, h₂⟩ =>
             ⟨_, ⟨_, h₁, rfl⟩, by
@@ -306,7 +311,7 @@ theorem snd : Computable (@Prod.snd α β) :=
 
 theorem pair {f : α → β} {g : α → γ} (hf : Computable f) (hg : Computable g) : Computable fun a => (f a, g a) :=
   (hf.pair hg).of_eq fun n => by
-    cases decode α n <;> simp [· <*> ·]
+    cases decode α n <;> simp [(· <*> ·)]
 
 theorem unpair : Computable Nat.unpair :=
   Primrec.unpair.to_comp
@@ -338,10 +343,10 @@ theorem list_reverse : Computable (@List.reverse α) :=
 theorem list_nth : Computable₂ (@List.nth α) :=
   Primrec.list_nth.to_comp
 
-theorem list_append : Computable₂ (· ++ · : List α → List α → List α) :=
+theorem list_append : Computable₂ ((· ++ ·) : List α → List α → List α) :=
   Primrec.list_append.to_comp
 
-theorem list_concat : Computable₂ fun l a : α => l ++ [a] :=
+theorem list_concat : Computable₂ fun a : α => l ++ [a] :=
   Primrec.list_concat.to_comp
 
 theorem list_length : Computable (@List.length α) :=
@@ -422,7 +427,7 @@ theorem const' (s : Part σ) : Partrec fun a : α => s :=
 protected theorem bind {f : α →. β} {g : α → β →. σ} (hf : Partrec f) (hg : Partrec₂ g) :
     Partrec fun a => (f a).bind (g a) :=
   (hg.comp (Nat.Partrec.some.pair hf)).of_eq fun n => by
-    simp [· <*> ·] <;> cases' e : decode α n with a <;> simp [e, encodek]
+    simp [(· <*> ·)] <;> cases' e : decode α n with a <;> simp [e, encodek]
 
 theorem map {f : α →. β} {g : α → β → σ} (hf : Partrec f) (hg : Computable₂ g) : Partrec fun a => (f a).map (g a) := by
   simpa [bind_some_eq_map] using @Partrec.bind _ _ _ (fun a b => Part.some (g a b)) hf hg
@@ -518,7 +523,7 @@ theorem rfind {p : α → ℕ →. Bool} (hp : Partrec₂ p) : Partrec fun a => 
     cases' e : decode α n with a <;> simp [e, Nat.rfind_zero_none, map_id']
     congr
     funext n
-    simp [Part.map_map, · ∘ ·]
+    simp [Part.map_map, (· ∘ ·)]
     apply map_id' fun b => _
     cases b <;> rfl
 

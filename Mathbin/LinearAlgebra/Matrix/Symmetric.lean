@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Lu-Ming Zhang. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Lu-Ming Zhang
+-/
 import Mathbin.Data.Matrix.Block
 
 /-!
@@ -25,19 +30,19 @@ open_locale Matrix
 def IsSymm (A : Matrix n n α) : Prop :=
   (A)ᵀ = A
 
-theorem is_symm.eq {A : Matrix n n α} (h : A.IsSymm) : (A)ᵀ = A :=
+theorem IsSymm.eq {A : Matrix n n α} (h : A.IsSymm) : (A)ᵀ = A :=
   h
 
 /-- A version of `matrix.ext_iff` that unfolds the `matrix.transpose`. -/
-theorem is_symm.ext_iff {A : Matrix n n α} : A.IsSymm ↔ ∀ i j, A j i = A i j :=
+theorem IsSymm.ext_iff {A : Matrix n n α} : A.IsSymm ↔ ∀ i j, A j i = A i j :=
   Matrix.ext_iff.symm
 
 /-- A version of `matrix.ext` that unfolds the `matrix.transpose`. -/
 @[ext]
-theorem is_symm.ext {A : Matrix n n α} : (∀ i j, A j i = A i j) → A.IsSymm :=
+theorem IsSymm.ext {A : Matrix n n α} : (∀ i j, A j i = A i j) → A.IsSymm :=
   Matrix.ext
 
-theorem is_symm.apply {A : Matrix n n α} (h : A.IsSymm) (i j : n) : A j i = A i j :=
+theorem IsSymm.apply {A : Matrix n n α} (h : A.IsSymm) (i j : n) : A j i = A i j :=
   IsSymm.ext_iff.1 h i j
 
 theorem is_symm_mul_transpose_self [Fintype n] [CommSemiringₓ α] (A : Matrix n n α) : (A ⬝ (A)ᵀ).IsSymm :=
@@ -61,35 +66,35 @@ theorem is_symm_one [DecidableEq n] [Zero α] [One α] : (1 : Matrix n n α).IsS
   transpose_one
 
 @[simp]
-theorem is_symm.map {A : Matrix n n α} (h : A.IsSymm) (f : α → β) : (A.map f).IsSymm :=
+theorem IsSymm.map {A : Matrix n n α} (h : A.IsSymm) (f : α → β) : (A.map f).IsSymm :=
   transpose_map.symm.trans (h.symm ▸ rfl)
 
 @[simp]
-theorem is_symm.transpose {A : Matrix n n α} (h : A.IsSymm) : (A)ᵀ.IsSymm :=
+theorem IsSymm.transpose {A : Matrix n n α} (h : A.IsSymm) : (A)ᵀ.IsSymm :=
   congr_argₓ _ h
 
 @[simp]
-theorem is_symm.conj_transpose [HasStar α] {A : Matrix n n α} (h : A.IsSymm) : (A)ᴴ.IsSymm :=
+theorem IsSymm.conj_transpose [HasStar α] {A : Matrix n n α} (h : A.IsSymm) : (A)ᴴ.IsSymm :=
   h.transpose.map _
 
 @[simp]
-theorem is_symm.neg [Neg α] {A : Matrix n n α} (h : A.IsSymm) : (-A).IsSymm :=
+theorem IsSymm.neg [Neg α] {A : Matrix n n α} (h : A.IsSymm) : (-A).IsSymm :=
   (transpose_neg _).trans (congr_argₓ _ h)
 
 @[simp]
-theorem is_symm.add {A B : Matrix n n α} [Add α] (hA : A.IsSymm) (hB : B.IsSymm) : (A + B).IsSymm :=
+theorem IsSymm.add {A B : Matrix n n α} [Add α] (hA : A.IsSymm) (hB : B.IsSymm) : (A + B).IsSymm :=
   (transpose_add _ _).trans (hA.symm ▸ hB.symm ▸ rfl)
 
 @[simp]
-theorem is_symm.sub {A B : Matrix n n α} [Sub α] (hA : A.IsSymm) (hB : B.IsSymm) : (A - B).IsSymm :=
+theorem IsSymm.sub {A B : Matrix n n α} [Sub α] (hA : A.IsSymm) (hB : B.IsSymm) : (A - B).IsSymm :=
   (transpose_sub _ _).trans (hA.symm ▸ hB.symm ▸ rfl)
 
 @[simp]
-theorem is_symm.smul [HasScalar R α] {A : Matrix n n α} (h : A.IsSymm) (k : R) : (k • A).IsSymm :=
+theorem IsSymm.smul [HasScalar R α] {A : Matrix n n α} (h : A.IsSymm) (k : R) : (k • A).IsSymm :=
   (transpose_smul _ _).trans (congr_argₓ _ h)
 
 @[simp]
-theorem is_symm.minor {A : Matrix n n α} (h : A.IsSymm) (f : m → n) : (A.minor f f).IsSymm :=
+theorem IsSymm.minor {A : Matrix n n α} (h : A.IsSymm) (f : m → n) : (A.minor f f).IsSymm :=
   (transpose_minor _ _ _).trans (h.symm ▸ rfl)
 
 /-- The diagonal matrix `diagonal v` is symmetric. -/
@@ -99,7 +104,7 @@ theorem is_symm_diagonal [DecidableEq n] [Zero α] (v : n → α) : (diagonalₓ
 
 /-- A block matrix `A.from_blocks B C D` is symmetric,
     if `A` and `D` are symmetric and `Bᵀ = C`. -/
-theorem is_symm.from_blocks {A : Matrix m m α} {B : Matrix m n α} {C : Matrix n m α} {D : Matrix n n α} (hA : A.IsSymm)
+theorem IsSymm.from_blocks {A : Matrix m m α} {B : Matrix m n α} {C : Matrix n m α} {D : Matrix n n α} (hA : A.IsSymm)
     (hBC : (B)ᵀ = C) (hD : D.IsSymm) : (A.fromBlocks B C D).IsSymm := by
   have hCB : (C)ᵀ = B := by
     rw [← hBC]

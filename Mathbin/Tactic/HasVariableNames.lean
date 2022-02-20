@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Jannis Limperg. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Jannis Limperg
+-/
 import Mathbin.Tactic.Core
 
 /-!
@@ -60,7 +65,7 @@ an instance `has_variable_names α`. If `α` has associated names `a`, `b`, ...,
 the generated instance for `β` has names `as`, `bs`, ... This can be used to
 create instances for 'containers' such as lists or sets.
 -/
-def make_listlike_instance (α : Sort u) [HasVariableNames α] {β : Sort v} : HasVariableNames β :=
+def makeListlikeInstance (α : Sort u) [HasVariableNames α] {β : Sort v} : HasVariableNames β :=
   ⟨(names α).map fun n => n.appendSuffix "s", by
     simp [names_nonempty]⟩
 
@@ -69,7 +74,7 @@ from an instance `has_variable_names α`. The generated instance contains the
 same variable names as that of `α`. This can be used to create instances for
 'wrapper' types like `option` and `subtype`.
 -/
-def make_inheriting_instance (α : Sort u) [HasVariableNames α] {β : Sort v} : HasVariableNames β :=
+def makeInheritingInstance (α : Sort u) [HasVariableNames α] {β : Sort v} : HasVariableNames β :=
   ⟨names α, names_nonempty⟩
 
 end HasVariableNames

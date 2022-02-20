@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison
+-/
 import Mathbin.Algebra.Homology.HomologicalComplex
 import Mathbin.CategoryTheory.DifferentialObject
 
@@ -69,7 +74,7 @@ attribute [local reducible] graded_object.has_shift
 /-- The functor from differential graded objects to homological complexes.
 -/
 @[simps]
-def dgo_to_homological_complex :
+def dgoToHomologicalComplex :
     DifferentialObject (GradedObjectWithShift b V) ⥤ HomologicalComplex V (ComplexShape.up' b) where
   obj := fun X =>
     { x := fun i => X.x i,
@@ -101,7 +106,7 @@ def dgo_to_homological_complex :
 /-- The functor from homological complexes to differential graded objects.
 -/
 @[simps]
-def homological_complex_to_dgo :
+def homologicalComplexToDgo :
     HomologicalComplex V (ComplexShape.up' b) ⥤ DifferentialObject (GradedObjectWithShift b V) where
   obj := fun X =>
     { x := fun i => X.x i, d := fun i => X.d i (i + 1 • b),
@@ -119,7 +124,7 @@ def homological_complex_to_dgo :
 /-- The unit isomorphism for `dgo_equiv_homological_complex`.
 -/
 @[simps]
-def dgo_equiv_homological_complex_unit_iso :
+def dgoEquivHomologicalComplexUnitIso :
     𝟭 (DifferentialObject (GradedObjectWithShift b V)) ≅ dgoToHomologicalComplex b V ⋙ homologicalComplexToDgo b V :=
   NatIso.ofComponents (fun X => { Hom := { f := fun i => 𝟙 (X.x i) }, inv := { f := fun i => 𝟙 (X.x i) } })
     (by
@@ -128,7 +133,7 @@ def dgo_equiv_homological_complex_unit_iso :
 /-- The counit isomorphism for `dgo_equiv_homological_complex`.
 -/
 @[simps]
-def dgo_equiv_homological_complex_counit_iso :
+def dgoEquivHomologicalComplexCounitIso :
     homologicalComplexToDgo b V ⋙ dgoToHomologicalComplex b V ≅ 𝟭 (HomologicalComplex V (ComplexShape.up' b)) :=
   NatIso.ofComponents
     (fun X =>
@@ -153,7 +158,7 @@ def dgo_equiv_homological_complex_counit_iso :
 to the category of homological complexes in `V`.
 -/
 @[simps]
-def dgo_equiv_homological_complex :
+def dgoEquivHomologicalComplex :
     DifferentialObject (GradedObjectWithShift b V) ≌ HomologicalComplex V (ComplexShape.up' b) where
   Functor := dgoToHomologicalComplex b V
   inverse := homologicalComplexToDgo b V

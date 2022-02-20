@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Yury Kudryashov. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Alexander Bentkamp, Yury Kudriashov
+-/
 import Mathbin.Analysis.Convex.Jensen
 import Mathbin.Analysis.NormedSpace.FiniteDimension
 import Mathbin.Topology.PathConnected
@@ -70,9 +75,9 @@ end StdSimplex
 /-! ### Topological vector space -/
 
 
-section HasContinuousSmul
+section HasContinuousConstSmul
 
-variable [AddCommGroupₓ E] [Module ℝ E] [TopologicalSpace E] [TopologicalAddGroup E] [HasContinuousSmul ℝ E]
+variable [AddCommGroupₓ E] [Module ℝ E] [TopologicalSpace E] [TopologicalAddGroup E] [HasContinuousConstSmul ℝ E]
 
 theorem Convex.combo_interior_self_subset_interior {s : Set E} (hs : Convex ℝ s) {a b : ℝ} (ha : 0 < a) (hb : 0 ≤ b)
     (hab : a + b = 1) : a • Interior s + b • s ⊆ Interior s :=
@@ -124,10 +129,15 @@ theorem Convex.interior {s : Set E} (hs : Convex ℝ s) : Convex ℝ (Interior s
 /-- In a topological vector space, the closure of a convex set is convex. -/
 theorem Convex.closure {s : Set E} (hs : Convex ℝ s) : Convex ℝ (Closure s) := fun x y hx hy a b ha hb hab =>
   let f : E → E → E := fun x' y' => a • x' + b • y'
-  have hf : Continuous fun p : E × E => f p.1 p.2 :=
-    (continuous_const.smul continuous_fst).add (continuous_const.smul continuous_snd)
+  have hf : Continuous fun p : E × E => f p.1 p.2 := (continuous_fst.const_smul _).add (continuous_snd.const_smul _)
   show f x y ∈ Closure s from
     mem_closure_of_continuous2 hf hx hy fun x' hx' y' hy' => subset_closure (hs hx' hy' ha hb hab)
+
+end HasContinuousConstSmul
+
+section HasContinuousSmul
+
+variable [AddCommGroupₓ E] [Module ℝ E] [TopologicalSpace E] [TopologicalAddGroup E] [HasContinuousSmul ℝ E]
 
 /-- Convex hull of a finite set is compact. -/
 theorem Set.Finite.compact_convex_hull {s : Set E} (hs : Finite s) : IsCompact (convexHull ℝ s) := by

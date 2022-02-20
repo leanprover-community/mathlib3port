@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Eric Wieser. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Eric Wieser
+-/
 import Mathbin.LinearAlgebra.Finsupp
 import Mathbin.Algebra.MonoidAlgebra.Basic
 import Mathbin.Algebra.DirectSum.Internal
@@ -36,7 +41,7 @@ section
 variable (R) [CommSemiringₓ R]
 
 /-- The submodule corresponding to each grade given by the degree function `f`. -/
-abbrev grade_by (f : M → ι) (i : ι) : Submodule R (AddMonoidAlgebra R M) :=
+abbrev gradeBy (f : M → ι) (i : ι) : Submodule R (AddMonoidAlgebra R M) :=
   { Carrier := { a | ∀ m, m ∈ a.Support → f m = i }, zero_mem' := Set.empty_subset _,
     add_mem' := fun a b ha hb m h => Or.rec_on (Finset.mem_union.mp (Finsupp.support_add h)) (ha m) (hb m),
     smul_mem' := fun a m h => Set.Subset.trans Finsupp.support_smul h }
@@ -79,7 +84,7 @@ end
 
 open_locale DirectSum
 
-instance grade_by.graded_monoid [AddMonoidₓ M] [AddMonoidₓ ι] [CommSemiringₓ R] (f : M →+ ι) :
+instance gradeBy.graded_monoid [AddMonoidₓ M] [AddMonoidₓ ι] [CommSemiringₓ R] (f : M →+ ι) :
     SetLike.GradedMonoid (gradeBy R f : ι → Submodule R (AddMonoidAlgebra R M)) where
   one_mem := fun m h => by
     rw [one_def] at h
@@ -105,7 +110,7 @@ instance grade.graded_monoid [AddMonoidₓ M] [CommSemiringₓ R] :
 variable {R} [AddMonoidₓ M] [DecidableEq ι] [AddMonoidₓ ι] [CommSemiringₓ R] (f : M →+ ι)
 
 /-- The canonical grade decomposition. -/
-def to_grades_by : AddMonoidAlgebra R M →ₐ[R] ⨁ i : ι, gradeBy R f i :=
+def toGradesBy : AddMonoidAlgebra R M →ₐ[R] ⨁ i : ι, gradeBy R f i :=
   AddMonoidAlgebra.lift R M _
     { toFun := fun m =>
         DirectSum.of (fun i : ι => gradeBy R f i) (f m.toAdd)
@@ -135,7 +140,7 @@ def to_grades_by : AddMonoidAlgebra R M →ₐ[R] ⨁ i : ι, gradeBy R f i :=
            }
 
 /-- The canonical grade decomposition. -/
-def to_grades : AddMonoidAlgebra R M →ₐ[R] ⨁ i : M, grade R i :=
+def toGrades : AddMonoidAlgebra R M →ₐ[R] ⨁ i : M, grade R i :=
   toGradesBy (AddMonoidHom.id M)
 
 theorem to_grades_by_single' (i : ι) (m : M) (h : f m = i) (r : R) :
@@ -195,11 +200,11 @@ theorem to_grades_coe {i : ι} (x : grade R i) : toGrades ↑x = DirectSum.of (f
   apply to_grades_by_coe
 
 /-- The canonical recombination of grades. -/
-def of_grades_by : (⨁ i : ι, gradeBy R f i) →ₐ[R] AddMonoidAlgebra R M :=
+def ofGradesBy : (⨁ i : ι, gradeBy R f i) →ₐ[R] AddMonoidAlgebra R M :=
   DirectSum.submoduleCoeAlgHom (gradeBy R f)
 
 /-- The canonical recombination of grades. -/
-def of_grades : (⨁ i : ι, grade R i) →ₐ[R] AddMonoidAlgebra R ι :=
+def ofGrades : (⨁ i : ι, grade R i) →ₐ[R] AddMonoidAlgebra R ι :=
   ofGradesBy (AddMonoidHom.id ι)
 
 @[simp]
@@ -249,17 +254,17 @@ theorem to_grades_of_grades (g : ⨁ i : ι, grade R i) : (ofGrades g).toGrades 
 /-- An `add_monoid_algebra R M` is equivalent as an algebra to the direct sum of its grades.
 -/
 @[simps]
-def equiv_grades_by : AddMonoidAlgebra R M ≃ₐ[R] ⨁ i : ι, gradeBy R f i :=
+def equivGradesBy : AddMonoidAlgebra R M ≃ₐ[R] ⨁ i : ι, gradeBy R f i :=
   AlgEquiv.ofAlgHom _ _ (to_grades_by_comp_of_grades_by f) (of_grades_by_comp_to_grades_by f)
 
 /-- An `add_monoid_algebra R ι` is equivalent as an algebra to the direct sum of its grades.
 -/
 @[simps]
-def equiv_grades : AddMonoidAlgebra R ι ≃ₐ[R] ⨁ i : ι, grade R i :=
+def equivGrades : AddMonoidAlgebra R ι ≃ₐ[R] ⨁ i : ι, grade R i :=
   equivGradesBy (AddMonoidHom.id ι)
 
 /-- `add_monoid_algebra.gradesby` describe an internally graded algebra -/
-theorem grade_by.is_internal : DirectSum.SubmoduleIsInternal (gradeBy R f) :=
+theorem gradeBy.is_internal : DirectSum.SubmoduleIsInternal (gradeBy R f) :=
   (equivGradesBy f).symm.Bijective
 
 /-- `add_monoid_algebra.grades` describe an internally graded algebra -/

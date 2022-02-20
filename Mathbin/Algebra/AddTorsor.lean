@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Joseph Myers. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Joseph Myers, Yury Kudryashov
+-/
 import Mathbin.Algebra.Group.Prod
 import Mathbin.Algebra.Group.TypeTags
 import Mathbin.Algebra.Group.Pi
@@ -94,7 +99,7 @@ theorem vadd_right_cancel_iff {g1 g2 : G} (p : P) : g1 +ᵥ p = g2 +ᵥ p ↔ g1
 
 /-- Adding a group element to the point `p` is an injective
 function. -/
-theorem vadd_right_injective (p : P) : Function.Injective (· +ᵥ p : G → P) := fun g1 g2 => vadd_right_cancel p
+theorem vadd_right_injective (p : P) : Function.Injective ((· +ᵥ p) : G → P) := fun g1 g2 => vadd_right_cancel p
 
 /-- Adding a group element to a point, then subtracting another point,
 produces the same result as subtracting the points then adding the
@@ -159,7 +164,7 @@ open_locale Pointwise
 theorem singleton_vsub_self (p : P) : ({p} : Set P) -ᵥ {p} = {(0 : G)} := by
   rw [Set.singleton_vsub_singleton, vsub_self]
 
-instance AddAction : AddAction (Set G) (Set P) :=
+instance addAction : AddAction (Set G) (Set P) :=
   { show HasVadd (Set G) (Set P) by
       infer_instance with
     zero_vadd := fun s => by
@@ -187,7 +192,7 @@ theorem vsub_left_cancel_iff {p1 p2 p : P} : p1 -ᵥ p = p2 -ᵥ p ↔ p1 = p2 :
   ⟨vsub_left_cancel, fun h => h ▸ rfl⟩
 
 /-- Subtracting the point `p` is an injective function. -/
-theorem vsub_left_injective (p : P) : Function.Injective (· -ᵥ p : P → G) := fun p2 p3 => vsub_left_cancel
+theorem vsub_left_injective (p : P) : Function.Injective ((· -ᵥ p) : P → G) := fun p2 p3 => vsub_left_cancel
 
 /-- If subtracting two points from the same point produces equal
 results, those points are equal. -/
@@ -307,7 +312,7 @@ variable {G : Type _} {P : Type _} [AddGroupₓ G] [AddTorsor G P]
 include G
 
 /-- `v ↦ v +ᵥ p` as an equivalence. -/
-def vadd_const (p : P) : G ≃ P where
+def vaddConst (p : P) : G ≃ P where
   toFun := fun v => v +ᵥ p
   invFun := fun p' => p' -ᵥ p
   left_inv := fun v => vadd_vsub _ _
@@ -322,7 +327,7 @@ theorem coe_vadd_const_symm (p : P) : ⇑(vaddConst p).symm = fun p' => p' -ᵥ 
   rfl
 
 /-- `p' ↦ p -ᵥ p'` as an equivalence. -/
-def const_vsub (p : P) : P ≃ G where
+def constVsub (p : P) : P ≃ G where
   toFun := (· -ᵥ ·) p
   invFun := fun v => -v +ᵥ p
   left_inv := fun p' => by
@@ -341,7 +346,7 @@ theorem coe_const_vsub_symm (p : P) : ⇑(constVsub p).symm = fun v => -v +ᵥ p
 variable (P)
 
 /-- The permutation given by `p ↦ v +ᵥ p`. -/
-def const_vadd (v : G) : Equivₓ.Perm P where
+def constVadd (v : G) : Equivₓ.Perm P where
   toFun := (· +ᵥ ·) v
   invFun := (· +ᵥ ·) (-v)
   left_inv := fun p => by
@@ -366,7 +371,7 @@ theorem const_vadd_add (v₁ v₂ : G) : constVadd P (v₁ + v₂) = constVadd P
   ext <| add_vadd v₁ v₂
 
 /-- `equiv.const_vadd` as a homomorphism from `multiplicative G` to `equiv.perm P` -/
-def const_vadd_hom : Multiplicative G →* Equivₓ.Perm P where
+def constVaddHom : Multiplicative G →* Equivₓ.Perm P where
   toFun := fun v => constVadd P v.toAdd
   map_one' := const_vadd_zero G P
   map_mul' := const_vadd_add P
@@ -376,7 +381,7 @@ variable {P}
 open Function
 
 /-- Point reflection in `x` as a permutation. -/
-def point_reflection (x : P) : Perm P :=
+def pointReflection (x : P) : Perm P :=
   (constVsub x).trans (vaddConst x)
 
 theorem point_reflection_apply (x y : P) : pointReflection x y = x -ᵥ y +ᵥ x :=
@@ -406,7 +411,7 @@ omit G
 
 theorem injective_point_reflection_left_of_injective_bit0 {G P : Type _} [AddCommGroupₓ G] [AddTorsor G P]
     (h : Injective (bit0 : G → G)) (y : P) : Injective fun x : P => pointReflection x y :=
-  fun x₁ x₂ hy : pointReflection x₁ y = pointReflection x₂ y => by
+  fun hy : pointReflection x₁ y = pointReflection x₂ y => by
   rwa [point_reflection_apply, point_reflection_apply, vadd_eq_vadd_iff_sub_eq_vsub, vsub_sub_vsub_cancel_right, ←
     neg_vsub_eq_vsub_rev, neg_eq_iff_add_eq_zero, ← bit0, ← bit0_zero, h.eq_iff, vsub_eq_zero_iff_eq] at hy
 

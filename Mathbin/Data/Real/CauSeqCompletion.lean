@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Mario Carneiro. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Mario Carneiro, Robert Y. Lewis
+-/
 import Mathbin.Data.Real.CauSeq
 
 /-!
@@ -34,7 +39,7 @@ theorem mk_eq {f g} : mk f = mk g ↔ f ≈ g :=
   Quotientₓ.eq
 
 /-- The map from the original ring into the Cauchy completion. -/
-def of_rat (x : β) : Cauchy :=
+def ofRat (x : β) : Cauchy :=
   mk (const abv x)
 
 instance : Zero Cauchy :=
@@ -60,7 +65,7 @@ instance : Add Cauchy :=
   ⟨fun x y =>
     (Quotientₓ.liftOn₂ x y fun f g => mk (f + g)) fun f₁ g₁ f₂ g₂ hf hg =>
       Quotientₓ.sound <| by
-        simpa [· ≈ ·, Setoidₓ.R, sub_eq_add_neg, add_commₓ, add_left_commₓ, add_assocₓ] using add_lim_zero hf hg⟩
+        simpa [(· ≈ ·), Setoidₓ.R, sub_eq_add_neg, add_commₓ, add_left_commₓ, add_assocₓ] using add_lim_zero hf hg⟩
 
 @[simp]
 theorem mk_add (f g : CauSeq β abv) : mk f + mk g = mk (f + g) :=
@@ -70,7 +75,7 @@ instance : Neg Cauchy :=
   ⟨fun x =>
     (Quotientₓ.liftOn x fun f => mk (-f)) fun f₁ f₂ hf =>
       Quotientₓ.sound <| by
-        simpa [· ≈ ·, Setoidₓ.R] using neg_lim_zero hf⟩
+        simpa [(· ≈ ·), Setoidₓ.R] using neg_lim_zero hf⟩
 
 @[simp]
 theorem mk_neg (f : CauSeq β abv) : -mk f = mk (-f) :=
@@ -80,7 +85,7 @@ instance : Mul Cauchy :=
   ⟨fun x y =>
     (Quotientₓ.liftOn₂ x y fun f g => mk (f * g)) fun f₁ g₁ f₂ g₂ hf hg =>
       Quotientₓ.sound <| by
-        simpa [· ≈ ·, Setoidₓ.R, mul_addₓ, mul_comm, add_assocₓ, sub_eq_add_neg] using
+        simpa [(· ≈ ·), Setoidₓ.R, mul_addₓ, mul_comm, add_assocₓ, sub_eq_add_neg] using
           add_lim_zero (mul_lim_zero_right g₁ hf) (mul_lim_zero_right f₂ hg)⟩
 
 @[simp]
@@ -115,8 +120,8 @@ private theorem one_def : 1 = mk 1 :=
 
 instance : CommRingₓ Cauchy := by
   refine'
-      { neg := Neg.neg, sub := Sub.sub, sub_eq_add_neg := _, add := · + ·, zero := (0 : Cauchy), mul := · * ·, one := 1,
-        nsmul := nsmulRec, npow := npowRec, zsmul := zsmulRec, .. } <;>
+      { neg := Neg.neg, sub := Sub.sub, sub_eq_add_neg := _, add := (· + ·), zero := (0 : Cauchy), mul := (· * ·),
+        one := 1, nsmul := nsmulRec, npow := npowRec, zsmul := zsmulRec, .. } <;>
     try
         intros <;> rfl <;>
       · repeat'
@@ -182,7 +187,7 @@ protected theorem inv_mul_cancel {x : Cauchy} : x ≠ 0 → x⁻¹ * x = 1 :=
 /-- The Cauchy completion forms a field.
 See note [reducible non-instances]. -/
 @[reducible]
-noncomputable def Field : Field Cauchy :=
+noncomputable def field : Field Cauchy :=
   { Cauchy.commRing with inv := Inv.inv,
     mul_inv_cancel := fun x x0 => by
       rw [mul_comm, CauSeq.Completion.inv_mul_cancel x0],
@@ -211,7 +216,7 @@ variable (β : Type _) [Ringₓ β] (abv : β → α) [IsAbsoluteValue abv]
 
 /-- A class stating that a ring with an absolute value is complete, i.e. every Cauchy
 sequence has a limit. -/
-class is_complete where
+class IsComplete where
   IsComplete : ∀ s : CauSeq β abv, ∃ b : β, s ≈ const abv b
 
 end

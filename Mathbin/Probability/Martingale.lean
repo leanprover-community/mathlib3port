@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Rémy Degenne. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Rémy Degenne, Kexing Ying
+-/
 import Mathbin.Probability.Notation
 import Mathbin.Probability.Stopping
 
@@ -43,19 +48,19 @@ variable {α E ι : Type _} [Preorderₓ ι] [MeasurableSpace E] {m0 : Measurabl
 
 /-- A family of functions `f : ι → α → E` is a martingale with respect to a filtration `ℱ` if `f`
 is adapted with respect to `ℱ` and for all `i ≤ j`, `μ[f j | ℱ.le i] =ᵐ[μ] f i`. -/
-def martingale (f : ι → α → E) (ℱ : Filtration ι m0) (μ : Measure α) [SigmaFiniteFiltration μ ℱ] : Prop :=
+def Martingale (f : ι → α → E) (ℱ : Filtration ι m0) (μ : Measure α) [SigmaFiniteFiltration μ ℱ] : Prop :=
   Adapted ℱ f ∧ ∀ i j, i ≤ j → μ[f j|ℱ i,ℱ.le i] =ᵐ[μ] f i
 
 /-- A family of integrable functions `f : ι → α → E` is a supermartingale with respect to a
 filtration `ℱ` if `f` is adapted with respect to `ℱ` and for all `i ≤ j`,
 `μ[f j | ℱ.le i] ≤ᵐ[μ] f i`. -/
-def supermartingale [LE E] (f : ι → α → E) (ℱ : Filtration ι m0) (μ : Measure α) [SigmaFiniteFiltration μ ℱ] : Prop :=
+def Supermartingale [LE E] (f : ι → α → E) (ℱ : Filtration ι m0) (μ : Measure α) [SigmaFiniteFiltration μ ℱ] : Prop :=
   Adapted ℱ f ∧ (∀ i j, i ≤ j → μ[f j|ℱ i,ℱ.le i] ≤ᵐ[μ] f i) ∧ ∀ i, Integrable (f i) μ
 
 /-- A family of integrable functions `f : ι → α → E` is a submartingale with respect to a
 filtration `ℱ` if `f` is adapted with respect to `ℱ` and for all `i ≤ j`,
 `f i ≤ᵐ[μ] μ[f j | ℱ.le i]`. -/
-def submartingale [LE E] (f : ι → α → E) (ℱ : Filtration ι m0) (μ : Measure α) [SigmaFiniteFiltration μ ℱ] : Prop :=
+def Submartingale [LE E] (f : ι → α → E) (ℱ : Filtration ι m0) (μ : Measure α) [SigmaFiniteFiltration μ ℱ] : Prop :=
   Adapted ℱ f ∧ (∀ i j, i ≤ j → f i ≤ᵐ[μ] μ[f j|ℱ i,ℱ.le i]) ∧ ∀ i, Integrable (f i) μ
 
 variable (E)
@@ -75,7 +80,7 @@ theorem adapted (hf : Martingale f ℱ μ) : Adapted ℱ f :=
   hf.1
 
 @[protected]
-theorem Measurable (hf : Martingale f ℱ μ) (i : ι) : measurable[ℱ i] (f i) :=
+theorem measurable (hf : Martingale f ℱ μ) (i : ι) : measurable[ℱ i] (f i) :=
   hf.Adapted i
 
 theorem condexp_ae_eq (hf : Martingale f ℱ μ) {i j : ι} (hij : i ≤ j) : μ[f j|ℱ i,ℱ.le i] =ᵐ[μ] f i :=
@@ -130,7 +135,7 @@ theorem adapted [LE E] (hf : Supermartingale f ℱ μ) : Adapted ℱ f :=
   hf.1
 
 @[protected]
-theorem Measurable [LE E] (hf : Supermartingale f ℱ μ) (i : ι) : measurable[ℱ i] (f i) :=
+theorem measurable [LE E] (hf : Supermartingale f ℱ μ) (i : ι) : measurable[ℱ i] (f i) :=
   hf.Adapted i
 
 @[protected]
@@ -174,7 +179,7 @@ theorem adapted [LE E] (hf : Submartingale f ℱ μ) : Adapted ℱ f :=
   hf.1
 
 @[protected]
-theorem Measurable [LE E] (hf : Submartingale f ℱ μ) (i : ι) : measurable[ℱ i] (f i) :=
+theorem measurable [LE E] (hf : Submartingale f ℱ μ) (i : ι) : measurable[ℱ i] (f i) :=
   hf.Adapted i
 
 @[protected]
@@ -291,6 +296,8 @@ theorem integrable_stopped_value [LE E] {f : ℕ → α → E} (hf : Submartinga
 /-- Given a submartingale `f` and bounded stopping times `τ` and `π` such that `τ ≤ π`, the
 expectation of `stopped_value f τ` is less or equal to the expectation of `stopped_value f π`.
 This is the forward direction of the optional stopping theorem. -/
+-- We may generalize the below lemma to functions taking value in a `normed_lattice_add_comm_group`.
+-- Similarly, generalize `(super/)submartingale.set_integral_le`.
 theorem expected_stopped_value_mono {f : ℕ → α → ℝ} (hf : Submartingale f 𝒢 μ) {τ π : α → ℕ} (hτ : IsStoppingTime 𝒢 τ)
     (hπ : IsStoppingTime 𝒢 π) (hle : τ ≤ π) {N : ℕ} (hbdd : ∀ x, π x ≤ N) : μ[stoppedValue f τ] ≤ μ[stoppedValue f π] :=
   by

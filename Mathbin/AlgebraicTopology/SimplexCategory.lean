@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johan Commelin, Scott Morrison, Adam Topaz
+-/
 import Mathbin.CategoryTheory.Skeletal
 import Mathbin.Tactic.Linarith.Default
 import Mathbin.Data.Fintype.Sort
@@ -29,7 +34,7 @@ universe u v
 
 open CategoryTheory
 
--- ././Mathport/Syntax/Translate/Basic.lean:1081:31: unsupported: @[derive, irreducible] def
+-- ././Mathport/Syntax/Translate/Basic.lean:1203:31: unsupported: @[derive, irreducible] def
 /-- The simplex category:
 * objects are natural numbers `n : ℕ`
 * morphisms from `n` to `m` are monotone functions `fin (n+1) → fin (m+1)`
@@ -44,12 +49,14 @@ section
 attribute [local semireducible] SimplexCategory
 
 /-- Interpet a natural number as an object of the simplex category. -/
+-- TODO: Make `mk` irreducible.
 def mk (n : ℕ) : SimplexCategory.{u} :=
   Ulift.up n
 
 localized [Simplicial] notation "[" n "]" => SimplexCategory.mk n
 
 /-- The length of an object of `simplex_category`. -/
+-- TODO: Make `len` irreducible.
 def len (n : SimplexCategory.{u}) : ℕ :=
   n.down
 
@@ -68,7 +75,7 @@ theorem mk_len (n : SimplexCategory.{u}) : [n.len] = n := by
 
 /-- Morphisms in the simplex_category. -/
 @[nolint has_inhabited_instance]
-protected irreducible_def hom (a b : SimplexCategory.{u}) : Type u :=
+protected irreducible_def Hom (a b : SimplexCategory.{u}) : Type u :=
   Ulift (Finₓ (a.len + 1) →o Finₓ (b.len + 1))
 
 namespace Hom
@@ -80,7 +87,7 @@ def mk {a b : SimplexCategory.{u}} (f : Finₓ (a.len + 1) →o Finₓ (b.len + 
   Ulift.up f
 
 /-- Recover the monotone map from a morphism in the simplex category. -/
-def to_order_hom {a b : SimplexCategory.{u}} (f : SimplexCategory.Hom a b) : Finₓ (a.len + 1) →o Finₓ (b.len + 1) :=
+def toOrderHom {a b : SimplexCategory.{u}} (f : SimplexCategory.Hom a b) : Finₓ (a.len + 1) →o Finₓ (b.len + 1) :=
   Ulift.down f
 
 @[ext]
@@ -115,7 +122,7 @@ def comp {a b c : SimplexCategory.{u}} (f : SimplexCategory.Hom b c) (g : Simple
 end Hom
 
 @[simps]
-instance small_category : SmallCategory.{u} SimplexCategory where
+instance smallCategory : SmallCategory.{u} SimplexCategory where
   Hom := fun n m => SimplexCategory.Hom n m
   id := fun m => SimplexCategory.Hom.id _
   comp := fun _ _ _ f g => SimplexCategory.Hom.comp g f
@@ -136,7 +143,7 @@ This is useful for constructing morphisms beetween `[n]` directly
 without identifying `n` with `[n].len`.
 -/
 @[simp]
-def mk_hom {n m : ℕ} (f : Finₓ (n + 1) →o Finₓ (m + 1)) : [n] ⟶ [m] :=
+def mkHom {n m : ℕ} (f : Finₓ (n + 1) →o Finₓ (m + 1)) : [n] ⟶ [m] :=
   SimplexCategory.Hom.mk f
 
 theorem hom_zero_zero (f : [0] ⟶ [0]) : f = 𝟙 _ := by
@@ -214,6 +221,8 @@ theorem δ_comp_σ_of_le {n} {i : Finₓ (n + 2)} {j : Finₓ (n + 1)} (H : i �
   dsimp
   simp only [if_congr, Subtype.mk_lt_mk, dif_ctx_congr]
   split_ifs
+  -- Most of the goals can now be handled by `linarith`,
+  -- but we have to deal with two of them by hand.
   pick_goal 8
   · exact (Nat.succ_pred_eq_of_posₓ (lt_of_le_of_ltₓ (zero_le _) ‹_›)).symm
     
@@ -221,6 +230,7 @@ theorem δ_comp_σ_of_le {n} {i : Finₓ (n + 2)} {j : Finₓ (n + 1)} (H : i �
   · have : k ≤ i := Nat.le_of_pred_lt ‹_›
     linarith
     
+  -- Hope for the best from `linarith`:
   all_goals
     try
         first |
@@ -269,6 +279,8 @@ theorem δ_comp_σ_of_gt {n} {i : Finₓ (n + 2)} {j : Finₓ (n + 1)} (H : j.ca
   suffices ite (_ < ite (k < i + 1) _ _) _ _ = ite _ (ite (j < k) (k - 1) k) (ite (j < k) (k - 1) k + 1) by
     simpa [apply_dite Finₓ.castSucc, Finₓ.predAbove] with push_cast
   split_ifs
+  -- Most of the goals can now be handled by `linarith`,
+  -- but we have to deal with three of them by hand.
   swap
   · simp only [Subtype.mk_lt_mk] at h_1
     simp only [not_ltₓ] at h_2
@@ -291,6 +303,7 @@ theorem δ_comp_σ_of_gt {n} {i : Finₓ (n + 2)} {j : Finₓ (n + 1)} (H : j.ca
     simp only [Nat.add_succ_sub_one, add_zeroₓ]
     exact (Nat.succ_pred_eq_of_posₓ (lt_of_le_of_ltₓ (zero_le _) h_2)).symm
     
+  -- Hope for the best from `linarith`:
   all_goals
     simp at h_1 h_2⊢ <;> linarith
 
@@ -304,9 +317,17 @@ theorem σ_comp_σ {n} {i j : Finₓ (n + 1)} (H : i ≤ j) : σ i.cast_succ ≫
   rcases j with ⟨j, _⟩
   rcases k with ⟨k, _⟩
   simp only [Subtype.mk_le_mk] at H
+  -- At this point `simp with push_cast` makes good progress, but neither `simp?` nor `squeeze_simp`
+  -- return usable sets of lemmas.
+  -- To avoid using a non-terminal simp, we make a `suffices` statement indicating the shape
+  -- of the goal we're looking for, and then use `simpa with push_cast`.
+  -- I'm not sure this is actually much more robust that a non-terminal simp.
   suffices ite (_ < dite (i < k) _ _) _ _ = ite (_ < dite (j + 1 < k) _ _) _ _ by
     simpa [Finₓ.predAbove] with push_cast
   split_ifs
+  -- `split_ifs` created 12 goals.
+  -- Most of them are dealt with `by simp at *; linarith`,
+  -- but we pull out two harder ones to do by hand.
   pick_goal 3
   · simp only [not_ltₓ] at h_2
     exact
@@ -319,6 +340,7 @@ theorem σ_comp_σ {n} {i j : Finₓ (n + 1)} (H : i ≤ j) : σ i.cast_succ ≫
   · simp only [Subtype.mk_lt_mk, not_ltₓ] at h_1
     exact False.elim (lt_irreflₓ j (lt_of_lt_of_leₓ (Nat.pred_lt_predₓ (Nat.succ_ne_zero j) h_2) h_1))
     
+  -- Deal with the rest automatically.
   all_goals
     simp at * <;> linarith
 
@@ -329,7 +351,7 @@ section Skeleton
 /-- The functor that exhibits `simplex_category` as skeleton
 of `NonemptyFinLinOrd` -/
 @[simps obj map]
-def skeletal_functor : SimplexCategory.{u} ⥤ NonemptyFinLinOrdₓ.{v} where
+def skeletalFunctor : SimplexCategory.{u} ⥤ NonemptyFinLinOrdₓ.{v} where
   obj := fun a => NonemptyFinLinOrdₓ.of <| Ulift (Finₓ (a.len + 1))
   map := fun a b f => ⟨fun i => Ulift.up (f.toOrderHom i.down), fun i j h => f.toOrderHom.Monotone h⟩
   map_id' := fun a => by
@@ -399,26 +421,26 @@ instance : EssSurj skeletalFunctor.{u, v} where
           exact f.apply_symm_apply i
           ⟩⟩
 
-noncomputable instance is_equivalence : IsEquivalence skeletalFunctor.{u, v} :=
+noncomputable instance isEquivalence : IsEquivalence skeletalFunctor.{u, v} :=
   Equivalence.ofFullyFaithfullyEssSurj skeletalFunctor
 
 end SkeletalFunctor
 
 /-- The equivalence that exhibits `simplex_category` as skeleton
 of `NonemptyFinLinOrd` -/
-noncomputable def skeletal_equivalence : SimplexCategory.{u} ≌ NonemptyFinLinOrdₓ.{v} :=
+noncomputable def skeletalEquivalence : SimplexCategory.{u} ≌ NonemptyFinLinOrdₓ.{v} :=
   Functor.asEquivalence skeletalFunctor
 
 end Skeleton
 
 /-- `simplex_category` is a skeleton of `NonemptyFinLinOrd`.
 -/
-noncomputable def is_skeleton_of : IsSkeletonOf NonemptyFinLinOrdₓ SimplexCategory skeletalFunctor.{u, v} where
+noncomputable def isSkeletonOf : IsSkeletonOf NonemptyFinLinOrdₓ SimplexCategory skeletalFunctor.{u, v} where
   skel := skeletal
   eqv := skeletalFunctor.isEquivalence
 
 /-- The truncated simplex category. -/
-def truncated (n : ℕ) :=
+def Truncated (n : ℕ) :=
   { a : SimplexCategory.{u} // a.len ≤ n }deriving SmallCategory
 
 namespace Truncated
@@ -460,7 +482,7 @@ theorem mono_iff_injective {n m : SimplexCategory.{u}} {f : n ⟶ m} : Mono f �
   · exact concrete_category.mono_of_injective f
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:418:16: unsupported tactic `by_contra'
+-- ././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'
 -- ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:50: missing argument
 -- ././Mathport/Syntax/Translate/Tactic/Basic.lean:59:31: expecting tactic arg
 -- ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:50: missing argument
@@ -470,7 +492,10 @@ theorem mono_iff_injective {n m : SimplexCategory.{u}} {f : n ⟶ m} : Mono f �
 theorem epi_iff_surjective {n m : SimplexCategory.{u}} {f : n ⟶ m} : Epi f ↔ Function.Surjective f.toOrderHom := by
   constructor
   · intros hyp_f_epi x
-    "././Mathport/Syntax/Translate/Basic.lean:418:16: unsupported tactic `by_contra'"
+    "././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'"
+    -- The proof is by contradiction: assume f is not surjective,
+    -- then introduce two non-equal auxiliary functions equalizing f, and get a contradiction.
+    -- First we define the two auxiliary functions.
     set chi_1 : m ⟶ [1] :=
       hom.mk
         ⟨fun u => if u ≤ x then 0 else 1, by
@@ -495,10 +520,12 @@ theorem epi_iff_surjective {n m : SimplexCategory.{u}} {f : n ⟶ m} : Epi f ↔
             
           · exact False.elim (h1 (lt_of_le_of_ltₓ h h3))
             ⟩
+    -- The two auxiliary functions equalize f
     have f_comp_chi_i : f ≫ chi_1 = f ≫ chi_2 := by
       dsimp
       ext
       simp [le_iff_lt_or_eqₓ, h_ab x_1]
+    -- We now just have to show the two auxiliary functions are not equal.
     rw [CategoryTheory.cancel_epi f] at f_comp_chi_i
     rename' f_comp_chi_i => eq_chi_i
     apply_fun fun e => e.toOrderHom x  at eq_chi_i

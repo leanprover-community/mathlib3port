@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Kevin Kappelmann. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Kevin Kappelmann
+-/
 import Mathbin.Algebra.ContinuedFractions.Computation.Approximations
 import Mathbin.Algebra.ContinuedFractions.Computation.CorrectnessTerminating
 import Mathbin.Algebra.Order.Archimedean
@@ -31,6 +36,10 @@ open generalized_continued_fraction (of)
 
 variable {K : Type _} [LinearOrderedField K] [FloorRing K]
 
+/-
+We will have to constantly coerce along our structures in the following proofs using their provided
+map functions.
+-/
 attribute [local simp] pair.map int_fract_pair.mapFr
 
 section RatOfTerminates
@@ -57,26 +66,34 @@ theorem exists_gcf_pair_rat_eq_of_nth_conts_aux :
       let g := of v
       intro n IH
       rcases n with (_ | _ | n)
+      -- n = 0
       · suffices ∃ gp : pair ℚ, pair.mk (1 : K) 0 = gp.map coe by
           simpa [continuants_aux]
         use pair.mk 1 0
         simp
         
+      -- n = 1
       · suffices ∃ conts : pair ℚ, pair.mk g.h 1 = conts.map coe by
           simpa [continuants_aux]
         use pair.mk ⌊v⌋ 1
         simp
         
+      -- 2 ≤ n
       · cases' IH (n + 1) <| lt_add_one (n + 1) with pred_conts pred_conts_eq
+        -- invoke the IH
         cases' s_ppred_nth_eq : g.s.nth n with gp_n
+        -- option.none
         · use pred_conts
           have : g.continuants_aux (n + 2) = g.continuants_aux (n + 1) :=
             continuants_aux_stable_of_terminated (n + 1).le_succ s_ppred_nth_eq
           simp only [this, pred_conts_eq]
           
-        · cases' IH n <| lt_of_le_of_ltₓ n.le_succ <| lt_add_one <| n + 1 with ppred_conts ppred_conts_eq
+        -- option.some
+        · -- invoke the IH a second time
+          cases' IH n <| lt_of_le_of_ltₓ n.le_succ <| lt_add_one <| n + 1 with ppred_conts ppred_conts_eq
           obtain ⟨a_eq_one, z, b_eq_z⟩ : gp_n.a = 1 ∧ ∃ z : ℤ, gp_n.b = (z : K)
           exact of_part_num_eq_one_and_exists_int_part_denom_eq s_ppred_nth_eq
+          -- finally, unfold the recurrence to obtain the required rational value.
           simp only [a_eq_one, b_eq_z, continuants_aux_recurrence s_ppred_nth_eq ppred_conts_eq pred_conts_eq]
           use next_continuants 1 (z : ℚ) ppred_conts pred_conts
           cases ppred_conts
@@ -140,6 +157,7 @@ the computation first and then lift the results step-by-step.
 -/
 
 
+-- The lifting works for arbitrary linear ordered fields with a floor function.
 variable {v : K} {q : ℚ} (v_eq_q : v = (↑q : K)) (n : ℕ)
 
 include v_eq_q
@@ -293,7 +311,9 @@ theorem exists_nth_stream_eq_none_of_rat (q : ℚ) : ∃ n : ℕ, IntFractPair.s
   · use n
     exact stream_nth_eq
     
-  · have ifp_fr_num_le_q_fr_num_sub_n : ifp.fr.num ≤ fract_q_num - n :=
+  · -- arrive at a contradiction since the numerator decreased num + 1 times but every fractional
+    -- value is nonnegative.
+    have ifp_fr_num_le_q_fr_num_sub_n : ifp.fr.num ≤ fract_q_num - n :=
       stream_nth_fr_num_le_fr_num_sub_n_rat stream_nth_eq
     have : fract_q_num - n = -1 := by
       have : 0 ≤ fract_q_num := rat.num_nonneg_iff_zero_le.elim_right (Int.fract_nonneg q)

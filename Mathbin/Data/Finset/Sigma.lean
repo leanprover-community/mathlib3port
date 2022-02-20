@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2017 Mario Carneiro. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Mario Carneiro, Yaël Dillies, Bhavik Mehta
+-/
 import Mathbin.Data.Finset.Lattice
 
 /-!
@@ -31,7 +36,7 @@ section Sigma
 variable {α : ι → Type _} {β : Type _} (s s₁ s₂ : Finset ι) (t t₁ t₂ : ∀ i, Finset (α i))
 
 /-- `s.sigma t` is the finset of dependent pairs `⟨i, a⟩` such that `i ∈ s` and `a ∈ t i`. -/
-protected def Sigma : Finset (Σ i, α i) :=
+protected def sigma : Finset (Σ i, α i) :=
   ⟨_, nodup_sigma s.2 fun i => (t i).2⟩
 
 variable {s s₁ s₂ t t₁ t₂}
@@ -49,7 +54,7 @@ theorem sigma_eq_empty : s.Sigma t = ∅ ↔ ∀, ∀ i ∈ s, ∀, t i = ∅ :=
   simp only [← not_nonempty_iff_eq_empty, sigma_nonempty, not_exists]
 
 @[mono]
-theorem sigma_mono (hs : s₁ ⊆ s₂) (ht : ∀ i, t₁ i ⊆ t₂ i) : s₁.Sigma t₁ ⊆ s₂.Sigma t₂ := fun ⟨i, a⟩ h =>
+theorem sigma_mono (hs : s₁ ⊆ s₂) (ht : ∀ i, t₁ i ⊆ t₂ i) : s₁.Sigma t₁ ⊆ s₂.Sigma t₂ := fun h =>
   let ⟨hi, ha⟩ := mem_sigma.1 h
   mem_sigma.2 ⟨hs hi, ht i ha⟩
 
@@ -77,7 +82,7 @@ section SigmaLift
 variable {α β γ : ι → Type _} [DecidableEq ι]
 
 /-- Lifts maps `α i → β i → finset (γ i)` to a map `Σ i, α i → Σ i, β i → finset (Σ i, γ i)`. -/
-def sigma_lift (f : ∀ ⦃i⦄, α i → β i → Finset (γ i)) (a : Sigma α) (b : Sigma β) : Finset (Sigma γ) :=
+def sigmaLift (f : ∀ ⦃i⦄, α i → β i → Finset (γ i)) (a : Sigma α) (b : Sigma β) : Finset (Sigma γ) :=
   dite (a.1 = b.1) (fun h => (f (h.rec a.2) b.2).map <| Embedding.sigmaMk _) fun _ => ∅
 
 theorem mem_sigma_lift (f : ∀ ⦃i⦄, α i → β i → Finset (γ i)) (a : Sigma α) (b : Sigma β) (x : Sigma γ) :

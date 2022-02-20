@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2022 Yaël Dillies. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yaël Dillies
+-/
 import Mathbin.Order.CompleteLattice
 import Mathbin.Order.Hom.Lattice
 
@@ -82,8 +87,8 @@ attribute [simp] map_Sup map_Inf
 theorem map_supr [HasSupₓ α] [HasSupₓ β] [SupHomClassₓ F α β] (f : F) (g : ι → α) : f (⨆ i, g i) = ⨆ i, f (g i) := by
   rw [supr, supr, map_Sup, Set.range_comp]
 
--- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (i j)
--- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (i j)
 theorem map_supr₂ [HasSupₓ α] [HasSupₓ β] [SupHomClassₓ F α β] (f : F) (g : ∀ i, κ i → α) :
     f (⨆ (i) (j), g i j) = ⨆ (i) (j), f (g i j) := by
   simp_rw [map_supr]
@@ -91,44 +96,52 @@ theorem map_supr₂ [HasSupₓ α] [HasSupₓ β] [SupHomClassₓ F α β] (f : 
 theorem map_infi [HasInfₓ α] [HasInfₓ β] [InfHomClassₓ F α β] (f : F) (g : ι → α) : f (⨅ i, g i) = ⨅ i, f (g i) := by
   rw [infi, infi, map_Inf, Set.range_comp]
 
--- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (i j)
--- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (i j)
 theorem map_infi₂ [HasInfₓ α] [HasInfₓ β] [InfHomClassₓ F α β] (f : F) (g : ∀ i, κ i → α) :
     f (⨅ (i) (j), g i j) = ⨅ (i) (j), f (g i j) := by
   simp_rw [map_infi]
 
+-- See note [lower instance priority]
 instance (priority := 100) SupHomClassₓ.toSupHomClass [CompleteLattice α] [CompleteLattice β] [SupHomClassₓ F α β] :
     SupHomClass F α β :=
   ⟨fun f a b => by
     rw [← Sup_pair, map_Sup, Set.image_pair, Sup_pair]⟩
 
+-- See note [lower instance priority]
 instance (priority := 100) SupHomClassₓ.toBotHomClass [CompleteLattice α] [CompleteLattice β] [SupHomClassₓ F α β] :
     BotHomClass F α β :=
   ⟨fun f => by
     rw [← Sup_empty, map_Sup, Set.image_empty, Sup_empty]⟩
 
+-- See note [lower instance priority]
 instance (priority := 100) InfHomClassₓ.toInfHomClass [CompleteLattice α] [CompleteLattice β] [InfHomClassₓ F α β] :
     InfHomClass F α β :=
   ⟨fun f a b => by
     rw [← Inf_pair, map_Inf, Set.image_pair, Inf_pair]⟩
 
+-- See note [lower instance priority]
 instance (priority := 100) InfHomClassₓ.toTopHomClass [CompleteLattice α] [CompleteLattice β] [InfHomClassₓ F α β] :
     TopHomClass F α β :=
   ⟨fun f => by
     rw [← Inf_empty, map_Inf, Set.image_empty, Inf_empty]⟩
 
+-- See note [lower instance priority]
 instance (priority := 100) FrameHomClass.toLatticeHomClass [CompleteLattice α] [CompleteLattice β]
     [FrameHomClass F α β] : LatticeHomClass F α β :=
   { ‹FrameHomClass F α β› with }
 
+-- See note [lower instance priority]
 instance (priority := 100) CompleteLatticeHomClass.toInfHomClass [CompleteLattice α] [CompleteLattice β]
     [CompleteLatticeHomClass F α β] : InfHomClassₓ F α β :=
   { ‹CompleteLatticeHomClass F α β› with }
 
+-- See note [lower instance priority]
 instance (priority := 100) CompleteLatticeHomClass.toFrameHomClass [CompleteLattice α] [CompleteLattice β]
     [CompleteLatticeHomClass F α β] : FrameHomClass F α β :=
   { ‹CompleteLatticeHomClass F α β›, InfHomClassₓ.toInfHomClass with }
 
+-- See note [lower instance priority]
 instance (priority := 100) CompleteLatticeHomClass.toBoundedLatticeHomClass [CompleteLattice α] [CompleteLattice β]
     [CompleteLatticeHomClass F α β] : BoundedLatticeHomClass F α β :=
   { SupHomClassₓ.toBotHomClass, InfHomClassₓ.toTopHomClass with }
@@ -405,7 +418,7 @@ instance : CoeFun (FrameHom α β) fun _ => α → β :=
   ⟨fun f => f.toFun⟩
 
 /-- Reinterpret a `frame_hom` as a `lattice_hom`. -/
-def to_lattice_hom (f : FrameHom α β) : LatticeHom α β :=
+def toLatticeHom (f : FrameHom α β) : LatticeHom α β :=
   { f with toFun := f,
     map_sup' := fun a b => by
       rw [← Sup_pair, map_Sup, Set.image_pair, Sup_pair] }
@@ -503,7 +516,7 @@ namespace CompleteLatticeHom
 variable [CompleteLattice α] [CompleteLattice β] [CompleteLattice γ] [CompleteLattice δ]
 
 /-- Reinterpret a `complete_lattice_hom` as an `Inf_hom`. -/
-def to_Inf_hom (f : CompleteLatticeHom α β) : InfHomₓ α β :=
+def toInfHom (f : CompleteLatticeHom α β) : InfHomₓ α β :=
   { f with }
 
 instance : CompleteLatticeHomClass (CompleteLatticeHom α β) α β where

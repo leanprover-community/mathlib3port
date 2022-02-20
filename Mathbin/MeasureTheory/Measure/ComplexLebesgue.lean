@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Yury Kudryashov. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yury Kudryashov
+-/
 import Mathbin.MeasureTheory.Measure.Lebesgue
 
 /-!
@@ -18,15 +23,15 @@ noncomputable section
 namespace Complex
 
 /-- Lebesgue measure on `ℂ`. -/
-instance measure_space : MeasureSpace ℂ :=
+instance measureSpace : MeasureSpace ℂ :=
   ⟨Measure.map basisOneI.equivFun.symm volume⟩
 
 /-- Measurable equivalence between `ℂ` and `ℝ² = fin 2 → ℝ`. -/
-def measurable_equiv_pi : ℂ ≃ᵐ (Finₓ 2 → ℝ) :=
+def measurableEquivPi : ℂ ≃ᵐ (Finₓ 2 → ℝ) :=
   basisOneI.equivFun.toContinuousLinearEquiv.toHomeomorph.toMeasurableEquiv
 
 /-- Measurable equivalence between `ℂ` and `ℝ × ℝ`. -/
-def measurable_equiv_real_prod : ℂ ≃ᵐ ℝ × ℝ :=
+def measurableEquivRealProd : ℂ ≃ᵐ ℝ × ℝ :=
   equivRealProdₗ.toHomeomorph.toMeasurableEquiv
 
 theorem volume_preserving_equiv_pi : MeasurePreserving measurableEquivPi :=

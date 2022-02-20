@@ -1,3 +1,10 @@
+/-
+Copyright (c) 2017 Johannes Hölzl. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johannes Hölzl
+
+Binder elimination
+-/
 import Mathbin.Order.CompleteLattice
 
 namespace OldConv
@@ -19,14 +26,18 @@ unsafe def head_beta : old_conv Unit := fun r e => do
   let n ← tactic.head_beta e
   return ⟨(), n, none⟩
 
-unsafe def congr_argₓ : old_conv Unit → old_conv Unit :=
+-- congr should forward data!
+unsafe def congr_arg : old_conv Unit → old_conv Unit :=
   congr_core (return ())
 
-unsafe def congr_funₓ : old_conv Unit → old_conv Unit := fun c => congr_core c (return ())
+unsafe def congr_fun : old_conv Unit → old_conv Unit := fun c => congr_core c (return ())
 
 unsafe def congr_rule (congr : expr) (cs : List (List expr → old_conv Unit)) : old_conv Unit := fun r lhs => do
   let meta_rhs ← infer_type lhs >>= mk_meta_var
-  let t ← mk_app r [lhs, meta_rhs]
+  let t
+    ←-- is maybe overly restricted for `heq`
+        mk_app
+        r [lhs, meta_rhs]
   let ((), meta_pr) ←
     solve_aux t do
         apply congr
@@ -76,13 +87,34 @@ end OldConv
 
 open Expr Tactic OldConv
 
+/- Binder elimination:
+
+We assume a binder `B : p → Π (α : Sort u), (α → t) → t`, where `t` is a type depending on `p`.
+Examples:
+  ∃: there is no `p` and `t` is `Prop`.
+  ⨅, ⨆: here p is `β` and `[complete_lattice β]`, `p` is `β`
+
+Problem: ∀x, _ should be a binder, but is not a constant!
+
+Provide a mechanism to rewrite:
+
+  B (x : α) ..x.. (h : x = t), p x  =  B ..x/t.., p t
+
+Here ..x.. are binders, maybe also some constants which provide commutativity rules with `B`.
+
+-/
 unsafe structure binder_eq_elim where
   match_binder : expr → tactic (expr × expr)
+  -- returns the bound type and body
   adapt_rel : old_conv Unit → old_conv Unit
+  -- optionally adapt `eq` to `iff`
   apply_comm : old_conv Unit
+  -- apply commutativity rule
   apply_congr : (expr → old_conv Unit) → old_conv Unit
+  -- apply congruence rule
   apply_elim_eq : old_conv Unit
 
+-- (B (x : β) (h : x = t), s x) = s t
 unsafe def binder_eq_elim.check_eq (b : binder_eq_elim) (x : expr) : expr → tactic Unit
   | quote.1 (@Eq (%%ₓβ) (%%ₓl) (%%ₓr)) => guardₓ (l = x ∧ ¬x.occurs r ∨ r = x ∧ ¬x.occurs l)
   | _ => fail "no match"

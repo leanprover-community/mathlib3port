@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Bhavik Mehta. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Bhavik Mehta
+-/
 import Mathbin.CategoryTheory.Over
 import Mathbin.CategoryTheory.Monad.Algebra
 import Mathbin.CategoryTheory.Limits.Shapes.BinaryProducts
@@ -20,6 +25,7 @@ noncomputable section
 
 universe v u
 
+-- morphism levels before object levels. See note [category_theory universes].
 namespace CategoryTheory
 
 open Category Limits
@@ -34,7 +40,7 @@ variable [HasBinaryProducts C]
 
 /-- `X ⨯ -` has a comonad structure. This is sometimes called the writer comonad. -/
 @[simps]
-def prod_comonad : Comonad C where
+def prodComonad : Comonad C where
   toFunctor := prod.functor.obj X
   ε' := { app := fun Y => Limits.prod.snd }
   δ' := { app := fun Y => prod.lift Limits.prod.fst (𝟙 _) }
@@ -43,7 +49,7 @@ def prod_comonad : Comonad C where
 category.
 -/
 @[simps]
-def coalgebra_to_over : Coalgebra (prodComonad X) ⥤ Over X where
+def coalgebraToOver : Coalgebra (prodComonad X) ⥤ Over X where
   obj := fun A => Over.mk (A.a ≫ limits.prod.fst)
   map := fun A₁ A₂ f =>
     Over.homMk f.f
@@ -56,13 +62,13 @@ def coalgebra_to_over : Coalgebra (prodComonad X) ⥤ Over X where
 category.
 -/
 @[simps]
-def over_to_coalgebra : Over X ⥤ Coalgebra (prodComonad X) where
+def overToCoalgebra : Over X ⥤ Coalgebra (prodComonad X) where
   obj := fun f => { A := f.left, a := prod.lift f.Hom (𝟙 _) }
   map := fun f₁ f₂ g => { f := g.left }
 
 /-- The equivalence from coalgebras for the product comonad to the over category. -/
 @[simps]
-def coalgebra_equiv_over : Coalgebra (prodComonad X) ≌ Over X where
+def coalgebraEquivOver : Coalgebra (prodComonad X) ≌ Over X where
   Functor := coalgebraToOver X
   inverse := overToCoalgebra X
   unitIso :=
@@ -93,7 +99,7 @@ variable [HasBinaryCoproducts C]
 
 /-- `X ⨿ -` has a monad structure. This is sometimes called the either monad. -/
 @[simps]
-def coprod_monad : Monad C where
+def coprodMonad : Monad C where
   toFunctor := coprod.functor.obj X
   η' := { app := fun Y => coprod.inr }
   μ' := { app := fun Y => coprod.desc coprod.inl (𝟙 _) }
@@ -102,7 +108,7 @@ def coprod_monad : Monad C where
 category.
 -/
 @[simps]
-def algebra_to_under : Monad.Algebra (coprodMonad X) ⥤ Under X where
+def algebraToUnder : Monad.Algebra (coprodMonad X) ⥤ Under X where
   obj := fun A => Under.mk (coprod.inl ≫ A.a)
   map := fun A₁ A₂ f =>
     Under.homMk f.f
@@ -115,14 +121,14 @@ def algebra_to_under : Monad.Algebra (coprodMonad X) ⥤ Under X where
 category.
 -/
 @[simps]
-def under_to_algebra : Under X ⥤ Monad.Algebra (coprodMonad X) where
+def underToAlgebra : Under X ⥤ Monad.Algebra (coprodMonad X) where
   obj := fun f => { A := f.right, a := coprod.desc f.Hom (𝟙 _) }
   map := fun f₁ f₂ g => { f := g.right }
 
 /-- The equivalence from algebras for the coproduct monad to the under category.
 -/
 @[simps]
-def algebra_equiv_under : Monad.Algebra (coprodMonad X) ≌ Under X where
+def algebraEquivUnder : Monad.Algebra (coprodMonad X) ≌ Under X where
   Functor := algebraToUnder X
   inverse := underToAlgebra X
   unitIso :=

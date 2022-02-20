@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Johannes Hölzl. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johannes Hölzl
+-/
 import Mathbin.LinearAlgebra.Dimension
 import Mathbin.LinearAlgebra.FiniteDimensional
 import Mathbin.LinearAlgebra.StdBasis
@@ -62,7 +67,7 @@ theorem linear_independent_single {φ : ι → Type _} {f : ∀ ι, φ ι → M}
 open LinearMap Submodule
 
 /-- The basis on `ι →₀ M` with basis vectors `λ ⟨i, x⟩, single i (b i x)`. -/
-protected def Basis {φ : ι → Type _} (b : ∀ i, Basis (φ i) R M) : Basis (Σ i, φ i) R (ι →₀ M) :=
+protected def basis {φ : ι → Type _} (b : ∀ i, Basis (φ i) R M) : Basis (Σ i, φ i) R (ι →₀ M) :=
   Basis.of_repr
     { toFun := fun g =>
         { toFun := fun ix => (b ix.1).repr (g ix.1) ix.2,
@@ -112,7 +117,7 @@ theorem coe_basis {φ : ι → Type _} (b : ∀ i, Basis (φ i) R M) :
 
 /-- The basis on `ι →₀ M` with basis vectors `λ i, single i 1`. -/
 @[simps]
-protected def basis_single_one : Basis ι R (ι →₀ R) :=
+protected def basisSingleOne : Basis ι R (ι →₀ R) :=
   Basis.of_repr (LinearEquiv.refl _ _)
 
 @[simp]

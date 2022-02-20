@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Floris van Doorn. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Floris van Doorn
+-/
 import Mathbin.MeasureTheory.Measure.Regular
 import Mathbin.MeasureTheory.Group.MeasurableEquiv
 import Mathbin.MeasureTheory.Measure.OpenPos
@@ -31,24 +36,24 @@ namespace Measureₓ
 
 /-- A measure `μ` on a measurable additive group is left invariant
   if the measure of left translations of a set are equal to the measure of the set itself. -/
-class is_add_left_invariant [Add G] (μ : Measure G) : Prop where
+class IsAddLeftInvariant [Add G] (μ : Measure G) : Prop where
   map_add_left_eq_self : ∀ g : G, map ((· + ·) g) μ = μ
 
 /-- A measure `μ` on a measurable group is left invariant
   if the measure of left translations of a set are equal to the measure of the set itself. -/
 @[to_additive]
-class is_mul_left_invariant [Mul G] (μ : Measure G) : Prop where
+class IsMulLeftInvariant [Mul G] (μ : Measure G) : Prop where
   map_mul_left_eq_self : ∀ g : G, map ((· * ·) g) μ = μ
 
 /-- A measure `μ` on a measurable additive group is right invariant
   if the measure of right translations of a set are equal to the measure of the set itself. -/
-class is_add_right_invariant [Add G] (μ : Measure G) : Prop where
+class IsAddRightInvariant [Add G] (μ : Measure G) : Prop where
   map_add_right_eq_self : ∀ g : G, map (· + g) μ = μ
 
 /-- A measure `μ` on a measurable group is right invariant
   if the measure of right translations of a set are equal to the measure of the set itself. -/
 @[to_additive]
-class is_mul_right_invariant [Mul G] (μ : Measure G) : Prop where
+class IsMulRightInvariant [Mul G] (μ : Measure G) : Prop where
   map_mul_right_eq_self : ∀ g : G, map (· * g) μ = μ
 
 end Measureₓ
@@ -141,7 +146,7 @@ theorem inv_apply (μ : Measure G) (s : Set G) : μ.inv s = μ s⁻¹ :=
   (MeasurableEquiv.inv G).map_apply s
 
 @[simp, to_additive]
-protected theorem inv_invₓ (μ : Measure G) : μ.inv.inv = μ :=
+protected theorem inv_inv (μ : Measure G) : μ.inv.inv = μ :=
   (MeasurableEquiv.inv G).map_symm_map
 
 end Measureₓ
@@ -175,7 +180,7 @@ variable [TopologicalSpace G] [BorelSpace G] {μ : Measure G}
 variable [Groupₓ G] [TopologicalGroup G]
 
 @[to_additive]
-instance measure.regular.inv [T2Space G] [Regular μ] : Regular μ.inv :=
+instance Measure.Regular.inv [T2Space G] [Regular μ] : Regular μ.inv :=
   Regular.map (Homeomorph.inv G)
 
 @[to_additive]
@@ -263,7 +268,7 @@ variable [CommGroupₓ G]
   We don't declare the converse as an instance, since that would loop type-class inference, and
   we use `is_mul_left_invariant` as default hypotheses in abelian groups. -/
 @[to_additive]
-instance (priority := 100) is_mul_left_invariant.is_mul_right_invariant {μ : Measure G} [IsMulLeftInvariant μ] :
+instance (priority := 100) IsMulLeftInvariant.is_mul_right_invariant {μ : Measure G} [IsMulLeftInvariant μ] :
     IsMulRightInvariant μ :=
   ⟨fun g => by
     simp_rw [mul_comm, map_mul_left_eq_self]⟩
@@ -276,13 +281,13 @@ namespace Measureₓ
 
 /-- A measure on an additive group is an additive Haar measure if it is left-invariant, and gives
 finite mass to compact sets and positive mass to open sets. -/
-class is_add_haar_measure {G : Type _} [AddGroupₓ G] [TopologicalSpace G] [MeasurableSpace G] (μ : Measure G) extends
+class IsAddHaarMeasure {G : Type _} [AddGroupₓ G] [TopologicalSpace G] [MeasurableSpace G] (μ : Measure G) extends
   IsFiniteMeasureOnCompacts μ, IsAddLeftInvariant μ, IsOpenPosMeasure μ : Prop
 
 /-- A measure on a group is a Haar measure if it is left-invariant, and gives finite mass to compact
 sets and positive mass to open sets. -/
 @[to_additive]
-class is_haar_measure {G : Type _} [Groupₓ G] [TopologicalSpace G] [MeasurableSpace G] (μ : Measure G) extends
+class IsHaarMeasure {G : Type _} [Groupₓ G] [TopologicalSpace G] [MeasurableSpace G] (μ : Measure G) extends
   IsFiniteMeasureOnCompacts μ, IsMulLeftInvariant μ, IsOpenPosMeasure μ : Prop
 
 section
@@ -295,7 +300,7 @@ theorem haar_singleton [TopologicalGroup G] [BorelSpace G] (g : G) : μ {g} = μ
   simp only [mul_oneₓ, preimage_mul_left_singleton, inv_invₓ]
 
 @[to_additive MeasureTheory.Measure.IsAddHaarMeasure.smul]
-theorem is_haar_measure.smul {c : ℝ≥0∞} (cpos : c ≠ 0) (ctop : c ≠ ∞) : IsHaarMeasure (c • μ) :=
+theorem IsHaarMeasure.smul {c : ℝ≥0∞} (cpos : c ≠ 0) (ctop : c ≠ ∞) : IsHaarMeasure (c • μ) :=
   { lt_top_of_is_compact := fun K hK => Ennreal.mul_lt_top ctop hK.measure_lt_top.Ne,
     to_is_open_pos_measure := is_open_pos_measure_smul μ cpos }
 
@@ -332,8 +337,9 @@ theorem is_haar_measure_map [BorelSpace G] [TopologicalGroup G] {H : Type _} [Gr
     to_is_open_pos_measure := hf.is_open_pos_measure_map f.Surjective }
 
 /-- A Haar measure on a sigma-compact space is sigma-finite. -/
+-- see Note [lower instance priority]
 @[to_additive]
-instance (priority := 100) is_haar_measure.sigma_finite [SigmaCompactSpace G] : SigmaFinite μ :=
+instance (priority := 100) IsHaarMeasure.sigma_finite [SigmaCompactSpace G] : SigmaFinite μ :=
   ⟨⟨{ Set := CompactCovering G, set_mem := fun n => mem_univ _,
         Finite := fun n => IsCompact.measure_lt_top <| is_compact_compact_covering G n,
         spanning := Union_compact_covering G }⟩⟩
@@ -348,7 +354,7 @@ no atom.
 This applies in particular to show that an additive Haar measure on a nontrivial
 finite-dimensional real vector space has no atom. -/
 @[to_additive]
-instance (priority := 100) is_haar_measure.has_no_atoms [TopologicalGroup G] [BorelSpace G] [T1Space G]
+instance (priority := 100) IsHaarMeasure.has_no_atoms [TopologicalGroup G] [BorelSpace G] [T1Space G]
     [LocallyCompactSpace G] [(𝓝[≠] (1 : G)).ne_bot] (μ : Measure G) [μ.IsHaarMeasure] : HasNoAtoms μ := by
   suffices H : μ {(1 : G)} ≤ 0
   · constructor
@@ -384,6 +390,8 @@ instance (priority := 100) is_haar_measure.has_no_atoms [TopologicalGroup G] [Bo
   simp only [Ennreal.div_top] at J
   exact ge_of_tendsto' J I
 
+/- The above instance applies in particular to show that an additive Haar measure on a nontrivial
+finite-dimensional real vector space has no atom. -/
 example {E : Type _} [NormedGroup E] [NormedSpace ℝ E] [Nontrivial E] [FiniteDimensional ℝ E] [MeasurableSpace E]
     [BorelSpace E] (μ : Measure E) [IsAddHaarMeasure μ] : HasNoAtoms μ := by
   infer_instance

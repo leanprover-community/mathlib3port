@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Yakov Pechersky. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yakov Pechersky
+-/
 import Mathbin.Data.Equiv.Basic
 import Mathbin.Data.Set.Finite
 import Mathbin.GroupTheory.Perm.Sign
@@ -83,14 +88,14 @@ is an equivalence between the complement of those subtypes.
 
 See also `equiv.compl`, for a computable version when a term of type
 `{e' : α ≃ α // ∀ x : {x // p x}, e' x = e x}` is known. -/
-noncomputable def to_compl (e : { x // p x } ≃ { x // q x }) : { x // ¬p x } ≃ { x // ¬q x } :=
+noncomputable def toCompl (e : { x // p x } ≃ { x // q x }) : { x // ¬p x } ≃ { x // ¬q x } :=
   Classical.choice (Fintype.card_eq.mp (Fintype.card_compl_eq_card_compl (Fintype.card_congr e)))
 
 /-- If `e` is an equivalence between two subtypes of a fintype `α`, `e.extend_subtype`
 is a permutation of `α` acting like `e` on the subtypes and doing something arbitrary outside.
 
 Note that when `p = q`, `equiv.perm.subtype_congr e (equiv.refl _)` can be used instead. -/
-noncomputable abbrev extend_subtype (e : { x // p x } ≃ { x // q x }) : Perm α :=
+noncomputable abbrev extendSubtype (e : { x // p x } ≃ { x // q x }) : Perm α :=
   subtypeCongr e e.toCompl
 
 theorem extend_subtype_apply_of_mem (e : { x // p x } ≃ { x // q x }) x (hx : p x) : e.extendSubtype x = e ⟨x, hx⟩ := by

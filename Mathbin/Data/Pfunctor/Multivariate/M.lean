@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Jeremy Avigad. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Jeremy Avigad, Mario Carneiro, Simon Hudon
+-/
 import Mathbin.Data.Pfunctor.Multivariate.Basic
 import Mathbin.Data.Pfunctor.Univariate.M
 
@@ -51,13 +56,13 @@ open Typevec
 variable {n : ℕ} (P : Mvpfunctor.{u} (n + 1))
 
 /-- A path from the root of a tree to one of its node -/
-inductive M.path : P.last.M → Fin2 n → Type u
+inductive M.Path : P.last.M → Fin2 n → Type u
   | root (x : P.last.M) (a : P.A) (f : P.last.B a → P.last.M) (h : Pfunctor.M.dest x = ⟨a, f⟩) (i : Fin2 n)
     (c : P.drop.B a i) : M.path x i
   | child (x : P.last.M) (a : P.A) (f : P.last.B a → P.last.M) (h : Pfunctor.M.dest x = ⟨a, f⟩) (j : P.last.B a)
     (i : Fin2 n) (c : M.path (f j) i) : M.path x i
 
-instance M.path.inhabited (x : P.last.M) {i} [Inhabited (P.drop.B x.head i)] : Inhabited (M.Path P x i) :=
+instance M.Path.inhabited (x : P.last.M) {i} [Inhabited (P.drop.B x.head i)] : Inhabited (M.Path P x i) :=
   ⟨M.Path.root _ (Pfunctor.M.head x) (Pfunctor.M.children x)
       (Pfunctor.M.casesOn' x <| by
         intros <;> simp [Pfunctor.M.dest_mk] <;> ext <;> rw [Pfunctor.M.children_mk] <;> rfl)
@@ -67,7 +72,7 @@ instance M.path.inhabited (x : P.last.M) {i} [Inhabited (P.drop.B x.head i)] : I
 possibly infinite tree whereas, for a given `a : A`, `B a` is a valid
 path in tree `a` so that `Wp.obj α` is made of a tree and a function
 from its valid paths to the values it contains -/
-def Mp : Mvpfunctor n where
+def mp : Mvpfunctor n where
   A := P.last.M
   B := M.Path P
 
@@ -75,25 +80,25 @@ def Mp : Mvpfunctor n where
 def M (α : Typevec n) : Type _ :=
   P.mp.Obj α
 
-instance mvfunctor_M : Mvfunctor P.M := by
+instance mvfunctorM : Mvfunctor P.M := by
   delta' M <;> infer_instance
 
-instance inhabited_M {α : Typevec _} [I : Inhabited P.A] [∀ i : Fin2 n, Inhabited (α i)] : Inhabited (P.M α) :=
+instance inhabitedM {α : Typevec _} [I : Inhabited P.A] [∀ i : Fin2 n, Inhabited (α i)] : Inhabited (P.M α) :=
   @Obj.inhabited _ (mp P) _ (@Pfunctor.M.inhabited P.last I) _
 
 /-- construct through corecursion the shape of an M-type
 without its contents -/
-def M.corec_shape {β : Type u} (g₀ : β → P.A) (g₂ : ∀ b : β, P.last.B (g₀ b) → β) : β → P.last.M :=
+def M.corecShape {β : Type u} (g₀ : β → P.A) (g₂ : ∀ b : β, P.last.B (g₀ b) → β) : β → P.last.M :=
   Pfunctor.M.corec fun b => ⟨g₀ b, g₂ b⟩
 
 /-- Proof of type equality as an arrow -/
-def cast_dropB {a a' : P.A} (h : a = a') : P.drop.B a ⟹ P.drop.B a' := fun i b => Eq.recOnₓ h b
+def castDropB {a a' : P.A} (h : a = a') : P.drop.B a ⟹ P.drop.B a' := fun i b => Eq.recOnₓ h b
 
 /-- Proof of type equality as a function -/
-def cast_lastB {a a' : P.A} (h : a = a') : P.last.B a → P.last.B a' := fun b => Eq.recOnₓ h b
+def castLastB {a a' : P.A} (h : a = a') : P.last.B a → P.last.B a' := fun b => Eq.recOnₓ h b
 
 /-- Using corecursion, construct the contents of an M-type -/
-def M.corec_contents {α : Typevec.{u} n} {β : Type u} (g₀ : β → P.A) (g₁ : ∀ b : β, P.drop.B (g₀ b) ⟹ α)
+def M.corecContents {α : Typevec.{u} n} {β : Type u} (g₀ : β → P.A) (g₁ : ∀ b : β, P.drop.B (g₀ b) ⟹ α)
     (g₂ : ∀ b : β, P.last.B (g₀ b) → β) : ∀ x b, x = M.corecShape P g₀ g₂ b → M.Path P x ⟹ α
   | _, b, h, _, M.path.root x a f h' i c =>
     have : a = g₀ b := by
@@ -122,11 +127,11 @@ def M.corec {α : Typevec n} {β : Type u} (g : β → P.Obj (α.Append1 β)) : 
   M.corec' P (fun b => (g b).fst) (fun b => dropFun (g b).snd) fun b => lastFun (g b).snd
 
 /-- Implementation of destructor for M-type of `P` -/
-def M.path_dest_left {α : Typevec n} {x : P.last.M} {a : P.A} {f : P.last.B a → P.last.M}
-    (h : Pfunctor.M.dest x = ⟨a, f⟩) (f' : M.Path P x ⟹ α) : P.drop.B a ⟹ α := fun i c => f' i (M.Path.root x a f h i c)
+def M.pathDestLeft {α : Typevec n} {x : P.last.M} {a : P.A} {f : P.last.B a → P.last.M} (h : Pfunctor.M.dest x = ⟨a, f⟩)
+    (f' : M.Path P x ⟹ α) : P.drop.B a ⟹ α := fun i c => f' i (M.Path.root x a f h i c)
 
 /-- Implementation of destructor for M-type of `P` -/
-def M.path_dest_right {α : Typevec n} {x : P.last.M} {a : P.A} {f : P.last.B a → P.last.M}
+def M.pathDestRight {α : Typevec n} {x : P.last.M} {a : P.A} {f : P.last.B a → P.last.M}
     (h : Pfunctor.M.dest x = ⟨a, f⟩) (f' : M.Path P x ⟹ α) : ∀ j : P.last.B a, M.Path P (f j) ⟹ α := fun j i c =>
   f' i (M.Path.child x a f h j i c)
 
@@ -233,7 +238,7 @@ theorem M.bisim₀ {α : Typevec n} (R : P.M α → P.M α → Prop) (h₀ : Equ
   simp
   intro i
   replace h₁ := congr_funₓ (congr_funₓ h₁ Fin2.fz) i
-  simp [· ⊚ ·, append_fun, split_fun] at h₁
+  simp [(· ⊚ ·), append_fun, split_fun] at h₁
   replace h₁ := Quot.exact _ h₁
   rw [h₀.eqv_gen_iff] at h₁
   exact h₁

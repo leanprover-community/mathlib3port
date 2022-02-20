@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Keeley Hoek. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johan Commelin, Keeley Hoek, Scott Morrison
+-/
 import Mathbin.Data.List.Defs
 import Mathbin.Tactic.DeriveInhabited
 
@@ -38,13 +43,13 @@ directions in which an `expr_lens` should zoom into an `expr`.
 
 This type is used in the development of rewriting tactics such as `nth_rewrite` and
 `rewrite_search`. -/
-inductive dir
+inductive Dir
   | F
   | A
   deriving DecidableEq, Inhabited
 
 /-- String representation of `dir`. -/
-def dir.to_string : Dir → Stringₓ
+def Dir.toString : Dir → Stringₓ
   | dir.F => "F"
   | dir.A => "A"
 

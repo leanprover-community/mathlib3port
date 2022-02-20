@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Anatole Dedecker. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Anatole Dedecker
+-/
 import Mathbin.Data.Polynomial.Eval
 import Mathbin.LinearAlgebra.Dimension
 
@@ -54,12 +59,12 @@ variable {α : Type _} [CommSemiringₓ α] (E : LinearRecurrence α)
 
 /-- We say that a sequence `u` is solution of `linear_recurrence order coeffs` when we have
   `u (n + order) = ∑ i : fin order, coeffs i * u (n + i)` for any `n`. -/
-def is_solution (u : ℕ → α) :=
+def IsSolution (u : ℕ → α) :=
   ∀ n, u (n + E.order) = ∑ i, E.coeffs i * u (n + i)
 
 /-- A solution of a `linear_recurrence` which satisfies certain initial conditions.
   We will prove this is the only such solution. -/
-def mk_sol (init : Finₓ E.order → α) : ℕ → α
+def mkSol (init : Finₓ E.order → α) : ℕ → α
   | n =>
     if h : n < E.order then init ⟨n, h⟩
     else
@@ -111,7 +116,7 @@ theorem eq_mk_of_is_sol_of_eq_init' {u : ℕ → α} {init : Finₓ E.order → 
   funext (E.eq_mk_of_is_sol_of_eq_init h HEq)
 
 /-- The space of solutions of `E`, as a `submodule` over `α` of the module `ℕ → α`. -/
-def sol_space : Submodule α (ℕ → α) where
+def solSpace : Submodule α (ℕ → α) where
   Carrier := { u | E.IsSolution u }
   zero_mem' := fun n => by
     simp
@@ -127,7 +132,7 @@ theorem is_sol_iff_mem_sol_space (u : ℕ → α) : E.IsSolution u ↔ u ∈ E.s
 
 /-- The function that maps a solution `u` of `E` to its first
   `E.order` terms as a `linear_equiv`. -/
-def to_init : E.solSpace ≃ₗ[α] Finₓ E.order → α where
+def toInit : E.solSpace ≃ₗ[α] Finₓ E.order → α where
   toFun := fun u x => (u : ℕ → α) x
   map_add' := fun u v => by
     ext
@@ -161,7 +166,7 @@ theorem sol_eq_of_eq_init (u v : ℕ → α) (hu : E.IsSolution u) (hv : E.IsSol
 
 /-- `E.tuple_succ` maps `![s₀, s₁, ..., sₙ]` to `![s₁, ..., sₙ, ∑ (E.coeffs i) * sᵢ]`,
   where `n := E.order`. -/
-def tuple_succ : (Finₓ E.order → α) →ₗ[α] Finₓ E.order → α where
+def tupleSucc : (Finₓ E.order → α) →ₗ[α] Finₓ E.order → α where
   toFun := fun X i => if h : (i : ℕ) + 1 < E.order then X ⟨i + 1, h⟩ else ∑ i, E.coeffs i * X i
   map_add' := fun x y => by
     ext i
@@ -191,7 +196,7 @@ variable {α : Type _} [CommRingₓ α] (E : LinearRecurrence α)
 
 /-- The characteristic polynomial of `E` is
 `X ^ E.order - ∑ i : fin E.order, (E.coeffs i) * X ^ i`. -/
-def char_poly : α[X] :=
+def charPoly : α[X] :=
   Polynomial.monomial E.order 1 - ∑ i : Finₓ E.order, Polynomial.monomial i (E.coeffs i)
 
 /-- The geometric sequence `q^n` is a solution of `E` iff

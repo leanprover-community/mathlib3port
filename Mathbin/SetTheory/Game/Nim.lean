@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Fox Thomson. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Fox Thomson, Markus Himmel
+-/
 import Mathbin.Data.Nat.Bitwise
 import Mathbin.SetTheory.Game.Impartial
 import Mathbin.SetTheory.OrdinalArithmetic
@@ -178,7 +183,7 @@ end nim
   from some type to ordinals and returns a nonempty set of ordinals with empty intersection with
   the image of the function. It is guaranteed that the smallest ordinal not in the image will be
   in the set, i.e. we can use this to find the mex. -/
-def nonmoves {α : Type u} (M : α → Ordinal.{u}) : Set Ordinal.{u} :=
+def Nonmoves {α : Type u} (M : α → Ordinal.{u}) : Set Ordinal.{u} :=
   { O : Ordinal | ¬∃ a : α, M a = O }
 
 theorem nonmoves_nonempty {α : Type u} (M : α → Ordinal.{u}) : ∃ O : Ordinal, O ∈ Nonmoves M := by
@@ -199,7 +204,7 @@ theorem nonmoves_nonempty {α : Type u} (M : α → Ordinal.{u}) : ∃ O : Ordin
 
 /-- The Grundy value of an impartial game, the ordinal which corresponds to the game of nim that the
  game is equivalent to -/
-noncomputable def grundy_value : ∀ G : Pgame.{u} [G.Impartial], Ordinal.{u}
+noncomputable def grundyValue : ∀ G : Pgame.{u} [G.Impartial], Ordinal.{u}
   | G => fun hG => Inf (nonmoves fun i => grundy_value (G.move_left i))
 
 theorem grundy_value_def (G : Pgame) [G.Impartial] :
@@ -266,7 +271,7 @@ theorem equiv_nim_iff_grundy_value_eq (G : Pgame) [G.Impartial] (O : Ordinal) : 
     rintro rfl
     exact equiv_nim_grundy_value G⟩
 
-theorem nim.grundy_value (O : Ordinal.{u}) : grundyValue (nim O) = O := by
+theorem Nim.grundy_value (O : Ordinal.{u}) : grundyValue (nim O) = O := by
   rw [← equiv_nim_iff_grundy_value_eq]
 
 theorem equiv_iff_grundy_value_eq (G H : Pgame) [G.Impartial] [H.Impartial] : (G ≈ H) ↔ grundyValue G = grundyValue H :=
@@ -282,28 +287,43 @@ theorem grundy_value_nim_add_nim (n m : ℕ) : grundyValue (nim n + nim m) = Nat
   induction' n using Nat.strong_induction_onₓ with n hn generalizing m
   induction' m using Nat.strong_induction_onₓ with m hm
   rw [grundy_value_def]
+  -- We want to show that `n xor m` is the smallest unreachable Grundy value. We will do this in two
+  -- steps:
+  -- h₀: `n xor m` is not a reachable grundy number.
+  -- h₁: every Grundy number strictly smaller than `n xor m` is reachable.
   have h₀ : (Nat.lxor n m : Ordinal) ∈ nonmoves fun i => grundy_value ((nim n + nim m).moveLeft i) := by
+    -- To show that `n xor m` is unreachable, we show that every move produces a Grundy number
+    -- different from `n xor m`.
     simp only [nonmoves, not_exists, Set.mem_set_of_eq]
     equiv_rw left_moves_add _ _
+    -- The move operates either on the left pile or on the right pile.
     rintro (a | a)
     all_goals
+      -- One of the piles is reduced to `k` stones, with `k < n` or `k < m`.
       obtain ⟨ok, ⟨hk, hk'⟩⟩ := nim.exists_ordinal_move_left_eq _ a
       obtain ⟨k, rfl⟩ := Ordinal.lt_omega.1 (lt_transₓ hk (Ordinal.nat_lt_omega _))
       replace hk := Ordinal.nat_cast_lt.1 hk
+      -- Thus, the problem is reduced to computing the Grundy value of `nim n + nim k` or
+      -- `nim k + nim m`, both of which can be dealt with using an inductive hypothesis.
       simp only [hk', add_move_left_inl, add_move_left_inr, id]
       first |
         rw [hn _ hk]|
         rw [hm _ hk]
+      -- But of course xor is injective, so if we change one of the arguments, we will not get the
+      -- same value again.
       intro h
       rw [Ordinal.nat_cast_inj] at h
       try
         rw [Nat.lxor_comm n k, Nat.lxor_comm n m] at h
       exact _root_.ne_of_lt hk (Nat.lxor_left_inj h)
   have h₁ : ∀ u : Ordinal, u < Nat.lxor n m → u ∉ nonmoves fun i => grundy_value ((nim n + nim m).moveLeft i) := by
+    -- Take any natural number `u` less than `n xor m`.
     intro ou hu
     obtain ⟨u, rfl⟩ := Ordinal.lt_omega.1 (lt_transₓ hu (Ordinal.nat_lt_omega _))
     replace hu := Ordinal.nat_cast_lt.1 hu
+    -- Our goal is to produce a move that gives the Grundy value `u`.
     simp only [nonmoves, not_exists, not_not, Set.mem_set_of_eq, not_forall]
+    -- By a lemma about xor, either `u xor m < n` or `u xor n < m`.
     have : Nat.lxor u (Nat.lxor n m) ≠ 0 := by
       intro h
       rw [Nat.lxor_eq_zero] at h
@@ -311,6 +331,8 @@ theorem grundy_value_nim_add_nim (n m : ℕ) : grundyValue (nim n + nim m) = Nat
     rcases Nat.lxor_trichotomy this with (h | h | h)
     · linarith
       
+    -- Therefore, we can play the corresponding move, and by the inductive hypothesis the new state
+    -- is `(u xor m) xor m = u` or `n xor (u xor n) = u` as required.
     · obtain ⟨i, hi⟩ := nim.exists_move_left_eq _ _ (Ordinal.nat_cast_lt.2 h)
       refine' ⟨(left_moves_add _ _).symm (Sum.inl i), _⟩
       simp only [hi, add_move_left_inl]
@@ -321,6 +343,7 @@ theorem grundy_value_nim_add_nim (n m : ℕ) : grundyValue (nim n + nim m) = Nat
       simp only [hi, add_move_left_inr]
       rw [hm _ h, Nat.lxor_comm, Nat.lxor_assoc, Nat.lxor_self, Nat.lxor_zero]
       
+  -- We are done!
   apply le_antisymmₓ (cInf_le' h₀)
   contrapose! h₁
   exact ⟨_, ⟨h₁, Inf_mem (nonmoves_nonempty _)⟩⟩

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison, Jannis Limperg
+-/
 
 /-!
 # Monadic instances for `ulift` and `plift`
@@ -53,14 +58,14 @@ instance : IsLawfulFunctor Plift where
 instance : IsLawfulApplicative Plift where
   pure_seq_eq_map := fun α β g ⟨x⟩ => rfl
   map_pure := fun α β g x => rfl
-  seq_pure := fun α β ⟨g⟩ x => rfl
+  seq_pure := fun x => rfl
   seq_assoc := fun α β γ ⟨x⟩ ⟨g⟩ ⟨h⟩ => rfl
 
 instance : IsLawfulMonad Plift where
   bind_pure_comp_eq_map := fun α β f ⟨x⟩ => rfl
   bind_map_eq_seq := fun α β ⟨a⟩ ⟨b⟩ => rfl
   pure_bind := fun α β x f => rfl
-  bind_assoc := fun α β γ ⟨x⟩ f g => rfl
+  bind_assoc := fun f g => rfl
 
 @[simp]
 theorem rec.constant {α : Sort u} {β : Type v} (b : β) : (@Plift.rec α (fun _ => β) fun _ => b) = fun _ => b :=
@@ -115,7 +120,7 @@ instance : IsLawfulApplicative Ulift where
   to_is_lawful_functor := Ulift.is_lawful_functor
   pure_seq_eq_map := fun α β g ⟨x⟩ => rfl
   map_pure := fun α β g x => rfl
-  seq_pure := fun α β ⟨g⟩ x => rfl
+  seq_pure := fun x => rfl
   seq_assoc := fun α β γ ⟨x⟩ ⟨g⟩ ⟨h⟩ => rfl
 
 instance : IsLawfulMonad Ulift where
@@ -125,7 +130,7 @@ instance : IsLawfulMonad Ulift where
     dsimp only [bind, pure, Ulift.pure, Ulift.bind]
     cases f x
     rfl
-  bind_assoc := fun α β γ ⟨x⟩ f g => by
+  bind_assoc := fun f g => by
     dsimp only [bind, pure, Ulift.pure, Ulift.bind]
     cases f x
     rfl

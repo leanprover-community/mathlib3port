@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2014 Parikshit Khanna. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Parikshit Khanna, Jeremy Avigad, Leonardo de Moura, Floris van Doorn, Mario Carneiro
+-/
 import Mathbin.Data.List.BigOperators
 
 /-!
@@ -58,7 +63,7 @@ theorem countp_eq_length {l} : countp p l = l.length ↔ ∀, ∀ a ∈ l, ∀, 
 theorem length_filter_lt_length_iff_exists l : length (filterₓ p l) < length l ↔ ∃ x ∈ l, ¬p x := by
   rw [length_eq_countp_add_countp p l, ← countp_pos, countp_eq_length_filter, lt_add_iff_pos_right]
 
-theorem sublist.countp_le (s : l₁ <+ l₂) : countp p l₁ ≤ countp p l₂ := by
+theorem Sublist.countp_le (s : l₁ <+ l₂) : countp p l₁ ≤ countp p l₂ := by
   simpa only [countp_eq_length_filter] using length_le_of_sublist (s.filter p)
 
 @[simp]
@@ -109,7 +114,7 @@ theorem count_tail : ∀ l : List α a : α h : 0 < l.length, l.tail.count a = l
 theorem count_le_length (a : α) (l : List α) : count a l ≤ l.length :=
   countp_le_length _
 
-theorem sublist.count_le (h : l₁ <+ l₂) (a : α) : count a l₁ ≤ count a l₂ :=
+theorem Sublist.count_le (h : l₁ <+ l₂) (a : α) : count a l₁ ≤ count a l₂ :=
   h.countp_le _
 
 theorem count_le_count_cons (a b : α) (l : List α) : count a l ≤ count a (b :: l) :=

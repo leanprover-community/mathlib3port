@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Johannes Hölzl. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johannes Hölzl, Callum Sutton, Yury Kudryashov
+-/
 import Mathbin.GroupTheory.Perm.Basic
 
 /-!
@@ -84,14 +89,14 @@ theorem inv_apply_self (e : MulAut M) (m : M) : e⁻¹ (e m) = m :=
   MulEquiv.apply_symm_apply _ _
 
 /-- Monoid hom from the group of multiplicative automorphisms to the group of permutations. -/
-def to_perm : MulAut M →* Equivₓ.Perm M := by
+def toPerm : MulAut M →* Equivₓ.Perm M := by
   refine_struct { toFun := MulEquiv.toEquiv } <;> intros <;> rfl
 
 /-- The tautological action by `mul_aut M` on `M`.
 
 This generalizes `function.End.apply_mul_action`. -/
-instance apply_mul_distrib_mul_action {M} [Monoidₓ M] : MulDistribMulAction (MulAut M) M where
-  smul := · <| ·
+instance applyMulDistribMulAction {M} [Monoidₓ M] : MulDistribMulAction (MulAut M) M where
+  smul := (· <| ·)
   one_smul := fun _ => rfl
   mul_smul := fun _ _ _ => rfl
   smul_one := MulEquiv.map_one
@@ -145,7 +150,7 @@ variable (A) [Add A]
 `λ g h, add_equiv.trans h g`.
 This means that multiplication agrees with composition, `(g*h)(x) = g (h x)`.
 -/
-instance Groupₓ : Groupₓ (AddAut A) := by
+instance group : Groupₓ (AddAut A) := by
   refine_struct
       { mul := fun g h => AddEquiv.trans h g, one := AddEquiv.refl A, inv := AddEquiv.symm, div := _,
         npow := @npowRec _ ⟨AddEquiv.refl A⟩ ⟨fun g h => AddEquiv.trans h g⟩,
@@ -193,14 +198,14 @@ theorem inv_apply_self (e : AddAut A) (a : A) : e (e⁻¹ a) = a :=
   AddEquiv.apply_symm_apply _ _
 
 /-- Monoid hom from the group of multiplicative automorphisms to the group of permutations. -/
-def to_perm : AddAut A →* Equivₓ.Perm A := by
+def toPerm : AddAut A →* Equivₓ.Perm A := by
   refine_struct { toFun := AddEquiv.toEquiv } <;> intros <;> rfl
 
 /-- The tautological action by `add_aut A` on `A`.
 
 This generalizes `function.End.apply_mul_action`. -/
-instance apply_distrib_mul_action {A} [AddMonoidₓ A] : DistribMulAction (AddAut A) A where
-  smul := · <| ·
+instance applyDistribMulAction {A} [AddMonoidₓ A] : DistribMulAction (AddAut A) A where
+  smul := (· <| ·)
   smul_zero := AddEquiv.map_zero
   smul_add := AddEquiv.map_add
   one_smul := fun _ => rfl
@@ -220,7 +225,8 @@ homomorphism mapping addition in `G` into multiplication in the automorphism gro
 def conj [AddGroupₓ G] : G →+ Additive (AddAut G) where
   toFun := fun g =>
     @Additive.ofMul (AddAut G)
-      { toFun := fun h => g + h + -g, invFun := fun h => -g + h + g,
+      { toFun := fun h => g + h + -g,-- this definition is chosen to match `mul_aut.conj`
+        invFun := fun h => -g + h + g,
         left_inv := fun _ => by
           simp [add_assocₓ],
         right_inv := fun _ => by

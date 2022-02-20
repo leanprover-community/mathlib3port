@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2020 Anne Baanen. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Nathaniel Thomas, Jeremy Avigad, Johannes Hölzl, Mario Carneiro, Anne Baanen,
+  Frédéric Dupuis, Heather Macbeth
+-/
 import Mathbin.Algebra.Module.LinearMap
 
 /-!
@@ -83,6 +89,7 @@ include σ'
 instance : Coe (M ≃ₛₗ[σ] M₂) (M →ₛₗ[σ] M₂) :=
   ⟨toLinearMap⟩
 
+-- see Note [function coercion]
 instance : CoeFun (M ≃ₛₗ[σ] M₂) fun _ => M → M₂ :=
   ⟨toFun⟩
 
@@ -91,11 +98,12 @@ theorem coe_mk {to_fun inv_fun map_add map_smul left_inv right_inv} :
     ⇑(⟨to_fun, map_add, map_smul, inv_fun, left_inv, right_inv⟩ : M ≃ₛₗ[σ] M₂) = to_fun :=
   rfl
 
+-- This exists for compatibility, previously `≃ₗ[R]` extended `≃` instead of `≃+`.
 @[nolint doc_blame]
-def to_equiv : (M ≃ₛₗ[σ] M₂) → M ≃ M₂ := fun f => f.toAddEquiv.toEquiv
+def toEquiv : (M ≃ₛₗ[σ] M₂) → M ≃ M₂ := fun f => f.toAddEquiv.toEquiv
 
-theorem to_equiv_injective : Function.Injective (toEquiv : (M ≃ₛₗ[σ] M₂) → M ≃ M₂) :=
-  fun ⟨_, _, _, _, _, _⟩ ⟨_, _, _, _, _, _⟩ h => LinearEquiv.mk.inj_eq.mpr (Equivₓ.mk.inj h)
+theorem to_equiv_injective : Function.Injective (toEquiv : (M ≃ₛₗ[σ] M₂) → M ≃ M₂) := fun h =>
+  LinearEquiv.mk.inj_eq.mpr (Equivₓ.mk.inj h)
 
 @[simp]
 theorem to_equiv_inj {e₁ e₂ : M ≃ₛₗ[σ] M₂} : e₁.toEquiv = e₂.toEquiv ↔ e₁ = e₂ :=
@@ -165,10 +173,10 @@ theorem ext (h : ∀ x, e x = e' x) : e = e' :=
 theorem ext_iff : e = e' ↔ ∀ x, e x = e' x :=
   FunLike.ext_iff
 
-protected theorem congr_argₓ {x x'} : x = x' → e x = e x' :=
+protected theorem congr_arg {x x'} : x = x' → e x = e x' :=
   FunLike.congr_arg e
 
-protected theorem congr_funₓ (h : e = e') (x : M) : e x = e' x :=
+protected theorem congr_fun (h : e = e') (x : M) : e x = e' x :=
   FunLike.congr_fun h x
 
 end
@@ -201,7 +209,7 @@ def symm (e : M ≃ₛₗ[σ] M₂) : M₂ ≃ₛₗ[σ'] M :=
 omit module_M module_S_M₂ re₁ re₂
 
 /-- See Note [custom simps projection] -/
-def simps.symm_apply {R : Type _} {S : Type _} [Semiringₓ R] [Semiringₓ S] {σ : R →+* S} {σ' : S →+* R}
+def Simps.symmApply {R : Type _} {S : Type _} [Semiringₓ R] [Semiringₓ S] {σ : R →+* S} {σ' : S →+* R}
     [RingHomInvPair σ σ'] [RingHomInvPair σ' σ] {M : Type _} {M₂ : Type _} [AddCommMonoidₓ M] [AddCommMonoidₓ M₂]
     [Module R M] [Module S M₂] (e : M ≃ₛₗ[σ] M₂) : M₂ → M :=
   e.symm
@@ -239,6 +247,7 @@ variable (e₁₂ : M₁ ≃ₛₗ[σ₁₂] M₂) (e₂₃ : M₂ ≃ₛₗ[σ�
 include σ₃₁
 
 /-- Linear equivalences are transitive. -/
+-- Note: The linter thinks the `ring_hom_comp_triple` argument is doubled -- it is not.
 @[trans, nolint unused_arguments]
 def trans : M₁ ≃ₛₗ[σ₁₃] M₃ :=
   { e₂₃.toLinearMap.comp e₁₂.toLinearMap, e₁₂.toEquiv.trans e₂₃.toEquiv with }
@@ -442,7 +451,7 @@ variable [Semiringₓ R₁] [Semiringₓ R₂] [Semiringₓ R₃]
 variable [AddCommMonoidₓ M] [AddCommMonoidₓ M₁] [AddCommMonoidₓ M₂]
 
 /-- An involutive linear map is a linear equivalence. -/
-def of_involutive {σ σ' : R →+* R} [RingHomInvPair σ σ'] [RingHomInvPair σ' σ] {module_M : Module R M} (f : M →ₛₗ[σ] M)
+def ofInvolutive {σ σ' : R →+* R} [RingHomInvPair σ σ'] [RingHomInvPair σ' σ] {module_M : Module R M} (f : M →ₛₗ[σ] M)
     (hf : Involutive f) : M ≃ₛₗ[σ] M :=
   { f, hf.toEquiv f with }
 
@@ -461,7 +470,7 @@ equivalence from `M` to `M₂` is also an `R`-linear equivalence.
 
 See also `linear_map.restrict_scalars`. -/
 @[simps]
-def restrict_scalars (f : M ≃ₗ[S] M₂) : M ≃ₗ[R] M₂ :=
+def restrictScalars (f : M ≃ₗ[S] M₂) : M ≃ₗ[R] M₂ :=
   { f.toLinearMap.restrictScalars R with toFun := f, invFun := f.symm, left_inv := f.left_inv,
     right_inv := f.right_inv }
 
@@ -478,7 +487,7 @@ section Automorphisms
 
 variable [Module R M]
 
-instance automorphism_group : Groupₓ (M ≃ₗ[R] M) where
+instance automorphismGroup : Groupₓ (M ≃ₗ[R] M) where
   mul := fun f g => g.trans f
   one := LinearEquiv.refl R M
   inv := fun f => f.symm
@@ -490,7 +499,7 @@ instance automorphism_group : Groupₓ (M ≃ₗ[R] M) where
 /-- Restriction from `R`-linear automorphisms of `M` to `R`-linear endomorphisms of `M`,
 promoted to a monoid hom. -/
 @[simps]
-def automorphism_group.to_linear_map_monoid_hom : (M ≃ₗ[R] M) →* M →ₗ[R] M where
+def automorphismGroup.toLinearMapMonoidHom : (M ≃ₗ[R] M) →* M →ₗ[R] M where
   toFun := coe
   map_one' := rfl
   map_mul' := fun _ _ => rfl
@@ -498,8 +507,8 @@ def automorphism_group.to_linear_map_monoid_hom : (M ≃ₗ[R] M) →* M →ₗ[
 /-- The tautological action by `M ≃ₗ[R] M` on `M`.
 
 This generalizes `function.End.apply_mul_action`. -/
-instance apply_distrib_mul_action : DistribMulAction (M ≃ₗ[R] M) M where
-  smul := · <| ·
+instance applyDistribMulAction : DistribMulAction (M ≃ₗ[R] M) M where
+  smul := (· <| ·)
   smul_zero := LinearEquiv.map_zero
   smul_add := LinearEquiv.map_add
   one_smul := fun _ => rfl
@@ -529,7 +538,7 @@ namespace Module
 
 /-- `g : R ≃+* S` is `R`-linear when the module structure on `S` is `module.comp_hom S g` . -/
 @[simps]
-def comp_hom.to_linear_equiv {R S : Type _} [Semiringₓ R] [Semiringₓ S] (g : R ≃+* S) :
+def compHom.toLinearEquiv {R S : Type _} [Semiringₓ R] [Semiringₓ S] (g : R ≃+* S) :
     have := comp_hom S (↑g : R →+* S)
     R ≃ₗ[R] S :=
   { g with toFun := (g : R → S), invFun := (g.symm : S → R), map_smul' := g.map_mul }
@@ -546,14 +555,14 @@ variable [Groupₓ S] [DistribMulAction S M] [SmulCommClass S R M]
 
 This is a stronger version of `distrib_mul_action.to_add_equiv`. -/
 @[simps]
-def to_linear_equiv (s : S) : M ≃ₗ[R] M :=
+def toLinearEquiv (s : S) : M ≃ₗ[R] M :=
   { toAddEquiv M s, toLinearMap R M s with }
 
 /-- Each element of the group defines a module automorphism.
 
 This is a stronger version of `distrib_mul_action.to_add_aut`. -/
 @[simps]
-def to_module_aut : S →* M ≃ₗ[R] M where
+def toModuleAut : S →* M ≃ₗ[R] M where
   toFun := toLinearEquiv R M
   map_one' := LinearEquiv.ext <| one_smul _
   map_mul' := fun a b => LinearEquiv.ext <| mul_smul _ _
@@ -571,7 +580,7 @@ variable [Module R M] [Module R M₂]
 variable (e : M ≃+ M₂)
 
 /-- An additive equivalence whose underlying function preserves `smul` is a linear equivalence. -/
-def to_linear_equiv (h : ∀ c : R x, e (c • x) = c • e x) : M ≃ₗ[R] M₂ :=
+def toLinearEquiv (h : ∀ c : R x, e (c • x) = c • e x) : M ≃ₗ[R] M₂ :=
   { e with map_smul' := h }
 
 @[simp]
@@ -584,7 +593,7 @@ theorem coe_to_linear_equiv_symm (h : ∀ c : R x, e (c • x) = c • e x) : �
 
 /-- An additive equivalence between commutative additive monoids is a linear equivalence between
 ℕ-modules -/
-def to_nat_linear_equiv : M ≃ₗ[ℕ] M₂ :=
+def toNatLinearEquiv : M ≃ₗ[ℕ] M₂ :=
   e.toLinearEquiv fun c a => by
     erw [e.to_add_monoid_hom.map_nsmul]
     rfl
@@ -625,7 +634,7 @@ variable (e : M ≃+ M₂)
 
 /-- An additive equivalence between commutative additive groups is a linear
 equivalence between ℤ-modules -/
-def to_int_linear_equiv : M ≃ₗ[ℤ] M₂ :=
+def toIntLinearEquiv : M ≃ₗ[ℤ] M₂ :=
   e.toLinearEquiv fun c a => e.toAddMonoidHom.map_zsmul a c
 
 @[simp]

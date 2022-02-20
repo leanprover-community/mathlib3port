@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Adam Topaz. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Bhavik Mehta, Adam Topaz
+-/
 import Mathbin.CategoryTheory.Limits.Shapes.Terminal
 import Mathbin.CategoryTheory.Punit
 import Mathbin.CategoryTheory.StructuredArrow
@@ -84,7 +89,7 @@ def loc (F : S ⥤ D) [∀ x, HasLimit (diagram ι F x)] : L ⥤ D where
 
 /-- An auxiliary definition used to define `Ran` and `Ran.adjunction`. -/
 @[simps]
-def Equivₓ (F : S ⥤ D) [∀ x, HasLimit (diagram ι F x)] (G : L ⥤ D) :
+def equiv (F : S ⥤ D) [∀ x, HasLimit (diagram ι F x)] (G : L ⥤ D) :
     (G ⟶ loc ι F) ≃ (((whiskeringLeft _ _ _).obj ι).obj G ⟶ F) where
   toFun := fun f =>
     { app := fun x => f.app _ ≫ limit.π (diagram ι F (ι.obj x)) (StructuredArrow.mk (𝟙 _)),
@@ -121,7 +126,7 @@ end Ran
 
 /-- The right Kan extension of a functor. -/
 @[simps]
-def Ran [∀ X, HasLimitsOfShape (StructuredArrow X ι) D] : (S ⥤ D) ⥤ L ⥤ D :=
+def ran [∀ X, HasLimitsOfShape (StructuredArrow X ι) D] : (S ⥤ D) ⥤ L ⥤ D :=
   Adjunction.rightAdjointOfEquiv (fun F G => (Ran.equiv ι G F).symm)
     (by
       tidy)
@@ -190,6 +195,7 @@ def loc (F : S ⥤ D) [I : ∀ x, HasColimit (diagram ι F x)] : L ⥤ D where
     let ff : costructured_arrow ι _ ⥤ _ := costructured_arrow.map f
     let gg : costructured_arrow ι _ ⥤ _ := costructured_arrow.map g
     let dd := diagram ι F z
+    -- I don't know why lean can't deduce the following three instances...
     have : has_colimit (ff ⋙ gg ⋙ dd) := I _
     have : has_colimit ((ff ⋙ gg) ⋙ dd) := I _
     have : has_colimit (gg ⋙ dd) := I _
@@ -200,17 +206,18 @@ def loc (F : S ⥤ D) [I : ∀ x, HasColimit (diagram ι F x)] : L ⥤ D where
 
 /-- An auxiliary definition used to define `Lan` and `Lan.adjunction`. -/
 @[simps]
-def Equivₓ (F : S ⥤ D) [I : ∀ x, HasColimit (diagram ι F x)] (G : L ⥤ D) :
+def equiv (F : S ⥤ D) [I : ∀ x, HasColimit (diagram ι F x)] (G : L ⥤ D) :
     (loc ι F ⟶ G) ≃ (F ⟶ ((whiskeringLeft _ _ _).obj ι).obj G) where
   toFun := fun f =>
     { app := fun x => by
-        apply colimit.ι (diagram ι F (ι.obj x)) (costructured_arrow.mk (𝟙 _)) ≫ f.app _,
+        apply colimit.ι (diagram ι F (ι.obj x)) (costructured_arrow.mk (𝟙 _)) ≫ f.app _,-- sigh
       naturality' := by
         intro x y ff
         dsimp only [whiskering_left]
         simp only [functor.comp_map, category.assoc]
         rw [← f.naturality (ι.map ff), ← category.assoc, ← category.assoc]
         let fff : costructured_arrow ι _ ⥤ _ := costructured_arrow.map (ι.map ff)
+        -- same issue :-(
         have : has_colimit (fff ⋙ diagram ι F (ι.obj y)) := I _
         erw [colimit.ι_pre (diagram ι F (ι.obj y)) fff (costructured_arrow.mk (𝟙 _))]
         let xx : costructured_arrow ι (ι.obj y) := costructured_arrow.mk (ι.map ff)
@@ -249,7 +256,7 @@ end Lan
 
 /-- The left Kan extension of a functor. -/
 @[simps]
-def Lan [∀ X, HasColimitsOfShape (CostructuredArrow ι X) D] : (S ⥤ D) ⥤ L ⥤ D :=
+def lan [∀ X, HasColimitsOfShape (CostructuredArrow ι X) D] : (S ⥤ D) ⥤ L ⥤ D :=
   Adjunction.leftAdjointOfEquiv (fun F G => Lan.equiv ι F G)
     (by
       tidy)

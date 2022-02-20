@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Bhavik Mehta. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Bhavik Mehta
+-/
 import Mathbin.CategoryTheory.Limits.Shapes.Equalizers
 import Mathbin.CategoryTheory.Limits.Shapes.Pullbacks
 import Mathbin.CategoryTheory.Limits.Shapes.RegularMono
@@ -44,7 +49,7 @@ and the square
 is a pullback square.
 This is essentially just a convenience wrapper over `is_limit (pullback_cone.mk _ _ _)`.
 -/
-structure is_kernel_pair where
+structure IsKernelPair where
   comm : a ≫ f = b ≫ f
   IsLimit : IsLimit (PullbackCone.mk _ _ comm)
 
@@ -60,7 +65,7 @@ instance : Subsingleton (IsKernelPair f a b) :=
     congr⟩
 
 /-- If `f` is a monomorphism, then `(𝟙 _, 𝟙 _)`  is a kernel pair for `f`. -/
-def id_of_mono [Mono f] : IsKernelPair f (𝟙 _) (𝟙 _) :=
+def idOfMono [Mono f] : IsKernelPair f (𝟙 _) (𝟙 _) :=
   ⟨rfl, PullbackCone.isLimitMkIdId _⟩
 
 instance [Mono f] : Inhabited (IsKernelPair f (𝟙 _) (𝟙 _)) :=
@@ -79,7 +84,7 @@ just `f₁`.
 That is, to show that `(a,b)` is a kernel pair for `f₁` it suffices to only show the square
 commutes, rather than to additionally show it's a pullback.
 -/
-def cancel_right {f₁ : X ⟶ Y} {f₂ : Y ⟶ Z} (comm : a ≫ f₁ = b ≫ f₁) (big_k : IsKernelPair (f₁ ≫ f₂) a b) :
+def cancelRight {f₁ : X ⟶ Y} {f₂ : Y ⟶ Z} (comm : a ≫ f₁ = b ≫ f₁) (big_k : IsKernelPair (f₁ ≫ f₂) a b) :
     IsKernelPair f₁ a b :=
   { comm,
     IsLimit :=
@@ -97,8 +102,7 @@ def cancel_right {f₁ : X ⟶ Y} {f₂ : Y ⟶ Z} (comm : a ≫ f₁ = b ≫ f�
 just `f₁`.
 The converse of `comp_of_mono`.
 -/
-def cancel_right_of_mono {f₁ : X ⟶ Y} {f₂ : Y ⟶ Z} [Mono f₂] (big_k : IsKernelPair (f₁ ≫ f₂) a b) :
-    IsKernelPair f₁ a b :=
+def cancelRightOfMono {f₁ : X ⟶ Y} {f₂ : Y ⟶ Z} [Mono f₂] (big_k : IsKernelPair (f₁ ≫ f₂) a b) : IsKernelPair f₁ a b :=
   cancelRight
     (by
       rw [← cancel_mono f₂, assoc, assoc, big_k.comm])
@@ -107,7 +111,7 @@ def cancel_right_of_mono {f₁ : X ⟶ Y} {f₂ : Y ⟶ Z} [Mono f₂] (big_k : 
 /-- If `(a,b)` is a kernel pair for `f₁` and `f₂` is mono, then `(a,b)` is a kernel pair for `f₁ ≫ f₂`.
 The converse of `cancel_right_of_mono`.
 -/
-def comp_of_mono {f₁ : X ⟶ Y} {f₂ : Y ⟶ Z} [Mono f₂] (small_k : IsKernelPair f₁ a b) : IsKernelPair (f₁ ≫ f₂) a b where
+def compOfMono {f₁ : X ⟶ Y} {f₂ : Y ⟶ Z} [Mono f₂] (small_k : IsKernelPair f₁ a b) : IsKernelPair (f₁ ≫ f₂) a b where
   comm := by
     rw [small_k.comm_assoc]
   IsLimit :=
@@ -126,7 +130,7 @@ def comp_of_mono {f₁ : X ⟶ Y} {f₂ : Y ⟶ Z} [Mono f₂] (small_k : IsKern
 /-- If `(a,b)` is the kernel pair of `f`, and `f` is a coequalizer morphism for some parallel pair, then
 `f` is a coequalizer morphism of `a` and `b`.
 -/
-def to_coequalizer (k : IsKernelPair f a b) [r : RegularEpi f] : IsColimit (Cofork.ofπ f k.comm) := by
+def toCoequalizer (k : IsKernelPair f a b) [r : RegularEpi f] : IsColimit (Cofork.ofπ f k.comm) := by
   let t := k.is_limit.lift (pullback_cone.mk _ _ r.w)
   have ht : t ≫ a = r.left := k.is_limit.fac _ walking_cospan.left
   have kt : t ≫ b = r.right := k.is_limit.fac _ walking_cospan.right

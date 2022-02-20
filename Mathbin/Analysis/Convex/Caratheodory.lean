@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johan Commelin, Scott Morrison
+-/
 import Mathbin.Analysis.Convex.Combination
 import Mathbin.LinearAlgebra.AffineSpace.Independent
 import Mathbin.Tactic.FieldSimp
@@ -82,7 +87,11 @@ theorem mem_convex_hull_erase [DecidableEq E] {t : Finset E} (h : ¬AffineIndepe
       rw [← le_div_iff hge]
       exact w _ hes
       
-    · calc _ ≤ 0 := mul_nonpos_of_nonneg_of_nonpos _ _ _ ≤ f e := fpos e het
+    · calc _ ≤ 0 :=
+          mul_nonpos_of_nonneg_of_nonpos _ _-- prove two goals below
+            _ ≤
+            f e :=
+          fpos e het
       · apply div_nonneg (fpos i₀ (mem_of_subset (filter_subset _ t) mem)) (le_of_ltₓ hg)
         
       · simpa only [mem_filter, het, true_andₓ, not_ltₓ] using hes
@@ -105,7 +114,7 @@ include hx
 
 /-- Given a point `x` in the convex hull of a set `s`, this is a finite subset of `s` of minimum
 cardinality, whose convex hull contains `x`. -/
-noncomputable def min_card_finset_of_mem_convex_hull : Finset E :=
+noncomputable def minCardFinsetOfMemConvexHull : Finset E :=
   Function.argminOn Finset.card Nat.lt_wf { t | ↑t ⊆ s ∧ x ∈ convexHull 𝕜 (t : Set E) }
     (by
       simpa only [convex_hull_eq_union_convex_hull_finite_subsets s, exists_prop, mem_Union] using hx)

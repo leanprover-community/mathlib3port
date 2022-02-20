@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Yury Kudryashov. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yury Kudryashov
+-/
 import Mathbin.MeasureTheory.Measure.MeasureSpace
 
 /-!
@@ -364,6 +369,9 @@ theorem MeasurableSet.inv {s : Set G} (hs : MeasurableSet s) : MeasurableSet s�
 
 end Inv
 
+/- There is something extremely strange here: copy-pasting the proof of this lemma in the proof
+of `has_measurable_zpow` fails, while `pp.all` does not show any difference in the goal.
+Keep it as a separate lemmas as a workaround. -/
 private theorem has_measurable_zpow_aux (G : Type u) [DivInvMonoidₓ G] [MeasurableSpace G] [HasMeasurableMul₂ G]
     [HasMeasurableInv G] (k : ℕ) : Measurable fun x : G => x ^ -[1+ k] := by
   simp_rw [zpow_neg_succ_of_nat]

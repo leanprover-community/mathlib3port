@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Yaël Dillies. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yaël Dillies
+-/
 import Mathbin.Data.Finset.LocallyFinite
 import Mathbin.Data.Dfinsupp.Order
 
@@ -20,7 +25,7 @@ namespace Finset
 variable [DecidableEq ι] [∀ i, Zero (α i)] {s : Finset ι} {f : Π₀ i, α i} {t : ∀ i, Finset (α i)}
 
 /-- Finitely supported product of finsets. -/
-def Dfinsupp (s : Finset ι) (t : ∀ i, Finset (α i)) : Finset (Π₀ i, α i) :=
+def dfinsupp (s : Finset ι) (t : ∀ i, Finset (α i)) : Finset (Π₀ i, α i) :=
   (s.pi t).map
     ⟨fun f => (Dfinsupp.mk s) fun i => f i i.2, by
       refine' (mk_injective _).comp fun f g h => _
@@ -94,7 +99,7 @@ variable [∀ i, Zero (α i)] [∀ i, PartialOrderₓ (α i)] [∀ i, LocallyFin
   {a : α i}
 
 /-- Pointwise `finset.Icc` bundled as a `dfinsupp`. -/
-def range_Icc (f g : Π₀ i, α i) : Π₀ i, Finset (α i) :=
+def rangeIcc (f g : Π₀ i, α i) : Π₀ i, Finset (α i) :=
   ⟦{ toFun := fun i => icc (f i) (g i), preSupport := f.support.1 + g.support.1,
       zero := fun i => by
         refine' or_iff_not_imp_left.2 fun h => _

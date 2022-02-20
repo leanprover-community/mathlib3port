@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2017 Microsoft Corporation. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johannes Hölzl, Mario Carneiro, Oliver Nash
+-/
 import Mathbin.Data.Finset.Card
 
 /-!
@@ -52,7 +57,7 @@ theorem subset_product [DecidableEq α] [DecidableEq β] {s : Finset (α × β)}
     s ⊆ (s.Image Prod.fst).product (s.Image Prod.snd) := fun p hp =>
   mem_product.2 ⟨mem_image_of_mem _ hp, mem_image_of_mem _ hp⟩
 
-theorem product_subset_product (hs : s ⊆ s') (ht : t ⊆ t') : s.product t ⊆ s'.product t' := fun ⟨x, y⟩ h =>
+theorem product_subset_product (hs : s ⊆ s') (ht : t ⊆ t') : s.product t ⊆ s'.product t' := fun h =>
   mem_product.2 ⟨hs (mem_product.1 h).1, ht (mem_product.1 h).2⟩
 
 theorem product_subset_product_left (hs : s ⊆ s') : s.product t ⊆ s'.product t :=
@@ -123,16 +128,16 @@ theorem empty_product (t : Finset β) : (∅ : Finset α).product t = ∅ :=
 theorem product_empty (s : Finset α) : s.product (∅ : Finset β) = ∅ :=
   eq_empty_of_forall_not_mem fun x h => (Finset.mem_product.1 h).2
 
-theorem nonempty.product (hs : s.Nonempty) (ht : t.Nonempty) : (s.product t).Nonempty :=
+theorem Nonempty.product (hs : s.Nonempty) (ht : t.Nonempty) : (s.product t).Nonempty :=
   let ⟨x, hx⟩ := hs
   let ⟨y, hy⟩ := ht
   ⟨(x, y), mem_product.2 ⟨hx, hy⟩⟩
 
-theorem nonempty.fst (h : (s.product t).Nonempty) : s.Nonempty :=
+theorem Nonempty.fst (h : (s.product t).Nonempty) : s.Nonempty :=
   let ⟨xy, hxy⟩ := h
   ⟨xy.1, (mem_product.1 hxy).1⟩
 
-theorem nonempty.snd (h : (s.product t).Nonempty) : t.Nonempty :=
+theorem Nonempty.snd (h : (s.product t).Nonempty) : t.Nonempty :=
   let ⟨xy, hxy⟩ := h
   ⟨xy.2, (mem_product.1 hxy).2⟩
 
@@ -181,7 +186,7 @@ def diag :=
 
 /-- Given a finite set `s`, the off-diagonal, `s.off_diag` is the set of pairs `(a, b)` with `a ≠ b`
 for `a, b ∈ s`. -/
-def off_diag :=
+def offDiag :=
   (s.product s).filter fun a : α × α => a.fst ≠ a.snd
 
 @[simp]

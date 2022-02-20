@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Heather Macbeth. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Heather Macbeth
+-/
 import Mathbin.Analysis.InnerProductSpace.Rayleigh
 import Mathbin.Analysis.InnerProductSpace.PiL2
 
@@ -111,6 +116,7 @@ variable [FiniteDimensional 𝕜 E]
 finite-dimensional inner product space is trivial. -/
 theorem orthogonal_supr_eigenspaces_eq_bot : (⨆ μ, eigenspace T μ)ᗮ = ⊥ := by
   have hT' : is_self_adjoint _ := hT.restrict_invariant hT.orthogonal_supr_eigenspaces_invariant
+  -- a self-adjoint operator on a nontrivial inner product space has an eigenvalue
   have := hT'.subsingleton_of_no_eigenvalue_finite_dimensional hT.orthogonal_supr_eigenspaces
   exact Submodule.eq_bot_of_subsingleton _
 
@@ -165,7 +171,7 @@ finite-dimensional inner product space `E`.
 
 TODO Postcompose with a permutation so that these eigenvectors are listed in increasing order of
 eigenvalue. -/
-noncomputable def eigenvector_basis : Basis (Finₓ n) 𝕜 E :=
+noncomputable def eigenvectorBasis : Basis (Finₓ n) 𝕜 E :=
   hT.direct_sum_submodule_is_internal.subordinateOrthonormalBasis hn
 
 theorem eigenvector_basis_orthonormal : Orthonormal 𝕜 (hT.eigenvectorBasis hn) :=
@@ -199,8 +205,8 @@ theorem apply_eigenvector_basis (i : Finₓ n) :
 
 /-- An isometry from an inner product space `E` to Euclidean space, induced by a choice of
 orthonormal basis of eigenvectors for a self-adjoint operator `T` on `E`. -/
-noncomputable def diagonalization_basis : E ≃ₗᵢ[𝕜] EuclideanSpace 𝕜 (Finₓ n) :=
-  (hT.eigenvectorBasis hn).isometryEuclideanOfOrthonormal (hT.eigenvector_basis_orthonormal hn)
+noncomputable def diagonalizationBasis : E ≃ₗᵢ[𝕜] EuclideanSpace 𝕜 (Finₓ n) :=
+  ((hT.eigenvectorBasis hn).toOrthonormalBasis (hT.eigenvector_basis_orthonormal hn)).repr
 
 @[simp]
 theorem diagonalization_basis_symm_apply (w : EuclideanSpace 𝕜 (Finₓ n)) :

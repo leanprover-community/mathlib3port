@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison
+-/
 import Mathbin.Tactic.FinCases
 import Mathbin.Data.Fin.Interval
 import Mathbin.Data.Int.Interval
@@ -28,6 +33,12 @@ where the hypotheses should be of the form `hl : a ≤ n` and `hu : n < b`. In t
 -/
 
 
+-- These imports aren't required to compile this file,
+-- These imports aren't required to compile this file,
+-- but they are needed at the use site for the tactic to work
+-- but they are needed at the use site for the tactic to work
+-- (on values of type fin/int/pnat)
+-- (on values of type fin/int/pnat)
 open Set
 
 namespace Tactic
@@ -38,6 +49,8 @@ namespace IntervalCases
 for some explicit `b`,
 return that proof.
 -/
+-- We use `expr.to_rat` merely to decide if an `expr` is an explicit number.
+-- It would be more natural to use `expr.to_int`, but that hasn't been implemented.
 unsafe def gives_upper_bound (n e : expr) : tactic expr := do
   let t ← infer_type e
   match t with
@@ -167,7 +180,7 @@ unsafe def get_bounds (n : expr) : tactic (expr × expr) := do
     | (some lb_prf, some ub_prf) => return (lb_prf, ub_prf)
 
 /-- The finset of elements of a set `s` for which we have `fintype s`. -/
-def set_elems {α} [DecidableEq α] (s : Set α) [Fintype s] : Finset α :=
+def setElems {α} [DecidableEq α] (s : Set α) [Fintype s] : Finset α :=
   (Fintype.elems s).Image Subtype.val
 
 /-- Each element of `s` is a member of `set_elems s`. -/

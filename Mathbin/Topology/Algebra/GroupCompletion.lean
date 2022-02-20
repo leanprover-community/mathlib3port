@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Patrick Massot. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Patrick Massot, Johannes Hölzl
+-/
 import Mathbin.Algebra.Group.HomInstances
 import Mathbin.Topology.UniformSpace.Completion
 import Mathbin.Topology.Algebra.UniformGroup
@@ -117,7 +122,7 @@ instance : UniformAddGroup (Completion α) :=
 
 /-- The map from a group to its completion as a group hom. -/
 @[simps]
-def to_compl : α →+ Completion α where
+def toCompl : α →+ Completion α where
   toFun := coe
   map_add' := coe_add
   map_zero' := coe_zero

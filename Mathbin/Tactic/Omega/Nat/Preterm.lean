@@ -1,5 +1,13 @@
+/-
+Copyright (c) 2019 Seul Baek. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Seul Baek
+-/
 import Mathbin.Tactic.Omega.Term
 
+/-
+Linear natural number arithmetic terms in pre-normalized form.
+-/
 open Tactic
 
 namespace Omega
@@ -20,7 +28,7 @@ unsafe inductive exprterm : Type
 /-- Similar to `exprterm`, except that all exprs are now replaced with
 de Brujin indices of type `nat`. This is akin to generalizing over
 the terms represented by the said exprs. -/
-inductive preterm : Type
+inductive Preterm : Type
   | cst : Nat → preterm
   | var : Nat → Nat → preterm
   | add : preterm → preterm → preterm
@@ -37,7 +45,7 @@ localized [Omega.Nat] notation t " -* " s => Omega.Nat.Preterm.sub t s
 
 namespace Preterm
 
--- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:916:4: warning: unsupported (TODO): `[tacs]
 /-- Helper tactic for proof by induction over preterms -/
 unsafe def induce (tac : tactic Unit := tactic.skip) : tactic Unit :=
   sorry
@@ -69,7 +77,7 @@ theorem val_sub {v : Nat → Nat} {t s : Preterm} : (t -* s).val v = t.val v - s
   rfl
 
 /-- Fresh de Brujin index not used by any variable in argument -/
-def fresh_index : Preterm → Nat
+def freshIndex : Preterm → Nat
   | &_ => 0
   | i ** n => n + 1
   | t1 +* t2 => max t1.freshIndex t2.freshIndex
@@ -94,18 +102,18 @@ theorem val_constant (v w : Nat → Nat) : ∀ t : Preterm, (∀, ∀ x < t.fres
     have hs := val_constant s fun x hx => h1 _ (lt_of_lt_of_leₓ hx (le_max_rightₓ _ _))
     rw [ht, hs]
 
-def reprₓ : Preterm → Stringₓ
+def repr : Preterm → Stringₓ
   | &i => i.repr
   | i ** n => i.repr ++ "*x" ++ n.repr
   | t1 +* t2 => "(" ++ t1.repr ++ " + " ++ t2.repr ++ ")"
   | t1 -* t2 => "(" ++ t1.repr ++ " - " ++ t2.repr ++ ")"
 
 @[simp]
-def add_one (t : Preterm) : Preterm :=
+def addOne (t : Preterm) : Preterm :=
   t +* &1
 
 /-- Preterm is free of subtractions -/
-def sub_free : Preterm → Prop
+def SubFree : Preterm → Prop
   | &m => True
   | m ** n => True
   | t +* s => t.SubFree ∧ s.SubFree
@@ -117,6 +125,7 @@ open_locale List.Func
 
 /-- Return a term (which is in canonical form by definition)
     that is equivalent to the input preterm -/
+-- get notation for list.func.set
 @[simp]
 def canonize : Preterm → Term
   | &m => ⟨↑m, []⟩

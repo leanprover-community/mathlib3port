@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Simon Hudon All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Simon Hudon
+-/
 import Mathbin.Control.Functor.Multivariate
 import Mathbin.Data.Qpf.Multivariate.Basic
 
@@ -16,32 +21,32 @@ open_locale Mvfunctor
 variable {n : ℕ} (i : Fin2 n)
 
 /-- The projection `i` functor -/
-def prj (v : Typevec.{u} n) : Type u :=
+def Prj (v : Typevec.{u} n) : Type u :=
   v i
 
-instance prj.inhabited {v : Typevec.{u} n} [Inhabited (v i)] : Inhabited (Prj i v) :=
+instance Prj.inhabited {v : Typevec.{u} n} [Inhabited (v i)] : Inhabited (Prj i v) :=
   ⟨(default : v i)⟩
 
 /-- `map` on functor `prj i` -/
-def prj.map ⦃α β : Typevec n⦄ (f : α ⟹ β) : Prj i α → Prj i β :=
+def Prj.map ⦃α β : Typevec n⦄ (f : α ⟹ β) : Prj i α → Prj i β :=
   f _
 
-instance prj.mvfunctor : Mvfunctor (Prj i) where
+instance Prj.mvfunctor : Mvfunctor (Prj i) where
   map := Prj.map i
 
 /-- Polynomial representation of the projection functor -/
-def prj.P : Mvpfunctor.{u} n where
+def Prj.p : Mvpfunctor.{u} n where
   A := PUnit
   B := fun _ j => Ulift <| Plift <| i = j
 
 /-- Abstraction function of the `qpf` instance -/
-def prj.abs ⦃α : Typevec n⦄ : (Prj.p i).Obj α → Prj i α
+def Prj.abs ⦃α : Typevec n⦄ : (Prj.p i).Obj α → Prj i α
   | ⟨x, f⟩ => f _ ⟨⟨rfl⟩⟩
 
 /-- Representation function of the `qpf` instance -/
-def prj.repr ⦃α : Typevec n⦄ : Prj i α → (Prj.p i).Obj α := fun x : α i => ⟨⟨⟩, fun j ⟨⟨h⟩⟩ => (h.rec x : α j)⟩
+def Prj.repr ⦃α : Typevec n⦄ : Prj i α → (Prj.p i).Obj α := fun x : α i => ⟨⟨⟩, fun j ⟨⟨h⟩⟩ => (h.rec x : α j)⟩
 
-instance prj.mvqpf : Mvqpf (Prj i) where
+instance Prj.mvqpf : Mvqpf (Prj i) where
   p := Prj.p i
   abs := Prj.abs i
   repr := Prj.repr i

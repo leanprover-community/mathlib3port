@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Kenny Lau. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Kenny Lau
+-/
 import Mathbin.Data.Equiv.Ring
 import Mathbin.GroupTheory.GroupAction.Group
 import Mathbin.RingTheory.Subring.Basic
@@ -39,6 +44,7 @@ variable (M G : Type u) [Monoidₓ M] [Groupₓ G]
 
 variable (A R S F : Type v) [AddMonoidₓ A] [Semiringₓ R] [CommSemiringₓ S] [DivisionRing F]
 
+-- note we could not use `extends` since these typeclasses are made with `old_structure_cmd`
 instance (priority := 100) MulSemiringAction.toMulDistribMulAction [h : MulSemiringAction M R] :
     MulDistribMulAction M R :=
   { h with }
@@ -63,7 +69,7 @@ variable {M G R}
 
 /-- A stronger version of `submonoid.distrib_mul_action`. -/
 instance Submonoid.mulSemiringAction [MulSemiringAction M R] (H : Submonoid M) : MulSemiringAction H R :=
-  { H.MulDistribMulAction, H.DistribMulAction with smul := · • · }
+  { H.MulDistribMulAction, H.DistribMulAction with smul := (· • ·) }
 
 /-- A stronger version of `subgroup.distrib_mul_action`. -/
 instance Subgroup.mulSemiringAction [MulSemiringAction G R] (H : Subgroup G) : MulSemiringAction H R :=

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Eric Wieser. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Eric Wieser
+-/
 import Mathbin.LinearAlgebra.CliffordAlgebra.Basic
 import Mathbin.Data.Zmod.Basic
 import Mathbin.RingTheory.GradedAlgebra.Basic
@@ -22,7 +27,7 @@ variable (Q)
 
 /-- The even or odd submodule, defined as the supremum of the even or odd powers of
 `(ι Q).range`. `even_odd 0` is the even submodule, and `even_odd 1` is the odd submodule. -/
-def even_odd (i : Zmod 2) : Submodule R (CliffordAlgebra Q) :=
+def evenOdd (i : Zmod 2) : Submodule R (CliffordAlgebra Q) :=
   ⨆ j : { n : ℕ // ↑n = i }, (ι Q).range ^ (j : ℕ)
 
 theorem one_le_even_odd_zero : 1 ≤ evenOdd Q 0 := by
@@ -48,29 +53,31 @@ theorem even_odd_mul_le (i j : Zmod 2) : evenOdd Q i * evenOdd Q j ≤ evenOdd Q
   simp only [Subtype.coe_mk, Nat.cast_addₓ, pow_addₓ]
   exact Submodule.mul_mem_mul hx' hy'
 
-instance even_odd.graded_monoid : SetLike.GradedMonoid (evenOdd Q) where
+instance evenOdd.graded_monoid : SetLike.GradedMonoid (evenOdd Q) where
   one_mem := Submodule.one_le.mp (one_le_even_odd_zero Q)
   mul_mem := fun i j p q hp hq => Submodule.mul_le.mp (even_odd_mul_le Q _ _) _ hp _ hq
 
 /-- A version of `clifford_algebra.ι` that maps directly into the graded structure. This is
 primarily an auxiliary construction used to provide `clifford_algebra.graded_algebra`. -/
-def graded_algebra.ι : M →ₗ[R] ⨁ i : Zmod 2, evenOdd Q i :=
+def GradedAlgebra.ι : M →ₗ[R] ⨁ i : Zmod 2, evenOdd Q i :=
   DirectSum.lof R (Zmod 2) (fun i => ↥evenOdd Q i) 1 ∘ₗ
     (ι Q).codRestrict _ fun m => range_ι_le_even_odd_one Q <| LinearMap.mem_range_self _ m
 
-theorem graded_algebra.ι_apply (m : M) :
+theorem GradedAlgebra.ι_apply (m : M) :
     GradedAlgebra.ι Q m =
       DirectSum.of (fun i => ↥evenOdd Q i) 1 ⟨ι Q m, range_ι_le_even_odd_one Q <| LinearMap.mem_range_self _ m⟩ :=
   rfl
 
-theorem graded_algebra.ι_sq_scalar (m : M) : GradedAlgebra.ι Q m * GradedAlgebra.ι Q m = algebraMap R _ (Q m) := by
+theorem GradedAlgebra.ι_sq_scalar (m : M) : GradedAlgebra.ι Q m * GradedAlgebra.ι Q m = algebraMap R _ (Q m) := by
   rw [graded_algebra.ι_apply, DirectSum.of_mul_of, DirectSum.algebra_map_apply]
   refine' DirectSum.of_eq_of_graded_monoid_eq (Sigma.subtype_ext rfl <| ι_sq_scalar _ _)
 
 /-- The clifford algebra is graded by the even and odd parts. -/
-instance GradedAlgebra : GradedAlgebra (evenOdd Q) :=
+instance gradedAlgebra : GradedAlgebra (evenOdd Q) :=
   GradedAlgebra.ofAlgHom _ (lift _ <| ⟨GradedAlgebra.ι Q, GradedAlgebra.ι_sq_scalar Q⟩)
-    (by
+    (-- the proof from here onward is mostly similar to the `tensor_algebra` case, with some extra
+    -- handling for the `supr` in `even_odd`.
+    by
       ext m
       dsimp only [LinearMap.comp_apply, AlgHom.to_linear_map_apply, AlgHom.comp_apply, AlgHom.id_apply]
       rw [lift_ι_apply, graded_algebra.ι_apply, DirectSum.submodule_coe_alg_hom_of, Subtype.coe_mk])

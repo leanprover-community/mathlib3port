@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Yury Kudryashov. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yury Kudryashov
+-/
 import Mathbin.Algebra.BigOperators.Finprod
 import Mathbin.Topology.UrysohnsLemma
 import Mathbin.Topology.Paracompact
@@ -127,7 +132,7 @@ variable {s : Set X} (f : PartitionOfUnity ι X s)
 instance : CoeFun (PartitionOfUnity ι X s) fun _ => ι → C(X, ℝ) :=
   ⟨toFun⟩
 
-protected theorem LocallyFinite : LocallyFinite fun i => Support (f i) :=
+protected theorem locally_finite : LocallyFinite fun i => Support (f i) :=
   f.locally_finite'
 
 theorem nonneg (i : ι) (x : X) : 0 ≤ f i x :=
@@ -147,7 +152,7 @@ theorem le_one (i : ι) (x : X) : f i x ≤ 1 :=
 
 /-- A partition of unity `f i` is subordinate to a family of sets `U i` indexed by the same type if
 for each `i` the closure of the support of `f i` is a subset of `U i`. -/
-def is_subordinate (f : PartitionOfUnity ι X s) (U : ι → Set X) : Prop :=
+def IsSubordinate (f : PartitionOfUnity ι X s) (U : ι → Set X) : Prop :=
   ∀ i, Closure (Support (f i)) ⊆ U i
 
 end PartitionOfUnity
@@ -159,7 +164,7 @@ variable {s : Set X} (f : BumpCovering ι X s)
 instance : CoeFun (BumpCovering ι X s) fun _ => ι → C(X, ℝ) :=
   ⟨toFun⟩
 
-protected theorem LocallyFinite : LocallyFinite fun i => Support (f i) :=
+protected theorem locally_finite : LocallyFinite fun i => Support (f i) :=
   f.locally_finite'
 
 protected theorem point_finite (x : X) : Finite { i | f i x ≠ 0 } :=
@@ -196,10 +201,10 @@ instance [Inhabited ι] : Inhabited (BumpCovering ι X s) :=
 
 /-- A collection of bump functions `f i` is subordinate to a family of sets `U i` indexed by the
 same type if for each `i` the closure of the support of `f i` is a subset of `U i`. -/
-def is_subordinate (f : BumpCovering ι X s) (U : ι → Set X) : Prop :=
+def IsSubordinate (f : BumpCovering ι X s) (U : ι → Set X) : Prop :=
   ∀ i, Closure (Support (f i)) ⊆ U i
 
-theorem is_subordinate.mono {f : BumpCovering ι X s} {U V : ι → Set X} (hU : f.IsSubordinate U) (hV : ∀ i, U i ⊆ V i) :
+theorem IsSubordinate.mono {f : BumpCovering ι X s} {U V : ι → Set X} (hU : f.IsSubordinate U) (hV : ∀ i, U i ⊆ V i) :
     f.IsSubordinate V := fun i => Subset.trans (hU i) (hV i)
 
 /-- If `X` is a normal topological space and `U i`, `i : ι`, is a locally finite open covering of a
@@ -283,7 +288,7 @@ words, `g i x = ∏ᶠ j < i, (1 - f j x) - ∏ᶠ j ≤ i, (1 - f j x)`, so
 of `1 - f j x` vanishes, and `∑ᶠ i, g i x = 1`.
 
 In order to avoid an assumption `linear_order ι`, we use `well_ordering_rel` instead of `(<)`. -/
-def to_pou_fun (i : ι) (x : X) : ℝ :=
+def toPouFun (i : ι) (x : X) : ℝ :=
   f i x * ∏ᶠ (j) (hj : WellOrderingRel j i), 1 - f j x
 
 theorem to_pou_fun_zero_of_zero {i : ι} {x : X} (h : f i x = 0) : f.toPouFun i x = 0 := by
@@ -338,7 +343,7 @@ words, `g i x = ∏ᶠ j < i, (1 - f j x) - ∏ᶠ j ≤ i, (1 - f j x)`, so
 of `1 - f j x` vanishes, and `∑ᶠ i, g i x = 1`.
 
 In order to avoid an assumption `linear_order ι`, we use `well_ordering_rel` instead of `(<)`. -/
-def to_partition_of_unity : PartitionOfUnity ι X s where
+def toPartitionOfUnity : PartitionOfUnity ι X s where
   toFun := fun i => ⟨f.toPouFun i, f.continuous_to_pou_fun i⟩
   locally_finite' := f.LocallyFinite.Subset f.support_to_pou_fun_subset
   nonneg' := fun i x => mul_nonneg (f.Nonneg i x) (finprod_cond_nonneg fun j hj => sub_nonneg.2 <| f.le_one j x)
@@ -376,7 +381,7 @@ theorem support_to_partition_of_unity_subset (i : ι) : Support (f.toPartitionOf
 theorem sum_to_partition_of_unity_eq (x : X) : (∑ᶠ i, f.toPartitionOfUnity i x) = 1 - ∏ᶠ i, 1 - f i x :=
   f.sum_to_pou_fun_eq x
 
-theorem is_subordinate.to_partition_of_unity {f : BumpCovering ι X s} {U : ι → Set X} (h : f.IsSubordinate U) :
+theorem IsSubordinate.to_partition_of_unity {f : BumpCovering ι X s} {U : ι → Set X} (h : f.IsSubordinate U) :
     f.toPartitionOfUnity.IsSubordinate U := fun i =>
   Subset.trans (closure_mono <| f.support_to_partition_of_unity_subset i) (h i)
 

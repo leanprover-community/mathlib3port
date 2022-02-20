@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2017 Kevin Buzzard. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Kevin Buzzard, Mario Carneiro
+-/
 import Mathbin.Data.Real.Sqrt
 
 /-!
@@ -30,7 +35,7 @@ noncomputable instance : DecidableEq ℂ :=
 
 /-- The equivalence between the complex numbers and `ℝ × ℝ`. -/
 @[simps]
-def equiv_real_prod : ℂ ≃ ℝ × ℝ where
+def equivRealProd : ℂ ≃ ℝ × ℝ where
   toFun := fun z => ⟨z.re, z.im⟩
   invFun := fun p => ⟨p.1, p.2⟩
   left_inv := fun ⟨x, y⟩ => rfl
@@ -217,7 +222,7 @@ theorem of_real_mul' (r : ℝ) (z : ℂ) : ↑r * z = ⟨r * z.re, r * z.im⟩ :
 
 
 /-- The imaginary unit. -/
-def I : ℂ :=
+def i : ℂ :=
   ⟨0, 1⟩
 
 @[simp]
@@ -252,16 +257,19 @@ theorem re_add_im (z : ℂ) : (z.re : ℂ) + z.im * I = z :=
 /-! ### Commutative ring instance and lemmas -/
 
 
+/- We use a nonstandard formula for the `ℕ` and `ℤ` actions to make sure there is no
+diamond from the other actions they inherit through the `ℝ`-action on `ℂ` and action transitivity
+defined in `data.complex.module.lean`. -/
 instance : CommRingₓ ℂ := by
   refine_struct
-      { zero := (0 : ℂ), add := · + ·, neg := Neg.neg, sub := Sub.sub, one := 1, mul := · * ·,
+      { zero := (0 : ℂ), add := (· + ·), neg := Neg.neg, sub := Sub.sub, one := 1, mul := (· * ·),
         zero_add := fun z => by
           apply ext_iff.2
           simp ,
         add_zero := fun z => by
           apply ext_iff.2
           simp ,
-        nsmul := fun n z => ⟨n • z.re - 0 * z.im, n • z.im + 0 * z.re⟩, npow := @npowRec _ ⟨(1 : ℂ)⟩ ⟨· * ·⟩,
+        nsmul := fun n z => ⟨n • z.re - 0 * z.im, n • z.im + 0 * z.re⟩, npow := @npowRec _ ⟨(1 : ℂ)⟩ ⟨(· * ·)⟩,
         zsmul := fun n z => ⟨n • z.re - 0 * z.im, n • z.im + 0 * z.re⟩ } <;>
     intros <;>
       try
@@ -280,7 +288,7 @@ instance : Ringₓ ℂ := by
   infer_instance
 
 /-- The "real part" map, considered as an additive group homomorphism. -/
-def re_add_group_hom : ℂ →+ ℝ where
+def reAddGroupHom : ℂ →+ ℝ where
   toFun := re
   map_zero' := zero_re
   map_add' := add_re
@@ -290,7 +298,7 @@ theorem coe_re_add_group_hom : (reAddGroupHom : ℂ → ℝ) = re :=
   rfl
 
 /-- The "imaginary part" map, considered as an additive group homomorphism. -/
-def im_add_group_hom : ℂ →+ ℝ where
+def imAddGroupHom : ℂ →+ ℝ where
   toFun := im
   map_zero' := zero_im
   map_add' := add_im
@@ -365,7 +373,9 @@ theorem eq_conj_iff_im {z : ℂ} : conj z = z ↔ z.im = 0 :=
   ⟨fun h => add_self_eq_zero.mp (neg_eq_iff_add_eq_zero.mp (congr_argₓ im h)), fun h =>
     ext rfl (neg_eq_iff_add_eq_zero.mpr (add_self_eq_zero.mpr h))⟩
 
-@[simp]
+-- `simp_nf` complains about this being provable by `is_R_or_C.star_def` even
+-- though it's not imported by this file.
+@[simp, nolint simp_nf]
 theorem star_def : (HasStar.star : ℂ → ℂ) = conj :=
   rfl
 
@@ -374,7 +384,7 @@ theorem star_def : (HasStar.star : ℂ → ℂ) = conj :=
 
 /-- The norm squared function. -/
 @[pp_nodot]
-def norm_sq : ℂ →*₀ ℝ where
+def normSq : ℂ →*₀ ℝ where
   toFun := fun z => z.re * z.re + z.im * z.im
   map_zero' := by
     simp
@@ -455,7 +465,7 @@ theorem add_conj (z : ℂ) : z + conj z = (2 * z.re : ℝ) :=
     simp [two_mul]
 
 /-- The coercion `ℝ → ℂ` as a `ring_hom`. -/
-def of_real : ℝ →+* ℂ :=
+def ofReal : ℝ →+* ℂ :=
   ⟨coe, of_real_one, of_real_mul, of_real_zero, of_real_add⟩
 
 @[simp]
@@ -539,6 +549,9 @@ theorem div_re (z w : ℂ) : (z / w).re = z.re * w.re / normSq w + z.im * w.im /
 
 theorem div_im (z w : ℂ) : (z / w).im = z.im * w.re / normSq w - z.re * w.im / normSq w := by
   simp [div_eq_mul_inv, mul_assoc, sub_eq_add_neg, add_commₓ]
+
+theorem conj_inv (x : ℂ) : conj x⁻¹ = (conj x)⁻¹ :=
+  star_inv' _
 
 @[simp, norm_cast]
 theorem of_real_div (r s : ℝ) : ((r / s : ℝ) : ℂ) = r / s :=
@@ -795,7 +808,7 @@ theorem norm_sq_eq_abs (x : ℂ) : normSq x = abs x ^ 2 := by
 /-- We put a partial order on ℂ so that `z ≤ w` exactly if `w - z` is real and nonnegative.
 Complex numbers with different imaginary parts are incomparable.
 -/
-protected def PartialOrderₓ : PartialOrderₓ ℂ where
+protected def partialOrder : PartialOrderₓ ℂ where
   le := fun z w => z.re ≤ w.re ∧ z.im = w.im
   lt := fun z w => z.re < w.re ∧ z.im = w.im
   lt_iff_le_not_le := fun z w => by
@@ -840,7 +853,7 @@ theorem not_le_zero_iff {z : ℂ} : ¬z ≤ 0 ↔ 0 < z.re ∨ z.im ≠ 0 :=
 
 /-- With `z ≤ w` iff `w - z` is real and nonnegative, `ℂ` is an ordered ring.
 -/
-protected def OrderedCommRing : OrderedCommRing ℂ :=
+protected def orderedCommRing : OrderedCommRing ℂ :=
   { Complex.partialOrder, Complex.commRing with zero_le_one := ⟨zero_le_one, rfl⟩,
     add_le_add_left := fun w z h y => ⟨add_le_add_left h.1 _, congr_arg2ₓ (· + ·) rfl h.2⟩,
     mul_pos := fun z w hz hw => by
@@ -851,7 +864,7 @@ localized [ComplexOrder] attribute [instance] Complex.orderedCommRing
 /-- With `z ≤ w` iff `w - z` is real and nonnegative, `ℂ` is a star ordered ring.
 (That is, a star ring in which the nonnegative elements are those of the form `star z * z`.)
 -/
-protected def StarOrderedRing : StarOrderedRing ℂ :=
+protected def starOrderedRing : StarOrderedRing ℂ :=
   { Complex.orderedCommRing with
     nonneg_iff := fun r => by
       refine' ⟨fun hr => ⟨Real.sqrt r.re, _⟩, fun h => _⟩
@@ -894,11 +907,11 @@ theorem is_cau_seq_im (f : CauSeq ℂ abs) : IsCauSeq abs' fun n => (f n).im := 
       (H _ ij)
 
 /-- The real part of a complex Cauchy sequence, as a real Cauchy sequence. -/
-noncomputable def cau_seq_re (f : CauSeq ℂ abs) : CauSeq ℝ abs' :=
+noncomputable def cauSeqRe (f : CauSeq ℂ abs) : CauSeq ℝ abs' :=
   ⟨_, is_cau_seq_re f⟩
 
 /-- The imaginary part of a complex Cauchy sequence, as a real Cauchy sequence. -/
-noncomputable def cau_seq_im (f : CauSeq ℂ abs) : CauSeq ℝ abs' :=
+noncomputable def cauSeqIm (f : CauSeq ℂ abs) : CauSeq ℝ abs' :=
   ⟨_, is_cau_seq_im f⟩
 
 theorem is_cau_seq_abs {f : ℕ → ℂ} (hf : IsCauSeq abs f) : IsCauSeq abs' (abs ∘ f) := fun ε ε0 =>
@@ -906,7 +919,7 @@ theorem is_cau_seq_abs {f : ℕ → ℂ} (hf : IsCauSeq abs f) : IsCauSeq abs' (
   ⟨i, fun j hj => lt_of_le_of_ltₓ (abs_abs_sub_le_abs_sub _ _) (hi j hj)⟩
 
 /-- The limit of a Cauchy sequence of complex numbers. -/
-noncomputable def lim_aux (f : CauSeq ℂ abs) : ℂ :=
+noncomputable def limAux (f : CauSeq ℂ abs) : ℂ :=
   ⟨CauSeq.lim (cauSeqRe f), CauSeq.lim (cauSeqIm f)⟩
 
 theorem equiv_lim_aux (f : CauSeq ℂ abs) : f ≈ CauSeq.const abs (limAux f) := fun ε ε0 =>
@@ -949,7 +962,7 @@ theorem is_cau_seq_conj (f : CauSeq ℂ abs) : IsCauSeq abs fun n => conj (f n) 
     rw [← RingHom.map_sub, abs_conj] <;> exact hi j hj⟩
 
 /-- The complex conjugate of a complex Cauchy sequence, as a complex Cauchy sequence. -/
-noncomputable def cau_seq_conj (f : CauSeq ℂ abs) : CauSeq ℂ abs :=
+noncomputable def cauSeqConj (f : CauSeq ℂ abs) : CauSeq ℂ abs :=
   ⟨_, is_cau_seq_conj f⟩
 
 theorem lim_conj (f : CauSeq ℂ abs) : limₓ (cauSeqConj f) = conj (limₓ f) :=
@@ -960,7 +973,7 @@ theorem lim_conj (f : CauSeq ℂ abs) : limₓ (cauSeqConj f) = conj (limₓ f) 
       simp [cau_seq_conj, (lim_im _).symm, cau_seq_im, (lim_neg _).symm] <;> rfl)
 
 /-- The absolute value of a complex Cauchy sequence, as a real Cauchy sequence. -/
-noncomputable def cau_seq_abs (f : CauSeq ℂ abs) : CauSeq ℝ abs' :=
+noncomputable def cauSeqAbs (f : CauSeq ℂ abs) : CauSeq ℝ abs' :=
   ⟨_, is_cau_seq_abs f.2⟩
 
 theorem lim_abs (f : CauSeq ℂ abs) : limₓ (cauSeqAbs f) = abs (limₓ f) :=

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison
+-/
 import Mathbin.Algebra.Homology.HomologicalComplex
 import Mathbin.AlgebraicTopology.SimplicialObject
 import Mathbin.CategoryTheory.Abelian.Basic
@@ -51,33 +56,46 @@ variable (X : SimplicialObject C)
 /-- The normalized Moore complex in degree `n`, as a subobject of `X n`.
 -/
 @[simp]
-def obj_X : ∀ n : ℕ, Subobject (X.obj (op (SimplexCategory.mk n)))
+def objX : ∀ n : ℕ, Subobject (X.obj (op (SimplexCategory.mk n)))
   | 0 => ⊤
   | n + 1 => Finset.univ.inf fun k : Finₓ (n + 1) => kernelSubobject (X.δ k.succ)
 
 /-- The differentials in the normalized Moore complex.
 -/
 @[simp]
-def obj_d : ∀ n : ℕ, (objX X (n + 1) : C) ⟶ (objX X n : C)
+def objD : ∀ n : ℕ, (objX X (n + 1) : C) ⟶ (objX X n : C)
   | 0 => Subobject.arrow _ ≫ X.δ (0 : Finₓ 2) ≫ inv (⊤ : Subobject _).arrow
   | n + 1 => by
+    -- The differential is `subobject.arrow _ ≫ X.δ (0 : fin (n+3))`,
+    -- factored through the intersection of the kernels.
     refine' factor_thru _ (arrow _ ≫ X.δ (0 : Finₓ (n + 3))) _
+    -- We now need to show that it factors!
+    -- A morphism factors through an intersection of subobjects if it factors through each.
     refine' (finset_inf_factors _).mpr fun i m => _
+    -- A morphism `f` factors through the kernel of `g` exactly if `f ≫ g = 0`.
     apply kernel_subobject_factors
+    -- Use a simplicial identity
     dsimp [obj_X]
     erw [category.assoc, ← X.δ_comp_δ (Finₓ.zero_le i.succ), ← category.assoc]
+    -- It's the first two factors which are zero.
     convert zero_comp
+    -- We can rewrite the arrow out of the intersection of all the kernels as a composition
+    -- of a morphism we don't care about with the arrow out of the kernel of `X.δ i.succ.succ`.
     rw [←
       factor_thru_arrow _ _
         (finset_inf_arrow_factors Finset.univ _ i.succ
           (by
             simp ))]
+    -- It's the second two factors which are zero.
     rw [category.assoc]
     convert comp_zero
     exact kernel_subobject_arrow_comp _
 
 theorem d_squared (n : ℕ) : objD X (n + 1) ≫ objD X n = 0 := by
-  cases n <;> dsimp
+  -- It's a pity we need to do a case split here;
+    -- after the first simp the proofs are almost identical
+    cases n <;>
+    dsimp
   · simp only [subobject.factor_thru_arrow_assoc]
     slice_lhs 2 3 => erw [← X.δ_comp_δ (Finₓ.zero_le 0)]
     rw [←
@@ -103,7 +121,11 @@ theorem d_squared (n : ℕ) : objD X (n + 1) ≫ objD X n = 0 := by
 -/
 @[simps]
 def obj (X : SimplicialObject C) : ChainComplex C ℕ :=
-  ChainComplex.of (fun n => (objX X n : C)) (objD X) (d_squared X)
+  ChainComplex.of (fun n => (objX X n : C))
+    (-- the coercion here picks a representative of the subobject
+      objD
+      X)
+    (d_squared X)
 
 variable {X} {Y : SimplicialObject C} (f : X ⟶ Y)
 
@@ -156,7 +178,7 @@ The differentials are induced from `X.δ 0`,
 which maps each of these intersections of kernels to the next.
 -/
 @[simps]
-def normalized_Moore_complex : SimplicialObject C ⥤ ChainComplex C ℕ where
+def normalizedMooreComplex : SimplicialObject C ⥤ ChainComplex C ℕ where
   obj := obj
   map := fun X Y f => map f
   map_id' := fun X => by

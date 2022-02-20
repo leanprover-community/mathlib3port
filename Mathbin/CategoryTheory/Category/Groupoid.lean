@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Yury Kudryashov. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yury Kudryashov
+-/
 import Mathbin.CategoryTheory.SingleObj
 import Mathbin.CategoryTheory.Limits.Shapes.Products
 import Mathbin.CategoryTheory.Pi.Basic
@@ -25,8 +30,9 @@ universe v u
 namespace CategoryTheory
 
 /-- Category of groupoids -/
+-- intended to be used with explicit universe parameters
 @[nolint check_univs]
-def Groupoid :=
+def Groupoidₓ :=
   Bundled Groupoid.{v, u}
 
 namespace Groupoid
@@ -60,11 +66,11 @@ def objects : Groupoid.{v, u} ⥤ Type u where
   map := fun C D F => F.obj
 
 /-- Forgetting functor to `Cat` -/
-def forget_to_Cat : Groupoid.{v, u} ⥤ Cat.{v, u} where
+def forgetToCat : Groupoid.{v, u} ⥤ Cat.{v, u} where
   obj := fun C => Cat.of C.α
   map := fun C D => id
 
-instance forget_to_Cat_full : Full forgetToCat where
+instance forgetToCatFull : Full forgetToCat where
   Preimage := fun C D => id
 
 instance forget_to_Cat_faithful : Faithful forgetToCat :=
@@ -79,7 +85,7 @@ section Products
 
 /-- The cone for the product of a family of groupoids indexed by J is a limit cone -/
 @[simps]
-def pi_limit_cone {J : Type u} (F : Discrete J ⥤ Groupoid.{u, u}) : Limits.LimitCone F where
+def piLimitCone {J : Type u} (F : Discrete J ⥤ Groupoid.{u, u}) : Limits.LimitCone F where
   Cone := { x := @of (∀ j : J, (F.obj j).α) _, π := { app := fun j : J => CategoryTheory.pi.eval _ j } }
   IsLimit :=
     { lift := fun s => Functor.pi' s.π.app,
@@ -94,7 +100,7 @@ def pi_limit_cone {J : Type u} (F : Discrete J ⥤ Groupoid.{u, u}) : Limits.Lim
         simpa }
 
 /-- `pi_limit_cone` reinterpreted as a fan -/
-abbrev pi_limit_fan {J : Type u} (F : J → Groupoidₓ.{u, u}) : Limits.Fan F :=
+abbrev piLimitFan {J : Type u} (F : J → Groupoidₓ.{u, u}) : Limits.Fan F :=
   (piLimitCone (Discrete.functor F)).Cone
 
 instance has_pi : Limits.HasProducts Groupoidₓ.{u, u} := fun J =>
@@ -102,7 +108,7 @@ instance has_pi : Limits.HasProducts Groupoidₓ.{u, u} := fun J =>
 
 /-- The product of a family of groupoids is isomorphic
 to the product object in the category of Groupoids -/
-noncomputable def pi_iso_pi (J : Type u) (f : J → Groupoidₓ.{u, u}) : @of (∀ j, (f j).α) _ ≅ ∏ f :=
+noncomputable def piIsoPi (J : Type u) (f : J → Groupoidₓ.{u, u}) : @of (∀ j, (f j).α) _ ≅ ∏ f :=
   Limits.IsLimit.conePointUniqueUpToIso (piLimitCone (Discrete.functor f)).IsLimit
     (Limits.limit.isLimit (Discrete.functor f))
 

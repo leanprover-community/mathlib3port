@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Ruben Van de Velde. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Ruben Van de Velde
+-/
 import Mathbin.Algebra.Algebra.RestrictScalars
 import Mathbin.Data.Complex.IsROrC
 
@@ -75,6 +80,12 @@ theorem LinearMap.extend_to_𝕜'_apply [Module ℝ F] [IsScalarTower ℝ 𝕜 F
 theorem norm_bound [NormedSpace ℝ F] [IsScalarTower ℝ 𝕜 F] (fr : F →L[ℝ] ℝ) (x : F) :
     ∥(fr.toLinearMap.extendTo𝕜' x : 𝕜)∥ ≤ ∥fr∥ * ∥x∥ := by
   let lm : F →ₗ[𝕜] 𝕜 := fr.to_linear_map.extend_to_𝕜'
+  -- We aim to find a `t : 𝕜` such that
+  -- * `lm (t • x) = fr (t • x)` (so `lm (t • x) = t * lm x ∈ ℝ`)
+  -- * `∥lm x∥ = ∥lm (t • x)∥` (so `t.abs` must be 1)
+  -- If `lm x ≠ 0`, `(lm x)⁻¹` satisfies the first requirement, and after normalizing, it
+  -- satisfies the second.
+  -- (If `lm x = 0`, the goal is trivial.)
   classical
   by_cases' h : lm x = 0
   · rw [h, norm_zero]

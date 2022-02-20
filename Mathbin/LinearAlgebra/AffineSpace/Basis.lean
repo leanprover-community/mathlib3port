@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Oliver Nash. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Oliver Nash
+-/
 import Mathbin.LinearAlgebra.AffineSpace.Independent
 import Mathbin.LinearAlgebra.AffineSpace.FiniteDimensional
 import Mathbin.LinearAlgebra.Determinant
@@ -69,7 +74,7 @@ obtain a linear basis for the model space `V`.
 
 The linear basis correpsonding to the singled-out member `i : ι` is indexed by `{j : ι // j ≠ i}`
 and its `j`th element is `points j -ᵥ points i`. (See `basis_of_apply`.) -/
-noncomputable def basis_of (i : ι) : Basis { j : ι // j ≠ i } k V :=
+noncomputable def basisOf (i : ι) : Basis { j : ι // j ≠ i } k V :=
   Basis.mk ((affine_independent_iff_linear_independent_vsub k b.points i).mp b.ind)
     (by
       suffices
@@ -204,7 +209,7 @@ theorem coords_apply (q : P) (i : ι) : b.coords q i = b.Coord i q :=
 rows are the barycentric coordinates of `q` with respect to `p`.
 
 It is an affine equivalent of `basis.to_matrix`. -/
-noncomputable def to_matrix {ι' : Type _} (q : ι' → P) : Matrix ι' ι k := fun i j => b.Coord j (q i)
+noncomputable def toMatrix {ι' : Type _} (q : ι' → P) : Matrix ι' ι k := fun i j => b.Coord j (q i)
 
 @[simp]
 theorem to_matrix_apply {ι' : Type _} (q : ι' → P) (i : ι') (j : ι) : b.toMatrix q i j = b.Coord j (q i) :=
@@ -325,6 +330,7 @@ end CommRingₓ
 
 section Field
 
+-- TODO Relax `field` to `division_ring` (results are still true)
 variable [Field k] [Module k V]
 
 include V

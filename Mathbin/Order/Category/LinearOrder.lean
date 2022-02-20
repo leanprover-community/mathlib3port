@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Johan Commelin. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johan Commelin
+-/
 import Mathbin.Order.Category.Lattice
 
 /-!
@@ -35,12 +40,12 @@ instance : Inhabited LinearOrderₓₓ :=
 instance (α : LinearOrderₓₓ) : LinearOrderₓ α :=
   α.str
 
-instance has_forget_to_Lattice : HasForget₂ LinearOrderₓₓ Latticeₓ where
+instance hasForgetToLattice : HasForget₂ LinearOrderₓₓ Latticeₓ where
   forget₂ := { obj := fun X => Latticeₓ.of X, map := fun X Y f => (OrderHomClass.toLatticeHom X Y f : LatticeHom X Y) }
 
 /-- Constructs an equivalence between linear orders from an order isomorphism between them. -/
 @[simps]
-def iso.mk {α β : LinearOrderₓₓ.{u}} (e : α ≃o β) : α ≅ β where
+def Iso.mk {α β : LinearOrderₓₓ.{u}} (e : α ≃o β) : α ≅ β where
   Hom := e
   inv := e.symm
   hom_inv_id' := by
@@ -58,7 +63,7 @@ def dual : LinearOrderₓₓ ⥤ LinearOrderₓₓ where
 
 /-- The equivalence between `LinearOrder` and itself induced by `order_dual` both ways. -/
 @[simps Functor inverse]
-def dual_equiv : LinearOrderₓₓ ≌ LinearOrderₓₓ :=
+def dualEquiv : LinearOrderₓₓ ≌ LinearOrderₓₓ :=
   Equivalence.mk dual dual ((NatIso.ofComponents fun X => iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
     ((NatIso.ofComponents fun X => iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
 

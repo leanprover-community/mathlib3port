@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Kenny Lau. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Kenny Lau, Yury Kudryashov
+-/
 import Mathbin.Algebra.Algebra.Basic
 import Mathbin.LinearAlgebra.TensorProduct
 import Mathbin.Algebra.IterateHom
@@ -58,7 +63,7 @@ theorem lmul_apply (p q : A) : lmul R A p q = p * q :=
 variable (R)
 
 /-- The multiplication on the left in an algebra is a linear map. -/
-def lmul_left (r : A) : A →ₗ[R] A :=
+def lmulLeft (r : A) : A →ₗ[R] A :=
   lmul R A r
 
 @[simp]
@@ -66,7 +71,7 @@ theorem lmul_left_to_add_monoid_hom (r : A) : (lmulLeft R r : A →+ A) = AddMon
   FunLike.coe_injective rfl
 
 /-- The multiplication on the right in an algebra is a linear map. -/
-def lmul_right (r : A) : A →ₗ[R] A :=
+def lmulRight (r : A) : A →ₗ[R] A :=
   (lmul R A).toLinearMap.flip r
 
 @[simp]
@@ -74,7 +79,7 @@ theorem lmul_right_to_add_monoid_hom (r : A) : (lmulRight R r : A →+ A) = AddM
   FunLike.coe_injective rfl
 
 /-- Simultaneous multiplication on the left and right is a linear map. -/
-def lmul_left_right (vw : A × A) : A →ₗ[R] A :=
+def lmulLeftRight (vw : A × A) : A →ₗ[R] A :=
   (lmulRight R vw.2).comp (lmulLeft R vw.1)
 
 theorem commute_lmul_left_right (a b : A) : Commute (lmulLeft R a) (lmulRight R b) := by

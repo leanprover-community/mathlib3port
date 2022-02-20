@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison, Yaël Dillies
+-/
 import Mathbin.Order.LocallyFinite
 
 /-!
@@ -187,6 +192,7 @@ theorem Icc_subset_Ico_iff (h₁ : a₁ ≤ b₁) : icc a₁ b₁ ⊆ ico a₂ b
 theorem Icc_subset_Ioc_iff (h₁ : a₁ ≤ b₁) : icc a₁ b₁ ⊆ ioc a₂ b₂ ↔ a₂ < a₁ ∧ b₁ ≤ b₂ :=
   (Icc_subset_Ico_iff h₁.dual).trans And.comm
 
+--TODO: `Ico_subset_Ioo_iff`, `Ioc_subset_Ioo_iff`
 theorem Icc_ssubset_Icc_left (hI : a₂ ≤ b₂) (ha : a₂ < a₁) (hb : b₁ ≤ b₂) : icc a₁ b₁ ⊂ icc a₂ b₂ := by
   rw [← coe_ssubset, coe_Icc, coe_Icc]
   exact Set.Icc_ssubset_Icc_left hI ha hb
@@ -433,6 +439,7 @@ theorem Ico_disjoint_Ico_consecutive (a b c : α) : Disjoint (ico a b) (ico b c)
 
 end DecidableEq
 
+-- Those lemmas are purposefully the other way around
 theorem Icc_eq_cons_Ico (h : a ≤ b) : icc a b = (ico a b).cons b right_not_mem_Ico := by
   classical
   rw [cons_eq_insert, Ico_insert_right h]
@@ -490,6 +497,7 @@ theorem Ici_erase [DecidableEq α] (a : α) : (ici a).erase a = ioi a :=
 theorem Ioi_insert [DecidableEq α] (a : α) : insert a (ioi a) = ici a :=
   Ioc_insert_left le_top
 
+-- Purposefully written the other way around
 theorem Ici_eq_cons_Ioi (a : α) : ici a = (ioi a).cons a left_not_mem_Ioc := by
   classical
   rw [cons_eq_insert, Ioi_insert]
@@ -508,6 +516,7 @@ theorem Iic_erase [DecidableEq α] (b : α) : (iic b).erase b = iio b :=
 theorem Iio_insert [DecidableEq α] (b : α) : insert b (iio b) = iic b :=
   Ico_insert_right bot_le
 
+-- Purposefully written the other way around
 theorem Iic_eq_cons_Iio (b : α) : iic b = (iio b).cons b right_not_mem_Ico := by
   classical
   rw [cons_eq_insert, Iio_insert]
@@ -525,6 +534,10 @@ theorem Ico_subset_Ico_iff {a₁ b₁ a₂ b₂ : α} (h : a₁ < b₁) : ico a�
 
 theorem Ico_union_Ico_eq_Ico {a b c : α} (hab : a ≤ b) (hbc : b ≤ c) : ico a b ∪ ico b c = ico a c := by
   rw [← coe_inj, coe_union, coe_Ico, coe_Ico, coe_Ico, Set.Ico_union_Ico_eq_Ico hab hbc]
+
+theorem Ico_subset_Ico_union_Ico {a b c : α} : ico a c ⊆ ico a b ∪ ico b c := by
+  rw [← coe_subset, coe_union, coe_Ico, coe_Ico, coe_Ico]
+  exact Set.Ico_subset_Ico_union_Ico
 
 theorem Ico_union_Ico' {a b c d : α} (hcb : c ≤ b) (had : a ≤ d) : ico a b ∪ ico c d = ico (min a c) (max b d) := by
   rw [← coe_inj, coe_union, coe_Ico, coe_Ico, coe_Ico, Set.Ico_union_Ico' hcb had]

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Sébastien Gouëzel. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johannes Hölzl, Yury Kudryashov, Sébastien Gouëzel
+-/
 import Mathbin.MeasureTheory.Constructions.BorelSpace
 
 /-!
@@ -52,7 +57,7 @@ theorem right_continuous (x : ℝ) : ContinuousWithinAt f (Ici x) x :=
 
 /-- The limit of a Stieltjes function to the left of `x` (it exists by monotonicity). The fact that
 it is indeed a left limit is asserted in `tendsto_left_lim` -/
-irreducible_def left_lim (x : ℝ) :=
+irreducible_def leftLim (x : ℝ) :=
   sup (f '' Iio x)
 
 theorem tendsto_left_lim (x : ℝ) : Tendsto f (𝓝[<] x) (𝓝 (f.leftLim x)) := by
@@ -94,7 +99,7 @@ instance : Inhabited StieltjesFunction :=
 /-! ### The outer measure associated to a Stieltjes function -/
 
 
--- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (a b)
+-- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (a b)
 /-- Length of an interval. This is the largest monotone function which correctly measures all
 intervals. -/
 def length (s : Set ℝ) : ℝ≥0∞ :=
@@ -141,7 +146,7 @@ theorem length_subadditive_Icc_Ioo {a b : ℝ} {c d : ℕ → ℝ} (ss : Icc a b
     ∀ s : Finset ℕ b cv : Icc a b ⊆ ⋃ i ∈ (↑s : Set ℕ), Ioo (c i) (d i),
       (of_real (f b - f a) : ℝ≥0∞) ≤ ∑ i in s, of_real (f (d i) - f (c i))
     by
-    rcases is_compact_Icc.elim_finite_subcover_image (fun i : ℕ _ : i ∈ univ => @is_open_Ioo _ _ _ _ (c i) (d i))
+    rcases is_compact_Icc.elim_finite_subcover_image (fun _ : i ∈ univ => @is_open_Ioo _ _ _ _ (c i) (d i))
         (by
           simpa using ss) with
       ⟨s, su, hf, hs⟩
@@ -176,6 +181,17 @@ theorem length_subadditive_Icc_Ioo {a b : ℝ} {c d : ℕ → ℝ} (ss : Icc a b
 
 @[simp]
 theorem outer_Ioc (a b : ℝ) : f.outer (Ioc a b) = ofReal (f b - f a) := by
+  /- It suffices to show that, if `(a, b]` is covered by sets `s i`, then `f b - f a` is bounded
+    by `∑ f.length (s i) + ε`. The difficulty is that `f.length` is expressed in terms of half-open
+    intervals, while we would like to have a compact interval covered by open intervals to use
+    compactness and finite sums, as provided by `length_subadditive_Icc_Ioo`. The trick is to use the
+    right-continuity of `f`. If `a'` is close enough to `a` on its right, then `[a', b]` is still
+    covered by the sets `s i` and moreover `f b - f a'` is very close to `f b - f a` (up to `ε/2`).
+    Also, by definition one can cover `s i` by a half-closed interval `(p i, q i]` with `f`-length
+    very close to  that of `s i` (within a suitably small `ε' i`, say). If one moves `q i` very
+    slightly to the right, then the `f`-length will change very little by right continuity, and we
+    will get an open interval `(p i, q' i)` covering `s i` with `f (q' i) - f (p i)` within `ε' i`
+    of the `f`-length of `s i`. -/
   refine'
     le_antisymmₓ
       (by
@@ -279,7 +295,7 @@ theorem borel_le_measurable : borel ℝ ≤ f.outer.caratheodory := by
 
 /-- The measure associated to a Stieltjes function, giving mass `f b - f a` to the
 interval `(a, b]`. -/
-protected irreducible_def Measureₓ : Measureₓ ℝ :=
+protected irreducible_def measure : Measureₓ ℝ :=
   { toOuterMeasure := f.outer,
     m_Union := fun s hs => f.outer.Union_eq_of_caratheodory fun i => f.borel_le_measurable _ (hs i),
     trimmed := f.outer_trim }

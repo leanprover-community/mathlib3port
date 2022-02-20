@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Adam Topaz. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Adam Topaz
+-/
 import Mathbin.CategoryTheory.Limits.Shapes.Products
 import Mathbin.CategoryTheory.EpiMono
 
@@ -26,7 +31,7 @@ variable [∀ a b : C, HasCoproductsOfShape (a ⟶ b) D]
 
 /-- The left adjoint of evaluation. -/
 @[simps]
-def evaluation_left_adjoint (c : C) : D ⥤ C ⥤ D where
+def evaluationLeftAdjoint (c : C) : D ⥤ C ⥤ D where
   obj := fun d =>
     { obj := fun t => ∐ fun i : c ⟶ t => d, map := fun u v f => sigma.desc fun g => (Sigma.ι fun _ => d) <| g ≫ f,
       map_id' := by
@@ -61,7 +66,7 @@ def evaluation_left_adjoint (c : C) : D ⥤ C ⥤ D where
 
 /-- The adjunction showing that evaluation is a right adjoint. -/
 @[simps unit_app counit_app_app]
-def evaluation_adjunction_right (c : C) : evaluationLeftAdjoint D c ⊣ (evaluation _ _).obj c :=
+def evaluationAdjunctionRight (c : C) : evaluationLeftAdjoint D c ⊣ (evaluation _ _).obj c :=
   Adjunction.mkOfHomEquiv
     { homEquiv := fun d F =>
         { toFun := fun f => Sigma.ι (fun _ => d) (𝟙 _) ≫ f.app c,
@@ -93,10 +98,10 @@ def evaluation_adjunction_right (c : C) : evaluationLeftAdjoint D c ⊣ (evaluat
         dsimp
         simp }
 
-instance evaluation_is_right_adjoint (c : C) : IsRightAdjoint ((evaluation _ D).obj c) :=
+instance evaluationIsRightAdjoint (c : C) : IsRightAdjoint ((evaluation _ D).obj c) :=
   ⟨_, evaluationAdjunctionRight _ _⟩
 
-theorem nat_trans.mono_iff_app_mono {F G : C ⥤ D} (η : F ⟶ G) : Mono η ↔ ∀ c, Mono (η.app c) := by
+theorem NatTrans.mono_iff_app_mono {F G : C ⥤ D} (η : F ⟶ G) : Mono η ↔ ∀ c, Mono (η.app c) := by
   constructor
   · intro h c
     exact right_adjoint_preserves_mono (evaluation_adjunction_right D c) h
@@ -113,7 +118,7 @@ variable [∀ a b : C, HasProductsOfShape (a ⟶ b) D]
 
 /-- The right adjoint of evaluation. -/
 @[simps]
-def evaluation_right_adjoint (c : C) : D ⥤ C ⥤ D where
+def evaluationRightAdjoint (c : C) : D ⥤ C ⥤ D where
   obj := fun d =>
     { obj := fun t => ∏ fun i : t ⟶ c => d, map := fun u v f => pi.lift fun g => Pi.π _ <| f ≫ g,
       map_id' := by
@@ -150,7 +155,7 @@ def evaluation_right_adjoint (c : C) : D ⥤ C ⥤ D where
 
 /-- The adjunction showing that evaluation is a left adjoint. -/
 @[simps unit_app_app counit_app]
-def evaluation_adjunction_left (c : C) : (evaluation _ _).obj c ⊣ evaluationRightAdjoint D c :=
+def evaluationAdjunctionLeft (c : C) : (evaluation _ _).obj c ⊣ evaluationRightAdjoint D c :=
   Adjunction.mkOfHomEquiv
     { homEquiv := fun F d =>
         { toFun := fun f =>
@@ -181,10 +186,10 @@ def evaluation_adjunction_left (c : C) : (evaluation _ _).obj c ⊣ evaluationRi
         dsimp
         simp }
 
-instance evaluation_is_left_adjoint (c : C) : IsLeftAdjoint ((evaluation _ D).obj c) :=
+instance evaluationIsLeftAdjoint (c : C) : IsLeftAdjoint ((evaluation _ D).obj c) :=
   ⟨_, evaluationAdjunctionLeft _ _⟩
 
-theorem nat_trans.epi_iff_app_epi {F G : C ⥤ D} (η : F ⟶ G) : Epi η ↔ ∀ c, Epi (η.app c) := by
+theorem NatTrans.epi_iff_app_epi {F G : C ⥤ D} (η : F ⟶ G) : Epi η ↔ ∀ c, Epi (η.app c) := by
   constructor
   · intro h c
     exact left_adjoint_preserves_epi (evaluation_adjunction_left D c) h

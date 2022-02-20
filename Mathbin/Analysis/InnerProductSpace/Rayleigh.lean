@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Heather Macbeth. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Heather Macbeth, Frédéric Dupuis
+-/
 import Mathbin.Analysis.InnerProductSpace.Calculus
 import Mathbin.Analysis.InnerProductSpace.Dual
 import Mathbin.Analysis.Calculus.LagrangeMultipliers
@@ -114,6 +119,8 @@ theorem linearly_dependent_of_is_local_extr_on (hT : IsSelfAdjoint (T : F →ₗ
     convert hextr
     ext x
     simp [dist_eq_norm]
+  -- find Lagrange multipliers for the function `T.re_apply_inner_self` and the
+  -- hypersurface-defining function `λ x, ∥x∥ ^ 2`
   obtain ⟨a, b, h₁, h₂⟩ :=
     IsLocalExtrOn.exists_multipliers_of_has_strict_fderiv_at_1d H (has_strict_fderiv_at_norm_sq x₀)
       (hT.has_strict_fderiv_at_re_apply_inner_self x₀)
@@ -238,6 +245,7 @@ theorem has_eigenvalue_supr_of_finite_dimensional (hT : IsSelfAdjoint T) :
   have H₂ : (sphere (0 : E) ∥x∥).Nonempty :=
     ⟨x, by
       simp ⟩
+  -- key point: in finite dimension, a continuous function on the sphere has a max
   obtain ⟨x₀, hx₀', hTx₀⟩ := H₁.exists_forall_ge H₂ T'.re_apply_inner_self_continuous.continuous_on
   have hx₀ : ∥x₀∥ = ∥x∥ := by
     simpa using hx₀'
@@ -261,6 +269,7 @@ theorem has_eigenvalue_infi_of_finite_dimensional (hT : IsSelfAdjoint T) :
   have H₂ : (sphere (0 : E) ∥x∥).Nonempty :=
     ⟨x, by
       simp ⟩
+  -- key point: in finite dimension, a continuous function on the sphere has a min
   obtain ⟨x₀, hx₀', hTx₀⟩ := H₁.exists_forall_le H₂ T'.re_apply_inner_self_continuous.continuous_on
   have hx₀ : ∥x₀∥ = ∥x∥ := by
     simpa using hx₀'

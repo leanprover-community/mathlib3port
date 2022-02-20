@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Sébastien Gouëzel. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Sébastien Gouëzel
+-/
 import Mathbin.Topology.Instances.Real
 import Mathbin.Order.Filter.Archimedean
 
@@ -31,7 +36,7 @@ include h
 /-- The limit of a bounded-below subadditive sequence. The fact that the sequence indeed tends to
 this limit is given in `subadditive.tendsto_lim` -/
 @[nolint unused_arguments]
-protected irreducible_def limₓ :=
+protected irreducible_def lim :=
   inf ((fun n : ℕ => u n / n) '' Ici 1)
 
 theorem lim_le_div (hbdd : BddBelow (Range fun n => u n / n)) {n : ℕ} (hn : n ≠ 0) : h.lim ≤ u n / n := by

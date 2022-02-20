@@ -1,12 +1,28 @@
+/-
+Copyright (c) 2018 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison, Mario Carneiro
+-/
 import Mathbin.Tactic.Ext
 
 open Interactive
 
 namespace Tactic
 
+/-
+This file defines a `chain` tactic, which takes a list of tactics,
+and exhaustively tries to apply them to the goals, until no tactic succeeds on any goal.
+
+Along the way, it generates auxiliary declarations, in order to speed up elaboration time
+of the resulting (sometimes long!) proofs.
+
+This tactic is used by the `tidy` tactic.
+-/
+-- α is the return type of our tactics. When `chain` is called by `tidy`, this is string,
+-- describing what that tactic did as an interactive tactic.
 variable {α : Type}
 
-inductive tactic_script (α : Type) : Type
+inductive TacticScript (α : Type) : Type
   | base : α → tactic_script
   | work (index : ℕ) (first : α) (later : List tactic_script) (closed : Bool) : tactic_script
 
@@ -24,7 +40,10 @@ unsafe instance tactic_script_unit_has_to_string : HasToString (TacticScript Uni
 unsafe def abstract_if_success (tac : expr → tactic α) (g : expr) : tactic α := do
   let type ← infer_type g
   let is_lemma ← is_prop type
-  if is_lemma then tac g
+  if is_lemma then
+      -- there's no point making the abstraction, and indeed it's slower
+        tac
+        g
     else do
       let m ← mk_meta_var type
       let a ← tac m
@@ -66,7 +85,8 @@ mutual
   unsafe def chain_iter {α} (tac : tactic α) : List expr → List expr → tactic (List (TacticScript α))
     | [], _ => return []
     | g :: later_goals, stuck_goals =>
-      (do
+      (-- we keep the goals up to date, so they are correct at the end
+        do
           let (a, l) ← abstract_if_success chain_single g
           let new_goals ← get_goals
           let w := TacticScript.work stuck_goals.length a l (new_goals = [])

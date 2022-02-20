@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Patrick Massot. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Patrick Massot
+-/
 import Mathbin.Algebra.Order.WithZero
 import Mathbin.Topology.Algebra.Order.Basic
 
@@ -41,12 +46,12 @@ variable (Γ₀ : Type _) [LinearOrderedCommGroupWithZero Γ₀]
 These neighbourhoods are defined as follows:
 A set s is a neighbourhood of 0 if there is an invertible γ₀ ∈ Γ₀ such that {γ | γ < γ₀} ⊆ s.
 If γ ≠ 0, then every set that contains γ is a neighbourhood of γ. -/
-def nhds_fun (x : Γ₀) : Filter Γ₀ :=
+def nhdsFun (x : Γ₀) : Filter Γ₀ :=
   if x = 0 then ⨅ γ₀ : (Γ₀)ˣ, principal { γ | γ < γ₀ } else pure x
 
 /-- The topology on a linearly ordered commutative group with a zero element adjoined.
 A subset U is open if 0 ∉ U or if there is an invertible element γ₀ such that {γ | γ < γ₀} ⊆ U. -/
-protected def TopologicalSpace : TopologicalSpace Γ₀ :=
+protected def topologicalSpace : TopologicalSpace Γ₀ :=
   TopologicalSpace.mkOfNhds (nhdsFun Γ₀)
 
 attribute [local instance] LinearOrderedCommGroupWithZero.topologicalSpace
@@ -64,6 +69,8 @@ theorem directed_lt : Directed (· ≥ ·) fun γ₀ : (Γ₀)ˣ => principal { 
 
 /-- At all points of a linearly ordered commutative group with a zero element adjoined,
 the pure filter is smaller than the filter given by nhds_fun. -/
+-- We need two auxilliary lemmas to show that nhds_fun accurately describes the neighbourhoods
+-- coming from the topology (that is defined in terms of nhds_fun).
 theorem pure_le_nhds_fun : pure ≤ nhdsFun Γ₀ := fun x => by
   by_cases' hx : x = 0 <;> simp [hx, nhds_fun]
 
@@ -194,7 +201,7 @@ instance (priority := 100) ordered_topology : OrderClosedTopology Γ₀ where
       
 
 /-- The topology on a linearly ordered group with zero element adjoined is T₃ (aka regular). -/
-instance (priority := 100) RegularSpace : RegularSpace Γ₀ := by
+instance (priority := 100) regular_space : RegularSpace Γ₀ := by
   have : T1Space Γ₀ := T2Space.t1_space
   constructor
   intro s x s_closed x_not_in_s
@@ -225,7 +232,7 @@ instance (priority := 100) RegularSpace : RegularSpace Γ₀ := by
         simp [subset.refl]⟩
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (y «expr ≠ » (0 : Γ₀))
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (y «expr ≠ » (0 : Γ₀))
 /-- The topology on a linearly ordered group with zero element adjoined makes it a topological
 monoid. -/
 instance (priority := 100) : HasContinuousMul Γ₀ :=

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Alex Kontorovich and Heather Macbeth and Marc Masdeu. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Alex Kontorovich, Heather Macbeth, Marc Masdeu
+-/
 import Mathbin.LinearAlgebra.SpecialLinearGroup
 import Mathbin.Analysis.Complex.Basic
 import Mathbin.GroupTheory.GroupAction.Defs
@@ -65,7 +70,7 @@ theorem norm_sq_ne_zero (z : ℍ) : Complex.normSq (z : ℂ) ≠ 0 :=
 
 /-- Numerator of the formula for a fractional linear transformation -/
 @[simp]
-def Num (g : SL(2,ℝ)) (z : ℍ) : ℂ :=
+def num (g : SL(2,ℝ)) (z : ℍ) : ℂ :=
   g 0 0 * z + g 0 1
 
 /-- Denominator of the formula for a fractional linear transformation -/
@@ -77,6 +82,7 @@ def denom (g : SL(2,ℝ)) (z : ℍ) : ℂ :=
 theorem linear_ne_zero (cd : Finₓ 2 → ℝ) (z : ℍ) (h : cd ≠ 0) : (cd 0 : ℂ) * z + cd 1 ≠ 0 := by
   contrapose! h
   have : cd 0 = 0 := by
+    -- we will need this twice
     apply_fun Complex.im  at h
     simpa only [z.im_ne_zero, Complex.add_im, add_zeroₓ, coe_im, zero_mul, or_falseₓ, Complex.of_real_im,
       Complex.zero_im, Complex.mul_im, mul_eq_zero] using h
@@ -94,7 +100,7 @@ theorem norm_sq_denom_ne_zero (g : SL(2,ℝ)) (z : ℍ) : Complex.normSq (denom 
   ne_of_gtₓ (norm_sq_denom_pos g z)
 
 /-- Fractional linear transformation -/
-def smul_aux' (g : SL(2,ℝ)) (z : ℍ) : ℂ :=
+def smulAux' (g : SL(2,ℝ)) (z : ℍ) : ℂ :=
   num g z / denom g z
 
 theorem smul_aux'_im (g : SL(2,ℝ)) (z : ℍ) : (smulAux' g z).im = z.im / (denom g z).normSq := by
@@ -111,7 +117,7 @@ theorem smul_aux'_im (g : SL(2,ℝ)) (z : ℍ) : (smulAux' g z).im = z.im / (den
     
 
 /-- Fractional linear transformation -/
-def smul_aux (g : SL(2,ℝ)) (z : ℍ) : ℍ :=
+def smulAux (g : SL(2,ℝ)) (z : ℍ) : ℍ :=
   ⟨smulAux' g z, by
     rw [smul_aux'_im]
     exact div_pos z.im_pos (complex.norm_sq_pos.mpr (denom_ne_zero g z))⟩

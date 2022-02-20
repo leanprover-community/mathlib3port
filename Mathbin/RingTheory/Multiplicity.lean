@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Robert Y. Lewis. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Robert Y. Lewis, Chris Hughes
+-/
 import Mathbin.Algebra.Associated
 import Mathbin.Algebra.BigOperators.Basic
 import Mathbin.RingTheory.Valuation.Basic
@@ -27,7 +32,7 @@ open_locale BigOperators
 /-- `multiplicity a b` returns the largest natural number `n` such that
   `a ^ n ∣ b`, as an `enat` or natural with infinity. If `∀ n, a ^ n ∣ b`,
   then it returns `⊤`-/
-def multiplicity [CommMonoidₓ α] [DecidableRel (· ∣ · : α → α → Prop)] (a b : α) : Enat :=
+def multiplicity [CommMonoidₓ α] [DecidableRel ((· ∣ ·) : α → α → Prop)] (a b : α) : Enat :=
   Enat.find fun n => ¬a ^ (n + 1) ∣ b
 
 namespace multiplicity
@@ -38,17 +43,17 @@ variable [CommMonoidₓ α]
 
 /-- `multiplicity.finite a b` indicates that the multiplicity of `a` in `b` is finite. -/
 @[reducible]
-def finite (a b : α) : Prop :=
+def Finite (a b : α) : Prop :=
   ∃ n : ℕ, ¬a ^ (n + 1) ∣ b
 
-theorem finite_iff_dom [DecidableRel (· ∣ · : α → α → Prop)] {a b : α} : Finite a b ↔ (multiplicity a b).Dom :=
+theorem finite_iff_dom [DecidableRel ((· ∣ ·) : α → α → Prop)] {a b : α} : Finite a b ↔ (multiplicity a b).Dom :=
   Iff.rfl
 
 theorem finite_def {a b : α} : Finite a b ↔ ∃ n : ℕ, ¬a ^ (n + 1) ∣ b :=
   Iff.rfl
 
 @[norm_cast]
-theorem int.coe_nat_multiplicity (a b : ℕ) : multiplicity (a : ℤ) (b : ℤ) = multiplicity a b := by
+theorem Int.coe_nat_multiplicity (a b : ℕ) : multiplicity (a : ℤ) (b : ℤ) = multiplicity a b := by
   apply Part.ext'
   · repeat'
       rw [← finite_iff_dom, finite_def]
@@ -87,7 +92,7 @@ theorem finite_of_finite_mul_left {a b c : α} : Finite a (b * c) → Finite a c
 theorem finite_of_finite_mul_right {a b c : α} : Finite a (b * c) → Finite a b := by
   rw [mul_comm] <;> exact finite_of_finite_mul_left
 
-variable [DecidableRel (· ∣ · : α → α → Prop)]
+variable [DecidableRel ((· ∣ ·) : α → α → Prop)]
 
 theorem pow_dvd_of_le_multiplicity {a b : α} {k : ℕ} : (k : Enat) ≤ multiplicity a b → a ^ k ∣ b := by
   rw [← Enat.some_eq_coe]
@@ -103,7 +108,7 @@ theorem pow_multiplicity_dvd {a b : α} (h : Finite a b) : a ^ get (multiplicity
     (by
       rw [Enat.coe_get])
 
-theorem IsGreatest {a b : α} {m : ℕ} (hm : multiplicity a b < m) : ¬a ^ m ∣ b := fun h => by
+theorem is_greatest {a b : α} {m : ℕ} (hm : multiplicity a b < m) : ¬a ^ m ∣ b := fun h => by
   rw [Enat.lt_coe_iff] at hm <;> exact Nat.find_specₓ hm.fst ((pow_dvd_pow _ hm.snd).trans h)
 
 theorem is_greatest' {a b : α} {m : ℕ} (h : Finite a b) (hm : get (multiplicity a b) h < m) : ¬a ^ m ∣ b :=
@@ -115,7 +120,7 @@ theorem pos_of_dvd {a b : α} (hfin : Finite a b) (hdiv : a ∣ b) : 0 < (multip
   refine' zero_lt_iff.2 fun h => _
   simpa [hdiv] using is_greatest' hfin (lt_one_iff.mpr h)
 
-theorem Unique {a b : α} {k : ℕ} (hk : a ^ k ∣ b) (hsucc : ¬a ^ (k + 1) ∣ b) : (k : Enat) = multiplicity a b :=
+theorem unique {a b : α} {k : ℕ} (hk : a ^ k ∣ b) (hsucc : ¬a ^ (k + 1) ∣ b) : (k : Enat) = multiplicity a b :=
   le_antisymmₓ (le_of_not_gtₓ fun hk' => is_greatest hk' hk) <| by
     have : Finite a b := ⟨k, hsucc⟩
     rw [Enat.le_coe_iff]
@@ -281,7 +286,7 @@ theorem ne_zero_of_finite {a b : α} (h : Finite a b) : b ≠ 0 :=
   fun hb => by
   simpa [hb] using hn
 
-variable [DecidableRel (· ∣ · : α → α → Prop)]
+variable [DecidableRel ((· ∣ ·) : α → α → Prop)]
 
 @[simp]
 protected theorem zero (a : α) : multiplicity a 0 = ⊤ :=
@@ -296,7 +301,7 @@ end CommMonoidWithZero
 
 section CommSemiringₓ
 
-variable [CommSemiringₓ α] [DecidableRel (· ∣ · : α → α → Prop)]
+variable [CommSemiringₓ α] [DecidableRel ((· ∣ ·) : α → α → Prop)]
 
 theorem min_le_multiplicity_add {p a b : α} : min (multiplicity p a) (multiplicity p b) ≤ multiplicity p (a + b) :=
   (le_totalₓ (multiplicity p a) (multiplicity p b)).elim
@@ -311,7 +316,7 @@ end CommSemiringₓ
 
 section CommRingₓ
 
-variable [CommRingₓ α] [DecidableRel (· ∣ · : α → α → Prop)]
+variable [CommRingₓ α] [DecidableRel ((· ∣ ·) : α → α → Prop)]
 
 open_locale Classical
 
@@ -436,7 +441,7 @@ theorem finite_pow {p a : α} (hp : Prime p) : ∀ {k : ℕ} ha : Finite p a, Fi
   | k + 1, ha => by
     rw [pow_succₓ] <;> exact finite_mul hp ha (finite_pow ha)
 
-variable [DecidableRel (· ∣ · : α → α → Prop)]
+variable [DecidableRel ((· ∣ ·) : α → α → Prop)]
 
 @[simp]
 theorem multiplicity_self {a : α} (ha : ¬IsUnit a) (ha0 : a ≠ 0) : multiplicity a a = 1 := by
@@ -542,7 +547,7 @@ section Valuation
 variable {R : Type _} [CommRingₓ R] [IsDomain R] {p : R} [DecidableRel (HasDvd.Dvd : R → R → Prop)]
 
 /-- `multiplicity` of a prime inan integral domain as an additive valuation to `enat`. -/
-noncomputable def AddValuation (hp : Prime p) : AddValuation R Enat :=
+noncomputable def addValuation (hp : Prime p) : AddValuation R Enat :=
   AddValuation.of (multiplicity p) (multiplicity.zero _) (one_right hp.not_unit) (fun _ _ => min_le_multiplicity_add)
     fun a b => multiplicity.mul hp
 

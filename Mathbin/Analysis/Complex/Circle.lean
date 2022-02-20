@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Heather Macbeth. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Heather Macbeth
+-/
 import Mathbin.Analysis.SpecialFunctions.Exp
 import Mathbin.Topology.ContinuousFunction.Basic
 
@@ -97,6 +102,9 @@ def circle.toUnits : circle →* Units ℂ where
 instance : CompactSpace circle :=
   Metric.Sphere.compact_space _ _
 
+-- the following result could instead be deduced from the Lie group structure on the circle using
+-- `topological_group_of_lie_group`, but that seems a little awkward since one has to first provide
+-- and then forget the model space
 instance : TopologicalGroup circle where
   continuous_mul :=
     let h : Continuous fun x : circle => (x : ℂ) := continuous_subtype_coe

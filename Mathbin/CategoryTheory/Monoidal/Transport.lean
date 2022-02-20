@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison
+-/
 import Mathbin.CategoryTheory.Monoidal.NaturalTransformation
 
 /-!
@@ -113,7 +118,7 @@ def transport (e : C ≌ D) : MonoidalCategory.{v₂} D where
 
 /-- A type synonym for `D`, which will carry the transported monoidal structure. -/
 @[nolint unused_arguments]
-def transported (e : C ≌ D) :=
+def Transported (e : C ≌ D) :=
   D deriving Category
 
 instance (e : C ≌ D) : MonoidalCategory (Transported e) :=
@@ -125,7 +130,7 @@ instance (e : C ≌ D) : Inhabited (Transported e) :=
 /-- We can upgrade `e.functor` to a lax monoidal functor from `C` to `D` with the transported structure.
 -/
 @[simps]
-def lax_to_transported (e : C ≌ D) : LaxMonoidalFunctor C (Transported e) :=
+def laxToTransported (e : C ≌ D) : LaxMonoidalFunctor C (Transported e) :=
   { e.Functor with ε := 𝟙 (e.Functor.obj (𝟙_ C)), μ := fun X Y => e.Functor.map (e.unitInv.app X ⊗ e.unitInv.app Y),
     μ_natural' := fun X Y X' Y' f g => by
       dsimp
@@ -170,7 +175,7 @@ def lax_to_transported (e : C ≌ D) : LaxMonoidalFunctor C (Transported e) :=
 /-- We can upgrade `e.functor` to a monoidal functor from `C` to `D` with the transported structure.
 -/
 @[simps]
-def to_transported (e : C ≌ D) : MonoidalFunctor C (Transported e) :=
+def toTransported (e : C ≌ D) : MonoidalFunctor C (Transported e) :=
   { laxToTransported e with
     ε_is_iso := by
       dsimp
@@ -182,7 +187,7 @@ def to_transported (e : C ≌ D) : MonoidalFunctor C (Transported e) :=
 /-- We can upgrade `e.inverse` to a lax monoidal functor from `D` with the transported structure to `C`.
 -/
 @[simps]
-def lax_from_transported (e : C ≌ D) : LaxMonoidalFunctor (Transported e) C :=
+def laxFromTransported (e : C ≌ D) : LaxMonoidalFunctor (Transported e) C :=
   { e.inverse with ε := e.Unit.app (𝟙_ C), μ := fun X Y => e.Unit.app (e.inverse.obj X ⊗ e.inverse.obj Y),
     μ_natural' := fun X Y X' Y' f g => by
       dsimp
@@ -208,7 +213,7 @@ def lax_from_transported (e : C ≌ D) : LaxMonoidalFunctor (Transported e) C :=
 /-- We can upgrade `e.inverse` to a monoidal functor from `D` with the transported structure to `C`.
 -/
 @[simps]
-def from_transported (e : C ≌ D) : MonoidalFunctor (Transported e) C :=
+def fromTransported (e : C ≌ D) : MonoidalFunctor (Transported e) C :=
   { laxFromTransported e with
     ε_is_iso := by
       dsimp
@@ -219,7 +224,7 @@ def from_transported (e : C ≌ D) : MonoidalFunctor (Transported e) C :=
 
 /-- The unit isomorphism upgrades to a monoidal isomorphism. -/
 @[simps]
-def transported_monoidal_unit_iso (e : C ≌ D) : LaxMonoidalFunctor.id C ≅ laxToTransported e ⊗⋙ laxFromTransported e :=
+def transportedMonoidalUnitIso (e : C ≌ D) : LaxMonoidalFunctor.id C ≅ laxToTransported e ⊗⋙ laxFromTransported e :=
   MonoidalNatIso.ofComponents (fun X => e.unitIso.app X) (fun X Y f => e.Unit.naturality f)
     (by
       dsimp
@@ -232,7 +237,7 @@ def transported_monoidal_unit_iso (e : C ≌ D) : LaxMonoidalFunctor.id C ≅ la
 
 /-- The counit isomorphism upgrades to a monoidal isomorphism. -/
 @[simps]
-def transported_monoidal_counit_iso (e : C ≌ D) :
+def transportedMonoidalCounitIso (e : C ≌ D) :
     laxFromTransported e ⊗⋙ laxToTransported e ≅ LaxMonoidalFunctor.id (Transported e) :=
   MonoidalNatIso.ofComponents (fun X => e.counitIso.app X) (fun X Y f => e.counit.naturality f)
     (by
@@ -247,5 +252,13 @@ def transported_monoidal_counit_iso (e : C ≌ D) :
     dsimp
     simp
 
+-- See note [dsimp, simp].
+-- We could put these together as an equivalence of monoidal categories,
+-- but I don't want to do this quite yet.
+-- Etingof-Gelaki-Nikshych-Ostrik "Tensor categories" define an equivalence of monoidal categories
+-- as a monoidal functor which, as a functor, is an equivalence.
+-- Presumably one can show that the inverse functor can be upgraded to a monoidal
+-- functor in a unique way, such that the unit and counit are monoidal natural isomorphisms,
+-- but I've never seen this explained or worked it out.
 end CategoryTheory.Monoidal
 

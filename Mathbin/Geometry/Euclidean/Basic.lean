@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Joseph Myers. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Joseph Myers, Manuel Candales
+-/
 import Mathbin.Analysis.InnerProductSpace.Projection
 import Mathbin.Analysis.SpecialFunctions.Trigonometric.Inverse
 import Mathbin.Algebra.QuadraticDiscriminant
@@ -76,7 +81,7 @@ this is π/2. -/
 def angle (x y : V) : ℝ :=
   Real.arccos (inner x y / (∥x∥ * ∥y∥))
 
-theorem is_conformal_map.preserves_angle {E F : Type _} [InnerProductSpace ℝ E] [InnerProductSpace ℝ F] {f' : E →L[ℝ] F}
+theorem IsConformalMap.preserves_angle {E F : Type _} [InnerProductSpace ℝ E] [InnerProductSpace ℝ F] {f' : E →L[ℝ] F}
     (h : IsConformalMap f') (u v : E) : angle (f' u) (f' v) = angle u v := by
   obtain ⟨c, hc, li, hcf⟩ := h
   suffices c * (c * inner u v) / (∥c∥ * ∥u∥ * (∥c∥ * ∥v∥)) = inner u v / (∥u∥ * ∥v∥) by
@@ -95,7 +100,7 @@ theorem is_conformal_map.preserves_angle {E F : Type _} [InnerProductSpace ℝ E
 
 /-- If a real differentiable map `f` is conformal at a point `x`,
     then it preserves the angles at that point. -/
-theorem conformal_at.preserves_angle {E F : Type _} [InnerProductSpace ℝ E] [InnerProductSpace ℝ F] {f : E → F} {x : E}
+theorem ConformalAt.preserves_angle {E F : Type _} [InnerProductSpace ℝ E] [InnerProductSpace ℝ F] {f : E → F} {x : E}
     {f' : E →L[ℝ] F} (h : HasFderivAt f f' x) (H : ConformalAt f x) (u v : E) : angle (f' u) (f' v) = angle u v :=
   let ⟨f₁, h₁, c⟩ := H
   h₁.unique h ▸ IsConformalMap.preserves_angle c u v
@@ -571,8 +576,8 @@ theorem dist_smul_vadd_eq_dist {v : V} (p₁ p₂ : P) (hv : v ≠ 0) (r : ℝ) 
 
 open AffineSubspace FiniteDimensional
 
--- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»
 -- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
 -- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
 -- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
@@ -590,7 +595,7 @@ theorem eq_of_dist_eq_of_dist_eq_of_mem_of_finrank_eq_two {s : AffineSubspace �
   have hop : ⟪c₂ -ᵥ c₁, p -ᵥ p₁⟫ = 0 :=
     inner_vsub_vsub_of_dist_eq_of_dist_eq (hp₁c₁.trans hpc₁.symm) (hp₁c₂.trans hpc₂.symm)
   let b : Finₓ 2 → V :=
-    «expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»"
+    «expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»"
   have hb : LinearIndependent ℝ b := by
     refine' linear_independent_of_ne_zero_of_inner_eq_zero _ _
     · intro i
@@ -1046,7 +1051,7 @@ omit V
 /-- A set of points is cospherical if they are equidistant from some
 point.  In two dimensions, this is the same thing as being
 concyclic. -/
-def cospherical (ps : Set P) : Prop :=
+def Cospherical (ps : Set P) : Prop :=
   ∃ (center : P)(radius : ℝ), ∀, ∀ p ∈ ps, ∀, dist p center = radius
 
 /-- The definition of `cospherical`. -/
@@ -1091,7 +1096,7 @@ theorem cospherical_insert_singleton (p₁ p₂ : P) : Cospherical ({p₁, p₂}
     
 
 /-- Any three points in a cospherical set are affinely independent. -/
-theorem cospherical.affine_independent {s : Set P} (hs : Cospherical s) {p : Finₓ 3 → P} (hps : Set.Range p ⊆ s)
+theorem Cospherical.affine_independent {s : Set P} (hs : Cospherical s) {p : Finₓ 3 → P} (hps : Set.Range p ⊆ s)
     (hpi : Function.Injective p) : AffineIndependent ℝ p := by
   rw [affine_independent_iff_not_collinear]
   intro hc

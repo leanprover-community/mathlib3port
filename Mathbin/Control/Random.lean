@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Simon Hudon. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Simon Hudon
+-/
 import Mathbin.Control.Monad.Basic
 import Mathbin.Data.Int.Basic
 import Mathbin.Data.Stream.Defs
@@ -99,11 +104,11 @@ variable [Random α]
 export Random (Random)
 
 /-- Generate a random value of type `α`. -/
-def Random : RandG g α :=
+def random : RandG g α :=
   Random.random α g
 
 /-- generate an infinite series of random values of type `α` -/
-def random_series : RandG g (Streamₓ α) := do
+def randomSeries : RandG g (Streamₓ α) := do
   let gen ← Uliftable.up (split g)
   pure <| Streamₓ.corecState (Random.random α g) gen
 
@@ -112,11 +117,11 @@ end Random
 variable {α}
 
 /-- Generate a random value between `x` and `y` inclusive. -/
-def random_r [Preorderₓ α] [BoundedRandom α] (x y : α) (h : x ≤ y) : RandG g (x .. y) :=
+def randomR [Preorderₓ α] [BoundedRandom α] (x y : α) (h : x ≤ y) : RandG g (x .. y) :=
   BoundedRandom.randomR g x y h
 
 /-- generate an infinite series of random values of type `α` between `x` and `y` inclusive. -/
-def random_series_r [Preorderₓ α] [BoundedRandom α] (x y : α) (h : x ≤ y) : RandG g (Streamₓ (x .. y)) := do
+def randomSeriesR [Preorderₓ α] [BoundedRandom α] (x y : α) (h : x ≤ y) : RandG g (Streamₓ (x .. y)) := do
   let gen ← Uliftable.up (split g)
   pure <| corec_state (BoundedRandom.randomR g x y h) gen
 
@@ -128,19 +133,19 @@ private def accum_char (w : ℕ) (c : Charₓ) : ℕ :=
   c.toNat + 256 * w
 
 /-- create and a seed a random number generator -/
-def mk_generator : Io StdGen := do
+def mkGenerator : Io StdGen := do
   let seed ← Io.rand 0 shift31Left
   return <| mkStdGenₓ seed
 
 variable {α : Type}
 
 /-- Run `cmd` using a randomly seeded random number generator -/
-def run_rand (cmd : Rand α) : Io α := do
+def runRand (cmd : Rand α) : Io α := do
   let g ← Io.mkGenerator
   return <| (cmd ⟨g⟩).1
 
 /-- Run `cmd` using the provided seed. -/
-def run_rand_with (seed : ℕ) (cmd : Rand α) : Io α :=
+def runRandWith (seed : ℕ) (cmd : Rand α) : Io α :=
   return <| (cmd.run ⟨mkStdGenₓ seed⟩).1
 
 section Random
@@ -148,11 +153,11 @@ section Random
 variable [Random α]
 
 /-- randomly generate a value of type α -/
-def Random : Io α :=
+def random : Io α :=
   Io.runRand (Rand.random α)
 
 /-- randomly generate an infinite series of value of type α -/
-def random_series : Io (Streamₓ α) :=
+def randomSeries : Io (Streamₓ α) :=
   Io.runRand (Rand.randomSeries α)
 
 end Random
@@ -162,11 +167,11 @@ section BoundedRandom
 variable [Preorderₓ α] [BoundedRandom α]
 
 /-- randomly generate a value of type α between `x` and `y` -/
-def random_r (x y : α) (p : x ≤ y) : Io (x .. y) :=
+def randomR (x y : α) (p : x ≤ y) : Io (x .. y) :=
   Io.runRand (BoundedRandom.randomR _ x y p)
 
 /-- randomly generate an infinite series of value of type α between `x` and `y` -/
-def random_series_r (x y : α) (h : x ≤ y) : Io (Streamₓ <| x .. y) :=
+def randomSeriesR (x y : α) (h : x ≤ y) : Io (Streamₓ <| x .. y) :=
   Io.runRand (Rand.randomSeriesR x y h)
 
 end BoundedRandom
@@ -206,7 +211,7 @@ section Random
 variable [Random α]
 
 /-- randomly generate a value of type α -/
-unsafe def Random : tactic α :=
+unsafe def random : tactic α :=
   run_rand (Rand.random α)
 
 /-- randomly generate an infinite series of value of type α -/
@@ -228,7 +233,7 @@ namespace Finₓ
 variable {n : ℕ} [Fact (0 < n)]
 
 /-- generate a `fin` randomly -/
-protected def Random : RandG g (Finₓ n) :=
+protected def random : RandG g (Finₓ n) :=
   ⟨fun ⟨g⟩ => Prod.map ofNat' up <| randNatₓ g 0 n⟩
 
 end Finₓ
@@ -261,7 +266,7 @@ instance finRandom (n : ℕ) [Fact (0 < n)] : Random (Finₓ n) where
   Random := fun g inst => @Finₓ.random g inst _ _
 
 instance finBoundedRandom (n : ℕ) : BoundedRandom (Finₓ n) where
-  randomR := fun g inst x y : Finₓ n p => do
+  randomR := fun p => do
     let ⟨r, h, h'⟩ ← @Rand.randomR ℕ g inst _ _ x.val y.val p
     pure ⟨⟨r, lt_of_le_of_ltₓ h' y⟩, h, h'⟩
 

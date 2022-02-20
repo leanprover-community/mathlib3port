@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Sébastien Gouëzel. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Sébastien Gouëzel
+-/
 import Mathbin.Topology.MetricSpace.Baire
 import Mathbin.Analysis.NormedSpace.OperatorNorm
 import Mathbin.Analysis.NormedSpace.AffineIsometry
@@ -25,7 +30,7 @@ namespace ContinuousLinearMap
 linear itself but which satisfies a bound `∥inverse x∥ ≤ C * ∥x∥`. A surjective continuous linear
 map doesn't always have a continuous linear right inverse, but it always has a nonlinear inverse
 in this sense, by Banach's open mapping theorem. -/
-structure nonlinear_right_inverse where
+structure NonlinearRightInverse where
   toFun : F → E
   nnnorm : ℝ≥0
   bound' : ∀ y, ∥to_fun y∥ ≤ nnnorm * ∥y∥
@@ -35,10 +40,10 @@ instance : CoeFun (NonlinearRightInverse f) fun _ => F → E :=
   ⟨fun fsymm => fsymm.toFun⟩
 
 @[simp]
-theorem nonlinear_right_inverse.right_inv {f : E →L[𝕜] F} (fsymm : NonlinearRightInverse f) (y : F) : f (fsymm y) = y :=
+theorem NonlinearRightInverse.right_inv {f : E →L[𝕜] F} (fsymm : NonlinearRightInverse f) (y : F) : f (fsymm y) = y :=
   fsymm.right_inv' y
 
-theorem nonlinear_right_inverse.bound {f : E →L[𝕜] F} (fsymm : NonlinearRightInverse f) (y : F) :
+theorem NonlinearRightInverse.bound {f : E →L[𝕜] F} (fsymm : NonlinearRightInverse f) (y : F) :
     ∥fsymm y∥ ≤ fsymm.nnnorm * ∥y∥ :=
   fsymm.bound' y
 
@@ -183,6 +188,12 @@ variable [CompleteSpace E]
 any point has a preimage with controlled norm. -/
 theorem exists_preimage_norm_le (surj : Surjective f) : ∃ C > 0, ∀ y, ∃ x, f x = y ∧ ∥x∥ ≤ C * ∥y∥ := by
   obtain ⟨C, C0, hC⟩ := exists_approx_preimage_norm_le f surj
+  /- Second step of the proof: starting from `y`, we want an exact preimage of `y`. Let `g y` be
+    the approximate preimage of `y` given by the first step, and `h y = y - f(g y)` the part that
+    has no preimage yet. We will iterate this process, taking the approximate preimage of `h y`,
+    leaving only `h^2 y` without preimage yet, and so on. Let `u n` be the approximate preimage
+    of `h^n y`. Then `u` is a converging series, and by design the sum of the series is a
+    preimage of `y`. This uses completeness of `E`. -/
   choose g hg using hC
   let h := fun y => y - f (g y)
   have hle : ∀ y, ∥h y∥ ≤ 1 / 2 * ∥y∥ := by
@@ -255,7 +266,7 @@ theorem exists_preimage_norm_le (surj : Surjective f) : ∃ C > 0, ∀ y, ∃ x,
 
 /-- The Banach open mapping theorem: a surjective bounded linear map between Banach spaces is
 open. -/
-protected theorem IsOpenMap (surj : Surjective f) : IsOpenMap f := by
+protected theorem is_open_map (surj : Surjective f) : IsOpenMap f := by
   intro s hs
   rcases exists_preimage_norm_le f surj with ⟨C, Cpos, hC⟩
   refine' is_open_iff.2 fun y yfs => _
@@ -279,7 +290,7 @@ protected theorem IsOpenMap (surj : Surjective f) : IsOpenMap f := by
       
   exact Set.mem_image_of_mem _ (hε this)
 
-protected theorem QuotientMap (surj : Surjective f) : QuotientMap f :=
+protected theorem quotient_map (surj : Surjective f) : QuotientMap f :=
   (f.IsOpenMap surj).to_quotient_map f.Continuous surj
 
 theorem _root_.affine_map.is_open_map {P Q : Type _} [MetricSpace P] [NormedAddTorsor E P] [MetricSpace Q]
@@ -310,7 +321,7 @@ theorem exists_nonlinear_right_inverse_of_surjective (f : E →L[𝕜] F) (hsurj
 controlled right inverse. In general, it is not possible to ensure that such a right inverse
 is linear (take for instance the map from `E` to `E/F` where `F` is a closed subspace of `E`
 without a closed complement. Then it doesn't have a continuous linear right inverse.) -/
-noncomputable irreducible_def nonlinear_right_inverse_of_surjective (f : E →L[𝕜] F) (hsurj : f.range = ⊤) :
+noncomputable irreducible_def nonlinearRightInverseOfSurjective (f : E →L[𝕜] F) (hsurj : f.range = ⊤) :
   NonlinearRightInverse f :=
   Classical.some (exists_nonlinear_right_inverse_of_surjective f hsurj)
 
@@ -337,7 +348,7 @@ theorem continuous_symm (e : E ≃ₗ[𝕜] F) (h : Continuous e) : Continuous e
 /-- Associating to a linear equivalence between Banach spaces a continuous linear equivalence when
 the direct map is continuous, thanks to the Banach open mapping theorem that ensures that the
 inverse map is also continuous. -/
-def to_continuous_linear_equiv_of_continuous (e : E ≃ₗ[𝕜] F) (h : Continuous e) : E ≃L[𝕜] F :=
+def toContinuousLinearEquivOfContinuous (e : E ≃ₗ[𝕜] F) (h : Continuous e) : E ≃L[𝕜] F :=
   { e with continuous_to_fun := h, continuous_inv_fun := e.continuous_symm h }
 
 @[simp]
@@ -358,7 +369,7 @@ variable [CompleteSpace E]
 
 /-- Convert a bijective continuous linear map `f : E →L[𝕜] F` from a Banach space to a normed space
 to a continuous linear equivalence. -/
-noncomputable def of_bijective (f : E →L[𝕜] F) (hinj : f.ker = ⊥) (hsurj : f.range = ⊤) : E ≃L[𝕜] F :=
+noncomputable def ofBijective (f : E →L[𝕜] F) (hinj : f.ker = ⊥) (hsurj : f.range = ⊤) : E ≃L[𝕜] F :=
   (LinearEquiv.ofBijective (↑f) (LinearMap.ker_eq_bot.mp hinj)
         (LinearMap.range_eq_top.mp hsurj)).toContinuousLinearEquivOfContinuous
     f.Continuous
@@ -392,7 +403,7 @@ variable [CompleteSpace E]
 `continuous_linear_map.closed_complemented_range_of_is_compl_of_ker_eq_bot`.
 
 This is `f.coprod G.subtypeL` as an `continuous_linear_equiv`. -/
-noncomputable def coprod_subtypeL_equiv_of_is_compl (f : E →L[𝕜] F) {G : Submodule 𝕜 F} (h : IsCompl f.range G)
+noncomputable def coprodSubtypeLEquivOfIsCompl (f : E →L[𝕜] F) {G : Submodule 𝕜 F} (h : IsCompl f.range G)
     [CompleteSpace G] (hker : f.ker = ⊥) : (E × G) ≃L[𝕜] F :=
   ContinuousLinearEquiv.ofBijective (f.coprod G.subtypeL)
     (by
@@ -413,6 +424,8 @@ theorem range_eq_map_coprod_subtypeL_equiv_of_is_compl (f : E →L[𝕜] F) {G :
   rw [coprod_subtypeL_equiv_of_is_compl, _root_.coe_coe, ContinuousLinearEquiv.coe_of_bijective, coe_coprod,
     LinearMap.coprod_map_prod, Submodule.map_bot, sup_bot_eq, Submodule.map_top, range]
 
+/- TODO: remove the assumption `f.ker = ⊥` in the next lemma, by using the map induced by `f` on
+`E / f.ker`, once we have quotient normed spaces. -/
 theorem closed_complemented_range_of_is_compl_of_ker_eq_bot (f : E →L[𝕜] F) (G : Submodule 𝕜 F) (h : IsCompl f.range G)
     (hG : IsClosed (G : Set F)) (hker : f.ker = ⊥) : IsClosed (f.range : Set F) := by
   have : CompleteSpace G := hG.complete_space_coe

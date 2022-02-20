@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison
+-/
 import Mathbin.Algebra.Homology.Single
 import Mathbin.Tactic.Linarith.Default
 
@@ -34,12 +39,14 @@ def truncate [HasZeroMorphisms V] : ChainComplex V ℕ ⥤ ChainComplex V ℕ wh
 the "single object" chain complex consisting of the truncated object `C.X 0` in degree 0.
 The components of this chain map are `C.d 1 0` in degree 0, and zero otherwise.
 -/
-def truncate_to [HasZeroObject V] [HasZeroMorphisms V] (C : ChainComplex V ℕ) :
+def truncateTo [HasZeroObject V] [HasZeroMorphisms V] (C : ChainComplex V ℕ) :
     truncate.obj C ⟶ (single₀ V).obj (C.x 0) :=
   (toSingle₀Equiv (truncate.obj C) (C.x 0)).symm
     ⟨C.d 1 0, by
       tidy⟩
 
+-- PROJECT when `V` is abelian (but not generally?)
+-- `[∀ n, exact (C.d (n+2) (n+1)) (C.d (n+1) n)] [epi (C.d 1 0)]` iff `quasi_iso (C.truncate_to)`
 variable [HasZeroMorphisms V]
 
 /-- We can "augment" a chain complex by inserting an arbitrary object in degree zero
@@ -106,7 +113,7 @@ theorem augment_d_succ_succ (C : ChainComplex V ℕ) {X : V} (f : C.x 0 ⟶ X) (
 /-- Truncating an augmented chain complex is isomorphic (with components the identity)
 to the original complex.
 -/
-def truncate_augment (C : ChainComplex V ℕ) {X : V} (f : C.x 0 ⟶ X) (w : C.d 1 0 ≫ f = 0) :
+def truncateAugment (C : ChainComplex V ℕ) {X : V} (f : C.x 0 ⟶ X) (w : C.d 1 0 ≫ f = 0) :
     truncate.obj (augment C f w) ≅ C where
   Hom := { f := fun i => 𝟙 _ }
   inv :=
@@ -149,7 +156,7 @@ theorem chain_complex_d_succ_succ_zero (C : ChainComplex V ℕ) (i : ℕ) : C.d 
 /-- Augmenting a truncated complex with the original object and morphism is isomorphic
 (with components the identity) to the original complex.
 -/
-def augment_truncate (C : ChainComplex V ℕ) : augment (truncate.obj C) (C.d 1 0) (C.d_comp_d _ _ _) ≅ C where
+def augmentTruncate (C : ChainComplex V ℕ) : augment (truncate.obj C) (C.d 1 0) (C.d_comp_d _ _ _) ≅ C where
   Hom :=
     { f := fun i => by
         cases i <;> exact 𝟙 _,
@@ -204,7 +211,7 @@ can be reinterpreted as a chain complex.
 
 Ths is the inverse construction of `truncate_to`.
 -/
-def to_single₀_as_complex [HasZeroObject V] (C : ChainComplex V ℕ) (X : V) (f : C ⟶ (single₀ V).obj X) :
+def toSingle₀AsComplex [HasZeroObject V] (C : ChainComplex V ℕ) (X : V) (f : C ⟶ (single₀ V).obj X) :
     ChainComplex V ℕ :=
   let ⟨f, w⟩ := toSingle₀Equiv C X f
   augment C f w
@@ -229,7 +236,7 @@ def truncate [HasZeroMorphisms V] : CochainComplex V ℕ ⥤ CochainComplex V �
 the "single object" cochain complex consisting of the truncated object `C.X 0` in degree 0.
 The components of this chain map are `C.d 0 1` in degree 0, and zero otherwise.
 -/
-def to_truncate [HasZeroObject V] [HasZeroMorphisms V] (C : CochainComplex V ℕ) :
+def toTruncate [HasZeroObject V] [HasZeroMorphisms V] (C : CochainComplex V ℕ) :
     (single₀ V).obj (C.x 0) ⟶ truncate.obj C :=
   (fromSingle₀Equiv (truncate.obj C) (C.x 0)).symm
     ⟨C.d 0 1, by
@@ -305,7 +312,7 @@ theorem augment_d_succ_succ (C : CochainComplex V ℕ) {X : V} (f : X ⟶ C.x 0)
 /-- Truncating an augmented cochain complex is isomorphic (with components the identity)
 to the original complex.
 -/
-def truncate_augment (C : CochainComplex V ℕ) {X : V} (f : X ⟶ C.x 0) (w : f ≫ C.d 0 1 = 0) :
+def truncateAugment (C : CochainComplex V ℕ) {X : V} (f : X ⟶ C.x 0) (w : f ≫ C.d 0 1 = 0) :
     truncate.obj (augment C f w) ≅ C where
   Hom := { f := fun i => 𝟙 _ }
   inv :=
@@ -349,7 +356,7 @@ theorem cochain_complex_d_succ_succ_zero (C : CochainComplex V ℕ) (i : ℕ) : 
 /-- Augmenting a truncated complex with the original object and morphism is isomorphic
 (with components the identity) to the original complex.
 -/
-def augment_truncate (C : CochainComplex V ℕ) : augment (truncate.obj C) (C.d 0 1) (C.d_comp_d _ _ _) ≅ C where
+def augmentTruncate (C : CochainComplex V ℕ) : augment (truncate.obj C) (C.d 0 1) (C.d_comp_d _ _ _) ≅ C where
   Hom :=
     { f := fun i => by
         cases i <;> exact 𝟙 _,
@@ -404,7 +411,7 @@ can be reinterpreted as a cochain complex.
 
 Ths is the inverse construction of `to_truncate`.
 -/
-def from_single₀_as_complex [HasZeroObject V] (C : CochainComplex V ℕ) (X : V) (f : (single₀ V).obj X ⟶ C) :
+def fromSingle₀AsComplex [HasZeroObject V] (C : CochainComplex V ℕ) (X : V) (f : (single₀ V).obj X ⟶ C) :
     CochainComplex V ℕ :=
   let ⟨f, w⟩ := fromSingle₀Equiv C X f
   augment C f w

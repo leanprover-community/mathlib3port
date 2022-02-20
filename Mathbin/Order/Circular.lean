@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Yaël Dillies. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yaël Dillies
+-/
 import Mathbin.Data.Set.Basic
 
 /-!
@@ -132,6 +137,8 @@ variable {α : Type _} [CircularPreorder α]
 theorem btw_rfl {a : α} : Btw a a a :=
   btw_refl _
 
+-- TODO: `alias` creates a def instead of a lemma.
+-- alias btw_cyclic_left        ← has_btw.btw.cyclic_left
 theorem HasBtw.Btw.cyclic_left {a b c : α} (h : Btw a b c) : Btw b c a :=
   btw_cyclic_left h
 
@@ -182,6 +189,8 @@ alias sbtw_cyclic_right ← HasSbtw.Sbtw.cyclic_right
 theorem sbtw_cyclic {a b c : α} : Sbtw a b c ↔ Sbtw c a b :=
   ⟨sbtw_cyclic_right, sbtw_cyclic_left⟩
 
+-- TODO: `alias` creates a def instead of a lemma.
+-- alias btw_trans_left        ← has_btw.btw.trans_left
 theorem HasSbtw.Sbtw.trans_left {a b c d : α} (h : Sbtw a b c) : Sbtw b d c → Sbtw a d c :=
   sbtw_trans_left h
 
@@ -213,6 +222,8 @@ section CircularPartialOrder
 
 variable {α : Type _} [CircularPartialOrder α]
 
+-- TODO: `alias` creates a def instead of a lemma.
+-- alias btw_antisymm        ← has_btw.btw.antisymm
 theorem HasBtw.Btw.antisymm {a b c : α} (h : Btw a b c) : Btw c b a → a = b ∨ b = c ∨ c = a :=
   btw_antisymm h
 
@@ -262,11 +273,11 @@ section CircularPreorder
 variable {α : Type _} [CircularPreorder α]
 
 /-- Closed-closed circular interval -/
-def cIcc (a b : α) : Set α :=
+def CIcc (a b : α) : Set α :=
   { x | Btw a x b }
 
 /-- Open-open circular interval -/
-def cIoo (a b : α) : Set α :=
+def CIoo (a b : α) : Set α :=
   { x | Sbtw a x b }
 
 @[simp]

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2014 Robert Lewis. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Robert Lewis, Leonardo de Moura, Mario Carneiro, Floris van Doorn
+-/
 import Mathbin.Algebra.Field.Basic
 import Mathbin.Algebra.GroupPower.Order
 import Mathbin.Algebra.Order.Ring
@@ -348,6 +353,7 @@ theorem div_le_div_of_le (hc : 0 ≤ c) (h : a ≤ b) : a / c ≤ b / c := by
   rw [div_eq_mul_one_div a c, div_eq_mul_one_div b c]
   exact mul_le_mul_of_nonneg_right h (one_div_nonneg.2 hc)
 
+-- Not a `mono` lemma b/c `div_le_div` is strictly more general
 theorem div_le_div_of_le_left (ha : 0 ≤ a) (hc : 0 < c) (h : c ≤ b) : a / b ≤ a / c := by
   rw [div_eq_mul_inv, div_eq_mul_inv]
   exact mul_le_mul_of_nonneg_left ((inv_le_inv (hc.trans_le h) hc).mpr h) ha
@@ -623,11 +629,15 @@ theorem add_div_two_lt_right : (a + b) / 2 < b ↔ a < b := by
 
 /-- An inequality involving `2`. -/
 theorem sub_one_div_inv_le_two (a2 : 2 ≤ a) : (1 - 1 / a)⁻¹ ≤ 2 := by
+  -- Take inverses on both sides to obtain `2⁻¹ ≤ 1 - 1 / a`
   refine' trans (inv_le_inv_of_le (inv_pos.mpr zero_lt_two) _) (inv_invₓ (2 : α)).le
+  -- move `1 / a` to the left and `1 - 1 / 2 = 1 / 2` to the right to obtain `1 / a ≤ ⅟ 2`
   refine' trans (le_sub_iff_add_le.mpr (_ : _ + 2⁻¹ = _).le) ((sub_le_sub_iff_left 1).mpr _)
-  · exact trans (two_mul _).symm (mul_inv_cancel two_ne_zero)
+  · -- show 2⁻¹ + 2⁻¹ = 1
+    exact trans (two_mul _).symm (mul_inv_cancel two_ne_zero)
     
-  · exact (one_div a).le.trans (inv_le_inv_of_le zero_lt_two a2)
+  · -- take inverses on both sides and use the assumption `2 ≤ a`.
+    exact (one_div a).le.trans (inv_le_inv_of_le zero_lt_two a2)
     
 
 /-!
@@ -683,6 +693,7 @@ theorem StrictMono.div_const {β : Type _} [Preorderₓ β] {f : β → α} (hf 
     StrictMono fun x => f x / c := by
   simpa only [div_eq_mul_inv] using hf.mul_const (inv_pos.2 hc)
 
+-- see Note [lower instance priority]
 instance (priority := 100) LinearOrderedField.to_densely_ordered : DenselyOrdered α where
   dense := fun a₁ a₂ h =>
     ⟨(a₁ + a₂) / 2,
@@ -723,6 +734,7 @@ theorem abs_one_div (a : α) : abs (1 / a) = 1 / abs a := by
 theorem abs_inv (a : α) : abs a⁻¹ = (abs a)⁻¹ :=
   (absHom : α →*₀ α).map_inv a
 
+-- TODO: add lemmas with `a⁻¹`.
 theorem one_div_strict_anti_on : StrictAntiOn (fun x : α => 1 / x) (Set.Ioi 0) := fun x x1 y y1 xy =>
   (one_div_lt_one_div (Set.mem_Ioi.mp y1) (Set.mem_Ioi.mp x1)).mpr xy
 

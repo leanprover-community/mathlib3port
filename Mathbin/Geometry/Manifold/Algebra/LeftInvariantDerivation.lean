@@ -1,3 +1,8 @@
+/-
+Copyright © 2020 Nicolò Cavalleri. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Nicolò Cavalleri
+-/
 import Mathbin.Geometry.Manifold.DerivationBundle
 
 /-!
@@ -22,6 +27,7 @@ variable {𝕜 : Type _} [NondiscreteNormedField 𝕜] {E : Type _} [NormedGroup
   [TopologicalSpace H] (I : ModelWithCorners 𝕜 E H) (G : Type _) [TopologicalSpace G] [ChartedSpace H G] [Monoidₓ G]
   [HasSmoothMul I G] (g h : G)
 
+-- Generate trivial has_sizeof instance. It prevents weird type class inference timeout problems
 @[local nolint instance_priority, local instance]
 private def disable_has_sizeof {α} : SizeOf α :=
   ⟨fun _ => 0⟩
@@ -176,7 +182,7 @@ variable (I G)
 
 /-- The coercion to function is a monoid homomorphism. -/
 @[simps]
-def coe_fn_add_monoid_hom : LeftInvariantDerivation I G →+ C^∞⟮I, G; 𝕜⟯ → C^∞⟮I, G; 𝕜⟯ :=
+def coeFnAddMonoidHom : LeftInvariantDerivation I G →+ C^∞⟮I, G; 𝕜⟯ → C^∞⟮I, G; 𝕜⟯ :=
   ⟨fun X => X.toDerivation.toFun, coe_zero, coe_add⟩
 
 variable {I G}
@@ -186,7 +192,7 @@ instance : Module 𝕜 (LeftInvariantDerivation I G) :=
 
 /-- Evaluation at a point for left invariant derivation. Same thing as for generic global
 derivations (`derivation.eval_at`). -/
-def eval_at : LeftInvariantDerivation I G →ₗ[𝕜] PointDerivation I g where
+def evalAt : LeftInvariantDerivation I G →ₗ[𝕜] PointDerivation I g where
   toFun := fun X => Derivation.evalAt g ↑X
   map_add' := fun X Y => rfl
   map_smul' := fun k X => rfl

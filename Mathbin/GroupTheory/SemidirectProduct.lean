@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Chris Hughes. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Chris Hughes
+-/
 import Mathbin.Data.Equiv.MulAddAut
 import Mathbin.Logic.Function.Basic
 import Mathbin.GroupTheory.Subgroup.Basic
@@ -162,7 +167,7 @@ theorem inl_left_mul_inr_right (x : N ⋊[φ] G) : inl x.left * inr x.right = x 
   ext <;> simp
 
 /-- The canonical projection map `N ⋊[φ] G →* G`, as a group hom. -/
-def right_hom : N ⋊[φ] G →* G where
+def rightHom : N ⋊[φ] G →* G where
   toFun := SemidirectProduct.right
   map_one' := rfl
   map_mul' := fun _ _ => rfl

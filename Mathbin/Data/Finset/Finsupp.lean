@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2022 Yaël Dillies. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yaël Dillies
+-/
 import Mathbin.Data.Finsupp.Indicator
 
 /-!
@@ -30,7 +35,7 @@ variable {ι α : Type _} [Zero α] {s : Finset ι} {f : ι →₀ α}
 namespace Finset
 
 /-- Finitely supported product of finsets. -/
-protected def Finsupp (s : Finset ι) (t : ι → Finset α) : Finset (ι →₀ α) :=
+protected def finsupp (s : Finset ι) (t : ι → Finset α) : Finset (ι →₀ α) :=
   (s.pi t).map ⟨indicator s, indicator_injective s⟩
 
 theorem mem_finsupp_iff {t : ι → Finset α} : f ∈ s.Finsupp t ↔ f.Support ⊆ s ∧ ∀, ∀ i ∈ s, ∀, f i ∈ t i := by

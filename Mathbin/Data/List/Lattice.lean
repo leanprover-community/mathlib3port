@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2014 Parikshit Khanna. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Parikshit Khanna, Jeremy Avigad, Leonardo de Moura, Floris van Doorn, Mario Carneiro,
+Scott Morrison
+-/
 import Mathbin.Data.List.Count
 import Mathbin.Data.List.Infix
 
@@ -33,47 +39,47 @@ section Disjoint
 
 theorem Disjoint.symm (d : Disjoint l₁ l₂) : Disjoint l₂ l₁ := fun a i₂ i₁ => d i₁ i₂
 
-theorem disjoint_comm : Disjoint l₁ l₂ ↔ Disjoint l₂ l₁ :=
+theorem disjoint_commₓ : Disjoint l₁ l₂ ↔ Disjoint l₂ l₁ :=
   ⟨Disjoint.symm, Disjoint.symm⟩
 
-theorem disjoint_left : Disjoint l₁ l₂ ↔ ∀ ⦃a⦄, a ∈ l₁ → a ∉ l₂ :=
+theorem disjoint_leftₓ : Disjoint l₁ l₂ ↔ ∀ ⦃a⦄, a ∈ l₁ → a ∉ l₂ :=
   Iff.rfl
 
-theorem disjoint_right : Disjoint l₁ l₂ ↔ ∀ ⦃a⦄, a ∈ l₂ → a ∉ l₁ :=
+theorem disjoint_rightₓ : Disjoint l₁ l₂ ↔ ∀ ⦃a⦄, a ∈ l₂ → a ∉ l₁ :=
   disjoint_comm
 
-theorem disjoint_iff_ne : Disjoint l₁ l₂ ↔ ∀, ∀ a ∈ l₁, ∀, ∀, ∀ b ∈ l₂, ∀, a ≠ b := by
+theorem disjoint_iff_neₓ : Disjoint l₁ l₂ ↔ ∀, ∀ a ∈ l₁, ∀, ∀, ∀ b ∈ l₂, ∀, a ≠ b := by
   simp only [disjoint_left, imp_not_comm, forall_eq']
 
-theorem disjoint_of_subset_left (ss : l₁ ⊆ l) (d : Disjoint l l₂) : Disjoint l₁ l₂ := fun x m => d (ss m)
+theorem disjoint_of_subset_leftₓ (ss : l₁ ⊆ l) (d : Disjoint l l₂) : Disjoint l₁ l₂ := fun x m => d (ss m)
 
-theorem disjoint_of_subset_right (ss : l₂ ⊆ l) (d : Disjoint l₁ l) : Disjoint l₁ l₂ := fun x m m₁ => d m (ss m₁)
+theorem disjoint_of_subset_rightₓ (ss : l₂ ⊆ l) (d : Disjoint l₁ l) : Disjoint l₁ l₂ := fun x m m₁ => d m (ss m₁)
 
-theorem disjoint_of_disjoint_cons_left {l₁ l₂} : Disjoint (a :: l₁) l₂ → Disjoint l₁ l₂ :=
+theorem disjoint_of_disjoint_cons_leftₓ {l₁ l₂} : Disjoint (a :: l₁) l₂ → Disjoint l₁ l₂ :=
   disjoint_of_subset_leftₓ (List.subset_consₓ _ _)
 
-theorem disjoint_of_disjoint_cons_right {l₁ l₂} : Disjoint l₁ (a :: l₂) → Disjoint l₁ l₂ :=
+theorem disjoint_of_disjoint_cons_rightₓ {l₁ l₂} : Disjoint l₁ (a :: l₂) → Disjoint l₁ l₂ :=
   disjoint_of_subset_rightₓ (List.subset_consₓ _ _)
 
 @[simp]
-theorem disjoint_nil_left (l : List α) : Disjoint [] l := fun a => (not_mem_nil a).elim
+theorem disjoint_nil_leftₓ (l : List α) : Disjoint [] l := fun a => (not_mem_nil a).elim
 
 @[simp]
-theorem disjoint_nil_right (l : List α) : Disjoint l [] := by
+theorem disjoint_nil_rightₓ (l : List α) : Disjoint l [] := by
   rw [disjoint_comm]
   exact disjoint_nil_left _
 
 @[simp]
-theorem singleton_disjoint : Disjoint [a] l ↔ a ∉ l := by
+theorem singleton_disjointₓ : Disjoint [a] l ↔ a ∉ l := by
   simp only [Disjoint, mem_singleton, forall_eq]
   rfl
 
 @[simp]
-theorem disjoint_singleton : Disjoint l [a] ↔ a ∉ l := by
+theorem disjoint_singletonₓ : Disjoint l [a] ↔ a ∉ l := by
   rw [disjoint_comm, singleton_disjoint]
 
 @[simp]
-theorem disjoint_append_left : Disjoint (l₁ ++ l₂) l ↔ Disjoint l₁ l ∧ Disjoint l₂ l := by
+theorem disjoint_append_leftₓ : Disjoint (l₁ ++ l₂) l ↔ Disjoint l₁ l ∧ Disjoint l₂ l := by
   simp only [Disjoint, mem_append, or_imp_distrib, forall_and_distrib]
 
 @[simp]
@@ -82,7 +88,7 @@ theorem disjoint_append_right : Disjoint l (l₁ ++ l₂) ↔ Disjoint l l₁ �
     simp only [disjoint_comm, disjoint_append_left]
 
 @[simp]
-theorem disjoint_cons_left : Disjoint (a :: l₁) l₂ ↔ a ∉ l₂ ∧ Disjoint l₁ l₂ :=
+theorem disjoint_cons_leftₓ : Disjoint (a :: l₁) l₂ ↔ a ∉ l₂ ∧ Disjoint l₁ l₂ :=
   (@disjoint_append_leftₓ _ l₂ [a] l₁).trans <| by
     simp only [singleton_disjoint]
 
@@ -91,10 +97,10 @@ theorem disjoint_cons_right : Disjoint l₁ (a :: l₂) ↔ a ∉ l₁ ∧ Disjo
   disjoint_commₓ.trans <| by
     simp only [disjoint_comm, disjoint_cons_left]
 
-theorem disjoint_of_disjoint_append_left_left (d : Disjoint (l₁ ++ l₂) l) : Disjoint l₁ l :=
+theorem disjoint_of_disjoint_append_left_leftₓ (d : Disjoint (l₁ ++ l₂) l) : Disjoint l₁ l :=
   (disjoint_append_leftₓ.1 d).1
 
-theorem disjoint_of_disjoint_append_left_right (d : Disjoint (l₁ ++ l₂) l) : Disjoint l₂ l :=
+theorem disjoint_of_disjoint_append_left_rightₓ (d : Disjoint (l₁ ++ l₂) l) : Disjoint l₂ l :=
   (disjoint_append_leftₓ.1 d).2
 
 theorem disjoint_of_disjoint_append_right_left (d : Disjoint l (l₁ ++ l₂)) : Disjoint l l₁ :=
@@ -135,7 +141,7 @@ theorem nil_union (l : List α) : [] ∪ l = l :=
   rfl
 
 @[simp]
-theorem cons_union (l₁ l₂ : List α) (a : α) : a :: l₁ ∪ l₂ = insert a (l₁ ∪ l₂) :=
+theorem cons_unionₓ (l₁ l₂ : List α) (a : α) : a :: l₁ ∪ l₂ = insert a (l₁ ∪ l₂) :=
   rfl
 
 @[simp]

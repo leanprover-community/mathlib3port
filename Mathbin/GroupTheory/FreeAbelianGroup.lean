@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Kenny Lau. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Kenny Lau
+-/
 import Mathbin.Algebra.Group.Pi
 import Mathbin.GroupTheory.FreeGroup
 import Mathbin.GroupTheory.Abelianization
@@ -62,6 +67,10 @@ are about `free_abelian_group.map`.
 -/
 
 
+-- we use the ℤ-module structure on an add_comm_group in punit_equiv
+-- we use the ℤ-module structure on an add_comm_group in punit_equiv
+-- someone who understands `seq` can remove this
+-- someone who understands `seq` can remove this
 universe u v
 
 variable (α : Type u)
@@ -100,7 +109,7 @@ protected theorem of (x : α) : lift f (of x) = f x := by
   convert @Abelianization.lift.of (FreeGroup α) _ (Multiplicative β) _ _ _
   convert free_group.lift.of.symm
 
-protected theorem Unique (g : FreeAbelianGroup α →+ β) (hg : ∀ x, g (of x) = f x) {x} : g x = lift f x :=
+protected theorem unique (g : FreeAbelianGroup α →+ β) (hg : ∀ x, g (of x) = f x) {x} : g x = lift f x :=
   AddMonoidHom.congr_fun (lift.symm_apply_eq.mp (funext hg : g ∘ of = f)) _
 
 /-- See note [partially-applied ext lemmas]. -/
@@ -115,7 +124,7 @@ theorem map_hom {α β γ} [AddCommGroupₓ β] [AddCommGroupₓ γ] (a : FreeAb
   apply @lift.unique
   intro a
   show g ((lift f) (of a)) = g (f a)
-  simp only [· ∘ ·, lift.of]
+  simp only [(· ∘ ·), lift.of]
 
 end lift
 
@@ -140,7 +149,7 @@ protected theorem induction_on {C : FreeAbelianGroup α → Prop} (z : FreeAbeli
     (Cn : ∀ x, C (of x) → C (-of x)) (Cp : ∀ x y, C x → C y → C (x + y)) : C z :=
   (Quotientₓ.induction_on' z) fun x =>
     (Quot.induction_on x) fun L =>
-      (List.recOn L C0) fun ⟨x, b⟩ tl ih => Bool.recOn b (Cp _ _ (Cn _ (C1 x)) ih) (Cp _ _ (C1 x) ih)
+      (List.recOn L C0) fun tl ih => Bool.recOn b (Cp _ _ (Cn _ (C1 x)) ih) (Cp _ _ (C1 x) ih)
 
 theorem lift.add' {α β} [AddCommGroupₓ β] (a : FreeAbelianGroup α) (f g : α → β) :
     lift (f + g) a = lift f a + lift g a := by
@@ -162,7 +171,7 @@ theorem lift.add' {α β} [AddCommGroupₓ β] (a : FreeAbelianGroup α) (f g : 
 is the additive group homomorphism sending a function `X → A` to the term of type `A`
 corresponding to the evaluation of the induced map `free_abelian_group X → A` at `g`. -/
 @[simps]
-def lift_add_group_hom {α} β [AddCommGroupₓ β] (a : FreeAbelianGroup α) : (α → β) →+ β :=
+def liftAddGroupHom {α} β [AddCommGroupₓ β] (a : FreeAbelianGroup α) : (α → β) →+ β :=
   AddMonoidHom.mk' (fun f => lift f a) (lift.add' a)
 
 theorem is_add_group_hom_lift' {α} β [AddCommGroupₓ β] (a : FreeAbelianGroup α) :
@@ -357,6 +366,7 @@ theorem map_comp_apply {f : α → β} {g : β → γ} (x : FreeAbelianGroup α)
   rw [map_comp]
   rfl
 
+-- version of map_of which uses `map`
 @[simp]
 theorem map_of_apply {f : α → β} (a : α) : map f (of a) = of (f a) :=
   rfl
@@ -503,7 +513,7 @@ instance : Ringₓ (FreeAbelianGroup α) :=
 variable {α}
 
 /-- `free_abelian_group.of` is a `monoid_hom` when `α` is a `monoid`. -/
-def of_mul_hom : α →* FreeAbelianGroup α where
+def ofMulHom : α →* FreeAbelianGroup α where
   toFun := of
   map_one' := rfl
   map_mul' := of_mul
@@ -513,7 +523,7 @@ theorem of_mul_hom_coe : (ofMulHom : α → FreeAbelianGroup α) = of :=
   rfl
 
 /-- If `f` preserves multiplication, then so does `lift f`. -/
-def lift_monoid : (α →* R) ≃ (FreeAbelianGroup α →+* R) where
+def liftMonoid : (α →* R) ≃ (FreeAbelianGroup α →+* R) where
   toFun := fun f =>
     { lift f with map_one' := (lift.of f _).trans f.map_one,
       map_mul' := fun x y => by
@@ -596,7 +606,7 @@ instance [CommMonoidₓ α] : CommRingₓ (FreeAbelianGroup α) :=
         rw [add_mulₓ, mul_addₓ, ih1, ih2]
          }
 
-instance pempty_unique : Unique (FreeAbelianGroup Pempty) where
+instance pemptyUnique : Unique (FreeAbelianGroup Pempty) where
   default := 0
   uniq := fun x =>
     FreeAbelianGroup.induction_on x rfl (fun x => Pempty.elimₓ x) (fun x => Pempty.elimₓ x)
@@ -605,7 +615,7 @@ instance pempty_unique : Unique (FreeAbelianGroup Pempty) where
         simp )
 
 /-- The free abelian group on a type with one term is isomorphic to `ℤ`. -/
-def punit_equiv (T : Type _) [Unique T] : FreeAbelianGroup T ≃+ ℤ where
+def punitEquiv (T : Type _) [Unique T] : FreeAbelianGroup T ≃+ ℤ where
   toFun := FreeAbelianGroup.lift fun _ => (1 : ℤ)
   invFun := fun n => n • of Inhabited.default
   left_inv := fun z =>
@@ -625,7 +635,7 @@ def punit_equiv (T : Type _) [Unique T] : FreeAbelianGroup T ≃+ ℤ where
   map_add' := AddMonoidHom.map_add _
 
 /-- Isomorphic types have isomorphic free abelian groups. -/
-def equiv_of_equiv {α β : Type _} (f : α ≃ β) : FreeAbelianGroup α ≃+ FreeAbelianGroup β where
+def equivOfEquiv {α β : Type _} (f : α ≃ β) : FreeAbelianGroup α ≃+ FreeAbelianGroup β where
   toFun := map f
   invFun := map f.symm
   left_inv := by

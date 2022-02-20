@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Johan Commelin. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johan Commelin
+-/
 import Mathbin.RingTheory.Noetherian
 
 /-!
@@ -51,7 +56,7 @@ open_locale TensorProduct
 
 /-- An `R`-module `M` is flat if for all finitely generated ideals `I` of `R`,
 the canonical map `I ⊗ M →ₗ M` is injective. -/
-class flat (R : Type u) (M : Type v) [CommRingₓ R] [AddCommGroupₓ M] [Module R M] : Prop where
+class Flat (R : Type u) (M : Type v) [CommRingₓ R] [AddCommGroupₓ M] [Module R M] : Prop where
   out : ∀ ⦃I : Ideal R⦄ hI : I.Fg, Injective (TensorProduct.lift ((lsmul R M).comp I.Subtype))
 
 namespace Flat

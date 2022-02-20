@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2017 Johannes Hölzl. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johannes Hölzl
+-/
 import Mathbin.Logic.Function.Basic
 import Mathbin.Tactic.Ext
 import Mathbin.Tactic.Lint.Default
@@ -26,7 +31,7 @@ namespace Subtype
 variable {α β γ : Sort _} {p q : α → Prop}
 
 /-- See Note [custom simps projection] -/
-def simps.coe (x : Subtype p) : α :=
+def Simps.coe (x : Subtype p) : α :=
   x
 
 initialize_simps_projections Subtype (val → coe)
@@ -88,6 +93,7 @@ theorem coe_eta (a : { a // p a }) (h : p a) : mk (↑a) h = a :=
 theorem coe_mk a h : (@mk α p a h : α) = a :=
   rfl
 
+-- built-in reduction doesn't always work
 @[simp, nolint simp_nf]
 theorem mk_eq_mk {a h a' h'} : @mk α p a h = @mk α p a' h' ↔ a = a' :=
   ext_iff
@@ -157,7 +163,7 @@ theorem coind_bijective {α β} {f : α → β} {p : β → Prop} (h : ∀ a, p 
 def map {p : α → Prop} {q : β → Prop} (f : α → β) (h : ∀ a, p a → q (f a)) : Subtype p → Subtype q := fun x =>
   ⟨f x, h x x.prop⟩
 
-theorem map_comp {p : α → Prop} {q : β → Prop} {r : γ → Prop} {x : Subtype p} (f : α → β) (h : ∀ a, p a → q (f a))
+theorem map_compₓ {p : α → Prop} {q : β → Prop} {r : γ → Prop} {x : Subtype p} (f : α → β) (h : ∀ a, p a → q (f a))
     (g : β → γ) (l : ∀ a, q a → r (g a)) : map g l (map f h x) = map (g ∘ f) (fun a ha => l (f a) <| h a ha) x :=
   rfl
 
@@ -174,21 +180,21 @@ theorem map_involutive {p : α → Prop} {f : α → α} (h : ∀ a, p a → p (
 instance [HasEquivₓ α] (p : α → Prop) : HasEquivₓ (Subtype p) :=
   ⟨fun s t => (s : α) ≈ (t : α)⟩
 
-theorem equiv_iff [HasEquivₓ α] {p : α → Prop} {s t : Subtype p} : s ≈ t ↔ (s : α) ≈ (t : α) :=
+theorem equiv_iffₓ [HasEquivₓ α] {p : α → Prop} {s t : Subtype p} : s ≈ t ↔ (s : α) ≈ (t : α) :=
   Iff.rfl
 
 variable [Setoidₓ α]
 
-protected theorem refl (s : Subtype p) : s ≈ s :=
+protected theorem reflₓ (s : Subtype p) : s ≈ s :=
   Setoidₓ.refl ↑s
 
-protected theorem symm {s t : Subtype p} (h : s ≈ t) : t ≈ s :=
+protected theorem symmₓ {s t : Subtype p} (h : s ≈ t) : t ≈ s :=
   Setoidₓ.symm h
 
-protected theorem trans {s t u : Subtype p} (h₁ : s ≈ t) (h₂ : t ≈ u) : s ≈ u :=
+protected theorem transₓ {s t u : Subtype p} (h₁ : s ≈ t) (h₂ : t ≈ u) : s ≈ u :=
   Setoidₓ.trans h₁ h₂
 
-theorem Equivalenceₓ (p : α → Prop) : Equivalenceₓ (@HasEquivₓ.Equiv (Subtype p) _) :=
+theorem equivalenceₓ (p : α → Prop) : Equivalenceₓ (@HasEquivₓ.Equiv (Subtype p) _) :=
   mk_equivalence _ Subtype.reflₓ (@Subtype.symmₓ _ p _) (@Subtype.transₓ _ p _)
 
 instance (p : α → Prop) : Setoidₓ (Subtype p) :=

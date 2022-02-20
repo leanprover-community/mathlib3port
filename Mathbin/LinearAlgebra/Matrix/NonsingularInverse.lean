@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Tim Baanen. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Tim Baanen, Lu-Ming Zhang
+-/
 import Mathbin.Algebra.Regular.Smul
 import Mathbin.LinearAlgebra.Matrix.Adjugate
 import Mathbin.LinearAlgebra.Matrix.Polynomial
@@ -70,7 +75,7 @@ protected theorem mul_inv_of_self [Invertible A] : A ⬝ ⅟ A = 1 :=
   mul_inv_of_self A
 
 /-- If `A.det` has a constructive inverse, produce one for `A`. -/
-def invertible_of_det_invertible [Invertible A.det] : Invertible A where
+def invertibleOfDetInvertible [Invertible A.det] : Invertible A where
   invOf := ⅟ A.det • A.adjugate
   mul_inv_of_self := by
     rw [mul_smul_comm, Matrix.mul_eq_mul, mul_adjugate, smul_smul, inv_of_mul_self, one_smul]
@@ -82,7 +87,7 @@ theorem inv_of_eq [Invertible A.det] [Invertible A] : ⅟ A = ⅟ A.det • A.ad
   convert (rfl : ⅟ A = _)
 
 /-- `A.det` is invertible if `A` has a left inverse. -/
-def det_invertible_of_left_inverse (h : B ⬝ A = 1) : Invertible A.det where
+def detInvertibleOfLeftInverse (h : B ⬝ A = 1) : Invertible A.det where
   invOf := B.det
   mul_inv_of_self := by
     rw [mul_comm, ← det_mul, h, det_one]
@@ -90,7 +95,7 @@ def det_invertible_of_left_inverse (h : B ⬝ A = 1) : Invertible A.det where
     rw [← det_mul, h, det_one]
 
 /-- `A.det` is invertible if `A` has a right inverse. -/
-def det_invertible_of_right_inverse (h : A ⬝ B = 1) : Invertible A.det where
+def detInvertibleOfRightInverse (h : A ⬝ B = 1) : Invertible A.det where
   invOf := B.det
   mul_inv_of_self := by
     rw [← det_mul, h, det_one]
@@ -98,7 +103,7 @@ def det_invertible_of_right_inverse (h : A ⬝ B = 1) : Invertible A.det where
     rw [mul_comm, ← det_mul, h, det_one]
 
 /-- If `A` has a constructive inverse, produce one for `A.det`. -/
-def det_invertible_of_invertible [Invertible A] : Invertible A.det :=
+def detInvertibleOfInvertible [Invertible A] : Invertible A.det :=
   detInvertibleOfLeftInverse A (⅟ A) (inv_of_mul_self _)
 
 theorem det_inv_of [Invertible A] [Invertible A.det] : (⅟ A).det = ⅟ A.det := by
@@ -108,7 +113,7 @@ theorem det_inv_of [Invertible A] [Invertible A.det] : (⅟ A).det = ⅟ A.det :
 /-- Together `matrix.det_invertible_of_invertible` and `matrix.invertible_of_det_invertible` form an
 equivalence, although both sides of the equiv are subsingleton anyway. -/
 @[simps]
-def invertible_equiv_det_invertible : Invertible A ≃ Invertible A.det where
+def invertibleEquivDetInvertible : Invertible A ≃ Invertible A.det where
   toFun := @detInvertibleOfInvertible _ _ _ _ _ A
   invFun := @invertibleOfDetInvertible _ _ _ _ _ A
   left_inv := fun _ => Subsingleton.elimₓ _ _
@@ -129,15 +134,15 @@ theorem mul_eq_one_comm : A ⬝ B = 1 ↔ B ⬝ A = 1 :=
 variable (A B)
 
 /-- We can construct an instance of invertible A if A has a left inverse. -/
-def invertible_of_left_inverse (h : B ⬝ A = 1) : Invertible A :=
+def invertibleOfLeftInverse (h : B ⬝ A = 1) : Invertible A :=
   ⟨B, h, mul_eq_one_comm.mp h⟩
 
 /-- We can construct an instance of invertible A if A has a right inverse. -/
-def invertible_of_right_inverse (h : A ⬝ B = 1) : Invertible A :=
+def invertibleOfRightInverse (h : A ⬝ B = 1) : Invertible A :=
   ⟨B, mul_eq_one_comm.mp h, h⟩
 
 /-- Given a proof that `A.det` has a constructive inverse, lift `A` to `(matrix n n α)ˣ`-/
-def unit_of_det_invertible [Invertible A.det] : (Matrix n n α)ˣ :=
+def unitOfDetInvertible [Invertible A.det] : (Matrix n n α)ˣ :=
   @unitOfInvertible _ _ A (invertibleOfDetInvertible A)
 
 /-- When lowered to a prop, `matrix.invertible_equiv_det_invertible` forms an `iff`. -/
@@ -278,12 +283,13 @@ theorem is_unit_nonsing_inv_det_iff {A : Matrix n n α} : IsUnit A⁻¹.det ↔ 
 
 /-- A version of `matrix.invertible_of_det_invertible` with the inverse defeq to `A⁻¹` that is
 therefore noncomputable. -/
-noncomputable def invertible_of_is_unit_det (h : IsUnit A.det) : Invertible A :=
+-- `is_unit.invertible` lifts the proposition `is_unit A` to a constructive inverse of `A`.
+noncomputable def invertibleOfIsUnitDet (h : IsUnit A.det) : Invertible A :=
   ⟨A⁻¹, nonsing_inv_mul A h, mul_nonsing_inv A h⟩
 
 /-- A version of `matrix.units_of_det_invertible` with the inverse defeq to `A⁻¹` that is therefore
 noncomputable. -/
-noncomputable def nonsing_inv_unit (h : IsUnit A.det) : (Matrix n n α)ˣ :=
+noncomputable def nonsingInvUnit (h : IsUnit A.det) : (Matrix n n α)ˣ :=
   @unitOfInvertible _ _ _ (invertibleOfIsUnitDet A h)
 
 theorem unit_of_det_invertible_eq_nonsing_inv_unit [Invertible A.det] :

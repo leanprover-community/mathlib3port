@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Robert Y. Lewis. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Robert Y. Lewis
+-/
 import Mathbin.Tactic.Linarith.Datatypes
 
 /-!
@@ -41,7 +46,7 @@ The atomic source of a comparison is an assumption, indexed by a natural number.
 Two comparisons can be added to produce a new comparison,
 and one comparison can be scaled by a natural number to produce a new comparison.
  -/
-inductive comp_source : Type
+inductive CompSource : Type
   | assump : ℕ → comp_source
   | add : comp_source → comp_source → comp_source
   | scale : ℕ → comp_source → comp_source
@@ -60,7 +65,7 @@ unsafe def comp_source.flatten : CompSource → rb_map ℕ ℕ
   | comp_source.scale n c => (comp_source.flatten c).map fun v => v * n
 
 /-- Formats a `comp_source` for printing. -/
-def comp_source.to_string : CompSource → Stringₓ
+def CompSource.toString : CompSource → Stringₓ
   | comp_source.assump e => toString e
   | comp_source.add c1 c2 => comp_source.to_string c1 ++ " + " ++ comp_source.to_string c2
   | comp_source.scale n c => toString n ++ " * " ++ comp_source.to_string c
@@ -221,7 +226,7 @@ unsafe structure linarith_structure : Type where
   max_var : ℕ
   comps : rb_set pcomp
 
--- ././Mathport/Syntax/Translate/Basic.lean:859:9: unsupported derive handler monad_except pcomp
+-- ././Mathport/Syntax/Translate/Basic.lean:981:9: unsupported derive handler monad_except pcomp
 /-- The linarith monad extends an exceptional monad with a `linarith_structure` state.
 An exception produces a contradictory `pcomp`.
 -/

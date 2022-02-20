@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison, Reid Barton
+-/
 import Mathbin.CategoryTheory.Limits.Shapes.Images
 import Mathbin.CategoryTheory.Filtered
 import Mathbin.Tactic.EquivRw
@@ -15,14 +20,14 @@ variable {J : Type u} [SmallCategory J]
 /-- (internal implementation) the limit cone of a functor,
 implemented as flat sections of a pi type
 -/
-def limit_cone (F : J ⥤ Type u) : Cone F where
+def limitCone (F : J ⥤ Type u) : Cone F where
   x := F.sections
   π := { app := fun j u => u.val j }
 
 attribute [local elabWithoutExpectedType] congr_funₓ
 
 /-- (internal implementation) the fact that the proposed limit cone is the limit -/
-def limit_cone_is_limit (F : J ⥤ Type u) : IsLimit (limitCone F) where
+def limitConeIsLimit (F : J ⥤ Type u) : IsLimit (limitCone F) where
   lift := fun s v => ⟨fun j => s.π.app j v, fun j j' f => congr_funₓ (Cone.w s f) _⟩
   uniq' := by
     intros
@@ -40,7 +45,7 @@ instance : HasLimits (Type u) where
 /-- The equivalence between a limiting cone of `F` in `Type u` and the "concrete" definition as the
 sections of `F`.
 -/
-def is_limit_equiv_sections {F : J ⥤ Type u} {c : Cone F} (t : IsLimit c) : c.x ≃ F.sections :=
+def isLimitEquivSections {F : J ⥤ Type u} {c : Cone F} (t : IsLimit c) : c.x ≃ F.sections :=
   (IsLimit.conePointUniqueUpToIso t (limitConeIsLimit F)).toEquiv
 
 @[simp]
@@ -57,7 +62,7 @@ theorem is_limit_equiv_sections_symm_apply {F : J ⥤ Type u} {c : Cone F} (t : 
 /-- The equivalence between the abstract limit of `F` in `Type u`
 and the "concrete" definition as the sections of `F`.
 -/
-noncomputable def limit_equiv_sections (F : J ⥤ Type u) : (limit F : Type u) ≃ F.sections :=
+noncomputable def limitEquivSections (F : J ⥤ Type u) : (limit F : Type u) ≃ F.sections :=
   isLimitEquivSections (limit.isLimit _)
 
 @[simp]
@@ -74,16 +79,17 @@ theorem limit_equiv_sections_symm_apply (F : J ⥤ Type u) (x : F.sections) (j :
 which are "coherent": `∀ (j j') (f : j ⟶ j'), F.map f (x j) = x j'`.
 -/
 @[ext]
-noncomputable def limit.mk (F : J ⥤ Type u) (x : ∀ j, F.obj j) (h : ∀ j j' f : j ⟶ j', F.map f (x j) = x j') :
+noncomputable def Limit.mk (F : J ⥤ Type u) (x : ∀ j, F.obj j) (h : ∀ j j' f : j ⟶ j', F.map f (x j) = x j') :
     (limit F : Type u) :=
   (limitEquivSections F).symm ⟨x, h⟩
 
 @[simp]
-theorem limit.π_mk (F : J ⥤ Type u) (x : ∀ j, F.obj j) (h : ∀ j j' f : j ⟶ j', F.map f (x j) = x j') j :
+theorem Limit.π_mk (F : J ⥤ Type u) (x : ∀ j, F.obj j) (h : ∀ j j' f : j ⟶ j', F.map f (x j) = x j') j :
     limit.π F j (Limit.mk F x h) = x j := by
   dsimp [limit.mk]
   simp
 
+-- PROJECT: prove this for concrete categories where the forgetful functor preserves limits
 @[ext]
 theorem limit_ext (F : J ⥤ Type u) (x y : limit F) (w : ∀ j, limit.π F j x = limit.π F j y) : x = y := by
   apply (limit_equiv_sections F).Injective
@@ -93,25 +99,28 @@ theorem limit_ext (F : J ⥤ Type u) (x y : limit F) (w : ∀ j, limit.π F j x 
 theorem limit_ext_iff (F : J ⥤ Type u) (x y : limit F) : x = y ↔ ∀ j, limit.π F j x = limit.π F j y :=
   ⟨fun t _ => t ▸ rfl, limit_ext _ _ _⟩
 
+-- TODO: are there other limits lemmas that should have `_apply` versions?
+-- Can we generate these like with `@[reassoc]`?
+-- PROJECT: prove these for any concrete category where the forgetful functor preserves limits?
 @[simp]
-theorem limit.w_apply {F : J ⥤ Type u} {j j' : J} {x : limit F} (f : j ⟶ j') :
+theorem Limit.w_apply {F : J ⥤ Type u} {j j' : J} {x : limit F} (f : j ⟶ j') :
     F.map f (limit.π F j x) = limit.π F j' x :=
   congr_funₓ (limit.w F f) x
 
 @[simp]
-theorem limit.lift_π_apply (F : J ⥤ Type u) (s : Cone F) (j : J) (x : s.x) :
+theorem Limit.lift_π_apply (F : J ⥤ Type u) (s : Cone F) (j : J) (x : s.x) :
     limit.π F j (limit.lift F s x) = s.π.app j x :=
   congr_funₓ (limit.lift_π s j) x
 
 @[simp]
-theorem limit.map_π_apply {F G : J ⥤ Type u} (α : F ⟶ G) (j : J) x :
+theorem Limit.map_π_apply {F G : J ⥤ Type u} (α : F ⟶ G) (j : J) x :
     limit.π G j (limMap α x) = α.app j (limit.π F j x) :=
   congr_funₓ (lim_map_π α j) x
 
 /-- The relation defining the quotient type which implements the colimit of a functor `F : J ⥤ Type u`.
 See `category_theory.limits.types.quot`.
 -/
-def quot.rel (F : J ⥤ Type u) : (Σ j, F.obj j) → (Σ j, F.obj j) → Prop := fun p p' =>
+def Quot.Rel (F : J ⥤ Type u) : (Σ j, F.obj j) → (Σ j, F.obj j) → Prop := fun p p' =>
   ∃ f : p.1 ⟶ p'.1, p'.2 = F.map f p.2
 
 /-- A quotient type implementing the colimit of a functor `F : J ⥤ Type u`,
@@ -125,7 +134,7 @@ def Quot (F : J ⥤ Type u) : Type u :=
 /-- (internal implementation) the colimit cocone of a functor,
 implemented as a quotient of a sigma type
 -/
-def colimit_cocone (F : J ⥤ Type u) : Cocone F where
+def colimitCocone (F : J ⥤ Type u) : Cocone F where
   x := Quot F
   ι :=
     { app := fun j x => Quot.mk _ ⟨j, x⟩, naturality' := fun j j' f => funext fun x => Eq.symm (Quot.sound ⟨f, rfl⟩) }
@@ -133,7 +142,7 @@ def colimit_cocone (F : J ⥤ Type u) : Cocone F where
 attribute [local elab_with_expected_type] Quot.lift
 
 /-- (internal implementation) the fact that the proposed colimit cocone is the colimit -/
-def colimit_cocone_is_colimit (F : J ⥤ Type u) : IsColimit (colimitCocone F) where
+def colimitCoconeIsColimit (F : J ⥤ Type u) : IsColimit (colimitCocone F) where
   desc := fun s =>
     Quot.lift (fun p : Σ j, F.obj j => s.ι.app p.1 p.2) fun ⟨j, x⟩ ⟨j', x'⟩ ⟨f, hf⟩ => by
       rw [hf] <;> exact (congr_funₓ (cocone.w s f) x).symm
@@ -149,7 +158,7 @@ instance : HasColimits (Type u) where
 /-- The equivalence between the abstract colimit of `F` in `Type u`
 and the "concrete" definition as a quotient.
 -/
-noncomputable def colimit_equiv_quot (F : J ⥤ Type u) : (colimit F : Type u) ≃ Quot F :=
+noncomputable def colimitEquivQuot (F : J ⥤ Type u) : (colimit F : Type u) ≃ Quot F :=
   (IsColimit.coconePointUniqueUpToIso (colimit.isColimit F) (colimitCoconeIsColimit F)).toEquiv
 
 @[simp]
@@ -164,17 +173,17 @@ theorem colimit_equiv_quot_apply (F : J ⥤ Type u) (j : J) (x : F.obj j) :
   simp
 
 @[simp]
-theorem colimit.w_apply {F : J ⥤ Type u} {j j' : J} {x : F.obj j} (f : j ⟶ j') :
+theorem Colimit.w_apply {F : J ⥤ Type u} {j j' : J} {x : F.obj j} (f : j ⟶ j') :
     colimit.ι F j' (F.map f x) = colimit.ι F j x :=
   congr_funₓ (colimit.w F f) x
 
 @[simp]
-theorem colimit.ι_desc_apply (F : J ⥤ Type u) (s : Cocone F) (j : J) (x : F.obj j) :
+theorem Colimit.ι_desc_apply (F : J ⥤ Type u) (s : Cocone F) (j : J) (x : F.obj j) :
     colimit.desc F s (colimit.ι F j x) = s.ι.app j x :=
   congr_funₓ (colimit.ι_desc s j) x
 
 @[simp]
-theorem colimit.ι_map_apply {F G : J ⥤ Type u} (α : F ⟶ G) (j : J) x :
+theorem Colimit.ι_map_apply {F G : J ⥤ Type u} (α : F ⟶ G) (j : J) x :
     colim.map α (colimit.ι F j x) = colimit.ι G j (α.app j x) :=
   congr_funₓ (colimit.ι_map α j) x
 
@@ -211,6 +220,9 @@ theorem jointly_surjective' {F : J ⥤ Type u} (x : colimit F) : ∃ j y, colimi
 
 namespace FilteredColimit
 
+/- For filtered colimits of types, we can give an explicit description
+  of the equivalence relation generated by the relation used to form
+  the colimit.  -/
 variable (F : J ⥤ Type u)
 
 /-- An alternative relation on `Σ j, F.obj j`,
@@ -220,7 +232,7 @@ but that is more convenient when working with filtered colimits.
 Elements in `F.obj j` and `F.obj j'` are equivalent if there is some `k : J` to the right
 where their images are equal.
 -/
-protected def rel (x y : Σ j, F.obj j) : Prop :=
+protected def Rel (x y : Σ j, F.obj j) : Prop :=
   ∃ (k : _)(f : x.1 ⟶ k)(g : y.1 ⟶ k), F.map f x.2 = F.map g y.2
 
 theorem rel_of_quot_rel (x y : Σ j, F.obj j) : Quot.Rel F x y → FilteredColimit.Rel F x y := fun ⟨f, h⟩ =>
@@ -234,9 +246,11 @@ theorem eqv_gen_quot_rel_of_rel (x y : Σ j, F.obj j) : FilteredColimit.Rel F x 
 attribute [local elabWithoutExpectedType] nat_trans.app
 
 /-- Recognizing filtered colimits of types. -/
-noncomputable def is_colimit_of (t : Cocone F) (hsurj : ∀ x : t.x, ∃ i xi, x = t.ι.app i xi)
+noncomputable def isColimitOf (t : Cocone F) (hsurj : ∀ x : t.x, ∃ i xi, x = t.ι.app i xi)
     (hinj : ∀ i j xi xj, t.ι.app i xi = t.ι.app j xj → ∃ (k : _)(f : i ⟶ k)(g : j ⟶ k), F.map f xi = F.map g xj) :
     IsColimit t := by
+  -- Strategy: Prove that the map from "the" colimit of F (defined above) to t.X
+  -- is a bijection.
   apply is_colimit.of_iso_colimit (colimit.is_colimit F)
   refine' cocones.ext (Equivₓ.toIso (Equivₓ.ofBijective _ _)) _
   · exact colimit.desc F t
@@ -323,14 +337,15 @@ variable {α β : Type u} (f : α ⟶ β)
 section
 
 /-- the image of a morphism in Type is just `set.range f` -/
-def image : Type u :=
+-- implementation of `has_image`
+def Image : Type u :=
   Set.Range f
 
 instance [Inhabited α] : Inhabited (Image f) where
   default := ⟨f default, ⟨_, rfl⟩⟩
 
 /-- the inclusion of `image f` into the target -/
-def image.ι : Image f ⟶ β :=
+def Image.ι : Image f ⟶ β :=
   Subtype.val
 
 instance : Mono (Image.ι f) :=
@@ -339,10 +354,10 @@ instance : Mono (Image.ι f) :=
 variable {f}
 
 /-- the universal property for the image factorisation -/
-noncomputable def image.lift (F' : MonoFactorisation f) : Image f ⟶ F'.i :=
+noncomputable def Image.lift (F' : MonoFactorisation f) : Image f ⟶ F'.i :=
   (fun x => F'.e (Classical.indefiniteDescription _ x.2).1 : Image f → F'.i)
 
-theorem image.lift_fac (F' : MonoFactorisation f) : Image.lift F' ≫ F'.m = Image.ι f := by
+theorem Image.lift_fac (F' : MonoFactorisation f) : Image.lift F' ≫ F'.m = Image.ι f := by
   ext x
   change (F'.e ≫ F'.m) _ = _
   rw [F'.fac, (Classical.indefiniteDescription _ x.2).2]
@@ -351,13 +366,13 @@ theorem image.lift_fac (F' : MonoFactorisation f) : Image.lift F' ≫ F'.m = Ima
 end
 
 /-- the factorisation of any morphism in Type through a mono. -/
-def mono_factorisation : MonoFactorisation f where
+def monoFactorisation : MonoFactorisation f where
   i := Image f
   m := Image.ι f
   e := Set.rangeFactorization f
 
 /-- the facorisation through a mono has the universal property of the image. -/
-noncomputable def is_image : IsImage (monoFactorisation f) where
+noncomputable def isImage : IsImage (monoFactorisation f) where
   lift := Image.lift
   lift_fac' := Image.lift_fac
 

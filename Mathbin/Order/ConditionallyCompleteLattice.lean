@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Sébastien Gouëzel. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Sébastien Gouëzel
+-/
 import Mathbin.Order.Bounds
 import Mathbin.Data.Set.Intervals.Basic
 import Mathbin.Data.Set.Finite
@@ -68,13 +73,14 @@ To differentiate the statements from the corresponding statements in (unconditio
 complete lattices, we prefix Inf and Sup by a c everywhere. The same statements should
 hold in both worlds, sometimes with additional assumptions of nonemptiness or
 boundedness.-/
+-- section
 class ConditionallyCompleteLattice (α : Type _) extends Lattice α, HasSupₓ α, HasInfₓ α where
   le_cSup : ∀ s a, BddAbove s → a ∈ s → a ≤ Sup s
   cSup_le : ∀ s a, Set.Nonempty s → a ∈ UpperBounds s → Sup s ≤ a
   cInf_le : ∀ s a, BddBelow s → a ∈ s → Inf s ≤ a
   le_cInf : ∀ s a, Set.Nonempty s → a ∈ LowerBounds s → a ≤ Inf s
 
--- ././Mathport/Syntax/Translate/Basic.lean:1165:11: unsupported: advanced extends in structure
+-- ././Mathport/Syntax/Translate/Basic.lean:1287:11: unsupported: advanced extends in structure
 /-- A conditionally complete linear order is a linear order in which
 every nonempty subset which is bounded above has a supremum, and
 every nonempty subset which is bounded below has an infimum.
@@ -85,7 +91,7 @@ complete linear orders, we prefix Inf and Sup by a c everywhere. The same statem
 hold in both worlds, sometimes with additional assumptions of nonemptiness or
 boundedness.-/
 class ConditionallyCompleteLinearOrder (α : Type _) extends ConditionallyCompleteLattice α,
-  "././Mathport/Syntax/Translate/Basic.lean:1165:11: unsupported: advanced extends in structure"
+  "././Mathport/Syntax/Translate/Basic.lean:1287:11: unsupported: advanced extends in structure"
 
 /-- A conditionally complete linear order with `bot` is a linear order with least element, in which
 every nonempty subset which is bounded above has a supremum, and every nonempty subset (necessarily
@@ -100,12 +106,14 @@ class ConditionallyCompleteLinearOrderBot (α : Type _) extends ConditionallyCom
   bot_le : ∀ x : α, ⊥ ≤ x
   cSup_empty : Sup ∅ = ⊥
 
+-- see Note [lower instance priority]
 instance (priority := 100) ConditionallyCompleteLinearOrderBot.toOrderBot [h : ConditionallyCompleteLinearOrderBot α] :
     OrderBot α :=
   { h with }
 
 /-- A complete lattice is a conditionally complete lattice, as there are no restrictions
 on the properties of Inf and Sup in a complete lattice.-/
+-- see Note [lower instance priority]
 instance (priority := 100) CompleteLattice.toConditionallyCompleteLattice [CompleteLattice α] :
     ConditionallyCompleteLattice α :=
   { ‹CompleteLattice α› with
@@ -118,6 +126,7 @@ instance (priority := 100) CompleteLattice.toConditionallyCompleteLattice [Compl
     le_cInf := by
       intros <;> apply le_Inf <;> assumption }
 
+-- see Note [lower instance priority]
 instance (priority := 100) CompleteLinearOrder.toConditionallyCompleteLinearOrderBot {α : Type _}
     [CompleteLinearOrder α] : ConditionallyCompleteLinearOrderBot α :=
   { CompleteLattice.toConditionallyCompleteLattice, ‹CompleteLinearOrder α› with cSup_empty := Sup_empty }
@@ -129,7 +138,7 @@ open_locale Classical
 /-- A well founded linear order is conditionally complete, with a bottom element. -/
 @[reducible]
 noncomputable def WellFounded.conditionallyCompleteLinearOrderWithBot {α : Type _} [i : LinearOrderₓ α]
-    (h : WellFounded (· < · : α → α → Prop)) (c : α) (hc : c = h.min Set.Univ ⟨c, mem_univ c⟩) :
+    (h : WellFounded ((· < ·) : α → α → Prop)) (c : α) (hc : c = h.min Set.Univ ⟨c, mem_univ c⟩) :
     ConditionallyCompleteLinearOrderBot α :=
   { i with sup := max, le_sup_left := le_max_leftₓ, le_sup_right := le_max_rightₓ, sup_le := fun a b c => max_leₓ,
     inf := min, inf_le_left := min_le_leftₓ, inf_le_right := min_le_rightₓ, le_inf := fun a b c => le_minₓ,
@@ -198,10 +207,10 @@ theorem cInf_le_of_le (_ : BddBelow s) (hb : b ∈ s) (h : b ≤ a) : inf s ≤ 
   le_transₓ (cInf_le ‹BddBelow s› hb) h
 
 theorem cSup_le_cSup (_ : BddAbove t) (_ : s.Nonempty) (h : s ⊆ t) : sup s ≤ sup t :=
-  cSup_le ‹_› fun a ha : a ∈ s => le_cSup ‹BddAbove t› (h ha)
+  cSup_le ‹_› fun ha : a ∈ s => le_cSup ‹BddAbove t› (h ha)
 
 theorem cInf_le_cInf (_ : BddBelow t) (_ : s.Nonempty) (h : s ⊆ t) : inf t ≤ inf s :=
-  le_cInf ‹_› fun a ha : a ∈ s => cInf_le ‹BddBelow t› (h ha)
+  le_cInf ‹_› fun ha : a ∈ s => cInf_le ‹BddBelow t› (h ha)
 
 theorem is_lub_cSup (ne : s.Nonempty) (H : BddAbove s) : IsLub s (sup s) :=
   ⟨fun x => le_cSup H, fun x => cSup_le Ne⟩
@@ -288,6 +297,7 @@ theorem cSup_eq_of_forall_le_of_forall_lt_exists_gt (_ : s.Nonempty) (_ : ∀, �
   have : sup s < b ∨ sup s = b := lt_or_eq_of_leₓ (cSup_le ‹_› ‹∀, ∀ a ∈ s, ∀, a ≤ b›)
   have h : ¬sup s < b := fun this : sup s < b =>
     let ⟨a, _, _⟩ := H (sup s) ‹sup s < b›
+    -- a ∈ s, Sup s < a
     have : sup s < sup s := lt_of_lt_of_leₓ ‹sup s < a› (le_cSup ‹BddAbove s› ‹a ∈ s›)
     show False from lt_irreflₓ (Sup s) this
   show sup s = b by
@@ -558,13 +568,13 @@ end ConditionallyCompleteLattice
 instance Pi.conditionallyCompleteLattice {ι : Type _} {α : ∀ i : ι, Type _} [∀ i, ConditionallyCompleteLattice (α i)] :
     ConditionallyCompleteLattice (∀ i, α i) :=
   { Pi.lattice, Pi.hasSupₓ, Pi.hasInfₓ with
-    le_cSup := fun s f ⟨g, hg⟩ hf i => le_cSup ⟨g i, Set.forall_range_iff.2 fun ⟨f', hf'⟩ => hg hf' i⟩ ⟨⟨f, hf⟩, rfl⟩,
+    le_cSup := fun hf i => le_cSup ⟨g i, Set.forall_range_iff.2 fun ⟨f', hf'⟩ => hg hf' i⟩ ⟨⟨f, hf⟩, rfl⟩,
     cSup_le := fun s f hs hf i =>
       (cSup_le
           (by
             have := hs.to_subtype <;> apply range_nonempty))
         fun b ⟨⟨g, hg⟩, hb⟩ => hb ▸ hf hg i,
-    cInf_le := fun s f ⟨g, hg⟩ hf i => cInf_le ⟨g i, Set.forall_range_iff.2 fun ⟨f', hf'⟩ => hg hf' i⟩ ⟨⟨f, hf⟩, rfl⟩,
+    cInf_le := fun hf i => cInf_le ⟨g i, Set.forall_range_iff.2 fun ⟨f', hf'⟩ => hg hf' i⟩ ⟨⟨f, hf⟩, rfl⟩,
     le_cInf := fun s f hs hf i =>
       (le_cInf
           (by

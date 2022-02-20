@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Simon Hudon. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Simon Hudon
+-/
 import Mathbin.Order.OmegaCompletePartialOrder
 import Mathbin.Order.Category.Preorder
 import Mathbin.CategoryTheory.Limits.Shapes.Products
@@ -63,7 +68,7 @@ def product {J : Type v} (f : J → ωCPO.{v}) : Fan f :=
   Fan.mk (of (∀ j, f j)) fun j => ContinuousHom.ofMono (Pi.evalOrderHom j) fun c => rfl
 
 /-- The pi-type is a limit cone for the product. -/
-def is_product (J : Type v) (f : J → ωCPO) : IsLimit (product f) where
+def isProduct (J : Type v) (f : J → ωCPO) : IsLimit (product f) where
   lift := fun s =>
     ⟨⟨fun t j => s.π.app j t, fun x y h j => (s.π.app j).Monotone h⟩, fun x => funext fun j => (s.π.app j).Continuous x⟩
   uniq' := fun s m w => by
@@ -77,8 +82,8 @@ instance (J : Type v) (f : J → ωCPO.{v}) : HasProduct f :=
 
 end HasProducts
 
-instance omega_complete_partial_order_equalizer {α β : Type _} [OmegaCompletePartialOrder α]
-    [OmegaCompletePartialOrder β] (f g : α →𝒄 β) : OmegaCompletePartialOrder { a : α // f a = g a } :=
+instance omegaCompletePartialOrderEqualizer {α β : Type _} [OmegaCompletePartialOrder α] [OmegaCompletePartialOrder β]
+    (f g : α →𝒄 β) : OmegaCompletePartialOrder { a : α // f a = g a } :=
   (OmegaCompletePartialOrder.subtype _) fun c hc => by
     rw [f.continuous, g.continuous]
     congr 1
@@ -88,7 +93,7 @@ instance omega_complete_partial_order_equalizer {α β : Type _} [OmegaCompleteP
 namespace HasEqualizers
 
 /-- The equalizer inclusion function as a `continuous_hom`. -/
-def equalizer_ι {α β : Type _} [OmegaCompletePartialOrder α] [OmegaCompletePartialOrder β] (f g : α →𝒄 β) :
+def equalizerι {α β : Type _} [OmegaCompletePartialOrder α] [OmegaCompletePartialOrder β] (f g : α →𝒄 β) :
     { a : α // f a = g a } →𝒄 α :=
   ContinuousHom.ofMono (OrderHom.Subtype.val _) fun c => rfl
 
@@ -97,7 +102,7 @@ def equalizer {X Y : ωCPO.{v}} (f g : X ⟶ Y) : Fork f g :=
   @Fork.ofι _ _ _ _ _ _ (ωCPO.of { a // f a = g a }) (equalizerι f g) (ContinuousHom.ext _ _ fun x => x.2)
 
 /-- The equalizer fork is a limit. -/
-def is_equalizer {X Y : ωCPO.{v}} (f g : X ⟶ Y) : IsLimit (equalizer f g) :=
+def isEqualizer {X Y : ωCPO.{v}} (f g : X ⟶ Y) : IsLimit (equalizer f g) :=
   (Fork.IsLimit.mk' _) fun s =>
     ⟨{ toFun := fun x =>
           ⟨s.ι x, by

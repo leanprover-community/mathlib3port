@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Yury Kudryashov. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yury Kudryashov
+-/
 import Mathbin.Analysis.BoxIntegral.Box.Basic
 
 /-!
@@ -42,7 +47,7 @@ variable {ι : Type _}
 
 /-- A prepartition of `I : box_integral.box ι` is a finite set of pairwise disjoint subboxes of
 `I`. -/
-structure prepartition (I : Box ι) where
+structure Prepartition (I : Box ι) where
   boxes : Finset (Box ι)
   le_of_mem' : ∀, ∀ J ∈ boxes, ∀, J ≤ I
   PairwiseDisjoint : Set.Pairwise (↑boxes) (Disjoint on (coe : Box ι → Set (ι → ℝ)))
@@ -107,7 +112,7 @@ instance : LE (Prepartition I) :=
   ⟨fun π π' => ∀ ⦃I⦄, I ∈ π → ∃ I' ∈ π', I ≤ I'⟩
 
 instance : PartialOrderₓ (Prepartition I) where
-  le := · ≤ ·
+  le := (· ≤ ·)
   le_refl := fun π I hI => ⟨I, hI, le_rfl⟩
   le_trans := fun π₁ π₂ π₃ h₁₂ h₂₃ I₁ hI₁ =>
     let ⟨I₂, hI₂, hI₁₂⟩ := h₁₂ hI₁
@@ -310,7 +315,7 @@ theorem sum_bUnion_boxes {M : Type _} [AddCommMonoidₓ M] (π : Prepartition I)
 
 /-- Given a box `J ∈ π.bUnion πi`, returns the box `J' ∈ π` such that `J ∈ πi J'`.
 For `J ∉ π.bUnion πi`, returns `I`. -/
-def bUnion_index (πi : ∀ J, Prepartition J) (J : Box ι) : Box ι :=
+def bUnionIndex (πi : ∀ J, Prepartition J) (J : Box ι) : Box ι :=
   if hJ : J ∈ π.bUnion πi then (π.mem_bUnion.1 hJ).some else I
 
 theorem bUnion_index_mem (hJ : J ∈ π.bUnion πi) : π.bUnionIndex πi J ∈ π := by
@@ -352,7 +357,7 @@ theorem bUnion_assoc (πi : ∀ J, Prepartition J) (πi' : Box ι → ∀ J : Bo
 
 /-- Create a `box_integral.prepartition` from a collection of possibly empty boxes by filtering out
 the empty one if it exists. -/
-def of_with_bot (boxes : Finset (WithBot (Box ι))) (le_of_mem : ∀, ∀ J ∈ boxes, ∀, (J : WithBot (Box ι)) ≤ I)
+def ofWithBot (boxes : Finset (WithBot (Box ι))) (le_of_mem : ∀, ∀ J ∈ boxes, ∀, (J : WithBot (Box ι)) ≤ I)
     (pairwise_disjoint : Set.Pairwise (boxes : Set (WithBot (Box ι))) Disjoint) : Prepartition I where
   boxes := boxes.eraseNone
   le_of_mem' := fun J hJ => by
@@ -514,7 +519,7 @@ instance : SemilatticeInf (Prepartition I) :=
 
 /-- The prepartition with boxes `{J ∈ π | p J}`. -/
 @[simps]
-def Filter (π : Prepartition I) (p : Box ι → Prop) : Prepartition I where
+def filter (π : Prepartition I) (p : Box ι → Prop) : Prepartition I where
   boxes := π.boxes.filter p
   le_of_mem' := fun J hJ => π.le_of_mem (mem_filter.1 hJ).1
   PairwiseDisjoint := fun J₁ h₁ J₂ h₂ => π.disjoint_coe_of_mem (mem_filter.1 h₁).1 (mem_filter.1 h₂).1
@@ -553,7 +558,7 @@ theorem sum_fiberwise {α M} [AddCommMonoidₓ M] (π : Prepartition I) (f : Box
 
 /-- Union of two disjoint prepartitions. -/
 @[simps]
-def disj_union (π₁ π₂ : Prepartition I) (h : Disjoint π₁.Union π₂.Union) : Prepartition I where
+def disjUnion (π₁ π₂ : Prepartition I) (h : Disjoint π₁.Union π₂.Union) : Prepartition I where
   boxes := π₁.boxes ∪ π₂.boxes
   le_of_mem' := fun J hJ => (Finset.mem_union.1 hJ).elim π₁.le_of_mem π₂.le_of_mem
   PairwiseDisjoint :=
@@ -612,7 +617,7 @@ theorem distortion_bot (I : Box ι) : distortion (⊥ : Prepartition I) = 0 :=
 end Distortion
 
 /-- A prepartition `π` of `I` is a partition if the boxes of `π` cover the whole `I`. -/
-def is_partition (π : Prepartition I) :=
+def IsPartition (π : Prepartition I) :=
   ∀, ∀ x ∈ I, ∀, ∃ J ∈ π, x ∈ J
 
 theorem is_partition_iff_Union_eq {π : Prepartition I} : π.IsPartition ↔ π.Union = I := by
@@ -634,7 +639,7 @@ theorem Union_eq (h : π.IsPartition) : π.Union = I :=
 theorem Union_subset (h : π.IsPartition) (π₁ : Prepartition I) : π₁.Union ⊆ π.Union :=
   h.Union_eq.symm ▸ π₁.Union_subset
 
-protected theorem ExistsUnique (h : π.IsPartition) (hx : x ∈ I) : ∃! J ∈ π, x ∈ J := by
+protected theorem exists_unique (h : π.IsPartition) (hx : x ∈ I) : ∃! J ∈ π, x ∈ J := by
   rcases h x hx with ⟨J, h, hx⟩
   exact ExistsUnique.intro2 J h hx fun J' h' hx' => π.eq_of_mem_of_mem h' h hx' hx
 

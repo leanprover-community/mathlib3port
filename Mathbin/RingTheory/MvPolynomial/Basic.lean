@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Johannes Hölzl. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johannes Hölzl
+-/
 import Mathbin.Algebra.CharP.Basic
 import Mathbin.LinearAlgebra.FinsuppVectorSpace
 
@@ -53,6 +58,7 @@ section Homomorphism
 
 theorem map_range_eq_map {R S : Type _} [CommRingₓ R] [CommRingₓ S] (p : MvPolynomial σ R) (f : R →+* S) :
     Finsupp.mapRange f f.map_zero p = map f p := by
+  -- `finsupp.map_range_finset_sum` expects `f : R →+ S`
   change Finsupp.mapRange (f : R →+ S) (f : R →+ S).map_zero p = map f p
   rw [p.as_sum, Finsupp.map_range_finset_sum, (map f).map_sum]
   refine' Finset.sum_congr rfl fun n _ => _
@@ -63,12 +69,12 @@ end Homomorphism
 section Degree
 
 /-- The submodule of polynomials of total degree less than or equal to `m`.-/
-def restrict_total_degree : Submodule R (MvPolynomial σ R) :=
+def restrictTotalDegree : Submodule R (MvPolynomial σ R) :=
   Finsupp.supported _ _ { n | (n.Sum fun n e => e) ≤ m }
 
 /-- The submodule of polynomials such that the degree with respect to each individual variable is
 less than or equal to `m`.-/
-def restrict_degree (m : ℕ) : Submodule R (MvPolynomial σ R) :=
+def restrictDegree (m : ℕ) : Submodule R (MvPolynomial σ R) :=
   Finsupp.supported _ _ { n | ∀ i, n i ≤ m }
 
 variable {R}
@@ -90,7 +96,7 @@ theorem mem_restrict_degree_iff_sup (p : MvPolynomial σ R) (n : ℕ) :
 variable (σ R)
 
 /-- The monomials form a basis on `mv_polynomial σ R`. -/
-def basis_monomials : Basis (σ →₀ ℕ) R (MvPolynomial σ R) :=
+def basisMonomials : Basis (σ →₀ ℕ) R (MvPolynomial σ R) :=
   Finsupp.basisSingleOne
 
 @[simp]
@@ -105,10 +111,11 @@ end Degree
 
 end MvPolynomial
 
+-- this is here to avoid import cycle issues
 namespace Polynomial
 
 /-- The monomials form a basis on `polynomial R`. -/
-noncomputable def basis_monomials : Basis ℕ R R[X] :=
+noncomputable def basisMonomials : Basis ℕ R R[X] :=
   Finsupp.basisSingleOne.map (toFinsuppIsoAlg R).toLinearEquiv.symm
 
 @[simp]

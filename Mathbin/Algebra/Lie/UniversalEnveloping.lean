@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Oliver Nash. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Oliver Nash
+-/
 import Mathbin.Algebra.Lie.OfAssociative
 import Mathbin.Algebra.RingQuot
 import Mathbin.LinearAlgebra.TensorAlgebra.Basic
@@ -44,12 +49,12 @@ namespace UniversalEnvelopingAlgebra
 Note that we have avoided using the more natural expression:
 | lie_compat (x y : L) : rel (ιₜ ⁅x, y⁆) ⁅ιₜ x, ιₜ y⁆
 so that our construction needs only the semiring structure of the tensor algebra. -/
-inductive rel : TensorAlgebra R L → TensorAlgebra R L → Prop
+inductive Rel : TensorAlgebra R L → TensorAlgebra R L → Prop
   | lie_compat (x y : L) : rel (ιₜ ⁅x,y⁆ + ιₜ y * ιₜ x) (ιₜ x * ιₜ y)
 
 end UniversalEnvelopingAlgebra
 
--- ././Mathport/Syntax/Translate/Basic.lean:859:9: unsupported derive handler algebra R
+-- ././Mathport/Syntax/Translate/Basic.lean:981:9: unsupported derive handler algebra R
 /-- The universal enveloping algebra of a Lie algebra. -/
 def UniversalEnvelopingAlgebra :=
   RingQuot (UniversalEnvelopingAlgebra.Rel R L)deriving Inhabited, Ringₓ, [anonymous]
@@ -58,7 +63,7 @@ namespace UniversalEnvelopingAlgebra
 
 /-- The quotient map from the tensor algebra to the universal enveloping algebra as a morphism of
 associative algebras. -/
-def mk_alg_hom : TensorAlgebra R L →ₐ[R] UniversalEnvelopingAlgebra R L :=
+def mkAlgHom : TensorAlgebra R L →ₐ[R] UniversalEnvelopingAlgebra R L :=
   RingQuot.mkAlgHom R (Rel R L)
 
 variable {L}

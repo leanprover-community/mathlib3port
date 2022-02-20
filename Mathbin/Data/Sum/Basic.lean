@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2017 Mario Carneiro. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Mario Carneiro, Yury G. Kudryashov
+-/
 import Mathbin.Data.Option.Basic
 
 /-!
@@ -59,25 +64,25 @@ section get
 
 /-- Check if a sum is `inl` and if so, retrieve its contents. -/
 @[simp]
-def get_left : Sum α β → Option α
+def getLeft : Sum α β → Option α
   | inl a => some a
   | inr _ => none
 
 /-- Check if a sum is `inr` and if so, retrieve its contents. -/
 @[simp]
-def get_right : Sum α β → Option β
+def getRight : Sum α β → Option β
   | inr b => some b
   | inl _ => none
 
 /-- Check if a sum is `inl`. -/
 @[simp]
-def is_left : Sum α β → Bool
+def isLeft : Sum α β → Bool
   | inl _ => true
   | inr _ => false
 
 /-- Check if a sum is `inr`. -/
 @[simp]
-def is_right : Sum α β → Bool
+def isRight : Sum α β → Bool
   | inl _ => false
   | inr _ => true
 
@@ -246,7 +251,7 @@ section LiftRel
 
 /-- Lifts pointwise two relations between `α` and `γ` and between `β` and `δ` to a relation between
 `α ⊕ β` and `γ ⊕ δ`. -/
-inductive lift_rel (r : α → γ → Prop) (s : β → δ → Prop) : Sum α β → Sum γ δ → Prop
+inductive LiftRel (r : α → γ → Prop) (s : β → δ → Prop) : Sum α β → Sum γ δ → Prop
   | inl {a c} : r a c → lift_rel (inl a) (inl c)
   | inr {b d} : s b d → lift_rel (inr b) (inr d)
 
@@ -281,18 +286,18 @@ instance [∀ a c, Decidable (r a c)] [∀ b d, Decidable (s b d)] :
   | inr b, inl c => Decidable.isFalse not_lift_rel_inr_inl
   | inr b, inr d => decidableOfIff' _ lift_rel_inr_inr
 
-theorem lift_rel.mono (hr : ∀ a b, r₁ a b → r₂ a b) (hs : ∀ a b, s₁ a b → s₂ a b) (h : LiftRel r₁ s₁ x y) :
+theorem LiftRel.mono (hr : ∀ a b, r₁ a b → r₂ a b) (hs : ∀ a b, s₁ a b → s₂ a b) (h : LiftRel r₁ s₁ x y) :
     LiftRel r₂ s₂ x y := by
   cases h
   exacts[lift_rel.inl (hr _ _ ‹_›), lift_rel.inr (hs _ _ ‹_›)]
 
-theorem lift_rel.mono_left (hr : ∀ a b, r₁ a b → r₂ a b) (h : LiftRel r₁ s x y) : LiftRel r₂ s x y :=
+theorem LiftRel.mono_left (hr : ∀ a b, r₁ a b → r₂ a b) (h : LiftRel r₁ s x y) : LiftRel r₂ s x y :=
   (h.mono hr) fun _ _ => id
 
-theorem lift_rel.mono_right (hs : ∀ a b, s₁ a b → s₂ a b) (h : LiftRel r s₁ x y) : LiftRel r s₂ x y :=
+theorem LiftRel.mono_right (hs : ∀ a b, s₁ a b → s₂ a b) (h : LiftRel r s₁ x y) : LiftRel r s₂ x y :=
   h.mono (fun _ _ => id) hs
 
-protected theorem lift_rel.swap (h : LiftRel r s x y) : LiftRel s r x.swap y.swap := by
+protected theorem LiftRel.swap (h : LiftRel r s x y) : LiftRel s r x.swap y.swap := by
   cases h
   exacts[lift_rel.inr ‹_›, lift_rel.inl ‹_›]
 
@@ -308,7 +313,7 @@ section Lex
 
 /-- Lexicographic order for sum. Sort all the `inl a` before the `inr b`, otherwise use the
 respective order on `α` or `β`. -/
-inductive lex (r : α → α → Prop) (s : β → β → Prop) : Sum α β → Sum α β → Prop
+inductive Lex (r : α → α → Prop) (s : β → β → Prop) : Sum α β → Sum α β → Prop
   | inl {a₁ a₂} (h : r a₁ a₂) : lex (inl a₁) (inl a₂)
   | inr {b₁ b₂} (h : s b₁ b₂) : lex (inr b₁) (inr b₂)
   | sep a b : lex (inl a) (inr b)
@@ -341,18 +346,18 @@ instance [DecidableRel r] [DecidableRel s] : DecidableRel (Lex r s)
   | inr b, inl c => Decidable.isFalse lex_inr_inl
   | inr b, inr d => decidableOfIff' _ lex_inr_inr
 
-protected theorem lift_rel.lex {a b : Sum α β} (h : LiftRel r s a b) : Lex r s a b := by
+protected theorem LiftRel.lex {a b : Sum α β} (h : LiftRel r s a b) : Lex r s a b := by
   cases h
   exacts[lex.inl ‹_›, lex.inr ‹_›]
 
-theorem lex.mono (hr : ∀ a b, r₁ a b → r₂ a b) (hs : ∀ a b, s₁ a b → s₂ a b) (h : Lex r₁ s₁ x y) : Lex r₂ s₂ x y := by
+theorem Lex.mono (hr : ∀ a b, r₁ a b → r₂ a b) (hs : ∀ a b, s₁ a b → s₂ a b) (h : Lex r₁ s₁ x y) : Lex r₂ s₂ x y := by
   cases h
   exacts[lex.inl (hr _ _ ‹_›), lex.inr (hs _ _ ‹_›), lex.sep _ _]
 
-theorem lex.mono_left (hr : ∀ a b, r₁ a b → r₂ a b) (h : Lex r₁ s x y) : Lex r₂ s x y :=
+theorem Lex.mono_left (hr : ∀ a b, r₁ a b → r₂ a b) (h : Lex r₁ s x y) : Lex r₂ s x y :=
   (h.mono hr) fun _ _ => id
 
-theorem lex.mono_right (hs : ∀ a b, s₁ a b → s₂ a b) (h : Lex r s₁ x y) : Lex r s₂ x y :=
+theorem Lex.mono_right (hs : ∀ a b, s₁ a b → s₂ a b) (h : Lex r s₁ x y) : Lex r s₂ x y :=
   h.mono (fun _ _ => id) hs
 
 theorem lex_acc_inl {a} (aca : Acc r a) : Acc (Lex r s) (inl a) := by
@@ -384,18 +389,18 @@ namespace Function
 
 open Sum
 
-theorem injective.sum_elim {f : α → γ} {g : β → γ} (hf : Injective f) (hg : Injective g) (hfg : ∀ a b, f a ≠ g b) :
+theorem Injective.sum_elim {f : α → γ} {g : β → γ} (hf : Injective f) (hg : Injective g) (hfg : ∀ a b, f a ≠ g b) :
     Injective (Sum.elim f g)
   | inl x, inl y, h => congr_argₓ inl <| hf h
   | inl x, inr y, h => (hfg x y h).elim
   | inr x, inl y, h => (hfg y x h.symm).elim
   | inr x, inr y, h => congr_argₓ inr <| hg h
 
-theorem injective.sum_map {f : α → β} {g : α' → β'} (hf : Injective f) (hg : Injective g) : Injective (Sum.map f g)
+theorem Injective.sum_map {f : α → β} {g : α' → β'} (hf : Injective f) (hg : Injective g) : Injective (Sum.map f g)
   | inl x, inl y, h => congr_argₓ inl <| hf <| inl.injₓ h
   | inr x, inr y, h => congr_argₓ inr <| hg <| inr.injₓ h
 
-theorem surjective.sum_map {f : α → β} {g : α' → β'} (hf : Surjective f) (hg : Surjective g) : Surjective (Sum.map f g)
+theorem Surjective.sum_map {f : α → β} {g : α' → β'} (hf : Surjective f) (hg : Surjective g) : Surjective (Sum.map f g)
   | inl y =>
     let ⟨x, hx⟩ := hf y
     ⟨inl x, congr_argₓ inl hx⟩

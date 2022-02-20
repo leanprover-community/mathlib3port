@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Yaël Dillies. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yaël Dillies, Eric Rodriguez
+-/
 import Mathbin.Data.Nat.Choose.Basic
 import Mathbin.Data.Nat.Cast
 import Mathbin.Algebra.GroupPower.Lemmas
@@ -29,6 +34,7 @@ theorem choose_le_pow (r n : ℕ) : (n.choose r : α) ≤ n ^ r / r ! := by
     
   exact_mod_cast r.factorial_pos
 
+-- horrific casting is due to ℕ-subtraction
 theorem pow_le_choose (r n : ℕ) : ((n + 1 - r : ℕ) ^ r : α) / r ! ≤ n.choose r := by
   rw [div_le_iff']
   · norm_cast

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2017 Microsoft Corporation. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Mario Carneiro, Neil Strickland
+-/
 import Mathbin.Data.Nat.Basic
 
 /-!
@@ -41,7 +46,7 @@ namespace Nat
 
 /-- Convert a natural number to a positive natural number. The
   positivity assumption is inferred by `dec_trivial`. -/
-def to_pnat (n : ℕ)
+def toPnat (n : ℕ)
     (h : 0 < n := by
       run_tac
         tactic.exact_dec_trivial) :
@@ -49,7 +54,7 @@ def to_pnat (n : ℕ)
   ⟨n, h⟩
 
 /-- Write a successor as an element of `ℕ+`. -/
-def succ_pnat (n : ℕ) : ℕ+ :=
+def succPnat (n : ℕ) : ℕ+ :=
   ⟨succ n, succ_posₓ n⟩
 
 @[simp]
@@ -62,7 +67,7 @@ theorem succ_pnat_inj {n m : ℕ} : succPnat n = succPnat m → n = m := fun h =
 
 /-- Convert a natural number to a pnat. `n+1` is mapped to itself,
   and `0` becomes `1`. -/
-def to_pnat' (n : ℕ) : ℕ+ :=
+def toPnat' (n : ℕ) : ℕ+ :=
   succPnat (pred n)
 
 @[simp]
@@ -106,13 +111,14 @@ theorem coe_lt_coe (n k : ℕ+) : (n : ℕ) < k ↔ n < k :=
   Iff.rfl
 
 @[simp]
-theorem Pos (n : ℕ+) : 0 < (n : ℕ) :=
+theorem pos (n : ℕ+) : 0 < (n : ℕ) :=
   n.2
 
+-- see note [fact non_instances]
 theorem fact_pos (n : ℕ+) : Fact (0 < ↑n) :=
   ⟨n.Pos⟩
 
-theorem Eq {m n : ℕ+} : (m : ℕ) = n → m = n :=
+theorem eq {m n : ℕ+} : (m : ℕ) = n → m = n :=
   Subtype.eq
 
 @[simp]
@@ -137,7 +143,7 @@ theorem add_coe (m n : ℕ+) : ((m + n : ℕ+) : ℕ) = m + n :=
   rfl
 
 /-- `pnat.coe` promoted to an `add_hom`, that is, a morphism which preserves addition. -/
-def coe_add_hom : AddHom ℕ+ ℕ where
+def coeAddHom : AddHom ℕ+ ℕ where
   toFun := coe
   map_add' := add_coe
 
@@ -186,6 +192,7 @@ theorem bot_eq_one : (⊥ : ℕ+) = 1 :=
 instance : Inhabited ℕ+ :=
   ⟨1⟩
 
+-- Some lemmas that rewrite `pnat.mk n h`, for `n` an explicit numeral, into explicit numerals.
 @[simp]
 theorem mk_one {h} : (⟨1, h⟩ : ℕ+) = (1 : ℕ+) :=
   rfl
@@ -198,6 +205,13 @@ theorem mk_bit0 n {h} : (⟨bit0 n, h⟩ : ℕ+) = (bit0 ⟨n, pos_of_bit0_pos h
 theorem mk_bit1 n {h} {k} : (⟨bit1 n, h⟩ : ℕ+) = (bit1 ⟨n, k⟩ : ℕ+) :=
   rfl
 
+-- Some lemmas that rewrite inequalities between explicit numerals in `ℕ+`
+-- into the corresponding inequalities in `ℕ`.
+-- TODO: perhaps this should not be attempted by `simp`,
+-- and instead we should expect `norm_num` to take care of these directly?
+-- TODO: these lemmas are perhaps incomplete:
+-- * 1 is not represented as a bit0 or bit1
+-- * strict inequalities?
 @[simp]
 theorem bit0_le_bit0 (n m : ℕ+) : bit0 n ≤ bit0 m ↔ bit0 (n : ℕ) ≤ bit0 (m : ℕ) :=
   Iff.rfl
@@ -223,7 +237,7 @@ theorem mul_coe (m n : ℕ+) : ((m * n : ℕ+) : ℕ) = m * n :=
   rfl
 
 /-- `pnat.coe` promoted to a `monoid_hom`. -/
-def coe_monoid_hom : ℕ+ →* ℕ where
+def coeMonoidHom : ℕ+ →* ℕ where
   toFun := coe
   map_one' := one_coe
   map_mul' := mul_coe
@@ -289,10 +303,10 @@ theorem add_sub_of_lt {a b : ℕ+} : a < b → a + (b - a) = b := fun h =>
     exact add_tsub_cancel_of_le h.le
 
 instance : HasWellFounded ℕ+ :=
-  ⟨· < ·, measure_wf coe⟩
+  ⟨(· < ·), measure_wf coe⟩
 
 /-- Strong induction on `ℕ+`. -/
-def strong_induction_on {p : ℕ+ → Sort _} : ∀ n : ℕ+ h : ∀ k, (∀ m, m < k → p m) → p k, p n
+def strongInductionOn {p : ℕ+ → Sort _} : ∀ n : ℕ+ h : ∀ k, (∀ m, m < k → p m) → p k, p n
   | n => fun IH => IH _ fun a h => strong_induction_on a IH
 
 /-- If `n : ℕ+` is different from `1`, then it is the successor of some `k : ℕ+`. -/
@@ -304,8 +318,7 @@ theorem exists_eq_succ_of_ne_one : ∀ {n : ℕ+} h1 : n ≠ 1, ∃ k : ℕ+, n 
       rfl⟩
 
 /-- Strong induction on `ℕ+`, with `n = 1` treated separately. -/
-def case_strong_induction_on {p : ℕ+ → Sort _} (a : ℕ+) (hz : p 1) (hi : ∀ n, (∀ m, m ≤ n → p m) → p (n + 1)) : p a :=
-  by
+def caseStrongInductionOn {p : ℕ+ → Sort _} (a : ℕ+) (hz : p 1) (hi : ∀ n, (∀ m, m ≤ n → p m) → p (n + 1)) : p a := by
   apply strong_induction_on a
   rintro ⟨k, kprop⟩ hk
   cases' k with k
@@ -319,7 +332,7 @@ def case_strong_induction_on {p : ℕ+ → Sort _} (a : ℕ+) (hz : p 1) (hi : �
 /-- An induction principle for `ℕ+`: it takes values in `Sort*`, so it applies also to Types,
 not only to `Prop`. -/
 @[elab_as_eliminator]
-def rec_on (n : ℕ+) {p : ℕ+ → Sort _} (p1 : p 1) (hp : ∀ n, p n → p (n + 1)) : p n := by
+def recOn (n : ℕ+) {p : ℕ+ → Sort _} (p1 : p 1) (hp : ∀ n, p n → p (n + 1)) : p n := by
   rcases n with ⟨n, h⟩
   induction' n with n IH
   · exact
@@ -355,7 +368,7 @@ theorem rec_on_succ (n : ℕ+) {p : ℕ+ → Sort _} p1 hp : @Pnat.recOn (n + 1)
   define a function `div_exact` which gives the usual `m / k`
   in the case where `k` divides `m`.
 -/
-def mod_div_aux : ℕ+ → ℕ → ℕ → ℕ+ × ℕ
+def modDivAux : ℕ+ → ℕ → ℕ → ℕ+ × ℕ
   | k, 0, q => ⟨k, q.pred⟩
   | k, r + 1, q => ⟨⟨r + 1, Nat.succ_posₓ r⟩, q⟩
 
@@ -375,7 +388,7 @@ theorem mod_div_aux_spec :
   define a function `div_exact` which gives the usual `m / k`
   in the case where `k` divides `m`.
 -/
-def mod_div (m k : ℕ+) : ℕ+ × ℕ :=
+def modDiv (m k : ℕ+) : ℕ+ × ℕ :=
   modDivAux k ((m : ℕ) % (k : ℕ)) ((m : ℕ) / (k : ℕ))
 
 /-- We define `m % k` in the same way as for `ℕ`
@@ -488,7 +501,7 @@ theorem le_of_dvd {m n : ℕ+} : m ∣ n → m ≤ n := by
   apply (mod_le n m).left
 
 /-- If `h : k | m`, then `k * (div_exact m k) = m`. Note that this is not equal to `m / k`. -/
-def div_exact (m k : ℕ+) : ℕ+ :=
+def divExact (m k : ℕ+) : ℕ+ :=
   ⟨(div m k).succ, Nat.succ_posₓ _⟩
 
 theorem mul_div_exact {m k : ℕ+} (h : k ∣ m) : k * divExact m k = m := by

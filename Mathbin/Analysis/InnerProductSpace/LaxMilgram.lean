@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2022 Daniel Roca González. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Daniel Roca González
+-/
 import Mathbin.Analysis.InnerProductSpace.Projection
 import Mathbin.Analysis.InnerProductSpace.Dual
 import Mathbin.Analysis.NormedSpace.Banach
@@ -106,7 +111,7 @@ for all `v : V`, `continuous_linear_equiv_of_bilin B v` is the unique element `V
 such that `⟪continuous_linear_equiv_of_bilin B v, w⟫ = B v w`.
 The Lax-Milgram theorem states that this is a continuous equivalence.
 -/
-def continuous_linear_equiv_of_bilin (coercive : IsCoercive B) : V ≃L[ℝ] V :=
+def continuousLinearEquivOfBilin (coercive : IsCoercive B) : V ≃L[ℝ] V :=
   ContinuousLinearEquiv.ofBijective (B)♯ coercive.ker_eq_bot coercive.range_eq_top
 
 @[simp]

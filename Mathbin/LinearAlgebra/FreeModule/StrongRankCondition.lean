@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Riccardo Brasca. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Riccardo Brasca
+-/
 import Mathbin.LinearAlgebra.Charpoly.Basic
 import Mathbin.LinearAlgebra.InvariantBasisNumber
 
@@ -36,6 +41,8 @@ instance (priority := 100) comm_ring_strong_rank_condition : StrongRankCondition
     rwa [strong_rank_condition_iff_succ R]
   intro n f
   by_contra hf
+  -- Lean is unable to find this instance without help, either via this `letI`, or via a duplicate
+  -- instance with unecessarily strong typeclasses on `R` and `M`.
   let this' : Module.Finite R (Finₓ n.succ → R) := Module.Finite.pi
   let g : (Finₓ (n + 1) → R) →ₗ[R] Finₓ (n + 1) → R := (extend_by_zero.linear_map R cast_succ).comp f
   have hg : injective g := (extend_injective (RelEmbedding.injective cast_succ) 0).comp hf
@@ -43,6 +50,7 @@ instance (priority := 100) comm_ring_strong_rank_condition : StrongRankCondition
   let a₀ := (minpoly R g).coeff 0
   have : a₀ ≠ 0 := minpoly_coeff_zero_of_injective hg
   have : a₀ = 0 := by
+    -- Evaluate `(minpoly R g) g` at the vector `(0,...,0,1)`
     have heval := LinearMap.congr_fun (minpoly.aeval R g) (Pi.single (Finₓ.last n) 1)
     obtain ⟨P, hP⟩ := X_dvd_iff.2 (erase_same (minpoly R g) 0)
     rw [← monomial_add_erase (minpoly R g) 0, hP] at heval

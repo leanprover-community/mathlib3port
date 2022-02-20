@@ -1,3 +1,11 @@
+/-
+Copyright (c) 2018 Simon Hudon. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Simon Hudon
+
+Provides a `subtype_instance` tactic which builds instances for algebraic substructures
+(sub-groups, sub-rings...).
+-/
 import Mathbin.Tactic.Basic
 
 open Tactic Expr Name List
@@ -9,11 +17,11 @@ setup_tactic_parser
 open tactic.interactive (get_current_field refine_struct)
 
 /-- makes the substructure axiom name from field name, by postfacing with `_mem`-/
-def mk_mem_name (sub : Name) : Name → Name
+def mkMemName (sub : Name) : Name → Name
   | mk_string n _ => mk_string (n ++ "_mem") sub
   | n => n
 
--- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:916:4: warning: unsupported (TODO): `[tacs]
 unsafe def derive_field_subtype : tactic Unit := do
   let field ← get_current_field
   let b ← target >>= is_prop

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Jeremy Avigad. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Jeremy Avigad, Simon Hudon
+-/
 import Mathbin.Data.Pfunctor.Multivariate.Basic
 
 /-!
@@ -50,16 +55,16 @@ open_locale Mvfunctor
 variable {n : ℕ} (P : Mvpfunctor.{u} (n + 1))
 
 /-- A path from the root of a tree to one of its node -/
-inductive W_path : P.last.W → Fin2 n → Type u
+inductive WPath : P.last.W → Fin2 n → Type u
   | root (a : P.A) (f : P.last.B a → P.last.W) (i : Fin2 n) (c : P.drop.B a i) : W_path ⟨a, f⟩ i
   | child (a : P.A) (f : P.last.B a → P.last.W) (i : Fin2 n) (j : P.last.B a) (c : W_path (f j) i) : W_path ⟨a, f⟩ i
 
-instance W_path.inhabited (x : P.last.W) {i} [I : Inhabited (P.drop.B x.head i)] : Inhabited (WPath P x i) :=
+instance WPath.inhabited (x : P.last.W) {i} [I : Inhabited (P.drop.B x.head i)] : Inhabited (WPath P x i) :=
   ⟨match x, I with
     | ⟨a, f⟩, I => WPath.root a f i (@default _ I)⟩
 
 /-- Specialized destructor on `W_path` -/
-def W_path_cases_on {α : Typevec n} {a : P.A} {f : P.last.B a → P.last.W} (g' : P.drop.B a ⟹ α)
+def wPathCasesOn {α : Typevec n} {a : P.A} {f : P.last.B a → P.last.W} (g' : P.drop.B a ⟹ α)
     (g : ∀ j : P.last.B a, P.WPath (f j) ⟹ α) : P.WPath ⟨a, f⟩ ⟹ α := by
   intro i x
   cases x
@@ -69,11 +74,11 @@ def W_path_cases_on {α : Typevec n} {a : P.A} {f : P.last.B a → P.last.W} (g'
     exact g j i c
 
 /-- Specialized destructor on `W_path` -/
-def W_path_dest_left {α : Typevec n} {a : P.A} {f : P.last.B a → P.last.W} (h : P.WPath ⟨a, f⟩ ⟹ α) : P.drop.B a ⟹ α :=
+def wPathDestLeft {α : Typevec n} {a : P.A} {f : P.last.B a → P.last.W} (h : P.WPath ⟨a, f⟩ ⟹ α) : P.drop.B a ⟹ α :=
   fun i c => h i (WPath.root a f i c)
 
 /-- Specialized destructor on `W_path` -/
-def W_path_dest_right {α : Typevec n} {a : P.A} {f : P.last.B a → P.last.W} (h : P.WPath ⟨a, f⟩ ⟹ α) :
+def wPathDestRight {α : Typevec n} {a : P.A} {f : P.last.B a → P.last.W} (h : P.WPath ⟨a, f⟩ ⟹ α) :
     ∀ j : P.last.B a, P.WPath (f j) ⟹ α := fun j i c => h i (WPath.child a f i j c)
 
 theorem W_path_dest_left_W_path_cases_on {α : Typevec n} {a : P.A} {f : P.last.B a → P.last.W} (g' : P.drop.B a ⟹ α)
@@ -96,7 +101,7 @@ theorem comp_W_path_cases_on {α β : Typevec n} (h : α ⟹ β) {a : P.A} {f : 
 tree whereas, for a given `a : A`, `B a` is a valid path in tree `a` so
 that `Wp.obj α` is made of a tree and a function from its valid paths to
 the values it contains  -/
-def Wp : Mvpfunctor n where
+def wp : Mvpfunctor n where
   A := P.last.W
   B := P.WPath
 
@@ -105,7 +110,7 @@ def Wp : Mvpfunctor n where
 def W (α : Typevec n) : Type _ :=
   P.wp.Obj α
 
-instance mvfunctor_W : Mvfunctor P.W := by
+instance mvfunctorW : Mvfunctor P.W := by
   delta' Mvpfunctor.W <;> infer_instance
 
 /-!
@@ -114,11 +119,11 @@ First, describe operations on `W` as a polynomial functor.
 
 
 /-- Constructor for `Wp` -/
-def Wp_mk {α : Typevec n} (a : P.A) (f : P.last.B a → P.last.W) (f' : P.WPath ⟨a, f⟩ ⟹ α) : P.W α :=
+def wpMk {α : Typevec n} (a : P.A) (f : P.last.B a → P.last.W) (f' : P.WPath ⟨a, f⟩ ⟹ α) : P.W α :=
   ⟨⟨a, f⟩, f'⟩
 
 /-- Recursor for `Wp` -/
-def Wp_rec {α : Typevec n} {C : Type _}
+def wpRecₓ {α : Typevec n} {C : Type _}
     (g : ∀ a : P.A f : P.last.B a → P.last.W, P.WPath ⟨a, f⟩ ⟹ α → (P.last.B a → C) → C) :
     ∀ x : P.last.W f' : P.WPath x ⟹ α, C
   | ⟨a, f⟩, f' => g a f f' fun i => Wp_rec (f i) (P.wPathDestRight f' i)
@@ -129,6 +134,7 @@ theorem Wp_rec_eq {α : Typevec n} {C : Type _}
     P.wpRec g ⟨a, f⟩ f' = g a f f' fun i => P.wpRec g (f i) (P.wPathDestRight f' i) :=
   rfl
 
+-- Note: we could replace Prop by Type* and obtain a dependent recursor
 theorem Wp_ind {α : Typevec n} {C : ∀ x : P.last.W, P.WPath x ⟹ α → Prop}
     (ih :
       ∀ a : P.A f : P.last.B a → P.last.W f' : P.WPath ⟨a, f⟩ ⟹ α,
@@ -145,13 +151,13 @@ Now think of W as defined inductively by the data ⟨a, f', f⟩ where
 
 
 /-- Constructor for `W` -/
-def W_mk {α : Typevec n} (a : P.A) (f' : P.drop.B a ⟹ α) (f : P.last.B a → P.W α) : P.W α :=
+def wMk {α : Typevec n} (a : P.A) (f' : P.drop.B a ⟹ α) (f : P.last.B a → P.W α) : P.W α :=
   let g : P.last.B a → P.last.W := fun i => (f i).fst
   let g' : P.WPath ⟨a, g⟩ ⟹ α := P.wPathCasesOn f' fun i => (f i).snd
   ⟨⟨a, g⟩, g'⟩
 
 /-- Recursor for `W` -/
-def W_rec {α : Typevec n} {C : Type _} (g : ∀ a : P.A, P.drop.B a ⟹ α → (P.last.B a → P.W α) → (P.last.B a → C) → C) :
+def wRecₓ {α : Typevec n} {C : Type _} (g : ∀ a : P.A, P.drop.B a ⟹ α → (P.last.B a → P.W α) → (P.last.B a → C) → C) :
     P.W α → C
   | ⟨a, f'⟩ =>
     let g' (a : P.A) (f : P.last.B a → P.last.W) (h : P.WPath ⟨a, f⟩ ⟹ α) (h' : P.last.B a → C) : C :=
@@ -188,7 +194,7 @@ theorem W_cases {α : Typevec n} {C : P.W α → Prop}
   P.W_ind fun a f' f ih' => ih a f' f
 
 /-- W-types are functorial -/
-def W_map {α β : Typevec n} (g : α ⟹ β) : P.W α → P.W β := fun x => g <$$> x
+def wMap {α β : Typevec n} (g : α ⟹ β) : P.W α → P.W β := fun x => g <$$> x
 
 theorem W_mk_eq {α : Typevec n} (a : P.A) (f : P.last.B a → P.last.W) (g' : P.drop.B a ⟹ α)
     (g : ∀ j : P.last.B a, P.WPath (f j) ⟹ α) : (P.wMk a g' fun i => ⟨f i, g i⟩) = ⟨⟨a, f⟩, P.wPathCasesOn g' g⟩ :=
@@ -215,8 +221,10 @@ theorem W_map_W_mk {α β : Typevec n} (g : α ⟹ β) (a : P.A) (f' : P.drop.B 
 
 /-- Constructor of a value of `P.obj (α ::: β)` from components.
 Useful to avoid complicated type annotation -/
+-- TODO: this technical theorem is used in one place in constructing the initial algebra.
+-- Can it be avoided?
 @[reducible]
-def obj_append1 {α : Typevec n} {β : Type _} (a : P.A) (f' : P.drop.B a ⟹ α) (f : P.last.B a → β) : P.Obj (α ::: β) :=
+def objAppend1 {α : Typevec n} {β : Type _} (a : P.A) (f' : P.drop.B a ⟹ α) (f : P.last.B a → β) : P.Obj (α ::: β) :=
   ⟨a, splitFun f' f⟩
 
 theorem map_obj_append1 {α γ : Typevec n} (g : α ⟹ γ) (a : P.A) (f' : P.drop.B a ⟹ α) (f : P.last.B a → P.W α) :
@@ -231,11 +239,11 @@ the qpf axioms are expressed in terms of `map` on `P`.
 
 
 /-- Constructor for the W-type of `P` -/
-def W_mk' {α : Typevec n} : P.Obj (α ::: P.W α) → P.W α
+def wMk' {α : Typevec n} : P.Obj (α ::: P.W α) → P.W α
   | ⟨a, f⟩ => P.wMk a (dropFun f) (lastFun f)
 
 /-- Destructor for the W-type of `P` -/
-def W_dest' {α : Typevec.{u} n} : P.W α → P.Obj (α.Append1 (P.W α)) :=
+def wDest' {α : Typevec.{u} n} : P.W α → P.Obj (α.Append1 (P.W α)) :=
   P.wRec fun a f' f _ => ⟨a, splitFun f' f⟩
 
 theorem W_dest'_W_mk {α : Typevec n} (a : P.A) (f' : P.drop.B a ⟹ α) (f : P.last.B a → P.W α) :

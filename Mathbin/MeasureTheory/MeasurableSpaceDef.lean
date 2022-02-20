@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2017 Johannes Hölzl. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johannes Hölzl, Mario Carneiro
+-/
 import Mathbin.Order.SymmDiff
 import Mathbin.Order.Disjointed
 import Mathbin.Order.ConditionallyCompleteLattice
@@ -294,14 +299,14 @@ instance : PartialOrderₓ (MeasurableSpace α) :=
     le_antisymm := fun a b h₁ h₂ => MeasurableSpace.ext fun s => ⟨h₁ s, h₂ s⟩ }
 
 /-- The smallest σ-algebra containing a collection `s` of basic sets -/
-inductive generate_measurable (s : Set (Set α)) : Set α → Prop
+inductive GenerateMeasurable (s : Set (Set α)) : Set α → Prop
   | basic : ∀, ∀ u ∈ s, ∀, generate_measurable u
   | Empty : generate_measurable ∅
   | compl : ∀ s, generate_measurable s → generate_measurable (sᶜ)
   | union : ∀ f : ℕ → Set α, (∀ n, generate_measurable (f n)) → generate_measurable (⋃ i, f i)
 
 /-- Construct the smallest measure space containing a collection of basic sets -/
-def generate_from (s : Set (Set α)) : MeasurableSpace α where
+def generateFrom (s : Set (Set α)) : MeasurableSpace α where
   MeasurableSet' := GenerateMeasurable s
   measurable_set_empty := GenerateMeasurable.empty
   measurable_set_compl := GenerateMeasurable.compl
@@ -311,7 +316,7 @@ theorem measurable_set_generate_from {s : Set (Set α)} {t : Set α} (ht : t ∈
   GenerateMeasurable.basic t ht
 
 theorem generate_from_le {s : Set (Set α)} {m : MeasurableSpace α} (h : ∀, ∀ t ∈ s, ∀, m.MeasurableSet' t) :
-    generateFrom s ≤ m := fun t ht : GenerateMeasurable s t =>
+    generateFrom s ≤ m := fun ht : GenerateMeasurable s t =>
   ht.recOn h (measurable_set_empty m) (fun s _ hs => measurable_set_compl m s hs) fun f _ hf =>
     measurable_set_Union m f hf
 
@@ -325,7 +330,7 @@ theorem generate_from_measurable_set [MeasurableSpace α] : generateFrom { s : S
 
 /-- If `g` is a collection of subsets of `α` such that the `σ`-algebra generated from `g` contains
 the same sets as `g`, then `g` was already a `σ`-algebra. -/
-protected def mk_of_closure (g : Set (Set α)) (hg : { t | (generateFrom g).MeasurableSet' t } = g) :
+protected def mkOfClosure (g : Set (Set α)) (hg : { t | (generateFrom g).MeasurableSet' t } = g) :
     MeasurableSpace α where
   MeasurableSet' := fun s => s ∈ g
   measurable_set_empty := hg ▸ measurable_set_empty _
@@ -341,7 +346,7 @@ theorem mk_of_closure_sets {s : Set (Set α)} {hs : { t | (generateFrom s).Measu
 
 /-- We get a Galois insertion between `σ`-algebras on `α` and `set (set α)` by using `generate_from`
   on one side and the collection of measurable sets on the other side. -/
-def gi_generate_from : GaloisInsertion (@generateFrom α) fun m => { t | @MeasurableSet α m t } where
+def giGenerateFrom : GaloisInsertion (@generateFrom α) fun m => { t | @MeasurableSet α m t } where
   gc := fun s => generate_from_le_iff
   le_l_u := fun m s => measurable_set_generate_from
   choice := fun g hg => MeasurableSpace.mkOfClosure g <| le_antisymmₓ hg <| (generate_from_le_iff _).1 le_rfl

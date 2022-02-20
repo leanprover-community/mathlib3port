@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2017 Johannes Hölzl. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johannes Hölzl, Patrick Massot
+-/
 import Mathbin.Tactic.ApplyFun
 import Mathbin.Data.Set.Pairwise
 import Mathbin.Topology.UniformSpace.Basic
@@ -68,7 +73,7 @@ open_locale Classical TopologicalSpace uniformity Filter
 
 noncomputable section
 
--- ././Mathport/Syntax/Translate/Basic.lean:169:40: warning: unsupported option eqn_compiler.zeta
+-- ././Mathport/Syntax/Translate/Basic.lean:211:40: warning: unsupported option eqn_compiler.zeta
 set_option eqn_compiler.zeta true
 
 universe u v w
@@ -91,10 +96,10 @@ protected def SeparationRel (α : Type u) [u : UniformSpace α] :=
 localized [uniformity] notation "𝓢" => SeparationRel
 
 theorem separated_equiv : Equivalenceₓ fun x y => (x, y) ∈ 𝓢 α :=
-  ⟨fun x => fun s => refl_mem_uniformity, fun x y => fun h s : Set (α × α) hs =>
+  ⟨fun x => fun s => refl_mem_uniformity, fun x y => fun hs =>
     have : Preimage Prod.swap s ∈ 𝓤 α := symm_le_uniformity hs
     h _ this,
-    fun x y z hxy : (x, y) ∈ 𝓢 α hyz : (y, z) ∈ 𝓢 α s hs : s ∈ 𝓤 α =>
+    fun hs : s ∈ 𝓤 α =>
     let ⟨t, ht, (h_ts : CompRel t t ⊆ s)⟩ := comp_mem_uniformity_sets hs
     h_ts <| show (x, z) ∈ CompRel t t from ⟨y, hxy t ht, hyz t ht⟩⟩
 
@@ -174,6 +179,7 @@ theorem separated_iff_t2 : SeparatedSpace α ↔ T2Space α := by
     exact ⟨r, hrU, fun H => disjoint_iff.2 h ⟨hr H, hy⟩⟩
     
 
+-- see Note [lower instance priority]
 instance (priority := 100) separated_regular [SeparatedSpace α] : RegularSpace α :=
   { @T2Space.t1_space _ _ (separated_iff_t2.mp ‹_›) with
     t0 :=
@@ -225,13 +231,13 @@ theorem is_closed_range_of_spaced_out {ι} [SeparatedSpace α] {V₀ : Set (α �
 -/
 
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (x y «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (x y «expr ∈ » s)
 /-- A set `s` in a uniform space `α` is separated if the separation relation `𝓢 α`
 induces the trivial relation on `s`. -/
 def IsSeparated (s : Set α) : Prop :=
   ∀ x y _ : x ∈ s _ : y ∈ s, (x, y) ∈ 𝓢 α → x = y
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (x y «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (x y «expr ∈ » s)
 theorem is_separated_def (s : Set α) : IsSeparated s ↔ ∀ x y _ : x ∈ s _ : y ∈ s, (x, y) ∈ 𝓢 α → x = y :=
   Iff.rfl
 
@@ -253,7 +259,7 @@ theorem univ_separated_iff : IsSeparated (Univ : Set α) ↔ SeparatedSpace α :
   simp only [IsSeparated, mem_univ, true_implies_iff, separated_space_iff]
   constructor
   · intro h
-    exact subset.antisymm (fun ⟨x, y⟩ xy_in => h x y xy_in) (id_rel_sub_separation_relation α)
+    exact subset.antisymm (fun xy_in => h x y xy_in) (id_rel_sub_separation_relation α)
     
   · intro h x y xy_in
     rwa [h] at xy_in
@@ -307,12 +313,12 @@ theorem eq_of_uniformity_inf_nhds [SeparatedSpace α] : ∀ {x y : α}, ClusterP
 namespace UniformSpace
 
 /-- The separation relation of a uniform space seen as a setoid. -/
-def separation_setoid (α : Type u) [UniformSpace α] : Setoidₓ α :=
+def separationSetoid (α : Type u) [UniformSpace α] : Setoidₓ α :=
   ⟨fun x y => (x, y) ∈ 𝓢 α, separated_equiv⟩
 
 attribute [local instance] separation_setoid
 
-instance separation_setoid.uniform_space {α : Type u} [u : UniformSpace α] :
+instance separationSetoid.uniformSpace {α : Type u} [u : UniformSpace α] :
     UniformSpace (Quotientₓ (separationSetoid α)) where
   toTopologicalSpace := u.toTopologicalSpace.coinduced fun x => ⟦x⟧
   uniformity := map (fun p : α × α => (⟦p.1⟧, ⟦p.2⟧)) u.uniformity
@@ -323,7 +329,7 @@ instance separation_setoid.uniform_space {α : Type u} [u : UniformSpace α] :
       (Filter.map_mono refl_le_uniformity)
   symm :=
     tendsto_map' <| by
-      simp [Prod.swap, · ∘ ·] <;> exact tendsto_map.comp tendsto_swap_uniformity
+      simp [Prod.swap, (· ∘ ·)] <;> exact tendsto_map.comp tendsto_swap_uniformity
   comp :=
     calc
       ((map (fun p : α × α => (⟦p.fst⟧, ⟦p.snd⟧)) u.uniformity).lift' fun s => CompRel s s) =
@@ -353,7 +359,7 @@ instance separation_setoid.uniform_space {α : Type u} [u : UniformSpace α] :
         have hts : ∀ {a₁ a₂}, (a, a₁) ∈ t → (a₁, a₂) ∈ t → ⟦a₂⟧ ∈ s := fun a₁ a₂ ha₁ ha₂ =>
           @hts (a, a₂) ⟨a₁, ha₁, ha₂⟩ rfl
         have ht' : ∀ {a₁ a₂}, a₁ ≈ a₂ → (a₁, a₂) ∈ t := fun a₁ a₂ h => sInter_subset_of_mem ht h
-        (u.uniformity.sets_of_superset ht) fun ⟨a₁, a₂⟩ h₁ h₂ => hts (ht' <| Setoidₓ.symm h₂) h₁,
+        (u.uniformity.sets_of_superset ht) fun h₁ h₂ => hts (ht' <| Setoidₓ.symm h₂) h₁,
         fun h =>
         u.uniformity.sets_of_superset h <| by
           simp (config := { contextual := true })⟩
@@ -428,7 +434,7 @@ theorem _root_.is_separated.eq_of_uniform_continuous {f : α → β} {x y : α} 
   ((is_separated_def _).mp hs _ hxs _ hys) fun _ h' => h _ (H h')
 
 /-- The maximal separated quotient of a uniform space `α`. -/
-def separation_quotient (α : Type _) [UniformSpace α] :=
+def SeparationQuotient (α : Type _) [UniformSpace α] :=
   Quotientₓ (separationSetoid α)
 
 namespace SeparationQuotient
@@ -479,7 +485,7 @@ theorem map_id : map (@id α) = id :=
 theorem map_comp {f : α → β} {g : β → γ} (hf : UniformContinuous f) (hg : UniformContinuous g) :
     map g ∘ map f = map (g ∘ f) :=
   (map_unique (hg.comp hf) <| by
-      simp only [· ∘ ·, map_mk, hf, hg]).symm
+      simp only [(· ∘ ·), map_mk, hf, hg]).symm
 
 end SeparationQuotient
 
@@ -502,7 +508,7 @@ theorem separation_prod {a₁ a₂ : α} {b₁ b₂ : β} : (a₁, b₁) ≈ (a�
     exact ⟨h_α key_α, h_β key_β⟩
     
 
-instance separated.prod [SeparatedSpace α] [SeparatedSpace β] : SeparatedSpace (α × β) :=
+instance Separated.prod [SeparatedSpace α] [SeparatedSpace β] : SeparatedSpace (α × β) :=
   separated_def.2 fun x y H =>
     Prod.extₓ (eq_of_separated_of_uniform_continuous uniform_continuous_fst H)
       (eq_of_separated_of_uniform_continuous uniform_continuous_snd H)

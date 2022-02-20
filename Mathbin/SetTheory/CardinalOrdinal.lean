@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2017 Johannes Hölzl. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johannes Hölzl, Mario Carneiro, Floris van Doorn
+-/
 import Mathbin.SetTheory.OrdinalArithmetic
 import Mathbin.Tactic.Linarith.Default
 import Mathbin.Order.Bounded
@@ -70,7 +75,7 @@ theorem ord_is_limit {c} (co : ω ≤ c) : (ord c).IsLimit := by
   i.e., it is order preserving and its range is an initial segment of the ordinals.
   For the basic function version, see `aleph_idx`.
   For an upgraded version stating that the range is everything, see `aleph_idx.rel_iso`. -/
-def aleph_idx.initial_seg : @InitialSeg Cardinal Ordinal (· < ·) (· < ·) :=
+def AlephIdx.initialSeg : @InitialSeg Cardinal Ordinal (· < ·) (· < ·) :=
   @RelEmbedding.collapse Cardinal Ordinal (· < ·) (· < ·) _ Cardinal.ord.orderEmbedding.ltEmbedding
 
 /-- The `aleph'` index function, which gives the ordinal index of a cardinal.
@@ -78,11 +83,11 @@ def aleph_idx.initial_seg : @InitialSeg Cardinal Ordinal (· < ·) (· < ·) :=
   finite stages. So `aleph_idx n = n`, `aleph_idx ω = ω`,
   `aleph_idx ℵ₁ = ω + 1` and so on.)
   For an upgraded version stating that the range is everything, see `aleph_idx.rel_iso`. -/
-def aleph_idx : Cardinal → Ordinal :=
+def alephIdx : Cardinal → Ordinal :=
   aleph_idx.initial_seg
 
 @[simp]
-theorem aleph_idx.initial_seg_coe : (AlephIdx.initialSeg : Cardinal → Ordinal) = aleph_idx :=
+theorem alephIdx.initial_seg_coe : (AlephIdx.initialSeg : Cardinal → Ordinal) = aleph_idx :=
   rfl
 
 @[simp]
@@ -93,7 +98,7 @@ theorem aleph_idx_lt {a b} : alephIdx a < alephIdx b ↔ a < b :=
 theorem aleph_idx_le {a b} : alephIdx a ≤ alephIdx b ↔ a ≤ b := by
   rw [← not_ltₓ, ← not_ltₓ, aleph_idx_lt]
 
-theorem aleph_idx.init {a b} : b < alephIdx a → ∃ c, alephIdx c = b :=
+theorem alephIdx.init {a b} : b < alephIdx a → ∃ c, alephIdx c = b :=
   AlephIdx.initialSeg.init _ _
 
 /-- The `aleph'` index function, which gives the ordinal index of a cardinal.
@@ -103,7 +108,7 @@ theorem aleph_idx.init {a b} : b < alephIdx a → ∃ c, alephIdx c = b :=
   In this version, we register additionally that this function is an order isomorphism
   between cardinals and ordinals.
   For the basic function version, see `aleph_idx`. -/
-def aleph_idx.rel_iso : @RelIso Cardinal.{u} Ordinal.{u} (· < ·) (· < ·) :=
+def alephIdx.relIso : @RelIso Cardinal.{u} Ordinal.{u} (· < ·) (· < ·) :=
   @RelIso.ofSurjective Cardinal.{u} Ordinal.{u} (· < ·) (· < ·) AlephIdx.initialSeg.{u} <|
     (InitialSeg.eq_or_principal AlephIdx.initialSeg.{u}).resolve_right fun ⟨o, e⟩ => by
       have : ∀ c, aleph_idx c < o := fun c => (e _).2 ⟨_, rfl⟩
@@ -116,7 +121,7 @@ def aleph_idx.rel_iso : @RelIso Cardinal.{u} Ordinal.{u} (· < ·) (· < ·) :=
         le_sup.{u, u} (fun a => inv_fun aleph_idx (Ordinal.typein r a)) (Ordinal.enum r _ (h (succ s)))
 
 @[simp]
-theorem aleph_idx.rel_iso_coe : (alephIdx.relIso : Cardinal → Ordinal) = aleph_idx :=
+theorem alephIdx.rel_iso_coe : (alephIdx.relIso : Cardinal → Ordinal) = aleph_idx :=
   rfl
 
 @[simp]
@@ -133,7 +138,7 @@ theorem mk_cardinal : # Cardinal = univ.{u, u + 1} := by
   In this version, we register additionally that this function is an order isomorphism
   between ordinals and cardinals.
   For the basic function version, see `aleph'`. -/
-def aleph'.rel_iso :=
+def Aleph'.relIso :=
   Cardinal.alephIdx.relIso.symm
 
 /-- The `aleph'` function gives the cardinals listed by their ordinal
@@ -198,7 +203,7 @@ theorem aleph'_omega : aleph' Ordinal.omega = ω :=
 
 /-- `aleph'` and `aleph_idx` form an equivalence between `ordinal` and `cardinal` -/
 @[simp]
-def aleph'_equiv : Ordinal ≃ Cardinal :=
+def aleph'Equiv : Ordinal ≃ Cardinal :=
   ⟨aleph', alephIdx, aleph_idx_aleph', aleph'_aleph_idx⟩
 
 /-- The `aleph` function gives the infinite cardinals listed by their
@@ -311,15 +316,25 @@ theorem mul_eq_self {c : Cardinal} (h : ω ≤ c) : c * c = c := by
     le_antisymmₓ _
       (by
         simpa only [mul_oneₓ] using mul_le_mul_left' (one_lt_omega.le.trans h) c)
+  -- the only nontrivial part is `c * c ≤ c`. We prove it inductively.
   refine' Acc.recOnₓ (cardinal.wf.apply c) (fun c _ => (Quotientₓ.induction_on c) fun α IH ol => _) h
+  -- consider the minimal well-order `r` on `α` (a type with cardinality `c`).
   rcases ord_eq α with ⟨r, wo, e⟩
   skip
   let this' := linearOrderOfSTO' r
   have : IsWellOrder α (· < ·) := wo
+  -- Define an order `s` on `α × α` by writing `(a, b) < (c, d)` if `max a b < max c d`, or
+  -- the max are equal and `a < c`, or the max are equal and `a = c` and `b < d`.
   let g : α × α → α := fun p => max p.1 p.2
   let f : α × α ↪ Ordinal × α × α := ⟨fun p : α × α => (typein (· < ·) (g p), p), fun p q => congr_argₓ Prod.snd⟩
   let s := f ⁻¹'o Prod.Lex (· < ·) (Prod.Lex (· < ·) (· < ·))
+  -- this is a well order on `α × α`.
   have : IsWellOrder _ s := (RelEmbedding.preimage _ _).IsWellOrder
+  /- it suffices to show that this well order is smaller than `r`
+       if it were larger, then `r` would be a strict prefix of `s`. It would be contained in
+      `β × β` for some `β` of cardinality `< c`. By the inductive assumption, this set has the
+      same cardinality as `β` (or it is finite if `β` is finite), so it is `< c`, which is a
+      contradiction. -/
   suffices type s ≤ type r by
     exact card_le_card this
   refine' le_of_forall_lt fun o h => _
@@ -1064,6 +1079,7 @@ theorem bit0_lt_bit1 {a b : Cardinal} : bit0 a < bit1 b ↔ a < b ∨ a ≤ b �
     
 
 theorem one_lt_two : (1 : Cardinal) < 2 := by
+  -- This strategy works generally to prove inequalities between numerals in `cardinality`.
   norm_cast
   norm_num
 

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Floris van Doorn. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Floris van Doorn
+-/
 import Mathbin.Logic.Function.Basic
 import Mathbin.Tactic.Protected
 
@@ -67,6 +72,7 @@ theorem Subtype.is_empty_of_false {p : α → Prop} (hp : ∀ a, ¬p a) : IsEmpt
 instance Subtype.is_empty_false : IsEmpty { a : α // False } :=
   Subtype.is_empty_of_false fun a => id
 
+-- Test that `pi.is_empty` finds this instance.
 example [h : Nonempty α] [IsEmpty β] : IsEmpty (α → β) := by
   infer_instance
 
@@ -102,6 +108,7 @@ theorem forall_iff {p : α → Prop} : (∀ a, p a) ↔ True :=
 theorem exists_iff {p : α → Prop} : (∃ a, p a) ↔ False :=
   iff_false_intro fun ⟨x, hx⟩ => IsEmpty.false x
 
+-- see Note [lower instance priority]
 instance (priority := 100) : Subsingleton α :=
   ⟨isEmptyElim⟩
 

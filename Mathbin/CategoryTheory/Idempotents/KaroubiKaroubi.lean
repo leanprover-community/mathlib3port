@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2022 Joël Riou. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Joël Riou
+-/
 import Mathbin.CategoryTheory.Idempotents.Karoubi
 
 /-!
@@ -36,7 +41,7 @@ instance [Preadditive C] : Functor.Additive (inverse C) :=
 
 /-- The unit isomorphism of the equivalence -/
 @[simps]
-def unit_iso : 𝟭 (Karoubi C) ≅ toKaroubi (Karoubi C) ⋙ inverse C :=
+def unitIso : 𝟭 (Karoubi C) ≅ toKaroubi (Karoubi C) ⋙ inverse C :=
   eqToIso
     (by
       apply Functor.ext
@@ -57,7 +62,7 @@ def unit_iso : 𝟭 (Karoubi C) ≅ toKaroubi (Karoubi C) ⋙ inverse C :=
 
 /-- The counit isomorphism of the equivalence -/
 @[simps]
-def counit_iso : inverse C ⋙ toKaroubi (Karoubi C) ≅ 𝟭 (Karoubi (Karoubi C)) where
+def counitIso : inverse C ⋙ toKaroubi (Karoubi C) ≅ 𝟭 (Karoubi (Karoubi C)) where
   Hom :=
     { app := fun P =>
         { f :=
@@ -95,7 +100,7 @@ def counit_iso : inverse C ⋙ toKaroubi (Karoubi C) ≅ 𝟭 (Karoubi (Karoubi 
 
 /-- The equivalence `karoubi C ≌ karoubi (karoubi C)` -/
 @[simps]
-def Equivalenceₓ : Karoubi C ≌ Karoubi (Karoubi C) where
+def equivalence : Karoubi C ≌ Karoubi (Karoubi C) where
   Functor := toKaroubi (Karoubi C)
   inverse := KaroubiKaroubi.inverse C
   unitIso := KaroubiKaroubi.unitIso C

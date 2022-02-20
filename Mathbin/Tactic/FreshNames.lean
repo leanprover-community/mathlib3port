@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Jannis Limperg. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Jannis Limperg
+-/
 import Mathbin.Data.Sum.Basic
 import Mathbin.Tactic.Dependencies
 
@@ -15,6 +20,8 @@ in the list.
 
 namespace Tactic
 
+-- This implementation is a bit of a hack, but probably fine in practice since
+-- we're unlikely to need more than two or three iterations of the loop.
 private unsafe def get_unused_name_reserved_aux (n : Name) (reserved : name_set) : Option Nat → tactic Name :=
   fun suffix => do
   let n ← get_unused_name n suffix

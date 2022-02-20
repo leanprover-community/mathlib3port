@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Yaël Dillies. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yaël Dillies
+-/
 import Mathbin.Order.Hom.Basic
 import Mathbin.Order.Lexicographic
 
@@ -33,7 +38,7 @@ section LiftRel
 variable (r : α → α → Prop) (s : β → β → Prop)
 
 @[refl]
-theorem lift_rel.refl [IsRefl α r] [IsRefl β s] : ∀ x, LiftRel r s x x
+theorem LiftRel.refl [IsRefl α r] [IsRefl β s] : ∀ x, LiftRel r s x x
   | inl a => LiftRel.inl (refl _)
   | inr a => LiftRel.inr (refl _)
 
@@ -45,7 +50,7 @@ instance [IsIrrefl α r] [IsIrrefl β s] : IsIrrefl (Sum α β) (LiftRel r s) :=
     rintro _ (⟨a, _, h⟩ | ⟨a, _, h⟩) <;> exact irrefl _ h⟩
 
 @[trans]
-theorem lift_rel.trans [IsTrans α r] [IsTrans β s] : ∀ {a b c}, LiftRel r s a b → LiftRel r s b c → LiftRel r s a c
+theorem LiftRel.trans [IsTrans α r] [IsTrans β s] : ∀ {a b c}, LiftRel r s a b → LiftRel r s b c → LiftRel r s a c
   | _, _, _, lift_rel.inl hab, lift_rel.inl hbc => lift_rel.inl <| trans hab hbc
   | _, _, _, lift_rel.inr hab, lift_rel.inr hbc => lift_rel.inr <| trans hab hbc
 
@@ -184,7 +189,7 @@ end Preorderₓ
 instance [PartialOrderₓ α] [PartialOrderₓ β] : PartialOrderₓ (Sum α β) :=
   { Sum.preorder with le_antisymm := fun _ _ => antisymm }
 
-instance NoMinOrder [LT α] [LT β] [NoMinOrder α] [NoMinOrder β] : NoMinOrder (Sum α β) :=
+instance no_min_order [LT α] [LT β] [NoMinOrder α] [NoMinOrder β] : NoMinOrder (Sum α β) :=
   ⟨fun a =>
     match a with
     | inl a =>
@@ -194,7 +199,7 @@ instance NoMinOrder [LT α] [LT β] [NoMinOrder α] [NoMinOrder β] : NoMinOrder
       let ⟨b, h⟩ := exists_lt a
       ⟨inr b, inr_lt_inr_iff.2 h⟩⟩
 
-instance NoMaxOrder [LT α] [LT β] [NoMaxOrder α] [NoMaxOrder β] : NoMaxOrder (Sum α β) :=
+instance no_max_order [LT α] [LT β] [NoMaxOrder α] [NoMaxOrder β] : NoMaxOrder (Sum α β) :=
   ⟨fun a =>
     match a with
     | inl a =>
@@ -238,7 +243,7 @@ theorem no_max_order_iff [LT α] [LT β] : NoMaxOrder (Sum α β) ↔ NoMaxOrder
           ⟩⟩,
     fun h => @Sum.no_max_order _ _ _ _ h.1 h.2⟩
 
-instance DenselyOrdered [LT α] [LT β] [DenselyOrdered α] [DenselyOrdered β] : DenselyOrdered (Sum α β) :=
+instance densely_ordered [LT α] [LT β] [DenselyOrdered α] [DenselyOrdered β] : DenselyOrdered (Sum α β) :=
   ⟨fun a b h =>
     match a, b, h with
     | inl a, inl b, lift_rel.inl h =>
@@ -283,6 +288,7 @@ namespace Lex
 notation:30 α " ⊕ₗ " β:29 => Lex (Sum α β)
 
 /-- Lexicographical `sum.inl`. Only used for pattern matching. -/
+--TODO: Can we make `inlₗ`, `inrₗ` `local notation`?
 @[matchPattern]
 abbrev _root_.sum.inlₗ (x : α) : α ⊕ₗ β :=
   toLex (Sum.inl x)
@@ -293,11 +299,11 @@ abbrev _root_.sum.inrₗ (x : β) : α ⊕ₗ β :=
   toLex (Sum.inr x)
 
 /-- The linear/lexicographical `≤` on a sum. -/
-instance LE [LE α] [LE β] : LE (α ⊕ₗ β) :=
+instance hasLe [LE α] [LE β] : LE (α ⊕ₗ β) :=
   ⟨Lex (· ≤ ·) (· ≤ ·)⟩
 
 /-- The linear/lexicographical `<` on a sum. -/
-instance LT [LT α] [LT β] : LT (α ⊕ₗ β) :=
+instance hasLt [LT α] [LT β] : LT (α ⊕ₗ β) :=
   ⟨Lex (· < ·) (· < ·)⟩
 
 @[simp]
@@ -350,7 +356,7 @@ section Preorderₓ
 
 variable [Preorderₓ α] [Preorderₓ β]
 
-instance Preorderₓ : Preorderₓ (α ⊕ₗ β) :=
+instance preorder : Preorderₓ (α ⊕ₗ β) :=
   { Lex.hasLe, Lex.hasLt with le_refl := refl_of (Lex (· ≤ ·) (· ≤ ·)),
     le_trans := fun _ _ _ => trans_of (Lex (· ≤ ·) (· ≤ ·)),
     lt_iff_le_not_le := fun a b => by
@@ -390,15 +396,15 @@ theorem inr_strict_mono : StrictMono (toLex ∘ inr : β → α ⊕ₗ β) :=
 
 end Preorderₓ
 
-instance PartialOrderₓ [PartialOrderₓ α] [PartialOrderₓ β] : PartialOrderₓ (α ⊕ₗ β) :=
+instance partialOrder [PartialOrderₓ α] [PartialOrderₓ β] : PartialOrderₓ (α ⊕ₗ β) :=
   { Lex.preorder with le_antisymm := fun _ _ => antisymm_of (Lex (· ≤ ·) (· ≤ ·)) }
 
-instance LinearOrderₓ [LinearOrderₓ α] [LinearOrderₓ β] : LinearOrderₓ (α ⊕ₗ β) :=
+instance linearOrder [LinearOrderₓ α] [LinearOrderₓ β] : LinearOrderₓ (α ⊕ₗ β) :=
   { Lex.partialOrder with le_total := total_of (Lex (· ≤ ·) (· ≤ ·)), decidableLe := Lex.decidableRel,
     DecidableEq := Sum.decidableEq _ _ }
 
 /-- The lexicographical bottom of a sum is the bottom of the left component. -/
-instance OrderBot [LE α] [OrderBot α] [LE β] : OrderBot (α ⊕ₗ β) where
+instance orderBot [LE α] [OrderBot α] [LE β] : OrderBot (α ⊕ₗ β) where
   bot := inl ⊥
   bot_le := by
     rintro (a | b)
@@ -412,7 +418,7 @@ theorem inl_bot [LE α] [OrderBot α] [LE β] : toLex (inl ⊥ : Sum α β) = �
   rfl
 
 /-- The lexicographical top of a sum is the top of the right component. -/
-instance OrderTop [LE α] [LE β] [OrderTop β] : OrderTop (α ⊕ₗ β) where
+instance orderTop [LE α] [LE β] [OrderTop β] : OrderTop (α ⊕ₗ β) where
   top := inr ⊤
   le_top := by
     rintro (a | b)
@@ -425,10 +431,10 @@ instance OrderTop [LE α] [LE β] [OrderTop β] : OrderTop (α ⊕ₗ β) where
 theorem inr_top [LE α] [LE β] [OrderTop β] : toLex (inr ⊤ : Sum α β) = ⊤ :=
   rfl
 
-instance BoundedOrder [LE α] [LE β] [OrderBot α] [OrderTop β] : BoundedOrder (α ⊕ₗ β) :=
+instance boundedOrder [LE α] [LE β] [OrderBot α] [OrderTop β] : BoundedOrder (α ⊕ₗ β) :=
   { Lex.orderBot, Lex.orderTop with }
 
-instance NoMinOrder [LT α] [LT β] [NoMinOrder α] [NoMinOrder β] : NoMinOrder (α ⊕ₗ β) :=
+instance no_min_order [LT α] [LT β] [NoMinOrder α] [NoMinOrder β] : NoMinOrder (α ⊕ₗ β) :=
   ⟨fun a =>
     match a with
     | inl a =>
@@ -438,7 +444,7 @@ instance NoMinOrder [LT α] [LT β] [NoMinOrder α] [NoMinOrder β] : NoMinOrder
       let ⟨b, h⟩ := exists_lt a
       ⟨toLex (inr b), inr_lt_inr_iff.2 h⟩⟩
 
-instance NoMaxOrder [LT α] [LT β] [NoMaxOrder α] [NoMaxOrder β] : NoMaxOrder (α ⊕ₗ β) :=
+instance no_max_order [LT α] [LT β] [NoMaxOrder α] [NoMaxOrder β] : NoMaxOrder (α ⊕ₗ β) :=
   ⟨fun a =>
     match a with
     | inl a =>
@@ -507,7 +513,7 @@ variable {α β γ : Type _} [LE α] [LE β] [LE γ] (a : α) (b : β) (c : γ)
 
 /-- `equiv.sum_comm` promoted to an order isomorphism. -/
 @[simps apply]
-def sum_comm (α β : Type _) [LE α] [LE β] : Sum α β ≃o Sum β α :=
+def sumComm (α β : Type _) [LE α] [LE β] : Sum α β ≃o Sum β α :=
   { Equivₓ.sumComm α β with map_rel_iff' := fun a b => swap_le_swap_iff }
 
 @[simp]
@@ -515,7 +521,7 @@ theorem sum_comm_symm (α β : Type _) [LE α] [LE β] : (OrderIso.sumComm α β
   rfl
 
 /-- `equiv.sum_assoc` promoted to an order isomorphism. -/
-def sum_assoc (α β γ : Type _) [LE α] [LE β] [LE γ] : Sum (Sum α β) γ ≃o Sum α (Sum β γ) :=
+def sumAssoc (α β γ : Type _) [LE α] [LE β] [LE γ] : Sum (Sum α β) γ ≃o Sum α (Sum β γ) :=
   { Equivₓ.sumAssoc α β γ with
     map_rel_iff' := by
       rintro ((a | a) | a) ((b | b) | b) <;> simp }
@@ -545,7 +551,7 @@ theorem sum_assoc_symm_apply_inr_inr : (sumAssoc α β γ).symm (inr (inr c)) = 
   rfl
 
 /-- `order_dual` is distributive over `⊕` up to an order isomorphism. -/
-def sum_dual_distrib (α β : Type _) [LE α] [LE β] : OrderDual (Sum α β) ≃o Sum (OrderDual α) (OrderDual β) :=
+def sumDualDistrib (α β : Type _) [LE α] [LE β] : OrderDual (Sum α β) ≃o Sum (OrderDual α) (OrderDual β) :=
   { Equivₓ.refl _ with
     map_rel_iff' := by
       rintro (a | a) (b | b)
@@ -577,7 +583,7 @@ theorem sum_dual_distrib_symm_inr : (sumDualDistrib α β).symm (inr (toDual b))
   rfl
 
 /-- `equiv.sum_assoc` promoted to an order isomorphism. -/
-def sum_lex_assoc (α β γ : Type _) [LE α] [LE β] [LE γ] : (α ⊕ₗ β) ⊕ₗ γ ≃o α ⊕ₗ β ⊕ₗ γ :=
+def sumLexAssoc (α β γ : Type _) [LE α] [LE β] [LE γ] : (α ⊕ₗ β) ⊕ₗ γ ≃o α ⊕ₗ β ⊕ₗ γ :=
   { Equivₓ.sumAssoc α β γ with
     map_rel_iff' := fun a b =>
       ⟨fun h =>
@@ -623,7 +629,7 @@ theorem sum_lex_assoc_symm_apply_inr_inr : (sumLexAssoc α β γ).symm (inr (inr
   rfl
 
 /-- `order_dual` is antidistributive over `⊕ₗ` up to an order isomorphism. -/
-def sum_lex_dual_antidistrib (α β : Type _) [LE α] [LE β] : OrderDual (α ⊕ₗ β) ≃o OrderDual β ⊕ₗ OrderDual α :=
+def sumLexDualAntidistrib (α β : Type _) [LE α] [LE β] : OrderDual (α ⊕ₗ β) ≃o OrderDual β ⊕ₗ OrderDual α :=
   { Equivₓ.sumComm α β with
     map_rel_iff' := by
       rintro (a | a) (b | b)

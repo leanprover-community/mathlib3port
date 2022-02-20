@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Robert Y. Lewis. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Robert Y. Lewis
+-/
 import Mathbin.Analysis.NormedSpace.Basic
 import Mathbin.Data.Polynomial.AlgebraMap
 import Mathbin.Data.Polynomial.Inductions
@@ -42,16 +47,16 @@ protected theorem continuous_eval₂ [Semiringₓ S] (p : S[X]) (f : S →+* R) 
   exact continuous_finset_sum _ fun c hc => continuous_const.mul (continuous_pow _)
 
 @[continuity]
-protected theorem Continuous : Continuous fun x => p.eval x :=
+protected theorem continuous : Continuous fun x => p.eval x :=
   p.continuous_eval₂ _
 
-protected theorem ContinuousAt {a : R} : ContinuousAt (fun x => p.eval x) a :=
+protected theorem continuous_at {a : R} : ContinuousAt (fun x => p.eval x) a :=
   p.Continuous.ContinuousAt
 
-protected theorem ContinuousWithinAt {s a} : ContinuousWithinAt (fun x => p.eval x) s a :=
+protected theorem continuous_within_at {s a} : ContinuousWithinAt (fun x => p.eval x) s a :=
   p.Continuous.ContinuousWithinAt
 
-protected theorem ContinuousOn {s} : ContinuousOn (fun x => p.eval x) s :=
+protected theorem continuous_on {s} : ContinuousOn (fun x => p.eval x) s :=
   p.Continuous.ContinuousOn
 
 end TopologicalRing

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Adam Topaz. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Calle Sönne, Adam Topaz
+-/
 import Mathbin.Topology.Separation
 import Mathbin.Topology.SubsetProperties
 import Mathbin.Topology.LocallyConstant.Basic
@@ -61,7 +66,7 @@ namespace DiscreteQuotient
 variable {X} (S : DiscreteQuotient X)
 
 /-- Construct a discrete quotient from a clopen set. -/
-def of_clopen {A : Set X} (h : IsClopen A) : DiscreteQuotient X where
+def ofClopen {A : Set X} (h : IsClopen A) : DiscreteQuotient X where
   Rel := fun x y => x ∈ A ∧ y ∈ A ∨ x ∉ A ∧ y ∉ A
   Equiv :=
     ⟨by
@@ -100,7 +105,7 @@ theorem trans : ∀ x y z : X, S.Rel x y → S.Rel y z → S.Rel x z :=
   S.Equiv.2.2
 
 /-- The setoid whose quotient yields the discrete quotient. -/
-def Setoidₓ : Setoidₓ X :=
+def setoid : Setoidₓ X :=
   ⟨S.Rel, S.Equiv⟩
 
 instance : CoeSort (DiscreteQuotient X) (Type _) :=
@@ -208,7 +213,7 @@ end Comap
 section OfLe
 
 /-- The map induced by a refinement of a discrete quotient. -/
-def of_le {A B : DiscreteQuotient X} (h : A ≤ B) : A → B := fun a =>
+def ofLe {A B : DiscreteQuotient X} (h : A ≤ B) : A → B := fun a =>
   Quotientₓ.liftOn' a (fun x => B.proj x) fun a b i => Quotientₓ.sound' (h _ _ i)
 
 @[simp]
@@ -247,7 +252,7 @@ end OfLe
 /-- When X is discrete, there is a `order_bot` instance on `discrete_quotient X`
 -/
 instance [DiscreteTopology X] : OrderBot (DiscreteQuotient X) where
-  bot := { Rel := · = ·, Equiv := eq_equivalence, clopen := fun x => is_clopen_discrete _ }
+  bot := { Rel := (· = ·), Equiv := eq_equivalence, clopen := fun x => is_clopen_discrete _ }
   bot_le := by
     rintro S a b (h : a = b)
     rw [h]
@@ -267,7 +272,7 @@ variable {Y : Type _} [TopologicalSpace Y] {f : Y → X} (cont : Continuous f) (
 /-- Given `cont : continuous f`, `le_comap cont A B` is defined as `A ≤ B.comap f`.
 Mathematically this means that `f` descends to a morphism `A → B`.
 -/
-def le_comap : Prop :=
+def LeComap : Prop :=
   A ≤ B.comap cont
 
 variable {cont A B}
@@ -409,7 +414,7 @@ namespace LocallyConstant
 variable {X} {α : Type _} (f : LocallyConstant X α)
 
 /-- Any locally constant function induces a discrete quotient. -/
-def DiscreteQuotient : DiscreteQuotient X where
+def discreteQuotient : DiscreteQuotient X where
   Rel := fun a b => f b = f a
   Equiv :=
     ⟨by
@@ -424,7 +429,7 @@ def lift : f.DiscreteQuotient → α := fun a => Quotientₓ.liftOn' a f fun a b
 theorem lift_is_locally_constant : IsLocallyConstant f.lift := fun A => trivialₓ
 
 /-- A locally constant version of `locally_constant.lift`. -/
-def locally_constant_lift : LocallyConstant f.DiscreteQuotient α :=
+def locallyConstantLift : LocallyConstant f.DiscreteQuotient α :=
   ⟨f.lift, f.lift_is_locally_constant⟩
 
 @[simp]

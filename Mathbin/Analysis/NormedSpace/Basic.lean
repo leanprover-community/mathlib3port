@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Patrick Massot. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Patrick Massot, Johannes Hölzl
+-/
 import Mathbin.Algebra.Algebra.RestrictScalars
 import Mathbin.Algebra.Algebra.Subalgebra
 import Mathbin.Analysis.Normed.Group.InfiniteSum
@@ -36,6 +41,7 @@ class NormedRing (α : Type _) extends HasNorm α, Ringₓ α, MetricSpace α wh
   norm_mul : ∀ a b, norm (a * b) ≤ norm a * norm b
 
 /-- A normed ring is a seminormed ring. -/
+-- see Note [lower instance priority]
 instance (priority := 100) NormedRing.toSemiNormedRing [β : NormedRing α] : SemiNormedRing α :=
   { β with }
 
@@ -50,6 +56,7 @@ class NormedCommRing (α : Type _) extends NormedRing α where
   mul_comm : ∀ x y : α, x * y = y * x
 
 /-- A normed commutative ring is a seminormed commutative ring. -/
+-- see Note [lower instance priority]
 instance (priority := 100) NormedCommRing.toSemiNormedCommRing [β : NormedCommRing α] : SemiNormedCommRing α :=
   { β with }
 
@@ -71,12 +78,15 @@ attribute [simp] norm_one
 theorem nnnorm_one [SemiNormedGroup α] [One α] [NormOneClass α] : ∥(1 : α)∥₊ = 1 :=
   Nnreal.eq norm_one
 
+-- see Note [lower instance priority]
 instance (priority := 100) SemiNormedCommRing.toCommRing [β : SemiNormedCommRing α] : CommRingₓ α :=
   { β with }
 
+-- see Note [lower instance priority]
 instance (priority := 100) NormedRing.toNormedGroup [β : NormedRing α] : NormedGroup α :=
   { β with }
 
+-- see Note [lower instance priority]
 instance (priority := 100) SemiNormedRing.toSemiNormedGroup [β : SemiNormedRing α] : SemiNormedGroup α :=
   { β with }
 
@@ -223,6 +233,7 @@ def Matrix.normedGroup {n m : Type _} [Fintype n] [Fintype m] : NormedGroup (Mat
 
 end NormedRing
 
+-- see Note [lower instance priority]
 instance (priority := 100) semi_normed_ring_top_monoid [SemiNormedRing α] : HasContinuousMul α :=
   ⟨continuous_iff_continuous_at.2 fun x =>
       tendsto_iff_norm_tendsto_zero.2 <| by
@@ -240,6 +251,7 @@ instance (priority := 100) semi_normed_ring_top_monoid [SemiNormedRing α] : Has
         simp ⟩
 
 /-- A seminormed ring is a topological ring. -/
+-- see Note [lower instance priority]
 instance (priority := 100) semi_normed_top_ring [SemiNormedRing α] : TopologicalRing α :=
   {  }
 
@@ -264,7 +276,8 @@ variable [NormedField α]
 theorem norm_mul (a b : α) : ∥a * b∥ = ∥a∥ * ∥b∥ :=
   NormedField.norm_mul' a b
 
-instance (priority := 100) to_normed_comm_ring : NormedCommRing α :=
+-- see Note [lower instance priority]
+instance (priority := 100) toNormedCommRing : NormedCommRing α :=
   { ‹NormedField α› with norm_mul := fun a b => (norm_mul a b).le }
 
 instance (priority := 900) to_norm_one_class : NormOneClass α :=
@@ -277,12 +290,12 @@ theorem nnnorm_mul (a b : α) : ∥a * b∥₊ = ∥a∥₊ * ∥b∥₊ :=
 
 /-- `norm` as a `monoid_with_zero_hom`. -/
 @[simps]
-def norm_hom : α →*₀ ℝ :=
+def normHom : α →*₀ ℝ :=
   ⟨norm, norm_zero, norm_one, norm_mul⟩
 
 /-- `nnnorm` as a `monoid_with_zero_hom`. -/
 @[simps]
-def nnnorm_hom : α →*₀ ℝ≥0 :=
+def nnnormHom : α →*₀ ℝ≥0 :=
   ⟨nnnorm, nnnorm_zero, nnnorm_one, nnnorm_mul⟩
 
 @[simp]
@@ -326,6 +339,7 @@ theorem norm_zpow : ∀ a : α n : ℤ, ∥a ^ n∥ = ∥a∥ ^ n :=
 theorem nnnorm_zpow : ∀ a : α n : ℤ, ∥a ^ n∥₊ = ∥a∥₊ ^ n :=
   (nnnormHom : α →*₀ ℝ≥0 ).map_zpow
 
+-- see Note [lower instance priority]
 instance (priority := 100) : HasContinuousInv₀ α := by
   refine' ⟨fun r r0 => tendsto_iff_norm_tendsto_zero.2 _⟩
   have r0' : 0 < ∥r∥ := norm_pos_iff.2 r0
@@ -534,6 +548,8 @@ theorem Rat.norm_cast_real (r : ℚ) : ∥(r : ℝ)∥ = ∥r∥ :=
 theorem Int.norm_cast_rat (m : ℤ) : ∥(m : ℚ)∥ = ∥m∥ := by
   rw [← Rat.norm_cast_real, ← Int.norm_cast_real] <;> congr 1 <;> norm_cast
 
+-- Now that we've installed the norm on `ℤ`,
+-- we can state some lemmas about `nsmul` and `zsmul`.
 section
 
 variable [SemiNormedGroup α]
@@ -568,7 +584,7 @@ section SemiNormedGroup
 
 section Prio
 
--- ././Mathport/Syntax/Translate/Basic.lean:169:40: warning: unsupported option extends_priority
+-- ././Mathport/Syntax/Translate/Basic.lean:211:40: warning: unsupported option extends_priority
 set_option extends_priority 920
 
 /-- A normed space over a normed field is a vector space endowed with a norm which satisfies the
@@ -577,6 +593,9 @@ equality `∥c • x∥ = ∥c∥ ∥x∥`. We require only `∥c • x∥ ≤ �
 
 Note that since this requires `semi_normed_group` and not `normed_group`, this typeclass can be
 used for "semi normed spaces" too, just as `module` can be used for "semi modules". -/
+-- Here, we set a rather high priority for the instance `[normed_space α β] : module α β`
+-- to take precedence over `semiring.to_module` as this leads to instance paths with better
+-- unification properties.
 class NormedSpace (α : Type _) (β : Type _) [NormedField α] [SemiNormedGroup β] extends Module α β where
   norm_smul_le : ∀ a : α b : β, ∥a • b∥ ≤ ∥a∥ * ∥b∥
 
@@ -584,6 +603,7 @@ end Prio
 
 variable [NormedField α] [SemiNormedGroup β]
 
+-- see Note [lower instance priority]
 instance (priority := 100) NormedSpace.has_bounded_smul [NormedSpace α β] : HasBoundedSmul α β where
   dist_smul_pair' := fun x y₁ y₂ => by
     simpa [dist_eq_norm, smul_sub] using NormedSpace.norm_smul_le x (y₁ - y₂)
@@ -626,7 +646,7 @@ variable {F : Type _} [SemiNormedGroup F] [NormedSpace α F]
 
 theorem eventually_nhds_norm_smul_sub_lt (c : α) (x : E) {ε : ℝ} (h : 0 < ε) : ∀ᶠ y in 𝓝 x, ∥c • (y - x)∥ < ε :=
   have : Tendsto (fun y => ∥c • (y - x)∥) (𝓝 x) (𝓝 0) :=
-    (continuous_const.smul (continuous_id.sub continuous_const)).norm.tendsto' _ _
+    ((continuous_id.sub continuous_const).const_smul _).norm.tendsto' _ _
       (by
         simp )
   this.Eventually (gt_mem_nhds h)

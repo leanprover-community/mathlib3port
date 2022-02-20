@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Reid Barton. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johannes Hölzl, Mario Carneiro, Patrick Massot
+-/
 import Mathbin.Topology.Separation
 import Mathbin.Topology.Bases
 
@@ -41,13 +46,13 @@ variable {i : α → β} (di : DenseInducing i)
 theorem nhds_eq_comap (di : DenseInducing i) : ∀ a : α, 𝓝 a = comap i (𝓝 <| i a) :=
   di.to_inducing.nhds_eq_comap
 
-protected theorem Continuous (di : DenseInducing i) : Continuous i :=
+protected theorem continuous (di : DenseInducing i) : Continuous i :=
   di.to_inducing.Continuous
 
 theorem closure_range : Closure (Range i) = univ :=
   di.dense.closure_range
 
-theorem PreconnectedSpace [PreconnectedSpace α] (di : DenseInducing i) : PreconnectedSpace β :=
+protected theorem preconnected_space [PreconnectedSpace α] (di : DenseInducing i) : PreconnectedSpace β :=
   di.dense.PreconnectedSpace di.Continuous
 
 theorem closure_image_mem_nhds {s : Set α} {a : α} (di : DenseInducing i) (hs : s ∈ 𝓝 a) : Closure (i '' s) ∈ 𝓝 (i a) :=
@@ -75,7 +80,7 @@ theorem interior_compact_eq_empty [T2Space β] (di : DenseInducing i) (hd : Dens
   exact hyi (image_subset_range _ _ hys)
 
 /-- The product of two dense inducings is a dense inducing -/
-protected theorem Prod [TopologicalSpace γ] [TopologicalSpace δ] {e₁ : α → β} {e₂ : γ → δ} (de₁ : DenseInducing e₁)
+protected theorem prod [TopologicalSpace γ] [TopologicalSpace δ] {e₁ : α → β} {e₂ : γ → δ} (de₁ : DenseInducing e₁)
     (de₂ : DenseInducing e₂) : DenseInducing fun p : α × γ => (e₁ p.1, e₂ p.2) :=
   { induced := (de₁.to_inducing.prod_mk de₂.to_inducing).induced, dense := de₁.dense.prod_map de₂.dense }
 
@@ -221,7 +226,7 @@ protected theorem separable_space [SeparableSpace α] : SeparableSpace β :=
   de.to_dense_inducing.SeparableSpace
 
 /-- The product of two dense embeddings is a dense embedding. -/
-protected theorem Prod {e₁ : α → β} {e₂ : γ → δ} (de₁ : DenseEmbedding e₁) (de₂ : DenseEmbedding e₂) :
+protected theorem prod {e₁ : α → β} {e₂ : γ → δ} (de₁ : DenseEmbedding e₁) (de₂ : DenseEmbedding e₂) :
     DenseEmbedding fun p : α × γ => (e₁ p.1, e₂ p.2) :=
   { DenseInducing.prod de₁.to_dense_inducing de₂.to_dense_inducing with
     inj := fun ⟨x₁, x₂⟩ ⟨y₁, y₂⟩ => by
@@ -229,19 +234,19 @@ protected theorem Prod {e₁ : α → β} {e₂ : γ → δ} (de₁ : DenseEmbed
 
 /-- The dense embedding of a subtype inside its closure. -/
 @[simps]
-def subtype_emb {α : Type _} (p : α → Prop) (e : α → β) (x : { x // p x }) : { x // x ∈ Closure (e '' { x | p x }) } :=
+def subtypeEmb {α : Type _} (p : α → Prop) (e : α → β) (x : { x // p x }) : { x // x ∈ Closure (e '' { x | p x }) } :=
   ⟨e x, subset_closure <| mem_image_of_mem e x.Prop⟩
 
-protected theorem Subtype (p : α → Prop) : DenseEmbedding (subtypeEmb p e) :=
+protected theorem subtype (p : α → Prop) : DenseEmbedding (subtypeEmb p e) :=
   { dense :=
       dense_iff_closure_eq.2 <| by
         ext ⟨x, hx⟩
         rw [image_eq_range] at hx
-        simpa [closure_subtype, ← range_comp, · ∘ ·],
+        simpa [closure_subtype, ← range_comp, (· ∘ ·)],
     inj := (de.inj.comp Subtype.coe_injective).codRestrict _,
     induced :=
       (induced_iff_nhds_eq _).2 fun ⟨x, hx⟩ => by
-        simp [subtype_emb, nhds_subtype_eq_comap, de.to_inducing.nhds_eq_comap, comap_comap, · ∘ ·] }
+        simp [subtype_emb, nhds_subtype_eq_comap, de.to_inducing.nhds_eq_comap, comap_comap, (· ∘ ·)] }
 
 theorem dense_image {s : Set α} : Dense (e '' s) ↔ Dense s :=
   de.to_dense_inducing.dense_image

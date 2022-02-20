@@ -1,7 +1,16 @@
+/-
+Copyright (c) 2019 Seul Baek. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Seul Baek
+-/
 import Mathbin.Tactic.Omega.FindEes
 import Mathbin.Tactic.Omega.FindScalars
 import Mathbin.Tactic.Omega.LinComb
 
+/-
+A tactic which constructs exprs to discharge
+goals of the form `clauses.unsat cs`.
+-/
 namespace Omega
 
 open Tactic

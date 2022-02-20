@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Gabriel Ebner. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Gabriel Ebner
+-/
 import Mathbin.Logic.Basic
 import Mathbin.Data.Rbmap.Basic
 
@@ -12,7 +17,7 @@ instances for types in the core library.
 
 namespace Tactic
 
--- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:916:4: warning: unsupported (TODO): `[tacs]
 /-- Tries to derive an `inhabited` instance for inductives and structures.
 
 For example:

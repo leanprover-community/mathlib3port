@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Jireh Loreaux. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Jireh Loreaux
+-/
 import Mathbin.Analysis.NormedSpace.OperatorNorm
 import Mathbin.Topology.MetricSpace.Baire
 import Mathbin.Topology.Algebra.Module.Basic
@@ -26,17 +31,22 @@ If a family of continuous linear maps from a Banach space into a normed space is
 bounded, then the norms of these linear maps are uniformly bounded. -/
 theorem banach_steinhaus {ι : Type _} [CompleteSpace E] {g : ι → E →SL[σ₁₂] F} (h : ∀ x, ∃ C, ∀ i, ∥g i x∥ ≤ C) :
     ∃ C', ∀ i, ∥g i∥ ≤ C' := by
+  -- sequence of subsets consisting of those `x : E` with norms `∥g i x∥` bounded by `n`
   let e : ℕ → Set E := fun n => ⋂ i : ι, { x : E | ∥g i x∥ ≤ n }
+  -- each of these sets is closed
   have hc : ∀ n : ℕ, IsClosed (e n) := fun i =>
     is_closed_Inter fun i => is_closed_le (Continuous.norm (g i).cont) continuous_const
+  -- the union is the entire space; this is where we use `h`
   have hU : (⋃ n : ℕ, e n) = univ := by
     refine' eq_univ_of_forall fun x => _
     cases' h x with C hC
     obtain ⟨m, hm⟩ := exists_nat_ge C
     exact ⟨e m, mem_range_self m, mem_Inter.mpr fun i => le_transₓ (hC i) hm⟩
+  -- apply the Baire category theorem to conclude that for some `m : ℕ`, `e m` contains some `x`
   rcases nonempty_interior_of_Union_of_closed hc hU with ⟨m, x, hx⟩
   rcases metric.is_open_iff.mp is_open_interior x hx with ⟨ε, ε_pos, hε⟩
   obtain ⟨k, hk⟩ := NormedField.exists_one_lt_norm 𝕜
+  -- show all elements in the ball have norm bounded by `m` after applying any `g i`
   have real_norm_le : ∀ z : E, z ∈ Metric.Ball x ε → ∀ i : ι, ∥g i z∥ ≤ m := by
     intro z hz i
     replace hz := mem_Inter.mp (interior_Inter_subset _ (hε hz)) i
@@ -94,6 +104,7 @@ def continuousLinearMapOfTendsto [CompleteSpace E] [T2Space F] (g : ℕ → E �
   map_add' := (linearMapOfTendsto _ _ h).map_add'
   map_smul' := (linearMapOfTendsto _ _ h).map_smul'
   cont := by
+    -- show that the maps are pointwise bounded and apply `banach_steinhaus`
     have h_point_bdd : ∀ x : E, ∃ C : ℝ, ∀ n : ℕ, ∥g n x∥ ≤ C := by
       intro x
       rcases cauchy_seq_bdd (tendsto_pi_nhds.mp h x).CauchySeq with ⟨C, C_pos, hC⟩
@@ -102,6 +113,8 @@ def continuousLinearMapOfTendsto [CompleteSpace E] [T2Space F] (g : ℕ → E �
       calc ∥g n x∥ ≤ ∥g 0 x∥ + ∥g n x - g 0 x∥ := norm_le_insert' _ _ _ ≤ C + ∥g 0 x∥ := by
           linarith [hC n 0]
     cases' banach_steinhaus h_point_bdd with C' hC'
+    /- show the uniform bound from `banach_steinhaus` is a norm bound of the limit map
+             by allowing "an `ε` of room." -/
     refine'
       LinearMap.continuous_of_bound (linearMapOfTendsto _ _ h) C' fun x => le_of_forall_pos_lt_add fun ε ε_pos => _
     cases' metric.tendsto_at_top.mp (tendsto_pi_nhds.mp h x) ε ε_pos with n hn

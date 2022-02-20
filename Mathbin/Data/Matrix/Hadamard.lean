@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Lu-Ming Zhang. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Lu-Ming Zhang
+-/
 import Mathbin.LinearAlgebra.Matrix.Trace
 
 /-!
@@ -45,18 +50,22 @@ section BasicProperties
 
 variable (A : Matrix m n α) (B : Matrix m n α) (C : Matrix m n α)
 
+-- commutativity
 theorem hadamard_comm [CommSemigroupₓ α] : A ⊙ B = B ⊙ A :=
   ext fun _ _ => mul_comm _ _
 
+-- associativity
 theorem hadamard_assoc [Semigroupₓ α] : A ⊙ B ⊙ C = A ⊙ (B ⊙ C) :=
   ext fun _ _ => mul_assoc _ _ _
 
+-- distributivity
 theorem hadamard_add [Distribₓ α] : A ⊙ (B + C) = A ⊙ B + A ⊙ C :=
   ext fun _ _ => left_distrib _ _ _
 
 theorem add_hadamard [Distribₓ α] : (B + C) ⊙ A = B ⊙ A + C ⊙ A :=
   ext fun _ _ => right_distrib _ _ _
 
+-- scalar multiplication
 section Scalar
 
 @[simp]

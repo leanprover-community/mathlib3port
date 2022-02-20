@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Jordan Brown, Thomas Browning, Patrick Lutz. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Jordan Brown, Thomas Browning, Patrick Lutz
+-/
 import Mathbin.Data.Bracket
 import Mathbin.GroupTheory.Subgroup.Basic
 import Mathbin.Tactic.Group

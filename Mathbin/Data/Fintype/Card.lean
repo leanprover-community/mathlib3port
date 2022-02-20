@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2017 Mario Carneiro. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Mario Carneiro
+-/
 import Mathbin.Data.Fintype.Basic
 import Mathbin.Algebra.BigOperators.Ring
 import Mathbin.Algebra.BigOperators.Option
@@ -56,7 +61,7 @@ theorem prod_eq_one (f : α → M) (h : ∀ a, f a = 1) : (∏ a, f a) = 1 :=
 theorem prod_congr (f g : α → M) (h : ∀ a, f a = g a) : (∏ a, f a) = ∏ a, g a :=
   (Finset.prod_congr rfl) fun a ha => h a
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (x «expr ≠ » a)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (x «expr ≠ » a)
 @[to_additive]
 theorem prod_eq_single {f : α → M} (a : α) (h : ∀ x _ : x ≠ a, f x = 1) : (∏ x, f x) = f a :=
   (Finset.prod_eq_single a fun x _ hx => h x hx) fun ha => (ha (Finset.mem_univ a)).elim
@@ -118,6 +123,8 @@ theorem Finₓ.prod_univ_zero [CommMonoidₓ β] (f : Finₓ 0 → β) : (∏ i,
 
 /-- A product of a function `f : fin (n + 1) → β` over all `fin (n + 1)`
 is the product of `f x`, for some `x : fin (n + 1)` times the remaining product -/
+/- A sum of a function `f : fin (n + 1) → β` over all `fin (n + 1)`
+is the sum of `f x`, for some `x : fin (n + 1)` plus the remaining product -/
 @[to_additive]
 theorem Finₓ.prod_univ_succ_above [CommMonoidₓ β] {n : ℕ} (f : Finₓ (n + 1) → β) (x : Finₓ (n + 1)) :
     (∏ i, f i) = f x * ∏ i : Finₓ n, f (x.succAbove i) := by
@@ -126,6 +133,8 @@ theorem Finₓ.prod_univ_succ_above [CommMonoidₓ β] {n : ℕ} (f : Finₓ (n 
 
 /-- A product of a function `f : fin (n + 1) → β` over all `fin (n + 1)`
 is the product of `f 0` plus the remaining product -/
+/- A sum of a function `f : fin (n + 1) → β` over all `fin (n + 1)`
+is the sum of `f 0` plus the remaining product -/
 @[to_additive]
 theorem Finₓ.prod_univ_succ [CommMonoidₓ β] {n : ℕ} (f : Finₓ (n + 1) → β) :
     (∏ i, f i) = f 0 * ∏ i : Finₓ n, f i.succ :=
@@ -133,6 +142,8 @@ theorem Finₓ.prod_univ_succ [CommMonoidₓ β] {n : ℕ} (f : Finₓ (n + 1) �
 
 /-- A product of a function `f : fin (n + 1) → β` over all `fin (n + 1)`
 is the product of `f (fin.last n)` plus the remaining product -/
+/- A sum of a function `f : fin (n + 1) → β` over all `fin (n + 1)`
+is the sum of `f (fin.last n)` plus the remaining sum -/
 @[to_additive]
 theorem Finₓ.prod_univ_cast_succ [CommMonoidₓ β] {n : ℕ} (f : Finₓ (n + 1) → β) :
     (∏ i, f i) = (∏ i : Finₓ n, f i.cast_succ) * f (Finₓ.last n) := by
@@ -168,6 +179,7 @@ theorem Fintype.card_pi {β : α → Type _} [DecidableEq α] [Fintype α] [f : 
     Fintype.card (∀ a, β a) = ∏ a, Fintype.card (β a) :=
   Fintype.card_pi_finset _
 
+-- FIXME ouch, this should be in the main file.
 @[simp]
 theorem Fintype.card_fun [DecidableEq α] [Fintype α] [Fintype β] :
     Fintype.card (α → β) = Fintype.card β ^ Fintype.card α := by

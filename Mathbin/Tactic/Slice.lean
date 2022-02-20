@@ -1,7 +1,13 @@
+/-
+Copyright (c) 2018 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison
+-/
 import Mathbin.CategoryTheory.Category.Basic
 
 open CategoryTheory
 
+-- TODO someone might like to generalise this tactic to work with other associative structures.
 namespace Tactic
 
 unsafe def repeat_with_results {α : Type} (t : tactic α) : tactic (List α) :=

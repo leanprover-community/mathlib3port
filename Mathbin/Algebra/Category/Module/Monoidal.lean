@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Kevin Buzzard, Scott Morrison, Jakob von Raumer
+-/
 import Mathbin.CategoryTheory.Monoidal.Braided
 import Mathbin.Algebra.Category.Module.Basic
 import Mathbin.LinearAlgebra.TensorProduct
@@ -24,16 +29,19 @@ variable {R : Type u} [CommRingₓ R]
 
 namespace MonoidalCategory
 
+-- The definitions inside this namespace are essentially private.
+-- After we build the `monoidal_category (Module R)` instance,
+-- you should use that API.
 open_locale TensorProduct
 
 attribute [local ext] TensorProduct.ext
 
 /-- (implementation) tensor product of R-modules -/
-def tensor_obj (M N : ModuleCat R) : ModuleCat R :=
+def tensorObj (M N : ModuleCat R) : ModuleCat R :=
   ModuleCat.of R (M ⊗[R] N)
 
 /-- (implementation) tensor product of morphisms R-modules -/
-def tensor_hom {M N M' N' : ModuleCat R} (f : M ⟶ N) (g : M' ⟶ N') : tensorObj M M' ⟶ tensorObj N N' :=
+def tensorHom {M N M' N' : ModuleCat R} (f : M ⟶ N) (g : M' ⟶ N') : tensorObj M M' ⟶ tensorObj N N' :=
   TensorProduct.map f g
 
 theorem tensor_id (M N : ModuleCat R) : tensorHom (𝟙 M) (𝟙 N) = 𝟙 (ModuleCat.of R (↥M ⊗ ↥N)) := by
@@ -94,7 +102,7 @@ theorem pentagon (W X Y Z : ModuleCat R) :
   convert pentagon_aux R W X Y Z using 1
 
 /-- (implementation) the left unitor for R-modules -/
-def left_unitor (M : ModuleCat.{u} R) : ModuleCat.of R (R ⊗[R] M) ≅ M :=
+def leftUnitor (M : ModuleCat.{u} R) : ModuleCat.of R (R ⊗[R] M) ≅ M :=
   (LinearEquiv.toModuleIso (TensorProduct.lid R M) : of R (R ⊗ M) ≅ of R M).trans (ofSelfIso M)
 
 theorem left_unitor_naturality {M N : ModuleCat R} (f : M ⟶ N) :
@@ -106,7 +114,7 @@ theorem left_unitor_naturality {M N : ModuleCat R} (f : M ⟶ N) :
   rfl
 
 /-- (implementation) the right unitor for R-modules -/
-def right_unitor (M : ModuleCat.{u} R) : ModuleCat.of R (M ⊗[R] R) ≅ M :=
+def rightUnitor (M : ModuleCat.{u} R) : ModuleCat.of R (M ⊗[R] R) ≅ M :=
   (LinearEquiv.toModuleIso (TensorProduct.rid R M) : of R (M ⊗ R) ≅ of R M).trans (ofSelfIso M)
 
 theorem right_unitor_naturality {M N : ModuleCat R} (f : M ⟶ N) :
@@ -132,13 +140,15 @@ end MonoidalCategory
 
 open MonoidalCategory
 
-instance monoidal_category : MonoidalCategory (ModuleCat.{u} R) where
+instance monoidalCategory : MonoidalCategory (ModuleCat.{u} R) where
+  -- data
   tensorObj := tensorObj
   tensorHom := @tensorHom _ _
   tensorUnit := ModuleCat.of R R
   associator := associator
   leftUnitor := leftUnitor
   rightUnitor := rightUnitor
+  -- properties
   tensor_id' := fun M N => tensor_id M N
   tensor_comp' := fun M N K M' N' K' f g h => tensor_comp f g h
   associator_naturality' := fun M N K M' N' K' f g h => associator_naturality f g h
@@ -223,7 +233,7 @@ theorem hexagon_reverse (X Y Z : ModuleCat.{u} R) :
 attribute [local ext] TensorProduct.ext
 
 /-- The symmetric monoidal structure on `Module R`. -/
-instance symmetric_category : SymmetricCategory (ModuleCat.{u} R) where
+instance symmetricCategory : SymmetricCategory (ModuleCat.{u} R) where
   braiding := braiding
   braiding_naturality' := fun X₁ X₂ Y₁ Y₂ f g => braiding_naturality f g
   hexagon_forward' := hexagon_forward

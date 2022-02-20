@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2022 Yury Kudryashov. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yury Kudryashov
+-/
 import Mathbin.MeasureTheory.Measure.MeasureSpaceDef
 
 /-!
@@ -16,12 +21,12 @@ namespace MeasureTheory
 variable {ι α : Type _} {m : MeasurableSpace α} (μ : Measure α)
 
 /-- Two sets are said to be `μ`-a.e. disjoint if their intersection has measure zero. -/
-def ae_disjoint (s t : Set α) :=
+def AeDisjoint (s t : Set α) :=
   μ (s ∩ t) = 0
 
 variable {μ} {s t u v : Set α}
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (j «expr ≠ » i)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (j «expr ≠ » i)
 /-- If `s : ι → set α` is a countable family of pairwise a.e. disjoint sets, then there exists a
 family of measurable null sets `t i` such that `s i \ t i` are pairwise disjoint. -/
 theorem exists_null_pairwise_disjoint_diff [Encodable ι] {s : ι → Set α} (hd : Pairwise (AeDisjoint μ on s)) :
@@ -41,14 +46,14 @@ theorem exists_null_pairwise_disjoint_diff [Encodable ι] {s : ι → Set α} (h
 
 namespace AeDisjoint
 
-protected theorem Eq (h : AeDisjoint μ s t) : μ (s ∩ t) = 0 :=
+protected theorem eq (h : AeDisjoint μ s t) : μ (s ∩ t) = 0 :=
   h
 
 @[symm]
 protected theorem symm (h : AeDisjoint μ s t) : AeDisjoint μ t s := by
   rwa [ae_disjoint, inter_comm]
 
-protected theorem Symmetric : Symmetric (AeDisjoint μ) := fun s t h => h.symm
+protected theorem symmetric : Symmetric (AeDisjoint μ) := fun s t h => h.symm
 
 protected theorem comm : AeDisjoint μ s t ↔ AeDisjoint μ t s :=
   ⟨fun h => h.symm, fun h => h.symm⟩

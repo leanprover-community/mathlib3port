@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Yury G. Kudryashov. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yury G. Kudryashov
+-/
 import Mathbin.LinearAlgebra.AffineSpace.AffineMap
 import Mathbin.Algebra.Invertible
 
@@ -97,7 +102,7 @@ theorem coe_to_equiv (e : P₁ ≃ᵃ[k] P₂) : ⇑e.toEquiv = e :=
   rfl
 
 /-- Reinterpret an `affine_equiv` as an `affine_map`. -/
-def to_affine_map (e : P₁ ≃ᵃ[k] P₂) : P₁ →ᵃ[k] P₂ :=
+def toAffineMap (e : P₁ ≃ᵃ[k] P₂) : P₁ →ᵃ[k] P₂ :=
   { e with toFun := e }
 
 instance : Coe (P₁ ≃ᵃ[k] P₂) (P₁ →ᵃ[k] P₂) :=
@@ -190,11 +195,11 @@ theorem symm_linear (e : P₁ ≃ᵃ[k] P₂) : e.linear.symm = e.symm.linear :=
   rfl
 
 /-- See Note [custom simps projection] -/
-def simps.apply (e : P₁ ≃ᵃ[k] P₂) : P₁ → P₂ :=
+def Simps.apply (e : P₁ ≃ᵃ[k] P₂) : P₁ → P₂ :=
   e
 
 /-- See Note [custom simps projection] -/
-def simps.symm_apply (e : P₁ ≃ᵃ[k] P₂) : P₂ → P₁ :=
+def Simps.symmApply (e : P₁ ≃ᵃ[k] P₂) : P₂ → P₁ :=
   e.symm
 
 initialize_simps_projections AffineEquiv (to_equiv_to_fun → apply, to_equiv_inv_fun → symmApply, linear →
@@ -242,10 +247,10 @@ def trans (e : P₁ ≃ᵃ[k] P₂) (e' : P₂ ≃ᵃ[k] P₃) : P₁ ≃ᵃ[k] 
   toEquiv := e.toEquiv.trans e'.toEquiv
   linear := e.linear.trans e'.linear
   map_vadd' := fun p v => by
-    simp only [LinearEquiv.trans_apply, coe_to_equiv, · ∘ ·, Equivₓ.coe_trans, map_vadd]
+    simp only [LinearEquiv.trans_apply, coe_to_equiv, (· ∘ ·), Equivₓ.coe_trans, map_vadd]
 
 @[simp]
-theorem coeTransₓ (e : P₁ ≃ᵃ[k] P₂) (e' : P₂ ≃ᵃ[k] P₃) : ⇑e.trans e' = e' ∘ e :=
+theorem coe_trans (e : P₁ ≃ᵃ[k] P₂) (e' : P₂ ≃ᵃ[k] P₃) : ⇑e.trans e' = e' ∘ e :=
   rfl
 
 theorem trans_apply (e : P₁ ≃ᵃ[k] P₂) (e' : P₂ ≃ᵃ[k] P₃) (p : P₁) : e.trans e' p = e' (e p) :=
@@ -310,7 +315,7 @@ theorem inv_def (e : P₁ ≃ᵃ[k] P₁) : e⁻¹ = e.symm :=
 
 /-- `affine_equiv.linear` on automorphisms is a `monoid_hom`. -/
 @[simps]
-def linear_hom : (P₁ ≃ᵃ[k] P₁) →* V₁ ≃ₗ[k] V₁ where
+def linearHom : (P₁ ≃ᵃ[k] P₁) →* V₁ ≃ₗ[k] V₁ where
   toFun := linear
   map_one' := rfl
   map_mul' := fun _ _ => rfl
@@ -319,7 +324,7 @@ def linear_hom : (P₁ ≃ᵃ[k] P₁) →* V₁ ≃ₗ[k] V₁ where
 
 This is the affine version of `linear_map.general_linear_group.general_linear_equiv`. -/
 @[simps]
-def equiv_units_affine_map : (P₁ ≃ᵃ[k] P₁) ≃* (P₁ →ᵃ[k] P₁)ˣ where
+def equivUnitsAffineMap : (P₁ ≃ᵃ[k] P₁) ≃* (P₁ →ᵃ[k] P₁)ˣ where
   toFun := fun e => ⟨e, e.symm, congr_argₓ coe e.symm_trans_self, congr_argₓ coe e.self_trans_symm⟩
   invFun := fun u =>
     { toFun := (u : P₁ →ᵃ[k] P₁), invFun := (↑u⁻¹ : P₁ →ᵃ[k] P₁), left_inv := AffineMap.congr_fun u.inv_mul,
@@ -335,13 +340,13 @@ variable (k)
 /-- The map `v ↦ v +ᵥ b` as an affine equivalence between a module `V` and an affine space `P` with
 tangent space `V`. -/
 @[simps]
-def vadd_const (b : P₁) : V₁ ≃ᵃ[k] P₁ where
+def vaddConst (b : P₁) : V₁ ≃ᵃ[k] P₁ where
   toEquiv := Equivₓ.vaddConst b
   linear := LinearEquiv.refl _ _
   map_vadd' := fun p v => add_vadd _ _ _
 
 /-- `p' ↦ p -ᵥ p'` as an equivalence. -/
-def const_vsub (p : P₁) : P₁ ≃ᵃ[k] V₁ where
+def constVsub (p : P₁) : P₁ ≃ᵃ[k] V₁ where
   toEquiv := Equivₓ.constVsub p
   linear := LinearEquiv.neg k
   map_vadd' := fun p' v => by
@@ -359,7 +364,7 @@ variable (P₁)
 
 /-- The map `p ↦ v +ᵥ p` as an affine automorphism of an affine space. -/
 @[simps]
-def const_vadd (v : V₁) : P₁ ≃ᵃ[k] P₁ where
+def constVadd (v : V₁) : P₁ ≃ᵃ[k] P₁ where
   toEquiv := Equivₓ.constVadd P₁ v
   linear := LinearEquiv.refl _ _
   map_vadd' := fun p w => vadd_comm _ _ _
@@ -374,7 +379,7 @@ include V
 
 /-- Fixing a point in affine space, homothety about this point gives a group homomorphism from (the
 centre of) the units of the scalars into the group of affine equivalences. -/
-def homothety_units_mul_hom (p : P) : (R)ˣ →* P ≃ᵃ[R] P :=
+def homothetyUnitsMulHom (p : P) : (R)ˣ →* P ≃ᵃ[R] P :=
   equivUnitsAffineMap.symm.toMonoidHom.comp <| Units.map (AffineMap.homothetyHom p)
 
 @[simp]
@@ -399,7 +404,7 @@ variable {P₁}
 open Function
 
 /-- Point reflection in `x` as a permutation. -/
-def point_reflection (x : P₁) : P₁ ≃ᵃ[k] P₁ :=
+def pointReflection (x : P₁) : P₁ ≃ᵃ[k] P₁ :=
   (constVsub k x).trans (vaddConst k x)
 
 theorem point_reflection_apply (x y : P₁) : pointReflection k x y = x -ᵥ y +ᵥ x :=
@@ -443,7 +448,7 @@ end AffineEquiv
 namespace LinearEquiv
 
 /-- Interpret a linear equivalence between modules as an affine equivalence. -/
-def to_affine_equiv (e : V₁ ≃ₗ[k] V₂) : V₁ ≃ᵃ[k] V₂ where
+def toAffineEquiv (e : V₁ ≃ₗ[k] V₂) : V₁ ≃ᵃ[k] V₂ where
   toEquiv := e.toEquiv
   linear := e
   map_vadd' := fun p v => e.map_add v p

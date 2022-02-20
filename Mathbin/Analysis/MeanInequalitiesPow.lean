@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Yury Kudryashov. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yury Kudryashov, Sébastien Gouëzel, Rémy Degenne
+-/
 import Mathbin.Analysis.Convex.SpecificFunctions
 
 /-!
@@ -96,17 +101,17 @@ theorem rpow_arith_mean_le_arith_mean_rpow (w z : ι → ℝ≥0 ) (hw' : (∑ i
         exact_mod_cast hw')
       (fun i _ => (z i).coe_nonneg) hp
 
--- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»
 /-- Weighted generalized mean inequality, version for two elements of `ℝ≥0` and real exponents. -/
 theorem rpow_arith_mean_le_arith_mean2_rpow (w₁ w₂ z₁ z₂ : ℝ≥0 ) (hw' : w₁ + w₂ = 1) {p : ℝ} (hp : 1 ≤ p) :
     (w₁ * z₁ + w₂ * z₂) ^ p ≤ w₁ * z₁ ^ p + w₂ * z₂ ^ p := by
   have h :=
     rpow_arith_mean_le_arith_mean_rpow univ
-      («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»")
-      («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»") _ hp
+      («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»")
+      («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»") _ hp
   · simpa [Finₓ.sum_univ_succ] using h
     
   · simp [hw', Finₓ.sum_univ_succ]
@@ -195,14 +200,19 @@ theorem rpow_arith_mean_le_arith_mean_rpow (w z : ι → ℝ≥0∞) (hw' : (∑
   have h_top_iff_rpow_top : ∀ i : ι hi : i ∈ s, w i * z i = ⊤ ↔ w i * z i ^ p = ⊤ := by
     simp [hp_pos, hp_nonneg, hp_not_nonpos, hp_not_neg]
   refine' le_of_top_imp_top_of_to_nnreal_le _ _
-  · rw [rpow_eq_top_iff, sum_eq_top_iff, sum_eq_top_iff]
+  · -- first, prove `(∑ i in s, w i * z i) ^ p = ⊤ → ∑ i in s, (w i * z i ^ p) = ⊤`
+    rw [rpow_eq_top_iff, sum_eq_top_iff, sum_eq_top_iff]
     intro h
     simp only [and_falseₓ, hp_not_neg, false_orₓ] at h
     rcases h.left with ⟨a, H, ha⟩
     use a, H
     rwa [← h_top_iff_rpow_top a H]
     
-  · intro h_top_rpow_sum _
+  · -- second, suppose both `(∑ i in s, w i * z i) ^ p ≠ ⊤` and `∑ i in s, (w i * z i ^ p) ≠ ⊤`,
+    -- and prove `((∑ i in s, w i * z i) ^ p).to_nnreal ≤ (∑ i in s, (w i * z i ^ p)).to_nnreal`,
+    -- by using `nnreal.rpow_arith_mean_le_arith_mean_rpow`.
+    intro h_top_rpow_sum _
+    -- show hypotheses needed to put the `.to_nnreal` inside the sums.
     have h_top : ∀ a : ι, a ∈ s → w a * z a ≠ ⊤ :=
       have h_top_sum : (∑ i : ι in s, w i * z i) ≠ ⊤ := by
         intro h
@@ -213,8 +223,11 @@ theorem rpow_arith_mean_le_arith_mean_rpow (w z : ι → ℝ≥0∞) (hw' : (∑
       intro i hi
       specialize h_top i hi
       rwa [Ne.def, ← h_top_iff_rpow_top i hi]
+    -- put the `.to_nnreal` inside the sums.
     simp_rw [to_nnreal_sum h_top_rpow, ← to_nnreal_rpow, to_nnreal_sum h_top, to_nnreal_mul, ← to_nnreal_rpow]
+    -- use corresponding nnreal result
     refine' Nnreal.rpow_arith_mean_le_arith_mean_rpow s (fun i => (w i).toNnreal) (fun i => (z i).toNnreal) _ hp
+    -- verify the hypothesis `∑ i in s, (w i).to_nnreal = 1`, using `∑ i in s, w i = 1` .
     have h_sum_nnreal : (∑ i in s, w i) = ↑(∑ i in s, (w i).toNnreal) := by
       rw [coe_finset_sum]
       refine' sum_congr rfl fun i hi => (coe_to_nnreal _).symm
@@ -223,18 +236,18 @@ theorem rpow_arith_mean_le_arith_mean_rpow (w z : ι → ℝ≥0∞) (hw' : (∑
     rwa [← coe_eq_coe, ← h_sum_nnreal]
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»
 /-- Weighted generalized mean inequality, version for two elements of `ℝ≥0∞` and real
 exponents. -/
 theorem rpow_arith_mean_le_arith_mean2_rpow (w₁ w₂ z₁ z₂ : ℝ≥0∞) (hw' : w₁ + w₂ = 1) {p : ℝ} (hp : 1 ≤ p) :
     (w₁ * z₁ + w₂ * z₂) ^ p ≤ w₁ * z₁ ^ p + w₂ * z₂ ^ p := by
   have h :=
     rpow_arith_mean_le_arith_mean_rpow univ
-      («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»")
-      («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»") _ hp
+      («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»")
+      («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»") _ hp
   · simpa [Finₓ.sum_univ_succ] using h
     
   · simp [hw', Finₓ.sum_univ_succ]

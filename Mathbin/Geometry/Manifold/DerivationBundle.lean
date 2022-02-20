@@ -1,3 +1,8 @@
+/-
+Copyright © 2020 Nicolò Cavalleri. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Nicolò Cavalleri
+-/
 import Mathbin.Geometry.Manifold.Algebra.SmoothFunctions
 import Mathbin.RingTheory.Derivation
 
@@ -20,6 +25,7 @@ variable (𝕜 : Type _) [NondiscreteNormedField 𝕜] {E : Type _} [NormedGroup
 
 open_locale Manifold
 
+-- the following two instances prevent poorly understood type class inference timeout problems
 instance smoothFunctionsAlgebra : Algebra 𝕜 C^∞⟮I, M; 𝕜⟯ := by
   infer_instance
 
@@ -59,7 +65,7 @@ instance {x : M} : IsScalarTower 𝕜 C^∞⟮I,M;𝕜⟯⟨x⟩ C^∞⟮I, M; �
 variable {I}
 
 /-- `smooth_map.eval_ring_hom` gives rise to an algebra structure of `C^∞⟮I, M; 𝕜⟯` on `𝕜`. -/
-instance eval_algebra {x : M} : Algebra C^∞⟮I,M;𝕜⟯⟨x⟩ 𝕜 :=
+instance evalAlgebra {x : M} : Algebra C^∞⟮I,M;𝕜⟯⟨x⟩ 𝕜 :=
   (SmoothMap.evalRingHom x : C^∞⟮I,M;𝕜⟯⟨x⟩ →+* 𝕜).toAlgebra
 
 /-- With the `eval_algebra` algebra structure evaluation is actually an algebra morphism. -/
@@ -97,7 +103,7 @@ namespace Derivation
 variable {I}
 
 /-- The evaluation at a point as a linear map. -/
-def eval_at (x : M) : Derivation 𝕜 C^∞⟮I, M; 𝕜⟯ C^∞⟮I, M; 𝕜⟯ →ₗ[𝕜] PointDerivation I x :=
+def evalAt (x : M) : Derivation 𝕜 C^∞⟮I, M; 𝕜⟯ C^∞⟮I, M; 𝕜⟯ →ₗ[𝕜] PointDerivation I x :=
   (SmoothFunction.evalAt I x).compDer
 
 theorem eval_at_apply (x : M) : evalAt x X f = (X f) x :=
@@ -130,8 +136,10 @@ def hfdifferential {f : C^∞⟮I, M; I', M'⟯} {x : M} {y : M'} (h : f x = y) 
 def fdifferential (f : C^∞⟮I, M; I', M'⟯) (x : M) : PointDerivation I x →ₗ[𝕜] PointDerivation I' (f x) :=
   hfdifferential (rfl : f x = f x)
 
+-- Standard notation for the differential. The abbreviation is `MId`.
 localized [Manifold] notation "𝒅" => fdifferential
 
+-- Standard notation for the differential. The abbreviation is `MId`.
 localized [Manifold] notation "𝒅ₕ" => hfdifferential
 
 @[simp]

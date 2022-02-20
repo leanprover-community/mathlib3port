@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2017 Microsoft Corporation. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Mario Carneiro
+-/
 import Leanbin.Data.Dlist
 import Mathbin.Data.List.Basic
 import Mathbin.Data.Seq.Seq
@@ -17,6 +22,12 @@ universe u v w
   This model is appropriate for Haskell style lazy lists, and is closed
   under most interesting computation patterns on infinite lists,
   but conversely it is difficult to extract elements from it. -/
+/-
+coinductive wseq (α : Type u) : Type u
+| nil : wseq α
+| cons : α → wseq α → wseq α
+| think : wseq α → wseq α
+-/
 def Wseq α :=
   Seqₓₓ (Option α)
 
@@ -25,24 +36,24 @@ namespace Wseq
 variable {α : Type u} {β : Type v} {γ : Type w}
 
 /-- Turn a sequence into a weak sequence -/
-def of_seq : Seqₓₓ α → Wseq α :=
+def ofSeq : Seqₓₓ α → Wseq α :=
   (· <$> ·) some
 
 /-- Turn a list into a weak sequence -/
-def of_list (l : List α) : Wseq α :=
+def ofList (l : List α) : Wseq α :=
   ofSeq l
 
 /-- Turn a stream into a weak sequence -/
-def of_stream (l : Streamₓ α) : Wseq α :=
+def ofStream (l : Streamₓ α) : Wseq α :=
   ofSeq l
 
-instance coe_seq : Coe (Seqₓₓ α) (Wseq α) :=
+instance coeSeq : Coe (Seqₓₓ α) (Wseq α) :=
   ⟨ofSeq⟩
 
-instance coe_list : Coe (List α) (Wseq α) :=
+instance coeList : Coe (List α) (Wseq α) :=
   ⟨ofList⟩
 
-instance coe_stream : Coe (Streamₓ α) (Wseq α) :=
+instance coeStream : Coe (Streamₓ α) (Wseq α) :=
   ⟨ofStream⟩
 
 /-- The empty weak sequence -/
@@ -69,10 +80,10 @@ def destruct : Wseq α → Computation (Option (α × Wseq α)) :=
     | some (none, s') => Sum.inr s'
     | some (some a, s') => Sum.inl (some (a, s'))
 
-def cases_on {C : Wseq α → Sort v} (s : Wseq α) (h1 : C nil) (h2 : ∀ x s, C (cons x s)) (h3 : ∀ s, C (think s)) : C s :=
+def casesOn {C : Wseq α → Sort v} (s : Wseq α) (h1 : C nil) (h2 : ∀ x s, C (cons x s)) (h3 : ∀ s, C (think s)) : C s :=
   Seqₓₓ.casesOn s h1 fun o => Option.casesOn o h3 h2
 
-protected def mem (a : α) (s : Wseq α) :=
+protected def Mem (a : α) (s : Wseq α) :=
   Seqₓₓ.Mem (some a) s
 
 instance : HasMem α (Wseq α) :=
@@ -112,7 +123,7 @@ def nth (s : Wseq α) (n : ℕ) : Computation (Option α) :=
   head (drop s n)
 
 /-- Convert `s` to a list (if it is finite and completes in finite time). -/
-def to_list (s : Wseq α) : Computation (List α) :=
+def toList (s : Wseq α) : Computation (List α) :=
   @Computation.corec (List α) (List α × Wseq α)
     (fun ⟨l, s⟩ =>
       match Seqₓₓ.destruct s with
@@ -133,7 +144,7 @@ def length (s : Wseq α) : Computation ℕ :=
 
 /-- A weak sequence is finite if `to_list s` terminates. Equivalently,
   it is a finite number of `think` and `cons` applied to `nil`. -/
-class is_finite (s : Wseq α) : Prop where
+class IsFinite (s : Wseq α) : Prop where
   out : (toList s).Terminates
 
 instance to_list_terminates (s : Wseq α) [h : IsFinite s] : (toList s).Terminates :=
@@ -146,7 +157,7 @@ def get (s : Wseq α) [IsFinite s] : List α :=
 /-- A weak sequence is *productive* if it never stalls forever - there are
  always a finite number of `think`s between `cons` constructors.
  The sequence itself is allowed to be infinite though. -/
-class productive (s : Wseq α) : Prop where
+class Productive (s : Wseq α) : Prop where
   nth_terminates : ∀ n, (nth s n).Terminates
 
 theorem productive_iff (s : Wseq α) : Productive s ↔ ∀ n, (nth s n).Terminates :=
@@ -159,7 +170,7 @@ instance head_terminates (s : Wseq α) [Productive s] : (head s).Terminates :=
   s.nth_terminates 0
 
 /-- Replace the `n`th element of `s` with `a`. -/
-def update_nth (s : Wseq α) (n : ℕ) (a : α) : Wseq α :=
+def updateNth (s : Wseq α) (n : ℕ) (a : α) : Wseq α :=
   @Seqₓₓ.corec (Option α) (ℕ × Wseq α)
     (fun ⟨n, s⟩ =>
       match Seqₓₓ.destruct s, n with
@@ -171,7 +182,7 @@ def update_nth (s : Wseq α) (n : ℕ) (a : α) : Wseq α :=
     (n + 1, s)
 
 /-- Remove the `n`th element of `s`. -/
-def remove_nth (s : Wseq α) (n : ℕ) : Wseq α :=
+def removeNth (s : Wseq α) (n : ℕ) : Wseq α :=
   @Seqₓₓ.corec (Option α) (ℕ × Wseq α)
     (fun ⟨n, s⟩ =>
       match Seqₓₓ.destruct s, n with
@@ -183,7 +194,7 @@ def remove_nth (s : Wseq α) (n : ℕ) : Wseq α :=
     (n + 1, s)
 
 /-- Map the elements of `s` over `f`, removing any values that yield `none`. -/
-def filter_map (f : α → Option β) : Wseq α → Wseq β :=
+def filterMap (f : α → Option β) : Wseq α → Wseq β :=
   Seqₓₓ.corec fun s =>
     match Seqₓₓ.destruct s with
     | none => none
@@ -195,11 +206,12 @@ def filter (p : α → Prop) [DecidablePred p] : Wseq α → Wseq α :=
   filterMap fun a => if p a then some a else none
 
 /-- Get the first element of `s` satisfying `p`. -/
+-- example of infinite list manipulations
 def find (p : α → Prop) [DecidablePred p] (s : Wseq α) : Computation (Option α) :=
   head <| filter p s
 
 /-- Zip a function over two weak sequences -/
-def zip_with (f : α → β → γ) (s1 : Wseq α) (s2 : Wseq β) : Wseq γ :=
+def zipWith (f : α → β → γ) (s1 : Wseq α) (s2 : Wseq β) : Wseq γ :=
   @Seqₓₓ.corec (Option γ) (Wseq α × Wseq β)
     (fun ⟨s1, s2⟩ =>
       match Seqₓₓ.destruct s1, Seqₓₓ.destruct s2 with
@@ -215,19 +227,19 @@ def zip : Wseq α → Wseq β → Wseq (α × β) :=
   zipWith Prod.mk
 
 /-- Get the list of indexes of elements of `s` satisfying `p` -/
-def find_indexes (p : α → Prop) [DecidablePred p] (s : Wseq α) : Wseq ℕ :=
+def findIndexes (p : α → Prop) [DecidablePred p] (s : Wseq α) : Wseq ℕ :=
   (zip s (Streamₓ.nats : Wseq ℕ)).filterMap fun ⟨a, n⟩ => if p a then some n else none
 
 /-- Get the index of the first element of `s` satisfying `p` -/
-def find_index (p : α → Prop) [DecidablePred p] (s : Wseq α) : Computation ℕ :=
+def findIndex (p : α → Prop) [DecidablePred p] (s : Wseq α) : Computation ℕ :=
   (fun o => Option.getOrElse o 0) <$> head (findIndexes p s)
 
 /-- Get the index of the first occurrence of `a` in `s` -/
-def index_of [DecidableEq α] (a : α) : Wseq α → Computation ℕ :=
+def indexOf [DecidableEq α] (a : α) : Wseq α → Computation ℕ :=
   findIndex (Eq a)
 
 /-- Get the indexes of occurrences of `a` in `s` -/
-def indexes_of [DecidableEq α] (a : α) : Wseq α → Wseq ℕ :=
+def indexesOf [DecidableEq α] (a : α) : Wseq α → Wseq ℕ :=
   findIndexes (Eq a)
 
 /-- `union s1 s2` is a weak sequence which interleaves `s1` and `s2` in
@@ -246,7 +258,7 @@ def union (s1 s2 : Wseq α) : Wseq α :=
     (s1, s2)
 
 /-- Returns `tt` if `s` is `nil` and `ff` if `s` has an element -/
-def IsEmpty (s : Wseq α) : Computation Bool :=
+def isEmpty (s : Wseq α) : Computation Bool :=
   Computation.map Option.isNone <| head s
 
 /-- Calculate one step of computation -/
@@ -268,7 +280,7 @@ def take (s : Wseq α) (n : ℕ) : Wseq α :=
 
 /-- Split the sequence at position `n` into a finite initial segment
   and the weak sequence tail -/
-def split_at (s : Wseq α) (n : ℕ) : Computation (List α × Wseq α) :=
+def splitAt (s : Wseq α) (n : ℕ) : Computation (List α × Wseq α) :=
   @Computation.corec (List α × Wseq α) (ℕ × List α × Wseq α)
     (fun ⟨n, l, s⟩ =>
       match n, Seqₓₓ.destruct s with
@@ -355,40 +367,40 @@ def bind (s : Wseq α) (f : α → Wseq β) : Wseq β :=
   join (map f s)
 
 @[simp]
-def lift_rel_o (R : α → β → Prop) (C : Wseq α → Wseq β → Prop) : Option (α × Wseq α) → Option (β × Wseq β) → Prop
+def LiftRelO (R : α → β → Prop) (C : Wseq α → Wseq β → Prop) : Option (α × Wseq α) → Option (β × Wseq β) → Prop
   | none, none => True
   | some (a, s), some (b, t) => R a b ∧ C s t
   | _, _ => False
 
-theorem lift_rel_o.imp {R S : α → β → Prop} {C D : Wseq α → Wseq β → Prop} (H1 : ∀ a b, R a b → S a b)
+theorem LiftRelO.imp {R S : α → β → Prop} {C D : Wseq α → Wseq β → Prop} (H1 : ∀ a b, R a b → S a b)
     (H2 : ∀ s t, C s t → D s t) : ∀ {o p}, LiftRelO R C o p → LiftRelO S D o p
   | none, none, h => trivialₓ
   | some (a, s), some (b, t), h => And.imp (H1 _ _) (H2 _ _) h
   | none, some _, h => False.elim h
   | some (_, _), none, h => False.elim h
 
-theorem lift_rel_o.imp_right (R : α → β → Prop) {C D : Wseq α → Wseq β → Prop} (H : ∀ s t, C s t → D s t) {o p} :
+theorem LiftRelO.imp_right (R : α → β → Prop) {C D : Wseq α → Wseq β → Prop} (H : ∀ s t, C s t → D s t) {o p} :
     LiftRelO R C o p → LiftRelO R D o p :=
   LiftRelO.imp (fun _ _ => id) H
 
 @[simp]
-def bisim_o (R : Wseq α → Wseq α → Prop) : Option (α × Wseq α) → Option (α × Wseq α) → Prop :=
+def BisimO (R : Wseq α → Wseq α → Prop) : Option (α × Wseq α) → Option (α × Wseq α) → Prop :=
   LiftRelO (· = ·) R
 
-theorem bisim_o.imp {R S : Wseq α → Wseq α → Prop} (H : ∀ s t, R s t → S s t) {o p} : BisimO R o p → BisimO S o p :=
+theorem BisimO.imp {R S : Wseq α → Wseq α → Prop} (H : ∀ s t, R s t → S s t) {o p} : BisimO R o p → BisimO S o p :=
   LiftRelO.imp_right _ H
 
 /-- Two weak sequences are `lift_rel R` related if they are either both empty,
   or they are both nonempty and the heads are `R` related and the tails are
   `lift_rel R` related. (This is a coinductive definition.) -/
-def lift_rel (R : α → β → Prop) (s : Wseq α) (t : Wseq β) : Prop :=
+def LiftRel (R : α → β → Prop) (s : Wseq α) (t : Wseq β) : Prop :=
   ∃ C : Wseq α → Wseq β → Prop, C s t ∧ ∀ {s t}, C s t → Computation.LiftRel (LiftRelO R C) (destruct s) (destruct t)
 
 /-- If two sequences are equivalent, then they have the same values and
   the same computational behavior (i.e. if one loops forever then so does
   the other), although they may differ in the number of `think`s needed to
   arrive at the answer. -/
-def Equivₓ : Wseq α → Wseq α → Prop :=
+def Equiv : Wseq α → Wseq α → Prop :=
   LiftRel (· = ·)
 
 theorem lift_rel_destruct {R : α → β → Prop} {s : Wseq α} {t : Wseq β} :
@@ -419,8 +431,8 @@ theorem destruct_congr {s t : Wseq α} : s ~ t → Computation.LiftRel (BisimO (
 theorem destruct_congr_iff {s t : Wseq α} : s ~ t ↔ Computation.LiftRel (BisimO (· ~ ·)) (destruct s) (destruct t) :=
   lift_rel_destruct_iff
 
-theorem lift_rel.refl (R : α → α → Prop) (H : Reflexive R) : Reflexive (LiftRel R) := fun s => by
-  refine' ⟨· = ·, rfl, fun s t h : s = t => _⟩
+theorem LiftRel.refl (R : α → α → Prop) (H : Reflexive R) : Reflexive (LiftRel R) := fun s => by
+  refine' ⟨(· = ·), rfl, fun h : s = t => _⟩
   rw [← h]
   apply Computation.LiftRel.refl
   intro a
@@ -429,22 +441,22 @@ theorem lift_rel.refl (R : α → α → Prop) (H : Reflexive R) : Reflexive (Li
   cases a <;> simp
   apply H
 
-theorem lift_rel_o.swap (R : α → β → Prop) C : swap (LiftRelO R C) = LiftRelO (swap R) (swap C) := by
+theorem LiftRelO.swap (R : α → β → Prop) C : swap (LiftRelO R C) = LiftRelO (swap R) (swap C) := by
   funext x y <;>
     cases' x with x <;> [skip, cases x] <;>
       · cases' y with y <;> [skip, cases y] <;> rfl
         
 
-theorem lift_rel.swap_lem {R : α → β → Prop} {s1 s2} (h : LiftRel R s1 s2) : LiftRel (swap R) s2 s1 := by
-  refine' ⟨swap (lift_rel R), h, fun s t h : lift_rel R t s => _⟩
+theorem LiftRel.swap_lem {R : α → β → Prop} {s1 s2} (h : LiftRel R s1 s2) : LiftRel (swap R) s2 s1 := by
+  refine' ⟨swap (lift_rel R), h, fun h : lift_rel R t s => _⟩
   rw [← lift_rel_o.swap, Computation.LiftRel.swap]
   apply lift_rel_destruct h
 
-theorem lift_rel.swap (R : α → β → Prop) : swap (LiftRel R) = LiftRel (swap R) :=
+theorem LiftRel.swap (R : α → β → Prop) : swap (LiftRel R) = LiftRel (swap R) :=
   funext fun x => funext fun y => propext ⟨LiftRel.swap_lem, LiftRel.swap_lem⟩
 
-theorem lift_rel.symm (R : α → α → Prop) (H : Symmetric R) : Symmetric (LiftRel R) :=
-  fun s1 s2 h : swap (LiftRel R) s2 s1 => by
+theorem LiftRel.symm (R : α → α → Prop) (H : Symmetric R) : Symmetric (LiftRel R) := fun h : swap (LiftRel R) s2 s1 =>
+  by
   rwa [lift_rel.swap,
     show swap R = R from
       funext fun a =>
@@ -453,7 +465,7 @@ theorem lift_rel.symm (R : α → α → Prop) (H : Symmetric R) : Symmetric (Li
             constructor <;> apply H] at
     h
 
-theorem lift_rel.trans (R : α → α → Prop) (H : Transitive R) : Transitive (LiftRel R) := fun s t u h1 h2 => by
+theorem LiftRel.trans (R : α → α → Prop) (H : Transitive R) : Transitive (LiftRel R) := fun s t u h1 h2 => by
   refine' ⟨fun s u => ∃ t, lift_rel R s t ∧ lift_rel R t u, ⟨t, h1, h2⟩, fun s u h => _⟩
   rcases h with ⟨t, h1, h2⟩
   have h1 := lift_rel_destruct h1
@@ -491,22 +503,22 @@ theorem lift_rel.trans (R : α → α → Prop) (H : Transitive R) : Transitive 
     exact ⟨H ab bc, t, st, tu⟩
     
 
-theorem lift_rel.equiv (R : α → α → Prop) : Equivalenceₓ R → Equivalenceₓ (LiftRel R)
+theorem LiftRel.equiv (R : α → α → Prop) : Equivalenceₓ R → Equivalenceₓ (LiftRel R)
   | ⟨refl, symm, trans⟩ => ⟨LiftRel.refl R refl, LiftRel.symm R symm, LiftRel.trans R trans⟩
 
 @[refl]
-theorem Equivₓ.refl : ∀ s : Wseq α, s ~ s :=
+theorem Equiv.refl : ∀ s : Wseq α, s ~ s :=
   LiftRel.refl (· = ·) Eq.refl
 
 @[symm]
-theorem Equivₓ.symm : ∀ {s t : Wseq α}, s ~ t → t ~ s :=
+theorem Equiv.symm : ∀ {s t : Wseq α}, s ~ t → t ~ s :=
   LiftRel.symm (· = ·) (@Eq.symm _)
 
 @[trans]
-theorem Equivₓ.trans : ∀ {s t u : Wseq α}, s ~ t → t ~ u → s ~ u :=
+theorem Equiv.trans : ∀ {s t u : Wseq α}, s ~ t → t ~ u → s ~ u :=
   LiftRel.trans (· = ·) (@Eq.trans _)
 
-theorem equiv.equivalence : Equivalenceₓ (@Equiv α) :=
+theorem Equiv.equivalence : Equivalenceₓ (@Equiv α) :=
   ⟨@Equiv.refl _, @Equiv.symm _, @Equiv.trans _⟩
 
 open Computation
@@ -742,7 +754,7 @@ instance productive_dropn (s : Wseq α) [Productive s] n : Productive (drop s n)
 
 /-- Given a productive weak sequence, we can collapse all the `think`s to
   produce a sequence. -/
-def to_seq (s : Wseq α) [Productive s] : Seqₓₓ α :=
+def toSeq (s : Wseq α) [Productive s] : Seqₓₓ α :=
   ⟨fun n => (nth s n).get, fun n h => by
     cases e : Computation.get (nth s (n + 1))
     · assumption
@@ -1050,7 +1062,7 @@ theorem mem_congr {s t : Wseq α} (h : s ~ t) a : a ∈ s ↔ a ∈ t :=
 theorem productive_congr {s t : Wseq α} (h : s ~ t) : Productive s ↔ Productive t := by
   simp only [productive_iff] <;> exact forall_congrₓ fun n => terminates_congr <| nth_congr h _
 
-theorem Equivₓ.ext {s t : Wseq α} (h : ∀ n, nth s n ~ nth t n) : s ~ t :=
+theorem Equiv.ext {s t : Wseq α} (h : ∀ n, nth s n ~ nth t n) : s ~ t :=
   ⟨fun s t => ∀ n, nth s n ~ nth t n, h, fun s t h => by
     refine' lift_rel_def.2 ⟨_, _⟩
     · rw [← head_terminates_iff, ← head_terminates_iff]
@@ -1235,6 +1247,7 @@ theorem map_comp (f : α → β) (g : β → γ) (s : Wseq α) : map (g ∘ f) s
 theorem mem_map (f : α → β) {a : α} {s : Wseq α} : a ∈ s → f a ∈ map f s :=
   Seqₓₓ.mem_map (Option.map f)
 
+-- The converse is not true without additional assumptions
 theorem exists_of_mem_join {a : α} : ∀ {S : Wseq (Wseq α)}, a ∈ join S → ∃ s, s ∈ S ∧ a ∈ s := by
   suffices ∀ ss : Wseq α, a ∈ ss → ∀ s S, append s (join S) = ss → a ∈ append s (join S) → a ∈ s ∨ ∃ s, s ∈ S ∧ a ∈ s
     from fun S h =>
@@ -1344,7 +1357,7 @@ theorem map_congr (f : α → β) {s t : Wseq α} (h : s ~ t) : map f s ~ map f 
   lift_rel_map _ _ h fun _ _ => congr_argₓ _
 
 @[simp]
-def destruct_append.aux (t : Wseq α) : Option (α × Wseq α) → Computation (Option (α × Wseq α))
+def DestructAppend.aux (t : Wseq α) : Option (α × Wseq α) → Computation (Option (α × Wseq α))
   | none => destruct t
   | some (a, s) => return (some (a, append s t))
 
@@ -1364,7 +1377,7 @@ theorem destruct_append (s t : Wseq α) : destruct (append s t) = (destruct s).b
     
 
 @[simp]
-def destruct_join.aux : Option (Wseq α × Wseq (Wseq α)) → Computation (Option (α × Wseq α))
+def DestructJoin.aux : Option (Wseq α × Wseq (Wseq α)) → Computation (Option (α × Wseq α))
   | none => return none
   | some (s, S) => (destruct (append s (join S))).think
 
@@ -1415,7 +1428,7 @@ theorem lift_rel_append (R : α → β → Prop) {s1 s2 : Wseq α} {t1 t2 : Wseq
         exact ⟨r, Or.inr ⟨s, rfl, t, rfl, h⟩⟩
         ⟩
 
-theorem lift_rel_join.lem (R : α → β → Prop) {S T} {U : Wseq α → Wseq β → Prop} (ST : LiftRel (LiftRel R) S T)
+theorem LiftRelJoin.lem (R : α → β → Prop) {S T} {U : Wseq α → Wseq β → Prop} (ST : LiftRel (LiftRel R) S T)
     (HU :
       ∀ s1 s2,
         (∃ s t S T, s1 = append s (join S) ∧ s2 = append t (join T) ∧ LiftRel R s t ∧ LiftRel (LiftRel R) S T) →
@@ -1668,5 +1681,19 @@ instance : Monadₓ Wseq where
   pure := @ret
   bind := @bind
 
+/-
+  Unfortunately, wseq is not a lawful monad, because it does not satisfy
+  the monad laws exactly, only up to sequence equivalence.
+  Furthermore, even quotienting by the equivalence is not sufficient,
+  because the join operation involves lists of quotient elements,
+  with a lifted equivalence relation, and pure quotients cannot handle
+  this type of construction.
+
+instance : is_lawful_monad wseq :=
+{ id_map := @map_id,
+  bind_pure_comp_eq_map := @bind_ret,
+  pure_bind := @ret_bind,
+  bind_assoc := @bind_assoc }
+-/
 end Wseq
 

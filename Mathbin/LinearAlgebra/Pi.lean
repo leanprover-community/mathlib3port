@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2017 Johannes Hölzl. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johannes Hölzl, Mario Carneiro, Kevin Buzzard, Yury Kudryashov, Eric Wieser
+-/
 import Mathbin.LinearAlgebra.Basic
 import Mathbin.Data.Equiv.Fin
 
@@ -88,7 +93,7 @@ theorem infi_ker_proj : (⨅ i, ker (proj i) : Submodule R (∀ i, φ i)) = ⊥ 
 /-- Linear map between the function spaces `I → M₂` and `I → M₃`, induced by a linear map `f`
 between `M₂` and `M₃`. -/
 @[simps]
-protected def comp_left (f : M₂ →ₗ[R] M₃) (I : Type _) : (I → M₂) →ₗ[R] I → M₃ :=
+protected def compLeft (f : M₂ →ₗ[R] M₃) (I : Type _) : (I → M₂) →ₗ[R] I → M₃ :=
   { f.toAddMonoidHom.compLeft I with toFun := fun h => f ∘ h,
     map_smul' := fun c h => by
       ext x
@@ -158,7 +163,7 @@ variable (R φ)
 
 /-- If `I` and `J` are disjoint index sets, the product of the kernels of the `J`th projections of
 `φ` is linearly equivalent to the product over `I`. -/
-def infi_ker_proj_equiv {I J : Set ι} [DecidablePred fun i => i ∈ I] (hd : Disjoint I J) (hu : Set.Univ ⊆ I ∪ J) :
+def infiKerProjEquiv {I J : Set ι} [DecidablePred fun i => i ∈ I] (hd : Disjoint I J) (hu : Set.Univ ⊆ I ∪ J) :
     (⨅ i ∈ J, ker (proj i) : Submodule R (∀ i, φ i)) ≃ₗ[R] ∀ i : I, φ i := by
   refine'
     LinearEquiv.ofLinear (pi fun i => (proj (i : ι)).comp (Submodule.subtype _))
@@ -278,7 +283,7 @@ variable [∀ i, AddCommMonoidₓ (χ i)] [∀ i, Module R (χ i)]
 
 This is `equiv.Pi_congr_right` as a `linear_equiv` -/
 @[simps apply]
-def Pi_congr_right (e : ∀ i, φ i ≃ₗ[R] ψ i) : (∀ i, φ i) ≃ₗ[R] ∀ i, ψ i :=
+def piCongrRight (e : ∀ i, φ i ≃ₗ[R] ψ i) : (∀ i, φ i) ≃ₗ[R] ∀ i, ψ i :=
   { AddEquiv.piCongrRight fun j => (e j).toAddEquiv with toFun := fun f i => e i (f i),
     invFun := fun f i => (e i).symm (f i),
     map_smul' := fun c f => by
@@ -304,18 +309,18 @@ variable (R φ)
 
 This is `equiv.Pi_congr_left'` as a `linear_equiv`. -/
 @[simps (config := { simpRhs := true })]
-def Pi_congr_left' (e : ι ≃ ι') : (∀ i', φ i') ≃ₗ[R] ∀ i, φ <| e.symm i :=
+def piCongrLeft' (e : ι ≃ ι') : (∀ i', φ i') ≃ₗ[R] ∀ i, φ <| e.symm i :=
   { Equivₓ.piCongrLeft' φ e with map_add' := fun x y => rfl, map_smul' := fun x y => rfl }
 
 /-- Transporting dependent functions through an equivalence of the base,
 expressed as a "simplification".
 
 This is `equiv.Pi_congr_left` as a `linear_equiv` -/
-def Pi_congr_left (e : ι' ≃ ι) : (∀ i', φ (e i')) ≃ₗ[R] ∀ i, φ i :=
+def piCongrLeft (e : ι' ≃ ι) : (∀ i', φ (e i')) ≃ₗ[R] ∀ i, φ i :=
   (piCongrLeft' R φ e.symm).symm
 
 /-- This is `equiv.pi_option_equiv_prod` as a `linear_equiv` -/
-def pi_option_equiv_prod {ι : Type _} {M : Option ι → Type _} [∀ i, AddCommGroupₓ (M i)] [∀ i, Module R (M i)] :
+def piOptionEquivProd {ι : Type _} {M : Option ι → Type _} [∀ i, AddCommGroupₓ (M i)] [∀ i, Module R (M i)] :
     (∀ i : Option ι, M i) ≃ₗ[R] M none × ∀ i : ι, M (some i) :=
   { Equivₓ.piOptionEquivProd with
     map_add' := by
@@ -333,7 +338,7 @@ This as an `S`-linear equivalence, under the assumption that `S` acts on `M` com
 When `R` is commutative, we can take this to be the usual action with `S = R`.
 Otherwise, `S = ℕ` shows that the equivalence is additive.
 See note [bundled maps over different rings]. -/
-def pi_ring : ((ι → R) →ₗ[R] M) ≃ₗ[S] ι → M :=
+def piRing : ((ι → R) →ₗ[R] M) ≃ₗ[S] ι → M :=
   (LinearMap.lsum R (fun i : ι => R) S).symm.trans (Pi_congr_right fun i => LinearMap.ringLmapEquivSelf R S M)
 
 variable {ι R M}
@@ -348,7 +353,8 @@ theorem pi_ring_symm_apply (f : ι → M) (g : ι → R) : (piRing R M ι S).sym
 
 /-- `equiv.sum_arrow_equiv_prod_arrow` as a linear equivalence.
 -/
-def sum_arrow_lequiv_prod_arrow (α β R M : Type _) [Semiringₓ R] [AddCommMonoidₓ M] [Module R M] :
+-- TODO additive version?
+def sumArrowLequivProdArrow (α β R M : Type _) [Semiringₓ R] [AddCommMonoidₓ M] [Module R M] :
     (Sum α β → M) ≃ₗ[R] (α → M) × (β → M) :=
   { Equivₓ.sumArrowEquivProdArrow α β M with
     map_add' := by
@@ -380,19 +386,19 @@ theorem sum_arrow_lequiv_prod_arrow_symm_apply_inr {α β} (f : α → M) (g : �
 
 /-- If `ι` has a unique element, then `ι → M` is linearly equivalent to `M`. -/
 @[simps (config := { simpRhs := true, fullyApplied := false })]
-def fun_unique (ι R M : Type _) [Unique ι] [Semiringₓ R] [AddCommMonoidₓ M] [Module R M] : (ι → M) ≃ₗ[R] M :=
+def funUnique (ι R M : Type _) [Unique ι] [Semiringₓ R] [AddCommMonoidₓ M] [Module R M] : (ι → M) ≃ₗ[R] M :=
   { Equivₓ.funUnique ι M with map_add' := fun f g => rfl, map_smul' := fun c f => rfl }
 
 variable (R M)
 
 /-- Linear equivalence between dependent functions `Π i : fin 2, M i` and `M 0 × M 1`. -/
 @[simps (config := { simpRhs := true, fullyApplied := false })]
-def pi_fin_two (M : Finₓ 2 → Type v) [∀ i, AddCommMonoidₓ (M i)] [∀ i, Module R (M i)] : (∀ i, M i) ≃ₗ[R] M 0 × M 1 :=
+def piFinTwo (M : Finₓ 2 → Type v) [∀ i, AddCommMonoidₓ (M i)] [∀ i, Module R (M i)] : (∀ i, M i) ≃ₗ[R] M 0 × M 1 :=
   { piFinTwoEquiv M with map_add' := fun f g => rfl, map_smul' := fun c f => rfl }
 
 /-- Linear equivalence between vectors in `M² = fin 2 → M` and `M × M`. -/
 @[simps (config := { simpRhs := true, fullyApplied := false })]
-def fin_two_arrow : (Finₓ 2 → M) ≃ₗ[R] M × M :=
+def finTwoArrow : (Finₓ 2 → M) ≃ₗ[R] M × M :=
   { finTwoArrowEquiv M, piFinTwo R fun _ => M with }
 
 end LinearEquiv
@@ -438,12 +444,12 @@ def LinearMap.vecEmpty : M →ₗ[R] Finₓ 0 → M₃ where
   map_add' := fun x y => Subsingleton.elimₓ _ _
   map_smul' := fun r x => Subsingleton.elimₓ _ _
 
--- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»
 @[simp]
 theorem LinearMap.vec_empty_apply (m : M) :
     (LinearMap.vecEmpty : M →ₗ[R] Finₓ 0 → M₃) m =
-      «expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»" :=
+      «expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»" :=
   rfl
 
 /-- A linear map into `fin n.succ → M₃` can be built out of a map into `M₃` and a map into

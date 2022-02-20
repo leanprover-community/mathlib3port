@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison, Johan Commelin
+-/
 import Mathbin.LinearAlgebra.TensorProductBasis
 import Mathbin.RingTheory.Adjoin.Basic
 
@@ -221,7 +226,7 @@ variable (r : R) (f g : M →ₗ[R] N)
 variable (A)
 
 /-- `base_change A f` for `f : M →ₗ[R] N` is the `A`-linear map `A ⊗[R] M →ₗ[A] A ⊗[R] N`. -/
-def base_change (f : M →ₗ[R] N) : A ⊗[R] M →ₗ[A] A ⊗[R] N where
+def baseChange (f : M →ₗ[R] N) : A ⊗[R] M →ₗ[A] A ⊗[R] N where
   toFun := f.ltensor A
   map_add' := (f.ltensor A).map_add
   map_smul' := fun a x =>
@@ -257,7 +262,7 @@ variable (R A M N)
 
 /-- `base_change` as a linear map. -/
 @[simps]
-def base_change_hom : (M →ₗ[R] N) →ₗ[R] A ⊗[R] M →ₗ[A] A ⊗[R] N where
+def baseChangeHom : (M →ₗ[R] N) →ₗ[R] A ⊗[R] M →ₗ[A] A ⊗[R] N where
   toFun := baseChange A
   map_add' := base_change_add
   map_smul' := base_change_smul
@@ -310,7 +315,7 @@ The multiplication map on `A ⊗[R] B`,
 for a fixed pure tensor in the first argument,
 as an `R`-linear map.
 -/
-def mul_aux (a₁ : A) (b₁ : B) : A ⊗[R] B →ₗ[R] A ⊗[R] B :=
+def mulAux (a₁ : A) (b₁ : B) : A ⊗[R] B →ₗ[R] A ⊗[R] B :=
   TensorProduct.map (lmulLeft R a₁) (lmulLeft R b₁)
 
 @[simp]
@@ -376,16 +381,16 @@ theorem mul_assoc (x y z : A ⊗[R] B) : mul (mul x y) z = mul x (mul y z) :=
       simp only [mul_apply, mul_assoc])
     x y z
 
-theorem one_mulₓ (x : A ⊗[R] B) : mul (1 ⊗ₜ 1) x = x := by
+theorem one_mul (x : A ⊗[R] B) : mul (1 ⊗ₜ 1) x = x := by
   apply TensorProduct.induction_on x <;> simp (config := { contextual := true })
 
-theorem mul_oneₓ (x : A ⊗[R] B) : mul x (1 ⊗ₜ 1) = x := by
+theorem mul_one (x : A ⊗[R] B) : mul x (1 ⊗ₜ 1) = x := by
   apply TensorProduct.induction_on x <;> simp (config := { contextual := true })
 
 instance : Semiringₓ (A ⊗[R] B) :=
   { (by
       infer_instance : AddCommMonoidₓ (A ⊗[R] B)) with
-    zero := 0, add := · + ·, one := 1 ⊗ₜ 1, mul := fun a b => mul a b, one_mul := one_mul, mul_one := mul_one,
+    zero := 0, add := (· + ·), one := 1 ⊗ₜ 1, mul := fun a b => mul a b, one_mul := one_mul, mul_one := mul_one,
     mul_assoc := mul_assoc,
     zero_mul := by
       simp ,
@@ -413,7 +418,7 @@ theorem tmul_pow (a : A) (b : B) (k : ℕ) : a ⊗ₜ[R] b ^ k = (a ^ k) ⊗ₜ[
 
 /-- The algebra map `R →+* (A ⊗[R] B)` giving `A ⊗[R] B` the structure of an `R`-algebra.
 -/
-def tensor_algebra_map : R →+* A ⊗[R] B where
+def tensorAlgebraMap : R →+* A ⊗[R] B where
   toFun := fun r => algebraMap R A r ⊗ₜ[R] 1
   map_one' := by
     simp
@@ -466,7 +471,7 @@ theorem ext {g h : A ⊗[R] B →ₐ[R] C} (H : ∀ a b, g (a ⊗ₜ b) = h (a �
   simp [H]
 
 /-- The algebra morphism `A →ₐ[R] A ⊗[R] B` sending `a` to `a ⊗ₜ 1`. -/
-def include_left : A →ₐ[R] A ⊗[R] B where
+def includeLeft : A →ₐ[R] A ⊗[R] B where
   toFun := fun a => a ⊗ₜ 1
   map_zero' := by
     simp
@@ -483,7 +488,7 @@ theorem include_left_apply (a : A) : (includeLeft : A →ₐ[R] A ⊗[R] B) a = 
   rfl
 
 /-- The algebra morphism `B →ₐ[R] A ⊗[R] B` sending `b` to `1 ⊗ₜ b`. -/
-def include_right : B →ₐ[R] A ⊗[R] B where
+def includeRight : B →ₐ[R] A ⊗[R] B where
   toFun := fun b => 1 ⊗ₜ b
   map_zero' := by
     simp
@@ -589,7 +594,7 @@ variable {D : Type v₄} [Semiringₓ D] [Algebra R D]
 /-- Build an algebra morphism from a linear map out of a tensor product,
 and evidence of multiplicativity on pure tensors.
 -/
-def alg_hom_of_linear_map_tensor_product (f : A ⊗[R] B →ₗ[R] C)
+def algHomOfLinearMapTensorProduct (f : A ⊗[R] B →ₗ[R] C)
     (w₁ : ∀ a₁ a₂ : A b₁ b₂ : B, f ((a₁ * a₂) ⊗ₜ (b₁ * b₂)) = f (a₁ ⊗ₜ b₁) * f (a₂ ⊗ₜ b₂))
     (w₂ : ∀ r, f ((algebraMap R A) r ⊗ₜ[R] 1) = (algebraMap R C) r) : A ⊗[R] B →ₐ[R] C :=
   { f with
@@ -627,7 +632,7 @@ theorem alg_hom_of_linear_map_tensor_product_apply f w₁ w₂ x :
 /-- Build an algebra equivalence from a linear equivalence out of a tensor product,
 and evidence of multiplicativity on pure tensors.
 -/
-def alg_equiv_of_linear_equiv_tensor_product (f : A ⊗[R] B ≃ₗ[R] C)
+def algEquivOfLinearEquivTensorProduct (f : A ⊗[R] B ≃ₗ[R] C)
     (w₁ : ∀ a₁ a₂ : A b₁ b₂ : B, f ((a₁ * a₂) ⊗ₜ (b₁ * b₂)) = f (a₁ ⊗ₜ b₁) * f (a₂ ⊗ₜ b₂))
     (w₂ : ∀ r, f ((algebraMap R A) r ⊗ₜ[R] 1) = (algebraMap R C) r) : A ⊗[R] B ≃ₐ[R] C :=
   { algHomOfLinearMapTensorProduct (f : A ⊗[R] B →ₗ[R] C) w₁ w₂, f with }
@@ -640,7 +645,7 @@ theorem alg_equiv_of_linear_equiv_tensor_product_apply f w₁ w₂ x :
 /-- Build an algebra equivalence from a linear equivalence out of a triple tensor product,
 and evidence of multiplicativity on pure tensors.
 -/
-def alg_equiv_of_linear_equiv_triple_tensor_product (f : (A ⊗[R] B) ⊗[R] C ≃ₗ[R] D)
+def algEquivOfLinearEquivTripleTensorProduct (f : (A ⊗[R] B) ⊗[R] C ≃ₗ[R] D)
     (w₁ :
       ∀ a₁ a₂ : A b₁ b₂ : B c₁ c₂ : C,
         f ((a₁ * a₂) ⊗ₜ (b₁ * b₂) ⊗ₜ (c₁ * c₂)) = f (a₁ ⊗ₜ b₁ ⊗ₜ c₁) * f (a₂ ⊗ₜ b₂ ⊗ₜ c₂))
@@ -772,6 +777,19 @@ theorem assoc_aux_2 (r : R) :
     (TensorProduct.assoc R A B C) (((algebraMap R A) r ⊗ₜ[R] 1) ⊗ₜ[R] 1) = (algebraMap R (A ⊗ (B ⊗ C))) r :=
   rfl
 
+-- variables (R A B C)
+-- -- local attribute [elab_simple] alg_equiv_of_linear_equiv_triple_tensor_product
+-- /-- The associator for tensor product of R-algebras, as an algebra isomorphism. -/
+-- -- FIXME This is _really_ slow to compile. :-(
+-- protected def assoc : ((A ⊗[R] B) ⊗[R] C) ≃ₐ[R] (A ⊗[R] (B ⊗[R] C)) :=
+-- alg_equiv_of_linear_equiv_triple_tensor_product
+--   (tensor_product.assoc R A B C)
+--   assoc_aux_1 assoc_aux_2
+-- variables {R A B C}
+-- @[simp] theorem assoc_tmul (a : A) (b : B) (c : C) :
+--   ((tensor_product.assoc R A B C) :
+--   (A ⊗[R] B) ⊗[R] C → A ⊗[R] (B ⊗[R] C)) ((a ⊗ₜ b) ⊗ₜ c) = a ⊗ₜ (b ⊗ₜ c) :=
+-- rfl
 end
 
 variable {R A B C D}
@@ -871,7 +889,7 @@ theorem lmul'_comp_include_right : (lmul' R : _ →ₐ[R] S).comp includeRight =
 /-- If `S` is commutative, for a pair of morphisms `f : A →ₐ[R] S`, `g : B →ₐ[R] S`,
 We obtain a map `A ⊗[R] B →ₐ[R] S` that commutes with `f`, `g` via `a ⊗ b ↦ f(a) * g(b)`.
 -/
-def product_map : A ⊗[R] B →ₐ[R] S :=
+def productMap : A ⊗[R] B →ₐ[R] S :=
   (lmul' R).comp (TensorProduct.map f g)
 
 @[simp]

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Shing Tak Lam. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Shing Tak Lam
+-/
 import Mathbin.Topology.Homotopy.Basic
 
 /-!
@@ -33,7 +38,7 @@ namespace ContinuousMap
 are both homotopic to `id`.
 -/
 @[ext]
-structure homotopy_equiv (X : Type u) (Y : Type v) [TopologicalSpace X] [TopologicalSpace Y] where
+structure HomotopyEquiv (X : Type u) (Y : Type v) [TopologicalSpace X] [TopologicalSpace Y] where
   toFun : C(X, Y)
   invFun : C(Y, X)
   left_inv : (inv_fun.comp to_fun).Homotopic id
@@ -51,7 +56,7 @@ theorem to_fun_eq_coe (h : HomotopyEquiv X Y) : (h.toFun : X → Y) = h :=
   rfl
 
 @[continuity]
-theorem Continuous (h : HomotopyEquiv X Y) : Continuous h :=
+theorem continuous (h : HomotopyEquiv X Y) : Continuous h :=
   h.toFun.Continuous
 
 end HomotopyEquiv
@@ -64,7 +69,7 @@ namespace Homeomorph
 
 /-- Any homeomorphism is a homotopy equivalence.
 -/
-def to_homotopy_equiv (h : X ≃ₜ Y) : X ≃ₕ Y where
+def toHomotopyEquiv (h : X ≃ₜ Y) : X ≃ₕ Y where
   toFun := ⟨h⟩
   invFun := ⟨h.symm⟩
   left_inv := by
@@ -100,12 +105,12 @@ theorem coe_inv_fun (h : HomotopyEquiv X Y) : (⇑h.invFun : Y → X) = ⇑h.sym
 
 /-- See Note [custom simps projection]. We need to specify this projection explicitly in this case,
 because it is a composition of multiple projections. -/
-def simps.apply (h : X ≃ₕ Y) : X → Y :=
+def Simps.apply (h : X ≃ₕ Y) : X → Y :=
   h
 
 /-- See Note [custom simps projection]. We need to specify this projection explicitly in this case,
 because it is a composition of multiple projections. -/
-def simps.symm_apply (h : X ≃ₕ Y) : Y → X :=
+def Simps.symmApply (h : X ≃ₕ Y) : Y → X :=
   h.symm
 
 initialize_simps_projections HomotopyEquiv (to_fun_to_fun → apply, inv_fun_to_fun → symmApply, -toFun, -invFun)
@@ -132,6 +137,7 @@ def trans (h₁ : X ≃ₕ Y) (h₂ : Y ≃ₕ Z) : X ≃ₕ Z where
       h₁.inv_fun.comp ((h₂.inv_fun.comp h₂.to_fun).comp h₁.to_fun)
     refine' homotopic.hcomp _ (homotopic.refl _)
     refine' homotopic.trans ((homotopic.refl _).hcomp h₂.left_inv) _
+    -- simp,
     rw [ContinuousMap.id_comp]
   right_inv := by
     refine' homotopic.trans _ h₂.right_inv

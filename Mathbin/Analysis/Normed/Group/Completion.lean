@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Johan Commelin. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johan Commelin
+-/
 import Mathbin.Analysis.Normed.Group.Basic
 import Mathbin.Topology.Algebra.GroupCompletion
 import Mathbin.Topology.MetricSpace.Completion
@@ -29,7 +34,7 @@ theorem norm_coe {E} [SemiNormedGroup E] (x : E) : ∥(x : Completion E)∥ = �
   Completion.extension_coe uniform_continuous_norm x
 
 instance [SemiNormedGroup E] : NormedGroup (Completion E) :=
-  { UniformSpace.Completion.addCommGroup, Metric.Completion.metricSpace with
+  { Completion.addCommGroup, Completion.metricSpace with
     dist_eq := by
       intro x y
       apply completion.induction_on₂ x y <;> clear x y
@@ -37,7 +42,7 @@ instance [SemiNormedGroup E] : NormedGroup (Completion E) :=
         exact Continuous.comp completion.continuous_extension continuous_sub
         
       · intro x y
-        rw [← completion.coe_sub, norm_coe, Metric.Completion.dist_eq, dist_eq_norm]
+        rw [← completion.coe_sub, norm_coe, completion.dist_eq, dist_eq_norm]
          }
 
 end Completion

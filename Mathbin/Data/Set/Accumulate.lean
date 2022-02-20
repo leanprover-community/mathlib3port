@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Floris van Doorn. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Floris van Doorn
+-/
 import Mathbin.Data.Set.Lattice
 
 /-!
@@ -12,7 +17,7 @@ variable {α β γ : Type _} {s : α → Set β} {t : α → Set γ}
 namespace Set
 
 /-- `accumulate s` is the union of `s y` for `y ≤ x`. -/
-def accumulate [LE α] (s : α → Set β) (x : α) : Set β :=
+def Accumulate [LE α] (s : α → Set β) (x : α) : Set β :=
   ⋃ y ≤ x, s y
 
 variable {s}

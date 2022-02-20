@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Johannes Hölzl. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johannes Hölzl, Jens Wagemaker
+-/
 import Mathbin.Algebra.Associated
 import Mathbin.Algebra.GroupPower.Lemmas
 
@@ -160,9 +165,11 @@ theorem dvd_antisymm_of_normalize_eq {a b : α} (ha : normalize a = a) (hb : nor
     (hba : b ∣ a) : a = b :=
   ha ▸ hb ▸ normalize_eq_normalize hab hba
 
+--can be proven by simp
 theorem dvd_normalize_iff {a b : α} : a ∣ normalize b ↔ a ∣ b :=
   Units.dvd_mul_right
 
+--can be proven by simp
 theorem normalize_dvd_iff {a b : α} : normalize a ∣ b ↔ a ∣ b :=
   Units.mul_right_dvd
 
@@ -744,6 +751,7 @@ section UniqueUnit
 
 variable [CancelCommMonoidWithZero α] [Unique (α)ˣ]
 
+-- see Note [lower instance priority]
 instance (priority := 100) normalizationMonoidOfUniqueUnits : NormalizationMonoid α where
   normUnit := fun x => 1
   norm_unit_zero := rfl
@@ -1096,6 +1104,7 @@ namespace CommGroupWithZero
 
 variable (G₀ : Type _) [CommGroupWithZero G₀] [DecidableEq G₀]
 
+-- see Note [lower instance priority]
 instance (priority := 100) : NormalizedGcdMonoid G₀ where
   normUnit := fun x => if h : x = 0 then 1 else (Units.mk0 x h)⁻¹
   norm_unit_zero := dif_pos rfl
@@ -1137,6 +1146,7 @@ instance (priority := 100) : NormalizedGcdMonoid G₀ where
     exact (associated_one_iff_is_unit.mpr ((IsUnit.mk0 _ ha).mul (IsUnit.mk0 _ hb))).symm
   lcm_zero_left := fun b => if_pos (Or.inl rfl)
   lcm_zero_right := fun a => if_pos (Or.inr rfl)
+  -- `split_ifs` wants to split `normalize`, so handle the cases manually
   normalize_gcd := fun a b =>
     if h : a = 0 ∧ b = 0 then by
       simp [if_pos h]

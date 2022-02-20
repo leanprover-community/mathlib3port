@@ -1,3 +1,10 @@
+/-
+Copyright (c) 2019 Patrick Massot All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Patrick Massot, Simon Hudon
+
+A tactic pushing negations into an expression
+-/
 import Mathbin.Logic.Basic
 
 open Tactic Expr
@@ -34,7 +41,7 @@ theorem not_exists_eq : (¬∃ x, s x) = ∀ x, ¬s x :=
 theorem not_implies_eq : (¬(p → q)) = (p ∧ ¬q) :=
   propext not_imp
 
-theorem classical.implies_iff_not_or : p → q ↔ ¬p ∨ q :=
+theorem Classical.implies_iff_not_or : p → q ↔ ¬p ∨ q :=
   imp_iff_not_or
 
 theorem not_eq (a b : α) : ¬a = b ↔ a ≠ b :=
@@ -148,8 +155,8 @@ local postfix:9001 "*" => many
 
 open PushNeg
 
--- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
--- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:916:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:916:4: warning: unsupported (TODO): `[tacs]
 /-- Push negations in the goal of some assumption.
 
 For instance, a hypothesis `h : ¬ ∀ x, ∃ y, x ≤ y` will be transformed by `push_neg at h` into

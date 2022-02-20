@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Keeley Hoek. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Keeley Hoek
+-/
 import Mathbin.Tactic.Core
 
 /-!
@@ -32,7 +37,7 @@ unsafe def binder_less_important (u v : BinderInfo) : Bool :=
 /-- Selects the elements of the given `list α` which under the image of `p : α → β × γ` have `β`
 component equal to `b'`. Returns the `γ` components of the selected elements under the image of `p`,
 and the elements of the original `list α` which were not selected. -/
-def select_for_which {α β γ : Type} (p : α → β × γ) [DecidableEq β] (b' : β) : List α → List γ × List α
+def selectForWhich {α β γ : Type} (p : α → β × γ) [DecidableEq β] (b' : β) : List α → List γ × List α
   | [] => ([], [])
   | a :: rest =>
     let (cs, others) := select_for_which rest

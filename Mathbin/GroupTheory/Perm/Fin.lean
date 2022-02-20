@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Eric Wieser. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Eric Wieser
+-/
 import Mathbin.Data.Equiv.Fin
 import Mathbin.Data.Equiv.Fintype
 import Mathbin.GroupTheory.Perm.Option
@@ -141,7 +146,7 @@ theorem cycle_type_fin_rotate_of_le {n : ℕ} (h : 2 ≤ n) : cycleType (finRota
 namespace Finₓ
 
 /-- `fin.cycle_range i` is the cycle `(0 1 2 ... i)` leaving `(i+1 ... (n-1))` unchanged. -/
-def cycle_range {n : ℕ} (i : Finₓ n) : Perm (Finₓ n) :=
+def cycleRange {n : ℕ} (i : Finₓ n) : Perm (Finₓ n) :=
   (finRotate (i + 1)).extendDomain
     (Equivₓ.ofLeftInverse' (Finₓ.castLe (Nat.succ_le_of_ltₓ i.is_lt)).toEmbedding coe
       (by

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Seul Baek. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Seul Baek
+-/
 import Mathbin.Data.List.ProdSigma
 import Mathbin.Tactic.Omega.Clause
 import Mathbin.Tactic.Omega.Nat.Form
@@ -14,14 +19,14 @@ namespace Nat
 open_locale Omega.Nat
 
 @[simp]
-def dnf_core : Preform → List Clause
+def dnfCore : Preform → List Clause
   | p ∨* q => dnf_core p ++ dnf_core q
   | p ∧* q => (List.product (dnf_core p) (dnf_core q)).map fun pq => Clause.append pq.fst pq.snd
   | t =* s => [([Term.sub (canonize s) (canonize t)], [])]
   | t ≤* s => [([], [Term.sub (canonize s) (canonize t)])]
   | ¬* _ => []
 
--- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:916:4: warning: unsupported (TODO): `[tacs]
 theorem exists_clause_holds_core {v : Nat → Nat} :
     ∀ {p : Preform}, p.NegFree → p.SubFree → p.Holds v → ∃ c ∈ dnfCore p, Clause.Holds (fun x => ↑(v x)) c := by
   run_tac
@@ -60,32 +65,33 @@ theorem exists_clause_holds_core {v : Nat → Nat} :
     constructor <;> assumption
     
 
-def term.vars_core (is : List Int) : List Bool :=
+def Term.varsCore (is : List Int) : List Bool :=
   is.map fun i => if i = 0 then false else true
 
 /-- Return a list of bools that encodes which variables have nonzero coefficients -/
-def term.vars (t : Term) : List Bool :=
+def Term.vars (t : Term) : List Bool :=
   Term.varsCore t.snd
 
-def bools.or : List Bool → List Bool → List Bool
+def Bools.or : List Bool → List Bool → List Bool
   | [], bs2 => bs2
   | bs1, [] => bs1
   | b1 :: bs1, b2 :: bs2 => (b1 || b2) :: bools.or bs1 bs2
 
 /-- Return a list of bools that encodes which variables have nonzero coefficients in any one of the
 input terms. -/
-def terms.vars : List Term → List Bool
+def Terms.vars : List Term → List Bool
   | [] => []
   | t :: ts => Bools.or (Term.vars t) (terms.vars ts)
 
 open_locale List.Func
 
-def nonneg_consts_core : Nat → List Bool → List Term
+-- get notation for list.func.set
+def nonnegConstsCore : Nat → List Bool → List Term
   | _, [] => []
   | k, ff :: bs => nonneg_consts_core (k + 1) bs
   | k, tt :: bs => ⟨0, [] {k ↦ 1}⟩ :: nonneg_consts_core (k + 1) bs
 
-def nonneg_consts (bs : List Bool) : List Term :=
+def nonnegConsts (bs : List Bool) : List Term :=
   nonnegConstsCore 0 bs
 
 def nonnegate : Clause → Clause

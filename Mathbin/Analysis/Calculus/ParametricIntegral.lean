@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Patrick Massot. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Patrick Massot
+-/
 import Mathbin.MeasureTheory.Integral.SetIntegral
 import Mathbin.Analysis.Calculus.MeanValue
 
@@ -208,7 +213,7 @@ theorem has_deriv_at_integral_of_dominated_loc_of_lip {F : 𝕜 → α → E} {F
     hF'_int key
   replace hF'_int : integrable F' μ
   · rw [← integrable_norm_iff hm] at hF'_int
-    simpa only [L, · ∘ ·, integrable_norm_iff, hF'_meas, one_mulₓ, norm_one, ContinuousLinearMap.comp_apply,
+    simpa only [L, (· ∘ ·), integrable_norm_iff, hF'_meas, one_mulₓ, norm_one, ContinuousLinearMap.comp_apply,
       ContinuousLinearMap.coe_restrict_scalarsL', ContinuousLinearMap.norm_restrict_scalars,
       ContinuousLinearMap.norm_smul_rightL_apply] using hF'_int
     

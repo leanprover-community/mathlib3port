@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Mario Carneiro. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Mario Carneiro, Chris Hughes, Floris van Doorn, Yaël Dillies
+-/
 import Mathbin.Data.Nat.Basic
 import Mathbin.Data.Nat.Pow
 
@@ -199,7 +204,7 @@ section AscFactorial
 /-- `n.asc_factorial k = (n + k)! / n!` (as seen in `nat.asc_factorial_eq_div`), but implemented
 recursively to allow for "quick" computation when using `norm_num`. This is closely related to
 `pochhammer`, but much less general. -/
-def asc_factorial (n : ℕ) : ℕ → ℕ
+def ascFactorial (n : ℕ) : ℕ → ℕ
   | 0 => 1
   | k + 1 => (n + k + 1) * asc_factorial k
 
@@ -293,7 +298,7 @@ section DescFactorial
 /-- `n.desc_factorial k = n! / (n - k)!` (as seen in `nat.desc_factorial_eq_div`), but
 implemented recursively to allow for "quick" computation when using `norm_num`. This is closely
 related to `pochhammer`, but much less general. -/
-def desc_factorial (n : ℕ) : ℕ → ℕ
+def descFactorial (n : ℕ) : ℕ → ℕ
   | 0 => 1
   | k + 1 => (n - k) * desc_factorial k
 

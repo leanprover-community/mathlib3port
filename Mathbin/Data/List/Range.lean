@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Mario Carneiro. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Mario Carneiro, Kenny Lau, Scott Morrison
+-/
 import Mathbin.Data.List.Chain
 import Mathbin.Data.List.Nodup
 import Mathbin.Data.List.OfFn
@@ -187,12 +192,12 @@ theorem reverse_range' : ∀ s n : ℕ, reverse (range' s n) = map (fun i => s +
   | s, 0 => rfl
   | s, n + 1 => by
     rw [range'_concat, reverse_append, range_succ_eq_map] <;>
-      simpa only [show s + (n + 1) - 1 = s + n from rfl, · ∘ ·, fun a i =>
+      simpa only [show s + (n + 1) - 1 = s + n from rfl, (· ∘ ·), fun a i =>
         show a - 1 - i = a - succ i from pred_sub _ _, reverse_singleton, map_cons, tsub_zero, cons_append, nil_append,
         eq_self_iff_true, true_andₓ, map_map] using reverse_range' s n
 
 /-- All elements of `fin n`, from `0` to `n-1`. -/
-def fin_range (n : ℕ) : List (Finₓ n) :=
+def finRange (n : ℕ) : List (Finₓ n) :=
   (range n).pmap Finₓ.mk fun _ => List.mem_range.1
 
 @[simp]

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison
+-/
 import Mathbin.Algebra.Group.Basic
 import Mathbin.CategoryTheory.Pi.Basic
 import Mathbin.CategoryTheory.Shift
@@ -29,24 +34,26 @@ namespace CategoryTheory
 universe w v u
 
 /-- A type synonym for `β → C`, used for `β`-graded objects in a category `C`. -/
-def graded_object (β : Type w) (C : Type u) : Type max w u :=
+def GradedObject (β : Type w) (C : Type u) : Type max w u :=
   β → C
 
-instance inhabited_graded_object (β : Type w) (C : Type u) [Inhabited C] : Inhabited (GradedObject β C) :=
+-- Satisfying the inhabited linter...
+instance inhabitedGradedObject (β : Type w) (C : Type u) [Inhabited C] : Inhabited (GradedObject β C) :=
   ⟨fun b => Inhabited.default⟩
 
 /-- A type synonym for `β → C`, used for `β`-graded objects in a category `C`
 with a shift functor given by translation by `s`.
 -/
+-- `s` is here to distinguish type synonyms asking for different shifts
 @[nolint unused_arguments]
-abbrev graded_object_with_shift {β : Type w} [AddCommGroupₓ β] (s : β) (C : Type u) : Type max w u :=
+abbrev GradedObjectWithShift {β : Type w} [AddCommGroupₓ β] (s : β) (C : Type u) : Type max w u :=
   GradedObject β C
 
 namespace GradedObject
 
 variable {C : Type u} [Category.{v} C]
 
-instance category_of_graded_objects (β : Type w) : Category.{max w v} (GradedObject β C) :=
+instance categoryOfGradedObjects (β : Type w) : Category.{max w v} (GradedObject β C) :=
   CategoryTheory.pi fun _ => C
 
 /-- The projection of a graded object to its `i`-th component. -/
@@ -63,7 +70,7 @@ variable (C)
 pulling back along two propositionally equal functions.
 -/
 @[simps]
-def comap_eq {β γ : Type w} {f g : β → γ} (h : f = g) : comap (fun _ => C) f ≅ comap (fun _ => C) g where
+def comapEq {β γ : Type w} {f g : β → γ} (h : f = g) : comap (fun _ => C) f ≅ comap (fun _ => C) g where
   Hom :=
     { app := fun X b =>
         eqToHom
@@ -99,7 +106,7 @@ theorem eq_to_hom_apply {β : Type w} {X Y : ∀ b : β, C} (h : X = Y) (b : β)
 given an equivalence between β and γ.
 -/
 @[simps]
-def comap_equiv {β γ : Type w} (e : β ≃ γ) : GradedObject β C ≌ GradedObject γ C where
+def comapEquiv {β γ : Type w} (e : β ≃ γ) : GradedObject β C ≌ GradedObject γ C where
   Functor := comap (fun _ => C) (e.symm : γ → β)
   inverse := comap (fun _ => C) (e : β → γ)
   counitIso :=
@@ -119,11 +126,12 @@ def comap_equiv {β γ : Type w} (e : β ≃ γ) : GradedObject β C ≌ GradedO
     dsimp
     simp
 
+-- See note [dsimp, simp].
 end
 
 attribute [local reducible, local instance] endofunctor_monoidal_category Discrete.addMonoidal
 
-instance has_shift {β : Type _} [AddCommGroupₓ β] (s : β) : HasShift (GradedObjectWithShift s C) ℤ :=
+instance hasShift {β : Type _} [AddCommGroupₓ β] (s : β) : HasShift (GradedObjectWithShift s C) ℤ :=
   hasShiftMk _ _
     { f := fun n => (comap fun _ => C) fun b : β => b + n • s,
       ε :=
@@ -164,7 +172,7 @@ theorem shift_functor_map_apply {β : Type _} [AddCommGroupₓ β] (s : β) {X Y
     (t : β) (n : ℤ) : (shiftFunctor (GradedObjectWithShift s C) n).map f t = f (t + n • s) :=
   rfl
 
-instance has_zero_morphisms [HasZeroMorphisms C] (β : Type w) : HasZeroMorphisms.{max w v} (GradedObject β C) where
+instance hasZeroMorphisms [HasZeroMorphisms C] (β : Type w) : HasZeroMorphisms.{max w v} (GradedObject β C) where
   HasZero := fun X Y => { zero := fun b => 0 }
 
 @[simp]
@@ -175,7 +183,7 @@ section
 
 open_locale ZeroObject
 
-instance has_zero_object [HasZeroObject C] [HasZeroMorphisms C] (β : Type w) :
+instance hasZeroObject [HasZeroObject C] [HasZeroMorphisms C] (β : Type w) :
     HasZeroObject.{max w v} (GradedObject β C) where
   zero := fun b => (0 : C)
   uniqueTo := fun X =>
@@ -191,6 +199,9 @@ end GradedObject
 
 namespace GradedObject
 
+-- The universes get a little hairy here, so we restrict the universe level for the grading to 0.
+-- Since we're typically interested in grading by ℤ or a finite group, this should be okay.
+-- If you're grading by things in higher universes, have fun!
 variable (β : Type)
 
 variable (C : Type u) [Category.{v} C]
@@ -199,7 +210,7 @@ variable [HasCoproducts C]
 
 /-- The total object of a graded object is the coproduct of the graded components.
 -/
-noncomputable def Total : GradedObject β C ⥤ C where
+noncomputable def total : GradedObject β C ⥤ C where
   obj := fun X => ∐ fun i : Ulift.{v} β => X i.down
   map := fun X Y f => Limits.Sigma.map fun i => f i.down
 

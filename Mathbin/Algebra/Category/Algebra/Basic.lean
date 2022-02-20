@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison
+-/
 import Mathbin.Algebra.Algebra.Basic
 import Mathbin.Algebra.Algebra.Subalgebra
 import Mathbin.Algebra.FreeAlgebra
@@ -43,10 +48,10 @@ instance : ConcreteCategory.{v} (AlgebraCat.{v} R) where
   forget := { obj := fun R => R, map := fun R S f => (f : R → S) }
   forget_faithful := {  }
 
-instance has_forget_to_Ring : HasForget₂ (AlgebraCat.{v} R) Ringₓₓ.{v} where
+instance hasForgetToRing : HasForget₂ (AlgebraCat.{v} R) Ringₓₓ.{v} where
   forget₂ := { obj := fun A => Ringₓₓ.of A, map := fun A₁ A₂ f => AlgHom.toRingHom f }
 
-instance has_forget_to_Module : HasForget₂ (AlgebraCat.{v} R) (ModuleCat.{v} R) where
+instance hasForgetToModule : HasForget₂ (AlgebraCat.{v} R) (ModuleCat.{v} R) where
   forget₂ := { obj := fun M => ModuleCat.of R M, map := fun M₁ M₂ f => AlgHom.toLinearMap f }
 
 /-- The object in the category of R-algebras associated to a type equipped with the appropriate
@@ -55,7 +60,7 @@ def of (X : Type v) [Ringₓ X] [Algebra R X] : AlgebraCat.{v} R :=
   ⟨X⟩
 
 /-- Typecheck a `alg_hom` as a morphism in `Algebra R`. -/
-def of_hom {R : Type u} [CommRingₓ R] {X Y : Type v} [Ringₓ X] [Algebra R X] [Ringₓ Y] [Algebra R Y] (f : X →ₐ[R] Y) :
+def ofHom {R : Type u} [CommRingₓ R] {X Y : Type v} [Ringₓ X] [Algebra R X] [Ringₓ Y] [Algebra R Y] (f : X →ₐ[R] Y) :
     of R X ⟶ of R Y :=
   f
 
@@ -71,7 +76,7 @@ variable {R}
 /-- Forgetting to the underlying type and then building the bundled object returns the original
 algebra. -/
 @[simps]
-def of_self_iso (M : AlgebraCat.{v} R) : AlgebraCat.of R M ≅ M where
+def ofSelfIso (M : AlgebraCat.{v} R) : AlgebraCat.of R M ≅ M where
   hom := 𝟙 M
   inv := 𝟙 M
 
@@ -92,6 +97,7 @@ variable (R)
 def free : Type u ⥤ AlgebraCat.{u} R where
   obj := fun S => { Carrier := FreeAlgebra R S, isRing := Algebra.semiringToRing R }
   map := fun S T f => FreeAlgebra.lift _ <| FreeAlgebra.ι _ ∘ f
+  -- obviously can fill the next two goals, but it is slow
   map_id' := by
     intro X
     ext1
@@ -107,7 +113,8 @@ def free : Type u ⥤ AlgebraCat.{u} R where
 /-- The free/forget adjunction for `R`-algebras. -/
 def adj : free.{u} R ⊣ forget (AlgebraCat.{u} R) :=
   Adjunction.mkOfHomEquiv
-    { homEquiv := fun X A => (FreeAlgebra.lift _).symm,
+    { homEquiv := fun X A =>
+        (FreeAlgebra.lift _).symm,-- Relying on `obviously` to fill out these proofs is very slow :(
       hom_equiv_naturality_left_symm' := by
         intros
         ext
@@ -145,7 +152,7 @@ namespace CategoryTheory.Iso
 
 /-- Build a `alg_equiv` from an isomorphism in the category `Algebra R`. -/
 @[simps]
-def to_alg_equiv {X Y : AlgebraCat R} (i : X ≅ Y) : X ≃ₐ[R] Y where
+def toAlgEquiv {X Y : AlgebraCat R} (i : X ≅ Y) : X ≃ₐ[R] Y where
   toFun := i.hom
   invFun := i.inv
   left_inv := by

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2016 Leonardo de Moura. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Leonardo de Moura
+-/
 import Mathbin.Data.Set.Lattice
 
 /-!
@@ -56,7 +61,7 @@ instance : IsCommApplicative (Set : Type u → Type u) :=
   ⟨fun α β s t => prod_image_seq_comm s t⟩
 
 instance : Alternativeₓ Set :=
-  { Set.monad with orelse := fun α => · ∪ ·, failure := fun α => ∅ }
+  { Set.monad with orelse := fun α => (· ∪ ·), failure := fun α => ∅ }
 
 end Set
 

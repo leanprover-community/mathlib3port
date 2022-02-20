@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Mario Carneiro. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Mario Carneiro
+-/
 import Mathbin.Computability.PartrecCode
 
 /-!
@@ -177,7 +182,7 @@ theorem computable_iff {p : α → Prop} : ComputablePred p ↔ ∃ f : α → B
           infer_instance, by
           simpa using h⟩⟩
 
-protected theorem Not {p : α → Prop} (hp : ComputablePred p) : ComputablePred fun a => ¬p a := by
+protected theorem not {p : α → Prop} (hp : ComputablePred p) : ComputablePred fun a => ¬p a := by
   obtain ⟨f, hf, rfl⟩ := computable_iff.1 hp <;>
     exact
       ⟨by
@@ -235,6 +240,9 @@ theorem halting_problem_re n : RePred fun c => (eval c n).Dom :=
 theorem halting_problem n : ¬ComputablePred fun c => (eval c n).Dom
   | h => rice { f | (f n).Dom } h Nat.Partrec.zero Nat.Partrec.none trivialₓ
 
+-- Post's theorem on the equivalence of r.e., co-r.e. sets and
+-- computable sets. The assumption that p is decidable is required
+-- unless we assume Markov's principle or LEM.
 @[nolint decidable_classical]
 theorem computable_iff_re_compl_re {p : α → Prop} [DecidablePred p] :
     ComputablePred p ↔ RePred p ∧ RePred fun a => ¬p a :=
@@ -264,7 +272,7 @@ namespace Nat
 open Vector Part
 
 /-- A simplified basis for `partrec`. -/
-inductive partrec' : ∀ {n}, (Vector ℕ n →. ℕ) → Prop
+inductive Partrec' : ∀ {n}, (Vector ℕ n →. ℕ) → Prop
   | prim {n f} : @Primrec' n f → @partrec' n f
   | comp {m n f} (g : Finₓ n → Vector ℕ m →. ℕ) :
     partrec' f → (∀ i, partrec' (g i)) → partrec' fun v => (mOfFnₓ fun i => g i v) >>= f
@@ -320,10 +328,10 @@ attribute [-instance] Part.hasZero
 
 /-- Analogous to `nat.partrec'` for `ℕ`-valued functions, a predicate for partial recursive
   vector-valued functions.-/
-def vec {n m} (f : Vector ℕ n → Vector ℕ m) :=
+def Vec {n m} (f : Vector ℕ n → Vector ℕ m) :=
   ∀ i, Partrec' fun v => (f v).nth i
 
-theorem vec.prim {n m f} (hf : @Nat.Primrec'.Vec n m f) : Vec f := fun i => prim <| hf i
+theorem Vec.prim {n m f} (hf : @Nat.Primrec'.Vec n m f) : Vec f := fun i => prim <| hf i
 
 protected theorem nil {n} : @Vec n 0 fun _ => nil := fun i => i.elim0
 

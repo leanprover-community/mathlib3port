@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Rohan Mitta. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Rohan Mitta, Kevin Buzzard, Alistair Tucker, Johannes Hölzl, Yury Kudryashov
+-/
 import Mathbin.Logic.Function.Iterate
 import Mathbin.Data.Set.Intervals.ProjIcc
 import Mathbin.Topology.MetricSpace.Basic
@@ -89,7 +94,7 @@ variable [PseudoEmetricSpace α] [PseudoEmetricSpace β] [PseudoEmetricSpace γ]
 
 variable {K : ℝ≥0 } {f : α → β}
 
-protected theorem LipschitzOnWith (h : LipschitzWith K f) (s : Set α) : LipschitzOnWith K f s := fun x _ y _ => h x y
+protected theorem lipschitz_on_with (h : LipschitzWith K f) (s : Set α) : LipschitzOnWith K f s := fun x _ y _ => h x y
 
 theorem edist_le_mul (h : LipschitzWith K f) (x y : α) : edist (f x) (f y) ≤ K * edist x y :=
   h x y
@@ -121,13 +126,13 @@ theorem edist_lt_of_edist_lt_div (hf : LipschitzWith K f) {x y : α} {d : ℝ≥
     
 
 /-- A Lipschitz function is uniformly continuous -/
-protected theorem UniformContinuous (hf : LipschitzWith K f) : UniformContinuous f := by
+protected theorem uniform_continuous (hf : LipschitzWith K f) : UniformContinuous f := by
   refine' Emetric.uniform_continuous_iff.2 fun ε εpos => _
   use ε / K, Ennreal.div_pos_iff.2 ⟨ne_of_gtₓ εpos, Ennreal.coe_ne_top⟩
   exact fun x y => hf.edist_lt_of_edist_lt_div
 
 /-- A Lipschitz function is continuous -/
-protected theorem Continuous (hf : LipschitzWith K f) : Continuous f :=
+protected theorem continuous (hf : LipschitzWith K f) : Continuous f :=
   hf.UniformContinuous.Continuous
 
 protected theorem const (b : β) : LipschitzWith 0 fun a : α => b := fun x y => by
@@ -177,7 +182,7 @@ protected theorem prod_fst : LipschitzWith 1 (@Prod.fst α β) :=
 protected theorem prod_snd : LipschitzWith 1 (@Prod.snd α β) :=
   LipschitzWith.of_edist_le fun x y => le_max_rightₓ _ _
 
-protected theorem Prod {f : α → β} {Kf : ℝ≥0 } (hf : LipschitzWith Kf f) {g : α → γ} {Kg : ℝ≥0 }
+protected theorem prod {f : α → β} {Kf : ℝ≥0 } (hf : LipschitzWith Kf f) {g : α → γ} {Kg : ℝ≥0 }
     (hg : LipschitzWith Kg g) : LipschitzWith (max Kf Kg) fun x => (f x, g x) := by
   intro x y
   rw [ennreal.coe_mono.map_max, Prod.edist_eq, Ennreal.max_mul]
@@ -305,11 +310,11 @@ variable {α} [PseudoEmetricSpace α] {f g : α → ℝ} {Kf Kg : ℝ≥0 }
 
 protected theorem max (hf : LipschitzWith Kf f) (hg : LipschitzWith Kg g) :
     LipschitzWith (max Kf Kg) fun x => max (f x) (g x) := by
-  simpa only [· ∘ ·, one_mulₓ] using lipschitz_with_max.comp (hf.prod hg)
+  simpa only [(· ∘ ·), one_mulₓ] using lipschitz_with_max.comp (hf.prod hg)
 
 protected theorem min (hf : LipschitzWith Kf f) (hg : LipschitzWith Kg g) :
     LipschitzWith (max Kf Kg) fun x => min (f x) (g x) := by
-  simpa only [· ∘ ·, one_mulₓ] using lipschitz_with_min.comp (hf.prod hg)
+  simpa only [(· ∘ ·), one_mulₓ] using lipschitz_with_min.comp (hf.prod hg)
 
 theorem max_const (hf : LipschitzWith Kf f) (a : ℝ) : LipschitzWith Kf fun x => max (f x) a := by
   simpa only [max_eq_leftₓ (zero_le Kf)] using hf.max (LipschitzWith.const a)
@@ -338,10 +343,10 @@ variable [PseudoEmetricSpace α] [PseudoEmetricSpace β] [PseudoEmetricSpace γ]
 
 variable {K : ℝ≥0 } {s : Set α} {f : α → β}
 
-protected theorem UniformContinuousOn (hf : LipschitzOnWith K f s) : UniformContinuousOn f s :=
+protected theorem uniform_continuous_on (hf : LipschitzOnWith K f s) : UniformContinuousOn f s :=
   uniform_continuous_on_iff_restrict.mpr (lipschitz_on_with_iff_restrict.mp hf).UniformContinuous
 
-protected theorem ContinuousOn (hf : LipschitzOnWith K f s) : ContinuousOn f s :=
+protected theorem continuous_on (hf : LipschitzOnWith K f s) : ContinuousOn f s :=
   hf.UniformContinuousOn.ContinuousOn
 
 theorem edist_lt_of_edist_lt_div (hf : LipschitzOnWith K f s) {x y : α} (hx : x ∈ s) (hy : y ∈ s) {d : ℝ≥0∞}
@@ -405,7 +410,7 @@ theorem continuous_on_prod_of_continuous_on_lipschitz_on [PseudoEmetricSpace α]
     (ha : ∀, ∀ a ∈ s, ∀, ContinuousOn (fun y => f (a, y)) t)
     (hb : ∀, ∀ b ∈ t, ∀, LipschitzOnWith K (fun x => f (x, b)) s) : ContinuousOn f (s ×ˢ t) := by
   rintro ⟨x, y⟩ ⟨hx : x ∈ s, hy : y ∈ t⟩
-  refine' Emetric.tendsto_nhds.2 fun ε ε0 : 0 < ε => _
+  refine' Emetric.tendsto_nhds.2 fun ε0 : 0 < ε => _
   replace ε0 : 0 < ε / 2 := Ennreal.half_pos (ne_of_gtₓ ε0)
   have εK : 0 < ε / 2 / K := Ennreal.div_pos_iff.2 ⟨ε0.ne', Ennreal.coe_ne_top⟩
   have A : s ∩ Emetric.Ball x (ε / 2 / K) ∈ 𝓝[s] x := inter_mem_nhds_within _ (Emetric.ball_mem_nhds _ εK)
@@ -434,9 +439,11 @@ open Metric
 /-- If a function is locally Lipschitz around a point, then it is continuous at this point. -/
 theorem continuous_at_of_locally_lipschitz [PseudoMetricSpace α] [PseudoMetricSpace β] {f : α → β} {x : α} {r : ℝ}
     (hr : 0 < r) (K : ℝ) (h : ∀ y, dist y x < r → dist (f y) (f x) ≤ K * dist y x) : ContinuousAt f x := by
+  -- We use `h` to squeeze `dist (f y) (f x)` between `0` and `K * dist y x`
   refine'
     tendsto_iff_dist_tendsto_zero.2
       (squeeze_zero' (eventually_of_forall fun _ => dist_nonneg) (mem_of_superset (ball_mem_nhds _ hr) h) _)
+  -- Then show that `K * dist y x` tends to zero as `y → x`
   refine' (continuous_const.mul (continuous_id.dist continuous_const)).tendsto' _ _ _
   simp
 
@@ -444,6 +451,10 @@ theorem continuous_at_of_locally_lipschitz [PseudoMetricSpace α] [PseudoMetricS
 to the whole space. -/
 theorem LipschitzOnWith.extend_real [PseudoMetricSpace α] {f : α → ℝ} {s : Set α} {K : ℝ≥0 }
     (hf : LipschitzOnWith K f s) : ∃ g : α → ℝ, LipschitzWith K g ∧ EqOn f g s := by
+  /- An extension is given by `g y = Inf {f x + K * dist y x | x ∈ s}`. Taking `x = y`, one has
+    `g y ≤ f y` for `y ∈ s`, and the other inequality holds because `f` is `K`-Lipschitz, so that it
+    can not counterbalance the growth of `K * dist y x`. One readily checks from the formula that the
+    extended function is also `K`-Lipschitz. -/
   rcases eq_empty_or_nonempty s with (rfl | hs)
   · exact ⟨fun x => 0, (LipschitzWith.const _).weaken (zero_le _), eq_on_empty _ _⟩
     

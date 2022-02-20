@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2017 Johannes Hölzl. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johannes Hölzl, Yaël Dillies
+-/
 import Mathbin.Order.PartialSups
 
 /-!
@@ -90,6 +95,7 @@ theorem disjointed_rec_zero {f : ℕ → α} {p : α → Sort _} (hdiff : ∀ �
     disjointedRecₓ hdiff h₀ = h₀ :=
   rfl
 
+-- TODO: Find a useful statement of `disjointed_rec_succ`.
 theorem Monotone.disjointed_eq {f : ℕ → α} (hf : Monotone f) (n : ℕ) : disjointed f (n + 1) = f (n + 1) \ f n := by
   rw [disjointed_succ, hf.partial_sups_eq]
 

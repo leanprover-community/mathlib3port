@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Johan Commelin. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johan Commelin, Riccardo Brasca
+-/
 import Mathbin.Analysis.Normed.Group.Hom
 import Mathbin.CategoryTheory.Limits.Shapes.Zero
 
@@ -21,7 +26,7 @@ def SemiNormedGroupₓ : Type (u + 1) :=
 
 namespace SemiNormedGroupₓ
 
-instance bundled_hom : BundledHom @NormedGroupHom :=
+instance bundledHom : BundledHom @NormedGroupHom :=
   ⟨@NormedGroupHom.toFun, @NormedGroupHom.id, @NormedGroupHom.comp, @NormedGroupHom.coe_inj⟩
 
 deriving instance LargeCategory, ConcreteCategory for SemiNormedGroupₓ
@@ -61,7 +66,7 @@ instance : Limits.HasZeroMorphisms.{u, u + 1} SemiNormedGroupₓ :=
 theorem zero_apply {V W : SemiNormedGroupₓ} (x : V) : (0 : V ⟶ W) x = 0 :=
   rfl
 
-instance has_zero_object : Limits.HasZeroObject SemiNormedGroupₓ.{u} where
+instance hasZeroObject : Limits.HasZeroObject SemiNormedGroupₓ.{u} where
   zero := 0
   uniqueTo := fun X =>
     { default := 0,
@@ -115,7 +120,7 @@ instance (M : SemiNormedGroup₁) : SemiNormedGroup M :=
   M.str
 
 /-- Promote a morphism in `SemiNormedGroup` to a morphism in `SemiNormedGroup₁`. -/
-def mk_hom {M N : SemiNormedGroupₓ} (f : M ⟶ N) (i : f.NormNoninc) : SemiNormedGroup₁.of M ⟶ SemiNormedGroup₁.of N :=
+def mkHom {M N : SemiNormedGroupₓ} (f : M ⟶ N) (i : f.NormNoninc) : SemiNormedGroup₁.of M ⟶ SemiNormedGroup₁.of N :=
   ⟨f, i⟩
 
 @[simp]
@@ -124,7 +129,7 @@ theorem mk_hom_apply {M N : SemiNormedGroupₓ} (f : M ⟶ N) (i : f.NormNoninc)
 
 /-- Promote an isomorphism in `SemiNormedGroup` to an isomorphism in `SemiNormedGroup₁`. -/
 @[simps]
-def mk_iso {M N : SemiNormedGroupₓ} (f : M ≅ N) (i : f.hom.NormNoninc) (i' : f.inv.NormNoninc) :
+def mkIso {M N : SemiNormedGroupₓ} (f : M ≅ N) (i : f.hom.NormNoninc) (i' : f.inv.NormNoninc) :
     SemiNormedGroup₁.of M ≅ SemiNormedGroup₁.of N where
   hom := mkHom f.hom i
   inv := mkHom f.inv i'
@@ -150,6 +155,7 @@ theorem coe_id (V : SemiNormedGroup₁) : ⇑𝟙 V = id :=
 theorem coe_comp {M N K : SemiNormedGroup₁} (f : M ⟶ N) (g : N ⟶ K) : (f ≫ g : M → K) = g ∘ f :=
   rfl
 
+-- If `coe_fn_coe_base` fires before `coe_comp`, `coe_comp'` puts us back in normal form.
 @[simp]
 theorem coe_comp' {M N K : SemiNormedGroup₁} (f : M ⟶ N) (g : N ⟶ K) :
     (f ≫ g : NormedGroupHom M K) = (↑g : NormedGroupHom N K).comp ↑f :=
@@ -174,7 +180,7 @@ instance : Limits.HasZeroMorphisms.{u, u + 1} SemiNormedGroup₁ where
 theorem zero_apply {V W : SemiNormedGroup₁} (x : V) : (0 : V ⟶ W) x = 0 :=
   rfl
 
-instance has_zero_object : Limits.HasZeroObject SemiNormedGroup₁.{u} where
+instance hasZeroObject : Limits.HasZeroObject SemiNormedGroup₁.{u} where
   zero := 0
   uniqueTo := fun X =>
     { default := 0,

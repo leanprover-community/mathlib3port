@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison, Johan Commelin
+-/
 import Mathbin.Algebra.Category.Module.Monoidal
 import Mathbin.CategoryTheory.Monoidal.Functorial
 import Mathbin.CategoryTheory.Monoidal.Types
@@ -104,8 +109,11 @@ theorem associativity (X Y Z : Type u) :
     CategoryTheory.associator_hom_apply]
 
 /-- The free R-module functor is lax monoidal. -/
+-- In fact, it's strong monoidal, but we don't yet have a typeclass for that.
 instance : LaxMonoidal.{u} (free R).obj where
+  -- Send `R` to `punit →₀ R`
   ε := ε R
+  -- Send `(α →₀ R) ⊗ (β →₀ R)` to `α × β →₀ R`
   μ := μ R
   μ_natural' := fun X Y X' Y' f g => μ_natural R f g
   left_unitality' := left_unitality R
@@ -137,12 +145,16 @@ variable (R : Type _) [CommRingₓ R] (C : Type u) [Category.{v} C]
 
 open Finsupp
 
-instance category_Free : Category (Free R C) where
+-- Conceptually, it would be nice to construct this via "transport of enrichment",
+-- using the fact that `Module.free R : Type ⥤ Module R` and `Module.forget` are both lax monoidal.
+-- This still seems difficult, so we just do it by hand.
+instance categoryFree : Category (Free R C) where
   Hom := fun X Y : C => (X ⟶ Y) →₀ R
   id := fun X : C => Finsupp.single (𝟙 X) 1
-  comp := fun X Y Z : C f g => f.Sum fun f' s => g.Sum fun g' t => Finsupp.single (f' ≫ g') (s * t)
+  comp := fun f g => f.Sum fun f' s => g.Sum fun g' t => Finsupp.single (f' ≫ g') (s * t)
   assoc' := fun W X Y Z f g h => by
     dsimp
+    -- This imitates the proof of associativity for `monoid_algebra`.
     simp only [sum_sum_index, sum_single_index, single_zero, single_add, eq_self_iff_true, forall_true_iff,
       forall_3_true_iff, add_mulₓ, mul_addₓ, category.assoc, mul_assoc, zero_mul, mul_zero, sum_zero, sum_add]
 
@@ -274,7 +286,7 @@ instance lift_linear (F : C ⥤ D) : (lift R F).Linear R where
 /-- The embedding into the `R`-linear completion, followed by the lift,
 is isomorphic to the original functor.
 -/
-def embedding_lift_iso (F : C ⥤ D) : embedding R C ⋙ lift R F ≅ F :=
+def embeddingLiftIso (F : C ⥤ D) : embedding R C ⋙ lift R F ≅ F :=
   NatIso.ofComponents (fun X => Iso.refl _)
     (by
       tidy)
@@ -299,13 +311,14 @@ def ext {F G : Free R C ⥤ D} [F.Additive] [F.Linear R] [G.Additive] [G.Linear 
         change r • (embedding R C ⋙ F).map f' ≫ _ = r • _ ≫ (embedding R C ⋙ G).map f'
         rw [α.hom.naturality f']
         infer_instance
+        -- Why are these not picked up automatically when we rewrite?
         infer_instance
         )
 
 /-- `Free.lift` is unique amongst `R`-linear functors `Free R C ⥤ D`
 which compose with `embedding ℤ C` to give the original functor.
 -/
-def lift_unique (F : C ⥤ D) (L : Free R C ⥤ D) [L.Additive] [L.Linear R] (α : embedding R C ⋙ L ≅ F) : L ≅ lift R F :=
+def liftUnique (F : C ⥤ D) (L : Free R C ⥤ D) [L.Additive] [L.Linear R] (α : embedding R C ⋙ L ≅ F) : L ≅ lift R F :=
   ext R (α.trans (embeddingLiftIso R F).symm)
 
 end Free

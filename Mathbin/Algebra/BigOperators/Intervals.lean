@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2017 Johannes Hölzl. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johannes Hölzl
+-/
 import Mathbin.Algebra.BigOperators.Basic
 import Mathbin.Data.Nat.Interval
 import Mathbin.Tactic.Linarith.Default
@@ -15,20 +20,23 @@ open_locale BigOperators Nat
 
 namespace Finset
 
+section Generic
+
 variable {α : Type u} {β : Type v} {γ : Type w} {s₂ s₁ s : Finset α} {a : α} {g f : α → β}
 
-theorem sum_Ico_add [OrderedCancelAddCommMonoid α] [HasExistsAddOfLe α] [LocallyFiniteOrder α] [AddCommMonoidₓ β]
-    (f : α → β) (a b c : α) : (∑ x in ico a b, f (c + x)) = ∑ x in ico (a + c) (b + c), f x := by
-  classical
-  rw [← image_add_right_Ico, sum_image fun x hx y hy h => add_right_cancelₓ h]
-  simp_rw [add_commₓ]
+variable [CommMonoidₓ β]
 
 @[to_additive]
-theorem prod_Ico_add [OrderedCancelAddCommMonoid α] [HasExistsAddOfLe α] [LocallyFiniteOrder α] [CommMonoidₓ β]
-    (f : α → β) (a b c : α) : (∏ x in ico a b, f (c + x)) = ∏ x in ico (a + c) (b + c), f x :=
-  @sum_Ico_add _ (Additive β) _ _ _ _ f a b c
+theorem prod_Ico_add' [OrderedCancelAddCommMonoid α] [HasExistsAddOfLe α] [LocallyFiniteOrder α] (f : α → β)
+    (a b c : α) : (∏ x in ico a b, f (x + c)) = ∏ x in ico (a + c) (b + c), f x := by
+  classical
+  rw [← image_add_right_Ico, prod_image fun x hx y hy h => add_right_cancelₓ h]
 
-variable [CommMonoidₓ β]
+@[to_additive]
+theorem prod_Ico_add [OrderedCancelAddCommMonoid α] [HasExistsAddOfLe α] [LocallyFiniteOrder α] (f : α → β)
+    (a b c : α) : (∏ x in ico a b, f (c + x)) = ∏ x in ico (a + c) (b + c), f x := by
+  convert prod_Ico_add' f a b c
+  simp_rw [add_commₓ]
 
 theorem sum_Ico_succ_top {δ : Type _} [AddCommMonoidₓ δ] {a b : ℕ} (hab : a ≤ b) (f : ℕ → δ) :
     (∑ k in ico a (b + 1), f k) = (∑ k in ico a b, f k) + f b := by
@@ -76,8 +84,7 @@ theorem sum_Ico_Ico_comm {M : Type _} [AddCommMonoidₓ M] (a b : ℕ) (f : ℕ 
   by
   rw [Finset.sum_sigma', Finset.sum_sigma']
   refine'
-      Finset.sum_bij' (fun x : Σ i : ℕ, ℕ _ => (⟨x.2, x.1⟩ : Σ i : ℕ, ℕ)) _ (fun _ _ => rfl)
-        (fun x : Σ i : ℕ, ℕ _ => (⟨x.2, x.1⟩ : Σ i : ℕ, ℕ)) _
+      Finset.sum_bij' (fun _ => (⟨x.2, x.1⟩ : Σ i : ℕ, ℕ)) _ (fun _ _ => rfl) (fun _ => (⟨x.2, x.1⟩ : Σ i : ℕ, ℕ)) _
         (by
           rintro ⟨⟩ _ <;> rfl)
         (by
@@ -160,6 +167,70 @@ theorem sum_range_id (n : ℕ) : (∑ i in range n, i) = n * (n - 1) / 2 := by
       decide
 
 end GaussSum
+
+end Generic
+
+section Nat
+
+variable {β : Type _}
+
+variable (f g : ℕ → β) {m n : ℕ}
+
+section Groupₓ
+
+variable [CommGroupₓ β]
+
+@[to_additive]
+theorem prod_range_succ_div_prod : ((∏ i in range (n + 1), f i) / ∏ i in range n, f i) = f n :=
+  div_eq_iff_eq_mul'.mpr <| prod_range_succ f n
+
+@[to_additive]
+theorem prod_range_succ_div_top : (∏ i in range (n + 1), f i) / f n = ∏ i in range n, f i :=
+  div_eq_iff_eq_mul.mpr <| prod_range_succ f n
+
+@[to_additive]
+theorem prod_Ico_div_bot (hmn : m < n) : (∏ i in ico m n, f i) / f m = ∏ i in ico (m + 1) n, f i :=
+  div_eq_iff_eq_mul'.mpr <| prod_eq_prod_Ico_succ_bot hmn _
+
+@[to_additive]
+theorem prod_Ico_succ_div_top (hmn : m ≤ n) : (∏ i in ico m (n + 1), f i) / f n = ∏ i in ico m n, f i :=
+  div_eq_iff_eq_mul.mpr <| prod_Ico_succ_top hmn _
+
+end Groupₓ
+
+-- The partial sum of `g`, starting from zero
+local notation "G" n:80 => ∑ i in range n, g i
+
+variable [CommRingₓ β]
+
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:50: missing argument
+/-- **Summation by parts**, also known as **Abel's lemma** or an **Abel transformation** -/
+theorem sum_Ico_by_parts (hmn : m < n) :
+    (∑ i in ico m n, f i * g i) = f (n - 1) * G n - f m * G m - ∑ i in ico m (n - 1), G(i + 1) * (f (i + 1) - f i) := by
+  have h₁ : (∑ i in Ico (m + 1) n, f i * G i) = ∑ i in Ico m (n - 1), f (i + 1) * G(i + 1) := by
+    conv in n => rw [← Nat.sub_add_cancelₓ (Nat.one_le_of_lt hmn)]
+    rw [← sum_Ico_add']
+  have h₂ :
+    (∑ i in Ico (m + 1) n, f i * G(i + 1)) =
+      (∑ i in Ico m (n - 1), f i * G(i + 1)) + f (n - 1) * G n - f m * G(m + 1) :=
+    by
+    rw [← sum_Ico_sub_bot _ hmn, ← sum_Ico_succ_sub_top _ (Nat.le_pred_of_lt hmn), Nat.sub_add_cancelₓ (pos_of_gt hmn),
+      sub_add_cancel]
+  rw [sum_eq_sum_Ico_succ_bot hmn]
+  conv =>
+    for (f _ * g _) [2] =>
+      rw [← sum_range_succ_sub_sum g, mul_sub_left_distrib]
+  rw [sum_sub_distrib, h₂, h₁]
+  conv_lhs => congr skip rw [← add_sub, add_commₓ, ← add_sub, ← sum_sub_distrib]
+  conv in f _ * G(_ + 1) - _ => rw [← sub_mul, ← neg_sub, mul_comm, mul_neg]
+  rw [sum_neg_distrib, ← sub_eq_add_neg, add_sub, add_commₓ, sub_add, ← mul_sub, sum_range_succ_sub_top]
+
+/-- **Summation by parts** for ranges -/
+theorem sum_range_by_parts (hn : 0 < n) :
+    (∑ i in range n, f i * g i) = f (n - 1) * G n - ∑ i in range (n - 1), G(i + 1) * (f (i + 1) - f i) := by
+  rw [range_eq_Ico, sum_Ico_by_parts f g hn, sum_range_zero, mul_zero, sub_zero, range_eq_Ico]
+
+end Nat
 
 end Finset
 

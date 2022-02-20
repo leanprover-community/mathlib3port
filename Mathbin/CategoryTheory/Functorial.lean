@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison
+-/
 import Mathbin.CategoryTheory.Functor
 
 /-!
@@ -7,12 +12,15 @@ import Mathbin.CategoryTheory.Functor
 
 namespace CategoryTheory
 
+-- declare the `v`'s first; see `category_theory.category` for an explanation
 universe v v₁ v₂ v₃ u u₁ u₂ u₃
 
 variable {C : Type u₁} [Category.{v₁} C] {D : Type u₂} [Category.{v₂} D]
 
 /-- A unbundled functor. -/
-class functorial (F : C → D) : Type max v₁ v₂ u₁ u₂ where
+-- Perhaps in the future we could redefine `functor` in terms of this, but that isn't the
+-- immediate plan.
+class Functorial (F : C → D) : Type max v₁ v₂ u₁ u₂ where
   map : ∀ {X Y : C}, (X ⟶ Y) → (F X ⟶ F Y)
   map_id' : ∀ X : C, map (𝟙 X) = 𝟙 (F X) := by
     run_tac
@@ -32,11 +40,11 @@ theorem map_as_map {F : C → D} [Functorial.{v₁, v₂} F] {X Y : C} {f : X �
   rfl
 
 @[simp]
-theorem functorial.map_id {F : C → D} [Functorial.{v₁, v₂} F] {X : C} : map F (𝟙 X) = 𝟙 (F X) :=
+theorem Functorial.map_id {F : C → D} [Functorial.{v₁, v₂} F] {X : C} : map F (𝟙 X) = 𝟙 (F X) :=
   Functorial.map_id' X
 
 @[simp]
-theorem functorial.map_comp {F : C → D} [Functorial.{v₁, v₂} F] {X Y Z : C} {f : X ⟶ Y} {g : Y ⟶ Z} :
+theorem Functorial.map_comp {F : C → D} [Functorial.{v₁, v₂} F] {X Y Z : C} {f : X ⟶ Y} {g : Y ⟶ Z} :
     map F (f ≫ g) = map F f ≫ map F g :=
   Functorial.map_comp' f g
 
@@ -56,7 +64,7 @@ instance (F : C ⥤ D) : Functorial.{v₁, v₂} F.obj :=
 theorem map_functorial_obj (F : C ⥤ D) {X Y : C} (f : X ⟶ Y) : map F.obj f = F.map f :=
   rfl
 
-instance functorial_id : Functorial.{v₁, v₁} (id : C → C) where
+instance functorialId : Functorial.{v₁, v₁} (id : C → C) where
   map := fun X Y f => f
 
 section
@@ -65,7 +73,10 @@ variable {E : Type u₃} [Category.{v₃} E]
 
 /-- `G ∘ F` is a functorial if both `F` and `G` are.
 -/
-def functorial_comp (F : C → D) [Functorial.{v₁, v₂} F] (G : D → E) [Functorial.{v₂, v₃} G] :
+-- This is no longer viable as an instance in Lean 3.7,
+-- #lint reports an instance loop
+-- Will this be a problem?
+def functorialComp (F : C → D) [Functorial.{v₁, v₂} F] (G : D → E) [Functorial.{v₂, v₃} G] :
     Functorial.{v₁, v₃} (G ∘ F) :=
   { Functor.of F ⋙ Functor.of G with }
 

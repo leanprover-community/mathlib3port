@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Chris Hughes. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Chris Hughes
+-/
 import Mathbin.RingTheory.Prime
 import Mathbin.RingTheory.Polynomial.Content
 
@@ -19,6 +24,7 @@ open_locale Polynomial
 
 namespace EisensteinCriterionAux
 
+-- Section for auxiliary lemmas used in the proof of `irreducible_of_eisenstein_criterion`
 theorem map_eq_C_mul_X_pow_of_forall_coeff_mem {f : R[X]} {P : Ideal R} (hfP : ∀ n : ℕ, ↑n < f.degree → f.coeff n ∈ P) :
     map (mk P) f = c ((mk P) f.leadingCoeff) * X ^ f.natDegree :=
   Polynomial.ext fun n => by

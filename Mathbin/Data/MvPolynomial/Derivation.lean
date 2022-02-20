@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Yury Kudryashov. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yury Kudryashov
+-/
 import Mathbin.Data.MvPolynomial.Supported
 import Mathbin.RingTheory.Derivation
 
@@ -25,7 +30,7 @@ variable (R)
 
 /-- The derivation on `mv_polynomial σ R` that takes value `f i` on `X i`, as a linear map.
 Use `mv_polynomial.mk_derivation` instead. -/
-def mk_derivationₗ (f : σ → A) : MvPolynomial σ R →ₗ[R] A :=
+def mkDerivationₗ (f : σ → A) : MvPolynomial σ R →ₗ[R] A :=
   (Finsupp.lsum R) fun xs : σ →₀ ℕ =>
     (LinearMap.ringLmapEquivSelf R R A).symm <| xs.Sum fun i k => monomial (xs - Finsupp.single i 1) (k : R) • f i
 
@@ -103,7 +108,7 @@ theorem leibniz_iff_X (D : MvPolynomial σ R →ₗ[R] A) (h₁ : D 1 = 0) :
 variable (R)
 
 /-- The derivation on `mv_polynomial σ R` that takes value `f i` on `X i`. -/
-def mk_derivation (f : σ → A) : Derivation R (MvPolynomial σ R) A where
+def mkDerivation (f : σ → A) : Derivation R (MvPolynomial σ R) A where
   toLinearMap := mkDerivationₗ R f
   map_one_eq_zero' := mk_derivationₗ_C _ 1
   leibniz' :=
@@ -135,7 +140,7 @@ theorem mk_derivation_monomial (f : σ → A) (s : σ →₀ ℕ) (r : R) :
   mk_derivationₗ_monomial f s r
 
 /-- `mv_polynomial.mk_derivation` as a linear equivalence. -/
-def mk_derivation_equiv : (σ → A) ≃ₗ[R] Derivation R (MvPolynomial σ R) A :=
+def mkDerivationEquiv : (σ → A) ≃ₗ[R] Derivation R (MvPolynomial σ R) A :=
   LinearEquiv.symm <|
     { invFun := mkDerivation R, toFun := fun D i => D (x i), map_add' := fun D₁ D₂ => rfl, map_smul' := fun c D => rfl,
       left_inv := fun D => derivation_ext <| mk_derivation_X _ _, right_inv := fun f => funext <| mk_derivation_X _ _ }

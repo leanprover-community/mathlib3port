@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison
+-/
 import Mathbin.RingTheory.MatrixAlgebra
 import Mathbin.Data.Polynomial.AlgebraMap
 import Mathbin.Data.Matrix.Basis
@@ -48,7 +53,7 @@ The function underlying `A ⊗[R] R[X] →ₐ[R] polynomial A`,
 as a bilinear function of two arguments.
 -/
 @[simps apply_apply]
-def to_fun_bilinear : A →ₗ[A] R[X] →ₗ[R] A[X] :=
+def toFunBilinear : A →ₗ[A] R[X] →ₗ[R] A[X] :=
   LinearMap.toSpanSingleton A _ (aeval (Polynomial.x : Polynomial A)).toLinearMap
 
 theorem to_fun_bilinear_apply_eq_sum (a : A) (p : R[X]) :
@@ -63,13 +68,15 @@ theorem to_fun_bilinear_apply_eq_sum (a : A) (p : R[X]) :
 The function underlying `A ⊗[R] R[X] →ₐ[R] polynomial A`,
 as a linear map.
 -/
-def to_fun_linear : A ⊗[R] R[X] →ₗ[R] Polynomial A :=
+def toFunLinear : A ⊗[R] R[X] →ₗ[R] Polynomial A :=
   TensorProduct.lift (toFunBilinear R A)
 
 @[simp]
 theorem to_fun_linear_tmul_apply (a : A) (p : R[X]) : toFunLinear R A (a ⊗ₜ[R] p) = toFunBilinear R A a p :=
   lift.tmul _ _
 
+-- We apparently need to provide the decidable instance here
+-- in order to successfully rewrite by this lemma.
 theorem to_fun_linear_mul_tmul_mul_aux_1 (p : R[X]) (k : ℕ) (h : Decidable ¬p.coeff k = 0) (a : A) :
     ite (¬coeff p k = 0) (a * (algebraMap R A) (coeff p k)) 0 = a * (algebraMap R A) (coeff p k) := by
   classical
@@ -106,7 +113,7 @@ theorem to_fun_linear_algebra_map_tmul_one (r : R) :
 /-- (Implementation detail).
 The algebra homomorphism `A ⊗[R] R[X] →ₐ[R] polynomial A`.
 -/
-def to_fun_alg_hom : A ⊗[R] R[X] →ₐ[R] Polynomial A :=
+def toFunAlgHom : A ⊗[R] R[X] →ₐ[R] Polynomial A :=
   algHomOfLinearMapTensorProduct (toFunLinear R A) (to_fun_linear_mul_tmul_mul R A)
     (to_fun_linear_algebra_map_tmul_one R A)
 
@@ -121,7 +128,7 @@ theorem to_fun_alg_hom_apply_tmul (a : A) (p : R[X]) :
 The bare function `polynomial A → A ⊗[R] R[X]`.
 (We don't need to show that it's an algebra map, thankfully --- just that it's an inverse.)
 -/
-def inv_fun (p : A[X]) : A ⊗[R] R[X] :=
+def invFun (p : A[X]) : A ⊗[R] R[X] :=
   p.eval₂ (includeLeft : A →ₐ[R] A ⊗[R] R[X]) ((1 : A) ⊗ₜ[R] (x : R[X]))
 
 @[simp]
@@ -165,7 +172,7 @@ theorem right_inv (x : A[X]) : (toFunAlgHom R A) (invFun R A x) = x := by
 
 The equivalence, ignoring the algebra structure, `(A ⊗[R] R[X]) ≃ polynomial A`.
 -/
-def Equivₓ : A ⊗[R] R[X] ≃ Polynomial A where
+def equiv : A ⊗[R] R[X] ≃ Polynomial A where
   toFun := toFunAlgHom R A
   invFun := invFun R A
   left_inv := left_inv R A

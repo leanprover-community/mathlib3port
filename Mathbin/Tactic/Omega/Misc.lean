@@ -1,5 +1,13 @@
+/-
+Copyright (c) 2019 Seul Baek. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Seul Baek
+-/
 import Mathbin.Tactic.Localized
 
+/-
+Miscellaneous.
+-/
 variable {α β γ : Type}
 
 namespace Omega
@@ -32,7 +40,7 @@ theorem update_eq_of_ne {m : Nat} {a : α} {v : Nat → α} (k : Nat) : k ≠ m 
 
 /-- Assign a new value to the zeroth variable, and push all
     other assignments up by 1 -/
-def update_zero (a : α) (v : Nat → α) : Nat → α
+def updateZero (a : α) (v : Nat → α) : Nat → α
   | 0 => a
   | k + 1 => v k
 

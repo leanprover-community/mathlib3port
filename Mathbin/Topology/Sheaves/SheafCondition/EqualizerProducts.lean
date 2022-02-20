@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison
+-/
 import Mathbin.CategoryTheory.FullSubcategory
 import Mathbin.CategoryTheory.Limits.Shapes.Equalizers
 import Mathbin.CategoryTheory.Limits.Shapes.Products
@@ -40,25 +45,25 @@ namespace Presheaf
 namespace SheafConditionEqualizerProducts
 
 /-- The product of the sections of a presheaf over a family of open sets. -/
-def pi_opens : C :=
+def piOpens : C :=
   ∏ fun i : ι => F.obj (op (U i))
 
 /-- The product of the sections of a presheaf over the pairwise intersections of
 a family of open sets.
 -/
-def pi_inters : C :=
+def piInters : C :=
   ∏ fun p : ι × ι => F.obj (op (U p.1⊓U p.2))
 
 /-- The morphism `Π F.obj (U i) ⟶ Π F.obj (U i) ⊓ (U j)` whose components
 are given by the restriction maps from `U i` to `U i ⊓ U j`.
 -/
-def left_res : piOpens F U ⟶ piInters F U :=
+def leftRes : piOpens F U ⟶ piInters F U :=
   Pi.lift fun p : ι × ι => Pi.π _ p.1 ≫ F.map (inf_le_left (U p.1) (U p.2)).op
 
 /-- The morphism `Π F.obj (U i) ⟶ Π F.obj (U i) ⊓ (U j)` whose components
 are given by the restriction maps from `U j` to `U i ⊓ U j`.
 -/
-def right_res : piOpens F U ⟶ piInters F U :=
+def rightRes : piOpens F U ⟶ piInters F U :=
   Pi.lift fun p : ι × ι => Pi.π _ p.2 ≫ F.map (inf_le_right (U p.1) (U p.2)).op
 
 /-- The morphism `F.obj U ⟶ Π F.obj (U i)` whose components
@@ -112,16 +117,16 @@ variable {F} {G : Presheaf C X}
 
 /-- Isomorphic presheaves have isomorphic `pi_opens` for any cover `U`. -/
 @[simp]
-def pi_opens.iso_of_iso (α : F ≅ G) : piOpens F U ≅ piOpens G U :=
+def piOpens.isoOfIso (α : F ≅ G) : piOpens F U ≅ piOpens G U :=
   Pi.mapIso fun X => α.app _
 
 /-- Isomorphic presheaves have isomorphic `pi_inters` for any cover `U`. -/
 @[simp]
-def pi_inters.iso_of_iso (α : F ≅ G) : piInters F U ≅ piInters G U :=
+def piInters.isoOfIso (α : F ≅ G) : piInters F U ≅ piInters G U :=
   Pi.mapIso fun X => α.app _
 
 /-- Isomorphic presheaves have isomorphic sheaf condition diagrams. -/
-def diagram.iso_of_iso (α : F ≅ G) : diagram F U ≅ diagram G U :=
+def diagram.isoOfIso (α : F ≅ G) : diagram F U ≅ diagram G U :=
   NatIso.ofComponents
     (by
       rintro ⟨⟩
@@ -145,12 +150,13 @@ then the `fork F U`, the canonical cone of the sheaf condition diagram for `F`,
 is isomorphic to `fork F G` postcomposed with the corresponding isomorphism between
 sheaf condition diagrams.
 -/
-def fork.iso_of_iso (α : F ≅ G) : fork F U ≅ (Cones.postcompose (diagram.isoOfIso U α).inv).obj (fork G U) := by
+def fork.isoOfIso (α : F ≅ G) : fork F U ≅ (Cones.postcompose (diagram.isoOfIso U α).inv).obj (fork G U) := by
   fapply fork.ext
   · apply α.app
     
   · ext
     dunfold fork.ι
+    -- Ugh, `simp` can't unfold abbreviations.
     simp [res, diagram.iso_of_iso]
     
 
@@ -163,19 +169,18 @@ variable (𝒰 : ι → Opens V)
 /-- Push forward a cover along an open embedding.
 -/
 @[simp]
-def cover.of_open_embedding : ι → Opens X := fun i => oe.IsOpenMap.Functor.obj (𝒰 i)
+def Cover.ofOpenEmbedding : ι → Opens X := fun i => oe.IsOpenMap.Functor.obj (𝒰 i)
 
 /-- The isomorphism between `pi_opens` corresponding to an open embedding.
 -/
 @[simp]
-def pi_opens.iso_of_open_embedding : piOpens (oe.IsOpenMap.Functor.op ⋙ F) 𝒰 ≅ piOpens F (Cover.ofOpenEmbedding oe 𝒰) :=
+def piOpens.isoOfOpenEmbedding : piOpens (oe.IsOpenMap.Functor.op ⋙ F) 𝒰 ≅ piOpens F (Cover.ofOpenEmbedding oe 𝒰) :=
   Pi.mapIso fun X => F.mapIso (Iso.refl _)
 
 /-- The isomorphism between `pi_inters` corresponding to an open embedding.
 -/
 @[simp]
-def pi_inters.iso_of_open_embedding :
-    piInters (oe.IsOpenMap.Functor.op ⋙ F) 𝒰 ≅ piInters F (Cover.ofOpenEmbedding oe 𝒰) :=
+def piInters.isoOfOpenEmbedding : piInters (oe.IsOpenMap.Functor.op ⋙ F) 𝒰 ≅ piInters F (Cover.ofOpenEmbedding oe 𝒰) :=
   Pi.mapIso fun X =>
     F.mapIso
       (by
@@ -194,7 +199,7 @@ def pi_inters.iso_of_open_embedding :
                     exact le_rfl) })
 
 /-- The isomorphism of sheaf condition diagrams corresponding to an open embedding. -/
-def diagram.iso_of_open_embedding : diagram (oe.IsOpenMap.Functor.op ⋙ F) 𝒰 ≅ diagram F (Cover.ofOpenEmbedding oe 𝒰) :=
+def diagram.isoOfOpenEmbedding : diagram (oe.IsOpenMap.Functor.op ⋙ F) 𝒰 ≅ diagram F (Cover.ofOpenEmbedding oe 𝒰) :=
   NatIso.ofComponents
     (by
       rintro ⟨⟩
@@ -230,7 +235,7 @@ of indexing diagrams `diagram.iso_of_open_embedding`.
 
 We use this to show that the restriction of sheaf along an open embedding is still a sheaf.
 -/
-def fork.iso_of_open_embedding :
+def fork.isoOfOpenEmbedding :
     fork (oe.IsOpenMap.Functor.op ⋙ F) 𝒰 ≅
       (Cones.postcompose (diagram.isoOfOpenEmbedding oe 𝒰).inv).obj (fork F (Cover.ofOpenEmbedding oe 𝒰)) :=
   by
@@ -250,6 +255,7 @@ def fork.iso_of_open_embedding :
     
   · ext
     dunfold fork.ι
+    -- Ugh, it is unpleasant that we need this.
     simp only [res, diagram.iso_of_open_embedding, discrete.nat_iso_inv_app, functor.map_iso_inv, limit.lift_π,
       cones.postcompose_obj_π, functor.comp_map, fork_π_app_walking_parallel_pair_zero, pi_opens.iso_of_open_embedding,
       nat_iso.of_components.inv_app, functor.map_iso_refl, functor.op_map, limit.lift_map, fan.mk_π_app,

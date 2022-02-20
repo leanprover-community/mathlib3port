@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Johannes Hölzl. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johannes Hölzl
+-/
 import Mathbin.MeasureTheory.Measure.GiryMonad
 import Mathbin.CategoryTheory.ConcreteCategory.UnbundledHom
 import Mathbin.CategoryTheory.Monad.Algebra
@@ -50,7 +55,7 @@ def of (α : Type u) [MeasurableSpace α] : Meas :=
 theorem coe_of (X : Type u) [MeasurableSpace X] : (of X : Type u) = X :=
   rfl
 
-instance unbundled_hom : UnbundledHom @Measurable :=
+instance unbundledHom : UnbundledHom @Measurable :=
   ⟨@measurable_id, @Measurable.comp⟩
 
 deriving instance LargeCategory, ConcreteCategory for Meas
@@ -67,14 +72,14 @@ the pure values are the Dirac measure, and the bind operation maps to the integr
 In probability theory, the `Meas`-morphisms `X → Prob X` are (sub-)Markov kernels (here `Prob` is
 the restriction of `Measure` to (sub-)probability space.)
 -/
-def Measure : Meas ⥤ Meas where
+def measure : Meas ⥤ Meas where
   obj := fun X => ⟨@MeasureTheory.Measure X.1 X.2⟩
   map := fun X Y f => ⟨Measure.map (f : X → Y), Measure.measurable_map f f.2⟩
   map_id' := fun ⟨α, I⟩ => Subtype.eq <| funext fun μ => @Measure.map_id α I μ
   map_comp' := fun X Y Z ⟨f, hf⟩ ⟨g, hg⟩ => Subtype.eq <| funext fun μ => (Measure.map_map hg hf).symm
 
 /-- The Giry monad, i.e. the monadic structure associated with `Measure`. -/
-def Giry : CategoryTheory.Monad Meas where
+def giry : CategoryTheory.Monad Meas where
   toFunctor := measure
   η' :=
     { app := fun X => ⟨@Measure.dirac X.1 X.2, Measure.measurable_dirac⟩,
@@ -88,7 +93,7 @@ def Giry : CategoryTheory.Monad Meas where
 
 /-- An example for an algebra on `Measure`: the nonnegative Lebesgue integral is a hom, behaving
 nicely under the monad operations. -/
-def Integral : giry.Algebra where
+def integral : giry.Algebra where
   A := Meas.of ℝ≥0∞
   a := ⟨fun m : Measureₓ ℝ≥0∞ => ∫⁻ x, x ∂m, Measure.measurable_lintegral measurable_id⟩
   unit' := Subtype.eq <| funext fun r : ℝ≥0∞ => lintegral_dirac' _ measurable_id

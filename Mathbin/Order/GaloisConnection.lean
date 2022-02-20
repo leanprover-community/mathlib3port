@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2017 Johannes Hölzl. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johannes Hölzl
+-/
 import Mathbin.Order.CompleteLattice
 import Mathbin.Order.OrderDual
 
@@ -276,6 +281,7 @@ theorem lt_iff_lt {a : α} {b : β} : b < l a ↔ u b < a :=
 
 end LinearOrderₓ
 
+-- Constructing Galois connections
 section Constructions
 
 protected theorem id [pα : Preorderₓ α] : @GaloisConnection α α pα pα id id := fun a b =>
@@ -287,8 +293,7 @@ protected theorem compose [Preorderₓ α] [Preorderₓ β] [Preorderₓ γ] {l1
 
 protected theorem dfun {ι : Type u} {α : ι → Type v} {β : ι → Type w} [∀ i, Preorderₓ (α i)] [∀ i, Preorderₓ (β i)]
     (l : ∀ i, α i → β i) (u : ∀ i, β i → α i) (gc : ∀ i, GaloisConnection (l i) (u i)) :
-    GaloisConnection (fun a : ∀ i, α i i => l i (a i)) fun b i => u i (b i) := fun a b =>
-  forall_congrₓ fun i => gc i (a i) (b i)
+    GaloisConnection (fun i => l i (a i)) fun b i => u i (b i) := fun a b => forall_congrₓ fun i => gc i (a i) (b i)
 
 end Constructions
 
@@ -411,8 +416,8 @@ theorem l_supr_u [CompleteLattice α] [CompleteLattice β] (gi : GaloisInsertion
     _ = ⨆ i : ι, f i := congr_argₓ _ <| funext fun i => gi.l_u_eq (f i)
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (i hi)
--- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (i hi)
+-- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (i hi)
+-- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (i hi)
 theorem l_bsupr_u [CompleteLattice α] [CompleteLattice β] (gi : GaloisInsertion l u) {ι : Sort x} {p : ι → Prop}
     (f : ∀ i hi : p i, β) : l (⨆ (i) (hi), u (f i hi)) = ⨆ (i) (hi), f i hi := by
   simp only [supr_subtype', gi.l_supr_u]
@@ -435,8 +440,8 @@ theorem l_infi_u [CompleteLattice α] [CompleteLattice β] (gi : GaloisInsertion
     _ = ⨅ i : ι, f i := gi.l_u_eq _
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (i hi)
--- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (i hi)
+-- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (i hi)
+-- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (i hi)
 theorem l_binfi_u [CompleteLattice α] [CompleteLattice β] (gi : GaloisInsertion l u) {ι : Sort x} {p : ι → Prop}
     (f : ∀ i hi : p i, β) : l (⨅ (i) (hi), u (f i hi)) = ⨅ (i) (hi), f i hi := by
   simp only [infi_subtype', gi.l_infi_u]
@@ -453,8 +458,8 @@ theorem l_infi_of_ul_eq_self [CompleteLattice α] [CompleteLattice β] (gi : Gal
     _ = ⨅ i, l (f i) := gi.l_infi_u _
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (i hi)
--- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (i hi)
+-- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (i hi)
+-- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (i hi)
 theorem l_binfi_of_ul_eq_self [CompleteLattice α] [CompleteLattice β] (gi : GaloisInsertion l u) {ι : Sort x}
     {p : ι → Prop} (f : ∀ i hi : p i, α) (hf : ∀ i hi, u (l (f i hi)) = f i hi) :
     l (⨅ (i) (hi), f i hi) = ⨅ (i) (hi), l (f i hi) := by
@@ -482,14 +487,14 @@ section lift
 variable [PartialOrderₓ β]
 
 /-- Lift the suprema along a Galois insertion -/
-def lift_semilattice_sup [SemilatticeSup α] (gi : GaloisInsertion l u) : SemilatticeSup β :=
+def liftSemilatticeSup [SemilatticeSup α] (gi : GaloisInsertion l u) : SemilatticeSup β :=
   { ‹PartialOrderₓ β› with sup := fun a b => l (u a⊔u b),
     le_sup_left := fun a b => (gi.le_l_u a).trans <| gi.gc.monotone_l <| le_sup_left,
     le_sup_right := fun a b => (gi.le_l_u b).trans <| gi.gc.monotone_l <| le_sup_right,
     sup_le := fun a b c hac hbc => gi.gc.l_le <| sup_le (gi.gc.monotone_u hac) (gi.gc.monotone_u hbc) }
 
 /-- Lift the infima along a Galois insertion -/
-def lift_semilattice_inf [SemilatticeInf α] (gi : GaloisInsertion l u) : SemilatticeInf β :=
+def liftSemilatticeInf [SemilatticeInf α] (gi : GaloisInsertion l u) : SemilatticeInf β :=
   { ‹PartialOrderₓ β› with
     inf := fun a b =>
       gi.choice (u a⊓u b) <|
@@ -504,21 +509,21 @@ def lift_semilattice_inf [SemilatticeInf α] (gi : GaloisInsertion l u) : Semila
           (gi.le_l_u a).trans <| gi.gc.monotone_l <| le_inf (gi.gc.monotone_u hac) (gi.gc.monotone_u hbc) }
 
 /-- Lift the suprema and infima along a Galois insertion -/
-def lift_lattice [Lattice α] (gi : GaloisInsertion l u) : Lattice β :=
+def liftLattice [Lattice α] (gi : GaloisInsertion l u) : Lattice β :=
   { gi.liftSemilatticeSup, gi.liftSemilatticeInf with }
 
 /-- Lift the top along a Galois insertion -/
-def lift_order_top [Preorderₓ α] [OrderTop α] (gi : GaloisInsertion l u) : OrderTop β where
+def liftOrderTop [Preorderₓ α] [OrderTop α] (gi : GaloisInsertion l u) : OrderTop β where
   top := gi.choice ⊤ <| le_top
   le_top := by
     simp only [gi.choice_eq] <;> exact fun b => (gi.le_l_u b).trans (gi.gc.monotone_l le_top)
 
 /-- Lift the top, bottom, suprema, and infima along a Galois insertion -/
-def lift_bounded_order [Preorderₓ α] [BoundedOrder α] (gi : GaloisInsertion l u) : BoundedOrder β :=
+def liftBoundedOrder [Preorderₓ α] [BoundedOrder α] (gi : GaloisInsertion l u) : BoundedOrder β :=
   { gi.liftOrderTop, gi.gc.liftOrderBot with }
 
 /-- Lift all suprema and infima along a Galois insertion -/
-def lift_complete_lattice [CompleteLattice α] (gi : GaloisInsertion l u) : CompleteLattice β :=
+def liftCompleteLattice [CompleteLattice α] (gi : GaloisInsertion l u) : CompleteLattice β :=
   { gi.liftBoundedOrder, gi.liftLattice with sup := fun s => l (sup (u '' s)),
     Sup_le := fun s => (gi.is_lub_of_u_image (is_lub_Sup _)).2,
     le_Sup := fun s => (gi.is_lub_of_u_image (is_lub_Sup _)).1,
@@ -620,8 +625,8 @@ theorem u_supr_l [CompleteLattice α] [CompleteLattice β] (gi : GaloisCoinserti
     u (⨆ i, l (f i)) = ⨆ i, f i :=
   gi.dual.l_infi_u _
 
--- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (i hi)
--- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (i hi)
+-- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (i hi)
+-- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (i hi)
 theorem u_bsupr_l [CompleteLattice α] [CompleteLattice β] (gi : GaloisCoinsertion l u) {ι : Sort x} {p : ι → Prop}
     (f : ∀ i hi : p i, α) : u (⨆ (i) (hi), l (f i hi)) = ⨆ (i) (hi), f i hi :=
   gi.dual.l_binfi_u _
@@ -634,8 +639,8 @@ theorem u_supr_of_lu_eq_self [CompleteLattice α] [CompleteLattice β] (gi : Gal
     (f : ι → β) (hf : ∀ i, l (u (f i)) = f i) : u (⨆ i, f i) = ⨆ i, u (f i) :=
   gi.dual.l_infi_of_ul_eq_self _ hf
 
--- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (i hi)
--- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (i hi)
+-- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (i hi)
+-- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (i hi)
 theorem u_bsupr_of_lu_eq_self [CompleteLattice α] [CompleteLattice β] (gi : GaloisCoinsertion l u) {ι : Sort x}
     {p : ι → Prop} (f : ∀ i hi : p i, β) (hf : ∀ i hi, l (u (f i hi)) = f i hi) :
     u (⨆ (i) (hi), f i hi) = ⨆ (i) (hi), u (f i hi) :=
@@ -660,30 +665,30 @@ section lift
 variable [PartialOrderₓ α]
 
 /-- Lift the infima along a Galois coinsertion -/
-def lift_semilattice_inf [SemilatticeInf β] (gi : GaloisCoinsertion l u) : SemilatticeInf α :=
+def liftSemilatticeInf [SemilatticeInf β] (gi : GaloisCoinsertion l u) : SemilatticeInf α :=
   { ‹PartialOrderₓ α›, @OrderDual.semilatticeInf _ gi.dual.liftSemilatticeSup with inf := fun a b => u (l a⊓l b) }
 
 /-- Lift the suprema along a Galois coinsertion -/
-def lift_semilattice_sup [SemilatticeSup β] (gi : GaloisCoinsertion l u) : SemilatticeSup α :=
+def liftSemilatticeSup [SemilatticeSup β] (gi : GaloisCoinsertion l u) : SemilatticeSup α :=
   { ‹PartialOrderₓ α›, @OrderDual.semilatticeSup _ gi.dual.liftSemilatticeInf with
     sup := fun a b =>
       gi.choice (l a⊔l b) <|
         sup_le (gi.gc.monotone_l <| gi.gc.le_u <| le_sup_left) (gi.gc.monotone_l <| gi.gc.le_u <| le_sup_right) }
 
 /-- Lift the suprema and infima along a Galois coinsertion -/
-def lift_lattice [Lattice β] (gi : GaloisCoinsertion l u) : Lattice α :=
+def liftLattice [Lattice β] (gi : GaloisCoinsertion l u) : Lattice α :=
   { gi.liftSemilatticeSup, gi.liftSemilatticeInf with }
 
 /-- Lift the bot along a Galois coinsertion -/
-def lift_order_bot [Preorderₓ β] [OrderBot β] (gi : GaloisCoinsertion l u) : OrderBot α :=
+def liftOrderBot [Preorderₓ β] [OrderBot β] (gi : GaloisCoinsertion l u) : OrderBot α :=
   { @OrderDual.orderBot _ _ gi.dual.liftOrderTop with bot := gi.choice ⊥ <| bot_le }
 
 /-- Lift the top, bottom, suprema, and infima along a Galois coinsertion -/
-def lift_bounded_order [Preorderₓ β] [BoundedOrder β] (gi : GaloisCoinsertion l u) : BoundedOrder α :=
+def liftBoundedOrder [Preorderₓ β] [BoundedOrder β] (gi : GaloisCoinsertion l u) : BoundedOrder α :=
   { gi.liftOrderBot, gi.gc.liftOrderTop with }
 
 /-- Lift all suprema and infima along a Galois coinsertion -/
-def lift_complete_lattice [CompleteLattice β] (gi : GaloisCoinsertion l u) : CompleteLattice α :=
+def liftCompleteLattice [CompleteLattice β] (gi : GaloisCoinsertion l u) : CompleteLattice α :=
   { @OrderDual.completeLattice _ gi.dual.liftCompleteLattice with inf := fun s => u (inf (l '' s)),
     sup := fun s => gi.choice (sup (l '' s)) _ }
 

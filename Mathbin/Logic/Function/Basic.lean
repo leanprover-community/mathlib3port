@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2016 Johannes Hölzl. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johannes Hölzl, Mario Carneiro
+-/
 import Mathbin.Data.Option.Defs
 import Mathbin.Logic.Nonempty
 import Mathbin.Tactic.Cache
@@ -25,22 +30,22 @@ def eval {β : α → Sort _} (x : α) (f : ∀ x, β x) : β x :=
 theorem eval_apply {β : α → Sort _} (x : α) (f : ∀ x, β x) : eval x f = f x :=
   rfl
 
-theorem comp_apply {α : Sort u} {β : Sort v} {φ : Sort w} (f : β → φ) (g : α → β) (a : α) : (f ∘ g) a = f (g a) :=
+theorem comp_applyₓ {α : Sort u} {β : Sort v} {φ : Sort w} (f : β → φ) (g : α → β) (a : α) : (f ∘ g) a = f (g a) :=
   rfl
 
 theorem const_def {y : β} : (fun x : α => y) = const α y :=
   rfl
 
 @[simp]
-theorem const_apply {y : β} {x : α} : const α y x = y :=
+theorem const_applyₓ {y : β} {x : α} : const α y x = y :=
   rfl
 
 @[simp]
-theorem const_comp {f : α → β} {c : γ} : const β c ∘ f = const α c :=
+theorem const_compₓ {f : α → β} {c : γ} : const β c ∘ f = const α c :=
   rfl
 
 @[simp]
-theorem comp_const {f : β → γ} {b : β} : f ∘ const α b = const α (f b) :=
+theorem comp_constₓ {f : β → γ} {b : β} : f ∘ const α b = const α (f b) :=
   rfl
 
 theorem id_def : @id α = fun x => x :=
@@ -60,41 +65,41 @@ theorem hfunext {α α' : Sort u} {β : α → Sort v} {β' : α' → Sort v} {f
   funext a
   exact eq_of_heq (this a)
 
-theorem funext_iff {β : α → Sort _} {f₁ f₂ : ∀ x : α, β x} : f₁ = f₂ ↔ ∀ a, f₁ a = f₂ a :=
+theorem funext_iffₓ {β : α → Sort _} {f₁ f₂ : ∀ x : α, β x} : f₁ = f₂ ↔ ∀ a, f₁ a = f₂ a :=
   Iff.intro (fun h a => h ▸ rfl) funext
 
-protected theorem bijective.injective {f : α → β} (hf : Bijective f) : Injective f :=
+protected theorem Bijective.injective {f : α → β} (hf : Bijective f) : Injective f :=
   hf.1
 
-protected theorem bijective.surjective {f : α → β} (hf : Bijective f) : Surjective f :=
+protected theorem Bijective.surjective {f : α → β} (hf : Bijective f) : Surjective f :=
   hf.2
 
-theorem injective.eq_iff (I : Injective f) {a b : α} : f a = f b ↔ a = b :=
+theorem Injective.eq_iff (I : Injective f) {a b : α} : f a = f b ↔ a = b :=
   ⟨@I _ _, congr_argₓ f⟩
 
-theorem injective.eq_iff' (I : Injective f) {a b : α} {c : β} (h : f b = c) : f a = c ↔ a = b :=
+theorem Injective.eq_iff' (I : Injective f) {a b : α} {c : β} (h : f b = c) : f a = c ↔ a = b :=
   h ▸ I.eq_iff
 
-theorem injective.ne (hf : Injective f) {a₁ a₂ : α} : a₁ ≠ a₂ → f a₁ ≠ f a₂ :=
+theorem Injective.ne (hf : Injective f) {a₁ a₂ : α} : a₁ ≠ a₂ → f a₁ ≠ f a₂ :=
   mt fun h => hf h
 
-theorem injective.ne_iff (hf : Injective f) {x y : α} : f x ≠ f y ↔ x ≠ y :=
+theorem Injective.ne_iff (hf : Injective f) {x y : α} : f x ≠ f y ↔ x ≠ y :=
   ⟨mt <| congr_argₓ f, hf.Ne⟩
 
-theorem injective.ne_iff' (hf : Injective f) {x y : α} {z : β} (h : f y = z) : f x ≠ z ↔ x ≠ y :=
+theorem Injective.ne_iff' (hf : Injective f) {x y : α} {z : β} (h : f y = z) : f x ≠ z ↔ x ≠ y :=
   h ▸ hf.ne_iff
 
 /-- If the co-domain `β` of an injective function `f : α → β` has decidable equality, then
 the domain `α` also has decidable equality. -/
-def injective.decidable_eq [DecidableEq β] (I : Injective f) : DecidableEq α := fun a b => decidableOfIff _ I.eq_iff
+def Injective.decidableEq [DecidableEq β] (I : Injective f) : DecidableEq α := fun a b => decidableOfIff _ I.eq_iff
 
-theorem injective.of_comp {g : γ → α} (I : Injective (f ∘ g)) : Injective g := fun x y h =>
+theorem Injective.of_comp {g : γ → α} (I : Injective (f ∘ g)) : Injective g := fun x y h =>
   I <| show f (g x) = f (g y) from congr_argₓ f h
 
-theorem injective.of_comp_iff {f : α → β} (hf : Injective f) (g : γ → α) : Injective (f ∘ g) ↔ Injective g :=
+theorem Injective.of_comp_iff {f : α → β} (hf : Injective f) (g : γ → α) : Injective (f ∘ g) ↔ Injective g :=
   ⟨Injective.of_comp, hf.comp⟩
 
-theorem injective.of_comp_iff' (f : α → β) {g : γ → α} (hg : Bijective g) : Injective (f ∘ g) ↔ Injective f :=
+theorem Injective.of_comp_iff' (f : α → β) {g : γ → α} (hg : Bijective g) : Injective (f ∘ g) ↔ Injective f :=
   ⟨fun h x y =>
     let ⟨x', hx⟩ := hg.Surjective x
     let ⟨y', hy⟩ := hg.Surjective y
@@ -102,12 +107,12 @@ theorem injective.of_comp_iff' (f : α → β) {g : γ → α} (hg : Bijective g
     fun h => h.comp hg.Injective⟩
 
 /-- Composition by an injective function on the left is itself injective. -/
-theorem injective.comp_left {g : β → γ} (hg : Function.Injective g) :
+theorem Injective.comp_left {g : β → γ} (hg : Function.Injective g) :
     Function.Injective ((· ∘ ·) g : (α → β) → α → γ) := fun f₁ f₂ hgf => funext fun i => hg <| (congr_funₓ hgf i : _)
 
 theorem injective_of_subsingleton [Subsingleton α] (f : α → β) : Injective f := fun a b ab => Subsingleton.elimₓ _ _
 
-theorem injective.dite (p : α → Prop) [DecidablePred p] {f : { a : α // p a } → β} {f' : { a : α // ¬p a } → β}
+theorem Injective.dite (p : α → Prop) [DecidablePred p] {f : { a : α // p a } → β} {f' : { a : α // ¬p a } → β}
     (hf : Injective f) (hf' : Injective f')
     (im_disj : ∀ {x x' : α} {hx : p x} {hx' : ¬p x'}, f ⟨x, hx⟩ ≠ f' ⟨x', hx'⟩) :
     Function.Injective fun x => if h : p x then f ⟨x, h⟩ else f' ⟨x, h⟩ := fun x₁ x₂ h => by
@@ -126,59 +131,58 @@ theorem injective.dite (p : α → Prop) [DecidablePred p] {f : { a : α // p a 
     injection hf' h
     
 
-theorem surjective.of_comp {g : γ → α} (S : Surjective (f ∘ g)) : Surjective f := fun y =>
+theorem Surjective.of_comp {g : γ → α} (S : Surjective (f ∘ g)) : Surjective f := fun y =>
   let ⟨x, h⟩ := S y
   ⟨g x, h⟩
 
-theorem surjective.of_comp_iff (f : α → β) {g : γ → α} (hg : Surjective g) : Surjective (f ∘ g) ↔ Surjective f :=
+theorem Surjective.of_comp_iff (f : α → β) {g : γ → α} (hg : Surjective g) : Surjective (f ∘ g) ↔ Surjective f :=
   ⟨Surjective.of_comp, fun h => h.comp hg⟩
 
-theorem surjective.of_comp_iff' (hf : Bijective f) (g : γ → α) : Surjective (f ∘ g) ↔ Surjective g :=
+theorem Surjective.of_comp_iff' (hf : Bijective f) (g : γ → α) : Surjective (f ∘ g) ↔ Surjective g :=
   ⟨fun h x =>
     let ⟨x', hx'⟩ := h (f x)
     ⟨x', hf.Injective hx'⟩,
     hf.Surjective.comp⟩
 
-instance decidable_eq_pfun (p : Prop) [Decidable p] (α : p → Type _) [∀ hp, DecidableEq (α hp)] :
-    DecidableEq (∀ hp, α hp)
+instance decidableEqPfun (p : Prop) [Decidable p] (α : p → Type _) [∀ hp, DecidableEq (α hp)] : DecidableEq (∀ hp, α hp)
   | f, g => decidableOfIff (∀ hp, f hp = g hp) funext_iffₓ.symm
 
-protected theorem surjective.forall (hf : Surjective f) {p : β → Prop} : (∀ y, p y) ↔ ∀ x, p (f x) :=
+protected theorem Surjective.forall (hf : Surjective f) {p : β → Prop} : (∀ y, p y) ↔ ∀ x, p (f x) :=
   ⟨fun h x => h (f x), fun h y =>
     let ⟨x, hx⟩ := hf y
     hx ▸ h x⟩
 
-protected theorem surjective.forall₂ (hf : Surjective f) {p : β → β → Prop} :
+protected theorem Surjective.forall₂ (hf : Surjective f) {p : β → β → Prop} :
     (∀ y₁ y₂, p y₁ y₂) ↔ ∀ x₁ x₂, p (f x₁) (f x₂) :=
   hf.forall.trans <| forall_congrₓ fun x => hf.forall
 
-protected theorem surjective.forall₃ (hf : Surjective f) {p : β → β → β → Prop} :
+protected theorem Surjective.forall₃ (hf : Surjective f) {p : β → β → β → Prop} :
     (∀ y₁ y₂ y₃, p y₁ y₂ y₃) ↔ ∀ x₁ x₂ x₃, p (f x₁) (f x₂) (f x₃) :=
   hf.forall.trans <| forall_congrₓ fun x => hf.forall₂
 
-protected theorem surjective.exists (hf : Surjective f) {p : β → Prop} : (∃ y, p y) ↔ ∃ x, p (f x) :=
+protected theorem Surjective.exists (hf : Surjective f) {p : β → Prop} : (∃ y, p y) ↔ ∃ x, p (f x) :=
   ⟨fun ⟨y, hy⟩ =>
     let ⟨x, hx⟩ := hf y
     ⟨x, hx.symm ▸ hy⟩,
     fun ⟨x, hx⟩ => ⟨f x, hx⟩⟩
 
-protected theorem surjective.exists₂ (hf : Surjective f) {p : β → β → Prop} :
+protected theorem Surjective.exists₂ (hf : Surjective f) {p : β → β → Prop} :
     (∃ y₁ y₂, p y₁ y₂) ↔ ∃ x₁ x₂, p (f x₁) (f x₂) :=
   hf.exists.trans <| exists_congr fun x => hf.exists
 
-protected theorem surjective.exists₃ (hf : Surjective f) {p : β → β → β → Prop} :
+protected theorem Surjective.exists₃ (hf : Surjective f) {p : β → β → β → Prop} :
     (∃ y₁ y₂ y₃, p y₁ y₂ y₃) ↔ ∃ x₁ x₂ x₃, p (f x₁) (f x₂) (f x₃) :=
   hf.exists.trans <| exists_congr fun x => hf.exists₂
 
-theorem surjective.injective_comp_right (hf : Surjective f) : Injective fun g : β → γ => g ∘ f := fun g₁ g₂ h =>
+theorem Surjective.injective_comp_right (hf : Surjective f) : Injective fun g : β → γ => g ∘ f := fun g₁ g₂ h =>
   funext <| hf.forall.2 <| congr_funₓ h
 
-protected theorem surjective.right_cancellable (hf : Surjective f) {g₁ g₂ : β → γ} : g₁ ∘ f = g₂ ∘ f ↔ g₁ = g₂ :=
+protected theorem Surjective.right_cancellable (hf : Surjective f) {g₁ g₂ : β → γ} : g₁ ∘ f = g₂ ∘ f ↔ g₁ = g₂ :=
   hf.injective_comp_right.eq_iff
 
 theorem surjective_of_right_cancellable_Prop (h : ∀ g₁ g₂ : β → Prop, g₁ ∘ f = g₂ ∘ f → g₁ = g₂) : Surjective f := by
   specialize h (fun _ => True) (fun y => ∃ x, f x = y) (funext fun x => _)
-  · simp only [· ∘ ·, exists_apply_eq_applyₓ]
+  · simp only [(· ∘ ·), exists_apply_eq_applyₓ]
     
   · intro y
     have : True = ∃ x, f x = y := congr_funₓ h y
@@ -193,14 +197,14 @@ theorem bijective_iff_exists_unique (f : α → β) : Bijective f ↔ ∀ b : β
     fun he => ⟨fun a a' h => unique_of_exists_unique (he (f a')) h rfl, fun b => exists_of_exists_unique (he b)⟩⟩
 
 /-- Shorthand for using projection notation with `function.bijective_iff_exists_unique`. -/
-protected theorem bijective.exists_unique {f : α → β} (hf : Bijective f) (b : β) : ∃! a : α, f a = b :=
+protected theorem Bijective.exists_unique {f : α → β} (hf : Bijective f) (b : β) : ∃! a : α, f a = b :=
   (bijective_iff_exists_unique f).mp hf b
 
-theorem bijective.exists_unique_iff {f : α → β} (hf : Bijective f) {p : β → Prop} : (∃! y, p y) ↔ ∃! x, p (f x) :=
+theorem Bijective.exists_unique_iff {f : α → β} (hf : Bijective f) {p : β → Prop} : (∃! y, p y) ↔ ∃! x, p (f x) :=
   ⟨fun ⟨y, hpy, hy⟩ =>
     let ⟨x, hx⟩ := hf.Surjective y
     ⟨x, by
-      rwa [hx], fun z hz : p (f z) => hf.Injective <| hx.symm ▸ hy _ hz⟩,
+      rwa [hx], fun hz : p (f z) => hf.Injective <| hx.symm ▸ hy _ hz⟩,
     fun ⟨x, hpx, hx⟩ =>
     ⟨f x, hpx, fun y hy =>
       let ⟨z, hz⟩ := hf.Surjective y
@@ -208,10 +212,10 @@ theorem bijective.exists_unique_iff {f : α → β} (hf : Bijective f) {p : β �
         hx _ <| by
           rwa [hz]⟩⟩
 
-theorem bijective.of_comp_iff (f : α → β) {g : γ → α} (hg : Bijective g) : Bijective (f ∘ g) ↔ Bijective f :=
+theorem Bijective.of_comp_iff (f : α → β) {g : γ → α} (hg : Bijective g) : Bijective (f ∘ g) ↔ Bijective f :=
   and_congr (Injective.of_comp_iff' _ hg) (Surjective.of_comp_iff _ hg.Surjective)
 
-theorem bijective.of_comp_iff' {f : α → β} (hf : Bijective f) (g : γ → α) :
+theorem Bijective.of_comp_iff' {f : α → β} (hf : Bijective f) (g : γ → α) :
     Function.Bijective (f ∘ g) ↔ Function.Bijective g :=
   and_congr (Injective.of_comp_iff hf.Injective _) (Surjective.of_comp_iff' hf _)
 
@@ -232,7 +236,7 @@ theorem cantor_injective {α : Type _} (f : Set α → α) : ¬Function.Injectiv
 /-- `g` is a partial inverse to `f` (an injective but not necessarily
   surjective function) if `g y = some x` implies `f x = y`, and `g y = none`
   implies that `y` is not in the range of `f`. -/
-def is_partial_inv {α β} (f : α → β) (g : β → Option α) : Prop :=
+def IsPartialInv {α β} (f : α → β) (g : β → Option α) : Prop :=
   ∀ x y, g y = some x ↔ f x = y
 
 theorem is_partial_inv_left {α β} {f : α → β} {g} (H : IsPartialInv f g) x : g (f x) = some x :=
@@ -245,48 +249,48 @@ theorem injective_of_partial_inv_right {α β} {f : α → β} {g} (H : IsPartia
     (h₂ : b ∈ g y) : x = y :=
   ((H _ _).1 h₁).symm.trans ((H _ _).1 h₂)
 
-theorem left_inverse.comp_eq_id {f : α → β} {g : β → α} (h : LeftInverse f g) : f ∘ g = id :=
+theorem LeftInverse.comp_eq_id {f : α → β} {g : β → α} (h : LeftInverse f g) : f ∘ g = id :=
   funext h
 
-theorem left_inverse_iff_comp {f : α → β} {g : β → α} : LeftInverse f g ↔ f ∘ g = id :=
+theorem left_inverse_iff_compₓ {f : α → β} {g : β → α} : LeftInverse f g ↔ f ∘ g = id :=
   ⟨LeftInverse.comp_eq_id, congr_funₓ⟩
 
-theorem right_inverse.comp_eq_id {f : α → β} {g : β → α} (h : RightInverse f g) : g ∘ f = id :=
+theorem RightInverse.comp_eq_id {f : α → β} {g : β → α} (h : RightInverse f g) : g ∘ f = id :=
   funext h
 
-theorem right_inverse_iff_comp {f : α → β} {g : β → α} : RightInverse f g ↔ g ∘ f = id :=
+theorem right_inverse_iff_compₓ {f : α → β} {g : β → α} : RightInverse f g ↔ g ∘ f = id :=
   ⟨RightInverse.comp_eq_id, congr_funₓ⟩
 
-theorem left_inverse.comp {f : α → β} {g : β → α} {h : β → γ} {i : γ → β} (hf : LeftInverse f g)
-    (hh : LeftInverse h i) : LeftInverse (h ∘ f) (g ∘ i) := fun a =>
+theorem LeftInverse.comp {f : α → β} {g : β → α} {h : β → γ} {i : γ → β} (hf : LeftInverse f g) (hh : LeftInverse h i) :
+    LeftInverse (h ∘ f) (g ∘ i) := fun a =>
   show h (f (g (i a))) = a by
     rw [hf (i a), hh a]
 
-theorem right_inverse.comp {f : α → β} {g : β → α} {h : β → γ} {i : γ → β} (hf : RightInverse f g)
+theorem RightInverse.comp {f : α → β} {g : β → α} {h : β → γ} {i : γ → β} (hf : RightInverse f g)
     (hh : RightInverse h i) : RightInverse (h ∘ f) (g ∘ i) :=
   LeftInverse.comp hh hf
 
-theorem left_inverse.right_inverse {f : α → β} {g : β → α} (h : LeftInverse g f) : RightInverse f g :=
+theorem LeftInverse.right_inverse {f : α → β} {g : β → α} (h : LeftInverse g f) : RightInverse f g :=
   h
 
-theorem right_inverse.left_inverse {f : α → β} {g : β → α} (h : RightInverse g f) : LeftInverse f g :=
+theorem RightInverse.left_inverse {f : α → β} {g : β → α} (h : RightInverse g f) : LeftInverse f g :=
   h
 
-theorem left_inverse.surjective {f : α → β} {g : β → α} (h : LeftInverse f g) : Surjective f :=
+theorem LeftInverse.surjective {f : α → β} {g : β → α} (h : LeftInverse f g) : Surjective f :=
   h.RightInverse.Surjective
 
-theorem right_inverse.injective {f : α → β} {g : β → α} (h : RightInverse f g) : Injective f :=
+theorem RightInverse.injective {f : α → β} {g : β → α} (h : RightInverse f g) : Injective f :=
   h.LeftInverse.Injective
 
-theorem left_inverse.right_inverse_of_injective {f : α → β} {g : β → α} (h : LeftInverse f g) (hf : Injective f) :
+theorem LeftInverse.right_inverse_of_injective {f : α → β} {g : β → α} (h : LeftInverse f g) (hf : Injective f) :
     RightInverse f g := fun x => hf <| h (f x)
 
-theorem left_inverse.right_inverse_of_surjective {f : α → β} {g : β → α} (h : LeftInverse f g) (hg : Surjective g) :
+theorem LeftInverse.right_inverse_of_surjective {f : α → β} {g : β → α} (h : LeftInverse f g) (hg : Surjective g) :
     RightInverse f g := fun x =>
   let ⟨y, hy⟩ := hg x
   hy ▸ congr_argₓ g (h y)
 
-theorem left_inverse.eq_right_inverse {f : α → β} {g₁ g₂ : β → α} (h₁ : LeftInverse g₁ f) (h₂ : RightInverse g₂ f) :
+theorem LeftInverse.eq_right_inverse {f : α → β} {g₁ g₂ : β → α} (h₁ : LeftInverse g₁ f) (h₂ : RightInverse g₂ f) :
     g₁ = g₂ :=
   calc
     g₁ = g₁ ∘ f ∘ g₂ := by
@@ -299,7 +303,7 @@ attribute [local instance] Classical.propDecidable
 
 /-- We can use choice to construct explicitly a partial inverse for
   a given injective function `f`. -/
-noncomputable def partial_inv {α β} (f : α → β) (b : β) : Option α :=
+noncomputable def partialInv {α β} (f : α → β) (b : β) : Option α :=
   if h : ∃ a, f a = b then some (Classical.some h) else none
 
 theorem partial_inv_of_injective {α β} {f : α → β} (I : Injective f) : IsPartialInv f (partialInv f)
@@ -330,15 +334,15 @@ attribute [local instance] Classical.propDecidable
 
 /-- The inverse of a function (which is a left inverse if `f` is injective
   and a right inverse if `f` is surjective). -/
-noncomputable def inv_fun (f : α → β) : β → α := fun y => if h : ∃ x, f x = y then h.some else Classical.arbitrary α
+noncomputable def invFun (f : α → β) : β → α := fun y => if h : ∃ x, f x = y then h.some else Classical.arbitrary α
 
-theorem inv_fun_eq (h : ∃ a, f a = b) : f (invFun f b) = b := by
+theorem inv_fun_eqₓ (h : ∃ a, f a = b) : f (invFun f b) = b := by
   simp only [inv_fun, dif_pos h, h.some_spec]
 
-theorem inv_fun_neg (h : ¬∃ a, f a = b) : invFun f b = Classical.choice ‹_› :=
+theorem inv_fun_negₓ (h : ¬∃ a, f a = b) : invFun f b = Classical.choice ‹_› :=
   dif_neg h
 
-theorem inv_fun_eq_of_injective_of_right_inverse {g : β → α} (hf : Injective f) (hg : RightInverse g f) :
+theorem inv_fun_eq_of_injective_of_right_inverseₓ {g : β → α} (hf : Injective f) (hg : RightInverse g f) :
     invFun f = g :=
   funext fun b =>
     hf
@@ -346,20 +350,20 @@ theorem inv_fun_eq_of_injective_of_right_inverse {g : β → α} (hf : Injective
         rw [hg b]
         exact inv_fun_eq ⟨g b, hg b⟩)
 
-theorem right_inverse_inv_fun (hf : Surjective f) : RightInverse (invFun f) f := fun b => inv_fun_eq <| hf b
+theorem right_inverse_inv_funₓ (hf : Surjective f) : RightInverse (invFun f) f := fun b => inv_fun_eq <| hf b
 
-theorem left_inverse_inv_fun (hf : Injective f) : LeftInverse (invFun f) f := fun b => hf <| inv_fun_eqₓ ⟨b, rfl⟩
+theorem left_inverse_inv_funₓ (hf : Injective f) : LeftInverse (invFun f) f := fun b => hf <| inv_fun_eqₓ ⟨b, rfl⟩
 
-theorem inv_fun_surjective (hf : Injective f) : Surjective (invFun f) :=
+theorem inv_fun_surjectiveₓ (hf : Injective f) : Surjective (invFun f) :=
   (left_inverse_inv_funₓ hf).Surjective
 
-theorem inv_fun_comp (hf : Injective f) : invFun f ∘ f = id :=
+theorem inv_fun_compₓ (hf : Injective f) : invFun f ∘ f = id :=
   funext <| left_inverse_inv_funₓ hf
 
-theorem injective.has_left_inverse (hf : Injective f) : HasLeftInverse f :=
+theorem Injective.has_left_inverse (hf : Injective f) : HasLeftInverse f :=
   ⟨invFun f, left_inverse_inv_funₓ hf⟩
 
-theorem injective_iff_has_left_inverse : Injective f ↔ HasLeftInverse f :=
+theorem injective_iff_has_left_inverseₓ : Injective f ↔ HasLeftInverse f :=
   ⟨Injective.has_left_inverse, HasLeftInverse.injective⟩
 
 end InvFun
@@ -370,7 +374,7 @@ variable {α : Sort u} {β : Sort v} {γ : Sort w} {f : α → β}
 
 /-- The inverse of a surjective function. (Unlike `inv_fun`, this does not require
   `α` to be inhabited.) -/
-noncomputable def surj_inv {f : α → β} (h : Surjective f) (b : β) : α :=
+noncomputable def surjInv {f : α → β} (h : Surjective f) (b : β) : α :=
   Classical.some (h b)
 
 theorem surj_inv_eq (h : Surjective f) b : f (surjInv h b) = b :=
@@ -382,7 +386,7 @@ theorem right_inverse_surj_inv (hf : Surjective f) : RightInverse (surjInv hf) f
 theorem left_inverse_surj_inv (hf : Bijective f) : LeftInverse (surjInv hf.2) f :=
   right_inverse_of_injective_of_left_inverse hf.1 (right_inverse_surj_inv hf.2)
 
-theorem surjective.has_right_inverse (hf : Surjective f) : HasRightInverse f :=
+theorem Surjective.has_right_inverse (hf : Surjective f) : HasRightInverse f :=
   ⟨_, right_inverse_surj_inv hf⟩
 
 theorem surjective_iff_has_right_inverse : Surjective f ↔ HasRightInverse f :=
@@ -400,11 +404,11 @@ theorem surjective_to_subsingleton [na : Nonempty α] [Subsingleton β] (f : α 
   ⟨a, Subsingleton.elimₓ _ _⟩
 
 /-- Composition by an surjective function on the left is itself surjective. -/
-theorem surjective.comp_left {g : β → γ} (hg : Surjective g) : Surjective ((· ∘ ·) g : (α → β) → α → γ) := fun f =>
+theorem Surjective.comp_left {g : β → γ} (hg : Surjective g) : Surjective ((· ∘ ·) g : (α → β) → α → γ) := fun f =>
   ⟨surjInv hg ∘ f, funext fun x => right_inverse_surj_inv _ _⟩
 
 /-- Composition by an bijective function on the left is itself bijective. -/
-theorem bijective.comp_left {g : β → γ} (hg : Bijective g) : Bijective ((· ∘ ·) g : (α → β) → α → γ) :=
+theorem Bijective.comp_left {g : β → γ} (hg : Bijective g) : Bijective ((· ∘ ·) g : (α → β) → α → γ) :=
   ⟨hg.Injective.compLeft, hg.Surjective.compLeft⟩
 
 end SurjInv
@@ -441,23 +445,23 @@ theorem update_injective (f : ∀ a, β a) (a' : α) : Injective (update f a') :
 theorem update_noteq {a a' : α} (h : a ≠ a') (v : β a') (f : ∀ a, β a) : update f a' v a = f a :=
   dif_neg h
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (x «expr ≠ » a)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (x «expr ≠ » a)
 theorem forall_update_iff (f : ∀ a, β a) {a : α} {b : β a} (p : ∀ a, β a → Prop) :
     (∀ x, p x (update f a b x)) ↔ p a b ∧ ∀ x _ : x ≠ a, p x (f x) := by
   rw [← and_forall_ne a, update_same]
   simp (config := { contextual := true })
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (x «expr ≠ » a)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (x «expr ≠ » a)
 theorem exists_update_iff (f : ∀ a, β a) {a : α} {b : β a} (p : ∀ a, β a → Prop) :
     (∃ x, p x (update f a b x)) ↔ p a b ∨ ∃ (x : _)(_ : x ≠ a), p x (f x) := by
   rw [← not_forall_not, forall_update_iff f fun a b => ¬p a b]
   simp [not_and_distrib]
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (x «expr ≠ » a)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (x «expr ≠ » a)
 theorem update_eq_iff {a : α} {b : β a} {f g : ∀ a, β a} : update f a b = g ↔ b = g a ∧ ∀ x _ : x ≠ a, f x = g x :=
   funext_iffₓ.trans <| forall_update_iff _ fun x y => y = g x
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (x «expr ≠ » a)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (x «expr ≠ » a)
 theorem eq_update_iff {a : α} {b : β a} {f g : ∀ a, β a} : g = update f a b ↔ g a = b ∧ ∀ x _ : x ≠ a, g x = f x :=
   funext_iffₓ.trans <| forall_update_iff _ fun x y => g x = y
 
@@ -538,16 +542,16 @@ by using the values of `g` on the range of `f`
 and the values of an auxiliary function `e' : β → γ` elsewhere.
 
 Mostly useful when `f` is injective. -/
-def extend (f : α → β) (g : α → γ) (e' : β → γ) : β → γ := fun b =>
+def extendₓ (f : α → β) (g : α → γ) (e' : β → γ) : β → γ := fun b =>
   if h : ∃ a, f a = b then g (Classical.some h) else e' b
 
-theorem extend_def (f : α → β) (g : α → γ) (e' : β → γ) (b : β) [Decidable (∃ a, f a = b)] :
+theorem extend_defₓ (f : α → β) (g : α → γ) (e' : β → γ) (b : β) [Decidable (∃ a, f a = b)] :
     extendₓ f g e' b = if h : ∃ a, f a = b then g (Classical.some h) else e' b := by
   unfold extend
   congr
 
 @[simp]
-theorem extend_apply (hf : Injective f) (g : α → γ) (e' : β → γ) (a : α) : extendₓ f g e' (f a) = g a := by
+theorem extend_applyₓ (hf : Injective f) (g : α → γ) (e' : β → γ) (a : α) : extendₓ f g e' (f a) = g a := by
   simp only [extend_def, dif_pos, exists_apply_eq_applyₓ]
   exact congr_argₓ g (hf <| Classical.some_spec (exists_apply_eq_applyₓ f a))
 
@@ -573,16 +577,16 @@ theorem extend_injective (hf : Injective f) (e' : β → γ) : Injective fun g =
   exact H
 
 @[simp]
-theorem extend_comp (hf : Injective f) (g : α → γ) (e' : β → γ) : extendₓ f g e' ∘ f = g :=
+theorem extend_compₓ (hf : Injective f) (g : α → γ) (e' : β → γ) : extendₓ f g e' ∘ f = g :=
   funext fun a => extend_applyₓ hf g e' a
 
-theorem injective.surjective_comp_right' (hf : Injective f) (g₀ : β → γ) : Surjective fun g : β → γ => g ∘ f := fun g =>
+theorem Injective.surjective_comp_right' (hf : Injective f) (g₀ : β → γ) : Surjective fun g : β → γ => g ∘ f := fun g =>
   ⟨extendₓ f g g₀, extend_compₓ hf _ _⟩
 
-theorem injective.surjective_comp_right [Nonempty γ] (hf : Injective f) : Surjective fun g : β → γ => g ∘ f :=
+theorem Injective.surjective_comp_right [Nonempty γ] (hf : Injective f) : Surjective fun g : β → γ => g ∘ f :=
   hf.surjective_comp_right' fun _ => Classical.choice ‹_›
 
-theorem bijective.comp_right (hf : Bijective f) : Bijective fun g : β → γ => g ∘ f :=
+theorem Bijective.comp_right (hf : Bijective f) : Bijective fun g : β → γ => g ∘ f :=
   ⟨hf.Surjective.injective_comp_right, fun g =>
     ⟨g ∘ surjInv hf.Surjective, by
       simp only [comp.assoc g _ f, (left_inverse_surj_inv hf).comp_eq_id, comp.right_id]⟩⟩
@@ -613,12 +617,13 @@ def bicompl (f : γ → δ → ε) (g : α → γ) (h : β → δ) a b :=
 def bicompr (f : γ → δ) (g : α → β → γ) a b :=
   f (g a b)
 
+-- Suggested local notation:
 local notation f "∘₂" g => bicompr f g
 
-theorem uncurry_bicompr (f : α → β → γ) (g : γ → δ) : uncurry (g∘₂f) = g ∘ uncurry f :=
+theorem uncurry_bicomprₓ (f : α → β → γ) (g : γ → δ) : uncurry (g∘₂f) = g ∘ uncurry f :=
   rfl
 
-theorem uncurry_bicompl (f : γ → δ → ε) (g : α → γ) (h : β → δ) : uncurry (bicompl f g h) = uncurry f ∘ Prod.map g h :=
+theorem uncurry_bicomplₓ (f : γ → δ → ε) (g : α → γ) (h : β → δ) : uncurry (bicompl f g h) = uncurry f ∘ Prod.map g h :=
   rfl
 
 end Bicomp
@@ -630,7 +635,7 @@ variable {α β γ δ : Type _}
 /-- Records a way to turn an element of `α` into a function from `β` to `γ`. The most generic use
 is to recursively uncurry. For instance `f : α → β → γ → δ` will be turned into
 `↿f : α × β × γ → δ`. One can also add instances for bundled maps. -/
-class has_uncurry (α : Type _) (β : outParam (Type _)) (γ : outParam (Type _)) where
+class HasUncurry (α : Type _) (β : outParam (Type _)) (γ : outParam (Type _)) where
   uncurry : α → β → γ
 
 /-- Uncurrying operator. The most generic use is to recursively uncurry. For instance
@@ -638,20 +643,20 @@ class has_uncurry (α : Type _) (β : outParam (Type _)) (γ : outParam (Type _)
 for bundled maps.-/
 add_decl_doc has_uncurry.uncurry
 
--- ././Mathport/Syntax/Translate/Basic.lean:343:9: unsupported: advanced prec syntax
--- ././Mathport/Syntax/Translate/Basic.lean:343:9: unsupported: advanced prec syntax
+-- ././Mathport/Syntax/Translate/Basic.lean:462:9: unsupported: advanced prec syntax
+-- ././Mathport/Syntax/Translate/Basic.lean:462:9: unsupported: advanced prec syntax
 notation:999 "↿" x:999 => HasUncurry.uncurry x
 
-instance has_uncurry_base : HasUncurry (α → β) α β :=
+instance hasUncurryBase : HasUncurry (α → β) α β :=
   ⟨id⟩
 
-instance has_uncurry_induction [HasUncurry β γ δ] : HasUncurry (α → β) (α × γ) δ :=
+instance hasUncurryInduction [HasUncurry β γ δ] : HasUncurry (α → β) (α × γ) δ :=
   ⟨fun f p => (↿f p.1) p.2⟩
 
 end Uncurry
 
 /-- A function is involutive, if `f ∘ f = id`. -/
-def involutive {α} (f : α → α) : Prop :=
+def Involutive {α} (f : α → α) : Prop :=
   ∀ x, f (f x) = x
 
 theorem involutive_iff_iter_2_eq_id {α} {f : α → α} : Involutive f ↔ f^[2] = id :=
@@ -670,7 +675,7 @@ theorem comp_self : f ∘ f = id :=
 protected theorem left_inverse : LeftInverse f f :=
   h
 
-protected theorem RightInverse : RightInverse f f :=
+protected theorem right_inverse : RightInverse f f :=
   h
 
 protected theorem injective : Injective f :=
@@ -695,7 +700,7 @@ end Involutive
 Mathematically this should be thought of as the corresponding function `α × β → γ` being injective.
 -/
 @[reducible]
-def injective2 {α β γ} (f : α → β → γ) : Prop :=
+def Injective2 {α β γ} (f : α → β → γ) : Prop :=
   ∀ ⦃a₁ a₂ b₁ b₂⦄, f a₁ b₁ = f a₂ b₂ → a₁ = a₂ ∧ b₁ = b₂
 
 namespace Injective2

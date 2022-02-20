@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Johan Commelin. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johan Commelin
+-/
 import Mathbin.Data.Polynomial.RingDivision
 import Mathbin.Tactic.Zify
 import Mathbin.FieldTheory.Separable
@@ -300,7 +305,7 @@ theorem pow_eq_one_iff_dvd (l : ℕ) : ζ ^ l = 1 ↔ k ∣ l :=
     rintro ⟨i, rfl⟩
     simp only [pow_mulₓ, h.pow_eq_one, one_pow, Pnat.mul_coe]⟩
 
-theorem IsUnit (h : IsPrimitiveRoot ζ k) (h0 : 0 < k) : IsUnit ζ := by
+theorem is_unit (h : IsPrimitiveRoot ζ k) (h0 : 0 < k) : IsUnit ζ := by
   apply is_unit_of_mul_eq_one ζ (ζ ^ (k - 1))
   rw [← pow_succₓ, tsub_add_cancel_of_le h0.nat_succ_le, h.pow_eq_one]
 
@@ -368,10 +373,10 @@ theorem pow_iff_coprime (h : IsPrimitiveRoot ζ k) (h0 : 0 < k) (i : ℕ) : IsPr
   apply Nat.dvd_antisymm ⟨i.gcd k, hb⟩ (hi.dvd_of_pow_eq_one b _)
   rw [← pow_mul', ← mul_assoc, ← hb, pow_mulₓ, h.pow_eq_one, one_pow]
 
-protected theorem orderOf (ζ : M) : IsPrimitiveRoot ζ (orderOf ζ) :=
+protected theorem order_of (ζ : M) : IsPrimitiveRoot ζ (orderOf ζ) :=
   ⟨pow_order_of_eq_one ζ, fun l => order_of_dvd_of_pow_eq_one⟩
 
-theorem Unique {ζ : M} (hk : IsPrimitiveRoot ζ k) (hl : IsPrimitiveRoot ζ l) : k = l := by
+theorem unique {ζ : M} (hk : IsPrimitiveRoot ζ k) (hl : IsPrimitiveRoot ζ l) : k = l := by
   wlog hkl : k ≤ l
   rcases hkl.eq_or_lt with (rfl | hkl)
   · rfl
@@ -384,7 +389,7 @@ theorem Unique {ζ : M} (hk : IsPrimitiveRoot ζ k) (hl : IsPrimitiveRoot ζ l) 
 theorem eq_order_of : k = orderOf ζ :=
   h.unique (IsPrimitiveRoot.order_of ζ)
 
-protected theorem Iff (hk : 0 < k) : IsPrimitiveRoot ζ k ↔ ζ ^ k = 1 ∧ ∀ l : ℕ, 0 < l → l < k → ζ ^ l ≠ 1 := by
+protected theorem iff (hk : 0 < k) : IsPrimitiveRoot ζ k ↔ ζ ^ k = 1 ∧ ∀ l : ℕ, 0 < l → l < k → ζ ^ l ≠ 1 := by
   refine' ⟨fun h => ⟨h.pow_eq_one, fun l hl' hl => _⟩, fun ⟨hζ, hl⟩ => IsPrimitiveRoot.mk_of_lt ζ hk hζ hl⟩
   rw [h.eq_order_of] at hl
   exact pow_ne_one_of_lt_order_of' hl'.ne' hl
@@ -608,7 +613,7 @@ protected theorem mem_roots_of_unity {n : ℕ+} (h : IsPrimitiveRoot ζ n) : ζ 
 
 /-- The (additive) monoid equivalence between `zmod k`
 and the powers of a primitive root of unity `ζ`. -/
-def zmod_equiv_zpowers (h : IsPrimitiveRoot ζ k) : Zmod k ≃+ Additive (Subgroup.zpowers ζ) :=
+def zmodEquivZpowers (h : IsPrimitiveRoot ζ k) : Zmod k ≃+ Additive (Subgroup.zpowers ζ) :=
   AddEquiv.ofBijective
     (AddMonoidHom.liftOfRightInverse (Int.castAddHom <| Zmod k) _ Zmod.int_cast_right_inverse
       ⟨{ toFun := fun i => Additive.ofMul (⟨_, i, rfl⟩ : Subgroup.zpowers ζ),
@@ -836,7 +841,7 @@ theorem card_primitive_roots {ζ : R} {k : ℕ} (h : IsPrimitiveRoot ζ k) : (pr
     
 
 /-- The sets `primitive_roots k R` are pairwise disjoint. -/
-theorem Disjoint {k l : ℕ} (h : k ≠ l) : Disjoint (primitiveRoots k R) (primitiveRoots l R) := by
+theorem disjoint {k l : ℕ} (h : k ≠ l) : Disjoint (primitiveRoots k R) (primitiveRoots l R) := by
   by_cases' hk : k = 0
   · simp [hk]
     
@@ -906,7 +911,7 @@ variable {n : ℕ} {K : Type _} [CommRingₓ K] {μ : K} (h : IsPrimitiveRoot μ
 include n μ h hpos
 
 /-- `μ` is integral over `ℤ`. -/
-theorem IsIntegral : IsIntegral ℤ μ := by
+theorem is_integral : IsIntegral ℤ μ := by
   use X ^ n - 1
   constructor
   · exact monic_X_pow_sub_C 1 (ne_of_ltₓ hpos).symm
@@ -950,6 +955,8 @@ theorem squarefree_minpoly_mod {p : ℕ} [Fact p.Prime] (hdiv : ¬p ∣ n) :
     Squarefree (map (Int.castRingHom (Zmod p)) (minpoly ℤ μ)) :=
   (separable_minpoly_mod h hdiv).Squarefree
 
+/- Let `P` be the minimal polynomial of a root of unity `μ` and `Q` be the minimal polynomial of
+`μ ^ p`, where `p` is a prime that does not divide `n`. Then `P` divides `expand ℤ p Q`. -/
 theorem minpoly_dvd_expand {p : ℕ} (hprime : Nat.Prime p) (hdiv : ¬p ∣ n) :
     minpoly ℤ μ ∣ expand ℤ p (minpoly ℤ (μ ^ p)) := by
   by_cases' hn : n = 0
@@ -967,6 +974,8 @@ theorem minpoly_dvd_expand {p : ℕ} (hprime : Nat.Prime p) (hdiv : ¬p ∣ n) :
     exact minpoly.aeval _ _
     
 
+/- Let `P` be the minimal polynomial of a root of unity `μ` and `Q` be the minimal polynomial of
+`μ ^ p`, where `p` is a prime that does not divide `n`. Then `P` divides `Q ^ p` modulo `p`. -/
 theorem minpoly_dvd_pow_mod {p : ℕ} [hprime : Fact p.Prime] (hdiv : ¬p ∣ n) :
     map (Int.castRingHom (Zmod p)) (minpoly ℤ μ) ∣ map (Int.castRingHom (Zmod p)) (minpoly ℤ (μ ^ p)) ^ p := by
   set Q := minpoly ℤ (μ ^ p)
@@ -976,6 +985,8 @@ theorem minpoly_dvd_pow_mod {p : ℕ} [hprime : Fact p.Prime] (hdiv : ¬p ∣ n)
   apply RingHom.map_dvd (map_ring_hom (Int.castRingHom (Zmod p)))
   exact minpoly_dvd_expand h hprime.1 hdiv
 
+/- Let `P` be the minimal polynomial of a root of unity `μ` and `Q` be the minimal polynomial of
+`μ ^ p`, where `p` is a prime that does not divide `n`. Then `P` divides `Q` modulo `p`. -/
 theorem minpoly_dvd_mod_p {p : ℕ} [hprime : Fact p.Prime] (hdiv : ¬p ∣ n) :
     map (Int.castRingHom (Zmod p)) (minpoly ℤ μ) ∣ map (Int.castRingHom (Zmod p)) (minpoly ℤ (μ ^ p)) :=
   (UniqueFactorizationMonoid.dvd_pow_iff_dvd_of_squarefree (squarefree_minpoly_mod h hdiv) hprime.1.ne_zero).1
@@ -1085,7 +1096,11 @@ theorem is_roots_of_minpoly : primitiveRoots n K ⊆ (map (Int.castRingHom K) (m
 /-- The degree of the minimal polynomial of `μ` is at least `totient n`. -/
 theorem totient_le_degree_minpoly : Nat.totient n ≤ (minpoly ℤ μ).natDegree :=
   let P : ℤ[X] := minpoly ℤ μ
-  let P_K : K[X] := map (Int.castRingHom K) P
+  let
+    P_K :-- minimal polynomial of `μ`
+      K[X] :=
+    map (Int.castRingHom K) P
+  -- minimal polynomial of `μ` sent to `K[X]`
   calc
     n.totient = (primitiveRoots n K).card := h.card_primitive_roots.symm
     _ ≤ P_K.roots.toFinset.card := Finset.card_le_of_subset (is_roots_of_minpoly h)
@@ -1103,7 +1118,7 @@ variable {S} [CommRingₓ S] [IsDomain S] {μ : S} {n : ℕ+} (hμ : IsPrimitive
 -- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:98:4: warning: unsupported: rw with cfg: { occs := occurrences.pos «expr[ , ]»([1]) }
 /-- The `monoid_hom` that takes an automorphism to the power of μ that μ gets mapped to under it. -/
 @[simps (config := { attrs := [] })]
-noncomputable def aut_to_pow : (S ≃ₐ[R] S) →* (Zmod n)ˣ :=
+noncomputable def autToPow : (S ≃ₐ[R] S) →* (Zmod n)ˣ :=
   let μ' := hμ.toRootsOfUnity
   have ho : orderOf μ' = n := by
     rw [hμ.eq_order_of, ← hμ.coe_to_roots_of_unity_coe, order_of_units, order_of_subgroup]

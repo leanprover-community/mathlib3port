@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison, Reid Barton, Simon Hudon, Kenny Lau
+-/
 import Mathbin.Data.Equiv.Basic
 
 /-!
@@ -11,6 +16,7 @@ category, with all arrows reversed.
 
 universe v u
 
+-- morphism levels before object levels. See note [category_theory universes].
 variable (α : Sort u)
 
 /-- The type of objects of the opposite of `α`; used to define the opposite category.
@@ -38,8 +44,12 @@ variable (α : Sort u)
 def Opposite : Sort u :=
   α
 
--- ././Mathport/Syntax/Translate/Basic.lean:343:9: unsupported: advanced prec syntax
-notation:999 α "ᵒᵖ" => Opposite α
+-- ././Mathport/Syntax/Translate/Basic.lean:462:9: unsupported: advanced prec syntax
+notation:999 α
+  "ᵒᵖ" =>-- Use a high right binding power (like that of postfix ⁻¹) so that, for example,
+    -- `presheaf Cᵒᵖ` parses as `presheaf (Cᵒᵖ)` and not `(presheaf C)ᵒᵖ`.
+    Opposite
+    α
 
 namespace Opposite
 
@@ -76,7 +86,7 @@ theorem unop_op (x : α) : unop (op x) = x :=
   rfl
 
 /-- The type-level equivalence between a type and its opposite. -/
-def equiv_to_opposite : α ≃ αᵒᵖ where
+def equivToOpposite : α ≃ αᵒᵖ where
   toFun := op
   invFun := unop
   left_inv := unop_op

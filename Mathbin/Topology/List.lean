@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Reid Barton. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johannes Hölzl
+-/
 import Mathbin.Topology.Constructions
 import Mathbin.Topology.Algebra.Monoid
 
@@ -76,7 +81,7 @@ theorem tendsto_cons_iff {β : Type _} {f : List α → β} {b : Filter β} {a :
     Tendsto f (𝓝 (a :: l)) b ↔ Tendsto (fun p : α × List α => f (p.1 :: p.2)) (𝓝 a ×ᶠ 𝓝 l) b := by
   have : 𝓝 (a :: l) = (𝓝 a ×ᶠ 𝓝 l).map fun p : α × List α => p.1 :: p.2 := by
     simp only [nhds_cons, Filter.prod_eq, (Filter.map_def _ _).symm, (Filter.seq_eq_filter_seq _ _).symm]
-    simp' [-Filter.seq_eq_filter_seq, -Filter.map_def, · ∘ ·] with functor_norm
+    simp' [-Filter.seq_eq_filter_seq, -Filter.map_def, (· ∘ ·)] with functor_norm
   rw [this, Filter.tendsto_map'_iff]
 
 theorem continuous_cons : Continuous fun x : α × List α => (x.1 :: x.2 : List α) :=
@@ -109,7 +114,7 @@ theorem tendsto_insert_nth' {a : α} :
   | n + 1, a' :: l => by
     have : 𝓝 a ×ᶠ 𝓝 (a' :: l) = (𝓝 a ×ᶠ (𝓝 a' ×ᶠ 𝓝 l)).map fun p : α × α × List α => (p.1, p.2.1 :: p.2.2) := by
       simp only [nhds_cons, Filter.prod_eq, ← Filter.map_def, ← Filter.seq_eq_filter_seq]
-      simp' [-Filter.seq_eq_filter_seq, -Filter.map_def, · ∘ ·] with functor_norm
+      simp' [-Filter.seq_eq_filter_seq, -Filter.map_def, (· ∘ ·)] with functor_norm
     rw [this, tendsto_map'_iff]
     exact
       (tendsto_fst.comp tendsto_snd).cons
@@ -181,7 +186,9 @@ theorem continuous_insert_nth {n : ℕ} {i : Finₓ (n + 1)} {f : β → α} {g 
   continuous_insert_nth'.comp (hf.prod_mk hg : _)
 
 theorem continuous_at_remove_nth {n : ℕ} {i : Finₓ (n + 1)} : ∀ {l : Vector α (n + 1)}, ContinuousAt (removeNth i) l
-  | ⟨l, hl⟩ => by
+  | ⟨l, hl⟩ =>--  ∀{l:vector α (n+1)}, tendsto (remove_nth i) (𝓝 l) (𝓝 (remove_nth i l))
+  --| ⟨l, hl⟩ :=
+  by
     rw [ContinuousAt, remove_nth, tendsto_subtype_rng]
     simp only [← Subtype.val_eq_coe, Vector.remove_nth_val]
     exact tendsto.comp List.tendsto_remove_nth continuous_at_subtype_coe

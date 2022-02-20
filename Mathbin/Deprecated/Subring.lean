@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Johan Commelin. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johan Commelin
+-/
 import Mathbin.Deprecated.Subgroup
 import Mathbin.Deprecated.Group
 import Mathbin.RingTheory.Subring.Basic
@@ -54,7 +59,7 @@ theorem is_subring_Union_of_directed {ι : Type _} [hι : Nonempty ι] {s : ι �
 
 namespace Ringₓ
 
-def closure (s : Set R) :=
+def Closure (s : Set R) :=
   AddGroupₓ.Closure (Monoidₓ.Closure s)
 
 variable {s : Set R}
@@ -75,7 +80,7 @@ theorem exists_list_of_mem_closure {a : R} (h : a ∈ Closure s) :
           match L2, List.mem_mapₓ.1 h2 with
           | _, ⟨L3, h3, rfl⟩ => List.forall_mem_consₓ.2 ⟨Or.inr rfl, h1 L3 h3⟩,
           by
-          simp only [List.map_mapₓ, · ∘ ·, List.prod_cons, neg_one_mul] <;>
+          simp only [List.map_mapₓ, (· ∘ ·), List.prod_cons, neg_one_mul] <;>
             exact
               List.recOn L1 neg_zero.symm fun hd tl ih => by
                 rw [List.map_cons, List.sum_cons, ih, List.map_cons, List.sum_cons, neg_add]⟩)
@@ -86,7 +91,7 @@ theorem exists_list_of_mem_closure {a : R} (h : a ∈ Closure s) :
         rw [List.map_append, List.sum_append]⟩
 
 @[elab_as_eliminator]
-protected theorem in_closure.rec_on {C : R → Prop} {x : R} (hx : x ∈ Closure s) (h1 : C 1) (hneg1 : C (-1))
+protected theorem InClosure.rec_on {C : R → Prop} {x : R} (hx : x ∈ Closure s) (h1 : C 1) (hneg1 : C (-1))
     (hs : ∀, ∀ z ∈ s, ∀, ∀ n, C n → C (z * n)) (ha : ∀ {x y}, C x → C y → C (x + y)) : C x := by
   have h0 : C 0 := add_neg_selfₓ (1 : R) ▸ ha h1 hneg1
   rcases exists_list_of_mem_closure hx with ⟨L, HL, rfl⟩
@@ -145,7 +150,7 @@ protected theorem in_closure.rec_on {C : R → Prop} {x : R} (hx : x ∈ Closure
           rw [List.prod_cons, hhd, HP, neg_one_mul, neg_negₓ]⟩
     
 
-theorem closure.is_subring : IsSubring (Closure s) :=
+theorem Closure.is_subring : IsSubring (Closure s) :=
   { AddGroupₓ.Closure.is_add_subgroup _ with
     one_mem := AddGroupₓ.mem_closure <| IsSubmonoid.one_mem <| Monoidₓ.Closure.is_submonoid _,
     mul_mem := fun a b ha hb =>

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Johan Commelin. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johan Commelin
+-/
 import Mathbin.Data.MvPolynomial.Basic
 
 /-!
@@ -61,7 +66,7 @@ noncomputable def counit : MvPolynomial R ℤ →+* R :=
 
 See `mv_polynomial.acounit` for a “relative” variant for algebras over a base ring
 and `mv_polynomial.counit` for the “absolute” variant with `A = ℤ`. -/
-noncomputable def counit_nat : MvPolynomial A ℕ →+* A :=
+noncomputable def counitNat : MvPolynomial A ℕ →+* A :=
   acounit ℕ A
 
 theorem counit_surjective : Surjective (counit R) :=

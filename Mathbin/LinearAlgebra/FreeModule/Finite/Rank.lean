@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Riccardo Brasca. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Riccardo Brasca
+-/
 import Mathbin.LinearAlgebra.FreeModule.Rank
 import Mathbin.LinearAlgebra.FreeModule.Finite.Basic
 
@@ -10,6 +15,8 @@ This is a basic API for the rank of finite free modules.
 -/
 
 
+--TODO: `linear_algebra/finite_dimensional` should import this file, and a lot of results should
+--be moved here.
 universe u v w
 
 variable (R : Type u) (M : Type v) (N : Type w)
@@ -71,6 +78,7 @@ theorem finrank_prod : finrank R (M × N) = finrank R M + finrank R N := by
   simp [finrank, rank_lt_omega R M, rank_lt_omega R N]
 
 /-- The finrank of a finite product is the sum of the finranks. -/
+--TODO: this should follow from `linear_equiv.finrank_eq`, that is over a field.
 theorem finrank_pi_fintype {ι : Type v} [Fintype ι] {M : ι → Type w} [∀ i : ι, AddCommGroupₓ (M i)]
     [∀ i : ι, Module R (M i)] [∀ i : ι, Module.Free R (M i)] [∀ i : ι, Module.Finite R (M i)] :
     finrank R (∀ i, M i) = ∑ i, finrank R (M i) := by
@@ -95,6 +103,7 @@ variable [AddCommGroupₓ M] [Module R M] [Module.Free R M] [Module.Finite R M]
 variable [AddCommGroupₓ N] [Module R N] [Module.Free R N] [Module.Finite R N]
 
 /-- The finrank of `M →ₗ[R] N` is `(finrank R M) * (finrank R N)`. -/
+--TODO: this should follow from `linear_equiv.finrank_eq`, that is over a field.
 theorem finrank_linear_hom : finrank R (M →ₗ[R] N) = finrank R M * finrank R N := by
   classical
   let this' := nontrivial_of_invariant_basis_number R

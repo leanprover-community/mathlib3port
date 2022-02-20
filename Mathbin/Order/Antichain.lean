@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Yaël Dillies. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yaël Dillies
+-/
 import Mathbin.Data.Set.Pairwise
 
 /-!
@@ -37,16 +42,16 @@ theorem mono (hs : IsAntichain r₁ s) (h : r₂ ≤ r₁) : IsAntichain r₂ s 
 theorem mono_on (hs : IsAntichain r₁ s) (h : s.Pairwise fun ⦃a b⦄ => r₂ a b → r₁ a b) : IsAntichain r₂ s :=
   hs.imp_on <| h.imp fun a b h h₁ h₂ => h₁ <| h h₂
 
-protected theorem Eq (hs : IsAntichain r s) {a b : α} (ha : a ∈ s) (hb : b ∈ s) (h : r a b) : a = b :=
+protected theorem eq (hs : IsAntichain r s) {a b : α} (ha : a ∈ s) (hb : b ∈ s) (h : r a b) : a = b :=
   hs.Eq ha hb <| not_not_intro h
 
 protected theorem eq' (hs : IsAntichain r s) {a b : α} (ha : a ∈ s) (hb : b ∈ s) (h : r b a) : a = b :=
   (hs.Eq hb ha h).symm
 
-protected theorem IsAntisymm (h : IsAntichain r Univ) : IsAntisymm α r :=
+protected theorem is_antisymm (h : IsAntichain r Univ) : IsAntisymm α r :=
   ⟨fun a b ha _ => h.Eq trivialₓ trivialₓ ha⟩
 
-protected theorem Subsingleton [IsTrichotomous α r] (h : IsAntichain r s) : s.Subsingleton := by
+protected theorem subsingleton [IsTrichotomous α r] (h : IsAntichain r s) : s.Subsingleton := by
   rintro a ha b hb
   obtain hab | hab | hab := trichotomous_of r a b
   · exact h.eq ha hb hab
@@ -142,13 +147,13 @@ protected theorem subset (hs : IsStrongAntichain r s) (h : t ⊆ s) : IsStrongAn
 theorem mono (hs : IsStrongAntichain r₁ s) (h : r₂ ≤ r₁) : IsStrongAntichain r₂ s :=
   hs.mono' fun a b hab c => (hab c).imp (compl_le_compl h _ _) (compl_le_compl h _ _)
 
-theorem Eq (hs : IsStrongAntichain r s) {a b c : α} (ha : a ∈ s) (hb : b ∈ s) (hac : r a c) (hbc : r b c) : a = b :=
+theorem eq (hs : IsStrongAntichain r s) {a b c : α} (ha : a ∈ s) (hb : b ∈ s) (hac : r a c) (hbc : r b c) : a = b :=
   (hs.Eq ha hb) fun h => False.elim <| (h c).elim (not_not_intro hac) (not_not_intro hbc)
 
-protected theorem IsAntichain [IsRefl α r] (h : IsStrongAntichain r s) : IsAntichain r s :=
+protected theorem is_antichain [IsRefl α r] (h : IsStrongAntichain r s) : IsAntichain r s :=
   h.imp fun a b hab => (hab b).resolve_right (not_not_intro <| refl _)
 
-protected theorem Subsingleton [IsDirected α r] (h : IsStrongAntichain r s) : s.Subsingleton := fun a ha b hb =>
+protected theorem subsingleton [IsDirected α r] (h : IsStrongAntichain r s) : s.Subsingleton := fun a ha b hb =>
   let ⟨c, hac, hbc⟩ := directed_of r a b
   h.Eq ha hb hac hbc
 

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Anne Baanen. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Mario Carneiro, Anne Baanen
+-/
 import Mathbin.Algebra.Order.Field
 
 /-!
@@ -53,7 +58,7 @@ protected theorem add_le (x y : R) : abv (x + y) ≤ abv x + abv y :=
 protected theorem map_mul (x y : R) : abv (x * y) = abv x * abv y :=
   abv.map_mul' x y
 
-protected theorem Pos {x : R} (hx : x ≠ 0) : 0 < abv x :=
+protected theorem pos {x : R} (hx : x ≠ 0) : 0 < abv x :=
   lt_of_le_of_neₓ (abv.Nonneg x) (Ne.symm <| mt abv.eq_zero.mp hx)
 
 @[simp]
@@ -110,7 +115,7 @@ protected theorem map_one : abv 1 = 1 :=
     rw [← abv.map_mul, mul_oneₓ, mul_oneₓ]
 
 /-- Absolute values from a nontrivial `R` to a linear ordered ring preserve `*`, `0` and `1`. -/
-def to_monoid_with_zero_hom : R →*₀ S :=
+def toMonoidWithZeroHom : R →*₀ S :=
   { abv with toFun := abv, map_zero' := abv.map_zero, map_one' := abv.map_one }
 
 @[simp]
@@ -118,7 +123,7 @@ theorem coe_to_monoid_with_zero_hom : ⇑abv.toMonoidWithZeroHom = abv :=
   rfl
 
 /-- Absolute values from a nontrivial `R` to a linear ordered ring preserve `*` and `1`. -/
-def to_monoid_hom : MonoidHom R S :=
+def toMonoidHom : MonoidHom R S :=
   { abv with toFun := abv, map_one' := abv.map_one }
 
 @[simp]
@@ -203,7 +208,7 @@ variable {S : Type _} [OrderedSemiring S]
 variable {R : Type _} [Semiringₓ R] (abv : R → S) [IsAbsoluteValue abv]
 
 /-- A bundled absolute value is an absolute value. -/
-instance absolute_value.is_absolute_value (abv : AbsoluteValue R S) : IsAbsoluteValue abv where
+instance AbsoluteValue.is_absolute_value (abv : AbsoluteValue R S) : IsAbsoluteValue abv where
   abv_nonneg := abv.Nonneg
   abv_eq_zero := fun _ => abv.eq_zero
   abv_add := abv.add_le
@@ -211,7 +216,7 @@ instance absolute_value.is_absolute_value (abv : AbsoluteValue R S) : IsAbsolute
 
 /-- Convert an unbundled `is_absolute_value` to a bundled `absolute_value`. -/
 @[simps]
-def to_absolute_value : AbsoluteValue R S where
+def toAbsoluteValue : AbsoluteValue R S where
   toFun := abv
   add_le' := abv_add abv
   eq_zero' := fun _ => abv_eq_zero abv
@@ -253,7 +258,7 @@ theorem abv_one [Nontrivial R] : abv 1 = 1 :=
     rw [← abv_mul abv, mul_oneₓ, mul_oneₓ]
 
 /-- `abv` as a `monoid_with_zero_hom`. -/
-def abv_hom [Nontrivial R] : R →*₀ S :=
+def abvHom [Nontrivial R] : R →*₀ S :=
   ⟨abv, abv_zero abv, abv_one abv, abv_mul abv⟩
 
 theorem abv_pow [Nontrivial R] (abv : R → S) [IsAbsoluteValue abv] (a : R) (n : ℕ) : abv (a ^ n) = abv a ^ n :=

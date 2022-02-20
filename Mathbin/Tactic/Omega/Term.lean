@@ -1,11 +1,19 @@
+/-
+Copyright (c) 2019 Seul Baek. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Seul Baek
+-/
 import Mathbin.Tactic.Omega.Coeffs
 
+/-
+Normalized linear integer arithmetic terms.
+-/
 namespace Omega
 
 /-- Shadow syntax of normalized terms. The first element
     represents the constant term and the list represents
     the coefficients. -/
-def term : Type :=
+def Term : Type :=
   Int × List Int deriving Inhabited
 
 namespace Term
@@ -65,11 +73,11 @@ theorem val_div {v : Nat → Int} {i b : Int} {as : List Int} :
   rw [← coeffs.val_map_div h2]
 
 /-- Fresh de Brujin index not used by any variable ocurring in the term -/
-def fresh_index (t : Term) : Nat :=
+def freshIndex (t : Term) : Nat :=
   t.snd.length
 
 def toString (t : Term) : Stringₓ :=
-  t.2.enum.foldr (fun ⟨i, n⟩ r => toString n ++ " * x" ++ toString i ++ " + " ++ r) (toString t.1)
+  t.2.enum.foldr (fun r => toString n ++ " * x" ++ toString i ++ " + " ++ r) (toString t.1)
 
 instance : HasToString Term :=
   ⟨toString⟩
@@ -77,7 +85,7 @@ instance : HasToString Term :=
 end Term
 
 /-- Fresh de Brujin index not used by any variable ocurring in the list of terms -/
-def terms.fresh_index : List Term → Nat
+def Terms.freshIndex : List Term → Nat
   | [] => 0
   | t :: ts => max t.freshIndex (terms.fresh_index ts)
 

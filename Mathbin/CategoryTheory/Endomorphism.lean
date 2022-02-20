@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Yury Kudryashov. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yury Kudryashov, Scott Morrison, Simon Hudon
+-/
 import Mathbin.CategoryTheory.Groupoid
 import Mathbin.CategoryTheory.Opposites
 import Mathbin.Data.Equiv.MulAdd
@@ -28,14 +33,14 @@ section Struct
 
 variable {C : Type u} [CategoryStruct.{v} C] (X : C)
 
-instance One : One (End X) :=
+instance hasOne : One (End X) :=
   ⟨𝟙 X⟩
 
-instance Inhabited : Inhabited (End X) :=
+instance inhabited : Inhabited (End X) :=
   ⟨𝟙 X⟩
 
 /-- Multiplication of endomorphisms agrees with `function.comp`, not `category_struct.comp`. -/
-instance Mul : Mul (End X) :=
+instance hasMul : Mul (End X) :=
   ⟨fun x y => y ≫ x⟩
 
 variable {X}
@@ -45,7 +50,7 @@ def of (f : X ⟶ X) : End X :=
   f
 
 /-- Assist the typechecker by expressing an endomorphism `f : End X` as a term of `X ⟶ X`. -/
-def as_hom (f : End X) : X ⟶ X :=
+def asHom (f : End X) : X ⟶ X :=
   f
 
 @[simp]
@@ -59,7 +64,7 @@ theorem mul_def (xs ys : End X) : xs * ys = ys ≫ xs :=
 end Struct
 
 /-- Endomorphisms of an object form a monoid -/
-instance Monoidₓ {C : Type u} [Category.{v} C] {X : C} : Monoidₓ (End X) :=
+instance monoid {C : Type u} [Category.{v} C] {X : C} : Monoidₓ (End X) :=
   { End.hasMul X, End.hasOne X with mul_one := Category.id_comp, one_mul := Category.comp_id,
     mul_assoc := fun x y z => (Category.assoc z y x).symm }
 
@@ -69,12 +74,12 @@ variable {C : Type u} [Category.{v} C]
 
 open Opposite
 
-instance mul_action_right {X Y : C} : MulAction (End Y) (X ⟶ Y) where
+instance mulActionRight {X Y : C} : MulAction (End Y) (X ⟶ Y) where
   smul := fun r f => f ≫ r
   one_smul := Category.comp_id
   mul_smul := fun r s f => Eq.symm <| Category.assoc _ _ _
 
-instance mul_action_left {X : Cᵒᵖ} {Y : C} : MulAction (End X) (unop X ⟶ Y) where
+instance mulActionLeft {X : Cᵒᵖ} {Y : C} : MulAction (End X) (unop X ⟶ Y) where
   smul := fun r f => r.unop ≫ f
   one_smul := Category.id_comp
   mul_smul := fun r s f => Category.assoc _ _ _
@@ -88,7 +93,7 @@ theorem smul_left {X : Cᵒᵖ} {Y : C} {r : End X} {f : unop X ⟶ Y} : r • f
 end MulAction
 
 /-- In a groupoid, endomorphisms form a group -/
-instance Groupₓ {C : Type u} [Groupoid.{v} C] (X : C) : Groupₓ (End X) :=
+instance group {C : Type u} [Groupoid.{v} C] (X : C) : Groupₓ (End X) :=
   { End.monoid with mul_left_inv := Groupoid.comp_inv, inv := Groupoid.inv }
 
 end End
@@ -114,7 +119,7 @@ attribute [ext Aut] iso.ext
 
 namespace Aut
 
-instance Inhabited : Inhabited (Aut X) :=
+instance inhabited : Inhabited (Aut X) :=
   ⟨Iso.refl X⟩
 
 instance : Groupₓ (Aut X) := by
@@ -125,12 +130,12 @@ instance : Groupₓ (Aut X) := by
     intros <;>
       try
           rfl <;>
-        ext <;> simp [flip, · * ·, Monoidₓ.mul, MulOneClassₓ.mul, MulOneClassₓ.one, One.one, Monoidₓ.one, Inv.inv]
+        ext <;> simp [flip, (· * ·), Monoidₓ.mul, MulOneClassₓ.mul, MulOneClassₓ.one, One.one, Monoidₓ.one, Inv.inv]
 
 /-- Units in the monoid of endomorphisms of an object
 are (multiplicatively) equivalent to automorphisms of that object.
 -/
-def units_End_equiv_Aut : (End X)ˣ ≃* Aut X where
+def unitsEndEquivAut : (End X)ˣ ≃* Aut X where
   toFun := fun f => ⟨f.1, f.2, f.4, f.3⟩
   invFun := fun f => ⟨f.1, f.2, f.4, f.3⟩
   left_inv := fun ⟨f₁, f₂, f₃, f₄⟩ => rfl
@@ -146,13 +151,13 @@ variable {D : Type u'} [Category.{v'} D] (f : C ⥤ D) (X)
 
 /-- `f.map` as a monoid hom between endomorphism monoids. -/
 @[simps]
-def map_End : End X →* End (f.obj X) where
+def mapEnd : End X →* End (f.obj X) where
   toFun := Functor.map f
   map_mul' := fun x y => f.map_comp y x
   map_one' := f.map_id X
 
 /-- `f.map_iso` as a group hom between automorphism groups. -/
-def map_Aut : Aut X →* Aut (f.obj X) where
+def mapAut : Aut X →* Aut (f.obj X) where
   toFun := f.mapIso
   map_mul' := fun x y => f.map_iso_trans y x
   map_one' := f.map_iso_refl X

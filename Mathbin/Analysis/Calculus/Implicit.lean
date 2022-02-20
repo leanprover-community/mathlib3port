@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Yury Kudryashov. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yury Kudryashov
+-/
 import Mathbin.Analysis.Calculus.Inverse
 import Mathbin.Analysis.NormedSpace.Complemented
 
@@ -109,14 +114,14 @@ variable {𝕜 : Type _} [NondiscreteNormedField 𝕜] {E : Type _} [NormedGroup
   [CompleteSpace G] (φ : ImplicitFunctionData 𝕜 E F G)
 
 /-- The function given by `x ↦ (left_fun x, right_fun x)`. -/
-def prod_fun (x : E) : F × G :=
+def prodFun (x : E) : F × G :=
   (φ.leftFun x, φ.rightFun x)
 
 @[simp]
 theorem prod_fun_apply (x : E) : φ.prodFun x = (φ.leftFun x, φ.rightFun x) :=
   rfl
 
-protected theorem HasStrictFderivAt :
+protected theorem has_strict_fderiv_at :
     HasStrictFderivAt φ.prodFun
       (φ.leftDeriv.equivProdOfSurjectiveOfIsCompl φ.rightDeriv φ.left_range φ.right_range φ.is_compl_ker :
         E →L[𝕜] F × G)
@@ -127,14 +132,14 @@ protected theorem HasStrictFderivAt :
 at `a`, their derivatives `f'`, `g'` are surjective, and the kernels of these derivatives are
 complementary subspaces of `E`, then `x ↦ (f x, g x)` defines a local homeomorphism between
 `E` and `F × G`. In particular, `{x | f x = f a}` is locally homeomorphic to `G`. -/
-def to_local_homeomorph : LocalHomeomorph E (F × G) :=
+def toLocalHomeomorph : LocalHomeomorph E (F × G) :=
   φ.HasStrictFderivAt.toLocalHomeomorph _
 
 /-- Implicit function theorem. If `f : E → F` and `g : E → G` are two maps strictly differentiable
 at `a`, their derivatives `f'`, `g'` are surjective, and the kernels of these derivatives are
 complementary subspaces of `E`, then `implicit_function_of_is_compl_ker` is the unique (germ of a)
 map `φ : F → G → E` such that `f (φ y z) = y` and `g (φ y z) = z`. -/
-def implicit_function : F → G → E :=
+def implicitFunction : F → G → E :=
   Function.curry <| φ.toLocalHomeomorph.symm
 
 @[simp]
@@ -151,7 +156,7 @@ theorem map_pt_mem_to_local_homeomorph_target : (φ.leftFun φ.pt, φ.rightFun �
   φ.toLocalHomeomorph.map_source <| φ.pt_mem_to_local_homeomorph_source
 
 theorem prod_map_implicit_function : ∀ᶠ p : F × G in 𝓝 (φ.prodFun φ.pt), φ.prodFun (φ.implicitFunction p.1 p.2) = p :=
-  φ.HasStrictFderivAt.eventually_right_inverse.mono fun ⟨z, y⟩ h => h
+  φ.HasStrictFderivAt.eventually_right_inverse.mono fun h => h
 
 theorem left_map_implicit_function : ∀ᶠ p : F × G in 𝓝 (φ.prodFun φ.pt), φ.leftFun (φ.implicitFunction p.1 p.2) = p.1 :=
   φ.prod_map_implicit_function.mono fun z => congr_argₓ Prod.fst
@@ -207,7 +212,7 @@ variable (f f')
 /-- Data used to apply the generic implicit function theorem to the case of a strictly
 differentiable map such that its derivative is surjective and has a complemented kernel. -/
 @[simp]
-def implicit_function_data_of_complemented (hf : HasStrictFderivAt f f' a) (hf' : f'.range = ⊤)
+def implicitFunctionDataOfComplemented (hf : HasStrictFderivAt f f' a) (hf' : f'.range = ⊤)
     (hker : f'.ker.ClosedComplemented) : ImplicitFunctionData 𝕜 E F f'.ker where
   leftFun := f
   leftDeriv := f'
@@ -222,12 +227,12 @@ def implicit_function_data_of_complemented (hf : HasStrictFderivAt f f' a) (hf' 
 
 /-- A local homeomorphism between `E` and `F × f'.ker` sending level surfaces of `f`
 to vertical subspaces. -/
-def implicit_to_local_homeomorph_of_complemented (hf : HasStrictFderivAt f f' a) (hf' : f'.range = ⊤)
+def implicitToLocalHomeomorphOfComplemented (hf : HasStrictFderivAt f f' a) (hf' : f'.range = ⊤)
     (hker : f'.ker.ClosedComplemented) : LocalHomeomorph E (F × f'.ker) :=
   (implicitFunctionDataOfComplemented f f' hf hf' hker).toLocalHomeomorph
 
 /-- Implicit function `g` defined by `f (g z y) = z`. -/
-def implicit_function_of_complemented (hf : HasStrictFderivAt f f' a) (hf' : f'.range = ⊤)
+def implicitFunctionOfComplemented (hf : HasStrictFderivAt f f' a) (hf' : f'.range = ⊤)
     (hker : f'.ker.ClosedComplemented) : F → f'.ker → E :=
   (implicitFunctionDataOfComplemented f f' hf hf' hker).implicitFunction
 
@@ -272,7 +277,7 @@ theorem map_implicit_function_of_complemented_eq (hf : HasStrictFderivAt f f' a)
     ∀ᶠ p : F × f'.ker in 𝓝 (f a, 0), f (hf.implicitFunctionOfComplemented f f' hf' hker p.1 p.2) = p.1 :=
   ((hf.implicitToLocalHomeomorphOfComplemented f f' hf' hker).eventually_right_inverse <|
         hf.mem_implicit_to_local_homeomorph_of_complemented_target hf' hker).mono
-    fun ⟨z, y⟩ h => congr_argₓ Prod.fst h
+    fun h => congr_argₓ Prod.fst h
 
 /-- Any point in some neighborhood of `a` can be represented as `implicit_function`
 of some point. -/
@@ -329,13 +334,12 @@ variable {𝕜 : Type _} [NondiscreteNormedField 𝕜] [CompleteSpace 𝕜] {E :
 
 /-- Given a map `f : E → F` to a finite dimensional space with a surjective derivative `f'`,
 returns a local homeomorphism between `E` and `F × ker f'`. -/
-def implicit_to_local_homeomorph (hf : HasStrictFderivAt f f' a) (hf' : f'.range = ⊤) :
-    LocalHomeomorph E (F × f'.ker) :=
+def implicitToLocalHomeomorph (hf : HasStrictFderivAt f f' a) (hf' : f'.range = ⊤) : LocalHomeomorph E (F × f'.ker) :=
   have := FiniteDimensional.complete 𝕜 F
   hf.implicit_to_local_homeomorph_of_complemented f f' hf' f'.ker_closed_complemented_of_finite_dimensional_range
 
 /-- Implicit function `g` defined by `f (g z y) = z`. -/
-def implicit_function (hf : HasStrictFderivAt f f' a) (hf' : f'.range = ⊤) : F → f'.ker → E :=
+def implicitFunction (hf : HasStrictFderivAt f f' a) (hf' : f'.range = ⊤) : F → f'.ker → E :=
   Function.curry <| (hf.implicitToLocalHomeomorph f f' hf').symm
 
 variable {f f'}

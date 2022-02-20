@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Anne Baanen. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Anne Baanen
+-/
 import Mathbin.Tactic.Core
 
 /-!
@@ -46,6 +51,7 @@ unsafe def simp_rw (q : parse rw_rules) (l : parse location) : tactic Unit :=
     save_info rule
     simp none none tt [simp_arg] [] l
 
+-- equivalent to `simp only [rule] at l`
 add_tactic_doc
   { Name := "simp_rw", category := DocCategory.tactic, declNames := [`tactic.interactive.simp_rw],
     tags := ["simplification"] }

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Kyle Miller. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Kyle Miller
+-/
 import Mathbin.Combinatorics.SimpleGraph.Basic
 import Mathbin.Algebra.BigOperators.Basic
 import Mathbin.Data.Nat.Parity
@@ -45,12 +50,12 @@ variable {V : Type u} (G : SimpleGraph V)
 
 /-- A dart is a directed edge, consisting of an ordered pair of adjacent vertices. -/
 @[ext]
-structure dart where
+structure Dart where
   (fst snd : V)
   is_adj : G.Adj fst snd
   deriving DecidableEq
 
-instance dart.fintype [Fintype V] [DecidableRel G.Adj] : Fintype G.Dart :=
+instance Dart.fintype [Fintype V] [DecidableRel G.Adj] : Fintype G.Dart :=
   Fintype.ofEquiv (Σ v, G.NeighborSet v)
     { toFun := fun s => ⟨s.fst, s.snd, s.snd.property⟩, invFun := fun d => ⟨d.fst, d.snd, d.is_adj⟩,
       left_inv := fun s => by
@@ -61,30 +66,30 @@ instance dart.fintype [Fintype V] [DecidableRel G.Adj] : Fintype G.Dart :=
 variable {G}
 
 /-- The edge associated to the dart. -/
-def dart.edge (d : G.Dart) : Sym2 V :=
+def Dart.edge (d : G.Dart) : Sym2 V :=
   ⟦(d.fst, d.snd)⟧
 
 @[simp]
-theorem dart.edge_mem (d : G.Dart) : d.edge ∈ G.EdgeSet :=
+theorem Dart.edge_mem (d : G.Dart) : d.edge ∈ G.EdgeSet :=
   d.is_adj
 
 /-- The dart with reversed orientation from a given dart. -/
-def dart.rev (d : G.Dart) : G.Dart :=
+def Dart.rev (d : G.Dart) : G.Dart :=
   ⟨d.snd, d.fst, G.symm d.is_adj⟩
 
 @[simp]
-theorem dart.rev_edge (d : G.Dart) : d.rev.edge = d.edge :=
+theorem Dart.rev_edge (d : G.Dart) : d.rev.edge = d.edge :=
   Sym2.eq_swap
 
 @[simp]
-theorem dart.rev_rev (d : G.Dart) : d.rev.rev = d :=
+theorem Dart.rev_rev (d : G.Dart) : d.rev.rev = d :=
   Dart.ext _ _ rfl rfl
 
 @[simp]
-theorem dart.rev_involutive : Function.Involutive (Dart.rev : G.Dart → G.Dart) :=
+theorem Dart.rev_involutive : Function.Involutive (Dart.rev : G.Dart → G.Dart) :=
   dart.rev_rev
 
-theorem dart.rev_ne (d : G.Dart) : d.rev ≠ d := by
+theorem Dart.rev_ne (d : G.Dart) : d.rev ≠ d := by
   cases' d with f s h
   simp only [dart.rev, not_and, Ne.def]
   rintro rfl
@@ -100,14 +105,14 @@ variable (G)
 
 /-- For a given vertex `v`, this is the bijective map from the neighbor set at `v`
 to the darts `d` with `d.fst = v`. --/
-def dart_of_neighbor_set (v : V) (w : G.NeighborSet v) : G.Dart :=
+def dartOfNeighborSet (v : V) (w : G.NeighborSet v) : G.Dart :=
   ⟨v, w, w.property⟩
 
 theorem dart_of_neighbor_set_injective (v : V) : Function.Injective (G.dartOfNeighborSet v) := fun e₁ e₂ h => by
   injection h with h₁ h₂
   exact Subtype.ext h₂
 
-instance dart.inhabited [Inhabited V] [Inhabited (G.NeighborSet default)] : Inhabited G.Dart :=
+instance Dart.inhabited [Inhabited V] [Inhabited (G.NeighborSet default)] : Inhabited G.Dart :=
   ⟨G.dartOfNeighborSet default default⟩
 
 section DegreeSum
@@ -144,7 +149,7 @@ theorem dart_card_eq_sum_degrees : Fintype.card G.Dart = ∑ v, G.degree v := by
 
 variable {G} [DecidableEq V]
 
-theorem dart.edge_fiber (d : G.Dart) : (univ.filter fun d' : G.Dart => d'.edge = d.edge) = {d, d.rev} :=
+theorem Dart.edge_fiber (d : G.Dart) : (univ.filter fun d' : G.Dart => d'.edge = d.edge) = {d, d.rev} :=
   Finset.ext fun d' => by
     simpa using dart_edge_eq_iff d' d
 

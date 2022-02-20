@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison
+-/
 import Mathbin.Algebra.Homology.Homology
 
 /-!
@@ -76,7 +81,7 @@ def single (j : ι) : V ⥤ HomologicalComplex V c where
 /-- The object in degree `j` of `(single V c h).obj A` is just `A`.
 -/
 @[simps]
-def single_obj_X_self (j : ι) (A : V) : ((single V c j).obj A).x j ≅ A :=
+def singleObjXSelf (j : ι) (A : V) : ((single V c j).obj A).x j ≅ A :=
   eqToIso
     (by
       simp )
@@ -200,7 +205,7 @@ variable [HasEqualizers V] [HasCokernels V] [HasImages V] [HasImageMaps V]
 /-- Sending objects to chain complexes supported at `0` then taking `0`-th homology
 is the same as doing nothing.
 -/
-noncomputable def homology_functor_0_single₀ : single₀ V ⋙ homologyFunctor V _ 0 ≅ 𝟭 V :=
+noncomputable def homologyFunctor0Single₀ : single₀ V ⋙ homologyFunctor V _ 0 ≅ 𝟭 V :=
   NatIso.ofComponents
     (fun X =>
       homology.congr _ _
@@ -217,7 +222,7 @@ noncomputable def homology_functor_0_single₀ : single₀ V ⋙ homologyFunctor
 /-- Sending objects to chain complexes supported at `0` then taking `(n+1)`-st homology
 is the same as the zero functor.
 -/
-noncomputable def homology_functor_succ_single₀ (n : ℕ) : single₀ V ⋙ homologyFunctor V _ (n + 1) ≅ 0 :=
+noncomputable def homologyFunctorSuccSingle₀ (n : ℕ) : single₀ V ⋙ homologyFunctor V _ (n + 1) ≅ 0 :=
   NatIso.ofComponents
     (fun X =>
       homology.congr _ _
@@ -237,8 +242,7 @@ variable {V}
 to a single object chain complex with `X` concentrated in degree 0
 are the same as morphisms `f : C.X 0 ⟶ X` such that `C.d 1 0 ≫ f = 0`.
 -/
-def to_single₀_equiv (C : ChainComplex V ℕ) (X : V) :
-    (C ⟶ (single₀ V).obj X) ≃ { f : C.x 0 ⟶ X // C.d 1 0 ≫ f = 0 } where
+def toSingle₀Equiv (C : ChainComplex V ℕ) (X : V) : (C ⟶ (single₀ V).obj X) ≃ { f : C.x 0 ⟶ X // C.d 1 0 ≫ f = 0 } where
   toFun := fun f =>
     ⟨f.f 0, by
       rw [← f.comm 1 0]
@@ -271,7 +275,7 @@ def to_single₀_equiv (C : ChainComplex V ℕ) (X : V) :
 variable (V)
 
 /-- `single₀` is the same as `single V _ 0`. -/
-def single₀_iso_single : single₀ V ≅ single V _ 0 :=
+def single₀IsoSingle : single₀ V ≅ single V _ 0 :=
   NatIso.ofComponents
     (fun X =>
       { Hom :=
@@ -383,7 +387,7 @@ variable [HasEqualizers V] [HasCokernels V] [HasImages V] [HasImageMaps V]
 /-- Sending objects to cochain complexes supported at `0` then taking `0`-th homology
 is the same as doing nothing.
 -/
-noncomputable def homology_functor_0_single₀ : single₀ V ⋙ homologyFunctor V _ 0 ≅ 𝟭 V :=
+noncomputable def homologyFunctor0Single₀ : single₀ V ⋙ homologyFunctor V _ 0 ≅ 𝟭 V :=
   NatIso.ofComponents
     (fun X =>
       homology.congr _ _
@@ -400,7 +404,7 @@ noncomputable def homology_functor_0_single₀ : single₀ V ⋙ homologyFunctor
 /-- Sending objects to cochain complexes supported at `0` then taking `(n+1)`-st homology
 is the same as the zero functor.
 -/
-noncomputable def homology_functor_succ_single₀ (n : ℕ) : single₀ V ⋙ homologyFunctor V _ (n + 1) ≅ 0 :=
+noncomputable def homologyFunctorSuccSingle₀ (n : ℕ) : single₀ V ⋙ homologyFunctor V _ (n + 1) ≅ 0 :=
   NatIso.ofComponents
     (fun X =>
       homology.congr _ _
@@ -420,7 +424,7 @@ variable {V}
 to a `ℕ`-indexed cochain complex `C`
 are the same as morphisms `f : X ⟶ C.X 0` such that `f ≫ C.d 0 1 = 0`.
 -/
-def from_single₀_equiv (C : CochainComplex V ℕ) (X : V) :
+def fromSingle₀Equiv (C : CochainComplex V ℕ) (X : V) :
     ((single₀ V).obj X ⟶ C) ≃ { f : X ⟶ C.x 0 // f ≫ C.d 0 1 = 0 } where
   toFun := fun f =>
     ⟨f.f 0, by
@@ -457,7 +461,7 @@ def from_single₀_equiv (C : CochainComplex V ℕ) (X : V) :
 variable (V)
 
 /-- `single₀` is the same as `single V _ 0`. -/
-def single₀_iso_single : single₀ V ≅ single V _ 0 :=
+def single₀IsoSingle : single₀ V ≅ single V _ 0 :=
   NatIso.ofComponents
     (fun X =>
       { Hom :=

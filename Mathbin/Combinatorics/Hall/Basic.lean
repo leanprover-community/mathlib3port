@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Alena Gusakov, Bhavik Mehta, Kyle Miller. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Alena Gusakov, Bhavik Mehta, Kyle Miller
+-/
 import Mathbin.Combinatorics.Hall.Finite
 import Mathbin.Topology.Category.Top.Limits
 
@@ -77,6 +82,7 @@ theorem HallMatchingsOn.nonempty {ι : Type u} {α : Type v} [DecidableEq α] (t
 
 /-- This is the `hall_matchings_on` sets assembled into a directed system.
 -/
+-- TODO: This takes a long time to elaborate for an unknown reason.
 def hallMatchingsFunctor {ι : Type u} {α : Type v} (t : ι → Finset α) : Finset ιᵒᵖ ⥤ Type max u v where
   obj := fun ι' => HallMatchingsOn t ι'.unop
   map := fun ι' ι'' g f => HallMatchingsOn.restrict t (CategoryTheory.le_of_hom g.unop) f
@@ -111,6 +117,7 @@ theorem Finset.all_card_le_bUnion_card_iff_exists_injective {ι : Type u} {α : 
     (∀ s : Finset ι, s.card ≤ (s.bUnion t).card) ↔ ∃ f : ι → α, Function.Injective f ∧ ∀ x, f x ∈ t x := by
   constructor
   · intro h
+    -- Set up the functor
     have : ∀ ι' : Finset ιᵒᵖ, Nonempty ((hallMatchingsFunctor t).obj ι') := fun ι' =>
       HallMatchingsOn.nonempty t h ι'.unop
     classical
@@ -118,14 +125,18 @@ theorem Finset.all_card_le_bUnion_card_iff_exists_injective {ι : Type u} {α : 
       intro ι'
       rw [hallMatchingsFunctor]
       infer_instance
+    -- Apply the compactness argument
     obtain ⟨u, hu⟩ := nonempty_sections_of_fintype_inverse_system (hallMatchingsFunctor t)
+    -- Interpret the resulting section of the inverse limit
     refine' ⟨_, _, _⟩
-    · exact fun i =>
+    · -- Build the matching function from the section
+      exact fun i =>
         (u (Opposite.op ({i} : Finset ι))).val
           ⟨i, by
             simp only [Opposite.unop_op, mem_singleton]⟩
       
-    · intro i i'
+    · -- Show that it is injective
+      intro i i'
       have subi : ({i} : Finset ι) ⊆ {i, i'} := by
         simp
       have subi' : ({i'} : Finset ι) ⊆ {i, i'} := by
@@ -135,11 +146,13 @@ theorem Finset.all_card_le_bUnion_card_iff_exists_injective {ι : Type u} {α : 
       let uii' := u (Opposite.op ({i, i'} : Finset ι))
       exact fun h => subtype.mk_eq_mk.mp (uii'.property.1 h)
       
-    · intro i
+    · -- Show that it maps each index to the corresponding finite set
+      intro i
       apply (u (Opposite.op ({i} : Finset ι))).property.2
       
     
-  · rintro ⟨f, hf₁, hf₂⟩ s
+  · -- The reverse direction is a straightforward cardinality argument
+    rintro ⟨f, hf₁, hf₂⟩ s
     rw [← Finset.card_image_of_injective s hf₁]
     apply Finset.card_le_of_subset
     intro
@@ -190,6 +203,7 @@ of the relation) iff every subset of `k` terms of `α` is related to at least `k
 It is like `fintype.all_card_le_rel_image_card_iff_exists_injective` but uses `finset.filter`
 rather than `rel.image`.
 -/
+-- TODO: decidable_pred makes Yael sad. When an appropriate decidable_rel-like exists, fix it.
 theorem Fintype.all_card_le_filter_rel_iff_exists_injective {α : Type u} {β : Type v} [Fintype β] (r : α → β → Prop)
     [∀ a, DecidablePred (r a)] :
     (∀ A : Finset α, A.card ≤ (univ.filter fun b : β => ∃ a ∈ A, r a b).card) ↔

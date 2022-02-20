@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Zhouhang Zhou. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Zhouhang Zhou
+-/
 import Mathbin.Algebra.Pointwise
 import Mathbin.Order.Filter.Basic
 
@@ -67,7 +72,7 @@ protected theorem mul_le_mul [Monoidₓ α] {f₁ f₂ g₁ g₂ : Filter α} (h
   fun _ ⟨s, t, hs, ht, hst⟩ => ⟨s, t, hf hs, hg ht, hst⟩
 
 @[to_additive]
-theorem ne_bot.mul [Monoidₓ α] {f g : Filter α} : NeBot f → NeBot g → NeBot (f * g) := by
+theorem NeBot.mul [Monoidₓ α] {f g : Filter α} : NeBot f → NeBot g → NeBot (f * g) := by
   simp only [forall_mem_nonempty_iff_ne_bot.symm]
   rintro hf hg s ⟨a, b, ha, hb, ab⟩
   exact ((hf a ha).mul (hg b hb)).mono ab
@@ -88,7 +93,7 @@ protected theorem mul_assoc [Monoidₓ α] (f g h : Filter α) : f * g * h = f *
     
 
 @[to_additive]
-protected theorem one_mulₓ [Monoidₓ α] (f : Filter α) : 1 * f = f := by
+protected theorem one_mul [Monoidₓ α] (f : Filter α) : 1 * f = f := by
   ext s
   constructor
   · rintro ⟨t₁, t₂, ht₁, ht₂, t₁t₂⟩
@@ -105,7 +110,7 @@ protected theorem one_mulₓ [Monoidₓ α] (f : Filter α) : 1 * f = f := by
     
 
 @[to_additive]
-protected theorem mul_oneₓ [Monoidₓ α] (f : Filter α) : f * 1 = f := by
+protected theorem mul_one [Monoidₓ α] (f : Filter α) : f * 1 = f := by
   ext s
   constructor
   · rintro ⟨t₁, t₂, ht₁, ht₂, t₁t₂⟩
@@ -163,11 +168,12 @@ protected theorem map_one : map φ (1 : Filter α) = 1 :=
 `filter α →* filter β` induced by `map φ`. -/
 @[to_additive
       "If `φ : α →+ β` then `map_add_monoid_hom φ` is the monoid homomorphism\n`filter α →+ filter β` induced by `map φ`."]
-def map_monoid_hom : Filter α →* Filter β where
+def mapMonoidHom : Filter α →* Filter β where
   toFun := map φ
   map_one' := Filter.map_one φ
   map_mul' := fun _ _ => Filter.map_mul φ.toMulHom
 
+-- The other direction does not hold in general.
 @[to_additive]
 theorem comap_mul_comap_le {f₁ f₂ : Filter β} : comap m f₁ * comap m f₂ ≤ comap m (f₁ * f₂) := by
   rintro s ⟨t, ⟨t₁, t₂, ht₁, ht₂, t₁t₂⟩, mt⟩
@@ -176,7 +182,7 @@ theorem comap_mul_comap_le {f₁ f₂ : Filter β} : comap m f₁ * comap m f₂
   exact subset.trans (preimage_mul_preimage_subset _) this
 
 @[to_additive]
-theorem tendsto.mul_mul {f₁ g₁ : Filter α} {f₂ g₂ : Filter β} :
+theorem Tendsto.mul_mul {f₁ g₁ : Filter α} {f₂ g₂ : Filter β} :
     Tendsto m f₁ f₂ → Tendsto m g₁ g₂ → Tendsto m (f₁ * g₁) (f₂ * g₂) := fun hf hg => by
   rw [tendsto, Filter.map_mul m]
   exact Filter.mul_le_mul hf hg

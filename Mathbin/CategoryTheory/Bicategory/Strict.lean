@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2022 Yuma Mizuno. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yuma Mizuno
+-/
 import Mathbin.CategoryTheory.EqToHom
 import Mathbin.CategoryTheory.Bicategory.Basic
 
@@ -28,7 +33,7 @@ variable (B : Type u) [Bicategory.{w, v} B]
 /-- A bicategory is called `strict` if the left unitors, the right unitors, and the associators are
 isomorphisms given by equalities.
 -/
-class bicategory.strict : Prop where
+class Bicategory.Strict : Prop where
   id_comp' : ∀ {a b : B} f : a ⟶ b, 𝟙 a ≫ f = f := by
     run_tac
       obviously
@@ -64,7 +69,8 @@ attribute [simp]
   bicategory.strict.id_comp bicategory.strict.left_unitor_eq_to_iso bicategory.strict.comp_id bicategory.strict.right_unitor_eq_to_iso bicategory.strict.assoc bicategory.strict.associator_eq_to_iso
 
 /-- Category structure on a strict bicategory -/
-instance (priority := 100) strict_bicategory.category [Bicategory.Strict B] : Category B where
+-- see Note [lower instance priority]
+instance (priority := 100) StrictBicategory.category [Bicategory.Strict B] : Category B where
   id_comp' := fun a b => Bicategory.Strict.id_comp
   comp_id' := fun a b => Bicategory.Strict.comp_id
   assoc' := fun a b c d => Bicategory.Strict.assoc

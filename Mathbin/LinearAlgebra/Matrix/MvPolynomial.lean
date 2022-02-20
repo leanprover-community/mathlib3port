@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Eric Wieser. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Eric Wieser
+-/
 import Mathbin.LinearAlgebra.Matrix.Determinant
 import Mathbin.Data.MvPolynomial.Basic
 import Mathbin.Data.MvPolynomial.CommRing
@@ -23,7 +28,7 @@ variable (m n R)
 
 /-- The matrix with variable `X (i,j)` at location `(i,j)`. -/
 @[simp]
-noncomputable def mv_polynomial_X [CommSemiringₓ R] : Matrix m n (MvPolynomial (m × n) R)
+noncomputable def mvPolynomialX [CommSemiringₓ R] : Matrix m n (MvPolynomial (m × n) R)
   | i, j => MvPolynomial.x (i, j)
 
 variable {m n R S}

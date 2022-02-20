@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Patrick Massot. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Patrick Massot, Johannes Hölzl
+-/
 import Mathbin.Order.LiminfLimsup
 import Mathbin.Topology.Algebra.UniformGroup
 import Mathbin.Topology.MetricSpace.Algebra
@@ -51,6 +56,7 @@ class NormedGroup (E : Type _) extends HasNorm E, AddCommGroupₓ E, MetricSpace
   dist_eq : ∀ x y : E, dist x y = norm (x - y)
 
 /-- A normed group is a seminormed group. -/
+-- see Note [lower instance priority]
 instance (priority := 100) NormedGroup.toSemiNormedGroup [h : NormedGroup E] : SemiNormedGroup E :=
   { h with }
 
@@ -253,6 +259,7 @@ theorem norm_sub_norm_le (g h : E) : ∥g∥ - ∥h∥ ≤ ∥g - h∥ :=
 theorem dist_norm_norm_le (g h : E) : dist ∥g∥ ∥h∥ ≤ ∥g - h∥ :=
   abs_norm_sub_norm_le g h
 
+/-- The direct path from `0` to `v` is shorter than the path with `u` inserted in between. -/
 theorem norm_le_insert (u v : E) : ∥v∥ ≤ ∥u∥ + ∥u - v∥ :=
   calc
     ∥v∥ = ∥u - (u - v)∥ := by
@@ -382,7 +389,9 @@ theorem coe_neg_sphere {r : ℝ} (v : Sphere (0 : E) r) : ((-v : Sphere _ _) : E
 namespace Isometric
 
 /-- Addition `y ↦ y + x` as an `isometry`. -/
-protected def add_right (x : E) : E ≃ᵢ E :=
+-- TODO This material is superseded by similar constructions such as
+-- `affine_isometry_equiv.const_vadd`; deduplicate
+protected def addRight (x : E) : E ≃ᵢ E :=
   { Equivₓ.addRight x with isometry_to_fun := isometry_emetric_iff_metric.2 fun y z => dist_add_right _ _ _ }
 
 @[simp]
@@ -401,7 +410,7 @@ theorem add_right_symm (x : E) : (Isometric.addRight x).symm = Isometric.addRigh
   ext fun y => rfl
 
 /-- Addition `y ↦ x + y` as an `isometry`. -/
-protected def add_left (x : E) : E ≃ᵢ E where
+protected def addLeft (x : E) : E ≃ᵢ E where
   isometry_to_fun := isometry_emetric_iff_metric.2 fun y z => dist_add_left _ _ _
   toEquiv := Equivₓ.addLeft x
 
@@ -570,6 +579,7 @@ export HasNnnorm (nnnorm)
 
 notation "∥" e "∥₊" => nnnorm e
 
+-- see Note [lower instance priority]
 instance (priority := 100) SemiNormedGroup.toHasNnnorm : HasNnnorm E :=
   ⟨fun a => ⟨norm a, norm_nonneg a⟩⟩
 
@@ -898,17 +908,21 @@ theorem eventually_ne_of_tendsto_norm_at_top {l : Filter α} {f : α → E} (h :
   subst x
   exact not_le_of_lt zero_lt_one (add_le_iff_nonpos_left.1 hy)
 
+-- see Note [lower instance priority]
 instance (priority := 100) SemiNormedGroup.has_lipschitz_add : HasLipschitzAdd E where
   lipschitz_add := ⟨2, LipschitzWith.prod_fst.add LipschitzWith.prod_snd⟩
 
 /-- A seminormed group is a uniform additive group, i.e., addition and subtraction are uniformly
 continuous. -/
+-- see Note [lower instance priority]
 instance (priority := 100) normed_uniform_group : UniformAddGroup E :=
   ⟨(LipschitzWith.prod_fst.sub LipschitzWith.prod_snd).UniformContinuous⟩
 
+-- see Note [lower instance priority]
 instance (priority := 100) normed_top_group : TopologicalAddGroup E := by
   infer_instance
 
+-- short-circuit type class inference
 theorem Nat.norm_cast_le [One E] : ∀ n : ℕ, ∥(n : E)∥ ≤ n * ∥(1 : E)∥
   | 0 => by
     simp

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Mario Carneiro. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Mario Carneiro
+-/
 import Mathbin.SetTheory.OrdinalArithmetic
 
 /-!
@@ -25,6 +30,7 @@ open_locale Ordinal
   For this to be valid Cantor normal form, we must have the exponents
   decrease to the right, but we can't state this condition until we've
   defined `repr`, so it is a separate definition `NF`. -/
+-- get notation for `ω`
 inductive Onote : Type
   | zero : Onote
   | oadd : Onote → ℕ+ → Onote → Onote
@@ -53,12 +59,12 @@ def omega : Onote :=
 
 /-- The ordinal denoted by a notation -/
 @[simp]
-noncomputable def reprₓ : Onote → Ordinal.{0}
+noncomputable def repr : Onote → Ordinal.{0}
   | 0 => 0
   | oadd e n a => ω ^ reprₓ e * n + reprₓ a
 
 /-- Auxiliary definition to print an ordinal notation -/
-def to_string_aux1 (e : Onote) (n : ℕ) (s : Stringₓ) : Stringₓ :=
+def toStringAux1 (e : Onote) (n : ℕ) (s : Stringₓ) : Stringₓ :=
   if e = 0 then toString n else (if e = 1 then "ω" else "ω^(" ++ s ++ ")") ++ if n = 1 then "" else "*" ++ toString n
 
 /-- Print an ordinal notation -/
@@ -93,7 +99,7 @@ theorem le_def {x y : Onote} : x ≤ y ↔ repr x ≤ repr y :=
 
 /-- Convert a `nat` into an ordinal -/
 @[simp]
-def of_nat : ℕ → Onote
+def ofNat : ℕ → Onote
   | 0 => 0
   | Nat.succ n => oadd 0 n.succPnat 0
 
@@ -156,7 +162,7 @@ theorem zero_lt_one : (0 : Onote) < 1 := by
 
 /-- `NF_below o b` says that `o` is a normal form ordinal notation
   satisfying `repr o < ω ^ b`. -/
-inductive NF_below : Onote → Ordinal.{0} → Prop
+inductive NFBelow : Onote → Ordinal.{0} → Prop
   | zero {b} : NF_below 0 b
   | oadd' {e n a eb b} : NF_below e eb → NF_below a (repr e) → repr e < b → NF_below (oadd e n a) b
 
@@ -178,16 +184,16 @@ attribute [pp_nodot] NF
 instance NF.zero : NF 0 :=
   ⟨⟨0, NFBelow.zero⟩⟩
 
-theorem NF_below.oadd {e n a b} : NF e → NFBelow a (repr e) → repr e < b → NFBelow (oadd e n a) b
+theorem NFBelow.oadd {e n a b} : NF e → NFBelow a (repr e) → repr e < b → NFBelow (oadd e n a) b
   | ⟨⟨eb, h⟩⟩ => NFBelow.oadd' h
 
-theorem NF_below.fst {e n a b} (h : NFBelow (oadd e n a) b) : NF e := by
+theorem NFBelow.fst {e n a b} (h : NFBelow (oadd e n a) b) : NF e := by
   cases' h with _ _ _ _ eb _ h₁ h₂ h₃ <;> exact ⟨⟨_, h₁⟩⟩
 
 theorem NF.fst {e n a} : NF (oadd e n a) → NF e
   | ⟨⟨b, h⟩⟩ => h.fst
 
-theorem NF_below.snd {e n a b} (h : NFBelow (oadd e n a) b) : NFBelow a (repr e) := by
+theorem NFBelow.snd {e n a b} (h : NFBelow (oadd e n a) b) : NFBelow a (repr e) := by
   cases' h with _ _ _ _ eb _ h₁ h₂ h₃ <;> exact h₂
 
 theorem NF.snd' {e n a} : NF (oadd e n a) → NFBelow a (repr e)
@@ -202,7 +208,7 @@ theorem NF.oadd {e a} (h₁ : NF e) n (h₂ : NFBelow a (repr e)) : NF (oadd e n
 instance NF.oadd_zero e n [h : NF e] : NF (oadd e n 0) :=
   h.oadd _ NFBelow.zero
 
-theorem NF_below.lt {e n a b} (h : NFBelow (oadd e n a) b) : repr e < b := by
+theorem NFBelow.lt {e n a b} (h : NFBelow (oadd e n a) b) : repr e < b := by
   cases' h with _ _ _ _ eb _ h₁ h₂ h₃ <;> exact h₃
 
 theorem NF_below_zero : ∀ {o}, NFBelow o 0 ↔ o = 0
@@ -212,7 +218,7 @@ theorem NF_below_zero : ∀ {o}, NFBelow o 0 ↔ o = 0
 theorem NF.zero_of_zero {e n a} (h : NF (oadd e n a)) (e0 : e = 0) : a = 0 := by
   simpa [e0, NF_below_zero] using h.snd'
 
-theorem NF_below.repr_lt {o b} (h : NFBelow o b) : repr o < ω ^ b := by
+theorem NFBelow.repr_lt {o b} (h : NFBelow o b) : repr o < ω ^ b := by
   induction' h with _ e n a eb b h₁ h₂ h₃ _ IH
   · exact opow_pos _ omega_pos
     
@@ -224,7 +230,7 @@ theorem NF_below.repr_lt {o b} (h : NFBelow o b) : repr o < ω ^ b := by
     exact opow_le_opow_right omega_pos (Ordinal.succ_le.2 h₃)
     
 
-theorem NF_below.mono {o b₁ b₂} (bb : b₁ ≤ b₂) (h : NFBelow o b₁) : NFBelow o b₂ := by
+theorem NFBelow.mono {o b₁ b₂} (bb : b₁ ≤ b₂) (h : NFBelow o b₁) : NFBelow o b₂ := by
   induction' h with _ e n a eb b h₁ h₂ h₃ _ IH <;> constructor
   exacts[h₁, h₂, lt_of_lt_of_leₓ h₃ bb]
 
@@ -319,11 +325,11 @@ theorem NF.of_dvd_omega {e n a} (h : NF (oadd e n a)) : ω ∣ repr (oadd e n a)
 /-- `top_below b o` asserts that the largest exponent in `o`, if
   it exists, is less than `b`. This is an auxiliary definition
   for decidability of `NF`. -/
-def top_below b : Onote → Prop
+def TopBelow b : Onote → Prop
   | 0 => True
   | oadd e n a => cmp e b = Ordering.lt
 
-instance decidable_top_below : DecidableRel TopBelow := by
+instance decidableTopBelow : DecidableRel TopBelow := by
   intro b o <;> cases o <;> delta' top_below <;> infer_instance
 
 theorem NF_below_iff_top_below {b} [NF b] : ∀ {o}, NFBelow o (repr b) ↔ NF o ∧ TopBelow b o
@@ -332,7 +338,7 @@ theorem NF_below_iff_top_below {b} [NF b] : ∀ {o}, NFBelow o (repr b) ↔ NF o
     ⟨fun h => ⟨⟨⟨_, h⟩⟩, (@cmp_compares _ b h.fst _).eq_lt.2 h.lt⟩, fun ⟨h₁, h₂⟩ =>
       h₁.below_of_lt <| (@cmp_compares _ b h₁.fst _).eq_lt.1 h₂⟩
 
-instance decidable_NF : DecidablePred NF
+instance decidableNF : DecidablePred NF
   | 0 => isTrue NF.zero
   | oadd e n a => by
     have := decidable_NF e
@@ -359,7 +365,7 @@ instance : Add Onote :=
   ⟨add⟩
 
 @[simp]
-theorem zero_addₓ (o : Onote) : 0 + o = o :=
+theorem zero_add (o : Onote) : 0 + o = o :=
   rfl
 
 theorem oadd_add e n a o : oadd e n a + o = Add._match1 e n (a + o) :=
@@ -412,10 +418,10 @@ theorem repr_add : ∀ o₁ o₂ [NF o₁] [NF o₂], repr (o₁ + o₂) = repr 
   | oadd e n a, o, h₁, h₂ => by
     have := h₁.snd
     have h' := repr_add a o
-    conv at h' in _ + o => simp [· + ·]
+    conv at h' in _ + o => simp [(· + ·)]
     have nf := Onote.add_NF a o
-    conv at nf in _ + o => simp [· + ·]
-    conv in _ + o => simp [· + ·, add]
+    conv at nf in _ + o => simp [(· + ·)]
+    conv in _ + o => simp [(· + ·), add]
     cases' add a o with e' n' a' <;> simp [add, h'.symm, add_assocₓ]
     have := h₁.fst
     have := nf.fst
@@ -560,7 +566,7 @@ theorem repr_mul : ∀ o₁ o₂ [NF o₁] [NF o₂], repr (o₁ * o₂) = repr 
   | oadd e₁ n₁ a₁, 0, h₁, h₂ => (Ordinal.mul_zero _).symm
   | oadd e₁ n₁ a₁, oadd e₂ n₂ a₂, h₁, h₂ => by
     have IH : reprₓ (mul _ _) = _ := @repr_mul _ _ h₁ h₂.snd
-    conv => lhs simp [· * ·]
+    conv => lhs simp [(· * ·)]
     have ao : reprₓ a₁ + ω ^ reprₓ e₁ * (n₁ : ℕ) = ω ^ reprₓ e₁ * (n₁ : ℕ) := by
       apply add_absorp h₁.snd'.repr_lt
       simpa using (mul_le_mul_iff_left <| opow_pos _ omega_pos).2 (nat_cast_le.2 n₁.2)
@@ -606,14 +612,14 @@ def scale (x : Onote) : Onote → Onote
   | oadd e n a => oadd (x + e) n (scale a)
 
 /-- `mul_nat o n` is the ordinal notation for `o * n`. -/
-def mul_nat : Onote → ℕ → Onote
+def mulNat : Onote → ℕ → Onote
   | 0, m => 0
   | _, 0 => 0
   | oadd e n a, m + 1 => oadd e (n * m.succPnat) a
 
 /-- Auxiliary definition to compute the ordinal notation for the ordinal
 exponentiation in `opow` -/
-def opow_aux (e a0 a : Onote) : ℕ → ℕ → Onote
+def opowAux (e a0 a : Onote) : ℕ → ℕ → Onote
   | _, 0 => 0
   | 0, m + 1 => oadd e m.succPnat 0
   | k + 1, m => scale (e + mulNat a0 k) a + opow_aux k m
@@ -701,7 +707,7 @@ theorem NF_repr_split' : ∀ {o o' m} [NF o], split' o = (o', m) → NF o' ∧ r
 theorem scale_eq_mul x [NF x] : ∀ o [NF o], scale x o = oadd x 1 0 * o
   | 0, h => rfl
   | oadd e n a, h => by
-    simp [· * ·]
+    simp [(· * ·)]
     simp [mul, scale]
     have := h.snd
     by_cases' e0 : e = 0
@@ -712,7 +718,7 @@ theorem scale_eq_mul x [NF x] : ∀ o [NF o], scale x o = oadd x 1 0 * o
             (by
               simp )]
       
-    · simp [e0, scale_eq_mul, · * ·]
+    · simp [e0, scale_eq_mul, (· * ·)]
       
 
 instance NF_scale x [NF x] o [NF o] : NF (scale x o) := by
@@ -984,7 +990,7 @@ def mk (o : Onote) [h : NF o] : Nonote :=
   `nonote` can be used exclusively without reference
   to `ordinal`, but this function allows for correctness
   results to be stated.) -/
-noncomputable def reprₓ (o : Nonote) : Ordinal :=
+noncomputable def repr (o : Nonote) : Ordinal :=
   o.1.repr
 
 instance : HasToString Nonote :=
@@ -1010,10 +1016,10 @@ theorem wf : @WellFounded Nonote (· < ·) :=
   InvImage.wfₓ repr Ordinal.wf
 
 instance : HasWellFounded Nonote :=
-  ⟨· < ·, wf⟩
+  ⟨(· < ·), wf⟩
 
 /-- Convert a natural number to an ordinal notation -/
-def of_nat (n : ℕ) : Nonote :=
+def ofNat (n : ℕ) : Nonote :=
   ⟨ofNat n, ⟨⟨_, NF_below_of_nat _⟩⟩⟩
 
 /-- Compare ordinal notations -/
@@ -1048,7 +1054,7 @@ def oadd (e : Nonote) (n : ℕ+) (a : Nonote) (h : below a e) : Nonote :=
   inductive definition, which can't actually be defined this
   way due to conflicting dependencies. -/
 @[elab_as_eliminator]
-def rec_on {C : Nonote → Sort _} (o : Nonote) (H0 : C 0) (H1 : ∀ e n a h, C e → C a → C (oadd e n a h)) : C o := by
+def recOn {C : Nonote → Sort _} (o : Nonote) (H0 : C 0) (H1 : ∀ e n a h, C e → C a → C (oadd e n a h)) : C o := by
   cases' o with o h
   induction' o with e n a IHe IHa
   · exact H0

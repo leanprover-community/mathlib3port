@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Mario Carneiro. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Mario Carneiro
+-/
 import Mathbin.Algebra.Group.Hom
 import Mathbin.Data.Equiv.Basic
 
@@ -32,11 +37,11 @@ def Multiplicative (α : Type _) :=
 namespace Additive
 
 /-- Reinterpret `x : α` as an element of `additive α`. -/
-def of_mul : α ≃ Additive α :=
+def ofMul : α ≃ Additive α :=
   ⟨fun x => x, fun x => x, fun x => rfl, fun x => rfl⟩
 
 /-- Reinterpret `x : additive α` as an element of `α`. -/
-def to_mul : Additive α ≃ α :=
+def toMul : Additive α ≃ α :=
   ofMul.symm
 
 @[simp]
@@ -52,11 +57,11 @@ end Additive
 namespace Multiplicative
 
 /-- Reinterpret `x : α` as an element of `multiplicative α`. -/
-def of_add : α ≃ Multiplicative α :=
+def ofAdd : α ≃ Multiplicative α :=
   ⟨fun x => x, fun x => x, fun x => rfl, fun x => rfl⟩
 
 /-- Reinterpret `x : multiplicative α` as an element of `α`. -/
-def to_add : Multiplicative α ≃ α :=
+def toAdd : Multiplicative α ≃ α :=
   ofAdd.symm
 
 @[simp]
@@ -175,41 +180,41 @@ theorem to_add_one [Zero α] : (1 : Multiplicative α).toAdd = 0 :=
 
 instance [MulOneClassₓ α] : AddZeroClass (Additive α) where
   zero := 0
-  add := · + ·
+  add := (· + ·)
   zero_add := one_mulₓ
   add_zero := mul_oneₓ
 
 instance [AddZeroClass α] : MulOneClassₓ (Multiplicative α) where
   one := 1
-  mul := · * ·
+  mul := (· * ·)
   one_mul := zero_addₓ
   mul_one := add_zeroₓ
 
 instance [h : Monoidₓ α] : AddMonoidₓ (Additive α) :=
-  { Additive.addZeroClass, Additive.addSemigroup with zero := 0, add := · + ·, nsmul := @Monoidₓ.npow α h,
+  { Additive.addZeroClass, Additive.addSemigroup with zero := 0, add := (· + ·), nsmul := @Monoidₓ.npow α h,
     nsmul_zero' := Monoidₓ.npow_zero', nsmul_succ' := Monoidₓ.npow_succ' }
 
 instance [h : AddMonoidₓ α] : Monoidₓ (Multiplicative α) :=
-  { Multiplicative.mulOneClass, Multiplicative.semigroup with one := 1, mul := · * ·, npow := @AddMonoidₓ.nsmul α h,
+  { Multiplicative.mulOneClass, Multiplicative.semigroup with one := 1, mul := (· * ·), npow := @AddMonoidₓ.nsmul α h,
     npow_zero' := AddMonoidₓ.nsmul_zero', npow_succ' := AddMonoidₓ.nsmul_succ' }
 
 instance [LeftCancelMonoid α] : AddLeftCancelMonoid (Additive α) :=
-  { Additive.addMonoid, Additive.addLeftCancelSemigroup with zero := 0, add := · + · }
+  { Additive.addMonoid, Additive.addLeftCancelSemigroup with zero := 0, add := (· + ·) }
 
 instance [AddLeftCancelMonoid α] : LeftCancelMonoid (Multiplicative α) :=
-  { Multiplicative.monoid, Multiplicative.leftCancelSemigroup with one := 1, mul := · * · }
+  { Multiplicative.monoid, Multiplicative.leftCancelSemigroup with one := 1, mul := (· * ·) }
 
 instance [RightCancelMonoid α] : AddRightCancelMonoid (Additive α) :=
-  { Additive.addMonoid, Additive.addRightCancelSemigroup with zero := 0, add := · + · }
+  { Additive.addMonoid, Additive.addRightCancelSemigroup with zero := 0, add := (· + ·) }
 
 instance [AddRightCancelMonoid α] : RightCancelMonoid (Multiplicative α) :=
-  { Multiplicative.monoid, Multiplicative.rightCancelSemigroup with one := 1, mul := · * · }
+  { Multiplicative.monoid, Multiplicative.rightCancelSemigroup with one := 1, mul := (· * ·) }
 
 instance [CommMonoidₓ α] : AddCommMonoidₓ (Additive α) :=
-  { Additive.addMonoid, Additive.addCommSemigroup with zero := 0, add := · + · }
+  { Additive.addMonoid, Additive.addCommSemigroup with zero := 0, add := (· + ·) }
 
 instance [AddCommMonoidₓ α] : CommMonoidₓ (Multiplicative α) :=
-  { Multiplicative.monoid, Multiplicative.commSemigroup with one := 1, mul := · * · }
+  { Multiplicative.monoid, Multiplicative.commSemigroup with one := 1, mul := (· * ·) }
 
 instance [Inv α] : Neg (Additive α) :=
   ⟨fun x => Multiplicative.ofAdd x.toMul⁻¹⟩

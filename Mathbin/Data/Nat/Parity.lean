@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Jeremy Avigad. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Jeremy Avigad, Benjamin Davidson
+-/
 import Mathbin.Data.Nat.Modeq
 
 /-!
@@ -89,7 +94,7 @@ instance : DecidablePred (Even : ℕ → Prop) := fun n =>
       infer_instance)
     even_iff.symm
 
-instance decidable_pred_odd : DecidablePred (Odd : ℕ → Prop) := fun n =>
+instance decidablePredOdd : DecidablePred (Odd : ℕ → Prop) := fun n =>
   decidableOfDecidableOfIff
     (by
       infer_instance)
@@ -116,13 +121,13 @@ theorem even_add : Even (m + n) ↔ (Even m ↔ Even n) := by
   cases' mod_two_eq_zero_or_one m with h₁ h₁ <;>
     cases' mod_two_eq_zero_or_one n with h₂ h₂ <;> simp [even_iff, h₁, h₂, Nat.add_modₓ] <;> norm_num
 
-theorem even.add_even (hm : Even m) (hn : Even n) : Even (m + n) :=
+theorem Even.add_even (hm : Even m) (hn : Even n) : Even (m + n) :=
   even_add.2 <| iff_of_true hm hn
 
 theorem even_add' : Even (m + n) ↔ (Odd m ↔ Odd n) := by
   rw [even_add, even_iff_not_odd, even_iff_not_odd, not_iff_not]
 
-theorem odd.add_odd (hm : Odd m) (hn : Odd n) : Even (m + n) :=
+theorem Odd.add_odd (hm : Odd m) (hn : Odd n) : Even (m + n) :=
   even_add'.2 <| iff_of_true hm hn
 
 @[simp]
@@ -140,7 +145,7 @@ theorem even_sub (h : n ≤ m) : Even (m - n) ↔ (Even m ↔ Even n) := by
   conv => rhs rw [← tsub_add_cancel_of_le h, even_add]
   by_cases' h : Even n <;> simp [h]
 
-theorem even.sub_even (hm : Even m) (hn : Even n) : Even (m - n) :=
+theorem Even.sub_even (hm : Even m) (hn : Even n) : Even (m - n) :=
   (le_totalₓ n m).elim
     (fun h => by
       simp only [even_sub h, *])
@@ -150,7 +155,7 @@ theorem even.sub_even (hm : Even m) (hn : Even n) : Even (m - n) :=
 theorem even_sub' (h : n ≤ m) : Even (m - n) ↔ (Odd m ↔ Odd n) := by
   rw [even_sub h, even_iff_not_odd, even_iff_not_odd, not_iff_not]
 
-theorem odd.sub_odd (hm : Odd m) (hn : Odd n) : Even (m - n) :=
+theorem Odd.sub_odd (hm : Odd m) (hn : Odd n) : Even (m - n) :=
   (le_totalₓ n m).elim
     (fun h => by
       simp only [even_sub' h, *])
@@ -169,19 +174,19 @@ theorem even_mul : Even (m * n) ↔ Even m ∨ Even n := by
 theorem odd_mul : Odd (m * n) ↔ Odd m ∧ Odd n := by
   simp' [not_or_distrib] with parity_simps
 
-theorem even.mul_left (hm : Even m) n : Even (m * n) :=
+theorem Even.mul_left (hm : Even m) n : Even (m * n) :=
   even_mul.mpr <| Or.inl hm
 
-theorem even.mul_right m (hn : Even n) : Even (m * n) :=
+theorem Even.mul_right m (hn : Even n) : Even (m * n) :=
   even_mul.mpr <| Or.inr hn
 
-theorem odd.mul (hm : Odd m) (hn : Odd n) : Odd (m * n) :=
+theorem Odd.mul (hm : Odd m) (hn : Odd n) : Odd (m * n) :=
   odd_mul.mpr ⟨hm, hn⟩
 
-theorem odd.of_mul_left (h : Odd (m * n)) : Odd m :=
+theorem Odd.of_mul_left (h : Odd (m * n)) : Odd m :=
   (odd_mul.mp h).1
 
-theorem odd.of_mul_right (h : Odd (m * n)) : Odd n :=
+theorem Odd.of_mul_right (h : Odd (m * n)) : Odd n :=
   (odd_mul.mp h).2
 
 /-- If `m` and `n` are natural numbers, then the natural number `m^n` is even
@@ -201,13 +206,13 @@ theorem even_div : Even (m / n) ↔ m % (2 * n) / n = 0 := by
 theorem odd_add : Odd (m + n) ↔ (Odd m ↔ Even n) := by
   rw [odd_iff_not_even, even_add, not_iff, odd_iff_not_even]
 
-theorem odd.add_even (hm : Odd m) (hn : Even n) : Odd (m + n) :=
+theorem Odd.add_even (hm : Odd m) (hn : Even n) : Odd (m + n) :=
   odd_add.2 <| iff_of_true hm hn
 
 theorem odd_add' : Odd (m + n) ↔ (Odd n ↔ Even m) := by
   rw [add_commₓ, odd_add]
 
-theorem even.add_odd (hm : Even m) (hn : Odd n) : Odd (m + n) :=
+theorem Even.add_odd (hm : Even m) (hn : Odd n) : Odd (m + n) :=
   odd_add'.2 <| iff_of_true hn hm
 
 theorem ne_of_odd_add (h : Odd (m + n)) : m ≠ n := fun hnot => by
@@ -217,13 +222,13 @@ theorem ne_of_odd_add (h : Odd (m + n)) : m ≠ n := fun hnot => by
 theorem odd_sub (h : n ≤ m) : Odd (m - n) ↔ (Odd m ↔ Even n) := by
   rw [odd_iff_not_even, even_sub h, not_iff, odd_iff_not_even]
 
-theorem odd.sub_even (h : n ≤ m) (hm : Odd m) (hn : Even n) : Odd (m - n) :=
+theorem Odd.sub_even (h : n ≤ m) (hm : Odd m) (hn : Even n) : Odd (m - n) :=
   (odd_sub h).mpr <| iff_of_true hm hn
 
 theorem odd_sub' (h : n ≤ m) : Odd (m - n) ↔ (Odd n ↔ Even m) := by
   rw [odd_iff_not_even, even_sub h, not_iff, not_iff_comm, odd_iff_not_even]
 
-theorem even.sub_odd (h : n ≤ m) (hm : Even m) (hn : Odd n) : Odd (m - n) :=
+theorem Even.sub_odd (h : n ≤ m) (hm : Even m) (hn : Odd n) : Odd (m - n) :=
   (odd_sub' h).mpr <| iff_of_true hn hm
 
 theorem even_mul_succ_self (n : ℕ) : Even (n * (n + 1)) := by
@@ -285,6 +290,7 @@ theorem one_add_div_two_mul_two_of_odd (h : Odd n) : 1 + n / 2 * 2 = n := by
   convert Nat.div_add_mod' n 2
   rw [odd_iff.mp h]
 
+-- Here are examples of how `parity_simps` can be used with `nat`.
 example (m n : ℕ) (h : Even m) : ¬Even (n + 3) ↔ Even (m ^ 2 + m + n) := by
   simp' [*,
     (by

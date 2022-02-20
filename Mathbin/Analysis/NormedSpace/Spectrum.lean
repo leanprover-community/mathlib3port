@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Jireh Loreaux. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Jireh Loreaux
+-/
 import Mathbin.Algebra.Algebra.Spectrum
 import Mathbin.Analysis.SpecialFunctions.Pow
 import Mathbin.Analysis.Complex.CauchyIntegral
@@ -66,7 +71,7 @@ variable [CompleteSpace A]
 theorem is_open_resolvent_set (a : A) : IsOpen (ρ a) :=
   Units.is_open.Preimage ((algebra_map_isometry 𝕜 A).Continuous.sub continuous_const)
 
-theorem IsClosed (a : A) : IsClosed (σ a) :=
+theorem is_closed (a : A) : IsClosed (σ a) :=
   (is_open_resolvent_set a).is_closed_compl
 
 theorem mem_resolvent_of_norm_lt {a : A} {k : 𝕜} (h : ∥a∥ < ∥k∥) : k ∈ ρ a := by
@@ -89,7 +94,7 @@ theorem subset_closed_ball_norm (a : A) : σ a ⊆ Metric.ClosedBall (0 : 𝕜) 
 theorem is_bounded (a : A) : Metric.Bounded (σ a) :=
   (Metric.bounded_iff_subset_ball 0).mpr ⟨∥a∥, subset_closed_ball_norm a⟩
 
-theorem IsCompact [ProperSpace 𝕜] (a : A) : IsCompact (σ a) :=
+theorem is_compact [ProperSpace 𝕜] (a : A) : IsCompact (σ a) :=
   Metric.is_compact_of_is_closed_bounded (is_closed a) (is_bounded a)
 
 theorem spectral_radius_le_nnnorm (a : A) : spectralRadius 𝕜 a ≤ ∥a∥₊ := by
@@ -103,12 +108,15 @@ variable (𝕜)
 theorem spectral_radius_le_pow_nnnorm_pow_one_div (a : A) (n : ℕ) :
     spectralRadius 𝕜 a ≤ ∥a ^ (n + 1)∥₊ ^ (1 / (n + 1) : ℝ) := by
   refine' bsupr_le fun k hk => _
+  -- apply easy direction of the spectral mapping theorem for polynomials
   have pow_mem : k ^ (n + 1) ∈ σ (a ^ (n + 1)) := by
     simpa only [one_mulₓ, Algebra.algebra_map_eq_smul_one, one_smul, aeval_monomial, one_mulₓ, eval_monomial] using
       subset_polynomial_aeval a (monomial (n + 1) (1 : 𝕜)) ⟨k, hk, rfl⟩
+  -- power of the norm is bounded by norm of the power
   have nnnorm_pow_le : (↑(∥k∥₊ ^ (n + 1)) : ℝ≥0∞) ≤ ↑∥a ^ (n + 1)∥₊ := by
     simpa only [norm_to_nnreal, NormedField.nnnorm_pow k (n + 1)] using
       coe_mono (Real.to_nnreal_mono (norm_le_norm_of_mem pow_mem))
+  -- take (n + 1)ᵗʰ roots and clean up the left-hand side
   have hn : 0 < (n + 1 : ℝ) := by
     exact_mod_cast Nat.succ_pos'
   convert monotone_rpow_of_nonneg (one_div_pos.mpr hn).le nnnorm_pow_le
@@ -217,6 +225,9 @@ open Filter Ennreal ContinuousMultilinearMap
 
 open_locale TopologicalSpace
 
+/- the assumption below that `A` be second countable is a technical limitation due to
+the current implementation of Bochner integrals in mathlib. Once this is changed, we
+will be able to remove that hypothesis. -/
 variable [NormedRing A] [NormedAlgebra ℂ A] [CompleteSpace A] [MeasurableSpace A] [BorelSpace A]
   [TopologicalSpace.SecondCountableTopology A]
 
@@ -257,6 +268,8 @@ theorem pow_nnnorm_pow_one_div_tendsto_nhds_spectral_radius (a : A) :
 
 /-- **Gelfand's formula**: Given an element `a : A` of a complex Banach algebra, the
 `spectral_radius` of `a` is the limit of the sequence `∥a ^ n∥₊ ^ (1 / n)` -/
+/- This is the same as `pow_nnnorm_pow_one_div_tendsto_nhds_spectral_radius` but for `norm`
+instead of `nnnorm`. -/
 theorem pow_norm_pow_one_div_tendsto_nhds_spectral_radius (a : A) :
     Tendsto (fun n : ℕ => Ennreal.ofReal (∥a ^ n∥ ^ (1 / n : ℝ))) atTop (𝓝 (spectralRadius ℂ a)) := by
   convert pow_nnnorm_pow_one_div_tendsto_nhds_spectral_radius a
@@ -282,11 +295,11 @@ local notation "↑ₐ" => algebraMap 𝕜 A
 /-- An algebra homomorphism into the base field, as a continuous linear map (since it is
 automatically bounded). -/
 @[simps]
-def to_continuous_linear_map (φ : A →ₐ[𝕜] 𝕜) : A →L[𝕜] 𝕜 :=
+def toContinuousLinearMap (φ : A →ₐ[𝕜] 𝕜) : A →L[𝕜] 𝕜 :=
   φ.toLinearMap.mkContinuousOfExistsBound <|
     ⟨1, fun a => (one_mulₓ ∥a∥).symm ▸ Spectrum.norm_le_norm_of_mem (φ.apply_mem_spectrum _)⟩
 
-theorem Continuous (φ : A →ₐ[𝕜] 𝕜) : Continuous φ :=
+theorem continuous (φ : A →ₐ[𝕜] 𝕜) : Continuous φ :=
   φ.toContinuousLinearMap.Continuous
 
 end NormedField

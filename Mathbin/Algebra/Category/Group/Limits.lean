@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison
+-/
 import Mathbin.Algebra.Category.Mon.Limits
 import Mathbin.Algebra.Category.Group.Preadditive
 import Mathbin.CategoryTheory.Over
@@ -27,14 +32,14 @@ variable {J : Type u} [SmallCategory J]
 namespace Groupₓₓ
 
 @[to_additive]
-instance group_obj (F : J ⥤ Groupₓₓ) j : Groupₓ ((F ⋙ forget Groupₓₓ).obj j) := by
+instance groupObj (F : J ⥤ Groupₓₓ) j : Groupₓ ((F ⋙ forget Groupₓₓ).obj j) := by
   change Groupₓ (F.obj j)
   infer_instance
 
 /-- The flat sections of a functor into `Group` form a subgroup of all sections.
 -/
 @[to_additive "The flat sections of a functor into `AddGroup` form an additive subgroup of all sections."]
-def sections_subgroup (F : J ⥤ Groupₓₓ) : Subgroup (∀ j, F.obj j) :=
+def sectionsSubgroup (F : J ⥤ Groupₓₓ) : Subgroup (∀ j, F.obj j) :=
   { Mon.sectionsSubmonoid (F ⋙ forget₂ Groupₓₓ Mon) with Carrier := (F ⋙ forget Groupₓₓ).sections,
     inv_mem' := fun a ah j j' f => by
       simp only [forget_map_eq_coe, functor.comp_map, Pi.inv_apply, MonoidHom.map_inv, inv_inj]
@@ -42,7 +47,7 @@ def sections_subgroup (F : J ⥤ Groupₓₓ) : Subgroup (∀ j, F.obj j) :=
       rw [ah f] }
 
 @[to_additive]
-instance limit_group (F : J ⥤ Groupₓₓ) : Groupₓ (Types.limitCone (F ⋙ forget Groupₓₓ.{u})).x := by
+instance limitGroup (F : J ⥤ Groupₓₓ) : Groupₓ (Types.limitCone (F ⋙ forget Groupₓₓ.{u})).x := by
   change Groupₓ (sections_subgroup F)
   infer_instance
 
@@ -68,14 +73,14 @@ instance (F : J ⥤ Groupₓₓ) : CreatesLimit F (forget₂ Groupₓₓ Mon.{u}
 (Generally, you'll just want to use `limit F`.)
 -/
 @[to_additive "A choice of limit cone for a functor into `Group`.\n(Generally, you'll just want to use `limit F`.)"]
-def limit_cone (F : J ⥤ Groupₓₓ) : Cone F :=
+def limitCone (F : J ⥤ Groupₓₓ) : Cone F :=
   liftLimit (limit.isLimit (F ⋙ forget₂ Groupₓₓ Mon.{u}))
 
 /-- The chosen cone is a limit cone.
 (Generally, you'll just want to use `limit.cone F`.)
 -/
 @[to_additive "The chosen cone is a limit cone.\n(Generally, you'll just want to use `limit.cone F`.)"]
-def limit_cone_is_limit (F : J ⥤ Groupₓₓ) : IsLimit (limitCone F) :=
+def limitConeIsLimit (F : J ⥤ Groupₓₓ) : IsLimit (limitCone F) :=
   liftedLimitIsLimit _
 
 /-- The category of groups has all limits. -/
@@ -87,8 +92,9 @@ instance has_limits : HasLimits Groupₓₓ where
 (That is, the underlying monoid could have been computed instead as limits in the category
 of monoids.)
 -/
+-- TODO use the above instead?
 @[to_additive AddGroupₓₓ.forget₂AddMonPreservesLimits]
-instance forget₂_Mon_preserves_limits : PreservesLimits (forget₂ Groupₓₓ Mon) where
+instance forget₂MonPreservesLimits : PreservesLimits (forget₂ Groupₓₓ Mon) where
   PreservesLimitsOfShape := fun J 𝒥 =>
     { PreservesLimit := fun F => by
         infer_instance }
@@ -97,7 +103,7 @@ instance forget₂_Mon_preserves_limits : PreservesLimits (forget₂ Groupₓₓ
 types could have been computed instead as limits in the category of types.)
 -/
 @[to_additive]
-instance forget_preserves_limits : PreservesLimits (forget Groupₓₓ) where
+instance forgetPreservesLimits : PreservesLimits (forget Groupₓₓ) where
   PreservesLimitsOfShape := fun J 𝒥 =>
     { PreservesLimit := fun F => limits.comp_preserves_limit (forget₂ Groupₓₓ Mon) (forget Mon) }
 
@@ -106,12 +112,12 @@ end Groupₓₓ
 namespace CommGroupₓₓ
 
 @[to_additive]
-instance comm_group_obj (F : J ⥤ CommGroupₓₓ) j : CommGroupₓ ((F ⋙ forget CommGroupₓₓ).obj j) := by
+instance commGroupObj (F : J ⥤ CommGroupₓₓ) j : CommGroupₓ ((F ⋙ forget CommGroupₓₓ).obj j) := by
   change CommGroupₓ (F.obj j)
   infer_instance
 
 @[to_additive]
-instance limit_comm_group (F : J ⥤ CommGroupₓₓ) : CommGroupₓ (Types.limitCone (F ⋙ forget CommGroupₓₓ.{u})).x :=
+instance limitCommGroup (F : J ⥤ CommGroupₓₓ) : CommGroupₓ (Types.limitCone (F ⋙ forget CommGroupₓₓ.{u})).x :=
   @Subgroup.toCommGroup (∀ j, F.obj j) _ (Groupₓₓ.sectionsSubgroup (F ⋙ forget₂ CommGroupₓₓ Groupₓₓ.{u}))
 
 /-- We show that the forgetful functor `CommGroup ⥤ Group` creates limits.
@@ -139,14 +145,14 @@ instance (F : J ⥤ CommGroupₓₓ) : CreatesLimit F (forget₂ CommGroupₓₓ
 (Generally, you'll just want to use `limit F`.)
 -/
 @[to_additive "A choice of limit cone for a functor into `CommGroup`.\n(Generally, you'll just want to use `limit F`.)"]
-def limit_cone (F : J ⥤ CommGroupₓₓ) : Cone F :=
+def limitCone (F : J ⥤ CommGroupₓₓ) : Cone F :=
   liftLimit (limit.isLimit (F ⋙ forget₂ CommGroupₓₓ Groupₓₓ.{u}))
 
 /-- The chosen cone is a limit cone.
 (Generally, you'll just want to use `limit.cone F`.)
 -/
 @[to_additive "The chosen cone is a limit cone.\n(Generally, you'll just wantto use `limit.cone F`.)"]
-def limit_cone_is_limit (F : J ⥤ CommGroupₓₓ) : IsLimit (limitCone F) :=
+def limitConeIsLimit (F : J ⥤ CommGroupₓₓ) : IsLimit (limitCone F) :=
   liftedLimitIsLimit _
 
 /-- The category of commutative groups has all limits. -/
@@ -159,7 +165,7 @@ instance has_limits : HasLimits CommGroupₓₓ where
 of groups.)
 -/
 @[to_additive AddCommGroupₓₓ.forget₂AddGroupPreservesLimits]
-instance forget₂_Group_preserves_limits : PreservesLimits (forget₂ CommGroupₓₓ Groupₓₓ) where
+instance forget₂GroupPreservesLimits : PreservesLimits (forget₂ CommGroupₓₓ Groupₓₓ) where
   PreservesLimitsOfShape := fun J 𝒥 =>
     { PreservesLimit := fun F => by
         infer_instance }
@@ -167,7 +173,7 @@ instance forget₂_Group_preserves_limits : PreservesLimits (forget₂ CommGroup
 /-- An auxiliary declaration to speed up typechecking.
 -/
 @[to_additive AddCommGroupₓₓ.forget₂AddCommMonPreservesLimitsAux "An auxiliary declaration to speed up typechecking."]
-def forget₂_CommMon_preserves_limits_aux (F : J ⥤ CommGroupₓₓ) :
+def forget₂CommMonPreservesLimitsAux (F : J ⥤ CommGroupₓₓ) :
     IsLimit ((forget₂ CommGroupₓₓ CommMon).mapCone (limitCone F)) :=
   CommMon.limitConeIsLimit (F ⋙ forget₂ CommGroupₓₓ CommMon)
 
@@ -176,7 +182,7 @@ def forget₂_CommMon_preserves_limits_aux (F : J ⥤ CommGroupₓₓ) :
 in the category of commutative monoids.)
 -/
 @[to_additive AddCommGroupₓₓ.forget₂AddCommMonPreservesLimits]
-instance forget₂_CommMon_preserves_limits : PreservesLimits (forget₂ CommGroupₓₓ CommMon) where
+instance forget₂CommMonPreservesLimits : PreservesLimits (forget₂ CommGroupₓₓ CommMon) where
   PreservesLimitsOfShape := fun J 𝒥 =>
     { PreservesLimit := fun F =>
         preserves_limit_of_preserves_limit_cone (limit_cone_is_limit F) (forget₂_CommMon_preserves_limits_aux F) }
@@ -185,7 +191,7 @@ instance forget₂_CommMon_preserves_limits : PreservesLimits (forget₂ CommGro
 underlying types could have been computed instead as limits in the category of types.)
 -/
 @[to_additive AddCommGroupₓₓ.forgetPreservesLimits]
-instance forget_preserves_limits : PreservesLimits (forget CommGroupₓₓ) where
+instance forgetPreservesLimits : PreservesLimits (forget CommGroupₓₓ) where
   PreservesLimitsOfShape := fun J 𝒥 =>
     { PreservesLimit := fun F => limits.comp_preserves_limit (forget₂ CommGroupₓₓ Groupₓₓ) (forget Groupₓₓ) }
 
@@ -196,10 +202,11 @@ namespace AddCommGroupₓₓ
 /-- The categorical kernel of a morphism in `AddCommGroup`
 agrees with the usual group-theoretical kernel.
 -/
-def kernel_iso_ker {G H : AddCommGroupₓₓ} (f : G ⟶ H) : kernel f ≅ AddCommGroupₓₓ.of f.ker where
+def kernelIsoKer {G H : AddCommGroupₓₓ} (f : G ⟶ H) : kernel f ≅ AddCommGroupₓₓ.of f.ker where
   Hom :=
     { toFun := fun g =>
         ⟨kernel.ι f g, by
+          -- TODO where is this `has_coe_t_aux.coe` coming from? can we prevent it appearing?
           change (kernel.ι f) g ∈ f.ker
           simp [AddMonoidHom.mem_ker]⟩,
       map_zero' := by
@@ -237,7 +244,7 @@ theorem kernel_iso_ker_inv_comp_ι {G H : AddCommGroupₓₓ} (f : G ⟶ H) :
 agrees with the `subtype` map.
 -/
 @[simps]
-def kernel_iso_ker_over {G H : AddCommGroupₓₓ.{u}} (f : G ⟶ H) :
+def kernelIsoKerOver {G H : AddCommGroupₓₓ.{u}} (f : G ⟶ H) :
     Over.mk (kernel.ι f) ≅ @Over.mk _ _ G (AddCommGroupₓₓ.of f.ker) (AddSubgroup.subtype f.ker) :=
   Over.isoMk (kernelIsoKer f)
     (by

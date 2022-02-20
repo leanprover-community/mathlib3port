@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Yaël Dillies, Bhavik Mehta. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yaël Dillies, Bhavik Mehta
+-/
 import Mathbin.Analysis.Convex.Extreme
 import Mathbin.Analysis.Convex.Function
 import Mathbin.Analysis.NormedSpace.Ordered
@@ -77,6 +82,10 @@ protected theorem refl (A : Set E) : IsExposed 𝕜 A A := fun ⟨w, hw⟩ =>
 protected theorem antisymm (hB : IsExposed 𝕜 A B) (hA : IsExposed 𝕜 B A) : A = B :=
   hA.Subset.antisymm hB.Subset
 
+/- `is_exposed` is *not* transitive: Consider a (topologically) open cube with vertices
+`A₀₀₀, ..., A₁₁₁` and add to it the triangle `A₀₀₀A₀₀₁A₀₁₀`. Then `A₀₀₁A₀₁₀` is an exposed subset
+of `A₀₀₀A₀₀₁A₀₁₀` which is an exposed subset of the cube, but `A₀₀₁A₀₁₀` is not itself an exposed
+subset of the cube. -/
 protected theorem mono (hC : IsExposed 𝕜 A C) (hBA : B ⊆ A) (hCB : C ⊆ B) : IsExposed 𝕜 B C := by
   rintro ⟨w, hw⟩
   obtain ⟨l, rfl⟩ := hC ⟨w, hw⟩
@@ -144,7 +153,7 @@ theorem inter_right (hC : IsExposed 𝕜 B C) (hCA : C ⊆ A) : IsExposed 𝕜 (
   rw [inter_comm]
   exact hC.inter_left hCA
 
-protected theorem IsExtreme (hAB : IsExposed 𝕜 A B) : IsExtreme 𝕜 A B := by
+protected theorem is_extreme (hAB : IsExposed 𝕜 A B) : IsExtreme 𝕜 A B := by
   refine' ⟨hAB.subset, fun x₁ hx₁A x₂ hx₂A x hxB hx => _⟩
   obtain ⟨l, rfl⟩ := hAB ⟨x, hxB⟩
   have hl : ConvexOn 𝕜 univ l := l.to_linear_map.convex_on convex_univ
@@ -158,7 +167,7 @@ protected theorem IsExtreme (hAB : IsExposed 𝕜 A B) : IsExtreme 𝕜 A B := b
     exact hxB.2 y hy
     
 
-protected theorem Convex (hAB : IsExposed 𝕜 A B) (hA : Convex 𝕜 A) : Convex 𝕜 B := by
+protected theorem convex (hAB : IsExposed 𝕜 A B) (hA : Convex 𝕜 A) : Convex 𝕜 B := by
   obtain rfl | hB := B.eq_empty_or_nonempty
   · exact convex_empty
     
@@ -168,11 +177,11 @@ protected theorem Convex (hAB : IsExposed 𝕜 A B) (hA : Convex 𝕜 A) : Conve
       ((l.to_linear_map.concave_on convex_univ).convex_ge _ ⟨mem_univ _, hx₁.2 y hy⟩ ⟨mem_univ _, hx₂.2 y hy⟩ ha hb
           hab).2⟩
 
-protected theorem IsClosed [OrderClosedTopology 𝕜] (hAB : IsExposed 𝕜 A B) (hA : IsClosed A) : IsClosed B := by
+protected theorem is_closed [OrderClosedTopology 𝕜] (hAB : IsExposed 𝕜 A B) (hA : IsClosed A) : IsClosed B := by
   obtain ⟨l, a, rfl⟩ := hAB.eq_inter_halfspace
   exact hA.is_closed_le continuous_on_const l.continuous.continuous_on
 
-protected theorem IsCompact [OrderClosedTopology 𝕜] (hAB : IsExposed 𝕜 A B) (hA : IsCompact A) : IsCompact B :=
+protected theorem is_compact [OrderClosedTopology 𝕜] (hAB : IsExposed 𝕜 A B) (hA : IsCompact A) : IsCompact B :=
   compact_of_is_closed_subset hA (hAB.IsClosed hA.IsClosed) hAB.Subset
 
 end IsExposed
@@ -198,7 +207,7 @@ theorem exposed_points_empty : (∅ : Set E).ExposedPoints 𝕜 = ∅ :=
 
 /-- Exposed points exactly correspond to exposed singletons. -/
 theorem mem_exposed_points_iff_exposed_singleton : x ∈ A.ExposedPoints 𝕜 ↔ IsExposed 𝕜 A {x} := by
-  use fun ⟨hxA, l, hl⟩ h =>
+  use fun h =>
     ⟨l,
       Eq.symm <| eq_singleton_iff_unique_mem.2 ⟨⟨hxA, fun y hy => (hl y hy).1⟩, fun z hz => (hl z hz.1).2 (hz.2 x hxA)⟩⟩
   rintro h

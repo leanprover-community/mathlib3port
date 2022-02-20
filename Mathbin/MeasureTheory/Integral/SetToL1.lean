@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Rémy Degenne. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Zhouhang Zhou, Yury Kudryashov, Sébastien Gouëzel, Rémy Degenne
+-/
 import Mathbin.MeasureTheory.Function.SimpleFuncDense
 
 /-!
@@ -88,7 +93,7 @@ section FinMeasAdditive
 
 /-- A set function is `fin_meas_additive` if its value on the union of two disjoint measurable
 sets with finite measure is the sum of its values on each set. -/
-def fin_meas_additive {β} [AddMonoidₓ β] {m : MeasurableSpace α} (μ : Measure α) (T : Set α → β) : Prop :=
+def FinMeasAdditive {β} [AddMonoidₓ β] {m : MeasurableSpace α} (μ : Measure α) (T : Set α → β) : Prop :=
   ∀ s t, MeasurableSet s → MeasurableSet t → μ s ≠ ∞ → μ t ≠ ∞ → s ∩ t = ∅ → T (s ∪ t) = T s + T t
 
 namespace FinMeasAdditive
@@ -134,7 +139,7 @@ theorem map_empty_eq_zero {β} [AddCancelMonoid β] {T : Set α → β} (hT : Fi
   nth_rw 0[← add_zeroₓ (T ∅)]  at hT
   exact (add_left_cancelₓ hT).symm
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (i j «expr ∈ » sι)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (i j «expr ∈ » sι)
 theorem map_Union_fin_meas_set_eq_sum (T : Set α → β) (T_empty : T ∅ = 0) (h_add : FinMeasAdditive μ T) {ι}
     (S : ι → Set α) (sι : Finset ι) (hS_meas : ∀ i, MeasurableSet (S i)) (hSp : ∀, ∀ i ∈ sι, ∀, μ (S i) ≠ ∞)
     (h_disj : ∀ i j _ : i ∈ sι _ : j ∈ sι, i ≠ j → Disjoint (S i) (S j)) : T (⋃ i ∈ sι, S i) = ∑ i in sι, T (S i) := by
@@ -173,8 +178,8 @@ end FinMeasAdditive
 
 /-- A `fin_meas_additive` set function whose norm on every set is less than the measure of the
 set (up to a multiplicative constant). -/
-def dominated_fin_meas_additive {β} [SemiNormedGroup β] {m : MeasurableSpace α} (μ : Measure α) (T : Set α → β)
-    (C : ℝ) : Prop :=
+def DominatedFinMeasAdditive {β} [SemiNormedGroup β] {m : MeasurableSpace α} (μ : Measure α) (T : Set α → β) (C : ℝ) :
+    Prop :=
   FinMeasAdditive μ T ∧ ∀ s, MeasurableSet s → μ s < ∞ → ∥T s∥ ≤ C * (μ s).toReal
 
 namespace DominatedFinMeasAdditive
@@ -260,7 +265,7 @@ end FinMeasAdditive
 namespace SimpleFunc
 
 /-- Extend `set α → (F →L[ℝ] F')` to `(α →ₛ F) → F'`. -/
-def set_to_simple_func {m : MeasurableSpace α} (T : Set α → F →L[ℝ] F') (f : α →ₛ F) : F' :=
+def setToSimpleFunc {m : MeasurableSpace α} (T : Set α → F →L[ℝ] F') (f : α →ₛ F) : F' :=
   ∑ x in f.range, T (f ⁻¹' {x}) x
 
 @[simp]
@@ -692,7 +697,7 @@ attribute [local instance] Lp.simple_func.module
 attribute [local instance] Lp.simple_func.normed_space
 
 /-- Extend `set α → (E →L[ℝ] F')` to `(α →₁ₛ[μ] E) → F'`. -/
-def set_to_L1s (T : Set α → E →L[ℝ] F) (f : α →₁ₛ[μ] E) : F :=
+def setToL1s (T : Set α → E →L[ℝ] F) (f : α →₁ₛ[μ] E) : F :=
   (toSimpleFunc f).setToSimpleFunc T
 
 theorem set_to_L1s_eq_set_to_simple_func (T : Set α → E →L[ℝ] F) (f : α →₁ₛ[μ] E) :
@@ -839,7 +844,7 @@ variable [NormedSpace 𝕜 F] [MeasurableSpace 𝕜] [OpensMeasurableSpace 𝕜]
 variable (α E μ 𝕜)
 
 /-- Extend `set α → E →L[ℝ] F` to `(α →₁ₛ[μ] E) →L[𝕜] F`. -/
-def set_to_L1s_clm' {T : Set α → E →L[ℝ] F} {C : ℝ} (hT : DominatedFinMeasAdditive μ T C)
+def setToL1sClm' {T : Set α → E →L[ℝ] F} {C : ℝ} (hT : DominatedFinMeasAdditive μ T C)
     (h_smul : ∀ c : 𝕜, ∀ s x, T s (c • x) = c • T s x) : (α →₁ₛ[μ] E) →L[𝕜] F :=
   LinearMap.mkContinuous
     ⟨setToL1s T, set_to_L1s_add T (fun _ => hT.eq_zero_of_measure_zero) hT.1,
@@ -847,7 +852,7 @@ def set_to_L1s_clm' {T : Set α → E →L[ℝ] F} {C : ℝ} (hT : DominatedFinM
     C fun f => norm_set_to_L1s_le T hT.2 f
 
 /-- Extend `set α → E →L[ℝ] F` to `(α →₁ₛ[μ] E) →L[ℝ] F`. -/
-def set_to_L1s_clm {T : Set α → E →L[ℝ] F} {C : ℝ} (hT : DominatedFinMeasAdditive μ T C) : (α →₁ₛ[μ] E) →L[ℝ] F :=
+def setToL1sClm {T : Set α → E →L[ℝ] F} {C : ℝ} (hT : DominatedFinMeasAdditive μ T C) : (α →₁ₛ[μ] E) →L[ℝ] F :=
   LinearMap.mkContinuous
     ⟨setToL1s T, set_to_L1s_add T (fun _ => hT.eq_zero_of_measure_zero) hT.1,
       set_to_L1s_smul_real T (fun _ => hT.eq_zero_of_measure_zero) hT.1⟩
@@ -956,7 +961,7 @@ variable (𝕜) [NondiscreteNormedField 𝕜] [MeasurableSpace 𝕜] [OpensMeasu
   [BorelSpace E] [NormedSpace 𝕜 E] [NormedSpace 𝕜 F] [CompleteSpace F] {T T' T'' : Set α → E →L[ℝ] F} {C C' C'' : ℝ}
 
 /-- Extend `set α → (E →L[ℝ] F)` to `(α →₁[μ] E) →L[𝕜] F`. -/
-def set_to_L1' (hT : DominatedFinMeasAdditive μ T C) (h_smul : ∀ c : 𝕜, ∀ s x, T s (c • x) = c • T s x) :
+def setToL1' (hT : DominatedFinMeasAdditive μ T C) (h_smul : ∀ c : 𝕜, ∀ s x, T s (c • x) = c • T s x) :
     (α →₁[μ] E) →L[𝕜] F :=
   (setToL1sClm' α E 𝕜 μ hT h_smul).extend (coeToLp α E 𝕜) (simpleFunc.dense_range one_ne_top)
     simpleFunc.uniform_inducing
@@ -964,7 +969,7 @@ def set_to_L1' (hT : DominatedFinMeasAdditive μ T C) (h_smul : ∀ c : 𝕜, �
 variable {𝕜}
 
 /-- Extend `set α → E →L[ℝ] F` to `(α →₁[μ] E) →L[ℝ] F`. -/
-def set_to_L1 (hT : DominatedFinMeasAdditive μ T C) : (α →₁[μ] E) →L[ℝ] F :=
+def setToL1 (hT : DominatedFinMeasAdditive μ T C) : (α →₁[μ] E) →L[ℝ] F :=
   (setToL1sClm α E μ hT).extend (coeToLp α E ℝ) (simpleFunc.dense_range one_ne_top) simpleFunc.uniform_inducing
 
 theorem set_to_L1_eq_set_to_L1s_clm (hT : DominatedFinMeasAdditive μ T C) (f : α →₁ₛ[μ] E) :
@@ -1198,7 +1203,7 @@ variable (μ T)
 
 /-- Extend `T : set α → E →L[ℝ] F` to `(α → E) → F` (for integrable functions `α → E`). We set it to
 0 if the function is not integrable. -/
-def set_to_fun (hT : DominatedFinMeasAdditive μ T C) (f : α → E) : F :=
+def setToFun (hT : DominatedFinMeasAdditive μ T C) (f : α → E) : F :=
   if hf : Integrable f μ then L1.setToL1 hT (hf.toL1 f) else 0
 
 variable {μ T}
@@ -1492,8 +1497,10 @@ theorem continuous_L1_to_L1 [BorelSpace G] [SecondCountableTopology G] {μ' : Me
 theorem set_to_fun_congr_measure_of_integrable {μ' : Measure α} (c' : ℝ≥0∞) (hc' : c' ≠ ∞) (hμ'_le : μ' ≤ c' • μ)
     (hT : DominatedFinMeasAdditive μ T C) (hT' : DominatedFinMeasAdditive μ' T C') (f : α → E) (hfμ : Integrable f μ) :
     setToFun μ T hT f = setToFun μ' T hT' f := by
+  -- integrability for `μ` implies integrability for `μ'`.
   have h_int : ∀ g : α → E, integrable g μ → integrable g μ' := fun g hg =>
     integrable.of_measure_le_smul c' hc' hμ'_le hg
+  -- We use `integrable.induction`
   refine' hfμ.induction _ _ _ _ _
   · intro c s hs hμs
     have hμ's : μ' s ≠ ∞ := by
@@ -1526,7 +1533,8 @@ theorem set_to_fun_congr_measure {μ' : Measure α} (c c' : ℝ≥0∞) (hc : c 
   by_cases' hf : integrable f μ
   · exact set_to_fun_congr_measure_of_integrable c' hc' hμ'_le hT hT' f hf
     
-  · have h_int : ∀ g : α → E, ¬integrable g μ → ¬integrable g μ' := fun g => mt fun h => h.of_measure_le_smul _ hc hμ_le
+  · -- if `f` is not integrable, both `set_to_fun` are 0.
+    have h_int : ∀ g : α → E, ¬integrable g μ → ¬integrable g μ' := fun g => mt fun h => h.of_measure_le_smul _ hc hμ_le
     simp_rw [set_to_fun_undef _ hf, set_to_fun_undef _ (h_int f hf)]
     
 
@@ -1599,10 +1607,13 @@ theorem tendsto_set_to_fun_of_dominated_convergence (hT : DominatedFinMeasAdditi
     (bound : α → ℝ) (fs_measurable : ∀ n, AeMeasurable (fs n) μ) (bound_integrable : Integrable bound μ)
     (h_bound : ∀ n, ∀ᵐ a ∂μ, ∥fs n a∥ ≤ bound a) (h_lim : ∀ᵐ a ∂μ, Tendsto (fun n => fs n a) atTop (𝓝 (f a))) :
     Tendsto (fun n => setToFun μ T hT (fs n)) atTop (𝓝 <| setToFun μ T hT f) := by
+  -- `f` is a.e.-measurable, since it is the a.e.-pointwise limit of a.e.-measurable functions.
   have f_measurable : AeMeasurable f μ := ae_measurable_of_tendsto_metric_ae fs_measurable h_lim
+  -- all functions we consider are integrable
   have fs_int : ∀ n, integrable (fs n) μ := fun n => bound_integrable.mono' (fs_measurable n) (h_bound _)
   have f_int : integrable f μ :=
     ⟨f_measurable, has_finite_integral_of_dominated_convergence bound_integrable.has_finite_integral h_bound h_lim⟩
+  -- it suffices to prove the result for the corresponding L1 functions
   suffices tendsto (fun n => L1.set_to_L1 hT ((fs_int n).toL1 (fs n))) at_top (𝓝 (L1.set_to_L1 hT (f_int.to_L1 f))) by
     convert this
     · ext1 n
@@ -1610,7 +1621,9 @@ theorem tendsto_set_to_fun_of_dominated_convergence (hT : DominatedFinMeasAdditi
       
     · exact set_to_fun_eq hT f_int
       
+  -- the convergence of set_to_L1 follows from the convergence of the L1 functions
   refine' L1.tendsto_set_to_L1 hT _ _ _
+  -- up to some rewriting, what we need to prove is `h_lim`
   rw [tendsto_iff_norm_tendsto_zero]
   have lintegral_norm_tendsto_zero :
     tendsto (fun n => Ennreal.toReal <| ∫⁻ a, Ennreal.ofReal ∥fs n a - f a∥ ∂μ) at_top (𝓝 0) :=

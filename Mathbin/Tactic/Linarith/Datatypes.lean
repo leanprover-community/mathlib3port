@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Robert Y. Lewis. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Robert Y. Lewis
+-/
 import Mathbin.Tactic.Linarith.Lemmas
 import Mathbin.Tactic.Ring
 
@@ -41,7 +46,7 @@ and that the list is sorted in decreasing order of the first argument.
 This is not enforced by the type but the operations here preserve it.
 -/
 @[reducible]
-def linexp : Type :=
+def Linexp : Type :=
   List (ℕ × ℤ)
 
 namespace Linexp
@@ -105,7 +110,7 @@ end Linexp
 
 /-- The three-element type `ineq` is used to represent the strength of a comparison between
 terms. -/
-inductive ineq : Type
+inductive Ineq : Type
   | Eq
   | le
   | lt
@@ -161,21 +166,21 @@ Index 0 is reserved for constants, i.e. `coeffs.find 0` is the coefficient of 1.
 The represented term is `coeffs.sum (λ ⟨k, v⟩, v * Var[k])`.
 str determines the strength of the comparison -- is it < 0, ≤ 0, or = 0?
 -/
-structure comp : Type where
+structure Comp : Type where
   str : Ineq
   coeffs : Linexp
   deriving Inhabited
 
 /-- `c.vars` returns the list of variables that appear in the linear expression contained in `c`. -/
-def comp.vars : Comp → List ℕ :=
+def Comp.vars : Comp → List ℕ :=
   linexp.vars ∘ comp.coeffs
 
 /-- `comp.coeff_of c a` projects the coefficient of variable `a` out of `c`. -/
-def comp.coeff_of (c : Comp) (a : ℕ) : ℤ :=
+def Comp.coeffOf (c : Comp) (a : ℕ) : ℤ :=
   c.coeffs.zfind a
 
 /-- `comp.scale c n` scales the coefficients of `c` by `n`. -/
-def comp.scale (c : Comp) (n : ℕ) : Comp :=
+def Comp.scale (c : Comp) (n : ℕ) : Comp :=
   { c with coeffs := c.coeffs.scale n }
 
 /-- `comp.add c1 c2` adds the expressions represented by `c1` and `c2`.
@@ -291,7 +296,7 @@ The default `certificate_oracle` used by `linarith` is
 unsafe def certificate_oracle : Type :=
   List Comp → ℕ → tactic (rb_map ℕ ℕ)
 
--- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:916:4: warning: unsupported (TODO): `[tacs]
 /-- A configuration object for `linarith`. -/
 unsafe structure linarith_config : Type where
   discharger : tactic Unit := sorry
@@ -306,7 +311,7 @@ unsafe structure linarith_config : Type where
   preprocessors : Option (List global_branching_preprocessor) := none
   oracle : Option certificate_oracle := none
 
--- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:916:4: warning: unsupported (TODO): `[tacs]
 /-- `cfg.update_reducibility reduce_semi` will change the transparency setting of `cfg` to
 `semireducible` if `reduce_semi` is true. In this case, it also sets the discharger to `ring!`,
 since this is typically needed when using stronger unification.
@@ -345,7 +350,7 @@ unsafe def parse_into_comp_and_expr : expr → Option (ineq × expr)
   | quote.1 ((%%ₓe) = 0) => (Ineq.eq, e)
   | _ => none
 
--- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:916:4: warning: unsupported (TODO): `[tacs]
 /-- `mk_single_comp_zero_pf c h` assumes that `h` is a proof of `t R 0`.
 It produces a pair `(R', h')`, where `h'` is a proof of `c*t R' 0`.
 Typically `R` and `R'` will be the same, except when `c = 0`, in which case `R'` is `=`.

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Chris Hughes. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Chris Hughes, Thomas Browning
+-/
 import Mathbin.Data.Nat.Factorization
 import Mathbin.Data.SetLike.Fintype
 import Mathbin.GroupTheory.GroupAction.ConjAct
@@ -183,7 +188,7 @@ theorem IsPGroup.sylow_mem_fixed_points_iff {P : Subgroup G} (hP : IsPGroup p P)
 instance [hp : Fact p.Prime] [Fintype (Sylow p G)] : IsPretransitive G (Sylow p G) :=
   ⟨fun P Q => by
     classical
-    have H := fun {R : Sylow p G} {S : orbit G P} =>
+    have H := fun {S : orbit G P} =>
       calc
         S ∈ fixed_points R (orbit G P) ↔ S.1 ∈ fixed_points R (Sylow p G) := forall_congrₓ fun a => Subtype.ext_iff
         _ ↔ R.1 ≤ S := R.2.sylow_mem_fixed_points_iff
@@ -310,7 +315,7 @@ theorem mem_fixed_points_mul_left_cosets_iff_mem_normalizer {H : Subgroup G} [Fi
   ⟨fun hx =>
     have ha : ∀ {y : G ⧸ H}, y ∈ Orbit H (x : G ⧸ H) → y = x := fun _ => (mem_fixed_points' _).1 hx _
     (inv_mem_iff _).1
-      (@mem_normalizer_fintype _ _ _ _inst_2 _ fun n hn : n ∈ H =>
+      (@mem_normalizer_fintype _ _ _ _inst_2 _ fun hn : n ∈ H =>
         have : (n⁻¹ * x)⁻¹ * x ∈ H := QuotientGroup.eq.1 (ha (mem_orbit _ ⟨n⁻¹, H.inv_mem hn⟩))
         show _ ∈ H by
           rw [mul_inv_rev, inv_invₓ] at this
@@ -327,7 +332,7 @@ theorem mem_fixed_points_mul_left_cosets_iff_mem_normalizer {H : Subgroup G} [Fi
               (mul_mem_cancel_left H (H.inv_mem hb₁)).1 <| by
                 rw [hx] at hb₂ <;> simpa [mul_inv_rev, mul_assoc] using hb₂)⟩
 
-def fixed_points_mul_left_cosets_equiv_quotient (H : Subgroup G) [Fintype (H : Set G)] :
+def fixedPointsMulLeftCosetsEquivQuotient (H : Subgroup G) [Fintype (H : Set G)] :
     MulAction.FixedPoints H (G ⧸ H) ≃ normalizer H ⧸ Subgroup.comap ((normalizer H).Subtype : normalizer H →* G) H :=
   @subtypeQuotientEquivQuotientSubtype G (normalizer H : Set G) (id _) (id _) (FixedPoints _ _)
     (fun a => (@mem_fixed_points_mul_left_cosets_iff_mem_normalizer _ _ _ _inst_2 _).symm)
@@ -500,7 +505,7 @@ theorem characteristic_of_normal {p : ℕ} [Fact p.Prime] [Fintype (Sylow p G)] 
 end Pointwise
 
 /-- The preimage of a Sylow subgroup under a homomorphism with p-group-kernel is a Sylow subgroup -/
-def comap_of_ker_is_p_group {p : ℕ} (P : Sylow p G) {K : Type _} [Groupₓ K] (ϕ : K →* G) (hϕ : IsPGroup p ϕ.ker)
+def comapOfKerIsPGroup {p : ℕ} (P : Sylow p G) {K : Type _} [Groupₓ K] (ϕ : K →* G) (hϕ : IsPGroup p ϕ.ker)
     (h : P.1 ≤ ϕ.range) : Sylow p K :=
   { P.1.comap ϕ with is_p_group' := P.2.comap_of_ker_is_p_group ϕ hϕ,
     is_maximal' := fun Q hQ hle => by
@@ -513,7 +518,7 @@ theorem coe_comap_of_ker_is_p_group {p : ℕ} {P : Sylow p G} {K : Type _} [Grou
   rfl
 
 /-- The preimage of a Sylow subgroup under an injective homomorphism is a Sylow subgroup -/
-def comap_of_injective {p : ℕ} (P : Sylow p G) {K : Type _} [Groupₓ K] (ϕ : K →* G) (hϕ : Function.Injective ϕ)
+def comapOfInjective {p : ℕ} (P : Sylow p G) {K : Type _} [Groupₓ K] (ϕ : K →* G) (hϕ : Function.Injective ϕ)
     (h : P.1 ≤ ϕ.range) : Sylow p K :=
   P.comap_of_ker_is_p_group ϕ (IsPGroup.ker_is_p_group_of_injective hϕ) h
 
@@ -523,13 +528,13 @@ theorem coe_comap_of_injective {p : ℕ} {P : Sylow p G} {K : Type _} [Groupₓ 
   rfl
 
 /-- A sylow subgroup in G is also a sylow subgroup in a subgroup of G. -/
-def Subtype {p : ℕ} (P : Sylow p G) (N : Subgroup G) (h : ↑P ≤ N) : Sylow p N :=
+def subtype {p : ℕ} (P : Sylow p G) (N : Subgroup G) (h : ↑P ≤ N) : Sylow p N :=
   P.comap_of_injective N.Subtype Subtype.coe_injective
     (by
       simp [h])
 
 @[simp]
-theorem coeSubtype {p : ℕ} {P : Sylow p G} {N : Subgroup G} {h : P.1 ≤ N} :
+theorem coe_subtype {p : ℕ} {P : Sylow p G} {N : Subgroup G} {h : P.1 ≤ N} :
     ↑(P.Subtype N h) = Subgroup.comap N.Subtype ↑P :=
   rfl
 

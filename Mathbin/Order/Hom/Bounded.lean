@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2022 Yaël Dillies. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yaël Dillies
+-/
 import Mathbin.Order.Hom.Basic
 import Mathbin.Order.BoundedOrder
 
@@ -59,7 +64,7 @@ class BotHomClass (F : Type _) (α β : outParam <| Type _) [HasBot α] [HasBot 
 
 You should extend this class when you extend `bounded_order_hom`. -/
 class BoundedOrderHomClass (F : Type _) (α β : outParam <| Type _) [Preorderₓ α] [Preorderₓ β] [BoundedOrder α]
-  [BoundedOrder β] extends RelHomClass F (· ≤ · : α → α → Prop) (· ≤ · : β → β → Prop) where
+  [BoundedOrder β] extends RelHomClass F ((· ≤ ·) : α → α → Prop) ((· ≤ ·) : β → β → Prop) where
   map_top (f : F) : f ⊤ = ⊤
   map_bot (f : F) : f ⊥ = ⊥
 
@@ -69,22 +74,27 @@ export BotHomClass (map_bot)
 
 attribute [simp] map_top map_bot
 
+-- See note [lower instance priority]
 instance (priority := 100) BoundedOrderHomClass.toTopHomClass [Preorderₓ α] [Preorderₓ β] [BoundedOrder α]
     [BoundedOrder β] [BoundedOrderHomClass F α β] : TopHomClass F α β :=
   { ‹BoundedOrderHomClass F α β› with }
 
+-- See note [lower instance priority]
 instance (priority := 100) BoundedOrderHomClass.toBotHomClass [Preorderₓ α] [Preorderₓ β] [BoundedOrder α]
     [BoundedOrder β] [BoundedOrderHomClass F α β] : BotHomClass F α β :=
   { ‹BoundedOrderHomClass F α β› with }
 
+-- See note [lower instance priority]
 instance (priority := 100) OrderIso.topHomClass [PartialOrderₓ α] [PartialOrderₓ β] [OrderTop α] [OrderTop β] :
     TopHomClass (α ≃o β) α β :=
   { RelIso.relHomClass with map_top := fun f => f.map_top }
 
+-- See note [lower instance priority]
 instance (priority := 100) OrderIso.botHomClass [PartialOrderₓ α] [PartialOrderₓ β] [OrderBot α] [OrderBot β] :
     BotHomClass (α ≃o β) α β :=
   { RelIso.relHomClass with map_bot := fun f => f.map_bot }
 
+-- See note [lower instance priority]
 instance (priority := 100) OrderIso.boundedOrderHomClass [PartialOrderₓ α] [PartialOrderₓ β] [BoundedOrder α]
     [BoundedOrder β] : BoundedOrderHomClass (α ≃o β) α β :=
   { OrderIso.topHomClass, OrderIso.botHomClass with }
@@ -444,11 +454,11 @@ variable [Preorderₓ α] [Preorderₓ β] [Preorderₓ γ] [Preorderₓ δ] [Bo
   [BoundedOrder δ]
 
 /-- Reinterpret a `bounded_order_hom` as a `top_hom`. -/
-def to_top_hom (f : BoundedOrderHom α β) : TopHom α β :=
+def toTopHom (f : BoundedOrderHom α β) : TopHom α β :=
   { f with }
 
 /-- Reinterpret a `bounded_order_hom` as a `bot_hom`. -/
-def to_bot_hom (f : BoundedOrderHom α β) : BotHom α β :=
+def toBotHom (f : BoundedOrderHom α β) : BotHom α β :=
   { f with }
 
 instance : BoundedOrderHomClass (BoundedOrderHom α β) α β where

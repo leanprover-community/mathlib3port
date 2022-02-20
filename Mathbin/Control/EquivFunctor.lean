@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison
+-/
 import Mathbin.Data.Equiv.Basic
 
 /-!
@@ -42,7 +47,7 @@ section
 variable (f : Type u₀ → Type u₁) [EquivFunctor f] {α β : Type u₀} (e : α ≃ β)
 
 /-- An `equiv_functor` in fact takes every equiv to an equiv. -/
-def map_equiv : f α ≃ f β where
+def mapEquiv : f α ≃ f β where
   toFun := EquivFunctor.map e
   invFun := EquivFunctor.map e.symm
   left_inv := fun x => by
@@ -79,7 +84,7 @@ theorem map_equiv_trans {γ : Type u₀} (ab : α ≃ β) (bc : β ≃ γ) :
 
 end
 
-instance (priority := 100) of_is_lawful_functor (f : Type u₀ → Type u₁) [Functor f] [IsLawfulFunctor f] :
+instance (priority := 100) ofIsLawfulFunctor (f : Type u₀ → Type u₁) [Functor f] [IsLawfulFunctor f] :
     EquivFunctor f where
   map := fun α β e => Functor.map e
   map_refl' := fun α => by
@@ -89,7 +94,7 @@ instance (priority := 100) of_is_lawful_functor (f : Type u₀ → Type u₁) [F
     ext x
     apply IsLawfulFunctor.comp_map k h x
 
-theorem map_equiv.injective (f : Type u₀ → Type u₁) [Applicativeₓ f] [IsLawfulApplicative f] {α β : Type u₀}
+theorem mapEquiv.injective (f : Type u₀ → Type u₁) [Applicativeₓ f] [IsLawfulApplicative f] {α β : Type u₀}
     (h : ∀ γ, Function.Injective (pure : γ → f γ)) : Function.Injective (@EquivFunctor.mapEquiv f _ α β) :=
   fun e₁ e₂ H =>
   Equivₓ.ext fun x =>

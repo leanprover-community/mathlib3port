@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Chris Hughes. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Chris Hughes
+-/
 import Mathbin.Data.Set.Lattice
 import Mathbin.Order.Directed
 
@@ -40,8 +45,11 @@ section UnionLift
 
 /-- Given a Union of sets `Union S`, define a function on the Union by defining
 it on each component, and proving that it agrees on the intersections. -/
+/- The unused argument `hf` is left in the definition so that the `simp` lemmas
+`Union_lift_inclusion` will work without the user having to provide `hf` explicitly to
+simplify terms involving `Union_lift`. -/
 @[nolint unused_arguments]
-noncomputable def Union_lift (S : ι → Set α) (f : ∀ i x : S i, β)
+noncomputable def unionLift (S : ι → Set α) (f : ∀ i x : S i, β)
     (hf : ∀ i j x : α hxi : x ∈ S i hxj : x ∈ S j, f i ⟨x, hxi⟩ = f j ⟨x, hxj⟩) (T : Set α) (hT : T ⊆ Unionₓ S)
     (x : T) : β :=
   let i := Classical.indefiniteDescription _ (mem_Union.1 (hT x.Prop))
@@ -130,7 +138,7 @@ variable {S : ι → Set α} {f : ∀ i x : S i, β}
 
 /-- Glue together functions defined on each of a collection `S` of sets that cover a type. See
   also `set.Union_lift`.   -/
-noncomputable def lift_cover (S : ι → Set α) (f : ∀ i x : S i, β)
+noncomputable def liftCover (S : ι → Set α) (f : ∀ i x : S i, β)
     (hf : ∀ i j x : α hxi : x ∈ S i hxj : x ∈ S j, f i ⟨x, hxi⟩ = f j ⟨x, hxj⟩) (hS : Unionₓ S = univ) (a : α) : β :=
   unionLift S f hf Univ (hS ▸ Set.Subset.refl _) ⟨a, trivialₓ⟩
 

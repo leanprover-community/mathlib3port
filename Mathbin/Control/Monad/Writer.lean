@@ -1,3 +1,10 @@
+/-
+Copyright (c) 2019 Microsoft Corporation. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Simon Hudon
+
+The writer monad transformer for passing immutable state.
+-/
 import Mathbin.Algebra.Group.Defs
 import Mathbin.Data.Equiv.Basic
 
@@ -40,7 +47,7 @@ protected def listen : WriterT ω m α → WriterT ω m (α × ω)
 
 @[inline]
 protected def pass : WriterT ω m (α × (ω → ω)) → WriterT ω m α
-  | ⟨cmd⟩ => ⟨uncurry (uncurry fun x f : ω → ω w => (x, f w)) <$> cmd⟩
+  | ⟨cmd⟩ => ⟨uncurry (uncurry fun w => (x, f w)) <$> cmd⟩
 
 @[inline]
 protected def pure [One ω] (a : α) : WriterT ω m α :=
@@ -61,14 +68,14 @@ instance [Monoidₓ ω] [IsLawfulMonad m] : IsLawfulMonad (WriterT ω m) where
   id_map := by
     intros
     cases x
-    simp [· <$> ·, WriterT.bind, WriterT.pure]
+    simp [(· <$> ·), WriterT.bind, WriterT.pure]
   pure_bind := by
     intros
-    simp [Pure.pure, WriterT.pure, · >>= ·, WriterT.bind]
+    simp [Pure.pure, WriterT.pure, (· >>= ·), WriterT.bind]
     ext <;> rfl
   bind_assoc := by
     intros
-    simp' [· >>= ·, WriterT.bind, mul_assoc] with functor_norm
+    simp' [(· >>= ·), WriterT.bind, mul_assoc] with functor_norm
 
 @[inline]
 protected def lift [One ω] (a : m α) : WriterT ω m α :=
@@ -78,7 +85,7 @@ instance m [Monadₓ m] [One ω] : HasMonadLift m (WriterT ω m) :=
   ⟨fun α => WriterT.lift⟩
 
 @[inline]
-protected def monad_map {m m'} [Monadₓ m] [Monadₓ m'] {α} (f : ∀ {α}, m α → m' α) : WriterT ω m α → WriterT ω m' α :=
+protected def monadMap {m m'} [Monadₓ m] [Monadₓ m'] {α} (f : ∀ {α}, m α → m' α) : WriterT ω m α → WriterT ω m' α :=
   fun x => ⟨f x.run⟩
 
 instance m m' [Monadₓ m] [Monadₓ m'] : MonadFunctorₓ m m' (WriterT ω m) (WriterT ω m') :=

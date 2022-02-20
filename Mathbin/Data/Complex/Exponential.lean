@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Chris Hughes. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Chris Hughes, Abhimanyu Pallavi Sudhir
+-/
 import Mathbin.Algebra.GeomSum
 import Mathbin.Data.Complex.Basic
 import Mathbin.Data.Nat.Choose.Sum
@@ -205,7 +210,7 @@ theorem sum_range_diag_flip {α : Type _} [AddCommMonoidₓ α] (n : ℕ) (f : �
           mem_sigma.2
             ⟨mem_range.2 (lt_of_lt_of_leₓ h₂ h₁), mem_range.2 ((tsub_lt_tsub_iff_right (Nat.le_of_lt_succₓ h₂)).2 h₁)⟩)
         (fun _ _ => rfl)
-        (fun ⟨a₁, a₂⟩ ⟨b₁, b₂⟩ ha hb h =>
+        (fun ha hb h =>
           have ha : a₁ < n ∧ a₂ ≤ a₁ :=
             ⟨mem_range.1 (mem_sigma.1 ha).1, Nat.le_of_lt_succₓ (mem_range.1 (mem_sigma.1 ha).2)⟩
           have hb : b₁ < n ∧ b₂ ≤ b₁ :=
@@ -213,13 +218,14 @@ theorem sum_range_diag_flip {α : Type _} [AddCommMonoidₓ α] (n : ℕ) (f : �
           have h : a₂ = b₂ ∧ _ := Sigma.mk.inj h
           have h' : a₁ = b₁ - b₂ + a₂ := (tsub_eq_iff_eq_add_of_le ha.2).1 (eq_of_heq h.2)
           Sigma.mk.inj_iff.2 ⟨tsub_add_cancel_of_le hb.2 ▸ h'.symm ▸ h.1 ▸ rfl, heq_of_eq h.1⟩)
-        fun ⟨a₁, a₂⟩ ha =>
+        fun ha =>
         have ha : a₁ < n ∧ a₂ < n - a₁ := ⟨mem_range.1 (mem_sigma.1 ha).1, mem_range.1 (mem_sigma.1 ha).2⟩
         ⟨⟨a₂ + a₁, a₁⟩,
           ⟨mem_sigma.2
               ⟨mem_range.2 (lt_tsub_iff_right.1 ha.2), mem_range.2 (Nat.lt_succ_of_leₓ (Nat.le_add_leftₓ _ _))⟩,
             Sigma.mk.inj_iff.2 ⟨rfl, heq_of_eq (add_tsub_cancel_right _ _).symm⟩⟩⟩
 
+-- TODO move to src/algebra/big_operators/basic.lean, rewrite with comm_group, and make to_additive
 theorem sum_range_sub_sum_range {α : Type _} [AddCommGroupₓ α] {f : ℕ → α} {n m : ℕ} (hnm : n ≤ m) :
     ((∑ k in range m, f k) - ∑ k in range n, f k) = ∑ k in (range m).filter fun k => n ≤ k, f k := by
   rw [← sum_sdiff (@filter_subset _ (fun k => n ≤ k) _ (range m)), sub_eq_iff_eq_add, ← eq_sub_iff_add_eq,
@@ -1557,7 +1563,7 @@ theorem exp_bound' {x : ℝ} (h1 : 0 ≤ x) (h2 : x ≤ 1) {n : ℕ} (hn : 0 < n
 For fixed `n` this is just a linear map wrt `r`, and each map is a simple linear function
 of the previous (see `exp_near_succ`), with `exp_near n x r ⟶ exp x` as `n ⟶ ∞`,
 for any `r`. -/
-def exp_near (n : ℕ) (x r : ℝ) : ℝ :=
+def expNear (n : ℕ) (x r : ℝ) : ℝ :=
   (∑ m in range n, x ^ m / m !) + x ^ n / n ! * r
 
 @[simp]

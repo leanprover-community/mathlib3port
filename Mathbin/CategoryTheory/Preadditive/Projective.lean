@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Markus Himmel. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Markus Himmel, Scott Morrison
+-/
 import Mathbin.Algebra.Homology.Exact
 import Mathbin.CategoryTheory.Types
 import Mathbin.CategoryTheory.Limits.Shapes.Biproducts
@@ -32,7 +37,7 @@ variable {C : Type u} [Category.{v} C]
 
 /-- An object `P` is called projective if every morphism out of `P` factors through every epimorphism.
 -/
-class projective (P : C) : Prop where
+class Projective (P : C) : Prop where
   Factors : ∀ {E X : C} f : P ⟶ X e : E ⟶ X [Epi e], ∃ f', f' ≫ e = f
 
 section
@@ -41,7 +46,7 @@ section
 from some projective object `P`.
 -/
 @[nolint has_inhabited_instance]
-structure projective_presentation (X : C) where
+structure ProjectivePresentation (X : C) where
   P : C
   Projective : Projective P := by
     run_tac
@@ -55,7 +60,7 @@ variable (C)
 
 /-- A category "has enough projectives" if for every object `X` there is a projective object `P` and
     an epimorphism `P ↠ X`. -/
-class enough_projectives : Prop where
+class EnoughProjectives : Prop where
   presentation : ∀ X : C, Nonempty (ProjectivePresentation X)
 
 end
@@ -64,7 +69,7 @@ namespace Projective
 
 /-- An arbitrarily chosen factorisation of a morphism out of a projective object through an epimorphism.
 -/
-def factor_thru {P X E : C} [Projective P] (f : P ⟶ X) (e : E ⟶ X) [Epi e] : P ⟶ E :=
+def factorThru {P X E : C} [Projective P] (f : P ⟶ X) (e : E ⟶ X) [Epi e] : P ⟶ E :=
   (Projective.factors f e).some
 
 @[simp]
@@ -182,7 +187,7 @@ variable [HasZeroMorphisms C] [HasEqualizers C] [HasImages C]
 the middle object `R` of a pair of exact morphisms `f : Q ⟶ R` and `g : R ⟶ S`,
 such that `h ≫ g = 0`, there is a lift of `h` to `Q`.
 -/
-def exact.lift {P Q R S : C} [Projective P] (h : P ⟶ R) (f : Q ⟶ R) (g : R ⟶ S) [Exact f g] (w : h ≫ g = 0) : P ⟶ Q :=
+def Exact.lift {P Q R S : C} [Projective P] (h : P ⟶ R) (f : Q ⟶ R) (g : R ⟶ S) [Exact f g] (w : h ≫ g = 0) : P ⟶ Q :=
   factorThru
     (factorThru (factorThruKernelSubobject g h w)
       (imageToKernel f g
@@ -191,7 +196,7 @@ def exact.lift {P Q R S : C} [Projective P] (h : P ⟶ R) (f : Q ⟶ R) (g : R �
     (factorThruImageSubobject f)
 
 @[simp]
-theorem exact.lift_comp {P Q R S : C} [Projective P] (h : P ⟶ R) (f : Q ⟶ R) (g : R ⟶ S) [Exact f g] (w : h ≫ g = 0) :
+theorem Exact.lift_comp {P Q R S : C} [Projective P] (h : P ⟶ R) (f : Q ⟶ R) (g : R ⟶ S) [Exact f g] (w : h ≫ g = 0) :
     Exact.lift h f g w ≫ f = h := by
   simp [exact.lift]
   conv_lhs => congr skip rw [← image_subobject_arrow_comp f]

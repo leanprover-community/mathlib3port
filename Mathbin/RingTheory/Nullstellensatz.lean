@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Devon Tuma. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Devon Tuma
+-/
 import Mathbin.RingTheory.Jacobson
 import Mathbin.FieldTheory.IsAlgClosed.Basic
 import Mathbin.FieldTheory.MvPolynomial
@@ -31,7 +36,7 @@ variable {k : Type _} [Field k]
 variable {σ : Type _}
 
 /-- Set of points that are zeroes of all polynomials in an ideal -/
-def zero_locus (I : Ideal (MvPolynomial σ k)) : Set (σ → k) :=
+def ZeroLocus (I : Ideal (MvPolynomial σ k)) : Set (σ → k) :=
   { x : σ → k | ∀, ∀ p ∈ I, ∀, eval x p = 0 }
 
 @[simp]
@@ -48,7 +53,7 @@ theorem zero_locus_top : ZeroLocus (⊤ : Ideal (MvPolynomial σ k)) = ⊥ :=
   eq_bot_iff.2 fun x hx => one_ne_zero ((eval x).map_one ▸ hx 1 Submodule.mem_top : (1 : k) = 0)
 
 /-- Ideal of polynomials with common zeroes at all elements of a set -/
-def vanishing_ideal (V : Set (σ → k)) : Ideal (MvPolynomial σ k) where
+def vanishingIdeal (V : Set (σ → k)) : Ideal (MvPolynomial σ k) where
   Carrier := { p | ∀, ∀ x ∈ V, ∀, eval x p = 0 }
   zero_mem' := fun x hx => RingHom.map_zero _
   add_mem' := fun p q hp hq x hx => by
@@ -106,7 +111,7 @@ theorem radical_le_vanishing_ideal_zero_locus (I : Ideal (MvPolynomial σ k)) :
         is_maximal.is_prime' _⟩
 
 /-- The point in the prime spectrum assosiated to a given point -/
-def point_to_point (x : σ → k) : PrimeSpectrum (MvPolynomial σ k) :=
+def pointToPoint (x : σ → k) : PrimeSpectrum (MvPolynomial σ k) :=
   ⟨(vanishingIdeal {x} : Ideal (MvPolynomial σ k)), by
     infer_instance⟩
 
@@ -181,7 +186,7 @@ theorem vanishing_ideal_zero_locus_eq_radical (I : Ideal (MvPolynomial σ k)) :
     
 
 @[simp]
-theorem is_prime.vanishing_ideal_zero_locus (P : Ideal (MvPolynomial σ k)) [h : P.IsPrime] :
+theorem IsPrime.vanishing_ideal_zero_locus (P : Ideal (MvPolynomial σ k)) [h : P.IsPrime] :
     vanishingIdeal (ZeroLocus P) = P :=
   trans (vanishing_ideal_zero_locus_eq_radical P) h.radical
 

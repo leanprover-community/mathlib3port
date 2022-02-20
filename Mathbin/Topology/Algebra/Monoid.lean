@@ -1,5 +1,11 @@
+/-
+Copyright (c) 2017 Johannes Hölzl. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johannes Hölzl, Mario Carneiro
+-/
 import Mathbin.Topology.ContinuousOn
 import Mathbin.Topology.Separation
+import Mathbin.Topology.Algebra.MulAction
 import Mathbin.GroupTheory.Submonoid.Operations
 import Mathbin.Algebra.Group.Prod
 import Mathbin.Algebra.Pointwise
@@ -46,6 +52,10 @@ variable [TopologicalSpace M] [Mul M] [HasContinuousMul M]
 @[to_additive]
 theorem continuous_mul : Continuous fun p : M × M => p.1 * p.2 :=
   HasContinuousMul.continuous_mul
+
+@[to_additive]
+instance HasContinuousMul.has_continuous_smul : HasContinuousSmul M M :=
+  ⟨continuous_mul⟩
 
 @[continuity, to_additive]
 theorem Continuous.mul {f g : X → M} (hf : Continuous f) (hg : Continuous g) : Continuous fun x => f x * g x :=
@@ -123,7 +133,7 @@ open Function
 
 @[to_additive]
 theorem HasContinuousMul.of_nhds_one {M : Type u} [Monoidₓ M] [TopologicalSpace M]
-    (hmul : Tendsto (uncurry (· * · : M → M → M)) (𝓝 1 ×ᶠ 𝓝 1) <| 𝓝 1)
+    (hmul : Tendsto (uncurry ((· * ·) : M → M → M)) (𝓝 1 ×ᶠ 𝓝 1) <| 𝓝 1)
     (hleft : ∀ x₀ : M, 𝓝 x₀ = map (fun x => x₀ * x) (𝓝 1)) (hright : ∀ x₀ : M, 𝓝 x₀ = map (fun x => x * x₀) (𝓝 1)) :
     HasContinuousMul M :=
   ⟨by
@@ -146,7 +156,7 @@ theorem HasContinuousMul.of_nhds_one {M : Type u} [Monoidₓ M] [TopologicalSpac
 
 @[to_additive]
 theorem has_continuous_mul_of_comm_of_nhds_one (M : Type u) [CommMonoidₓ M] [TopologicalSpace M]
-    (hmul : Tendsto (uncurry (· * · : M → M → M)) (𝓝 1 ×ᶠ 𝓝 1) (𝓝 1))
+    (hmul : Tendsto (uncurry ((· * ·) : M → M → M)) (𝓝 1 ×ᶠ 𝓝 1) (𝓝 1))
     (hleft : ∀ x₀ : M, 𝓝 x₀ = map (fun x => x₀ * x) (𝓝 1)) : HasContinuousMul M := by
   apply HasContinuousMul.of_nhds_one hmul hleft
   intro x₀
@@ -179,7 +189,7 @@ homomorphisms that has a `monoid_hom_class` instance) to `M₁ → M₂`. -/
 @[to_additive
       "Construct a bundled additive monoid homomorphism `M₁ →+ M₂` from a function `f`\nand a proof that it belongs to the closure of the range of the coercion from `M₁ →+ M₂` (or another\ntype of bundled homomorphisms that has a `add_monoid_hom_class` instance) to `M₁ → M₂`.",
   simps (config := { fullyApplied := false })]
-def monoidHomOfMemClosureRangeCoe (f : M₁ → M₂) (hf : f ∈ Closure (Range fun f : F x : M₁ => f x)) : M₁ →* M₂ where
+def monoidHomOfMemClosureRangeCoe (f : M₁ → M₂) (hf : f ∈ Closure (Range fun x : M₁ => f x)) : M₁ →* M₂ where
   toFun := f
   map_one' := (is_closed_set_of_map_one M₁ M₂).closure_subset_iff.2 (range_subset_iff.2 map_one) hf
   map_mul' := (is_closed_set_of_map_mul M₁ M₂).closure_subset_iff.2 (range_subset_iff.2 map_mul) hf
@@ -357,26 +367,9 @@ end HasContinuousMul
 
 namespace MulOpposite
 
-/-- Put the same topological space structure on the opposite monoid as on the original space. -/
+/-- If multiplication is continuous in `α`, then it also is in `αᵐᵒᵖ`. -/
 @[to_additive]
-instance [_i : TopologicalSpace α] : TopologicalSpace (αᵐᵒᵖ) :=
-  TopologicalSpace.induced (unop : αᵐᵒᵖ → α) _i
-
-variable [TopologicalSpace α]
-
-@[to_additive]
-theorem continuous_unop : Continuous (unop : αᵐᵒᵖ → α) :=
-  continuous_induced_dom
-
-@[to_additive]
-theorem continuous_op : Continuous (op : α → αᵐᵒᵖ) :=
-  continuous_induced_rng continuous_id
-
-variable [Monoidₓ α] [HasContinuousMul α]
-
-/-- If multiplication is continuous in the monoid `α`, then it also is in the monoid `αᵐᵒᵖ`. -/
-@[to_additive]
-instance : HasContinuousMul (αᵐᵒᵖ) :=
+instance [TopologicalSpace α] [Mul α] [HasContinuousMul α] : HasContinuousMul (αᵐᵒᵖ) :=
   ⟨let h₁ := @continuous_mul α _ _ _
     let h₂ : Continuous fun p : α × α => _ := continuous_snd.prod_mk continuous_fst
     continuous_induced_rng <| (h₁.comp h₂).comp (continuous_unop.prod_map continuous_unop)⟩
@@ -387,24 +380,7 @@ namespace Units
 
 open MulOpposite
 
-variable [TopologicalSpace α] [Monoidₓ α]
-
-/-- The units of a monoid are equipped with a topology, via the embedding into `α × α`. -/
-@[to_additive]
-instance : TopologicalSpace (α)ˣ :=
-  TopologicalSpace.induced (embedProduct α)
-    (by
-      infer_instance)
-
-@[to_additive]
-theorem continuous_embed_product : Continuous (embedProduct α) :=
-  continuous_induced_dom
-
-@[to_additive]
-theorem continuous_coe : Continuous (coe : (α)ˣ → α) := by
-  convert continuous_fst.comp continuous_induced_dom
-
-variable [HasContinuousMul α]
+variable [TopologicalSpace α] [Monoidₓ α] [HasContinuousMul α]
 
 /-- If multiplication on a monoid is continuous, then multiplication on the units of the monoid,
 with respect to the induced topology, is continuous.

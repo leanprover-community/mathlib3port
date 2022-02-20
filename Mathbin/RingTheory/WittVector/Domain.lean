@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2022 Robert Y. Lewis. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Robert Y. Lewis
+-/
 import Mathbin.RingTheory.WittVector.Identities
 
 /-!
@@ -48,6 +53,7 @@ local notation "𝕎" => WittVector p
 `witt_vector.shift` does the opposite, removing the first entries.
 This is mainly useful as an auxiliary construction for `witt_vector.verschiebung_nonzero`.
 -/
+-- type as `\bbW`
 def shift (x : 𝕎 R) (n : ℕ) : 𝕎 R :=
   mk p fun i => x.coeff (n + i)
 
@@ -82,11 +88,11 @@ theorem eq_iterate_verschiebung {x : 𝕎 R} {n : ℕ} (h : ∀, ∀ i < n, ∀,
       
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:418:16: unsupported tactic `by_contra'
+-- ././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'
 theorem verschiebung_nonzero {x : 𝕎 R} (hx : x ≠ 0) : ∃ n : ℕ, ∃ x' : 𝕎 R, x'.coeff 0 ≠ 0 ∧ x = (verschiebung^[n]) x' :=
   by
   have hex : ∃ k : ℕ, x.coeff k ≠ 0 := by
-    "././Mathport/Syntax/Translate/Basic.lean:418:16: unsupported tactic `by_contra'"
+    "././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'"
     apply hx
     ext i
     simp only [hall, zero_coeff]

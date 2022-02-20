@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Johannes Hölzl. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johannes Hölzl, Floris van Doorn, Mario Carneiro
+-/
 import Mathbin.Logic.Function.Basic
 import Mathbin.Tactic.Core
 
@@ -103,7 +108,9 @@ unsafe def choose (nondep : Bool) : expr → List Name → optParam (Option (Opt
   | h, [n], some (some Ne) => do
     let g ← mk_meta_var Ne
     set_goals [g]
-    fail "choose: failed to synthesize nonempty instance"
+    -- make a reasonable error state
+        fail
+        "choose: failed to synthesize nonempty instance"
   | h, [n], _ => do
     let cnt ← revert h
     intro n
@@ -122,9 +129,9 @@ namespace Interactive
 
 setup_tactic_parser
 
--- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr ?»
--- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr *»
--- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr ?»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr ?»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr *»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr ?»
 /-- `choose a b h h' using hyp` takes an hypothesis `hyp` of the form
 `∀ (x : X) (y : Y), ∃ (a : A) (b : B), P x y a b ∧ Q x y a b`
 for some `P Q : X → Y → A → B → Prop` and outputs

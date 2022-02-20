@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Zhouhang Zhou. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Zhouhang Zhou, Frédéric Dupuis, Heather Macbeth
+-/
 import Mathbin.Analysis.Convex.Basic
 import Mathbin.Analysis.InnerProductSpace.Basic
 import Mathbin.Analysis.NormedSpace.IsROrC
@@ -61,6 +66,9 @@ local notation "absR" => HasAbs.abs
 Let `u` be a point in a real inner product space, and let `K` be a nonempty complete convex subset.
 Then there exists a (unique) `v` in `K` that minimizes the distance `∥u - v∥` to `u`.
  -/
+-- FIXME this monolithic proof causes a deterministic timeout with `-T50000`
+-- It should be broken in a sequence of more manageable pieces,
+-- perhaps with individual statements for the three steps below.
 theorem exists_norm_eq_infi_of_complete_convex {K : Set F} (ne : K.Nonempty) (h₁ : IsComplete K) (h₂ : Convex ℝ K) :
     ∀ u : F, ∃ v ∈ K, ∥u - v∥ = ⨅ w : K, ∥u - w∥ := fun u => by
   let δ := ⨅ w : K, ∥u - w∥
@@ -68,6 +76,9 @@ theorem exists_norm_eq_infi_of_complete_convex {K : Set F} (ne : K.Nonempty) (h�
   have zero_le_δ : 0 ≤ δ := le_cinfi fun _ => norm_nonneg _
   have δ_le : ∀ w : K, δ ≤ ∥u - w∥ := cinfi_le ⟨0, Set.forall_range_iff.2 fun _ => norm_nonneg _⟩
   have δ_le' : ∀, ∀ w ∈ K, ∀, δ ≤ ∥u - w∥ := fun w hw => δ_le ⟨w, hw⟩
+  -- Step 1: since `δ` is the infimum, can find a sequence `w : ℕ → K` in `K`
+  -- such that `∥u - w n∥ < δ + 1 / (n + 1)` (which implies `∥u - w n∥ --> δ`);
+  -- maybe this should be a separate lemma
   have exists_seq : ∃ w : ℕ → K, ∀ n, ∥u - w n∥ < δ + 1 / (n + 1) := by
     have hδ : ∀ n : ℕ, δ < δ + 1 / (n + 1) := fun n => lt_add_of_le_of_pos le_rfl Nat.one_div_pos_of_nat
     have h := fun n => exists_lt_of_cinfi_lt (hδ n)
@@ -80,14 +91,18 @@ theorem exists_norm_eq_infi_of_complete_convex {K : Set F} (ne : K.Nonempty) (h�
       convert h.add tendsto_one_div_add_at_top_nhds_0_nat
       simp only [add_zeroₓ]
     exact tendsto_of_tendsto_of_tendsto_of_le_of_le h h' (fun x => δ_le _) fun x => le_of_ltₓ (hw _)
+  -- Step 2: Prove that the sequence `w : ℕ → K` is a Cauchy sequence
   have seq_is_cauchy : CauchySeq fun n => (w n : F) := by
     rw [cauchy_seq_iff_le_tendsto_0]
+    -- splits into three goals
     let b := fun n : ℕ => 8 * δ * (1 / (n + 1)) + 4 * (1 / (n + 1)) * (1 / (n + 1))
     use fun n => sqrt (b n)
     constructor
+    -- first goal :  `∀ (n : ℕ), 0 ≤ sqrt (b n)`
     intro n
     exact sqrt_nonneg _
     constructor
+    -- second goal : `∀ (n m N : ℕ), N ≤ n → N ≤ m → dist ↑(w n) ↑(w m) ≤ sqrt (b N)`
     intro p q N hp hq
     let wp := (w p : F)
     let wq := (w q : F)
@@ -170,6 +185,7 @@ theorem exists_norm_eq_infi_of_complete_convex {K : Set F} (ne : K.Nonempty) (h�
               norm_num)
             nat.one_div_pos_of_nat.le)
           nat.one_div_pos_of_nat.le)
+    -- third goal : `tendsto (λ (n : ℕ), sqrt (b n)) at_top (𝓝 0)`
     apply tendsto.comp
     · convert continuous_sqrt.continuous_at
       exact sqrt_zero.symm
@@ -185,6 +201,8 @@ theorem exists_norm_eq_infi_of_complete_convex {K : Set F} (ne : K.Nonempty) (h�
       simp only [mul_zero]
     convert eq₁.add eq₂
     simp only [add_zeroₓ]
+  -- Step 3: By completeness of `K`, let `w : ℕ → K` converge to some `v : K`.
+  -- Prove that it satisfies all requirements.
   rcases cauchy_seq_tendsto_of_is_complete h₁ (fun n => _) seq_is_cauchy with ⟨v, hv, w_tendsto⟩
   use v
   use hv
@@ -931,8 +949,11 @@ of `φ`. -/
 theorem LinearIsometryEquiv.reflections_generate_dim_aux [FiniteDimensional ℝ F] {n : ℕ} (φ : F ≃ₗᵢ[ℝ] F)
     (hn : finrank ℝ (ContinuousLinearMap.id ℝ F - φ.toContinuousLinearEquiv).kerᗮ ≤ n) :
     ∃ l : List F, l.length ≤ n ∧ φ = (l.map fun v => reflection (ℝ∙v)ᗮ).Prod := by
+  -- We prove this by strong induction on `n`, the dimension of the orthogonal complement of the
+  -- fixed subspace of the endomorphism `φ`
   induction' n with n IH generalizing φ
-  · refine' ⟨[], rfl.le, show φ = 1 from _⟩
+  · -- Base case: `n = 0`, the fixed subspace is the whole space, so `φ = id`
+    refine' ⟨[], rfl.le, show φ = 1 from _⟩
     have : (ContinuousLinearMap.id ℝ F - φ.to_continuous_linear_equiv).ker = ⊤ := by
       rwa [Nat.le_zero_iffₓ, finrank_eq_zero, Submodule.orthogonal_eq_bot_iff] at hn
     symm
@@ -940,12 +961,15 @@ theorem LinearIsometryEquiv.reflections_generate_dim_aux [FiniteDimensional ℝ 
     have := LinearMap.congr_fun (linear_map.ker_eq_top.mp this) x
     rwa [ContinuousLinearMap.coe_sub, LinearMap.zero_apply, LinearMap.sub_apply, sub_eq_zero] at this
     
-  · let W := (ContinuousLinearMap.id ℝ F - φ.to_continuous_linear_equiv).ker
+  · -- Inductive step.  Let `W` be the fixed subspace of `φ`.  We suppose its complement to have
+    -- dimension at most n + 1.
+    let W := (ContinuousLinearMap.id ℝ F - φ.to_continuous_linear_equiv).ker
     have hW : ∀, ∀ w ∈ W, ∀, φ w = w := fun w hw => (sub_eq_zero.mp hw).symm
     by_cases' hn' : finrank ℝ Wᗮ ≤ n
     · obtain ⟨V, hV₁, hV₂⟩ := IH φ hn'
       exact ⟨V, hV₁.trans n.le_succ, hV₂⟩
       
+    -- Take a nonzero element `v` of the orthogonal complement of `W`.
     have : Nontrivial Wᗮ :=
       nontrivial_of_finrank_pos
         (by
@@ -958,13 +982,16 @@ theorem LinearIsometryEquiv.reflections_generate_dim_aux [FiniteDimensional ℝ 
     have hv' : (v : F) ∉ W := by
       intro h
       exact hv ((Submodule.mem_left_iff_eq_zero_of_disjoint W.orthogonal_disjoint).mp h)
+    -- Let `ρ` be the reflection in `v - φ v`; this is designed to swap `v` and `φ v`
     let x : F := v - φ v
     let ρ := reflection (ℝ∙x)ᗮ
+    -- Notation: Let `V` be the fixed subspace of `φ.trans ρ`
     let V := (ContinuousLinearMap.id ℝ F - (φ.trans ρ).toContinuousLinearEquiv).ker
     have hV : ∀ w, ρ (φ w) = w → w ∈ V := by
       intro w hw
       change w - ρ (φ w) = 0
       rw [sub_eq_zero, hw]
+    -- Everything fixed by `φ` is fixed by `φ.trans ρ`
     have H₂V : W ≤ V := by
       intro w hw
       apply hV
@@ -972,11 +999,14 @@ theorem LinearIsometryEquiv.reflections_generate_dim_aux [FiniteDimensional ℝ 
       refine' reflection_mem_subspace_eq_self _
       apply mem_orthogonal_singleton_of_inner_left
       exact Submodule.sub_mem _ v.prop hφv _ hw
+    -- `v` is also fixed by `φ.trans ρ`
     have H₁V : (v : F) ∈ V := by
       apply hV
       have : ρ v = φ v := reflection_sub (φ.norm_map v).symm
       rw [← this]
       exact reflection_reflection _ _
+    -- By dimension-counting, the complement of the fixed subspace of `φ.trans ρ` has dimension at
+    -- most `n`
     have : finrank ℝ Vᗮ ≤ n := by
       change finrank ℝ Wᗮ ≤ n + 1 at hn
       have : finrank ℝ W + 1 ≤ finrank ℝ V :=
@@ -984,7 +1014,10 @@ theorem LinearIsometryEquiv.reflections_generate_dim_aux [FiniteDimensional ℝ 
       have : finrank ℝ V + finrank ℝ Vᗮ = finrank ℝ F := V.finrank_add_finrank_orthogonal
       have : finrank ℝ W + finrank ℝ Wᗮ = finrank ℝ F := W.finrank_add_finrank_orthogonal
       linarith
+    -- So apply the inductive hypothesis to `φ.trans ρ`
     obtain ⟨l, hl, hφl⟩ := IH (ρ * φ) this
+    -- Prepend `ρ` to the factorization into reflections obtained for `φ.trans ρ`; this gives a
+    -- factorization into reflections for `φ`.
     refine' ⟨x :: l, Nat.succ_le_succₓ hl, _⟩
     rw [List.map_cons, List.prod_cons]
     have := congr_argₓ ((· * ·) ρ) hφl
@@ -1038,7 +1071,7 @@ theorem OrthogonalFamily.submodule_is_internal_iff [DecidableEq ι] [FiniteDimen
 
 end OrthogonalFamily
 
-section orthonormalBasis
+section OrthonormalBasis
 
 /-! ### Existence of orthonormal basis, etc. -/
 
@@ -1047,7 +1080,7 @@ variable {𝕜 E} {v : Set E}
 
 open FiniteDimensional Submodule Set
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (u «expr ⊇ » v)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (u «expr ⊇ » v)
 /-- An orthonormal set in an `inner_product_space` is maximal, if and only if the orthogonal
 complement of its span is empty. -/
 theorem maximal_orthonormal_iff_orthogonal_complement_eq_bot (hv : Orthonormal 𝕜 (coe : v → E)) :
@@ -1055,7 +1088,9 @@ theorem maximal_orthonormal_iff_orthogonal_complement_eq_bot (hv : Orthonormal �
   rw [Submodule.eq_bot_iff]
   constructor
   · contrapose!
+    -- ** direction 1: nonempty orthogonal complement implies nonmaximal
     rintro ⟨x, hx', hx⟩
+    -- take a nonzero vector and normalize it
     let e := (∥x∥⁻¹ : 𝕜) • x
     have he : ∥e∥ = 1 := by
       simp [e, norm_smul_inv_norm hx]
@@ -1067,15 +1102,18 @@ theorem maximal_orthonormal_iff_orthogonal_complement_eq_bot (hv : Orthonormal �
         simpa [(span 𝕜 v).inf_orthogonal_eq_bot] using this
       have : e ≠ 0 := hv.ne_zero ⟨e, hev⟩
       contradiction
+    -- put this together with `v` to provide a candidate orthonormal basis for the whole space
     refine' ⟨v.insert e, v.subset_insert e, ⟨_, _⟩, (v.ne_insert_of_not_mem he'').symm⟩
-    · rintro ⟨a, ha'⟩
+    · -- show that the elements of `v.insert e` have unit length
+      rintro ⟨a, ha'⟩
       cases' eq_or_mem_of_mem_insert ha' with ha ha
       · simp [ha, he]
         
       · exact hv.1 ⟨a, ha⟩
         
       
-    · have h_end : ∀, ∀ a ∈ v, ∀, ⟪a, e⟫ = 0 := by
+    · -- show that the elements of `v.insert e` are orthogonal
+      have h_end : ∀, ∀ a ∈ v, ∀, ⟪a, e⟫ = 0 := by
         intro a ha
         exact he' a (Submodule.subset_span ha)
       rintro ⟨a, ha'⟩
@@ -1100,7 +1138,8 @@ theorem maximal_orthonormal_iff_orthogonal_complement_eq_bot (hv : Orthonormal �
       exact hv.2 this
       
     
-  · simp only [subset.antisymm_iff]
+  · -- ** direction 2: empty orthogonal complement implies maximal
+    simp only [subset.antisymm_iff]
     rintro h u (huv : v ⊆ u) hu
     refine' ⟨_, huv⟩
     intro x hxu
@@ -1118,7 +1157,7 @@ section FiniteDimensional
 
 variable [FiniteDimensional 𝕜 E]
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (u «expr ⊇ » v)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (u «expr ⊇ » v)
 /-- An orthonormal set in a finite-dimensional `inner_product_space` is maximal, if and only if it
 is a basis. -/
 theorem maximal_orthonormal_iff_basis_of_finite_dimensional (hv : Orthonormal 𝕜 (coe : v → E)) :
@@ -1137,7 +1176,7 @@ theorem maximal_orthonormal_iff_basis_of_finite_dimensional (hv : Orthonormal �
     rw [← h.span_eq, coe_h, hv_coe]
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (u «expr ⊇ » v)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (u «expr ⊇ » v)
 /-- In a finite-dimensional `inner_product_space`, any orthonormal subset can be extended to an
 orthonormal basis. -/
 theorem exists_subset_is_orthonormal_basis (hv : Orthonormal 𝕜 (coe : v → E)) :
@@ -1155,32 +1194,36 @@ def OrthonormalBasisIndex : Set E :=
   Classical.some (exists_subset_is_orthonormal_basis (orthonormal_empty 𝕜 E))
 
 /-- A finite-dimensional `inner_product_space` has an orthonormal basis. -/
-def orthonormalBasis : Basis (OrthonormalBasisIndex 𝕜 E) 𝕜 E :=
+def stdOrthonormalBasis : Basis (OrthonormalBasisIndex 𝕜 E) 𝕜 E :=
   (exists_subset_is_orthonormal_basis (orthonormal_empty 𝕜 E)).some_spec.some_spec.some
 
-theorem orthonormal_basis_orthonormal : Orthonormal 𝕜 (orthonormalBasis 𝕜 E) :=
+theorem std_orthonormal_basis_orthonormal : Orthonormal 𝕜 (stdOrthonormalBasis 𝕜 E) :=
   (exists_subset_is_orthonormal_basis (orthonormal_empty 𝕜 E)).some_spec.some_spec.some_spec.1
 
 @[simp]
-theorem coe_orthonormal_basis : ⇑orthonormalBasis 𝕜 E = coe :=
+theorem coe_std_orthonormal_basis : ⇑stdOrthonormalBasis 𝕜 E = coe :=
   (exists_subset_is_orthonormal_basis (orthonormal_empty 𝕜 E)).some_spec.some_spec.some_spec.2
 
 instance : Fintype (OrthonormalBasisIndex 𝕜 E) :=
-  @IsNoetherian.fintypeBasisIndex _ _ _ _ _ _ _ (IsNoetherian.iff_fg.2 inferInstance) (orthonormalBasis 𝕜 E)
+  @IsNoetherian.fintypeBasisIndex _ _ _ _ _ _ _ (IsNoetherian.iff_fg.2 inferInstance) (stdOrthonormalBasis 𝕜 E)
 
 variable {𝕜 E}
 
 /-- An `n`-dimensional `inner_product_space` has an orthonormal basis indexed by `fin n`. -/
-def finOrthonormalBasis {n : ℕ} (hn : finrank 𝕜 E = n) : Basis (Finₓ n) 𝕜 E :=
+def finStdOrthonormalBasis {n : ℕ} (hn : finrank 𝕜 E = n) : Basis (Finₓ n) 𝕜 E :=
   have h : Fintype.card (OrthonormalBasisIndex 𝕜 E) = n := by
-    rw [← finrank_eq_card_basis (orthonormalBasis 𝕜 E), hn]
-  (orthonormalBasis 𝕜 E).reindex (Fintype.equivFinOfCardEq h)
+    rw [← finrank_eq_card_basis (stdOrthonormalBasis 𝕜 E), hn]
+  (stdOrthonormalBasis 𝕜 E).reindex (Fintype.equivFinOfCardEq h)
 
-theorem fin_orthonormal_basis_orthonormal {n : ℕ} (hn : finrank 𝕜 E = n) : Orthonormal 𝕜 (finOrthonormalBasis hn) :=
-  suffices Orthonormal 𝕜 (orthonormalBasis _ _ ∘ Equivₓ.symm _) by
-    simp only [finOrthonormalBasis, Basis.coe_reindex]
+theorem fin_std_orthonormal_basis_orthonormal {n : ℕ} (hn : finrank 𝕜 E = n) :
+    Orthonormal 𝕜 (finStdOrthonormalBasis hn) :=
+  suffices Orthonormal 𝕜 (stdOrthonormalBasis _ _ ∘ Equivₓ.symm _) by
+    simp only [finStdOrthonormalBasis, Basis.coe_reindex]
     assumption
-  (orthonormal_basis_orthonormal 𝕜 E).comp _ (Equivₓ.injective _)
+  (-- simpa doesn't work?
+        std_orthonormal_basis_orthonormal
+        𝕜 E).comp
+    _ (Equivₓ.injective _)
 
 section SubordinateOrthonormalBasis
 
@@ -1193,13 +1236,13 @@ variable {n : ℕ} (hn : finrank 𝕜 E = n) {ι : Type _} [Fintype ι] [Decidab
 inner product space `E`.  This should not be accessed directly, but only via the subsequent API. -/
 irreducible_def DirectSum.SubmoduleIsInternal.sigmaOrthonormalBasisIndexEquiv :
   (Σ i, OrthonormalBasisIndex 𝕜 (V i)) ≃ Finₓ n :=
-  let b := hV.collectedBasis fun i => orthonormalBasis 𝕜 (V i)
+  let b := hV.collectedBasis fun i => stdOrthonormalBasis 𝕜 (V i)
   Fintype.equivFinOfCardEq <| (FiniteDimensional.finrank_eq_card_basis b).symm.trans hn
 
 /-- An `n`-dimensional `inner_product_space` equipped with a decomposition as an internal direct
 sum has an orthonormal basis indexed by `fin n` and subordinate to that direct sum. -/
 irreducible_def DirectSum.SubmoduleIsInternal.subordinateOrthonormalBasis : Basis (Finₓ n) 𝕜 E :=
-  (hV.collectedBasis fun i => orthonormalBasis 𝕜 (V i)).reindex (hV.sigmaOrthonormalBasisIndexEquiv hn)
+  (hV.collectedBasis fun i => stdOrthonormalBasis 𝕜 (V i)).reindex (hV.sigmaOrthonormalBasisIndexEquiv hn)
 
 /-- An `n`-dimensional `inner_product_space` equipped with a decomposition as an internal direct
 sum has an orthonormal basis indexed by `fin n` and subordinate to that direct sum. This function
@@ -1212,8 +1255,8 @@ theorem DirectSum.SubmoduleIsInternal.subordinate_orthonormal_basis_orthonormal
     (hV' : @OrthogonalFamily 𝕜 _ _ _ _ (fun i => V i) _ fun i => (V i).subtypeₗᵢ) :
     Orthonormal 𝕜 (hV.subordinateOrthonormalBasis hn) := by
   simp only [DirectSum.SubmoduleIsInternal.subordinateOrthonormalBasis, Basis.coe_reindex]
-  have : Orthonormal 𝕜 (hV.collected_basis fun i => orthonormalBasis 𝕜 (V i)) :=
-    hV.collected_basis_orthonormal hV' fun i => orthonormal_basis_orthonormal 𝕜 (V i)
+  have : Orthonormal 𝕜 (hV.collected_basis fun i => stdOrthonormalBasis 𝕜 (V i)) :=
+    hV.collected_basis_orthonormal hV' fun i => std_orthonormal_basis_orthonormal 𝕜 (V i)
   exact this.comp _ (Equivₓ.injective _)
 
 /-- The basis constructed in `orthogonal_family.subordinate_orthonormal_basis` is subordinate to
@@ -1221,11 +1264,11 @@ the `orthogonal_family` in question. -/
 theorem DirectSum.SubmoduleIsInternal.subordinate_orthonormal_basis_subordinate (a : Finₓ n) :
     hV.subordinateOrthonormalBasis hn a ∈ V (hV.subordinateOrthonormalBasisIndex hn a) := by
   simpa only [DirectSum.SubmoduleIsInternal.subordinateOrthonormalBasis, Basis.coe_reindex] using
-    hV.collected_basis_mem (fun i => orthonormalBasis 𝕜 (V i)) ((hV.sigma_orthonormal_basis_index_equiv hn).symm a)
+    hV.collected_basis_mem (fun i => stdOrthonormalBasis 𝕜 (V i)) ((hV.sigma_orthonormal_basis_index_equiv hn).symm a)
 
 end SubordinateOrthonormalBasis
 
 end FiniteDimensional
 
-end orthonormalBasis
+end OrthonormalBasis
 

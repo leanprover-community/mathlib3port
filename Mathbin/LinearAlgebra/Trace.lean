@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Johannes Hölzl. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johannes Hölzl, Patrick Massot, Casper Putz, Anne Baanen
+-/
 import Mathbin.LinearAlgebra.Matrix.ToLin
 import Mathbin.LinearAlgebra.Matrix.Trace
 
@@ -38,9 +43,10 @@ variable {κ : Type _} [DecidableEq κ] [Fintype κ]
 variable (b : Basis ι R M) (c : Basis κ R M)
 
 /-- The trace of an endomorphism given a basis. -/
-def trace_aux : (M →ₗ[R] M) →ₗ[R] R :=
+def traceAux : (M →ₗ[R] M) →ₗ[R] R :=
   Matrix.trace ι R R ∘ₗ ↑(LinearMap.toMatrix b b)
 
+-- Can't be `simp` because it would cause a loop.
 theorem trace_aux_def (b : Basis ι R M) (f : M →ₗ[R] M) :
     traceAux R b f = Matrix.trace ι R R (LinearMap.toMatrix b b f) :=
   rfl

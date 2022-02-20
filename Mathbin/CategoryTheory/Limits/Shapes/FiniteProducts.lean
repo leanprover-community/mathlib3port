@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison
+-/
 import Mathbin.CategoryTheory.Limits.Shapes.BinaryProducts
 import Mathbin.CategoryTheory.Limits.Shapes.FiniteLimits
 import Mathbin.CategoryTheory.Limits.Shapes.Products
@@ -21,7 +26,9 @@ variable (C : Type u) [Category.{v} C]
 /-- A category has finite products if there is a chosen limit for every diagram
 with shape `discrete J`, where we have `[decidable_eq J]` and `[fintype J]`.
 -/
-class has_finite_products : Prop where
+-- We can't simply make this an abbreviation, as we do with other `has_Xs` limits typeclasses,
+-- because of https://github.com/leanprover-community/lean/issues/429
+class HasFiniteProducts : Prop where
   out (J : Type v) [DecidableEq J] [Fintype J] : HasLimitsOfShape (Discrete J) C
 
 instance has_limits_of_shape_discrete (J : Type v) [Fintype J] [HasFiniteProducts C] :
@@ -55,7 +62,7 @@ theorem has_finite_products_of_has_products [HasProducts C] : HasFiniteProducts 
 /-- A category has finite coproducts if there is a chosen colimit for every diagram
 with shape `discrete J`, where we have `[decidable_eq J]` and `[fintype J]`.
 -/
-class has_finite_coproducts : Prop where
+class HasFiniteCoproducts : Prop where
   out (J : Type v) [DecidableEq J] [Fintype J] : HasColimitsOfShape (Discrete J) C
 
 attribute [class] has_finite_coproducts

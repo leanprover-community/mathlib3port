@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Kenny Lau. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Kenny Lau
+-/
 import Mathbin.Algebra.CharP.Basic
 import Mathbin.RingTheory.Subring.Basic
 
@@ -10,7 +15,7 @@ universe u v
 
 namespace CharP
 
-instance Subsemiring (R : Type u) [Semiringₓ R] (p : ℕ) [CharP R p] (S : Subsemiring R) : CharP S p :=
+instance subsemiring (R : Type u) [Semiringₓ R] (p : ℕ) [CharP R p] (S : Subsemiring R) : CharP S p :=
   ⟨fun x =>
     Iff.symm <|
       (CharP.cast_eq_zero_iff R p x).symm.trans
@@ -22,7 +27,7 @@ instance Subsemiring (R : Type u) [Semiringₓ R] (p : ℕ) [CharP R p] (S : Sub
           map_nat_cast S.Subtype x ▸ by
             rw [h, RingHom.map_zero]⟩⟩
 
-instance Subring (R : Type u) [Ringₓ R] (p : ℕ) [CharP R p] (S : Subring R) : CharP S p :=
+instance subring (R : Type u) [Ringₓ R] (p : ℕ) [CharP R p] (S : Subring R) : CharP S p :=
   ⟨fun x =>
     Iff.symm <|
       (CharP.cast_eq_zero_iff R p x).symm.trans

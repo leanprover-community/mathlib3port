@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Riccardo Brasca. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Riccardo Brasca
+-/
 import Mathbin.LinearAlgebra.FreeModule.Finite.Basic
 import Mathbin.LinearAlgebra.Matrix.Charpoly.Coeff
 
@@ -57,7 +62,7 @@ theorem aeval_self_charpoly : aeval f f.charpoly = 0 := by
   rw [AlgEquiv.to_linear_equiv_apply, ← AlgEquiv.coe_alg_hom, ← Polynomial.aeval_alg_hom_apply _ _ _, charpoly_def]
   exact aeval_self_charpoly _
 
-theorem IsIntegral : IsIntegral R f :=
+theorem is_integral : IsIntegral R f :=
   ⟨f.charpoly, ⟨charpoly_monic f, aeval_self_charpoly f⟩⟩
 
 theorem minpoly_dvd_charpoly {K : Type u} {M : Type v} [Field K] [AddCommGroupₓ M] [Module K M] [FiniteDimensional K M]

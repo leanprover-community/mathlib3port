@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Kenny Lau. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Kenny Lau
+-/
 import Mathbin.Data.Equiv.Basic
 import Mathbin.Control.Applicative
 import Mathbin.Control.Traversable.Basic
@@ -55,7 +60,7 @@ theorem mul_eq (x y : FreeMagma α) : mul x y = x * y :=
 
 /-- Recursor for `free_magma` using `x * y` instead of `free_magma.mul x y`. -/
 @[elab_as_eliminator, to_additive "Recursor for `free_add_magma` using `x + y` instead of `free_add_magma.add x y`."]
-def rec_on_mul {C : FreeMagma α → Sort l} x (ih1 : ∀ x, C (of x)) (ih2 : ∀ x y, C x → C y → C (x * y)) : C x :=
+def recOnMul {C : FreeMagma α → Sort l} x (ih1 : ∀ x, C (of x)) (ih2 : ∀ x y, C x → C y → C (x * y)) : C x :=
   FreeMagma.recOn x ih1 ih2
 
 end FreeMagma
@@ -141,7 +146,7 @@ instance : Monadₓ FreeMagma where
 
 /-- Recursor on `free_magma` using `pure` instead of `of`. -/
 @[elab_as_eliminator, to_additive "Recursor on `free_add_magma` using `pure` instead of `of`."]
-protected def rec_on_pure {C : FreeMagma α → Sort l} x (ih1 : ∀ x, C (pure x)) (ih2 : ∀ x y, C x → C y → C (x * y)) :
+protected def recOnPure {C : FreeMagma α → Sort l} x (ih1 : ∀ x, C (pure x)) (ih2 : ∀ x y, C x → C y → C (x * y)) :
     C x :=
   FreeMagma.recOnMul x ih1 ih2
 
@@ -439,7 +444,7 @@ instance [Inhabited α] : Inhabited (FreeSemigroup α) :=
 
 /-- Recursor for free semigroup using `of` and `*`. -/
 @[elab_as_eliminator, to_additive "Recursor for free additive semigroup using `of` and `+`."]
-protected def rec_on {C : FreeSemigroup α → Sort l} x (ih1 : ∀ x, C (of x))
+protected def recOn {C : FreeSemigroup α → Sort l} x (ih1 : ∀ x, C (of x))
     (ih2 : ∀ x y, C (of x) → C y → C (of x * y)) : C x :=
   (Prod.recOn x) fun f s => List.recOn s ih1 (fun hd tl ih f => ih2 f (hd, tl) (ih1 f) (ih hd)) f
 
@@ -522,7 +527,7 @@ instance : Monadₓ FreeSemigroup where
 
 /-- Recursor that uses `pure` instead of `of`. -/
 @[elab_as_eliminator, to_additive "Recursor that uses `pure` instead of `of`."]
-def rec_on_pure {C : FreeSemigroup α → Sort l} x (ih1 : ∀ x, C (pure x))
+def recOnPure {C : FreeSemigroup α → Sort l} x (ih1 : ∀ x, C (pure x))
     (ih2 : ∀ x y, C (pure x) → C y → C (pure x * y)) : C x :=
   FreeSemigroup.recOn x ih1 ih2
 
@@ -594,7 +599,7 @@ theorem traverse_mul (x y : FreeSemigroup α) : traverse F (x * y) = (· * ·) <
         (· * ·) <$> pure <$> F x <*> traverse F ((hd, tl) * (y, L2) : FreeSemigroup α) =
           (· * ·) <$> ((· * ·) <$> pure <$> F x <*> traverse F (hd, tl)) <*> traverse F (y, L2)
         by
-        rw [ih] <;> simp' only [· ∘ ·, (mul_assoc _ _ _).symm] with functor_norm)
+        rw [ih] <;> simp' only [(· ∘ ·), (mul_assoc _ _ _).symm] with functor_norm)
     x
 
 @[simp, to_additive]

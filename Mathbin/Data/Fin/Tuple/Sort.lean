@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Kyle Miller. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Kyle Miller
+-/
 import Mathbin.Data.Fin.Basic
 import Mathbin.Data.Finset.Sort
 import Mathbin.Order.Lexicographic
@@ -47,7 +52,7 @@ theorem graph.card (f : Finₓ n → α) : (graph f).card = n := by
 
 /-- `graph_equiv₁ f` is the natural equivalence between `fin n` and `graph f`,
 mapping `i` to `(f i, i)`. -/
-def graph_equiv₁ (f : Finₓ n → α) : Finₓ n ≃ graph f where
+def graphEquiv₁ (f : Finₓ n → α) : Finₓ n ≃ graph f where
   toFun := fun i =>
     ⟨(f i, i), by
       simp [graph]⟩
@@ -63,7 +68,7 @@ theorem proj_equiv₁' (f : Finₓ n → α) : graph.proj ∘ graphEquiv₁ f = 
 
 /-- `graph_equiv₂ f` is an equivalence between `fin n` and `graph f` that respects the order.
 -/
-def graph_equiv₂ (f : Finₓ n → α) : Finₓ n ≃o graph f :=
+def graphEquiv₂ (f : Finₓ n → α) : Finₓ n ≃o graph f :=
   Finset.orderIsoOfFin _
     (by
       simp )

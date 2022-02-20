@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Yury G. Kudryashov. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yury G. Kudryashov
+-/
 import Mathbin.Topology.MetricSpace.Lipschitz
 import Mathbin.Analysis.SpecialFunctions.Pow
 
@@ -107,14 +112,14 @@ theorem comp_holder_with {Cg rg : ℝ≥0 } {g : Y → Z} {t : Set Y} (hg : Hold
   holder_on_with_univ.mp <| hg.comp (hf.HolderOnWith Univ) fun x _ => ht x
 
 /-- A Hölder continuous function is uniformly continuous -/
-protected theorem UniformContinuousOn (hf : HolderOnWith C r f s) (h0 : 0 < r) : UniformContinuousOn f s := by
+protected theorem uniform_continuous_on (hf : HolderOnWith C r f s) (h0 : 0 < r) : UniformContinuousOn f s := by
   refine' Emetric.uniform_continuous_on_iff.2 fun ε εpos => _
   have : tendsto (fun d : ℝ≥0∞ => (C : ℝ≥0∞) * d ^ (r : ℝ)) (𝓝 0) (𝓝 0) :=
     Ennreal.tendsto_const_mul_rpow_nhds_zero_of_pos Ennreal.coe_ne_top h0
   rcases ennreal.nhds_zero_basis.mem_iff.1 (this (gt_mem_nhds εpos)) with ⟨δ, δ0, H⟩
   exact ⟨δ, δ0, fun x hx y hy h => (hf.edist_le hx hy).trans_lt (H h)⟩
 
-protected theorem ContinuousOn (hf : HolderOnWith C r f s) (h0 : 0 < r) : ContinuousOn f s :=
+protected theorem continuous_on (hf : HolderOnWith C r f s) (h0 : 0 < r) : ContinuousOn f s :=
   (hf.UniformContinuousOn h0).ContinuousOn
 
 protected theorem mono (hf : HolderOnWith C r f s) (ht : t ⊆ s) : HolderOnWith C r f t := fun x hx y hy =>
@@ -165,10 +170,10 @@ theorem comp_holder_on_with {Cg rg : ℝ≥0 } {g : Y → Z} (hg : HolderWith Cg
   (hg.HolderOnWith Univ).comp hf fun _ _ => trivialₓ
 
 /-- A Hölder continuous function is uniformly continuous -/
-protected theorem UniformContinuous (hf : HolderWith C r f) (h0 : 0 < r) : UniformContinuous f :=
+protected theorem uniform_continuous (hf : HolderWith C r f) (h0 : 0 < r) : UniformContinuous f :=
   uniform_continuous_on_univ.mp <| (hf.HolderOnWith Univ).UniformContinuousOn h0
 
-protected theorem Continuous (hf : HolderWith C r f) (h0 : 0 < r) : Continuous f :=
+protected theorem continuous (hf : HolderWith C r f) (h0 : 0 < r) : Continuous f :=
   (hf.UniformContinuous h0).Continuous
 
 theorem ediam_image_le (hf : HolderWith C r f) (s : Set X) : Emetric.diam (f '' s) ≤ C * Emetric.diam s ^ (r : ℝ) :=

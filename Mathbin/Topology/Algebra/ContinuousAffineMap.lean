@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Oliver Nash. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Oliver Nash
+-/
 import Mathbin.LinearAlgebra.AffineSpace.AffineMap
 import Mathbin.Topology.ContinuousFunction.Basic
 import Mathbin.Topology.Algebra.Module.Basic
@@ -65,14 +70,14 @@ theorem ext_iff {f g : P →A[R] Q} : f = g ↔ ∀ x, f x = g x :=
     rintro rfl x
     rfl, ext⟩
 
-theorem congr_funₓ {f g : P →A[R] Q} (h : f = g) (x : P) : f x = g x :=
+theorem congr_fun {f g : P →A[R] Q} (h : f = g) (x : P) : f x = g x :=
   h ▸ rfl
 
 instance : Coe (P →A[R] Q) (P →ᵃ[R] Q) :=
   ⟨toAffineMap⟩
 
 /-- Forgetting its algebraic properties, a continuous affine map is a continuous map. -/
-def to_continuous_map (f : P →A[R] Q) : C(P, Q) :=
+def toContinuousMap (f : P →A[R] Q) : C(P, Q) :=
   ⟨f, f.cont⟩
 
 instance : Coe (P →A[R] Q) C(P, Q) :=
@@ -120,7 +125,7 @@ theorem mk_coe (f : P →A[R] Q) h : (⟨(f : P →ᵃ[R] Q), h⟩ : P →A[R] Q
   rfl
 
 @[continuity]
-protected theorem Continuous (f : P →A[R] Q) : Continuous f :=
+protected theorem continuous (f : P →A[R] Q) : Continuous f :=
   f.2
 
 variable (R P)
@@ -231,7 +236,7 @@ theorem neg_apply (f : P →A[R] W) (x : P) : (-f) x = -f x :=
   rfl
 
 instance : AddCommGroupₓ (P →A[R] W) :=
-  { (coe_injective.AddCommGroup _ coe_zero coe_add coe_neg coe_sub : AddCommGroupₓ (P →A[R] W)) with add := · + ·,
+  { (coe_injective.AddCommGroup _ coe_zero coe_add coe_neg coe_sub : AddCommGroupₓ (P →A[R] W)) with add := (· + ·),
     zero := 0, neg := Neg.neg, sub := Sub.sub }
 
 instance [Monoidₓ S] [DistribMulAction S W] [SmulCommClass R S W] [HasContinuousConstSmul S W] :
@@ -254,7 +259,7 @@ variable [AddCommGroupₓ V] [Module R V] [TopologicalSpace V]
 variable [AddCommGroupₓ W] [Module R W] [TopologicalSpace W]
 
 /-- A continuous linear map can be regarded as a continuous affine map. -/
-def to_continuous_affine_map (f : V →L[R] W) : V →A[R] W where
+def toContinuousAffineMap (f : V →L[R] W) : V →A[R] W where
   toFun := f
   linear := f
   map_vadd' := by

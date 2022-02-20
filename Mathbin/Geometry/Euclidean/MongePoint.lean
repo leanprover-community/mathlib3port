@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Joseph Myers. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Joseph Myers
+-/
 import Mathbin.Geometry.Euclidean.Circumcenter
 
 /-!
@@ -74,7 +79,7 @@ M are collinear in that order on the Euler line, with OG : GM = (n-1)
 in a point that equals the centroid in 0 or 1 dimensions), and then
 show in subsequent lemmas that the point so defined lies in the Monge
 planes and is their unique point of intersection. -/
-def monge_point {n : ℕ} (s : Simplex ℝ P n) : P :=
+def mongePoint {n : ℕ} (s : Simplex ℝ P n) : P :=
   (((n + 1 : ℕ) : ℝ) / ((n - 1 : ℕ) : ℝ)) • ((univ : Finset (Finₓ (n + 1))).centroid ℝ s.points -ᵥ s.circumcenter) +ᵥ
     s.circumcenter
 
@@ -101,7 +106,7 @@ omit V
 
 /-- The weights for the Monge point of an (n+2)-simplex, in terms of
 `points_with_circumcenter`. -/
-def monge_point_weights_with_circumcenter (n : ℕ) : PointsWithCircumcenterIndex (n + 2) → ℝ
+def mongePointWeightsWithCircumcenter (n : ℕ) : PointsWithCircumcenterIndex (n + 2) → ℝ
   | point_index i => ((n + 1 : ℕ) : ℝ)⁻¹
   | circumcenter_index => -2 / ((n + 1 : ℕ) : ℝ)
 
@@ -153,7 +158,7 @@ omit V
 /-- The weights for the Monge point of an (n+2)-simplex, minus the
 centroid of an n-dimensional face, in terms of
 `points_with_circumcenter`.  This definition is only valid when `i₁ ≠ i₂`. -/
-def monge_point_vsub_face_centroid_weights_with_circumcenter {n : ℕ} (i₁ i₂ : Finₓ (n + 3)) :
+def mongePointVsubFaceCentroidWeightsWithCircumcenter {n : ℕ} (i₁ i₂ : Finₓ (n + 3)) :
     PointsWithCircumcenterIndex (n + 2) → ℝ
   | point_index i => if i = i₁ ∨ i = i₂ then ((n + 1 : ℕ) : ℝ)⁻¹ else 0
   | circumcenter_index => -2 / ((n + 1 : ℕ) : ℝ)
@@ -250,7 +255,7 @@ subspace of the subspace spanned by the simplex that passes through
 the centroid of an n-dimensional face and is orthogonal to the
 opposite edge (in 2 dimensions, this is the same as an altitude).
 This definition is only intended to be used when `i₁ ≠ i₂`. -/
-def monge_plane {n : ℕ} (s : Simplex ℝ P (n + 2)) (i₁ i₂ : Finₓ (n + 3)) : AffineSubspace ℝ P :=
+def mongePlane {n : ℕ} (s : Simplex ℝ P (n + 2)) (i₁ i₂ : Finₓ (n + 3)) : AffineSubspace ℝ P :=
   mk' (({i₁, i₂}ᶜ : Finset (Finₓ (n + 3))).centroid ℝ s.points)
       (ℝ∙s.points i₁ -ᵥ s.points i₂)ᗮ⊓affineSpan ℝ (Set.Range s.points)
 
@@ -613,7 +618,7 @@ include V
 
 /-- Four points form an orthocentric system if they consist of the
 vertices of a triangle and its orthocenter. -/
-def orthocentric_system (s : Set P) : Prop :=
+def OrthocentricSystem (s : Set P) : Prop :=
   ∃ t : Triangle ℝ P, t.orthocenter ∉ Set.Range t.points ∧ s = insert t.orthocenter (Set.Range t.points)
 
 /-- This is an auxiliary lemma giving information about the relation
@@ -697,7 +702,7 @@ theorem exists_dist_eq_circumradius_of_subset_insert_orthocenter {t : Triangle �
     
 
 /-- Any three points in an orthocentric system are affinely independent. -/
-theorem orthocentric_system.affine_independent {s : Set P} (ho : OrthocentricSystem s) {p : Finₓ 3 → P}
+theorem OrthocentricSystem.affine_independent {s : Set P} (ho : OrthocentricSystem s) {p : Finₓ 3 → P}
     (hps : Set.Range p ⊆ s) (hpi : Function.Injective p) : AffineIndependent ℝ p := by
   rcases ho with ⟨t, hto, hst⟩
   rw [hst] at hps
@@ -724,7 +729,7 @@ theorem affine_span_of_orthocentric_system {s : Set P} (ho : OrthocentricSystem 
     t.independent.finrank_vector_span (Fintype.card_fin _)]
 
 /-- All triangles in an orthocentric system have the same circumradius. -/
-theorem orthocentric_system.exists_circumradius_eq {s : Set P} (ho : OrthocentricSystem s) :
+theorem OrthocentricSystem.exists_circumradius_eq {s : Set P} (ho : OrthocentricSystem s) :
     ∃ r : ℝ, ∀ t : Triangle ℝ P, Set.Range t.points ⊆ s → t.circumradius = r := by
   rcases ho with ⟨t, hto, hts⟩
   use t.circumradius
@@ -742,7 +747,7 @@ theorem orthocentric_system.exists_circumradius_eq {s : Set P} (ho : Orthocentri
 
 /-- Given any triangle in an orthocentric system, the fourth point is
 its orthocenter. -/
-theorem orthocentric_system.eq_insert_orthocenter {s : Set P} (ho : OrthocentricSystem s) {t : Triangle ℝ P}
+theorem OrthocentricSystem.eq_insert_orthocenter {s : Set P} (ho : OrthocentricSystem s) {t : Triangle ℝ P}
     (ht : Set.Range t.points ⊆ s) : s = insert t.orthocenter (Set.Range t.points) := by
   rcases ho with ⟨t₀, ht₀o, ht₀s⟩
   rw [ht₀s] at ht

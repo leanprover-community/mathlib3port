@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Johan Commelin. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johan Commelin
+-/
 import Mathbin.Data.Multiset.Sort
 import Mathbin.Data.Pnat.Interval
 import Mathbin.Data.Rat.Order
@@ -38,7 +43,7 @@ open Multiset
 /-- `A' q r := {1,q,r}` is a `multiset ℕ+`
 that is a solution to the inequality
 `(p⁻¹ + q⁻¹ + r⁻¹ : ℚ) > 1`. -/
-def A' (q r : ℕ+) : Multiset ℕ+ :=
+def a' (q r : ℕ+) : Multiset ℕ+ :=
   {1, q, r}
 
 /-- `A r := {1,1,r}` is a `multiset ℕ+`
@@ -46,7 +51,7 @@ that is a solution to the inequality
 `(p⁻¹ + q⁻¹ + r⁻¹ : ℚ) > 1`.
 
 These solutions are related to the Dynkin diagrams $A_r$. -/
-def A (r : ℕ+) : Multiset ℕ+ :=
+def a (r : ℕ+) : Multiset ℕ+ :=
   a' 1 r
 
 /-- `D' r := {2,2,r}` is a `multiset ℕ+`
@@ -54,7 +59,7 @@ that is a solution to the inequality
 `(p⁻¹ + q⁻¹ + r⁻¹ : ℚ) > 1`.
 
 These solutions are related to the Dynkin diagrams $D_{r+2}$. -/
-def D' (r : ℕ+) : Multiset ℕ+ :=
+def d' (r : ℕ+) : Multiset ℕ+ :=
   {2, 2, r}
 
 /-- `E' r := {2,3,r}` is a `multiset ℕ+`.
@@ -62,7 +67,7 @@ For `r ∈ {3,4,5}` is a solution to the inequality
 `(p⁻¹ + q⁻¹ + r⁻¹ : ℚ) > 1`.
 
 These solutions are related to the Dynkin diagrams $E_{r+3}$. -/
-def E' (r : ℕ+) : Multiset ℕ+ :=
+def e' (r : ℕ+) : Multiset ℕ+ :=
   {2, 3, r}
 
 /-- `E6 := {2,3,3}` is a `multiset ℕ+`
@@ -70,7 +75,7 @@ that is a solution to the inequality
 `(p⁻¹ + q⁻¹ + r⁻¹ : ℚ) > 1`.
 
 This solution is related to the Dynkin diagrams $E_6$. -/
-def E6 : Multiset ℕ+ :=
+def e6 : Multiset ℕ+ :=
   e' 3
 
 /-- `E7 := {2,3,4}` is a `multiset ℕ+`
@@ -78,7 +83,7 @@ that is a solution to the inequality
 `(p⁻¹ + q⁻¹ + r⁻¹ : ℚ) > 1`.
 
 This solution is related to the Dynkin diagrams $E_7$. -/
-def E7 : Multiset ℕ+ :=
+def e7 : Multiset ℕ+ :=
   e' 4
 
 /-- `E8 := {2,3,5}` is a `multiset ℕ+`
@@ -86,14 +91,14 @@ that is a solution to the inequality
 `(p⁻¹ + q⁻¹ + r⁻¹ : ℚ) > 1`.
 
 This solution is related to the Dynkin diagrams $E_8$. -/
-def E8 : Multiset ℕ+ :=
+def e8 : Multiset ℕ+ :=
   e' 5
 
 /-- `sum_inv pqr` for a `pqr : multiset ℕ+` is the sum of the inverses
 of the elements of `pqr`, as rational number.
 
 The intended argument is a multiset `{p,q,r}` of cardinality `3`. -/
-def sum_inv (pqr : Multiset ℕ+) : ℚ :=
+def sumInv (pqr : Multiset ℕ+) : ℚ :=
   Multiset.sum <| pqr.map fun x => x⁻¹
 
 theorem sum_inv_pqr (p q r : ℕ+) : sumInv {p, q, r} = p⁻¹ + q⁻¹ + r⁻¹ := by
@@ -101,7 +106,7 @@ theorem sum_inv_pqr (p q r : ℕ+) : sumInv {p, q, r} = p⁻¹ + q⁻¹ + r⁻¹
 
 /-- A multiset `pqr` of positive natural numbers is `admissible`
 if it is equal to `A' q r`, or `D' r`, or one of `E6`, `E7`, or `E8`. -/
-def admissible (pqr : Multiset ℕ+) : Prop :=
+def Admissible (pqr : Multiset ℕ+) : Prop :=
   (∃ q r, a' q r = pqr) ∨ (∃ r, d' r = pqr) ∨ e' 3 = pqr ∨ e' 4 = pqr ∨ e' 5 = pqr
 
 theorem admissible_A' (q r : ℕ+) : Admissible (a' q r) :=
@@ -128,7 +133,7 @@ theorem admissible_E7 : Admissible e7 :=
 theorem admissible_E8 : Admissible e8 :=
   admissible_E'5
 
-theorem admissible.one_lt_sum_inv {pqr : Multiset ℕ+} : Admissible pqr → 1 < sumInv pqr := by
+theorem Admissible.one_lt_sum_inv {pqr : Multiset ℕ+} : Admissible pqr → 1 < sumInv pqr := by
   rw [admissible]
   rintro (⟨p', q', H⟩ | ⟨n, H⟩ | H | H | H)
   · rw [← H, A', sum_inv_pqr, add_assocₓ]
@@ -205,7 +210,7 @@ theorem admissible_of_one_lt_sum_inv_aux :
 
 theorem admissible_of_one_lt_sum_inv {p q r : ℕ+} (H : 1 < sumInv {p, q, r}) : Admissible {p, q, r} := by
   simp only [admissible]
-  let S := sort (· ≤ · : ℕ+ → ℕ+ → Prop) {p, q, r}
+  let S := sort ((· ≤ ·) : ℕ+ → ℕ+ → Prop) {p, q, r}
   have hS : S.sorted (· ≤ ·) := sort_sorted _ _
   have hpqr : ({p, q, r} : Multiset ℕ+) = S := (sort_eq LE.le {p, q, r}).symm
   simp only [hpqr] at *

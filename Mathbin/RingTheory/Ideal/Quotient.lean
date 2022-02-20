@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Kenny Lau. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Kenny Lau, Chris Hughes, Mario Carneiro, Anne Baanen
+-/
 import Mathbin.LinearAlgebra.Quotient
 import Mathbin.RingTheory.Ideal.Basic
 
@@ -37,6 +42,9 @@ The ideal quotient of `I` is defined to equal the quotient of `I` as an `R`-subm
 This definition is marked `reducible` so that typeclass instances can be shared between
 `ideal.quotient I` and `submodule.quotient I`.
 -/
+-- Note that at present `ideal` means a left-ideal,
+-- so this quotient is only useful in a commutative ring.
+-- We should develop quotients by two-sided ideals as well.
 @[reducible]
 instance : HasQuotient R (Ideal R) :=
   Submodule.hasQuotient
@@ -45,10 +53,10 @@ namespace Quotientₓ
 
 variable {I} {x y : R}
 
-instance One (I : Ideal R) : One (R ⧸ I) :=
+instance hasOne (I : Ideal R) : One (R ⧸ I) :=
   ⟨Submodule.Quotient.mk 1⟩
 
-instance Mul (I : Ideal R) : Mul (R ⧸ I) :=
+instance hasMul (I : Ideal R) : Mul (R ⧸ I) :=
   ⟨fun a b =>
     (Quotientₓ.liftOn₂' a b fun a b => Submodule.Quotient.mk (a * b)) fun a₁ a₂ b₁ b₂ h₁ h₂ =>
       Quot.sound <| by
@@ -59,8 +67,8 @@ instance Mul (I : Ideal R) : Mul (R ⧸ I) :=
         change _ ∈ _
         convert F⟩
 
-instance CommRingₓ (I : Ideal R) : CommRingₓ (R ⧸ I) :=
-  { Submodule.Quotient.addCommGroup I with mul := · * ·, one := 1,
+instance commRing (I : Ideal R) : CommRingₓ (R ⧸ I) :=
+  { Submodule.Quotient.addCommGroup I with mul := (· * ·), one := 1,
     mul_assoc := fun a b c =>
       (Quotientₓ.induction_on₃' a b c) fun a b c => congr_argₓ Submodule.Quotient.mk (mul_assoc a b c),
     mul_comm := fun a b => (Quotientₓ.induction_on₂' a b) fun a b => congr_argₓ Submodule.Quotient.mk (mul_comm a b),
@@ -75,14 +83,18 @@ instance CommRingₓ (I : Ideal R) : CommRingₓ (R ⧸ I) :=
 def mk (I : Ideal R) : R →+* R ⧸ I :=
   ⟨fun a => Submodule.Quotient.mk a, rfl, fun _ _ => rfl, rfl, fun _ _ => rfl⟩
 
+/- Two `ring_homs`s from the quotient by an ideal are equal if their
+compositions with `ideal.quotient.mk'` are equal.
+
+See note [partially-applied ext lemmas]. -/
 @[ext]
 theorem ring_hom_ext [NonAssocSemiringₓ S] ⦃f g : R ⧸ I →+* S⦄ (h : f.comp (mk I) = g.comp (mk I)) : f = g :=
   RingHom.ext fun x => Quotientₓ.induction_on' x <| (RingHom.congr_fun h : _)
 
-instance Inhabited : Inhabited (R ⧸ I) :=
+instance inhabited : Inhabited (R ⧸ I) :=
   ⟨mk I 37⟩
 
-protected theorem Eq : mk I x = mk I y ↔ x - y ∈ I :=
+protected theorem eq : mk I x = mk I y ↔ x - y ∈ I :=
   Submodule.Quotient.eq I
 
 @[simp]
@@ -98,7 +110,7 @@ theorem zero_eq_one_iff {I : Ideal R} : (0 : R ⧸ I) = 1 ↔ I = ⊤ :=
 theorem zero_ne_one_iff {I : Ideal R} : (0 : R ⧸ I) ≠ 1 ↔ I ≠ ⊤ :=
   not_congr zero_eq_one_iff
 
-protected theorem Nontrivial {I : Ideal R} (hI : I ≠ ⊤) : Nontrivial (R ⧸ I) :=
+protected theorem nontrivial {I : Ideal R} (hI : I ≠ ⊤) : Nontrivial (R ⧸ I) :=
   ⟨⟨0, 1, zero_ne_one_iff.2 hI⟩⟩
 
 theorem mk_surjective : Function.Surjective (mk I) := fun y => Quotientₓ.induction_on' y fun x => Exists.introₓ x rfl
@@ -116,7 +128,7 @@ theorem quotient_ring_saturate (I : Ideal R) (s : Set R) : mk I ⁻¹' (mk I '' 
       ⟨a, ha, by
         rw [← Eq, sub_add_eq_sub_sub_swap, sub_self, zero_sub] <;> exact I.neg_mem hi⟩⟩
 
-instance IsDomain (I : Ideal R) [hI : I.IsPrime] : IsDomain (R ⧸ I) :=
+instance is_domain (I : Ideal R) [hI : I.IsPrime] : IsDomain (R ⧸ I) :=
   { Quotient.nontrivial hI.1 with
     eq_zero_or_eq_zero_of_mul_eq_zero := fun a b =>
       (Quotientₓ.induction_on₂' a b) fun a b hab =>
@@ -136,6 +148,7 @@ theorem exists_inv {I : Ideal R} [hI : I.IsMaximal] : ∀ {a : R ⧸ I}, a ≠ 0
   rcases hI.exists_inv (mt eq_zero_iff_mem.2 h) with ⟨b, c, hc, abc⟩
   rw [mul_comm] at abc
   refine' ⟨mk _ b, Quot.sound _⟩
+  --quot.sound hb
   rw [← eq_sub_iff_add_eq'] at abc
   rw [abc, ← neg_mem_iff, neg_sub] at hc
   convert hc
@@ -146,10 +159,10 @@ open_locale Classical
 computable inverses in some applications.
 See note [reducible non-instances]. -/
 @[reducible]
-protected noncomputable def Field (I : Ideal R) [hI : I.IsMaximal] : Field (R ⧸ I) :=
+protected noncomputable def field (I : Ideal R) [hI : I.IsMaximal] : Field (R ⧸ I) :=
   { Quotient.commRing I, Quotient.is_domain I with
     inv := fun a => if ha : a = 0 then 0 else Classical.some (exists_inv ha),
-    mul_inv_cancel := fun a ha : a ≠ 0 =>
+    mul_inv_cancel := fun ha : a ≠ 0 =>
       show a * dite _ _ _ = _ by
         rw [dif_neg ha] <;> exact Classical.some_spec (exists_inv ha),
     inv_zero := dif_pos rfl }
@@ -178,7 +191,7 @@ variable [CommRingₓ S]
 lift it to the quotient by this ideal. -/
 def lift (I : Ideal R) (f : R →+* S) (H : ∀ a : R, a ∈ I → f a = 0) : R ⧸ I →+* S where
   toFun := fun x =>
-    (Quotientₓ.liftOn' x f) fun a b h : _ ∈ _ =>
+    (Quotientₓ.liftOn' x f) fun h : _ ∈ _ =>
       eq_of_sub_eq_zero <| by
         rw [← f.map_sub, H _ h]
   map_one' := f.map_one
@@ -211,7 +224,7 @@ end Quotientₓ
 
 See also `submodule.quot_equiv_of_eq`.
 -/
-def quot_equiv_of_eq {R : Type _} [CommRingₓ R] {I J : Ideal R} (h : I = J) : R ⧸ I ≃+* R ⧸ J :=
+def quotEquivOfEq {R : Type _} [CommRingₓ R] {I J : Ideal R} (h : I = J) : R ⧸ I ≃+* R ⧸ J :=
   { Submodule.quotEquivOfEq I J h with
     map_mul' := by
       rintro ⟨x⟩ ⟨y⟩
@@ -227,7 +240,7 @@ section Pi
 variable (ι : Type v)
 
 /-- `R^n/I^n` is a `R/I`-module. -/
-instance module_pi : Module (R ⧸ I) ((ι → R) ⧸ I.pi ι) where
+instance modulePi : Module (R ⧸ I) ((ι → R) ⧸ I.pi ι) where
   smul := fun c m =>
     Quotientₓ.liftOn₂' c m (fun r m => Submodule.Quotient.mk <| r • m)
       (by
@@ -243,7 +256,7 @@ instance module_pi : Module (R ⧸ I) ((ι → R) ⧸ I.pi ι) where
   mul_smul := by
     rintro ⟨a⟩ ⟨b⟩ ⟨c⟩
     change Ideal.Quotient.mk _ _ = Ideal.Quotient.mk _ _
-    simp only [· • ·]
+    simp only [(· • ·)]
     congr with i
     exact mul_assoc a b (c i)
   smul_add := by
@@ -268,7 +281,7 @@ instance module_pi : Module (R ⧸ I) ((ι → R) ⧸ I.pi ι) where
     exact zero_mul (a i)
 
 /-- `R^n/I^n` is isomorphic to `(R/I)^n` as an `R/I`-module. -/
-noncomputable def pi_quot_equiv : ((ι → R) ⧸ I.pi ι) ≃ₗ[R ⧸ I] ι → R ⧸ I where
+noncomputable def piQuotEquiv : ((ι → R) ⧸ I.pi ι) ≃ₗ[R ⧸ I] ι → R ⧸ I where
   toFun := fun x =>
     (Quotientₓ.liftOn' x fun f i => Ideal.Quotient.mk I (f i)) fun a b hab =>
       funext fun i => Ideal.Quotient.eq.2 (hab i)
@@ -374,7 +387,7 @@ theorem exists_sub_mem [Fintype ι] {f : ι → Ideal R} (hf : ∀ i j, i ≠ j 
 
 /-- The homomorphism from `R/(⋂ i, f i)` to `∏ i, (R / f i)` featured in the Chinese
   Remainder Theorem. It is bijective if the ideals `f i` are comaximal. -/
-def quotient_inf_to_pi_quotient (f : ι → Ideal R) : (R ⧸ ⨅ i, f i) →+* ∀ i, R ⧸ f i :=
+def quotientInfToPiQuotient (f : ι → Ideal R) : (R ⧸ ⨅ i, f i) →+* ∀ i, R ⧸ f i :=
   (Quotient.lift (⨅ i, f i) (Pi.ringHom fun i : ι => (Quotient.mk (f i) : _))) fun r hr => by
     rw [Submodule.mem_infi] at hr
     ext i
@@ -394,7 +407,7 @@ theorem quotient_inf_to_pi_quotient_bijective [Fintype ι] {f : ι → Ideal R} 
     ⟨Quotient.mk _ r, funext fun i => Quotientₓ.out_eq' (g i) ▸ Quotient.eq.2 (hr i)⟩⟩
 
 /-- Chinese Remainder Theorem. Eisenbud Ex.2.6. Similar to Atiyah-Macdonald 1.10 and Stacks 00DT -/
-noncomputable def quotient_inf_ring_equiv_pi_quotient [Fintype ι] (f : ι → Ideal R) (hf : ∀ i j, i ≠ j → f i⊔f j = ⊤) :
+noncomputable def quotientInfRingEquivPiQuotient [Fintype ι] (f : ι → Ideal R) (hf : ∀ i j, i ≠ j → f i⊔f j = ⊤) :
     (R ⧸ ⨅ i, f i) ≃+* ∀ i, R ⧸ f i :=
   { Equivₓ.ofBijective _ (quotient_inf_to_pi_quotient_bijective hf), quotientInfToPiQuotient f with }
 

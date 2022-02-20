@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Chris Birkbeck. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Chris Birkbeck
+-/
 import Mathbin.LinearAlgebra.Matrix.NonsingularInverse
 import Mathbin.LinearAlgebra.SpecialLinearGroup
 
@@ -24,7 +29,7 @@ open LinearMap
 
 /-- `GL n R` is the group of `n` by `n` `R`-matrices with unit determinant.
 Defined as a subtype of matrices-/
-abbrev general_linear_group (n : Type u) (R : Type v) [DecidableEq n] [Fintype n] [CommRingₓ R] : Type _ :=
+abbrev GeneralLinearGroup (n : Type u) (R : Type v) [DecidableEq n] [Fintype n] [CommRingₓ R] : Type _ :=
   (Matrix n n R)ˣ
 
 notation "GL" => GeneralLinearGroup
@@ -46,7 +51,7 @@ def det : GL n R →* (R)ˣ where
   map_mul' := fun A B => Units.ext <| det_mul _ _
 
 /-- The `GL n R` and `general_linear_group R n` groups are multiplicatively equivalent-/
-def to_lin : GL n R ≃* LinearMap.GeneralLinearGroup R (n → R) :=
+def toLin : GL n R ≃* LinearMap.GeneralLinearGroup R (n → R) :=
   Units.mapEquiv toLinAlgEquiv'.toMulEquiv
 
 /-- Given a matrix with invertible determinant we get an element of `GL n R`-/
@@ -58,10 +63,10 @@ noncomputable def mk'' (A : Matrix n n R) (h : IsUnit (Matrix.det A)) : GL n R :
   nonsingInvUnit A h
 
 /-- Given a matrix with non-zero determinant over a field, we get an element of `GL n K`-/
-def mk_of_det_ne_zero {K : Type _} [Field K] (A : Matrix n n K) (h : Matrix.det A ≠ 0) : GL n K :=
+def mkOfDetNeZero {K : Type _} [Field K] (A : Matrix n n K) (h : Matrix.det A ≠ 0) : GL n K :=
   mk' A (invertibleOfNonzero h)
 
-instance coe_fun : CoeFun (GL n R) fun _ => n → n → R where
+instance coeFun : CoeFun (GL n R) fun _ => n → n → R where
   coe := fun A => A.val
 
 theorem ext_iff (A B : GL n R) : A = B ↔ ∀ i j, (A : Matrix n n R) i j = (B : Matrix n n R) i j :=
@@ -93,9 +98,13 @@ theorem coe_inv : ↑A⁻¹ = (↑A : Matrix n n R)⁻¹ := by
 
 /-- An element of the matrix general linear group on `(n) [fintype n]` can be considered as an
 element of the endomorphism general linear group on `n → R`. -/
-def to_linear : GeneralLinearGroup n R ≃* LinearMap.GeneralLinearGroup R (n → R) :=
+def toLinear : GeneralLinearGroup n R ≃* LinearMap.GeneralLinearGroup R (n → R) :=
   Units.mapEquiv Matrix.toLinAlgEquiv'.toRingEquiv.toMulEquiv
 
+-- Note that without the `@` and `‹_›`, lean infers `λ a b, _inst_1 a b` instead of `_inst_1` as the
+-- decidability argument, which prevents `simp` from obtaining the instance by unification.
+-- These `λ a b, _inst a b` terms also appear in the type of `A`, but simp doesn't get confused by
+-- them so for now we do not care.
 @[simp]
 theorem coe_to_linear : (@toLinear n ‹_› ‹_› _ _ A : (n → R) →ₗ[R] n → R) = Matrix.mulVecLin A :=
   rfl
@@ -112,7 +121,7 @@ namespace SpecialLinearGroup
 
 variable {n : Type u} [DecidableEq n] [Fintype n] {R : Type v} [CommRingₓ R]
 
-instance has_coe_to_general_linear_group : Coe (SpecialLinearGroup n R) (GL n R) :=
+instance hasCoeToGeneralLinearGroup : Coe (SpecialLinearGroup n R) (GL n R) :=
   ⟨fun A => ⟨↑A, ↑A⁻¹, congr_argₓ coe (mul_right_invₓ A), congr_argₓ coe (mul_left_invₓ A)⟩⟩
 
 end SpecialLinearGroup
@@ -127,7 +136,7 @@ variable (n R)
 
 /-- This is the subgroup of `nxn` matrices with entries over a
 linear ordered ring and positive determinant. -/
-def GL_pos : Subgroup (GL n R) :=
+def gLPos : Subgroup (GL n R) :=
   (Units.posSubgroup R).comap GeneralLinearGroup.det
 
 end
@@ -177,7 +186,7 @@ namespace SpecialLinearGroup
 variable {n : Type u} [DecidableEq n] [Fintype n] {R : Type v} [LinearOrderedCommRing R]
 
 /-- `special_linear_group n R` embeds into `GL_pos n R` -/
-def to_GL_pos : SpecialLinearGroup n R →* gLPos n R where
+def toGLPos : SpecialLinearGroup n R →* gLPos n R where
   toFun := fun A => ⟨(A : GL n R), show 0 < (↑A : Matrix n n R).det from A.Prop.symm ▸ zero_lt_one⟩
   map_one' := Subtype.ext <| Units.ext <| rfl
   map_mul' := fun A₁ A₂ => Subtype.ext <| Units.ext <| rfl
@@ -195,17 +204,20 @@ end SpecialLinearGroup
 
 section Examples
 
--- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»
 /-- The matrix [a, b; -b, a] (inspired by multiplication by a complex number); it is an element of
 $GL_2(R)$ if `a ^ 2 + b ^ 2` is nonzero. -/
 @[simps (config := { fullyApplied := false }) coe]
-def plane_conformal_matrix {R} [Field R] (a b : R) (hab : a ^ 2 + b ^ 2 ≠ 0) : Matrix.GeneralLinearGroup (Finₓ 2) R :=
+def planeConformalMatrix {R} [Field R] (a b : R) (hab : a ^ 2 + b ^ 2 ≠ 0) : Matrix.GeneralLinearGroup (Finₓ 2) R :=
   GeneralLinearGroup.mkOfDetNeZero
-    («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»")
+    («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»")
     (by
       simpa [det_fin_two, sq] using hab)
 
+/- TODO: Add Iwasawa matrices `n_x=![![1,x],![0,1]]`, `a_t=![![exp(t/2),0],![0,exp(-t/2)]]` and
+  `k_θ==![![cos θ, sin θ],![-sin θ, cos θ]]`
+-/
 end Examples
 
 end Matrix

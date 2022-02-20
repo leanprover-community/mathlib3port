@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2017 Johannes Hölzl. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johannes Hölzl, Mario Carneiro, Floris van Doorn
+-/
 import Mathbin.Topology.Bases
 import Mathbin.Topology.Homeomorph
 import Mathbin.Topology.ContinuousFunction.Basic
@@ -25,7 +30,7 @@ namespace TopologicalSpace
 variable (α)
 
 /-- The type of open subsets of a topological space. -/
-def opens :=
+def Opens :=
   { s : Set α // IsOpen s }
 
 variable {α}
@@ -68,7 +73,7 @@ instance : PartialOrderₓ (Opens α) :=
   Subtype.partialOrder _
 
 /-- The interior of a set, as an element of `opens`. -/
-def Interior (s : Set α) : Opens α :=
+def interior (s : Set α) : Opens α :=
   ⟨Interior s, is_open_interior⟩
 
 theorem gc : GaloisConnection (coe : Opens α → Set α) interior := fun U s =>
@@ -88,14 +93,27 @@ theorem gi_choice_val {s : OrderDual (Set α)} {hs} : (gi.choice s hs).val = s :
   rfl
 
 instance : CompleteLattice (Opens α) :=
-  CompleteLattice.copy (@OrderDual.completeLattice _ (GaloisInsertion.liftCompleteLattice (@gi α _))) (fun U V => U ⊆ V)
-    rfl ⟨Set.Univ, is_open_univ⟩ (Subtype.ext_iff_val.mpr interior_univ.symm) ⟨∅, is_open_empty⟩ rfl
-    (fun U V => ⟨↑U ∪ ↑V, IsOpen.union U.2 V.2⟩) rfl (fun U V => ⟨↑U ∩ ↑V, IsOpen.inter U.2 V.2⟩)
+  CompleteLattice.copy (@OrderDual.completeLattice _ (GaloisInsertion.liftCompleteLattice (@gi α _)))
+    (-- le
+    fun U V => U ⊆ V)
+    rfl-- top
+    ⟨Set.Univ, is_open_univ⟩
+    (Subtype.ext_iff_val.mpr interior_univ.symm)-- bot
+    ⟨∅, is_open_empty⟩
+    rfl
+    (-- sup
+    fun U V => ⟨↑U ∪ ↑V, IsOpen.union U.2 V.2⟩)
+    rfl
+    (-- inf
+    fun U V => ⟨↑U ∩ ↑V, IsOpen.inter U.2 V.2⟩)
     (by
       funext
       apply subtype.ext_iff_val.mpr
-      exact (IsOpen.inter U.2 V.2).interior_eq.symm)
-    _ rfl _ rfl
+      exact (IsOpen.inter U.2 V.2).interior_eq.symm)-- Sup
+    _
+    rfl-- Inf
+    _
+    rfl
 
 theorem le_def {U V : Opens α} : U ≤ V ↔ (U : Set α) ≤ (V : Set α) := by
   rfl
@@ -183,7 +201,7 @@ theorem ne_bot_iff_nonempty (U : Opens α) : U ≠ ⊥ ↔ Set.Nonempty (U : Set
   rw [Ne.def, ← opens.not_nonempty_iff_eq_bot, not_not]
 
 /-- A set of `opens α` is a basis if the set of corresponding sets is a topological basis. -/
-def is_basis (B : Set (Opens α)) : Prop :=
+def IsBasis (B : Set (Opens α)) : Prop :=
   IsTopologicalBasis ((coe : _ → Set α) '' B)
 
 theorem is_basis_iff_nbhd {B : Set (Opens α)} : IsBasis B ↔ ∀ {U : Opens α} {x}, x ∈ U → ∃ U' ∈ B, x ∈ U' ∧ U' ⊆ U := by
@@ -207,7 +225,7 @@ theorem is_basis_iff_nbhd {B : Set (Opens α)} : IsBasis B ↔ ∀ {U : Opens α
       
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (Us «expr ⊆ » B)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (Us «expr ⊆ » B)
 theorem is_basis_iff_cover {B : Set (Opens α)} : IsBasis B ↔ ∀ U : Opens α, ∃ (Us : _)(_ : Us ⊆ B), U = sup Us := by
   constructor
   · intro hB U
@@ -254,7 +272,7 @@ protected theorem comap_comap (g : C(β, γ)) (f : C(α, β)) (U : Opens γ) : c
 
 /-- A homeomorphism induces an equivalence on open sets, by taking comaps. -/
 @[simp]
-protected def Equivₓ (f : α ≃ₜ β) : Opens α ≃ Opens β where
+protected def equiv (f : α ≃ₜ β) : Opens α ≃ Opens β where
   toFun := Opens.comap f.symm.toContinuousMap
   invFun := Opens.comap f.toContinuousMap
   left_inv := by
@@ -268,17 +286,17 @@ protected def Equivₓ (f : α ≃ₜ β) : Opens α ≃ Opens β where
 
 /-- A homeomorphism induces an order isomorphism on open sets, by taking comaps. -/
 @[simp]
-protected def OrderIso (f : α ≃ₜ β) : Opens α ≃o Opens β where
+protected def orderIso (f : α ≃ₜ β) : Opens α ≃o Opens β where
   toEquiv := Opens.equiv f
   map_rel_iff' := fun U V => f.symm.Surjective.preimage_subset_preimage_iff
 
 end Opens
 
 /-- The open neighborhoods of a point. See also `opens` or `nhds`. -/
-def open_nhds_of (x : α) : Type _ :=
+def OpenNhdsOf (x : α) : Type _ :=
   { s : Set α // IsOpen s ∧ x ∈ s }
 
-instance open_nhds_of.inhabited {α : Type _} [TopologicalSpace α] (x : α) : Inhabited (OpenNhdsOf x) :=
+instance OpenNhdsOf.inhabited {α : Type _} [TopologicalSpace α] (x : α) : Inhabited (OpenNhdsOf x) :=
   ⟨⟨Set.Univ, is_open_univ, Set.mem_univ _⟩⟩
 
 end TopologicalSpace

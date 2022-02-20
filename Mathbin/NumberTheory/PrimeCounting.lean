@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Bolton Bailey. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Bolton Bailey
+-/
 import Mathbin.Data.Nat.Prime
 import Mathbin.Data.Nat.Totient
 import Mathbin.Algebra.Periodic
@@ -37,11 +42,11 @@ open Finset
 /-- A variant of the traditional prime counting function which gives the number of primes
 *strictly* less than the input. More convenient for avoiding off-by-one errors.
 -/
-def prime_counting' : ℕ → ℕ :=
+def primeCounting' : ℕ → ℕ :=
   Nat.count Prime
 
 /-- The prime counting function: Returns the number of primes less than or equal to the input. -/
-def prime_counting (n : ℕ) : ℕ :=
+def primeCounting (n : ℕ) : ℕ :=
   primeCounting' (n + 1)
 
 localized [Nat] notation "π" => Nat.primeCounting

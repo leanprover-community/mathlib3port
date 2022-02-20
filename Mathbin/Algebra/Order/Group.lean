@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2016 Jeremy Avigad. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Jeremy Avigad, Leonardo de Moura, Mario Carneiro, Johannes Hölzl
+-/
 import Mathbin.Algebra.Abs
 import Mathbin.Algebra.Order.Sub
 import Mathbin.Order.OrderDual
@@ -81,6 +86,7 @@ instance Units.orderedCommGroup [OrderedCommMonoid α] : OrderedCommGroup (α)ˣ
   { Units.partialOrder, Units.commGroup with
     mul_le_mul_left := fun a b h c => (mul_le_mul_left' (h : (a : α) ≤ b) _ : (c : α) * a ≤ c * b) }
 
+-- see Note [lower instance priority]
 @[to_additive]
 instance (priority := 100) OrderedCommGroup.toOrderedCancelCommMonoid (α : Type u) [s : OrderedCommGroup α] :
     OrderedCancelCommMonoid α :=
@@ -607,6 +613,8 @@ def Function.Injective.orderedCommGroup [OrderedCommGroup α] {β : Type _} [One
     (div : ∀ x y, f (x / y) = f x / f y) : OrderedCommGroup β :=
   { PartialOrderₓ.lift f hf, hf.OrderedCommMonoid f one mul, hf.CommGroup f one mul inv div with }
 
+--  Most of the lemmas that are primed in this section appear in ordered_field. 
+--  I (DT) did not try to minimise the assumptions.
 section Groupₓ
 
 variable [Groupₓ α] [LE α]
@@ -645,6 +653,9 @@ alias le_sub_iff_add_le ↔ add_le_of_le_sub_right le_sub_right_of_add_le
 theorem div_le_iff_le_mul : a / c ≤ b ↔ a ≤ b * c := by
   rw [← mul_le_mul_iff_right c, div_eq_mul_inv, inv_mul_cancel_right]
 
+-- TODO: Should we get rid of `sub_le_iff_le_add` in favor of
+-- (a renamed version of) `tsub_le_iff_right`?
+-- see Note [lower instance priority]
 instance (priority := 100) AddGroupₓ.toHasOrderedSub {α : Type _} [AddGroupₓ α] [LE α]
     [CovariantClass α α (swap (· + ·)) (· ≤ ·)] : HasOrderedSub α :=
   ⟨fun a b c => sub_le_iff_le_add⟩
@@ -749,6 +760,8 @@ end Preorderₓ
 
 end CommGroupₓ
 
+--  Most of the lemmas that are primed in this section appear in ordered_field. 
+--  I (DT) did not try to minimise the assumptions.
 section Groupₓ
 
 variable [Groupₓ α] [LT α]
@@ -884,11 +897,14 @@ theorem le_of_forall_one_lt_lt_mul (h : ∀ ε : α, 1 < ε → a < b * ε) : a 
 theorem le_iff_forall_one_lt_lt_mul : a ≤ b ↔ ∀ ε, 1 < ε → a < b * ε :=
   ⟨fun h ε => lt_mul_of_le_of_one_lt h, le_of_forall_one_lt_lt_mul⟩
 
+/-  I (DT) introduced this lemma to prove (the additive version `sub_le_sub_flip` of)
+`div_le_div_flip` below.  Now I wonder what is the point of either of these lemmas... -/
 @[to_additive]
 theorem div_le_inv_mul_iff [CovariantClass α α (swap (· * ·)) (· ≤ ·)] : a / b ≤ a⁻¹ * b ↔ a ≤ b := by
   rw [div_eq_mul_inv, mul_inv_le_inv_mul_iff]
   exact ⟨fun h => not_lt.mp fun k => not_lt.mpr h (mul_lt_mul''' k k), fun h => mul_le_mul' h h⟩
 
+--  What is the point of this lemma?  See comment about `div_le_inv_mul_iff` above.
 @[simp, to_additive]
 theorem div_le_div_flip {α : Type _} [CommGroupₓ α] [LinearOrderₓ α] [CovariantClass α α (· * ·) (· ≤ ·)] {a b : α} :
     a / b ≤ b / a ↔ a ≤ b := by
@@ -969,6 +985,7 @@ section LinearOrderedCommGroup
 
 variable [LinearOrderedCommGroup α] {a b c : α}
 
+-- see Note [lower instance priority]
 @[to_additive]
 instance (priority := 100) LinearOrderedCommGroup.toLinearOrderedCancelCommMonoid : LinearOrderedCancelCommMonoid α :=
   { ‹LinearOrderedCommGroup α› with le_of_mul_le_mul_left := fun x y z => le_of_mul_le_mul_left',
@@ -1032,12 +1049,14 @@ theorem exists_one_lt' [Nontrivial α] : ∃ a : α, 1 < a := by
   · exact ⟨y, h⟩
     
 
+-- see Note [lower instance priority]
 @[to_additive]
 instance (priority := 100) LinearOrderedCommGroup.to_no_max_order [Nontrivial α] : NoMaxOrder α :=
   ⟨by
     obtain ⟨y, hy⟩ : ∃ a : α, 1 < a := exists_one_lt'
     exact fun a => ⟨a * y, lt_mul_of_one_lt_right' a hy⟩⟩
 
+-- see Note [lower instance priority]
 @[to_additive]
 instance (priority := 100) LinearOrderedCommGroup.to_no_min_order [Nontrivial α] : NoMinOrder α :=
   ⟨by
@@ -1051,6 +1070,7 @@ section CovariantAddLe
 section Neg
 
 /-- `abs a` is the absolute value of `a`. -/
+-- see Note [lower instance priority]
 @[to_additive]
 instance (priority := 100) hasInvLatticeHasAbs [Inv α] [Lattice α] : HasAbs α :=
   ⟨fun a => a⊔a⁻¹⟩
@@ -1329,7 +1349,7 @@ namespace AddCommGroupₓ
 This is useful for constructing an `ordered_add_commm_group`
 by choosing a positive cone in an exisiting `add_comm_group`. -/
 @[nolint has_inhabited_instance]
-structure positive_cone (α : Type _) [AddCommGroupₓ α] where
+structure PositiveCone (α : Type _) [AddCommGroupₓ α] where
   Nonneg : α → Prop
   Pos : α → Prop := fun a => nonneg a ∧ ¬nonneg (-a)
   pos_iff : ∀ a, Pos a ↔ nonneg a ∧ ¬nonneg (-a) := by
@@ -1342,7 +1362,7 @@ structure positive_cone (α : Type _) [AddCommGroupₓ α] where
 /-- A positive cone in an `add_comm_group` induces a linear order if
 for every `a`, either `a` or `-a` is non-negative. -/
 @[nolint has_inhabited_instance]
-structure total_positive_cone (α : Type _) [AddCommGroupₓ α] extends PositiveCone α where
+structure TotalPositiveCone (α : Type _) [AddCommGroupₓ α] extends PositiveCone α where
   nonnegDecidable : DecidablePred nonneg
   nonneg_total : ∀ a : α, nonneg a ∨ nonneg (-a)
 
@@ -1357,7 +1377,7 @@ open AddCommGroupₓ
 
 /-- Construct an `ordered_add_comm_group` by
 designating a positive cone in an existing `add_comm_group`. -/
-def mk_of_positive_cone {α : Type _} [AddCommGroupₓ α] (C : PositiveCone α) : OrderedAddCommGroup α :=
+def mkOfPositiveCone {α : Type _} [AddCommGroupₓ α] (C : PositiveCone α) : OrderedAddCommGroup α :=
   { ‹AddCommGroupₓ α› with le := fun a b => C.Nonneg (b - a), lt := fun a b => C.Pos (b - a),
     lt_iff_le_not_le := fun a b => by
       simp <;> rw [C.pos_iff] <;> simp ,
@@ -1371,7 +1391,7 @@ def mk_of_positive_cone {α : Type _} [AddCommGroupₓ α] (C : PositiveCone α)
           (by
             rw [neg_sub] <;> exact nab),
     add_le_add_left := fun a b nab c => by
-      simpa [· ≤ ·, Preorderₓ.Le] using nab }
+      simpa [(· ≤ ·), Preorderₓ.Le] using nab }
 
 end OrderedAddCommGroup
 
@@ -1382,7 +1402,7 @@ open AddCommGroupₓ
 /-- Construct a `linear_ordered_add_comm_group` by
 designating a positive cone in an existing `add_comm_group`
 such that for every `a`, either `a` or `-a` is non-negative. -/
-def mk_of_positive_cone {α : Type _} [AddCommGroupₓ α] (C : TotalPositiveCone α) : LinearOrderedAddCommGroup α :=
+def mkOfPositiveCone {α : Type _} [AddCommGroupₓ α] (C : TotalPositiveCone α) : LinearOrderedAddCommGroup α :=
   { OrderedAddCommGroup.mkOfPositiveCone C.toPositiveCone with
     le_total := fun a b => by
       convert C.nonneg_total (b - a)
@@ -1421,6 +1441,8 @@ end TypeTags
 
 section NormNumLemmas
 
+/- The following lemmas are stated so that the `norm_num` tactic can use them with the
+expected signatures.  -/
 variable [OrderedCommGroup α] {a b : α}
 
 @[to_additive neg_le_neg]
@@ -1431,10 +1453,12 @@ theorem inv_le_inv' : a ≤ b → b⁻¹ ≤ a⁻¹ :=
 theorem inv_lt_inv' : a < b → b⁻¹ < a⁻¹ :=
   inv_lt_inv_iff.mpr
 
+--  The additive version is also a `linarith` lemma.
 @[to_additive]
 theorem inv_lt_one_of_one_lt : 1 < a → a⁻¹ < 1 :=
   inv_lt_one_iff_one_lt.mpr
 
+--  The additive version is also a `linarith` lemma.
 @[to_additive]
 theorem inv_le_one_of_one_le : 1 ≤ a → a⁻¹ ≤ 1 :=
   inv_le_one'.mpr

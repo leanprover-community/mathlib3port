@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Rémy Degenne. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Rémy Degenne
+-/
 import Mathbin.MeasureTheory.Function.ConditionalExpectation
 
 /-! # Notations for probability theory
@@ -23,6 +28,11 @@ value in `ℝ`, `ℝ≥0` or `ℝ≥0∞`.
 
 open MeasureTheory
 
+-- We define notations `𝔼[f|hm]` and `𝔼[f|m,hm]` for the conditional expectation of `f` with
+-- respect to `m`. Both can be used in code but only the second one will be used by the goal view.
+-- The first notation avoids the repetition of `m`, which is already present in `hm`. The second
+-- one ensures that `m` stays visible in the goal view: when `hm` is complicated, it gets rendered
+-- as `_` and the measurable space would not be visible in `𝔼[f|_]`, but is clear in `𝔼[f|m,_]`.
 localized [ProbabilityTheory] notation "𝔼[" X "|" hm "]" => MeasureTheory.condexp _ hm MeasureTheory.Measure.volume X
 
 localized [ProbabilityTheory]

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Floris van Doorn. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Floris van Doorn
+-/
 import Mathbin.Meta.RbMap
 import Mathbin.Tactic.Core
 
@@ -113,6 +118,9 @@ unsafe def print_localized_commands (ns : List Name) : tactic Unit := do
   let cmds ← get_localized ns
   cmds trace
 
+-- you can run `open_locale classical` to get the decidability of all propositions, and downgrade
+-- the priority of decidability instances that make Lean run through all the algebraic hierarchy
+-- whenever it wants to solve a decidability question
 localized [Classical] attribute [instance] Classical.propDecidable
 
 localized [Classical] attribute [instance] Eq.decidable decidableEqOfDecidableLe

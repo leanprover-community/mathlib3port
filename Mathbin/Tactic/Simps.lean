@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Floris van Doorn. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Floris van Doorn
+-/
 import Mathbin.Tactic.Protected
 import Mathbin.Algebra.Group.ToAdditive
 
@@ -67,7 +72,9 @@ unsafe structure projection_data where
   matching this projection has been found. Only used internally in `simps_get_raw_projections`. -/
 unsafe structure parsed_projection_data where
   orig_name : Name
+  -- name for this projection used in the structure definition
   new_name : Name
+  -- name for this projection used in the generated `simp` lemmas
   is_default : Bool
   IsPrefix : Bool
 
@@ -119,8 +126,8 @@ unsafe def simps_str_attr : user_attribute Unit (List Name × List projection_da
   descr := "An attribute specifying the projection of the given structure."
   parser := failed
 
--- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr ?»
--- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr ?»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr ?»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr ?»
 /-- The `@[notation_class]` attribute specifies that this is a notation class,
   and this notation should be used instead of projections by @[simps].
   * The first argument `tt` for notation classes and `ff` for classes applied to the structure,
@@ -243,13 +250,18 @@ unsafe def get_composite_of_projections (str : Name) (proj : Stringₓ) : tactic
     means that the projection `name` will not be applied by default.
   * if `trc` is true, this tactic will trace information.
 -/
+-- if performance becomes a problem, possible heuristic: use the names of the projections to
+-- skip all classes that don't have the corresponding field.
 unsafe def simps_get_raw_projections (e : environment) (str : Name) (trace_if_exists : Bool := false)
     (rules : List ProjectionRule := []) (trc := false) : tactic (List Name × List projection_data) := do
   let trc := trc || is_trace_enabled_for `simps.verbose
   let has_attr ← has_attribute' `_simps_str str
   if has_attr then do
       let data ← simps_str_attr str
-      when (trace_if_exists || is_trace_enabled_for `simps.verbose) <|
+      -- We always print the projections when they already exists and are called by
+            -- `initialize_simps_projections`.
+            when
+            (trace_if_exists || is_trace_enabled_for `simps.verbose) <|
           projections_info data.2 "Already found projection information for structure" str >>= trace
       return data
     else do
@@ -262,7 +274,14 @@ unsafe def simps_get_raw_projections (e : environment) (str : Name) (trace_if_ex
       let d_str ← e str
       let raw_univs := d_str
       let raw_levels := level.param <$> raw_univs
-      let projs ← e str
+      let projs
+        ←/- Figure out projections, including renamings. The information for a projection is (before we
+                figure out the `expr` of the projection:
+                `(original name, given name, is default, is prefix)`.
+                The first projections are always the actual projections of the structure, but `rules` could
+                specify custom projections that are compositions of multiple projections. -/
+            e
+            str
       let projs : List parsed_projection_data := projs fun nm => ⟨nm, nm, tt, ff⟩
       let projs : List parsed_projection_data :=
         rules
@@ -285,8 +304,11 @@ unsafe def simps_get_raw_projections (e : environment) (str : Name) (trace_if_ex
             "Invalid projection names. Two projections have the same name.\nThis is likely because a custom composition of projections was given the same name as an " ++
                 "existing projection. Solution: rename the existing projection (before renaming the custom " ++
               "projection)."
-      let raw_exprs_and_nrs ←
-        projs fun ⟨orig_nm, new_nm, _, _⟩ => do
+      let raw_exprs_and_nrs
+        ←/- Define the raw expressions for the projections, by default as the projections
+                (as an expression), but this can be overriden by the user. -/
+            projs
+            fun ⟨orig_nm, new_nm, _, _⟩ => do
             let (raw_expr, nrs) ← get_composite_of_projections str orig_nm
             let custom_proj ←
               (do
@@ -298,7 +320,10 @@ unsafe def simps_get_raw_projections (e : environment) (str : Name) (trace_if_ex
                                     > {← custom_proj}")
                     return custom_proj) <|>
                   return raw_expr
-            is_def_eq custom_proj raw_expr <|> do
+            is_def_eq custom_proj
+                  raw_expr <|>-- if the type of the expression is different, we show a different error message, because
+              -- that is more likely going to be helpful.
+              do
                 let custom_proj_type ← infer_type custom_proj
                 let raw_expr_type ← infer_type raw_expr
                 let b ← succeeds (is_def_eq custom_proj_type raw_expr_type)
@@ -316,13 +341,20 @@ unsafe def simps_get_raw_projections (e : environment) (str : Name) (trace_if_ex
                         {← raw_expr_type}"
             return (custom_proj, nrs)
       let raw_exprs := raw_exprs_and_nrs Prod.fst
-      let (args, _) ← open_pis d_str
+      let-- Check for other coercions and type-class arguments to use as projections instead.
+        (args, _)
+        ← open_pis d_str
       let e_str := (expr.const str raw_levels).mk_app args
       let automatic_projs ← attribute.get_instances `notation_class
       let raw_exprs ←
         automatic_projs
-            (fun raw_exprs : List expr class_nm =>
-              (do
+            (fun class_nm =>
+              (/- For this class, find the projection. `raw_expr` is the projection found applied to `args`,
+                        and `lambda_raw_expr` has the arguments `args` abstracted. -/
+                -- Note: `expr.bind_lambda` doesn't give the correct type
+                /- Use this as projection, if the function reduces to a projection, and this projection has
+                        not been overrriden by the user. -/
+                do
                   let (is_class, proj_nm) ← notation_class_attr class_nm
                   let proj_nm ← proj_nm <|> (e class_nm).map List.headₓ
                   let (raw_expr, lambda_raw_expr) ←
@@ -358,8 +390,10 @@ unsafe def simps_get_raw_projections (e : environment) (str : Name) (trace_if_ex
       let defaults := projs fun x => x
       let prefixes := projs fun x => x
       let projs := proj_names projection_data.mk raw_exprs positions defaults prefixes
-      let projs ←
-        projs fun proj => is_proof proj >>= fun b => return <| if b then { proj with is_default := ff } else proj
+      let projs
+        ←-- make all proof non-default.
+            projs
+            fun proj => is_proof proj >>= fun b => return <| if b then { proj with is_default := ff } else proj
       when trc <| projections_info projs "generated projections for" str >>= trace
       simps_str_attr str (raw_univs, projs) tt
       when_tracing `simps.debug
@@ -368,7 +402,7 @@ unsafe def simps_get_raw_projections (e : environment) (str : Name) (trace_if_ex
               {← (raw_univs, projs)}")
       return (raw_univs, projs)
 
--- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr ?»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr ?»
 /-- Parse a rule for `initialize_simps_projections`. It is either `<name>→<name>` or `-<name>`,
   possibly following by `as_prefix`.-/
 unsafe def simps_parse_rule : parser ProjectionRule :=
@@ -394,9 +428,9 @@ composite of multiple projections).
 -/
 
 
--- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr ?»
--- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr *»
--- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr ?»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr ?»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr *»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr ?»
 /-- This command specifies custom names and custom projections for the simp attribute `simps_attr`.
 * You can specify custom names by writing e.g.
   `initialize_simps_projections equiv (to_fun → apply, inv_fun → symm_apply)`.
@@ -570,10 +604,16 @@ def lemmasOnly : SimpsCfg where
 unsafe def simps_get_projection_exprs (e : environment) (tgt : expr) (rhs : expr) (cfg : SimpsCfg) :
     tactic <| List <| expr × projection_data := do
   let params := get_app_args tgt
-  ((params <| (get_app_args rhs).take params).mmap' fun ⟨a, b⟩ => is_def_eq a b) <|> fail "unreachable code (1)"
+  ((-- the parameters of the structure
+            params <|
+            (get_app_args rhs).take params).mmap'
+        fun ⟨a, b⟩ => is_def_eq a b) <|>
+      fail "unreachable code (1)"
   let str := tgt.get_app_fn.const_name
   let rhs_args := (get_app_args rhs).drop params.length
-  let (raw_univs, proj_data) ← simps_get_raw_projections e str false [] cfg.trace
+  let-- the fields of the object
+    (raw_univs, proj_data)
+    ← simps_get_raw_projections e str false [] cfg.trace
   let univs := raw_univs.zip tgt.get_app_fn.univ_levels
   let new_proj_data : List <| expr × projection_data :=
     proj_data.map fun proj =>
@@ -591,7 +631,9 @@ unsafe def simps_add_projection (nm : Name) (type lhs rhs : expr) (args : List e
         dbg_trace "[simps] > Planning to add the equality
                   > {(← lhs)} = ({(← rhs)} : {← type})")
   let lvl ← get_univ_level type
-  let (rhs, prf) ←
+  let-- simplify `rhs` if `cfg.simp_rhs` is true
+    (rhs, prf)
+    ←
     (do
           guardₓ cfg
           let rhs' ← rhs.dsimp { failIfUnchanged := false }
@@ -631,7 +673,9 @@ unsafe def simps_add_projections :
     ∀ e : environment nm : Name type lhs rhs : expr args : List expr univs : List Name must_be_str : Bool cfg : SimpsCfg
       todo : List Stringₓ to_apply : List ℕ, tactic Unit
   | e, nm, type, lhs, rhs, args, univs, must_be_str, cfg, todo, to_apply => do
-    when_tracing `simps.debug
+    -- we don't want to unfold non-reducible definitions (like `set`) to apply more arguments
+        when_tracing
+        `simps.debug
         (← do
           dbg_trace "[simps] > Type of the expression before normalizing: {← type}")
     let (type_args, tgt) ← open_pis_whnf type cfg.typeMd
@@ -646,29 +690,50 @@ unsafe def simps_add_projections :
     let lhs_ap := lhs.instantiate_lambdas_or_apps type_args
     let rhs_ap := rhs.instantiate_lambdas_or_apps type_args
     let str := tgt.get_app_fn.const_name
-    let todo_next := todo.filter (· ≠ "")
-    if e str ∧ ¬(todo = [] ∧ str ∈ cfg ∧ ¬must_be_str) then do
+    let-- We want to generate the current projection if it is in `todo`
+    todo_next := todo.filter (· ≠ "")
+    /- Don't recursively continue if `str` is not a structure or if the structure is in
+            `not_recursive`. -/
+        if e str ∧ ¬(todo = [] ∧ str ∈ cfg ∧ ¬must_be_str) then do
         let [intro] ← return <| e str | fail "unreachable code (3)"
         let rhs_whnf ← whnf rhs_ap cfg
-        let (rhs_ap, todo_now) ←
-          if ¬is_constant_of rhs_ap intro ∧ is_constant_of rhs_whnf intro then
-              when ("" ∈ todo ∧ to_apply = [])
+        let (rhs_ap, todo_now)
+          ←-- `todo_now` means that we still have to generate the current simp lemma
+              if ¬is_constant_of rhs_ap intro ∧ is_constant_of rhs_whnf intro then
+              /- If this was a desired projection, we want to apply it before taking the whnf.
+                          However, if the current field is an eta-expansion (see below), we first want
+                          to eta-reduce it and only then construct the projection.
+                          This makes the flow of this function messy. -/
+                  when
+                  ("" ∈ todo ∧ to_apply = [])
                   (if cfg then simps_add_projection nm tgt lhs_ap rhs_ap new_args univs cfg
                   else simps_add_projection nm type lhs rhs args univs cfg) >>
                 return (rhs_whnf, ff)
             else return (rhs_ap, "" ∈ todo ∧ to_apply = [])
         if is_constant_of (get_app_fn rhs_ap) intro then do
-            let proj_info ← simps_get_projection_exprs e tgt rhs_ap cfg
+            let proj_info
+              ←-- if the value is a constructor application
+                  simps_get_projection_exprs
+                  e tgt rhs_ap cfg
             when_tracing `simps.debug
                 (← do
                   dbg_trace "[simps] > Raw projection information:
                       {← proj_info}")
             let eta ← rhs_ap
-            let rhs_ap := eta rhs_ap
-            when (todo_now ∨ todo = [] ∧ eta ∧ to_apply = []) <|
+            let-- check whether `rhs_ap` is an eta-expansion
+            rhs_ap := eta rhs_ap
+            -- eta-reduce `rhs_ap`
+                  /- As a special case, we want to automatically generate the current projection if `rhs_ap`
+                          was an eta-expansion. Also, when this was a desired projection, we need to generate the
+                          current projection if we haven't done it above. -/
+                  when
+                  (todo_now ∨ todo = [] ∧ eta ∧ to_apply = []) <|
                 if cfg then simps_add_projection nm tgt lhs_ap rhs_ap new_args univs cfg
                 else simps_add_projection nm type lhs rhs args univs cfg
-            when (to_apply ≠ []) <| do
+            -- If we are in the middle of a composite projection.
+                  when
+                  (to_apply ≠ []) <|
+                do
                 let ⟨new_rhs, proj, proj_expr, proj_nrs, is_default, is_prefix⟩ ← return <| proj_info to_apply
                 let new_type ← infer_type new_rhs
                 when_tracing `simps.debug
@@ -676,10 +741,16 @@ unsafe def simps_add_projections :
                       dbg_trace "[simps] > Applying a custom composite projection. Current lhs:
                                 >  {← lhs_ap}")
                 simps_add_projections e nm new_type lhs_ap new_rhs new_args univs ff cfg todo to_apply
-            when ¬(to_apply ≠ [] ∨ todo = [""] ∨ eta ∧ todo = []) <| do
+            /- We stop if no further projection is specified or if we just reduced an eta-expansion and we
+                        automatically choose projections -/
+                  when
+                  ¬(to_apply ≠ [] ∨ todo = [""] ∨ eta ∧ todo = []) <|
+                do
                 let projs : List Name := proj_info fun x => x
                 let todo := if to_apply = [] then todo_next else todo
-                guardₓ (todo fun x => projs fun proj => ("_" ++ proj).isPrefixOf x) <|>
+                -- check whether all elements in `todo` have a projection as prefix
+                      guardₓ
+                      (todo fun x => projs fun proj => ("_" ++ proj).isPrefixOf x) <|>
                     let x := (todo fun x => projs fun proj => ¬("_" ++ proj).isPrefixOf x).iget
                     let simp_lemma := nm x
                     let needed_proj := (x '_').tail.head
@@ -694,7 +765,10 @@ unsafe def simps_add_projections :
                 proj_info fun proj_nr ⟨new_rhs, proj, proj_expr, proj_nrs, is_default, is_prefix⟩ => do
                     let new_type ← infer_type new_rhs
                     let new_todo := todo fun x => x ("_" ++ proj)
-                    when (is_default ∧ todo = [] ∨ new_todo ≠ []) <| do
+                    -- we only continue with this field if it is non-propositional or mentioned in todo
+                          when
+                          (is_default ∧ todo = [] ∨ new_todo ≠ []) <|
+                        do
                         let new_lhs := proj_expr [lhs_ap]
                         let new_nm := nm proj is_prefix
                         let new_cfg :=
@@ -705,8 +779,8 @@ unsafe def simps_add_projections :
                                         >  {← new_lhs}")
                         simps_add_projections e new_nm new_type new_lhs new_rhs new_args univs ff new_cfg new_todo
                             proj_nrs
-          else
-            if cfg = transparency.none ∧ (must_be_str ∨ todo_next ≠ [] ∨ to_apply ≠ []) then do
+          else-- if I'm about to run into an error, try to set the transparency for `rhs_md` higher.
+              if cfg = transparency.none ∧ (must_be_str ∨ todo_next ≠ [] ∨ to_apply ≠ []) then do
               when cfg
                   (← do
                     dbg_trace "[simps] > The given definition is not a constructor application:
@@ -758,11 +832,13 @@ unsafe def simps_tac (nm : Name) (cfg : SimpsCfg := {  }) (todo : List Stringₓ
       else return cfg
   simps_add_projections e nm d lhs d [] d tt cfg todo []
 
--- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr ?»
--- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr ?»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr ?»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr ?»
 /-- The parser for the `@[simps]` attribute. -/
 unsafe def simps_parser : parser (Bool × List Stringₓ × SimpsCfg) := do
-  Prod.mk <$> is_some <$> «expr ?» (tk "?") <*>
+  -- note: we don't check whether the user has written a nonsense namespace in an argument.
+        Prod.mk <$>
+        is_some <$> «expr ?» (tk "?") <*>
       (Prod.mk <$> many (name.last <$> ident) <*> do
         let some e ← «expr ?» parser.pexpr | return {  }
         eval_pexpr SimpsCfg e)
@@ -865,6 +941,8 @@ derives two `simp` lemmas:
   that `simps` comes after `to_additive`. This will also generate the additive versions of all
   `simp` lemmas.
 -/
+/- If one of the fields is a partially applied constructor, we will eta-expand it
+  (this likely never happens, so is not included in the official doc). -/
 @[user_attribute]
 unsafe def simps_attr : user_attribute Unit (Bool × List Stringₓ × SimpsCfg) where
   Name := `simps

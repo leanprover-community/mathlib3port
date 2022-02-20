@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Sébastien Gouëzel. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Sébastien Gouëzel
+-/
 import Mathbin.Analysis.Calculus.TimesContDiff
 import Mathbin.Geometry.Manifold.ChartedSpace
 
@@ -165,6 +170,7 @@ instance : CoeFun (ModelWithCorners 𝕜 E H) fun _ => H → E :=
 protected def symm : LocalEquiv E H :=
   I.toLocalEquiv.symm
 
+-- Register a few lemmas to make sure that `simp` puts expressions in normal form
 @[simp, mfld_simps]
 theorem to_local_equiv_coe : (I.toLocalEquiv : H → E) = I :=
   rfl
@@ -183,13 +189,13 @@ theorem mk_symm (e : LocalEquiv H E) a b c d : (ModelWithCorners.mk e a b c d : 
   rfl
 
 @[continuity]
-protected theorem Continuous : Continuous I :=
+protected theorem continuous : Continuous I :=
   I.continuous_to_fun
 
-protected theorem ContinuousAt {x} : ContinuousAt I x :=
+protected theorem continuous_at {x} : ContinuousAt I x :=
   I.Continuous.ContinuousAt
 
-protected theorem ContinuousWithinAt {s x} : ContinuousWithinAt I s x :=
+protected theorem continuous_within_at {s x} : ContinuousWithinAt I s x :=
   I.ContinuousAt.ContinuousWithinAt
 
 @[continuity]
@@ -237,7 +243,7 @@ protected theorem image_eq (s : Set H) : I '' s = I.symm ⁻¹' s ∩ Range I :=
   · rw [inter_comm, I.target_eq, I.to_local_equiv_coe_symm]
     
 
-protected theorem ClosedEmbedding : ClosedEmbedding I :=
+protected theorem closed_embedding : ClosedEmbedding I :=
   I.LeftInverse.ClosedEmbedding I.continuous_symm I.Continuous
 
 theorem closed_range : IsClosed (Range I) :=
@@ -459,6 +465,8 @@ local homeomorphisms -/
 theorem times_cont_diff_groupoid_zero_eq : timesContDiffGroupoid 0 I = continuousGroupoid H := by
   apply le_antisymmₓ le_top
   intro u hu
+  -- we have to check that every local homeomorphism belongs to `times_cont_diff_groupoid 0 I`,
+  -- by unfolding its definition
   change u ∈ timesContDiffGroupoid 0 I
   rw [timesContDiffGroupoid, mem_groupoid_of_pregroupoid]
   simp only [times_cont_diff_on_zero]
@@ -566,12 +574,15 @@ end SmoothManifoldWithCorners
 
 namespace SmoothManifoldWithCorners
 
+/- We restate in the namespace `smooth_manifolds_with_corners` some lemmas that hold for general
+charted space with a structure groupoid, avoiding the need to specify the groupoid
+`times_cont_diff_groupoid ∞ I` explicitly. -/
 variable {𝕜 : Type _} [NondiscreteNormedField 𝕜] {E : Type _} [NormedGroup E] [NormedSpace 𝕜 E] {H : Type _}
   [TopologicalSpace H] (I : ModelWithCorners 𝕜 E H) (M : Type _) [TopologicalSpace M] [ChartedSpace H M]
 
 /-- The maximal atlas of `M` for the smooth manifold with corners structure corresponding to the
 model with corners `I`. -/
-def maximal_atlas :=
+def MaximalAtlas :=
   (timesContDiffGroupoid ∞ I).MaximalAtlas M
 
 variable {M}
@@ -590,7 +601,7 @@ theorem compatible_of_mem_maximal_atlas {e e' : LocalHomeomorph M H} (he : e ∈
   StructureGroupoid.compatible_of_mem_maximal_atlas he he'
 
 /-- The product of two smooth manifolds with corners is naturally a smooth manifold with corners. -/
-instance Prod {𝕜 : Type _} [NondiscreteNormedField 𝕜] {E : Type _} [NormedGroup E] [NormedSpace 𝕜 E] {E' : Type _}
+instance prod {𝕜 : Type _} [NondiscreteNormedField 𝕜] {E : Type _} [NormedGroup E] [NormedSpace 𝕜 E] {E' : Type _}
     [NormedGroup E'] [NormedSpace 𝕜 E'] {H : Type _} [TopologicalSpace H] {I : ModelWithCorners 𝕜 E H} {H' : Type _}
     [TopologicalSpace H'] {I' : ModelWithCorners 𝕜 E' H'} (M : Type _) [TopologicalSpace M] [ChartedSpace H M]
     [SmoothManifoldWithCorners I M] (M' : Type _) [TopologicalSpace M'] [ChartedSpace H' M']
@@ -704,7 +715,7 @@ theorem ext_chart_at_continuous_on_symm : ContinuousOn (extChartAt I x).symm (ex
 
 theorem ext_chart_at_map_nhds' {x y : M} (hy : y ∈ (extChartAt I x).Source) :
     map (extChartAt I x) (𝓝 y) = 𝓝[Range I] extChartAt I x y := by
-  rw [ext_chart_at_coe, · ∘ ·, ← I.map_nhds_eq, ← (chart_at H x).map_nhds_eq, map_map]
+  rw [ext_chart_at_coe, (· ∘ ·), ← I.map_nhds_eq, ← (chart_at H x).map_nhds_eq, map_map]
   rwa [ext_chart_at_source] at hy
 
 theorem ext_chart_at_map_nhds : map (extChartAt I x) (𝓝 x) = 𝓝[Range I] extChartAt I x x :=

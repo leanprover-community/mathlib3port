@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Anne Baanen. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Anne Baanen
+-/
 import Mathbin.Data.FunLike.Embedding
 
 /-!
@@ -123,6 +128,7 @@ class EquivLike (E : Sort _) (α β : outParam (Sort _)) where
   inv : E → β → α
   left_inv : ∀ e, Function.LeftInverse (inv e) (coe e)
   right_inv : ∀ e, Function.RightInverse (inv e) (coe e)
+  -- The `inv` hypothesis makes this easier to prove with `congr'`
   coe_injective' : ∀ e g, coe e = coe g → inv e = inv g → e = g
 
 namespace EquivLike
@@ -134,7 +140,7 @@ include iE
 theorem inv_injective : Function.Injective (EquivLike.inv : E → β → α) := fun e g h =>
   coe_injective' e g ((right_inv e).eq_right_inverse (h.symm ▸ left_inv g)) h
 
-instance (priority := 100) to_embedding_like : EmbeddingLike E α β where
+instance (priority := 100) toEmbeddingLike : EmbeddingLike E α β where
   coe := coe
   coe_injective' := fun e g h => coe_injective' e g h ((left_inv e).eq_right_inverse (h.symm ▸ right_inv g))
   injective' := fun e => (left_inv e).Injective

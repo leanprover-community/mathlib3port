@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Mario Carneiro. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Mario Carneiro
+-/
 import Mathbin.Data.List.Basic
 import Mathbin.Data.Nat.Choose.Basic
 
@@ -88,7 +93,7 @@ theorem sublists_aux₁_eq_sublists_aux : ∀ l f : List α → List β, sublist
 theorem sublists_aux_cons_eq_sublists_aux₁ (l : List α) : sublistsAux l cons = sublistsAux₁ l fun x => [x] := by
   rw [sublists_aux₁_eq_sublists_aux] <;> rfl
 
-theorem sublists_aux_eq_foldr.aux {a : α} {l : List α}
+theorem SublistsAuxEqFoldr.aux {a : α} {l : List α}
     (IH₁ : ∀ f : List α → List β → List β, sublistsAux l f = foldr f [] (sublistsAux l cons))
     (IH₂ : ∀ f : List α → List (List α) → List (List α), sublistsAux l f = foldr f [] (sublistsAux l cons))
     (f : List α → List β → List β) : sublistsAux (a :: l) f = foldr f [] (sublistsAux (a :: l) cons) := by
@@ -162,7 +167,7 @@ theorem sublists_concat (l : List α) (a : α) :
 theorem sublists_reverse (l : List α) : sublists (reverse l) = map reverse (sublists' l) := by
   induction' l with hd tl ih <;> [rfl,
     simp only [reverse_cons, sublists_append, sublists'_cons, map_append, ih, sublists_singleton, map_eq_map,
-      bind_eq_bind, map_map, cons_bind, append_nil, nil_bind, · ∘ ·]]
+      bind_eq_bind, map_map, cons_bind, append_nil, nil_bind, (· ∘ ·)]]
 
 theorem sublists_eq_sublists' (l : List α) : sublists l = map reverse (sublists' (reverse l)) := by
   rw [← sublists_reverse, reverse_reverse]
@@ -211,7 +216,7 @@ theorem map_ret_sublist_sublists (l : List α) : map List.ret l <+ sublists l :=
 /-- Auxiliary function to construct the list of all sublists of a given length. Given an
 integer `n`, a list `l`, a function `f` and an auxiliary list `L`, it returns the list made of
 of `f` applied to all sublists of `l` of length `n`, concatenated with `L`. -/
-def sublists_len_aux {α β : Type _} : ℕ → List α → (List α → β) → List β → List β
+def sublistsLenAux {α β : Type _} : ℕ → List α → (List α → β) → List β → List β
   | 0, l, f, r => f [] :: r
   | n + 1, [], f, r => r
   | n + 1, a :: l, f, r => sublists_len_aux (n + 1) l f (sublists_len_aux n l (f ∘ List.cons a) r)
@@ -219,7 +224,7 @@ def sublists_len_aux {α β : Type _} : ℕ → List α → (List α → β) →
 /-- The list of all sublists of a list `l` that are of length `n`. For instance, for
 `l = [0, 1, 2, 3]` and `n = 2`, one gets
 `[[2, 3], [1, 3], [1, 2], [0, 3], [0, 2], [0, 1]]`. -/
-def sublists_len {α : Type _} (n : ℕ) (l : List α) : List (List α) :=
+def sublistsLen {α : Type _} (n : ℕ) (l : List α) : List (List α) :=
   sublistsLenAux n l id []
 
 theorem sublists_len_aux_append {α β γ : Type _} :

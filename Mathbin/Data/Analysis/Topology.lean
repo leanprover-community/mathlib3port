@@ -1,3 +1,10 @@
+/-
+Copyright (c) 2017 Mario Carneiro. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Mario Carneiro
+
+Computational realization of topological spaces (experimental).
+-/
 import Mathbin.Topology.Bases
 import Mathbin.Data.Analysis.Filter
 
@@ -34,7 +41,7 @@ theorem coe_mk f T h₁ I h₂ h₃ a : (@Ctop.mk α σ f T h₁ I h₂ h₃) a 
   rfl
 
 /-- Map a ctop to an equivalent representation type. -/
-def of_equiv (E : σ ≃ τ) : Ctop α σ → Ctop α τ
+def ofEquiv (E : σ ≃ τ) : Ctop α σ → Ctop α τ
   | ⟨f, T, h₁, I, h₂, h₃⟩ =>
     { f := fun a => f (E.symm a), top := fun x => E (T x),
       top_mem := fun x => by
@@ -52,14 +59,14 @@ theorem of_equiv_val (E : σ ≃ τ) (F : Ctop α σ) (a : τ) : F.ofEquiv E a =
 end
 
 /-- Every `ctop` is a topological space. -/
-def to_topsp (F : Ctop α σ) : TopologicalSpace α :=
+def toTopsp (F : Ctop α σ) : TopologicalSpace α :=
   TopologicalSpace.generateFrom (Set.Range F.f)
 
 theorem to_topsp_is_topological_basis (F : Ctop α σ) :
     @TopologicalSpace.IsTopologicalBasis _ F.toTopsp (Set.Range F.f) := by
   let this' := F.to_topsp <;>
     exact
-      ⟨fun u ⟨a, e₁⟩ v ⟨b, e₂⟩ => e₁ ▸ e₂ ▸ fun x h => ⟨_, ⟨_, rfl⟩, F.inter_mem a b x h, F.inter_sub a b x h⟩,
+      ⟨fun v ⟨b, e₂⟩ => e₁ ▸ e₂ ▸ fun x h => ⟨_, ⟨_, rfl⟩, F.inter_mem a b x h, F.inter_sub a b x h⟩,
         eq_univ_iff_forall.2 fun x => ⟨_, ⟨_, rfl⟩, F.top_mem x⟩, rfl⟩
 
 @[simp]
@@ -107,7 +114,7 @@ theorem mem_interior_iff [TopologicalSpace α] (F : Realizer α) {s : Set α} {a
     a ∈ Interior s ↔ ∃ b, a ∈ F.f b ∧ F.f b ⊆ s :=
   mem_interior_iff_mem_nhds.trans F.mem_nhds
 
-protected theorem IsOpen [TopologicalSpace α] (F : Realizer α) (s : F.σ) : IsOpen (F.f s) :=
+protected theorem is_open [TopologicalSpace α] (F : Realizer α) (s : F.σ) : IsOpen (F.f s) :=
   is_open_iff_nhds.2 fun a m => by
     simpa using F.mem_nhds.2 ⟨s, m, subset.refl _⟩
 
@@ -126,13 +133,12 @@ variable [TopologicalSpace α]
 protected def id : Realizer α :=
   ⟨{ x : Set α // IsOpen x },
     { f := Subtype.val, top := fun _ => ⟨Univ, is_open_univ⟩, top_mem := mem_univ,
-      inter := fun ⟨x, h₁⟩ ⟨y, h₂⟩ a h₃ => ⟨_, h₁.inter h₂⟩, inter_mem := fun ⟨x, h₁⟩ ⟨y, h₂⟩ a => id,
-      inter_sub := fun ⟨x, h₁⟩ ⟨y, h₂⟩ a h₃ => Subset.refl _ },
+      inter := fun a h₃ => ⟨_, h₁.inter h₂⟩, inter_mem := fun a => id, inter_sub := fun a h₃ => Subset.refl _ },
     (ext Subtype.property) fun x s h =>
       let ⟨t, h, o, m⟩ := mem_nhds_iff.1 h
       ⟨⟨t, o⟩, m, h⟩⟩
 
-def of_equiv (F : Realizer α) (E : F.σ ≃ τ) : Realizer α :=
+def ofEquiv (F : Realizer α) (E : F.σ ≃ τ) : Realizer α :=
   ⟨τ, F.f.ofEquiv E,
     ext' fun a s =>
       F.mem_nhds.trans <|
@@ -154,8 +160,8 @@ theorem of_equiv_F (F : Realizer α) (E : F.σ ≃ τ) (s : τ) : (F.ofEquiv E).
 protected def nhds (F : Realizer α) (a : α) : (𝓝 a).Realizer :=
   ⟨{ s : F.σ // a ∈ F.f s },
     { f := fun s => F.f s.1, pt := ⟨_, F.f.top_mem a⟩, inf := fun ⟨x, h₁⟩ ⟨y, h₂⟩ => ⟨_, F.f.inter_mem x y a ⟨h₁, h₂⟩⟩,
-      inf_le_left := fun ⟨x, h₁⟩ ⟨y, h₂⟩ z h => (F.f.inter_sub x y a ⟨h₁, h₂⟩ h).1,
-      inf_le_right := fun ⟨x, h₁⟩ ⟨y, h₂⟩ z h => (F.f.inter_sub x y a ⟨h₁, h₂⟩ h).2 },
+      inf_le_left := fun z h => (F.f.inter_sub x y a ⟨h₁, h₂⟩ h).1,
+      inf_le_right := fun z h => (F.f.inter_sub x y a ⟨h₁, h₂⟩ h).2 },
     filter_eq <|
       Set.ext fun x =>
         ⟨fun ⟨⟨s, as⟩, h⟩ => mem_nhds_iff.2 ⟨_, h, F.IsOpen _, as⟩, fun h =>

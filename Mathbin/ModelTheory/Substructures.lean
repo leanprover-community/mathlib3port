@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Aaron Anderson. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Aaron Anderson
+-/
 import Mathbin.Order.Closure
 import Mathbin.ModelTheory.Basic
 
@@ -46,7 +51,7 @@ open Set
 variable {n : ℕ} (f : L.Functions n) (s : Set M)
 
 /-- Indicates that a set in a given structure is a closed under a function symbol. -/
-def closed_under : Prop :=
+def ClosedUnder : Prop :=
   ∀ x : Finₓ n → M, (∀ i : Finₓ n, x i ∈ s) → funMap f x ∈ s
 
 variable (L)
@@ -75,7 +80,7 @@ end ClosedUnder
 variable (L) (M)
 
 /-- A substructure of a structure `M` is a set closed under application of function symbols. -/
-structure substructure where
+structure Substructure where
   Carrier : Set M
   fun_mem : ∀ {n}, ∀ f : L.Functions n, ClosedUnder f carrier
 
@@ -88,7 +93,7 @@ instance : SetLike (L.Substructure M) M :=
     cases p <;> cases q <;> congr⟩
 
 /-- See Note [custom simps projection] -/
-def simps.coe (S : L.Substructure M) : Set M :=
+def Simps.Coe (S : L.Substructure M) : Set M :=
   S
 
 initialize_simps_projections Substructure (Carrier → coe)
@@ -177,7 +182,7 @@ theorem coe_infi {ι : Sort _} {S : ι → L.Substructure M} : (↑(⨅ i, S i) 
 instance : CompleteLattice (L.Substructure M) :=
   { (completeLatticeOfInf (L.Substructure M)) fun s =>
       IsGlb.of_image (fun S T => show (S : Set M) ≤ T ↔ S ≤ T from SetLike.coe_subset_coe) is_glb_binfi with
-    le := · ≤ ·, lt := · < ·, top := ⊤, le_top := fun S x hx => mem_top x, inf := ·⊓·, inf := HasInfₓ.inf,
+    le := (· ≤ ·), lt := (· < ·), top := ⊤, le_top := fun S x hx => mem_top x, inf := (·⊓·), inf := HasInfₓ.inf,
     le_inf := fun a b c ha hb x hx => ⟨ha hx, hb hx⟩, inf_le_left := fun a b x => And.left,
     inf_le_right := fun a b x => And.right }
 
@@ -387,7 +392,7 @@ variable {ι : Type _} {f : M →[L] N} (hf : Function.Injective f)
 include hf
 
 /-- `map f` and `comap f` form a `galois_coinsertion` when `f` is injective. -/
-def gci_map_comap : GaloisCoinsertion (map f) (comap f) :=
+def gciMapComap : GaloisCoinsertion (map f) (comap f) :=
   (gc_map_comap f).toGaloisCoinsertion fun S x => by
     simp [mem_comap, mem_map, hf.eq_iff]
 
@@ -427,7 +432,7 @@ variable {ι : Type _} {f : M →[L] N} (hf : Function.Surjective f)
 include hf
 
 /-- `map f` and `comap f` form a `galois_insertion` when `f` is surjective. -/
-def gi_map_comap : GaloisInsertion (map f) (comap f) :=
+def giMapComap : GaloisInsertion (map f) (comap f) :=
   (gc_map_comap f).toGaloisInsertion fun S x h =>
     let ⟨y, hy⟩ := hf x
     mem_map.2
@@ -463,21 +468,21 @@ theorem comap_strict_mono_of_surjective : StrictMono (comap f) :=
 
 end GaloisInsertion
 
-instance induced_Structure {S : L.Substructure M} : L.Structure S where
+instance inducedStructure {S : L.Substructure M} : L.Structure S where
   funMap := fun n f x => ⟨funMap f fun i => x i, S.fun_mem f (fun i => x i) fun i => (x i).2⟩
   RelMap := fun n r x => RelMap r fun i => (x i : M)
 
 /-- The natural embedding of an `L.substructure` of `M` into `M`. -/
-def Subtype (S : L.Substructure M) : S ↪[L] M where
+def subtype (S : L.Substructure M) : S ↪[L] M where
   toFun := coe
   inj' := Subtype.coe_injective
 
 @[simp]
-theorem coeSubtype : ⇑S.Subtype = coe :=
+theorem coe_subtype : ⇑S.Subtype = coe :=
   rfl
 
 /-- The equivalence between the maximal substructure of a structure and the structure itself. -/
-def top_equiv : (⊤ : L.Substructure M) ≃[L] M where
+def topEquiv : (⊤ : L.Substructure M) ≃[L] M where
   toFun := subtype ⊤
   invFun := fun m => ⟨m, mem_top m⟩
   left_inv := fun m => by
@@ -492,7 +497,7 @@ theorem coe_top_equiv : ⇑(topEquiv : (⊤ : L.Substructure M) ≃[L] M) = coe 
 @[elab_as_eliminator]
 theorem closure_induction' (s : Set M) {p : ∀ x, x ∈ closure L s → Prop} (Hs : ∀ x h : x ∈ s, p x (subset_closure h))
     (Hfun : ∀ {n : ℕ} f : L.Functions n, ClosedUnder f { x | ∃ hx, p x hx }) {x} (hx : x ∈ closure L s) : p x hx := by
-  refine' Exists.elim _ fun hx : x ∈ closure L s hc : p x hx => hc
+  refine' Exists.elim _ fun hc : p x hx => hc
   exact closure_induction hx (fun x hx => ⟨subset_closure hx, Hs x hx⟩) @Hfun
 
 end Substructure
@@ -503,13 +508,13 @@ open Substructure
 
 /-- The restriction of a first-order hom to a substructure `s ⊆ M` gives a hom `s → N`. -/
 @[simps]
-def dom_restrict (f : M →[L] N) (p : L.Substructure M) : p →[L] N :=
+def domRestrict (f : M →[L] N) (p : L.Substructure M) : p →[L] N :=
   f.comp p.Subtype.toHom
 
 /-- A first-order hom `f : M → N` whose values lie in a substructure `p ⊆ N` can be restricted to a
 hom `M → p`. -/
 @[simps]
-def cod_restrict (p : L.Substructure N) (f : M →[L] N) (h : ∀ c, f c ∈ p) : M →[L] p where
+def codRestrict (p : L.Substructure N) (f : M →[L] N) (h : ∀ c, f c ∈ p) : M →[L] p where
   toFun := fun c => ⟨f c, h c⟩
   map_rel' := fun n R x h => f.map_rel R x h
 
@@ -562,7 +567,7 @@ theorem map_le_range {f : M →[L] N} {p : L.Substructure M} : map f p ≤ range
   SetLike.coe_mono (Set.image_subset_range f p)
 
 /-- The substructure of elements `x : M` such that `f x = g x` -/
-def eq_locus (f g : M →[L] N) : Substructure L M where
+def eqLocus (f g : M →[L] N) : Substructure L M where
   Carrier := { x : M | f x = g x }
   fun_mem := fun n fn x hx => by
     have h : f ∘ x = g ∘ x := by
@@ -592,7 +597,7 @@ open Substructure
 
 /-- The restriction of a first-order embedding to a substructure `s ⊆ M` gives an embedding `s → N`.
 -/
-def dom_restrict (f : M ↪[L] N) (p : L.Substructure M) : p ↪[L] N :=
+def domRestrict (f : M ↪[L] N) (p : L.Substructure M) : p ↪[L] N :=
   f.comp p.Subtype
 
 @[simp]
@@ -601,7 +606,7 @@ theorem dom_restrict_apply (f : M ↪[L] N) (p : L.Substructure M) (x : p) : f.d
 
 /-- A first-order embedding `f : M → N` whose values lie in a substructure `p ⊆ N` can be restricted
 to an embedding `M → p`. -/
-def cod_restrict (p : L.Substructure N) (f : M ↪[L] N) (h : ∀ c, f c ∈ p) : M ↪[L] p where
+def codRestrict (p : L.Substructure N) (f : M ↪[L] N) (h : ∀ c, f c ∈ p) : M ↪[L] p where
   toFun := f.toHom.codRestrict p h
   inj' := fun a b ab => f.Injective (Subtype.mk_eq_mk.1 ab)
   map_fun' := fun n F x => (f.toHom.codRestrict p h).map_fun' F x
@@ -628,7 +633,7 @@ theorem subtype_comp_cod_restrict (f : M ↪[L] N) (p : L.Substructure N) (h : �
 
 /-- The equivalence between a substructure `s` and its image `s.map f.to_hom`, where `f` is an
   embedding. -/
-noncomputable def substructure_equiv_map (f : M ↪[L] N) (s : L.Substructure M) : s ≃[L] s.map f.toHom where
+noncomputable def substructureEquivMap (f : M ↪[L] N) (s : L.Substructure M) : s ≃[L] s.map f.toHom where
   toFun := codRestrict (s.map f.toHom) (f.domRestrict s) fun ⟨m, hm⟩ => ⟨m, hm, rfl⟩
   invFun := fun n => ⟨Classical.some n.2, (Classical.some_spec n.2).1⟩
   left_inv := fun ⟨m, hm⟩ =>
@@ -643,7 +648,7 @@ theorem substructure_equiv_map_apply (f : M ↪[L] N) (p : L.Substructure M) (x 
   rfl
 
 /-- The equivalence between the domain and the range of an embedding `f`. -/
-noncomputable def equiv_range (f : M ↪[L] N) : M ≃[L] f.toHom.range where
+noncomputable def equivRange (f : M ↪[L] N) : M ≃[L] f.toHom.range where
   toFun := codRestrict f.toHom.range f f.toHom.mem_range_self
   invFun := fun n => Classical.some n.2
   left_inv := fun m => f.Injective (Classical.some_spec (codRestrict f.toHom.range f f.toHom.mem_range_self m).2)

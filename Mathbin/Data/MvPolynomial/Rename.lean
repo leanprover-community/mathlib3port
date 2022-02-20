@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2017 Johannes Hölzl. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johannes Hölzl, Johan Commelin, Mario Carneiro
+-/
 import Mathbin.Data.MvPolynomial.Basic
 
 /-!
@@ -70,7 +75,7 @@ theorem map_rename (f : R →+* S) (g : σ → τ) (p : MvPolynomial σ R) : map
 theorem rename_rename (f : σ → τ) (g : τ → α) (p : MvPolynomial σ R) : rename g (rename f p) = rename (g ∘ f) p :=
   show rename g (eval₂ c (X ∘ f) p) = _ by
     simp only [rename, aeval_eq_eval₂_hom]
-    simp [eval₂_comp_left _ C (X ∘ f) p, · ∘ ·, eval₂_C, eval_X]
+    simp [eval₂_comp_left _ C (X ∘ f) p, (· ∘ ·), eval₂_C, eval_X]
     apply eval₂_hom_congr _ rfl rfl
     ext1
     simp only [comp_app, RingHom.coe_comp, eval₂_hom_C]
@@ -106,7 +111,7 @@ variable (R)
 
 /-- `mv_polynomial.rename e` is an equivalence when `e` is. -/
 @[simps apply]
-def rename_equiv (f : σ ≃ τ) : MvPolynomial σ R ≃ₐ[R] MvPolynomial τ R :=
+def renameEquiv (f : σ ≃ τ) : MvPolynomial σ R ≃ₐ[R] MvPolynomial τ R :=
   { rename f with toFun := rename f, invFun := rename f.symm,
     left_inv := fun p => by
       rw [rename_rename, f.symm_comp_self, rename_id],

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Yury Kudryashov. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yury Kudryashov
+-/
 import Mathbin.Algebra.Quaternion
 import Mathbin.Analysis.InnerProductSpace.Basic
 
@@ -118,7 +123,7 @@ theorem coe_complex_coe (r : ℝ) : ((r : ℂ) : ℍ) = r :=
   rfl
 
 /-- Coercion `ℂ →ₐ[ℝ] ℍ` as an algebra homomorphism. -/
-def of_complex : ℂ →ₐ[ℝ] ℍ where
+def ofComplex : ℂ →ₐ[ℝ] ℍ where
   toFun := coe
   map_one' := rfl
   map_zero' := rfl

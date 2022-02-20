@@ -1,4 +1,10 @@
+/-
+Copyright (c) 2021 Adam Topaz. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Adam Topaz, Scott Morrison
+-/
 import Mathbin.CategoryTheory.Preadditive.Default
+import Mathbin.CategoryTheory.Limits.Preserves.Shapes.Zero
 import Mathbin.CategoryTheory.Limits.Shapes.Biproducts
 
 /-!
@@ -27,7 +33,7 @@ groups.
 namespace CategoryTheory
 
 /-- A functor `F` is additive provided `F.map` is an additive homomorphism. -/
-class functor.additive {C D : Type _} [Category C] [Category D] [Preadditive C] [Preadditive D] (F : C ⥤ D) : Prop where
+class Functor.Additive {C D : Type _} [Category C] [Category D] [Preadditive C] [Preadditive D] (F : C ⥤ D) : Prop where
   map_add' : ∀ {X Y : C} {f g : X ⟶ Y}, F.map (f + g) = F.map f + F.map g := by
     run_tac
       obviously
@@ -46,15 +52,14 @@ theorem map_add {X Y : C} {f g : X ⟶ Y} : F.map (f + g) = F.map f + F.map g :=
 
 /-- `F.map_add_hom` is an additive homomorphism whose underlying function is `F.map`. -/
 @[simps (config := { fullyApplied := false })]
-def map_add_hom {X Y : C} : (X ⟶ Y) →+ (F.obj X ⟶ F.obj Y) :=
+def mapAddHom {X Y : C} : (X ⟶ Y) →+ (F.obj X ⟶ F.obj Y) :=
   AddMonoidHom.mk' (fun f => F.map f) fun f g => F.map_add
 
 theorem coe_map_add_hom {X Y : C} : ⇑(F.mapAddHom : (X ⟶ Y) →+ _) = @map C _ D _ F X Y :=
   rfl
 
-@[simp]
-theorem map_zero {X Y : C} : F.map (0 : X ⟶ Y) = 0 :=
-  F.mapAddHom.map_zero
+instance (priority := 100) preserves_zero_morphisms_of_additive : PreservesZeroMorphisms F where
+  map_zero' := fun X Y => F.mapAddHom.map_zero
 
 instance : Additive (𝟭 C) :=
   {  }
@@ -70,6 +75,7 @@ theorem map_neg {X Y : C} {f : X ⟶ Y} : F.map (-f) = -F.map f :=
 theorem map_sub {X Y : C} {f g : X ⟶ Y} : F.map (f - g) = F.map f - F.map g :=
   F.mapAddHom.map_sub _ _
 
+-- You can alternatively just use `functor.map_smul` here, with an explicit `(r : ℤ)` argument.
 theorem map_zsmul {X Y : C} {f : X ⟶ Y} {r : ℤ} : F.map (r • f) = r • F.map f :=
   F.mapAddHom.map_zsmul _ _
 
@@ -79,19 +85,6 @@ open_locale BigOperators
 theorem map_sum {X Y : C} {α : Type _} (f : α → (X ⟶ Y)) (s : Finset α) :
     F.map (∑ a in s, f a) = ∑ a in s, F.map (f a) :=
   (F.mapAddHom : (X ⟶ Y) →+ _).map_sum f s
-
-open CategoryTheory.Limits
-
-open_locale ZeroObject
-
-/-- An additive functor takes the zero object to the zero object (up to isomorphism). -/
-@[simps]
-def map_zero_object [HasZeroObject C] [HasZeroObject D] : F.obj 0 ≅ 0 where
-  Hom := 0
-  inv := 0
-  hom_inv_id' := by
-    rw [← F.map_id]
-    simp
 
 end
 
@@ -106,6 +99,7 @@ end InducedCategory
 
 section
 
+-- To talk about preservation of biproducts we need to specify universes explicitly.
 noncomputable section
 
 universe v u₁ u₂
@@ -134,8 +128,10 @@ instance map_has_biproduct {J : Type v} [Fintype J] [DecidableEq J] (f : J → C
 
 /-- An additive functor between preadditive categories preserves finite biproducts.
 -/
+-- This essentially repeats the work of the previous instance,
+-- but gives good definitional reduction to `biproduct.lift` and `biproduct.desc`.
 @[simps]
-def map_biproduct {J : Type v} [Fintype J] [DecidableEq J] (f : J → C) [HasBiproduct f] :
+def mapBiproduct {J : Type v} [Fintype J] [DecidableEq J] (f : J → C) [HasBiproduct f] :
     F.obj (⨁ f) ≅ ⨁ fun j => F.obj (f j) where
   Hom := biproduct.lift fun j => F.map (biproduct.π f j)
   inv := biproduct.desc fun j => F.map (biproduct.ι f j)

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2022 Yaël Dillies. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yaël Dillies
+-/
 import Mathbin.Data.Sum.Basic
 import Mathbin.Logic.Nontrivial
 
@@ -50,6 +55,7 @@ theorem swap_snd : p.swap.snd = p.fst :=
 theorem swap_swap : p.swap.swap = p := by
   ext <;> rfl
 
+-- See note [reducible non instances]
 @[reducible]
 theorem to_nontrivial : Nontrivial α :=
   ⟨⟨p.fst, p.snd, p.fst_ne_snd⟩⟩
@@ -85,7 +91,7 @@ theorem pi_snd : (q.pi α).snd = const α q.snd :=
 end Pi
 
 /-- The product of two two-pointings. -/
-def Prod : TwoPointing (α × β) where
+def prod : TwoPointing (α × β) where
   fst := (p.fst, q.fst)
   snd := (p.snd, q.snd)
   fst_ne_snd := fun h => p.fst_ne_snd (congr_argₓ Prod.fst h)
@@ -100,7 +106,7 @@ theorem prod_snd : (p.Prod q).snd = (p.snd, q.snd) :=
 
 /-- The sum of two pointings. Keeps the first point from the left and the second point from the
 right. -/
-protected def Sum : TwoPointing (Sum α β) :=
+protected def sum : TwoPointing (Sum α β) :=
   ⟨(Sum.inl p.fst, Sum.inr q.snd), Sum.inl_ne_inr⟩
 
 @[simp]
@@ -112,7 +118,7 @@ theorem sum_snd : (p.Sum q).snd = Sum.inr q.snd :=
   rfl
 
 /-- The `ff`, `tt` two-pointing of `bool`. -/
-protected def Bool : TwoPointing Bool :=
+protected def bool : TwoPointing Bool :=
   ⟨(false, true), Bool.ff_ne_tt⟩
 
 @[simp]
@@ -127,7 +133,7 @@ instance : Inhabited (TwoPointing Bool) :=
   ⟨TwoPointing.bool⟩
 
 /-- The `false`, `true` two-pointing of `Prop`. -/
-protected def Prop : TwoPointing Prop :=
+protected def prop : TwoPointing Prop :=
   ⟨(False, True), false_ne_true⟩
 
 @[simp]

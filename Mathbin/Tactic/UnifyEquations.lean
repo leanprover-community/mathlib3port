@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Jannis Limperg. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Jannis Limperg
+-/
 import Mathbin.Tactic.Core
 
 /-!
@@ -90,6 +95,9 @@ unsafe def unify_var : unification_step := fun equ type _ lhs rhs lhs_whnf rhs_w
       pure <| simplified []) <|>
     pure not_simplified
 
+-- TODO This is an improved version of `injection_with` from core
+-- (init/meta/injection_tactic). Remove when the improvements have landed in
+-- core.
 private unsafe def injection_with' (h : expr) (ns : List Name) (base := `h) (offset := some 1) :
     tactic (Option (List expr) × List Name) := do
   let H ← infer_type h
@@ -104,22 +112,46 @@ private unsafe def injection_with' (h : expr) (ns : List Name) (base := `h) (off
           ("injection tactic failed, argument must be an equality proof where lhs and rhs " ++
             "are of the form (c ...), where c is a constructor")
   if constructor_left = constructor_right then do
-      let inj ← mk_const inj_name
+      let inj
+        ←-- C.inj_arrow, for a given constructor C of datatype D, has type
+            --
+            --     ∀ (A₁ ... Aₙ) (x₁ ... xₘ) (y₁ ... yₘ), C x₁ ... xₘ = C y₁ ... yₘ
+            --       → ∀ ⦃P : Sort u⦄, (x₁ = y₁ → ... → yₖ = yₖ → P) → P
+            --
+            -- where the Aᵢ are parameters of D and the xᵢ/yᵢ are arguments of C.
+            -- Note that if xᵢ/yᵢ are propositions, no equation is generated, so the
+            -- number of equations is not necessarily the constructor arity.
+            -- First, we find out how many equations we need to intro later.
+            mk_const
+            inj_name
       let inj_type ← infer_type inj
       let inj_arity ← get_pi_arity inj_type
       let num_equations := (inj_type (inj_arity - 1)).binding_domain.pi_arity
-      let tgt ← target
+      let tgt
+        ←-- Now we generate the actual proof of the target.
+          target
       let proof ← mk_mapp inj_name (List.repeat none (inj_arity - 3) ++ [some h, some tgt])
       eapply proof
       let (next, ns) ← intron_with num_equations ns base offset
-      let next ←
-        next fun h => do
+      let next
+        ←-- The following filters out 'next' hypotheses of type `true`. The
+            -- `inj_arrow` lemmas introduce these for nullary constructors.
+            next
+            fun h => do
             let quote.1 True ← infer_type h | pure tt
             clear h >> pure ff <|> pure tt
       pure (some next, ns)
     else do
       let tgt ← target
-      let constructor_left ← get_app_fn_const_whnf lhs semireducible tt
+      let constructor_left
+        ←-- The following construction deals with a corner case involing
+            -- mutual/nested inductive types. For these, Lean does not generate
+            -- no-confusion principles. However, the regular inductive data type which a
+            -- mutual/nested inductive type is compiled to does have a no-confusion
+            -- principle which we can (usually? always?) use. To find it, we normalise
+            -- the constructor with `unfold_ginductive = tt`.
+            get_app_fn_const_whnf
+            lhs semireducible tt
       let no_confusion := constructor_left ++ "no_confusion"
       let pr ← mk_app no_confusion [tgt, lhs, rhs, h]
       exact pr
@@ -159,6 +191,7 @@ theorem add_add_one_ne (n m : ℕ) : n + (m + 1) ≠ n := by
 It returns `n` plus the number of `succ` constructors and `e'`. The matching is
 performed up to normalisation with transparency `md`.
 -/
+-- Linarith could prove this, but I want to avoid that dependency.
 unsafe def match_n_plus_m md : ℕ → expr → tactic (ℕ × expr) := fun n e => do
   let e ← whnf e md
   match e with
@@ -180,7 +213,10 @@ unsafe def contradict_n_eq_n_plus_m (md : Transparency) (equ lhs rhs : expr) : t
           "equal at transparency {md}.")
   let common := lhs_e
   guardₓ (lhs_n ≠ rhs_n) <|> fail "contradict_n_eq_n_plus_m:\nexpected {lhs_n} and {rhs_n} to be different."
-  let ⟨equ, lhs_n, rhs_n⟩ ←
+  let-- Ensure that lhs_n is bigger than rhs_n. Swap lhs and rhs if that's not
+    -- already the case.
+    ⟨equ, lhs_n, rhs_n⟩
+    ←
     if lhs_n > rhs_n then pure (equ, lhs_n, rhs_n)
       else do
         let equ ← to_expr (pquote.1 (Eq.symm (%%ₓequ)))
@@ -195,7 +231,9 @@ unsafe def contradict_n_eq_n_plus_m (md : Transparency) (equ lhs rhs : expr) : t
 goal by contradiction.
 -/
 unsafe def unify_cyclic : unification_step := fun equ type _ _ _ lhs_whnf rhs_whnf _ =>
-  (do
+  (-- Establish `sizeof lhs = sizeof rhs`.
+    -- Derive a contradiction (if indeed `sizeof lhs ≠ sizeof rhs`).
+    do
       let sizeof ← get_sizeof type
       let hyp_lhs ← to_expr (pquote.1 ((%%ₓsizeof) (%%ₓlhs_whnf)))
       let hyp_rhs ← to_expr (pquote.1 ((%%ₓsizeof) (%%ₓrhs_whnf)))

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Aaron Anderson. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Aaron Anderson, Jalex Stark
+-/
 import Mathbin.Algebra.Order.WithZero
 import Mathbin.Data.Polynomial.Monic
 
@@ -254,6 +259,8 @@ variable [CommRingₓ R]
 
 open Monic
 
+-- Eventually this can be generalized with Vieta's formulas
+-- plus the connection between roots and factorization.
 theorem multiset_prod_X_sub_C_next_coeff [Nontrivial R] (t : Multiset R) :
     nextCoeff (t.map fun x => X - c x).Prod = -t.Sum := by
   rw [next_coeff_multiset_prod]

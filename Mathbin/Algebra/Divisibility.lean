@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2014 Jeremy Avigad. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Jeremy Avigad, Leonardo de Moura, Floris van Doorn, Amelia Livingston, Yury Kudryashov,
+Neil Strickland, Aaron Anderson
+-/
 import Mathbin.Algebra.GroupWithZero.Basic
 
 /-!
@@ -34,6 +40,8 @@ variable [Monoidₓ α] {a b c : α}
 instance (priority := 100) monoidHasDvd : HasDvd α :=
   HasDvd.mk fun a b => ∃ c, b = a * c
 
+-- TODO: this used to not have `c` explicit, but that seems to be important
+--       for use with tactics, similar to `exists.intro`
 theorem Dvd.intro (c : α) (h : a * c = b) : a ∣ b :=
   Exists.introₓ c h
 

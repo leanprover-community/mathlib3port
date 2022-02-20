@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Johannes Hölzl. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johannes Hölzl
+-/
 import Mathbin.Data.Finsupp.Order
 
 /-!
@@ -21,7 +26,7 @@ namespace Finsupp
 
 /-- Given `f : α →₀ ℕ`, `f.to_multiset` is the multiset with multiplicities given by the values of
 `f` on the elements of `α`. We define this function as an `add_equiv`. -/
-def to_multiset : (α →₀ ℕ) ≃+ Multiset α where
+def toMultiset : (α →₀ ℕ) ≃+ Multiset α where
   toFun := fun f => f.Sum fun a n => n • {a}
   invFun := fun s =>
     ⟨s.toFinset, fun a => s.count a, fun a => by
@@ -127,7 +132,7 @@ namespace Multiset
 
 /-- Given a multiset `s`, `s.to_finsupp` returns the finitely supported function on `ℕ` given by
 the multiplicities of the elements of `s`. -/
-def to_finsupp : Multiset α ≃+ (α →₀ ℕ) :=
+def toFinsupp : Multiset α ≃+ (α →₀ ℕ) :=
   Finsupp.toMultiset.symm
 
 @[simp]
@@ -168,7 +173,7 @@ theorem Finsupp.to_multiset_to_finsupp (f : α →₀ ℕ) : f.toMultiset.toFins
 namespace Finsupp
 
 /-- `finsupp.to_multiset` as an order isomorphism. -/
-def order_iso_multiset : (ι →₀ ℕ) ≃o Multiset ι where
+def orderIsoMultiset : (ι →₀ ℕ) ≃o Multiset ι where
   toEquiv := toMultiset.toEquiv
   map_rel_iff' := fun f g => by
     simp [Multiset.le_iff_count, le_def]

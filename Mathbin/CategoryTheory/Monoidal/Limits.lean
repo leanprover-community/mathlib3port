@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison
+-/
 import Mathbin.CategoryTheory.Monoidal.Functorial
 import Mathbin.CategoryTheory.Monoidal.FunctorCategory
 import Mathbin.CategoryTheory.Limits.HasLimits
@@ -27,7 +32,7 @@ variable {J : Type v} [SmallCategory J]
 
 variable {C : Type u} [Category.{v} C] [HasLimits C]
 
-instance limit_functorial : Functorial fun F : J ⥤ C => limit F :=
+instance limitFunctorial : Functorial fun F : J ⥤ C => limit F :=
   { Limits.lim with }
 
 @[simp]
@@ -37,7 +42,7 @@ theorem limit_functorial_map {F G : J ⥤ C} (α : F ⟶ G) : map (fun F : J ⥤
 variable [MonoidalCategory.{v} C]
 
 @[simps]
-instance limit_lax_monoidal : LaxMonoidal fun F : J ⥤ C => limit F where
+instance limitLaxMonoidal : LaxMonoidal fun F : J ⥤ C => limit F where
   ε := limit.lift _ { x := _, π := { app := fun j => 𝟙 _ } }
   μ := fun F G =>
     limit.lift (F ⊗ G)
@@ -83,7 +88,7 @@ instance limit_lax_monoidal : LaxMonoidal fun F : J ⥤ C => limit F where
     simp
 
 /-- The limit functor `F ↦ limit F` bundled as a lax monoidal functor. -/
-def lim_lax : LaxMonoidalFunctor (J ⥤ C) C :=
+def limLax : LaxMonoidalFunctor (J ⥤ C) C :=
   LaxMonoidalFunctor.of fun F : J ⥤ C => limit F
 
 @[simp]

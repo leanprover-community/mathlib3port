@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Julian Kuelshammer. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Julian Kuelshammer
+-/
 import Mathbin.GroupTheory.OrderOfElement
 import Mathbin.Algebra.PunitInstances
 import Mathbin.Algebra.GcdMonoid.Finset
@@ -48,7 +53,7 @@ variable (G) [Monoidₓ G]
   for all `g`.-/
 @[to_additive
       "A predicate on an additive monoid saying that there is a positive integer `n` such\n  that `n • g = 0` for all `g`."]
-def exponent_exists :=
+def ExponentExists :=
   ∃ n, 0 < n ∧ ∀ g : G, g ^ n = 1
 
 /-- The exponent of a group is the smallest positive integer `n` such that `g ^ n = 1` for all
@@ -66,6 +71,7 @@ theorem exponent_eq_zero_iff : exponent G = 0 ↔ ¬ExponentExists G := by
   split_ifs
   · simp [h, @not_lt_zero' ℕ]
     
+  --if this isn't done this way, `to_additive` freaks
   · tauto
     
 
@@ -106,10 +112,10 @@ theorem exponent_min' (n : ℕ) (hpos : 0 < n) (hG : ∀ g : G, g ^ n = 1) : exp
   · exact ⟨n, hpos, hG⟩
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:418:16: unsupported tactic `by_contra'
+-- ././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'
 @[to_additive]
 theorem exponent_min (m : ℕ) (hpos : 0 < m) (hm : m < exponent G) : ∃ g : G, g ^ m ≠ 1 := by
-  "././Mathport/Syntax/Translate/Basic.lean:418:16: unsupported tactic `by_contra'"
+  "././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'"
   have hcon : exponent G ≤ m := exponent_min' m hpos h
   linarith
 
@@ -241,7 +247,7 @@ section CommMonoidₓ
 
 variable [CancelCommMonoid G]
 
--- ././Mathport/Syntax/Translate/Basic.lean:418:16: unsupported tactic `by_contra'
+-- ././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'
 @[to_additive]
 theorem exponent_eq_supr_order_of (h : ∀ g : G, 0 < orderOf g) : exponent G = ⨆ g : G, orderOf g := by
   rw [supr]
@@ -258,7 +264,7 @@ theorem exponent_eq_supr_order_of (h : ∀ g : G, 0 < orderOf g) : exponent G = 
     
   refine' Nat.dvd_of_factors_subperm he _
   rw [List.subperm_ext_iff]
-  "././Mathport/Syntax/Translate/Basic.lean:418:16: unsupported tactic `by_contra'"
+  "././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'"
   obtain ⟨p, hp, hpe⟩ := h
   replace hp := Nat.prime_of_mem_factors hp
   simp only [Nat.factors_count_eq] at hpe

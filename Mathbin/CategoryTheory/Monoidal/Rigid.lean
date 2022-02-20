@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Jakob von Raumer. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Jakob von Raumer
+-/
 import Mathbin.CategoryTheory.Monoidal.Category
 
 /-!
@@ -53,7 +58,7 @@ variable {C : Type u₁} [Category.{v₁} C] [MonoidalCategory C]
 
 /-- An exact pairing is a pair of objects `X Y : C` which admit
   a coevaluation and evaluation morphism which fulfill two triangle equalities. -/
-class exact_pairing (X Y : C) where
+class ExactPairing (X Y : C) where
   coevaluation {} : 𝟙_ C ⟶ X ⊗ Y
   evaluation {} : Y ⊗ X ⟶ 𝟙_ C
   coevaluation_evaluation' {} :
@@ -79,7 +84,7 @@ restate_axiom evaluation_coevaluation'
 
 attribute [reassoc, simp] exact_pairing.evaluation_coevaluation
 
-instance exact_pairing_unit : ExactPairing (𝟙_ C) (𝟙_ C) where
+instance exactPairingUnit : ExactPairing (𝟙_ C) (𝟙_ C) where
   coevaluation := (ρ_ _).inv
   evaluation := (ρ_ _).Hom
   coevaluation_evaluation' := by
@@ -92,12 +97,12 @@ instance exact_pairing_unit : ExactPairing (𝟙_ C) (𝟙_ C) where
     simp
 
 /-- A class of objects which have a right dual. -/
-class has_right_dual (X : C) where
+class HasRightDual (X : C) where
   rightDual : C
   [exact : ExactPairing X right_dual]
 
 /-- A class of objects with have a left dual. -/
-class has_left_dual (Y : C) where
+class HasLeftDual (Y : C) where
   leftDual : C
   [exact : ExactPairing left_dual Y]
 
@@ -111,16 +116,16 @@ prefix:1025 "ᘁ" => leftDual
 
 postfix:1025 "ᘁ" => rightDual
 
-instance has_right_dual_unit : HasRightDual (𝟙_ C) where
+instance hasRightDualUnit : HasRightDual (𝟙_ C) where
   rightDual := 𝟙_ C
 
-instance has_left_dual_unit : HasLeftDual (𝟙_ C) where
+instance hasLeftDualUnit : HasLeftDual (𝟙_ C) where
   leftDual := 𝟙_ C
 
-instance has_right_dual_left_dual {X : C} [HasLeftDual X] : HasRightDual ᘁ(X) where
+instance hasRightDualLeftDual {X : C} [HasLeftDual X] : HasRightDual ᘁ(X) where
   rightDual := X
 
-instance has_left_dual_right_dual {X : C} [HasRightDual X] : HasLeftDual (X)ᘁ where
+instance hasLeftDualRightDual {X : C} [HasRightDual X] : HasLeftDual (X)ᘁ where
   leftDual := X
 
 @[simp]
@@ -132,11 +137,11 @@ theorem right_dual_left_dual {X : C} [HasLeftDual X] : (ᘁ(X))ᘁ = X :=
   rfl
 
 /-- The right adjoint mate `fᘁ : Xᘁ ⟶ Yᘁ` of a morphism `f : X ⟶ Y`. -/
-def right_adjoint_mate {X Y : C} [HasRightDual X] [HasRightDual Y] (f : X ⟶ Y) : (Y)ᘁ ⟶ (X)ᘁ :=
+def rightAdjointMate {X Y : C} [HasRightDual X] [HasRightDual Y] (f : X ⟶ Y) : (Y)ᘁ ⟶ (X)ᘁ :=
   (ρ_ _).inv ≫ (𝟙 _ ⊗ η_ _ _) ≫ (𝟙 _ ⊗ f ⊗ 𝟙 _) ≫ (α_ _ _ _).inv ≫ (ε_ _ _ ⊗ 𝟙 _) ≫ (λ_ _).Hom
 
 /-- The left adjoint mate `ᘁf : ᘁY ⟶ ᘁX` of a morphism `f : X ⟶ Y`. -/
-def left_adjoint_mate {X Y : C} [HasLeftDual X] [HasLeftDual Y] (f : X ⟶ Y) : ᘁ(Y) ⟶ ᘁ(X) :=
+def leftAdjointMate {X Y : C} [HasLeftDual X] [HasLeftDual Y] (f : X ⟶ Y) : ᘁ(Y) ⟶ ᘁ(X) :=
   (λ_ _).inv ≫ (η_ ᘁ(X) X ⊗ 𝟙 _) ≫ ((𝟙 _ ⊗ f) ⊗ 𝟙 _) ≫ (α_ _ _ _).Hom ≫ (𝟙 _ ⊗ ε_ _ _) ≫ (ρ_ _).Hom
 
 notation f "ᘁ" => rightAdjointMate f
@@ -241,7 +246,7 @@ theorem comp_left_adjoint_mate {X Y Z : C} [HasLeftDual X] [HasLeftDual Y] [HasL
   simp
 
 /-- Right duals are isomorphic. -/
-def right_dual_iso {X Y₁ Y₂ : C} (_ : ExactPairing X Y₁) (_ : ExactPairing X Y₂) : Y₁ ≅ Y₂ where
+def rightDualIso {X Y₁ Y₂ : C} (_ : ExactPairing X Y₁) (_ : ExactPairing X Y₂) : Y₁ ≅ Y₂ where
   Hom := @rightAdjointMate C _ _ X X ⟨Y₂⟩ ⟨Y₁⟩ (𝟙 X)
   inv := @rightAdjointMate C _ _ X X ⟨Y₁⟩ ⟨Y₂⟩ (𝟙 X)
   hom_inv_id' := by
@@ -250,7 +255,7 @@ def right_dual_iso {X Y₁ Y₂ : C} (_ : ExactPairing X Y₁) (_ : ExactPairing
     rw [← comp_right_adjoint_mate, category.comp_id, right_adjoint_mate_id]
 
 /-- Left duals are isomorphic. -/
-def left_dual_iso {X₁ X₂ Y : C} (p₁ : ExactPairing X₁ Y) (p₂ : ExactPairing X₂ Y) : X₁ ≅ X₂ where
+def leftDualIso {X₁ X₂ Y : C} (p₁ : ExactPairing X₁ Y) (p₂ : ExactPairing X₂ Y) : X₁ ≅ X₂ where
   Hom := @leftAdjointMate C _ _ Y Y ⟨X₂⟩ ⟨X₁⟩ (𝟙 Y)
   inv := @leftAdjointMate C _ _ Y Y ⟨X₁⟩ ⟨X₂⟩ (𝟙 Y)
   hom_inv_id' := by
@@ -269,11 +274,11 @@ theorem left_dual_iso_id {X Y : C} (p : ExactPairing X Y) : leftDualIso p p = Is
   simp only [left_dual_iso, iso.refl_hom, left_adjoint_mate_id]
 
 /-- A right rigid monoidal category is one in which every object has a right dual. -/
-class right_rigid_category (C : Type u) [Category.{v} C] [MonoidalCategory.{v} C] where
+class RightRigidCategory (C : Type u) [Category.{v} C] [MonoidalCategory.{v} C] where
   [rightDual : ∀ X : C, HasRightDual X]
 
 /-- A left rigid monoidal category is one in which every object has a right dual. -/
-class left_rigid_category (C : Type u) [Category.{v} C] [MonoidalCategory.{v} C] where
+class LeftRigidCategory (C : Type u) [Category.{v} C] [MonoidalCategory.{v} C] where
   [leftDual : ∀ X : C, HasLeftDual X]
 
 attribute [instance] right_rigid_category.right_dual
@@ -281,7 +286,7 @@ attribute [instance] right_rigid_category.right_dual
 attribute [instance] left_rigid_category.left_dual
 
 /-- A rigid monoidal category is a monoidal category which is left rigid and right rigid. -/
-class rigid_category (C : Type u) [Category.{v} C] [MonoidalCategory.{v} C] extends RightRigidCategory C,
+class RigidCategory (C : Type u) [Category.{v} C] [MonoidalCategory.{v} C] extends RightRigidCategory C,
   LeftRigidCategory C
 
 end CategoryTheory

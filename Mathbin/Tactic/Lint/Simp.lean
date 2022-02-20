@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Gabriel Ebner. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Gabriel Ebner
+-/
 import Mathbin.Tactic.Lint.Basic
 
 /-!
@@ -17,7 +22,10 @@ open Tactic Expr
 private unsafe def simp_lhs_rhs : expr → tactic (expr × expr)
   | ty => do
     let ty ← head_beta ty
-    match ty with
+    -- We only detect a fixed set of simp relations here.
+      -- This is somewhat justified since for a custom simp relation R,
+      -- the simp lemma `R a b` is implicitly converted to `R a b ↔ true` as well.
+      match ty with
       | quote.1 ¬%%ₓlhs => pure (lhs, quote.1 False)
       | quote.1 ((%%ₓlhs) = %%ₓrhs) => pure (lhs, rhs)
       | quote.1 ((%%ₓlhs) ↔ %%ₓrhs) => pure (lhs, rhs)
@@ -63,7 +71,10 @@ unsafe def is_simp_eq (a b : expr) : tactic Bool :=
 /-- Reports declarations that are simp lemmas whose left-hand side is not in simp-normal form. -/
 unsafe def simp_nf_linter (timeout := 200000) (d : declaration) : tactic (Option Stringₓ) := do
   let tt ← is_simp_lemma d.to_name | pure none
-  let tt ← is_valid_simp_lemma_cnst d.to_name | pure none
+  let-- Sometimes, a definition is tagged @[simp] to add the equational lemmas to the simp set.
+    -- In this case, ignore the declaration if it is not a valid simp lemma by itself.
+    tt
+    ← is_valid_simp_lemma_cnst d.to_name | pure none
   let [] ← get_eqn_lemmas_for false d.to_name | pure none
   try_for timeout <|
       retrieve <| do
@@ -170,7 +181,10 @@ unsafe def linter.simp_nf : linter where
 
 private unsafe def simp_var_head (d : declaration) : tactic (Option Stringₓ) := do
   let tt ← is_simp_lemma d.to_name | pure none
-  let tt ← is_valid_simp_lemma_cnst d.to_name | pure none
+  let-- Sometimes, a definition is tagged @[simp] to add the equational lemmas to the simp set.
+    -- In this case, ignore the declaration if it is not a valid simp lemma by itself.
+    tt
+    ← is_valid_simp_lemma_cnst d.to_name | pure none
   let lhs ← simp_lhs d.type
   let head_sym@(expr.local_const _ _ _ _) ← pure lhs.get_app_fn | pure none
   let head_sym ← pp head_sym
@@ -190,14 +204,19 @@ unsafe def linter.simp_var_head : linter where
 
 private unsafe def simp_comm (d : declaration) : tactic (Option Stringₓ) := do
   let tt ← is_simp_lemma d.to_name | pure none
-  let tt ← is_valid_simp_lemma_cnst d.to_name | pure none
+  let-- Sometimes, a definition is tagged @[simp] to add the equational lemmas to the simp set.
+    -- In this case, ignore the declaration if it is not a valid simp lemma by itself.
+    tt
+    ← is_valid_simp_lemma_cnst d.to_name | pure none
   let (lhs, rhs) ← simp_lhs_rhs d.type
   if lhs ≠ rhs then pure none
     else do
       let (lhs', rhs') ← Prod.snd <$> open_pis_metas d >>= simp_lhs_rhs
       let tt ← succeeds <| unify rhs lhs' transparency.reducible | pure none
       let tt ← succeeds <| is_def_eq rhs lhs' transparency.reducible | pure none
-      let ff ← succeeds <| unify lhs' rhs' transparency.reducible | pure none
+      let-- ensure that the second application makes progress:
+        ff
+        ← succeeds <| unify lhs' rhs' transparency.reducible | pure none
       pure <| "should not be marked simp"
 
 /-- A linter for commutativity lemmas that are marked simp. -/

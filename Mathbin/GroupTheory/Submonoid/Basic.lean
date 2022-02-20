@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2018 Johannes Hölzl. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johannes Hölzl, Kenny Lau, Johan Commelin, Mario Carneiro, Kevin Buzzard,
+Amelia Livingston, Yury Kudryashov
+-/
 import Mathbin.Data.Set.Lattice
 import Mathbin.Data.SetLike.Basic
 
@@ -80,7 +86,7 @@ instance : SetLike (Submonoid M) M :=
 
 /-- See Note [custom simps projection] -/
 @[to_additive " See Note [custom simps projection]"]
-def simps.coe (S : Submonoid M) : Set M :=
+def Simps.Coe (S : Submonoid M) : Set M :=
   S
 
 initialize_simps_projections Submonoid (Carrier → coe)
@@ -218,9 +224,10 @@ theorem coe_infi {ι : Sort _} {S : ι → Submonoid M} : (↑(⨅ i, S i) : Set
 instance : CompleteLattice (Submonoid M) :=
   { (completeLatticeOfInf (Submonoid M)) fun s =>
       IsGlb.of_image (fun S T => show (S : Set M) ≤ T ↔ S ≤ T from SetLike.coe_subset_coe) is_glb_binfi with
-    le := · ≤ ·, lt := · < ·, bot := ⊥, bot_le := fun S x hx => (mem_bot.1 hx).symm ▸ S.one_mem, top := ⊤,
-    le_top := fun S x hx => mem_top x, inf := ·⊓·, inf := HasInfₓ.inf, le_inf := fun a b c ha hb x hx => ⟨ha hx, hb hx⟩,
-    inf_le_left := fun a b x => And.left, inf_le_right := fun a b x => And.right }
+    le := (· ≤ ·), lt := (· < ·), bot := ⊥, bot_le := fun S x hx => (mem_bot.1 hx).symm ▸ S.one_mem, top := ⊤,
+    le_top := fun S x hx => mem_top x, inf := (·⊓·), inf := HasInfₓ.inf,
+    le_inf := fun a b c ha hb x hx => ⟨ha hx, hb hx⟩, inf_le_left := fun a b x => And.left,
+    inf_le_right := fun a b x => And.right }
 
 @[simp, to_additive]
 theorem subsingleton_iff : Subsingleton (Submonoid M) ↔ Subsingleton M :=
@@ -298,7 +305,7 @@ theorem closure_induction {p : M → Prop} {x} (h : x ∈ closure s) (Hs : ∀, 
 theorem closure_induction' (s : Set M) {p : ∀ x, x ∈ closure s → Prop} (Hs : ∀ x h : x ∈ s, p x (subset_closure h))
     (H1 : p 1 (one_mem _)) (Hmul : ∀ x hx y hy, p x hx → p y hy → p (x * y) (mul_mem _ hx hy)) {x}
     (hx : x ∈ closure s) : p x hx := by
-  refine' Exists.elim _ fun hx : x ∈ closure s hc : p x hx => hc
+  refine' Exists.elim _ fun hc : p x hx => hc
   exact closure_induction hx (fun x hx => ⟨_, Hs x hx⟩) ⟨_, H1⟩ fun x y ⟨hx', hx⟩ ⟨hy', hy⟩ => ⟨_, Hmul _ _ _ _ hx hy⟩
 
 /-- If `s` is a dense set in a monoid `M`, `submonoid.closure s = ⊤`, then in order to prove that
@@ -368,11 +375,11 @@ open Submonoid
 
 /-- The submonoid of elements `x : M` such that `f x = g x` -/
 @[to_additive "The additive submonoid of elements `x : M` such that `f x = g x`"]
-def eq_mlocus (f g : M →* N) : Submonoid M where
+def eqMlocus (f g : M →* N) : Submonoid M where
   Carrier := { x | f x = g x }
   one_mem' := by
     rw [Set.mem_set_of_eq, f.map_one, g.map_one]
-  mul_mem' := fun x y hx : _ = _ hy : _ = _ => by
+  mul_mem' := fun hy : _ = _ => by
     simp [*]
 
 /-- If two monoid homomorphisms are equal on a set, then they are equal on its submonoid closure. -/
@@ -424,7 +431,7 @@ open Submonoid
 Then `monoid_hom.of_mdense` defines a monoid homomorphism from `M` asking for a proof
 of `f (x * y) = f x * f y` only for `y ∈ s`. -/
 @[to_additive]
-def of_mdense {M N} [Monoidₓ M] [Monoidₓ N] {s : Set M} (f : M → N) (hs : closure s = ⊤) (h1 : f 1 = 1)
+def ofMdense {M N} [Monoidₓ M] [Monoidₓ N] {s : Set M} (f : M → N) (hs : closure s = ⊤) (h1 : f 1 = 1)
     (hmul : ∀ x, ∀ y ∈ s, ∀, f (x * y) = f x * f y) : M →* N where
   toFun := f
   map_one' := h1

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2017 Johannes Hölzl. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johannes Hölzl, Mario Carneiro, Kevin Buzzard, Yury Kudryashov, Eric Wieser
+-/
 import Mathbin.LinearAlgebra.Basic
 import Mathbin.Order.PartialSups
 
@@ -76,7 +81,7 @@ theorem snd_surjective : Function.Surjective (snd R M M₂) := fun x => ⟨(0, x
 
 /-- The prod of two linear maps is a linear map. -/
 @[simps]
-def Prod (f : M →ₗ[R] M₂) (g : M →ₗ[R] M₃) : M →ₗ[R] M₂ × M₃ where
+def prod (f : M →ₗ[R] M₂) (g : M →ₗ[R] M₃) : M →ₗ[R] M₂ × M₃ where
   toFun := Pi.prod f g
   map_add' := fun x y => by
     simp only [Pi.prod, Prod.mk_add_mk, map_add]
@@ -103,7 +108,7 @@ their codomains.
 
 See note [bundled maps over different rings] for why separate `R` and `S` semirings are used. -/
 @[simps]
-def prod_equiv [Module S M₂] [Module S M₃] [SmulCommClass R S M₂] [SmulCommClass R S M₃] :
+def prodEquiv [Module S M₂] [Module S M₃] [SmulCommClass R S M₂] [SmulCommClass R S M₃] :
     ((M →ₗ[R] M₂) × (M →ₗ[R] M₃)) ≃ₗ[S] M →ₗ[R] M₂ × M₃ where
   toFun := fun f => f.1.Prod f.2
   invFun := fun f => ((fst _ _ _).comp f, (snd _ _ _).comp f)
@@ -230,7 +235,7 @@ their domains.
 
 See note [bundled maps over different rings] for why separate `R` and `S` semirings are used. -/
 @[simps]
-def coprod_equiv [Module S M₃] [SmulCommClass R S M₃] : ((M →ₗ[R] M₃) × (M₂ →ₗ[R] M₃)) ≃ₗ[S] M × M₂ →ₗ[R] M₃ where
+def coprodEquiv [Module S M₃] [SmulCommClass R S M₃] : ((M →ₗ[R] M₃) × (M₂ →ₗ[R] M₃)) ≃ₗ[S] M × M₂ →ₗ[R] M₃ where
   toFun := fun f => f.1.coprod f.2
   invFun := fun f => (f.comp (inl _ _ _), f.comp (inr _ _ _))
   left_inv := fun f => by
@@ -260,7 +265,7 @@ theorem prod_ext {f g : M × M₂ →ₗ[R] M₃} (hl : f.comp (inl _ _ _) = g.c
   prod_ext_iff.2 ⟨hl, hr⟩
 
 /-- `prod.map` of two linear maps. -/
-def prod_mapₓ (f : M →ₗ[R] M₃) (g : M₂ →ₗ[R] M₄) : M × M₂ →ₗ[R] M₃ × M₄ :=
+def prodMap (f : M →ₗ[R] M₃) (g : M₂ →ₗ[R] M₄) : M × M₂ →ₗ[R] M₃ × M₄ :=
   (f.comp (fst R M M₂)).Prod (g.comp (snd R M M₂))
 
 @[simp]
@@ -462,7 +467,7 @@ def fst : Submodule R (M × M₂) :=
 
 /-- `M` as a submodule of `M × N` is isomorphic to `M`. -/
 @[simps]
-def fst_equiv : Submodule.fst R M M₂ ≃ₗ[R] M where
+def fstEquiv : Submodule.fst R M M₂ ≃ₗ[R] M where
   toFun := fun x => x.1.1
   invFun := fun m =>
     ⟨⟨m, 0⟩, by
@@ -489,7 +494,7 @@ def snd : Submodule R (M × M₂) :=
 
 /-- `N` as a submodule of `M × N` is isomorphic to `N`. -/
 @[simps]
-def snd_equiv : Submodule.snd R M M₂ ≃ₗ[R] M₂ where
+def sndEquiv : Submodule.snd R M M₂ ≃ₗ[R] M₂ where
   toFun := fun x => x.1.2
   invFun := fun n =>
     ⟨⟨0, n⟩, by
@@ -585,7 +590,7 @@ namespace LinearEquiv
 
 /-- Product of modules is commutative up to linear isomorphism. -/
 @[simps apply]
-def prod_comm (R M N : Type _) [Semiringₓ R] [AddCommMonoidₓ M] [AddCommMonoidₓ N] [Module R M] [Module R N] :
+def prodComm (R M N : Type _) [Semiringₓ R] [AddCommMonoidₓ M] [AddCommMonoidₓ N] [Module R M] [Module R N] :
     (M × N) ≃ₗ[R] N × M :=
   { AddEquiv.prodComm with toFun := Prod.swap, map_smul' := fun r ⟨m, n⟩ => rfl }
 
@@ -602,7 +607,7 @@ variable {module_M₃ : Module R M₃} {module_M₄ : Module R M₄}
 variable (e₁ : M ≃ₗ[R] M₂) (e₂ : M₃ ≃ₗ[R] M₄)
 
 /-- Product of linear equivalences; the maps come from `equiv.prod_congr`. -/
-protected def Prod : (M × M₃) ≃ₗ[R] M₂ × M₄ :=
+protected def prod : (M × M₃) ≃ₗ[R] M₂ × M₄ :=
   { Equivₓ.prodCongr e₁.toEquiv e₂.toEquiv with map_add' := fun x y => Prod.extₓ (e₁.map_add _ _) (e₂.map_add _ _),
     map_smul' := fun c x => Prod.extₓ (e₁.map_smulₛₗ c _) (e₂.map_smulₛₗ c _) }
 
@@ -633,7 +638,7 @@ variable (e₁ : M ≃ₗ[R] M₂) (e₂ : M₃ ≃ₗ[R] M₄)
 
 /-- Equivalence given by a block lower diagonal matrix. `e₁` and `e₂` are diagonal square blocks,
   and `f` is a rectangular block below the diagonal. -/
-protected def skew_prod (f : M →ₗ[R] M₄) : (M × M₃) ≃ₗ[R] M₂ × M₄ :=
+protected def skewProd (f : M →ₗ[R] M₄) : (M × M₃) ≃ₗ[R] M₂ × M₄ :=
   { ((e₁ : M →ₗ[R] M₂).comp (LinearMap.fst R M M₃)).Prod
       ((e₂ : M₃ →ₗ[R] M₄).comp (LinearMap.snd R M M₃) + f.comp (LinearMap.fst R M M₃)) with
     invFun := fun p : M₂ × M₄ => (e₁.symm p.1, e₂.symm (p.2 - f (e₁.symm p.1))),
@@ -708,6 +713,8 @@ and establishes the strong rank condition for any left-noetherian ring.
 
 section Tunnel
 
+-- (This doesn't work over a semiring: we need to use that `submodule R M` is a modular lattice,
+-- which requires cancellation.)
 variable [Ringₓ R]
 
 variable {N : Type _} [AddCommGroupₓ M] [Module R M] [AddCommGroupₓ N] [Module R N]
@@ -717,7 +724,7 @@ open Function
 /-- An auxiliary construction for `tunnel`.
 The composition of `f`, followed by the isomorphism back to `K`,
 followed by the inclusion of this submodule back into `M`. -/
-def tunnel_aux (f : M × N →ₗ[R] M) (Kφ : Σ K : Submodule R M, K ≃ₗ[R] M) : M × N →ₗ[R] M :=
+def tunnelAux (f : M × N →ₗ[R] M) (Kφ : Σ K : Submodule R M, K ≃ₗ[R] M) : M × N →ₗ[R] M :=
   (Kφ.1.Subtype.comp Kφ.2.symm.toLinearMap).comp f
 
 theorem tunnel_aux_injective (f : M × N →ₗ[R] M) (i : Injective f) (Kφ : Σ K : Submodule R M, K ≃ₗ[R] M) :
@@ -727,7 +734,9 @@ theorem tunnel_aux_injective (f : M × N →ₗ[R] M) (i : Injective f) (Kφ : �
 noncomputable section
 
 /-- Auxiliary definition for `tunnel`. -/
-noncomputable def tunnel' (f : M × N →ₗ[R] M) (i : Injective f) : ℕ → Σ K : Submodule R M, K ≃ₗ[R] M
+-- Even though we have `noncomputable theory`,
+-- we get an error without another `noncomputable` here.
+noncomputable def tunnel'ₓ (f : M × N →ₗ[R] M) (i : Injective f) : ℕ → Σ K : Submodule R M, K ≃ₗ[R] M
   | 0 => ⟨⊤, LinearEquiv.ofTop ⊤ rfl⟩
   | n + 1 =>
     ⟨(Submodule.fst R M N).map (tunnelAux f (tunnel' n)),
@@ -751,7 +760,7 @@ def tailing (f : M × N →ₗ[R] M) (i : Injective f) (n : ℕ) : Submodule R M
   (Submodule.snd R M N).map (tunnelAux f (tunnel'ₓ f i n))
 
 /-- Each `tailing f i n` is a copy of `N`. -/
-def tailing_linear_equiv (f : M × N →ₗ[R] M) (i : Injective f) (n : ℕ) : tailing f i n ≃ₗ[R] N :=
+def tailingLinearEquiv (f : M × N →ₗ[R] M) (i : Injective f) (n : ℕ) : tailing f i n ≃ₗ[R] N :=
   ((Submodule.snd R M N).equivMapOfInjective _ (tunnel_aux_injective f i (tunnel'ₓ f i n))).symm.trans
     (Submodule.sndEquiv R M N)
 

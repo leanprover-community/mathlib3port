@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Martin Dvorak. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Martin Dvorak, Kyle Miller, Eric Wieser
+-/
 import Mathbin.Data.Matrix.Notation
 import Mathbin.LinearAlgebra.BilinearMap
 import Mathbin.LinearAlgebra.Matrix.Determinant
@@ -37,13 +42,13 @@ open_locale Matrix
 
 variable {R : Type _} [CommRingₓ R]
 
--- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»
 /-- The cross product of two vectors in $R^3$ for $R$ a commutative ring. -/
 def crossProduct : (Finₓ 3 → R) →ₗ[R] (Finₓ 3 → R) →ₗ[R] Finₓ 3 → R := by
   apply
     LinearMap.mk₂ R fun a b : Finₓ 3 → R =>
-      «expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»"
+      «expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»"
   · intros
     simp [vec3_add (_ : R), add_commₓ, add_assocₓ, add_left_commₓ, add_mulₓ, sub_eq_add_neg]
     
@@ -59,10 +64,10 @@ def crossProduct : (Finₓ 3 → R) →ₗ[R] (Finₓ 3 → R) →ₗ[R] Finₓ 
 
 localized [Matrix] infixl:74 " ×₃ " => crossProduct
 
--- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»
 theorem cross_apply (a b : Finₓ 3 → R) :
-    a ×₃ b = «expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»" :=
+    a ×₃ b = «expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»" :=
   rfl
 
 section ProductsProperties
@@ -97,13 +102,13 @@ theorem triple_product_permutation (u v w : Finₓ 3 → R) : u ⬝ᵥ v ×₃ w
     Matrix.cons_val_one, Matrix.cons_vec_alt0, Matrix.cons_append, Matrix.cons_val_zero]
   ring
 
--- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»
 /-- The triple product of `u`, `v`, and `w` is equal to the determinant of the matrix
     with those vectors as its rows. -/
 theorem triple_product_eq_det (u v w : Finₓ 3 → R) :
     u ⬝ᵥ v ×₃ w =
-      Matrix.det («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»") :=
+      Matrix.det («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»") :=
   by
   simp only [vec3_dot_product, cross_apply, Matrix.det_fin_three, Matrix.head_cons, Matrix.cons_vec_bit0_eq_alt0,
     Matrix.empty_vec_alt0, Matrix.cons_vec_alt0, Matrix.vec_head_vec_alt0, Finₓ.fin_append_apply_zero,

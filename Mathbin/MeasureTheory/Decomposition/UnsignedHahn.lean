@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Johannes Hölzl. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johannes Hölzl
+-/
 import Mathbin.MeasureTheory.Measure.MeasureSpace
 
 /-!
@@ -25,6 +30,7 @@ namespace MeasureTheory
 
 variable {α : Type _} [MeasurableSpace α] {μ ν : Measure α}
 
+-- suddenly this is necessary?!
 private theorem aux {m : ℕ} {γ d : ℝ} (h : γ - (1 / 2) ^ m < d) : γ - 2 * (1 / 2) ^ m + (1 / 2) ^ m ≤ d := by
   linarith
 

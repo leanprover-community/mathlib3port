@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Patrick Massot. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Patrick Massot, Johannes Hölzl
+-/
 import Mathbin.Algebra.Ring.Prod
 import Mathbin.RingTheory.Ideal.Quotient
 import Mathbin.RingTheory.Subring.Basic
@@ -90,13 +95,13 @@ section
 variable {R : Type _} [Ringₓ R] [TopologicalSpace R]
 
 theorem TopologicalRing.of_add_group_of_nhds_zero [TopologicalAddGroup R]
-    (hmul : Tendsto (uncurry (· * · : R → R → R)) (𝓝 0 ×ᶠ 𝓝 0) <| 𝓝 0)
+    (hmul : Tendsto (uncurry ((· * ·) : R → R → R)) (𝓝 0 ×ᶠ 𝓝 0) <| 𝓝 0)
     (hmul_left : ∀ x₀ : R, Tendsto (fun x : R => x₀ * x) (𝓝 0) <| 𝓝 0)
     (hmul_right : ∀ x₀ : R, Tendsto (fun x : R => x * x₀) (𝓝 0) <| 𝓝 0) : TopologicalRing R := by
   refine' { ‹TopologicalAddGroup R› with .. }
   have hleft : ∀ x₀ : R, 𝓝 x₀ = map (fun x => x₀ + x) (𝓝 0) := by
     simp
-  have hadd : tendsto (uncurry (· + · : R → R → R)) (𝓝 0 ×ᶠ 𝓝 0) (𝓝 0) := by
+  have hadd : tendsto (uncurry ((· + ·) : R → R → R)) (𝓝 0 ×ᶠ 𝓝 0) (𝓝 0) := by
     rw [← nhds_prod_eq]
     convert continuous_add.tendsto ((0 : R), (0 : R))
     rw [zero_addₓ]
@@ -118,9 +123,9 @@ theorem TopologicalRing.of_add_group_of_nhds_zero [TopologicalAddGroup R]
   refine' tendsto_map.comp (hadd.comp (tendsto.prod_mk _ hmul))
   exact hadd.comp (((hmul_right y₀).comp tendsto_fst).prod_mk ((hmul_left x₀).comp tendsto_snd))
 
-theorem TopologicalRing.of_nhds_zero (hadd : Tendsto (uncurry (· + · : R → R → R)) (𝓝 0 ×ᶠ 𝓝 0) <| 𝓝 0)
+theorem TopologicalRing.of_nhds_zero (hadd : Tendsto (uncurry ((· + ·) : R → R → R)) (𝓝 0 ×ᶠ 𝓝 0) <| 𝓝 0)
     (hneg : Tendsto (fun x => -x : R → R) (𝓝 0) (𝓝 0))
-    (hmul : Tendsto (uncurry (· * · : R → R → R)) (𝓝 0 ×ᶠ 𝓝 0) <| 𝓝 0)
+    (hmul : Tendsto (uncurry ((· * ·) : R → R → R)) (𝓝 0 ×ᶠ 𝓝 0) <| 𝓝 0)
     (hmul_left : ∀ x₀ : R, Tendsto (fun x : R => x₀ * x) (𝓝 0) <| 𝓝 0)
     (hmul_right : ∀ x₀ : R, Tendsto (fun x : R => x * x₀) (𝓝 0) <| 𝓝 0)
     (hleft : ∀ x₀ : R, 𝓝 x₀ = map (fun x => x₀ + x) (𝓝 0)) : TopologicalRing R :=
@@ -131,6 +136,7 @@ end
 
 variable {α} [Ringₓ α] [TopologicalSpace α] [TopologicalRing α]
 
+-- See note [lower instance priority]
 instance (priority := 100) TopologicalRing.to_topological_add_group : TopologicalAddGroup α where
   continuous_add := continuous_add
   continuous_neg := by
@@ -197,6 +203,7 @@ instance topologicalRingQuotientTopology : TopologicalSpace (α ⧸ N) :=
   show TopologicalSpace (Quotientₓ _) by
     infer_instance
 
+-- note for the reader: in the following, `mk` is `ideal.quotient.mk`, the canonical map `R → R/I`.
 variable [TopologicalRing α]
 
 theorem QuotientRing.is_open_map_coe : IsOpenMap (mk N) := by
@@ -243,7 +250,7 @@ namespace RingTopology
 
 variable {α : Type _} [Ringₓ α]
 
-instance Inhabited {α : Type u} [Ringₓ α] : Inhabited (RingTopology α) :=
+instance inhabited {α : Type u} [Ringₓ α] : Inhabited (RingTopology α) :=
   ⟨{ toTopologicalSpace := ⊤, continuous_add := continuous_top, continuous_mul := continuous_top }⟩
 
 @[ext]
@@ -313,12 +320,12 @@ theorem coinduced_continuous {α β : Type _} [t : TopologicalSpace α] [Ringₓ
   exact ht'
 
 /-- The forgetful functor from ring topologies on `a` to additive group topologies on `a`. -/
-def to_add_group_topology (t : RingTopology α) : AddGroupTopology α where
+def toAddGroupTopology (t : RingTopology α) : AddGroupTopology α where
   toTopologicalSpace := t.toTopologicalSpace
   to_topological_add_group := @TopologicalRing.to_topological_add_group _ _ t.toTopologicalSpace t.to_topological_ring
 
 /-- The order embedding from ring topologies on `a` to additive group topologies on `a`. -/
-def to_add_group_topology.order_embedding : OrderEmbedding (RingTopology α) (AddGroupTopology α) where
+def toAddGroupTopology.orderEmbedding : OrderEmbedding (RingTopology α) (AddGroupTopology α) where
   toFun := fun t => t.toAddGroupTopology
   inj' := by
     intro t₁ t₂ h_eq

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Bhavik Mehta. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Bhavik Mehta
+-/
 import Mathbin.CategoryTheory.Limits.Shapes.Products
 import Mathbin.SetTheory.Cardinal
 
@@ -30,7 +35,7 @@ universe u
 
 variable {C : Type u} [SmallCategory C] [HasProducts C]
 
--- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (Z W)
+-- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (Z W)
 /-- A small category with products is a thin category.
 
 in Lean, a preorder category is one where the morphisms are in Prop, which is weaker than the usual

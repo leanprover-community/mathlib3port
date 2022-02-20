@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2018 Chris Hughes. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Chris Hughes, Abhimanyu Pallavi Sudhir, Jean Lo, Calle Sönne, Sébastien Gouëzel,
+  Rémy Degenne
+-/
 import Mathbin.Analysis.SpecialFunctions.Pow
 import Mathbin.Analysis.SpecialFunctions.Complex.LogDeriv
 import Mathbin.Analysis.Calculus.ExtendDeriv

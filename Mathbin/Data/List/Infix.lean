@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2017 Mario Carneiro. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Mario Carneiro
+-/
 import Mathbin.Data.List.Basic
 
 /-!
@@ -49,9 +54,9 @@ theorem infix_append (l₁ l₂ l₃ : List α) : l₂ <:+: l₁ ++ l₂ ++ l₃
 theorem infix_append' (l₁ l₂ l₃ : List α) : l₂ <:+: l₁ ++ (l₂ ++ l₃) := by
   rw [← List.append_assoc] <;> apply infix_append
 
-theorem is_prefix.is_infix : l₁ <+: l₂ → l₁ <:+: l₂ := fun ⟨t, h⟩ => ⟨[], t, h⟩
+theorem IsPrefix.is_infix : l₁ <+: l₂ → l₁ <:+: l₂ := fun ⟨t, h⟩ => ⟨[], t, h⟩
 
-theorem is_suffix.is_infix : l₁ <:+ l₂ → l₁ <:+: l₂ := fun ⟨t, h⟩ =>
+theorem IsSuffix.is_infix : l₁ <:+ l₂ → l₁ <:+: l₂ := fun ⟨t, h⟩ =>
   ⟨t, [], by
     rw [h, append_nil]⟩
 
@@ -99,27 +104,27 @@ theorem infix_concat : l₁ <:+: l₂ → l₁ <:+: concat l₂ a := fun ⟨L₁
     simp_rw [← h, concat_eq_append, append_assoc]⟩
 
 @[trans]
-theorem is_prefix.trans : ∀ {l₁ l₂ l₃ : List α}, l₁ <+: l₂ → l₂ <+: l₃ → l₁ <+: l₃
+theorem IsPrefix.trans : ∀ {l₁ l₂ l₃ : List α}, l₁ <+: l₂ → l₂ <+: l₃ → l₁ <+: l₃
   | l, _, _, ⟨r₁, rfl⟩, ⟨r₂, rfl⟩ => ⟨r₁ ++ r₂, (append_assoc _ _ _).symm⟩
 
 @[trans]
-theorem is_suffix.trans : ∀ {l₁ l₂ l₃ : List α}, l₁ <:+ l₂ → l₂ <:+ l₃ → l₁ <:+ l₃
+theorem IsSuffix.trans : ∀ {l₁ l₂ l₃ : List α}, l₁ <:+ l₂ → l₂ <:+ l₃ → l₁ <:+ l₃
   | l, _, _, ⟨l₁, rfl⟩, ⟨l₂, rfl⟩ => ⟨l₂ ++ l₁, append_assoc _ _ _⟩
 
 @[trans]
-theorem is_infix.trans : ∀ {l₁ l₂ l₃ : List α}, l₁ <:+: l₂ → l₂ <:+: l₃ → l₁ <:+: l₃
+theorem IsInfix.trans : ∀ {l₁ l₂ l₃ : List α}, l₁ <:+: l₂ → l₂ <:+: l₃ → l₁ <:+: l₃
   | l, _, _, ⟨l₁, r₁, rfl⟩, ⟨l₂, r₂, rfl⟩ =>
     ⟨l₂ ++ l₁, r₁ ++ r₂, by
       simp only [append_assoc]⟩
 
-protected theorem is_infix.sublist : l₁ <:+: l₂ → l₁ <+ l₂ := fun ⟨s, t, h⟩ => by
+protected theorem IsInfix.sublist : l₁ <:+: l₂ → l₁ <+ l₂ := fun ⟨s, t, h⟩ => by
   rw [← h]
   exact (sublist_append_right _ _).trans (sublist_append_left _ _)
 
-protected theorem is_prefix.sublist (h : l₁ <+: l₂) : l₁ <+ l₂ :=
+protected theorem IsPrefix.sublist (h : l₁ <+: l₂) : l₁ <+ l₂ :=
   h.IsInfix.Sublist
 
-protected theorem is_suffix.sublist (h : l₁ <:+ l₂) : l₁ <+ l₂ :=
+protected theorem IsSuffix.sublist (h : l₁ <:+ l₂) : l₁ <+ l₂ :=
   h.IsInfix.Sublist
 
 @[simp]
@@ -139,7 +144,7 @@ alias reverse_prefix ↔ _ List.IsSuffix.reverse
 
 alias reverse_suffix ↔ _ List.IsPrefix.reverse
 
-theorem infix.length_le (h : l₁ <:+: l₂) : length l₁ ≤ length l₂ :=
+theorem Infix.length_le (h : l₁ <:+: l₂) : length l₁ ≤ length l₂ :=
   length_le_of_sublistₓ h.Sublist
 
 theorem eq_nil_of_infix_nil (h : l <:+: []) : l = [] :=
@@ -294,7 +299,7 @@ theorem suffix_iff_eq_drop : l₁ <:+ l₂ ↔ l₁ = dropₓ (length l₂ - len
   ⟨fun h => append_left_cancel <| (suffix_iff_eq_append.1 h).trans (take_append_dropₓ _ _).symm, fun e =>
     e.symm ▸ drop_suffix _ _⟩
 
-instance decidable_prefix [DecidableEq α] : ∀ l₁ l₂ : List α, Decidable (l₁ <+: l₂)
+instance decidablePrefix [DecidableEq α] : ∀ l₁ l₂ : List α, Decidable (l₁ <+: l₂)
   | [], l₂ => isTrue ⟨l₂, rfl⟩
   | a :: l₁, [] => is_false fun ⟨t, te⟩ => List.noConfusion te
   | a :: l₁, b :: l₂ =>
@@ -308,7 +313,8 @@ instance decidable_prefix [DecidableEq α] : ∀ l₁ l₂ : List α, Decidable 
         h <| by
           injection te
 
-instance decidable_suffix [DecidableEq α] : ∀ l₁ l₂ : List α, Decidable (l₁ <:+ l₂)
+-- Alternatively, use mem_tails
+instance decidableSuffix [DecidableEq α] : ∀ l₁ l₂ : List α, Decidable (l₁ <:+ l₂)
   | [], l₂ => isTrue ⟨l₂, append_nil _⟩
   | a :: l₁, [] =>
     is_false <|
@@ -353,7 +359,7 @@ theorem cons_prefix_iff : a :: l₁ <+: b :: l₂ ↔ a = b ∧ l₁ <+: l₂ :=
     rwa [prefix_cons_inj]
     
 
-theorem is_prefix.map (h : l₁ <+: l₂) (f : α → β) : l₁.map f <+: l₂.map f := by
+theorem IsPrefix.map (h : l₁ <+: l₂) (f : α → β) : l₁.map f <+: l₂.map f := by
   induction' l₁ with hd tl hl generalizing l₂
   · simp only [nil_prefix, map_nil]
     
@@ -365,7 +371,7 @@ theorem is_prefix.map (h : l₁ <+: l₂) (f : α → β) : l₁.map f <+: l₂.
       
     
 
-theorem is_prefix.filter_map (h : l₁ <+: l₂) (f : α → Option β) : l₁.filterMap f <+: l₂.filterMap f := by
+theorem IsPrefix.filter_map (h : l₁ <+: l₂) (f : α → Option β) : l₁.filterMap f <+: l₂.filterMap f := by
   induction' l₁ with hd₁ tl₁ hl generalizing l₂
   · simp only [nil_prefix, filter_map_nil]
     
@@ -379,22 +385,22 @@ theorem is_prefix.filter_map (h : l₁ <+: l₂) (f : α → Option β) : l₁.f
       
     
 
-theorem is_prefix.reduce_option {l₁ l₂ : List (Option α)} (h : l₁ <+: l₂) : l₁.reduceOption <+: l₂.reduceOption :=
+theorem IsPrefix.reduce_option {l₁ l₂ : List (Option α)} (h : l₁ <+: l₂) : l₁.reduceOption <+: l₂.reduceOption :=
   h.filterMap id
 
-theorem is_prefix.filter (p : α → Prop) [DecidablePred p] ⦃l₁ l₂ : List α⦄ (h : l₁ <+: l₂) :
+theorem IsPrefix.filter (p : α → Prop) [DecidablePred p] ⦃l₁ l₂ : List α⦄ (h : l₁ <+: l₂) :
     l₁.filter p <+: l₂.filter p := by
   obtain ⟨xs, rfl⟩ := h
   rw [filter_append]
   exact prefix_append _ _
 
-theorem is_suffix.filter (p : α → Prop) [DecidablePred p] ⦃l₁ l₂ : List α⦄ (h : l₁ <:+ l₂) :
+theorem IsSuffix.filter (p : α → Prop) [DecidablePred p] ⦃l₁ l₂ : List α⦄ (h : l₁ <:+ l₂) :
     l₁.filter p <:+ l₂.filter p := by
   obtain ⟨xs, rfl⟩ := h
   rw [filter_append]
   exact suffix_append _ _
 
-theorem is_infix.filter (p : α → Prop) [DecidablePred p] ⦃l₁ l₂ : List α⦄ (h : l₁ <:+: l₂) :
+theorem IsInfix.filter (p : α → Prop) [DecidablePred p] ⦃l₁ l₂ : List α⦄ (h : l₁ <:+: l₂) :
     l₁.filter p <:+: l₂.filter p := by
   obtain ⟨xs, ys, rfl⟩ := h
   rw [filter_append, filter_append]
@@ -423,7 +429,7 @@ theorem mem_inits : ∀ s t : List α, s ∈ inits t ↔ s <+: t
       match s, mi with
       | [], ⟨_, rfl⟩ => Or.inl rfl
       | b :: s, ⟨r, hr⟩ =>
-        (List.noConfusion hr) fun ba st : s ++ r = t =>
+        (List.noConfusion hr) fun st : s ++ r = t =>
           Or.inr <| by
             rw [ba] <;> exact ⟨_, (mem_inits _ _).2 ⟨_, st⟩, rfl⟩⟩
 
@@ -471,6 +477,7 @@ theorem tails_append : ∀ s t : List α, tails (s ++ t) = (s.tails.map fun l =>
   | a :: s, t => by
     simp [tails_append s t]
 
+-- the lemma names `inits_eq_tails` and `tails_eq_inits` are like `sublists_eq_sublists'`
 theorem inits_eq_tails : ∀ l : List α, l.inits = (reverse <| map reverse <| tails <| reverse l)
   | [] => by
     simp
@@ -535,7 +542,7 @@ theorem nth_le_inits (l : List α) (n : ℕ) (hn : n < length (inits l)) : nthLe
       
     
 
-instance decidable_infix [DecidableEq α] : ∀ l₁ l₂ : List α, Decidable (l₁ <:+: l₂)
+instance decidableInfix [DecidableEq α] : ∀ l₁ l₂ : List α, Decidable (l₁ <:+: l₂)
   | [], l₂ => isTrue ⟨[], l₂, rfl⟩
   | a :: l₁, [] =>
     is_false fun ⟨s, t, te⟩ =>
@@ -558,19 +565,19 @@ variable [DecidableEq α]
 theorem insert_nil (a : α) : insert a nil = [a] :=
   rfl
 
-theorem insert.def (a : α) (l : List α) : insert a l = if a ∈ l then l else a :: l :=
+theorem insertₓ.def (a : α) (l : List α) : insert a l = if a ∈ l then l else a :: l :=
   rfl
 
 @[simp]
-theorem insert_of_mem (h : a ∈ l) : insert a l = l := by
+theorem insert_of_memₓ (h : a ∈ l) : insert a l = l := by
   simp only [insert.def, if_pos h]
 
 @[simp]
-theorem insert_of_not_mem (h : a ∉ l) : insert a l = a :: l := by
+theorem insert_of_not_memₓ (h : a ∉ l) : insert a l = a :: l := by
   simp only [insert.def, if_neg h] <;> constructor <;> rfl
 
 @[simp]
-theorem mem_insert_iff : a ∈ insert b l ↔ a = b ∨ a ∈ l := by
+theorem mem_insert_iffₓ : a ∈ insert b l ↔ a = b ∨ a ∈ l := by
   by_cases' h' : b ∈ l
   · simp only [insert_of_mem h']
     apply (or_iff_right_of_imp _).symm
@@ -593,21 +600,21 @@ theorem subset_insert (a : α) (l : List α) : l ⊆ l.insert a :=
   (sublist_insert a l).Subset
 
 @[simp]
-theorem mem_insert_self (a : α) (l : List α) : a ∈ l.insert a :=
+theorem mem_insert_selfₓ (a : α) (l : List α) : a ∈ l.insert a :=
   mem_insert_iffₓ.2 <| Or.inl rfl
 
-theorem mem_insert_of_mem (h : a ∈ l) : a ∈ insert b l :=
+theorem mem_insert_of_memₓ (h : a ∈ l) : a ∈ insert b l :=
   mem_insert_iffₓ.2 (Or.inr h)
 
-theorem eq_or_mem_of_mem_insert (h : a ∈ insert b l) : a = b ∨ a ∈ l :=
+theorem eq_or_mem_of_mem_insertₓ (h : a ∈ insert b l) : a = b ∨ a ∈ l :=
   mem_insert_iffₓ.1 h
 
 @[simp]
-theorem length_insert_of_mem (h : a ∈ l) : (insert a l).length = l.length :=
+theorem length_insert_of_memₓ (h : a ∈ l) : (insert a l).length = l.length :=
   congr_argₓ _ <| insert_of_memₓ h
 
 @[simp]
-theorem length_insert_of_not_mem (h : a ∉ l) : (insert a l).length = l.length + 1 :=
+theorem length_insert_of_not_memₓ (h : a ∉ l) : (insert a l).length = l.length + 1 :=
   congr_argₓ _ <| insert_of_not_memₓ h
 
 end Insert

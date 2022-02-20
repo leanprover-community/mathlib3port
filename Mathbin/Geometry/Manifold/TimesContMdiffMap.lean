@@ -1,3 +1,8 @@
+/-
+Copyright © 2020 Nicolò Cavalleri. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Nicolò Cavalleri
+-/
 import Mathbin.Geometry.Manifold.TimesContMdiff
 import Mathbin.Topology.ContinuousFunction.Basic
 
@@ -52,19 +57,19 @@ variable {f g : C^n⟮I, M; I', M'⟯}
 theorem coe_fn_mk (f : M → M') (hf : TimesContMdiff I I' n f) : (mk f hf : M → M') = f :=
   rfl
 
-protected theorem TimesContMdiff (f : C^n⟮I, M; I', M'⟯) : TimesContMdiff I I' n f :=
+protected theorem times_cont_mdiff (f : C^n⟮I, M; I', M'⟯) : TimesContMdiff I I' n f :=
   f.times_cont_mdiff_to_fun
 
-protected theorem Smooth (f : C^∞⟮I, M; I', M'⟯) : Smooth I I' f :=
+protected theorem smooth (f : C^∞⟮I, M; I', M'⟯) : Smooth I I' f :=
   f.times_cont_mdiff_to_fun
 
 protected theorem mdifferentiable' (f : C^n⟮I, M; I', M'⟯) (hn : 1 ≤ n) : Mdifferentiable I I' f :=
   f.TimesContMdiff.Mdifferentiable hn
 
-protected theorem Mdifferentiable (f : C^∞⟮I, M; I', M'⟯) : Mdifferentiable I I' f :=
+protected theorem mdifferentiable (f : C^∞⟮I, M; I', M'⟯) : Mdifferentiable I I' f :=
   f.TimesContMdiff.Mdifferentiable le_top
 
-protected theorem MdifferentiableAt (f : C^∞⟮I, M; I', M'⟯) {x} : MdifferentiableAt I I' f x :=
+protected theorem mdifferentiable_at (f : C^∞⟮I, M; I', M'⟯) {x} : MdifferentiableAt I I' f x :=
   f.Mdifferentiable x
 
 theorem coe_inj ⦃f g : C^n⟮I, M; I', M'⟯⦄ (h : (f : M → M') = g) : f = g := by

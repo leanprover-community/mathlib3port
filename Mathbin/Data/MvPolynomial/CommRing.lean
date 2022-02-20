@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2017 Johannes Hölzl. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johannes Hölzl, Johan Commelin, Mario Carneiro
+-/
 import Mathbin.Data.MvPolynomial.Variables
 
 /-!
@@ -148,7 +153,7 @@ theorem eval₂_hom_X {R : Type u} (c : ℤ →+* S) (f : MvPolynomial R ℤ →
 
 /-- Ring homomorphisms out of integer polynomials on a type `σ` are the same as
 functions out of the type `σ`, -/
-def hom_equiv : (MvPolynomial σ ℤ →+* S) ≃ (σ → S) where
+def homEquiv : (MvPolynomial σ ℤ →+* S) ≃ (σ → S) where
   toFun := fun f => ⇑f ∘ X
   invFun := fun f => eval₂Hom (Int.castRingHom S) f
   left_inv := fun f => RingHom.ext <| eval₂_hom_X _ _

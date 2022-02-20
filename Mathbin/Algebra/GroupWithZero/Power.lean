@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Johan Commelin. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johan Commelin
+-/
 import Mathbin.Algebra.GroupPower.Lemmas
 
 /-!
@@ -315,7 +320,7 @@ theorem div_sq_cancel (a b : G₀) : a ^ 2 * b / a = a * b := by
 /-- The `n`-th power map (`n` an integer) on a commutative group with zero, considered as a group
 homomorphism. -/
 def zpowGroupHom₀ (n : ℤ) : G₀ →* G₀ where
-  toFun := · ^ n
+  toFun := (· ^ n)
   map_one' := one_zpow₀ n
   map_mul' := fun a b => mul_zpow₀ a b n
 
@@ -332,6 +337,9 @@ theorem MonoidWithZeroHom.map_zpow {G₀ G₀' : Type _} [GroupWithZeroₓ G₀]
     rw [zpow_neg_succ_of_nat, zpow_neg_succ_of_nat]
     exact (f.map_inv _).trans <| congr_argₓ _ <| f.to_monoid_hom.map_pow x _
 
+-- I haven't been able to find a better home for this:
+-- it belongs with other lemmas on `linear_ordered_field`, but
+-- we need to wait until `zpow` has been defined in this file.
 section
 
 variable {R : Type _} [LinearOrderedField R] {a : R}

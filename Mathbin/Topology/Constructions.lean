@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2017 Johannes Hölzl. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johannes Hölzl, Mario Carneiro, Patrick Massot
+-/
 import Mathbin.Topology.Maps
 import Mathbin.Order.Filter.Pi
 import Mathbin.Data.Fin.Tuple.Default
@@ -94,6 +99,9 @@ section Topα
 
 variable [TopologicalSpace α]
 
+/-
+The 𝓝 filter and the subspace topology.
+-/
 theorem mem_nhds_subtype (s : Set α) (a : { x // x ∈ s }) (t : Set { x // x ∈ s }) :
     t ∈ 𝓝 a ↔ ∃ u ∈ 𝓝 (a : α), coe ⁻¹' u ⊆ t :=
   mem_nhds_induced coe a t
@@ -417,7 +425,7 @@ theorem prod_induced_induced {α γ : Type _} (f : α → β) (g : γ → δ) :
 theorem continuous_uncurry_of_discrete_topology_left [DiscreteTopology α] {f : α → β → γ} (h : ∀ a, Continuous (f a)) :
     Continuous (Function.uncurry f) :=
   continuous_iff_continuous_at.2 fun ⟨a, b⟩ => by
-    simp only [ContinuousAt, nhds_prod_eq, nhds_discrete α, pure_prod, tendsto_map'_iff, · ∘ ·, Function.uncurry,
+    simp only [ContinuousAt, nhds_prod_eq, nhds_discrete α, pure_prod, tendsto_map'_iff, (· ∘ ·), Function.uncurry,
       (h a).Tendsto]
 
 /-- Given a neighborhood `s` of `(x, x)`, then `(x, x)` has a square open neighborhood

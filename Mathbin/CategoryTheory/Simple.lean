@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Markus Himmel, Scott Morrison
+-/
 import Mathbin.CategoryTheory.Limits.Shapes.Zero
 import Mathbin.CategoryTheory.Limits.Shapes.Kernels
 import Mathbin.CategoryTheory.Abelian.Basic
@@ -36,7 +41,7 @@ section
 variable [HasZeroMorphisms C]
 
 /-- An object is simple if monomorphisms into it are (exclusively) either isomorphisms or zero. -/
-class simple (X : C) : Prop where
+class Simple (X : C) : Prop where
   mono_is_iso_iff_nonzero : ∀ {Y : C} f : Y ⟶ X [Mono f], IsIso f ↔ f ≠ 0
 
 /-- A nonzero monomorphism to a simple object is an isomorphism. -/
@@ -80,6 +85,7 @@ end
 
 end
 
+-- We next make the dual arguments, but for this we must be in an abelian category.
 section Abelian
 
 variable [Abelian C]
@@ -106,7 +112,8 @@ theorem simple_of_cosimple (X : C) (h : ∀ {Z : C} f : X ⟶ Z [Epi f], IsIso f
 
 /-- A nonzero epimorphism from a simple object is an isomorphism. -/
 theorem is_iso_of_epi_of_nonzero {X Y : C} [Simple X] {f : X ⟶ Y} [Epi f] (w : f ≠ 0) : IsIso f :=
-  have : mono f := preadditive.mono_of_kernel_zero (mono_to_simple_zero_of_not_iso (kernel_not_iso_of_nonzero w))
+  have-- `f ≠ 0` means that `kernel.ι f` is not an iso, and hence zero, and hence `f` is a mono.
+   : mono f := preadditive.mono_of_kernel_zero (mono_to_simple_zero_of_not_iso (kernel_not_iso_of_nonzero w))
   is_iso_of_mono_of_epi f
 
 theorem cokernel_zero_of_nonzero_to_simple {X Y : C} [Simple Y] {f : X ⟶ Y} [HasCokernel f] (w : f ≠ 0) :

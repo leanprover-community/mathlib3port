@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Kenny Lau. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Kenny Lau
+-/
 import Mathbin.Algebra.Polynomial.GroupRingAction
 import Mathbin.FieldTheory.Normal
 import Mathbin.FieldTheory.Separable
@@ -74,7 +79,8 @@ namespace FixedPoints
 variable (M)
 
 /-- The subfield of fixed points by a monoid action. -/
-def Subfield : Subfield F :=
+-- we use `subfield.copy` so that the underlying set is `fixed_points M F`
+def subfield : Subfield F :=
   Subfield.copy (⨅ m : M, FixedBy.subfield F m) (FixedPoints M F)
     (by
       ext z
@@ -96,6 +102,7 @@ instance smul_comm_class' : SmulCommClass (FixedPoints.subfield M F) M F :=
 theorem smul (m : M) (x : FixedPoints.subfield M F) : m • x = x :=
   Subtype.eq <| x.2 m
 
+-- Why is this so slow?
 @[simp]
 theorem smul_polynomial (m : M) (p : Polynomial (FixedPoints.subfield M F)) : m • p = p :=
   Polynomial.induction_on p
@@ -187,6 +194,7 @@ theorem of_eval₂ (f : Polynomial (FixedPoints.subfield G F))
     MulSemiringActionHom.coe_polynomial, IsInvariantSubring.coe_subtype_hom', Polynomial.eval_map,
     Subfield.toSubring.subtype_eq_subtype, hf, smul_zero]
 
+-- Why is this so slow?
 theorem irreducible_aux (f g : Polynomial (FixedPoints.subfield G F)) (hf : f.Monic) (hg : g.Monic)
     (hfg : f * g = minpoly G F x) : f = 1 ∨ g = 1 := by
   have hf2 : f ∣ minpoly G F x := by
@@ -211,18 +219,18 @@ theorem irreducible_aux (f g : Polynomial (FixedPoints.subfield G F)) (hf : f.Mo
     rwa [← one_mulₓ (minpoly G F x), hg3, mul_left_inj' (monic G F x).ne_zero] at hfg
     
 
-theorem Irreducible : Irreducible (minpoly G F x) :=
+theorem irreducible : Irreducible (minpoly G F x) :=
   (Polynomial.irreducible_of_monic (monic G F x) (ne_one G F x)).2 (irreducible_aux G F x)
 
 end minpoly
 
-theorem IsIntegral : IsIntegral (FixedPoints.subfield G F) x :=
+theorem is_integral : IsIntegral (FixedPoints.subfield G F) x :=
   ⟨minpoly G F x, minpoly.monic G F x, minpoly.eval₂ G F x⟩
 
 theorem minpoly_eq_minpoly : minpoly G F x = minpoly (FixedPoints.subfield G F) x :=
   minpoly.eq_of_irreducible_of_monic (minpoly.irreducible G F x) (minpoly.eval₂ G F x) (minpoly.monic G F x)
 
-instance Normal : Normal (FixedPoints.subfield G F) F :=
+instance normal : Normal (FixedPoints.subfield G F) F :=
   ⟨fun x => is_integral G F x, fun x =>
     (Polynomial.splits_id_iff_splits _).1 <| by
       rw [← minpoly_eq_minpoly, minpoly, coe_algebra_map, ← Subfield.toSubring.subtype_eq_subtype,
@@ -231,6 +239,7 @@ instance Normal : Normal (FixedPoints.subfield G F) F :=
 
 instance separable : IsSeparable (FixedPoints.subfield G F) F :=
   ⟨fun x => is_integral G F x, fun x => by
+    -- this was a plain rw when we were using unbundled subrings
     erw [← minpoly_eq_minpoly, ← Polynomial.separable_map (FixedPoints.subfield G F).Subtype, minpoly,
       Polynomial.map_to_subring _ (Subfield G F).toSubring]
     exact Polynomial.separable_prod_X_sub_C_iff.2 (injective_of_quotient_stabilizer G x)⟩
@@ -305,7 +314,7 @@ theorem to_alg_hom_bijective (G : Type u) (F : Type v) [Groupₓ G] [Field F] [F
     
 
 /-- Bijection between G and algebra homomorphisms that fix the fixed points -/
-def to_alg_hom_equiv (G : Type u) (F : Type v) [Groupₓ G] [Field F] [Fintype G] [MulSemiringAction G F]
+def toAlgHomEquiv (G : Type u) (F : Type v) [Groupₓ G] [Field F] [Fintype G] [MulSemiringAction G F]
     [HasFaithfulScalar G F] : G ≃ (F →ₐ[FixedPoints.subfield G F] F) :=
   Equivₓ.ofBijective _ (to_alg_hom_bijective G F)
 

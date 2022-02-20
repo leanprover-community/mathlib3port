@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Yury Kudryashov. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yury Kudryashov
+-/
 import Mathbin.Topology.Instances.RealVectorSpace
 import Mathbin.Analysis.NormedSpace.AffineIsometry
 import Mathbin.LinearAlgebra.AffineSpace.Midpoint
@@ -39,23 +44,31 @@ then it fixes the midpoint of `[x, y]`. This is a lemma for a more general Mazur
 see below. -/
 theorem midpoint_fixed {x y : PE} : ∀ e : PE ≃ᵢ PE, e x = x → e y = y → e (midpoint ℝ x y) = midpoint ℝ x y := by
   set z := midpoint ℝ x y
+  -- Consider the set of `e : E ≃ᵢ E` such that `e x = x` and `e y = y`
   set s := { e : PE ≃ᵢ PE | e x = x ∧ e y = y }
   have : Nonempty s := ⟨⟨Isometric.refl PE, rfl, rfl⟩⟩
+  -- On the one hand, `e` cannot send the midpoint `z` of `[x, y]` too far
   have h_bdd : BddAbove (range fun e : s => dist (e z) z) := by
     refine' ⟨dist x z + dist x z, forall_range_iff.2 <| Subtype.forall.2 _⟩
     rintro e ⟨hx, hy⟩
     calc dist (e z) z ≤ dist (e z) x + dist x z := dist_triangle (e z) x z _ = dist (e x) (e z) + dist x z := by
         rw [hx, dist_comm]_ = dist x z + dist x z := by
         erw [e.dist_eq x z]
+  -- On the other hand, consider the map `f : (E ≃ᵢ E) → (E ≃ᵢ E)`
+  -- sending each `e` to `R ∘ e⁻¹ ∘ R ∘ e`, where `R` is the point reflection in the
+  -- midpoint `z` of `[x, y]`.
   set R : PE ≃ᵢ PE := (point_reflection ℝ z).toIsometric
   set f : PE ≃ᵢ PE → PE ≃ᵢ PE := fun e => ((e.trans R).trans e.symm).trans R
+  -- Note that `f` doubles the value of ``dist (e z) z`
   have hf_dist : ∀ e, dist (f e z) z = 2 * dist (e z) z := by
     intro e
     dsimp [f]
     rw [dist_point_reflection_fixed, ← e.dist_eq, e.apply_symm_apply, dist_point_reflection_self_real, dist_comm]
+  -- Also note that `f` maps `s` to itself
   have hf_maps_to : maps_to f s s := by
     rintro e ⟨hx, hy⟩
     constructor <;> simp [hx, hy, e.symm_apply_eq.2 hx.symm, e.symm_apply_eq.2 hy.symm]
+  -- Therefore, `dist (e z) z = 0` for all `e ∈ s`.
   set c := ⨆ e : s, dist ((e : PE ≃ᵢ PE) z) z
   have : c ≤ c / 2 := by
     apply csupr_le
@@ -92,7 +105,7 @@ We define a conversion to a `continuous_linear_equiv` first, then a conversion t
 
 /-- **Mazur-Ulam Theorem**: if `f` is an isometric bijection between two normed vector spaces
 over `ℝ` and `f 0 = 0`, then `f` is a linear isometry equivalence. -/
-def to_real_linear_isometry_equiv_of_map_zero (f : E ≃ᵢ F) (h0 : f 0 = 0) : E ≃ₗᵢ[ℝ] F :=
+def toRealLinearIsometryEquivOfMapZero (f : E ≃ᵢ F) (h0 : f 0 = 0) : E ≃ₗᵢ[ℝ] F :=
   { (AddMonoidHom.ofMapMidpoint ℝ ℝ f h0 f.map_midpoint).toRealLinearMap f.Continuous, f with
     norm_map' := fun x =>
       show ∥f x∥ = ∥x∥ by
@@ -110,7 +123,7 @@ theorem coe_to_real_linear_equiv_of_map_zero_symm (f : E ≃ᵢ F) (h0 : f 0 = 0
 
 /-- **Mazur-Ulam Theorem**: if `f` is an isometric bijection between two normed vector spaces
 over `ℝ`, then `x ↦ f x - f 0` is a linear isometry equivalence. -/
-def to_real_linear_isometry_equiv (f : E ≃ᵢ F) : E ≃ₗᵢ[ℝ] F :=
+def toRealLinearIsometryEquiv (f : E ≃ᵢ F) : E ≃ₗᵢ[ℝ] F :=
   (f.trans (Isometric.addRight (f 0)).symm).toRealLinearIsometryEquivOfMapZero
     (by
       simpa only [sub_eq_add_neg] using sub_self (f 0))
@@ -126,7 +139,7 @@ theorem to_real_linear_isometry_equiv_symm_apply (f : E ≃ᵢ F) (y : F) :
 
 /-- **Mazur-Ulam Theorem**: if `f` is an isometric bijection between two normed add-torsors over
 normed vector spaces over `ℝ`, then `f` is an affine isometry equivalence. -/
-def to_real_affine_isometry_equiv (f : PE ≃ᵢ PF) : PE ≃ᵃⁱ[ℝ] PF :=
+def toRealAffineIsometryEquiv (f : PE ≃ᵢ PF) : PE ≃ᵃⁱ[ℝ] PF :=
   AffineIsometryEquiv.mk' f
     ((vaddConst (Classical.arbitrary PE)).trans <|
         f.trans (vaddConst (f <| Classical.arbitrary PE)).symm).toRealLinearIsometryEquiv

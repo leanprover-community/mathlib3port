@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Bhavik Mehta, Scott Morrison
+-/
 import Mathbin.CategoryTheory.Subobject.FactorThru
 import Mathbin.CategoryTheory.Subobject.WellPowered
 
@@ -32,7 +37,7 @@ instance {X : C} : Inhabited (MonoOver X) :=
   ⟨⊤⟩
 
 /-- The morphism to the top object in `mono_over X`. -/
-def le_top (f : MonoOver X) : f ⟶ ⊤ :=
+def leTop (f : MonoOver X) : f ⟶ ⊤ :=
   homMk f.arrow (comp_id _)
 
 @[simp]
@@ -44,7 +49,7 @@ theorem top_arrow (X : C) : (⊤ : MonoOver X).arrow = 𝟙 X :=
   rfl
 
 /-- `map f` sends `⊤ : mono_over X` to `⟨X, f⟩ : mono_over Y`. -/
-def map_top (f : X ⟶ Y) [Mono f] : (map f).obj ⊤ ≅ mk' f :=
+def mapTop (f : X ⟶ Y) [Mono f] : (map f).obj ⊤ ≅ mk' f :=
   isoOfBothWays (homMk (𝟙 _) rfl)
     (homMk (𝟙 _)
       (by
@@ -56,7 +61,7 @@ variable [HasPullbacks C]
 
 /-- The pullback of the top object in `mono_over Y`
 is (isomorphic to) the top object in `mono_over X`. -/
-def pullback_top (f : X ⟶ Y) : (pullback f).obj ⊤ ≅ ⊤ :=
+def pullbackTop (f : X ⟶ Y) : (pullback f).obj ⊤ ≅ ⊤ :=
   isoOfBothWays (leTop _)
     (homMk
       (pullback.lift f (𝟙 _)
@@ -66,11 +71,11 @@ def pullback_top (f : X ⟶ Y) : (pullback f).obj ⊤ ≅ ⊤ :=
 
 /-- There is a morphism from `⊤ : mono_over A` to the pullback of a monomorphism along itself;
 as the category is thin this is an isomorphism. -/
-def top_le_pullback_self {A B : C} (f : A ⟶ B) [Mono f] : (⊤ : MonoOver A) ⟶ (pullback f).obj (mk' f) :=
+def topLePullbackSelf {A B : C} (f : A ⟶ B) [Mono f] : (⊤ : MonoOver A) ⟶ (pullback f).obj (mk' f) :=
   homMk _ (pullback.lift_snd _ _ rfl)
 
 /-- The pullback of a monomorphism along itself is isomorphic to the top object. -/
-def pullback_self {A B : C} (f : A ⟶ B) [Mono f] : (pullback f).obj (mk' f) ≅ ⊤ :=
+def pullbackSelf {A B : C} (f : A ⟶ B) [Mono f] : (pullback f).obj (mk' f) ≅ ⊤ :=
   isoOfBothWays (leTop _) (topLePullbackSelf _)
 
 end
@@ -93,13 +98,13 @@ theorem bot_arrow {X : C} : (⊥ : MonoOver X).arrow = initial.to X :=
   rfl
 
 /-- The (unique) morphism from `⊥ : mono_over X` to any other `f : mono_over X`. -/
-def bot_le {X : C} (f : MonoOver X) : ⊥ ⟶ f :=
+def botLe {X : C} (f : MonoOver X) : ⊥ ⟶ f :=
   homMk (initial.to _)
     (by
       simp )
 
 /-- `map f` sends `⊥ : mono_over X` to `⊥ : mono_over Y`. -/
-def map_bot (f : X ⟶ Y) [Mono f] : (map f).obj ⊥ ≅ ⊥ :=
+def mapBot (f : X ⟶ Y) [Mono f] : (map f).obj ⊥ ≅ ⊥ :=
   isoOfBothWays
     (homMk (initial.to _)
       (by
@@ -117,7 +122,7 @@ variable [HasZeroObject C]
 open_locale ZeroObject
 
 /-- The object underlying `⊥ : subobject B` is (up to isomorphism) the zero object. -/
-def bot_coe_iso_zero {B : C} : ((⊥ : MonoOver B) : C) ≅ 0 :=
+def botCoeIsoZero {B : C} : ((⊥ : MonoOver B) : C) ≅ 0 :=
   initialIsInitial.uniqueUpToIso HasZeroObject.zeroIsInitial
 
 @[simp]
@@ -148,15 +153,15 @@ def inf {A : C} : MonoOver A ⥤ MonoOver A ⥤ MonoOver A where
         rw [pullback.lift_snd_assoc, assoc, w k] }
 
 /-- A morphism from the "infimum" of two objects in `mono_over A` to the first object. -/
-def inf_le_left {A : C} (f g : MonoOver A) : (inf.obj f).obj g ⟶ f :=
+def infLeLeft {A : C} (f g : MonoOver A) : (inf.obj f).obj g ⟶ f :=
   homMk _ rfl
 
 /-- A morphism from the "infimum" of two objects in `mono_over A` to the second object. -/
-def inf_le_right {A : C} (f g : MonoOver A) : (inf.obj f).obj g ⟶ g :=
+def infLeRight {A : C} (f g : MonoOver A) : (inf.obj f).obj g ⟶ g :=
   homMk _ pullback.condition
 
 /-- A morphism version of the `le_inf` axiom. -/
-def le_inf {A : C} (f g h : MonoOver A) : (h ⟶ f) → (h ⟶ g) → (h ⟶ (inf.obj f).obj g) := by
+def leInf {A : C} (f g h : MonoOver A) : (h ⟶ f) → (h ⟶ g) → (h ⟶ (inf.obj f).obj g) := by
   intro k₁ k₂
   refine' hom_mk (pullback.lift k₂.left k₁.left _) _
   rw [w k₁, w k₂]
@@ -175,19 +180,19 @@ def sup {A : C} : MonoOver A ⥤ MonoOver A ⥤ MonoOver A :=
   curryObj ((forget A).Prod (forget A) ⋙ uncurry.obj Over.coprod ⋙ image)
 
 /-- A morphism version of `le_sup_left`. -/
-def le_sup_left {A : C} (f g : MonoOver A) : f ⟶ (sup.obj f).obj g := by
+def leSupLeft {A : C} (f g : MonoOver A) : f ⟶ (sup.obj f).obj g := by
   refine' hom_mk (coprod.inl ≫ factor_thru_image _) _
   erw [category.assoc, image.fac, coprod.inl_desc]
   rfl
 
 /-- A morphism version of `le_sup_right`. -/
-def le_sup_right {A : C} (f g : MonoOver A) : g ⟶ (sup.obj f).obj g := by
+def leSupRight {A : C} (f g : MonoOver A) : g ⟶ (sup.obj f).obj g := by
   refine' hom_mk (coprod.inr ≫ factor_thru_image _) _
   erw [category.assoc, image.fac, coprod.inr_desc]
   rfl
 
 /-- A morphism version of `sup_le`. -/
-def sup_le {A : C} (f g h : MonoOver A) : (f ⟶ h) → (g ⟶ h) → ((sup.obj f).obj g ⟶ h) := by
+def supLe {A : C} (f g h : MonoOver A) : (f ⟶ h) → (g ⟶ h) → ((sup.obj f).obj g ⟶ h) := by
   intro k₁ k₂
   refine' hom_mk _ _
   apply image.lift ⟨_, h.arrow, coprod.desc k₁.left k₂.left, _⟩
@@ -209,7 +214,7 @@ namespace Subobject
 
 section OrderTop
 
-instance OrderTop {X : C} : OrderTop (Subobject X) where
+instance orderTop {X : C} : OrderTop (Subobject X) where
   top := Quotientₓ.mk' ⊤
   le_top := by
     refine' Quotientₓ.ind' fun f => _
@@ -275,7 +280,7 @@ section OrderBot
 
 variable [HasInitial C] [InitialMonoClass C]
 
-instance OrderBot {X : C} : OrderBot (Subobject X) where
+instance orderBot {X : C} : OrderBot (Subobject X) where
   bot := Quotientₓ.mk' ⊥
   bot_le := by
     refine' Quotientₓ.ind' fun f => _
@@ -285,7 +290,7 @@ theorem bot_eq_initial_to {B : C} : (⊥ : Subobject B) = Subobject.mk (initial.
   rfl
 
 /-- The object underlying `⊥ : subobject B` is (up to isomorphism) the initial object. -/
-def bot_coe_iso_initial {B : C} : ((⊥ : Subobject B) : C) ≅ ⊥_ C :=
+def botCoeIsoInitial {B : C} : ((⊥ : Subobject B) : C) ≅ ⊥_ C :=
   underlyingIso _
 
 theorem map_bot (f : X ⟶ Y) [Mono f] : (map f).obj ⊥ = ⊥ :=
@@ -300,7 +305,7 @@ variable [HasZeroObject C]
 open_locale ZeroObject
 
 /-- The object underlying `⊥ : subobject B` is (up to isomorphism) the zero object. -/
-def bot_coe_iso_zero {B : C} : ((⊥ : Subobject B) : C) ≅ 0 :=
+def botCoeIsoZero {B : C} : ((⊥ : Subobject B) : C) ≅ 0 :=
   bot_coe_iso_initial ≪≫ initialIsInitial.uniqueUpToIso HasZeroObject.zeroIsInitial
 
 variable [HasZeroMorphisms C]
@@ -331,7 +336,7 @@ variable (C)
 
 /-- Sending `X : C` to `subobject X` is a contravariant functor `Cᵒᵖ ⥤ Type`. -/
 @[simps]
-def Functor [HasPullbacks C] : Cᵒᵖ ⥤ Type max u₁ v₁ where
+def functor [HasPullbacks C] : Cᵒᵖ ⥤ Type max u₁ v₁ where
   obj := fun X => Subobject X.unop
   map := fun X Y f => (pullback f.unop).obj
   map_id' := fun X => funext pullback_id
@@ -398,6 +403,7 @@ theorem finset_inf_factors {I : Type _} {A B : C} {s : Finset I} {P : I → Subo
     simp [ih]
     
 
+-- `i` is explicit here because often we'd like to defer a proof of `m`
 theorem finset_inf_arrow_factors {I : Type _} {B : C} (s : Finset I) (P : I → Subobject B) (i : I) (m : i ∈ s) :
     (P i).Factors (s.inf P).arrow := by
   revert i m
@@ -518,7 +524,7 @@ variable [WellPowered C]
 (This is just the diagram of all the subobjects pasted together, but using `well_powered C`
 to make the diagram small.)
 -/
-def wide_cospan {A : C} (s : Set (Subobject A)) : WidePullbackShape (equivShrink _ '' s) ⥤ C :=
+def wideCospan {A : C} (s : Set (Subobject A)) : WidePullbackShape (equivShrink _ '' s) ⥤ C :=
   WidePullbackShape.wideCospan A (fun j : equivShrink _ '' s => ((equivShrink (Subobject A)).symm j : C)) fun j =>
     ((equivShrink (Subobject A)).symm j).arrow
 
@@ -528,7 +534,7 @@ theorem wide_cospan_map_term {A : C} (s : Set (Subobject A)) j :
   rfl
 
 /-- Auxiliary construction of a cone for `le_Inf`. -/
-def le_Inf_cone {A : C} (s : Set (Subobject A)) (f : Subobject A) (k : ∀, ∀ g ∈ s, ∀, f ≤ g) : Cone (wideCospan s) :=
+def leInfCone {A : C} (s : Set (Subobject A)) (f : Subobject A) (k : ∀, ∀ g ∈ s, ∀, f ≤ g) : Cone (wideCospan s) :=
   WidePullbackShape.mkCone f.arrow
     (fun j =>
       underlying.map
@@ -549,12 +555,12 @@ variable [HasWidePullbacks C]
 
 /-- The limit of `wide_cospan s`. (This will be the supremum of the set of subobjects.)
 -/
-def wide_pullback {A : C} (s : Set (Subobject A)) : C :=
+def widePullback {A : C} (s : Set (Subobject A)) : C :=
   Limits.limit (wideCospan s)
 
 /-- The inclusion map from `wide_pullback s` to `A`
 -/
-def wide_pullback_ι {A : C} (s : Set (Subobject A)) : widePullback s ⟶ A :=
+def widePullbackι {A : C} (s : Set (Subobject A)) : widePullback s ⟶ A :=
   Limits.limit.π (wideCospan s) none
 
 instance wide_pullback_ι_mono {A : C} (s : Set (Subobject A)) : Mono (widePullbackι s) :=
@@ -571,10 +577,10 @@ instance wide_pullback_ι_mono {A : C} (s : Set (Subobject A)) : Mono (widePullb
 
 /-- When `[well_powered C]` and `[has_wide_pullbacks C]`, `subobject A` has arbitrary infimums.
 -/
-def Inf {A : C} (s : Set (Subobject A)) : Subobject A :=
+def infₓ {A : C} (s : Set (Subobject A)) : Subobject A :=
   Subobject.mk (widePullbackι s)
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (f «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (f «expr ∈ » s)
 theorem Inf_le {A : C} (s : Set (Subobject A)) f (_ : f ∈ s) : infₓ s ≤ f := by
   fapply le_of_comm
   · refine'
@@ -610,17 +616,17 @@ variable [WellPowered C] [HasCoproducts C]
 /-- The univesal morphism out of the coproduct of a set of subobjects,
 after using `[well_powered C]` to reindex by a small type.
 -/
-def small_coproduct_desc {A : C} (s : Set (Subobject A)) : _ ⟶ A :=
+def smallCoproductDesc {A : C} (s : Set (Subobject A)) : _ ⟶ A :=
   Limits.Sigma.desc fun j : equivShrink _ '' s => ((equivShrink (Subobject A)).symm j).arrow
 
 variable [HasImages C]
 
 /-- When `[well_powered C] [has_images C] [has_coproducts C]`,
 `subobject A` has arbitrary supremums. -/
-def Sup {A : C} (s : Set (Subobject A)) : Subobject A :=
+def supₓ {A : C} (s : Set (Subobject A)) : Subobject A :=
   Subobject.mk (image.ι (smallCoproductDesc s))
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (f «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (f «expr ∈ » s)
 theorem le_Sup {A : C} (s : Set (Subobject A)) f (_ : f ∈ s) : f ≤ supₓ s := by
   fapply le_of_comm
   · dsimp [Sup]

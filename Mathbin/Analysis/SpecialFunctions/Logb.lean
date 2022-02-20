@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2022 Bolton Bailey. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Bolton Bailey, Chris Hughes, Abhimanyu Pallavi Sudhir, Jean Lo, Calle Sönne
+-/
 import Mathbin.Analysis.SpecialFunctions.Log
 import Mathbin.Analysis.SpecialFunctions.Pow
 
@@ -310,6 +315,7 @@ theorem logb_eq_zero : logb b x = 0 ↔ b = 0 ∨ b = 1 ∨ b = -1 ∨ x = 0 ∨
   simp_rw [logb, div_eq_zero_iff, log_eq_zero]
   tauto
 
+-- TODO add other limits and continuous API lemmas analogous to those in log.lean
 open_locale BigOperators
 
 theorem logb_prod {α : Type _} (s : Finset α) (f : α → ℝ) (hf : ∀, ∀ x ∈ s, ∀, f x ≠ 0) :

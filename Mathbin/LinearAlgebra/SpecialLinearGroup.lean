@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Anne Baanen. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Anne Baanen
+-/
 import Mathbin.LinearAlgebra.Matrix.Adjugate
 import Mathbin.LinearAlgebra.Matrix.ToLin
 
@@ -56,7 +61,7 @@ variable (n : Type u) [DecidableEq n] [Fintype n] (R : Type v) [CommRingₓ R]
 
 /-- `special_linear_group n R` is the group of `n` by `n` `R`-matrices with determinant equal to 1.
 -/
-def special_linear_group :=
+def SpecialLinearGroup :=
   { A : Matrix n n R // A.det = 1 }
 
 end
@@ -67,9 +72,14 @@ namespace SpecialLinearGroup
 
 variable {n : Type u} [DecidableEq n] [Fintype n] {R : Type v} [CommRingₓ R]
 
-instance has_coe_to_matrix : Coe (SpecialLinearGroup n R) (Matrix n n R) :=
+instance hasCoeToMatrix : Coe (SpecialLinearGroup n R) (Matrix n n R) :=
   ⟨fun A => A.val⟩
 
+/- In this file, Lean often has a hard time working out the values of `n` and `R` for an expression
+like `det ↑A`. Rather than writing `(A : matrix n n R)` everywhere in this file which is annoyingly
+verbose, or `A.val` which is not the simp-normal form for subtypes, we create a local notation
+`↑ₘA`. This notation references the local `n` and `R` variables, so is not valid as a global
+notation. -/
 local prefix:1024 "↑ₘ" => @coe _ (Matrix n n R) _
 
 theorem ext_iff (A B : SpecialLinearGroup n R) : A = B ↔ ∀ i j, ↑ₘA i j = ↑ₘB i j :=
@@ -79,17 +89,17 @@ theorem ext_iff (A B : SpecialLinearGroup n R) : A = B ↔ ∀ i j, ↑ₘA i j 
 theorem ext (A B : SpecialLinearGroup n R) : (∀ i j, ↑ₘA i j = ↑ₘB i j) → A = B :=
   (SpecialLinearGroup.ext_iff A B).mpr
 
-instance Inv : Inv (SpecialLinearGroup n R) :=
+instance hasInv : Inv (SpecialLinearGroup n R) :=
   ⟨fun A =>
     ⟨adjugate A, by
       rw [det_adjugate, A.prop, one_pow]⟩⟩
 
-instance Mul : Mul (SpecialLinearGroup n R) :=
+instance hasMul : Mul (SpecialLinearGroup n R) :=
   ⟨fun A B =>
     ⟨A.1 ⬝ B.1, by
       erw [det_mul, A.2, B.2, one_mulₓ]⟩⟩
 
-instance One : One (SpecialLinearGroup n R) :=
+instance hasOne : One (SpecialLinearGroup n R) :=
   ⟨⟨1, det_one⟩⟩
 
 instance : Inhabited (SpecialLinearGroup n R) :=
@@ -140,7 +150,7 @@ instance : Groupₓ (SpecialLinearGroup n R) :=
       simp [adjugate_mul] }
 
 /-- A version of `matrix.to_lin' A` that produces linear equivalences. -/
-def to_lin' : SpecialLinearGroup n R →* (n → R) ≃ₗ[R] n → R where
+def toLin' : SpecialLinearGroup n R →* (n → R) ≃ₗ[R] n → R where
   toFun := fun A =>
     LinearEquiv.ofLinear (Matrix.toLin' ↑ₘA) (Matrix.toLin' ↑ₘA⁻¹)
       (by
@@ -167,7 +177,7 @@ theorem to_lin'_injective : Function.Injective (⇑(toLin' : SpecialLinearGroup 
   fun A B h => Subtype.coe_injective <| Matrix.toLin'.Injective <| LinearEquiv.to_linear_map_injective.eq_iff.mpr h
 
 /-- `to_GL` is the map from the special linear group to the general linear group -/
-def to_GL : SpecialLinearGroup n R →* GeneralLinearGroup R (n → R) :=
+def toGL : SpecialLinearGroup n R →* GeneralLinearGroup R (n → R) :=
   (GeneralLinearGroup.generalLinearEquiv _ _).symm.toMonoidHom.comp toLin'
 
 theorem coe_to_GL (A : SpecialLinearGroup n R) : ↑A.toGL = A.toLin'.toLinearMap :=
@@ -226,6 +236,7 @@ theorem coe_int_neg (g : SpecialLinearGroup n ℤ) : ↑(-g) = (-↑g : SpecialL
 
 end Neg
 
+-- this section should be last to ensure we do not use it in lemmas
 section CoeFnInstance
 
 /-- This instance is here for convenience, but is not the simp-normal form. -/

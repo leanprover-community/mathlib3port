@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Mario Carneiro. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Mario Carneiro
+-/
 import Mathbin.Data.Equiv.Basic
 
 /-!
@@ -34,7 +39,7 @@ noncomputable def out {α} : Erased α → α
 Note: `(mk a).out_type` is not definitionally equal to `a`.
 -/
 @[reducible]
-def out_type (a : Erased (Sort u)) : Sort u :=
+def OutType (a : Erased (Sort u)) : Sort u :=
   out a
 
 /-- Extracts the erased value, if it is a proof. -/
@@ -58,7 +63,7 @@ theorem out_inj {α} (a b : Erased α) (h : a.out = b.out) : a = b := by
   simpa using congr_argₓ mk h
 
 /-- Equivalence between `erased α` and `α`. -/
-noncomputable def Equivₓ α : Erased α ≃ α :=
+noncomputable def equiv α : Erased α ≃ α :=
   ⟨out, mk, mk_out, out_mk⟩
 
 instance (α : Type u) : HasRepr (Erased α) :=
@@ -124,11 +129,11 @@ theorem pure_def {α} : (pure : α → Erased α) = @mk _ :=
   rfl
 
 @[simp]
-theorem bind_def {α β} : (· >>= · : Erased α → (α → Erased β) → Erased β) = @bind _ _ :=
+theorem bind_def {α β} : ((· >>= ·) : Erased α → (α → Erased β) → Erased β) = @bind _ _ :=
   rfl
 
 @[simp]
-theorem map_def {α β} : (· <$> · : (α → β) → Erased α → Erased β) = @map _ _ :=
+theorem map_def {α β} : ((· <$> ·) : (α → β) → Erased α → Erased β) = @map _ _ :=
   rfl
 
 instance : IsLawfulMonad Erased := by

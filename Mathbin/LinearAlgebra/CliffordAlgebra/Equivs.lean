@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Eric Wieser. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Eric Wieser
+-/
 import Mathbin.Algebra.QuaternionBasis
 import Mathbin.Data.Complex.Module
 import Mathbin.LinearAlgebra.CliffordAlgebra.Conjugation
@@ -102,7 +107,7 @@ theorem involute_eq_id : (involute : CliffordAlgebra (0 : QuadraticForm R Unit) 
   simp
 
 /-- The clifford algebra over a 0-dimensional vector space is isomorphic to its scalars. -/
-protected def Equivₓ : CliffordAlgebra (0 : QuadraticForm R Unit) ≃ₐ[R] R :=
+protected def equiv : CliffordAlgebra (0 : QuadraticForm R Unit) ≃ₐ[R] R :=
   AlgEquiv.ofAlgHom
     (CliffordAlgebra.lift (0 : QuadraticForm R Unit) <|
       ⟨0, fun m : Unit => (zero_mul (0 : R)).trans (algebraMap R _).map_zero.symm⟩)
@@ -124,7 +129,7 @@ namespace CliffordAlgebraComplex
 open_locale ComplexConjugate
 
 /-- The quadratic form sending elements to the negation of their square. -/
-def Q : QuadraticForm ℝ ℝ :=
+def q : QuadraticForm ℝ ℝ :=
   -QuadraticForm.sq
 
 @[simp]
@@ -133,7 +138,7 @@ theorem Q_apply (r : ℝ) : q r = -(r * r) :=
 
 /-- Intermediate result for `clifford_algebra_complex.equiv`: clifford algebras over
 `clifford_algebra_complex.Q` above can be converted to `ℂ`. -/
-def to_complex : CliffordAlgebra q →ₐ[ℝ] ℂ :=
+def toComplex : CliffordAlgebra q →ₐ[ℝ] ℂ :=
   CliffordAlgebra.lift q
     ⟨LinearMap.toSpanSingleton _ _ Complex.i, fun r => by
       dsimp [LinearMap.toSpanSingleton, LinearMap.id]
@@ -156,7 +161,7 @@ theorem to_complex_involute (c : CliffordAlgebra q) : toComplex c.involute = con
 
 /-- Intermediate result for `clifford_algebra_complex.equiv`: `ℂ` can be converted to
 `clifford_algebra_complex.Q` above can be converted to. -/
-def of_complex : ℂ →ₐ[ℝ] CliffordAlgebra q :=
+def ofComplex : ℂ →ₐ[ℝ] CliffordAlgebra q :=
   Complex.lift
     ⟨CliffordAlgebra.ι q 1, by
       rw [CliffordAlgebra.ι_sq_scalar, Q_apply, one_mulₓ, RingHom.map_neg, RingHom.map_one]⟩
@@ -188,7 +193,7 @@ theorem of_complex_to_complex (c : CliffordAlgebra q) : ofComplex (toComplex c) 
 /-- The clifford algebras over `clifford_algebra_complex.Q` is isomorphic as an `ℝ`-algebra to
 `ℂ`. -/
 @[simps]
-protected def Equivₓ : CliffordAlgebra q ≃ₐ[ℝ] ℂ :=
+protected def equiv : CliffordAlgebra q ≃ₐ[ℝ] ℂ :=
   AlgEquiv.ofAlgHom toComplex ofComplex to_complex_comp_of_complex of_complex_comp_to_complex
 
 /-- The clifford algebra is commutative since it is isomorphic to the complex numbers.
@@ -222,6 +227,7 @@ theorem of_complex_conj (c : ℂ) : ofComplex (conj c) = (ofComplex c).involute 
   CliffordAlgebraComplex.equiv.Injective <| by
     rw [equiv_apply, equiv_apply, to_complex_involute, to_complex_of_complex, to_complex_of_complex]
 
+-- this name is too short for us to want it visible after `open clifford_algebra_complex`
 attribute [protected] Q
 
 end CliffordAlgebraComplex
@@ -239,7 +245,7 @@ variable {R : Type _} [CommRingₓ R] (c₁ c₂ : R)
 
 /-- `Q c₁ c₂` is a quadratic form over `R × R` such that `clifford_algebra (Q c₁ c₂)` is isomorphic
 as an `R`-algebra to `ℍ[R,c₁,c₂]`. -/
-def Q : QuadraticForm R (R × R) :=
+def q : QuadraticForm R (R × R) :=
   (c₁ • QuadraticForm.sq).Prod (c₂ • QuadraticForm.sq)
 
 @[simp]
@@ -248,7 +254,7 @@ theorem Q_apply (v : R × R) : q c₁ c₂ v = c₁ * (v.1 * v.1) + c₂ * (v.2 
 
 /-- The quaternion basis vectors within the algebra. -/
 @[simps i j k]
-def quaternion_basis : QuaternionAlgebra.Basis (CliffordAlgebra (q c₁ c₂)) c₁ c₂ where
+def quaternionBasis : QuaternionAlgebra.Basis (CliffordAlgebra (q c₁ c₂)) c₁ c₂ where
   i := ι (q c₁ c₂) (1, 0)
   j := ι (q c₁ c₂) (0, 1)
   k := ι (q c₁ c₂) (1, 0) * ι (q c₁ c₂) (0, 1)
@@ -267,7 +273,7 @@ variable {c₁ c₂}
 
 /-- Intermediate result of `clifford_algebra_quaternion.equiv`: clifford algebras over
 `clifford_algebra_quaternion.Q` can be converted to `ℍ[R,c₁,c₂]`. -/
-def to_quaternion : CliffordAlgebra (q c₁ c₂) →ₐ[R] ℍ[R,c₁,c₂] :=
+def toQuaternion : CliffordAlgebra (q c₁ c₂) →ₐ[R] ℍ[R,c₁,c₂] :=
   CliffordAlgebra.lift (q c₁ c₂)
     ⟨{ toFun := fun v => (⟨0, v.1, v.2, 0⟩ : ℍ[R,c₁,c₂]),
         map_add' := fun v₁ v₂ => by
@@ -301,7 +307,7 @@ theorem to_quaternion_involute_reverse (c : CliffordAlgebra (q c₁ c₂)) :
     simp only [reverse.map_add, AlgHom.map_add, hx₁, hx₂, QuaternionAlgebra.conj_add]
 
 /-- Map a quaternion into the clifford algebra. -/
-def of_quaternion : ℍ[R,c₁,c₂] →ₐ[R] CliffordAlgebra (q c₁ c₂) :=
+def ofQuaternion : ℍ[R,c₁,c₂] →ₐ[R] CliffordAlgebra (q c₁ c₂) :=
   (quaternionBasis c₁ c₂).liftHom
 
 @[simp]
@@ -316,6 +322,7 @@ theorem of_quaternion_comp_to_quaternion : ofQuaternion.comp toQuaternion = AlgH
   by
   ext : 1
   dsimp
+  -- before we end up with two goals and have to do this twice
   ext
   all_goals
     dsimp
@@ -339,7 +346,7 @@ theorem to_quaternion_of_quaternion (q : ℍ[R,c₁,c₂]) : toQuaternion (ofQua
 /-- The clifford algebra over `clifford_algebra_quaternion.Q c₁ c₂` is isomorphic as an `R`-algebra
 to `ℍ[R,c₁,c₂]`. -/
 @[simps]
-protected def Equivₓ : CliffordAlgebra (q c₁ c₂) ≃ₐ[R] ℍ[R,c₁,c₂] :=
+protected def equiv : CliffordAlgebra (q c₁ c₂) ≃ₐ[R] ℍ[R,c₁,c₂] :=
   AlgEquiv.ofAlgHom toQuaternion ofQuaternion to_quaternion_comp_of_quaternion of_quaternion_comp_to_quaternion
 
 /-- The quaternion conjugate maps to the "clifford conjugate" (aka
@@ -350,6 +357,7 @@ theorem of_quaternion_conj (q : ℍ[R,c₁,c₂]) : ofQuaternion q.conj = (ofQua
     rw [equiv_apply, equiv_apply, to_quaternion_involute_reverse, to_quaternion_of_quaternion,
       to_quaternion_of_quaternion]
 
+-- this name is too short for us to want it visible after `open clifford_algebra_quaternion`
 attribute [protected] Q
 
 end CliffordAlgebraQuaternion
@@ -371,7 +379,7 @@ theorem ι_mul_ι r₁ r₂ : ι (0 : QuadraticForm R R) r₁ * ι (0 : Quadrati
 
 /-- The clifford algebra over a 1-dimensional vector space with 0 quadratic form is isomorphic to
 the dual numbers. -/
-protected def Equivₓ : CliffordAlgebra (0 : QuadraticForm R R) ≃ₐ[R] (R)[ε] :=
+protected def equiv : CliffordAlgebra (0 : QuadraticForm R R) ≃ₐ[R] (R)[ε] :=
   AlgEquiv.ofAlgHom (CliffordAlgebra.lift (0 : QuadraticForm R R) ⟨inrHom R _, fun m => inr_mul_inr _ m m⟩)
     (DualNumber.lift ⟨ι _ (1 : R), ι_mul_ι (1 : R) 1⟩)
     (by

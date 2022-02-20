@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Kenny Lau. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Kenny Lau
+-/
 import Mathbin.Algebra.Algebra.Basic
 import Mathbin.LinearAlgebra.Prod
 
@@ -268,12 +273,12 @@ variable (R M)
 
 /-- The canonical `R`-linear inclusion `M → triv_sq_zero_ext R M`. -/
 @[simps apply]
-def inr_hom [Semiringₓ R] [AddCommMonoidₓ M] [Module R M] : M →ₗ[R] tsze R M :=
+def inrHom [Semiringₓ R] [AddCommMonoidₓ M] [Module R M] : M →ₗ[R] tsze R M :=
   { LinearMap.inr R R M with toFun := inr }
 
 /-- The canonical `R`-linear projection `triv_sq_zero_ext R M → M`. -/
 @[simps apply]
-def snd_hom [Semiringₓ R] [AddCommMonoidₓ M] [Module R M] : tsze R M →ₗ[R] M :=
+def sndHom [Semiringₓ R] [AddCommMonoidₓ M] [Module R M] : tsze R M →ₗ[R] M :=
   { LinearMap.snd _ _ _ with toFun := snd }
 
 end Additive
@@ -402,7 +407,7 @@ variable (R M)
 
 /-- The canonical inclusion of rings `R → triv_sq_zero_ext R M`. -/
 @[simps apply]
-def inl_hom [Semiringₓ R] [AddCommMonoidₓ M] [Module R M] : R →+* tsze R M where
+def inlHom [Semiringₓ R] [AddCommMonoidₓ M] [Module R M] : R →+* tsze R M where
   toFun := inl
   map_one' := inl_one M
   map_mul' := inl_mul M
@@ -426,6 +431,7 @@ instance algebra' : Algebra S (tsze R M) :=
         show r • x.2 = algebraMap S R r • x.2 + x.1 • 0 by
           rw [smul_zero, add_zeroₓ, algebra_map_smul] }
 
+-- shortcut instance for the common case
 instance : Algebra R (tsze R M) :=
   TrivSqZeroExt.algebra' _ _ _
 
@@ -440,7 +446,7 @@ theorem algebra_map_eq_inl' (s : S) : algebraMap S (tsze R M) s = inl (algebraMa
 
 /-- The canonical `R`-algebra projection `triv_sq_zero_ext R M → R`. -/
 @[simps]
-def fst_hom : tsze R M →ₐ[R] R where
+def fstHom : tsze R M →ₐ[R] R where
   toFun := fst
   map_one' := fst_one
   map_mul' := fst_mul
@@ -464,7 +470,7 @@ variable {A : Type _} [Semiringₓ A] [Algebra R A]
 whose products are all zero.
 
 See `triv_sq_zero_ext.lift` for this as an equiv. -/
-def lift_aux (f : M →ₗ[R] A) (hf : ∀ x y, f x * f y = 0) : tsze R M →ₐ[R] A :=
+def liftAux (f : M →ₗ[R] A) (hf : ∀ x y, f x * f y = 0) : tsze R M →ₐ[R] A :=
   AlgHom.ofLinearMap ((Algebra.linearMap _ _).comp (fstHom R M).toLinearMap + f.comp (sndHom R M))
     (show algebraMap R _ 1 + f (0 : M) = 1 by
       rw [map_zero, map_one, add_zeroₓ])
@@ -485,6 +491,7 @@ theorem lift_aux_comp_inr_hom (f : M →ₗ[R] A) (hf : ∀ x y, f x * f y = 0) 
     (liftAux f hf).toLinearMap.comp (inrHom R M) = f :=
   LinearMap.ext <| lift_aux_apply_inr f hf
 
+-- When applied to `inr` itself, `lift_aux` is the identity.
 @[simp]
 theorem lift_aux_inr_hom : liftAux (inrHom R M) (inr_mul_inr R) = AlgHom.id R (tsze R M) :=
   alg_hom_ext' <| lift_aux_comp_inr_hom _ _

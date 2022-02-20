@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison, Floris van Doorn
+-/
 import Mathbin.CategoryTheory.Limits.Shapes.FiniteProducts
 import Mathbin.CategoryTheory.DiscreteCategory
 
@@ -40,6 +45,9 @@ theorem has_limit_of_has_colimit_left_op [HasColimit F.leftOp] : HasLimit F :=
               Quiver.Hom.op_unop]
             rfl,
           uniq' := fun s m w => by
+            -- It's a pity we can't do this automatically.
+            -- Usually something like this would work by limit.hom_ext,
+            -- but the opposites get in the way of this firing.
             have u := (colimit.is_colimit F.left_op).uniq (cocone_left_op_of_cone s) m.unop
             convert congr_argₓ (fun f : _ ⟶ _ => f.op) (u _)
             clear u

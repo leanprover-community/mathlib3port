@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2022 Yaël Dillies. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yaël Dillies
+-/
 import Mathbin.CategoryTheory.Category.Bipointed
 import Mathbin.Data.TwoPointing
 
@@ -42,16 +47,16 @@ instance : Inhabited Twop :=
 
 /-- Turns a two-pointed type into a bipointed type, by forgetting that the pointed elements are
 distinct. -/
-def to_Bipointed (X : Twop) : Bipointed :=
+def toBipointed (X : Twop) : Bipointed :=
   X.toTwoPointing.toProd.Bipointed
 
-instance large_category : LargeCategory Twop :=
+instance largeCategory : LargeCategory Twop :=
   InducedCategory.category toBipointed
 
-instance concrete_category : ConcreteCategory Twop :=
+instance concreteCategory : ConcreteCategory Twop :=
   InducedCategory.concreteCategory toBipointed
 
-instance has_forget_to_Bipointed : HasForget₂ Twop Bipointed :=
+instance hasForgetToBipointed : HasForget₂ Twop Bipointed :=
   InducedCategory.hasForget₂ toBipointed
 
 /-- Swaps the pointed elements of a two-pointed type. `two_pointing.swap` as a functor. -/
@@ -62,7 +67,7 @@ def swap : Twop ⥤ Twop where
 
 /-- The equivalence between `Twop` and itself induced by `prod.swap` both ways. -/
 @[simps]
-def swap_equiv : Twop ≌ Twop :=
+def swapEquiv : Twop ≌ Twop :=
   Equivalence.mk swap swap
     ((NatIso.ofComponents fun X => { Hom := ⟨id, rfl, rfl⟩, inv := ⟨id, rfl, rfl⟩ }) fun X Y f => rfl)
     ((NatIso.ofComponents fun X => { Hom := ⟨id, rfl, rfl⟩, inv := ⟨id, rfl, rfl⟩ }) fun X Y f => rfl)

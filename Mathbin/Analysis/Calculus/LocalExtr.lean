@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Yury Kudryashov. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yury Kudryashov
+-/
 import Mathbin.Analysis.Calculus.Deriv
 import Mathbin.Data.Polynomial.FieldDivision
 import Mathbin.Topology.Algebra.Order.ExtendFrom
@@ -251,6 +256,7 @@ or its minimum value at a point in the interior of the interval. -/
 theorem exists_Ioo_extr_on_Icc (hab : a < b) (hfc : ContinuousOn f (Icc a b)) (hfI : f a = f b) :
     ∃ c ∈ Ioo a b, IsExtrOn f (Icc a b) c := by
   have ne : (Icc a b).Nonempty := nonempty_Icc.2 (le_of_ltₓ hab)
+  -- Consider absolute min and max points
   obtain ⟨c, cmem, cle⟩ : ∃ c ∈ Icc a b, ∀, ∀ x ∈ Icc a b, ∀, f c ≤ f x
   exact is_compact_Icc.exists_forall_le Ne hfc
   obtain ⟨C, Cmem, Cge⟩ : ∃ C ∈ Icc a b, ∀, ∀ x ∈ Icc a b, ∀, f x ≤ f C
@@ -258,6 +264,7 @@ theorem exists_Ioo_extr_on_Icc (hab : a < b) (hfc : ContinuousOn f (Icc a b)) (h
   by_cases' hc : f c = f a
   · by_cases' hC : f C = f a
     · have : ∀, ∀ x ∈ Icc a b, ∀, f x = f a := fun x hx => le_antisymmₓ (hC ▸ Cge x hx) (hc ▸ cle x hx)
+      -- `f` is a constant, so we can take any point in `Ioo a b`
       rcases exists_between hab with ⟨c', hc'⟩
       refine' ⟨c', hc', Or.inl _⟩
       intro x hx

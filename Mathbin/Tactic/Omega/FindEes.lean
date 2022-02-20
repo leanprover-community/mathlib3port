@@ -1,5 +1,14 @@
+/-
+Copyright (c) 2019 Seul Baek. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Seul Baek
+-/
 import Mathbin.Tactic.Omega.EqElim
 
+/-
+A tactic for finding a sequence of equality
+elimination rules for a given set of constraints.
+-/
 variable {α β : Type}
 
 open Tactic
@@ -12,7 +21,7 @@ namespace Omega
     represents the constraint `0 < t`. `ees` is the sequence of equality
     elimination steps that have been used so far to obtain the current set of
     constraints. The list `ees` grows over time until `eqs` becomes empty. -/
-structure ee_state where
+structure EeState where
   eqs : List Term
   les : List Term
   ees : List Ee

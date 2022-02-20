@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2022 Chris Hughes. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Chris Hughes
+-/
 import Mathbin.Data.W.Cardinal
 import Mathbin.RingTheory.AlgebraicIndependent
 import Mathbin.FieldTheory.IsAlgClosed.Basic
@@ -109,7 +114,7 @@ variable (hw : AlgebraicIndependent R w)
 /-- setting `R` to be `zmod (ring_char R)` this result shows that if two algebraically
 closed fields have equipotent transcendence bases and the same characteristic then they are
 isomorphic. -/
-def equiv_of_transcendence_basis [IsAlgClosed K] [IsAlgClosed L] (e : ι ≃ κ) (hv : IsTranscendenceBasis R v)
+def equivOfTranscendenceBasis [IsAlgClosed K] [IsAlgClosed L] (e : ι ≃ κ) (hv : IsTranscendenceBasis R v)
     (hw : IsTranscendenceBasis R w) : K ≃+* L := by
   let this' := is_alg_closure_of_transcendence_basis v hv <;>
     let this' := is_alg_closure_of_transcendence_basis w hw <;>
@@ -180,8 +185,7 @@ variable {K L : Type} [Field K] [Field L] [IsAlgClosed K] [IsAlgClosed L]
 /-- Two uncountable algebraically closed fields of characteristic zero are isomorphic
 if they have the same cardinality. -/
 @[nolint def_lemma]
-theorem ring_equiv_of_cardinal_eq_of_char_zero [CharZero K] [CharZero L] (hK : ω < # K) (hKL : # K = # L) : K ≃+* L :=
-  by
+theorem ringEquivOfCardinalEqOfCharZero [CharZero K] [CharZero L] (hK : ω < # K) (hKL : # K = # L) : K ≃+* L := by
   apply Classical.choice
   cases' exists_is_transcendence_basis ℤ (show Function.Injective (algebraMap ℤ K) from Int.cast_injective) with s hs
   cases' exists_is_transcendence_basis ℤ (show Function.Injective (algebraMap ℤ L) from Int.cast_injective) with t ht
@@ -216,8 +220,7 @@ private theorem ring_equiv_of_cardinal_eq_of_char_p (p : ℕ) [Fact p.Prime] [Ch
 /-- Two uncountable algebraically closed fields are isomorphic
 if they have the same cardinality and the same characteristic. -/
 @[nolint def_lemma]
-theorem ring_equiv_of_cardinal_eq_of_char_eq (p : ℕ) [CharP K p] [CharP L p] (hK : ω < # K) (hKL : # K = # L) :
-    K ≃+* L := by
+theorem ringEquivOfCardinalEqOfCharEq (p : ℕ) [CharP K p] [CharP L p] (hK : ω < # K) (hKL : # K = # L) : K ≃+* L := by
   apply Classical.choice
   rcases CharP.char_is_prime_or_zero K p with (hp | hp)
   · have : Fact p.prime := ⟨hp⟩

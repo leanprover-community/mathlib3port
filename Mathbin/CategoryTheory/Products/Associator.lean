@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2017 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Stephen Morgan, Scott Morrison
+-/
 import Mathbin.CategoryTheory.Products.Basic
 
 /-!
@@ -23,7 +28,7 @@ def associator : (C × D) × E ⥤ C × D × E where
 /-- The inverse associator functor `C × (D × E) ⥤ (C × D) × E `.
 -/
 @[simps]
-def inverse_associator : C × D × E ⥤ (C × D) × E where
+def inverseAssociator : C × D × E ⥤ (C × D) × E where
   obj := fun X => ((X.1, X.2.1), X.2.2)
   map := fun _ _ f => ((f.1, f.2.1), f.2.2)
 
@@ -46,13 +51,15 @@ def associativity : (C × D) × E ≌ C × D × E :=
       (by
         tidy))
 
-instance associator_is_equivalence : IsEquivalence (associator C D E) :=
+instance associatorIsEquivalence : IsEquivalence (associator C D E) :=
   (by
     infer_instance : IsEquivalence (associativity C D E).Functor)
 
-instance inverse_associator_is_equivalence : IsEquivalence (inverseAssociator C D E) :=
+instance inverseAssociatorIsEquivalence : IsEquivalence (inverseAssociator C D E) :=
   (by
     infer_instance : IsEquivalence (associativity C D E).inverse)
 
+-- TODO unitors?
+-- TODO pentagon natural transformation? ...satisfying?
 end CategoryTheory.prod
 

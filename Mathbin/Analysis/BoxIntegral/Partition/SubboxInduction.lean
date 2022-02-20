@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Yury Kudryashov. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yury Kudryashov
+-/
 import Mathbin.Analysis.BoxIntegral.Box.SubboxInduction
 import Mathbin.Analysis.BoxIntegral.Partition.Tagged
 
@@ -35,7 +40,7 @@ variable {ι : Type _} [Fintype ι] {I J : Box ι}
 namespace Prepartition
 
 /-- Split a box in `ℝⁿ` into `2 ^ n` boxes by hyperplanes passing through its center. -/
-def split_center (I : Box ι) : Prepartition I where
+def splitCenter (I : Box ι) : Prepartition I where
   boxes := Finset.univ.map (Box.splitCenterBoxEmb I)
   le_of_mem' := by
     simp [I.split_center_box_le]
@@ -174,7 +179,7 @@ is a tagged partition `π'` such that
 * `π'` covers exactly the same part of `I` as `π`;
 * the distortion of `π'` is equal to the distortion of `π`.
 -/
-def to_subordinate (π : Prepartition I) (r : (ι → ℝ) → ioi (0 : ℝ)) : TaggedPrepartition I :=
+def toSubordinate (π : Prepartition I) (r : (ι → ℝ) → ioi (0 : ℝ)) : TaggedPrepartition I :=
   (π.exists_tagged_le_is_Henstock_is_subordinate_Union_eq r).some
 
 theorem to_subordinate_to_prepartition_le (π : Prepartition I) (r : (ι → ℝ) → ioi (0 : ℝ)) :
@@ -212,7 +217,7 @@ a function `r : ℝⁿ → (0, ∞)`, returns the union of `π₁` and `π₂.to
 * `π` is subordinate to `r` outside of `π₁`;
 * the distortion of `π` is equal to the maximum of the distortions of `π₁` and `π₂`.
 -/
-def union_compl_to_subordinate (π₁ : TaggedPrepartition I) (π₂ : Prepartition I) (hU : π₂.Union = I \ π₁.Union)
+def unionComplToSubordinate (π₁ : TaggedPrepartition I) (π₂ : Prepartition I) (hU : π₂.Union = I \ π₁.Union)
     (r : (ι → ℝ) → Ioi (0 : ℝ)) : TaggedPrepartition I :=
   π₁.disjUnion (π₂.toSubordinate r) (((π₂.Union_to_subordinate r).trans hU).symm ▸ disjoint_diff)
 

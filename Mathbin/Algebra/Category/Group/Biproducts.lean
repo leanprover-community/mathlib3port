@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison
+-/
 import Mathbin.Algebra.Group.Pi
 import Mathbin.Algebra.Category.Group.Preadditive
 import Mathbin.CategoryTheory.Limits.Shapes.Biproducts
@@ -20,7 +25,7 @@ namespace AddCommGroupₓₓ
 
 /-- Construct limit data for a binary product in `AddCommGroup`, using `AddCommGroup.of (G × H)`.
 -/
-def binary_product_limit_cone (G H : AddCommGroupₓₓ.{u}) : Limits.LimitCone (pair G H) where
+def binaryProductLimitCone (G H : AddCommGroupₓₓ.{u}) : Limits.LimitCone (pair G H) where
   Cone :=
     { x := AddCommGroupₓₓ.of (G × H),
       π := { app := fun j => WalkingPair.casesOn j (AddMonoidHom.fst G H) (AddMonoidHom.snd G H) } }
@@ -43,9 +48,10 @@ instance (G H : AddCommGroupₓₓ.{u}) : HasBinaryBiproduct G H :=
 /-- We verify that the biproduct in AddCommGroup is isomorphic to
 the cartesian product of the underlying types:
 -/
-noncomputable def biprod_iso_prod (G H : AddCommGroupₓₓ.{u}) : (G ⊞ H : AddCommGroupₓₓ) ≅ AddCommGroupₓₓ.of (G × H) :=
+noncomputable def biprodIsoProd (G H : AddCommGroupₓₓ.{u}) : (G ⊞ H : AddCommGroupₓₓ) ≅ AddCommGroupₓₓ.of (G × H) :=
   IsLimit.conePointUniqueUpToIso (BinaryBiproduct.isLimit G H) (binaryProductLimitCone G H).IsLimit
 
+-- Furthermore, our biproduct will automatically function as a coproduct.
 example (G H : AddCommGroupₓₓ.{u}) : HasColimit (pair G H) := by
   infer_instance
 
@@ -71,7 +77,7 @@ theorem lift_apply (s : Cone F) (x : s.x) (j : J) : (lift F s) x j = s.π.app j 
 
 /-- Construct limit data for a product in `AddCommGroup`, using `AddCommGroup.of (Π j, F.obj j)`.
 -/
-def product_limit_cone : Limits.LimitCone F where
+def productLimitCone : Limits.LimitCone F where
   Cone :=
     { x := AddCommGroupₓₓ.of (∀ j, F.obj j), π := Discrete.natTrans fun j => Pi.evalAddMonoidHom (fun j => F.obj j) j }
   IsLimit :=
@@ -99,8 +105,7 @@ instance (f : J → AddCommGroupₓₓ.{u}) : HasBiproduct f :=
 /-- We verify that the biproduct we've just defined is isomorphic to the AddCommGroup structure
 on the dependent function type
 -/
-noncomputable def biproduct_iso_pi (f : J → AddCommGroupₓₓ.{u}) :
-    (⨁ f : AddCommGroupₓₓ) ≅ AddCommGroupₓₓ.of (∀ j, f j) :=
+noncomputable def biproductIsoPi (f : J → AddCommGroupₓₓ.{u}) : (⨁ f : AddCommGroupₓₓ) ≅ AddCommGroupₓₓ.of (∀ j, f j) :=
   IsLimit.conePointUniqueUpToIso (Biproduct.isLimit f) (productLimitCone (Discrete.functor f)).IsLimit
 
 end

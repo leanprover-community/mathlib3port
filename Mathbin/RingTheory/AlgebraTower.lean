@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Kenny Lau. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Kenny Lau
+-/
 import Mathbin.Algebra.Invertible
 import Mathbin.RingTheory.Adjoin.Fg
 import Mathbin.LinearAlgebra.Basis
@@ -42,14 +47,14 @@ variable (R S A B)
 
 /-- Suppose that `R -> S -> A` is a tower of algebras.
 If an element `r : R` is invertible in `S`, then it is invertible in `A`. -/
-def invertible.algebra_tower (r : R) [Invertible (algebraMap R S r)] : Invertible (algebraMap R A r) :=
+def Invertible.algebraTower (r : R) [Invertible (algebraMap R S r)] : Invertible (algebraMap R A r) :=
   Invertible.copy (Invertible.map (algebraMap S A : S →* A) (algebraMap R S r)) (algebraMap R A r)
     (by
       rw [RingHom.coe_monoid_hom, IsScalarTower.algebra_map_apply R S A])
 
 /-- A natural number that is invertible when coerced to `R` is also invertible
 when coerced to any `R`-algebra. -/
-def invertible_algebra_coe_nat (n : ℕ) [inv : Invertible (n : R)] : Invertible (n : A) :=
+def invertibleAlgebraCoeNat (n : ℕ) [inv : Invertible (n : R)] : Invertible (n : A) :=
   have : Invertible (algebraMap ℕ R n) := inv
   invertible.algebra_tower ℕ R A n
 
@@ -242,7 +247,7 @@ open Finset Submodule
 
 open_locale Classical
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (yi yj yk «expr ∈ » y)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (yi yj yk «expr ∈ » y)
 theorem exists_subalgebra_of_fg (hAC : (⊤ : Subalgebra A C).Fg) (hBC : (⊤ : Submodule B C).Fg) :
     ∃ B₀ : Subalgebra A B, B₀.Fg ∧ (⊤ : Submodule B₀ C).Fg := by
   cases' hAC with x hx

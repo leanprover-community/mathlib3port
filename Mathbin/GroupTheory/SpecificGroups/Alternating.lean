@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Aaron Anderson. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Aaron Anderson
+-/
 import Mathbin.GroupTheory.Perm.Fin
 import Mathbin.Tactic.IntervalCases
 
@@ -61,7 +66,7 @@ theorem prod_list_swap_mem_alternating_group_iff_even_length {l : List (Perm α)
     Nat.neg_one_pow_eq_one_iff_even]
   decide
 
-theorem is_three_cycle.mem_alternating_group {f : Perm α} (h : IsThreeCycle f) : f ∈ alternatingGroup α :=
+theorem IsThreeCycle.mem_alternating_group {f : Perm α} (h : IsThreeCycle f) : f ∈ alternatingGroup α :=
   mem_alternating_group.2 h.sign
 
 theorem fin_rotate_bit1_mem_alternating_group {n : ℕ} : finRotate (bit1 n) ∈ alternatingGroup (Finₓ (bit1 n)) := by
@@ -148,7 +153,7 @@ theorem closure_three_cycles_eq_alternating : closure { σ : Perm α | IsThreeCy
 
 /-- A key lemma to prove $A_5$ is simple. Shows that any normal subgroup of an alternating group on
   at least 5 elements is the entire alternating group if it contains a 3-cycle. -/
-theorem is_three_cycle.alternating_normal_closure (h5 : 5 ≤ Fintype.card α) {f : Perm α} (hf : IsThreeCycle f) :
+theorem IsThreeCycle.alternating_normal_closure (h5 : 5 ≤ Fintype.card α) {f : Perm α} (hf : IsThreeCycle f) :
     normalClosure ({⟨f, hf.mem_alternating_group⟩} : Set (alternatingGroup α)) = ⊤ :=
   eq_top_iff.2
     (by
@@ -313,24 +318,33 @@ instance is_simple_group_five : IsSimpleGroup (alternatingGroup (Finₓ 5)) :=
     rw [eq_bot_iff_forall] at Hb
     push_neg  at Hb
     obtain ⟨⟨g, gA⟩, gH, g1⟩ : ∃ x : ↥alternatingGroup (Finₓ 5), x ∈ H ∧ x ≠ 1 := Hb
+    -- `g` is a non-identity alternating permutation in a normal subgroup `H` of $A_5$.
     rw [← SetLike.mem_coe, ← Set.singleton_subset_iff] at gH
     refine' eq_top_iff.2 (le_transₓ (ge_of_eq _) (normal_closure_le_normal gH))
+    -- It suffices to show that the normal closure of `g` in $A_5$ is $A_5$.
     by_cases' h2 : ∀, ∀ n ∈ g.cycle_type, ∀, n = 2
-    · rw [Ne.def, Subtype.ext_iff] at g1
+    · -- If the cycle decomposition of `g` consists entirely of swaps, then the cycle type is $(2,2)$.
+      -- This means that it is conjugate to $(04)(13)$, whose normal closure is $A_5$.
+      rw [Ne.def, Subtype.ext_iff] at g1
       exact
         (is_conj_swap_mul_swap_of_cycle_type_two gA g1 h2).normal_closure_eq_top_of normal_closure_swap_mul_swap_five
       
     push_neg  at h2
     obtain ⟨n, ng, n2⟩ : ∃ n : ℕ, n ∈ g.cycle_type ∧ n ≠ 2 := h2
+    -- `n` is the size of a non-swap cycle in the decomposition of `g`.
     have n2' : 2 < n := lt_of_le_of_neₓ (two_le_of_mem_cycle_type ng) n2.symm
     have n5 : n ≤ 5 := le_transₓ _ g.support.card_le_univ
+    -- We check that `2 < n ≤ 5`, so that `interval_cases` has a precise range to check.
     swap
     · obtain ⟨m, hm⟩ := Multiset.exists_cons_of_mem ng
       rw [← sum_cycle_type, hm, Multiset.sum_cons]
       exact le_add_right le_rfl
       
     interval_cases n
-    · rw [eq_top_iff, ←
+    -- This breaks into cases `n = 3`, `n = 4`, `n = 5`.
+    · -- If `n = 3`, then `g` has a 3-cycle in its decomposition, so `g^2` is a 3-cycle.
+      -- `g^2` is in the normal closure of `g`, so that normal closure must be $A_5$.
+      rw [eq_top_iff, ←
         (is_three_cycle_sq_of_three_mem_cycle_type_five ng).alternating_normal_closure
           (by
             rw [card_fin])]
@@ -339,7 +353,8 @@ instance is_simple_group_five : IsSimpleGroup (alternatingGroup (Finₓ 5)) :=
       have h := SetLike.mem_coe.1 (subset_normal_closure (Set.mem_singleton _))
       exact mul_mem _ h h
       
-    · have con := mem_alternating_group.1 gA
+    · -- The case `n = 4` leads to contradiction, as no element of $A_5$ includes a 4-cycle.
+      have con := mem_alternating_group.1 gA
       contrapose! con
       rw [sign_of_cycle_type,
         cycle_type_of_card_le_mem_cycle_type_add_two
@@ -349,7 +364,8 @@ instance is_simple_group_five : IsSimpleGroup (alternatingGroup (Finₓ 5)) :=
         Multiset.map_singleton, Multiset.prod_singleton]
       decide
       
-    · refine' (is_conj_iff_cycle_type_eq.2 _).normal_closure_eq_top_of normal_closure_fin_rotate_five
+    · -- If `n = 5`, then `g` is itself a 5-cycle, conjugate to `fin_rotate 5`.
+      refine' (is_conj_iff_cycle_type_eq.2 _).normal_closure_eq_top_of normal_closure_fin_rotate_five
       rw
         [cycle_type_of_card_le_mem_cycle_type_add_two
           (by

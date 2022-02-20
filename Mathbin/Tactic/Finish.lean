@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2017 Jeremy Avigad. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Jeremy Avigad, Jesse Michael Han
+-/
 import Mathbin.Tactic.Hint
 
 /-!
@@ -51,6 +56,7 @@ namespace Auto
 unsafe def whnf_reducible (e : expr) : tactic expr :=
   whnf e reducible
 
+-- stolen from interactive.lean
 unsafe def add_simps : simp_lemmas → List Name → tactic simp_lemmas
   | s, [] => return s
   | s, n :: ns => do
@@ -61,7 +67,7 @@ unsafe def add_simps : simp_lemmas → List Name → tactic simp_lemmas
 * `(use_simp := tt)`: call the simplifier
 * `(max_ematch_rounds := 20)`: for the "done" tactic
 -/
-structure auto_config : Type where
+structure AutoConfig : Type where
   useSimp := true
   maxEmatchRounds := 20
   deriving DecidableEq, Inhabited
@@ -124,16 +130,16 @@ theorem not_exists_eq : (¬∃ x, s x) = ∀ x, ¬s x :=
 theorem not_implies_eq : (¬(p → q)) = (p ∧ ¬q) :=
   propext not_imp
 
-theorem classical.implies_iff_not_or : p → q ↔ ¬p ∨ q :=
+theorem Classical.implies_iff_not_or : p → q ↔ ¬p ∨ q :=
   imp_iff_not_or
 
 end
 
-def common_normalize_lemma_names : List Name :=
+def commonNormalizeLemmaNames : List Name :=
   [`` bex_def, `` forall_and_distrib, `` exists_imp_distrib, `` Or.assoc, `` Or.comm, `` Or.left_comm, `` And.assoc,
     `` And.comm, `` And.left_comm]
 
-def classical_normalize_lemma_names : List Name :=
+def classicalNormalizeLemmaNames : List Name :=
   common_normalize_lemma_names ++ [`` classical.implies_iff_not_or]
 
 /-- optionally returns an equivalent expression and proof of equivalence -/
@@ -308,8 +314,10 @@ unsafe def preprocess_hyps (cfg : AutoConfig) : tactic Unit := do
 
 TODO(Jeremy): allow users to specify attribute for ematching lemmas?
 -/
+--<|> self_simplify_hyps
 unsafe def mk_hinst_lemmas : List expr → smt_tactic hinst_lemmas
-  | [] => do
+  | [] =>-- return hinst_lemmas.mk
+  do
     get_hinst_lemmas_for_attr `ematch
   | h :: hs => do
     let his ← mk_hinst_lemmas hs
@@ -384,20 +392,32 @@ unsafe def done (ps : List pexpr) (cfg : AutoConfig := {  }) : tactic Unit := do
 -/
 
 
-inductive case_option
-  | force
-  | at_most_one
+inductive CaseOption
+  | force-- fail unless all goals are solved
+
+  | at_most_one-- leave at most one goal
+
   | accept
   deriving DecidableEq, Inhabited
 
+-- leave as many goals as necessary
 private unsafe def case_cont (s : CaseOption) (cont : CaseOption → tactic Unit) : tactic Unit := do
   match s with
     | case_option.force => cont case_option.force >> cont case_option.force
-    | case_option.at_most_one =>
-      mcond (cont case_option.force >> return tt) (cont case_option.at_most_one) skip <|>
-        (swap >> cont case_option.force) >> cont case_option.at_most_one
+    |
+    case_option.at_most_one =>-- if the first one succeeds, commit to it, and try the second
+          mcond
+          (cont case_option.force >> return tt) (cont case_option.at_most_one) skip <|>
+        (-- otherwise, try the second
+            swap >>
+            cont case_option.force) >>
+          cont case_option.at_most_one
     | case_option.accept => focus' [cont case_option.accept, cont case_option.accept]
 
+-- three possible outcomes:
+--   finds something to case, the continuations succeed ==> returns tt
+--   finds something to case, the continutations fail ==> fails
+--   doesn't find anything to case ==> returns ff
 unsafe def case_hyp (h : expr) (s : CaseOption) (cont : CaseOption → tactic Unit) : tactic Bool := do
   let t ← infer_type h
   match t with
@@ -482,7 +502,7 @@ namespace Interactive
 
 setup_tactic_parser
 
--- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr ?»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr ?»
 /-- `clarify [h1,...,hn] using [e1,...,en]` negates the goal, normalizes hypotheses
 (by splitting conjunctions, eliminating existentials, pushing negations inwards,
 and calling `simp` with the supplied lemmas `h1,...,hn`), and then tries `contradiction`.
@@ -502,7 +522,7 @@ unsafe def clarify (hs : parse simp_arg_list) (ps : parse («expr ?» (tk "using
   let s ← mk_simp_set false [] hs
   auto.clarify s (ps []) cfg
 
--- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr ?»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr ?»
 /-- `safe [h1,...,hn] using [e1,...,en]` negates the goal, normalizes hypotheses
 (by splitting conjunctions, eliminating existentials, pushing negations inwards,
 and calling `simp` with the supplied lemmas `h1,...,hn`), and then tries `contradiction`.
@@ -522,7 +542,7 @@ unsafe def safe (hs : parse simp_arg_list) (ps : parse («expr ?» (tk "using" *
   let s ← mk_simp_set false [] hs
   auto.safe s (ps []) cfg
 
--- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr ?»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr ?»
 /-- `finish [h1,...,hn] using [e1,...,en]` negates the goal, normalizes hypotheses
 (by splitting conjunctions, eliminating existentials, pushing negations inwards,
 and calling `simp` with the supplied lemmas `h1,...,hn`), and then tries `contradiction`.

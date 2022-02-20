@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Zhouhang Zhou. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Zhouhang Zhou, Sébastien Gouëzel, Frédéric Dupuis
+-/
 import Mathbin.Algebra.DirectSum.Module
 import Mathbin.Analysis.Complex.Basic
 import Mathbin.Analysis.NormedSpace.BoundedLinearMaps
@@ -124,6 +129,7 @@ instance defined on it, otherwise this will create a second non-defeq norm insta
 
 /-- A structure requiring that a scalar product is positive definite and symmetric, from which one
 can construct an `inner_product_space` instance in `inner_product_space.of_core`. -/
+-- note [is_R_or_C instance]
 @[nolint has_inhabited_instance]
 structure InnerProductSpace.Core (𝕜 : Type _) (F : Type _) [IsROrC 𝕜] [AddCommGroupₓ F] [Module 𝕜 F] where
   inner : F → F → 𝕜
@@ -133,6 +139,9 @@ structure InnerProductSpace.Core (𝕜 : Type _) (F : Type _) [IsROrC 𝕜] [Add
   add_left : ∀ x y z, inner (x + y) z = inner x z + inner y z
   smulLeft : ∀ x y r, inner (r • x) y = conj r * inner x y
 
+/- We set `inner_product_space.core` to be a class as we will use it as such in the construction
+of the normed space structure that it produces. However, all the instances we will use will be
+local to this proof. -/
 attribute [class] InnerProductSpace.Core
 
 namespace InnerProductSpace.ofCore
@@ -154,13 +163,13 @@ local notation "ext_iff" => @IsROrC.ext_iff 𝕜 _
 local postfix:90 "†" => starRingEnd _
 
 /-- Inner product defined by the `inner_product_space.core` structure. -/
-def to_has_inner : HasInner 𝕜 F where
+def toHasInner : HasInner 𝕜 F where
   inner := c.inner
 
 attribute [local instance] to_has_inner
 
 /-- The norm squared function for `inner_product_space.core` structure. -/
-def norm_sq (x : F) :=
+def normSq (x : F) :=
   reK ⟪x, x⟫
 
 local notation "norm_sqF" => @normSq 𝕜 F _ _ _ _
@@ -241,6 +250,7 @@ theorem inner_mul_conj_re_abs {x y : F} : re (⟪x, y⟫ * ⟪y, x⟫) = abs (�
 theorem inner_add_add_self {x y : F} : ⟪x + y, x + y⟫ = ⟪x, x⟫ + ⟪x, y⟫ + ⟪y, x⟫ + ⟪y, y⟫ := by
   simp only [inner_add_left, inner_add_right] <;> ring
 
+-- Expand `inner (x - y) (x - y)`
 theorem inner_sub_sub_self {x y : F} : ⟪x - y, x - y⟫ = ⟪x, x⟫ - ⟪x, y⟫ - ⟪y, x⟫ + ⟪y, y⟫ := by
   simp only [inner_sub_left, inner_sub_right] <;> ring
 
@@ -305,7 +315,7 @@ theorem inner_mul_inner_self_le (x y : F) : abs ⟪x, y⟫ * abs ⟪y, x⟫ ≤ 
 
 /-- Norm constructed from a `inner_product_space.core` structure, defined to be the square root
 of the scalar product. -/
-def to_has_norm : HasNorm F where
+def toHasNorm : HasNorm F where
   norm := fun x => sqrt (re ⟪x, x⟫)
 
 attribute [local instance] to_has_norm
@@ -331,7 +341,7 @@ theorem abs_inner_le_norm (x y : F) : abs ⟪x, y⟫ ≤ ∥x∥ * ∥y∥ :=
       exact inner_mul_inner_self_le y x)
 
 /-- Normed group structure constructed from an `inner_product_space.core` structure -/
-def to_normed_group : NormedGroup F :=
+def toNormedGroup : NormedGroup F :=
   NormedGroup.ofCore F
     { norm_eq_zero_iff := fun x => by
         constructor
@@ -366,7 +376,7 @@ def to_normed_group : NormedGroup F :=
 attribute [local instance] to_normed_group
 
 /-- Normed space structure constructed from a `inner_product_space.core` structure -/
-def to_normed_space : NormedSpace 𝕜 F where
+def toNormedSpace : NormedSpace 𝕜 F where
   norm_smul_le := fun r x => by
     rw [norm_eq_sqrt_inner, inner_smul_left, inner_smul_right, ← mul_assoc]
     rw [conj_mul_eq_norm_sq_left, of_real_mul_re, sqrt_mul, ← inner_norm_sq_eq_inner_self, of_real_re]
@@ -488,13 +498,13 @@ theorem inner_sum {ι : Type _} (s : Finset ι) (f : ι → E) (x : E) : ⟪x, �
 
 /-- An inner product with a sum on the left, `finsupp` version. -/
 theorem Finsupp.sum_inner {ι : Type _} (l : ι →₀ 𝕜) (v : ι → E) (x : E) :
-    ⟪l.Sum fun i : ι a : 𝕜 => a • v i, x⟫ = l.Sum fun i : ι a : 𝕜 => conj a • ⟪v i, x⟫ := by
+    ⟪l.Sum fun a : 𝕜 => a • v i, x⟫ = l.Sum fun a : 𝕜 => conj a • ⟪v i, x⟫ := by
   convert sum_inner l.support (fun a => l a • v a) x
   simp [inner_smul_left, Finsupp.sum]
 
 /-- An inner product with a sum on the right, `finsupp` version. -/
 theorem Finsupp.inner_sum {ι : Type _} (l : ι →₀ 𝕜) (v : ι → E) (x : E) :
-    ⟪x, l.Sum fun i : ι a : 𝕜 => a • v i⟫ = l.Sum fun i : ι a : 𝕜 => a • ⟪x, v i⟫ := by
+    ⟪x, l.Sum fun a : 𝕜 => a • v i⟫ = l.Sum fun a : 𝕜 => a • ⟪x, v i⟫ := by
   convert inner_sum l.support (fun a => l a • v a) x
   simp [inner_smul_right, Finsupp.sum]
 
@@ -633,6 +643,7 @@ theorem real_inner_add_add_self {x y : F} : ⟪x + y, x + y⟫_ℝ = ⟪x, x⟫_
   simp [inner_add_add_self, this]
   ring
 
+-- Expand `⟪x - y, x - y⟫`
 theorem inner_sub_sub_self {x y : E} : ⟪x - y, x - y⟫ = ⟪x, x⟫ - ⟪x, y⟫ - ⟪y, x⟫ + ⟪y, y⟫ := by
   simp only [inner_sub_left, inner_sub_right] <;> ring
 
@@ -894,6 +905,9 @@ theorem Orthonormal.orthonormal_of_forall_eq_or_eq_neg {v w : ι → E} (hv : Or
   intro i j
   cases' hw i with hi hi <;> cases' hw j with hj hj <;> split_ifs with h <;> simpa [hi, hj, h] using hv i j
 
+/- The material that follows, culminating in the existence of a maximal orthonormal subset, is
+adapted from the corresponding development of the theory of linearly independents sets.  See
+`exists_linear_independent` in particular. -/
 variable (𝕜 E)
 
 theorem orthonormal_empty : Orthonormal 𝕜 (fun x => x : (∅ : Set E) → E) := by
@@ -919,8 +933,8 @@ theorem orthonormal_sUnion_of_directed {s : Set (Set E)} (hs : DirectedOn (· �
         (by
           simpa using h)
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (w «expr ⊇ » s)
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (u «expr ⊇ » w)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (w «expr ⊇ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (u «expr ⊇ » w)
 /-- Given an orthonormal set `v` of vectors in `E`, there exists a maximal orthonormal set
 containing it. -/
 theorem exists_maximal_orthonormal {s : Set E} (hs : Orthonormal 𝕜 (coe : s → E)) :
@@ -1111,6 +1125,38 @@ theorem inner_eq_sum_norm_sq_div_four (x y : E) :
     im_inner_eq_norm_sub_I_smul_mul_self_sub_norm_add_I_smul_mul_self_div_four]
   push_cast
   simp only [sq, ← mul_div_right_comm, ← add_div]
+
+section Complex
+
+variable {V : Type _} [InnerProductSpace ℂ V]
+
+/-- A complex polarization identity, with a linear map
+-/
+theorem inner_map_polarization (T : V →ₗ[ℂ] V) (x y : V) :
+    ⟪T y, x⟫_ℂ =
+      (⟪T (x + y), x + y⟫_ℂ - ⟪T (x - y), x - y⟫_ℂ + Complex.i * ⟪T (x + Complex.i • y), x + Complex.i • y⟫_ℂ -
+          Complex.i * ⟪T (x - Complex.i • y), x - Complex.i • y⟫_ℂ) /
+        4 :=
+  by
+  simp only [map_add, map_sub, inner_add_left, inner_add_right, LinearMap.map_smul, inner_smul_left, inner_smul_right,
+    Complex.conj_I, ← pow_two, Complex.I_sq, inner_sub_left, inner_sub_right, mul_addₓ, ← mul_assoc, mul_neg, neg_negₓ,
+    sub_neg_eq_add, one_mulₓ, neg_one_mul, mul_sub, sub_sub]
+  ring
+
+/-- If `⟪T x, x⟫_ℂ = 0` for all x, then T = 0.
+-/
+theorem inner_map_self_eq_zero (T : V →ₗ[ℂ] V) : (∀ x : V, ⟪T x, x⟫_ℂ = 0) ↔ T = 0 := by
+  constructor
+  · intro hT
+    ext x
+    simp only [LinearMap.zero_apply, ← inner_self_eq_zero, inner_map_polarization, hT]
+    norm_num
+    
+  · rintro rfl x
+    simp only [LinearMap.zero_apply, inner_zero_left]
+    
+
+end Complex
 
 section
 
@@ -1525,6 +1571,7 @@ of the equality case for Cauchy-Schwarz.
 Compare `abs_inner_eq_norm_iff`, which takes the weaker hypothesis `abs ⟪x, y⟫ = ∥x∥ * ∥y∥`. -/
 theorem inner_eq_norm_mul_iff {x y : E} : ⟪x, y⟫ = (∥x∥ : 𝕜) * ∥y∥ ↔ (∥y∥ : 𝕜) • x = (∥x∥ : 𝕜) • y := by
   by_cases' h : x = 0 ∨ y = 0
+  -- WLOG `x` and `y` are nonzero
   · cases h <;> simp [h]
     
   calc ⟪x, y⟫ = (∥x∥ : 𝕜) * ∥y∥ ↔ ∥x∥ * ∥y∥ = re ⟪x, y⟫ := by
@@ -1645,7 +1692,7 @@ variable {E' : Type _} [InnerProductSpace 𝕜 E']
 
 /-- Given `f : E →L[𝕜] E'`, construct the continuous sesquilinear form `λ x y, ⟪x, A y⟫`, given
 as a continuous linear map. -/
-def to_sesq_form : (E →L[𝕜] E') →L[𝕜] E' →L⋆[𝕜] E →L[𝕜] 𝕜 :=
+def toSesqForm : (E →L[𝕜] E') →L[𝕜] E' →L⋆[𝕜] E →L[𝕜] 𝕜 :=
   ↑(ContinuousLinearMap.flipₗᵢ' E E' 𝕜 (starRingEnd 𝕜) (RingHom.id 𝕜)).toContinuousLinearEquiv ∘L
     ContinuousLinearMap.compSL E E' (E' →L⋆[𝕜] 𝕜) (RingHom.id 𝕜) (RingHom.id 𝕜) innerSLFlip
 
@@ -2238,7 +2285,7 @@ namespace InnerProductSpace
 
 /-- A (not necessarily bounded) operator on an inner product space is self-adjoint, if for all
 `x`, `y`, we have `⟪T x, y⟫ = ⟪x, T y⟫`. -/
-def is_self_adjoint (T : E →ₗ[𝕜] E) : Prop :=
+def IsSelfAdjoint (T : E →ₗ[𝕜] E) : Prop :=
   ∀ x y, ⟪T x, y⟫ = ⟪x, T y⟫
 
 /-- An operator `T` on a `ℝ`-inner product space is self-adjoint if and only if it is
@@ -2246,17 +2293,16 @@ def is_self_adjoint (T : E →ₗ[𝕜] E) : Prop :=
 theorem is_self_adjoint_iff_bilin_form (T : F →ₗ[ℝ] F) : IsSelfAdjoint T ↔ bilinFormOfRealInner.IsSelfAdjoint T := by
   simp [is_self_adjoint, BilinForm.IsSelfAdjoint, BilinForm.IsAdjointPair]
 
-theorem is_self_adjoint.conj_inner_sym {T : E →ₗ[𝕜] E} (hT : IsSelfAdjoint T) (x y : E) : conj ⟪T x, y⟫ = ⟪T y, x⟫ := by
+theorem IsSelfAdjoint.conj_inner_sym {T : E →ₗ[𝕜] E} (hT : IsSelfAdjoint T) (x y : E) : conj ⟪T x, y⟫ = ⟪T y, x⟫ := by
   rw [hT x y, inner_conj_sym]
 
 @[simp]
-theorem is_self_adjoint.apply_clm {T : E →L[𝕜] E} (hT : IsSelfAdjoint (T : E →ₗ[𝕜] E)) (x y : E) :
-    ⟪T x, y⟫ = ⟪x, T y⟫ :=
+theorem IsSelfAdjoint.apply_clm {T : E →L[𝕜] E} (hT : IsSelfAdjoint (T : E →ₗ[𝕜] E)) (x y : E) : ⟪T x, y⟫ = ⟪x, T y⟫ :=
   hT x y
 
 /-- For a self-adjoint operator `T`, the function `λ x, ⟪T x, x⟫` is real-valued. -/
 @[simp]
-theorem is_self_adjoint.coe_re_apply_inner_self_apply {T : E →L[𝕜] E} (hT : IsSelfAdjoint (T : E →ₗ[𝕜] E)) (x : E) :
+theorem IsSelfAdjoint.coe_re_apply_inner_self_apply {T : E →L[𝕜] E} (hT : IsSelfAdjoint (T : E →ₗ[𝕜] E)) (x : E) :
     (T.reApplyInnerSelf x : 𝕜) = ⟪T x, x⟫ := by
   suffices ∃ r : ℝ, ⟪T x, x⟫ = r by
     obtain ⟨r, hr⟩ := this
@@ -2266,7 +2312,7 @@ theorem is_self_adjoint.coe_re_apply_inner_self_apply {T : E →L[𝕜] E} (hT :
 
 /-- If a self-adjoint operator preserves a submodule, its restriction to that submodule is
 self-adjoint. -/
-theorem is_self_adjoint.restrict_invariant {T : E →ₗ[𝕜] E} (hT : IsSelfAdjoint T) {V : Submodule 𝕜 E}
+theorem IsSelfAdjoint.restrict_invariant {T : E →ₗ[𝕜] E} (hT : IsSelfAdjoint T) {V : Submodule 𝕜 E}
     (hV : ∀, ∀ v ∈ V, ∀, T v ∈ V) : IsSelfAdjoint (T.restrict hV) := fun v w => hT v w
 
 end InnerProductSpace

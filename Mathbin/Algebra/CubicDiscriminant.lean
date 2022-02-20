@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2022 David Kurniadi Angdinata. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: David Kurniadi Angdinata
+-/
 import Mathbin.FieldTheory.SplittingField
 
 /-!
@@ -52,7 +57,7 @@ section Basic
 variable {P : Cubic R} [Semiringₓ R]
 
 /-- Convert a cubic polynomial to a polynomial. -/
-def to_poly (P : Cubic R) : R[X] :=
+def toPoly (P : Cubic R) : R[X] :=
   c P.a * X ^ 3 + c P.b * X ^ 2 + c P.c * X + c P.d
 
 /-! ### Coefficients -/
@@ -162,7 +167,7 @@ section Degree
 
 /-- The equivalence between cubic polynomials and polynomials of degree at most three. -/
 @[simps]
-def Equivₓ : Cubic R ≃ { p : R[X] // p.degree ≤ 3 } where
+def equiv : Cubic R ≃ { p : R[X] // p.degree ≤ 3 } where
   toFun := fun P => ⟨P.toPoly, degree_cubic_le⟩
   invFun := fun f => ⟨coeff f 3, coeff f 2, coeff f 1, coeff f 0⟩
   left_inv := fun P => by

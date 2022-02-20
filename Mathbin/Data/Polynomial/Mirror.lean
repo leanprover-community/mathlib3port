@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Thomas Browning. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Thomas Browning
+-/
 import Mathbin.Data.Polynomial.RingDivision
 
 /-!
@@ -100,6 +105,7 @@ theorem coeff_mirror (n : ℕ) : p.mirror.coeff n = p.coeff (revAt (p.natDegree 
       (by
         rwa [mirror_nat_trailing_degree])
 
+--TODO: Extract `finset.sum_range_rev_at` lemma.
 theorem mirror_eval_one : p.mirror.eval 1 = p.eval 1 := by
   simp_rw [eval_eq_finset_sum, one_pow, mul_oneₓ, mirror_nat_degree]
   refine' Finset.sum_bij_ne_zero _ _ _ _ _

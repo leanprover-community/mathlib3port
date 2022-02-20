@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Jeremy Avigad. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Jeremy Avigad, Simon Hudon
+-/
 import Mathbin.Data.Pfunctor.Multivariate.Basic
 
 /-!
@@ -108,10 +113,11 @@ theorem comp_map {α β γ : Typevec n} (f : α ⟹ β) (g : β ⟹ γ) (x : F �
   rw [← abs_map, ← abs_map, ← abs_map]
   rfl
 
-instance (priority := 100) IsLawfulMvfunctor : IsLawfulMvfunctor F where
+instance (priority := 100) is_lawful_mvfunctor : IsLawfulMvfunctor F where
   id_map := @Mvqpf.id_map n F _ _
   comp_map := @comp_map n F _ _
 
+-- Lifting predicates and relations
 theorem liftp_iff {α : Typevec n} (p : ∀ ⦃i⦄, α i → Prop) (x : F α) :
     Liftp p x ↔ ∃ a f, x = abs ⟨a, f⟩ ∧ ∀ i j, p (f i j) := by
   constructor
@@ -224,16 +230,16 @@ variable (q)
 
 /-- A qpf is said to be uniform if every polynomial functor
 representing a single value all have the same range. -/
-def is_uniform : Prop :=
+def IsUniform : Prop :=
   ∀ ⦃α : Typevec n⦄ a a' : q.p.A f : q.p.B a ⟹ α f' : q.p.B a' ⟹ α,
     abs ⟨a, f⟩ = abs ⟨a', f'⟩ → ∀ i, f i '' univ = f' i '' univ
 
 /-- does `abs` preserve `liftp`? -/
-def liftp_preservation : Prop :=
+def LiftpPreservation : Prop :=
   ∀ ⦃α : Typevec n⦄ p : ∀ ⦃i⦄, α i → Prop x : q.p.Obj α, Liftp p (abs x) ↔ Liftp p x
 
 /-- does `abs` preserve `supp`? -/
-def supp_preservation : Prop :=
+def SuppPreservation : Prop :=
   ∀ ⦃α⦄ x : q.p.Obj α, Supp (abs x) = Supp x
 
 variable (q)

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Yury Kudryashov. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yury Kudryashov
+-/
 import Mathbin.Analysis.Calculus.Inverse
 import Mathbin.LinearAlgebra.Dual
 
@@ -57,6 +62,7 @@ theorem IsLocalExtrOn.exists_linear_map_of_has_strict_fderiv_at (hextr : IsLocal
   rcases e.surjective Λ' with ⟨⟨Λ, Λ₀⟩, rfl⟩
   refine' ⟨Λ, Λ₀, e.map_ne_zero_iff.1 h0, fun x => _⟩
   convert LinearMap.congr_fun (LinearMap.range_le_ker_iff.1 hΛ') x using 1
+  -- squeezed `simp [mul_comm]` to speed up elaboration
   simp only [LinearMap.coprod_equiv_apply, LinearEquiv.refl_apply, LinearMap.ring_lmap_equiv_self_symm_apply,
     LinearMap.comp_apply, ContinuousLinearMap.coe_coe, ContinuousLinearMap.prod_apply, LinearEquiv.trans_apply,
     LinearEquiv.prod_apply, LinearMap.coprod_apply, LinearMap.smul_right_apply, LinearMap.one_apply, smul_eq_mul,

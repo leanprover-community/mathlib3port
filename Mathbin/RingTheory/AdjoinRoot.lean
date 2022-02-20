@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Mario Carneiro. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Mario Carneiro, Chris Hughes
+-/
 import Mathbin.Data.Polynomial.FieldDivision
 import Mathbin.LinearAlgebra.FiniteDimensional
 import Mathbin.RingTheory.Adjoin.Basic
@@ -105,7 +110,7 @@ def root : AdjoinRoot f :=
 
 variable {f}
 
-instance adjoin_root.has_coe_t : CoeTₓ R (AdjoinRoot f) :=
+instance AdjoinRoot.hasCoeT : CoeTₓ R (AdjoinRoot f) :=
   ⟨of f⟩
 
 @[simp]
@@ -183,7 +188,7 @@ variable (f) [Algebra R S]
 
 /-- Produce an algebra homomorphism `adjoin_root f →ₐ[R] S` sending `root f` to
 a root of `f` in `S`. -/
-def lift_hom (x : S) (hfx : aeval x f = 0) : AdjoinRoot f →ₐ[R] S :=
+def liftHom (x : S) (hfx : aeval x f = 0) : AdjoinRoot f →ₐ[R] S :=
   { lift (algebraMap R S) x hfx with commutes' := fun r => show lift _ _ hfx r = _ from lift_of hfx }
 
 @[simp]
@@ -228,7 +233,7 @@ variable [Field K] {f : K[X]} [Irreducible f]
 instance is_maximal_span : IsMaximal (span {f} : Ideal K[X]) :=
   PrincipalIdealRing.is_maximal_of_irreducible ‹Irreducible f›
 
-noncomputable instance Field : Field (AdjoinRoot f) :=
+noncomputable instance field : Field (AdjoinRoot f) :=
   { AdjoinRoot.commRing f, Ideal.Quotient.field (span {f} : Ideal K[X]) with }
 
 theorem coe_injective : Function.Injective (coe : K → AdjoinRoot f) :=
@@ -252,8 +257,8 @@ theorem is_integral_root' (hg : g.Monic) : IsIntegral R (root g) :=
 /-- `adjoin_root.mod_by_monic_hom` sends the equivalence class of `f` mod `g` to `f %ₘ g`.
 
 This is a well-defined right inverse to `adjoin_root.mk`, see `adjoin_root.mk_left_inverse`. -/
-def mod_by_monic_hom [Nontrivial R] (hg : g.Monic) : AdjoinRoot g →ₗ[R] R[X] :=
-  (Submodule.liftq _ (Polynomial.modByMonicHom hg) fun f hf : f ∈ (Ideal.span {g}).restrictScalars R =>
+def modByMonicHom [Nontrivial R] (hg : g.Monic) : AdjoinRoot g →ₗ[R] R[X] :=
+  (Submodule.liftq _ (Polynomial.modByMonicHom hg) fun hf : f ∈ (Ideal.span {g}).restrictScalars R =>
         (mem_ker_mod_by_monic hg).mpr (Ideal.mem_span_singleton.mp hf)).comp <|
     (Submodule.Quotient.restrictScalarsEquiv R (Ideal.span {g} : Ideal R[X])).symm.toLinearMap
 
@@ -272,7 +277,7 @@ theorem mk_surjective [Nontrivial R] (hg : g.Monic) : Function.Surjective (mk g)
 /-- The elements `1, root g, ..., root g ^ (d - 1)` form a basis for `adjoin_root g`,
 where `g` is a monic polynomial of degree `d`. -/
 @[simps]
-def power_basis_aux' [Nontrivial R] (hg : g.Monic) : Basis (Finₓ g.natDegree) R (AdjoinRoot g) :=
+def powerBasisAux' [Nontrivial R] (hg : g.Monic) : Basis (Finₓ g.natDegree) R (AdjoinRoot g) :=
   Basis.ofEquivFun
     { toFun := fun f i => (modByMonicHom hg f).coeff i,
       invFun := fun c => mk g <| ∑ i : Finₓ g.natDegree, monomial i (c i),
@@ -314,7 +319,7 @@ def power_basis_aux' [Nontrivial R] (hg : g.Monic) : Basis (Finₓ g.natDegree) 
 /-- The power basis `1, root g, ..., root g ^ (d - 1)` for `adjoin_root g`,
 where `g` is a monic polynomial of degree `d`. -/
 @[simps]
-def power_basis' [Nontrivial R] (hg : g.Monic) : PowerBasis R (AdjoinRoot g) where
+def powerBasis' [Nontrivial R] (hg : g.Monic) : PowerBasis R (AdjoinRoot g) where
   gen := root g
   dim := g.natDegree
   Basis := powerBasisAux' hg
@@ -327,6 +332,7 @@ def power_basis' [Nontrivial R] (hg : g.Monic) : PowerBasis R (AdjoinRoot g) whe
       rw [← monomial_zero_right _]
       convert congr_argₓ _ (Function.update_noteq hj _ _)
       
+    -- Fix `decidable_eq` mismatch
     · intros
       have := Finset.mem_univ i
       contradiction
@@ -364,7 +370,7 @@ theorem minpoly_root (hf : f ≠ 0) : minpoly K (root f) = f * c f.leadingCoeff�
 
 /-- The elements `1, root f, ..., root f ^ (d - 1)` form a basis for `adjoin_root f`,
 where `f` is an irreducible polynomial over a field of degree `d`. -/
-def power_basis_aux (hf : f ≠ 0) : Basis (Finₓ f.natDegree) K (AdjoinRoot f) := by
+def powerBasisAux (hf : f ≠ 0) : Basis (Finₓ f.natDegree) K (AdjoinRoot f) := by
   set f' := f * C f.leading_coeff⁻¹ with f'_def
   have deg_f' : f'.nat_degree = f.nat_degree := by
     rw [nat_degree_mul hf, nat_degree_C, add_zeroₓ]
@@ -388,7 +394,7 @@ def power_basis_aux (hf : f ≠ 0) : Basis (Finₓ f.natDegree) K (AdjoinRoot f)
 /-- The power basis `1, root f, ..., root f ^ (d - 1)` for `adjoin_root f`,
 where `f` is an irreducible polynomial over a field of degree `d`. -/
 @[simps]
-def PowerBasis (hf : f ≠ 0) : PowerBasis K (AdjoinRoot f) where
+def powerBasis (hf : f ≠ 0) : PowerBasis K (AdjoinRoot f) where
   gen := root f
   dim := f.natDegree
   Basis := powerBasisAux hf
@@ -447,7 +453,7 @@ variable (pb : PowerBasis F K)
 
 /-- If `L` is a field extension of `F` and `f` is a polynomial over `F` then the set
 of maps from `F[x]/(f)` into `L` is in bijection with the set of roots of `f` in `L`. -/
-def Equivₓ (f : F[X]) (hf : f ≠ 0) : (AdjoinRoot f →ₐ[F] L) ≃ { x // x ∈ (f.map (algebraMap F L)).roots } :=
+def equiv (f : F[X]) (hf : f ≠ 0) : (AdjoinRoot f →ₐ[F] L) ≃ { x // x ∈ (f.map (algebraMap F L)).roots } :=
   (powerBasis hf).liftEquiv'.trans
     ((Equivₓ.refl _).subtypeEquiv fun x => by
       rw [power_basis_gen, minpoly_root hf, Polynomial.map_mul, roots_mul, Polynomial.map_C, roots_C, add_zeroₓ,

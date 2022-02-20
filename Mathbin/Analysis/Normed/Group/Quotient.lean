@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Patrick Massot. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Patrick Massot, Riccardo Brasca
+-/
 import Mathbin.Analysis.Normed.Group.Hom
 
 /-!
@@ -300,6 +305,8 @@ noncomputable instance AddSubgroup.semiNormedGroupQuotient (S : AddSubgroup M) :
     · simp
       
 
+-- This is a sanity check left here on purpose to ensure that potential refactors won't destroy
+-- this important property.
 example (S : AddSubgroup M) :
     (Quotientₓ.topologicalSpace : TopologicalSpace <| M ⧸ S) =
       S.semiNormedGroupQuotient.toUniformSpace.toTopologicalSpace :=
@@ -314,6 +321,8 @@ noncomputable instance AddSubgroup.normedGroupQuotient (S : AddSubgroup M) [hS :
       erw [← (mk' S).map_sub, quotient_norm_eq_zero_iff, hS.closure_eq, ← QuotientAddGroup.eq_iff_sub_mem] at h
       exact h }
 
+-- This is a sanity check left here on purpose to ensure that potential refactors won't destroy
+-- this important property.
 example (S : AddSubgroup M) [IsClosed (S : Set M)] : S.semiNormedGroupQuotient = NormedGroup.toSemiNormedGroup :=
   rfl
 
@@ -322,7 +331,7 @@ namespace AddSubgroup
 open NormedGroupHom
 
 /-- The morphism from a seminormed group to the quotient by a subgroup. -/
-noncomputable def normed_mk (S : AddSubgroup M) : NormedGroupHom M (M ⧸ S) :=
+noncomputable def normedMk (S : AddSubgroup M) : NormedGroupHom M (M ⧸ S) :=
   { QuotientAddGroup.mk' S with
     bound' :=
       ⟨1, fun m => by
@@ -330,7 +339,7 @@ noncomputable def normed_mk (S : AddSubgroup M) : NormedGroupHom M (M ⧸ S) :=
 
 /-- `S.normed_mk` agrees with `quotient_add_group.mk' S`. -/
 @[simp]
-theorem normed_mk.apply (S : AddSubgroup M) (m : M) : normedMk S m = QuotientAddGroup.mk' S m :=
+theorem normedMk.apply (S : AddSubgroup M) (m : M) : normedMk S m = QuotientAddGroup.mk' S m :=
   rfl
 
 /-- `S.normed_mk` is surjective. -/
@@ -399,7 +408,7 @@ namespace NormedGroupHom
 
 /-- `is_quotient f`, for `f : M ⟶ N` means that `N` is isomorphic to the quotient of `M`
 by the kernel of `f`. -/
-structure is_quotient (f : NormedGroupHom M N) : Prop where
+structure IsQuotient (f : NormedGroupHom M N) : Prop where
   Surjective : Function.Surjective f
   norm : ∀ x, ∥f x∥ = inf ((fun m => ∥x + m∥) '' f.ker)
 
@@ -433,7 +442,7 @@ theorem is_quotient_quotient (S : AddSubgroup M) : IsQuotient S.normedMk :=
   ⟨S.surjective_normed_mk, fun m => by
     simpa [S.ker_normed_mk] using quotient_norm_mk_eq _ m⟩
 
-theorem is_quotient.norm_lift {f : NormedGroupHom M N} (hquot : IsQuotient f) {ε : ℝ} (hε : 0 < ε) (n : N) :
+theorem IsQuotient.norm_lift {f : NormedGroupHom M N} (hquot : IsQuotient f) {ε : ℝ} (hε : 0 < ε) (n : N) :
     ∃ m : M, f m = n ∧ ∥m∥ < ∥n∥ + ε := by
   obtain ⟨m, rfl⟩ := hquot.surjective n
   have nonemp : ((fun m' => ∥m + m'∥) '' f.ker).Nonempty := by
@@ -446,7 +455,7 @@ theorem is_quotient.norm_lift {f : NormedGroupHom M N} (hquot : IsQuotient f) {�
       rw [f.map_add, (NormedGroupHom.mem_ker f x).mp hx, add_zeroₓ], by
       rwa [hquot.norm]⟩
 
-theorem is_quotient.norm_le {f : NormedGroupHom M N} (hquot : IsQuotient f) (m : M) : ∥f m∥ ≤ ∥m∥ := by
+theorem IsQuotient.norm_le {f : NormedGroupHom M N} (hquot : IsQuotient f) (m : M) : ∥f m∥ ≤ ∥m∥ := by
   rw [hquot.norm]
   apply cInf_le
   · use 0

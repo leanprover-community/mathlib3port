@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Chris Hughes. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Chris Hughes
+-/
 import Mathbin.Data.W.Cardinal
 import Mathbin.Data.MvPolynomial.Basic
 
@@ -13,6 +18,19 @@ and `ω`.
 
 universe u
 
+/-
+The definitions `mv_polynomial_fun` and `arity` are motivated by defining the following
+inductive type as a `W_type` in order to be able to use theorems about the cardinality
+of `W_type`.
+
+inductive mv_polynomial_term (σ R : Type u) : Type u
+| of_ring : R → mv_polynomial_term
+| X : σ → mv_polynomial_term
+| add : mv_polynomial_term → mv_polynomial_term → mv_polynomial_term
+| mul : mv_polynomial_term → mv_polynomial_term → mv_polynomial_term
+
+`W_type (arity σ R)` is isomorphic to the above type.
+-/
 open Cardinal
 
 open_locale Cardinal

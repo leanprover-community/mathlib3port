@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Eric Wieser. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Eric Wieser
+-/
 import Mathbin.Algebra.Group.Opposite
 import Mathbin.GroupTheory.GroupAction.Defs
 
@@ -95,7 +100,7 @@ instance CommSemigroupₓ.is_central_scalar [CommSemigroupₓ α] : IsCentralSca
 /-- Like `monoid.to_mul_action`, but multiplies on the right. -/
 @[to_additive]
 instance Monoidₓ.toOppositeMulAction [Monoidₓ α] : MulAction (αᵐᵒᵖ) α where
-  smul := · • ·
+  smul := (· • ·)
   one_smul := mul_oneₓ
   mul_smul := fun x y r => (mul_assoc _ _ _).symm
 
@@ -109,6 +114,8 @@ instance SmulCommClass.opposite_mid {M N} [Monoidₓ N] [HasScalar M N] [IsScala
     induction y using MulOpposite.rec
     simp [smul_mul_assoc]⟩
 
+-- The above instance does not create an unwanted diamond, the two paths to
+-- `mul_action αᵐᵒᵖ αᵐᵒᵖ` are defeq.
 example [Monoidₓ α] : Monoidₓ.toMulAction (αᵐᵒᵖ) = MulOpposite.mulAction α (αᵐᵒᵖ) :=
   rfl
 

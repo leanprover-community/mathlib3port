@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2014 Microsoft Corporation. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Mario Carneiro
+-/
 import Mathbin.Data.Num.Bitwise
 import Mathbin.Data.Int.CharZero
 import Mathbin.Data.Nat.Gcd
@@ -216,10 +221,10 @@ variable {α : Type _}
 
 open PosNum
 
-theorem add_zeroₓ (n : Num) : n + 0 = n := by
+theorem add_zero (n : Num) : n + 0 = n := by
   cases n <;> rfl
 
-theorem zero_addₓ (n : Num) : 0 + n = n := by
+theorem zero_add (n : Num) : 0 + n = n := by
   cases n <;> rfl
 
 theorem add_one : ∀ n : Num, n + 1 = succ n
@@ -369,7 +374,7 @@ theorem of_to_nat : ∀ n : Num, ((n : ℕ) : Num) = n
 theorem to_nat_inj {m n : Num} : (m : ℕ) = n ↔ m = n :=
   ⟨fun h => Function.LeftInverse.injective of_to_nat h, congr_argₓ _⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:916:4: warning: unsupported (TODO): `[tacs]
 /-- This tactic tries to turn an (in)equality about `num`s to one about `nat`s by rewriting.
 ```lean
 example (n : num) (m : num) : n ≤ n + m :=
@@ -382,7 +387,7 @@ end
 unsafe def transfer_rw : tactic Unit :=
   sorry
 
--- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:916:4: warning: unsupported (TODO): `[tacs]
 /-- This tactic tries to prove (in)equalities about `num`s by transfering them to the `nat` world and
 then trying to call `simp`.
 ```lean
@@ -394,8 +399,8 @@ unsafe def transfer : tactic Unit :=
 
 instance : CommSemiringₓ Num := by
   refine_struct
-      { add := · + ·, zero := 0, zero_add, add_zero, mul := · * ·, one := 1, nsmul := @nsmulRec Num ⟨0⟩ ⟨· + ·⟩,
-        npow := @npowRec Num ⟨1⟩ ⟨· * ·⟩ } <;>
+      { add := (· + ·), zero := 0, zero_add, add_zero, mul := (· * ·), one := 1, nsmul := @nsmulRec Num ⟨0⟩ ⟨(· + ·)⟩,
+        npow := @npowRec Num ⟨1⟩ ⟨(· * ·)⟩ } <;>
     try
         intros
         rfl <;>
@@ -411,13 +416,13 @@ instance : OrderedCancelAddCommMonoid Num :=
       run_tac
         transfer_rw
       apply add_left_cancelₓ,
-    lt := · < ·,
+    lt := (· < ·),
     lt_iff_le_not_le := by
       intro a b
       run_tac
         transfer_rw
       apply lt_iff_le_not_leₓ,
-    le := · ≤ ·,
+    le := (· ≤ ·),
     le_refl := by
       run_tac
         transfer,
@@ -540,7 +545,7 @@ theorem nat_size_to_nat n : natSize n = Nat.size n := by
 theorem nat_size_pos n : 0 < natSize n := by
   cases n <;> apply Nat.succ_posₓ
 
--- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:916:4: warning: unsupported (TODO): `[tacs]
 /-- This tactic tries to turn an (in)equality about `pos_num`s to one about `nat`s by rewriting.
 ```lean
 example (n : pos_num) (m : pos_num) : n ≤ n + m :=
@@ -553,7 +558,7 @@ end
 unsafe def transfer_rw : tactic Unit :=
   sorry
 
--- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:916:4: warning: unsupported (TODO): `[tacs]
 /-- This tactic tries to prove (in)equalities about `pos_num`s by transferring them to the `nat` world
 and then trying to call `simp`.
 ```lean
@@ -564,12 +569,12 @@ unsafe def transfer : tactic Unit :=
   sorry
 
 instance : AddCommSemigroupₓ PosNum := by
-  refine' { add := · + ·, .. } <;>
+  refine' { add := (· + ·), .. } <;>
     run_tac
       transfer
 
 instance : CommMonoidₓ PosNum := by
-  refine_struct { mul := · * ·, one := (1 : PosNum), npow := @npowRec PosNum ⟨1⟩ ⟨· * ·⟩ } <;>
+  refine_struct { mul := (· * ·), one := (1 : PosNum), npow := @npowRec PosNum ⟨1⟩ ⟨(· * ·)⟩ } <;>
     try
         intros
         rfl <;>
@@ -577,20 +582,20 @@ instance : CommMonoidₓ PosNum := by
         transfer
 
 instance : Distribₓ PosNum := by
-  refine' { add := · + ·, mul := · * ·, .. } <;>
+  refine' { add := (· + ·), mul := (· * ·), .. } <;>
     · run_tac
         transfer
       simp [mul_addₓ, mul_comm]
       
 
 instance : LinearOrderₓ PosNum where
-  lt := · < ·
+  lt := (· < ·)
   lt_iff_le_not_le := by
     intro a b
     run_tac
       transfer_rw
     apply lt_iff_le_not_leₓ
-  le := · ≤ ·
+  le := (· ≤ ·)
   le_refl := by
     run_tac
       transfer
@@ -1196,10 +1201,10 @@ theorem cast_bitm1 [AddGroupₓ α] [One α] (n : Znum) : (n.bitm1 : α) = bit0 
     simp [add_commₓ, add_left_commₓ]
   simpa [_root_.bit1, _root_.bit0, sub_eq_add_neg, -Int.add_neg_one]
 
-theorem add_zeroₓ (n : Znum) : n + 0 = n := by
+theorem add_zero (n : Znum) : n + 0 = n := by
   cases n <;> rfl
 
-theorem zero_addₓ (n : Znum) : 0 + n = n := by
+theorem zero_add (n : Znum) : 0 + n = n := by
   cases n <;> rfl
 
 theorem add_one : ∀ n : Znum, n + 1 = succ n
@@ -1460,7 +1465,7 @@ theorem cast_le [LinearOrderedRing α] {m n : Znum} : (m : α) ≤ n ↔ m ≤ n
 theorem cast_inj [LinearOrderedRing α] {m n : Znum} : (m : α) = n ↔ m = n := by
   rw [← cast_to_int m, ← cast_to_int n, Int.cast_inj, to_int_inj]
 
--- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:916:4: warning: unsupported (TODO): `[tacs]
 /-- This tactic tries to turn an (in)equality about `znum`s to one about `int`s by rewriting.
 ```lean
 example (n : znum) (m : znum) : n ≤ n + m * m :=
@@ -1473,7 +1478,7 @@ end
 unsafe def transfer_rw : tactic Unit :=
   sorry
 
--- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:916:4: warning: unsupported (TODO): `[tacs]
 /-- This tactic tries to prove (in)equalities about `znum`s by transfering them to the `int` world and
 then trying to call `simp`.
 ```lean
@@ -1488,13 +1493,13 @@ unsafe def transfer : tactic Unit :=
   sorry
 
 instance : LinearOrderₓ Znum where
-  lt := · < ·
+  lt := (· < ·)
   lt_iff_le_not_le := by
     intro a b
     run_tac
       transfer_rw
     apply lt_iff_le_not_leₓ
-  le := · ≤ ·
+  le := (· ≤ ·)
   le_refl := by
     run_tac
       transfer
@@ -1518,7 +1523,7 @@ instance : LinearOrderₓ Znum where
   decidableLt := Znum.decidableLt
 
 instance : AddCommGroupₓ Znum where
-  add := · + ·
+  add := (· + ·)
   add_assoc := by
     run_tac
       transfer
@@ -1534,7 +1539,7 @@ instance : AddCommGroupₓ Znum where
       transfer
 
 instance : LinearOrderedCommRing Znum :=
-  { Znum.linearOrder, Znum.addCommGroup with mul := · * ·,
+  { Znum.linearOrder, Znum.addCommGroup with mul := (· * ·),
     mul_assoc := by
       run_tac
         transfer,
@@ -1724,12 +1729,12 @@ theorem gcd_to_nat : ∀ a b, (gcd a b : ℕ) = Nat.gcdₓ a b := by
 theorem dvd_iff_mod_eq_zero {m n : Num} : m ∣ n ↔ n % m = 0 := by
   rw [← dvd_to_nat, Nat.dvd_iff_mod_eq_zeroₓ, ← to_nat_inj, mod_to_nat] <;> rfl
 
-instance decidable_dvd : DecidableRel (· ∣ · : Num → Num → Prop)
+instance decidableDvd : DecidableRel ((· ∣ ·) : Num → Num → Prop)
   | a, b => decidableOfIff' _ dvd_iff_mod_eq_zero
 
 end Num
 
-instance PosNum.decidableDvd : DecidableRel (· ∣ · : PosNum → PosNum → Prop)
+instance PosNum.decidableDvd : DecidableRel ((· ∣ ·) : PosNum → PosNum → Prop)
   | a, b => Num.decidableDvd _ _
 
 namespace Znum
@@ -1787,7 +1792,7 @@ theorem gcd_to_nat a b : (gcd a b : ℕ) = Int.gcdₓ a b :=
 theorem dvd_iff_mod_eq_zero {m n : Znum} : m ∣ n ↔ n % m = 0 := by
   rw [← dvd_to_int, Int.dvd_iff_mod_eq_zero, ← to_int_inj, mod_to_int] <;> rfl
 
-instance : DecidableRel (· ∣ · : Znum → Znum → Prop)
+instance : DecidableRel ((· ∣ ·) : Znum → Znum → Prop)
   | a, b => decidableOfIff' _ dvd_iff_mod_eq_zero
 
 end Znum
@@ -1795,10 +1800,10 @@ end Znum
 namespace Int
 
 /-- Cast a `snum` to the corresponding integer. -/
-def of_snum : Snum → ℤ :=
+def ofSnum : Snum → ℤ :=
   Snum.rec' (fun a => cond a (-1) 0) fun a p IH => cond a (bit1 IH) (bit0 IH)
 
-instance snum_coe : Coe Snum ℤ :=
+instance snumCoe : Coe Snum ℤ :=
   ⟨ofSnum⟩
 
 end Int

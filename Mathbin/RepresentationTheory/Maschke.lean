@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison
+-/
 import Mathbin.Algebra.MonoidAlgebra.Basic
 import Mathbin.Algebra.CharP.Invertible
 import Mathbin.Algebra.Regular.Basic
@@ -40,6 +45,8 @@ open_locale BigOperators
 
 section
 
+-- At first we work with any `[comm_ring k]`, and add the assumption that
+-- `[invertible (fintype.card G : k)]` when it is required.
 variable {k : Type u} [CommRingₓ k] {G : Type u} [Groupₓ G]
 
 variable {V : Type u} [AddCommGroupₓ V] [Module k V] [Module (MonoidAlgebra k G) V]
@@ -95,12 +102,12 @@ variable (G) [Fintype G]
 
 (We postpone dividing by the size of the group as long as possible.)
 -/
-def sum_of_conjugates : W →ₗ[k] V :=
+def sumOfConjugates : W →ₗ[k] V :=
   ∑ g : G, π.conjugate g
 
 /-- In fact, the sum over `g : G` of the conjugate of `π` by `g` is a `k[G]`-linear map.
 -/
-def sum_of_conjugates_equivariant : W →ₗ[MonoidAlgebra k G] V :=
+def sumOfConjugatesEquivariant : W →ₗ[MonoidAlgebra k G] V :=
   MonoidAlgebra.equivariantOfLinearOfComm (π.sumOfConjugates G) fun g v => by
     dsimp [sum_of_conjugates]
     simp only [LinearMap.sum_apply, Finset.smul_sum]
@@ -118,7 +125,7 @@ include inv
 /-- We construct our `k[G]`-linear retraction of `i` as
 $$ \frac{1}{|G|} \sum_{g \in G} g⁻¹ • π(g • -). $$
 -/
-def equivariant_projection : W →ₗ[MonoidAlgebra k G] V :=
+def equivariantProjection : W →ₗ[MonoidAlgebra k G] V :=
   ⅟ (Fintype.card G : k) • π.sumOfConjugatesEquivariant G
 
 include h
@@ -149,6 +156,7 @@ end CharZero
 
 namespace MonoidAlgebra
 
+-- Now we work over a `[field k]`.
 variable {k : Type u} [Field k] {G : Type u} [Fintype G] [Invertible (Fintype.card G : k)]
 
 variable [Groupₓ G]
@@ -183,7 +191,7 @@ theorem exists_is_compl (p : Submodule (MonoidAlgebra k G) V) : ∃ q : Submodul
   ⟨f.ker, LinearMap.is_compl_of_proj <| LinearMap.ext_iff.1 hf⟩
 
 /-- This also implies an instance `is_semisimple_module (monoid_algebra k G) V`. -/
-instance IsComplemented : IsComplemented (Submodule (MonoidAlgebra k G) V) :=
+instance is_complemented : IsComplemented (Submodule (MonoidAlgebra k G) V) :=
   ⟨exists_is_compl⟩
 
 end Submodule

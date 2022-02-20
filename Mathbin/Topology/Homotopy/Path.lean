@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Shing Tak Lam. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Shing Tak Lam
+-/
 import Mathbin.Topology.Homotopy.Basic
 import Mathbin.Topology.PathConnected
 import Mathbin.Analysis.Convex.Basic
@@ -39,7 +44,7 @@ namespace Path
 
 /-- The type of homotopies between two paths.
 -/
-abbrev homotopy (p₀ p₁ : Path x₀ x₁) :=
+abbrev Homotopy (p₀ p₁ : Path x₀ x₁) :=
   ContinuousMap.HomotopyRel p₀.toContinuousMap p₁.toContinuousMap {0, 1}
 
 namespace Homotopy
@@ -257,7 +262,7 @@ end Homotopy
 
 /-- Two paths `p₀` and `p₁` are `path.homotopic` if there exists a `homotopy` between them.
 -/
-def homotopic (p₀ p₁ : Path x₀ x₁) : Prop :=
+def Homotopic (p₀ p₁ : Path x₀ x₁) : Prop :=
   Nonempty (p₀.Homotopy p₁)
 
 namespace Homotopic
@@ -274,7 +279,7 @@ theorem symm ⦃p₀ p₁ : Path x₀ x₁⦄ (h : p₀.Homotopic p₁) : p₁.H
 theorem trans ⦃p₀ p₁ p₂ : Path x₀ x₁⦄ (h₀ : p₀.Homotopic p₁) (h₁ : p₁.Homotopic p₂) : p₀.Homotopic p₂ :=
   h₀.map2 Homotopy.trans h₁
 
-theorem Equivalenceₓ : Equivalenceₓ (@Homotopic X _ x₀ x₁) :=
+theorem equivalence : Equivalenceₓ (@Homotopic X _ x₀ x₁) :=
   ⟨refl, symm, trans⟩
 
 theorem map {p q : Path x₀ x₁} (h : p.Homotopic q) (f : C(X, Y)) :
@@ -288,12 +293,12 @@ theorem hcomp {p₀ p₁ : Path x₀ x₁} {q₀ q₁ : Path x₁ x₂} (hp : p�
 /-- The setoid on `path`s defined by the equivalence relation `path.homotopic`. That is, two paths are
 equivalent if there is a `homotopy` between them.
 -/
-protected def Setoidₓ (x₀ x₁ : X) : Setoidₓ (Path x₀ x₁) :=
+protected def setoid (x₀ x₁ : X) : Setoidₓ (Path x₀ x₁) :=
   ⟨Homotopic, equivalence⟩
 
 /-- The quotient on `path x₀ x₁` by the equivalence relation `path.homotopic`.
 -/
-protected def Quotientₓ (x₀ x₁ : X) :=
+protected def Quotient (x₀ x₁ : X) :=
   Quotientₓ (Homotopic.setoid x₀ x₁)
 
 attribute [local instance] homotopic.setoid
@@ -302,16 +307,16 @@ instance : Inhabited (Homotopic.Quotient () ()) :=
   ⟨Quotientₓ.mk <| Path.refl ()⟩
 
 /-- The composition of path homotopy classes. This is `path.trans` descended to the quotient. -/
-def quotient.comp (P₀ : Path.Homotopic.Quotient x₀ x₁) (P₁ : Path.Homotopic.Quotient x₁ x₂) :
+def Quotient.comp (P₀ : Path.Homotopic.Quotient x₀ x₁) (P₁ : Path.Homotopic.Quotient x₁ x₂) :
     Path.Homotopic.Quotient x₀ x₂ :=
-  Quotientₓ.map₂ Path.trans (fun p₀ : Path x₀ x₁ p₁ hp q₀ : Path x₁ x₂ q₁ hq => hcomp hp hq) P₀ P₁
+  Quotientₓ.map₂ Path.trans (fun q₁ hq => hcomp hp hq) P₀ P₁
 
 theorem comp_lift (P₀ : Path x₀ x₁) (P₁ : Path x₁ x₂) : ⟦P₀.trans P₁⟧ = Quotient.comp (⟦P₀⟧) (⟦P₁⟧) :=
   rfl
 
 /-- The image of a path homotopy class `P₀` under a map `f`.
     This is `path.map` descended to the quotient -/
-def quotient.map_fn (P₀ : Path.Homotopic.Quotient x₀ x₁) (f : C(X, Y)) : Path.Homotopic.Quotient (f x₀) (f x₁) :=
+def Quotient.mapFn (P₀ : Path.Homotopic.Quotient x₀ x₁) (f : C(X, Y)) : Path.Homotopic.Quotient (f x₀) (f x₁) :=
   Quotientₓ.map (fun q : Path x₀ x₁ => q.map f.Continuous) (fun p₀ p₁ h => Path.Homotopic.map h f) P₀
 
 theorem map_lift (P₀ : Path x₀ x₁) (f : C(X, Y)) : ⟦P₀.map f.Continuous⟧ = Quotient.mapFn (⟦P₀⟧) f :=

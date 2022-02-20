@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Johan Commelin. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johan Commelin
+-/
 import Mathbin.Tactic.Suggest
 
 /-!
@@ -12,7 +17,7 @@ open Tactic Tactic.Interactive
 
 setup_tactic_parser
 
--- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr ?»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr ?»
 /-- `observe hp : p` asserts the proposition `p`, and tries to prove it using `library_search`.
 If no proof is found, the tactic fails.
 In other words, this tactic is equivalent to `have hp : p, { library_search }`.

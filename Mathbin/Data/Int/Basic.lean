@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2016 Jeremy Avigad. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Jeremy Avigad
+-/
 import Mathbin.Data.Nat.Pow
 import Mathbin.Order.MinMax
 
@@ -49,7 +54,7 @@ instance : CommRingₓ Int where
   left_distrib := Int.distrib_left
   right_distrib := Int.distrib_right
   mul_comm := Int.mul_comm
-  zsmul := · * ·
+  zsmul := (· * ·)
   zsmul_zero' := Int.zero_mul
   zsmul_succ' := fun n x => by
     rw [succ_eq_one_add, of_nat_add, Int.distrib_right, of_nat_one, Int.one_mul]
@@ -62,6 +67,7 @@ these instances non-computably.
 -/
 
 
+-- instance : has_sub int            := by apply_instance -- This is in core
 instance : AddCommMonoidₓ Int := by
   infer_instance
 
@@ -321,7 +327,7 @@ protected theorem induction_on {p : ℤ → Prop} (i : ℤ) (hz : p 0) (hp : ∀
 
 /-- Inductively define a function on `ℤ` by defining it at `b`, for the `succ` of a number greater
   than `b`, and the `pred` of a number less than `b`. -/
-protected def induction_on' {C : ℤ → Sort _} (z : ℤ) (b : ℤ) :
+protected def inductionOn' {C : ℤ → Sort _} (z : ℤ) (b : ℤ) :
     C b → (∀ k, b ≤ k → C k → C (k + 1)) → (∀, ∀ k ≤ b, ∀, C k → C (k - 1)) → C z := fun H0 Hs Hp => by
   rw [← sub_add_cancel z b]
   induction' z - b with n n
@@ -489,6 +495,7 @@ theorem neg_succ_of_nat_div (m : ℕ) {b : ℤ} (H : 0 < b) : -[1+ m] / b = -(m 
   match b, eq_succ_of_zero_ltₓ H with
   | _, ⟨n, rfl⟩ => rfl
 
+-- Will be generalized to Euclidean domains.
 @[local simp]
 protected theorem zero_div : ∀ b : ℤ, 0 / b = 0
   | 0 =>
@@ -501,6 +508,7 @@ protected theorem zero_div : ∀ b : ℤ, 0 / b = 0
     show -ofNat _ = _ by
       simp
 
+-- Will be generalized to Euclidean domains.
 @[local simp]
 protected theorem div_zero : ∀ a : ℤ, a / 0 = 0
   | 0 =>
@@ -648,15 +656,18 @@ theorem mod_neg : ∀ a b : ℤ, a % -b = a % b
 theorem mod_abs (a b : ℤ) : a % abs b = a % b :=
   abs_by_cases (fun i => a % i = a % b) rfl (mod_neg _ _)
 
+-- Will be generalized to Euclidean domains.
 @[local simp]
 theorem zero_mod (b : ℤ) : 0 % b = 0 :=
   rfl
 
+-- Will be generalized to Euclidean domains.
 @[local simp]
 theorem mod_zero : ∀ a : ℤ, a % 0 = a
   | (m : ℕ) => congr_argₓ ofNat <| Nat.mod_zeroₓ _
   | -[1+ m] => congr_argₓ negSucc <| Nat.mod_zeroₓ _
 
+-- Will be generalized to Euclidean domains.
 @[local simp]
 theorem mod_one : ∀ a : ℤ, a % 1 = 0
   | (m : ℕ) => congr_argₓ ofNat <| Nat.mod_oneₓ _
@@ -783,6 +794,7 @@ theorem neg_mod_two (i : ℤ) : -i % 2 = i % 2 := by
   convert Int.mul_mod_right 2 (-i)
   simp only [two_mul, sub_eq_add_neg]
 
+-- Will be generalized to Euclidean domains.
 @[local simp]
 theorem mod_self {a : ℤ} : a % a = 0 := by
   have := mul_mod_left 1 a <;> rwa [one_mulₓ] at this
@@ -956,7 +968,7 @@ theorem dvd_nat_abs {a b : ℤ} : a ∣ b.natAbs ↔ a ∣ b :=
     fun e => by
     rw [← dvd_neg, ← e]
 
-instance decidable_dvd : @DecidableRel ℤ (· ∣ ·) := fun a n =>
+instance decidableDvd : @DecidableRel ℤ (· ∣ ·) := fun a n =>
   decidableOfDecidableOfIff
     (by
       infer_instance)
@@ -1346,7 +1358,7 @@ theorem to_nat_add_to_nat_neg_eq_nat_abs : ∀ n : ℤ, n.toNat + (-n).toNat = n
 
 /-- If `n : ℕ`, then `int.to_nat' n = some n`, if `n : ℤ` is negative, then `int.to_nat' n = none`.
 -/
-def to_nat' : ℤ → Option ℕ
+def toNat' : ℤ → Option ℕ
   | (n : ℕ) => some n
   | -[1+ n] => none
 
@@ -1405,6 +1417,7 @@ theorem units_inv_eq_self (u : (ℤ)ˣ) : u⁻¹ = u :=
 theorem units_mul_self (u : (ℤ)ˣ) : u * u = 1 :=
   (units_eq_one_or u).elim (fun h => h.symm ▸ rfl) fun h => h.symm ▸ rfl
 
+-- `units.coe_mul` is a "wrong turn" for the simplifier, this undoes it and simplifies further
 @[simp]
 theorem units_coe_mul_self (u : (ℤ)ˣ) : (u * u : ℤ) = 1 := by
   rw [← Units.coe_mul, units_mul_self, Units.coe_one]
@@ -1488,7 +1501,7 @@ theorem bit_decomp (n : ℤ) : bit (bodd n) (div2 n) = n :=
 
 /-- Defines a function from `ℤ` conditionally, if it is defined for odd and even integers separately
   using `bit`. -/
-def bit_cases_on.{u} {C : ℤ → Sort u} n (h : ∀ b n, C (bit b n)) : C n := by
+def bitCasesOn.{u} {C : ℤ → Sort u} n (h : ∀ b n, C (bit b n)) : C n := by
   rw [← bit_decomp n] <;> apply h
 
 @[simp]
@@ -1551,7 +1564,7 @@ theorem test_bit_succ m b : ∀ n, testBit (bit b n) (Nat.succ m) = testBit n m
   | -[1+ n] => by
     rw [bit_neg_succ] <;> dsimp [test_bit] <;> rw [Nat.test_bit_succ]
 
--- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:916:4: warning: unsupported (TODO): `[tacs]
 private unsafe def bitwise_tac : tactic Unit :=
   sorry
 

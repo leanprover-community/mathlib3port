@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Yury Kudryashov. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yury Kudryashov
+-/
 import Mathbin.CategoryTheory.Endomorphism
 import Mathbin.CategoryTheory.Category.Cat
 import Mathbin.Algebra.Category.Mon.Basic
@@ -36,7 +41,7 @@ namespace CategoryTheory
 
 /-- Type tag on `unit` used to define single-object categories and groupoids. -/
 @[nolint unused_arguments has_inhabited_instance]
-def single_obj (α : Type u) : Type :=
+def SingleObj (α : Type u) : Type :=
   Unit
 
 namespace SingleObj
@@ -44,7 +49,7 @@ namespace SingleObj
 variable (α : Type u)
 
 /-- One and `flip (*)` become `id` and `comp` for morphisms of the single object category. -/
-instance category_struct [One α] [Mul α] : CategoryStruct (SingleObj α) where
+instance categoryStruct [One α] [Mul α] : CategoryStruct (SingleObj α) where
   Hom := fun _ _ => α
   comp := fun _ _ _ x y => y * x
   id := fun _ => 1
@@ -80,7 +85,7 @@ protected def star : SingleObj α :=
 
 /-- The endomorphisms monoid of the only object in `single_obj α` is equivalent to the original
      monoid α. -/
-def to_End [Monoidₓ α] : α ≃* End (SingleObj.star α) :=
+def toEnd [Monoidₓ α] : α ≃* End (SingleObj.star α) :=
   { Equivₓ.refl α with map_mul' := fun x y => rfl }
 
 theorem to_End_def [Monoidₓ α] (x : α) : toEnd α x = x :=
@@ -93,7 +98,7 @@ theorem to_End_def [Monoidₓ α] (x : α) : toEnd α x = x :=
 See https://stacks.math.columbia.edu/tag/001F --
 although we do not characterize when the functor is full or faithful.
 -/
-def map_hom (α : Type u) (β : Type v) [Monoidₓ α] [Monoidₓ β] : (α →* β) ≃ SingleObj α ⥤ SingleObj β where
+def mapHom (α : Type u) (β : Type v) [Monoidₓ α] [Monoidₓ β] : (α →* β) ≃ SingleObj α ⥤ SingleObj β where
   toFun := fun f =>
     { obj := id, map := fun _ _ => ⇑f, map_id' := fun _ => f.map_one, map_comp' := fun _ _ _ x y => f.map_mul y x }
   invFun := fun f =>
@@ -115,7 +120,7 @@ theorem map_hom_comp {α : Type u} {β : Type v} [Monoidₓ α] [Monoidₓ β] (
 /-- Given a function `f : C → G` from a category to a group, we get a functor
     `C ⥤ G` sending any morphism `x ⟶ y` to `f y * (f x)⁻¹`. -/
 @[simps]
-def difference_functor {C G} [Category C] [Groupₓ G] (f : C → G) : C ⥤ SingleObj G where
+def differenceFunctor {C G} [Category C] [Groupₓ G] (f : C → G) : C ⥤ SingleObj G where
   obj := fun _ => ()
   map := fun x y _ => f y * (f x)⁻¹
   map_id' := by
@@ -136,7 +141,7 @@ namespace MonoidHom
 /-- Reinterpret a monoid homomorphism `f : α → β` as a functor `(single_obj α) ⥤ (single_obj β)`.
 See also `category_theory.single_obj.map_hom` for an equivalence between these types. -/
 @[reducible]
-def to_functor {α : Type u} {β : Type v} [Monoidₓ α] [Monoidₓ β] (f : α →* β) : SingleObj α ⥤ SingleObj β :=
+def toFunctor {α : Type u} {β : Type v} [Monoidₓ α] [Monoidₓ β] (f : α →* β) : SingleObj α ⥤ SingleObj β :=
   SingleObj.mapHom α β f
 
 @[simp]
@@ -156,7 +161,7 @@ variable (α : Type u) [Monoidₓ α]
 
 /-- The units in a monoid are (multiplicatively) equivalent to
 the automorphisms of `star` when we think of the monoid as a single-object category. -/
-def to_Aut : (α)ˣ ≃* Aut (SingleObj.star α) :=
+def toAut : (α)ˣ ≃* Aut (SingleObj.star α) :=
   (Units.mapEquiv (SingleObj.toEnd α)).trans <| Aut.unitsEndEquivAut _
 
 @[simp]
@@ -174,11 +179,11 @@ namespace Mon
 open CategoryTheory
 
 /-- The fully faithful functor from `Mon` to `Cat`. -/
-def to_Cat : Mon ⥤ Cat where
+def toCat : Mon ⥤ Cat where
   obj := fun x => Cat.of (SingleObj x)
   map := fun x y f => SingleObj.mapHom x y f
 
-instance to_Cat_full : Full toCat where
+instance toCatFull : Full toCat where
   Preimage := fun x y => (SingleObj.mapHom x y).invFun
   witness' := fun x y => by
     apply Equivₓ.right_inv

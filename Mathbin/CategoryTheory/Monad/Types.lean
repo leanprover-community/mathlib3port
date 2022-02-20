@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Johannes Hölzl. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johannes Hölzl, Bhavik Mehta
+-/
 import Mathbin.CategoryTheory.Monad.Basic
 import Mathbin.CategoryTheory.Monad.Kleisli
 import Mathbin.CategoryTheory.Category.Kleisli
@@ -23,10 +28,10 @@ variable (m : Type u → Type u) [Monadₓ m] [IsLawfulMonad m]
 /-- A lawful `control.monad` gives a category theory `monad` on the category of types.
 -/
 @[simps]
-def of_type_monad : Monad (Type u) where
+def ofTypeMonad : Monad (Type u) where
   toFunctor := ofTypeFunctor m
   η' := ⟨@pure m _, fun α β f => (IsLawfulApplicative.map_comp_pure f).symm⟩
-  μ' := ⟨@mjoin m _, fun α β f : α → β => funext fun a => mjoin_map_map f a⟩
+  μ' := ⟨@mjoin m _, fun f : α → β => funext fun a => mjoin_map_map f a⟩
   assoc' := fun α => funext fun a => mjoin_map_mjoin a
   left_unit' := fun α => funext fun a => mjoin_pure a
   right_unit' := fun α => funext fun a => mjoin_map_pure a
@@ -35,7 +40,7 @@ def of_type_monad : Monad (Type u) where
 category-theoretic version, provided the monad is lawful.
 -/
 @[simps]
-def Eq : KleisliCat m ≌ Kleisli (of_type_monad m) where
+def eq : KleisliCat m ≌ Kleisli (of_type_monad m) where
   Functor :=
     { obj := fun X => X, map := fun X Y f => f, map_id' := fun X => rfl,
       map_comp' := fun X Y Z f g => by

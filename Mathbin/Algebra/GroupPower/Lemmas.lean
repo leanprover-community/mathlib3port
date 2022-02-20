@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2015 Jeremy Avigad. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Jeremy Avigad, Robert Y. Lewis
+-/
 import Mathbin.Algebra.Invertible
 import Mathbin.Data.Int.Cast
 
@@ -152,6 +157,8 @@ theorem zpow_one_add (a : G) (i : ℤ) : a ^ (1 + i) = a * a ^ i := by
 theorem zpow_mul_comm (a : G) (i j : ℤ) : a ^ i * a ^ j = a ^ j * a ^ i := by
   rw [← zpow_add, ← zpow_add, add_commₓ]
 
+-- note that `mul_zsmul` and `zpow_mul` have the primes swapped since their argument order
+-- and therefore the more "natural" choice of lemma is reversed.
 @[to_additive mul_zsmul']
 theorem zpow_mul (a : G) (m n : ℤ) : a ^ (m * n) = (a ^ m) ^ n :=
   Int.induction_on n
@@ -373,6 +380,8 @@ theorem Int.coe_nat_pow (n m : ℕ) : ((n ^ m : ℕ) : ℤ) = n ^ m := by
 theorem Int.nat_abs_pow (n : ℤ) (k : ℕ) : Int.natAbs (n ^ k) = Int.natAbs n ^ k := by
   induction' k with k ih <;> [rfl, rw [pow_succ'ₓ, Int.nat_abs_mul, pow_succ'ₓ, ih]]
 
+-- The next four lemmas allow us to replace multiplication by a numeral with a `zsmul` expression.
+-- They are used by the `noncomm_ring` tactic, to normalise expressions before passing to `abel`.
 theorem bit0_mul [Ringₓ R] {n r : R} : bit0 n * r = (2 : ℤ) • (n * r) := by
   dsimp [bit0]
   rw [add_mulₓ, add_zsmul, one_zsmul]
@@ -704,6 +713,7 @@ theorem zmultiples_hom_symm_apply [AddGroupₓ A] (f : ℤ →+ A) : (zmultiples
 
 attribute [to_additive zmultiples_hom_symm_apply] zpowers_hom_symm_apply
 
+-- TODO use to_additive in the rest of this file
 theorem MonoidHom.apply_mnat [Monoidₓ M] (f : Multiplicative ℕ →* M) (n : Multiplicative ℕ) :
     f n = f (Multiplicative.ofAdd 1) ^ n.toAdd := by
   rw [← powers_hom_symm_apply, ← powers_hom_apply, Equivₓ.apply_symm_apply]

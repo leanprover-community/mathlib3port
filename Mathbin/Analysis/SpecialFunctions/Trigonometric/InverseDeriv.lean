@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Chris Hughes. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Chris Hughes, Abhimanyu Pallavi Sudhir, Jean Lo, Calle Sönne, Benjamin Davidson
+-/
 import Mathbin.Analysis.SpecialFunctions.Trigonometric.Inverse
 import Mathbin.Analysis.SpecialFunctions.Trigonometric.Deriv
 
@@ -94,7 +99,7 @@ theorem differentiable_within_at_arcsin_Iic {x : ℝ} : DifferentiableWithinAt �
   refine' ⟨fun h => _, fun h => (has_deriv_within_at_arcsin_Iic h).DifferentiableWithinAt⟩
   rw [← neg_negₓ x, ← image_neg_Ici] at h
   have := (h.comp (-x) differentiable_within_at_id.neg (maps_to_image _ _)).neg
-  simpa [· ∘ ·, differentiable_within_at_arcsin_Ici] using this
+  simpa [(· ∘ ·), differentiable_within_at_arcsin_Ici] using this
 
 theorem differentiable_at_arcsin {x : ℝ} : DifferentiableAt ℝ arcsin x ↔ x ≠ -1 ∧ x ≠ 1 :=
   ⟨fun h =>

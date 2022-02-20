@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Heather Macbeth. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Heather Macbeth
+-/
 import Mathbin.MeasureTheory.Measure.Regular
 import Mathbin.MeasureTheory.Function.SimpleFuncDense
 import Mathbin.Topology.UrysohnsLemma
@@ -52,8 +57,8 @@ namespace MeasureTheory.lp
 
 variable [NormedSpace ℝ E]
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (u «expr ⊇ » s)
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (F «expr ⊆ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (u «expr ⊇ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (F «expr ⊆ » s)
 /-- A function in `Lp` can be approximated in `Lp` by continuous functions. -/
 theorem bounded_continuous_function_dense [μ.WeaklyRegular] :
     (boundedContinuousFunction E p μ).topologicalClosure = ⊤ := by
@@ -61,6 +66,8 @@ theorem bounded_continuous_function_dense [μ.WeaklyRegular] :
   have hp₀' : 0 ≤ 1 / p.to_real := div_nonneg zero_le_one Ennreal.to_real_nonneg
   have hp₀'' : 0 < p.to_real := by
     simpa [← Ennreal.to_real_lt_to_real Ennreal.zero_ne_top hp] using hp₀
+  -- It suffices to prove that scalar multiples of the indicator function of a finite-measure
+  -- measurable set can be approximated by continuous functions
   suffices
     ∀ c : E {s : Set α} hs : MeasurableSet s hμs : μ s < ⊤,
       (Lp.simple_func.indicator_const p hs hμs.Ne c : Lp E p μ) ∈ (BoundedContinuousFunction E p μ).topologicalClosure
@@ -73,10 +80,13 @@ theorem bounded_continuous_function_dense [μ.WeaklyRegular] :
       
     · exact AddSubgroup.is_closed_topological_closure _
       
+  -- Let `s` be a finite-measure measurable set, let's approximate `c` times its indicator function
   intro c s hs hsμ
   refine' mem_closure_iff_frequently.mpr _
   rw [metric.nhds_basis_closed_ball.frequently_iff]
   intro ε hε
+  -- A little bit of pre-emptive work, to find `η : ℝ≥0` which will be a margin small enough for
+  -- our purposes
   obtain ⟨η, hη_pos, hη_le⟩ : ∃ η, 0 < η ∧ (↑(∥bit0 ∥c∥∥₊ * (2 * η) ^ (1 / p.to_real)) : ℝ) ≤ ε := by
     have : Filter.Tendsto (fun x : ℝ≥0 => ∥bit0 ∥c∥∥₊ * (2 * x) ^ (1 / p.to_real)) (𝓝 0) (𝓝 0) := by
       have : Filter.Tendsto (fun x : ℝ≥0 => 2 * x) (𝓝 0) (𝓝 (2 * 0)) := filter.tendsto_id.const_mul 2
@@ -90,6 +100,8 @@ theorem bounded_continuous_function_dense [μ.WeaklyRegular] :
     refine' ⟨η, hη, _⟩
     exact_mod_cast hδε' hηδ
   have hη_pos' : (0 : ℝ≥0∞) < η := Ennreal.coe_pos.2 hη_pos
+  -- Use the regularity of the measure to `η`-approximate `s` by an open superset and a closed
+  -- subset
   obtain ⟨u, su, u_open, μu⟩ : ∃ (u : _)(_ : u ⊇ s), IsOpen u ∧ μ u < μ s + ↑η := by
     refine' s.exists_is_open_lt_of_lt _ _
     simpa using Ennreal.add_lt_add_left hsμ.ne hη_pos'
@@ -110,7 +122,11 @@ theorem bounded_continuous_function_dense [μ.WeaklyRegular] :
       simpa using add_mulₓ (1 : ℝ≥0∞) 1 η
     rw [this]
     abel
+  -- Apply Urysohn's lemma to get a continuous approximation to the characteristic function of
+  -- the set `s`
   obtain ⟨g, hgu, hgF, hg_range⟩ := exists_continuous_zero_one_of_closed u_open.is_closed_compl F_closed this
+  -- Multiply this by `c` to get a continuous approximation to the function `f`; the key point is
+  -- that this is pointwise bounded by the indicator of the set `u \ F`
   have g_norm : ∀ x, ∥g x∥ = g x := fun x => by
     rw [Real.norm_eq_abs, abs_of_nonneg (hg_range x).1]
   have gc_bd : ∀ x, ∥g x • c - s.indicator (fun x => c) x∥ ≤ ∥(u \ F).indicator (fun x => bit0 ∥c∥) x∥ := by
@@ -132,6 +148,7 @@ theorem bounded_continuous_function_dense [μ.WeaklyRegular] :
     · have : x ∉ s := fun h => hu (su h)
       simp [hgu hu, this]
       
+  -- The rest is basically just `ennreal`-arithmetic
   have gc_snorm :
     snorm ((fun x => g x • c) - s.indicator fun x => c) p μ ≤ (↑(∥bit0 ∥c∥∥₊ * (2 * η) ^ (1 / p.to_real)) : ℝ≥0∞) := by
     refine' (snorm_mono_ae (Filter.eventually_of_forall gc_bd)).trans _

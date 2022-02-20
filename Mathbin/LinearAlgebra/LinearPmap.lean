@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Yury Kudryashov All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yury Kudryashov
+-/
 import Mathbin.LinearAlgebra.Basic
 import Mathbin.LinearAlgebra.Prod
 
@@ -68,7 +73,7 @@ theorem mk_apply (p : Submodule R E) (f : p →ₗ[R] F) (x : p) : mk p f x = f 
 
 /-- The unique `linear_pmap` on `R ∙ x` that sends `x` to `y`. This version works for modules
 over rings, and requires a proof of `∀ c, c • x = 0 → c • y = 0`. -/
-noncomputable def mk_span_singleton' (x : E) (y : F) (H : ∀ c : R, c • x = 0 → c • y = 0) : LinearPmap R E F where
+noncomputable def mkSpanSingleton' (x : E) (y : F) (H : ∀ c : R, c • x = 0 → c • y = 0) : LinearPmap R E F where
   domain := R∙x
   toFun :=
     have H : ∀ c₁ c₂ : R, c₁ • x = c₂ • x → c₁ • y = c₂ • y := by
@@ -104,7 +109,7 @@ theorem mk_span_singleton_apply (x : E) (y : F) (H : ∀ c : R, c • x = 0 → 
 /-- The unique `linear_pmap` on `span R {x}` that sends a non-zero vector `x` to `y`.
 This version works for modules over division rings. -/
 @[reducible]
-noncomputable def mk_span_singleton {K E F : Type _} [DivisionRing K] [AddCommGroupₓ E] [Module K E] [AddCommGroupₓ F]
+noncomputable def mkSpanSingleton {K E F : Type _} [DivisionRing K] [AddCommGroupₓ E] [Module K E] [AddCommGroupₓ F]
     [Module K F] (x : E) (y : F) (hx : x ≠ 0) : LinearPmap K E F :=
   (mkSpanSingleton' x y) fun c hc =>
     (smul_eq_zero.1 hc).elim
@@ -150,7 +155,7 @@ theorem eq_of_le_of_domain_eq {f g : LinearPmap R E F} (hle : f ≤ g) (heq : f.
 
 /-- Given two partial linear maps `f`, `g`, the set of points `x` such that
 both `f` and `g` are defined at `x` and `f x = g x` form a submodule. -/
-def eq_locus (f g : LinearPmap R E F) : Submodule R E where
+def eqLocus (f g : LinearPmap R E F) : Submodule R E where
   Carrier := { x | ∃ (hf : x ∈ f.domain)(hg : x ∈ g.domain), f ⟨x, hf⟩ = g ⟨x, hg⟩ }
   zero_mem' := ⟨zero_mem _, zero_mem _, f.map_zero.trans g.map_zero.symm⟩
   add_mem' := fun x y ⟨hfx, hgx, hx⟩ ⟨hfy, hgy, hy⟩ =>
@@ -170,24 +175,23 @@ instance : Inhabited (LinearPmap R E F) :=
   ⟨⊥⟩
 
 instance : SemilatticeInf (LinearPmap R E F) where
-  le := · ≤ ·
+  le := (· ≤ ·)
   le_refl := fun f => ⟨le_reflₓ f.domain, fun x y h => Subtype.eq h ▸ rfl⟩
   le_trans := fun f g h ⟨fg_le, fg_eq⟩ ⟨gh_le, gh_eq⟩ =>
     ⟨le_transₓ fg_le gh_le, fun x z hxz =>
       have hxy : (x : E) = ofLe fg_le x := rfl
       (fg_eq hxy).trans (gh_eq <| hxy.symm.trans hxz)⟩
   le_antisymm := fun f g fg gf => eq_of_le_of_domain_eq fg (le_antisymmₓ fg.1 gf.1)
-  inf := ·⊓·
+  inf := (·⊓·)
   le_inf := fun f g h ⟨fg_le, fg_eq⟩ ⟨fh_le, fh_eq⟩ =>
     ⟨fun x hx =>
       ⟨fg_le hx, fh_le hx, by
         refine' (fg_eq _).symm.trans (fh_eq _) <;> [exact ⟨x, hx⟩, rfl, rfl]⟩,
-      fun x ⟨y, yg, hy⟩ h => by
+      fun h => by
       apply fg_eq
       exact h⟩
   inf_le_left := fun f g => ⟨fun x hx => hx.fst, fun x y h => congr_argₓ f <| Subtype.eq <| h⟩
-  inf_le_right := fun f g =>
-    ⟨fun x hx => hx.snd.fst, fun ⟨x, xf, xg, hx⟩ y h => hx.trans <| congr_argₓ g <| Subtype.eq <| h⟩
+  inf_le_right := fun f g => ⟨fun x hx => hx.snd.fst, fun y h => hx.trans <| congr_argₓ g <| Subtype.eq <| h⟩
 
 instance : OrderBot (LinearPmap R E F) where
   bot := ⊥
@@ -278,7 +282,7 @@ section
 variable {K : Type _} [DivisionRing K] [Module K E] [Module K F]
 
 /-- Extend a `linear_pmap` to `f.domain ⊔ K ∙ x`. -/
-noncomputable def sup_span_singleton (f : LinearPmap K E F) (x : E) (y : F) (hx : x ∉ f.domain) : LinearPmap K E F :=
+noncomputable def supSpanSingleton (f : LinearPmap K E F) (x : E) (y : F) (hx : x ∉ f.domain) : LinearPmap K E F :=
   f.sup (mkSpanSingleton x y fun h₀ => hx <| h₀.symm ▸ f.domain.zero_mem) <|
     sup_h_of_disjoint _ _ <| by
       simpa [disjoint_span_singleton]
@@ -335,7 +339,7 @@ private theorem Sup_aux (c : Set (LinearPmap R E F)) (hc : DirectedOn (· ≤ ·
 
 /-- Glue a collection of partially defined linear maps to a linear map defined on `Sup`
 of these submodules. -/
-protected noncomputable def Sup (c : Set (LinearPmap R E F)) (hc : DirectedOn (· ≤ ·) c) : LinearPmap R E F :=
+protected noncomputable def supₓ (c : Set (LinearPmap R E F)) (hc : DirectedOn (· ≤ ·) c) : LinearPmap R E F :=
   ⟨_, Classical.some <| Sup_aux c hc⟩
 
 protected theorem le_Sup {c : Set (LinearPmap R E F)} (hc : DirectedOn (· ≤ ·) c) {f : LinearPmap R E F} (hf : f ∈ c) :
@@ -355,7 +359,7 @@ end LinearPmap
 namespace LinearMap
 
 /-- Restrict a linear map to a submodule, reinterpreting the result as a `linear_pmap`. -/
-def to_pmap (f : E →ₗ[R] F) (p : Submodule R E) : LinearPmap R E F :=
+def toPmap (f : E →ₗ[R] F) (p : Submodule R E) : LinearPmap R E F :=
   ⟨p, f.comp p.Subtype⟩
 
 @[simp]
@@ -363,7 +367,7 @@ theorem to_pmap_apply (f : E →ₗ[R] F) (p : Submodule R E) (x : p) : f.toPmap
   rfl
 
 /-- Compose a linear map with a `linear_pmap` -/
-def comp_pmap (g : F →ₗ[R] G) (f : LinearPmap R E F) : LinearPmap R E G where
+def compPmap (g : F →ₗ[R] G) (f : LinearPmap R E F) : LinearPmap R E G where
   domain := f.domain
   toFun := g.comp f.toFun
 
@@ -376,7 +380,7 @@ end LinearMap
 namespace LinearPmap
 
 /-- Restrict codomain of a `linear_pmap` -/
-def cod_restrict (f : LinearPmap R E F) (p : Submodule R F) (H : ∀ x, f x ∈ p) : LinearPmap R E p where
+def codRestrict (f : LinearPmap R E F) (p : Submodule R F) (H : ∀ x, f x ∈ p) : LinearPmap R E p where
   domain := f.domain
   toFun := f.toFun.codRestrict p H
 

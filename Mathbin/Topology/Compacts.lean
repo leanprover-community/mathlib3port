@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Floris van Doorn. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Floris van Doorn
+-/
 import Mathbin.Topology.Homeomorph
 
 /-!
@@ -23,7 +28,7 @@ variable (α : Type _) {β : Type _} [TopologicalSpace α] [TopologicalSpace β]
 namespace TopologicalSpace
 
 /-- The type of closed subsets of a topological space. -/
-def closeds :=
+def Closeds :=
   { s : Set α // IsClosed s }
 
 /-- The type of closed subsets is inhabited, with default element the empty set. -/
@@ -31,29 +36,29 @@ instance : Inhabited (Closeds α) :=
   ⟨⟨∅, is_closed_empty⟩⟩
 
 /-- The compact sets of a topological space. See also `nonempty_compacts`. -/
-def compacts : Type _ :=
+def Compacts : Type _ :=
   { s : Set α // IsCompact s }
 
 /-- The type of non-empty compact subsets of a topological space. The
 non-emptiness will be useful in metric spaces, as we will be able to put
 a distance (and not merely an edistance) on this space. -/
-def nonempty_compacts :=
+def NonemptyCompacts :=
   { s : Set α // s.Nonempty ∧ IsCompact s }
 
 /-- In an inhabited space, the type of nonempty compact subsets is also inhabited, with
 default element the singleton set containing the default element. -/
-instance nonempty_compacts_inhabited [Inhabited α] : Inhabited (NonemptyCompacts α) :=
+instance nonemptyCompactsInhabited [Inhabited α] : Inhabited (NonemptyCompacts α) :=
   ⟨⟨{default}, singleton_nonempty default, is_compact_singleton⟩⟩
 
 /-- The compact sets with nonempty interior of a topological space. See also `compacts` and
   `nonempty_compacts`. -/
 @[nolint has_inhabited_instance]
-def positive_compacts : Type _ :=
+def PositiveCompacts : Type _ :=
   { s : Set α // IsCompact s ∧ (Interior s).Nonempty }
 
 /-- In a nonempty compact space, `set.univ` is a member of `positive_compacts`, the compact sets
 with nonempty interior. -/
-def positive_compacts_univ {α : Type _} [TopologicalSpace α] [CompactSpace α] [Nonempty α] : PositiveCompacts α :=
+def positiveCompactsUniv {α : Type _} [TopologicalSpace α] [CompactSpace α] [Nonempty α] : PositiveCompacts α :=
   ⟨Set.Univ, compact_univ, by
     simp ⟩
 
@@ -107,7 +112,7 @@ theorem map_val {f : α → β} (hf : Continuous f) (K : Compacts α) : (K.map f
 
 /-- A homeomorphism induces an equivalence on compact sets, by taking the image. -/
 @[simp]
-protected def Equivₓ (f : α ≃ₜ β) : Compacts α ≃ Compacts β where
+protected def equiv (f : α ≃ₜ β) : Compacts α ≃ Compacts β where
   toFun := Compacts.map f f.Continuous
   invFun := Compacts.map _ f.symm.Continuous
   left_inv := by
@@ -131,14 +136,14 @@ open TopologicalSpace Set
 
 variable {α}
 
-instance nonempty_compacts.to_compact_space {p : NonemptyCompacts α} : CompactSpace p.val :=
+instance NonemptyCompacts.to_compact_space {p : NonemptyCompacts α} : CompactSpace p.val :=
   ⟨is_compact_iff_is_compact_univ.1 p.property.2⟩
 
-instance nonempty_compacts.to_nonempty {p : NonemptyCompacts α} : Nonempty p.val :=
+instance NonemptyCompacts.to_nonempty {p : NonemptyCompacts α} : Nonempty p.val :=
   p.property.1.to_subtype
 
 /-- Associate to a nonempty compact subset the corresponding closed subset -/
-def nonempty_compacts.to_closeds [T2Space α] : NonemptyCompacts α → Closeds α :=
+def NonemptyCompacts.toCloseds [T2Space α] : NonemptyCompacts α → Closeds α :=
   Set.inclusion fun s hs => hs.2.IsClosed
 
 end NonemptyCompacts

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Chris Hughes. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Chris Hughes, Joey van Langen, Casper Putz
+-/
 import Mathbin.Tactic.ApplyFun
 import Mathbin.Data.Equiv.Ring
 import Mathbin.Data.Zmod.Algebra
@@ -173,6 +178,7 @@ theorem card (p : ℕ) [CharP K p] : ∃ n : ℕ+, Nat.Prime p ∧ q = p ^ (n : 
     apply fintype.card_le_one_iff.mp (le_of_eqₓ h)
   exact absurd this zero_ne_one
 
+-- this statement doesn't use `q` because we want `K` to be an explicit parameter
 theorem card' : ∃ (p : ℕ)(n : ℕ+), Nat.Prime p ∧ Fintype.card K = p ^ (n : ℕ) :=
   let ⟨p, hc⟩ := CharP.exists K
   ⟨p, @FiniteField.card K _ _ p hc⟩
@@ -408,6 +414,9 @@ section
 
 variable {V : Type _} [Fintype K] [DivisionRing K] [AddCommGroupₓ V] [Module K V]
 
+-- should this go in a namespace?
+-- finite_dimensional would be natural,
+-- but we don't assume it...
 theorem card_eq_pow_finrank [Fintype V] : Fintype.card V = q ^ FiniteDimensional.finrank K V := by
   let b := IsNoetherian.finsetBasis K V
   rw [Module.card_fintype b, ← FiniteDimensional.finrank_eq_card_basis b]

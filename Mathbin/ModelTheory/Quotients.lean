@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2022 Aaron Anderson. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Aaron Anderson
+-/
 import Mathbin.Data.Fintype.Basic
 import Mathbin.ModelTheory.TermsAndFormulas
 
@@ -26,14 +31,14 @@ open Structure
 
 /-- A prestructure is a first-order structure with a `setoid` equivalence relation on it,
   such that quotienting by that equivalence relation is still a structure. -/
-class prestructure (s : Setoidₓ M) where
+class Prestructure (s : Setoidₓ M) where
   toStructure : L.Structure M
   fun_equiv : ∀ {n} {f : L.Functions n} x y : Finₓ n → M, x ≈ y → funMap f x ≈ funMap f y
   rel_equiv : ∀ {n} {r : L.Relations n} x y : Finₓ n → M h : x ≈ y, RelMap r x = RelMap r y
 
 variable {L} {s : Setoidₓ M} [ps : L.Prestructure s]
 
-instance quotient_structure : L.Structure (Quotientₓ s) where
+instance quotientStructure : L.Structure (Quotientₓ s) where
   funMap := fun n f x => Quotientₓ.map (@funMap L M ps.toStructure n f) Prestructure.fun_equiv (Quotientₓ.finChoice x)
   rel_map := fun n r x => Quotientₓ.lift (@RelMap L M ps.toStructure n r) Prestructure.rel_equiv (Quotientₓ.finChoice x)
 

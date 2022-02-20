@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Kenny Lau. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Kenny Lau, Joey van Langen, Casper Putz
+-/
 import Mathbin.Data.Int.Modeq
 import Mathbin.Algebra.IterateHom
 import Mathbin.Data.Nat.Choose.Sum
@@ -97,10 +102,10 @@ theorem spec : ∀ x : ℕ, (x : R) = 0 ↔ ringChar R ∣ x := by
   let this' := (Classical.some_spec (CharP.exists_unique R)).1 <;>
     unfold ringChar <;> exact CharP.cast_eq_zero_iff R (ringChar R)
 
-theorem Eq (p : ℕ) [C : CharP R p] : ringChar R = p :=
+theorem eq (p : ℕ) [C : CharP R p] : ringChar R = p :=
   ((Classical.some_spec (CharP.exists_unique R)).2 p C).symm
 
-instance CharP : CharP R (ringChar R) :=
+instance char_p : CharP R (ringChar R) :=
   ⟨spec R⟩
 
 variable {R}
@@ -359,10 +364,10 @@ section NoZeroDivisors
 
 variable [NoZeroDivisors R]
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (d «expr ∣ » p)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (d «expr ∣ » p)
 theorem char_is_prime_of_two_le (p : ℕ) [hc : CharP R p] (hp : 2 ≤ p) : Nat.Prime p :=
   suffices ∀ d _ : d ∣ p, d = 1 ∨ d = p from Nat.prime_def_lt''.mpr ⟨hp, this⟩
-  fun d : ℕ hdvd : ∃ e, p = d * e =>
+  fun hdvd : ∃ e, p = d * e =>
   let ⟨e, hmul⟩ := hdvd
   have : (p : R) = 0 := (cast_eq_zero_iff R p p).mpr (dvd_refl p)
   have : (d : R) * e = 0 := @cast_mulₓ R _ d e ▸ hmul ▸ this
@@ -411,6 +416,7 @@ section CharOne
 
 variable {R} [NonAssocSemiringₓ R]
 
+-- see Note [lower instance priority]
 instance (priority := 100) [CharP R 1] : Subsingleton R :=
   Subsingleton.intro <|
     suffices ∀ r : R, r = 0 from fun a b =>

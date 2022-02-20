@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Mario Carneiro. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Mario Carneiro
+-/
 import Leanbin.Data.Vector
 import Mathbin.Data.List.Nodup
 import Mathbin.Data.List.OfFn
@@ -332,7 +337,7 @@ end Scan
 
 /-- Monadic analog of `vector.of_fn`.
 Given a monadic function on `fin n`, return a `vector α n` inside the monad. -/
-def m_of_fn {m} [Monadₓ m] {α : Type u} : ∀ {n}, (Finₓ n → m α) → m (Vector α n)
+def mOfFnₓ {m} [Monadₓ m] {α : Type u} : ∀ {n}, (Finₓ n → m α) → m (Vector α n)
   | 0, f => pure nil
   | n + 1, f => do
     let a ← f 0
@@ -347,7 +352,7 @@ theorem m_of_fn_pure {m} [Monadₓ m] [IsLawfulMonad m] {α} :
 
 /-- Apply a monadic function to each component of a vector,
 returning a vector inside the monad. -/
-def mmap {m} [Monadₓ m] {α} {β : Type u} (f : α → m β) : ∀ {n}, Vector α n → m (Vector β n)
+def mmapₓ {m} [Monadₓ m] {α} {β : Type u} (f : α → m β) : ∀ {n}, Vector α n → m (Vector β n)
   | 0, xs => pure nil
   | n + 1, xs => do
     let h' ← f xs.head
@@ -372,7 +377,7 @@ theorem mmap_cons {m} [Monadₓ m] {α β} (f : α → m β) a :
 This function has two arguments: `h_nil` handles the base case on `C nil`,
 and `h_cons` defines the inductive step using `∀ x : α, C w → C (x ::ᵥ w)`. -/
 @[elab_as_eliminator]
-def induction_on {C : ∀ {n : ℕ}, Vector α n → Sort _} (v : Vector α n) (h_nil : C nil)
+def inductionOn {C : ∀ {n : ℕ}, Vector α n → Sort _} (v : Vector α n) (h_nil : C nil)
     (h_cons : ∀ {n : ℕ} {x : α} {w : Vector α n}, C w → C (x::ᵥw)) : C v := by
   induction' n with n ih generalizing v
   · rcases v with ⟨_ | ⟨-, -⟩, - | -⟩
@@ -388,7 +393,7 @@ variable {β γ : Type _}
 
 /-- Define `C v w` by induction on a pair of vectors `v : vector α n` and `w : vector β n`. -/
 @[elab_as_eliminator]
-def induction_on₂ {C : ∀ {n}, Vector α n → Vector β n → Sort _} (v : Vector α n) (w : Vector β n) (h_nil : C nil nil)
+def inductionOn₂ {C : ∀ {n}, Vector α n → Vector β n → Sort _} (v : Vector α n) (w : Vector β n) (h_nil : C nil nil)
     (h_cons : ∀ {n a b} {x : Vector α n} {y}, C x y → C (a::ᵥx) (b::ᵥy)) : C v w := by
   induction' n with n ih generalizing v w
   · rcases v with ⟨_ | ⟨-, -⟩, - | -⟩
@@ -406,7 +411,7 @@ def induction_on₂ {C : ∀ {n}, Vector α n → Vector β n → Sort _} (v : V
 /-- Define `C u v w` by induction on a triplet of vectors
 `u : vector α n`, `v : vector β n`, and `w : vector γ b`. -/
 @[elab_as_eliminator]
-def induction_on₃ {C : ∀ {n}, Vector α n → Vector β n → Vector γ n → Sort _} (u : Vector α n) (v : Vector β n)
+def inductionOn₃ {C : ∀ {n}, Vector α n → Vector β n → Vector γ n → Sort _} (u : Vector α n) (v : Vector β n)
     (w : Vector γ n) (h_nil : C nil nil nil)
     (h_cons : ∀ {n a b c} {x : Vector α n} {y z}, C x y z → C (a::ᵥx) (b::ᵥy) (c::ᵥz)) : C u v w := by
   induction' n with n ih generalizing u v w
@@ -428,7 +433,7 @@ def induction_on₃ {C : ∀ {n}, Vector α n → Vector β n → Vector γ n �
     
 
 /-- Cast a vector to an array. -/
-def to_array : Vector α n → Arrayₓ n α
+def toArray : Vector α n → Arrayₓ n α
   | ⟨xs, h⟩ =>
     cast
       (by
@@ -441,7 +446,7 @@ variable {a : α}
 
 /-- `v.insert_nth a i` inserts `a` into the vector `v` at position `i`
 (and shifting later components to the right). -/
-def insert_nth (a : α) (i : Finₓ (n + 1)) (v : Vector α n) : Vector α (n + 1) :=
+def insertNth (a : α) (i : Finₓ (n + 1)) (v : Vector α n) : Vector α (n + 1) :=
   ⟨v.1.insertNth i a, by
     rw [List.length_insert_nth, v.2]
     rw [v.2, ← Nat.succ_le_succ_iff]
@@ -503,7 +508,7 @@ end InsertNth
 section UpdateNth
 
 /-- `update_nth v n a` replaces the `n`th element of `v` with `a` -/
-def update_nth (v : Vector α n) (i : Finₓ n) (a : α) : Vector α n :=
+def updateNth (v : Vector α n) (i : Finₓ n) (a : α) : Vector α n :=
   ⟨v.1.updateNth i.1 a, by
     rw [List.update_nth_length, v.2]⟩
 
@@ -602,6 +607,8 @@ variable [IsLawfulApplicative F] [IsLawfulApplicative G]
 variable {α β γ : Type u}
 
 -- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:377:22: warning: unsupported simp config option: iota_eqn
+-- We need to turn off the linter here as
+-- the `is_lawful_traversable` instance below expects a particular signature.
 @[nolint unused_arguments]
 protected theorem comp_traverse (f : β → F γ) (g : α → G β) :
     ∀ x : Vector α n,
@@ -609,7 +616,7 @@ protected theorem comp_traverse (f : β → F γ) (g : α → G β) :
   by
   rintro ⟨x, rfl⟩ <;>
     dsimp [Vector.traverse, cast] <;>
-      induction' x with x xs <;> simp' [cast, *] with functor_norm <;> [rfl, simp [· ∘ ·]]
+      induction' x with x xs <;> simp' [cast, *] with functor_norm <;> [rfl, simp [(· ∘ ·)]]
 
 -- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:377:22: warning: unsupported simp config option: iota_eqn
 -- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:377:22: warning: unsupported simp config option: iota_eqn
@@ -639,9 +646,9 @@ instance : IsLawfulTraversable.{u} (flip Vector n) where
   traverse_eq_map_id := @Vector.traverse_eq_map_id n
   naturality := @Vector.naturality n
   id_map := by
-    intros <;> cases x <;> simp [· <$> ·]
+    intros <;> cases x <;> simp [(· <$> ·)]
   comp_map := by
-    intros <;> cases x <;> simp [· <$> ·]
+    intros <;> cases x <;> simp [(· <$> ·)]
 
 end Vector
 

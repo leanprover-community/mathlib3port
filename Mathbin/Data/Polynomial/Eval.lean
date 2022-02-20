@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Chris Hughes. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Chris Hughes, Johannes Hölzl, Scott Morrison, Jens Wagemaker
+-/
 import Mathbin.Data.Polynomial.Degree.Definitions
 import Mathbin.Algebra.GeomSum
 
@@ -103,7 +108,7 @@ theorem eval₂_C_X : eval₂ c x p = p :=
 /-- `eval₂_add_monoid_hom (f : R →+* S) (x : S)` is the `add_monoid_hom` from
 `polynomial R` to `S` obtained by evaluating the pushforward of `p` along `f` at `x`. -/
 @[simps]
-def eval₂_add_monoid_hom : R[X] →+ S where
+def eval₂AddMonoidHom : R[X] →+ S where
   toFun := eval₂ f x
   map_zero' := eval₂_zero _ _
   map_add' := fun _ _ => eval₂_add _ _
@@ -178,7 +183,7 @@ theorem eval₂_list_prod_noncomm (ps : List R[X]) (hf : ∀, ∀ p ∈ ps, ∀ 
     
 
 /-- `eval₂` as a `ring_hom` for noncommutative rings -/
-def eval₂_ring_hom' (f : R →+* S) (x : S) (hf : ∀ a, Commute (f a) x) : R[X] →+* S where
+def eval₂RingHom' (f : R →+* S) (x : S) (hf : ∀ a, Commute (f a) x) : R[X] →+* S where
   toFun := eval₂ f x
   map_add' := fun _ _ => eval₂_add _ _
   map_zero' := eval₂_zero _ _
@@ -213,7 +218,7 @@ theorem eval₂_mul_eq_zero_of_right (p : R[X]) (hq : q.eval₂ f x = 0) : (p * 
   exact mul_eq_zero_of_right (p.eval₂ f x) hq
 
 /-- `eval₂` as a `ring_hom` -/
-def eval₂_ring_hom (f : R →+* S) (x : S) : R[X] →+* S :=
+def eval₂RingHom (f : R →+* S) (x : S) : R[X] →+* S :=
   { eval₂AddMonoidHom f x with map_one' := eval₂_one _ _, map_mul' := fun _ _ => eval₂_mul _ _ }
 
 @[simp]
@@ -365,17 +370,17 @@ theorem eval_finset_sum (s : Finset ι) (g : ι → R[X]) (x : R) : (∑ i in s,
   eval₂_finset_sum _ _ _ _
 
 /-- `is_root p x` implies `x` is a root of `p`. The evaluation of `p` at `x` is zero -/
-def is_root (p : R[X]) (a : R) : Prop :=
+def IsRoot (p : R[X]) (a : R) : Prop :=
   p.eval a = 0
 
 instance [DecidableEq R] : Decidable (IsRoot p a) := by
   unfold is_root <;> infer_instance
 
 @[simp]
-theorem is_root.def : IsRoot p a ↔ p.eval a = 0 :=
+theorem IsRoot.def : IsRoot p a ↔ p.eval a = 0 :=
   Iff.rfl
 
-theorem is_root.eq_zero (h : IsRoot p x) : eval x p = 0 :=
+theorem IsRoot.eq_zero (h : IsRoot p x) : eval x p = 0 :=
   h
 
 theorem coeff_zero_eq_eval_zero (p : R[X]) : coeff p 0 = p.eval 0 :=
@@ -394,8 +399,7 @@ theorem coeff_zero_eq_eval_zero (p : R[X]) : coeff p 0 = p.eval 0 :=
 theorem zero_is_root_of_coeff_zero_eq_zero {p : R[X]} (hp : p.coeff 0 = 0) : IsRoot p 0 := by
   rwa [coeff_zero_eq_eval_zero] at hp
 
-theorem is_root.dvd {R : Type _} [CommSemiringₓ R] {p q : R[X]} {x : R} (h : p.IsRoot x) (hpq : p ∣ q) : q.IsRoot x :=
-  by
+theorem IsRoot.dvd {R : Type _} [CommSemiringₓ R] {p q : R[X]} {x : R} (h : p.IsRoot x) (hpq : p ∣ q) : q.IsRoot x := by
   rwa [is_root, eval, eval₂_eq_zero_of_dvd_of_eval₂_eq_zero _ _ hpq]
 
 theorem not_is_root_C (r a : R) (hr : r ≠ 0) : ¬IsRoot (c r) a := by
@@ -571,7 +575,13 @@ theorem map_smul (r : R) : (r • p).map f = f r • p.map f := by
   rw [map, eval₂_smul, RingHom.comp_apply, C_mul']
 
 /-- `polynomial.map` as a `ring_hom`. -/
-def map_ring_hom (f : R →+* S) : R[X] →+* S[X] where
+-- `map` is a ring-hom unconditionally, and theoretically the definition could be replaced,
+-- but this turns out not to be easy because `p.map f` does not resolve to `polynomial.map`
+-- if `map` is a `ring_hom` instead of a plain function; the elaborator does not try to coerce
+-- to a function before trying field (dot) notation (this may be technically infeasible);
+-- the relevant code is (both lines): https://github.com/leanprover-community/
+-- lean/blob/487ac5d7e9b34800502e1ddf3c7c806c01cf9d51/src/frontends/lean/elaborator.cpp#L1876-L1913
+def mapRingHom (f : R →+* S) : R[X] →+* S[X] where
   toFun := Polynomial.map f
   map_add' := fun _ _ => map_add f
   map_zero' := map_zero f
@@ -582,6 +592,7 @@ def map_ring_hom (f : R →+* S) : R[X] →+* S[X] where
 theorem coe_map_ring_hom (f : R →+* S) : ⇑mapRingHom f = map f :=
   rfl
 
+-- This is protected to not clash with the global `map_nat_cast`.
 @[simp]
 protected theorem map_nat_cast (n : ℕ) : (n : R[X]).map f = n :=
   map_nat_cast (mapRingHom f) n
@@ -596,7 +607,7 @@ theorem coeff_map (n : ℕ) : coeff (p.map f) n = f (coeff p n) := by
 
 /-- If `R` and `S` are isomorphic, then so are their polynomial rings. -/
 @[simps]
-def map_equiv (e : R ≃+* S) : R[X] ≃+* S[X] :=
+def mapEquiv (e : R ≃+* S) : R[X] ≃+* S[X] :=
   RingEquiv.ofHomInv (mapRingHom e) (mapRingHom e.symm)
     (by
       ext <;> simp )
@@ -815,7 +826,7 @@ theorem eval_mul : (p * q).eval x = p.eval x * q.eval x :=
   eval₂_mul _ _
 
 /-- `eval r`, regarded as a ring homomorphism from `polynomial R` to `R`. -/
-def eval_ring_hom : R → R[X] →+* R :=
+def evalRingHom : R → R[X] →+* R :=
   eval₂RingHom (RingHom.id _)
 
 @[simp]
@@ -837,7 +848,7 @@ theorem eval_comp : (p.comp q).eval x = p.eval (q.eval x) := by
     
 
 /-- `comp p`, regarded as a ring homomorphism from `polynomial R` to itself. -/
-def comp_ring_hom : R[X] → R[X] →+* R[X] :=
+def compRingHom : R[X] → R[X] →+* R[X] :=
   eval₂RingHom c
 
 theorem eval₂_hom [CommSemiringₓ S] (f : R →+* S) (x : R) : p.eval₂ f (f x) = f (p.eval x) :=
@@ -900,10 +911,10 @@ theorem support_map_subset (p : R[X]) : (map f p).Support ⊆ p.Support := by
   rw [hx]
   exact RingHom.map_zero f
 
-theorem is_root.map {f : R →+* S} {x : R} {p : R[X]} (h : IsRoot p x) : IsRoot (p.map f) (f x) := by
+theorem IsRoot.map {f : R →+* S} {x : R} {p : R[X]} (h : IsRoot p x) : IsRoot (p.map f) (f x) := by
   rw [is_root, eval_map, eval₂_hom, h.eq_zero, f.map_zero]
 
-theorem is_root.of_map {R} [CommRingₓ R] {f : R →+* S} {x : R} {p : R[X]} (h : IsRoot (p.map f) (f x))
+theorem IsRoot.of_map {R} [CommRingₓ R] {f : R →+* S} {x : R} {p : R[X]} (h : IsRoot (p.map f) (f x))
     (hf : Function.Injective f) : IsRoot p x := by
   rwa [is_root, ← f.injective_iff'.mp hf, ← eval₂_hom, ← eval_map]
 

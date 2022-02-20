@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Jannis Limperg. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Jannis Limperg
+-/
 import Mathbin.Data.List.Range
 
 /-!
@@ -73,7 +78,7 @@ end MapWithIndex
 section FoldrWithIndex
 
 /-- Specification of `foldr_with_index_aux`. -/
-def foldr_with_index_aux_spec (f : ℕ → α → β → β) (start : ℕ) (b : β) (as : List α) : β :=
+def foldrWithIndexAuxSpec (f : ℕ → α → β → β) (start : ℕ) (b : β) (as : List α) : β :=
   foldr (uncurry f) b <| enumFrom start as
 
 theorem foldr_with_index_aux_spec_cons (f : ℕ → α → β → β) start b a as :
@@ -105,8 +110,8 @@ theorem find_indexes_eq_map_indexes_values (p : α → Prop) [DecidablePred p] (
 section FoldlWithIndex
 
 /-- Specification of `foldl_with_index_aux`. -/
-def foldl_with_index_aux_spec (f : ℕ → α → β → α) (start : ℕ) (a : α) (bs : List β) : α :=
-  foldlₓ (fun a p : ℕ × β => f p.fst a p.snd) a <| enumFrom start bs
+def foldlWithIndexAuxSpec (f : ℕ → α → β → α) (start : ℕ) (a : α) (bs : List β) : α :=
+  foldlₓ (fun p : ℕ × β => f p.fst a p.snd) a <| enumFrom start bs
 
 theorem foldl_with_index_aux_spec_cons (f : ℕ → α → β → α) start a b bs :
     foldlWithIndexAuxSpec f start a (b :: bs) = foldlWithIndexAuxSpec f (start + 1) (f start a b) bs :=
@@ -121,7 +126,7 @@ theorem foldl_with_index_aux_eq_foldl_with_index_aux_spec (f : ℕ → α → β
     
 
 theorem foldl_with_index_eq_foldl_enum (f : ℕ → α → β → α) (a : α) (bs : List β) :
-    foldlWithIndex f a bs = foldlₓ (fun a p : ℕ × β => f p.fst a p.snd) a (enum bs) := by
+    foldlWithIndex f a bs = foldlₓ (fun p : ℕ × β => f p.fst a p.snd) a (enum bs) := by
   simp only [foldl_with_index, foldl_with_index_aux_spec, foldl_with_index_aux_eq_foldl_with_index_aux_spec, enum]
 
 end FoldlWithIndex
@@ -135,7 +140,7 @@ theorem mfoldr_with_index_eq_mfoldr_enum {α β} (f : ℕ → α → β → m β
   simp only [mfoldr_with_index, mfoldr_eq_foldr, foldr_with_index_eq_foldr_enum, uncurry]
 
 theorem mfoldl_with_index_eq_mfoldl_enum [IsLawfulMonad m] {α β} (f : ℕ → β → α → m β) (b : β) (as : List α) :
-    mfoldlWithIndex f b as = mfoldl (fun b p : ℕ × α => f p.fst b p.snd) b (enum as) := by
+    mfoldlWithIndex f b as = mfoldl (fun p : ℕ × α => f p.fst b p.snd) b (enum as) := by
   rw [mfoldl_with_index, mfoldl_eq_foldl, foldl_with_index_eq_foldl_enum]
 
 end MfoldWithIndex
@@ -145,9 +150,11 @@ section MmapWithIndex
 variable {m : Type u → Type v} [Applicativeₓ m]
 
 /-- Specification of `mmap_with_index_aux`. -/
-def mmap_with_index_aux_spec {α β} (f : ℕ → α → m β) (start : ℕ) (as : List α) : m (List β) :=
+def mmapWithIndexAuxSpec {α β} (f : ℕ → α → m β) (start : ℕ) (as : List α) : m (List β) :=
   List.traverseₓₓ (uncurry f) <| enumFrom start as
 
+-- Note: `traverse` the class method would require a less universe-polymorphic
+-- `m : Type u → Type u`.
 theorem mmap_with_index_aux_spec_cons {α β} (f : ℕ → α → m β) (start : ℕ) (a : α) (as : List α) :
     mmapWithIndexAuxSpec f start (a :: as) = List.cons <$> f start a <*> mmapWithIndexAuxSpec f (start + 1) as :=
   rfl

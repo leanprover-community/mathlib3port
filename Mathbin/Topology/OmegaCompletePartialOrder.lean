@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Simon Hudon. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Simon Hudon
+-/
 import Mathbin.Topology.Basic
 import Mathbin.Order.OmegaCompletePartialOrder
 
@@ -23,7 +28,7 @@ universe u
 namespace Scott
 
 /-- `x` is an `ω`-Sup of a chain `c` if it is the least upper bound of the range of `c`. -/
-def is_ωSup {α : Type u} [Preorderₓ α] (c : Chain α) (x : α) : Prop :=
+def IsωSup {α : Type u} [Preorderₓ α] (c : Chain α) (x : α) : Prop :=
   (∀ i, c i ≤ x) ∧ ∀ y, (∀ i, c i ≤ y) → x ≤ y
 
 theorem is_ωSup_iff_is_lub {α : Type u} [Preorderₓ α] {c : Chain α} {x : α} : IsωSup c x ↔ IsLub (Set.Range c) x := by
@@ -110,13 +115,13 @@ theorem is_ωSup_ωSup {α} [OmegaCompletePartialOrder α] (c : Chain α) : Isω
 -- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:532:11: unsupported: specialize non-hyp
 theorem Scott_continuous_of_continuous {α β} [OmegaCompletePartialOrder α] [OmegaCompletePartialOrder β]
     (f : Scott α → Scott β) (hf : Continuous f) : OmegaCompletePartialOrder.Continuous' f := by
-  simp only [continuous_def, · ⁻¹' ·] at hf
+  simp only [continuous_def, (· ⁻¹' ·)] at hf
   have h : Monotone f := by
     intro x y h
     cases' hf { x | ¬x ≤ f y } (not_below_is_open _) with hf hf'
     clear hf'
     specialize hf h
-    simp only [Set.Preimage, SetOf, · ∈ ·, Set.Mem, le_Prop_eq] at hf
+    simp only [Set.Preimage, SetOf, (· ∈ ·), Set.Mem, le_Prop_eq] at hf
     by_contra H
     apply hf H (le_reflₓ (f y))
   exists h

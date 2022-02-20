@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Kenny Lau, Chris Hughes. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Kenny Lau, Chris Hughes
+-/
 import Mathbin.Data.Finset.Order
 import Mathbin.Algebra.DirectSum.Module
 import Mathbin.RingTheory.FreeCommRing
@@ -64,7 +69,7 @@ variable (G)
 include dec_ι
 
 /-- The direct limit of a directed system is the modules glued together along the maps. -/
-def direct_limit : Type max v w :=
+def DirectLimit : Type max v w :=
   DirectSum ι G ⧸
     (span R <| { a | ∃ (i j : _)(H : i ≤ j)(x : _), DirectSum.lof R ι G i x - DirectSum.lof R ι G j (f i j H x) = a })
 
@@ -250,7 +255,7 @@ variable [∀ i, AddCommGroupₓ (G i)]
 include dec_ι
 
 /-- The direct limit of a directed system is the abelian groups glued together along the maps. -/
-def direct_limit (f : ∀ i j, i ≤ j → G i →+ G j) : Type _ :=
+def DirectLimit (f : ∀ i j, i ≤ j → G i →+ G j) : Type _ :=
   @Module.DirectLimit ℤ _ ι _ _ G _ _ fun i j hij => (f i j hij).toIntLinearMap
 
 namespace DirectLimit
@@ -259,7 +264,7 @@ variable (f : ∀ i j, i ≤ j → G i →+ G j)
 
 omit dec_ι
 
-protected theorem DirectedSystem [h : DirectedSystem G fun i j h => f i j h] :
+protected theorem directed_system [h : DirectedSystem G fun i j h => f i j h] :
     DirectedSystem G fun i j hij => (f i j hij).toIntLinearMap :=
   h
 
@@ -338,7 +343,7 @@ variable (f : ∀ i j, i ≤ j → G i → G j)
 open FreeCommRing
 
 /-- The direct limit of a directed system is the rings glued together along the maps. -/
-def direct_limit : Type max v w :=
+def DirectLimit : Type max v w :=
   FreeCommRing (Σ i, G i) ⧸
     Ideal.span
       { a |
@@ -404,7 +409,7 @@ open Polynomial
 
 variable {f' : ∀ i j, i ≤ j → G i →+* G j}
 
-theorem polynomial.exists_of [Nonempty ι] [IsDirected ι (· ≤ ·)]
+theorem Polynomial.exists_of [Nonempty ι] [IsDirected ι (· ≤ ·)]
     (q : Polynomial (DirectLimit G fun i j h => f' i j h)) :
     ∃ i p, Polynomial.map (of G (fun i j h => f' i j h) i) p = q :=
   Polynomial.induction_on q
@@ -668,7 +673,7 @@ variable (f' : ∀ i j, i ≤ j → G i →+* G j)
 
 namespace DirectLimit
 
-instance Nontrivial [DirectedSystem G fun i j h => f' i j h] : Nontrivial (Ringₓ.DirectLimit G fun i j h => f' i j h) :=
+instance nontrivial [DirectedSystem G fun i j h => f' i j h] : Nontrivial (Ringₓ.DirectLimit G fun i j h => f' i j h) :=
   ⟨⟨0, 1,
       (Nonempty.elimₓ
           (by
@@ -707,7 +712,7 @@ protected theorem inv_mul_cancel {p : Ringₓ.DirectLimit G f} (hp : p ≠ 0) : 
 /-- Noncomputable field structure on the direct limit of fields.
 See note [reducible non-instances]. -/
 @[reducible]
-protected noncomputable def Field [DirectedSystem G fun i j h => f' i j h] :
+protected noncomputable def field [DirectedSystem G fun i j h => f' i j h] :
     Field (Ringₓ.DirectLimit G fun i j h => f' i j h) :=
   { Ringₓ.DirectLimit.commRing G fun i j h => f' i j h, DirectLimit.nontrivial G fun i j h => f' i j h with
     inv := inv G fun i j h => f' i j h, mul_inv_cancel := fun p => DirectLimit.mul_inv_cancel G fun i j h => f' i j h,

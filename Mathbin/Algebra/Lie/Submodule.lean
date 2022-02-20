@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Oliver Nash. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Oliver Nash
+-/
 import Mathbin.Algebra.Lie.Subalgebra
 import Mathbin.RingTheory.Noetherian
 
@@ -61,7 +66,7 @@ instance : Zero (LieSubmodule R L M) :=
 instance : Inhabited (LieSubmodule R L M) :=
   ⟨0⟩
 
-instance coe_submodule : Coe (LieSubmodule R L M) (Submodule R M) :=
+instance coeSubmodule : Coe (LieSubmodule R L M) (Submodule R M) :=
   ⟨toSubmodule⟩
 
 @[simp]
@@ -137,7 +142,7 @@ theorem copy_eq (S : LieSubmodule R L M) (s : Set M) (hs : s = ↑S) : S.copy s 
   coe_submodule_injective (SetLike.coe_injective hs)
 
 instance : LieRingModule L N where
-  bracket := fun x : L m : N => ⟨⁅x,m.val⁆, N.lie_mem m.property⟩
+  bracket := fun m : N => ⟨⁅x,m.val⁆, N.lie_mem m.property⟩
   add_lie := by
     intro x y m
     apply SetCoe.ext
@@ -254,7 +259,7 @@ variable {L} (K : LieSubalgebra R L)
 
 /-- Given a Lie subalgebra `K ⊆ L`, if we view `L` as a `K`-module by restriction, it contains
 a distinguished Lie submodule for the action of `K`, namely `K` itself. -/
-def to_lie_submodule : LieSubmodule R K L :=
+def toLieSubmodule : LieSubmodule R K L :=
   { (K : Submodule R L) with lie_mem := fun x y hy => K.lie_mem x.property hy }
 
 @[simp]
@@ -342,11 +347,11 @@ theorem mem_top (x : M) : x ∈ (⊤ : LieSubmodule R L M) :=
 instance : HasInf (LieSubmodule R L M) :=
   ⟨fun N N' => { (N⊓N' : Submodule R M) with lie_mem := fun x m h => mem_inter (N.lie_mem h.1) (N'.lie_mem h.2) }⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:827:4: unsupported set replacement {((s : submodule R M)) | s «expr ∈ » S}
+-- ././Mathport/Syntax/Translate/Basic.lean:947:4: unsupported set replacement {((s : submodule R M)) | s «expr ∈ » S}
 instance : HasInfₓ (LieSubmodule R L M) :=
   ⟨fun S =>
     { inf
-        "././Mathport/Syntax/Translate/Basic.lean:827:4: unsupported set replacement {((s : submodule R M)) | s «expr ∈ » S}" with
+        "././Mathport/Syntax/Translate/Basic.lean:947:4: unsupported set replacement {((s : submodule R M)) | s «expr ∈ » S}" with
       lie_mem := fun x m h => by
         simp only [Submodule.mem_carrier, mem_Inter, Submodule.Inf_coe, mem_set_of_eq, forall_apply_eq_imp_iff₂,
           exists_imp_distrib] at *
@@ -357,12 +362,12 @@ instance : HasInfₓ (LieSubmodule R L M) :=
 theorem inf_coe : (↑(N⊓N') : Set M) = N ∩ N' :=
   rfl
 
--- ././Mathport/Syntax/Translate/Basic.lean:827:4: unsupported set replacement {((s : submodule R M)) | s «expr ∈ » S}
+-- ././Mathport/Syntax/Translate/Basic.lean:947:4: unsupported set replacement {((s : submodule R M)) | s «expr ∈ » S}
 @[simp]
 theorem Inf_coe_to_submodule (S : Set (LieSubmodule R L M)) :
     (↑(inf S) : Submodule R M) =
       inf
-        "././Mathport/Syntax/Translate/Basic.lean:827:4: unsupported set replacement {((s : submodule R M)) | s «expr ∈ » S}" :=
+        "././Mathport/Syntax/Translate/Basic.lean:947:4: unsupported set replacement {((s : submodule R M)) | s «expr ∈ » S}" :=
   rfl
 
 @[simp]
@@ -384,16 +389,16 @@ theorem Inf_glb (S : Set (LieSubmodule R L M)) : IsGlb S (inf S) := by
 We provide explicit values for the fields `bot`, `top`, `inf` to get more convenient definitions
 than we would otherwise obtain from `complete_lattice_of_Inf`.  -/
 instance : CompleteLattice (LieSubmodule R L M) :=
-  { SetLike.partialOrder, completeLatticeOfInf _ Inf_glb with le := · ≤ ·, lt := · < ·, bot := ⊥,
+  { SetLike.partialOrder, completeLatticeOfInf _ Inf_glb with le := (· ≤ ·), lt := (· < ·), bot := ⊥,
     bot_le := fun N _ h => by
       rw [mem_bot] at h
       rw [h]
       exact N.zero_mem',
-    top := ⊤, le_top := fun _ _ _ => trivialₓ, inf := ·⊓·, le_inf := fun N₁ N₂ N₃ h₁₂ h₁₃ m hm => ⟨h₁₂ hm, h₁₃ hm⟩,
+    top := ⊤, le_top := fun _ _ _ => trivialₓ, inf := (·⊓·), le_inf := fun N₁ N₂ N₃ h₁₂ h₁₃ m hm => ⟨h₁₂ hm, h₁₃ hm⟩,
     inf_le_left := fun _ _ _ => And.left, inf_le_right := fun _ _ _ => And.right }
 
 instance : AddCommMonoidₓ (LieSubmodule R L M) where
-  add := ·⊔·
+  add := (·⊔·)
   add_assoc := fun _ _ _ => sup_assoc
   zero := ⊥
   zero_add := fun _ => bot_sup_eq
@@ -433,6 +438,7 @@ theorem eq_bot_iff : N = ⊥ ↔ ∀ m : M, m ∈ N → m = 0 := by
   rw [eq_bot_iff]
   exact Iff.rfl
 
+-- TODO[gh-6025]: make this an instance once safe to do so
 theorem subsingleton_of_bot : Subsingleton (LieSubmodule R L (↥(⊥ : LieSubmodule R L M))) := by
   apply subsingleton_of_bot_eq_top
   ext ⟨x, hx⟩
@@ -449,8 +455,9 @@ instance : IsModularLattice (LieSubmodule R L M) where
 variable (R L M)
 
 theorem well_founded_of_noetherian [IsNoetherian R M] :
-    WellFounded (· > · : LieSubmodule R L M → LieSubmodule R L M → Prop) :=
-  let f : (· > · : LieSubmodule R L M → LieSubmodule R L M → Prop) →r (· > · : Submodule R M → Submodule R M → Prop) :=
+    WellFounded ((· > ·) : LieSubmodule R L M → LieSubmodule R L M → Prop) :=
+  let f :
+    ((· > ·) : LieSubmodule R L M → LieSubmodule R L M → Prop) →r ((· > ·) : Submodule R M → Submodule R M → Prop) :=
     { toFun := coe, map_rel' := fun N N' h => h }
   RelHomClass.well_founded f (is_noetherian_iff_well_founded.mp inferInstance)
 
@@ -501,7 +508,7 @@ theorem incl_eq_val : (N.incl : N → M) = Subtype.val :=
 variable {N N'} (h : N ≤ N')
 
 /-- Given two nested Lie submodules `N ⊆ N'`, the inclusion `N ↪ N'` is a morphism of Lie modules.-/
-def hom_of_le : N →ₗ⁅R,L⁆ N' :=
+def homOfLe : N →ₗ⁅R,L⁆ N' :=
   { Submodule.ofLe (show N.toSubmodule ≤ N'.toSubmodule from h) with map_lie' := fun x m => rfl }
 
 @[simp]
@@ -521,7 +528,7 @@ section LieSpan
 variable (R L) (s : Set M)
 
 /-- The `lie_span` of a set `s ⊆ M` is the smallest Lie submodule of `M` that contains `s`. -/
-def lie_span : LieSubmodule R L M :=
+def lieSpan : LieSubmodule R L M :=
   inf { N | s ⊆ N }
 
 variable {R L s}
@@ -769,6 +776,7 @@ different (though the latter does naturally inject into the former).
 
 In other words, in general, ideals of `I`, regarded as a Lie algebra in its own right, are not the
 same as ideals of `L` contained in `I`. -/
+-- TODO[gh-6025]: make this an instance once safe to do so
 theorem subsingleton_of_bot : Subsingleton (LieIdeal R (↥(⊥ : LieIdeal R L))) := by
   apply subsingleton_of_bot_eq_top
   ext ⟨x, hx⟩
@@ -788,7 +796,7 @@ def ker : LieIdeal R L :=
   LieIdeal.comap f ⊥
 
 /-- The range of a morphism of Lie algebras as an ideal in the codomain. -/
-def ideal_range : LieIdeal R L' :=
+def idealRange : LieIdeal R L' :=
   LieSubmodule.lieSpan R L' f.range
 
 theorem ideal_range_eq_lie_span_range : f.idealRange = LieSubmodule.lieSpan R L' f.range :=
@@ -800,7 +808,7 @@ theorem ideal_range_eq_map : f.idealRange = LieIdeal.map f ⊤ := by
   rfl
 
 /-- The condition that the image of a morphism of Lie algebras is an ideal. -/
-def is_ideal_morphism : Prop :=
+def IsIdealMorphism : Prop :=
   (f.idealRange : LieSubalgebra R L') = f.range
 
 @[simp]
@@ -927,7 +935,7 @@ theorem bot_of_map_eq_bot {I : LieIdeal R L} (h₁ : Function.Injective f) (h₂
   exact h₂
 
 /-- Given two nested Lie ideals `I₁ ⊆ I₂`, the inclusion `I₁ ↪ I₂` is a morphism of Lie algebras. -/
-def hom_of_le {I₁ I₂ : LieIdeal R L} (h : I₁ ≤ I₂) : I₁ →ₗ⁅R⁆ I₂ :=
+def homOfLe {I₁ I₂ : LieIdeal R L} (h : I₁ ≤ I₂) : I₁ →ₗ⁅R⁆ I₂ :=
   { Submodule.ofLe (show I₁.toSubmodule ≤ I₂.toSubmodule from h) with map_lie' := fun x y => rfl }
 
 @[simp]

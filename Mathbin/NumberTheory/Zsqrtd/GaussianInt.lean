@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Chris Hughes. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Chris Hughes
+-/
 import Mathbin.NumberTheory.Zsqrtd.Basic
 import Mathbin.Data.Complex.Basic
 import Mathbin.RingTheory.PrincipalIdealDomain
@@ -53,7 +58,8 @@ section
 attribute [-instance] Complex.field
 
 /-- The embedding of the Gaussian integers into the complex numbers, as a ring homomorphism. -/
-def to_complex : ℤ[i] →+* ℂ :=
+-- Avoid making things noncomputable unnecessarily.
+def toComplex : ℤ[i] →+* ℂ :=
   Zsqrtd.lift
     ⟨i, by
       simp ⟩
@@ -241,7 +247,7 @@ instance : Nontrivial ℤ[i] :=
       decide⟩⟩
 
 instance : EuclideanDomain ℤ[i] :=
-  { GaussianInt.commRing, GaussianInt.nontrivial with Quotient := · / ·, remainder := · % ·,
+  { GaussianInt.commRing, GaussianInt.nontrivial with Quotient := (· / ·), remainder := (· % ·),
     quotient_zero := by
       simp [div_def]
       rfl,

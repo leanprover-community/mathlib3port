@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Yury Kudryashov. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yury Kudryashov
+-/
 import Mathbin.CategoryTheory.ConcreteCategory.BundledHom
 
 /-!
@@ -17,7 +22,7 @@ namespace CategoryTheory
 /-- A class for unbundled homs used to define a category. `hom` must
 take two types `α`, `β` and instances of the corresponding structures,
 and return a predicate on `α → β`. -/
-class unbundled_hom {c : Type u → Type u} (hom : ∀ {α β}, c α → c β → (α → β) → Prop) where
+class UnbundledHom {c : Type u → Type u} (hom : ∀ {α β}, c α → c β → (α → β) → Prop) where
   hom_id {} : ∀ {α} ia : c α, hom ia ia id
   hom_comp {} :
     ∀ {α β γ} {Iα : c α} {Iβ : c β} {Iγ : c γ} {g : β → γ} {f : α → β} hg : hom Iβ Iγ g hf : hom Iα Iβ f,
@@ -29,7 +34,7 @@ variable (c : Type u → Type u) (hom : ∀ ⦃α β⦄, c α → c β → (α �
 
 include 𝒞
 
-instance bundled_hom : BundledHom fun α β Iα : c α Iβ : c β => Subtype (hom Iα Iβ) where
+instance bundledHom : BundledHom fun Iβ : c β => Subtype (hom Iα Iβ) where
   toFun := fun _ _ _ _ => Subtype.val
   id := fun α Iα => ⟨id, hom_id hom Iα⟩
   id_to_fun := by
@@ -50,7 +55,7 @@ variable (obj : ∀ ⦃α⦄, c α → c' α) (map : ∀ ⦃α β Iα Iβ f⦄, 
 
 /-- A custom constructor for forgetful functor
 between concrete categories defined using `unbundled_hom`. -/
-def mk_has_forget₂ : HasForget₂ (Bundled c) (Bundled c') :=
+def mkHasForget₂ : HasForget₂ (Bundled c) (Bundled c') :=
   BundledHom.mkHasForget₂ obj (fun X Y f => ⟨f.val, map f.property⟩) fun _ _ _ => rfl
 
 end HasForget₂

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Damiano Testa. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Damiano Testa
+-/
 import Mathbin.Algebra.GroupPower.Basic
 import Mathbin.Algebra.Ring.Opposite
 import Mathbin.GroupTheory.GroupAction.Opposite
@@ -44,13 +49,13 @@ class SmulWithZero [Zero R] [Zero M] extends HasScalar R M where
   zero_smul : ∀ m : M, (0 : R) • m = 0
 
 instance MulZeroClassₓ.toSmulWithZero [MulZeroClassₓ R] : SmulWithZero R R where
-  smul := · * ·
+  smul := (· * ·)
   smul_zero := mul_zero
   zero_smul := zero_mul
 
 /-- Like `mul_zero_class.to_smul_with_zero`, but multiplies on the right. -/
 instance MulZeroClassₓ.toOppositeSmulWithZero [MulZeroClassₓ R] : SmulWithZero (Rᵐᵒᵖ) R where
-  smul := · • ·
+  smul := (· • ·)
   smul_zero := fun r => zero_mul _
   zero_smul := mul_zero
 
@@ -78,7 +83,7 @@ See note [reducible non-instances]. -/
 @[reducible]
 protected def Function.Injective.smulWithZero (f : ZeroHom M' M) (hf : Function.Injective f)
     (smul : ∀ a : R b, f (a • b) = a • f b) : SmulWithZero R M' where
-  smul := · • ·
+  smul := (· • ·)
   zero_smul := fun a =>
     hf <| by
       simp [smul]
@@ -91,7 +96,7 @@ See note [reducible non-instances]. -/
 @[reducible]
 protected def Function.Surjective.smulWithZero (f : ZeroHom M M') (hf : Function.Surjective f)
     (smul : ∀ a : R b, f (a • b) = a • f b) : SmulWithZero R M' where
-  smul := · • ·
+  smul := (· • ·)
   zero_smul := fun m => by
     rcases hf m with ⟨x, rfl⟩
     simp [← smul]
@@ -120,9 +125,11 @@ variable (R M)
 is compatible with `0` (both in `R` and in `M`), with `1 ∈ R`, and with associativity of
 multiplication on the monoid `M`. -/
 class MulActionWithZero extends MulAction R M where
+  -- these fields are copied from `smul_with_zero`, as `extends` behaves poorly
   smul_zero : ∀ r : R, r • (0 : M) = 0
   zero_smul : ∀ m : M, (0 : R) • m = 0
 
+-- see Note [lower instance priority]
 instance (priority := 100) MulActionWithZero.toSmulWithZero [m : MulActionWithZero R M] : SmulWithZero R M :=
   { m with }
 

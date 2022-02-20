@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Oliver Nash. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Oliver Nash
+-/
 import Mathbin.Algebra.Lie.Solvable
 import Mathbin.Algebra.Lie.Quotient
 import Mathbin.LinearAlgebra.Eigenspace
@@ -63,7 +68,7 @@ namespace LieModule
 variable (R L M)
 
 /-- The lower central series of Lie submodules of a Lie module. -/
-def lower_central_series : LieSubmodule R L M :=
+def lowerCentralSeries : LieSubmodule R L M :=
   (⊤ : LieSubmodule R L M).lcs k
 
 @[simp]
@@ -233,7 +238,7 @@ theorem nilpotent_of_nilpotent_quotient {N : LieSubmodule R L M} (h₁ : N ≤ m
 the natural number `k` (the number of inclusions).
 
 For a non-nilpotent module, we use the junk value 0. -/
-noncomputable def nilpotency_length : ℕ :=
+noncomputable def nilpotencyLength : ℕ :=
   inf { k | lowerCentralSeries R L M k = ⊥ }
 
 theorem nilpotency_length_eq_zero_iff [IsNilpotent R L M] : nilpotencyLength R L M = 0 ↔ Subsingleton M := by
@@ -264,7 +269,7 @@ theorem nilpotency_length_eq_succ_iff (k : ℕ) :
 non-trivial term).
 
 For a trivial or non-nilpotent module, this is the bottom submodule, `⊥`. -/
-noncomputable def lower_central_series_last : LieSubmodule R L M :=
+noncomputable def lowerCentralSeriesLast : LieSubmodule R L M :=
   match nilpotencyLength R L M with
   | 0 => ⊥
   | k + 1 => lowerCentralSeries R L M k
@@ -414,6 +419,8 @@ theorem LieAlgebra.infi_max_gen_zero_eigenspace_eq_top_of_nilpotent [IsNilpotent
     (⨅ x : L, (ad R L x).maximalGeneralizedEigenspace 0) = ⊤ :=
   LieModule.infi_max_gen_zero_eigenspace_eq_top_of_nilpotent R L L
 
+-- TODO Generalise the below to Lie modules if / when we define morphisms, equivs of Lie modules
+-- covering a Lie algebra morphism of (possibly different) Lie algebras.
 variable {R L L'}
 
 open lie_module (lowerCentralSeries)

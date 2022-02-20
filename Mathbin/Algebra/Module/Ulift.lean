@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison
+-/
 import Mathbin.Algebra.Ring.Ulift
 import Mathbin.Data.Equiv.Module
 
@@ -23,7 +28,7 @@ variable {M : Type v}
 
 variable {N : Type w}
 
-instance has_scalar_left [HasScalar R M] : HasScalar (Ulift R) M :=
+instance hasScalarLeft [HasScalar R M] : HasScalar (Ulift R) M :=
   ⟨fun s x => s.down • x⟩
 
 @[simp]
@@ -34,7 +39,7 @@ theorem smul_down [HasScalar R M] (s : Ulift R) (x : M) : s • x = s.down • x
 theorem smul_down' [HasScalar R M] (s : R) (x : Ulift M) : (s • x).down = s • x.down :=
   rfl
 
-instance IsScalarTower [HasScalar R M] [HasScalar M N] [HasScalar R N] [IsScalarTower R M N] :
+instance is_scalar_tower [HasScalar R M] [HasScalar M N] [HasScalar R N] [IsScalarTower R M N] :
     IsScalarTower (Ulift R) M N :=
   ⟨fun x y z => show (x.down • y) • z = x.down • y • z from smul_assoc _ _ _⟩
 
@@ -51,8 +56,8 @@ instance is_scalar_tower'' [HasScalar R M] [HasScalar M N] [HasScalar R N] [IsSc
 instance [HasScalar R M] [HasScalar (Rᵐᵒᵖ) M] [IsCentralScalar R M] : IsCentralScalar R (Ulift M) :=
   ⟨fun r m => congr_argₓ up <| op_smul_eq_smul r m.down⟩
 
-instance MulAction [Monoidₓ R] [MulAction R M] : MulAction (Ulift R) M where
-  smul := · • ·
+instance mulAction [Monoidₓ R] [MulAction R M] : MulAction (Ulift R) M where
+  smul := (· • ·)
   mul_smul := fun r s f => by
     cases r
     cases s
@@ -60,8 +65,8 @@ instance MulAction [Monoidₓ R] [MulAction R M] : MulAction (Ulift R) M where
   one_smul := fun f => by
     simp [one_smul]
 
-instance mul_action' [Monoidₓ R] [MulAction R M] : MulAction R (Ulift M) where
-  smul := · • ·
+instance mulAction' [Monoidₓ R] [MulAction R M] : MulAction R (Ulift M) where
+  smul := (· • ·)
   mul_smul := fun r s f => by
     cases f
     ext
@@ -70,7 +75,7 @@ instance mul_action' [Monoidₓ R] [MulAction R M] : MulAction R (Ulift M) where
     ext
     simp [one_smul]
 
-instance DistribMulAction [Monoidₓ R] [AddMonoidₓ M] [DistribMulAction R M] : DistribMulAction (Ulift R) M :=
+instance distribMulAction [Monoidₓ R] [AddMonoidₓ M] [DistribMulAction R M] : DistribMulAction (Ulift R) M :=
   { Ulift.mulAction with
     smul_zero := fun c => by
       cases c
@@ -79,7 +84,7 @@ instance DistribMulAction [Monoidₓ R] [AddMonoidₓ M] [DistribMulAction R M] 
       cases c
       simp [smul_add] }
 
-instance distrib_mul_action' [Monoidₓ R] [AddMonoidₓ M] [DistribMulAction R M] : DistribMulAction R (Ulift M) :=
+instance distribMulAction' [Monoidₓ R] [AddMonoidₓ M] [DistribMulAction R M] : DistribMulAction R (Ulift M) :=
   { Ulift.mulAction' with
     smul_zero := fun c => by
       ext
@@ -88,7 +93,7 @@ instance distrib_mul_action' [Monoidₓ R] [AddMonoidₓ M] [DistribMulAction R 
       ext
       simp [smul_add] }
 
-instance MulDistribMulAction [Monoidₓ R] [Monoidₓ M] [MulDistribMulAction R M] : MulDistribMulAction (Ulift R) M :=
+instance mulDistribMulAction [Monoidₓ R] [Monoidₓ M] [MulDistribMulAction R M] : MulDistribMulAction (Ulift R) M :=
   { Ulift.mulAction with
     smul_one := fun c => by
       cases c
@@ -97,7 +102,7 @@ instance MulDistribMulAction [Monoidₓ R] [Monoidₓ M] [MulDistribMulAction R 
       cases c
       simp [smul_mul'] }
 
-instance mul_distrib_mul_action' [Monoidₓ R] [Monoidₓ M] [MulDistribMulAction R M] : MulDistribMulAction R (Ulift M) :=
+instance mulDistribMulAction' [Monoidₓ R] [Monoidₓ M] [MulDistribMulAction R M] : MulDistribMulAction R (Ulift M) :=
   { Ulift.mulAction' with
     smul_one := fun c => by
       ext
@@ -106,7 +111,7 @@ instance mul_distrib_mul_action' [Monoidₓ R] [Monoidₓ M] [MulDistribMulActio
       ext
       simp [smul_mul'] }
 
-instance Module [Semiringₓ R] [AddCommMonoidₓ M] [Module R M] : Module (Ulift R) M :=
+instance module [Semiringₓ R] [AddCommMonoidₓ M] [Module R M] : Module (Ulift R) M :=
   { Ulift.distribMulAction with
     add_smul := fun c f g => by
       cases c
@@ -126,7 +131,7 @@ instance module' [Semiringₓ R] [AddCommMonoidₓ M] [Module R M] : Module R (U
 
 /-- The `R`-linear equivalence between `ulift M` and `M`.
 -/
-def module_equiv [Semiringₓ R] [AddCommMonoidₓ M] [Module R M] : Ulift M ≃ₗ[R] M where
+def moduleEquiv [Semiringₓ R] [AddCommMonoidₓ M] [Module R M] : Ulift M ≃ₗ[R] M where
   toFun := Ulift.down
   invFun := Ulift.up
   map_smul' := fun r x => rfl

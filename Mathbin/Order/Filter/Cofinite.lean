@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2017 Johannes Hölzl. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johannes Hölzl, Jeremy Avigad, Yury Kudryashov
+-/
 import Mathbin.Order.Filter.AtTopBot
 import Mathbin.Order.Filter.Pi
 
@@ -29,8 +34,8 @@ def cofinite : Filter α where
   Sets := { s | Finite (sᶜ) }
   univ_sets := by
     simp only [compl_univ, finite_empty, mem_set_of_eq]
-  sets_of_superset := fun s t hs : Finite (sᶜ) st : s ⊆ t => hs.Subset <| compl_subset_compl.2 st
-  inter_sets := fun s t hs : Finite (sᶜ) ht : Finite (tᶜ) => by
+  sets_of_superset := fun st : s ⊆ t => hs.Subset <| compl_subset_compl.2 st
+  inter_sets := fun ht : Finite (tᶜ) => by
     simp only [compl_inter, finite.union, ht, hs, mem_set_of_eq]
 
 @[simp]
@@ -128,13 +133,15 @@ theorem Nat.frequently_at_top_iff_infinite {p : ℕ → Prop} : (∃ᶠ n in at_
 theorem Filter.Tendsto.exists_within_forall_le {α β : Type _} [LinearOrderₓ β] {s : Set α} (hs : s.Nonempty) {f : α → β}
     (hf : Filter.Tendsto f Filter.cofinite Filter.atTop) : ∃ a₀ ∈ s, ∀, ∀ a ∈ s, ∀, f a₀ ≤ f a := by
   rcases em (∃ y ∈ s, ∃ x, f y < x) with (⟨y, hys, x, hx⟩ | not_all_top)
-  · have : finite { y | ¬x ≤ f y } := filter.eventually_cofinite.mp (tendsto_at_top.1 hf x)
+  · -- the set of points `{y | f y < x}` is nonempty and finite, so we take `min` over this set
+    have : finite { y | ¬x ≤ f y } := filter.eventually_cofinite.mp (tendsto_at_top.1 hf x)
     simp only [not_leₓ] at this
     obtain ⟨a₀, ⟨ha₀ : f a₀ < x, ha₀s⟩, others_bigger⟩ := exists_min_image _ f (this.inter_of_left s) ⟨y, hx, hys⟩
     refine' ⟨a₀, ha₀s, fun a has => (lt_or_leₓ (f a) x).elim _ (le_transₓ ha₀.le)⟩
     exact fun h => others_bigger a ⟨h, has⟩
     
-  · push_neg  at not_all_top
+  · -- in this case, f is constant because all values are at top
+    push_neg  at not_all_top
     obtain ⟨a₀, ha₀s⟩ := hs
     exact ⟨a₀, ha₀s, fun a ha => not_all_top a ha (f a₀)⟩
     

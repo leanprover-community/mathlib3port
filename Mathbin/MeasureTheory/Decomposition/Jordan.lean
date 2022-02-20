@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Kexing Ying. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Kexing Ying
+-/
 import Mathbin.MeasureTheory.Decomposition.SignedHahn
 import Mathbin.MeasureTheory.Measure.MutuallySingular
 
@@ -46,7 +51,7 @@ namespace MeasureTheory
 /-- A Jordan decomposition of a measurable space is a pair of mutually singular,
 finite measures. -/
 @[ext]
-structure jordan_decomposition (α : Type _) [MeasurableSpace α] where
+structure JordanDecomposition (α : Type _) [MeasurableSpace α] where
   (posPart negPart : Measure α)
   [pos_part_finite : IsFiniteMeasure pos_part]
   [neg_part_finite : IsFiniteMeasure neg_part]
@@ -76,7 +81,7 @@ instance : HasScalar ℝ≥0 (JordanDecomposition α) where
   smul := fun r j =>
     ⟨r • j.posPart, r • j.negPart, MutuallySingular.smul _ (MutuallySingular.smul _ j.MutuallySingular.symm).symm⟩
 
-instance has_scalar_real : HasScalar ℝ (JordanDecomposition α) where
+instance hasScalarReal : HasScalar ℝ (JordanDecomposition α) where
   smul := fun r j => if hr : 0 ≤ r then r.toNnreal • j else -((-r).toNnreal • j)
 
 @[simp]
@@ -131,7 +136,7 @@ theorem real_smul_neg_part_neg (r : ℝ) (hr : r < 0) : (r • j).negPart = (-r)
   rw [real_smul_def, ← smul_pos_part, dif_neg (not_leₓ.2 hr), neg_neg_part]
 
 /-- The signed measure associated with a Jordan decomposition. -/
-def to_signed_measure : SignedMeasure α :=
+def toSignedMeasure : SignedMeasure α :=
   j.posPart.toSignedMeasure - j.negPart.toSignedMeasure
 
 theorem to_signed_measure_zero : (0 : JordanDecomposition α).toSignedMeasure = 0 := by
@@ -182,7 +187,7 @@ variable {s : SignedMeasure α} {μ ν : Measure α} [IsFiniteMeasure μ] [IsFin
 such that `s = j.to_signed_measure`. This property is known as the Jordan decomposition
 theorem, and is shown by
 `measure_theory.signed_measure.to_signed_measure_to_jordan_decomposition`. -/
-def to_jordan_decomposition (s : SignedMeasure α) : JordanDecomposition α :=
+def toJordanDecomposition (s : SignedMeasure α) : JordanDecomposition α :=
   let i := some s.exists_compl_positive_negative
   let hi := some_spec s.exists_compl_positive_negative
   { posPart := s.toMeasureOfZeroLe i hi.1 hi.2.1, negPart := s.toMeasureOfLeZero (iᶜ) hi.1.Compl hi.2.2,
@@ -330,15 +335,24 @@ private theorem eq_of_pos_part_eq_pos_part {j₁ j₂ : JordanDecomposition α} 
 
 /-- The Jordan decomposition of a signed measure is unique. -/
 theorem to_signed_measure_injective : injective <| @JordanDecomposition.toSignedMeasure α _ := by
+  /- The main idea is that two Jordan decompositions of a signed measure provide two
+    Hahn decompositions for that measure. Then, from `of_symm_diff_compl_positive_negative`,
+    the symmetric difference of the two Hahn decompositions has measure zero, thus, allowing us to
+    show the equality of the underlying measures of the Jordan decompositions. -/
   intro j₁ j₂ hj
+  -- obtain the two Hahn decompositions from the Jordan decompositions
   obtain ⟨S, hS₁, hS₂, hS₃, hS₄, hS₅⟩ := j₁.exists_compl_positive_negative
   obtain ⟨T, hT₁, hT₂, hT₃, hT₄, hT₅⟩ := j₂.exists_compl_positive_negative
   rw [← hj] at hT₂ hT₃
+  -- the symmetric differences of the two Hahn decompositions have measure zero
   obtain ⟨hST₁, -⟩ :=
     of_symm_diff_compl_positive_negative hS₁.compl hT₁.compl ⟨hS₃, (compl_compl S).symm ▸ hS₂⟩
       ⟨hT₃, (compl_compl T).symm ▸ hT₂⟩
+  -- it suffices to show the Jordan decompositions have the same positive parts
   refine' eq_of_pos_part_eq_pos_part _ hj
   ext1 i hi
+  -- we see that the positive parts of the two Jordan decompositions are equal to their
+  -- associated signed measures restricted on their associated Hahn decompositions
   have hμ₁ : (j₁.pos_part i).toReal = j₁.to_signed_measure (i ∩ Sᶜ) := by
     rw [to_signed_measure, to_signed_measure_sub_apply (hi.inter hS₁.compl),
       show j₁.neg_part (i ∩ Sᶜ) = 0 from nonpos_iff_eq_zero.1 (hS₅ ▸ measure_mono (Set.inter_subset_right _ _)),
@@ -367,6 +381,8 @@ theorem to_signed_measure_injective : injective <| @JordanDecomposition.toSigned
       
     · exact hi.inter hT₁.compl
       
+  -- since the two signed measures associated with the Jordan decompositions are the same,
+  -- and the symmetric difference of the Hahn decompositions have measure zero, the result follows
   rw [← Ennreal.to_real_eq_to_real (measure_ne_top _ _) (measure_ne_top _ _), hμ₁, hμ₂, ← hj]
   exact of_inter_eq_of_symm_diff_eq_zero_positive hS₁.compl hT₁.compl hi hS₃ hT₃ hST₁
   all_goals
@@ -388,7 +404,7 @@ open JordanDecomposition
 /-- `measure_theory.signed_measure.to_jordan_decomposition` and
 `measure_theory.jordan_decomposition.to_signed_measure` form a `equiv`. -/
 @[simps apply symmApply]
-def to_jordan_decomposition_equiv (α : Type _) [MeasurableSpace α] : SignedMeasure α ≃ JordanDecomposition α where
+def toJordanDecompositionEquiv (α : Type _) [MeasurableSpace α] : SignedMeasure α ≃ JordanDecomposition α where
   toFun := toJordanDecomposition
   invFun := toSignedMeasure
   left_inv := to_signed_measure_to_jordan_decomposition
@@ -442,7 +458,7 @@ theorem to_jordan_decomposition_eq {s : SignedMeasure α} {j : JordanDecompositi
   rw [h, to_jordan_decomposition_to_signed_measure]
 
 /-- The total variation of a signed measure. -/
-def total_variation (s : SignedMeasure α) : Measure α :=
+def totalVariation (s : SignedMeasure α) : Measure α :=
   s.toJordanDecomposition.posPart + s.toJordanDecomposition.negPart
 
 theorem total_variation_zero : (0 : SignedMeasure α).totalVariation = 0 := by
@@ -491,6 +507,7 @@ theorem total_variation_absolutely_continuous_iff (s : SignedMeasure α) (μ : M
     rw [total_variation, measure.add_apply, h.1 hS₂, h.2 hS₂, add_zeroₓ]
     
 
+-- TODO: Generalize to vector measures once total variation on vector measures is defined
 theorem mutually_singular_iff (s t : SignedMeasure α) : s ⊥ᵥ t ↔ s.totalVariation ⊥ₘ t.totalVariation := by
   constructor
   · rintro ⟨u, hmeas, hu₁, hu₂⟩

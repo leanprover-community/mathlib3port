@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Sébastien Gouëzel. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Sébastien Gouëzel
+-/
 import Mathbin.MeasureTheory.Covering.VitaliFamily
 import Mathbin.MeasureTheory.Measure.Regular
 import Mathbin.MeasureTheory.Function.AeMeasurableOrder
@@ -64,7 +69,7 @@ namespace VitaliFamily
 /-- The limit along a Vitali family of `ρ a / μ a` where it makes sense, and garbage otherwise.
 Do *not* use this definition: it is only a temporary device to show that this ratio tends almost
 everywhere to the Radon-Nikodym derivative. -/
-noncomputable def lim_ratio (ρ : Measureₓ α) (x : α) : ℝ≥0∞ :=
+noncomputable def limRatio (ρ : Measureₓ α) (x : α) : ℝ≥0∞ :=
   limₓ (v.filterAt x) fun a => ρ a / μ a
 
 /-- For almost every point `x`, sufficiently small sets in a Vitali family around `x` have positive
@@ -99,6 +104,7 @@ Vitali family satisfying `ρ a ≤ ν a`, then `ρ s ≤ ν s` if `ρ ≪ μ`.-/
 theorem measure_le_of_frequently_le [SigmaCompactSpace α] [BorelSpace α] {ρ : Measureₓ α} (ν : Measureₓ α)
     [IsLocallyFiniteMeasure ν] (hρ : ρ ≪ μ) (s : Set α) (hs : ∀, ∀ x ∈ s, ∀, ∃ᶠ a in v.filterAt x, ρ a ≤ ν a) :
     ρ s ≤ ν s := by
+  -- this follows from a covering argument using the sets satisfying `ρ a ≤ ν a`.
   apply Ennreal.le_of_forall_pos_le_add fun ε εpos hc => _
   obtain ⟨U, sU, U_open, νU⟩ : ∃ (U : Set α)(H : s ⊆ U), IsOpen U ∧ ν U ≤ ν s + ε :=
     exists_is_open_le_add s ν (Ennreal.coe_pos.2 εpos).ne'
@@ -229,11 +235,11 @@ theorem ae_tendsto_lim_ratio : ∀ᵐ x ∂μ, Tendsto (fun a => ρ a / μ a) (v
   intro x hx
   exact tendsto_nhds_lim hx
 
--- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (m n)
--- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (m n)
--- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (m n)
--- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (m n)
--- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (m n)
+-- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (m n)
+-- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (m n)
+-- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (m n)
+-- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (m n)
+-- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (m n)
 /-- Given two thresholds `p < q`, the sets `{x | v.lim_ratio ρ x < p}`
 and `{x | q < v.lim_ratio ρ x}` are obviously disjoint. The key to proving that `v.lim_ratio ρ` is
 almost everywhere measurable is to show that these sets have measurable supersets which are also
@@ -243,13 +249,32 @@ theorem exists_measurable_supersets_lim_ratio {p q : ℝ≥0 } (hpq : p < q) :
       MeasurableSet a ∧
         MeasurableSet b ∧ { x | v.limRatio ρ x < p } ⊆ a ∧ { x | (q : ℝ≥0∞) < v.limRatio ρ x } ⊆ b ∧ μ (a ∩ b) = 0 :=
   by
+  /- Here is a rough sketch, assuming that the measure is finite and the limit is well defined
+    everywhere. Let `u := {x | v.lim_ratio ρ x < p}` and `w := {x | q < v.lim_ratio ρ x}`. They
+    have measurable supersets `u'` and `w'` of the same measure. We will show that these satisfy
+    the conclusion of the theorem, i.e., `μ (u' ∩ w') = 0`. For this, note that
+    `ρ (u' ∩ w') = ρ (u ∩ w')` (as `w'` is measurable, see `measure_to_measurable_add_inter_left`).
+    The latter set is included in the set where the limit of the ratios is `< p`, and therefore
+    its measure is `≤ p * μ (u ∩ w')`. Using the same trick in the other direction gives that this is
+    `p * μ (u' ∩ w')`. We have shown that `ρ (u' ∩ w') ≤ p * μ (u' ∩ w')`. Arguing in the same way but
+    using the `w` part gives `q * μ (u' ∩ w') ≤ ρ (u' ∩ w')`. If `μ (u' ∩ w')` were nonzero, this
+    would be a contradiction as `p < q`.
+  
+    For the rigorous proof, we need to work on a part of the space where the measure is finite
+    (provided by `spanning_sets (ρ + μ)`) and to restrict to the set where the limit is well defined
+    (called `s` below, of full measure). Otherwise, the argument goes through.
+    -/
   let s := { x | ∃ c, tendsto (fun a => ρ a / μ a) (v.filter_at x) (𝓝 c) }
   let o : ℕ → Set α := spanning_sets (ρ + μ)
   let u := fun n => s ∩ { x | v.lim_ratio ρ x < p } ∩ o n
   let w := fun n => s ∩ { x | (q : ℝ≥0∞) < v.lim_ratio ρ x } ∩ o n
+  -- the supersets are obtained by restricting to the set `s` where the limit is well defined, to
+  -- a finite measure part `o n`, taking a measurable superset here, and then taking the union over
+  -- `n`.
   refine'
     ⟨to_measurable μ (sᶜ) ∪ ⋃ n, to_measurable (ρ + μ) (u n), to_measurable μ (sᶜ) ∪ ⋃ n, to_measurable (ρ + μ) (w n),
       _, _, _, _, _⟩
+  -- check that these sets are measurable supersets as required
   · exact (measurable_set_to_measurable _ _).union (MeasurableSet.Union fun n => measurable_set_to_measurable _ _)
     
   · exact (measurable_set_to_measurable _ _).union (MeasurableSet.Union fun n => measurable_set_to_measurable _ _)
@@ -270,6 +295,8 @@ theorem exists_measurable_supersets_lim_ratio {p q : ℝ≥0 } (hpq : p < q) :
     · exact Or.inl (subset_to_measurable μ (sᶜ) h)
       
     
+  -- it remains to check the nontrivial part that these sets have zero measure intersection.
+  -- it suffices to do it for fixed `m` and `n`, as one is taking countable unions.
   suffices H : ∀ m n : ℕ, μ (to_measurable (ρ + μ) (u m) ∩ to_measurable (ρ + μ) (w n)) = 0
   · have A :
       (to_measurable μ (sᶜ) ∪ ⋃ n, to_measurable (ρ + μ) (u n)) ∩
@@ -296,6 +323,10 @@ theorem exists_measurable_supersets_lim_ratio {p q : ℝ≥0 } (hpq : p < q) :
         (measure_Union_le _).trans (Ennreal.tsum_le_tsum fun m => measure_Union_le _)_ = 0 := by
         simp only [H, tsum_zero]
     
+  -- now starts the nontrivial part of the argument. We fix `m` and `n`, and show that the
+  -- measurable supersets of `u m` and `w n` have zero measure intersection by using the lemmas
+  -- `measure_to_measurable_add_inter_left` (to reduce to `u m` or `w n` instead of the measurable
+  -- superset) and `measure_le_of_frequently_le` to compare their measures for `ρ` and `μ`.
   intro m n
   have I : (ρ + μ) (u m) ≠ ∞ := by
     apply (lt_of_le_of_ltₓ (measure_mono _) (measure_spanning_sets_lt_top (ρ + μ) m)).Ne
@@ -365,7 +396,7 @@ theorem ae_measurable_lim_ratio : AeMeasurable (v.limRatio ρ) μ := by
 
 /-- A measurable version of `v.lim_ratio ρ`. Do *not* use this definition: it is only a temporary
 device to show that `v.lim_ratio` is almost everywhere equal to the Radon-Nikodym derivative. -/
-noncomputable def lim_ratio_meas : α → ℝ≥0∞ :=
+noncomputable def limRatioMeas : α → ℝ≥0∞ :=
   (v.ae_measurable_lim_ratio hρ).mk _
 
 theorem lim_ratio_meas_measurable : Measurable (v.limRatioMeas hρ) :=
@@ -478,6 +509,12 @@ theorem measure_lim_ratio_meas_zero : ρ { x | v.limRatioMeas hρ x = 0 } = 0 :=
 that `μ.with_density (v.lim_ratio_meas hρ) ≤ t^2 ρ` for any `t > 1`. -/
 theorem with_density_le_mul {s : Set α} (hs : MeasurableSet s) {t : ℝ≥0 } (ht : 1 < t) :
     μ.withDensity (v.limRatioMeas hρ) s ≤ t ^ 2 * ρ s := by
+  /- We cut `s` into the sets where `v.lim_ratio_meas hρ = 0`, where `v.lim_ratio_meas hρ = ∞`, and
+    where `v.lim_ratio_meas hρ ∈ [t^n, t^(n+1))` for `n : ℤ`. The first and second have measure `0`.
+    For the latter, since `v.lim_ratio_meas hρ` fluctuates by at most `t` on this slice, we can use
+    `measure_le_mul_of_subset_lim_ratio_meas_lt` and `mul_measure_le_of_subset_lt_lim_ratio_meas` to
+    show that the two measures are comparable up to `t` (in fact `t^2` for technical reasons of
+    strict inequalities). -/
   have t_ne_zero' : t ≠ 0 := (zero_lt_one.trans ht).ne'
   have t_ne_zero : (t : ℝ≥0∞) ≠ 0 := by
     simpa only [Ennreal.coe_eq_zero, Ne.def] using t_ne_zero'
@@ -533,6 +570,11 @@ theorem with_density_le_mul {s : Set α} (hs : MeasurableSet s) {t : ℝ≥0 } (
 that `ρ ≤ t μ.with_density (v.lim_ratio_meas hρ)` for any `t > 1`. -/
 theorem le_mul_with_density {s : Set α} (hs : MeasurableSet s) {t : ℝ≥0 } (ht : 1 < t) :
     ρ s ≤ t * μ.withDensity (v.limRatioMeas hρ) s := by
+  /- We cut `s` into the sets where `v.lim_ratio_meas hρ = 0`, where `v.lim_ratio_meas hρ = ∞`, and
+    where `v.lim_ratio_meas hρ ∈ [t^n, t^(n+1))` for `n : ℤ`. The first and second have measure `0`.
+    For the latter, since `v.lim_ratio_meas hρ` fluctuates by at most `t` on this slice, we can use
+    `measure_le_mul_of_subset_lim_ratio_meas_lt` and `mul_measure_le_of_subset_lt_lim_ratio_meas` to
+    show that the two measures are comparable up to `t`. -/
   have t_ne_zero' : t ≠ 0 := (zero_lt_one.trans ht).ne'
   have t_ne_zero : (t : ℝ≥0∞) ≠ 0 := by
     simpa only [Ennreal.coe_eq_zero, Ne.def] using t_ne_zero'

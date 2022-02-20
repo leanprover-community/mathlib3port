@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Oliver Nash. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Oliver Nash
+-/
 import Mathbin.Algebra.Lie.Basic
 import Mathbin.Algebra.NonUnitalAlgHom
 
@@ -43,12 +48,12 @@ namespace LieAlgebra
 
 /-- Regarding the `lie_ring` of a `lie_algebra` as a `non_unital_non_assoc_semiring`, we can
 reinterpret the `smul_lie` law as an `is_scalar_tower`. -/
-instance IsScalarTower : IsScalarTower R L L :=
+instance is_scalar_tower : IsScalarTower R L L :=
   ⟨smul_lie⟩
 
 /-- Regarding the `lie_ring` of a `lie_algebra` as a `non_unital_non_assoc_semiring`, we can
 reinterpret the `lie_smul` law as an `smul_comm_class`. -/
-instance SmulCommClass : SmulCommClass R L L :=
+instance smul_comm_class : SmulCommClass R L L :=
   ⟨fun t x y => (lie_smul t x y).symm⟩
 
 end LieAlgebra
@@ -60,7 +65,7 @@ variable {R L} {L₂ : Type w} [LieRing L₂] [LieAlgebra R L₂]
 /-- Regarding the `lie_ring` of a `lie_algebra` as a `non_unital_non_assoc_semiring`, we can
 regard a `lie_hom` as a `non_unital_alg_hom`. -/
 @[simps]
-def to_non_unital_alg_hom (f : L →ₗ⁅R⁆ L₂) : NonUnitalAlgHom R L L₂ :=
+def toNonUnitalAlgHom (f : L →ₗ⁅R⁆ L₂) : NonUnitalAlgHom R L L₂ :=
   { f with toFun := f, map_zero' := f.map_zero, map_mul' := f.map_lie }
 
 theorem to_non_unital_alg_hom_injective : Function.Injective (toNonUnitalAlgHom : _ → NonUnitalAlgHom R L L₂) :=

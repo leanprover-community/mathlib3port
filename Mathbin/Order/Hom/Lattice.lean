@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2022 Yaël Dillies. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yaël Dillies
+-/
 import Mathbin.Order.Hom.Bounded
 
 /-!
@@ -84,30 +89,37 @@ export InfHomClass (map_inf)
 
 attribute [simp] map_top map_bot map_sup map_inf
 
+-- See note [lower instance priority]
 instance (priority := 100) SupHomClass.toOrderHomClass [SemilatticeSup α] [SemilatticeSup β] [SupHomClass F α β] :
     OrderHomClass F α β :=
   ⟨fun f a b h => by
     rw [← sup_eq_right, ← map_sup, sup_eq_right.2 h]⟩
 
+-- See note [lower instance priority]
 instance (priority := 100) InfHomClass.toOrderHomClass [SemilatticeInf α] [SemilatticeInf β] [InfHomClass F α β] :
     OrderHomClass F α β :=
   ⟨fun f a b h => by
     rw [← inf_eq_left, ← map_inf, inf_eq_left.2 h]⟩
 
+-- See note [lower instance priority]
 instance (priority := 100) LatticeHomClass.toInfHomClass [Lattice α] [Lattice β] [LatticeHomClass F α β] :
     InfHomClass F α β :=
   { ‹LatticeHomClass F α β› with }
 
+-- See note [lower instance priority]
 instance (priority := 100) BoundedLatticeHomClass.toBoundedOrderHomClass [Lattice α] [Lattice β] [BoundedOrder α]
     [BoundedOrder β] [BoundedLatticeHomClass F α β] : BoundedOrderHomClass F α β :=
   { ‹BoundedLatticeHomClass F α β› with }
 
+-- See note [lower instance priority]
 instance (priority := 100) OrderIso.supHomClass [SemilatticeSup α] [SemilatticeSup β] : SupHomClass (α ≃o β) α β :=
   { RelIso.relHomClass with map_sup := fun f => f.map_sup }
 
+-- See note [lower instance priority]
 instance (priority := 100) OrderIso.infHomClass [SemilatticeInf α] [SemilatticeInf β] : InfHomClass (α ≃o β) α β :=
   { RelIso.relHomClass with map_inf := fun f => f.map_inf }
 
+-- See note [lower instance priority]
 instance (priority := 100) OrderIso.latticeHomClass [Lattice α] [Lattice β] : LatticeHomClass (α ≃o β) α β :=
   { OrderIso.supHomClass, OrderIso.infHomClass with }
 
@@ -388,7 +400,7 @@ namespace LatticeHom
 variable [Lattice α] [Lattice β] [Lattice γ] [Lattice δ]
 
 /-- Reinterpret a `lattice_hom` as an `inf_hom`. -/
-def to_inf_hom (f : LatticeHom α β) : InfHom α β :=
+def toInfHom (f : LatticeHom α β) : InfHom α β :=
   { f with }
 
 instance : LatticeHomClass (LatticeHom α β) α β where
@@ -504,7 +516,7 @@ variable (α β) [LinearOrderₓ α] [Lattice β] [OrderHomClass F α β]
 
 /-- An order homomorphism from a linear order is a lattice homomorphism. -/
 @[reducible]
-def to_lattice_hom_class : LatticeHomClass F α β :=
+def toLatticeHomClass : LatticeHomClass F α β :=
   { ‹OrderHomClass F α β› with
     map_sup := fun f a b => by
       obtain h | h := le_totalₓ a b
@@ -520,7 +532,7 @@ def to_lattice_hom_class : LatticeHomClass F α β :=
          }
 
 /-- Reinterpret an order homomorphism to a linear order as a `lattice_hom`. -/
-def to_lattice_hom (f : F) : LatticeHom α β :=
+def toLatticeHom (f : F) : LatticeHom α β :=
   have : LatticeHomClass F α β := OrderHomClass.toLatticeHomClass α β
   f
 
@@ -543,7 +555,7 @@ variable [Lattice α] [Lattice β] [Lattice γ] [Lattice δ] [BoundedOrder α] [
   [BoundedOrder δ]
 
 /-- Reinterpret a `bounded_lattice_hom` as a `bounded_order_hom`. -/
-def to_bounded_order_hom (f : BoundedLatticeHom α β) : BoundedOrderHom α β :=
+def toBoundedOrderHom (f : BoundedLatticeHom α β) : BoundedOrderHom α β :=
   { f, (f.toLatticeHom : α →o β) with }
 
 instance : BoundedLatticeHomClass (BoundedLatticeHom α β) α β where

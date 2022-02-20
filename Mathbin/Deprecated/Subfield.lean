@@ -1,6 +1,45 @@
+/-
+Copyright (c) 2018 Andreas Swerdlow. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Andreas Swerdlow
+-/
 import Mathbin.Deprecated.Subring
 import Mathbin.Algebra.GroupWithZero.Power
 
+/-
+
+# Unbundled subfields
+
+This file introduces the predicate `is_subfield` on `S : set F` where `F` is a field.
+This is *not* the preferred way to do subfields in Lean 3: in general `S : subfield F`
+works more smoothly.
+
+## Main definitions
+
+`is_subfield (S : set F)` : the predicate that `S` is the underlying set of a subfield
+of the field `F`. Note that the bundled variant `subfield F` is preferred to this approach.
+
+## Tags
+
+is_subfield
+-/
+/-
+
+# Unbundled subfields
+
+This file introduces the predicate `is_subfield` on `S : set F` where `F` is a field.
+This is *not* the preferred way to do subfields in Lean 3: in general `S : subfield F`
+works more smoothly.
+
+## Main definitions
+
+`is_subfield (S : set F)` : the predicate that `S` is the underlying set of a subfield
+of the field `F`. Note that the bundled variant `subfield F` is preferred to this approach.
+
+## Tags
+
+is_subfield
+-/
 variable {F : Type _} [Field F] (S : Set F)
 
 structure IsSubfield extends IsSubring S : Prop where
@@ -27,7 +66,7 @@ theorem Univ.is_subfield : IsSubfield (@Set.Univ F) :=
 theorem Preimage.is_subfield {K : Type _} [Field K] (f : F →+* K) {s : Set K} (hs : IsSubfield s) :
     IsSubfield (f ⁻¹' s) :=
   { f.is_subring_preimage hs.to_is_subring with
-    inv_mem := fun a ha : f a ∈ s =>
+    inv_mem := fun ha : f a ∈ s =>
       show f a⁻¹ ∈ s by
         rw [f.map_inv]
         exact hs.inv_mem ha }
@@ -43,7 +82,7 @@ theorem Range.is_subfield {K : Type _} [Field K] (f : F →+* K) : IsSubfield (S
 namespace Field
 
 /-- `field.closure s` is the minimal subfield that includes `s`. -/
-def closure : Set F :=
+def Closure : Set F :=
   { x | ∃ y ∈ Ringₓ.Closure S, ∃ z ∈ Ringₓ.Closure S, y / z = x }
 
 variable {S}
@@ -51,7 +90,7 @@ variable {S}
 theorem ring_closure_subset : Ringₓ.Closure S ⊆ Closure S := fun x hx =>
   ⟨x, hx, 1, Ringₓ.Closure.is_subring.to_is_submonoid.one_mem, div_one x⟩
 
-theorem closure.is_submonoid : IsSubmonoid (Closure S) :=
+theorem Closure.is_submonoid : IsSubmonoid (Closure S) :=
   { mul_mem := by
       rintro _ _ ⟨p, hp, q, hq, hq0, rfl⟩ ⟨r, hr, s, hs, hs0, rfl⟩ <;>
         exact
@@ -59,7 +98,7 @@ theorem closure.is_submonoid : IsSubmonoid (Closure S) :=
             IsSubmonoid.mul_mem ring.closure.is_subring.to_is_submonoid hq hs, (div_mul_div _ _ _ _).symm⟩,
     one_mem := ring_closure_subset <| IsSubmonoid.one_mem Ringₓ.Closure.is_subring.to_is_submonoid }
 
-theorem closure.is_subfield : IsSubfield (Closure S) :=
+theorem Closure.is_subfield : IsSubfield (Closure S) :=
   have h0 : (0 : F) ∈ Closure S :=
     ring_closure_subset <| Ringₓ.Closure.is_subring.to_is_add_subgroup.to_is_add_submonoid.zero_mem
   { Closure.is_submonoid with

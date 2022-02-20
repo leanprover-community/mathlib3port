@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Frédéric Dupuis. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Frédéric Dupuis
+-/
 import Mathbin.Analysis.Normed.Group.Hom
 import Mathbin.Analysis.NormedSpace.Basic
 import Mathbin.Analysis.NormedSpace.LinearIsometry
@@ -27,7 +32,7 @@ To get a C⋆-algebra `E` over field `𝕜`, use
 
 open_locale TopologicalSpace
 
--- ././Mathport/Syntax/Translate/Basic.lean:343:9: unsupported: advanced prec syntax
+-- ././Mathport/Syntax/Translate/Basic.lean:462:9: unsupported: advanced prec syntax
 local postfix:999 "⋆" => star
 
 /-- A normed star ring is a star ring endowed with a norm such that `star` is isometric. -/
@@ -106,7 +111,8 @@ namespace CstarRing
 variable [NormedRing E] [StarRing E] [CstarRing E]
 
 /-- In a C*-ring, star preserves the norm. -/
-instance (priority := 100) to_normed_star_monoid : NormedStarMonoid E :=
+-- see Note [lower instance priority]
+instance (priority := 100) toNormedStarMonoid : NormedStarMonoid E :=
   ⟨by
     intro x
     by_cases' htriv : x = 0
@@ -140,6 +146,7 @@ theorem norm_one [Nontrivial E] : ∥(1 : E)∥ = 1 := by
   have : 0 < ∥(1 : E)∥ := norm_pos_iff.mpr one_ne_zero
   rw [← mul_left_inj' this.ne', ← norm_star_mul_self, mul_oneₓ, star_one, one_mulₓ]
 
+-- see Note [lower instance priority]
 instance (priority := 100) [Nontrivial E] : NormOneClass E :=
   ⟨norm_one⟩
 

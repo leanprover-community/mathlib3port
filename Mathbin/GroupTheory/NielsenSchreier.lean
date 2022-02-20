@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 David Wärn. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: David Wärn
+-/
 import Mathbin.CategoryTheory.Action
 import Mathbin.Combinatorics.Quiver.Arborescence
 import Mathbin.Combinatorics.Quiver.ConnectedComponent
@@ -49,7 +54,7 @@ open_locale Classical
 
 universe v u
 
--- ././Mathport/Syntax/Translate/Basic.lean:1039:11: unsupported: unusual advanced open style
+-- ././Mathport/Syntax/Translate/Basic.lean:1161:11: unsupported: unusual advanced open style
 open CategoryTheory CategoryTheory.ActionCategory CategoryTheory.SingleObj Quiver
 
 /-- `is_free_groupoid.generators G` is a type synonym for `G`. We think of this as
@@ -83,7 +88,7 @@ quiver. -/
 @[ext]
 theorem ext_functor {G} [Groupoid.{v} G] [IsFreeGroupoid G] {X : Type v} [Groupₓ X] (f g : G ⥤ SingleObj X)
     (h : ∀ a b e : a ⟶ b, f.map (of e) = g.map (of e)) : f = g :=
-  let ⟨_, _, u⟩ := @unique_lift G _ _ X _ fun a b : Generators G e : a ⟶ b => g.map (of e)
+  let ⟨_, _, u⟩ := @unique_lift G _ _ X _ fun e : a ⟶ b => g.map (of e)
   trans (u _ h) (u _ fun _ _ _ => rfl).symm
 
 /-- An action groupoid over a free froup is free. More generally, one could show that the groupoid
@@ -92,7 +97,7 @@ purposes.
 
 Analogous to the fact that a covering space of a graph is a graph. (A free groupoid is like a graph,
 and a groupoid of elements is like a covering space.) -/
-instance action_groupoid_is_free {G A : Type u} [Groupₓ G] [IsFreeGroup G] [MulAction G A] :
+instance actionGroupoidIsFree {G A : Type u} [Groupₓ G] [IsFreeGroup G] [MulAction G A] :
     IsFreeGroupoid (ActionCategory G A) where
   quiverGenerators := ⟨fun a b => { e : IsFreeGroup.Generators G // IsFreeGroup.of e • a.back = b.back }⟩
   of := fun a b e => ⟨IsFreeGroup.of e, e.property⟩
@@ -136,6 +141,10 @@ instance action_groupoid_is_free {G A : Type u} [Groupₓ G] [IsFreeGroup G] [Mu
 
 namespace SpanningTree
 
+/- In this section, we suppose we have a free groupoid with a spanning tree for its generating
+quiver. The goal is to prove that the vertex group at the root is free. A picture to have in mind
+is that we are 'pulling' the endpoints of all the edges of the quiver along the spanning tree to
+the root. -/
 variable {G : Type u} [Groupoid.{u} G] [IsFreeGroupoid G] (T : WideSubquiver (symmetrify <| Generators G))
   [Arborescence T]
 
@@ -144,12 +153,14 @@ private def root' : G :=
   show T from root T
 
 /-- A path in the tree gives a hom, by composition. -/
-noncomputable def hom_of_path : ∀ {a : G}, Path (root T) a → (root' T ⟶ a)
+-- this has to be marked noncomputable, see issue #451.
+-- It might be nicer to define this in terms of `compose_path`
+noncomputable def homOfPath : ∀ {a : G}, Path (root T) a → (root' T ⟶ a)
   | _, path.nil => 𝟙 _
   | a, path.cons p f => hom_of_path p ≫ Sum.recOn f.val (fun e => of e) fun e => inv (of e)
 
 /-- For every vertex `a`, there is a canonical hom from the root, given by the path in the tree. -/
-def tree_hom (a : G) : root' T ⟶ a :=
+def treeHom (a : G) : root' T ⟶ a :=
   homOfPath T default
 
 /-- Any path to `a` gives `tree_hom T a`, since paths in the tree are unique. -/
@@ -158,13 +169,15 @@ theorem tree_hom_eq {a : G} (p : Path (root T) a) : treeHom T a = homOfPath T p 
 
 @[simp]
 theorem tree_hom_root : treeHom T (root' T) = 𝟙 _ :=
-  trans (tree_hom_eq T Path.nil) rfl
+  -- this should just be `tree_hom_eq T path.nil`, but Lean treats `hom_of_path` with suspicion.
+    trans
+    (tree_hom_eq T Path.nil) rfl
 
 /-- Any hom in `G` can be made into a loop, by conjugating with `tree_hom`s. -/
-def loop_of_hom {a b : G} (p : a ⟶ b) : End (root' T) :=
+def loopOfHom {a b : G} (p : a ⟶ b) : End (root' T) :=
   treeHom T a ≫ p ≫ inv (treeHom T b)
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (e «expr ∈ » wide_subquiver_symmetrify T a b)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (e «expr ∈ » wide_subquiver_symmetrify T a b)
 /-- Turning an edge in the spanning tree into a loop gives the indentity loop. -/
 theorem loop_of_hom_eq_id {a b : Generators G} e (_ : e ∈ WideSubquiverSymmetrify T a b) :
     loopOfHom T (of e) = 𝟙 (root' T) := by
@@ -180,7 +193,7 @@ theorem loop_of_hom_eq_id {a b : Generators G} e (_ : e ∈ WideSubquiverSymmetr
 /-- Since a hom gives a loop, any homomorphism from the vertex group at the root
     extends to a functor on the whole groupoid. -/
 @[simps]
-def functor_of_monoid_hom {X} [Monoidₓ X] (f : End (root' T) →* X) : G ⥤ SingleObj X where
+def functorOfMonoidHom {X} [Monoidₓ X] (f : End (root' T) →* X) : G ⥤ SingleObj X where
   obj := fun _ => ()
   map := fun a b p => f (loopOfHom T p)
   map_id' := by
@@ -194,7 +207,7 @@ def functor_of_monoid_hom {X} [Monoidₓ X] (f : End (root' T) →* X) : G ⥤ S
 /-- Given a free groupoid and an arborescence of its generating quiver, the vertex
     group at the root is freely generated by loops coming from generating arrows
     in the complement of the tree. -/
-def End_is_free : IsFreeGroup (End (root' T)) where
+def endIsFree : IsFreeGroup (End (root' T)) where
   Generators := Set.Compl (wide_subquiver_equiv_set_total <| WideSubquiverSymmetrify T)
   of := fun e => loopOfHom T (of e.val.Hom)
   unique_lift' := by
@@ -270,8 +283,7 @@ instance generators_connected G [Groupoid.{u, u} G] [IsConnected G] [IsFreeGroup
 
 /-- A vertex group in a free connected groupoid is free. With some work one could drop the
 connectedness assumption, by looking at connected components. -/
-instance End_is_free_of_connected_free {G} [Groupoid G] [IsConnected G] [IsFreeGroupoid G] (r : G) :
-    IsFreeGroup (End r) :=
+instance endIsFreeOfConnectedFree {G} [Groupoid G] [IsConnected G] [IsFreeGroupoid G] (r : G) : IsFreeGroup (End r) :=
   spanning_tree.End_is_free <| GeodesicSubtree (symgen r)
 
 end IsFreeGroupoid

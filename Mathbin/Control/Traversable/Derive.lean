@@ -1,3 +1,10 @@
+/-
+Copyright (c) 2018 Simon Hudon. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Simon Hudon
+
+Automation to construct `traversable` instances
+-/
 import Mathbin.Control.Traversable.Lemmas
 
 namespace Tactic.Interactive
@@ -8,7 +15,7 @@ unsafe def with_prefix : Option Name → Name → Name
   | none, n => n
   | some p, n => p ++ n
 
--- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `t
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `t
 /-- similar to `nested_traverse` but for `functor` -/
 unsafe def nested_map (f v : expr) : expr → tactic expr
   | t => do
@@ -39,7 +46,7 @@ unsafe def map_constructor (c n : Name) (f α β : expr) (args₀ : List expr) (
   let g ← target
   let (_, args') ←
     mmapAccuml
-        (fun x : List expr y : Bool × expr =>
+        (fun y : Bool × expr =>
           if y.1 then pure (x.tail, x.head) else Prod.mk rec_call <$> map_field n g.app_fn f α β y.2)
         rec_call args₁
   let constr ← mk_const c
@@ -110,7 +117,7 @@ unsafe def derive_map_equations (pre : Option Name) (n : Name) (vs : List expr) 
   set_goals []
   return ()
 
--- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `d
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `d
 unsafe def derive_functor (pre : Option Name) : tactic Unit := do
   let vs ← local_context
   let quote.1 (Functor (%%ₓf)) ← target
@@ -131,7 +138,7 @@ private unsafe def seq_apply_constructor : expr → List (Sum expr expr) → tac
   | e, Sum.inl x :: xs => Prod.map (cons <| pure x) id <$> seq_apply_constructor e xs
   | e, [] => return ([], e)
 
--- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `t
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `t
 /-- ``nested_traverse f α (list (array n (list α)))`` synthesizes the expression
 `traverse (traverse (traverse f))`. `nested_traverse` assumes that `α` appears in
 `(list (array n (list α)))` -/
@@ -167,7 +174,7 @@ unsafe def traverse_constructor (c n : Name) (appl_inst f α β : expr) (args₀
   let args' ← mmapₓ (traverse_field n appl_inst g.app_fn f α) args₀
   let (_, args') ←
     mmapAccuml
-        (fun x : List expr y : Bool × _ =>
+        (fun y : Bool × _ =>
           if y.1 then pure (x.tail, Sum.inr x.head) else Prod.mk x <$> traverse_field n appl_inst g.app_fn f α y.2)
         rec_call args₁
   let constr ← mk_const c
@@ -238,7 +245,7 @@ unsafe def derive_traverse_equations (pre : Option Name) (n : Name) (vs : List e
   set_goals []
   return ()
 
--- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `d
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `d
 unsafe def derive_traverse (pre : Option Name) : tactic Unit := do
   let vs ← local_context
   let quote.1 (Traversable (%%ₓf)) ← target
@@ -259,16 +266,19 @@ unsafe def mk_one_instance (n : Name) (cls : Name) (tac : tactic Unit) (namesp :
   let env ← get_env
   guardₓ (env n) <|> fail f! "failed to derive '{cls }', '{n}' is not an inductive type"
   let ls := decl.univ_params.map fun n => level.param n
-  let tgt : expr := expr.const n ls
+  let-- incrementally build up target expression `Π (hp : p) [cls hp] ..., cls (n.{ls} hp ...)`
+  -- where `p ...` are the inductive parameter types of `n`
+  tgt : expr := expr.const n ls
   let ⟨params, _⟩ ← open_pis (decl.type.instantiate_univ_params (decl.univ_params.zip ls))
   let params := params.init
   let tgt := tgt.mk_app params
   let tgt ← mk_inst cls tgt
   let tgt ←
     params.enum.mfoldr
-        (fun ⟨i, param⟩ tgt => do
+        (fun tgt => do
           let tgt ←
-            (do
+            (-- add typeclass hypothesis for each inductive parameter
+                do
                   guardₓ <| i < env n
                   let param_cls ← mk_app cls [param]
                   pure <| expr.pi `a BinderInfo.inst_implicit param_cls tgt) <|>

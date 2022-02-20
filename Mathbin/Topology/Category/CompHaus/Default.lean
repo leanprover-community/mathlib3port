@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Adam Topaz. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Adam Topaz, Bhavik Mehta
+-/
 import Mathbin.CategoryTheory.Adjunction.Reflective
 import Mathbin.Topology.Category.Top.Default
 import Mathbin.Topology.StoneCech
@@ -50,7 +55,7 @@ instance {X : CompHaus} : T2Space X :=
 instance category : Category CompHaus :=
   InducedCategory.category toTop
 
-instance concrete_category : ConcreteCategory CompHaus :=
+instance concreteCategory : ConcreteCategory CompHaus :=
   InducedCategory.concreteCategory _
 
 @[simp]
@@ -72,7 +77,7 @@ theorem coe_of : (CompHaus.of X : Type _) = X :=
   rfl
 
 /-- Any continuous function on compact Hausdorff spaces is a closed map. -/
-theorem IsClosedMap {X Y : CompHaus.{u}} (f : X ⟶ Y) : IsClosedMap f := fun C hC =>
+theorem is_closed_map {X Y : CompHaus.{u}} (f : X ⟶ Y) : IsClosedMap f := fun C hC =>
   (hC.IsCompact.Image f.Continuous).IsClosed
 
 /-- Any continuous bijection of compact Hausdorff spaces is an isomorphism. -/
@@ -92,7 +97,7 @@ theorem is_iso_of_bijective {X Y : CompHaus.{u}} (f : X ⟶ Y) (bij : Function.B
     
 
 /-- Any continuous bijection of compact Hausdorff spaces induces an isomorphism. -/
-noncomputable def iso_of_bijective {X Y : CompHaus.{u}} (f : X ⟶ Y) (bij : Function.Bijective f) : X ≅ Y := by
+noncomputable def isoOfBijective {X Y : CompHaus.{u}} (f : X ⟶ Y) (bij : Function.Bijective f) : X ≅ Y := by
   let this' := is_iso_of_bijective _ bij <;> exact as_iso f
 
 end CompHaus
@@ -157,10 +162,10 @@ instance CompHaus.has_colimits : Limits.HasColimits CompHaus :=
 
 namespace CompHaus
 
--- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (i j)
 /-- An explicit limit cone for a functor `F : J ⥤ CompHaus`, defined in terms of
 `Top.limit_cone`. -/
-def limit_cone {J : Type u} [SmallCategory J] (F : J ⥤ CompHaus.{u}) : Limits.Cone F where
+def limitCone {J : Type u} [SmallCategory J] (F : J ⥤ CompHaus.{u}) : Limits.Cone F where
   x :=
     { toTop := (Top.limitCone (F ⋙ compHausToTop)).x,
       IsCompact := by
@@ -196,7 +201,7 @@ def limit_cone {J : Type u} [SmallCategory J] (F : J ⥤ CompHaus.{u}) : Limits.
         exact (hx f).symm }
 
 /-- The limit cone `CompHaus.limit_cone F` is indeed a limit cone. -/
-def limit_cone_is_limit {J : Type u} [SmallCategory J] (F : J ⥤ CompHaus.{u}) : Limits.IsLimit (limitCone F) where
+def limitConeIsLimit {J : Type u} [SmallCategory J] (F : J ⥤ CompHaus.{u}) : Limits.IsLimit (limitCone F) where
   lift := fun S => (Top.limitConeIsLimit (F ⋙ compHausToTop)).lift (compHausToTop.mapCone S)
   uniq' := fun S m h => (Top.limitConeIsLimit _).uniq (compHausToTop.mapCone S) _ h
 

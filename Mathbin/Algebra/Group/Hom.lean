@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2018 Patrick Massot. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Patrick Massot, Kevin Buzzard, Scott Morrison, Johan Commelin, Chris Hughes,
+  Johannes Hölzl, Yury Kudryashov
+-/
 import Mathbin.Algebra.Group.Commute
 import Mathbin.Algebra.GroupWithZero.Defs
 import Mathbin.Data.FunLike.Basic
@@ -54,10 +60,14 @@ monoid_hom, add_monoid_hom
 
 variable {M : Type _} {N : Type _} {P : Type _}
 
+-- monoids
 variable {G : Type _} {H : Type _}
 
+-- groups
 variable {F : Type _}
 
+-- homs
+-- for easy multiple inheritance
 section Zero
 
 /-- `zero_hom M N` is the type of functions `M → N` that preserve zero.
@@ -78,6 +88,7 @@ You should extend this typeclass when you extend `zero_hom`.
 class ZeroHomClass (F : Type _) (M N : outParam <| Type _) [Zero M] [Zero N] extends FunLike F M fun _ => N where
   map_zero : ∀ f : F, f 0 = 0
 
+-- Instances and lemmas are defined below through `@[to_additive]`.
 end Zero
 
 section Add
@@ -99,6 +110,7 @@ You should declare an instance of this typeclass when you extend `add_hom`.
 class AddHomClass (F : Type _) (M N : outParam <| Type _) [Add M] [Add N] extends FunLike F M fun _ => N where
   map_add : ∀ f : F x y : M, f (x + y) = f x + f y
 
+-- Instances and lemmas are defined below through `@[to_additive]`.
 end Add
 
 section add_zeroₓ
@@ -130,6 +142,7 @@ You should also extend this typeclass when you extend `add_monoid_hom`.
 class AddMonoidHomClass (F : Type _) (M N : outParam <| Type _) [AddZeroClass M] [AddZeroClass N] extends
   AddHomClass F M N, ZeroHomClass F M N
 
+-- Instances and lemmas are defined below through `@[to_additive]`.
 end add_zeroₓ
 
 section One
@@ -342,6 +355,7 @@ instance [MonoidWithZeroHomClass F M N] : CoeTₓ F (M →*₀ N) :=
 
 end MulZeroOne
 
+-- completely uninteresting lemmas about coercion to function, that all homs need
 section Coes
 
 /-! Bundled morphisms can be down-cast to weaker bundlings -/
@@ -388,6 +402,7 @@ theorem MonoidWithZeroHom.coe_eq_to_zero_hom {mM : MulZeroOneClassₓ M} {mN : M
     (f : ZeroHom M N) = f.toZeroHom :=
   rfl
 
+-- Fallback `has_coe_to_fun` instances to help the elaborator
 @[to_additive]
 instance {mM : One M} {mN : One N} : CoeFun (OneHom M N) fun _ => M → N :=
   ⟨OneHom.toFun⟩
@@ -403,7 +418,8 @@ instance {mM : MulOneClassₓ M} {mN : MulOneClassₓ N} : CoeFun (M →* N) fun
 instance {mM : MulZeroOneClassₓ M} {mN : MulZeroOneClassₓ N} : CoeFun (M →*₀ N) fun _ => M → N :=
   ⟨MonoidWithZeroHom.toFun⟩
 
-initialize_simps_projections ZeroHom (toFun → apply)
+initialize_simps_projections -- these must come after the coe_to_fun definitions
+ZeroHom (toFun → apply)
 
 initialize_simps_projections AddHom (toFun → apply)
 
@@ -1044,6 +1060,7 @@ instance [Mul M] [MulOneClassₓ N] : Inhabited (MulHom M N) :=
 instance [MulOneClassₓ M] [MulOneClassₓ N] : Inhabited (M →* N) :=
   ⟨1⟩
 
+-- unlike the other homs, `monoid_with_zero_hom` does not have a `1` or `0`
 instance [MulZeroOneClassₓ M] : Inhabited (M →*₀ M) :=
   ⟨MonoidWithZeroHom.id M⟩
 
@@ -1158,7 +1175,7 @@ See also `monoid_hom.of_map_div` for a version using `λ x y, x / y`.
 -/
 @[to_additive
       "Makes an additive group homomorphism from a proof that the map preserves\nthe operation `λ a b, a + -b`. See also `add_monoid_hom.of_map_sub` for a version using\n`λ a b, a - b`."]
-def of_map_mul_inv {H : Type _} [Groupₓ H] (f : G → H) (map_div : ∀ a b : G, f (a * b⁻¹) = f a * (f b)⁻¹) : G →* H :=
+def ofMapMulInv {H : Type _} [Groupₓ H] (f : G → H) (map_div : ∀ a b : G, f (a * b⁻¹) = f a * (f b)⁻¹) : G →* H :=
   (mk' f) fun x y =>
     calc
       f (x * y) = f x * (f <| 1 * 1⁻¹ * y⁻¹)⁻¹ := by
@@ -1175,7 +1192,7 @@ theorem coe_of_map_mul_inv {H : Type _} [Groupₓ H] (f : G → H) (map_div : �
 
 /-- Define a morphism of additive groups given a map which respects ratios. -/
 @[to_additive "Define a morphism of additive groups given a map which respects difference."]
-def of_map_div {H : Type _} [Groupₓ H] (f : G → H) (hf : ∀ x y, f (x / y) = f x / f y) : G →* H :=
+def ofMapDiv {H : Type _} [Groupₓ H] (f : G → H) (hf : ∀ x y, f (x / y) = f x / f y) : G →* H :=
   ofMapMulInv f
     (by
       simpa only [div_eq_mul_inv] using hf)

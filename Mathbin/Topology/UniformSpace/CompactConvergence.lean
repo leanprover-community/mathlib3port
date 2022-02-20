@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Oliver Nash. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Oliver Nash
+-/
 import Mathbin.Topology.CompactOpen
 import Mathbin.Topology.UniformSpace.UniformConvergence
 
@@ -84,7 +89,7 @@ namespace ContinuousMap
 
 /-- Given `K ⊆ α`, `V ⊆ β × β`, and `f : C(α, β)`, we define `compact_conv_nhd K V f` to be the set
 of `g : C(α, β)` that are `V`-close to `f` on `K`. -/
-def compact_conv_nhd : Set C(α, β) :=
+def CompactConvNhd : Set C(α, β) :=
   { g | ∀, ∀ x ∈ K, ∀, (f x, g x) ∈ V }
 
 variable {K V}
@@ -125,7 +130,7 @@ theorem compact_conv_nhd_filter_is_basis :
         ⟨⟨K₁ ∪ K₂, V₁ ∩ V₂⟩, ⟨hK₁.union hK₂, Filter.inter_mem hV₁ hV₂⟩, compact_conv_nhd_subset_inter f K₁ K₂ V₁ V₂⟩ }
 
 /-- A filter basis for the neighbourhood filter of a point in the compact-convergence topology. -/
-def compact_convergence_filter_basis (f : C(α, β)) : FilterBasis C(α, β) :=
+def compactConvergenceFilterBasis (f : C(α, β)) : FilterBasis C(α, β) :=
   (compact_conv_nhd_filter_is_basis f).FilterBasis
 
 theorem mem_compact_convergence_nhd_filter (Y : Set C(α, β)) :
@@ -143,7 +148,7 @@ theorem mem_compact_convergence_nhd_filter (Y : Set C(α, β)) :
 /-- The compact-convergence topology. In fact, see `compact_open_eq_compact_convergence` this is
 the same as the compact-open topology. This definition is thus an auxiliary convenience definition
 and is unlikely to be of direct use. -/
-def compact_convergence_topology : TopologicalSpace C(α, β) :=
+def compactConvergenceTopology : TopologicalSpace C(α, β) :=
   TopologicalSpace.mkOfNhds fun f => (compactConvergenceFilterBasis f).filter
 
 theorem nhds_compact_convergence : @nhds _ compactConvergenceTopology f = (compactConvergenceFilterBasis f).filter := by
@@ -257,7 +262,7 @@ theorem compact_open_eq_compact_convergence :
     
 
 /-- The filter on `C(α, β) × C(α, β)` which underlies the uniform space structure on `C(α, β)`. -/
-def compact_convergence_uniformity : Filter (C(α, β) × C(α, β)) :=
+def compactConvergenceUniformity : Filter (C(α, β) × C(α, β)) :=
   ⨅ KV ∈ { KV : Set α × Set (β × β) | IsCompact KV.1 ∧ KV.2 ∈ 𝓤 β },
     𝓟 { fg : C(α, β) × C(α, β) | ∀ x : α, x ∈ KV.1 → (fg.1 x, fg.2 x) ∈ KV.2 }
 
@@ -284,7 +289,7 @@ theorem mem_compact_convergence_uniformity (X : Set (C(α, β) × C(α, β))) :
     
 
 /-- Note that we ensure the induced topology is definitionally the compact-open topology. -/
-instance compact_convergence_uniform_space : UniformSpace C(α, β) where
+instance compactConvergenceUniformSpace : UniformSpace C(α, β) where
   uniformity := compactConvergenceUniformity
   refl := by
     simp only [compact_convergence_uniformity, and_imp, Filter.le_principal_iff, Prod.forall, Filter.mem_principal,

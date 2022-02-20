@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison, Justus Springer
+-/
 import Mathbin.CategoryTheory.Limits.Preserves.Basic
 import Mathbin.CategoryTheory.Filtered
 
@@ -16,6 +21,7 @@ namespace CategoryTheory.Limits
 
 universe v u₁ u₂ u₃
 
+-- declare the `v`'s first; see `category_theory.category` for an explanation
 variable {C : Type u₁} [Category.{v} C]
 
 variable {D : Type u₂} [Category.{v} D]
@@ -27,32 +33,32 @@ variable {J : Type v} [SmallCategory J] {K : J ⥤ C}
 /-- A functor is said to preserve filtered colimits, if it preserves all colimits of shape `J`, where
 `J` is a filtered category.
 -/
-class preserves_filtered_colimits (F : C ⥤ D) : Type max u₁ u₂ (v + 1) where
+class PreservesFilteredColimits (F : C ⥤ D) : Type max u₁ u₂ (v + 1) where
   PreservesFilteredColimits : ∀ J : Type v [SmallCategory J] [IsFiltered J], PreservesColimitsOfShape J F
 
 attribute [instance] preserves_filtered_colimits.preserves_filtered_colimits
 
-instance (priority := 100) preserves_colimits.preserves_filtered_colimits (F : C ⥤ D) [PreservesColimits F] :
+instance (priority := 100) PreservesColimits.preservesFilteredColimits (F : C ⥤ D) [PreservesColimits F] :
     PreservesFilteredColimits F where
   PreservesFilteredColimits := inferInstance
 
-instance comp_preserves_filtered_colimits (F : C ⥤ D) (G : D ⥤ E) [PreservesFilteredColimits F]
+instance compPreservesFilteredColimits (F : C ⥤ D) (G : D ⥤ E) [PreservesFilteredColimits F]
     [PreservesFilteredColimits G] : PreservesFilteredColimits (F ⋙ G) where
   PreservesFilteredColimits := fun J _ _ => inferInstance
 
 /-- A functor is said to preserve cofiltered limits, if it preserves all limits of shape `J`, where
 `J` is a cofiltered category.
 -/
-class preserves_cofiltered_limits (F : C ⥤ D) : Type max u₁ u₂ (v + 1) where
+class PreservesCofilteredLimits (F : C ⥤ D) : Type max u₁ u₂ (v + 1) where
   PreservesCofilteredLimits : ∀ J : Type v [SmallCategory J] [IsCofiltered J], PreservesLimitsOfShape J F
 
 attribute [instance] preserves_cofiltered_limits.preserves_cofiltered_limits
 
-instance (priority := 100) preserves_limits.preserves_cofiltered_limits (F : C ⥤ D) [PreservesLimits F] :
+instance (priority := 100) PreservesLimits.preservesCofilteredLimits (F : C ⥤ D) [PreservesLimits F] :
     PreservesCofilteredLimits F where
   PreservesCofilteredLimits := inferInstance
 
-instance comp_preserves_cofiltered_limits (F : C ⥤ D) (G : D ⥤ E) [PreservesCofilteredLimits F]
+instance compPreservesCofilteredLimits (F : C ⥤ D) (G : D ⥤ E) [PreservesCofilteredLimits F]
     [PreservesCofilteredLimits G] : PreservesCofilteredLimits (F ⋙ G) where
   PreservesCofilteredLimits := fun J _ _ => inferInstance
 

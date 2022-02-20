@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison, Shing Tak Lam, Mario Carneiro
+-/
 import Mathbin.Data.Int.Modeq
 import Mathbin.Data.Nat.Log
 import Mathbin.Data.List.Indexes
@@ -21,16 +26,16 @@ A basic `norm_digits` tactic is also provided for proving goals of the form
 namespace Nat
 
 /-- (Impl.) An auxiliary definition for `digits`, to help get the desired definitional unfolding. -/
-def digits_aux_0 : ℕ → List ℕ
+def digitsAux0 : ℕ → List ℕ
   | 0 => []
   | n + 1 => [n + 1]
 
 /-- (Impl.) An auxiliary definition for `digits`, to help get the desired definitional unfolding. -/
-def digits_aux_1 (n : ℕ) : List ℕ :=
+def digitsAux1 (n : ℕ) : List ℕ :=
   List.repeat 1 n
 
 /-- (Impl.) An auxiliary definition for `digits`, to help get the desired definitional unfolding. -/
-def digits_aux (b : ℕ) (h : 2 ≤ b) : ℕ → List ℕ
+def digitsAux (b : ℕ) (h : 2 ≤ b) : ℕ → List ℕ
   | 0 => []
   | n + 1 =>
     have : (n + 1) / b < n + 1 := Nat.div_lt_selfₓ (Nat.succ_posₓ _) h
@@ -156,7 +161,10 @@ theorem digits_add (b : ℕ) (h : 2 ≤ b) (x y : ℕ) (w : x < b) (w' : 0 < x �
 /-- `of_digits b L` takes a list `L` of natural numbers, and interprets them
 as a number in semiring, as the little-endian digits in base `b`.
 -/
-def of_digits {α : Type _} [Semiringₓ α] (b : α) : List ℕ → α
+-- If we had a function converting a list into a polynomial,
+-- and appropriate lemmas about that function,
+-- we could rewrite this in terms of that.
+def ofDigits {α : Type _} [Semiringₓ α] (b : α) : List ℕ → α
   | [] => 0
   | h :: t => h + b * of_digits t
 
@@ -445,6 +453,7 @@ theorem digits_lt_base' {b m : ℕ} : ∀ {d}, d ∈ digits (b + 2) m → d < b 
   · rw [digits_zero] at hd
     cases hd
     
+  -- base b+2 expansion of 0 has no digits
   rw [digits_add_two_add_one] at hd
   cases hd
   · rw [hd]
@@ -562,6 +571,7 @@ theorem base_pow_length_digits_le (b m : ℕ) (hb : 2 ≤ b) : m ≠ 0 → b ^ (
 /-! ### Modular Arithmetic -/
 
 
+-- This is really a theorem about polynomials.
 theorem dvd_of_digits_sub_of_digits {α : Type _} [CommRingₓ α] {a b k : α} (h : k ∣ a - b) (L : List ℕ) :
     k ∣ ofDigits a L - ofDigits b L := by
   induction' L with d L ih

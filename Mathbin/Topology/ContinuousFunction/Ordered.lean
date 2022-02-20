@@ -1,3 +1,8 @@
+/-
+Copyright © 2021 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison, Shing Tak Lam
+-/
 import Mathbin.Topology.Algebra.Order.ProjIcc
 import Mathbin.Topology.ContinuousFunction.Basic
 
@@ -21,6 +26,7 @@ variable [LinearOrderedAddCommGroup β] [OrderTopology β]
 def abs (f : C(α, β)) : C(α, β) where
   toFun := fun x => abs (f x)
 
+-- see Note [lower instance priority]
 instance (priority := 100) : HasAbs C(α, β) :=
   ⟨fun f => abs f⟩
 
@@ -38,7 +44,7 @@ on continuous functions.
 
 section Lattice
 
-instance PartialOrderₓ [PartialOrderₓ β] : PartialOrderₓ C(α, β) :=
+instance partialOrder [PartialOrderₓ β] : PartialOrderₓ C(α, β) :=
   PartialOrderₓ.lift (fun f => f.toFun)
     (by
       tidy)
@@ -49,7 +55,7 @@ theorem le_def [PartialOrderₓ β] {f g : C(α, β)} : f ≤ g ↔ ∀ a, f a �
 theorem lt_def [PartialOrderₓ β] {f g : C(α, β)} : f < g ↔ (∀ a, f a ≤ g a) ∧ ∃ a, f a < g a :=
   Pi.lt_def
 
-instance HasSup [LinearOrderₓ β] [OrderClosedTopology β] : HasSup C(α, β) where
+instance hasSup [LinearOrderₓ β] [OrderClosedTopology β] : HasSup C(α, β) where
   sup := fun f g => { toFun := fun a => max (f a) (g a) }
 
 @[simp, norm_cast]
@@ -74,7 +80,7 @@ instance [LinearOrderₓ β] [OrderClosedTopology β] : SemilatticeSup C(α, β)
       le_def.mpr fun a => by
         simp [le_def.mp w₁ a, le_def.mp w₂ a] }
 
-instance HasInf [LinearOrderₓ β] [OrderClosedTopology β] : HasInf C(α, β) where
+instance hasInf [LinearOrderₓ β] [OrderClosedTopology β] : HasInf C(α, β) where
   inf := fun f g => { toFun := fun a => min (f a) (g a) }
 
 @[simp, norm_cast]
@@ -102,6 +108,7 @@ instance [LinearOrderₓ β] [OrderClosedTopology β] : SemilatticeInf C(α, β)
 instance [LinearOrderₓ β] [OrderClosedTopology β] : Lattice C(α, β) :=
   { ContinuousMap.semilatticeInf, ContinuousMap.semilatticeSup with }
 
+-- TODO transfer this lattice structure to `bounded_continuous_function`
 section Sup'
 
 variable [LinearOrderₓ γ] [OrderClosedTopology γ]
@@ -141,7 +148,7 @@ variable [LinearOrderₓ α] [OrderTopology α] {a b : α} (h : a ≤ b)
 
 /-- Extend a continuous function `f : C(set.Icc a b, β)` to a function `f : C(α, β)`.
 -/
-def Icc_extend (f : C(Set.Icc a b, β)) : C(α, β) :=
+def iccExtend (f : C(Set.Icc a b, β)) : C(α, β) :=
   ⟨Set.iccExtend h f⟩
 
 @[simp]

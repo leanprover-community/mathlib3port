@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Anne Baanen. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Anne Baanen
+-/
 import Mathbin.Algebra.Associated
 import Mathbin.Algebra.Regular.Basic
 import Mathbin.LinearAlgebra.Matrix.MvPolynomial
@@ -67,7 +72,7 @@ variable (A : Matrix n n α) (b : n → α)
   If `A ⬝ x = b` has a unique solution in `x`, `cramer_map A` sends the vector `b` to `A.det • x`.
   Otherwise, the outcome of `cramer_map` is well-defined but not necessarily useful.
 -/
-def cramer_map (i : n) : α :=
+def cramerMap (i : n) : α :=
   (A.updateColumn i b).det
 
 theorem cramer_map_is_linear (i : n) : IsLinearMap α fun b => cramerMap A b i :=
@@ -99,10 +104,12 @@ theorem cramer_transpose_row_self (i : n) : (A)ᵀ.cramer (A i) = Pi.single i A.
   ext j
   rw [cramer_apply, Pi.single_apply]
   split_ifs with h
-  · subst h
+  · -- i = j: this entry should be `A.det`
+    subst h
     simp only [update_column_transpose, det_transpose, update_row, Function.update_eq_self]
     
-  · rw [update_column_transpose, det_transpose]
+  · -- i ≠ j: this entry should be 0
+    rw [update_column_transpose, det_transpose]
     apply det_zero_of_row_eq h
     rw [update_row_self, update_row_ne (Ne.symm h)]
     
@@ -189,7 +196,9 @@ theorem adjugate_transpose (A : Matrix n n α) : (adjugate A)ᵀ = adjugate (A)�
   intro σ _
   congr 1
   by_cases' i = σ j
-  · congr <;> ext j'
+  · -- Everything except `(i , j)` (= `(σ j , j)`) is given by A, and the rest is a single `1`.
+      congr <;>
+      ext j'
     subst h
     have : σ j' = σ j ↔ j' = j := σ.injective.eq_iff
     rw [update_row_apply, update_column_apply]
@@ -198,7 +207,8 @@ theorem adjugate_transpose (A : Matrix n n α) : (adjugate A)ᵀ = adjugate (A)�
     congr 1 with rfl
     rw [Pi.single_eq_same, Pi.single_eq_same]
     
-  · have : (∏ j' : n, update_column A j (Pi.single i 1) (σ j') j') = 0 := by
+  · -- Otherwise, we need to show that there is a `0` somewhere in the product.
+    have : (∏ j' : n, update_column A j (Pi.single i 1) (σ j') j') = 0 := by
       apply prod_eq_zero (mem_univ j)
       rw [update_column_self, Pi.single_eq_of_ne' h]
     rw [this]
@@ -285,11 +295,14 @@ theorem _root_.alg_hom.map_adjugate {R A B : Type _} [CommSemiringₓ R] [CommRi
   f.toRingHom.map_adjugate _
 
 theorem det_adjugate (A : Matrix n n α) : (adjugate A).det = A.det ^ (Fintype.card n - 1) := by
+  -- get rid of the `- 1`
   cases' (Fintype.card n).eq_zero_or_pos with h_card h_card
   · have : IsEmpty n := fintype.card_eq_zero_iff.mp h_card
     rw [h_card, Nat.zero_sub, pow_zeroₓ, adjugate_subsingleton, det_one]
     
   replace h_card := tsub_add_cancel_of_le h_card.nat_succ_le
+  -- express `A` as an evaluation of a polynomial in n^2 variables, and solve in the polynomial ring
+  -- where `A'.det` is non-zero.
   let A' := mv_polynomial_X n n ℤ
   suffices A'.adjugate.det = A'.det ^ (Fintype.card n - 1) by
     rw [← mv_polynomial_X_map_matrix_aeval ℤ A, ← AlgHom.map_adjugate, ← AlgHom.map_det, ← AlgHom.map_det, ←
@@ -309,10 +322,10 @@ theorem adjugate_fin_one (A : Matrix (Finₓ 1) (Finₓ 1) α) : adjugate A = 1 
 
 -- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
 -- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
--- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»
 theorem adjugate_fin_two (A : Matrix (Finₓ 2) (Finₓ 2) α) :
-    adjugate A = «expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»" :=
+    adjugate A = «expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»" :=
   by
   ext i j
   rw [adjugate_apply, det_fin_two]
@@ -322,14 +335,14 @@ theorem adjugate_fin_two (A : Matrix (Finₓ 2) (Finₓ 2) α) :
         sub_zero, Pi.single_eq_of_ne, Ne.def, not_false_iff, update_row_self, update_row_ne, cons_val_zero, mul_zero,
         mul_oneₓ, zero_sub, cons_val_one, head_cons]
 
--- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»
 @[simp]
 theorem adjugate_fin_two' (a b c d : α) :
-    adjugate («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»") =
-      «expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»" :=
+    adjugate («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»") =
+      «expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»" :=
   adjugate_fin_two _
 
 theorem adjugate_conj_transpose [StarRing α] (A : Matrix n n α) : (A.adjugate)ᴴ = adjugate (A)ᴴ := by
@@ -399,6 +412,7 @@ theorem det_smul_adjugate_adjugate (A : Matrix n n α) :
 /-- Note that this is not true for `fintype.card n = 1` since `1 - 2 = 0` and not `-1`. -/
 theorem adjugate_adjugate (A : Matrix n n α) (h : Fintype.card n ≠ 1) :
     adjugate (adjugate A) = det A ^ (Fintype.card n - 2) • A := by
+  -- get rid of the `- 2`
   cases' h_card : Fintype.card n with n'
   · have : IsEmpty n := fintype.card_eq_zero_iff.mp h_card
     exact @Subsingleton.elimₓ _ Matrix.subsingleton_of_empty_left _ _
@@ -407,10 +421,13 @@ theorem adjugate_adjugate (A : Matrix n n α) (h : Fintype.card n ≠ 1) :
   · exact (h h_card).elim
     
   rw [← h_card]
+  -- express `A` as an evaluation of a polynomial in n^2 variables, and solve in the polynomial ring
+  -- where `A'.det` is non-zero.
   let A' := mv_polynomial_X n n ℤ
   suffices adjugate (adjugate A') = det A' ^ (Fintype.card n - 2) • A' by
     rw [← mv_polynomial_X_map_matrix_aeval ℤ A, ← AlgHom.map_adjugate, ← AlgHom.map_adjugate, this, ← AlgHom.map_det, ←
       AlgHom.map_pow]
+    -- TODO: missing an `alg_hom.map_smul_of_tower` here.
     ext i j
     dsimp [-mv_polynomial_X]
     rw [← AlgHom.map_mul]

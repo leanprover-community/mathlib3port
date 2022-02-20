@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Kenny Lau. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Kenny Lau
+-/
 import Mathbin.Algebra.Group.Defs
 import Mathbin.Data.Equiv.Basic
 import Mathbin.Logic.Nontrivial
@@ -37,10 +42,10 @@ reverses left and right in multiplication.-/
 def MulOpposite (α : Type u) : Type u :=
   α
 
--- ././Mathport/Syntax/Translate/Basic.lean:343:9: unsupported: advanced prec syntax
+-- ././Mathport/Syntax/Translate/Basic.lean:462:9: unsupported: advanced prec syntax
 postfix:999 "ᵐᵒᵖ" => MulOpposite
 
--- ././Mathport/Syntax/Translate/Basic.lean:343:9: unsupported: advanced prec syntax
+-- ././Mathport/Syntax/Translate/Basic.lean:462:9: unsupported: advanced prec syntax
 postfix:999 "ᵃᵒᵖ" => AddOpposite
 
 variable {α : Type u}
@@ -82,7 +87,7 @@ protected def rec {F : ∀ X : αᵐᵒᵖ, Sort v} (h : ∀ X, F (op X)) : ∀ 
 /-- The canonical bijection between `α` and `αᵐᵒᵖ`. -/
 @[to_additive "The canonical bijection between `α` and `αᵃᵒᵖ`.",
   simps (config := { fullyApplied := false }) apply symmApply]
-def op_equiv : α ≃ αᵐᵒᵖ :=
+def opEquiv : α ≃ αᵐᵒᵖ :=
   ⟨op, unop, unop_op, op_unop⟩
 
 @[to_additive]

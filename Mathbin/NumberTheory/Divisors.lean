@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Aaron Anderson. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Aaron Anderson
+-/
 import Mathbin.Algebra.BigOperators.Order
 import Mathbin.Data.Nat.Interval
 import Mathbin.Data.Nat.Prime
@@ -40,17 +45,17 @@ def divisors : Finset ℕ :=
 
 /-- `proper_divisors n` is the `finset` of divisors of `n`, other than `n`.
   As a special case, `proper_divisors 0 = ∅`. -/
-def proper_divisors : Finset ℕ :=
+def properDivisors : Finset ℕ :=
   Finset.filter (fun x : ℕ => x ∣ n) (Finset.ico 1 n)
 
 /-- `divisors_antidiagonal n` is the `finset` of pairs `(x,y)` such that `x * y = n`.
   As a special case, `divisors_antidiagonal 0 = ∅`. -/
-def divisors_antidiagonal : Finset (ℕ × ℕ) :=
+def divisorsAntidiagonal : Finset (ℕ × ℕ) :=
   ((Finset.ico 1 (n + 1)).product (Finset.ico 1 (n + 1))).filter fun x => x.fst * x.snd = n
 
 variable {n}
 
-theorem proper_divisors.not_self_mem : ¬n ∈ properDivisors n := by
+theorem properDivisors.not_self_mem : ¬n ∈ properDivisors n := by
   rw [proper_divisors]
   simp
 
@@ -226,7 +231,7 @@ theorem sum_divisors_eq_sum_proper_divisors_add_self : (∑ i in divisors n, i) 
 
 /-- `n : ℕ` is perfect if and only the sum of the proper divisors of `n` is `n` and `n`
   is positive. -/
-def perfect (n : ℕ) : Prop :=
+def Perfect (n : ℕ) : Prop :=
   (∑ i in properDivisors n, i) = n ∧ 0 < n
 
 theorem perfect_iff_sum_proper_divisors (h : 0 < n) : Perfect n ↔ (∑ i in properDivisors n, i) = n :=
@@ -244,11 +249,11 @@ theorem mem_divisors_prime_pow {p : ℕ} (pp : p.Prime) (k : ℕ) {x : ℕ} :
     x ∈ divisors (p ^ k) ↔ ∃ (j : ℕ)(H : j ≤ k), x = p ^ j := by
   rw [mem_divisors, Nat.dvd_prime_pow pp, and_iff_left (ne_of_gtₓ (pow_pos pp.pos k))]
 
-theorem prime.divisors {p : ℕ} (pp : p.Prime) : divisors p = {1, p} := by
+theorem Prime.divisors {p : ℕ} (pp : p.Prime) : divisors p = {1, p} := by
   ext
   rw [mem_divisors, dvd_prime pp, and_iff_left pp.ne_zero, Finset.mem_insert, Finset.mem_singleton]
 
-theorem prime.proper_divisors {p : ℕ} (pp : p.Prime) : properDivisors p = {1} := by
+theorem Prime.proper_divisors {p : ℕ} (pp : p.Prime) : properDivisors p = {1} := by
   rw [← erase_insert proper_divisors.not_self_mem, ← divisors_eq_proper_divisors_insert_self_of_pos pp.pos, pp.divisors,
     insert_singleton_comm, erase_insert fun con => pp.ne_one (mem_singleton.1 con)]
 
@@ -297,12 +302,12 @@ theorem sum_proper_divisors_dvd (h : (∑ x in n.properDivisors, x) ∣ n) :
   refine' ⟨one_dvd _, Nat.succ_lt_succₓ (Nat.succ_posₓ _)⟩
 
 @[simp, to_additive]
-theorem prime.prod_proper_divisors {α : Type _} [CommMonoidₓ α] {p : ℕ} {f : ℕ → α} (h : p.Prime) :
+theorem Prime.prod_proper_divisors {α : Type _} [CommMonoidₓ α] {p : ℕ} {f : ℕ → α} (h : p.Prime) :
     (∏ x in p.properDivisors, f x) = f 1 := by
   simp [h.proper_divisors]
 
 @[simp, to_additive]
-theorem prime.prod_divisors {α : Type _} [CommMonoidₓ α] {p : ℕ} {f : ℕ → α} (h : p.Prime) :
+theorem Prime.prod_divisors {α : Type _} [CommMonoidₓ α] {p : ℕ} {f : ℕ → α} (h : p.Prime) :
     (∏ x in p.divisors, f x) = f p * f 1 := by
   rw [divisors_eq_proper_divisors_insert_self_of_pos h.pos, prod_insert proper_divisors.not_self_mem,
     h.prod_proper_divisors]
@@ -409,6 +414,42 @@ theorem prime_divisors_eq_to_filter_divisors_prime (n : ℕ) : n.factors.toFinse
     
   · ext q
     simpa [hn, hn.ne', mem_factors] using and_comm (Prime q) (q ∣ n)
+    
+
+@[simp]
+theorem image_div_divisors_eq_divisors (n : ℕ) : image (fun x : ℕ => n / x) n.divisors = n.divisors := by
+  by_cases' hn : n = 0
+  · simp [hn]
+    
+  ext
+  constructor
+  · rw [mem_image]
+    rintro ⟨x, hx1, hx2⟩
+    rw [mem_divisors] at *
+    refine' ⟨_, hn⟩
+    rw [← hx2]
+    exact div_dvd_of_dvd hx1.1
+    
+  · rw [mem_divisors, mem_image]
+    rintro ⟨h1, -⟩
+    exact ⟨n / a, mem_divisors.mpr ⟨div_dvd_of_dvd h1, hn⟩, Nat.div_div_self h1 (pos_iff_ne_zero.mpr hn)⟩
+    
+
+@[simp, to_additive sum_div_divisors]
+theorem prod_div_divisors {α : Type _} [CommMonoidₓ α] (n : ℕ) (f : ℕ → α) :
+    (∏ d in n.divisors, f (n / d)) = n.divisors.Prod f := by
+  by_cases' hn : n = 0
+  · simp [hn]
+    
+  rw [← prod_image]
+  · exact
+      prod_congr (image_div_divisors_eq_divisors n)
+        (by
+          simp )
+    
+  · intro x hx y hy h
+    rw [mem_divisors] at hx hy
+    exact (div_eq_iff_eq_of_dvd_dvd hn hx.1 hy.1).mp h
     
 
 end Nat

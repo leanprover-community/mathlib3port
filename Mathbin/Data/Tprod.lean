@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Floris van Doorn. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Floris van Doorn
+-/
 import Mathbin.Data.List.Nodup
 
 /-!
@@ -38,7 +43,7 @@ namespace List
 variable (α)
 
 /-- The product of a family of types over a list. -/
-def tprod (l : List ι) : Type _ :=
+def Tprod (l : List ι) : Type _ :=
   l.foldr (fun i β => α i × β) PUnit
 
 variable {α}
@@ -48,7 +53,7 @@ namespace Tprod
 open List
 
 /-- Turning a function `f : Π i, α i` into an element of the iterated product `tprod α l`. -/
-protected def mk : ∀ l : List ι f : ∀ i, α i, Tprod α l
+protected def mkₓ : ∀ l : List ι f : ∀ i, α i, Tprod α l
   | [] => fun f => PUnit.unit
   | i :: is => fun f => (f i, mk is f)
 
@@ -67,7 +72,7 @@ variable [DecidableEq ι]
 
 /-- Given an element of the iterated product `l.prod α`, take a projection into direction `i`.
   If `i` appears multiple times in `l`, this chooses the first component in direction `i`. -/
-protected def elim : ∀ {l : List ι} v : Tprod α l {i : ι} hi : i ∈ l, α i
+protected def elimₓ : ∀ {l : List ι} v : Tprod α l {i : ι} hi : i ∈ l, α i
   | i :: is, v, j, hj =>
     if hji : j = i then by
       subst hji
@@ -119,7 +124,7 @@ theorem mk_elim (hnd : l.Nodup) (h : ∀ i, i ∈ l) (v : Tprod α l) : Tprod.mk
     simp [elim_mk]
 
 /-- Pi-types are equivalent to iterated products. -/
-def pi_equiv_tprod (hnd : l.Nodup) (h : ∀ i, i ∈ l) : (∀ i, α i) ≃ Tprod α l :=
+def piEquivTprod (hnd : l.Nodup) (h : ∀ i, i ∈ l) : (∀ i, α i) ≃ Tprod α l :=
   ⟨Tprod.mkₓ l, Tprod.elim' h, fun f => funext fun i => elim_mk l f (h i), mk_elim hnd h⟩
 
 end Tprod
@@ -132,7 +137,7 @@ open List
 
 /-- A product of sets in `tprod α l`. -/
 @[simp]
-protected def tprod : ∀ l : List ι t : ∀ i, Set (α i), Set (Tprod α l)
+protected def Tprodₓ : ∀ l : List ι t : ∀ i, Set (α i), Set (Tprod α l)
   | [], t => Univ
   | i :: is, t => t i ×ˢ tprod is t
 
@@ -144,6 +149,7 @@ theorem mk_preimage_tprod : ∀ l : List ι t : ∀ i, Set (α i), Tprod.mkₓ l
     have : f ∈ tprod.mk l ⁻¹' Set.Tprodₓ l t ↔ f ∈ { x | x ∈ l }.pi t := by
       rw [mk_preimage_tprod l t]
     change tprod.mk l f ∈ Set.Tprodₓ l t ↔ ∀ i : ι, i ∈ l → f i ∈ t i at this
+    -- `simp [set.tprod, tprod.mk, this]` can close this goal but is slow.
     rw [Set.Tprodₓ, tprod.mk, mem_preimage, mem_pi, prod_mk_mem_set_prod_eq]
     simp_rw [mem_set_of_eq, mem_cons_iff]
     rw [forall_eq_or_imp, And.congr_right_iff]

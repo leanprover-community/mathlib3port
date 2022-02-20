@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Yaël Dillies. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yaël Dillies
+-/
 import Mathbin.Order.SuccPred.Basic
 
 /-!
@@ -9,10 +14,12 @@ In this file, we show that `ℕ` is both an archimedean `succ_order` and an arch
 
 open Function Nat
 
+-- so that Lean reads `nat.succ` through `succ_order.succ`
 @[reducible]
 instance : SuccOrder ℕ :=
   { SuccOrder.ofSuccLeIff succ fun a b => Iff.rfl with succ := succ }
 
+-- so that Lean reads `nat.pred` through `pred_order.pred`
 @[reducible]
 instance : PredOrder ℕ where
   pred := pred

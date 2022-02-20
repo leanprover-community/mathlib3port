@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2022 Yaël Dillies. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yaël Dillies
+-/
 import Mathbin.CategoryTheory.Category.Pointed
 import Mathbin.Data.Pfun
 
@@ -45,7 +50,7 @@ def of : Type _ → PartialFun :=
 instance : Inhabited PartialFun :=
   ⟨Type _⟩
 
-instance large_category : LargeCategory.{u} PartialFun where
+instance largeCategory : LargeCategory.{u} PartialFun where
   Hom := Pfun
   id := Pfun.id
   comp := fun X Y Z f g => g.comp f
@@ -55,7 +60,7 @@ instance large_category : LargeCategory.{u} PartialFun where
 
 /-- Constructs a partial function isomorphism between types from an equivalence between them. -/
 @[simps]
-def iso.mk {α β : PartialFun.{u}} (e : α ≃ β) : α ≅ β where
+def Iso.mk {α β : PartialFun.{u}} (e : α ≃ β) : α ≅ β where
   Hom := e
   inv := e.symm
   hom_inv_id' := (Pfun.coe_comp _ _).symm.trans <| congr_argₓ coe e.symm_comp_self

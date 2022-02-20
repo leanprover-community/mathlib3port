@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2022 Joël Riou. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Joël Riou
+-/
 import Mathbin.CategoryTheory.Idempotents.Basic
 import Mathbin.CategoryTheory.Preadditive.AdditiveFunctor
 import Mathbin.CategoryTheory.Equivalence
@@ -40,7 +45,7 @@ one may define a formal direct factor of an object `X : C` : it consists of an i
 `p : X ⟶ X` which is thought as the "formal image" of `p`. The type `karoubi C` shall be the
 type of the objects of the karoubi enveloppe of `C`. It makes sense for any category `C`. -/
 @[nolint has_inhabited_instance]
-structure karoubi where
+structure Karoubi where
   x : C
   p : X ⟶ X
   idempotence : p ≫ p = p
@@ -62,7 +67,7 @@ theorem ext {P Q : Karoubi C} (h_X : P.x = Q.x) (h_p : P.p ≫ eqToHom h_X = eqT
 map between the corresponding "formal direct factors" and that it vanishes on the complement
 formal direct factor. -/
 @[ext]
-structure hom (P Q : Karoubi C) where
+structure Hom (P Q : Karoubi C) where
   f : P.x ⟶ Q.x
   comm : f = P.p ≫ f ≫ Q.p
 
@@ -150,7 +155,7 @@ end Karoubi
 /-- The obvious fully faithful functor `to_karoubi` sends an object `X : C` to the obvious
 formal direct factor of `X` given by `𝟙 X`. -/
 @[simps]
-def to_karoubi : C ⥤ Karoubi C where
+def toKaroubi : C ⥤ Karoubi C where
   obj := fun X =>
     ⟨X, 𝟙 X, by
       rw [comp_id]⟩
@@ -204,7 +209,7 @@ theorem hom_eq_zero_iff [Preadditive C] {P Q : Karoubi C} {f : Hom P Q} : f = 0 
 
 /-- The map sending `f : P ⟶ Q` to `f.f : P.X ⟶ Q.X` is additive. -/
 @[simps]
-def inclusion_hom [Preadditive C] (P Q : Karoubi C) : AddMonoidHom (P ⟶ Q) (P.x ⟶ Q.x) where
+def inclusionHom [Preadditive C] (P Q : Karoubi C) : AddMonoidHom (P ⟶ Q) (P.x ⟶ Q.x) where
   toFun := fun f => f.f
   map_zero' := rfl
   map_add' := fun f g => rfl
@@ -269,7 +274,7 @@ instance [IsIdempotentComplete C] : EssSurj (toKaroubi C) :=
             simp only [comp, ← h₂, id_eq] }⟩
 
 /-- If `C` is idempotent complete, the functor `to_karoubi : C ⥤ karoubi C` is an equivalence. -/
-def to_karoubi_is_equivalence [IsIdempotentComplete C] : IsEquivalence (toKaroubi C) :=
+def toKaroubiIsEquivalence [IsIdempotentComplete C] : IsEquivalence (toKaroubi C) :=
   Equivalence.ofFullyFaithfullyEssSurj (toKaroubi C)
 
 namespace Karoubi
@@ -278,13 +283,13 @@ variable {C}
 
 /-- The split mono which appears in the factorisation `decomp_id P`. -/
 @[simps]
-def decomp_id_i (P : Karoubi C) : P ⟶ P.x :=
+def decompIdI (P : Karoubi C) : P ⟶ P.x :=
   ⟨P.p, by
     erw [coe_p, comp_id, P.idempotence]⟩
 
 /-- The split epi which appears in the factorisation `decomp_id P`. -/
 @[simps]
-def decomp_id_p (P : Karoubi C) : (P.x : Karoubi C) ⟶ P :=
+def decompIdP (P : Karoubi C) : (P.x : Karoubi C) ⟶ P :=
   ⟨P.p, by
     erw [coe_p, id_comp, P.idempotence]⟩
 

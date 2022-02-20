@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Keeley Hoek. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Keeley Hoek
+-/
 import Mathbin.Tactic.NormNum
 
 namespace Tactic
@@ -30,14 +35,25 @@ unsafe def run_once_under_name {α : Type} [reflected α] [has_reflect α] (t : 
       save_data cache_name a
       return a
 
+-- We maintain two separate caches with different scopes:
+-- one local to `begin ... end` or `by` blocks, and another
+-- for entire `def`/`lemma`s.
 unsafe structure cache_scope where
+  -- Returns the name of the def used to store the contents of is cache,
+  -- making a new one and recording this in private state if neccesary.
   get_name : Name → tactic Name
+  -- Same as above but fails instead of making a new name, and never
+  -- mutates state.
   try_get_name : Name → tactic Name
+  -- Asks whether the namespace `ns` currently has a value-in-cache
   present : Name → tactic Bool
+  -- Clear cache associated to namespace `ns`
   clear : Name → tactic Unit
 
 namespace BlockLocal
 
+-- `mk_new` gives a way to generate a new name if no current one
+-- exists.
 private unsafe def get_name_aux (ns : Name) (mk_new : options → Name → tactic Name) : tactic Name := do
   let o ← tactic.get_options
   let opt := mk_full_namespace ns
@@ -51,6 +67,8 @@ unsafe def get_name (ns : Name) : tactic Name :=
     tactic.set_options <| o opt n
     return n
 
+-- Like `get_name`, but fail if `ns` does not have a cached
+-- decl name (we create a new one above).
 unsafe def try_get_name (ns : Name) : tactic Name :=
   (get_name_aux ns) fun o opt => fail f! "no cache for "{ns}""
 
@@ -68,22 +86,23 @@ end BlockLocal
 
 namespace DefLocal
 
+-- Fowler-Noll-Vo hash function (FNV-1a)
 section FnvA1
 
-def FNV_OFFSET_BASIS :=
+def fNVOFFSETBASIS :=
   14695981039346656037
 
-def FNV_PRIME :=
+def fNVPRIME :=
   1099511628211
 
-def RADIX := by
+def rADIX := by
   apply_normed 2 ^ 64
 
-def hash_byte (seed : ℕ) (c : Charₓ) : ℕ :=
+def hashByte (seed : ℕ) (c : Charₓ) : ℕ :=
   let n : ℕ := c.toNat
   seed.lxor n * FNV_PRIME % RADIX
 
-def hash_string (s : Stringₓ) : ℕ :=
+def hashString (s : Stringₓ) : ℕ :=
   s.toList.foldl hashByte fNVOFFSETBASIS
 
 end FnvA1
@@ -113,6 +132,8 @@ unsafe def is_name_dead (n : Name) : tactic Bool :=
       return True) <|>
     return False
 
+-- `get_with_status_tag_aux rn n` fails exactly when `rn ++ to_string n` does
+-- not exist.
 private unsafe def get_with_status_tag_aux (rn : Name) : ℕ → tactic (ℕ × Bool)
   | tag => do
     let n := apply_tag rn tag
@@ -122,6 +143,7 @@ private unsafe def get_with_status_tag_aux (rn : Name) : ℕ → tactic (ℕ × 
         let is_dead ← is_name_dead n
         if is_dead then get_with_status_tag_aux (tag + 1) <|> return (tag, False) else return (tag, True)
 
+-- Find the latest tag for the name `rn` and report whether it is alive.
 unsafe def get_tag_with_status (rn : Name) : tactic (ℕ × Bool) :=
   get_with_status_tag_aux rn 0
 
@@ -178,6 +200,9 @@ unsafe def get (ns : Name) (α : Type) [reflected α] [has_reflect α] (s : cach
     | none => return none
     | some dn => some <$> load_data dn
 
+-- Note: we can't just use `<|>` on `load_data` since it will fail
+-- when a cached value is not present *as well as* when the type of
+-- `α` is just wrong.
 end LocalCache
 
 open LocalCache LocalCache.Internal

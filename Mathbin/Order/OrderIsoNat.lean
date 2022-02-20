@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2017 Mario Carneiro. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Mario Carneiro
+-/
 import Mathbin.Data.Equiv.Denumerable
 import Mathbin.Data.Nat.Lattice
 import Mathbin.Logic.Function.Iterate
@@ -23,7 +28,7 @@ namespace RelEmbedding
 variable {α : Type _} {r : α → α → Prop} [IsStrictOrder α r]
 
 /-- If `f` is a strictly `r`-increasing sequence, then this returns `f` as an order embedding. -/
-def nat_lt (f : ℕ → α) (H : ∀ n : ℕ, r (f n) (f (n + 1))) : (· < · : ℕ → ℕ → Prop) ↪r r :=
+def natLt (f : ℕ → α) (H : ∀ n : ℕ, r (f n) (f (n + 1))) : ((· < ·) : ℕ → ℕ → Prop) ↪r r :=
   ofMonotone f <| Nat.rel_of_forall_rel_succ_of_lt r H
 
 @[simp]
@@ -31,11 +36,11 @@ theorem nat_lt_apply {f : ℕ → α} {H : ∀ n : ℕ, r (f n) (f (n + 1))} {n 
   rfl
 
 /-- If `f` is a strictly `r`-decreasing sequence, then this returns `f` as an order embedding. -/
-def nat_gt (f : ℕ → α) (H : ∀ n : ℕ, r (f (n + 1)) (f n)) : (· > · : ℕ → ℕ → Prop) ↪r r :=
+def natGt (f : ℕ → α) (H : ∀ n : ℕ, r (f (n + 1)) (f n)) : ((· > ·) : ℕ → ℕ → Prop) ↪r r :=
   have := IsStrictOrder.swap r
   RelEmbedding.swap (nat_lt f H)
 
-theorem well_founded_iff_no_descending_seq : WellFounded r ↔ IsEmpty ((· > · : ℕ → ℕ → Prop) ↪r r) :=
+theorem well_founded_iff_no_descending_seq : WellFounded r ↔ IsEmpty (((· > ·) : ℕ → ℕ → Prop) ↪r r) :=
   ⟨fun ⟨h⟩ =>
     ⟨fun ⟨f, o⟩ =>
       suffices ∀ a, Acc r a → ∀ n, a ≠ f n from this (f 0) (h _) 0 rfl
@@ -64,14 +69,14 @@ namespace Nat
 variable (s : Set ℕ) [DecidablePred (· ∈ s)] [Infinite s]
 
 /-- An order embedding from `ℕ` to itself with a specified range -/
-def order_embedding_of_set : ℕ ↪o ℕ :=
+def orderEmbeddingOfSet : ℕ ↪o ℕ :=
   (RelEmbedding.orderEmbeddingOfLtEmbedding
         (RelEmbedding.natLt (Nat.Subtype.ofNat s) fun n => Nat.Subtype.lt_succ_self _)).trans
     (OrderEmbedding.subtype s)
 
 /-- `nat.subtype.of_nat` as an order isomorphism between `ℕ` and an infinite decidable subset.
 See also `nat.nth` for a version where the subset may be finite. -/
-noncomputable def subtype.order_iso_of_nat : ℕ ≃o s :=
+noncomputable def Subtype.orderIsoOfNat : ℕ ≃o s :=
   RelIso.ofSurjective
     (RelEmbedding.orderEmbeddingOfLtEmbedding
       (RelEmbedding.natLt (Nat.Subtype.ofNat s) fun n => Nat.Subtype.lt_succ_self _))
@@ -87,7 +92,7 @@ theorem order_embedding_of_set_apply {n : ℕ} : orderEmbeddingOfSet s n = Subty
   rfl
 
 @[simp]
-theorem subtype.order_iso_of_nat_apply {n : ℕ} : Subtype.orderIsoOfNat s n = Subtype.ofNat s n := by
+theorem Subtype.order_iso_of_nat_apply {n : ℕ} : Subtype.orderIsoOfNat s n = Subtype.ofNat s n := by
   simp [subtype.order_iso_of_nat]
 
 variable (s)
@@ -160,7 +165,7 @@ theorem exists_increasing_or_nonincreasing_subseq {α : Type _} (r : α → α �
 
 /-- The "monotone chain condition" below is sometimes a convenient form of well foundedness. -/
 theorem WellFounded.monotone_chain_condition (α : Type _) [PartialOrderₓ α] :
-    WellFounded (· > · : α → α → Prop) ↔ ∀ a : ℕ →o α, ∃ n, ∀ m, n ≤ m → a n = a m := by
+    WellFounded ((· > ·) : α → α → Prop) ↔ ∀ a : ℕ →o α, ∃ n, ∀ m, n ≤ m → a n = a m := by
   constructor <;> intro h
   · rw [WellFounded.well_founded_iff_has_max'] at h
     intro a
@@ -176,7 +181,7 @@ theorem WellFounded.monotone_chain_condition (α : Type _) [PartialOrderₓ α] 
     
   · rw [RelEmbedding.well_founded_iff_no_descending_seq]
     refine' ⟨fun a => _⟩
-    obtain ⟨n, hn⟩ := h (a.swap : (· < · : ℕ → ℕ → Prop) →r (· < · : α → α → Prop)).toOrderHom
+    obtain ⟨n, hn⟩ := h (a.swap : ((· < ·) : ℕ → ℕ → Prop) →r ((· < ·) : α → α → Prop)).toOrderHom
     exact n.succ_ne_self.symm (RelEmbedding.to_order_hom_injective _ (hn _ n.le_succ))
     
 
@@ -193,7 +198,7 @@ noncomputable def monotonicSequenceLimit {α : Type _} [PartialOrderₓ α] (a :
   a (monotonicSequenceLimitIndex a)
 
 theorem WellFounded.supr_eq_monotonic_sequence_limit {α : Type _} [CompleteLattice α]
-    (h : WellFounded (· > · : α → α → Prop)) (a : ℕ →o α) : (⨆ m, a m) = monotonicSequenceLimit a := by
+    (h : WellFounded ((· > ·) : α → α → Prop)) (a : ℕ →o α) : (⨆ m, a m) = monotonicSequenceLimit a := by
   suffices (⨆ m : ℕ, a m) ≤ monotonicSequenceLimit a by
     exact le_antisymmₓ this (le_supr a _)
   apply supr_le

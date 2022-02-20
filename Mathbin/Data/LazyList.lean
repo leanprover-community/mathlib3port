@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2017 Microsoft Corporation. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Leonardo de Moura
+-/
 import Mathbin.Tactic.Lint.Default
 
 /-!
@@ -32,7 +37,7 @@ def singleton : α → LazyList α
   | a => cons a nil
 
 /-- Constructs a lazy list from a list. -/
-def of_list : List α → LazyList α
+def ofList : List α → LazyList α
   | [] => nil
   | h :: t => cons h (of_list t)
 
@@ -40,7 +45,7 @@ def of_list : List α → LazyList α
 If the lazy list is infinite,
 then this function does not terminate.
 -/
-def to_list : LazyList α → List α
+def toList : LazyList α → List α
   | nil => []
   | cons h t => h :: to_list (t ())
 

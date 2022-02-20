@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Yury G. Kudryashov. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yury G. Kudryashov
+-/
 import Mathbin.Order.ConditionallyCompleteLattice
 import Mathbin.Logic.Function.Conjugate
 import Mathbin.Order.OrdContinuous
@@ -44,7 +49,7 @@ theorem is_order_right_adjoint_cSup [ConditionallyCompleteLattice α] [Preorder�
 
 namespace IsOrderRightAdjoint
 
-protected theorem Unique [PartialOrderₓ α] [Preorderₓ β] {f : α → β} {g₁ g₂ : β → α} (h₁ : IsOrderRightAdjoint f g₁)
+protected theorem unique [PartialOrderₓ α] [Preorderₓ β] {f : α → β} {g₁ g₂ : β → α} (h₁ : IsOrderRightAdjoint f g₁)
     (h₂ : IsOrderRightAdjoint f g₂) : g₁ = g₂ :=
   funext fun y => (h₁ y).unique (h₂ y)
 
@@ -72,7 +77,7 @@ semiconjugate to `fa` by `g'`.
 
 This is a version of Proposition 2.1 from [Étienne Ghys, Groupes d'homeomorphismes du cercle et
 cohomologie bornee][ghys87:groupes]. -/
-theorem semiconj.symm_adjoint [PartialOrderₓ α] [Preorderₓ β] {fa : α ≃o α} {fb : β ↪o β} {g : α → β}
+theorem Semiconj.symm_adjoint [PartialOrderₓ α] [Preorderₓ β] {fa : α ≃o α} {fb : β ↪o β} {g : α → β}
     (h : Function.Semiconj g fa fb) {g' : β → α} (hg' : IsOrderRightAdjoint g g') : Function.Semiconj g' fb fa := by
   refine' fun y => (hg' _).unique _
   rw [← fa.surjective.image_preimage { x | g x ≤ fb y }, preimage_set_of_eq]
@@ -85,7 +90,7 @@ theorem semiconj_of_is_lub [PartialOrderₓ α] [Groupₓ G] (f₁ f₂ : G →*
   refine' fun y => (H _).unique _
   have := (f₁ g).LeftOrdContinuous (H y)
   rw [← range_comp, ← (Equivₓ.mulRight g).Surjective.range_comp _] at this
-  simpa [· ∘ ·] using this
+  simpa [(· ∘ ·)] using this
 
 /-- Consider two actions `f₁ f₂ : G → α → α` of a group on a complete lattice by order
 isomorphisms. Then the map `x ↦ ⨆ g : G, (f₁ g)⁻¹ (f₂ g x)` semiconjugates each `f₁ g'` to `f₂ g'`.

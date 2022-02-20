@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Bhavik Mehta. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Bhavik Mehta, Yaël Dillies
+-/
 import Mathbin.Data.Set.Lattice
 import Mathbin.Data.SetLike.Basic
 import Mathbin.Order.GaloisConnection
@@ -61,7 +66,7 @@ instance [Preorderₓ α] : CoeFun (ClosureOperator α) fun _ => α → α :=
   ⟨fun c => c.toFun⟩
 
 /-- See Note [custom simps projection] -/
-def simps.apply [Preorderₓ α] (f : ClosureOperator α) : α → α :=
+def Simps.apply [Preorderₓ α] (f : ClosureOperator α) : α → α :=
   f
 
 initialize_simps_projections ClosureOperator (to_order_hom_to_fun → apply, -toOrderHom)
@@ -126,7 +131,7 @@ theorem closure_le_mk₃_iff {f : α → α} {p : α → Prop} {hf : ∀ x, x �
   hmin hxy hy
 
 @[mono]
-theorem Monotone : Monotone c :=
+theorem monotone : Monotone c :=
   c.monotone'
 
 /-- Every element is less than its closure. This property is sometimes referred to as extensivity or
@@ -142,7 +147,7 @@ theorem le_closure_iff (x y : α) : x ≤ c y ↔ c x ≤ c y :=
   ⟨fun h => c.idempotent y ▸ c.Monotone h, fun h => (c.le_closure x).trans h⟩
 
 /-- An element `x` is closed for the closure operator `c` if it is a fixed point for it. -/
-def closed : Set α := fun x => c x = x
+def Closed : Set α := fun x => c x = x
 
 theorem mem_closed_iff (x : α) : x ∈ c.Closed ↔ c x = x :=
   Iff.rfl
@@ -165,7 +170,7 @@ theorem closed_eq_range_close : c.Closed = Set.Range c :=
       apply c.idempotent⟩
 
 /-- Send an `x` to an element of the set of closed elements (by taking the closure). -/
-def to_closed (x : α) : c.Closed :=
+def toClosed (x : α) : c.Closed :=
   ⟨c x, c.closure_is_closed x⟩
 
 @[simp]
@@ -274,7 +279,7 @@ instance : CoeFun (LowerAdjoint u) fun _ => α → β where
   coe := toFun
 
 /-- See Note [custom simps projection] -/
-def simps.apply : α → β :=
+def Simps.apply : α → β :=
   l
 
 theorem gc : GaloisConnection l u :=
@@ -287,7 +292,7 @@ theorem ext : ∀ l₁ l₂ : LowerAdjoint u, (l₁ : α → β) = (l₂ : α �
     exact h
 
 @[mono]
-theorem Monotone : Monotone (u ∘ l) :=
+theorem monotone : Monotone (u ∘ l) :=
   l.gc.monotone_u.comp l.gc.monotone_l
 
 /-- Every element is less than its closure. This property is sometimes referred to as extensivity or
@@ -304,7 +309,7 @@ variable [PartialOrderₓ α] [Preorderₓ β] {u : β → α} (l : LowerAdjoint
 /-- Every lower adjoint induces a closure operator given by the composition. This is the partial
 order version of the statement that every adjunction induces a monad. -/
 @[simps]
-def ClosureOperator : ClosureOperator α where
+def closureOperator : ClosureOperator α where
   toFun := fun x => u (l x)
   monotone' := l.Monotone
   le_closure' := l.le_closure
@@ -323,7 +328,7 @@ section Preorderₓ
 variable [Preorderₓ α] [Preorderₓ β] {u : β → α} (l : LowerAdjoint u)
 
 /-- An element `x` is closed for `l : lower_adjoint u` if it is a fixed point: `u (l x) = x` -/
-def closed : Set α := fun x => u (l x) = x
+def Closed : Set α := fun x => u (l x) = x
 
 theorem mem_closed_iff (x : α) : x ∈ l.Closed ↔ u (l x) = x :=
   Iff.rfl
@@ -349,7 +354,7 @@ theorem closed_eq_range_close : l.Closed = Set.Range (u ∘ l) :=
   l.ClosureOperator.closed_eq_range_close
 
 /-- Send an `x` to an element of the set of closed elements (by taking the closure). -/
-def to_closed (x : α) : l.Closed :=
+def toClosed (x : α) : l.Closed :=
   ⟨u (l x), l.closure_is_closed x⟩
 
 @[simp]
@@ -395,6 +400,7 @@ theorem closure_bsupr_closure (p : α → Prop) : u (l (⨆ (x) (H : p x), u (l 
 
 end CompleteLattice
 
+-- Lemmas for `lower_adjoint (coe : α → set β)`, where `set_like α β`
 section CoeToSet
 
 variable [SetLike α β] (l : LowerAdjoint (coe : α → Set β))

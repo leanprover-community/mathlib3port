@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Mario Carneiro, Scott Morrison, Ainsley Pahljina
+-/
 import Mathbin.Data.Nat.Parity
 import Mathbin.Data.Pnat.Interval
 import Mathbin.Data.Zmod.Basic
@@ -74,12 +79,12 @@ def s : ℕ → ℤ
   | i + 1 => s i ^ 2 - 2
 
 /-- The recurrence `s (i+1) = (s i)^2 - 2` in `zmod (2^p - 1)`. -/
-def s_zmod (p : ℕ) : ℕ → Zmod (2 ^ p - 1)
+def sZmod (p : ℕ) : ℕ → Zmod (2 ^ p - 1)
   | 0 => 4
   | i + 1 => s_zmod i ^ 2 - 2
 
 /-- The recurrence `s (i+1) = ((s i)^2 - 2) % (2^p - 1)` in `ℤ`. -/
-def s_mod (p : ℕ) : ℕ → ℤ
+def sMod (p : ℕ) : ℕ → ℤ
   | 0 => 4 % (2 ^ p - 1)
   | i + 1 => (s_mod i ^ 2 - 2) % (2 ^ p - 1)
 
@@ -117,11 +122,12 @@ theorem s_zmod_eq_s (p' : ℕ) (i : ℕ) : sZmod (p' + 2) i = (s i : Zmod (2 ^ (
   · push_cast [s, s_zmod, ih]
     
 
-theorem int.coe_nat_pow_pred (b p : ℕ) (w : 0 < b) : ((b ^ p - 1 : ℕ) : ℤ) = (b ^ p - 1 : ℤ) := by
+-- These next two don't make good `norm_cast` lemmas.
+theorem Int.coe_nat_pow_pred (b p : ℕ) (w : 0 < b) : ((b ^ p - 1 : ℕ) : ℤ) = (b ^ p - 1 : ℤ) := by
   have : 1 ≤ b ^ p := Nat.one_le_pow p b w
   push_cast [this]
 
-theorem int.coe_nat_two_pow_pred (p : ℕ) : ((2 ^ p - 1 : ℕ) : ℤ) = (2 ^ p - 1 : ℤ) :=
+theorem Int.coe_nat_two_pow_pred (p : ℕ) : ((2 ^ p - 1 : ℕ) : ℤ) = (2 ^ p - 1 : ℤ) :=
   Int.coe_nat_pow_pred 2 p
     (by
       decide)
@@ -130,14 +136,16 @@ theorem s_zmod_eq_s_mod (p : ℕ) (i : ℕ) : sZmod p i = (sMod p i : Zmod (2 ^ 
   induction i <;> push_cast [← int.coe_nat_two_pow_pred p, s_mod, s_zmod, *]
 
 /-- The Lucas-Lehmer residue is `s p (p-2)` in `zmod (2^p - 1)`. -/
-def lucas_lehmer_residue (p : ℕ) : Zmod (2 ^ p - 1) :=
+def lucasLehmerResidue (p : ℕ) : Zmod (2 ^ p - 1) :=
   sZmod p (p - 2)
 
 theorem residue_eq_zero_iff_s_mod_eq_zero (p : ℕ) (w : 1 < p) : lucasLehmerResidue p = 0 ↔ sMod p (p - 2) = 0 := by
   dsimp [lucas_lehmer_residue]
   rw [s_zmod_eq_s_mod p]
   constructor
-  · intro h
+  · -- We want to use that fact that `0 ≤ s_mod p (p-2) < 2^p - 1`
+    -- and `lucas_lehmer_residue p = 0 → 2^p - 1 ∣ s_mod p (p-2)`.
+    intro h
     simp [Zmod.int_coe_zmod_eq_zero_iff_dvd] at h
     apply Int.eq_zero_of_dvd_of_nonneg_of_lt _ _ h <;> clear h
     apply s_mod_nonneg _ (Nat.lt_of_succ_ltₓ w)
@@ -153,7 +161,7 @@ theorem residue_eq_zero_iff_s_mod_eq_zero (p : ℕ) (w : 1 < p) : lucasLehmerRes
 /-- A Mersenne number `2^p-1` is prime if and only if
 the Lucas-Lehmer residue `s p (p-2) % (2^p - 1)` is zero.
 -/
-def lucas_lehmer_test (p : ℕ) : Prop :=
+def LucasLehmerTest (p : ℕ) : Prop :=
   lucasLehmerResidue p = 0deriving DecidablePred
 
 /-- `q` is defined as the minimum factor of `mersenne p`, bundled as an `ℕ+`. -/
@@ -165,6 +173,11 @@ theorem fact_pnat_pos (q : ℕ+) : Fact (0 < (q : ℕ)) :=
   ⟨q.2⟩
 
 /-- We construct the ring `X q` as ℤ/qℤ + √3 ℤ/qℤ. -/
+-- It would be nice to define this as (ℤ/qℤ)[x] / (x^2 - 3),
+-- obtaining the ring structure for free,
+-- but that seems to be more trouble than it's worth;
+-- if it were easy to make the definition,
+-- cardinality calculations would be somewhat more involved, too.
 def X (q : ℕ+) : Type :=
   Zmod q × Zmod q deriving AddCommGroupₓ, DecidableEq, Fintype, Inhabited
 
@@ -369,7 +382,8 @@ theorem two_lt_q (p' : ℕ) : 2 < q (p' + 2) := by
   by_contra H
   simp at H
   interval_cases q (p' + 2) <;> clear H
-  · dsimp [q]  at h
+  · -- If q = 1, we get a contradiction from 2^p = 2
+    dsimp [q]  at h
     injection h with h'
     clear h
     simp [mersenne] at h'
@@ -385,7 +399,8 @@ theorem two_lt_q (p' : ℕ) : 2 < q (p' + 2) := by
               h'
           )
     
-  · dsimp [q]  at h
+  · -- If q = 2, we get a contradiction from 2 ∣ 2^p - 1
+    dsimp [q]  at h
     injection h with h'
     clear h
     rw [mersenne, Pnat.one_coe, Nat.min_fac_eq_two_iff, pow_succₓ] at h'
@@ -400,6 +415,7 @@ theorem ω_pow_formula (p' : ℕ) (h : lucasLehmerResidue (p' + 2) = 0) :
   cases' h with k h
   use k
   replace h := congr_argₓ (fun n : ℤ => (n : X (q (p' + 2)))) h
+  -- coercion from ℤ to X q
   dsimp  at h
   rw [closed_form] at h
   replace h := congr_argₓ (fun x => ω ^ 2 ^ p' * x) h
@@ -433,7 +449,7 @@ theorem ω_pow_eq_one (p' : ℕ) (h : lucasLehmerResidue (p' + 2) = 0) : (ω : X
     
 
 /-- `ω` as an element of the group of units. -/
-def ω_unit (p : ℕ) : Units (X (q p)) where
+def ωUnit (p : ℕ) : Units (X (q p)) where
   val := ω
   inv := ωb
   val_inv := by
@@ -448,6 +464,7 @@ theorem ω_unit_coe (p : ℕ) : (ωUnit p : X (q p)) = ω :=
 /-- The order of `ω` in the unit group is exactly `2^p`. -/
 theorem order_ω (p' : ℕ) (h : lucasLehmerResidue (p' + 2) = 0) : orderOf (ωUnit (p' + 2)) = 2 ^ (p' + 2) := by
   apply Nat.eq_prime_pow_of_dvd_least_prime_pow
+  -- the order of ω divides 2^p
   · norm_num
     
   · intro o
@@ -490,6 +507,7 @@ theorem lucas_lehmer_sufficiency (p : ℕ) (w : 1 < p) : LucasLehmerTest p → (
   have h := lt_of_lt_of_leₓ h₁ h₂
   exact not_lt_of_geₓ (Nat.sub_leₓ _ _) h
 
+-- Here we calculate the residue, very inefficiently, using `dec_trivial`. We can do much better.
 example : (mersenne 5).Prime :=
   lucas_lehmer_sufficiency 5
     (by
@@ -497,6 +515,7 @@ example : (mersenne 5).Prime :=
     (by
       decide)
 
+-- Next we use `norm_num` to calculate each `s p i`.
 namespace LucasLehmer
 
 open Tactic
@@ -512,10 +531,10 @@ theorem s_mod_succ {p a i b c} (h1 : (2 ^ p - 1 : ℤ) = a) (h2 : sMod p i = b) 
   dsimp [s_mod, mersenne]
   rw [h1, h2, sq, h3]
 
--- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
--- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
--- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
--- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:916:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:916:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:916:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:916:4: warning: unsupported (TODO): `[tacs]
 /-- Given a goal of the form `lucas_lehmer_test p`,
 attempt to do the calculation using `norm_num` to certify each step.
 -/
@@ -524,7 +543,8 @@ unsafe def run_test : tactic Unit := do
   sorry
   sorry
   let p ← eval_expr ℕ p
-  let M : ℤ := 2 ^ p - 1
+  let-- Calculate the candidate Mersenne prime
+  M : ℤ := 2 ^ p - 1
   let t ← to_expr (pquote.1 ((2 ^ %%ₓp) - 1 = %%ₓM))
   let v ←
     to_expr
@@ -532,16 +552,26 @@ unsafe def run_test : tactic Unit := do
           (by
             norm_num : (2 ^ %%ₓp) - 1 = %%ₓM))
   let w ← assertv `w t v
-  sorry
-  let t ← to_expr (pquote.1 (sMod (%%ₓp) 0 = 4))
+  -- Unfortunately this creates something like `w : 2^5 - 1 = int.of_nat 31`.
+    -- We could make a better `has_to_pexpr ℤ` instance, or just:
+    sorry
+  let t
+    ←-- base case
+        to_expr
+        (pquote.1 (sMod (%%ₓp) 0 = 4))
   let v ←
     to_expr
         (pquote.1
           (by
             norm_num [LucasLehmer.sMod] : sMod (%%ₓp) 0 = 4))
   let h ← assertv `h t v
-  iterate_exactly (p - 2) sorry
-  let h ← get_local `h
+  -- step case, repeated p-2 times
+      iterate_exactly
+      (p - 2) sorry
+  let h
+    ←-- now close the goal
+        get_local
+        `h
   exact h
 
 end LucasLehmer
@@ -573,6 +603,7 @@ Someone should do this, too!
 
 
 theorem modeq_mersenne (n k : ℕ) : k ≡ k / 2 ^ n + k % 2 ^ n [MOD 2 ^ n - 1] := by
+  -- See https://leanprover.zulipchat.com/#narrow/stream/113489-new-members/topic/help.20finding.20a.20lemma/near/177698446
   conv in k => rw [← Nat.div_add_mod k (2 ^ n)]
   refine' Nat.Modeq.add_right _ _
   conv => congr skip skip rw [← one_mulₓ (k / 2 ^ n)]
@@ -584,3 +615,5 @@ theorem modeq_mersenne (n k : ℕ) : k ≡ k / 2 ^ n + k % 2 ^ n [MOD 2 ^ n - 1]
             _).mul_right
       _
 
+-- It's hard to know what the limiting factor for large Mersenne primes would be.
+-- In the purely computational world, I think it's the squaring operation in `s`.

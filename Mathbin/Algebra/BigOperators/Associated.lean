@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Johannes Hölzl. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johannes Hölzl, Jens Wagemaker, Anne Baanen
+-/
 import Mathbin.Algebra.Associated
 import Mathbin.Algebra.BigOperators.Basic
 import Mathbin.Data.Finsupp.Basic
@@ -13,6 +18,7 @@ and products of multisets, finsets, and finsupps.
 
 variable {α β γ δ : Type _}
 
+-- the same local notation used in `algebra.associated`
 local infixl:50 " ~ᵤ " => Associated
 
 open_locale BigOperators

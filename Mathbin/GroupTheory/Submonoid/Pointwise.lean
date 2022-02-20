@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Eric Wieser. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Eric Wieser
+-/
 import Mathbin.GroupTheory.Submonoid.Operations
 import Mathbin.Algebra.Pointwise
 
@@ -42,14 +47,14 @@ open_locale Pointwise
 
 /-- The submonoid with every element inverted. -/
 @[to_additive " The additive submonoid with every element negated. "]
-protected def Inv : Inv (Submonoid G) where
+protected def hasInv : Inv (Submonoid G) where
   inv := fun S =>
     { Carrier := (S : Set G)⁻¹,
       one_mem' :=
         show (1 : G)⁻¹ ∈ S by
           rw [one_inv]
           exact S.one_mem,
-      mul_mem' := fun a b ha : a⁻¹ ∈ S hb : b⁻¹ ∈ S =>
+      mul_mem' := fun hb : b⁻¹ ∈ S =>
         show (a * b)⁻¹ ∈ S by
           rw [mul_inv_rev]
           exact S.mul_mem hb ha }
@@ -81,7 +86,7 @@ theorem inv_le (S T : Submonoid G) : S⁻¹ ≤ T ↔ S ≤ T⁻¹ :=
 
 /-- `submonoid.has_inv` as an order isomorphism. -/
 @[to_additive " `add_submonoid.has_neg` as an order isomorphism ", simps]
-def inv_order_iso : Submonoid G ≃o Submonoid G where
+def invOrderIso : Submonoid G ≃o Submonoid G where
   toEquiv := Equivₓ.inv _
   map_rel_iff' := inv_le_inv
 
@@ -130,7 +135,7 @@ variable [Monoidₓ α] [MulDistribMulAction α M]
 /-- The action on a submonoid corresponding to applying the action to every element.
 
 This is available as an instance in the `pointwise` locale. -/
-protected def pointwise_mul_action : MulAction α (Submonoid M) where
+protected def pointwiseMulAction : MulAction α (Submonoid M) where
   smul := fun a S => S.map (MulDistribMulAction.toMonoidEnd _ _ a)
   one_smul := fun S => (congr_argₓ (fun f => S.map f) (MonoidHom.map_one _)).trans S.map_id
   mul_smul := fun a₁ a₂ S => (congr_argₓ (fun f => S.map f) (MonoidHom.map_mul _ _ _)).trans (S.map_map _ _).symm
@@ -229,7 +234,7 @@ variable [Monoidₓ α] [DistribMulAction α A]
 /-- The action on an additive submonoid corresponding to applying the action to every element.
 
 This is available as an instance in the `pointwise` locale. -/
-protected def pointwise_mul_action : MulAction α (AddSubmonoid A) where
+protected def pointwiseMulAction : MulAction α (AddSubmonoid A) where
   smul := fun a S => S.map (DistribMulAction.toAddMonoidEnd _ _ a)
   one_smul := fun S => (congr_argₓ (fun f => S.map f) (MonoidHom.map_one _)).trans S.map_id
   mul_smul := fun a₁ a₂ S => (congr_argₓ (fun f => S.map f) (MonoidHom.map_mul _ _ _)).trans (S.map_map _ _).symm
@@ -349,6 +354,7 @@ open_locale Pointwise
 
 variable (R)
 
+-- this proof is copied directly from `submodule.span_mul_span`
 theorem closure_mul_closure (S T : Set R) : closure S * closure T = closure (S * T) := by
   apply le_antisymmₓ
   · rw [mul_le]

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Yury Kudryashov. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Simon Hudon, Patrick Massot, Yury Kudryashov
+-/
 import Mathbin.Algebra.Group.Opposite
 
 /-!
@@ -258,7 +263,7 @@ variable [MulOneClassₓ P]
 given by `(f.prod g) x = (f x, g x)`. -/
 @[to_additive Prod
       "Combine two `add_monoid_hom`s `f : M →+ N`, `g : M →+ P` into\n`f.prod g : M →+ N × P` given by `(f.prod g) x = (f x, g x)`"]
-protected def Prod (f : M →* N) (g : M →* P) : M →* N × P where
+protected def prod (f : M →* N) (g : M →* P) : M →* N × P where
   toFun := Pi.prod f g
   map_one' := Prod.extₓ f.map_one g.map_one
   map_mul' := fun x y => Prod.extₓ (f.map_mul x y) (g.map_mul x y)
@@ -292,7 +297,7 @@ variable {M' : Type _} {N' : Type _} [MulOneClassₓ M'] [MulOneClassₓ N'] [Mu
 
 /-- `prod.map` as a `monoid_hom`. -/
 @[to_additive prod_mapₓ "`prod.map` as an `add_monoid_hom`"]
-def prod_mapₓ : M × N →* M' × N' :=
+def prodMap : M × N →* M' × N' :=
   (f.comp (fst M N)).Prod (g.comp (snd M N))
 
 @[to_additive prod_map_def]
@@ -361,7 +366,7 @@ variable {M N} [MulOneClassₓ M] [MulOneClassₓ N]
 /-- The equivalence between `M × N` and `N × M` given by swapping the components
 is multiplicative. -/
 @[to_additive prod_comm "The equivalence between `M × N` and `N × M` given by swapping the\ncomponents is additive."]
-def prod_comm : M × N ≃* N × M :=
+def prodComm : M × N ≃* N × M :=
   { Equivₓ.prodComm M N with map_mul' := fun ⟨x₁, y₁⟩ ⟨x₂, y₂⟩ => rfl }
 
 @[simp, to_additive coe_prod_comm]
@@ -382,7 +387,7 @@ variable {M N} [Monoidₓ M] [Monoidₓ N]
     units of each monoid. -/
 @[to_additive prod_add_units
       "The additive monoid equivalence between additive units of a product\nof two additive monoids, and the product of the additive units of each additive monoid."]
-def prod_units : (M × N)ˣ ≃* (M)ˣ × (N)ˣ where
+def prodUnits : (M × N)ˣ ≃* (M)ˣ × (N)ˣ where
   toFun := (Units.map (MonoidHom.fst M N)).Prod (Units.map (MonoidHom.snd M N))
   invFun := fun u =>
     ⟨(u.1, u.2), (↑u.1⁻¹, ↑u.2⁻¹), by
@@ -406,7 +411,7 @@ open MulOpposite
 Used mainly to define the natural topology of `αˣ`. -/
 @[to_additive
       "Canonical homomorphism of additive monoids from `add_units α` into `α × αᵃᵒᵖ`.\nUsed mainly to define the natural topology of `add_units α`."]
-def embed_product (α : Type _) [Monoidₓ α] : (α)ˣ →* α × αᵐᵒᵖ where
+def embedProduct (α : Type _) [Monoidₓ α] : (α)ˣ →* α × αᵐᵒᵖ where
   toFun := fun x => ⟨x, op ↑x⁻¹⟩
   map_one' := by
     simp only [one_inv, eq_self_iff_true, Units.coe_one, op_one, Prod.mk_eq_one, and_selfₓ]

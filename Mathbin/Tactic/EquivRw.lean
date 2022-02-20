@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison
+-/
 import Mathbin.Data.Equiv.Basic
 import Mathbin.Tactic.Clear
 import Mathbin.Tactic.SimpResult
@@ -59,13 +64,36 @@ but this will wait for another subsequent PR.
 -/
 
 
+-- these make equiv_rw more powerful!
+-- these make equiv_rw more powerful!
+-- so do these!
+-- so do these!
 namespace Tactic
 
 /-- A list of lemmas used for constructing congruence equivalences. -/
+-- Although this looks 'hard-coded', in fact the lemma `equiv_functor.map_equiv`
+-- allows us to extend `equiv_rw` simply by constructing new instance so `equiv_functor`.
+-- TODO: We should also use `category_theory.functorial` and `category_theory.hygienic` instances.
+-- (example goal: we could rewrite along an isomorphism of rings (either as `R ≅ S` or `R ≃+* S`)
+-- and turn an `x : mv_polynomial σ R` into an `x : mv_polynomial σ S`.).
 unsafe def equiv_congr_lemmas : List (tactic expr) :=
-  [`equiv.of_iff, `equiv.equiv_congr, `equiv.arrow_congr', `equiv.subtype_equiv_of_subtype', `equiv.sigma_congr_left',
-        `equiv.forall₃_congr', `equiv.forall₂_congr', `equiv.forall_congr', `equiv.Pi_congr_left', `bifunctor.map_equiv,
-        `equiv_functor.map_equiv, `equiv.refl, `iff.refl].map
+  [`equiv.of_iff,-- TODO decide what to do with this; it's an equiv_bifunctor?
+        `equiv.equiv_congr,-- The function arrow is technically a bifunctor `Typeᵒᵖ → Type → Type`,
+        -- but the pattern matcher will never see this.
+        `equiv.arrow_congr',-- Allow rewriting in subtypes:
+        `equiv.subtype_equiv_of_subtype',-- Allow rewriting in the first component of a sigma-type:
+        `equiv.sigma_congr_left',-- Allow rewriting ∀s:
+        -- (You might think that repeated application of `equiv.forall_congr'
+        -- would handle the higher arity cases, but unfortunately unification is not clever enough.)
+        `equiv.forall₃_congr',
+        `equiv.forall₂_congr',
+        `equiv.forall_congr',-- Allow rewriting in argument of Pi types:
+        `equiv.Pi_congr_left',-- Handles `sum` and `prod`, and many others:
+        `bifunctor.map_equiv,-- Handles `list`, `option`, `unique`, and many others:
+        `equiv_functor.map_equiv,-- We have to filter results to ensure we don't cheat and use exclusively
+        -- `equiv.refl` and `iff.refl`!
+        `equiv.refl,
+        `iff.refl].map
     fun n => mk_const n
 
 initialize
@@ -81,21 +109,37 @@ initialize
 unsafe structure equiv_rw_cfg where
   max_depth : ℕ := 10
 
--- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
--- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
--- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
--- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:916:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:916:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:916:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:916:4: warning: unsupported (TODO): `[tacs]
 /-- Implementation of `equiv_rw_type`, using `solve_by_elim`.
 Expects a goal of the form `t ≃ _`,
 and tries to solve it using `eq : α ≃ β` and congruence lemmas.
 -/
 unsafe def equiv_rw_type_core (eq : expr) (cfg : equiv_rw_cfg) : tactic Unit := do
-  solve_by_elim
+  /-
+          We now call `solve_by_elim` to try to generate the requested equivalence.
+          There are a few subtleties!
+          * We make sure that `eq` is the first lemma, so it is applied whenever possible.
+          * In `equiv_congr_lemmas`, we put `equiv.refl` last so it is only used when it is not possible
+            to descend further.
+          * Since some congruence lemmas generate subgoals with `∀` statements,
+            we use the `pre_apply` subtactic of `solve_by_elim` to preprocess each new goal with `intros`.
+        -/
+      solve_by_elim
       { use_symmetry := False, use_exfalso := False, lemma_thunks := some (pure Eq :: equiv_congr_lemmas),
-        ctx_thunk := pure [], max_depth := cfg, pre_apply := tactic.intros >> skip, backtrack_all_goals := tt,
+        ctx_thunk := pure [],
+        max_depth := cfg,-- Subgoals may contain function types,
+        -- and we want to continue trying to construct equivalences after the binders.
+        pre_apply := tactic.intros >> skip,
+        backtrack_all_goals :=
+          tt,-- If solve_by_elim gets stuck, make sure it isn't because there's a later `≃` or `↔` goal
+        -- that we should still attempt.
         discharger :=
           (sorry >> sorry) >> (sorry <|> sorry) <|>
-            trace_if_enabled `equiv_rw_type "Failed, no congruence lemma applied!" >> failed,
+            trace_if_enabled `equiv_rw_type "Failed, no congruence lemma applied!" >>
+              failed,-- We use the `accept` tactic in `solve_by_elim` to provide tracing.
         accept := fun goals =>
           lock_tactic_state do
             when_tracing `equiv_rw_type do
@@ -116,52 +160,88 @@ unsafe def equiv_rw_type (eqv : expr) (ty : expr) (cfg : equiv_rw_cfg) : tactic 
       let eqv_ty_pp ← infer_type eqv >>= pp
       trace f! "Attempting to rewrite the type `{ty_pp }` using `{eqv_pp } : {eqv_ty_pp}`."
   let quote.1 (_ ≃ _) ← infer_type eqv | fail f! "{eqv} must be an `equiv`"
-  let equiv_ty ← to_expr (pquote.1 ((%%ₓty) ≃ _))
-  let new_eqv ← Prod.snd <$> (solve_aux equiv_ty <| equiv_rw_type_core eqv cfg)
-  let new_eqv ← instantiate_mvars new_eqv
-  kdepends_on new_eqv eqv >>= guardb <|> do
+  let equiv_ty
+    ←-- We prepare a synthetic goal of type `(%%ty ≃ _)`, for some placeholder right hand side.
+        to_expr
+        (pquote.1 ((%%ₓty) ≃ _))
+  let new_eqv
+    ←-- Now call `equiv_rw_type_core`.
+        Prod.snd <$>
+        (solve_aux equiv_ty <| equiv_rw_type_core eqv cfg)
+  let new_eqv
+    ←-- Check that we actually used the equivalence `eq`
+        -- (`equiv_rw_type_core` will always find `equiv.refl`,
+        -- but hopefully only after all other possibilities)
+        instantiate_mvars
+        new_eqv
+  -- We previously had `guard (eqv.occurs new_eqv)` here, but `kdepends_on` is more reliable.
+          kdepends_on
+          new_eqv eqv >>=
+        guardb <|>
+      do
       let eqv_pp ← pp eqv
       let ty_pp ← pp ty
       fail f! "Could not construct an equivalence from {eqv_pp } of the form: {ty_pp} ≃ _"
-  Prod.fst <$> new_eqv { failIfUnchanged := ff }
+  -- Finally we simplify the resulting equivalence,
+      -- to compress away some `map_equiv equiv.refl` subexpressions.
+      Prod.fst <$>
+      new_eqv { failIfUnchanged := ff }
 
 mk_simp_attribute equiv_rw_simp :=
   "The simpset `equiv_rw_simp` is used by the tactic `equiv_rw` to\nsimplify applications of equivalences and their inverses."
 
 attribute [equiv_rw_simp] Equivₓ.symm_symm Equivₓ.apply_symm_apply Equivₓ.symm_apply_apply
 
--- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:916:4: warning: unsupported (TODO): `[tacs]
 /-- Attempt to replace the hypothesis with name `x`
 by transporting it along the equivalence in `e : α ≃ β`.
 -/
 unsafe def equiv_rw_hyp (x : Name) (e : expr) (cfg : equiv_rw_cfg := {  }) : tactic Unit :=
-  dsimp_result
+  -- We call `dsimp_result` to perform the beta redex introduced by `revert`
+    dsimp_result
     (do
       let x' ← get_local x
       let x_ty ← infer_type x'
-      let e ← equiv_rw_type e x_ty cfg
+      let e
+        ←-- Adapt `e` to an equivalence with left-hand-side `x_ty`.
+            equiv_rw_type
+            e x_ty cfg
       let eq ← to_expr (pquote.1 ((%%ₓx') = Equivₓ.symm (%%ₓe) (Equivₓ.toFun (%%ₓe) (%%ₓx'))))
       let prf ← to_expr (pquote.1 (Equivₓ.symm_apply_apply (%%ₓe) (%%ₓx')).symm)
       let h ← note_anon Eq prf
-      revert h
+      -- Revert the new hypothesis, so it is also part of the goal.
+          revert
+          h
       let ex ← to_expr (pquote.1 (Equivₓ.toFun (%%ₓe) (%%ₓx')))
-      generalize ex
+      -- Now call `generalize`,
+          -- attempting to replace all occurrences of `e x`,
+          -- calling it for now `j : β`, with `k : x = e.symm j`.
+          generalize
+          ex
           (by
             infer_opt_param)
           transparency.none
-      intro x
+      -- Reintroduce `x` (now of type `b`), and the hypothesis `h`.
+          intro
+          x
       let h ← intro1
-      let b ← target >>= is_prop
+      let b
+        ←-- Finally, if we're working on properties, substitute along `h`, then do some cleanup,
+            -- and if we're working on data, just throw out the old `x`.
+            target >>=
+            is_prop
       if b then do
           subst h
           sorry
-        else
-          unfreezing_hyp x' (clear' tt [x']) <|>
+        else-- We may need to unfreeze `x` before we can `clear` it.
+              unfreezing_hyp
+              x' (clear' tt [x']) <|>
             fail f! "equiv_rw expected to be able to clear the original hypothesis {x}, but couldn't."
       skip)
     { failIfUnchanged := false } true
 
 /-- Rewrite the goal using an equiv `e`. -/
+-- call `dsimp_result` with `no_defaults := tt`.
 unsafe def equiv_rw_target (e : expr) (cfg : equiv_rw_cfg := {  }) : tactic Unit := do
   let t ← target
   let e ← equiv_rw_type e t cfg

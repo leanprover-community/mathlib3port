@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Chris Hughes. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Chris Hughes, Johannes Hölzl, Scott Morrison, Jens Wagemaker
+-/
 import Mathbin.Data.Nat.WithBot
 import Mathbin.Data.Polynomial.Induction
 import Mathbin.Data.Polynomial.Monomial
@@ -44,32 +49,32 @@ instance : HasWellFounded R[X] :=
   ⟨_, degree_lt_wf⟩
 
 /-- `nat_degree p` forces `degree p` to ℕ, by defining nat_degree 0 = 0. -/
-def nat_degree (p : R[X]) : ℕ :=
+def natDegree (p : R[X]) : ℕ :=
   (degree p).getOrElse 0
 
 /-- `leading_coeff p` gives the coefficient of the highest power of `X` in `p`-/
-def leading_coeff (p : R[X]) : R :=
+def leadingCoeff (p : R[X]) : R :=
   coeff p (natDegree p)
 
 /-- a polynomial is `monic` if its leading coefficient is 1 -/
-def monic (p : R[X]) :=
+def Monic (p : R[X]) :=
   leadingCoeff p = (1 : R)
 
 @[nontriviality]
 theorem monic_of_subsingleton [Subsingleton R] (p : R[X]) : Monic p :=
   Subsingleton.elimₓ _ _
 
-theorem monic.def : Monic p ↔ leadingCoeff p = 1 :=
+theorem Monic.def : Monic p ↔ leadingCoeff p = 1 :=
   Iff.rfl
 
-instance monic.decidable [DecidableEq R] : Decidable (Monic p) := by
+instance Monic.decidable [DecidableEq R] : Decidable (Monic p) := by
   unfold monic <;> infer_instance
 
 @[simp]
-theorem monic.leading_coeff {p : R[X]} (hp : p.Monic) : leadingCoeff p = 1 :=
+theorem Monic.leading_coeff {p : R[X]} (hp : p.Monic) : leadingCoeff p = 1 :=
   hp
 
-theorem monic.coeff_nat_degree {p : R[X]} (hp : p.Monic) : p.coeff p.natDegree = 1 :=
+theorem Monic.coeff_nat_degree {p : R[X]} (hp : p.Monic) : p.coeff p.natDegree = 1 :=
   hp
 
 @[simp]
@@ -268,6 +273,7 @@ theorem coeff_eq_zero_of_nat_degree_lt {p : R[X]} {n : ℕ} (h : p.natDegree < n
 theorem coeff_nat_degree_succ_eq_zero {p : R[X]} : p.coeff (p.natDegree + 1) = 0 :=
   coeff_eq_zero_of_nat_degree_lt (lt_add_one _)
 
+-- We need the explicit `decidable` argument here because an exotic one shows up in a moment!
 theorem ite_le_nat_degree_coeff (p : R[X]) (n : ℕ) (I : Decidable (n < 1 + natDegree p)) :
     @ite _ (n < 1 + natDegree p) I (coeff p n) 0 = coeff p n := by
   split_ifs
@@ -422,7 +428,7 @@ section Semiringₓ
 variable [Semiringₓ R]
 
 /-- The second-highest coefficient, or 0 for constants -/
-def next_coeff (p : R[X]) : R :=
+def nextCoeff (p : R[X]) : R :=
   if p.natDegree = 0 then 0 else p.coeff (p.natDegree - 1)
 
 @[simp]
@@ -663,15 +669,15 @@ theorem leading_coeff_one : leadingCoeff (1 : R[X]) = 1 :=
 theorem monic_one : Monic (1 : R[X]) :=
   leading_coeff_C _
 
-theorem monic.ne_zero {R : Type _} [Semiringₓ R] [Nontrivial R] {p : R[X]} (hp : p.Monic) : p ≠ 0 := by
+theorem Monic.ne_zero {R : Type _} [Semiringₓ R] [Nontrivial R] {p : R[X]} (hp : p.Monic) : p ≠ 0 := by
   rintro rfl
   simpa [monic] using hp
 
-theorem monic.ne_zero_of_ne (h : (0 : R) ≠ 1) {p : R[X]} (hp : p.Monic) : p ≠ 0 := by
+theorem Monic.ne_zero_of_ne (h : (0 : R) ≠ 1) {p : R[X]} (hp : p.Monic) : p ≠ 0 := by
   nontriviality R
   exact hp.ne_zero
 
-theorem monic.ne_zero_of_polynomial_ne {r} (hp : Monic p) (hne : q ≠ r) : p ≠ 0 :=
+theorem Monic.ne_zero_of_polynomial_ne {r} (hp : Monic p) (hne : q ≠ r) : p ≠ 0 :=
   have := nontrivial.of_polynomial_ne hne
   hp.ne_zero
 
@@ -740,7 +746,7 @@ theorem degree_mul' (h : leadingCoeff p * leadingCoeff q ≠ 0) : degree (p * q)
       refine' le_degree_of_ne_zero _
       rwa [coeff_mul_degree_add_degree])
 
-theorem monic.degree_mul (hq : Monic q) : degree (p * q) = degree p + degree q :=
+theorem Monic.degree_mul (hq : Monic q) : degree (p * q) = degree p + degree q :=
   if hp : p = 0 then by
     simp [hp]
   else
@@ -901,7 +907,7 @@ theorem nat_degree_eq_zero_iff_degree_le_zero : p.natDegree = 0 ↔ p.degree ≤
   rw [← nonpos_iff_eq_zero, nat_degree_le_iff_degree_le, WithBot.coe_zero]
 
 theorem degree_le_iff_coeff_zero (f : R[X]) (n : WithBot ℕ) : degree f ≤ n ↔ ∀ m : ℕ, n < m → coeff f m = 0 :=
-  ⟨fun H : Finset.sup f.Support some ≤ n m Hm : n < (m : WithBot ℕ) =>
+  ⟨fun Hm : n < (m : WithBot ℕ) =>
     Decidable.of_not_not fun H4 =>
       have H1 : m ∉ f.Support := fun H2 => not_lt_of_geₓ ((Finset.sup_le_iff.1 H) m H2 : (m : WithBot ℕ) ≤ n) Hm
       H1 <| mem_support_iff.2 H4,
@@ -1265,7 +1271,7 @@ theorem leading_coeff_mul (p q : R[X]) : leadingCoeff (p * q) = leadingCoeff p *
 
 /-- `polynomial.leading_coeff` bundled as a `monoid_hom` when `R` has `no_zero_divisors`, and thus
   `leading_coeff` is multiplicative -/
-def leading_coeff_hom : R[X] →* R where
+def leadingCoeffHom : R[X] →* R where
   toFun := leadingCoeff
   map_one' := by
     simp

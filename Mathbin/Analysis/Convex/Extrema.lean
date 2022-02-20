@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Frédéric Dupuis. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Frédéric Dupuis
+-/
 import Mathbin.Analysis.Convex.Function
 import Mathbin.Topology.Algebra.Affine
 import Mathbin.Topology.LocalExtr
@@ -18,12 +23,12 @@ open Set Filter
 
 open_locale Classical
 
--- ././Mathport/Syntax/Translate/Basic.lean:418:16: unsupported tactic `by_contra'
+-- ././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'
 /-- Helper lemma for the more general case: `is_min_on.of_is_local_min_on_of_convex_on`.
 -/
 theorem IsMinOn.of_is_local_min_on_of_convex_on_Icc {f : ℝ → β} {a b : ℝ} (a_lt_b : a < b)
     (h_local_min : IsLocalMinOn f (Icc a b) a) (h_conv : ConvexOn ℝ (Icc a b) f) : ∀, ∀ x ∈ Icc a b, ∀, f a ≤ f x := by
-  "././Mathport/Syntax/Translate/Basic.lean:418:16: unsupported tactic `by_contra'"
+  "././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'"
   rcases H_cont with ⟨x, ⟨h_ax, h_xb⟩, fx_lt_fa⟩
   obtain ⟨z, hz, ge_on_nhd⟩ : ∃ z > a, ∀, ∀ y ∈ Icc a z, ∀, f y ≥ f a := by
     rcases eventually_iff_exists_mem.mp h_local_min with ⟨U, U_in_nhds_within, fy_ge_fa⟩
@@ -50,12 +55,12 @@ theorem IsMinOn.of_is_local_min_on_of_convex_on_Icc {f : ℝ → β} {a b : ℝ}
     exact not_lt_of_geₓ (ge_on_nhd z h₂) (lt_on_nhd z h₁)
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:418:16: unsupported tactic `by_contra'
+-- ././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'
 /-- A local minimum of a convex function is a global minimum, restricted to a set `s`.
 -/
 theorem IsMinOn.of_is_local_min_on_of_convex_on {f : E → β} {a : E} (a_in_s : a ∈ s) (h_localmin : IsLocalMinOn f s a)
     (h_conv : ConvexOn ℝ s f) : ∀, ∀ x ∈ s, ∀, f a ≤ f x := by
-  "././Mathport/Syntax/Translate/Basic.lean:418:16: unsupported tactic `by_contra'"
+  "././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'"
   rcases H_cont with ⟨x, ⟨x_in_s, fx_lt_fa⟩⟩
   let g : ℝ →ᵃ[ℝ] E := AffineMap.lineMap a x
   have hg0 : g 0 = a := AffineMap.line_map_apply_zero a x

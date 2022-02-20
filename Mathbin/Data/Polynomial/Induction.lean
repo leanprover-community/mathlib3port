@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Chris Hughes. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Chris Hughes, Johannes Hölzl, Scott Morrison, Jens Wagemaker
+-/
 import Mathbin.Data.Polynomial.Coeff
 
 /-!
@@ -73,9 +78,11 @@ theorem coeff_mul_monomial (p : R[X]) (n d : ℕ) (r : R) : coeff (p * monomial 
 theorem coeff_monomial_mul (p : R[X]) (n d : ℕ) (r : R) : coeff (monomial n r * p) (d + n) = r * coeff p d := by
   rw [monomial_eq_C_mul_X, mul_assoc, coeff_C_mul, X_pow_mul, coeff_mul_X_pow]
 
+-- This can already be proved by `simp`.
 theorem coeff_mul_monomial_zero (p : R[X]) (d : ℕ) (r : R) : coeff (p * monomial 0 r) d = coeff p d * r :=
   coeff_mul_monomial p 0 d r
 
+-- This can already be proved by `simp`.
 theorem coeff_monomial_zero_mul (p : R[X]) (d : ℕ) (r : R) : coeff (monomial 0 r * p) d = r * coeff p d :=
   coeff_monomial_mul p 0 d r
 

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Zhouhang Zhou. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Zhouhang Zhou, Yury Kudryashov, Sébastien Gouëzel, Rémy Degenne
+-/
 import Mathbin.MeasureTheory.Integral.SetToL1
 import Mathbin.Analysis.NormedSpace.BoundedLinearMaps
 import Mathbin.Topology.Sequences
@@ -155,7 +160,7 @@ variable [NormedGroup F] [NormedSpace ℝ F] {m : MeasurableSpace α} {μ : Meas
 
 /-- Given a set `s`, return the continuous linear map `λ x, (μ s).to_real • x`. The extension of
 that set function through `set_to_L1` gives the Bochner integral of L1 functions. -/
-def weighted_smul {m : MeasurableSpace α} (μ : Measure α) (s : Set α) : F →L[ℝ] F :=
+def weightedSmul {m : MeasurableSpace α} (μ : Measure α) (s : Set α) : F →L[ℝ] F :=
   (μ s).toReal • ContinuousLinearMap.id ℝ F
 
 theorem weighted_smul_apply {m : MeasurableSpace α} (μ : Measure α) (s : Set α) (x : F) :
@@ -243,11 +248,11 @@ section PosPart
 variable [LinearOrderₓ E] [Zero E] [MeasurableSpace α]
 
 /-- Positive part of a simple function. -/
-def pos_part (f : α →ₛ E) : α →ₛ E :=
+def posPart (f : α →ₛ E) : α →ₛ E :=
   f.map fun b => max b 0
 
 /-- Negative part of a simple function. -/
-def neg_part [Neg E] (f : α →ₛ E) : α →ₛ E :=
+def negPart [Neg E] (f : α →ₛ E) : α →ₛ E :=
   posPart (-f)
 
 theorem pos_part_map_norm (f : α →ₛ ℝ) : (posPart f).map norm = posPart f := by
@@ -434,7 +439,7 @@ theorem norm_eq_integral (f : α →₁ₛ[μ] E) : ∥f∥ = ((toSimpleFunc f).
 section PosPart
 
 /-- Positive part of a simple function in L1 space.  -/
-def pos_part (f : α →₁ₛ[μ] ℝ) : α →₁ₛ[μ] ℝ :=
+def posPart (f : α →₁ₛ[μ] ℝ) : α →₁ₛ[μ] ℝ :=
   ⟨lp.posPart (f : α →₁[μ] ℝ), by
     rcases f with ⟨f, s, hsf⟩
     use s.pos_part
@@ -442,7 +447,7 @@ def pos_part (f : α →₁ₛ[μ] ℝ) : α →₁ₛ[μ] ℝ :=
       simple_func.coe_map]⟩
 
 /-- Negative part of a simple function in L1 space. -/
-def neg_part (f : α →₁ₛ[μ] ℝ) : α →₁ₛ[μ] ℝ :=
+def negPart (f : α →₁ₛ[μ] ℝ) : α →₁ₛ[μ] ℝ :=
   posPart (-f)
 
 @[norm_cast]
@@ -503,13 +508,13 @@ variable {E' : Type _} [NormedGroup E'] [SecondCountableTopology E'] [Measurable
 variable (α E μ 𝕜)
 
 /-- The Bochner integral over simple functions in L1 space as a continuous linear map. -/
-def integral_clm' : (α →₁ₛ[μ] E) →L[𝕜] E :=
+def integralClm' : (α →₁ₛ[μ] E) →L[𝕜] E :=
   LinearMap.mkContinuous ⟨integral, integral_add, integral_smul⟩ 1 fun f =>
     le_transₓ (norm_integral_le_norm _) <| by
       rw [one_mulₓ]
 
 /-- The Bochner integral over simple functions in L1 space as a continuous linear map over ℝ. -/
-def integral_clm : (α →₁ₛ[μ] E) →L[ℝ] E :=
+def integralClm : (α →₁ₛ[μ] E) →L[ℝ] E :=
   integralClm' α E ℝ μ
 
 variable {α E μ 𝕜}
@@ -542,14 +547,17 @@ theorem neg_part_to_simple_func (f : α →₁ₛ[μ] ℝ) : toSimpleFunc (negPa
   rfl
 
 theorem integral_eq_norm_pos_part_sub (f : α →₁ₛ[μ] ℝ) : integral f = ∥posPart f∥ - ∥negPart f∥ := by
+  -- Convert things in `L¹` to their `simple_func` counterpart
   have ae_eq₁ : (to_simple_func f).posPart =ᵐ[μ] (to_simple_func (pos_part f)).map norm := by
     filter_upwards [pos_part_to_simple_func f] with _ h
     rw [simple_func.map_apply, h]
     conv_lhs => rw [← simple_func.pos_part_map_norm, simple_func.map_apply]
+  -- Convert things in `L¹` to their `simple_func` counterpart
   have ae_eq₂ : (to_simple_func f).negPart =ᵐ[μ] (to_simple_func (neg_part f)).map norm := by
     filter_upwards [neg_part_to_simple_func f] with _ h
     rw [simple_func.map_apply, h]
     conv_lhs => rw [← simple_func.neg_part_map_norm, simple_func.map_apply]
+  -- Convert things in `L¹` to their `simple_func` counterpart
   have ae_eq :
     ∀ᵐ a ∂μ,
       (to_simple_func f).posPart a - (to_simple_func f).negPart a =
@@ -596,13 +604,13 @@ open ContinuousLinearMap
 variable (𝕜) [MeasurableSpace 𝕜] [OpensMeasurableSpace 𝕜]
 
 /-- The Bochner integral in L1 space as a continuous linear map. -/
-def integral_clm' : (α →₁[μ] E) →L[𝕜] E :=
+def integralClm' : (α →₁[μ] E) →L[𝕜] E :=
   (integralClm' α E 𝕜 μ).extend (coeToLp α E 𝕜) (simpleFunc.dense_range one_ne_top) simpleFunc.uniform_inducing
 
 variable {𝕜}
 
 /-- The Bochner integral in L1 space as a continuous linear map over ℝ. -/
-def integral_clm : (α →₁[μ] E) →L[ℝ] E :=
+def integralClm : (α →₁[μ] E) →L[ℝ] E :=
   integralClm' ℝ
 
 /-- The Bochner integral in L1 space -/
@@ -616,7 +624,7 @@ theorem integral_eq_set_to_L1 (f : α →₁[μ] E) : integral f = setToL1 (domi
   rfl
 
 @[norm_cast]
-theorem simple_func.integral_L1_eq_integral (f : α →₁ₛ[μ] E) : integral (f : α →₁[μ] E) = SimpleFunc.integral f :=
+theorem SimpleFunc.integral_L1_eq_integral (f : α →₁ₛ[μ] E) : integral (f : α →₁[μ] E) = SimpleFunc.integral f :=
   set_to_L1_eq_set_to_L1s_clm (dominated_fin_meas_additive_weighted_smul μ) f
 
 variable (α E)
@@ -661,6 +669,7 @@ theorem continuous_integral : Continuous fun f : α →₁[μ] E => integral f :
 section PosPart
 
 theorem integral_eq_norm_pos_part_sub (f : α →₁[μ] ℝ) : integral f = ∥lp.posPart f∥ - ∥lp.negPart f∥ := by
+  -- Use `is_closed_property` and `is_closed_eq`
   refine'
     @is_closed_property _ _ _ (coe : (α →₁ₛ[μ] ℝ) → α →₁[μ] ℝ)
       (fun f : α →₁[μ] ℝ => integral f = ∥Lp.pos_part f∥ - ∥Lp.neg_part f∥) (simple_func.dense_range one_ne_top)
@@ -669,6 +678,7 @@ theorem integral_eq_norm_pos_part_sub (f : α →₁[μ] ℝ) : integral f = ∥
     
   · refine' Continuous.sub (continuous_norm.comp Lp.continuous_pos_part) (continuous_norm.comp Lp.continuous_neg_part)
     
+  -- Show that the property holds for all simple functions in the `L¹` space.
   · intro s
     norm_cast
     exact simple_func.integral_eq_norm_pos_part_sub _
@@ -810,7 +820,7 @@ theorem integral_eq_zero_of_ae {f : α → E} (hf : f =ᵐ[μ] 0) : (∫ a, f a 
 
 /-- If `f` has finite integral, then `∫ x in s, f x ∂μ` is absolutely continuous in `s`: it tends
 to zero as `μ s` tends to zero. -/
-theorem has_finite_integral.tendsto_set_integral_nhds_zero {ι} {f : α → E} (hf : HasFiniteIntegral f μ) {l : Filter ι}
+theorem HasFiniteIntegral.tendsto_set_integral_nhds_zero {ι} {f : α → E} (hf : HasFiniteIntegral f μ) {l : Filter ι}
     {s : ι → Set α} (hs : Tendsto (μ ∘ s) l (𝓝 0)) : Tendsto (fun i => ∫ x in s i, f x ∂μ) l (𝓝 0) := by
   rw [tendsto_zero_iff_norm_tendsto_zero]
   simp_rw [← coe_nnnorm, ← Nnreal.coe_zero, Nnreal.tendsto_coe, ← Ennreal.tendsto_coe, Ennreal.coe_zero]
@@ -820,7 +830,7 @@ theorem has_finite_integral.tendsto_set_integral_nhds_zero {ι} {f : α → E} (
 
 /-- If `f` is integrable, then `∫ x in s, f x ∂μ` is absolutely continuous in `s`: it tends
 to zero as `μ s` tends to zero. -/
-theorem integrable.tendsto_set_integral_nhds_zero {ι} {f : α → E} (hf : Integrable f μ) {l : Filter ι} {s : ι → Set α}
+theorem Integrable.tendsto_set_integral_nhds_zero {ι} {f : α → E} (hf : Integrable f μ) {l : Filter ι} {s : ι → Set α}
     (hs : Tendsto (μ ∘ s) l (𝓝 0)) : Tendsto (fun i => ∫ x in s i, f x ∂μ) l (𝓝 0) :=
   hf.2.tendsto_set_integral_nhds_zero hs
 
@@ -902,6 +912,7 @@ theorem integral_eq_lintegral_pos_part_sub_lintegral_neg_part {f : α → ℝ} (
       Ennreal.toReal (∫⁻ a, Ennreal.ofReal <| f a ∂μ) - Ennreal.toReal (∫⁻ a, Ennreal.ofReal <| -f a ∂μ) :=
   by
   let f₁ := hf.toL1 f
+  -- Go to the `L¹` space
   have eq₁ : Ennreal.toReal (∫⁻ a, Ennreal.ofReal <| f a ∂μ) = ∥lp.posPart f₁∥ := by
     rw [L1.norm_def]
     congr 1
@@ -912,6 +923,7 @@ theorem integral_eq_lintegral_pos_part_sub_lintegral_neg_part {f : α → ℝ} (
     apply Nnreal.eq
     rw [Real.nnnorm_of_nonneg (le_max_rightₓ _ _)]
     simp only [Real.coe_to_nnreal', Subtype.coe_mk]
+  -- Go to the `L¹` space
   have eq₂ : Ennreal.toReal (∫⁻ a, Ennreal.ofReal <| -f a ∂μ) = ∥lp.negPart f₁∥ := by
     rw [L1.norm_def]
     congr 1
@@ -1022,7 +1034,7 @@ theorem integral_eq_zero_iff_of_nonneg_ae {f : α → ℝ} (hf : 0 ≤ᵐ[μ] f)
   simp_rw [integral_eq_lintegral_of_nonneg_ae hf hfi.1, Ennreal.to_real_eq_zero_iff,
     lintegral_eq_zero_iff' (ennreal.measurable_of_real.comp_ae_measurable hfi.1), ← Ennreal.not_lt_top, ←
     has_finite_integral_iff_of_real hf, hfi.2, not_true, or_falseₓ, ← hf.le_iff_eq, Filter.EventuallyEq,
-    Filter.EventuallyLe, · ∘ ·, Pi.zero_apply, Ennreal.of_real_eq_zero]
+    Filter.EventuallyLe, (· ∘ ·), Pi.zero_apply, Ennreal.of_real_eq_zero]
 
 theorem integral_eq_zero_iff_of_nonneg {f : α → ℝ} (hf : 0 ≤ f) (hfi : Integrable f μ) :
     (∫ x, f x ∂μ) = 0 ↔ f =ᵐ[μ] 0 :=
@@ -1109,12 +1121,12 @@ theorem norm_integral_le_of_norm_le {f : α → E} {g : α → ℝ} (hg : Integr
     _ ≤ ∫ x, g x ∂μ := integral_mono_of_nonneg (eventually_of_forall fun x => norm_nonneg _) hg h
     
 
-theorem simple_func.integral_eq_integral (f : α →ₛ E) (hfi : Integrable f μ) : f.integral μ = ∫ x, f x ∂μ := by
+theorem SimpleFunc.integral_eq_integral (f : α →ₛ E) (hfi : Integrable f μ) : f.integral μ = ∫ x, f x ∂μ := by
   rw [integral_eq f hfi, ← L1.simple_func.to_Lp_one_eq_to_L1, L1.simple_func.integral_L1_eq_integral,
     L1.simple_func.integral_eq_integral]
   exact simple_func.integral_congr hfi (Lp.simple_func.to_simple_func_to_Lp _ _).symm
 
-theorem simple_func.integral_eq_sum (f : α →ₛ E) (hfi : Integrable f μ) :
+theorem SimpleFunc.integral_eq_sum (f : α →ₛ E) (hfi : Integrable f μ) :
     (∫ x, f x ∂μ) = ∑ x in f.range, Ennreal.toReal (μ (f ⁻¹' {x})) • x := by
   rw [← f.integral_eq_integral hfi, simple_func.integral, ← simple_func.integral_eq]
   rfl
@@ -1175,6 +1187,7 @@ theorem integral_finset_sum_measure {ι} {m : MeasurableSpace α} {f : α → E}
     (hf : ∀, ∀ i ∈ s, ∀, Integrable f (μ i)) : (∫ a, f a ∂∑ i in s, μ i) = ∑ i in s, ∫ a, f a ∂μ i := by
   classical
   refine' Finset.induction_on' s _ _
+  -- `induction s using finset.induction_on'` fails
   · simp
     
   · intro i t hi ht hit iht
@@ -1213,9 +1226,11 @@ theorem integral_sum_measure {ι} {m : MeasurableSpace α} {f : α → E} {μ : 
 
 @[simp]
 theorem integral_smul_measure (f : α → E) (c : ℝ≥0∞) : (∫ x, f x ∂c • μ) = c.toReal • ∫ x, f x ∂μ := by
+  -- First we consider the “degenerate” case `c = ∞`
   rcases eq_or_ne c ∞ with (rfl | hc)
   · rw [Ennreal.top_to_real, zero_smul, integral_eq_set_to_fun, set_to_fun_top_smul_measure]
     
+  -- Main case: `c ≠ ∞`
   simp_rw [integral_eq_set_to_fun, ← set_to_fun_smul_left]
   have hdfma : dominated_fin_meas_additive μ (weighted_smul (c • μ) : Set α → E →L[ℝ] E) c.to_real :=
     mul_oneₓ c.to_real ▸ (dominated_fin_meas_additive_weighted_smul (c • μ)).of_smul_measure c hc
@@ -1267,7 +1282,7 @@ theorem integral_map_equiv {β} [MeasurableSpace β] (e : α ≃ᵐ β) (f : β 
     (∫ y, f y ∂Measure.map e μ) = ∫ x, f (e x) ∂μ :=
   e.MeasurableEmbedding.integral_map f
 
-theorem measure_preserving.integral_comp {β} {_ : MeasurableSpace β} {f : α → β} {ν} (h₁ : MeasurePreserving f μ ν)
+theorem MeasurePreserving.integral_comp {β} {_ : MeasurableSpace β} {f : α → β} {ν} (h₁ : MeasurePreserving f μ ν)
     (h₂ : MeasurableEmbedding f) (g : β → E) : (∫ x, g (f x) ∂μ) = ∫ y, g y ∂ν :=
   h₁.map_eq ▸ (h₂.integral_map g).symm
 
@@ -1305,11 +1320,11 @@ section IntegralTrim
 variable {H β γ : Type _} [NormedGroup H] [MeasurableSpace H] {m m0 : MeasurableSpace β} {μ : Measure β}
 
 /-- Simple function seen as simple function of a larger `measurable_space`. -/
-def simple_func.to_larger_space (hm : m ≤ m0) (f : @SimpleFunc β m γ) : SimpleFunc β γ :=
+def SimpleFunc.toLargerSpace (hm : m ≤ m0) (f : @SimpleFunc β m γ) : SimpleFunc β γ :=
   ⟨@SimpleFunc.toFun β m γ f, fun x => hm _ (@SimpleFunc.measurable_set_fiber β γ m f x),
     @SimpleFunc.finite_range β γ m f⟩
 
-theorem simple_func.coe_to_larger_space_eq (hm : m ≤ m0) (f : @SimpleFunc β m γ) : ⇑f.toLargerSpace hm = f :=
+theorem SimpleFunc.coe_to_larger_space_eq (hm : m ≤ m0) (f : @SimpleFunc β m γ) : ⇑f.toLargerSpace hm = f :=
   rfl
 
 theorem integral_simple_func_larger_space (hm : m ≤ m0) (f : @SimpleFunc β m F) (hf_int : Integrable f μ) :

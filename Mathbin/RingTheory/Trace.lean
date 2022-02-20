@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Anne Baanen. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Anne Baanen
+-/
 import Mathbin.LinearAlgebra.BilinearForm
 import Mathbin.LinearAlgebra.Matrix.Charpoly.Coeff
 import Mathbin.LinearAlgebra.Determinant
@@ -85,6 +90,8 @@ noncomputable def trace : S →ₗ[R] R :=
 
 variable {S}
 
+-- Not a `simp` lemma since there are more interesting ways to rewrite `trace R S x`,
+-- for example `trace_trace`
 theorem trace_apply x : trace R S x = LinearMap.trace R S (lmul R S x) :=
   rfl
 
@@ -96,6 +103,7 @@ include b
 
 variable {R}
 
+-- Can't be a `simp` lemma because it depends on a choice of basis
 theorem trace_eq_matrix_trace [DecidableEq ι] (b : Basis ι R S) (s : S) :
     trace R S s = Matrix.trace _ R _ (Algebra.leftMulMatrix b s) := by
   rw [trace_apply, LinearMap.trace_eq_matrix_trace _ b, to_matrix_lmul_eq]
@@ -129,8 +137,10 @@ theorem trace_trace_of_basis [Algebra S T] [IsScalarTower R S T] {ι κ : Type _
   rw [trace_eq_matrix_trace (b.smul c), trace_eq_matrix_trace b, trace_eq_matrix_trace c, Matrix.trace_apply,
     Matrix.trace_apply, Matrix.trace_apply, ← Finset.univ_product_univ, Finset.sum_product]
   refine' Finset.sum_congr rfl fun i _ => _
-  simp only [AlgHom.map_sum, smul_left_mul_matrix, Finset.sum_apply,
-    Finset.sum_apply i _ fun y => left_mul_matrix b (left_mul_matrix c x y y)]
+  simp only [AlgHom.map_sum, smul_left_mul_matrix,
+    Finset.sum_apply,-- The unifier is not smart enough to apply this one by itself:
+      Finset.sum_apply
+      i _ fun y => left_mul_matrix b (left_mul_matrix c x y y)]
 
 theorem trace_comp_trace_of_basis [Algebra S T] [IsScalarTower R S T] {ι κ : Type _} [Fintype ι] [Fintype κ]
     (b : Basis ι R S) (c : Basis κ S T) : (trace R S).comp ((trace S T).restrictScalars R) = trace R T := by
@@ -154,11 +164,12 @@ variable (R S)
 
 /-- The `trace_form` maps `x y : S` to the trace of `x * y`.
 It is a symmetric bilinear form and is nondegenerate if the extension is separable. -/
-noncomputable def trace_form : BilinForm R S :=
+noncomputable def traceForm : BilinForm R S :=
   (LinearMap.compr₂ (lmul R S).toLinearMap (trace R S)).toBilin
 
 variable {S}
 
+-- This is a nicer lemma than the one produced by `@[simps] def trace_form`.
 @[simp]
 theorem trace_form_apply (x y : S) : traceForm R S x y = trace R S (x * y) :=
   rfl
@@ -210,13 +221,13 @@ namespace IntermediateField.AdjoinSimple
 
 open IntermediateField
 
--- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr ⟮ , ⟯»
--- ././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr ⟮ , ⟯»
--- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr ⟮ , ⟯»
--- ././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr ⟮ , ⟯»
 theorem trace_gen_eq_zero {x : L} (hx : ¬IsIntegral K x) :
     Algebra.trace K
-        («expr ⟮ , ⟯» K "././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr ⟮ , ⟯»")
+        («expr ⟮ , ⟯» K "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr ⟮ , ⟯»")
         (AdjoinSimple.gen K x) =
       0 :=
   by
@@ -226,33 +237,33 @@ theorem trace_gen_eq_zero {x : L} (hx : ¬IsIntegral K x) :
   refine'
     is_integral_of_mem_of_fg
       («expr ⟮ , ⟯» K
-          "././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr ⟮ , ⟯»").toSubalgebra
+          "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr ⟮ , ⟯»").toSubalgebra
       _ x _
   · exact (Submodule.fg_iff_finite_dimensional _).mpr (FiniteDimensional.of_finset_basis b)
     
   · exact subset_adjoin K _ (Set.mem_singleton x)
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr ⟮ , ⟯»
--- ././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr ⟮ , ⟯»
--- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr ⟮ , ⟯»
--- ././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr ⟮ , ⟯»
--- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr ⟮ , ⟯»
--- ././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr ⟮ , ⟯»
 theorem trace_gen_eq_sum_roots (x : L) (hf : (minpoly K x).Splits (algebraMap K F)) :
     algebraMap K F
-        (trace K («expr ⟮ , ⟯» K "././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr ⟮ , ⟯»")
+        (trace K («expr ⟮ , ⟯» K "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr ⟮ , ⟯»")
           (AdjoinSimple.gen K x)) =
       ((minpoly K x).map (algebraMap K F)).roots.Sum :=
   by
   have injKKx :
     Function.Injective
       (algebraMap K
-        («expr ⟮ , ⟯» K "././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr ⟮ , ⟯»")) :=
+        («expr ⟮ , ⟯» K "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr ⟮ , ⟯»")) :=
     RingHom.injective _
   have injKxL :
     Function.Injective
-      (algebraMap («expr ⟮ , ⟯» K "././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr ⟮ , ⟯»")
+      (algebraMap («expr ⟮ , ⟯» K "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr ⟮ , ⟯»")
         L) :=
     RingHom.injective _
   by_cases' hx : IsIntegral K x
@@ -274,32 +285,32 @@ open IntermediateField
 
 variable (K)
 
--- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr ⟮ , ⟯»
--- ././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr ⟮ , ⟯»
--- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr ⟮ , ⟯»
--- ././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr ⟮ , ⟯»
--- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr ⟮ , ⟯»
--- ././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr ⟮ , ⟯»
 theorem trace_eq_trace_adjoin [FiniteDimensional K L] (x : L) :
     Algebra.trace K L x =
-      finrank («expr ⟮ , ⟯» K "././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr ⟮ , ⟯»") L •
-        trace K («expr ⟮ , ⟯» K "././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr ⟮ , ⟯»")
+      finrank («expr ⟮ , ⟯» K "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr ⟮ , ⟯»") L •
+        trace K («expr ⟮ , ⟯» K "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr ⟮ , ⟯»")
           (AdjoinSimple.gen K x) :=
   by
   rw [←
     @trace_trace _ _ K
-      («expr ⟮ , ⟯» K "././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr ⟮ , ⟯»") _ _ _ _ _ _
+      («expr ⟮ , ⟯» K "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr ⟮ , ⟯»") _ _ _ _ _ _
       _ _ x]
   conv in x => rw [← IntermediateField.AdjoinSimple.algebra_map_gen K x]
   rw [trace_algebra_map, LinearMap.map_smul_of_tower]
 
 variable {K}
 
--- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr ⟮ , ⟯»
--- ././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr ⟮ , ⟯»
 theorem trace_eq_sum_roots [FiniteDimensional K L] {x : L} (hF : (minpoly K x).Splits (algebraMap K F)) :
     algebraMap K F (Algebra.trace K L x) =
-      finrank («expr ⟮ , ⟯» K "././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr ⟮ , ⟯»") L •
+      finrank («expr ⟮ , ⟯» K "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr ⟮ , ⟯»") L •
         ((minpoly K x).map (algebraMap K _)).roots.Sum :=
   by
   rw [trace_eq_trace_adjoin K x, Algebra.smul_def, RingHom.map_mul, ← Algebra.smul_def,
@@ -363,6 +374,7 @@ theorem sum_embeddings_eq_finrank_mul [FiniteDimensional K F] [IsSeparable K F] 
   have : IsSeparable L F := is_separable_tower_top_of_is_separable K L F
   let this' : Fintype (L →ₐ[K] E) := PowerBasis.AlgHom.fintype pb
   let this' : ∀ f : L →ₐ[K] E, Fintype (@AlgHom L F E _ _ _ _ f.to_ring_hom.to_algebra) := _
+  -- will be solved by unification
   rw [Fintype.sum_equiv algHomEquivSigma (fun σ : F →ₐ[K] E => _) fun σ => σ.1 pb.gen, ← Finset.univ_sigma_univ,
     Finset.sum_sigma, ← Finset.sum_nsmul]
   refine' Finset.sum_congr rfl fun σ _ => _
@@ -375,8 +387,8 @@ theorem sum_embeddings_eq_finrank_mul [FiniteDimensional K F] [IsSeparable K F] 
       IsScalarTower.coe_to_alg_hom']
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr ⟮ , ⟯»
--- ././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr ⟮ , ⟯»
 theorem trace_eq_sum_embeddings [FiniteDimensional K L] [IsSeparable K L] {x : L} :
     algebraMap K E (Algebra.trace K L x) = ∑ σ : L →ₐ[K] E, σ x := by
   have hx := IsSeparable.is_integral K x
@@ -387,7 +399,7 @@ theorem trace_eq_sum_embeddings [FiniteDimensional K L] [IsSeparable K L] {x : L
     
   · have :=
       is_separable_tower_bot_of_is_separable K
-        («expr ⟮ , ⟯» K "././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr ⟮ , ⟯»") L
+        («expr ⟮ , ⟯» K "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr ⟮ , ⟯»") L
     exact IsSeparable.separable K _
     
 
@@ -406,7 +418,7 @@ open Finset
 /-- Given an `A`-algebra `B` and `b`, an `κ`-indexed family of elements of `B`, we define
 `trace_matrix A b` as the matrix whose `(i j)`-th element is the trace of `b i * b j`. -/
 @[simp]
-noncomputable def trace_matrix (b : κ → B) : Matrix κ κ A
+noncomputable def traceMatrix (b : κ → B) : Matrix κ κ A
   | i, j => traceForm A B (b i) (b j)
 
 theorem trace_matrix_def (b : κ → B) : traceMatrix A b = fun i j => traceForm A B (b i) (b j) :=
@@ -470,7 +482,7 @@ variable (A)
   `σ (b i)`. It is mostly useful for fields when `fintype.card κ = finrank A B` and `C` is
   algebraically closed. -/
 @[simp]
-def embeddings_matrix (b : κ → B) : Matrix κ (B →ₐ[A] C) C
+def embeddingsMatrix (b : κ → B) : Matrix κ (B →ₐ[A] C) C
   | i, σ => σ (b i)
 
 /-- `embeddings_matrix_reindex A C b e : matrix κ κ C` is the matrix whose `(i, j)` coefficient
@@ -478,7 +490,7 @@ def embeddings_matrix (b : κ → B) : Matrix κ (B →ₐ[A] C) C
   bijection `e : κ ≃ (B →ₐ[A] C)`. It is mostly useful for fields and `C` is algebraically closed.
   In this case, in presence of `h : fintype.card κ = finrank A B`, one can take
   `e := equiv_of_card_eq ((alg_hom.card A B C).trans h.symm)`. -/
-def embeddings_matrix_reindex (b : κ → B) (e : κ ≃ (B →ₐ[A] C)) :=
+def embeddingsMatrixReindex (b : κ → B) (e : κ ≃ (B →ₐ[A] C)) :=
   reindex (Equivₓ.refl κ) e.symm (embeddingsMatrix A C b)
 
 variable {A}

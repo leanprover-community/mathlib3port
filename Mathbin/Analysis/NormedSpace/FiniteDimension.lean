@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Sébastien Gouëzel. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Sébastien Gouëzel
+-/
 import Mathbin.Analysis.NormedSpace.AffineIsometry
 import Mathbin.Analysis.NormedSpace.OperatorNorm
 import Mathbin.Analysis.Asymptotics.AsymptoticEquivalent
@@ -57,7 +62,7 @@ variable {R₁ : Type _} [Field R₁] [Module R₁ E₁] [Module R₁ F] [Finite
 
 /-- A linear isometry between finite dimensional spaces of equal dimension can be upgraded
     to a linear isometry equivalence. -/
-def to_linear_isometry_equiv (li : E₁ →ₗᵢ[R₁] F) (h : finrank R₁ E₁ = finrank R₁ F) : E₁ ≃ₗᵢ[R₁] F where
+def toLinearIsometryEquiv (li : E₁ →ₗᵢ[R₁] F) (h : finrank R₁ E₁ = finrank R₁ F) : E₁ ≃ₗᵢ[R₁] F where
   toLinearEquiv := li.toLinearMap.linearEquivOfInjective li.Injective h
   norm_map' := li.norm_map'
 
@@ -85,7 +90,7 @@ variable [FiniteDimensional 𝕜 V₁] [FiniteDimensional 𝕜 V₂]
 
 /-- An affine isometry between finite dimensional spaces of equal dimension can be upgraded
     to an affine isometry equivalence. -/
-def to_affine_isometry_equiv [Inhabited P₁] (li : P₁ →ᵃⁱ[𝕜] P₂) (h : finrank 𝕜 V₁ = finrank 𝕜 V₂) : P₁ ≃ᵃⁱ[𝕜] P₂ :=
+def toAffineIsometryEquiv [Inhabited P₁] (li : P₁ →ᵃⁱ[𝕜] P₂) (h : finrank 𝕜 V₁ = finrank 𝕜 V₂) : P₁ ≃ᵃⁱ[𝕜] P₂ :=
   AffineIsometryEquiv.mk' li (li.LinearIsometry.toLinearIsometryEquiv h) (arbitrary P₁) fun p => by
     simp
 
@@ -105,6 +110,8 @@ end AffineIsometry
 theorem LinearMap.continuous_on_pi {ι : Type w} [Fintype ι] {𝕜 : Type u} [NormedField 𝕜] {E : Type v} [AddCommGroupₓ E]
     [Module 𝕜 E] [TopologicalSpace E] [TopologicalAddGroup E] [HasContinuousSmul 𝕜 E] (f : (ι → 𝕜) →ₗ[𝕜] E) :
     Continuous f := by
+  -- for the proof, write `f` in the standard basis, and use that each coordinate is a continuous
+  -- function.
   have : (f : (ι → 𝕜) → E) = fun x => ∑ i : ι, x i • f fun j => if i = j then 1 else 0 := by
     ext x
     exact f.pi_apply_eq_sum_univ x
@@ -146,6 +153,8 @@ theorem continuous_equiv_fun_basis {ι : Type v} [Fintype ι] (ξ : Basis ι �
     simp [norm_nonneg]
     
   · have : FiniteDimensional 𝕜 E := of_fintype_basis ξ
+    -- first step: thanks to the inductive assumption, any n-dimensional subspace is equivalent
+    -- to a standard space of dimension n, hence it is complete and therefore closed.
     have H₁ : ∀ s : Submodule 𝕜 E, finrank 𝕜 s = n → IsClosed (s : Set E) := by
       intro s s_dim
       let b := Basis.ofVectorSpace 𝕜 s
@@ -161,6 +170,7 @@ theorem continuous_equiv_fun_basis {ι : Type v} [Fintype ι] (ξ : Basis ι �
             (by
               infer_instance))
       exact this.is_closed
+    -- second step: any linear form is continuous, as its kernel is closed by the first step
     have H₂ : ∀ f : E →ₗ[𝕜] 𝕜, Continuous f := by
       intro f
       have : finrank 𝕜 f.ker = n ∨ finrank 𝕜 f.ker = n.succ := by
@@ -188,11 +198,14 @@ theorem continuous_equiv_fun_basis {ι : Type v} [Fintype ι] (ξ : Basis ι �
           simp [this]
           
       exact LinearMap.continuous_iff_is_closed_ker.2 this
+    -- third step: applying the continuity to the linear form corresponding to a coefficient in the
+    -- basis decomposition, deduce that all such coefficients are controlled in terms of the norm
     have : ∀ i : ι, ∃ C, 0 ≤ C ∧ ∀ x : E, ∥ξ.equiv_fun x i∥ ≤ C * ∥x∥ := by
       intro i
       let f : E →ₗ[𝕜] 𝕜 := LinearMap.proj i ∘ₗ ↑ξ.equiv_fun
       let f' : E →L[𝕜] 𝕜 := { f with cont := H₂ f }
       exact ⟨∥f'∥, norm_nonneg _, fun x => ContinuousLinearMap.le_op_norm f' x⟩
+    -- fourth step: combine the bound on each coefficient to get a global bound and the continuity
     choose C0 hC0 using this
     let C := ∑ i, C0 i
     have C_nonneg : 0 ≤ C := Finset.sum_nonneg fun i hi => (hC0 i).1
@@ -207,6 +220,8 @@ theorem continuous_equiv_fun_basis {ι : Type v} [Fintype ι] (ξ : Basis ι �
 
 /-- Any linear map on a finite dimensional space over a complete field is continuous. -/
 theorem LinearMap.continuous_of_finite_dimensional [FiniteDimensional 𝕜 E] (f : E →ₗ[𝕜] F') : Continuous f := by
+  -- for the proof, go to a model vector space `b → 𝕜` thanks to `continuous_equiv_fun_basis`, and
+  -- argue that all linear maps there are continuous.
   let b := Basis.ofVectorSpace 𝕜 E
   have A : Continuous b.equiv_fun := continuous_equiv_fun_basis b
   have B : Continuous (f.comp (b.equiv_fun.symm : (Basis.OfVectorSpaceIndex 𝕜 E → 𝕜) →ₗ[𝕜] E)) :=
@@ -246,7 +261,7 @@ namespace LinearMap
 variable [FiniteDimensional 𝕜 E]
 
 /-- The continuous linear map induced by a linear map on a finite dimensional space -/
-def to_continuous_linear_map : (E →ₗ[𝕜] F') ≃ₗ[𝕜] E →L[𝕜] F' where
+def toContinuousLinearMap : (E →ₗ[𝕜] F') ≃ₗ[𝕜] E →L[𝕜] F' where
   toFun := fun f => ⟨f, f.continuous_of_finite_dimensional⟩
   invFun := coe
   map_add' := fun f g => rfl
@@ -274,7 +289,7 @@ variable [FiniteDimensional 𝕜 E]
 
 /-- The continuous linear equivalence induced by a linear equivalence on a finite dimensional
 space. -/
-def to_continuous_linear_equiv (e : E ≃ₗ[𝕜] F) : E ≃L[𝕜] F :=
+def toContinuousLinearEquiv (e : E ≃ₗ[𝕜] F) : E ≃L[𝕜] F :=
   { e with continuous_to_fun := e.toLinearMap.continuous_of_finite_dimensional,
     continuous_inv_fun :=
       have : FiniteDimensional 𝕜 F := e.finite_dimensional
@@ -329,6 +344,8 @@ constant `lipschitz_extension_constant E' * K`. -/
 theorem LipschitzOnWith.extend_finite_dimension {α : Type _} [PseudoMetricSpace α] {E' : Type _} [NormedGroup E']
     [NormedSpace ℝ E'] [FiniteDimensional ℝ E'] {s : Set α} {f : α → E'} {K : ℝ≥0 } (hf : LipschitzOnWith K f s) :
     ∃ g : α → E', LipschitzWith (lipschitzExtensionConstant E' * K) g ∧ EqOn f g s := by
+  /- This result is already known for spaces `ι → ℝ`. We use a continuous linear equiv between
+    `E'` and such a space to transfer the result to `E'`. -/
   let ι : Type _ := Basis.OfVectorSpaceIndex ℝ E'
   let A := (Basis.ofVectorSpace ℝ E').equivFun.toContinuousLinearEquiv
   have LA : LipschitzWith ∥A.to_continuous_linear_map∥₊ A := by
@@ -345,7 +362,7 @@ theorem LipschitzOnWith.extend_finite_dimension {α : Type _} [PseudoMetricSpace
     
   · intro x hx
     have : A (f x) = g x := gs hx
-    simp only [· ∘ ·, ← this, A.symm_apply_apply]
+    simp only [(· ∘ ·), ← this, A.symm_apply_apply]
     
 
 theorem LinearMap.exists_antilipschitz_with [FiniteDimensional 𝕜 E] (f : E →ₗ[𝕜] F) (hf : f.ker = ⊥) :
@@ -565,7 +582,7 @@ theorem exists_seq_norm_le_one_le_norm_sub' {c : 𝕜} (hc : 1 < ∥c∥) {R : �
     intro x y hxy
     rw [← norm_neg]
     simpa
-  apply exists_seq_of_forall_finset_exists' (fun x : E => ∥x∥ ≤ R) fun x : E y : E => 1 ≤ ∥x - y∥
+  apply exists_seq_of_forall_finset_exists' (fun x : E => ∥x∥ ≤ R) fun y : E => 1 ≤ ∥x - y∥
   intro s hs
   exact exists_norm_le_le_norm_sub_of_finset hc hR h s
 
@@ -625,6 +642,7 @@ theorem ContinuousLinearMap.exists_right_inverse_of_surjective [FiniteDimensiona
 theorem closed_embedding_smul_left {c : E} (hc : c ≠ 0) : ClosedEmbedding fun x : 𝕜 => x • c :=
   LinearEquiv.closed_embedding_of_injective (LinearEquiv.ker_to_span_singleton 𝕜 E hc)
 
+-- `smul` is a closed map in the first argument.
 theorem is_closed_map_smul_left (c : E) : IsClosedMap fun x : 𝕜 => x • c := by
   by_cases' hc : c = 0
   · simp_rw [hc, smul_zero]
@@ -649,6 +667,8 @@ theorem FiniteDimensional.proper [FiniteDimensional 𝕜 E] : ProperSpace E := b
 
 end ProperField
 
+/- Over the real numbers, we can register the previous statement as an instance as it will not
+cause problems in instance resolution since the properness of `ℝ` is already known. -/
 instance (priority := 900) FiniteDimensional.proper_real (E : Type u) [NormedGroup E] [NormedSpace ℝ E]
     [FiniteDimensional ℝ E] : ProperSpace E :=
   FiniteDimensional.proper ℝ E
@@ -671,6 +691,7 @@ any complete normed space, while the other holds only in finite dimensional spac
 theorem summable_norm_iff {α E : Type _} [NormedGroup E] [NormedSpace ℝ E] [FiniteDimensional ℝ E] {f : α → E} :
     (Summable fun x => ∥f x∥) ↔ Summable f := by
   refine' ⟨summable_of_summable_norm, fun hf => _⟩
+  -- First we use a finite basis to reduce the problem to the case `E = fin N → ℝ`
   suffices ∀ {N : ℕ} {g : α → Finₓ N → ℝ}, Summable g → Summable fun x => ∥g x∥ by
     obtain v := fin_basis ℝ E
     set e := v.equiv_funL
@@ -678,9 +699,10 @@ theorem summable_norm_iff {α E : Type _} [NormedGroup E] [NormedSpace ℝ E] [F
     refine' summable_of_norm_bounded _ (this.mul_left ↑(nnnorm (e.symm : (Finₓ (finrank ℝ E) → ℝ) →L[ℝ] E))) fun i => _
     simpa using (e.symm : (Finₓ (finrank ℝ E) → ℝ) →L[ℝ] E).le_op_norm (e <| f i)
   clear! E
+  -- Now we deal with `g : α → fin N → ℝ`
   intro N g hg
   have : ∀ i, Summable fun x => ∥g x i∥ := fun i => (Pi.summable.1 hg i).abs
-  refine' summable_of_norm_bounded _ (summable_sum fun i hi : i ∈ Finset.univ => this i) fun x => _
+  refine' summable_of_norm_bounded _ (summable_sum fun hi : i ∈ Finset.univ => this i) fun x => _
   rw [norm_norm, pi_norm_le_iff]
   · refine' fun i => Finset.single_le_sum (fun i hi => _) (Finset.mem_univ i)
     exact norm_nonneg (g x i)

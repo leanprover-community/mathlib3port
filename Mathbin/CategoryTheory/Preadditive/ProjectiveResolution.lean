@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison
+-/
 import Mathbin.CategoryTheory.Preadditive.Projective
 import Mathbin.Algebra.Homology.Single
 import Mathbin.Algebra.Homology.HomotopyCategory
@@ -86,7 +91,7 @@ attribute [instance]
 
 /-- An object admits a projective resolution.
 -/
-class has_projective_resolution (Z : C) : Prop where
+class HasProjectiveResolution (Z : C) : Prop where
   out {} : Nonempty (ProjectiveResolution Z)
 
 section
@@ -97,7 +102,7 @@ variable (C)
 `[enough_projectives C]` and `[abelian C]`.
 By itself it's enough to set up the basic theory of derived functors.
 -/
-class has_projective_resolutions : Prop where
+class HasProjectiveResolutions : Prop where
   out : ∀ Z : C, HasProjectiveResolution Z
 
 attribute [instance] has_projective_resolutions.out
@@ -138,12 +143,12 @@ def self (Z : C) [CategoryTheory.Projective Z] : ProjectiveResolution Z where
     infer_instance
 
 /-- Auxiliary construction for `lift`. -/
-def lift_f_zero {Y Z : C} (f : Y ⟶ Z) (P : ProjectiveResolution Y) (Q : ProjectiveResolution Z) :
+def liftFZero {Y Z : C} (f : Y ⟶ Z) (P : ProjectiveResolution Y) (Q : ProjectiveResolution Z) :
     P.complex.x 0 ⟶ Q.complex.x 0 :=
   factorThru (P.π.f 0 ≫ f) (Q.π.f 0)
 
 /-- Auxiliary construction for `lift`. -/
-def lift_f_one {Y Z : C} (f : Y ⟶ Z) (P : ProjectiveResolution Y) (Q : ProjectiveResolution Z) :
+def liftFOne {Y Z : C} (f : Y ⟶ Z) (P : ProjectiveResolution Y) (Q : ProjectiveResolution Z) :
     P.complex.x 1 ⟶ Q.complex.x 1 :=
   Exact.lift (P.complex.d 1 0 ≫ liftFZero f P Q) (Q.complex.d 1 0) (Q.π.f 0)
     (by
@@ -157,7 +162,7 @@ theorem lift_f_one_zero_comm {Y Z : C} (f : Y ⟶ Z) (P : ProjectiveResolution Y
   simp
 
 /-- Auxiliary construction for `lift`. -/
-def lift_f_succ {Y Z : C} (P : ProjectiveResolution Y) (Q : ProjectiveResolution Z) (n : ℕ)
+def liftFSucc {Y Z : C} (P : ProjectiveResolution Y) (Q : ProjectiveResolution Z) (n : ℕ)
     (g : P.complex.x n ⟶ Q.complex.x n) (g' : P.complex.x (n + 1) ⟶ Q.complex.x (n + 1))
     (w : g' ≫ Q.complex.d (n + 1) n = P.complex.d (n + 1) n ≫ g) :
     Σ' g'' : P.complex.x (n + 2) ⟶ Q.complex.x (n + 2),
@@ -193,6 +198,8 @@ theorem lift_commutes {Y Z : C} (f : Y ⟶ Z) (P : ProjectiveResolution Y) (Q : 
     simp
     
 
+-- Now that we've checked this property of the lift,
+-- we can seal away the actual definition.
 end ProjectiveResolution
 
 end
@@ -202,21 +209,20 @@ namespace ProjectiveResolution
 variable [HasZeroObject C] [Preadditive C] [HasEqualizers C] [HasImages C]
 
 /-- An auxiliary definition for `lift_homotopy_zero`. -/
-def lift_homotopy_zero_zero {Y Z : C} {P : ProjectiveResolution Y} {Q : ProjectiveResolution Z}
-    (f : P.complex ⟶ Q.complex) (comm : f ≫ Q.π = 0) : P.complex.x 0 ⟶ Q.complex.x 1 :=
+def liftHomotopyZeroZero {Y Z : C} {P : ProjectiveResolution Y} {Q : ProjectiveResolution Z} (f : P.complex ⟶ Q.complex)
+    (comm : f ≫ Q.π = 0) : P.complex.x 0 ⟶ Q.complex.x 1 :=
   Exact.lift (f.f 0) (Q.complex.d 1 0) (Q.π.f 0) (congr_funₓ (congr_argₓ HomologicalComplex.Hom.f comm) 0)
 
 /-- An auxiliary definition for `lift_homotopy_zero`. -/
-def lift_homotopy_zero_one {Y Z : C} {P : ProjectiveResolution Y} {Q : ProjectiveResolution Z}
-    (f : P.complex ⟶ Q.complex) (comm : f ≫ Q.π = 0) : P.complex.x 1 ⟶ Q.complex.x 2 :=
+def liftHomotopyZeroOne {Y Z : C} {P : ProjectiveResolution Y} {Q : ProjectiveResolution Z} (f : P.complex ⟶ Q.complex)
+    (comm : f ≫ Q.π = 0) : P.complex.x 1 ⟶ Q.complex.x 2 :=
   Exact.lift (f.f 1 - P.complex.d 1 0 ≫ liftHomotopyZeroZero f comm) (Q.complex.d 2 1) (Q.complex.d 1 0)
     (by
       simp [lift_homotopy_zero_zero])
 
 /-- An auxiliary definition for `lift_homotopy_zero`. -/
-def lift_homotopy_zero_succ {Y Z : C} {P : ProjectiveResolution Y} {Q : ProjectiveResolution Z}
-    (f : P.complex ⟶ Q.complex) (n : ℕ) (g : P.complex.x n ⟶ Q.complex.x (n + 1))
-    (g' : P.complex.x (n + 1) ⟶ Q.complex.x (n + 2))
+def liftHomotopyZeroSucc {Y Z : C} {P : ProjectiveResolution Y} {Q : ProjectiveResolution Z} (f : P.complex ⟶ Q.complex)
+    (n : ℕ) (g : P.complex.x n ⟶ Q.complex.x (n + 1)) (g' : P.complex.x (n + 1) ⟶ Q.complex.x (n + 2))
     (w : f.f (n + 1) = P.complex.d (n + 1) n ≫ g + g' ≫ Q.complex.d (n + 2) (n + 1)) :
     P.complex.x (n + 2) ⟶ Q.complex.x (n + 3) :=
   Exact.lift (f.f (n + 2) - P.complex.d (n + 2) (n + 1) ≫ g') (Q.complex.d (n + 3) (n + 2))
@@ -225,7 +231,7 @@ def lift_homotopy_zero_succ {Y Z : C} {P : ProjectiveResolution Y} {Q : Projecti
       simp [w])
 
 /-- Any lift of the zero morphism is homotopic to zero. -/
-def lift_homotopy_zero {Y Z : C} {P : ProjectiveResolution Y} {Q : ProjectiveResolution Z} (f : P.complex ⟶ Q.complex)
+def liftHomotopyZero {Y Z : C} {P : ProjectiveResolution Y} {Q : ProjectiveResolution Z} (f : P.complex ⟶ Q.complex)
     (comm : f ≫ Q.π = 0) : Homotopy f 0 := by
   fapply Homotopy.mkInductive
   · exact lift_homotopy_zero_zero f comm
@@ -245,7 +251,7 @@ def lift_homotopy_zero {Y Z : C} {P : ProjectiveResolution Y} {Q : ProjectiveRes
     
 
 /-- Two lifts of the same morphism are homotopic. -/
-def lift_homotopy {Y Z : C} (f : Y ⟶ Z) {P : ProjectiveResolution Y} {Q : ProjectiveResolution Z}
+def liftHomotopy {Y Z : C} (f : Y ⟶ Z) {P : ProjectiveResolution Y} {Q : ProjectiveResolution Z}
     (g h : P.complex ⟶ Q.complex) (g_comm : g ≫ Q.π = P.π ≫ (ChainComplex.single₀ C).map f)
     (h_comm : h ≫ Q.π = P.π ≫ (ChainComplex.single₀ C).map f) : Homotopy g h := by
   apply homotopy.equiv_sub_zero.inv_fun
@@ -253,16 +259,17 @@ def lift_homotopy {Y Z : C} (f : Y ⟶ Z) {P : ProjectiveResolution Y} {Q : Proj
   simp [g_comm, h_comm]
 
 /-- The lift of the identity morphism is homotopic to the identity chain map. -/
-def lift_id_homotopy (X : C) (P : ProjectiveResolution X) : Homotopy (lift (𝟙 X) P P) (𝟙 P.complex) := by
+def liftIdHomotopy (X : C) (P : ProjectiveResolution X) : Homotopy (lift (𝟙 X) P P) (𝟙 P.complex) := by
   apply lift_homotopy (𝟙 X) <;> simp
 
 /-- The lift of a composition is homotopic to the composition of the lifts. -/
-def lift_comp_homotopy {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z) (P : ProjectiveResolution X) (Q : ProjectiveResolution Y)
+def liftCompHomotopy {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z) (P : ProjectiveResolution X) (Q : ProjectiveResolution Y)
     (R : ProjectiveResolution Z) : Homotopy (lift (f ≫ g) P R) (lift f P Q ≫ lift g Q R) := by
   apply lift_homotopy (f ≫ g) <;> simp
 
 /-- Any two projective resolutions are homotopy equivalent. -/
-def HomotopyEquiv {X : C} (P Q : ProjectiveResolution X) : HomotopyEquiv P.complex Q.complex where
+-- We don't care about the actual definitions of these homotopies.
+def homotopyEquiv {X : C} (P Q : ProjectiveResolution X) : HomotopyEquiv P.complex Q.complex where
   Hom := lift (𝟙 X) P Q
   inv := lift (𝟙 X) Q P
   homotopyHomInvId := by
@@ -289,17 +296,17 @@ section
 variable [HasZeroMorphisms C] [HasZeroObject C] [HasEqualizers C] [HasImages C]
 
 /-- An arbitrarily chosen projective resolution of an object. -/
-abbrev projective_resolution (Z : C) [HasProjectiveResolution Z] : ChainComplex C ℕ :=
+abbrev projectiveResolution (Z : C) [HasProjectiveResolution Z] : ChainComplex C ℕ :=
   (HasProjectiveResolution.out Z).some.complex
 
 /-- The chain map from the arbitrarily chosen projective resolution `projective_resolution Z`
 back to the chain complex consisting of `Z` supported in degree `0`. -/
-abbrev projective_resolution.π (Z : C) [HasProjectiveResolution Z] :
+abbrev projectiveResolution.π (Z : C) [HasProjectiveResolution Z] :
     projectiveResolution Z ⟶ (ChainComplex.single₀ C).obj Z :=
   (HasProjectiveResolution.out Z).some.π
 
 /-- The lift of a morphism to a chain map between the arbitrarily chosen projective resolutions. -/
-abbrev projective_resolution.lift {X Y : C} (f : X ⟶ Y) [HasProjectiveResolution X] [HasProjectiveResolution Y] :
+abbrev projectiveResolution.lift {X Y : C} (f : X ⟶ Y) [HasProjectiveResolution X] [HasProjectiveResolution Y] :
     projectiveResolution X ⟶ projectiveResolution Y :=
   ProjectiveResolution.lift f _ _
 
@@ -311,7 +318,7 @@ variable (C) [Preadditive C] [HasZeroObject C] [HasEqualizers C] [HasImages C] [
 if considered with target the homotopy category
 (`ℕ`-indexed chain complexes and chain maps up to homotopy).
 -/
-def projective_resolutions : C ⥤ HomotopyCategory C (ComplexShape.down ℕ) where
+def projectiveResolutions : C ⥤ HomotopyCategory C (ComplexShape.down ℕ) where
   obj := fun X => (HomotopyCategory.quotient _ _).obj (projectiveResolution X)
   map := fun X Y f => (HomotopyCategory.quotient _ _).map (projectiveResolution.lift f)
   map_id' := fun X => by

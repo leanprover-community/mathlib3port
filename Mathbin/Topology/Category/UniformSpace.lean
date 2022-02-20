@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Reid Barton, Patrick Massot, Scott Morrison
+-/
 import Mathbin.CategoryTheory.Adjunction.Reflective
 import Mathbin.CategoryTheory.ConcreteCategory.UnbundledHom
 import Mathbin.CategoryTheory.Monad.Limits
@@ -67,7 +72,7 @@ theorem hom_ext {X Y : UniformSpaceₓ} {f g : X ⟶ Y} : (f : X → Y) = g → 
   Subtype.eq
 
 /-- The forgetful functor from uniform spaces to topological spaces. -/
-instance has_forget_to_Top : HasForget₂ UniformSpaceₓ.{u} Top.{u} where
+instance hasForgetToTop : HasForget₂ UniformSpaceₓ.{u} Top.{u} where
   forget₂ :=
     { obj := fun X => Top.of X,
       map := fun X Y f => { toFun := f, continuous_to_fun := UniformContinuous.continuous f.property } }
@@ -89,13 +94,13 @@ instance : CoeSort CpltSepUniformSpace (Type u) :=
 attribute [instance] is_uniform_space is_complete_space IsSeparated
 
 /-- The function forgetting that a complete separated uniform spaces is complete and separated. -/
-def to_UniformSpace (X : CpltSepUniformSpace) : UniformSpaceₓ :=
+def toUniformSpace (X : CpltSepUniformSpace) : UniformSpaceₓ :=
   UniformSpaceₓ.of X
 
-instance CompleteSpace (X : CpltSepUniformSpace) : CompleteSpace (toUniformSpace X).α :=
+instance complete_space (X : CpltSepUniformSpace) : CompleteSpace (toUniformSpace X).α :=
   CpltSepUniformSpace.is_complete_space X
 
-instance SeparatedSpace (X : CpltSepUniformSpace) : SeparatedSpace (toUniformSpace X).α :=
+instance separated_space (X : CpltSepUniformSpace) : SeparatedSpace (toUniformSpace X).α :=
   CpltSepUniformSpace.is_separated X
 
 /-- Construct a bundled `UniformSpace` from the underlying type and the appropriate typeclasses. -/
@@ -118,10 +123,10 @@ instance category : LargeCategory CpltSepUniformSpace :=
   InducedCategory.category toUniformSpace
 
 /-- The concrete category instance on `CpltSepUniformSpace`. -/
-instance concrete_category : ConcreteCategory CpltSepUniformSpace :=
+instance concreteCategory : ConcreteCategory CpltSepUniformSpace :=
   InducedCategory.concreteCategory toUniformSpace
 
-instance has_forget_to_UniformSpace : HasForget₂ CpltSepUniformSpace UniformSpaceₓ :=
+instance hasForgetToUniformSpace : HasForget₂ CpltSepUniformSpace UniformSpaceₓ :=
   InducedCategory.hasForget₂ toUniformSpace
 
 end CpltSepUniformSpace
@@ -133,14 +138,14 @@ open UniformSpace
 open CpltSepUniformSpace
 
 /-- The functor turning uniform spaces into complete separated uniform spaces. -/
-noncomputable def completion_functor : UniformSpaceₓ ⥤ CpltSepUniformSpace where
+noncomputable def completionFunctor : UniformSpaceₓ ⥤ CpltSepUniformSpace where
   obj := fun X => CpltSepUniformSpace.of (Completion X)
   map := fun X Y f => ⟨Completion.map f.1, Completion.uniform_continuous_map⟩
   map_id' := fun X => Subtype.eq Completion.map_id
   map_comp' := fun X Y Z f g => Subtype.eq (Completion.map_comp g.property f.property).symm
 
 /-- The inclusion of a uniform space into its completion. -/
-def completion_hom (X : UniformSpaceₓ) :
+def completionHom (X : UniformSpaceₓ) :
     X ⟶ (forget₂ CpltSepUniformSpace UniformSpaceₓ).obj (completionFunctor.obj X) where
   val := (coe : X → Completion X)
   property := Completion.uniform_continuous_coe X
@@ -150,7 +155,7 @@ theorem completion_hom_val (X : UniformSpaceₓ) x : (completionHom X) x = (x : 
   rfl
 
 /-- The mate of a morphism from a `UniformSpace` to a `CpltSepUniformSpace`. -/
-noncomputable def extension_hom {X : UniformSpaceₓ} {Y : CpltSepUniformSpace}
+noncomputable def extensionHom {X : UniformSpaceₓ} {Y : CpltSepUniformSpace}
     (f : X ⟶ (forget₂ CpltSepUniformSpace UniformSpaceₓ).obj Y) : completionFunctor.obj X ⟶ Y where
   val := Completion.extension f
   property := Completion.uniform_continuous_extension
@@ -198,6 +203,7 @@ noncomputable instance : Reflective (forget₂ CpltSepUniformSpace UniformSpace�
 
 open CategoryTheory.Limits
 
+-- TODO Once someone defines `has_limits UniformSpace`, turn this into an instance.
 example [HasLimits.{u} UniformSpaceₓ.{u}] : HasLimits.{u} CpltSepUniformSpace.{u} :=
   has_limits_of_reflective <| forget₂ CpltSepUniformSpace UniformSpaceₓ.{u}
 

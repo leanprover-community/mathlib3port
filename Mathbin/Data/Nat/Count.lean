@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Vladimir Goryachev. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yaël Dillies, Vladimir Goryachev, Kyle Miller, Scott Morrison, Eric Rodriguez
+-/
 import Mathbin.Data.List.Basic
 import Mathbin.Data.Nat.Prime
 import Mathbin.SetTheory.Fincard
@@ -32,7 +37,7 @@ theorem count_zero : count p 0 = 0 := by
   rw [count, List.range_zero, List.countp]
 
 /-- A fintype instance for the set relevant to `nat.count`. Locally an instance in locale `count` -/
-def count_set.fintype (n : ℕ) : Fintype { i // i < n ∧ p i } := by
+def CountSet.fintype (n : ℕ) : Fintype { i // i < n ∧ p i } := by
   apply Fintype.ofFinset ((Finset.range n).filter p)
   intro x
   rw [mem_filter, mem_range]

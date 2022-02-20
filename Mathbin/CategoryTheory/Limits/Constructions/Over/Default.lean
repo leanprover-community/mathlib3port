@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Johan Commelin. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johan Commelin, Reid Barton, Bhavik Mehta
+-/
 import Mathbin.CategoryTheory.Limits.Connected
 import Mathbin.CategoryTheory.Limits.Constructions.Over.Products
 import Mathbin.CategoryTheory.Limits.Constructions.Over.Connected
@@ -14,6 +19,7 @@ finite limits, and if `C` has arbitrary wide pullbacks then `over B` has limits.
 
 universe v u
 
+-- morphism levels before object levels. See note [category_theory universes].
 open CategoryTheory CategoryTheory.Limits
 
 variable {J : Type v} [SmallCategory J]

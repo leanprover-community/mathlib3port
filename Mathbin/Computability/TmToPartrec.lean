@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Mario Carneiro. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Mario Carneiro
+-/
 import Mathbin.Computability.Halting
 import Mathbin.Computability.TuringMachine
 import Mathbin.Data.Num.Lemmas
@@ -65,7 +70,7 @@ namespace ToPartrec
 
 /-- The type of codes for primitive recursive functions. Unlike `nat.partrec.code`, this uses a set
 of operations on `list ℕ`. See `code.eval` for a description of the behavior of the primitives. -/
-inductive code
+inductive Code
   | zero'
   | succ
   | tail
@@ -102,7 +107,7 @@ we functions that return a single result return a singleton `[n]`, or in some ca
   * `fix f v = fix f w` if `f v = n+1 :: w` (the exact value of `n` is discarded)
 -/
 @[simp]
-def code.eval : Code → List ℕ →. List ℕ
+def Code.eval : Code → List ℕ →. List ℕ
   | code.zero' => fun v => pure (0 :: v)
   | code.succ => fun v => pure [v.head.succ]
   | code.tail => fun v => pure v.tail
@@ -202,7 +207,7 @@ def prec (f g : Code) : Code :=
 
 attribute [-simp] Part.bind_eq_bind Part.map_eq_map Part.pure_eq_some
 
-theorem exists_code.comp {m n} {f : Vector ℕ n →. ℕ} {g : Finₓ n → Vector ℕ m →. ℕ}
+theorem ExistsCode.comp {m n} {f : Vector ℕ n →. ℕ} {g : Finₓ n → Vector ℕ m →. ℕ}
     (hf : ∃ c : Code, ∀ v : Vector ℕ n, c.eval v.1 = pure <$> f v)
     (hg : ∀ i, ∃ c : Code, ∀ v : Vector ℕ m, c.eval v.1 = pure <$> g i v) :
     ∃ c : Code, ∀ v : Vector ℕ m, c.eval v.1 = pure <$> ((Vector.mOfFnₓ fun i => g i v) >>= f) := by
@@ -211,7 +216,7 @@ theorem exists_code.comp {m n} {f : Vector ℕ n →. ℕ} {g : Finₓ n → Vec
     obtain ⟨cg, hg⟩ := this
     exact
       ⟨cf.comp cg, fun v => by
-        simp [hg, hf, map_bind, seq_bind_eq, · ∘ ·, -Subtype.val_eq_coe]
+        simp [hg, hf, map_bind, seq_bind_eq, (· ∘ ·), -Subtype.val_eq_coe]
         rfl⟩
   clear hf f
   induction' n with n IH
@@ -223,7 +228,7 @@ theorem exists_code.comp {m n} {f : Vector ℕ n →. ℕ} {g : Finₓ n → Vec
     obtain ⟨cl, hl⟩ := IH fun i => hg i.succ
     exact
       ⟨cons cg cl, fun v => by
-        simp [Vector.mOfFnₓ, hg₁, map_bind, seq_bind_eq, bind_assoc, · ∘ ·, hl, -Subtype.val_eq_coe]
+        simp [Vector.mOfFnₓ, hg₁, map_bind, seq_bind_eq, bind_assoc, (· ∘ ·), hl, -Subtype.val_eq_coe]
         rfl⟩
     
 
@@ -411,7 +416,7 @@ to `v'` in finitely many steps if and only if `code.eval c v = some v'`.
 
 
 /-- The type of continuations, built up during evaluation of a `code` expression. -/
-inductive cont
+inductive Cont
   | halt
   | cons₁ : Code → List ℕ → cont → cont
   | cons₂ : List ℕ → cont → cont
@@ -420,7 +425,7 @@ inductive cont
   deriving Inhabited
 
 /-- The semantics of a continuation. -/
-def cont.eval : Cont → List ℕ →. List ℕ
+def Cont.eval : Cont → List ℕ →. List ℕ
   | cont.halt => pure
   | cont.cons₁ fs as k => fun v => do
     let ns ← Code.eval fs as
@@ -436,7 +441,7 @@ def cont.eval : Cont → List ℕ →. List ℕ
 
 We don't have a state corresponding to normal evaluation because these are evaluated immediately
 to a `ret` "in zero steps" using the `step_normal` function. -/
-inductive cfg
+inductive Cfg
   | halt : List ℕ → cfg
   | ret : Cont → List ℕ → cfg
   deriving Inhabited
@@ -457,7 +462,7 @@ recursion on `c`, building an augmented continuation and a value to pass to it.
   needs to first evaluate `f v`, so we do that and leave the rest for the continuation (called
   `cont.fix f k`)
 -/
-def step_normal : Code → Cont → List ℕ → Cfg
+def stepNormal : Code → Cont → List ℕ → Cfg
   | code.zero', k, v => Cfg.ret k (0 :: v)
   | code.succ, k, v => Cfg.ret k [v.head.succ]
   | code.tail, k, v => Cfg.ret k v.tail
@@ -479,7 +484,7 @@ evaluation, when we receive results from continuations built by `step_normal`.
   so we evaluate the if statement and either call `k` with `v.tail`, or call `fix f v` with `k` as
   the continuation (which immediately calls `f` with `cont.fix f k` as the continuation).
 -/
-def step_ret : Cont → List ℕ → Cfg
+def stepRet : Cont → List ℕ → Cfg
   | cont.halt, v => Cfg.halt v
   | cont.cons₁ fs as k, v => stepNormal fs (Cont.cons₂ v k) as
   | cont.cons₂ ns k, v => step_ret k (ns.head :: v)
@@ -505,14 +510,14 @@ and relate it to the original machine's evaluation steps. In the literature this
 where one uses Turing machines embedded inside other Turing machines, but this approach allows us
 to avoid changing the ambient type `cfg` in the middle of the recursion.
 -/
-def cont.then : Cont → Cont → Cont
+def Cont.then : Cont → Cont → Cont
   | cont.halt, k' => k'
   | cont.cons₁ fs as k, k' => Cont.cons₁ fs as (k.then k')
   | cont.cons₂ ns k, k' => Cont.cons₂ ns (k.then k')
   | cont.comp f k, k' => Cont.comp f (k.then k')
   | cont.fix f k, k' => Cont.fix f (k.then k')
 
-theorem cont.then_eval {k k' : Cont} {v} : (k.then k').eval v = k.eval v >>= k'.eval := by
+theorem Cont.then_eval {k k' : Cont} {v} : (k.then k').eval v = k.eval v >>= k'.eval := by
   induction k generalizing v <;> simp only [cont.eval, cont.then, bind_assoc, pure_bind, *]
   · simp only [← k_ih]
     
@@ -522,7 +527,7 @@ theorem cont.then_eval {k k' : Cont} {v} : (k.then k').eval v = k.eval v >>= k'.
 /-- The `then k` function is a "configuration homomorphism". Its operation on states is to append
 `k` to the continuation of a `cfg.ret` state, and to run `k` on `v` if we are in the `cfg.halt v`
 state. -/
-def cfg.then : Cfg → Cont → Cfg
+def Cfg.then : Cfg → Cont → Cfg
   | cfg.halt v, k' => stepRet k' v
   | cfg.ret k v, k' => Cfg.ret (k.then k') v
 
@@ -566,16 +571,16 @@ It asserts that `c` is semantically correct; that is, for any `k` and `v`,
 
 In particular, we can let `k = cont.halt`, and then this asserts that `step_normal c cont.halt v`
 evaluates to `cfg.halt (code.eval c v)`. -/
-def code.ok (c : Code) :=
+def Code.Ok (c : Code) :=
   ∀ k v, eval step (stepNormal c k v) = Code.eval c v >>= fun v => eval step (Cfg.ret k v)
 
-theorem code.ok.zero {c} (h : Code.Ok c) {v} : eval step (stepNormal c Cont.halt v) = cfg.halt <$> Code.eval c v := by
+theorem Code.Ok.zero {c} (h : Code.Ok c) {v} : eval step (stepNormal c Cont.halt v) = cfg.halt <$> Code.eval c v := by
   rw [h, ← bind_pure_comp_eq_map]
   congr
   funext v
   exact Part.eq_some_iff.2 (mem_eval.2 ⟨refl_trans_gen.single rfl, rfl⟩)
 
-theorem step_normal.is_ret c k v : ∃ k' v', stepNormal c k v = Cfg.ret k' v' := by
+theorem stepNormal.is_ret c k v : ∃ k' v', stepNormal c k v = Cfg.ret k' v' := by
   induction c generalizing k v
   iterate 3 
     exact ⟨_, _, rfl⟩
@@ -661,7 +666,7 @@ theorem cont_eval_fix {f k v} (fok : Code.Ok f) :
     rw [reaches_eval] at hr
     swap
     exact refl_trans_gen.single rfl
-    refine' Pfun.fixInduction he fun v he : v' ∈ f.fix.eval v IH => _
+    refine' Pfun.fixInduction he fun IH => _
     rw [fok, Part.bind_eq_bind, Part.mem_bind_iff]
     obtain he | ⟨v'', he₁', he₂'⟩ := Pfun.mem_fix_iff.1 he
     · obtain ⟨v', he₁, he₂⟩ := (Part.mem_map_iff _).1 he
@@ -902,7 +907,7 @@ open K'
 the set of all continuations in the program to be finite (so that it can ultimately be encoded into
 the finite state machine of a Turing machine), but a continuation can handle a potentially infinite
 number of data values during execution. -/
-inductive cont'
+inductive Cont'
   | halt
   | cons₁ : Code → cont' → cont'
   | cons₂ : cont' → cont'
@@ -942,18 +947,18 @@ instance : DecidableEq Λ' := fun a b => by
           simp [Function.funext_iffₓ])
 
 /-- The type of TM2 statements used by this machine. -/
-def stmt' :=
+def Stmt' :=
   TM2.Stmt (fun _ : K' => Γ') Λ' (Option Γ')deriving Inhabited
 
 /-- The type of TM2 configurations used by this machine. -/
-def cfg' :=
+def Cfg' :=
   TM2.Cfg (fun _ : K' => Γ') Λ' (Option Γ')deriving Inhabited
 
 open TM2.Stmt
 
 /-- A predicate that detects the end of a natural number, either `Γ'.cons` or `Γ'.Cons` (or
 implicitly the end of the list), for use in predicate-taking functions like `move` and `clear`. -/
-def nat_end : Γ' → Bool
+def natEnd : Γ' → Bool
   | Γ'.Cons => true
   | Γ'.cons => true
   | _ => false
@@ -978,7 +983,7 @@ def unrev :=
   Λ'.move (fun _ => false) rev main
 
 /-- Move elements from `k₁` to `k₂` while `p` holds, with the last element being left on `k₁`. -/
-def move_excl p k₁ k₂ q :=
+def moveExcl p k₁ k₂ q :=
   Λ'.move p k₁ k₂ <| Λ'.push k₁ id q
 
 /-- Move elements from `k₁` to `k₂` without reversion, by performing a double move via the `rev`
@@ -997,7 +1002,7 @@ def head (k : K') (q : Λ') : Λ' :=
 `tr_list v` is on `main`, `tr_cont_stack k` is on `stack`, and `aux` and `rev` are empty.
 See the section documentation for details. -/
 @[simp]
-def tr_normal : Code → Cont' → Λ'
+def trNormal : Code → Cont' → Λ'
   | code.zero', k => (Λ'.push main fun _ => some Γ'.cons) <| Λ'.ret k
   | code.succ, k => head main <| Λ'.succ <| Λ'.ret k
   | code.tail, k => Λ'.clear natEnd main <| Λ'.ret k
@@ -1043,7 +1048,7 @@ def tr : Λ' → Stmt'
 
 /-- Translating a `cont` continuation to a `cont'` continuation simply entails dropping all the
 data. This data is instead encoded in `tr_cont_stack` in the configuration. -/
-def tr_cont : Cont → Cont'
+def trCont : Cont → Cont'
   | cont.halt => Cont'.halt
   | cont.cons₁ c _ k => Cont'.cons₁ c (tr_cont k)
   | cont.cons₂ _ k => Cont'.cons₂ (tr_cont k)
@@ -1059,7 +1064,7 @@ represented as a little-endian list of `bit0` and `bit1` elements:
     4 = [bit0, bit0, bit1]
 
 In particular, this representation guarantees no trailing `bit0`'s at the end of the list. -/
-def tr_pos_num : PosNum → List Γ'
+def trPosNum : PosNum → List Γ'
   | PosNum.one => [Γ'.bit1]
   | PosNum.bit0 n => Γ'.bit0 :: tr_pos_num n
   | PosNum.bit1 n => Γ'.bit1 :: tr_pos_num n
@@ -1074,14 +1079,14 @@ a translated `num`.
     3 = [bit1, bit1]
     4 = [bit0, bit0, bit1]
 -/
-def tr_num : Num → List Γ'
+def trNum : Num → List Γ'
   | Num.zero => []
   | Num.pos n => trPosNum n
 
 /-- Because we use binary encoding, we define `tr_nat` in terms of `tr_num`, using `num`, which are
 binary natural numbers. (We could also use `nat.binary_rec_on`, but `num` and `pos_num` make for
 easy inductions.) -/
-def tr_nat (n : ℕ) : List Γ' :=
+def trNat (n : ℕ) : List Γ' :=
   trNum n
 
 @[simp]
@@ -1097,7 +1102,7 @@ For example:
     [6, 0] = [bit0, bit1, bit1, cons, cons]
 -/
 @[simp]
-def tr_list : List ℕ → List Γ'
+def trList : List ℕ → List Γ'
   | [] => []
   | n :: ns => trNat n ++ Γ'.cons :: tr_list ns
 
@@ -1111,14 +1116,14 @@ For example:
     [[1, 2], [0]] = [bit1, cons, bit0, bit1, cons, Cons, cons, Cons]
 -/
 @[simp]
-def tr_llist : List (List ℕ) → List Γ'
+def trLlist : List (List ℕ) → List Γ'
   | [] => []
   | l :: ls => trList l ++ Γ'.Cons :: tr_llist ls
 
 /-- The data part of a continuation is a list of lists, which is encoded on the `stack` stack
 using `tr_llist`. -/
 @[simp]
-def cont_stack : Cont → List (List ℕ)
+def contStack : Cont → List (List ℕ)
   | cont.halt => []
   | cont.cons₁ _ ns k => ns :: cont_stack k
   | cont.cons₂ ns k => ns :: cont_stack k
@@ -1127,7 +1132,7 @@ def cont_stack : Cont → List (List ℕ)
 
 /-- The data part of a continuation is a list of lists, which is encoded on the `stack` stack
 using `tr_llist`. -/
-def tr_cont_stack (k : Cont) :=
+def trContStack (k : Cont) :=
   trLlist (contStack k)
 
 /-- This is the nondependent eliminator for `K'`, but we use it specifically here in order to
@@ -1165,7 +1170,7 @@ def halt (v : List ℕ) : Cfg' :=
 local store contains an arbitrary garbage value. To make the final theorem cleaner we explicitly
 clear it in the halt state so that there is exactly one configuration corresponding to output `v`.
 -/
-def tr_cfg : Cfg → Cfg' → Prop
+def TrCfg : Cfg → Cfg' → Prop
   | cfg.ret k v, c' => ∃ s, c' = ⟨some (Λ'.ret (trCont k)), s, K'.elim (trList v) [] [] (trContStack k)⟩
   | cfg.halt v, c' => c' = halt v
 
@@ -1173,7 +1178,7 @@ def tr_cfg : Cfg → Cfg' → Prop
 application. `split_at_pred p L` will search `L` for the first element satisfying `p`.
 If it is found, say `L = l₁ ++ a :: l₂` where `a` satisfies `p` but `l₁` does not, then it returns
 `(l₁, some a, l₂)`. Otherwise, if there is no such element, it returns `(L, none, [])`. -/
-def split_at_pred {α} (p : α → Bool) : List α → List α × Option α × List α
+def splitAtPred {α} (p : α → Bool) : List α → List α × Option α × List α
   | [] => ([], none, [])
   | a :: as =>
     cond (p a) ([], some a, as) <|
@@ -1680,7 +1685,7 @@ theorem tr_eval c v : eval (TM2.step tr) (init c v) = halt <$> Code.eval c v := 
     
 
 /-- The set of machine states reachable via downward label jumps, discounting jumps via `ret`. -/
-def tr_stmts₁ : Λ' → Finset Λ'
+def trStmts₁ : Λ' → Finset Λ'
   | Q@(Λ'.move p k₁ k₂ q) => insert Q <| tr_stmts₁ q
   | Q@(Λ'.push k f q) => insert Q <| tr_stmts₁ q
   | Q@(Λ'.read q) => insert Q <| Finset.univ.bUnion fun s => tr_stmts₁ (q s)
@@ -1729,7 +1734,7 @@ theorem tr_stmts₁_self q : q ∈ trStmts₁ q := by
 /-- The (finite!) set of machine states visited during the course of evaluation of `c`,
 including the state `ret k` but not any states after that (that is, the states visited while
 evaluating `k`). -/
-def code_supp' : Code → Cont' → Finset Λ'
+def codeSupp' : Code → Cont' → Finset Λ'
   | c@code.zero', k => trStmts₁ (trNormal c k)
   | c@code.succ, k => trStmts₁ (trNormal c k)
   | c@code.tail, k => trStmts₁ (trNormal c k)
@@ -1757,7 +1762,7 @@ theorem code_supp'_self c k : trStmts₁ (trNormal c k) ⊆ codeSupp' c k := by
 
 /-- The (finite!) set of machine states visited during the course of evaluation of a continuation
 `k`, not including the initial state `ret k`. -/
-def cont_supp : Cont' → Finset Λ'
+def contSupp : Cont' → Finset Λ'
   | cont'.cons₁ fs k =>
     trStmts₁
         (move₂ (fun _ => false) main aux <|
@@ -1772,7 +1777,7 @@ def cont_supp : Cont' → Finset Λ'
 continuation `k`. This is actually closed under forward simulation (see `tr_supports`), and the
 existence of this set means that the machine constructed in this section is in fact a proper
 Turing machine, with a finite set of states. -/
-def code_supp (c : Code) (k : Cont') : Finset Λ' :=
+def codeSupp (c : Code) (k : Cont') : Finset Λ' :=
   codeSupp' c k ∪ contSupp k
 
 @[simp]
@@ -1841,7 +1846,7 @@ theorem cont_supp_halt : contSupp Cont'.halt = ∅ :=
 /-- The statement `Λ'.supports S q` means that `cont_supp k ⊆ S` for any `ret k`
 reachable from `q`.
 (This is a technical condition used in the proof that the machine is supported.) -/
-def Λ'.supports (S : Finset Λ') : Λ' → Prop
+def Λ'.Supports (S : Finset Λ') : Λ' → Prop
   | Q@(Λ'.move p k₁ k₂ q) => Λ'.supports q
   | Q@(Λ'.push k f q) => Λ'.supports q
   | Q@(Λ'.read q) => ∀ s, Λ'.supports (q s)
@@ -1857,7 +1862,7 @@ the proof, and denotes the full set of states in the machine, while `K` is a sub
 currently proving a property about. The predicate asserts that every state in `K` is closed in `S`
 under forward simulation, i.e. stepping forward through evaluation starting from any state in `K`
 stays entirely within `S`. -/
-def supports (K S : Finset Λ') :=
+def Supports (K S : Finset Λ') :=
   ∀, ∀ q ∈ K, ∀, TM2.SupportsStmt S (tr q)
 
 theorem supports_insert {K S q} : Supports (insert q K) S ↔ TM2.SupportsStmt S (tr q) ∧ Supports K S := by
@@ -1911,18 +1916,25 @@ theorem tr_stmts₁_supports {S q} (H₁ : (q : Λ').Supports S) (HS₁ : trStmt
   }
   · exact supports_insert.2 ⟨⟨fun _ => h₃, fun _ => h₁⟩, q_ih H₁ h₂⟩
     
+  -- move
   · exact supports_insert.2 ⟨⟨fun _ => h₃, fun _ => h₁⟩, q_ih H₁ h₂⟩
     
+  -- clear
   · exact supports_insert.2 ⟨⟨fun _ => h₁, fun _ => h₃⟩, q_ih H₁ h₂⟩
     
+  -- copy
   · exact supports_insert.2 ⟨⟨fun _ => h₃, fun _ => h₃⟩, q_ih H₁ h₂⟩
     
+  -- push
+  -- read
   · refine' supports_insert.2 ⟨fun _ => h₂ _ W, _⟩
     exact supports_bUnion.2 fun _ => q_ih _ (H₁ _) fun _ h => h₂ _ h
     
+  -- succ
   · refine' supports_insert.2 ⟨⟨fun _ => h₁, fun _ => h₂.1, fun _ => h₂.1⟩, _⟩
     exact supports_insert.2 ⟨⟨fun _ => h₂.2 _ W, fun _ => h₂.1⟩, q_ih H₁ h₂.2⟩
     
+  -- pred
   · refine' supports_insert.2 ⟨⟨fun _ => h₁, fun _ => h₂.2 _ (Or.inl W), fun _ => h₂.1, fun _ => h₂.1⟩, _⟩
     refine' supports_insert.2 ⟨⟨fun _ => h₂.2 _ (Or.inr W), fun _ => h₂.1⟩, _⟩
     refine' supports_union.2 ⟨_, _⟩
@@ -1931,6 +1943,7 @@ theorem tr_stmts₁_supports {S q} (H₁ : (q : Λ').Supports S) (HS₁ : trStmt
     · exact q_ih_q₂ H₁.2 fun _ h => h₂.2 _ (Or.inr h)
       
     
+  -- ret
   · exact supports_singleton.2 (ret_supports H₁)
     
 

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Yaël Dillies, Bhavik Mehta. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yaël Dillies, Bhavik Mehta
+-/
 import Mathbin.Analysis.Convex.Hull
 
 /-!
@@ -46,13 +51,13 @@ section HasScalar
 
 variable [OrderedSemiring 𝕜] [AddCommMonoidₓ E] [HasScalar 𝕜 E]
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (x₁ x₂ «expr ∈ » A)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (x₁ x₂ «expr ∈ » A)
 /-- A set `B` is an extreme subset of `A` if `B ⊆ A` and all points of `B` only belong to open
 segments whose ends are in `B`. -/
 def IsExtreme (A B : Set E) : Prop :=
   B ⊆ A ∧ ∀ x₁ x₂ _ : x₁ ∈ A _ : x₂ ∈ A, ∀, ∀ x ∈ B, ∀, x ∈ OpenSegment 𝕜 x₁ x₂ → x₁ ∈ B ∧ x₂ ∈ B
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (x₁ x₂ «expr ∈ » A)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (x₁ x₂ «expr ∈ » A)
 /-- A point `x` is an extreme point of a set `A` if `x` belongs to no open segment with ends in
 `A`, except for the obvious `open_segment x x`. -/
 def Set.ExtremePoints (A : Set E) : Set E :=
@@ -117,7 +122,7 @@ theorem is_extreme_sInter {F : Set (Set E)} (hF : F.Nonempty) (hAF : ∀, ∀ B 
   have h := fun B hB => (hAF B hB).2 x₁ x₂ hx₁A hx₂A x (hxF B hB) hx
   exact ⟨fun B hB => (h B hB).1, fun B hB => (h B hB).2⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (x₁ x₂ «expr ∈ » A)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (x₁ x₂ «expr ∈ » A)
 theorem extreme_points_def :
     x ∈ A.ExtremePoints 𝕜 ↔ x ∈ A ∧ ∀ x₁ x₂ _ : x₁ ∈ A _ : x₂ ∈ A, x ∈ OpenSegment 𝕜 x₁ x₂ → x₁ = x ∧ x₂ = x :=
   Iff.rfl
@@ -159,7 +164,7 @@ section OrderedSemiring
 variable {𝕜} [OrderedSemiring 𝕜] [AddCommGroupₓ E] [Module 𝕜 E] {A B : Set E} {x : E}
 
 theorem IsExtreme.convex_diff (hA : Convex 𝕜 A) (hAB : IsExtreme 𝕜 A B) : Convex 𝕜 (A \ B) :=
-  convex_iff_open_segment_subset.2 fun x₁ x₂ ⟨hx₁A, hx₁B⟩ ⟨hx₂A, hx₂B⟩ x hx =>
+  convex_iff_open_segment_subset.2 fun x hx =>
     ⟨hA.open_segment_subset hx₁A hx₂A hx, fun hxB => hx₁B (hAB.2 x₁ hx₁A x₂ hx₂A x hxB hx).1⟩
 
 end OrderedSemiring
@@ -168,8 +173,8 @@ section LinearOrderedField
 
 variable {𝕜} [LinearOrderedField 𝕜] [AddCommGroupₓ E] [Module 𝕜 E] {A B : Set E} {x : E}
 
--- ././Mathport/Syntax/Translate/Basic.lean:418:16: unsupported tactic `by_contra'
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (x₁ x₂ «expr ∈ » A)
+-- ././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (x₁ x₂ «expr ∈ » A)
 /-- A useful restatement using `segment`: `x` is an extreme point iff the only (closed) segments
 that contain it are those with `x` as one of their endpoints. -/
 theorem mem_extreme_points_iff_forall_segment [NoZeroSmulDivisors 𝕜 E] :
@@ -178,7 +183,7 @@ theorem mem_extreme_points_iff_forall_segment [NoZeroSmulDivisors 𝕜 E] :
   · rintro ⟨hxA, hAx⟩
     use hxA
     rintro x₁ hx₁ x₂ hx₂ hx
-    "././Mathport/Syntax/Translate/Basic.lean:418:16: unsupported tactic `by_contra'"
+    "././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'"
     exact h.1 (hAx _ hx₁ _ hx₂ (mem_open_segment_of_ne_left_right 𝕜 h.1 h.2 hx)).1
     
   rintro ⟨hxA, hAx⟩
@@ -189,14 +194,14 @@ theorem mem_extreme_points_iff_forall_segment [NoZeroSmulDivisors 𝕜 E] :
     
   exact ⟨right_mem_open_segment_iff.1 hx, rfl⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:418:16: unsupported tactic `by_contra'
+-- ././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'
 theorem Convex.mem_extreme_points_iff_convex_diff (hA : Convex 𝕜 A) :
     x ∈ A.ExtremePoints 𝕜 ↔ x ∈ A ∧ Convex 𝕜 (A \ {x}) := by
   use fun hx => ⟨hx.1, (mem_extreme_points_iff_extreme_singleton.1 hx).convex_diff hA⟩
   rintro ⟨hxA, hAx⟩
   refine' mem_extreme_points_iff_forall_segment.2 ⟨hxA, fun x₁ hx₁ x₂ hx₂ hx => _⟩
   rw [convex_iff_segment_subset] at hAx
-  "././Mathport/Syntax/Translate/Basic.lean:418:16: unsupported tactic `by_contra'"
+  "././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'"
   exact (hAx ⟨hx₁, fun hx₁ => h.1 (mem_singleton_iff.2 hx₁)⟩ ⟨hx₂, fun hx₂ => h.2 (mem_singleton_iff.2 hx₂)⟩ hx).2 rfl
 
 theorem Convex.mem_extreme_points_iff_mem_diff_convex_hull_diff (hA : Convex 𝕜 A) :

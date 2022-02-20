@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Patrick Massot. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Patrick Massot, Johannes Hölzl
+-/
 import Mathbin.Topology.UniformSpace.UniformConvergence
 import Mathbin.Topology.UniformSpace.UniformEmbedding
 import Mathbin.Topology.UniformSpace.CompleteSeparated
@@ -88,7 +93,7 @@ theorem uniformity_translate_mul (a : α) : ((𝓤 α).map fun x : α × α => (
   le_antisymmₓ (uniform_continuous_id.mul uniform_continuous_const)
     (calc
       𝓤 α = ((𝓤 α).map fun x : α × α => (x.1 * a⁻¹, x.2 * a⁻¹)).map fun x : α × α => (x.1 * a, x.2 * a) := by
-        simp [Filter.map_map, · ∘ ·] <;> exact filter.map_id.symm
+        simp [Filter.map_map, (· ∘ ·)] <;> exact filter.map_id.symm
       _ ≤ (𝓤 α).map fun x : α × α => (x.1 * a, x.2 * a) :=
         Filter.map_mono (uniform_continuous_id.mul uniform_continuous_const)
       )
@@ -251,7 +256,7 @@ theorem TopologicalGroup.tendsto_locally_uniformly_iff {ι α : Type _} [Topolog
     (p : Filter ι) :
     @TendstoLocallyUniformly α G ι (TopologicalGroup.toUniformSpace G) _ F f p ↔
       ∀, ∀ u ∈ 𝓝 (1 : G), ∀ x : α, ∃ t ∈ 𝓝 x, ∀ᶠ i in p, ∀, ∀ a ∈ t, ∀, F i a / f a ∈ u :=
-  ⟨fun h u hu => h _ ⟨u, hu, fun _ => id⟩, fun h v ⟨u, hu, hv⟩ x =>
+  ⟨fun h u hu => h _ ⟨u, hu, fun _ => id⟩, fun x =>
     exists_imp_exists (fun a => exists_imp_exists fun ha hp => mem_of_superset hp fun i hi a ha => hv (hi a ha))
       (h u hu x)⟩
 
@@ -260,7 +265,7 @@ theorem TopologicalGroup.tendsto_locally_uniformly_on_iff {ι α : Type _} [Topo
     (f : α → G) (p : Filter ι) (s : Set α) :
     @TendstoLocallyUniformlyOn α G ι (TopologicalGroup.toUniformSpace G) _ F f p s ↔
       ∀, ∀ u ∈ 𝓝 (1 : G), ∀, ∀ x ∈ s, ∀, ∃ t ∈ 𝓝[s] x, ∀ᶠ i in p, ∀, ∀ a ∈ t, ∀, F i a / f a ∈ u :=
-  ⟨fun h u hu => h _ ⟨u, hu, fun _ => id⟩, fun h v ⟨u, hu, hv⟩ x =>
+  ⟨fun h u hu => h _ ⟨u, hu, fun _ => id⟩, fun x =>
     (exists_imp_exists fun a => exists_imp_exists fun ha hp => mem_of_superset hp fun i hi a ha => hv (hi a ha)) ∘
       h u hu x⟩
 
@@ -293,7 +298,7 @@ theorem topological_group_is_uniform : UniformGroup G := by
   constructor
   rw [UniformContinuous, uniformity_prod_eq_prod, tendsto_map'_iff, uniformity_eq_comap_nhds_one' G, tendsto_comap_iff,
     prod_comap_comap_eq]
-  simpa [· ∘ ·, div_eq_mul_inv, mul_comm, mul_left_commₓ] using this
+  simpa [(· ∘ ·), div_eq_mul_inv, mul_comm, mul_left_commₓ] using this
 
 attribute [local instance] topological_group_is_uniform
 
@@ -354,6 +359,7 @@ variable {α : Type _} {β : Type _}
 
 variable [TopologicalSpace α] [CommGroupₓ α] [TopologicalGroup α]
 
+-- β is a dense subgroup of α, inclusion is denoted by e
 variable [TopologicalSpace β] [CommGroupₓ β]
 
 variable {e : β →* α} (de : DenseInducing e)
@@ -379,6 +385,8 @@ variable {α : Type _} {β : Type _} {γ : Type _} {δ : Type _}
 
 variable {G : Type _}
 
+-- β is a dense subgroup of α, inclusion is denoted by e
+-- δ is a dense subgroup of γ, inclusion is denoted by f
 variable [TopologicalSpace α] [AddCommGroupₓ α] [TopologicalAddGroup α]
 
 variable [TopologicalSpace β] [AddCommGroupₓ β] [TopologicalAddGroup β]
@@ -405,7 +413,7 @@ variable {W' : Set G} (W'_nhd : W' ∈ 𝓝 (0 : G))
 
 include W'_nhd
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (x x' «expr ∈ » U₂)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (x x' «expr ∈ » U₂)
 private theorem extend_Z_bilin_aux (x₀ : α) (y₁ : δ) :
     ∃ U₂ ∈ comap e (𝓝 x₀), ∀ x x' _ : x ∈ U₂ _ : x' ∈ U₂, Φ (x' - x, y₁) ∈ W' := by
   let Nx := 𝓝 x₀
@@ -423,10 +431,10 @@ private theorem extend_Z_bilin_aux (x₀ : α) (y₁ : δ) :
   simp_rw [ball_mem_comm]
   exact limₓ W' W'_nhd
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (x x' «expr ∈ » U₁)
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (y y' «expr ∈ » V₁)
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (x x' «expr ∈ » U)
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (y y' «expr ∈ » V)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (x x' «expr ∈ » U₁)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (y y' «expr ∈ » V₁)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (x x' «expr ∈ » U)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (y y' «expr ∈ » V)
 private theorem extend_Z_bilin_key (x₀ : α) (y₀ : γ) :
     ∃ U ∈ comap e (𝓝 x₀),
       ∃ V ∈ comap f (𝓝 y₀), ∀ x x' _ : x ∈ U _ : x' ∈ U, ∀ y y' _ : y ∈ V _ : y' ∈ V, Φ (x', y') - Φ (x, y) ∈ W' :=

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Aaron Anderson. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Aaron Anderson
+-/
 import Mathbin.Algebra.BigOperators.Ring
 import Mathbin.NumberTheory.Divisors
 import Mathbin.Algebra.Squarefree
@@ -53,7 +58,7 @@ variable (R : Type _)
 /-- An arithmetic function is a function from `ℕ` that maps 0 to 0. In the literature, they are
   often instead defined as functions from `ℕ+`. Multiplication on `arithmetic_functions` is by
   Dirichlet convolution. -/
-def arithmetic_function [Zero R] :=
+def ArithmeticFunction [Zero R] :=
   ZeroHom ℕ R deriving Zero, Inhabited
 
 variable {R}
@@ -108,7 +113,7 @@ end One
 
 end Zero
 
-instance nat_coe [Zero R] [One R] [Add R] : Coe (ArithmeticFunction ℕ) (ArithmeticFunction R) :=
+instance natCoe [Zero R] [One R] [Add R] : Coe (ArithmeticFunction ℕ) (ArithmeticFunction R) :=
   ⟨fun f =>
     ⟨↑(f : ℕ → ℕ), by
       trans ↑(f 0)
@@ -124,7 +129,7 @@ theorem nat_coe_apply [Zero R] [One R] [Add R] {f : ArithmeticFunction ℕ} {x :
     (f : ArithmeticFunction R) x = f x :=
   rfl
 
-instance int_coe [Zero R] [One R] [Add R] [Neg R] : Coe (ArithmeticFunction ℤ) (ArithmeticFunction R) :=
+instance intCoe [Zero R] [One R] [Add R] [Neg R] : Coe (ArithmeticFunction ℤ) (ArithmeticFunction R) :=
   ⟨fun f =>
     ⟨↑(f : ℕ → ℤ), by
       trans ↑(f 0)
@@ -200,7 +205,7 @@ end HasScalar
 /-- The Dirichlet convolution of two arithmetic functions `f` and `g` is another arithmetic function
   such that `(f * g) n` is the sum of `f x * g y` over all `(x,y)` such that `x * y = n`. -/
 instance [Semiringₓ R] : Mul (ArithmeticFunction R) :=
-  ⟨· • ·⟩
+  ⟨(· • ·)⟩
 
 @[simp]
 theorem mul_apply [Semiringₓ R] {f g : ArithmeticFunction R} {n : ℕ} :
@@ -516,7 +521,7 @@ theorem ppow_succ' {f : ArithmeticFunction R} {k : ℕ} {kpos : 0 < k} : f.ppow 
 end Pmul
 
 /-- Multiplicative functions -/
-def is_multiplicative [MonoidWithZeroₓ R] (f : ArithmeticFunction R) : Prop :=
+def IsMultiplicative [MonoidWithZeroₓ R] (f : ArithmeticFunction R) : Prop :=
   f 1 = 1 ∧ ∀ {m n : ℕ}, m.Coprime n → f (m * n) = f m * f n
 
 namespace IsMultiplicative
@@ -556,7 +561,7 @@ theorem mul [CommSemiringₓ R] {f g : ArithmeticFunction R} (hf : f.IsMultiplic
     intro m n cop
     rw [sum_mul_sum]
     symm
-    apply sum_bij fun x : (ℕ × ℕ) × ℕ × ℕ h => (x.1.1 * x.2.1, x.1.2 * x.2.2)
+    apply sum_bij fun h => (x.1.1 * x.2.1, x.1.2 * x.2.2)
     · rintro ⟨⟨a1, a2⟩, ⟨b1, b2⟩⟩ h
       simp only [mem_divisors_antidiagonal, Ne.def, mem_product] at h
       rcases h with ⟨⟨rfl, ha⟩, ⟨rfl, hb⟩⟩
@@ -662,7 +667,7 @@ theorem pow_apply {k n : ℕ} : pow k n = if k = 0 ∧ n = 0 then 0 else n ^ k :
   simp [pow, (ne_of_ltₓ (Nat.succ_posₓ k)).symm]
 
 /-- `σ k n` is the sum of the `k`th powers of the divisors of `n` -/
-def Sigma (k : ℕ) : ArithmeticFunction ℕ :=
+def sigma (k : ℕ) : ArithmeticFunction ℕ :=
   ⟨fun n => ∑ d in divisors n, d ^ k, by
     simp ⟩
 
@@ -698,7 +703,7 @@ theorem is_multiplicative_zeta : IsMultiplicative ζ :=
 theorem is_multiplicative_id : IsMultiplicative ArithmeticFunction.id :=
   ⟨rfl, fun _ _ _ => rfl⟩
 
-theorem is_multiplicative.ppow [CommSemiringₓ R] {f : ArithmeticFunction R} (hf : f.IsMultiplicative) {k : ℕ} :
+theorem IsMultiplicative.ppow [CommSemiringₓ R] {f : ArithmeticFunction R} (hf : f.IsMultiplicative) {k : ℕ} :
     IsMultiplicative (f.ppow k) := by
   induction' k with k hi
   · exact is_multiplicative_zeta.nat_cast
@@ -715,7 +720,7 @@ theorem is_multiplicative_sigma {k : ℕ} : IsMultiplicative (sigma k) := by
   apply is_multiplicative_zeta.mul is_multiplicative_pow
 
 /-- `Ω n` is the number of prime factors of `n`. -/
-def card_factors : ArithmeticFunction ℕ :=
+def cardFactors : ArithmeticFunction ℕ :=
   ⟨fun n => n.factors.length, by
     simp ⟩
 
@@ -754,7 +759,7 @@ theorem card_factors_multiset_prod {s : Multiset ℕ} (h0 : s.Prod ≠ 0) : Ω s
   simp [h0, card_factors_mul, h]
 
 /-- `ω n` is the number of distinct prime factors of `n`. -/
-def card_distinct_factors : ArithmeticFunction ℕ :=
+def cardDistinctFactors : ArithmeticFunction ℕ :=
   ⟨fun n => n.factors.eraseDup.length, by
     simp ⟩
 
@@ -890,7 +895,7 @@ instance : Invertible (ζ : ArithmeticFunction R) where
   mul_inv_of_self := coe_zeta_mul_coe_moebius
 
 /-- A unit in `arithmetic_function R` that evaluates to `ζ`, with inverse `μ`. -/
-def zeta_unit : (ArithmeticFunction R)ˣ :=
+def zetaUnit : (ArithmeticFunction R)ˣ :=
   ⟨ζ, μ, coe_zeta_mul_coe_moebius, coe_moebius_mul_coe_zeta⟩
 
 @[simp]

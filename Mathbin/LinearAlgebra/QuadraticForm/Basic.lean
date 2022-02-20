@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Anne Baanen. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Anne Baanen, Kexing Ying, Eric Wieser
+-/
 import Mathbin.Algebra.Invertible
 import Mathbin.LinearAlgebra.Matrix.Determinant
 import Mathbin.LinearAlgebra.BilinearForm
@@ -202,7 +207,7 @@ theorem ext (H : ∀ x : M, Q x = Q' x) : Q = Q' := by
   funext
   apply H
 
-theorem congr_funₓ (h : Q = Q') (x : M) : Q x = Q' x :=
+theorem congr_fun (h : Q = Q') (x : M) : Q x = Q' x :=
   h ▸ rfl
 
 theorem ext_iff : Q = Q' ↔ ∀ x, Q x = Q' x :=
@@ -277,7 +282,7 @@ theorem neg_apply (Q : QuadraticForm R M) (x : M) : (-Q) x = -Q x :=
   rfl
 
 instance : AddCommGroupₓ (QuadraticForm R M) where
-  add := · + ·
+  add := (· + ·)
   zero := 0
   neg := Neg.neg
   add_comm := fun Q Q' => by
@@ -308,14 +313,14 @@ theorem sub_apply (Q Q' : QuadraticForm R M) (x : M) : (Q - Q') x = Q x - Q' x :
 
 This API mirrors `add_monoid_hom.coe_fn`. -/
 @[simps apply]
-def coe_fn_add_monoid_hom : QuadraticForm R M →+ M → R where
+def coeFnAddMonoidHom : QuadraticForm R M →+ M → R where
   toFun := coeFn
   map_zero' := coe_fn_zero
   map_add' := coe_fn_add
 
 /-- Evaluation on a particular element of the module `M` is an additive map over quadratic forms. -/
 @[simps apply]
-def eval_add_monoid_hom (m : M) : QuadraticForm R M →+ R :=
+def evalAddMonoidHom (m : M) : QuadraticForm R M →+ R :=
   (Pi.evalAddMonoidHom _ m).comp coeFnAddMonoidHom
 
 section Sum
@@ -433,7 +438,7 @@ end Comp
 section CommRingₓ
 
 /-- Create a quadratic form in a commutative ring by proving only one side of the bilinearity. -/
-def mk_left (f : M → R₁) (to_fun_smul : ∀ a x, f (a • x) = a * a * f x)
+def mkLeft (f : M → R₁) (to_fun_smul : ∀ a x, f (a • x) = a * a * f x)
     (polar_add_left : ∀ x x' y, polar f (x + x') y = polar f x y + polar f x' y)
     (polar_smul_left : ∀ a x y, polar f (a • x) y = a * polar f x y) : QuadraticForm R₁ M :=
   { toFun := f, to_fun_smul, polar_add_left' := polar_add_left, polar_smul_left' := polar_smul_left,
@@ -443,7 +448,7 @@ def mk_left (f : M → R₁) (to_fun_smul : ∀ a x, f (a • x) = a * a * f x)
       rw [polar_comm, polar_smul_left, polar_comm f y x, smul_eq_mul] }
 
 /-- The product of linear forms is a quadratic form. -/
-def lin_mul_lin (f g : M →ₗ[R₁] R₁) : QuadraticForm R₁ M :=
+def linMulLin (f g : M →ₗ[R₁] R₁) : QuadraticForm R₁ M :=
   mkLeft (f * g)
     (fun a x => by
       simp only [smul_eq_mul, RingHom.id_apply, Pi.mul_apply, LinearMap.map_smulₛₗ]
@@ -514,7 +519,7 @@ theorem polar_to_quadratic_form (x y : M) : polar (fun x => B x x) x y = B x y +
     sub_eq_add_neg _ (B y y), add_commₓ (B y x) _]
 
 /-- A bilinear form gives a quadratic form by applying the argument twice. -/
-def to_quadratic_form (B : BilinForm R M) : QuadraticForm R M :=
+def toQuadraticForm (B : BilinForm R M) : QuadraticForm R M :=
   ⟨fun x => B x x, fun a x => by
     simp only [mul_assoc, smul_right, smul_left], fun x x' y => by
     simp only [add_assocₓ, add_right, add_left_injₓ, polar_to_quadratic_form, add_left, add_left_commₓ], fun a x y => by
@@ -558,7 +563,7 @@ where `S` is a commutative subring of `R`.
 Over a commutative ring, use `associated`, which gives an `R`-linear map.  Over a general ring with
 no nontrivial distinguished commutative subring, use `associated'`, which gives an additive
 homomorphism (or more precisely a `ℤ`-linear map.) -/
-def associated_hom : QuadraticForm R M →ₗ[S] BilinForm R M where
+def associatedHom : QuadraticForm R M →ₗ[S] BilinForm R M where
   toFun := fun Q =>
     { bilin := fun x y => ⅟ 2 * polar Q x y,
       bilin_add_left := fun x y z => by
@@ -611,6 +616,8 @@ theorem to_quadratic_form_associated : (associatedHom S Q).toQuadraticForm = Q :
         rw [← two_mul (Q x), ← mul_assoc, inv_of_mul_self, one_mulₓ]
       
 
+-- note: usually `right_inverse` lemmas are named the other way around, but this is consistent
+-- with historical naming in this file.
 theorem associated_right_inverse :
     Function.RightInverse (associatedHom S) (BilinForm.toQuadraticForm : _ → QuadraticForm R M) := fun Q =>
   to_quadratic_form_associated S Q
@@ -650,7 +657,9 @@ variable [Invertible (2 : R₁)]
 
 /-- `associated` is the linear map that sends a quadratic form over a commutative ring to its
 associated symmetric bilinear form. -/
-abbrev Associated : QuadraticForm R₁ M →ₗ[R₁] BilinForm R₁ M :=
+-- Note:  When possible, rather than writing lemmas about `associated`, write a lemma applying to
+-- the more general `associated_hom` and place it in the previous section.
+abbrev associated : QuadraticForm R₁ M →ₗ[R₁] BilinForm R₁ M :=
   associatedHom R₁
 
 @[simp]
@@ -666,14 +675,14 @@ end Associated
 section Anisotropic
 
 /-- An anisotropic quadratic form is zero only on zero vectors. -/
-def anisotropic (Q : QuadraticForm R M) : Prop :=
+def Anisotropic (Q : QuadraticForm R M) : Prop :=
   ∀ x, Q x = 0 → x = 0
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (x «expr ≠ » 0)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (x «expr ≠ » 0)
 theorem not_anisotropic_iff_exists (Q : QuadraticForm R M) : ¬Anisotropic Q ↔ ∃ (x : _)(_ : x ≠ 0), Q x = 0 := by
   simp only [anisotropic, not_forall, exists_prop, and_comm]
 
-theorem anisotropic.eq_zero_iff {Q : QuadraticForm R M} (h : Anisotropic Q) {x : M} : Q x = 0 ↔ x = 0 :=
+theorem Anisotropic.eq_zero_iff {Q : QuadraticForm R M} (h : Anisotropic Q) {x : M} : Q x = 0 ↔ x = 0 :=
   ⟨h x, fun h => h.symm ▸ map_zero⟩
 
 /-- The associated bilinear form of an anisotropic quadratic form is nondegenerate. -/
@@ -690,20 +699,20 @@ section PosDef
 
 variable {R₂ : Type u} [OrderedRing R₂] [Module R₂ M] {Q₂ : QuadraticForm R₂ M}
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (x «expr ≠ » 0)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (x «expr ≠ » 0)
 /-- A positive definite quadratic form is positive on nonzero vectors. -/
-def pos_def (Q₂ : QuadraticForm R₂ M) : Prop :=
+def PosDef (Q₂ : QuadraticForm R₂ M) : Prop :=
   ∀ x _ : x ≠ 0, 0 < Q₂ x
 
-theorem pos_def.smul {R} [LinearOrderedCommRing R] [Module R M] {Q : QuadraticForm R M} (h : PosDef Q) {a : R}
+theorem PosDef.smul {R} [LinearOrderedCommRing R] [Module R M] {Q : QuadraticForm R M} (h : PosDef Q) {a : R}
     (a_pos : 0 < a) : PosDef (a • Q) := fun x hx => mul_pos a_pos (h x hx)
 
 variable {n : Type _}
 
-theorem pos_def.nonneg {Q : QuadraticForm R₂ M} (hQ : PosDef Q) (x : M) : 0 ≤ Q x :=
+theorem PosDef.nonneg {Q : QuadraticForm R₂ M} (hQ : PosDef Q) (x : M) : 0 ≤ Q x :=
   (eq_or_ne x 0).elim (fun h => h.symm ▸ map_zero.symm.le) fun h => (hQ _ h).le
 
-theorem pos_def.anisotropic {Q : QuadraticForm R₂ M} (hQ : Q.PosDef) : Q.Anisotropic := fun x hQx =>
+theorem PosDef.anisotropic {Q : QuadraticForm R₂ M} (hQ : Q.PosDef) : Q.Anisotropic := fun x hQx =>
   Classical.by_contradiction fun hx =>
     lt_irreflₓ (0 : R₂) <| by
       have := hQ _ hx
@@ -716,7 +725,7 @@ theorem pos_def_of_nonneg {Q : QuadraticForm R₂ M} (h : ∀ x, 0 ≤ Q x) (h0 
 theorem pos_def_iff_nonneg {Q : QuadraticForm R₂ M} : PosDef Q ↔ (∀ x, 0 ≤ Q x) ∧ Q.Anisotropic :=
   ⟨fun h => ⟨h.Nonneg, h.Anisotropic⟩, fun ⟨n, a⟩ => pos_def_of_nonneg n a⟩
 
-theorem pos_def.add (Q Q' : QuadraticForm R₂ M) (hQ : PosDef Q) (hQ' : PosDef Q') : PosDef (Q + Q') := fun x hx =>
+theorem PosDef.add (Q Q' : QuadraticForm R₂ M) (hQ : PosDef Q) (hQ' : PosDef Q') : PosDef (Q + Q') := fun x hx =>
   add_pos (hQ x hx) (hQ' x hx)
 
 theorem lin_mul_lin_self_pos_def {R} [LinearOrderedCommRing R] [Module R M] (f : M →ₗ[R] R) (hf : LinearMap.ker f = ⊥) :
@@ -808,13 +817,13 @@ variable [Module R M₁] [Module R M₂] [Module R M₃]
 /-- An isometry between two quadratic spaces `M₁, Q₁` and `M₂, Q₂` over a ring `R`,
 is a linear equivalence between `M₁` and `M₂` that commutes with the quadratic forms. -/
 @[nolint has_inhabited_instance]
-structure isometry (Q₁ : QuadraticForm R M₁) (Q₂ : QuadraticForm R M₂) extends M₁ ≃ₗ[R] M₂ where
+structure Isometry (Q₁ : QuadraticForm R M₁) (Q₂ : QuadraticForm R M₂) extends M₁ ≃ₗ[R] M₂ where
   map_app' : ∀ m, Q₂ (to_fun m) = Q₁ m
 
 /-- Two quadratic forms over a ring `R` are equivalent
 if there exists an isometry between them:
 a linear equivalence that transforms one quadratic form into the other. -/
-def equivalent (Q₁ : QuadraticForm R M₁) (Q₂ : QuadraticForm R M₂) :=
+def Equivalent (Q₁ : QuadraticForm R M₁) (Q₂ : QuadraticForm R M₂) :=
   Nonempty (Q₁.Isometry Q₂)
 
 namespace Isometry
@@ -914,6 +923,7 @@ theorem exists_orthogonal_basis [hK : Invertible (2 : K)] {B : BilinForm K V} (h
   · exact ⟨basisOfFinrankZero hd, fun _ _ _ => zero_left _⟩
     
   have := finrank_pos_iff.1 (hd.symm ▸ Nat.succ_posₓ d : 0 < finrank K V)
+  -- either the bilinear form is trivial or we can pick a non-null `x`
   obtain rfl | hB₁ := eq_or_ne B 0
   · let b := FiniteDimensional.finBasis K V
     rw [hd] at b
@@ -924,6 +934,7 @@ theorem exists_orthogonal_basis [hK : Invertible (2 : K)] {B : BilinForm K V} (h
     finrank_span_singleton (ne_zero_of_not_is_ortho_self x hx)] at hd
   let B' := B.restrict (B.orthogonal <| K∙x)
   obtain ⟨v', hv₁⟩ := ih (B.restrict_symm hB₂ _ : B'.is_symm) (Nat.succ.injₓ hd)
+  -- concatenate `x` with the basis obtained by induction
   let b :=
     Basis.mkFinCons x v'
       (by
@@ -969,7 +980,7 @@ variable {M₁ : Type _} [AddCommGroupₓ M₁] [Module R M₁]
 variable {ι : Type _} [Fintype ι] {v : Basis ι R M}
 
 /-- A quadratic form composed with a `linear_equiv` is isometric to itself. -/
-def isometry_of_comp_linear_equiv (Q : QuadraticForm R M) (f : M₁ ≃ₗ[R] M) : Q.Isometry (Q.comp (f : M₁ →ₗ[R] M)) :=
+def isometryOfCompLinearEquiv (Q : QuadraticForm R M) (f : M₁ ≃ₗ[R] M) : Q.Isometry (Q.comp (f : M₁ →ₗ[R] M)) :=
   { f.symm with
     map_app' := by
       intro
@@ -977,7 +988,7 @@ def isometry_of_comp_linear_equiv (Q : QuadraticForm R M) (f : M₁ ≃ₗ[R] M)
         f.apply_symm_apply] }
 
 /-- Given a quadratic form `Q` and a basis, `basis_repr` is the basis representation of `Q`. -/
-noncomputable def basis_repr (Q : QuadraticForm R M) (v : Basis ι R M) : QuadraticForm R (ι → R) :=
+noncomputable def basisRepr (Q : QuadraticForm R M) (v : Basis ι R M) : QuadraticForm R (ι → R) :=
   Q.comp v.equivFun.symm
 
 @[simp]
@@ -986,7 +997,7 @@ theorem basis_repr_apply (Q : QuadraticForm R M) (w : ι → R) : Q.basis_repr v
   rfl
 
 /-- A quadratic form is isometric to its bases representations. -/
-noncomputable def isometry_basis_repr (Q : QuadraticForm R M) (v : Basis ι R M) : Isometry Q (Q.basis_repr v) :=
+noncomputable def isometryBasisRepr (Q : QuadraticForm R M) (v : Basis ι R M) : Isometry Q (Q.basis_repr v) :=
   isometryOfCompLinearEquiv Q v.equivFun.symm
 
 section
@@ -997,7 +1008,7 @@ variable (R₁)
 
 The weights are applied using `•`; typically this definition is used either with `S = R₁` or
 `[algebra S R₁]`, although this is stated more generally. -/
-def weighted_sum_squares [Monoidₓ S] [DistribMulAction S R₁] [SmulCommClass S R₁ R₁] (w : ι → S) :
+def weightedSumSquares [Monoidₓ S] [DistribMulAction S R₁] [SmulCommClass S R₁ R₁] (w : ι → S) :
     QuadraticForm R₁ (ι → R₁) :=
   ∑ i : ι, w i • proj i i
 
@@ -1027,7 +1038,7 @@ variable {V : Type _} {K : Type _} [Field K] [Invertible (2 : K)]
 variable [AddCommGroupₓ V] [Module K V]
 
 /-- Given an orthogonal basis, a quadratic form is isometric with a weighted sum of squares. -/
-noncomputable def isometry_weighted_sum_squares (Q : QuadraticForm K V)
+noncomputable def isometryWeightedSumSquares (Q : QuadraticForm K V)
     (v : Basis (Finₓ (FiniteDimensional.finrank K V)) K V) (hv₁ : (associated Q).IsOrtho v) :
     Q.Isometry (weightedSumSquares K fun i => Q (v i)) := by
   let iso := Q.isometry_basis_repr v

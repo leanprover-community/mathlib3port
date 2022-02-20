@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Yakov Pechersky. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yakov Pechersky
+-/
 import Mathbin.Data.Fintype.Basic
 import Mathbin.Data.List.Perm
 
@@ -29,7 +34,7 @@ namespace Multiset
 /-- The `finset` of `l : list α` that, given `m : multiset α`, have the property `⟦l⟧ = m`.
 -/
 def lists : Multiset α → Finset (List α) := fun s =>
-  Quotientₓ.liftOn s (fun l => l.permutations.toFinset) fun l l' h : l ~ l' => by
+  Quotientₓ.liftOn s (fun l => l.permutations.toFinset) fun h : l ~ l' => by
     ext sl
     simp only [mem_permutations, List.mem_to_finset]
     exact ⟨fun hs => hs.trans h, fun hs => hs.trans h.symm⟩

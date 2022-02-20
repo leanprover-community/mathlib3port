@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Kevin Lacker, Keeley Hoek, Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Kevin Lacker, Keeley Hoek, Scott Morrison
+-/
 import Mathbin.Tactic.RewriteSearch.Types
 import Mathbin.Tactic.Converter.Interactive
 
@@ -6,6 +11,8 @@ import Mathbin.Tactic.Converter.Interactive
 -/
 
 
+-- Required for us to emit more compact `conv` invocations
+-- Required for us to emit more compact `conv` invocations
 open Interactive Interactive.Types Expr Tactic
 
 namespace Tactic.RewriteSearch
@@ -15,7 +22,7 @@ universe u
 /-- A `dir_pair` is a pair of items designed to be accessed according to
 `dir`, a "direction" defined in the `expr_lens` library.
 -/
-structure dir_pair (α : Type u) where
+structure DirPair (α : Type u) where
   (l R : α)
   deriving Inhabited
 
@@ -31,19 +38,19 @@ def get : Dir → α
   | dir.A => p.R
 
 /-- Set one side of the pair, picking the side according to the direction. -/
-def Set : Dir → α → DirPair α
+def set : Dir → α → DirPair α
   | dir.F, v => ⟨v, p.R⟩
   | dir.A, v => ⟨p.l, v⟩
 
 /-- Convert the pair to a list of its elements. -/
-def to_list : List α :=
+def toList : List α :=
   [p.l, p.R]
 
 /-- Convert the pair to a readable string format. -/
 def toString [HasToString α] (p : DirPair α) : Stringₓ :=
   toString p.l ++ "-" ++ toString p.R
 
-instance HasToString [HasToString α] : HasToString (DirPair α) :=
+instance hasToString [HasToString α] : HasToString (DirPair α) :=
   ⟨toString⟩
 
 end DirPair
@@ -75,7 +82,7 @@ private unsafe def using_location.explain_rewrites (rs : List (expr × Bool)) (s
 namespace UsingConv
 
 /-- `app_addr` represents a tree structure that `conv` tactics use for a rewrite. -/
-inductive app_addr
+inductive AppAddr
   | node (children : DirPair (Option app_addr)) : app_addr
   | rw : List ℕ → app_addr
 
@@ -90,7 +97,7 @@ obstructed:  There was more of the addr to be added left, but we hit a rw
 contained:   The added addr was already contained, and did not terminate at an existing rw
 new:         The added addr terminated at an existing rw or we could create a new one for it
 -/
-inductive splice_result
+inductive SpliceResult
   | obstructed
   | contained
   | new (addr : AppAddr)
@@ -211,8 +218,9 @@ private unsafe def explain_proof_full (rs : List (expr × Bool)) (explain_using_
     List proof_unit → tactic Stringₓ
   | [] => return ""
   | u :: rest => do
-    let head ←
-      if rest.length = 0 ∨ u.Side = side.L then pure []
+    let head
+      ←-- Don't use transitivity for the last unit, since it must be redundant.
+          if rest.length = 0 ∨ u.Side = side.L then pure []
         else do
           let n ← (infer_type u.proof >>= fun e => Prod.snd <$> (match_eq e <|> match_iff e)) >>= pp
           pure <| ["transitivity " ++ toString n]

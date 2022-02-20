@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Thomas Browning, Patrick Lutz. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Thomas Browning, Patrick Lutz
+-/
 import Mathbin.GroupTheory.Perm.CycleType
 import Mathbin.Analysis.Complex.Polynomial
 import Mathbin.FieldTheory.Galois
@@ -45,7 +50,7 @@ namespace Polynomial
 variable {F : Type _} [Field F] (p q : F[X]) (E : Type _) [Field E] [Algebra F E]
 
 /-- The Galois group of a polynomial. -/
-def gal :=
+def Gal :=
   p.SplittingField ≃ₐ[F] p.SplittingField deriving Groupₓ, Fintype
 
 namespace Gal
@@ -61,7 +66,7 @@ theorem ext {σ τ : p.Gal} (h : ∀, ∀ x ∈ p.RootSet p.SplittingField, ∀,
   rwa [eq_top_iff, ← splitting_field.adjoin_roots, Algebra.adjoin_le_iff]
 
 /-- If `p` splits in `F` then the `p.gal` is trivial. -/
-def unique_gal_of_splits (h : p.Splits (RingHom.id F)) : Unique p.Gal where
+def uniqueGalOfSplits (h : p.Splits (RingHom.id F)) : Unique p.Gal where
   default := 1
   uniq := fun f =>
     AlgEquiv.ext fun x => by
@@ -72,22 +77,22 @@ def unique_gal_of_splits (h : p.Splits (RingHom.id F)) : Unique p.Gal where
 instance [h : Fact (p.Splits (RingHom.id F))] : Unique p.Gal :=
   uniqueGalOfSplits _ h.1
 
-instance unique_gal_zero : Unique (0 : F[X]).Gal :=
+instance uniqueGalZero : Unique (0 : F[X]).Gal :=
   uniqueGalOfSplits _ (splits_zero _)
 
-instance unique_gal_one : Unique (1 : F[X]).Gal :=
+instance uniqueGalOne : Unique (1 : F[X]).Gal :=
   uniqueGalOfSplits _ (splits_one _)
 
-instance unique_gal_C (x : F) : Unique (c x).Gal :=
+instance uniqueGalC (x : F) : Unique (c x).Gal :=
   uniqueGalOfSplits _ (splits_C _ _)
 
-instance unique_gal_X : Unique (x : F[X]).Gal :=
+instance uniqueGalX : Unique (x : F[X]).Gal :=
   uniqueGalOfSplits _ (splits_X _)
 
-instance unique_gal_X_sub_C (x : F) : Unique (X - c x).Gal :=
+instance uniqueGalXSubC (x : F) : Unique (X - c x).Gal :=
   uniqueGalOfSplits _ (splits_X_sub_C _)
 
-instance unique_gal_X_pow (n : ℕ) : Unique (X ^ n : F[X]).Gal :=
+instance uniqueGalXPow (n : ℕ) : Unique (X ^ n : F[X]).Gal :=
   uniqueGalOfSplits _ (splits_X_pow _ _)
 
 instance [h : Fact (p.Splits (algebraMap F E))] : Algebra p.SplittingField E :=
@@ -97,6 +102,12 @@ instance [h : Fact (p.Splits (algebraMap F E))] : IsScalarTower F p.SplittingFie
   IsScalarTower.of_algebra_map_eq fun x => ((IsSplittingField.lift p.SplittingField p h.1).commutes x).symm
 
 /-- Restrict from a superfield automorphism into a member of `gal p`. -/
+-- The `algebra p.splitting_field E` instance above behaves badly when
+-- `E := p.splitting_field`, since it may result in a unification problem
+-- `is_splitting_field.lift.to_ring_hom.to_algebra =?= algebra.id`,
+-- which takes an extremely long time to resolve, causing timeouts.
+-- Since we don't really care about this definition, marking it as irreducible
+-- causes that unification to error out early.
 def restrict [Fact (p.Splits (algebraMap F E))] : (E ≃ₐ[F] E) →* p.Gal :=
   AlgEquiv.restrictNormalHom p.SplittingField
 
@@ -107,7 +118,7 @@ section RootsAction
 
 /-- The function taking `roots p p.splitting_field` to `roots p E`. This is actually a bijection,
 see `polynomial.gal.map_roots_bijective`. -/
-def map_roots [Fact (p.Splits (algebraMap F E))] : RootSet p p.SplittingField → RootSet p E := fun x =>
+def mapRoots [Fact (p.Splits (algebraMap F E))] : RootSet p p.SplittingField → RootSet p E := fun x =>
   ⟨IsScalarTower.toAlgHom F p.SplittingField E x, by
     have key := Subtype.mem x
     by_cases' p = 0
@@ -122,6 +133,7 @@ theorem map_roots_bijective [h : Fact (p.Splits (algebraMap F E))] : Function.Bi
   · exact fun _ _ h => Subtype.ext (RingHom.injective _ (subtype.ext_iff.mp h))
     
   · intro y
+    -- this is just an equality of two different ways to write the roots of `p` as an `E`-polynomial
     have key :=
       roots_map (IsScalarTower.toAlgHom F p.splitting_field E : p.splitting_field →+* E)
         ((splits_id_iff_splits _).mpr (is_splitting_field.splits p.splitting_field p))
@@ -133,13 +145,14 @@ theorem map_roots_bijective [h : Fact (p.Splits (algebraMap F E))] : Function.Bi
     
 
 /-- The bijection between `root_set p p.splitting_field` and `root_set p E`. -/
-def roots_equiv_roots [Fact (p.Splits (algebraMap F E))] : RootSet p p.SplittingField ≃ RootSet p E :=
+def rootsEquivRoots [Fact (p.Splits (algebraMap F E))] : RootSet p p.SplittingField ≃ RootSet p E :=
   Equivₓ.ofBijective (mapRoots p E) (map_roots_bijective p E)
 
-instance gal_action_aux : MulAction p.Gal (RootSet p p.SplittingField) where
+instance galActionAux : MulAction p.Gal (RootSet p p.SplittingField) where
   smul := fun ϕ x =>
     ⟨ϕ x, by
       have key := Subtype.mem x
+      --simp only [root_set, finset.mem_coe, multiset.mem_to_finset] at *,
       by_cases' p = 0
       · simp only [h, root_set_zero] at key
         exact False.ndrec _ key
@@ -156,7 +169,7 @@ instance gal_action_aux : MulAction p.Gal (RootSet p p.SplittingField) where
     rfl
 
 /-- The action of `gal p` on the roots of `p` in `E`. -/
-instance gal_action [Fact (p.Splits (algebraMap F E))] : MulAction p.Gal (RootSet p E) where
+instance galAction [Fact (p.Splits (algebraMap F E))] : MulAction p.Gal (RootSet p E) where
   smul := fun ϕ x => rootsEquivRoots p E (ϕ • (rootsEquivRoots p E).symm x)
   one_smul := fun _ => by
     simp only [Equivₓ.apply_symm_apply, one_smul]
@@ -178,7 +191,7 @@ theorem restrict_smul [Fact (p.Splits (algebraMap F E))] (ϕ : E ≃ₐ[F] E) (x
 variable (p E)
 
 /-- `polynomial.gal.gal_action` as a permutation representation -/
-def gal_action_hom [Fact (p.Splits (algebraMap F E))] : p.Gal →* Equivₓ.Perm (RootSet p E) where
+def galActionHom [Fact (p.Splits (algebraMap F E))] : p.Gal →* Equivₓ.Perm (RootSet p E) where
   toFun := fun ϕ =>
     Equivₓ.mk (fun x => ϕ • x) (fun x => ϕ⁻¹ • x) (fun x => inv_smul_smul ϕ x) fun x => smul_inv_smul ϕ x
   map_one' := by
@@ -210,7 +223,7 @@ end RootsAction
 variable {p q}
 
 /-- `polynomial.gal.restrict`, when both fields are splitting fields of polynomials. -/
-def restrict_dvd (hpq : p ∣ q) : q.Gal →* p.Gal :=
+def restrictDvd (hpq : p ∣ q) : q.Gal →* p.Gal :=
   if hq : q = 0 then 1
   else @restrict F _ p _ _ _ ⟨splits_of_splits_of_dvd (algebraMap F q.SplittingField) hq (SplittingField.splits q) hpq⟩
 
@@ -220,7 +233,7 @@ theorem restrict_dvd_surjective (hpq : p ∣ q) (hq : q ≠ 0) : Function.Surjec
 variable (p q)
 
 /-- The Galois group of a product maps into the product of the Galois groups.  -/
-def restrict_prod : (p * q).Gal →* p.Gal × q.Gal :=
+def restrictProd : (p * q).Gal →* p.Gal × q.Gal :=
   MonoidHom.prod (restrictDvd (dvd_mul_right p q)) (restrictDvd (dvd_mul_left q p))
 
 /-- `polynomial.gal.restrict_prod` is actually a subgroup embedding. -/
@@ -327,7 +340,7 @@ theorem splits_in_splitting_field_of_comp (hq : q.natDegree ≠ 0) : p.Splits (a
     WfDvdMonoid.induction_on_irreducible p (splits_zero _) (fun _ => splits_of_is_unit _) fun _ _ _ h => key2 (key1 h)
 
 /-- `polynomial.gal.restrict` for the composition of polynomials. -/
-def restrict_comp (hq : q.natDegree ≠ 0) : (p.comp q).Gal →* p.Gal :=
+def restrictComp (hq : q.natDegree ≠ 0) : (p.comp q).Gal →* p.Gal :=
   @restrict F _ p _ _ _ ⟨splits_in_splitting_field_of_comp p q hq⟩
 
 theorem restrict_comp_surjective (hq : q.natDegree ≠ 0) : Function.Surjective (restrictComp p q hq) := by
@@ -341,10 +354,10 @@ theorem card_of_separable (hp : p.Separable) : Fintype.card p.Gal = finrank F p.
   have : IsGalois F p.splitting_field := IsGalois.of_separable_splitting_field hp
   IsGalois.card_aut_eq_finrank F p.splitting_field
 
--- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr ⟮ , ⟯»
--- ././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr ⟮ , ⟯»
--- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr ⟮ , ⟯»
--- ././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr ⟮ , ⟯»
 theorem prime_degree_dvd_card [CharZero F] (p_irr : Irreducible p) (p_deg : p.natDegree.Prime) :
     p.natDegree ∣ Fintype.card p.Gal := by
   rw [gal.card_of_separable p_irr.separable]
@@ -353,12 +366,12 @@ theorem prime_degree_dvd_card [CharZero F] (p_irr : Irreducible p) (p_deg : p.na
   have hα : IsIntegral F α := Algebra.is_integral_of_finite _ _ α
   use
     FiniteDimensional.finrank
-      («expr ⟮ , ⟯» F "././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr ⟮ , ⟯»")
+      («expr ⟮ , ⟯» F "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr ⟮ , ⟯»")
       p.splitting_field
   suffices (minpoly F α).natDegree = p.nat_degree by
     rw [←
       FiniteDimensional.finrank_mul_finrank F
-        («expr ⟮ , ⟯» F "././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr ⟮ , ⟯»")
+        («expr ⟮ , ⟯» F "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr ⟮ , ⟯»")
         p.splitting_field,
       IntermediateField.adjoin.finrank hα, this]
   suffices minpoly F α ∣ p by

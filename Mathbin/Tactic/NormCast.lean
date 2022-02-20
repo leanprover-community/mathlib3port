@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Paul-Nicolas Madelaine. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Paul-Nicolas Madelaine, Robert Y. Lewis
+-/
 import Mathbin.Tactic.Converter.Interactive
 import Mathbin.Tactic.Hint
 
@@ -64,7 +69,7 @@ mk_simp_attribute push_cast :=
 * move lemma:   LHS has 1 head coe and 0 internal coes,    RHS has 0 head coes and ≥ 1 internal coes
 * squash lemma: LHS has ≥ 1 head coes and 0 internal coes, RHS has fewer head coes
 -/
-inductive label
+inductive Label
   | elim : label
   | move : label
   | squash : label
@@ -88,7 +93,7 @@ unsafe instance : has_to_format Label :=
   ⟨fun l => l.toString⟩
 
 /-- Convert `string` into `label`. -/
-def of_string : Stringₓ → Option Label
+def ofString : Stringₓ → Option Label
   | "elim" => some elim
   | "move" => some move
   | "squash" => some squash
@@ -211,6 +216,7 @@ unsafe def add_lemma (attr : norm_cast_attr_ty) (cache : norm_cast_cache) (decl 
     | move => add_move cache e
     | squash => add_squash cache e
 
+-- special lemmas to handle the ≥, > and ≠ operators
 private theorem ge_from_le {α} [LE α] : ∀ x y : α, x ≥ y ↔ y ≤ x := fun _ _ => Iff.rfl
 
 private theorem gt_from_lt {α} [LT α] : ∀ x y : α, x > y ↔ y < x := fun _ _ => Iff.rfl
@@ -221,8 +227,12 @@ private theorem ne_from_not_eq {α} : ∀ x y : α, x ≠ y ↔ ¬x = y := fun _
 for names in `names`, and collects the lemmas attributed with specific `norm_cast` attributes.
 -/
 unsafe def mk_cache (attr : Thunkₓ norm_cast_attr_ty) (names : List Name) : tactic norm_cast_cache := do
-  let cache ← names.mfoldr (fun name cache => add_lemma (attr ()) cache Name) empty_cache
-  let up := cache.up
+  let cache
+    ←-- names has the declarations in reverse order
+          names.mfoldr
+        (fun name cache => add_lemma (attr ()) cache Name) empty_cache
+  let--some special lemmas to handle binary relations
+  up := cache.up
   let up ← up.add_simp `` ge_from_le
   let up ← up.add_simp `` gt_from_lt
   let up ← up.add_simp `` ne_from_not_eq
@@ -428,7 +438,9 @@ Returns a pair of the new expression and proof that they are equal.
 unsafe def coe_to_numeral (e : expr) : tactic (expr × expr) := do
   let quote.1 (@coe ℕ (%%ₓα) (%%ₓh1) (%%ₓe')) ← return e
   let n ← e'.toNat
-  is_def_eq (reflect n) e' reducible
+  -- replace e' by normalized numeral
+      is_def_eq
+      (reflect n) e' reducible
   let e := e.app_fn (reflect n)
   let new_e ← expr.of_nat α n
   let pr ← prove_eq_using_down e new_e
@@ -453,13 +465,21 @@ unsafe def derive (e : expr) : tactic (expr × expr) := do
     { zeta := false, beta := false, eta := false, proj := false, iota := false, iotaEqn := false,
       failIfUnchanged := false }
   let e0 := e
-  let ((), e1, pr1) ← simplify_top_down' () (fun _ e => Prod.mk () <$> numeral_to_coe e) e0 cfg
+  let-- step 1: pre-processing of numerals
+    ((), e1, pr1)
+    ← simplify_top_down' () (fun _ e => Prod.mk () <$> numeral_to_coe e) e0 cfg
   trace_norm_cast "after numeral_to_coe: " e1
-  let ((), e2, pr2) ← simplify_bottom_up () (fun _ e => Prod.mk () <$> upward_and_elim cache.up e) e1 cfg
+  let-- step 2: casts are moved upwards and eliminated
+    ((), e2, pr2)
+    ← simplify_bottom_up () (fun _ e => Prod.mk () <$> upward_and_elim cache.up e) e1 cfg
   trace_norm_cast "after upward_and_elim: " e2
-  let (e3, pr3, _) ← simplify cache.squash [] e2 cfg
+  let-- step 3: casts are squashed
+    (e3, pr3, _)
+    ← simplify cache.squash [] e2 cfg
   trace_norm_cast "after squashing: " e3
-  let ((), e4, pr4) ← simplify_top_down' () (fun _ e => Prod.mk () <$> coe_to_numeral e) e3 cfg
+  let-- step 4: post-processing of numerals
+    ((), e4, pr4)
+    ← simplify_top_down' () (fun _ e => Prod.mk () <$> coe_to_numeral e) e3 cfg
   trace_norm_cast "after coe_to_numeral: " e4
   let new_e := e4
   guardₓ ¬expr.alpha_eqv new_e e
@@ -595,6 +615,7 @@ unsafe def norm_cast : conv Unit :=
 
 end Conv.Interactive
 
+-- TODO: move this elsewhere?
 @[norm_cast]
 theorem ite_cast {α β} [HasLiftT α β] {c : Prop} [Decidable c] {a b : α} : ↑(ite c a b) = ite c (↑a : β) (↑b : β) := by
   by_cases' h : c <;> simp [h]
@@ -716,8 +737,12 @@ add_tactic_doc
   { Name := "norm_cast attributes", category := DocCategory.attr, declNames := [`` norm_cast.norm_cast_attr],
     tags := ["coercions", "simplification"] }
 
+-- Lemmas defined in core.
 attribute [norm_cast]
   Int.nat_abs_of_nat Int.coe_nat_subₓ Int.coe_nat_mul Int.coe_nat_zero Int.coe_nat_one Int.coe_nat_add
 
+-- Lemmas about nat.succ need to get a low priority, so that they are tried last.
+-- This is because `nat.succ _` matches `1`, `3`, `x+1`, etc.
+-- Rewriting would then produce really wrong terms.
 attribute [norm_cast] Int.coe_nat_succ
 

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Adam Topaz. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Adam Topaz
+-/
 import Mathbin.CategoryTheory.Sites.Sheafification
 import Mathbin.CategoryTheory.Sites.Whiskering
 
@@ -42,7 +47,7 @@ variable (P : Cᵒᵖ ⥤ D)
 
 /-- The diagram used to define `P⁺`, composed with `F`, is isomorphic
 to the diagram used to define `P ⋙ F`. -/
-def diagram_comp_iso (X : C) : J.diagram P X ⋙ F ≅ J.diagram (P ⋙ F) X :=
+def diagramCompIso (X : C) : J.diagram P X ⋙ F ≅ J.diagram (P ⋙ F) X :=
   NatIso.ofComponents
     (fun W => by
       refine' _ ≪≫ has_limit.iso_of_nat_iso (W.unop.multicospan_comp _ _).symm
@@ -70,7 +75,7 @@ variable [∀ X : C, HasColimitsOfShape (J.cover Xᵒᵖ) E]
 variable [∀ X : C, PreservesColimitsOfShape (J.cover Xᵒᵖ) F]
 
 /-- The isomorphism between `P⁺ ⋙ F` and `(P ⋙ F)⁺`. -/
-def plus_comp_iso : J.plusObj P ⋙ F ≅ J.plusObj (P ⋙ F) :=
+def plusCompIso : J.plusObj P ⋙ F ≅ J.plusObj (P ⋙ F) :=
   NatIso.ofComponents
     (fun X => by
       refine' _ ≪≫ has_colimit.iso_of_nat_iso (J.diagram_comp_iso F P X.unop)
@@ -134,7 +139,7 @@ theorem plus_comp_iso_whisker_left {F G : D ⥤ E} (η : F ⟶ G) (P : Cᵒᵖ �
 
 /-- The isomorphism between `P⁺ ⋙ F` and `(P ⋙ F)⁺`, functorially in `F`. -/
 @[simps hom_app inv_app]
-def plus_functor_whisker_left_iso (P : Cᵒᵖ ⥤ D) [∀ F : D ⥤ E X : C, PreservesColimitsOfShape (J.cover Xᵒᵖ) F]
+def plusFunctorWhiskerLeftIso (P : Cᵒᵖ ⥤ D) [∀ F : D ⥤ E X : C, PreservesColimitsOfShape (J.cover Xᵒᵖ) F]
     [∀ F : D ⥤ E X : C W : J.cover X P : Cᵒᵖ ⥤ D, PreservesLimit (W.index P).multicospan F] :
     (whiskeringLeft _ _ E).obj (J.plusObj P) ≅ (whiskeringLeft _ _ _).obj P ⋙ J.plusFunctor E :=
   (NatIso.ofComponents fun X => plusCompIso _ _ _) fun F G η => plus_comp_iso_whisker_left _ _ _
@@ -162,7 +167,7 @@ theorem plus_comp_iso_whisker_right {P Q : Cᵒᵖ ⥤ D} (η : P ⟶ Q) :
 
 /-- The isomorphism between `P⁺ ⋙ F` and `(P ⋙ F)⁺`, functorially in `P`. -/
 @[simps hom_app inv_app]
-def plus_functor_whisker_right_iso :
+def plusFunctorWhiskerRightIso :
     J.plusFunctor D ⋙ (whiskeringRight _ _ _).obj F ≅ (whiskeringRight _ _ _).obj F ⋙ J.plusFunctor E :=
   (NatIso.ofComponents fun P => J.plusCompIso _ _) fun P Q η => plus_comp_iso_whisker_right _ _ _
 

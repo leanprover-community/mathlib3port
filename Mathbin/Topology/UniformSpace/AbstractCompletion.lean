@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Patrick Massot. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Patrick Massot
+-/
 import Mathbin.Topology.UniformSpace.UniformEmbedding
 
 /-!
@@ -70,7 +75,7 @@ local notation "ι" => pkg.coe
 theorem closure_range : Closure (Range ι) = univ :=
   pkg.dense.closure_range
 
-theorem DenseInducing : DenseInducing ι :=
+theorem dense_inducing : DenseInducing ι :=
   ⟨pkg.UniformInducing.Inducing, pkg.dense⟩
 
 theorem uniform_continuous_coe : UniformContinuous ι :=
@@ -170,7 +175,7 @@ theorem map_unique {f : α → β} {g : hatα → hatβ} (hg : UniformContinuous
   pkg.funext (pkg.continuous_map _ _) hg.Continuous <| by
     intro a
     change pkg.extend (ι' ∘ f) _ = _
-    simp only [· ∘ ·, h]
+    simp only [(· ∘ ·), h]
     rw [pkg.extend_coe (hg.comp pkg.uniform_continuous_coe)]
 
 @[simp]
@@ -194,6 +199,7 @@ end MapSec
 
 section Compare
 
+-- We can now compare two completion packages for the same uniform space
 variable (pkg' : AbstractCompletion α)
 
 /-- The comparison map between two completions of the same uniform space. -/
@@ -215,7 +221,7 @@ theorem inverse_compare : pkg.compare pkg' ∘ pkg'.compare pkg = id := by
   rfl
 
 /-- The bijection between two completions of the same uniform space. -/
-def compare_equiv : pkg.Space ≃ pkg'.Space where
+def compareEquiv : pkg.Space ≃ pkg'.Space where
   toFun := pkg.compare pkg'
   invFun := pkg'.compare pkg
   left_inv := congr_funₓ (pkg'.inverse_compare pkg)
@@ -238,7 +244,7 @@ local notation "hatβ" => pkg'.Space
 local notation "ι'" => pkg'.coe
 
 /-- Products of completions -/
-protected def Prod : AbstractCompletion (α × β) where
+protected def prod : AbstractCompletion (α × β) where
   Space := hatα × hatβ
   coe := fun p => ⟨ι p.1, ι' p.2⟩
   uniformStruct := Prod.uniformSpace

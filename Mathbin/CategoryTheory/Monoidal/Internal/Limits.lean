@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison
+-/
 import Mathbin.CategoryTheory.Monoidal.Internal.FunctorCategory
 import Mathbin.CategoryTheory.Monoidal.Limits
 import Mathbin.CategoryTheory.Limits.Preserves.Basic
@@ -40,7 +45,7 @@ def limit (F : J ⥤ Mon_ C) : Mon_ C :=
 /-- Implementation of `Mon_.has_limits`: a limiting cone over a functor `F : J ⥤ Mon_ C`.
 -/
 @[simps]
-def limit_cone (F : J ⥤ Mon_ C) : Cone F where
+def limitCone (F : J ⥤ Mon_ C) : Cone F where
   x := limit F
   π :=
     { app := fun j => { Hom := limit.π (F ⋙ Mon_.forget C) j },
@@ -51,7 +56,7 @@ def limit_cone (F : J ⥤ Mon_ C) : Cone F where
 /-- The image of the proposed limit cone for `F : J ⥤ Mon_ C` under the forgetful functor
 `forget C : Mon_ C ⥤ C` is isomorphic to the limit cone of `F ⋙ forget C`.
 -/
-def forget_map_cone_limit_cone_iso (F : J ⥤ Mon_ C) : (forget C).mapCone (limitCone F) ≅ Limit.cone (F ⋙ forget C) :=
+def forgetMapConeLimitConeIso (F : J ⥤ Mon_ C) : (forget C).mapCone (limitCone F) ≅ Limit.cone (F ⋙ forget C) :=
   Cones.ext (Iso.refl _) fun j => by
     tidy
 
@@ -59,7 +64,7 @@ def forget_map_cone_limit_cone_iso (F : J ⥤ Mon_ C) : (forget C).mapCone (limi
 the proposed cone over a functor `F : J ⥤ Mon_ C` is a limit cone.
 -/
 @[simps]
-def limit_cone_is_limit (F : J ⥤ Mon_ C) : IsLimit (limitCone F) where
+def limitConeIsLimit (F : J ⥤ Mon_ C) : IsLimit (limitCone F) where
   lift := fun s =>
     { Hom := limit.lift (F ⋙ Mon_.forget C) ((Mon_.forget C).mapCone s),
       mul_hom' := by
@@ -81,7 +86,7 @@ instance has_limits : HasLimits (Mon_ C) where
   HasLimitsOfShape := fun J 𝒥 =>
     { HasLimit := fun F => has_limit.mk { Cone := limit_cone F, IsLimit := limit_cone_is_limit F } }
 
-instance forget_preserves_limits : PreservesLimits (Mon_.forget C) where
+instance forgetPreservesLimits : PreservesLimits (Mon_.forget C) where
   PreservesLimitsOfShape := fun J 𝒥 =>
     { PreservesLimit := fun F : J ⥤ Mon_ C =>
         preserves_limit_of_preserves_limit_cone (limit_cone_is_limit F)

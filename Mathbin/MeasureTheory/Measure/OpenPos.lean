@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2022 Yury Kudryashov. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yury Kudryashov
+-/
 import Mathbin.MeasureTheory.Measure.MeasureSpace
 
 /-!
@@ -24,7 +29,7 @@ section Basic
 variable {X Y : Type _} [TopologicalSpace X] {m : MeasurableSpace X} [TopologicalSpace Y] [T2Space Y] (μ ν : Measure X)
 
 /-- A measure is said to be `is_open_pos_measure` if it is positive on nonempty open sets. -/
-class is_open_pos_measure : Prop where
+class IsOpenPosMeasure : Prop where
   open_pos : ∀ U : Set X, IsOpen U → U.Nonempty → μ U ≠ 0
 
 variable [IsOpenPosMeasure μ] {s U : Set X} {x : X}
@@ -52,7 +57,7 @@ theorem is_open_pos_measure_smul {c : ℝ≥0∞} (h : c ≠ 0) : IsOpenPosMeasu
 
 variable {μ ν}
 
-protected theorem absolutely_continuous.is_open_pos_measure (h : μ ≪ ν) : IsOpenPosMeasure ν :=
+protected theorem AbsolutelyContinuous.is_open_pos_measure (h : μ ≪ ν) : IsOpenPosMeasure ν :=
   ⟨fun U ho hne h₀ => ho.measure_ne_zero μ hne (h h₀)⟩
 
 theorem _root_.has_le.le.is_open_pos_measure (h : μ ≤ ν) : IsOpenPosMeasure ν :=

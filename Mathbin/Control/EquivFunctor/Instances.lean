@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison
+-/
 import Mathbin.Data.Fintype.Basic
 import Mathbin.Control.EquivFunctor
 
@@ -16,6 +21,8 @@ instance equivFunctorUnique : EquivFunctor Unique where
 instance equivFunctorPerm : EquivFunctor Perm where
   map := fun α β e p => (e.symm.trans p).trans e
 
+-- There is a classical instance of `is_lawful_functor finset` available,
+-- but we provide this computable alternative separately.
 instance equivFunctorFinset : EquivFunctor Finset where
   map := fun α β e s => s.map e.toEmbedding
 

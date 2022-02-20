@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Adam Topaz. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Zhangir Azerbayev, Adam Topaz, Eric Wieser
+-/
 import Mathbin.Algebra.RingQuot
 import Mathbin.LinearAlgebra.TensorAlgebra.Basic
 import Mathbin.LinearAlgebra.Alternating
@@ -54,12 +59,12 @@ open TensorAlgebra
 
 The exterior algebra of `M` is defined as the quotient modulo this relation.
 -/
-inductive rel : TensorAlgebra R M → TensorAlgebra R M → Prop
+inductive Rel : TensorAlgebra R M → TensorAlgebra R M → Prop
   | of (m : M) : rel (ι R m * ι R m) 0
 
 end ExteriorAlgebra
 
--- ././Mathport/Syntax/Translate/Basic.lean:859:9: unsupported derive handler algebra R
+-- ././Mathport/Syntax/Translate/Basic.lean:981:9: unsupported derive handler algebra R
 /-- The exterior algebra of an `R`-module `M`.
 -/
 def ExteriorAlgebra :=
@@ -100,7 +105,7 @@ from `exterior_algebra R M` to `A`.
 def lift : { f : M →ₗ[R] A // ∀ m, f m * f m = 0 } ≃ (ExteriorAlgebra R M →ₐ[R] A) where
   toFun := fun f =>
     RingQuot.liftAlgHom R
-      ⟨TensorAlgebra.lift R (f : M →ₗ[R] A), fun x y h : Rel R M x y => by
+      ⟨TensorAlgebra.lift R (f : M →ₗ[R] A), fun h : Rel R M x y => by
         induction h
         rw [AlgHom.map_zero, AlgHom.map_mul, TensorAlgebra.lift_ι_apply, f.prop]⟩
   invFun := fun F =>
@@ -128,6 +133,9 @@ theorem lift_unique (f : M →ₗ[R] A) (cond : ∀ m, f m * f m = 0) (g : Exter
   rw [lift_symm_apply]
   simp only
 
+-- Marking `exterior_algebra` irreducible makes our `ring` instances inaccessible.
+-- https://leanprover.zulipchat.com/#narrow/stream/113488-general/topic/algebra.2Esemiring_to_ring.20breaks.20semimodule.20typeclass.20lookup/near/212580241
+-- For now, we avoid this by not marking it irreducible.
 variable {R M}
 
 @[simp]
@@ -147,22 +155,26 @@ theorem hom_ext {f g : ExteriorAlgebra R M →ₐ[R] A} (h : f.toLinearMap.comp 
 /-- If `C` holds for the `algebra_map` of `r : R` into `exterior_algebra R M`, the `ι` of `x : M`,
 and is preserved under addition and muliplication, then it holds for all of `exterior_algebra R M`.
 -/
+-- This proof closely follows `tensor_algebra.induction`
 @[elab_as_eliminator]
 theorem induction {C : ExteriorAlgebra R M → Prop} (h_grade0 : ∀ r, C (algebraMap R (ExteriorAlgebra R M) r))
     (h_grade1 : ∀ x, C (ι R x)) (h_mul : ∀ a b, C a → C b → C (a * b)) (h_add : ∀ a b, C a → C b → C (a + b))
     (a : ExteriorAlgebra R M) : C a := by
+  -- the arguments are enough to construct a subalgebra, and a mapping into it from M
   let s : Subalgebra R (ExteriorAlgebra R M) :=
     { Carrier := C, mul_mem' := h_mul, add_mem' := h_add, algebra_map_mem' := h_grade0 }
   let of : { f : M →ₗ[R] s // ∀ m, f m * f m = 0 } :=
     ⟨(ι R).codRestrict s.to_submodule h_grade1, fun m => Subtype.eq <| ι_sq_zero m⟩
+  -- the mapping through the subalgebra is the identity
   have of_id : AlgHom.id R (ExteriorAlgebra R M) = s.val.comp (lift R of) := by
     ext
     simp [of]
+  -- finding a proof is finding an element of the subalgebra
   convert Subtype.prop (lift R of a)
   exact AlgHom.congr_fun of_id a
 
 /-- The left-inverse of `algebra_map`. -/
-def algebra_map_inv : ExteriorAlgebra R M →ₐ[R] R :=
+def algebraMapInv : ExteriorAlgebra R M →ₐ[R] R :=
   ExteriorAlgebra.lift R
     ⟨(0 : M →ₗ[R] R), fun m => by
       simp ⟩
@@ -190,7 +202,7 @@ variable {M}
 
 /-- The canonical map from `exterior_algebra R M` into `triv_sq_zero_ext R M` that sends
 `exterior_algebra.ι` to `triv_sq_zero_ext.inr`. -/
-def to_triv_sq_zero_ext : ExteriorAlgebra R M →ₐ[R] TrivSqZeroExt R M :=
+def toTrivSqZeroExt : ExteriorAlgebra R M →ₐ[R] TrivSqZeroExt R M :=
   lift R ⟨TrivSqZeroExt.inrHom R M, fun m => TrivSqZeroExt.inr_mul_inr R m m⟩
 
 @[simp]
@@ -201,7 +213,7 @@ theorem to_triv_sq_zero_ext_ι (x : M) : toTrivSqZeroExt (ι R x) = TrivSqZeroEx
 
 As an implementation detail, we implement this using `triv_sq_zero_ext` which has a suitable
 algebra structure. -/
-def ι_inv : ExteriorAlgebra R M →ₗ[R] M :=
+def ιInv : ExteriorAlgebra R M →ₗ[R] M :=
   (TrivSqZeroExt.sndHom R M).comp toTrivSqZeroExt.toLinearMap
 
 theorem ι_left_inverse : Function.LeftInverse ιInv (ι R : M → ExteriorAlgebra R M) := fun x => by
@@ -260,7 +272,7 @@ theorem ι_mul_prod_list {n : ℕ} (f : Finₓ n → M) (i : Finₓ n) :
     by_cases' h : i = 0
     · rw [h, ι_sq_zero, zero_mul]
       
-    · replace hn := congr_argₓ (· * · <| ι R <| f 0) (hn (fun i => f <| Finₓ.succ i) (i.pred h))
+    · replace hn := congr_argₓ ((· * ·) <| ι R <| f 0) (hn (fun i => f <| Finₓ.succ i) (i.pred h))
       simp only at hn
       rw [Finₓ.succ_pred, ← mul_assoc, mul_zero] at hn
       refine' (eq_zero_iff_eq_zero_of_add_eq_zero _).mp hn
@@ -273,9 +285,11 @@ variable (R)
 /-- The product of `n` terms of the form `ι R m` is an alternating map.
 
 This is a special case of `multilinear_map.mk_pi_algebra_fin` -/
-def ι_multi (n : ℕ) : AlternatingMap R M (ExteriorAlgebra R M) (Finₓ n) :=
+def ιMulti (n : ℕ) : AlternatingMap R M (ExteriorAlgebra R M) (Finₓ n) :=
   let F := (MultilinearMap.mkPiAlgebraFin R n (ExteriorAlgebra R M)).compLinearMap fun i => ι R
-  { F with
+  { -- one of the repeated terms is on the left
+    -- ignore the left-most term and induct on the remaining ones, decrementing indices
+    F with
     map_eq_zero_of_eq' := fun f x y hfxy hxy => by
       rw [MultilinearMap.comp_linear_map_apply, MultilinearMap.mk_pi_algebra_fin_apply]
       wlog h : x < y := lt_or_gt_of_neₓ hxy using x y
@@ -312,7 +326,7 @@ variable {R M}
 
 /-- The canonical image of the `tensor_algebra` in the `exterior_algebra`, which maps
 `tensor_algebra.ι R x` to `exterior_algebra.ι R x`. -/
-def to_exterior : TensorAlgebra R M →ₐ[R] ExteriorAlgebra R M :=
+def toExterior : TensorAlgebra R M →ₐ[R] ExteriorAlgebra R M :=
   TensorAlgebra.lift R (ExteriorAlgebra.ι R)
 
 @[simp]

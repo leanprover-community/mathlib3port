@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison
+-/
 import Mathbin.Analysis.SpecialFunctions.Bernstein
 import Mathbin.Topology.Algebra.Algebra
 
@@ -45,17 +50,29 @@ so we may as well get this done first.)
 -/
 theorem polynomial_functions_closure_eq_top (a b : ℝ) : (polynomialFunctions (Set.Icc a b)).topologicalClosure = ⊤ := by
   by_cases' h : a < b
-  · let W : C(Set.Icc a b, ℝ) →ₐ[ℝ] C(I, ℝ) := comp_right_alg_hom ℝ (iccHomeoI a b h).symm.toContinuousMap
+  -- (Otherwise it's easy; we'll deal with that later.)
+  · -- We can pullback continuous functions on `[a,b]` to continuous functions on `[0,1]`,
+    -- by precomposing with an affine map.
+    let W : C(Set.Icc a b, ℝ) →ₐ[ℝ] C(I, ℝ) := comp_right_alg_hom ℝ (iccHomeoI a b h).symm.toContinuousMap
+    -- This operation is itself a homeomorphism
+    -- (with respect to the norm topologies on continuous functions).
     let W' : C(Set.Icc a b, ℝ) ≃ₜ C(I, ℝ) := comp_right_homeomorph ℝ (iccHomeoI a b h).symm
     have w : (W : C(Set.Icc a b, ℝ) → C(I, ℝ)) = W' := rfl
+    -- Thus we take the statement of the Weierstrass approximation theorem for `[0,1]`,
     have p := polynomial_functions_closure_eq_top'
+    -- and pullback both sides, obtaining an equation between subalgebras of `C([a,b], ℝ)`.
     apply_fun fun s => s.comap' W  at p
     simp only [Algebra.comap_top] at p
+    -- Since the pullback operation is continuous, it commutes with taking `topological_closure`,
     rw [Subalgebra.topological_closure_comap'_homeomorph _ W W' w] at p
+    -- and precomposing with an affine map takes polynomial functions to polynomial functions.
     rw [polynomialFunctions.comap'_comp_right_alg_hom_Icc_homeo_I] at p
+    -- 🎉
     exact p
     
-  · have : Subsingleton (Set.Icc a b) :=
+  · -- Otherwise, `b ≤ a`, and the interval is a subsingleton,
+    -- so all subalgebras are the same anyway.
+    have : Subsingleton (Set.Icc a b) :=
       ⟨fun x y => le_antisymmₓ ((x.2.2.trans (not_lt.mp h)).trans y.2.1) ((y.2.2.trans (not_lt.mp h)).trans x.2.1)⟩
     have := ContinuousMap.subsingleton_subalgebra (Set.Icc a b) ℝ
     apply Subsingleton.elimₓ

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2017 Mario Carneiro. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Mario Carneiro, Floris van Doorn
+-/
 import Mathbin.SetTheory.CardinalOrdinal
 
 /-!
@@ -83,7 +88,7 @@ theorem RelIso.Cof.aux {α : Type u} {β : Type v} {r s} [IsRefl α r] [IsRefl �
     
   · exact
       lift_mk_le.{u, v, max u v}.2
-        ⟨⟨fun ⟨x, h⟩ => ⟨f x, h⟩, fun ⟨x, h₁⟩ ⟨y, h₂⟩ h₃ => by
+        ⟨⟨fun ⟨x, h⟩ => ⟨f x, h⟩, fun h₃ => by
             congr <;> injection h₃ with h' <;> exact f.to_equiv.injective h'⟩⟩
     
 
@@ -179,7 +184,7 @@ theorem lift_cof o : (cof o).lift = cof o.lift :=
     apply le_antisymmₓ
     · refine' le_cof_type.2 fun S H => _
       have : (# (Ulift.up ⁻¹' S)).lift ≤ # S :=
-        ⟨⟨fun ⟨⟨x, h⟩⟩ => ⟨⟨x⟩, h⟩, fun ⟨⟨x, h₁⟩⟩ ⟨⟨y, h₂⟩⟩ e => by
+        ⟨⟨fun ⟨⟨x, h⟩⟩ => ⟨⟨x⟩, h⟩, fun e => by
             simp at e <;> congr <;> injection e⟩⟩
       refine' le_transₓ (Cardinal.lift_le.2 <| cof_type_le _ _) this
       exact fun a =>
@@ -188,7 +193,7 @@ theorem lift_cof o : (cof o).lift = cof o.lift :=
       
     · rcases cof_eq r with ⟨S, H, e'⟩
       have : # (Ulift.down ⁻¹' S) ≤ (# S).lift :=
-        ⟨⟨fun ⟨⟨x⟩, h⟩ => ⟨⟨x, h⟩⟩, fun ⟨⟨x⟩, h₁⟩ ⟨⟨y⟩, h₂⟩ e => by
+        ⟨⟨fun ⟨⟨x⟩, h⟩ => ⟨⟨x, h⟩⟩, fun e => by
             simp at e <;> congr <;> injections⟩⟩
       rw [e'] at this
       refine' le_transₓ (cof_type_le _ _) this
@@ -323,7 +328,7 @@ theorem cof_add (a b : Ordinal) : b ≠ 0 → cof (a + b) = cof b :=
           
         · exact fun ⟨a, h⟩ => ⟨_, h⟩
           
-        · exact fun ⟨a, h₁⟩ ⟨b, h₂⟩ h => by
+        · exact fun h => by
             injection h with h <;> congr <;> injection h
           
         
@@ -346,7 +351,7 @@ theorem cof_cof (o : Ordinal) : cof (cof o).ord = cof o :=
         
       · exact fun ⟨a, h⟩ => ⟨⟨a, h.fst⟩, h.snd⟩
         
-      · exact fun ⟨a, ha⟩ ⟨b, hb⟩ h => by
+      · exact fun h => by
           injection h with h <;> congr <;> injection h
         
 
@@ -556,25 +561,25 @@ local infixr:0 "^" => @pow Cardinal.{u} Cardinal Cardinal.hasPow
 
 /-- A cardinal is a limit if it is not zero or a successor
   cardinal. Note that `ω` is a limit cardinal by this definition. -/
-def is_limit (c : Cardinal) : Prop :=
+def IsLimit (c : Cardinal) : Prop :=
   c ≠ 0 ∧ ∀, ∀ x < c, ∀, succ x < c
 
 /-- A cardinal is a strong limit if it is not zero and it is
   closed under powersets. Note that `ω` is a strong limit by this definition. -/
-def is_strong_limit (c : Cardinal) : Prop :=
+def IsStrongLimit (c : Cardinal) : Prop :=
   c ≠ 0 ∧ ∀, ∀ x < c, ∀, (2^x) < c
 
-theorem is_strong_limit.is_limit {c} (H : IsStrongLimit c) : IsLimit c :=
+theorem IsStrongLimit.is_limit {c} (H : IsStrongLimit c) : IsLimit c :=
   ⟨H.1, fun x h => lt_of_le_of_ltₓ (succ_le.2 <| cantor _) (H.2 _ h)⟩
 
 /-- A cardinal is regular if it is infinite and it equals its own cofinality. -/
 def IsRegular (c : Cardinal) : Prop :=
   ω ≤ c ∧ c.ord.cof = c
 
-theorem is_regular.pos {c : Cardinal} (H : c.IsRegular) : 0 < c :=
+theorem IsRegular.pos {c : Cardinal} (H : c.IsRegular) : 0 < c :=
   omega_pos.trans_le H.left
 
-theorem is_regular.ord_pos {c : Cardinal} (H : c.IsRegular) : 0 < c.ord := by
+theorem IsRegular.ord_pos {c : Cardinal} (H : c.IsRegular) : 0 < c.ord := by
   rw [Cardinal.lt_ord]
   exact H.pos
 
@@ -680,12 +685,13 @@ theorem sum_lt_of_is_regular {ι} (f : ι → Cardinal) {c} (hc : IsRegular c) (
   lt_of_le_of_ltₓ (sum_le_sup _) <| mul_lt_of_lt hc.1 H1 <| sup_lt_of_is_regular f hc H1 H2
 
 /-- A cardinal is inaccessible if it is an uncountable regular strong limit cardinal. -/
-def is_inaccessible (c : Cardinal) :=
+def IsInaccessible (c : Cardinal) :=
   ω < c ∧ IsRegular c ∧ IsStrongLimit c
 
-theorem is_inaccessible.mk {c} (h₁ : ω < c) (h₂ : c ≤ c.ord.cof) (h₃ : ∀, ∀ x < c, ∀, (2^x) < c) : IsInaccessible c :=
+theorem IsInaccessible.mk {c} (h₁ : ω < c) (h₂ : c ≤ c.ord.cof) (h₃ : ∀, ∀ x < c, ∀, (2^x) < c) : IsInaccessible c :=
   ⟨h₁, ⟨le_of_ltₓ h₁, le_antisymmₓ (cof_ord_le _) h₂⟩, ne_of_gtₓ (lt_transₓ omega_pos h₁), h₃⟩
 
+-- Lean's foundations prove the existence of ω many inaccessible cardinals
 theorem univ_inaccessible : IsInaccessible univ.{u, v} :=
   IsInaccessible.mk
     (by

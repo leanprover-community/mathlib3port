@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Chris Hughes. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Chris Hughes, Johannes Hölzl, Scott Morrison, Jens Wagemaker
+-/
 import Mathbin.RingTheory.Adjoin.Basic
 import Mathbin.Data.Polynomial.Eval
 
@@ -30,7 +35,7 @@ variable [CommSemiringₓ R] {p q r : R[X]}
 variable [Semiringₓ A] [Algebra R A]
 
 /-- Note that this instance also provides `algebra R R[X]`. -/
-instance algebra_of_algebra : Algebra R (Polynomial A) :=
+instance algebraOfAlgebra : Algebra R (Polynomial A) :=
   { c.comp (algebraMap R A) with
     smul_def' := fun r p => by
       rcases p with ⟨⟩
@@ -69,7 +74,7 @@ variable (R)
 /-- Algebra isomorphism between `polynomial R` and `add_monoid_algebra R ℕ`. This is just an
 implementation detail, but it can be useful to transfer results from `finsupp` to polynomials. -/
 @[simps]
-def to_finsupp_iso_alg : R[X] ≃ₐ[R] AddMonoidAlgebra R ℕ :=
+def toFinsuppIsoAlg : R[X] ≃ₐ[R] AddMonoidAlgebra R ℕ :=
   { toFinsuppIso R with
     commutes' := fun r => by
       simp only [AddMonoidAlgebra.coe_algebra_map, Algebra.id.map_eq_self, Function.comp_app]
@@ -101,6 +106,7 @@ theorem eval₂_algebra_map_X {R A : Type _} [CommRingₓ R] [Ringₓ A] [Algebr
   simp only [f.map_sum, f.map_mul, f.map_pow, RingHom.eq_int_cast, RingHom.map_int_cast]
   simp [Polynomial.C_eq_algebra_map]
 
+-- these used to be about `algebra_map ℤ R`, but now the simp-normal form is `int.cast_ring_hom R`.
 @[simp]
 theorem ring_hom_eval₂_cast_int_ring_hom {R S : Type _} [Ringₓ R] [Ringₓ S] (p : ℤ[X]) (f : R →+* S) (r : R) :
     f (eval₂ (Int.castRingHom R) r p) = eval₂ (Int.castRingHom S) (f r) p :=
@@ -285,7 +291,7 @@ variable [Algebra S R] [Algebra S A'] [Algebra S B']
 
 /-- Version of `aeval` for defining algebra homs out of `polynomial R` over a smaller base ring
   than `R`. -/
-def aeval_tower (f : R →ₐ[S] A') (x : A') : R[X] →ₐ[S] A' :=
+def aevalTower (f : R →ₐ[S] A') (x : A') : R[X] →ₐ[S] A' :=
   { eval₂RingHom (↑f) x with
     commutes' := fun r => by
       simp [algebra_map_apply] }
@@ -337,7 +343,7 @@ section CommRingₓ
 
 variable [CommRingₓ S] {f : R →+* S}
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (j «expr ≠ » i)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (j «expr ≠ » i)
 theorem dvd_term_of_dvd_eval_of_dvd_terms {z p : S} {f : S[X]} (i : ℕ) (dvd_eval : p ∣ f.eval z)
     (dvd_terms : ∀ j _ : j ≠ i, p ∣ f.coeff j * z ^ j) : p ∣ f.coeff i * z ^ i := by
   by_cases' hi : i ∈ f.support
@@ -353,7 +359,7 @@ theorem dvd_term_of_dvd_eval_of_dvd_terms {z p : S} {f : S[X]} (i : ℕ) (dvd_ev
     simp [hi]
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (j «expr ≠ » i)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (j «expr ≠ » i)
 theorem dvd_term_of_is_root_of_dvd_terms {r p : S} {f : S[X]} (i : ℕ) (hr : f.IsRoot r)
     (h : ∀ j _ : j ≠ i, p ∣ f.coeff j * r ^ j) : p ∣ f.coeff i * r ^ i :=
   dvd_term_of_dvd_eval_of_dvd_terms i (Eq.symm hr ▸ dvd_zero p) h

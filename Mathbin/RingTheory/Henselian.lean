@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Johan Commelin. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johan Commelin
+-/
 import Mathbin.Data.Polynomial.Taylor
 import Mathbin.RingTheory.Ideal.LocalRing
 import Mathbin.LinearAlgebra.AdicCompletion
@@ -103,6 +108,7 @@ class HenselianLocalRing (R : Type _) [CommRingₓ R] extends LocalRing R : Prop
     ∀ f : R[X] hf : f.Monic a₀ : R h₁ : f.eval a₀ ∈ maximalIdeal R h₂ : IsUnit (f.derivative.eval a₀),
       ∃ a : R, f.IsRoot a ∧ a - a₀ ∈ maximalIdeal R
 
+-- see Note [lower instance priority]
 instance (priority := 100) Field.henselian (K : Type _) [Field K] : HenselianLocalRing K where
   is_henselian := fun f hf a₀ h₁ h₂ => by
     refine' ⟨a₀, _, _⟩ <;> rwa [(maximal_ideal K).eq_bot_of_prime, Ideal.mem_bot] at *
@@ -163,6 +169,7 @@ instance (R : Type _) [CommRingₓ R] [hR : HenselianLocalRing R] : HenselianRin
     exact not_is_unit_zero
 
 /-- A ring `R` that is `I`-adically complete is Henselian at `I`. -/
+-- see Note [lower instance priority]
 instance (priority := 100) IsAdicComplete.henselian_ring (R : Type _) [CommRingₓ R] (I : Ideal R) [IsAdicComplete I R] :
     HenselianRing R I where
   jac := IsAdicComplete.le_jacobson_bot _
@@ -170,11 +177,18 @@ instance (priority := 100) IsAdicComplete.henselian_ring (R : Type _) [CommRing�
     intro f hf a₀ h₁ h₂
     classical
     let f' := f.derivative
+    -- we define a sequence `c n` by starting at `a₀` and then continually
+    -- applying the function sending `b` to `b - f(b)/f'(b)` (Newton's method).
+    -- Note that `f'.eval b` is a unit, because `b` has the same residue as `a₀` modulo `I`.
     let c : ℕ → R := fun n => Nat.recOn n a₀ fun _ b => b - f.eval b * Ring.inverse (f'.eval b)
     have hc : ∀ n, c (n + 1) = c n - f.eval (c n) * Ring.inverse (f'.eval (c n)) := by
       intro n
       dsimp only [c, Nat.rec_add_one]
       rfl
+    -- we now spend some time determining properties of the sequence `c : ℕ → R`
+    -- `hc_mod`: for every `n`, we have `c n ≡ a₀ [SMOD I]`
+    -- `hf'c`  : for every `n`, `f'.eval (c n)` is a unit
+    -- `hfcI`  : for every `n`, `f.eval (c n)` is contained in `I ^ (n+1)`
     have hc_mod : ∀ n, c n ≡ a₀ [SMOD I] := by
       intro n
       induction' n with n ih
@@ -221,6 +235,7 @@ instance (priority := 100) IsAdicComplete.henselian_ring (R : Type _) [CommRing�
         rw [pow_mul']
         refine' Ideal.pow_mem_pow ((Ideal.neg_mem_iff _).2 <| Ideal.mul_mem_right _ _ ih) _
         
+    -- we are now in the position to show that `c : ℕ → R` is a Cauchy sequence
     have aux : ∀ m n, m ≤ n → c m ≡ c n [SMOD (I ^ m • ⊤ : Ideal R)] := by
       intro m n hmn
       rw [← Ideal.one_eq_top, Algebra.id.smul_eq_mul, mul_oneₓ]
@@ -236,6 +251,7 @@ instance (priority := 100) IsAdicComplete.henselian_ring (R : Type _) [CommRing�
       refine' Ideal.mul_mem_right _ _ (Ideal.pow_le_pow _ (hfcI _))
       rw [add_assocₓ]
       exact le_self_add
+    -- hence the sequence converges to some limit point `a`, which is the `a` we are looking for
     obtain ⟨a, ha⟩ := IsPrecomplete.prec' c aux
     refine' ⟨a, _, _⟩
     · show f.is_root a

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2017 Johannes Hölzl. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johannes Hölzl, Mario Carneiro
+-/
 import Mathbin.Topology.MetricSpace.Basic
 import Mathbin.Topology.Algebra.UniformGroup
 import Mathbin.Topology.Algebra.Ring
@@ -210,9 +215,10 @@ theorem Real.uniform_continuous_add : UniformContinuous fun p : ℝ × ℝ => p.
       let ⟨h₁, h₂⟩ := max_lt_iff.1 h
       Hδ h₁ h₂⟩
 
+-- TODO(Mario): Find a way to use rat_add_continuous_lemma
 theorem Rat.uniform_continuous_add : UniformContinuous fun p : ℚ × ℚ => p.1 + p.2 :=
   Rat.uniform_embedding_coe_real.to_uniform_inducing.uniform_continuous_iff.2 <| by
-    simp only [· ∘ ·, Rat.cast_add] <;>
+    simp only [(· ∘ ·), Rat.cast_add] <;>
       exact real.uniform_continuous_add.comp (rat.uniform_continuous_coe_real.prod_map Rat.uniform_continuous_coe_real)
 
 theorem Real.uniform_continuous_neg : UniformContinuous (@Neg.neg ℝ _) :=
@@ -231,6 +237,7 @@ instance : UniformAddGroup ℝ :=
 instance : UniformAddGroup ℚ :=
   UniformAddGroup.mk' Rat.uniform_continuous_add Rat.uniform_continuous_neg
 
+-- short-circuit type class inference
 instance : TopologicalAddGroup ℝ := by
   infer_instance
 
@@ -248,7 +255,7 @@ instance : ProperSpace ℝ where
 instance : SecondCountableTopology ℝ :=
   second_countable_of_proper
 
--- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (a b)
+-- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (a b)
 theorem Real.is_topological_basis_Ioo_rat : @IsTopologicalBasis ℝ _ (⋃ (a : ℚ) (b : ℚ) (h : a < b), {Ioo a b}) :=
   is_topological_basis_of_open_of_nhds
     (by
@@ -266,6 +273,12 @@ theorem Real.is_topological_basis_Ioo_rat : @IsTopologicalBasis ℝ _ (⋃ (a : 
 theorem Real.cocompact_eq : cocompact ℝ = at_bot⊔at_top := by
   simp only [← comap_dist_right_at_top_eq_cocompact (0 : ℝ), Real.dist_eq, sub_zero, comap_abs_at_top]
 
+/- TODO(Mario): Prove that these are uniform isomorphisms instead of uniform embeddings
+lemma uniform_embedding_add_rat {r : ℚ} : uniform_embedding (λp:ℚ, p + r) :=
+_
+
+lemma uniform_embedding_mul_rat {q : ℚ} (hq : q ≠ 0) : uniform_embedding ((*) q) :=
+_ -/
 theorem Real.mem_closure_iff {s : Set ℝ} {x : ℝ} : x ∈ Closure s ↔ ∀, ∀ ε > 0, ∀, ∃ y ∈ s, abs (y - x) < ε := by
   simp [mem_closure_iff_nhds_basis nhds_basis_ball, Real.dist_eq]
 
@@ -331,7 +344,7 @@ instance : TopologicalRing ℝ :=
 
 theorem Rat.continuous_mul : Continuous fun p : ℚ × ℚ => p.1 * p.2 :=
   Rat.embedding_coe_real.continuous_iff.2 <| by
-    simp [· ∘ ·] <;> exact real.continuous_mul.comp (rat.continuous_coe_real.prod_map Rat.continuous_coe_real)
+    simp [(· ∘ ·)] <;> exact real.continuous_mul.comp (rat.continuous_coe_real.prod_map Rat.continuous_coe_real)
 
 instance : TopologicalRing ℚ :=
   { Rat.topological_add_group with continuous_mul := Rat.continuous_mul }
@@ -369,12 +382,22 @@ theorem closure_of_rat_image_lt {q : ℚ} : Closure ((coe : ℚ → ℝ) '' { x 
             rwa [abs_of_nonneg (le_of_ltₓ <| sub_pos.2 h₁), sub_lt_iff_lt_add']),
         p, Rat.cast_lt.1 (@lt_of_le_of_ltₓ ℝ _ _ _ _ hx h₁), rfl⟩
 
+/- TODO(Mario): Put these back only if needed later
+lemma closure_of_rat_image_le_eq {q : ℚ} : closure ((coe:ℚ → ℝ) '' {x | q ≤ x}) = {r | ↑q ≤ r} :=
+_
+
+lemma closure_of_rat_image_le_le_eq {a b : ℚ} (hab : a ≤ b) :
+  closure (of_rat '' {q:ℚ | a ≤ q ∧ q ≤ b}) = {r:ℝ | of_rat a ≤ r ∧ r ≤ of_rat b} :=
+_-/
 theorem Real.bounded_iff_bdd_below_bdd_above {s : Set ℝ} : Bounded s ↔ BddBelow s ∧ BddAbove s :=
   ⟨by
     intro bdd
     rcases(bounded_iff_subset_ball 0).1 bdd with ⟨r, hr⟩
+    -- hr : s ⊆ closed_ball 0 r
     rw [Real.closed_ball_eq_Icc] at hr
-    exact ⟨bdd_below_Icc.mono hr, bdd_above_Icc.mono hr⟩, fun h => bounded_of_bdd_above_of_bdd_below h.2 h.1⟩
+    -- hr : s ⊆ Icc (0 - r) (0 + r)
+    exact ⟨bdd_below_Icc.mono hr, bdd_above_Icc.mono hr⟩,
+    fun h => bounded_of_bdd_above_of_bdd_below h.2 h.1⟩
 
 theorem Real.subset_Icc_Inf_Sup_of_bounded {s : Set ℝ} (h : Bounded s) : s ⊆ Icc (inf s) (sup s) :=
   subset_Icc_cInf_cSup (Real.bounded_iff_bdd_below_bdd_above.1 h).1 (Real.bounded_iff_bdd_below_bdd_above.1 h).2
@@ -385,7 +408,7 @@ section Periodic
 
 namespace Function
 
-theorem periodic.compact_of_continuous' [TopologicalSpace α] {f : ℝ → α} {c : ℝ} (hp : Periodic f c) (hc : 0 < c)
+theorem Periodic.compact_of_continuous' [TopologicalSpace α] {f : ℝ → α} {c : ℝ} (hp : Periodic f c) (hc : 0 < c)
     (hf : Continuous f) : IsCompact (Range f) := by
   convert is_compact_Icc.image hf
   ext x
@@ -395,13 +418,13 @@ theorem periodic.compact_of_continuous' [TopologicalSpace α] {f : ℝ → α} {
   exact ⟨z, mem_Icc_of_Ico hz, h2.symm.trans h1⟩
 
 /-- A continuous, periodic function has compact range. -/
-theorem periodic.compact_of_continuous [TopologicalSpace α] {f : ℝ → α} {c : ℝ} (hp : Periodic f c) (hc : c ≠ 0)
+theorem Periodic.compact_of_continuous [TopologicalSpace α] {f : ℝ → α} {c : ℝ} (hp : Periodic f c) (hc : c ≠ 0)
     (hf : Continuous f) : IsCompact (Range f) := by
   cases' lt_or_gt_of_neₓ hc with hneg hpos
   exacts[hp.neg.compact_of_continuous' (neg_pos.mpr hneg) hf, hp.compact_of_continuous' hpos hf]
 
 /-- A continuous, periodic function is bounded. -/
-theorem periodic.bounded_of_continuous [PseudoMetricSpace α] {f : ℝ → α} {c : ℝ} (hp : Periodic f c) (hc : c ≠ 0)
+theorem Periodic.bounded_of_continuous [PseudoMetricSpace α] {f : ℝ → α} {c : ℝ} (hp : Periodic f c) (hc : c ≠ 0)
     (hf : Continuous f) : Bounded (Range f) :=
   (hp.compact_of_continuous hc hf).Bounded
 

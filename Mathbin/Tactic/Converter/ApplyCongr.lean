@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Lucas Allen, Scott Morrison
+-/
 import Mathbin.Tactic.Interactive
 import Mathbin.Tactic.Converter.Interactive
 
@@ -66,17 +71,30 @@ which is then used to rewrite the `f x` to `g x`.
 unsafe def apply_congr (q : parse (texpr)?) : conv Unit := do
   let congr_lemmas ←
     match q with
-      | some e => do
+      |-- If the user specified a lemma, use that one,
+          some
+          e =>
+        do
         let gs ← get_goals
         let e ← to_expr e
-        set_goals gs
+        -- to_expr messes with the goals? (see tests)
+            set_goals
+            gs
         return [e]
-      | none => do
+      |-- otherwise, look up everything tagged `@[congr]`
+        none =>
+        do
         let congr_lemma_names ← attribute.get_instances `congr
         congr_lemma_names mk_const
-  congr_lemmas fun n =>
-      seq' (tactic.eapply n >> tactic.skip)
-        (tactic.intros >> do
+  -- For every lemma:
+      congr_lemmas
+      fun n =>
+      -- Call tactic.eapply
+        seq'
+        (tactic.eapply n >> tactic.skip)
+        (-- and then call `intros` on each resulting goal, and require that afterwards it's an equation.
+          tactic.intros >>
+          do
           let quote.1 (_ = _) ← target
           tactic.skip)
 

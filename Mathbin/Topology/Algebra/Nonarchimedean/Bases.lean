@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Patrick Massot. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Patrick Massot
+-/
 import Mathbin.Topology.Algebra.Nonarchimedean.Basic
 import Mathbin.Topology.Algebra.FilterBasis
 import Mathbin.Algebra.Module.SubmodulePointwise
@@ -50,7 +55,7 @@ theorem of_comm {A ι : Type _} [CommRingₓ A] (B : ι → AddSubgroup A) (inte
       simpa [mul_comm] using hj }
 
 /-- Every subgroups basis on a ring leads to a ring filter basis. -/
-def to_ring_filter_basis [Nonempty ι] {B : ι → AddSubgroup A} (hB : RingSubgroupsBasis B) : RingFilterBasis A where
+def toRingFilterBasis [Nonempty ι] {B : ι → AddSubgroup A} (hB : RingSubgroupsBasis B) : RingFilterBasis A where
   Sets := { U | ∃ i, U = B i }
   Nonempty := by
     inhabit ι
@@ -143,7 +148,7 @@ theorem has_basis_nhds (a : A) : HasBasis (@nhds A hB.topology a) (fun _ => True
 
 /-- Given a subgroups basis, the basis elements as open additive subgroups in the associated
 topology. -/
-def OpenAddSubgroup (i : ι) : @OpenAddSubgroup A _ hB.topology :=
+def openAddSubgroup (i : ι) : @OpenAddSubgroup A _ hB.topology :=
   { B i with
     is_open' := by
       let this' := hB.topology
@@ -154,6 +159,7 @@ def OpenAddSubgroup (i : ι) : @OpenAddSubgroup A _ hB.topology :=
       rintro b b_in
       simpa using (B i).add_mem a_in b_in }
 
+-- see Note [nonarchimedean non instances]
 theorem nonarchimedean : @NonarchimedeanRing A _ hB.topology := by
   let this' := hB.topology
   constructor
@@ -207,7 +213,7 @@ variable [TopologicalSpace R] [Nonempty ι] {B : ι → Submodule R M} (hB : Sub
 include hB
 
 /-- The image of a submodules basis is a module filter basis. -/
-def to_module_filter_basis : ModuleFilterBasis R M where
+def toModuleFilterBasis : ModuleFilterBasis R M where
   Sets := { U | ∃ i, U = B i }
   Nonempty := by
     inhabit ι
@@ -253,7 +259,7 @@ def topology : TopologicalSpace M :=
 
 /-- Given a submodules basis, the basis elements as open additive subgroups in the associated
 topology. -/
-def OpenAddSubgroup (i : ι) : @OpenAddSubgroup M _ hB.topology :=
+def openAddSubgroup (i : ι) : @OpenAddSubgroup M _ hB.topology :=
   { (B i).toAddSubgroup with
     is_open' := by
       let this' := hB.topology
@@ -264,6 +270,7 @@ def OpenAddSubgroup (i : ι) : @OpenAddSubgroup M _ hB.topology :=
       rintro - ⟨b, b_in, rfl⟩
       exact (B i).add_mem a_in b_in }
 
+-- see Note [nonarchimedean non instances]
 theorem nonarchimedean (hB : SubmodulesBasis B) : @NonarchimedeanAddGroup M _ hB.topology := by
   let this' := hB.topology
   constructor
@@ -283,6 +290,12 @@ end SubmodulesBasis
 
 section
 
+/-
+In this section, we check that, in a `R`-algebra `A` over a ring equipped with a topology,
+a basis of `R`-submodules which is compatible with the topology on `R` is also a submodule basis
+in the sense of `R`-modules (forgetting about the ring structure on `A`) and those two points of
+view definitionaly gives the same topology on `A`.
+-/
 variable [TopologicalSpace R] {B : ι → Submodule R A} (hB : SubmodulesRingBasis B)
   (hsmul : ∀ m : A i : ι, ∀ᶠ a : R in 𝓝 0, a • m ∈ B i)
 

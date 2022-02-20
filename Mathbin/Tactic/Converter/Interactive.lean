@@ -1,3 +1,10 @@
+/-
+Copyright (c) 2017 Microsoft Corporation. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Lucas Allen, Keeley Hoek, Leonardo de Moura
+
+Converter monad for building simplifiers.
+-/
 import Mathbin.Tactic.Core
 import Mathbin.Tactic.Converter.OldConv
 
@@ -5,7 +12,10 @@ namespace OldConv
 
 unsafe def save_info (p : Pos) : old_conv Unit := fun r lhs => do
   let ts ← tactic.read
-  (tactic.save_info_thunk p fun _ => ts lhs) >> return ⟨(), lhs, none⟩
+  (-- TODO(Leo): include context
+        tactic.save_info_thunk
+        p fun _ => ts lhs) >>
+      return ⟨(), lhs, none⟩
 
 unsafe def step {α : Type} (c : old_conv α) : old_conv Unit :=
   c >> return ()
@@ -38,7 +48,9 @@ unsafe def change (p : parse texpr) : old_conv Unit :=
 unsafe def find (p : parse lean.parser.pexpr) (c : itactic) : old_conv Unit := fun r lhs => do
   let pat ← tactic.pexpr_to_pattern p
   let s ← simp_lemmas.mk_default
-  let (found, new_lhs, pr) ←
+  let-- to be able to use congruence lemmas @[congr]
+    (found, new_lhs, pr)
+    ←
     tactic.ext_simplify_core false { zeta := false, beta := false, singlePass := true, eta := false, proj := false } s
         (fun u => return u)
         (fun found s r p e => do
@@ -62,6 +74,8 @@ unsafe def replace_lhs (tac : expr → tactic (expr × expr)) : conv Unit := do
   let (e, pf) ← lhs >>= tac
   update_lhs e pf
 
+-- Attempts to discharge the equality of the current `lhs` using `tac`,
+-- moving to the next goal on success.
 unsafe def discharge_eq_lhs (tac : tactic Unit) : conv Unit := do
   let pf ←
     lock_tactic_state do
@@ -122,14 +136,14 @@ unsafe def old_conv (c : old_conv.interactive.itactic) : tactic Unit := do
 unsafe def find (p : parse lean.parser.pexpr) (c : old_conv.interactive.itactic) : tactic Unit :=
   old_conv <| old_conv.interactive.find p c
 
--- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr ?»
--- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr ?»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr ?»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr ?»
 unsafe def conv_lhs (loc : parse («expr ?» (tk "at" *> ident))) (p : parse («expr ?» (tk "in" *> parser.pexpr)))
     (c : conv.interactive.itactic) : tactic Unit :=
   conv loc p (conv.interactive.to_lhs >> c)
 
--- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr ?»
--- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr ?»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr ?»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr ?»
 unsafe def conv_rhs (loc : parse («expr ?» (tk "at" *> ident))) (p : parse («expr ?» (tk "in" *> parser.pexpr)))
     (c : conv.interactive.itactic) : tactic Unit :=
   conv loc p (conv.interactive.to_rhs >> c)

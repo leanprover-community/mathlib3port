@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Bhavik Mehta, Scott Morrison
+-/
 import Mathbin.CategoryTheory.Subobject.Basic
 import Mathbin.CategoryTheory.Preadditive.Default
 
@@ -28,7 +33,7 @@ namespace MonoOver
 `P.factors f` expresses that there exists a factorisation of `f` through `P`.
 Given `h : P.factors f`, you can recover the morphism as `P.factor_thru f h`.
 -/
-def factors {X Y : C} (P : MonoOver Y) (f : X ⟶ Y) : Prop :=
+def Factors {X Y : C} (P : MonoOver Y) (f : X ⟶ Y) : Prop :=
   ∃ g : X ⟶ (P : C), g ≫ P.arrow = f
 
 theorem factors_congr {X : C} {f g : MonoOver X} {Y : C} (h : Y ⟶ X) (e : f ≅ g) : f.Factors h ↔ g.Factors h :=
@@ -41,7 +46,7 @@ theorem factors_congr {X : C} {f g : MonoOver X} {Y : C} (h : Y ⟶ X) (e : f �
 
 /-- `P.factor_thru f h` provides a factorisation of `f : X ⟶ Y` through some `P : mono_over Y`,
 given the evidence `h : P.factors f` that such a factorisation exists. -/
-def factor_thru {X Y : C} (P : MonoOver Y) (f : X ⟶ Y) (h : Factors P f) : X ⟶ (P : C) :=
+def factorThru {X Y : C} (P : MonoOver Y) (f : X ⟶ Y) (h : Factors P f) : X ⟶ (P : C) :=
   Classical.some h
 
 end MonoOver
@@ -52,7 +57,7 @@ namespace Subobject
 `P.factors f` expresses that there exists a factorisation of `f` through `P`.
 Given `h : P.factors f`, you can recover the morphism as `P.factor_thru f h`.
 -/
-def factors {X Y : C} (P : Subobject Y) (f : X ⟶ Y) : Prop :=
+def Factors {X Y : C} (P : Subobject Y) (f : X ⟶ Y) : Prop :=
   Quotientₓ.liftOn' P (fun P => P.Factors f)
     (by
       rintro P Q ⟨h⟩
@@ -108,7 +113,7 @@ theorem factors_of_le {Y Z : C} {P Q : Subobject Y} (f : Z ⟶ Y) (h : P ≤ Q) 
 
 /-- `P.factor_thru f h` provides a factorisation of `f : X ⟶ Y` through some `P : subobject Y`,
 given the evidence `h : P.factors f` that such a factorisation exists. -/
-def factor_thru {X Y : C} (P : Subobject Y) (f : X ⟶ Y) (h : Factors P f) : X ⟶ P :=
+def factorThru {X Y : C} (P : Subobject Y) (f : X ⟶ Y) (h : Factors P f) : X ⟶ P :=
   Classical.some ((factors_iff _ _).mp h)
 
 @[simp, reassoc]
@@ -148,6 +153,9 @@ theorem factor_thru_zero [HasZeroMorphisms C] {X Y : C} {P : Subobject Y} (h : P
     P.factorThru 0 h = 0 := by
   simp
 
+-- `h` is an explicit argument here so we can use
+-- `rw factor_thru_le h`, obtaining a subgoal `P.factors f`.
+-- (While the reverse direction looks plausible as a simp lemma, it seems to be unproductive.)
 theorem factor_thru_of_le {Y Z : C} {P Q : Subobject Y} {f : Z ⟶ Y} (h : P ≤ Q) (w : P.Factors f) :
     Q.factorThru f (factors_of_le f h w) = P.factorThru f w ≫ ofLe P Q h := by
   ext
@@ -163,6 +171,8 @@ theorem factors_add {X Y : C} {P : Subobject Y} (f g : X ⟶ Y) (wf : P.Factors 
     ⟨P.factorThru f wf + P.factorThru g wg, by
       simp ⟩
 
+-- This can't be a `simp` lemma as `wf` and `wg` may not exist.
+-- However you can `rw` by it to assert that `f` and `g` factor through `P` separately.
 theorem factor_thru_add {X Y : C} {P : Subobject Y} (f g : X ⟶ Y) (w : P.Factors (f + g)) (wf : P.Factors f)
     (wg : P.Factors g) : P.factorThru (f + g) w = P.factorThru f wf + P.factorThru g wg := by
   ext

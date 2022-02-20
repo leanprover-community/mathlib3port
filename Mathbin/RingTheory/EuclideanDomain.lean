@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Mario Carneiro. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Mario Carneiro, Chris Hughes
+-/
 import Mathbin.Algebra.GcdMonoid.Basic
 import Mathbin.RingTheory.Coprime.Basic
 import Mathbin.RingTheory.Ideal.Basic
@@ -51,7 +56,7 @@ end GcdMonoid
 namespace EuclideanDomain
 
 /-- Create a `gcd_monoid` whose `gcd_monoid.gcd` matches `euclidean_domain.gcd`. -/
-def GcdMonoid R [EuclideanDomain R] : GcdMonoid R where
+def gcdMonoid R [EuclideanDomain R] : GcdMonoid R where
   gcd := gcd
   lcm := lcm
   gcd_dvd_left := gcd_dvd_left
@@ -72,11 +77,13 @@ theorem gcd_is_unit_iff {α} [EuclideanDomain α] {x y : α} : IsUnit (gcd x y) 
   let this' := EuclideanDomain.gcdMonoid α
   exact gcd_is_unit_iff x y
 
+-- this should be proved for UFDs surely?
 theorem is_coprime_of_dvd {α} [EuclideanDomain α] {x y : α} (nonzero : ¬(x = 0 ∧ y = 0))
     (H : ∀, ∀ z ∈ Nonunits α, ∀, z ≠ 0 → z ∣ x → ¬z ∣ y) : IsCoprime x y := by
   let this' := EuclideanDomain.gcdMonoid α
   exact is_coprime_of_dvd x y nonzero H
 
+-- this should be proved for UFDs surely?
 theorem dvd_or_coprime {α} [EuclideanDomain α] (x y : α) (h : Irreducible x) : x ∣ y ∨ IsCoprime x y := by
   let this' := EuclideanDomain.gcdMonoid α
   exact dvd_or_coprime x y h

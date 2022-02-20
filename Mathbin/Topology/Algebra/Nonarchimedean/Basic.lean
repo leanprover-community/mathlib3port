@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Ashwin Iyengar. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Kevin Buzzard, Johan Commelin, Ashwin Iyengar, Patrick Massot
+-/
 import Mathbin.GroupTheory.Subgroup.Basic
 import Mathbin.Topology.Algebra.OpenSubgroup
 import Mathbin.Topology.Algebra.Ring
@@ -39,6 +44,7 @@ class NonarchimedeanRing (R : Type _) [Ringₓ R] [TopologicalSpace R] extends T
   is_nonarchimedean : ∀, ∀ U ∈ nhds (0 : R), ∀, ∃ V : OpenAddSubgroup R, (V : Set R) ⊆ U
 
 /-- Every nonarchimedean ring is naturally a nonarchimedean additive group. -/
+-- see Note [lower instance priority]
 instance (priority := 100) NonarchimedeanRing.to_nonarchimedean_add_group (R : Type _) [Ringₓ R] [TopologicalSpace R]
     [t : NonarchimedeanRing R] : NonarchimedeanAddGroup R :=
   { t with }

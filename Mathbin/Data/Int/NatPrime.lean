@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Bryan Gin-ge Chen. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Kevin Lacker, Bryan Gin-ge Chen
+-/
 import Mathbin.Data.Nat.Prime
 import Mathbin.Data.Int.Basic
 

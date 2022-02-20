@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Mario Carneiro, Keeley Hoek, Simon Hudon, Scott Morrison
+-/
 import Mathbin.Data.Option.Defs
 
 /-! # Monadic lazy lists.
@@ -17,6 +22,7 @@ universe u v
 namespace Tactic
 
 /-- A monadic lazy list, controlled by an arbitrary monad. -/
+-- We hide this away in the tactic namespace, just because it's all meta.
 unsafe inductive mllist (m : Type u → Type u) (α : Type u) : Type u
   | nil : mllist
   | cons : m (Option α × mllist) → mllist
@@ -61,7 +67,7 @@ unsafe def uncons {α : Type u} : mllist m α → m (Option (α × mllist m α))
     return (x, xs)
 
 /-- Compute, inside the monad, whether an `mllist` is empty. -/
-unsafe def Empty {α : Type u} (xs : mllist m α) : m (Ulift Bool) :=
+unsafe def empty {α : Type u} (xs : mllist m α) : m (Ulift Bool) :=
   (Ulift.up ∘ Option.isSome) <$> uncons xs
 
 /-- Convert a `list` to an `mllist`. -/

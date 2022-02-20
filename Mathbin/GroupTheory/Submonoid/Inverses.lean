@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Andrew Yang. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Andrew Yang
+-/
 import Mathbin.GroupTheory.Submonoid.Pointwise
 
 /-!
@@ -37,7 +42,7 @@ noncomputable instance [CommMonoidₓ M] : CommGroupₓ (IsUnit.submonoid M) :=
     mul_comm := fun a b => mul_comm a b }
 
 @[to_additive]
-theorem is_unit.submonoid.coe_inv [Monoidₓ M] (x : IsUnit.submonoid M) : ↑x⁻¹ = (↑x.Prop.Unit⁻¹ : M) :=
+theorem IsUnit.Submonoid.coe_inv [Monoidₓ M] (x : IsUnit.submonoid M) : ↑x⁻¹ = (↑x.Prop.Unit⁻¹ : M) :=
   rfl
 
 section Monoidₓ
@@ -46,7 +51,7 @@ variable [Monoidₓ M] (S : Submonoid M)
 
 /-- `S.left_inv` is the submonoid containing all the left inverses of `S`. -/
 @[to_additive "`S.left_neg` is the additive submonoid containing all the left additive inverses\nof `S`."]
-def left_inv : Submonoid M where
+def leftInv : Submonoid M where
   Carrier := { x : M | ∃ y : S, x * y = 1 }
   one_mem' := ⟨1, mul_oneₓ 1⟩
   mul_mem' := fun a b ⟨a', ha⟩ ⟨b', hb⟩ =>
@@ -77,7 +82,7 @@ theorem left_inv_left_inv_eq (hS : S ≤ IsUnit.submonoid M) : S.left_inv.left_i
 This is a `monoid_hom` when `M` is commutative. -/
 @[to_additive
       "The function from `S.left_add` to `S` sending an element to its right additive\ninverse in `S`. This is an `add_monoid_hom` when `M` is commutative."]
-noncomputable def from_left_inv : S.left_inv → S := fun x => x.Prop.some
+noncomputable def fromLeftInv : S.left_inv → S := fun x => x.Prop.some
 
 @[simp, to_additive]
 theorem mul_from_left_inv (x : S.left_inv) : (x : M) * S.fromLeftInv x = 1 :=
@@ -107,7 +112,7 @@ theorem from_left_inv_eq_iff (a : S.left_inv) (b : M) : (S.fromLeftInv a : M) = 
 /-- The `monoid_hom` from `S.left_inv` to `S` sending an element to its right inverse in `S`. -/
 @[to_additive "The `add_monoid_hom` from `S.left_neg` to `S` sending an element to its\nright additive inverse in `S`.",
   simps]
-noncomputable def from_comm_left_inv : S.left_inv →* S where
+noncomputable def fromCommLeftInv : S.left_inv →* S where
   toFun := S.fromLeftInv
   map_one' := S.from_left_inv_one
   map_mul' := fun x y =>
@@ -121,7 +126,7 @@ include hS
 
 /-- The submonoid of pointwise inverse of `S` is `mul_equiv` to `S`. -/
 @[to_additive "The additive submonoid of pointwise additive inverse of `S` is\n`add_equiv` to `S`.", simps apply]
-noncomputable def left_inv_equiv : S.left_inv ≃* S :=
+noncomputable def leftInvEquiv : S.left_inv ≃* S :=
   { S.fromCommLeftInv with
     invFun := fun x => by
       choose x' hx using hS x.prop

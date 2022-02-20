@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Johan Commelin. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johan Commelin, Aaron Anderson
+-/
 import Mathbin.Data.Finsupp.Basic
 
 /-!
@@ -42,7 +47,7 @@ theorem le_def {f g : ι →₀ α} : f ≤ g ↔ ∀ i, f i ≤ g i :=
   Iff.rfl
 
 /-- The order on `finsupp`s over a partial order embeds into the order on functions -/
-def order_embedding_to_fun : (ι →₀ α) ↪o (ι → α) where
+def orderEmbeddingToFun : (ι →₀ α) ↪o (ι → α) where
   toFun := fun f => f
   inj' := fun f g h =>
     Finsupp.ext fun i => by
@@ -86,7 +91,7 @@ instance [SemilatticeSup α] : SemilatticeSup (ι →₀ α) :=
 theorem sup_apply [SemilatticeSup α] {i : ι} {f g : ι →₀ α} : (f⊔g) i = f i⊔g i :=
   rfl
 
-instance Lattice [Lattice α] : Lattice (ι →₀ α) :=
+instance lattice [Lattice α] : Lattice (ι →₀ α) :=
   { Finsupp.semilatticeInf, Finsupp.semilatticeSup with }
 
 end Zero
@@ -128,7 +133,7 @@ theorem le_iff' (f g : ι →₀ α) {s : Finset ι} (hf : f.Support ⊆ s) : f 
 theorem le_iff (f g : ι →₀ α) : f ≤ g ↔ ∀, ∀ i ∈ f.Support, ∀, f i ≤ g i :=
   le_iff' f g <| Subset.refl _
 
-instance decidable_le [DecidableRel (@LE.le α _)] : DecidableRel (@LE.le (ι →₀ α) _) := fun f g =>
+instance decidableLe [DecidableRel (@LE.le α _)] : DecidableRel (@LE.le (ι →₀ α) _) := fun f g =>
   decidableOfIff _ (le_iff f g).symm
 
 @[simp]

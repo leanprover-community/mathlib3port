@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Chris Hughes. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Chris Hughes, Abhimanyu Pallavi Sudhir, Jean Lo, Calle Sönne, Benjamin Davidson
+-/
 import Mathbin.Analysis.SpecialFunctions.Trigonometric.Angle
 import Mathbin.Analysis.SpecialFunctions.Trigonometric.Inverse
 
@@ -75,7 +80,7 @@ theorem abs_mul_cos_add_sin_mul_I (x : ℂ) : (abs x * (cos (arg x) + sin (arg x
 @[simp]
 theorem range_exp_mul_I : (Range fun x : ℝ => exp (x * I)) = Metric.Sphere 0 1 := by
   simp only [Metric.Sphere, dist_eq, sub_zero]
-  refine' (range_subset_iff.2 fun x => _).antisymm fun z hz : abs z = 1 => _
+  refine' (range_subset_iff.2 fun x => _).antisymm fun hz : abs z = 1 => _
   · exact abs_exp_of_real_mul_I _
     
   · refine' ⟨arg z, _⟩

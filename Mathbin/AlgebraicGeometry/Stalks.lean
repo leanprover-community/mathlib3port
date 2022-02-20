@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison
+-/
 import Mathbin.AlgebraicGeometry.PresheafedSpace
 import Mathbin.CategoryTheory.Limits.Final
 import Mathbin.Topology.Sheaves.Stalks
@@ -40,7 +45,7 @@ abbrev stalk (X : PresheafedSpace C) (x : X) : C :=
 
 /-- A morphism of presheafed spaces induces a morphism of stalks.
 -/
-def stalk_map {X Y : PresheafedSpace C} (α : X ⟶ Y) (x : X) : Y.stalk (α.base x) ⟶ X.stalk x :=
+def stalkMap {X Y : PresheafedSpace C} (α : X ⟶ Y) (x : X) : Y.stalk (α.base x) ⟶ X.stalk x :=
   (stalkFunctor C (α.base x)).map α.c ≫ X.Presheaf.stalkPushforward C α.base x
 
 @[simp, elementwise, reassoc]
@@ -53,10 +58,14 @@ section Restrict
 /-- For an open embedding `f : U ⟶ X` and a point `x : U`, we get an isomorphism between the stalk
 of `X` at `f x` and the stalk of the restriction of `X` along `f` at t `x`.
 -/
-def restrict_stalk_iso {U : Top} (X : PresheafedSpace C) {f : U ⟶ (X : Top.{v})} (h : OpenEmbedding f) (x : U) :
+def restrictStalkIso {U : Top} (X : PresheafedSpace C) {f : U ⟶ (X : Top.{v})} (h : OpenEmbedding f) (x : U) :
     (X.restrict h).stalk x ≅ X.stalk (f x) :=
-  have := initial_of_adjunction (h.is_open_map.adjunction_nhds x)
-  final.colimit_iso (h.is_open_map.functor_nhds x).op ((open_nhds.inclusion (f x)).op ⋙ X.presheaf)
+  have-- As a left adjoint, the functor `h.is_open_map.functor_nhds x` is initial.
+   := initial_of_adjunction (h.is_open_map.adjunction_nhds x)
+  -- Typeclass resolution knows that the opposite of an initial functor is final. The result
+    -- follows from the general fact that postcomposing with a final functor doesn't change colimits.
+    final.colimit_iso
+    (h.is_open_map.functor_nhds x).op ((open_nhds.inclusion (f x)).op ⋙ X.presheaf)
 
 @[simp, elementwise, reassoc]
 theorem restrict_stalk_iso_hom_eq_germ {U : Top} (X : PresheafedSpace C) {f : U ⟶ (X : Top.{v})} (h : OpenEmbedding f)
@@ -102,6 +111,7 @@ theorem id (X : PresheafedSpace C) (x : X) : stalkMap (𝟙 X) x = 𝟙 (X.stalk
   convert (stalk_functor C x).map_id X.presheaf
   tidy
 
+-- TODO understand why this proof is still gross (i.e. requires using `erw`)
 @[simp]
 theorem comp {X Y Z : PresheafedSpace C} (α : X ⟶ Y) (β : Y ⟶ Z) (x : X) :
     stalkMap (α ≫ β) x =
@@ -116,6 +126,7 @@ theorem comp {X Y Z : PresheafedSpace C} (α : X ⟶ Y) (β : Y ⟶ Z) (x : X) :
     id_comp, map_id, map_comp]
   dsimp
   simp only [map_id, assoc, pushforward.comp_inv_app]
+  -- FIXME Why doesn't simp do this:
   erw [CategoryTheory.Functor.map_id]
   erw [CategoryTheory.Functor.map_id]
   erw [id_comp, id_comp]
@@ -165,6 +176,12 @@ instance is_iso {X Y : PresheafedSpace C} (α : X ⟶ Y) [IsIso α] (x : X) : Is
     let β : Y ⟶ X := CategoryTheory.inv α
     have h_eq : (α ≫ β).base x = x := by
       rw [is_iso.hom_inv_id α, id_base, Top.id_app]
+    -- Intuitively, the inverse of the stalk map of `α` at `x` should just be the stalk map of `β`
+    -- at `α x`. Unfortunately, we have a problem with dependent type theory here: Because `x`
+    -- is not *definitionally* equal to `β (α x)`, the map `stalk_map β (α x)` has not the correct
+    -- type for an inverse.
+    -- To get a proper inverse, we need to compose with the `eq_to_hom` arrow
+    -- `X.stalk x ⟶ X.stalk ((α ≫ β).base x)`.
     refine'
       ⟨eq_to_hom
             (show X.stalk x = X.stalk ((α ≫ β).base x) by
@@ -181,7 +198,7 @@ instance is_iso {X Y : PresheafedSpace C} (α : X ⟶ Y) [IsIso α] (x : X) : Is
 
 /-- An isomorphism between presheafed spaces induces an isomorphism of stalks.
 -/
-def stalk_iso {X Y : PresheafedSpace C} (α : X ≅ Y) (x : X) : Y.stalk (α.Hom.base x) ≅ X.stalk x :=
+def stalkIso {X Y : PresheafedSpace C} (α : X ≅ Y) (x : X) : Y.stalk (α.Hom.base x) ≅ X.stalk x :=
   asIso (stalkMap α.Hom x)
 
 @[simp, reassoc, elementwise]

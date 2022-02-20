@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Chris Hughes. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Chris Hughes
+-/
 import Mathbin.Order.WellFounded
 import Mathbin.Algebra.Group.Pi
 import Mathbin.Order.MinMax
@@ -22,7 +27,7 @@ def Pilex (α : Type _) (β : α → Type _) : Type _ :=
   ∀ a, β a
 
 instance [LT ι] [∀ a, LT (β a)] : LT (Pilex ι β) where
-  lt := Pi.Lex (· < ·) fun _ => · < ·
+  lt := Pi.Lex (· < ·) fun _ => (· < ·)
 
 instance [∀ a, Inhabited (β a)] : Inhabited (Pilex ι β) := by
   unfold Pilex <;> infer_instance
@@ -39,7 +44,7 @@ instance Pilex.is_strict_order [LinearOrderₓ ι] [∀ a, PartialOrderₓ (β a
 instance [LinearOrderₓ ι] [∀ a, PartialOrderₓ (β a)] : PartialOrderₓ (Pilex ι β) :=
   partialOrderOfSO (· < ·)
 
-protected theorem Pilex.is_strict_total_order' [LinearOrderₓ ι] (wf : WellFounded (· < · : ι → ι → Prop))
+protected theorem Pilex.is_strict_total_order' [LinearOrderₓ ι] (wf : WellFounded ((· < ·) : ι → ι → Prop))
     [∀ a, LinearOrderₓ (β a)] : IsStrictTotalOrder' (Pilex ι β) (· < ·) :=
   { trichotomous := fun a b => by
       by_cases' h : ∃ i, a i ≠ b i
@@ -57,15 +62,16 @@ protected theorem Pilex.is_strict_total_order' [LinearOrderₓ ι] (wf : WellFou
 
 /-- `pilex` is a linear order if the original order is well-founded.
 This cannot be an instance, since it depends on the well-foundedness of `<`. -/
-protected noncomputable def Pilex.linearOrder [LinearOrderₓ ι] (wf : WellFounded (· < · : ι → ι → Prop))
+protected noncomputable def Pilex.linearOrder [LinearOrderₓ ι] (wf : WellFounded ((· < ·) : ι → ι → Prop))
     [∀ a, LinearOrderₓ (β a)] : LinearOrderₓ (Pilex ι β) :=
   @linearOrderOfSTO' (Pilex ι β) (· < ·) (Pilex.is_strict_total_order' wf) (Classical.decRel _)
 
-theorem Pilex.le_of_forall_le [LinearOrderₓ ι] (wf : WellFounded (· < · : ι → ι → Prop)) [∀ a, LinearOrderₓ (β a)]
+theorem Pilex.le_of_forall_le [LinearOrderₓ ι] (wf : WellFounded ((· < ·) : ι → ι → Prop)) [∀ a, LinearOrderₓ (β a)]
     {a b : Pilex ι β} (h : ∀ i, a i ≤ b i) : a ≤ b := by
   let this' : LinearOrderₓ (Pilex ι β) := Pilex.linearOrder wf
   exact le_of_not_ltₓ fun ⟨i, hi⟩ => (h i).not_lt hi.2
 
+--we might want the analog of `pi.ordered_cancel_comm_monoid` as well in the future
 @[to_additive]
 instance [LinearOrderₓ ι] [∀ a, OrderedCommGroup (β a)] : OrderedCommGroup (Pilex ι β) :=
   { Pilex.partialOrder, Pi.commGroup with

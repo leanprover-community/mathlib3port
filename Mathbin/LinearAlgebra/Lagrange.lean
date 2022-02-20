@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Kenny Lau. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Kenny Lau
+-/
 import Mathbin.Algebra.BigOperators.Basic
 import Mathbin.RingTheory.Polynomial.Basic
 
@@ -209,7 +214,7 @@ theorem eq_interpolate (f : F[X]) (hf : f.degree < s.card) : (interpolate s fun 
 
 /-- Lagrange interpolation induces isomorphism between functions from `s` and polynomials
 of degree less than `s.card`. -/
-def fun_equiv_degree_lt : degreeLt F s.card ≃ₗ[F] s → F where
+def funEquivDegreeLt : degreeLt F s.card ≃ₗ[F] s → F where
   toFun := fun f x => f.1.eval x
   map_add' := fun f g => funext fun x => eval_add
   map_smul' := fun c f =>

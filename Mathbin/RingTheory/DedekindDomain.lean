@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Kenji Nakagawa. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Kenji Nakagawa, Anne Baanen, Filippo A. E. Nuccio
+-/
 import Mathbin.RingTheory.DiscreteValuationRing
 import Mathbin.RingTheory.FractionalIdeal
 import Mathbin.RingTheory.Ideal.Over
@@ -49,7 +54,7 @@ variable (R A K : Type _) [CommRingₓ R] [CommRingₓ A] [Field K]
 
 open_locale nonZeroDivisors Polynomial
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (p «expr ≠ » («expr⊥»() : ideal R))
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (p «expr ≠ » («expr⊥»() : ideal R))
 /-- A ring `R` has Krull dimension at most one if all nonzero prime ideals are maximal. -/
 def Ringₓ.DimensionLeOne : Prop :=
   ∀ p _ : p ≠ (⊥ : Ideal R), p.IsPrime → p.IsMaximal
@@ -58,17 +63,17 @@ open Ideal Ringₓ
 
 namespace Ringₓ
 
-theorem dimension_le_one.principal_ideal_ring [IsDomain A] [IsPrincipalIdealRing A] : DimensionLeOne A :=
+theorem DimensionLeOne.principal_ideal_ring [IsDomain A] [IsPrincipalIdealRing A] : DimensionLeOne A :=
   fun p nonzero prime =>
   have := Prime
   IsPrime.to_maximal_ideal nonzero
 
-theorem dimension_le_one.is_integral_closure (B : Type _) [CommRingₓ B] [IsDomain B] [Nontrivial R] [Algebra R A]
+theorem DimensionLeOne.is_integral_closure (B : Type _) [CommRingₓ B] [IsDomain B] [Nontrivial R] [Algebra R A]
     [Algebra R B] [Algebra B A] [IsScalarTower R B A] [IsIntegralClosure B R A] (h : DimensionLeOne R) :
     DimensionLeOne B := fun p ne_bot prime =>
   is_integral_closure.is_maximal_of_is_maximal_comap A p (h _ (is_integral_closure.comap_ne_bot A ne_bot) inferInstance)
 
-theorem dimension_le_one.integral_closure [Nontrivial R] [IsDomain A] [Algebra R A] (h : DimensionLeOne R) :
+theorem DimensionLeOne.integral_closure [Nontrivial R] [IsDomain A] [Algebra R A] (h : DimensionLeOne R) :
     DimensionLeOne (integralClosure R A) :=
   h.IsIntegralClosure R A (integralClosure R A)
 
@@ -93,6 +98,7 @@ class IsDedekindDomain : Prop where
   DimensionLeOne : DimensionLeOne A
   IsIntegrallyClosed : IsIntegrallyClosed A
 
+-- See library note [lower instance priority]
 attribute [instance] IsDedekindDomain.is_noetherian_ring IsDedekindDomain.is_integrally_closed
 
 /-- An integral domain is a Dedekind domain iff and only if it is
@@ -104,11 +110,12 @@ theorem is_dedekind_domain_iff (K : Type _) [Field K] [Algebra A K] [IsFractionR
   ⟨fun ⟨hr, hd, hi⟩ => ⟨hr, hd, fun x => (is_integrally_closed_iff K).mp hi⟩, fun ⟨hr, hd, hi⟩ =>
     ⟨hr, hd, (is_integrally_closed_iff K).mpr @hi⟩⟩
 
+-- See library note [lower instance priority]
 instance (priority := 100) IsPrincipalIdealRing.is_dedekind_domain [IsPrincipalIdealRing A] : IsDedekindDomain A :=
   ⟨PrincipalIdealRing.is_noetherian_ring, Ringₓ.DimensionLeOne.principal_ideal_ring A,
     UniqueFactorizationMonoid.is_integrally_closed⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (P «expr ≠ » («expr⊥»() : ideal A))
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (P «expr ≠ » («expr⊥»() : ideal A))
 /-- A Dedekind domain is an integral domain that is Noetherian, and the
 localization at every nonzero prime is a discrete valuation ring.
 
@@ -204,6 +211,7 @@ theorem span_singleton_inv (x : K) : (FractionalIdeal.spanSingleton R₁⁰ x)�
 theorem mul_generator_self_inv {R₁ : Type _} [CommRingₓ R₁] [Algebra R₁ K] [IsLocalization R₁⁰ K]
     (I : FractionalIdeal R₁⁰ K) [Submodule.IsPrincipal (I : Submodule R₁ K)] (h : I ≠ 0) :
     I * FractionalIdeal.spanSingleton _ (generator (I : Submodule R₁ K))⁻¹ = 1 := by
+  -- Rewrite only the `I` that appears alone.
   conv_lhs => congr rw [FractionalIdeal.eq_span_singleton_of_principal I]
   rw [FractionalIdeal.span_singleton_mul_span_singleton, mul_inv_cancel, FractionalIdeal.span_singleton_one]
   intro generator_I_eq_zero
@@ -245,7 +253,7 @@ theorem one_inv : (1⁻¹ : FractionalIdeal R₁⁰ K) = 1 :=
 
 end FractionalIdeal
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (I «expr ≠ » («expr⊥»() : fractional_ideal «expr ⁰»(A) (fraction_ring A)))
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (I «expr ≠ » («expr⊥»() : fractional_ideal «expr ⁰»(A) (fraction_ring A)))
 /-- A Dedekind domain is an integral domain such that every fractional ideal has an inverse.
 
 This is equivalent to `is_dedekind_domain`.
@@ -260,7 +268,7 @@ open FractionalIdeal
 
 variable {R A K}
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (I «expr ≠ » («expr⊥»() : fractional_ideal «expr ⁰»(A) K))
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (I «expr ≠ » («expr⊥»() : fractional_ideal «expr ⁰»(A) K))
 theorem is_dedekind_domain_inv_iff [Algebra A K] [IsFractionRing A K] :
     IsDedekindDomainInv A ↔ ∀ I _ : I ≠ (⊥ : FractionalIdeal A⁰ K), I * I⁻¹ = 1 := by
   set h := FractionRing.algEquiv A K
@@ -296,10 +304,10 @@ theorem mul_inv_eq_one {I : FractionalIdeal A⁰ K} (hI : I ≠ 0) : I * I⁻¹ 
 theorem inv_mul_eq_one {I : FractionalIdeal A⁰ K} (hI : I ≠ 0) : I⁻¹ * I = 1 :=
   (mul_comm _ _).trans (h.mul_inv_eq_one hI)
 
-protected theorem IsUnit {I : FractionalIdeal A⁰ K} (hI : I ≠ 0) : IsUnit I :=
+protected theorem is_unit {I : FractionalIdeal A⁰ K} (hI : I ≠ 0) : IsUnit I :=
   is_unit_of_mul_eq_one _ _ (h.mul_inv_eq_one hI)
 
-theorem IsNoetherianRing : IsNoetherianRing A := by
+theorem is_noetherian_ring : IsNoetherianRing A := by
   refine' is_noetherian_ring_iff.mpr ⟨fun I : Ideal A => _⟩
   by_cases' hI : I = ⊥
   · rw [hI]
@@ -310,6 +318,8 @@ theorem IsNoetherianRing : IsNoetherianRing A := by
   exact I.fg_of_is_unit (IsFractionRing.injective A (FractionRing A)) (h.is_unit hI)
 
 theorem integrally_closed : IsIntegrallyClosed A := by
+  -- It suffices to show that for integral `x`,
+  -- `A[x]` (which is a fractional ideal) is in fact equal to `A`.
   refine' ⟨fun x hx => _⟩
   rw [← Set.mem_range, ← Algebra.mem_bot, ← Subalgebra.mem_to_submodule, Algebra.to_submodule_bot, ←
     coe_span_singleton A⁰ (1 : FractionRing A), FractionalIdeal.span_singleton_one, ←
@@ -320,12 +330,16 @@ theorem integrally_closed : IsIntegrallyClosed A := by
     
 
 theorem dimension_le_one : DimensionLeOne A := by
+  -- We're going to show that `P` is maximal because any (maximal) ideal `M`
+  -- that is strictly larger would be `⊤`.
   rintro P P_ne hP
   refine' ideal.is_maximal_def.mpr ⟨hP.ne_top, fun M hM => _⟩
+  -- We may assume `P` and `M` (as fractional ideals) are nonzero.
   have P'_ne : (P : FractionalIdeal A⁰ (FractionRing A)) ≠ 0 :=
     (coe_to_fractional_ideal_ne_zero (le_reflₓ (nonZeroDivisors A))).mpr P_ne
   have M'_ne : (M : FractionalIdeal A⁰ (FractionRing A)) ≠ 0 :=
     (coe_to_fractional_ideal_ne_zero (le_reflₓ (nonZeroDivisors A))).mpr (lt_of_le_of_ltₓ bot_le hM).ne'
+  -- In particular, we'll show `M⁻¹ * P ≤ P`
   suffices (M⁻¹ * P : FractionalIdeal A⁰ (FractionRing A)) ≤ P by
     rw [eq_top_iff, ← coe_ideal_le_coe_ideal (FractionRing A), FractionalIdeal.coe_ideal_top]
     calc (1 : FractionalIdeal A⁰ (FractionRing A)) = _ * _ * _ := _ _ ≤ _ * _ :=
@@ -336,21 +350,25 @@ theorem dimension_le_one : DimensionLeOne A := by
       
     · infer_instance
       
+  -- Suppose we have `x ∈ M⁻¹ * P`, then in fact `x = algebra_map _ _ y` for some `y`.
   intro x hx
   have le_one : (M⁻¹ * P : FractionalIdeal A⁰ (FractionRing A)) ≤ 1 := by
     rw [← h.inv_mul_eq_one M'_ne]
     exact FractionalIdeal.mul_left_mono _ ((coe_ideal_le_coe_ideal (FractionRing A)).mpr hM.le)
   obtain ⟨y, hy, rfl⟩ := (mem_coe_ideal _).mp (le_one hx)
+  -- Since `M` is strictly greater than `P`, let `z ∈ M \ P`.
   obtain ⟨z, hzM, hzp⟩ := SetLike.exists_of_lt hM
+  -- We have `z * y ∈ M * (M⁻¹ * P) = P`.
   have zy_mem := FractionalIdeal.mul_mem_mul (mem_coe_ideal_of_mem A⁰ hzM) hx
   rw [← RingHom.map_mul, ← mul_assoc, h.mul_inv_eq_one M'_ne, one_mulₓ] at zy_mem
   obtain ⟨zy, hzy, zy_eq⟩ := (mem_coe_ideal A⁰).mp zy_mem
   rw [IsFractionRing.injective A (FractionRing A) zy_eq] at hzy
+  -- But `P` is a prime ideal, so `z ∉ P` implies `y ∈ P`, as desired.
   exact mem_coe_ideal_of_mem A⁰ (Or.resolve_left (hP.mem_or_mem hzy) hzp)
 
 /-- Showing one side of the equivalence between the definitions
 `is_dedekind_domain_inv` and `is_dedekind_domain` of Dedekind domains. -/
-theorem IsDedekindDomain : IsDedekindDomain A :=
+theorem is_dedekind_domain : IsDedekindDomain A :=
   ⟨h.IsNoetherianRing, h.DimensionLeOne, h.integrally_closed⟩
 
 end IsDedekindDomainInv
@@ -368,6 +386,7 @@ theorem exists_multiset_prod_cons_le_and_prod_not_le [IsDedekindDomain A] (hNF :
     ∃ Z : Multiset (PrimeSpectrum A),
       (M ::ₘ Z.map PrimeSpectrum.asIdeal).Prod ≤ I ∧ ¬Multiset.prod (Z.map PrimeSpectrum.asIdeal) ≤ I :=
   by
+  -- Let `Z` be a minimal set of prime ideals such that their product is contained in `J`.
   obtain ⟨Z₀, hZ₀⟩ := PrimeSpectrum.exists_prime_spectrum_prod_le_and_ne_bot_of_domain hNF hI0
   obtain ⟨Z, ⟨hZI, hprodZ⟩, h_eraseZ⟩ :=
     multiset.well_founded_lt.has_min
@@ -377,13 +396,16 @@ theorem exists_multiset_prod_cons_le_and_prod_not_le [IsDedekindDomain A] (hNF :
     rintro rfl
     simpa [hM.ne_top] using hZM
   obtain ⟨_, hPZ', hPM⟩ := (hM.is_prime.multiset_prod_le (mt multiset.map_eq_zero.mp hZ0)).mp hZM
+  -- Then in fact there is a `P ∈ Z` with `P ≤ M`.
   obtain ⟨P, hPZ, rfl⟩ := multiset.mem_map.mp hPZ'
   let this' := Classical.decEq (Ideal A)
   have := Multiset.map_erase PrimeSpectrum.asIdeal Subtype.coe_injective P Z
   obtain ⟨hP0, hZP0⟩ : P.as_ideal ≠ ⊥ ∧ ((Z.erase P).map PrimeSpectrum.asIdeal).Prod ≠ ⊥ := by
     rwa [Ne.def, ← Multiset.cons_erase hPZ', Multiset.prod_cons, Ideal.mul_eq_bot, not_or_distrib, ← this] at hprodZ
+  -- By maximality of `P` and `M`, we have that `P ≤ M` implies `P = M`.
   have hPM' := (IsDedekindDomain.dimension_le_one _ hP0 P.is_prime).eq_of_le hM.ne_top hPM
   subst hPM'
+  -- By minimality of `Z`, erasing `P` from `Z` is exactly what we need.
   refine' ⟨Z.erase P, _, _⟩
   · convert hZI
     rw [this, Multiset.cons_erase hPZ']
@@ -396,6 +418,7 @@ namespace FractionalIdeal
 
 theorem exists_not_mem_one_of_ne_bot [IsDedekindDomain A] (hNF : ¬IsField A) {I : Ideal A} (hI0 : I ≠ ⊥) (hI1 : I ≠ ⊤) :
     ∃ x : K, x ∈ (I⁻¹ : FractionalIdeal A⁰ K) ∧ x ∉ (1 : FractionalIdeal A⁰ K) := by
+  -- WLOG, let `I` be maximal.
   suffices ∀ {M : Ideal A} hM : M.IsMaximal, ∃ x : K, x ∈ (M⁻¹ : FractionalIdeal A⁰ K) ∧ x ∉ (1 : FractionalIdeal A⁰ K)
     by
     obtain ⟨M, hM, hIM⟩ : ∃ M : Ideal A, is_maximal M ∧ I ≤ M := Ideal.exists_le_maximal I hI1
@@ -404,6 +427,7 @@ theorem exists_not_mem_one_of_ne_bot [IsDedekindDomain A] (hNF : ¬IsField A) {I
     obtain ⟨x, hxM, hx1⟩ := this hM
     refine' ⟨x, inv_anti_mono _ _ ((coe_ideal_le_coe_ideal _).mpr hIM) hxM, hx1⟩ <;>
       apply FractionalIdeal.coe_ideal_ne_zero <;> assumption
+  -- Let `a` be a nonzero element of `M` and `J` the ideal generated by `a`.
   intro M hM
   skip
   obtain ⟨⟨a, haM⟩, ha0⟩ := Submodule.nonzero_mem_of_bot_lt (M.bot_lt_of_maximal hNF)
@@ -412,11 +436,15 @@ theorem exists_not_mem_one_of_ne_bot [IsDedekindDomain A] (hNF : ¬IsField A) {I
   have hJ0 : J ≠ ⊥ := mt ideal.span_singleton_eq_bot.mp ha0
   have hJM : J ≤ M := ideal.span_le.mpr (set.singleton_subset_iff.mpr haM)
   have hM0 : ⊥ < M := M.bot_lt_of_maximal hNF
+  -- Then we can find a product of prime (hence maximal) ideals contained in `J`,
+  -- such that removing element `M` from the product is not contained in `J`.
   obtain ⟨Z, hle, hnle⟩ := exists_multiset_prod_cons_le_and_prod_not_le hNF hJ0 hJM
+  -- Choose an element `b` of the product that is not in `J`.
   obtain ⟨b, hbZ, hbJ⟩ := set_like.not_le_iff_exists.mp hnle
   have hnz_fa : algebraMap A K a ≠ 0 := mt ((RingHom.injective_iff _).mp (IsFractionRing.injective A K) a) ha0
   have hb0 : algebraMap A K b ≠ 0 :=
     mt ((RingHom.injective_iff _).mp (IsFractionRing.injective A K) b) fun h => hbJ <| h.symm ▸ J.zero_mem
+  -- Then `b a⁻¹ : K` is in `M⁻¹` but not in `1`.
   refine' ⟨algebraMap A K b * (algebraMap A K a)⁻¹, (mem_inv_iff _).mpr _, _⟩
   · exact (FractionalIdeal.coe_to_fractional_ideal_ne_zero le_rfl).mpr hM0.ne'
     
@@ -448,6 +476,7 @@ theorem one_mem_inv_coe_ideal {I : Ideal A} (hI : I ≠ ⊥) : (1 : K) ∈ (I : 
 
 theorem mul_inv_cancel_of_le_one [h : IsDedekindDomain A] {I : Ideal A} (hI0 : I ≠ ⊥)
     (hI : ((I * I⁻¹)⁻¹ : FractionalIdeal A⁰ K) ≤ 1) : (I * I⁻¹ : FractionalIdeal A⁰ K) = 1 := by
+  -- Handle a few trivial cases.
   by_cases' hI1 : I = ⊤
   · rw [hI1, coe_ideal_top, one_mulₓ, FractionalIdeal.one_inv]
     
@@ -455,6 +484,8 @@ theorem mul_inv_cancel_of_le_one [h : IsDedekindDomain A] {I : Ideal A} (hI0 : I
   · let this' := hNF.to_field A
     rcases hI1 (I.eq_bot_or_top.resolve_left hI0) with ⟨⟩
     
+  -- We'll show a contradiction with `exists_not_mem_one_of_ne_bot`:
+  -- `J⁻¹ = (I * I⁻¹)⁻¹` cannot have an element `x ∉ 1`, so it must equal `1`.
   obtain ⟨J, hJ⟩ : ∃ J : Ideal A, (J : FractionalIdeal A⁰ K) = I * I⁻¹ :=
     le_one_iff_exists_coe_ideal.mp mul_one_div_le_one
   by_cases' hJ0 : J = ⊥
@@ -480,16 +511,20 @@ and finally conclude that fractional ideals in a Dedekind domain form a group wi
 -/
 theorem coe_ideal_mul_inv [h : IsDedekindDomain A] (I : Ideal A) (hI0 : I ≠ ⊥) : (I * I⁻¹ : FractionalIdeal A⁰ K) = 1 :=
   by
+  -- We'll show `1 ≤ J⁻¹ = (I * I⁻¹)⁻¹ ≤ 1`.
   apply mul_inv_cancel_of_le_one hI0
   by_cases' hJ0 : (I * I⁻¹ : FractionalIdeal A⁰ K) = 0
   · rw [hJ0, inv_zero']
     exact FractionalIdeal.zero_le _
     
   intro x hx
+  -- In particular, we'll show all `x ∈ J⁻¹` are integral.
   suffices x ∈ integralClosure A K by
     rwa [IsIntegrallyClosed.integral_closure_eq_bot, Algebra.mem_bot, Set.mem_range, ← FractionalIdeal.mem_one_iff] at
         this <;>
       assumption
+  -- For that, we'll find a subalgebra that is f.g. as a module and contains `x`.
+  -- `A` is a noetherian ring, so we just need to find a subalgebra between `{x}` and `I⁻¹`.
   rw [mem_integral_closure_iff_mem_fg]
   have x_mul_mem : ∀, ∀ b ∈ (I⁻¹ : FractionalIdeal A⁰ K), ∀, x * b ∈ (I⁻¹ : FractionalIdeal A⁰ K) := by
     intro b hb
@@ -503,6 +538,7 @@ theorem coe_ideal_mul_inv [h : IsDedekindDomain A] (I : Ideal A) (hI0 : I ≠ �
     simp only [mul_assoc, mul_comm b] at hx⊢
     intro y hy
     exact hx _ (FractionalIdeal.mul_mem_mul hy hb)
+  -- It turns out the subalgebra consisting of all `p(x)` for `p : polynomial A` works.
   refine'
     ⟨AlgHom.range (Polynomial.aeval x : A[X] →ₐ[A] K),
       is_noetherian_submodule.mp (FractionalIdeal.is_noetherian I⁻¹) _ fun y hy => _,
@@ -592,7 +628,7 @@ variable {R A} [IsDedekindDomain A] [Algebra A K] [IsFractionRing A K]
 open FractionalIdeal
 
 noncomputable instance FractionalIdeal.commGroupWithZero : CommGroupWithZero (FractionalIdeal A⁰ K) :=
-  { FractionalIdeal.commSemiring with inv := fun I => I⁻¹, inv_zero := inv_zero' _, div := · / ·,
+  { FractionalIdeal.commSemiring with inv := fun I => I⁻¹, inv_zero := inv_zero' _, div := (· / ·),
     div_eq_mul_inv := FractionalIdeal.div_eq_mul_inv,
     exists_pair_ne :=
       ⟨0, 1,
@@ -641,7 +677,7 @@ theorem Ideal.dvd_not_unit_iff_lt {I J : Ideal A} : DvdNotUnit I J ↔ J < I :=
 
 instance : WfDvdMonoid (Ideal A) where
   well_founded_dvd_not_unit := by
-    have : WellFounded (· > · : Ideal A → Ideal A → Prop) :=
+    have : WellFounded ((· > ·) : Ideal A → Ideal A → Prop) :=
       is_noetherian_iff_well_founded.mp (is_noetherian_ring_iff.mp IsDedekindDomain.is_noetherian_ring)
     convert this
     ext
@@ -751,7 +787,7 @@ variable (A) (K)
 
 include K
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (y «expr ≠ » (0 : A))
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (y «expr ≠ » (0 : A))
 /-- Send a set of `x`'es in a finite extension `L` of the fraction field of `R`
 to `(y : R) • x ∈ integral_closure R L`. -/
 theorem exists_integral_multiples (s : Finset L) : ∃ (y : _)(_ : y ≠ (0 : A)), ∀, ∀ x ∈ s, ∀, IsIntegral A (y • x) := by
@@ -814,6 +850,9 @@ variable (A K L) [IsSeparable K L]
 
 include L
 
+/- If `L` is a finite separable extension of `K = Frac(A)`, where `A` is
+integrally closed and Noetherian, the integral closure `C` of `A` in `L` is
+Noetherian. -/
 theorem IsIntegralClosure.is_noetherian_ring [IsIntegrallyClosed A] [IsNoetherianRing A] : IsNoetherianRing C := by
   have := Classical.decEq L
   obtain ⟨s, b, hb_int⟩ := FiniteDimensional.exists_is_basis_integral A K L
@@ -829,12 +868,22 @@ theorem IsIntegralClosure.is_noetherian_ring [IsIntegrallyClosed A] [IsNoetheria
 
 variable {A K}
 
+/- If `L` is a finite separable extension of `K = Frac(A)`, where `A` is
+integrally closed and Noetherian, the integral closure of `A` in `L` is
+Noetherian. -/
 theorem integralClosure.is_noetherian_ring [IsIntegrallyClosed A] [IsNoetherianRing A] :
     IsNoetherianRing (integralClosure A L) :=
   IsIntegralClosure.is_noetherian_ring A K L (integralClosure A L)
 
 variable (A K) [IsDomain C]
 
+/- If `L` is a finite separable extension of `K = Frac(A)`, where `A` is a Dedekind domain,
+the integral closure `C` of `A` in `L` is a Dedekind domain.
+
+Can't be an instance since `A`, `K` or `L` can't be inferred. See also the instance
+`integral_closure.is_dedekind_domain_fraction_ring` where `K := fraction_ring A`
+and `C := integral_closure A L`.
+-/
 theorem IsIntegralClosure.is_dedekind_domain [h : IsDedekindDomain A] : IsDedekindDomain C :=
   have : IsFractionRing C L := IsIntegralClosure.is_fraction_ring_of_finite_extension A K L C
   ⟨IsIntegralClosure.is_noetherian_ring A K L C, h.dimension_le_one.is_integral_closure _ L _,
@@ -842,6 +891,12 @@ theorem IsIntegralClosure.is_dedekind_domain [h : IsDedekindDomain A] : IsDedeki
       ⟨IsIntegralClosure.mk' C x (is_integral_trans (IsIntegralClosure.is_integral_algebra A L) _ hx),
         IsIntegralClosure.algebra_map_mk' _ _ _⟩⟩
 
+/- If `L` is a finite separable extension of `K = Frac(A)`, where `A` is a Dedekind domain,
+the integral closure of `A` in `L` is a Dedekind domain.
+
+Can't be an instance since `K` can't be inferred. See also the instance
+`integral_closure.is_dedekind_domain_fraction_ring` where `K := fraction_ring A`.
+-/
 theorem integralClosure.is_dedekind_domain [h : IsDedekindDomain A] : IsDedekindDomain (integralClosure A L) :=
   IsIntegralClosure.is_dedekind_domain A K L (integralClosure A L)
 
@@ -851,6 +906,12 @@ variable [Algebra (FractionRing A) L] [IsScalarTower A (FractionRing A) L]
 
 variable [FiniteDimensional (FractionRing A) L] [IsSeparable (FractionRing A) L]
 
+/- If `L` is a finite separable extension of `Frac(A)`, where `A` is a Dedekind domain,
+the integral closure of `A` in `L` is a Dedekind domain.
+
+See also the lemma `integral_closure.is_dedekind_domain` where you can choose
+the field of fractions yourself.
+-/
 instance integralClosure.is_dedekind_domain_fraction_ring [IsDedekindDomain A] :
     IsDedekindDomain (integralClosure A L) :=
   integralClosure.is_dedekind_domain A (FractionRing A) L

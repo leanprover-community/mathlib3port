@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Chris Hughes. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Chris Hughes, Johannes Hölzl, Scott Morrison, Jens Wagemaker
+-/
 import Mathbin.Algebra.GcdMonoid.Basic
 import Mathbin.Data.Polynomial.Derivative
 import Mathbin.Data.Polynomial.RingDivision
@@ -61,7 +66,7 @@ theorem coe_norm_unit {p : R[X]} : (normUnit p : R[X]) = c ↑(normUnit p.leadin
 theorem leading_coeff_normalize (p : R[X]) : leadingCoeff (normalize p) = normalize (leadingCoeff p) := by
   simp
 
-theorem monic.normalize_eq_self {p : R[X]} (hp : p.Monic) : normalize p = p := by
+theorem Monic.normalize_eq_self {p : R[X]} (hp : p.Monic) : normalize p = p := by
   simp only [Polynomial.coe_norm_unit, normalize_apply, hp.leading_coeff, norm_unit_one, Units.coe_one,
     polynomial.C.map_one, mul_oneₓ]
 
@@ -195,10 +200,10 @@ theorem mul_div_eq_iff_is_root : (X - c a) * (p / (X - c a)) = p ↔ IsRoot p a 
   div_by_monic_eq_div p (monic_X_sub_C a) ▸ mul_div_by_monic_eq_iff_is_root
 
 instance : EuclideanDomain R[X] :=
-  { Polynomial.commRing, Polynomial.nontrivial with Quotient := · / ·,
+  { Polynomial.commRing, Polynomial.nontrivial with Quotient := (· / ·),
     quotient_zero := by
       simp [div_def],
-    remainder := · % ·, R := _, r_well_founded := degree_lt_wf,
+    remainder := (· % ·), R := _, r_well_founded := degree_lt_wf,
     quotient_mul_add_remainder_eq := quotient_mul_add_remainder_eq_aux,
     remainder_lt := fun p q hq => remainder_lt_aux _ hq,
     mul_left_not_lt := fun p q hq => not_lt_of_geₓ (degree_le_mul_left _ hq) }

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Johan Commelin, Robert Y. Lewis. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johan Commelin, Robert Y. Lewis
+-/
 import Mathbin.Data.MvPolynomial.Rename
 
 /-!
@@ -116,6 +121,9 @@ theorem eval₂_hom_id_X_eq_join₂ : eval₂Hom (RingHom.id _) x = @join₂ σ 
 
 end
 
+-- In this file, we don't want to use these simp lemmas,
+-- because we first need to show how these new definitions interact
+-- and the proofs fall back on unfolding the definitions and call simp afterwards
 attribute [-simp] aeval_eq_bind₁ eval₂_hom_C_eq_bind₁ eval₂_hom_eq_bind₂ aeval_id_eq_join₁ eval₂_hom_id_X_eq_join₂
 
 @[simp]
@@ -228,6 +236,7 @@ theorem map_comp_C (f : R →+* S) : (map f).comp (c : R →+* MvPolynomial σ R
   ext1
   apply map_C
 
+-- mixing the two monad structures
 theorem hom_bind₁ (f : MvPolynomial τ R →+* S) (g : σ → MvPolynomial τ R) (φ : MvPolynomial σ R) :
     f (bind₁ g φ) = eval₂Hom (f.comp c) (fun i => f (g i)) φ := by
   rw [bind₁, map_aeval, algebra_map_eq]
@@ -283,22 +292,37 @@ theorem bind₂_monomial (f : R →+* MvPolynomial σ S) (d : σ →₀ ℕ) (r 
 theorem bind₂_monomial_one (f : R →+* MvPolynomial σ S) (d : σ →₀ ℕ) : bind₂ f (monomial d 1) = monomial d 1 := by
   rw [bind₂_monomial, f.map_one, one_mulₓ]
 
-instance Monadₓ : Monadₓ fun σ => MvPolynomial σ R where
+instance monad : Monadₓ fun σ => MvPolynomial σ R where
   map := fun α β f p => rename f p
   pure := fun _ => x
   bind := fun _ _ p f => bind₁ f p
 
-instance IsLawfulFunctor : IsLawfulFunctor fun σ => MvPolynomial σ R where
+instance is_lawful_functor : IsLawfulFunctor fun σ => MvPolynomial σ R where
   id_map := by
-    intros <;> simp [· <$> ·]
+    intros <;> simp [(· <$> ·)]
   comp_map := by
-    intros <;> simp [· <$> ·]
+    intros <;> simp [(· <$> ·)]
 
-instance IsLawfulMonad : IsLawfulMonad fun σ => MvPolynomial σ R where
+instance is_lawful_monad : IsLawfulMonad fun σ => MvPolynomial σ R where
   pure_bind := by
     intros <;> simp [pure, bind]
   bind_assoc := by
     intros <;> simp [bind, ← bind₁_comp_bind₁]
 
+/-
+Possible TODO for the future:
+Enable the following definitions, and write a lot of supporting lemmas.
+
+def bind (f : R →+* mv_polynomial τ S) (g : σ → mv_polynomial τ S) :
+  mv_polynomial σ R →+* mv_polynomial τ S :=
+eval₂_hom f g
+
+def join (f : R →+* S) : mv_polynomial (mv_polynomial σ R) S →ₐ[S] mv_polynomial σ S :=
+aeval (map f)
+
+def ajoin [algebra R S] : mv_polynomial (mv_polynomial σ R) S →ₐ[S] mv_polynomial σ S :=
+join (algebra_map R S)
+
+-/
 end MvPolynomial
 

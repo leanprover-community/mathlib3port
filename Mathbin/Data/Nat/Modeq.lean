@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2017 Mario Carneiro. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Mario Carneiro
+-/
 import Mathbin.Data.Int.Gcd
 import Mathbin.Data.List.Rotate
 import Mathbin.Tactic.Abel
@@ -22,7 +27,7 @@ modeq, congruence, mod, MOD, modulo
 namespace Nat
 
 /-- Modular equality. `n.modeq a b`, or `a ≡ b [MOD n]`, means that `a - b` is a multiple of `n`. -/
-def modeq (n a b : ℕ) :=
+def Modeq (n a b : ℕ) :=
   a % n = b % n deriving Decidable
 
 notation:50 a " ≡ " b " [MOD " n "]" => Modeq n a b
@@ -64,7 +69,7 @@ theorem modeq_iff_dvd : a ≡ b [MOD n] ↔ (n : ℤ) ∣ b - a := by
   rw [modeq, eq_comm, ← Int.coe_nat_inj', Int.coe_nat_mod, Int.coe_nat_mod, Int.mod_eq_mod_iff_mod_sub_eq_zero,
     Int.dvd_iff_mod_eq_zero]
 
-protected theorem modeq.dvd : a ≡ b [MOD n] → (n : ℤ) ∣ b - a :=
+protected theorem Modeq.dvd : a ≡ b [MOD n] → (n : ℤ) ∣ b - a :=
   modeq_iff_dvd.1
 
 theorem modeq_of_dvd : (n : ℤ) ∣ b - a → a ≡ b [MOD n] :=
@@ -114,7 +119,7 @@ protected theorem add_left (c : ℕ) (h : a ≡ b [MOD n]) : c + a ≡ c + b [MO
 protected theorem add_right (c : ℕ) (h : a ≡ b [MOD n]) : a + c ≡ b + c [MOD n] :=
   h.add Modeq.rfl
 
-protected theorem add_left_cancelₓ (h₁ : a ≡ b [MOD n]) (h₂ : a + c ≡ b + d [MOD n]) : c ≡ d [MOD n] := by
+protected theorem add_left_cancel (h₁ : a ≡ b [MOD n]) (h₂ : a + c ≡ b + d [MOD n]) : c ≡ d [MOD n] := by
   simp only [modeq_iff_dvd, Int.coe_nat_add] at *
   rw [add_sub_comm] at h₂
   convert _root_.dvd_sub h₂ h₁ using 1
@@ -123,7 +128,7 @@ protected theorem add_left_cancelₓ (h₁ : a ≡ b [MOD n]) (h₂ : a + c ≡ 
 protected theorem add_left_cancel' (c : ℕ) (h : c + a ≡ c + b [MOD n]) : a ≡ b [MOD n] :=
   Modeq.rfl.add_left_cancel h
 
-protected theorem add_right_cancelₓ (h₁ : c ≡ d [MOD n]) (h₂ : a + c ≡ b + d [MOD n]) : a ≡ b [MOD n] := by
+protected theorem add_right_cancel (h₁ : c ≡ d [MOD n]) (h₂ : a + c ≡ b + d [MOD n]) : a ≡ b [MOD n] := by
   rw [add_commₓ a, add_commₓ b] at h₂
   exact h₁.add_left_cancel h₂
 
@@ -256,7 +261,7 @@ end Modeq
 attribute [local semireducible] Int.Nonneg
 
 /-- The natural number less than `lcm n m` congruent to `a` mod `n` and `b` mod `m` -/
-def chinese_remainder' (h : a ≡ b [MOD gcdₓ n m]) : { k // k ≡ a [MOD n] ∧ k ≡ b [MOD m] } :=
+def chineseRemainder' (h : a ≡ b [MOD gcdₓ n m]) : { k // k ≡ a [MOD n] ∧ k ≡ b [MOD m] } :=
   if hn : n = 0 then
     ⟨a, by
       rw [hn, gcd_zero_left] at h
@@ -309,7 +314,7 @@ def chinese_remainder' (h : a ≡ b [MOD gcdₓ n m]) : { k // k ≡ a [MOD n] �
           ⟩
 
 /-- The natural number less than `n*m` congruent to `a` mod `n` and `b` mod `m` -/
-def chinese_remainder (co : Coprime n m) (a b : ℕ) : { k // k ≡ a [MOD n] ∧ k ≡ b [MOD m] } :=
+def chineseRemainder (co : Coprime n m) (a b : ℕ) : { k // k ≡ a [MOD n] ∧ k ≡ b [MOD m] } :=
   chineseRemainder'
     (by
       convert modeq_one)
@@ -518,7 +523,7 @@ theorem rotate_eq_self_iff_eq_repeat [hα : Nonempty α] :
           conv => lhs rw [← h (List.length (a :: l) - n)]
           rw [nth_rotate hn, add_tsub_cancel_of_le (le_of_ltₓ hn), Nat.mod_selfₓ, nth_le_repeat]
           rfl⟩,
-      fun ⟨a, ha⟩ n =>
+      fun n =>
       ha.symm ▸
         List.ext_le
           (by

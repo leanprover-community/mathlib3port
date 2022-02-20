@@ -1,3 +1,8 @@
+/-
+Copyright © 2021 Nicolò Cavalleri. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Nicolò Cavalleri
+-/
 import Mathbin.Tactic.Basic
 import Mathbin.Algebra.Module.Basic
 
@@ -21,7 +26,7 @@ variable {B : Type _} (E : B → Type _)
 /-- `total_space E` is the total space of the bundle `Σ x, E x`. This type synonym is used to avoid
 conflicts with general sigma types.
 -/
-def total_space :=
+def TotalSpace :=
   Σ x, E x
 
 instance [Inhabited B] [Inhabited (E default)] : Inhabited (TotalSpace E) :=
@@ -34,7 +39,7 @@ def proj : TotalSpace E → B :=
 
 /-- Constructor for the total space of a `topological_fiber_bundle_core`. -/
 @[simp, reducible]
-def total_space_mk (E : B → Type _) (b : B) (a : E b) : Bundle.TotalSpace E :=
+def totalSpaceMk (E : B → Type _) (b : B) (a : E b) : Bundle.TotalSpace E :=
   ⟨b, a⟩
 
 instance {x : B} : CoeTₓ (E x) (TotalSpace E) :=
@@ -48,14 +53,14 @@ theorem to_total_space_coe {x : B} (v : E x) : (v : TotalSpace E) = ⟨x, v⟩ :
   rfl
 
 /-- `bundle.trivial B F` is the trivial bundle over `B` of fiber `F`. -/
-def trivialₓ (B : Type _) (F : Type _) : B → Type _ :=
+def Trivial (B : Type _) (F : Type _) : B → Type _ :=
   Function.const B F
 
 instance {F : Type _} [Inhabited F] {b : B} : Inhabited (Bundle.Trivial B F b) :=
   ⟨(default : F)⟩
 
 /-- The trivial bundle, unlike other bundles, has a canonical projection on the fiber. -/
-def trivial.proj_snd (B : Type _) (F : Type _) : TotalSpace (Bundle.Trivial B F) → F :=
+def Trivial.projSnd (B : Type _) (F : Type _) : TotalSpace (Bundle.Trivial B F) → F :=
   Sigma.snd
 
 section FiberStructures

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Mario Carneiro. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Reid Barton, Mario Carneiro, Isabel Longbottom, Scott Morrison, Apurva Nakade
+-/
 import Mathbin.SetTheory.Pgame
 import Mathbin.Tactic.Abel
 
@@ -41,30 +46,34 @@ open Pgame
 namespace Game
 
 /-- The relation `x ≤ y` on games. -/
-def le : Game → Game → Prop :=
+def Le : Game → Game → Prop :=
   Quotientₓ.lift₂ (fun x y => x ≤ y) fun x₁ y₁ x₂ y₂ hx hy => propext (le_congr hx hy)
 
 instance : LE Game where
   le := Le
 
-theorem le_reflₓ : ∀ x : Game, x ≤ x := by
+-- Adding `@[refl]` and `@[trans]` attributes here would override the ones on
+-- `preorder.le_refl` and `preorder.le_trans`, which breaks all non-`game` uses of `≤`!
+theorem le_refl : ∀ x : Game, x ≤ x := by
   rintro ⟨x⟩
   apply Pgame.le_refl
 
-theorem le_transₓ : ∀ x y z : Game, x ≤ y → y ≤ z → x ≤ z := by
+theorem le_trans : ∀ x y z : Game, x ≤ y → y ≤ z → x ≤ z := by
   rintro ⟨x⟩ ⟨y⟩ ⟨z⟩
   apply Pgame.le_trans
 
-theorem le_antisymmₓ : ∀ x y : Game, x ≤ y → y ≤ x → x = y := by
+theorem le_antisymm : ∀ x y : Game, x ≤ y → y ≤ x → x = y := by
   rintro ⟨x⟩ ⟨y⟩ h₁ h₂
   apply Quot.sound
   exact ⟨h₁, h₂⟩
 
 /-- The relation `x < y` on games. -/
-def lt : Game → Game → Prop :=
+-- We don't yet make this into an instance, because it will conflict with the (incorrect) notion
+-- of `<` provided by `partial_order` later.
+def Lt : Game → Game → Prop :=
   Quotientₓ.lift₂ (fun x y => x < y) fun x₁ y₁ x₂ y₂ hx hy => propext (lt_congr hx hy)
 
-theorem not_leₓ : ∀ {x y : Game}, ¬x ≤ y ↔ Lt y x := by
+theorem not_le : ∀ {x y : Game}, ¬x ≤ y ↔ Lt y x := by
   rintro ⟨x⟩ ⟨y⟩
   exact not_leₓ
 
@@ -91,7 +100,7 @@ def add : Game → Game → Game :=
 instance : Add Game :=
   ⟨add⟩
 
-theorem add_assocₓ : ∀ x y z : Game, x + y + z = x + (y + z) := by
+theorem add_assoc : ∀ x y z : Game, x + y + z = x + (y + z) := by
   rintro ⟨x⟩ ⟨y⟩ ⟨z⟩
   apply Quot.sound
   exact add_assoc_equiv
@@ -99,12 +108,12 @@ theorem add_assocₓ : ∀ x y z : Game, x + y + z = x + (y + z) := by
 instance : AddSemigroupₓ Game.{u} :=
   { Game.hasAdd with add_assoc := add_assoc }
 
-theorem add_zeroₓ : ∀ x : Game, x + 0 = x := by
+theorem add_zero : ∀ x : Game, x + 0 = x := by
   rintro ⟨x⟩
   apply Quot.sound
   apply add_zero_equiv
 
-theorem zero_addₓ : ∀ x : Game, 0 + x = x := by
+theorem zero_add : ∀ x : Game, 0 + x = x := by
   rintro ⟨x⟩
   apply Quot.sound
   apply zero_add_equiv
@@ -112,7 +121,7 @@ theorem zero_addₓ : ∀ x : Game, 0 + x = x := by
 instance : AddMonoidₓ Game :=
   { Game.hasZero, Game.addSemigroup with add_zero := add_zero, zero_add := zero_add }
 
-theorem add_left_negₓ : ∀ x : Game, -x + x = 0 := by
+theorem add_left_neg : ∀ x : Game, -x + x = 0 := by
   rintro ⟨x⟩
   apply Quot.sound
   apply add_left_neg_equiv
@@ -120,7 +129,7 @@ theorem add_left_negₓ : ∀ x : Game, -x + x = 0 := by
 instance : AddGroupₓ Game :=
   { Game.hasNeg, Game.addMonoid with add_left_neg := add_left_neg }
 
-theorem add_commₓ : ∀ x y : Game, x + y = y + x := by
+theorem add_comm : ∀ x y : Game, x + y = y + x := by
   rintro ⟨x⟩ ⟨y⟩
   apply Quot.sound
   exact add_comm_equiv
@@ -136,11 +145,20 @@ theorem add_le_add_left : ∀ a b : Game, a ≤ b → ∀ c : Game, c + a ≤ c 
   apply Pgame.add_le_add_left h
 
 /-- The `<` operation provided by this partial order is not the usual `<` on games! -/
-def game_partial_order : PartialOrderₓ Game :=
+-- While it is very tempting to define a `partial_order` on games, and prove
+-- that games form an `ordered_add_comm_group`, it is a bit dangerous.
+-- The relations `≤` and `<` on games do not satisfy
+-- `lt_iff_le_not_le : ∀ a b : α, a < b ↔ (a ≤ b ∧ ¬ b ≤ a)`
+-- (Consider `a = 0`, `b = star`.)
+-- (`lt_iff_le_not_le` is satisfied by surreal numbers, however.)
+-- Thus we can not use `<` when defining a `partial_order`.
+-- Because of this issue, we define the `partial_order` and `ordered_add_comm_group` instances,
+-- but do not actually mark them as instances, for safety.
+def gamePartialOrder : PartialOrderₓ Game :=
   { Game.hasLe with le_refl := le_refl, le_trans := le_trans, le_antisymm := le_antisymm }
 
 /-- The `<` operation provided by this `ordered_add_comm_group` is not the usual `<` on games! -/
-def ordered_add_comm_group_game : OrderedAddCommGroup Game :=
+def orderedAddCommGroupGame : OrderedAddCommGroup Game :=
   { Game.addCommGroup, gamePartialOrder with add_le_add_left := add_le_add_left }
 
 end Game
@@ -191,15 +209,14 @@ instance : Mul Pgame :=
   ⟨mul⟩
 
 /-- An explicit description of the moves for Left in `x * y`. -/
-def left_moves_mul (x y : Pgame) : (x * y).LeftMoves ≃ Sum (x.LeftMoves × y.LeftMoves) (x.RightMoves × y.RightMoves) :=
-  by
+def leftMovesMul (x y : Pgame) : (x * y).LeftMoves ≃ Sum (x.LeftMoves × y.LeftMoves) (x.RightMoves × y.RightMoves) := by
   cases x
   cases y
   rfl
 
 /-- An explicit description of the moves for Right in `x * y`. -/
-def right_moves_mul (x y : Pgame) :
-    (x * y).RightMoves ≃ Sum (x.LeftMoves × y.RightMoves) (x.RightMoves × y.LeftMoves) := by
+def rightMovesMul (x y : Pgame) : (x * y).RightMoves ≃ Sum (x.LeftMoves × y.RightMoves) (x.RightMoves × y.LeftMoves) :=
+  by
   cases x
   cases y
   rfl
@@ -298,7 +315,7 @@ theorem mul_comm_equiv (x y : Pgame) : x * y ≈ y * x :=
   Quotientₓ.exact <| quot_mul_comm _ _
 
 /-- `x * 0` has exactly the same moves as `0`. -/
-def mul_zero_relabelling : ∀ x : Pgame, Relabelling (x * 0) 0
+def mulZeroRelabelling : ∀ x : Pgame, Relabelling (x * 0) 0
   | mk xl xr xL xR =>
     ⟨by
       fconstructor <;> rintro (⟨_, ⟨⟩⟩ | ⟨_, ⟨⟩⟩), by
@@ -315,7 +332,7 @@ theorem quot_mul_zero (x : Pgame) : ⟦x * 0⟧ = ⟦0⟧ :=
   @Quotientₓ.sound _ _ (x * 0) _ x.mul_zero_equiv
 
 /-- `0 * x` has exactly the same moves as `0`. -/
-def zero_mul_relabelling : ∀ x : Pgame, Relabelling (0 * x) 0
+def zeroMulRelabelling : ∀ x : Pgame, Relabelling (0 * x) 0
   | mk xl xr xL xR =>
     ⟨by
       fconstructor <;> rintro (⟨⟨⟩, _⟩ | ⟨⟨⟩, _⟩), by
@@ -604,7 +621,7 @@ theorem mul_assoc_equiv (x y z : Pgame) : x * y * z ≈ x * (y * z) :=
 /-- Because the two halves of the definition of `inv` produce more elements
 on each side, we have to define the two families inductively.
 This is the indexing set for the function, and `inv_val` is the function part. -/
-inductive inv_ty (l r : Type u) : Bool → Type u
+inductive InvTy (l r : Type u) : Bool → Type u
   | zero : inv_ty false
   | left₁ : r → inv_ty false → inv_ty false
   | left₂ : l → inv_ty true → inv_ty false
@@ -614,7 +631,7 @@ inductive inv_ty (l r : Type u) : Bool → Type u
 /-- Because the two halves of the definition of `inv` produce more elements
 of each side, we have to define the two families inductively.
 This is the function part, defined by recursion on `inv_ty`. -/
-def inv_val {l r} (L : l → Pgame) (R : r → Pgame) (IHl : l → Pgame) (IHr : r → Pgame) : ∀ {b}, InvTy l r b → Pgame
+def invVal {l r} (L : l → Pgame) (R : r → Pgame) (IHl : l → Pgame) (IHr : r → Pgame) : ∀ {b}, InvTy l r b → Pgame
   | _, inv_ty.zero => 0
   | _, inv_ty.left₁ i j => (1 + (R i - mk l r L R) * inv_val j) * IHr i
   | _, inv_ty.left₂ i j => (1 + (L i - mk l r L R) * inv_val j) * IHl i

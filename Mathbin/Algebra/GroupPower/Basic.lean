@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2015 Jeremy Avigad. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Jeremy Avigad, Robert Y. Lewis
+-/
 import Mathbin.Data.Nat.Basic
 import Mathbin.Tactic.Monotonicity.Basic
 import Mathbin.GroupTheory.GroupAction.Defs
@@ -73,6 +78,7 @@ theorem ite_pow (P : Prop) [Decidable P] (a b : M) (c : ℕ) : (if P then a else
 theorem pow_boole (P : Prop) [Decidable P] (a : M) : (a ^ if P then 1 else 0) = if P then a else 1 := by
   simp
 
+-- the attributes are intentionally out of order. `smul_zero` proves `nsmul_zero`.
 @[to_additive nsmul_zero, simp]
 theorem one_pow (n : ℕ) : (1 : M) ^ n = 1 := by
   induction' n with n ih <;> [exact pow_zeroₓ _, rw [pow_succₓ, ih, one_mulₓ]]
@@ -150,10 +156,12 @@ monoids. -/
       "Multiplication by a natural `n` on a commutative additive\nmonoid, considered as a morphism of additive monoids.",
   simps]
 def powMonoidHom (n : ℕ) : M →* M where
-  toFun := · ^ n
+  toFun := (· ^ n)
   map_one' := one_pow _
   map_mul' := fun a b => mul_powₓ a b n
 
+-- the below line causes the linter to complain :-/
+-- attribute [simps] pow_monoid_hom nsmul_add_monoid_hom
 theorem dvd_pow {x y : M} (hxy : x ∣ y) : ∀ {n : ℕ} hn : n ≠ 0, x ∣ y ^ n
   | 0, hn => (hn rfl).elim
   | n + 1, hn => by
@@ -209,6 +217,7 @@ theorem inv_pow (a : G) (n : ℕ) : a⁻¹ ^ n = (a ^ n)⁻¹ := by
   · rw [pow_succ'ₓ, pow_succₓ, ih, mul_inv_rev]
     
 
+-- rename to sub_nsmul?
 @[to_additive nsmul_sub]
 theorem pow_sub (a : G) {m n : ℕ} (h : n ≤ m) : a ^ (m - n) = a ^ m * (a ^ n)⁻¹ :=
   have h1 : m - n + n = m := tsub_add_cancel_of_le h
@@ -281,7 +290,7 @@ homomorphism. -/
       "Multiplication by an integer `n` on a commutative additive group, considered as an\nadditive group homomorphism.",
   simps]
 def zpowGroupHom (n : ℤ) : G →* G where
-  toFun := · ^ n
+  toFun := (· ^ n)
   map_one' := one_zpow n
   map_mul' := fun a b => mul_zpow a b n
 
@@ -432,6 +441,7 @@ theorem sub_sq (a b : R) : (a - b) ^ 2 = a ^ 2 - 2 * a * b + b ^ 2 := by
 
 alias sub_sq ← sub_pow_two
 
+-- Copies of the above comm_ring lemmas for `units R`.
 namespace Units
 
 theorem eq_or_eq_neg_of_sq_eq_sq [IsDomain R] (a b : (R)ˣ) (h : a ^ 2 = b ^ 2) : a = b ∨ a = -b := by

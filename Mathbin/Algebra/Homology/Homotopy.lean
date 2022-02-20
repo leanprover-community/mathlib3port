@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison
+-/
 import Mathbin.Algebra.Homology.Additive
 import Mathbin.Tactic.Abel
 
@@ -209,7 +214,7 @@ restate_axiom Homotopy.zero'
 
 /-- `f` is homotopic to `g` iff `f - g` is homotopic to `0`.
 -/
-def equiv_sub_zero : Homotopy f g ≃ Homotopy (f - g) 0 where
+def equivSubZero : Homotopy f g ≃ Homotopy (f - g) 0 where
   toFun := fun h =>
     { Hom := fun i j => h.Hom i j, zero' := fun i j w => h.zero _ _ w,
       comm := fun i => by
@@ -225,7 +230,7 @@ def equiv_sub_zero : Homotopy f g ≃ Homotopy (f - g) 0 where
 
 /-- Equal chain maps are homotopic. -/
 @[simps]
-def of_eq (h : f = g) : Homotopy f g where
+def ofEq (h : f = g) : Homotopy f g where
   Hom := 0
   zero' := fun _ _ _ => rfl
   comm := fun _ => by
@@ -267,7 +272,7 @@ def add {f₁ g₁ f₂ g₂ : C ⟶ D} (h₁ : Homotopy f₁ g₁) (h₂ : Homo
 
 /-- homotopy is closed under composition (on the right) -/
 @[simps]
-def comp_right {e f : C ⟶ D} (h : Homotopy e f) (g : D ⟶ E) : Homotopy (e ≫ g) (f ≫ g) where
+def compRight {e f : C ⟶ D} (h : Homotopy e f) (g : D ⟶ E) : Homotopy (e ≫ g) (f ≫ g) where
   Hom := fun i j => h.Hom i j ≫ g.f j
   zero' := fun i j w => by
     rw [h.zero i j w, zero_comp]
@@ -276,7 +281,7 @@ def comp_right {e f : C ⟶ D} (h : Homotopy e f) (g : D ⟶ E) : Homotopy (e �
 
 /-- homotopy is closed under composition (on the left) -/
 @[simps]
-def comp_left {f g : D ⟶ E} (h : Homotopy f g) (e : C ⟶ D) : Homotopy (e ≫ f) (e ≫ g) where
+def compLeft {f g : D ⟶ E} (h : Homotopy f g) (e : C ⟶ D) : Homotopy (e ≫ f) (e ≫ g) where
   Hom := fun i j => e.f i ≫ h.Hom i j
   zero' := fun i j w => by
     rw [h.zero i j w, comp_zero]
@@ -291,12 +296,12 @@ def comp {C₁ C₂ C₃ : HomologicalComplex V c} {f₁ g₁ : C₁ ⟶ C₂} {
 
 /-- a variant of `homotopy.comp_right` useful for dealing with homotopy equivalences. -/
 @[simps]
-def comp_right_id {f : C ⟶ C} (h : Homotopy f (𝟙 C)) (g : C ⟶ D) : Homotopy (f ≫ g) g :=
+def compRightId {f : C ⟶ C} (h : Homotopy f (𝟙 C)) (g : C ⟶ D) : Homotopy (f ≫ g) g :=
   (h.compRight g).trans (of_eq <| Category.id_comp _)
 
 /-- a variant of `homotopy.comp_left` useful for dealing with homotopy equivalences. -/
 @[simps]
-def comp_left_id {f : D ⟶ D} (h : Homotopy f (𝟙 D)) (g : C ⟶ D) : Homotopy (g ≫ f) g :=
+def compLeftId {f : D ⟶ D} (h : Homotopy f (𝟙 D)) (g : C ⟶ D) : Homotopy (g ≫ f) g :=
   (h.compLeft g).trans (of_eq <| Category.comp_id _)
 
 /-!
@@ -311,7 +316,7 @@ two differentials going to and from a certain degree, only one, or none.
 This is the same datum as for the field `hom` in the structure `homotopy`. For
 this definition, we do not need the field `zero` of that structure 
 as this definition uses only the maps `C_i ⟶ C_j` when `c.rel j i`. -/
-def null_homotopic_map (hom : ∀ i j, C.x i ⟶ D.x j) : C ⟶ D where
+def nullHomotopicMap (hom : ∀ i j, C.x i ⟶ D.x j) : C ⟶ D where
   f := fun i => dNext i hom + prevD i hom
   comm' := fun i j hij => by
     have eq1 : prevD i hom ≫ D.d i j = 0 := by
@@ -335,13 +340,13 @@ def null_homotopic_map (hom : ∀ i j, C.x i ⟶ D.x j) : C ⟶ D where
 
 /-- Variant of `null_homotopic_map` where the input consists only of the
 relevant maps `C_i ⟶ D_j` such that `c.rel j i`. -/
-def null_homotopic_map' (h : ∀ i j, c.Rel j i → (C.x i ⟶ D.x j)) : C ⟶ D :=
+def nullHomotopicMap' (h : ∀ i j, c.Rel j i → (C.x i ⟶ D.x j)) : C ⟶ D :=
   nullHomotopicMap fun i j => dite (c.Rel j i) (h i j) fun _ => 0
 
 /-- Tautological construction of the `homotopy` to zero for maps constructed by
 `null_homotopic_map`, at least when we have the `zero'` condition. -/
 @[simps]
-def null_homotopy (hom : ∀ i j, C.x i ⟶ D.x j) (zero' : ∀ i j, ¬c.Rel j i → hom i j = 0) :
+def nullHomotopy (hom : ∀ i j, C.x i ⟶ D.x j) (zero' : ∀ i j, ¬c.Rel j i → hom i j = 0) :
     Homotopy (nullHomotopicMap hom) 0 :=
   { Hom, zero',
     comm := by
@@ -351,7 +356,7 @@ def null_homotopy (hom : ∀ i j, C.x i ⟶ D.x j) (zero' : ∀ i j, ¬c.Rel j i
 
 /-- Homotopy to zero for maps constructed with `null_homotopic_map'` -/
 @[simps]
-def null_homotopy' (h : ∀ i j, c.Rel j i → (C.x i ⟶ D.x j)) : Homotopy (nullHomotopicMap' h) 0 := by
+def nullHomotopy' (h : ∀ i j, c.Rel j i → (C.x i ⟶ D.x j)) : Homotopy (nullHomotopicMap' h) 0 := by
   apply null_homotopy fun i j => dite (c.rel j i) (h i j) fun _ => 0
   intro i j hij
   dsimp
@@ -507,7 +512,7 @@ because it "falls off the end", and is easier to treat using `X_next` and `X_pre
 which we do in `mk_inductive_aux₂`.
 -/
 @[simp, nolint unused_arguments]
-def mk_inductive_aux₁ :
+def mkInductiveAux₁ₓ :
     ∀ n,
       Σ' (f : P.x n ⟶ Q.x (n + 1)) (f' : P.x (n + 1) ⟶ Q.x (n + 2)),
         e.f (n + 1) = P.d (n + 1) n ≫ f + f' ≫ Q.d (n + 2) (n + 1)
@@ -524,7 +529,7 @@ variable [HasZeroObject V]
 /-- An auxiliary construction for `mk_inductive`.
 -/
 @[simp]
-def mk_inductive_aux₂ : ∀ n, Σ' (f : P.xNext n ⟶ Q.x n) (f' : P.x n ⟶ Q.xPrev n), e.f n = P.dFrom n ≫ f + f' ≫ Q.dTo n
+def mkInductiveAux₂ₓ : ∀ n, Σ' (f : P.xNext n ⟶ Q.x n) (f' : P.x n ⟶ Q.xPrev n), e.f n = P.dFrom n ≫ f + f' ≫ Q.dTo n
   | 0 =>
     ⟨0, zero ≫ (Q.xPrevIso rfl).inv, by
       simpa using comm_zero⟩
@@ -551,7 +556,7 @@ and then give a construction of each component,
 and the fact that it satisfies the homotopy condition,
 using as an inductive hypothesis the data and homotopy condition for the previous two components.
 -/
-def mk_inductive : Homotopy e 0 where
+def mkInductive : Homotopy e 0 where
   Hom := fun i j =>
     if h : i + 1 = j then (mkInductiveAux₂ₓ e zero comm_zero one comm_one succ i).2.1 ≫ (Q.xPrevIso h).Hom else 0
   zero' := fun i j w => by
@@ -673,7 +678,7 @@ variable {W : Type _} [Category W] [Preadditive W]
 
 /-- An additive functor takes homotopies to homotopies. -/
 @[simps]
-def functor.map_homotopy (F : V ⥤ W) [F.Additive] {f g : C ⟶ D} (h : Homotopy f g) :
+def Functor.mapHomotopy (F : V ⥤ W) [F.Additive] {f g : C ⟶ D} (h : Homotopy f g) :
     Homotopy ((F.mapHomologicalComplex c).map f) ((F.mapHomologicalComplex c).map g) where
   Hom := fun i j => F.map (h.Hom i j)
   zero' := fun i j w => by
@@ -690,7 +695,7 @@ def functor.map_homotopy (F : V ⥤ W) [F.Additive] {f g : C ⟶ D} (h : Homotop
 
 /-- An additive functor preserves homotopy equivalences. -/
 @[simps]
-def functor.map_homotopy_equiv (F : V ⥤ W) [F.Additive] (h : HomotopyEquiv C D) :
+def Functor.mapHomotopyEquiv (F : V ⥤ W) [F.Additive] (h : HomotopyEquiv C D) :
     HomotopyEquiv ((F.mapHomologicalComplex c).obj C) ((F.mapHomologicalComplex c).obj D) where
   Hom := (F.mapHomologicalComplex c).map h.Hom
   inv := (F.mapHomologicalComplex c).map h.inv

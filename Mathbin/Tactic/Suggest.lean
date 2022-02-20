@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Lucas Allen. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Lucas Allen, Scott Morrison
+-/
 import Mathbin.Data.Bool.Basic
 import Mathbin.Data.Mllist
 import Mathbin.Tactic.SolveByElim
@@ -34,6 +39,7 @@ The default is that the original argument is returned, so `<` is just mapped to 
 
 `normalize_synonym` is called for every lemma in the library, so it needs to be fast.
 -/
+-- TODO this is a hack; if you suspect more cases here would help, please report them
 unsafe def normalize_synonym : Name → Name
   | `gt => `has_lt.lt
   | `ge => `has_le.le
@@ -45,14 +51,28 @@ unsafe def normalize_synonym : Name → Name
 
 This is only used when analysing the goal, so it is okay to do more expensive analysis here.
 -/
+-- We may want to tweak this further?
 unsafe def allowed_head_symbols : expr → List Name
-  | quote.1 (@LE.le ℕ _ (Nat.succ _) _) => [`has_le.le, `has_lt.lt]
+  |-- We first have a various "customisations":
+      --   Because in `ℕ` `a.succ ≤ b` is definitionally `a < b`,
+      --   we add some special cases to allow looking for `<` lemmas even when the goal has a `≤`.
+      --   Note we only do this in the `ℕ` case, for performance.
+      quote.1
+      (@LE.le ℕ _ (Nat.succ _) _) =>
+    [`has_le.le, `has_lt.lt]
   | quote.1 (@Ge ℕ _ _ (Nat.succ _)) => [`has_le.le, `has_lt.lt]
   | quote.1 (@LE.le ℕ _ 1 _) => [`has_le.le, `has_lt.lt]
   | quote.1 (@Ge ℕ _ _ 1) => [`has_le.le, `has_lt.lt]
-  | quote.1 (_ ≠ _) => [`false]
+  |-- These allow `library_search` to search for lemmas of type `¬ a = b` when proving `a ≠ b`
+      --   and vice-versa.
+      quote.1
+      (_ ≠ _) =>
+    [`false]
   | quote.1 ¬_ = _ => [`ne]
-  | expr.pi _ _ _ t => allowed_head_symbols t
+  |-- And then the generic cases:
+      expr.pi
+      _ _ _ t =>
+    allowed_head_symbols t
   | expr.app f _ => allowed_head_symbols f
   | expr.const n _ => [normalize_synonym n]
   | _ => [`_]
@@ -63,7 +83,7 @@ unsafe def allowed_head_symbols : expr → List Name
 * `mpr` : the declaration returns an `iff`, and the left hand side matches the goal
 * `both`: the declaration returns an `iff`, and the both sides match the goal
 -/
-inductive head_symbol_match
+inductive HeadSymbolMatch
   | ex
   | mp
   | mpr
@@ -73,7 +93,7 @@ inductive head_symbol_match
 open HeadSymbolMatch
 
 /-- a textual representation of a `head_symbol_match`, for trace debugging. -/
-def head_symbol_match.to_string : HeadSymbolMatch → Stringₓ
+def HeadSymbolMatch.toString : HeadSymbolMatch → Stringₓ
   | ex => "exact"
   | mp => "iff.mp"
   | mpr => "iff.mpr"
@@ -105,6 +125,9 @@ unsafe structure decl_data where
 /-- Generate a `decl_data` from the given declaration if
 it matches the head symbol `hs` for the current goal.
 -/
+-- cached length of name
+-- We used to check here for private declarations, or declarations with certain suffixes.
+-- It turns out `apply` is so fast, it's better to just try them all.
 unsafe def process_declaration (hs : name_set) (d : declaration) : Option decl_data :=
   let n := d.to_name
   if !d.is_trusted || n.is_internal then none else (fun m => ⟨d, n, m, n.length⟩) <$> match_head_symbol hs d.type
@@ -114,7 +137,8 @@ unsafe def library_defs (hs : name_set) : tactic (List decl_data) := do
   trace_if_enabled `suggest f! "Looking for lemmas with head symbols {hs}."
   let env ← get_env
   let defs := env.decl_filter_map (process_declaration hs)
-  let defs := defs.qsort fun d₁ d₂ => d₁.l ≤ d₂.l
+  let-- Sort by length; people like short proofs
+  defs := defs.qsort fun d₁ d₂ => d₁.l ≤ d₂.l
   trace_if_enabled `suggest f! "Found {defs} relevant lemmas:"
   trace_if_enabled `suggest <| defs fun ⟨d, n, m, l⟩ => (n, m)
   return defs
@@ -155,16 +179,39 @@ and there are any goals remaining.
 
 Returns the number of subgoals which were closed using `solve_by_elim`.
 -/
+-- Implementation note: as this is used by both `library_search` and `suggest`,
+-- we first run `solve_by_elim` separately on the independent goals,
+-- whether or not `close_goals` is set,
+-- and then run `solve_by_elim { all_goals := tt }`,
+-- requiring that it succeeds if `close_goals = tt`.
 unsafe def apply_and_solve (close_goals : Bool) (opt : suggest_opt := {  }) (e : expr) : tactic ℕ := do
   trace_if_enabled `suggest f! "Trying to apply lemma: {e}"
   apply e opt
   trace_if_enabled `suggest f! "Applied lemma: {e}"
   let ng ← num_goals
-  try (guardₓ (opt = []) >> any_goals (independent_goal >> solve_by_elim opt))
-  done >> return ng <|> do
-      (guardₓ (opt ≠ []) <|> any_goals (success_if_fail independent_goal) >> skip) >>
-            solve_by_elim { opt with backtrack_all_goals := tt } <|>
-          guardₓ ¬close_goals
+  -- Phase 1
+      -- Run `solve_by_elim` on each "safe" goal separately, not worrying about failures.
+      -- (We only attempt the "safe" goals in this way in Phase 1.
+      -- In Phase 2 we will do backtracking search across all goals,
+      -- allowing us to guess solutions that involve data or unify metavariables,
+      -- but only as long as we can finish all goals.)
+      -- If `compulsory_hyps` is non-empty, we skip this phase and defer to phase 2.
+      try
+      (guardₓ (opt = []) >> any_goals (independent_goal >> solve_by_elim opt))
+  -- Phase 2
+        done >>
+        return ng <|>
+      do
+      (-- If there were any goals that we did not attempt solving in the first phase
+                -- (because they weren't propositional, or contained a metavariable)
+                -- as a second phase we attempt to solve all remaining goals at once
+                -- (with backtracking across goals).
+                guardₓ
+                (opt ≠ []) <|>
+              any_goals (success_if_fail independent_goal) >> skip) >>
+            solve_by_elim { opt with backtrack_all_goals := tt } <|>-- and fail unless `close_goals = ff`
+            guardₓ
+            ¬close_goals
       let ng' ← num_goals
       return (ng - ng')
 
@@ -188,6 +235,7 @@ unsafe def apply_declaration (close_goals : Bool) (opt : suggest_opt := {  }) (d
     | both => undefined
 
 /-- An `application` records the result of a successful application of a library lemma. -/
+-- we use `unpack_iff_both` to ensure this isn't reachable
 unsafe structure application where
   State : tactic_state
   script : Stringₓ
@@ -204,34 +252,61 @@ open Suggest
 initialize
   registerTraceClass.1 `suggest
 
+-- Trace a list of all relevant lemmas
+-- Call `apply_declaration`, then prepare the tactic script and
+-- count the number of local hypotheses used.
 private unsafe def apply_declaration_script (g : expr) (hyps : List expr) (opt : suggest_opt := {  }) (d : decl_data) :
     tactic application :=
-  retrieve <|
+  -- (This tactic block is only executed when we evaluate the mllist,
+    -- so we need to do the `focus1` here.)
+    retrieve <|
     focus1 <| do
       apply_declaration ff opt d
-      let g ← instantiate_mvars g
+      let g
+        ←-- This `instantiate_mvars` is necessary so that we count used hypotheses correctly.
+            instantiate_mvars
+            g
       guardₓ <| opt fun h => h g
       let ng ← num_goals
       let s ← read
       let m ← tactic_statement g
       return { State := s, decl := d, script := m, num_goals := ng, hyps_used := hyps fun h => h g }
 
+-- implementation note: we produce a `tactic (mllist tactic application)` first,
+-- because it's easier to work in the tactic monad, but in a moment we squash this
+-- down to an `mllist tactic application`.
 private unsafe def suggest_core' (opt : suggest_opt := {  }) : tactic (mllist tactic application) := do
   let g :: _ ← get_goals
   let hyps ← local_context
-  (retrieve do
+  (-- Check if `solve_by_elim` can solve the goal immediately:
+        -- This `instantiate_mvars` is necessary so that we count used hypotheses correctly.
+        retrieve
+        do
         focus1 <| solve_by_elim opt
         let s ← read
         let m ← tactic_statement g
         let g ← instantiate_mvars g
         guardₓ (opt fun h => h g)
-        return <| mllist.of_list [⟨s, m, none, 0, hyps fun h => h g⟩]) <|>
-      do
-      let t ← infer_type g
+        return <|
+            mllist.of_list
+              [⟨s, m, none, 0, hyps fun h => h g⟩]) <|>-- Otherwise, let's actually try applying library lemmas.
+    do
+      let t
+        ←-- Collect all definitions with the correct head symbol
+            infer_type
+            g
       let defs ← unpack_iff_both <$> library_defs (name_set.of_list <| allowed_head_symbols t)
       let defs : mllist tactic _ := mllist.of_list defs
-      let results := defs (apply_declaration_script g hyps opt)
-      let symm_state ← retrieve <| try_core <| symmetry >> read
+      let-- Try applying each lemma against the goal,
+      -- recording the tactic script as a string,
+      -- the number of remaining goals,
+      -- and number of local hypotheses used.
+      results := defs (apply_declaration_script g hyps opt)
+      let symm_state
+        ←-- Now call `symmetry` and try again.
+            -- (Because we are using `mllist`, this is essentially free if we've already found a lemma.)
+            retrieve <|
+            try_core <| symmetry >> read
       let results_symm :=
         match symm_state with
         | some s => defs fun d => retrieve <| set_state s >> apply_declaration_script g hyps opt d
@@ -262,8 +337,13 @@ sorted by number of goals, and then (reverse) number of hypotheses used.
 -/
 unsafe def suggest (limit : Option ℕ := none) (opt : suggest_opt := {  }) : tactic (List application) := do
   let results := suggest_core opt
-  let L ← if h : limit.isSome then results.take (Option.getₓ h) else results.force
-  return <| L fun d₁ d₂ => d₁ < d₂ ∨ d₁ = d₂ ∧ d₁ ≥ d₂
+  let L
+    ←-- Get the first n elements of the successful lemmas
+        if h : limit.isSome then results.take (Option.getₓ h)
+      else results.force
+  -- Sort by number of remaining goals, then by number of hypotheses used.
+      return <|
+      L fun d₁ d₂ => d₁ < d₂ ∨ d₁ = d₂ ∧ d₁ ≥ d₂
 
 /-- Returns a list of at most `limit` strings, of the form `Try this: exact ...` or
 `Try this: refine ...`, which make progress on the current goal using a declaration
@@ -290,7 +370,7 @@ open SolveByElim
 initialize
   registerTraceClass.1 `silence_suggest
 
--- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr ?»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr ?»
 /-- `suggest` tries to apply suitable theorems/defs from the library, and generates
 a list of `exact ...` or `refine ...` scripts that could be used at this step.
 It leaves the tactic state unchanged. It is intended as a complement of the search
@@ -314,6 +394,7 @@ end
 ```
 You can also use `suggest with attr` to include all lemmas with the attribute `attr`.
 -/
+-- Turn off `Try this: exact/refine ...` trace messages for `suggest`
 unsafe def suggest (n : parse («expr ?» (with_desc "n" small_nat))) (hs : parse simp_arg_list)
     (attr_names : parse with_ident_list) (use : parse <| tk "using" *> many ident_ <|> return [])
     (opt : suggest_opt := {  }) : tactic Unit := do
@@ -362,6 +443,7 @@ add_tactic_doc
   { Name := "suggest", category := DocCategory.tactic, declNames := [`tactic.interactive.suggest],
     tags := ["search", "Try this"] }
 
+-- Turn off `Try this: exact ...` trace message for `library_search`
 initialize
   registerTraceClass.1 `silence_library_search
 
@@ -438,7 +520,9 @@ unsafe def library_search_hole_cmd : hole_command where
   descr := "Use `library_search` to complete the goal."
   action := fun _ => do
     let script ← library_search
-    return [((script "Try this: exact ").getOrElse script, "by library_search")]
+    -- Is there a better API for dropping the 'Try this: exact ' prefix on this string?
+        return
+        [((script "Try this: exact ").getOrElse script, "by library_search")]
 
 add_tactic_doc
   { Name := "library_search", category := DocCategory.hole_cmd, declNames := [`tactic.library_search_hole_cmd],

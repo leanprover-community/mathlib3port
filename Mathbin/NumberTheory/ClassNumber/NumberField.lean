@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Anne Baanen. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Anne Baanen
+-/
 import Mathbin.NumberTheory.ClassNumber.AdmissibleAbs
 import Mathbin.NumberTheory.ClassNumber.Finite
 import Mathbin.NumberTheory.NumberField
@@ -27,7 +32,7 @@ noncomputable instance : Fintype (ClassGroup (ringOfIntegers K) K) :=
 end RingOfIntegers
 
 /-- The class number of a number field is the (finite) cardinality of the class group. -/
-noncomputable def class_number : ℕ :=
+noncomputable def classNumber : ℕ :=
   Fintype.card (ClassGroup (ringOfIntegers K) K)
 
 variable {K}

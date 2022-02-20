@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Joseph Myers. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Joseph Myers
+-/
 import Mathbin.Data.Set.Intervals.UnorderedInterval
 import Mathbin.LinearAlgebra.AffineSpace.AffineEquiv
 
@@ -160,7 +165,7 @@ namespace Submodule
 variable {k V : Type _} [Ringₓ k] [AddCommGroupₓ V] [Module k V]
 
 /-- Reinterpret `p : submodule k V` as an `affine_subspace k V`. -/
-def to_affine_subspace (p : Submodule k V) : AffineSubspace k V where
+def toAffineSubspace (p : Submodule k V) : AffineSubspace k V where
   Carrier := p
   smul_vsub_vadd_mem := fun c p₁ p₂ p₃ h₁ h₂ h₃ => p.add_mem (p.smul_mem _ (p.sub_mem h₁ h₂)) h₃
 
@@ -172,6 +177,7 @@ variable (k : Type _) {V : Type _} (P : Type _) [Ringₓ k] [AddCommGroupₓ V] 
 
 include V
 
+-- TODO Refactor to use `instance : set_like (affine_subspace k P) P :=` instead
 instance : Coe (AffineSubspace k P) (Set P) :=
   ⟨Carrier⟩
 
@@ -203,7 +209,7 @@ is nonempty.  This is defined so that the order on submodules (as used
 in the definition of `submodule.span`) can be used in the proof of
 `coe_direction_eq_vsub_set`, and is not intended to be used beyond
 that proof. -/
-def direction_of_nonempty {s : AffineSubspace k P} (h : (s : Set P).Nonempty) : Submodule k V where
+def directionOfNonempty {s : AffineSubspace k P} (h : (s : Set P).Nonempty) : Submodule k V where
   Carrier := (s : Set P) -ᵥ s
   zero_mem' := by
     cases' h with p hp
@@ -355,7 +361,7 @@ theorem ext_of_direction_eq {s1 s2 : AffineSubspace k P} (hd : s1.direction = s2
     exact vsub_mem_direction hp hq2
     
 
-instance to_add_torsor (s : AffineSubspace k P) [Nonempty s] : AddTorsor s.direction s where
+instance toAddTorsor (s : AffineSubspace k P) [Nonempty s] : AddTorsor s.direction s where
   vadd := fun a b => ⟨(a : V) +ᵥ (b : P), vadd_mem_of_mem_direction a.2 b.2⟩
   zero_vadd := by
     simp
@@ -1215,7 +1221,7 @@ namespace AffineSubspace
 /-- The preimage of an affine subspace under an affine map as an affine subspace. -/
 def comap (f : P₁ →ᵃ[k] P₂) (s : AffineSubspace k P₂) : AffineSubspace k P₁ where
   Carrier := f ⁻¹' s
-  smul_vsub_vadd_mem := fun t p₁ p₂ p₃ hp₁ : f p₁ ∈ s hp₂ : f p₂ ∈ s hp₃ : f p₃ ∈ s =>
+  smul_vsub_vadd_mem := fun hp₃ : f p₃ ∈ s =>
     show f _ ∈ s by
       rw [AffineMap.map_vadd, LinearMap.map_smul, AffineMap.linear_map_vsub]
       apply s.smul_vsub_vadd_mem _ hp₁ hp₂ hp₃
@@ -1250,6 +1256,7 @@ theorem comap_comap (s : AffineSubspace k P₃) (f : P₁ →ᵃ[k] P₂) (g : P
 
 omit V₃
 
+-- lemmas about map and comap derived from the galois connection
 theorem map_le_iff_le_comap {f : P₁ →ᵃ[k] P₂} {s : AffineSubspace k P₁} {t : AffineSubspace k P₂} :
     s.map f ≤ t ↔ s ≤ t.comap f :=
   image_subset_iff

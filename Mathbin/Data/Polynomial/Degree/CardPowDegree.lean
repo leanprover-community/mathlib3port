@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Anne Baanen. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Anne Baanen
+-/
 import Mathbin.Algebra.Order.EuclideanAbsoluteValue
 import Mathbin.Data.Polynomial.FieldDivision
 
@@ -31,7 +36,7 @@ open_locale Classical Polynomial
 /-- `card_pow_degree` is the absolute value on `𝔽_q[t]` sending `f` to `q ^ degree f`.
 
 `card_pow_degree 0` is defined to be `0`. -/
-noncomputable def card_pow_degree : AbsoluteValue Fq[X] ℤ :=
+noncomputable def cardPowDegree : AbsoluteValue Fq[X] ℤ :=
   have card_pos : 0 < Fintype.card Fq := Fintype.card_pos_iff.mpr inferInstance
   have pow_pos : ∀ n, 0 < (Fintype.card Fq : ℤ) ^ n := fun n => pow_pos (Int.coe_nat_pos.mpr card_pos) n
   { toFun := fun p => if p = 0 then 0 else Fintype.card Fq ^ p.natDegree,

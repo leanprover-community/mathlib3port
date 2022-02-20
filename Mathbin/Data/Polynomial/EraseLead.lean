@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Damiano Testa. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Damiano Testa
+-/
 import Mathbin.Data.Polynomial.Degree.Definitions
 
 /-!
@@ -25,7 +30,7 @@ variable {R : Type _} [Semiringₓ R] {f : R[X]}
 
 /-- `erase_lead f` for a polynomial `f` is the polynomial obtained by
 subtracting from `f` the leading term of `f`. -/
-def erase_lead (f : R[X]) : R[X] :=
+def eraseLead (f : R[X]) : R[X] :=
   Polynomial.erase f.natDegree f
 
 section EraseLead

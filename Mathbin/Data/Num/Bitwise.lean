@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2014 Microsoft Corporation. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Mario Carneiro
+-/
 import Mathbin.Data.Num.Basic
 import Mathbin.Data.Bitvec.Core
 
@@ -68,7 +73,7 @@ def lxor : PosNum → PosNum → Num
 
 /-- `a.test_bit n` is `tt` iff the `n`-th bit (starting from the LSB) in the binary representation
       of `a` is active. If the size of `a` is less than `n`, this evaluates to `ff`. -/
-def test_bit : PosNum → Nat → Bool
+def testBit : PosNum → Nat → Bool
   | 1, 0 => true
   | 1, n + 1 => false
   | bit0 p, 0 => false
@@ -77,7 +82,7 @@ def test_bit : PosNum → Nat → Bool
   | bit1 p, n + 1 => test_bit p n
 
 /-- `n.one_bits 0` is the list of indices of active bits in the binary representation of `n`. -/
-def one_bits : PosNum → Nat → List Nat
+def oneBits : PosNum → Nat → List Nat
   | 1, d => [d]
   | bit0 p, d => one_bits p (d + 1)
   | bit1 p, d => d :: one_bits p (d + 1)
@@ -141,12 +146,12 @@ def shiftr : Num → Nat → Num
 
 /-- `a.test_bit n` is `tt` iff the `n`-th bit (starting from the LSB) in the binary representation
       of `a` is active. If the size of `a` is less than `n`, this evaluates to `ff`. -/
-def test_bit : Num → Nat → Bool
+def testBit : Num → Nat → Bool
   | 0, n => false
   | Pos p, n => p.testBit n
 
 /-- `n.one_bits` is the list of indices of active bits in the binary representation of `n`. -/
-def one_bits : Num → List Nat
+def oneBits : Num → List Nat
   | 0 => []
   | Pos p => p.oneBits 0
 
@@ -211,7 +216,7 @@ def sign : Nzsnum → Bool
 
 /-- Bitwise `not` for `nzsnum`. -/
 @[matchPattern]
-def Not : Nzsnum → Nzsnum
+def not : Nzsnum → Nzsnum
   | msb b => msb (bnot b)
   | b :: p => bnot b :: Not p
 
@@ -249,7 +254,7 @@ def sign : Snum → Bool
 
 /-- Bitwise `not` for `snum`. -/
 @[matchPattern]
-def Not : Snum → Snum
+def not : Snum → Snum
   | zero z => zero (bnot z)
   | nz p => ~p
 
@@ -316,7 +321,7 @@ def rec' {α} (z : Bool → α) (s : Bool → Snum → α → α) : Snum → α 
 
 /-- `snum.test_bit n a` is `tt` iff the `n`-th bit (starting from the LSB) of `a` is active.
       If the size of `a` is less than `n`, this evaluates to `ff`. -/
-def test_bit : Nat → Snum → Bool
+def testBit : Nat → Snum → Bool
   | 0, p => head p
   | n + 1, p => test_bit n (tail p)
 

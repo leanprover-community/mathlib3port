@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Yury Kudryashov. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yury Kudryashov
+-/
 import Mathbin.Algebra.Group.TypeTags
 import Mathbin.Algebra.Group.UnitsHom
 import Mathbin.Algebra.Ring.Basic
@@ -106,13 +111,13 @@ variable {M : Type _} {N : Type _} [MulOneClassₓ M] [MulOneClassₓ N]
 
 /-- A multiplicative isomorphism preserves multiplication (deprecated). -/
 @[to_additive]
-theorem IsMulHom (h : M ≃* N) : IsMulHom h :=
+theorem is_mul_hom (h : M ≃* N) : IsMulHom h :=
   ⟨h.map_mul⟩
 
 /-- A multiplicative bijection between two monoids is a monoid hom
   (deprecated -- use `mul_equiv.to_monoid_hom`). -/
 @[to_additive]
-theorem IsMonoidHom (h : M ≃* N) : IsMonoidHom h :=
+theorem is_monoid_hom (h : M ≃* N) : IsMonoidHom h :=
   { map_mul := h.map_mul, map_one := h.map_one }
 
 end MulEquiv
@@ -345,6 +350,7 @@ theorem Multiplicative.is_mul_hom [Add α] [Add β] {f : α → β} (hf : IsAddH
     @IsMulHom (Multiplicative α) (Multiplicative β) _ _ f :=
   { map_mul := IsAddHom.map_add hf }
 
+-- defeq abuse
 theorem Additive.is_add_monoid_hom [MulOneClassₓ α] [MulOneClassₓ β] {f : α → β} (hf : IsMonoidHom f) :
     @IsAddMonoidHom (Additive α) (Additive β) _ _ f :=
   { Additive.is_add_hom hf.to_is_mul_hom with map_zero := hf.map_one }

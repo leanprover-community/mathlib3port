@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2014 Jeremy Avigad. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Jeremy Avigad, Leonardo de Moura, Floris van Doorn, Amelia Livingston, Yury Kudryashov,
+Neil Strickland
+-/
 import Mathbin.Algebra.Divisibility
 import Mathbin.Algebra.Regular.Basic
 
@@ -73,8 +79,8 @@ See note [reducible non-instances]. -/
 @[reducible]
 protected def Function.Injective.distrib {S} [Mul R] [Add R] [Distribₓ S] (f : R → S) (hf : Injective f)
     (add : ∀ x y, f (x + y) = f x + f y) (mul : ∀ x y, f (x * y) = f x * f y) : Distribₓ R where
-  mul := · * ·
-  add := · + ·
+  mul := (· * ·)
+  add := (· + ·)
   left_distrib := fun x y z =>
     hf <| by
       simp only [*, left_distrib]
@@ -87,8 +93,8 @@ See note [reducible non-instances]. -/
 @[reducible]
 protected def Function.Surjective.distrib {S} [Distribₓ R] [Add S] [Mul S] (f : R → S) (hf : Surjective f)
     (add : ∀ x y, f (x + y) = f x + f y) (mul : ∀ x y, f (x * y) = f x * f y) : Distribₓ S where
-  mul := · * ·
-  add := · + ·
+  mul := (· * ·)
+  add := (· + ·)
   left_distrib :=
     hf.forall₃.2 fun x y z => by
       simp only [← add, ← mul, left_distrib]
@@ -221,6 +227,14 @@ theorem ite_mul {α} [Mul α] (P : Prop) [Decidable P] (a b c : α) :
     (if P then a else b) * c = if P then a * c else b * c := by
   split_ifs <;> rfl
 
+-- We make `mul_ite` and `ite_mul` simp lemmas,
+-- but not `add_ite` or `ite_add`.
+-- The problem we're trying to avoid is dealing with
+-- summations of the form `∑ x in s, (f x + ite P 1 0)`,
+-- in which `add_ite` followed by `sum_ite` would needlessly slice up
+-- the `f x` terms according to whether `P` holds at `x`.
+-- There doesn't appear to be a corresponding difficulty so far with
+-- `mul_ite` and `ite_mul`.
 attribute [simp] mul_ite ite_mul
 
 @[simp]
@@ -285,12 +299,12 @@ namespace AddHom
 
 /-- Left multiplication by an element of a type with distributive multiplication is an `add_hom`. -/
 @[simps (config := { fullyApplied := false })]
-def mul_left {R : Type _} [Distribₓ R] (r : R) : AddHom R R :=
+def mulLeft {R : Type _} [Distribₓ R] (r : R) : AddHom R R :=
   ⟨(· * ·) r, mul_addₓ r⟩
 
 /-- Left multiplication by an element of a type with distributive multiplication is an `add_hom`. -/
 @[simps (config := { fullyApplied := false })]
-def mul_right {R : Type _} [Distribₓ R] (r : R) : AddHom R R :=
+def mulRight {R : Type _} [Distribₓ R] (r : R) : AddHom R R :=
   ⟨fun a => a * r, fun _ _ => add_mulₓ _ _ r⟩
 
 end AddHom
@@ -298,7 +312,7 @@ end AddHom
 namespace AddMonoidHom
 
 /-- Left multiplication by an element of a (semi)ring is an `add_monoid_hom` -/
-def mul_left {R : Type _} [NonUnitalNonAssocSemiringₓ R] (r : R) : R →+ R where
+def mulLeft {R : Type _} [NonUnitalNonAssocSemiringₓ R] (r : R) : R →+ R where
   toFun := (· * ·) r
   map_zero' := mul_zero r
   map_add' := mul_addₓ r
@@ -308,13 +322,13 @@ theorem coe_mul_left {R : Type _} [NonUnitalNonAssocSemiringₓ R] (r : R) : ⇑
   rfl
 
 /-- Right multiplication by an element of a (semi)ring is an `add_monoid_hom` -/
-def mul_right {R : Type _} [NonUnitalNonAssocSemiringₓ R] (r : R) : R →+ R where
+def mulRight {R : Type _} [NonUnitalNonAssocSemiringₓ R] (r : R) : R →+ R where
   toFun := fun a => a * r
   map_zero' := zero_mul r
   map_add' := fun _ _ => add_mulₓ _ _ r
 
 @[simp]
-theorem coe_mul_right {R : Type _} [NonUnitalNonAssocSemiringₓ R] (r : R) : ⇑mulRight r = · * r :=
+theorem coe_mul_right {R : Type _} [NonUnitalNonAssocSemiringₓ R] (r : R) : ⇑mulRight r = (· * r) :=
   rfl
 
 theorem mul_right_apply {R : Type _} [NonUnitalNonAssocSemiringₓ R] (a r : R) : mulRight r a = a * r :=
@@ -409,7 +423,11 @@ theorem to_fun_eq_coe (f : α →+* β) : f.toFun = f :=
 theorem coe_mk (f : α → β) h₁ h₂ h₃ h₄ : ⇑(⟨f, h₁, h₂, h₃, h₄⟩ : α →+* β) = f :=
   rfl
 
-instance has_coe_monoid_hom : Coe (α →+* β) (α →* β) :=
+@[simp]
+theorem coe_coe {F : Type _} [RingHomClass F α β] (f : F) : ((f : α →+* β) : α → β) = f :=
+  rfl
+
+instance hasCoeMonoidHom : Coe (α →+* β) (α →* β) :=
   ⟨RingHom.toMonoidHom⟩
 
 @[simp, norm_cast]
@@ -455,10 +473,10 @@ include rα rβ
 
 variable (f : α →+* β) {x y : α} {rα rβ}
 
-theorem congr_funₓ {f g : α →+* β} (h : f = g) (x : α) : f x = g x :=
+theorem congr_fun {f g : α →+* β} (h : f = g) (x : α) : f x = g x :=
   FunLike.congr_fun h x
 
-theorem congr_argₓ (f : α →+* β) {x y : α} (h : x = y) : f x = f y :=
+theorem congr_arg (f : α →+* β) {x y : α} (h : x = y) : f x = f y :=
   FunLike.congr_arg f h
 
 theorem coe_inj ⦃f g : α →+* β⦄ (h : (f : α → β) = g) : f = g :=
@@ -662,6 +680,7 @@ commutative monoid (`comm_monoid`), distributive laws (`distrib`), and multiplic
 @[protect_proj, ancestor Semiringₓ CommMonoidₓ]
 class CommSemiringₓ (α : Type u) extends Semiringₓ α, CommMonoidₓ α
 
+-- see Note [lower instance priority]
 instance (priority := 100) CommSemiringₓ.toCommMonoidWithZero [CommSemiringₓ α] : CommMonoidWithZero α :=
   { CommSemiringₓ.toCommMonoid α, CommSemiringₓ.toSemiring α with }
 
@@ -801,6 +820,8 @@ section Ringₓ
 
 variable [Ringₓ α] {a b c d e : α}
 
+-- A (unital, associative) ring is a not-necessarily-unital, not-necessarily-associative ring 
+-- see Note [lower instance priority]
 instance (priority := 100) Ringₓ.toNonUnitalNonAssocRing : NonUnitalNonAssocRing α :=
   { ‹Ringₓ α› with
     zero_mul := fun a =>
@@ -812,6 +833,10 @@ instance (priority := 100) Ringₓ.toNonUnitalNonAssocRing : NonUnitalNonAssocRi
         show a * 0 + a * 0 = a * 0 + 0 by
           rw [← mul_addₓ, add_zeroₓ, add_zeroₓ] }
 
+/- The instance from `ring` to `semiring` happens often in linear algebra, for which all the basic
+definitions are given in terms of semirings, but many applications use rings or fields. We increase
+a little bit its priority above 100 to try it quickly, but remaining below the default 1000 so that
+more specific instances are tried first. -/
 instance (priority := 200) Ringₓ.toSemiring : Semiringₓ α :=
   { ‹Ringₓ α›, Ringₓ.toNonUnitalNonAssocRing with }
 
@@ -950,6 +975,7 @@ end RingHom
 @[protect_proj, ancestor Ringₓ CommSemigroupₓ]
 class CommRingₓ (α : Type u) extends Ringₓ α, CommMonoidₓ α
 
+-- see Note [lower instance priority]
 instance (priority := 100) CommRingₓ.toCommSemiring [s : CommRingₓ α] : CommSemiringₓ α :=
   { s with mul_zero := mul_zero, zero_mul := zero_mul }
 
@@ -1159,6 +1185,7 @@ section Ringₓ
 
 variable [Ringₓ α] [IsDomain α]
 
+-- see Note [lower instance priority]
 instance (priority := 100) IsDomain.toCancelMonoidWithZero : CancelMonoidWithZero α :=
   NoZeroDivisors.toCancelMonoidWithZero
 
@@ -1172,6 +1199,7 @@ section CommRingₓ
 
 variable [CommRingₓ α] [IsDomain α]
 
+-- see Note [lower instance priority]
 instance (priority := 100) IsDomain.toCancelCommMonoidWithZero : CancelCommMonoidWithZero α :=
   { CommSemiringₓ.toCommMonoidWithZero, IsDomain.toCancelMonoidWithZero with }
 

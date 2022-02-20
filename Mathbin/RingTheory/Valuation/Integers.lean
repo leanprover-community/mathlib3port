@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Kenny Lau. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Kenny Lau
+-/
 import Mathbin.RingTheory.Valuation.Basic
 
 /-!
@@ -40,11 +45,12 @@ variable (O : Type w) [CommRingₓ O] [Algebra O R]
 
 /-- Given a valuation v : R → Γ₀ and a ring homomorphism O →+* R, we say that O is the integers of v
 if f is injective, and its range is exactly `v.integer`. -/
-structure integers : Prop where
+structure Integers : Prop where
   hom_inj : Function.Injective (algebraMap O R)
   map_le_one : ∀ x, v (algebraMap O R x) ≤ 1
   exists_of_le_one : ∀ ⦃r⦄, v r ≤ 1 → ∃ x, algebraMap O R x = r
 
+-- typeclass shortcut
 instance : Algebra v.integer R :=
   Algebra.ofSubring v.integer
 

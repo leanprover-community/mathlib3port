@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Kevin Buzzard. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Kevin Buzzard
+-/
 import Mathbin.Data.Rat.Basic
 import Mathbin.Tactic.NormNum
 
@@ -54,6 +59,7 @@ def EllipticCurve.discAux {R : Type _} [CommRingₓ R] (a1 a2 a3 a4 a6 : R) : R 
 
 /-- The category of elliptic curves over `R` (note that this definition is only mathematically
 correct for certain rings, for example if `R` is a field or a PID). -/
+-- If Pic(R)[12]=0 then this definition is mathematically correct
 structure EllipticCurve (R : Type _) [CommRingₓ R] where
   (a1 a2 a3 a4 a6 : R)
   discUnit : (R)ˣ

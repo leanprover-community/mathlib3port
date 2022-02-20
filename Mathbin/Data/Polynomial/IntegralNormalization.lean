@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Chris Hughes. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Chris Hughes, Johannes Hölzl, Scott Morrison, Jens Wagemaker
+-/
 import Mathbin.Data.Polynomial.AlgebraMap
 import Mathbin.Data.Polynomial.Degree.Lemmas
 import Mathbin.Data.Polynomial.Monic
@@ -28,7 +33,7 @@ a monic polynomial with root `leading_coeff f * z`.
 
 Moreover, `integral_normalization 0 = 0`.
 -/
-noncomputable def integral_normalization (f : R[X]) : R[X] :=
+noncomputable def integralNormalization (f : R[X]) : R[X] :=
   ∑ i in f.support, monomial i (if f.degree = i then 1 else coeff f i * f.leadingCoeff ^ (f.natDegree - 1 - i))
 
 @[simp]

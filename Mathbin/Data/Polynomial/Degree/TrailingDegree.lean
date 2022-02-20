@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Damiano Testa. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Damiano Testa
+-/
 import Mathbin.Data.Polynomial.Degree.Definitions
 
 /-!
@@ -35,7 +40,7 @@ variable [Semiringₓ R] {p q r : R[X]}
 `trailing_degree p = some n` when `p ≠ 0` and `n` is the smallest power of `X` that appears
 in `p`, otherwise
 `trailing_degree 0 = ⊤`. -/
-def trailing_degree (p : R[X]) : WithTop ℕ :=
+def trailingDegree (p : R[X]) : WithTop ℕ :=
   p.Support.inf some
 
 theorem trailing_degree_lt_wf : WellFounded fun p q : R[X] => trailingDegree p < trailingDegree q :=
@@ -43,25 +48,25 @@ theorem trailing_degree_lt_wf : WellFounded fun p q : R[X] => trailingDegree p <
 
 /-- `nat_trailing_degree p` forces `trailing_degree p` to `ℕ`, by defining
 `nat_trailing_degree ⊤ = 0`. -/
-def nat_trailing_degree (p : R[X]) : ℕ :=
+def natTrailingDegree (p : R[X]) : ℕ :=
   (trailingDegree p).getOrElse 0
 
 /-- `trailing_coeff p` gives the coefficient of the smallest power of `X` in `p`-/
-def trailing_coeff (p : R[X]) : R :=
+def trailingCoeff (p : R[X]) : R :=
   coeff p (natTrailingDegree p)
 
 /-- a polynomial is `monic_at` if its trailing coefficient is 1 -/
-def trailing_monic (p : R[X]) :=
+def TrailingMonic (p : R[X]) :=
   trailingCoeff p = (1 : R)
 
-theorem trailing_monic.def : TrailingMonic p ↔ trailingCoeff p = 1 :=
+theorem TrailingMonic.def : TrailingMonic p ↔ trailingCoeff p = 1 :=
   Iff.rfl
 
-instance trailing_monic.decidable [DecidableEq R] : Decidable (TrailingMonic p) := by
+instance TrailingMonic.decidable [DecidableEq R] : Decidable (TrailingMonic p) := by
   unfold trailing_monic <;> infer_instance
 
 @[simp]
-theorem trailing_monic.trailing_coeff {p : R[X]} (hp : p.TrailingMonic) : trailingCoeff p = 1 :=
+theorem TrailingMonic.trailing_coeff {p : R[X]} (hp : p.TrailingMonic) : trailingCoeff p = 1 :=
   hp
 
 @[simp]
@@ -334,7 +339,7 @@ section Semiringₓ
 variable [Semiringₓ R]
 
 /-- The second-lowest coefficient, or 0 for constants -/
-def next_coeff_up (p : R[X]) : R :=
+def nextCoeffUp (p : R[X]) : R :=
   if p.natTrailingDegree = 0 then 0 else p.coeff (p.natTrailingDegree + 1)
 
 @[simp]

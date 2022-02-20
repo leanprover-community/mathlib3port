@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Mario Carneiro. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Mario Carneiro
+-/
 import Mathbin.Data.Fintype.Basic
 import Mathbin.Data.Pfun
 import Mathbin.Logic.Function.Iterate
@@ -60,23 +65,23 @@ namespace Turing
 
 /-- The `blank_extends` partial order holds of `l₁` and `l₂` if `l₂` is obtained by adding
 blanks (`default : Γ`) to the end of `l₁`. -/
-def blank_extends {Γ} [Inhabited Γ] (l₁ l₂ : List Γ) : Prop :=
+def BlankExtends {Γ} [Inhabited Γ] (l₁ l₂ : List Γ) : Prop :=
   ∃ n, l₂ = l₁ ++ List.repeat default n
 
 @[refl]
-theorem blank_extends.refl {Γ} [Inhabited Γ] (l : List Γ) : BlankExtends l l :=
+theorem BlankExtends.refl {Γ} [Inhabited Γ] (l : List Γ) : BlankExtends l l :=
   ⟨0, by
     simp ⟩
 
 @[trans]
-theorem blank_extends.trans {Γ} [Inhabited Γ] {l₁ l₂ l₃ : List Γ} :
+theorem BlankExtends.trans {Γ} [Inhabited Γ] {l₁ l₂ l₃ : List Γ} :
     BlankExtends l₁ l₂ → BlankExtends l₂ l₃ → BlankExtends l₁ l₃ := by
   rintro ⟨i, rfl⟩ ⟨j, rfl⟩ <;>
     exact
       ⟨i + j, by
         simp [List.repeat_add]⟩
 
-theorem blank_extends.below_of_le {Γ} [Inhabited Γ] {l l₁ l₂ : List Γ} :
+theorem BlankExtends.below_of_le {Γ} [Inhabited Γ] {l l₁ l₂ : List Γ} :
     BlankExtends l l₁ → BlankExtends l l₂ → l₁.length ≤ l₂.length → BlankExtends l₁ l₂ := by
   rintro ⟨i, rfl⟩ ⟨j, rfl⟩ h
   use j - i
@@ -85,12 +90,12 @@ theorem blank_extends.below_of_le {Γ} [Inhabited Γ] {l l₁ l₂ : List Γ} :
 
 /-- Any two extensions by blank `l₁,l₂` of `l` have a common join (which can be taken to be the
 longer of `l₁` and `l₂`). -/
-def blank_extends.above {Γ} [Inhabited Γ] {l l₁ l₂ : List Γ} (h₁ : BlankExtends l l₁) (h₂ : BlankExtends l l₂) :
+def BlankExtends.above {Γ} [Inhabited Γ] {l l₁ l₂ : List Γ} (h₁ : BlankExtends l l₁) (h₂ : BlankExtends l l₂) :
     { l' // BlankExtends l₁ l' ∧ BlankExtends l₂ l' } :=
   if h : l₁.length ≤ l₂.length then ⟨l₂, h₁.below_of_le h₂ h, BlankExtends.refl _⟩
   else ⟨l₁, BlankExtends.refl _, h₂.below_of_le h₁ (le_of_not_geₓ h)⟩
 
-theorem blank_extends.above_of_le {Γ} [Inhabited Γ] {l l₁ l₂ : List Γ} :
+theorem BlankExtends.above_of_le {Γ} [Inhabited Γ] {l l₁ l₂ : List Γ} :
     BlankExtends l₁ l → BlankExtends l₂ l → l₁.length ≤ l₂.length → BlankExtends l₁ l₂ := by
   rintro ⟨i, rfl⟩ ⟨j, e⟩ h
   use i - j
@@ -102,19 +107,19 @@ theorem blank_extends.above_of_le {Γ} [Inhabited Γ] {l l₁ l₂ : List Γ} :
 
 /-- `blank_rel` is the symmetric closure of `blank_extends`, turning it into an equivalence
 relation. Two lists are related by `blank_rel` if one extends the other by blanks. -/
-def blank_rel {Γ} [Inhabited Γ] (l₁ l₂ : List Γ) : Prop :=
+def BlankRel {Γ} [Inhabited Γ] (l₁ l₂ : List Γ) : Prop :=
   BlankExtends l₁ l₂ ∨ BlankExtends l₂ l₁
 
 @[refl]
-theorem blank_rel.refl {Γ} [Inhabited Γ] (l : List Γ) : BlankRel l l :=
+theorem BlankRel.refl {Γ} [Inhabited Γ] (l : List Γ) : BlankRel l l :=
   Or.inl (BlankExtends.refl _)
 
 @[symm]
-theorem blank_rel.symm {Γ} [Inhabited Γ] {l₁ l₂ : List Γ} : BlankRel l₁ l₂ → BlankRel l₂ l₁ :=
+theorem BlankRel.symm {Γ} [Inhabited Γ] {l₁ l₂ : List Γ} : BlankRel l₁ l₂ → BlankRel l₂ l₁ :=
   Or.symm
 
 @[trans]
-theorem blank_rel.trans {Γ} [Inhabited Γ] {l₁ l₂ l₃ : List Γ} : BlankRel l₁ l₂ → BlankRel l₂ l₃ → BlankRel l₁ l₃ := by
+theorem BlankRel.trans {Γ} [Inhabited Γ] {l₁ l₂ l₃ : List Γ} : BlankRel l₁ l₂ → BlankRel l₂ l₃ → BlankRel l₁ l₃ := by
   rintro (h₁ | h₁) (h₂ | h₂)
   · exact Or.inl (h₁.trans h₂)
     
@@ -134,7 +139,7 @@ theorem blank_rel.trans {Γ} [Inhabited Γ] {l₁ l₂ l₃ : List Γ} : BlankRe
     
 
 /-- Given two `blank_rel` lists, there exists (constructively) a common join. -/
-def blank_rel.above {Γ} [Inhabited Γ] {l₁ l₂ : List Γ} (h : BlankRel l₁ l₂) :
+def BlankRel.above {Γ} [Inhabited Γ] {l₁ l₂ : List Γ} (h : BlankRel l₁ l₂) :
     { l // BlankExtends l₁ l ∧ BlankExtends l₂ l } := by
   refine'
     if hl : l₁.length ≤ l₂.length then ⟨l₂, Or.elim h id fun h' => _, blank_extends.refl _⟩
@@ -143,7 +148,7 @@ def blank_rel.above {Γ} [Inhabited Γ] {l₁ l₂ : List Γ} (h : BlankRel l₁
   exact (blank_extends.refl _).above_of_le h' (le_of_not_geₓ hl)
 
 /-- Given two `blank_rel` lists, there exists (constructively) a common meet. -/
-def blank_rel.below {Γ} [Inhabited Γ] {l₁ l₂ : List Γ} (h : BlankRel l₁ l₂) :
+def BlankRel.below {Γ} [Inhabited Γ] {l₁ l₂ : List Γ} (h : BlankRel l₁ l₂) :
     { l // BlankExtends l l₁ ∧ BlankExtends l l₂ } := by
   refine'
     if hl : l₁.length ≤ l₂.length then ⟨l₁, blank_extends.refl _, Or.elim h id fun h' => _⟩
@@ -151,44 +156,44 @@ def blank_rel.below {Γ} [Inhabited Γ] {l₁ l₂ : List Γ} (h : BlankRel l₁
   exact (blank_extends.refl _).above_of_le h' hl
   exact (blank_extends.refl _).above_of_le h' (le_of_not_geₓ hl)
 
-theorem blank_rel.equivalence Γ [Inhabited Γ] : Equivalenceₓ (@BlankRel Γ _) :=
+theorem BlankRel.equivalence Γ [Inhabited Γ] : Equivalenceₓ (@BlankRel Γ _) :=
   ⟨BlankRel.refl, @BlankRel.symm _ _, @BlankRel.trans _ _⟩
 
 /-- Construct a setoid instance for `blank_rel`. -/
-def blank_rel.setoid Γ [Inhabited Γ] : Setoidₓ (List Γ) :=
+def BlankRel.setoid Γ [Inhabited Γ] : Setoidₓ (List Γ) :=
   ⟨_, BlankRel.equivalence _⟩
 
 /-- A `list_blank Γ` is a quotient of `list Γ` by extension by blanks at the end. This is used to
 represent half-tapes of a Turing machine, so that we can pretend that the list continues
 infinitely with blanks. -/
-def list_blank Γ [Inhabited Γ] :=
+def ListBlank Γ [Inhabited Γ] :=
   Quotientₓ (BlankRel.setoid Γ)
 
-instance list_blank.inhabited {Γ} [Inhabited Γ] : Inhabited (ListBlank Γ) :=
+instance ListBlank.inhabited {Γ} [Inhabited Γ] : Inhabited (ListBlank Γ) :=
   ⟨Quotientₓ.mk' []⟩
 
-instance list_blank.has_emptyc {Γ} [Inhabited Γ] : HasEmptyc (ListBlank Γ) :=
+instance ListBlank.hasEmptyc {Γ} [Inhabited Γ] : HasEmptyc (ListBlank Γ) :=
   ⟨Quotientₓ.mk' []⟩
 
 /-- A modified version of `quotient.lift_on'` specialized for `list_blank`, with the stronger
 precondition `blank_extends` instead of `blank_rel`. -/
 @[elab_as_eliminator, reducible]
-protected def list_blank.lift_on {Γ} [Inhabited Γ] {α} (l : ListBlank Γ) (f : List Γ → α)
+protected def ListBlank.liftOn {Γ} [Inhabited Γ] {α} (l : ListBlank Γ) (f : List Γ → α)
     (H : ∀ a b, BlankExtends a b → f a = f b) : α :=
   l.liftOn' f <| by
     rintro a b (h | h) <;> [exact H _ _ h, exact (H _ _ h).symm]
 
 /-- The quotient map turning a `list` into a `list_blank`. -/
-def list_blank.mk {Γ} [Inhabited Γ] : List Γ → ListBlank Γ :=
+def ListBlank.mk {Γ} [Inhabited Γ] : List Γ → ListBlank Γ :=
   Quotientₓ.mk'
 
 @[elab_as_eliminator]
-protected theorem list_blank.induction_on {Γ} [Inhabited Γ] {p : ListBlank Γ → Prop} (q : ListBlank Γ)
+protected theorem ListBlank.induction_on {Γ} [Inhabited Γ] {p : ListBlank Γ → Prop} (q : ListBlank Γ)
     (h : ∀ a, p (ListBlank.mk a)) : p q :=
   Quotientₓ.induction_on' q h
 
 /-- The head of a `list_blank` is well defined. -/
-def list_blank.head {Γ} [Inhabited Γ] (l : ListBlank Γ) : Γ :=
+def ListBlank.head {Γ} [Inhabited Γ] (l : ListBlank Γ) : Γ :=
   l.liftOn List.headₓ
     (by
       rintro _ _ ⟨i, rfl⟩
@@ -198,11 +203,11 @@ def list_blank.head {Γ} [Inhabited Γ] (l : ListBlank Γ) : Γ :=
       rfl)
 
 @[simp]
-theorem list_blank.head_mk {Γ} [Inhabited Γ] (l : List Γ) : ListBlank.head (ListBlank.mk l) = l.head :=
+theorem ListBlank.head_mk {Γ} [Inhabited Γ] (l : List Γ) : ListBlank.head (ListBlank.mk l) = l.head :=
   rfl
 
 /-- The tail of a `list_blank` is well defined (up to the tail of blanks). -/
-def list_blank.tail {Γ} [Inhabited Γ] (l : ListBlank Γ) : ListBlank Γ :=
+def ListBlank.tail {Γ} [Inhabited Γ] (l : ListBlank Γ) : ListBlank Γ :=
   l.liftOn (fun l => ListBlank.mk l.tail)
     (by
       rintro _ _ ⟨i, rfl⟩
@@ -213,33 +218,33 @@ def list_blank.tail {Γ} [Inhabited Γ] (l : ListBlank Γ) : ListBlank Γ :=
         exact ⟨i, rfl⟩])
 
 @[simp]
-theorem list_blank.tail_mk {Γ} [Inhabited Γ] (l : List Γ) : ListBlank.tail (ListBlank.mk l) = ListBlank.mk l.tail :=
+theorem ListBlank.tail_mk {Γ} [Inhabited Γ] (l : List Γ) : ListBlank.tail (ListBlank.mk l) = ListBlank.mk l.tail :=
   rfl
 
 /-- We can cons an element onto a `list_blank`. -/
-def list_blank.cons {Γ} [Inhabited Γ] (a : Γ) (l : ListBlank Γ) : ListBlank Γ :=
+def ListBlank.cons {Γ} [Inhabited Γ] (a : Γ) (l : ListBlank Γ) : ListBlank Γ :=
   l.liftOn (fun l => ListBlank.mk (List.cons a l))
     (by
       rintro _ _ ⟨i, rfl⟩
       exact Quotientₓ.sound' (Or.inl ⟨i, rfl⟩))
 
 @[simp]
-theorem list_blank.cons_mk {Γ} [Inhabited Γ] (a : Γ) (l : List Γ) :
+theorem ListBlank.cons_mk {Γ} [Inhabited Γ] (a : Γ) (l : List Γ) :
     ListBlank.cons a (ListBlank.mk l) = ListBlank.mk (a :: l) :=
   rfl
 
 @[simp]
-theorem list_blank.head_cons {Γ} [Inhabited Γ] (a : Γ) : ∀ l : ListBlank Γ, (l.cons a).head = a :=
+theorem ListBlank.head_cons {Γ} [Inhabited Γ] (a : Γ) : ∀ l : ListBlank Γ, (l.cons a).head = a :=
   Quotientₓ.ind' fun l => rfl
 
 @[simp]
-theorem list_blank.tail_cons {Γ} [Inhabited Γ] (a : Γ) : ∀ l : ListBlank Γ, (l.cons a).tail = l :=
+theorem ListBlank.tail_cons {Γ} [Inhabited Γ] (a : Γ) : ∀ l : ListBlank Γ, (l.cons a).tail = l :=
   Quotientₓ.ind' fun l => rfl
 
 /-- The `cons` and `head`/`tail` functions are mutually inverse, unlike in the case of `list` where
 this only holds for nonempty lists. -/
 @[simp]
-theorem list_blank.cons_head_tail {Γ} [Inhabited Γ] : ∀ l : ListBlank Γ, l.tail.cons l.head = l :=
+theorem ListBlank.cons_head_tail {Γ} [Inhabited Γ] : ∀ l : ListBlank Γ, l.tail.cons l.head = l :=
   Quotientₓ.ind'
     (by
       refine' fun l => Quotientₓ.sound' (Or.inr _)
@@ -251,11 +256,11 @@ theorem list_blank.cons_head_tail {Γ} [Inhabited Γ] : ∀ l : ListBlank Γ, l.
 
 /-- The `cons` and `head`/`tail` functions are mutually inverse, unlike in the case of `list` where
 this only holds for nonempty lists. -/
-theorem list_blank.exists_cons {Γ} [Inhabited Γ] (l : ListBlank Γ) : ∃ a l', l = ListBlank.cons a l' :=
+theorem ListBlank.exists_cons {Γ} [Inhabited Γ] (l : ListBlank Γ) : ∃ a l', l = ListBlank.cons a l' :=
   ⟨_, _, (ListBlank.cons_head_tail _).symm⟩
 
 /-- The n-th element of a `list_blank` is well defined for all `n : ℕ`, unlike in a `list`. -/
-def list_blank.nth {Γ} [Inhabited Γ] (l : ListBlank Γ) (n : ℕ) : Γ :=
+def ListBlank.nth {Γ} [Inhabited Γ] (l : ListBlank Γ) (n : ℕ) : Γ :=
   l.liftOn (fun l => List.inth l n)
     (by
       rintro l _ ⟨i, rfl⟩
@@ -270,21 +275,21 @@ def list_blank.nth {Γ} [Inhabited Γ] (l : ListBlank Γ) (n : ℕ) : Γ :=
       rw [List.nth_le_nth h₂, List.nth_le_append_right h, List.nth_le_repeat])
 
 @[simp]
-theorem list_blank.nth_mk {Γ} [Inhabited Γ] (l : List Γ) (n : ℕ) : (ListBlank.mk l).nth n = l.inth n :=
+theorem ListBlank.nth_mk {Γ} [Inhabited Γ] (l : List Γ) (n : ℕ) : (ListBlank.mk l).nth n = l.inth n :=
   rfl
 
 @[simp]
-theorem list_blank.nth_zero {Γ} [Inhabited Γ] (l : ListBlank Γ) : l.nth 0 = l.head := by
+theorem ListBlank.nth_zero {Γ} [Inhabited Γ] (l : ListBlank Γ) : l.nth 0 = l.head := by
   conv => lhs rw [← list_blank.cons_head_tail l]
   exact Quotientₓ.induction_on' l.tail fun l => rfl
 
 @[simp]
-theorem list_blank.nth_succ {Γ} [Inhabited Γ] (l : ListBlank Γ) (n : ℕ) : l.nth (n + 1) = l.tail.nth n := by
+theorem ListBlank.nth_succ {Γ} [Inhabited Γ] (l : ListBlank Γ) (n : ℕ) : l.nth (n + 1) = l.tail.nth n := by
   conv => lhs rw [← list_blank.cons_head_tail l]
   exact Quotientₓ.induction_on' l.tail fun l => rfl
 
 @[ext]
-theorem list_blank.ext {Γ} [Inhabited Γ] {L₁ L₂ : ListBlank Γ} : (∀ i, L₁.nth i = L₂.nth i) → L₁ = L₂ :=
+theorem ListBlank.ext {Γ} [Inhabited Γ] {L₁ L₂ : ListBlank Γ} : (∀ i, L₁.nth i = L₂.nth i) → L₁ = L₂ :=
   (ListBlank.induction_on L₁) fun l₁ =>
     (ListBlank.induction_on L₂) fun l₂ H => by
       wlog h : l₁.length ≤ l₂.length using l₁ l₂
@@ -305,11 +310,11 @@ theorem list_blank.ext {Γ} [Inhabited Γ] {L₁ L₂ : ListBlank Γ} : (∀ i, 
 
 /-- Apply a function to a value stored at the nth position of the list. -/
 @[simp]
-def list_blank.modify_nth {Γ} [Inhabited Γ] (f : Γ → Γ) : ℕ → ListBlank Γ → ListBlank Γ
+def ListBlank.modifyNth {Γ} [Inhabited Γ] (f : Γ → Γ) : ℕ → ListBlank Γ → ListBlank Γ
   | 0, L => L.tail.cons (f L.head)
   | n + 1, L => (L.tail.modifyNth n).cons L.head
 
-theorem list_blank.nth_modify_nth {Γ} [Inhabited Γ] (f : Γ → Γ) n i (L : ListBlank Γ) :
+theorem ListBlank.nth_modify_nth {Γ} [Inhabited Γ] (f : Γ → Γ) n i (L : ListBlank Γ) :
     (L.modifyNth f n).nth i = if i = n then f (L.nth i) else L.nth i := by
   induction' n with n IH generalizing i L
   · cases i <;>
@@ -325,7 +330,7 @@ theorem list_blank.nth_modify_nth {Γ} [Inhabited Γ] (f : Γ → Γ) n i (L : L
     
 
 /-- A pointed map of `inhabited` types is a map that sends one default value to the other. -/
-structure pointed_map.{u, v} (Γ : Type u) (Γ' : Type v) [Inhabited Γ] [Inhabited Γ'] : Type max u v where
+structure PointedMap.{u, v} (Γ : Type u) (Γ' : Type v) [Inhabited Γ] [Inhabited Γ'] : Type max u v where
   f : Γ → Γ'
   map_pt' : f default = default
 
@@ -336,21 +341,21 @@ instance {Γ Γ'} [Inhabited Γ] [Inhabited Γ'] : CoeFun (PointedMap Γ Γ') fu
   ⟨PointedMap.f⟩
 
 @[simp]
-theorem pointed_map.mk_val {Γ Γ'} [Inhabited Γ] [Inhabited Γ'] (f : Γ → Γ') pt : (PointedMap.mk f pt : Γ → Γ') = f :=
+theorem PointedMap.mk_val {Γ Γ'} [Inhabited Γ] [Inhabited Γ'] (f : Γ → Γ') pt : (PointedMap.mk f pt : Γ → Γ') = f :=
   rfl
 
 @[simp]
-theorem pointed_map.map_pt {Γ Γ'} [Inhabited Γ] [Inhabited Γ'] (f : PointedMap Γ Γ') : f default = default :=
+theorem PointedMap.map_pt {Γ Γ'} [Inhabited Γ] [Inhabited Γ'] (f : PointedMap Γ Γ') : f default = default :=
   PointedMap.map_pt' _
 
 @[simp]
-theorem pointed_map.head_map {Γ Γ'} [Inhabited Γ] [Inhabited Γ'] (f : PointedMap Γ Γ') (l : List Γ) :
+theorem PointedMap.head_map {Γ Γ'} [Inhabited Γ] [Inhabited Γ'] (f : PointedMap Γ Γ') (l : List Γ) :
     (l.map f).head = f l.head := by
   cases l <;> [exact (pointed_map.map_pt f).symm, rfl]
 
 /-- The `map` function on lists is well defined on `list_blank`s provided that the map is
 pointed. -/
-def list_blank.map {Γ Γ'} [Inhabited Γ] [Inhabited Γ'] (f : PointedMap Γ Γ') (l : ListBlank Γ) : ListBlank Γ' :=
+def ListBlank.map {Γ Γ'} [Inhabited Γ] [Inhabited Γ'] (f : PointedMap Γ Γ') (l : ListBlank Γ) : ListBlank Γ' :=
   l.liftOn (fun l => ListBlank.mk (List.map f l))
     (by
       rintro l _ ⟨i, rfl⟩
@@ -358,30 +363,30 @@ def list_blank.map {Γ Γ'} [Inhabited Γ] [Inhabited Γ'] (f : PointedMap Γ Γ
       simp only [pointed_map.map_pt, List.map_append, List.map_repeat])
 
 @[simp]
-theorem list_blank.map_mk {Γ Γ'} [Inhabited Γ] [Inhabited Γ'] (f : PointedMap Γ Γ') (l : List Γ) :
+theorem ListBlank.map_mk {Γ Γ'} [Inhabited Γ] [Inhabited Γ'] (f : PointedMap Γ Γ') (l : List Γ) :
     (ListBlank.mk l).map f = ListBlank.mk (l.map f) :=
   rfl
 
 @[simp]
-theorem list_blank.head_map {Γ Γ'} [Inhabited Γ] [Inhabited Γ'] (f : PointedMap Γ Γ') (l : ListBlank Γ) :
+theorem ListBlank.head_map {Γ Γ'} [Inhabited Γ] [Inhabited Γ'] (f : PointedMap Γ Γ') (l : ListBlank Γ) :
     (l.map f).head = f l.head := by
   conv => lhs rw [← list_blank.cons_head_tail l]
   exact Quotientₓ.induction_on' l fun a => rfl
 
 @[simp]
-theorem list_blank.tail_map {Γ Γ'} [Inhabited Γ] [Inhabited Γ'] (f : PointedMap Γ Γ') (l : ListBlank Γ) :
+theorem ListBlank.tail_map {Γ Γ'} [Inhabited Γ] [Inhabited Γ'] (f : PointedMap Γ Γ') (l : ListBlank Γ) :
     (l.map f).tail = l.tail.map f := by
   conv => lhs rw [← list_blank.cons_head_tail l]
   exact Quotientₓ.induction_on' l fun a => rfl
 
 @[simp]
-theorem list_blank.map_cons {Γ Γ'} [Inhabited Γ] [Inhabited Γ'] (f : PointedMap Γ Γ') (l : ListBlank Γ) (a : Γ) :
+theorem ListBlank.map_cons {Γ Γ'} [Inhabited Γ] [Inhabited Γ'] (f : PointedMap Γ Γ') (l : ListBlank Γ) (a : Γ) :
     (l.cons a).map f = (l.map f).cons (f a) := by
   refine' (list_blank.cons_head_tail _).symm.trans _
   simp only [list_blank.head_map, list_blank.head_cons, list_blank.tail_map, list_blank.tail_cons]
 
 @[simp]
-theorem list_blank.nth_map {Γ Γ'} [Inhabited Γ] [Inhabited Γ'] (f : PointedMap Γ Γ') (l : ListBlank Γ) (n : ℕ) :
+theorem ListBlank.nth_map {Γ Γ'} [Inhabited Γ] [Inhabited Γ'] (f : PointedMap Γ Γ') (l : ListBlank Γ) (n : ℕ) :
     (l.map f).nth n = f (l.nth n) :=
   l.induction_on
     (by
@@ -401,30 +406,30 @@ theorem proj_map_nth {ι : Type _} {Γ : ι → Type _} [∀ i, Inhabited (Γ i)
     (ListBlank.map (@proj ι Γ _ i) L).nth n = L.nth n i := by
   rw [list_blank.nth_map] <;> rfl
 
-theorem list_blank.map_modify_nth {Γ Γ'} [Inhabited Γ] [Inhabited Γ'] (F : PointedMap Γ Γ') (f : Γ → Γ) (f' : Γ' → Γ')
+theorem ListBlank.map_modify_nth {Γ Γ'} [Inhabited Γ] [Inhabited Γ'] (F : PointedMap Γ Γ') (f : Γ → Γ) (f' : Γ' → Γ')
     (H : ∀ x, F (f x) = f' (F x)) n (L : ListBlank Γ) : (L.modifyNth f n).map F = (L.map F).modifyNth f' n := by
   induction' n with n IH generalizing L <;>
     simp only [*, list_blank.head_map, list_blank.modify_nth, list_blank.map_cons, list_blank.tail_map]
 
 /-- Append a list on the left side of a list_blank. -/
 @[simp]
-def list_blank.append {Γ} [Inhabited Γ] : List Γ → ListBlank Γ → ListBlank Γ
+def ListBlank.append {Γ} [Inhabited Γ] : List Γ → ListBlank Γ → ListBlank Γ
   | [], L => L
   | a :: l, L => ListBlank.cons a (list_blank.append l L)
 
 @[simp]
-theorem list_blank.append_mk {Γ} [Inhabited Γ] (l₁ l₂ : List Γ) :
+theorem ListBlank.append_mk {Γ} [Inhabited Γ] (l₁ l₂ : List Γ) :
     ListBlank.append l₁ (ListBlank.mk l₂) = ListBlank.mk (l₁ ++ l₂) := by
   induction l₁ <;> simp only [*, list_blank.append, List.nil_append, List.cons_append, list_blank.cons_mk]
 
-theorem list_blank.append_assoc {Γ} [Inhabited Γ] (l₁ l₂ : List Γ) (l₃ : ListBlank Γ) :
+theorem ListBlank.append_assoc {Γ} [Inhabited Γ] (l₁ l₂ : List Γ) (l₃ : ListBlank Γ) :
     ListBlank.append (l₁ ++ l₂) l₃ = ListBlank.append l₁ (ListBlank.append l₂ l₃) :=
   l₃.induction_on <| by
     intro <;> simp only [list_blank.append_mk, List.append_assoc]
 
 /-- The `bind` function on lists is well defined on `list_blank`s provided that the default element
 is sent to a sequence of default elements. -/
-def list_blank.bind {Γ Γ'} [Inhabited Γ] [Inhabited Γ'] (l : ListBlank Γ) (f : Γ → List Γ')
+def ListBlank.bind {Γ Γ'} [Inhabited Γ] [Inhabited Γ'] (l : ListBlank Γ) (f : Γ → List Γ')
     (hf : ∃ n, f default = List.repeat default n) : ListBlank Γ' :=
   l.liftOn (fun l => ListBlank.mk (List.bind l f))
     (by
@@ -438,12 +443,12 @@ def list_blank.bind {Γ Γ'} [Inhabited Γ] [Inhabited Γ'] (l : ListBlank Γ) (
       simp only [IH, e, List.repeat_add, Nat.mul_succ, add_commₓ, List.repeat_succ, List.cons_bind])
 
 @[simp]
-theorem list_blank.bind_mk {Γ Γ'} [Inhabited Γ] [Inhabited Γ'] (l : List Γ) (f : Γ → List Γ') hf :
+theorem ListBlank.bind_mk {Γ Γ'} [Inhabited Γ] [Inhabited Γ'] (l : List Γ) (f : Γ → List Γ') hf :
     (ListBlank.mk l).bind f hf = ListBlank.mk (l.bind f) :=
   rfl
 
 @[simp]
-theorem list_blank.cons_bind {Γ Γ'} [Inhabited Γ] [Inhabited Γ'] (a : Γ) (l : ListBlank Γ) (f : Γ → List Γ') hf :
+theorem ListBlank.cons_bind {Γ Γ'} [Inhabited Γ] [Inhabited Γ'] (a : Γ) (l : ListBlank Γ) (f : Γ → List Γ') hf :
     (l.cons a).bind f hf = (l.bind f hf).append (f a) :=
   l.induction_on <| by
     intro <;> simp only [list_blank.append_mk, list_blank.bind_mk, list_blank.cons_mk, List.cons_bind]
@@ -452,114 +457,114 @@ theorem list_blank.cons_bind {Γ Γ'} [Inhabited Γ] [Inhabited Γ'] (a : Γ) (l
 current position of the head), together with two `list_blank`s denoting the portions of the tape
 going off to the left and right. When the Turing machine moves right, an element is pulled from the
 right side and becomes the new head, while the head element is consed onto the left side. -/
-structure tape (Γ : Type _) [Inhabited Γ] where
+structure Tape (Γ : Type _) [Inhabited Γ] where
   head : Γ
   left : ListBlank Γ
   right : ListBlank Γ
 
-instance tape.inhabited {Γ} [Inhabited Γ] : Inhabited (Tape Γ) :=
+instance Tape.inhabited {Γ} [Inhabited Γ] : Inhabited (Tape Γ) :=
   ⟨by
     constructor <;> apply default⟩
 
 /-- A direction for the turing machine `move` command, either
   left or right. -/
-inductive dir
+inductive Dir
   | left
   | right
   deriving DecidableEq, Inhabited
 
 /-- The "inclusive" left side of the tape, including both `left` and `head`. -/
-def tape.left₀ {Γ} [Inhabited Γ] (T : Tape Γ) : ListBlank Γ :=
+def Tape.left₀ {Γ} [Inhabited Γ] (T : Tape Γ) : ListBlank Γ :=
   T.left.cons T.head
 
 /-- The "inclusive" right side of the tape, including both `right` and `head`. -/
-def tape.right₀ {Γ} [Inhabited Γ] (T : Tape Γ) : ListBlank Γ :=
+def Tape.right₀ {Γ} [Inhabited Γ] (T : Tape Γ) : ListBlank Γ :=
   T.right.cons T.head
 
 /-- Move the tape in response to a motion of the Turing machine. Note that `T.move dir.left` makes
 `T.left` smaller; the Turing machine is moving left and the tape is moving right. -/
-def tape.move {Γ} [Inhabited Γ] : Dir → Tape Γ → Tape Γ
+def Tape.move {Γ} [Inhabited Γ] : Dir → Tape Γ → Tape Γ
   | dir.left, ⟨a, L, R⟩ => ⟨L.head, L.tail, R.cons a⟩
   | dir.right, ⟨a, L, R⟩ => ⟨R.head, L.cons a, R.tail⟩
 
 @[simp]
-theorem tape.move_left_right {Γ} [Inhabited Γ] (T : Tape Γ) : (T.move Dir.left).move Dir.right = T := by
+theorem Tape.move_left_right {Γ} [Inhabited Γ] (T : Tape Γ) : (T.move Dir.left).move Dir.right = T := by
   cases T <;> simp [tape.move]
 
 @[simp]
-theorem tape.move_right_left {Γ} [Inhabited Γ] (T : Tape Γ) : (T.move Dir.right).move Dir.left = T := by
+theorem Tape.move_right_left {Γ} [Inhabited Γ] (T : Tape Γ) : (T.move Dir.right).move Dir.left = T := by
   cases T <;> simp [tape.move]
 
 /-- Construct a tape from a left side and an inclusive right side. -/
-def tape.mk' {Γ} [Inhabited Γ] (L R : ListBlank Γ) : Tape Γ :=
+def Tape.mk' {Γ} [Inhabited Γ] (L R : ListBlank Γ) : Tape Γ :=
   ⟨R.head, L, R.tail⟩
 
 @[simp]
-theorem tape.mk'_left {Γ} [Inhabited Γ] (L R : ListBlank Γ) : (Tape.mk' L R).left = L :=
+theorem Tape.mk'_left {Γ} [Inhabited Γ] (L R : ListBlank Γ) : (Tape.mk' L R).left = L :=
   rfl
 
 @[simp]
-theorem tape.mk'_head {Γ} [Inhabited Γ] (L R : ListBlank Γ) : (Tape.mk' L R).head = R.head :=
+theorem Tape.mk'_head {Γ} [Inhabited Γ] (L R : ListBlank Γ) : (Tape.mk' L R).head = R.head :=
   rfl
 
 @[simp]
-theorem tape.mk'_right {Γ} [Inhabited Γ] (L R : ListBlank Γ) : (Tape.mk' L R).right = R.tail :=
+theorem Tape.mk'_right {Γ} [Inhabited Γ] (L R : ListBlank Γ) : (Tape.mk' L R).right = R.tail :=
   rfl
 
 @[simp]
-theorem tape.mk'_right₀ {Γ} [Inhabited Γ] (L R : ListBlank Γ) : (Tape.mk' L R).right₀ = R :=
+theorem Tape.mk'_right₀ {Γ} [Inhabited Γ] (L R : ListBlank Γ) : (Tape.mk' L R).right₀ = R :=
   ListBlank.cons_head_tail _
 
 @[simp]
-theorem tape.mk'_left_right₀ {Γ} [Inhabited Γ] (T : Tape Γ) : Tape.mk' T.left T.right₀ = T := by
+theorem Tape.mk'_left_right₀ {Γ} [Inhabited Γ] (T : Tape Γ) : Tape.mk' T.left T.right₀ = T := by
   cases T <;> simp only [tape.right₀, tape.mk', list_blank.head_cons, list_blank.tail_cons, eq_self_iff_true, and_selfₓ]
 
-theorem tape.exists_mk' {Γ} [Inhabited Γ] (T : Tape Γ) : ∃ L R, T = Tape.mk' L R :=
+theorem Tape.exists_mk' {Γ} [Inhabited Γ] (T : Tape Γ) : ∃ L R, T = Tape.mk' L R :=
   ⟨_, _, (Tape.mk'_left_right₀ _).symm⟩
 
 @[simp]
-theorem tape.move_left_mk' {Γ} [Inhabited Γ] (L R : ListBlank Γ) :
+theorem Tape.move_left_mk' {Γ} [Inhabited Γ] (L R : ListBlank Γ) :
     (Tape.mk' L R).move Dir.left = Tape.mk' L.tail (R.cons L.head) := by
   simp only [tape.move, tape.mk', list_blank.head_cons, eq_self_iff_true, list_blank.cons_head_tail, and_selfₓ,
     list_blank.tail_cons]
 
 @[simp]
-theorem tape.move_right_mk' {Γ} [Inhabited Γ] (L R : ListBlank Γ) :
+theorem Tape.move_right_mk' {Γ} [Inhabited Γ] (L R : ListBlank Γ) :
     (Tape.mk' L R).move Dir.right = Tape.mk' (L.cons R.head) R.tail := by
   simp only [tape.move, tape.mk', list_blank.head_cons, eq_self_iff_true, list_blank.cons_head_tail, and_selfₓ,
     list_blank.tail_cons]
 
 /-- Construct a tape from a left side and an inclusive right side. -/
-def tape.mk₂ {Γ} [Inhabited Γ] (L R : List Γ) : Tape Γ :=
+def Tape.mk₂ {Γ} [Inhabited Γ] (L R : List Γ) : Tape Γ :=
   Tape.mk' (ListBlank.mk L) (ListBlank.mk R)
 
 /-- Construct a tape from a list, with the head of the list at the TM head and the rest going
 to the right. -/
-def tape.mk₁ {Γ} [Inhabited Γ] (l : List Γ) : Tape Γ :=
+def Tape.mk₁ {Γ} [Inhabited Γ] (l : List Γ) : Tape Γ :=
   Tape.mk₂ [] l
 
 /-- The `nth` function of a tape is integer-valued, with index `0` being the head, negative indexes
 on the left and positive indexes on the right. (Picture a number line.) -/
-def tape.nth {Γ} [Inhabited Γ] (T : Tape Γ) : ℤ → Γ
+def Tape.nth {Γ} [Inhabited Γ] (T : Tape Γ) : ℤ → Γ
   | 0 => T.head
   | (n + 1 : ℕ) => T.right.nth n
   | -[1+ n] => T.left.nth n
 
 @[simp]
-theorem tape.nth_zero {Γ} [Inhabited Γ] (T : Tape Γ) : T.nth 0 = T.1 :=
+theorem Tape.nth_zero {Γ} [Inhabited Γ] (T : Tape Γ) : T.nth 0 = T.1 :=
   rfl
 
-theorem tape.right₀_nth {Γ} [Inhabited Γ] (T : Tape Γ) (n : ℕ) : T.right₀.nth n = T.nth n := by
+theorem Tape.right₀_nth {Γ} [Inhabited Γ] (T : Tape Γ) (n : ℕ) : T.right₀.nth n = T.nth n := by
   cases n <;>
     simp only [tape.nth, tape.right₀, Int.coe_nat_zero, list_blank.nth_zero, list_blank.nth_succ, list_blank.head_cons,
       list_blank.tail_cons]
 
 @[simp]
-theorem tape.mk'_nth_nat {Γ} [Inhabited Γ] (L R : ListBlank Γ) (n : ℕ) : (Tape.mk' L R).nth n = R.nth n := by
+theorem Tape.mk'_nth_nat {Γ} [Inhabited Γ] (L R : ListBlank Γ) (n : ℕ) : (Tape.mk' L R).nth n = R.nth n := by
   rw [← tape.right₀_nth, tape.mk'_right₀]
 
 @[simp]
-theorem tape.move_left_nth {Γ} [Inhabited Γ] : ∀ T : Tape Γ i : ℤ, (T.move Dir.left).nth i = T.nth (i - 1)
+theorem Tape.move_left_nth {Γ} [Inhabited Γ] : ∀ T : Tape Γ i : ℤ, (T.move Dir.left).nth i = T.nth (i - 1)
   | ⟨a, L, R⟩, -[1+ n] => (ListBlank.nth_succ _ _).symm
   | ⟨a, L, R⟩, 0 => (ListBlank.nth_zero _).symm
   | ⟨a, L, R⟩, 1 => (ListBlank.nth_zero _).trans (ListBlank.head_cons _ _)
@@ -569,49 +574,49 @@ theorem tape.move_left_nth {Γ} [Inhabited Γ] : ∀ T : Tape Γ i : ℤ, (T.mov
     rw [list_blank.nth_succ, list_blank.tail_cons]
 
 @[simp]
-theorem tape.move_right_nth {Γ} [Inhabited Γ] (T : Tape Γ) (i : ℤ) : (T.move Dir.right).nth i = T.nth (i + 1) := by
+theorem Tape.move_right_nth {Γ} [Inhabited Γ] (T : Tape Γ) (i : ℤ) : (T.move Dir.right).nth i = T.nth (i + 1) := by
   conv => rhs rw [← T.move_right_left] <;> rw [tape.move_left_nth, add_sub_cancel]
 
 @[simp]
-theorem tape.move_right_n_head {Γ} [Inhabited Γ] (T : Tape Γ) (i : ℕ) : ((Tape.move Dir.right^[i]) T).head = T.nth i :=
+theorem Tape.move_right_n_head {Γ} [Inhabited Γ] (T : Tape Γ) (i : ℕ) : ((Tape.move Dir.right^[i]) T).head = T.nth i :=
   by
   induction i generalizing T <;> [rfl, simp only [*, tape.move_right_nth, Int.coe_nat_succ, iterate_succ]]
 
 /-- Replace the current value of the head on the tape. -/
-def tape.write {Γ} [Inhabited Γ] (b : Γ) (T : Tape Γ) : Tape Γ :=
+def Tape.write {Γ} [Inhabited Γ] (b : Γ) (T : Tape Γ) : Tape Γ :=
   { T with head := b }
 
 @[simp]
-theorem tape.write_self {Γ} [Inhabited Γ] : ∀ T : Tape Γ, T.write T.1 = T := by
+theorem Tape.write_self {Γ} [Inhabited Γ] : ∀ T : Tape Γ, T.write T.1 = T := by
   rintro ⟨⟩ <;> rfl
 
 @[simp]
-theorem tape.write_nth {Γ} [Inhabited Γ] (b : Γ) :
+theorem Tape.write_nth {Γ} [Inhabited Γ] (b : Γ) :
     ∀ T : Tape Γ {i : ℤ}, (T.write b).nth i = if i = 0 then b else T.nth i
   | ⟨a, L, R⟩, 0 => rfl
   | ⟨a, L, R⟩, (n + 1 : ℕ) => rfl
   | ⟨a, L, R⟩, -[1+ n] => rfl
 
 @[simp]
-theorem tape.write_mk' {Γ} [Inhabited Γ] (a b : Γ) (L R : ListBlank Γ) :
+theorem Tape.write_mk' {Γ} [Inhabited Γ] (a b : Γ) (L R : ListBlank Γ) :
     (Tape.mk' L (R.cons a)).write b = Tape.mk' L (R.cons b) := by
   simp only [tape.write, tape.mk', list_blank.head_cons, list_blank.tail_cons, eq_self_iff_true, and_selfₓ]
 
 /-- Apply a pointed map to a tape to change the alphabet. -/
-def tape.map {Γ Γ'} [Inhabited Γ] [Inhabited Γ'] (f : PointedMap Γ Γ') (T : Tape Γ) : Tape Γ' :=
+def Tape.map {Γ Γ'} [Inhabited Γ] [Inhabited Γ'] (f : PointedMap Γ Γ') (T : Tape Γ) : Tape Γ' :=
   ⟨f T.1, T.2.map f, T.3.map f⟩
 
 @[simp]
-theorem tape.map_fst {Γ Γ'} [Inhabited Γ] [Inhabited Γ'] (f : PointedMap Γ Γ') : ∀ T : Tape Γ, (T.map f).1 = f T.1 := by
+theorem Tape.map_fst {Γ Γ'} [Inhabited Γ] [Inhabited Γ'] (f : PointedMap Γ Γ') : ∀ T : Tape Γ, (T.map f).1 = f T.1 := by
   rintro ⟨⟩ <;> rfl
 
 @[simp]
-theorem tape.map_write {Γ Γ'} [Inhabited Γ] [Inhabited Γ'] (f : PointedMap Γ Γ') (b : Γ) :
+theorem Tape.map_write {Γ Γ'} [Inhabited Γ] [Inhabited Γ'] (f : PointedMap Γ Γ') (b : Γ) :
     ∀ T : Tape Γ, (T.write b).map f = (T.map f).write (f b) := by
   rintro ⟨⟩ <;> rfl
 
 @[simp]
-theorem tape.write_move_right_n {Γ} [Inhabited Γ] (f : Γ → Γ) (L R : ListBlank Γ) (n : ℕ) :
+theorem Tape.write_move_right_n {Γ} [Inhabited Γ] (f : Γ → Γ) (L R : ListBlank Γ) (n : ℕ) :
     ((Tape.move Dir.right^[n]) (Tape.mk' L R)).write (f (R.nth n)) =
       (Tape.move Dir.right^[n]) (Tape.mk' L (R.modifyNth f n)) :=
   by
@@ -622,22 +627,22 @@ theorem tape.write_move_right_n {Γ} [Inhabited Γ] (f : Γ → Γ) (L R : ListB
   simp only [list_blank.head_cons, list_blank.nth_succ, list_blank.modify_nth, tape.move_right_mk',
     list_blank.tail_cons, iterate_succ_apply, IH]
 
-theorem tape.map_move {Γ Γ'} [Inhabited Γ] [Inhabited Γ'] (f : PointedMap Γ Γ') (T : Tape Γ) d :
+theorem Tape.map_move {Γ Γ'} [Inhabited Γ] [Inhabited Γ'] (f : PointedMap Γ Γ') (T : Tape Γ) d :
     (T.move d).map f = (T.map f).move d := by
   cases T <;>
     cases d <;>
       simp only [tape.move, tape.map, list_blank.head_map, eq_self_iff_true, list_blank.map_cons, and_selfₓ,
         list_blank.tail_map]
 
-theorem tape.map_mk' {Γ Γ'} [Inhabited Γ] [Inhabited Γ'] (f : PointedMap Γ Γ') (L R : ListBlank Γ) :
+theorem Tape.map_mk' {Γ Γ'} [Inhabited Γ] [Inhabited Γ'] (f : PointedMap Γ Γ') (L R : ListBlank Γ) :
     (Tape.mk' L R).map f = Tape.mk' (L.map f) (R.map f) := by
   simp only [tape.mk', tape.map, list_blank.head_map, eq_self_iff_true, and_selfₓ, list_blank.tail_map]
 
-theorem tape.map_mk₂ {Γ Γ'} [Inhabited Γ] [Inhabited Γ'] (f : PointedMap Γ Γ') (L R : List Γ) :
+theorem Tape.map_mk₂ {Γ Γ'} [Inhabited Γ] [Inhabited Γ'] (f : PointedMap Γ Γ') (L R : List Γ) :
     (Tape.mk₂ L R).map f = Tape.mk₂ (L.map f) (R.map f) := by
   simp only [tape.mk₂, tape.map_mk', list_blank.map_mk]
 
-theorem tape.map_mk₁ {Γ Γ'} [Inhabited Γ] [Inhabited Γ'] (f : PointedMap Γ Γ') (l : List Γ) :
+theorem Tape.map_mk₁ {Γ Γ'} [Inhabited Γ] [Inhabited Γ'] (f : PointedMap Γ Γ') (l : List Γ) :
     (Tape.mk₁ l).map f = Tape.mk₁ (l.map f) :=
   Tape.map_mk₂ _ _ _
 
@@ -650,13 +655,13 @@ def eval {σ} (f : σ → Option σ) : σ → Part σ :=
 /-- The reflexive transitive closure of a state transition function. `reaches f a b` means
 there is a finite sequence of steps `f a = some a₁`, `f a₁ = some a₂`, ... such that `aₙ = b`.
 This relation permits zero steps of the state transition function. -/
-def reaches {σ} (f : σ → Option σ) : σ → σ → Prop :=
+def Reaches {σ} (f : σ → Option σ) : σ → σ → Prop :=
   ReflTransGen fun a b => b ∈ f a
 
 /-- The transitive closure of a state transition function. `reaches₁ f a b` means there is a
 nonempty finite sequence of steps `f a = some a₁`, `f a₁ = some a₂`, ... such that `aₙ = b`.
 This relation does not permit zero steps of the state transition function. -/
-def reaches₁ {σ} (f : σ → Option σ) : σ → σ → Prop :=
+def Reaches₁ {σ} (f : σ → Option σ) : σ → σ → Prop :=
   TransGen fun a b => b ∈ f a
 
 theorem reaches₁_eq {σ} {f : σ → Option σ} {a b c} (h : f a = f b) : Reaches₁ f a c ↔ Reaches₁ f b c :=
@@ -676,35 +681,35 @@ theorem reaches₁_fwd {σ} {f : σ → Option σ} {a b c} (h₁ : Reaches₁ f 
 /-- A variation on `reaches`. `reaches₀ f a b` holds if whenever `reaches₁ f b c` then
 `reaches₁ f a c`. This is a weaker property than `reaches` and is useful for replacing states with
 equivalent states without taking a step. -/
-def reaches₀ {σ} (f : σ → Option σ) (a b : σ) : Prop :=
+def Reaches₀ {σ} (f : σ → Option σ) (a b : σ) : Prop :=
   ∀ c, Reaches₁ f b c → Reaches₁ f a c
 
-theorem reaches₀.trans {σ} {f : σ → Option σ} {a b c : σ} (h₁ : Reaches₀ f a b) (h₂ : Reaches₀ f b c) : Reaches₀ f a c
+theorem Reaches₀.trans {σ} {f : σ → Option σ} {a b c : σ} (h₁ : Reaches₀ f a b) (h₂ : Reaches₀ f b c) : Reaches₀ f a c
   | d, h₃ => h₁ _ (h₂ _ h₃)
 
 @[refl]
-theorem reaches₀.refl {σ} {f : σ → Option σ} (a : σ) : Reaches₀ f a a
+theorem Reaches₀.refl {σ} {f : σ → Option σ} (a : σ) : Reaches₀ f a a
   | b, h => h
 
-theorem reaches₀.single {σ} {f : σ → Option σ} {a b : σ} (h : b ∈ f a) : Reaches₀ f a b
+theorem Reaches₀.single {σ} {f : σ → Option σ} {a b : σ} (h : b ∈ f a) : Reaches₀ f a b
   | c, h₂ => h₂.head h
 
-theorem reaches₀.head {σ} {f : σ → Option σ} {a b c : σ} (h : b ∈ f a) (h₂ : Reaches₀ f b c) : Reaches₀ f a c :=
+theorem Reaches₀.head {σ} {f : σ → Option σ} {a b c : σ} (h : b ∈ f a) (h₂ : Reaches₀ f b c) : Reaches₀ f a c :=
   (Reaches₀.single h).trans h₂
 
-theorem reaches₀.tail {σ} {f : σ → Option σ} {a b c : σ} (h₁ : Reaches₀ f a b) (h : c ∈ f b) : Reaches₀ f a c :=
+theorem Reaches₀.tail {σ} {f : σ → Option σ} {a b c : σ} (h₁ : Reaches₀ f a b) (h : c ∈ f b) : Reaches₀ f a c :=
   h₁.trans (Reaches₀.single h)
 
 theorem reaches₀_eq {σ} {f : σ → Option σ} {a b} (e : f a = f b) : Reaches₀ f a b
   | d, h => (reaches₁_eq e).2 h
 
-theorem reaches₁.to₀ {σ} {f : σ → Option σ} {a b : σ} (h : Reaches₁ f a b) : Reaches₀ f a b
+theorem Reaches₁.to₀ {σ} {f : σ → Option σ} {a b : σ} (h : Reaches₁ f a b) : Reaches₀ f a b
   | c, h₂ => h.trans h₂
 
-theorem reaches.to₀ {σ} {f : σ → Option σ} {a b : σ} (h : Reaches f a b) : Reaches₀ f a b
+theorem Reaches.to₀ {σ} {f : σ → Option σ} {a b : σ} (h : Reaches f a b) : Reaches₀ f a b
   | c, h₂ => h₂.trans_right h
 
-theorem reaches₀.tail' {σ} {f : σ → Option σ} {a b c : σ} (h : Reaches₀ f a b) (h₂ : c ∈ f b) : Reaches₁ f a c :=
+theorem Reaches₀.tail' {σ} {f : σ → Option σ} {a b c : σ} (h : Reaches₀ f a b) (h₂ : c ∈ f b) : Reaches₁ f a c :=
   h _ (TransGen.single h₂)
 
 /-- (co-)Induction principle for `eval`. If a property `C` holds of any point `a` evaluating to `b`
@@ -712,7 +717,7 @@ which is either terminal (meaning `a = b`) or where the next point also satisfie
 holds of any point where `eval f a` evaluates to `b`. This formalizes the notion that if
 `eval f a` evaluates to `b` then it reaches terminal state `b` in finitely many steps. -/
 @[elab_as_eliminator]
-def eval_induction {σ} {f : σ → Option σ} {b : σ} {C : σ → Sort _} {a : σ} (h : b ∈ eval f a)
+def evalInduction {σ} {f : σ → Option σ} {b : σ} {C : σ → Sort _} {a : σ} (h : b ∈ eval f a)
     (H : ∀ a, b ∈ eval f a → (∀ a', b ∈ eval f a' → f a = some a' → C a') → C a) : C a :=
   Pfun.fixInduction h fun a' ha' h' =>
     (H _ ha') fun b' hb' e =>
@@ -777,7 +782,7 @@ theorem reaches_eval {σ} {f : σ → Option σ} {a b} (ab : Reaches f a b) : ev
 initially and `f₁` takes a step to `a₂` then `f₂` will take one or more steps before reaching a
 state `b₂` satisfying `tr a₂ b₂`, and if `f₁ a₁` terminates then `f₂ a₂` also terminates.
 Such a relation `tr` is also known as a refinement. -/
-def respects {σ₁ σ₂} (f₁ : σ₁ → Option σ₁) (f₂ : σ₂ → Option σ₂) (tr : σ₁ → σ₂ → Prop) :=
+def Respects {σ₁ σ₂} (f₁ : σ₁ → Option σ₁) (f₂ : σ₂ → Option σ₂) (tr : σ₁ → σ₂ → Prop) :=
   ∀ ⦃a₁ a₂⦄,
     tr a₁ a₂ →
       (match f₁ a₁ with
@@ -864,7 +869,7 @@ theorem tr_eval_dom {σ₁ σ₂ f₁ f₂} {tr : σ₁ → σ₂ → Prop} (H :
     h⟩
 
 /-- A simpler version of `respects` when the state transition relation `tr` is a function. -/
-def frespects {σ₁ σ₂} (f₂ : σ₂ → Option σ₂) (tr : σ₁ → σ₂) (a₂ : σ₂) : Option σ₁ → Prop
+def Frespects {σ₁ σ₂} (f₂ : σ₂ → Option σ₂) (tr : σ₁ → σ₂) (a₂ : σ₂) : Option σ₁ → Prop
   | some b₁ => Reaches₁ f₂ a₂ (tr b₁)
   | none => f₂ a₂ = none
 
@@ -921,15 +926,17 @@ section
 
 parameter (Γ : Type _)[Inhabited Γ]
 
+-- type of tape symbols
 parameter (Λ : Type _)[Inhabited Λ]
 
 /-- A Turing machine "statement" is just a command to either move
   left or right, or write a symbol on the tape. -/
-inductive stmt
+-- type of "labels" or TM states
+inductive Stmt
   | move : Dir → stmt
   | write : Γ → stmt
 
-instance stmt.inhabited : Inhabited stmt :=
+instance Stmt.inhabited : Inhabited stmt :=
   ⟨stmt.write default⟩
 
 /-- A Post-Turing machine with symbol type `Γ` and label type `Λ`
@@ -941,11 +948,12 @@ instance stmt.inhabited : Inhabited stmt :=
   Both `Λ` and `Γ` are required to be inhabited; the default value
   for `Γ` is the "blank" tape value, and the default value of `Λ` is
   the initial state. -/
+-- [inhabited Λ]: this is a deliberate addition, see comment
 @[nolint unused_arguments]
-def machine :=
+def Machine :=
   Λ → Γ → Option (Λ × stmt)
 
-instance machine.inhabited : Inhabited machine := by
+instance Machine.inhabited : Inhabited machine := by
   unfold machine <;> infer_instance
 
 /-- The configuration state of a Turing machine during operation
@@ -953,11 +961,11 @@ instance machine.inhabited : Inhabited machine := by
   the form `(a, L, R)` meaning the tape looks like `L.rev ++ [a] ++ R`
   with the machine currently reading the `a`. The lists are
   automatically extended with blanks as the machine moves around. -/
-structure cfg where
+structure Cfg where
   q : Λ
   Tape : Tape Γ
 
-instance cfg.inhabited : Inhabited cfg :=
+instance Cfg.inhabited : Inhabited cfg :=
   ⟨⟨default, default⟩⟩
 
 parameter {Γ Λ}
@@ -973,7 +981,7 @@ def step (M : machine) : cfg → Option cfg
 
 /-- The statement `reaches M s₁ s₂` means that `s₂` is obtained
   starting from `s₁` after a finite number of steps from `s₂`. -/
-def reaches (M : machine) : cfg → cfg → Prop :=
+def Reaches (M : machine) : cfg → cfg → Prop :=
   ReflTransGen fun a b => b ∈ step M a
 
 /-- The initial configuration. -/
@@ -992,7 +1000,7 @@ def eval (M : machine) (l : List Γ) : Part (ListBlank Γ) :=
   finite subset of their states. We say that a set `S ⊆ Λ`
   supports a Turing machine `M` if `S` is closed under the
   transition function and contains the initial state. -/
-def supports (M : machine) (S : Set Λ) :=
+def Supports (M : machine) (S : Set Λ) :=
   default ∈ S ∧ ∀ {q a q' s}, (q', s) ∈ M q a → q ∈ S → q' ∈ S
 
 theorem step_supports (M : machine) {S} (ss : supports M S) : ∀ {c c' : cfg}, c' ∈ step M c → c.q ∈ S → c'.q ∈ S
@@ -1017,13 +1025,13 @@ variable {Λ' : Type _} [Inhabited Λ']
 
 /-- Map a TM statement across a function. This does nothing to move statements and maps the write
 values. -/
-def stmt.map (f : PointedMap Γ Γ') : Stmt Γ → Stmt Γ'
+def Stmt.map (f : PointedMap Γ Γ') : Stmt Γ → Stmt Γ'
   | stmt.move d => Stmt.move d
   | stmt.write a => Stmt.write (f a)
 
 /-- Map a configuration across a function, given `f : Γ → Γ'` a map of the alphabets and
 `g : Λ → Λ'` a map of the machine states. -/
-def cfg.map (f : PointedMap Γ Γ') (g : Λ → Λ') : Cfg Γ Λ → Cfg Γ' Λ'
+def Cfg.map (f : PointedMap Γ Γ') (g : Λ → Λ') : Cfg Γ Λ → Cfg Γ' Λ'
   | ⟨q, T⟩ => ⟨g q, T.map f⟩
 
 variable (M : Machine Γ Λ) (f₁ : PointedMap Γ Γ') (f₂ : PointedMap Γ' Γ) (g₁ : Λ → Λ') (g₂ : Λ' → Λ)
@@ -1031,10 +1039,10 @@ variable (M : Machine Γ Λ) (f₁ : PointedMap Γ Γ') (f₂ : PointedMap Γ' �
 /-- Because the state transition function uses the alphabet and machine states in both the input
 and output, to map a machine from one alphabet and machine state space to another we need functions
 in both directions, essentially an `equiv` without the laws. -/
-def machine.map : Machine Γ' Λ'
+def Machine.map : Machine Γ' Λ'
   | q, l => (M (g₂ q) (f₂ l)).map (Prod.map g₁ (Stmt.map f₁))
 
-theorem machine.map_step {S : Set Λ} (f₂₁ : Function.RightInverse f₁ f₂) (g₂₁ : ∀, ∀ q ∈ S, ∀, g₂ (g₁ q) = q) :
+theorem Machine.map_step {S : Set Λ} (f₂₁ : Function.RightInverse f₁ f₂) (g₂₁ : ∀, ∀ q ∈ S, ∀, g₂ (g₁ q) = q) :
     ∀ c : Cfg Γ Λ, c.q ∈ S → (step M c).map (Cfg.map f₁ g₁) = step (M.map f₁ f₂ g₁ g₂) (Cfg.map f₁ g₁ c)
   | ⟨q, T⟩, h => by
     unfold step machine.map cfg.map
@@ -1052,7 +1060,7 @@ theorem machine.map_step {S : Set Λ} (f₂₁ : Function.RightInverse f₁ f₂
 theorem map_init (g₁ : PointedMap Λ Λ') (l : List Γ) : (init l).map f₁ g₁ = init (l.map f₁) :=
   congr (congr_argₓ Cfg.mk g₁.map_pt) (Tape.map_mk₁ _ _)
 
-theorem machine.map_respects (g₁ : PointedMap Λ Λ') (g₂ : Λ' → Λ) {S} (ss : Supports M S)
+theorem Machine.map_respects (g₁ : PointedMap Λ Λ') (g₂ : Λ' → Λ) {S} (ss : Supports M S)
     (f₂₁ : Function.RightInverse f₁ f₂) (g₂₁ : ∀, ∀ q ∈ S, ∀, g₂ (g₁ q) = q) :
     Respects (step M) (step (M.map f₁ f₂ g₁ g₂)) fun a b => a.q ∈ S ∧ Cfg.map f₁ g₁ a = b
   | c, _, ⟨cs, rfl⟩ => by
@@ -1105,8 +1113,10 @@ section
 
 parameter (Γ : Type _)[Inhabited Γ]
 
+-- Type of tape symbols
 parameter (Λ : Type _)
 
+-- Type of function labels
 parameter (σ : Type _)
 
 /-- The TM1 model is a simplification and extension of TM0
@@ -1121,7 +1131,8 @@ parameter (σ : Type _)
   most statements do not have labels; `goto` commands can only
   go to a new function. All commands have access to the variable value
   and current tape value. -/
-inductive stmt
+-- Type of variable settings
+inductive Stmt
   | move : Dir → stmt → stmt
   | write : (Γ → σ → Γ) → stmt → stmt
   | load : (Γ → σ → σ) → stmt → stmt
@@ -1131,23 +1142,23 @@ inductive stmt
 
 open Stmt
 
-instance stmt.inhabited : Inhabited stmt :=
+instance Stmt.inhabited : Inhabited stmt :=
   ⟨halt⟩
 
 /-- The configuration of a TM1 machine is given by the currently
   evaluating statement, the variable store value, and the tape. -/
-structure cfg where
+structure Cfg where
   l : Option Λ
   var : σ
   Tape : Tape Γ
 
-instance cfg.inhabited [Inhabited σ] : Inhabited cfg :=
+instance Cfg.inhabited [Inhabited σ] : Inhabited cfg :=
   ⟨⟨default, default, default⟩⟩
 
 parameter {Γ Λ σ}
 
 /-- The semantics of TM1 evaluation. -/
-def step_aux : stmt → σ → Tape Γ → cfg
+def stepAux : stmt → σ → Tape Γ → cfg
   | move d q, v, T => step_aux q v (T.move d)
   | write a q, v, T => step_aux q v (T.write (a T.1 v))
   | load s q, v, T => step_aux q (s T.1 v) T
@@ -1162,7 +1173,7 @@ def step (M : Λ → stmt) : cfg → Option cfg
 
 /-- A set `S` of labels supports the statement `q` if all the `goto`
   statements in `q` refer only to other functions in `S`. -/
-def supports_stmt (S : Finset Λ) : stmt → Prop
+def SupportsStmt (S : Finset Λ) : stmt → Prop
   | move d q => supports_stmt q
   | write a q => supports_stmt q
   | load s q => supports_stmt q
@@ -1239,7 +1250,7 @@ variable [Inhabited Λ]
 /-- A set `S` of labels supports machine `M` if all the `goto`
   statements in the functions in `S` refer only to other functions
   in `S`. -/
-def supports (M : Λ → stmt) (S : Finset Λ) :=
+def Supports (M : Λ → stmt) (S : Finset Λ) :=
   default ∈ S ∧ ∀, ∀ q ∈ S, ∀, supports_stmt S (M q)
 
 theorem stmts_supports_stmt {M : Λ → stmt} {S q} (ss : supports M S) : some q ∈ stmts M S → supports_stmt S q := by
@@ -1328,6 +1339,9 @@ to be executed, or `none` for the halt state, and a `σ` which is the local stat
 not the tape). Because there are an infinite number of programs, this state space is infinite, but
 for a finitely supported TM1 machine and a finite type `σ`, only finitely many of these states are
 reachable. -/
+-- [inhabited Λ] [inhabited σ] (M : Λ → stmt₁): We need the M assumption
+-- because of the inhabited instance, but we could avoid the inhabited instances on Λ and σ here.
+-- But they are parameters so we cannot easily skip them for just this definition.
 @[nolint unused_arguments]
 def Λ' :=
   Option stmt₁ × σ
@@ -1341,7 +1355,7 @@ open TM0.Stmt
 `stmt₁` is the TM1 statement to translate, with local state `v : σ`. We evaluate all regular
 instructions recursively until we reach either a `move` or `write` command, or a `goto`; in the
 latter case we emit a dummy `write s` step and transition to the new target location. -/
-def tr_aux (s : Γ) : stmt₁ → σ → Λ' × stmt₀
+def trAux (s : Γ) : stmt₁ → σ → Λ' × stmt₀
   | TM1.stmt.move d q, v => ((some q, v), move d)
   | TM1.stmt.write a q, v => ((some q, v), write (a s v))
   | TM1.stmt.load a q, v => tr_aux q (a s v)
@@ -1357,7 +1371,7 @@ def tr : TM0.Machine Γ Λ'
   | (some q, v), s => some (tr_aux s q v)
 
 /-- Translate configurations from TM1 to TM0. -/
-def tr_cfg : cfg₁ → cfg₀
+def trCfg : cfg₁ → cfg₀
   | ⟨l, v, T⟩ => ⟨(l.map M, v), T⟩
 
 theorem tr_respects : Respects (TM1.step M) (TM0.step tr) fun c₁ c₂ => tr_cfg c₁ = c₂ :=
@@ -1406,7 +1420,7 @@ variable [Fintype σ]
 
 /-- Given a finite set of accessible `Λ` machine states, there is a finite set of accessible
 machine states in the target (even though the type `Λ'` is infinite). -/
-noncomputable def tr_stmts (S : Finset Λ) : Finset Λ' :=
+noncomputable def trStmts (S : Finset Λ) : Finset Λ' :=
   (TM1.stmts M S).product Finset.univ
 
 open_locale Classical
@@ -1531,7 +1545,7 @@ local notation "stmt'" => Stmt Bool Λ' σ
 local notation "cfg'" => Cfg Bool Λ' σ
 
 /-- Read a vector of length `n` from the tape. -/
-def read_aux : ∀ n, (Vector Bool n → stmt') → stmt'
+def readAux : ∀ n, (Vector Bool n → stmt') → stmt'
   | 0, f => f Vector.nil
   | i + 1, f =>
     Stmt.branch (fun a s => a) (Stmt.move Dir.right <| read_aux i fun v => f (tt::ᵥv))
@@ -1555,7 +1569,7 @@ def write : List Bool → stmt' → stmt'
 
 /-- Translate a normal instruction. For the `write` command, we use a `goto` indirection so that
 we can access the current value of the tape. -/
-def tr_normal : stmt₁ → stmt'
+def trNormal : stmt₁ → stmt'
   | stmt.move d q => move d <| tr_normal q
   | stmt.write f q => read fun a => stmt.goto fun _ s => Λ'.write (f a s) q
   | stmt.load f q => read fun a => (Stmt.load fun _ s => f a s) <| tr_normal q
@@ -1599,12 +1613,12 @@ parameter {enc}
 include enc0
 
 /-- The low level tape corresponding to the given tape over alphabet `Γ`. -/
-def tr_tape' (L R : ListBlank Γ) : Tape Bool := by
+def trTape' (L R : ListBlank Γ) : Tape Bool := by
   refine' tape.mk' (L.bind (fun x => (enc x).toList.reverse) ⟨n, _⟩) (R.bind (fun x => (enc x).toList) ⟨n, _⟩) <;>
     simp only [enc0, Vector.repeat, List.reverse_repeat, Bool.default_bool, Vector.to_list_mk]
 
 /-- The low level tape corresponding to the given tape over alphabet `Γ`. -/
-def tr_tape (T : Tape Γ) : Tape Bool :=
+def trTape (T : Tape Γ) : Tape Bool :=
   tr_tape' T.left T.right₀
 
 theorem tr_tape_mk' (L R : ListBlank Γ) : tr_tape (Tape.mk' L R) = tr_tape' L R := by
@@ -1620,7 +1634,7 @@ def tr : Λ' → stmt'
   | Λ'.write a q => write (enc a).toList <| move Dir.left <| tr_normal q
 
 /-- The machine configuration translation. -/
-def tr_cfg : cfg₁ → cfg'
+def trCfg : cfg₁ → cfg'
   | ⟨l, v, T⟩ => ⟨l.map Λ'.normal, v, tr_tape T⟩
 
 parameter {enc}
@@ -1771,7 +1785,7 @@ noncomputable def writes : stmt₁ → Finset Λ'
 
 /-- The set of accessible machine states, assuming that the input machine is supported on `S`,
 are the normal states embedded from `S`, plus all write states accessible from these states. -/
-noncomputable def tr_supp (S : Finset Λ) : Finset Λ' :=
+noncomputable def trSupp (S : Finset Λ) : Finset Λ' :=
   S.bUnion fun l => insert (Λ'.normal l) (writes (M l))
 
 theorem tr_supports {S} (ss : Supports M S) : Supports tr (tr_supp S) :=
@@ -1876,12 +1890,15 @@ def tr : Λ' → stmt₁
       goto fun a _ =>
         match M q a with
         | none => default
-        | some (q', s) => Λ'.act s q'
+        |-- unreachable
+            some
+            (q', s) =>
+          Λ'.act s q'
   | Λ'.act (TM0.stmt.move d) q => move d <| goto fun _ _ => Λ'.normal q
   | Λ'.act (TM0.stmt.write a) q => (write fun _ _ => a) <| goto fun _ _ => Λ'.normal q
 
 /-- The configuration translation. -/
-def tr_cfg : cfg₀ → cfg₁
+def trCfg : cfg₀ → cfg₁
   | ⟨q, T⟩ => ⟨cond (M q T.1).isSome (some (Λ'.normal q)) none, (), T⟩
 
 theorem tr_respects : Respects (TM0.step M) (TM1.step tr) fun a b => tr_cfg a = b :=
@@ -1945,10 +1962,13 @@ section
 
 parameter {K : Type _}[DecidableEq K]
 
+-- Index type of stacks
 parameter (Γ : K → Type _)
 
+-- Type of stack elements
 parameter (Λ : Type _)
 
+-- Type of function labels
 parameter (σ : Type _)
 
 /-- The TM2 model removes the tape entirely from the TM1 model,
@@ -1957,7 +1977,8 @@ parameter (σ : Type _)
   and `pop` removes an element from a stack (and modifying the
   internal state based on the result). `peek` modifies the
   internal state but does not remove an element. -/
-inductive stmt
+-- Type of variable settings
+inductive Stmt
   | push : ∀ k, (σ → Γ k) → stmt → stmt
   | peek : ∀ k, (σ → Option (Γ k) → σ) → stmt → stmt
   | pop : ∀ k, (σ → Option (Γ k) → σ) → stmt → stmt
@@ -1968,25 +1989,25 @@ inductive stmt
 
 open Stmt
 
-instance stmt.inhabited : Inhabited stmt :=
+instance Stmt.inhabited : Inhabited stmt :=
   ⟨halt⟩
 
 /-- A configuration in the TM2 model is a label (or `none` for the halt state), the state of
 local variables, and the stacks. (Note that the stacks are not `list_blank`s, they have a definite
 size.) -/
-structure cfg where
+structure Cfg where
   l : Option Λ
   var : σ
   stk : ∀ k, List (Γ k)
 
-instance cfg.inhabited [Inhabited σ] : Inhabited cfg :=
+instance Cfg.inhabited [Inhabited σ] : Inhabited cfg :=
   ⟨⟨default, default, default⟩⟩
 
 parameter {Γ Λ σ K}
 
 /-- The step function for the TM2 model. -/
 @[simp]
-def step_aux : stmt → σ → (∀ k, List (Γ k)) → cfg
+def stepAux : stmt → σ → (∀ k, List (Γ k)) → cfg
   | push k f q, v, S => step_aux q v (update S k (f v :: S k))
   | peek k f q, v, S => step_aux q (f v (S k).head') S
   | pop k f q, v, S => step_aux q (f v (S k).head') (update S k (S k).tail)
@@ -2002,11 +2023,11 @@ def step (M : Λ → stmt) : cfg → Option cfg
   | ⟨some l, v, S⟩ => some (step_aux (M l) v S)
 
 /-- The (reflexive) reachability relation for the TM2 model. -/
-def reaches (M : Λ → stmt) : cfg → cfg → Prop :=
+def Reaches (M : Λ → stmt) : cfg → cfg → Prop :=
   ReflTransGen fun a b => b ∈ step M a
 
 /-- Given a set `S` of states, `support_stmt S q` means that `q` only jumps to states in `S`. -/
-def supports_stmt (S : Finset Λ) : stmt → Prop
+def SupportsStmt (S : Finset Λ) : stmt → Prop
   | push k f q => supports_stmt q
   | peek k f q => supports_stmt q
   | pop k f q => supports_stmt q
@@ -2084,7 +2105,7 @@ variable [Inhabited Λ]
 
 /-- Given a TM2 machine `M` and a set `S` of states, `supports M S` means that all states in
 `S` jump only to other states in `S`. -/
-def supports (M : Λ → stmt) (S : Finset Λ) :=
+def Supports (M : Λ → stmt) (S : Finset Λ) :=
   default ∈ S ∧ ∀, ∀ q ∈ S, ∀, supports_stmt S (M q)
 
 theorem stmts_supports_stmt {M : Λ → stmt} {S q} (ss : supports M S) : some q ∈ stmts M S → supports_stmt S q := by
@@ -2168,6 +2189,7 @@ steps to run when emulated in TM1, where `m` is the length of the input.
 
 namespace TM2to1
 
+-- A displaced lemma proved in unnecessary generality
 theorem stk_nth_val {K : Type _} {Γ : K → Type _} {L : ListBlank (∀ k, Option (Γ k))} {k S} n
     (hL : ListBlank.map (proj k) L = ListBlank.mk (List.map some S).reverse) : L.nth n k = S.reverse.nth n := by
   rw [← proj_map_nth, hL, ← List.map_reverse, list_blank.nth_mk, List.inth, List.nth_map]
@@ -2189,6 +2211,8 @@ local notation "cfg₂" => TM2.Cfg Γ Λ σ
 
 /-- The alphabet of the TM2 simulator on TM1 is a marker for the stack bottom,
 plus a vector of stack elements for each stack, or none if the stack does not extend this far. -/
+-- [decidable_eq K]: Because K is a parameter, we cannot easily skip
+-- the decidable_eq assumption, and this is a local definition anyway so it's not important.
 @[nolint unused_arguments]
 def Γ' :=
   Bool × ∀ k, Option (Γ k)
@@ -2201,7 +2225,7 @@ instance Γ'.fintype [Fintype K] [∀ k, Fintype (Γ k)] : Fintype Γ' :=
 
 /-- The bottom marker is fixed throughout the calculation, so we use the `add_bottom` function
 to express the program state in terms of a tape with only the stacks themselves. -/
-def add_bottom (L : ListBlank (∀ k, Option (Γ k))) : ListBlank Γ' :=
+def addBottom (L : ListBlank (∀ k, Option (Γ k))) : ListBlank Γ' :=
   ListBlank.cons (true, L.head) (L.tail.map ⟨Prod.mk false, rfl⟩)
 
 theorem add_bottom_map L : (add_bottom L).map ⟨Prod.snd, rfl⟩ = L := by
@@ -2231,12 +2255,12 @@ theorem add_bottom_head_fst L : (add_bottom L).head.1 = tt := by
 /-- A stack action is a command that interacts with the top of a stack. Our default position
 is at the bottom of all the stacks, so we have to hold on to this action while going to the end
 to modify the stack. -/
-inductive st_act (k : K)
+inductive StAct (k : K)
   | push : (σ → Γ k) → st_act
   | peek : (σ → Option (Γ k) → σ) → st_act
   | pop : (σ → Option (Γ k) → σ) → st_act
 
-instance st_act.inhabited {k} : Inhabited (st_act k) :=
+instance StAct.inhabited {k} : Inhabited (st_act k) :=
   ⟨st_act.peek fun s _ => s⟩
 
 section
@@ -2244,20 +2268,22 @@ section
 open StAct
 
 /-- The TM2 statement corresponding to a stack action. -/
+-- [inhabited Λ]: as this is a local definition it is more trouble than
+-- it is worth to omit the typeclass assumption without breaking the parameters
 @[nolint unused_arguments]
-def st_run {k : K} : st_act k → stmt₂ → stmt₂
+def stRunₓ {k : K} : st_act k → stmt₂ → stmt₂
   | push f => TM2.Stmt.push k f
   | peek f => TM2.Stmt.peek k f
   | pop f => TM2.Stmt.pop k f
 
 /-- The effect of a stack action on the local variables, given the value of the stack. -/
-def st_var {k : K} (v : σ) (l : List (Γ k)) : st_act k → σ
+def stVar {k : K} (v : σ) (l : List (Γ k)) : st_act k → σ
   | push f => v
   | peek f => f v l.head'
   | pop f => f v l.head'
 
 /-- The effect of a stack action on the stack. -/
-def st_write {k : K} (v : σ) (l : List (Γ k)) : st_act k → List (Γ k)
+def stWrite {k : K} (v : σ) (l : List (Γ k)) : st_act k → List (Γ k)
   | push f => f v :: l
   | peek f => l
   | pop f => l.tail
@@ -2266,7 +2292,7 @@ def st_write {k : K} (v : σ) (l : List (Γ k)) : st_act k → List (Γ k)
 of the stack, and all other actions, which do not. This is a modified recursor which lumps the
 stack actions into one. -/
 @[elab_as_eliminator]
-def stmt_st_rec.{l} {C : stmt₂ → Sort l} (H₁ : ∀ k s : st_act k q IH : C q, C (st_run s q))
+def stmtStRecₓ.{l} {C : stmt₂ → Sort l} (H₁ : ∀ k s : st_act k q IH : C q, C (st_run s q))
     (H₂ : ∀ a q IH : C q, C (TM2.Stmt.load a q)) (H₃ : ∀ p q₁ q₂ IH₁ : C q₁ IH₂ : C q₂, C (TM2.Stmt.branch p q₁ q₂))
     (H₄ : ∀ l, C (TM2.Stmt.goto l)) (H₅ : C TM2.Stmt.halt) : ∀ n, C n
   | TM2.stmt.push k f q => H₁ _ (push f) _ (stmt_st_rec q)
@@ -2303,7 +2329,7 @@ open TM1.Stmt
 
 /-- The program corresponding to state transitions at the end of a stack. Here we start out just
 after the top of the stack, and should end just after the new top of the stack. -/
-def tr_st_act {k} (q : stmt₁) : st_act k → stmt₁
+def trStAct {k} (q : stmt₁) : st_act k → stmt₁
   | st_act.push f => (write fun a s => (a.1, update a.2 k <| some <| f s)) <| move Dir.right q
   | st_act.peek f => move Dir.left <| (load fun a s => f s (a.2 k)) <| move Dir.right q
   | st_act.pop f =>
@@ -2312,7 +2338,7 @@ def tr_st_act {k} (q : stmt₁) : st_act k → stmt₁
 
 /-- The initial state for the TM2 emulator, given an initial TM2 state. All stacks start out empty
 except for the input stack, and the stack bottom mark is set at the head. -/
-def tr_init k (L : List (Γ k)) : List Γ' :=
+def trInit k (L : List (Γ k)) : List Γ' :=
   let L' : List Γ' := L.reverse.map fun a => (false, update (fun _ => none) k a)
   (true, L'.head.2) :: L'.tail
 
@@ -2326,7 +2352,7 @@ theorem step_run {k : K} q v S :
 /-- The translation of TM2 statements to TM1 statements. regular actions have direct equivalents,
 but stack actions are deferred by going to the corresponding `go` state, so that we can find the
 appropriate stack top. -/
-def tr_normal : stmt₂ → stmt₁
+def trNormal : stmt₂ → stmt₁
   | TM2.stmt.push k f q => goto fun _ _ => go k (st_act.push f) q
   | TM2.stmt.peek k f q => goto fun _ _ => go k (st_act.peek f) q
   | TM2.stmt.pop k f q => goto fun _ _ => go k (st_act.pop f) q
@@ -2341,7 +2367,7 @@ theorem tr_normal_run {k} s q : tr_normal (st_run s q) = goto fun _ _ => go k s 
 open_locale Classical
 
 /-- The set of machine states accessible from an initial TM2 statement. -/
-noncomputable def tr_stmts₁ : stmt₂ → Finset Λ'
+noncomputable def trStmts₁ : stmt₂ → Finset Λ'
   | TM2.stmt.push k f q => {go k (st_act.push f) q, ret q} ∪ tr_stmts₁ q
   | TM2.stmt.peek k f q => {go k (st_act.peek f) q, ret q} ∪ tr_stmts₁ q
   | TM2.stmt.pop k f q => {go k (st_act.pop f) q, ret q} ∪ tr_stmts₁ q
@@ -2466,12 +2492,12 @@ def tr : Λ' → stmt₁
 attribute [local pp_using_anonymous_constructor] Turing.TM1.Cfg
 
 /-- The relation between TM2 configurations and TM1 configurations of the TM2 emulator. -/
-inductive tr_cfg : cfg₂ → cfg₁ → Prop
+inductive TrCfg : cfg₂ → cfg₁ → Prop
   | mk {q v} {S : ∀ k, List (Γ k)} (L : ListBlank (∀ k, Option (Γ k))) :
     (∀ k, L.map (proj k) = ListBlank.mk ((S k).map some).reverse) →
       tr_cfg ⟨q, v, S⟩ ⟨q.map normal, v, Tape.mk' ∅ (add_bottom L)⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (n «expr ≤ » S.length)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (n «expr ≤ » S.length)
 theorem tr_respects_aux₁ {k} o q v {S : List (Γ k)} {L : ListBlank (∀ k, Option (Γ k))}
     (hL : L.map (proj k) = ListBlank.mk (S.map some).reverse) n (_ : n ≤ S.length) :
     Reaches₀ (TM1.step tr) ⟨some (go k o q), v, Tape.mk' ∅ (add_bottom L)⟩
@@ -2555,7 +2581,7 @@ theorem tr_cfg_init k (L : List (Γ k)) : tr_cfg (TM2.init k L) (TM1.init (tr_in
   rw [(_ : TM1.init _ = _)]
   · refine' ⟨list_blank.mk (L.reverse.map fun a => update default k (some a)), fun k' => _⟩
     refine' list_blank.ext fun i => _
-    rw [list_blank.map_mk, list_blank.nth_mk, List.inth, List.map_mapₓ, · ∘ ·, List.nth_map, proj, pointed_map.mk_val]
+    rw [list_blank.map_mk, list_blank.nth_mk, List.inth, List.map_mapₓ, (· ∘ ·), List.nth_map, proj, pointed_map.mk_val]
     by_cases' k' = k
     · subst k'
       simp only [Function.update_same]
@@ -2592,7 +2618,7 @@ theorem tr_eval k (L : List (Γ k)) {L₁ L₂} (H₁ : L₁ ∈ TM1.eval tr (tr
       simp only [tape.mk'_right₀], hT, rfl⟩
 
 /-- The support of a set of TM2 states in the TM2 emulator. -/
-noncomputable def tr_supp (S : Finset Λ) : Finset Λ' :=
+noncomputable def trSupp (S : Finset Λ) : Finset Λ' :=
   S.bUnion fun l => insert (normal l) (tr_stmts₁ (M l))
 
 theorem tr_supports {S} (ss : TM2.Supports M S) : TM1.Supports tr (tr_supp S) :=
@@ -2607,7 +2633,8 @@ theorem tr_supports {S} (ss : TM2.Supports M S) : TM1.Supports tr (tr_supp S) :=
       rcases Finset.mem_insert.1 h with (rfl | h) <;> [exact this.1, exact this.2 _ h]
     clear h l'
     refine' stmt_st_rec _ _ _ _ _ <;> intros
-    · rw [TM2to1.supports_run] at ss'
+    · -- stack op
+      rw [TM2to1.supports_run] at ss'
       simp only [TM2to1.tr_stmts₁_run, Finset.mem_union, Finset.mem_insert, Finset.mem_singleton] at sub
       have hgo := sub _ (Or.inl <| Or.inl rfl)
       have hret := sub _ (Or.inl <| Or.inr rfl)
@@ -2633,17 +2660,20 @@ theorem tr_supports {S} (ss : TM2.Supports M S) : TM1.Supports tr (tr_supp S) :=
       · exact IH₂ _ h
         
       
-    · unfold TM2to1.tr_stmts₁  at ss' sub⊢
+    · -- load
+      unfold TM2to1.tr_stmts₁  at ss' sub⊢
       exact IH ss' sub
       
-    · unfold TM2to1.tr_stmts₁  at sub
+    · -- branch
+      unfold TM2to1.tr_stmts₁  at sub
       cases' IH₁ ss'.1 fun x hx => sub x <| Finset.mem_union_left _ hx with IH₁₁ IH₁₂
       cases' IH₂ ss'.2 fun x hx => sub x <| Finset.mem_union_right _ hx with IH₂₁ IH₂₂
       refine' ⟨⟨IH₁₁, IH₂₁⟩, fun l h => _⟩
       rw [tr_stmts₁] at h
       rcases Finset.mem_union.1 h with (h | h) <;> [exact IH₁₂ _ h, exact IH₂₂ _ h]
       
-    · rw [tr_stmts₁]
+    · -- goto
+      rw [tr_stmts₁]
       unfold TM2to1.tr_normal TM1.supports_stmt
       unfold TM2.supports_stmt  at ss'
       exact ⟨fun _ v => Finset.mem_bUnion.2 ⟨_, ss' v, Finset.mem_insert_self _ _⟩, fun _ => False.elim⟩
@@ -2651,6 +2681,7 @@ theorem tr_supports {S} (ss : TM2.Supports M S) : TM1.Supports tr (tr_supp S) :=
     · exact ⟨trivialₓ, fun _ => False.elim⟩
       ⟩
 
+-- halt
 end
 
 end TM2to1

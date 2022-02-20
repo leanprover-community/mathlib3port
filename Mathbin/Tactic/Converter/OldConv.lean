@@ -1,3 +1,10 @@
+/-
+Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Leonardo de Moura
+
+Converter monad for building simplifiers.
+-/
 import Mathbin.Control.Basic
 
 open Tactic
@@ -54,6 +61,12 @@ protected unsafe def bind {α β : Type} (c₁ : old_conv α) (c₂ : α → old
   Bind.bind (c₁ r e) fun ⟨a, e₁, pr₁⟩ =>
     Bind.bind (c₂ a r e₁) fun ⟨b, e₂, pr₂⟩ => Bind.bind (join_proofs r pr₁ pr₂) fun pr => return ⟨b, e₂, pr⟩
 
+/- do -- wrong bind instance something with `name`?
+  ⟨a, e₁, pr₁⟩ ← c₁ r e,
+  ⟨b, e₂, pr₂⟩ ← c₂ a r e₁,
+  pr           ← join_proofs r pr₁ pr₂,
+  return ⟨b, e₂, pr⟩
+  -/
 unsafe instance : Monadₓ old_conv where
   map := @old_conv.map
   pure := @old_conv.pure
@@ -84,6 +97,7 @@ unsafe def apply_lemmas_core (s : simp_lemmas) (prove : tactic Unit) : old_conv 
 unsafe def apply_lemmas (s : simp_lemmas) : old_conv Unit :=
   apply_lemmas_core s failed
 
+-- adapter for using iff-lemmas as eq-lemmas
 unsafe def apply_propext_lemmas_core (s : simp_lemmas) (prove : tactic Unit) : old_conv Unit := fun r e => do
   guardₓ (r = `eq)
   let (new_e, pr) ← s.rewrite e prove `iff
@@ -163,7 +177,7 @@ unsafe def funext (c : old_conv Unit) : old_conv Unit := fun r lhs => do
           | none => return ⟨(), rhs, none⟩
   return result
 
--- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `f_type
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `f_type
 unsafe def congr_core (c_f c_a : old_conv Unit) : old_conv Unit := fun r lhs => do
   guardₓ (r = `eq)
   let expr.app f a ← return lhs

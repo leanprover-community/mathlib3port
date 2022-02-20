@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2022 Yakov Pechersky. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yakov Pechersky
+-/
 import Mathbin.Data.Polynomial.Taylor
 import Mathbin.FieldTheory.Ratfunc
 import Mathbin.RingTheory.LaurentSeries
@@ -41,7 +46,7 @@ theorem taylor_mem_non_zero_divisors (hp : p ∈ R[X]⁰) : taylor r p ∈ R[X]�
 
 /-- The Laurent expansion of rational functions about a value.
 Auxiliary definition, usage when over integral domains should prefer `ratfunc.laurent`. -/
-def laurent_aux : Ratfunc R →+* Ratfunc R :=
+def laurentAux : Ratfunc R →+* Ratfunc R :=
   Ratfunc.mapRingHom (RingHom.mk (taylor r) (taylor_one _) (taylor_mul _) (LinearMap.map_zero _) (LinearMap.map_add _))
     (taylor_mem_non_zero_divisors _)
 

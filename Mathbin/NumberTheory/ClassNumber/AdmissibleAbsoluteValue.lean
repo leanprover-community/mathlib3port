@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Anne Baanen. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Anne Baanen
+-/
 import Mathbin.Data.Fin.Tuple.Default
 import Mathbin.Data.Real.Basic
 import Mathbin.Combinatorics.Pigeonhole
@@ -35,7 +40,7 @@ variable (abv : AbsoluteValue R ℤ)
 /-- An absolute value `R → ℤ` is admissible if it respects the Euclidean domain
 structure and a large enough set of elements in `R^n` will contain a pair of
 elements whose remainders are pointwise close together. -/
-structure is_admissible extends IsEuclidean abv where
+structure IsAdmissible extends IsEuclidean abv where
   card : ℝ → ℕ
   exists_partition' :
     ∀ n : ℕ {ε : ℝ} hε : 0 < ε {b : R} hb : b ≠ 0 A : Finₓ n → R,
@@ -73,13 +78,19 @@ theorem exists_approx_aux (n : ℕ) (h : abv.IsAdmissible) :
     
   intro ε hε b hb A
   set M := h.card ε with hM
+  -- By the "nicer" pigeonhole principle, we can find a collection `s`
+  -- of more than `M^n` remainders where the first components lie close together:
   obtain ⟨s, s_inj, hs⟩ :
     ∃ s : Finₓ (M ^ n).succ → Finₓ (M ^ n.succ).succ,
       Function.Injective s ∧ ∀ i₀ i₁, (abv (A (s i₁) 0 % b - A (s i₀) 0 % b) : ℝ) < abv b • ε :=
     by
+    -- We can partition the `A`s into `M` subsets where
+    -- the first components lie close together:
     obtain ⟨t, ht⟩ :
       ∃ t : Finₓ (M ^ n.succ).succ → Finₓ M, ∀ i₀ i₁, t i₀ = t i₁ → (abv (A i₁ 0 % b - A i₀ 0 % b) : ℝ) < abv b • ε :=
       h.exists_partition hε hb fun x => A x 0
+    -- Since the `M` subsets contain more than `M * M^n` elements total,
+    -- there must be a subset that contains more than `M^n` elements.
     obtain ⟨s, hs⟩ :=
       @Fintype.exists_lt_card_fiber_of_mul_lt_card _ _ _ _ _ t (M ^ n)
         (by
@@ -98,6 +109,8 @@ theorem exists_approx_aux (n : ℕ) (h : abv.IsAdmissible) :
     obtain ⟨_, h₀⟩ := finset.mem_filter.mp (this i₀ _)
     obtain ⟨_, h₁⟩ := finset.mem_filter.mp (this i₁ _)
     exact h₀.trans h₁.symm
+  -- Since `s` is large enough, there are two elements of `A ∘ s`
+  -- where the second components lie close together.
   obtain ⟨k₀, k₁, hk, h⟩ := ih hε hb fun x => Finₓ.tail (A (s x))
   refine' ⟨s k₀, s k₁, fun h => hk (s_inj h), fun i => Finₓ.cases _ (fun i => _) i⟩
   · exact hs k₀ k₁

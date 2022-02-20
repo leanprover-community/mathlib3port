@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Johan Commelin. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johan Commelin
+-/
 import Mathbin.CategoryTheory.Preadditive.Default
 
 /-!
@@ -79,7 +84,7 @@ variable {F G : C ⥤ D}
 /-- Application of a natural transformation at a fixed object,
 as group homomorphism -/
 @[simps]
-def app_hom (X : C) : (F ⟶ G) →+ (F.obj X ⟶ G.obj X) where
+def appHom (X : C) : (F ⟶ G) →+ (F.obj X ⟶ G.obj X) where
   toFun := fun α => α.app X
   map_zero' := rfl
   map_add' := fun _ _ => rfl

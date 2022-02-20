@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Rémy Degenne. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Rémy Degenne
+-/
 import Mathbin.MeasureTheory.Function.SimpleFuncDense
 
 /-!
@@ -58,17 +63,17 @@ section Definitions
 variable {α β : Type _} [TopologicalSpace β]
 
 /-- A function is `strongly_measurable` if it is the limit of simple functions. -/
-def strongly_measurable [MeasurableSpace α] (f : α → β) : Prop :=
+def StronglyMeasurable [MeasurableSpace α] (f : α → β) : Prop :=
   ∃ fs : ℕ → α →ₛ β, ∀ x, Tendsto (fun n => fs n x) atTop (𝓝 (f x))
 
 /-- A function is `fin_strongly_measurable` with respect to a measure if it is the limit of simple
   functions with support with finite measure. -/
-def fin_strongly_measurable [Zero β] {m0 : MeasurableSpace α} (f : α → β) (μ : Measure α) : Prop :=
+def FinStronglyMeasurable [Zero β] {m0 : MeasurableSpace α} (f : α → β) (μ : Measure α) : Prop :=
   ∃ fs : ℕ → α →ₛ β, (∀ n, μ (Support (fs n)) < ∞) ∧ ∀ x, Tendsto (fun n => fs n x) atTop (𝓝 (f x))
 
 /-- A function is `ae_fin_strongly_measurable` with respect to a measure if it is almost everywhere
 equal to the limit of a sequence of simple functions with support with finite measure. -/
-def ae_fin_strongly_measurable [Zero β] {m0 : MeasurableSpace α} (f : α → β) (μ : Measure α) : Prop :=
+def AeFinStronglyMeasurable [Zero β] {m0 : MeasurableSpace α} (f : α → β) (μ : Measure α) : Prop :=
   ∃ g, FinStronglyMeasurable g μ ∧ f =ᵐ[μ] g
 
 end Definitions
@@ -76,7 +81,7 @@ end Definitions
 /-! ## Strongly measurable functions -/
 
 
-theorem subsingleton.strongly_measurable {α β} [MeasurableSpace α] [TopologicalSpace β] [Subsingleton β] (f : α → β) :
+theorem Subsingleton.strongly_measurable {α β} [MeasurableSpace α] [TopologicalSpace β] [Subsingleton β] (f : α → β) :
     StronglyMeasurable f := by
   let f_sf : α →ₛ β := ⟨f, fun x => _, Set.Subsingleton.finite Set.subsingleton_of_subsingleton⟩
   · exact ⟨fun n => f_sf, fun x => tendsto_const_nhds⟩
@@ -101,7 +106,7 @@ protected theorem tendsto_approx [MeasurableSpace α] [TopologicalSpace β] (hf 
     ∀ x, Tendsto (fun n => hf.approx n x) atTop (𝓝 (f x)) :=
   hf.some_spec
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (x «expr ∉ » t)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (x «expr ∉ » t)
 theorem fin_strongly_measurable_of_set_sigma_finite [TopologicalSpace β] [Zero β] {m : MeasurableSpace α}
     {μ : Measure α} (hf_meas : StronglyMeasurable f) {t : Set α} (ht : MeasurableSet t)
     (hft_zero : ∀, ∀ x ∈ tᶜ, ∀, f x = 0) (htμ : SigmaFinite (μ.restrict t)) : FinStronglyMeasurable f μ := by
@@ -165,7 +170,7 @@ protected theorem fin_strongly_measurable [TopologicalSpace β] [Zero β] {m0 : 
       rwa [measure.restrict_univ])
 
 /-- A strongly measurable function is measurable. -/
-protected theorem Measurable [MeasurableSpace α] [MetricSpace β] [MeasurableSpace β] [BorelSpace β]
+protected theorem measurable [MeasurableSpace α] [MetricSpace β] [MeasurableSpace β] [BorelSpace β]
     (hf : StronglyMeasurable f) : Measurable f :=
   measurable_of_tendsto_metric (fun n => (hf.approx n).Measurable) (tendsto_pi_nhds.mpr hf.tendsto_approx)
 
@@ -271,7 +276,7 @@ theorem exists_set_sigma_finite [TopologicalSpace β] [T2Space β] (hf : FinStro
     
 
 /-- A finitely strongly measurable function is measurable. -/
-protected theorem Measurable [MetricSpace β] [MeasurableSpace β] [BorelSpace β] (hf : FinStronglyMeasurable f μ) :
+protected theorem measurable [MetricSpace β] [MeasurableSpace β] [BorelSpace β] (hf : FinStronglyMeasurable f μ) :
     Measurable f :=
   measurable_of_tendsto_metric (fun n => (hf.some n).Measurable) (tendsto_pi_nhds.mpr hf.some_spec.2)
 
@@ -334,10 +339,10 @@ theorem exists_set_sigma_finite (hf : AeFinStronglyMeasurable f μ) :
   exact eventually_of_forall hgt_zero
 
 /-- A measurable set `t` such that `f =ᵐ[μ.restrict tᶜ] 0` and `sigma_finite (μ.restrict t)`. -/
-def sigma_finite_set (hf : AeFinStronglyMeasurable f μ) : Set α :=
+def SigmaFiniteSet (hf : AeFinStronglyMeasurable f μ) : Set α :=
   hf.exists_set_sigma_finite.some
 
-protected theorem MeasurableSet (hf : AeFinStronglyMeasurable f μ) : MeasurableSet hf.SigmaFiniteSet :=
+protected theorem measurable_set (hf : AeFinStronglyMeasurable f μ) : MeasurableSet hf.SigmaFiniteSet :=
   hf.exists_set_sigma_finite.some_spec.1
 
 theorem ae_eq_zero_compl (hf : AeFinStronglyMeasurable f μ) : f =ᵐ[μ.restrict (hf.SigmaFiniteSetᶜ)] 0 :=
@@ -363,7 +368,7 @@ theorem ae_fin_strongly_measurable_iff_ae_measurable {m0 : MeasurableSpace α} (
     AeFinStronglyMeasurable f μ ↔ AeMeasurable f μ := by
   simp_rw [ae_fin_strongly_measurable, AeMeasurable, fin_strongly_measurable_iff_measurable]
 
-theorem mem_ℒp.fin_strongly_measurable_of_measurable (hf : Memℒp f p μ) (hf_meas : Measurable f) (hp_ne_zero : p ≠ 0)
+theorem Memℒp.fin_strongly_measurable_of_measurable (hf : Memℒp f p μ) (hf_meas : Measurable f) (hp_ne_zero : p ≠ 0)
     (hp_ne_top : p ≠ ∞) : FinStronglyMeasurable f μ := by
   let fs := simple_func.approx_on f hf_meas Set.Univ 0 (Set.mem_univ _)
   refine' ⟨fs, _, _⟩
@@ -376,17 +381,17 @@ theorem mem_ℒp.fin_strongly_measurable_of_measurable (hf : Memℒp f p μ) (hf
           simp )
     
 
-theorem mem_ℒp.ae_fin_strongly_measurable (hf : Memℒp f p μ) (hp_ne_zero : p ≠ 0) (hp_ne_top : p ≠ ∞) :
+theorem Memℒp.ae_fin_strongly_measurable (hf : Memℒp f p μ) (hp_ne_zero : p ≠ 0) (hp_ne_top : p ≠ ∞) :
     AeFinStronglyMeasurable f μ :=
   ⟨hf.AeMeasurable.mk f,
     ((mem_ℒp_congr_ae hf.AeMeasurable.ae_eq_mk).mp hf).fin_strongly_measurable_of_measurable
       hf.AeMeasurable.measurable_mk hp_ne_zero hp_ne_top,
     hf.AeMeasurable.ae_eq_mk⟩
 
-theorem integrable.ae_fin_strongly_measurable (hf : Integrable f μ) : AeFinStronglyMeasurable f μ :=
+theorem Integrable.ae_fin_strongly_measurable (hf : Integrable f μ) : AeFinStronglyMeasurable f μ :=
   (mem_ℒp_one_iff_integrable.mpr hf).AeFinStronglyMeasurable one_ne_zero Ennreal.coe_ne_top
 
-theorem Lp.fin_strongly_measurable (f : lp G p μ) (hp_ne_zero : p ≠ 0) (hp_ne_top : p ≠ ∞) :
+theorem lp.fin_strongly_measurable (f : lp G p μ) (hp_ne_zero : p ≠ 0) (hp_ne_top : p ≠ ∞) :
     FinStronglyMeasurable f μ :=
   (lp.mem_ℒp f).fin_strongly_measurable_of_measurable (lp.measurable f) hp_ne_zero hp_ne_top
 

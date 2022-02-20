@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Mario Carneiro. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Mario Carneiro
+-/
 import Mathbin.Data.Multiset.FinsetOps
 import Mathbin.Data.Multiset.Fold
 
@@ -15,6 +20,7 @@ variable {α : Type _}
 
 section Sup
 
+-- can be defined with just `[has_bot α]` where some lemmas hold without requiring `[order_bot α]`
 variable [SemilatticeSup α] [OrderBot α]
 
 /-- Supremum of a multiset: `sup {a, b, c} = a ⊔ b ⊔ c` -/
@@ -87,6 +93,7 @@ end Sup
 
 section Inf
 
+-- can be defined with just `[has_top α]` where some lemmas hold without requiring `[order_top α]`
 variable [SemilatticeInf α] [OrderTop α]
 
 /-- Infimum of a multiset: `inf {a, b, c} = a ⊓ b ⊓ c` -/

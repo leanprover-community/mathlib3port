@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2015, 2017 Jeremy Avigad. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Jeremy Avigad, Robert Y. Lewis, Johannes Hölzl, Mario Carneiro, Sébastien Gouëzel
+-/
 import Mathbin.Data.Nat.Interval
 import Mathbin.Data.Real.Ennreal
 import Mathbin.Topology.UniformSpace.Pi
@@ -56,7 +61,7 @@ def uniformSpaceOfEdist (edist : α → α → ℝ≥0∞) (edist_self : ∀ x :
       refl :=
         le_infi fun ε =>
           le_infi <| by
-            simp (config := { contextual := true })[Set.subset_def, IdRel, edist_self, · > ·],
+            simp (config := { contextual := true })[Set.subset_def, IdRel, edist_self, (· > ·)],
       comp :=
         le_infi fun ε =>
           le_infi fun h =>
@@ -96,6 +101,8 @@ on a product.
 
 Continuity of `edist` is proved in `topology.instances.ennreal`
 -/
+-- the uniform structure is embedded in the emetric space structure
+-- to avoid instance diamond issues. See Note [forgetful inheritance].
 class PseudoEmetricSpace (α : Type u) extends HasEdist α : Type u where
   edist_self : ∀ x : α, edist x x = 0
   edist_comm : ∀ x y : α, edist x y = edist y x
@@ -105,8 +112,11 @@ class PseudoEmetricSpace (α : Type u) extends HasEdist α : Type u where
     run_tac
       control_laws_tac
 
+/- Pseudoemetric spaces are less common than metric spaces. Therefore, we work in a dedicated
+namespace, while notions associated to metric spaces are mostly in the root namespace. -/
 variable [PseudoEmetricSpace α]
 
+-- see Note [lower instance priority]
 instance (priority := 100) PseudoEmetricSpace.toUniformSpace' : UniformSpace α :=
   PseudoEmetricSpace.toUniformSpace
 
@@ -133,6 +143,7 @@ theorem edist_le_Ico_sum_edist (f : ℕ → α) {m n} (h : m ≤ n) :
   revert n
   refine' Nat.le_induction _ _
   · simp only [Finset.sum_empty, Finset.Ico_self, edist_self]
+    -- TODO: Why doesn't Lean close this goal automatically? `exact le_rfl` fails too.
     exact le_reflₓ (0 : ℝ≥0∞)
     
   · intro n hn hrec
@@ -252,7 +263,7 @@ namespace Emetric
 instance (priority := 900) : IsCountablyGenerated (𝓤 α) :=
   is_countably_generated_of_seq ⟨_, uniformity_basis_edist_inv_nat.eq_infi⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection {a b «expr ∈ » s}
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection {a b «expr ∈ » s}
 /-- ε-δ characterization of uniform continuity on a set for pseudoemetric spaces -/
 theorem uniform_continuous_on_iff [PseudoEmetricSpace β] {f : α → β} {s : Set α} :
     UniformContinuousOn f s ↔
@@ -291,7 +302,7 @@ theorem controlled_of_uniform_embedding [PseudoEmetricSpace β] {f : α → β} 
   intro h
   exact ⟨uniform_continuous_iff.1 (uniform_embedding_iff.1 h).2.1, (uniform_embedding_iff.1 h).2.2⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (x y «expr ∈ » t)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (x y «expr ∈ » t)
 /-- ε-δ characterization of Cauchy sequences on pseudoemetric spaces -/
 protected theorem cauchy_iff {f : Filter α} :
     Cauchy f ↔ f ≠ ⊥ ∧ ∀, ∀ ε > 0, ∀, ∃ t ∈ f, ∀ x y _ : x ∈ t _ : y ∈ t, edist x y < ε := by
@@ -477,7 +488,7 @@ namespace Emetric
 variable {x y z : α} {ε ε₁ ε₂ : ℝ≥0∞} {s : Set α}
 
 /-- `emetric.ball x ε` is the set of all points `y` with `edist y x < ε` -/
-def ball (x : α) (ε : ℝ≥0∞) : Set α :=
+def Ball (x : α) (ε : ℝ≥0∞) : Set α :=
   { y | edist y x < ε }
 
 @[simp]
@@ -488,7 +499,7 @@ theorem mem_ball' : y ∈ Ball x ε ↔ edist x y < ε := by
   rw [edist_comm] <;> rfl
 
 /-- `emetric.closed_ball x ε` is the set of all points `y` with `edist y x ≤ ε` -/
-def closed_ball (x : α) (ε : ℝ≥0∞) :=
+def ClosedBall (x : α) (ε : ℝ≥0∞) :=
   { y | edist y x ≤ ε }
 
 @[simp]
@@ -515,9 +526,9 @@ theorem mem_closed_ball_self : x ∈ ClosedBall x ε :=
 theorem mem_ball_comm : x ∈ Ball y ε ↔ y ∈ Ball x ε := by
   simp [edist_comm]
 
-theorem ball_subset_ball (h : ε₁ ≤ ε₂) : Ball x ε₁ ⊆ Ball x ε₂ := fun y yx : _ < ε₁ => lt_of_lt_of_leₓ yx h
+theorem ball_subset_ball (h : ε₁ ≤ ε₂) : Ball x ε₁ ⊆ Ball x ε₂ := fun yx : _ < ε₁ => lt_of_lt_of_leₓ yx h
 
-theorem closed_ball_subset_closed_ball (h : ε₁ ≤ ε₂) : ClosedBall x ε₁ ⊆ ClosedBall x ε₂ := fun y yx : _ ≤ ε₁ =>
+theorem closed_ball_subset_closed_ball (h : ε₁ ≤ ε₂) : ClosedBall x ε₁ ⊆ ClosedBall x ε₂ := fun yx : _ ≤ ε₁ =>
   le_transₓ yx h
 
 theorem ball_disjoint (h : ε₁ + ε₂ ≤ edist x y) : Ball x ε₁ ∩ Ball y ε₂ = ∅ :=
@@ -544,7 +555,7 @@ theorem ball_eq_empty_iff : Ball x ε = ∅ ↔ ε = 0 :=
       not_lt_of_le (le_of_eqₓ ε0) (pos_of_mem_ball h)⟩
 
 /-- Relation “two points are at a finite edistance” is an equivalence relation. -/
-def edist_lt_top_setoid : Setoidₓ α where
+def edistLtTopSetoid : Setoidₓ α where
   R := fun x y => edist x y < ⊤
   iseqv :=
     ⟨fun x => by
@@ -610,9 +621,10 @@ theorem tendsto_at_top [Nonempty β] [SemilatticeSup β] {u : β → α} {a : α
   (at_top_basis.tendsto_iff nhds_basis_eball).trans <| by
     simp only [exists_prop, true_andₓ, mem_Ici, mem_ball]
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (m n «expr ≥ » N)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (m n «expr ≥ » N)
 /-- In a pseudoemetric space, Cauchy sequences are characterized by the fact that, eventually,
 the pseudoedistance between its elements is arbitrarily small -/
+-- see Note [nolint_ge]
 @[nolint ge_or_gt]
 theorem cauchy_seq_iff [Nonempty β] [SemilatticeSup β] {u : β → α} :
     CauchySeq u ↔ ∀, ∀ ε > 0, ∀, ∃ N, ∀ m n _ : m ≥ N _ : n ≥ N, edist (u m) (u n) < ε :=
@@ -636,7 +648,7 @@ theorem totally_bounded_iff {s : Set α} :
     let ⟨t, ft, h⟩ := H ε ε0
     ⟨t, ft, h.trans <| Union₂_mono fun y yt z => hε⟩⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (t «expr ⊆ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (t «expr ⊆ » s)
 theorem totally_bounded_iff' {s : Set α} :
     TotallyBounded s ↔ ∀, ∀ ε > 0, ∀, ∃ (t : _)(_ : t ⊆ s), Finite t ∧ s ⊆ ⋃ y ∈ t, Ball y ε :=
   ⟨fun H ε ε0 => (totally_bounded_iff_subset.1 H) _ (edist_mem_uniformity ε0), fun H r ru =>
@@ -646,7 +658,7 @@ theorem totally_bounded_iff' {s : Set α} :
 
 section Compact
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (t «expr ⊆ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (t «expr ⊆ » s)
 /-- For a set `s` in a pseudo emetric space, if for every `ε > 0` there exists a countable
 set that is `ε`-dense in `s`, then there exists a countable subset `t ⊆ s` that is dense in `s`. -/
 theorem subset_countable_closure_of_almost_dense_set (s : Set α)
@@ -680,7 +692,7 @@ theorem subset_countable_closure_of_almost_dense_set (s : Set α)
   refine' ⟨f n⁻¹ y, mem_Union.2 ⟨n, mem_image_of_mem _ hyn⟩, _⟩
   calc edist x (f n⁻¹ y) ≤ n⁻¹ * 2 := hf _ _ ⟨hyx, hx⟩_ < ε := Ennreal.mul_lt_of_lt_div hn
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (t «expr ⊆ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (t «expr ⊆ » s)
 /-- A compact set in a pseudo emetric space is separable, i.e., it is a subset of the closure of a
 countable set.  -/
 theorem subset_countable_closure_of_compact {s : Set α} (hs : IsCompact s) :
@@ -828,11 +840,13 @@ end Diam
 end Emetric
 
 /-- We now define `emetric_space`, extending `pseudo_emetric_space`. -/
+--namespace
 class EmetricSpace (α : Type u) extends PseudoEmetricSpace α : Type u where
   eq_of_edist_eq_zero : ∀ {x y : α}, edist x y = 0 → x = y
 
 variable {γ : Type w} [EmetricSpace γ]
 
+-- see Note [lower instance priority]
 instance (priority := 100) EmetricSpace.toUniformSpace' : UniformSpace γ :=
   PseudoEmetricSpace.toUniformSpace
 
@@ -882,6 +896,7 @@ theorem uniform_embedding_iff' [EmetricSpace β] {f : γ → β} :
     
 
 /-- An emetric space is separated -/
+-- see Note [lower instance priority]
 instance (priority := 100) to_separated : SeparatedSpace γ :=
   separated_def.2 fun x y h => eq_of_forall_edist_le fun ε ε0 => le_of_ltₓ (h _ (edist_mem_uniformity ε0))
 
@@ -974,7 +989,7 @@ end Pi
 
 namespace Emetric
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (t «expr ⊆ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (t «expr ⊆ » s)
 /-- A compact set in an emetric space is separable, i.e., it is the closure of a countable set. -/
 theorem countable_closure_of_compact {s : Set γ} (hs : IsCompact s) :
     ∃ (t : _)(_ : t ⊆ s), Countable t ∧ s = Closure t := by

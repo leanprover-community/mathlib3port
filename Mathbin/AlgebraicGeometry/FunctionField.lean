@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2022 Andrew Yang. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Andrew Yang
+-/
 import Mathbin.AlgebraicGeometry.Properties
 
 /-!
@@ -23,11 +28,11 @@ variable (X : Scheme)
 
 /-- The function field of an irreducible scheme is the local ring at its generic point.
 Despite the name, this is a field only when the scheme is integral. -/
-noncomputable abbrev Scheme.function_field [IrreducibleSpace X.Carrier] : CommRingₓₓ :=
+noncomputable abbrev Scheme.functionField [IrreducibleSpace X.Carrier] : CommRingₓₓ :=
   X.Presheaf.stalk (genericPoint X.Carrier)
 
 /-- The restriction map from a component to the function field. -/
-noncomputable abbrev Scheme.germ_to_function_field [IrreducibleSpace X.Carrier] (U : Opens X.Carrier) [h : Nonempty U] :
+noncomputable abbrev Scheme.germToFunctionField [IrreducibleSpace X.Carrier] (U : Opens X.Carrier) [h : Nonempty U] :
     X.Presheaf.obj (op U) ⟶ X.functionField :=
   X.Presheaf.germ
     ⟨genericPoint X.Carrier,
@@ -89,7 +94,7 @@ theorem generic_point_eq_of_is_open_immersion {X Y : Scheme} (f : X ⟶ Y) [H : 
     
   exact ⟨_, trivialₓ, Set.mem_range_self hX.2.some⟩
 
-noncomputable instance stalk_function_field_algebra [IrreducibleSpace X.Carrier] (x : X.Carrier) :
+noncomputable instance stalkFunctionFieldAlgebra [IrreducibleSpace X.Carrier] (x : X.Carrier) :
     Algebra (X.Presheaf.stalk x) X.functionField := by
   apply RingHom.toAlgebra
   exact X.presheaf.stalk_specializes ((generic_point_spec X.carrier).Specializes trivialₓ)
@@ -126,7 +131,7 @@ instance {X : Scheme} [IsIntegral X] {U : Opens X.Carrier} [hU : Nonempty U] :
   have : Nonempty (X.restrict U.open_embedding).Carrier := hU
   is_integral_of_open_immersion (X.of_restrict U.open_embedding)
 
-theorem is_affine_open.prime_ideal_of_generic_point {X : Scheme} [IsIntegral X] {U : Opens X.Carrier}
+theorem IsAffineOpen.prime_ideal_of_generic_point {X : Scheme} [IsIntegral X] {U : Opens X.Carrier}
     (hU : IsAffineOpen U) [h : Nonempty U] :
     hU.primeIdealOf
         ⟨genericPoint X.Carrier,

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Chris Hughes. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Chris Hughes
+-/
 import Mathbin.Data.MvPolynomial.Variables
 
 /-!
@@ -42,7 +47,7 @@ theorem supported_eq_range_rename (s : Set σ) : supported R s = (rename (coe : 
   rw [supported, Set.image_eq_range, adjoin_range_eq_range_aeval, rename]
 
 /-- The isomorphism between the subalgebra of polynomials supported by `s` and `mv_polynomial s R`-/
-noncomputable def supported_equiv_mv_polynomial (s : Set σ) : supported R s ≃ₐ[R] MvPolynomial s R :=
+noncomputable def supportedEquivMvPolynomial (s : Set σ) : supported R s ≃ₐ[R] MvPolynomial s R :=
   (Subalgebra.equivOfEq _ _ (supported_eq_range_rename s)).trans
     (AlgEquiv.ofInjective (rename (coe : s → σ)) (rename_injective _ Subtype.val_injective)).symm
 

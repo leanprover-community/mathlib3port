@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Simon Hudon. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Simon Hudon, Patrick Massot
+-/
 import Mathbin.Data.Pi
 import Mathbin.Data.Set.Function
 import Mathbin.Tactic.PiInstances
@@ -14,128 +19,131 @@ universe u v w
 
 variable {I : Type u}
 
+-- The indexing type
 variable {f : I → Type v}
 
+-- The family of types already equipped with instances
 variable (x y : ∀ i, f i) (i : I)
 
 namespace Pi
 
 @[to_additive]
-instance Semigroupₓ [∀ i, Semigroupₓ <| f i] : Semigroupₓ (∀ i : I, f i) := by
-  refine_struct { mul := · * ·, .. } <;>
+instance semigroup [∀ i, Semigroupₓ <| f i] : Semigroupₓ (∀ i : I, f i) := by
+  refine_struct { mul := (· * ·), .. } <;>
     run_tac
       tactic.pi_instance_derive_field
 
-instance SemigroupWithZeroₓ [∀ i, SemigroupWithZeroₓ <| f i] : SemigroupWithZeroₓ (∀ i : I, f i) := by
-  refine_struct { zero := (0 : ∀ i, f i), mul := · * ·, .. } <;>
-    run_tac
-      tactic.pi_instance_derive_field
-
-@[to_additive]
-instance CommSemigroupₓ [∀ i, CommSemigroupₓ <| f i] : CommSemigroupₓ (∀ i : I, f i) := by
-  refine_struct { mul := · * ·, .. } <;>
+instance semigroupWithZero [∀ i, SemigroupWithZeroₓ <| f i] : SemigroupWithZeroₓ (∀ i : I, f i) := by
+  refine_struct { zero := (0 : ∀ i, f i), mul := (· * ·), .. } <;>
     run_tac
       tactic.pi_instance_derive_field
 
 @[to_additive]
-instance MulOneClassₓ [∀ i, MulOneClassₓ <| f i] : MulOneClassₓ (∀ i : I, f i) := by
-  refine_struct { one := (1 : ∀ i, f i), mul := · * ·, .. } <;>
+instance commSemigroup [∀ i, CommSemigroupₓ <| f i] : CommSemigroupₓ (∀ i : I, f i) := by
+  refine_struct { mul := (· * ·), .. } <;>
     run_tac
       tactic.pi_instance_derive_field
 
 @[to_additive]
-instance Monoidₓ [∀ i, Monoidₓ <| f i] : Monoidₓ (∀ i : I, f i) := by
-  refine_struct { one := (1 : ∀ i, f i), mul := · * ·, npow := fun n x i => x i ^ n } <;>
+instance mulOneClass [∀ i, MulOneClassₓ <| f i] : MulOneClassₓ (∀ i : I, f i) := by
+  refine_struct { one := (1 : ∀ i, f i), mul := (· * ·), .. } <;>
     run_tac
       tactic.pi_instance_derive_field
 
-@[simp]
+@[to_additive]
+instance monoid [∀ i, Monoidₓ <| f i] : Monoidₓ (∀ i : I, f i) := by
+  refine_struct { one := (1 : ∀ i, f i), mul := (· * ·), npow := fun n x i => x i ^ n } <;>
+    run_tac
+      tactic.pi_instance_derive_field
+
+-- the attributes are intentionally out of order. `smul_apply` proves `nsmul_apply`.
+@[to_additive nsmul_apply, simp]
 theorem pow_apply [∀ i, Monoidₓ <| f i] (n : ℕ) : (x ^ n) i = x i ^ n :=
   rfl
 
 @[to_additive]
-instance CommMonoidₓ [∀ i, CommMonoidₓ <| f i] : CommMonoidₓ (∀ i : I, f i) := by
-  refine_struct { one := (1 : ∀ i, f i), mul := · * ·, npow := Monoidₓ.npow } <;>
+instance commMonoid [∀ i, CommMonoidₓ <| f i] : CommMonoidₓ (∀ i : I, f i) := by
+  refine_struct { one := (1 : ∀ i, f i), mul := (· * ·), npow := Monoidₓ.npow } <;>
     run_tac
       tactic.pi_instance_derive_field
 
 @[to_additive]
-instance DivInvMonoidₓ [∀ i, DivInvMonoidₓ <| f i] : DivInvMonoidₓ (∀ i : I, f i) := by
+instance divInvMonoid [∀ i, DivInvMonoidₓ <| f i] : DivInvMonoidₓ (∀ i : I, f i) := by
   refine_struct
-      { one := (1 : ∀ i, f i), mul := · * ·, inv := Inv.inv, div := Div.div, npow := Monoidₓ.npow,
+      { one := (1 : ∀ i, f i), mul := (· * ·), inv := Inv.inv, div := Div.div, npow := Monoidₓ.npow,
         zpow := fun z x i => x i ^ z } <;>
     run_tac
       tactic.pi_instance_derive_field
 
 @[to_additive]
-instance Groupₓ [∀ i, Groupₓ <| f i] : Groupₓ (∀ i : I, f i) := by
+instance group [∀ i, Groupₓ <| f i] : Groupₓ (∀ i : I, f i) := by
   refine_struct
-      { one := (1 : ∀ i, f i), mul := · * ·, inv := Inv.inv, div := Div.div, npow := Monoidₓ.npow,
+      { one := (1 : ∀ i, f i), mul := (· * ·), inv := Inv.inv, div := Div.div, npow := Monoidₓ.npow,
         zpow := DivInvMonoidₓ.zpow } <;>
     run_tac
       tactic.pi_instance_derive_field
 
 @[to_additive]
-instance CommGroupₓ [∀ i, CommGroupₓ <| f i] : CommGroupₓ (∀ i : I, f i) := by
+instance commGroup [∀ i, CommGroupₓ <| f i] : CommGroupₓ (∀ i : I, f i) := by
   refine_struct
-      { one := (1 : ∀ i, f i), mul := · * ·, inv := Inv.inv, div := Div.div, npow := Monoidₓ.npow,
+      { one := (1 : ∀ i, f i), mul := (· * ·), inv := Inv.inv, div := Div.div, npow := Monoidₓ.npow,
         zpow := DivInvMonoidₓ.zpow } <;>
     run_tac
       tactic.pi_instance_derive_field
 
 @[to_additive AddLeftCancelSemigroup]
-instance LeftCancelSemigroup [∀ i, LeftCancelSemigroup <| f i] : LeftCancelSemigroup (∀ i : I, f i) := by
-  refine_struct { mul := · * · } <;>
+instance leftCancelSemigroup [∀ i, LeftCancelSemigroup <| f i] : LeftCancelSemigroup (∀ i : I, f i) := by
+  refine_struct { mul := (· * ·) } <;>
     run_tac
       tactic.pi_instance_derive_field
 
 @[to_additive AddRightCancelSemigroup]
-instance RightCancelSemigroup [∀ i, RightCancelSemigroup <| f i] : RightCancelSemigroup (∀ i : I, f i) := by
-  refine_struct { mul := · * · } <;>
+instance rightCancelSemigroup [∀ i, RightCancelSemigroup <| f i] : RightCancelSemigroup (∀ i : I, f i) := by
+  refine_struct { mul := (· * ·) } <;>
     run_tac
       tactic.pi_instance_derive_field
 
 @[to_additive AddLeftCancelMonoid]
-instance LeftCancelMonoid [∀ i, LeftCancelMonoid <| f i] : LeftCancelMonoid (∀ i : I, f i) := by
-  refine_struct { one := (1 : ∀ i, f i), mul := · * ·, npow := Monoidₓ.npow } <;>
+instance leftCancelMonoid [∀ i, LeftCancelMonoid <| f i] : LeftCancelMonoid (∀ i : I, f i) := by
+  refine_struct { one := (1 : ∀ i, f i), mul := (· * ·), npow := Monoidₓ.npow } <;>
     run_tac
       tactic.pi_instance_derive_field
 
 @[to_additive AddRightCancelMonoid]
-instance RightCancelMonoid [∀ i, RightCancelMonoid <| f i] : RightCancelMonoid (∀ i : I, f i) := by
-  refine_struct { one := (1 : ∀ i, f i), mul := · * ·, npow := Monoidₓ.npow, .. } <;>
+instance rightCancelMonoid [∀ i, RightCancelMonoid <| f i] : RightCancelMonoid (∀ i : I, f i) := by
+  refine_struct { one := (1 : ∀ i, f i), mul := (· * ·), npow := Monoidₓ.npow, .. } <;>
     run_tac
       tactic.pi_instance_derive_field
 
 @[to_additive AddCancelMonoid]
-instance CancelMonoid [∀ i, CancelMonoid <| f i] : CancelMonoid (∀ i : I, f i) := by
-  refine_struct { one := (1 : ∀ i, f i), mul := · * ·, npow := Monoidₓ.npow } <;>
+instance cancelMonoid [∀ i, CancelMonoid <| f i] : CancelMonoid (∀ i : I, f i) := by
+  refine_struct { one := (1 : ∀ i, f i), mul := (· * ·), npow := Monoidₓ.npow } <;>
     run_tac
       tactic.pi_instance_derive_field
 
 @[to_additive AddCancelCommMonoid]
-instance CancelCommMonoid [∀ i, CancelCommMonoid <| f i] : CancelCommMonoid (∀ i : I, f i) := by
-  refine_struct { one := (1 : ∀ i, f i), mul := · * ·, npow := Monoidₓ.npow } <;>
+instance cancelCommMonoid [∀ i, CancelCommMonoid <| f i] : CancelCommMonoid (∀ i : I, f i) := by
+  refine_struct { one := (1 : ∀ i, f i), mul := (· * ·), npow := Monoidₓ.npow } <;>
     run_tac
       tactic.pi_instance_derive_field
 
-instance MulZeroClassₓ [∀ i, MulZeroClassₓ <| f i] : MulZeroClassₓ (∀ i : I, f i) := by
-  refine_struct { zero := (0 : ∀ i, f i), mul := · * ·, .. } <;>
+instance mulZeroClass [∀ i, MulZeroClassₓ <| f i] : MulZeroClassₓ (∀ i : I, f i) := by
+  refine_struct { zero := (0 : ∀ i, f i), mul := (· * ·), .. } <;>
     run_tac
       tactic.pi_instance_derive_field
 
-instance MulZeroOneClassₓ [∀ i, MulZeroOneClassₓ <| f i] : MulZeroOneClassₓ (∀ i : I, f i) := by
-  refine_struct { zero := (0 : ∀ i, f i), one := (1 : ∀ i, f i), mul := · * ·, .. } <;>
+instance mulZeroOneClass [∀ i, MulZeroOneClassₓ <| f i] : MulZeroOneClassₓ (∀ i : I, f i) := by
+  refine_struct { zero := (0 : ∀ i, f i), one := (1 : ∀ i, f i), mul := (· * ·), .. } <;>
     run_tac
       tactic.pi_instance_derive_field
 
-instance MonoidWithZeroₓ [∀ i, MonoidWithZeroₓ <| f i] : MonoidWithZeroₓ (∀ i : I, f i) := by
-  refine_struct { zero := (0 : ∀ i, f i), one := (1 : ∀ i, f i), mul := · * ·, npow := Monoidₓ.npow } <;>
+instance monoidWithZero [∀ i, MonoidWithZeroₓ <| f i] : MonoidWithZeroₓ (∀ i : I, f i) := by
+  refine_struct { zero := (0 : ∀ i, f i), one := (1 : ∀ i, f i), mul := (· * ·), npow := Monoidₓ.npow } <;>
     run_tac
       tactic.pi_instance_derive_field
 
-instance CommMonoidWithZero [∀ i, CommMonoidWithZero <| f i] : CommMonoidWithZero (∀ i : I, f i) := by
-  refine_struct { zero := (0 : ∀ i, f i), one := (1 : ∀ i, f i), mul := · * ·, npow := Monoidₓ.npow } <;>
+instance commMonoidWithZero [∀ i, CommMonoidWithZero <| f i] : CommMonoidWithZero (∀ i : I, f i) := by
+  refine_struct { zero := (0 : ∀ i, f i), one := (1 : ∀ i, f i), mul := (· * ·), npow := Monoidₓ.npow } <;>
     run_tac
       tactic.pi_instance_derive_field
 
@@ -216,7 +224,7 @@ This is the `monoid_hom` version of `pi.mul_single`. -/
       "The additive monoid homomorphism including a single additive\nmonoid into a dependent family of additive monoids, as functions supported at a point.\n\nThis is the `add_monoid_hom` version of `pi.single`.",
   simps]
 def MonoidHom.single [∀ i, MulOneClassₓ <| f i] (i : I) : f i →* ∀ i, f i :=
-  { OneHom.single f i with map_mul' := mul_single_op₂ (fun _ => · * ·) (fun _ => one_mulₓ _) _ }
+  { OneHom.single f i with map_mul' := mul_single_op₂ (fun _ => (· * ·)) (fun _ => one_mulₓ _) _ }
 
 /-- The multiplicative homomorphism including a single `mul_zero_class`
 into a dependent family of `mul_zero_class`es, as functions supported at a point.
@@ -225,7 +233,7 @@ This is the `mul_hom` version of `pi.single`. -/
 @[simps]
 def MulHom.single [∀ i, MulZeroClassₓ <| f i] (i : I) : MulHom (f i) (∀ i, f i) where
   toFun := single i
-  map_mul' := Pi.single_op₂ (fun _ => · * ·) (fun _ => zero_mul _) _
+  map_mul' := Pi.single_op₂ (fun _ => (· * ·)) (fun _ => zero_mul _) _
 
 variable {f}
 
@@ -266,7 +274,7 @@ theorem update_one [∀ i, One (f i)] [DecidableEq I] (i : I) : update (1 : ∀ 
 @[to_additive]
 theorem update_mul [∀ i, Mul (f i)] [DecidableEq I] (f₁ f₂ : ∀ i, f i) (i : I) (x₁ : f i) (x₂ : f i) :
     update (f₁ * f₂) i (x₁ * x₂) = update f₁ i x₁ * update f₂ i x₂ :=
-  funext fun j => (apply_update₂ (fun i => · * ·) f₁ f₂ i x₁ x₂ j).symm
+  funext fun j => (apply_update₂ (fun i => (· * ·)) f₁ f₂ i x₁ x₂ j).symm
 
 @[to_additive]
 theorem update_inv [∀ i, Inv (f i)] [DecidableEq I] (f₁ : ∀ i, f i) (i : I) (x₁ : f i) :
@@ -276,7 +284,7 @@ theorem update_inv [∀ i, Inv (f i)] [DecidableEq I] (f₁ : ∀ i, f i) (i : I
 @[to_additive]
 theorem update_div [∀ i, Div (f i)] [DecidableEq I] (f₁ f₂ : ∀ i, f i) (i : I) (x₁ : f i) (x₂ : f i) :
     update (f₁ / f₂) i (x₁ / x₂) = update f₁ i x₁ / update f₂ i x₂ :=
-  funext fun j => (apply_update₂ (fun i => · / ·) f₁ f₂ i x₁ x₂ j).symm
+  funext fun j => (apply_update₂ (fun i => (· / ·)) f₁ f₂ i x₁ x₂ j).symm
 
 end Function
 
@@ -285,7 +293,7 @@ section Piecewise
 @[to_additive]
 theorem Set.piecewise_mul [∀ i, Mul (f i)] (s : Set I) [∀ i, Decidable (i ∈ s)] (f₁ f₂ g₁ g₂ : ∀ i, f i) :
     s.piecewise (f₁ * f₂) (g₁ * g₂) = s.piecewise f₁ g₁ * s.piecewise f₂ g₂ :=
-  s.piecewise_op₂ _ _ _ _ fun _ => · * ·
+  s.piecewise_op₂ _ _ _ _ fun _ => (· * ·)
 
 @[to_additive]
 theorem Set.piecewise_inv [∀ i, Inv (f i)] (s : Set I) [∀ i, Decidable (i ∈ s)] (f₁ g₁ : ∀ i, f i) :
@@ -295,7 +303,7 @@ theorem Set.piecewise_inv [∀ i, Inv (f i)] (s : Set I) [∀ i, Decidable (i �
 @[to_additive]
 theorem Set.piecewise_div [∀ i, Div (f i)] (s : Set I) [∀ i, Decidable (i ∈ s)] (f₁ f₂ g₁ g₂ : ∀ i, f i) :
     s.piecewise (f₁ / f₂) (g₁ / g₂) = s.piecewise f₁ g₁ / s.piecewise f₂ g₂ :=
-  s.piecewise_op₂ _ _ _ _ fun _ => · / ·
+  s.piecewise_op₂ _ _ _ _ fun _ => (· / ·)
 
 end Piecewise
 

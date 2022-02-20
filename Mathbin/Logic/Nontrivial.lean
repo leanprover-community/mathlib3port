@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Sébastien Gouëzel. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Sébastien Gouëzel
+-/
 import Mathbin.Data.Prod
 import Mathbin.Data.Subtype
 import Mathbin.Logic.Function.Basic
@@ -29,6 +34,7 @@ theorem nontrivial_iff : Nontrivial α ↔ ∃ x y : α, x ≠ y :=
 theorem exists_pair_ne (α : Type _) [Nontrivial α] : ∃ x y : α, x ≠ y :=
   Nontrivial.exists_pair_ne
 
+-- See Note [decidable namespace]
 protected theorem Decidable.exists_ne [Nontrivial α] [DecidableEq α] (x : α) : ∃ y, y ≠ x := by
   rcases exists_pair_ne α with ⟨y, y', h⟩
   by_cases' hx : x = y
@@ -41,9 +47,11 @@ protected theorem Decidable.exists_ne [Nontrivial α] [DecidableEq α] (x : α) 
 theorem exists_ne [Nontrivial α] (x : α) : ∃ y, y ≠ x := by
   classical <;> exact Decidable.exists_ne x
 
+-- `x` and `y` are explicit here, as they are often needed to guide typechecking of `h`.
 theorem nontrivial_of_ne (x y : α) (h : x ≠ y) : Nontrivial α :=
   ⟨⟨x, y, h⟩⟩
 
+-- `x` and `y` are explicit here, as they are often needed to guide typechecking of `h`.
 theorem nontrivial_of_lt [Preorderₓ α] (x y : α) (h : x < y) : Nontrivial α :=
   ⟨⟨x, y, ne_of_ltₓ h⟩⟩
 
@@ -151,7 +159,7 @@ theorem nontrivial_at (i' : I) [inst : ∀ i, Nonempty (f i)] [Nontrivial (f i')
 
 If a different index has the non-trivial type, then use `haveI := nontrivial_at that_index`.
 -/
-instance Nontrivial [Inhabited I] [inst : ∀ i, Nonempty (f i)] [Nontrivial (f default)] : Nontrivial (∀ i : I, f i) :=
+instance nontrivial [Inhabited I] [inst : ∀ i, Nonempty (f i)] [Nontrivial (f default)] : Nontrivial (∀ i : I, f i) :=
   nontrivial_at default
 
 end Pi
@@ -183,7 +191,7 @@ unsafe def nontriviality_by_elim (α : expr) (lems : interactive.parse simp_arg_
       fail f! "Could not prove goal assuming `subsingleton {α}`"
   reset_instance_cache
 
--- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:916:4: warning: unsupported (TODO): `[tacs]
 /-- Tries to generate a `nontrivial α` instance using `nontrivial_of_ne` or `nontrivial_of_lt`
 and local hypotheses.
 -/

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Eric Wieser. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Eric Wieser
+-/
 import Mathbin.RingTheory.Subsemiring.Pointwise
 import Mathbin.GroupTheory.Subgroup.Pointwise
 import Mathbin.RingTheory.Subring.Basic
@@ -28,7 +33,7 @@ variable [Monoidₓ M] [Ringₓ R] [MulSemiringAction M R]
 /-- The action on a subring corresponding to applying the action to every element.
 
 This is available as an instance in the `pointwise` locale. -/
-protected def pointwise_mul_action : MulAction M (Subring R) where
+protected def pointwiseMulAction : MulAction M (Subring R) where
   smul := fun a S => S.map (MulSemiringAction.toRingHom _ _ a)
   one_smul := fun S => (congr_argₓ (fun f => S.map f) (RingHom.ext <| one_smul M)).trans S.map_id
   mul_smul := fun a₁ a₂ S => (congr_argₓ (fun f => S.map f) (RingHom.ext <| mul_smul _ _)).trans (S.map_map _ _).symm

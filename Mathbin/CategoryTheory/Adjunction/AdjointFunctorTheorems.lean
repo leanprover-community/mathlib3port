@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Bhavik Mehta. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Bhavik Mehta
+-/
 import Mathbin.CategoryTheory.Adjunction.Basic
 import Mathbin.CategoryTheory.Adjunction.Comma
 import Mathbin.CategoryTheory.Limits.Constructions.WeaklyInitial
@@ -42,7 +47,7 @@ The key part of this definition is that the indexing set `ι` lives in `Type v`,
 universe of morphisms of the category: this is the "smallness" condition which allows the general
 adjoint functor theorem to go through.
 -/
-def solution_set_condition {D : Type u} [Category.{v} D] (G : D ⥤ C) : Prop :=
+def SolutionSetCondition {D : Type u} [Category.{v} D] (G : D ⥤ C) : Prop :=
   ∀ A : C,
     ∃ (ι : Type v)(B : ι → D)(f : ∀ i : ι, A ⟶ G.obj (B i)),
       ∀ X h : A ⟶ G.obj X, ∃ (i : ι)(g : B i ⟶ X), f i ≫ G.map g = h
@@ -64,7 +69,7 @@ theorem solution_set_condition_of_is_right_adjoint [IsRightAdjoint G] : Solution
 /-- The general adjoint functor theorem says that if `G : D ⥤ C` preserves limits and `D` has them,
 if `G` satisfies the solution set condition then `G` is a right adjoint.
 -/
-noncomputable def is_right_adjoint_of_preserves_limits_of_solution_set_condition [HasLimits D] [PreservesLimits G]
+noncomputable def isRightAdjointOfPreservesLimitsOfSolutionSetCondition [HasLimits D] [PreservesLimits G]
     (hG : SolutionSetCondition G) : IsRightAdjoint G := by
   apply is_right_adjoint_of_structured_arrow_initials _
   intro A

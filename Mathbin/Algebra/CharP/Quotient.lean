@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Kenny Lau. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Kenny Lau, Eric Wieser
+-/
 import Mathbin.Algebra.CharP.Basic
 import Mathbin.RingTheory.Ideal.Quotient
 
@@ -10,7 +15,7 @@ universe u v
 
 namespace CharP
 
-theorem Quotientₓ (R : Type u) [CommRingₓ R] (p : ℕ) [hp1 : Fact p.Prime] (hp2 : ↑p ∈ Nonunits R) :
+theorem quotient (R : Type u) [CommRingₓ R] (p : ℕ) [hp1 : Fact p.Prime] (hp2 : ↑p ∈ Nonunits R) :
     CharP (R ⧸ (Ideal.span {p} : Ideal R)) p :=
   have hp0 : (p : R ⧸ (Ideal.span {p} : Ideal R)) = 0 :=
     map_nat_cast (Ideal.Quotient.mk (Ideal.span {p} : Ideal R)) p ▸

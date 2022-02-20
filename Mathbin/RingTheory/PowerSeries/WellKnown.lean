@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Yury G. Kudryashov. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yury G. Kudryashov
+-/
 import Mathbin.RingTheory.PowerSeries.Basic
 import Mathbin.Data.Nat.Parity
 import Mathbin.Algebra.BigOperators.NatAntidiagonal
@@ -22,7 +27,7 @@ section Ringₓ
 variable {R S : Type _} [Ringₓ R] [Ringₓ S]
 
 /-- The power series for `1 / (u - x)`. -/
-def inv_units_sub (u : (R)ˣ) : PowerSeries R :=
+def invUnitsSub (u : (R)ˣ) : PowerSeries R :=
   mk fun n => 1 /ₚ u ^ (n + 1)
 
 @[simp]

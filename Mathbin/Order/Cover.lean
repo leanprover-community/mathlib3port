@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Yaël Dillies. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yaël Dillies, Violeta Hernández Palacios, Grayson Burton
+-/
 import Mathbin.Data.Set.Intervals.OrdConnected
 
 /-!

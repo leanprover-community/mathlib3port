@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison, Adam Topaz
+-/
 import Mathbin.Algebra.Category.Group.Basic
 import Mathbin.Algebra.Category.Module.Abelian
 import Mathbin.CategoryTheory.Derived

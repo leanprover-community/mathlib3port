@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Oliver Nash. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Oliver Nash
+-/
 import Mathbin.Algebra.Algebra.Basic
 
 /-!
@@ -82,7 +87,7 @@ theorem ext_iff {f g : NonUnitalAlgHom R A B} : f = g ↔ ∀ x, f x = g x :=
     rintro rfl x
     rfl, ext⟩
 
-theorem congr_funₓ {f g : NonUnitalAlgHom R A B} (h : f = g) (x : A) : f x = g x :=
+theorem congr_fun {f g : NonUnitalAlgHom R A B} (h : f = g) (x : A) : f x = g x :=
   h ▸ rfl
 
 @[simp]
@@ -209,10 +214,10 @@ namespace AlgHom
 variable {R A B} [CommSemiringₓ R] [Semiringₓ A] [Semiringₓ B] [Algebra R A] [Algebra R B]
 
 /-- A unital morphism of algebras is a `non_unital_alg_hom`. -/
-def to_non_unital_alg_hom (f : A →ₐ[R] B) : NonUnitalAlgHom R A B :=
+def toNonUnitalAlgHom (f : A →ₐ[R] B) : NonUnitalAlgHom R A B :=
   { f with map_smul' := f.map_smul }
 
-instance non_unital_alg_hom.has_coe : Coe (A →ₐ[R] B) (NonUnitalAlgHom R A B) :=
+instance NonUnitalAlgHom.hasCoe : Coe (A →ₐ[R] B) (NonUnitalAlgHom R A B) :=
   ⟨toNonUnitalAlgHom⟩
 
 @[simp]

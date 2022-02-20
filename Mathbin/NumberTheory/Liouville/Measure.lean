@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Yury G. Kudryashov. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yury G. Kudryashov
+-/
 import Mathbin.MeasureTheory.Measure.Lebesgue
 import Mathbin.NumberTheory.Liouville.Residual
 import Mathbin.NumberTheory.Liouville.LiouvilleWith
@@ -84,7 +89,7 @@ theorem volume_Union_set_of_liouville_with : volume (⋃ (p : ℝ) (hp : 2 < p),
   intro m
   rw [measure_preimage_add_right]
   clear m
-  refine' (measure_bUnion_null_iff <| countable_encodable _).2 fun n hn : 1 ≤ n => _
+  refine' (measure_bUnion_null_iff <| countable_encodable _).2 fun hn : 1 ≤ n => _
   generalize hr : (2 + 1 / n : ℝ) = r
   replace hr : 2 < r
   · simp [← hr, zero_lt_one.trans_le hn]

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Andrew Yang. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Andrew Yang
+-/
 import Mathbin.Topology.Gluing
 import Mathbin.AlgebraicGeometry.OpenImmersion
 import Mathbin.AlgebraicGeometry.LocallyRingedSpace.HasColimits
@@ -84,7 +89,7 @@ We can then glue the spaces `U i` together by identifying `V i j` with `V j i`, 
 that the `U i`'s are open subspaces of the glued space.
 -/
 @[nolint has_inhabited_instance]
-structure glue_data extends GlueData (PresheafedSpace C) where
+structure GlueData extends GlueData (PresheafedSpace C) where
   f_open : ∀ i j, IsOpenImmersion (f i j)
 
 attribute [instance] glue_data.f_open
@@ -106,7 +111,7 @@ local notation "π₂⁻¹" i "," j "," k =>
   (PresheafedSpace.IsOpenImmersion.pullback_snd_of_left (D.f i j) (D.f i k)).inv_app
 
 /-- The glue data of topological spaces associated to a family of glue data of PresheafedSpaces. -/
-abbrev to_Top_glue_data : Top.GlueData :=
+abbrev toTopGlueData : Top.GlueData :=
   { f_open := fun i j => (D.f_open i j).base_open, toGlueData := 𝖣.mapGlueData (forget C) }
 
 theorem ι_open_embedding [HasLimits C] (i : D.J) : OpenEmbedding (𝖣.ι i).base := by
@@ -216,7 +221,7 @@ theorem ι_image_preimage_eq (i j : D.J) (U : Opens (D.U i).Carrier) :
     
 
 /-- (Implementation). The map `Γ(𝒪_{U_i}, U) ⟶ Γ(𝒪_{U_j}, 𝖣.ι j ⁻¹' (𝖣.ι i '' U))` -/
-def opens_image_preimage_map (i j : D.J) (U : Opens (D.U i).Carrier) :
+def opensImagePreimageMap (i j : D.J) (U : Opens (D.U i).Carrier) :
     (D.U i).Presheaf.obj (op U) ⟶ (D.U j).Presheaf.obj _ :=
   (D.f i j).c.app (op U) ≫
     (D.t j i).c.app _ ≫
@@ -246,6 +251,7 @@ theorem opens_image_preimage_map_app (i j k : D.J) (U : Opens (D.U i).Carrier) :
         (π₂⁻¹j,i,k) (unop _) ≫ (D.V (j, k)).Presheaf.map (eqToHom (opens_image_preimage_map_app' D i j k U).some) :=
   (opens_image_preimage_map_app' D i j k U).some_spec
 
+-- This is proved separately since `reassoc` somehow timeouts.
 theorem opens_image_preimage_map_app_assoc (i j k : D.J) (U : Opens (D.U i).Carrier) {X' : C} (f' : _ ⟶ X') :
     D.opensImagePreimageMap i j U ≫ (D.f j k).c.app _ ≫ f' =
       ((π₁ j,i,k) ≫ D.t j i ≫ D.f i j).c.app (op U) ≫
@@ -256,17 +262,17 @@ theorem opens_image_preimage_map_app_assoc (i j k : D.J) (U : Opens (D.U i).Carr
 
 /-- (Implementation) Given an open subset of one of the spaces `U ⊆ Uᵢ`, the sheaf component of
 the image `ι '' U` in the glued space is the limit of this diagram. -/
-abbrev diagram_over_open {i : D.J} (U : Opens (D.U i).Carrier) : WalkingMultispan _ _ᵒᵖ ⥤ C :=
+abbrev diagramOverOpen {i : D.J} (U : Opens (D.U i).Carrier) : WalkingMultispan _ _ᵒᵖ ⥤ C :=
   componentwiseDiagram 𝖣.diagram.multispan ((D.ι_open_embedding i).IsOpenMap.Functor.obj U)
 
 /-- (Implementation)
 The projection from the limit of `diagram_over_open` to a component of `D.U j`. -/
-abbrev diagram_over_open_π {i : D.J} (U : Opens (D.U i).Carrier) (j : D.J) :=
+abbrev diagramOverOpenπ {i : D.J} (U : Opens (D.U i).Carrier) (j : D.J) :=
   limit.π (D.diagramOverOpen U) (op (WalkingMultispan.right j))
 
 /-- (Implementation) We construct the map `Γ(𝒪_{U_i}, U) ⟶ Γ(𝒪_V, U_V)` for each `V` in the gluing
 diagram. We will lift these maps into `ι_inv_app`. -/
-def ι_inv_app_π_app {i : D.J} (U : Opens (D.U i).Carrier) j :
+def ιInvAppπApp {i : D.J} (U : Opens (D.U i).Carrier) j :
     (𝖣.U i).Presheaf.obj (op U) ⟶ (D.diagramOverOpen U).obj (op j) := by
   rcases j with (⟨j, k⟩ | j)
   · refine' D.opens_image_preimage_map i j U ≫ (D.f j k).c.app _ ≫ (D.V (j, k)).Presheaf.map (eq_to_hom _)
@@ -282,7 +288,7 @@ def ι_inv_app_π_app {i : D.J} (U : Opens (D.U i).Carrier) j :
 
 /-- (Implementation) The natural map `Γ(𝒪_{U_i}, U) ⟶ Γ(𝒪_X, 𝖣.ι i '' U)`.
 This forms the inverse of `(𝖣.ι i).c.app (op U)`. -/
-def ι_inv_app {i : D.J} (U : Opens (D.U i).Carrier) : (D.U i).Presheaf.obj (op U) ⟶ limit (D.diagramOverOpen U) :=
+def ιInvApp {i : D.J} (U : Opens (D.U i).Carrier) : (D.U i).Presheaf.obj (op U) ⟶ limit (D.diagramOverOpen U) :=
   limit.lift (D.diagramOverOpen U)
     { x := (D.U i).Presheaf.obj (op U),
       π :=
@@ -302,6 +308,9 @@ def ι_inv_app {i : D.J} (U : Opens (D.U i).Carrier) : (D.U i).Presheaf.obj (op 
               congr 1
               
             erw [category.id_comp]
+            -- It remains to show that the blue is equal to red + green in the original diagram.
+            -- The proof strategy is illustrated in ![this diagram](https://i.imgur.com/mBzV1Rx.png)
+            -- where we prove red = pink = light-blue = green = blue.
             change
               D.opens_image_preimage_map i j U ≫ (D.f j k).c.app _ ≫ (D.V (j, k)).Presheaf.map (eq_to_hom _) =
                 D.opens_image_preimage_map _ _ _ ≫
@@ -311,6 +320,8 @@ def ι_inv_app {i : D.J} (U : Opens (D.U i).Carrier) : (D.U i).Presheaf.obj (op 
             erw [opens_image_preimage_map_app_assoc, (D.t j k).c.naturality_assoc]
             rw [snd_inv_app_t_app_assoc]
             erw [← PresheafedSpace.comp_c_app_assoc]
+            -- light-blue = green is relatively easy since the part that differs does not involve
+            -- partial inverses.
             have :
               D.t' j k i ≫ (π₁ k,i,j) ≫ D.t k i ≫ 𝖣.f i k =
                 (pullback_symmetry _ _).Hom ≫ (π₁ j,i,k) ≫ D.t j i ≫ D.f i j :=
@@ -352,7 +363,7 @@ theorem ι_inv_app_π {i : D.J} (U : Opens (D.U i).Carrier) :
     
 
 /-- The `eq_to_hom` given by `ι_inv_app_π`. -/
-abbrev ι_inv_app_π_eq_map {i : D.J} (U : Opens (D.U i).Carrier) :=
+abbrev ιInvAppπEqMap {i : D.J} (U : Opens (D.U i).Carrier) :=
   (D.U i).Presheaf.map (eqToIso (D.ι_inv_app_π U).some).inv
 
 /-- `ι_inv_app` is the right inverse of `D.ι i` on `U`. -/
@@ -424,7 +435,7 @@ Vᵢⱼ ⟶ Uᵢ
  ↓      ↓
  Uⱼ ⟶ X
 -/
-def V_pullback_cone_is_limit (i j : D.J) : IsLimit (𝖣.vPullbackCone i j) :=
+def vPullbackConeIsLimit (i j : D.J) : IsLimit (𝖣.vPullbackCone i j) :=
   (PullbackCone.isLimitAux' _) fun s => by
     refine' ⟨_, _, _, _⟩
     · refine' PresheafedSpace.is_open_immersion.lift (D.f i j) s.fst _
@@ -481,7 +492,7 @@ We can then glue the spaces `U i` together by identifying `V i j` with `V j i`, 
 that the `U i`'s are open subspaces of the glued space.
 -/
 @[nolint has_inhabited_instance]
-structure glue_data extends GlueData (SheafedSpace C) where
+structure GlueData extends GlueData (SheafedSpace C) where
   f_open : ∀ i j, SheafedSpace.IsOpenImmersion (f i j)
 
 attribute [instance] glue_data.f_open
@@ -493,13 +504,13 @@ variable {C} (D : GlueData C)
 local notation "𝖣" => D.toGlueData
 
 /-- The glue data of presheafed spaces associated to a family of glue data of sheafed spaces. -/
-abbrev to_PresheafedSpace_glue_data : PresheafedSpace.GlueData C :=
+abbrev toPresheafedSpaceGlueData : PresheafedSpace.GlueData C :=
   { f_open := D.f_open, toGlueData := 𝖣.mapGlueData forgetToPresheafedSpace }
 
 variable [HasLimits C]
 
 /-- The gluing as sheafed spaces is isomorphic to the gluing as presheafed spaces. -/
-abbrev iso_PresheafedSpace : 𝖣.glued.toPresheafedSpace ≅ D.toPresheafedSpaceGlueData.toGlueData.glued :=
+abbrev isoPresheafedSpace : 𝖣.glued.toPresheafedSpace ≅ D.toPresheafedSpaceGlueData.toGlueData.glued :=
   𝖣.gluedIso forgetToPresheafedSpace
 
 theorem ι_iso_PresheafedSpace_inv (i : D.J) :
@@ -520,7 +531,7 @@ Vᵢⱼ ⟶ Uᵢ
  ↓      ↓
  Uⱼ ⟶ X
 -/
-def V_pullback_cone_is_limit (i j : D.J) : IsLimit (𝖣.vPullbackCone i j) :=
+def vPullbackConeIsLimit (i j : D.J) : IsLimit (𝖣.vPullbackCone i j) :=
   𝖣.vPullbackConeIsLimitOfMap forgetToPresheafedSpace i j (D.toPresheafedSpaceGlueData.vPullbackConeIsLimit _ _)
 
 end GlueData
@@ -548,7 +559,7 @@ We can then glue the spaces `U i` together by identifying `V i j` with `V j i`, 
 that the `U i`'s are open subspaces of the glued space.
 -/
 @[nolint has_inhabited_instance]
-structure glue_data extends GlueData LocallyRingedSpace where
+structure GlueData extends GlueData LocallyRingedSpace where
   f_open : ∀ i j, LocallyRingedSpace.IsOpenImmersion (f i j)
 
 attribute [instance] glue_data.f_open
@@ -560,11 +571,11 @@ variable (D : GlueData)
 local notation "𝖣" => D.toGlueData
 
 /-- The glue data of ringed spaces associated to a family of glue data of locally ringed spaces. -/
-abbrev to_SheafedSpace_glue_data : SheafedSpace.GlueData CommRingₓₓ :=
+abbrev toSheafedSpaceGlueData : SheafedSpace.GlueData CommRingₓₓ :=
   { f_open := D.f_open, toGlueData := 𝖣.mapGlueData forgetToSheafedSpace }
 
 /-- The gluing as locally ringed spaces is isomorphic to the gluing as ringed spaces. -/
-abbrev iso_SheafedSpace : 𝖣.glued.toSheafedSpace ≅ D.toSheafedSpaceGlueData.toGlueData.glued :=
+abbrev isoSheafedSpace : 𝖣.glued.toSheafedSpace ≅ D.toSheafedSpaceGlueData.toGlueData.glued :=
   𝖣.gluedIso forgetToSheafedSpace
 
 theorem ι_iso_SheafedSpace_inv (i : D.J) :
@@ -589,7 +600,7 @@ Vᵢⱼ ⟶ Uᵢ
  ↓      ↓
  Uⱼ ⟶ X
 -/
-def V_pullback_cone_is_limit (i j : D.J) : IsLimit (𝖣.vPullbackCone i j) :=
+def vPullbackConeIsLimit (i j : D.J) : IsLimit (𝖣.vPullbackCone i j) :=
   𝖣.vPullbackConeIsLimitOfMap forgetToSheafedSpace i j (D.toSheafedSpaceGlueData.vPullbackConeIsLimit _ _)
 
 end GlueData

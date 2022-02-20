@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison, Bhavik Mehta
+-/
 import Mathbin.CategoryTheory.Opposites
 
 /-!
@@ -12,6 +17,7 @@ We have `(const J).obj X ⋙ F ≅ (const J).obj (F.obj X)` for any `F : C ⥤ D
 -/
 
 
+-- declare the `v`'s first; see `category_theory.category` for an explanation
 universe v₁ v₂ v₃ u₁ u₂ u₃
 
 open CategoryTheory
@@ -49,7 +55,7 @@ theorem map_app {X Y : C} (f : X ⟶ Y) (j : J) : ((const J).map f).app j = f :=
 /-- The contant functor `Jᵒᵖ ⥤ Cᵒᵖ` sending everything to `op X`
 is (naturally isomorphic to) the opposite of the constant functor `J ⥤ C` sending everything to `X`.
 -/
-def op_obj_op (X : C) : (const (Jᵒᵖ)).obj (op X) ≅ ((const J).obj X).op where
+def opObjOp (X : C) : (const (Jᵒᵖ)).obj (op X) ≅ ((const J).obj X).op where
   Hom := { app := fun j => 𝟙 _ }
   inv := { app := fun j => 𝟙 _ }
 
@@ -65,10 +71,11 @@ theorem op_obj_op_inv_app (X : C) (j : Jᵒᵖ) : (opObjOp X).inv.app j = 𝟙 _
 is (naturally isomorphic to) the opposite of
 the constant functor `J ⥤ Cᵒᵖ` sending everything to `X`.
 -/
-def op_obj_unop (X : Cᵒᵖ) : (const (Jᵒᵖ)).obj (unop X) ≅ ((const J).obj X).leftOp where
+def opObjUnop (X : Cᵒᵖ) : (const (Jᵒᵖ)).obj (unop X) ≅ ((const J).obj X).leftOp where
   Hom := { app := fun j => 𝟙 _ }
   inv := { app := fun j => 𝟙 _ }
 
+-- Lean needs some help with universes here.
 @[simp]
 theorem op_obj_unop_hom_app (X : Cᵒᵖ) (j : Jᵒᵖ) : (opObjUnop.{v₁, v₂} X).Hom.app j = 𝟙 _ :=
   rfl
@@ -92,7 +99,7 @@ variable {D : Type u₃} [Category.{v₃} D]
   (the equality requires F.map (𝟙 _) = 𝟙 _). A natural isomorphism is
   more convenient than an equality between functors (compare id_to_iso). -/
 @[simps]
-def const_comp (X : C) (F : C ⥤ D) : (const J).obj X ⋙ F ≅ (const J).obj (F.obj X) where
+def constComp (X : C) (F : C ⥤ D) : (const J).obj X ⋙ F ≅ (const J).obj (F.obj X) where
   Hom := { app := fun _ => 𝟙 _ }
   inv := { app := fun _ => 𝟙 _ }
 

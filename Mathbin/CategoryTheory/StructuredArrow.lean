@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Adam Topaz, Scott Morrison
+-/
 import Mathbin.CategoryTheory.Punit
 import Mathbin.CategoryTheory.Comma
 import Mathbin.CategoryTheory.Limits.Shapes.Terminal
@@ -16,6 +21,7 @@ We prove that `𝟙 (T.obj Y)` is the initial object in `T`-structured objects w
 
 namespace CategoryTheory
 
+-- morphism levels before object levels. See note [category_theory universes].
 universe v₁ v₂ v₃ v₄ u₁ u₂ u₃ u₄
 
 variable {C : Type u₁} [Category.{v₁} C] {D : Type u₂} [Category.{v₂} D]
@@ -25,7 +31,7 @@ has as its objects `D`-morphisms of the form `S ⟶ T Y`, for some `Y : C`,
 and morphisms `C`-morphisms `Y ⟶ Y'` making the obvious triangle commute.
 -/
 @[nolint has_inhabited_instance]
-def structured_arrow (S : D) (T : C ⥤ D) :=
+def StructuredArrow (S : D) (T : C ⥤ D) :=
   Comma (Functor.fromPunit S) T deriving Category
 
 namespace StructuredArrow
@@ -67,7 +73,7 @@ we need a morphism of the objects underlying the target,
 and to check that the triangle commutes.
 -/
 @[simps]
-def hom_mk {f f' : StructuredArrow S T} (g : f.right ⟶ f'.right) (w : f.Hom ≫ T.map g = f'.Hom) : f ⟶ f' where
+def homMk {f f' : StructuredArrow S T} (g : f.right ⟶ f'.right) (w : f.Hom ≫ T.map g = f'.Hom) : f ⟶ f' where
   left :=
     eqToHom
       (by
@@ -80,7 +86,7 @@ def hom_mk {f f' : StructuredArrow S T} (g : f.right ⟶ f'.right) (w : f.Hom �
 /-- Given a structured arrow `X ⟶ F(U)`, and an arrow `U ⟶ Y`, we can construct a morphism of
 structured arrow given by `(X ⟶ F(U)) ⟶ (X ⟶ F(U) ⟶ F(Y))`.
 -/
-def hom_mk' {F : C ⥤ D} {X : D} {Y : C} (U : StructuredArrow X F) (f : U.right ⟶ Y) : U ⟶ mk (U.Hom ≫ F.map f) where
+def homMk' {F : C ⥤ D} {X : D} {Y : C} (U : StructuredArrow X F) (f : U.right ⟶ Y) : U ⟶ mk (U.Hom ≫ F.map f) where
   right := f
 
 /-- To construct an isomorphism of structured arrows,
@@ -88,7 +94,7 @@ we need an isomorphism of the objects underlying the target,
 and to check that the triangle commutes.
 -/
 @[simps]
-def iso_mk {f f' : StructuredArrow S T} (g : f.right ≅ f'.right) (w : f.Hom ≫ T.map g.Hom = f'.Hom) : f ≅ f' :=
+def isoMk {f f' : StructuredArrow S T} (g : f.right ≅ f'.right) (w : f.Hom ≫ T.map g.Hom = f'.Hom) : f ≅ f' :=
   Comma.isoMk
     (eqToIso
       (by
@@ -135,7 +141,7 @@ instance proj_reflects_iso : ReflectsIsomorphisms (proj S T) where
 open CategoryTheory.Limits
 
 /-- The identity structured arrow is initial. -/
-def mk_id_initial [Full T] [Faithful T] : IsInitial (mk (𝟙 (T.obj Y))) where
+def mkIdInitial [Full T] [Faithful T] : IsInitial (mk (𝟙 (T.obj Y))) where
   desc := fun c =>
     homMk (T.Preimage c.x.Hom)
       (by
@@ -169,7 +175,7 @@ has as its objects `D`-morphisms of the form `S Y ⟶ T`, for some `Y : C`,
 and morphisms `C`-morphisms `Y ⟶ Y'` making the obvious triangle commute.
 -/
 @[nolint has_inhabited_instance]
-def costructured_arrow (S : C ⥤ D) (T : D) :=
+def CostructuredArrow (S : C ⥤ D) (T : D) :=
   Comma S (Functor.fromPunit T)deriving Category
 
 namespace CostructuredArrow
@@ -211,7 +217,7 @@ we need a morphism of the objects underlying the source,
 and to check that the triangle commutes.
 -/
 @[simps]
-def hom_mk {f f' : CostructuredArrow S T} (g : f.left ⟶ f'.left) (w : S.map g ≫ f'.Hom = f.Hom) : f ⟶ f' where
+def homMk {f f' : CostructuredArrow S T} (g : f.left ⟶ f'.left) (w : S.map g ≫ f'.Hom = f.Hom) : f ⟶ f' where
   left := g
   right :=
     eqToHom
@@ -225,7 +231,7 @@ we need an isomorphism of the objects underlying the source,
 and to check that the triangle commutes.
 -/
 @[simps]
-def iso_mk {f f' : CostructuredArrow S T} (g : f.left ≅ f'.left) (w : S.map g.Hom ≫ f'.Hom = f.Hom) : f ≅ f' :=
+def isoMk {f f' : CostructuredArrow S T} (g : f.left ≅ f'.left) (w : S.map g.Hom ≫ f'.Hom = f.Hom) : f ≅ f' :=
   Comma.isoMk g
     (eqToIso
       (by
@@ -271,7 +277,7 @@ instance proj_reflects_iso : ReflectsIsomorphisms (proj S T) where
 open CategoryTheory.Limits
 
 /-- The identity costructured arrow is terminal. -/
-def mk_id_terminal [Full S] [Faithful S] : IsTerminal (mk (𝟙 (S.obj Y))) where
+def mkIdTerminal [Full S] [Faithful S] : IsTerminal (mk (𝟙 (S.obj Y))) where
   lift := fun c =>
     homMk (S.Preimage c.x.Hom)
       (by
@@ -310,7 +316,7 @@ category of structured arrows `d ⟶ F.obj c` to the category of costructured ar
 `F.op.obj c ⟶ (op d)`.
 -/
 @[simps]
-def to_costructured_arrow (F : C ⥤ D) (d : D) : StructuredArrow d Fᵒᵖ ⥤ CostructuredArrow F.op (op d) where
+def toCostructuredArrow (F : C ⥤ D) (d : D) : StructuredArrow d Fᵒᵖ ⥤ CostructuredArrow F.op (op d) where
   obj := fun X => @CostructuredArrow.mk _ _ _ _ _ (op X.unop.right) F.op X.unop.Hom.op
   map := fun X Y f =>
     CostructuredArrow.homMk f.unop.right.op
@@ -324,7 +330,7 @@ category of structured arrows `op d ⟶ F.op.obj c` to the category of costructu
 `F.obj c ⟶ d`.
 -/
 @[simps]
-def to_costructured_arrow' (F : C ⥤ D) (d : D) : StructuredArrow (op d) F.opᵒᵖ ⥤ CostructuredArrow F d where
+def toCostructuredArrow' (F : C ⥤ D) (d : D) : StructuredArrow (op d) F.opᵒᵖ ⥤ CostructuredArrow F d where
   obj := fun X => @CostructuredArrow.mk _ _ _ _ _ (unop X.unop.right) F X.unop.Hom.unop
   map := fun X Y f =>
     CostructuredArrow.homMk f.unop.right.unop
@@ -343,7 +349,7 @@ category of costructured arrows `F.obj c ⟶ d` to the category of structured ar
 `op d ⟶ F.op.obj c`.
 -/
 @[simps]
-def to_structured_arrow (F : C ⥤ D) (d : D) : CostructuredArrow F dᵒᵖ ⥤ StructuredArrow (op d) F.op where
+def toStructuredArrow (F : C ⥤ D) (d : D) : CostructuredArrow F dᵒᵖ ⥤ StructuredArrow (op d) F.op where
   obj := fun X => @StructuredArrow.mk _ _ _ _ _ (op X.unop.left) F.op X.unop.Hom.op
   map := fun X Y f =>
     StructuredArrow.homMk f.unop.left.op
@@ -357,7 +363,7 @@ category of costructured arrows `F.op.obj c ⟶ op d` to the category of structu
 `d ⟶ F.obj c`.
 -/
 @[simps]
-def to_structured_arrow' (F : C ⥤ D) (d : D) : CostructuredArrow F.op (op d)ᵒᵖ ⥤ StructuredArrow d F where
+def toStructuredArrow' (F : C ⥤ D) (d : D) : CostructuredArrow F.op (op d)ᵒᵖ ⥤ StructuredArrow d F where
   obj := fun X => @StructuredArrow.mk _ _ _ _ _ (unop X.unop.left) F X.unop.Hom.unop
   map := fun X Y f =>
     StructuredArrow.homMk f.unop.left.unop
@@ -371,7 +377,7 @@ end CostructuredArrow
 /-- For a functor `F : C ⥤ D` and an object `d : D`, the category of structured arrows `d ⟶ F.obj c`
 is contravariantly equivalent to the category of costructured arrows `F.op.obj c ⟶ op d`.
 -/
-def structured_arrow_op_equivalence (F : C ⥤ D) (d : D) : StructuredArrow d Fᵒᵖ ≌ CostructuredArrow F.op (op d) :=
+def structuredArrowOpEquivalence (F : C ⥤ D) (d : D) : StructuredArrow d Fᵒᵖ ≌ CostructuredArrow F.op (op d) :=
   Equivalence.mk (StructuredArrow.toCostructuredArrow F d) (CostructuredArrow.toStructuredArrow' F d).rightOp
     (NatIso.ofComponents
       (fun X =>
@@ -397,7 +403,7 @@ def structured_arrow_op_equivalence (F : C ⥤ D) (d : D) : StructuredArrow d F�
 `F.obj c ⟶ d` is contravariantly equivalent to the category of structured arrows
 `op d ⟶ F.op.obj c`.
 -/
-def costructured_arrow_op_equivalence (F : C ⥤ D) (d : D) : CostructuredArrow F dᵒᵖ ≌ StructuredArrow (op d) F.op :=
+def costructuredArrowOpEquivalence (F : C ⥤ D) (d : D) : CostructuredArrow F dᵒᵖ ≌ StructuredArrow (op d) F.op :=
   Equivalence.mk (CostructuredArrow.toStructuredArrow F d) (StructuredArrow.toCostructuredArrow' F d).rightOp
     (NatIso.ofComponents
       (fun X =>

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Mario Carneiro. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Mario Carneiro
+-/
 import Mathbin.Tactic.DocCommands
 
 open Interactive
@@ -38,10 +43,14 @@ unsafe def simpa (use_iota_eqn : parse <| (tk "!")?) (trace_lemmas : parse <| (t
       let e ←
         i_to_expr e <|> do
             let ty ← target
-            let e ← i_to_expr_strict (pquote.1 (%%ₓe : %%ₓty))
+            let e
+              ←-- for positional error messages, we don't care about the result
+                  i_to_expr_strict
+                  (pquote.1 (%%ₓe : %%ₓty))
             let pty ← pp ty
             let ptgt ← pp e
-            fail
+            -- Fail deliberately, to advise regarding `simp; exact` usage
+                fail
                 ("simpa failed, 'using' expression type not directly " ++
                         "inferrable. Try:\n\nsimpa ... using\nshow " ++
                       to_fmt pty ++

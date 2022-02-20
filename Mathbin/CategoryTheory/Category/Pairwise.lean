@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison
+-/
 import Mathbin.CategoryTheory.Category.Preorder
 import Mathbin.CategoryTheory.Limits.IsLimit
 
@@ -38,13 +43,13 @@ variable {ι : Type v}
 
 namespace Pairwise
 
-instance pairwise_inhabited [Inhabited ι] : Inhabited (Pairwise ι) :=
+instance pairwiseInhabited [Inhabited ι] : Inhabited (Pairwise ι) :=
   ⟨single default⟩
 
 /-- Morphisms in the category `pairwise ι`. The only non-identity morphisms are
 `left i j : single i ⟶ pair i j` and `right i j : single j ⟶ pair i j`.
 -/
-inductive hom : Pairwise ι → Pairwise ι → Type v
+inductive Hom : Pairwise ι → Pairwise ι → Type v
   | id_single : ∀ i, hom (single i) (single i)
   | id_pair : ∀ i j, hom (pair i j) (pair i j)
   | left : ∀ i j, hom (pair i j) (single i)
@@ -52,7 +57,7 @@ inductive hom : Pairwise ι → Pairwise ι → Type v
 
 open Hom
 
-instance hom_inhabited [Inhabited ι] : Inhabited (Hom (single (default : ι)) (single default)) :=
+instance homInhabited [Inhabited ι] : Inhabited (Hom (single (default : ι)) (single default)) :=
   ⟨id_single default⟩
 
 /-- The identity morphism in `pairwise ι`.
@@ -87,13 +92,13 @@ variable [SemilatticeInf α]
 
 /-- Auxiliary definition for `diagram`. -/
 @[simp]
-def diagram_obj : Pairwise ι → α
+def diagramObj : Pairwise ι → α
   | single i => U i
   | pair i j => U i⊓U j
 
 /-- Auxiliary definition for `diagram`. -/
 @[simp]
-def diagram_map : ∀ {o₁ o₂ : Pairwise ι} f : o₁ ⟶ o₂, diagramObj U o₁ ⟶ diagramObj U o₂
+def diagramMap : ∀ {o₁ o₂ : Pairwise ι} f : o₁ ⟶ o₂, diagramObj U o₁ ⟶ diagramObj U o₂
   | _, _, id_single i => 𝟙 _
   | _, _, id_pair i j => 𝟙 _
   | _, _, left i j => homOfLe inf_le_left
@@ -112,10 +117,12 @@ end
 
 section
 
+-- `complete_lattice` is not really needed, as we only ever use `inf`,
+-- but the appropriate structure has not been defined.
 variable [CompleteLattice α]
 
 /-- Auxiliary definition for `cocone`. -/
-def cocone_ι_app : ∀ o : Pairwise ι, diagramObj U o ⟶ supr U
+def coconeιApp : ∀ o : Pairwise ι, diagramObj U o ⟶ supr U
   | single i => homOfLe (le_supr U i)
   | pair i j => homOfLe inf_le_left ≫ homOfLe (le_supr U i)
 
@@ -130,7 +137,7 @@ def cocone : Cocone (diagram U) where
 /-- Given a function `U : ι → α` for `[complete_lattice α]`,
 `infi U` provides a limit cone over `diagram U`.
 -/
-def cocone_is_colimit : IsColimit (cocone U) where
+def coconeIsColimit : IsColimit (cocone U) where
   desc := fun s =>
     homOfLe
       (by

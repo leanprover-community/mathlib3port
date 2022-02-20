@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Aaron Anderson. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Aaron Anderson
+-/
 import Mathbin.Algebra.GcdMonoid.Finset
 import Mathbin.Data.Polynomial.FieldDivision
 import Mathbin.Data.Polynomial.EraseLead
@@ -32,7 +37,7 @@ section Primitive
 variable {R : Type _} [CommSemiringₓ R]
 
 /-- A polynomial is primitive when the only constant polynomials dividing it are units -/
-def is_primitive (p : R[X]) : Prop :=
+def IsPrimitive (p : R[X]) : Prop :=
   ∀ r : R, c r ∣ p → IsUnit r
 
 theorem is_primitive_iff_is_unit_of_C_dvd {p : R[X]} : p.IsPrimitive ↔ ∀ r : R, c r ∣ p → IsUnit r :=
@@ -41,14 +46,14 @@ theorem is_primitive_iff_is_unit_of_C_dvd {p : R[X]} : p.IsPrimitive ↔ ∀ r :
 @[simp]
 theorem is_primitive_one : IsPrimitive (1 : R[X]) := fun r h => is_unit_C.mp (is_unit_of_dvd_one (c r) h)
 
-theorem monic.is_primitive {p : R[X]} (hp : p.Monic) : p.IsPrimitive := by
+theorem Monic.is_primitive {p : R[X]} (hp : p.Monic) : p.IsPrimitive := by
   rintro r ⟨q, h⟩
   exact
     is_unit_of_mul_eq_one r (q.coeff p.nat_degree)
       (by
         rwa [← coeff_C_mul, ← h])
 
-theorem is_primitive.ne_zero [Nontrivial R] {p : R[X]} (hp : p.IsPrimitive) : p ≠ 0 := by
+theorem IsPrimitive.ne_zero [Nontrivial R] {p : R[X]} (hp : p.IsPrimitive) : p ≠ 0 := by
   rintro rfl
   exact (hp 0 (dvd_zero (C 0))).ne_zero rfl
 
@@ -208,7 +213,7 @@ theorem is_primitive_iff_content_eq_one {p : R[X]} : p.IsPrimitive ↔ p.content
   simp_rw [← dvd_content_iff_C_dvd]
   exact ⟨fun h => h p.content (dvd_refl p.content), fun h r hdvd => is_unit_of_dvd_unit hdvd h⟩
 
-theorem is_primitive.content_eq_one {p : R[X]} (hp : p.IsPrimitive) : p.content = 1 :=
+theorem IsPrimitive.content_eq_one {p : R[X]} (hp : p.IsPrimitive) : p.content = 1 :=
   is_primitive_iff_content_eq_one.mp hp
 
 open_locale Classical
@@ -219,7 +224,7 @@ section PrimPart
 
 /-- The primitive part of a polynomial `p` is the primitive polynomial gained by dividing `p` by
   `p.content`. If `p = 0`, then `p.prim_part = 1`.  -/
-def prim_part (p : R[X]) : R[X] :=
+def primPart (p : R[X]) : R[X] :=
   if p = 0 then 1 else Classical.some (C_content_dvd p)
 
 theorem eq_C_content_mul_prim_part (p : R[X]) : p = c p.content * p.primPart := by
@@ -255,7 +260,7 @@ theorem nat_degree_prim_part (p : R[X]) : p.primPart.natDegree = p.natDegree := 
   conv_rhs => rw [p.eq_C_content_mul_prim_part, nat_degree_mul h p.prim_part_ne_zero, nat_degree_C, zero_addₓ]
 
 @[simp]
-theorem is_primitive.prim_part_eq {p : R[X]} (hp : p.IsPrimitive) : p.primPart = p := by
+theorem IsPrimitive.prim_part_eq {p : R[X]} (hp : p.IsPrimitive) : p.primPart = p := by
   rw [← one_mulₓ p.prim_part, ← C_1, ← hp.content_eq_one, ← p.eq_C_content_mul_prim_part]
 
 theorem is_unit_prim_part_C (r : R) : IsUnit (c r).primPart := by
@@ -355,7 +360,7 @@ theorem content_mul {p q : R[X]} : (p * q).content = p.content * q.content := by
       
     
 
-theorem is_primitive.mul {p q : R[X]} (hp : p.IsPrimitive) (hq : q.IsPrimitive) : (p * q).IsPrimitive := by
+theorem IsPrimitive.mul {p q : R[X]} (hp : p.IsPrimitive) (hq : q.IsPrimitive) : (p * q).IsPrimitive := by
   rw [is_primitive_iff_content_eq_one, content_mul, hp.content_eq_one, hq.content_eq_one, mul_oneₓ]
 
 @[simp]
@@ -366,19 +371,19 @@ theorem prim_part_mul {p q : R[X]} (h0 : p * q ≠ 0) : (p * q).primPart = p.pri
   rw [content_mul, RingHom.map_mul]
   ring
 
-theorem is_primitive.is_primitive_of_dvd {p q : R[X]} (hp : p.IsPrimitive) (hdvd : q ∣ p) : q.IsPrimitive := by
+theorem IsPrimitive.is_primitive_of_dvd {p q : R[X]} (hp : p.IsPrimitive) (hdvd : q ∣ p) : q.IsPrimitive := by
   rcases hdvd with ⟨r, rfl⟩
   rw [is_primitive_iff_content_eq_one, ← normalize_content, normalize_eq_one, is_unit_iff_dvd_one]
   apply Dvd.intro r.content
   rwa [is_primitive_iff_content_eq_one, content_mul] at hp
 
-theorem is_primitive.dvd_prim_part_iff_dvd {p q : R[X]} (hp : p.IsPrimitive) (hq : q ≠ 0) : p ∣ q.primPart ↔ p ∣ q := by
+theorem IsPrimitive.dvd_prim_part_iff_dvd {p q : R[X]} (hp : p.IsPrimitive) (hq : q ≠ 0) : p ∣ q.primPart ↔ p ∣ q := by
   refine' ⟨fun h => h.trans (Dvd.intro_left _ q.eq_C_content_mul_prim_part.symm), fun h => _⟩
   rcases h with ⟨r, rfl⟩
   apply Dvd.intro _
   rw [prim_part_mul hq, hp.prim_part_eq]
 
--- ././Mathport/Syntax/Translate/Basic.lean:418:16: unsupported tactic `by_contra'
+-- ././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'
 theorem exists_primitive_lcm_of_is_primitive {p q : R[X]} (hp : p.IsPrimitive) (hq : q.IsPrimitive) :
     ∃ r : R[X], r.IsPrimitive ∧ ∀ s : R[X], p ∣ s ∧ q ∣ s ↔ r ∣ s := by
   classical
@@ -390,7 +395,7 @@ theorem exists_primitive_lcm_of_is_primitive {p q : R[X]} (hp : p.IsPrimitive) (
   · apply hs s.nat_degree s rfl
     
   clear s
-  "././Mathport/Syntax/Translate/Basic.lean:418:16: unsupported tactic `by_contra'"
+  "././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'"
   rcases Nat.find_specₓ Con with ⟨s, sdeg, ⟨ps, qs⟩, rs⟩
   have s0 : s ≠ 0 := by
     contrapose! rs
@@ -431,7 +436,7 @@ theorem dvd_iff_content_dvd_content_and_prim_part_dvd_prim_part {p q : R[X]} (hq
     exact mul_dvd_mul (RingHom.map_dvd C h.1) h.2
     
 
-instance (priority := 100) NormalizedGcdMonoid : NormalizedGcdMonoid R[X] :=
+instance (priority := 100) normalizedGcdMonoid : NormalizedGcdMonoid R[X] :=
   normalizedGcdMonoidOfExistsLcm fun p q => by
     rcases exists_primitive_lcm_of_is_primitive p.is_primitive_prim_part q.is_primitive_prim_part with ⟨r, rprim, hr⟩
     refine' ⟨C (lcm p.content q.content) * r, fun s => _⟩

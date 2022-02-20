@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Sébastien Gouëzel. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Sébastien Gouëzel
+-/
 import Mathbin.Analysis.Analytic.Composition
 
 /-!
@@ -47,7 +52,7 @@ term compensates the rest of the sum, using `i⁻¹` as an inverse to `p₁`.
 These formulas only make sense when the constant term `p₀` vanishes. The definition we give is
 general, but it ignores the value of `p₀`.
 -/
-noncomputable def left_inv (p : FormalMultilinearSeries 𝕜 E F) (i : E ≃L[𝕜] F) : FormalMultilinearSeries 𝕜 F E
+noncomputable def leftInv (p : FormalMultilinearSeries 𝕜 E F) (i : E ≃L[𝕜] F) : FormalMultilinearSeries 𝕜 F E
   | 0 => 0
   | 1 => (continuousMultilinearCurryFin1 𝕜 F E).symm i.symm
   | n + 2 =>
@@ -73,9 +78,11 @@ theorem left_inv_remove_zero (p : FormalMultilinearSeries 𝕜 E F) (i : E ≃L[
   cases n
   · simp
     
+  -- if one replaces `simp` with `refl`, the proof times out in the kernel.
   cases n
   · simp
     
+  -- TODO: why?
   simp only [left_inv, neg_inj]
   refine' Finset.sum_congr rfl fun c cuniv => _
   rcases c with ⟨c, hc⟩
@@ -158,7 +165,7 @@ term compensates the rest of the sum, using `i⁻¹` as an inverse to `p₁`.
 These formulas only make sense when the constant term `p₀` vanishes. The definition we give is
 general, but it ignores the value of `p₀`.
 -/
-noncomputable def right_inv (p : FormalMultilinearSeries 𝕜 E F) (i : E ≃L[𝕜] F) : FormalMultilinearSeries 𝕜 F E
+noncomputable def rightInv (p : FormalMultilinearSeries 𝕜 E F) (i : E ≃L[𝕜] F) : FormalMultilinearSeries 𝕜 F E
   | 0 => 0
   | 1 => (continuousMultilinearCurryFin1 𝕜 F E).symm i.symm
   | n + 2 =>
@@ -300,7 +307,7 @@ private theorem left_inv_eq_right_inv_aux (p : FormalMultilinearSeries 𝕜 E F)
 /-- The left inverse and the right inverse of a formal multilinear series coincide. This is not at
 all obvious from their definition, but it follows from uniqueness of inverses (which comes from the
 fact that composition is associative on formal multilinear series). -/
-theorem left_inv_eq_right_invₓ (p : FormalMultilinearSeries 𝕜 E F) (i : E ≃L[𝕜] F)
+theorem left_inv_eq_right_inv (p : FormalMultilinearSeries 𝕜 E F) (i : E ≃L[𝕜] F)
     (h : p 1 = (continuousMultilinearCurryFin1 𝕜 E F).symm i) : leftInv p i = rightInv p i :=
   calc
     leftInv p i = leftInv p.removeZero i := by
@@ -440,7 +447,7 @@ theorem radius_right_inv_pos_of_radius_pos_aux1 (n : ℕ) (p : ℕ → ℝ) (hp 
       apply sum_congr rfl fun j hj => _
       simp only [← @MultilinearMap.mk_pi_algebra_apply ℝ (Finₓ j) _ _ ℝ]
       simp only [←
-        MultilinearMap.map_sum_finset (MultilinearMap.mkPiAlgebra ℝ (Finₓ j) ℝ) fun k m : ℕ => r * (a ^ m * p m)]
+        MultilinearMap.map_sum_finset (MultilinearMap.mkPiAlgebra ℝ (Finₓ j) ℝ) fun m : ℕ => r * (a ^ m * p m)]
       simp only [MultilinearMap.mk_pi_algebra_apply]
       dsimp
       simp [prod_const, ← mul_sum, mul_powₓ]
@@ -511,6 +518,8 @@ theorem radius_right_inv_pos_of_radius_pos (p : FormalMultilinearSeries 𝕜 E F
   obtain ⟨C, r, Cpos, rpos, ple⟩ : ∃ (C r : _)(hC : 0 < C)(hr : 0 < r), ∀ n : ℕ, ∥p n∥ ≤ C * r ^ n :=
     le_mul_pow_of_radius_pos p hp
   let I := ∥(i.symm : F →L[𝕜] E)∥
+  -- choose `a` small enough to make sure that `∑_{k ≤ n} aᵏ Qₖ` will be controllable by
+  -- induction
   obtain ⟨a, apos, ha1, ha2⟩ :
     ∃ (a : _)(apos : 0 < a), 2 * I * C * r ^ 2 * (I + 1) ^ 2 * a ≤ 1 ∧ r * (I + 1) * a ≤ 1 / 2 := by
     have : tendsto (fun a => 2 * I * C * r ^ 2 * (I + 1) ^ 2 * a) (𝓝 0) (𝓝 (2 * I * C * r ^ 2 * (I + 1) ^ 2 * 0)) :=
@@ -526,6 +535,8 @@ theorem radius_right_inv_pos_of_radius_pos (p : FormalMultilinearSeries 𝕜 E F
       filter_upwards [self_mem_nhds_within] with _ ha using ha
     rcases(C.and ((A.and B).filter_mono inf_le_left)).exists with ⟨a, ha⟩
     exact ⟨a, ha.1, ha.2.1.le, ha.2.2.le⟩
+  -- check by induction that the partial sums are suitably bounded, using the choice of `a` and the
+  -- inductive control from Lemma `radius_right_inv_pos_of_radius_pos_aux2`.
   let S := fun n => ∑ k in Ico 1 n, a ^ k * ∥p.right_inv i k∥
   have IRec : ∀ n, 1 ≤ n → S n ≤ (I + 1) * a := by
     apply Nat.le_induction
@@ -570,6 +581,7 @@ theorem radius_right_inv_pos_of_radius_pos (p : FormalMultilinearSeries 𝕜 E F
           ring _ ≤ (I + 1) * a := by
           apply_rules [mul_le_mul_of_nonneg_right, apos.le, add_le_add, le_reflₓ]
       
+  -- conclude that all coefficients satisfy `aⁿ Qₙ ≤ (I + 1) a`.
   let a' : Nnreal := ⟨a, apos.le⟩
   suffices H : (a' : Ennreal) ≤ (p.right_inv i).radius
   · apply lt_of_lt_of_leₓ _ H

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Johannes Hölzl. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johannes Hölzl
+-/
 import Mathbin.Tactic.Basic
 import Mathbin.Logic.Relator
 
@@ -92,7 +97,7 @@ variable {r : α → β → Prop} {p : β → γ → Prop} {q : γ → δ → Pr
 relates a term of `α` and a term of `γ` if there is an intermediate
 term of `β` related to both.
 -/
-def comp (r : α → β → Prop) (p : β → γ → Prop) (a : α) (c : γ) : Prop :=
+def Comp (r : α → β → Prop) (p : β → γ → Prop) (a : α) (c : γ) : Prop :=
   ∃ b, r a b ∧ p b c
 
 local infixr:80 " ∘r " => Relation.Comp
@@ -134,14 +139,14 @@ relation to the codomains of the functions.  The resulting relation is
 defined by having pairs of terms related if they have preimages
 related by `r`.
 -/
-protected def map (r : α → β → Prop) (f : α → γ) (g : β → δ) : γ → δ → Prop := fun c d =>
+protected def Map (r : α → β → Prop) (f : α → γ) (g : β → δ) : γ → δ → Prop := fun c d =>
   ∃ a b, r a b ∧ f a = c ∧ g b = d
 
 variable {r : α → α → Prop} {a b c d : α}
 
 /-- `refl_trans_gen r`: reflexive transitive closure of `r` -/
 @[mk_iff Relation.ReflTransGen.cases_tail_iff]
-inductive refl_trans_gen (r : α → α → Prop) (a : α) : α → Prop
+inductive ReflTransGen (r : α → α → Prop) (a : α) : α → Prop
   | refl : refl_trans_gen a
   | tail {b c} : refl_trans_gen b → r b c → refl_trans_gen c
 
@@ -149,13 +154,13 @@ attribute [refl] refl_trans_gen.refl
 
 /-- `refl_gen r`: reflexive closure of `r` -/
 @[mk_iff]
-inductive refl_gen (r : α → α → Prop) (a : α) : α → Prop
+inductive ReflGen (r : α → α → Prop) (a : α) : α → Prop
   | refl : refl_gen a
   | single {b} : r a b → refl_gen b
 
 /-- `trans_gen r`: transitive closure of `r` -/
 @[mk_iff]
-inductive trans_gen (r : α → α → Prop) (a : α) : α → Prop
+inductive TransGen (r : α → α → Prop) (a : α) : α → Prop
   | single {b} : r a b → trans_gen b
   | tail {b c} : trans_gen b → r b c → trans_gen c
 
@@ -195,7 +200,7 @@ theorem head (hab : r a b) (hbc : ReflTransGen r b c) : ReflTransGen r a c := by
   case refl_trans_gen.tail c d hbc hcd hac =>
     exact hac.tail hcd
 
-theorem Symmetric (h : Symmetric r) : Symmetric (ReflTransGen r) := by
+theorem symmetric (h : Symmetric r) : Symmetric (ReflTransGen r) := by
   intro x y h
   induction' h with z w a b c
   · rfl
@@ -372,7 +377,7 @@ theorem transitive_trans_gen : Transitive (TransGen r) := fun a b c => TransGen.
 theorem trans_gen_idem : TransGen (TransGen r) = TransGen r :=
   trans_gen_eq_self transitive_trans_gen
 
-theorem trans_gen.lift {p : β → β → Prop} {a b : α} (f : α → β) (h : ∀ a b, r a b → p (f a) (f b))
+theorem TransGen.lift {p : β → β → Prop} {a b : α} (f : α → β) (h : ∀ a b, r a b → p (f a) (f b))
     (hab : TransGen r a b) : TransGen p (f a) (f b) := by
   induction hab
   case trans_gen.single c hac =>
@@ -380,17 +385,17 @@ theorem trans_gen.lift {p : β → β → Prop} {a b : α} (f : α → β) (h : 
   case trans_gen.tail c d hac hcd hac =>
     exact trans_gen.tail hac (h c d hcd)
 
-theorem trans_gen.lift' {p : β → β → Prop} {a b : α} (f : α → β) (h : ∀ a b, r a b → TransGen p (f a) (f b))
+theorem TransGen.lift' {p : β → β → Prop} {a b : α} (f : α → β) (h : ∀ a b, r a b → TransGen p (f a) (f b))
     (hab : TransGen r a b) : TransGen p (f a) (f b) := by
   simpa [trans_gen_idem] using hab.lift f h
 
-theorem trans_gen.closed {p : α → α → Prop} : (∀ a b, r a b → TransGen p a b) → TransGen r a b → TransGen p a b :=
+theorem TransGen.closed {p : α → α → Prop} : (∀ a b, r a b → TransGen p a b) → TransGen r a b → TransGen p a b :=
   TransGen.lift' id
 
-theorem trans_gen.mono {p : α → α → Prop} : (∀ a b, r a b → p a b) → TransGen r a b → TransGen p a b :=
+theorem TransGen.mono {p : α → α → Prop} : (∀ a b, r a b → p a b) → TransGen r a b → TransGen p a b :=
   TransGen.lift id
 
-theorem trans_gen.swap (h : TransGen r b a) : TransGen (swap r) a b := by
+theorem TransGen.swap (h : TransGen r b a) : TransGen (swap r) a b := by
   induction' h with b h b c hab hbc ih
   · exact trans_gen.single h
     
@@ -423,11 +428,11 @@ theorem refl_trans_gen_iff_eq_or_trans_gen : ReflTransGen r a b ↔ b = a ∨ Tr
       
     
 
-theorem refl_trans_gen.lift {p : β → β → Prop} {a b : α} (f : α → β) (h : ∀ a b, r a b → p (f a) (f b))
+theorem ReflTransGen.lift {p : β → β → Prop} {a b : α} (f : α → β) (h : ∀ a b, r a b → p (f a) (f b))
     (hab : ReflTransGen r a b) : ReflTransGen p (f a) (f b) :=
   ReflTransGen.trans_induction_on hab (fun a => refl) (fun a b => refl_trans_gen.single ∘ h _ _) fun a b c _ _ => trans
 
-theorem refl_trans_gen.mono {p : α → α → Prop} : (∀ a b, r a b → p a b) → ReflTransGen r a b → ReflTransGen p a b :=
+theorem ReflTransGen.mono {p : α → α → Prop} : (∀ a b, r a b → p a b) → ReflTransGen r a b → ReflTransGen p a b :=
   ReflTransGen.lift id
 
 theorem refl_trans_gen_eq_self (refl : Reflexive r) (trans : Transitive r) : ReflTransGen r = r :=
@@ -447,7 +452,7 @@ theorem transitive_refl_trans_gen : Transitive (ReflTransGen r) := fun a b c => 
 theorem refl_trans_gen_idem : ReflTransGen (ReflTransGen r) = ReflTransGen r :=
   refl_trans_gen_eq_self reflexive_refl_trans_gen transitive_refl_trans_gen
 
-theorem refl_trans_gen.lift' {p : β → β → Prop} {a b : α} (f : α → β) (h : ∀ a b, r a b → ReflTransGen p (f a) (f b))
+theorem ReflTransGen.lift' {p : β → β → Prop} {a b : α} (f : α → β) (h : ∀ a b, r a b → ReflTransGen p (f a) (f b))
     (hab : ReflTransGen r a b) : ReflTransGen p (f a) (f b) := by
   simpa [refl_trans_gen_idem] using hab.lift f h
 
@@ -455,7 +460,7 @@ theorem refl_trans_gen_closed {p : α → α → Prop} :
     (∀ a b, r a b → ReflTransGen p a b) → ReflTransGen r a b → ReflTransGen p a b :=
   ReflTransGen.lift' id
 
-theorem refl_trans_gen.swap (h : ReflTransGen r b a) : ReflTransGen (swap r) a b := by
+theorem ReflTransGen.swap (h : ReflTransGen r b a) : ReflTransGen (swap r) a b := by
   induction' h with b c hab hbc ih
   · rfl
     
@@ -473,7 +478,7 @@ in a term rewriting system, then *confluence* is the property that if
 `a` rewrites to both `b` and `c`, then `join r` relates `b` and `c`
 (see `relation.church_rosser`).
 -/
-def join (r : α → α → Prop) : α → α → Prop := fun a b => ∃ c, r a c ∧ r b c
+def Join (r : α → α → Prop) : α → α → Prop := fun a b => ∃ c, r a c ∧ r b c
 
 section Join
 

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Abhimanyu Pallavi Sudhir. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Abhimanyu Pallavi Sudhir, Yury Kudryashov
+-/
 import Mathbin.Order.Filter.Ultrafilter
 import Mathbin.Order.Filter.Germ
 
@@ -39,7 +44,7 @@ instance [DivisionRing β] : DivisionRing β* :=
           (φ.em fun y => f y = 0).elim (fun H => (hf <| coe_eq.2 H).elim) fun H => H.mono fun x => mul_inv_cancel,
     inv_zero :=
       coe_eq.2 <| by
-        simp only [· ∘ ·, inv_zero] }
+        simp only [(· ∘ ·), inv_zero] }
 
 /-- If `φ` is an ultrafilter then the ultraproduct is a field. -/
 instance [Field β] : Field β* :=
@@ -66,7 +71,7 @@ theorem coe_pos [Preorderₓ β] [Zero β] {f : α → β} : 0 < (f : β*) ↔ �
 theorem const_lt [Preorderₓ β] {x y : β} : (↑x : β*) < ↑y ↔ x < y :=
   coe_lt.trans lift_rel_const_iff
 
-theorem lt_def [Preorderₓ β] : (· < · : β* → β* → Prop) = LiftRel (· < ·) := by
+theorem lt_def [Preorderₓ β] : ((· < ·) : β* → β* → Prop) = LiftRel (· < ·) := by
   ext ⟨f⟩ ⟨g⟩
   exact coe_lt
 
@@ -128,7 +133,7 @@ theorem const_min [LinearOrderₓ β] (x y : β) : (↑(min x y : β) : β*) = m
 theorem const_abs [LinearOrderedAddCommGroup β] (x : β) : (↑(abs x) : β*) = abs ↑x := by
   rw [abs_def, map_const]
 
-theorem linear_order.to_lattice_eq_filter_germ_lattice [LinearOrderₓ β] :
+theorem linearOrder.to_lattice_eq_filter_germ_lattice [LinearOrderₓ β] :
     @LinearOrderₓ.toLattice (Filter.Germ (↑φ) β) Filter.Germ.linearOrder = Filter.Germ.lattice :=
   Lattice.ext fun x y => Iff.rfl
 

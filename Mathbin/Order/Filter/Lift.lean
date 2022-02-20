@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Johannes Hölzl. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johannes Hölzl
+-/
 import Mathbin.Order.Filter.Bases
 
 /-!
@@ -34,7 +39,7 @@ is a basis of the filter `f.lift g`.
 This basis is parametrized by `i : ι` and `x : β i`, so in order to formulate this fact using
 `has_basis` one has to use `Σ i, β i` as the index type, see `filter.has_basis.lift`.
 This lemma states the corresponding `mem_iff` statement without using a sigma type. -/
-theorem has_basis.mem_lift_iff {ι} {p : ι → Prop} {s : ι → Set α} {f : Filter α} (hf : f.HasBasis p s) {β : ι → Type _}
+theorem HasBasis.mem_lift_iff {ι} {p : ι → Prop} {s : ι → Set α} {f : Filter α} (hf : f.HasBasis p s) {β : ι → Type _}
     {pg : ∀ i, β i → Prop} {sg : ∀ i, β i → Set γ} {g : Set α → Filter γ} (hg : ∀ i, (g <| s i).HasBasis (pg i) (sg i))
     (gm : Monotone g) {s : Set γ} : s ∈ f.lift g ↔ ∃ (i : ι)(hi : p i)(x : β i)(hx : pg i x), sg i x ⊆ s := by
   refine' (mem_binfi_of_directed _ ⟨univ, univ_sets _⟩).trans _
@@ -53,7 +58,7 @@ is a basis of the filter `f.lift g`.
 This basis is parametrized by `i : ι` and `x : β i`, so in order to formulate this fact using
 `has_basis` one has to use `Σ i, β i` as the index type. See also `filter.has_basis.mem_lift_iff`
 for the corresponding `mem_iff` statement formulated without using a sigma type. -/
-theorem has_basis.lift {ι} {p : ι → Prop} {s : ι → Set α} {f : Filter α} (hf : f.HasBasis p s) {β : ι → Type _}
+theorem HasBasis.lift {ι} {p : ι → Prop} {s : ι → Set α} {f : Filter α} (hf : f.HasBasis p s) {β : ι → Type _}
     {pg : ∀ i, β i → Prop} {sg : ∀ i, β i → Set γ} {g : Set α → Filter γ} (hg : ∀ i, (g <| s i).HasBasis (pg i) (sg i))
     (gm : Monotone g) : (f.lift g).HasBasis (fun i : Σ i, β i => p i.1 ∧ pg i.1 i.2) fun i : Σ i, β i => sg i.1 i.2 :=
   by
@@ -211,7 +216,7 @@ theorem mem_lift' {t : Set α} (ht : t ∈ f) : h t ∈ f.lift' h :=
 theorem tendsto_lift' {m : γ → β} {l : Filter γ} : Tendsto m l (f.lift' h) ↔ ∀, ∀ s ∈ f, ∀, ∀ᶠ a in l, m a ∈ h s := by
   simp only [Filter.lift', tendsto_lift, tendsto_principal]
 
-theorem has_basis.lift' {ι} {p : ι → Prop} {s} (hf : f.HasBasis p s) (hh : Monotone h) :
+theorem HasBasis.lift' {ι} {p : ι → Prop} {s} (hf : f.HasBasis p s) (hh : Monotone h) :
     (f.lift' h).HasBasis p (h ∘ s) := by
   refine' ⟨fun t => (hf.mem_lift_iff _ (monotone_principal.comp hh)).trans _⟩
   show ∀ i, (𝓟 (h (s i))).HasBasis (fun j : Unit => True) fun j : Unit => h (s i)
@@ -242,7 +247,7 @@ theorem map_lift'_eq {m : β → γ} (hh : Monotone h) : map m (f.lift' h) = f.l
   calc
     map m (f.lift' h) = f.lift (map m ∘ 𝓟 ∘ h) := map_lift_eq <| monotone_principal.comp hh
     _ = f.lift' (Image m ∘ h) := by
-      simp only [· ∘ ·, Filter.lift', map_principal, eq_self_iff_true]
+      simp only [(· ∘ ·), Filter.lift', map_principal, eq_self_iff_true]
     
 
 theorem map_lift'_eq2 {g : Set β → Set γ} {m : α → β} (hg : Monotone g) : (map m f).lift' g = f.lift' (g ∘ Image m) :=
@@ -252,7 +257,7 @@ theorem comap_lift'_eq {m : γ → β} (hh : Monotone h) : comap m (f.lift' h) =
   calc
     comap m (f.lift' h) = f.lift (comap m ∘ 𝓟 ∘ h) := comap_lift_eq <| monotone_principal.comp hh
     _ = f.lift' (Preimage m ∘ h) := by
-      simp only [· ∘ ·, Filter.lift', comap_principal, eq_self_iff_true]
+      simp only [(· ∘ ·), Filter.lift', comap_principal, eq_self_iff_true]
     
 
 theorem comap_lift'_eq2 {m : β → α} {g : Set β → Set γ} (hg : Monotone g) :
@@ -299,7 +304,7 @@ theorem lift_lift'_same_eq_lift' {g : Set α → Set α → Set β} (hg₁ : ∀
   lift_lift_same_eq_lift (fun s => monotone_principal.comp (hg₁ s)) fun t => monotone_principal.comp (hg₂ t)
 
 theorem lift'_inf_principal_eq {h : Set α → Set β} {s : Set β} : f.lift' h⊓𝓟 s = f.lift' fun t => h t ∩ s := by
-  simp only [Filter.lift', Filter.lift, · ∘ ·, ← inf_principal, infi_subtype', ← infi_inf]
+  simp only [Filter.lift', Filter.lift, (· ∘ ·), ← inf_principal, infi_subtype', ← infi_inf]
 
 theorem lift'_ne_bot_iff (hh : Monotone h) : NeBot (f.lift' h) ↔ ∀, ∀ s ∈ f, ∀, (h s).Nonempty :=
   calc
@@ -327,7 +332,7 @@ theorem lift_infi' {f : ι → Filter α} {g : Set α → Filter β} [Nonempty �
 theorem lift'_infi {f : ι → Filter α} {g : Set α → Set β} [Nonempty ι] (hg : ∀ {s t}, g s ∩ g t = g (s ∩ t)) :
     (infi f).lift' g = ⨅ i, (f i).lift' g :=
   lift_infi fun s t => by
-    simp only [principal_eq_iff_eq, inf_principal, · ∘ ·, hg]
+    simp only [principal_eq_iff_eq, inf_principal, (· ∘ ·), hg]
 
 theorem lift'_inf (f g : Filter α) {s : Set α → Set β} (hs : ∀ {t₁ t₂}, s t₁ ∩ s t₂ = s (t₁ ∩ t₂)) :
     (f⊓g).lift' s = f.lift' s⊓g.lift' s := by
@@ -347,7 +352,7 @@ theorem lift'_infi_powerset {f : ι → Filter α} : (infi f).lift' Powerset = �
 theorem lift'_inf_powerset (f g : Filter α) : (f⊓g).lift' Powerset = f.lift' Powerset⊓g.lift' Powerset :=
   (lift'_inf f g) fun _ _ => (powerset_inter _ _).symm
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (t «expr ⊆ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (t «expr ⊆ » s)
 theorem eventually_lift'_powerset {f : Filter α} {p : Set α → Prop} :
     (∀ᶠ s in f.lift' Powerset, p s) ↔ ∃ s ∈ f, ∀ t _ : t ⊆ s, p t :=
   eventually_lift'_iff monotone_powerset
@@ -361,7 +366,7 @@ instance lift'_powerset_ne_bot (f : Filter α) : NeBot (f.lift' Powerset) :=
 
 theorem tendsto_lift'_powerset_mono {la : Filter α} {lb : Filter β} {s t : α → Set β}
     (ht : Tendsto t la (lb.lift' Powerset)) (hst : ∀ᶠ x in la, s x ⊆ t x) : Tendsto s la (lb.lift' Powerset) := by
-  simp only [Filter.lift', Filter.lift, · ∘ ·, tendsto_infi, tendsto_principal] at ht⊢
+  simp only [Filter.lift', Filter.lift, (· ∘ ·), tendsto_infi, tendsto_principal] at ht⊢
   exact fun u hu => (ht u hu).mp (hst.mono fun a hst ht => subset.trans hst ht)
 
 @[simp]

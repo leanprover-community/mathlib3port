@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018  Patrick Massot. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Patrick Massot, Chris Hughes, Michael Howes
+-/
 import Mathbin.Data.Fintype.Basic
 import Mathbin.Algebra.Group.Hom
 import Mathbin.Algebra.Group.Semiconj
@@ -113,7 +118,9 @@ theorem is_conj_iff₀ [GroupWithZeroₓ α] {a b : α} : IsConj a b ↔ ∃ c :
 namespace IsConj
 
 /-- The setoid of the relation `is_conj` iff there is a unit `u` such that `u * x = y * u` -/
-protected def Setoidₓ (α : Type _) [Monoidₓ α] : Setoidₓ α where
+/- This small quotient API is largely copied from the API of `associates`;
+where possible, try to keep them in sync -/
+protected def setoid (α : Type _) [Monoidₓ α] : Setoidₓ α where
   R := IsConj
   iseqv := ⟨IsConj.refl, fun a b => IsConj.symm, fun a b c => IsConj.trans⟩
 
@@ -188,8 +195,8 @@ theorem mk_bijective : Function.Bijective (@ConjClasses.mk α _) :=
   ⟨mk_injective, mk_surjective⟩
 
 /-- The bijection between a `comm_group` and its `conj_classes`. -/
-def mk_equiv : α ≃ ConjClasses α :=
-  ⟨ConjClasses.mk, Quotientₓ.lift id fun a : α b => is_conj_iff_eq.1, Quotientₓ.lift_mk _ _, by
+def mkEquiv : α ≃ ConjClasses α :=
+  ⟨ConjClasses.mk, Quotientₓ.lift id fun b => is_conj_iff_eq.1, Quotientₓ.lift_mk _ _, by
     rw [Function.RightInverse, Function.LeftInverse, forall_is_conj]
     intro x
     rw [← quotient_mk_eq_mk, ← quotient_mk_eq_mk, Quotientₓ.lift_mk, id.def]⟩
@@ -226,8 +233,8 @@ variable [Monoidₓ α]
 attribute [local instance] IsConj.setoid
 
 /-- Given a conjugacy class `a`, `carrier a` is the set it represents. -/
-def carrier : ConjClasses α → Set α :=
-  Quotientₓ.lift ConjugatesOf fun a : α b ab => IsConj.conjugates_of_eq ab
+def Carrier : ConjClasses α → Set α :=
+  Quotientₓ.lift ConjugatesOf fun b ab => IsConj.conjugates_of_eq ab
 
 theorem mem_carrier_mk {a : α} : a ∈ Carrier (ConjClasses.mk a) :=
   IsConj.refl _

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Yakov Pechersky. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yakov Pechersky
+-/
 import Mathbin.Algebra.Polynomial.BigOperators
 import Mathbin.Data.Polynomial.Degree.Lemmas
 import Mathbin.Data.Polynomial.Eval
@@ -48,7 +53,7 @@ theorem nat_degree_det_X_add_C_le (A B : Matrix n n α) :
         _ ≤ ∑ i : n, nat_degree (((X : α[X]) • A.map C + B.map C) (g i) i) :=
       nat_degree_prod_le (Finset.univ : Finset n) fun i : n =>
         (X • A.map C + B.map C) (g i) i _ ≤ finset.univ.card • 1 :=
-      Finset.sum_le_of_forall_le _ _ 1 fun i : n _ => _ _ ≤ Fintype.card n := by
+      Finset.sum_le_of_forall_le _ _ 1 fun _ => _ _ ≤ Fintype.card n := by
       simpa
   calc
     nat_degree (((X : α[X]) • A.map C + B.map C) (g i) i) = nat_degree ((X : α[X]) * C (A (g i) i) + C (B (g i) i)) :=
@@ -96,7 +101,9 @@ theorem leading_coeff_det_X_one_add_C (A : Matrix n n α) :
   · simp only [RingHom.map_one, Matrix.map_one, C_eq_zero] at h
     rw [h]
     
-  · have H := coeff_eq_zero_of_nat_degree_lt h
+  · -- contradiction. we have a hypothesis that the degree is less than |n|
+    -- but we know that coeff _ n = 1
+    have H := coeff_eq_zero_of_nat_degree_lt h
     rw [coeff_det_X_add_C_card] at H
     simpa using H
     

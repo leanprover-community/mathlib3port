@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Kenny Lau. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Kenny Lau
+-/
 import Mathbin.Algebra.GeomSum
 import Mathbin.LinearAlgebra.Smodeq
 import Mathbin.RingTheory.Ideal.Quotient
@@ -98,7 +103,7 @@ instance bot : IsHausdorff (⊥ : Ideal R) M :=
 
 variable {M}
 
-protected theorem Subsingleton (h : IsHausdorff (⊤ : Ideal R) M) : Subsingleton M :=
+protected theorem subsingleton (h : IsHausdorff (⊤ : Ideal R) M) : Subsingleton M :=
   ⟨fun x y =>
     eq_of_sub_eq_zero <|
       (h.haus (x - y)) fun n => by
@@ -260,7 +265,7 @@ namespace IsAdicComplete
 instance bot : IsAdicComplete (⊥ : Ideal R) M :=
   {  }
 
-protected theorem Subsingleton (h : IsAdicComplete (⊤ : Ideal R) M) : Subsingleton M :=
+protected theorem subsingleton (h : IsAdicComplete (⊤ : Ideal R) M) : Subsingleton M :=
   h.1.Subsingleton
 
 instance (priority := 100) of_subsingleton [Subsingleton M] : IsAdicComplete I M :=

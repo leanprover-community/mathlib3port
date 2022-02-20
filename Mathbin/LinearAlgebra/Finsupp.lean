@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Johannes Hölzl. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johannes Hölzl
+-/
 import Mathbin.Data.Finsupp.Basic
 import Mathbin.LinearAlgebra.Pi
 
@@ -88,7 +93,7 @@ section LsubtypeDomain
 variable (s : Set α)
 
 /-- Interpret `finsupp.subtype_domain s` as a linear map. -/
-def lsubtype_domain : (α →₀ M) →ₗ[R] s →₀ M where
+def lsubtypeDomain : (α →₀ M) →ₗ[R] s →₀ M where
   toFun := subtypeDomain fun x => x ∈ s
   map_add' := fun a b => subtype_domain_add
   map_smul' := fun c a => ext fun a => rfl
@@ -168,7 +173,7 @@ variable {M}
 theorem mem_supported {s : Set α} (p : α →₀ M) : p ∈ supported M R s ↔ ↑p.Support ⊆ s :=
   Iff.rfl
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (x «expr ∉ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (x «expr ∉ » s)
 theorem mem_supported' {s : Set α} (p : α →₀ M) : p ∈ supported M R s ↔ ∀ x _ : x ∉ s, p x = 0 := by
   have := Classical.decPred fun x : α => x ∈ s <;> simp [mem_supported, Set.subset_def, not_imp_comm]
 
@@ -195,7 +200,7 @@ theorem supported_eq_span_single (s : Set α) : supported R R s = span R ((fun i
 variable (M R)
 
 /-- Interpret `finsupp.filter s` as a linear map from `α →₀ M` to `supported M R s`. -/
-def restrict_dom (s : Set α) : (α →₀ M) →ₗ[R] supported M R s :=
+def restrictDom (s : Set α) : (α →₀ M) →ₗ[R] supported M R s :=
   LinearMap.codRestrict _
     { toFun := filter (· ∈ s), map_add' := fun l₁ l₂ => filter_add, map_smul' := fun a l => filter_smul } fun l =>
     (mem_supported' _ _).2 fun x => filter_apply_neg (· ∈ s) l
@@ -272,7 +277,7 @@ theorem disjoint_supported_supported_iff [Nontrivial M] {s t : Set α} :
 
 /-- Interpret `finsupp.restrict_support_equiv` as a linear equivalence between
 `supported M R s` and `s →₀ M`. -/
-def supported_equiv_finsupp (s : Set α) : supported M R s ≃ₗ[R] s →₀ M := by
+def supportedEquivFinsupp (s : Set α) : supported M R s ≃ₗ[R] s →₀ M := by
   let F : supported M R s ≃ (s →₀ M) := restrict_support_equiv s M
   refine' F.to_linear_equiv _
   have :
@@ -350,7 +355,7 @@ section LmapDomain
 variable {α' : Type _} {α'' : Type _} (M R)
 
 /-- Interpret `finsupp.map_domain` as a linear map. -/
-def lmap_domain (f : α → α') : (α →₀ M) →ₗ[R] α' →₀ M where
+def lmapDomain (f : α → α') : (α →₀ M) →ₗ[R] α' →₀ M where
   toFun := mapDomain f
   map_add' := fun a b => map_domain_add
   map_smul' := map_domain_smul
@@ -368,7 +373,7 @@ theorem lmap_domain_comp (f : α → α') (g : α' → α'') :
   LinearMap.ext fun l => map_domain_comp
 
 theorem supported_comap_lmap_domain (f : α → α') (s : Set α') :
-    supported M R (f ⁻¹' s) ≤ (supported M R s).comap (lmapDomain M R f) := fun l hl : ↑l.Support ⊆ f ⁻¹' s =>
+    supported M R (f ⁻¹' s) ≤ (supported M R s).comap (lmapDomain M R f) := fun hl : ↑l.Support ⊆ f ⁻¹' s =>
   show ↑(mapDomain f l).Support ⊆ s by
     rw [← Set.image_subset_iff, ← Finset.coe_image] at hl
     exact Set.Subset.trans map_domain_support hl
@@ -397,7 +402,7 @@ theorem lmap_domain_supported [Nonempty α] (f : α → α') (s : Set α) :
           simpa using hl hc)
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (a b «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (a b «expr ∈ » s)
 theorem lmap_domain_disjoint_ker (f : α → α') {s : Set α} (H : ∀ a b _ : a ∈ s _ : b ∈ s, f a = f b → a = b) :
     Disjoint (supported M R s) (lmapDomain M R f).ker := by
   rintro l ⟨h₁, h₂⟩
@@ -430,7 +435,7 @@ variable (α) {α' : Type _} (M) {M' : Type _} (R) [AddCommMonoidₓ M'] [Module
 
 /-- Interprets (l : α →₀ R) as linear combination of the elements in the family (v : α → M) and
     evaluates this linear combination. -/
-protected def Total : (α →₀ R) →ₗ[R] M :=
+protected def total : (α →₀ R) →ₗ[R] M :=
   Finsupp.lsum ℕ fun i => LinearMap.id.smulRight (v i)
 
 variable {α M v}
@@ -577,7 +582,7 @@ subset of the vectors in `v`, mapping it to the span of those vectors.
 
 The subset is indicated by a set `s : set α` of indices.
 -/
-protected def total_on (s : Set α) : supported R R s →ₗ[R] span R (v '' s) :=
+protected def totalOn (s : Set α) : supported R R s →ₗ[R] span R (v '' s) :=
   (LinearMap.codRestrict _ ((Finsupp.total _ _ _ v).comp (Submodule.subtype (supported R R s)))) fun ⟨l, hl⟩ =>
     (mem_span_image_iff_total _).2 ⟨l, hl, rfl⟩
 
@@ -610,7 +615,7 @@ end Total
 
 This is `finsupp.dom_congr` as a `linear_equiv`.
 See also `linear_map.fun_congr_left` for the case of arbitrary functions. -/
-protected def dom_lcongr {α₁ α₂ : Type _} (e : α₁ ≃ α₂) : (α₁ →₀ M) ≃ₗ[R] α₂ →₀ M :=
+protected def domLcongr {α₁ α₂ : Type _} (e : α₁ ≃ α₂) : (α₁ →₀ M) ≃ₗ[R] α₂ →₀ M :=
   (Finsupp.domCongr e : (α₁ →₀ M) ≃+ (α₂ →₀ M)).toLinearEquiv <| by
     simpa only [equiv_map_domain_eq_map_domain, dom_congr_apply] using (lmap_domain M R e).map_smul
 
@@ -646,49 +651,49 @@ noncomputable def congr {α' : Type _} (s : Set α) (t : Set α') (e : s ≃ t) 
 
 /-- `finsupp.map_range` as a `linear_map`. -/
 @[simps]
-def map_range.linear_map (f : M →ₗ[R] N) : (α →₀ M) →ₗ[R] α →₀ N :=
+def mapRange.linearMap (f : M →ₗ[R] N) : (α →₀ M) →ₗ[R] α →₀ N :=
   { mapRange.addMonoidHom f.toAddMonoidHom with toFun := (mapRange f f.map_zero : (α →₀ M) → α →₀ N),
     map_smul' := fun c v => map_range_smul c v (f.map_smul c) }
 
 @[simp]
-theorem map_range.linear_map_id : mapRange.linearMap LinearMap.id = (LinearMap.id : (α →₀ M) →ₗ[R] _) :=
+theorem mapRange.linear_map_id : mapRange.linearMap LinearMap.id = (LinearMap.id : (α →₀ M) →ₗ[R] _) :=
   LinearMap.ext map_range_id
 
-theorem map_range.linear_map_comp (f : N →ₗ[R] P) (f₂ : M →ₗ[R] N) :
+theorem mapRange.linear_map_comp (f : N →ₗ[R] P) (f₂ : M →ₗ[R] N) :
     (mapRange.linearMap (f.comp f₂) : (α →₀ _) →ₗ[R] _) = (mapRange.linearMap f).comp (mapRange.linearMap f₂) :=
   LinearMap.ext <| map_range_comp _ _ _ _ _
 
 @[simp]
-theorem map_range.linear_map_to_add_monoid_hom (f : M →ₗ[R] N) :
+theorem mapRange.linear_map_to_add_monoid_hom (f : M →ₗ[R] N) :
     (mapRange.linearMap f).toAddMonoidHom = (mapRange.addMonoidHom f.toAddMonoidHom : (α →₀ M) →+ _) :=
   AddMonoidHom.ext fun _ => rfl
 
 /-- `finsupp.map_range` as a `linear_equiv`. -/
 @[simps apply]
-def map_range.linear_equiv (e : M ≃ₗ[R] N) : (α →₀ M) ≃ₗ[R] α →₀ N :=
+def mapRange.linearEquiv (e : M ≃ₗ[R] N) : (α →₀ M) ≃ₗ[R] α →₀ N :=
   { mapRange.linearMap e.toLinearMap, mapRange.addEquiv e.toAddEquiv with toFun := mapRange e e.map_zero,
     invFun := mapRange e.symm e.symm.map_zero }
 
 @[simp]
-theorem map_range.linear_equiv_refl : mapRange.linearEquiv (LinearEquiv.refl R M) = LinearEquiv.refl R (α →₀ M) :=
+theorem mapRange.linear_equiv_refl : mapRange.linearEquiv (LinearEquiv.refl R M) = LinearEquiv.refl R (α →₀ M) :=
   LinearEquiv.ext map_range_id
 
-theorem map_range.linear_equiv_trans (f : M ≃ₗ[R] N) (f₂ : N ≃ₗ[R] P) :
+theorem mapRange.linear_equiv_trans (f : M ≃ₗ[R] N) (f₂ : N ≃ₗ[R] P) :
     (mapRange.linearEquiv (f.trans f₂) : (α →₀ _) ≃ₗ[R] _) = (mapRange.linearEquiv f).trans (mapRange.linearEquiv f₂) :=
   LinearEquiv.ext <| map_range_comp _ _ _ _ _
 
 @[simp]
-theorem map_range.linear_equiv_symm (f : M ≃ₗ[R] N) :
+theorem mapRange.linear_equiv_symm (f : M ≃ₗ[R] N) :
     ((mapRange.linearEquiv f).symm : (α →₀ _) ≃ₗ[R] _) = mapRange.linearEquiv f.symm :=
   LinearEquiv.ext fun x => rfl
 
 @[simp]
-theorem map_range.linear_equiv_to_add_equiv (f : M ≃ₗ[R] N) :
+theorem mapRange.linear_equiv_to_add_equiv (f : M ≃ₗ[R] N) :
     (mapRange.linearEquiv f).toAddEquiv = (mapRange.addEquiv f.toAddEquiv : (α →₀ M) ≃+ _) :=
   AddEquiv.ext fun _ => rfl
 
 @[simp]
-theorem map_range.linear_equiv_to_linear_map (f : M ≃ₗ[R] N) :
+theorem mapRange.linear_equiv_to_linear_map (f : M ≃ₗ[R] N) :
     (mapRange.linearEquiv f).toLinearMap = (mapRange.linearMap f.toLinearMap : (α →₀ M) →ₗ[R] _) :=
   LinearMap.ext fun _ => rfl
 
@@ -736,7 +741,7 @@ variable (R)
 
 This is the `linear_equiv` version of `finsupp.sum_finsupp_equiv_prod_finsupp`. -/
 @[simps apply symmApply]
-def sum_finsupp_lequiv_prod_finsupp {α β : Type _} : (Sum α β →₀ M) ≃ₗ[R] (α →₀ M) × (β →₀ M) :=
+def sumFinsuppLequivProdFinsupp {α β : Type _} : (Sum α β →₀ M) ≃ₗ[R] (α →₀ M) × (β →₀ M) :=
   { sumFinsuppAddEquivProdFinsupp with
     map_smul' := by
       intros
@@ -772,7 +777,7 @@ variable (R)
 `(Σ (j : η), ιs j) →₀ M` and `Π j, (ιs j →₀ M)`.
 
 This is the `linear_equiv` version of `finsupp.sigma_finsupp_add_equiv_pi_finsupp`. -/
-noncomputable def sigma_finsupp_lequiv_pi_finsupp {M : Type _} {ιs : η → Type _} [AddCommMonoidₓ M] [Module R M] :
+noncomputable def sigmaFinsuppLequivPiFinsupp {M : Type _} {ιs : η → Type _} [AddCommMonoidₓ M] [Module R M] :
     ((Σ j, ιs j) →₀ M) ≃ₗ[R] ∀ j, ιs j →₀ M :=
   { sigmaFinsuppAddEquivPiFinsupp with
     map_smul' := fun c f => by
@@ -796,7 +801,7 @@ section Prod
 /-- The linear equivalence between `α × β →₀ M` and `α →₀ β →₀ M`.
 
 This is the `linear_equiv` version of `finsupp.finsupp_prod_equiv`. -/
-noncomputable def finsupp_prod_lequiv {α β : Type _} (R : Type _) {M : Type _} [Semiringₓ R] [AddCommMonoidₓ M]
+noncomputable def finsuppProdLequiv {α β : Type _} (R : Type _) {M : Type _} [Semiringₓ R] [AddCommMonoidₓ M]
     [Module R M] : (α × β →₀ M) ≃ₗ[R] α →₀ β →₀ M :=
   { finsuppProdEquiv with
     map_add' := fun f g => by
@@ -918,7 +923,8 @@ variable {R M} {α : Type _}
 open Finsupp Function
 
 /-- A surjective linear map to finitely supported functions has a splitting. -/
-def splitting_of_finsupp_surjective (f : M →ₗ[R] α →₀ R) (s : Surjective f) : (α →₀ R) →ₗ[R] M :=
+-- See also `linear_map.splitting_of_fun_on_fintype_surjective`
+def splittingOfFinsuppSurjective (f : M →ₗ[R] α →₀ R) (s : Surjective f) : (α →₀ R) →ₗ[R] M :=
   Finsupp.lift _ _ _ fun x : α => (s (Finsupp.single x 1)).some
 
 theorem splitting_of_finsupp_surjective_splits (f : M →ₗ[R] α →₀ R) (s : Surjective f) :
@@ -941,7 +947,8 @@ theorem splitting_of_finsupp_surjective_injective (f : M →ₗ[R] α →₀ R) 
   (left_inverse_splitting_of_finsupp_surjective f s).Injective
 
 /-- A surjective linear map to functions on a finite type has a splitting. -/
-def splitting_of_fun_on_fintype_surjective [Fintype α] (f : M →ₗ[R] α → R) (s : Surjective f) : (α → R) →ₗ[R] M :=
+-- See also `linear_map.splitting_of_finsupp_surjective`
+def splittingOfFunOnFintypeSurjective [Fintype α] (f : M →ₗ[R] α → R) (s : Surjective f) : (α → R) →ₗ[R] M :=
   (Finsupp.lift _ _ _ fun x : α => (s (Finsupp.single x 1)).some).comp (linearEquivFunOnFintype R R α).symm.toLinearMap
 
 theorem splitting_of_fun_on_fintype_surjective_splits [Fintype α] (f : M →ₗ[R] α → R) (s : Surjective f) :

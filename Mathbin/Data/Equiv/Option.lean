@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Eric Wieser. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Eric Wieser
+-/
 import Mathbin.Data.Equiv.Basic
 import Mathbin.Control.EquivFunctor
 
@@ -53,7 +58,7 @@ private theorem remove_none_aux_inv (x : α) : removeNoneAux e.symm (removeNoneA
 
 /-- Given an equivalence between two `option` types, eliminate `none` from that equivalence by
 mapping `e.symm none` to `e none`. -/
-def remove_none : α ≃ β where
+def removeNone : α ≃ β where
   toFun := removeNoneAux e
   invFun := removeNoneAux e.symm
   left_inv := remove_none_aux_inv e

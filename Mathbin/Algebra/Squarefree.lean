@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Aaron Anderson. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Aaron Anderson
+-/
 import Mathbin.RingTheory.UniqueFactorizationDomain
 import Mathbin.RingTheory.Int.Basic
 import Mathbin.NumberTheory.Divisors
@@ -185,7 +190,7 @@ theorem squarefree_iff_prime_squarefree {n : ℕ} : Squarefree n ↔ ∀ x, Prim
 
 /-- Assuming that `n` has no factors less than `k`, returns the smallest prime `p` such that
   `p^2 ∣ n`. -/
-def min_sq_fac_aux : ℕ → ℕ → Option ℕ
+def minSqFacAux : ℕ → ℕ → Option ℕ
   | n, k =>
     if h : n < k * k then none
     else
@@ -202,7 +207,7 @@ def min_sq_fac_aux : ℕ → ℕ → Option ℕ
 
 /-- Returns the smallest prime factor `p` of `n` such that `p^2 ∣ n`, or `none` if there is no
   such `p` (that is, `n` is squarefree). See also `squarefree_iff_min_sq_fac`. -/
-def min_sq_fac (n : ℕ) : Option ℕ :=
+def minSqFac (n : ℕ) : Option ℕ :=
   if 2 ∣ n then
     let n' := n / 2
     if 2 ∣ n' then some 2 else minSqFacAux n' 3
@@ -211,7 +216,7 @@ def min_sq_fac (n : ℕ) : Option ℕ :=
 /-- The correctness property of the return value of `min_sq_fac`.
   * If `none`, then `n` is squarefree;
   * If `some d`, then `d` is a minimal square factor of `n` -/
-def min_sq_fac_prop (n : ℕ) : Option ℕ → Prop
+def MinSqFacProp (n : ℕ) : Option ℕ → Prop
   | none => Squarefree n
   | some d => Prime d ∧ d * d ∣ n ∧ ∀ p, Prime p → p * p ∣ n → d ≤ p
 
@@ -485,7 +490,7 @@ namespace Tactic
 namespace NormNum
 
 /-- A predicate representing partial progress in a proof of `squarefree`. -/
-def squarefree_helper (n k : ℕ) : Prop :=
+def SquarefreeHelper (n k : ℕ) : Prop :=
   0 < k → (∀ m, Nat.Prime m → m ∣ bit1 n → bit1 k ≤ m) → Squarefree (bit1 n)
 
 theorem squarefree_bit10 (n : ℕ) (h : SquarefreeHelper n 1) : Squarefree (bit0 (bit1 n)) := by
@@ -579,7 +584,7 @@ theorem squarefree_helper_4 (n k k' : ℕ) (e : bit1 k * bit1 k = k') (hd : bit1
   subst e
   refine' fun k0 ih => Irreducible.squarefree (Nat.prime_def_le_sqrt.2 ⟨bit1_lt_bit1.2 h, _⟩)
   intro m m2 hm md
-  obtain ⟨p, pp, hp⟩ := Nat.exists_prime_and_dvd m2
+  obtain ⟨p, pp, hp⟩ := Nat.exists_prime_and_dvd (ne_of_gtₓ m2)
   have :=
     (ih p pp (dvd_trans hp md)).trans
       (le_transₓ

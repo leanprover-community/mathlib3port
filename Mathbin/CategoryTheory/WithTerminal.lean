@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Adam Topaz. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Adam Topaz
+-/
 import Mathbin.CategoryTheory.Limits.Shapes.Terminal
 
 /-!
@@ -35,13 +40,13 @@ universe v u
 variable (C : Type u) [Category.{v} C]
 
 /-- Formally adjoin a terminal object to a category. -/
-inductive with_terminal : Type u
+inductive WithTerminal : Type u
   | of : C → with_terminal
   | star : with_terminal
   deriving Inhabited
 
 /-- Formally adjoin an initial object to a category. -/
-inductive with_initial : Type u
+inductive WithInitial : Type u
   | of : C → with_initial
   | star : with_initial
   deriving Inhabited
@@ -54,20 +59,20 @@ variable {C}
 
 /-- Morphisms for `with_terminal C`. -/
 @[simp, nolint has_inhabited_instance]
-def hom : WithTerminal C → WithTerminal C → Type v
+def Homₓ : WithTerminal C → WithTerminal C → Type v
   | of X, of Y => X ⟶ Y
   | star, of X => Pempty
   | _, star => PUnit
 
 /-- Identity morphisms for `with_terminal C`. -/
 @[simp]
-def id : ∀ X : WithTerminal C, Homₓ X X
+def idₓ : ∀ X : WithTerminal C, Homₓ X X
   | of X => 𝟙 _
   | star => PUnit.unit
 
 /-- Composition of morphisms for `with_terminal C`. -/
 @[simp]
-def comp : ∀ {X Y Z : WithTerminal C}, Homₓ X Y → Homₓ Y Z → Homₓ X Z
+def compₓ : ∀ {X Y Z : WithTerminal C}, Homₓ X Y → Homₓ Y Z → Homₓ X Z
   | of X, of Y, of Z => fun f g => f ≫ g
   | of X, _, star => fun f g => PUnit.unit
   | star, of X, _ => fun f g => Pempty.elimₓ f
@@ -111,7 +116,7 @@ instance {X : WithTerminal C} : Unique (X ⟶ star) where
     tidy
 
 /-- `with_terminal.star` is terminal. -/
-def star_terminal : Limits.IsTerminal (star : WithTerminal C) :=
+def starTerminal : Limits.IsTerminal (star : WithTerminal C) :=
   Limits.IsTerminal.ofUnique _
 
 /-- Lift a functor `F : C ⥤ D` to `with_term C ⥤ D`. -/
@@ -130,14 +135,14 @@ def lift {D : Type _} [Category D] {Z : D} (F : C ⥤ D) (M : ∀ x : C, F.obj x
 
 /-- The isomorphism between `incl ⋙ lift F _ _` with `F`. -/
 @[simps]
-def incl_lift {D : Type _} [Category D] {Z : D} (F : C ⥤ D) (M : ∀ x : C, F.obj x ⟶ Z)
+def inclLift {D : Type _} [Category D] {Z : D} (F : C ⥤ D) (M : ∀ x : C, F.obj x ⟶ Z)
     (hM : ∀ x y : C f : x ⟶ y, F.map f ≫ M y = M x) : incl ⋙ lift F M hM ≅ F where
   Hom := { app := fun X => 𝟙 _ }
   inv := { app := fun X => 𝟙 _ }
 
 /-- The isomorphism between `(lift F _ _).obj with_terminal.star` with `Z`. -/
 @[simps]
-def lift_star {D : Type _} [Category D] {Z : D} (F : C ⥤ D) (M : ∀ x : C, F.obj x ⟶ Z)
+def liftStar {D : Type _} [Category D] {Z : D} (F : C ⥤ D) (M : ∀ x : C, F.obj x ⟶ Z)
     (hM : ∀ x y : C f : x ⟶ y, F.map f ≫ M y = M x) : (lift F M hM).obj star ≅ Z :=
   eqToIso rfl
 
@@ -149,7 +154,7 @@ theorem lift_map_lift_star {D : Type _} [Category D] {Z : D} (F : C ⥤ D) (M : 
 
 /-- The uniqueness of `lift`. -/
 @[simp]
-def lift_unique {D : Type _} [Category D] {Z : D} (F : C ⥤ D) (M : ∀ x : C, F.obj x ⟶ Z)
+def liftUnique {D : Type _} [Category D] {Z : D} (F : C ⥤ D) (M : ∀ x : C, F.obj x ⟶ Z)
     (hM : ∀ x y : C f : x ⟶ y, F.map f ≫ M y = M x) (G : WithTerminal C ⥤ D) (h : incl ⋙ G ≅ F) (hG : G.obj star ≅ Z)
     (hh : ∀ x : C, G.map (starTerminal.from (incl.obj x)) ≫ hG.Hom = h.Hom.app x ≫ M x) : G ≅ lift F M hM :=
   NatIso.ofComponents
@@ -173,24 +178,24 @@ def lift_unique {D : Type _} [Category D] {Z : D} (F : C ⥤ D) (M : ∀ x : C, 
 
 /-- A variant of `lift` with `Z` a terminal object. -/
 @[simps]
-def lift_to_terminal {D : Type _} [Category D] {Z : D} (F : C ⥤ D) (hZ : Limits.IsTerminal Z) : WithTerminal C ⥤ D :=
+def liftToTerminal {D : Type _} [Category D] {Z : D} (F : C ⥤ D) (hZ : Limits.IsTerminal Z) : WithTerminal C ⥤ D :=
   lift F (fun x => hZ.from _) fun x y f => hZ.hom_ext _ _
 
 /-- A variant of `incl_lift` with `Z` a terminal object. -/
 @[simps]
-def incl_lift_to_terminal {D : Type _} [Category D] {Z : D} (F : C ⥤ D) (hZ : Limits.IsTerminal Z) :
+def inclLiftToTerminal {D : Type _} [Category D] {Z : D} (F : C ⥤ D) (hZ : Limits.IsTerminal Z) :
     incl ⋙ liftToTerminal F hZ ≅ F :=
   inclLift _ _ _
 
 /-- A variant of `lift_unique` with `Z` a terminal object. -/
 @[simps]
-def lift_to_terminal_unique {D : Type _} [Category D] {Z : D} (F : C ⥤ D) (hZ : Limits.IsTerminal Z)
+def liftToTerminalUnique {D : Type _} [Category D] {Z : D} (F : C ⥤ D) (hZ : Limits.IsTerminal Z)
     (G : WithTerminal C ⥤ D) (h : incl ⋙ G ≅ F) (hG : G.obj star ≅ Z) : G ≅ liftToTerminal F hZ :=
   liftUnique F (fun z => hZ.from _) (fun x y f => hZ.hom_ext _ _) G h hG fun x => hZ.hom_ext _ _
 
 /-- Constructs a morphism to `star` from `of X`. -/
 @[simp]
-def hom_from (X : C) : incl.obj X ⟶ star :=
+def homFrom (X : C) : incl.obj X ⟶ star :=
   starTerminal.from _
 
 instance is_iso_of_from_star {X : WithTerminal C} (f : star ⟶ X) : IsIso f := by
@@ -206,20 +211,20 @@ variable {C}
 
 /-- Morphisms for `with_initial C`. -/
 @[simp, nolint has_inhabited_instance]
-def hom : WithInitial C → WithInitial C → Type v
+def Homₓ : WithInitial C → WithInitial C → Type v
   | of X, of Y => X ⟶ Y
   | of X, _ => Pempty
   | star, _ => PUnit
 
 /-- Identity morphisms for `with_initial C`. -/
 @[simp]
-def id : ∀ X : WithInitial C, Homₓ X X
+def idₓ : ∀ X : WithInitial C, Homₓ X X
   | of X => 𝟙 _
   | star => PUnit.unit
 
 /-- Composition of morphisms for `with_initial C`. -/
 @[simp]
-def comp : ∀ {X Y Z : WithInitial C}, Homₓ X Y → Homₓ Y Z → Homₓ X Z
+def compₓ : ∀ {X Y Z : WithInitial C}, Homₓ X Y → Homₓ Y Z → Homₓ X Z
   | of X, of Y, of Z => fun f g => f ≫ g
   | star, _, of X => fun f g => PUnit.unit
   | _, of X, star => fun f g => Pempty.elimₓ g
@@ -263,7 +268,7 @@ instance {X : WithInitial C} : Unique (star ⟶ X) where
     tidy
 
 /-- `with_initial.star` is initial. -/
-def star_initial : Limits.IsInitial (star : WithInitial C) :=
+def starInitial : Limits.IsInitial (star : WithInitial C) :=
   Limits.IsInitial.ofUnique _
 
 /-- Lift a functor `F : C ⥤ D` to `with_initial C ⥤ D`. -/
@@ -282,14 +287,14 @@ def lift {D : Type _} [Category D] {Z : D} (F : C ⥤ D) (M : ∀ x : C, Z ⟶ F
 
 /-- The isomorphism between `incl ⋙ lift F _ _` with `F`. -/
 @[simps]
-def incl_lift {D : Type _} [Category D] {Z : D} (F : C ⥤ D) (M : ∀ x : C, Z ⟶ F.obj x)
+def inclLift {D : Type _} [Category D] {Z : D} (F : C ⥤ D) (M : ∀ x : C, Z ⟶ F.obj x)
     (hM : ∀ x y : C f : x ⟶ y, M x ≫ F.map f = M y) : incl ⋙ lift F M hM ≅ F where
   Hom := { app := fun X => 𝟙 _ }
   inv := { app := fun X => 𝟙 _ }
 
 /-- The isomorphism between `(lift F _ _).obj with_term.star` with `Z`. -/
 @[simps]
-def lift_star {D : Type _} [Category D] {Z : D} (F : C ⥤ D) (M : ∀ x : C, Z ⟶ F.obj x)
+def liftStar {D : Type _} [Category D] {Z : D} (F : C ⥤ D) (M : ∀ x : C, Z ⟶ F.obj x)
     (hM : ∀ x y : C f : x ⟶ y, M x ≫ F.map f = M y) : (lift F M hM).obj star ≅ Z :=
   eqToIso rfl
 
@@ -301,7 +306,7 @@ theorem lift_star_lift_map {D : Type _} [Category D] {Z : D} (F : C ⥤ D) (M : 
 
 /-- The uniqueness of `lift`. -/
 @[simp]
-def lift_unique {D : Type _} [Category D] {Z : D} (F : C ⥤ D) (M : ∀ x : C, Z ⟶ F.obj x)
+def liftUnique {D : Type _} [Category D] {Z : D} (F : C ⥤ D) (M : ∀ x : C, Z ⟶ F.obj x)
     (hM : ∀ x y : C f : x ⟶ y, M x ≫ F.map f = M y) (G : WithInitial C ⥤ D) (h : incl ⋙ G ≅ F) (hG : G.obj star ≅ Z)
     (hh : ∀ x : C, hG.symm.Hom ≫ G.map (starInitial.to (incl.obj x)) = M x ≫ h.symm.Hom.app x) : G ≅ lift F M hM :=
   NatIso.ofComponents
@@ -328,24 +333,24 @@ def lift_unique {D : Type _} [Category D] {Z : D} (F : C ⥤ D) (M : ∀ x : C, 
 
 /-- A variant of `lift` with `Z` an initial object. -/
 @[simps]
-def lift_to_initial {D : Type _} [Category D] {Z : D} (F : C ⥤ D) (hZ : Limits.IsInitial Z) : WithInitial C ⥤ D :=
+def liftToInitial {D : Type _} [Category D] {Z : D} (F : C ⥤ D) (hZ : Limits.IsInitial Z) : WithInitial C ⥤ D :=
   lift F (fun x => hZ.to _) fun x y f => hZ.hom_ext _ _
 
 /-- A variant of `incl_lift` with `Z` an initial object. -/
 @[simps]
-def incl_lift_to_initial {D : Type _} [Category D] {Z : D} (F : C ⥤ D) (hZ : Limits.IsInitial Z) :
+def inclLiftToInitial {D : Type _} [Category D] {Z : D} (F : C ⥤ D) (hZ : Limits.IsInitial Z) :
     incl ⋙ liftToInitial F hZ ≅ F :=
   inclLift _ _ _
 
 /-- A variant of `lift_unique` with `Z` an initial object. -/
 @[simps]
-def lift_to_initial_unique {D : Type _} [Category D] {Z : D} (F : C ⥤ D) (hZ : Limits.IsInitial Z)
-    (G : WithInitial C ⥤ D) (h : incl ⋙ G ≅ F) (hG : G.obj star ≅ Z) : G ≅ liftToInitial F hZ :=
+def liftToInitialUnique {D : Type _} [Category D] {Z : D} (F : C ⥤ D) (hZ : Limits.IsInitial Z) (G : WithInitial C ⥤ D)
+    (h : incl ⋙ G ≅ F) (hG : G.obj star ≅ Z) : G ≅ liftToInitial F hZ :=
   liftUnique F (fun z => hZ.to _) (fun x y f => hZ.hom_ext _ _) G h hG fun x => hZ.hom_ext _ _
 
 /-- Constructs a morphism from `star` to `of X`. -/
 @[simp]
-def hom_to (X : C) : star ⟶ incl.obj X :=
+def homTo (X : C) : star ⟶ incl.obj X :=
   starInitial.to _
 
 instance is_iso_of_to_star {X : WithInitial C} (f : X ⟶ star) : IsIso f := by

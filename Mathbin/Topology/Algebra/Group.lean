@@ -1,9 +1,12 @@
+/-
+Copyright (c) 2017 Johannes Hölzl. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johannes Hölzl, Mario Carneiro, Patrick Massot
+-/
 import Mathbin.GroupTheory.QuotientGroup
 import Mathbin.Order.Filter.Pointwise
 import Mathbin.Topology.Algebra.Monoid
-import Mathbin.Topology.Homeomorph
 import Mathbin.Topology.Compacts
-import Mathbin.Topology.Algebra.MulAction
 import Mathbin.Topology.CompactOpen
 
 /-!
@@ -477,7 +480,7 @@ theorem TopologicalGroup.of_nhds_aux {G : Type _} [Groupₓ G] [TopologicalSpace
 
 @[to_additive]
 theorem TopologicalGroup.of_nhds_one' {G : Type u} [Groupₓ G] [TopologicalSpace G]
-    (hmul : Tendsto (uncurry (· * · : G → G → G)) (𝓝 1 ×ᶠ 𝓝 1) (𝓝 1)) (hinv : Tendsto (fun x : G => x⁻¹) (𝓝 1) (𝓝 1))
+    (hmul : Tendsto (uncurry ((· * ·) : G → G → G)) (𝓝 1 ×ᶠ 𝓝 1) (𝓝 1)) (hinv : Tendsto (fun x : G => x⁻¹) (𝓝 1) (𝓝 1))
     (hleft : ∀ x₀ : G, 𝓝 x₀ = map (fun x => x₀ * x) (𝓝 1)) (hright : ∀ x₀ : G, 𝓝 x₀ = map (fun x => x * x₀) (𝓝 1)) :
     TopologicalGroup G := by
   refine'
@@ -497,7 +500,7 @@ theorem TopologicalGroup.of_nhds_one' {G : Type u} [Groupₓ G] [TopologicalSpac
 
 @[to_additive]
 theorem TopologicalGroup.of_nhds_one {G : Type u} [Groupₓ G] [TopologicalSpace G]
-    (hmul : Tendsto (uncurry (· * · : G → G → G)) (𝓝 1 ×ᶠ 𝓝 1) (𝓝 1)) (hinv : Tendsto (fun x : G => x⁻¹) (𝓝 1) (𝓝 1))
+    (hmul : Tendsto (uncurry ((· * ·) : G → G → G)) (𝓝 1 ×ᶠ 𝓝 1) (𝓝 1)) (hinv : Tendsto (fun x : G => x⁻¹) (𝓝 1) (𝓝 1))
     (hleft : ∀ x₀ : G, 𝓝 x₀ = map (fun x => x₀ * x) (𝓝 1))
     (hconj : ∀ x₀ : G, Tendsto (fun x => x₀ * x * x₀⁻¹) (𝓝 1) (𝓝 1)) : TopologicalGroup G :=
   { continuous_mul := by
@@ -529,7 +532,7 @@ theorem TopologicalGroup.of_nhds_one {G : Type u} [Groupₓ G] [TopologicalSpace
 
 @[to_additive]
 theorem TopologicalGroup.of_comm_of_nhds_one {G : Type u} [CommGroupₓ G] [TopologicalSpace G]
-    (hmul : Tendsto (uncurry (· * · : G → G → G)) (𝓝 1 ×ᶠ 𝓝 1) (𝓝 1)) (hinv : Tendsto (fun x : G => x⁻¹) (𝓝 1) (𝓝 1))
+    (hmul : Tendsto (uncurry ((· * ·) : G → G → G)) (𝓝 1 ×ᶠ 𝓝 1) (𝓝 1)) (hinv : Tendsto (fun x : G => x⁻¹) (𝓝 1) (𝓝 1))
     (hleft : ∀ x₀ : G, 𝓝 x₀ = map (fun x => x₀ * x) (𝓝 1)) : TopologicalGroup G :=
   TopologicalGroup.of_nhds_one hmul hinv hleft
     (by
@@ -587,6 +590,7 @@ The unprimed version is for `group_with_zero`. -/
 class HasContinuousDiv (G : Type _) [TopologicalSpace G] [Div G] : Prop where
   continuous_div' : Continuous fun p : G × G => p.1 / p.2
 
+-- see Note [lower instance priority]
 @[to_additive]
 instance (priority := 100) TopologicalGroup.to_has_continuous_div [TopologicalSpace G] [Groupₓ G] [TopologicalGroup G] :
     HasContinuousDiv G :=
@@ -680,6 +684,8 @@ theorem TopologicalGroup.regular_space [T1Space G] : RegularSpace G :=
   ⟨fun s a hs ha => by
     let f := fun p : G × G => p.1 * p.2⁻¹
     have hf : Continuous f := continuous_fst.mul continuous_snd.inv
+    -- a ∈ -s implies f (a, 1) ∈ -s, and so (a, 1) ∈ f⁻¹' (-s);
+    -- and so can find t₁ t₂ open such that a ∈ t₁ × t₂ ⊆ f⁻¹' (-s)
     let ⟨t₁, t₂, ht₁, ht₂, a_mem_t₁, one_mem_t₂, t_subset⟩ :=
       is_open_prod_iff.1 ((is_open_compl_iff.2 hs).Preimage hf) a (1 : G)
         (by
@@ -888,7 +894,7 @@ instance : TopologicalGroup (α)ˣ where
 
 /-- The topological group isomorphism between the units of a product of two monoids, and the product
     of the units of each monoid. -/
-def homeomorph.prod_units : Homeomorph (α × β)ˣ ((α)ˣ × (β)ˣ) :=
+def Homeomorph.prodUnits : Homeomorph (α × β)ˣ ((α)ˣ × (β)ˣ) :=
   { MulEquiv.prodUnits with
     continuous_to_fun := by
       show Continuous fun i : (α × β)ˣ => (map (MonoidHom.fst α β) i, map (MonoidHom.snd α β) i)
@@ -1133,8 +1139,8 @@ instance : CompleteSemilatticeInf (GroupTopology α) :=
 
 @[to_additive]
 instance : CompleteLattice (GroupTopology α) :=
-  { GroupTopology.boundedOrder, GroupTopology.semilatticeInf, completeLatticeOfCompleteSemilatticeInf _ with inf := ·⊓·,
-    top := ⊤, bot := ⊥ }
+  { GroupTopology.boundedOrder, GroupTopology.semilatticeInf, completeLatticeOfCompleteSemilatticeInf _ with
+    inf := (·⊓·), top := ⊤, bot := ⊥ }
 
 /-- Given `f : α → β` and a topology on `α`, the coinduced group topology on `β` is the finest
 topology such that `f` is continuous and `β` is a topological group. -/

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Kevin Kappelmann. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Kevin Kappelmann
+-/
 import Mathbin.Algebra.ContinuedFractions.Computation.CorrectnessTerminating
 import Mathbin.Data.Nat.Fib
 import Mathbin.Tactic.SolveByElim
@@ -166,6 +171,7 @@ denominators `Bₙ` are bounded from below by the fibonacci sequence `nat.fib`. 
 -/
 
 
+-- open `nat` as we will make use of fibonacci numbers.
 open Nat
 
 theorem fib_le_of_continuants_aux_b :
@@ -177,9 +183,12 @@ theorem fib_le_of_continuants_aux_b :
       rcases n with (_ | _ | n)
       · simp [fib_add_two, continuants_aux]
         
+      -- case n = 0
       · simp [fib_add_two, continuants_aux]
         
+      -- case n = 1
       · let g := of v
+        -- case 2 ≤ n
         have : ¬n + 2 ≤ 1 := by
           linarith
         have not_terminated_at_n : ¬g.terminated_at n := Or.resolve_left hyp this
@@ -187,19 +196,23 @@ theorem fib_le_of_continuants_aux_b :
         exact option.ne_none_iff_exists'.mp not_terminated_at_n
         set pconts := g.continuants_aux (n + 1) with pconts_eq
         set ppconts := g.continuants_aux n with ppconts_eq
+        -- use the recurrence of continuants_aux
         suffices (fib n : K) + fib (n + 1) ≤ gp.a * ppconts.b + gp.b * pconts.b by
           simpa [fib_add_two, add_commₓ, continuants_aux_recurrence s_ppred_nth_eq ppconts_eq pconts_eq]
+        -- make use of the fact that gp.a = 1
         suffices (fib n : K) + fib (n + 1) ≤ ppconts.b + gp.b * pconts.b by
           simpa [of_part_num_eq_one <| part_num_eq_s_a s_ppred_nth_eq]
         have not_terminated_at_pred_n : ¬g.terminated_at (n - 1) :=
           mt (terminated_stable <| Nat.sub_leₓ n 1) not_terminated_at_n
         have not_terminated_at_ppred_n : ¬terminated_at g (n - 2) :=
           mt (terminated_stable (n - 1).pred_le) not_terminated_at_pred_n
+        -- use the IH to get the inequalities for `pconts` and `ppconts`
         have : (fib (n + 1) : K) ≤ pconts.b := IH _ (Nat.Lt.base <| n + 1) (Or.inr not_terminated_at_pred_n)
         have ppred_nth_fib_le_ppconts_B : (fib n : K) ≤ ppconts.b :=
           IH n (lt_transₓ (Nat.Lt.base n) <| Nat.Lt.base <| n + 1) (Or.inr not_terminated_at_ppred_n)
         suffices : (fib (n + 1) : K) ≤ gp.b * pconts.b
         solve_by_elim [add_le_add ppred_nth_fib_le_ppconts_B]
+        -- finally use the fact that 1 ≤ gp.b to solve the goal
         suffices 1 * (fib (n + 1) : K) ≤ gp.b * pconts.b by
           rwa [one_mulₓ] at this
         have one_le_gp_b : (1 : K) ≤ gp.b := of_one_le_nth_part_denom (part_denom_eq_s_b s_ppred_nth_eq)
@@ -233,6 +246,7 @@ theorem zero_le_of_continuants_aux_b : 0 ≤ ((of v).continuantsAux n).b := by
   case nat.succ =>
     cases' Decidable.em <| g.terminated_at (n - 1) with terminated not_terminated
     · cases n
+      -- terminating case
       · simp [zero_le_one]
         
       · have : g.continuants_aux (n + 2) = g.continuants_aux (n + 1) :=
@@ -240,7 +254,10 @@ theorem zero_le_of_continuants_aux_b : 0 ≤ ((of v).continuantsAux n).b := by
         simp only [this, IH]
         
       
-    · calc (0 : K) ≤ fib (n + 1) := by
+    · calc-- non-terminating case
+            (0 : K) ≤
+            fib (n + 1) :=
+          by
           exact_mod_cast (n + 1).fib.zero_le _ ≤ ((of v).continuantsAux (n + 1)).b :=
           fib_le_of_continuants_aux_b (Or.inr not_terminated)
       
@@ -262,6 +279,7 @@ theorem le_of_succ_succ_nth_continuants_aux_b {b : K} (nth_part_denom_eq : (of v
   have h1 : 0 ≤ ppconts.b := zero_le_of_continuants_aux_b
   have h2 : gp_n.b * pconts.b ≤ ppconts.b + gp_n.b * pconts.b := by
     solve_by_elim [le_add_of_nonneg_of_le, le_reflₓ]
+  -- use the recurrence of continuants_aux and the fact that gp_n.a = 1
   simp [h1, h2, of_part_num_eq_one (part_num_eq_s_a nth_s_eq),
     GeneralizedContinuedFraction.continuants_aux_recurrence nth_s_eq ppconts_eq pconts_eq]
 
@@ -312,6 +330,7 @@ theorem determinant_aux (hyp : n = 0 ∨ ¬(of v).TerminatedAt (n - 1)) :
   case nat.zero =>
     simp [continuants_aux]
   case nat.succ =>
+    -- set up some shorthand notation
     let g := of v
     let conts := continuants_aux g (n + 2)
     set pred_conts := continuants_aux g (n + 1) with pred_conts_eq
@@ -320,10 +339,12 @@ theorem determinant_aux (hyp : n = 0 ∨ ¬(of v).TerminatedAt (n - 1)) :
     let pB := pred_conts.b
     let ppA := ppred_conts.a
     let ppB := ppred_conts.b
+    -- let's change the goal to something more readable
     change pA * conts.b - pB * conts.a = -1 ^ (n + 1)
     have not_terminated_at_n : ¬terminated_at g n := Or.resolve_left hyp n.succ_ne_zero
     obtain ⟨gp, s_nth_eq⟩ : ∃ gp, g.s.nth n = some gp
     exact option.ne_none_iff_exists'.elim_left not_terminated_at_n
+    -- unfold the recurrence relation for `conts` once and simplify to derive the following
     suffices pA * (ppB + gp.b * pB) - pB * (ppA + gp.b * pA) = -1 ^ (n + 1) by
       simp only [conts, continuants_aux_recurrence s_nth_eq ppred_conts_eq pred_conts_eq]
       have gp_a_eq_one : gp.a = 1 := of_part_num_eq_one (part_num_eq_s_a s_nth_eq)
@@ -366,6 +387,7 @@ theorem sub_convergents_eq {ifp : IntFractPair K} (stream_nth_eq : IntFractPair.
     let pB := (g.continuantsAux n).b
     v - g.convergents n = if ifp.fr = 0 then 0 else -1 ^ n / (B * (ifp.fr⁻¹ * B + pB)) :=
   by
+  -- set up some shorthand notation
   let g := of v
   let conts := g.continuants_aux (n + 1)
   let pred_conts := g.continuants_aux n
@@ -379,18 +401,23 @@ theorem sub_convergents_eq {ifp : IntFractPair K} (stream_nth_eq : IntFractPair.
       
     exact sub_eq_zero.elim_right g_finite_correctness
     
-  · let A := conts.a
+  · -- more shorthand notation
+    let A := conts.a
     let B := conts.b
     let pA := pred_conts.a
     let pB := pred_conts.b
+    -- first, let's simplify the goal as `ifp.fr ≠ 0`
     suffices v - A / B = -1 ^ n / (B * (ifp.fr⁻¹ * B + pB)) by
       simpa [ifp_fr_ne_zero]
+    -- now we can unfold `g.comp_exact_value` to derive the following equality for `v`
     replace g_finite_correctness : v = (pA + ifp.fr⁻¹ * A) / (pB + ifp.fr⁻¹ * B)
     · simpa [GeneralizedContinuedFraction.compExactValue, ifp_fr_ne_zero, next_continuants, next_numerator,
         next_denominator, add_commₓ] using g_finite_correctness
       
+    -- let's rewrite this equality for `v` in our goal
     suffices (pA + ifp.fr⁻¹ * A) / (pB + ifp.fr⁻¹ * B) - A / B = -1 ^ n / (B * (ifp.fr⁻¹ * B + pB)) by
       rwa [g_finite_correctness]
+    -- To continue, we need use the determinant equality. So let's derive the needed hypothesis.
     have n_eq_zero_or_not_terminated_at_pred_n : n = 0 ∨ ¬g.terminated_at (n - 1) := by
       cases' n with n'
       · simp
@@ -402,6 +429,8 @@ theorem sub_convergents_eq {ifp : IntFractPair K} (stream_nth_eq : IntFractPair.
         exact Or.inr this
         
     have determinant_eq : pA * B - pB * A = -1 ^ n := determinant_aux n_eq_zero_or_not_terminated_at_pred_n
+    -- now all we got to do is to rewrite this equality in our goal and re-arrange terms;
+    -- however, for this, we first have to derive quite a few tedious inequalities.
     have pB_ineq : (fib n : K) ≤ pB :=
       have : n ≤ 1 ∨ ¬g.terminated_at (n - 2) := by
         cases' n_eq_zero_or_not_terminated_at_pred_n with n_eq_zero not_terminated_at_pred_n
@@ -429,6 +458,7 @@ theorem sub_convergents_eq {ifp : IntFractPair K} (stream_nth_eq : IntFractPair.
     have : 0 ≠ pB + ifp.fr⁻¹ * B := by
       have : (0 : K) ≤ fib n := by
         exact_mod_cast (fib n).zero_le
+      -- 0 ≤ fib n ≤ pB
       have zero_le_pB : 0 ≤ pB := le_transₓ this pB_ineq
       have : 0 < ifp.fr⁻¹ := by
         suffices 0 < ifp.fr by
@@ -439,6 +469,7 @@ theorem sub_convergents_eq {ifp : IntFractPair K} (stream_nth_eq : IntFractPair.
       have : 0 < ifp.fr⁻¹ * B := mul_pos this zero_lt_B
       have : 0 < pB + ifp.fr⁻¹ * B := add_pos_of_nonneg_of_pos zero_le_pB this
       exact ne_of_ltₓ this
+    -- finally, let's do the rewriting
     calc
       (pA + ifp.fr⁻¹ * A) / (pB + ifp.fr⁻¹ * B) - A / B =
           ((pA + ifp.fr⁻¹ * A) * B - (pB + ifp.fr⁻¹ * B) * A) / ((pB + ifp.fr⁻¹ * B) * B) :=
@@ -459,14 +490,17 @@ theorem sub_convergents_eq {ifp : IntFractPair K} (stream_nth_eq : IntFractPair.
 /-- Shows that `|v - Aₙ / Bₙ| ≤ 1 / (Bₙ * Bₙ₊₁)` -/
 theorem abs_sub_convergents_le (not_terminated_at_n : ¬(of v).TerminatedAt n) :
     abs (v - (of v).convergents n) ≤ 1 / ((of v).denominators n * ((of v).denominators <| n + 1)) := by
+  -- shorthand notation
   let g := of v
   let nextConts := g.continuants_aux (n + 2)
   set conts := continuants_aux g (n + 1) with conts_eq
   set pred_conts := continuants_aux g n with pred_conts_eq
+  -- change the goal to something more readable
   change abs (v - convergents g n) ≤ 1 / (conts.b * nextConts.b)
   obtain ⟨gp, s_nth_eq⟩ : ∃ gp, g.s.nth n = some gp
   exact option.ne_none_iff_exists'.elim_left not_terminated_at_n
   have gp_a_eq_one : gp.a = 1 := of_part_num_eq_one (part_num_eq_s_a s_nth_eq)
+  -- unfold the recurrence relation for `nextConts.b`
   have nextConts_b_eq : nextConts.b = pred_conts.b + gp.b * conts.b := by
     simp [nextConts, continuants_aux_recurrence s_nth_eq pred_conts_eq conts_eq, gp_a_eq_one, pred_conts_eq.symm,
       conts_eq.symm, add_commₓ]
@@ -481,8 +515,10 @@ theorem abs_sub_convergents_le (not_terminated_at_n : ¬(of v).TerminatedAt n) :
     ∃ ifp_n, int_fract_pair.stream v n = some ifp_n ∧ ifp_n.fr ≠ 0 ∧ int_fract_pair.of ifp_n.fr⁻¹ = ifp_succ_n
   exact int_fract_pair.succ_nth_stream_eq_some_iff.elim_left succ_nth_stream_eq
   let denom' := conts.b * (pred_conts.b + ifp_n.fr⁻¹ * conts.b)
+  -- now we can use `sub_convergents_eq` to simplify our goal
   suffices abs (-1 ^ n / denom') ≤ 1 / denom by
     have : v - g.convergents n = -1 ^ n / denom' := by
+      -- apply `sub_convergens_eq` and simplify the result
       have tmp := sub_convergents_eq stream_nth_eq
       delta'  at tmp
       simp only [stream_nth_fr_ne_zero, conts_eq.symm, pred_conts_eq.symm] at tmp
@@ -491,6 +527,7 @@ theorem abs_sub_convergents_le (not_terminated_at_n : ¬(of v).TerminatedAt n) :
       ring_nf
       ac_rfl
     rwa [this]
+  -- derive some tedious inequalities that we need to rewrite our goal
   have nextConts_b_ineq : (fib (n + 2) : K) ≤ pred_conts.b + gp.b * conts.b := by
     have : (fib (n + 2) : K) ≤ nextConts.b := fib_le_of_continuants_aux_b (Or.inr not_terminated_at_n)
     rwa [nextConts_b_eq] at this
@@ -501,6 +538,7 @@ theorem abs_sub_convergents_le (not_terminated_at_n : ¬(of v).TerminatedAt n) :
     have : (0 : K) < fib (n + 1) := by
       exact_mod_cast fib_pos (lt_of_le_of_neₓ n.succ.zero_le n.succ_ne_zero.symm)
     lt_of_lt_of_leₓ this conts_b_ineq
+  -- `denom'` is positive, so we can remove `|⬝|` from our goal
   suffices 1 / denom' ≤ 1 / denom by
     have : abs (-1 ^ n / denom') = 1 / denom' := by
       suffices 1 / abs denom' = 1 / denom' by
@@ -532,7 +570,8 @@ theorem abs_sub_convergents_le (not_terminated_at_n : ¬(of v).TerminatedAt n) :
         nextConts_b_ineq
     solve_by_elim [mul_pos]
     
-  · suffices : gp.b * conts.b ≤ ifp_n.fr⁻¹ * conts.b
+  · -- we can cancel multiplication by `conts.b` and addition with `pred_conts.b`
+    suffices : gp.b * conts.b ≤ ifp_n.fr⁻¹ * conts.b
     exact (mul_le_mul_left zero_lt_conts_b).elim_right <| (add_le_add_iff_left pred_conts.b).elim_right this
     suffices (ifp_succ_n.b : K) * conts.b ≤ ifp_n.fr⁻¹ * conts.b by
       rwa [← ifp_succ_n_b_eq_gp_b]
@@ -559,6 +598,7 @@ theorem abs_sub_convergents_le' {b : K} (nth_part_denom_eq : (of v).partialDenom
   suffices 1 / (B * nB) ≤ (1 : K) / (b * B * B) by
     have : abs (v - g.convergents n) ≤ 1 / (B * nB) := abs_sub_convergents_le not_terminated_at_n
     trans <;> assumption
+  -- derive some inequalities needed to show the claim
   have zero_lt_B : 0 < B :=
     have : (fib (n + 1) : K) ≤ B :=
       succ_nth_fib_le_of_nth_denom (Or.inr <| mt (terminated_stable n.pred_le) not_terminated_at_n)

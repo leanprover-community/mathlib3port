@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Anne Baanen. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Anne Baanen
+-/
 import Mathbin.Algebra.Order.AbsoluteValue
 import Mathbin.Algebra.EuclideanDomain
 
@@ -29,13 +34,14 @@ variable (abv : AbsoluteValue R S)
 /-- An absolute value `abv : R → S` is Euclidean if it is compatible with the
 `euclidean_domain` structure on `R`, namely `abv` is strictly monotone with respect to the well
 founded relation `≺` on `R`. -/
-structure is_euclidean : Prop where
+structure IsEuclidean : Prop where
   map_lt_map_iff' : ∀ {x y}, abv x < abv y ↔ x ≺ y
 
 namespace IsEuclidean
 
 variable {abv}
 
+-- Rearrange the parameters to `map_lt_map_iff'` so it elaborates better.
 theorem map_lt_map_iff {x y : R} (h : abv.IsEuclidean) : abv x < abv y ↔ x ≺ y :=
   map_lt_map_iff' h
 
@@ -53,6 +59,7 @@ section Int
 open Int
 
 /-- `abs : ℤ → ℤ` is a Euclidean absolute value -/
+-- TODO: generalize to `linear_ordered_euclidean_domain`s if we ever get a definition of those
 protected theorem abs_is_euclidean : IsEuclidean (AbsoluteValue.abs : AbsoluteValue ℤ ℤ) :=
   { map_lt_map_iff' := fun x y =>
       show abs x < abs y ↔ natAbs x < natAbs y by

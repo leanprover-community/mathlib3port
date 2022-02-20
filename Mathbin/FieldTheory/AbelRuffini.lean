@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Thomas Browning and Patrick Lutz. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Thomas Browning, Patrick Lutz
+-/
 import Mathbin.GroupTheory.Solvable
 import Mathbin.FieldTheory.PolynomialGaloisGroup
 import Mathbin.RingTheory.RootsOfUnity
@@ -280,7 +285,7 @@ theorem induction (P : solvableByRad F E → Prop) (base : ∀ α : F, P (algebr
     exact Subtype.ext (Eq.trans ((solvableByRad F E).coe_pow _ n) hα₀.symm)
     
 
-theorem IsIntegral (α : solvableByRad F E) : IsIntegral F α := by
+theorem is_integral (α : solvableByRad F E) : IsIntegral F α := by
   revert α
   apply solvableByRad.induction
   · exact fun _ => is_integral_algebra_map
@@ -351,17 +356,17 @@ theorem induction3 {α : solvableByRad F E} {n : ℕ} (hn : n ≠ 0) (hα : P (�
       
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr ⟮ , ⟯»
--- ././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr ⟮ , ⟯»
--- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr ⟮ , ⟯»
--- ././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr ⟮ , ⟯»
--- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr ⟮ , ⟯»
--- ././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr ⟮ , ⟯»
--- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr ⟮ , ⟯»
--- ././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr ⟮ , ⟯»
 /-- An auxiliary induction lemma, which is generalized by `solvable_by_rad.is_solvable`. -/
 theorem induction2 {α β γ : solvableByRad F E}
-    (hγ : γ ∈ «expr ⟮ , ⟯» F "././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr ⟮ , ⟯»")
+    (hγ : γ ∈ «expr ⟮ , ⟯» F "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr ⟮ , ⟯»")
     (hα : P α) (hβ : P β) : P γ := by
   let p := minpoly F α
   let q := minpoly F β
@@ -369,7 +374,7 @@ theorem induction2 {α β γ : solvableByRad F E}
     Polynomial.splits_of_splits_mul _ (mul_ne_zero (minpoly.ne_zero (IsIntegral α)) (minpoly.ne_zero (IsIntegral β)))
       (splitting_field.splits (p * q))
   let f :
-    «expr ⟮ , ⟯» F "././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr ⟮ , ⟯»" →ₐ[F]
+    «expr ⟮ , ⟯» F "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr ⟮ , ⟯»" →ₐ[F]
       (p * q).SplittingField :=
     Classical.choice
       (alg_hom_mk_adjoin_splits
@@ -386,14 +391,14 @@ theorem induction2 {α β γ : solvableByRad F E}
         suffices
           aeval
               (⟨γ, hγ⟩ :
-                «expr ⟮ , ⟯» F "././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr ⟮ , ⟯»")
+                «expr ⟮ , ⟯» F "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr ⟮ , ⟯»")
               (minpoly F γ) =
             0
           by
           rw [aeval_alg_hom_apply, this, AlgHom.map_zero]
         apply
           (algebraMap
-              («expr ⟮ , ⟯» F "././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr ⟮ , ⟯»")
+              («expr ⟮ , ⟯» F "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr ⟮ , ⟯»")
               (solvableByRad F E)).Injective
         rw [RingHom.map_zero, IsScalarTower.algebra_map_aeval]
         exact minpoly.aeval F γ)
@@ -401,15 +406,15 @@ theorem induction2 {α β γ : solvableByRad F E}
   rw [P, key]
   exact gal_is_solvable_of_splits ⟨Normal.splits (splitting_field.normal _) _⟩ (gal_mul_is_solvable hα hβ)
 
--- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr ⟮ , ⟯»
--- ././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr ⟮ , ⟯»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr ⟮ , ⟯»
 /-- An auxiliary induction lemma, which is generalized by `solvable_by_rad.is_solvable`. -/
 theorem induction1 {α β : solvableByRad F E}
-    (hβ : β ∈ «expr ⟮ , ⟯» F "././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr ⟮ , ⟯»")
+    (hβ : β ∈ «expr ⟮ , ⟯» F "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr ⟮ , ⟯»")
     (hα : P α) : P β :=
   induction2 (adjoin.mono F _ _ (ge_of_eq (Set.pair_eq_singleton α)) hβ) hα hα
 
-theorem IsSolvable (α : solvableByRad F E) : IsSolvable (minpoly F α).Gal := by
+theorem is_solvable (α : solvableByRad F E) : IsSolvable (minpoly F α).Gal := by
   revert α
   apply solvableByRad.induction
   · exact fun α => by

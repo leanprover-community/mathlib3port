@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johan Commelin, Scott Morrison, Adam Topaz
+-/
 import Mathbin.AlgebraicTopology.SimplicialObject
 import Mathbin.AlgebraicTopology.TopologicalSimplex
 import Mathbin.CategoryTheory.Limits.Presheaf
@@ -42,7 +47,7 @@ namespace SSet
 
 /-- The `n`-th standard simplex `Δ[n]` associated with a nonempty finite linear order `n`
 is the Yoneda embedding of `n`. -/
-def standard_simplex : SimplexCategory ⥤ SSet :=
+def standardSimplex : SimplexCategory ⥤ SSet :=
   yoneda
 
 localized [Simplicial] notation "Δ[" n "]" => SSet.standardSimplex.obj (SimplexCategory.mk n)
@@ -54,7 +59,7 @@ section
 
 /-- The `m`-simplices of the `n`-th standard simplex are
 the monotone maps from `fin (m+1)` to `fin (n+1)`. -/
-def as_order_hom {n} {m} (α : Δ[n].obj m) : OrderHom (Finₓ (m.unop.len + 1)) (Finₓ (n + 1)) :=
+def asOrderHom {n} {m} (α : Δ[n].obj m) : OrderHom (Finₓ (m.unop.len + 1)) (Finₓ (n + 1)) :=
   α.toOrderHom
 
 end
@@ -73,8 +78,8 @@ def boundary (n : ℕ) : SSet where
 localized [Simplicial] notation "∂Δ[" n "]" => SSet.boundary n
 
 /-- The inclusion of the boundary of the `n`-th standard simplex into that standard simplex. -/
-def boundary_inclusion (n : ℕ) : ∂Δ[n] ⟶ Δ[n] where
-  app := fun m α : { α : Δ[n].obj m // _ } => α
+def boundaryInclusion (n : ℕ) : ∂Δ[n] ⟶ Δ[n] where
+  app := fun α : { α : Δ[n].obj m // _ } => α
 
 /-- `horn n i` (or `Λ[n, i]`) is the `i`-th horn of the `n`-th standard simplex, where `i : n`.
 It consists of all `m`-simplices `α` of `Δ[n]`
@@ -95,15 +100,15 @@ def horn (n : ℕ) (i : Finₓ (n + 1)) : SSet where
 localized [Simplicial] notation "Λ[" n ", " i "]" => SSet.horn (n : ℕ) i
 
 /-- The inclusion of the `i`-th horn of the `n`-th standard simplex into that standard simplex. -/
-def horn_inclusion (n : ℕ) (i : Finₓ (n + 1)) : Λ[n, i] ⟶ Δ[n] where
-  app := fun m α : { α : Δ[n].obj m // _ } => α
+def hornInclusion (n : ℕ) (i : Finₓ (n + 1)) : Λ[n, i] ⟶ Δ[n] where
+  app := fun α : { α : Δ[n].obj m // _ } => α
 
 section Examples
 
 open_locale Simplicial
 
 /-- The simplicial circle. -/
-noncomputable def S1 : SSet :=
+noncomputable def s1 : SSet :=
   limits.colimit <|
     Limits.parallelPair (standardSimplex.map <| SimplexCategory.δ 0 : Δ[0] ⟶ Δ[1])
       (standardSimplex.map <| SimplexCategory.δ 1)
@@ -111,7 +116,7 @@ noncomputable def S1 : SSet :=
 end Examples
 
 /-- Truncated simplicial sets. -/
-def truncated (n : ℕ) :=
+def Truncated (n : ℕ) :=
   SimplicialObject.Truncated (Type u) n deriving LargeCategory, Limits.HasLimits, Limits.HasColimits
 
 /-- The skeleton functor on simplicial sets. -/

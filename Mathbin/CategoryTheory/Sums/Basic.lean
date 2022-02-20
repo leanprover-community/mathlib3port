@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison
+-/
 import Mathbin.CategoryTheory.EqToHom
 
 /-!
@@ -19,6 +24,7 @@ namespace CategoryTheory
 
 universe v₁ u₁
 
+-- morphism levels before object levels. See note [category_theory universes].
 open Sum
 
 section
@@ -27,7 +33,7 @@ variable (C : Type u₁) [Category.{v₁} C] (D : Type u₁) [Category.{v₁} D]
 
 /-- `sum C D` gives the direct sum of two categories.
 -/
-instance Sum : Category.{v₁} (Sum C D) where
+instance sum : Category.{v₁} (Sum C D) where
   Hom := fun X Y =>
     match X, Y with
     | inl X, inl Y => X ⟶ Y
@@ -62,6 +68,7 @@ namespace Sum
 variable (C : Type u₁) [Category.{v₁} C] (D : Type u₁) [Category.{v₁} D]
 
 /-- `inl_` is the functor `X ↦ inl X`. -/
+-- Unfortunate naming here, suggestions welcome.
 @[simps]
 def inl_ : C ⥤ Sum C D where
   obj := fun X => inl X
@@ -103,7 +110,7 @@ theorem swap_map_inr {X Y : D} {f : inr X ⟶ inr Y} : (swap C D).map f = f :=
 namespace Swap
 
 /-- `swap` gives an equivalence between `C ⊕ D` and `D ⊕ C`. -/
-def Equivalenceₓ : Sum C D ≌ Sum D C :=
+def equivalence : Sum C D ≌ Sum D C :=
   Equivalence.mk (swap C D) (swap D C)
     (NatIso.ofComponents
       (fun X =>
@@ -120,7 +127,7 @@ def Equivalenceₓ : Sum C D ≌ Sum D C :=
       (by
         tidy))
 
-instance is_equivalence : IsEquivalence (swap C D) :=
+instance isEquivalence : IsEquivalence (swap C D) :=
   (by
     infer_instance : IsEquivalence (equivalence C D).Functor)
 
@@ -138,7 +145,7 @@ variable {A : Type u₁} [Category.{v₁} A] {B : Type u₁} [Category.{v₁} B]
 namespace Functor
 
 /-- The sum of two functors. -/
-def Sum (F : A ⥤ B) (G : C ⥤ D) : Sum A C ⥤ Sum B D where
+def sum (F : A ⥤ B) (G : C ⥤ D) : Sum A C ⥤ Sum B D where
   obj := fun X =>
     match X with
     | inl X => inl (F.obj X)
@@ -185,7 +192,7 @@ end Functor
 namespace NatTrans
 
 /-- The sum of two natural transformations. -/
-def Sum {F G : A ⥤ B} {H I : C ⥤ D} (α : F ⟶ G) (β : H ⟶ I) : F.Sum H ⟶ G.Sum I where
+def sum {F G : A ⥤ B} {H I : C ⥤ D} (α : F ⟶ G) (β : H ⟶ I) : F.Sum H ⟶ G.Sum I where
   app := fun X =>
     match X with
     | inl X => α.app X

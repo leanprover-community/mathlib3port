@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Sébastien Gouëzel. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Sébastien Gouëzel
+-/
 import Mathbin.Analysis.NormedSpace.Multilinear
 
 /-!
@@ -38,6 +43,8 @@ instance : Inhabited (FormalMultilinearSeries 𝕜 E F) :=
 
 section Module
 
+/- `derive` is not able to find the module structure, probably because Lean is confused by the
+dependent types. We register it explicitly. -/
 attribute [local reducible] FormalMultilinearSeries
 
 instance : Module 𝕜 (FormalMultilinearSeries 𝕜 E F) := by
@@ -64,7 +71,7 @@ def unshift (q : FormalMultilinearSeries 𝕜 E (E →L[𝕜] F)) (z : F) : Form
   | n + 1 => continuousMultilinearCurryRightEquiv' 𝕜 n E F (q n)
 
 /-- Killing the zeroth coefficient in a formal multilinear series -/
-def remove_zero (p : FormalMultilinearSeries 𝕜 E F) : FormalMultilinearSeries 𝕜 E F
+def removeZero (p : FormalMultilinearSeries 𝕜 E F) : FormalMultilinearSeries 𝕜 E F
   | 0 => 0
   | n + 1 => p (n + 1)
 
@@ -90,7 +97,7 @@ theorem congr (p : FormalMultilinearSeries 𝕜 E F) {m n : ℕ} {v : Finₓ m �
 
 /-- Composing each term `pₙ` in a formal multilinear series with `(u, ..., u)` where `u` is a fixed
 continuous linear map, gives a new formal multilinear series `p.comp_continuous_linear_map u`. -/
-def comp_continuous_linear_map (p : FormalMultilinearSeries 𝕜 F G) (u : E →L[𝕜] F) : FormalMultilinearSeries 𝕜 E G :=
+def compContinuousLinearMap (p : FormalMultilinearSeries 𝕜 F G) (u : E →L[𝕜] F) : FormalMultilinearSeries 𝕜 E G :=
   fun n => (p n).compContinuousLinearMap fun i : Finₓ n => u
 
 @[simp]
@@ -107,7 +114,7 @@ variable [NormedSpace 𝕜' F] [IsScalarTower 𝕜 𝕜' F]
 /-- Reinterpret a formal `𝕜'`-multilinear series as a formal `𝕜`-multilinear series, where `𝕜'` is a
 normed algebra over `𝕜`. -/
 @[simp]
-protected def RestrictScalars (p : FormalMultilinearSeries 𝕜' E F) : FormalMultilinearSeries 𝕜 E F := fun n =>
+protected def restrictScalars (p : FormalMultilinearSeries 𝕜' E F) : FormalMultilinearSeries 𝕜 E F := fun n =>
   (p n).restrictScalars 𝕜
 
 end FormalMultilinearSeries

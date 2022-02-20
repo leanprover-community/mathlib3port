@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Yury G. Kudryashov. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yury G. Kudryashov
+-/
 import Mathbin.Topology.Algebra.MulAction
 import Mathbin.GroupTheory.GroupAction.Basic
 
@@ -64,8 +69,8 @@ theorem IsOpen.Union_smul [IsMinimal G α] {U : Set α} (hUo : IsOpen U) (hne : 
     ⟨g⁻¹, _, hg, inv_smul_smul _ _⟩
 
 @[to_additive]
-theorem IsCompact.exists_finite_cover_smul [TopologicalSpace G] [IsMinimal G α] [HasContinuousSmul G α] {K U : Set α}
-    (hK : IsCompact K) (hUo : IsOpen U) (hne : U.Nonempty) : ∃ I : Finset G, K ⊆ ⋃ g ∈ I, g • U :=
+theorem IsCompact.exists_finite_cover_smul [IsMinimal G α] [HasContinuousConstSmul G α] {K U : Set α} (hK : IsCompact K)
+    (hUo : IsOpen U) (hne : U.Nonempty) : ∃ I : Finset G, K ⊆ ⋃ g ∈ I, g • U :=
   (hK.elim_finite_subcover (fun g : G => g • U) fun g => hUo.smul _) <|
     calc
       K ⊆ univ := subset_univ K
@@ -84,7 +89,7 @@ theorem eq_empty_or_univ_of_smul_invariant_closed [IsMinimal M α] {s : Set α} 
   s.eq_empty_or_nonempty.imp_right fun hne => hs.closure_eq ▸ (dense_of_nonempty_smul_invariant M hne hsmul).closure_eq
 
 @[to_additive]
-theorem is_minimal_iff_closed_smul_invariant [TopologicalSpace M] [HasContinuousSmul M α] :
+theorem is_minimal_iff_closed_smul_invariant [HasContinuousConstSmul M α] :
     IsMinimal M α ↔ ∀ s : Set α, IsClosed s → (∀ c : M, c • s ⊆ s) → s = ∅ ∨ s = univ := by
   constructor
   · intros h s

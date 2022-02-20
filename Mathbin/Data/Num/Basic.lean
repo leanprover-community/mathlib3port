@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2014 Microsoft Corporation. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Leonardo de Moura, Mario Carneiro
+-/
 
 /-!
 # Binary representation of integers using inductive types
@@ -76,7 +81,7 @@ def succ : PosNum → PosNum
 
 /-- Returns a boolean for whether the `pos_num` is `one`.
   -/
-def is_one : PosNum → Bool
+def isOne : PosNum → Bool
   | 1 => true
   | _ => false
 
@@ -114,7 +119,7 @@ def size : PosNum → PosNum
 
 /-- The number of bits of a `pos_num`, as a `nat`.
   -/
-def nat_size : PosNum → Nat
+def natSize : PosNum → Nat
   | 1 => 1
   | bit0 n => Nat.succ (nat_size n)
   | bit1 n => Nat.succ (nat_size n)
@@ -131,13 +136,13 @@ instance : Mul PosNum :=
 
 /-- `of_nat_succ n` is the `pos_num` corresponding to `n + 1`.
   -/
-def of_nat_succ : ℕ → PosNum
+def ofNatSucc : ℕ → PosNum
   | 0 => 1
   | Nat.succ n => succ (of_nat_succ n)
 
 /-- `of_nat n` is the `pos_num` corresponding to `n`, except for `of_nat 0 = 1`.
   -/
-def of_nat (n : ℕ) : PosNum :=
+def ofNat (n : ℕ) : PosNum :=
   ofNatSucc (Nat.pred n)
 
 open Ordering
@@ -159,13 +164,13 @@ instance : LT PosNum :=
 instance : LE PosNum :=
   ⟨fun a b => ¬b < a⟩
 
-instance decidable_lt : @DecidableRel PosNum (· < ·)
+instance decidableLt : @DecidableRel PosNum (· < ·)
   | a, b => by
-    dsimp [· < ·] <;> infer_instance
+    dsimp [(· < ·)] <;> infer_instance
 
-instance decidable_le : @DecidableRel PosNum (· ≤ ·)
+instance decidableLe : @DecidableRel PosNum (· ≤ ·)
   | a, b => by
-    dsimp [· ≤ ·] <;> infer_instance
+    dsimp [(· ≤ ·)] <;> infer_instance
 
 end PosNum
 
@@ -186,9 +191,11 @@ def castNum [z : Zero α] : Num → α
   | 0 => 0
   | Num.pos p => castPosNum p
 
+-- see Note [coercion into rings]
 instance (priority := 900) posNumCoe : CoeTₓ PosNum α :=
   ⟨castPosNum⟩
 
+-- see Note [coercion into rings]
 instance (priority := 900) numNatCoe [z : Zero α] : CoeTₓ Num α :=
   ⟨castNum⟩
 
@@ -250,7 +257,7 @@ def size : Num → Num
 
 /-- The number of bits required to represent a `num`, as a `nat`. `size 0` is defined to be `0`.
   -/
-def nat_size : Num → Nat
+def natSize : Num → Nat
   | 0 => 0
   | Pos n => PosNum.natSize n
 
@@ -280,29 +287,29 @@ instance : LT Num :=
 instance : LE Num :=
   ⟨fun a b => ¬b < a⟩
 
-instance decidable_lt : @DecidableRel Num (· < ·)
+instance decidableLt : @DecidableRel Num (· < ·)
   | a, b => by
-    dsimp [· < ·] <;> infer_instance
+    dsimp [(· < ·)] <;> infer_instance
 
-instance decidable_le : @DecidableRel Num (· ≤ ·)
+instance decidableLe : @DecidableRel Num (· ≤ ·)
   | a, b => by
-    dsimp [· ≤ ·] <;> infer_instance
+    dsimp [(· ≤ ·)] <;> infer_instance
 
 /-- Converts a `num` to a `znum`.
   -/
-def to_znum : Num → Znum
+def toZnum : Num → Znum
   | 0 => 0
   | Pos a => Znum.pos a
 
 /-- Converts `x : num` to `-x : znum`.
   -/
-def to_znum_neg : Num → Znum
+def toZnumNeg : Num → Znum
   | 0 => 0
   | Pos a => Znum.neg a
 
 /-- Converts a `nat` to a `num`.
   -/
-def of_nat' : ℕ → Num :=
+def ofNat' : ℕ → Num :=
   Nat.binaryRec 0 fun b n => cond b Num.bit1 Num.bit0
 
 end Num
@@ -365,7 +372,7 @@ protected def bitm1 : Znum → Znum
 
 /-- Converts an `int` to a `znum`.
   -/
-def of_int' : ℤ → Znum
+def ofInt' : ℤ → Znum
   | (n : ℕ) => Num.toZnum (Num.ofNat' n)
   | -[1+ n] => Num.toZnumNeg (Num.ofNat' (n + 1))
 
@@ -388,13 +395,13 @@ def sub' : PosNum → PosNum → Znum
 /-- Converts a `znum` to `option pos_num`, where it is `some` if the `znum` was positive and `none`
   otherwise.
   -/
-def of_znum' : Znum → Option PosNum
+def ofZnum' : Znum → Option PosNum
   | Znum.pos p => some p
   | _ => none
 
 /-- Converts a `znum` to a `pos_num`, mapping all out of range values to `1`.
   -/
-def of_znum : Znum → PosNum
+def ofZnum : Znum → PosNum
   | Znum.pos p => p
   | _ => 1
 
@@ -434,14 +441,14 @@ def div2 : Num → Num
 
 /-- Converts a `znum` to an `option num`, where `of_znum' p = none` if `p < 0`.
   -/
-def of_znum' : Znum → Option Num
+def ofZnum' : Znum → Option Num
   | 0 => some 0
   | Znum.pos p => some (pos p)
   | Znum.neg p => none
 
 /-- Converts a `znum` to an `option num`, where `of_znum p = 0` if `p < 0`.
   -/
-def of_znum : Znum → Num
+def ofZnum : Znum → Num
   | Znum.pos p => pos p
   | _ => 0
 
@@ -517,20 +524,20 @@ instance : LT Znum :=
 instance : LE Znum :=
   ⟨fun a b => ¬b < a⟩
 
-instance decidable_lt : @DecidableRel Znum (· < ·)
+instance decidableLt : @DecidableRel Znum (· < ·)
   | a, b => by
-    dsimp [· < ·] <;> infer_instance
+    dsimp [(· < ·)] <;> infer_instance
 
-instance decidable_le : @DecidableRel Znum (· ≤ ·)
+instance decidableLe : @DecidableRel Znum (· ≤ ·)
   | a, b => by
-    dsimp [· ≤ ·] <;> infer_instance
+    dsimp [(· ≤ ·)] <;> infer_instance
 
 end Znum
 
 namespace PosNum
 
 /-- Auxiliary definition for `pos_num.divmod`. -/
-def divmod_aux (d : PosNum) (q r : Num) : Num × Num :=
+def divmodAux (d : PosNum) (q r : Num) : Num × Num :=
   match Num.ofZnum' (Num.sub' r (Num.pos d)) with
   | some r' => (Num.bit1 q, r')
   | none => (Num.bit0 q, r)
@@ -556,6 +563,37 @@ def div' (n d : PosNum) : Num :=
 def mod' (n d : PosNum) : Num :=
   (divmod d n).2
 
+/-
+  private def sqrt_aux1 (b : pos_num) (r n : num) : num × num :=
+  match num.of_znum' (n.sub' (r + num.pos b)) with
+  | some n' := (r.div2 + num.pos b, n')
+  | none := (r.div2, n)
+  end
+
+  private def sqrt_aux : pos_num → num → num → num
+  | b@(bit0 b') r n := let (r', n') := sqrt_aux1 b r n in sqrt_aux b' r' n'
+  | b@(bit1 b') r n := let (r', n') := sqrt_aux1 b r n in sqrt_aux b' r' n'
+  | 1           r n := (sqrt_aux1 1 r n).1
+  -/
+/-
+
+def sqrt_aux : ℕ → ℕ → ℕ → ℕ
+| b r n := if b0 : b = 0 then r else
+  let b' := shiftr b 2 in
+  have b' < b, from sqrt_aux_dec b0,
+  match (n - (r + b : ℕ) : ℤ) with
+  | (n' : ℕ) := sqrt_aux b' (div2 r + b) n'
+  | _ := sqrt_aux b' (div2 r) n
+  end
+
+/-- `sqrt n` is the square root of a natural number `n`. If `n` is not a
+  perfect square, it returns the largest `k:ℕ` such that `k*k ≤ n`. -/
+def sqrt (n : ℕ) : ℕ :=
+match size n with
+| 0      := 0
+| succ s := sqrt_aux (shiftl 1 (bit0 (div2 s))) 0 n
+end
+-/
 end PosNum
 
 namespace Num
@@ -581,7 +619,7 @@ instance : Mod Num :=
   ⟨Num.mod⟩
 
 /-- Auxiliary definition for `num.gcd`. -/
-def gcd_aux : Nat → Num → Num → Num
+def gcdAux : Nat → Num → Num → Num
   | 0, a, b => b
   | Nat.succ n, 0, b => b
   | Nat.succ n, a, b => gcd_aux n (b % a) a
@@ -636,6 +674,7 @@ def castZnum : Znum → α
   | Znum.pos p => p
   | Znum.neg p => -p
 
+-- see Note [coercion into rings]
 instance (priority := 900) znumCoe : CoeTₓ Znum α :=
   ⟨castZnum⟩
 

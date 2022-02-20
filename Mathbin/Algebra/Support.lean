@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Yury Kudryashov. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yury Kudryashov
+-/
 import Mathbin.Order.ConditionallyCompleteLattice
 import Mathbin.Algebra.BigOperators.Basic
 import Mathbin.Algebra.Group.Prod
@@ -25,12 +30,12 @@ section One
 variable [One M] [One N] [One P]
 
 /-- `support` of a function is the set of points `x` such that `f x ≠ 0`. -/
-def support [Zero A] (f : α → A) : Set α :=
+def Support [Zero A] (f : α → A) : Set α :=
   { x | f x ≠ 0 }
 
 /-- `mul_support` of a function is the set of points `x` such that `f x ≠ 1`. -/
 @[to_additive]
-def mul_support (f : α → M) : Set α :=
+def MulSupport (f : α → M) : Set α :=
   { x | f x ≠ 1 }
 
 @[to_additive]
@@ -53,7 +58,7 @@ theorem mem_mul_support {f : α → M} {x : α} : x ∈ MulSupport f ↔ f x ≠
 theorem mul_support_subset_iff {f : α → M} {s : Set α} : MulSupport f ⊆ s ↔ ∀ x, f x ≠ 1 → x ∈ s :=
   Iff.rfl
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (x «expr ∉ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (x «expr ∉ » s)
 @[to_additive]
 theorem mul_support_subset_iff' {f : α → M} {s : Set α} : MulSupport f ⊆ s ↔ ∀ x _ : x ∉ s, f x = 1 :=
   forall_congrₓ fun x => not_imp_comm
@@ -134,7 +139,7 @@ theorem mul_support_infi [ConditionallyCompleteLattice M] [Nonempty ι] (f : ι 
 @[to_additive]
 theorem mul_support_comp_subset {g : M → N} (hg : g 1 = 1) (f : α → M) : MulSupport (g ∘ f) ⊆ MulSupport f := fun x =>
   mt fun h => by
-    simp only [· ∘ ·, *]
+    simp only [(· ∘ ·), *]
 
 @[to_additive]
 theorem mul_support_subset_comp {g : M → N} (hg : ∀ {x}, g x = 1 → x = 1) (f : α → M) :

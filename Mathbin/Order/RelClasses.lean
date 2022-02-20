@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Jeremy Avigad. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Jeremy Avigad, Mario Carneiro, Yury G. Kudryashov
+-/
 import Mathbin.Order.Basic
 
 /-!
@@ -92,6 +97,7 @@ protected theorem IsAsymm.is_irrefl [IsAsymm α r] : IsIrrefl α r :=
 protected theorem IsTotal.is_trichotomous r [IsTotal α r] : IsTrichotomous α r :=
   ⟨fun a b => Or.left_comm.1 (Or.inr <| total_of r a b)⟩
 
+-- see Note [lower instance priority]
 instance (priority := 100) IsTotal.to_is_refl r [IsTotal α r] : IsRefl α r :=
   ⟨fun a => (or_selfₓ _).1 <| total_of r a a⟩
 
@@ -191,10 +197,12 @@ theorem is_strict_weak_order_of_is_order_connected [IsAsymm α r] [IsOrderConnec
     incomp_trans := fun a b c ⟨h₁, h₂⟩ ⟨h₃, h₄⟩ =>
       ⟨IsOrderConnected.neg_trans h₁ h₃, IsOrderConnected.neg_trans h₄ h₂⟩ }
 
+-- see Note [lower instance priority]
 instance (priority := 100) is_order_connected_of_is_strict_total_order' [IsStrictTotalOrder' α r] :
     IsOrderConnected α r :=
   ⟨fun a b c h => (trichotomous _ _).imp_right fun o => o.elim (fun e => e ▸ h) fun h' => trans h' h⟩
 
+-- see Note [lower instance priority]
 instance (priority := 100) is_strict_total_order_of_is_strict_total_order' [IsStrictTotalOrder' α r] :
     IsStrictTotalOrder α r :=
   { is_strict_weak_order_of_is_order_connected with }
@@ -209,6 +217,7 @@ instance (priority := 100) is_strict_total_order_of_is_strict_total_order' [IsSt
 class IsExtensional (α : Type u) (r : α → α → Prop) : Prop where
   ext : ∀ a b, (∀ x, r x a ↔ r x b) → a = b
 
+-- see Note [lower instance priority]
 instance (priority := 100) is_extensional_of_is_strict_total_order' [IsStrictTotalOrder' α r] : IsExtensional α r :=
   ⟨fun a b H =>
     ((@trichotomous _ r _ a b).resolve_left <| mt (H _).2 (irrefl a)).resolve_right <| mt (H _).1 (irrefl b)⟩
@@ -221,23 +230,29 @@ instance (priority := 100) is_extensional_of_is_strict_total_order' [IsStrictTot
 class IsWellOrder (α : Type u) (r : α → α → Prop) extends IsStrictTotalOrder' α r : Prop where
   wf : WellFounded r
 
+-- see Note [lower instance priority]
 instance (priority := 100) IsWellOrder.is_strict_total_order {α} (r : α → α → Prop) [IsWellOrder α r] :
     IsStrictTotalOrder α r := by
   infer_instance
 
+-- see Note [lower instance priority]
 instance (priority := 100) IsWellOrder.is_extensional {α} (r : α → α → Prop) [IsWellOrder α r] : IsExtensional α r := by
   infer_instance
 
+-- see Note [lower instance priority]
 instance (priority := 100) IsWellOrder.is_trichotomous {α} (r : α → α → Prop) [IsWellOrder α r] : IsTrichotomous α r :=
   by
   infer_instance
 
+-- see Note [lower instance priority]
 instance (priority := 100) IsWellOrder.is_trans {α} (r : α → α → Prop) [IsWellOrder α r] : IsTrans α r := by
   infer_instance
 
+-- see Note [lower instance priority]
 instance (priority := 100) IsWellOrder.is_irrefl {α} (r : α → α → Prop) [IsWellOrder α r] : IsIrrefl α r := by
   infer_instance
 
+-- see Note [lower instance priority]
 instance (priority := 100) IsWellOrder.is_asymm {α} (r : α → α → Prop) [IsWellOrder α r] : IsAsymm α r := by
   infer_instance
 
@@ -263,7 +278,7 @@ instance Prod.Lex.is_well_order [IsWellOrder α r] [IsWellOrder β s] : IsWellOr
         | Or.inl h => Or.inl <| Prod.Lex.right _ h
         | Or.inr (Or.inr h) => Or.inr <| Or.inr <| Prod.Lex.right _ h
         | Or.inr (Or.inl e) => e ▸ Or.inr <| Or.inl rfl
-  irrefl := fun ⟨a₁, a₂⟩ h => by
+  irrefl := fun h => by
     cases' h with _ _ _ _ h _ _ _ h <;> [exact irrefl _ h, exact irrefl _ h]
   trans := fun a b c h₁ h₂ => by
     cases' h₁ with a₁ a₂ b₁ b₂ ab a₁ b₁ b₂ ab <;> cases' h₂ with _ _ c₁ c₂ bc _ _ c₂ bc
@@ -280,11 +295,11 @@ instance Prod.Lex.is_well_order [IsWellOrder α r] [IsWellOrder β s] : IsWellOr
 namespace Set
 
 /-- An unbounded or cofinal set. -/
-def unbounded (r : α → α → Prop) (s : Set α) : Prop :=
+def Unbounded (r : α → α → Prop) (s : Set α) : Prop :=
   ∀ a, ∃ b ∈ s, ¬r b a
 
 /-- A bounded or final set. Not to be confused with `metric.bounded`. -/
-def bounded (r : α → α → Prop) (s : Set α) : Prop :=
+def Bounded (r : α → α → Prop) (s : Set α) : Prop :=
   ∃ a, ∀, ∀ b ∈ s, ∀, r b a
 
 @[simp]
@@ -331,6 +346,9 @@ theorem right_iff_left_not_left_of (r s : α → α → Prop) [IsNonstrictStrict
     s a b ↔ r a b ∧ ¬r b a :=
   right_iff_left_not_left
 
+-- The free parameter `r` is strictly speaking not uniquely determined by `s`, but in practice it
+-- always has a unique instance, so this is not dangerous.
+-- see Note [lower instance priority]
 @[nolint dangerous_instance]
 instance (priority := 100) IsNonstrictStrictOrder.to_is_irrefl {r : α → α → Prop} {s : α → α → Prop}
     [IsNonstrictStrictOrder α r s] : IsIrrefl α s :=
@@ -372,6 +390,7 @@ theorem superset_antisymm [IsAntisymm α (· ⊆ ·)] (h : a ⊆ b) (h' : b ⊆ 
 
 alias subset_of_eq ← Eq.subset'
 
+--TODO: Fix it and kill `eq.subset`
 alias superset_of_eq ← Eq.superset
 
 alias subset_trans ← HasSubset.Subset.trans

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Markus Himmel. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Markus Himmel
+-/
 import Mathbin.CategoryTheory.Abelian.Basic
 import Mathbin.Algebra.Homology.Exact
 import Mathbin.Tactic.Tfae
@@ -106,7 +111,7 @@ theorem exact_tfae :
   tfae_finish
 
 /-- If `(f, g)` is exact, then `images.image.ι f` is a kernel of `g`. -/
-def is_limit_image [h : Exact f g] :
+def isLimitImage [h : Exact f g] :
     IsLimit (KernelFork.ofι (Images.image.ι f) (Images.image_ι_comp_eq_zero h.1) : KernelFork g) := by
   rw [exact_iff] at h
   refine' is_limit.of_ι _ _ _ _ _
@@ -116,11 +121,11 @@ def is_limit_image [h : Exact f g] :
   tidy
 
 /-- If `(f, g)` is exact, then `image.ι f` is a kernel of `g`. -/
-def is_limit_image' [h : Exact f g] : IsLimit (KernelFork.ofι (image.ι f) (image_ι_comp_eq_zero h.1)) :=
+def isLimitImage' [h : Exact f g] : IsLimit (KernelFork.ofι (image.ι f) (image_ι_comp_eq_zero h.1)) :=
   IsKernel.isoKernel _ _ (isLimitImage f g) (imageIsoImage f).symm <| IsImage.lift_fac _ _
 
 /-- If `(f, g)` is exact, then `coimages.coimage.π g` is a cokernel of `f`. -/
-def is_colimit_coimage [h : Exact f g] :
+def isColimitCoimage [h : Exact f g] :
     IsColimit (CokernelCofork.ofπ (Coimages.coimage.π g) (Coimages.comp_coimage_π_eq_zero h.1) : CokernelCofork f) := by
   rw [exact_iff] at h
   refine' is_colimit.of_π _ _ _ _ _
@@ -130,7 +135,7 @@ def is_colimit_coimage [h : Exact f g] :
   tidy
 
 /-- If `(f, g)` is exact, then `factor_thru_image g` is a cokernel of `f`. -/
-def is_colimit_image [h : Exact f g] :
+def isColimitImage [h : Exact f g] :
     IsColimit (CokernelCofork.ofπ (factorThruImage g) (comp_factor_thru_image_eq_zero h.1)) :=
   IsCokernel.cokernelIso _ _ (isColimitCoimage f g) (coimageIsoImage' g) <|
     (cancel_mono (image.ι g)).1 <| by
@@ -174,6 +179,8 @@ theorem tfae_mono : Tfae [Mono f, kernel.ι f = 0, Exact (0 : Z ⟶ X) f] := by
     
   tfae_finish
 
+-- Note we've already proved `mono_iff_exact_zero_left : mono f ↔ exact (0 : Z ⟶ X) f`
+-- in any preadditive category with kernels and images.
 theorem mono_iff_kernel_ι_eq_zero : Mono f ↔ kernel.ι f = 0 :=
   (tfae_mono X f).out 0 1
 
@@ -196,6 +203,8 @@ theorem tfae_epi : Tfae [Epi f, cokernel.π f = 0, Exact f (0 : Y ⟶ Z)] := by
     
   tfae_finish
 
+-- Note we've already proved `epi_iff_exact_zero_right : epi f ↔ exact f (0 : Y ⟶ Z)`
+-- in any preadditive category with equalizers and images.
 theorem epi_iff_cokernel_π_eq_zero : Epi f ↔ cokernel.π f = 0 :=
   (tfae_epi X f).out 0 1
 

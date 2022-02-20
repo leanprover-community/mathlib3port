@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Floris van Doorn. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Floris van Doorn
+-/
 import Mathbin.MeasureTheory.Measure.Content
 import Mathbin.MeasureTheory.Group.Prod
 
@@ -108,7 +113,7 @@ theorem prehaar_nonneg (K₀ : PositiveCompacts G) {U : Set G} (K : Compacts G) 
 /-- `haar_product K₀` is the product of intervals `[0, (K : K₀)]`, for all compact sets `K`.
   For all `U`, we can show that `prehaar K₀ U ∈ haar_product K₀`. -/
 @[to_additive "additive version of `measure_theory.measure.haar.haar_product`"]
-def haar_product (K₀ : Set G) : Set (Compacts G → ℝ) :=
+def HaarProduct (K₀ : Set G) : Set (Compacts G → ℝ) :=
   Pi Univ fun K => Icc 0 <| index K.1 K₀
 
 @[simp, to_additive]
@@ -122,7 +127,7 @@ theorem mem_prehaar_empty {K₀ : Set G} {f : Compacts G → ℝ} :
   We show that the intersection of all these sets is nonempty, and the Haar measure
   on compact sets is defined to be an element in the closure of this intersection. -/
 @[to_additive "additive version of `measure_theory.measure.haar.cl_prehaar`"]
-def cl_prehaar (K₀ : Set G) (V : OpenNhdsOf (1 : G)) : Set (Compacts G → ℝ) :=
+def ClPrehaar (K₀ : Set G) (V : OpenNhdsOf (1 : G)) : Set (Compacts G → ℝ) :=
   Closure <| prehaar K₀ '' { U : Set G | U ⊆ V.1 ∧ IsOpen U ∧ (1 : G) ∈ U }
 
 variable [TopologicalGroup G]
@@ -558,7 +563,7 @@ variable [T2Space G]
 
 /-- The function `chaar` interpreted in `ℝ≥0`, as a content -/
 @[to_additive "additive version of `measure_theory.measure.haar.haar_content`"]
-def haar_content (K₀ : PositiveCompacts G) : Content G where
+def haarContent (K₀ : PositiveCompacts G) : Content G where
   toFun := fun K => ⟨chaar K₀ K, chaar_nonneg _ _⟩
   mono' := fun K₁ K₂ h => by
     simp only [← Nnreal.coe_le_coe, Subtype.coe_mk, chaar_mono, h]
@@ -613,7 +618,7 @@ variable [TopologicalSpace G] [T2Space G] [TopologicalGroup G] [MeasurableSpace 
 /-- The Haar measure on the locally compact group `G`, scaled so that `haar_measure K₀ K₀ = 1`. -/
 @[to_additive
       "The Haar measure on the locally compact additive group `G`,\nscaled so that `add_haar_measure K₀ K₀ = 1`."]
-def haar_measure (K₀ : PositiveCompacts G) : Measure G :=
+def haarMeasure (K₀ : PositiveCompacts G) : Measure G :=
   ((haarContent K₀).OuterMeasure K₀.1)⁻¹ • (haarContent K₀).Measure
 
 @[to_additive]
@@ -719,6 +724,7 @@ theorem is_haar_measure_eq_smul_is_haar_measure [LocallyCompactSpace G] [SecondC
         rw [← haar_measure_unique ν K]
     
 
+-- see Note [lower instance priority]]
 @[to_additive]
 instance (priority := 90) regular_of_is_haar_measure [LocallyCompactSpace G] [SecondCountableTopology G] (μ : Measure G)
     [IsHaarMeasure μ] : Regular μ := by
@@ -733,6 +739,9 @@ instance (priority := 90) regular_of_is_haar_measure [LocallyCompactSpace G] [Se
 theorem map_haar_inv {G : Type _} [CommGroupₓ G] [TopologicalSpace G] [TopologicalGroup G] [T2Space G]
     [MeasurableSpace G] [BorelSpace G] [LocallyCompactSpace G] [SecondCountableTopology G] (μ : Measure G)
     [IsHaarMeasure μ] : Measure.map Inv.inv μ = μ := by
+  -- the image measure is a Haar measure. By uniqueness up to multiplication, it is of the form
+  -- `c μ`. Applying again inversion, one gets the measure `c^2 μ`. But since inversion is an
+  -- involution, this is also `μ`. Hence, `c^2 = 1`, which implies `c = 1`.
   have : is_haar_measure (measure.map Inv.inv μ) := is_haar_measure_map μ (MulEquiv.inv G) continuous_inv continuous_inv
   obtain ⟨c, cpos, clt, hc⟩ : ∃ c : ℝ≥0∞, c ≠ 0 ∧ c ≠ ∞ ∧ measure.map Inv.inv μ = c • μ :=
     is_haar_measure_eq_smul_is_haar_measure _ _

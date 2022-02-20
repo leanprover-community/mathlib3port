@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Adam Topaz. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Adam Topaz
+-/
 import Mathbin.CategoryTheory.Sites.Plus
 import Mathbin.CategoryTheory.Limits.ConcreteCategory
 
@@ -32,7 +37,7 @@ attribute [local instance] concrete_category.has_coe_to_sort concrete_category.h
 
 /-- A concrete version of the multiequalizer, to be used below. -/
 @[nolint has_inhabited_instance]
-def meq {X : C} (P : Cᵒᵖ ⥤ D) (S : J.cover X) :=
+def Meq {X : C} (P : Cᵒᵖ ⥤ D) (S : J.cover X) :=
   { x : ∀ I : S.arrow, P.obj (op I.y) // ∀ I : S.Relation, P.map I.g₁.op (x I.fst) = P.map I.g₂.op (x I.snd) }
 
 end
@@ -93,7 +98,7 @@ theorem mk_apply {X : C} {P : Cᵒᵖ ⥤ D} (S : J.cover X) (x : P.obj (op X)) 
 variable [PreservesLimits (forget D)]
 
 /-- The equivalence between the type associated to `multiequalizer (S.index P)` and `meq P S`. -/
-noncomputable def Equivₓ {X : C} (P : Cᵒᵖ ⥤ D) (S : J.cover X) [HasMultiequalizer (S.index P)] :
+noncomputable def equiv {X : C} (P : Cᵒᵖ ⥤ D) (S : J.cover X) [HasMultiequalizer (S.index P)] :
     (multiequalizer (S.index P) : D) ≃ Meq P S :=
   Limits.Concrete.multiequalizerEquiv _
 
@@ -231,13 +236,22 @@ theorem eq_mk_iff_exists {X : C} {P : Cᵒᵖ ⥤ D} {S T : J.cover X} (x : Meq 
 /-- `P⁺` is always separated. -/
 theorem sep {X : C} (P : Cᵒᵖ ⥤ D) (S : J.cover X) (x y : (J.plusObj P).obj (op X))
     (h : ∀ I : S.arrow, (J.plusObj P).map I.f.op x = (J.plusObj P).map I.f.op y) : x = y := by
+  -- First, we choose representatives for x and y.
   obtain ⟨Sx, x, rfl⟩ := exists_rep x
   obtain ⟨Sy, y, rfl⟩ := exists_rep y
   simp only [res_mk_eq_mk_pullback] at h
+  -- Next, using our assumption,
+  -- choose covers over which the pullbacks of these representatives become equal.
   choose W h1 h2 hh using fun I : S.arrow => (eq_mk_iff_exists _ _).mp (h I)
+  -- To prove equality, it suffices to prove that there exists a cover over which
+  -- the representatives become equal.
   rw [eq_mk_iff_exists]
+  -- Construct the cover over which the representatives become equal by combining the various
+  -- covers chosen above.
   let B : J.cover X := S.bind W
   use B
+  -- Prove that this cover refines the two covers over which our representatives are defined
+  -- and use these proofs.
   let ex : B ⟶ Sx :=
     hom_of_le
       (by
@@ -253,6 +267,9 @@ theorem sep {X : C} (P : Cᵒᵖ ⥤ D) (S : J.cover X) (x y : (J.plusObj P).obj
         apply le_of_hom (h2 ⟨_, _, he2⟩)
         exact he1)
   use ex, ey
+  -- Now prove that indeed the representatives become equal over `B`.
+  -- This will follow by using the fact that our representatives become
+  -- equal over the chosen covers.
   ext1 I
   let IS : S.arrow := I.from_middle
   specialize hh IS
@@ -289,7 +306,7 @@ theorem inj_of_sep (P : Cᵒᵖ ⥤ D)
   construct a compatible family of local sections of `P` over the combination of the covers
   associated to the representatives.
   The separatedness condition is used to prove compatibility among these local sections of `P`. -/
-def meq_of_sep (P : Cᵒᵖ ⥤ D)
+def meqOfSep (P : Cᵒᵖ ⥤ D)
     (hsep : ∀ X : C S : J.cover X x y : P.obj (op X), (∀ I : S.arrow, P.map I.f.op x = P.map I.f.op y) → x = y) (X : C)
     (S : J.cover X) (s : Meq (J.plusObj P) S) (T : ∀ I : S.arrow, J.cover I.y) (t : ∀ I : S.arrow, Meq P (T I))
     (ht : ∀ I : S.arrow, s I = mk (t I)) : Meq P (S.bind T) where
@@ -315,16 +332,27 @@ theorem exists_of_sep (P : Cᵒᵖ ⥤ D)
     (hsep : ∀ X : C S : J.cover X x y : P.obj (op X), (∀ I : S.arrow, P.map I.f.op x = P.map I.f.op y) → x = y) (X : C)
     (S : J.cover X) (s : Meq (J.plusObj P) S) : ∃ t : (J.plusObj P).obj (op X), Meq.mk S t = s := by
   have inj : ∀ X : C, Function.Injective ((J.to_plus P).app (op X)) := inj_of_sep _ hsep
+  -- Choose representatives for the given local sections.
   choose T t ht using fun I => exists_rep (s I)
+  -- Construct a large cover over which we will define a representative that will
+  -- provide the gluing of the given local sections.
   let B : J.cover X := S.bind T
   choose Z e1 e2 he2 he1 hee using fun I : B.arrow => I.hf
+  -- Construct a compatible system of local sections over this large cover, using the chosen
+  -- representatives of our local sections.
+  -- The compatilibity here follows from the separatedness assumption.
   let w : meq P B := meq_of_sep P hsep X S s T t ht
+  -- The associated gluing will be the candidate section.
   use mk w
   ext I
   erw [ht, res_mk_eq_mk_pullback]
+  -- Use the separatedness of `P⁺` to prove that this is indeed a gluing of our
+  -- original local sections.
   apply sep P (T I)
   intro II
   simp only [res_mk_eq_mk_pullback, eq_mk_iff_exists]
+  -- It suffices to prove equality for representatives over a
+  -- convenient sufficiently large cover...
   use (J.pullback II.f).obj (T I)
   let e0 : (J.pullback II.f).obj (T I) ⟶ (J.pullback II.f).obj ((J.pullback I.f).obj B) :=
     hom_of_le
@@ -351,6 +379,7 @@ theorem exists_of_sep (P : Cᵒᵖ ⥤ D)
   change t IB IC = t I ID
   apply inj IV.Y
   erw [to_plus_apply (T I) (t I) ID, to_plus_apply (T IB) (t IB) IC, ← ht, ← ht]
+  -- Conclude by constructing the relation showing equality...
   let IR : S.relation := ⟨_, _, IV.Y, IC.f, ID.f, IB.f, I.f, _, I.hf, IA.middle_spec⟩
   convert s.condition IR
   cases I
@@ -413,11 +442,11 @@ def sheafify (P : Cᵒᵖ ⥤ D) : Cᵒᵖ ⥤ D :=
   J.plusObj (J.plusObj P)
 
 /-- The canonical map from `P` to its sheafification. -/
-def to_sheafify (P : Cᵒᵖ ⥤ D) : P ⟶ J.sheafify P :=
+def toSheafify (P : Cᵒᵖ ⥤ D) : P ⟶ J.sheafify P :=
   J.toPlus P ≫ J.plusMap (J.toPlus P)
 
 /-- The canonical map on sheafifications induced by a morphism. -/
-def sheafify_map {P Q : Cᵒᵖ ⥤ D} (η : P ⟶ Q) : J.sheafify P ⟶ J.sheafify Q :=
+def sheafifyMap {P Q : Cᵒᵖ ⥤ D} (η : P ⟶ Q) : J.sheafify P ⟶ J.sheafify Q :=
   J.plusMap <| J.plusMap η
 
 @[simp]
@@ -453,7 +482,7 @@ theorem sheafification_map {P Q : Cᵒᵖ ⥤ D} (η : P ⟶ Q) : (J.sheafificat
 
 /-- The canonical map from `P` to its sheafification, as a natural transformation.
 *Note:* We only show this is a sheaf under additional hypotheses on `D`. -/
-def to_sheafification : 𝟭 _ ⟶ sheafification J D :=
+def toSheafification : 𝟭 _ ⟶ sheafification J D :=
   J.toPlusNatTrans D ≫ whiskerRight (J.toPlusNatTrans D) (J.plusFunctor D)
 
 @[simp]
@@ -471,7 +500,7 @@ theorem is_iso_to_sheafify {P : Cᵒᵖ ⥤ D} (hP : Presheaf.IsSheaf J P) : IsI
   exact @is_iso.comp_is_iso _ _ _ _ _ (J.to_plus P) ((J.plus_functor D).map (J.to_plus P)) _ _
 
 /-- If `P` is a sheaf, then `P` is isomorphic to `J.sheafify P`. -/
-def iso_sheafify {P : Cᵒᵖ ⥤ D} (hP : Presheaf.IsSheaf J P) : P ≅ J.sheafify P := by
+def isoSheafify {P : Cᵒᵖ ⥤ D} (hP : Presheaf.IsSheaf J P) : P ≅ J.sheafify P := by
   let this' := is_iso_to_sheafify J hP <;> exact as_iso (J.to_sheafify P)
 
 @[simp]
@@ -480,7 +509,7 @@ theorem iso_sheafify_hom {P : Cᵒᵖ ⥤ D} (hP : Presheaf.IsSheaf J P) : (J.is
 
 /-- Given a sheaf `Q` and a morphism `P ⟶ Q`, construct a morphism from
 `J.sheafifcation P` to `Q`. -/
-def sheafify_lift {P Q : Cᵒᵖ ⥤ D} (η : P ⟶ Q) (hQ : Presheaf.IsSheaf J Q) : J.sheafify P ⟶ Q :=
+def sheafifyLift {P Q : Cᵒᵖ ⥤ D} (η : P ⟶ Q) (hQ : Presheaf.IsSheaf J Q) : J.sheafify P ⟶ Q :=
   J.plusLift (J.plusLift η hQ) hQ
 
 @[simp, reassoc]
@@ -524,14 +553,14 @@ variable [ConcreteCategory.{max v u} D] [PreservesLimits (forget D)]
   [∀ P : Cᵒᵖ ⥤ D X : C S : J.cover X, HasMultiequalizer (S.index P)] [∀ X : C, HasColimitsOfShape (J.cover Xᵒᵖ) D]
   [∀ X : C, PreservesColimitsOfShape (J.cover Xᵒᵖ) (forget D)] [ReflectsIsomorphisms (forget D)]
 
-theorem grothendieck_topology.sheafify_is_sheaf (P : Cᵒᵖ ⥤ D) : Presheaf.IsSheaf J (J.sheafify P) :=
+theorem GrothendieckTopology.sheafify_is_sheaf (P : Cᵒᵖ ⥤ D) : Presheaf.IsSheaf J (J.sheafify P) :=
   GrothendieckTopology.Plus.is_sheaf_plus_plus _ _
 
 variable (D)
 
 /-- The sheafification functor, as a functor taking values in `Sheaf`. -/
 @[simps]
-def presheaf_to_Sheaf : (Cᵒᵖ ⥤ D) ⥤ Sheaf J D where
+def presheafToSheaf : (Cᵒᵖ ⥤ D) ⥤ Sheaf J D where
   obj := fun P => ⟨J.sheafify P, J.sheafify_is_sheaf P⟩
   map := fun P Q η => ⟨J.sheafifyMap η⟩
   map_id' := fun P => Sheaf.Hom.ext _ _ <| J.sheafify_map_id _
@@ -539,7 +568,7 @@ def presheaf_to_Sheaf : (Cᵒᵖ ⥤ D) ⥤ Sheaf J D where
 
 /-- The sheafification functor is left adjoint to the forgetful functor. -/
 @[simps unit_app counit_app_val]
-def sheafification_adjunction : presheafToSheaf J D ⊣ sheafToPresheaf J D :=
+def sheafificationAdjunction : presheafToSheaf J D ⊣ sheafToPresheaf J D :=
   Adjunction.mkOfHomEquiv
     { homEquiv := fun P Q =>
         { toFun := fun e => J.toSheafify P ≫ e.val, invFun := fun e => ⟨J.sheafifyLift e Q.2⟩,
@@ -559,7 +588,7 @@ variable {J D}
 
 /-- A sheaf `P` is isomorphic to its own sheafification. -/
 @[simps]
-def sheafification_iso (P : Sheaf J D) : P ≅ (presheafToSheaf J D).obj P.val where
+def sheafificationIso (P : Sheaf J D) : P ≅ (presheafToSheaf J D).obj P.val where
   Hom := ⟨(J.isoSheafify P.2).Hom⟩
   inv := ⟨(J.isoSheafify P.2).inv⟩
   hom_inv_id' := by

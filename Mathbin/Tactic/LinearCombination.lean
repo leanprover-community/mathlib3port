@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2022 Abby J. Goldberg. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Abby J. Goldberg
+-/
 import Mathbin.Tactic.Ring
 
 /-!
@@ -53,7 +58,7 @@ theorem replace_eq_expr {α} [h : Zero α] {x y : α} (h1 : x = 0) (h2 : y = x) 
 /-! ### Configuration -/
 
 
--- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:916:4: warning: unsupported (TODO): `[tacs]
 /-- A configuration object for `linear_combination`.
 
 `normalize` describes whether or not the normalization step should be used.
@@ -81,7 +86,11 @@ unsafe structure linear_combination_config : Type where
 -/
 unsafe def mul_equality_expr (h_equality : expr) (coeff : pexpr) : tactic expr := do
   let quote.1 ((%%ₓlhs) = %%ₓrhs) ← infer_type h_equality
-  let left_type ← infer_type lhs
+  let left_type
+    ←-- Mark the coefficient as having the same type as the sides of `h_equality` -
+        --   this is necessary in order to use the left_mul_both_sides lemma
+        infer_type
+        lhs
   let coeff_expr ← to_expr (pquote.1 (%%ₓcoeff : %%ₓleft_type))
   mk_app `` left_mul_both_sides [coeff_expr, h_equality]
 
@@ -138,12 +147,18 @@ unsafe def make_sum_of_hyps_helper : Option (tactic expr) → List Name → List
   | some tactic_hcombo, [], [] => do
     tactic_hcombo
   | none, h_equality_nam :: h_eqs_names, coeff :: coeffs => do
-    let h_equality ← get_local h_equality_nam
+    let h_equality
+      ←-- This is the first equality, and we do not have anything to add to it
+          get_local
+          h_equality_nam
     make_sum_of_hyps_helper (some (mul_equality_expr h_equality coeff)) h_eqs_names coeffs
   | some tactic_hcombo, h_equality_nam :: h_eqs_names, coeff :: coeffs => do
     let h_equality ← get_local h_equality_nam
     let hcombo ← tactic_hcombo
-    make_sum_of_hyps_helper (some (sum_two_hyps_one_mul_helper hcombo h_equality coeff)) h_eqs_names coeffs
+    -- We want to add this weighted equality to the current equality in
+        --   the hypothesis
+        make_sum_of_hyps_helper
+        (some (sum_two_hyps_one_mul_helper hcombo h_equality coeff)) h_eqs_names coeffs
   | _, _, _ => do
     fail
         ("The length of the input list of equalities should be the " ++
@@ -197,7 +212,9 @@ Note: The target must be an equality when this tactic is called, and the
 * Output: N/A
 -/
 unsafe def move_target_to_left_side : tactic Unit := do
-  let target ← target
+  let target
+    ←-- Move all the terms in the target equality to the left side
+      target
   let (targ_lhs, targ_rhs) ← match_eq target
   let target_left_eq ← to_expr (pquote.1 (((%%ₓtarg_lhs) - %%ₓtarg_rhs) = 0))
   mk_app `` all_on_left_equiv [targ_lhs, targ_rhs] >>= replace_target target_left_eq

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison
+-/
 import Mathbin.CategoryTheory.Limits.Types
 import Mathbin.CategoryTheory.Currying
 import Mathbin.CategoryTheory.Limits.FunctorCategory
@@ -47,8 +52,7 @@ variable [HasColimitsOfShape K C]
 /-- The universal morphism
 $\colim_k \lim_j F(j,k) → \lim_j \colim_k F(j, k)$.
 -/
-noncomputable def colimit_limit_to_limit_colimit :
-    colimit (curry.obj (swap K J ⋙ F) ⋙ lim) ⟶ limit (curry.obj F ⋙ colim) :=
+noncomputable def colimitLimitToLimitColimit : colimit (curry.obj (swap K J ⋙ F) ⋙ lim) ⟶ limit (curry.obj F ⋙ colim) :=
   limit.lift (curry.obj F ⋙ colim)
     { x := _,
       π :=
@@ -90,7 +94,7 @@ theorem ι_colimit_limit_to_limit_colimit_π_apply (F : J × K ⥤ Type v) j k f
 
 /-- The map `colimit_limit_to_limit_colimit` realized as a map of cones. -/
 @[simps]
-noncomputable def colimit_limit_to_limit_colimit_cone (G : J ⥤ K ⥤ C) [HasLimit G] :
+noncomputable def colimitLimitToLimitColimitCone (G : J ⥤ K ⥤ C) [HasLimit G] :
     colim.mapCone (Limit.cone G) ⟶ Limit.cone (G ⋙ colim) where
   Hom :=
     colim.map (limitIsoSwapCompLim G).Hom ≫

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Johannes Hölzl. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johannes Hölzl, Patrick Massot, Casper Putz, Anne Baanen
+-/
 import Mathbin.LinearAlgebra.Matrix.Determinant
 
 /-!
@@ -35,7 +40,7 @@ variable [Semiringₓ R] [AddCommMonoidₓ A] [Module R A]
 
 /-- The natural map that reindexes a matrix's rows and columns with equivalent types,
 `matrix.reindex`, is a linear equivalence. -/
-def reindex_linear_equiv (eₘ : m ≃ m') (eₙ : n ≃ n') : Matrix m n A ≃ₗ[R] Matrix m' n' A :=
+def reindexLinearEquiv (eₘ : m ≃ m') (eₙ : n ≃ n') : Matrix m n A ≃ₗ[R] Matrix m' n' A :=
   { reindex eₘ eₙ with map_add' := fun _ _ => rfl, map_smul' := fun _ _ => rfl }
 
 @[simp]
@@ -102,7 +107,7 @@ variable [CommSemiringₓ R] [Fintype n] [Fintype m] [DecidableEq m] [DecidableE
 /-- For square matrices with coefficients in commutative semirings, the natural map that reindexes
 a matrix's rows and columns with equivalent types, `matrix.reindex`, is an equivalence of algebras.
 -/
-def reindex_alg_equiv (e : m ≃ n) : Matrix m m R ≃ₐ[R] Matrix n n R :=
+def reindexAlgEquiv (e : m ≃ n) : Matrix m m R ≃ₐ[R] Matrix n n R :=
   { reindexLinearEquiv R R e e with toFun := reindex e e,
     map_mul' := fun a b => (reindex_linear_equiv_mul R R e e e a b).symm,
     commutes' := fun r => by

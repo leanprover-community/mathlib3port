@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2022 Yaël Dillies. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yaël Dillies
+-/
 import Mathbin.Order.Category.Lattice
 
 /-!
@@ -39,13 +44,13 @@ instance : BundledHom.ParentProjection @DistribLattice.toLattice :=
 
 deriving instance LargeCategory, ConcreteCategory for DistribLatticeₓ
 
-instance has_forget_to_Lattice : HasForget₂ DistribLatticeₓ Latticeₓ :=
+instance hasForgetToLattice : HasForget₂ DistribLatticeₓ Latticeₓ :=
   BundledHom.forget₂ _ _
 
 /-- Constructs an equivalence between distributive lattices from an order isomorphism between them.
 -/
 @[simps]
-def iso.mk {α β : DistribLatticeₓ.{u}} (e : α ≃o β) : α ≅ β where
+def Iso.mk {α β : DistribLatticeₓ.{u}} (e : α ≃o β) : α ≅ β where
   Hom := e
   inv := e.symm
   hom_inv_id' := by
@@ -63,7 +68,7 @@ def dual : DistribLatticeₓ ⥤ DistribLatticeₓ where
 
 /-- The equivalence between `DistribLattice` and itself induced by `order_dual` both ways. -/
 @[simps Functor inverse]
-def dual_equiv : DistribLatticeₓ ≌ DistribLatticeₓ :=
+def dualEquiv : DistribLatticeₓ ≌ DistribLatticeₓ :=
   Equivalence.mk dual dual ((NatIso.ofComponents fun X => iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
     ((NatIso.ofComponents fun X => iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
 

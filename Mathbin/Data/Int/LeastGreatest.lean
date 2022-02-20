@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2016 Jeremy Avigad. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Jeremy Avigad, Mario Carneiro
+-/
 import Mathbin.Data.Int.Basic
 
 /-! # Least upper bound and greatest lower bound properties for integers
@@ -35,7 +40,7 @@ namespace Int
 /-- A computable version of `exists_least_of_bdd`: given a decidable predicate on the
 integers, with an explicit lower bound and a proof that it is somewhere true, return
 the least value for which the predicate is true. -/
-def least_of_bdd {P : ℤ → Prop} [DecidablePred P] (b : ℤ) (Hb : ∀ z : ℤ, P z → b ≤ z) (Hinh : ∃ z : ℤ, P z) :
+def leastOfBdd {P : ℤ → Prop} [DecidablePred P] (b : ℤ) (Hb : ∀ z : ℤ, P z → b ≤ z) (Hinh : ∃ z : ℤ, P z) :
     { lb : ℤ // P lb ∧ ∀ z : ℤ, P z → lb ≤ z } :=
   have EX : ∃ n : ℕ, P (b + n) :=
     let ⟨elt, Helt⟩ := Hinh
@@ -65,7 +70,7 @@ theorem coe_least_of_bdd_eq {P : ℤ → Prop} [DecidablePred P] {b b' : ℤ} (H
 /-- A computable version of `exists_greatest_of_bdd`: given a decidable predicate on the
 integers, with an explicit upper bound and a proof that it is somewhere true, return
 the greatest value for which the predicate is true. -/
-def greatest_of_bdd {P : ℤ → Prop} [DecidablePred P] (b : ℤ) (Hb : ∀ z : ℤ, P z → z ≤ b) (Hinh : ∃ z : ℤ, P z) :
+def greatestOfBdd {P : ℤ → Prop} [DecidablePred P] (b : ℤ) (Hb : ∀ z : ℤ, P z → z ≤ b) (Hinh : ∃ z : ℤ, P z) :
     { ub : ℤ // P ub ∧ ∀ z : ℤ, P z → z ≤ ub } :=
   have Hbdd' : ∀ z : ℤ, P (-z) → -b ≤ z := fun z h => neg_le.1 (Hb _ h)
   have Hinh' : ∃ z : ℤ, P (-z) :=

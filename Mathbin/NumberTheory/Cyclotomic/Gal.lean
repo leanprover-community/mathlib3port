@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2022 Eric Rodriguez. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Eric Rodriguez
+-/
 import Mathbin.NumberTheory.Cyclotomic.PrimitiveRoots
 import Mathbin.FieldTheory.PolynomialGaloisGroup
 
@@ -72,7 +77,7 @@ end IsPrimitiveRoot
 namespace IsCyclotomicExtension
 
 /-- Cyclotomic extensions are abelian. -/
-noncomputable def aut.comm_group [NeZero ((n : ℕ) : K)] : CommGroupₓ (L ≃ₐ[K] L) :=
+noncomputable def Aut.commGroup [NeZero ((n : ℕ) : K)] : CommGroupₓ (L ≃ₐ[K] L) :=
   let _ := of_no_zero_smul_divisors K L n
   ((zeta_primitive_root n K L).aut_to_pow_injective K).CommGroup _ (map_one _) (map_mul _) (map_inv _) (map_div _)
 
@@ -84,7 +89,7 @@ include h
 /-- The `mul_equiv` that takes an automorphism `f` to the element `k : (zmod n)ˣ` such that
   `f μ = μ ^ k`. A stronger version of `is_primitive_root.aut_to_pow`. -/
 @[simps]
-noncomputable def aut_equiv_pow [NeZero ((n : ℕ) : K)] : (L ≃ₐ[K] L) ≃* (Zmod n)ˣ :=
+noncomputable def autEquivPow [NeZero ((n : ℕ) : K)] : (L ≃ₐ[K] L) ≃* (Zmod n)ˣ :=
   let hn := of_no_zero_smul_divisors K L n
   let hζ := zeta_primitive_root n K L
   let hμ := fun t => hζ.pow_of_coprime _ (Zmod.val_coe_unit_coprime t)
@@ -124,7 +129,7 @@ include hμ
 variable {L}
 
 /-- Maps `μ` to the `alg_equiv` that sends `is_cyclotomic_extension.zeta` to `μ`. -/
-noncomputable def from_zeta_aut [NeZero ((n : ℕ) : K)] : L ≃ₐ[K] L :=
+noncomputable def fromZetaAut [NeZero ((n : ℕ) : K)] : L ≃ₐ[K] L :=
   have := of_no_zero_smul_divisors K L n
   let hζ := (zeta_primitive_root n K L).eq_pow_of_pow_eq_one hμ.pow_eq_one n.pos
   (aut_equiv_pow L h).symm <|

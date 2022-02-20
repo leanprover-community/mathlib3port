@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Johan Commelin. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johan Commelin
+-/
 import Mathbin.Algebra.Category.Mon.Basic
 import Mathbin.CategoryTheory.Endomorphism
 
@@ -49,7 +54,7 @@ add_decl_doc AddGroupₓₓ.of
 
 /-- Typecheck a `monoid_hom` as a morphism in `Group`. -/
 @[to_additive]
-def of_hom {X Y : Type u} [Groupₓ X] [Groupₓ Y] (f : X →* Y) : of X ⟶ of Y :=
+def ofHom {X Y : Type u} [Groupₓ X] [Groupₓ Y] (f : X →* Y) : of X ⟶ of Y :=
   f
 
 /-- Typecheck a `add_monoid_hom` as a morphism in `AddGroup`. -/
@@ -72,7 +77,7 @@ instance : Inhabited Groupₓₓ :=
   ⟨1⟩
 
 @[to_additive]
-instance one.unique : Unique (1 : Groupₓₓ) where
+instance One.unique : Unique (1 : Groupₓₓ) where
   default := 1
   uniq := fun a => by
     cases a
@@ -88,7 +93,7 @@ theorem ext (G H : Groupₓₓ) (f₁ f₂ : G ⟶ H) (w : ∀ x, f₁ x = f₂ 
   apply w
 
 @[to_additive has_forget_to_AddMon]
-instance has_forget_to_Mon : HasForget₂ Groupₓₓ Mon :=
+instance hasForgetToMon : HasForget₂ Groupₓₓ Mon :=
   BundledHom.forget₂ _ _
 
 end Groupₓₓ
@@ -129,14 +134,14 @@ add_decl_doc AddCommGroupₓₓ.of
 
 /-- Typecheck a `monoid_hom` as a morphism in `CommGroup`. -/
 @[to_additive]
-def of_hom {X Y : Type u} [CommGroupₓ X] [CommGroupₓ Y] (f : X →* Y) : of X ⟶ of Y :=
+def ofHom {X Y : Type u} [CommGroupₓ X] [CommGroupₓ Y] (f : X →* Y) : of X ⟶ of Y :=
   f
 
 /-- Typecheck a `add_monoid_hom` as a morphism in `AddCommGroup`. -/
 add_decl_doc AddCommGroupₓₓ.ofHom
 
 @[to_additive]
-instance comm_group_instance (G : CommGroupₓₓ) : CommGroupₓ G :=
+instance commGroupInstance (G : CommGroupₓₓ) : CommGroupₓ G :=
   G.str
 
 @[simp, to_additive]
@@ -152,7 +157,7 @@ instance : Inhabited CommGroupₓₓ :=
   ⟨1⟩
 
 @[to_additive]
-instance one.unique : Unique (1 : CommGroupₓₓ) where
+instance One.unique : Unique (1 : CommGroupₓₓ) where
   default := 1
   uniq := fun a => by
     cases a
@@ -168,15 +173,19 @@ theorem ext (G H : CommGroupₓₓ) (f₁ f₂ : G ⟶ H) (w : ∀ x, f₁ x = f
   apply w
 
 @[to_additive has_forget_to_AddGroup]
-instance has_forget_to_Group : HasForget₂ CommGroupₓₓ Groupₓₓ :=
+instance hasForgetToGroup : HasForget₂ CommGroupₓₓ Groupₓₓ :=
   BundledHom.forget₂ _ _
 
 @[to_additive has_forget_to_AddCommMon]
-instance has_forget_to_CommMon : HasForget₂ CommGroupₓₓ CommMon :=
+instance hasForgetToCommMon : HasForget₂ CommGroupₓₓ CommMon :=
   InducedCategory.hasForget₂ fun G : CommGroupₓₓ => CommMon.of G
 
 end CommGroupₓₓ
 
+-- This example verifies an improvement possible in Lean 3.8.
+-- Before that, to have `monoid_hom.map_map` usable by `simp` here,
+-- we had to mark all the concrete category `has_coe_to_sort` instances reducible.
+-- Now, it just works.
 @[to_additive]
 example {R S : CommGroupₓₓ} (i : R ⟶ S) (r : R) (h : r = 1) : i r = 1 := by
   simp [h]
@@ -185,7 +194,10 @@ namespace AddCommGroupₓₓ
 
 /-- Any element of an abelian group gives a unique morphism from `ℤ` sending
 `1` to that element. -/
-def as_hom {G : AddCommGroupₓₓ.{0}} (g : G) : AddCommGroupₓₓ.of ℤ ⟶ G :=
+-- Note that because `ℤ : Type 0`, this forces `G : AddCommGroup.{0}`,
+-- so we write this explicitly to be clear.
+-- TODO generalize this, requiring a `ulift_instances.lean` file
+def asHom {G : AddCommGroupₓₓ.{0}} (g : G) : AddCommGroupₓₓ.of ℤ ⟶ G :=
   zmultiplesHom G g
 
 @[simp]
@@ -199,6 +211,8 @@ theorem as_hom_injective {G : AddCommGroupₓₓ.{0}} : Function.Injective (@asH
 theorem int_hom_ext {G : AddCommGroupₓₓ.{0}} (f g : AddCommGroupₓₓ.of ℤ ⟶ G) (w : f (1 : ℤ) = g (1 : ℤ)) : f = g :=
   AddMonoidHom.ext_int w
 
+-- TODO: this argument should be generalised to the situation where
+-- the forgetful functor is representable.
 theorem injective_of_mono {G H : AddCommGroupₓₓ.{0}} (f : G ⟶ H) [Mono f] : Function.Injective f := fun g₁ g₂ h => by
   have t0 : as_hom g₁ ≫ f = as_hom g₂ ≫ f := by
     ext
@@ -233,13 +247,13 @@ namespace CategoryTheory.Iso
 
 /-- Build a `mul_equiv` from an isomorphism in the category `Group`. -/
 @[to_additive AddGroup_iso_to_add_equiv "Build an `add_equiv` from an isomorphism in the category\n`AddGroup`.", simps]
-def Group_iso_to_mul_equiv {X Y : Groupₓₓ} (i : X ≅ Y) : X ≃* Y :=
+def groupIsoToMulEquiv {X Y : Groupₓₓ} (i : X ≅ Y) : X ≃* Y :=
   i.Hom.toMulEquiv i.inv i.hom_inv_id i.inv_hom_id
 
 /-- Build a `mul_equiv` from an isomorphism in the category `CommGroup`. -/
 @[to_additive AddCommGroup_iso_to_add_equiv "Build an `add_equiv` from an isomorphism\nin the category `AddCommGroup`.",
   simps]
-def CommGroup_iso_to_mul_equiv {X Y : CommGroupₓₓ} (i : X ≅ Y) : X ≃* Y :=
+def commGroupIsoToMulEquiv {X Y : CommGroupₓₓ} (i : X ≅ Y) : X ≃* Y :=
   i.Hom.toMulEquiv i.inv i.hom_inv_id i.inv_hom_id
 
 end CategoryTheory.Iso
@@ -265,7 +279,7 @@ namespace CategoryTheory.Aut
 
 /-- The (bundled) group of automorphisms of a type is isomorphic to the (bundled) group
 of permutations. -/
-def iso_perm {α : Type u} : Groupₓₓ.of (Aut α) ≅ Groupₓₓ.of (Equivₓ.Perm α) where
+def isoPerm {α : Type u} : Groupₓₓ.of (Aut α) ≅ Groupₓₓ.of (Equivₓ.Perm α) where
   Hom :=
     ⟨fun g => g.toEquiv, by
       tidy, by
@@ -277,7 +291,7 @@ def iso_perm {α : Type u} : Groupₓₓ.of (Aut α) ≅ Groupₓₓ.of (Equiv�
 
 /-- The (unbundled) group of automorphisms of a type is `mul_equiv` to the (unbundled) group
 of permutations. -/
-def mul_equiv_perm {α : Type u} : Aut α ≃* Equivₓ.Perm α :=
+def mulEquivPerm {α : Type u} : Aut α ≃* Equivₓ.Perm α :=
   isoPerm.groupIsoToMulEquiv
 
 end CategoryTheory.Aut

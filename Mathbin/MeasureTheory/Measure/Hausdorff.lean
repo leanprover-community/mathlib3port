@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Yury Kudryashov. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yury Kudryashov
+-/
 import Mathbin.Topology.MetricSpace.MetricSeparated
 import Mathbin.MeasureTheory.Constructions.BorelSpace
 import Mathbin.MeasureTheory.Measure.Lebesgue
@@ -130,7 +135,7 @@ measure has the Caratheodory property.
 
 /-- We say that an outer measure `μ` in an (e)metric space is *metric* if `μ (s ∪ t) = μ s + μ t`
 for any two metric separated sets `s`, `t`. -/
-def is_metric (μ : OuterMeasure X) : Prop :=
+def IsMetric (μ : OuterMeasure X) : Prop :=
   ∀ s t : Set X, IsMetricSeparated s t → μ (s ∪ t) = μ s + μ t
 
 namespace IsMetric
@@ -176,6 +181,9 @@ theorem borel_le_caratheodory (hm : IsMetric μ) : borel X ≤ μ.caratheodory :
     rw [mem_iff_inf_edist_zero_of_closed ht] at hxt
     rcases Ennreal.exists_inv_nat_lt hxt with ⟨n, hn⟩
     exact mem_Union.2 ⟨n, hxs, hn.le⟩
+  /- Now we have `∀ n, μ (s ∩ t) + μ (S n) ≤ μ s` and we need to prove
+    `μ (s ∩ t) + μ (⋃ n, S n) ≤ μ s`. We can't pass to the limit because
+    `μ` is only an outer measure. -/
   by_cases' htop : μ (s \ t) = ∞
   · rw [htop, Ennreal.add_top, ← htop]
     exact μ.mono (diff_subset _ _)
@@ -184,10 +192,17 @@ theorem borel_le_caratheodory (hm : IsMetric μ) : borel X ≤ μ.caratheodory :
   calc μ (s ∩ t) + μ (s \ t) = μ (s ∩ t) + μ (⋃ n, S n) := by
       rw [Union_S]_ ≤ μ (s ∩ t) + ⨆ n, μ (S n) := add_le_add le_rfl this _ = ⨆ n, μ (s ∩ t) + μ (S n) :=
       Ennreal.add_supr _ ≤ μ s := supr_le hSs
+  /- It suffices to show that `∑' k, μ (S (k + 1) \ S k) ≠ ∞`. Indeed, if we have this,
+    then for all `N` we have `μ (⋃ n, S n) ≤ μ (S N) + ∑' k, m (S (N + k + 1) \ S (N + k))`
+    and the second term tends to zero, see `outer_measure.Union_nat_of_monotone_of_tsum_ne_top`
+    for details. -/
   have : ∀ n, S n ⊆ S (n + 1) := fun n x hx =>
     ⟨hx.1, le_transₓ (Ennreal.inv_le_inv.2 <| Ennreal.coe_nat_le_coe_nat.2 n.le_succ) hx.2⟩
   refine' (μ.Union_nat_of_monotone_of_tsum_ne_top this _).le
   clear this
+  /- While the sets `S (k + 1) \ S k` are not pairwise metric separated, the sets in each
+    subsequence `S (2 * k + 1) \ S (2 * k)` and `S (2 * k + 2) \ S (2 * k)` are metric separated,
+    so `m` is additive on each of those sequences. -/
   rw [← tsum_even_add_odd Ennreal.summable Ennreal.summable, Ennreal.add_ne_top]
   suffices : ∀ a, (∑' k : ℕ, μ (S (2 * k + 1 + a) \ S (2 * k + a))) ≠ ∞
   exact
@@ -238,19 +253,19 @@ measures. We also prove basic lemmas about `map`/`comap` of these measures.
 /-- Auxiliary definition for `outer_measure.mk_metric'`: given a function on sets
 `m : set X → ℝ≥0∞`, returns the maximal outer measure `μ` such that `μ s ≤ m s`
 for any set `s` of diameter at most `r`.-/
-def mk_metric'.pre (m : Set X → ℝ≥0∞) (r : ℝ≥0∞) : OuterMeasure X :=
-  bounded_by <| extend fun s hs : diam s ≤ r => m s
+def MkMetric'.pre (m : Set X → ℝ≥0∞) (r : ℝ≥0∞) : OuterMeasure X :=
+  bounded_by <| extend fun hs : diam s ≤ r => m s
 
 /-- Given a function `m : set X → ℝ≥0∞`, `mk_metric' m` is the supremum of `mk_metric'.pre m r`
 over `r > 0`. Equivalently, it is the limit of `mk_metric'.pre m r` as `r` tends to zero from
 the right. -/
-def mk_metric' (m : Set X → ℝ≥0∞) : OuterMeasure X :=
+def mkMetric' (m : Set X → ℝ≥0∞) : OuterMeasure X :=
   ⨆ r > 0, MkMetric'.pre m r
 
 /-- Given a function `m : ℝ≥0∞ → ℝ≥0∞` and `r > 0`, let `μ r` be the maximal outer measure such that
 `μ s ≤ m (emetric.diam s)` whenever `emetric.diam s < r`. Then
 `mk_metric m = ⨆ r > 0, μ r`. -/
-def mk_metric (m : ℝ≥0∞ → ℝ≥0∞) : OuterMeasure X :=
+def mkMetric (m : ℝ≥0∞ → ℝ≥0∞) : OuterMeasure X :=
   mkMetric' fun s => m (diam s)
 
 namespace MkMetric'
@@ -404,13 +419,13 @@ variable [MeasurableSpace X] [BorelSpace X]
 /-- Given a function `m : set X → ℝ≥0∞`, `mk_metric' m` is the supremum of `μ r`
 over `r > 0`, where `μ r` is the maximal outer measure `μ` such that `μ s ≤ m s`
 for all `s`. While each `μ r` is an *outer* measure, the supremum is a measure. -/
-def mk_metric' (m : Set X → ℝ≥0∞) : Measure X :=
+def mkMetric' (m : Set X → ℝ≥0∞) : Measure X :=
   (OuterMeasure.mkMetric' m).toMeasure (OuterMeasure.mk_metric'_is_metric _).le_caratheodory
 
 /-- Given a function `m : ℝ≥0∞ → ℝ≥0∞`, `mk_metric m` is the supremum of `μ r` over `r > 0`, where
 `μ r` is the maximal outer measure `μ` such that `μ s ≤ m s` for all sets `s` that contain at least
 two points. While each `mk_metric'.pre` is an *outer* measure, the supremum is a measure. -/
-def mk_metric (m : ℝ≥0∞ → ℝ≥0∞) : Measure X :=
+def mkMetric (m : ℝ≥0∞ → ℝ≥0∞) : Measure X :=
   (OuterMeasure.mkMetric m).toMeasure (OuterMeasure.mk_metric'_is_metric _).le_caratheodory
 
 @[simp]
@@ -425,7 +440,7 @@ theorem mk_metric_to_outer_measure (m : ℝ≥0∞ → ℝ≥0∞) :
 
 end Measureₓ
 
-theorem outer_measure.coe_mk_metric [MeasurableSpace X] [BorelSpace X] (m : ℝ≥0∞ → ℝ≥0∞) :
+theorem OuterMeasure.coe_mk_metric [MeasurableSpace X] [BorelSpace X] (m : ℝ≥0∞ → ℝ≥0∞) :
     ⇑(OuterMeasure.mkMetric m : OuterMeasure X) = Measure.mkMetric m := by
   rw [← measure.mk_metric_to_outer_measure, coe_to_outer_measure]
 
@@ -452,6 +467,7 @@ theorem mk_metric_apply (m : ℝ≥0∞ → ℝ≥0∞) (s : Set X) :
       ⨆ (r : ℝ≥0∞) (hr : 0 < r),
         ⨅ (t : ℕ → Set X) (h : s ⊆ Unionₓ t) (h' : ∀ n, diam (t n) ≤ r), ∑' n, ⨆ h : (t n).Nonempty, m (diam (t n)) :=
   by
+  -- We mostly unfold the definitions but we need to switch the order of `∑'` and `⨅`
   classical
   simp only [← outer_measure.coe_mk_metric, outer_measure.mk_metric, outer_measure.mk_metric', outer_measure.supr_apply,
     outer_measure.mk_metric'.pre, outer_measure.bounded_by_apply, extend]
@@ -526,7 +542,7 @@ theorem mk_metric_le_liminf_sum {β : Type _} {ι : β → Type _} [hι : ∀ n,
 
 
 /-- Hausdorff measure on an (e)metric space. -/
-def hausdorff_measure (d : ℝ) : Measure X :=
+def hausdorffMeasure (d : ℝ) : Measure X :=
   mkMetric fun r => r ^ d
 
 localized [MeasureTheory] notation "μH[" d "]" => MeasureTheory.Measure.hausdorffMeasure d
@@ -558,10 +574,10 @@ theorem hausdorff_measure_le_liminf_sum {β : Type _} {ι : β → Type _} [hι 
     μH[d] s ≤ liminfₓ l fun n => ∑ i, diam (t n i) ^ d :=
   mk_metric_le_liminf_sum s r hr t ht hst _
 
--- ././Mathport/Syntax/Translate/Basic.lean:418:16: unsupported tactic `by_contra'
+-- ././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'
 /-- If `d₁ < d₂`, then for any set `s` we have either `μH[d₂] s = 0`, or `μH[d₁] s = ∞`. -/
 theorem hausdorff_measure_zero_or_top {d₁ d₂ : ℝ} (h : d₁ < d₂) (s : Set X) : μH[d₂] s = 0 ∨ μH[d₁] s = ∞ := by
-  "././Mathport/Syntax/Translate/Basic.lean:418:16: unsupported tactic `by_contra'"
+  "././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'"
   suffices ∀ c : ℝ≥0 , c ≠ 0 → μH[d₂] s ≤ c * μH[d₁] s by
     rcases Ennreal.exists_nnreal_pos_mul_lt H.2 H.1 with ⟨c, hc0, hc⟩
     exact hc.not_le (this c (pos_iff_ne_zero.1 hc0))
@@ -686,16 +702,19 @@ open Measureₓ
 @[simp]
 theorem hausdorff_measure_pi_real {ι : Type _} [Fintype ι] : (μH[Fintype.card ι] : Measure (ι → ℝ)) = volume := by
   classical
+  -- it suffices to check that the two measures coincide on products of rational intervals
   refine'
     (pi_eq_generate_from (fun i => real.borel_eq_generate_from_Ioo_rat.symm) (fun i => Real.is_pi_system_Ioo_rat)
         (fun i => Real.finiteSpanningSetsInIooRat _) _).symm
   simp only [mem_Union, mem_singleton_iff]
+  -- fix such a product `s` of rational intervals, of the form `Π (a i, b i)`.
   intro s hs
   choose a b H using hs
   obtain rfl : s = fun i => Ioo (a i) (b i)
   exact funext fun i => (H i).2
   replace H := fun i => (H i).1
   apply le_antisymmₓ _
+  -- first check that `volume s ≤ μH s`
   · have Hle : volume ≤ (μH[Fintype.card ι] : Measureₓ (ι → ℝ)) := by
       refine' le_hausdorff_measure _ _ ∞ Ennreal.coe_lt_top fun s _ => _
       rw [Ennreal.rpow_nat_cast]
@@ -703,6 +722,9 @@ theorem hausdorff_measure_pi_real {ι : Type _} [Fintype ι] : (μH[Fintype.card
     rw [← volume_pi_pi fun i => Ioo (a i : ℝ) (b i)]
     exact measure.le_iff'.1 Hle _
     
+  /- For the other inequality `μH s ≤ volume s`, we use a covering of `s` by sets of small diameter
+    `1/n`, namely cubes with left-most point of the form `a i + f i / n` with `f i` ranging between
+    `0` and `⌈(b i - a i) * n⌉`. Their number is asymptotic to `n^d * Π (b i - a i)`. -/
   have I : ∀ i, 0 ≤ (b i : ℝ) - a i := fun i => by
     simpa only [sub_nonneg, Rat.cast_le] using (H i).le
   let γ := fun n : ℕ => ∀ i : ι, Finₓ ⌈((b i : ℝ) - a i) * n⌉₊
@@ -795,6 +817,7 @@ variable {C r : ℝ≥0 } {f : X → Y} {s t : Set X}
 `μH[d] (f '' s) ≤ C ^ d * μH[r * d] s`. -/
 theorem hausdorff_measure_image_le (h : HolderOnWith C r f s) (hr : 0 < r) {d : ℝ} (hd : 0 ≤ d) :
     μH[d] (f '' s) ≤ C ^ d * μH[r * d] s := by
+  -- We start with the trivial case `C = 0`
   rcases(zero_le C).eq_or_lt with (rfl | hC0)
   · rcases eq_empty_or_nonempty s with (rfl | ⟨x, hx⟩)
     · simp only [measure_empty, nonpos_iff_eq_zero, mul_zero, image_empty]
@@ -813,6 +836,7 @@ theorem hausdorff_measure_image_le (h : HolderOnWith C r f s) (hr : 0 < r) {d : 
       simp only [zero_le, measure_singleton]
       
     
+  -- Now assume `C ≠ 0`
   · have hCd0 : (C : ℝ≥0∞) ^ d ≠ 0 := by
       simp [hC0.ne']
     have hCd : (C : ℝ≥0∞) ^ d ≠ ∞ := by

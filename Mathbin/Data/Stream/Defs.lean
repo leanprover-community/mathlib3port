@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Leonardo de Moura
+-/
 
 /-!
 # Definition of `stream` and functions on streams
@@ -40,11 +45,11 @@ def nth (s : Streamₓ α) (n : ℕ) : α :=
   s n
 
 /-- Proposition saying that all elements of a stream satisfy a predicate. -/
-def all (p : α → Prop) (s : Streamₓ α) :=
+def All (p : α → Prop) (s : Streamₓ α) :=
   ∀ n, p (nth s n)
 
 /-- Proposition saying that at least one element of a stream satisfies a predicate. -/
-def any (p : α → Prop) (s : Streamₓ α) :=
+def Any (p : α → Prop) (s : Streamₓ α) :=
   ∃ n, p (nth s n)
 
 /-- `a ∈ s` means that `a = stream.nth n s` for some `n`. -/
@@ -66,16 +71,17 @@ def iterate (f : α → α) (a : α) : Streamₓ α := fun n => Nat.recOn n a fu
 
 def corec (f : α → β) (g : α → α) : α → Streamₓ β := fun a => map f (iterate g a)
 
-def corec_on (a : α) (f : α → β) (g : α → α) : Streamₓ β :=
+def corecOn (a : α) (f : α → β) (g : α → α) : Streamₓ β :=
   corec f g a
 
 def corec' (f : α → β × α) : α → Streamₓ β :=
   corec (Prod.fst ∘ f) (Prod.snd ∘ f)
 
 /-- Use a state monad to generate a stream through corecursion -/
-def corec_state {σ α} (cmd : State σ α) (s : σ) : Streamₓ α :=
+def corecState {σ α} (cmd : State σ α) (s : σ) : Streamₓ α :=
   corec Prod.fst (cmd.run ∘ Prod.snd) (cmd.run s)
 
+-- corec is also known as unfold
 def unfolds (g : α → β) (f : α → α) (a : α) : Streamₓ β :=
   corec g f a
 
@@ -94,7 +100,7 @@ def odd (s : Streamₓ α) : Streamₓ α :=
   even (tail s)
 
 /-- Append a stream to a list. -/
-def append_stream : List α → Streamₓ α → Streamₓ α
+def appendStream : List α → Streamₓ α → Streamₓ α
   | [], s => s
   | List.cons a l, s => a :: append_stream l s
 
@@ -106,11 +112,11 @@ def take : ℕ → Streamₓ α → List α
   | n + 1, s => List.cons (head s) (take n (tail s))
 
 /-- An auxiliary definition for `stream.cycle` corecursive def -/
-protected def cycle_f : α × List α × α × List α → α
+protected def cycleF : α × List α × α × List α → α
   | (v, _, _, _) => v
 
 /-- An auxiliary definition for `stream.cycle` corecursive def -/
-protected def cycle_g : α × List α × α × List α → α × List α × α × List α
+protected def cycleG : α × List α × α × List α → α × List α × α × List α
   | (v₁, [], v₀, l₀) => (v₀, l₀, v₀, l₀)
   | (v₁, List.cons v₂ l₂, v₀, l₀) => (v₂, l₂, v₀, l₀)
 
@@ -124,7 +130,7 @@ def tails (s : Streamₓ α) : Streamₓ (Streamₓ α) :=
   corec id tail (tail s)
 
 /-- An auxiliary definition for `stream.inits`. -/
-def inits_core (l : List α) (s : Streamₓ α) : Streamₓ (List α) :=
+def initsCore (l : List α) (s : Streamₓ α) : Streamₓ (List α) :=
   corecOn (l, s) (fun ⟨a, b⟩ => a) fun p =>
     match p with
     | (l', s') => (l' ++ [head s'], tail s')
@@ -143,6 +149,7 @@ def apply (f : Streamₓ (α → β)) (s : Streamₓ α) : Streamₓ β := fun n
 infixl:75 "⊛" => apply
 
 /-- The stream of natural numbers: `stream.nth n stream.nats = n`. -/
+-- input as \o*
 def nats : Streamₓ Nat := fun n => n
 
 end Streamₓ

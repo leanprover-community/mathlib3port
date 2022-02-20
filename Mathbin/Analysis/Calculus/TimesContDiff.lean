@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Sébastien Gouëzel. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Sébastien Gouëzel
+-/
 import Mathbin.Analysis.Calculus.MeanValue
 import Mathbin.Analysis.NormedSpace.Multilinear
 import Mathbin.Analysis.Calculus.FormalMultilinearSeries
@@ -423,7 +428,7 @@ variable {𝕜}
 theorem times_cont_diff_within_at_nat {n : ℕ} :
     TimesContDiffWithinAt 𝕜 n f s x ↔
       ∃ u ∈ 𝓝[insert x s] x, ∃ p : E → FormalMultilinearSeries 𝕜 E F, HasFtaylorSeriesUpToOn n f p u :=
-  ⟨fun H => H n le_rfl, fun ⟨u, hu, p, hp⟩ m hm => ⟨u, hu, p, hp.ofLe hm⟩⟩
+  ⟨fun H => H n le_rfl, fun m hm => ⟨u, hu, p, hp.ofLe hm⟩⟩
 
 theorem TimesContDiffWithinAt.of_le {m n : WithTop ℕ} (h : TimesContDiffWithinAt 𝕜 n f s x) (hmn : m ≤ n) :
     TimesContDiffWithinAt 𝕜 m f s x := fun k hk => h k (le_transₓ hk hmn)
@@ -1646,7 +1651,7 @@ domains. -/
 theorem ContinuousLinearEquiv.comp_times_cont_diff_within_at_iff {n : WithTop ℕ} (e : F ≃L[𝕜] G) :
     TimesContDiffWithinAt 𝕜 n (e ∘ f) s x ↔ TimesContDiffWithinAt 𝕜 n f s x :=
   ⟨fun H => by
-    simpa only [· ∘ ·, e.symm.coe_coe, e.symm_apply_apply] using H.continuous_linear_map_comp (e.symm : G →L[𝕜] F),
+    simpa only [(· ∘ ·), e.symm.coe_coe, e.symm_apply_apply] using H.continuous_linear_map_comp (e.symm : G →L[𝕜] F),
     fun H => H.continuous_linear_map_comp (e : F →L[𝕜] G)⟩
 
 /-- Composition by continuous linear equivs on the left respects higher differentiability on
@@ -1711,7 +1716,7 @@ theorem ContinuousLinearEquiv.times_cont_diff_within_at_comp_iff {n : WithTop �
     TimesContDiffWithinAt 𝕜 n (f ∘ e) (e ⁻¹' s) (e.symm x) ↔ TimesContDiffWithinAt 𝕜 n f s x := by
   constructor
   · intro H
-    simpa [← preimage_comp, · ∘ ·] using H.comp_continuous_linear_map (e.symm : E →L[𝕜] G)
+    simpa [← preimage_comp, (· ∘ ·)] using H.comp_continuous_linear_map (e.symm : E →L[𝕜] G)
     
   · intro H
     rw [← e.apply_symm_apply x, ← e.coe_coe] at H
@@ -1928,6 +1933,10 @@ private theorem times_cont_diff_on.comp_same_univ {Eu : Type u} [NormedGroup Eu]
 theorem TimesContDiffOn.comp {n : WithTop ℕ} {s : Set E} {t : Set F} {g : F → G} {f : E → F}
     (hg : TimesContDiffOn 𝕜 n g t) (hf : TimesContDiffOn 𝕜 n f s) (st : s ⊆ f ⁻¹' t) : TimesContDiffOn 𝕜 n (g ∘ f) s :=
   by
+  /- we lift all the spaces to a common universe, as we have already proved the result in this
+    situation. For the lift, we use the trick that `H` is isomorphic through a
+    continuous linear equiv to `continuous_multilinear_map 𝕜 (λ (i : fin 0), (E × F × G)) H`, and
+    continuous linear equivs respect smoothness classes. -/
   let Eu := ContinuousMultilinearMap 𝕜 (fun i : Finₓ 0 => E × F × G) E
   let this' : NormedGroup Eu := by
     infer_instance
@@ -1943,9 +1952,11 @@ theorem TimesContDiffOn.comp {n : WithTop ℕ} {s : Set E} {t : Set F} {g : F �
     infer_instance
   let this' : NormedSpace 𝕜 Gu := by
     infer_instance
+  -- declare the isomorphisms
   let isoE : Eu ≃L[𝕜] E := continuousMultilinearCurryFin0 𝕜 (E × F × G) E
   let isoF : Fu ≃L[𝕜] F := continuousMultilinearCurryFin0 𝕜 (E × F × G) F
   let isoG : Gu ≃L[𝕜] G := continuousMultilinearCurryFin0 𝕜 (E × F × G) G
+  -- lift the functions to the new spaces, check smoothness there, and then go back.
   let fu : Eu → Fu := (isoF.symm ∘ f) ∘ isoE
   have fu_diff : TimesContDiffOn 𝕜 n fu (isoE ⁻¹' s) := by
     rwa [isoE.times_cont_diff_on_comp_iff, isoF.symm.comp_times_cont_diff_on_iff]
@@ -2057,6 +2068,7 @@ theorem TimesContDiff.times_cont_diff_fderiv_apply {n m : WithTop ℕ} {f : E �
 /-! ### Sum of two functions -/
 
 
+-- The sum is smooth.
 theorem times_cont_diff_add {n : WithTop ℕ} : TimesContDiff 𝕜 n fun p : F × F => p.1 + p.2 :=
   (IsBoundedLinearMap.fst.add IsBoundedLinearMap.snd).TimesContDiff
 
@@ -2083,6 +2095,7 @@ theorem TimesContDiffOn.add {n : WithTop ℕ} {s : Set E} {f g : E → F} (hf : 
 /-! ### Negative -/
 
 
+-- The negative is smooth.
 theorem times_cont_diff_neg {n : WithTop ℕ} : TimesContDiff 𝕜 n fun p : F => -p :=
   IsBoundedLinearMap.id.neg.TimesContDiff
 
@@ -2158,6 +2171,7 @@ theorem TimesContDiff.sum {ι : Type _} {f : ι → E → F} {s : Finset ι} {n 
 /-! ### Product of two functions -/
 
 
+-- The product is smooth.
 theorem times_cont_diff_mul {n : WithTop ℕ} : TimesContDiff 𝕜 n fun p : 𝕜 × 𝕜 => p.1 * p.2 :=
   is_bounded_bilinear_map_mul.TimesContDiff
 
@@ -2218,6 +2232,7 @@ theorem TimesContDiffOn.pow {n : WithTop ℕ} {f : E → 𝕜} (hf : TimesContDi
 /-! ### Scalar multiplication -/
 
 
+-- The scalar multiplication is smooth.
 theorem times_cont_diff_smul {n : WithTop ℕ} : TimesContDiff 𝕜 n fun p : 𝕜 × F => p.1 • p.2 :=
   is_bounded_bilinear_map_smul.TimesContDiff
 
@@ -2346,6 +2361,9 @@ theorem times_cont_diff_on_inv {n} : TimesContDiffOn 𝕜 n (Inv.inv : 𝕜' →
 
 variable {𝕜}
 
+-- TODO: the next few lemmas don't need `𝕜` or `𝕜'` to be complete
+-- A good way to show this is to generalize `times_cont_diff_at_ring_inverse` to the setting
+-- of a function `f` such that `∀ᶠ x in 𝓝 a, x * f x = 1`.
 theorem TimesContDiffWithinAt.inv {f : E → 𝕜'} {n} (hf : TimesContDiffWithinAt 𝕜 n f s x) (hx : f x ≠ 0) :
     TimesContDiffWithinAt 𝕜 n (fun x => (f x)⁻¹) s x :=
   (times_cont_diff_at_inv 𝕜 hx).comp_times_cont_diff_within_at x hf
@@ -2362,6 +2380,7 @@ theorem TimesContDiff.inv {f : E → 𝕜'} {n} (hf : TimesContDiff 𝕜 n f) (h
   rw [times_cont_diff_iff_times_cont_diff_at]
   exact fun x => hf.times_cont_diff_at.inv (h x)
 
+-- TODO: generalize to `f g : E → 𝕜'`
 theorem TimesContDiffWithinAt.div [CompleteSpace 𝕜] {f g : E → 𝕜} {n} (hf : TimesContDiffWithinAt 𝕜 n f s x)
     (hg : TimesContDiffWithinAt 𝕜 n g s x) (hx : g x ≠ 0) : TimesContDiffWithinAt 𝕜 n (fun x => f x / g x) s x := by
   simpa only [div_eq_mul_inv] using hf.mul (hg.inv hx)
@@ -2393,10 +2412,14 @@ inversion is `C^n`, for all `n`. -/
 theorem times_cont_diff_at_map_inverse [CompleteSpace E] {n : WithTop ℕ} (e : E ≃L[𝕜] F) :
     TimesContDiffAt 𝕜 n inverse (e : E →L[𝕜] F) := by
   nontriviality E
+  -- first, we use the lemma `to_ring_inverse` to rewrite in terms of `ring.inverse` in the ring
+  -- `E →L[𝕜] E`
   let O₁ : (E →L[𝕜] E) → F →L[𝕜] E := fun f => f.comp (e.symm : F →L[𝕜] E)
   let O₂ : (E →L[𝕜] F) → E →L[𝕜] E := fun f => (e.symm : F →L[𝕜] E).comp f
   have : ContinuousLinearMap.inverse = O₁ ∘ Ring.inverse ∘ O₂ := funext (to_ring_inverse e)
   rw [this]
+  -- `O₁` and `O₂` are `times_cont_diff`,
+  -- so we reduce to proving that `ring.inverse` is `times_cont_diff`
   have h₁ : TimesContDiff 𝕜 n O₁ :=
     is_bounded_bilinear_map_comp.times_cont_diff.comp (times_cont_diff_const.prod times_cont_diff_id)
   have h₂ : TimesContDiff 𝕜 n O₂ :=
@@ -2421,15 +2444,20 @@ an inverse function. -/
 theorem LocalHomeomorph.times_cont_diff_at_symm [CompleteSpace E] {n : WithTop ℕ} (f : LocalHomeomorph E F)
     {f₀' : E ≃L[𝕜] F} {a : F} (ha : a ∈ f.Target) (hf₀' : HasFderivAt f (f₀' : E →L[𝕜] F) (f.symm a))
     (hf : TimesContDiffAt 𝕜 n f (f.symm a)) : TimesContDiffAt 𝕜 n f.symm a := by
+  -- We prove this by induction on `n`
   induction' n using WithTop.nat_induction with n IH Itop
   · rw [times_cont_diff_at_zero]
     exact ⟨f.target, IsOpen.mem_nhds f.open_target ha, f.continuous_inv_fun⟩
     
   · obtain ⟨f', ⟨u, hu, hff'⟩, hf'⟩ := times_cont_diff_at_succ_iff_has_fderiv_at.mp hf
     apply times_cont_diff_at_succ_iff_has_fderiv_at.mpr
+    -- For showing `n.succ` times continuous differentiability (the main inductive step), it
+    -- suffices to produce the derivative and show that it is `n` times continuously differentiable
     have eq_f₀' : f' (f.symm a) = f₀' := (hff' (f.symm a) (mem_of_mem_nhds hu)).unique hf₀'
+    -- This follows by a bootstrapping formula expressing the derivative as a function of `f` itself
     refine' ⟨inverse ∘ f' ∘ f.symm, _, _⟩
-    · have h_nhds : { y : E | ∃ e : E ≃L[𝕜] F, ↑e = f' y } ∈ 𝓝 (f.symm a) := by
+    · -- We first check that the derivative of `f` is that formula
+      have h_nhds : { y : E | ∃ e : E ≃L[𝕜] F, ↑e = f' y } ∈ 𝓝 (f.symm a) := by
         have hf₀' := f₀'.nhds
         rw [← eq_f₀'] at hf₀'
         exact hf'.continuous_at.preimage_mem_nhds hf₀'
@@ -2448,7 +2476,9 @@ theorem LocalHomeomorph.times_cont_diff_at_symm [CompleteSpace E] {n : WithTop �
       convert f.has_fderiv_at_symm hx.1 h_deriv
       simp [← he]
       
-    · have h_deriv₁ : TimesContDiffAt 𝕜 n inverse (f' (f.symm a)) := by
+    · -- Then we check that the formula, being a composition of `times_cont_diff` pieces, is
+      -- itself `times_cont_diff`
+      have h_deriv₁ : TimesContDiffAt 𝕜 n inverse (f' (f.symm a)) := by
         rw [eq_f₀']
         exact times_cont_diff_at_map_inverse _
       have h_deriv₂ : TimesContDiffAt 𝕜 n f.symm a := by

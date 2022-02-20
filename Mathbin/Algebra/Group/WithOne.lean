@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Mario Carneiro. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Mario Carneiro, Johan Commelin
+-/
 import Mathbin.Algebra.Ring.Basic
 import Mathbin.Data.Equiv.Basic
 
@@ -83,9 +88,12 @@ theorem coe_inj {a b : α} : (a : WithOne α) = b ↔ a = b :=
 protected theorem cases_on {P : WithOne α → Prop} : ∀ x : WithOne α, P 1 → (∀ a : α, P a) → P x :=
   Option.casesOn
 
+-- the `show` statements in the proofs are important, because otherwise the generated lemmas
+-- `with_one.mul_one_class._proof_{1,2}` have an ill-typed statement after `with_one` is made
+-- irreducible.
 @[to_additive]
 instance [Mul α] : MulOneClassₓ (WithOne α) where
-  mul := · * ·
+  mul := (· * ·)
   one := 1
   one_mul := show ∀ x : WithOne α, 1 * x = x from (Option.lift_or_get_is_left_id _).1
   mul_one := show ∀ x : WithOne α, x * 1 = x from (Option.lift_or_get_is_right_id _).1
@@ -104,8 +112,10 @@ instance [CommSemigroupₓ α] : CommMonoidₓ (WithOne α) :=
 section
 
 /-- `coe` as a bundled morphism -/
+-- workaround: we make `with_one`/`with_zero` irreducible for this definition, otherwise `simps`
+-- will unfold it in the statement of the lemma it generates.
 @[to_additive "`coe` as a bundled morphism", simps apply]
-def coe_mul_hom [Mul α] : MulHom α (WithOne α) where
+def coeMulHom [Mul α] : MulHom α (WithOne α) where
   toFun := coe
   map_mul' := fun x y => rfl
 

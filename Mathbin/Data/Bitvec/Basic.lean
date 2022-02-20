@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Simon Hudon. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Simon Hudon
+-/
 import Mathbin.Data.Bitvec.Core
 import Mathbin.Data.Fin.Basic
 import Mathbin.Tactic.NormNum
@@ -9,14 +14,14 @@ instance (n : ℕ) : Preorderₓ (Bitvec n) :=
   Preorderₓ.lift Bitvec.toNat
 
 /-- convert `fin` to `bitvec` -/
-def of_fin {n : ℕ} (i : Finₓ <| 2 ^ n) : Bitvec n :=
+def ofFin {n : ℕ} (i : Finₓ <| 2 ^ n) : Bitvec n :=
   Bitvec.ofNat _ i.val
 
 theorem of_fin_val {n : ℕ} (i : Finₓ <| 2 ^ n) : (ofFin i).toNat = i.val := by
   rw [of_fin, to_nat_of_nat, Nat.mod_eq_of_ltₓ] <;> apply i.is_lt
 
 /-- convert `bitvec` to `fin` -/
-def to_fin {n : ℕ} (i : Bitvec n) : Finₓ <| 2 ^ n :=
+def toFin {n : ℕ} (i : Bitvec n) : Finₓ <| 2 ^ n :=
   @Finₓ.ofNat' _
     ⟨pow_pos
         (by
@@ -44,7 +49,7 @@ theorem to_nat_lt {n : ℕ} (v : Bitvec n) : v.toNat < 2 ^ n := by
     
   · simp only [← h, pow_addₓ, flip, List.length, List.foldr, pow_oneₓ]
     rw [add_lsb_eq_twice_add_one]
-    trans 2 * List.foldr (fun x : Bool y : ℕ => add_lsb y x) 0 ys_tl + 2 * 1
+    trans 2 * List.foldr (fun y : ℕ => add_lsb y x) 0 ys_tl + 2 * 1
     · ac_mono
       rw [two_mul]
       mono

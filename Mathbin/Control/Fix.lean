@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Simon Hudon. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Simon Hudon
+-/
 import Mathbin.Data.Stream.Init
 import Mathbin.Data.Part
 import Mathbin.Data.Nat.Upto
@@ -37,12 +42,12 @@ variable (f : (∀ a, Part <| β a) → ∀ a, Part <| β a)
 
 /-- A series of successive, finite approximation of the fixed point of `f`, defined by
 `approx f n = f^[n] ⊥`. The limit of this chain is the fixed point of `f`. -/
-def fix.approx : Streamₓ <| ∀ a, Part <| β a
+def Fix.approx : Streamₓ <| ∀ a, Part <| β a
   | 0 => ⊥
   | Nat.succ i => f (fix.approx i)
 
 /-- loop body for finding the fixed point of `f` -/
-def fix_aux {p : ℕ → Prop} (i : Nat.Upto p) (g : ∀ j : Nat.Upto p, i < j → ∀ a, Part <| β a) : ∀ a, Part <| β a :=
+def fixAux {p : ℕ → Prop} (i : Nat.Upto p) (g : ∀ j : Nat.Upto p, i < j → ∀ a, Part <| β a) : ∀ a, Part <| β a :=
   f fun x : α => (assert ¬p i.val) fun h : ¬p i.val => g (i.succ h) (Nat.lt_succ_selfₓ _) x
 
 /-- The least fixed point of `f`.

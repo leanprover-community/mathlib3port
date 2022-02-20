@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Chris Hughes. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Chris Hughes
+-/
 import Mathbin.Data.Equiv.MulAdd
 import Mathbin.Tactic.NormNum
 import Mathbin.Data.Part
@@ -103,7 +108,7 @@ theorem dom_coe (x : ℕ) : (x : Enat).Dom := by
   rw [← some_eq_coe] <;> trivial
 
 instance : AddCommMonoidₓ Enat where
-  add := · + ·
+  add := (· + ·)
   zero := 0
   add_comm := fun x y => Part.ext' And.comm fun _ _ => add_commₓ _ _
   zero_add := fun x => Part.ext' (true_andₓ _) fun _ _ => zero_addₓ _
@@ -185,19 +190,19 @@ theorem dom_of_le_coe {x : Enat} {y : ℕ} (h : x ≤ y) : x.Dom := by
   rw [← some_eq_coe] at h
   exact dom_of_le_some h
 
-instance decidable_le (x y : Enat) [Decidable x.Dom] [Decidable y.Dom] : Decidable (x ≤ y) :=
+instance decidableLe (x y : Enat) [Decidable x.Dom] [Decidable y.Dom] : Decidable (x ≤ y) :=
   if hx : x.Dom then
     decidableOfDecidableOfIff
         (show Decidable (∀ hy : (y : Enat).Dom, x.get hx ≤ (y : Enat).get hy) from forallPropDecidable _) <|
       by
-      dsimp [· ≤ ·]
+      dsimp [(· ≤ ·)]
       simp only [hx, exists_prop_of_true, forall_true_iff]
   else
     if hy : y.Dom then is_false fun h => hx <| dom_of_le_of_dom h hy
     else isTrue ⟨fun h => (hy h).elim, fun h => (hy h).elim⟩
 
 /-- The coercion `ℕ → enat` preserves `0` and addition. -/
-def coe_hom : ℕ →+ Enat :=
+def coeHom : ℕ →+ Enat :=
   ⟨coe, Nat.cast_zeroₓ, Nat.cast_addₓ⟩
 
 @[simp]
@@ -205,7 +210,7 @@ theorem coe_coe_hom : ⇑coe_hom = coe :=
   rfl
 
 instance : PartialOrderₓ Enat where
-  le := · ≤ ·
+  le := (· ≤ ·)
   le_refl := fun x => ⟨id, fun _ => le_rfl⟩
   le_trans := fun x y z ⟨hxy₁, hxy₂⟩ ⟨hyz₁, hyz₂⟩ => ⟨hxy₁ ∘ hyz₁, fun _ => le_transₓ (hxy₂ _) (hyz₂ _)⟩
   le_antisymm := fun x y ⟨hxy₁, hxy₂⟩ ⟨hyx₁, hyx₂⟩ => Part.ext' ⟨hyx₁, hxy₁⟩ fun _ _ => le_antisymmₓ (hxy₂ _) (hyx₂ _)
@@ -269,16 +274,16 @@ protected theorem zero_lt_one : (0 : Enat) < 1 := by
   norm_cast
   norm_num
 
-instance SemilatticeSup : SemilatticeSup Enat :=
-  { Enat.partialOrder with sup := ·⊔·, le_sup_left := fun _ _ => ⟨And.left, fun _ => le_sup_left⟩,
+instance semilatticeSup : SemilatticeSup Enat :=
+  { Enat.partialOrder with sup := (·⊔·), le_sup_left := fun _ _ => ⟨And.left, fun _ => le_sup_left⟩,
     le_sup_right := fun _ _ => ⟨And.right, fun _ => le_sup_right⟩,
     sup_le := fun x y z ⟨hx₁, hx₂⟩ ⟨hy₁, hy₂⟩ => ⟨fun hz => ⟨hx₁ hz, hy₁ hz⟩, fun _ => sup_le (hx₂ _) (hy₂ _)⟩ }
 
-instance OrderBot : OrderBot Enat where
+instance orderBot : OrderBot Enat where
   bot := ⊥
   bot_le := fun _ => ⟨fun _ => trivialₓ, fun _ => Nat.zero_leₓ _⟩
 
-instance OrderTop : OrderTop Enat where
+instance orderTop : OrderTop Enat where
   top := ⊤
   le_top := fun x => ⟨fun h => False.elim h, fun hy => False.elim hy⟩
 
@@ -337,7 +342,7 @@ instance : IsTotal Enat (· ≤ ·) where
         (le_totalₓ x y).elim (Or.inr ∘ coe_le_coe.2) (Or.inl ∘ coe_le_coe.2))
 
 noncomputable instance : LinearOrderₓ Enat :=
-  { Enat.partialOrder with le_total := IsTotal.total, decidableLe := Classical.decRel _, max := ·⊔·,
+  { Enat.partialOrder with le_total := IsTotal.total, decidableLe := Classical.decRel _, max := (·⊔·),
     max_def := @sup_eq_max_default _ _ (id _) _ }
 
 instance : BoundedOrder Enat :=
@@ -349,7 +354,7 @@ noncomputable instance : Lattice Enat :=
 
 instance : OrderedAddCommMonoid Enat :=
   { Enat.linearOrder, Enat.addCommMonoid with
-    add_le_add_left := fun a b ⟨h₁, h₂⟩ c =>
+    add_le_add_left := fun c =>
       Enat.cases_on c
         (by
           simp )
@@ -377,7 +382,7 @@ instance : CanonicallyOrderedAddMonoid Enat :=
                 hc.symm ▸
                   show (a : Enat) ≤ a + ⊤ by
                     rw [add_top] <;> exact le_top)
-              (fun c hc : (b : Enat) = a + c =>
+              (fun hc : (b : Enat) = a + c =>
                 coe_le_coe.2
                   (by
                     rw [← Nat.cast_addₓ, coe_inj] at hc <;> rw [hc] <;> exact Nat.le_add_rightₓ _ _))
@@ -449,20 +454,20 @@ theorem add_eq_top_iff {a b : Enat} : a + b = ⊤ ↔ a = ⊤ ∨ b = ⊤ := by
   apply Enat.cases_on a <;>
     apply Enat.cases_on b <;> simp <;> simp only [(Nat.cast_addₓ _ _).symm, Enat.coe_ne_top] <;> simp
 
-protected theorem add_right_cancel_iffₓ {a b c : Enat} (hc : c ≠ ⊤) : a + c = b + c ↔ a = b := by
+protected theorem add_right_cancel_iff {a b c : Enat} (hc : c ≠ ⊤) : a + c = b + c ↔ a = b := by
   rcases ne_top_iff.1 hc with ⟨c, rfl⟩
   apply Enat.cases_on a <;>
     apply Enat.cases_on b <;>
       simp [add_eq_top_iff, coe_ne_top, @eq_comm _ (⊤ : Enat)] <;>
         simp only [(Nat.cast_addₓ _ _).symm, add_left_cancel_iffₓ, Enat.coe_inj, add_commₓ] <;> tauto
 
-protected theorem add_left_cancel_iffₓ {a b c : Enat} (ha : a ≠ ⊤) : a + b = a + c ↔ b = c := by
+protected theorem add_left_cancel_iff {a b c : Enat} (ha : a ≠ ⊤) : a + b = a + c ↔ b = c := by
   rw [add_commₓ a, add_commₓ a, Enat.add_right_cancel_iff ha]
 
 section WithTop
 
 /-- Computably converts an `enat` to a `with_top ℕ`. -/
-def to_with_top (x : Enat) [Decidable x.Dom] : WithTop ℕ :=
+def toWithTop (x : Enat) [Decidable x.Dom] : WithTop ℕ :=
   x.toOption
 
 theorem to_with_top_top : toWithTop ⊤ = ⊤ :=
@@ -515,7 +520,7 @@ theorem to_with_top_add {x y : Enat} : toWithTop (x + y) = toWithTop x + toWithT
   apply Enat.cases_on y <;> apply Enat.cases_on x <;> simp [← Nat.cast_addₓ, ← WithTop.coe_add]
 
 /-- `equiv` between `enat` and `with_top ℕ` (for the order isomorphism see `with_top_order_iso`). -/
-noncomputable def with_top_equiv : Enat ≃ WithTop ℕ where
+noncomputable def withTopEquiv : Enat ≃ WithTop ℕ where
   toFun := fun x => toWithTop x
   invFun := fun x =>
     match x with
@@ -547,7 +552,7 @@ theorem with_top_equiv_lt {x y : Enat} : withTopEquiv x < withTopEquiv y ↔ x <
   to_with_top_lt
 
 /-- `to_with_top` induces an order isomorphism between `enat` and `with_top ℕ`. -/
-noncomputable def with_top_order_iso : Enat ≃o WithTop ℕ :=
+noncomputable def withTopOrderIso : Enat ≃o WithTop ℕ :=
   { withTopEquiv with map_rel_iff' := fun _ _ => with_top_equiv_le }
 
 @[simp]
@@ -571,21 +576,21 @@ theorem with_top_equiv_symm_lt {x y : WithTop ℕ} : withTopEquiv.symm x < withT
   rw [← with_top_equiv_lt] <;> simp
 
 /-- `to_with_top` induces an additive monoid isomorphism between `enat` and `with_top ℕ`. -/
-noncomputable def with_top_add_equiv : Enat ≃+ WithTop ℕ :=
+noncomputable def withTopAddEquiv : Enat ≃+ WithTop ℕ :=
   { withTopEquiv with
     map_add' := fun x y => by
       simp only [with_top_equiv] <;> convert to_with_top_add }
 
 end WithTopEquiv
 
-theorem lt_wf : WellFounded (· < · : Enat → Enat → Prop) :=
+theorem lt_wf : WellFounded ((· < ·) : Enat → Enat → Prop) :=
   show WellFounded fun a b : Enat => a < b by
     have := Classical.dec <;>
       simp (config := { eta := false })only [to_with_top_lt.symm] <;>
         exact InvImage.wfₓ _ (WithTop.well_founded_lt Nat.lt_wf)
 
 instance : HasWellFounded Enat :=
-  ⟨· < ·, lt_wf⟩
+  ⟨(· < ·), lt_wf⟩
 
 section Find
 

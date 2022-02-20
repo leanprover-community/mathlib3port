@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Bhavik Mehta. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Bhavik Mehta, Andrew Yang
+-/
 import Mathbin.CategoryTheory.Limits.Shapes.Terminal
 import Mathbin.CategoryTheory.Limits.Shapes.Pullbacks
 import Mathbin.CategoryTheory.Limits.Shapes.BinaryProducts
@@ -59,6 +64,7 @@ def isPullbackOfIsTerminalIsProduct {W X Y Z : C} (f : X ⟶ Z) (g : Y ⟶ Z) (h
 variable (C)
 
 /-- Any category with pullbacks and terminal object has binary products. -/
+-- This is not an instance, as it is not always how one wants to construct binary products!
 theorem has_binary_products_of_terminal_and_pullbacks [HasTerminal C] [HasPullbacks C] : HasBinaryProducts C :=
   { HasLimit := fun F =>
       HasLimit.mk
@@ -118,6 +124,7 @@ def isPushoutOfIsInitialIsCoproduct {W X Y Z : C} (f : X ⟶ Z) (g : Y ⟶ Z) (h
 variable (C)
 
 /-- Any category with pushouts and initial object has binary coproducts. -/
+-- This is not an instance, as it is not always how one wants to construct binary coproducts!
 theorem has_binary_coproducts_of_initial_and_pushouts [HasInitial C] [HasPushouts C] : HasBinaryCoproducts C :=
   { HasColimit := fun F =>
       HasColimit.mk

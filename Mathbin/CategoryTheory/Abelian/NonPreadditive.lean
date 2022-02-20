@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Markus Himmel. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Markus Himmel
+-/
 import Mathbin.CategoryTheory.Limits.Shapes.FiniteProducts
 import Mathbin.CategoryTheory.Limits.Shapes.Kernels
 import Mathbin.CategoryTheory.Limits.Shapes.NormalMono
@@ -59,14 +64,14 @@ variable (C : Type u) [Category.{v} C]
 
 /-- We call a category `non_preadditive_abelian` if it has a zero object, kernels, cokernels, binary
     products and coproducts, and every monomorphism and every epimorphism is normal. -/
-class non_preadditive_abelian extends HasZeroMorphisms C, NormalMonoCategory C, NormalEpiCategory C where
+class NonPreadditiveAbelian extends HasZeroMorphisms C, NormalMonoCategory C, NormalEpiCategory C where
   [HasZeroObject : HasZeroObject C]
   [HasKernels : HasKernels C]
   [HasCokernels : HasCokernels C]
   [HasFiniteProducts : HasFiniteProducts C]
   [HasFiniteCoproducts : HasFiniteCoproducts C]
 
--- ././Mathport/Syntax/Translate/Basic.lean:169:40: warning: unsupported option default_priority
+-- ././Mathport/Syntax/Translate/Basic.lean:211:40: warning: unsupported option default_priority
 set_option default_priority 100
 
 attribute [instance] non_preadditive_abelian.has_zero_object
@@ -95,7 +100,7 @@ section
 
 variable [NonPreadditiveAbelian C]
 
--- ././Mathport/Syntax/Translate/Basic.lean:1080:38: unsupported irreducible non-definition
+-- ././Mathport/Syntax/Translate/Basic.lean:1202:38: unsupported irreducible non-definition
 /-- The pullback of two monomorphisms exists. -/
 irreducible_def pullback_of_mono {X Y Z : C} (a : X ⟶ Z) (b : Y ⟶ Z) [Mono a] [Mono b] : HasLimit (cospan a b) :=
   let ⟨P, f, haf, i⟩ := normalMonoOfMono a
@@ -167,7 +172,7 @@ irreducible_def pullback_of_mono {X Y Z : C} (a : X ⟶ Z) (b : Y ⟶ Z) [Mono a
                 rw [kernel.lift_ι]
                }
 
--- ././Mathport/Syntax/Translate/Basic.lean:1080:38: unsupported irreducible non-definition
+-- ././Mathport/Syntax/Translate/Basic.lean:1202:38: unsupported irreducible non-definition
 /-- The pushout of two epimorphisms exists. -/
 irreducible_def pushout_of_epi {X Y Z : C} (a : X ⟶ Y) (b : X ⟶ Z) [Epi a] [Epi b] : HasColimit (span a b) :=
   let ⟨P, f, hfa, i⟩ := normalEpiOfEpi a
@@ -247,7 +252,7 @@ attribute [local instance] pullback_of_mono
 private abbrev P {X Y : C} (f g : X ⟶ Y) [Mono (prod.lift (𝟙 X) f)] [Mono (prod.lift (𝟙 X) g)] : C :=
   pullback (prod.lift (𝟙 X) f) (prod.lift (𝟙 X) g)
 
--- ././Mathport/Syntax/Translate/Basic.lean:1080:38: unsupported irreducible non-definition
+-- ././Mathport/Syntax/Translate/Basic.lean:1202:38: unsupported irreducible non-definition
 /-- The equalizer of `f` and `g` exists. -/
 irreducible_def has_limit_parallel_pair {X Y : C} (f g : X ⟶ Y) : HasLimit (parallelPair f g) :=
   have huv : (pullback.fst : p f g ⟶ X) = pullback.snd :=
@@ -301,7 +306,7 @@ attribute [local instance] pushout_of_epi
 private abbrev Q {X Y : C} (f g : X ⟶ Y) [Epi (coprod.desc (𝟙 Y) f)] [Epi (coprod.desc (𝟙 Y) g)] : C :=
   pushout (coprod.desc (𝟙 Y) f) (coprod.desc (𝟙 Y) g)
 
--- ././Mathport/Syntax/Translate/Basic.lean:1080:38: unsupported irreducible non-definition
+-- ././Mathport/Syntax/Translate/Basic.lean:1202:38: unsupported irreducible non-definition
 /-- The coequalizer of `f` and `g` exists. -/
 irreducible_def has_colimit_parallel_pair {X Y : C} (f g : X ⟶ Y) : HasColimit (parallelPair f g) :=
   have huv : (pushout.inl : Y ⟶ q f g) = pushout.inr :=
@@ -412,7 +417,7 @@ theorem epi_of_zero_cokernel {X Y : C} (f : X ⟶ Y) (Z : C)
 open_locale ZeroObject
 
 /-- If `g ≫ f = 0` implies `g = 0` for all `g`, then `0 : 0 ⟶ X` is a kernel of `f`. -/
-def zero_kernel_of_cancel_zero {X Y : C} (f : X ⟶ Y) (hf : ∀ Z : C g : Z ⟶ X hgf : g ≫ f = 0, g = 0) :
+def zeroKernelOfCancelZero {X Y : C} (f : X ⟶ Y) (hf : ∀ Z : C g : Z ⟶ X hgf : g ≫ f = 0, g = 0) :
     IsLimit
       (KernelFork.ofι (0 : 0 ⟶ X)
         (show 0 ≫ f = 0 by
@@ -424,7 +429,7 @@ def zero_kernel_of_cancel_zero {X Y : C} (f : X ⟶ Y) (hf : ∀ Z : C g : Z ⟶
     ext
 
 /-- If `f ≫ g = 0` implies `g = 0` for all `g`, then `0 : Y ⟶ 0` is a cokernel of `f`. -/
-def zero_cokernel_of_zero_cancel {X Y : C} (f : X ⟶ Y) (hf : ∀ Z : C g : Y ⟶ Z hgf : f ≫ g = 0, g = 0) :
+def zeroCokernelOfZeroCancel {X Y : C} (f : X ⟶ Y) (hf : ∀ Z : C g : Y ⟶ Z hgf : f ≫ g = 0, g = 0) :
     IsColimit
       (CokernelCofork.ofπ (0 : Y ⟶ 0)
         (show f ≫ 0 = 0 by
@@ -458,7 +463,7 @@ protected abbrev image.ι : NonPreadditiveAbelian.image f ⟶ Q :=
   kernel.ι (cokernel.π f)
 
 /-- There is a canonical epimorphism `p : P ⟶ image f` for every `f`. -/
-protected abbrev factor_thru_image : P ⟶ NonPreadditiveAbelian.image f :=
+protected abbrev factorThruImage : P ⟶ NonPreadditiveAbelian.image f :=
   kernel.lift (cokernel.π f) f <| cokernel.condition f
 
 /-- `f` factors through its image via the canonical morphism `p`. -/
@@ -471,24 +476,32 @@ instance : Epi (NonPreadditiveAbelian.factorThruImage f) :=
   let I := NonPreadditiveAbelian.image f
   let p := NonPreadditiveAbelian.factorThruImage f
   let i := kernel.ι (cokernel.π f)
-  (epi_of_zero_cancel _) fun R g : I ⟶ R hpg : p ≫ g = 0 => by
+  (-- It will suffice to consider some g : I ⟶ R such that p ≫ g = 0 and show that g = 0.
+      epi_of_zero_cancel
+      _)
+    fun hpg : p ≫ g = 0 => by
+    -- Since C is abelian, u := ker g ≫ i is the kernel of some morphism h.
     let u := kernel.ι g ≫ i
     have : mono u := mono_comp _ _
     have hu := normal_mono_of_mono u
     let h := hu.g
+    -- By hypothesis, p factors through the kernel of g via some t.
     obtain ⟨t, ht⟩ := kernel.lift' g p hpg
     have fh : f ≫ h = 0
     calc f ≫ h = (p ≫ i) ≫ h := (image.fac f).symm ▸ rfl _ = ((t ≫ kernel.ι g) ≫ i) ≫ h := ht ▸ rfl _ = t ≫ u ≫ h := by
         simp only [category.assoc] <;> conv_lhs => congr skip rw [← category.assoc]_ = t ≫ 0 := hu.w ▸ rfl _ = 0 :=
         has_zero_morphisms.comp_zero _ _
+    -- h factors through the cokernel of f via some l.
     obtain ⟨l, hl⟩ := cokernel.desc' f h fh
     have hih : i ≫ h = 0
     calc i ≫ h = i ≫ cokernel.π f ≫ l := hl ▸ rfl _ = 0 ≫ l := by
         rw [← category.assoc, kernel.condition]_ = 0 := zero_comp
+    -- i factors through u = ker h via some s.
     obtain ⟨s, hs⟩ := normal_mono.lift' u i hih
     have hs' : (s ≫ kernel.ι g) ≫ i = 𝟙 I ≫ i := by
       rw [category.assoc, hs, category.id_comp]
     have : epi (kernel.ι g) := epi_of_epi_fac ((cancel_mono _).1 hs')
+    -- ker g is an epimorphism, but ker g ≫ g = 0 = ker g ≫ 0, so g = 0 as required.
     exact zero_of_epi_comp _ (kernel.condition g)
 
 instance mono_factor_thru_image [Mono f] : Mono (NonPreadditiveAbelian.factorThruImage f) :=
@@ -506,7 +519,7 @@ protected abbrev coimage.π : P ⟶ NonPreadditiveAbelian.coimage f :=
   cokernel.π (kernel.ι f)
 
 /-- There is a canonical monomorphism `i : coimage f ⟶ Q`. -/
-protected abbrev factor_thru_coimage : NonPreadditiveAbelian.coimage f ⟶ Q :=
+protected abbrev factorThruCoimage : NonPreadditiveAbelian.coimage f ⟶ Q :=
   cokernel.desc (kernel.ι f) f <| kernel.condition f
 
 /-- `f` factors through its coimage via the canonical morphism `p`. -/
@@ -518,24 +531,29 @@ instance : Mono (NonPreadditiveAbelian.factorThruCoimage f) :=
   let I := NonPreadditiveAbelian.coimage f
   let i := NonPreadditiveAbelian.factorThruCoimage f
   let p := cokernel.π (kernel.ι f)
-  (mono_of_cancel_zero _) fun R g : R ⟶ I hgi : g ≫ i = 0 => by
+  (mono_of_cancel_zero _) fun hgi : g ≫ i = 0 => by
+    -- Since C is abelian, u := p ≫ coker g is the cokernel of some morphism h.
     let u := p ≫ cokernel.π g
     have : epi u := epi_comp _ _
     have hu := normal_epi_of_epi u
     let h := hu.g
+    -- By hypothesis, i factors through the cokernel of g via some t.
     obtain ⟨t, ht⟩ := cokernel.desc' g i hgi
     have hf : h ≫ f = 0
     calc h ≫ f = h ≫ p ≫ i := (coimage.fac f).symm ▸ rfl _ = h ≫ p ≫ cokernel.π g ≫ t := ht ▸ rfl _ = h ≫ u ≫ t := by
         simp only [category.assoc] <;> conv_lhs => congr skip rw [← category.assoc]_ = 0 ≫ t := by
         rw [← category.assoc, hu.w]_ = 0 := zero_comp
+    -- h factors through the kernel of f via some l.
     obtain ⟨l, hl⟩ := kernel.lift' f h hf
     have hhp : h ≫ p = 0
     calc h ≫ p = (l ≫ kernel.ι f) ≫ p := hl ▸ rfl _ = l ≫ 0 := by
         rw [category.assoc, cokernel.condition]_ = 0 := comp_zero
+    -- p factors through u = coker h via some s.
     obtain ⟨s, hs⟩ := normal_epi.desc' u p hhp
     have hs' : p ≫ cokernel.π g ≫ s = p ≫ 𝟙 I := by
       rw [← category.assoc, hs, category.comp_id]
     have : mono (cokernel.π g) := mono_of_mono_fac ((cancel_epi _).1 hs')
+    -- coker g is a monomorphism, but g ≫ coker g = 0 = 0 ≫ coker g, so g = 0 as required.
     exact zero_of_comp_mono _ (cokernel.condition g)
 
 instance epi_factor_thru_coimage [Epi f] : Epi (NonPreadditiveAbelian.factorThruCoimage f) :=
@@ -553,7 +571,7 @@ variable {X Y : C} {f : X ⟶ Y}
 /-- In a `non_preadditive_abelian` category, an epi is the cokernel of its kernel. More precisely:
     If `f` is an epimorphism and `s` is some limit kernel cone on `f`, then `f` is a cokernel
     of `fork.ι s`. -/
-def epi_is_cokernel_of_kernel [Epi f] (s : Fork f 0) (h : IsLimit s) :
+def epiIsCokernelOfKernel [Epi f] (s : Fork f 0) (h : IsLimit s) :
     IsColimit (CokernelCofork.ofπ f (KernelFork.condition s)) :=
   IsCokernel.cokernelIso _ _
     (cokernel.ofIsoComp _ _ (Limits.IsLimit.conePointUniqueUpToIso (limit.isLimit _) h)
@@ -563,7 +581,7 @@ def epi_is_cokernel_of_kernel [Epi f] (s : Fork f 0) (h : IsLimit s) :
 /-- In a `non_preadditive_abelian` category, a mono is the kernel of its cokernel. More precisely:
     If `f` is a monomorphism and `s` is some colimit cokernel cocone on `f`, then `f` is a kernel
     of `cofork.π s`. -/
-def mono_is_kernel_of_cokernel [Mono f] (s : Cofork f 0) (h : IsColimit s) :
+def monoIsKernelOfCokernel [Mono f] (s : Cofork f 0) (h : IsColimit s) :
     IsLimit (KernelFork.ofι f (CokernelCofork.condition s)) :=
   IsKernel.isoKernel _ _
     (kernel.ofCompIso _ _ (Limits.IsColimit.coconePointUniqueUpToIso h (colimit.isColimit _))
@@ -651,7 +669,7 @@ theorem lift_map {X Y : C} (f : X ⟶ Y) : prod.lift (𝟙 X) 0 ≫ Limits.prod.
   simp
 
 /-- σ is a cokernel of Δ X. -/
-def is_colimit_σ {X : C} : IsColimit (CokernelCofork.ofπ σ diag_σ) :=
+def isColimitσ {X : C} : IsColimit (CokernelCofork.ofπ σ diag_σ) :=
   cokernel.cokernelIso _ σ (asIso (r X)).symm
     (by
       rw [iso.symm_hom, as_iso_inv])
@@ -674,19 +692,22 @@ theorem σ_comp {X Y : C} (f : X ⟶ Y) : σ ≫ f = Limits.prod.map f f ≫ σ 
 section
 
 /-- Subtraction of morphisms in a `non_preadditive_abelian` category. -/
-def Sub {X Y : C} : Sub (X ⟶ Y) :=
+-- We write `f - g` for `prod.lift f g ≫ σ`.
+def hasSub {X Y : C} : Sub (X ⟶ Y) :=
   ⟨fun f g => prod.lift f g ≫ σ⟩
 
 attribute [local instance] Sub
 
 /-- Negation of morphisms in a `non_preadditive_abelian` category. -/
-def Neg {X Y : C} : Neg (X ⟶ Y) :=
+-- We write `-f` for `0 - f`.
+def hasNeg {X Y : C} : Neg (X ⟶ Y) :=
   ⟨fun f => 0 - f⟩
 
 attribute [local instance] Neg
 
 /-- Addition of morphisms in a `non_preadditive_abelian` category. -/
-def Add {X Y : C} : Add (X ⟶ Y) :=
+-- We write `f + g` for `f - (-g)`.
+def hasAdd {X Y : C} : Add (X ⟶ Y) :=
   ⟨fun f g => f - -g⟩
 
 attribute [local instance] Add
@@ -726,12 +747,12 @@ theorem sub_sub_sub {X Y : C} (a b c d : X ⟶ Y) : a - c - (b - d) = a - b - (c
 theorem neg_sub {X Y : C} (a b : X ⟶ Y) : -a - b = -b - a := by
   conv_lhs => rw [neg_def, ← sub_zero b, sub_sub_sub, sub_zero, ← neg_def]
 
-theorem neg_negₓ {X Y : C} (a : X ⟶ Y) : - -a = a := by
+theorem neg_neg {X Y : C} (a : X ⟶ Y) : - -a = a := by
   rw [neg_def, neg_def]
   conv_lhs => congr rw [← sub_self a]
   rw [sub_sub_sub, sub_zero, sub_self, sub_zero]
 
-theorem add_commₓ {X Y : C} (a b : X ⟶ Y) : a + b = b + a := by
+theorem add_comm {X Y : C} (a b : X ⟶ Y) : a + b = b + a := by
   rw [add_def]
   conv_lhs => rw [← neg_negₓ a]
   rw [neg_def, neg_def, neg_def, sub_sub_sub]
@@ -741,10 +762,10 @@ theorem add_commₓ {X Y : C} (a b : X ⟶ Y) : a + b = b + a := by
 theorem add_neg {X Y : C} (a b : X ⟶ Y) : a + -b = a - b := by
   rw [add_def, neg_negₓ]
 
-theorem add_neg_selfₓ {X Y : C} (a : X ⟶ Y) : a + -a = 0 := by
+theorem add_neg_self {X Y : C} (a : X ⟶ Y) : a + -a = 0 := by
   rw [add_neg, sub_self]
 
-theorem neg_add_selfₓ {X Y : C} (a : X ⟶ Y) : -a + a = 0 := by
+theorem neg_add_self {X Y : C} (a : X ⟶ Y) : -a + a = 0 := by
   rw [add_commₓ, add_neg_selfₓ]
 
 theorem neg_sub' {X Y : C} (a b : X ⟶ Y) : -(a - b) = -a + b := by
@@ -758,11 +779,11 @@ theorem neg_add {X Y : C} (a b : X ⟶ Y) : -(a + b) = -a - b := by
 theorem sub_add {X Y : C} (a b c : X ⟶ Y) : a - b + c = a - (b - c) := by
   rw [add_def, neg_def, sub_sub_sub, sub_zero]
 
-theorem add_assocₓ {X Y : C} (a b c : X ⟶ Y) : a + b + c = a + (b + c) := by
+theorem add_assoc {X Y : C} (a b c : X ⟶ Y) : a + b + c = a + (b + c) := by
   conv_lhs => congr rw [add_def]
   rw [sub_add, ← add_neg, neg_sub', neg_negₓ]
 
-theorem add_zeroₓ {X Y : C} (a : X ⟶ Y) : a + 0 = a := by
+theorem add_zero {X Y : C} (a : X ⟶ Y) : a + 0 = a := by
   rw [add_def, neg_def, sub_self, sub_zero]
 
 theorem comp_sub {X Y Z : C} (f : X ⟶ Y) (g h : Y ⟶ Z) : f ≫ (g - h) = f ≫ g - f ≫ h := by
@@ -780,7 +801,7 @@ theorem add_comp (X Y Z : C) (f g : X ⟶ Y) (h : Y ⟶ Z) : (f + g) ≫ h = f �
 /-- Every `non_preadditive_abelian` category is preadditive. -/
 def preadditive : Preadditive C where
   homGroup := fun X Y =>
-    { add := · + ·, add_assoc := add_assoc, zero := 0, zero_add := neg_neg, add_zero := add_zero, neg := fun f => -f,
+    { add := (· + ·), add_assoc := add_assoc, zero := 0, zero_add := neg_neg, add_zero := add_zero, neg := fun f => -f,
       add_left_neg := neg_add_self, add_comm := add_comm }
   add_comp' := add_comp
   comp_add' := comp_add

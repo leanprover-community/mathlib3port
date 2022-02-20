@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Neil Strickland. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Neil Strickland
+-/
 import Mathbin.Tactic.Ring
 import Mathbin.Data.Pnat.Prime
 
@@ -36,7 +41,7 @@ namespace Pnat
  [[w, x], [y, z]] = [[wp + 1, x], [y, zp + 1]]
  together with the vector [a, b] = [ap + 1, bp + 1].
 -/
-structure xgcd_type where
+structure XgcdType where
   (wp x y zp ap bp : ℕ)
   deriving Inhabited
 
@@ -103,10 +108,10 @@ theorem v_eq_succ_vp : u.V = succ₂ u.vp := by
         ring
 
 /-- is_special holds if the matrix has determinant one. -/
-def is_special : Prop :=
+def IsSpecial : Prop :=
   u.wp + u.zp + u.wp * u.zp = u.x * u.y
 
-def is_special' : Prop :=
+def IsSpecial' : Prop :=
   u.w * u.z = succPnat (u.x * u.y)
 
 theorem is_special_iff : u.IsSpecial ↔ u.IsSpecial' := by
@@ -134,10 +139,10 @@ theorem is_special_iff : u.IsSpecial ↔ u.IsSpecial' := by
  same.  The reduction algorithm will produce a system with this
  property, whose product vector is the same as for the original
  system. -/
-def is_reduced : Prop :=
+def IsReduced : Prop :=
   u.ap = u.bp
 
-def is_reduced' : Prop :=
+def IsReduced' : Prop :=
   u.a = u.b
 
 theorem is_reduced_iff : u.IsReduced ↔ u.IsReduced' :=
@@ -352,25 +357,25 @@ variable (a b : ℕ+)
 def xgcd : XgcdType :=
   (XgcdType.start a b).reduce
 
-def gcd_d : ℕ+ :=
+def gcdD : ℕ+ :=
   (xgcd a b).a
 
-def gcd_w : ℕ+ :=
+def gcdW : ℕ+ :=
   (xgcd a b).w
 
-def gcd_x : ℕ :=
+def gcdX : ℕ :=
   (xgcd a b).x
 
-def gcd_y : ℕ :=
+def gcdY : ℕ :=
   (xgcd a b).y
 
-def gcd_z : ℕ+ :=
+def gcdZ : ℕ+ :=
   (xgcd a b).z
 
-def gcd_a' : ℕ+ :=
+def gcdA' : ℕ+ :=
   succPnat ((xgcd a b).wp + (xgcd a b).x)
 
-def gcd_b' : ℕ+ :=
+def gcdB' : ℕ+ :=
   succPnat ((xgcd a b).y + (xgcd a b).zp)
 
 theorem gcd_a'_coe : (gcdA' a b : ℕ) = gcdW a b + gcdX a b := by

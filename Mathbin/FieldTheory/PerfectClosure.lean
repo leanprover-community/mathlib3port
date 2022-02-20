@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Kenny Lau. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Kenny Lau, Yury Kudryashov
+-/
 import Mathbin.Algebra.CharP.Basic
 import Mathbin.Data.Equiv.Ring
 import Mathbin.Algebra.GroupWithZero.Power
@@ -132,7 +137,7 @@ variable {K p}
 
 /-- Lift a function `ℕ × K → L` to a function on `perfect_closure K p`. -/
 @[elab_as_eliminator]
-def lift_on {L : Type _} (x : PerfectClosure K p) (f : ℕ × K → L) (hf : ∀ x y, R K p x y → f x = f y) : L :=
+def liftOn {L : Type _} (x : PerfectClosure K p) (f : ℕ × K → L) (hf : ∀ x y, R K p x y → f x = f y) : L :=
   Quot.liftOn x f hf
 
 @[simp]
@@ -167,7 +172,7 @@ instance : Mul (PerfectClosure K p) :=
       (fun x : ℕ × K =>
         Quot.lift (fun y : ℕ × K => mk K p (x.1 + y.1, (frobenius K p^[y.1]) x.2 * (frobenius K p^[x.1]) y.2))
           (mul_aux_right K p x))
-      fun x1 x2 H : R K p x1 x2 => funext fun e => (Quot.induction_on e) fun y => mul_aux_left K p x1 x2 y H⟩
+      fun H : R K p x1 x2 => funext fun e => (Quot.induction_on e) fun y => mul_aux_left K p x1 x2 y H⟩
 
 @[simp]
 theorem mk_mul_mk (x y : ℕ × K) :
@@ -225,7 +230,7 @@ instance : Add (PerfectClosure K p) :=
       (fun x : ℕ × K =>
         Quot.lift (fun y : ℕ × K => mk K p (x.1 + y.1, (frobenius K p^[y.1]) x.2 + (frobenius K p^[x.1]) y.2))
           (add_aux_right K p x))
-      fun x1 x2 H : R K p x1 x2 => funext fun e => (Quot.induction_on e) fun y => add_aux_left K p x1 x2 y H⟩
+      fun H : R K p x1 x2 => funext fun e => (Quot.induction_on e) fun y => add_aux_left K p x1 x2 y H⟩
 
 @[simp]
 theorem mk_add_mk (x y : ℕ × K) :
@@ -233,7 +238,7 @@ theorem mk_add_mk (x y : ℕ × K) :
   rfl
 
 instance : Neg (PerfectClosure K p) :=
-  ⟨Quot.lift (fun x : ℕ × K => mk K p (x.1, -x.2)) fun x y H : R K p x y =>
+  ⟨Quot.lift (fun x : ℕ × K => mk K p (x.1, -x.2)) fun H : R K p x y =>
       match x, y, H with
       | _, _, r.intro n x =>
         Quot.sound <| by
@@ -253,7 +258,7 @@ theorem mk_zero (n : ℕ) : mk K p (n, 0) = 0 := by
   induction' n with n ih <;> [rfl, rw [← ih]] <;>
     symm <;> apply Quot.sound <;> have := r.intro n (0 : K) <;> rwa [frobenius_zero K p] at this
 
-theorem r.sound (m n : ℕ) (x y : K) (H : (frobenius K p^[m]) x = y) : mk K p (n, x) = mk K p (m + n, y) := by
+theorem R.sound (m n : ℕ) (x y : K) (H : (frobenius K p^[m]) x = y) : mk K p (n, x) = mk K p (m + n, y) := by
   subst H <;>
     induction' m with m ih <;> [simp only [zero_addₓ, iterate_zero_apply], rw [ih, Nat.succ_add, iterate_succ']] <;>
       apply Quot.sound <;> apply r.intro
@@ -410,7 +415,7 @@ section Field
 variable [Field K] (p : ℕ) [Fact p.Prime] [CharP K p]
 
 instance : Inv (PerfectClosure K p) :=
-  ⟨Quot.lift (fun x : ℕ × K => Quot.mk (R K p) (x.1, x.2⁻¹)) fun x y H : R K p x y =>
+  ⟨Quot.lift (fun x : ℕ × K => Quot.mk (R K p) (x.1, x.2⁻¹)) fun H : R K p x y =>
       match x, y, H with
       | _, _, r.intro n x =>
         Quot.sound <| by
@@ -422,7 +427,7 @@ instance : Field (PerfectClosure K p) :=
   { (inferInstance : Inv (PerfectClosure K p)), (inferInstance : CommRingₓ (PerfectClosure K p)) with
     exists_pair_ne := ⟨0, 1, fun H => zero_ne_one ((eq_iff _ _ _ _).1 H)⟩,
     mul_inv_cancel := fun e =>
-      (induction_on e) fun ⟨m, x⟩ H =>
+      (induction_on e) fun H =>
         have := mt (eq_iff _ _ _ _).2 H
         (eq_iff _ _ _ _).2
           (by

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Johan Commelin. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johan Commelin, Kevin Buzzard
+-/
 import Mathbin.Algebra.BigOperators.NatAntidiagonal
 import Mathbin.Algebra.GeomSum
 import Mathbin.Data.Fintype.Card
@@ -109,6 +114,7 @@ theorem bernoulli'_three : bernoulli' 3 = 0 := by
 theorem bernoulli'_four : bernoulli' 4 = -1 / 30 := by
   have : Nat.choose 4 2 = 6 := by
     decide
+  -- shrug
   rw [bernoulli'_def]
   norm_num [sum_range_succ, this]
 
@@ -139,6 +145,7 @@ def bernoulli'PowerSeries :=
 
 theorem bernoulli'_power_series_mul_exp_sub_one : bernoulli'PowerSeries A * (exp A - 1) = X * exp A := by
   ext n
+  -- constant coefficient is a special case
   cases n
   · simp
     
@@ -232,13 +239,16 @@ theorem bernoulli_spec' (n : ℕ) :
   · simp
     
   rw [if_neg (succ_ne_zero _)]
+  -- algebra facts
   have h₁ : (1, n) ∈ antidiagonal n.succ := by
     simp [mem_antidiagonal, add_commₓ]
   have h₂ : (n : ℚ) + 1 ≠ 0 := by
     apply_mod_cast succ_ne_zero
   have h₃ : (1 + n).choose n = n + 1 := by
     simp [add_commₓ]
+  -- key equation: the corresponding fact for `bernoulli'`
   have H := bernoulli'_spec' n.succ
+  -- massage it to match the structure of the goal, then convert piece by piece
   rw [sum_eq_add_sum_diff_singleton h₁] at H⊢
   apply add_eq_of_eq_sub'
   convert eq_sub_of_add_eq' H using 1
@@ -257,6 +267,7 @@ def bernoulliPowerSeries :=
 
 theorem bernoulli_power_series_mul_exp_sub_one : bernoulliPowerSeries A * (exp A - 1) = X := by
   ext n
+  -- constant coefficient is a special case
   cases n
   · simp
     
@@ -297,17 +308,20 @@ theorem sum_range_pow (n p : ℕ) :
   by
   have hne : ∀ m : ℕ, (m ! : ℚ) ≠ 0 := fun m => by
     exact_mod_cast factorial_ne_zero m
+  -- compute the Cauchy product of two power series
   have h_cauchy :
     ((mk fun p => bernoulli p / p !) * mk fun q => coeff ℚ (q + 1) (exp ℚ ^ n)) =
       mk fun p => ∑ i in range (p + 1), bernoulli i * (p + 1).choose i * n ^ (p + 1 - i) / (p + 1)! :=
     by
     ext q : 1
     let f := fun a b => bernoulli a / a ! * coeff ℚ (b + 1) (exp ℚ ^ n)
+    -- key step: use `power_series.coeff_mul` and then rewrite sums
     simp only [coeff_mul, coeff_mk, cast_mul, sum_antidiagonal_eq_sum_range_succ f]
     apply sum_congr rfl
     simp_intro m h only [Finset.mem_range]
     simp only [f, exp_pow_eq_rescale_exp, rescale, one_div, coeff_mk, RingHom.coe_mk, coeff_exp, RingHom.id_apply,
       cast_mul, algebra_map_rat_rat]
+    -- manipulate factorials and binomial coefficients
     rw [choose_eq_factorial_div_factorial h.le, eq_comm, div_eq_iff (hne q.succ), succ_eq_add_one,
       mul_assoc _ _ ↑q.succ !, mul_comm _ ↑q.succ !, ← mul_assoc, div_mul_eq_mul_div, mul_comm (↑n ^ (q - m + 1)), ←
       mul_assoc _ _ (↑n ^ (q - m + 1)), ← one_div, mul_one_div, div_div_eq_div_mul,
@@ -318,6 +332,7 @@ theorem sum_range_pow (n p : ℕ) :
       
     · simp [hne]
       
+  -- same as our goal except we pull out `p!` for convenience
   have hps :
     (∑ k in range n, ↑k ^ p) =
       (∑ i in range (p + 1), bernoulli i * (p + 1).choose i * n ^ (p + 1 - i) / (p + 1)!) * p ! :=
@@ -329,6 +344,7 @@ theorem sum_range_pow (n p : ℕ) :
       rw [← div_eq_iff (hne p), div_eq_mul_inv, sum_mul]
       rw [PowerSeries.ext_iff] at this
       simpa using this p
+    -- the power series `exp ℚ - 1` is non-zero, a fact we need in order to use `mul_right_inj'`
     have hexp : exp ℚ - 1 ≠ 0 := by
       simp only [exp, PowerSeries.ext_iff, Ne, not_forall]
       use 1
@@ -337,9 +353,11 @@ theorem sum_range_pow (n p : ℕ) :
       have h_const : C ℚ (constant_coeff ℚ (exp ℚ ^ n)) = 1 := by
         simp
       rw [← h_const, sub_const_eq_X_mul_shift]
+    -- key step: a chain of equalities of power series
     rw [← mul_right_inj' hexp, mul_comm, ← exp_pow_sum, ← geom_sum_def, geom_sum_mul, h_r, ←
       bernoulli_power_series_mul_exp_sub_one, bernoulliPowerSeries, mul_right_commₓ]
     simp [h_cauchy, mul_comm]
+  -- massage `hps` into our goal
   rw [hps, sum_mul]
   refine' sum_congr rfl fun x hx => _
   field_simp [mul_right_commₓ _ ↑p !, ← mul_assoc _ _ ↑p !, cast_add_one_ne_zero, hne]
@@ -351,6 +369,7 @@ theorem sum_Ico_pow (n p : ℕ) :
     (∑ k in ico 1 (n + 1), (k : ℚ) ^ p) =
       ∑ i in range (p + 1), bernoulli' i * (p + 1).choose i * n ^ (p + 1 - i) / (p + 1) :=
   by
+  -- dispose of the trivial case
   cases p
   · simp
     
@@ -358,6 +377,7 @@ theorem sum_Ico_pow (n p : ℕ) :
   let f' := fun i => bernoulli' i * p.succ.succ.choose i * n ^ (p.succ.succ - i) / p.succ.succ
   suffices (∑ k in Ico 1 n.succ, ↑k ^ p.succ) = ∑ i in range p.succ.succ, f' i by
     convert this
+  -- prove some algebraic facts that will make things easier for us later on
   have hle := Nat.le_add_leftₓ 1 n
   have hne : (p + 1 + 1 : ℚ) ≠ 0 := by
     exact_mod_cast succ_ne_zero p.succ
@@ -371,15 +391,34 @@ theorem sum_Ico_pow (n p : ℕ) :
       ∑ i in range p, bernoulli' (i + 2) * (p + 2).choose (i + 2) * n ^ (p - i) / ↑(p + 2) :=
     sum_congr rfl fun i h => by
       rw [bernoulli_eq_bernoulli'_of_ne_one (succ_succ_ne_one i)]
-  calc (∑ k in Ico 1 n.succ, ↑k ^ p.succ) = ∑ k in range n.succ, ↑k ^ p.succ := by
-      simp [sum_Ico_eq_sub _ hle, succ_ne_zero]_ = (∑ k in range n, (k : ℚ) ^ p.succ) + n ^ p.succ := by
-      rw [sum_range_succ]_ = (∑ i in range p.succ.succ, f i) + n ^ p.succ := by
-      simp [f, sum_range_pow]_ = (∑ i in range p, f i.succ.succ) + f 1 + f 0 + n ^ p.succ := by
+  calc
+    (-- replace sum over `Ico` with sum over `range` and simplify
+        ∑ k in Ico 1 n.succ, ↑k ^ p.succ) =
+        ∑ k in range n.succ, ↑k ^ p.succ :=
+      by
+      simp [sum_Ico_eq_sub _ hle, succ_ne_zero]-- extract the last term of the sum
+        _ =
+        (∑ k in range n, (k : ℚ) ^ p.succ) + n ^ p.succ :=
+      by
+      rw [sum_range_succ]-- apply the key lemma, `sum_range_pow`
+        _ =
+        (∑ i in range p.succ.succ, f i) + n ^ p.succ :=
+      by
+      simp [f, sum_range_pow]-- extract the first two terms of the sum
+        _ =
+        (∑ i in range p, f i.succ.succ) + f 1 + f 0 + n ^ p.succ :=
+      by
       simp_rw [sum_range_succ']_ = (∑ i in range p, f i.succ.succ) + (f 1 + n ^ p.succ) + f 0 := by
       ring _ = (∑ i in range p, f i.succ.succ) + 1 / 2 * n ^ p.succ + f 0 := by
-      rw [h2]_ = (∑ i in range p, f' i.succ.succ) + f' 1 + f' 0 := by
+      rw [h2]-- convert from `bernoulli` to `bernoulli'`
+        _ =
+        (∑ i in range p, f' i.succ.succ) + f' 1 + f' 0 :=
+      by
       simp only [f, f']
-      simpa [h1]_ = ∑ i in range p.succ.succ, f' i := by
+      simpa [h1]-- rejoin the first two terms of the sum
+        _ =
+        ∑ i in range p.succ.succ, f' i :=
+      by
       simp_rw [sum_range_succ']
 
 end Faulhaber

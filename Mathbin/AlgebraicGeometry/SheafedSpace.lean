@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison
+-/
 import Mathbin.AlgebraicGeometry.PresheafedSpace.HasColimits
 import Mathbin.Topology.Sheaves.Functors
 
@@ -40,7 +45,7 @@ variable {C}
 
 namespace SheafedSpace
 
-instance coe_carrier : Coe (SheafedSpace C) Top where
+instance coeCarrier : Coe (SheafedSpace C) Top where
   coe := fun X => X.Carrier
 
 /-- Extract the `sheaf C (X : Top)` from a `SheafedSpace C`. -/
@@ -59,7 +64,7 @@ instance (X : SheafedSpace.{v} C) : TopologicalSpace X :=
   X.Carrier.str
 
 /-- The trivial `punit` valued sheaf on any topological space. -/
-def PUnit (X : Top) : SheafedSpace (discrete PUnit) :=
+def punit (X : Top) : SheafedSpace (discrete PUnit) :=
   { @PresheafedSpace.const (discrete PUnit) _ X PUnit.unit with IsSheaf := Presheaf.is_sheaf_punit _ }
 
 instance : Inhabited (SheafedSpace (discrete PUnit)) :=
@@ -70,7 +75,7 @@ instance : Category (SheafedSpace C) :=
     infer_instance
 
 /-- Forgetting the sheaf condition is a functor from `SheafedSpace C` to `PresheafedSpace C`. -/
-def forget_to_PresheafedSpace : SheafedSpace C ⥤ PresheafedSpace C :=
+def forgetToPresheafedSpace : SheafedSpace C ⥤ PresheafedSpace C :=
   inducedFunctor _ deriving Full, Faithful
 
 instance is_PresheafedSpace_iso {X Y : SheafedSpace C} (f : X ⟶ Y) [IsIso f] : @IsIso (PresheafedSpace C) _ _ _ f :=
@@ -147,7 +152,7 @@ def restrict {U : Top} (X : SheafedSpace C) {f : U ⟶ (X : Top.{v})} (h : OpenE
 
 /-- The restriction of a sheafed space `X` to the top subspace is isomorphic to `X` itself.
 -/
-def restrict_top_iso (X : SheafedSpace C) : X.restrict (Opens.open_embedding ⊤) ≅ X :=
+def restrictTopIso (X : SheafedSpace C) : X.restrict (Opens.open_embedding ⊤) ≅ X :=
   @preimageIso _ _ _ _ forgetToPresheafedSpace _ _ (X.restrict (Opens.open_embedding ⊤)) _
     X.toPresheafedSpace.restrictTopIso
 

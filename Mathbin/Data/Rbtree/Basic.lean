@@ -1,9 +1,14 @@
+/-
+Copyright (c) 2017 Microsoft Corporation. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Leonardo de Moura
+-/
 import Mathbin.Tactic.Interactive
 import Mathbin.Data.Rbtree.Init
 
 universe u
 
--- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:916:4: warning: unsupported (TODO): `[tacs]
 unsafe def tactic.interactive.blast_disjs : tactic Unit :=
   sorry
 
@@ -13,22 +18,22 @@ variable {α : Type u}
 
 open Color Nat
 
-inductive is_node_of : Rbnode α → Rbnode α → α → Rbnode α → Prop
+inductive IsNodeOf : Rbnode α → Rbnode α → α → Rbnode α → Prop
   | of_red l v r : is_node_of (red_node l v r) l v r
   | of_black l v r : is_node_of (black_node l v r) l v r
 
-def lift (lt : α → α → Prop) : Option α → Option α → Prop
+def Lift (lt : α → α → Prop) : Option α → Option α → Prop
   | some a, some b => lt a b
   | _, _ => True
 
-inductive is_searchable (lt : α → α → Prop) : Rbnode α → Option α → Option α → Prop
+inductive IsSearchable (lt : α → α → Prop) : Rbnode α → Option α → Option α → Prop
   | leaf_s {lo hi} (hlt : Lift lt lo hi) : is_searchable leaf lo hi
   | red_s {l r v lo hi} (hs₁ : is_searchable l lo (some v)) (hs₂ : is_searchable r (some v) hi) :
     is_searchable (red_node l v r) lo hi
   | black_s {l r v lo hi} (hs₁ : is_searchable l lo (some v)) (hs₂ : is_searchable r (some v) hi) :
     is_searchable (black_node l v r) lo hi
 
--- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:916:4: warning: unsupported (TODO): `[tacs]
 unsafe def is_searchable_tactic : tactic Unit :=
   sorry
 
@@ -140,6 +145,7 @@ theorem range [IsStrictWeakOrder α lt] {t : Rbnode α} {x} :
   case leaf =>
     simp [mem]
   all_goals
+    -- red_node and black_node are identical
     intro lo hi h₁ h₂
     cases h₁
     simp only [mem] at h₂
@@ -222,7 +228,7 @@ theorem lt_of_mem_left_right [IsStrictWeakOrder α lt] {y : α} {t l r : Rbnode 
 
 end IsSearchableLemmas
 
-inductive is_red_black : Rbnode α → Color → Nat → Prop
+inductive IsRedBlack : Rbnode α → Color → Nat → Prop
   | leaf_rb : is_red_black leaf black 0
   | red_rb {v l r n} (rb_l : is_red_black l black n) (rb_r : is_red_black r black n) :
     is_red_black (red_node l v r) red n

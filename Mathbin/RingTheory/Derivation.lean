@@ -1,3 +1,8 @@
+/-
+Copyright © 2020 Nicolò Cavalleri. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Nicolò Cavalleri
+-/
 import Mathbin.RingTheory.Adjoin.Basic
 import Mathbin.Algebra.Lie.OfAssociative
 
@@ -63,10 +68,11 @@ instance : AddMonoidHomClass (Derivation R A M) A M where
 instance : CoeFun (Derivation R A M) fun _ => A → M :=
   ⟨fun D => D.toLinearMap.toFun⟩
 
+-- Not a simp lemma because it can be proved via `coe_fn_coe` + `to_linear_map_eq_coe`
 theorem to_fun_eq_coe : D.toFun = ⇑D :=
   rfl
 
-instance has_coe_to_linear_map : Coe (Derivation R A M) (A →ₗ[R] M) :=
+instance hasCoeToLinearMap : Coe (Derivation R A M) (A →ₗ[R] M) :=
   ⟨fun D => D.toLinearMap⟩
 
 @[simp]
@@ -88,7 +94,7 @@ theorem coe_injective : @Function.Injective (Derivation R A M) (A → M) coeFn :
 theorem ext (H : ∀ a, D1 a = D2 a) : D1 = D2 :=
   FunLike.ext _ _ H
 
-theorem congr_funₓ (h : D1 = D2) (a : A) : D1 a = D2 a :=
+theorem congr_fun (h : D1 = D2) (a : A) : D1 a = D2 a :=
   FunLike.congr_fun h a
 
 protected theorem map_add : D (a + b) = D a + D b :=
@@ -152,6 +158,7 @@ on the whole algebra. -/
 theorem ext_of_adjoin_eq_top (s : Set A) (hs : adjoin R s = ⊤) (h : Set.EqOn D1 D2 s) : D1 = D2 :=
   ext fun a => eq_on_adjoin h <| hs.symm ▸ trivialₓ
 
+-- Data typeclasses
 instance : Zero (Derivation R A M) :=
   ⟨{ toLinearMap := 0, map_one_eq_zero' := rfl,
       leibniz' := fun a b => by
@@ -194,7 +201,7 @@ instance : AddCommMonoidₓ (Derivation R A M) :=
   coe_injective.AddCommMonoid _ coe_zero coe_add
 
 /-- `coe_fn` as an `add_monoid_hom`. -/
-def coe_fn_add_monoid_hom : Derivation R A M →+ A → M where
+def coeFnAddMonoidHom : Derivation R A M →+ A → M where
   toFun := coeFn
   map_zero' := coe_zero
   map_add' := coe_add

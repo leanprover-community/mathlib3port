@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Kenny Lau. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Kenny Lau
+-/
 import Mathbin.Data.Polynomial.Monic
 import Mathbin.Data.Polynomial.AlgebraMap
 import Mathbin.Algebra.GroupRingAction
@@ -31,7 +36,7 @@ theorem smul_eq_map [MulSemiringAction M R] (m : M) : (· • ·) m = map (MulSe
 variable (M)
 
 noncomputable instance [MulSemiringAction M R] : MulSemiringAction M R[X] :=
-  { Polynomial.distribMulAction with smul := · • ·,
+  { Polynomial.distribMulAction with smul := (· • ·),
     smul_one := fun m => (smul_eq_map R m).symm ▸ map_one (MulSemiringAction.toRingHom M R m),
     smul_mul := fun m p q => (smul_eq_map R m).symm ▸ map_mul (MulSemiringAction.toRingHom M R m) }
 
@@ -110,7 +115,7 @@ variable {Q : Type _} [CommSemiringₓ Q] [MulSemiringAction M Q]
 open Polynomial
 
 /-- An equivariant map induces an equivariant map on polynomials. -/
-protected noncomputable def Polynomial (g : P →+*[M] Q) : P[X] →+*[M] Q[X] where
+protected noncomputable def polynomial (g : P →+*[M] Q) : P[X] →+*[M] Q[X] where
   toFun := map g
   map_smul' := fun m p =>
     Polynomial.induction_on p

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Oliver Nash. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Oliver Nash
+-/
 import Mathbin.Algebra.Lie.Submodule
 import Mathbin.Algebra.Lie.OfAssociative
 import Mathbin.LinearAlgebra.Isomorphisms
@@ -43,21 +48,21 @@ namespace Quotientₓ
 
 variable {N I}
 
-instance AddCommGroupₓ : AddCommGroupₓ (M ⧸ N) :=
+instance addCommGroup : AddCommGroupₓ (M ⧸ N) :=
   Submodule.Quotient.addCommGroup _
 
 instance module' {S : Type _} [Semiringₓ S] [HasScalar S R] [Module S M] [IsScalarTower S R M] : Module S (M ⧸ N) :=
   Submodule.Quotient.module' _
 
-instance Module : Module R (M ⧸ N) :=
+instance module : Module R (M ⧸ N) :=
   Submodule.Quotient.module _
 
-instance IsCentralScalar {S : Type _} [Semiringₓ S] [HasScalar S R] [Module S M] [IsScalarTower S R M]
+instance is_central_scalar {S : Type _} [Semiringₓ S] [HasScalar S R] [Module S M] [IsScalarTower S R M]
     [HasScalar (Sᵐᵒᵖ) R] [Module (Sᵐᵒᵖ) M] [IsScalarTower (Sᵐᵒᵖ) R M] [IsCentralScalar S M] :
     IsCentralScalar S (M ⧸ N) :=
   Submodule.Quotient.is_central_scalar _
 
-instance Inhabited : Inhabited (M ⧸ N) :=
+instance inhabited : Inhabited (M ⧸ N) :=
   ⟨0⟩
 
 /-- Map sending an element of `M` to the corresponding element of `M/N`, when `N` is a
@@ -70,14 +75,14 @@ theorem is_quotient_mk (m : M) : Quotientₓ.mk' m = (mk m : M ⧸ N) :=
 
 /-- Given a Lie module `M` over a Lie algebra `L`, together with a Lie submodule `N ⊆ M`, there
 is a natural linear map from `L` to the endomorphisms of `M` leaving `N` invariant. -/
-def lie_submodule_invariant : L →ₗ[R] Submodule.compatibleMaps N.toSubmodule N.toSubmodule :=
+def lieSubmoduleInvariant : L →ₗ[R] Submodule.compatibleMaps N.toSubmodule N.toSubmodule :=
   LinearMap.codRestrict _ (LieModule.toEndomorphism R L M) N.lie_mem
 
 variable (N)
 
 /-- Given a Lie module `M` over a Lie algebra `L`, together with a Lie submodule `N ⊆ M`, there
 is a natural Lie algebra morphism from `L` to the linear endomorphism of the quotient `M/N`. -/
-def action_as_endo_map : L →ₗ⁅R⁆ Module.End R (M ⧸ N) :=
+def actionAsEndoMap : L →ₗ⁅R⁆ Module.End R (M ⧸ N) :=
   { LinearMap.comp (Submodule.mapqLinear (N : Submodule R M) ↑N) lieSubmoduleInvariant with
     map_lie' := fun x y => by
       ext m
@@ -87,10 +92,10 @@ def action_as_endo_map : L →ₗ⁅R⁆ Module.End R (M ⧸ N) :=
 
 /-- Given a Lie module `M` over a Lie algebra `L`, together with a Lie submodule `N ⊆ M`, there is
 a natural bracket action of `L` on the quotient `M/N`. -/
-def action_as_endo_map_bracket : HasBracket L (M ⧸ N) :=
+def actionAsEndoMapBracket : HasBracket L (M ⧸ N) :=
   ⟨fun x n => actionAsEndoMap N x n⟩
 
-instance lie_quotient_lie_ring_module : LieRingModule L (M ⧸ N) where
+instance lieQuotientLieRingModule : LieRingModule L (M ⧸ N) where
   bracket := fun x n => (actionAsEndoMap N : L →ₗ[R] Module.End R (M ⧸ N)) x n
   add_lie := fun x y n => by
     simp only [LinearMap.map_add, LinearMap.add_apply]
@@ -102,7 +107,7 @@ instance lie_quotient_lie_ring_module : LieRingModule L (M ⧸ N) where
         LinearMap.mul_apply, LinearMap.sub_apply]
 
 /-- The quotient of a Lie module by a Lie submodule, is a Lie module. -/
-instance lie_quotient_lie_module : LieModule R L (M ⧸ N) where
+instance lieQuotientLieModule : LieModule R L (M ⧸ N) where
   smul_lie := fun t x m =>
     show (_ : L →ₗ[R] Module.End R (M ⧸ N)) _ _ = _ by
       simp only [LinearMap.map_smul]
@@ -112,7 +117,7 @@ instance lie_quotient_lie_module : LieModule R L (M ⧸ N) where
       simp only [LinearMap.map_smul]
       rfl
 
-instance lie_quotient_has_bracket : HasBracket (L ⧸ I) (L ⧸ I) :=
+instance lieQuotientHasBracket : HasBracket (L ⧸ I) (L ⧸ I) :=
   ⟨by
     intro x y
     apply Quotientₓ.liftOn₂' x y fun x' y' => mk ⁅x',y'⁆
@@ -131,7 +136,7 @@ instance lie_quotient_has_bracket : HasBracket (L ⧸ I) (L ⧸ I) :=
 theorem mk_bracket (x y : L) : mk ⁅x,y⁆ = ⁅(mk x : L ⧸ I),(mk y : L ⧸ I)⁆ :=
   rfl
 
-instance lie_quotient_lie_ring : LieRing (L ⧸ I) where
+instance lieQuotientLieRing : LieRing (L ⧸ I) where
   add_lie := by
     intro x' y' z'
     apply Quotientₓ.induction_on₃' x' y' z'
@@ -173,7 +178,7 @@ instance lie_quotient_lie_ring : LieRing (L ⧸ I) where
     apply congr_argₓ
     apply leibniz_lie
 
-instance lie_quotient_lie_algebra : LieAlgebra R (L ⧸ I) where
+instance lieQuotientLieAlgebra : LieAlgebra R (L ⧸ I) where
   lie_smul := by
     intro t x' y'
     apply Quotientₓ.induction_on₂' x' y'
@@ -226,7 +231,7 @@ variable (f : L →ₗ⁅R⁆ L')
 
 /-- The first isomorphism theorem for morphisms of Lie algebras. -/
 @[simps]
-noncomputable def quot_ker_equiv_range : (L ⧸ f.ker) ≃ₗ⁅R⁆ f.range :=
+noncomputable def quotKerEquivRange : (L ⧸ f.ker) ≃ₗ⁅R⁆ f.range :=
   { (f : L →ₗ[R] L').quotKerEquivRange with toFun := (f : L →ₗ[R] L').quotKerEquivRange,
     map_lie' := by
       rintro ⟨x⟩ ⟨y⟩

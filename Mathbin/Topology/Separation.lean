@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2017 Johannes Hölzl. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johannes Hölzl, Mario Carneiro
+-/
 import Mathbin.Topology.SubsetProperties
 import Mathbin.Topology.Connected
 import Mathbin.Topology.NhdsSet
@@ -402,6 +407,7 @@ instance Subtype.t1_space {α : Type u} [TopologicalSpace α] [T1Space α] {p : 
         Set.ext fun y => by
           simp [Subtype.ext_iff_val]⟩⟩
 
+-- see Note [lower instance priority]
 instance (priority := 100) T1Space.t0_space [T1Space α] : T0Space α :=
   ⟨fun x y h => ⟨{ z | z ≠ y }, is_open_ne, Or.inl ⟨h, not_not_intro rfl⟩⟩⟩
 
@@ -632,6 +638,7 @@ theorem t2_separation [T2Space α] {x y : α} (h : x ≠ y) :
     ∃ u v : Set α, IsOpen u ∧ IsOpen v ∧ x ∈ u ∧ y ∈ v ∧ u ∩ v = ∅ :=
   T2Space.t2 x y h
 
+-- see Note [lower instance priority]
 instance (priority := 100) T2Space.t1_space [T2Space α] : T1Space α :=
   ⟨fun x =>
     is_open_compl_iff.1 <|
@@ -701,7 +708,7 @@ theorem is_closed_diagonal [T2Space α] : IsClosed (Diagonal α) := by
   have : x ∈ t₁ ∩ t₂ := ⟨x_in, y_in⟩
   rwa [h'] at this
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (t «expr ⊆ » «expr ᶜ»(diagonal α))
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (t «expr ⊆ » «expr ᶜ»(diagonal α))
 theorem t2_iff_is_closed_diagonal : T2Space α ↔ IsClosed (Diagonal α) := by
   constructor
   · intro h
@@ -769,6 +776,7 @@ theorem tendsto_const_nhds_iff [T2Space α] {l : Filter α} [NeBot l] {c d : α}
 class T25Space (α : Type u) [TopologicalSpace α] : Prop where
   t2_5 : ∀ x y h : x ≠ y, ∃ U V : Set α, IsOpen U ∧ IsOpen V ∧ Closure U ∩ Closure V = ∅ ∧ x ∈ U ∧ y ∈ V
 
+-- see Note [lower instance priority]
 instance (priority := 100) T25Space.t2_space [T25Space α] : T2Space α :=
   ⟨fun x y hxy =>
     let ⟨U, V, hU, hV, hUV, hh⟩ := T25Space.t2_5 x y hxy
@@ -852,6 +860,7 @@ Hausdorff spaces:
 -/
 
 
+-- see Note [lower instance priority]
 instance (priority := 100) t2_space_discrete {α : Type _} [TopologicalSpace α] [DiscreteTopology α] : T2Space α where
   t2 := fun x y hxy =>
     ⟨{x}, {y}, is_open_discrete _, is_open_discrete _, rfl, rfl,
@@ -876,7 +885,7 @@ instance {α : Type _} {p : α → Prop} [t : TopologicalSpace α] [T2Space α] 
 
 instance {α : Type _} {β : Type _} [t₁ : TopologicalSpace α] [T2Space α] [t₂ : TopologicalSpace β] [T2Space β] :
     T2Space (α × β) :=
-  ⟨fun ⟨x₁, x₂⟩ ⟨y₁, y₂⟩ h =>
+  ⟨fun h =>
     Or.elim (not_and_distrib.mp (mt Prod.ext_iff.mpr h)) (fun h₁ => separated_by_continuous continuous_fst h₁) fun h₂ =>
       separated_by_continuous continuous_snd h₂⟩
 
@@ -1079,6 +1088,10 @@ theorem locally_compact_of_compact_nhds [T2Space α] (h : ∀ x : α, ∃ s, s �
   ⟨fun x n hn =>
     let ⟨u, un, uo, xu⟩ := mem_nhds_iff.mp hn
     let ⟨k, kx, kc⟩ := h x
+    -- K is compact but not necessarily contained in N.
+    -- K \ U is again compact and doesn't contain x, so
+    -- we may find open sets V, W separating x from K \ U.
+    -- Then K \ W is a compact neighborhood of x contained in U.
     let ⟨v, w, vo, wo, xv, kuw, vw⟩ :=
       compact_compact_separated is_compact_singleton (IsCompact.diff kc uo)
         (by
@@ -1086,6 +1099,7 @@ theorem locally_compact_of_compact_nhds [T2Space α] (h : ∀ x : α, ∃ s, s �
     have wn : wᶜ ∈ 𝓝 x := mem_nhds_iff.mpr ⟨v, subset_compl_iff_disjoint.mpr vw, vo, singleton_subset_iff.mp xv⟩
     ⟨k \ w, Filter.inter_mem kx wn, Subset.trans (diff_subset_comm.mp kuw) un, kc.diff wo⟩⟩
 
+-- see Note [lower instance priority]
 instance (priority := 100) locally_compact_of_compact [T2Space α] [CompactSpace α] : LocallyCompactSpace α :=
   locally_compact_of_compact_nhds fun x => ⟨Univ, is_open_univ.mem_nhds trivialₓ, compact_univ⟩
 
@@ -1140,6 +1154,7 @@ section Regularity
 class RegularSpace (α : Type u) [TopologicalSpace α] extends T0Space α : Prop where
   regular : ∀ {s : Set α} {a}, IsClosed s → a ∉ s → ∃ t, IsOpen t ∧ s ⊆ t ∧ 𝓝[t] a = ⊥
 
+-- see Note [lower instance priority]
 instance (priority := 100) RegularSpace.t1_space [RegularSpace α] : T1Space α := by
   rw [t1_space_iff_exists_open]
   intro x y hxy
@@ -1193,6 +1208,7 @@ instance Subtype.regular_space [RegularSpace α] {p : α → Prop} : RegularSpac
 
 variable (α)
 
+-- see Note [lower instance priority]
 instance (priority := 100) RegularSpace.t2_space [RegularSpace α] : T2Space α :=
   ⟨fun x y hxy =>
     let ⟨s, hs, hys, hxs⟩ := RegularSpace.regular is_closed_singleton (mt mem_singleton_iff.1 hxy)
@@ -1203,6 +1219,7 @@ instance (priority := 100) RegularSpace.t2_space [RegularSpace α] : T2Space α 
         rw [htu]
         exact ⟨hvt hzv, hsu hzs⟩⟩⟩
 
+-- see Note [lower instance priority]
 instance (priority := 100) RegularSpace.t2_5_space [RegularSpace α] : T25Space α :=
   ⟨fun x y hxy =>
     let ⟨U, V, hU, hV, hh_1, hh_2, hUV⟩ := T2Space.t2 x y hxy
@@ -1221,8 +1238,8 @@ instance (priority := 100) RegularSpace.t2_5_space [RegularSpace α] : T25Space 
 
 variable {α}
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (U₁ V₁ «expr ∈ » expr𝓝() x)
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (U₂ V₂ «expr ∈ » expr𝓝() y)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (U₁ V₁ «expr ∈ » expr𝓝() x)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (U₂ V₂ «expr ∈ » expr𝓝() y)
 /-- Given two points `x ≠ y`, we can find neighbourhoods `x ∈ V₁ ⊆ U₁` and `y ∈ V₂ ⊆ U₂`,
 with the `Vₖ` closed and the `Uₖ` open, such that the `Uₖ` are disjoint. -/
 theorem disjoint_nested_nhds [RegularSpace α] {x y : α} (h : x ≠ y) :
@@ -1291,6 +1308,7 @@ theorem normal_exists_closure_subset [NormalSpace α] {s t : Set α} (hs : IsClo
   refine' ⟨s', hs', hss', subset.trans (closure_minimal _ (is_closed_compl_iff.2 ht')) (compl_subset_comm.1 htt')⟩
   exact fun x hxs hxt => hs't' ⟨hxs, hxt⟩
 
+-- see Note [lower instance priority]
 instance (priority := 100) NormalSpace.regular_space [NormalSpace α] : RegularSpace α where
   regular := fun s x hs hxs =>
     let ⟨u, v, hu, hv, hsu, hxv, huv⟩ :=
@@ -1302,6 +1320,7 @@ instance (priority := 100) NormalSpace.regular_space [NormalSpace α] : RegularS
           ⟨v, IsOpen.mem_nhds hv (singleton_subset_iff.1 hxv), u, Filter.mem_principal_self u, by
             rwa [eq_comm, inter_comm, ← disjoint_iff_inter_eq_empty]⟩⟩
 
+-- We can't make this an instance because it could cause an instance loop.
 theorem normal_of_compact_t2 [CompactSpace α] [T2Space α] : NormalSpace α := by
   refine' ⟨fun s t hs ht st => _⟩
   simp only [disjoint_iff]
@@ -1372,12 +1391,22 @@ its clopen neighbourhoods. -/
 theorem connected_component_eq_Inter_clopen [T2Space α] [CompactSpace α] (x : α) :
     ConnectedComponent x = ⋂ Z : { Z : Set α // IsClopen Z ∧ x ∈ Z }, Z := by
   apply eq_of_subset_of_subset connected_component_subset_Inter_clopen
+  -- Reduce to showing that the clopen intersection is connected.
   refine' IsPreconnected.subset_connected_component _ (mem_Inter.2 fun Z => Z.2.2)
+  -- We do this by showing that any disjoint cover by two closed sets implies
+  -- that one of these closed sets must contain our whole thing.
+  -- To reduce to the case where the cover is disjoint on all of `α` we need that `s` is closed
   have hs : @IsClosed _ _inst_1 (⋂ Z : { Z : Set α // IsClopen Z ∧ x ∈ Z }, Z) := is_closed_Inter fun Z => Z.2.1.2
   rw [is_preconnected_iff_subset_of_fully_disjoint_closed hs]
   intro a b ha hb hab ab_empty
   have := @normal_of_compact_t2 α _ _ _
+  -- Since our space is normal, we get two larger disjoint open sets containing the disjoint
+  -- closed sets. If we can show that our intersection is a subset of any of these we can then
+  -- "descend" this to show that it is a subset of either a or b.
   rcases normal_separation ha hb (disjoint_iff.2 ab_empty) with ⟨u, v, hu, hv, hau, hbv, huv⟩
+  -- If we can find a clopen set around x, contained in u ∪ v, we get a disjoint decomposition
+  -- Z = Z ∩ u ∪ Z ∩ v of clopen sets. The intersection of all clopen neighbourhoods will then lie
+  -- in whichever of u or v x lies in and hence will be a subset of either a or b.
   suffices ∃ Z : Set α, IsClopen Z ∧ x ∈ Z ∧ Z ⊆ u ∪ v by
     cases' this with Z H
     rw [disjoint_iff_inter_eq_empty] at huv
@@ -1385,6 +1414,7 @@ theorem connected_component_eq_Inter_clopen [T2Space α] [CompactSpace α] (x : 
     rw [union_comm] at H
     have H2 := is_clopen_inter_of_disjoint_cover_clopen H.1 H.2.2 hv hu (inter_comm u v ▸ huv)
     by_cases' x ∈ u
+    -- The x ∈ u case.
     · left
       suffices (⋂ Z : { Z : Set α // IsClopen Z ∧ x ∈ Z }, ↑Z) ⊆ u by
         rw [← Set.disjoint_iff_inter_eq_empty] at huv
@@ -1395,6 +1425,7 @@ theorem connected_component_eq_Inter_clopen [T2Space α] [CompactSpace α] (x : 
         apply Inter_subset (fun Z : { Z : Set α // IsClopen Z ∧ x ∈ Z } => ↑Z) ⟨Z ∩ u, H1, mem_inter H.2.1 h⟩
         
       
+    -- If x ∉ u, we get x ∈ v since x ∈ u ∪ v. The rest is then like the x ∈ u case.
     have h1 : x ∈ v := by
       cases'
         (mem_union x u v).1
@@ -1414,6 +1445,9 @@ theorem connected_component_eq_Inter_clopen [T2Space α] [CompactSpace α] (x : 
     · apply subset.trans _ (inter_subset_right Z v)
       apply Inter_subset (fun Z : { Z : Set α // IsClopen Z ∧ x ∈ Z } => ↑Z) ⟨Z ∩ v, H2, mem_inter H.2.1 h1⟩
       
+  -- Now we find the required Z. We utilize the fact that X \ u ∪ v will be compact,
+  -- so there must be some finite intersection of clopen neighbourhoods of X disjoint to it,
+  -- but a finite intersection of clopen sets is clopen so we let this be our Z.
   have H1 :=
     (is_closed_compl_iff.2 (hu.union hv)).IsCompact.inter_Inter_nonempty
       (fun Z : { Z : Set α // IsClopen Z ∧ x ∈ Z } => Z) fun Z => Z.2.1.2
@@ -1495,7 +1529,7 @@ theorem nhds_basis_clopen (x : α) : (𝓝 x).HasBasis (fun s : Set α => x ∈ 
       ⟩
 
 theorem is_topological_basis_clopen : IsTopologicalBasis { s : Set α | IsClopen s } := by
-  apply is_topological_basis_of_open_of_nhds fun U hU : IsClopen U => hU.1
+  apply is_topological_basis_of_open_of_nhds fun hU : IsClopen U => hU.1
   intro x U hxU U_op
   have : U ∈ 𝓝 x := IsOpen.mem_nhds U_op hxU
   rcases(nhds_basis_clopen x).mem_iff.mp this with ⟨V, ⟨hxV, hV⟩, hVU : V ⊆ U⟩
@@ -1566,10 +1600,14 @@ end LocallyCompact
 
 /-- `connected_components α` is Hausdorff when `α` is Hausdorff and compact -/
 instance ConnectedComponents.t2 [T2Space α] [CompactSpace α] : T2Space (ConnectedComponents α) := by
+  -- Proof follows that of: https://stacks.math.columbia.edu/tag/0900
+  -- Fix 2 distinct connected components, with points a and b
   refine' ⟨connected_components.surjective_coe.forall₂.2 fun a b ne => _⟩
   rw [ConnectedComponents.coe_ne_coe] at ne
   have h := connected_component_disjoint Ne
+  -- write ↑b as the intersection of all clopen subsets containing it
   rw [connected_component_eq_Inter_clopen b, disjoint_iff_inter_eq_empty] at h
+  -- Now we show that this can be reduced to some clopen containing `↑b` being disjoint to `↑a`
   obtain ⟨U, V, hU, ha, hb, rfl⟩ :
     ∃ (U : Set α)(V : Set (ConnectedComponents α)),
       IsClopen U ∧ ConnectedComponent a ∩ U = ∅ ∧ ConnectedComponent b ⊆ U ∧ coe ⁻¹' V = U :=
@@ -1578,6 +1616,7 @@ instance ConnectedComponents.t2 [T2Space α] [CompactSpace α] : T2Space (Connec
     swap
     · exact fun Z => Z.2.1.2
       
+    -- This clopen and its complement will separate the connected components of `a` and `b`
     set U : Set α := ⋂ (i : { Z // IsClopen Z ∧ b ∈ Z }) (H : i ∈ fin_a), i
     have hU : IsClopen U := is_clopen_bInter fun i j => i.2.1
     exact

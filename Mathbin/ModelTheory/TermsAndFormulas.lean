@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Aaron Anderson, Jesse Michael Han, Floris van Doorn. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Aaron Anderson, Jesse Michael Han, Floris van Doorn
+-/
 import Mathbin.Data.Finset.Basic
 import Mathbin.ModelTheory.Basic
 
@@ -45,7 +50,7 @@ variable (L)
 
 /-- A term on `α` is either a variable indexed by an element of `α`
   or a function symbol applied to simpler terms. -/
-inductive term (α : Type) : Type u
+inductive Term (α : Type) : Type u
   | var {} : ∀ a : α, term
   | func {} : ∀ {l : ℕ} f : L.Functions l ts : Finₓ l → term, term
 
@@ -55,7 +60,7 @@ variable {L}
 
 /-- Relabels a term's variables along a particular function. -/
 @[simp]
-def term.relabel {α β : Type} (g : α → β) : L.Term α → L.Term β
+def Term.relabel {α β : Type} (g : α → β) : L.Term α → L.Term β
   | var i => var (g i)
   | func f ts => func f fun i => (ts i).relabel
 
@@ -67,7 +72,7 @@ instance {α} : Coe L.const (L.Term α) :=
 
 /-- A term `t` with variables indexed by `α` can be evaluated by giving a value to each variable. -/
 @[simp]
-def realize_term {α : Type} (v : α → M) : ∀ t : L.Term α, M
+def realizeTermₓ {α : Type} (v : α → M) : ∀ t : L.Term α, M
   | var k => v k
   | func f ts => funMap f fun i => realize_term (ts i)
 
@@ -81,7 +86,7 @@ theorem realize_term_relabel {α β : Type} (g : α → β) (v : β → M) (t : 
     
 
 @[simp]
-theorem hom.realize_term {α : Type} (v : α → M) (t : L.Term α) (g : M →[L] N) :
+theorem Hom.realize_term {α : Type} (v : α → M) (t : L.Term α) (g : M →[L] N) :
     realizeTermₓ (g ∘ v) t = g (realizeTermₓ v t) := by
   induction t
   · rfl
@@ -93,12 +98,12 @@ theorem hom.realize_term {α : Type} (v : α → M) (t : L.Term α) (g : M →[L
     
 
 @[simp]
-theorem embedding.realize_term {α : Type} (v : α → M) (t : L.Term α) (g : M ↪[L] N) :
+theorem Embedding.realize_term {α : Type} (v : α → M) (t : L.Term α) (g : M ↪[L] N) :
     realizeTermₓ (g ∘ v) t = g (realizeTermₓ v t) :=
   g.toHom.realizeTerm v t
 
 @[simp]
-theorem equiv.realize_term {α : Type} (v : α → M) (t : L.Term α) (g : M ≃[L] N) :
+theorem Equiv.realize_term {α : Type} (v : α → M) (t : L.Term α) (g : M ≃[L] N) :
     realizeTermₓ (g ∘ v) t = g (realizeTermₓ v t) :=
   g.toHom.realizeTerm v t
 
@@ -106,7 +111,7 @@ variable (L)
 
 /-- `bounded_formula α n` is the type of formulas with free variables indexed by `α` and up to `n`
   additional free variables. -/
-inductive bounded_formula (α : Type) : ℕ → Type max u v
+inductive BoundedFormula (α : Type) : ℕ → Type max u v
   | bd_falsum {} {n} : bounded_formula n
   | bd_equal {n} (t₁ t₂ : L.Term (Sum α (Finₓ n))) : bounded_formula n
   | bd_rel {n l : ℕ} (R : L.Relations l) (ts : Finₓ l → L.Term (Sum α (Finₓ n))) : bounded_formula n
@@ -120,12 +125,12 @@ instance {α : Type} {n : ℕ} : Inhabited (L.BoundedFormula α n) :=
 
 /-- `formula α` is the type of formulas with all free variables indexed by `α`. -/
 @[reducible]
-def formula (α : Type) :=
+def Formula (α : Type) :=
   L.BoundedFormula α 0
 
 /-- A sentence is a formula with no free variables. -/
 @[reducible]
-def sentence :=
+def Sentence :=
   L.Formula Pempty
 
 /-- A theory is a set of sentences. -/
@@ -145,7 +150,7 @@ instance : HasBot (L.BoundedFormula α n) :=
 
 /-- The negation of a bounded formula is also a bounded formula. -/
 @[reducible]
-def bd_not (φ : L.BoundedFormula α n) : L.BoundedFormula α n :=
+def bdNot (φ : L.BoundedFormula α n) : L.BoundedFormula α n :=
   bd_imp φ ⊥
 
 @[simps]
@@ -162,7 +167,7 @@ instance : HasSup (L.BoundedFormula α n) :=
 
 /-- Relabels a bounded formula's variables along a particular function. -/
 @[simp]
-def bounded_formula.relabel {α β : Type} (g : α → β) : ∀ {n : ℕ}, L.BoundedFormula α n → L.BoundedFormula β n
+def BoundedFormula.relabel {α β : Type} (g : α → β) : ∀ {n : ℕ}, L.BoundedFormula α n → L.BoundedFormula β n
   | n, bd_falsum => bd_falsum
   | n, bd_equal t₁ t₂ =>
     bd_equal (t₁.relabel (Sum.elim (Sum.inl ∘ g) Sum.inr)) (t₂.relabel (Sum.elim (Sum.inl ∘ g) Sum.inr))
@@ -195,7 +200,7 @@ variable (M)
 
 /-- A bounded formula can be evaluated as true or false by giving values to each free variable. -/
 @[simp]
-def realize_bounded_formula : ∀ {l} f : L.BoundedFormula α l v : α → M xs : Finₓ l → M, Prop
+def RealizeBoundedFormulaₓ : ∀ {l} f : L.BoundedFormula α l v : α → M xs : Finₓ l → M, Prop
   | _, bd_falsum, v, xs => False
   | _, bd_equal t₁ t₂, v, xs => realizeTermₓ (Sum.elim v xs) t₁ = realizeTermₓ (Sum.elim v xs) t₂
   | _, bd_rel R ts, v, xs => RelMap R fun i => realizeTermₓ (Sum.elim v xs) (ts i)
@@ -218,26 +223,28 @@ theorem realize_imp {l} (φ ψ : L.BoundedFormula α l) (v : α → M) (xs : Fin
 
 /-- A bounded formula can be evaluated as true or false by giving values to each free variable. -/
 @[reducible]
-def realize_formula (f : L.Formula α) (v : α → M) : Prop :=
+def RealizeFormula (f : L.Formula α) (v : α → M) : Prop :=
   RealizeBoundedFormulaₓ M f v finZeroElim
 
 /-- A sentence can be evaluated as true or false in a structure. -/
 @[reducible]
-def realize_sentence (φ : L.Sentence) : Prop :=
+def RealizeSentence (φ : L.Sentence) : Prop :=
   RealizeFormula M φ Pempty.elimₓ
 
 infixl:51 " ⊨ " => RealizeSentence
 
 /-- A model of a theory is a structure in which every sentence is realized as true. -/
+-- input using \|= or \vDash, but not using \models
 @[reducible]
-def Theory.model (T : L.Theory) : Prop :=
+def Theory.Model (T : L.Theory) : Prop :=
   ∀, ∀ φ ∈ T, ∀, RealizeSentence M φ
 
 infixl:51 " ⊨ " => Theory.Model
 
+-- input using \|= or \vDash, but not using \models
 variable {M}
 
-theorem Theory.model.mono {T T' : L.Theory} (h : T'.Model M) (hs : T ⊆ T') : T.Model M := fun φ hφ => h φ (hs hφ)
+theorem Theory.Model.mono {T T' : L.Theory} (h : T'.Model M) (hs : T ⊆ T') : T.Model M := fun φ hφ => h φ (hs hφ)
 
 @[simp]
 theorem realize_bounded_formula_relabel {α β : Type} {n : ℕ} (g : α → β) (v : β → M) (xs : Finₓ n → M)
@@ -260,7 +267,7 @@ theorem realize_bounded_formula_relabel {α β : Type} {n : ℕ} (g : α → β)
     
 
 @[simp]
-theorem equiv.realize_bounded_formula {α : Type} {n : ℕ} (v : α → M) (xs : Finₓ n → M) (φ : L.BoundedFormula α n)
+theorem Equiv.realize_bounded_formula {α : Type} {n : ℕ} (v : α → M) (xs : Finₓ n → M) (φ : L.BoundedFormula α n)
     (g : M ≃[L] N) : RealizeBoundedFormulaₓ N φ (g ∘ v) (g ∘ xs) ↔ RealizeBoundedFormulaₓ M φ v xs := by
   induction' φ with _ _ _ _ _ _ _ _ _ _ _ ih1 ih2 _ _ ih3
   · rfl
@@ -310,49 +317,49 @@ theorem realize_graph {l : ℕ} (f : L.Functions l) (x : Finₓ l → M) (y : M)
 namespace Theory
 
 /-- A theory is satisfiable if a structure models it. -/
-def is_satisfiable (T : L.Theory) : Prop :=
+def IsSatisfiable (T : L.Theory) : Prop :=
   ∃ (M : Type max u v)(_ : Nonempty M)(str : L.Structure M), @Theory.Model L M str T
 
 /-- A theory is finitely satisfiable if all of its finite subtheories are satisfiable. -/
-def is_finitely_satisfiable (T : L.Theory) : Prop :=
+def IsFinitelySatisfiable (T : L.Theory) : Prop :=
   ∀ T0 : Finset L.Sentence, (T0 : L.Theory) ⊆ T → (T0 : L.Theory).IsSatisfiable
 
 /-- Given that a theory is satisfiable, selects a model using choice. -/
-def is_satisfiable.some_model {T : L.Theory} (h : T.IsSatisfiable) : Type _ :=
+def IsSatisfiable.SomeModel {T : L.Theory} (h : T.IsSatisfiable) : Type _ :=
   Classical.some h
 
-instance is_satisfiable.nonempty_some_model {T : L.Theory} (h : T.IsSatisfiable) : Nonempty h.SomeModel :=
+instance IsSatisfiable.nonempty_some_model {T : L.Theory} (h : T.IsSatisfiable) : Nonempty h.SomeModel :=
   Classical.some (Classical.some_spec h)
 
-noncomputable instance is_satisfiable.inhabited_some_model {T : L.Theory} (h : T.IsSatisfiable) :
-    Inhabited h.SomeModel :=
+noncomputable instance IsSatisfiable.inhabitedSomeModel {T : L.Theory} (h : T.IsSatisfiable) : Inhabited h.SomeModel :=
   Classical.inhabitedOfNonempty'
 
-noncomputable instance is_satisfiable.some_model_structure {T : L.Theory} (h : T.IsSatisfiable) :
+noncomputable instance IsSatisfiable.someModelStructure {T : L.Theory} (h : T.IsSatisfiable) :
     L.Structure h.SomeModel :=
   Classical.some (Classical.some_spec (Classical.some_spec h))
 
-theorem is_satisfiable.some_model_models {T : L.Theory} (h : T.IsSatisfiable) : T.Model h.SomeModel :=
+theorem IsSatisfiable.some_model_models {T : L.Theory} (h : T.IsSatisfiable) : T.Model h.SomeModel :=
   Classical.some_spec (Classical.some_spec (Classical.some_spec h))
 
-theorem model.is_satisfiable {T : L.Theory} (M : Type max u v) [n : Nonempty M] [S : L.Structure M] (h : T.Model M) :
+theorem Model.is_satisfiable {T : L.Theory} (M : Type max u v) [n : Nonempty M] [S : L.Structure M] (h : T.Model M) :
     T.IsSatisfiable :=
   ⟨M, n, S, h⟩
 
-theorem is_satisfiable.mono {T T' : L.Theory} (h : T'.IsSatisfiable) (hs : T ⊆ T') : T.IsSatisfiable :=
+theorem IsSatisfiable.mono {T T' : L.Theory} (h : T'.IsSatisfiable) (hs : T ⊆ T') : T.IsSatisfiable :=
   ⟨h.SomeModel, h.nonempty_some_model, h.someModelStructure, h.some_model_models.mono hs⟩
 
-theorem is_satisfiable.is_finitely_satisfiable {T : L.Theory} (h : T.IsSatisfiable) : T.IsFinitelySatisfiable :=
-  fun _ => h.mono
+theorem IsSatisfiable.is_finitely_satisfiable {T : L.Theory} (h : T.IsSatisfiable) : T.IsFinitelySatisfiable := fun _ =>
+  h.mono
 
 /-- A theory models a (bounded) formula when any of its nonempty models realizes that formula on all
   inputs.-/
-def models_bounded_formula {n : ℕ} {α : Type} (T : L.Theory) (φ : L.BoundedFormula α n) : Prop :=
+def ModelsBoundedFormula {n : ℕ} {α : Type} (T : L.Theory) (φ : L.BoundedFormula α n) : Prop :=
   ∀ M : Type max u v [Nonempty M] [str : L.Structure M] v : α → M xs : Finₓ n → M,
     @Theory.Model L M str T → @RealizeBoundedFormulaₓ L M str α n φ v xs
 
 infixl:51 " ⊨ " => ModelsBoundedFormula
 
+-- input using \|= or \vDash, but not using \models
 theorem models_formula_iff {α : Type} (T : L.Theory) (φ : L.Formula α) :
     T ⊨ φ ↔
       ∀ M : Type max u v [Nonempty M] [str : L.Structure M] v : α → M,
@@ -379,10 +386,10 @@ variable {n : ℕ}
 /-- Two (bounded) formulas are semantically equivalent over a theory `T` when they have the same
 interpretation in every model of `T`. (This is also known as logical equivalence, which also has a
 proof-theoretic definition.) -/
-def semantically_equivalent (T : L.Theory) (φ ψ : L.BoundedFormula α n) : Prop :=
+def SemanticallyEquivalent (T : L.Theory) (φ ψ : L.BoundedFormula α n) : Prop :=
   T ⊨ bd_imp φ ψ⊓bd_imp ψ φ
 
-theorem semantically_equivalent.realize_eq {T : L.Theory} {φ ψ : L.BoundedFormula α n} {M : Type max u v}
+theorem SemanticallyEquivalent.realize_eq {T : L.Theory} {φ ψ : L.BoundedFormula α n} {M : Type max u v}
     [ne : Nonempty M] [str : L.Structure M] (hM : T.Model M) (h : T.SemanticallyEquivalent φ ψ) :
     RealizeBoundedFormulaₓ M φ = RealizeBoundedFormulaₓ M ψ :=
   funext fun v =>
@@ -391,13 +398,13 @@ theorem semantically_equivalent.realize_eq {T : L.Theory} {φ ψ : L.BoundedForm
       simp only [realize_bounded_formula, has_inf_inf, realize_not, not_forall, exists_prop, not_and, not_not] at h'
       exact iff_eq_eq.mp ⟨h'.1, h'.2⟩
 
-theorem semantically_equivalent.some_model_realize_eq {T : L.Theory} {φ ψ : L.BoundedFormula α n}
+theorem SemanticallyEquivalent.some_model_realize_eq {T : L.Theory} {φ ψ : L.BoundedFormula α n}
     (hsat : T.IsSatisfiable) (h : T.SemanticallyEquivalent φ ψ) :
     RealizeBoundedFormulaₓ hsat.SomeModel φ = RealizeBoundedFormulaₓ hsat.SomeModel ψ :=
   h.realize_eq hsat.some_model_models
 
 /-- Semantic equivalence forms an equivalence relation on formulas. -/
-def semantically_equivalent_setoid (T : L.Theory) : Setoidₓ (L.BoundedFormula α n) where
+def semanticallyEquivalentSetoid (T : L.Theory) : Setoidₓ (L.BoundedFormula α n) where
   R := SemanticallyEquivalent T
   iseqv :=
     ⟨fun φ M ne str v xs hM => by

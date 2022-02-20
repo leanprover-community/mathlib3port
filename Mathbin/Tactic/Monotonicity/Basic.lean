@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Simon Hudon. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Simon Hudon
+-/
 import Mathbin.Order.BoundedOrder
 
 namespace Tactic.Interactive
@@ -8,11 +13,11 @@ open Lean Lean.Parser Interactive
 
 open Interactive.Types
 
-structure mono_cfg where
+structure MonoCfg where
   unify := false
   deriving Inhabited
 
-inductive mono_selection : Type
+inductive MonoSelection : Type
   | left : mono_selection
   | right : mono_selection
   | both : mono_selection
@@ -43,7 +48,7 @@ unsafe def find_one_difference : List expr → List expr → tactic (List expr �
 
 end Compare
 
-def last_two {α : Type _} (l : List α) : Option (α × α) :=
+def lastTwo {α : Type _} (l : List α) : Option (α × α) :=
   match l.reverse with
   | x₁ :: x₀ :: _ => some (x₀, x₁)
   | _ => none
@@ -73,7 +78,7 @@ unsafe def monotonicity.check_rel (l r : expr) : tactic (Option Name) := do
   if l then pure none else pure r
 
 @[reducible]
-def mono_key :=
+def MonoKey :=
   WithBot Name × WithBot Name
 
 unsafe instance mono_key.has_lt : LT MonoKey where

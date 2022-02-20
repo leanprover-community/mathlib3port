@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Anne Baanen. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Anne Baanen
+-/
 import Mathbin.Logic.Function.Basic
 import Mathbin.Tactic.Lint.Default
 import Mathbin.Tactic.NormCast
@@ -109,6 +114,8 @@ instead of linearly increasing the work per `my_hom`-related declaration.
 -/
 
 
+-- This instance should have low priority, to ensure we follow the chain
+-- `fun_like → has_coe_to_fun`
 attribute [instance] coeFnTrans
 
 /-- The class `fun_like F α β` expresses that terms of type `F` have an
@@ -134,6 +141,8 @@ variable {F α β} [i : FunLike F α β]
 
 include i
 
+-- Give this a priority between `coe_fn_trans` and the default priority
+-- `α` and `β` are out_params, so this instance should not be dangerous
 @[nolint dangerous_instance]
 instance (priority := 100) : CoeFun F fun _ => ∀ a : α, β a where
   coe := FunLike.coe
@@ -162,7 +171,7 @@ theorem ext (f g : F) (h : ∀ x : α, f x = g x) : f = g :=
 theorem ext_iff {f g : F} : f = g ↔ ∀ x, f x = g x :=
   coe_fn_eq.symm.trans Function.funext_iffₓ
 
-protected theorem congr_funₓ {f g : F} (h₁ : f = g) (x : α) : f x = g x :=
+protected theorem congr_fun {f g : F} (h₁ : f = g) (x : α) : f x = g x :=
   congr_funₓ (congr_argₓ _ h₁) x
 
 end FunLike
@@ -183,7 +192,7 @@ namespace FunLike
 protected theorem congr {f g : F} {x y : α} (h₁ : f = g) (h₂ : x = y) : f x = g y :=
   congr (congr_argₓ _ h₁) h₂
 
-protected theorem congr_argₓ (f : F) {x y : α} (h₂ : x = y) : f x = f y :=
+protected theorem congr_arg (f : F) {x y : α} (h₂ : x = y) : f x = f y :=
   congr_argₓ _ h₂
 
 end FunLike

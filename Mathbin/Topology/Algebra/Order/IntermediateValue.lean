@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Yury G. Kudryashov. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yury G. Kudryashov, Alistair Tucker
+-/
 import Mathbin.Order.CompleteLatticeIntervals
 import Mathbin.Topology.Algebra.Order.Basic
 
@@ -287,9 +292,19 @@ theorem IsPreconnected.mem_intervals {s : Set α} (hs : IsPreconnected s) :
 one can represent `∅` as `(Inf s, Inf s)`, we include it into the list of possible cases to improve
 readability. -/
 theorem set_of_is_preconnected_subset_of_ordered :
-    { s : Set α | IsPreconnected s } ⊆
-      Range (uncurry Icc) ∪ Range (uncurry Ico) ∪ Range (uncurry Ioc) ∪ Range (uncurry Ioo) ∪
-        (Range Ici ∪ Range Ioi ∪ Range Iic ∪ Range Iio ∪ {Univ, ∅}) :=
+    { s : Set α | IsPreconnected s } ⊆-- bounded intervals
+                Range
+                (uncurry Icc) ∪
+              Range (uncurry Ico) ∪
+            Range (uncurry Ioc) ∪
+          Range (uncurry Ioo) ∪
+        (-- unbounded intervals and `univ`
+                  Range
+                  Ici ∪
+                Range Ioi ∪
+              Range Iic ∪
+            Range Iio ∪
+          {Univ, ∅}) :=
   by
   intro s hs
   rcases hs.mem_intervals with (hs | hs | hs | hs | hs | hs | hs | hs | hs | hs)
@@ -427,9 +442,19 @@ the set of the intervals `Icc`, `Ico`, `Ioc`, `Ioo`, `Ici`, `Ioi`, `Iic`, `Iio`,
 or `∅`. Though one can represent `∅` as `(Inf s, Inf s)`, we include it into the list of
 possible cases to improve readability. -/
 theorem set_of_is_preconnected_eq_of_ordered :
-    { s : Set α | IsPreconnected s } =
-      Range (uncurry Icc) ∪ Range (uncurry Ico) ∪ Range (uncurry Ioc) ∪ Range (uncurry Ioo) ∪
-        (Range Ici ∪ Range Ioi ∪ Range Iic ∪ Range Iio ∪ {Univ, ∅}) :=
+    { s : Set α | IsPreconnected s } =-- bounded intervals
+                Range
+                (uncurry Icc) ∪
+              Range (uncurry Ico) ∪
+            Range (uncurry Ioc) ∪
+          Range (uncurry Ioo) ∪
+        (-- unbounded intervals and `univ`
+                  Range
+                  Ici ∪
+                Range Ioi ∪
+              Range Iic ∪
+            Range Iio ∪
+          {Univ, ∅}) :=
   by
   refine' subset.antisymm set_of_is_preconnected_subset_of_ordered _
   simp only [subset_def, -mem_range, forall_range_iff, uncurry, or_imp_distrib, forall_and_distrib, mem_union,

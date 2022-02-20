@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Oliver Nash. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Oliver Nash
+-/
 import Mathbin.Algebra.Algebra.RestrictScalars
 import Mathbin.Algebra.Lie.TensorProduct
 
@@ -142,7 +147,7 @@ private theorem bracket_lie_smul (a : A) (x y : A ⊗[R] L) : ⁅x,a • y⁆ = 
     simp only [h₁, h₂, smul_add, add_lie]
     
 
-instance LieAlgebra : LieAlgebra A (A ⊗[R] L) where
+instance lieAlgebra : LieAlgebra A (A ⊗[R] L) where
   lie_smul := bracket_lie_smul R A L
 
 end ExtendScalars
@@ -161,7 +166,7 @@ instance : LieRing (RestrictScalars R A L) :=
 variable [CommRingₓ A] [LieAlgebra A L]
 
 @[nolint unused_arguments]
-instance LieAlgebra [CommRingₓ R] [Algebra R A] : LieAlgebra R (RestrictScalars R A L) :=
+instance lieAlgebra [CommRingₓ R] [Algebra R A] : LieAlgebra R (RestrictScalars R A L) :=
   { (by
       infer_instance : Module R (RestrictScalars R A L)) with
     lie_smul := fun t x y => (lie_smul _ (show L from x) (show L from y) : _) }

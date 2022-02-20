@@ -1,6 +1,14 @@
+/-
+Copyright (c) 2019 Seul Baek. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Seul Baek
+-/
 import Mathbin.Tactic.Omega.ProveUnsats
 import Mathbin.Tactic.Omega.Int.Dnf
 
+/-
+Main procedure for linear integer arithmetic.
+-/
 open Tactic
 
 namespace Omega
@@ -15,7 +23,7 @@ run_cmd
 attribute [sugar]
   Ne not_leₓ not_ltₓ Int.lt_iff_add_one_leₓ or_falseₓ false_orₓ and_trueₓ true_andₓ Ge Gt mul_addₓ add_mulₓ one_mulₓ mul_oneₓ mul_comm sub_eq_add_neg imp_iff_not_or iff_iff_not_or_and_or_not
 
--- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:916:4: warning: unsupported (TODO): `[tacs]
 unsafe def desugar :=
   sorry
 
@@ -34,7 +42,8 @@ unsafe def prove_univ_close (m : Nat) (p : Preform) : tactic expr := do
 /-- Reification to imtermediate shadow syntax that retains exprs -/
 unsafe def to_exprterm : expr → tactic exprterm
   | quote.1 (-%%ₓx) =>
-    (do
+    (--return (exprterm.exp (-1 : int) x)
+      do
         let z ← eval_expr' Int x
         return (exprterm.cst (-z : Int))) <|>
       (return <| exprterm.exp (-1 : Int) x)

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2014 Microsoft Corporation. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Leonardo de Moura, Jeremy Avigad
+-/
 
 /-!
 # booleans
@@ -18,15 +23,19 @@ prefix:90 "!" => bnot
 
 namespace Bool
 
+-- TODO: duplicate of a lemma in core
 theorem coe_sort_tt : coeSort.{1, 1} true = True :=
   coe_sort_tt
 
+-- TODO: duplicate of a lemma in core
 theorem coe_sort_ff : coeSort.{1, 1} false = False :=
   coe_sort_ff
 
+-- TODO: duplicate of a lemma in core
 theorem to_bool_true {h} : @toBool True h = tt :=
   to_bool_true_eq_tt h
 
+-- TODO: duplicate of a lemma in core
 theorem to_bool_false {h} : @toBool False h = ff :=
   to_bool_false_eq_ff h
 
@@ -84,7 +93,7 @@ theorem dichotomy (b : Bool) : b = ff ∨ b = tt := by
 @[simp]
 theorem forall_bool {p : Bool → Prop} : (∀ b, p b) ↔ p false ∧ p true :=
   ⟨fun h => by
-    simp [h], fun ⟨h₁, h₂⟩ b => by
+    simp [h], fun b => by
     cases b <;> assumption⟩
 
 @[simp]
@@ -94,11 +103,11 @@ theorem exists_bool {p : Bool → Prop} : (∃ b, p b) ↔ p false ∨ p true :=
     cases h <;> exact ⟨_, h⟩⟩
 
 /-- If `p b` is decidable for all `b : bool`, then `∀ b, p b` is decidable -/
-instance decidable_forall_bool {p : Bool → Prop} [∀ b, Decidable (p b)] : Decidable (∀ b, p b) :=
+instance decidableForallBool {p : Bool → Prop} [∀ b, Decidable (p b)] : Decidable (∀ b, p b) :=
   decidableOfDecidableOfIff And.decidable forall_bool.symm
 
 /-- If `p b` is decidable for all `b : bool`, then `∃ b, p b` is decidable -/
-instance decidable_exists_bool {p : Bool → Prop} [∀ b, Decidable (p b)] : Decidable (∃ b, p b) :=
+instance decidableExistsBool {p : Bool → Prop} [∀ b, Decidable (p b)] : Decidable (∃ b, p b) :=
   decidableOfDecidableOfIff Or.decidable exists_bool.symm
 
 @[simp]
@@ -305,11 +314,11 @@ theorem bor_le : ∀ {x y z}, x ≤ z → y ≤ z → (x || y) ≤ z := by
   decide
 
 /-- convert a `bool` to a `ℕ`, `false -> 0`, `true -> 1` -/
-def to_nat (b : Bool) : ℕ :=
+def toNat (b : Bool) : ℕ :=
   cond b 1 0
 
 /-- convert a `ℕ` to a `bool`, `0 -> false`, everything else -> `true` -/
-def of_nat (n : ℕ) : Bool :=
+def ofNat (n : ℕ) : Bool :=
   toBool (n ≠ 0)
 
 theorem of_nat_le_of_nat {n m : ℕ} (h : n ≤ m) : ofNat n ≤ ofNat m := by

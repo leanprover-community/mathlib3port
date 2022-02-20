@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2017 Johannes Hölzl. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johannes Hölzl, Mario Carneiro
+-/
 import Mathbin.Data.Equiv.Basic
 import Mathbin.Data.FunLike.Embedding
 import Mathbin.Data.Pprod
@@ -14,8 +19,9 @@ universe u v w x
 namespace Function
 
 /-- `α ↪ β` is a bundled injective function. -/
+-- depending on cardinalities, an injective function may not exist
 @[nolint has_inhabited_instance]
-structure embedding (α : Sort _) (β : Sort _) where
+structure Embedding (α : Sort _) (β : Sort _) where
   toFun : α → β
   inj' : Injective to_fun
 
@@ -150,20 +156,20 @@ protected def congr {α : Sort u} {β : Sort v} {γ : Sort w} {δ : Sort x} (e�
   (Equivₓ.toEmbedding e₁.symm).trans (f.trans e₂.toEmbedding)
 
 /-- A right inverse `surj_inv` of a surjective function as an `embedding`. -/
-protected noncomputable def of_surjective {α β} (f : β → α) (hf : Surjective f) : α ↪ β :=
+protected noncomputable def ofSurjective {α β} (f : β → α) (hf : Surjective f) : α ↪ β :=
   ⟨surjInv hf, injective_surj_inv _⟩
 
 /-- Convert a surjective `embedding` to an `equiv` -/
-protected noncomputable def equiv_of_surjective {α β} (f : α ↪ β) (hf : Surjective f) : α ≃ β :=
+protected noncomputable def equivOfSurjective {α β} (f : α ↪ β) (hf : Surjective f) : α ≃ β :=
   Equivₓ.ofBijective f ⟨f.Injective, hf⟩
 
 /-- There is always an embedding from an empty type. --/
-protected def of_is_empty {α β} [IsEmpty α] : α ↪ β :=
+protected def ofIsEmpty {α β} [IsEmpty α] : α ↪ β :=
   ⟨isEmptyElim, isEmptyElim⟩
 
 /-- Change the value of an embedding `f` at one point. If the prescribed image
 is already occupied by some `f a'`, then swap the values at these two points. -/
-def set_value {α β} (f : α ↪ β) (a : α) (b : β) [∀ a', Decidable (a' = a)] [∀ a', Decidable (f a' = b)] : α ↪ β :=
+def setValue {α β} (f : α ↪ β) (a : α) (b : β) [∀ a', Decidable (a' = a)] [∀ a', Decidable (f a' = b)] : α ↪ β :=
   ⟨fun a' => if a' = a then b else if f a' = b then f a else f a', by
     intro x y h
     dsimp  at h
@@ -190,25 +196,25 @@ def coeOption {α} : α ↪ Option α :=
 
 /-- Embedding into `with_top α`. -/
 @[simps]
-def coe_with_top {α} : α ↪ WithTop α :=
+def coeWithTop {α} : α ↪ WithTop α :=
   { Embedding.some with toFun := coe }
 
 /-- Given an embedding `f : α ↪ β` and a point outside of `set.range f`, construct an embedding
 `option α ↪ β`. -/
 @[simps]
-def option_elim {α β} (f : α ↪ β) (x : β) (h : x ∉ Set.Range f) : Option α ↪ β :=
+def optionElim {α β} (f : α ↪ β) (x : β) (h : x ∉ Set.Range f) : Option α ↪ β :=
   ⟨fun o => o.elim x f, Option.injective_iff.2 ⟨f.2, h⟩⟩
 
 /-- Embedding of a `subtype`. -/
-def Subtype {α} (p : α → Prop) : Subtype p ↪ α :=
+def subtype {α} (p : α → Prop) : Subtype p ↪ α :=
   ⟨coe, fun _ _ => Subtype.ext_val⟩
 
 @[simp]
-theorem coeSubtype {α} (p : α → Prop) : ⇑subtype p = coe :=
+theorem coe_subtype {α} (p : α → Prop) : ⇑subtype p = coe :=
   rfl
 
 /-- Choosing an element `b : β` gives an embedding of `punit` into `β`. -/
-def PUnit {β : Sort _} (b : β) : PUnit ↪ β :=
+def punit {β : Sort _} (b : β) : PUnit ↪ β :=
   ⟨fun _ => b, by
     rintro ⟨⟩ ⟨⟩ _
     rfl⟩
@@ -222,7 +228,7 @@ def sectr {α : Sort _} (a : α) (β : Sort _) : β ↪ α × β :=
   ⟨fun b => (a, b), fun b b' h => congr_argₓ Prod.snd h⟩
 
 /-- Restrict the codomain of an embedding. -/
-def cod_restrict {α β} (p : Set β) (f : α ↪ β) (H : ∀ a, f a ∈ p) : α ↪ p :=
+def codRestrict {α β} (p : Set β) (f : α ↪ β) (H : ∀ a, f a ∈ p) : α ↪ p :=
   ⟨fun a => ⟨f a, H a⟩, fun a b h => f.Injective (@congr_argₓ _ _ _ _ Subtype.val h)⟩
 
 @[simp]
@@ -230,7 +236,7 @@ theorem cod_restrict_apply {α β} p (f : α ↪ β) H a : codRestrict p f H a =
   rfl
 
 /-- If `e₁` and `e₂` are embeddings, then so is `prod.map e₁ e₂ : (a, b) ↦ (e₁ a, e₂ b)`. -/
-def prod_mapₓ {α β γ δ : Type _} (e₁ : α ↪ β) (e₂ : γ ↪ δ) : α × γ ↪ β × δ :=
+def prodMap {α β γ δ : Type _} (e₁ : α ↪ β) (e₂ : γ ↪ δ) : α × γ ↪ β × δ :=
   ⟨Prod.map e₁ e₂, e₁.Injective.prod_map e₂.Injective⟩
 
 @[simp]
@@ -238,7 +244,7 @@ theorem coe_prod_map {α β γ δ : Type _} (e₁ : α ↪ β) (e₂ : γ ↪ δ
   rfl
 
 /-- If `e₁` and `e₂` are embeddings, then so is `λ ⟨a, b⟩, ⟨e₁ a, e₂ b⟩ : pprod α γ → pprod β δ`. -/
-def pprod_map {α β γ δ : Sort _} (e₁ : α ↪ β) (e₂ : γ ↪ δ) : PProd α γ ↪ PProd β δ :=
+def pprodMap {α β γ δ : Sort _} (e₁ : α ↪ β) (e₂ : γ ↪ δ) : PProd α γ ↪ PProd β δ :=
   ⟨fun x => ⟨e₁ x.1, e₂ x.2⟩, e₁.Injective.pprod_map e₂.Injective⟩
 
 section Sum
@@ -246,7 +252,7 @@ section Sum
 open Sum
 
 /-- If `e₁` and `e₂` are embeddings, then so is `sum.map e₁ e₂`. -/
-def sum_map {α β γ δ : Type _} (e₁ : α ↪ β) (e₂ : γ ↪ δ) : Sum α γ ↪ Sum β δ :=
+def sumMap {α β γ δ : Type _} (e₁ : α ↪ β) (e₂ : γ ↪ δ) : Sum α γ ↪ Sum β δ :=
   ⟨Sum.map e₁ e₂, fun s₁ s₂ h =>
     match s₁, s₂, h with
     | inl a₁, inl a₂, h => congr_argₓ inl <| e₁.Injective <| inl.injₓ h
@@ -274,13 +280,13 @@ variable {α α' : Type _} {β : α → Type _} {β' : α' → Type _}
 
 /-- `sigma.mk` as an `function.embedding`. -/
 @[simps apply]
-def sigma_mk (a : α) : β a ↪ Σ x, β x :=
+def sigmaMk (a : α) : β a ↪ Σ x, β x :=
   ⟨Sigma.mk a, sigma_mk_injective⟩
 
 /-- If `f : α ↪ α'` is an embedding and `g : Π a, β α ↪ β' (f α)` is a family
 of embeddings, then `sigma.map f g` is an embedding. -/
 @[simps apply]
-def sigma_map (f : α ↪ α') (g : ∀ a, β a ↪ β' (f a)) : (Σ a, β a) ↪ Σ a', β' a' :=
+def sigmaMap (f : α ↪ α') (g : ∀ a, β a ↪ β' (f a)) : (Σ a, β a) ↪ Σ a', β' a' :=
   ⟨Sigma.map f fun a => g a, f.Injective.sigma_map fun a => (g a).Injective⟩
 
 end Sigma
@@ -288,12 +294,12 @@ end Sigma
 /-- Define an embedding `(Π a : α, β a) ↪ (Π a : α, γ a)` from a family of embeddings
 `e : Π a, (β a ↪ γ a)`. This embedding sends `f` to `λ a, e a (f a)`. -/
 @[simps]
-def Pi_congr_right {α : Sort _} {β γ : α → Sort _} (e : ∀ a, β a ↪ γ a) : (∀ a, β a) ↪ ∀ a, γ a :=
+def piCongrRight {α : Sort _} {β γ : α → Sort _} (e : ∀ a, β a ↪ γ a) : (∀ a, β a) ↪ ∀ a, γ a :=
   ⟨fun f a => e a (f a), fun f₁ f₂ h => funext fun a => (e a).Injective (congr_funₓ h a)⟩
 
 /-- An embedding `e : α ↪ β` defines an embedding `(γ → α) ↪ (γ → β)` that sends each `f`
 to `e ∘ f`. -/
-def arrow_congr_right {α : Sort u} {β : Sort v} {γ : Sort w} (e : α ↪ β) : (γ → α) ↪ γ → β :=
+def arrowCongrRight {α : Sort u} {β : Sort v} {γ : Sort w} (e : α ↪ β) : (γ → α) ↪ γ → β :=
   piCongrRight fun _ => e
 
 @[simp]
@@ -304,13 +310,13 @@ theorem arrow_congr_right_apply {α : Sort u} {β : Sort v} {γ : Sort w} (e : �
 /-- An embedding `e : α ↪ β` defines an embedding `(α → γ) ↪ (β → γ)` for any inhabited type `γ`.
 This embedding sends each `f : α → γ` to a function `g : β → γ` such that `g ∘ e = f` and
 `g y = default` whenever `y ∉ range e`. -/
-noncomputable def arrow_congr_left {α : Sort u} {β : Sort v} {γ : Sort w} [Inhabited γ] (e : α ↪ β) : (α → γ) ↪ β → γ :=
+noncomputable def arrowCongrLeft {α : Sort u} {β : Sort v} {γ : Sort w} [Inhabited γ] (e : α ↪ β) : (α → γ) ↪ β → γ :=
   ⟨fun f => extendₓ e f fun _ => default, fun f₁ f₂ h =>
     funext fun x => by
       simpa only [extend_apply e.injective] using congr_funₓ h (e x)⟩
 
 /-- Restrict both domain and codomain of an embedding. -/
-protected def subtype_map {α β} {p : α → Prop} {q : β → Prop} (f : α ↪ β) (h : ∀ ⦃x⦄, p x → q (f x)) :
+protected def subtypeMap {α β} {p : α → Prop} {q : β → Prop} (f : α ↪ β) (h : ∀ ⦃x⦄, p x → q (f x)) :
     { x : α // p x } ↪ { y : β // q y } :=
   ⟨Subtype.map f h, Subtype.map_injective h f.2⟩
 
@@ -339,7 +345,7 @@ open Function.Embedding
 
 /-- The type of embeddings `α ↪ β` is equivalent to
     the subtype of all injective functions `α → β`. -/
-def subtype_injective_equiv_embedding (α β : Sort _) : { f : α → β // Function.Injective f } ≃ (α ↪ β) where
+def subtypeInjectiveEquivEmbedding (α β : Sort _) : { f : α → β // Function.Injective f } ≃ (α ↪ β) where
   toFun := fun f => ⟨f.val, f.property⟩
   invFun := fun f => ⟨f, f.Injective⟩
   left_inv := fun f => by
@@ -351,7 +357,7 @@ def subtype_injective_equiv_embedding (α β : Sort _) : { f : α → β // Func
 /-- If `α₁ ≃ α₂` and `β₁ ≃ β₂`, then the type of embeddings `α₁ ↪ β₁`
 is equivalent to the type of embeddings `α₂ ↪ β₂`. -/
 @[congr, simps apply]
-def embedding_congr {α β γ δ : Sort _} (h : α ≃ β) (h' : γ ≃ δ) : (α ↪ γ) ≃ (β ↪ δ) where
+def embeddingCongr {α β γ δ : Sort _} (h : α ≃ β) (h' : γ ≃ δ) : (α ↪ γ) ≃ (β ↪ δ) where
   toFun := fun f => f.congr h h'
   invFun := fun f => f.congr h.symm h'.symm
   left_inv := fun x => by
@@ -399,8 +405,8 @@ namespace Set
 
 /-- The injection map is an embedding between subsets. -/
 @[simps apply]
-def embedding_of_subset {α} (s t : Set α) (h : s ⊆ t) : s ↪ t :=
-  ⟨fun x => ⟨x.1, h x.2⟩, fun ⟨x, hx⟩ ⟨y, hy⟩ h => by
+def embeddingOfSubset {α} (s t : Set α) (h : s ⊆ t) : s ↪ t :=
+  ⟨fun x => ⟨x.1, h x.2⟩, fun h => by
     congr
     injection h⟩
 

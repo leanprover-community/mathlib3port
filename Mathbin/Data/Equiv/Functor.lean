@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Johan Commelin. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johan Commelin, Simon Hudon, Scott Morrison
+-/
 import Mathbin.Data.Equiv.Basic
 import Mathbin.Control.Bifunctor
 
@@ -28,7 +33,7 @@ namespace Functor
 variable (f : Type u → Type v) [Functor f] [IsLawfulFunctor f]
 
 /-- Apply a functor to an `equiv`. -/
-def map_equiv (h : α ≃ β) : f α ≃ f β where
+def mapEquiv (h : α ≃ β) : f α ≃ f β where
   toFun := map h
   invFun := map h.symm
   left_inv := fun x => by
@@ -37,11 +42,11 @@ def map_equiv (h : α ≃ β) : f α ≃ f β where
     simp [map_map]
 
 @[simp]
-theorem map_equiv_apply (h : α ≃ β) (x : f α) : (mapEquiv f h : f α ≃ f β) x = map h x :=
+theorem map_equiv_applyₓ (h : α ≃ β) (x : f α) : (mapEquiv f h : f α ≃ f β) x = map h x :=
   rfl
 
 @[simp]
-theorem map_equiv_symm_apply (h : α ≃ β) (y : f β) : (mapEquiv f h : f α ≃ f β).symm y = map h.symm y :=
+theorem map_equiv_symm_applyₓ (h : α ≃ β) (y : f β) : (mapEquiv f h : f α ≃ f β).symm y = map h.symm y :=
   rfl
 
 @[simp]
@@ -57,7 +62,7 @@ namespace Bifunctor
 variable {α' β' : Type v} (F : Type u → Type v → Type w) [Bifunctor F] [IsLawfulBifunctor F]
 
 /-- Apply a bifunctor to a pair of `equiv`s. -/
-def map_equiv (h : α ≃ β) (h' : α' ≃ β') : F α α' ≃ F β β' where
+def mapEquiv (h : α ≃ β) (h' : α' ≃ β') : F α α' ≃ F β β' where
   toFun := bimap h h'
   invFun := bimap h.symm h'.symm
   left_inv := fun x => by

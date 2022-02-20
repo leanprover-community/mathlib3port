@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Anne Baanen. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Anne Baanen, Kexing Ying, Eric Wieser
+-/
 import Mathbin.LinearAlgebra.QuadraticForm.Basic
 import Mathbin.Analysis.SpecialFunctions.Pow
 import Mathbin.Data.Real.Sign
@@ -25,7 +30,7 @@ variable {ι : Type _} [Fintype ι]
 
 /-- The isometry between a weighted sum of squares with weights `u` on the
 (non-zero) real numbers and the weighted sum of squares with weights `sign ∘ u`. -/
-noncomputable def isometry_sign_weighted_sum_squares [DecidableEq ι] (w : ι → ℝ) :
+noncomputable def isometrySignWeightedSumSquares [DecidableEq ι] (w : ι → ℝ) :
     Isometry (weightedSumSquares ℝ w) (weightedSumSquares ℝ (sign ∘ w)) := by
   let u := fun i => if h : w i = 0 then (1 : (ℝ)ˣ) else Units.mk0 (w i) h
   have hu' : ∀ i : ι, (sign (u i) * u i) ^ -(1 / 2 : ℝ) ≠ 0 := by

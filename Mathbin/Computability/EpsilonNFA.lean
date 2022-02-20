@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Fox Thomson. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Fox Thomson
+-/
 import Mathbin.Computability.NFA
 
 /-!
@@ -33,28 +38,28 @@ instance : Inhabited (εNFA α σ) :=
 
 /-- The `ε_closure` of a set is the set of states which can be reached by taking a finite string of
   ε-transitions from an element of the set -/
-inductive ε_closure : Set σ → Set σ
+inductive εClosure : Set σ → Set σ
   | base : ∀ S, ∀ s ∈ S, ∀, ε_closure S s
   | step : ∀ S s, ∀ t ∈ M.step s none, ∀, ε_closure S s → ε_closure S t
 
 /-- `M.step_set S a` is the union of the ε-closure of `M.step s a` for all `s ∈ S`. -/
-def step_set : Set σ → α → Set σ := fun S a => S >>= fun s => M.εClosure (M.step s a)
+def StepSet : Set σ → α → Set σ := fun S a => S >>= fun s => M.εClosure (M.step s a)
 
 /-- `M.eval_from S x` computes all possible paths though `M` with input `x` starting at an element
   of `S`. -/
-def eval_from (start : Set σ) : List α → Set σ :=
+def EvalFrom (start : Set σ) : List α → Set σ :=
   List.foldlₓ M.StepSet (M.εClosure start)
 
 /-- `M.eval x` computes all possible paths though `M` with input `x` starting at an element of
   `M.start`. -/
-def eval :=
+def Eval :=
   M.evalFrom M.start
 
 /-- `M.accepts` is the language of `x` such that there is an accept state in `M.eval x`. -/
-def accepts : Language α := fun x => ∃ S ∈ M.accept, S ∈ M.eval x
+def Accepts : Language α := fun x => ∃ S ∈ M.accept, S ∈ M.eval x
 
 /-- `M.to_NFA` is an `NFA` constructed from an `ε_NFA` `M`. -/
-def to_NFA : NFA α σ where
+def toNFA : NFA α σ where
   step := fun S a => M.εClosure (M.step S a)
   start := M.εClosure M.start
   accept := M.accept
@@ -83,7 +88,7 @@ namespace NFA
 
 /-- `M.to_ε_NFA` is an `ε_NFA` constructed from an `NFA` `M` by using the same start and accept
   states and transition functions. -/
-def to_ε_NFA (M : NFA α σ) : εNFA α σ where
+def toεNFA (M : NFA α σ) : εNFA α σ where
   step := fun s a => a.casesOn' ∅ fun a => M.step s a
   start := M.start
   accept := M.accept

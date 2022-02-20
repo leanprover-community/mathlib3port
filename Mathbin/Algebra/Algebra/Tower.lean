@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Kenny Lau. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Kenny Lau
+-/
 import Mathbin.Algebra.Algebra.Subalgebra
 
 /-!
@@ -85,7 +90,7 @@ theorem of_algebra_map_eq' [Algebra R A] (h : algebraMap R A = (algebraMap S A).
 
 variable (R S A)
 
-instance Subalgebra (S₀ : Subalgebra R S) : IsScalarTower S₀ S A :=
+instance subalgebra (S₀ : Subalgebra R S) : IsScalarTower S₀ S A :=
   of_algebra_map_eq fun x => rfl
 
 variable [Algebra R A] [Algebra R B]
@@ -103,7 +108,7 @@ instance subalgebra' (S₀ : Subalgebra R S) : IsScalarTower R S₀ A :=
   (@IsScalarTower.of_algebra_map_eq R S₀ A _ _ _ _ _ _) fun _ => (IsScalarTower.algebra_map_apply R S A _ : _)
 
 @[ext]
-theorem algebra.ext {S : Type u} {A : Type v} [CommSemiringₓ S] [Semiringₓ A] (h1 h2 : Algebra S A)
+theorem Algebra.ext {S : Type u} {A : Type v} [CommSemiringₓ S] [Semiringₓ A] (h1 h2 : Algebra S A)
     (h :
       ∀ r : S x : A,
         (have := h1
@@ -115,7 +120,7 @@ theorem algebra.ext {S : Type u} {A : Type v} [CommSemiringₓ S] [Semiringₓ A
 
 /-- In a tower, the canonical map from the middle element to the top element is an
 algebra homomorphism over the bottom element. -/
-def to_alg_hom : S →ₐ[R] A :=
+def toAlgHom : S →ₐ[R] A :=
   { algebraMap S A with commutes' := fun _ => (algebra_map_apply _ _ _ _).symm }
 
 theorem to_alg_hom_apply (y : S) : toAlgHom R S A y = algebraMap S A y :=
@@ -144,7 +149,8 @@ theorem _root_.alg_hom.comp_algebra_map_of_tower (f : A →ₐ[S] B) :
 
 variable (R) {S A B}
 
-instance (priority := 999) Subsemiring (U : Subsemiring S) : IsScalarTower U S A :=
+-- conflicts with is_scalar_tower.subalgebra
+instance (priority := 999) subsemiring (U : Subsemiring S) : IsScalarTower U S A :=
   of_algebra_map_eq fun x => rfl
 
 @[nolint instance_priority]
@@ -174,7 +180,7 @@ open IsScalarTower
 namespace AlgHom
 
 /-- R ⟶ S induces S-Alg ⥤ R-Alg -/
-def restrict_scalars (f : A →ₐ[S] B) : A →ₐ[R] B :=
+def restrictScalars (f : A →ₐ[S] B) : A →ₐ[R] B :=
   { (f : A →+* B) with
     commutes' := fun r => by
       rw [algebra_map_apply R S A, algebra_map_apply R S B]
@@ -199,7 +205,7 @@ end AlgHom
 namespace AlgEquiv
 
 /-- R ⟶ S induces S-Alg ⥤ R-Alg -/
-def restrict_scalars (f : A ≃ₐ[S] B) : A ≃ₐ[R] B :=
+def restrictScalars (f : A ≃ₐ[S] B) : A ≃ₐ[R] B :=
   { (f : A ≃+* B) with
     commutes' := fun r => by
       rw [algebra_map_apply R S A, algebra_map_apply R S B]
@@ -237,7 +243,7 @@ variable [IsScalarTower R S A] [IsScalarTower R S B]
 
 /-- Given a scalar tower `R`, `S`, `A` of algebras, reinterpret an `S`-subalgebra of `A` an as an
 `R`-subalgebra. -/
-def restrict_scalars (U : Subalgebra S A) : Subalgebra R A :=
+def restrictScalars (U : Subalgebra S A) : Subalgebra R A :=
   { U with
     algebra_map_mem' := fun x => by
       rw [algebra_map_apply R S A]
@@ -269,7 +275,7 @@ theorem restrict_scalars_injective : Function.Injective (restrictScalars R : Sub
 
 This is a special case of `alg_hom.restrict_scalars` that can be helpful in elaboration. -/
 @[simp]
-def of_restrict_scalars (U : Subalgebra S A) (f : U →ₐ[S] B) : U.restrictScalars R →ₐ[R] B :=
+def ofRestrictScalars (U : Subalgebra S A) (f : U →ₐ[S] B) : U.restrictScalars R →ₐ[R] B :=
   f.restrictScalars R
 
 end Semiringₓ

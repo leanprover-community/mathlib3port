@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Johan Commelin. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johan Commelin
+-/
 import Mathbin.Order.Antisymmetrization
 import Mathbin.Order.Category.Preorder
 
@@ -36,12 +41,12 @@ instance : Inhabited PartialOrderₓₓ :=
 instance (α : PartialOrderₓₓ) : PartialOrderₓ α :=
   α.str
 
-instance has_forget_to_Preorder : HasForget₂ PartialOrderₓₓ Preorderₓₓ :=
+instance hasForgetToPreorder : HasForget₂ PartialOrderₓₓ Preorderₓₓ :=
   BundledHom.forget₂ _ _
 
 /-- Constructs an equivalence between partial orders from an order isomorphism between them. -/
 @[simps]
-def iso.mk {α β : PartialOrderₓₓ.{u}} (e : α ≃o β) : α ≅ β where
+def Iso.mk {α β : PartialOrderₓₓ.{u}} (e : α ≃o β) : α ≅ β where
   Hom := e
   inv := e.symm
   hom_inv_id' := by
@@ -53,13 +58,13 @@ def iso.mk {α β : PartialOrderₓₓ.{u}} (e : α ≃o β) : α ≅ β where
 
 /-- `order_dual` as a functor. -/
 @[simps]
-def to_dual : PartialOrderₓₓ ⥤ PartialOrderₓₓ where
+def toDual : PartialOrderₓₓ ⥤ PartialOrderₓₓ where
   obj := fun X => of (OrderDual X)
   map := fun X Y => OrderHom.dual
 
 /-- The equivalence between `PartialOrder` and itself induced by `order_dual` both ways. -/
 @[simps Functor inverse]
-def dual_equiv : PartialOrderₓₓ ≌ PartialOrderₓₓ :=
+def dualEquiv : PartialOrderₓₓ ≌ PartialOrderₓₓ :=
   Equivalence.mk toDual toDual ((NatIso.ofComponents fun X => iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
     ((NatIso.ofComponents fun X => iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
 

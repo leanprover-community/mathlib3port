@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2017 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Stephen Morgan, Scott Morrison
+-/
 import Mathbin.CategoryTheory.EqToHom
 
 /-!
@@ -20,6 +25,7 @@ and products of functors and natural transformations, written `F.prod G` and `α
 
 namespace CategoryTheory
 
+-- declare the `v`'s first; see `category_theory.category` for an explanation
 universe v₁ v₂ v₃ v₄ u₁ u₂ u₃ u₄
 
 section
@@ -30,8 +36,9 @@ variable (C : Type u₁) [Category.{v₁} C] (D : Type u₂) [Category.{v₂} D]
 
 See https://stacks.math.columbia.edu/tag/001K.
 -/
+-- the generates simp lemmas like `id_fst` and `comp_snd`
 @[simps (config := { notRecursive := [] })]
-instance Prod : Category.{max v₁ v₂} (C × D) where
+instance prod : Category.{max v₁ v₂} (C × D) where
   Hom := fun X Y => (X.1 ⟶ Y.1) × (X.2 ⟶ Y.2)
   id := fun X => ⟨𝟙 X.1, 𝟙 X.2⟩
   comp := fun _ _ _ f g => (f.1 ≫ g.1, f.2 ≫ g.2)
@@ -55,11 +62,13 @@ variable (C : Type u₁) [Category.{v₁} C] (D : Type u₁) [Category.{v₁} D]
 /-- `prod.category.uniform C D` is an additional instance specialised so both factors have the same
 universe levels. This helps typeclass resolution.
 -/
-instance uniform_prod : Category (C × D) :=
+instance uniformProd : Category (C × D) :=
   CategoryTheory.prod C D
 
 end
 
+-- Next we define the natural functors into and out of product categories. For now this doesn't
+-- address the universal properties.
 namespace Prod
 
 /-- `sectl C Z` is the functor `C ⥤ C × D` given by `X ↦ (X, Z)`. -/
@@ -122,7 +131,7 @@ def braiding : C × D ≌ D × C :=
       (by
         tidy))
 
-instance swap_is_equivalence : IsEquivalence (swap C D) :=
+instance swapIsEquivalence : IsEquivalence (swap C D) :=
   (by
     infer_instance : IsEquivalence (braiding C D).Functor)
 
@@ -145,7 +154,7 @@ def evaluation : C ⥤ (C ⥤ D) ⥤ D where
 as a functor `C × (C ⥤ D) ⥤ D`.
 -/
 @[simps]
-def evaluation_uncurried : C × (C ⥤ D) ⥤ D where
+def evaluationUncurried : C × (C ⥤ D) ⥤ D where
   obj := fun p => p.2.obj p.1
   map := fun x y f => x.2.map f.1 ≫ f.2.app y.1
   map_comp' := fun X Y Z f g => by
@@ -166,11 +175,13 @@ namespace Functor
 
 /-- The cartesian product of two functors. -/
 @[simps]
-def Prod (F : A ⥤ B) (G : C ⥤ D) : A × C ⥤ B × D where
+def prod (F : A ⥤ B) (G : C ⥤ D) : A × C ⥤ B × D where
   obj := fun X => (F.obj X.1, G.obj X.2)
   map := fun _ _ f => (F.map f.1, G.map f.2)
 
 /-- Similar to `prod`, but both functors start from the same category `A` -/
+/- Because of limitations in Lean 3's handling of notations, we do not setup a notation `F × G`.
+   You can use `F.prod G` as a "poor man's infix", or just write `functor.prod F G`. -/
 @[simps]
 def prod' (F : A ⥤ B) (G : A ⥤ C) : A ⥤ B × C where
   obj := fun a => (F.obj a, G.obj a)
@@ -182,7 +193,7 @@ namespace NatTrans
 
 /-- The cartesian product of two natural transformations. -/
 @[simps]
-def Prod {F G : A ⥤ B} {H I : C ⥤ D} (α : F ⟶ G) (β : H ⟶ I) : F.Prod H ⟶ G.Prod I where
+def prod {F G : A ⥤ B} {H I : C ⥤ D} (α : F ⟶ G) (β : H ⟶ I) : F.Prod H ⟶ G.Prod I where
   app := fun X => (α.app X.1, β.app X.2)
   naturality' := fun X Y f => by
     cases X
@@ -190,11 +201,13 @@ def Prod {F G : A ⥤ B} {H I : C ⥤ D} (α : F ⟶ G) (β : H ⟶ I) : F.Prod 
     simp only [functor.prod_map, Prod.mk.inj_iffₓ, prod_comp]
     constructor <;> rw [naturality]
 
+/- Again, it is inadvisable in Lean 3 to setup a notation `α × β`;
+   use instead `α.prod β` or `nat_trans.prod α β`. -/
 end NatTrans
 
 /-- `F.flip` composed with evaluation is the same as evaluating `F`. -/
 @[simps]
-def flip_comp_evaluation (F : A ⥤ B ⥤ C) a : F.flip ⋙ (evaluation _ _).obj a ≅ F.obj a :=
+def flipCompEvaluation (F : A ⥤ B ⥤ C) a : F.flip ⋙ (evaluation _ _).obj a ≅ F.obj a :=
   (NatIso.ofComponents fun b => eqToIso rfl) <| by
     tidy
 

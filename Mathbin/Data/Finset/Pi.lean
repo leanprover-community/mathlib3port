@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Johannes Hölzl. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johannes Hölzl
+-/
 import Mathbin.Data.Finset.Basic
 import Mathbin.Data.Multiset.Pi
 
@@ -19,7 +24,7 @@ variable {α : Type _}
 
 /-- The empty dependent product function, defined on the empty set. The assumption `a ∈ ∅` is never
 satisfied. -/
-def pi.empty (β : α → Sort _) (a : α) (h : a ∈ (∅ : Finset α)) : β a :=
+def Pi.empty (β : α → Sort _) (a : α) (h : a ∈ (∅ : Finset α)) : β a :=
   Multiset.Pi.emptyₓ β a h
 
 variable {δ : α → Type _} [DecidableEq α]
@@ -81,7 +86,7 @@ theorem pi_insert [∀ a, DecidableEq (δ a)] {s : Finset α} {t : ∀ a : α, F
   apply eq_of_veq
   rw [← (pi (insert a s) t).2.eraseDup]
   refine'
-    (fun s' h : s' = a ::ₘ s.1 =>
+    (fun h : s' = a ::ₘ s.1 =>
         (_ :
           erase_dup (Multiset.pi s' fun a => (t a).1) =
             erase_dup

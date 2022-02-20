@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison
+-/
 import Mathbin.CategoryTheory.Monoidal.Category
 import Mathbin.CategoryTheory.Adjunction.Basic
 
@@ -19,11 +24,11 @@ namespace CategoryTheory
 open Category MonoidalCategory
 
 /-- An object `X` is (right) closed if `(X ⊗ -)` is a left adjoint. -/
-class closed {C : Type u} [Category.{v} C] [MonoidalCategory.{v} C] (X : C) where
+class Closed {C : Type u} [Category.{v} C] [MonoidalCategory.{v} C] (X : C) where
   isAdj : IsLeftAdjoint (tensorLeft X)
 
 /-- A monoidal category `C` is (right) monoidal closed if every object is (right) closed. -/
-class monoidal_closed (C : Type u) [Category.{v} C] [MonoidalCategory.{v} C] where
+class MonoidalClosed (C : Type u) [Category.{v} C] [MonoidalCategory.{v} C] where
   Closed : ∀ X : C, Closed X
 
 attribute [instance] monoidal_closed.closed
@@ -32,7 +37,7 @@ attribute [instance] monoidal_closed.closed
 This isn't an instance because most of the time we'll prove closedness for all objects at once,
 rather than just for this one.
 -/
-def unit_closed {C : Type u} [Category.{v} C] [MonoidalCategory.{v} C] : Closed (𝟙_ C) where
+def unitClosed {C : Type u} [Category.{v} C] [MonoidalCategory.{v} C] : Closed (𝟙_ C) where
   isAdj :=
     { right := 𝟭 C,
       adj :=

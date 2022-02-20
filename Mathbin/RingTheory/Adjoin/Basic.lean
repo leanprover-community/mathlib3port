@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Kenny Lau. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Kenny Lau
+-/
 import Mathbin.Algebra.Algebra.Tower
 import Mathbin.LinearAlgebra.Prod
 import Mathbin.LinearAlgebra.Finsupp
@@ -71,7 +76,7 @@ theorem adjoin_induction' {p : adjoin R s → Prop} (Hs : ∀ x h : x ∈ s, p �
     (Halg : ∀ r, p (algebraMap R _ r)) (Hadd : ∀ x y, p x → p y → p (x + y)) (Hmul : ∀ x y, p x → p y → p (x * y))
     (x : adjoin R s) : p x :=
   (Subtype.recOn x) fun x hx => by
-    refine' Exists.elim _ fun hx : x ∈ adjoin R s hc : p ⟨x, hx⟩ => hc
+    refine' Exists.elim _ fun hc : p ⟨x, hx⟩ => hc
     exact
       adjoin_induction hx (fun x hx => ⟨subset_adjoin hx, Hs x hx⟩) (fun r => ⟨Subalgebra.algebra_map_mem _ r, Halg r⟩)
         (fun x y hx hy =>
@@ -185,9 +190,11 @@ theorem adjoin_inl_union_inr_eq_prod s t :
     adjoin R (LinearMap.inl R A B '' (s ∪ {1}) ∪ LinearMap.inr R A B '' (t ∪ {1})) = (adjoin R s).Prod (adjoin R t) :=
   by
   apply le_antisymmₓ
-  · simp only [adjoin_le_iff, Set.insert_subset, Subalgebra.zero_mem, Subalgebra.one_mem, subset_adjoin,
-      Set.union_subset_iff, LinearMap.coe_inl, Set.mk_preimage_prod_right, Set.image_subset_iff, SetLike.mem_coe,
-      Set.mk_preimage_prod_left, LinearMap.coe_inr, and_selfₓ, Set.union_singleton, Subalgebra.coe_prod]
+  · simp only [adjoin_le_iff, Set.insert_subset, Subalgebra.zero_mem, Subalgebra.one_mem,
+      subset_adjoin,-- the rest comes from `squeeze_simp`
+      Set.union_subset_iff,
+      LinearMap.coe_inl, Set.mk_preimage_prod_right, Set.image_subset_iff, SetLike.mem_coe, Set.mk_preimage_prod_left,
+      LinearMap.coe_inr, and_selfₓ, Set.union_singleton, Subalgebra.coe_prod]
     
   · rintro ⟨a, b⟩ ⟨ha, hb⟩
     let P := adjoin R (LinearMap.inl R A B '' (s ∪ {1}) ∪ LinearMap.inr R A B '' (t ∪ {1}))
@@ -232,7 +239,7 @@ theorem pow_smul_mem_adjoin_smul (r : R) (s : Set A) {x : A} (hx : x ∈ adjoin 
     ∃ n₀ : ℕ, ∀, ∀ n ≥ n₀, ∀, r ^ n • x ∈ adjoin R (r • s) := by
   change x ∈ (adjoin R s).toSubmodule at hx
   rw [adjoin_eq_span, Finsupp.mem_span_iff_total] at hx
-  rcases hx with ⟨l, rfl : (l.sum fun i : Submonoid.closure s c : R => c • ↑i) = x⟩
+  rcases hx with ⟨l, rfl : (l.sum fun c : R => c • ↑i) = x⟩
   choose n₁ n₂ using fun x : Submonoid.closure s => Submonoid.pow_smul_mem_closure_smul r s x.Prop
   use l.support.sup n₁
   intro n hn

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Mario Carneiro. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Mario Carneiro, Simon Hudon, Scott Morrison, Keeley Hoek
+-/
 import Mathbin.Control.Basic
 import Mathbin.Data.Dlist.Basic
 import Mathbin.Meta.Expr
@@ -11,6 +16,7 @@ universe u
 
 deriving instance has_reflect, DecidableEq for Tactic.Transparency
 
+-- Rather than import order.lexicographic here, we can get away with defining the order by hand.
 instance : LT Pos where
   lt := fun x y => x.line < y.line ∨ x.line = y.line ∧ x.column < y.column
 
@@ -130,9 +136,11 @@ open Result
 variable {σ : Type} {α : Type u}
 
 /-- `get_state` returns the underlying state inside an interaction monad, from within that monad. -/
+-- Note that this is a generalization of `tactic.read` in core.
 unsafe def get_state : interaction_monad σ σ := fun state => success State State
 
 /-- `set_state` sets the underlying state inside an interaction monad, from within that monad. -/
+-- Note that this is a generalization of `tactic.write` in core.
 unsafe def set_state (state : σ) : interaction_monad σ Unit := fun _ => success () State
 
 /-- `run_with_state state tac` applies `tac` to the given state `state` and returns the result,
@@ -200,12 +208,22 @@ export InteractionMonad (get_state set_state run_with_state)
 private unsafe def add_local_consts_as_local_hyps_aux : List (expr × expr) → List expr → tactic (List (expr × expr))
   | mappings, [] => return mappings
   | mappings, var :: rest => do
-    let is_dependent := (var.local_type.fold false) fun e n b => if b then b else e ∈ rest
-    if is_dependent then add_local_consts_as_local_hyps_aux mappings (rest ++ [var])
+    let-- Determine if `var` contains any local variables in the lift `rest`.
+    is_dependent := (var.local_type.fold false) fun e n b => if b then b else e ∈ rest
+    -- If so, then skip it---add it to the end of the variable queue.
+        if is_dependent then add_local_consts_as_local_hyps_aux mappings (rest ++ [var])
       else do
-        let new_type := var mappings
-        let hyp ← assertv var new_type (var new_type)
-        add_local_consts_as_local_hyps_aux ((var, hyp) :: mappings) rest
+        let/- Otherwise, replace all of the local constants referenced by the type of `var` with the
+               respective new corresponding local hypotheses as recorded in the list `mappings`. -/
+        new_type := var mappings
+        let hyp
+          ←-- Introduce a new local new local hypothesis `hyp` for `var`, with the correct type.
+              assertv
+              var new_type (var new_type)
+        /- Process the next variable in the queue, with the mapping list updated to include the local
+                   hypothesis which we just created. -/
+            add_local_consts_as_local_hyps_aux
+            ((var, hyp) :: mappings) rest
 
 /-- `add_local_consts_as_local_hyps vars` add the given list `vars` of `expr.local_const`s to the
     tactic state. This is harder than it sounds, since the list of local constants which we have
@@ -219,7 +237,10 @@ private unsafe def add_local_consts_as_local_hyps_aux : List (expr × expr) → 
     If the list of passed local constants have types which depend on one another (which can only
     happen by hand-crafting the `expr`s manually), this function will loop forever. -/
 unsafe def add_local_consts_as_local_hyps (vars : List expr) : tactic (List (expr × expr)) :=
-  add_local_consts_as_local_hyps_aux [] vars.reverse.eraseDup
+  /- The `list.reverse` below is a performance optimisation since the list of available variables
+       reported by the system is often mostly the reverse of the order in which they are dependent. -/
+    add_local_consts_as_local_hyps_aux
+    [] vars.reverse.eraseDup
 
 private unsafe def get_expl_pi_arity_aux : expr → tactic Nat
   | expr.pi n bi d b => do
@@ -322,6 +343,7 @@ unsafe def lambdas : List expr → expr → tactic expr
 
 /-- `mk_theorem n ls t e` creates a theorem declaration with name `n`, universe parameters named
 `ls`, type `t`, and body `e`. -/
+-- TODO: move to `declaration` namespace in `meta/expr.lean`
 unsafe def mk_theorem (n : Name) (ls : List Name) (t : expr) (e : expr) : declaration :=
   declaration.thm n ls t (task.pure e)
 
@@ -509,7 +531,7 @@ unsafe def extract_def (n : Name) (trusted : Bool) (elab_def : tactic Unit) : ta
   add_decl <| declaration.defn n univ t' d' (ReducibilityHints.regular 1 tt) trusted
   applyc n
 
--- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:916:4: warning: unsupported (TODO): `[tacs]
 /-- Attempts to close the goal with `dec_trivial`. -/
 unsafe def exact_dec_trivial : tactic Unit :=
   sorry
@@ -562,7 +584,9 @@ unsafe def revert_after (e : expr) : tactic ℕ := do
   let l ← local_context
   let [Pos] ← return <| l.indexesOf e | pp e >>= fun s => fail f! "No such local constant {s}"
   let l := l.drop Pos.succ
-  revert_lst l
+  -- all local hypotheses after `e`
+      revert_lst
+      l
 
 /-- `revert_target_deps` reverts all local constants on which the target depends (recursively).
   Returns the number of local constants that have been reverted. -/
@@ -613,7 +637,9 @@ We call `t` the value of `x`.
   locally using a `let` expression. Otherwise it fails. -/
 unsafe def local_def_value (e : expr) : tactic expr :=
   pp e >>= fun s =>
-    tactic.unsafe.type_context.run <| do
+    -- running `pp` here, because we cannot access it in the `type_context` monad.
+      tactic.unsafe.type_context.run <|
+      do
       let lctx ← tactic.unsafe.type_context.get_local_context
       let some ldecl ← return <| lctx.get_local_decl e.local_uniq_name |
         tactic.unsafe.type_context.fail f! "No such hypothesis {s}."
@@ -702,7 +728,10 @@ local definition. It is trickier to fix this in core, since `tactic.is_local_def
 unsafe def subst' (h : expr) : tactic Unit := do
   let e ←
     do
-      let t ← infer_type h
+      let t
+        ←-- we first find the variable being substituted away
+            infer_type
+            h
       let (f, args) := t.get_app_fn_args
       if f = `eq ∨ f = `heq then do
           let lhs := args 1
@@ -944,7 +973,10 @@ unsafe def build_list_expr_for_apply : List pexpr → tactic (List (tactic expr)
   | h :: t => do
     let tail ← build_list_expr_for_apply t
     let a ← i_to_expr_for_apply h
-    (do
+    (-- We reverse the list of lemmas marked with an attribute,
+        -- on the assumption that lemmas proved earlier are more often applicable
+        -- than lemmas proved later. This is a performance optimization.
+        do
           let l ← attribute.get_instances (expr.const_name a)
           let m ← l fun n => _root_.to_pexpr <$> mk_const n
           build_list_expr_for_apply (m ++ t)) <|>
@@ -1168,6 +1200,7 @@ unsafe def successes (tactics : List (tactic α)) : tactic (List α) :=
 returning the list of successful results,
 and reverting to the original `tactic_state`.
 -/
+-- Note this is not the same as `successes`, which keeps track of the evolving `tactic_state`.
 unsafe def try_all {α : Type} (tactics : List (tactic α)) : tactic (List α) := fun s =>
   result.success
     (tactics.map fun t : tactic α =>
@@ -1204,6 +1237,7 @@ private unsafe def target' : tactic expr :=
 an inductive data type with one constructor.
 However it does not reorder goals or invoke `auto_param` tactics.
 -/
+-- FIXME check if we can remove `auto_param := ff`
 unsafe def fsplit : tactic Unit := do
   let [c] ← target' >>= get_constructors_for |
     fail "fsplit tactic failed, target is not an inductive datatype with only one constructor"
@@ -1216,7 +1250,7 @@ add_tactic_doc
   { Name := "fsplit", category := DocCategory.tactic, declNames := [`tactic.interactive.fsplit],
     tags := ["logic", "goal management"] }
 
--- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `results
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `results
 /-- Calls `injection` on each hypothesis, and then, for each hypothesis on which `injection`
 succeeds, clears the old hypothesis. -/
 unsafe def injections_and_clear : tactic Unit := do
@@ -1231,7 +1265,7 @@ add_tactic_doc
   { Name := "injections_and_clear", category := DocCategory.tactic,
     declNames := [`tactic.interactive.injections_and_clear], tags := ["context management"] }
 
--- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `r
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `r
 /-- Calls `cases` on every local hypothesis, succeeding if
 it succeeds on at least one hypothesis. -/
 unsafe def case_bash : tactic Unit := do
@@ -1244,6 +1278,7 @@ adds `h : t` to the current context, where the name `h` is fresh.
 
 `note_anon none v` will infer the type `t` from `v`.
 -/
+-- While `note` provides a default value for `t`, it doesn't seem this could ever be used.
 unsafe def note_anon (t : Option expr) (v : expr) : tactic expr := do
   let h ← get_unused_name `h none
   note h t v
@@ -1346,18 +1381,50 @@ Returns a new `ts : tactic_state` with these local variables added, and
 `var` and the local hypothesis `hyp` which was added to the tactic state `ts` as a result. -/
 unsafe def synthesize_tactic_state_with_variables_as_hyps (es : List pexpr) :
     lean.parser (tactic_state × List (expr × expr)) := do
-  let vars ← list_available_include_vars
+  let vars
+    ←/- First, in order to get `to_expr e` to resolve declared `variables`, we add all of the
+            declared variables to a fake `tactic_state`, and perform the resolution. At the end,
+            `to_expr e` has done the work of determining which variables were actually referenced, which
+            we then obtain from `fe` via `expr.list_local_consts` (which, importantly, is not defined for
+            `pexpr`s). -/
+      list_available_include_vars
   let fake_es ←
     lean.parser.of_tactic <|
         lock_tactic_state <| do
-          add_local_consts_as_local_hyps vars
+          /- Note that `add_local_consts_as_local_hyps` returns the mappings it generated, but we discard
+                      them on this first pass. (We return the mappings generated by our second invocation of this
+                      function below.) -/
+              add_local_consts_as_local_hyps
+              vars
           es to_expr
-  let included_vars ← list_include_var_names
+  let included_vars
+    ←/- Now calculate lists of a) the explicitly `include`ed variables and b) the variables which were
+            referenced in `e` when it was resolved to `fake_e`.
+      
+            It is important that we include variables of the kind a) because we want `simp` to have access
+            to declared local instances, and it is important that we only restrict to variables of kind a)
+            and b) together since we do not to recognise a hypothesis which is posited as a `variable`
+            in the environment but not referenced in the `pexpr` we were passed.
+      
+            One use case for this behaviour is running `simp` on the passed `pexpr`, since we do not want
+            simp to use arbitrary hypotheses which were declared as `variables` in the local environment
+            but not referenced in the expression to simplify (as one would be expect generally in tactic
+            mode). -/
+      list_include_var_names
   let referenced_vars := List.join <| fake_es.map fun e => e.list_local_consts.map expr.local_pp_name
-  let directly_included_vars :=
+  let/- Look up the explicit `included_vars` and the `referenced_vars` (which have appeared in the
+        `pexpr` list which we were passed.)  -/
+  directly_included_vars :=
     vars.filter fun var => var.local_pp_name ∈ included_vars ∨ var.local_pp_name ∈ referenced_vars
-  let all_implicitly_included_vars := expr.all_implicitly_included_variables vars directly_included_vars
-  lean.parser.of_tactic <| do
+  let/- Inflate the list `directly_included_vars` to include those variables which are "implicitly
+        included" by virtue of reference to one or multiple others. For example, given
+        `variables (n : ℕ) [prime n] [ih : even n]`, a reference to `n` implies that the typeclass
+        instance `prime n` should be included, but `ih : even n` should not. -/
+  all_implicitly_included_vars := expr.all_implicitly_included_variables vars directly_included_vars
+  /- Capture a tactic state where both of these kinds of variables have been added as local
+            hypotheses, and resolve `e` against this state with `to_expr`, this time for real. -/
+      lean.parser.of_tactic <|
+      do
       let mappings ← add_local_consts_as_local_hyps all_implicitly_included_vars
       let ts ← get_state
       return (ts, mappings)

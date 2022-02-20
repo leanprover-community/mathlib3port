@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Jeremy Avigad. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Jeremy Avigad, Simon Hudon
+-/
 import Mathbin.Control.Functor.Multivariate
 import Mathbin.Data.Pfunctor.Univariate.Basic
 
@@ -28,7 +33,7 @@ open mvfunctor (Liftp Liftr)
 variable {n m : ℕ} (P : Mvpfunctor.{u} n)
 
 /-- Applying `P` to an object of `Type` -/
-def obj (α : Typevec.{u} n) : Type u :=
+def Obj (α : Typevec.{u} n) : Type u :=
   Σ a : P.A, P.B a ⟹ α
 
 /-- Applying `P` to a morphism of `Type` -/
@@ -37,7 +42,7 @@ def map {α β : Typevec n} (f : α ⟹ β) : P.Obj α → P.Obj β := fun ⟨a,
 instance : Inhabited (Mvpfunctor n) :=
   ⟨⟨default, fun _ => default⟩⟩
 
-instance obj.inhabited {α : Typevec n} [Inhabited P.A] [∀ i, Inhabited (α i)] : Inhabited (P.Obj α) :=
+instance Obj.inhabited {α : Typevec n} [Inhabited P.A] [∀ i, Inhabited (α i)] : Inhabited (P.Obj α) :=
   ⟨⟨default, fun _ _ => default⟩⟩
 
 instance : Mvfunctor P.Obj :=
@@ -105,10 +110,10 @@ def comp.mk (x : P.Obj fun i => (Q i).Obj α) : (comp P Q).Obj α :=
 
 /-- Destructor for functor composition -/
 def comp.get (x : (comp P Q).Obj α) : P.Obj fun i => (Q i).Obj α :=
-  ⟨x.1.1, fun i a => ⟨x.fst.snd i a, fun j : Fin2 m b : (Q i).B _ j => x.snd j ⟨i, ⟨a, b⟩⟩⟩⟩
+  ⟨x.1.1, fun i a => ⟨x.fst.snd i a, fun b : (Q i).B _ j => x.snd j ⟨i, ⟨a, b⟩⟩⟩⟩
 
 theorem comp.get_map (f : α ⟹ β) (x : (comp P Q).Obj α) :
-    comp.get (f <$$> x) = (fun i x : (Q i).Obj α => f <$$> x) <$$> comp.get x := by
+    comp.get (f <$$> x) = (fun x : (Q i).Obj α => f <$$> x) <$$> comp.get x := by
   cases x
   rfl
 
@@ -131,6 +136,9 @@ theorem comp.mk_get (x : (comp P Q).Obj α) : comp.mk (comp.get x) = x := by
   congr
   rcases x_1 with ⟨a, b, c⟩ <;> rfl
 
+/-
+lifting predicates and relations
+-/
 theorem liftp_iff {α : Typevec n} (p : ∀ ⦃i⦄, α i → Prop) (x : P.Obj α) :
     Liftp p x ↔ ∃ a f, x = ⟨a, f⟩ ∧ ∀ i j, p (f i j) := by
   constructor
@@ -204,6 +212,9 @@ theorem supp_eq {α : Typevec n} (a : P.A) (f : P.B a ⟹ α) i :
 
 end Mvpfunctor
 
+/-
+Decomposing an n+1-ary pfunctor.
+-/
 namespace Mvpfunctor
 
 open Typevec
@@ -224,7 +235,7 @@ def last : Pfunctor where
 
 /-- append arrows of a polynomial functor application -/
 @[reducible]
-def append_contents {α : Typevec n} {β : Type _} {a : P.A} (f' : P.drop.B a ⟹ α) (f : P.last.B a → β) :
+def appendContents {α : Typevec n} {β : Type _} {a : P.A} (f' : P.drop.B a ⟹ α) (f : P.last.B a → β) :
     P.B a ⟹ (α ::: β) :=
   splitFun f' f
 

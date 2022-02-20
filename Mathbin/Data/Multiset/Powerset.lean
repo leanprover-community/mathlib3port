@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Mario Carneiro. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Mario Carneiro
+-/
 import Mathbin.Data.Multiset.Basic
 
 /-!
@@ -16,7 +21,7 @@ variable {α : Type _}
 
 /-- A helper function for the powerset of a multiset. Given a list `l`, returns a list
 of sublists of `l` (using `sublists_aux`), as multisets. -/
-def powerset_aux (l : List α) : List (Multiset α) :=
+def powersetAux (l : List α) : List (Multiset α) :=
   0 :: sublistsAux l fun x y => x :: y
 
 theorem powerset_aux_eq_map_coe {l : List α} : powersetAux l = (sublists l).map coe := by
@@ -34,7 +39,7 @@ theorem mem_powerset_aux {l : List α} {s} : s ∈ powersetAux l ↔ s ≤ ↑l 
 
 /-- Helper function for the powerset of a multiset. Given a list `l`, returns a list
 of sublists of `l` (using `sublists'`), as multisets. -/
-def powerset_aux' (l : List α) : List (Multiset α) :=
+def powersetAux' (l : List α) : List (Multiset α) :=
   (sublists' l).map coe
 
 theorem powerset_aux_perm_powerset_aux' {l : List α} : powersetAux l ~ powersetAux' l := by
@@ -120,10 +125,7 @@ theorem revzip_powerset_aux' {l : List α} ⦃x⦄ (h : x ∈ revzipₓ (powerse
 
 theorem revzip_powerset_aux_lemma [DecidableEq α] (l : List α) {l' : List (Multiset α)}
     (H : ∀ ⦃x : _ × _⦄, x ∈ revzipₓ l' → x.1 + x.2 = ↑l) : revzipₓ l' = l'.map fun x => (x, ↑l - x) := by
-  have :
-    forall₂ (fun p : Multiset α × Multiset α s : Multiset α => p = (s, ↑l - s)) (revzip l')
-      ((revzip l').map Prod.fst) :=
-    by
+  have : forall₂ (fun s : Multiset α => p = (s, ↑l - s)) (revzip l') ((revzip l').map Prod.fst) := by
     rw [forall₂_map_right_iff]
     apply forall₂_same
     rintro ⟨s, t⟩ h
@@ -148,7 +150,7 @@ theorem revzip_powerset_aux_perm {l₁ l₂ : List α} (p : l₁ ~ l₂) : revzi
 
 /-- Helper function for `powerset_len`. Given a list `l`, `powerset_len_aux n l` is the list
 of sublists of length `n`, as multisets. -/
-def powerset_len_aux (n : ℕ) (l : List α) : List (Multiset α) :=
+def powersetLenAux (n : ℕ) (l : List α) : List (Multiset α) :=
   sublistsLenAux n l coe []
 
 theorem powerset_len_aux_eq_map_coe {n} {l : List α} : powersetLenAux n l = (sublistsLen n l).map coe := by
@@ -201,7 +203,7 @@ theorem powerset_len_aux_perm {n} {l₁ l₂ : List α} (p : l₁ ~ l₂) : powe
     
 
 /-- `powerset_len n s` is the multiset of all submultisets of `s` of length `n`. -/
-def powerset_len (n : ℕ) (s : Multiset α) : Multiset (Multiset α) :=
+def powersetLen (n : ℕ) (s : Multiset α) : Multiset (Multiset α) :=
   Quot.liftOn s (fun l => (powersetLenAux n l : Multiset (Multiset α))) fun l₁ l₂ h =>
     Quot.sound (powerset_len_aux_perm h)
 

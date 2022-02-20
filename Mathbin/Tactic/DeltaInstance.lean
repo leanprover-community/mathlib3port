@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Rob Lewis. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Rob Lewis
+-/
 import Mathbin.Tactic.SimpResult
 
 namespace Tactic
@@ -5,6 +10,11 @@ namespace Tactic
 /-- `delta_instance ids` tries to solve the goal by calling `apply_instance`,
 first unfolding the definitions in `ids`.
 -/
+-- We call `dsimp_result` here because otherwise
+-- `delta_target` will insert an `id` in the result.
+-- See the note [locally reducible category instances]
+-- https://github.com/leanprover-community/mathlib/blob/c9fca15420e2ad443707ace831679fd1762580fe/src/algebra/category/Mon/basic.lean#L27
+-- for an example where this used to cause a problem.
 unsafe def delta_instance (ids : List Name) : tactic Unit :=
   dsimp_result ((((intros >> reset_instance_cache) >> delta_target ids) >> apply_instance) >> done)
 
@@ -12,7 +22,7 @@ namespace Interactive
 
 setup_tactic_parser
 
--- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr *»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr *»
 /-- `delta_instance id₁ id₂ ...` tries to solve the goal by calling `apply_instance`,
 first unfolding the definitions in `idᵢ`.
 -/

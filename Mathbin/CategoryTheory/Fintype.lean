@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Adam Topaz. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Bhavik Mehta, Adam Topaz
+-/
 import Mathbin.CategoryTheory.ConcreteCategory.Bundled
 import Mathbin.CategoryTheory.FullSubcategory
 import Mathbin.CategoryTheory.Skeletal
@@ -67,7 +72,7 @@ directly as `ulift ℕ`, as the type `ulift (fin m) ≃ ulift (fin n)` is
 nonempty if and only if `n = m`. Specifying universes, `skeleton : Type u` is a small
 skeletal category equivalent to `Fintype.{u}`.
 -/
-def skeleton : Type u :=
+def Skeleton : Type u :=
   Ulift ℕ
 
 namespace Skeleton
@@ -130,7 +135,7 @@ noncomputable instance : IsEquivalence incl :=
   Equivalence.ofFullyFaithfullyEssSurj _
 
 /-- The equivalence between `Fintype.skeleton` and `Fintype`. -/
-noncomputable def Equivalenceₓ : skeleton ≌ Fintypeₓ :=
+noncomputable def equivalence : skeleton ≌ Fintypeₓ :=
   incl.asEquivalence
 
 @[simp]
@@ -141,7 +146,7 @@ theorem incl_mk_nat_card (n : ℕ) : Fintype.card (incl.obj (mk n)) = n := by
 end Skeleton
 
 /-- `Fintype.skeleton` is a skeleton of `Fintype`. -/
-noncomputable def is_skeleton : IsSkeletonOf Fintypeₓ Skeleton Skeleton.incl where
+noncomputable def isSkeleton : IsSkeletonOf Fintypeₓ Skeleton Skeleton.incl where
   skel := Skeleton.is_skeletal
   eqv := by
     infer_instance

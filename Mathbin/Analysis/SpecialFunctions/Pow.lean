@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2018 Chris Hughes. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Chris Hughes, Abhimanyu Pallavi Sudhir, Jean Lo, Calle Sönne, Sébastien Gouëzel,
+  Rémy Degenne
+-/
 import Mathbin.Analysis.SpecialFunctions.Complex.Log
 
 /-!
@@ -1165,7 +1171,7 @@ theorem rpow_eq_pow (x : ℝ≥0∞) (y : ℝ) : rpow x y = x ^ y :=
 @[simp]
 theorem rpow_zero {x : ℝ≥0∞} : x ^ (0 : ℝ) = 1 := by
   cases x <;>
-    · dsimp only [· ^ ·, rpow]
+    · dsimp only [(· ^ ·), rpow]
       simp [lt_irreflₓ]
       
 
@@ -1183,13 +1189,13 @@ theorem top_rpow_of_neg {y : ℝ} (h : y < 0) : (⊤ : ℝ≥0∞) ^ y = 0 := by
 @[simp]
 theorem zero_rpow_of_pos {y : ℝ} (h : 0 < y) : (0 : ℝ≥0∞) ^ y = 0 := by
   rw [← Ennreal.coe_zero, ← Ennreal.some_eq_coe]
-  dsimp only [· ^ ·, rpow]
+  dsimp only [(· ^ ·), rpow]
   simp [h, asymm h, ne_of_gtₓ h]
 
 @[simp]
 theorem zero_rpow_of_neg {y : ℝ} (h : y < 0) : (0 : ℝ≥0∞) ^ y = ⊤ := by
   rw [← Ennreal.coe_zero, ← Ennreal.some_eq_coe]
-  dsimp only [· ^ ·, rpow]
+  dsimp only [(· ^ ·), rpow]
   simp [h, ne_of_gtₓ h]
 
 theorem zero_rpow_def (y : ℝ) : (0 : ℝ≥0∞) ^ y = if 0 < y then 0 else if y = 0 then 1 else ⊤ := by
@@ -1210,7 +1216,7 @@ theorem zero_rpow_mul_self (y : ℝ) : (0 : ℝ≥0∞) ^ y * 0 ^ y = 0 ^ y := b
 @[norm_cast]
 theorem coe_rpow_of_ne_zero {x : ℝ≥0 } (h : x ≠ 0) (y : ℝ) : (x : ℝ≥0∞) ^ y = (x ^ y : ℝ≥0 ) := by
   rw [← Ennreal.some_eq_coe]
-  dsimp only [· ^ ·, rpow]
+  dsimp only [(· ^ ·), rpow]
   simp [h]
 
 @[norm_cast]
@@ -1230,7 +1236,7 @@ theorem coe_rpow_def (x : ℝ≥0 ) (y : ℝ) : (x : ℝ≥0∞) ^ y = if x = 0 
 
 @[simp]
 theorem rpow_one (x : ℝ≥0∞) : x ^ (1 : ℝ) = x := by
-  cases x <;> dsimp only [· ^ ·, rpow] <;> simp [zero_lt_one, not_lt_of_le zero_le_one]
+  cases x <;> dsimp only [(· ^ ·), rpow] <;> simp [zero_lt_one, not_lt_of_le zero_le_one]
 
 @[simp]
 theorem one_rpow (x : ℝ) : (1 : ℝ≥0∞) ^ x = 1 := by
@@ -1411,7 +1417,7 @@ theorem monotone_rpow_of_nonneg {z : ℝ} (h : 0 ≤ z) : Monotone fun x : ℝ�
 /-- Bundles `λ x : ℝ≥0∞, x ^ y` into an order isomorphism when `y : ℝ` is positive,
 where the inverse is `λ x : ℝ≥0∞, x ^ (1 / y)`. -/
 @[simps apply]
-def order_iso_rpow (y : ℝ) (hy : 0 < y) : ℝ≥0∞ ≃o ℝ≥0∞ :=
+def orderIsoRpow (y : ℝ) (hy : 0 < y) : ℝ≥0∞ ≃o ℝ≥0∞ :=
   (strict_mono_rpow_of_pos hy).orderIsoOfRightInverse (fun x => x ^ y) (fun x => x ^ (1 / y)) fun x => by
     dsimp
     rw [← rpow_mul, one_div_mul_cancel hy.ne.symm, rpow_one]

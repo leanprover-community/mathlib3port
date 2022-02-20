@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison
+-/
 import Mathbin.CategoryTheory.Punit
 import Mathbin.CategoryTheory.StructuredArrow
 import Mathbin.CategoryTheory.IsConnected
@@ -72,7 +77,7 @@ is connected.
 
 See https://stacks.math.columbia.edu/tag/04E6
 -/
-class final (F : C ⥤ D) : Prop where
+class Final (F : C ⥤ D) : Prop where
   out (d : D) : IsConnected (StructuredArrow d F)
 
 attribute [instance] final.out
@@ -80,7 +85,7 @@ attribute [instance] final.out
 /-- A functor `F : C ⥤ D` is initial if for every `d : D`, the comma category of morphisms
 `F.obj c ⟶ d` is connected.
 -/
-class initial (F : C ⥤ D) : Prop where
+class Initial (F : C ⥤ D) : Prop where
   out (d : D) : IsConnected (CostructuredArrow F d)
 
 attribute [instance] initial.out
@@ -161,7 +166,7 @@ def lift (d : D) : C :=
 /-- When `F : C ⥤ D` is cofinal, we denote by `hom_to_lift` an arbitrary choice of morphism
 `d ⟶ F.obj (lift F d)`.
 -/
-def hom_to_lift (d : D) : d ⟶ F.obj (lift F d) :=
+def homToLift (d : D) : d ⟶ F.obj (lift F d) :=
   (Classical.arbitrary (StructuredArrow d F)).Hom
 
 /-- We provide an induction principle for reasoning about `lift` and `hom_to_lift`.
@@ -197,7 +202,7 @@ variable {F G}
 /-- Given a cocone over `F ⋙ G`, we can construct a `cocone G` with the same cocone point.
 -/
 @[simps]
-def extend_cocone : Cocone (F ⋙ G) ⥤ Cocone G where
+def extendCocone : Cocone (F ⋙ G) ⥤ Cocone G where
   obj := fun c =>
     { x := c.x,
       ι :=
@@ -205,6 +210,8 @@ def extend_cocone : Cocone (F ⋙ G) ⥤ Cocone G where
           naturality' := fun X Y f => by
             dsimp
             simp
+            -- This would be true if we'd chosen `lift F X` to be `lift F Y`
+            -- and `hom_to_lift F X` to be `f ≫ hom_to_lift F Y`.
             apply induction F fun Z k => G.map f ≫ G.map (hom_to_lift F Y) ≫ c.ι.app (lift F Y) = G.map k ≫ c.ι.app Z
             · intro Z₁ Z₂ k₁ k₂ g a z
               rw [← a, functor.map_comp, category.assoc, ← functor.comp_map, c.w, z]
@@ -220,6 +227,8 @@ def extend_cocone : Cocone (F ⋙ G) ⥤ Cocone G where
 @[simp]
 theorem colimit_cocone_comp_aux (s : Cocone (F ⋙ G)) (j : C) :
     G.map (homToLift F (F.obj j)) ≫ s.ι.app (lift F (F.obj j)) = s.ι.app j := by
+  -- This point is that this would be true if we took `lift (F.obj j)` to just be `j`
+  -- and `hom_to_lift (F.obj j)` to be `𝟙 (F.obj j)`.
   apply induction F fun X k => G.map k ≫ s.ι.app X = (s.ι.app j : _)
   · intro j₁ j₂ k₁ k₂ f w h
     rw [← w]
@@ -241,7 +250,7 @@ the category of cocones on `F ⋙ G` is equivalent to the category of cocones on
 for any `G : D ⥤ E`.
 -/
 @[simps]
-def cocones_equiv : Cocone (F ⋙ G) ≌ Cocone G where
+def coconesEquiv : Cocone (F ⋙ G) ≌ Cocone G where
   Functor := extendCocone
   inverse := Cocones.whiskering F
   unitIso :=
@@ -266,18 +275,18 @@ variable {G}
 /-- When `F : C ⥤ D` is cofinal, and `t : cocone G` for some `G : D ⥤ E`,
 `t.whisker F` is a colimit cocone exactly when `t` is.
 -/
-def is_colimit_whisker_equiv (t : Cocone G) : IsColimit (t.whisker F) ≃ IsColimit t :=
+def isColimitWhiskerEquiv (t : Cocone G) : IsColimit (t.whisker F) ≃ IsColimit t :=
   IsColimit.ofCoconeEquiv (coconesEquiv F G).symm
 
 /-- When `F` is cofinal, and `t : cocone (F ⋙ G)`,
 `extend_cocone.obj t` is a colimit coconne exactly when `t` is.
 -/
-def is_colimit_extend_cocone_equiv (t : Cocone (F ⋙ G)) : IsColimit (extendCocone.obj t) ≃ IsColimit t :=
+def isColimitExtendCoconeEquiv (t : Cocone (F ⋙ G)) : IsColimit (extendCocone.obj t) ≃ IsColimit t :=
   IsColimit.ofCoconeEquiv (coconesEquiv F G)
 
 /-- Given a colimit cocone over `G : D ⥤ E` we can construct a colimit cocone over `F ⋙ G`. -/
 @[simps]
-def colimit_cocone_comp (t : ColimitCocone G) : ColimitCocone (F ⋙ G) where
+def colimitCoconeComp (t : ColimitCocone G) : ColimitCocone (F ⋙ G) where
   Cocone := _
   IsColimit := (isColimitWhiskerEquiv F _).symm t.IsColimit
 
@@ -294,6 +303,7 @@ theorem colimit_pre_is_iso_aux {t : Cocone G} (P : IsColimit t) :
   dsimp
   simp
 
+-- See library note [dsimp, simp].
 instance colimit_pre_is_iso [HasColimit G] : IsIso (colimit.pre G F) := by
   rw [colimit.pre_eq (colimit_cocone_comp F (get_colimit_cocone G)) (get_colimit_cocone G)]
   erw [colimit_pre_is_iso_aux]
@@ -309,14 +319,14 @@ variable (G)
 
 https://stacks.math.columbia.edu/tag/04E7
 -/
-def colimit_iso [HasColimit G] : colimit (F ⋙ G) ≅ colimit G :=
+def colimitIso [HasColimit G] : colimit (F ⋙ G) ≅ colimit G :=
   asIso (colimit.pre G F)
 
 end
 
 /-- Given a colimit cocone over `F ⋙ G` we can construct a colimit cocone over `G`. -/
 @[simps]
-def colimit_cocone_of_comp (t : ColimitCocone (F ⋙ G)) : ColimitCocone G where
+def colimitCoconeOfComp (t : ColimitCocone (F ⋙ G)) : ColimitCocone G where
   Cocone := extendCocone.obj t.Cocone
   IsColimit := (isColimitExtendCoconeEquiv F _).symm t.IsColimit
 
@@ -337,7 +347,7 @@ attribute [local instance] has_colimit_of_comp
 
 https://stacks.math.columbia.edu/tag/04E7
 -/
-def colimit_iso' [HasColimit (F ⋙ G)] : colimit (F ⋙ G) ≅ colimit G :=
+def colimitIso' [HasColimit (F ⋙ G)] : colimit (F ⋙ G) ≅ colimit G :=
   asIso (colimit.pre G F)
 
 end
@@ -347,7 +357,7 @@ is an isomorphism (as it always is when `F` is cofinal),
 then `colimit (F ⋙ coyoneda.obj (op d)) ≅ punit`
 (simply because `colimit (coyoneda.obj (op d)) ≅ punit`).
 -/
-def colimit_comp_coyoneda_iso (d : D) [IsIso (colimit.pre (coyoneda.obj (op d)) F)] :
+def colimitCompCoyonedaIso (d : D) [IsIso (colimit.pre (coyoneda.obj (op d)) F)] :
     colimit (F ⋙ coyoneda.obj (op d)) ≅ PUnit :=
   asIso (colimit.pre (coyoneda.obj (op d)) F) ≪≫ coyoneda.colimitCoyonedaIso (op d)
 
@@ -413,7 +423,7 @@ def lift (d : D) : C :=
 /-- When `F : C ⥤ D` is initial, we denote by `hom_to_lift` an arbitrary choice of morphism
 `F.obj (lift F d) ⟶ d`.
 -/
-def hom_to_lift (d : D) : F.obj (lift F d) ⟶ d :=
+def homToLift (d : D) : F.obj (lift F d) ⟶ d :=
   (Classical.arbitrary (CostructuredArrow F d)).Hom
 
 /-- We provide an induction principle for reasoning about `lift` and `hom_to_lift`.
@@ -449,7 +459,7 @@ variable {F G}
 /-- Given a cone over `F ⋙ G`, we can construct a `cone G` with the same cocone point.
 -/
 @[simps]
-def extend_cone : Cone (F ⋙ G) ⥤ Cone G where
+def extendCone : Cone (F ⋙ G) ⥤ Cone G where
   obj := fun c =>
     { x := c.x,
       π :=
@@ -457,6 +467,8 @@ def extend_cone : Cone (F ⋙ G) ⥤ Cone G where
           naturality' := fun X Y f => by
             dsimp
             simp
+            -- This would be true if we'd chosen `lift F Y` to be `lift F X`
+            -- and `hom_to_lift F Y` to be `hom_to_lift F X ≫ f`.
             apply
               induction F fun Z k =>
                 (c.π.app Z ≫ G.map k : c.X ⟶ _) = c.π.app (lift F X) ≫ G.map (hom_to_lift F X) ≫ G.map f
@@ -474,6 +486,8 @@ def extend_cone : Cone (F ⋙ G) ⥤ Cone G where
 @[simp]
 theorem limit_cone_comp_aux (s : Cone (F ⋙ G)) (j : C) :
     s.π.app (lift F (F.obj j)) ≫ G.map (homToLift F (F.obj j)) = s.π.app j := by
+  -- This point is that this would be true if we took `lift (F.obj j)` to just be `j`
+  -- and `hom_to_lift (F.obj j)` to be `𝟙 (F.obj j)`.
   apply induction F fun X k => s.π.app X ≫ G.map k = (s.π.app j : _)
   · intro j₁ j₂ k₁ k₂ f w h
     rw [← s.w f]
@@ -495,7 +509,7 @@ the category of cones on `F ⋙ G` is equivalent to the category of cones on `G`
 for any `G : D ⥤ E`.
 -/
 @[simps]
-def cones_equiv : Cone (F ⋙ G) ≌ Cone G where
+def conesEquiv : Cone (F ⋙ G) ≌ Cone G where
   Functor := extendCone
   inverse := Cones.whiskering F
   unitIso :=
@@ -520,18 +534,18 @@ variable {G}
 /-- When `F : C ⥤ D` is initial, and `t : cone G` for some `G : D ⥤ E`,
 `t.whisker F` is a limit cone exactly when `t` is.
 -/
-def is_limit_whisker_equiv (t : Cone G) : IsLimit (t.whisker F) ≃ IsLimit t :=
+def isLimitWhiskerEquiv (t : Cone G) : IsLimit (t.whisker F) ≃ IsLimit t :=
   IsLimit.ofConeEquiv (conesEquiv F G).symm
 
 /-- When `F` is initial, and `t : cone (F ⋙ G)`,
 `extend_cone.obj t` is a limit cone exactly when `t` is.
 -/
-def is_limit_extend_cone_equiv (t : Cone (F ⋙ G)) : IsLimit (extendCone.obj t) ≃ IsLimit t :=
+def isLimitExtendConeEquiv (t : Cone (F ⋙ G)) : IsLimit (extendCone.obj t) ≃ IsLimit t :=
   IsLimit.ofConeEquiv (conesEquiv F G)
 
 /-- Given a limit cone over `G : D ⥤ E` we can construct a limit cone over `F ⋙ G`. -/
 @[simps]
-def limit_cone_comp (t : LimitCone G) : LimitCone (F ⋙ G) where
+def limitConeComp (t : LimitCone G) : LimitCone (F ⋙ G) where
   Cone := _
   IsLimit := (isLimitWhiskerEquiv F _).symm t.IsLimit
 
@@ -560,14 +574,14 @@ variable (G)
 
 https://stacks.math.columbia.edu/tag/04E7
 -/
-def limit_iso [HasLimit G] : limit (F ⋙ G) ≅ limit G :=
+def limitIso [HasLimit G] : limit (F ⋙ G) ≅ limit G :=
   (asIso (limit.pre G F)).symm
 
 end
 
 /-- Given a limit cone over `F ⋙ G` we can construct a limit cone over `G`. -/
 @[simps]
-def limit_cone_of_comp (t : LimitCone (F ⋙ G)) : LimitCone G where
+def limitConeOfComp (t : LimitCone (F ⋙ G)) : LimitCone G where
   Cone := extendCone.obj t.Cone
   IsLimit := (isLimitExtendConeEquiv F _).symm t.IsLimit
 
@@ -588,7 +602,7 @@ attribute [local instance] has_limit_of_comp
 
 https://stacks.math.columbia.edu/tag/04E7
 -/
-def limit_iso' [HasLimit (F ⋙ G)] : limit (F ⋙ G) ≅ limit G :=
+def limitIso' [HasLimit (F ⋙ G)] : limit (F ⋙ G) ≅ limit G :=
   (asIso (limit.pre G F)).symm
 
 end

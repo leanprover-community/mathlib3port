@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Yaël Dillies. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yaël Dillies
+-/
 import Mathbin.Data.Dfinsupp.Basic
 
 /-!
@@ -44,7 +49,7 @@ theorem le_def {f g : Π₀ i, α i} : f ≤ g ↔ ∀ i, f i ≤ g i :=
   Iff.rfl
 
 /-- The order on `dfinsupp`s over a partial order embeds into the order on functions -/
-def order_embedding_to_fun : (Π₀ i, α i) ↪o ∀ i, α i where
+def orderEmbeddingToFun : (Π₀ i, α i) ↪o ∀ i, α i where
   toFun := fun f => f
   inj' := fun f g h =>
     Dfinsupp.ext fun i => by
@@ -73,7 +78,7 @@ instance [∀ i, PartialOrderₓ (α i)] : PartialOrderₓ (Π₀ i, α i) :=
   { Dfinsupp.preorder α with le_antisymm := fun f g hfg hgf => ext fun i => (hfg i).antisymm (hgf i) }
 
 instance [∀ i, SemilatticeInf (α i)] : SemilatticeInf (Π₀ i, α i) :=
-  { Dfinsupp.partialOrder α with inf := zipWith (fun _ => ·⊓·) fun _ => inf_idem,
+  { Dfinsupp.partialOrder α with inf := zipWith (fun _ => (·⊓·)) fun _ => inf_idem,
     inf_le_left := fun f g i => by
       rw [zip_with_apply]
       exact inf_le_left,
@@ -89,7 +94,7 @@ theorem inf_apply [∀ i, SemilatticeInf (α i)] (f g : Π₀ i, α i) (i : ι) 
   zip_with_apply _ _ _ _ _
 
 instance [∀ i, SemilatticeSup (α i)] : SemilatticeSup (Π₀ i, α i) :=
-  { Dfinsupp.partialOrder α with sup := zipWith (fun _ => ·⊔·) fun _ => sup_idem,
+  { Dfinsupp.partialOrder α with sup := zipWith (fun _ => (·⊔·)) fun _ => sup_idem,
     le_sup_left := fun f g i => by
       rw [zip_with_apply]
       exact le_sup_left,
@@ -104,7 +109,7 @@ instance [∀ i, SemilatticeSup (α i)] : SemilatticeSup (Π₀ i, α i) :=
 theorem sup_apply [∀ i, SemilatticeSup (α i)] (f g : Π₀ i, α i) (i : ι) : (f⊔g) i = f i⊔g i :=
   zip_with_apply _ _ _ _ _
 
-instance Lattice [∀ i, Lattice (α i)] : Lattice (Π₀ i, α i) :=
+instance lattice [∀ i, Lattice (α i)] : Lattice (Π₀ i, α i) :=
   { Dfinsupp.semilatticeInf α, Dfinsupp.semilatticeSup α with }
 
 end Zero
@@ -168,7 +173,7 @@ theorem le_iff : f ≤ g ↔ ∀, ∀ i ∈ f.support, ∀, f i ≤ g i :=
 
 variable (α)
 
-instance decidable_le [∀ i, DecidableRel (@LE.le (α i) _)] : DecidableRel (@LE.le (Π₀ i, α i) _) := fun f g =>
+instance decidableLe [∀ i, DecidableRel (@LE.le (α i) _)] : DecidableRel (@LE.le (Π₀ i, α i) _) := fun f g =>
   decidableOfIff _ le_iff.symm
 
 variable {α}

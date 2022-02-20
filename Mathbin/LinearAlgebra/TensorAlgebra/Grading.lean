@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Eric Wieser. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Eric Wieser
+-/
 import Mathbin.LinearAlgebra.TensorAlgebra.Basic
 import Mathbin.RingTheory.GradedAlgebra.Basic
 
@@ -19,12 +24,12 @@ variable (R M)
 
 /-- A version of `tensor_algebra.ι` that maps directly into the graded structure. This is
 primarily an auxiliary construction used to provide `tensor_algebra.graded_algebra`. -/
-def graded_algebra.ι : M →ₗ[R] ⨁ i : ℕ, ↥((ι R : M →ₗ[_] _).range ^ i) :=
+def GradedAlgebra.ι : M →ₗ[R] ⨁ i : ℕ, ↥((ι R : M →ₗ[_] _).range ^ i) :=
   DirectSum.lof R ℕ (fun i => ↥((ι R : M →ₗ[_] _).range ^ i)) 1 ∘ₗ
     (ι R).codRestrict _ fun m => by
       simpa only [pow_oneₓ] using LinearMap.mem_range_self _ m
 
-theorem graded_algebra.ι_apply (m : M) :
+theorem GradedAlgebra.ι_apply (m : M) :
     GradedAlgebra.ι R M m =
       DirectSum.of (fun i => ↥((ι R : M →ₗ[_] _).range ^ i)) 1
         ⟨ι R m, by
@@ -34,7 +39,7 @@ theorem graded_algebra.ι_apply (m : M) :
 variable {R M}
 
 /-- The tensor algebra is graded by the powers of the submodule `(tensor_algebra.ι R).range`. -/
-instance GradedAlgebra : GradedAlgebra ((· ^ ·) (ι R : M →ₗ[R] TensorAlgebra R M).range : ℕ → Submodule R _) :=
+instance gradedAlgebra : GradedAlgebra ((· ^ ·) (ι R : M →ₗ[R] TensorAlgebra R M).range : ℕ → Submodule R _) :=
   GradedAlgebra.ofAlgHom _ (lift _ <| GradedAlgebra.ι R M)
     (by
       ext m

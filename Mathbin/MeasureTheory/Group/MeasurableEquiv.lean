@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Yury G. Kudryashov. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yury G. Kudryashov
+-/
 import Mathbin.MeasureTheory.Group.Arithmetic
 
 /-!
@@ -77,7 +82,7 @@ variable [HasMeasurableMul G] [HasMeasurableMul G₀]
 measurable automorphism of `G`. -/
 @[to_additive
       "If `G` is an additive group with measurable addition, then addition of `g : G`\non the left is a measurable automorphism of `G`."]
-def mul_left (g : G) : G ≃ᵐ G :=
+def mulLeft (g : G) : G ≃ᵐ G :=
   smul g
 
 @[simp, to_additive]
@@ -100,7 +105,7 @@ theorem _root_.measurable_embedding_mul_left (g : G) : MeasurableEmbedding ((· 
 measurable automorphism of `G`. -/
 @[to_additive
       "If `G` is an additive group with measurable addition, then addition of `g : G`\non the right is a measurable automorphism of `G`."]
-def mul_right (g : G) : G ≃ᵐ G where
+def mulRight (g : G) : G ≃ᵐ G where
   toEquiv := Equivₓ.mulRight g
   measurable_to_fun := measurable_mul_const g
   measurable_inv_fun := measurable_mul_const g⁻¹
@@ -123,7 +128,7 @@ theorem to_equiv_mul_right (g : G) : (mulRight g).toEquiv = Equivₓ.mulRight g 
 
 /-- If `G₀` is a group with zero with measurable multiplication, then left multiplication by a
 nonzero element `g : G₀` is a measurable automorphism of `G₀`. -/
-def mul_left₀ (g : G₀) (hg : g ≠ 0) : G₀ ≃ᵐ G₀ :=
+def mulLeft₀ (g : G₀) (hg : g ≠ 0) : G₀ ≃ᵐ G₀ :=
   smul₀ g hg
 
 theorem _root_.measurable_embedding_mul_left₀ {g : G₀} (hg : g ≠ 0) : MeasurableEmbedding ((· * ·) g) :=
@@ -143,7 +148,7 @@ theorem to_equiv_mul_left₀ {g : G₀} (hg : g ≠ 0) : (mulLeft₀ g hg).toEqu
 
 /-- If `G₀` is a group with zero with measurable multiplication, then right multiplication by a
 nonzero element `g : G₀` is a measurable automorphism of `G₀`. -/
-def mul_right₀ (g : G₀) (hg : g ≠ 0) : G₀ ≃ᵐ G₀ where
+def mulRight₀ (g : G₀) (hg : g ≠ 0) : G₀ ≃ᵐ G₀ where
   toEquiv := Equivₓ.mulRight₀ g hg
   measurable_to_fun := measurable_mul_const g
   measurable_inv_fun := measurable_mul_const g⁻¹

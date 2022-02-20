@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Fox Thomson. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Fox Thomson
+-/
 import Mathbin.Data.Fintype.Basic
 import Mathbin.Computability.Language
 import Mathbin.Tactic.NormNum
@@ -29,7 +34,7 @@ instance [Inhabited σ] : Inhabited (DFA α σ) :=
   ⟨DFA.mk (fun _ _ => default) default ∅⟩
 
 /-- `M.eval_from s x` evaluates `M` with input `x` starting from the state `s`. -/
-def eval_from (start : σ) : List α → σ :=
+def evalFrom (start : σ) : List α → σ :=
   List.foldlₓ M.step start
 
 /-- `M.eval x` evaluates `M` with input `x` starting from the state `M.start`. -/
@@ -37,7 +42,7 @@ def eval :=
   M.evalFrom M.start
 
 /-- `M.accepts` is the language of `x` such that `M.eval x` is an accept state. -/
-def accepts : Language α := fun x => M.eval x ∈ M.accept
+def Accepts : Language α := fun x => M.eval x ∈ M.accept
 
 theorem mem_accepts (x : List α) : x ∈ M.Accepts ↔ M.evalFrom M.start x ∈ M.accept := by
   rfl

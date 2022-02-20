@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Johannes Hölzl. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johannes Hölzl
+-/
 import Mathbin.Algebra.BigOperators.Order
 import Mathbin.Data.Nat.Totient
 import Mathbin.GroupTheory.OrderOfElement
@@ -96,6 +101,7 @@ theorem is_cyclic_of_prime_card {α : Type u} [Groupₓ α] [Fintype α] {p : �
   ⟨by
     obtain ⟨g, hg⟩ : ∃ g : α, g ≠ 1 := Fintype.exists_ne_of_one_lt_card (h.symm ▸ hp.1.one_lt) 1
     classical
+    -- for fintype (subgroup.zpowers g)
     have : Fintype.card (Subgroup.zpowers g) ∣ p := by
       rw [← h]
       apply card_subgroup_dvd_card
@@ -298,6 +304,7 @@ private theorem card_pow_eq_one_eq_order_of_aux (a : α) :
 
 open_locale Nat
 
+-- use φ for nat.totient
 private theorem card_order_of_eq_totient_aux₁ :
     ∀ {d : ℕ},
       d ∣ Fintype.card α →

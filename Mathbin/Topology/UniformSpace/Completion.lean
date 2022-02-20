@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Patrick Massot. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Patrick Massot, Johannes Hölzl
+-/
 import Mathbin.Topology.UniformSpace.AbstractCompletion
 
 /-!
@@ -63,7 +68,7 @@ variable {β : Type v} {γ : Type w}
 
 variable [UniformSpace β] [UniformSpace γ]
 
-def gen (s : Set (α × α)) : Set (Cauchyₓ α × Cauchyₓ α) :=
+def Gen (s : Set (α × α)) : Set (Cauchyₓ α × Cauchyₓ α) :=
   { p | s ∈ p.1.val ×ᶠ p.2.val }
 
 theorem monotone_gen : Monotone gen :=
@@ -109,9 +114,8 @@ private theorem comp_gen : (((𝓤 α).lift' gen).lift' fun s => CompRel s s) �
 
 instance : UniformSpace (Cauchyₓ α) :=
   UniformSpace.ofCore
-    { uniformity := (𝓤 α).lift' gen,
-      refl := principal_le_lift' fun s hs ⟨a, b⟩ a_eq_b : a = b => a_eq_b ▸ a.property.right hs, symm := symm_gen,
-      comp := comp_gen }
+    { uniformity := (𝓤 α).lift' gen, refl := principal_le_lift' fun a_eq_b : a = b => a_eq_b ▸ a.property.right hs,
+      symm := symm_gen, comp := comp_gen }
 
 theorem mem_uniformity {s : Set (Cauchyₓ α × Cauchyₓ α)} : s ∈ 𝓤 (Cauchyₓ α) ↔ ∃ t ∈ 𝓤 α, gen t ⊆ s :=
   mem_lift'_sets monotone_gen
@@ -121,7 +125,7 @@ theorem mem_uniformity' {s : Set (Cauchyₓ α × Cauchyₓ α)} :
   mem_uniformity.trans <| bex_congr fun t h => Prod.forall
 
 /-- Embedding of `α` into its completion `Cauchy α` -/
-def pure_cauchy (a : α) : Cauchyₓ α :=
+def pureCauchy (a : α) : Cauchyₓ α :=
   ⟨pure a, cauchy_pure⟩
 
 theorem uniform_inducing_pure_cauchy : UniformInducing (pure_cauchy : α → Cauchyₓ α) :=
@@ -179,7 +183,7 @@ theorem nonempty_Cauchy_iff : Nonempty (Cauchyₓ α) ↔ Nonempty α := by
 
 section
 
--- ././Mathport/Syntax/Translate/Basic.lean:169:40: warning: unsupported option eqn_compiler.zeta
+-- ././Mathport/Syntax/Translate/Basic.lean:211:40: warning: unsupported option eqn_compiler.zeta
 set_option eqn_compiler.zeta true
 
 instance : CompleteSpace (Cauchyₓ α) :=
@@ -310,7 +314,7 @@ instance complete_space_separation [h : CompleteSpace α] : CompleteSpace (Quoti
         (hx.trans <| map_le_iff_le_comap.1 continuous_quotient_mk.ContinuousAt)⟩⟩
 
 /-- Hausdorff completion of `α` -/
-def completion :=
+def Completion :=
   Quotientₓ (separation_setoid <| Cauchyₓ α)
 
 namespace Completion
@@ -334,6 +338,7 @@ instance : RegularSpace (Completion α) :=
 instance : CoeTₓ α (Completion α) :=
   ⟨Quotientₓ.mk ∘ pure_cauchy⟩
 
+-- note [use has_coe_t]
 protected theorem coe_eq : (coe : α → Completion α) = Quotientₓ.mk ∘ pure_cauchy :=
   rfl
 
@@ -370,7 +375,7 @@ def cpkg {α : Type _} [UniformSpace α] : AbstractCompletion α where
   UniformInducing := Completion.uniform_inducing_coe α
   dense := Completion.dense_range_coe
 
-instance abstract_completion.inhabited : Inhabited (AbstractCompletion α) :=
+instance AbstractCompletion.inhabited : Inhabited (AbstractCompletion α) :=
   ⟨cpkg⟩
 
 attribute [local instance] AbstractCompletion.uniformStruct AbstractCompletion.complete AbstractCompletion.separation
@@ -499,7 +504,7 @@ theorem map_id : Completion.map (@id α) = id :=
 theorem extension_map [CompleteSpace γ] [SeparatedSpace γ] {f : β → γ} {g : α → β} (hf : UniformContinuous f)
     (hg : UniformContinuous g) : Completion.extension f ∘ Completion.map g = Completion.extension (f ∘ g) :=
   Completion.ext (continuous_extension.comp continuous_map) continuous_extension <| by
-    intro a <;> simp only [hg, hf, hf.comp hg, · ∘ ·, map_coe, extension_coe]
+    intro a <;> simp only [hg, hf, hf.comp hg, (· ∘ ·), map_coe, extension_coe]
 
 theorem map_comp {g : β → γ} {f : α → β} (hg : UniformContinuous g) (hf : UniformContinuous f) :
     Completion.map g ∘ Completion.map f = Completion.map (g ∘ f) :=
@@ -507,9 +512,11 @@ theorem map_comp {g : β → γ} {f : α → β} (hg : UniformContinuous g) (hf 
 
 end Map
 
+/- In this section we construct isomorphisms between the completion of a uniform space and the
+completion of its separation quotient -/
 section SeparationQuotientCompletion
 
-def completion_separation_quotient_equiv (α : Type u) [UniformSpace α] :
+def completionSeparationQuotientEquiv (α : Type u) [UniformSpace α] :
     Completion (SeparationQuotient α) ≃ Completion α := by
   refine' ⟨completion.extension (separation_quotient.lift (coe : α → completion α)), completion.map Quotientₓ.mk, _, _⟩
   · intro a

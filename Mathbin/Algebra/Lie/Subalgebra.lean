@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Oliver Nash. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Oliver Nash
+-/
 import Mathbin.Algebra.Lie.Basic
 import Mathbin.RingTheory.Noetherian
 
@@ -286,7 +291,7 @@ theorem mem_range_self (x : L) : f x ∈ f.range :=
   LinearMap.mem_range_self f x
 
 /-- We can restrict a morphism to a (surjective) map to its range. -/
-def range_restrict : L →ₗ⁅R⁆ f.range :=
+def rangeRestrict : L →ₗ⁅R⁆ f.range :=
   { (f : L →ₗ[R] L₂).range_restrict with
     map_lie' := fun x y => by
       apply Subtype.ext
@@ -304,7 +309,7 @@ theorem surjective_range_restrict : Function.Surjective f.range_restrict := by
   simp only [Subtype.mk_eq_mk, range_restrict_apply]
 
 /-- A Lie algebra is equivalent to its range under an injective Lie algebra morphism. -/
-noncomputable def equiv_range_of_injective (h : Function.Injective f) : L ≃ₗ⁅R⁆ f.range :=
+noncomputable def equivRangeOfInjective (h : Function.Injective f) : L ≃ₗ⁅R⁆ f.range :=
   LieEquiv.ofBijective f.range_restrict
     (fun x y hxy => by
       simp only [Subtype.mk_eq_mk, range_restrict_apply] at hxy
@@ -356,6 +361,7 @@ def map : LieSubalgebra R L₂ :=
 theorem mem_map (x : L₂) : x ∈ K.map f ↔ ∃ y : L, y ∈ K ∧ f y = x :=
   Submodule.mem_map
 
+-- TODO Rename and state for homs instead of equivs.
 @[simp]
 theorem mem_map_submodule (e : L ≃ₗ⁅R⁆ L₂) (x : L₂) :
     x ∈ K.map (e : L →ₗ⁅R⁆ L₂) ↔ x ∈ (K : Submodule R L).map (e : L →ₗ[R] L₂) :=
@@ -375,7 +381,10 @@ section LatticeStructure
 open Set
 
 instance : PartialOrderₓ (LieSubalgebra R L) :=
-  { PartialOrderₓ.lift (coe : LieSubalgebra R L → Set L) coe_injective with le := fun N N' => ∀ ⦃x⦄, x ∈ N → x ∈ N' }
+  { -- Overriding `le` like this gives a better defeq.
+      PartialOrderₓ.lift
+      (coe : LieSubalgebra R L → Set L) coe_injective with
+    le := fun N N' => ∀ ⦃x⦄, x ∈ N → x ∈ N' }
 
 theorem le_def : K ≤ K' ↔ (K : Set L) ⊆ K' :=
   Iff.rfl
@@ -422,11 +431,11 @@ instance : HasInf (LieSubalgebra R L) :=
   ⟨fun K K' =>
     { (K⊓K' : Submodule R L) with lie_mem' := fun x y hx hy => mem_inter (K.lie_mem hx.1 hy.1) (K'.lie_mem hx.2 hy.2) }⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:827:4: unsupported set replacement {((s : submodule R L)) | s «expr ∈ » S}
+-- ././Mathport/Syntax/Translate/Basic.lean:947:4: unsupported set replacement {((s : submodule R L)) | s «expr ∈ » S}
 instance : HasInfₓ (LieSubalgebra R L) :=
   ⟨fun S =>
     { inf
-        "././Mathport/Syntax/Translate/Basic.lean:827:4: unsupported set replacement {((s : submodule R L)) | s «expr ∈ » S}" with
+        "././Mathport/Syntax/Translate/Basic.lean:947:4: unsupported set replacement {((s : submodule R L)) | s «expr ∈ » S}" with
       lie_mem' := fun x y hx hy => by
         simp only [Submodule.mem_carrier, mem_Inter, Submodule.Inf_coe, mem_set_of_eq, forall_apply_eq_imp_iff₂,
           exists_imp_distrib] at *
@@ -437,12 +446,12 @@ instance : HasInfₓ (LieSubalgebra R L) :=
 theorem inf_coe : (↑(K⊓K') : Set L) = K ∩ K' :=
   rfl
 
--- ././Mathport/Syntax/Translate/Basic.lean:827:4: unsupported set replacement {((s : submodule R L)) | s «expr ∈ » S}
+-- ././Mathport/Syntax/Translate/Basic.lean:947:4: unsupported set replacement {((s : submodule R L)) | s «expr ∈ » S}
 @[simp]
 theorem Inf_coe_to_submodule (S : Set (LieSubalgebra R L)) :
     (↑(inf S) : Submodule R L) =
       inf
-        "././Mathport/Syntax/Translate/Basic.lean:827:4: unsupported set replacement {((s : submodule R L)) | s «expr ∈ » S}" :=
+        "././Mathport/Syntax/Translate/Basic.lean:947:4: unsupported set replacement {((s : submodule R L)) | s «expr ∈ » S}" :=
   rfl
 
 @[simp]
@@ -469,11 +478,11 @@ instance : CompleteLattice (LieSubalgebra R L) :=
       rw [mem_bot] at h
       rw [h]
       exact N.zero_mem',
-    top := ⊤, le_top := fun _ _ _ => trivialₓ, inf := ·⊓·, le_inf := fun N₁ N₂ N₃ h₁₂ h₁₃ m hm => ⟨h₁₂ hm, h₁₃ hm⟩,
+    top := ⊤, le_top := fun _ _ _ => trivialₓ, inf := (·⊓·), le_inf := fun N₁ N₂ N₃ h₁₂ h₁₃ m hm => ⟨h₁₂ hm, h₁₃ hm⟩,
     inf_le_left := fun _ _ _ => And.left, inf_le_right := fun _ _ _ => And.right }
 
 instance : AddCommMonoidₓ (LieSubalgebra R L) where
-  add := ·⊔·
+  add := (·⊔·)
   add_assoc := fun _ _ _ => sup_assoc
   zero := ⊥
   zero_add := fun _ => bot_sup_eq
@@ -496,6 +505,7 @@ theorem eq_bot_iff : K = ⊥ ↔ ∀ x : L, x ∈ K → x = 0 := by
   rw [eq_bot_iff]
   exact Iff.rfl
 
+-- TODO[gh-6025]: make this an instance once safe to do so
 theorem subsingleton_of_bot : Subsingleton (LieSubalgebra R (↥(⊥ : LieSubalgebra R L))) := by
   apply subsingleton_of_bot_eq_top
   ext ⟨x, hx⟩
@@ -511,8 +521,9 @@ theorem subsingleton_bot : Subsingleton (↥(⊥ : LieSubalgebra R L)) :=
 variable (R L)
 
 theorem well_founded_of_noetherian [IsNoetherian R L] :
-    WellFounded (· > · : LieSubalgebra R L → LieSubalgebra R L → Prop) :=
-  let f : (· > · : LieSubalgebra R L → LieSubalgebra R L → Prop) →r (· > · : Submodule R L → Submodule R L → Prop) :=
+    WellFounded ((· > ·) : LieSubalgebra R L → LieSubalgebra R L → Prop) :=
+  let f :
+    ((· > ·) : LieSubalgebra R L → LieSubalgebra R L → Prop) →r ((· > ·) : Submodule R L → Submodule R L → Prop) :=
     { toFun := coe, map_rel' := fun N N' h => h }
   RelHomClass.well_founded f (is_noetherian_iff_well_founded.mp inferInstance)
 
@@ -524,7 +535,7 @@ variable (h : K ≤ K')
 
 /-- Given two nested Lie subalgebras `K ⊆ K'`, the inclusion `K ↪ K'` is a morphism of Lie
 algebras. -/
-def hom_of_le : K →ₗ⁅R⁆ K' :=
+def homOfLe : K →ₗ⁅R⁆ K' :=
   { Submodule.ofLe h with map_lie' := fun x y => rfl }
 
 @[simp]
@@ -539,7 +550,7 @@ theorem hom_of_le_injective : Function.Injective (homOfLe h) := fun x y => by
 
 /-- Given two nested Lie subalgebras `K ⊆ K'`, we can view `K` as a Lie subalgebra of `K'`,
 regarded as Lie algebra in its own right. -/
-def of_le : LieSubalgebra R K' :=
+def ofLe : LieSubalgebra R K' :=
   (homOfLe h).range
 
 @[simp]
@@ -565,7 +576,7 @@ theorem coe_of_le : (ofLe h : Submodule R K') = (Submodule.ofLe h).range :=
 
 /-- Given nested Lie subalgebras `K ⊆ K'`, there is a natural equivalence from `K` to its image in
 `K'`.  -/
-noncomputable def equiv_of_le : K ≃ₗ⁅R⁆ ofLe h :=
+noncomputable def equivOfLe : K ≃ₗ⁅R⁆ ofLe h :=
   (homOfLe h).equivRangeOfInjective (hom_of_le_injective h)
 
 @[simp]
@@ -586,7 +597,7 @@ section LieSpan
 variable (R L) (s : Set L)
 
 /-- The Lie subalgebra of a Lie algebra `L` generated by a subset `s ⊆ L`. -/
-def lie_span : LieSubalgebra R L :=
+def lieSpan : LieSubalgebra R L :=
   inf { N | s ⊆ N }
 
 variable {R L s}
@@ -671,7 +682,7 @@ variable {R : Type u} {L₁ : Type v} {L₂ : Type w}
 variable [CommRingₓ R] [LieRing L₁] [LieRing L₂] [LieAlgebra R L₁] [LieAlgebra R L₂]
 
 /-- An injective Lie algebra morphism is an equivalence onto its range. -/
-noncomputable def of_injective (f : L₁ →ₗ⁅R⁆ L₂) (h : Function.Injective f) : L₁ ≃ₗ⁅R⁆ f.range :=
+noncomputable def ofInjective (f : L₁ →ₗ⁅R⁆ L₂) (h : Function.Injective f) : L₁ ≃ₗ⁅R⁆ f.range :=
   { LinearEquiv.ofInjective ↑f <| by
       rwa [LieHom.coe_to_linear_map] with
     map_lie' := fun x y => by
@@ -685,7 +696,7 @@ theorem of_injective_apply (f : L₁ →ₗ⁅R⁆ L₂) (h : Function.Injective
 variable (L₁' L₁'' : LieSubalgebra R L₁) (L₂' : LieSubalgebra R L₂)
 
 /-- Lie subalgebras that are equal as sets are equivalent as Lie algebras. -/
-def of_eq (h : (L₁' : Set L₁) = L₁'') : L₁' ≃ₗ⁅R⁆ L₁'' :=
+def ofEq (h : (L₁' : Set L₁) = L₁'') : L₁' ≃ₗ⁅R⁆ L₁'' :=
   { LinearEquiv.ofEq (↑L₁') (↑L₁'')
       (by
         ext x
@@ -703,7 +714,7 @@ variable (e : L₁ ≃ₗ⁅R⁆ L₂)
 
 /-- An equivalence of Lie algebras restricts to an equivalence from any Lie subalgebra onto its
 image. -/
-def lie_subalgebra_map : L₁'' ≃ₗ⁅R⁆ (L₁''.map e : LieSubalgebra R L₂) :=
+def lieSubalgebraMap : L₁'' ≃ₗ⁅R⁆ (L₁''.map e : LieSubalgebra R L₂) :=
   { LinearEquiv.submoduleMap (e : L₁ ≃ₗ[R] L₂) ↑L₁'' with
     map_lie' := fun x y => by
       apply SetCoe.ext
@@ -715,7 +726,7 @@ theorem lie_subalgebra_map_apply (x : L₁'') : ↑(e.lieSubalgebraMap _ x) = e 
 
 /-- An equivalence of Lie algebras restricts to an equivalence from any Lie subalgebra onto its
 image. -/
-def of_subalgebras (h : L₁'.map ↑e = L₂') : L₁' ≃ₗ⁅R⁆ L₂' :=
+def ofSubalgebras (h : L₁'.map ↑e = L₂') : L₁' ≃ₗ⁅R⁆ L₂' :=
   { LinearEquiv.ofSubmodules (e : L₁ ≃ₗ[R] L₂) (↑L₁') (↑L₂')
       (by
         rw [← h]

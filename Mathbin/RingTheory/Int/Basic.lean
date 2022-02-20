@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Johannes Hölzl. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johannes Hölzl, Jens Wagemaker, Aaron Anderson
+-/
 import Mathbin.RingTheory.Coprime.Basic
 import Mathbin.RingTheory.PrincipalIdealDomain
 
@@ -27,7 +32,7 @@ namespace Nat
 instance : WfDvdMonoid ℕ :=
   ⟨by
     refine'
-      RelHomClass.well_founded (⟨fun x : ℕ => if x = 0 then (⊤ : WithTop ℕ) else x, _⟩ : DvdNotUnit →r · < ·)
+      RelHomClass.well_founded (⟨fun x : ℕ => if x = 0 then (⊤ : WithTop ℕ) else x, _⟩ : DvdNotUnit →r (· < ·))
         (WithTop.well_founded_lt Nat.lt_wf)
     intro a b h
     cases a
@@ -268,8 +273,8 @@ theorem prime_two_or_dvd_of_dvd_two_mul_pow_self_two {m : ℤ} {p : ℕ} (hp : N
     exact (or_selfₓ _).mp ((Nat.Prime.dvd_mul hp).mp hpp)
     
 
-theorem Int.exists_prime_and_dvd {n : ℤ} (n2 : 2 ≤ n.natAbs) : ∃ p, Prime p ∧ p ∣ n := by
-  obtain ⟨p, pp, pd⟩ := Nat.exists_prime_and_dvd n2
+theorem Int.exists_prime_and_dvd {n : ℤ} (hn : n.natAbs ≠ 1) : ∃ p, Prime p ∧ p ∣ n := by
+  obtain ⟨p, pp, pd⟩ := Nat.exists_prime_and_dvd hn
   exact ⟨p, nat.prime_iff_prime_int.mp pp, int.coe_nat_dvd_left.mpr pd⟩
 
 open UniqueFactorizationMonoid
@@ -306,10 +311,10 @@ theorem finite_int_iff_nat_abs_finite {a b : ℤ} : Finite a b ↔ Finite a.natA
 theorem finite_int_iff {a b : ℤ} : Finite a b ↔ a.natAbs ≠ 1 ∧ b ≠ 0 := by
   rw [finite_int_iff_nat_abs_finite, finite_nat_iff, pos_iff_ne_zero, Int.nat_abs_ne_zero]
 
-instance decidable_nat : DecidableRel fun a b : ℕ => (multiplicity a b).Dom := fun a b =>
+instance decidableNat : DecidableRel fun a b : ℕ => (multiplicity a b).Dom := fun a b =>
   decidableOfIff _ finite_nat_iff.symm
 
-instance decidable_int : DecidableRel fun a b : ℤ => (multiplicity a b).Dom := fun a b =>
+instance decidableInt : DecidableRel fun a b : ℤ => (multiplicity a b).Dom := fun a b =>
   decidableOfIff _ finite_int_iff.symm
 
 end multiplicity

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison, Bhavik Mehta
+-/
 import Mathbin.CategoryTheory.Adjunction.Reflective
 import Mathbin.CategoryTheory.Monad.Algebra
 
@@ -7,6 +12,7 @@ open Category
 
 universe v₁ v₂ u₁ u₂
 
+-- morphism levels before object levels. See note [category_theory universes].
 variable {C : Type u₁} [Category.{v₁} C] {D : Type u₂} [Category.{v₂} D]
 
 variable {L : C ⥤ D} {R : D ⥤ C}
@@ -17,7 +23,7 @@ namespace Adjunction
 the category `C`.
 -/
 @[simps]
-def to_monad (h : L ⊣ R) : Monad C where
+def toMonad (h : L ⊣ R) : Monad C where
   toFunctor := L ⋙ R
   η' := h.Unit
   μ' := whiskerRight (whiskerLeft L h.counit) R
@@ -34,7 +40,7 @@ def to_monad (h : L ⊣ R) : Monad C where
 the category `D`.
 -/
 @[simps]
-def to_comonad (h : L ⊣ R) : Comonad D where
+def toComonad (h : L ⊣ R) : Comonad D where
   toFunctor := R ⋙ L
   ε' := h.counit
   δ' := whiskerRight (whiskerLeft R h.Unit) L
@@ -49,7 +55,7 @@ def to_comonad (h : L ⊣ R) : Comonad D where
 
 /-- The monad induced by the Eilenberg-Moore adjunction is the original monad.  -/
 @[simps]
-def adj_to_monad_iso (T : Monad C) : T.adj.toMonad ≅ T :=
+def adjToMonadIso (T : Monad C) : T.adj.toMonad ≅ T :=
   MonadIso.mk
     (NatIso.ofComponents (fun X => Iso.refl _)
       (by
@@ -63,7 +69,7 @@ def adj_to_monad_iso (T : Monad C) : T.adj.toMonad ≅ T :=
 
 /-- The comonad induced by the Eilenberg-Moore adjunction is the original comonad. -/
 @[simps]
-def adj_to_comonad_iso (G : Comonad C) : G.adj.toComonad ≅ G :=
+def adjToComonadIso (G : Comonad C) : G.adj.toComonad ≅ G :=
   ComonadIso.mk
     (NatIso.ofComponents (fun X => Iso.refl _)
       (by
@@ -84,7 +90,7 @@ We later show that this is full when `R` is full, faithful when `R` is faithful,
 and essentially surjective when `R` is reflective.
 -/
 @[simps]
-def monad.comparison (h : L ⊣ R) : D ⥤ h.toMonad.Algebra where
+def Monad.comparison (h : L ⊣ R) : D ⥤ h.toMonad.Algebra where
   obj := fun X =>
     { a := R.obj X, a := R.map (h.counit.app X),
       assoc' := by
@@ -100,11 +106,11 @@ def monad.comparison (h : L ⊣ R) : D ⥤ h.toMonad.Algebra where
 /-- The underlying object of `(monad.comparison R).obj X` is just `R.obj X`.
 -/
 @[simps]
-def monad.comparison_forget (h : L ⊣ R) : Monad.comparison h ⋙ h.toMonad.forget ≅ R where
+def Monad.comparisonForget (h : L ⊣ R) : Monad.comparison h ⋙ h.toMonad.forget ≅ R where
   Hom := { app := fun X => 𝟙 _ }
   inv := { app := fun X => 𝟙 _ }
 
-theorem monad.left_comparison (h : L ⊣ R) : L ⋙ Monad.comparison h = h.toMonad.free :=
+theorem Monad.left_comparison (h : L ⊣ R) : L ⋙ Monad.comparison h = h.toMonad.free :=
   rfl
 
 instance [Faithful R] (h : L ⊣ R) : Faithful (Monad.comparison h) where
@@ -131,7 +137,7 @@ sending objects `X : C` to Eilenberg-Moore coalgebras for `L ⋙ R` with underly
 `L.obj X`.
 -/
 @[simps]
-def comonad.comparison (h : L ⊣ R) : C ⥤ h.toComonad.Coalgebra where
+def Comonad.comparison (h : L ⊣ R) : C ⥤ h.toComonad.Coalgebra where
   obj := fun X =>
     { a := L.obj X, a := L.map (h.Unit.app X),
       coassoc' := by
@@ -148,14 +154,14 @@ def comonad.comparison (h : L ⊣ R) : C ⥤ h.toComonad.Coalgebra where
 /-- The underlying object of `(comonad.comparison L).obj X` is just `L.obj X`.
 -/
 @[simps]
-def comonad.comparison_forget {L : C ⥤ D} {R : D ⥤ C} (h : L ⊣ R) : Comonad.comparison h ⋙ h.toComonad.forget ≅ L where
+def Comonad.comparisonForget {L : C ⥤ D} {R : D ⥤ C} (h : L ⊣ R) : Comonad.comparison h ⋙ h.toComonad.forget ≅ L where
   Hom := { app := fun X => 𝟙 _ }
   inv := { app := fun X => 𝟙 _ }
 
-theorem comonad.left_comparison (h : L ⊣ R) : R ⋙ Comonad.comparison h = h.toComonad.cofree :=
+theorem Comonad.left_comparison (h : L ⊣ R) : R ⋙ Comonad.comparison h = h.toComonad.cofree :=
   rfl
 
-instance comonad.comparison_faithful_of_faithful [Faithful L] (h : L ⊣ R) : Faithful (Comonad.comparison h) where
+instance Comonad.comparison_faithful_of_faithful [Faithful L] (h : L ⊣ R) : Faithful (Comonad.comparison h) where
   map_injective' := fun X Y f g w => L.map_injective (congr_argₓ Comonad.Coalgebra.Hom.f w : _)
 
 instance (G : Comonad C) : Full (Comonad.comparison G.adj) where
@@ -177,13 +183,13 @@ instance (G : Comonad C) : EssSurj (Comonad.comparison G.adj) where
 /-- A right adjoint functor `R : D ⥤ C` is *monadic* if the comparison functor `monad.comparison R`
 from `D` to the category of Eilenberg-Moore algebras for the adjunction is an equivalence.
 -/
-class monadic_right_adjoint (R : D ⥤ C) extends IsRightAdjoint R where
+class MonadicRightAdjoint (R : D ⥤ C) extends IsRightAdjoint R where
   eqv : IsEquivalence (Monad.comparison (Adjunction.ofRightAdjoint R))
 
 /-- A left adjoint functor `L : C ⥤ D` is *comonadic* if the comparison functor `comonad.comparison L`
 from `C` to the category of Eilenberg-Moore algebras for the adjunction is an equivalence.
 -/
-class comonadic_left_adjoint (L : C ⥤ D) extends IsLeftAdjoint L where
+class ComonadicLeftAdjoint (L : C ⥤ D) extends IsLeftAdjoint L where
   eqv : IsEquivalence (Comonad.comparison (Adjunction.ofLeftAdjoint L))
 
 noncomputable instance (T : Monad C) : MonadicRightAdjoint T.forget :=
@@ -192,6 +198,7 @@ noncomputable instance (T : Monad C) : MonadicRightAdjoint T.forget :=
 noncomputable instance (G : Comonad C) : ComonadicLeftAdjoint G.forget :=
   ⟨(Equivalence.ofFullyFaithfullyEssSurj _ : IsEquivalence (Comonad.comparison G.adj))⟩
 
+-- TODO: This holds more generally for idempotent adjunctions, not just reflective adjunctions.
 instance μ_iso_of_reflective [Reflective R] : IsIso (Adjunction.ofRightAdjoint R).toMonad.μ := by
   dsimp
   infer_instance
@@ -225,14 +232,17 @@ instance comparison_ess_surj [Reflective R] : EssSurj (Monad.comparison (Adjunct
     adjunction.right_triangle_components, comp_id]
   apply (X.unit_assoc _).symm
 
-instance comparison_full [Full R] [IsRightAdjoint R] : Full (Monad.comparison (Adjunction.ofRightAdjoint R)) where
+instance comparisonFull [Full R] [IsRightAdjoint R] : Full (Monad.comparison (Adjunction.ofRightAdjoint R)) where
   Preimage := fun X Y f => R.Preimage f.f
 
 end Reflective
 
 /-- Any reflective inclusion has a monadic right adjoint.
     cf Prop 5.3.3 of [Riehl][riehl2017] -/
-noncomputable instance (priority := 100) monadic_of_reflective [Reflective R] : MonadicRightAdjoint R where
+-- It is possible to do this computably since the construction gives the data of the inverse, not
+-- just the existence of an inverse on each object.
+-- see Note [lower instance priority]
+noncomputable instance (priority := 100) monadicOfReflective [Reflective R] : MonadicRightAdjoint R where
   eqv := Equivalence.ofFullyFaithfullyEssSurj _
 
 end CategoryTheory

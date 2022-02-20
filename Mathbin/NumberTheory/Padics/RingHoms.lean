@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Johan Commelin, Robert Y. Lewis. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johan Commelin, Robert Y. Lewis
+-/
 import Mathbin.Data.Zmod.Basic
 import Mathbin.NumberTheory.Padics.PadicIntegers
 
@@ -61,7 +66,7 @@ It is the unique non-negative integer that is `< p` with this property.
 (Note that this definition assumes `r : ℚ`.
 See `padic_int.zmod_repr` for a version that takes values in `ℕ`
 and works for arbitrary `x : ℤ_[p]`.) -/
-def mod_part : ℤ :=
+def modPart : ℤ :=
   r.num * gcdA r.denom p % p
 
 include hp_prime
@@ -184,7 +189,7 @@ theorem exists_mem_range : ∃ n : ℕ, n < p ∧ x - n ∈ maximalIdeal ℤ_[p]
 /-- `zmod_repr x` is the unique natural number smaller than `p`
 satisfying `∥(x - zmod_repr x : ℤ_[p])∥ < 1`.
 -/
-def zmod_repr : ℕ :=
+def zmodRepr : ℕ :=
   Classical.some (exists_mem_range x)
 
 theorem zmod_repr_spec : zmodRepr x < p ∧ x - zmodRepr x ∈ maximalIdeal ℤ_[p] :=
@@ -198,7 +203,7 @@ theorem sub_zmod_repr_mem : x - zmodRepr x ∈ maximalIdeal ℤ_[p] :=
 
 /-- `to_zmod_hom` is an auxiliary constructor for creating ring homs from `ℤ_[p]` to `zmod v`.
 -/
-def to_zmod_hom (v : ℕ) (f : ℤ_[p] → ℕ) (f_spec : ∀ x, x - f x ∈ (Ideal.span {v} : Ideal ℤ_[p]))
+def toZmodHom (v : ℕ) (f : ℤ_[p] → ℕ) (f_spec : ∀ x, x - f x ∈ (Ideal.span {v} : Ideal ℤ_[p]))
     (f_congr :
       ∀ x : ℤ_[p] a b : ℕ,
         x - a ∈ (Ideal.span {v} : Ideal ℤ_[p]) → x - b ∈ (Ideal.span {v} : Ideal ℤ_[p]) → (a : Zmod v) = b) :
@@ -239,7 +244,7 @@ def to_zmod_hom (v : ℕ) (f : ℤ_[p] → ℕ) (f_spec : ∀ x, x - f x ∈ (Id
 /-- `to_zmod` is a ring hom from `ℤ_[p]` to `zmod p`,
 with the equality `to_zmod x = (zmod_repr x : zmod p)`.
 -/
-def to_zmod : ℤ_[p] →+* Zmod p :=
+def toZmod : ℤ_[p] →+* Zmod p :=
   toZmodHom p zmodRepr
     (by
       rw [← maximal_ideal_eq_span_p]
@@ -369,6 +374,7 @@ theorem appr_spec (n : ℕ) : ∀ x : ℤ_[p], x - appr x n ∈ (Ideal.span {p ^
       rw [← this, ← Ideal.mem_span_singleton, ← maximal_ideal_eq_span_p]
       apply to_zmod_spec
     obtain ⟨c, rfl⟩ : IsUnit c := by
+      -- TODO: write a can_lift instance for units
       rw [Int.nat_abs_eq_zero] at hc0
       rw [is_unit_iff, norm_eq_pow_val hc', hc0, neg_zero, zpow_zero]
     rw [DiscreteValuationRing.unit_mul_pow_congr_unit _ _ _ _ _ hc]
@@ -381,7 +387,7 @@ theorem appr_spec (n : ℕ) : ∀ x : ℤ_[p], x - appr x n ∈ (Ideal.span {p ^
     
 
 /-- A ring hom from `ℤ_[p]` to `zmod (p^n)`, with underlying function `padic_int.appr n`. -/
-def to_zmod_pow (n : ℕ) : ℤ_[p] →+* Zmod (p ^ n) :=
+def toZmodPow (n : ℕ) : ℤ_[p] →+* Zmod (p ^ n) :=
   toZmodHom (p ^ n) (fun x => appr x n)
     (by
       intros
@@ -480,7 +486,7 @@ omit hp_prime
 whose `n`th value is the unique integer `k` such that `0 ≤ k < p ^ n`
 and `f n r = (k : zmod (p ^ n))`.
 -/
-def nth_hom (r : R) : ℕ → ℤ := fun n => (f n r : Zmod (p ^ n)).val
+def nthHom (r : R) : ℕ → ℤ := fun n => (f n r : Zmod (p ^ n)).val
 
 @[simp]
 theorem nth_hom_zero : nthHom f 0 = 0 := by
@@ -515,7 +521,7 @@ theorem is_cau_seq_nth_hom (r : R) : IsCauSeq (padicNorm p) fun n => nthHom f r 
 as a Cauchy sequence of rationals with respect to the `p`-adic norm.
 The `n`th value of the sequence is `((f n r).val : ℚ)`.
 -/
-def nth_hom_seq (r : R) : PadicSeq p :=
+def nthHomSeq (r : R) : PadicSeq p :=
   ⟨fun n => nthHom f r n, is_cau_seq_nth_hom f_compat r⟩
 
 theorem nth_hom_seq_one : nthHomSeq f_compat 1 ≈ 1 := by
@@ -571,7 +577,7 @@ theorem nth_hom_seq_mul (r s : R) : nthHomSeq f_compat (r * s) ≈ nthHomSeq f_c
 /-- `lim_nth_hom f_compat r` is the limit of a sequence `f` of compatible ring homs `R →+* zmod (p^k)`.
 This is itself a ring hom: see `padic_int.lift`.
 -/
-def lim_nth_hom (r : R) : ℤ_[p] :=
+def limNthHom (r : R) : ℤ_[p] :=
   ofIntSeq (nthHom f r) (is_cau_seq_nth_hom f_compat r)
 
 theorem lim_nth_hom_spec (r : R) : ∀ ε : ℝ, 0 < ε → ∃ N : ℕ, ∀, ∀ n ≥ N, ∀, ∥limNthHom f_compat r - nthHom f r n∥ < ε :=
@@ -603,6 +609,7 @@ theorem lim_nth_hom_mul (r s : R) : limNthHom f_compat (r * s) = limNthHom f_com
 /-- `lift f_compat` is the limit of a sequence `f` of compatible ring homs `R →+* zmod (p^k)`,
 with the equality `lift f_compat r = padic_int.lim_nth_hom f_compat r`.
 -/
+-- TODO: generalize this to arbitrary complete discrete valuation rings
 def lift : R →+* ℤ_[p] where
   toFun := limNthHom f_compat
   map_one' := lim_nth_hom_one f_compat

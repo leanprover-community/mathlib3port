@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison
+-/
 import Mathbin.CategoryTheory.Isomorphism
 import Mathbin.CategoryTheory.FunctorCategory
 import Mathbin.CategoryTheory.FullyFaithful
@@ -36,7 +41,7 @@ variable {C : Type u₁} [Category.{v₁} C] {D : Type u₂} [Category.{v₂} D]
 `whisker_left F α : (F ⋙ G) ⟶ (F ⋙ H)` has components `α.app (F.obj X)`.
 -/
 @[simps]
-def whisker_left (F : C ⥤ D) {G H : D ⥤ E} (α : G ⟶ H) : F ⋙ G ⟶ F ⋙ H where
+def whiskerLeft (F : C ⥤ D) {G H : D ⥤ E} (α : G ⟶ H) : F ⋙ G ⟶ F ⋙ H where
   app := fun X => α.app (F.obj X)
   naturality' := fun X Y f => by
     rw [functor.comp_map, functor.comp_map, α.naturality]
@@ -45,7 +50,7 @@ def whisker_left (F : C ⥤ D) {G H : D ⥤ E} (α : G ⟶ H) : F ⋙ G ⟶ F �
 `whisker_right α F : (G ⋙ F) ⟶ (G ⋙ F)` has components `F.map (α.app X)`.
 -/
 @[simps]
-def whisker_right {G H : C ⥤ D} (α : G ⟶ H) (F : D ⥤ E) : G ⋙ F ⟶ H ⋙ F where
+def whiskerRight {G H : C ⥤ D} (α : G ⟶ H) (F : D ⥤ E) : G ⋙ F ⟶ H ⋙ F where
   app := fun X => F.map (α.app X)
   naturality' := fun X Y f => by
     rw [functor.comp_map, functor.comp_map, ← F.map_comp, ← F.map_comp, α.naturality]
@@ -58,7 +63,7 @@ variable (C D E)
 `(whiskering_left.obj F).map α` is `whisker_left F α`.
 -/
 @[simps]
-def whiskering_left : (C ⥤ D) ⥤ (D ⥤ E) ⥤ C ⥤ E where
+def whiskeringLeft : (C ⥤ D) ⥤ (D ⥤ E) ⥤ C ⥤ E where
   obj := fun F => { obj := fun G => F ⋙ G, map := fun G H α => whiskerLeft F α }
   map := fun F G τ =>
     { app := fun H =>
@@ -77,7 +82,7 @@ def whiskering_left : (C ⥤ D) ⥤ (D ⥤ E) ⥤ C ⥤ E where
 `(whiskering_right.obj H).map α` is `whisker_right α H`.
 -/
 @[simps]
-def whiskering_right : (D ⥤ E) ⥤ (C ⥤ D) ⥤ C ⥤ E where
+def whiskeringRight : (D ⥤ E) ⥤ (C ⥤ D) ⥤ C ⥤ E where
   obj := fun H => { obj := fun F => F ⋙ H, map := fun _ _ α => whiskerRight α H }
   map := fun G H τ =>
     { app := fun F =>
@@ -125,7 +130,7 @@ theorem whisker_right_comp {G H K : C ⥤ D} (α : G ⟶ H) (β : H ⟶ K) (F : 
 /-- If `α : G ≅ H` is a natural isomorphism then
 `iso_whisker_left F α : (F ⋙ G) ≅ (F ⋙ H)` has components `α.app (F.obj X)`.
 -/
-def iso_whisker_left (F : C ⥤ D) {G H : D ⥤ E} (α : G ≅ H) : F ⋙ G ≅ F ⋙ H :=
+def isoWhiskerLeft (F : C ⥤ D) {G H : D ⥤ E} (α : G ≅ H) : F ⋙ G ≅ F ⋙ H :=
   ((whiskeringLeft C D E).obj F).mapIso α
 
 @[simp]
@@ -139,7 +144,7 @@ theorem iso_whisker_left_inv (F : C ⥤ D) {G H : D ⥤ E} (α : G ≅ H) : (iso
 /-- If `α : G ≅ H` then
 `iso_whisker_right α F : (G ⋙ F) ≅ (H ⋙ F)` has components `F.map_iso (α.app X)`.
 -/
-def iso_whisker_right {G H : C ⥤ D} (α : G ≅ H) (F : D ⥤ E) : G ⋙ F ≅ H ⋙ F :=
+def isoWhiskerRight {G H : C ⥤ D} (α : G ≅ H) (F : D ⥤ E) : G ⋙ F ≅ H ⋙ F :=
   ((whiskeringRight C D E).obj F).mapIso α
 
 @[simp]
@@ -189,14 +194,14 @@ variable {B : Type u₂} [Category.{v₂} B]
 /-- The left unitor, a natural isomorphism `((𝟭 _) ⋙ F) ≅ F`.
 -/
 @[simps]
-def left_unitor (F : A ⥤ B) : 𝟭 A ⋙ F ≅ F where
+def leftUnitor (F : A ⥤ B) : 𝟭 A ⋙ F ≅ F where
   Hom := { app := fun X => 𝟙 (F.obj X) }
   inv := { app := fun X => 𝟙 (F.obj X) }
 
 /-- The right unitor, a natural isomorphism `(F ⋙ (𝟭 B)) ≅ F`.
 -/
 @[simps]
-def right_unitor (F : A ⥤ B) : F ⋙ 𝟭 B ≅ F where
+def rightUnitor (F : A ⥤ B) : F ⋙ 𝟭 B ≅ F where
   Hom := { app := fun X => 𝟙 (F.obj X) }
   inv := { app := fun X => 𝟙 (F.obj X) }
 
@@ -220,6 +225,7 @@ theorem triangle (F : A ⥤ B) (G : B ⥤ C) :
   dsimp
   simp
 
+-- See note [dsimp, simp].
 variable {E : Type u₅} [Category.{v₅} E]
 
 variable (F : A ⥤ B) (G : B ⥤ C) (H : C ⥤ D) (K : D ⥤ E)

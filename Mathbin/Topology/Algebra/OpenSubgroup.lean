@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Johan Commelin All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johan Commelin
+-/
 import Mathbin.Topology.Opens
 import Mathbin.Topology.Algebra.Ring
 
@@ -54,7 +59,7 @@ variable {G : Type _} [Groupₓ G] [TopologicalSpace G]
 variable {U V : OpenSubgroup G} {g : G}
 
 @[to_additive]
-instance has_coe_set : CoeTₓ (OpenSubgroup G) (Set G) :=
+instance hasCoeSet : CoeTₓ (OpenSubgroup G) (Set G) :=
   ⟨fun U => U.1⟩
 
 @[to_additive]
@@ -62,11 +67,11 @@ instance : HasMem G (OpenSubgroup G) :=
   ⟨fun g U => g ∈ (U : Set G)⟩
 
 @[to_additive]
-instance has_coe_subgroup : CoeTₓ (OpenSubgroup G) (Subgroup G) :=
+instance hasCoeSubgroup : CoeTₓ (OpenSubgroup G) (Subgroup G) :=
   ⟨toSubgroup⟩
 
 @[to_additive]
-instance has_coe_opens : CoeTₓ (OpenSubgroup G) (Opens G) :=
+instance hasCoeOpens : CoeTₓ (OpenSubgroup G) (Opens G) :=
   ⟨fun U => ⟨U, U.is_open'⟩⟩
 
 @[simp, norm_cast, to_additive]
@@ -97,7 +102,7 @@ theorem ext_iff : U = V ↔ ∀ x, x ∈ U ↔ x ∈ V :=
 variable (U)
 
 @[to_additive]
-protected theorem IsOpen : IsOpen (U : Set G) :=
+protected theorem is_open : IsOpen (U : Set G) :=
   U.is_open'
 
 @[to_additive]
@@ -127,7 +132,7 @@ instance : Inhabited (OpenSubgroup G) :=
   ⟨⊤⟩
 
 @[to_additive]
-theorem IsClosed [HasContinuousMul G] (U : OpenSubgroup G) : IsClosed (U : Set G) := by
+theorem is_closed [HasContinuousMul G] (U : OpenSubgroup G) : IsClosed (U : Set G) := by
   apply is_open_compl_iff.1
   refine' is_open_iff_forall_mem_open.2 fun x hx => ⟨(fun y => y * x⁻¹) ⁻¹' U, _, _, _⟩
   · intro u hux
@@ -147,7 +152,7 @@ variable {H : Type _} [Groupₓ H] [TopologicalSpace H]
 
 /-- The product of two open subgroups as an open subgroup of the product group. -/
 @[to_additive "The product of two open subgroups as an open subgroup of the product group."]
-def Prod (U : OpenSubgroup G) (V : OpenSubgroup H) : OpenSubgroup (G × H) :=
+def prod (U : OpenSubgroup G) (V : OpenSubgroup H) : OpenSubgroup (G × H) :=
   { (U : Subgroup G).Prod (V : Subgroup H) with Carrier := (U : Set G) ×ˢ (V : Set H),
     is_open' := U.IsOpen.Prod V.IsOpen }
 

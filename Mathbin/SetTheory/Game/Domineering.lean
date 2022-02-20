@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison
+-/
 import Mathbin.SetTheory.Game.State
 
 /-!
@@ -23,16 +28,16 @@ open Function
 
 /-- The equivalence `(x, y) ↦ (x, y+1)`. -/
 @[simps]
-def shift_up : ℤ × ℤ ≃ ℤ × ℤ :=
+def shiftUp : ℤ × ℤ ≃ ℤ × ℤ :=
   (Equivₓ.refl ℤ).prodCongr (Equivₓ.addRight (1 : ℤ))
 
 /-- The equivalence `(x, y) ↦ (x+1, y)`. -/
 @[simps]
-def shift_right : ℤ × ℤ ≃ ℤ × ℤ :=
+def shiftRight : ℤ × ℤ ≃ ℤ × ℤ :=
   (Equivₓ.addRight (1 : ℤ)).prodCongr (Equivₓ.refl ℤ)
 
 /-- A Domineering board is an arbitrary finite subset of `ℤ × ℤ`. -/
-def board :=
+def Board :=
   Finset (ℤ × ℤ)deriving Inhabited
 
 attribute [local reducible] board
@@ -52,11 +57,11 @@ theorem mem_right {b : Board} (x : ℤ × ℤ) : x ∈ right b ↔ x ∈ b ∧ (
   Finset.mem_inter.trans (and_congr Iff.rfl Finset.mem_map_equiv)
 
 /-- After Left moves, two vertically adjacent squares are removed from the board. -/
-def move_left (b : Board) (m : ℤ × ℤ) : Board :=
+def moveLeft (b : Board) (m : ℤ × ℤ) : Board :=
   (b.erase m).erase (m.1, m.2 - 1)
 
 /-- After Left moves, two horizontally adjacent squares are removed from the board. -/
-def move_right (b : Board) (m : ℤ × ℤ) : Board :=
+def moveRight (b : Board) (m : ℤ × ℤ) : Board :=
   (b.erase m).erase (m.1 - 1, m.2)
 
 theorem fst_pred_mem_erase_of_mem_right {b : Board} {m : ℤ × ℤ} (h : m ∈ right b) : (m.1 - 1, m.2) ∈ b.erase m := by
@@ -105,7 +110,7 @@ theorem move_right_smaller {b : Board} {m : ℤ × ℤ} (h : m ∈ right b) :
   simp [← move_right_card h, lt_add_one]
 
 /-- The instance describing allowed moves on a Domineering board. -/
-instance State : State Board where
+instance state : State Board where
   turnBound := fun s => s.card / 2
   l := fun s => (left s).Image (moveLeft s)
   r := fun s => (right s).Image (moveRight s)
@@ -125,7 +130,7 @@ def domineering (b : Domineering.Board) : Pgame :=
   Pgame.of b
 
 /-- All games of Domineering are short, because each move removes two squares. -/
-instance short_domineering (b : Domineering.Board) : Short (domineering b) := by
+instance shortDomineering (b : Domineering.Board) : Short (domineering b) := by
   dsimp [domineering]
   infer_instance
 
@@ -134,16 +139,43 @@ def domineering.one :=
   domineering [(0, 0), (0, 1)].toFinset
 
 /-- The `L` shaped Domineering board, in which Left is exactly half a move ahead. -/
-def domineering.L :=
+def domineering.l :=
   domineering [(0, 2), (0, 1), (0, 0), (1, 0)].toFinset
 
-instance short_one : Short domineering.one := by
+instance shortOne : Short domineering.one := by
   dsimp [domineering.one]
   infer_instance
 
-instance short_L : Short domineering.l := by
+instance shortL : Short domineering.l := by
   dsimp [domineering.L]
   infer_instance
 
+-- The VM can play small games successfully:
+-- #eval to_bool (domineering.one ≈ 1)
+-- #eval to_bool (domineering.L + domineering.L ≈ 1)
+-- The following no longer works since Lean 3.29, since definitions by well-founded
+-- recursion no longer reduce definitionally.
+-- We can check that `decidable` instances reduce as expected,
+-- and so our implementation of domineering is computable.
+-- run_cmd tactic.whnf `(by apply_instance : decidable (domineering.one ≤ 1)) >>= tactic.trace
+-- dec_trivial can handle most of the dictionary of small games described in [conway2001]
+-- example : domineering.one ≈ 1 := dec_trivial
+-- example : domineering.L + domineering.L ≈ 1 := dec_trivial
+-- example : domineering.L ≈ pgame.of_lists [0] [1] := dec_trivial
+-- example : (domineering ([(0,0), (0,1), (0,2), (0,3)].to_finset) ≈ 2) := dec_trivial
+-- example : (domineering ([(0,0), (0,1), (1,0), (1,1)].to_finset) ≈ pgame.of_lists [1] [-1]) :=
+--   dec_trivial.
+-- The 3x3 grid is doable, but takes a minute...
+-- example :
+--   (domineering ([(0,0), (0,1), (0,2), (1,0), (1,1), (1,2), (2,0), (2,1), (2,2)].to_finset) ≈
+--     pgame.of_lists [1] [-1]) := dec_trivial
+-- The 5x5 grid is actually 0, but brute-forcing this is too challenging even for the VM.
+-- #eval to_bool (domineering ([
+--   (0,0), (0,1), (0,2), (0,3), (0,4),
+--   (1,0), (1,1), (1,2), (1,3), (1,4),
+--   (2,0), (2,1), (2,2), (2,3), (2,4),
+--   (3,0), (3,1), (3,2), (3,3), (3,4),
+--   (4,0), (4,1), (4,2), (4,3), (4,4)
+--   ].to_finset) ≈ 0)
 end Pgame
 

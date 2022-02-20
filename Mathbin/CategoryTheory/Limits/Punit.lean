@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison
+-/
 import Mathbin.CategoryTheory.Punit
 import Mathbin.CategoryTheory.Limits.HasLimits
 
@@ -19,21 +24,21 @@ namespace CategoryTheory.Limits
 variable {J : Type v} [SmallCategory J] {F : J ⥤ Discrete PUnit.{v + 1}}
 
 /-- A trivial cone for a functor into `punit`. `punit_cone_is_limit` shows it is a limit. -/
-def punit_cone : Cone F :=
+def punitCone : Cone F :=
   ⟨PUnit.unit, (Functor.punitExt _ _).Hom⟩
 
 /-- A trivial cocone for a functor into `punit`. `punit_cocone_is_limit` shows it is a colimit. -/
-def punit_cocone : Cocone F :=
+def punitCocone : Cocone F :=
   ⟨PUnit.unit, (Functor.punitExt _ _).Hom⟩
 
 /-- Any cone over a functor into `punit` is a limit cone.
 -/
-def punit_cone_is_limit {c : Cone F} : IsLimit c := by
+def punitConeIsLimit {c : Cone F} : IsLimit c := by
   tidy
 
 /-- Any cocone over a functor into `punit` is a colimit cocone.
 -/
-def punit_cocone_is_colimit {c : Cocone F} : IsColimit c := by
+def punitCoconeIsColimit {c : Cocone F} : IsColimit c := by
   tidy
 
 instance : HasLimits (Discrete PUnit) := by

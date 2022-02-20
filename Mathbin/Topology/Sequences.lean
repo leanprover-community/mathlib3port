@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Jan-David Salchow. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Jan-David Salchow, Patrick Massot
+-/
 import Mathbin.Topology.SubsetProperties
 import Mathbin.Topology.MetricSpace.Basic
 
@@ -44,7 +49,7 @@ the set of all p ∈ α which arise as limit of sequences in M. -/
 def SequentialClosure (M : Set α) : Set α :=
   { p | ∃ x : ℕ → α, (∀ n : ℕ, x n ∈ M) ∧ x ⟶ p }
 
-theorem subset_sequential_closure (M : Set α) : M ⊆ SequentialClosure M := fun p _ : p ∈ M =>
+theorem subset_sequential_closure (M : Set α) : M ⊆ SequentialClosure M := fun _ : p ∈ M =>
   show p ∈ SequentialClosure M from ⟨fun n => p, fun n => ‹p ∈ M›, tendsto_const_nhds⟩
 
 /-- A set `s` is sequentially closed if for any converging sequence `x n` of elements of `s`,
@@ -117,8 +122,9 @@ theorem mem_closure_iff_seq_limit [SequentialSpace α] {s : Set α} {a : α} :
 def SequentiallyContinuous (f : α → β) : Prop :=
   ∀ x : ℕ → α, ∀ {limit : α}, (x ⟶ limit) → (f ∘ x) ⟶ f limit
 
+-- A continuous function is sequentially continuous.
 theorem Continuous.to_sequentially_continuous {f : α → β} (_ : Continuous f) : SequentiallyContinuous f :=
-  fun x limit _ : x ⟶ limit =>
+  fun _ : x ⟶ limit =>
   have : Tendsto f (𝓝 limit) (𝓝 (f limit)) := Continuous.tendsto ‹Continuous f› limit
   show (f ∘ x) ⟶ f limit from Tendsto.comp this ‹x ⟶ limit›
 
@@ -129,8 +135,8 @@ theorem continuous_iff_sequentially_continuous {f : α → β} [SequentialSpace 
     show Continuous f from
       suffices h : ∀ {A : Set β}, IsClosed A → IsSeqClosed (f ⁻¹' A) from
         continuous_iff_is_closed.mpr fun A _ => is_seq_closed_iff_is_closed.mp <| h ‹IsClosed A›
-      fun A _ : IsClosed A =>
-      is_seq_closed_of_def fun x : ℕ → α p _ : ∀ n, f (x n) ∈ A _ : x ⟶ p =>
+      fun _ : IsClosed A =>
+      is_seq_closed_of_def fun _ : x ⟶ p =>
         have : (f ∘ x) ⟶ f p := ‹SequentiallyContinuous f› x ‹x ⟶ p›
         show f p ∈ A from mem_of_is_closed_sequential ‹IsClosed A› ‹∀ n, f (x n) ∈ A› ‹(f ∘ x) ⟶ f p›
 
@@ -143,16 +149,25 @@ namespace FirstCountableTopology
 variable [TopologicalSpace α] [FirstCountableTopology α]
 
 /-- Every first-countable space is sequential. -/
+-- see Note [lower instance priority]
 instance (priority := 100) : SequentialSpace α :=
   ⟨show ∀ M, SequentialClosure M = Closure M from fun M =>
       suffices Closure M ⊆ SequentialClosure M from Set.Subset.antisymm (sequential_closure_subset_closure M) this
-      fun p : α hp : p ∈ Closure M => by
+      -- For every p ∈ closure M, we need to construct a sequence x in M that converges to p:
+    fun hp : p ∈ Closure M =>
+      -- Since we are in a first-countable space, the neighborhood filter around `p` has a decreasing
+    -- basis `U` indexed by `ℕ`.
+    by
       let ⟨U, hU⟩ := (𝓝 p).exists_antitone_basis
+      -- Since `p ∈ closure M`, there is an element in each `M ∩ U i`
       have hp : ∀ i : ℕ, ∃ y : α, y ∈ M ∧ y ∈ U i := by
         simpa using (mem_closure_iff_nhds_basis hU.1).mp hp
+      -- The axiom of (countable) choice builds our sequence from the later fact
       choose u hu using hp
       rw [forall_and_distrib] at hu
+      -- It clearly takes values in `M`
       use u, hu.1
+      -- and converges to `p` because the basis is decreasing.
       apply hU.tendsto hu.2⟩
 
 end FirstCountableTopology
@@ -207,6 +222,7 @@ theorem IsCompact.tendsto_subseq {s : Set α} {u : ℕ → α} (hs : IsCompact s
     ∃ x ∈ s, ∃ φ : ℕ → ℕ, StrictMono φ ∧ Tendsto (u ∘ φ) atTop (𝓝 x) :=
   hs.IsSeqCompact hu
 
+-- see Note [lower instance priority]
 instance (priority := 100) FirstCountableTopology.seq_compact_of_compact [CompactSpace α] : SeqCompactSpace α :=
   ⟨compact_univ.IsSeqCompact⟩
 

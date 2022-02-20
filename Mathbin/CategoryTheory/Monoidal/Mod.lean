@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison
+-/
 import Mathbin.CategoryTheory.Monoidal.Mon_
 
 /-!
@@ -41,7 +46,7 @@ theorem assoc_flip : (𝟙 A.x ⊗ M.act) ≫ M.act = (α_ A.x A.x M.x).inv ≫ 
 
 /-- A morphism of module objects. -/
 @[ext]
-structure hom (M N : Modₓ A) where
+structure Hom (M N : Modₓ A) where
   Hom : M.x ⟶ N.x
   act_hom' : M.act ≫ hom = (𝟙 A.x ⊗ hom) ≫ N.act := by
     run_tac
@@ -56,7 +61,7 @@ attribute [simp, reassoc] hom.act_hom
 def id (M : Modₓ A) : Hom M M where
   Hom := 𝟙 M.x
 
-instance hom_inhabited (M : Modₓ A) : Inhabited (Hom M M) :=
+instance homInhabited (M : Modₓ A) : Inhabited (Hom M M) :=
   ⟨id M⟩
 
 /-- Composition of module object morphisms. -/
@@ -106,6 +111,7 @@ def comap {A B : Mon_ C} (f : A ⟶ B) : Modₓ B ⥤ Modₓ A where
         slice_lhs 1 2 => rw [← comp_tensor_id]
         rw [f.one_hom, one_act],
       assoc' := by
+        -- oh, for homotopy.io in a widget!
         slice_rhs 2 3 => rw [id_tensor_comp_tensor_id, ← tensor_id_comp_id_tensor]
         rw [id_tensor_comp]
         slice_rhs 4 5 => rw [Modₓ.assoc_flip]
@@ -123,5 +129,7 @@ def comap {A B : Mon_ C} (f : A ⟶ B) : Modₓ B ⥤ Modₓ A where
         slice_rhs 2 3 => rw [← g.act_hom]
         rw [category.assoc] }
 
+-- Lots more could be said about `comap`, e.g. how it interacts with
+-- identities, compositions, and equalities of monoid object morphisms.
 end Modₓ
 

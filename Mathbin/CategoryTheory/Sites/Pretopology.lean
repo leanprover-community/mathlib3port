@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Bhavik Mehta. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Bhavik Mehta
+-/
 import Mathbin.CategoryTheory.Sites.Grothendieck
 
 /-!
@@ -53,7 +58,7 @@ Note that Stacks calls a category together with a pretopology a site, and [MM92]
 a basis for a topology.
 -/
 @[ext]
-structure pretopology where
+structure Pretopology where
   Coverings : ∀ X : C, Set (Presieve X)
   has_isos : ∀ ⦃X Y⦄ f : Y ⟶ X [IsIso f], Presieve.Singleton f ∈ coverings X
   pullbacks : ∀ ⦃X Y⦄ f : Y ⟶ X S, S ∈ coverings X → PullbackArrows f S ∈ coverings Y
@@ -95,7 +100,7 @@ instance : Inhabited (Pretopology C) :=
 
 See https://stacks.math.columbia.edu/tag/00ZC, or [MM92] Chapter III, Section 2, Equation (2).
 -/
-def to_grothendieck (K : Pretopology C) : GrothendieckTopology C where
+def toGrothendieck (K : Pretopology C) : GrothendieckTopology C where
   Sieves := fun X S => ∃ R ∈ K X, R ≤ (S : Presieve _)
   top_mem' := fun X => ⟨Presieve.Singleton (𝟙 _), K.has_isos _, fun _ _ _ => ⟨⟩⟩
   pullback_stable' := fun X Y S g => by
@@ -118,7 +123,7 @@ theorem mem_to_grothendieck (K : Pretopology C) X S : S ∈ toGrothendieck C K X
 
 See [MM92] Chapter III, Section 2, Equations (3,4).
 -/
-def of_grothendieck (J : GrothendieckTopology C) : Pretopology C where
+def ofGrothendieck (J : GrothendieckTopology C) : Pretopology C where
   Coverings := fun X R => Sieve.generate R ∈ J X
   has_isos := fun X Y f i =>
     J.covering_of_eq_top
@@ -159,7 +164,7 @@ also known as the indiscrete, coarse, or chaotic topology.
 
 See https://stacks.math.columbia.edu/tag/07GE
 -/
-def trivialₓ : Pretopology C where
+def trivial : Pretopology C where
   Coverings := fun X S => ∃ (Y : _)(f : Y ⟶ X)(h : IsIso f), S = Presieve.Singleton f
   has_isos := fun X Y f i => ⟨_, _, i, rfl⟩
   pullbacks := fun X Y f S => by

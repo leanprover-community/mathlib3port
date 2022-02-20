@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Jannis Limperg. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Jannis Limperg
+-/
 import Mathbin.Data.Bool.Basic
 import Mathbin.Tactic.Core
 
@@ -32,11 +37,18 @@ but depend on one of the `hyps`, what we do depends on `clear_dependent`. If it
 is true, `H` is implicitly also cleared. If it is false, `clear'` fails. -/
 unsafe def tactic.clear' (clear_dependent : Bool) (hyps : List expr) : tactic Unit := do
   let tgt ← target
-  hyps fun h => do
+  -- Check if the target depends on any of the hyps. Doing this (instead of
+      -- letting one of the later tactics fail) lets us give a much more informative
+      -- error message.
+      hyps
+      fun h => do
       let dep ← kdepends_on tgt h
       when dep <| fail <| f! "Cannot clear hypothesis {h} since the target depends on it."
   let n ← revert_lst hyps
-  when (!clear_dependent && n ≠ hyps) <|
+  -- If revert_lst reverted more hypotheses than we wanted to clear, there must
+        -- have been other hypotheses dependent on some of the hyps.
+        when
+        (!clear_dependent && n ≠ hyps) <|
       fail <|
         format.join
           ["Some of the following hypotheses cannot be cleared because other ",

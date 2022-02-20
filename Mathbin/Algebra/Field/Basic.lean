@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2014 Robert Lewis. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Robert Lewis, Leonardo de Moura, Johannes Hölzl, Mario Carneiro
+-/
 import Mathbin.Algebra.Ring.Basic
 
 /-!
@@ -54,6 +59,7 @@ section DivisionRing
 variable [DivisionRing K] {a b : K}
 
 /-- Every division ring is a `group_with_zero`. -/
+-- see Note [lower instance priority]
 instance (priority := 100) DivisionRing.toGroupWithZero : GroupWithZeroₓ K :=
   { ‹DivisionRing K›, (inferInstance : Semiringₓ K) with }
 
@@ -168,6 +174,7 @@ theorem add_div_eq_mul_add_div (a b : K) {c : K} (hc : c ≠ 0) : a + b / c = (a
   (eq_div_iff_mul_eq hc).2 <| by
     rw [right_distrib, div_mul_cancel _ hc]
 
+-- see Note [lower instance priority]
 instance (priority := 100) DivisionRing.is_domain : IsDomain K :=
   { ‹DivisionRing K›,
     (by
@@ -185,11 +192,13 @@ section Field
 
 variable [Field K]
 
+-- see Note [lower instance priority]
 instance (priority := 100) Field.toDivisionRing : DivisionRing K :=
   { show Field K by
       infer_instance with }
 
 /-- Every field is a `comm_group_with_zero`. -/
+-- see Note [lower instance priority]
 instance (priority := 100) Field.toCommGroupWithZero : CommGroupWithZero K :=
   { (_ : GroupWithZeroₓ K), ‹Field K› with }
 
@@ -231,6 +240,7 @@ theorem div_add' (a b c : K) (hc : c ≠ 0) : a / c + b = (a + b * c) / c := by
 theorem div_sub' (a b c : K) (hc : c ≠ 0) : a / c - b = (a - c * b) / c := by
   simpa using div_sub_div a b hc one_ne_zero
 
+-- see Note [lower instance priority]
 instance (priority := 100) Field.is_domain : IsDomain K :=
   { DivisionRing.is_domain with }
 

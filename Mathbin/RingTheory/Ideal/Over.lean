@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Anne Baanen. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Anne Baanen
+-/
 import Mathbin.RingTheory.Algebraic
 import Mathbin.RingTheory.Localization
 
@@ -132,24 +137,24 @@ theorem comap_eq_of_scalar_tower_quotient [Algebra R S] [Algebra (R ⧸ p) (S �
     
 
 /-- If `P` lies over `p`, then `R / p` has a canonical map to `S / P`. -/
-def quotient.algebra_quotient_of_le_comap (h : p ≤ comap f P) : Algebra (R ⧸ p) (S ⧸ P) :=
+def Quotient.algebraQuotientOfLeComap (h : p ≤ comap f P) : Algebra (R ⧸ p) (S ⧸ P) :=
   RingHom.toAlgebra <| quotientMap _ f h
 
 /-- `R / p` has a canonical map to `S / pS`. -/
-instance quotient.algebra_quotient_map_quotient : Algebra (R ⧸ p) (S ⧸ map f p) :=
+instance Quotient.algebraQuotientMapQuotient : Algebra (R ⧸ p) (S ⧸ map f p) :=
   Quotient.algebraQuotientOfLeComap le_comap_map
 
 @[simp]
-theorem quotient.algebra_map_quotient_map_quotient (x : R) :
+theorem Quotient.algebra_map_quotient_map_quotient (x : R) :
     algebraMap (R ⧸ p) (S ⧸ map f p) (Quotient.mk p x) = Quotient.mk _ (f x) :=
   rfl
 
 @[simp]
-theorem quotient.mk_smul_mk_quotient_map_quotient (x : R) (y : S) :
+theorem Quotient.mk_smul_mk_quotient_map_quotient (x : R) (y : S) :
     Quotient.mk p x • Quotient.mk (map f p) y = Quotient.mk _ (f x * y) :=
   rfl
 
-instance quotient.tower_quotient_map_quotient [Algebra R S] : IsScalarTower R (R ⧸ p) (S ⧸ map (algebraMap R S) p) :=
+instance Quotient.tower_quotient_map_quotient [Algebra R S] : IsScalarTower R (R ⧸ p) (S ⧸ map (algebraMap R S) p) :=
   IsScalarTower.of_algebra_map_eq fun x => by
     rw [quotient.algebra_map_eq, quotient.algebra_map_quotient_map_quotient, quotient.mk_algebra_map]
 
@@ -257,33 +262,31 @@ variable (S) {A : Type _} [CommRingₓ A]
 
 variable [Algebra R A] [Algebra A S] [IsScalarTower R A S] [IsIntegralClosure A R S]
 
-theorem is_integral_closure.comap_lt_comap {I J : Ideal A} [I.IsPrime] (I_lt_J : I < J) :
+theorem IsIntegralClosure.comap_lt_comap {I J : Ideal A} [I.IsPrime] (I_lt_J : I < J) :
     I.comap (algebraMap R A) < J.comap (algebraMap _ _) :=
   let ⟨I_le_J, x, hxJ, hxI⟩ := SetLike.lt_iff_le_and_exists.mp I_lt_J
   comap_lt_comap_of_integral_mem_sdiff I_le_J ⟨hxJ, hxI⟩ (IsIntegralClosure.is_integral R S x)
 
-theorem is_integral_closure.is_maximal_of_is_maximal_comap (I : Ideal A) [I.IsPrime]
+theorem IsIntegralClosure.is_maximal_of_is_maximal_comap (I : Ideal A) [I.IsPrime]
     (hI : IsMaximal (I.comap (algebraMap R A))) : IsMaximal I :=
   is_maximal_of_is_integral_of_is_maximal_comap (fun x => IsIntegralClosure.is_integral R S x) I hI
 
 variable [IsDomain A]
 
-theorem is_integral_closure.comap_ne_bot [Nontrivial R] {I : Ideal A} (I_ne_bot : I ≠ ⊥) :
-    I.comap (algebraMap R A) ≠ ⊥ :=
+theorem IsIntegralClosure.comap_ne_bot [Nontrivial R] {I : Ideal A} (I_ne_bot : I ≠ ⊥) : I.comap (algebraMap R A) ≠ ⊥ :=
   let ⟨x, x_mem, x_ne_zero⟩ := I.ne_bot_iff.mp I_ne_bot
   comap_ne_bot_of_integral_mem x_ne_zero x_mem (IsIntegralClosure.is_integral R S x)
 
-theorem is_integral_closure.eq_bot_of_comap_eq_bot [Nontrivial R] {I : Ideal A} :
-    I.comap (algebraMap R A) = ⊥ → I = ⊥ :=
+theorem IsIntegralClosure.eq_bot_of_comap_eq_bot [Nontrivial R] {I : Ideal A} : I.comap (algebraMap R A) = ⊥ → I = ⊥ :=
   imp_of_not_imp_not _ _ (IsIntegralClosure.comap_ne_bot S)
 
 end IsIntegralClosure
 
-theorem integral_closure.comap_lt_comap {I J : Ideal (integralClosure R S)} [I.IsPrime] (I_lt_J : I < J) :
+theorem IntegralClosure.comap_lt_comap {I J : Ideal (integralClosure R S)} [I.IsPrime] (I_lt_J : I < J) :
     I.comap (algebraMap R (integralClosure R S)) < J.comap (algebraMap _ _) :=
   IsIntegralClosure.comap_lt_comap S I_lt_J
 
-theorem integral_closure.is_maximal_of_is_maximal_comap (I : Ideal (integralClosure R S)) [I.IsPrime]
+theorem IntegralClosure.is_maximal_of_is_maximal_comap (I : Ideal (integralClosure R S)) [I.IsPrime]
     (hI : IsMaximal (I.comap (algebraMap R (integralClosure R S)))) : IsMaximal I :=
   IsIntegralClosure.is_maximal_of_is_maximal_comap S I hI
 
@@ -291,11 +294,11 @@ section
 
 variable [IsDomain S]
 
-theorem integral_closure.comap_ne_bot [Nontrivial R] {I : Ideal (integralClosure R S)} (I_ne_bot : I ≠ ⊥) :
+theorem IntegralClosure.comap_ne_bot [Nontrivial R] {I : Ideal (integralClosure R S)} (I_ne_bot : I ≠ ⊥) :
     I.comap (algebraMap R (integralClosure R S)) ≠ ⊥ :=
   IsIntegralClosure.comap_ne_bot S I_ne_bot
 
-theorem integral_closure.eq_bot_of_comap_eq_bot [Nontrivial R] {I : Ideal (integralClosure R S)} :
+theorem IntegralClosure.eq_bot_of_comap_eq_bot [Nontrivial R] {I : Ideal (integralClosure R S)} :
     I.comap (algebraMap R (integralClosure R S)) = ⊥ → I = ⊥ :=
   IsIntegralClosure.eq_bot_of_comap_eq_bot S
 

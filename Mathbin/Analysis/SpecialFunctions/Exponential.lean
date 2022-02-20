@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Anatole Dedecker. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Anatole Dedecker
+-/
 import Mathbin.Analysis.NormedSpace.Exponential
 import Mathbin.Analysis.Calculus.FderivAnalytic
 import Mathbin.Data.Complex.Exponential
@@ -147,8 +152,6 @@ section IsROrCCommAlgebra
 
 variable {𝕂 𝔸 : Type _} [IsROrC 𝕂] [NormedCommRing 𝔸] [NormedAlgebra 𝕂 𝔸] [CompleteSpace 𝔸]
 
-attribute [local instance] char_zero_R_or_C
-
 /-- The exponential map in a commutative Banach-algebra `𝔸` over `𝕂 = ℝ` or `𝕂 = ℂ` has strict
 Fréchet-derivative `exp 𝕂 𝔸 x • 1 : 𝔸 →L[𝕂] 𝔸` at any point `x`. -/
 theorem has_strict_fderiv_at_exp {x : 𝔸} : HasStrictFderivAt (exp 𝕂 𝔸) (exp 𝕂 𝔸 x • 1 : 𝔸 →L[𝕂] 𝔸) x :=
@@ -164,8 +167,6 @@ end IsROrCCommAlgebra
 section DerivROrC
 
 variable {𝕂 : Type _} [IsROrC 𝕂]
-
-attribute [local instance] char_zero_R_or_C
 
 /-- The exponential map in `𝕂 = ℝ` or `𝕂 = ℂ` has strict derivative `exp 𝕂 𝕂 x` at any point
 `x`. -/

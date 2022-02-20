@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 David Wärn. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: David Wärn
+-/
 import Mathbin.CategoryTheory.Elements
 import Mathbin.CategoryTheory.IsConnected
 import Mathbin.CategoryTheory.SingleObj
@@ -27,16 +32,16 @@ variable (M : Type _) [Monoidₓ M] (X : Type u) [MulAction M X]
 /-- A multiplicative action M ↻ X viewed as a functor mapping the single object of M to X
   and an element `m : M` to the map `X → X` given by multiplication by `m`. -/
 @[simps]
-def action_as_functor : SingleObj M ⥤ Type u where
+def actionAsFunctor : SingleObj M ⥤ Type u where
   obj := fun _ => X
-  map := fun _ _ => · • ·
+  map := fun _ _ => (· • ·)
   map_id' := fun _ => funext <| MulAction.one_smul
   map_comp' := fun _ _ _ f g => funext fun x => (smul_smul g f x).symm
 
 /-- A multiplicative action M ↻ X induces a category strucure on X, where a morphism
  from x to y is a scalar taking x to y. Due to implementation details, the object type
  of this category is not equal to X, but is in bijection with X. -/
-def action_category :=
+def ActionCategory :=
   (actionAsFunctor M X).Elements deriving Category
 
 namespace ActionCategory
@@ -74,7 +79,7 @@ theorem back_coe (x : ActionCategory M X) : ↑x.back = x := by
 variable (M X)
 
 /-- An object of the action category given by M ↻ X corresponds to an element of X. -/
-def obj_equiv : X ≃ ActionCategory M X where
+def objEquiv : X ≃ ActionCategory M X where
   toFun := coe
   invFun := fun x => x.back
   left_inv := coe_back
@@ -93,7 +98,7 @@ variable {X} (x : X)
 
 /-- The stabilizer of a point is isomorphic to the endomorphism monoid at the
   corresponding point. In fact they are definitionally equivalent. -/
-def stabilizer_iso_End : Stabilizer.submonoid M x ≃* End (↑x : ActionCategory M X) :=
+def stabilizerIsoEnd : Stabilizer.submonoid M x ≃* End (↑x : ActionCategory M X) :=
   MulEquiv.refl _
 
 @[simp]
@@ -126,15 +131,15 @@ noncomputable instance : Groupoid (ActionCategory G X) :=
   CategoryTheory.groupoidOfElements _
 
 /-- Any subgroup of `G` is a vertex group in its action groupoid. -/
-def End_mul_equiv_subgroup (H : Subgroup G) : End (objEquiv G (G ⧸ H) ↑(1 : G)) ≃* H :=
+def endMulEquivSubgroup (H : Subgroup G) : End (objEquiv G (G ⧸ H) ↑(1 : G)) ≃* H :=
   MulEquiv.trans (stabilizerIsoEnd G ((1 : G) : G ⧸ H)).symm (MulEquiv.subgroupCongr <| stabilizer_quotient H)
 
 /-- A target vertex `t` and a scalar `g` determine a morphism in the action groupoid. -/
-def hom_of_pair (t : X) (g : G) : ↑(g⁻¹ • t) ⟶ (t : ActionCategory G X) :=
+def homOfPair (t : X) (g : G) : ↑(g⁻¹ • t) ⟶ (t : ActionCategory G X) :=
   Subtype.mk g (smul_inv_smul g t)
 
 @[simp]
-theorem hom_of_pair.val (t : X) (g : G) : (homOfPair t g).val = g :=
+theorem homOfPair.val (t : X) (g : G) : (homOfPair t g).val = g :=
   rfl
 
 /-- Any morphism in the action groupoid is given by some pair. -/

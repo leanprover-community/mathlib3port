@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Sébastien Gouëzel. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Sébastien Gouëzel
+-/
 import Mathbin.Topology.UniformSpace.Basic
 
 /-!
@@ -84,7 +89,7 @@ def TendstoUniformly (F : ι → α → β) (f : α → β) (p : Filter ι) :=
   ∀, ∀ u ∈ 𝓤 β, ∀, ∀ᶠ n in p, ∀ x, (f x, F n x) ∈ u
 
 theorem tendsto_uniformly_on_iff_tendsto_uniformly_comp_coe :
-    TendstoUniformlyOn F f p s ↔ TendstoUniformly (fun i x : s => F i x) (f ∘ coe) p :=
+    TendstoUniformlyOn F f p s ↔ TendstoUniformly (fun x : s => F i x) (f ∘ coe) p :=
   forall₂_congrₓ fun V hV => by
     simp
 
@@ -141,12 +146,12 @@ theorem TendstoUniformly.prod_map {ι' α' β' : Type _} [UniformSpace β'] {F' 
 
 theorem TendstoUniformlyOn.prod {ι' β' : Type _} [UniformSpace β'] {F' : ι' → α → β'} {f' : α → β'} {p' : Filter ι'}
     (h : TendstoUniformlyOn F f p s) (h' : TendstoUniformlyOn F' f' p' s) :
-    TendstoUniformlyOn (fun i : ι × ι' a => (F i.1 a, F' i.2 a)) (fun a => (f a, f' a)) (p.Prod p') s :=
+    TendstoUniformlyOn (fun a => (F i.1 a, F' i.2 a)) (fun a => (f a, f' a)) (p.Prod p') s :=
   (congr_argₓ _ s.inter_self).mp ((h.prod_map h').comp fun a => (a, a))
 
 theorem TendstoUniformly.prod {ι' β' : Type _} [UniformSpace β'] {F' : ι' → α → β'} {f' : α → β'} {p' : Filter ι'}
     (h : TendstoUniformly F f p) (h' : TendstoUniformly F' f' p') :
-    TendstoUniformly (fun i : ι × ι' a => (F i.1 a, F' i.2 a)) (fun a => (f a, f' a)) (p.Prod p') :=
+    TendstoUniformly (fun a => (F i.1 a, F' i.2 a)) (fun a => (f a, f' a)) (p.Prod p') :=
   (h.prod_map h').comp fun a => (a, a)
 
 /-- Uniform convergence to a constant function is equivalent to convergence in `p ×ᶠ ⊤`. -/
@@ -205,7 +210,7 @@ def TendstoLocallyUniformly (F : ι → α → β) (f : α → β) (p : Filter �
   ∀, ∀ u ∈ 𝓤 β, ∀, ∀ x : α, ∃ t ∈ 𝓝 x, ∀ᶠ n in p, ∀, ∀ y ∈ t, ∀, (f y, F n y) ∈ u
 
 theorem tendsto_locally_uniformly_on_iff_tendsto_locally_uniformly_comp_coe :
-    TendstoLocallyUniformlyOn F f p s ↔ TendstoLocallyUniformly (fun i x : s => F i x) (f ∘ coe) p := by
+    TendstoLocallyUniformlyOn F f p s ↔ TendstoLocallyUniformly (fun x : s => F i x) (f ∘ coe) p := by
   refine' forall₂_congrₓ fun V hV => _
   simp only [exists_prop, Function.comp_app, SetCoe.forall, Subtype.coe_mk]
   refine' forall₂_congrₓ fun x hx => ⟨_, _⟩

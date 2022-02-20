@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Yury Kudryashov. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yury Kudryashov
+-/
 import Mathbin.Topology.MetricSpace.Lipschitz
 import Mathbin.Topology.UniformSpace.CompleteSeparated
 
@@ -73,8 +78,9 @@ open Emetric
 
 /-- Extract the constant from `hf : antilipschitz_with K f`. This is useful, e.g.,
 if `K` is given by a long formula, and we want to reuse this value. -/
+-- uses neither `f` nor `hf`
 @[nolint unused_arguments]
-protected def K (hf : AntilipschitzWith K f) : ℝ≥0 :=
+protected def k (hf : AntilipschitzWith K f) : ℝ≥0 :=
   K
 
 protected theorem injective {α : Type _} {β : Type _} [EmetricSpace α] [PseudoEmetricSpace β] {K : ℝ≥0 } {f : α → β}
@@ -131,10 +137,10 @@ theorem comap_uniformity_le (hf : AntilipschitzWith K f) : (𝓤 β).comap (Prod
   rw [mul_comm]
   exact Ennreal.mul_lt_of_lt_div hx
 
-protected theorem UniformInducing (hf : AntilipschitzWith K f) (hfc : UniformContinuous f) : UniformInducing f :=
+protected theorem uniform_inducing (hf : AntilipschitzWith K f) (hfc : UniformContinuous f) : UniformInducing f :=
   ⟨le_antisymmₓ hf.comap_uniformity_le hfc.le_comap⟩
 
-protected theorem UniformEmbedding {α : Type _} {β : Type _} [EmetricSpace α] [PseudoEmetricSpace β] {K : ℝ≥0 }
+protected theorem uniform_embedding {α : Type _} {β : Type _} [EmetricSpace α] [PseudoEmetricSpace β] {K : ℝ≥0 }
     {f : α → β} (hf : AntilipschitzWith K f) (hfc : UniformContinuous f) : UniformEmbedding f :=
   ⟨hf.UniformInducing hfc, hf.Injective⟩
 
@@ -146,7 +152,7 @@ theorem is_closed_range {α β : Type _} [PseudoEmetricSpace α] [EmetricSpace �
     (hf : AntilipschitzWith K f) (hfc : UniformContinuous f) : IsClosed (Range f) :=
   (hf.is_complete_range hfc).IsClosed
 
-theorem ClosedEmbedding {α : Type _} {β : Type _} [EmetricSpace α] [EmetricSpace β] {K : ℝ≥0 } {f : α → β}
+theorem closed_embedding {α : Type _} {β : Type _} [EmetricSpace α] [EmetricSpace β] {K : ℝ≥0 } {f : α → β}
     [CompleteSpace α] (hf : AntilipschitzWith K f) (hfc : UniformContinuous f) : ClosedEmbedding f :=
   { (hf.UniformEmbedding hfc).Embedding with closed_range := hf.is_closed_range hfc }
 
@@ -157,7 +163,7 @@ theorem of_subsingleton [Subsingleton α] {K : ℝ≥0 } : AntilipschitzWith K f
   simp only [Subsingleton.elimₓ x y, edist_self, zero_le]
 
 /-- If `f : α → β` is `0`-antilipschitz, then `α` is a `subsingleton`. -/
-protected theorem Subsingleton {α β} [EmetricSpace α] [PseudoEmetricSpace β] {f : α → β} (h : AntilipschitzWith 0 f) :
+protected theorem subsingleton {α β} [EmetricSpace α] [PseudoEmetricSpace β] {f : α → β} (h : AntilipschitzWith 0 f) :
     Subsingleton α :=
   ⟨fun x y => edist_le_zero.1 <| (h x y).trans_eq <| zero_mul _⟩
 
@@ -177,7 +183,7 @@ theorem bounded_preimage (hf : AntilipschitzWith K f) {s : Set β} (hs : Bounded
       
 
 /-- The image of a proper space under an expanding onto map is proper. -/
-protected theorem ProperSpace {α : Type _} [MetricSpace α] {K : ℝ≥0 } {f : α → β} [ProperSpace α]
+protected theorem proper_space {α : Type _} [MetricSpace α] {K : ℝ≥0 } {f : α → β} [ProperSpace α]
     (hK : AntilipschitzWith K f) (f_cont : Continuous f) (hf : Function.Surjective f) : ProperSpace β := by
   apply proper_space_of_compact_closed_ball_of_le 0 fun x₀ r hr => _
   let K := f ⁻¹' closed_ball x₀ r

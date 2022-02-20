@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Luke Kershaw. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Luke Kershaw
+-/
 import Mathbin.CategoryTheory.Preadditive.AdditiveFunctor
 import Mathbin.CategoryTheory.Triangulated.Basic
 
@@ -43,7 +48,7 @@ applying `rotate` gives a triangle of the form:
 ```
 -/
 @[simps]
-def triangle.rotate (T : Triangle C) : Triangle C :=
+def Triangle.rotate (T : Triangle C) : Triangle C :=
   Triangle.mk _ T.mor₂ T.mor₃ (-T.mor₁⟦1⟧')
 
 attribute [local semireducible] shift_shift_neg shift_neg_shift
@@ -62,7 +67,7 @@ applying `inv_rotate` gives a triangle that can be thought of as:
 not necessarily equal to `Z`, but it is isomorphic, by the `counit_iso` of `shift C`)
 -/
 @[simps]
-def triangle.inv_rotate (T : Triangle C) : Triangle C :=
+def Triangle.invRotate (T : Triangle C) : Triangle C :=
   Triangle.mk _ (-(T.mor₃⟦(-1 : ℤ)⟧' ≫ (shiftShiftNeg _ _).Hom)) T.mor₁ (T.mor₂ ≫ (shiftNegShift _ _).inv)
 
 attribute [local reducible] shift_shift_neg shift_neg_shift Discrete.addMonoidal
@@ -130,7 +135,7 @@ as `Z⟦-1⟧⟦1⟧` is not necessarily equal to `Z`, and `Z'⟦-1⟧⟦1⟧` i
 but they are isomorphic, by the `counit_iso` of `shift C`)
 -/
 @[simps]
-def inv_rotate (f : TriangleMorphism T₁ T₂) : TriangleMorphism T₁.invRotate T₂.invRotate where
+def invRotate (f : TriangleMorphism T₁ T₂) : TriangleMorphism T₁.invRotate T₂.invRotate where
   hom₁ := f.hom₃⟦-1⟧'
   hom₂ := f.hom₁
   hom₃ := f.hom₂
@@ -159,7 +164,7 @@ def rotate : Triangle C ⥤ Triangle C where
 /-- The inverse rotation of triangles gives an endofunctor on the category of triangles in `C`.
 -/
 @[simps]
-def inv_rotate : Triangle C ⥤ Triangle C where
+def invRotate : Triangle C ⥤ Triangle C where
   obj := Triangle.invRotate
   map := fun _ _ f => f.invRotate
 
@@ -167,7 +172,7 @@ variable [∀ n : ℤ, Functor.Additive (shiftFunctor C n)]
 
 /-- There is a natural map from a triangle to the `inv_rotate` of its `rotate`. -/
 @[simps]
-def to_inv_rotate_rotate (T : Triangle C) : T ⟶ invRotate.obj (rotate.obj T) where
+def toInvRotateRotate (T : Triangle C) : T ⟶ invRotate.obj (rotate.obj T) where
   hom₁ := (shiftShiftNeg _ _).inv
   hom₂ := 𝟙 T.obj₂
   hom₃ := 𝟙 T.obj₃
@@ -182,7 +187,7 @@ def to_inv_rotate_rotate (T : Triangle C) : T ⟶ invRotate.obj (rotate.obj T) w
 and the composition of a rotation with an inverse rotation.
 -/
 @[simps]
-def rot_comp_inv_rot_hom : 𝟭 (Triangle C) ⟶ rotate ⋙ inv_rotate where
+def rotCompInvRotHom : 𝟭 (Triangle C) ⟶ rotate ⋙ inv_rotate where
   app := toInvRotateRotate
   naturality' := by
     introv
@@ -201,7 +206,7 @@ def rot_comp_inv_rot_hom : 𝟭 (Triangle C) ⟶ rotate ⋙ inv_rotate where
 
 /-- There is a natural map from the `inv_rotate` of the `rotate` of a triangle to itself. -/
 @[simps]
-def from_inv_rotate_rotate (T : Triangle C) : invRotate.obj (rotate.obj T) ⟶ T where
+def fromInvRotateRotate (T : Triangle C) : invRotate.obj (rotate.obj T) ⟶ T where
   hom₁ := (shiftEquiv C 1).unitInv.app T.obj₁
   hom₂ := 𝟙 T.obj₂
   hom₃ := 𝟙 T.obj₃
@@ -216,7 +221,7 @@ def from_inv_rotate_rotate (T : Triangle C) : invRotate.obj (rotate.obj T) ⟶ T
 on triangles in `C`, and the identity functor.
 -/
 @[simps]
-def rot_comp_inv_rot_inv : rotate ⋙ inv_rotate ⟶ 𝟭 (Triangle C) where
+def rotCompInvRotInv : rotate ⋙ inv_rotate ⟶ 𝟭 (Triangle C) where
   app := fromInvRotateRotate
 
 /-- The natural transformations between the identity functor on triangles in `C` and the composition
@@ -224,13 +229,13 @@ of a rotation with an inverse rotation are natural isomorphisms (they are isomor
 category of functors).
 -/
 @[simps]
-def rot_comp_inv_rot : 𝟭 (Triangle C) ≅ rotate ⋙ inv_rotate where
+def rotCompInvRot : 𝟭 (Triangle C) ≅ rotate ⋙ inv_rotate where
   Hom := rotCompInvRotHom
   inv := rotCompInvRotInv
 
 /-- There is a natural map from the `rotate` of the `inv_rotate` of a triangle to itself. -/
 @[simps]
-def from_rotate_inv_rotate (T : Triangle C) : rotate.obj (invRotate.obj T) ⟶ T where
+def fromRotateInvRotate (T : Triangle C) : rotate.obj (invRotate.obj T) ⟶ T where
   hom₁ := 𝟙 T.obj₁
   hom₂ := 𝟙 T.obj₂
   hom₃ := (shiftEquiv C 1).counit.app T.obj₃
@@ -252,12 +257,12 @@ def from_rotate_inv_rotate (T : Triangle C) : rotate.obj (invRotate.obj T) ⟶ T
 on triangles in `C`, and the identity functor.
 -/
 @[simps]
-def inv_rot_comp_rot_hom : inv_rotate ⋙ rotate ⟶ 𝟭 (Triangle C) where
+def invRotCompRotHom : inv_rotate ⋙ rotate ⟶ 𝟭 (Triangle C) where
   app := fromRotateInvRotate
 
 /-- There is a natural map from a triangle to the `rotate` of its `inv_rotate`. -/
 @[simps]
-def to_rotate_inv_rotate (T : Triangle C) : T ⟶ rotate.obj (invRotate.obj T) where
+def toRotateInvRotate (T : Triangle C) : T ⟶ rotate.obj (invRotate.obj T) where
   hom₁ := 𝟙 T.obj₁
   hom₂ := 𝟙 T.obj₂
   hom₃ := (shiftEquiv C 1).counitInv.app T.obj₃
@@ -274,7 +279,7 @@ def to_rotate_inv_rotate (T : Triangle C) : T ⟶ rotate.obj (invRotate.obj T) w
 and the composition of an inverse rotation with a rotation.
 -/
 @[simps]
-def inv_rot_comp_rot_inv : 𝟭 (Triangle C) ⟶ inv_rotate ⋙ rotate where
+def invRotCompRotInv : 𝟭 (Triangle C) ⟶ inv_rotate ⋙ rotate where
   app := toRotateInvRotate
   naturality' := by
     introv
@@ -296,14 +301,14 @@ on triangles in `C`, and the identity functor on triangles are natural isomorphi
 (they are isomorphisms in the category of functors).
 -/
 @[simps]
-def inv_rot_comp_rot : inv_rotate ⋙ rotate ≅ 𝟭 (Triangle C) where
+def invRotCompRot : inv_rotate ⋙ rotate ≅ 𝟭 (Triangle C) where
   Hom := invRotCompRotHom
   inv := invRotCompRotInv
 
 /-- Rotating triangles gives an auto-equivalence on the category of triangles in `C`.
 -/
 @[simps]
-def triangle_rotation : Equivalenceₓ (Triangle C) (Triangle C) where
+def triangleRotation : Equivalenceₓ (Triangle C) (Triangle C) where
   Functor := rotate
   inverse := invRotate
   unitIso := rotCompInvRot

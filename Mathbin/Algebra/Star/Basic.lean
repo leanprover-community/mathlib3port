@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison
+-/
 import Mathbin.Tactic.ApplyFun
 import Mathbin.Algebra.Field.Opposite
 import Mathbin.Algebra.FieldPower
@@ -255,6 +260,7 @@ theorem star_ring_end_apply [CommSemiringₓ R] [StarRing R] {x : R} : starRingE
 theorem star_ring_end_self_apply [CommSemiringₓ R] [StarRing R] (x : R) : starRingEnd R (starRingEnd R x) = x :=
   star_star x
 
+-- A more convenient name for complex conjugation
 alias star_ring_end_self_apply ← Complex.conj_conj
 
 alias star_ring_end_self_apply ← IsROrC.conj_conj
@@ -299,6 +305,7 @@ namespace StarOrderedRing
 
 variable [Ringₓ R] [PartialOrderₓ R] [StarOrderedRing R]
 
+-- see note [lower instance priority]
 instance (priority := 100) : OrderedAddCommGroup R :=
   { show Ringₓ R by
       infer_instance,

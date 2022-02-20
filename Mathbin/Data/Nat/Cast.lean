@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2014 Mario Carneiro. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Mario Carneiro
+-/
 import Mathbin.Algebra.Order.Field
 import Mathbin.Data.Nat.Basic
 
@@ -29,12 +34,12 @@ section
 variable [Zero α] [One α] [Add α]
 
 /-- Canonical homomorphism from `ℕ` to a type `α` with `0`, `1` and `+`. -/
-protected def cast : ℕ → α
+protected def castₓ : ℕ → α
   | 0 => 0
   | n + 1 => cast n + 1
 
 /-- Computationally friendlier cast than `nat.cast`, using binary representation. -/
-protected def bin_cast (n : ℕ) : α :=
+protected def binCast (n : ℕ) : α :=
   @Nat.binaryRec (fun _ => α) 0 (fun odd k a => cond Odd (a + a + 1) (a + a)) n
 
 library_note "coercion into rings"/-- Coercions such as `nat.cast_coe` that go from a concrete structure such as
@@ -65,18 +70,19 @@ attribute [instance] coeBaseₓ
 
 attribute [instance] coeTransₓ
 
-instance (priority := 900) cast_coe : CoeTₓ ℕ α :=
+-- see note [coercion into rings]
+instance (priority := 900) castCoe : CoeTₓ ℕ α :=
   ⟨Nat.castₓ⟩
 
 @[simp, norm_cast]
-theorem cast_zero : ((0 : ℕ) : α) = 0 :=
+theorem cast_zeroₓ : ((0 : ℕ) : α) = 0 :=
   rfl
 
 theorem cast_add_one (n : ℕ) : ((n + 1 : ℕ) : α) = n + 1 :=
   rfl
 
 @[simp, norm_cast]
-theorem cast_succ (n : ℕ) : ((succ n : ℕ) : α) = n + 1 :=
+theorem cast_succₓ (n : ℕ) : ((succ n : ℕ) : α) = n + 1 :=
   rfl
 
 @[simp, norm_cast]
@@ -86,11 +92,11 @@ theorem cast_ite (P : Prop) [Decidable P] (m n : ℕ) : ((ite P m n : ℕ) : α)
 end
 
 @[simp, norm_cast]
-theorem cast_one [AddZeroClass α] [One α] : ((1 : ℕ) : α) = 1 :=
+theorem cast_oneₓ [AddZeroClass α] [One α] : ((1 : ℕ) : α) = 1 :=
   zero_addₓ _
 
 @[simp, norm_cast]
-theorem cast_add [AddMonoidₓ α] [One α] m : ∀ n, ((m + n : ℕ) : α) = m + n
+theorem cast_addₓ [AddMonoidₓ α] [One α] m : ∀ n, ((m + n : ℕ) : α) = m + n
   | 0 => (add_zeroₓ _).symm
   | n + 1 =>
     show ((m + n : ℕ) : α) + 1 = m + (n + 1) by
@@ -111,7 +117,7 @@ theorem bin_cast_eq [AddMonoidₓ α] [One α] (n : ℕ) : (Nat.binCast n : α) 
     
 
 /-- `coe : ℕ → α` as an `add_monoid_hom`. -/
-def cast_add_monoid_hom (α : Type _) [AddMonoidₓ α] [One α] : ℕ →+ α where
+def castAddMonoidHom (α : Type _) [AddMonoidₓ α] [One α] : ℕ →+ α where
   toFun := coe
   map_add' := cast_addₓ
   map_zero' := cast_zeroₓ
@@ -141,7 +147,7 @@ theorem cast_sub [AddGroupₓ α] [One α] {m n} (h : m ≤ n) : ((n - m : ℕ) 
     rw [← cast_add, tsub_add_cancel_of_le h]
 
 @[simp, norm_cast]
-theorem cast_mul [NonAssocSemiringₓ α] m : ∀ n, ((m * n : ℕ) : α) = m * n
+theorem cast_mulₓ [NonAssocSemiringₓ α] m : ∀ n, ((m * n : ℕ) : α) = m * n
   | 0 => (mul_zero _).symm
   | n + 1 =>
     (cast_addₓ _ _).trans <|
@@ -159,7 +165,7 @@ theorem cast_dvd {α : Type _} [Field α] {m n : ℕ} (n_dvd : n ∣ m) (n_nonze
   rw [Nat.cast_mulₓ, mul_div_cancel_left _ n_nonzero]
 
 /-- `coe : ℕ → α` as a `ring_hom` -/
-def cast_ring_hom (α : Type _) [NonAssocSemiringₓ α] : ℕ →+* α :=
+def castRingHom (α : Type _) [NonAssocSemiringₓ α] : ℕ →+* α :=
   { castAddMonoidHom α with toFun := coe, map_one' := cast_oneₓ, map_mul' := cast_mulₓ }
 
 @[simp]
@@ -310,6 +316,7 @@ theorem AddMonoidHom.ext_nat : ∀ {f g : ℕ →+ A}, ∀ h : f 1 = g 1, f = g 
 
 variable [One A]
 
+-- these versions are primed so that the `ring_hom_class` versions aren't
 theorem eq_nat_cast' [AddMonoidHomClass F ℕ A] (f : F) (h1 : f 1 = 1) : ∀ n : ℕ, f n = n
   | 0 => by
     simp
@@ -370,6 +377,7 @@ theorem Nat.cast_with_bot : ∀ n : ℕ, @coe ℕ (WithBot ℕ) (@coeToLift _ _ 
   | n + 1 => by
     rw [WithBot.coe_add, Nat.cast_addₓ, Nat.cast_with_bot n] <;> rfl
 
+-- I don't think `ring_hom_class` is good here, because of the `subsingleton` TC slowness
 instance Nat.subsingleton_ring_hom {R : Type _} [NonAssocSemiringₓ R] : Subsingleton (ℕ →+* R) :=
   ⟨ext_nat⟩
 

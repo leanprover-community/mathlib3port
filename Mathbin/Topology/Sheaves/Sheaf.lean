@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison
+-/
 import Mathbin.Topology.Sheaves.SheafCondition.EqualizerProducts
 import Mathbin.CategoryTheory.FullSubcategory
 import Mathbin.CategoryTheory.Limits.Punit
@@ -62,7 +67,7 @@ open SheafConditionEqualizerProducts
 is the equalizer of the two morphisms
 `∏ F.obj (U i) ⟶ ∏ F.obj (U i) ⊓ (U j)`.
 -/
-def is_sheaf (F : Presheaf C X) : Prop :=
+def IsSheaf (F : Presheaf C X) : Prop :=
   ∀ ⦃ι : Type v⦄ U : ι → Opens X, Nonempty (IsLimit (SheafConditionEqualizerProducts.fork F U))
 
 /-- The presheaf valued in `punit` over any topological space is a sheaf.
@@ -85,10 +90,11 @@ variable (C X)
 /-- A `sheaf C X` is a presheaf of objects from `C` over a (bundled) topological space `X`,
 satisfying the sheaf condition.
 -/
-def sheaf : Type max u v :=
+def Sheaf : Type max u v :=
   { F : Presheaf C X // F.IsSheaf }deriving Category
 
-instance sheaf_inhabited : Inhabited (Sheaf (CategoryTheory.Discrete PUnit) X) :=
+-- Let's construct a trivial example, to keep the inhabited linter happy.
+instance sheafInhabited : Inhabited (Sheaf (CategoryTheory.Discrete PUnit) X) :=
   ⟨⟨Functor.star _, Presheaf.is_sheaf_punit _⟩⟩
 
 namespace Sheaf

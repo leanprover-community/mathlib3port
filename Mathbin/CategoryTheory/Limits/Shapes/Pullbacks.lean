@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison, Markus Himmel, Bhavik Mehta, Andrew Yang
+-/
 import Mathbin.CategoryTheory.Limits.Shapes.WidePullbacks
 import Mathbin.CategoryTheory.Limits.Shapes.BinaryProducts
 
@@ -29,64 +34,64 @@ attribute [local tidy] tactic.case_bash
 /-- The type of objects for the diagram indexing a pullback, defined as a special case of
 `wide_pullback_shape`.
 -/
-abbrev walking_cospan : Type v :=
+abbrev WalkingCospan : Type v :=
   WidePullbackShape WalkingPair
 
 /-- The left point of the walking cospan. -/
 @[matchPattern]
-abbrev walking_cospan.left : WalkingCospan :=
+abbrev WalkingCospan.left : WalkingCospan :=
   some WalkingPair.left
 
 /-- The right point of the walking cospan. -/
 @[matchPattern]
-abbrev walking_cospan.right : WalkingCospan :=
+abbrev WalkingCospan.right : WalkingCospan :=
   some WalkingPair.right
 
 /-- The central point of the walking cospan. -/
 @[matchPattern]
-abbrev walking_cospan.one : WalkingCospan :=
+abbrev WalkingCospan.one : WalkingCospan :=
   none
 
 /-- The type of objects for the diagram indexing a pushout, defined as a special case of
 `wide_pushout_shape`.
 -/
-abbrev walking_span : Type v :=
+abbrev WalkingSpan : Type v :=
   WidePushoutShape WalkingPair
 
 /-- The left point of the walking span. -/
 @[matchPattern]
-abbrev walking_span.left : WalkingSpan :=
+abbrev WalkingSpan.left : WalkingSpan :=
   some WalkingPair.left
 
 /-- The right point of the walking span. -/
 @[matchPattern]
-abbrev walking_span.right : WalkingSpan :=
+abbrev WalkingSpan.right : WalkingSpan :=
   some WalkingPair.right
 
 /-- The central point of the walking span. -/
 @[matchPattern]
-abbrev walking_span.zero : WalkingSpan :=
+abbrev WalkingSpan.zero : WalkingSpan :=
   none
 
 namespace WalkingCospan
 
 /-- The type of arrows for the diagram indexing a pullback. -/
-abbrev hom : WalkingCospan → WalkingCospan → Type v :=
+abbrev Hom : WalkingCospan → WalkingCospan → Type v :=
   wide_pullback_shape.hom
 
 /-- The left arrow of the walking cospan. -/
 @[matchPattern]
-abbrev hom.inl : left ⟶ one :=
+abbrev Hom.inl : left ⟶ one :=
   WidePullbackShape.Hom.term _
 
 /-- The right arrow of the walking cospan. -/
 @[matchPattern]
-abbrev hom.inr : right ⟶ one :=
+abbrev Hom.inr : right ⟶ one :=
   WidePullbackShape.Hom.term _
 
 /-- The identity arrows of the walking cospan. -/
 @[matchPattern]
-abbrev hom.id (X : WalkingCospan) : X ⟶ X :=
+abbrev Hom.id (X : WalkingCospan) : X ⟶ X :=
   WidePullbackShape.Hom.id X
 
 instance (X Y : WalkingCospan) : Subsingleton (X ⟶ Y) := by
@@ -97,22 +102,22 @@ end WalkingCospan
 namespace WalkingSpan
 
 /-- The type of arrows for the diagram indexing a pushout. -/
-abbrev hom : WalkingSpan → WalkingSpan → Type v :=
+abbrev Hom : WalkingSpan → WalkingSpan → Type v :=
   wide_pushout_shape.hom
 
 /-- The left arrow of the walking span. -/
 @[matchPattern]
-abbrev hom.fst : zero ⟶ left :=
+abbrev Hom.fst : zero ⟶ left :=
   WidePushoutShape.Hom.init _
 
 /-- The right arrow of the walking span. -/
 @[matchPattern]
-abbrev hom.snd : zero ⟶ right :=
+abbrev Hom.snd : zero ⟶ right :=
   WidePushoutShape.Hom.init _
 
 /-- The identity arrows of the walking span. -/
 @[matchPattern]
-abbrev hom.id (X : WalkingSpan) : X ⟶ X :=
+abbrev Hom.id (X : WalkingSpan) : X ⟶ X :=
   WidePushoutShape.Hom.id X
 
 instance (X Y : WalkingSpan) : Subsingleton (X ⟶ Y) := by
@@ -125,7 +130,7 @@ section
 open WalkingCospan
 
 /-- The functor between two `walking_cospan`s in different universes. -/
-def walking_cospan_functor : walking_cospan.{v₁} ⥤ walking_cospan.{v₂} where
+def walkingCospanFunctor : walking_cospan.{v₁} ⥤ walking_cospan.{v₂} where
   obj := by
     rintro (_ | _ | _)
     exacts[one, left, right]
@@ -160,7 +165,7 @@ theorem walking_cospan_functor_inr : walkingCospanFunctor.map Hom.inr = hom.inr 
   rfl
 
 /-- The equivalence between two `walking_cospan`s in different universes. -/
-def walking_cospan_equiv : walking_cospan.{v₁} ≌ walking_cospan.{v₂} where
+def walkingCospanEquiv : walking_cospan.{v₁} ≌ walking_cospan.{v₂} where
   Functor := walkingCospanFunctor
   inverse := walkingCospanFunctor
   unitIso :=
@@ -187,7 +192,7 @@ section
 open WalkingSpan
 
 /-- The functor between two `walking_span`s in different universes. -/
-def walking_span_functor : walking_span.{v₁} ⥤ walking_span.{v₂} where
+def walkingSpanFunctor : walking_span.{v₁} ⥤ walking_span.{v₂} where
   obj := by
     rintro (_ | _ | _)
     exacts[zero, left, right]
@@ -222,7 +227,7 @@ theorem walking_span_functor_snd : walkingSpanFunctor.map Hom.snd = hom.snd :=
   rfl
 
 /-- The equivalence between two `walking_span`s in different universes. -/
-def walking_span_equiv : walking_span.{v₁} ≌ walking_span.{v₂} where
+def walkingSpanEquiv : walking_span.{v₁} ≌ walking_span.{v₂} where
   Functor := walkingSpanFunctor
   inverse := walkingSpanFunctor
   unitIso :=
@@ -306,7 +311,7 @@ theorem span_map_id {X Y Z : C} (f : X ⟶ Y) (g : X ⟶ Z) (w : WalkingSpan) :
 
 /-- Every diagram indexing an pullback is naturally isomorphic (actually, equal) to a `cospan` -/
 @[simps (config := { rhsMd := semireducible })]
-def diagram_iso_cospan (F : walking_cospan ⥤ C) : F ≅ cospan (F.map inl) (F.map inr) :=
+def diagramIsoCospan (F : walking_cospan ⥤ C) : F ≅ cospan (F.map inl) (F.map inr) :=
   NatIso.ofComponents
     (fun j =>
       eqToIso
@@ -317,7 +322,7 @@ def diagram_iso_cospan (F : walking_cospan ⥤ C) : F ≅ cospan (F.map inl) (F.
 
 /-- Every diagram indexing a pushout is naturally isomorphic (actually, equal) to a `span` -/
 @[simps (config := { rhsMd := semireducible })]
-def diagram_iso_span (F : walking_span ⥤ C) : F ≅ span (F.map fst) (F.map snd) :=
+def diagramIsoSpan (F : walking_span ⥤ C) : F ≅ span (F.map fst) (F.map snd) :=
   NatIso.ofComponents
     (fun j =>
       eqToIso
@@ -330,7 +335,7 @@ variable {W X Y Z : C}
 
 /-- A pullback cone is just a cone on the cospan formed by two morphisms `f : X ⟶ Z` and
     `g : Y ⟶ Z`.-/
-abbrev pullback_cone (f : X ⟶ Z) (g : Y ⟶ Z) :=
+abbrev PullbackCone (f : X ⟶ Z) (g : Y ⟶ Z) :=
   Cone (cospan f g)
 
 namespace PullbackCone
@@ -347,7 +352,7 @@ abbrev snd (t : PullbackCone f g) : t.x ⟶ Y :=
 
 /-- This is a slightly more convenient method to verify that a pullback cone is a limit cone. It
     only asks for a proof of facts that carry any mathematical content -/
-def is_limit_aux (t : PullbackCone f g) (lift : ∀ s : PullbackCone f g, s.x ⟶ t.x)
+def isLimitAux (t : PullbackCone f g) (lift : ∀ s : PullbackCone f g, s.x ⟶ t.x)
     (fac_left : ∀ s : PullbackCone f g, lift s ≫ t.fst = s.fst)
     (fac_right : ∀ s : PullbackCone f g, lift s ≫ t.snd = s.snd)
     (uniq : ∀ s : PullbackCone f g m : s.x ⟶ t.x w : ∀ j : WalkingCospan, m ≫ t.π.app j = s.π.app j, m = lift s) :
@@ -365,7 +370,7 @@ def is_limit_aux (t : PullbackCone f g) (lift : ∀ s : PullbackCone f g, s.x �
 /-- This is another convenient method to verify that a pullback cone is a limit cone. It
     only asks for a proof of facts that carry any mathematical content, and allows access to the
     same `s` for all parts. -/
-def is_limit_aux' (t : PullbackCone f g)
+def isLimitAux' (t : PullbackCone f g)
     (create :
       ∀ s : PullbackCone f g,
         { l // l ≫ t.fst = s.fst ∧ l ≫ t.snd = s.snd ∧ ∀ {m}, m ≫ t.fst = s.fst → m ≫ t.snd = s.snd → m = l }) :
@@ -416,7 +421,7 @@ theorem equalizer_ext (t : PullbackCone f g) {W : C} {k l : W ⟶ t.x} (h₀ : k
   | none => by
     rw [← t.w inl, reassoc_of h₀]
 
-theorem is_limit.hom_ext {t : PullbackCone f g} (ht : IsLimit t) {W : C} {k l : W ⟶ t.x} (h₀ : k ≫ fst t = l ≫ fst t)
+theorem IsLimit.hom_ext {t : PullbackCone f g} (ht : IsLimit t) {W : C} {k l : W ⟶ t.x} (h₀ : k ≫ fst t = l ≫ fst t)
     (h₁ : k ≫ snd t = l ≫ snd t) : k = l :=
   ht.hom_ext <| equalizer_ext _ h₀ h₁
 
@@ -436,21 +441,21 @@ theorem mono_fst_of_is_pullback_of_mono {t : PullbackCone f g} (ht : IsLimit t) 
 /-- If `t` is a limit pullback cone over `f` and `g` and `h : W ⟶ X` and `k : W ⟶ Y` are such that
     `h ≫ f = k ≫ g`, then we have `l : W ⟶ t.X` satisfying `l ≫ fst t = h` and `l ≫ snd t = k`.
     -/
-def is_limit.lift' {t : PullbackCone f g} (ht : IsLimit t) {W : C} (h : W ⟶ X) (k : W ⟶ Y) (w : h ≫ f = k ≫ g) :
+def IsLimit.lift' {t : PullbackCone f g} (ht : IsLimit t) {W : C} (h : W ⟶ X) (k : W ⟶ Y) (w : h ≫ f = k ≫ g) :
     { l : W ⟶ t.x // l ≫ fst t = h ∧ l ≫ snd t = k } :=
   ⟨ht.lift <| PullbackCone.mk _ _ w, ht.fac _ _, ht.fac _ _⟩
 
 /-- This is a more convenient formulation to show that a `pullback_cone` constructed using
 `pullback_cone.mk` is a limit cone.
 -/
-def is_limit.mk {W : C} {fst : W ⟶ X} {snd : W ⟶ Y} (eq : fst ≫ f = snd ≫ g) (lift : ∀ s : PullbackCone f g, s.x ⟶ W)
+def IsLimit.mk {W : C} {fst : W ⟶ X} {snd : W ⟶ Y} (eq : fst ≫ f = snd ≫ g) (lift : ∀ s : PullbackCone f g, s.x ⟶ W)
     (fac_left : ∀ s : PullbackCone f g, lift s ≫ fst = s.fst) (fac_right : ∀ s : PullbackCone f g, lift s ≫ snd = s.snd)
     (uniq : ∀ s : PullbackCone f g m : s.x ⟶ W w_fst : m ≫ fst = s.fst w_snd : m ≫ snd = s.snd, m = lift s) :
     IsLimit (mk fst snd Eq) :=
   isLimitAux _ lift fac_left fac_right fun s m w => uniq s m (w WalkingCospan.left) (w WalkingCospan.right)
 
 /-- The flip of a pullback square is a pullback square. -/
-def flip_is_limit {W : C} {h : W ⟶ X} {k : W ⟶ Y} {comm : h ≫ f = k ≫ g} (t : IsLimit (mk _ _ comm.symm)) :
+def flipIsLimit {W : C} {h : W ⟶ X} {k : W ⟶ Y} {comm : h ≫ f = k ≫ g} (t : IsLimit (mk _ _ comm.symm)) :
     IsLimit (mk _ _ comm) :=
   (isLimitAux' _) fun s => by
     refine'
@@ -465,7 +470,7 @@ def flip_is_limit {W : C} {h : W ⟶ X} {k : W ⟶ Y} {comm : h ≫ f = k ≫ g}
 /-- The pullback cone `(𝟙 X, 𝟙 X)` for the pair `(f, f)` is a limit if `f` is a mono. The converse is
 shown in `mono_of_pullback_is_id`.
 -/
-def is_limit_mk_id_id (f : X ⟶ Y) [Mono f] : IsLimit (mk (𝟙 X) (𝟙 X) rfl : PullbackCone f f) :=
+def isLimitMkIdId (f : X ⟶ Y) [Mono f] : IsLimit (mk (𝟙 X) (𝟙 X) rfl : PullbackCone f f) :=
   IsLimit.mk _ (fun s => s.fst) (fun s => Category.comp_id _)
     (fun s => by
       rw [← cancel_mono f, category.comp_id, s.condition])
@@ -484,7 +489,7 @@ theorem mono_of_is_limit_mk_id_id (f : X ⟶ Y) (t : IsLimit (mk (𝟙 X) (𝟙 
     diagram formed by `f` and `g`. Suppose `f` and `g` both factor through a monomorphism `h` via
     `x` and `y`, respectively.  Then `s` is also a limit cone over the diagram formed by `x` and
     `y`.  -/
-def is_limit_of_factors (f : X ⟶ Z) (g : Y ⟶ Z) (h : W ⟶ Z) [Mono h] (x : X ⟶ W) (y : Y ⟶ W) (hxh : x ≫ h = f)
+def isLimitOfFactors (f : X ⟶ Z) (g : Y ⟶ Z) (h : W ⟶ Z) [Mono h] (x : X ⟶ W) (y : Y ⟶ W) (hxh : x ≫ h = f)
     (hyh : y ≫ h = g) (s : PullbackCone f g) (hs : IsLimit s) :
     IsLimit
       (PullbackCone.mk _ _
@@ -502,7 +507,7 @@ def is_limit_of_factors (f : X ⟶ Z) (g : Y ⟶ Z) (h : W ⟶ Z) [Mono h] (x : 
 
 /-- If `W` is the pullback of `f, g`,
 it is also the pullback of `f ≫ i, g ≫ i` for any mono `i`. -/
-def is_limit_of_comp_mono (f : X ⟶ W) (g : Y ⟶ W) (i : W ⟶ Z) [Mono i] (s : PullbackCone f g) (H : IsLimit s) :
+def isLimitOfCompMono (f : X ⟶ W) (g : Y ⟶ W) (i : W ⟶ Z) [Mono i] (s : PullbackCone f g) (H : IsLimit s) :
     IsLimit
       (PullbackCone.mk _ _
         (show s.fst ≫ f ≫ i = s.snd ≫ g ≫ i by
@@ -523,7 +528,7 @@ end PullbackCone
 
 /-- A pushout cocone is just a cocone on the span formed by two morphisms `f : X ⟶ Y` and
     `g : X ⟶ Z`.-/
-abbrev pushout_cocone (f : X ⟶ Y) (g : X ⟶ Z) :=
+abbrev PushoutCocone (f : X ⟶ Y) (g : X ⟶ Z) :=
   Cocone (span f g)
 
 namespace PushoutCocone
@@ -540,7 +545,7 @@ abbrev inr (t : PushoutCocone f g) : Z ⟶ t.x :=
 
 /-- This is a slightly more convenient method to verify that a pushout cocone is a colimit cocone.
     It only asks for a proof of facts that carry any mathematical content -/
-def is_colimit_aux (t : PushoutCocone f g) (desc : ∀ s : PushoutCocone f g, t.x ⟶ s.x)
+def isColimitAux (t : PushoutCocone f g) (desc : ∀ s : PushoutCocone f g, t.x ⟶ s.x)
     (fac_left : ∀ s : PushoutCocone f g, t.inl ≫ desc s = s.inl)
     (fac_right : ∀ s : PushoutCocone f g, t.inr ≫ desc s = s.inr)
     (uniq : ∀ s : PushoutCocone f g m : t.x ⟶ s.x w : ∀ j : WalkingSpan, t.ι.app j ≫ m = s.ι.app j, m = desc s) :
@@ -556,7 +561,7 @@ def is_colimit_aux (t : PushoutCocone f g) (desc : ∀ s : PushoutCocone f g, t.
 /-- This is another convenient method to verify that a pushout cocone is a colimit cocone. It
     only asks for a proof of facts that carry any mathematical content, and allows access to the
     same `s` for all parts. -/
-def is_colimit_aux' (t : PushoutCocone f g)
+def isColimitAux' (t : PushoutCocone f g)
     (create :
       ∀ s : PushoutCocone f g,
         { l // t.inl ≫ l = s.inl ∧ t.inr ≫ l = s.inr ∧ ∀ {m}, t.inl ≫ m = s.inl → t.inr ≫ m = s.inr → m = l }) :
@@ -607,14 +612,14 @@ theorem coequalizer_ext (t : PushoutCocone f g) {W : C} {k l : t.x ⟶ W} (h₀ 
   | none => by
     rw [← t.w fst, category.assoc, category.assoc, h₀]
 
-theorem is_colimit.hom_ext {t : PushoutCocone f g} (ht : IsColimit t) {W : C} {k l : t.x ⟶ W}
+theorem IsColimit.hom_ext {t : PushoutCocone f g} (ht : IsColimit t) {W : C} {k l : t.x ⟶ W}
     (h₀ : inl t ≫ k = inl t ≫ l) (h₁ : inr t ≫ k = inr t ≫ l) : k = l :=
   ht.hom_ext <| coequalizer_ext _ h₀ h₁
 
 /-- If `t` is a colimit pushout cocone over `f` and `g` and `h : Y ⟶ W` and `k : Z ⟶ W` are
     morphisms satisfying `f ≫ h = g ≫ k`, then we have a factorization `l : t.X ⟶ W` such that
     `inl t ≫ l = h` and `inr t ≫ l = k`. -/
-def is_colimit.desc' {t : PushoutCocone f g} (ht : IsColimit t) {W : C} (h : Y ⟶ W) (k : Z ⟶ W) (w : f ≫ h = g ≫ k) :
+def IsColimit.desc' {t : PushoutCocone f g} (ht : IsColimit t) {W : C} (h : Y ⟶ W) (k : Z ⟶ W) (w : f ≫ h = g ≫ k) :
     { l : t.x ⟶ W // inl t ≫ l = h ∧ inr t ≫ l = k } :=
   ⟨ht.desc <| PushoutCocone.mk _ _ w, ht.fac _ _, ht.fac _ _⟩
 
@@ -634,7 +639,7 @@ theorem epi_inl_of_is_pushout_of_epi {t : PushoutCocone f g} (ht : IsColimit t) 
 /-- This is a more convenient formulation to show that a `pushout_cocone` constructed using
 `pushout_cocone.mk` is a colimit cocone.
 -/
-def is_colimit.mk {W : C} {inl : Y ⟶ W} {inr : Z ⟶ W} (eq : f ≫ inl = g ≫ inr) (desc : ∀ s : PushoutCocone f g, W ⟶ s.x)
+def IsColimit.mk {W : C} {inl : Y ⟶ W} {inr : Z ⟶ W} (eq : f ≫ inl = g ≫ inr) (desc : ∀ s : PushoutCocone f g, W ⟶ s.x)
     (fac_left : ∀ s : PushoutCocone f g, inl ≫ desc s = s.inl)
     (fac_right : ∀ s : PushoutCocone f g, inr ≫ desc s = s.inr)
     (uniq : ∀ s : PushoutCocone f g m : W ⟶ s.x w_inl : inl ≫ m = s.inl w_inr : inr ≫ m = s.inr, m = desc s) :
@@ -642,7 +647,7 @@ def is_colimit.mk {W : C} {inl : Y ⟶ W} {inr : Z ⟶ W} (eq : f ≫ inl = g �
   isColimitAux _ desc fac_left fac_right fun s m w => uniq s m (w WalkingCospan.left) (w WalkingCospan.right)
 
 /-- The flip of a pushout square is a pushout square. -/
-def flip_is_colimit {W : C} {h : Y ⟶ W} {k : Z ⟶ W} {comm : f ≫ h = g ≫ k} (t : IsColimit (mk _ _ comm.symm)) :
+def flipIsColimit {W : C} {h : Y ⟶ W} {k : Z ⟶ W} {comm : f ≫ h = g ≫ k} (t : IsColimit (mk _ _ comm.symm)) :
     IsColimit (mk _ _ comm) :=
   (isColimitAux' _) fun s => by
     refine'
@@ -657,7 +662,7 @@ def flip_is_colimit {W : C} {h : Y ⟶ W} {k : Z ⟶ W} {comm : f ≫ h = g ≫ 
 /-- The pushout cocone `(𝟙 X, 𝟙 X)` for the pair `(f, f)` is a colimit if `f` is an epi. The converse is
 shown in `epi_of_is_colimit_mk_id_id`.
 -/
-def is_colimit_mk_id_id (f : X ⟶ Y) [Epi f] : IsColimit (mk (𝟙 Y) (𝟙 Y) rfl : PushoutCocone f f) :=
+def isColimitMkIdId (f : X ⟶ Y) [Epi f] : IsColimit (mk (𝟙 Y) (𝟙 Y) rfl : PushoutCocone f f) :=
   IsColimit.mk _ (fun s => s.inl) (fun s => Category.id_comp _)
     (fun s => by
       rw [← cancel_epi f, category.id_comp, s.condition])
@@ -676,7 +681,7 @@ theorem epi_of_is_colimit_mk_id_id (f : X ⟶ Y) (t : IsColimit (mk (𝟙 Y) (�
     diagram formed by `f` and `g`. Suppose `f` and `g` both factor through an epimorphism `h` via
     `x` and `y`, respectively. Then `s` is also a colimit cocone over the diagram formed by `x` and
     `y`.  -/
-def is_colimit_of_factors (f : X ⟶ Y) (g : X ⟶ Z) (h : X ⟶ W) [Epi h] (x : W ⟶ Y) (y : W ⟶ Z) (hhx : h ≫ x = f)
+def isColimitOfFactors (f : X ⟶ Y) (g : X ⟶ Z) (h : X ⟶ W) [Epi h] (x : W ⟶ Y) (y : W ⟶ Z) (hhx : h ≫ x = f)
     (hhy : h ≫ y = g) (s : PushoutCocone f g) (hs : IsColimit s) :
     IsColimit
       (PushoutCocone.mk _ _
@@ -694,7 +699,7 @@ def is_colimit_of_factors (f : X ⟶ Y) (g : X ⟶ Z) (h : X ⟶ W) [Epi h] (x :
 
 /-- If `W` is the pushout of `f, g`,
 it is also the pushout of `h ≫ f, h ≫ g` for any epi `h`. -/
-def is_colimit_of_epi_comp (f : X ⟶ Y) (g : X ⟶ Z) (h : W ⟶ X) [Epi h] (s : PushoutCocone f g) (H : IsColimit s) :
+def isColimitOfEpiComp (f : X ⟶ Y) (g : X ⟶ Z) (h : W ⟶ X) [Epi h] (s : PushoutCocone f g) (H : IsColimit s) :
     IsColimit
       (PushoutCocone.mk _ _
         (show (h ≫ f) ≫ s.inl = (h ≫ g) ≫ s.inr by
@@ -721,7 +726,7 @@ end PushoutCocone
     If you're thinking about using this, have a look at `has_pullbacks_of_has_limit_cospan`,
     which you may find to be an easier way of achieving your goal. -/
 @[simps]
-def cone.of_pullback_cone {F : walking_cospan ⥤ C} (t : PullbackCone (F.map inl) (F.map inr)) : Cone F where
+def Cone.ofPullbackCone {F : walking_cospan ⥤ C} (t : PullbackCone (F.map inl) (F.map inr)) : Cone F where
   x := t.x
   π := t.π ≫ (diagramIsoCospan F).inv
 
@@ -733,21 +738,21 @@ def cone.of_pullback_cone {F : walking_cospan ⥤ C} (t : PullbackCone (F.map in
     If you're thinking about using this, have a look at `has_pushouts_of_has_colimit_span`, which
     you may find to be an easiery way of achieving your goal.  -/
 @[simps]
-def cocone.of_pushout_cocone {F : walking_span ⥤ C} (t : PushoutCocone (F.map fst) (F.map snd)) : Cocone F where
+def Cocone.ofPushoutCocone {F : walking_span ⥤ C} (t : PushoutCocone (F.map fst) (F.map snd)) : Cocone F where
   x := t.x
   ι := (diagramIsoSpan F).Hom ≫ t.ι
 
 /-- Given `F : walking_cospan ⥤ C`, which is really the same as `cospan (F.map inl) (F.map inr)`,
     and a cone on `F`, we get a pullback cone on `F.map inl` and `F.map inr`. -/
 @[simps]
-def pullback_cone.of_cone {F : walking_cospan ⥤ C} (t : Cone F) : PullbackCone (F.map inl) (F.map inr) where
+def PullbackCone.ofCone {F : walking_cospan ⥤ C} (t : Cone F) : PullbackCone (F.map inl) (F.map inr) where
   x := t.x
   π := t.π ≫ (diagramIsoCospan F).Hom
 
 /-- A diagram `walking_cospan ⥤ C` is isomorphic to some `pullback_cone.mk` after
 composing with `diagram_iso_cospan`. -/
 @[simps]
-def pullback_cone.iso_mk {F : walking_cospan ⥤ C} (t : Cone F) :
+def PullbackCone.isoMk {F : walking_cospan ⥤ C} (t : Cone F) :
     (Cones.postcompose (diagramIsoCospan.{v} _).Hom).obj t ≅
       PullbackCone.mk (t.π.app WalkingCospan.left) (t.π.app WalkingCospan.right)
         ((t.π.naturality inl).symm.trans (t.π.naturality inr : _)) :=
@@ -760,14 +765,14 @@ def pullback_cone.iso_mk {F : walking_cospan ⥤ C} (t : Cone F) :
 /-- Given `F : walking_span ⥤ C`, which is really the same as `span (F.map fst) (F.map snd)`,
     and a cocone on `F`, we get a pushout cocone on `F.map fst` and `F.map snd`. -/
 @[simps]
-def pushout_cocone.of_cocone {F : walking_span ⥤ C} (t : Cocone F) : PushoutCocone (F.map fst) (F.map snd) where
+def PushoutCocone.ofCocone {F : walking_span ⥤ C} (t : Cocone F) : PushoutCocone (F.map fst) (F.map snd) where
   x := t.x
   ι := (diagramIsoSpan F).inv ≫ t.ι
 
 /-- A diagram `walking_span ⥤ C` is isomorphic to some `pushout_cocone.mk` after composing with
 `diagram_iso_span`. -/
 @[simps]
-def pushout_cocone.iso_mk {F : walking_span ⥤ C} (t : Cocone F) :
+def PushoutCocone.isoMk {F : walking_span ⥤ C} (t : Cocone F) :
     (Cocones.precompose (diagramIsoSpan.{v} _).inv).obj t ≅
       PushoutCocone.mk (t.ι.app WalkingSpan.left) (t.ι.app WalkingSpan.right)
         ((t.ι.naturality fst).trans (t.ι.naturality snd).symm) :=
@@ -780,13 +785,13 @@ def pushout_cocone.iso_mk {F : walking_span ⥤ C} (t : Cocone F) :
 /-- `has_pullback f g` represents a particular choice of limiting cone
 for the pair of morphisms `f : X ⟶ Z` and `g : Y ⟶ Z`.
 -/
-abbrev has_pullback {X Y Z : C} (f : X ⟶ Z) (g : Y ⟶ Z) :=
+abbrev HasPullback {X Y Z : C} (f : X ⟶ Z) (g : Y ⟶ Z) :=
   HasLimit (cospan f g)
 
 /-- `has_pushout f g` represents a particular choice of colimiting cocone
 for the pair of morphisms `f : X ⟶ Y` and `g : X ⟶ Z`.
 -/
-abbrev has_pushout {X Y Z : C} (f : X ⟶ Y) (g : X ⟶ Z) :=
+abbrev HasPushout {X Y Z : C} (f : X ⟶ Y) (g : X ⟶ Z) :=
   HasColimit (span f g)
 
 /-- `pullback f g` computes the pullback of a pair of morphisms with the same target. -/
@@ -908,7 +913,7 @@ theorem pullback.hom_ext {X Y Z : C} {f : X ⟶ Z} {g : Y ⟶ Z} [HasPullback f 
   limit.hom_ext <| PullbackCone.equalizer_ext _ h₀ h₁
 
 /-- The pullback cone built from the pullback projections is a pullback. -/
-def pullback_is_pullback {X Y Z : C} (f : X ⟶ Z) (g : Y ⟶ Z) [HasPullback f g] :
+def pullbackIsPullback {X Y Z : C} (f : X ⟶ Z) (g : Y ⟶ Z) [HasPullback f g] :
     IsLimit (PullbackCone.mk (pullback.fst : pullback f g ⟶ _) pullback.snd pullback.condition) :=
   PullbackCone.IsLimit.mk _ (fun s => pullback.lift s.fst s.snd s.condition)
     (by
@@ -946,7 +951,7 @@ theorem pushout.hom_ext {X Y Z : C} {f : X ⟶ Y} {g : X ⟶ Z} [HasPushout f g]
   colimit.hom_ext <| PushoutCocone.coequalizer_ext _ h₀ h₁
 
 /-- The pushout cocone built from the pushout coprojections is a pushout. -/
-def pushout_is_pushout {X Y Z : C} (f : X ⟶ Y) (g : X ⟶ Z) [HasPushout f g] :
+def pushoutIsPushout {X Y Z : C} (f : X ⟶ Y) (g : X ⟶ Z) [HasPushout f g] :
     IsColimit (PushoutCocone.mk (pushout.inl : _ ⟶ pushout f g) pushout.inr pushout.condition) :=
   PushoutCocone.IsColimit.mk _ (fun s => pushout.desc s.inl s.inr s.condition)
     (by
@@ -989,7 +994,7 @@ instance pullback.map_is_iso {W X Y Z S T : C} (f₁ : W ⟶ S) (f₂ : X ⟶ S)
 /-- If `f₁ = f₂` and `g₁ = g₂`, we may construct a canonical
 isomorphism `pullback f₁ g₁ ≅ pullback f₂ g₂` -/
 @[simps Hom]
-def pullback.congr_hom {X Y Z : C} {f₁ f₂ : X ⟶ Z} {g₁ g₂ : Y ⟶ Z} (h₁ : f₁ = f₂) (h₂ : g₁ = g₂) [HasPullback f₁ g₁]
+def pullback.congrHom {X Y Z : C} {f₁ f₂ : X ⟶ Z} {g₁ g₂ : Y ⟶ Z} (h₁ : f₁ = f₂) (h₂ : g₁ = g₂) [HasPullback f₁ g₁]
     [HasPullback f₂ g₂] : pullback f₁ g₁ ≅ pullback f₂ g₂ :=
   as_iso <|
     pullback.map _ _ _ _ (𝟙 _) (𝟙 _) (𝟙 _)
@@ -1033,7 +1038,7 @@ instance pushout.map_is_iso {W X Y Z S T : C} (f₁ : S ⟶ W) (f₂ : S ⟶ X) 
 /-- If `f₁ = f₂` and `g₁ = g₂`, we may construct a canonical
 isomorphism `pushout f₁ g₁ ≅ pullback f₂ g₂` -/
 @[simps Hom]
-def pushout.congr_hom {X Y Z : C} {f₁ f₂ : X ⟶ Y} {g₁ g₂ : X ⟶ Z} (h₁ : f₁ = f₂) (h₂ : g₁ = g₂) [HasPushout f₁ g₁]
+def pushout.congrHom {X Y Z : C} {f₁ f₂ : X ⟶ Y} {g₁ g₂ : X ⟶ Z} (h₁ : f₁ = f₂) (h₂ : g₁ = g₂) [HasPushout f₁ g₁]
     [HasPushout f₂ g₂] : pushout f₁ g₁ ≅ pushout f₂ g₂ :=
   as_iso <|
     pushout.map _ _ _ _ (𝟙 _) (𝟙 _) (𝟙 _)
@@ -1072,7 +1077,7 @@ variable {D : Type u₂} [Category.{v} D] (G : C ⥤ D)
 This is an isomorphism iff `G` preserves the pullback of `f,g`; see
 `category_theory/limits/preserves/shapes/pullbacks.lean`
 -/
-def pullback_comparison (f : X ⟶ Z) (g : Y ⟶ Z) [HasPullback f g] [HasPullback (G.map f) (G.map g)] :
+def pullbackComparison (f : X ⟶ Z) (g : Y ⟶ Z) [HasPullback f g] [HasPullback (G.map f) (G.map g)] :
     G.obj (pullback f g) ⟶ pullback (G.map f) (G.map g) :=
   pullback.lift (G.map pullback.fst) (G.map pullback.snd)
     (by
@@ -1102,7 +1107,7 @@ theorem map_lift_pullback_comparison (f : X ⟶ Z) (g : Y ⟶ Z) [HasPullback f 
 This is an isomorphism iff `G` preserves the pushout of `f,g`; see
 `category_theory/limits/preserves/shapes/pullbacks.lean`
 -/
-def pushout_comparison (f : X ⟶ Y) (g : X ⟶ Z) [HasPushout f g] [HasPushout (G.map f) (G.map g)] :
+def pushoutComparison (f : X ⟶ Y) (g : X ⟶ Z) [HasPushout f g] [HasPushout (G.map f) (G.map g)] :
     pushout (G.map f) (G.map g) ⟶ G.obj (pushout f g) :=
   pushout.desc (G.map pushout.inl) (G.map pushout.inr)
     (by
@@ -1143,7 +1148,7 @@ theorem has_pullback_symmetry [HasPullback f g] : HasPullback g f :=
 attribute [local instance] has_pullback_symmetry
 
 /-- The isomorphism `X ×[Z] Y ≅ Y ×[Z] X`. -/
-def pullback_symmetry [HasPullback f g] : pullback f g ≅ pullback g f :=
+def pullbackSymmetry [HasPullback f g] : pullback f g ≅ pullback g f :=
   IsLimit.conePointUniqueUpToIso
     (PullbackCone.flipIsLimit (pullbackIsPullback f g) : IsLimit (PullbackCone.mk _ _ pullback.condition.symm))
     (limit.isLimit _)
@@ -1183,7 +1188,7 @@ theorem has_pushout_symmetry [HasPushout f g] : HasPushout g f :=
 attribute [local instance] has_pushout_symmetry
 
 /-- The isomorphism `Y ⨿[X] Z ≅ Z ⨿[X] Y`. -/
-def pushout_symmetry [HasPushout f g] : pushout f g ≅ pushout g f :=
+def pushoutSymmetry [HasPushout f g] : pushout f g ≅ pushout g f :=
   IsColimit.coconePointUniqueUpToIso
     (PushoutCocone.flipIsColimit (pushoutIsPushout f g) : IsColimit (PushoutCocone.mk _ _ pushout.condition.symm))
     (colimit.isColimit _)
@@ -1213,7 +1218,7 @@ section PullbackLeftIso
 open WalkingCospan
 
 /-- The pullback of `f, g` is also the pullback of `f ≫ i, g ≫ i` for any mono `i`. -/
-noncomputable def pullback_is_pullback_of_comp_mono (f : X ⟶ W) (g : Y ⟶ W) (i : W ⟶ Z) [Mono i] [HasPullback f g] :
+noncomputable def pullbackIsPullbackOfCompMono (f : X ⟶ W) (g : Y ⟶ W) (i : W ⟶ Z) [Mono i] [HasPullback f g] :
     IsLimit (PullbackCone.mk pullback.fst pullback.snd _) :=
   PullbackCone.isLimitOfCompMono f g i _ (limit.isLimit (cospan f g))
 
@@ -1224,7 +1229,7 @@ instance has_pullback_of_comp_mono (f : X ⟶ W) (g : Y ⟶ W) (i : W ⟶ Z) [Mo
 variable (f : X ⟶ Z) (g : Y ⟶ Z) [IsIso f]
 
 /-- If `f : X ⟶ Z` is iso, then `X ×[Z] Y ≅ Y`. This is the explicit limit cone. -/
-def pullback_cone_of_left_iso : PullbackCone f g :=
+def pullbackConeOfLeftIso : PullbackCone f g :=
   PullbackCone.mk (g ≫ inv f) (𝟙 _) <| by
     simp
 
@@ -1254,7 +1259,7 @@ theorem pullback_cone_of_left_iso_π_app_right : (pullbackConeOfLeftIso f g).π.
   rfl
 
 /-- Verify that the constructed limit cone is indeed a limit. -/
-def pullback_cone_of_left_iso_is_limit : IsLimit (pullbackConeOfLeftIso f g) :=
+def pullbackConeOfLeftIsoIsLimit : IsLimit (pullbackConeOfLeftIso f g) :=
   PullbackCone.isLimitAux' _ fun s =>
     ⟨s.snd, by
       simp [← s.condition_assoc]⟩
@@ -1300,7 +1305,7 @@ open WalkingCospan
 variable (f : X ⟶ Z) (g : Y ⟶ Z) [IsIso g]
 
 /-- If `g : Y ⟶ Z` is iso, then `X ×[Z] Y ≅ X`. This is the explicit limit cone. -/
-def pullback_cone_of_right_iso : PullbackCone f g :=
+def pullbackConeOfRightIso : PullbackCone f g :=
   PullbackCone.mk (𝟙 _) (f ≫ inv g) <| by
     simp
 
@@ -1329,7 +1334,7 @@ theorem pullback_cone_of_right_iso_π_app_right : (pullbackConeOfRightIso f g).�
   rfl
 
 /-- Verify that the constructed limit cone is indeed a limit. -/
-def pullback_cone_of_right_iso_is_limit : IsLimit (pullbackConeOfRightIso f g) :=
+def pullbackConeOfRightIsoIsLimit : IsLimit (pullbackConeOfRightIso f g) :=
   PullbackCone.isLimitAux' _ fun s =>
     ⟨s.fst, by
       simp [s.condition_assoc]⟩
@@ -1373,7 +1378,7 @@ section PushoutLeftIso
 open WalkingSpan
 
 /-- The pushout of `f, g` is also the pullback of `h ≫ f, h ≫ g` for any epi `h`. -/
-noncomputable def pushout_is_pushout_of_epi_comp (f : X ⟶ Y) (g : X ⟶ Z) (h : W ⟶ X) [Epi h] [HasPushout f g] :
+noncomputable def pushoutIsPushoutOfEpiComp (f : X ⟶ Y) (g : X ⟶ Z) (h : W ⟶ X) [Epi h] [HasPushout f g] :
     IsColimit (PushoutCocone.mk pushout.inl pushout.inr _) :=
   PushoutCocone.isColimitOfEpiComp f g h _ (colimit.isColimit (span f g))
 
@@ -1384,7 +1389,7 @@ instance has_pushout_of_epi_comp (f : X ⟶ Y) (g : X ⟶ Z) (h : W ⟶ X) [Epi 
 variable (f : X ⟶ Y) (g : X ⟶ Z) [IsIso f]
 
 /-- If `f : X ⟶ Y` is iso, then `Y ⨿[X] Z ≅ Z`. This is the explicit colimit cocone. -/
-def pushout_cocone_of_left_iso : PushoutCocone f g :=
+def pushoutCoconeOfLeftIso : PushoutCocone f g :=
   PushoutCocone.mk (inv f ≫ g) (𝟙 _) <| by
     simp
 
@@ -1414,7 +1419,7 @@ theorem pushout_cocone_of_left_iso_ι_app_right : (pushoutCoconeOfLeftIso f g).�
   rfl
 
 /-- Verify that the constructed cocone is indeed a colimit. -/
-def pushout_cocone_of_left_iso_is_limit : IsColimit (pushoutCoconeOfLeftIso f g) :=
+def pushoutCoconeOfLeftIsoIsLimit : IsColimit (pushoutCoconeOfLeftIso f g) :=
   PushoutCocone.isColimitAux' _ fun s =>
     ⟨s.inr, by
       simp [← s.condition]⟩
@@ -1460,7 +1465,7 @@ open WalkingSpan
 variable (f : X ⟶ Y) (g : X ⟶ Z) [IsIso g]
 
 /-- If `f : X ⟶ Z` is iso, then `Y ⨿[X] Z ≅ Y`. This is the explicit colimit cocone. -/
-def pushout_cocone_of_right_iso : PushoutCocone f g :=
+def pushoutCoconeOfRightIso : PushoutCocone f g :=
   PushoutCocone.mk (𝟙 _) (inv g ≫ f) <| by
     simp
 
@@ -1490,7 +1495,7 @@ theorem pushout_cocone_of_right_iso_ι_app_right : (pushoutCoconeOfRightIso f g)
   rfl
 
 /-- Verify that the constructed cocone is indeed a colimit. -/
-def pushout_cocone_of_right_iso_is_limit : IsColimit (pushoutCoconeOfRightIso f g) :=
+def pushoutCoconeOfRightIsoIsLimit : IsColimit (pushoutCoconeOfRightIso f g) :=
   PushoutCocone.isColimitAux' _ fun s =>
     ⟨s.inl, by
       simp [← s.condition]⟩
@@ -1619,7 +1624,7 @@ Y₁ - g₁ -> Y₂ - g₂ -> Y₃
 
 Then the big square is a pullback if both the small squares are.
 -/
-def big_square_is_pullback (H : IsLimit (PullbackCone.mk _ _ h₂)) (H' : IsLimit (PullbackCone.mk _ _ h₁)) :
+def bigSquareIsPullback (H : IsLimit (PullbackCone.mk _ _ h₂)) (H' : IsLimit (PullbackCone.mk _ _ h₁)) :
     IsLimit
       (PullbackCone.mk _ _
         (show i₁ ≫ g₁ ≫ g₂ = (f₁ ≫ f₂) ≫ i₃ by
@@ -1659,7 +1664,7 @@ Y₁ - g₁ -> Y₂ - g₂ -> Y₃
 
 Then the big square is a pushout if both the small squares are.
 -/
-def big_square_is_pushout (H : IsColimit (PushoutCocone.mk _ _ h₂)) (H' : IsColimit (PushoutCocone.mk _ _ h₁)) :
+def bigSquareIsPushout (H : IsColimit (PushoutCocone.mk _ _ h₂)) (H' : IsColimit (PushoutCocone.mk _ _ h₁)) :
     IsColimit
       (PushoutCocone.mk _ _
         (show i₁ ≫ g₁ ≫ g₂ = (f₁ ≫ f₂) ≫ i₃ by
@@ -1699,7 +1704,7 @@ Y₁ - g₁ -> Y₂ - g₂ -> Y₃
 
 Then the left square is a pullback if the right square and the big square are.
 -/
-def left_square_is_pullback (H : IsLimit (PullbackCone.mk _ _ h₂))
+def leftSquareIsPullback (H : IsLimit (PullbackCone.mk _ _ h₂))
     (H' :
       IsLimit
         (PullbackCone.mk _ _
@@ -1741,7 +1746,7 @@ Y₁ - g₁ -> Y₂ - g₂ -> Y₃
 
 Then the right square is a pushout if the left square and the big square are.
 -/
-def right_square_is_pushout (H : IsColimit (PushoutCocone.mk _ _ h₁))
+def rightSquareIsPushout (H : IsColimit (PushoutCocone.mk _ _ h₁))
     (H' :
       IsColimit
         (PushoutCocone.mk _ _
@@ -1784,8 +1789,8 @@ variable [HasPullback f g] [HasPullback f' (pullback.fst : pullback f g ⟶ _)]
 variable [HasPullback (f' ≫ f) g]
 
 /-- The canonical isomorphism `W ×[X] (X ×[Z] Y) ≅ W ×[Z] Y` -/
-noncomputable def pullback_right_pullback_fst_iso :
-    pullback f' (pullback.fst : pullback f g ⟶ _) ≅ pullback (f' ≫ f) g := by
+noncomputable def pullbackRightPullbackFstIso : pullback f' (pullback.fst : pullback f g ⟶ _) ≅ pullback (f' ≫ f) g :=
+  by
   let this :=
     big_square_is_pullback (pullback.snd : pullback f' (pullback.fst : pullback f g ⟶ _) ⟶ _) pullback.snd f' f
       pullback.fst pullback.fst g pullback.condition pullback.condition (pullback_is_pullback _ _)
@@ -1829,7 +1834,7 @@ variable [HasPushout f g] [HasPushout (pushout.inr : _ ⟶ pushout f g) g']
 variable [HasPushout f (g ≫ g')]
 
 /-- The canonical isomorphism `(Y ⨿[X] Z) ⨿[Z] W ≅ Y ×[X] W` -/
-noncomputable def pushout_left_pushout_inr_iso : pushout (pushout.inr : _ ⟶ pushout f g) g' ≅ pushout f (g ≫ g') :=
+noncomputable def pushoutLeftPushoutInrIso : pushout (pushout.inr : _ ⟶ pushout f g) g' ≅ pushout f (g ≫ g') :=
   ((bigSquareIsPushout g g' _ _ f _ _ pushout.condition pushout.condition (pushoutIsPushout _ _)
         (pushoutIsPushout _ _)).coconePointUniqueUpToIso
     (pushoutIsPushout _ _) :
@@ -1868,6 +1873,43 @@ end
 
 section PullbackAssoc
 
+/-
+The objects and morphisms are as follows:
+
+           Z₂ - g₄ -> X₃
+           |          |
+           g₃         f₄
+           ∨          ∨
+Z₁ - g₂ -> X₂ - f₃ -> Y₂
+|          |
+g₁         f₂
+∨          ∨
+X₁ - f₁ -> Y₁
+
+where the two squares are pullbacks.
+
+We can then construct the pullback squares
+
+W  - l₂ -> Z₂ - g₄ -> X₃
+|                     |
+l₁                    f₄
+∨                     ∨
+Z₁ - g₂ -> X₂ - f₃ -> Y₂
+
+and
+
+W' - l₂' -> Z₂
+|           |
+l₁'         g₃
+∨           ∨
+Z₁          X₂
+|           |
+g₁          f₂
+∨           ∨
+X₁ -  f₁ -> Y₁
+
+We will show that both `W` and `W'` are pullbacks over `g₁, g₂`, and thus we may construct a
+canonical isomorphism between them. -/
 variable {X₁ X₂ X₃ Y₁ Y₂ : C} (f₁ : X₁ ⟶ Y₁) (f₂ : X₂ ⟶ Y₁) (f₃ : X₂ ⟶ Y₂)
 
 variable (f₄ : X₃ ⟶ Y₂) [HasPullback f₁ f₂] [HasPullback f₃ f₄]
@@ -1901,7 +1943,7 @@ local notation "l₁'" =>
 local notation "l₂'" => (pullback.snd : W' ⟶ Z₂)
 
 /-- `(X₁ ×[Y₁] X₂) ×[Y₂] X₃` is the pullback `(X₁ ×[Y₁] X₂) ×[X₂] (X₂ ×[Y₂] X₃)`. -/
-def pullback_pullback_left_is_pullback [HasPullback (g₂ ≫ f₃) f₄] :
+def pullbackPullbackLeftIsPullback [HasPullback (g₂ ≫ f₃) f₄] :
     IsLimit (PullbackCone.mk l₁ l₂ (show l₁ ≫ g₂ = l₂ ≫ g₃ from (pullback.lift_fst _ _ _).symm)) := by
   apply left_square_is_pullback
   exact pullback_is_pullback f₃ f₄
@@ -1909,7 +1951,7 @@ def pullback_pullback_left_is_pullback [HasPullback (g₂ ≫ f₃) f₄] :
   rw [pullback.lift_snd]
 
 /-- `(X₁ ×[Y₁] X₂) ×[Y₂] X₃` is the pullback `X₁ ×[Y₁] (X₂ ×[Y₂] X₃)`. -/
-def pullback_assoc_is_pullback [HasPullback (g₂ ≫ f₃) f₄] :
+def pullbackAssocIsPullback [HasPullback (g₂ ≫ f₃) f₄] :
     IsLimit
       (PullbackCone.mk (l₁ ≫ g₁) l₂
         (show (l₁ ≫ g₁) ≫ f₁ = l₂ ≫ g₃ ≫ f₂ by
@@ -1932,7 +1974,7 @@ theorem has_pullback_assoc [HasPullback (g₂ ≫ f₃) f₄] : HasPullback f₁
   ⟨⟨⟨_, pullbackAssocIsPullback f₁ f₂ f₃ f₄⟩⟩⟩
 
 /-- `X₁ ×[Y₁] (X₂ ×[Y₂] X₃)` is the pullback `(X₁ ×[Y₁] X₂) ×[X₂] (X₂ ×[Y₂] X₃)`. -/
-def pullback_pullback_right_is_pullback [HasPullback f₁ (g₃ ≫ f₂)] :
+def pullbackPullbackRightIsPullback [HasPullback f₁ (g₃ ≫ f₂)] :
     IsLimit (PullbackCone.mk l₁' l₂' (show l₁' ≫ g₂ = l₂' ≫ g₃ from pullback.lift_snd _ _ _)) := by
   apply pullback_cone.flip_is_limit
   apply left_square_is_pullback
@@ -1947,7 +1989,7 @@ def pullback_pullback_right_is_pullback [HasPullback f₁ (g₃ ≫ f₂)] :
     
 
 /-- `X₁ ×[Y₁] (X₂ ×[Y₂] X₃)` is the pullback `(X₁ ×[Y₁] X₂) ×[Y₂] X₃`. -/
-def pullback_assoc_symm_is_pullback [HasPullback f₁ (g₃ ≫ f₂)] :
+def pullbackAssocSymmIsPullback [HasPullback f₁ (g₃ ≫ f₂)] :
     IsLimit
       (PullbackCone.mk l₁' (l₂' ≫ g₄)
         (show l₁' ≫ g₂ ≫ f₃ = (l₂' ≫ g₄) ≫ f₄ by
@@ -1963,7 +2005,7 @@ theorem has_pullback_assoc_symm [HasPullback f₁ (g₃ ≫ f₂)] : HasPullback
 variable [HasPullback (g₂ ≫ f₃) f₄] [HasPullback f₁ (g₃ ≫ f₂)]
 
 /-- The canonical isomorphism `(X₁ ×[Y₁] X₂) ×[Y₂] X₃ ≅ X₁ ×[Y₁] (X₂ ×[Y₂] X₃)`. -/
-noncomputable def pullback_assoc :
+noncomputable def pullbackAssoc :
     pullback (pullback.snd ≫ f₃ : pullback f₁ f₂ ⟶ _) f₄ ≅ pullback f₁ (pullback.fst ≫ f₂ : pullback f₃ f₄ ⟶ _) :=
   (pullbackPullbackLeftIsPullback f₁ f₂ f₃ f₄).conePointUniqueUpToIso (pullbackPullbackRightIsPullback f₁ f₂ f₃ f₄)
 
@@ -2009,6 +2051,43 @@ end PullbackAssoc
 
 section PushoutAssoc
 
+/-
+The objects and morphisms are as follows:
+
+           Z₂ - g₄ -> X₃
+           |          |
+           g₃         f₄
+           ∨          ∨
+Z₁ - g₂ -> X₂ - f₃ -> Y₂
+|          |
+g₁         f₂
+∨          ∨
+X₁ - f₁ -> Y₁
+
+where the two squares are pushouts.
+
+We can then construct the pushout squares
+
+Z₁ - g₂ -> X₂ - f₃ -> Y₂
+|                     |
+g₁                    l₂
+∨                     ∨
+X₁ - f₁ -> Y₁ - l₁ -> W
+
+and
+
+Z₂ - g₄  -> X₃
+|           |
+g₃          f₄
+∨           ∨
+X₂          Y₂
+|           |
+f₂          l₂'
+∨           ∨
+Y₁ - l₁' -> W'
+
+We will show that both `W` and `W'` are pushouts over `f₂, f₃`, and thus we may construct a
+canonical isomorphism between them. -/
 variable {X₁ X₂ X₃ Z₁ Z₂ : C} (g₁ : Z₁ ⟶ X₁) (g₂ : Z₁ ⟶ X₂) (g₃ : Z₂ ⟶ X₂)
 
 variable (g₄ : Z₂ ⟶ X₃) [HasPushout g₁ g₂] [HasPushout g₃ g₄]
@@ -2042,7 +2121,7 @@ local notation "l₂'" =>
   (pushout.desc (f₂ ≫ pushout.inl) pushout.inr ((Category.assoc _ _ _).symm.trans pushout.condition) : Y₂ ⟶ W')
 
 /-- `(X₁ ⨿[Z₁] X₂) ⨿[Z₂] X₃` is the pushout `(X₁ ⨿[Z₁] X₂) ×[X₂] (X₂ ⨿[Z₂] X₃)`. -/
-def pushout_pushout_left_is_pushout [HasPushout (g₃ ≫ f₂) g₄] :
+def pushoutPushoutLeftIsPushout [HasPushout (g₃ ≫ f₂) g₄] :
     IsColimit (PushoutCocone.mk l₁' l₂' (show f₂ ≫ l₁' = f₃ ≫ l₂' from (pushout.inl_desc _ _ _).symm)) := by
   apply pushout_cocone.flip_is_colimit
   apply right_square_is_pushout
@@ -2057,7 +2136,7 @@ def pushout_pushout_left_is_pushout [HasPushout (g₃ ≫ f₂) g₄] :
     
 
 /-- `(X₁ ⨿[Z₁] X₂) ⨿[Z₂] X₃` is the pushout `X₁ ⨿[Z₁] (X₂ ⨿[Z₂] X₃)`. -/
-def pushout_assoc_is_pushout [HasPushout (g₃ ≫ f₂) g₄] :
+def pushoutAssocIsPushout [HasPushout (g₃ ≫ f₂) g₄] :
     IsColimit
       (PushoutCocone.mk (f₁ ≫ l₁') l₂'
         (show g₁ ≫ f₁ ≫ l₁' = (g₂ ≫ f₃) ≫ l₂' by
@@ -2073,7 +2152,7 @@ theorem has_pushout_assoc [HasPushout (g₃ ≫ f₂) g₄] : HasPushout g₁ (g
   ⟨⟨⟨_, pushoutAssocIsPushout g₁ g₂ g₃ g₄⟩⟩⟩
 
 /-- `X₁ ⨿[Z₁] (X₂ ⨿[Z₂] X₃)` is the pushout `(X₁ ⨿[Z₁] X₂) ×[X₂] (X₂ ⨿[Z₂] X₃)`. -/
-def pushout_pushout_right_is_pushout [HasPushout g₁ (g₂ ≫ f₃)] :
+def pushoutPushoutRightIsPushout [HasPushout g₁ (g₂ ≫ f₃)] :
     IsColimit (PushoutCocone.mk l₁ l₂ (show f₂ ≫ l₁ = f₃ ≫ l₂ from pushout.inr_desc _ _ _)) := by
   apply right_square_is_pushout
   · exact pushout_is_pushout _ _
@@ -2083,7 +2162,7 @@ def pushout_pushout_right_is_pushout [HasPushout g₁ (g₂ ≫ f₃)] :
     
 
 /-- `X₁ ⨿[Z₁] (X₂ ⨿[Z₂] X₃)` is the pushout `(X₁ ⨿[Z₁] X₂) ⨿[Z₂] X₃`. -/
-def pushout_assoc_symm_is_pushout [HasPushout g₁ (g₂ ≫ f₃)] :
+def pushoutAssocSymmIsPushout [HasPushout g₁ (g₂ ≫ f₃)] :
     IsColimit
       (PushoutCocone.mk l₁ (f₄ ≫ l₂)
         (show (g₃ ≫ f₂) ≫ l₁ = g₄ ≫ f₄ ≫ l₂ by
@@ -2108,7 +2187,7 @@ theorem has_pushout_assoc_symm [HasPushout g₁ (g₂ ≫ f₃)] : HasPushout (g
 variable [HasPushout (g₃ ≫ f₂) g₄] [HasPushout g₁ (g₂ ≫ f₃)]
 
 /-- The canonical isomorphism `(X₁ ⨿[Z₁] X₂) ⨿[Z₂] X₃ ≅ X₁ ⨿[Z₁] (X₂ ⨿[Z₂] X₃)`. -/
-noncomputable def pushout_assoc :
+noncomputable def pushoutAssoc :
     pushout (g₃ ≫ pushout.inr : _ ⟶ pushout g₁ g₂) g₄ ≅ pushout g₁ (g₂ ≫ pushout.inl : _ ⟶ pushout g₃ g₄) :=
   (pushoutPushoutLeftIsPushout g₁ g₂ g₃ g₄).coconePointUniqueUpToIso (pushoutPushoutRightIsPushout g₁ g₂ g₃ g₄)
 
@@ -2163,11 +2242,11 @@ variable (C)
 
 See https://stacks.math.columbia.edu/tag/001W
 -/
-abbrev has_pullbacks :=
+abbrev HasPullbacks :=
   HasLimitsOfShape WalkingCospan.{v} C
 
 /-- `has_pushouts` represents a choice of pushout for every pair of morphisms -/
-abbrev has_pushouts :=
+abbrev HasPushouts :=
   HasColimitsOfShape WalkingSpan.{v} C
 
 /-- If `C` has all limits of diagrams `cospan f g`, then it has all pullbacks -/

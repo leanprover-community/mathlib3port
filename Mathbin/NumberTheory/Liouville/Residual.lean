@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Yury Kudryashov. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yury Kudryashov
+-/
 import Mathbin.NumberTheory.Liouville.Basic
 import Mathbin.Topology.MetricSpace.Baire
 import Mathbin.Topology.Instances.Irrational
@@ -14,7 +19,7 @@ open_locale Filter
 
 open Filter Set Metric
 
--- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (a b)
+-- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (a b)
 theorem set_of_liouville_eq_Inter_Union :
     { x | Liouville x } = ⋂ n : ℕ, ⋃ (a : ℤ) (b : ℤ) (hb : 1 < b), Ball (a / b) (1 / b ^ n) \ {a / b} := by
   ext x
@@ -27,7 +32,7 @@ theorem is_Gδ_set_of_liouville : IsGδ { x | Liouville x } := by
   refine' is_open_Union fun a => is_open_Union fun b => is_open_Union fun hb => _
   exact is_open_ball.inter is_closed_singleton.is_open_compl
 
--- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (a b)
+-- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (a b)
 theorem set_of_liouville_eq_irrational_inter_Inter_Union :
     { x | Liouville x } = { x | Irrational x } ∩ ⋂ n : ℕ, ⋃ (a : ℤ) (b : ℤ) (hb : 1 < b), Ball (a / b) (1 / b ^ n) := by
   refine' subset.antisymm _ _

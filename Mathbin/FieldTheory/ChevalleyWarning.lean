@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Johan Commelin. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johan Commelin
+-/
 import Mathbin.FieldTheory.Finite.Basic
 
 /-!
@@ -74,8 +79,12 @@ theorem MvPolynomial.sum_mv_polynomial_eq_zero [DecidableEq σ] (f : MvPolynomia
       rw [← e'.prod_comp, Fintype.prod_sum_type, univ_unique, prod_singleton]
       rfl _ = a ^ d i * ∏ j : { j // j ≠ i }, (e a : σ → K) j ^ d j := by
       rw [Equivₓ.subtype_equiv_codomain_symm_apply_eq]_ = a ^ d i * ∏ j, x₀ j ^ d j :=
-      congr_argₓ _ (Fintype.prod_congr _ _ _)_ = (∏ j, x₀ j ^ d j) * a ^ d i := mul_comm _ _
-  · rintro ⟨j, hj⟩
+      congr_argₓ _ (Fintype.prod_congr _ _ _)-- see below
+        _ =
+        (∏ j, x₀ j ^ d j) * a ^ d i :=
+      mul_comm _ _
+  · -- the remaining step of the calculation above
+    rintro ⟨j, hj⟩
     show (e a : σ → K) j ^ d j = x₀ ⟨j, hj⟩ ^ d j
     rw [Equivₓ.subtype_equiv_codomain_symm_apply_ne]
     
@@ -97,6 +106,11 @@ theorem char_dvd_card_solutions_family (p : ℕ) [CharP K p] {ι : Type _} {s : 
   have hS : ∀ x : σ → K, x ∈ S ↔ ∀ i : ι, i ∈ s → eval x (f i) = 0 := by
     intro x
     simp only [S, true_andₓ, sep_def, mem_filter, mem_univ]
+  /- The polynomial `F = ∏ i in s, (1 - (f i)^(q - 1))` has the nice property
+    that it takes the value `1` on elements of `{x : σ → K // ∀ i ∈ s, (f i).eval x = 0}`
+    while it is `0` outside that locus.
+    Hence the sum of its values is equal to the cardinality of
+    `{x : σ → K // ∀ i ∈ s, (f i).eval x = 0}` modulo `p`. -/
   let F : MvPolynomial σ K := ∏ i in s, 1 - f i ^ (q - 1)
   have hF : ∀ x, eval x F = if x ∈ S then 1 else 0 := by
     intro x
@@ -113,19 +127,26 @@ theorem char_dvd_card_solutions_family (p : ℕ) [CharP K p] {ι : Type _} {s : 
       apply Finset.prod_eq_zero hi
       rw [pow_card_sub_one_eq_one (eval x (f i)) hx, sub_self]
       
+  -- In particular, we can now show:
   have key : (∑ x, eval x F) = Fintype.card { x : σ → K // ∀, ∀ i ∈ s, ∀, eval x (f i) = 0 }
   rw [Fintype.card_of_subtype S hS, card_eq_sum_ones, Nat.cast_sum, Nat.cast_oneₓ, ← Fintype.sum_extend_by_zero S,
     sum_congr rfl fun x hx => hF x]
+  -- With these preparations under our belt, we will approach the main goal.
   show p ∣ Fintype.card { x // ∀ i : ι, i ∈ s → eval x (f i) = 0 }
   rw [← CharP.cast_eq_zero_iff K, ← key]
   show (∑ x, eval x F) = 0
+  -- We are now ready to apply the main machine, proven before.
   apply F.sum_mv_polynomial_eq_zero
+  -- It remains to verify the crucial assumption of this machine
   show F.total_degree < (q - 1) * Fintype.card σ
   calc F.total_degree ≤ ∑ i in s, (1 - f i ^ (q - 1)).totalDegree :=
       total_degree_finset_prod s _ _ ≤ ∑ i in s, (q - 1) * (f i).totalDegree :=
-      sum_le_sum fun i hi => _ _ = (q - 1) * ∑ i in s, (f i).totalDegree := mul_sum.symm _ < (q - 1) * Fintype.card σ :=
-      by
+      sum_le_sum fun i hi => _-- see ↓
+        _ =
+        (q - 1) * ∑ i in s, (f i).totalDegree :=
+      mul_sum.symm _ < (q - 1) * Fintype.card σ := by
       rwa [mul_lt_mul_left hq]
+  -- Now we prove the remaining step from the preceding calculation
   show (1 - f i ^ (q - 1)).totalDegree ≤ (q - 1) * (f i).totalDegree
   calc (1 - f i ^ (q - 1)).totalDegree ≤ max (1 : MvPolynomial σ K).totalDegree (f i ^ (q - 1)).totalDegree :=
       total_degree_sub _ _ _ ≤ (f i ^ (q - 1)).totalDegree := by

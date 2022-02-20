@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Yakov Pechersky. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yakov Pechersky, Chris Hughes
+-/
 import Mathbin.Data.List.Nodup
 
 /-!
@@ -19,7 +24,7 @@ variable {α : Type _}
 namespace List
 
 /-- Property that an element `x : α` of `l : list α` can be found in the list more than once. -/
-inductive duplicate (x : α) : List α → Prop
+inductive Duplicate (x : α) : List α → Prop
   | cons_mem {l : List α} : x ∈ l → duplicate (x :: l)
   | cons_duplicate {y : α} {l : List α} : duplicate l → duplicate (y :: l)
 
@@ -27,20 +32,20 @@ local infixl:50 " ∈+ " => List.Duplicate
 
 variable {l : List α} {x : α}
 
-theorem mem.duplicate_cons_self (h : x ∈ l) : x ∈+ x :: l :=
+theorem Mem.duplicate_cons_self (h : x ∈ l) : x ∈+ x :: l :=
   Duplicate.cons_mem h
 
-theorem duplicate.duplicate_cons (h : x ∈+ l) (y : α) : x ∈+ y :: l :=
+theorem Duplicate.duplicate_cons (h : x ∈+ l) (y : α) : x ∈+ y :: l :=
   Duplicate.cons_duplicate h
 
-theorem duplicate.mem (h : x ∈+ l) : x ∈ l := by
+theorem Duplicate.mem (h : x ∈+ l) : x ∈ l := by
   induction' h with l' h y l' h hm
   · exact mem_cons_self _ _
     
   · exact mem_cons_of_mem _ hm
     
 
-theorem duplicate.mem_cons_self (h : x ∈+ x :: l) : x ∈ l := by
+theorem Duplicate.mem_cons_self (h : x ∈+ x :: l) : x ∈ l := by
   cases' h with _ h _ _ h
   · exact h
     
@@ -51,12 +56,12 @@ theorem duplicate.mem_cons_self (h : x ∈+ x :: l) : x ∈ l := by
 theorem duplicate_cons_self_iff : x ∈+ x :: l ↔ x ∈ l :=
   ⟨Duplicate.mem_cons_self, Mem.duplicate_cons_self⟩
 
-theorem duplicate.ne_nil (h : x ∈+ l) : l ≠ [] := fun H => (mem_nil_iff x).mp (H ▸ h.Mem)
+theorem Duplicate.ne_nil (h : x ∈+ l) : l ≠ [] := fun H => (mem_nil_iff x).mp (H ▸ h.Mem)
 
 @[simp]
 theorem not_duplicate_nil (x : α) : ¬x ∈+ [] := fun H => H.ne_nil rfl
 
-theorem duplicate.ne_singleton (h : x ∈+ l) (y : α) : l ≠ [y] := by
+theorem Duplicate.ne_singleton (h : x ∈+ l) (y : α) : l ≠ [y] := by
   induction' h with l' h z l' h hm
   · simp [ne_nil_of_mem h]
     
@@ -66,10 +71,10 @@ theorem duplicate.ne_singleton (h : x ∈+ l) (y : α) : l ≠ [y] := by
 @[simp]
 theorem not_duplicate_singleton (x y : α) : ¬x ∈+ [y] := fun H => H.ne_singleton _ rfl
 
-theorem duplicate.elim_nil (h : x ∈+ []) : False :=
+theorem Duplicate.elim_nil (h : x ∈+ []) : False :=
   not_duplicate_nil x h
 
-theorem duplicate.elim_singleton {y : α} (h : x ∈+ [y]) : False :=
+theorem Duplicate.elim_singleton {y : α} (h : x ∈+ [y]) : False :=
   not_duplicate_singleton x y h
 
 theorem duplicate_cons_iff {y : α} : x ∈+ y :: l ↔ y = x ∧ x ∈ l ∨ x ∈+ l := by
@@ -87,13 +92,13 @@ theorem duplicate_cons_iff {y : α} : x ∈+ y :: l ↔ y = x ∧ x ∈ l ∨ x 
       
     
 
-theorem duplicate.of_duplicate_cons {y : α} (h : x ∈+ y :: l) (hx : x ≠ y) : x ∈+ l := by
+theorem Duplicate.of_duplicate_cons {y : α} (h : x ∈+ y :: l) (hx : x ≠ y) : x ∈+ l := by
   simpa [duplicate_cons_iff, hx.symm] using h
 
 theorem duplicate_cons_iff_of_ne {y : α} (hne : x ≠ y) : x ∈+ y :: l ↔ x ∈+ l := by
   simp [duplicate_cons_iff, hne.symm]
 
-theorem duplicate.mono_sublist {l' : List α} (hx : x ∈+ l) (h : l <+ l') : x ∈+ l' := by
+theorem Duplicate.mono_sublist {l' : List α} (hx : x ∈+ l) (h : l <+ l') : x ∈+ l' := by
   induction' h with l₁ l₂ y h IH l₁ l₂ y h IH
   · exact hx
     
@@ -131,12 +136,12 @@ theorem nodup_iff_forall_not_duplicate : Nodupₓ l ↔ ∀ x : α, ¬x ∈+ l :
 theorem exists_duplicate_iff_not_nodup : (∃ x : α, x ∈+ l) ↔ ¬Nodupₓ l := by
   simp [nodup_iff_forall_not_duplicate]
 
-theorem duplicate.not_nodup (h : x ∈+ l) : ¬Nodupₓ l := fun H => nodup_iff_forall_not_duplicate.mp H _ h
+theorem Duplicate.not_nodup (h : x ∈+ l) : ¬Nodupₓ l := fun H => nodup_iff_forall_not_duplicate.mp H _ h
 
 theorem duplicate_iff_two_le_count [DecidableEq α] : x ∈+ l ↔ 2 ≤ count x l := by
   simp [duplicate_iff_sublist, le_count_iff_repeat_sublist]
 
-instance decidable_duplicate [DecidableEq α] (x : α) : ∀ l : List α, Decidable (x ∈+ l)
+instance decidableDuplicate [DecidableEq α] (x : α) : ∀ l : List α, Decidable (x ∈+ l)
   | [] => isFalse (not_duplicate_nil x)
   | y :: l =>
     match decidable_duplicate l with

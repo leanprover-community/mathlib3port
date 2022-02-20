@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Anne Baanen. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Anne Baanen
+-/
 import Mathbin.Algebra.Group.Units
 import Mathbin.Algebra.Ring.Basic
 
@@ -61,7 +66,9 @@ class Invertible [Mul α] [One α] (a : α) : Type u where
   inv_of_mul_self : inv_of * a = 1
   mul_inv_of_self : a * inv_of = 1
 
-notation:1034 "⅟" => Invertible.invOf
+notation:1034
+  "⅟" =>-- This notation has the same precedence as `has_inv.inv`.
+  Invertible.invOf
 
 @[simp]
 theorem inv_of_mul_self [Mul α] [One α] (a : α) [Invertible a] : ⅟ a * a = 1 :=
@@ -179,6 +186,10 @@ theorem inv_of_neg [Ringₓ α] (a : α) [Invertible a] [Invertible (-a)] : ⅟ 
 theorem one_sub_inv_of_two [Ringₓ α] [Invertible (2 : α)] : 1 - (⅟ 2 : α) = ⅟ 2 :=
   (is_unit_of_invertible (2 : α)).mul_right_inj.1 <| by
     rw [mul_sub, mul_inv_of_self, mul_oneₓ, bit0, add_sub_cancel]
+
+@[simp]
+theorem inv_of_two_add_inv_of_two [Semiringₓ α] [Invertible (2 : α)] : (⅟ 2 : α) + (⅟ 2 : α) = 1 := by
+  simp only [← two_mul, mul_inv_of_self]
 
 /-- `a` is the inverse of `⅟a`. -/
 instance invertibleInvOf [One α] [Mul α] {a : α} [Invertible a] : Invertible (⅟ a) :=

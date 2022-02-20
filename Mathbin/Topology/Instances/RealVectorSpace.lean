@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Yury Kudryashov. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yury Kudryashov
+-/
 import Mathbin.Topology.Algebra.Module.Basic
 import Mathbin.Topology.Instances.Real
 
@@ -22,7 +27,7 @@ theorem map_real_smul (f : E →+ F) (hf : Continuous f) (c : ℝ) (x : E) : f (
 
 /-- Reinterpret a continuous additive homomorphism between two real vector spaces
 as a continuous real-linear map. -/
-def to_real_linear_map (f : E →+ F) (hf : Continuous f) : E →L[ℝ] F :=
+def toRealLinearMap (f : E →+ F) (hf : Continuous f) : E →L[ℝ] F :=
   ⟨{ toFun := f, map_add' := f.map_add, map_smul' := f.map_real_smul hf }, hf⟩
 
 @[simp]

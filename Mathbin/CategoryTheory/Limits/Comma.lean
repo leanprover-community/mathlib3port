@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Bhavik Mehta. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Bhavik Mehta
+-/
 import Mathbin.CategoryTheory.Limits.Creates
 import Mathbin.CategoryTheory.Limits.Punit
 import Mathbin.CategoryTheory.Limits.Preserves.Basic
@@ -39,7 +44,7 @@ variable (F : J ⥤ Comma L R)
 /-- (Implementation). An auxiliary cone which is useful in order to construct limits
 in the comma category. -/
 @[simps]
-def limit_auxiliary_cone (c₁ : Cone (F ⋙ fst L R)) : Cone ((F ⋙ snd L R) ⋙ R) :=
+def limitAuxiliaryCone (c₁ : Cone (F ⋙ fst L R)) : Cone ((F ⋙ snd L R) ⋙ R) :=
   (Cones.postcompose (whiskerLeft F (Comma.natTrans L R) : _)).obj (L.mapCone c₁)
 
 /-- If `R` preserves the appropriate limit, then given a cone for `F ⋙ fst L R : J ⥤ L` and a
@@ -47,7 +52,7 @@ limit cone for `F ⋙ snd L R : J ⥤ R` we can build a cone for `F` which will 
 cone.
 -/
 @[simps]
-def cone_of_preserves [PreservesLimit (F ⋙ snd L R) R] (c₁ : Cone (F ⋙ fst L R)) {c₂ : Cone (F ⋙ snd L R)}
+def coneOfPreserves [PreservesLimit (F ⋙ snd L R) R] (c₁ : Cone (F ⋙ fst L R)) {c₂ : Cone (F ⋙ snd L R)}
     (t₂ : IsLimit c₂) : Cone F where
   x := { left := c₁.x, right := c₂.x, Hom := (isLimitOfPreserves R t₂).lift (limitAuxiliaryCone _ c₁) }
   π :=
@@ -59,7 +64,7 @@ def cone_of_preserves [PreservesLimit (F ⋙ snd L R) R] (c₁ : Cone (F ⋙ fst
 
 /-- Provided that `R` preserves the appropriate limit, then the cone in `cone_of_preserves` is a
 limit. -/
-def cone_of_preserves_is_limit [PreservesLimit (F ⋙ snd L R) R] {c₁ : Cone (F ⋙ fst L R)} (t₁ : IsLimit c₁)
+def coneOfPreservesIsLimit [PreservesLimit (F ⋙ snd L R) R] {c₁ : Cone (F ⋙ fst L R)} (t₁ : IsLimit c₁)
     {c₂ : Cone (F ⋙ snd L R)} (t₂ : IsLimit c₂) : IsLimit (coneOfPreserves F c₁ t₂) where
   lift := fun s =>
     { left := t₁.lift ((fst L R).mapCone s), right := t₂.lift ((snd L R).mapCone s),
@@ -78,7 +83,7 @@ def cone_of_preserves_is_limit [PreservesLimit (F ⋙ snd L R) R] {c₁ : Cone (
 /-- (Implementation). An auxiliary cocone which is useful in order to construct colimits
 in the comma category. -/
 @[simps]
-def colimit_auxiliary_cocone (c₂ : Cocone (F ⋙ snd L R)) : Cocone ((F ⋙ fst L R) ⋙ L) :=
+def colimitAuxiliaryCocone (c₂ : Cocone (F ⋙ snd L R)) : Cocone ((F ⋙ fst L R) ⋙ L) :=
   (Cocones.precompose (whiskerLeft F (Comma.natTrans L R) : _)).obj (R.mapCocone c₂)
 
 /-- If `L` preserves the appropriate colimit, then given a colimit cocone for `F ⋙ fst L R : J ⥤ L` and
@@ -86,7 +91,7 @@ a cocone for `F ⋙ snd L R : J ⥤ R` we can build a cocone for `F` which will 
 colimit cocone.
 -/
 @[simps]
-def cocone_of_preserves [PreservesColimit (F ⋙ fst L R) L] {c₁ : Cocone (F ⋙ fst L R)} (t₁ : IsColimit c₁)
+def coconeOfPreserves [PreservesColimit (F ⋙ fst L R) L] {c₁ : Cocone (F ⋙ fst L R)} (t₁ : IsColimit c₁)
     (c₂ : Cocone (F ⋙ snd L R)) : Cocone F where
   x := { left := c₁.x, right := c₂.x, Hom := (isColimitOfPreserves L t₁).desc (colimitAuxiliaryCocone _ c₂) }
   ι :=
@@ -98,7 +103,7 @@ def cocone_of_preserves [PreservesColimit (F ⋙ fst L R) L] {c₁ : Cocone (F �
 
 /-- Provided that `L` preserves the appropriate colimit, then the cocone in `cocone_of_preserves` is
 a colimit. -/
-def cocone_of_preserves_is_colimit [PreservesColimit (F ⋙ fst L R) L] {c₁ : Cocone (F ⋙ fst L R)} (t₁ : IsColimit c₁)
+def coconeOfPreservesIsColimit [PreservesColimit (F ⋙ fst L R) L] {c₁ : Cocone (F ⋙ fst L R)} (t₁ : IsColimit c₁)
     {c₂ : Cocone (F ⋙ snd L R)} (t₂ : IsColimit c₂) : IsColimit (coconeOfPreserves F t₁ c₂) where
   desc := fun s =>
     { left := t₁.desc ((fst L R).mapCocone s), right := t₂.desc ((snd L R).mapCocone s),
@@ -177,16 +182,16 @@ instance has_limits_of_shape [HasLimitsOfShape J A] [PreservesLimitsOfShape J G]
 instance has_limits [HasLimits A] [PreservesLimits G] : HasLimits (StructuredArrow X G) :=
   ⟨inferInstance⟩
 
-noncomputable instance creates_limit [i : PreservesLimit (F ⋙ proj X G) G] : CreatesLimit F (proj X G) :=
+noncomputable instance createsLimit [i : PreservesLimit (F ⋙ proj X G) G] : CreatesLimit F (proj X G) :=
   creates_limit_of_reflects_iso fun c t =>
     { liftedCone := @Comma.coneOfPreserves _ _ _ _ _ i punitCone t,
       makesLimit := Comma.coneOfPreservesIsLimit _ punitConeIsLimit _,
       validLift := (Cones.ext (Iso.refl _)) fun j => (id_comp _).symm }
 
-noncomputable instance creates_limits_of_shape [PreservesLimitsOfShape J G] : CreatesLimitsOfShape J (proj X G) :=
+noncomputable instance createsLimitsOfShape [PreservesLimitsOfShape J G] : CreatesLimitsOfShape J (proj X G) :=
   {  }
 
-noncomputable instance creates_limits [PreservesLimits G] : CreatesLimits (proj X G : _) :=
+noncomputable instance createsLimits [PreservesLimits G] : CreatesLimits (proj X G : _) :=
   ⟨⟩
 
 end StructuredArrow
@@ -205,16 +210,16 @@ instance has_colimits_of_shape [HasColimitsOfShape J A] [PreservesColimitsOfShap
 instance has_colimits [HasColimits A] [PreservesColimits G] : HasColimits (CostructuredArrow G X) :=
   ⟨inferInstance⟩
 
-noncomputable instance creates_colimit [i : PreservesColimit (F ⋙ proj G X) G] : CreatesColimit F (proj G X) :=
+noncomputable instance createsColimit [i : PreservesColimit (F ⋙ proj G X) G] : CreatesColimit F (proj G X) :=
   creates_colimit_of_reflects_iso fun c t =>
     { liftedCocone := @Comma.coconeOfPreserves _ _ _ _ _ i t punitCocone,
       makesColimit := Comma.coconeOfPreservesIsColimit _ _ punitCoconeIsColimit,
       validLift := (Cocones.ext (Iso.refl _)) fun j => comp_id _ }
 
-noncomputable instance creates_colimits_of_shape [PreservesColimitsOfShape J G] : CreatesColimitsOfShape J (proj G X) :=
+noncomputable instance createsColimitsOfShape [PreservesColimitsOfShape J G] : CreatesColimitsOfShape J (proj G X) :=
   {  }
 
-noncomputable instance creates_colimits [PreservesColimits G] : CreatesColimits (proj G X : _) :=
+noncomputable instance createsColimits [PreservesColimits G] : CreatesColimits (proj G X : _) :=
   ⟨⟩
 
 end CostructuredArrow

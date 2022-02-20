@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison
+-/
 import Mathbin.Tactic.SolveByElim
 import Mathbin.Tactic.Interactive
 
@@ -53,6 +58,8 @@ add_hint_tactic
 
 add_hint_tactic assumption
 
+-- tidy does something better here: it suggests the actual "intros X Y f" string.
+-- perhaps add a wrapper?
 add_hint_tactic intro
 
 add_hint_tactic infer_auto_param
@@ -61,6 +68,7 @@ add_hint_tactic dsimp  at *
 
 add_hint_tactic simp at *
 
+-- TODO hook up to squeeze_simp?
 add_hint_tactic fconstructor
 
 add_hint_tactic injections_and_clear

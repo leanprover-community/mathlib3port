@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2017 Mario Carneiro. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Mario Carneiro
+-/
 import Mathbin.Algebra.Associated
 import Mathbin.RingTheory.Int.Basic
 import Mathbin.Tactic.Ring
@@ -41,7 +46,7 @@ theorem ext : ∀ {z w : ℤ√d}, z = w ↔ z.re = w.re ∧ z.im = w.im
       congr <;> assumption⟩
 
 /-- Convert an integer to a `ℤ√d` -/
-def of_int (n : ℤ) : ℤ√d :=
+def ofInt (n : ℤ) : ℤ√d :=
   ⟨n, 0⟩
 
 theorem of_int_re (n : ℤ) : (of_int n).re = n :=
@@ -162,9 +167,9 @@ theorem mul_im : ∀ z w : ℤ√d, (z * w).im = z.re * w.im + z.im * w.re
 
 instance : CommRingₓ (ℤ√d) := by
   refine_struct
-      { add := · + ·, zero := (0 : ℤ√d), neg := Neg.neg, mul := · * ·, sub := fun a b => a + -b, one := 1,
-        npow := @npowRec (ℤ√d) ⟨1⟩ ⟨· * ·⟩, nsmul := @nsmulRec (ℤ√d) ⟨0⟩ ⟨· + ·⟩,
-        zsmul := @zsmulRec (ℤ√d) ⟨0⟩ ⟨· + ·⟩ ⟨Zsqrtd.neg⟩ } <;>
+      { add := (· + ·), zero := (0 : ℤ√d), neg := Neg.neg, mul := (· * ·), sub := fun a b => a + -b, one := 1,
+        npow := @npowRec (ℤ√d) ⟨1⟩ ⟨(· * ·)⟩, nsmul := @nsmulRec (ℤ√d) ⟨0⟩ ⟨(· + ·)⟩,
+        zsmul := @zsmulRec (ℤ√d) ⟨0⟩ ⟨(· + ·)⟩ ⟨Zsqrtd.neg⟩ } <;>
     intros <;>
       try
           rfl <;>
@@ -219,7 +224,7 @@ theorem conj_im : ∀ z : ℤ√d, (conj z).im = -z.im
   | ⟨x, y⟩ => rfl
 
 /-- `conj` as an `add_monoid_hom`. -/
-def conj_hom : ℤ√d →+ ℤ√d where
+def conjHom : ℤ√d →+ ℤ√d where
   toFun := conj
   map_add' := fun ⟨a, ai⟩ ⟨b, bi⟩ => ext.mpr ⟨rfl, neg_add _ _⟩
   map_zero' := ext.mpr ⟨rfl, neg_zero⟩
@@ -395,7 +400,7 @@ theorem exists_coprime_of_gcd_pos {a : ℤ√d} (hgcd : 0 < Int.gcdₓ a.re a.im
 end Gcd
 
 /-- Read `sq_le a c b d` as `a √c ≤ b √d` -/
-def sq_le (a c b d : ℕ) : Prop :=
+def SqLe (a c b d : ℕ) : Prop :=
   c * a * a ≤ d * b * b
 
 theorem sq_le_of_le {c d x y z w : ℕ} (xz : z ≤ x) (yw : y ≤ w) (xy : SqLe x c y d) : SqLe z c w d :=
@@ -444,7 +449,7 @@ theorem sq_le_mul {d x y z w : ℕ} :
 
 /-- "Generalized" `nonneg`. `nonnegg c d x y` means `a √c + b √d ≥ 0`;
   we are interested in the case `c = 1` but this is more symmetric -/
-def nonnegg (c d : ℕ) : ℤ → ℤ → Prop
+def Nonnegg (c d : ℕ) : ℤ → ℤ → Prop
   | (a : ℕ), (b : ℕ) => True
   | (a : ℕ), -[1+ b] => SqLe (b + 1) c a d
   | -[1+ a], (b : ℕ) => SqLe (a + 1) d b c
@@ -500,7 +505,7 @@ theorem norm_mul (n m : ℤ√d) : norm (n * m) = norm n * norm m := by
   ring
 
 /-- `norm` as a `monoid_hom`. -/
-def norm_monoid_hom : ℤ√d →* ℤ where
+def normMonoidHom : ℤ√d →* ℤ where
   toFun := norm
   map_mul' := norm_mul
   map_one' := norm_one
@@ -582,32 +587,32 @@ section
 parameter {d : ℕ}
 
 /-- Nonnegativity of an element of `ℤ√d`. -/
-def nonneg : ℤ√d → Prop
+def Nonneg : ℤ√d → Prop
   | ⟨a, b⟩ => Nonnegg d 1 a b
 
-protected def le (a b : ℤ√d) : Prop :=
+protected def Le (a b : ℤ√d) : Prop :=
   nonneg (b - a)
 
 instance : LE (ℤ√d) :=
   ⟨Zsqrtd.Le⟩
 
-protected def lt (a b : ℤ√d) : Prop :=
+protected def Lt (a b : ℤ√d) : Prop :=
   ¬b ≤ a
 
 instance : LT (ℤ√d) :=
   ⟨Zsqrtd.Lt⟩
 
-instance decidable_nonnegg c d a b : Decidable (Nonnegg c d a b) := by
+instance decidableNonnegg c d a b : Decidable (Nonnegg c d a b) := by
   cases a <;>
     cases b <;>
       repeat'
           rw [Int.of_nat_eq_coe] <;>
         unfold nonnegg sq_le <;> infer_instance
 
-instance decidable_nonneg : ∀ a : ℤ√d, Decidable (nonneg a)
+instance decidableNonneg : ∀ a : ℤ√d, Decidable (nonneg a)
   | ⟨a, b⟩ => Zsqrtd.decidableNonnegg _ _ _ _
 
-instance decidable_le (a b : ℤ√d) : Decidable (a ≤ b) :=
+instance decidableLe (a b : ℤ√d) : Decidable (a ≤ b) :=
   decidable_nonneg _
 
 theorem nonneg_cases : ∀ {a : ℤ√d}, nonneg a → ∃ x y : ℕ, a = ⟨x, y⟩ ∨ a = ⟨x, -y⟩ ∨ a = ⟨-x, y⟩
@@ -691,11 +696,11 @@ theorem nonneg_add {a b : ℤ√d} (ha : nonneg a) (hb : nonneg b) : nonneg (a +
   · simpa [add_commₓ] using nonnegg_neg_pos.2 (sq_le_add (nonnegg_neg_pos.1 ha) (nonnegg_neg_pos.1 hb))
     
 
-theorem le_reflₓ (a : ℤ√d) : a ≤ a :=
+theorem le_refl (a : ℤ√d) : a ≤ a :=
   show nonneg (a - a) by
     simp
 
-protected theorem le_transₓ {a b c : ℤ√d} (ab : a ≤ b) (bc : b ≤ c) : a ≤ c := by
+protected theorem le_trans {a b c : ℤ√d} (ab : a ≤ b) (bc : b ≤ c) : a ≤ c := by
   have : nonneg (b - a + (c - b)) := nonneg_add ab bc
   simpa [sub_add_sub_cancel']
 
@@ -743,7 +748,7 @@ protected theorem nonneg_total : ∀ a : ℤ√d, nonneg a ∨ nonneg (-a)
   | ⟨(x + 1 : ℕ), -[1+ y]⟩ => Nat.le_totalₓ
   | ⟨-[1+ x], (y + 1 : ℕ)⟩ => Nat.le_totalₓ
 
-protected theorem le_totalₓ (a b : ℤ√d) : a ≤ b ∨ b ≤ a := by
+protected theorem le_total (a b : ℤ√d) : a ≤ b ∨ b ≤ a := by
   let t := nonneg_total (b - a)
   rw [show -(b - a) = a - b from neg_sub b a] at t <;> exact t
 
@@ -846,7 +851,7 @@ theorem not_sq_le_succ c d y (h : 0 < c) : ¬SqLe (y + 1) c 0 d :=
 /-- A nonsquare is a natural number that is not equal to the square of an
   integer. This is implemented as a typeclass because it's a necessary condition
   for much of the Pell equation theory. -/
-class nonsquare (x : ℕ) : Prop where
+class Nonsquare (x : ℕ) : Prop where
   ns {} : ∀ n : ℕ, x ≠ n * n
 
 parameter [dnsq : Nonsquare d]
@@ -910,7 +915,7 @@ theorem nonneg_antisymm : ∀ {a : ℤ√d}, nonneg a → nonneg (-a) → a = 0
     let t := le_antisymmₓ xy yx
     rw [one_mulₓ] at t <;> exact absurd t (not_divides_sq _ _)
 
-theorem le_antisymmₓ {a b : ℤ√d} (ab : a ≤ b) (ba : b ≤ a) : a = b :=
+theorem le_antisymm {a b : ℤ√d} (ab : a ≤ b) (ba : b ≤ a) : a = b :=
   eq_of_sub_eq_zero <|
     nonneg_antisymm ba
       (by

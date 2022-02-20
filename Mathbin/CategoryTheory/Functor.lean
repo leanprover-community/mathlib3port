@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2017 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Tim Baumann, Stephen Morgan, Scott Morrison
+-/
 import Mathbin.Tactic.ReassocAxiom
 import Mathbin.Tactic.Monotonicity.Default
 import Mathbin.CategoryTheory.Category.Basic
@@ -15,6 +20,7 @@ but in mathlib4 we should switch to this.)
 
 namespace CategoryTheory
 
+-- declare the `v`'s first; see `category_theory.category` for an explanation
 universe v v₁ v₂ v₃ u u₁ u₂ u₃
 
 section
@@ -42,8 +48,12 @@ add_decl_doc functor.to_prefunctor
 
 end
 
-infixr:26 " ⥤ " => Functor
+infixr:26
+  " ⥤ " =>-- A functor is basically a function, so give ⥤ a similar precedence to → (25).
+  -- For example, `C × D ⥤ E` should parse as `(C × D) ⥤ E` not `C × (D ⥤ E)`.
+  Functor
 
+-- type as \func --
 restate_axiom functor.map_id'
 
 attribute [simp] Functor.map_id
@@ -65,6 +75,7 @@ protected def id : C ⥤ C where
 
 notation "𝟭" => Functor.id
 
+-- Type this as `\sb1`
 instance : Inhabited (C ⥤ C) :=
   ⟨Functor.id C⟩
 
@@ -100,6 +111,9 @@ theorem comp_obj (F : C ⥤ D) (G : D ⥤ E) (X : C) : (F ⋙ G).obj X = G.obj (
 theorem comp_map (F : C ⥤ D) (G : D ⥤ E) {X Y : C} (f : X ⟶ Y) : (F ⋙ G).map f = G.map (F.map f) :=
   rfl
 
+-- These are not simp lemmas because rewriting along equalities between functors
+-- is not necessarily a good idea.
+-- Natural isomorphisms are also provided in `whiskering.lean`.
 protected theorem comp_id (F : C ⥤ D) : F ⋙ 𝟭 D = F := by
   cases F <;> rfl
 

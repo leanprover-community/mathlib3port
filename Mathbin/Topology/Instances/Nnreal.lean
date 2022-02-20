@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Johan Commelin. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johan Commelin
+-/
 import Mathbin.Topology.Algebra.InfiniteSum
 import Mathbin.Topology.Algebra.GroupWithZero
 
@@ -53,6 +58,7 @@ open_locale Nnreal BigOperators Filter
 instance : TopologicalSpace ℝ≥0 :=
   inferInstance
 
+-- short-circuit type class inference
 instance : TopologicalRing ℝ≥0 where
   continuous_mul :=
     continuous_subtype_mk _ <|
@@ -103,7 +109,7 @@ theorem tendsto_of_real {f : Filter α} {m : α → ℝ} {x : ℝ} (h : Tendsto 
     Tendsto (fun a => Real.toNnreal (m a)) f (𝓝 (Real.toNnreal x)) :=
   (continuous_of_real.Tendsto _).comp h
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (a «expr ≠ » 0)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (a «expr ≠ » 0)
 theorem nhds_zero : 𝓝 (0 : ℝ≥0 ) = ⨅ (a) (_ : a ≠ 0), 𝓟 (iio a) :=
   nhds_bot_order.trans <| by
     simp [bot_lt_iff_ne_bot]

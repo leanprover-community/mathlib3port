@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Kenny Lau. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Kenny Lau
+-/
 import Mathbin.Data.Dfinsupp.Basic
 import Mathbin.GroupTheory.Submonoid.Operations
 import Mathbin.GroupTheory.Subgroup.Basic
@@ -140,14 +145,14 @@ variable (φ : ∀ i, β i →+ γ) (ψ : (⨁ i, β i) →+ γ)
 
 /-- `to_add_monoid φ` is the natural homomorphism from `⨁ i, β i` to `γ`
 induced by a family `φ` of homomorphisms `β i → γ`. -/
-def to_add_monoid : (⨁ i, β i) →+ γ :=
+def toAddMonoid : (⨁ i, β i) →+ γ :=
   Dfinsupp.liftAddHom φ
 
 @[simp]
 theorem to_add_monoid_of i (x : β i) : toAddMonoid φ (of β i x) = φ i x :=
   Dfinsupp.lift_add_hom_apply_single φ i x
 
-theorem to_add_monoid.unique (f : ⨁ i, β i) : ψ f = toAddMonoid (fun i => ψ.comp (of β i)) f := by
+theorem toAddMonoid.unique (f : ⨁ i, β i) : ψ f = toAddMonoid (fun i => ψ.comp (of β i)) f := by
   congr
   ext
   simp [to_add_monoid, of]
@@ -160,7 +165,7 @@ section FromAddMonoid
 induced by a family `φ` of homomorphisms `γ → β i`.
 
 Note that this is not an isomorphism. Not every homomorphism `γ →+ ⨁ i, β i` arises in this way. -/
-def from_add_monoid : (⨁ i, γ →+ β i) →+ γ →+ ⨁ i, β i :=
+def fromAddMonoid : (⨁ i, γ →+ β i) →+ γ →+ ⨁ i, β i :=
   to_add_monoid fun i => AddMonoidHom.compHom (of β i)
 
 @[simp]
@@ -177,7 +182,8 @@ variable (β)
 
 /-- `set_to_set β S T h` is the natural homomorphism `⨁ (i : S), β i → ⨁ (i : T), β i`,
 where `h : S ⊆ T`. -/
-def set_to_set (S T : Set ι) (H : S ⊆ T) : (⨁ i : S, β i) →+ ⨁ i : T, β i :=
+-- TODO: generalize this to remove the assumption `S ⊆ T`.
+def setToSet (S T : Set ι) (H : S ⊆ T) : (⨁ i : S, β i) →+ ⨁ i : T, β i :=
   to_add_monoid fun i => of (fun i : Subtype T => β i) ⟨↑i, H i.Prop⟩
 
 variable {β}
@@ -200,7 +206,7 @@ protected def id (M : Type v) (ι : Type _ := PUnit) [AddCommMonoidₓ M] [Uniqu
 
 /-- The canonical embedding from `⨁ i, A i` to `M` where `A` is a collection of `add_submonoid M`
 indexed by `ι`-/
-def add_submonoid_coe {M : Type _} [DecidableEq ι] [AddCommMonoidₓ M] (A : ι → AddSubmonoid M) : (⨁ i, A i) →+ M :=
+def addSubmonoidCoe {M : Type _} [DecidableEq ι] [AddCommMonoidₓ M] (A : ι → AddSubmonoid M) : (⨁ i, A i) →+ M :=
   toAddMonoid fun i => (A i).Subtype
 
 @[simp]
@@ -220,17 +226,17 @@ theorem coe_of_add_submonoid_apply {M : Type _} [DecidableEq ι] [AddCommMonoid�
 canonical map `(⨁ i, A i) →+ M` is bijective.
 
 See `direct_sum.add_subgroup_is_internal` for the same statement about `add_subgroup`s. -/
-def add_submonoid_is_internal {M : Type _} [DecidableEq ι] [AddCommMonoidₓ M] (A : ι → AddSubmonoid M) : Prop :=
+def AddSubmonoidIsInternal {M : Type _} [DecidableEq ι] [AddCommMonoidₓ M] (A : ι → AddSubmonoid M) : Prop :=
   Function.Bijective (addSubmonoidCoe A)
 
-theorem add_submonoid_is_internal.supr_eq_top {M : Type _} [DecidableEq ι] [AddCommMonoidₓ M] (A : ι → AddSubmonoid M)
+theorem AddSubmonoidIsInternal.supr_eq_top {M : Type _} [DecidableEq ι] [AddCommMonoidₓ M] (A : ι → AddSubmonoid M)
     (h : AddSubmonoidIsInternal A) : supr A = ⊤ := by
   rw [AddSubmonoid.supr_eq_mrange_dfinsupp_sum_add_hom, AddMonoidHom.mrange_top_iff_surjective]
   exact Function.Bijective.surjective h
 
 /-- The canonical embedding from `⨁ i, A i` to `M`  where `A` is a collection of `add_subgroup M`
 indexed by `ι`-/
-def add_subgroup_coe {M : Type _} [DecidableEq ι] [AddCommGroupₓ M] (A : ι → AddSubgroup M) : (⨁ i, A i) →+ M :=
+def addSubgroupCoe {M : Type _} [DecidableEq ι] [AddCommGroupₓ M] (A : ι → AddSubgroup M) : (⨁ i, A i) →+ M :=
   toAddMonoid fun i => (A i).Subtype
 
 @[simp]
@@ -250,11 +256,11 @@ theorem coe_of_add_subgroup_apply {M : Type _} [DecidableEq ι] [AddCommGroupₓ
 canonical map `(⨁ i, A i) →+ M` is bijective.
 
 See `direct_sum.submodule_is_internal` for the same statement about `submodules`s. -/
-def add_subgroup_is_internal {M : Type _} [DecidableEq ι] [AddCommGroupₓ M] (A : ι → AddSubgroup M) : Prop :=
+def AddSubgroupIsInternal {M : Type _} [DecidableEq ι] [AddCommGroupₓ M] (A : ι → AddSubgroup M) : Prop :=
   Function.Bijective (addSubgroupCoe A)
 
-theorem add_subgroup_is_internal.to_add_submonoid {M : Type _} [DecidableEq ι] [AddCommGroupₓ M]
-    (A : ι → AddSubgroup M) : AddSubgroupIsInternal A ↔ AddSubmonoidIsInternal fun i => (A i).toAddSubmonoid :=
+theorem AddSubgroupIsInternal.to_add_submonoid {M : Type _} [DecidableEq ι] [AddCommGroupₓ M] (A : ι → AddSubgroup M) :
+    AddSubgroupIsInternal A ↔ AddSubmonoidIsInternal fun i => (A i).toAddSubmonoid :=
   Iff.rfl
 
 end DirectSum

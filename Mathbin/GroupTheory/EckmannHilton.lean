@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Kenny Lau. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johan Commelin, Kenny Lau, Robert Y. Lewis
+-/
 import Mathbin.Algebra.Group.Defs
 
 /-!
@@ -27,10 +32,10 @@ local notation a "<" m ">" b => m a b
 
 /-- `is_unital m e` expresses that `e : X` is a left and right unit
 for the binary operation `m : X → X → X`. -/
-structure is_unital (m : X → X → X) (e : X) extends IsLeftId _ m e, IsRightId _ m e : Prop
+structure IsUnital (m : X → X → X) (e : X) extends IsLeftId _ m e, IsRightId _ m e : Prop
 
 @[to_additive EckmannHilton.AddZeroClass.is_unital]
-theorem mul_one_class.is_unital [G : MulOneClassₓ X] : IsUnital (· * ·) (1 : X) :=
+theorem MulOneClass.is_unital [G : MulOneClassₓ X] : IsUnital (· * ·) (1 : X) :=
   IsUnital.mk
     (by
       infer_instance)
@@ -85,15 +90,15 @@ omit h₁ h₂ distrib
 operations, then the magma structure is a commutative monoid. -/
 @[to_additive
       "If a type carries a unital additive magma structure that distributes over a\nunital binary operations, then the additive magma structure is a commutative additive monoid."]
-def CommMonoidₓ [h : MulOneClassₓ X] (distrib : ∀ a b c d, ((a * b)<m₁>c * d) = (a<m₁>c) * b<m₁>d) : CommMonoidₓ X :=
-  { h with mul := · * ·, one := 1, mul_comm := (mul_comm h₁ MulOneClass.is_unital distrib).comm,
+def commMonoid [h : MulOneClassₓ X] (distrib : ∀ a b c d, ((a * b)<m₁>c * d) = (a<m₁>c) * b<m₁>d) : CommMonoidₓ X :=
+  { h with mul := (· * ·), one := 1, mul_comm := (mul_comm h₁ MulOneClass.is_unital distrib).comm,
     mul_assoc := (mul_assoc h₁ MulOneClass.is_unital distrib).assoc }
 
 /-- If a type carries a group structure that distributes over a unital binary operation,
 then the group is commutative. -/
 @[to_additive
       "If a type carries an additive group structure that distributes\nover a unital binary operation, then the additive group is commutative."]
-def CommGroupₓ [G : Groupₓ X] (distrib : ∀ a b c d, ((a * b)<m₁>c * d) = (a<m₁>c) * b<m₁>d) : CommGroupₓ X :=
+def commGroup [G : Groupₓ X] (distrib : ∀ a b c d, ((a * b)<m₁>c * d) = (a<m₁>c) * b<m₁>d) : CommGroupₓ X :=
   { EckmannHilton.commMonoid h₁ distrib, G with }
 
 end EckmannHilton

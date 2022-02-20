@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Riccardo Brasca. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Riccardo Brasca
+-/
 import Mathbin.RingTheory.Polynomial.Cyclotomic.Basic
 import Mathbin.NumberTheory.NumberField
 import Mathbin.Algebra.CharP.Algebra
@@ -94,7 +99,7 @@ theorem iff_singleton :
   simp [is_cyclotomic_extension_iff]
 
 /-- If `is_cyclotomic_extension ∅ A B`, then `A = B`. -/
-theorem Empty [h : IsCyclotomicExtension ∅ A B] : (⊥ : Subalgebra A B) = ⊤ := by
+theorem empty [h : IsCyclotomicExtension ∅ A B] : (⊥ : Subalgebra A B) = ⊤ := by
   simpa [Algebra.eq_top_iff, is_cyclotomic_extension_iff] using h
 
 /-- Transitivity of cyclotomic extensions. -/
@@ -230,7 +235,7 @@ theorem finite [IsDomain B] [h₁ : Fintype S] [h₂ : IsCyclotomicExtension S A
     
 
 /-- A cyclotomic finite extension of a number field is a number field. -/
-theorem NumberField [h : NumberField K] [Fintype S] [IsCyclotomicExtension S K L] : NumberField L :=
+theorem number_field [h : NumberField K] [Fintype S] [IsCyclotomicExtension S K L] : NumberField L :=
   { to_char_zero := char_zero_of_injective_algebra_map (algebraMap K L).Injective,
     to_finite_dimensional :=
       @Finite.trans _ K L _ _ _ _ (@algebraRat L _ (char_zero_of_injective_algebra_map (algebraMap K L).Injective)) _ _
@@ -241,7 +246,7 @@ theorem integral [IsDomain B] [IsNoetherianRing A] [Fintype S] [IsCyclotomicExte
   is_integral_of_noetherian <| is_noetherian_of_fg_of_noetherian' <| (finite S A B).out
 
 /-- If `S` is finite and `is_cyclotomic_extension S K A`, then `finite_dimensional K A`. -/
-theorem FiniteDimensional (C : Type z) [Fintype S] [CommRingₓ C] [Algebra K C] [IsDomain C]
+theorem finite_dimensional (C : Type z) [Fintype S] [CommRingₓ C] [Algebra K C] [IsDomain C]
     [IsCyclotomicExtension S K C] : FiniteDimensional K C :=
   finite S K C
 
@@ -332,7 +337,7 @@ theorem splitting_field_X_pow_sub_one : IsSplittingField K L (X ^ (n : ℕ) - 1)
 
 include n
 
-theorem IsGalois : IsGalois K L := by
+theorem is_galois : IsGalois K L := by
   let this' := splitting_field_X_pow_sub_one n K L
   exact IsGalois.of_separable_splitting_field (X_pow_sub_one_separable_iff.2 (NeZero.ne _ : ((n : ℕ) : K) ≠ 0))
 
@@ -356,7 +361,7 @@ end IsCyclotomicExtension
 
 section CyclotomicField
 
--- ././Mathport/Syntax/Translate/Basic.lean:859:9: unsupported derive handler algebra K
+-- ././Mathport/Syntax/Translate/Basic.lean:981:9: unsupported derive handler algebra K
 /-- Given `n : ℕ+` and a field `K`, we define `cyclotomic_field n K` as the
 splitting field of `cyclotomic n K`. If `n` is nonzero in `K`, it has
 the instance `is_cyclotomic_extension {n} K (cyclotomic_field n K)`. -/
@@ -365,7 +370,7 @@ def CyclotomicField : Type w :=
 
 namespace CyclotomicField
 
-instance IsCyclotomicExtension [NeZero ((n : ℕ) : K)] : IsCyclotomicExtension {n} K (CyclotomicField n K) where
+instance is_cyclotomic_extension [NeZero ((n : ℕ) : K)] : IsCyclotomicExtension {n} K (CyclotomicField n K) where
   exists_root := fun a han => by
     rw [mem_singleton_iff] at han
     subst a
@@ -411,7 +416,7 @@ namespace CyclotomicRing
 
 /-- The `A`-algebra structure on `cyclotomic_ring n A K`.
 This is not an instance since it causes diamonds when `A = ℤ`. -/
-def algebra_base : Algebra A (CyclotomicRing n A K) :=
+def algebraBase : Algebra A (CyclotomicRing n A K) :=
   (adjoin A _).Algebra
 
 attribute [local instance] CyclotomicRing.algebraBase
@@ -434,7 +439,7 @@ instance : NoZeroSmulDivisors (CyclotomicRing n A K) (CyclotomicField n K) :=
 instance : IsScalarTower A (CyclotomicRing n A K) (CyclotomicField n K) :=
   IsScalarTower.subalgebra' _ _ _ _
 
-instance IsCyclotomicExtension [NeZero ((n : ℕ) : A)] : IsCyclotomicExtension {n} A (CyclotomicRing n A K) where
+instance is_cyclotomic_extension [NeZero ((n : ℕ) : A)] : IsCyclotomicExtension {n} A (CyclotomicRing n A K) where
   exists_root := fun a han => by
     rw [mem_singleton_iff] at han
     subst a

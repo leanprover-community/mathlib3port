@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Mario Carneiro. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Mario Carneiro, Kevin Kappelmann
+-/
 import Mathbin.Tactic.Abel
 import Mathbin.Tactic.Linarith.Default
 
@@ -456,6 +461,7 @@ notation "⌊" a "⌋" => Int.floor a
 
 notation "⌈" a "⌉" => Int.ceil a
 
+-- Mathematical notation for `fract a` is usually `{a}`. Let's not even go there.
 @[simp]
 theorem floor_ring_floor_eq : @FloorRing.floor = @Int.floor :=
   rfl
@@ -846,6 +852,7 @@ variable {α} [LinearOrderedRing α] [FloorRing α]
 /-! #### A floor ring as a floor semiring -/
 
 
+-- see Note [lower instance priority]
 instance (priority := 100) _root_.floor_ring.to_floor_semiring : FloorSemiring α where
   floor := fun a => ⌊a⌋.toNat
   ceil := fun a => ⌈a⌉.toNat

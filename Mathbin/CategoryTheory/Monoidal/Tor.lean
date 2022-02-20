@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison
+-/
 import Mathbin.CategoryTheory.Derived
 import Mathbin.CategoryTheory.Monoidal.Preadditive
 
@@ -32,7 +37,7 @@ variable (C)
 
 /-- We define `Tor C n : C ⥤ C ⥤ C` by left-deriving in the second factor of `(X, Y) ↦ X ⊗ Y`. -/
 @[simps]
-def Tor (n : ℕ) : C ⥤ C ⥤ C where
+def tor (n : ℕ) : C ⥤ C ⥤ C where
   obj := fun X => Functor.leftDerived ((tensoringLeft C).obj X) n
   map := fun X Y f => NatTrans.leftDerived ((tensoringLeft C).map f) n
   map_id' := fun X => by
@@ -42,7 +47,7 @@ def Tor (n : ℕ) : C ⥤ C ⥤ C where
 
 /-- An alternative definition of `Tor`, where we left-derive in the first factor instead. -/
 @[simps]
-def Tor' (n : ℕ) : C ⥤ C ⥤ C :=
+def tor' (n : ℕ) : C ⥤ C ⥤ C :=
   Functor.flip
     { obj := fun X => Functor.leftDerived ((tensoringRight C).obj X) n,
       map := fun X Y f => NatTrans.leftDerived ((tensoringRight C).map f) n,
@@ -54,11 +59,12 @@ def Tor' (n : ℕ) : C ⥤ C ⥤ C :=
 open_locale ZeroObject
 
 /-- The higher `Tor` groups for `X` and `Y` are zero if `Y` is projective. -/
-def Tor_succ_of_projective (X Y : C) [Projective Y] (n : ℕ) : ((tor C (n + 1)).obj X).obj Y ≅ 0 :=
+def torSuccOfProjective (X Y : C) [Projective Y] (n : ℕ) : ((tor C (n + 1)).obj X).obj Y ≅ 0 :=
   ((tensoringLeft C).obj X).leftDerivedObjProjectiveSucc n Y
 
 /-- The higher `Tor'` groups for `X` and `Y` are zero if `X` is projective. -/
-def Tor'_succ_of_projective (X Y : C) [Projective X] (n : ℕ) : ((tor' C (n + 1)).obj X).obj Y ≅ 0 := by
+def tor'SuccOfProjective (X Y : C) [Projective X] (n : ℕ) : ((tor' C (n + 1)).obj X).obj Y ≅ 0 := by
+  -- This unfortunately needs a manual `dsimp`, to avoid a slow unification problem.
   dsimp only [Tor', functor.flip]
   exact ((tensoring_right C).obj Y).leftDerivedObjProjectiveSucc n X
 

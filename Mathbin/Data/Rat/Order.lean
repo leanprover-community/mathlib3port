@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Johannes Hölzl. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johannes Hölzl, Mario Carneiro
+-/
 import Mathbin.Data.Rat.Basic
 
 /-!
@@ -25,7 +30,7 @@ variable (a b c : ℚ)
 open_locale Rat
 
 /-- A rational number is called nonnegative if its numerator is nonnegative. -/
-protected def nonneg (r : ℚ) : Prop :=
+protected def Nonneg (r : ℚ) : Prop :=
   0 ≤ r.num
 
 @[simp]
@@ -76,18 +81,18 @@ protected theorem nonneg_antisymm {a} : Rat.Nonneg a → Rat.Nonneg (-a) → a =
 protected theorem nonneg_total : Rat.Nonneg a ∨ Rat.Nonneg (-a) := by
   cases' a with n <;> exact Or.imp_rightₓ neg_nonneg_of_nonpos (le_totalₓ 0 n)
 
-instance decidable_nonneg : Decidable (Rat.Nonneg a) := by
+instance decidableNonneg : Decidable (Rat.Nonneg a) := by
   cases a <;> unfold Rat.Nonneg <;> infer_instance
 
 /-- Relation `a ≤ b` on `ℚ` defined as `a ≤ b ↔ rat.nonneg (b - a)`. Use `a ≤ b` instead of
 `rat.le a b`. -/
-protected def le (a b : ℚ) :=
+protected def Le (a b : ℚ) :=
   Rat.Nonneg (b - a)
 
 instance : LE ℚ :=
   ⟨Rat.Le⟩
 
-instance decidable_le : DecidableRel (· ≤ · : ℚ → ℚ → Prop)
+instance decidableLe : DecidableRel ((· ≤ ·) : ℚ → ℚ → Prop)
   | a, b =>
     show Decidable (Rat.Nonneg (b - a)) by
       infer_instance
@@ -97,21 +102,21 @@ protected theorem le_def {a b c d : ℤ} (b0 : 0 < b) (d0 : 0 < d) : a /. b ≤ 
   rw [← sub_nonneg]
   simp [sub_eq_add_neg, ne_of_gtₓ b0, ne_of_gtₓ d0, mul_pos d0 b0]
 
-protected theorem le_reflₓ : a ≤ a :=
+protected theorem le_refl : a ≤ a :=
   show Rat.Nonneg (a - a) by
     rw [sub_self] <;> exact le_reflₓ (0 : ℤ)
 
-protected theorem le_totalₓ : a ≤ b ∨ b ≤ a := by
+protected theorem le_total : a ≤ b ∨ b ≤ a := by
   have := Rat.nonneg_total (b - a) <;> rwa [neg_sub] at this
 
-protected theorem le_antisymmₓ {a b : ℚ} (hab : a ≤ b) (hba : b ≤ a) : a = b := by
+protected theorem le_antisymm {a b : ℚ} (hab : a ≤ b) (hba : b ≤ a) : a = b := by
   have :=
     eq_neg_of_add_eq_zero
       (Rat.nonneg_antisymm hba <| by
         rwa [← sub_eq_add_neg, neg_sub])
   rwa [neg_negₓ] at this
 
-protected theorem le_transₓ {a b c : ℚ} (hab : a ≤ b) (hbc : b ≤ c) : a ≤ c := by
+protected theorem le_trans {a b c : ℚ} (hab : a ≤ b) (hbc : b ≤ c) : a ≤ c := by
   have : Rat.Nonneg (b - a + (c - b)) := Rat.nonneg_add hab hbc
   simpa [sub_eq_add_neg, add_commₓ, add_left_commₓ]
 
@@ -125,6 +130,7 @@ instance : LinearOrderₓ ℚ where
     infer_instance
   decidableLe := fun a b => Rat.decidableNonneg (b - a)
 
+-- Extra instances to short-circuit type class resolution
 instance : LT ℚ := by
   infer_instance
 
@@ -195,6 +201,7 @@ instance : LinearOrderedField ℚ :=
       lt_of_le_of_neₓ (Rat.mul_nonneg (le_of_ltₓ ha) (le_of_ltₓ hb))
         (mul_ne_zero (ne_of_ltₓ ha).symm (ne_of_ltₓ hb).symm).symm }
 
+-- Extra instances to short-circuit type class resolution
 instance : LinearOrderedCommRing ℚ := by
   infer_instance
 

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 mathlib community. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Mario Carneiro, Wojciech Nawrocki
+-/
 import Mathbin.Data.Rbtree.Init
 import Mathbin.Data.Num.Basic
 
@@ -27,7 +32,7 @@ universe u
 variable {α : Type u}
 
 /-- Construct a string representation of a tree. Provides a `has_repr` instance. -/
-def reprₓ [HasRepr α] : Tree α → Stringₓ
+def repr [HasRepr α] : Tree α → Stringₓ
   | nil => "nil"
   | node a t1 t2 => "tree.node " ++ HasRepr.repr a ++ " (" ++ reprₓ t1 ++ ") (" ++ reprₓ t2 ++ ")"
 
@@ -38,7 +43,7 @@ instance : Inhabited (Tree α) :=
   ⟨nil⟩
 
 /-- Makes a `tree α` out of a red-black tree. -/
-def of_rbnode : Rbnode α → Tree α
+def ofRbnode : Rbnode α → Tree α
   | Rbnode.leaf => nil
   | Rbnode.red_node l a r => node a (of_rbnode l) (of_rbnode r)
   | Rbnode.black_node l a r => node a (of_rbnode l) (of_rbnode r)
@@ -47,7 +52,7 @@ def of_rbnode : Rbnode α → Tree α
 constructed according to the provided decidable order on its elements.
 If it hasn't, the result will be incorrect. If it has, but the element
 is not in the tree, returns none. -/
-def index_of (lt : α → α → Prop) [DecidableRel lt] (x : α) : Tree α → Option PosNum
+def indexOf (lt : α → α → Prop) [DecidableRel lt] (x : α) : Tree α → Option PosNum
   | nil => none
   | node a t₁ t₂ =>
     match cmpUsing lt x a with
@@ -68,12 +73,12 @@ def get : PosNum → Tree α → Option α
 
 /-- Retrieves an element from the tree, or the provided default value
 if the index is invalid. See `tree.get`. -/
-def get_or_else (n : PosNum) (t : Tree α) (v : α) : α :=
+def getOrElse (n : PosNum) (t : Tree α) (v : α) : α :=
   (t.get n).getOrElse v
 
 /-- Apply a function to each value in the tree.  This is the `map` function for the `tree` functor.
 TODO: implement `traversable tree`. -/
-def map {β} (f : α → β) : Tree α → Tree β
+def mapₓ {β} (f : α → β) : Tree α → Tree β
   | nil => nil
   | node a l r => node (f a) (map l) (map r)
 

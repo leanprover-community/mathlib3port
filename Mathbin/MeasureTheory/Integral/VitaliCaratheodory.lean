@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Sébastien Gouëzel. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Sébastien Gouëzel
+-/
 import Mathbin.MeasureTheory.Measure.Regular
 import Mathbin.Topology.Semicontinuous
 import Mathbin.MeasureTheory.Integral.Bochner
@@ -78,12 +83,12 @@ local infixr:25 " →ₛ " => SimpleFunc
 /-! ### Lower semicontinuous upper bound for nonnegative functions -/
 
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (u «expr ⊇ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (u «expr ⊇ » s)
 /-- Given a simple function `f` with values in `ℝ≥0`, there exists a lower semicontinuous
 function `g ≥ f` with integral arbitrarily close to that of `f`. Formulation in terms of
 `lintegral`.
 Auxiliary lemma for Vitali-Carathéodory theorem `exists_lt_lower_semicontinuous_integral_lt`. -/
-theorem simple_func.exists_le_lower_semicontinuous_lintegral_ge (f : α →ₛ ℝ≥0 ) {ε : ℝ≥0∞} (ε0 : ε ≠ 0) :
+theorem SimpleFunc.exists_le_lower_semicontinuous_lintegral_ge (f : α →ₛ ℝ≥0 ) {ε : ℝ≥0∞} (ε0 : ε ≠ 0) :
     ∃ g : α → ℝ≥0 , (∀ x, f x ≤ g x) ∧ LowerSemicontinuous g ∧ (∫⁻ x, g x ∂μ) ≤ (∫⁻ x, f x ∂μ) + ε := by
   induction' f using MeasureTheory.SimpleFunc.induction with c s hs f₁ f₂ H h₁ h₂ generalizing ε
   · let f := simple_func.piecewise s hs (simple_func.const α c) (simple_func.const α 0)
@@ -302,12 +307,12 @@ theorem exists_lt_lower_semicontinuous_integral_gt_nnreal [SigmaFinite μ] (f : 
 /-! ### Upper semicontinuous lower bound for nonnegative functions -/
 
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (F «expr ⊆ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (F «expr ⊆ » s)
 /-- Given a simple function `f` with values in `ℝ≥0`, there exists an upper semicontinuous
 function `g ≤ f` with integral arbitrarily close to that of `f`. Formulation in terms of
 `lintegral`.
 Auxiliary lemma for Vitali-Carathéodory theorem `exists_lt_lower_semicontinuous_integral_lt`. -/
-theorem simple_func.exists_upper_semicontinuous_le_lintegral_le (f : α →ₛ ℝ≥0 ) (int_f : (∫⁻ x, f x ∂μ) ≠ ∞) {ε : ℝ≥0∞}
+theorem SimpleFunc.exists_upper_semicontinuous_le_lintegral_le (f : α →ₛ ℝ≥0 ) (int_f : (∫⁻ x, f x ∂μ) ≠ ∞) {ε : ℝ≥0∞}
     (ε0 : ε ≠ 0) : ∃ g : α → ℝ≥0 , (∀ x, g x ≤ f x) ∧ UpperSemicontinuous g ∧ (∫⁻ x, f x ∂μ) ≤ (∫⁻ x, g x ∂μ) + ε := by
   induction' f using MeasureTheory.SimpleFunc.induction with c s hs f₁ f₂ H h₁ h₂ generalizing ε
   · let f := simple_func.piecewise s hs (simple_func.const α c) (simple_func.const α 0)

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2017 Mario Carneiro. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Mario Carneiro
+-/
 import Mathbin.Data.Fin.Fin2
 import Mathbin.Tactic.Localized
 
@@ -38,7 +43,10 @@ def cons (a : α) (v : Vector3 α n) : Vector3 α (succ n) := fun i => by
   exact a
   exact v
 
--- ././Mathport/Syntax/Translate/Basic.lean:1257:9: unsupported: advanced notation (l:(foldr `, ` (h t, vector3.cons h t) vector3.nil `]`))
+-- ././Mathport/Syntax/Translate/Basic.lean:1379:9: unsupported: advanced notation (l:(foldr `, ` (h t, vector3.cons h t) vector3.nil `]`))
+/- We do not want to make the following notation global, because then these expressions will be
+overloaded, and only the expected type will be able to disambiguate the meaning. Worse: Lean will
+try to insert a coercion from `vector3 α _` to `list α`, if a list is expected. -/
 localized [Vector3] notation3 "["  => l
 
 @[simp]
@@ -56,7 +64,7 @@ def nth (i : Fin2 n) (v : Vector3 α n) : α :=
 
 /-- Construct a vector from a function on `fin2`. -/
 @[reducible]
-def of_fn (f : Fin2 n → α) : Vector3 α n :=
+def ofFn (f : Fin2 n → α) : Vector3 α n :=
   f
 
 /-- Get the head of a nonempty vector. -/
@@ -73,11 +81,11 @@ theorem cons_head_tail (v : Vector3 α (succ n)) : head v :: tail v = v :=
   funext fun i => Fin2.cases' rfl (fun _ => rfl) i
 
 /-- Eliminator for an empty vector. -/
-def nil_elim {C : Vector3 α 0 → Sort u} (H : C []) (v : Vector3 α 0) : C v := by
+def nilElim {C : Vector3 α 0 → Sort u} (H : C []) (v : Vector3 α 0) : C v := by
   rw [eq_nil v] <;> apply H
 
 /-- Recursion principle for a nonempty vector. -/
-def cons_elim {C : Vector3 α (succ n) → Sort u} (H : ∀ a : α t : Vector3 α n, C (a :: t)) (v : Vector3 α (succ n)) :
+def consElim {C : Vector3 α (succ n) → Sort u} (H : ∀ a : α t : Vector3 α n, C (a :: t)) (v : Vector3 α (succ n)) :
     C v := by
   rw [← cons_head_tail v] <;> apply H
 
@@ -87,7 +95,7 @@ theorem cons_elim_cons {C H a t} : @consElim α n C H (a :: t) = H a t :=
 
 /-- Recursion principle with the vector as first argument. -/
 @[elab_as_eliminator]
-protected def rec_on {C : ∀ {n}, Vector3 α n → Sort u} {n} (v : Vector3 α n) (H0 : C [])
+protected def recOn {C : ∀ {n}, Vector3 α n → Sort u} {n} (v : Vector3 α n) (H0 : C [])
     (Hs : ∀ {n} a w : Vector3 α n, C w → C (a :: w)) : C v :=
   Nat.recOn n (fun v => v.nilElim H0) (fun n IH v => v.consElim fun a t => Hs _ _ (IH _)) v
 
@@ -221,7 +229,7 @@ theorem vector_allp_iff_forall (p : α → Prop) (v : Vector3 α n) : VectorAllp
   · simp
     refine' fun n a v IH =>
       (and_congr_right fun _ => IH).trans
-        ⟨fun ⟨pa, h⟩ i => by
+        ⟨fun i => by
           refine' i.cases' _ _
           exacts[pa, h], fun h => ⟨_, fun i => _⟩⟩
     · have h0 := h fz

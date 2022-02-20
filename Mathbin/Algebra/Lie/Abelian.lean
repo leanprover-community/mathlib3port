@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Oliver Nash. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Oliver Nash
+-/
 import Mathbin.Algebra.Lie.OfAssociative
 import Mathbin.Algebra.Lie.IdealOperations
 
@@ -75,7 +80,7 @@ theorem commutative_ring_iff_abelian_lie_ring {A : Type v} [Ringₓ A] : IsCommu
 
 theorem LieAlgebra.is_lie_abelian_bot (R : Type u) (L : Type v) [CommRingₓ R] [LieRing L] [LieAlgebra R L] :
     IsLieAbelian (⊥ : LieIdeal R L) :=
-  ⟨fun ⟨x, hx⟩ _ => by
+  ⟨fun _ => by
     convert zero_lie _⟩
 
 section Center
@@ -99,7 +104,7 @@ protected theorem mem_ker (x : L) : x ∈ LieModule.ker R L M ↔ ∀ m : M, ⁅
   simp only [LieModule.ker, LieHom.mem_ker, LinearMap.ext_iff, LinearMap.zero_apply, to_endomorphism_apply_apply]
 
 /-- The largest submodule of a Lie module `M` on which the Lie algebra `L` acts trivially. -/
-def max_triv_submodule : LieSubmodule R L M where
+def maxTrivSubmodule : LieSubmodule R L M where
   Carrier := { m | ∀ x : L, ⁅x,m⁆ = 0 }
   zero_mem' := fun x => lie_zero x
   add_mem' := fun x y hx hy z => by
@@ -155,7 +160,7 @@ theorem is_trivial_iff_max_triv_eq_top : IsTrivial L M ↔ maxTrivSubmodule R L 
 variable {R L M N}
 
 /-- `max_triv_submodule` is functorial. -/
-def max_triv_hom (f : M →ₗ⁅R,L⁆ N) : maxTrivSubmodule R L M →ₗ⁅R,L⁆ maxTrivSubmodule R L N where
+def maxTrivHom (f : M →ₗ⁅R,L⁆ N) : maxTrivSubmodule R L M →ₗ⁅R,L⁆ maxTrivSubmodule R L N where
   toFun := fun m =>
     ⟨f m, fun x =>
       (LieModuleHom.map_lie _ _ _).symm.trans <| (congr_argₓ f (m.property x)).trans (LieModuleHom.map_zero _)⟩
@@ -171,7 +176,7 @@ theorem coe_max_triv_hom_apply (f : M →ₗ⁅R,L⁆ N) (m : maxTrivSubmodule R
   rfl
 
 /-- The maximal trivial submodules of Lie-equivalent Lie modules are Lie-equivalent. -/
-def max_triv_equiv (e : M ≃ₗ⁅R,L⁆ N) : maxTrivSubmodule R L M ≃ₗ⁅R,L⁆ maxTrivSubmodule R L N :=
+def maxTrivEquiv (e : M ≃ₗ⁅R,L⁆ N) : maxTrivSubmodule R L M ≃ₗ⁅R,L⁆ maxTrivSubmodule R L N :=
   { maxTrivHom (e : M →ₗ⁅R,L⁆ N) with toFun := maxTrivHom (e : M →ₗ⁅R,L⁆ N),
     invFun := maxTrivHom (e.symm : N →ₗ⁅R,L⁆ M),
     left_inv := fun m => by
@@ -196,7 +201,7 @@ theorem max_triv_equiv_of_equiv_symm_eq_symm (e : M ≃ₗ⁅R,L⁆ N) : (maxTri
 
 /-- A linear map between two Lie modules is a morphism of Lie modules iff the Lie algebra action
 on it is trivial. -/
-def max_triv_linear_map_equiv_lie_module_hom : maxTrivSubmodule R L (M →ₗ[R] N) ≃ₗ[R] M →ₗ⁅R,L⁆ N where
+def maxTrivLinearMapEquivLieModuleHom : maxTrivSubmodule R L (M →ₗ[R] N) ≃ₗ[R] M →ₗ⁅R,L⁆ N where
   toFun := fun f =>
     { toLinearMap := f.val,
       map_lie' := fun x m => by

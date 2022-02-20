@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Mario Carneiro. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Mario Carneiro, Kenny Lau
+-/
 import Mathbin.Data.List.Lattice
 import Mathbin.Data.List.Pairwise
 import Mathbin.Data.List.Forall2
@@ -30,7 +35,7 @@ theorem nodup_nil : @Nodupₓ α [] :=
 theorem nodup_cons {a : α} {l : List α} : Nodupₓ (a :: l) ↔ a ∉ l ∧ Nodupₓ l := by
   simp only [nodup, pairwise_cons, forall_mem_ne]
 
-protected theorem pairwise.nodup {l : List α} {r : α → α → Prop} [IsIrrefl α r] (h : Pairwiseₓ r l) : Nodupₓ l :=
+protected theorem Pairwiseₓ.nodup {l : List α} {r : α → α → Prop} [IsIrrefl α r] (h : Pairwiseₓ r l) : Nodupₓ l :=
   h.imp fun a b => ne_of_irrefl
 
 theorem rel_nodup {r : α → β → Prop} (hr : Relator.BiUnique r) : (Forall₂ r⇒(· ↔ ·)) Nodupₓ Nodupₓ
@@ -75,12 +80,12 @@ theorem nodup_iff_nth_le_inj {l : List α} : Nodupₓ l ↔ ∀ i j h₁ h₂, n
       ((lt_trichotomyₓ _ _).resolve_left fun h' => H _ _ h₂ h' h).resolve_right fun h' => H _ _ h₁ h' h.symm,
       fun H i j h₁ h₂ h => ne_of_ltₓ h₂ (H _ _ _ _ h)⟩
 
-theorem nodup.nth_le_inj_iff {α : Type _} {l : List α} (h : Nodupₓ l) {i j : ℕ} (hi : i < l.length)
+theorem Nodupₓ.nth_le_inj_iff {α : Type _} {l : List α} (h : Nodupₓ l) {i j : ℕ} (hi : i < l.length)
     (hj : j < l.length) : l.nthLe i hi = l.nthLe j hj ↔ i = j :=
   ⟨nodup_iff_nth_le_inj.mp h _ _ _ _, by
     simp (config := { contextual := true })⟩
 
-theorem nodup.ne_singleton_iff {l : List α} (h : Nodupₓ l) (x : α) : l ≠ [x] ↔ l = [] ∨ ∃ y ∈ l, y ≠ x := by
+theorem Nodupₓ.ne_singleton_iff {l : List α} (h : Nodupₓ l) (x : α) : l ≠ [x] ↔ l = [] ∨ ∃ y ∈ l, y ≠ x := by
   induction' l with hd tl hl
   · simp
     
@@ -156,7 +161,7 @@ theorem nodup_of_nodup_map (f : α → β) {l : List α} : Nodupₓ (map f l) �
 
 theorem nodup_map_on {f : α → β} {l : List α} (H : ∀, ∀ x ∈ l, ∀, ∀, ∀ y ∈ l, ∀, f x = f y → x = y) (d : Nodupₓ l) :
     Nodupₓ (map f l) :=
-  pairwise_map_of_pairwise _ (fun a b ⟨ma, mb, n⟩ e => n (H a ma b mb e)) (Pairwiseₓ.and_mem.1 d)
+  pairwise_map_of_pairwise _ (fun e => n (H a ma b mb e)) (Pairwiseₓ.and_mem.1 d)
 
 theorem inj_on_of_nodup_map {f : α → β} {l : List α} (d : Nodupₓ (map f l)) :
     ∀ ⦃x⦄, x ∈ l → ∀ ⦃y⦄, y ∈ l → f x = f y → x = y := by
@@ -195,7 +200,7 @@ theorem nodup_pmap {p : α → Prop} {f : ∀ a, p a → β} {l : List α} {H} (
   rw [pmap_eq_map_attach] <;>
     exact
       nodup_map
-        (fun ⟨a, ha⟩ ⟨b, hb⟩ h => by
+        (fun h => by
           congr <;> exact hf a (H _ ha) b (H _ hb) h)
         (nodup_attach.2 h)
 
@@ -322,7 +327,7 @@ theorem nodup_update_nth : ∀ {l : List α} {n : ℕ} {a : α} hl : l.Nodup ha 
       ⟨fun h => (mem_or_eq_of_mem_update_nth h).elim (nodup_cons.1 hl).1 fun hba => ha (hba ▸ mem_cons_selfₓ _ _),
         nodup_update_nth (nodup_cons.1 hl).2 (mt (mem_cons_of_memₓ _) ha)⟩
 
-theorem nodup.map_update [DecidableEq α] {l : List α} (hl : l.Nodup) (f : α → β) (x : α) (y : β) :
+theorem Nodupₓ.map_update [DecidableEq α] {l : List α} (hl : l.Nodup) (f : α → β) (x : α) (y : β) :
     l.map (Function.update f x y) = if x ∈ l then (l.map f).updateNth (l.indexOf x) y else l.map f := by
   induction' l with hd tl ihl
   · simp
@@ -336,7 +341,7 @@ theorem nodup.map_update [DecidableEq α] {l : List α} (hl : l.Nodup) (f : α �
   · simp [Ne.symm H, H, update_nth, ← apply_ite (cons (f hd))]
     
 
-theorem nodup.pairwise_of_forall_ne {l : List α} {r : α → α → Prop} (hl : l.Nodup)
+theorem Nodupₓ.pairwise_of_forall_ne {l : List α} {r : α → α → Prop} (hl : l.Nodup)
     (h : ∀, ∀ a ∈ l, ∀, ∀ b ∈ l, ∀, a ≠ b → r a b) : l.Pairwise r := by
   classical
   refine' pairwise_of_reflexive_on_dupl_of_forall_ne _ h
@@ -344,7 +349,7 @@ theorem nodup.pairwise_of_forall_ne {l : List α} {r : α → α → Prop} (hl :
   rw [nodup_iff_count_le_one] at hl
   exact absurd (hl x) hx.not_le
 
-theorem nodup.pairwise_of_set_pairwise {l : List α} {r : α → α → Prop} (hl : l.Nodup) (h : { x | x ∈ l }.Pairwise r) :
+theorem Nodupₓ.pairwise_of_set_pairwise {l : List α} {r : α → α → Prop} (hl : l.Nodup) (h : { x | x ∈ l }.Pairwise r) :
     l.Pairwise r :=
   hl.pairwise_of_forall_ne h
 

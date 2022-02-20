@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2022 Aaron Anderson. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Aaron Anderson
+-/
 import Mathbin.Data.Fintype.Basic
 import Mathbin.ModelTheory.Substructures
 import Mathbin.ModelTheory.TermsAndFormulas
@@ -28,7 +33,7 @@ variable [L.Structure M] [L.Structure N] [L.Structure P] [L.Structure Q]
 
 /-- An elementary embedding of first-order structures is an embedding that commutes with the
   realizations of formulas. -/
-structure elementary_embedding where
+structure ElementaryEmbedding where
   toFun : M → N
   map_formula' :
     ∀ {n} φ : L.Formula (Finₓ n) x : Finₓ n → M, RealizeFormula N φ (to_fun ∘ x) ↔ RealizeFormula M φ x := by
@@ -41,7 +46,7 @@ variable {L} {M} {N}
 
 namespace ElementaryEmbedding
 
-instance CoeFun : CoeFun (M ↪ₑ[L] N) fun _ => M → N :=
+instance hasCoeToFun : CoeFun (M ↪ₑ[L] N) fun _ => M → N :=
   ⟨fun f => f.toFun⟩
 
 @[simp]
@@ -81,12 +86,12 @@ theorem injective (φ : M ↪ₑ[L] N) : Function.Injective φ := by
   exact h.1
 
 /-- An elementary embedding is also a first-order embedding. -/
-def to_embedding (f : M ↪ₑ[L] N) : M ↪[L] N where
+def toEmbedding (f : M ↪ₑ[L] N) : M ↪[L] N where
   toFun := f
   inj' := f.Injective
 
 /-- An elementary embedding is also a first-order homomorphism. -/
-def to_hom (f : M ↪ₑ[L] N) : M →[L] N where
+def toHom (f : M ↪ₑ[L] N) : M →[L] N where
   toFun := f
 
 @[simp]
@@ -150,7 +155,7 @@ end ElementaryEmbedding
 namespace Equivₓ
 
 /-- A first-order equivalence is also an elementary embedding. -/
-def to_elementary_embedding (f : M ≃[L] N) : M ↪ₑ[L] N where
+def toElementaryEmbedding (f : M ≃[L] N) : M ↪ₑ[L] N where
   toFun := f
 
 @[simp]
@@ -179,7 +184,7 @@ namespace Substructure
 
 /-- A substructure is elementary when every formula applied to a tuple in the subtructure
   agrees with its value in the overall structure. -/
-def is_elementary (S : L.Substructure M) : Prop :=
+def IsElementary (S : L.Substructure M) : Prop :=
   ∀ {n} φ : L.Formula (Finₓ n) x : Finₓ n → S, RealizeFormula M φ (coe ∘ x) ↔ RealizeFormula S φ x
 
 end Substructure
@@ -188,7 +193,7 @@ variable (L) (M)
 
 /-- An elementary substructure is one in which every formula applied to a tuple in the subtructure
   agrees with its value in the overall structure. -/
-structure elementary_substructure where
+structure ElementarySubstructure where
   toSubstructure : L.Substructure M
   is_elementary' : to_substructure.IsElementary
 
@@ -200,7 +205,7 @@ instance : Coe (L.ElementarySubstructure M) (L.Substructure M) :=
   ⟨ElementarySubstructure.toSubstructure⟩
 
 instance : SetLike (L.ElementarySubstructure M) M :=
-  ⟨fun x => x.toSubstructure.Carrier, fun ⟨⟨s, hs1⟩, hs2⟩ ⟨⟨t, ht1⟩, ht2⟩ h => by
+  ⟨fun x => x.toSubstructure.Carrier, fun h => by
     congr
     exact h⟩
 
@@ -209,12 +214,12 @@ theorem is_elementary (S : L.ElementarySubstructure M) : (S : L.Substructure M).
   S.is_elementary'
 
 /-- The natural embedding of an `L.substructure` of `M` into `M`. -/
-def Subtype (S : L.ElementarySubstructure M) : S ↪ₑ[L] M where
+def subtype (S : L.ElementarySubstructure M) : S ↪ₑ[L] M where
   toFun := coe
   map_formula' := fun n => S.IsElementary
 
 @[simp]
-theorem coeSubtype {S : L.ElementarySubstructure M} : ⇑S.Subtype = coe :=
+theorem coe_subtype {S : L.ElementarySubstructure M} : ⇑S.Subtype = coe :=
   rfl
 
 /-- The substructure `M` of the structure `M` is elementary. -/

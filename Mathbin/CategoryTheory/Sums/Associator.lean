@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison
+-/
 import Mathbin.CategoryTheory.Sums.Basic
 
 /-!
@@ -57,7 +62,7 @@ theorem associator_map_inr {X Y : E} (f : inr X ⟶ inr Y) : (associator C D E).
 
 /-- The inverse associator functor `C ⊕ (D ⊕ E) ⥤ (C ⊕ D) ⊕ E` for sums of categories.
 -/
-def inverse_associator : Sum C (Sum D E) ⥤ Sum (Sum C D) E where
+def inverseAssociator : Sum C (Sum D E) ⥤ Sum (Sum C D) E where
   obj := fun X =>
     match X with
     | inl X => inl (inl X)
@@ -114,13 +119,15 @@ def associativity : Sum (Sum C D) E ≌ Sum C (Sum D E) :=
       (by
         tidy))
 
-instance associator_is_equivalence : IsEquivalence (associator C D E) :=
+instance associatorIsEquivalence : IsEquivalence (associator C D E) :=
   (by
     infer_instance : IsEquivalence (associativity C D E).Functor)
 
-instance inverse_associator_is_equivalence : IsEquivalence (inverseAssociator C D E) :=
+instance inverseAssociatorIsEquivalence : IsEquivalence (inverseAssociator C D E) :=
   (by
     infer_instance : IsEquivalence (associativity C D E).inverse)
 
+-- TODO unitors?
+-- TODO pentagon natural transformation? ...satisfying?
 end CategoryTheory.sum
 

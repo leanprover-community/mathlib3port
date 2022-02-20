@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 David Wärn,. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: David Wärn, Scott Morrison
+-/
 import Mathbin.Combinatorics.Quiver.Basic
 
 /-!
@@ -13,12 +18,12 @@ universe v v₁ v₂ u u₁ u₂
 namespace Quiver
 
 /-- `G.path a b` is the type of paths from `a` to `b` through the arrows of `G`. -/
-inductive path {V : Type u} [Quiver.{v} V] (a : V) : V → Sort max (u + 1) v
+inductive Path {V : Type u} [Quiver.{v} V] (a : V) : V → Sort max (u + 1) v
   | nil : path a
   | cons : ∀ {b c : V}, path b → (b ⟶ c) → path c
 
 /-- An arrow viewed as a path of length one. -/
-def hom.to_path {V} [Quiver V] {a b : V} (e : a ⟶ b) : Path a b :=
+def Hom.toPath {V} [Quiver V] {a b : V} (e : a ⟶ b) : Path a b :=
   Path.nil.cons e
 
 namespace Path
@@ -77,7 +82,7 @@ open Quiver
 variable {V : Type u₁} [Quiver.{v₁} V] {W : Type u₂} [Quiver.{v₂} W] (F : Prefunctor V W)
 
 /-- The image of a path under a prefunctor. -/
-def map_path {a : V} : ∀ {b : V}, Path a b → Path (F.obj a) (F.obj b)
+def mapPathₓ {a : V} : ∀ {b : V}, Path a b → Path (F.obj a) (F.obj b)
   | _, path.nil => Path.nil
   | _, path.cons p e => Path.cons (map_path p) (F.map e)
 

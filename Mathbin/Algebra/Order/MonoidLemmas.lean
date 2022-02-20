@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2016 Jeremy Avigad. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Jeremy Avigad, Leonardo de Moura, Mario Carneiro, Johannes Hölzl, Damiano Testa
+-/
 import Mathbin.Algebra.CovariantAndContravariant
 import Mathbin.Order.Monotone
 
@@ -20,6 +25,8 @@ Almost no monoid is actually present in this file: most assumptions have been ge
 -/
 
 
+-- TODO: If possible, uniformize lemma names, taking special care of `'`,
+-- after the `ordered`-refactor is done.
 open Function
 
 variable {α β : Type _}
@@ -32,6 +39,8 @@ section LE
 
 variable [LE α]
 
+/- The prime on this lemma is present only on the multiplicative version.  The unprimed version
+is taken by the analogous lemma for semiring, with an extra non-negativity assumption. -/
 @[to_additive add_le_add_left]
 theorem mul_le_mul_left' [CovariantClass α α (· * ·) (· ≤ ·)] {b c : α} (bc : b ≤ c) (a : α) : a * b ≤ a * c :=
   CovariantClass.elim _ bc
@@ -40,6 +49,8 @@ theorem mul_le_mul_left' [CovariantClass α α (· * ·) (· ≤ ·)] {b c : α}
 theorem le_of_mul_le_mul_left' [ContravariantClass α α (· * ·) (· ≤ ·)] {a b c : α} (bc : a * b ≤ a * c) : b ≤ c :=
   ContravariantClass.elim _ bc
 
+/- The prime on this lemma is present only on the multiplicative version.  The unprimed version
+is taken by the analogous lemma for semiring, with an extra non-negativity assumption. -/
 @[to_additive add_le_add_right]
 theorem mul_le_mul_right' [CovariantClass α α (swap (· * ·)) (· ≤ ·)] {b c : α} (bc : b ≤ c) (a : α) : b * a ≤ c * a :=
   CovariantClass.elim a bc
@@ -96,6 +107,7 @@ end LT
 
 end Mul
 
+-- using one
 section MulOneClassₓ
 
 variable [MulOneClassₓ α]
@@ -321,6 +333,7 @@ theorem le_mul_of_le_of_le_one [CovariantClass α α (· * ·) (· ≤ ·)] {a b
     _ ≤ a * b := mul_le_mul_left' hb a
     
 
+--  This lemma is present to mimick the name of an existing one.
 @[to_additive add_nonneg]
 theorem one_le_mul [CovariantClass α α (· * ·) (· ≤ ·)] {a b : α} (ha : 1 ≤ a) (hb : 1 ≤ b) : 1 ≤ a * b :=
   le_mul_of_le_of_le_one ha hb
@@ -403,6 +416,8 @@ theorem mul_right_cancel'' [Semigroupₓ α] [PartialOrderₓ α] [Contravariant
 
 /-- A semigroup with a partial order and satisfying `left_cancel_semigroup`
 (i.e. `a * c < b * c → a < b`) is a `left_cancel semigroup`. -/
+/- This is not instance, since we want to have an instance from `left_cancel_semigroup`s
+to the appropriate `covariant_class`. -/
 @[to_additive
       "An additive semigroup with a partial order and satisfying `left_cancel_add_semigroup`\n(i.e. `c + a < c + b → a < b`) is a `left_cancel add_semigroup`."]
 def Contravariant.toLeftCancelSemigroup [Semigroupₓ α] [PartialOrderₓ α] [ContravariantClass α α (· * ·) (· ≤ ·)] :
@@ -411,6 +426,8 @@ def Contravariant.toLeftCancelSemigroup [Semigroupₓ α] [PartialOrderₓ α] [
 
 /-- A semigroup with a partial order and satisfying `right_cancel_semigroup`
 (i.e. `a * c < b * c → a < b`) is a `right_cancel semigroup`. -/
+/- This is not instance, since we want to have an instance from `right_cancel_semigroup`s
+to the appropriate `covariant_class`. -/
 @[to_additive
       "An additive semigroup with a partial order and satisfying `right_cancel_add_semigroup`\n(`a + c < b + c → a < b`) is a `right_cancel add_semigroup`."]
 def Contravariant.toRightCancelSemigroup [Semigroupₓ α] [PartialOrderₓ α]

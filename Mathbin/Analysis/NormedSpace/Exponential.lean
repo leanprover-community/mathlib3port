@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Anatole Dedecker. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Anatole Dedecker
+-/
 import Mathbin.Analysis.SpecificLimits
 import Mathbin.Analysis.Analytic.Basic
 import Mathbin.Analysis.Complex.Basic
@@ -89,7 +94,7 @@ theorem exp_eq_tsum : exp 𝕂 𝔸 = fun x : 𝔸 => ∑' n : ℕ, (1 / n ! : �
 theorem exp_eq_tsum_field : exp 𝕂 𝕂 = fun x : 𝕂 => ∑' n : ℕ, x ^ n / n ! :=
   funext exp_series_sum_eq_field
 
--- ././Mathport/Syntax/Translate/Basic.lean:480:2: warning: expanding binder collection (n «expr ∉ » ({0} : finset exprℕ()))
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (n «expr ∉ » ({0} : finset exprℕ()))
 theorem exp_zero : exp 𝕂 𝔸 0 = 1 := by
   suffices (fun x : 𝔸 => ∑' n : ℕ, (1 / n ! : 𝕂) • x ^ n) 0 = ∑' n : ℕ, if n = 0 then 1 else 0 by
     have key : ∀ n _ : n ∉ ({0} : Finset ℕ), (if n = 0 then (1 : 𝔸) else 0) = 0 := fun n hn =>
@@ -269,8 +274,6 @@ theorem exp_analytic (x : 𝔸) : AnalyticAt 𝕂 (exp 𝕂 𝔸) x :=
 
 end CompleteAlgebra
 
-attribute [local instance] char_zero_R_or_C
-
 /-- In a Banach-algebra `𝔸` over `𝕂 = ℝ` or `𝕂 = ℂ`, if `x` and `y` commute, then
 `exp 𝕂 𝔸 (x+y) = (exp 𝕂 𝔸 x) * (exp 𝕂 𝔸 y)`. -/
 theorem exp_add_of_commute [CompleteSpace 𝔸] {x y : 𝔸} (hxy : Commute x y) : exp 𝕂 𝔸 (x + y) = exp 𝕂 𝔸 x * exp 𝕂 𝔸 y :=
@@ -282,8 +285,6 @@ end AnyAlgebra
 section CommAlgebra
 
 variable {𝕂 𝔸 : Type _} [IsROrC 𝕂] [NormedCommRing 𝔸] [NormedAlgebra 𝕂 𝔸] [CompleteSpace 𝔸]
-
-attribute [local instance] char_zero_R_or_C
 
 /-- In a commutative Banach-algebra `𝔸` over `𝕂 = ℝ` or `𝕂 = ℂ`,
 `exp 𝕂 𝔸 (x+y) = (exp 𝕂 𝔸 x) * (exp 𝕂 𝔸 y)`. -/

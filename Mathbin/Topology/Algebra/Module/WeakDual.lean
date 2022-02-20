@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Kalle Kytölä. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Kalle Kytölä
+-/
 import Mathbin.Topology.Algebra.Module.Basic
 
 /-!
@@ -83,7 +88,7 @@ variable (𝕜 : Type _) [TopologicalSpace 𝕜] [Semiringₓ 𝕜]
 
 variable (E : Type _) [TopologicalSpace E] [AddCommMonoidₓ E] [Module 𝕜 E]
 
--- ././Mathport/Syntax/Translate/Basic.lean:859:9: unsupported derive handler λ α, has_coe_to_fun α (λ _, E → 𝕜)
+-- ././Mathport/Syntax/Translate/Basic.lean:981:9: unsupported derive handler λ α, has_coe_to_fun α (λ _, E → 𝕜)
 /-- The weak dual of a topological module `E` over a topological semiring `𝕜` consists of
 continuous linear functionals from `E` to scalars `𝕜`. It is a type synonym with the usual dual
 (when the latter is defined), but will be equipped with a different topology. -/
@@ -127,21 +132,25 @@ instance [HasContinuousAdd 𝕜] : HasContinuousAdd (WeakDual 𝕜 E) :=
 
 /-- If a monoid `M` distributively continuously acts on `𝕜` and this action commutes with
 multiplication on `𝕜`, then it acts on `weak_dual 𝕜 E`. -/
-instance (M : Type _) [Monoidₓ M] [DistribMulAction M 𝕜] [SmulCommClass 𝕜 M 𝕜] [TopologicalSpace M]
-    [HasContinuousSmul M 𝕜] : MulAction M (WeakDual 𝕜 E) :=
+instance (M : Type _) [Monoidₓ M] [DistribMulAction M 𝕜] [SmulCommClass 𝕜 M 𝕜] [HasContinuousConstSmul M 𝕜] :
+    MulAction M (WeakDual 𝕜 E) :=
   ContinuousLinearMap.mulAction
 
 /-- If a monoid `M` distributively continuously acts on `𝕜` and this action commutes with
 multiplication on `𝕜`, then it acts distributively on `weak_dual 𝕜 E`. -/
-instance (M : Type _) [Monoidₓ M] [DistribMulAction M 𝕜] [SmulCommClass 𝕜 M 𝕜] [TopologicalSpace M]
-    [HasContinuousSmul M 𝕜] [HasContinuousAdd 𝕜] : DistribMulAction M (WeakDual 𝕜 E) :=
+instance (M : Type _) [Monoidₓ M] [DistribMulAction M 𝕜] [SmulCommClass 𝕜 M 𝕜] [HasContinuousConstSmul M 𝕜]
+    [HasContinuousAdd 𝕜] : DistribMulAction M (WeakDual 𝕜 E) :=
   ContinuousLinearMap.distribMulAction
 
 /-- If `𝕜` is a topological module over a semiring `R` and scalar multiplication commutes with the
 multiplication on `𝕜`, then `weak_dual 𝕜 E` is a module over `R`. -/
-instance (R : Type _) [Semiringₓ R] [Module R 𝕜] [SmulCommClass 𝕜 R 𝕜] [TopologicalSpace R] [HasContinuousSmul R 𝕜]
+instance (R : Type _) [Semiringₓ R] [Module R 𝕜] [SmulCommClass 𝕜 R 𝕜] [HasContinuousConstSmul R 𝕜]
     [HasContinuousAdd 𝕜] : Module R (WeakDual 𝕜 E) :=
   ContinuousLinearMap.module
+
+instance (M : Type _) [Monoidₓ M] [DistribMulAction M 𝕜] [SmulCommClass 𝕜 M 𝕜] [HasContinuousConstSmul M 𝕜] :
+    HasContinuousConstSmul M (WeakDual 𝕜 E) :=
+  ⟨fun m => continuous_induced_rng <| (coe_fn_continuous 𝕜 E).const_smul m⟩
 
 /-- If a monoid `M` distributively continuously acts on `𝕜` and this action commutes with
 multiplication on `𝕜`, then it continuously acts on `weak_dual 𝕜 E`. -/

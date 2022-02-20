@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Sébastien Gouëzel. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Sébastien Gouëzel, Johannes Hölzl, Rémy Degenne
+-/
 import Mathbin.Order.Filter.Cofinite
 
 /-!
@@ -42,12 +47,12 @@ section Relation
 /-- `f.is_bounded (≺)`: the filter `f` is eventually bounded w.r.t. the relation `≺`, i.e.
 eventually, it is bounded by some uniform bound.
 `r` will be usually instantiated with `≤` or `≥`. -/
-def is_bounded (r : α → α → Prop) (f : Filter α) :=
+def IsBounded (r : α → α → Prop) (f : Filter α) :=
   ∃ b, ∀ᶠ x in f, r x b
 
 /-- `f.is_bounded_under (≺) u`: the image of the filter `f` under `u` is eventually bounded w.r.t.
 the relation `≺`, i.e. eventually, it is bounded by some uniform bound. -/
-def is_bounded_under (r : α → α → Prop) (f : Filter β) (u : β → α) :=
+def IsBoundedUnder (r : α → α → Prop) (f : Filter β) (u : β → α) :=
   (f.map u).IsBounded r
 
 variable {r : α → α → Prop} {f g : Filter α}
@@ -76,13 +81,13 @@ theorem is_bounded_sup [IsTrans α r] (hr : ∀ b₁ b₂, ∃ b, r b₁ b ∧ r
     let ⟨b, rb₁b, rb₂b⟩ := hr b₁ b₂
     ⟨b, eventually_sup.mpr ⟨h₁.mono fun x h => trans h rb₁b, h₂.mono fun x h => trans h rb₂b⟩⟩
 
-theorem is_bounded.mono (h : f ≤ g) : IsBounded r g → IsBounded r f
+theorem IsBounded.mono (h : f ≤ g) : IsBounded r g → IsBounded r f
   | ⟨b, hb⟩ => ⟨b, h hb⟩
 
-theorem is_bounded_under.mono {f g : Filter β} {u : β → α} (h : f ≤ g) : g.IsBoundedUnder r u → f.IsBoundedUnder r u :=
+theorem IsBoundedUnder.mono {f g : Filter β} {u : β → α} (h : f ≤ g) : g.IsBoundedUnder r u → f.IsBoundedUnder r u :=
   fun hg => hg.mono (map_mono h)
 
-theorem is_bounded.is_bounded_under {q : β → β → Prop} {u : α → β} (hf : ∀ a₀ a₁, r a₀ a₁ → q (u a₀) (u a₁)) :
+theorem IsBounded.is_bounded_under {q : β → β → Prop} {u : α → β} (hf : ∀ a₀ a₁, r a₀ a₁ → q (u a₀) (u a₁)) :
     f.IsBounded r → f.IsBoundedUnder q u
   | ⟨b, h⟩ => ⟨u b, show ∀ᶠ x in f, q (u x) (u b) from h.mono fun x => hf x b⟩
 
@@ -100,23 +105,23 @@ theorem not_is_bounded_under_of_tendsto_at_bot [Preorderₓ β] [NoMinOrder β] 
     (hf : Tendsto f l atBot) : ¬IsBoundedUnder (· ≥ ·) l f :=
   @not_is_bounded_under_of_tendsto_at_top α (OrderDual β) _ _ _ _ _ hf
 
-theorem is_bounded_under.bdd_above_range_of_cofinite [SemilatticeSup β] {f : α → β}
+theorem IsBoundedUnder.bdd_above_range_of_cofinite [SemilatticeSup β] {f : α → β}
     (hf : IsBoundedUnder (· ≤ ·) cofinite f) : BddAbove (Range f) := by
   rcases hf with ⟨b, hb⟩
   have : Nonempty β := ⟨b⟩
   rw [← image_univ, ← union_compl_self { x | f x ≤ b }, image_union, bdd_above_union]
   exact ⟨⟨b, ball_image_iff.2 fun x => id⟩, (hb.image f).BddAbove⟩
 
-theorem is_bounded_under.bdd_below_range_of_cofinite [SemilatticeInf β] {f : α → β}
+theorem IsBoundedUnder.bdd_below_range_of_cofinite [SemilatticeInf β] {f : α → β}
     (hf : IsBoundedUnder (· ≥ ·) cofinite f) : BddBelow (Range f) :=
   @IsBoundedUnder.bdd_above_range_of_cofinite α (OrderDual β) _ _ hf
 
-theorem is_bounded_under.bdd_above_range [SemilatticeSup β] {f : ℕ → β} (hf : IsBoundedUnder (· ≤ ·) atTop f) :
+theorem IsBoundedUnder.bdd_above_range [SemilatticeSup β] {f : ℕ → β} (hf : IsBoundedUnder (· ≤ ·) atTop f) :
     BddAbove (Range f) := by
   rw [← Nat.cofinite_eq_at_top] at hf
   exact hf.bdd_above_range_of_cofinite
 
-theorem is_bounded_under.bdd_below_range [SemilatticeInf β] {f : ℕ → β} (hf : IsBoundedUnder (· ≥ ·) atTop f) :
+theorem IsBoundedUnder.bdd_below_range [SemilatticeInf β] {f : ℕ → β} (hf : IsBoundedUnder (· ≥ ·) atTop f) :
     BddBelow (Range f) :=
   @IsBoundedUnder.bdd_above_range (OrderDual β) _ _ hf
 
@@ -130,36 +135,36 @@ the edge case of the trivial filter containing the empty set: the other natural 
   `¬ ∀ a, ∀ᶠ n in f, a ≤ n`
 would not work as well in this case.
 -/
-def is_cobounded (r : α → α → Prop) (f : Filter α) :=
+def IsCobounded (r : α → α → Prop) (f : Filter α) :=
   ∃ b, ∀ a, (∀ᶠ x in f, r x a) → r b a
 
 /-- `is_cobounded_under (≺) f u` states that the image of the filter `f` under the map `u` does not
 tend to infinity w.r.t. `≺`. This is also called frequently bounded. Will be usually instantiated
 with `≤` or `≥`. -/
-def is_cobounded_under (r : α → α → Prop) (f : Filter β) (u : β → α) :=
+def IsCoboundedUnder (r : α → α → Prop) (f : Filter β) (u : β → α) :=
   (f.map u).IsCobounded r
 
 /-- To check that a filter is frequently bounded, it suffices to have a witness
 which bounds `f` at some point for every admissible set.
 
 This is only an implication, as the other direction is wrong for the trivial filter.-/
-theorem is_cobounded.mk [IsTrans α r] (a : α) (h : ∀, ∀ s ∈ f, ∀, ∃ x ∈ s, r a x) : f.IsCobounded r :=
+theorem IsCobounded.mk [IsTrans α r] (a : α) (h : ∀, ∀ s ∈ f, ∀, ∃ x ∈ s, r a x) : f.IsCobounded r :=
   ⟨a, fun y s =>
     let ⟨x, h₁, h₂⟩ := h _ s
     trans h₂ h₁⟩
 
 /-- A filter which is eventually bounded is in particular frequently bounded (in the opposite
 direction). At least if the filter is not trivial. -/
-theorem is_bounded.is_cobounded_flip [IsTrans α r] [NeBot f] : f.IsBounded r → f.IsCobounded (flip r)
+theorem IsBounded.is_cobounded_flip [IsTrans α r] [NeBot f] : f.IsBounded r → f.IsCobounded (flip r)
   | ⟨a, ha⟩ =>
     ⟨a, fun b hb =>
       let ⟨x, rxa, rbx⟩ := (ha.And hb).exists
       show r b a from trans rbx rxa⟩
 
-theorem is_bounded.is_cobounded_ge [Preorderₓ α] [NeBot f] (h : f.IsBounded (· ≤ ·)) : f.IsCobounded (· ≥ ·) :=
+theorem IsBounded.is_cobounded_ge [Preorderₓ α] [NeBot f] (h : f.IsBounded (· ≤ ·)) : f.IsCobounded (· ≥ ·) :=
   h.is_cobounded_flip
 
-theorem is_bounded.is_cobounded_le [Preorderₓ α] [NeBot f] (h : f.IsBounded (· ≥ ·)) : f.IsCobounded (· ≤ ·) :=
+theorem IsBounded.is_cobounded_le [Preorderₓ α] [NeBot f] (h : f.IsBounded (· ≥ ·)) : f.IsCobounded (· ≤ ·) :=
   h.is_cobounded_flip
 
 theorem is_cobounded_bot : IsCobounded r ⊥ ↔ ∃ b, ∀ x, r b x := by
@@ -171,7 +176,7 @@ theorem is_cobounded_top : IsCobounded r ⊤ ↔ Nonempty α := by
 theorem is_cobounded_principal (s : Set α) : (𝓟 s).IsCobounded r ↔ ∃ b, ∀ a, (∀, ∀ x ∈ s, ∀, r x a) → r b a := by
   simp [is_cobounded, subset_def]
 
-theorem is_cobounded.mono (h : f ≤ g) : f.IsCobounded r → g.IsCobounded r
+theorem IsCobounded.mono (h : f ≤ g) : f.IsCobounded r → g.IsCobounded r
   | ⟨b, hb⟩ => ⟨b, fun a ha => hb a (h ha)⟩
 
 end Relation
@@ -217,22 +222,22 @@ variable [ConditionallyCompleteLattice α]
 
 /-- The `Limsup` of a filter `f` is the infimum of the `a` such that, eventually for `f`,
 holds `x ≤ a`. -/
-def Limsup (f : Filter α) : α :=
+def limsup (f : Filter α) : α :=
   inf { a | ∀ᶠ n in f, n ≤ a }
 
 /-- The `Liminf` of a filter `f` is the supremum of the `a` such that, eventually for `f`,
 holds `x ≥ a`. -/
-def Liminf (f : Filter α) : α :=
+def liminf (f : Filter α) : α :=
   sup { a | ∀ᶠ n in f, a ≤ n }
 
 /-- The `limsup` of a function `u` along a filter `f` is the infimum of the `a` such that,
 eventually for `f`, holds `u x ≤ a`. -/
-def limsup (f : Filter β) (u : β → α) : α :=
+def limsupₓ (f : Filter β) (u : β → α) : α :=
   (f.map u).limsup
 
 /-- The `liminf` of a function `u` along a filter `f` is the supremum of the `a` such that,
 eventually for `f`, holds `u x ≥ a`. -/
-def liminf (f : Filter β) (u : β → α) : α :=
+def liminfₓ (f : Filter β) (u : β → α) : α :=
   (f.map u).liminf
 
 section
@@ -446,14 +451,14 @@ theorem limsup_const_bot {f : Filter β} : (limsupₓ f fun x : β => (⊥ : α)
 theorem liminf_const_top {f : Filter β} : (liminfₓ f fun x : β => (⊤ : α)) = (⊤ : α) :=
   @limsup_const_bot (OrderDual α) β _ _
 
-theorem has_basis.Limsup_eq_infi_Sup {ι} {p : ι → Prop} {s} {f : Filter α} (h : f.HasBasis p s) :
+theorem HasBasis.Limsup_eq_infi_Sup {ι} {p : ι → Prop} {s} {f : Filter α} (h : f.HasBasis p s) :
     f.limsup = ⨅ (i) (hi : p i), sup (s i) :=
   le_antisymmₓ (le_binfi fun i hi => Inf_le <| h.eventually_iff.2 ⟨i, hi, fun x => le_Sup⟩)
     (le_Inf fun a ha =>
       let ⟨i, hi, ha⟩ := h.eventually_iff.1 ha
       infi_le_of_le _ <| infi_le_of_le hi <| Sup_le ha)
 
-theorem has_basis.Liminf_eq_supr_Inf {p : ι → Prop} {s : ι → Set α} {f : Filter α} (h : f.HasBasis p s) :
+theorem HasBasis.Liminf_eq_supr_Inf {p : ι → Prop} {s : ι → Set α} {f : Filter α} (h : f.HasBasis p s) :
     f.liminf = ⨆ (i) (hi : p i), inf (s i) :=
   @HasBasis.Limsup_eq_infi_Sup (OrderDual α) _ _ _ _ _ h
 
@@ -476,7 +481,7 @@ theorem limsup_eq_infi_supr_of_nat {u : ℕ → α} : limsupₓ atTop u = ⨅ n 
 theorem limsup_eq_infi_supr_of_nat' {u : ℕ → α} : limsupₓ atTop u = ⨅ n : ℕ, ⨆ i : ℕ, u (i + n) := by
   simp only [limsup_eq_infi_supr_of_nat, supr_ge_eq_supr_nat_add]
 
-theorem has_basis.limsup_eq_infi_supr {p : ι → Prop} {s : ι → Set β} {f : Filter β} {u : β → α} (h : f.HasBasis p s) :
+theorem HasBasis.limsup_eq_infi_supr {p : ι → Prop} {s : ι → Set β} {f : Filter β} {u : β → α} (h : f.HasBasis p s) :
     f.limsup u = ⨅ (i) (hi : p i), ⨆ a ∈ s i, u a :=
   (h.map u).Limsup_eq_infi_Sup.trans <| by
     simp only [Sup_image, id]
@@ -492,7 +497,7 @@ theorem liminf_eq_supr_infi_of_nat {u : ℕ → α} : liminfₓ atTop u = ⨆ n 
 theorem liminf_eq_supr_infi_of_nat' {u : ℕ → α} : liminfₓ atTop u = ⨆ n : ℕ, ⨅ i : ℕ, u (i + n) :=
   @limsup_eq_infi_supr_of_nat' (OrderDual α) _ _
 
-theorem has_basis.liminf_eq_supr_infi {p : ι → Prop} {s : ι → Set β} {f : Filter β} {u : β → α} (h : f.HasBasis p s) :
+theorem HasBasis.liminf_eq_supr_infi {p : ι → Prop} {s : ι → Set β} {f : Filter β} {u : β → α} (h : f.HasBasis p s) :
     f.liminf u = ⨆ (i) (hi : p i), ⨅ a ∈ s i, u a :=
   @HasBasis.limsup_eq_infi_supr (OrderDual α) _ _ _ _ _ _ _ h
 

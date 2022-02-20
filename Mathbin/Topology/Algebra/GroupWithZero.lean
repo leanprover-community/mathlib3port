@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Yury G. Kudryashov. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yury G. Kudryashov
+-/
 import Mathbin.Topology.Algebra.Monoid
 import Mathbin.Algebra.Group.Pi
 import Mathbin.Topology.Homeomorph
@@ -189,12 +194,12 @@ variable [TopologicalSpace α] [GroupWithZeroₓ α] [HasContinuousMul α]
 
 /-- Left multiplication by a nonzero element in a `group_with_zero` with continuous multiplication
 is a homeomorphism of the underlying type. -/
-protected def mul_left₀ (c : α) (hc : c ≠ 0) : α ≃ₜ α :=
+protected def mulLeft₀ (c : α) (hc : c ≠ 0) : α ≃ₜ α :=
   { Equivₓ.mulLeft₀ c hc with continuous_to_fun := continuous_mul_left _, continuous_inv_fun := continuous_mul_left _ }
 
 /-- Right multiplication by a nonzero element in a `group_with_zero` with continuous multiplication
 is a homeomorphism of the underlying type. -/
-protected def mul_right₀ (c : α) (hc : c ≠ 0) : α ≃ₜ α :=
+protected def mulRight₀ (c : α) (hc : c ≠ 0) : α ≃ₜ α :=
   { Equivₓ.mulRight₀ c hc with continuous_to_fun := continuous_mul_right _,
     continuous_inv_fun := continuous_mul_right _ }
 

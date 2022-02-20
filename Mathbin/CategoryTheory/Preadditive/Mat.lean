@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison
+-/
 import Mathbin.Algebra.BigOperators.Basic
 import Mathbin.Algebra.BigOperators.Pi
 import Mathbin.CategoryTheory.Limits.Shapes.Biproducts
@@ -67,7 +72,7 @@ variable {C}
 
 /-- A morphism in `Mat_ C` is a dependently typed matrix of morphisms. -/
 @[nolint has_inhabited_instance]
-def hom (M N : Mat_ C) : Type v₁ :=
+def Hom (M N : Mat_ C) : Type v₁ :=
   Dmatrix M.ι N.ι fun i j => M.x i ⟶ N.x j
 
 namespace Hom
@@ -157,7 +162,7 @@ instance has_finite_biproducts : HasFiniteBiproducts (Mat_ C) where
               refine' if h : x.1 = j then _ else 0
               refine' if h' : @Eq.ndrec J x.1 (fun j => (f j).ι) x.2 _ h = y then _ else 0
               apply eq_to_hom
-              substs h h',
+              substs h h',-- Notice we were careful not to use `subst` until we had a goal in `Prop`.
             ι := fun j x y => by
               dsimp  at y⊢
               refine' if h : y.1 = j then _ else 0
@@ -188,6 +193,7 @@ instance has_finite_biproducts : HasFiniteBiproducts (Mat_ C) where
             funext i₁
             dsimp  at i₁⊢
             rcases i₁ with ⟨j₁, i₁⟩
+            -- I'm not sure why we can't just `simp` by `finset.sum_apply`: something doesn't quite match
             convert Finset.sum_apply _ _ _ using 1
             · rfl
               
@@ -218,7 +224,7 @@ attribute [local simp] Mat_.id_apply
 /-- A functor induces a functor of matrix categories.
 -/
 @[simps]
-def map_Mat_ (F : C ⥤ D) [Functor.Additive F] : Mat_ C ⥤ Mat_ D where
+def mapMat_ (F : C ⥤ D) [Functor.Additive F] : Mat_ C ⥤ Mat_ D where
   obj := fun M => ⟨M.ι, fun i => F.obj (M.x i)⟩
   map := fun M N f i j => F.map (f i j)
   map_comp' := fun M N K f g => by
@@ -228,7 +234,7 @@ def map_Mat_ (F : C ⥤ D) [Functor.Additive F] : Mat_ C ⥤ Mat_ D where
 /-- The identity functor induces the identity functor on matrix categories.
 -/
 @[simps]
-def map_Mat_id : (𝟭 C).mapMat_ ≅ 𝟭 (Mat_ C) :=
+def mapMatId : (𝟭 C).mapMat_ ≅ 𝟭 (Mat_ C) :=
   NatIso.ofComponents
     (fun M =>
       eqToIso
@@ -244,7 +250,7 @@ def map_Mat_id : (𝟭 C).mapMat_ ≅ 𝟭 (Mat_ C) :=
 /-- Composite functors induce composite functors on matrix categories.
 -/
 @[simps]
-def map_Mat_comp {E : Type _} [Category.{v₁} E] [Preadditive E] (F : C ⥤ D) [Functor.Additive F] (G : D ⥤ E)
+def mapMatComp {E : Type _} [Category.{v₁} E] [Preadditive E] (F : C ⥤ D) [Functor.Additive F] (G : D ⥤ E)
     [Functor.Additive G] : (F ⋙ G).mapMat_ ≅ F.mapMat_ ⋙ G.mapMat_ :=
   NatIso.ofComponents
     (fun M =>
@@ -300,7 +306,7 @@ variable {C}
 /-- Every object in `Mat_ C` is isomorphic to the biproduct of its summands.
 -/
 @[simps]
-def iso_biproduct_embedding (M : Mat_ C) : M ≅ ⨁ fun i => (embedding C).obj (M.x i) where
+def isoBiproductEmbedding (M : Mat_ C) : M ≅ ⨁ fun i => (embedding C).obj (M.x i) where
   hom := biproduct.lift fun i j k => if h : j = i then eqToHom (congr_argₓ M.x h) else 0
   inv := biproduct.desc fun i j k => if h : i = k then eqToHom (congr_argₓ M.x h) else 0
   hom_inv_id' := by
@@ -337,7 +343,7 @@ variable {D : Type u₁} [Category.{v₁} D] [Preadditive D]
 
 /-- Every `M` is a direct sum of objects from `C`, and `F` preserves biproducts. -/
 @[simps]
-def additive_obj_iso_biproduct (F : Mat_ C ⥤ D) [Functor.Additive F] (M : Mat_ C) :
+def additiveObjIsoBiproduct (F : Mat_ C ⥤ D) [Functor.Additive F] (M : Mat_ C) :
     F.obj M ≅ ⨁ fun i => F.obj ((embedding C).obj (M.x i)) :=
   F.mapIso (isoBiproductEmbedding M) ≪≫ F.mapBiproduct _
 
@@ -348,6 +354,7 @@ theorem additive_obj_iso_biproduct_naturality (F : Mat_ C ⥤ D) [Functor.Additi
     F.map f ≫ (additiveObjIsoBiproduct F N).hom =
       (additiveObjIsoBiproduct F M).hom ≫ biproduct.matrix fun i j => F.map ((embedding C).map (f i j)) :=
   by
+  -- This is disappointingly tedious.
   ext
   dsimp [embedding]
   simp only [← F.map_comp, biproduct.lift_π, biproduct.matrix_π, category.assoc]
@@ -358,6 +365,7 @@ theorem additive_obj_iso_biproduct_naturality (F : Mat_ C ⥤ D) [Functor.Additi
   congr
   symm
   convert Finset.sum_fn _ _
+  -- It's hard to use this as a simp lemma!
   simp only [Finset.sum_fn, Finset.sum_dite_eq]
   ext
   simp
@@ -392,7 +400,7 @@ instance lift_additive (F : C ⥤ D) [Functor.Additive F] : Functor.Additive (li
 
 /-- An additive functor `C ⥤ D` factors through its lift to `Mat_ C ⥤ D`. -/
 @[simps]
-def embedding_lift_iso (F : C ⥤ D) [Functor.Additive F] : embedding C ⋙ lift F ≅ F :=
+def embeddingLiftIso (F : C ⥤ D) [Functor.Additive F] : embedding C ⋙ lift F ≅ F :=
   NatIso.ofComponents
     (fun X => { hom := biproduct.desc fun P => 𝟙 (F.obj X), inv := biproduct.lift fun P => 𝟙 (F.obj X) }) fun X Y f =>
     by
@@ -400,11 +408,12 @@ def embedding_lift_iso (F : C ⥤ D) [Functor.Additive F] : embedding C ⋙ lift
     ext
     simp only [category.id_comp, biproduct.ι_desc_assoc]
     erw [biproduct.ι_matrix_assoc]
+    -- Not sure why this doesn't fire via `simp`.
     simp
 
 /-- `Mat_.lift F` is the unique additive functor `L : Mat_ C ⥤ D` such that `F ≅ embedding C ⋙ L`.
 -/
-def lift_unique (F : C ⥤ D) [Functor.Additive F] (L : Mat_ C ⥤ D) [Functor.Additive L] (α : embedding C ⋙ L ≅ F) :
+def liftUnique (F : C ⥤ D) [Functor.Additive F] (L : Mat_ C ⥤ D) [Functor.Additive L] (α : embedding C ⋙ L ≅ F) :
     L ≅ lift F :=
   NatIso.ofComponents
     (fun M =>
@@ -428,13 +437,14 @@ def lift_unique (F : C ⥤ D) [Functor.Additive F] (L : Mat_ C ⥤ D) [Functor.A
 
 /-- Two additive functors `Mat_ C ⥤ D` are naturally isomorphic if
 their precompositions with `embedding C` are naturally isomorphic as functors `C ⥤ D`. -/
+-- TODO is there some uniqueness statement for the natural isomorphism in `lift_unique`?
 @[ext]
 def ext {F G : Mat_ C ⥤ D} [Functor.Additive F] [Functor.Additive G] (α : embedding C ⋙ F ≅ embedding C ⋙ G) : F ≅ G :=
   liftUnique (embedding C ⋙ G) _ α ≪≫ (liftUnique _ _ (Iso.refl _)).symm
 
 /-- Natural isomorphism needed in the construction of `equivalence_self_of_has_finite_biproducts`.
 -/
-def equivalence_self_of_has_finite_biproducts_aux [HasFiniteBiproducts C] :
+def equivalenceSelfOfHasFiniteBiproductsAux [HasFiniteBiproducts C] :
     embedding C ⋙ 𝟭 (Mat_ C) ≅ embedding C ⋙ lift (𝟭 C) ⋙ embedding C :=
   Functor.rightUnitor _ ≪≫
     (Functor.leftUnitor _).symm ≪≫ isoWhiskerRight (embeddingLiftIso _).symm _ ≪≫ Functor.associator _ _ _
@@ -444,9 +454,13 @@ def equivalence_self_of_has_finite_biproducts_aux [HasFiniteBiproducts C] :
 Note that we only prove this for a large category;
 otherwise there are universe issues that I haven't attempted to sort out.
 -/
-def equivalence_self_of_has_finite_biproducts (C : Type (u₁ + 1)) [LargeCategory C] [Preadditive C]
-    [HasFiniteBiproducts C] : Mat_ C ≌ C :=
-  Equivalence.mk (lift (𝟭 C)) (embedding C) (ext equivalenceSelfOfHasFiniteBiproductsAux) (embeddingLiftIso (𝟭 C))
+def equivalenceSelfOfHasFiniteBiproducts (C : Type (u₁ + 1)) [LargeCategory C] [Preadditive C] [HasFiniteBiproducts C] :
+    Mat_ C ≌ C :=
+  Equivalence.mk
+    (-- I suspect this is already an adjoint equivalence, but it seems painful to verify.
+      lift
+      (𝟭 C))
+    (embedding C) (ext equivalenceSelfOfHasFiniteBiproductsAux) (embeddingLiftIso (𝟭 C))
 
 @[simp]
 theorem equivalence_self_of_has_finite_biproducts_functor {C : Type (u₁ + 1)} [LargeCategory C] [Preadditive C]

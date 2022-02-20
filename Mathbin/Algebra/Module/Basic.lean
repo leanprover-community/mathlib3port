@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2015 Nathaniel Thomas. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Nathaniel Thomas, Jeremy Avigad, Johannes Hölzl, Mario Carneiro
+-/
 import Mathbin.Algebra.BigOperators.Basic
 import Mathbin.Algebra.SmulWithZero
 import Mathbin.GroupTheory.GroupAction.Group
@@ -54,6 +59,7 @@ section AddCommMonoidₓ
 variable [Semiringₓ R] [AddCommMonoidₓ M] [Module R M] (r s : R) (x y : M)
 
 /-- A module over a semiring automatically inherits a `mul_action_with_zero` structure. -/
+-- see Note [lower instance priority]
 instance (priority := 100) Module.toMulActionWithZero : MulActionWithZero R M :=
   { (inferInstance : MulAction R M) with smul_zero := smul_zero, zero_smul := Module.zero_smul }
 
@@ -76,12 +82,16 @@ theorem two_smul : (2 : R) • x = x + x := by
 theorem two_smul' : (2 : R) • x = bit0 x :=
   two_smul R x
 
+@[simp]
+theorem inv_of_two_smul_add_inv_of_two_smul [Invertible (2 : R)] (x : M) : (⅟ 2 : R) • x + (⅟ 2 : R) • x = x := by
+  rw [← add_smul, inv_of_two_add_inv_of_two, one_smul]
+
 /-- Pullback a `module` structure along an injective additive monoid homomorphism.
 See note [reducible non-instances]. -/
 @[reducible]
 protected def Function.Injective.module [AddCommMonoidₓ M₂] [HasScalar R M₂] (f : M₂ →+ M) (hf : Injective f)
     (smul : ∀ c : R x, f (c • x) = c • f x) : Module R M₂ :=
-  { hf.DistribMulAction f smul with smul := · • ·,
+  { hf.DistribMulAction f smul with smul := (· • ·),
     add_smul := fun c₁ c₂ x =>
       hf <| by
         simp only [smul, f.map_add, add_smul],
@@ -92,7 +102,7 @@ protected def Function.Injective.module [AddCommMonoidₓ M₂] [HasScalar R M�
 /-- Pushforward a `module` structure along a surjective additive monoid homomorphism. -/
 protected def Function.Surjective.module [AddCommMonoidₓ M₂] [HasScalar R M₂] (f : M →+ M₂) (hf : Surjective f)
     (smul : ∀ c : R x, f (c • x) = c • f x) : Module R M₂ :=
-  { hf.DistribMulAction f smul with smul := · • ·,
+  { hf.DistribMulAction f smul with smul := (· • ·),
     add_smul := fun c₁ c₂ x => by
       rcases hf x with ⟨x, rfl⟩
       simp only [add_smul, ← smul, ← f.map_add],
@@ -107,7 +117,7 @@ See also `function.surjective.mul_action_left` and `function.surjective.distrib_
 @[reducible]
 def Function.Surjective.moduleLeft {R S M : Type _} [Semiringₓ R] [AddCommMonoidₓ M] [Module R M] [Semiringₓ S]
     [HasScalar S M] (f : R →+* S) (hf : Function.Surjective f) (hsmul : ∀ c x : M, f c • x = c • x) : Module S M :=
-  { hf.distribMulActionLeft f.toMonoidHom hsmul with smul := · • ·,
+  { hf.distribMulActionLeft f.toMonoidHom hsmul with smul := (· • ·),
     zero_smul := fun x => by
       rw [← f.map_zero, hsmul, zero_smul],
     add_smul :=
@@ -217,6 +227,7 @@ def Module.ofCore (H : Module.Core R M) : Module R M := by
 end AddCommGroupₓ
 
 /-- A variant of `module.ext` that's convenient for term-mode. -/
+-- We'll later use this to show `module ℕ M` and `module ℤ M` are subsingletons.
 theorem Module.ext' {R : Type _} [Semiringₓ R] {M : Type _} [AddCommMonoidₓ M] (P Q : Module R M)
     (w :
       ∀ r : R m : M,
@@ -265,6 +276,7 @@ protected theorem Module.subsingleton (R M : Type _) [Semiringₓ R] [Subsinglet
   ⟨fun x y => by
     rw [← one_smul R x, ← one_smul R y, Subsingleton.elimₓ (1 : R) 0, zero_smul, zero_smul]⟩
 
+-- see Note [lower instance priority]
 instance (priority := 910) Semiringₓ.toModule [Semiringₓ R] : Module R R where
   smul_add := mul_addₓ
   add_smul := add_mulₓ
@@ -272,6 +284,7 @@ instance (priority := 910) Semiringₓ.toModule [Semiringₓ R] : Module R R whe
   smul_zero := mul_zero
 
 /-- Like `semiring.to_module`, but multiplies on the right. -/
+-- see Note [lower instance priority]
 instance (priority := 910) Semiringₓ.toOppositeModule [Semiringₓ R] : Module (Rᵐᵒᵖ) R :=
   { MonoidWithZeroₓ.toOppositeMulActionWithZero R with smul_add := fun r x y => add_mulₓ _ _ _,
     add_smul := fun r x y => mul_addₓ _ _ _ }
@@ -284,7 +297,7 @@ def RingHom.toModule [Semiringₓ R] [Semiringₓ S] (f : R →+* S) : Module R 
 
 This generalizes `function.End.apply_mul_action`. -/
 instance RingHom.applyDistribMulAction [Semiringₓ R] : DistribMulAction (R →+* R) R where
-  smul := · <| ·
+  smul := (· <| ·)
   smul_zero := RingHom.map_zero
   smul_add := RingHom.map_add
   one_smul := fun _ => rfl
@@ -345,6 +358,7 @@ instance AddCommMonoidₓ.nat_smul_comm_class : SmulCommClass ℕ R M where
       fun n ih => by
       simp only [Nat.succ_eq_add_one, add_smul, one_smul, ← ih, smul_add]
 
+-- `smul_comm_class.symm` is not registered as an instance, as it would cause a loop
 instance AddCommMonoidₓ.nat_smul_comm_class' : SmulCommClass R ℕ M :=
   SmulCommClass.symm _ _ _
 
@@ -467,6 +481,7 @@ instance AddCommGroupₓ.int_smul_comm_class {S : Type u} {M : Type v} [Semiring
     SmulCommClass ℤ S M where
   smul_comm := fun n x y => ((smulAddHom S M x).map_zsmul y n).symm
 
+-- `smul_comm_class.symm` is not registered as an instance, as it would cause a loop
 instance AddCommGroupₓ.int_smul_comm_class' {S : Type u} {M : Type v} [Semiringₓ S] [AddCommGroupₓ M] [Module S M] :
     SmulCommClass S ℤ M :=
   SmulCommClass.symm _ _ _
@@ -561,6 +576,7 @@ end Module
 
 section AddCommGroupₓ
 
+-- `R` can still be a semiring here
 variable [Semiringₓ R] [AddCommGroupₓ M] [Module R M]
 
 section SmulInjective
@@ -626,6 +642,7 @@ section DivisionRing
 
 variable [DivisionRing R] [AddCommGroupₓ M] [Module R M]
 
+-- see note [lower instance priority]
 instance (priority := 100) NoZeroSmulDivisors.of_division_ring : NoZeroSmulDivisors R M :=
   ⟨fun c x h => or_iff_not_imp_left.2 fun hc => (smul_eq_zero_iff_eq' hc).1 h⟩
 

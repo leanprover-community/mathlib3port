@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Riccardo Brasca. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Riccardo Brasca
+-/
 import Mathbin.Data.Polynomial.AlgebraMap
 import Mathbin.Data.Polynomial.Monic
 
@@ -227,7 +232,7 @@ section Ringₓ
 variable {R : Type u} [Ringₓ R] {S : Type v} [Ringₓ S] (f : R →+* S)
 
 /-- The subring of polynomials that lift. -/
-def lifts_ring (f : R →+* S) : Subring S[X] :=
+def liftsRing (f : R →+* S) : Subring S[X] :=
   RingHom.range (mapRingHom f)
 
 /-- If `R` and `S` are rings, `p` is in the subring of polynomials that lift if and only if it is in
@@ -242,7 +247,7 @@ section Algebra
 variable {R : Type u} [CommSemiringₓ R] {S : Type v} [Semiringₓ S] [Algebra R S]
 
 /-- The map `polynomial R → S[X]` as an algebra homomorphism. -/
-def map_alg (R : Type u) [CommSemiringₓ R] (S : Type v) [Semiringₓ S] [Algebra R S] : R[X] →ₐ[R] S[X] :=
+def mapAlg (R : Type u) [CommSemiringₓ R] (S : Type v) [Semiringₓ S] [Algebra R S] : R[X] →ₐ[R] S[X] :=
   @aeval _ S[X] _ _ _ (x : S[X])
 
 /-- `map_alg` is the morphism induced by `R → S`. -/

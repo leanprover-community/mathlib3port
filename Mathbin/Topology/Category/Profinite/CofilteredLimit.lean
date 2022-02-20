@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Adam Topaz. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Adam Topaz
+-/
 import Mathbin.Topology.Category.Profinite.Default
 import Mathbin.Topology.LocallyConstant.Basic
 import Mathbin.Topology.DiscreteQuotient
@@ -35,6 +40,8 @@ a clopen set in one of the terms in the limit.
 -/
 theorem exists_clopen_of_cofiltered {U : Set C.x} (hU : IsClopen U) :
     ∃ (j : J)(V : Set (F.obj j))(hV : IsClopen V), U = C.π.app j ⁻¹' V := by
+  -- First, we have the topological basis of the cofiltered limit obtained by pulling back
+  -- clopen sets from the factors in the limit. By continuity, all such sets are again clopen.
   have hB :=
     Top.is_topological_basis_cofiltered_limit (F ⋙ Profinite.toTop) (Profinite.to_Top.map_cone C)
       (is_limit_of_preserves _ hC) (fun j => { W | IsClopen W }) _ (fun i => is_clopen_univ)
@@ -47,11 +54,15 @@ theorem exists_clopen_of_cofiltered {U : Set C.x} (hU : IsClopen U) :
   · rintro i j f V (hV : IsClopen _)
     refine' ⟨hV.1.Preimage _, hV.2.Preimage _⟩ <;> continuity
     
+  -- Using this, since `U` is open, we can write `U` as a union of clopen sets all of which
+  -- are preimages of clopens from the factors in the limit.
   obtain ⟨S, hS, h⟩ := hB.open_eq_sUnion hU.1
   clear hB
   let j : S → J := fun s => (hS s.2).some
   let V : ∀ s : S, Set (F.obj (j s)) := fun s => (hS s.2).some_spec.some
   have hV : ∀ s : S, IsClopen (V s) ∧ s.1 = C.π.app (j s) ⁻¹' V s := fun s => (hS s.2).some_spec.some_spec
+  -- Since `U` is also closed, hence compact, it is covered by finitely many of the
+  -- clopens constructed in the previous step.
   have := hU.2.IsCompact.elim_finite_subcover (fun s : S => C.π.app (j s) ⁻¹' V s) _ _
   rotate_left
   · intro s
@@ -65,10 +76,16 @@ theorem exists_clopen_of_cofiltered {U : Set C.x} (hU : IsClopen U) :
     dsimp only
     rwa [← (hV ⟨T, hT⟩).2]
     
+  -- We thus obtain a finite set `G : finset J` and a clopen set of `F.obj j` for each
+  -- `j ∈ G` such that `U` is the union of the preimages of these clopen sets.
   obtain ⟨G, hG⟩ := this
+  -- Since `J` is cofiltered, we can find a single `j0` dominating all the `j ∈ G`.
+  -- Pulling back all of the sets from the previous step to `F.obj j0` and taking a union,
+  -- we obtain a clopen set in `F.obj j0` which works.
   obtain ⟨j0, hj0⟩ := is_cofiltered.inf_objs_exists (G.image j)
   let f : ∀ s : S hs : s ∈ G, j0 ⟶ j s := fun s hs => (hj0 (finset.mem_image.mpr ⟨s, hs, rfl⟩)).some
   let W : S → Set (F.obj j0) := fun s => if hs : s ∈ G then F.map (f s hs) ⁻¹' V s else Set.Univ
+  -- Conclude, using the `j0` and the clopen set of `F.obj j0` obtained above.
   refine' ⟨j0, ⋃ (s : S) (hs : s ∈ G), W s, _, _⟩
   · apply is_clopen_bUnion
     intro s hs

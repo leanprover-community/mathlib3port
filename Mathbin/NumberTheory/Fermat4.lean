@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Paul van Wamelen. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Paul van Wamelen
+-/
 import Mathbin.NumberTheory.PythagoreanTriples
 import Mathbin.RingTheory.Coprime.Lemmas
 
@@ -68,7 +73,7 @@ theorem ne_zero {a b c : ℤ} (h : Fermat42 a b c) : c ≠ 0 := by
 
 /-- We say a solution to `a ^ 4 + b ^ 4 = c ^ 2` is minimal if there is no other solution with
 a smaller `c` (in absolute value). -/
-def minimal (a b c : ℤ) : Prop :=
+def Minimal (a b c : ℤ) : Prop :=
   Fermat42 a b c ∧ ∀ a1 b1 c1 : ℤ, Fermat42 a1 b1 c1 → Int.natAbs c ≤ Int.natAbs c1
 
 /-- if we have a solution to `a ^ 4 + b ^ 4 = c ^ 2` then there must be a minimal one. -/
@@ -175,21 +180,33 @@ theorem Int.coprime_of_sq_sum' {r s : ℤ} (h : IsCoprime r s) : IsCoprime (r ^ 
 
 namespace Fermat42
 
+-- If we have a solution to a ^ 4 + b ^ 4 = c ^ 2, we can construct a smaller one. This
+-- implies there can't be a smallest solution.
 theorem not_minimal {a b c : ℤ} (h : Minimal a b c) (ha2 : a % 2 = 1) (hc : 0 < c) : False := by
+  -- Use the fact that a ^ 2, b ^ 2, c form a pythagorean triple to obtain m and n such that
+  -- a ^ 2 = m ^ 2 - n ^ 2, b ^ 2 = 2 * m * n and c = m ^ 2 + n ^ 2
+  -- first the formula:
   have ht : PythagoreanTriple (a ^ 2) (b ^ 2) c := by
     calc a ^ 2 * a ^ 2 + b ^ 2 * b ^ 2 = a ^ 4 + b ^ 4 := by
         ring _ = c ^ 2 := by
         rw [h.1.2.2]_ = c * c := by
         rw [sq]
+  -- coprime requirement:
   have h2 : Int.gcdₓ (a ^ 2) (b ^ 2) = 1 := int.gcd_eq_one_iff_coprime.mpr (coprime_of_minimal h).pow
+  -- in order to reduce the possibilities we get from the classification of pythagorean triples
+  -- it helps if we know the parity of a ^ 2 (and the sign of c):
   have ha22 : a ^ 2 % 2 = 1 := by
     rw [sq, Int.mul_mod, ha2]
     norm_num
   obtain ⟨m, n, ht1, ht2, ht3, ht4, ht5, ht6⟩ := PythagoreanTriple.coprime_classification' ht h2 ha22 hc
+  -- Now a, n, m form a pythagorean triple and so we can obtain r and s such that
+  -- a = r ^ 2 - s ^ 2, n = 2 * r * s and m = r ^ 2 + s ^ 2
+  -- formula:
   have htt : PythagoreanTriple a n m := by
     delta' PythagoreanTriple
     rw [← sq, ← sq, ← sq]
     exact add_eq_of_eq_sub ht1
+  -- a and n are coprime, because a ^ 2 = m ^ 2 - n ^ 2 and m and n are coprime.
   have h3 : Int.gcdₓ a n = 1 := by
     apply int.gcd_eq_one_iff_coprime.mpr
     apply @IsCoprime.of_mul_left_left _ _ _ a
@@ -197,6 +214,7 @@ theorem not_minimal {a b c : ℤ} (h : Minimal a b c) (ha2 : a % 2 = 1) (hc : 0 
       (by
         ring : m ^ 2 - n ^ 2 = m ^ 2 + -n * n)]
     exact (int.gcd_eq_one_iff_coprime.mp ht4).pow_left.add_mul_right_left (-n)
+  -- m is positive because b is non-zero and b ^ 2 = 2 * m * n and we already have 0 ≤ m.
   have hb20 : b ^ 2 ≠ 0 := mt pow_eq_zero h.1.2.1
   have h4 : 0 < m := by
     apply lt_of_le_of_neₓ ht6
@@ -205,9 +223,13 @@ theorem not_minimal {a b c : ℤ} (h : Minimal a b c) (ha2 : a % 2 = 1) (hc : 0 
     rw [ht2]
     simp
   obtain ⟨r, s, htt1, htt2, htt3, htt4, htt5, htt6⟩ := PythagoreanTriple.coprime_classification' htt h3 ha2 h4
+  -- Now use the fact that (b / 2) ^ 2 = m * r * s, and m, r and s are pairwise coprime to obtain
+  -- i, j and k such that m = i ^ 2, r = j ^ 2 and s = k ^ 2.
+  -- m and r * s are coprime because m = r ^ 2 + s ^ 2 and r and s are coprime.
   have hcp : Int.gcdₓ m (r * s) = 1 := by
     rw [htt3]
     exact int.gcd_eq_one_iff_coprime.mpr (Int.coprime_of_sq_sum' (int.gcd_eq_one_iff_coprime.mp htt4))
+  -- b is even because b ^ 2 = 2 * m * n.
   have hb2 : 2 ∣ b := by
     apply
       @Int.Prime.dvd_pow' _ 2 _
@@ -226,6 +248,7 @@ theorem not_minimal {a b c : ℤ} (h : Minimal a b c) (ha2 : a % 2 = 1) (hc : 0 
         rw [← hb2', ← sq, ht2, htt2]_ = 4 * (m * (r * s)) := by
         ring
   have hrsz : r * s ≠ 0 := by
+    -- because b ^ 2 is not zero and (b / 2) ^ 2 = m * (r * s)
     by_contra hrsz
     revert hb20
     rw [ht2, htt2, mul_assoc, @mul_assoc _ _ _ r s, hrsz]
@@ -242,6 +265,7 @@ theorem not_minimal {a b c : ℤ} (h : Minimal a b c) (ha2 : a % 2 = 1) (hc : 0 
     · exact hrsz
       
   obtain ⟨i, hi⟩ := Int.sq_of_gcd_eq_one hcp hs.symm
+  -- use m is positive to exclude m = - i ^ 2
   have hi' : ¬m = -(i ^ 2) := by
     by_contra h1
     have hit : -(i ^ 2) ≤ 0
@@ -253,7 +277,9 @@ theorem not_minimal {a b c : ℤ} (h : Minimal a b c) (ha2 : a % 2 = 1) (hc : 0 
     
   rw [mul_comm] at hs
   rw [Int.gcd_comm] at hcp
+  -- obtain d such that r * s = d ^ 2
   obtain ⟨d, hd⟩ := Int.sq_of_gcd_eq_one hcp hs.symm
+  -- (b / 2) ^ 2 and m are positive so r * s is positive
   have hd' : ¬r * s = -(d ^ 2) := by
     by_contra h1
     rw [h1] at hs
@@ -268,6 +294,7 @@ theorem not_minimal {a b c : ℤ} (h : Minimal a b c) (ha2 : a % 2 = 1) (hc : 0 
   replace hd : r * s = d ^ 2
   · apply Or.resolve_right hd hd'
     
+  -- r = +/- j ^ 2
   obtain ⟨j, hj⟩ := Int.sq_of_gcd_eq_one htt4 hd
   have hj0 : j ≠ 0 := by
     intro h0
@@ -279,6 +306,7 @@ theorem not_minimal {a b c : ℤ} (h : Minimal a b c) (ha2 : a % 2 = 1) (hc : 0 
     apply left_ne_zero_of_mul hrsz hj
   rw [mul_comm] at hd
   rw [Int.gcd_comm] at htt4
+  -- s = +/- k ^ 2
   obtain ⟨k, hk⟩ := Int.sq_of_gcd_eq_one htt4 hd
   have hk0 : k ≠ 0 := by
     intro h0
@@ -298,11 +326,13 @@ theorem not_minimal {a b c : ℤ} (h : Minimal a b c) (ha2 : a % 2 = 1) (hc : 0 
       · rw [hkp]
         ring
         
+  -- from m = r ^ 2 + s ^ 2 we now get a new solution to a ^ 4 + b ^ 4 = c ^ 2:
   have hh : i ^ 2 = j ^ 4 + k ^ 4 := by
     rw [← hi, htt3, hj2, hk2]
   have hn : n ≠ 0 := by
     rw [ht2] at hb20
     apply right_ne_zero_of_mul hb20
+  -- and it has a smaller c: from c = m ^ 2 + n ^ 2 we see that m is smaller than c, and i ^ 2 = m.
   have hic : Int.natAbs i < Int.natAbs c := by
     apply int.coe_nat_lt.mp
     rw [← Int.eq_nat_abs_of_zero_le (le_of_ltₓ hc)]

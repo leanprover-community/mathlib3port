@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Kenny Lau. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Kenny Lau
+-/
 import Mathbin.RingTheory.AlgebraTower
 import Mathbin.LinearAlgebra.Matrix.FiniteDimensional
 import Mathbin.LinearAlgebra.Matrix.ToLin
@@ -84,7 +89,7 @@ theorem finrank_mul_finrank [FiniteDimensional F K] : finrank F K * finrank K A 
     exact mt (@right F K A _ _ _ _ _ _ _) hA
     
 
-instance LinearMap (F : Type u) (V : Type v) (W : Type w) [Field F] [AddCommGroupₓ V] [Module F V] [AddCommGroupₓ W]
+instance linear_map (F : Type u) (V : Type v) (W : Type w) [Field F] [AddCommGroupₓ V] [Module F V] [AddCommGroupₓ W]
     [Module F W] [FiniteDimensional F V] [FiniteDimensional F W] : FiniteDimensional F (V →ₗ[F] W) :=
   let b := Basis.ofVectorSpace F V
   let c := Basis.ofVectorSpace F W
@@ -98,6 +103,9 @@ theorem finrank_linear_map (F : Type u) (V : Type v) (W : Type w) [Field F] [Add
   rw [LinearEquiv.finrank_eq (LinearMap.toMatrix b c), Matrix.finrank_matrix, finrank_eq_card_basis b,
     finrank_eq_card_basis c, mul_comm]
 
+-- TODO: generalize by removing [finite_dimensional F K]
+-- V = ⊕F,
+-- (V →ₗ[F] K) = ((⊕F) →ₗ[F] K) = (⊕ (F →ₗ[F] K)) = ⊕K
 instance linear_map' (F : Type u) (K : Type v) (V : Type w) [Field F] [Field K] [Algebra F K] [FiniteDimensional F K]
     [AddCommGroupₓ V] [Module F V] [FiniteDimensional F V] : FiniteDimensional K (V →ₗ[F] K) :=
   right F _ _

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Morrison
+-/
 import Mathbin.Topology.Algebra.Polynomial
 import Mathbin.Topology.ContinuousFunction.Algebra
 import Mathbin.Topology.ContinuousFunction.Compact
@@ -31,7 +36,7 @@ variable [Semiringₓ R] [TopologicalSpace R] [TopologicalRing R]
 /-- Every polynomial with coefficients in a topological semiring gives a (bundled) continuous function.
 -/
 @[simps]
-def to_continuous_map (p : R[X]) : C(R, R) :=
+def toContinuousMap (p : R[X]) : C(R, R) :=
   ⟨fun x : R => p.eval x, by
     continuity⟩
 
@@ -41,10 +46,11 @@ with domain restricted to some subset of the semiring of coefficients.
 (This is particularly useful when restricting to compact sets, e.g. `[0,1]`.)
 -/
 @[simps]
-def to_continuous_map_on (p : R[X]) (X : Set R) : C(X, R) :=
+def toContinuousMapOn (p : R[X]) (X : Set R) : C(X, R) :=
   ⟨fun x : X => p.toContinuousMap x, by
     continuity⟩
 
+-- TODO some lemmas about when `to_continuous_map_on` is injective?
 end
 
 section
@@ -72,7 +78,7 @@ variable [CommSemiringₓ R] [TopologicalSpace R] [TopologicalRing R]
 /-- The algebra map from `polynomial R` to continuous functions `C(R, R)`.
 -/
 @[simps]
-def to_continuous_map_alg_hom : R[X] →ₐ[R] C(R, R) where
+def toContinuousMapAlgHom : R[X] →ₐ[R] C(R, R) where
   toFun := fun p => p.toContinuousMap
   map_zero' := by
     ext
@@ -96,7 +102,7 @@ def to_continuous_map_alg_hom : R[X] →ₐ[R] C(R, R) where
 /-- The algebra map from `polynomial R` to continuous functions `C(X, R)`, for any subset `X` of `R`.
 -/
 @[simps]
-def to_continuous_map_on_alg_hom (X : Set R) : R[X] →ₐ[R] C(X, R) where
+def toContinuousMapOnAlgHom (X : Set R) : R[X] →ₐ[R] C(X, R) where
   toFun := fun p => p.toContinuousMapOn X
   map_zero' := by
     ext
@@ -136,7 +142,12 @@ theorem polynomial_functions_coe (X : Set R) :
   ext
   simp [polynomialFunctions]
 
+-- TODO:
+-- if `f : R → R` is an affine equivalence, then pulling back along `f`
+-- induces a normed algebra isomorphism between `polynomial_functions X` and
+-- `polynomial_functions (f ⁻¹' X)`, intertwining the pullback along `f` of `C(R, R)` to itself.
 theorem polynomial_functions_separates_points (X : Set R) : (polynomialFunctions X).SeparatesPoints := fun x y h => by
+  -- We use `polynomial.X`, then clean up.
   refine' ⟨_, ⟨⟨_, ⟨⟨Polynomial.x, ⟨Algebra.mem_top, rfl⟩⟩, rfl⟩⟩, _⟩⟩
   dsimp
   simp only [Polynomial.eval_X]
@@ -167,7 +178,8 @@ theorem polynomialFunctions.comap'_comp_right_alg_hom_Icc_homeo_I (a b : ℝ) (h
         Polynomial.coe_aeval_eq_eval, Polynomial.eval_comp, Polynomial.to_continuous_map_on_alg_hom_apply,
         Polynomial.to_continuous_map_on_to_fun, Polynomial.to_continuous_map_to_fun]
       convert w ⟨_, _⟩ <;> clear w
-      · change x = (iccHomeoI a b h).symm ⟨_ + _, _⟩
+      · -- why does `comm_ring.add` appear here!?
+        change x = (iccHomeoI a b h).symm ⟨_ + _, _⟩
         ext
         simp only [Icc_homeo_I_symm_apply_coe, Subtype.coe_mk]
         replace h : b - a ≠ 0 := sub_ne_zero_of_ne h.ne.symm

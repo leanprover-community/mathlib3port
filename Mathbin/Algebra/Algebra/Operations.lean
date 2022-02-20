@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Kenny Lau. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Kenny Lau
+-/
 import Mathbin.Algebra.Algebra.Bilinear
 import Mathbin.Algebra.Module.SubmodulePointwise
 
@@ -95,7 +100,7 @@ protected theorem mul_induction_on {C : A → Prop} {r : A} (hr : r ∈ M * N) (
 protected theorem mul_induction_on' {C : ∀ r, r ∈ M * N → Prop}
     (hm : ∀, ∀ m ∈ M, ∀, ∀ n ∈ N, ∀, C (m * n) (mul_mem_mul ‹_› ‹_›))
     (ha : ∀ x hx y hy, C x hx → C y hy → C (x + y) (add_mem _ ‹_› ‹_›)) {r : A} (hr : r ∈ M * N) : C r hr := by
-  refine' Exists.elim _ fun hr : r ∈ M * N hc : C r hr => hc
+  refine' Exists.elim _ fun hc : C r hr => hc
   exact
     Submodule.mul_induction_on hr (fun x hx y hy => ⟨_, hm _ hx _ hy⟩) fun x y ⟨_, hx⟩ ⟨_, hy⟩ => ⟨_, ha _ _ _ _ hx hy⟩
 
@@ -153,12 +158,12 @@ theorem bot_mul : ⊥ * M = ⊥ :=
       rw [Submodule.mem_bot] at hm⊢ <;> rw [hm, zero_mul]
 
 @[simp]
-protected theorem one_mulₓ : (1 : Submodule R A) * M = M := by
+protected theorem one_mul : (1 : Submodule R A) * M = M := by
   conv_lhs => rw [one_eq_span, ← span_eq M]
   erw [span_mul_span, one_mulₓ, span_eq]
 
 @[simp]
-protected theorem mul_oneₓ : M * 1 = M := by
+protected theorem mul_one : M * 1 = M := by
   conv_lhs => rw [one_eq_span, ← span_eq M]
   erw [span_mul_span, mul_oneₓ, span_eq]
 
@@ -296,7 +301,7 @@ protected theorem pow_induction_on {C : A → Prop} (hr : ∀ r : R, C (algebraM
 
 /-- `span` is a semiring homomorphism (recall multiplication is pointwise multiplication of subsets
 on either side). -/
-def span.ring_hom : SetSemiring A →+* Submodule R A where
+def span.ringHom : SetSemiring A →+* Submodule R A where
   toFun := Submodule.span R
   map_zero' := span_empty
   map_one' := one_eq_span.symm
@@ -342,7 +347,7 @@ theorem prod_span_singleton {ι : Type _} (s : Finset ι) (x : ι → A) :
 variable (R A)
 
 /-- R-submodules of the R-algebra A are a module over `set A`. -/
-instance module_set : Module (SetSemiring A) (Submodule R A) where
+instance moduleSet : Module (SetSemiring A) (Submodule R A) where
   smul := fun s P => span R s * P
   smul_add := fun _ _ _ => mul_addₓ _ _ _
   add_smul := fun s t P =>

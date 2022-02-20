@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Aaron Anderson. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Aaron Anderson
+-/
 import Mathbin.LinearAlgebra.Basic
 import Mathbin.Order.Atoms
 
@@ -33,6 +38,7 @@ abbrev IsSimpleModule :=
 abbrev IsSemisimpleModule :=
   IsComplemented (Submodule R M)
 
+-- Making this an instance causes the linter to complain of "dangerous instances"
 theorem IsSimpleModule.nontrivial [IsSimpleModule R M] : Nontrivial M :=
   ⟨⟨0, by
       have h : (⊥ : Submodule R M) ≠ ⊤ := bot_ne_top
@@ -52,7 +58,7 @@ namespace IsSimpleModule
 variable [hm : IsSimpleModule R m]
 
 @[simp]
-theorem IsAtom : IsAtom m :=
+theorem is_atom : IsAtom m :=
   is_simple_module_iff_is_atom.1 hm
 
 end IsSimpleModule

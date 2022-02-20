@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Fox Thomson. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Fox Thomson
+-/
 import Mathbin.Tactic.Rcases
 import Mathbin.Computability.Language
 
@@ -71,7 +76,7 @@ theorem comp_def (P Q : RegularExpression α) : comp P Q = P * Q :=
   rfl
 
 /-- `matches P` provides a language which contains all strings that `P` matches -/
-def matches : RegularExpression α → Language α
+def Matches : RegularExpression α → Language α
   | 0 => 0
   | 1 => 1
   | Charₓ a => {[a]}
@@ -100,7 +105,7 @@ theorem matches_star_def (P : RegularExpression α) : P.star.Matches = P.Matches
   rfl
 
 /-- `match_epsilon P` is true if and only if `P` matches the empty string -/
-def match_epsilon : RegularExpression α → Bool
+def matchEpsilon : RegularExpression α → Bool
   | 0 => false
   | 1 => true
   | Charₓ _ => false
@@ -229,7 +234,7 @@ theorem star_rmatch_iff (P : RegularExpression α) :
       intro m n
       convert add_lt_add_of_le_of_lt (add_le_add (zero_le m) (le_reflₓ n)) zero_lt_one
       simp
-    have IH := fun t h : List.length t < List.length x => star_rmatch_iff t
+    have IH := fun h : List.length t < List.length x => star_rmatch_iff t
     clear star_rmatch_iff
     constructor
     · cases' x with a x

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Kevin Lacker, Keeley Hoek, Scott Morrison. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Kevin Lacker, Keeley Hoek, Scott Morrison
+-/
 import Mathbin.Tactic.NthRewrite.Default
 
 /-!
@@ -12,7 +17,7 @@ namespace Tactic.RewriteSearch
 
 /-- `side` represents the side of an equation, either the left or the right.
 -/
-inductive side
+inductive Side
   | L
   | R
   deriving DecidableEq, Inhabited
@@ -23,7 +28,7 @@ unsafe def side.to_string : Side → format
   | side.R => "R"
 
 /-- Convert a side to the string "lhs" or "rhs", for use in tactic name generation. -/
-def side.to_xhs : Side → Stringₓ
+def Side.toXhs : Side → Stringₓ
   | side.L => "lhs"
   | side.R => "rhs"
 
@@ -51,6 +56,7 @@ unsafe instance how.has_to_format : has_to_format how :=
 unsafe structure rewrite where
   exp : expr
   proof : tactic expr
+  -- we defer constructing the proofs until they are needed
   how : how
 
 /-- `proof_unit` represents a sequence of steps that can be applied to one side of the

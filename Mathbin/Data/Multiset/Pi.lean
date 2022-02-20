@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2018 Johannes Hölzl. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johannes Hölzl
+-/
 import Mathbin.Data.Multiset.Nodup
 
 /-!
@@ -15,7 +20,7 @@ open Function
 
 /-- Given `δ : α → Type*`, `pi.empty δ` is the trivial dependent function out of the empty
 multiset. -/
-def pi.empty (δ : α → Type _) : ∀, ∀ a ∈ (0 : Multiset α), ∀, δ a :=
+def Pi.emptyₓ (δ : α → Type _) : ∀, ∀ a ∈ (0 : Multiset α), ∀, δ a :=
   fun.
 
 variable [DecidableEq α] {δ : α → Type _}
@@ -23,18 +28,18 @@ variable [DecidableEq α] {δ : α → Type _}
 /-- Given `δ : α → Type*`, a multiset `m` and a term `a`, as well as a term `b : δ a` and a
 function `f` such that `f a' : δ a'` for all `a'` in `m`, `pi.cons m a b f` is a function `g` such
 that `g a'' : δ a''` for all `a''` in `a ::ₘ m`. -/
-def pi.cons (m : Multiset α) (a : α) (b : δ a) (f : ∀, ∀ a ∈ m, ∀, δ a) : ∀, ∀ a' ∈ a ::ₘ m, ∀, δ a' := fun a' ha' =>
+def Pi.cons (m : Multiset α) (a : α) (b : δ a) (f : ∀, ∀ a ∈ m, ∀, δ a) : ∀, ∀ a' ∈ a ::ₘ m, ∀, δ a' := fun a' ha' =>
   if h : a' = a then Eq.ndrec b h.symm else f a' <| (mem_cons.1 ha').resolve_left h
 
-theorem pi.cons_same {m : Multiset α} {a : α} {b : δ a} {f : ∀, ∀ a ∈ m, ∀, δ a} (h : a ∈ a ::ₘ m) :
+theorem Pi.cons_same {m : Multiset α} {a : α} {b : δ a} {f : ∀, ∀ a ∈ m, ∀, δ a} (h : a ∈ a ::ₘ m) :
     Pi.cons m a b f a h = b :=
   dif_pos rfl
 
-theorem pi.cons_ne {m : Multiset α} {a a' : α} {b : δ a} {f : ∀, ∀ a ∈ m, ∀, δ a} (h' : a' ∈ a ::ₘ m) (h : a' ≠ a) :
+theorem Pi.cons_ne {m : Multiset α} {a a' : α} {b : δ a} {f : ∀, ∀ a ∈ m, ∀, δ a} (h' : a' ∈ a ::ₘ m) (h : a' ≠ a) :
     Pi.cons m a b f a' h' = f a' ((mem_cons.1 h').resolve_left h) :=
   dif_neg h
 
-theorem pi.cons_swap {a a' : α} {b : δ a} {b' : δ a'} {m : Multiset α} {f : ∀, ∀ a ∈ m, ∀, δ a} (h : a ≠ a') :
+theorem Pi.cons_swap {a a' : α} {b : δ a} {b' : δ a'} {m : Multiset α} {f : ∀, ∀ a ∈ m, ∀, δ a} (h : a ≠ a') :
     HEq (Pi.cons (a' ::ₘ m) a b (Pi.cons m a' b' f)) (Pi.cons (a ::ₘ m) a' b' (Pi.cons m a b f)) := by
   apply hfunext
   · rfl
@@ -54,7 +59,7 @@ theorem pi.cons_swap {a a' : α} {b : δ a} {b' : δ a'} {m : Multiset α} {f : 
 
 /-- `pi m t` constructs the Cartesian product over `t` indexed by `m`. -/
 def pi (m : Multiset α) (t : ∀ a, Multiset (δ a)) : Multiset (∀, ∀ a ∈ m, ∀, δ a) :=
-  m.recOn {Pi.emptyₓ δ} (fun a m p : Multiset (∀, ∀ a ∈ m, ∀, δ a) => (t a).bind fun b => p.map <| Pi.cons m a b)
+  m.recOn {Pi.emptyₓ δ} (fun p : Multiset (∀, ∀ a ∈ m, ∀, δ a) => (t a).bind fun b => p.map <| Pi.cons m a b)
     (by
       intro a a' m n
       by_cases' eq : a = a'

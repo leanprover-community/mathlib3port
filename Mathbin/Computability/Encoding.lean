@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Pim Spelier, Daan van Gent. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Pim Spelier, Daan van Gent
+-/
 import Mathbin.Data.Fintype.Basic
 import Mathbin.Data.Num.Lemmas
 import Mathbin.Tactic.DeriveFintype
@@ -21,14 +26,14 @@ It also contains several examples:
 namespace Computability
 
 /-- An encoding of a type in a certain alphabet, together with a decoding. -/
-structure encoding (α : Type) where
+structure Encoding (α : Type) where
   Γ : Type
   encode : α → List Γ
   decode : List Γ → Option α
   decode_encode : ∀ x, decode (encode x) = some x
 
 /-- An encoding plus a guarantee of finiteness of the alphabet. -/
-structure fin_encoding (α : Type) extends Encoding α where
+structure FinEncoding (α : Type) extends Encoding α where
   ΓFin : Fintype Γ
 
 /-- A standard Turing machine alphabet, consisting of blank,bit0,bit1,bra,ket,comma. -/
@@ -40,15 +45,15 @@ inductive Γ'
   | comma
   deriving DecidableEq, Fintype
 
-instance inhabited_Γ' : Inhabited Γ' :=
+instance inhabitedΓ' : Inhabited Γ' :=
   ⟨Γ'.blank⟩
 
 /-- The natural inclusion of bool in Γ'. -/
-def inclusion_bool_Γ' : Bool → Γ' :=
+def inclusionBoolΓ' : Bool → Γ' :=
   Γ'.bit
 
 /-- An arbitrary section of the natural inclusion of bool in Γ'. -/
-def section_Γ'_bool : Γ' → Bool
+def sectionΓ'Bool : Γ' → Bool
   | Γ'.bit b => b
   | _ => arbitrary Bool
 
@@ -59,31 +64,31 @@ theorem inclusion_bool_Γ'_injective : Function.Injective inclusionBoolΓ' :=
   Function.HasLeftInverse.injective (Exists.intro sectionΓ'Bool left_inverse_section_inclusion)
 
 /-- An encoding function of the positive binary numbers in bool. -/
-def encode_pos_num : PosNum → List Bool
+def encodePosNum : PosNum → List Bool
   | PosNum.one => [true]
   | PosNum.bit0 n => ff :: encode_pos_num n
   | PosNum.bit1 n => tt :: encode_pos_num n
 
 /-- An encoding function of the binary numbers in bool. -/
-def encode_num : Num → List Bool
+def encodeNum : Num → List Bool
   | Num.zero => []
   | Num.pos n => encodePosNum n
 
 /-- An encoding function of ℕ in bool. -/
-def encode_nat (n : ℕ) : List Bool :=
+def encodeNat (n : ℕ) : List Bool :=
   encodeNum n
 
 /-- A decoding function from `list bool` to the positive binary numbers. -/
-def decode_pos_num : List Bool → PosNum
+def decodePosNum : List Bool → PosNum
   | ff :: l => PosNum.bit0 (decode_pos_num l)
   | tt :: l => ite (l = []) PosNum.one (PosNum.bit1 (decode_pos_num l))
   | _ => PosNum.one
 
 /-- A decoding function from `list bool` to the binary numbers. -/
-def decode_num : List Bool → Num := fun l => ite (l = []) Num.zero <| decodePosNum l
+def decodeNum : List Bool → Num := fun l => ite (l = []) Num.zero <| decodePosNum l
 
 /-- A decoding function from `list bool` to ℕ. -/
-def decode_nat : List Bool → Nat := fun l => decodeNum l
+def decodeNat : List Bool → Nat := fun l => decodeNum l
 
 theorem encode_pos_num_nonempty (n : PosNum) : encodePosNum n ≠ [] :=
   PosNum.casesOn n (List.cons_ne_nil _ _) (fun m => List.cons_ne_nil _ _) fun m => List.cons_ne_nil _ _
@@ -114,18 +119,18 @@ theorem decode_encode_nat : ∀ n, decodeNat (encodeNat n) = n := by
   exact congr_argₓ coe (decode_encode_num ↑n)
 
 /-- A binary encoding of ℕ in bool. -/
-def encoding_nat_bool : Encoding ℕ where
+def encodingNatBool : Encoding ℕ where
   Γ := Bool
   encode := encodeNat
   decode := fun n => some (decodeNat n)
   decode_encode := fun n => congr_argₓ _ (decode_encode_nat n)
 
 /-- A binary fin_encoding of ℕ in bool. -/
-def fin_encoding_nat_bool : FinEncoding ℕ :=
+def finEncodingNatBool : FinEncoding ℕ :=
   ⟨encodingNatBool, Bool.fintype⟩
 
 /-- A binary encoding of ℕ in Γ'. -/
-def encoding_nat_Γ' : Encoding ℕ where
+def encodingNatΓ' : Encoding ℕ where
   Γ := Γ'
   encode := fun x => List.map inclusionBoolΓ' (encodeNat x)
   decode := fun x => some (decodeNat (List.map sectionΓ'Bool x))
@@ -134,23 +139,23 @@ def encoding_nat_Γ' : Encoding ℕ where
       rw [List.map_mapₓ, List.map_id' left_inverse_section_inclusion, decode_encode_nat]
 
 /-- A binary fin_encoding of ℕ in Γ'. -/
-def fin_encoding_nat_Γ' : FinEncoding ℕ :=
+def finEncodingNatΓ' : FinEncoding ℕ :=
   ⟨encodingNatΓ', Γ'.fintype⟩
 
 /-- A unary encoding function of ℕ in bool. -/
-def unary_encode_nat : Nat → List Bool
+def unaryEncodeNat : Nat → List Bool
   | 0 => []
   | n + 1 => tt :: unary_encode_nat n
 
 /-- A unary decoding function from `list bool` to ℕ. -/
-def unary_decode_nat : List Bool → Nat :=
+def unaryDecodeNat : List Bool → Nat :=
   List.length
 
 theorem unary_decode_encode_nat : ∀ n, unaryDecodeNat (unaryEncodeNat n) = n := fun n =>
-  Nat.rec rfl (fun m : ℕ hm => (congr_argₓ Nat.succ hm.symm).symm) n
+  Nat.rec rfl (fun hm => (congr_argₓ Nat.succ hm.symm).symm) n
 
 /-- A unary fin_encoding of ℕ. -/
-def unary_fin_encoding_nat : FinEncoding ℕ where
+def unaryFinEncodingNat : FinEncoding ℕ where
   Γ := Bool
   encode := unaryEncodeNat
   decode := fun n => some (unaryDecodeNat n)
@@ -158,28 +163,28 @@ def unary_fin_encoding_nat : FinEncoding ℕ where
   ΓFin := Bool.fintype
 
 /-- An encoding function of bool in bool. -/
-def encode_bool : Bool → List Bool :=
+def encodeBool : Bool → List Bool :=
   List.ret
 
 /-- A decoding function from `list bool` to bool. -/
-def decode_bool : List Bool → Bool
+def decodeBool : List Bool → Bool
   | b :: _ => b
   | _ => arbitrary Bool
 
 theorem decode_encode_bool : ∀ b, decodeBool (encodeBool b) = b := fun b => Bool.casesOn b rfl rfl
 
 /-- A fin_encoding of bool in bool. -/
-def fin_encoding_bool_bool : FinEncoding Bool where
+def finEncodingBoolBool : FinEncoding Bool where
   Γ := Bool
   encode := encodeBool
   decode := fun x => some (decodeBool x)
   decode_encode := fun x => congr_argₓ _ (decode_encode_bool x)
   ΓFin := Bool.fintype
 
-instance inhabited_fin_encoding : Inhabited (FinEncoding Bool) :=
+instance inhabitedFinEncoding : Inhabited (FinEncoding Bool) :=
   ⟨finEncodingBoolBool⟩
 
-instance inhabited_encoding : Inhabited (Encoding Bool) :=
+instance inhabitedEncoding : Inhabited (Encoding Bool) :=
   ⟨finEncodingBoolBool.toEncoding⟩
 
 end Computability

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Bhavik Mehta. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Bhavik Mehta
+-/
 import Mathbin.CategoryTheory.Limits.Presheaf
 import Mathbin.CategoryTheory.Limits.Preserves.FunctorCategory
 import Mathbin.CategoryTheory.Limits.Shapes.Types
@@ -26,8 +31,7 @@ section CartesianClosed
 
 instance (X : Type v₁) : IsLeftAdjoint (Types.binaryProductFunctor.obj X) where
   right := { obj := fun Y => X ⟶ Y, map := fun Y₁ Y₂ f g => g ≫ f }
-  adj :=
-    Adjunction.mkOfUnitCounit { Unit := { app := fun Z z : Z x => ⟨x, z⟩ }, counit := { app := fun Z xf => xf.2 xf.1 } }
+  adj := Adjunction.mkOfUnitCounit { Unit := { app := fun x => ⟨x, z⟩ }, counit := { app := fun Z xf => xf.2 xf.1 } }
 
 instance : HasFiniteProducts (Type v₁) :=
   has_finite_products_of_has_products _

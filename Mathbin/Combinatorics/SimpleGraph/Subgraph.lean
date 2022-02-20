@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Hunter Monroe. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Hunter Monroe, Kyle Miller, Alena Gusakov
+-/
 import Mathbin.Combinatorics.SimpleGraph.Basic
 
 /-!
@@ -50,7 +55,7 @@ relation that is symmetric and is supported by the vertex subset.  They also for
 Thinking of `V → V → Prop` as `set (V × V)`, a set of darts (i.e., half-edges), then
 `subgraph.adj_sub` is that the darts of a subgraph are a subset of the darts of `G`. -/
 @[ext]
-structure subgraph {V : Type u} (G : SimpleGraph V) where
+structure Subgraph {V : Type u} (G : SimpleGraph V) where
   Verts : Set V
   Adj : V → V → Prop
   adj_sub : ∀ {v w : V}, adj v w → G.Adj v w
@@ -84,7 +89,7 @@ theorem coe_adj_sub (G' : Subgraph G) (u v : G'.Verts) (h : G'.coe.Adj u v) : G.
   G'.adj_sub h
 
 /-- A subgraph is called a *spanning subgraph* if it contains all the vertices of `G`. --/
-def is_spanning (G' : Subgraph G) : Prop :=
+def IsSpanning (G' : Subgraph G) : Prop :=
   ∀ v : V, v ∈ G'.Verts
 
 theorem is_spanning_iff {G' : Subgraph G} : G'.IsSpanning ↔ G'.Verts = Set.Univ :=
@@ -94,18 +99,18 @@ theorem is_spanning_iff {G' : Subgraph G} : G'.IsSpanning ↔ G'.Verts = Set.Uni
 subgraph, then `G'.spanning_coe` yields an isomorphic graph.
 In general, this adds in all vertices from `V` as isolated vertices. -/
 @[simps]
-def spanning_coe (G' : Subgraph G) : SimpleGraph V where
+def spanningCoe (G' : Subgraph G) : SimpleGraph V where
   Adj := G'.Adj
   symm := G'.symm
   loopless := fun v hv => G.loopless v (G'.adj_sub hv)
 
 @[simp]
-theorem adj.of_spanning_coe {G' : Subgraph G} {u v : G'.Verts} (h : G'.spanningCoe.Adj u v) : G.Adj u v :=
+theorem Adj.of_spanning_coe {G' : Subgraph G} {u v : G'.Verts} (h : G'.spanningCoe.Adj u v) : G.Adj u v :=
   G'.adj_sub h
 
 /-- `spanning_coe` is equivalent to `coe` for a subgraph that `is_spanning`.  -/
 @[simps]
-def spanning_coe_equiv_coe_of_spanning (G' : Subgraph G) (h : G'.IsSpanning) : G'.spanningCoe ≃g G'.coe where
+def spanningCoeEquivCoeOfSpanning (G' : Subgraph G) (h : G'.IsSpanning) : G'.spanningCoe ≃g G'.coe where
   toFun := fun v => ⟨v, h v⟩
   invFun := fun v => v
   left_inv := fun v => rfl
@@ -114,11 +119,11 @@ def spanning_coe_equiv_coe_of_spanning (G' : Subgraph G) (h : G'.IsSpanning) : G
 
 /-- A subgraph is called an *induced subgraph* if vertices of `G'` are adjacent if
 they are adjacent in `G`. -/
-def is_induced (G' : Subgraph G) : Prop :=
+def IsInduced (G' : Subgraph G) : Prop :=
   ∀ {v w : V}, v ∈ G'.Verts → w ∈ G'.Verts → G.Adj v w → G'.Adj v w
 
 /-- `H.support` is the set of vertices that form edges in the subgraph `H`. -/
-def support (H : Subgraph G) : Set V :=
+def Support (H : Subgraph G) : Set V :=
   Rel.Dom H.Adj
 
 theorem mem_support (H : Subgraph G) {v : V} : v ∈ H.Support ↔ ∃ w, H.Adj v w :=
@@ -127,7 +132,7 @@ theorem mem_support (H : Subgraph G) {v : V} : v ∈ H.Support ↔ ∃ w, H.Adj 
 theorem support_subset_verts (H : Subgraph G) : H.Support ⊆ H.Verts := fun v ⟨w, h⟩ => H.edge_vert h
 
 /-- `G'.neighbor_set v` is the set of vertices adjacent to `v` in `G'`. -/
-def neighbor_set (G' : Subgraph G) (v : V) : Set V :=
+def NeighborSet (G' : Subgraph G) (v : V) : Set V :=
   SetOf (G'.Adj v)
 
 theorem neighbor_set_subset (G' : Subgraph G) (v : V) : G'.NeighborSet v ⊆ G.NeighborSet v := fun w h => G'.adj_sub h
@@ -140,7 +145,7 @@ theorem mem_neighbor_set (G' : Subgraph G) (v w : V) : w ∈ G'.NeighborSet v �
   Iff.rfl
 
 /-- A subgraph as a graph has equivalent neighbor sets. -/
-def coe_neighbor_set_equiv {G' : Subgraph G} (v : G'.Verts) : G'.coe.NeighborSet v ≃ G'.NeighborSet v where
+def coeNeighborSetEquiv {G' : Subgraph G} (v : G'.Verts) : G'.coe.NeighborSet v ≃ G'.NeighborSet v where
   toFun := fun w =>
     ⟨w, by
       obtain ⟨w', hw'⟩ := w
@@ -154,7 +159,7 @@ def coe_neighbor_set_equiv {G' : Subgraph G} (v : G'.Verts) : G'.coe.NeighborSet
     simp
 
 /-- The edge set of `G'` consists of a subset of edges of `G`. -/
-def edge_set (G' : Subgraph G) : Set (Sym2 V) :=
+def EdgeSet (G' : Subgraph G) : Set (Sym2 V) :=
   Sym2.FromRel G'.symm
 
 theorem edge_set_subset (G' : Subgraph G) : G'.EdgeSet ⊆ G.EdgeSet := fun e => Quotientₓ.ind (fun e h => G'.adj_sub h) e
@@ -175,7 +180,7 @@ theorem mem_verts_if_mem_edge {G' : Subgraph G} {e : Sym2 V} {v : V} (he : e ∈
     
 
 /-- The `incidence_set` is the set of edges incident to a given vertex. -/
-def incidence_set (G' : Subgraph G) (v : V) : Set (Sym2 V) :=
+def IncidenceSet (G' : Subgraph G) (v : V) : Set (Sym2 V) :=
   { e ∈ G'.EdgeSet | v ∈ e }
 
 theorem incidence_set_subset_incidence_set (G' : Subgraph G) (v : V) : G'.IncidenceSet v ⊆ G.IncidenceSet v :=
@@ -237,11 +242,11 @@ def bot : Subgraph G where
   edge_vert := fun v w h => False.ndrec _ h
   symm := fun u v h => h
 
-instance subgraph_inhabited : Inhabited (Subgraph G) :=
+instance subgraphInhabited : Inhabited (Subgraph G) :=
   ⟨bot⟩
 
 /-- The relation that one subgraph is a subgraph of another. -/
-def is_subgraph (x y : Subgraph G) : Prop :=
+def IsSubgraph (x y : Subgraph G) : Prop :=
   x.Verts ⊆ y.Verts ∧ ∀ ⦃v w : V⦄, x.Adj v w → y.Adj v w
 
 instance : Lattice (Subgraph G) where
@@ -270,6 +275,7 @@ instance : BoundedOrder (Subgraph G) where
   le_top := fun x => ⟨Set.subset_univ _, fun v w h => x.adj_sub h⟩
   bot_le := fun x => ⟨Set.empty_subset _, fun v w h => False.ndrec _ h⟩
 
+-- TODO simp lemmas for the other lattice operations on subgraphs
 @[simp]
 theorem top_verts : (⊤ : Subgraph G).Verts = Set.Univ :=
   rfl
@@ -347,7 +353,7 @@ theorem spanning_coe_le_of_le {H H' : Subgraph G} (h : H ≤ H') : H.spanningCoe
   h.2
 
 /-- The top of the `subgraph G` lattice is equivalent to the graph itself. -/
-def top_equiv : (⊤ : Subgraph G).coe ≃g G where
+def topEquiv : (⊤ : Subgraph G).coe ≃g G where
   toFun := fun v => ↑v
   invFun := fun v => ⟨v, trivialₓ⟩
   left_inv := fun ⟨v, _⟩ => rfl
@@ -356,7 +362,7 @@ def top_equiv : (⊤ : Subgraph G).coe ≃g G where
 
 /-- The bottom of the `subgraph G` lattice is equivalent to the empty graph on the empty
 vertex type. -/
-def bot_equiv : (⊥ : Subgraph G).coe ≃g (⊥ : SimpleGraph Empty) where
+def botEquiv : (⊥ : Subgraph G).coe ≃g (⊥ : SimpleGraph Empty) where
   toFun := fun v => v.property.elim
   invFun := fun v => v.elim
   left_inv := fun ⟨_, h⟩ => h.elim
@@ -379,11 +385,11 @@ theorem map.injective {x y : Subgraph G} (h : x ≤ y) : Function.Injective (map
   exact Subtype.ext h
 
 /-- There is an induced injective homomorphism of a subgraph of `G` into `G`. -/
-def map_top (x : Subgraph G) : x.coe →g G where
+def mapTop (x : Subgraph G) : x.coe →g G where
   toFun := fun v => v
   map_rel' := fun v w hvw => x.adj_sub hvw
 
-theorem map_top.injective {x : Subgraph G} : Function.Injective x.map_top := fun v w h => Subtype.ext h
+theorem mapTop.injective {x : Subgraph G} : Function.Injective x.map_top := fun v w h => Subtype.ext h
 
 @[simp]
 theorem map_top_to_fun {x : Subgraph G} (v : x.Verts) : x.map_top v = v :=
@@ -392,28 +398,28 @@ theorem map_top_to_fun {x : Subgraph G} (v : x.Verts) : x.map_top v = v :=
 /-- There is an induced injective homomorphism of a subgraph of `G` as
 a spanning subgraph into `G`. -/
 @[simps]
-def map_spanning_top (x : Subgraph G) : x.spanningCoe →g G where
+def mapSpanningTop (x : Subgraph G) : x.spanningCoe →g G where
   toFun := id
   map_rel' := fun v w hvw => x.adj_sub hvw
 
-theorem map_spanning_top.injective {x : Subgraph G} : Function.Injective x.mapSpanningTop := fun v w h => h
+theorem mapSpanningTop.injective {x : Subgraph G} : Function.Injective x.mapSpanningTop := fun v w h => h
 
 theorem neighbor_set_subset_of_subgraph {x y : Subgraph G} (h : x ≤ y) (v : V) : x.NeighborSet v ⊆ y.NeighborSet v :=
   fun w h' => h.2 h'
 
-instance neighbor_set.decidable_pred (G' : Subgraph G) [h : DecidableRel G'.Adj] (v : V) :
+instance NeighborSet.decidablePred (G' : Subgraph G) [h : DecidableRel G'.Adj] (v : V) :
     DecidablePred (· ∈ G'.NeighborSet v) :=
   h v
 
 /-- If a graph is locally finite at a vertex, then so is a subgraph of that graph. -/
-instance finite_at {G' : Subgraph G} (v : G'.Verts) [DecidableRel G'.Adj] [Fintype (G.NeighborSet v)] :
+instance finiteAt {G' : Subgraph G} (v : G'.Verts) [DecidableRel G'.Adj] [Fintype (G.NeighborSet v)] :
     Fintype (G'.NeighborSet v) :=
   Set.fintypeSubset (G.NeighborSet v) (G'.neighbor_set_subset v)
 
 /-- If a subgraph is locally finite at a vertex, then so are subgraphs of that subgraph.
 
 This is not an instance because `G''` cannot be inferred. -/
-def finite_at_of_subgraph {G' G'' : Subgraph G} [DecidableRel G'.Adj] (h : G' ≤ G'') (v : G'.Verts)
+def finiteAtOfSubgraph {G' G'' : Subgraph G} [DecidableRel G'.Adj] (h : G' ≤ G'') (v : G'.Verts)
     [hf : Fintype (G''.NeighborSet v)] : Fintype (G'.NeighborSet v) :=
   Set.fintypeSubset (G''.NeighborSet v) (neighbor_set_subset_of_subgraph h v)
 
@@ -421,10 +427,10 @@ instance (G' : Subgraph G) [Fintype G'.Verts] (v : V) [DecidablePred (· ∈ G'.
     Fintype (G'.NeighborSet v) :=
   Set.fintypeSubset G'.Verts (neighbor_set_subset_verts G' v)
 
-instance coe_finite_at {G' : Subgraph G} (v : G'.Verts) [Fintype (G'.NeighborSet v)] : Fintype (G'.coe.NeighborSet v) :=
+instance coeFiniteAt {G' : Subgraph G} (v : G'.Verts) [Fintype (G'.NeighborSet v)] : Fintype (G'.coe.NeighborSet v) :=
   Fintype.ofEquiv _ (coeNeighborSetEquiv v).symm
 
-theorem is_spanning.card_verts [Fintype V] {G' : Subgraph G} [Fintype G'.Verts] (h : G'.IsSpanning) :
+theorem IsSpanning.card_verts [Fintype V] {G' : Subgraph G} [Fintype G'.Verts] (h : G'.IsSpanning) :
     G'.Verts.toFinset.card = Fintype.card V := by
   rw [is_spanning_iff] at h
   simpa [h]

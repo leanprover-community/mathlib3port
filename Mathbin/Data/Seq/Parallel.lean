@@ -1,3 +1,15 @@
+/-
+Copyright (c) 2017 Microsoft Corporation. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Mario Carneiro
+
+Parallel computation of a computable sequence of computations by
+a diagonal enumeration.
+The important theorems of this operation are proven as
+terminates_parallel and exists_of_mem_parallel.
+(This operation is nondeterministic in the sense that it does not
+honor sequence equivalence (irrelevance of computation time).)
+-/
 import Mathbin.Data.Seq.Wseq
 
 universe u v
@@ -8,7 +20,7 @@ open Wseq
 
 variable {α : Type u} {β : Type v}
 
-def parallel.aux2 : List (Computation α) → Sum α (List (Computation α)) :=
+def Parallel.aux2 : List (Computation α) → Sum α (List (Computation α)) :=
   List.foldr
     (fun c o =>
       match o with
@@ -16,7 +28,7 @@ def parallel.aux2 : List (Computation α) → Sum α (List (Computation α)) :=
       | Sum.inr ls => rmap (fun c' => c' :: ls) (destruct c))
     (Sum.inr [])
 
-def parallel.aux1 : List (Computation α) × Wseq (Computation α) → Sum α (List (Computation α) × Wseq (Computation α))
+def Parallel.aux1 : List (Computation α) × Wseq (Computation α) → Sum α (List (Computation α) × Wseq (Computation α))
   | (l, S) =>
     rmap
       (fun l' =>
@@ -31,7 +43,7 @@ def parallel.aux1 : List (Computation α) × Wseq (Computation α) → Sum α (L
 def parallel (S : Wseq (Computation α)) : Computation α :=
   corec Parallel.aux1 ([], S)
 
-theorem terminates_parallel.aux :
+theorem TerminatesParallel.aux :
     ∀ {l : List (Computation α)} {S c}, c ∈ l → Terminates c → Terminates (corec Parallel.aux1 (l, S)) := by
   have lem1 : ∀ l S, (∃ a : α, parallel.aux2 l = Sum.inl a) → terminates (corec parallel.aux1 (l, S)) := by
     intro l S e
@@ -298,7 +310,8 @@ theorem parallel_empty (S : Wseq (Computation α)) (h : S.head ~> none) : parall
     let ⟨c', h'⟩ := head_some_of_nth_some nm
     injection h h'
 
-def parallel_rec {S : Wseq (Computation α)} (C : α → Sort v) (H : ∀, ∀ s ∈ S, ∀, ∀, ∀ a ∈ s, ∀, C a) {a}
+-- The reason this isn't trivial from exists_of_mem_parallel is because it eliminates to Sort
+def parallelRec {S : Wseq (Computation α)} (C : α → Sort v) (H : ∀, ∀ s ∈ S, ∀, ∀, ∀ a ∈ s, ∀, C a) {a}
     (h : a ∈ parallel S) : C a := by
   let T : Wseq (Computation (α × Computation α)) := S.map fun c => c.map fun a => (a, c)
   have : S = T.map (map fun c => c.1) := by
@@ -348,6 +361,7 @@ theorem parallel_congr_lem {S T : Wseq (Computation α)} {a} (H : S.LiftRel Equi
     let ⟨t, tT, se⟩ := Wseq.exists_of_lift_rel_left H sS
     (promises_congr se _).2 (h2 _ tT)⟩
 
+-- The parallel operation is only deterministic when all computation paths lead to the same value
 theorem parallel_congr_left {S T : Wseq (Computation α)} {a} (h1 : ∀, ∀ s ∈ S, ∀, s ~> a) (H : S.LiftRel Equiv T) :
     parallel S ~ parallel T :=
   let h2 := (parallel_congr_lem H).1 h1

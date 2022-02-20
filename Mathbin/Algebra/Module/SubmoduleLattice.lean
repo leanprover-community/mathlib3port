@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2017 Johannes Hölzl. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johannes Hölzl, Mario Carneiro, Kevin Buzzard, Yury Kudryashov
+-/
 import Mathbin.Algebra.Module.Submodule
 import Mathbin.Algebra.PunitInstances
 
@@ -62,7 +67,7 @@ theorem mem_bot {x : M} : x ∈ (⊥ : Submodule R M) ↔ x = 0 :=
 
 end
 
-instance unique_bot : Unique (⊥ : Submodule R M) :=
+instance uniqueBot : Unique (⊥ : Submodule R M) :=
   ⟨inferInstance, fun x => Subtype.ext <| (mem_bot R).1 x.Mem⟩
 
 instance : OrderBot (Submodule R M) where
@@ -95,7 +100,7 @@ theorem exists_mem_ne_zero_of_ne_bot {p : Submodule R M} (h : p ≠ ⊥) : ∃ b
 
 /-- The bottom submodule is linearly equivalent to punit as an `R`-module. -/
 @[simps]
-def bot_equiv_punit : (⊥ : Submodule R M) ≃ₗ[R] PUnit where
+def botEquivPunit : (⊥ : Submodule R M) ≃ₗ[R] PUnit where
   toFun := fun x => PUnit.unit
   invFun := fun x => 0
   map_add' := by
@@ -151,7 +156,7 @@ theorem eq_top_iff' {p : Submodule R M} : p = ⊤ ↔ ∀ x, x ∈ p :=
 
 /-- The top submodule is linearly equivalent to the module. -/
 @[simps]
-def top_equiv_self : (⊤ : Submodule R M) ≃ₗ[R] M where
+def topEquivSelf : (⊤ : Submodule R M) ≃ₗ[R] M where
   toFun := fun x => x
   invFun := fun x =>
     ⟨x, by
@@ -199,7 +204,7 @@ instance : HasInf (Submodule R M) :=
 instance : CompleteLattice (Submodule R M) :=
   { Submodule.orderTop, Submodule.orderBot, SetLike.partialOrder with sup := fun a b => inf { x | a ≤ x ∧ b ≤ x },
     le_sup_left := fun a b => le_Inf' fun x ⟨ha, hb⟩ => ha, le_sup_right := fun a b => le_Inf' fun x ⟨ha, hb⟩ => hb,
-    sup_le := fun a b c h₁ h₂ => Inf_le' ⟨h₁, h₂⟩, inf := ·⊓·, le_inf := fun a b c => Set.subset_inter,
+    sup_le := fun a b c h₁ h₂ => Inf_le' ⟨h₁, h₂⟩, inf := (·⊓·), le_inf := fun a b c => Set.subset_inter,
     inf_le_left := fun a b => Set.inter_subset_left _ _, inf_le_right := fun a b => Set.inter_subset_right _ _,
     sup := fun tt => inf { t | ∀, ∀ t' ∈ tt, ∀, t' ≤ t }, le_Sup := fun s p hs => le_Inf' fun q hq => hq _ hs,
     Sup_le := fun s p hs => Inf_le' hs, inf := inf, le_Inf := fun s a => le_Inf', Inf_le := fun s a => Inf_le' }

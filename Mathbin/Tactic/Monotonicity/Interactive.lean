@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2019 Simon Hudon. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Simon Hudon
+-/
 import Mathbin.Control.Traversable.Derive
 import Mathbin.Control.Traversable.Lemmas
 import Leanbin.Data.Dlist
@@ -207,14 +212,18 @@ unsafe def parse_ac_mono_function (l r : expr) : tactic (expr × expr × List ex
         let s' ← fold_assoc1 f s
         return (l', r', l_id ++ r_id, mono_function.assoc_comm f s')
       else do
-        let (pre, ls, rs, suff) ← Monadₓ.join (match_assoc <$> parse_assoc_chain f l <*> parse_assoc_chain f r)
+        let-- a ∧ ¬ c
+          (pre, ls, rs, suff)
+          ← Monadₓ.join (match_assoc <$> parse_assoc_chain f l <*> parse_assoc_chain f r)
         let (l', l_id) ← fold_assoc f i ls
         let (r', r_id) ← fold_assoc f i rs
         let pre' := fold_assoc1 f pre
         let suff' := fold_assoc1 f suff
         return (l', r', l_id ++ r_id, mono_function.assoc f pre' suff')
     else do
-      let (xs₀, x₀, x₁, xs₁) ← find_one_difference opt ls rs
+      let-- ¬ a
+        (xs₀, x₀, x₁, xs₁)
+        ← find_one_difference opt ls rs
       return (x₀, x₁, [], mono_function.non_assoc full_f xs₀ xs₁)
 
 unsafe def parse_ac_mono_function' (l r : pexpr) := do
@@ -258,8 +267,12 @@ unsafe def mk_fun_app : mono_function → expr → expr
   | mono_function.assoc f x y, z => bin_op_left f x (bin_op_right f z y)
   | mono_function.assoc_comm f x, z => f.mk_app [z, x]
 
-unsafe inductive mono_law
-  | assoc : expr × expr → expr × expr → mono_law
+unsafe inductive mono_law/- `assoc (l₀,r₀) (r₁,l₁)` gives first how to find rules to prove
+      x+(y₀+z) R x+(y₁+z);
+      if that fails, helps prove (x+y₀)+z R (x+y₁)+z -/
+
+  | assoc : expr × expr → expr × expr → mono_law-- `congr r` gives the rule to prove `x = y → f x = f y`
+
   | congr : expr → mono_law
   | other : expr → mono_law
 
@@ -283,7 +296,7 @@ unsafe instance has_to_tactic_format_mono_law : has_to_tactic_format mono_law wh
 unsafe def mk_rel (ctx : ac_mono_ctx_ne) (f : expr → expr) : expr :=
   ctx.to_rel (f ctx.left) (f ctx.right)
 
--- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `xs₁
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `xs₁
 unsafe def mk_congr_args (fn : expr) (xs₀ xs₁ : List expr) (l r : expr) : tactic expr := do
   let p ← mk_app `eq [fn.mk_app <| xs₀ ++ l :: xs₁, fn.mk_app <| xs₀ ++ r :: xs₁]
   Prod.snd <$>
@@ -338,7 +351,7 @@ unsafe def find_rule (ls : List Name) : mono_law → tactic (List expr)
 
 universe u v
 
-def apply_rel {α : Sort u} (R : α → α → Sort v) {x y : α} (x' y' : α) (h : R x y) (hx : x = x') (hy : y = y') :
+def applyRel {α : Sort u} (R : α → α → Sort v) {x y : α} (x' y' : α) (h : R x y) (hx : x = x') (hy : y = y') :
     R x' y' := by
   rw [← hx, ← hy]
   apply h
@@ -407,12 +420,12 @@ unsafe def solve_mvar (v : expr) (tac : tactic Unit) : tactic Unit := do
   done
   set_goals <| gs
 
-def list.minimum_on {α β} [LinearOrderₓ β] (f : α → β) : List α → List α
+def List.minimumOn {α β} [LinearOrderₓ β] (f : α → β) : List α → List α
   | [] => []
   | x :: xs =>
     Prod.snd <|
       xs.foldl
-        (fun ⟨k, a⟩ b =>
+        (fun b =>
           let k' := f b
           if k < k' then (k, a) else if k' < k then (k', [b]) else (k, b :: a))
         (f x, [x])
@@ -504,10 +517,10 @@ unsafe def mono (many : parse (tk "*")?) (dir : parse side)
 add_tactic_doc
   { Name := "mono", category := DocCategory.tactic, declNames := [`tactic.interactive.mono], tags := ["monotonicity"] }
 
--- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
--- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `g
--- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
--- ././Mathport/Syntax/Translate/Basic.lean:796:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:916:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `g
+-- ././Mathport/Syntax/Translate/Basic.lean:916:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:916:4: warning: unsupported (TODO): `[tacs]
 /-- transforms a goal of the form `f x ≼ f y` into `x ≤ y` using lemmas
 marked as `monotonic`.
 
@@ -546,7 +559,7 @@ unsafe def repeat_until_or_at_most : Nat → tactic Unit → tactic Unit → tac
 unsafe def repeat_until : tactic Unit → tactic Unit → tactic Unit :=
   repeat_until_or_at_most 100000
 
-inductive rep_arity : Type
+inductive RepArity : Type
   | one
   | exactly (n : ℕ)
   | many
@@ -629,6 +642,10 @@ unsafe def ac_mono (rep : parse arity) : parse (assert_or_rule)? → optParam Mo
     tactic.swap
     focus1 <| repeat_or_not rep (ac_mono_aux opt) (some <| done <|> ac_refine h)
 
+/-
+TODO(Simon): with `ac_mono := h` and `ac_mono : p` split the remaining
+  gaol if the provided rule does not solve it completely.
+-/
 add_tactic_doc
   { Name := "ac_mono", category := DocCategory.tactic, declNames := [`tactic.interactive.ac_mono],
     tags := ["monotonicity"] }

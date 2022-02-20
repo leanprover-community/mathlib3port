@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Alexander Bentkamp, Sébastien Gouëzel. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Alexander Bentkamp, Sébastien Gouëzel, Eric Wieser
+-/
 import Mathbin.Algebra.Order.Smul
 import Mathbin.Data.Complex.Basic
 import Mathbin.Data.Fin.VecNotation
@@ -39,14 +44,16 @@ section
 
 variable [HasScalar R ℝ]
 
+/- The useless `0` multiplication in `smul` is to make sure that
+`restrict_scalars.module ℝ ℂ ℂ = complex.module` definitionally. -/
 instance : HasScalar R ℂ where
   smul := fun r x => ⟨r • x.re - 0 * x.im, r • x.im + 0 * x.re⟩
 
 theorem smul_re (r : R) (z : ℂ) : (r • z).re = r • z.re := by
-  simp [· • ·]
+  simp [(· • ·)]
 
 theorem smul_im (r : R) (z : ℂ) : (r • z).im = r • z.im := by
-  simp [· • ·]
+  simp [(· • ·)]
 
 @[simp]
 theorem real_smul {x : ℝ} {z : ℂ} : x • z = x * z :=
@@ -85,11 +92,15 @@ instance [Semiringₓ R] [Module R ℝ] : Module R ℂ where
     ext <;> simp [smul_re, smul_im, zero_smul]
 
 instance [CommSemiringₓ R] [Algebra R ℝ] : Algebra R ℂ :=
-  { Complex.ofReal.comp (algebraMap R ℝ) with smul := · • ·,
+  { Complex.ofReal.comp (algebraMap R ℝ) with smul := (· • ·),
     smul_def' := fun r x => by
       ext <;> simp [smul_re, smul_im, Algebra.smul_def],
     commutes' := fun r ⟨xr, xi⟩ => by
       ext <;> simp [smul_re, smul_im, Algebra.commutes] }
+
+instance : StarModule ℝ ℂ :=
+  ⟨fun r x => by
+    simp only [star_def, star_trivial, real_smul, map_mul, conj_of_real]⟩
 
 @[simp]
 theorem coe_algebra_map : (algebraMap ℝ ℂ : ℝ → ℂ) = coe :=
@@ -117,7 +128,7 @@ section
 
 open_locale ComplexOrder
 
-protected theorem OrderedSmul : OrderedSmul ℝ ℂ :=
+protected theorem ordered_smul : OrderedSmul ℝ ℂ :=
   OrderedSmul.mk' fun a b r hab hr =>
     ⟨by
       simp [hr, hab.1.le], by
@@ -129,14 +140,14 @@ end
 
 open Submodule FiniteDimensional
 
--- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»
 -- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
 /-- `ℂ` has a basis over `ℝ` given by `1` and `I`. -/
-noncomputable def basis_one_I : Basis (Finₓ 2) ℝ ℂ :=
+noncomputable def basisOneI : Basis (Finₓ 2) ℝ ℂ :=
   Basis.ofEquivFun
     { toFun := fun z =>
-        «expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»",
+        «expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»",
       invFun := fun c => c 0 + c 1 • I,
       left_inv := fun z => by
         simp ,
@@ -144,25 +155,25 @@ noncomputable def basis_one_I : Basis (Finₓ 2) ℝ ℂ :=
         ext i
         fin_cases i <;> simp ,
       map_add' := fun z z' => by
-        simp ,
+        simp ,-- why does `simp` not know how to apply `smul_cons`, which is a `@[simp]` lemma, here?
       map_smul' := fun c z => by
         simp [Matrix.smul_cons c z.re, Matrix.smul_cons c z.im] }
 
--- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»
 @[simp]
 theorem coe_basis_one_I_repr (z : ℂ) :
     ⇑basisOneI.repr z =
-      «expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»" :=
+      «expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»" :=
   rfl
 
 -- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
 -- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
--- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»
 @[simp]
 theorem coe_basis_one_I :
-    ⇑basis_one_I = «expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»" :=
+    ⇑basis_one_I = «expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»" :=
   funext fun i =>
     Basis.apply_eq_iff.mpr <|
       Finsupp.ext fun j => by
@@ -193,6 +204,8 @@ theorem finrank_real_complex_fact : Fact (finrank ℝ ℂ = 2) :=
 
 end Complex
 
+/- Register as an instance (with low priority) the fact that a complex vector space is also a real
+vector space. -/
 instance (priority := 900) Module.complexToReal (E : Type _) [AddCommGroupₓ E] [Module ℂ E] : Module ℝ E :=
   RestrictScalars.module ℝ ℂ E
 
@@ -216,12 +229,18 @@ theorem finrank_real_of_complex (E : Type _) [AddCommGroupₓ E] [Module ℂ E] 
     FiniteDimensional.finrank ℝ E = 2 * FiniteDimensional.finrank ℂ E := by
   rw [← FiniteDimensional.finrank_mul_finrank ℝ ℂ E, Complex.finrank_real_complex]
 
+instance (priority := 900) StarModule.complexToReal {E : Type _} [AddCommGroupₓ E] [HasStar E] [Module ℂ E]
+    [StarModule ℂ E] : StarModule ℝ E :=
+  ⟨fun r a => by
+    rw [star_trivial r, restrict_scalars_smul_def, restrict_scalars_smul_def, star_smul, Complex.coe_algebra_map,
+      Complex.star_def, Complex.conj_of_real]⟩
+
 namespace Complex
 
 open_locale ComplexConjugate
 
 /-- Linear map version of the real part function, from `ℂ` to `ℝ`. -/
-def re_lm : ℂ →ₗ[ℝ] ℝ where
+def reLm : ℂ →ₗ[ℝ] ℝ where
   toFun := fun x => x.re
   map_add' := add_re
   map_smul' := by
@@ -232,7 +251,7 @@ theorem re_lm_coe : ⇑re_lm = re :=
   rfl
 
 /-- Linear map version of the imaginary part function, from `ℂ` to `ℝ`. -/
-def im_lm : ℂ →ₗ[ℝ] ℝ where
+def imLm : ℂ →ₗ[ℝ] ℝ where
   toFun := fun x => x.im
   map_add' := add_im
   map_smul' := by
@@ -243,7 +262,7 @@ theorem im_lm_coe : ⇑im_lm = im :=
   rfl
 
 /-- `ℝ`-algebra morphism version of the canonical embedding of `ℝ` in `ℂ`. -/
-def of_real_am : ℝ →ₐ[ℝ] ℂ :=
+def ofRealAm : ℝ →ₐ[ℝ] ℂ :=
   Algebra.ofId ℝ ℂ
 
 @[simp]
@@ -251,7 +270,7 @@ theorem of_real_am_coe : ⇑of_real_am = coe :=
   rfl
 
 /-- `ℝ`-algebra isomorphism version of the complex conjugation function from `ℂ` to `ℂ` -/
-def conj_ae : ℂ ≃ₐ[ℝ] ℂ :=
+def conjAe : ℂ ≃ₐ[ℝ] ℂ :=
   { conj with invFun := conj, left_inv := star_star, right_inv := star_star, commutes' := conj_of_real }
 
 @[simp]
@@ -260,13 +279,13 @@ theorem conj_ae_coe : ⇑conj_ae = conj :=
 
 -- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
 -- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
--- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»
 /-- The matrix representation of `conj_ae`. -/
 @[simp]
 theorem to_matrix_conj_ae :
     LinearMap.toMatrix basisOneI basisOneI conjAe.toLinearMap =
-      «expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»" :=
+      «expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»" :=
   by
   ext i j
   simp [LinearMap.to_matrix_apply]
@@ -279,7 +298,7 @@ variable {A : Type _} [Ringₓ A] [Algebra ℝ A]
 /-- There is an alg_hom from `ℂ` to any `ℝ`-algebra with an element that squares to `-1`.
 
 See `complex.lift` for this as an equiv. -/
-def lift_aux (I' : A) (hf : I' * I' = -1) : ℂ →ₐ[ℝ] A :=
+def liftAux (I' : A) (hf : I' * I' = -1) : ℂ →ₐ[ℝ] A :=
   AlgHom.ofLinearMap ((Algebra.ofId ℝ A).toLinearMap.comp reLm + (LinearMap.toSpanSingleton _ _ I').comp imLm)
     (show algebraMap ℝ A 1 + (0 : ℝ) • I' = 1 by
       rw [RingHom.map_one, zero_smul, add_zeroₓ])
@@ -290,6 +309,7 @@ def lift_aux (I' : A) (hf : I' * I' = -1) : ℂ →ₐ[ℝ] A :=
       by
       rw [add_mulₓ, mul_addₓ, mul_addₓ, add_commₓ _ (y₁ • I' * y₂ • I'), add_add_add_commₓ]
       congr 1
+      -- equate "real" and "imaginary" parts
       · rw [smul_mul_smul, hf, smul_neg, ← Algebra.algebra_map_eq_smul_one, ← sub_eq_add_neg, ← RingHom.map_mul, ←
           RingHom.map_sub]
         
@@ -319,10 +339,12 @@ def lift : { I' : A // I' * I' = -1 } ≃ (ℂ →ₐ[ℝ] A) where
   left_inv := fun I' => Subtype.ext <| lift_aux_apply_I I' I'.Prop
   right_inv := fun F => alg_hom_ext <| lift_aux_apply_I _ _
 
+-- When applied to `complex.I` itself, `lift` is the identity.
 @[simp]
 theorem lift_aux_I : liftAux i I_mul_I = AlgHom.id ℝ ℂ :=
   alg_hom_ext <| lift_aux_apply_I _ _
 
+-- When applied to `-complex.I`, `lift` is conjugation, `conj`.
 @[simp]
 theorem lift_aux_neg_I : liftAux (-I) ((neg_mul_neg _ _).trans I_mul_I) = conj_ae :=
   alg_hom_ext <| (lift_aux_apply_I _ _).trans conj_I.symm

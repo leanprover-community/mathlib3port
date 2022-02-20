@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2020 Johan Commelin. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johan Commelin, Robert Y. Lewis
+-/
 import Mathbin.Algebra.Ring.Ulift
 import Mathbin.RingTheory.WittVector.Basic
 import Mathbin.Data.MvPolynomial.Funext
@@ -85,6 +90,12 @@ end
 -/
 
 
+/-
+### Simplification tactics
+
+`ghost_simp` is used later in the development for certain simplifications.
+We define it here so it is a shared import.
+-/
 mk_simp_attribute ghost_simps := "Simplification rules for ghost equations"
 
 namespace Tactic
@@ -150,6 +161,7 @@ variable {p : ℕ} {R S : Type u} {σ idx : Type _} [hp : Fact p.Prime] [CommRin
 
 local notation "𝕎" => WittVector p
 
+-- type as `\bbW`
 open MvPolynomial
 
 open function (uncurry)
@@ -196,7 +208,9 @@ and the `@[is_poly]` attribute derives certain specialized composition instances
 for declarations of type `is_poly f`.
 For the most part, users are not expected to treat `is_poly` as a class.
 -/
-class is_poly (f : ∀ ⦃R⦄ [CommRingₓ R], WittVector p R → 𝕎 R) : Prop where mk' ::
+-- Ideally, we would generalise this to n-ary functions
+-- But we don't have a good theory of n-ary compositions in mathlib
+class IsPoly (f : ∀ ⦃R⦄ [CommRingₓ R], WittVector p R → 𝕎 R) : Prop where mk' ::
   poly : ∃ φ : ℕ → MvPolynomial ℕ ℤ, ∀ ⦃R⦄ [CommRingₓ R] x : 𝕎 R, (f x).coeff = fun n => aeval x.coeff (φ n)
 
 /-- The identity function on Witt vectors is a polynomial function. -/
@@ -255,8 +269,8 @@ theorem comp {g f} (hg : IsPoly p g) (hf : IsPoly p f) : IsPoly p fun R _Rcr => 
 
 end IsPoly
 
--- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»
 /-- A binary function `f : Π R, 𝕎 R → 𝕎 R → 𝕎 R` on Witt vectors
 is said to be *polynomial* if there is a family of polynomials `φₙ` over `ℤ` such that the `n`th
 coefficient of `f x y` is given by evaluating `φₙ` at the coefficients of `x` and `y`.
@@ -268,21 +282,21 @@ and the `@[is_poly]` attribute derives certain specialized composition instances
 for declarations of type `is_poly₂ f`.
 For the most part, users are not expected to treat `is_poly₂` as a class.
 -/
-class is_poly₂ (f : ∀ ⦃R⦄ [CommRingₓ R], WittVector p R → 𝕎 R → 𝕎 R) : Prop where mk' ::
+class IsPoly₂ (f : ∀ ⦃R⦄ [CommRingₓ R], WittVector p R → 𝕎 R → 𝕎 R) : Prop where mk' ::
   poly :
     ∃ φ : ℕ → MvPolynomial (Finₓ 2 × ℕ) ℤ,
       ∀ ⦃R⦄ [CommRingₓ R] x y : 𝕎 R,
         (f x y).coeff = fun n =>
           peval (φ n)
-            («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»")
+            («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»")
 
 variable {p}
 
--- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»
 -- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
 /-- The composition of polynomial functions is polynomial. -/
-theorem is_poly₂.comp {h f g} (hh : IsPoly₂ p h) (hf : IsPoly p f) (hg : IsPoly p g) :
+theorem IsPoly₂.comp {h f g} (hh : IsPoly₂ p h) (hf : IsPoly p f) (hg : IsPoly p g) :
     IsPoly₂ p fun R _Rcr x y => h (f x) (g y) := by
   obtain ⟨φ, hf⟩ := hf
   obtain ⟨ψ, hg⟩ := hg
@@ -291,7 +305,7 @@ theorem is_poly₂.comp {h f g} (hh : IsPoly₂ p h) (hf : IsPoly p f) (hg : IsP
     ⟨⟨fun n =>
         bind₁
           (uncurry <|
-            «expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»")
+            «expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»")
           (χ n),
         _⟩⟩
   intros
@@ -304,23 +318,23 @@ theorem is_poly₂.comp {h f g} (hh : IsPoly₂ p h) (hf : IsPoly p f) (hg : IsP
       Matrix.cons_val_one]
 
 /-- The composition of a polynomial function with a binary polynomial function is polynomial. -/
-theorem is_poly.comp₂ {g f} (hg : IsPoly p g) (hf : IsPoly₂ p f) : IsPoly₂ p fun R _Rcr x y => g (f x y) := by
+theorem IsPoly.comp₂ {g f} (hg : IsPoly p g) (hf : IsPoly₂ p f) : IsPoly₂ p fun R _Rcr x y => g (f x y) := by
   obtain ⟨φ, hf⟩ := hf
   obtain ⟨ψ, hg⟩ := hg
   use fun n => bind₁ φ (ψ n)
   intros
   simp only [peval, aeval_bind₁, Function.comp, hg, hf]
 
--- ././Mathport/Syntax/Translate/Basic.lean:707:4: warning: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ , ]»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»
 -- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
 /-- The diagonal `λ x, f x x` of a polynomial function `f` is polynomial. -/
-theorem is_poly₂.diag {f} (hf : IsPoly₂ p f) : IsPoly p fun R _Rcr x => f x x := by
+theorem IsPoly₂.diag {f} (hf : IsPoly₂ p f) : IsPoly p fun R _Rcr x => f x x := by
   obtain ⟨φ, hf⟩ := hf
   refine'
     ⟨⟨fun n =>
         bind₁
-          (uncurry («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:708:61: unsupported notation `«expr![ , ]»"))
+          (uncurry («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»"))
           (φ n),
         _⟩⟩
   intros
@@ -350,15 +364,14 @@ unsafe def mk_poly_comp_lemmas (n : Name) (vars : List expr) (p : expr) : tactic
   let c ← mk_const n
   let appd := vars.foldl expr.app c
   let tgt_bod ←
-    to_expr (pquote.1 fun f [hf : IsPoly (%%ₓp) f] => IsPoly.comp (%%ₓappd) hf) >>= replace_univ_metas_with_univ_params
+    to_expr (pquote.1 fun [hf : IsPoly (%%ₓp) f] => IsPoly.comp (%%ₓappd) hf) >>= replace_univ_metas_with_univ_params
   let tgt_bod ← lambdas vars tgt_bod
   let tgt_tp ← infer_type tgt_bod
   let nm := n <.> "comp_i"
   add_decl <| mk_definition nm tgt_tp tgt_tp tgt_bod
   set_attribute `instance nm
   let tgt_bod ←
-    to_expr (pquote.1 fun f [hf : IsPoly₂ (%%ₓp) f] => IsPoly.comp₂ (%%ₓappd) hf) >>=
-        replace_univ_metas_with_univ_params
+    to_expr (pquote.1 fun [hf : IsPoly₂ (%%ₓp) f] => IsPoly.comp₂ (%%ₓappd) hf) >>= replace_univ_metas_with_univ_params
   let tgt_bod ← lambdas vars tgt_bod
   let tgt_tp ← infer_type tgt_bod
   let nm := n <.> "comp₂_i"
@@ -373,7 +386,7 @@ unsafe def mk_poly₂_comp_lemmas (n : Name) (vars : List expr) (p : expr) : tac
   let c ← mk_const n
   let appd := vars.foldl expr.app c
   let tgt_bod ←
-    to_expr (pquote.1 fun {f g} [hf : IsPoly (%%ₓp) f] [hg : IsPoly (%%ₓp) g] => IsPoly₂.comp (%%ₓappd) hf hg) >>=
+    to_expr (pquote.1 fun [hg : IsPoly (%%ₓp) g] => IsPoly₂.comp (%%ₓappd) hf hg) >>=
         replace_univ_metas_with_univ_params
   let tgt_bod ← lambdas vars tgt_bod
   let tgt_tp ← infer_type tgt_bod >>= simp_lemmas.mk.dsimplify
@@ -381,8 +394,7 @@ unsafe def mk_poly₂_comp_lemmas (n : Name) (vars : List expr) (p : expr) : tac
   add_decl <| mk_definition nm tgt_tp tgt_tp tgt_bod
   set_attribute `instance nm
   let tgt_bod ←
-    to_expr
-          (pquote.1 fun {f g} [hf : IsPoly (%%ₓp) f] [hg : IsPoly (%%ₓp) g] => (IsPoly₂.comp (%%ₓappd) hf hg).diag) >>=
+    to_expr (pquote.1 fun [hg : IsPoly (%%ₓp) g] => (IsPoly₂.comp (%%ₓappd) hf hg).diag) >>=
         replace_univ_metas_with_univ_params
   let tgt_bod ← lambdas vars tgt_bod
   let tgt_tp ← infer_type tgt_bod >>= simp_lemmas.mk.dsimplify
@@ -457,6 +469,8 @@ theorem neg_is_poly : IsPoly p fun R _ => @Neg.neg (𝕎 R) _ :=
 section ZeroOne
 
 /-- The function that is constantly zero on Witt vectors is a polynomial function. -/
+/- To avoid a theory of 0-ary functions (a.k.a. constants)
+we model them as constant unary functions. -/
 instance zero_is_poly : IsPoly p fun _ _ _ => 0 :=
   ⟨⟨0, by
       intros
@@ -470,7 +484,7 @@ theorem bind₁_zero_witt_polynomial (n : ℕ) : bind₁ (0 : ℕ → MvPolynomi
 omit hp
 
 /-- The coefficients of `1 : 𝕎 R` as polynomials. -/
-def one_poly (n : ℕ) : MvPolynomial ℕ ℤ :=
+def onePoly (n : ℕ) : MvPolynomial ℕ ℤ :=
   if n = 0 then 1 else 0
 
 include hp
@@ -505,7 +519,7 @@ omit hp
 
 /-- Addition of Witt vectors is a polynomial function. -/
 @[is_poly]
-theorem add_is_poly₂ [Fact p.Prime] : IsPoly₂ p fun _ _ => · + · :=
+theorem add_is_poly₂ [Fact p.Prime] : IsPoly₂ p fun _ _ => (· + ·) :=
   ⟨⟨wittAdd p, by
       intros
       dunfold WittVector.hasAdd
@@ -513,7 +527,7 @@ theorem add_is_poly₂ [Fact p.Prime] : IsPoly₂ p fun _ _ => · + · :=
 
 /-- Multiplication of Witt vectors is a polynomial function. -/
 @[is_poly]
-theorem mul_is_poly₂ [Fact p.Prime] : IsPoly₂ p fun _ _ => · * · :=
+theorem mul_is_poly₂ [Fact p.Prime] : IsPoly₂ p fun _ _ => (· * ·) :=
   ⟨⟨wittMul p, by
       intros
       dunfold WittVector.hasMul
@@ -521,7 +535,11 @@ theorem mul_is_poly₂ [Fact p.Prime] : IsPoly₂ p fun _ _ => · * · :=
 
 include hp
 
-theorem is_poly.map {f} (hf : IsPoly p f) (g : R →+* S) (x : 𝕎 R) : map g (f x) = f (map g x) := by
+-- unfortunately this is not universe polymorphic, merely because `f` isn't
+theorem IsPoly.map {f} (hf : IsPoly p f) (g : R →+* S) (x : 𝕎 R) : map g (f x) = f (map g x) := by
+  -- this could be turned into a tactic “macro” (taking `hf` as parameter)
+  -- so that applications do not have to worry about the universe issue
+  -- see `is_poly₂.map` for a slightly more general proof strategy
   obtain ⟨φ, hf⟩ := hf
   ext n
   simp only [map_coeff, hf, map_aeval]
@@ -578,7 +596,10 @@ theorem ext {f g} (hf : IsPoly₂ p f) (hg : IsPoly₂ p g)
     fin_cases b <;> simp only [coeff_mk, uncurry] <;> rfl
 
 -- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
+-- unfortunately this is not universe polymorphic, merely because `f` isn't
 theorem map {f} (hf : IsPoly₂ p f) (g : R →+* S) (x y : 𝕎 R) : map g (f x y) = f (map g x) (map g y) := by
+  -- this could be turned into a tactic “macro” (taking `hf` as parameter)
+  -- so that applications do not have to worry about the universe issue
   obtain ⟨φ, hf⟩ := hf
   ext n
   simp only [map_coeff, hf, map_aeval, peval, uncurry]

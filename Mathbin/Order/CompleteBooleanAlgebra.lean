@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2017 Johannes Hölzl. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Johannes Hölzl, Yaël Dillies
+-/
 import Mathbin.Order.CompleteLattice
 
 /-!
@@ -50,6 +55,7 @@ distribute over `⨅` and `⨆`. -/
 class CompleteDistribLattice (α : Type _) extends Frame α where
   infi_sup_le_sup_Inf : ∀ a s, (⨅ b ∈ s, a⊔b) ≤ a⊔Inf s
 
+-- See note [lower instance priority]
 instance (priority := 100) CompleteDistribLattice.toCoframe [CompleteDistribLattice α] : Coframe α :=
   { ‹CompleteDistribLattice α› with }
 
@@ -72,13 +78,13 @@ theorem supr_inf_eq (f : ι → α) (a : α) : (⨆ i, f i)⊓a = ⨆ i, f i⊓a
 theorem inf_supr_eq (a : α) (f : ι → α) : (a⊓⨆ i, f i) = ⨆ i, a⊓f i := by
   simpa only [inf_comm] using supr_inf_eq f a
 
--- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (i j)
--- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (i j)
 theorem bsupr_inf_eq {f : ∀ i, κ i → α} (a : α) : (⨆ (i) (j), f i j)⊓a = ⨆ (i) (j), f i j⊓a := by
   simp only [supr_inf_eq]
 
--- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (i j)
--- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (i j)
 theorem inf_bsupr_eq {f : ∀ i, κ i → α} (a : α) : (a⊓⨆ (i) (j), f i j) = ⨆ (i) (j), a⊓f i j := by
   simp only [inf_supr_eq]
 
@@ -125,13 +131,13 @@ theorem infi_sup_eq (f : ι → α) (a : α) : (⨅ i, f i)⊔a = ⨅ i, f i⊔a
 theorem sup_infi_eq (a : α) (f : ι → α) : (a⊔⨅ i, f i) = ⨅ i, a⊔f i :=
   @inf_supr_eq (OrderDual α) _ _ _ _
 
--- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (i hi)
--- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (i hi)
+-- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (i hi)
+-- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (i hi)
 theorem binfi_sup_eq {p : α → Prop} {f : ∀ i hi : p i, α} (a : α) : (⨅ (i) (hi), f i hi)⊔a = ⨅ (i) (hi), f i hi⊔a :=
   @bsupr_inf_eq (OrderDual α) _ _ _ _ _
 
--- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (i hi)
--- ././Mathport/Syntax/Translate/Basic.lean:627:6: warning: expanding binder group (i hi)
+-- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (i hi)
+-- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (i hi)
 theorem sup_binfi_eq (a : α) {p : α → Prop} {f : ∀ i hi : p i, α} : (a⊔⨅ (i) (hi), f i hi) = ⨅ (i) (hi), a⊔f i hi :=
   @inf_bsupr_eq (OrderDual α) _ _ _ _ _
 
@@ -165,6 +171,7 @@ instance Pi.completeDistribLattice {ι : Type _} {π : ι → Type _} [∀ i, Co
 
 end CompleteDistribLattice
 
+-- see Note [lower instance priority]
 instance (priority := 100) CompleteDistribLattice.toDistribLattice [d : CompleteDistribLattice α] : DistribLattice α :=
   { d with
     le_sup_inf := fun x y z => by

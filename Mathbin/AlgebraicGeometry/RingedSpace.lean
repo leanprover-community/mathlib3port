@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Justus Springer. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Justus Springer, Andrew Yang
+-/
 import Mathbin.Algebra.Category.CommRing.FilteredColimits
 import Mathbin.AlgebraicGeometry.SheafedSpace
 import Mathbin.Topology.Sheaves.Stalks
@@ -59,12 +64,15 @@ theorem is_unit_res_of_is_unit_germ (U : Opens X) (f : X.Presheaf.obj (op U)) (x
 /-- If a section `f` is a unit in each stalk, `f` must be a unit. -/
 theorem is_unit_of_is_unit_germ (U : Opens X) (f : X.Presheaf.obj (op U)) (h : ∀ x : U, IsUnit (X.Presheaf.germ x f)) :
     IsUnit f := by
+  -- We pick a cover of `U` by open sets `V x`, such that `f` is a unit on each `V x`.
   choose V iVU m h_unit using fun x : U => X.is_unit_res_of_is_unit_germ U f x (h x)
   have hcover : U ≤ supr V := by
     intro x hxU
     rw [opens.mem_coe, opens.mem_supr]
     exact ⟨⟨x, hxU⟩, m ⟨x, hxU⟩⟩
+  -- Let `g x` denote the inverse of `f` in `U x`.
   choose g hg using fun x : U => IsUnit.exists_right_inv (h_unit x)
+  -- We claim that these local inverses glue together to a global inverse of `f`.
   obtain ⟨gl, gl_spec, -⟩ := X.sheaf.exists_unique_gluing' V U iVU hcover g _
   swap
   · intro x y
@@ -86,7 +94,7 @@ theorem is_unit_of_is_unit_germ (U : Opens X) (f : X.Presheaf.obj (op U)) (h : �
 /-- The basic open of a section `f` is the set of all points `x`, such that the germ of `f` at
 `x` is a unit.
 -/
-def basic_open {U : Opens X} (f : X.Presheaf.obj (op U)) : Opens X where
+def basicOpen {U : Opens X} (f : X.Presheaf.obj (op U)) : Opens X where
   val := coe '' { x : U | IsUnit (X.Presheaf.germ x f) }
   property := by
     rw [is_open_iff_forall_mem_open]
@@ -166,6 +174,7 @@ theorem basic_open_res {U V : Opens Xᵒᵖ} (i : U ⟶ V) (f : X.Presheaf.obj U
       
     
 
+-- This should fire before `basic_open_res`.
 @[simp]
 theorem basic_open_res_eq {U V : Opens Xᵒᵖ} (i : U ⟶ V) [IsIso i] (f : X.Presheaf.obj U) :
     @basicOpen X (unop V) (X.Presheaf.map i f) = @RingedSpace.basicOpen X (unop U) f := by
