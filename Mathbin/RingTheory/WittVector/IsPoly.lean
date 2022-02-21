@@ -133,7 +133,7 @@ All it does is apply the appropriate extensionality lemma and try to infer the r
 This is subtle and Lean's elaborator doesn't like it because of the HO unification involved,
 so it is easier (and prettier) to put it in a tactic script.
 -/
-unsafe def ghost_calc (ids' : parse (ident_)*) : tactic Unit := do
+unsafe def ghost_calc (ids' : parse ident_*) : tactic Unit := do
   let ids ← ids'.mmap fun n => get_local n <|> tactic.intro n
   let quote.1 (@Eq (WittVector _ (%%ₓR)) _ _) ← target
   match ids with

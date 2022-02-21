@@ -353,8 +353,7 @@ instance [SmulCommClass R' R'' M₂] : SmulCommClass R' R'' (ContinuousMultiline
 instance [HasScalar R' R''] [IsScalarTower R' R'' M₂] : IsScalarTower R' R'' (ContinuousMultilinearMap A M₁ M₂) :=
   ⟨fun c₁ c₂ f => ext fun x => smul_assoc _ _ _⟩
 
-instance [DistribMulAction (R'ᵐᵒᵖ) M₂] [IsCentralScalar R' M₂] :
-    IsCentralScalar R' (ContinuousMultilinearMap A M₁ M₂) :=
+instance [DistribMulAction R'ᵐᵒᵖ M₂] [IsCentralScalar R' M₂] : IsCentralScalar R' (ContinuousMultilinearMap A M₁ M₂) :=
   ⟨fun c₁ f => ext fun x => op_smul_eq_smul _ _⟩
 
 instance : MulAction R' (ContinuousMultilinearMap A M₁ M₂) :=

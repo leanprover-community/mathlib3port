@@ -18,9 +18,9 @@ open Interactive.Types
 
 open Tactic
 
-local postfix:9001 "?" => optionalₓ
+local postfix:1024 "?" => optionalₓ
 
-local postfix:9001 "*" => many
+local postfix:1024 "*" => many
 
 unsafe inductive mono_function (elab : Bool := true)
   | non_assoc : expr elab → List (expr elab) → List (expr elab) → mono_function
@@ -633,7 +633,7 @@ by ac_mono* := h₁.
 By giving `ac_mono` the assumption `h₁`, we are asking `ac_refl` to
 stop earlier than it would normally would.
 -/
-unsafe def ac_mono (rep : parse arity) : parse (assert_or_rule)? → optParam MonoCfg {  } → tactic Unit
+unsafe def ac_mono (rep : parse arity) : parse assert_or_rule ? → optParam MonoCfg {  } → tactic Unit
   | none, opt => focus1 <| repeat_or_not rep (ac_mono_aux opt) none
   | some (inl h), opt => do
     focus1 <| repeat_or_not rep (ac_mono_aux opt) (some <| done <|> to_expr h >>= ac_refine)

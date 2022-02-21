@@ -838,7 +838,7 @@ instance is_scalar_tower'' [HasScalar α β] [HasScalar α γ] [HasScalar β γ]
     IsScalarTower (Set α) (Set β) (Set γ) where
   smul_assoc := fun T T' T'' => image2_assoc smul_assoc
 
-instance is_central_scalar [HasScalar α β] [HasScalar (αᵐᵒᵖ) β] [IsCentralScalar α β] : IsCentralScalar α (Set β) :=
+instance is_central_scalar [HasScalar α β] [HasScalar αᵐᵒᵖ β] [IsCentralScalar α β] : IsCentralScalar α (Set β) :=
   ⟨fun a S => (congr_argₓ fun f => f '' S) <| funext fun _ => op_smul_eq_smul _ _⟩
 
 end Smul

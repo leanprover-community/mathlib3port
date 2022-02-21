@@ -503,7 +503,7 @@ theorem is_iso_of_stalk_functor_map_iso {F G : Sheaf C X} (f : F ⟶ G) [∀ x :
   suffices is_iso ((sheaf.forget C X).map f) by
     exact is_iso_of_fully_faithful (sheaf.forget C X) f
   -- We show that all components of `f` are isomorphisms.
-  suffices ∀ U : opens Xᵒᵖ, is_iso (f.app U) by
+  suffices ∀ U : (opens X)ᵒᵖ, is_iso (f.app U) by
     exact @nat_iso.is_iso_of_is_iso_app _ _ _ _ F.1 G.1 f this
   intro U
   induction U using Opposite.rec

@@ -138,8 +138,8 @@ case hypothesis. If the name is avoided, the default will be `case`.
   Produces the case `R x y ∨ R y x`. If `R` is ≤, then the disjunction discharged using linearity.
   If `using x y` is avoided then `x` and `y` are the last two variables appearing in the
   expression `R x y`. -/
-unsafe def wlog (h : parse (ident)?) (pat : parse (tk ":" *> texpr)?) (cases : parse (tk ":=" *> texpr)?)
-    (perms : parse (tk "using" *> (list_of (ident)* <|> (fun x => [x]) <$> (ident)*))?)
+unsafe def wlog (h : parse ident ?) (pat : parse (tk ":" *> texpr)?) (cases : parse (tk ":=" *> texpr)?)
+    (perms : parse (tk "using" *> (list_of ident* <|> (fun x => [x]) <$> ident*))?)
     (discharger : tactic Unit :=
       tactic.solve_by_elim <|>
         tactic.tautology { classical := true } <|> using_smt (smt_tactic.intros >> smt_tactic.solve_goals)) :

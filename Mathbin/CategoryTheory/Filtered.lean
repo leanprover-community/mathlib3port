@@ -688,7 +688,7 @@ section Opposite
 
 open Opposite
 
-instance is_cofiltered_op_of_is_filtered [IsFiltered C] : IsCofiltered (Cᵒᵖ) where
+instance is_cofiltered_op_of_is_filtered [IsFiltered C] : IsCofiltered Cᵒᵖ where
   cocone_objs := fun X Y =>
     ⟨op (IsFiltered.max X.unop Y.unop), (IsFiltered.leftToMax _ _).op, (IsFiltered.rightToMax _ _).op, trivialₓ⟩
   cocone_maps := fun X Y f g =>
@@ -703,7 +703,7 @@ instance is_cofiltered_op_of_is_filtered [IsFiltered C] : IsCofiltered (Cᵒᵖ)
       exact is_filtered.coeq_condition f.unop g.unop⟩
   Nonempty := ⟨op IsFiltered.nonempty.some⟩
 
-instance is_filtered_op_of_is_cofiltered [IsCofiltered C] : IsFiltered (Cᵒᵖ) where
+instance is_filtered_op_of_is_cofiltered [IsCofiltered C] : IsFiltered Cᵒᵖ where
   cocone_objs := fun X Y =>
     ⟨op (IsCofiltered.min X.unop Y.unop), (IsCofiltered.minToLeft X.unop Y.unop).op,
       (IsCofiltered.minToRight X.unop Y.unop).op, trivialₓ⟩

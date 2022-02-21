@@ -437,7 +437,7 @@ theorem coe_mul_zeta_apply [Semiringₓ R] {f : ArithmeticFunction R} {x : ℕ} 
   apply MulOpposite.op_injective
   rw [op_sum]
   convert
-    @coe_zeta_mul_apply (Rᵐᵒᵖ) _
+    @coe_zeta_mul_apply Rᵐᵒᵖ _
       { toFun := MulOpposite.op ∘ f,
         map_zero' := by
           simp }
@@ -971,7 +971,7 @@ theorem prod_eq_iff_prod_pow_moebius_eq_of_nonzero [CommGroupWithZero R] {f g : 
   refine'
       Iff.trans
         (Iff.trans (forall_congrₓ fun n => _)
-          (@prod_eq_iff_prod_pow_moebius_eq (R)ˣ _ (fun n => if h : 0 < n then Units.mk0 (f n) (hf n h) else 1) fun n =>
+          (@prod_eq_iff_prod_pow_moebius_eq Rˣ _ (fun n => if h : 0 < n then Units.mk0 (f n) (hf n h) else 1) fun n =>
             if h : 0 < n then Units.mk0 (g n) (hg n h) else 1))
         (forall_congrₓ fun n => _) <;>
     refine' imp_congr_right fun hn => _

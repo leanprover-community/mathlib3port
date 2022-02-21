@@ -31,7 +31,7 @@ namespace Quot
 
 variable {ra : α → α → Prop} {rb : β → β → Prop} {φ : Quot ra → Quot rb → Sort _}
 
--- ././Mathport/Syntax/Translate/Basic.lean:462:9: unsupported: advanced prec syntax
+-- ././Mathport/Syntax/Translate/Basic.lean:462:9: unsupported: advanced prec syntax max
 local notation:999 "⟦" a "⟧" => Quot.mk _ a
 
 instance (r : α → α → Prop) [Inhabited α] : Inhabited (Quot r) :=

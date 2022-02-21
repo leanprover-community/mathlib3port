@@ -64,7 +64,7 @@ def extSuccOfProjective (X Y : C) [Projective X] (n : ℕ) : ((ext R C (n + 1)).
   E ≪≫
     { Hom := 0, inv := 0,
       hom_inv_id' := by
-        let Z : ModuleCat Rᵒᵖ := 0
+        let Z : (ModuleCat R)ᵒᵖ := 0
         rw [← (0 : 0 ⟶ Z.unop).unop_op, ← (0 : Z.unop ⟶ 0).unop_op, ← unop_id, ← unop_comp]
         congr 1
         dsimp

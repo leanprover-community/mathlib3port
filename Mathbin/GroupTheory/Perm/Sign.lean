@@ -280,13 +280,13 @@ theorem mem_fin_pairs_lt {n : ℕ} {a : Σ a : Finₓ n, Finₓ n} : a ∈ finPa
 
 /-- `sign_aux σ` is the sign of a permutation on `fin n`, defined as the parity of the number of
   pairs `(x₁, x₂)` such that `x₂ < x₁` but `σ x₁ ≤ σ x₂` -/
-def signAux {n : ℕ} (a : Perm (Finₓ n)) : (ℤ)ˣ :=
+def signAux {n : ℕ} (a : Perm (Finₓ n)) : ℤˣ :=
   ∏ x in finPairsLt n, if a x.1 ≤ a x.2 then -1 else 1
 
 @[simp]
 theorem sign_aux_one (n : ℕ) : signAux (1 : Perm (Finₓ n)) = 1 := by
   unfold sign_aux
-  conv => rhs rw [← @Finset.prod_const_one (ℤ)ˣ _ (fin_pairs_lt n)]
+  conv => rhs rw [← @Finset.prod_const_one ℤˣ _ (fin_pairs_lt n)]
   exact Finset.prod_congr rfl fun a ha => if_neg (mem_fin_pairs_lt.1 ha).not_le
 
 /-- `sign_bij_aux f ⟨a, b⟩` returns the pair consisting of `f a` and `f b` in decreasing order. -/
@@ -366,7 +366,7 @@ private theorem sign_aux_swap_zero_one' (n : ℕ) : signAux (swap (0 : Finₓ (n
   show
     _ =
       ∏ x : Σ a : Finₓ (n + 2), Finₓ (n + 2) in {(⟨1, 0⟩ : Σ a : Finₓ (n + 2), Finₓ (n + 2))},
-        if (Equivₓ.swap 0 1) x.1 ≤ swap 0 1 x.2 then (-1 : (ℤ)ˣ) else 1
+        if (Equivₓ.swap 0 1) x.1 ≤ swap 0 1 x.2 then (-1 : ℤˣ) else 1
     by
     refine'
       Eq.symm
@@ -442,7 +442,7 @@ theorem sign_aux_swap : ∀ {n : ℕ} {x y : Finₓ n} hxy : x ≠ y, signAux (s
 
 /-- When the list `l : list α` contains all nonfixed points of the permutation `f : perm α`,
   `sign_aux2 l f` recursively calculates the sign of `f`. -/
-def signAux2 : List α → Perm α → (ℤ)ˣ
+def signAux2 : List α → Perm α → ℤˣ
   | [], f => 1
   | x :: l, f => if x = f x then sign_aux2 l f else -sign_aux2 l (swap x (f x) * f)
 
@@ -474,7 +474,7 @@ theorem sign_aux_eq_sign_aux2 {n : ℕ} :
 
 /-- When the multiset `s : multiset α` contains all nonfixed points of the permutation `f : perm α`,
   `sign_aux2 f _` recursively calculates the sign of `f`. -/
-def signAux3 [Fintype α] (f : Perm α) {s : Multiset α} : (∀ x, x ∈ s) → (ℤ)ˣ :=
+def signAux3 [Fintype α] (f : Perm α) {s : Multiset α} : (∀ x, x ∈ s) → ℤˣ :=
   Quotientₓ.hrecOn s (fun l h => signAux2 l f)
     (Trunc.induction_on (Fintype.truncEquivFin α) fun e l₁ l₂ h =>
       Function.hfunext
@@ -505,7 +505,7 @@ theorem sign_aux3_mul_and_swap [Fintype α] (f g : Perm α) (s : Multiset α) (h
 /-- `sign` of a permutation returns the signature or parity of a permutation, `1` for even
 permutations, `-1` for odd permutations. It is the unique surjective group homomorphism from
 `perm α` to the group with two elements.-/
-def sign [Fintype α] : Perm α →* (ℤ)ˣ :=
+def sign [Fintype α] : Perm α →* ℤˣ :=
   MonoidHom.mk' (fun f => signAux3 f mem_univ) fun f g => (sign_aux3_mul_and_swap f g _ mem_univ).1
 
 section Sign
@@ -584,7 +584,7 @@ theorem sign_prod_list_swap {l : List (Perm α)} (hl : ∀, ∀ g ∈ l, ∀, Is
 
 variable (α)
 
-theorem sign_surjective [Nontrivial α] : Function.Surjective (sign : Perm α → (ℤ)ˣ) := fun a =>
+theorem sign_surjective [Nontrivial α] : Function.Surjective (sign : Perm α → ℤˣ) := fun a =>
   (Int.units_eq_one_or a).elim
     (fun h =>
       ⟨1, by
@@ -596,7 +596,7 @@ theorem sign_surjective [Nontrivial α] : Function.Surjective (sign : Perm α �
 
 variable {α}
 
-theorem eq_sign_of_surjective_hom {s : Perm α →* (ℤ)ˣ} (hs : Surjective s) : s = sign :=
+theorem eq_sign_of_surjective_hom {s : Perm α →* ℤˣ} (hs : Surjective s) : s = sign :=
   have : ∀ {f}, IsSwap f → s f = -1 := fun f ⟨x, y, hxy, hxy'⟩ =>
     hxy'.symm ▸
       by_contradiction fun h => by
@@ -605,7 +605,7 @@ theorem eq_sign_of_surjective_hom {s : Perm α →* (ℤ)ˣ} (hs : Surjective s)
           exact s.map_is_conj (is_conj_swap hab hxy)
         let ⟨g, hg⟩ := hs (-1)
         let ⟨l, hl⟩ := (truncSwapFactors g).out
-        have : ∀, ∀ a ∈ l.map s, ∀, a = (1 : (ℤ)ˣ) := fun a ha =>
+        have : ∀, ∀ a ∈ l.map s, ∀, a = (1 : ℤˣ) := fun a ha =>
           let ⟨g, hg⟩ := List.mem_mapₓ.1 ha
           hg.2 ▸ this _ (hl.2 _ hg.1)
         have : s l.Prod = 1 := by
@@ -617,7 +617,7 @@ theorem eq_sign_of_surjective_hom {s : Perm α →* (ℤ)ˣ} (hs : Surjective s)
               decide)
   MonoidHom.ext fun f => by
     let ⟨l, hl₁, hl₂⟩ := (truncSwapFactors f).out
-    have hsl : ∀, ∀ a ∈ l.map s, ∀, a = (-1 : (ℤ)ˣ) := fun a ha =>
+    have hsl : ∀, ∀ a ∈ l.map s, ∀, a = (-1 : ℤˣ) := fun a ha =>
       let ⟨g, hg⟩ := List.mem_mapₓ.1 ha
       hg.2 ▸ this (hl₂ _ hg.1)
     rw [← hl₁, ← l.prod_hom s, List.eq_repeat'.2 hsl, List.length_map, List.prod_repeat, sign_prod_list_swap hl₂]

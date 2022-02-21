@@ -58,8 +58,7 @@ instance module : Module R (M ⧸ N) :=
   Submodule.Quotient.module _
 
 instance is_central_scalar {S : Type _} [Semiringₓ S] [HasScalar S R] [Module S M] [IsScalarTower S R M]
-    [HasScalar (Sᵐᵒᵖ) R] [Module (Sᵐᵒᵖ) M] [IsScalarTower (Sᵐᵒᵖ) R M] [IsCentralScalar S M] :
-    IsCentralScalar S (M ⧸ N) :=
+    [HasScalar Sᵐᵒᵖ R] [Module Sᵐᵒᵖ M] [IsScalarTower Sᵐᵒᵖ R M] [IsCentralScalar S M] : IsCentralScalar S (M ⧸ N) :=
   Submodule.Quotient.is_central_scalar _
 
 instance inhabited : Inhabited (M ⧸ N) :=

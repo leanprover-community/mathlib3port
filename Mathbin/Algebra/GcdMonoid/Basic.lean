@@ -67,10 +67,10 @@ variable {α : Type _}
 elements. -/
 @[protect_proj]
 class NormalizationMonoid (α : Type _) [CancelCommMonoidWithZero α] where
-  normUnit : α → (α)ˣ
+  normUnit : α → αˣ
   norm_unit_zero : norm_unit 0 = 1
   norm_unit_mul : ∀ {a b}, a ≠ 0 → b ≠ 0 → norm_unit (a * b) = norm_unit a * norm_unit b
-  norm_unit_coe_units : ∀ u : (α)ˣ, norm_unit u = u⁻¹
+  norm_unit_coe_units : ∀ u : αˣ, norm_unit u = u⁻¹
 
 export NormalizationMonoid (normUnit norm_unit_zero norm_unit_mul norm_unit_coe_units)
 
@@ -121,7 +121,7 @@ theorem normalize_zero : normalize (0 : α) = 0 :=
 theorem normalize_one : normalize (1 : α) = 1 :=
   normalize.map_one
 
-theorem normalize_coe_units (u : (α)ˣ) : normalize (u : α) = 1 := by
+theorem normalize_coe_units (u : αˣ) : normalize (u : α) = 1 := by
   simp
 
 theorem normalize_eq_zero {x : α} : normalize x = 0 ↔ x = 0 :=
@@ -557,7 +557,7 @@ theorem exists_associated_pow_of_mul_eq_pow [GcdMonoid α] {a b c : α} (hab : I
   use Units.mkOfMulEqOne _ _ h'
   rw [Units.coe_mk_of_mul_eq_one, ha']
 
-theorem exists_eq_pow_of_mul_eq_pow [GcdMonoid α] [Unique (α)ˣ] {a b c : α} (hab : IsUnit (gcd a b)) {k : ℕ}
+theorem exists_eq_pow_of_mul_eq_pow [GcdMonoid α] [Unique αˣ] {a b c : α} (hab : IsUnit (gcd a b)) {k : ℕ}
     (h : a * b = c ^ k) : ∃ d : α, a = d ^ k :=
   let ⟨d, hd⟩ := exists_associated_pow_of_mul_eq_pow hab h
   ⟨d, (associated_iff_eq.mp hd).symm⟩
@@ -648,11 +648,11 @@ theorem lcm_dvd_lcm [GcdMonoid α] {a b c d : α} (hab : a ∣ b) (hcd : c ∣ d
   lcm_dvd (hab.trans (dvd_lcm_left _ _)) (hcd.trans (dvd_lcm_right _ _))
 
 @[simp]
-theorem lcm_units_coe_left [NormalizedGcdMonoid α] (u : (α)ˣ) (a : α) : lcm (↑u) a = normalize a :=
+theorem lcm_units_coe_left [NormalizedGcdMonoid α] (u : αˣ) (a : α) : lcm (↑u) a = normalize a :=
   lcm_eq_normalize (lcm_dvd Units.coe_dvd dvd_rfl) (dvd_lcm_right _ _)
 
 @[simp]
-theorem lcm_units_coe_right [NormalizedGcdMonoid α] (a : α) (u : (α)ˣ) : lcm a ↑u = normalize a :=
+theorem lcm_units_coe_right [NormalizedGcdMonoid α] (a : α) (u : αˣ) : lcm a ↑u = normalize a :=
   (lcm_comm a u).trans <| lcm_units_coe_left _ _
 
 @[simp]
@@ -749,7 +749,7 @@ end GcdMonoid
 
 section UniqueUnit
 
-variable [CancelCommMonoidWithZero α] [Unique (α)ˣ]
+variable [CancelCommMonoidWithZero α] [Unique αˣ]
 
 -- see Note [lower instance priority]
 instance (priority := 100) normalizationMonoidOfUniqueUnits : NormalizationMonoid α where

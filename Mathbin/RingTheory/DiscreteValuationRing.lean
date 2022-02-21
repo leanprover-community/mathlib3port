@@ -344,7 +344,7 @@ theorem associated_pow_irreducible {x : R} (hx : x ≠ 0) {ϖ : R} (hirr : Irred
   assumption
 
 theorem eq_unit_mul_pow_irreducible {x : R} (hx : x ≠ 0) {ϖ : R} (hirr : Irreducible ϖ) :
-    ∃ (n : ℕ)(u : (R)ˣ), x = u * ϖ ^ n := by
+    ∃ (n : ℕ)(u : Rˣ), x = u * ϖ ^ n := by
   obtain ⟨n, hn⟩ := associated_pow_irreducible hx hirr
   obtain ⟨u, rfl⟩ := hn.symm
   use n, u
@@ -363,7 +363,7 @@ theorem ideal_eq_span_pow_irreducible {s : Ideal R} (hs : s ≠ ⊥) {ϖ : R} (h
   rw [← this, ← hnu, span_singleton_eq_span_singleton]
   use u
 
-theorem unit_mul_pow_congr_pow {p q : R} (hp : Irreducible p) (hq : Irreducible q) (u v : (R)ˣ) (m n : ℕ)
+theorem unit_mul_pow_congr_pow {p q : R} (hp : Irreducible p) (hq : Irreducible q) (u v : Rˣ) (m n : ℕ)
     (h : ↑u * p ^ m = v * q ^ n) : m = n := by
   have key : Associated (Multiset.repeat p m).Prod (Multiset.repeat q n).Prod := by
     rw [Multiset.prod_repeat, Multiset.prod_repeat, Associated]
@@ -379,7 +379,7 @@ theorem unit_mul_pow_congr_pow {p q : R} (hp : Irreducible p) (hq : Irreducible 
     subst hx
     assumption
 
-theorem unit_mul_pow_congr_unit {ϖ : R} (hirr : Irreducible ϖ) (u v : (R)ˣ) (m n : ℕ) (h : ↑u * ϖ ^ m = v * ϖ ^ n) :
+theorem unit_mul_pow_congr_unit {ϖ : R} (hirr : Irreducible ϖ) (u v : Rˣ) (m n : ℕ) (h : ↑u * ϖ ^ m = v * ϖ ^ n) :
     u = v := by
   obtain rfl : m = n := unit_mul_pow_congr_pow hirr hirr u v m n h
   rw [← sub_eq_zero] at h
@@ -402,13 +402,13 @@ open multiplicity
 noncomputable def addVal (R : Type u) [CommRingₓ R] [IsDomain R] [DiscreteValuationRing R] : AddValuation R Enat :=
   AddValuation (Classical.some_spec (exists_prime R))
 
-theorem add_val_def (r : R) (u : (R)ˣ) {ϖ : R} (hϖ : Irreducible ϖ) (n : ℕ) (hr : r = u * ϖ ^ n) : addVal R r = n := by
+theorem add_val_def (r : R) (u : Rˣ) {ϖ : R} (hϖ : Irreducible ϖ) (n : ℕ) (hr : r = u * ϖ ^ n) : addVal R r = n := by
   rw [add_val, add_valuation_apply, hr,
     eq_of_associated_left (associated_of_irreducible R hϖ (Classical.some_spec (exists_prime R)).Irreducible),
     eq_of_associated_right (Associated.symm ⟨u, mul_comm _ _⟩),
     multiplicity_pow_self_of_prime (PrincipalIdealRing.irreducible_iff_prime.1 hϖ)]
 
-theorem add_val_def' (u : (R)ˣ) {ϖ : R} (hϖ : Irreducible ϖ) (n : ℕ) : addVal R ((u : R) * ϖ ^ n) = n :=
+theorem add_val_def' (u : Rˣ) {ϖ : R} (hϖ : Irreducible ϖ) (n : ℕ) : addVal R ((u : R) * ϖ ^ n) = n :=
   add_val_def _ u hϖ n rfl
 
 @[simp]

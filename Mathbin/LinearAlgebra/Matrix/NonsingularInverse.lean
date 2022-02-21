@@ -179,7 +179,7 @@ end Invertible
 
 open_locale Classical
 
-theorem is_unit_det_transpose (h : IsUnit A.det) : IsUnit (A)ᵀ.det := by
+theorem is_unit_det_transpose (h : IsUnit A.det) : IsUnit Aᵀ.det := by
   rw [det_transpose]
   exact h
 
@@ -215,10 +215,10 @@ theorem nonsing_inv_eq_ring_inverse : A⁻¹ = Ring.inverse A := by
     rw [Ring.inverse_non_unit _ h, nonsing_inv_apply_not_is_unit A h_det]
     
 
-theorem transpose_nonsing_inv : (A⁻¹)ᵀ = (A)ᵀ⁻¹ := by
+theorem transpose_nonsing_inv : A⁻¹ᵀ = Aᵀ⁻¹ := by
   rw [inv_def, inv_def, transpose_smul, det_transpose, adjugate_transpose]
 
-theorem conj_transpose_nonsing_inv [StarRing α] : (A⁻¹)ᴴ = (A)ᴴ⁻¹ := by
+theorem conj_transpose_nonsing_inv [StarRing α] : A⁻¹ᴴ = Aᴴ⁻¹ := by
   rw [inv_def, inv_def, conj_transpose_smul, det_conj_transpose, adjugate_conj_transpose, Ringₓ.inverse_star]
 
 /-- The `nonsing_inv` of `A` is a right inverse. -/
@@ -361,7 +361,7 @@ theorem inv_smul (k : α) [Invertible k] (h : IsUnit A.det) : (k • A)⁻¹ = �
     (by
       simp [h, smul_smul])
 
-theorem inv_smul' (k : (α)ˣ) (h : IsUnit A.det) : (k • A)⁻¹ = k⁻¹ • A⁻¹ :=
+theorem inv_smul' (k : αˣ) (h : IsUnit A.det) : (k • A)⁻¹ = k⁻¹ • A⁻¹ :=
   inv_eq_left_inv
     (by
       simp [h, smul_smul])
@@ -391,9 +391,9 @@ theorem det_smul_inv_mul_vec_eq_cramer (A : Matrix n n α) (b : n → α) (h : I
 /-- One form of **Cramer's rule**. See `matrix.mul_vec_cramer` for a stronger form. -/
 @[simp]
 theorem det_smul_inv_vec_mul_eq_cramer_transpose (A : Matrix n n α) (b : n → α) (h : IsUnit A.det) :
-    A.det • A⁻¹.vecMul b = cramer (A)ᵀ b := by
+    A.det • A⁻¹.vecMul b = cramer Aᵀ b := by
   rw [← A⁻¹.transpose_transpose, vec_mul_transpose, transpose_nonsing_inv, ← det_transpose,
-    (A)ᵀ.det_smul_inv_mul_vec_eq_cramer _ (is_unit_det_transpose A h)]
+    Aᵀ.det_smul_inv_mul_vec_eq_cramer _ (is_unit_det_transpose A h)]
 
 end Matrix
 

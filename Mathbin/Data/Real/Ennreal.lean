@@ -462,7 +462,7 @@ noncomputable instance {A : Type _} [Semiringₓ A] [Algebra ℝ≥0∞ A] : Alg
 noncomputable example : Algebra ℝ≥0 ℝ≥0∞ := by
   infer_instance
 
-noncomputable example : DistribMulAction ( ℝ≥0 )ˣ ℝ≥0∞ := by
+noncomputable example : DistribMulAction ℝ≥0 ˣ ℝ≥0∞ := by
   infer_instance
 
 theorem coe_smul {R} (r : R) (s : ℝ≥0 ) [HasScalar R ℝ≥0 ] [HasScalar R ℝ≥0∞] [IsScalarTower R ℝ≥0 ℝ≥0 ]

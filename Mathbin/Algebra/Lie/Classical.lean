@@ -147,7 +147,7 @@ def so [Fintype n] : LieSubalgebra R (Matrix n n R) :=
   skewAdjointMatricesLieSubalgebra (1 : Matrix n n R)
 
 @[simp]
-theorem mem_so [Fintype n] (A : Matrix n n R) : A ∈ so n R ↔ (A)ᵀ = -A := by
+theorem mem_so [Fintype n] (A : Matrix n n R) : A ∈ so n R ↔ Aᵀ = -A := by
   erw [mem_skew_adjoint_matrices_submodule]
   simp only [Matrix.IsSkewAdjoint, Matrix.IsAdjointPair, Matrix.mul_one, Matrix.one_mul]
 

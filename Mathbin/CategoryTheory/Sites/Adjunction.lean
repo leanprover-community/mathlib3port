@@ -45,7 +45,7 @@ abbrev sheafForget : Sheaf J D ⥤ SheafOfTypes J :=
 
 -- We need to sheafify...
 variable [∀ P : Cᵒᵖ ⥤ D X : C S : J.cover X, HasMultiequalizer (S.index P)]
-  [∀ X : C, HasColimitsOfShape (J.cover Xᵒᵖ) D] [∀ X : C, PreservesColimitsOfShape (J.cover Xᵒᵖ) (forget D)]
+  [∀ X : C, HasColimitsOfShape (J.cover X)ᵒᵖ D] [∀ X : C, PreservesColimitsOfShape (J.cover X)ᵒᵖ (forget D)]
   [ReflectsIsomorphisms (forget D)]
 
 namespace Sheaf
@@ -61,7 +61,7 @@ abbrev composeAndSheafify (G : E ⥤ D) : Sheaf J E ⥤ Sheaf J D :=
 @[simps]
 def composeEquiv (adj : G ⊣ F) (X : Sheaf J E) (Y : Sheaf J D) :
     ((composeAndSheafify J G).obj X ⟶ Y) ≃ (X ⟶ (sheafCompose J F).obj Y) :=
-  let A := adj.whiskerRight (Cᵒᵖ)
+  let A := adj.whiskerRight Cᵒᵖ
   { toFun := fun η => ⟨A.homEquiv _ _ (J.toSheafify _ ≫ η.val)⟩,
     invFun := fun γ => ⟨J.sheafifyLift ((A.homEquiv _ _).symm ((sheafToPresheaf _ _).map γ)) Y.2⟩,
     left_inv := by

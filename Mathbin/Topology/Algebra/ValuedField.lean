@@ -46,8 +46,8 @@ variable {Γ₀ : Type _} [LinearOrderedCommGroupWithZero Γ₀] (v : Valuation 
 -- in the topology induced by a valuation on a division ring (ie the next instance)
 -- and the fact that a valued field is completable
 -- [BouAC, VI.5.1 Lemme 1]
-theorem Valuation.inversion_estimate {x y : K} {γ : (Γ₀)ˣ} (y_ne : y ≠ 0)
-    (h : v (x - y) < min (γ * (v y * v y)) (v y)) : v (x⁻¹ - y⁻¹) < γ := by
+theorem Valuation.inversion_estimate {x y : K} {γ : Γ₀ˣ} (y_ne : y ≠ 0) (h : v (x - y) < min (γ * (v y * v y)) (v y)) :
+    v (x⁻¹ - y⁻¹) < γ := by
   have hyp1 : v (x - y) < γ * (v y * v y) := lt_of_lt_of_leₓ h (min_le_leftₓ _ _)
   have hyp1' : v (x - y) * (v y * v y)⁻¹ < γ := mul_inv_lt_of_lt_mul₀ hyp1
   have hyp2 : v (x - y) < v y := lt_of_lt_of_leₓ h (min_le_rightₓ _ _)

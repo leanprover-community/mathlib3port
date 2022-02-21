@@ -97,10 +97,10 @@ def cramer (A : Matrix n n α) : (n → α) →ₗ[α] n → α :=
 theorem cramer_apply (i : n) : cramer A b i = (A.updateColumn i b).det :=
   rfl
 
-theorem cramer_transpose_apply (i : n) : cramer (A)ᵀ b i = (A.updateRow i b).det := by
+theorem cramer_transpose_apply (i : n) : cramer Aᵀ b i = (A.updateRow i b).det := by
   rw [cramer_apply, update_column_transpose, det_transpose]
 
-theorem cramer_transpose_row_self (i : n) : (A)ᵀ.cramer (A i) = Pi.single i A.det := by
+theorem cramer_transpose_row_self (i : n) : Aᵀ.cramer (A i) = Pi.single i A.det := by
   ext j
   rw [cramer_apply, Pi.single_apply]
   split_ifs with h
@@ -116,7 +116,7 @@ theorem cramer_transpose_row_self (i : n) : (A)ᵀ.cramer (A i) = Pi.single i A.
 
 theorem cramer_row_self (i : n) (h : ∀ j, b j = A j i) : A.cramer b = Pi.single i A.det := by
   rw [← transpose_transpose A, det_transpose]
-  convert cramer_transpose_row_self (A)ᵀ i
+  convert cramer_transpose_row_self Aᵀ i
   exact funext h
 
 @[simp]
@@ -178,9 +178,9 @@ These will hold for any matrix over a commutative ring.
   minor as replacing a column with a basis vector, since it allows us to use
   facts about the `cramer` map.
 -/
-def adjugate (A : Matrix n n α) : Matrix n n α := fun i => cramer (A)ᵀ (Pi.single i 1)
+def adjugate (A : Matrix n n α) : Matrix n n α := fun i => cramer Aᵀ (Pi.single i 1)
 
-theorem adjugate_def (A : Matrix n n α) : adjugate A = fun i => cramer (A)ᵀ (Pi.single i 1) :=
+theorem adjugate_def (A : Matrix n n α) : adjugate A = fun i => cramer Aᵀ (Pi.single i 1) :=
   rfl
 
 theorem adjugate_apply (A : Matrix n n α) (i j : n) : adjugate A i j = (A.updateRow j (Pi.single i 1)).det := by
@@ -188,7 +188,7 @@ theorem adjugate_apply (A : Matrix n n α) (i j : n) : adjugate A i j = (A.updat
   simp only
   rw [cramer_apply, update_column_transpose, det_transpose]
 
-theorem adjugate_transpose (A : Matrix n n α) : (adjugate A)ᵀ = adjugate (A)ᵀ := by
+theorem adjugate_transpose (A : Matrix n n α) : (adjugate A)ᵀ = adjugate Aᵀ := by
   ext i j
   rw [transpose_apply, adjugate_apply, adjugate_apply, update_row_transpose, det_transpose]
   rw [det_apply', det_apply']
@@ -233,7 +233,7 @@ theorem cramer_eq_adjugate_mul_vec (A : Matrix n n α) (b : n → α) : cramer A
   ext k
   simp [mul_vec, dot_product, mul_comm]
 
-theorem mul_adjugate_apply (A : Matrix n n α) i j k : A i k * adjugate A k j = cramer (A)ᵀ (Pi.single k (A i k)) j := by
+theorem mul_adjugate_apply (A : Matrix n n α) i j k : A i k * adjugate A k j = cramer Aᵀ (Pi.single k (A i k)) j := by
   erw [← smul_eq_mul, ← Pi.smul_apply, ← LinearMap.map_smul, ← Pi.single_smul', smul_eq_mul, mul_oneₓ]
 
 theorem mul_adjugate (A : Matrix n n α) : A ⬝ adjugate A = A.det • 1 := by
@@ -243,10 +243,10 @@ theorem mul_adjugate (A : Matrix n n α) : A ⬝ adjugate A = A.det • 1 := by
 
 theorem adjugate_mul (A : Matrix n n α) : adjugate A ⬝ A = A.det • 1 :=
   calc
-    adjugate A ⬝ A = ((A)ᵀ ⬝ adjugate (A)ᵀ)ᵀ := by
+    adjugate A ⬝ A = (Aᵀ ⬝ adjugate Aᵀ)ᵀ := by
       rw [← adjugate_transpose, ← transpose_mul, transpose_transpose]
     _ = A.det • 1 := by
-      rw [mul_adjugate (A)ᵀ, det_transpose, transpose_smul, transpose_one]
+      rw [mul_adjugate Aᵀ, det_transpose, transpose_smul, transpose_one]
     
 
 theorem adjugate_smul (r : α) (A : Matrix n n α) : adjugate (r • A) = r ^ (Fintype.card n - 1) • adjugate A := by
@@ -345,9 +345,9 @@ theorem adjugate_fin_two' (a b c d : α) :
       «expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»" :=
   adjugate_fin_two _
 
-theorem adjugate_conj_transpose [StarRing α] (A : Matrix n n α) : (A.adjugate)ᴴ = adjugate (A)ᴴ := by
+theorem adjugate_conj_transpose [StarRing α] (A : Matrix n n α) : A.adjugateᴴ = adjugate Aᴴ := by
   dsimp only [conj_transpose]
-  have : (A)ᵀ.adjugate.map star = adjugate ((A)ᵀ.map star) := (starRingEnd α).map_adjugate (A)ᵀ
+  have : Aᵀ.adjugate.map star = adjugate (Aᵀ.map star) := (starRingEnd α).map_adjugate Aᵀ
   rw [A.adjugate_transpose, this]
 
 theorem is_regular_of_is_left_regular_det {A : Matrix n n α} (hA : IsLeftRegular A.det) : IsRegular A := by

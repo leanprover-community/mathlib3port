@@ -98,7 +98,7 @@ theorem Continuous.smul (hf : Continuous f) (hg : Continuous g) : Continuous fun
   continuous_smul.comp (hf.prod_mk hg)
 
 /-- If a scalar is central, then its right action is continuous when its left action is. -/
-instance HasContinuousSmul.op [HasScalar (Mᵐᵒᵖ) X] [IsCentralScalar M X] : HasContinuousSmul (Mᵐᵒᵖ) X :=
+instance HasContinuousSmul.op [HasScalar Mᵐᵒᵖ X] [IsCentralScalar M X] : HasContinuousSmul Mᵐᵒᵖ X :=
   ⟨by
     suffices Continuous fun p : M × X => MulOpposite.op p.fst • p.snd from
       this.comp (MulOpposite.continuous_unop.prod_map continuous_id)
@@ -111,9 +111,9 @@ section Monoidₓ
 variable [Monoidₓ M] [MulAction M X] [HasContinuousSmul M X]
 
 @[to_additive]
-instance Units.has_continuous_smul : HasContinuousSmul (M)ˣ X where
+instance Units.has_continuous_smul : HasContinuousSmul Mˣ X where
   continuous_smul :=
-    show Continuous ((fun p : M × X => p.fst • p.snd) ∘ fun p : (M)ˣ × X => (p.1, p.2)) from
+    show Continuous ((fun p : M × X => p.fst • p.snd) ∘ fun p : Mˣ × X => (p.1, p.2)) from
       continuous_smul.comp ((Units.continuous_coe.comp continuous_fst).prod_mk continuous_snd)
 
 end Monoidₓ

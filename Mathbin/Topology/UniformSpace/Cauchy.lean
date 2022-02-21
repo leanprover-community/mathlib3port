@@ -13,7 +13,7 @@ import Mathbin.Topology.UniformSpace.Basic
 
 universe u v
 
-open Filter TopologicalSpace Set Classical UniformSpace
+open Filter TopologicalSpace Set Classical UniformSpace Function
 
 open_locale Classical uniformity TopologicalSpace Filter
 
@@ -169,6 +169,16 @@ theorem cauchy_seq_iff_tendsto [Nonempty β] [SemilatticeSup β] {u : β → α}
 theorem CauchySeq.comp_tendsto {γ} [SemilatticeSup β] [SemilatticeSup γ] [Nonempty γ] {f : β → α} (hf : CauchySeq f)
     {g : γ → β} (hg : Tendsto g atTop atTop) : CauchySeq (f ∘ g) :=
   cauchy_seq_iff_tendsto.2 <| hf.tendsto_uniformity.comp (hg.prod_at_top hg)
+
+theorem CauchySeq.comp_injective [SemilatticeSup β] [NoMaxOrder β] [Nonempty β] {u : ℕ → α} (hu : CauchySeq u)
+    {f : β → ℕ} (hf : Injective f) : CauchySeq (u ∘ f) :=
+  hu.comp_tendsto <| Nat.cofinite_eq_at_top ▸ hf.tendsto_cofinite.mono_left at_top_le_cofinite
+
+theorem Function.Bijective.cauchy_seq_comp_iff {f : ℕ → ℕ} (hf : Bijective f) (u : ℕ → α) :
+    CauchySeq (u ∘ f) ↔ CauchySeq u := by
+  refine' ⟨fun H => _, fun H => H.comp_injective hf.injective⟩
+  lift f to ℕ ≃ ℕ using hf
+  simpa only [(· ∘ ·), f.apply_symm_apply] using H.comp_injective f.symm.injective
 
 theorem CauchySeq.subseq_subseq_mem {V : ℕ → Set (α × α)} (hV : ∀ n, V n ∈ 𝓤 α) {u : ℕ → α} (hu : CauchySeq u)
     {f g : ℕ → ℕ} (hf : Tendsto f atTop atTop) (hg : Tendsto g atTop atTop) :

@@ -445,7 +445,7 @@ instance CompatibleSmul.intModule {S : Type _} [Semiringₓ S] [Module S M] [Mod
       simp [sub_smul, ih]⟩
 
 instance CompatibleSmul.units {R S : Type _} [Monoidₓ R] [MulAction R M] [MulAction R M₂] [Semiringₓ S] [Module S M]
-    [Module S M₂] [CompatibleSmul M M₂ R S] : CompatibleSmul M M₂ (R)ˣ S :=
+    [Module S M₂] [CompatibleSmul M M₂ R S] : CompatibleSmul M M₂ Rˣ S :=
   ⟨fun fₗ c x => (CompatibleSmul.map_smul fₗ (c : R) x : _)⟩
 
 end AddCommGroupₓ
@@ -799,7 +799,7 @@ instance [SmulCommClass S T M₂] : SmulCommClass S T (M →ₛₗ[σ₁₂] M�
 instance [HasScalar S T] [IsScalarTower S T M₂] : IsScalarTower S T (M →ₛₗ[σ₁₂] M₂) where
   smul_assoc := fun _ _ _ => ext fun _ => smul_assoc _ _ _
 
-instance [DistribMulAction (Sᵐᵒᵖ) M₂] [SmulCommClass R₂ (Sᵐᵒᵖ) M₂] [IsCentralScalar S M₂] :
+instance [DistribMulAction Sᵐᵒᵖ M₂] [SmulCommClass R₂ Sᵐᵒᵖ M₂] [IsCentralScalar S M₂] :
     IsCentralScalar S (M →ₛₗ[σ₁₂] M₂) where
   op_smul_eq_smul := fun a b => ext fun x => op_smul_eq_smul _ _
 

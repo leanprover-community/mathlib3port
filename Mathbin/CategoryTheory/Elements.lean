@@ -179,7 +179,7 @@ def toCostructuredArrow (F : Cᵒᵖ ⥤ Type v) : F.Elementsᵒᵖ ⥤ Costruct
 given by `category_theory.yoneda_equiv`.
 -/
 @[simps]
-def fromCostructuredArrow (F : Cᵒᵖ ⥤ Type v) : CostructuredArrow yoneda Fᵒᵖ ⥤ F.Elements where
+def fromCostructuredArrow (F : Cᵒᵖ ⥤ Type v) : (CostructuredArrow yoneda F)ᵒᵖ ⥤ F.Elements where
   obj := fun X => ⟨op (unop X).1, yonedaEquiv.1 (unop X).3⟩
   map := fun X Y f =>
     ⟨f.unop.1.op, by

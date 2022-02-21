@@ -60,7 +60,7 @@ theorem mul_matrix_apply [Fintype m] [DecidableEq m] [Semiringₓ α] (f : l ≃
     
 
 theorem to_matrix_symm [DecidableEq m] [DecidableEq n] [Zero α] [One α] (f : m ≃. n) :
-    (f.symm.toMatrix : Matrix n m α) = (f.toMatrix)ᵀ := by
+    (f.symm.toMatrix : Matrix n m α) = f.toMatrixᵀ := by
   ext <;> simp only [transpose, mem_iff_mem f, to_matrix] <;> congr
 
 @[simp]

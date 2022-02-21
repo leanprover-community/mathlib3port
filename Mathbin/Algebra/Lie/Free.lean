@@ -108,7 +108,7 @@ namespace FreeLieAlgebra
 instance {S : Type _} [Monoidₓ S] [DistribMulAction S R] [IsScalarTower S R R] : HasScalar S (FreeLieAlgebra R X) where
   smul := fun t => Quot.map ((· • ·) t) (Rel.smul_of_tower t)
 
-instance {S : Type _} [Monoidₓ S] [DistribMulAction S R] [DistribMulAction (Sᵐᵒᵖ) R] [IsScalarTower S R R]
+instance {S : Type _} [Monoidₓ S] [DistribMulAction S R] [DistribMulAction Sᵐᵒᵖ R] [IsScalarTower S R R]
     [IsCentralScalar S R] : IsCentralScalar S (FreeLieAlgebra R X) where
   op_smul_eq_smul := fun t => Quot.ind fun a => congr_argₓ (Quot.mk _) (op_smul_eq_smul t a)
 

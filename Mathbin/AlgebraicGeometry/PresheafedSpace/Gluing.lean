@@ -262,7 +262,7 @@ theorem opens_image_preimage_map_app_assoc (i j k : D.J) (U : Opens (D.U i).Carr
 
 /-- (Implementation) Given an open subset of one of the spaces `U ⊆ Uᵢ`, the sheaf component of
 the image `ι '' U` in the glued space is the limit of this diagram. -/
-abbrev diagramOverOpen {i : D.J} (U : Opens (D.U i).Carrier) : WalkingMultispan _ _ᵒᵖ ⥤ C :=
+abbrev diagramOverOpen {i : D.J} (U : Opens (D.U i).Carrier) : (WalkingMultispan _ _)ᵒᵖ ⥤ C :=
   componentwiseDiagram 𝖣.diagram.multispan ((D.ι_open_embedding i).IsOpenMap.Functor.obj U)
 
 /-- (Implementation)

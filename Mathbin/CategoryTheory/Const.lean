@@ -55,7 +55,7 @@ theorem map_app {X Y : C} (f : X ⟶ Y) (j : J) : ((const J).map f).app j = f :=
 /-- The contant functor `Jᵒᵖ ⥤ Cᵒᵖ` sending everything to `op X`
 is (naturally isomorphic to) the opposite of the constant functor `J ⥤ C` sending everything to `X`.
 -/
-def opObjOp (X : C) : (const (Jᵒᵖ)).obj (op X) ≅ ((const J).obj X).op where
+def opObjOp (X : C) : (const Jᵒᵖ).obj (op X) ≅ ((const J).obj X).op where
   Hom := { app := fun j => 𝟙 _ }
   inv := { app := fun j => 𝟙 _ }
 
@@ -71,7 +71,7 @@ theorem op_obj_op_inv_app (X : C) (j : Jᵒᵖ) : (opObjOp X).inv.app j = 𝟙 _
 is (naturally isomorphic to) the opposite of
 the constant functor `J ⥤ Cᵒᵖ` sending everything to `X`.
 -/
-def opObjUnop (X : Cᵒᵖ) : (const (Jᵒᵖ)).obj (unop X) ≅ ((const J).obj X).leftOp where
+def opObjUnop (X : Cᵒᵖ) : (const Jᵒᵖ).obj (unop X) ≅ ((const J).obj X).leftOp where
   Hom := { app := fun j => 𝟙 _ }
   inv := { app := fun j => 𝟙 _ }
 

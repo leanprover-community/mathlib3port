@@ -369,7 +369,7 @@ namespace MulOpposite
 
 /-- If multiplication is continuous in `α`, then it also is in `αᵐᵒᵖ`. -/
 @[to_additive]
-instance [TopologicalSpace α] [Mul α] [HasContinuousMul α] : HasContinuousMul (αᵐᵒᵖ) :=
+instance [TopologicalSpace α] [Mul α] [HasContinuousMul α] : HasContinuousMul αᵐᵒᵖ :=
   ⟨let h₁ := @continuous_mul α _ _ _
     let h₂ : Continuous fun p : α × α => _ := continuous_snd.prod_mk continuous_fst
     continuous_induced_rng <| (h₁.comp h₂).comp (continuous_unop.prod_map continuous_unop)⟩
@@ -388,7 +388,7 @@ with respect to the induced topology, is continuous.
 Inversion is also continuous, but we register this in a later file, `topology.algebra.group`,
 because the predicate `has_continuous_inv` has not yet been defined. -/
 @[to_additive]
-instance : HasContinuousMul (α)ˣ :=
+instance : HasContinuousMul αˣ :=
   ⟨let h := @continuous_mul (α × αᵐᵒᵖ) _ _ _
     continuous_induced_rng <| h.comp <| continuous_embed_product.prod_map continuous_embed_product⟩
 

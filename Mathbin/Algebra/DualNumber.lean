@@ -47,7 +47,7 @@ def DualNumber.eps [Zero R] [One R] : DualNumber R :=
 
 localized [DualNumber] notation "ε" => DualNumber.eps
 
-localized [DualNumber] postfix:1025 "[ε]" => DualNumber
+localized [DualNumber] postfix:1024 "[ε]" => DualNumber
 
 open_locale DualNumber
 
@@ -65,20 +65,20 @@ theorem snd_eps [Zero R] [One R] : snd ε = (1 : R) :=
 
 /-- A version of `triv_sq_zero_ext.snd_mul` with `*` instead of `•`. -/
 @[simp]
-theorem snd_mul [Semiringₓ R] (x y : (R)[ε]) : snd (x * y) = fst x * snd y + fst y * snd x :=
+theorem snd_mul [Semiringₓ R] (x y : R[ε]) : snd (x * y) = fst x * snd y + fst y * snd x :=
   snd_mul _ _
 
 @[simp]
-theorem eps_mul_eps [Semiringₓ R] : (ε * ε : (R)[ε]) = 0 :=
+theorem eps_mul_eps [Semiringₓ R] : (ε * ε : R[ε]) = 0 :=
   inr_mul_inr _ _ _
 
 @[simp]
-theorem inr_eq_smul_eps [MulZeroOneClassₓ R] (r : R) : inr r = (r • ε : (R)[ε]) :=
+theorem inr_eq_smul_eps [MulZeroOneClassₓ R] (r : R) : inr r = (r • ε : R[ε]) :=
   ext (mul_zero r).symm (mul_oneₓ r).symm
 
 /-- For two algebra morphisms out of `R[ε]` to agree, it suffices for them to agree on `ε`. -/
 @[ext]
-theorem alg_hom_ext {A} [CommSemiringₓ R] [Semiringₓ A] [Algebra R A] ⦃f g : (R)[ε] →ₐ[R] A⦄ (h : f ε = g ε) : f = g :=
+theorem alg_hom_ext {A} [CommSemiringₓ R] [Semiringₓ A] [Algebra R A] ⦃f g : R[ε] →ₐ[R] A⦄ (h : f ε = g ε) : f = g :=
   alg_hom_ext' <| LinearMap.ext_ring <| h
 
 variable {A : Type _} [CommSemiringₓ R] [Semiringₓ A] [Algebra R A]
@@ -88,7 +88,7 @@ of `A` which squares to `0`.
 
 This isomorphism is named to match the very similar `complex.lift`. -/
 @[simps (config := { attrs := [] })]
-def lift : { e : A // e * e = 0 } ≃ ((R)[ε] →ₐ[R] A) :=
+def lift : { e : A // e * e = 0 } ≃ (R[ε] →ₐ[R] A) :=
   Equivₓ.trans
     (show { e : A // e * e = 0 } ≃ { f : R →ₗ[R] A // ∀ x y, f x * f y = 0 } from
       (LinearMap.ringLmapEquivSelf R ℕ A).symm.toEquiv.subtypeEquiv fun a => by
@@ -101,12 +101,12 @@ def lift : { e : A // e * e = 0 } ≃ ((R)[ε] →ₐ[R] A) :=
 
 -- When applied to `ε`, `dual_number.lift` produces the element of `A` that squares to 0.
 @[simp]
-theorem lift_apply_eps (e : { e : A // e * e = 0 }) : lift e (ε : (R)[ε]) = e :=
+theorem lift_apply_eps (e : { e : A // e * e = 0 }) : lift e (ε : R[ε]) = e :=
   (TrivSqZeroExt.lift_aux_apply_inr _ _ _).trans <| one_smul _ _
 
 -- Lifting `dual_number.eps` itself gives the identity.
 @[simp]
-theorem lift_eps : lift ⟨ε, eps_mul_eps⟩ = AlgHom.id R (R)[ε] :=
+theorem lift_eps : lift ⟨ε, eps_mul_eps⟩ = AlgHom.id R R[ε] :=
   alg_hom_ext <| lift_apply_eps _
 
 end DualNumber

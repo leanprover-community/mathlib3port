@@ -39,7 +39,7 @@ variable (P : Cᵒᵖ ⥤ D)
 
 /-- The diagram whose colimit defines the values of `plus`. -/
 @[simps]
-def diagram (X : C) : J.cover Xᵒᵖ ⥤ D where
+def diagram (X : C) : (J.cover X)ᵒᵖ ⥤ D where
   obj := fun S => multiequalizer (S.unop.index P)
   map := fun S T f =>
     (multiequalizer.lift _ _ fun I => multiequalizer.ι (S.unop.index P) (I.map f.unop)) fun I =>
@@ -97,7 +97,7 @@ variable (D)
 
 /-- `J.diagram P`, as a functor in `P`. -/
 @[simps]
-def diagramFunctor (X : C) : (Cᵒᵖ ⥤ D) ⥤ J.cover Xᵒᵖ ⥤ D where
+def diagramFunctor (X : C) : (Cᵒᵖ ⥤ D) ⥤ (J.cover X)ᵒᵖ ⥤ D where
   obj := fun P => J.diagram P X
   map := fun P Q η => J.diagramNatTrans η X
   map_id' := fun P => J.diagram_nat_trans_id _ _
@@ -105,7 +105,7 @@ def diagramFunctor (X : C) : (Cᵒᵖ ⥤ D) ⥤ J.cover Xᵒᵖ ⥤ D where
 
 variable {D}
 
-variable [∀ X : C, HasColimitsOfShape (J.cover Xᵒᵖ) D]
+variable [∀ X : C, HasColimitsOfShape (J.cover X)ᵒᵖ D]
 
 /-- The plus construction, associating a presheaf to any presheaf.
 See `plus_functor` below for a functorial version. -/
@@ -274,7 +274,7 @@ theorem is_iso_to_plus_of_is_sheaf (hP : Presheaf.IsSheaf J P) : IsIso (J.toPlus
   suffices is_iso (colimit.ι (J.diagram P X.unop) (op ⊤)) by
     skip
     apply is_iso.comp_is_iso
-  suffices ∀ S T : J.cover X.unopᵒᵖ f : S ⟶ T, is_iso ((J.diagram P X.unop).map f) by
+  suffices ∀ S T : (J.cover X.unop)ᵒᵖ f : S ⟶ T, is_iso ((J.diagram P X.unop).map f) by
     skip
     apply is_iso_ι_of_is_initial (initial_op_of_terminal is_terminal_top)
   intro S T e

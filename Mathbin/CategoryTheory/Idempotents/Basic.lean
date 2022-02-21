@@ -190,7 +190,7 @@ theorem is_idempotent_complete_iff_of_equivalence {D : Type _} [Category D] (ε 
   · exact equivalence.is_idempotent_complete ε.symm
     
 
-theorem is_idempotent_complete_of_is_idempotent_complete_opposite (h : IsIdempotentComplete (Cᵒᵖ)) :
+theorem is_idempotent_complete_of_is_idempotent_complete_opposite (h : IsIdempotentComplete Cᵒᵖ) :
     IsIdempotentComplete C := by
   refine' ⟨_⟩
   intro X p hp
@@ -205,7 +205,7 @@ theorem is_idempotent_complete_of_is_idempotent_complete_opposite (h : IsIdempot
   · simpa only [← unop_comp, h₂]
     
 
-theorem is_idempotent_complete_iff_opposite : IsIdempotentComplete (Cᵒᵖ) ↔ IsIdempotentComplete C := by
+theorem is_idempotent_complete_iff_opposite : IsIdempotentComplete Cᵒᵖ ↔ IsIdempotentComplete C := by
   constructor
   · exact is_idempotent_complete_of_is_idempotent_complete_opposite
     
@@ -215,7 +215,7 @@ theorem is_idempotent_complete_iff_opposite : IsIdempotentComplete (Cᵒᵖ) ↔
     exact h
     
 
-instance [IsIdempotentComplete C] : IsIdempotentComplete (Cᵒᵖ) := by
+instance [IsIdempotentComplete C] : IsIdempotentComplete Cᵒᵖ := by
   rwa [is_idempotent_complete_iff_opposite]
 
 end Idempotents

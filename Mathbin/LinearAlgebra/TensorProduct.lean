@@ -309,7 +309,7 @@ instance leftModule : Module R'' (M ⊗[R] N) :=
 instance : Module R (M ⊗[R] N) :=
   TensorProduct.leftModule
 
-instance [Module (R''ᵐᵒᵖ) M] [IsCentralScalar R'' M] : IsCentralScalar R'' (M ⊗[R] N) where
+instance [Module R''ᵐᵒᵖ M] [IsCentralScalar R'' M] : IsCentralScalar R'' (M ⊗[R] N) where
   op_smul_eq_smul := fun r x =>
     TensorProduct.induction_on x
       (by
@@ -1086,7 +1086,7 @@ instance CompatibleSmul.int [Module ℤ M] [Module ℤ N] : CompatibleSmul R ℤ
       simpa [sub_smul, tmul_sub, sub_tmul] using ih⟩
 
 instance CompatibleSmul.unit {S} [Monoidₓ S] [DistribMulAction S M] [DistribMulAction S N] [CompatibleSmul R S M N] :
-    CompatibleSmul R (S)ˣ M N :=
+    CompatibleSmul R Sˣ M N :=
   ⟨fun s m n => (CompatibleSmul.smul_tmul (s : S) m n : _)⟩
 
 end TensorProduct

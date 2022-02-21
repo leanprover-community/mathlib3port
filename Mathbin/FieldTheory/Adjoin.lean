@@ -341,9 +341,8 @@ instance (priority := 1000) insertEmpty {α : Type _} : Insert (∅ : Set α) wh
 instance (priority := 900) insertNonempty {α : Type _} (s : Set α) : Insert s where
   insert := fun x => Set.Insert x s
 
--- ././Mathport/Syntax/Translate/Basic.lean:462:9: unsupported: advanced prec syntax
--- ././Mathport/Syntax/Translate/Basic.lean:1379:9: unsupported: advanced notation (l:(foldr `, ` (h t, insert.insert t h) «expr∅»()))
-notation3:999 K "⟮"  "⟯" => adjoin K l
+-- ././Mathport/Syntax/Translate/Basic.lean:1387:9: unsupported: advanced notation (l:(foldr `, ` (h t, insert.insert t h) «expr∅»()))
+notation3:max K "⟮"  "⟯" => adjoin K l
 
 section AdjoinSimple
 

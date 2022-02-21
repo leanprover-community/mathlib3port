@@ -60,7 +60,7 @@ theorem diag_one [DecidableEq n] : diag n R R 1 = fun i => 1 := by
   simp [one_apply_eq]
 
 @[simp]
-theorem diag_transpose (A : Matrix n n M) : diag n R M (A)ᵀ = diag n R M A :=
+theorem diag_transpose (A : Matrix n n M) : diag n R M Aᵀ = diag n R M A :=
   rfl
 
 @[simp]
@@ -96,11 +96,11 @@ theorem trace_one [DecidableEq n] : trace n R R 1 = Fintype.card n := by
   simp_rw [h, diag_one, Finset.sum_const, nsmul_one] <;> rfl
 
 @[simp]
-theorem trace_transpose (A : Matrix n n M) : trace n R M (A)ᵀ = trace n R M A :=
+theorem trace_transpose (A : Matrix n n M) : trace n R M Aᵀ = trace n R M A :=
   rfl
 
 @[simp]
-theorem trace_transpose_mul (A : Matrix m n R) (B : Matrix n m R) : trace n R R ((A)ᵀ ⬝ (B)ᵀ) = trace m R R (A ⬝ B) :=
+theorem trace_transpose_mul (A : Matrix m n R) (B : Matrix n m R) : trace n R R (Aᵀ ⬝ Bᵀ) = trace m R R (A ⬝ B) :=
   Finset.sum_comm
 
 theorem trace_mul_comm {S : Type v} [CommSemiringₓ S] (A : Matrix m n S) (B : Matrix n m S) :

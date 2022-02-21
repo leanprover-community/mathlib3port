@@ -112,9 +112,9 @@ attribute [instance] has_left_dual.exact
 
 open ExactPairing HasRightDual HasLeftDual MonoidalCategory
 
-prefix:1025 "ᘁ" => leftDual
+prefix:1024 "ᘁ" => leftDual
 
-postfix:1025 "ᘁ" => rightDual
+postfix:1024 "ᘁ" => rightDual
 
 instance hasRightDualUnit : HasRightDual (𝟙_ C) where
   rightDual := 𝟙_ C
@@ -122,27 +122,27 @@ instance hasRightDualUnit : HasRightDual (𝟙_ C) where
 instance hasLeftDualUnit : HasLeftDual (𝟙_ C) where
   leftDual := 𝟙_ C
 
-instance hasRightDualLeftDual {X : C} [HasLeftDual X] : HasRightDual ᘁ(X) where
+instance hasRightDualLeftDual {X : C} [HasLeftDual X] : HasRightDual ᘁX where
   rightDual := X
 
-instance hasLeftDualRightDual {X : C} [HasRightDual X] : HasLeftDual (X)ᘁ where
+instance hasLeftDualRightDual {X : C} [HasRightDual X] : HasLeftDual Xᘁ where
   leftDual := X
 
 @[simp]
-theorem left_dual_right_dual {X : C} [HasRightDual X] : ᘁ(X)ᘁ = X :=
+theorem left_dual_right_dual {X : C} [HasRightDual X] : ᘁXᘁ = X :=
   rfl
 
 @[simp]
-theorem right_dual_left_dual {X : C} [HasLeftDual X] : (ᘁ(X))ᘁ = X :=
+theorem right_dual_left_dual {X : C} [HasLeftDual X] : (ᘁX)ᘁ = X :=
   rfl
 
 /-- The right adjoint mate `fᘁ : Xᘁ ⟶ Yᘁ` of a morphism `f : X ⟶ Y`. -/
-def rightAdjointMate {X Y : C} [HasRightDual X] [HasRightDual Y] (f : X ⟶ Y) : (Y)ᘁ ⟶ (X)ᘁ :=
+def rightAdjointMate {X Y : C} [HasRightDual X] [HasRightDual Y] (f : X ⟶ Y) : Yᘁ ⟶ Xᘁ :=
   (ρ_ _).inv ≫ (𝟙 _ ⊗ η_ _ _) ≫ (𝟙 _ ⊗ f ⊗ 𝟙 _) ≫ (α_ _ _ _).inv ≫ (ε_ _ _ ⊗ 𝟙 _) ≫ (λ_ _).Hom
 
 /-- The left adjoint mate `ᘁf : ᘁY ⟶ ᘁX` of a morphism `f : X ⟶ Y`. -/
-def leftAdjointMate {X Y : C} [HasLeftDual X] [HasLeftDual Y] (f : X ⟶ Y) : ᘁ(Y) ⟶ ᘁ(X) :=
-  (λ_ _).inv ≫ (η_ ᘁ(X) X ⊗ 𝟙 _) ≫ ((𝟙 _ ⊗ f) ⊗ 𝟙 _) ≫ (α_ _ _ _).Hom ≫ (𝟙 _ ⊗ ε_ _ _) ≫ (ρ_ _).Hom
+def leftAdjointMate {X Y : C} [HasLeftDual X] [HasLeftDual Y] (f : X ⟶ Y) : ᘁY ⟶ ᘁX :=
+  (λ_ _).inv ≫ (η_ (ᘁX) X ⊗ 𝟙 _) ≫ ((𝟙 _ ⊗ f) ⊗ 𝟙 _) ≫ (α_ _ _ _).Hom ≫ (𝟙 _ ⊗ ε_ _ _) ≫ (ρ_ _).Hom
 
 notation f "ᘁ" => rightAdjointMate f
 

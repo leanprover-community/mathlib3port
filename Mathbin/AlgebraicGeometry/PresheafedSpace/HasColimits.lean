@@ -104,7 +104,7 @@ obtaining a diagram in `(presheaf C X)ᵒᵖ`.
 -- See note [dsimp, simp]
 @[simps]
 def pushforwardDiagramToColimit (F : J ⥤ PresheafedSpace C) :
-    J ⥤ Presheaf C (colimit (F ⋙ PresheafedSpace.forget C))ᵒᵖ where
+    J ⥤ (Presheaf C (colimit (F ⋙ PresheafedSpace.forget C)))ᵒᵖ where
   obj := fun j => op (colimit.ι (F ⋙ PresheafedSpace.forget C) j _* (F.obj j).Presheaf)
   map := fun j j' f =>
     (pushforwardMap (colimit.ι (F ⋙ PresheafedSpace.forget C) j') (F.map f).c ≫
@@ -196,7 +196,7 @@ namespace ColimitCoconeIsColimit
 
 /-- Auxiliary definition for `PresheafedSpace.colimit_cocone_is_colimit`.
 -/
-def descCApp (F : J ⥤ PresheafedSpace C) (s : Cocone F) (U : Opens (↥s.x.Carrier)ᵒᵖ) :
+def descCApp (F : J ⥤ PresheafedSpace C) (s : Cocone F) (U : (Opens (↥s.x.Carrier))ᵒᵖ) :
     s.x.Presheaf.obj U ⟶
       (colimit.desc (F ⋙ PresheafedSpace.forget C) ((PresheafedSpace.forget C).mapCocone s) _*
             limit (pushforwardDiagramToColimit F).leftOp).obj
@@ -226,7 +226,7 @@ def descCApp (F : J ⥤ PresheafedSpace C) (s : Cocone F) (U : Opens (↥s.x.Car
     simp
     
 
-theorem desc_c_naturality (F : J ⥤ PresheafedSpace C) (s : Cocone F) {U V : Opens (↥s.x.Carrier)ᵒᵖ} (i : U ⟶ V) :
+theorem desc_c_naturality (F : J ⥤ PresheafedSpace C) (s : Cocone F) {U V : (Opens (↥s.x.Carrier))ᵒᵖ} (i : U ⟶ V) :
     s.x.Presheaf.map i ≫ descCApp F s V =
       descCApp F s U ≫ (colimit.desc (F ⋙ forget C) ((forget C).mapCocone s) _* (colimitCocone F).x.Presheaf).map i :=
   by

@@ -130,7 +130,7 @@ instance [Monoidₓ R] [Monoidₓ S₁] [CommSemiringₓ S₂] [DistribMulAction
     [SmulCommClass R S₁ S₂] : SmulCommClass R S₁ (MvPolynomial σ S₂) :=
   AddMonoidAlgebra.smul_comm_class
 
-instance [Monoidₓ R] [CommSemiringₓ S₁] [DistribMulAction R S₁] [DistribMulAction (Rᵐᵒᵖ) S₁] [IsCentralScalar R S₁] :
+instance [Monoidₓ R] [CommSemiringₓ S₁] [DistribMulAction R S₁] [DistribMulAction Rᵐᵒᵖ S₁] [IsCentralScalar R S₁] :
     IsCentralScalar R (MvPolynomial σ S₁) :=
   AddMonoidAlgebra.is_central_scalar
 

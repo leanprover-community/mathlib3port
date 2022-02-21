@@ -91,12 +91,12 @@ instance ΓIsEquiv : IsEquivalence Γ.{u} :=
 
 instance : HasColimits AffineScheme.{u} := by
   have := Adjunction.has_limits_of_equivalence.{u} Γ.{u}
-  have : has_colimits (AffineScheme.{u}ᵒᵖᵒᵖ) := has_colimits_op_of_has_limits
+  have : has_colimits AffineScheme.{u}ᵒᵖᵒᵖ := has_colimits_op_of_has_limits
   exact Adjunction.has_colimits_of_equivalence.{u} (op_op_equivalence AffineScheme.{u}).inverse
 
 instance : HasLimits AffineScheme.{u} := by
   have := adjunction.has_colimits_of_equivalence Γ.{u}
-  have : has_limits (AffineScheme.{u}ᵒᵖᵒᵖ) := limits.has_limits_op_of_has_colimits
+  have : has_limits AffineScheme.{u}ᵒᵖᵒᵖ := limits.has_limits_op_of_has_colimits
   exact adjunction.has_limits_of_equivalence (op_op_equivalence AffineScheme.{u}).inverse
 
 end AffineScheme

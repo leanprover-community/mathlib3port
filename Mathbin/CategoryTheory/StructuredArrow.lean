@@ -316,7 +316,7 @@ category of structured arrows `d ⟶ F.obj c` to the category of costructured ar
 `F.op.obj c ⟶ (op d)`.
 -/
 @[simps]
-def toCostructuredArrow (F : C ⥤ D) (d : D) : StructuredArrow d Fᵒᵖ ⥤ CostructuredArrow F.op (op d) where
+def toCostructuredArrow (F : C ⥤ D) (d : D) : (StructuredArrow d F)ᵒᵖ ⥤ CostructuredArrow F.op (op d) where
   obj := fun X => @CostructuredArrow.mk _ _ _ _ _ (op X.unop.right) F.op X.unop.Hom.op
   map := fun X Y f =>
     CostructuredArrow.homMk f.unop.right.op
@@ -330,7 +330,7 @@ category of structured arrows `op d ⟶ F.op.obj c` to the category of costructu
 `F.obj c ⟶ d`.
 -/
 @[simps]
-def toCostructuredArrow' (F : C ⥤ D) (d : D) : StructuredArrow (op d) F.opᵒᵖ ⥤ CostructuredArrow F d where
+def toCostructuredArrow' (F : C ⥤ D) (d : D) : (StructuredArrow (op d) F.op)ᵒᵖ ⥤ CostructuredArrow F d where
   obj := fun X => @CostructuredArrow.mk _ _ _ _ _ (unop X.unop.right) F X.unop.Hom.unop
   map := fun X Y f =>
     CostructuredArrow.homMk f.unop.right.unop
@@ -349,7 +349,7 @@ category of costructured arrows `F.obj c ⟶ d` to the category of structured ar
 `op d ⟶ F.op.obj c`.
 -/
 @[simps]
-def toStructuredArrow (F : C ⥤ D) (d : D) : CostructuredArrow F dᵒᵖ ⥤ StructuredArrow (op d) F.op where
+def toStructuredArrow (F : C ⥤ D) (d : D) : (CostructuredArrow F d)ᵒᵖ ⥤ StructuredArrow (op d) F.op where
   obj := fun X => @StructuredArrow.mk _ _ _ _ _ (op X.unop.left) F.op X.unop.Hom.op
   map := fun X Y f =>
     StructuredArrow.homMk f.unop.left.op
@@ -363,7 +363,7 @@ category of costructured arrows `F.op.obj c ⟶ op d` to the category of structu
 `d ⟶ F.obj c`.
 -/
 @[simps]
-def toStructuredArrow' (F : C ⥤ D) (d : D) : CostructuredArrow F.op (op d)ᵒᵖ ⥤ StructuredArrow d F where
+def toStructuredArrow' (F : C ⥤ D) (d : D) : (CostructuredArrow F.op (op d))ᵒᵖ ⥤ StructuredArrow d F where
   obj := fun X => @StructuredArrow.mk _ _ _ _ _ (unop X.unop.left) F X.unop.Hom.unop
   map := fun X Y f =>
     StructuredArrow.homMk f.unop.left.unop
@@ -377,7 +377,7 @@ end CostructuredArrow
 /-- For a functor `F : C ⥤ D` and an object `d : D`, the category of structured arrows `d ⟶ F.obj c`
 is contravariantly equivalent to the category of costructured arrows `F.op.obj c ⟶ op d`.
 -/
-def structuredArrowOpEquivalence (F : C ⥤ D) (d : D) : StructuredArrow d Fᵒᵖ ≌ CostructuredArrow F.op (op d) :=
+def structuredArrowOpEquivalence (F : C ⥤ D) (d : D) : (StructuredArrow d F)ᵒᵖ ≌ CostructuredArrow F.op (op d) :=
   Equivalence.mk (StructuredArrow.toCostructuredArrow F d) (CostructuredArrow.toStructuredArrow' F d).rightOp
     (NatIso.ofComponents
       (fun X =>
@@ -403,7 +403,7 @@ def structuredArrowOpEquivalence (F : C ⥤ D) (d : D) : StructuredArrow d Fᵒ�
 `F.obj c ⟶ d` is contravariantly equivalent to the category of structured arrows
 `op d ⟶ F.op.obj c`.
 -/
-def costructuredArrowOpEquivalence (F : C ⥤ D) (d : D) : CostructuredArrow F dᵒᵖ ≌ StructuredArrow (op d) F.op :=
+def costructuredArrowOpEquivalence (F : C ⥤ D) (d : D) : (CostructuredArrow F d)ᵒᵖ ≌ StructuredArrow (op d) F.op :=
   Equivalence.mk (CostructuredArrow.toStructuredArrow F d) (StructuredArrow.toCostructuredArrow' F d).rightOp
     (NatIso.ofComponents
       (fun X =>

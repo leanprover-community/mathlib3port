@@ -76,7 +76,7 @@ theorem pointwise_smul_to_add_subgroup {R M : Type _} [Ringₓ R] [AddCommGroup�
 theorem smul_mem_pointwise_smul (m : M) (a : α) (S : Submodule R M) : m ∈ S → a • m ∈ a • S :=
   (Set.smul_mem_smul_set : _ → _ ∈ a • (S : Set M))
 
-instance pointwise_central_scalar [DistribMulAction (αᵐᵒᵖ) M] [SmulCommClass (αᵐᵒᵖ) R M] [IsCentralScalar α M] :
+instance pointwise_central_scalar [DistribMulAction αᵐᵒᵖ M] [SmulCommClass αᵐᵒᵖ R M] [IsCentralScalar α M] :
     IsCentralScalar α (Submodule R M) :=
   ⟨fun a S => (congr_argₓ fun f => S.map f) <| LinearMap.ext <| op_smul_eq_smul _⟩
 

@@ -196,7 +196,7 @@ noncomputable def invApp (U : Opens X) : X.Presheaf.obj (op U) ⟶ Y.Presheaf.ob
     inv (f.c.app (op (H.openFunctor.obj U)))
 
 @[simp, reassoc]
-theorem inv_naturality {U V : Opens Xᵒᵖ} (i : U ⟶ V) :
+theorem inv_naturality {U V : (Opens X)ᵒᵖ} (i : U ⟶ V) :
     X.Presheaf.map i ≫ H.inv_app (unop V) = H.inv_app (unop U) ≫ Y.Presheaf.map (H.openFunctor.op.map i) := by
   simp only [inv_app, ← category.assoc]
   rw [is_iso.comp_inv_eq]

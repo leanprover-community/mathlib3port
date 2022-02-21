@@ -116,7 +116,7 @@ section Transpose
 -- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»
 @[simp]
 theorem transpose_empty_rows (A : Matrix m' (Finₓ 0) α) :
-    (A)ᵀ = «expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»" :=
+    Aᵀ = «expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»" :=
   empty_eq _
 
 -- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ , ]»
@@ -125,22 +125,22 @@ theorem transpose_empty_rows (A : Matrix m' (Finₓ 0) α) :
 -- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»
 @[simp]
 theorem transpose_empty_cols :
-    ((«expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»" :
-          Matrix (Finₓ 0) m' α))ᵀ =
+    («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»" :
+          Matrix (Finₓ 0) m' α)ᵀ =
       fun i => «expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»" :=
   funext fun i => empty_eq _
 
 @[simp]
-theorem cons_transpose (v : n' → α) (A : Matrix (Finₓ m) n' α) : (vecCons v A)ᵀ = fun i => vecCons (v i) ((A)ᵀ i) := by
+theorem cons_transpose (v : n' → α) (A : Matrix (Finₓ m) n' α) : (vecCons v A)ᵀ = fun i => vecCons (v i) (Aᵀ i) := by
   ext i j
   refine' Finₓ.cases _ _ j <;> simp
 
 @[simp]
-theorem head_transpose (A : Matrix m' (Finₓ n.succ) α) : vecHead (A)ᵀ = vec_head ∘ A :=
+theorem head_transpose (A : Matrix m' (Finₓ n.succ) α) : vecHead Aᵀ = vec_head ∘ A :=
   rfl
 
 @[simp]
-theorem tail_transpose (A : Matrix m' (Finₓ n.succ) α) : vecTail (A)ᵀ = (vec_tail ∘ A)ᵀ := by
+theorem tail_transpose (A : Matrix m' (Finₓ n.succ) α) : vecTail Aᵀ = (vec_tail ∘ A)ᵀ := by
   ext i j
   rfl
 

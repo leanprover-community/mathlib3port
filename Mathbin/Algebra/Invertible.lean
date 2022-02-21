@@ -119,7 +119,7 @@ def Invertible.copy [Monoidₓ α] {r : α} (hr : Invertible r) (s : α) (hs : s
 
 /-- An `invertible` element is a unit. -/
 @[simps]
-def unitOfInvertible [Monoidₓ α] (a : α) [Invertible a] : (α)ˣ where
+def unitOfInvertible [Monoidₓ α] (a : α) [Invertible a] : αˣ where
   val := a
   inv := ⅟ a
   val_inv := by
@@ -131,13 +131,13 @@ theorem is_unit_of_invertible [Monoidₓ α] (a : α) [Invertible a] : IsUnit a 
   ⟨unitOfInvertible a, rfl⟩
 
 /-- Units are invertible in their associated monoid. -/
-def Units.invertible [Monoidₓ α] (u : (α)ˣ) : Invertible (u : α) where
+def Units.invertible [Monoidₓ α] (u : αˣ) : Invertible (u : α) where
   invOf := ↑u⁻¹
   inv_of_mul_self := u.inv_mul
   mul_inv_of_self := u.mul_inv
 
 @[simp]
-theorem inv_of_units [Monoidₓ α] (u : (α)ˣ) [Invertible (u : α)] : ⅟ (u : α) = ↑u⁻¹ :=
+theorem inv_of_units [Monoidₓ α] (u : αˣ) [Invertible (u : α)] : ⅟ (u : α) = ↑u⁻¹ :=
   inv_of_eq_right_inv u.mul_inv
 
 theorem IsUnit.nonempty_invertible [Monoidₓ α] {a : α} (h : IsUnit a) : Nonempty (Invertible a) :=

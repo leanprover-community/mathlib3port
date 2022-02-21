@@ -184,7 +184,7 @@ theorem ad_conj {R : Type _} [Rack R] (x y : R) : act (x ◃ y) = act x * act y 
 
 /-- The opposite rack, swapping the roles of `◃` and `◃⁻¹`.
 -/
-instance oppositeRack : Rack (Rᵐᵒᵖ) where
+instance oppositeRack : Rack Rᵐᵒᵖ where
   act := fun x y => op (invAct (unop x) (unop y))
   self_distrib :=
     MulOpposite.rec fun x =>
@@ -332,7 +332,7 @@ theorem fix_inv {x : Q} : x ◃⁻¹ x = x := by
   rw [← left_cancel x]
   simp
 
-instance oppositeQuandle : Quandle (Qᵐᵒᵖ) where
+instance oppositeQuandle : Quandle Qᵐᵒᵖ where
   fix := fun x => by
     induction x using MulOpposite.rec
     simp

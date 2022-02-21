@@ -95,13 +95,13 @@ theorem map_map {M : Matrix m n α} {β γ : Type _} {f : α → β} {g : β →
 def transposeₓ (M : Matrix m n α) : Matrix n m α
   | x, y => M y x
 
-localized [Matrix] postfix:1500 "ᵀ" => Matrix.transposeₓ
+localized [Matrix] postfix:1024 "ᵀ" => Matrix.transposeₓ
 
 /-- The conjugate transpose of a matrix defined in term of `star`. -/
 def conjTranspose [HasStar α] (M : Matrix m n α) : Matrix n m α :=
   M.transpose.map star
 
-localized [Matrix] postfix:1500 "ᴴ" => Matrix.conjTranspose
+localized [Matrix] postfix:1024 "ᴴ" => Matrix.conjTranspose
 
 /-- `matrix.col u` is the column matrix whose entries are given by `u`. -/
 def colₓ (w : m → α) : Matrix m Unit α
@@ -165,7 +165,7 @@ instance [HasScalar R α] [HasScalar S α] [SmulCommClass R S α] : SmulCommClas
 instance [HasScalar R S] [HasScalar R α] [HasScalar S α] [IsScalarTower R S α] : IsScalarTower R S (Matrix m n α) :=
   Pi.is_scalar_tower
 
-instance [HasScalar R α] [HasScalar (Rᵐᵒᵖ) α] [IsCentralScalar R α] : IsCentralScalar R (Matrix m n α) :=
+instance [HasScalar R α] [HasScalar Rᵐᵒᵖ α] [IsCentralScalar R α] : IsCentralScalar R (Matrix m n α) :=
   Pi.is_central_scalar
 
 instance [Monoidₓ R] [MulAction R α] : MulAction R (Matrix m n α) :=
@@ -1244,11 +1244,11 @@ theorem mul_vec_smul_assoc [Fintype n] (A : Matrix m n α) (b : n → α) (a : �
   ext
   apply dot_product_smul
 
-theorem mul_vec_transpose [Fintype m] (A : Matrix m n α) (x : m → α) : mulVecₓ (A)ᵀ x = vecMulₓ x A := by
+theorem mul_vec_transpose [Fintype m] (A : Matrix m n α) (x : m → α) : mulVecₓ Aᵀ x = vecMulₓ x A := by
   ext
   apply dot_product_comm
 
-theorem vec_mul_transpose [Fintype n] (A : Matrix m n α) (x : n → α) : vecMulₓ x (A)ᵀ = mulVecₓ A x := by
+theorem vec_mul_transpose [Fintype n] (A : Matrix m n α) (x : n → α) : vecMulₓ x Aᵀ = mulVecₓ A x := by
   ext
   apply dot_product_comm
 
@@ -1267,15 +1267,15 @@ theorem transpose_apply (M : Matrix m n α) i j : M.transpose j i = M i j :=
   rfl
 
 @[simp]
-theorem transpose_transpose (M : Matrix m n α) : (M)ᵀᵀ = M := by
+theorem transpose_transpose (M : Matrix m n α) : Mᵀᵀ = M := by
   ext <;> rfl
 
 @[simp]
-theorem transpose_zero [Zero α] : ((0 : Matrix m n α))ᵀ = 0 := by
+theorem transpose_zero [Zero α] : (0 : Matrix m n α)ᵀ = 0 := by
   ext i j <;> rfl
 
 @[simp]
-theorem transpose_one [DecidableEq n] [Zero α] [One α] : ((1 : Matrix n n α))ᵀ = 1 := by
+theorem transpose_one [DecidableEq n] [Zero α] [One α] : (1 : Matrix n n α)ᵀ = 1 := by
   ext i j
   unfold One.one transpose
   by_cases' i = j
@@ -1285,30 +1285,30 @@ theorem transpose_one [DecidableEq n] [Zero α] [One α] : ((1 : Matrix n n α))
     
 
 @[simp]
-theorem transpose_add [Add α] (M : Matrix m n α) (N : Matrix m n α) : (M + N)ᵀ = (M)ᵀ + (N)ᵀ := by
+theorem transpose_add [Add α] (M : Matrix m n α) (N : Matrix m n α) : (M + N)ᵀ = Mᵀ + Nᵀ := by
   ext i j
   simp
 
 @[simp]
-theorem transpose_sub [Sub α] (M : Matrix m n α) (N : Matrix m n α) : (M - N)ᵀ = (M)ᵀ - (N)ᵀ := by
+theorem transpose_sub [Sub α] (M : Matrix m n α) (N : Matrix m n α) : (M - N)ᵀ = Mᵀ - Nᵀ := by
   ext i j
   simp
 
 @[simp]
-theorem transpose_mul [CommSemiringₓ α] [Fintype n] (M : Matrix m n α) (N : Matrix n l α) : (M ⬝ N)ᵀ = (N)ᵀ ⬝ (M)ᵀ := by
+theorem transpose_mul [CommSemiringₓ α] [Fintype n] (M : Matrix m n α) (N : Matrix n l α) : (M ⬝ N)ᵀ = Nᵀ ⬝ Mᵀ := by
   ext i j
   apply dot_product_comm
 
 @[simp]
-theorem transpose_smul {R : Type _} [HasScalar R α] (c : R) (M : Matrix m n α) : (c • M)ᵀ = c • (M)ᵀ := by
+theorem transpose_smul {R : Type _} [HasScalar R α] (c : R) (M : Matrix m n α) : (c • M)ᵀ = c • Mᵀ := by
   ext i j
   rfl
 
 @[simp]
-theorem transpose_neg [Neg α] (M : Matrix m n α) : (-M)ᵀ = -(M)ᵀ := by
+theorem transpose_neg [Neg α] (M : Matrix m n α) : (-M)ᵀ = -Mᵀ := by
   ext i j <;> rfl
 
-theorem transpose_map {f : α → β} {M : Matrix m n α} : (M)ᵀ.map f = (M.map f)ᵀ := by
+theorem transpose_map {f : α → β} {M : Matrix m n α} : Mᵀ.map f = (M.map f)ᵀ := by
   ext
   rfl
 
@@ -1326,10 +1326,10 @@ theorem transpose_add_equiv_symm [Add α] :
     (transposeAddEquiv : Matrix m n α ≃+ Matrix n m α).symm = transpose_add_equiv :=
   rfl
 
-theorem transpose_list_sum [AddMonoidₓ α] (l : List (Matrix m n α)) : (l.Sum)ᵀ = (l.map transposeₓ).Sum :=
+theorem transpose_list_sum [AddMonoidₓ α] (l : List (Matrix m n α)) : l.Sumᵀ = (l.map transposeₓ).Sum :=
   (transposeAddEquiv : Matrix m n α ≃+ Matrix n m α).toAddMonoidHom.map_list_sum l
 
-theorem transpose_multiset_sum [AddCommMonoidₓ α] (s : Multiset (Matrix m n α)) : (s.Sum)ᵀ = (s.map transposeₓ).Sum :=
+theorem transpose_multiset_sum [AddCommMonoidₓ α] (s : Multiset (Matrix m n α)) : s.Sumᵀ = (s.map transposeₓ).Sum :=
   (transposeAddEquiv : Matrix m n α ≃+ Matrix n m α).toAddMonoidHom.map_multiset_sum s
 
 theorem transpose_sum [AddCommMonoidₓ α] {ι : Type _} (s : Finset ι) (M : ι → Matrix m n α) :
@@ -1338,14 +1338,13 @@ theorem transpose_sum [AddCommMonoidₓ α] {ι : Type _} (s : Finset ι) (M : �
 
 /-- `matrix.transpose` as a `ring_equiv` to the opposite ring -/
 @[simps]
-def transposeRingEquiv [CommSemiringₓ α] [Fintype m] : Matrix m m α ≃+* Matrix m m αᵐᵒᵖ :=
-  { transposeAddEquiv.trans MulOpposite.opAddEquiv with toFun := fun M => MulOpposite.op (M)ᵀ,
-    invFun := fun M => (M.unop)ᵀ,
+def transposeRingEquiv [CommSemiringₓ α] [Fintype m] : Matrix m m α ≃+* (Matrix m m α)ᵐᵒᵖ :=
+  { transposeAddEquiv.trans MulOpposite.opAddEquiv with toFun := fun M => MulOpposite.op Mᵀ, invFun := fun M => M.unopᵀ,
     map_mul' := fun M N => (congr_argₓ MulOpposite.op (transpose_mul M N)).trans (MulOpposite.op_mul _ _) }
 
 theorem transpose_list_prod [CommSemiringₓ α] [Fintype m] [DecidableEq m] (l : List (Matrix m m α)) :
-    (l.Prod)ᵀ = (l.map transposeₓ).reverse.Prod :=
-  (transposeRingEquiv : Matrix m m α ≃+* Matrix m m αᵐᵒᵖ).unop_map_list_prod l
+    l.Prodᵀ = (l.map transposeₓ).reverse.Prod :=
+  (transposeRingEquiv : Matrix m m α ≃+* (Matrix m m α)ᵐᵒᵖ).unop_map_list_prod l
 
 end Transpose
 
@@ -1362,36 +1361,36 @@ theorem conj_transpose_apply [HasStar α] (M : Matrix m n α) i j : M.conjTransp
   rfl
 
 @[simp]
-theorem conj_transpose_conj_transpose [HasInvolutiveStar α] (M : Matrix m n α) : (M)ᴴᴴ = M := by
+theorem conj_transpose_conj_transpose [HasInvolutiveStar α] (M : Matrix m n α) : Mᴴᴴ = M := by
   ext <;> simp
 
 @[simp]
-theorem conj_transpose_zero [Semiringₓ α] [StarRing α] : ((0 : Matrix m n α))ᴴ = 0 := by
+theorem conj_transpose_zero [Semiringₓ α] [StarRing α] : (0 : Matrix m n α)ᴴ = 0 := by
   ext i j <;> simp
 
 @[simp]
-theorem conj_transpose_one [DecidableEq n] [Semiringₓ α] [StarRing α] : ((1 : Matrix n n α))ᴴ = 1 := by
+theorem conj_transpose_one [DecidableEq n] [Semiringₓ α] [StarRing α] : (1 : Matrix n n α)ᴴ = 1 := by
   simp [conj_transpose]
 
 @[simp]
-theorem conj_transpose_add [AddMonoidₓ α] [StarAddMonoid α] (M N : Matrix m n α) : (M + N)ᴴ = (M)ᴴ + (N)ᴴ := by
+theorem conj_transpose_add [AddMonoidₓ α] [StarAddMonoid α] (M N : Matrix m n α) : (M + N)ᴴ = Mᴴ + Nᴴ := by
   ext i j <;> simp
 
 @[simp]
-theorem conj_transpose_sub [AddGroupₓ α] [StarAddMonoid α] (M N : Matrix m n α) : (M - N)ᴴ = (M)ᴴ - (N)ᴴ := by
+theorem conj_transpose_sub [AddGroupₓ α] [StarAddMonoid α] (M N : Matrix m n α) : (M - N)ᴴ = Mᴴ - Nᴴ := by
   ext i j <;> simp
 
 @[simp]
-theorem conj_transpose_smul [CommMonoidₓ α] [StarMonoid α] (c : α) (M : Matrix m n α) : (c • M)ᴴ = star c • (M)ᴴ := by
+theorem conj_transpose_smul [CommMonoidₓ α] [StarMonoid α] (c : α) (M : Matrix m n α) : (c • M)ᴴ = star c • Mᴴ := by
   ext i j <;> simp [mul_comm]
 
 @[simp]
 theorem conj_transpose_mul [Fintype n] [Semiringₓ α] [StarRing α] (M : Matrix m n α) (N : Matrix n l α) :
-    (M ⬝ N)ᴴ = (N)ᴴ ⬝ (M)ᴴ := by
+    (M ⬝ N)ᴴ = Nᴴ ⬝ Mᴴ := by
   ext i j <;> simp [mul_apply]
 
 @[simp]
-theorem conj_transpose_neg [Ringₓ α] [StarRing α] (M : Matrix m n α) : (-M)ᴴ = -(M)ᴴ := by
+theorem conj_transpose_neg [Ringₓ α] [StarRing α] (M : Matrix m n α) : (-M)ᴴ = -Mᴴ := by
   ext i j <;> simp
 
 /-- `matrix.conj_transpose` as an `add_equiv` -/
@@ -1409,11 +1408,11 @@ theorem conj_transpose_add_equiv_symm [AddMonoidₓ α] [StarAddMonoid α] :
   rfl
 
 theorem conj_transpose_list_sum [AddMonoidₓ α] [StarAddMonoid α] (l : List (Matrix m n α)) :
-    (l.Sum)ᴴ = (l.map conjTranspose).Sum :=
+    l.Sumᴴ = (l.map conjTranspose).Sum :=
   (conjTransposeAddEquiv : Matrix m n α ≃+ Matrix n m α).toAddMonoidHom.map_list_sum l
 
 theorem conj_transpose_multiset_sum [AddCommMonoidₓ α] [StarAddMonoid α] (s : Multiset (Matrix m n α)) :
-    (s.Sum)ᴴ = (s.map conjTranspose).Sum :=
+    s.Sumᴴ = (s.map conjTranspose).Sum :=
   (conjTransposeAddEquiv : Matrix m n α ≃+ Matrix n m α).toAddMonoidHom.map_multiset_sum s
 
 theorem conj_transpose_sum [AddCommMonoidₓ α] [StarAddMonoid α] {ι : Type _} (s : Finset ι) (M : ι → Matrix m n α) :
@@ -1422,14 +1421,14 @@ theorem conj_transpose_sum [AddCommMonoidₓ α] [StarAddMonoid α] {ι : Type _
 
 /-- `matrix.conj_transpose` as a `ring_equiv` to the opposite ring -/
 @[simps]
-def conjTransposeRingEquiv [CommSemiringₓ α] [StarRing α] [Fintype m] : Matrix m m α ≃+* Matrix m m αᵐᵒᵖ :=
-  { conjTransposeAddEquiv.trans MulOpposite.opAddEquiv with toFun := fun M => MulOpposite.op (M)ᴴ,
-    invFun := fun M => (M.unop)ᴴ,
+def conjTransposeRingEquiv [CommSemiringₓ α] [StarRing α] [Fintype m] : Matrix m m α ≃+* (Matrix m m α)ᵐᵒᵖ :=
+  { conjTransposeAddEquiv.trans MulOpposite.opAddEquiv with toFun := fun M => MulOpposite.op Mᴴ,
+    invFun := fun M => M.unopᴴ,
     map_mul' := fun M N => (congr_argₓ MulOpposite.op (conj_transpose_mul M N)).trans (MulOpposite.op_mul _ _) }
 
 theorem conj_transpose_list_prod [CommSemiringₓ α] [StarRing α] [Fintype m] [DecidableEq m] (l : List (Matrix m m α)) :
-    (l.Prod)ᴴ = (l.map conjTranspose).reverse.Prod :=
-  (conjTransposeRingEquiv : Matrix m m α ≃+* Matrix m m αᵐᵒᵖ).unop_map_list_prod l
+    l.Prodᴴ = (l.map conjTranspose).reverse.Prod :=
+  (conjTransposeRingEquiv : Matrix m m α ≃+* (Matrix m m α)ᵐᵒᵖ).unop_map_list_prod l
 
 end ConjTranspose
 
@@ -1440,7 +1439,7 @@ operation equal to `matrix.conj_transpose`. -/
 instance [HasStar α] : HasStar (Matrix n n α) where
   star := conjTranspose
 
-theorem star_eq_conj_transpose [HasStar α] (M : Matrix m m α) : star M = (M)ᴴ :=
+theorem star_eq_conj_transpose [HasStar α] (M : Matrix m m α) : star M = Mᴴ :=
   rfl
 
 @[simp]
@@ -1488,12 +1487,12 @@ theorem minor_minor {l₂ o₂ : Type _} (A : Matrix m n α) (r₁ : l → m) (c
 
 @[simp]
 theorem transpose_minor (A : Matrix m n α) (r_reindex : l → m) (c_reindex : o → n) :
-    (A.minor r_reindex c_reindex)ᵀ = (A)ᵀ.minor c_reindex r_reindex :=
+    (A.minor r_reindex c_reindex)ᵀ = Aᵀ.minor c_reindex r_reindex :=
   ext fun _ _ => rfl
 
 @[simp]
 theorem conj_transpose_minor [HasStar α] (A : Matrix m n α) (r_reindex : l → m) (c_reindex : o → n) :
-    (A.minor r_reindex c_reindex)ᴴ = (A)ᴴ.minor c_reindex r_reindex :=
+    (A.minor r_reindex c_reindex)ᴴ = Aᴴ.minor c_reindex r_reindex :=
   ext fun _ _ => rfl
 
 theorem minor_add [Add α] (A B : Matrix m n α) :
@@ -1612,16 +1611,16 @@ theorem reindex_trans {l₂ o₂ : Type _} (eₘ : m ≃ l) (eₙ : n ≃ o) (e�
     (reindex eₘ eₙ).trans (reindex eₘ₂ eₙ₂) = (reindex (eₘ.trans eₘ₂) (eₙ.trans eₙ₂) : Matrix m n α ≃ _) :=
   Equivₓ.ext fun A => (A.minor_minor eₘ.symm eₙ.symm eₘ₂.symm eₙ₂.symm : _)
 
-theorem transpose_reindex (eₘ : m ≃ l) (eₙ : n ≃ o) (M : Matrix m n α) : (reindex eₘ eₙ M)ᵀ = reindex eₙ eₘ (M)ᵀ :=
+theorem transpose_reindex (eₘ : m ≃ l) (eₙ : n ≃ o) (M : Matrix m n α) : (reindex eₘ eₙ M)ᵀ = reindex eₙ eₘ Mᵀ :=
   rfl
 
 theorem conj_transpose_reindex [HasStar α] (eₘ : m ≃ l) (eₙ : n ≃ o) (M : Matrix m n α) :
-    (reindex eₘ eₙ M)ᴴ = reindex eₙ eₘ (M)ᴴ :=
+    (reindex eₘ eₙ M)ᴴ = reindex eₙ eₘ Mᴴ :=
   rfl
 
 @[simp]
 theorem minor_mul_transpose_minor [Fintype n] [Fintype m] [Semiringₓ α] (e : n ≃ m) (M : Matrix n m α) :
-    M.minor id e ⬝ (M)ᵀ.minor e id = M ⬝ (M)ᵀ := by
+    M.minor id e ⬝ Mᵀ.minor e id = M ⬝ Mᵀ := by
   rw [minor_mul_equiv, minor_id_id]
 
 /-- The left `n × l` part of a `n × (l+r)` matrix. -/
@@ -1814,22 +1813,21 @@ theorem map_update_column [DecidableEq m] (f : α → β) : map (updateColumn M 
   rw [update_column_apply, map_apply, map_apply, update_column_apply]
   exact apply_ite f _ _ _
 
-theorem update_row_transpose [DecidableEq m] : updateRow (M)ᵀ j c = (updateColumn M j c)ᵀ := by
+theorem update_row_transpose [DecidableEq m] : updateRow Mᵀ j c = (updateColumn M j c)ᵀ := by
   ext i' j
   rw [transpose_apply, update_row_apply, update_column_apply]
   rfl
 
-theorem update_column_transpose [DecidableEq n] : updateColumn (M)ᵀ i b = (updateRow M i b)ᵀ := by
+theorem update_column_transpose [DecidableEq n] : updateColumn Mᵀ i b = (updateRow M i b)ᵀ := by
   ext i' j
   rw [transpose_apply, update_row_apply, update_column_apply]
   rfl
 
-theorem update_row_conj_transpose [DecidableEq m] [HasStar α] : updateRow (M)ᴴ j (star c) = (updateColumn M j c)ᴴ := by
+theorem update_row_conj_transpose [DecidableEq m] [HasStar α] : updateRow Mᴴ j (star c) = (updateColumn M j c)ᴴ := by
   rw [conj_transpose, conj_transpose, transpose_map, transpose_map, update_row_transpose, map_update_column]
   rfl
 
-theorem update_column_conj_transpose [DecidableEq n] [HasStar α] : updateColumn (M)ᴴ i (star b) = (updateRow M i b)ᴴ :=
-  by
+theorem update_column_conj_transpose [DecidableEq n] [HasStar α] : updateColumn Mᴴ i (star b) = (updateRow M i b)ᴴ := by
   rw [conj_transpose, conj_transpose, transpose_map, transpose_map, update_column_transpose, map_update_row]
   rfl
 

@@ -6,6 +6,7 @@ Authors: Johan Commelin
 import Mathbin.Data.Nat.Multiplicity
 import Mathbin.RingTheory.WittVector.Basic
 import Mathbin.RingTheory.WittVector.IsPoly
+import Mathbin.FieldTheory.PerfectClosure
 
 /-!
 ## The Frobenius operator
@@ -319,6 +320,14 @@ theorem frobenius_eq_map_frobenius : @frobenius p R _ _ = map (frobenius R p) :=
 @[simp]
 theorem frobenius_zmodp (x : 𝕎 (Zmod p)) : frobenius x = x := by
   simp only [ext_iff, coeff_frobenius_char_p, Zmod.pow_card, eq_self_iff_true, forall_const]
+
+variable (p R)
+
+theorem frobenius_bijective [PerfectRing R p] : Function.Bijective (@WittVector.frobenius p R _ _) := by
+  rw [WittVector.frobenius_eq_map_frobenius]
+  exact
+    ⟨WittVector.map_injective _ (frobeniusEquiv R p).Injective,
+      WittVector.map_surjective _ (frobeniusEquiv R p).Surjective⟩
 
 end CharP
 

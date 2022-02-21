@@ -177,7 +177,7 @@ setup_tactic_parser
 (You can also add the attribute `@[reassoc]` to lemmas to generate new declarations generalized
 in this way.)
 -/
-unsafe def reassoc (del : parse (tk "!")?) (ns : parse (ident)*) : tactic Unit := do
+unsafe def reassoc (del : parse (tk "!")?) (ns : parse ident*) : tactic Unit := do
   ns fun n => do
       let h ← get_local n
       let (t, pr) ← prove_reassoc h

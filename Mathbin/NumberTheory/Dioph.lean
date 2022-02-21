@@ -632,7 +632,7 @@ localized [Dioph] notation:35 x " D∨ " y => Dioph.or_dioph x y
 
 localized [Dioph] notation:30 "D∃" => Dioph.vec_ex1_dioph
 
--- ././Mathport/Syntax/Translate/Basic.lean:462:9: unsupported: advanced prec syntax
+-- ././Mathport/Syntax/Translate/Basic.lean:462:9: unsupported: advanced prec syntax max
 localized [Dioph] prefix:999 "&" => Fin2.ofNat'
 
 theorem proj_dioph_of_nat {n : ℕ} (m : ℕ) [IsLt m n] : DiophFn fun v : Vector3 ℕ n => v (&m) :=

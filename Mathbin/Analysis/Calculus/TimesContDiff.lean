@@ -2320,7 +2320,7 @@ open NormedRing ContinuousLinearMap Ringₓ
 /-- In a complete normed algebra, the operation of inversion is `C^n`, for all `n`, at each
 invertible element.  The proof is by induction, bootstrapping using an identity expressing the
 derivative of inversion as a bilinear map of inversion itself. -/
-theorem times_cont_diff_at_ring_inverse [CompleteSpace R] {n : WithTop ℕ} (x : (R)ˣ) :
+theorem times_cont_diff_at_ring_inverse [CompleteSpace R] {n : WithTop ℕ} (x : Rˣ) :
     TimesContDiffAt 𝕜 n Ring.inverse (x : R) := by
   induction' n using WithTop.nat_induction with n IH Itop
   · intro m hm

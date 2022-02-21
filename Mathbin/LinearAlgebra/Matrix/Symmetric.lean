@@ -28,9 +28,9 @@ open_locale Matrix
 
 /-- A matrix `A : matrix n n α` is "symmetric" if `Aᵀ = A`. -/
 def IsSymm (A : Matrix n n α) : Prop :=
-  (A)ᵀ = A
+  Aᵀ = A
 
-theorem IsSymm.eq {A : Matrix n n α} (h : A.IsSymm) : (A)ᵀ = A :=
+theorem IsSymm.eq {A : Matrix n n α} (h : A.IsSymm) : Aᵀ = A :=
   h
 
 /-- A version of `matrix.ext_iff` that unfolds the `matrix.transpose`. -/
@@ -45,16 +45,16 @@ theorem IsSymm.ext {A : Matrix n n α} : (∀ i j, A j i = A i j) → A.IsSymm :
 theorem IsSymm.apply {A : Matrix n n α} (h : A.IsSymm) (i j : n) : A j i = A i j :=
   IsSymm.ext_iff.1 h i j
 
-theorem is_symm_mul_transpose_self [Fintype n] [CommSemiringₓ α] (A : Matrix n n α) : (A ⬝ (A)ᵀ).IsSymm :=
+theorem is_symm_mul_transpose_self [Fintype n] [CommSemiringₓ α] (A : Matrix n n α) : (A ⬝ Aᵀ).IsSymm :=
   transpose_mul _ _
 
-theorem is_symm_transpose_mul_self [Fintype n] [CommSemiringₓ α] (A : Matrix n n α) : ((A)ᵀ ⬝ A).IsSymm :=
+theorem is_symm_transpose_mul_self [Fintype n] [CommSemiringₓ α] (A : Matrix n n α) : (Aᵀ ⬝ A).IsSymm :=
   transpose_mul _ _
 
-theorem is_symm_add_transpose_self [AddCommSemigroupₓ α] (A : Matrix n n α) : (A + (A)ᵀ).IsSymm :=
+theorem is_symm_add_transpose_self [AddCommSemigroupₓ α] (A : Matrix n n α) : (A + Aᵀ).IsSymm :=
   add_commₓ _ _
 
-theorem is_symm_transpose_add_self [AddCommSemigroupₓ α] (A : Matrix n n α) : ((A)ᵀ + A).IsSymm :=
+theorem is_symm_transpose_add_self [AddCommSemigroupₓ α] (A : Matrix n n α) : (Aᵀ + A).IsSymm :=
   add_commₓ _ _
 
 @[simp]
@@ -70,11 +70,11 @@ theorem IsSymm.map {A : Matrix n n α} (h : A.IsSymm) (f : α → β) : (A.map f
   transpose_map.symm.trans (h.symm ▸ rfl)
 
 @[simp]
-theorem IsSymm.transpose {A : Matrix n n α} (h : A.IsSymm) : (A)ᵀ.IsSymm :=
+theorem IsSymm.transpose {A : Matrix n n α} (h : A.IsSymm) : Aᵀ.IsSymm :=
   congr_argₓ _ h
 
 @[simp]
-theorem IsSymm.conj_transpose [HasStar α] {A : Matrix n n α} (h : A.IsSymm) : (A)ᴴ.IsSymm :=
+theorem IsSymm.conj_transpose [HasStar α] {A : Matrix n n α} (h : A.IsSymm) : Aᴴ.IsSymm :=
   h.transpose.map _
 
 @[simp]
@@ -105,8 +105,8 @@ theorem is_symm_diagonal [DecidableEq n] [Zero α] (v : n → α) : (diagonalₓ
 /-- A block matrix `A.from_blocks B C D` is symmetric,
     if `A` and `D` are symmetric and `Bᵀ = C`. -/
 theorem IsSymm.from_blocks {A : Matrix m m α} {B : Matrix m n α} {C : Matrix n m α} {D : Matrix n n α} (hA : A.IsSymm)
-    (hBC : (B)ᵀ = C) (hD : D.IsSymm) : (A.fromBlocks B C D).IsSymm := by
-  have hCB : (C)ᵀ = B := by
+    (hBC : Bᵀ = C) (hD : D.IsSymm) : (A.fromBlocks B C D).IsSymm := by
+  have hCB : Cᵀ = B := by
     rw [← hBC]
     simp
   unfold Matrix.IsSymm
@@ -115,7 +115,7 @@ theorem IsSymm.from_blocks {A : Matrix m m α} {B : Matrix m n α} {C : Matrix n
 
 /-- This is the `iff` version of `matrix.is_symm.from_blocks`. -/
 theorem is_symm_from_blocks_iff {A : Matrix m m α} {B : Matrix m n α} {C : Matrix n m α} {D : Matrix n n α} :
-    (A.fromBlocks B C D).IsSymm ↔ A.IsSymm ∧ (B)ᵀ = C ∧ (C)ᵀ = B ∧ D.IsSymm :=
+    (A.fromBlocks B C D).IsSymm ↔ A.IsSymm ∧ Bᵀ = C ∧ Cᵀ = B ∧ D.IsSymm :=
   ⟨fun h => ⟨congr_argₓ toBlocks₁₁ h, congr_argₓ toBlocks₂₁ h, congr_argₓ toBlocks₁₂ h, congr_argₓ toBlocks₂₂ h⟩,
     fun ⟨hA, hBC, hCB, hD⟩ => IsSymm.from_blocks hA hBC hD⟩
 

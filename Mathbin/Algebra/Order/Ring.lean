@@ -135,7 +135,7 @@ theorem zero_lt_two : 0 < (2 : α) :=
 
 @[field_simps]
 theorem two_ne_zero : (2 : α) ≠ 0 :=
-  Ne.symm (ne_of_ltₓ zero_lt_two)
+  zero_lt_two.ne'
 
 theorem one_lt_two : 1 < (2 : α) :=
   calc
@@ -147,8 +147,16 @@ theorem one_lt_two : 1 < (2 : α) :=
 theorem zero_lt_three : 0 < (3 : α) :=
   add_pos zero_lt_two zero_lt_one
 
+@[field_simps]
+theorem three_ne_zero : (3 : α) ≠ 0 :=
+  zero_lt_three.ne'
+
 theorem zero_lt_four : 0 < (4 : α) :=
   add_pos zero_lt_two zero_lt_two
+
+@[field_simps]
+theorem four_ne_zero : (4 : α) ≠ 0 :=
+  zero_lt_four.ne'
 
 alias zero_lt_one ← one_pos
 
@@ -783,15 +791,13 @@ def Function.Injective.linearOrderedSemiring {β : Type _} [Zero β] [One β] [A
   { LinearOrderₓ.lift f hf, pullback_nonzero f zero one, hf.OrderedSemiring f zero one add mul with }
 
 @[simp]
-theorem Units.inv_pos {u : (α)ˣ} : (0 : α) < ↑u⁻¹ ↔ (0 : α) < u :=
-  have : ∀ {u : (α)ˣ}, (0 : α) < u → (0 : α) < ↑u⁻¹ := fun u h =>
-    (zero_lt_mul_left h).mp <| u.mul_inv.symm ▸ zero_lt_one
+theorem Units.inv_pos {u : αˣ} : (0 : α) < ↑u⁻¹ ↔ (0 : α) < u :=
+  have : ∀ {u : αˣ}, (0 : α) < u → (0 : α) < ↑u⁻¹ := fun u h => (zero_lt_mul_left h).mp <| u.mul_inv.symm ▸ zero_lt_one
   ⟨this, this⟩
 
 @[simp]
-theorem Units.inv_neg {u : (α)ˣ} : ↑u⁻¹ < (0 : α) ↔ ↑u < (0 : α) :=
-  have : ∀ {u : (α)ˣ}, ↑u < (0 : α) → ↑u⁻¹ < (0 : α) := fun u h =>
-    neg_of_mul_pos_left (u.mul_inv.symm ▸ zero_lt_one) h.le
+theorem Units.inv_neg {u : αˣ} : ↑u⁻¹ < (0 : α) ↔ ↑u < (0 : α) :=
+  have : ∀ {u : αˣ}, ↑u < (0 : α) → ↑u⁻¹ < (0 : α) := fun u h => neg_of_mul_pos_left (u.mul_inv.symm ▸ zero_lt_one) h.le
   ⟨this, this⟩
 
 end LinearOrderedSemiring

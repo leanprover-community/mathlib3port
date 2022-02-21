@@ -15,7 +15,7 @@ namespace Interactive
 
 open Expr Lean.Parser
 
-local postfix:9001 "?" => optionalₓ
+local postfix:1024 "?" => optionalₓ
 
 /-- This is a "finishing" tactic modification of `simp`. It has two forms.
 

@@ -41,34 +41,32 @@ def HasOrthogonalRows [Fintype n] : Prop :=
 /-- `A.has_orthogonal_rows` means matrix `A` has orthogonal columns (with respect to
 `matrix.dot_product`). -/
 def HasOrthogonalCols [Fintype m] : Prop :=
-  HasOrthogonalRows (A)ᵀ
+  HasOrthogonalRows Aᵀ
 
 /-- `Aᵀ` has orthogonal rows iff `A` has orthogonal columns. -/
 @[simp]
 theorem transpose_has_orthogonal_rows_iff_has_orthogonal_cols [Fintype m] :
-    (A)ᵀ.HasOrthogonalRows ↔ A.HasOrthogonalCols :=
+    Aᵀ.HasOrthogonalRows ↔ A.HasOrthogonalCols :=
   Iff.rfl
 
 /-- `Aᵀ` has orthogonal columns iff `A` has orthogonal rows. -/
 @[simp]
 theorem transpose_has_orthogonal_cols_iff_has_orthogonal_rows [Fintype n] :
-    (A)ᵀ.HasOrthogonalCols ↔ A.HasOrthogonalRows :=
+    Aᵀ.HasOrthogonalCols ↔ A.HasOrthogonalRows :=
   Iff.rfl
 
 variable {A}
 
-theorem HasOrthogonalRows.has_orthogonal_cols [Fintype m] (h : (A)ᵀ.HasOrthogonalRows) : A.HasOrthogonalCols :=
+theorem HasOrthogonalRows.has_orthogonal_cols [Fintype m] (h : Aᵀ.HasOrthogonalRows) : A.HasOrthogonalCols :=
   h
 
-theorem HasOrthogonalCols.transpose_has_orthogonal_rows [Fintype m] (h : A.HasOrthogonalCols) :
-    (A)ᵀ.HasOrthogonalRows :=
+theorem HasOrthogonalCols.transpose_has_orthogonal_rows [Fintype m] (h : A.HasOrthogonalCols) : Aᵀ.HasOrthogonalRows :=
   h
 
-theorem HasOrthogonalCols.has_orthogonal_rows [Fintype n] (h : (A)ᵀ.HasOrthogonalCols) : A.HasOrthogonalRows :=
+theorem HasOrthogonalCols.has_orthogonal_rows [Fintype n] (h : Aᵀ.HasOrthogonalCols) : A.HasOrthogonalRows :=
   h
 
-theorem HasOrthogonalRows.transpose_has_orthogonal_cols [Fintype n] (h : A.HasOrthogonalRows) :
-    (A)ᵀ.HasOrthogonalCols :=
+theorem HasOrthogonalRows.transpose_has_orthogonal_cols [Fintype n] (h : A.HasOrthogonalRows) : Aᵀ.HasOrthogonalCols :=
   h
 
 end Matrix

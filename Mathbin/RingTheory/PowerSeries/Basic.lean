@@ -713,20 +713,20 @@ theorem coeff_inv_aux [DecidableEq σ] (n : σ →₀ ℕ) (a : R) (φ : MvPower
 
 /-- A multivariate formal power series is invertible if the constant coefficient is invertible.-/
 -- unify `decidable` instances
-def invOfUnit (φ : MvPowerSeries σ R) (u : (R)ˣ) : MvPowerSeries σ R :=
+def invOfUnit (φ : MvPowerSeries σ R) (u : Rˣ) : MvPowerSeries σ R :=
   Inv.aux (↑u⁻¹) φ
 
-theorem coeff_inv_of_unit [DecidableEq σ] (n : σ →₀ ℕ) (φ : MvPowerSeries σ R) (u : (R)ˣ) :
+theorem coeff_inv_of_unit [DecidableEq σ] (n : σ →₀ ℕ) (φ : MvPowerSeries σ R) (u : Rˣ) :
     coeff R n (invOfUnit φ u) =
       if n = 0 then ↑u⁻¹
       else -↑u⁻¹ * ∑ x in n.antidiagonal, if x.2 < n then coeff R x.1 φ * coeff R x.2 (invOfUnit φ u) else 0 :=
   coeff_inv_aux n (↑u⁻¹) φ
 
 @[simp]
-theorem constant_coeff_inv_of_unit (φ : MvPowerSeries σ R) (u : (R)ˣ) : constantCoeff σ R (invOfUnit φ u) = ↑u⁻¹ := by
+theorem constant_coeff_inv_of_unit (φ : MvPowerSeries σ R) (u : Rˣ) : constantCoeff σ R (invOfUnit φ u) = ↑u⁻¹ := by
   rw [← coeff_zero_eq_constant_coeff_apply, coeff_inv_of_unit, if_pos rfl]
 
-theorem mul_inv_of_unit (φ : MvPowerSeries σ R) (u : (R)ˣ) (h : constantCoeff σ R φ = u) : φ * invOfUnit φ u = 1 :=
+theorem mul_inv_of_unit (φ : MvPowerSeries σ R) (u : Rˣ) (h : constantCoeff σ R φ = u) : φ * invOfUnit φ u = 1 :=
   ext fun n =>
     if H : n = 0 then by
       rw [H]
@@ -1625,10 +1625,10 @@ theorem coeff_inv_aux (n : ℕ) (a : R) (φ : PowerSeries R) :
     
 
 /-- A formal power series is invertible if the constant coefficient is invertible.-/
-def invOfUnit (φ : PowerSeries R) (u : (R)ˣ) : PowerSeries R :=
+def invOfUnit (φ : PowerSeries R) (u : Rˣ) : PowerSeries R :=
   MvPowerSeries.invOfUnit φ u
 
-theorem coeff_inv_of_unit (n : ℕ) (φ : PowerSeries R) (u : (R)ˣ) :
+theorem coeff_inv_of_unit (n : ℕ) (φ : PowerSeries R) (u : Rˣ) :
     coeff R n (invOfUnit φ u) =
       if n = 0 then ↑u⁻¹
       else
@@ -1636,10 +1636,10 @@ theorem coeff_inv_of_unit (n : ℕ) (φ : PowerSeries R) (u : (R)ˣ) :
   coeff_inv_aux n (↑u⁻¹) φ
 
 @[simp]
-theorem constant_coeff_inv_of_unit (φ : PowerSeries R) (u : (R)ˣ) : constantCoeff R (invOfUnit φ u) = ↑u⁻¹ := by
+theorem constant_coeff_inv_of_unit (φ : PowerSeries R) (u : Rˣ) : constantCoeff R (invOfUnit φ u) = ↑u⁻¹ := by
   rw [← coeff_zero_eq_constant_coeff_apply, coeff_inv_of_unit, if_pos rfl]
 
-theorem mul_inv_of_unit (φ : PowerSeries R) (u : (R)ˣ) (h : constantCoeff R φ = u) : φ * invOfUnit φ u = 1 :=
+theorem mul_inv_of_unit (φ : PowerSeries R) (u : Rˣ) (h : constantCoeff R φ = u) : φ * invOfUnit φ u = 1 :=
   MvPowerSeries.mul_inv_of_unit φ u <| h
 
 /-- Two ways of removing the constant coefficient of a power series are the same. -/

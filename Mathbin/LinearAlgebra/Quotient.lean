@@ -180,7 +180,7 @@ instance is_scalar_tower (T : Type _) [HasScalar T R] [HasScalar T M] [IsScalarT
     [IsScalarTower S T M] : IsScalarTower S T (M ⧸ P) where
   smul_assoc := fun x y => Quotientₓ.ind' fun z => congr_argₓ mk (smul_assoc _ _ _)
 
-instance is_central_scalar [HasScalar (Sᵐᵒᵖ) R] [HasScalar (Sᵐᵒᵖ) M] [IsScalarTower (Sᵐᵒᵖ) R M] [IsCentralScalar S M] :
+instance is_central_scalar [HasScalar Sᵐᵒᵖ R] [HasScalar Sᵐᵒᵖ M] [IsScalarTower Sᵐᵒᵖ R M] [IsCentralScalar S M] :
     IsCentralScalar S (M ⧸ P) where
   op_smul_eq_smul := fun x => Quotientₓ.ind' fun z => congr_argₓ mk <| op_smul_eq_smul _ _
 

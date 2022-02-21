@@ -2465,7 +2465,7 @@ instance [Monoidₓ R] [Monoidₓ S] [AddMonoidₓ M] [DistribMulAction R M] [Di
     SmulCommClass R S (α →₀ M) where
   smul_comm := fun r s a => ext fun _ => smul_comm _ _ _
 
-instance [Monoidₓ R] [AddMonoidₓ M] [DistribMulAction R M] [DistribMulAction (Rᵐᵒᵖ) M] [IsCentralScalar R M] :
+instance [Monoidₓ R] [AddMonoidₓ M] [DistribMulAction R M] [DistribMulAction Rᵐᵒᵖ M] [IsCentralScalar R M] :
     IsCentralScalar R (α →₀ M) where
   op_smul_eq_smul := fun r a => ext fun _ => op_smul_eq_smul _ _
 

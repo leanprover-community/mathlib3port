@@ -251,7 +251,7 @@ theorem ne_zero_of_mem_factors {R : Type v} [CommRingₓ R] [IsDomain R] [IsPrin
   Irreducible.ne_zero ((factors_spec a ha).1 b hb)
 
 theorem mem_submonoid_of_factors_subset_of_units_subset (s : Submonoid R) {a : R} (ha : a ≠ 0)
-    (hfac : ∀, ∀ b ∈ factors a, ∀, b ∈ s) (hunit : ∀ c : (R)ˣ, (c : R) ∈ s) : a ∈ s := by
+    (hfac : ∀, ∀ b ∈ factors a, ∀, b ∈ s) (hunit : ∀ c : Rˣ, (c : R) ∈ s) : a ∈ s := by
   rcases(factors_spec a ha).2 with ⟨c, hc⟩
   rw [← hc]
   exact Submonoid.mul_mem _ (Submonoid.multiset_prod_mem _ _ hfac) (hunit _)
@@ -260,7 +260,7 @@ theorem mem_submonoid_of_factors_subset_of_units_subset (s : Submonoid R) {a : R
 also maps `a` into that submonoid. -/
 theorem ring_hom_mem_submonoid_of_factors_subset_of_units_subset {R S : Type _} [CommRingₓ R] [IsDomain R]
     [IsPrincipalIdealRing R] [Semiringₓ S] (f : R →+* S) (s : Submonoid S) (a : R) (ha : a ≠ 0)
-    (h : ∀, ∀ b ∈ factors a, ∀, f b ∈ s) (hf : ∀ c : (R)ˣ, f c ∈ s) : f a ∈ s :=
+    (h : ∀, ∀ b ∈ factors a, ∀, f b ∈ s) (hf : ∀ c : Rˣ, f c ∈ s) : f a ∈ s :=
   mem_submonoid_of_factors_subset_of_units_subset (s.comap f.toMonoidHom) ha h hf
 
 /-- A principal ideal domain has unique factorization -/

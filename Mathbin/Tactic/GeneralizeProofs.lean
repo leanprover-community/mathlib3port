@@ -76,7 +76,7 @@ unsafe def generalize_proofs (ns : List Name) (loc : Interactive.Loc) : tactic U
   collect_proofs_in t [] (ns, hs)
   intron n <|> intros $> ()
 
-local postfix:9001 "*" => many
+local postfix:1024 "*" => many
 
 namespace Interactive
 
@@ -93,7 +93,7 @@ begin
 end
 ```
 -/
-unsafe def generalize_proofs : parse (ident_)* → parse location → tactic Unit :=
+unsafe def generalize_proofs : parse ident_* → parse location → tactic Unit :=
   tactic.generalize_proofs
 
 end Interactive

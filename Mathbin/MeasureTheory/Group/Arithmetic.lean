@@ -523,11 +523,11 @@ theorem ae_measurable_const_smul_iff (c : G) : AeMeasurable (fun x => c • f x)
     simpa only [inv_smul_smul] using h.const_smul' c⁻¹, fun h => h.const_smul c⟩
 
 @[to_additive]
-instance : MeasurableSpace (M)ˣ :=
-  MeasurableSpace.comap (coe : (M)ˣ → M) ‹_›
+instance : MeasurableSpace Mˣ :=
+  MeasurableSpace.comap (coe : Mˣ → M) ‹_›
 
 @[to_additive]
-instance Units.has_measurable_smul : HasMeasurableSmul (M)ˣ β where
+instance Units.has_measurable_smul : HasMeasurableSmul Mˣ β where
   measurable_const_smul := fun c => (measurable_const_smul (c : M) : _)
   measurable_smul_const := fun x =>
     (measurable_smul_const x : Measurable fun c : M => c • x).comp MeasurableSpace.le_map_comap
@@ -563,7 +563,7 @@ section Opposite
 open MulOpposite
 
 @[to_additive]
-instance {α : Type _} [h : MeasurableSpace α] : MeasurableSpace (αᵐᵒᵖ) :=
+instance {α : Type _} [h : MeasurableSpace α] : MeasurableSpace αᵐᵒᵖ :=
   MeasurableSpace.map op h
 
 @[to_additive]
@@ -573,22 +573,22 @@ theorem measurable_mul_op {α : Type _} [MeasurableSpace α] : Measurable (op : 
 theorem measurable_mul_unop {α : Type _} [MeasurableSpace α] : Measurable (unop : αᵐᵒᵖ → α) := fun s => id
 
 @[to_additive]
-instance {M : Type _} [Mul M] [MeasurableSpace M] [HasMeasurableMul M] : HasMeasurableMul (Mᵐᵒᵖ) :=
+instance {M : Type _} [Mul M] [MeasurableSpace M] [HasMeasurableMul M] : HasMeasurableMul Mᵐᵒᵖ :=
   ⟨fun c => measurable_mul_op.comp (measurable_mul_unop.mul_const _), fun c =>
     measurable_mul_op.comp (measurable_mul_unop.const_mul _)⟩
 
 @[to_additive]
-instance {M : Type _} [Mul M] [MeasurableSpace M] [HasMeasurableMul₂ M] : HasMeasurableMul₂ (Mᵐᵒᵖ) :=
+instance {M : Type _} [Mul M] [MeasurableSpace M] [HasMeasurableMul₂ M] : HasMeasurableMul₂ Mᵐᵒᵖ :=
   ⟨measurable_mul_op.comp ((measurable_mul_unop.comp measurable_snd).mul (measurable_mul_unop.comp measurable_fst))⟩
 
 @[to_additive]
 instance has_measurable_smul_opposite_of_mul {M : Type _} [Mul M] [MeasurableSpace M] [HasMeasurableMul M] :
-    HasMeasurableSmul (Mᵐᵒᵖ) M :=
+    HasMeasurableSmul Mᵐᵒᵖ M :=
   ⟨fun c => measurable_mul_const (unop c), fun x => measurable_mul_unop.const_mul x⟩
 
 @[to_additive]
 instance has_measurable_smul₂_opposite_of_mul {M : Type _} [Mul M] [MeasurableSpace M] [HasMeasurableMul₂ M] :
-    HasMeasurableSmul₂ (Mᵐᵒᵖ) M :=
+    HasMeasurableSmul₂ Mᵐᵒᵖ M :=
   ⟨measurable_snd.mul (measurable_mul_unop.comp measurable_fst)⟩
 
 end Opposite

@@ -298,7 +298,7 @@ section
 variable {R : Type _} [Semiringₓ R] [DivisionRing K] (f : R →+* K)
 
 @[simp]
-theorem map_units_inv (u : (R)ˣ) : f ↑u⁻¹ = (f ↑u)⁻¹ :=
+theorem map_units_inv (u : Rˣ) : f ↑u⁻¹ = (f ↑u)⁻¹ :=
   (f : R →* K).map_units_inv u
 
 end

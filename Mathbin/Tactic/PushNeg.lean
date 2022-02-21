@@ -149,9 +149,9 @@ open lean.parser (tk ident many)
 
 open Interactive.Loc
 
-local postfix:9001 "?" => optionalₓ
+local postfix:1024 "?" => optionalₓ
 
-local postfix:9001 "*" => many
+local postfix:1024 "*" => many
 
 open PushNeg
 
@@ -213,7 +213,7 @@ unsafe def name_with_opt : lean.parser (Name × Option Name) :=
 * `contrapose! h`  first reverts the local assumption `h`, and then uses `contrapose!` and `intro h`
 * `contrapose h with new_h` uses the name `new_h` for the introduced hypothesis
 -/
-unsafe def tactic.interactive.contrapose (push : parse (tk "!")?) : parse (name_with_opt)? → tactic Unit
+unsafe def tactic.interactive.contrapose (push : parse (tk "!")?) : parse name_with_opt ? → tactic Unit
   | some (h, h') => (((get_local h >>= revert) >> tactic.interactive.contrapose none) >> intro (h'.getOrElse h)) >> skip
   | none => do
     let quote.1 ((%%ₓP) → %%ₓQ) ← target | fail "The goal is not an implication, and you didn't specify an assumption"

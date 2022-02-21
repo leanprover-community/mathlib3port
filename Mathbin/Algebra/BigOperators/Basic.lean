@@ -1607,7 +1607,7 @@ theorem Int.cast_prod {R : Type _} [CommRingₓ R] (f : α → ℤ) (s : Finset 
   (Int.castRingHom R).map_prod _ _
 
 @[simp, norm_cast]
-theorem Units.coe_prod {M : Type _} [CommMonoidₓ M] (f : α → (M)ˣ) (s : Finset α) :
+theorem Units.coe_prod {M : Type _} [CommMonoidₓ M] (f : α → Mˣ) (s : Finset α) :
     (↑(∏ i in s, f i) : M) = ∏ i in s, f i :=
   (Units.coeHom M).map_prod _ _
 

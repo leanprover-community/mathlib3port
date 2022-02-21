@@ -42,7 +42,7 @@ namespace Top
 /-- The category of `C`-valued presheaves on a (bundled) topological space `X`. -/
 @[nolint has_inhabited_instance]
 def Presheaf (X : Top.{v}) :=
-  Opens Xᵒᵖ ⥤ C deriving Category
+  (Opens X)ᵒᵖ ⥤ C deriving Category
 
 variable {C}
 
@@ -56,12 +56,12 @@ def pushforwardObj {X Y : Top.{v}} (f : X ⟶ Y) (ℱ : X.Presheaf C) : Y.Preshe
 infixl:80 " _* " => pushforwardObj
 
 @[simp]
-theorem pushforward_obj_obj {X Y : Top.{v}} (f : X ⟶ Y) (ℱ : X.Presheaf C) (U : Opens Yᵒᵖ) :
+theorem pushforward_obj_obj {X Y : Top.{v}} (f : X ⟶ Y) (ℱ : X.Presheaf C) (U : (Opens Y)ᵒᵖ) :
     (f _* ℱ).obj U = ℱ.obj ((Opens.map f).op.obj U) :=
   rfl
 
 @[simp]
-theorem pushforward_obj_map {X Y : Top.{v}} (f : X ⟶ Y) (ℱ : X.Presheaf C) {U V : Opens Yᵒᵖ} (i : U ⟶ V) :
+theorem pushforward_obj_map {X Y : Top.{v}} (f : X ⟶ Y) (ℱ : X.Presheaf C) {U V : (Opens Y)ᵒᵖ} (i : U ⟶ V) :
     (f _* ℱ).map i = ℱ.map ((Opens.map f).op.map i) :=
   rfl
 
@@ -264,7 +264,7 @@ def pushforward {X Y : Top.{v}} (f : X ⟶ Y) : X.Presheaf C ⥤ Y.Presheaf C wh
   map := @pushforwardMap _ _ X Y f
 
 @[simp]
-theorem pushforward_map_app' {X Y : Top.{v}} (f : X ⟶ Y) {ℱ 𝒢 : X.Presheaf C} (α : ℱ ⟶ 𝒢) {U : Opens Yᵒᵖ} :
+theorem pushforward_map_app' {X Y : Top.{v}} (f : X ⟶ Y) {ℱ 𝒢 : X.Presheaf C} (α : ℱ ⟶ 𝒢) {U : (Opens Y)ᵒᵖ} :
     ((pushforward C f).map α).app U = α.app (op <| (Opens.map f).obj U.unop) :=
   rfl
 
@@ -298,7 +298,7 @@ def toPushforwardOfIso {X Y : Top} (H : X ≅ Y) {ℱ : X.Presheaf C} {𝒢 : Y.
 
 @[simp]
 theorem to_pushforward_of_iso_app {X Y : Top} (H₁ : X ≅ Y) {ℱ : X.Presheaf C} {𝒢 : Y.Presheaf C} (H₂ : H₁.Hom _* ℱ ⟶ 𝒢)
-    (U : Opens Xᵒᵖ) :
+    (U : (Opens X)ᵒᵖ) :
     (toPushforwardOfIso H₁ H₂).app U =
       ℱ.map
           (eqToHom
@@ -321,7 +321,7 @@ def pushforwardToOfIso {X Y : Top} (H₁ : X ≅ Y) {ℱ : Y.Presheaf C} {𝒢 :
 
 @[simp]
 theorem pushforward_to_of_iso_app {X Y : Top} (H₁ : X ≅ Y) {ℱ : Y.Presheaf C} {𝒢 : X.Presheaf C} (H₂ : ℱ ⟶ H₁.Hom _* 𝒢)
-    (U : Opens Xᵒᵖ) :
+    (U : (Opens X)ᵒᵖ) :
     (pushforwardToOfIso H₁ H₂).app U =
       H₂.app (op ((Opens.map H₁.inv).obj (unop U))) ≫
         𝒢.map

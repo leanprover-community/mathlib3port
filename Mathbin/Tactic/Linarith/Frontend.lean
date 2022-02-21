@@ -288,7 +288,7 @@ Config options:
   Options: `ring2`, `ring SOP`, `simp`
 * `linarith {split_hypotheses := ff}` will not destruct conjunctions in the context.
 -/
-unsafe def tactic.interactive.linarith (red : parse (tk "!")?) (restr : parse (tk "only")?) (hyps : parse (pexpr_list)?)
+unsafe def tactic.interactive.linarith (red : parse (tk "!")?) (restr : parse (tk "only")?) (hyps : parse pexpr_list ?)
     (cfg : linarith_config := {  }) : tactic Unit :=
   tactic.linarith red.isSome restr.isSome (hyps.getOrElse []) cfg
 
@@ -359,8 +359,8 @@ in `linarith`. The preprocessing is as follows:
   the assumption `0 R' (b1 - a1) * (b2 - a2)` is added to the context (non-recursively),
   where `R ∈ {<, ≤, =}` is the appropriate comparison derived from `R1, R2`.
 -/
-unsafe def tactic.interactive.nlinarith (red : parse (tk "!")?) (restr : parse (tk "only")?)
-    (hyps : parse (pexpr_list)?) (cfg : linarith_config := {  }) : tactic Unit :=
+unsafe def tactic.interactive.nlinarith (red : parse (tk "!")?) (restr : parse (tk "only")?) (hyps : parse pexpr_list ?)
+    (cfg : linarith_config := {  }) : tactic Unit :=
   tactic.linarith red.isSome restr.isSome (hyps.getOrElse [])
     { cfg with preprocessors := some <| cfg.preprocessors.getOrElse default_preprocessors ++ [nlinarith_extras] }
 

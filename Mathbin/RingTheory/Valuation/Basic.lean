@@ -199,7 +199,7 @@ theorem zero_iff [Nontrivial Γ₀] {K : Type _} [DivisionRing K] (v : Valuation
 theorem ne_zero_iff [Nontrivial Γ₀] {K : Type _} [DivisionRing K] (v : Valuation K Γ₀) {x : K} : v x ≠ 0 ↔ x ≠ 0 :=
   v.toMonoidWithZeroHom.map_ne_zero
 
-theorem unit_map_eq (u : (R)ˣ) : (Units.map (v : R →* Γ₀) u : Γ₀) = v u :=
+theorem unit_map_eq (u : Rˣ) : (Units.map (v : R →* Γ₀) u : Γ₀) = v u :=
   rfl
 
 /-- A ring homomorphism `S → R` induces a map `valuation R Γ₀ → valuation S Γ₀`. -/
@@ -244,7 +244,7 @@ theorem map_inv {K : Type _} [DivisionRing K] (v : Valuation K Γ₀) {x : K} : 
 theorem map_zpow {K : Type _} [DivisionRing K] (v : Valuation K Γ₀) {x : K} {n : ℤ} : v (x ^ n) = v x ^ n :=
   v.toMonoidWithZeroHom.map_zpow x n
 
-theorem map_units_inv (x : (R)ˣ) : v (x⁻¹ : (R)ˣ) = (v x)⁻¹ :=
+theorem map_units_inv (x : Rˣ) : v (x⁻¹ : Rˣ) = (v x)⁻¹ :=
   v.toMonoidWithZeroHom.toMonoidHom.map_units_inv x
 
 @[simp]
@@ -289,7 +289,7 @@ theorem map_eq_of_sub_lt (h : v (y - x) < v x) : v y = v x := by
   simpa using this
 
 /-- The subgroup of elements whose valuation is less than a certain unit.-/
-def ltAddSubgroup (v : Valuation R Γ₀) (γ : (Γ₀)ˣ) : AddSubgroup R where
+def ltAddSubgroup (v : Valuation R Γ₀) (γ : Γ₀ˣ) : AddSubgroup R where
   Carrier := { x | v x < γ }
   zero_mem' := by
     have h := Units.ne_zero γ
@@ -652,7 +652,7 @@ variable [LinearOrderedAddCommGroupWithTop Γ₀] [Ringₓ R] (v : AddValuation 
 theorem map_inv {K : Type _} [DivisionRing K] (v : AddValuation K Γ₀) {x : K} : v x⁻¹ = -v x :=
   v.map_inv
 
-theorem map_units_inv (x : (R)ˣ) : v (x⁻¹ : (R)ˣ) = -v x :=
+theorem map_units_inv (x : Rˣ) : v (x⁻¹ : Rˣ) = -v x :=
   v.map_units_inv x
 
 @[simp]

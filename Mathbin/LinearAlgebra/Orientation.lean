@@ -264,7 +264,7 @@ end Action
 namespace Module.Ray
 
 /-- Scaling by a positive unit is a no-op. -/
-theorem units_smul_of_pos [Nontrivial R] (u : (R)ˣ) (hu : 0 < (u : R)) (v : Module.Ray R M) : u • v = v := by
+theorem units_smul_of_pos [Nontrivial R] (u : Rˣ) (hu : 0 < (u : R)) (v : Module.Ray R M) : u • v = v := by
   induction v using Module.Ray.ind
   rw [smul_ray_of_ne_zero, ray_eq_iff]
   exact same_ray_pos_smul_left _ hu
@@ -387,7 +387,7 @@ theorem ne_neg_self [Nontrivial R] [NoZeroSmulDivisors R M] (x : Module.Ray R M)
   exact x_hv (eq_zero_of_same_ray_self_neg h)
 
 /-- Scaling by a negative unit is negation. -/
-theorem units_smul_of_neg [Nontrivial R] (u : (R)ˣ) (hu : (u : R) < 0) (v : Module.Ray R M) : u • v = -v := by
+theorem units_smul_of_neg [Nontrivial R] (u : Rˣ) (hu : (u : R) < 0) (v : Module.Ray R M) : u • v = -v := by
   induction v using Module.Ray.ind
   rw [smul_ray_of_ne_zero, ← ray_neg, ray_eq_iff, ← same_ray_neg_swap, Units.smul_def, ← neg_smul]
   exact same_ray_pos_smul_left _ (neg_pos_of_neg hu)
@@ -444,10 +444,10 @@ theorem same_ray_of_mem_orbit {v₁ v₂ : M} (h : v₁ ∈ MulAction.Orbit (Uni
 
 /-- Scaling by an inverse unit is the same as scaling by itself. -/
 @[simp]
-theorem units_inv_smul (u : (R)ˣ) (v : Module.Ray R M) : u⁻¹ • v = u • v := by
+theorem units_inv_smul (u : Rˣ) (v : Module.Ray R M) : u⁻¹ • v = u • v := by
   induction' v using Module.Ray.ind with v hv
   rw [smul_ray_of_ne_zero, smul_ray_of_ne_zero, ray_eq_iff]
-  have : ∀ {u : (R)ˣ}, 0 < (u : R) → SameRay R (u⁻¹ • v) (u • v) := fun u h =>
+  have : ∀ {u : Rˣ}, 0 < (u : R) → SameRay R (u⁻¹ • v) (u • v) := fun u h =>
     ((SameRay.refl v).pos_smul_left <| units.inv_pos.mpr h).pos_smul_right h
   cases lt_or_lt_iff_ne.2 u.ne_zero
   · rw [← neg_negₓ u, inv_neg', (-u).neg_smul, Units.neg_smul]
@@ -500,7 +500,7 @@ theorem same_ray_neg_smul_left_iff {v : M} (hv : v ≠ 0) (r : R) : SameRay R (r
 /-- A nonzero vector is in the same ray as a multiple of itself if and only if that multiple
 is positive. -/
 @[simp]
-theorem units_smul_eq_self_iff {u : (R)ˣ} {v : Module.Ray R M} : u • v = v ↔ (0 : R) < u := by
+theorem units_smul_eq_self_iff {u : Rˣ} {v : Module.Ray R M} : u • v = v ↔ (0 : R) < u := by
   induction' v using Module.Ray.ind with v hv
   rw [smul_ray_of_ne_zero, ray_eq_iff, Units.smul_def]
   exact same_ray_smul_left_iff hv _
@@ -508,7 +508,7 @@ theorem units_smul_eq_self_iff {u : (R)ˣ} {v : Module.Ray R M} : u • v = v �
 /-- A nonzero vector is in the same ray as a multiple of itself if and only if that multiple
 is positive. -/
 @[simp]
-theorem units_smul_eq_neg_iff {u : (R)ˣ} {v : Module.Ray R M} : u • v = -v ↔ ↑u < (0 : R) := by
+theorem units_smul_eq_neg_iff {u : Rˣ} {v : Module.Ray R M} : u • v = -v ↔ ↑u < (0 : R) := by
   induction' v using Module.Ray.ind with v hv
   rw [smul_ray_of_ne_zero, ← ray_neg, ray_eq_iff, Units.smul_def]
   exact same_ray_neg_smul_left_iff hv _

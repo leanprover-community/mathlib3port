@@ -1514,8 +1514,8 @@ namespace UniqueFactorizationMonoid
 
 /-- If `y` is a nonzero element of a unique factorization monoid with finitely
 many units (e.g. `ℤ`, `ideal (ring_of_integers K)`), it has finitely many divisors. -/
-noncomputable def fintypeSubtypeDvd {M : Type _} [CancelCommMonoidWithZero M] [UniqueFactorizationMonoid M]
-    [Fintype (M)ˣ] (y : M) (hy : y ≠ 0) : Fintype { x // x ∣ y } := by
+noncomputable def fintypeSubtypeDvd {M : Type _} [CancelCommMonoidWithZero M] [UniqueFactorizationMonoid M] [Fintype Mˣ]
+    (y : M) (hy : y ≠ 0) : Fintype { x // x ∣ y } := by
   have : Nontrivial M := ⟨⟨y, 0, hy⟩⟩
   have : NormalizationMonoid M := UniqueFactorizationMonoid.normalizationMonoid
   have := Classical.decEq M
@@ -1524,7 +1524,7 @@ noncomputable def fintypeSubtypeDvd {M : Type _} [CancelCommMonoidWithZero M] [U
   -- and has image exactly the divisors of `y`.
   refine'
     Fintype.ofFinset
-      (((normalized_factors y).Powerset.toFinset.product (Finset.univ : Finset (M)ˣ)).Image fun s =>
+      (((normalized_factors y).Powerset.toFinset.product (Finset.univ : Finset Mˣ)).Image fun s =>
         (s.snd : M) * s.fst.prod)
       fun x => _
   simp only [exists_prop, Finset.mem_image, Finset.mem_product, Finset.mem_univ, and_trueₓ, Multiset.mem_to_finset,

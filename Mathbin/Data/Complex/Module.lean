@@ -69,7 +69,7 @@ instance [HasScalar R S] [HasScalar R ℝ] [HasScalar S ℝ] [IsScalarTower R S 
   smul_assoc := fun r s x => by
     ext <;> simp [smul_re, smul_im, smul_assoc]
 
-instance [HasScalar R ℝ] [HasScalar (Rᵐᵒᵖ) ℝ] [IsCentralScalar R ℝ] : IsCentralScalar R ℂ where
+instance [HasScalar R ℝ] [HasScalar Rᵐᵒᵖ ℝ] [IsCentralScalar R ℝ] : IsCentralScalar R ℂ where
   op_smul_eq_smul := fun r x => by
     ext <;> simp [smul_re, smul_im, op_smul_eq_smul]
 

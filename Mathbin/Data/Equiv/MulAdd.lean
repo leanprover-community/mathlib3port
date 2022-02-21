@@ -486,7 +486,7 @@ def MonoidHom.toMulEquiv [MulOneClassₓ M] [MulOneClassₓ N] (f : M →* N) (g
 
 /-- A group is isomorphic to its group of units. -/
 @[to_additive toAddUnits "An additive group is isomorphic to its group of additive units"]
-def toUnits [Groupₓ G] : G ≃* (G)ˣ where
+def toUnits [Groupₓ G] : G ≃* Gˣ where
   toFun := fun x => ⟨x, x⁻¹, mul_inv_selfₓ _, inv_mul_selfₓ _⟩
   invFun := coe
   left_inv := fun x => rfl
@@ -503,49 +503,49 @@ protected theorem Groupₓ.is_unit {G} [Groupₓ G] (x : G) : IsUnit x :=
 namespace Units
 
 @[simp, to_additive]
-theorem coe_inv [Groupₓ G] (u : (G)ˣ) : ↑u⁻¹ = (u⁻¹ : G) :=
+theorem coe_inv [Groupₓ G] (u : Gˣ) : ↑u⁻¹ = (u⁻¹ : G) :=
   toUnits.symm.map_inv u
 
 variable [Monoidₓ M] [Monoidₓ N] [Monoidₓ P]
 
 /-- A multiplicative equivalence of monoids defines a multiplicative equivalence
 of their groups of units. -/
-def mapEquiv (h : M ≃* N) : (M)ˣ ≃* (N)ˣ :=
+def mapEquiv (h : M ≃* N) : Mˣ ≃* Nˣ :=
   { map h.toMonoidHom with invFun := map h.symm.toMonoidHom, left_inv := fun u => ext <| h.left_inv u,
     right_inv := fun u => ext <| h.right_inv u }
 
 /-- Left multiplication by a unit of a monoid is a permutation of the underlying type. -/
 @[to_additive "Left addition of an additive unit is a permutation of the underlying type.",
   simps (config := { fullyApplied := false }) apply]
-def mulLeft (u : (M)ˣ) : Equivₓ.Perm M where
+def mulLeft (u : Mˣ) : Equivₓ.Perm M where
   toFun := fun x => u * x
   invFun := fun x => ↑u⁻¹ * x
   left_inv := u.inv_mul_cancel_left
   right_inv := u.mul_inv_cancel_left
 
 @[simp, to_additive]
-theorem mul_left_symm (u : (M)ˣ) : u.mul_left.symm = u⁻¹.mul_left :=
+theorem mul_left_symm (u : Mˣ) : u.mul_left.symm = u⁻¹.mul_left :=
   Equivₓ.ext fun x => rfl
 
 @[to_additive]
-theorem mul_left_bijective (a : (M)ˣ) : Function.Bijective ((· * ·) a : M → M) :=
+theorem mul_left_bijective (a : Mˣ) : Function.Bijective ((· * ·) a : M → M) :=
   (mulLeft a).Bijective
 
 /-- Right multiplication by a unit of a monoid is a permutation of the underlying type. -/
 @[to_additive "Right addition of an additive unit is a permutation of the underlying type.",
   simps (config := { fullyApplied := false }) apply]
-def mulRight (u : (M)ˣ) : Equivₓ.Perm M where
+def mulRight (u : Mˣ) : Equivₓ.Perm M where
   toFun := fun x => x * u
   invFun := fun x => x * ↑u⁻¹
   left_inv := fun x => mul_inv_cancel_right x u
   right_inv := fun x => inv_mul_cancel_right x u
 
 @[simp, to_additive]
-theorem mul_right_symm (u : (M)ˣ) : u.mul_right.symm = u⁻¹.mul_right :=
+theorem mul_right_symm (u : Mˣ) : u.mul_right.symm = u⁻¹.mul_right :=
   Equivₓ.ext fun x => rfl
 
 @[to_additive]
-theorem mul_right_bijective (a : (M)ˣ) : Function.Bijective ((· * a) : M → M) :=
+theorem mul_right_bijective (a : Mˣ) : Function.Bijective ((· * a) : M → M) :=
   (mulRight a).Bijective
 
 end Units

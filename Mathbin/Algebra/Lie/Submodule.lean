@@ -162,8 +162,8 @@ instance module' {S : Type _} [Semiringₓ S] [HasScalar S R] [Module S M] [IsSc
 instance : Module R N :=
   N.toSubmodule.Module
 
-instance {S : Type _} [Semiringₓ S] [HasScalar S R] [HasScalar (Sᵐᵒᵖ) R] [Module S M] [Module (Sᵐᵒᵖ) M]
-    [IsScalarTower S R M] [IsScalarTower (Sᵐᵒᵖ) R M] [IsCentralScalar S M] : IsCentralScalar S N :=
+instance {S : Type _} [Semiringₓ S] [HasScalar S R] [HasScalar Sᵐᵒᵖ R] [Module S M] [Module Sᵐᵒᵖ M]
+    [IsScalarTower S R M] [IsScalarTower Sᵐᵒᵖ R M] [IsCentralScalar S M] : IsCentralScalar S N :=
   N.toSubmodule.IsCentralScalar
 
 instance : LieModule R L N where

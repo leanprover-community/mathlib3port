@@ -247,7 +247,7 @@ theorem stalk_to_fiber_injective (P : LocalPredicate T) (x : X)
     Function.Injective (stalkToFiber P x) := fun tU tV h => by
   -- We promise to provide all the ingredients of the proof later:
   let Q :
-    ∃ (W : open_nhds xᵒᵖ)(s : ∀ w : (unop W).1, T w)(hW : P.pred s),
+    ∃ (W : (open_nhds x)ᵒᵖ)(s : ∀ w : (unop W).1, T w)(hW : P.pred s),
       tU = (subsheaf_to_Types P).1.germ ⟨x, (unop W).2⟩ ⟨s, hW⟩ ∧
         tV = (subsheaf_to_Types P).1.germ ⟨x, (unop W).2⟩ ⟨s, hW⟩ :=
     _

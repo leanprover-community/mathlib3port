@@ -19,7 +19,7 @@ namespace CategoryTheory
 
 variable (C : Type _) [Category C] [Preadditive C]
 
-instance : Preadditive (Cᵒᵖ) where
+instance : Preadditive Cᵒᵖ where
   homGroup := fun X Y => Equivₓ.addCommGroup (opEquiv X Y)
   add_comp' := fun X Y Z f f' g => congr_argₓ Quiver.Hom.op (Preadditive.comp_add _ _ _ g.unop f.unop f'.unop)
   comp_add' := fun X Y Z f g g' => congr_argₓ Quiver.Hom.op (Preadditive.add_comp _ _ _ g.unop g'.unop f.unop)

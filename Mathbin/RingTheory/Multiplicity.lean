@@ -189,10 +189,10 @@ theorem get_one_right {a : α} (ha : Finite a 1) : get (multiplicity a 1) ha = 0
   simpa [is_unit_iff_dvd_one.symm] using not_unit_of_finite ha
 
 @[simp]
-theorem unit_left (a : α) (u : (α)ˣ) : multiplicity (u : α) a = ⊤ :=
+theorem unit_left (a : α) (u : αˣ) : multiplicity (u : α) a = ⊤ :=
   is_unit_left a u.IsUnit
 
-theorem unit_right {a : α} (ha : ¬IsUnit a) (u : (α)ˣ) : multiplicity a u = 0 :=
+theorem unit_right {a : α} (ha : ¬IsUnit a) (u : αˣ) : multiplicity a u = 0 :=
   is_unit_right ha u.IsUnit
 
 theorem multiplicity_eq_zero_of_not_dvd {a b : α} (ha : ¬a ∣ b) : multiplicity a b = 0 := by

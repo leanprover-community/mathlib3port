@@ -26,7 +26,7 @@ variable [Monoidₓ α] [Monoidₓ β]
 
 /-- We say that `a` is conjugate to `b` if for some unit `c` we have `c * a * c⁻¹ = b`. -/
 def IsConj (a b : α) :=
-  ∃ c : (α)ˣ, SemiconjBy (↑c) a b
+  ∃ c : αˣ, SemiconjBy (↑c) a b
 
 @[refl]
 theorem IsConj.refl (a : α) : IsConj a a :=

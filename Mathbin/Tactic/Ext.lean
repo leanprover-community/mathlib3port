@@ -483,9 +483,9 @@ unsafe def ext (xs : List rcases_patt) (fuel : Option ℕ) (cfg : ApplyCfg := { 
   when trace <| tactic.trace <| "Try this: " ++ ", ".intercalate σ
   pure σ
 
-local postfix:9001 "?" => optionalₓ
+local postfix:1024 "?" => optionalₓ
 
-local postfix:9001 "*" => many
+local postfix:1024 "*" => many
 
 /-- `ext1 id` selects and apply one extensionality lemma (with attribute
 `ext`), using `id`, if provided, to name a local constant
@@ -494,7 +494,7 @@ named automatically, as per `intro`. Placing a `?` after `ext1`
  (e.g. `ext1? i ⟨a,b⟩ : 3`) will display a sequence of tactic
 applications that can replace the call to `ext1`.
 -/
-unsafe def interactive.ext1 (trace : parse (tk "?")?) (xs : parse (rcases_patt_parse_hi)*) : tactic Unit :=
+unsafe def interactive.ext1 (trace : parse (tk "?")?) (xs : parse rcases_patt_parse_hi*) : tactic Unit :=
   ext1 xs {  } trace.isSome $> ()
 
 /-- - `ext` applies as many extensionality lemmas as possible;
@@ -557,7 +557,7 @@ Try this: apply funext, rintro ⟨a, b⟩
 A maximum depth can be provided with `ext x y z : 3`.
 -/
 unsafe def interactive.ext :
-    (parse <| (tk "?")?) → parse (rcases_patt_parse_hi)* → parse (tk ":" *> small_nat)? → tactic Unit
+    (parse <| (tk "?")?) → parse rcases_patt_parse_hi* → parse (tk ":" *> small_nat)? → tactic Unit
   | trace, [], some n => iterate_range 1 n (ext1 [] {  } trace.isSome $> ())
   | trace, [], none => repeat1 (ext1 [] {  } trace.isSome $> ())
   | trace, xs, n => ext xs n {  } trace.isSome $> ()

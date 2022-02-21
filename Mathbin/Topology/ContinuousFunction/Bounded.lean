@@ -859,20 +859,21 @@ functions from `α` to `β` inherits a so-called `has_bounded_smul` structure (i
 using pointwise operations and checking that they are compatible with the uniform distance. -/
 
 
-variable {𝕜 : Type _} [MetricSpace 𝕜] [Semiringₓ 𝕜]
+variable {𝕜 : Type _} [PseudoMetricSpace 𝕜] [TopologicalSpace α] [MetricSpace β]
 
-variable [TopologicalSpace α] [MetricSpace β] [AddCommMonoidₓ β] [Module 𝕜 β] [HasBoundedSmul 𝕜 β]
+section HasScalar
 
-variable {f g : α →ᵇ β} {x : α} {C : ℝ}
+variable [Zero 𝕜] [Zero β] [HasScalar 𝕜 β] [HasBoundedSmul 𝕜 β]
 
-instance : HasScalar 𝕜 (α →ᵇ β) :=
-  ⟨fun c f =>
-    BoundedContinuousFunction.mkOfBound (c • f.toContinuousMap) (dist c 0 * Classical.some f.Bounded)
-      (by
-        intro x y
-        refine' (dist_smul_pair c (f x) (f y)).trans _
-        refine' mul_le_mul_of_nonneg_left _ dist_nonneg
-        exact Classical.some_spec f.bounded x y)⟩
+instance : HasScalar 𝕜 (α →ᵇ β) where
+  smul := fun c f =>
+    { toContinuousMap := c • f.toContinuousMap,
+      bounded' :=
+        let ⟨b, hb⟩ := f.Bounded
+        ⟨dist c 0 * b, fun x y => by
+          refine' (dist_smul_pair c (f x) (f y)).trans _
+          refine' mul_le_mul_of_nonneg_left _ dist_nonneg
+          exact hb x y⟩ }
 
 @[simp]
 theorem coe_smul (c : 𝕜) (f : α →ᵇ β) : ⇑(c • f) = fun x => c • f x :=
@@ -894,24 +895,46 @@ instance : HasBoundedSmul 𝕜 (α →ᵇ β) where
     convert mul_le_mul_of_nonneg_left (dist_coe_le_dist x) dist_nonneg
     simp
 
+end HasScalar
+
+section MulAction
+
+variable [MonoidWithZeroₓ 𝕜] [Zero β] [MulAction 𝕜 β] [HasBoundedSmul 𝕜 β]
+
+instance : MulAction 𝕜 (α →ᵇ β) :=
+  Function.Injective.mulAction _ coe_injective coe_smul
+
+end MulAction
+
+section DistribMulAction
+
+variable [MonoidWithZeroₓ 𝕜] [AddMonoidₓ β] [DistribMulAction 𝕜 β] [HasBoundedSmul 𝕜 β]
+
+variable [HasLipschitzAdd β]
+
+instance : DistribMulAction 𝕜 (α →ᵇ β) :=
+  Function.Injective.distribMulAction ⟨_, coe_zero, coe_add⟩ coe_injective coe_smul
+
+end DistribMulAction
+
+section Module
+
+variable [Semiringₓ 𝕜] [AddCommMonoidₓ β] [Module 𝕜 β] [HasBoundedSmul 𝕜 β]
+
+variable {f g : α →ᵇ β} {x : α} {C : ℝ}
+
 variable [HasLipschitzAdd β]
 
 instance : Module 𝕜 (α →ᵇ β) :=
-  { BoundedContinuousFunction.addCommMonoid with smul := (· • ·),
-    smul_add := fun c f g => ext fun x => smul_add c (f x) (g x),
-    add_smul := fun c₁ c₂ f => ext fun x => add_smul c₁ c₂ (f x),
-    mul_smul := fun c₁ c₂ f => ext fun x => mul_smul c₁ c₂ (f x), one_smul := fun f => ext fun x => one_smul 𝕜 (f x),
-    smul_zero := fun c => ext fun x => smul_zero c, zero_smul := fun f => ext fun x => zero_smul 𝕜 (f x) }
+  Function.Injective.module _ ⟨_, coe_zero, coe_add⟩ coe_injective coe_smul
 
 variable (𝕜)
 
 /-- The evaluation at a point, as a continuous linear map from `α →ᵇ β` to `β`. -/
 def evalClm (x : α) : (α →ᵇ β) →L[𝕜] β where
   toFun := fun f => f x
-  map_add' := fun f g => by
-    simp only [Pi.add_apply, coe_add]
-  map_smul' := fun c f => by
-    simp only [coe_smul, RingHom.id_apply]
+  map_add' := fun f g => add_apply _ _
+  map_smul' := fun c f => smul_apply _ _ _
 
 @[simp]
 theorem eval_clm_apply (x : α) (f : α →ᵇ β) : evalClm 𝕜 x f = f x :=
@@ -923,14 +946,10 @@ variable (α β)
 @[simps]
 def toContinuousMapLinearMap : (α →ᵇ β) →ₗ[𝕜] C(α, β) where
   toFun := toContinuousMap
-  map_smul' := by
-    intros
-    ext
-    simp
-  map_add' := by
-    intros
-    ext
-    simp
+  map_smul' := fun f g => rfl
+  map_add' := fun c f => rfl
+
+end Module
 
 end HasBoundedSmul
 

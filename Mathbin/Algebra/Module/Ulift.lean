@@ -53,7 +53,7 @@ instance is_scalar_tower'' [HasScalar R M] [HasScalar M N] [HasScalar R N] [IsSc
     show up ((x • y) • z.down) = ⟨x • y • z.down⟩ by
       rw [smul_assoc]⟩
 
-instance [HasScalar R M] [HasScalar (Rᵐᵒᵖ) M] [IsCentralScalar R M] : IsCentralScalar R (Ulift M) :=
+instance [HasScalar R M] [HasScalar Rᵐᵒᵖ M] [IsCentralScalar R M] : IsCentralScalar R (Ulift M) :=
   ⟨fun r m => congr_argₓ up <| op_smul_eq_smul r m.down⟩
 
 instance mulAction [Monoidₓ R] [MulAction R M] : MulAction (Ulift R) M where

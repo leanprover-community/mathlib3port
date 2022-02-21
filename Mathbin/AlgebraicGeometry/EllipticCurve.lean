@@ -62,7 +62,7 @@ correct for certain rings, for example if `R` is a field or a PID). -/
 -- If Pic(R)[12]=0 then this definition is mathematically correct
 structure EllipticCurve (R : Type _) [CommRingₓ R] where
   (a1 a2 a3 a4 a6 : R)
-  discUnit : (R)ˣ
+  discUnit : Rˣ
   disc_unit_eq : (disc_unit : R) = EllipticCurve.discAux a1 a2 a3 a4 a6
 
 namespace EllipticCurve
@@ -90,7 +90,7 @@ theorem disc_is_unit : IsUnit E.disc := by
 
 /-- The j-invariant of an elliptic curve. -/
 def j :=
-  (-48 * E.a4 + (-24 * E.a1 * E.a3 + (16 * E.a2 ^ 2 + 8 * E.a1 ^ 2 * E.a2 + E.a1 ^ 4))) ^ 3 * (E.discUnit⁻¹ : (R)ˣ)
+  (-48 * E.a4 + (-24 * E.a1 * E.a3 + (16 * E.a2 ^ 2 + 8 * E.a1 ^ 2 * E.a2 + E.a1 ^ 4))) ^ 3 * (E.discUnit⁻¹ : Rˣ)
 
 end EllipticCurve
 

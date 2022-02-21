@@ -22,7 +22,7 @@ namespace Conv.Interactive
 
 open Interactive Interactive.Types Lean.Parser
 
-local postfix:9001 "?" => optionalₓ
+local postfix:1024 "?" => optionalₓ
 
 /-- Apply a congruence lemma inside `conv` mode.
 
@@ -68,7 +68,7 @@ end
 In the above example, when the `apply_congr` tactic is called it gives the hypothesis `H : x ∈ S`
 which is then used to rewrite the `f x` to `g x`.
 -/
-unsafe def apply_congr (q : parse (texpr)?) : conv Unit := do
+unsafe def apply_congr (q : parse texpr ?) : conv Unit := do
   let congr_lemmas ←
     match q with
       |-- If the user specified a lemma, use that one,

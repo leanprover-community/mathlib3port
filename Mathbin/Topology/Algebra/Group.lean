@@ -887,14 +887,14 @@ open mul_opposite (continuous_op continuous_unop)
 variable [Monoidₓ α] [TopologicalSpace α] [HasContinuousMul α] [Monoidₓ β] [TopologicalSpace β] [HasContinuousMul β]
 
 @[to_additive]
-instance : TopologicalGroup (α)ˣ where
+instance : TopologicalGroup αˣ where
   continuous_inv :=
     continuous_induced_rng
       ((continuous_unop.comp (@continuous_embed_product α _ _).snd).prod_mk (continuous_op.comp continuous_coe))
 
 /-- The topological group isomorphism between the units of a product of two monoids, and the product
     of the units of each monoid. -/
-def Homeomorph.prodUnits : Homeomorph (α × β)ˣ ((α)ˣ × (β)ˣ) :=
+def Homeomorph.prodUnits : Homeomorph (α × β)ˣ (αˣ × βˣ) :=
   { MulEquiv.prodUnits with
     continuous_to_fun := by
       show Continuous fun i : (α × β)ˣ => (map (MonoidHom.fst α β) i, map (MonoidHom.snd α β) i)

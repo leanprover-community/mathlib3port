@@ -489,7 +489,7 @@ namespace MulOpposite
 
 variable {R A : Type _} [CommSemiringₓ R] [Semiringₓ A] [Algebra R A]
 
-instance : Algebra R (Aᵐᵒᵖ) :=
+instance : Algebra R Aᵐᵒᵖ :=
   { MulOpposite.hasScalar A R with toRingHom := (algebraMap R A).toOpposite fun x y => Algebra.commutes _ _,
     smul_def' := fun c x =>
       unop_injective <| by
@@ -500,7 +500,7 @@ instance : Algebra R (Aᵐᵒᵖ) :=
         dsimp <;> simp only [← op_mul, Algebra.commutes] }
 
 @[simp]
-theorem algebra_map_apply (c : R) : algebraMap R (Aᵐᵒᵖ) c = op (algebraMap R A c) :=
+theorem algebra_map_apply (c : R) : algebraMap R Aᵐᵒᵖ c = op (algebraMap R A c) :=
   rfl
 
 end MulOpposite

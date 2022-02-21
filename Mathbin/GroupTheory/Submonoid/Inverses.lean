@@ -65,14 +65,14 @@ theorem left_inv_left_inv_le : S.left_inv.left_inv ≤ S := by
   rw [← mul_oneₓ x, ← h₁, ← mul_assoc, h₂, one_mulₓ]
 
 @[to_additive]
-theorem unit_mem_left_inv (x : (M)ˣ) (hx : (x : M) ∈ S) : ((x⁻¹ : _) : M) ∈ S.left_inv :=
+theorem unit_mem_left_inv (x : Mˣ) (hx : (x : M) ∈ S) : ((x⁻¹ : _) : M) ∈ S.left_inv :=
   ⟨⟨x, hx⟩, x.inv_val⟩
 
 @[to_additive]
 theorem left_inv_left_inv_eq (hS : S ≤ IsUnit.submonoid M) : S.left_inv.left_inv = S := by
   refine' le_antisymmₓ S.left_inv_left_inv_le _
   intro x hx
-  have : x = ((hS hx).Unit⁻¹⁻¹ : (M)ˣ) := by
+  have : x = ((hS hx).Unit⁻¹⁻¹ : Mˣ) := by
     rw [inv_invₓ (hS hx).Unit]
     rfl
   rw [this]

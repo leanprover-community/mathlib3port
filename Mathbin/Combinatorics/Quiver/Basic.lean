@@ -76,7 +76,7 @@ end Prefunctor
 namespace Quiver
 
 /-- `Vᵒᵖ` reverses the direction of all arrows of `V`. -/
-instance opposite {V} [Quiver V] : Quiver (Vᵒᵖ) :=
+instance opposite {V} [Quiver V] : Quiver Vᵒᵖ :=
   ⟨fun a b => unop b ⟶ unop a⟩
 
 /-- The opposite of an arrow in `V`.

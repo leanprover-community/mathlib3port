@@ -875,8 +875,7 @@ theorem IsO.const_mul_left {f : α → R} (h : IsO f g l) (c' : R) : IsO (fun x 
   let ⟨c, hc⟩ := h.IsOWith
   (hc.const_mul_left c').IsO
 
-theorem is_O_with_self_const_mul' (u : (R)ˣ) (f : α → R) (l : Filter α) :
-    IsOWith ∥(↑u⁻¹ : R)∥ f (fun x => ↑u * f x) l :=
+theorem is_O_with_self_const_mul' (u : Rˣ) (f : α → R) (l : Filter α) : IsOWith ∥(↑u⁻¹ : R)∥ f (fun x => ↑u * f x) l :=
   (is_O_with_const_mul_self ↑u⁻¹ _ l).congr_left fun x => u.inv_mul_cancel_left (f x)
 
 theorem is_O_with_self_const_mul (c : 𝕜) (hc : c ≠ 0) (f : α → 𝕜) (l : Filter α) :
@@ -913,7 +912,7 @@ theorem IsO.of_const_mul_right {g : α → R} {c : R} (h : IsO f (fun x => c * g
   let ⟨c, cnonneg, hc⟩ := h.exists_nonneg
   (hc.of_const_mul_right cnonneg).IsO
 
-theorem IsOWith.const_mul_right' {g : α → R} {u : (R)ˣ} {c' : ℝ} (hc' : 0 ≤ c') (h : IsOWith c' f g l) :
+theorem IsOWith.const_mul_right' {g : α → R} {u : Rˣ} {c' : ℝ} (hc' : 0 ≤ c') (h : IsOWith c' f g l) :
     IsOWith (c' * ∥(↑u⁻¹ : R)∥) f (fun x => ↑u * g x) l :=
   h.trans (is_O_with_self_const_mul' _ _ _) hc'
 

@@ -1004,19 +1004,6 @@ theorem is_open_sigma_iff {s : Set (Sigma σ)} : IsOpen s ↔ ∀ i, IsOpen (Sig
 theorem is_closed_sigma_iff {s : Set (Sigma σ)} : IsClosed s ↔ ∀ i, IsClosed (Sigma.mk i ⁻¹' s) := by
   simp only [← is_open_compl_iff, is_open_sigma_iff, preimage_compl]
 
-theorem is_open_sigma_fst_preimage (s : Set ι) : IsOpen (Sigma.fst ⁻¹' s : Set (Σ a, σ a)) := by
-  rw [is_open_sigma_iff]
-  intro a
-  by_cases' h : a ∈ s
-  · convert is_open_univ
-    ext x
-    simp only [h, Set.mem_preimage, Set.mem_univ]
-    
-  · convert is_open_empty
-    ext x
-    simp only [h, Set.mem_empty_eq, Set.mem_preimage]
-    
-
 theorem is_open_map_sigma_mk {i : ι} : IsOpenMap (@Sigma.mk ι σ i) := by
   intro s hs
   rw [is_open_sigma_iff]
@@ -1062,6 +1049,11 @@ theorem closed_embedding_sigma_mk {i : ι} : ClosedEmbedding (@Sigma.mk ι σ i)
 
 theorem embedding_sigma_mk {i : ι} : Embedding (@Sigma.mk ι σ i) :=
   closed_embedding_sigma_mk.1
+
+theorem is_open_sigma_fst_preimage (s : Set ι) : IsOpen (Sigma.fst ⁻¹' s : Set (Σ a, σ a)) := by
+  rw [← bUnion_of_singleton s, preimage_Union₂]
+  simp only [← range_sigma_mk]
+  exact is_open_bUnion fun _ _ => is_open_range_sigma_mk
 
 /-- A map out of a sum type is continuous if its restriction to each summand is. -/
 @[continuity]

@@ -242,7 +242,7 @@ unsafe def tautology (cfg : tauto_cfg := {  }) : tactic Unit :=
 
 namespace Interactive
 
-local postfix:9001 "?" => optionalₓ
+local postfix:1024 "?" => optionalₓ
 
 setup_tactic_parser
 

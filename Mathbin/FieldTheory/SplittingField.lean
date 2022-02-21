@@ -354,7 +354,7 @@ theorem splits_of_exists_multiset {f : K[X]} {s : Multiset L}
           (Associated.symm <|
             calc
               _ ~ᵤ f.map i :=
-                ⟨(Units.map c.toMonoidHom : (L)ˣ →* (Polynomial L)ˣ)
+                ⟨(Units.map c.toMonoidHom : Lˣ →* (Polynomial L)ˣ)
                     (Units.mk0 (f.map i).leadingCoeff (mt leading_coeff_eq_zero.1 (map_ne_zero hf0))),
                   by
                   conv_rhs => rw [hs, ← leading_coeff_map i, mul_comm] <;> rfl⟩

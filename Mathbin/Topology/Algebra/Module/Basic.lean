@@ -1235,7 +1235,7 @@ instance : Module S₃ (M →SL[σ₁₃] M₃) where
   zero_smul := fun _ => ext fun _ => zero_smul _ _
   add_smul := fun _ _ _ => ext fun _ => add_smul _ _ _
 
-instance [Module (S₃ᵐᵒᵖ) M₃] [IsCentralScalar S₃ M₃] : IsCentralScalar S₃ (M →SL[σ₁₃] M₃) where
+instance [Module S₃ᵐᵒᵖ M₃] [IsCentralScalar S₃ M₃] : IsCentralScalar S₃ (M →SL[σ₁₃] M₃) where
   op_smul_eq_smul := fun _ _ => ext fun _ => op_smul_eq_smul _ _
 
 variable (S) [HasContinuousAdd N₃]
@@ -1917,7 +1917,7 @@ section
 variable (R) [TopologicalSpace R] [HasContinuousMul R]
 
 /-- Continuous linear equivalences `R ≃L[R] R` are enumerated by `Rˣ`. -/
-def unitsEquivAut : (R)ˣ ≃ R ≃L[R] R where
+def unitsEquivAut : Rˣ ≃ R ≃L[R] R where
   toFun := fun u =>
     equivOfInverse (ContinuousLinearMap.smulRight (1 : R →L[R] R) ↑u)
       (ContinuousLinearMap.smulRight (1 : R →L[R] R) ↑u⁻¹)
@@ -1939,11 +1939,11 @@ def unitsEquivAut : (R)ˣ ≃ R ≃L[R] R where
 variable {R}
 
 @[simp]
-theorem units_equiv_aut_apply (u : (R)ˣ) (x : R) : unitsEquivAut R u x = x * u :=
+theorem units_equiv_aut_apply (u : Rˣ) (x : R) : unitsEquivAut R u x = x * u :=
   rfl
 
 @[simp]
-theorem units_equiv_aut_apply_symm (u : (R)ˣ) (x : R) : (unitsEquivAut R u).symm x = x * ↑u⁻¹ :=
+theorem units_equiv_aut_apply_symm (u : Rˣ) (x : R) : (unitsEquivAut R u).symm x = x * ↑u⁻¹ :=
   rfl
 
 @[simp]

@@ -622,7 +622,7 @@ unsafe def ring1 (red : parse (tk "!")?) : tactic Unit :=
 -/
 unsafe def ring.mode : lean.parser Ring.NormalizeMode :=
   with_desc "(SOP|raw|horner)?" <| do
-    let mode ← (ident)?
+    let mode ← ident ?
     match mode with
       | none => pure ring.normalize_mode.horner
       | some `horner => pure ring.normalize_mode.horner
@@ -676,7 +676,7 @@ open tactic.interactive (ring.mode ring1)
 
 open tactic.ring (normalize normalize_mode.horner)
 
-local postfix:9001 "?" => optionalₓ
+local postfix:1024 "?" => optionalₓ
 
 /-- Normalises expressions in commutative (semi-)rings inside of a `conv` block using the tactic `ring`.
 -/

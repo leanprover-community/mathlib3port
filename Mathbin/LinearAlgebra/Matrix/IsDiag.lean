@@ -93,17 +93,17 @@ theorem IsDiag.smul [Monoidₓ R] [AddMonoidₓ α] [DistribMulAction R α] (k :
 theorem is_diag_smul_one n [Semiringₓ α] [DecidableEq n] (k : α) : (k • (1 : Matrix n n α)).IsDiag :=
   is_diag_one.smul k
 
-theorem IsDiag.transpose [Zero α] {A : Matrix n n α} (ha : A.IsDiag) : (A)ᵀ.IsDiag := fun i j h => ha h.symm
+theorem IsDiag.transpose [Zero α] {A : Matrix n n α} (ha : A.IsDiag) : Aᵀ.IsDiag := fun i j h => ha h.symm
 
 @[simp]
-theorem is_diag_transpose_iff [Zero α] {A : Matrix n n α} : (A)ᵀ.IsDiag ↔ A.IsDiag :=
+theorem is_diag_transpose_iff [Zero α] {A : Matrix n n α} : Aᵀ.IsDiag ↔ A.IsDiag :=
   ⟨IsDiag.transpose, IsDiag.transpose⟩
 
-theorem IsDiag.conj_transpose [Semiringₓ α] [StarRing α] {A : Matrix n n α} (ha : A.IsDiag) : (A)ᴴ.IsDiag :=
+theorem IsDiag.conj_transpose [Semiringₓ α] [StarRing α] {A : Matrix n n α} (ha : A.IsDiag) : Aᴴ.IsDiag :=
   ha.transpose.map (star_zero _)
 
 @[simp]
-theorem is_diag_conj_transpose_iff [Semiringₓ α] [StarRing α] {A : Matrix n n α} : (A)ᴴ.IsDiag ↔ A.IsDiag :=
+theorem is_diag_conj_transpose_iff [Semiringₓ α] [StarRing α] {A : Matrix n n α} : Aᴴ.IsDiag ↔ A.IsDiag :=
   ⟨fun ha => by
     convert ha.conj_transpose
     simp , IsDiag.conj_transpose⟩
@@ -169,11 +169,11 @@ theorem IsDiag.from_blocks_of_is_symm [Zero α] {A : Matrix m m α} {C : Matrix 
   exact ha.from_blocks hd
 
 theorem mul_transpose_self_is_diag_iff_has_orthogonal_rows [Fintype n] [Mul α] [AddCommMonoidₓ α] {A : Matrix m n α} :
-    (A ⬝ (A)ᵀ).IsDiag ↔ A.HasOrthogonalRows :=
+    (A ⬝ Aᵀ).IsDiag ↔ A.HasOrthogonalRows :=
   Iff.rfl
 
 theorem transpose_mul_self_is_diag_iff_has_orthogonal_cols [Fintype m] [Mul α] [AddCommMonoidₓ α] {A : Matrix m n α} :
-    ((A)ᵀ ⬝ A).IsDiag ↔ A.HasOrthogonalCols :=
+    (Aᵀ ⬝ A).IsDiag ↔ A.HasOrthogonalCols :=
   Iff.rfl
 
 end Matrix

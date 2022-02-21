@@ -37,7 +37,7 @@ namespace CategoryTheory.GrothendieckTopology
 @[simps]
 def coneCompEvaluationOfConeCompDiagramFunctorCompEvaluation {X : C} {K : Type max v u} [SmallCategory K]
     {F : K ⥤ Cᵒᵖ ⥤ D} {W : J.cover X} (i : W.arrow)
-    (E : Cone (F ⋙ J.diagramFunctor D X ⋙ (evaluation (J.cover Xᵒᵖ) D).obj (op W))) :
+    (E : Cone (F ⋙ J.diagramFunctor D X ⋙ (evaluation (J.cover X)ᵒᵖ D).obj (op W))) :
     Cone (F ⋙ (evaluation _ _).obj (op i.y)) where
   x := E.x
   π :=
@@ -51,8 +51,8 @@ def coneCompEvaluationOfConeCompDiagramFunctorCompEvaluation {X : C} {K : Type m
 
 /-- An auxiliary definition to be used in the proof of the fact that
 `J.diagram_functor D X` preserves limits. -/
-abbrev liftToDiagramLimitObj {X : C} {K : Type max v u} [SmallCategory K] [HasLimitsOfShape K D] {W : J.cover Xᵒᵖ}
-    (F : K ⥤ Cᵒᵖ ⥤ D) (E : Cone (F ⋙ J.diagramFunctor D X ⋙ (evaluation (J.cover Xᵒᵖ) D).obj W)) :
+abbrev liftToDiagramLimitObj {X : C} {K : Type max v u} [SmallCategory K] [HasLimitsOfShape K D] {W : (J.cover X)ᵒᵖ}
+    (F : K ⥤ Cᵒᵖ ⥤ D) (E : Cone (F ⋙ J.diagramFunctor D X ⋙ (evaluation (J.cover X)ᵒᵖ D).obj W)) :
     E.x ⟶ (J.diagram (limit F) X).obj W :=
   multiequalizer.lift _ _
     (fun i =>
@@ -104,22 +104,22 @@ instance (X : C) (K : Type max v u) [SmallCategory K] [HasLimitsOfShape K D] :
 instance (X : C) [HasLimits D] : PreservesLimits (J.diagramFunctor D X) :=
   ⟨⟩
 
-variable [∀ X : C, HasColimitsOfShape (J.cover Xᵒᵖ) D]
+variable [∀ X : C, HasColimitsOfShape (J.cover X)ᵒᵖ D]
 
 variable [ConcreteCategory.{max v u} D]
 
-variable [∀ X : C, PreservesColimitsOfShape (J.cover Xᵒᵖ) (forget D)]
+variable [∀ X : C, PreservesColimitsOfShape (J.cover X)ᵒᵖ (forget D)]
 
 /-- An auxiliary definition to be used in the proof that `J.plus_functor D` commutes
 with finite limits. -/
 def liftToPlusObjLimitObj {K : Type max v u} [SmallCategory K] [FinCategory K] [HasLimitsOfShape K D]
     [PreservesLimitsOfShape K (forget D)] [ReflectsLimitsOfShape K (forget D)] (F : K ⥤ Cᵒᵖ ⥤ D) (X : C)
-    (S : Cone (F ⋙ J.plusFunctor D ⋙ (evaluation (Cᵒᵖ) D).obj (op X))) : S.x ⟶ (J.plusObj (limit F)).obj (op X) :=
+    (S : Cone (F ⋙ J.plusFunctor D ⋙ (evaluation Cᵒᵖ D).obj (op X))) : S.x ⟶ (J.plusObj (limit F)).obj (op X) :=
   let e := colimitLimitIso (F ⋙ J.diagramFunctor D X)
   let t : J.diagram (limit F) X ≅ limit (F ⋙ J.diagramFunctor D X) :=
     (isLimitOfPreserves (J.diagramFunctor D X) (limit.isLimit _)).conePointUniqueUpToIso (limit.isLimit _)
   let p : (J.plusObj (limit F)).obj (op X) ≅ colimit (limit (F ⋙ J.diagramFunctor D X)) := HasColimit.isoOfNatIso t
-  let s : colimit (F ⋙ J.diagramFunctor D X).flip ≅ F ⋙ J.plusFunctor D ⋙ (evaluation (Cᵒᵖ) D).obj (op X) :=
+  let s : colimit (F ⋙ J.diagramFunctor D X).flip ≅ F ⋙ J.plusFunctor D ⋙ (evaluation Cᵒᵖ D).obj (op X) :=
     NatIso.ofComponents (fun k => colimitObjIsoColimitCompEvaluation _ k)
       (by
         intro i j f
@@ -137,10 +137,10 @@ def liftToPlusObjLimitObj {K : Type max v u} [SmallCategory K] [FinCategory K] [
 -- evaluation preserves limits.
 theorem lift_to_plus_obj_limit_obj_fac {K : Type max v u} [SmallCategory K] [FinCategory K] [HasLimitsOfShape K D]
     [PreservesLimitsOfShape K (forget D)] [ReflectsLimitsOfShape K (forget D)] (F : K ⥤ Cᵒᵖ ⥤ D) (X : C)
-    (S : Cone (F ⋙ J.plusFunctor D ⋙ (evaluation (Cᵒᵖ) D).obj (op X))) k :
+    (S : Cone (F ⋙ J.plusFunctor D ⋙ (evaluation Cᵒᵖ D).obj (op X))) k :
     liftToPlusObjLimitObj F X S ≫ (J.plusMap (limit.π F k)).app (op X) = S.π.app k := by
   dsimp only [lift_to_plus_obj_limit_obj]
-  rw [← (limit.is_limit (F ⋙ J.plus_functor D ⋙ (evaluation (Cᵒᵖ) D).obj (op X))).fac S k, category.assoc]
+  rw [← (limit.is_limit (F ⋙ J.plus_functor D ⋙ (evaluation Cᵒᵖ D).obj (op X))).fac S k, category.assoc]
   congr 1
   dsimp
   simp only [category.assoc]
@@ -209,11 +209,11 @@ end CategoryTheory.GrothendieckTopology
 
 namespace CategoryTheory
 
-variable [∀ X : C, HasColimitsOfShape (J.cover Xᵒᵖ) D]
+variable [∀ X : C, HasColimitsOfShape (J.cover X)ᵒᵖ D]
 
 variable [ConcreteCategory.{max v u} D]
 
-variable [∀ X : C, PreservesColimitsOfShape (J.cover Xᵒᵖ) (forget D)]
+variable [∀ X : C, PreservesColimitsOfShape (J.cover X)ᵒᵖ (forget D)]
 
 variable [PreservesLimits (forget D)]
 

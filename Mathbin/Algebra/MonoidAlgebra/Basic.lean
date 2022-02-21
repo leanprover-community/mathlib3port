@@ -251,7 +251,7 @@ instance [Monoidₓ R] [Monoidₓ S] [Semiringₓ k] [DistribMulAction R k] [Dis
     SmulCommClass R S (MonoidAlgebra k G) :=
   Finsupp.smul_comm_class G k
 
-instance [Monoidₓ R] [Semiringₓ k] [DistribMulAction R k] [DistribMulAction (Rᵐᵒᵖ) k] [IsCentralScalar R k] :
+instance [Monoidₓ R] [Semiringₓ k] [DistribMulAction R k] [DistribMulAction Rᵐᵒᵖ k] [IsCentralScalar R k] :
     IsCentralScalar R (MonoidAlgebra k G) :=
   Finsupp.is_central_scalar G k
 
@@ -790,7 +790,7 @@ variable [Semiringₓ k]
 /-- The opposite of an `monoid_algebra R I` equivalent as a ring to
 the `monoid_algebra Rᵐᵒᵖ Iᵐᵒᵖ` over the opposite ring, taking elements to their opposite. -/
 @[simps (config := { simpRhs := true })]
-protected noncomputable def opRingEquiv [Monoidₓ G] : MonoidAlgebra k Gᵐᵒᵖ ≃+* MonoidAlgebra (kᵐᵒᵖ) (Gᵐᵒᵖ) :=
+protected noncomputable def opRingEquiv [Monoidₓ G] : (MonoidAlgebra k G)ᵐᵒᵖ ≃+* MonoidAlgebra kᵐᵒᵖ Gᵐᵒᵖ :=
   { opAddEquiv.symm.trans <| (Finsupp.mapRange.addEquiv (opAddEquiv : k ≃+ kᵐᵒᵖ)).trans <| Finsupp.domCongr opEquiv with
     map_mul' := by
       dsimp only [AddEquiv.to_fun_eq_coe, ← AddEquiv.coe_to_add_monoid_hom]
@@ -1016,7 +1016,7 @@ instance [Monoidₓ R] [Monoidₓ S] [Semiringₓ k] [DistribMulAction R k] [Dis
     SmulCommClass R S (AddMonoidAlgebra k G) :=
   Finsupp.smul_comm_class G k
 
-instance [Monoidₓ R] [Semiringₓ k] [DistribMulAction R k] [DistribMulAction (Rᵐᵒᵖ) k] [IsCentralScalar R k] :
+instance [Monoidₓ R] [Semiringₓ k] [DistribMulAction R k] [DistribMulAction Rᵐᵒᵖ k] [IsCentralScalar R k] :
     IsCentralScalar R (AddMonoidAlgebra k G) :=
   Finsupp.is_central_scalar G k
 
@@ -1302,7 +1302,7 @@ variable [Semiringₓ k]
 /-- The opposite of an `add_monoid_algebra R I` is ring equivalent to
 the `add_monoid_algebra Rᵐᵒᵖ I` over the opposite ring, taking elements to their opposite. -/
 @[simps (config := { simpRhs := true })]
-protected noncomputable def opRingEquiv [AddCommMonoidₓ G] : AddMonoidAlgebra k Gᵐᵒᵖ ≃+* AddMonoidAlgebra (kᵐᵒᵖ) G :=
+protected noncomputable def opRingEquiv [AddCommMonoidₓ G] : (AddMonoidAlgebra k G)ᵐᵒᵖ ≃+* AddMonoidAlgebra kᵐᵒᵖ G :=
   { MulOpposite.opAddEquiv.symm.trans (Finsupp.mapRange.addEquiv (MulOpposite.opAddEquiv : k ≃+ kᵐᵒᵖ)) with
     map_mul' := by
       dsimp only [AddEquiv.to_fun_eq_coe, ← AddEquiv.coe_to_add_monoid_hom]

@@ -148,7 +148,7 @@ theorem smul_mem_iff' {G} [Groupₓ G] [HasScalar G R] [MulAction G M] [IsScalar
     g • x ∈ p ↔ x ∈ p :=
   ⟨fun h => inv_smul_smul g x ▸ p.smul_of_tower_mem g⁻¹ h, p.smul_of_tower_mem g⟩
 
-instance [HasScalar (Sᵐᵒᵖ) R] [HasScalar (Sᵐᵒᵖ) M] [IsScalarTower (Sᵐᵒᵖ) R M] [IsCentralScalar S M] :
+instance [HasScalar Sᵐᵒᵖ R] [HasScalar Sᵐᵒᵖ M] [IsScalarTower Sᵐᵒᵖ R M] [IsCentralScalar S M] :
     IsCentralScalar S p where
   op_smul_eq_smul := fun r x => Subtype.ext <| op_smul_eq_smul r x
 

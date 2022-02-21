@@ -525,12 +525,12 @@ namespace Interactive
 
 open Interactive Interactive.Types Expr Lean.Parser
 
-local postfix:9001 "?" => optionalₓ
+local postfix:1024 "?" => optionalₓ
 
-local postfix:9001 "*" => many
+local postfix:1024 "*" => many
 
 unsafe def coinduction (corec_name : parse ident) (ns : parse with_ident_list)
-    (revert : parse <| (tk "generalizing" *> (ident)*)?) : tactic Unit := do
+    (revert : parse <| (tk "generalizing" *> ident*)?) : tactic Unit := do
   let rule ← mk_const corec_name
   let locals ← mmapₓ tactic.get_local <| revert.getOrElse []
   revert_lst locals

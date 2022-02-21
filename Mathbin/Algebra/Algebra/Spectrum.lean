@@ -72,7 +72,7 @@ noncomputable def resolvent (a : A) (r : R) : A :=
 end Defs
 
 -- products of scalar units and algebra units
-theorem IsUnit.smul_sub_iff_sub_inv_smul {R : Type u} {A : Type v} [CommRingₓ R] [Ringₓ A] [Algebra R A] {r : (R)ˣ}
+theorem IsUnit.smul_sub_iff_sub_inv_smul {R : Type u} {A : Type v} [CommRingₓ R] [Ringₓ A] [Algebra R A] {r : Rˣ}
     {a : A} : IsUnit (r • 1 - a) ↔ IsUnit (1 - r⁻¹ • a) := by
   have a_eq : a = r • r⁻¹ • a := by
     simp
@@ -120,7 +120,7 @@ theorem add_mem_iff {a : A} {r s : R} : r ∈ σ a ↔ r + s ∈ σ (↑ₐ s + 
     noncomm_ring
   rw [h_eq]
 
-theorem smul_mem_smul_iff {a : A} {s : R} {r : (R)ˣ} : r • s ∈ σ (r • a) ↔ s ∈ σ a := by
+theorem smul_mem_smul_iff {a : A} {s : R} {r : Rˣ} : r • s ∈ σ (r • a) ↔ s ∈ σ a := by
   apply not_iff_not.mpr
   simp only [mem_resolvent_set_iff, Algebra.algebra_map_eq_smul_one]
   have h_eq : (r • s) • (1 : A) = r • s • 1 := by
@@ -129,7 +129,7 @@ theorem smul_mem_smul_iff {a : A} {s : R} {r : (R)ˣ} : r • s ∈ σ (r • a)
 
 open_locale Pointwise Polynomial
 
-theorem unit_smul_eq_smul (a : A) (r : (R)ˣ) : σ (r • a) = r • σ a := by
+theorem unit_smul_eq_smul (a : A) (r : Rˣ) : σ (r • a) = r • σ a := by
   ext
   have x_eq : x = r • r⁻¹ • x := by
     simp
@@ -151,7 +151,7 @@ theorem left_add_coset_eq (a : A) (r : R) : LeftAddCoset r (σ a) = σ (↑ₐ r
   nth_rw 1[← sub_add_cancel x r]
 
 -- `r ∈ σ(a*b) ↔ r ∈ σ(b*a)` for any `r : Rˣ`
-theorem unit_mem_mul_iff_mem_swap_mul {a b : A} {r : (R)ˣ} : ↑r ∈ σ (a * b) ↔ ↑r ∈ σ (b * a) := by
+theorem unit_mem_mul_iff_mem_swap_mul {a b : A} {r : Rˣ} : ↑r ∈ σ (a * b) ↔ ↑r ∈ σ (b * a) := by
   apply not_iff_not.mpr
   simp only [mem_resolvent_set_iff, Algebra.algebra_map_eq_smul_one]
   have coe_smul_eq : ↑r • 1 = r • (1 : A) := rfl
@@ -182,7 +182,7 @@ theorem unit_mem_mul_iff_mem_swap_mul {a b : A} {r : (R)ˣ} : ↑r ∈ σ (a * b
       apply is_unit_one_sub_mul_of_swap
   rw [← smul_mul_assoc, ← mul_smul_comm r⁻¹ b a, is_unit_one_sub_mul_iff_swap]
 
-theorem preimage_units_mul_eq_swap_mul {a b : A} : (coe : (R)ˣ → R) ⁻¹' σ (a * b) = coe ⁻¹' σ (b * a) := by
+theorem preimage_units_mul_eq_swap_mul {a b : A} : (coe : Rˣ → R) ⁻¹' σ (a * b) = coe ⁻¹' σ (b * a) := by
   ext
   exact unit_mem_mul_iff_mem_swap_mul
 

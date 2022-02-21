@@ -60,12 +60,12 @@ theorem IsPrimePow.ne_one {n : R} (h : IsPrimePow n) : n ≠ 1 := fun t => Eq.nd
 
 section UniqueUnits
 
-theorem eq_of_prime_pow_eq {R : Type _} [CancelCommMonoidWithZero R] [Unique (R)ˣ] {p₁ p₂ : R} {k₁ k₂ : ℕ}
+theorem eq_of_prime_pow_eq {R : Type _} [CancelCommMonoidWithZero R] [Unique Rˣ] {p₁ p₂ : R} {k₁ k₂ : ℕ}
     (hp₁ : Prime p₁) (hp₂ : Prime p₂) (hk₁ : 0 < k₁) (h : p₁ ^ k₁ = p₂ ^ k₂) : p₁ = p₂ := by
   rw [← associated_iff_eq] at h⊢
   apply h.of_pow_associated_of_prime hp₁ hp₂ hk₁
 
-theorem eq_of_prime_pow_eq' {R : Type _} [CancelCommMonoidWithZero R] [Unique (R)ˣ] {p₁ p₂ : R} {k₁ k₂ : ℕ}
+theorem eq_of_prime_pow_eq' {R : Type _} [CancelCommMonoidWithZero R] [Unique Rˣ] {p₁ p₂ : R} {k₁ k₂ : ℕ}
     (hp₁ : Prime p₁) (hp₂ : Prime p₂) (hk₁ : 0 < k₂) (h : p₁ ^ k₁ = p₂ ^ k₂) : p₁ = p₂ := by
   rw [← associated_iff_eq] at h⊢
   apply h.of_pow_associated_of_prime' hp₁ hp₂ hk₁

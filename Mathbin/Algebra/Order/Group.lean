@@ -82,7 +82,7 @@ instance OrderedCommGroup.to_covariant_class_left_le (α : Type u) [OrderedCommG
 
 /-- The units of an ordered commutative monoid form an ordered commutative group. -/
 @[to_additive]
-instance Units.orderedCommGroup [OrderedCommMonoid α] : OrderedCommGroup (α)ˣ :=
+instance Units.orderedCommGroup [OrderedCommMonoid α] : OrderedCommGroup αˣ :=
   { Units.partialOrder, Units.commGroup with
     mul_le_mul_left := fun a b h c => (mul_le_mul_left' (h : (a : α) ≤ b) _ : (c : α) * a ≤ c * b) }
 

@@ -43,7 +43,7 @@ def cons (a : α) (v : Vector3 α n) : Vector3 α (succ n) := fun i => by
   exact a
   exact v
 
--- ././Mathport/Syntax/Translate/Basic.lean:1379:9: unsupported: advanced notation (l:(foldr `, ` (h t, vector3.cons h t) vector3.nil `]`))
+-- ././Mathport/Syntax/Translate/Basic.lean:1387:9: unsupported: advanced notation (l:(foldr `, ` (h t, vector3.cons h t) vector3.nil `]`))
 /- We do not want to make the following notation global, because then these expressions will be
 overloaded, and only the expected type will be able to disambiguate the meaning. Worse: Lean will
 try to insert a coercion from `vector3 α _` to `list α`, if a list is expected. -/

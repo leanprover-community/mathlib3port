@@ -784,7 +784,7 @@ open_locale Matrix
 
 @[simp]
 theorem to_matrix'_comp (Q : QuadraticForm R₁ (m → R₁)) (f : (n → R₁) →ₗ[R₁] m → R₁) :
-    (Q.comp f).toMatrix' = (f.toMatrix')ᵀ ⬝ Q.toMatrix' ⬝ f.toMatrix' := by
+    (Q.comp f).toMatrix' = f.toMatrix'ᵀ ⬝ Q.toMatrix' ⬝ f.toMatrix' := by
   ext
   simp only [QuadraticForm.associated_comp, BilinForm.to_matrix'_comp, to_matrix']
 
@@ -1055,7 +1055,7 @@ theorem equivalent_weighted_sum_squares (Q : QuadraticForm K V) :
 
 theorem equivalent_weighted_sum_squares_units_of_nondegenerate' (Q : QuadraticForm K V)
     (hQ : (associated Q).Nondegenerate) :
-    ∃ w : Finₓ (FiniteDimensional.finrank K V) → (K)ˣ, Equivalent Q (weightedSumSquares K w) := by
+    ∃ w : Finₓ (FiniteDimensional.finrank K V) → Kˣ, Equivalent Q (weightedSumSquares K w) := by
   obtain ⟨v, hv₁⟩ := exists_orthogonal_basis (associated_is_symm _ Q)
   have hv₂ := hv₁.not_is_ortho_basis_self_of_nondegenerate hQ
   simp_rw [is_ortho, associated_eq_self_apply]  at hv₂

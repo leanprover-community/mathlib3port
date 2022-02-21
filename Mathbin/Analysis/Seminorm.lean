@@ -471,6 +471,16 @@ noncomputable instance : HasSup (Seminorm 𝕜 E) where
 theorem coe_sup (p q : Seminorm 𝕜 E) : ⇑(p⊔q) = p⊔q :=
   rfl
 
+theorem sup_apply (p q : Seminorm 𝕜 E) (x : E) : (p⊔q) x = p x⊔q x :=
+  rfl
+
+theorem smul_sup [HasScalar R ℝ] [HasScalar R ℝ≥0 ] [IsScalarTower R ℝ≥0 ℝ] (r : R) (p q : Seminorm 𝕜 E) :
+    r • (p⊔q) = r • p⊔r • q :=
+  have real.smul_max : ∀ x y : ℝ, r • max x y = max (r • x) (r • y) := fun x y => by
+    simpa only [← smul_eq_mul, ← Nnreal.smul_def, smul_one_smul ℝ≥0 r (_ : ℝ)] using
+      mul_max_of_nonneg x y (r • 1 : ℝ≥0 ).Prop
+  ext fun x => real.smul_max _ _
+
 instance : PartialOrderₓ (Seminorm 𝕜 E) :=
   PartialOrderₓ.lift _ FunLike.coe_injective
 

@@ -105,7 +105,7 @@ end MulOneClassₓ
 
 section Monoidₓ
 
-variable {M : Type _} [Monoidₓ M] {a b : M} {u u₁ u₂ : (M)ˣ}
+variable {M : Type _} [Monoidₓ M] {a b : M} {u u₁ u₂ : Mˣ}
 
 @[simp, to_additive]
 theorem pow_right (h : Commute a b) (n : ℕ) : Commute a (b ^ n) :=

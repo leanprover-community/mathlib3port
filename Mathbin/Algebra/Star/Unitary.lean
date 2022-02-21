@@ -114,12 +114,12 @@ theorem star_eq_inv' : (star : unitary R → unitary R) = Inv.inv :=
 
 /-- The unitary elements embed into the units. -/
 @[simps]
-def toUnits : unitary R →* (R)ˣ where
+def toUnits : unitary R →* Rˣ where
   toFun := fun x => ⟨x, ↑x⁻¹, coe_mul_star_self x, coe_star_mul_self x⟩
   map_one' := Units.ext rfl
   map_mul' := fun x y => Units.ext rfl
 
-theorem to_units_injective : Function.Injective (toUnits : unitary R → (R)ˣ) := fun x y h =>
+theorem to_units_injective : Function.Injective (toUnits : unitary R → Rˣ) := fun x y h =>
   Subtype.ext <| Units.ext_iff.mp h
 
 end Monoidₓ

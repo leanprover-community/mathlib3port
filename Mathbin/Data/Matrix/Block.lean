@@ -101,12 +101,12 @@ theorem from_blocks_map (A : Matrix n l α) (B : Matrix n m α) (C : Matrix o l 
   rcases i with ⟨⟩ <;> rcases j with ⟨⟩ <;> simp [from_blocks]
 
 theorem from_blocks_transpose (A : Matrix n l α) (B : Matrix n m α) (C : Matrix o l α) (D : Matrix o m α) :
-    (fromBlocks A B C D)ᵀ = fromBlocks (A)ᵀ (C)ᵀ (B)ᵀ (D)ᵀ := by
+    (fromBlocks A B C D)ᵀ = fromBlocks Aᵀ Cᵀ Bᵀ Dᵀ := by
   ext i j
   rcases i with ⟨⟩ <;> rcases j with ⟨⟩ <;> simp [from_blocks]
 
 theorem from_blocks_conj_transpose [HasStar α] (A : Matrix n l α) (B : Matrix n m α) (C : Matrix o l α)
-    (D : Matrix o m α) : (fromBlocks A B C D)ᴴ = fromBlocks (A)ᴴ (C)ᴴ (B)ᴴ (D)ᴴ := by
+    (D : Matrix o m α) : (fromBlocks A B C D)ᴴ = fromBlocks Aᴴ Cᴴ Bᴴ Dᴴ := by
   simp only [conj_transpose, from_blocks_transpose, from_blocks_map]
 
 /-- A 2x2 block matrix is block diagonal if the blocks outside of the diagonal vanish -/

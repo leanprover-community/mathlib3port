@@ -54,7 +54,7 @@ instance MulZeroClassₓ.toSmulWithZero [MulZeroClassₓ R] : SmulWithZero R R w
   zero_smul := zero_mul
 
 /-- Like `mul_zero_class.to_smul_with_zero`, but multiplies on the right. -/
-instance MulZeroClassₓ.toOppositeSmulWithZero [MulZeroClassₓ R] : SmulWithZero (Rᵐᵒᵖ) R where
+instance MulZeroClassₓ.toOppositeSmulWithZero [MulZeroClassₓ R] : SmulWithZero Rᵐᵒᵖ R where
   smul := (· • ·)
   smul_zero := fun r => zero_mul _
   zero_smul := mul_zero
@@ -139,7 +139,7 @@ instance MonoidWithZeroₓ.toMulActionWithZero : MulActionWithZero R R :=
 
 /-- Like `monoid_with_zero.to_mul_action_with_zero`, but multiplies on the right. See also
 `semiring.to_opposite_module` -/
-instance MonoidWithZeroₓ.toOppositeMulActionWithZero : MulActionWithZero (Rᵐᵒᵖ) R :=
+instance MonoidWithZeroₓ.toOppositeMulActionWithZero : MulActionWithZero Rᵐᵒᵖ R :=
   { MulZeroClassₓ.toOppositeSmulWithZero R, Monoidₓ.toOppositeMulAction R with }
 
 variable {R M} [MulActionWithZero R M] [Zero M'] [HasScalar R M']

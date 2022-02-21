@@ -183,8 +183,8 @@ variable {J : Type v₁}
 open Opposite
 
 /-- A discrete category is equivalent to its opposite category. -/
-protected def opposite (α : Type u₁) : Discrete αᵒᵖ ≌ Discrete α := by
-  let F : Discrete α ⥤ Discrete αᵒᵖ := Discrete.functor fun x => op x
+protected def opposite (α : Type u₁) : (Discrete α)ᵒᵖ ≌ Discrete α := by
+  let F : Discrete α ⥤ (Discrete α)ᵒᵖ := Discrete.functor fun x => op x
   refine'
     equivalence.mk (functor.left_op F) F _
       (discrete.nat_iso fun X => by

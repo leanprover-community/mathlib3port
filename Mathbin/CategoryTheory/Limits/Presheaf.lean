@@ -236,7 +236,7 @@ def extendAlongYonedaIsoKan : extendAlongYoneda A ≅ (lan yoneda : (_ ⥤ ℰ) 
 @[simps]
 def extendOfCompYonedaIsoLan {D : Type u₁} [SmallCategory D] (F : C ⥤ D) : extendAlongYoneda (F ⋙ yoneda) ≅ lan F.op :=
   Adjunction.natIsoOfRightAdjointNatIso (yonedaAdjunction (F ⋙ yoneda)) (lan.adjunction (Type u₁) F.op)
-    (isoWhiskerRight curriedYonedaLemma' ((whiskeringLeft (Cᵒᵖ) (Dᵒᵖ) (Type u₁)).obj F.op : _))
+    (isoWhiskerRight curriedYonedaLemma' ((whiskeringLeft Cᵒᵖ Dᵒᵖ (Type u₁)).obj F.op : _))
 
 end ColimitAdj
 

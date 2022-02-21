@@ -43,7 +43,7 @@ section
 
 attribute [local instance] is_iso_of_mono_of_epi
 
-theorem balanced_opposite [Balanced C] : Balanced (Cᵒᵖ) :=
+theorem balanced_opposite [Balanced C] : Balanced Cᵒᵖ :=
   { is_iso_of_mono_of_epi := fun X Y f fmono fepi => by
       rw [← Quiver.Hom.op_unop f]
       exact is_iso_of_op _ }

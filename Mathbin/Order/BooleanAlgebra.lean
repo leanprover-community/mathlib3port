@@ -759,7 +759,7 @@ class HasCompl (α : Type _) where
 
 export HasCompl (Compl)
 
--- ././Mathport/Syntax/Translate/Basic.lean:462:9: unsupported: advanced prec syntax
+-- ././Mathport/Syntax/Translate/Basic.lean:462:9: unsupported: advanced prec syntax «expr + »(max, 1)
 postfix:999 "ᶜ" => compl
 
 /-- This class contains the core axioms of a Boolean algebra. The `boolean_algebra` class extends

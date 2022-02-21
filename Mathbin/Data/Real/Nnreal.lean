@@ -237,7 +237,7 @@ instance {A : Type _} [Semiringₓ A] [Algebra ℝ A] : Algebra ℝ≥0 A where
 example : Algebra ℝ≥0 ℝ := by
   infer_instance
 
-example : DistribMulAction ( ℝ≥0 )ˣ ℝ := by
+example : DistribMulAction ℝ≥0 ˣ ℝ := by
   infer_instance
 
 end Actions

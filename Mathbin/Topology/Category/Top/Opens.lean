@@ -143,12 +143,12 @@ theorem map_id_obj' U p : (map (𝟙 X)).obj ⟨U, p⟩ = ⟨U, p⟩ :=
   rfl
 
 @[simp]
-theorem map_id_obj_unop (U : Opens Xᵒᵖ) : (map (𝟙 X)).obj (unop U) = unop U :=
+theorem map_id_obj_unop (U : (Opens X)ᵒᵖ) : (map (𝟙 X)).obj (unop U) = unop U :=
   let ⟨_, _⟩ := U.unop
   rfl
 
 @[simp]
-theorem op_map_id_obj (U : Opens Xᵒᵖ) : (map (𝟙 X)).op.obj U = U := by
+theorem op_map_id_obj (U : (Opens X)ᵒᵖ) : (map (𝟙 X)).op.obj U = U := by
   simp
 
 /-- The inclusion `U ⟶ (map f).obj ⊤` as a morphism in the category of open sets.

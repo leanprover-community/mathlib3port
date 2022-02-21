@@ -230,7 +230,7 @@ theorem div_le_div₀ (a b c d : α) (hb : b ≠ 0) (hd : d ≠ 0) : a * b⁻¹ 
         from mul_inv_le_mul_inv_iff'
 
 @[simp]
-theorem Units.zero_lt (u : (α)ˣ) : (0 : α) < u :=
+theorem Units.zero_lt (u : αˣ) : (0 : α) < u :=
   zero_lt_iff.2 <| u.ne_zero
 
 theorem mul_lt_mul_of_lt_of_le₀ (hab : a ≤ b) (hb : b ≠ 0) (hcd : c < d) : a * c < b * d :=

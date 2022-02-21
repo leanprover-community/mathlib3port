@@ -161,15 +161,15 @@ variable (α : Type u) [Monoidₓ α]
 
 /-- The units in a monoid are (multiplicatively) equivalent to
 the automorphisms of `star` when we think of the monoid as a single-object category. -/
-def toAut : (α)ˣ ≃* Aut (SingleObj.star α) :=
+def toAut : αˣ ≃* Aut (SingleObj.star α) :=
   (Units.mapEquiv (SingleObj.toEnd α)).trans <| Aut.unitsEndEquivAut _
 
 @[simp]
-theorem to_Aut_hom (x : (α)ˣ) : (toAut α x).Hom = SingleObj.toEnd α x :=
+theorem to_Aut_hom (x : αˣ) : (toAut α x).Hom = SingleObj.toEnd α x :=
   rfl
 
 @[simp]
-theorem to_Aut_inv (x : (α)ˣ) : (toAut α x).inv = SingleObj.toEnd α (x⁻¹ : (α)ˣ) :=
+theorem to_Aut_inv (x : αˣ) : (toAut α x).inv = SingleObj.toEnd α (x⁻¹ : αˣ) :=
   rfl
 
 end Units

@@ -499,7 +499,7 @@ theorem LinearIndependent.group_smul {G : Type _} [hG : Groupₓ G] [DistribMulA
 
 -- This lemma cannot be proved with `linear_independent.group_smul` since the action of
 -- `Rˣ` on `R` is not commutative.
-theorem LinearIndependent.units_smul {v : ι → M} (hv : LinearIndependent R v) (w : ι → (R)ˣ) :
+theorem LinearIndependent.units_smul {v : ι → M} (hv : LinearIndependent R v) (w : ι → Rˣ) :
     LinearIndependent R (w • v) := by
   rw [linear_independent_iff''] at hv⊢
   intro s g hgs hsum i

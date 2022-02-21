@@ -415,14 +415,19 @@ theorem Integrable.of_measure_le_smul {μ' : Measure α} (c : ℝ≥0∞) (hc : 
   rw [← mem_ℒp_one_iff_integrable] at hf⊢
   exact hf.of_measure_le_smul c hc hμ'_le
 
-theorem Integrable.add_measure {f : α → β} (hμ : Integrable f μ) (hν : Integrable f ν) : Integrable f (μ + ν) :=
-  ⟨hμ.AeMeasurable.add_measure hν.AeMeasurable, hμ.HasFiniteIntegral.add_measure hν.HasFiniteIntegral⟩
+theorem Integrable.add_measure {f : α → β} (hμ : Integrable f μ) (hν : Integrable f ν) : Integrable f (μ + ν) := by
+  simp_rw [← mem_ℒp_one_iff_integrable]  at hμ hν⊢
+  refine' ⟨hμ.ae_measurable.add_measure hν.ae_measurable, _⟩
+  rw [snorm_one_add_measure, Ennreal.add_lt_top]
+  exact ⟨hμ.snorm_lt_top, hν.snorm_lt_top⟩
 
-theorem Integrable.left_of_add_measure {f : α → β} (h : Integrable f (μ + ν)) : Integrable f μ :=
-  h.mono_measure <| measure.le_add_right <| le_rfl
+theorem Integrable.left_of_add_measure {f : α → β} (h : Integrable f (μ + ν)) : Integrable f μ := by
+  rw [← mem_ℒp_one_iff_integrable] at h⊢
+  exact h.left_of_add_measure
 
-theorem Integrable.right_of_add_measure {f : α → β} (h : Integrable f (μ + ν)) : Integrable f ν :=
-  h.mono_measure <| measure.le_add_left <| le_rfl
+theorem Integrable.right_of_add_measure {f : α → β} (h : Integrable f (μ + ν)) : Integrable f ν := by
+  rw [← mem_ℒp_one_iff_integrable] at h⊢
+  exact h.right_of_add_measure
 
 @[simp]
 theorem integrable_add_measure {f : α → β} : Integrable f (μ + ν) ↔ Integrable f μ ∧ Integrable f ν :=
@@ -436,19 +441,23 @@ theorem integrable_finset_sum_measure {ι} {m : MeasurableSpace α} {f : α → 
     Integrable f (∑ i in s, μ i) ↔ ∀, ∀ i ∈ s, ∀, Integrable f (μ i) := by
   induction s using Finset.induction_on <;> simp [*]
 
-theorem Integrable.smul_measure {f : α → β} (h : Integrable f μ) {c : ℝ≥0∞} (hc : c ≠ ∞) : Integrable f (c • μ) :=
-  ⟨h.AeMeasurable.smul_measure c, h.HasFiniteIntegral.smul_measure hc⟩
+theorem Integrable.smul_measure {f : α → β} (h : Integrable f μ) {c : ℝ≥0∞} (hc : c ≠ ∞) : Integrable f (c • μ) := by
+  rw [← mem_ℒp_one_iff_integrable] at h⊢
+  exact h.smul_measure hc
 
 theorem integrable_map_measure [OpensMeasurableSpace β] {f : α → δ} {g : δ → β} (hg : AeMeasurable g (Measure.map f μ))
     (hf : Measurable f) : Integrable g (Measure.map f μ) ↔ Integrable (g ∘ f) μ := by
-  simp [integrable, hg, hg.comp_measurable hf, has_finite_integral, lintegral_map' hg.ennnorm hf]
+  simp_rw [← mem_ℒp_one_iff_integrable]
+  exact mem_ℒp_map_measure_iff hg hf
 
 theorem _root_.measurable_embedding.integrable_map_iff {f : α → δ} (hf : MeasurableEmbedding f) {g : δ → β} :
     Integrable g (Measure.map f μ) ↔ Integrable (g ∘ f) μ := by
-  simp only [integrable, hf.ae_measurable_map_iff, has_finite_integral, hf.lintegral_map]
+  simp_rw [← mem_ℒp_one_iff_integrable]
+  exact hf.mem_ℒp_map_measure_iff
 
-theorem integrable_map_equiv (f : α ≃ᵐ δ) (g : δ → β) : Integrable g (Measure.map f μ) ↔ Integrable (g ∘ f) μ :=
-  f.MeasurableEmbedding.integrable_map_iff
+theorem integrable_map_equiv (f : α ≃ᵐ δ) (g : δ → β) : Integrable g (Measure.map f μ) ↔ Integrable (g ∘ f) μ := by
+  simp_rw [← mem_ℒp_one_iff_integrable]
+  exact f.mem_ℒp_map_measure_iff
 
 theorem MeasurePreserving.integrable_comp [OpensMeasurableSpace β] {ν : Measure δ} {g : δ → β} {f : α → δ}
     (hf : MeasurePreserving f μ ν) (hg : AeMeasurable g ν) : Integrable (g ∘ f) μ ↔ Integrable g ν := by

@@ -126,7 +126,7 @@ attribute [local instance] concrete_category.has_coe_to_sort concrete_category.h
 
 variable [PreservesLimits (forget D)]
 
-variable [∀ X : C, HasColimitsOfShape (J.cover Xᵒᵖ) D]
+variable [∀ X : C, HasColimitsOfShape (J.cover X)ᵒᵖ D]
 
 variable [∀ P : Cᵒᵖ ⥤ D X : C S : J.cover X, HasMultiequalizer (S.index P)]
 
@@ -195,7 +195,7 @@ theorem to_plus_eq_mk {X : C} {P : Cᵒᵖ ⥤ D} (x : P.obj (op X)) : (J.toPlus
   ext i
   simpa
 
-variable [∀ X : C, PreservesColimitsOfShape (J.cover Xᵒᵖ) (forget D)]
+variable [∀ X : C, PreservesColimitsOfShape (J.cover X)ᵒᵖ (forget D)]
 
 theorem exists_rep {X : C} {P : Cᵒᵖ ⥤ D} (x : (J.plusObj P).obj (op X)) : ∃ (S : J.cover X)(y : Meq P S), x = mk y := by
   obtain ⟨S, y, h⟩ := concrete.colimit_exists_rep (J.diagram P X) x
@@ -434,7 +434,7 @@ end Plus
 variable (J)
 
 variable [∀ P : Cᵒᵖ ⥤ D X : C S : J.cover X, HasMultiequalizer (S.index P)]
-  [∀ X : C, HasColimitsOfShape (J.cover Xᵒᵖ) D]
+  [∀ X : C, HasColimitsOfShape (J.cover X)ᵒᵖ D]
 
 /-- The sheafification of a presheaf `P`.
 *NOTE:* Additional hypotheses are needed to obtain a proof that this is a sheaf! -/
@@ -550,8 +550,8 @@ end GrothendieckTopology
 variable (J)
 
 variable [ConcreteCategory.{max v u} D] [PreservesLimits (forget D)]
-  [∀ P : Cᵒᵖ ⥤ D X : C S : J.cover X, HasMultiequalizer (S.index P)] [∀ X : C, HasColimitsOfShape (J.cover Xᵒᵖ) D]
-  [∀ X : C, PreservesColimitsOfShape (J.cover Xᵒᵖ) (forget D)] [ReflectsIsomorphisms (forget D)]
+  [∀ P : Cᵒᵖ ⥤ D X : C S : J.cover X, HasMultiequalizer (S.index P)] [∀ X : C, HasColimitsOfShape (J.cover X)ᵒᵖ D]
+  [∀ X : C, PreservesColimitsOfShape (J.cover X)ᵒᵖ (forget D)] [ReflectsIsomorphisms (forget D)]
 
 theorem GrothendieckTopology.sheafify_is_sheaf (P : Cᵒᵖ ⥤ D) : Presheaf.IsSheaf J (J.sheafify P) :=
   GrothendieckTopology.Plus.is_sheaf_plus_plus _ _

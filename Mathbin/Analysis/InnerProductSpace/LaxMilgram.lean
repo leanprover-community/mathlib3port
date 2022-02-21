@@ -48,9 +48,9 @@ variable {V : Type u} [InnerProductSpace ℝ V] [CompleteSpace V]
 
 variable {B : V →L[ℝ] V →L[ℝ] ℝ}
 
-local postfix:1025 "♯" => @continuousLinearMapOfBilin ℝ V _ _ _
+local postfix:1024 "♯" => @continuousLinearMapOfBilin ℝ V _ _ _
 
-theorem bounded_below (coercive : IsCoercive B) : ∃ C, 0 < C ∧ ∀ v, C * ∥v∥ ≤ ∥(B)♯ v∥ := by
+theorem bounded_below (coercive : IsCoercive B) : ∃ C, 0 < C ∧ ∀ v, C * ∥v∥ ≤ ∥B♯ v∥ := by
   rcases coercive with ⟨C, C_ge_0, coercivity⟩
   refine' ⟨C, C_ge_0, _⟩
   intro v
@@ -59,9 +59,9 @@ theorem bounded_below (coercive : IsCoercive B) : ∃ C, 0 < C ∧ ∀ v, C * �
     exact
       calc
         C * ∥v∥ * ∥v∥ ≤ B v v := coercivity v
-        _ = ⟪(B)♯ v, v⟫_ℝ := by
+        _ = ⟪B♯ v, v⟫_ℝ := by
           simp
-        _ ≤ ∥(B)♯ v∥ * ∥v∥ := real_inner_le_norm ((B)♯ v) v
+        _ ≤ ∥B♯ v∥ * ∥v∥ := real_inner_le_norm (B♯ v) v
         
     
   · have : v = 0 := by
@@ -69,32 +69,32 @@ theorem bounded_below (coercive : IsCoercive B) : ∃ C, 0 < C ∧ ∀ v, C * �
     simp [this]
     
 
-theorem antilipschitz (coercive : IsCoercive B) : ∃ C : ℝ≥0 , 0 < C ∧ AntilipschitzWith C (B)♯ := by
+theorem antilipschitz (coercive : IsCoercive B) : ∃ C : ℝ≥0 , 0 < C ∧ AntilipschitzWith C B♯ := by
   rcases coercive.bounded_below with ⟨C, C_pos, below_bound⟩
   refine' ⟨C⁻¹.toNnreal, real.to_nnreal_pos.mpr (inv_pos.mpr C_pos), _⟩
-  refine' LinearMap.antilipschitz_of_bound (B)♯ _
+  refine' LinearMap.antilipschitz_of_bound B♯ _
   simp_rw [Real.coe_to_nnreal', max_eq_left_of_ltₓ (inv_pos.mpr C_pos), ← inv_mul_le_iff (inv_pos.mpr C_pos)]
   simpa using below_bound
 
-theorem ker_eq_bot (coercive : IsCoercive B) : (B)♯.ker = ⊥ := by
+theorem ker_eq_bot (coercive : IsCoercive B) : B♯.ker = ⊥ := by
   rw [← ker_coe, LinearMap.ker_eq_bot]
   rcases coercive.antilipschitz with ⟨_, _, antilipschitz⟩
   exact antilipschitz.injective
 
-theorem closed_range (coercive : IsCoercive B) : IsClosed ((B)♯.range : Set V) := by
+theorem closed_range (coercive : IsCoercive B) : IsClosed (B♯.range : Set V) := by
   rcases coercive.antilipschitz with ⟨_, _, antilipschitz⟩
-  exact antilipschitz.is_closed_range (B)♯.UniformContinuous
+  exact antilipschitz.is_closed_range B♯.UniformContinuous
 
-theorem range_eq_top (coercive : IsCoercive B) : (B)♯.range = ⊤ := by
+theorem range_eq_top (coercive : IsCoercive B) : B♯.range = ⊤ := by
   have := coercive.closed_range.complete_space_coe
-  rw [← (B)♯.range.orthogonal_orthogonal]
+  rw [← B♯.range.orthogonal_orthogonal]
   rw [Submodule.eq_top_iff']
   intro v w mem_w_orthogonal
   rcases coercive with ⟨C, C_ge_0, coercivity⟩
   have : C * ∥w∥ * ∥w∥ ≤ 0 :=
     calc
       C * ∥w∥ * ∥w∥ ≤ B w w := coercivity w
-      _ = ⟪(B)♯ w, w⟫_ℝ := by
+      _ = ⟪B♯ w, w⟫_ℝ := by
         simp
       _ = 0 := mem_w_orthogonal _ ⟨w, rfl⟩
       
@@ -112,7 +112,7 @@ such that `⟪continuous_linear_equiv_of_bilin B v, w⟫ = B v w`.
 The Lax-Milgram theorem states that this is a continuous equivalence.
 -/
 def continuousLinearEquivOfBilin (coercive : IsCoercive B) : V ≃L[ℝ] V :=
-  ContinuousLinearEquiv.ofBijective (B)♯ coercive.ker_eq_bot coercive.range_eq_top
+  ContinuousLinearEquiv.ofBijective B♯ coercive.ker_eq_bot coercive.range_eq_top
 
 @[simp]
 theorem continuous_linear_equiv_of_bilin_apply (coercive : IsCoercive B) (v w : V) :

@@ -832,7 +832,7 @@ is equivalent to the opposite category of
 the category of cones on the opposite of `F`.
 -/
 @[simps]
-def coconeEquivalenceOpConeOp : Cocone F ≌ Cone F.opᵒᵖ where
+def coconeEquivalenceOpConeOp : Cocone F ≌ (Cone F.op)ᵒᵖ where
   Functor :=
     { obj := fun c => op (Cocone.op c),
       map := fun X Y f =>

@@ -483,7 +483,7 @@ def gluedIsLimit : IsLimit (PullbackCone.mk _ _ (p_comm 𝒰 f g)) := by
 theorem has_pullback_of_cover : HasPullback f g :=
   ⟨⟨⟨_, gluedIsLimit 𝒰 f g⟩⟩⟩
 
-instance : HasLimits (CommRingₓₓᵒᵖ) :=
+instance : HasLimits CommRingₓₓᵒᵖ :=
   has_limits_op_of_has_colimits
 
 instance affine_has_pullback {A B C : CommRingₓₓ} (f : spec.obj (Opposite.op A) ⟶ spec.obj (Opposite.op C))

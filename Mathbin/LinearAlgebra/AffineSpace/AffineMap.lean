@@ -615,7 +615,7 @@ theorem coe_smul (c : R) (f : P1 →ᵃ[k] V2) : ⇑(c • f) = c • f :=
 theorem smul_linear (t : R) (f : P1 →ᵃ[k] V2) : (t • f).linear = t • f.linear :=
   rfl
 
-instance [DistribMulAction (Rᵐᵒᵖ) V2] [IsCentralScalar R V2] : IsCentralScalar R (P1 →ᵃ[k] V2) where
+instance [DistribMulAction Rᵐᵒᵖ V2] [IsCentralScalar R V2] : IsCentralScalar R (P1 →ᵃ[k] V2) where
   op_smul_eq_smul := fun r x => ext fun _ => op_smul_eq_smul _ _
 
 end DistribMulAction

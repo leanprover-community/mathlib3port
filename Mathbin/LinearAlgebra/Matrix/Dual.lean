@@ -34,7 +34,7 @@ theorem LinearMap.to_matrix_transpose (u : V₁ →ₗ[K] V₂) :
 
 @[simp]
 theorem Matrix.to_lin_transpose (M : Matrix ι₁ ι₂ K) :
-    Matrix.toLin B₁.dualBasis B₂.dualBasis (M)ᵀ = Module.Dual.transpose (Matrix.toLin B₂ B₁ M) := by
+    Matrix.toLin B₁.dualBasis B₂.dualBasis Mᵀ = Module.Dual.transpose (Matrix.toLin B₂ B₁ M) := by
   apply (LinearMap.toMatrix B₁.dual_basis B₂.dual_basis).Injective
   rw [LinearMap.to_matrix_to_lin, LinearMap.to_matrix_transpose, LinearMap.to_matrix_to_lin]
 

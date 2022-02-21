@@ -1039,16 +1039,16 @@ theorem group_smul_apply {G : Type _} [Groupₓ G] [DistribMulAction G R] [Distr
     [SmulCommClass G R M] {v : Basis ι R M} {w : ι → G} (i : ι) : v.group_smul w i = (w • v : ι → M) i :=
   mk_apply (v.LinearIndependent.group_smul w) (group_smul_span_eq_top v.span_eq) i
 
-theorem units_smul_span_eq_top {v : ι → M} (hv : Submodule.span R (Set.Range v) = ⊤) {w : ι → (R)ˣ} :
+theorem units_smul_span_eq_top {v : ι → M} (hv : Submodule.span R (Set.Range v) = ⊤) {w : ι → Rˣ} :
     Submodule.span R (Set.Range (w • v)) = ⊤ :=
   group_smul_span_eq_top hv
 
 /-- Given a basis `v` and a map `w` such that for all `i`, `w i` is a unit, `smul_of_is_unit`
 provides the basis corresponding to `w • v`. -/
-def unitsSmul (v : Basis ι R M) (w : ι → (R)ˣ) : Basis ι R M :=
+def unitsSmul (v : Basis ι R M) (w : ι → Rˣ) : Basis ι R M :=
   @Basis.mk ι R M (w • v) _ _ _ (v.LinearIndependent.units_smul w) (units_smul_span_eq_top v.span_eq)
 
-theorem units_smul_apply {v : Basis ι R M} {w : ι → (R)ˣ} (i : ι) : v.units_smul w i = w i • v i :=
+theorem units_smul_apply {v : Basis ι R M} {w : ι → Rˣ} (i : ι) : v.units_smul w i = w i • v i :=
   mk_apply (v.LinearIndependent.units_smul w) (units_smul_span_eq_top v.span_eq) i
 
 /-- A version of `smul_of_units` that uses `is_unit`. -/

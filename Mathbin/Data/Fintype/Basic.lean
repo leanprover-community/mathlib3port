@@ -883,12 +883,12 @@ instance : Fintype Bool :=
 theorem Fintype.univ_bool : @univ Bool _ = {true, false} :=
   rfl
 
-instance UnitsInt.fintype : Fintype (ℤ)ˣ :=
+instance UnitsInt.fintype : Fintype ℤˣ :=
   ⟨{1, -1}, fun x => by
     cases Int.units_eq_one_or x <;> simp [*]⟩
 
 @[simp]
-theorem UnitsInt.univ : (Finset.univ : Finset (ℤ)ˣ) = {1, -1} :=
+theorem UnitsInt.univ : (Finset.univ : Finset ℤˣ) = {1, -1} :=
   rfl
 
 instance Additive.fintype : ∀ [Fintype α], Fintype (Additive α) :=
@@ -898,7 +898,7 @@ instance Multiplicative.fintype : ∀ [Fintype α], Fintype (Multiplicative α) 
   id
 
 @[simp]
-theorem Fintype.card_units_int : Fintype.card (ℤ)ˣ = 2 :=
+theorem Fintype.card_units_int : Fintype.card ℤˣ = 2 :=
   rfl
 
 @[simp]
@@ -1298,7 +1298,7 @@ variable (α)
 
 /-- The `αˣ` type is equivalent to a subtype of `α × α`. -/
 @[simps]
-def _root_.units_equiv_prod_subtype [Monoidₓ α] : (α)ˣ ≃ { p : α × α // p.1 * p.2 = 1 ∧ p.2 * p.1 = 1 } where
+def _root_.units_equiv_prod_subtype [Monoidₓ α] : αˣ ≃ { p : α × α // p.1 * p.2 = 1 ∧ p.2 * p.1 = 1 } where
   toFun := fun u => ⟨(u, ↑u⁻¹), u.val_inv, u.inv_val⟩
   invFun := fun p => Units.mk (p : α × α).1 (p : α × α).2 p.Prop.1 p.Prop.2
   left_inv := fun u => Units.ext rfl
@@ -1307,15 +1307,15 @@ def _root_.units_equiv_prod_subtype [Monoidₓ α] : (α)ˣ ≃ { p : α × α /
 /-- In a `group_with_zero` `α`, the unit group `αˣ` is equivalent to the subtype of nonzero
 elements. -/
 @[simps]
-def _root_.units_equiv_ne_zero [GroupWithZeroₓ α] : (α)ˣ ≃ { a : α // a ≠ 0 } :=
+def _root_.units_equiv_ne_zero [GroupWithZeroₓ α] : αˣ ≃ { a : α // a ≠ 0 } :=
   ⟨fun a => ⟨a, a.ne_zero⟩, fun a => Units.mk0 _ a.Prop, fun _ => Units.ext rfl, fun _ => Subtype.ext rfl⟩
 
 end
 
-instance [Monoidₓ α] [Fintype α] [DecidableEq α] : Fintype (α)ˣ :=
+instance [Monoidₓ α] [Fintype α] [DecidableEq α] : Fintype αˣ :=
   Fintype.ofEquiv _ (unitsEquivProdSubtype α).symm
 
-theorem Fintype.card_units [GroupWithZeroₓ α] [Fintype α] [Fintype (α)ˣ] : Fintype.card (α)ˣ = Fintype.card α - 1 := by
+theorem Fintype.card_units [GroupWithZeroₓ α] [Fintype α] [Fintype αˣ] : Fintype.card αˣ = Fintype.card α - 1 := by
   classical
   rw [eq_comm, Nat.sub_eq_iff_eq_addₓ (Fintype.card_pos_iff.2 ⟨(0 : α)⟩), Fintype.card_congr (unitsEquivNeZero α)]
   have := Fintype.card_congr (Equivₓ.sumCompl (· = (0 : α))).symm

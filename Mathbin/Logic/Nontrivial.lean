@@ -259,7 +259,7 @@ begin
 end
 ```
 -/
-unsafe def nontriviality (t : parse (texpr)?) (lems : parse (tk "using" *> simp_arg_list <|> pure [])) : tactic Unit :=
+unsafe def nontriviality (t : parse texpr ?) (lems : parse (tk "using" *> simp_arg_list <|> pure [])) : tactic Unit :=
   do
   let α ←
     match t with

@@ -149,8 +149,8 @@ theorem sum_cycle_type (σ : Perm α) : σ.cycleType.Sum = σ.support.card :=
     fun σ τ hστ hc hσ hτ => by
     rw [hστ.cycle_type, sum_add, hσ, hτ, hστ.card_support_mul]
 
-theorem sign_of_cycle_type (σ : Perm α) : sign σ = (σ.cycleType.map fun n => -((-1 : (ℤ)ˣ) ^ n)).Prod :=
-  cycle_induction_on (fun τ : Perm α => sign τ = (τ.cycleType.map fun n => -((-1 : (ℤ)ˣ) ^ n)).Prod) σ
+theorem sign_of_cycle_type (σ : Perm α) : sign σ = (σ.cycleType.map fun n => -((-1 : ℤˣ) ^ n)).Prod :=
+  cycle_induction_on (fun τ : Perm α => sign τ = (τ.cycleType.map fun n => -((-1 : ℤˣ) ^ n)).Prod) σ
     (by
       rw [sign_one, cycle_type_one, Multiset.map_zero, prod_zero])
     (fun σ hσ => by

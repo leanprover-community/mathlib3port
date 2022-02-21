@@ -1101,12 +1101,12 @@ end Actions
 /-- The subgroup of positive units of a linear ordered semiring. -/
 -- while this definition is not about subrings, this is the earliest we have
 -- both ordered ring structures and submonoids available
-def Units.posSubgroup (R : Type _) [LinearOrderedSemiring R] : Subgroup (R)ˣ :=
+def Units.posSubgroup (R : Type _) [LinearOrderedSemiring R] : Subgroup Rˣ :=
   { (posSubmonoid R).comap (Units.coeHom R) with Carrier := { x | (0 : R) < x },
     inv_mem' := fun x => Units.inv_pos.mpr }
 
 @[simp]
-theorem Units.mem_pos_subgroup {R : Type _} [LinearOrderedSemiring R] (u : (R)ˣ) :
+theorem Units.mem_pos_subgroup {R : Type _} [LinearOrderedSemiring R] (u : Rˣ) :
     u ∈ Units.posSubgroup R ↔ (0 : R) < u :=
   Iff.rfl
 

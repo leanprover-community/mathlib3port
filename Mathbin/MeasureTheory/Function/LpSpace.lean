@@ -593,6 +593,29 @@ theorem Memℒp.of_measure_le_smul {μ' : Measure α} (c : ℝ≥0∞) (hc : c �
   refine' Ennreal.mul_lt_top _ hf.2.Ne
   simp [hc, hc0]
 
+theorem Memℒp.smul_measure {f : α → E} {c : ℝ≥0∞} (hf : Memℒp f p μ) (hc : c ≠ ∞) : Memℒp f p (c • μ) :=
+  hf.of_measure_le_smul c hc le_rfl
+
+include m
+
+theorem snorm_one_add_measure (f : α → F) (μ ν : Measure α) : snorm f 1 (μ + ν) = snorm f 1 μ + snorm f 1 ν := by
+  simp_rw [snorm_one_eq_lintegral_nnnorm]
+  rw [lintegral_add_measure _ μ ν]
+
+theorem snorm_le_add_measure_right (f : α → F) (μ ν : Measure α) {p : ℝ≥0∞} : snorm f p μ ≤ snorm f p (μ + ν) :=
+  snorm_mono_measure f <| measure.le_add_right <| le_reflₓ _
+
+theorem snorm_le_add_measure_left (f : α → F) (μ ν : Measure α) {p : ℝ≥0∞} : snorm f p ν ≤ snorm f p (μ + ν) :=
+  snorm_mono_measure f <| measure.le_add_left <| le_reflₓ _
+
+omit m
+
+theorem Memℒp.left_of_add_measure {f : α → E} (h : Memℒp f p (μ + ν)) : Memℒp f p μ :=
+  h.mono_measure <| measure.le_add_right <| le_reflₓ _
+
+theorem Memℒp.right_of_add_measure {f : α → E} (h : Memℒp f p (μ + ν)) : Memℒp f p ν :=
+  h.mono_measure <| measure.le_add_left <| le_reflₓ _
+
 section OpensMeasurableSpace
 
 variable [OpensMeasurableSpace E]
@@ -761,6 +784,61 @@ theorem snorm_add_lt_top {f g : α → E} (hf : Memℒp f p μ) (hg : Memℒp g 
   rw [snorm_eq_snorm' h0 hp_top]
   rw [mem_ℒp, snorm_eq_snorm' h0 hp_top] at hf hg
   exact snorm'_add_lt_top_of_le_one hf.1 hg.1 hf.2 hg.2 hp_pos hp1_real
+
+section MapMeasure
+
+variable {β : Type _} {mβ : MeasurableSpace β} {f : α → β} {g : β → E}
+
+include mβ
+
+theorem snorm_ess_sup_map_measure (hg : AeMeasurable g (Measure.map f μ)) (hf : Measurable f) :
+    snormEssSup g (Measure.map f μ) = snormEssSup (g ∘ f) μ :=
+  ess_sup_map_measure hg.ennnorm hf
+
+theorem snorm_map_measure (hg : AeMeasurable g (Measure.map f μ)) (hf : Measurable f) :
+    snorm g p (Measure.map f μ) = snorm (g ∘ f) p μ := by
+  by_cases' hp_zero : p = 0
+  · simp only [hp_zero, snorm_exponent_zero]
+    
+  by_cases' hp_top : p = ∞
+  · simp_rw [hp_top, snorm_exponent_top]
+    exact snorm_ess_sup_map_measure hg hf
+    
+  simp_rw [snorm_eq_lintegral_rpow_nnnorm hp_zero hp_top]
+  rw [lintegral_map' (hg.ennnorm.pow_const p.to_real) hf]
+
+theorem mem_ℒp_map_measure_iff (hg : AeMeasurable g (Measure.map f μ)) (hf : Measurable f) :
+    Memℒp g p (Measure.map f μ) ↔ Memℒp (g ∘ f) p μ := by
+  simp [mem_ℒp, snorm_map_measure hg hf, hg.comp_measurable hf, hg]
+
+theorem _root_.measurable_embedding.snorm_ess_sup_map_measure {g : β → F} (hf : MeasurableEmbedding f) :
+    snormEssSup g (Measure.map f μ) = snormEssSup (g ∘ f) μ :=
+  hf.ess_sup_map_measure
+
+theorem _root_.measurable_embedding.snorm_map_measure {g : β → F} (hf : MeasurableEmbedding f) :
+    snorm g p (Measure.map f μ) = snorm (g ∘ f) p μ := by
+  by_cases' hp_zero : p = 0
+  · simp only [hp_zero, snorm_exponent_zero]
+    
+  by_cases' hp : p = ∞
+  · simp_rw [hp, snorm_exponent_top]
+    exact hf.ess_sup_map_measure
+    
+  · simp_rw [snorm_eq_lintegral_rpow_nnnorm hp_zero hp]
+    rw [hf.lintegral_map]
+    
+
+theorem _root_.measurable_embedding.mem_ℒp_map_measure_iff [MeasurableSpace F] {g : β → F}
+    (hf : MeasurableEmbedding f) : Memℒp g p (Measure.map f μ) ↔ Memℒp (g ∘ f) p μ := by
+  simp_rw [mem_ℒp, hf.ae_measurable_map_iff, hf.snorm_map_measure]
+
+theorem _root_.measurable_equiv.mem_ℒp_map_measure_iff [MeasurableSpace F] (f : α ≃ᵐ β) {g : β → F} :
+    Memℒp g p (Measure.map f μ) ↔ Memℒp (g ∘ f) p μ :=
+  f.MeasurableEmbedding.mem_ℒp_map_measure_iff
+
+omit mβ
+
+end MapMeasure
 
 section Trim
 

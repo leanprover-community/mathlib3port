@@ -227,7 +227,7 @@ theorem is_right_regular_of_mul_eq_one (h : a * b = 1) : IsRightRegular a :=
       exact is_regular_one.right)
 
 /-- If `R` is a monoid, an element in `Rˣ` is regular. -/
-theorem Units.is_regular (a : (R)ˣ) : IsRegular (a : R) :=
+theorem Units.is_regular (a : Rˣ) : IsRegular (a : R) :=
   ⟨is_left_regular_of_mul_eq_one a.inv_mul, is_right_regular_of_mul_eq_one a.mul_inv⟩
 
 /-- A unit in a monoid is regular. -/

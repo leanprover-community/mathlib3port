@@ -409,7 +409,7 @@ end Restrict
 /-- The global sections, notated Gamma.
 -/
 @[simps]
-def Γ : PresheafedSpace Cᵒᵖ ⥤ C where
+def Γ : (PresheafedSpace C)ᵒᵖ ⥤ C where
   obj := fun X => (unop X).Presheaf.obj (op ⊤)
   map := fun X Y f => f.unop.c.app (op ⊤)
 

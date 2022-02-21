@@ -395,7 +395,7 @@ instance [HasScalar R M] [HasContinuousConstSmul R M] [HasScalar R₁ M] [HasCon
     [IsScalarTower R R₁ M] : IsScalarTower R R₁ C(α, M) where
   smul_assoc := fun _ _ _ => ext fun _ => smul_assoc _ _ _
 
-instance [HasScalar R M] [HasScalar (Rᵐᵒᵖ) M] [HasContinuousConstSmul R M] [IsCentralScalar R M] :
+instance [HasScalar R M] [HasScalar Rᵐᵒᵖ M] [HasContinuousConstSmul R M] [IsCentralScalar R M] :
     IsCentralScalar R C(α, M) where
   op_smul_eq_smul := fun _ _ => ext fun _ => op_smul_eq_smul _ _
 

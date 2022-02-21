@@ -526,7 +526,7 @@ theorem mem_nonunits {z : ℤ_[p]} : z ∈ Nonunits ℤ_[p] ↔ ∥z∥ < 1 := b
   rw [lt_iff_le_and_ne] <;> simp [norm_le_one z, Nonunits, is_unit_iff]
 
 /-- A `p`-adic number `u` with `∥u∥ = 1` is a unit of `ℤ_[p]`. -/
-def mkUnits {u : ℚ_[p]} (h : ∥u∥ = 1) : (ℤ_[p])ˣ :=
+def mkUnits {u : ℚ_[p]} (h : ∥u∥ = 1) : ℤ_[p]ˣ :=
   let z : ℤ_[p] := ⟨u, le_of_eqₓ h⟩
   ⟨z, z.inv, mul_inv h, inv_mul h⟩
 
@@ -535,13 +535,13 @@ theorem mk_units_eq {u : ℚ_[p]} (h : ∥u∥ = 1) : ((mkUnits h : ℤ_[p]) : �
   rfl
 
 @[simp]
-theorem norm_units (u : (ℤ_[p])ˣ) : ∥(u : ℤ_[p])∥ = 1 :=
+theorem norm_units (u : ℤ_[p]ˣ) : ∥(u : ℤ_[p])∥ = 1 :=
   is_unit_iff.mp <| by
     simp
 
 /-- `unit_coeff hx` is the unit `u` in the unique representation `x = u * p ^ n`.
 See `unit_coeff_spec`. -/
-def unitCoeff {x : ℤ_[p]} (hx : x ≠ 0) : (ℤ_[p])ˣ :=
+def unitCoeff {x : ℤ_[p]} (hx : x ≠ 0) : ℤ_[p]ˣ :=
   let u : ℚ_[p] := x * p ^ -x.Valuation
   have hu : ∥u∥ = 1 := by
     simp [hx,

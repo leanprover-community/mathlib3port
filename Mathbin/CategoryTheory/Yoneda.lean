@@ -250,10 +250,10 @@ variable (C)
 
 -- We need to help typeclass inference with some awkward universe levels here.
 instance prodCategoryInstance1 : Category ((Cᵒᵖ ⥤ Type v₁) × Cᵒᵖ) :=
-  CategoryTheory.prod.{max u₁ v₁, v₁} (Cᵒᵖ ⥤ Type v₁) (Cᵒᵖ)
+  CategoryTheory.prod.{max u₁ v₁, v₁} (Cᵒᵖ ⥤ Type v₁) Cᵒᵖ
 
 instance prodCategoryInstance2 : Category (Cᵒᵖ × (Cᵒᵖ ⥤ Type v₁)) :=
-  CategoryTheory.prod.{v₁, max u₁ v₁} (Cᵒᵖ) (Cᵒᵖ ⥤ Type v₁)
+  CategoryTheory.prod.{v₁, max u₁ v₁} Cᵒᵖ (Cᵒᵖ ⥤ Type v₁)
 
 open Yoneda
 
@@ -261,7 +261,7 @@ open Yoneda
 to `F.obj X`, functorially in both `X` and `F`.
 -/
 def yonedaEvaluation : Cᵒᵖ × (Cᵒᵖ ⥤ Type v₁) ⥤ Type max u₁ v₁ :=
-  evaluationUncurried (Cᵒᵖ) (Type v₁) ⋙ ulift_functor.{u₁}
+  evaluationUncurried Cᵒᵖ (Type v₁) ⋙ ulift_functor.{u₁}
 
 @[simp]
 theorem yoneda_evaluation_map_down (P Q : Cᵒᵖ × (Cᵒᵖ ⥤ Type v₁)) (α : P ⟶ Q) (x : (yonedaEvaluation C).obj P) :
@@ -371,24 +371,24 @@ attribute [local ext] Functor.ext
 
 /-- The curried version of yoneda lemma when `C` is small. -/
 def curriedYonedaLemma {C : Type u₁} [SmallCategory C] :
-    (yoneda.op ⋙ coyoneda : Cᵒᵖ ⥤ (Cᵒᵖ ⥤ Type u₁) ⥤ Type u₁) ≅ evaluation (Cᵒᵖ) (Type u₁) :=
+    (yoneda.op ⋙ coyoneda : Cᵒᵖ ⥤ (Cᵒᵖ ⥤ Type u₁) ⥤ Type u₁) ≅ evaluation Cᵒᵖ (Type u₁) :=
   eqToIso
       (by
         tidy) ≪≫
-    curry.mapIso (yonedaLemma C ≪≫ isoWhiskerLeft (evaluationUncurried (Cᵒᵖ) (Type u₁)) uliftFunctorTrivial) ≪≫
+    curry.mapIso (yonedaLemma C ≪≫ isoWhiskerLeft (evaluationUncurried Cᵒᵖ (Type u₁)) uliftFunctorTrivial) ≪≫
       eqToIso
         (by
           tidy)
 
 /-- The curried version of yoneda lemma when `C` is small. -/
 def curriedYonedaLemma' {C : Type u₁} [SmallCategory C] :
-    yoneda ⋙ (whiskeringLeft (Cᵒᵖ) ((Cᵒᵖ ⥤ Type u₁)ᵒᵖ) (Type u₁)).obj yoneda.op ≅ 𝟭 (Cᵒᵖ ⥤ Type u₁) :=
+    yoneda ⋙ (whiskeringLeft Cᵒᵖ (Cᵒᵖ ⥤ Type u₁)ᵒᵖ (Type u₁)).obj yoneda.op ≅ 𝟭 (Cᵒᵖ ⥤ Type u₁) :=
   eqToIso
       (by
         tidy) ≪≫
     curry.mapIso
         (isoWhiskerLeft (prod.swap _ _)
-          (yonedaLemma C ≪≫ isoWhiskerLeft (evaluationUncurried (Cᵒᵖ) (Type u₁)) uliftFunctorTrivial : _)) ≪≫
+          (yonedaLemma C ≪≫ isoWhiskerLeft (evaluationUncurried Cᵒᵖ (Type u₁)) uliftFunctorTrivial : _)) ≪≫
       eqToIso
         (by
           tidy)

@@ -32,8 +32,7 @@ To get a C⋆-algebra `E` over field `𝕜`, use
 
 open_locale TopologicalSpace
 
--- ././Mathport/Syntax/Translate/Basic.lean:462:9: unsupported: advanced prec syntax
-local postfix:999 "⋆" => star
+local postfix:max "⋆" => star
 
 /-- A normed star ring is a star ring endowed with a norm such that `star` is isometric. -/
 class NormedStarMonoid (E : Type _) [NormedGroup E] [StarAddMonoid E] where
@@ -78,11 +77,11 @@ theorem continuous_at_star {x : E} : ContinuousAt star x :=
 theorem continuous_within_at_star {s : Set E} {x : E} : ContinuousWithinAt star s x :=
   continuous_star.ContinuousWithinAt
 
-theorem tendsto_star (x : E) : Filter.Tendsto star (𝓝 x) (𝓝 (x⋆)) :=
+theorem tendsto_star (x : E) : Filter.Tendsto star (𝓝 x) (𝓝 x⋆) :=
   continuous_star.Tendsto x
 
 theorem Filter.Tendsto.star {f : α → E} {l : Filter α} {y : E} (h : Filter.Tendsto f l (𝓝 y)) :
-    Filter.Tendsto (fun x => f x⋆) l (𝓝 (y⋆)) :=
+    Filter.Tendsto (fun x => (f x)⋆) l (𝓝 y⋆) :=
   (continuous_star.Tendsto y).comp h
 
 variable [TopologicalSpace α]
@@ -90,14 +89,14 @@ variable [TopologicalSpace α]
 theorem Continuous.star {f : α → E} (hf : Continuous f) : Continuous fun y => star (f y) :=
   continuous_star.comp hf
 
-theorem ContinuousAt.star {f : α → E} {x : α} (hf : ContinuousAt f x) : ContinuousAt (fun x => f x⋆) x :=
+theorem ContinuousAt.star {f : α → E} {x : α} (hf : ContinuousAt f x) : ContinuousAt (fun x => (f x)⋆) x :=
   continuous_at_star.comp hf
 
-theorem ContinuousOn.star {f : α → E} {s : Set α} (hf : ContinuousOn f s) : ContinuousOn (fun x => f x⋆) s :=
+theorem ContinuousOn.star {f : α → E} {s : Set α} (hf : ContinuousOn f s) : ContinuousOn (fun x => (f x)⋆) s :=
   continuous_star.comp_continuous_on hf
 
 theorem ContinuousWithinAt.star {f : α → E} {s : Set α} {x : α} (hf : ContinuousWithinAt f s x) :
-    ContinuousWithinAt (fun x => f x⋆) s x :=
+    ContinuousWithinAt (fun x => (f x)⋆) s x :=
   hf.star
 
 end NormedStarMonoid

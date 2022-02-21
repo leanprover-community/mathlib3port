@@ -50,7 +50,7 @@ variable {m n : Type _} [DecidableEq n] [Fintype n] [DecidableEq m] [Fintype m]
 
 variable {R : Type v} [CommRingₓ R]
 
--- ././Mathport/Syntax/Translate/Basic.lean:462:9: unsupported: advanced prec syntax
+-- ././Mathport/Syntax/Translate/Basic.lean:462:9: unsupported: advanced prec syntax max
 local notation "ε" σ:999 => ((sign σ : ℤ) : R)
 
 /-- `det` is an `alternating_map` in the rows of the matrix. -/
@@ -205,7 +205,7 @@ theorem det_units_conj' (M : (Matrix m m R)ˣ) (N : Matrix m m R) : det (↑M⁻
 
 /-- Transposing a matrix preserves the determinant. -/
 @[simp]
-theorem det_transpose (M : Matrix n n R) : (M)ᵀ.det = M.det := by
+theorem det_transpose (M : Matrix n n R) : Mᵀ.det = M.det := by
   rw [det_apply', det_apply']
   refine' Fintype.sum_bijective _ inv_involutive.bijective _ _ _
   intro σ
@@ -299,7 +299,7 @@ theorem _root_.alg_equiv.map_det [Algebra R S] {T : Type z} [CommRingₓ T] [Alg
 end HomMap
 
 @[simp]
-theorem det_conj_transpose [StarRing R] (M : Matrix m m R) : det (M)ᴴ = star (det M) :=
+theorem det_conj_transpose [StarRing R] (M : Matrix m m R) : det Mᴴ = star (det M) :=
   ((starRingEnd R).map_det _).symm.trans <| congr_argₓ star M.det_transpose
 
 section DetZero
@@ -391,7 +391,7 @@ theorem det_update_row_add_self (A : Matrix n n R) {i j : n} (hij : i ≠ j) : d
 theorem det_update_column_add_self (A : Matrix n n R) {i j : n} (hij : i ≠ j) :
     det (updateColumn A i fun k => A k i + A k j) = det A := by
   rw [← det_transpose, ← update_row_transpose, ← det_transpose A]
-  exact det_update_row_add_self (A)ᵀ hij
+  exact det_update_row_add_self Aᵀ hij
 
 theorem det_update_row_add_smul_self (A : Matrix n n R) {i j : n} (hij : i ≠ j) (c : R) :
     det (updateRow A i (A i + c • A j)) = det A := by
@@ -401,7 +401,7 @@ theorem det_update_row_add_smul_self (A : Matrix n n R) {i j : n} (hij : i ≠ j
 theorem det_update_column_add_smul_self (A : Matrix n n R) {i j : n} (hij : i ≠ j) (c : R) :
     det (updateColumn A i fun k => A k i + c • A k j) = det A := by
   rw [← det_transpose, ← update_row_transpose, ← det_transpose A]
-  exact det_update_row_add_smul_self (A)ᵀ hij c
+  exact det_update_row_add_smul_self Aᵀ hij c
 
 theorem det_eq_of_forall_row_eq_smul_add_const_aux {A B : Matrix n n R} {s : Finset n} :
     ∀ c : n → R hs : ∀ i, i ∉ s → c i = 0 k : n hk : k ∉ s A_eq : ∀ i j, A i j = B i j + c i * B k j, det A = det B :=
@@ -704,7 +704,7 @@ theorem det_succ_row {n : ℕ} (A : Matrix (Finₓ n.succ) (Finₓ n.succ) R) (i
     det A = ∑ j : Finₓ n.succ, -1 ^ (i + j : ℕ) * A i j * det (A.minor i.succAbove j.succAbove) := by
   simp_rw [pow_addₓ, mul_assoc, ← mul_sum]
   have : det A = (-1 : R) ^ (i : ℕ) * i.cycle_range⁻¹.sign * det A := by
-    calc det A = ↑((-1 : (ℤ)ˣ) ^ (i : ℕ) * (-1 : (ℤ)ˣ) ^ (i : ℕ) : (ℤ)ˣ) * det A := by
+    calc det A = ↑((-1 : ℤˣ) ^ (i : ℕ) * (-1 : ℤˣ) ^ (i : ℕ) : ℤˣ) * det A := by
         simp _ = (-1 : R) ^ (i : ℕ) * i.cycle_range⁻¹.sign * det A := by
         simp [-Int.units_mul_self]
   rw [this, mul_assoc]

@@ -351,14 +351,14 @@ begin
 end
 ```
 -/
-unsafe def _root_.tactic.interactive.linear_combination (input : parse (parse_name_pexpr_pair)*)
+unsafe def _root_.tactic.interactive.linear_combination (input : parse parse_name_pexpr_pair*)
     (config : linear_combination_config := {  }) : tactic Unit :=
   let (h_eqs_names, coeffs) := List.unzip input
   linear_combination h_eqs_names coeffs config
 
 add_tactic_doc
   { Name := "linear_combination", category := DocCategory.tactic, declNames := [`tactic.interactive.linear_combination],
-    tags := [] }
+    tags := ["arithmetic"] }
 
 end InteractiveMode
 

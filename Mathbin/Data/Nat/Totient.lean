@@ -304,7 +304,7 @@ theorem prime_iff_card_units (p : ℕ) [Fintype (Zmod p)ˣ] : p.Prime ↔ Fintyp
   · subst hp
     simp only [Zmod, not_prime_zero, false_iffₓ, zero_tsub]
     -- the substI created an non-defeq but subsingleton instance diamond; resolve it
-    suffices Fintype.card (ℤ)ˣ ≠ 0 by
+    suffices Fintype.card ℤˣ ≠ 0 by
       convert this
     simp
     

@@ -314,7 +314,7 @@ namespace LinearEquiv
 variable [IsDomain R]
 
 /-- On a `linear_equiv`, the domain of `linear_map.det` can be promoted to `Rˣ`. -/
-protected def det : (M ≃ₗ[R] M) →* (R)ˣ :=
+protected def det : (M ≃ₗ[R] M) →* Rˣ :=
   (Units.map (LinearMap.det : (M →ₗ[R] M) →* R)).comp
     (LinearMap.GeneralLinearGroup.generalLinearEquiv R M).symm.toMonoidHom
 
@@ -527,7 +527,7 @@ theorem Basis.det_smul_mk_coord_eq_det_update {v : ι → M} (hli : LinearIndepe
 
 /-- The determinant of a basis constructed by `units_smul` is the product of the given units. -/
 @[simp]
-theorem Basis.det_units_smul (w : ι → (R)ˣ) : e.det (e.units_smul w) = ∏ i, w i := by
+theorem Basis.det_units_smul (w : ι → Rˣ) : e.det (e.units_smul w) = ∏ i, w i := by
   simp [Basis.det_apply]
 
 /-- The determinant of a basis constructed by `is_unit_smul` is the product of the given units. -/

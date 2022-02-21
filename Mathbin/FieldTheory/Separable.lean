@@ -406,7 +406,7 @@ theorem nodup_of_separable_prod [Nontrivial R] {s : Multiset R}
   simpa only [Multiset.map_cons, Multiset.prod_cons] using mul_dvd_mul_left _ (dvd_mul_right _ _)
 
 /-- If `is_unit n` in a `comm_ring R`, then `X ^ n - u` is separable for any unit `u`. -/
-theorem separable_X_pow_sub_C_unit {n : ℕ} (u : (R)ˣ) (hn : IsUnit (n : R)) : Separable (X ^ n - c (u : R)) := by
+theorem separable_X_pow_sub_C_unit {n : ℕ} (u : Rˣ) (hn : IsUnit (n : R)) : Separable (X ^ n - c (u : R)) := by
   nontriviality R
   rcases n.eq_zero_or_pos with (rfl | hpos)
   · simpa using hn

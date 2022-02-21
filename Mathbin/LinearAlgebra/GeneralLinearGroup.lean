@@ -40,7 +40,7 @@ variable {n : Type u} [DecidableEq n] [Fintype n] {R : Type v} [CommRingₓ R]
 
 /-- The determinant of a unit matrix is itself a unit. -/
 @[simps]
-def det : GL n R →* (R)ˣ where
+def det : GL n R →* Rˣ where
   toFun := fun A =>
     { val := (↑A : Matrix n n R).det, inv := (↑A⁻¹ : Matrix n n R).det,
       val_inv := by

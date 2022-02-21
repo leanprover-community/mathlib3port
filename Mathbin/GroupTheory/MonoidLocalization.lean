@@ -391,7 +391,7 @@ instance is_scalar_tower_right {R : Type _} [HasScalar R M] [IsScalarTower R M M
           Prod.rec fun r₂ x₂ => by
             simp only [smul_mk, smul_eq_mul, mk_mul, smul_mul_assoc]
 
-instance [HasScalar R M] [HasScalar (Rᵐᵒᵖ) M] [IsScalarTower R M M] [IsScalarTower (Rᵐᵒᵖ) M M] [IsCentralScalar R M] :
+instance [HasScalar R M] [HasScalar Rᵐᵒᵖ M] [IsScalarTower R M M] [IsScalarTower Rᵐᵒᵖ M M] [IsCentralScalar R M] :
     IsCentralScalar R (Localization S) where
   op_smul_eq_smul := fun s =>
     Localization.ind <|

@@ -220,7 +220,7 @@ noncomputable def finsuppLequivDfinsupp [DecidableEq ι] [Semiringₓ R] [AddCom
 
 section Sigma
 
--- ././Mathport/Syntax/Translate/Basic.lean:1528:4: ignoring doc comment on noncomputable theory
+/-! ### Stronger versions of `finsupp.split` -/
 noncomputable section
 
 open_locale Classical

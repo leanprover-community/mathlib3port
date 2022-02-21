@@ -204,7 +204,7 @@ theorem order_of_submonoid {H : Submonoid G} (y : H) : orderOf (y : G) = orderOf
   order_of_injective H.Subtype Subtype.coe_injective y
 
 @[to_additive order_of_add_units]
-theorem order_of_units {y : (G)ˣ} : orderOf (y : G) = orderOf y :=
+theorem order_of_units {y : Gˣ} : orderOf (y : G) = orderOf y :=
   order_of_injective (Units.coeHom G) Units.ext y
 
 variable (x)
@@ -256,7 +256,7 @@ theorem order_of_eq_prime_pow (hnot : ¬x ^ p ^ n = 1) (hfin : x ^ p ^ (n + 1) =
 omit hp
 
 -- An example on how to determine the order of an element of a finite group.
-example : orderOf (-1 : (ℤ)ˣ) = 2 :=
+example : orderOf (-1 : ℤˣ) = 2 :=
   order_of_eq_prime (Int.units_sq _)
     (by
       decide)

@@ -879,7 +879,7 @@ theorem BilinForm.to_matrix'_apply (B : BilinForm R₃ (n → R₃)) (i j : n) :
 
 @[simp]
 theorem BilinForm.to_matrix'_comp (B : BilinForm R₃ (n → R₃)) (l r : (o → R₃) →ₗ[R₃] n → R₃) :
-    (B.comp l r).toMatrix' = (l.toMatrix')ᵀ ⬝ B.toMatrix' ⬝ r.toMatrix' := by
+    (B.comp l r).toMatrix' = l.toMatrix'ᵀ ⬝ B.toMatrix' ⬝ r.toMatrix' := by
   ext i j
   simp only [BilinForm.to_matrix'_apply, BilinForm.comp_apply, transpose_apply, Matrix.mul_apply, LinearMap.toMatrix',
     LinearEquiv.coe_mk, sum_mul]
@@ -902,7 +902,7 @@ theorem BilinForm.to_matrix'_comp (B : BilinForm R₃ (n → R₃)) (l r : (o �
     
 
 theorem BilinForm.to_matrix'_comp_left (B : BilinForm R₃ (n → R₃)) (f : (n → R₃) →ₗ[R₃] n → R₃) :
-    (B.compLeft f).toMatrix' = (f.toMatrix')ᵀ ⬝ B.toMatrix' := by
+    (B.compLeft f).toMatrix' = f.toMatrix'ᵀ ⬝ B.toMatrix' := by
   simp only [BilinForm.compLeft, BilinForm.to_matrix'_comp, to_matrix'_id, Matrix.mul_one]
 
 theorem BilinForm.to_matrix'_comp_right (B : BilinForm R₃ (n → R₃)) (f : (n → R₃) →ₗ[R₃] n → R₃) :
@@ -910,11 +910,11 @@ theorem BilinForm.to_matrix'_comp_right (B : BilinForm R₃ (n → R₃)) (f : (
   simp only [BilinForm.compRight, BilinForm.to_matrix'_comp, to_matrix'_id, transpose_one, Matrix.one_mul]
 
 theorem BilinForm.mul_to_matrix'_mul (B : BilinForm R₃ (n → R₃)) (M : Matrix o n R₃) (N : Matrix n o R₃) :
-    M ⬝ B.toMatrix' ⬝ N = (B.comp (M)ᵀ.toLin' N.toLin').toMatrix' := by
+    M ⬝ B.toMatrix' ⬝ N = (B.comp Mᵀ.toLin' N.toLin').toMatrix' := by
   simp only [B.to_matrix'_comp, transpose_transpose, to_matrix'_to_lin']
 
 theorem BilinForm.mul_to_matrix' (B : BilinForm R₃ (n → R₃)) (M : Matrix n n R₃) :
-    M ⬝ B.toMatrix' = (B.compLeft (M)ᵀ.toLin').toMatrix' := by
+    M ⬝ B.toMatrix' = (B.compLeft Mᵀ.toLin').toMatrix' := by
   simp only [B.to_matrix'_comp_left, transpose_transpose, to_matrix'_to_lin']
 
 theorem BilinForm.to_matrix'_mul (B : BilinForm R₃ (n → R₃)) (M : Matrix n n R₃) :
@@ -922,7 +922,7 @@ theorem BilinForm.to_matrix'_mul (B : BilinForm R₃ (n → R₃)) (M : Matrix n
   simp only [B.to_matrix'_comp_right, to_matrix'_to_lin']
 
 theorem Matrix.to_bilin'_comp (M : Matrix n n R₃) (P Q : Matrix n o R₃) :
-    M.toBilin'.comp P.toLin' Q.toLin' = ((P)ᵀ ⬝ M ⬝ Q).toBilin' :=
+    M.toBilin'.comp P.toLin' Q.toLin' = (Pᵀ ⬝ M ⬝ Q).toBilin' :=
   BilinForm.toMatrix'.Injective
     (by
       simp only [BilinForm.to_matrix'_comp, BilinForm.to_matrix'_to_bilin', to_matrix'_to_lin'])
@@ -1048,11 +1048,11 @@ theorem BilinForm.to_matrix_mul_basis_to_matrix (c : Basis o R₃ M₃) (B : Bil
   rw [← LinearMap.to_matrix_id_eq_basis_to_matrix, ← BilinForm.to_matrix_comp, BilinForm.comp_id_id]
 
 theorem BilinForm.mul_to_matrix_mul (B : BilinForm R₃ M₃) (M : Matrix o n R₃) (N : Matrix n o R₃) :
-    M ⬝ BilinForm.toMatrix b B ⬝ N = BilinForm.toMatrix c (B.comp (toLin c b (M)ᵀ) (toLin c b N)) := by
+    M ⬝ BilinForm.toMatrix b B ⬝ N = BilinForm.toMatrix c (B.comp (toLin c b Mᵀ) (toLin c b N)) := by
   simp only [B.to_matrix_comp b c, to_matrix_to_lin, transpose_transpose]
 
 theorem BilinForm.mul_to_matrix (B : BilinForm R₃ M₃) (M : Matrix n n R₃) :
-    M ⬝ BilinForm.toMatrix b B = BilinForm.toMatrix b (B.compLeft (toLin b b (M)ᵀ)) := by
+    M ⬝ BilinForm.toMatrix b B = BilinForm.toMatrix b (B.compLeft (toLin b b Mᵀ)) := by
   rw [B.to_matrix_comp_left b, to_matrix_to_lin, transpose_transpose]
 
 theorem BilinForm.to_matrix_mul (B : BilinForm R₃ M₃) (M : Matrix n n R₃) :
@@ -1060,7 +1060,7 @@ theorem BilinForm.to_matrix_mul (B : BilinForm R₃ M₃) (M : Matrix n n R₃) 
   rw [B.to_matrix_comp_right b, to_matrix_to_lin]
 
 theorem Matrix.to_bilin_comp (M : Matrix n n R₃) (P Q : Matrix n o R₃) :
-    (Matrix.toBilin b M).comp (toLin c b P) (toLin c b Q) = Matrix.toBilin c ((P)ᵀ ⬝ M ⬝ Q) :=
+    (Matrix.toBilin b M).comp (toLin c b P) (toLin c b Q) = Matrix.toBilin c (Pᵀ ⬝ M ⬝ Q) :=
   (BilinForm.toMatrix c).Injective
     (by
       simp only [BilinForm.to_matrix_comp b c, BilinForm.to_matrix_to_bilin, to_matrix_to_lin])
@@ -1294,7 +1294,7 @@ variable (J J₃ A A' : Matrix n n R₃)
 /-- The condition for the square matrices `A`, `A'` to be an adjoint pair with respect to the square
 matrices `J`, `J₃`. -/
 def Matrix.IsAdjointPair :=
-  (A)ᵀ ⬝ J₃ = J ⬝ A'
+  Aᵀ ⬝ J₃ = J ⬝ A'
 
 /-- The condition for a square matrix `A` to be self-adjoint with respect to the square matrix
 `J`. -/
@@ -1341,11 +1341,11 @@ theorem is_adjoint_pair_to_bilin [DecidableEq n] :
   rfl
 
 theorem Matrix.is_adjoint_pair_equiv [DecidableEq n] (P : Matrix n n R₃) (h : IsUnit P) :
-    ((P)ᵀ ⬝ J ⬝ P).IsAdjointPair ((P)ᵀ ⬝ J ⬝ P) A A' ↔ J.IsAdjointPair J (P ⬝ A ⬝ P⁻¹) (P ⬝ A' ⬝ P⁻¹) := by
+    (Pᵀ ⬝ J ⬝ P).IsAdjointPair (Pᵀ ⬝ J ⬝ P) A A' ↔ J.IsAdjointPair J (P ⬝ A ⬝ P⁻¹) (P ⬝ A' ⬝ P⁻¹) := by
   have h' : IsUnit P.det := P.is_unit_iff_is_unit_det.mp h
   let u := P.nonsing_inv_unit h'
-  let v := (P)ᵀ.nonsingInvUnit (P.is_unit_det_transpose h')
-  let x := (A)ᵀ * (P)ᵀ * J
+  let v := Pᵀ.nonsingInvUnit (P.is_unit_det_transpose h')
+  let x := Aᵀ * Pᵀ * J
   let y := J * P * A'
   suffices x * ↑u = ↑v * y ↔ ↑v⁻¹ * x = y * ↑u⁻¹ by
     dunfold Matrix.IsAdjointPair

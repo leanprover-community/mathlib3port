@@ -643,8 +643,8 @@ class HasUncurry (α : Type _) (β : outParam (Type _)) (γ : outParam (Type _))
 for bundled maps.-/
 add_decl_doc has_uncurry.uncurry
 
--- ././Mathport/Syntax/Translate/Basic.lean:462:9: unsupported: advanced prec syntax
--- ././Mathport/Syntax/Translate/Basic.lean:462:9: unsupported: advanced prec syntax
+-- ././Mathport/Syntax/Translate/Basic.lean:462:9: unsupported: advanced prec syntax max
+-- ././Mathport/Syntax/Translate/Basic.lean:462:9: unsupported: advanced prec syntax max
 notation:999 "↿" x:999 => HasUncurry.uncurry x
 
 instance hasUncurryBase : HasUncurry (α → β) α β :=

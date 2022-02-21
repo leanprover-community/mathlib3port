@@ -109,7 +109,7 @@ def ratio :=
 protected def singleton (a : α) : Ordnode α :=
   node 1 nil a nil
 
--- ././Mathport/Syntax/Translate/Basic.lean:462:9: unsupported: advanced prec syntax
+-- ././Mathport/Syntax/Translate/Basic.lean:462:9: unsupported: advanced prec syntax max
 local prefix:999 "ι" => Ordnode.singleton
 
 instance : HasSingleton α (Ordnode α) :=

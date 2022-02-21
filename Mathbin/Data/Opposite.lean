@@ -44,8 +44,7 @@ variable (α : Sort u)
 def Opposite : Sort u :=
   α
 
--- ././Mathport/Syntax/Translate/Basic.lean:462:9: unsupported: advanced prec syntax
-notation:999 α
+notation:max α
   "ᵒᵖ" =>-- Use a high right binding power (like that of postfix ⁻¹) so that, for example,
     -- `presheaf Cᵒᵖ` parses as `presheaf (Cᵒᵖ)` and not `(presheaf C)ᵒᵖ`.
     Opposite
@@ -106,7 +105,7 @@ theorem op_eq_iff_eq_unop {x : α} {y} : op x = y ↔ x = unop y :=
 theorem unop_eq_iff_eq_op {x} {y : α} : unop x = y ↔ x = op y :=
   equivToOpposite.symm.apply_eq_iff_eq_symm_apply
 
-instance [Inhabited α] : Inhabited (αᵒᵖ) :=
+instance [Inhabited α] : Inhabited αᵒᵖ :=
   ⟨op default⟩
 
 /-- A recursor for `opposite`. Use as `induction x using opposite.rec`. -/

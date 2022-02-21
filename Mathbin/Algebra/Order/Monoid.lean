@@ -172,31 +172,31 @@ theorem bit0_pos [OrderedAddCommMonoid α] {a : α} (h : 0 < a) : 0 < bit0 a :=
 namespace Units
 
 @[to_additive]
-instance [Monoidₓ α] [Preorderₓ α] : Preorderₓ (α)ˣ :=
-  Preorderₓ.lift (coe : (α)ˣ → α)
+instance [Monoidₓ α] [Preorderₓ α] : Preorderₓ αˣ :=
+  Preorderₓ.lift (coe : αˣ → α)
 
 @[simp, norm_cast, to_additive]
-theorem coe_le_coe [Monoidₓ α] [Preorderₓ α] {a b : (α)ˣ} : (a : α) ≤ b ↔ a ≤ b :=
+theorem coe_le_coe [Monoidₓ α] [Preorderₓ α] {a b : αˣ} : (a : α) ≤ b ↔ a ≤ b :=
   Iff.rfl
 
 @[simp, norm_cast, to_additive]
-theorem coe_lt_coe [Monoidₓ α] [Preorderₓ α] {a b : (α)ˣ} : (a : α) < b ↔ a < b :=
+theorem coe_lt_coe [Monoidₓ α] [Preorderₓ α] {a b : αˣ} : (a : α) < b ↔ a < b :=
   Iff.rfl
 
 @[to_additive]
-instance [Monoidₓ α] [PartialOrderₓ α] : PartialOrderₓ (α)ˣ :=
+instance [Monoidₓ α] [PartialOrderₓ α] : PartialOrderₓ αˣ :=
   PartialOrderₓ.lift coe Units.ext
 
 @[to_additive]
-instance [Monoidₓ α] [LinearOrderₓ α] : LinearOrderₓ (α)ˣ :=
+instance [Monoidₓ α] [LinearOrderₓ α] : LinearOrderₓ αˣ :=
   LinearOrderₓ.lift coe Units.ext
 
 @[simp, norm_cast, to_additive]
-theorem max_coe [Monoidₓ α] [LinearOrderₓ α] {a b : (α)ˣ} : (↑(max a b) : α) = max a b := by
+theorem max_coe [Monoidₓ α] [LinearOrderₓ α] {a b : αˣ} : (↑(max a b) : α) = max a b := by
   by_cases' b ≤ a <;> simp [max_def, h]
 
 @[simp, norm_cast, to_additive]
-theorem min_coe [Monoidₓ α] [LinearOrderₓ α] {a b : (α)ˣ} : (↑(min a b) : α) = min a b := by
+theorem min_coe [Monoidₓ α] [LinearOrderₓ α] {a b : αˣ} : (↑(min a b) : α) = min a b := by
   by_cases' a ≤ b <;> simp [min_def, h]
 
 end Units

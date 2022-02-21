@@ -213,7 +213,7 @@ end Groupₓ
 variable [MonoidWithZeroₓ R] [Zero M] [MulActionWithZero R M]
 
 /-- Any element in `Rˣ` is `M`-regular. -/
-theorem Units.is_smul_regular (a : (R)ˣ) : IsSmulRegular M (a : R) :=
+theorem Units.is_smul_regular (a : Rˣ) : IsSmulRegular M (a : R) :=
   IsSmulRegular.of_mul_eq_one a.inv_val
 
 /-- A unit is `M`-regular. -/

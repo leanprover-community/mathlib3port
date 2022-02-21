@@ -489,7 +489,7 @@ theorem star_algebra_map (r : R) : star (algebraMap R (FreeAlgebra R X) r) = alg
   simp [star, HasStar.star]
 
 /-- `star` as an `alg_equiv` -/
-def starHom : FreeAlgebra R X ≃ₐ[R] FreeAlgebra R Xᵐᵒᵖ :=
+def starHom : FreeAlgebra R X ≃ₐ[R] (FreeAlgebra R X)ᵐᵒᵖ :=
   { starRingEquiv with
     commutes' := fun r => by
       simp [star_algebra_map] }

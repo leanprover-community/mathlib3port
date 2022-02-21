@@ -58,7 +58,7 @@ shape `K` of objects in `D`, with cone point `S.X`.
 See `is_limit_multifork_of_is_limit` for more on how this definition is used.
 -/
 def multiforkEvaluationCone (F : K ⥤ Sheaf J D) (E : Cone (F ⋙ sheafToPresheaf J D)) (X : C) (W : J.cover X)
-    (S : Multifork (W.index E.x)) : Cone (F ⋙ sheafToPresheaf J D ⋙ (evaluation (Cᵒᵖ) D).obj (op X)) where
+    (S : Multifork (W.index E.x)) : Cone (F ⋙ sheafToPresheaf J D ⋙ (evaluation Cᵒᵖ D).obj (op X)) where
   x := S.x
   π :=
     { app := fun k =>
@@ -95,25 +95,25 @@ This is used below in `is_sheaf_of_is_limit` to show that the limit presheaf is 
 def isLimitMultiforkOfIsLimit (F : K ⥤ Sheaf J D) (E : Cone (F ⋙ sheafToPresheaf J D)) (hE : IsLimit E) (X : C)
     (W : J.cover X) : IsLimit (W.Multifork E.x) :=
   Multifork.IsLimit.mk _
-    (fun S => (isLimitOfPreserves ((evaluation (Cᵒᵖ) D).obj (op X)) hE).lift <| multifork_evaluation_cone F E X W S)
+    (fun S => (isLimitOfPreserves ((evaluation Cᵒᵖ D).obj (op X)) hE).lift <| multifork_evaluation_cone F E X W S)
     (by
       intro S i
-      apply (is_limit_of_preserves ((evaluation (Cᵒᵖ) D).obj (op i.Y)) hE).hom_ext
+      apply (is_limit_of_preserves ((evaluation Cᵒᵖ D).obj (op i.Y)) hE).hom_ext
       intro k
       dsimp [multifork.of_ι]
       erw [category.assoc, (E.π.app k).naturality]
       dsimp
       rw [← category.assoc]
-      erw [(is_limit_of_preserves ((evaluation (Cᵒᵖ) D).obj (op X)) hE).fac (multifork_evaluation_cone F E X W S)]
+      erw [(is_limit_of_preserves ((evaluation Cᵒᵖ D).obj (op X)) hE).fac (multifork_evaluation_cone F E X W S)]
       dsimp [multifork_evaluation_cone, presheaf.is_limit_of_is_sheaf]
       erw [presheaf.is_sheaf.amalgamate_map]
       rfl)
     (by
       intro S m hm
-      apply (is_limit_of_preserves ((evaluation (Cᵒᵖ) D).obj (op X)) hE).hom_ext
+      apply (is_limit_of_preserves ((evaluation Cᵒᵖ D).obj (op X)) hE).hom_ext
       intro k
       dsimp
-      erw [(is_limit_of_preserves ((evaluation (Cᵒᵖ) D).obj (op X)) hE).fac]
+      erw [(is_limit_of_preserves ((evaluation Cᵒᵖ D).obj (op X)) hE).fac]
       apply presheaf.is_sheaf.hom_ext (F.obj k).2 W
       intro i
       erw [presheaf.is_sheaf.amalgamate_map]
@@ -184,9 +184,9 @@ variable [∀ P : Cᵒᵖ ⥤ D X : C S : J.cover X, HasMultiequalizer (S.index 
 
 variable [PreservesLimits (forget D)]
 
-variable [∀ X : C, HasColimitsOfShape (J.cover Xᵒᵖ) D]
+variable [∀ X : C, HasColimitsOfShape (J.cover X)ᵒᵖ D]
 
-variable [∀ X : C, PreservesColimitsOfShape (J.cover Xᵒᵖ) (forget D)]
+variable [∀ X : C, PreservesColimitsOfShape (J.cover X)ᵒᵖ (forget D)]
 
 variable [ReflectsIsomorphisms (forget D)]
 

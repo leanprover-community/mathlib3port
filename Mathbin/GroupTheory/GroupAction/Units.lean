@@ -27,43 +27,42 @@ namespace Units
 
 
 @[to_additive]
-instance [Monoidₓ M] [HasScalar M α] : HasScalar (M)ˣ α where
+instance [Monoidₓ M] [HasScalar M α] : HasScalar Mˣ α where
   smul := fun m a => (m : M) • a
 
 @[to_additive]
-theorem smul_def [Monoidₓ M] [HasScalar M α] (m : (M)ˣ) (a : α) : m • a = (m : M) • a :=
+theorem smul_def [Monoidₓ M] [HasScalar M α] (m : Mˣ) (a : α) : m • a = (m : M) • a :=
   rfl
 
 theorem _root_.is_unit.inv_smul [Monoidₓ α] {a : α} (h : IsUnit a) : h.Unit⁻¹ • a = 1 :=
   h.coe_inv_mul
 
 @[to_additive]
-instance [Monoidₓ M] [HasScalar M α] [HasFaithfulScalar M α] : HasFaithfulScalar (M)ˣ α where
+instance [Monoidₓ M] [HasScalar M α] [HasFaithfulScalar M α] : HasFaithfulScalar Mˣ α where
   eq_of_smul_eq_smul := fun u₁ u₂ h => Units.ext <| eq_of_smul_eq_smul h
 
 @[to_additive]
-instance [Monoidₓ M] [MulAction M α] : MulAction (M)ˣ α where
+instance [Monoidₓ M] [MulAction M α] : MulAction Mˣ α where
   one_smul := (one_smul M : _)
   mul_smul := fun m n => mul_smul (m : M) n
 
-instance [Monoidₓ M] [AddMonoidₓ α] [DistribMulAction M α] : DistribMulAction (M)ˣ α where
+instance [Monoidₓ M] [AddMonoidₓ α] [DistribMulAction M α] : DistribMulAction Mˣ α where
   smul_add := fun m => smul_add (m : M)
   smul_zero := fun m => smul_zero m
 
-instance [Monoidₓ M] [Monoidₓ α] [MulDistribMulAction M α] : MulDistribMulAction (M)ˣ α where
+instance [Monoidₓ M] [Monoidₓ α] [MulDistribMulAction M α] : MulDistribMulAction Mˣ α where
   smul_mul := fun m => smul_mul' (m : M)
   smul_one := fun m => smul_one m
 
 instance smul_comm_class_left [Monoidₓ M] [HasScalar M α] [HasScalar N α] [SmulCommClass M N α] :
-    SmulCommClass (M)ˣ N α where
+    SmulCommClass Mˣ N α where
   smul_comm := fun m n => (smul_comm (m : M) n : _)
 
 instance smul_comm_class_right [Monoidₓ N] [HasScalar M α] [HasScalar N α] [SmulCommClass M N α] :
-    SmulCommClass M (N)ˣ α where
+    SmulCommClass M Nˣ α where
   smul_comm := fun m n => (smul_comm m (n : N) : _)
 
-instance [Monoidₓ M] [HasScalar M N] [HasScalar M α] [HasScalar N α] [IsScalarTower M N α] :
-    IsScalarTower (M)ˣ N α where
+instance [Monoidₓ M] [HasScalar M N] [HasScalar M α] [HasScalar N α] [IsScalarTower M N α] : IsScalarTower Mˣ N α where
   smul_assoc := fun m n => (smul_assoc (m : M) n : _)
 
 /-! ### Action of a group `G` on units of `M` -/
@@ -74,7 +73,7 @@ action on `Mˣ`. Notably, this provides `mul_action Mˣ Nˣ` under suitable
 conditions.
 -/
 instance mulAction' [Groupₓ G] [Monoidₓ M] [MulAction G M] [SmulCommClass G M M] [IsScalarTower G M M] :
-    MulAction G (M)ˣ where
+    MulAction G Mˣ where
   smul := fun g m =>
     ⟨g • (m : M), g⁻¹ • ↑m⁻¹, by
       rw [smul_mul_smul, Units.mul_inv, mul_right_invₓ, one_smul], by
@@ -83,40 +82,39 @@ instance mulAction' [Groupₓ G] [Monoidₓ M] [MulAction G M] [SmulCommClass G 
   mul_smul := fun g₁ g₂ m => Units.ext <| mul_smul _ _ _
 
 @[simp]
-theorem coe_smul [Groupₓ G] [Monoidₓ M] [MulAction G M] [SmulCommClass G M M] [IsScalarTower G M M] (g : G) (m : (M)ˣ) :
+theorem coe_smul [Groupₓ G] [Monoidₓ M] [MulAction G M] [SmulCommClass G M M] [IsScalarTower G M M] (g : G) (m : Mˣ) :
     ↑(g • m) = g • (m : M) :=
   rfl
 
 /-- Note that this lemma exists more generally as the global `smul_inv` -/
 @[simp]
-theorem smul_inv [Groupₓ G] [Monoidₓ M] [MulAction G M] [SmulCommClass G M M] [IsScalarTower G M M] (g : G) (m : (M)ˣ) :
+theorem smul_inv [Groupₓ G] [Monoidₓ M] [MulAction G M] [SmulCommClass G M M] [IsScalarTower G M M] (g : G) (m : Mˣ) :
     (g • m)⁻¹ = g⁻¹ • m⁻¹ :=
   ext rfl
 
 /-- Transfer `smul_comm_class G H M` to `smul_comm_class G H Mˣ` -/
 instance smul_comm_class' [Groupₓ G] [Groupₓ H] [Monoidₓ M] [MulAction G M] [SmulCommClass G M M] [MulAction H M]
-    [SmulCommClass H M M] [IsScalarTower G M M] [IsScalarTower H M M] [SmulCommClass G H M] :
-    SmulCommClass G H (M)ˣ where
+    [SmulCommClass H M M] [IsScalarTower G M M] [IsScalarTower H M M] [SmulCommClass G H M] : SmulCommClass G H Mˣ where
   smul_comm := fun g h m => Units.ext <| smul_comm g h (m : M)
 
 /-- Transfer `is_scalar_tower G H M` to `is_scalar_tower G H Mˣ` -/
 instance is_scalar_tower' [HasScalar G H] [Groupₓ G] [Groupₓ H] [Monoidₓ M] [MulAction G M] [SmulCommClass G M M]
     [MulAction H M] [SmulCommClass H M M] [IsScalarTower G M M] [IsScalarTower H M M] [IsScalarTower G H M] :
-    IsScalarTower G H (M)ˣ where
+    IsScalarTower G H Mˣ where
   smul_assoc := fun g h m => Units.ext <| smul_assoc g h (m : M)
 
 /-- Transfer `is_scalar_tower G M α` to `is_scalar_tower G Mˣ α` -/
 instance is_scalar_tower'_left [Groupₓ G] [Monoidₓ M] [MulAction G M] [HasScalar M α] [HasScalar G α]
-    [SmulCommClass G M M] [IsScalarTower G M M] [IsScalarTower G M α] : IsScalarTower G (M)ˣ α where
+    [SmulCommClass G M M] [IsScalarTower G M M] [IsScalarTower G M α] : IsScalarTower G Mˣ α where
   smul_assoc := fun g m => (smul_assoc g (m : M) : _)
 
 -- Just to prove this transfers a particularly useful instance.
-example [Monoidₓ M] [Monoidₓ N] [MulAction M N] [SmulCommClass M N N] [IsScalarTower M N N] : MulAction (M)ˣ (N)ˣ :=
+example [Monoidₓ M] [Monoidₓ N] [MulAction M N] [SmulCommClass M N N] [IsScalarTower M N N] : MulAction Mˣ Nˣ :=
   Units.mulAction'
 
 /-- A stronger form of `units.mul_action'`. -/
 instance mulDistribMulAction' [Groupₓ G] [Monoidₓ M] [MulDistribMulAction G M] [SmulCommClass G M M]
-    [IsScalarTower G M M] : MulDistribMulAction G (M)ˣ :=
+    [IsScalarTower G M M] : MulDistribMulAction G Mˣ :=
   { Units.mulAction' with smul := (· • ·), smul_one := fun m => Units.ext <| smul_one _,
     smul_mul := fun g m₁ m₂ => Units.ext <| smul_mul' _ _ _ }
 

@@ -57,7 +57,7 @@ variable [Category.{v₁} C]
 
 See https://stacks.math.columbia.edu/tag/001M.
 -/
-instance Category.opposite : Category.{v₁} (Cᵒᵖ) where
+instance Category.opposite : Category.{v₁} Cᵒᵖ where
   comp := fun _ _ _ f g => (g.unop ≫ f.unop).op
   id := fun X => (𝟙 (unop X)).op
 
@@ -106,7 +106,7 @@ def unopUnop : C ⥤ Cᵒᵖᵒᵖ where
 def opOpEquivalence : Cᵒᵖᵒᵖ ≌ C where
   Functor := opOp C
   inverse := unopUnop C
-  unitIso := Iso.refl (𝟭 (Cᵒᵖᵒᵖ))
+  unitIso := Iso.refl (𝟭 Cᵒᵖᵒᵖ)
   counitIso := Iso.refl (unopUnop C ⋙ opOp C)
 
 end

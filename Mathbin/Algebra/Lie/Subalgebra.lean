@@ -88,8 +88,8 @@ variable {R₁ : Type _} [Semiringₓ R₁]
 instance [HasScalar R₁ R] [Module R₁ L] [IsScalarTower R₁ R L] (L' : LieSubalgebra R L) : Module R₁ L' :=
   L'.toSubmodule.module'
 
-instance [HasScalar R₁ R] [HasScalar (R₁ᵐᵒᵖ) R] [Module R₁ L] [Module (R₁ᵐᵒᵖ) L] [IsScalarTower R₁ R L]
-    [IsScalarTower (R₁ᵐᵒᵖ) R L] [IsCentralScalar R₁ L] (L' : LieSubalgebra R L) : IsCentralScalar R₁ L' :=
+instance [HasScalar R₁ R] [HasScalar R₁ᵐᵒᵖ R] [Module R₁ L] [Module R₁ᵐᵒᵖ L] [IsScalarTower R₁ R L]
+    [IsScalarTower R₁ᵐᵒᵖ R L] [IsCentralScalar R₁ L] (L' : LieSubalgebra R L) : IsCentralScalar R₁ L' :=
   L'.toSubmodule.IsCentralScalar
 
 instance [HasScalar R₁ R] [Module R₁ L] [IsScalarTower R₁ R L] (L' : LieSubalgebra R L) : IsScalarTower R₁ R L' :=

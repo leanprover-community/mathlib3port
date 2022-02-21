@@ -187,7 +187,7 @@ theorem is_connected_of_equivalent {K : Type u₁} [Category.{v₂} K] (e : J �
     to_is_preconnected := is_preconnected_of_equivalent e }
 
 /-- If `J` is preconnected, then `Jᵒᵖ` is preconnected as well. -/
-instance is_preconnected_op [IsPreconnected J] : IsPreconnected (Jᵒᵖ) where
+instance is_preconnected_op [IsPreconnected J] : IsPreconnected Jᵒᵖ where
   iso_constant := fun α F X =>
     ⟨NatIso.ofComponents
         (fun Y =>
@@ -196,13 +196,13 @@ instance is_preconnected_op [IsPreconnected J] : IsPreconnected (Jᵒᵖ) where
         fun Y Z f => Subsingleton.elimₓ _ _⟩
 
 /-- If `J` is connected, then `Jᵒᵖ` is connected as well. -/
-instance is_connected_op [IsConnected J] : IsConnected (Jᵒᵖ) where
+instance is_connected_op [IsConnected J] : IsConnected Jᵒᵖ where
   is_nonempty := Nonempty.intro (op (Classical.arbitrary J))
 
-theorem is_preconnected_of_is_preconnected_op [IsPreconnected (Jᵒᵖ)] : IsPreconnected J :=
+theorem is_preconnected_of_is_preconnected_op [IsPreconnected Jᵒᵖ] : IsPreconnected J :=
   is_preconnected_of_equivalent (opOpEquivalence J)
 
-theorem is_connected_of_is_connected_op [IsConnected (Jᵒᵖ)] : IsConnected J :=
+theorem is_connected_of_is_connected_op [IsConnected Jᵒᵖ] : IsConnected J :=
   is_connected_of_equivalent (opOpEquivalence J)
 
 /-- j₁ and j₂ are related by `zag` if there is a morphism between them. -/

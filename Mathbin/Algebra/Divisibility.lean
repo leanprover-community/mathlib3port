@@ -198,7 +198,7 @@ namespace Units
 
 section Monoidₓ
 
-variable [Monoidₓ α] {a b : α} {u : (α)ˣ}
+variable [Monoidₓ α] {a b : α} {u : αˣ}
 
 /-- Elements of the unit group of a monoid represented as elements of the monoid
     divide any element of the monoid. -/
@@ -228,7 +228,7 @@ end Monoidₓ
 
 section CommMonoidₓ
 
-variable [CommMonoidₓ α] {a b : α} {u : (α)ˣ}
+variable [CommMonoidₓ α] {a b : α} {u : αˣ}
 
 /-- In a commutative monoid, an element `a` divides an element `b` iff `a` divides all left
     associates of `b`. -/

@@ -2257,7 +2257,7 @@ open NormedRing ContinuousLinearMap Ringₓ
 
 /-- At an invertible element `x` of a normed algebra `R`, the Fréchet derivative of the inversion
 operation is the linear map `λ t, - x⁻¹ * t * x⁻¹`. -/
-theorem has_fderiv_at_ring_inverse (x : (R)ˣ) : HasFderivAt Ring.inverse (-lmulLeftRight 𝕜 R ↑x⁻¹ ↑x⁻¹) x := by
+theorem has_fderiv_at_ring_inverse (x : Rˣ) : HasFderivAt Ring.inverse (-lmulLeftRight 𝕜 R ↑x⁻¹ ↑x⁻¹) x := by
   have h_is_o : is_o (fun t : R => inverse (↑x + t) - ↑x⁻¹ + ↑x⁻¹ * t * ↑x⁻¹) (fun t : R => t) (𝓝 0) := by
     refine' (inverse_add_norm_diff_second_order x).trans_is_o (is_o_norm_norm.mp _)
     simp only [NormedField.norm_pow, norm_norm]
@@ -2275,10 +2275,10 @@ theorem has_fderiv_at_ring_inverse (x : (R)ˣ) : HasFderivAt Ring.inverse (-lmul
   simp only [coe_comp', Function.comp_app, lmul_left_right_apply, neg_apply, inverse_unit x, Units.inv_mul,
     add_sub_cancel'_right, mul_sub, sub_mul, one_mulₓ, sub_neg_eq_add]
 
-theorem differentiable_at_inverse (x : (R)ˣ) : DifferentiableAt 𝕜 (@Ring.inverse R _) x :=
+theorem differentiable_at_inverse (x : Rˣ) : DifferentiableAt 𝕜 (@Ring.inverse R _) x :=
   (has_fderiv_at_ring_inverse x).DifferentiableAt
 
-theorem fderiv_inverse (x : (R)ˣ) : fderiv 𝕜 (@Ring.inverse R _) x = -lmulLeftRight 𝕜 R ↑x⁻¹ ↑x⁻¹ :=
+theorem fderiv_inverse (x : Rˣ) : fderiv 𝕜 (@Ring.inverse R _) x = -lmulLeftRight 𝕜 R ↑x⁻¹ ↑x⁻¹ :=
   (has_fderiv_at_ring_inverse x).fderiv
 
 end AlgebraInverse

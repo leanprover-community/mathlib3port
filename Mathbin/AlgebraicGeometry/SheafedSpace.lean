@@ -158,21 +158,21 @@ def restrictTopIso (X : SheafedSpace C) : X.restrict (Opens.open_embedding ⊤) 
 
 /-- The global sections, notated Gamma.
 -/
-def Γ : SheafedSpace Cᵒᵖ ⥤ C :=
+def Γ : (SheafedSpace C)ᵒᵖ ⥤ C :=
   forgetToPresheafedSpace.op ⋙ PresheafedSpace.Γ
 
 theorem Γ_def : (Γ : _ ⥤ C) = forgetToPresheafedSpace.op ⋙ PresheafedSpace.Γ :=
   rfl
 
 @[simp]
-theorem Γ_obj (X : SheafedSpace Cᵒᵖ) : Γ.obj X = (unop X).Presheaf.obj (op ⊤) :=
+theorem Γ_obj (X : (SheafedSpace C)ᵒᵖ) : Γ.obj X = (unop X).Presheaf.obj (op ⊤) :=
   rfl
 
 theorem Γ_obj_op (X : SheafedSpace C) : Γ.obj (op X) = X.Presheaf.obj (op ⊤) :=
   rfl
 
 @[simp]
-theorem Γ_map {X Y : SheafedSpace Cᵒᵖ} (f : X ⟶ Y) : Γ.map f = f.unop.c.app (op ⊤) :=
+theorem Γ_map {X Y : (SheafedSpace C)ᵒᵖ} (f : X ⟶ Y) : Γ.map f = f.unop.c.app (op ⊤) :=
   rfl
 
 theorem Γ_map_op {X Y : SheafedSpace C} (f : X ⟶ Y) : Γ.map f.op = f.c.app (op ⊤) :=

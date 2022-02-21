@@ -209,7 +209,7 @@ setup_tactic_parser
 
 namespace Interactive
 
-local postfix:9001 "?" => optionalₓ
+local postfix:1024 "?" => optionalₓ
 
 /-- `interval_cases n` searches for upper and lower bounds on a variable `n`,
 and if bounds are found,
@@ -233,7 +233,7 @@ in which case `interval_cases` calls `fin_cases` on the resulting fact `n ∈ se
 You can specify a name `h` for the new hypothesis,
 as `interval_cases n with h` or `interval_cases n using hl hu with h`.
 -/
-unsafe def interval_cases (n : parse (texpr)?) (bounds : parse (tk "using" *> (Prod.mk <$> ident <*> ident))?)
+unsafe def interval_cases (n : parse texpr ?) (bounds : parse (tk "using" *> (Prod.mk <$> ident <*> ident))?)
     (lname : parse (tk "with" *> ident)?) : tactic Unit := do
   if h : n then do
       guardₓ bounds <|> fail "Do not use the `using` keyword if specifying the variable explicitly."

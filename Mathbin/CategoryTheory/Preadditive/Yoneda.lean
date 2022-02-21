@@ -104,7 +104,7 @@ Yoneda embedding.
 -/
 @[simp]
 theorem whiskering_preadditive_yoneda :
-    preadditive_yoneda ⋙ (whiskeringRight (Cᵒᵖ) AddCommGroupₓₓ (Type v)).obj (forget AddCommGroupₓₓ) = yoneda :=
+    preadditive_yoneda ⋙ (whiskeringRight Cᵒᵖ AddCommGroupₓₓ (Type v)).obj (forget AddCommGroupₓₓ) = yoneda :=
   rfl
 
 /-- Composing the preadditive yoneda embedding with the forgetful functor yields the regular
@@ -117,10 +117,9 @@ theorem whiskering_preadditive_coyoneda :
 
 instance preadditiveYonedaFull : Full (preadditiveYoneda : C ⥤ Cᵒᵖ ⥤ AddCommGroupₓₓ) :=
   let yoneda_full :
-    Full (preadditive_yoneda ⋙ (whiskeringRight (Cᵒᵖ) AddCommGroupₓₓ (Type v)).obj (forget AddCommGroupₓₓ)) :=
+    Full (preadditive_yoneda ⋙ (whiskeringRight Cᵒᵖ AddCommGroupₓₓ (Type v)).obj (forget AddCommGroupₓₓ)) :=
     yoneda.yonedaFull
-  full.of_comp_faithful preadditive_yoneda
-    ((whiskering_right (Cᵒᵖ) AddCommGroupₓₓ (Type v)).obj (forget AddCommGroupₓₓ))
+  full.of_comp_faithful preadditive_yoneda ((whiskering_right Cᵒᵖ AddCommGroupₓₓ (Type v)).obj (forget AddCommGroupₓₓ))
 
 instance preadditiveCoyonedaFull : Full (preadditiveCoyoneda : Cᵒᵖ ⥤ C ⥤ AddCommGroupₓₓ) :=
   let coyoneda_full :

@@ -125,7 +125,7 @@ localized [Classical] attribute [instance] Classical.propDecidable
 
 localized [Classical] attribute [instance] Eq.decidable decidableEqOfDecidableLe
 
-localized [Parser] postfix:9001 "?" => optionalₓ
+localized [Parser] postfix:1024 "?" => optionalₓ
 
-localized [Parser] postfix:9001 "*" => lean.parser.many
+localized [Parser] postfix:1024 "*" => lean.parser.many
 

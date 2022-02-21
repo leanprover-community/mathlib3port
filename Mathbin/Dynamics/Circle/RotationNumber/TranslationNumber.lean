@@ -198,23 +198,23 @@ theorem mul_apply x : (f * g) x = f (g x) :=
 theorem coe_one : ⇑(1 : CircleDeg1Lift) = id :=
   rfl
 
-instance unitsHasCoeToFun : CoeFun (CircleDeg1Lift)ˣ fun _ => ℝ → ℝ :=
+instance unitsHasCoeToFun : CoeFun CircleDeg1Liftˣ fun _ => ℝ → ℝ :=
   ⟨fun f => ⇑(f : CircleDeg1Lift)⟩
 
 @[simp, norm_cast]
-theorem units_coe (f : (CircleDeg1Lift)ˣ) : ⇑(f : CircleDeg1Lift) = f :=
+theorem units_coe (f : CircleDeg1Liftˣ) : ⇑(f : CircleDeg1Lift) = f :=
   rfl
 
 @[simp]
-theorem units_inv_apply_apply (f : (CircleDeg1Lift)ˣ) (x : ℝ) : (f⁻¹ : (CircleDeg1Lift)ˣ) (f x) = x := by
+theorem units_inv_apply_apply (f : CircleDeg1Liftˣ) (x : ℝ) : (f⁻¹ : CircleDeg1Liftˣ) (f x) = x := by
   simp only [← units_coe, ← mul_apply, f.inv_mul, coe_one, id]
 
 @[simp]
-theorem units_apply_inv_apply (f : (CircleDeg1Lift)ˣ) (x : ℝ) : f ((f⁻¹ : (CircleDeg1Lift)ˣ) x) = x := by
+theorem units_apply_inv_apply (f : CircleDeg1Liftˣ) (x : ℝ) : f ((f⁻¹ : CircleDeg1Liftˣ) x) = x := by
   simp only [← units_coe, ← mul_apply, f.mul_inv, coe_one, id]
 
 /-- If a lift of a circle map is bijective, then it is an order automorphism of the line. -/
-def toOrderIso : (CircleDeg1Lift)ˣ →* ℝ ≃o ℝ where
+def toOrderIso : CircleDeg1Liftˣ →* ℝ ≃o ℝ where
   toFun := fun f =>
     { toFun := f, invFun := ⇑f⁻¹, left_inv := units_inv_apply_apply f, right_inv := units_apply_inv_apply f,
       map_rel_iff' := fun x y =>
@@ -224,15 +224,15 @@ def toOrderIso : (CircleDeg1Lift)ˣ →* ℝ ≃o ℝ where
   map_mul' := fun f g => rfl
 
 @[simp]
-theorem coe_to_order_iso (f : (CircleDeg1Lift)ˣ) : ⇑toOrderIso f = f :=
+theorem coe_to_order_iso (f : CircleDeg1Liftˣ) : ⇑toOrderIso f = f :=
   rfl
 
 @[simp]
-theorem coe_to_order_iso_symm (f : (CircleDeg1Lift)ˣ) : ⇑(toOrderIso f).symm = (f⁻¹ : (CircleDeg1Lift)ˣ) :=
+theorem coe_to_order_iso_symm (f : CircleDeg1Liftˣ) : ⇑(toOrderIso f).symm = (f⁻¹ : CircleDeg1Liftˣ) :=
   rfl
 
 @[simp]
-theorem coe_to_order_iso_inv (f : (CircleDeg1Lift)ˣ) : ⇑(toOrderIso f)⁻¹ = (f⁻¹ : (CircleDeg1Lift)ˣ) :=
+theorem coe_to_order_iso_inv (f : CircleDeg1Liftˣ) : ⇑(toOrderIso f)⁻¹ = (f⁻¹ : CircleDeg1Liftˣ) :=
   rfl
 
 theorem is_unit_iff_bijective {f : CircleDeg1Lift} : IsUnit f ↔ Bijective f :=
@@ -271,7 +271,7 @@ theorem commute_iff_commute {f g : CircleDeg1Lift} : Commute f g ↔ Function.Co
 /-- The map `y ↦ x + y` as a `circle_deg1_lift`. More precisely, we define a homomorphism from
 `multiplicative ℝ` to `circle_deg1_liftˣ`, so the translation by `x` is
 `translation (multiplicative.of_add x)`. -/
-def translate : Multiplicative ℝ →* (CircleDeg1Lift)ˣ := by
+def translate : Multiplicative ℝ →* CircleDeg1Liftˣ := by
   refine' (Units.map _).comp to_units.to_monoid_hom <;>
     exact
       { toFun := fun x => ⟨fun y => x.toAdd + y, fun y₁ y₂ h => add_le_add_left h _, fun y => (add_assocₓ _ _ _).symm⟩,
@@ -650,7 +650,7 @@ theorem translation_number_mul_of_commute {f g : CircleDeg1Lift} (h : Commute f 
   exact le_of_ltₓ ((f ^ n).dist_map_map_zero_lt (g ^ n))
 
 @[simp]
-theorem translation_number_units_inv (f : (CircleDeg1Lift)ˣ) : τ ↑f⁻¹ = -τ f :=
+theorem translation_number_units_inv (f : CircleDeg1Liftˣ) : τ ↑f⁻¹ = -τ f :=
   eq_neg_iff_add_eq_zero.2 <| by
     simp [← translation_number_mul_of_commute (Commute.refl _).units_inv_left]
 
@@ -663,7 +663,7 @@ theorem translation_number_pow : ∀ n : ℕ, τ (f ^ n) = n * τ f
       Nat.cast_add_one, add_mulₓ, one_mulₓ]
 
 @[simp]
-theorem translation_number_zpow (f : (CircleDeg1Lift)ˣ) : ∀ n : ℤ, τ (f ^ n : Units _) = n * τ f
+theorem translation_number_zpow (f : CircleDeg1Liftˣ) : ∀ n : ℤ, τ (f ^ n : Units _) = n * τ f
   | (n : ℕ) => by
     simp [translation_number_pow f n]
   | -[1+ n] => by
@@ -671,11 +671,11 @@ theorem translation_number_zpow (f : (CircleDeg1Lift)ˣ) : ∀ n : ℤ, τ (f ^ 
     ring
 
 @[simp]
-theorem translation_number_conj_eq (f : (CircleDeg1Lift)ˣ) (g : CircleDeg1Lift) : τ (↑f * g * ↑f⁻¹) = τ g :=
+theorem translation_number_conj_eq (f : CircleDeg1Liftˣ) (g : CircleDeg1Lift) : τ (↑f * g * ↑f⁻¹) = τ g :=
   (translation_number_eq_of_semiconj_by (f.mk_semiconj_by g)).symm
 
 @[simp]
-theorem translation_number_conj_eq' (f : (CircleDeg1Lift)ˣ) (g : CircleDeg1Lift) : τ (↑f⁻¹ * g * f) = τ g :=
+theorem translation_number_conj_eq' (f : CircleDeg1Liftˣ) (g : CircleDeg1Lift) : τ (↑f⁻¹ * g * f) = τ g :=
   translation_number_conj_eq f⁻¹ g
 
 theorem dist_pow_map_zero_mul_translation_number_le (n : ℕ) : dist ((f ^ n) 0) (n * f.translationNumber) ≤ 1 :=
@@ -879,7 +879,7 @@ theorem semiconj_of_group_action_of_forall_translation_number_eq {G : Type _} [G
 /-- If two lifts of circle homeomorphisms have the same translation number, then they are
 semiconjugate by a `circle_deg1_lift`. This version uses arguments `f₁ f₂ : circle_deg1_liftˣ`
 to assume that `f₁` and `f₂` are homeomorphisms. -/
-theorem units_semiconj_of_translation_number_eq {f₁ f₂ : (CircleDeg1Lift)ˣ} (h : τ f₁ = τ f₂) :
+theorem units_semiconj_of_translation_number_eq {f₁ f₂ : CircleDeg1Liftˣ} (h : τ f₁ = τ f₂) :
     ∃ F : CircleDeg1Lift, Semiconj F f₁ f₂ :=
   have :
     ∀ n : Multiplicative ℤ,

@@ -188,7 +188,7 @@ instance {S₁ S₂} [HasScalar S₁ S₂] [Monoidₓ S₁] [Monoidₓ S₂] [Di
     rintro _ _ ⟨⟩
     simp [smul_to_finsupp]⟩
 
-instance {S} [Monoidₓ S] [DistribMulAction S R] [DistribMulAction (Sᵐᵒᵖ) R] [IsCentralScalar S R] :
+instance {S} [Monoidₓ S] [DistribMulAction S R] [DistribMulAction Sᵐᵒᵖ R] [IsCentralScalar S R] :
     IsCentralScalar S R[X] :=
   ⟨by
     rintro _ ⟨⟩

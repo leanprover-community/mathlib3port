@@ -133,13 +133,13 @@ end bernstein
 
 open bernstein
 
-local postfix:2000 "/ₙ" => z
+local postfix:1024 "/ₙ" => z
 
 /-- The `n`-th approximation of a continuous function on `[0,1]` by Bernstein polynomials,
 given by `∑ k, f (k/n) * bernstein n k x`.
 -/
 def bernsteinApproximation (n : ℕ) (f : C(I, ℝ)) : C(I, ℝ) :=
-  ∑ k : Finₓ (n + 1), f (k)/ₙ • bernstein n k
+  ∑ k : Finₓ (n + 1), f k/ₙ • bernstein n k
 
 /-!
 We now set up some of the basic machinery of the proof that the Bernstein approximations
@@ -160,7 +160,7 @@ namespace bernsteinApproximation
 
 @[simp]
 theorem apply (n : ℕ) (f : C(I, ℝ)) (x : I) :
-    bernsteinApproximation n f x = ∑ k : Finₓ (n + 1), f (k)/ₙ * bernstein n k x := by
+    bernsteinApproximation n f x = ∑ k : Finₓ (n + 1), f k/ₙ * bernstein n k x := by
   simp [bernsteinApproximation]
 
 /-- The modulus of (uniform) continuity for `f`, chosen so `|f x - f y| < ε/2` when `|x - y| < δ`.
@@ -171,12 +171,12 @@ def δ (f : C(I, ℝ)) (ε : ℝ) (h : 0 < ε) : ℝ :=
 /-- The set of points `k` so `k/n` is within `δ` of `x`.
 -/
 def s (f : C(I, ℝ)) (ε : ℝ) (h : 0 < ε) (n : ℕ) (x : I) : Finset (Finₓ (n + 1)) :=
-  { k : Finₓ (n + 1) | dist (k)/ₙ x < δ f ε h }.toFinset
+  { k : Finₓ (n + 1) | dist k/ₙ x < δ f ε h }.toFinset
 
 /-- If `k ∈ S`, then `f(k/n)` is close to `f x`.
 -/
 theorem lt_of_mem_S {f : C(I, ℝ)} {ε : ℝ} {h : 0 < ε} {n : ℕ} {x : I} {k : Finₓ (n + 1)} (m : k ∈ s f ε h n x) :
-    abs (f (k)/ₙ - f x) < ε / 2 := by
+    abs (f k/ₙ - f x) < ε / 2 := by
   apply f.dist_lt_of_dist_lt_modulus (ε / 2) (half_pos h)
   simpa [S] using m
 
@@ -184,7 +184,7 @@ theorem lt_of_mem_S {f : C(I, ℝ)} {ε : ℝ} {h : 0 < ε} {n : ℕ} {x : I} {k
 This particular formulation will be helpful later.
 -/
 theorem le_of_mem_S_compl {f : C(I, ℝ)} {ε : ℝ} {h : 0 < ε} {n : ℕ} {x : I} {k : Finₓ (n + 1)} (m : k ∈ s f ε h n xᶜ) :
-    (1 : ℝ) ≤ δ f ε h ^ (-2 : ℤ) * (x - (k)/ₙ) ^ 2 := by
+    (1 : ℝ) ≤ δ f ε h ^ (-2 : ℤ) * (x - k/ₙ) ^ 2 := by
   simp only [Finset.mem_compl, not_ltₓ, Set.mem_to_finset, Set.mem_set_of_eq, S] at m
   field_simp
   erw [le_div_iff (pow_pos f.modulus_pos 2), one_mulₓ]
@@ -237,21 +237,21 @@ theorem bernstein_approximation_uniform (f : C(I, ℝ)) : Tendsto (fun n : ℕ =
   calc abs ((bernsteinApproximation n f - f) x) = abs (bernsteinApproximation n f x - f x) :=
       rfl _ = abs (bernsteinApproximation n f x - f x * 1) := by
       rw [mul_oneₓ]_ = abs (bernsteinApproximation n f x - f x * ∑ k : Finₓ (n + 1), bernstein n k x) := by
-      rw [bernstein.probability]_ = abs (∑ k : Finₓ (n + 1), (f (k)/ₙ - f x) * bernstein n k x) := by
+      rw [bernstein.probability]_ = abs (∑ k : Finₓ (n + 1), (f k/ₙ - f x) * bernstein n k x) := by
       simp [bernsteinApproximation, Finset.mul_sum,
-        sub_mul]_ ≤ ∑ k : Finₓ (n + 1), abs ((f (k)/ₙ - f x) * bernstein n k x) :=
-      Finset.abs_sum_le_sum_abs _ _ _ = ∑ k : Finₓ (n + 1), abs (f (k)/ₙ - f x) * bernstein n k x := by
+        sub_mul]_ ≤ ∑ k : Finₓ (n + 1), abs ((f k/ₙ - f x) * bernstein n k x) :=
+      Finset.abs_sum_le_sum_abs _ _ _ = ∑ k : Finₓ (n + 1), abs (f k/ₙ - f x) * bernstein n k x := by
       simp_rw [abs_mul,
         abs_eq_self.mpr
           bernstein_nonneg]_ =
-        (∑ k in S, abs (f (k)/ₙ - f x) * bernstein n k x) + ∑ k in Sᶜ, abs (f (k)/ₙ - f x) * bernstein n k x :=
+        (∑ k in S, abs (f k/ₙ - f x) * bernstein n k x) + ∑ k in Sᶜ, abs (f k/ₙ - f x) * bernstein n k x :=
       (S.sum_add_sum_compl _).symm-- We'll now deal with the terms in `S` and the terms in `Sᶜ` in separate calc blocks.
         _ <
         ε / 2 + ε / 2 :=
       add_lt_add_of_le_of_lt _ _ _ = ε := add_halves ε
   · -- We now work on the terms in `S`: uniform continuity and `bernstein.probability`
     -- quickly give us a bound.
-    calc (∑ k in S, abs (f (k)/ₙ - f x) * bernstein n k x) ≤ ∑ k in S, ε / 2 * bernstein n k x :=
+    calc (∑ k in S, abs (f k/ₙ - f x) * bernstein n k x) ≤ ∑ k in S, ε / 2 * bernstein n k x :=
         Finset.sum_le_sum fun k m =>
           mul_le_mul_of_nonneg_right (le_of_ltₓ (lt_of_mem_S m))
             bernstein_nonneg _ = ε / 2 * ∑ k in S, bernstein n k x :=
@@ -268,23 +268,23 @@ theorem bernstein_approximation_uniform (f : C(I, ℝ)) : Tendsto (fun n : ℕ =
   · -- We now turn to working on `Sᶜ`: we control the difference term just using `∥f∥`,
     -- and then insert a `δ^(-2) * (x - k/n)^2` factor
     -- (which is at least one because we are not in `S`).
-    calc (∑ k in Sᶜ, abs (f (k)/ₙ - f x) * bernstein n k x) ≤ ∑ k in Sᶜ, 2 * ∥f∥ * bernstein n k x :=
+    calc (∑ k in Sᶜ, abs (f k/ₙ - f x) * bernstein n k x) ≤ ∑ k in Sᶜ, 2 * ∥f∥ * bernstein n k x :=
         Finset.sum_le_sum fun k m =>
           mul_le_mul_of_nonneg_right (f.dist_le_two_norm _ _)
             bernstein_nonneg _ = 2 * ∥f∥ * ∑ k in Sᶜ, bernstein n k x :=
         by
-        rw [Finset.mul_sum]_ ≤ 2 * ∥f∥ * ∑ k in Sᶜ, δ ^ (-2 : ℤ) * (x - (k)/ₙ) ^ 2 * bernstein n k x :=
+        rw [Finset.mul_sum]_ ≤ 2 * ∥f∥ * ∑ k in Sᶜ, δ ^ (-2 : ℤ) * (x - k/ₙ) ^ 2 * bernstein n k x :=
         mul_le_mul_of_nonneg_left
           (Finset.sum_le_sum fun k m => by
             conv_lhs => rw [← one_mulₓ (bernstein _ _ _)]
             exact mul_le_mul_of_nonneg_right (le_of_mem_S_compl m) bernstein_nonneg)
           w₁-- Again enlarging the sum from `Sᶜ` to all of `fin (n+1)`
           _ ≤
-          2 * ∥f∥ * ∑ k : Finₓ (n + 1), δ ^ (-2 : ℤ) * (x - (k)/ₙ) ^ 2 * bernstein n k x :=
+          2 * ∥f∥ * ∑ k : Finₓ (n + 1), δ ^ (-2 : ℤ) * (x - k/ₙ) ^ 2 * bernstein n k x :=
         mul_le_mul_of_nonneg_left
           (Finset.sum_le_univ_sum_of_nonneg fun k =>
             mul_nonneg (mul_nonneg pow_minus_two_nonneg (sq_nonneg _)) bernstein_nonneg)
-          w₁ _ = 2 * ∥f∥ * δ ^ (-2 : ℤ) * ∑ k : Finₓ (n + 1), (x - (k)/ₙ) ^ 2 * bernstein n k x :=
+          w₁ _ = 2 * ∥f∥ * δ ^ (-2 : ℤ) * ∑ k : Finₓ (n + 1), (x - k/ₙ) ^ 2 * bernstein n k x :=
         by
         conv_rhs =>
           rw [mul_assoc,

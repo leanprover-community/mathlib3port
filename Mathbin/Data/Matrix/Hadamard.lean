@@ -123,7 +123,7 @@ variable [Fintype m] [Fintype n]
 
 variable (R) [Semiringₓ α] [Semiringₓ R] [Module R α]
 
-theorem sum_hadamard_eq : (∑ (i : m) (j : n), (A ⊙ B) i j) = trace m R α (A ⬝ (B)ᵀ) :=
+theorem sum_hadamard_eq : (∑ (i : m) (j : n), (A ⊙ B) i j) = trace m R α (A ⬝ Bᵀ) :=
   rfl
 
 theorem dot_product_vec_mul_hadamard [DecidableEq m] [DecidableEq n] (v : m → α) (w : n → α) :

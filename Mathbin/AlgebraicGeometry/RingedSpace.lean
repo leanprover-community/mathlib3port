@@ -149,7 +149,7 @@ theorem is_unit_res_basic_open {U : Opens X} (f : X.Presheaf.obj (op U)) :
   rfl
 
 @[simp]
-theorem basic_open_res {U V : Opens Xᵒᵖ} (i : U ⟶ V) (f : X.Presheaf.obj U) :
+theorem basic_open_res {U V : (Opens X)ᵒᵖ} (i : U ⟶ V) (f : X.Presheaf.obj U) :
     @basicOpen X (unop V) (X.Presheaf.map i f) = unop V ∩ @basicOpen X (unop U) f := by
   induction U using Opposite.rec
   induction V using Opposite.rec
@@ -176,7 +176,7 @@ theorem basic_open_res {U V : Opens Xᵒᵖ} (i : U ⟶ V) (f : X.Presheaf.obj U
 
 -- This should fire before `basic_open_res`.
 @[simp]
-theorem basic_open_res_eq {U V : Opens Xᵒᵖ} (i : U ⟶ V) [IsIso i] (f : X.Presheaf.obj U) :
+theorem basic_open_res_eq {U V : (Opens X)ᵒᵖ} (i : U ⟶ V) [IsIso i] (f : X.Presheaf.obj U) :
     @basicOpen X (unop V) (X.Presheaf.map i f) = @RingedSpace.basicOpen X (unop U) f := by
   apply le_antisymmₓ
   · rw [X.basic_open_res i f]

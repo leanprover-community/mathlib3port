@@ -55,7 +55,7 @@ def kroneckerMapₓ (f : α → β → γ) (A : Matrix l m α) (B : Matrix n p �
   | i, j => f (A i.1 j.1) (B i.2 j.2)
 
 theorem kronecker_map_transpose (f : α → β → γ) (A : Matrix l m α) (B : Matrix n p β) :
-    kroneckerMapₓ f (A)ᵀ (B)ᵀ = (kroneckerMapₓ f A B)ᵀ :=
+    kroneckerMapₓ f Aᵀ Bᵀ = (kroneckerMapₓ f A B)ᵀ :=
   ext fun i j => rfl
 
 theorem kronecker_map_map_left (f : α' → β → γ) (g : α → α') (A : Matrix l m α) (B : Matrix n p β) :

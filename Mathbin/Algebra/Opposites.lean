@@ -42,11 +42,9 @@ reverses left and right in multiplication.-/
 def MulOpposite (α : Type u) : Type u :=
   α
 
--- ././Mathport/Syntax/Translate/Basic.lean:462:9: unsupported: advanced prec syntax
-postfix:999 "ᵐᵒᵖ" => MulOpposite
+postfix:max "ᵐᵒᵖ" => MulOpposite
 
--- ././Mathport/Syntax/Translate/Basic.lean:462:9: unsupported: advanced prec syntax
-postfix:999 "ᵃᵒᵖ" => AddOpposite
+postfix:max "ᵃᵒᵖ" => AddOpposite
 
 variable {α : Type u}
 
@@ -125,51 +123,51 @@ theorem unop_inj {x y : αᵐᵒᵖ} : unop x = unop y ↔ x = y :=
 variable (α)
 
 @[to_additive]
-instance [Nontrivial α] : Nontrivial (αᵐᵒᵖ) :=
+instance [Nontrivial α] : Nontrivial αᵐᵒᵖ :=
   op_injective.Nontrivial
 
 @[to_additive]
-instance [Inhabited α] : Inhabited (αᵐᵒᵖ) :=
+instance [Inhabited α] : Inhabited αᵐᵒᵖ :=
   ⟨op default⟩
 
 @[to_additive]
-instance [Subsingleton α] : Subsingleton (αᵐᵒᵖ) :=
+instance [Subsingleton α] : Subsingleton αᵐᵒᵖ :=
   unop_injective.Subsingleton
 
 @[to_additive]
-instance [Unique α] : Unique (αᵐᵒᵖ) :=
+instance [Unique α] : Unique αᵐᵒᵖ :=
   Unique.mk' _
 
 @[to_additive]
-instance [IsEmpty α] : IsEmpty (αᵐᵒᵖ) :=
+instance [IsEmpty α] : IsEmpty αᵐᵒᵖ :=
   Function.is_empty unop
 
-instance [Zero α] : Zero (αᵐᵒᵖ) where
+instance [Zero α] : Zero αᵐᵒᵖ where
   zero := op 0
 
 @[to_additive]
-instance [One α] : One (αᵐᵒᵖ) where
+instance [One α] : One αᵐᵒᵖ where
   one := op 1
 
-instance [Add α] : Add (αᵐᵒᵖ) where
+instance [Add α] : Add αᵐᵒᵖ where
   add := fun x y => op (unop x + unop y)
 
-instance [Sub α] : Sub (αᵐᵒᵖ) where
+instance [Sub α] : Sub αᵐᵒᵖ where
   sub := fun x y => op (unop x - unop y)
 
-instance [Neg α] : Neg (αᵐᵒᵖ) where
+instance [Neg α] : Neg αᵐᵒᵖ where
   neg := fun x => op <| -unop x
 
 @[to_additive]
-instance [Mul α] : Mul (αᵐᵒᵖ) where
+instance [Mul α] : Mul αᵐᵒᵖ where
   mul := fun x y => op (unop y * unop x)
 
 @[to_additive]
-instance [Inv α] : Inv (αᵐᵒᵖ) where
+instance [Inv α] : Inv αᵐᵒᵖ where
   inv := fun x => op <| (unop x)⁻¹
 
 @[to_additive]
-instance (R : Type _) [HasScalar R α] : HasScalar R (αᵐᵒᵖ) where
+instance (R : Type _) [HasScalar R α] : HasScalar R αᵐᵒᵖ where
   smul := fun c x => op (c • unop x)
 
 section
@@ -272,7 +270,7 @@ end MulOpposite
 
 namespace AddOpposite
 
-instance [One α] : One (αᵃᵒᵖ) where
+instance [One α] : One αᵃᵒᵖ where
   one := op 1
 
 @[simp]
@@ -291,7 +289,7 @@ theorem op_eq_one_iff [One α] {a : α} : op a = 1 ↔ a = 1 :=
 theorem unop_eq_one_iff [One α] {a : αᵃᵒᵖ} : unop a = 1 ↔ a = 1 :=
   unop_injective.eq_iff' unop_one
 
-instance [Mul α] : Mul (αᵃᵒᵖ) where
+instance [Mul α] : Mul αᵃᵒᵖ where
   mul := fun a b => op (unop a * unop b)
 
 @[simp]
@@ -302,7 +300,7 @@ theorem op_mul [Mul α] (a b : α) : op (a * b) = op a * op b :=
 theorem unop_mul [Mul α] (a b : αᵃᵒᵖ) : unop (a * b) = unop a * unop b :=
   rfl
 
-instance [Inv α] : Inv (αᵃᵒᵖ) where
+instance [Inv α] : Inv αᵃᵒᵖ where
   inv := fun a => op (unop a)⁻¹
 
 @[simp]
@@ -313,7 +311,7 @@ theorem op_inv [Inv α] (a : α) : op a⁻¹ = (op a)⁻¹ :=
 theorem unop_inv [Inv α] (a : αᵃᵒᵖ) : unop a⁻¹ = (unop a)⁻¹ :=
   rfl
 
-instance [Div α] : Div (αᵃᵒᵖ) where
+instance [Div α] : Div αᵃᵒᵖ where
   div := fun a b => op (unop a / unop b)
 
 @[simp]

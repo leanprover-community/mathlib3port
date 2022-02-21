@@ -384,7 +384,7 @@ unsafe def abel1 (red : parse (tk "!")?) : tactic Unit := do
 
 unsafe def abel.mode : lean.parser Abel.NormalizeMode :=
   with_desc "(raw|term)?" <| do
-    let mode ← (ident)?
+    let mode ← ident ?
     match mode with
       | none => return abel.normalize_mode.term
       | some `term => return abel.normalize_mode.term

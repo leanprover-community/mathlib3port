@@ -73,7 +73,7 @@ theorem one_of_is_unit {x : O} (hx : IsUnit x) : v (algebraMap O R x) = 1 :=
 theorem is_unit_of_one {x : O} (hx : IsUnit (algebraMap O R x)) (hvx : v (algebraMap O R x) = 1) : IsUnit x :=
   let ⟨u, hu⟩ := hx
   have h1 : v u ≤ 1 := hu.symm ▸ hv.2 x
-  have h2 : v (u⁻¹ : (R)ˣ) ≤ 1 := by
+  have h2 : v (u⁻¹ : Rˣ) ≤ 1 := by
     rw [← one_mulₓ (v _), ← hvx, ← v.map_mul, ← hu, u.mul_inv, hu, hvx, v.map_one]
   let ⟨r1, hr1⟩ := hv.3 h1
   let ⟨r2, hr2⟩ := hv.3 h2

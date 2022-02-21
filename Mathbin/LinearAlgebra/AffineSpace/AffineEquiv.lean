@@ -379,22 +379,22 @@ include V
 
 /-- Fixing a point in affine space, homothety about this point gives a group homomorphism from (the
 centre of) the units of the scalars into the group of affine equivalences. -/
-def homothetyUnitsMulHom (p : P) : (R)ˣ →* P ≃ᵃ[R] P :=
+def homothetyUnitsMulHom (p : P) : Rˣ →* P ≃ᵃ[R] P :=
   equivUnitsAffineMap.symm.toMonoidHom.comp <| Units.map (AffineMap.homothetyHom p)
 
 @[simp]
-theorem coe_homothety_units_mul_hom_apply (p : P) (t : (R)ˣ) :
+theorem coe_homothety_units_mul_hom_apply (p : P) (t : Rˣ) :
     (homothetyUnitsMulHom p t : P → P) = AffineMap.homothety p (t : R) :=
   rfl
 
 @[simp]
-theorem coe_homothety_units_mul_hom_apply_symm (p : P) (t : (R)ˣ) :
+theorem coe_homothety_units_mul_hom_apply_symm (p : P) (t : Rˣ) :
     ((homothetyUnitsMulHom p t).symm : P → P) = AffineMap.homothety p (↑t⁻¹ : R) :=
   rfl
 
 @[simp]
 theorem coe_homothety_units_mul_hom_eq_homothety_hom_coe (p : P) :
-    (coe : (P ≃ᵃ[R] P) → P →ᵃ[R] P) ∘ homothetyUnitsMulHom p = AffineMap.homothetyHom p ∘ (coe : (R)ˣ → R) :=
+    (coe : (P ≃ᵃ[R] P) → P →ᵃ[R] P) ∘ homothetyUnitsMulHom p = AffineMap.homothetyHom p ∘ (coe : Rˣ → R) :=
   funext fun _ => rfl
 
 end Homothety

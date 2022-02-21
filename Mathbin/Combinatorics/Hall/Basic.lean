@@ -83,7 +83,7 @@ theorem HallMatchingsOn.nonempty {ι : Type u} {α : Type v} [DecidableEq α] (t
 /-- This is the `hall_matchings_on` sets assembled into a directed system.
 -/
 -- TODO: This takes a long time to elaborate for an unknown reason.
-def hallMatchingsFunctor {ι : Type u} {α : Type v} (t : ι → Finset α) : Finset ιᵒᵖ ⥤ Type max u v where
+def hallMatchingsFunctor {ι : Type u} {α : Type v} (t : ι → Finset α) : (Finset ι)ᵒᵖ ⥤ Type max u v where
   obj := fun ι' => HallMatchingsOn t ι'.unop
   map := fun ι' ι'' g f => HallMatchingsOn.restrict t (CategoryTheory.le_of_hom g.unop) f
 
@@ -118,10 +118,10 @@ theorem Finset.all_card_le_bUnion_card_iff_exists_injective {ι : Type u} {α : 
   constructor
   · intro h
     -- Set up the functor
-    have : ∀ ι' : Finset ιᵒᵖ, Nonempty ((hallMatchingsFunctor t).obj ι') := fun ι' =>
+    have : ∀ ι' : (Finset ι)ᵒᵖ, Nonempty ((hallMatchingsFunctor t).obj ι') := fun ι' =>
       HallMatchingsOn.nonempty t h ι'.unop
     classical
-    have : ∀ ι' : Finset ιᵒᵖ, Fintype ((hallMatchingsFunctor t).obj ι') := by
+    have : ∀ ι' : (Finset ι)ᵒᵖ, Fintype ((hallMatchingsFunctor t).obj ι') := by
       intro ι'
       rw [hallMatchingsFunctor]
       infer_instance

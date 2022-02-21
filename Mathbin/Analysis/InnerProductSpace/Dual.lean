@@ -185,15 +185,15 @@ and dualizing the result using `to_dual`.
 def continuousLinearMapOfBilin (B : E →L⋆[𝕜] E →L[𝕜] 𝕜) : E →L[𝕜] E :=
   comp (toDual 𝕜 E).symm.toContinuousLinearEquiv.toContinuousLinearMap B
 
-local postfix:1025 "♯" => continuousLinearMapOfBilin
+local postfix:1024 "♯" => continuousLinearMapOfBilin
 
 variable (B : E →L⋆[𝕜] E →L[𝕜] 𝕜)
 
 @[simp]
-theorem continuous_linear_map_of_bilin_apply (v w : E) : ⟪(B)♯ v, w⟫ = B v w := by
+theorem continuous_linear_map_of_bilin_apply (v w : E) : ⟪B♯ v, w⟫ = B v w := by
   simp [continuous_linear_map_of_bilin]
 
-theorem unique_continuous_linear_map_of_bilin {v f : E} (is_lax_milgram : ∀ w, ⟪f, w⟫ = B v w) : f = (B)♯ v := by
+theorem unique_continuous_linear_map_of_bilin {v f : E} (is_lax_milgram : ∀ w, ⟪f, w⟫ = B v w) : f = B♯ v := by
   refine' ext_inner_right 𝕜 _
   intro w
   rw [continuous_linear_map_of_bilin_apply]

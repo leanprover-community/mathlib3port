@@ -68,10 +68,9 @@ theorem neg_mem_center [Ringₓ M] {a : M} (ha : a ∈ Set.Center M) : -a ∈ Se
   rw [← neg_mul_comm, ha (-c), neg_mul_comm]
 
 @[to_additive subset_add_center_add_units]
-theorem subset_center_units [Monoidₓ M] : (coe : (M)ˣ → M) ⁻¹' Center M ⊆ Set.Center (M)ˣ := fun a ha b =>
-  Units.ext <| ha _
+theorem subset_center_units [Monoidₓ M] : (coe : Mˣ → M) ⁻¹' Center M ⊆ Set.Center Mˣ := fun a ha b => Units.ext <| ha _
 
-theorem center_units_subset [GroupWithZeroₓ M] : Set.Center (M)ˣ ⊆ (coe : (M)ˣ → M) ⁻¹' Center M := fun a ha b => by
+theorem center_units_subset [GroupWithZeroₓ M] : Set.Center Mˣ ⊆ (coe : Mˣ → M) ⁻¹' Center M := fun a ha b => by
   obtain rfl | hb := eq_or_ne b 0
   · rw [zero_mul, mul_zero]
     
@@ -79,7 +78,7 @@ theorem center_units_subset [GroupWithZeroₓ M] : Set.Center (M)ˣ ⊆ (coe : (
     
 
 /-- In a group with zero, the center of the units is the preimage of the center. -/
-theorem center_units_eq [GroupWithZeroₓ M] : Set.Center (M)ˣ = (coe : (M)ˣ → M) ⁻¹' Center M :=
+theorem center_units_eq [GroupWithZeroₓ M] : Set.Center Mˣ = (coe : Mˣ → M) ⁻¹' Center M :=
   Subset.antisymm center_units_subset subset_center_units
 
 @[simp]

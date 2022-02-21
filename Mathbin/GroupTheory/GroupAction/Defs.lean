@@ -210,34 +210,33 @@ instance Semigroupₓ.is_scalar_tower [Semigroupₓ α] : IsScalarTower α α α
 /-- A typeclass indicating that the right (aka `mul_opposite`) and left actions by `M` on `α` are
 equal, that is that `M` acts centrally on `α`. This can be thought of as a version of commutativity
 for `•`. -/
-class IsCentralScalar (M α : Type _) [HasScalar M α] [HasScalar (Mᵐᵒᵖ) α] : Prop where
+class IsCentralScalar (M α : Type _) [HasScalar M α] [HasScalar Mᵐᵒᵖ α] : Prop where
   op_smul_eq_smul : ∀ m : M a : α, MulOpposite.op m • a = m • a
 
-theorem IsCentralScalar.unop_smul_eq_smul {M α : Type _} [HasScalar M α] [HasScalar (Mᵐᵒᵖ) α] [IsCentralScalar M α]
+theorem IsCentralScalar.unop_smul_eq_smul {M α : Type _} [HasScalar M α] [HasScalar Mᵐᵒᵖ α] [IsCentralScalar M α]
     (m : Mᵐᵒᵖ) (a : α) : MulOpposite.unop m • a = m • a :=
   MulOpposite.rec (fun m => (IsCentralScalar.op_smul_eq_smul _ _).symm) m
 
 export IsCentralScalar (op_smul_eq_smul unop_smul_eq_smul)
 
 -- these instances are very low priority, as there is usually a faster way to find these instances
-instance (priority := 50) SmulCommClass.op_left [HasScalar M α] [HasScalar (Mᵐᵒᵖ) α] [IsCentralScalar M α]
-    [HasScalar N α] [SmulCommClass M N α] : SmulCommClass (Mᵐᵒᵖ) N α :=
+instance (priority := 50) SmulCommClass.op_left [HasScalar M α] [HasScalar Mᵐᵒᵖ α] [IsCentralScalar M α] [HasScalar N α]
+    [SmulCommClass M N α] : SmulCommClass Mᵐᵒᵖ N α :=
   ⟨fun m n a => by
     rw [← unop_smul_eq_smul m (n • a), ← unop_smul_eq_smul m a, smul_comm]⟩
 
-instance (priority := 50) SmulCommClass.op_right [HasScalar M α] [HasScalar N α] [HasScalar (Nᵐᵒᵖ) α]
-    [IsCentralScalar N α] [SmulCommClass M N α] : SmulCommClass M (Nᵐᵒᵖ) α :=
+instance (priority := 50) SmulCommClass.op_right [HasScalar M α] [HasScalar N α] [HasScalar Nᵐᵒᵖ α]
+    [IsCentralScalar N α] [SmulCommClass M N α] : SmulCommClass M Nᵐᵒᵖ α :=
   ⟨fun m n a => by
     rw [← unop_smul_eq_smul n (m • a), ← unop_smul_eq_smul n a, smul_comm]⟩
 
-instance (priority := 50) IsScalarTower.op_left [HasScalar M α] [HasScalar (Mᵐᵒᵖ) α] [IsCentralScalar M α]
-    [HasScalar M N] [HasScalar (Mᵐᵒᵖ) N] [IsCentralScalar M N] [HasScalar N α] [IsScalarTower M N α] :
-    IsScalarTower (Mᵐᵒᵖ) N α :=
+instance (priority := 50) IsScalarTower.op_left [HasScalar M α] [HasScalar Mᵐᵒᵖ α] [IsCentralScalar M α] [HasScalar M N]
+    [HasScalar Mᵐᵒᵖ N] [IsCentralScalar M N] [HasScalar N α] [IsScalarTower M N α] : IsScalarTower Mᵐᵒᵖ N α :=
   ⟨fun m n a => by
     rw [← unop_smul_eq_smul m (n • a), ← unop_smul_eq_smul m n, smul_assoc]⟩
 
-instance (priority := 50) IsScalarTower.op_right [HasScalar M α] [HasScalar M N] [HasScalar N α] [HasScalar (Nᵐᵒᵖ) α]
-    [IsCentralScalar N α] [IsScalarTower M N α] : IsScalarTower M (Nᵐᵒᵖ) α :=
+instance (priority := 50) IsScalarTower.op_right [HasScalar M α] [HasScalar M N] [HasScalar N α] [HasScalar Nᵐᵒᵖ α]
+    [IsCentralScalar N α] [IsScalarTower M N α] : IsScalarTower M Nᵐᵒᵖ α :=
   ⟨fun m n a => by
     rw [← unop_smul_eq_smul n a, ← unop_smul_eq_smul (m • n) a, MulOpposite.unop_smul, smul_assoc]⟩
 

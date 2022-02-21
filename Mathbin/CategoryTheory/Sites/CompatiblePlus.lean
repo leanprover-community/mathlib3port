@@ -62,17 +62,17 @@ def diagramCompIso (X : C) : J.diagram P X ⋙ F ≅ J.diagram (P ⋙ F) X :=
       simp only [← F.map_comp, multiequalizer.lift_ι])
 
 @[simp, reassoc]
-theorem diagram_comp_iso_hom_ι (X : C) (W : J.cover Xᵒᵖ) (i : W.unop.arrow) :
+theorem diagram_comp_iso_hom_ι (X : C) (W : (J.cover X)ᵒᵖ) (i : W.unop.arrow) :
     (J.diagramCompIso F P X).Hom.app W ≫ multiequalizer.ι _ i = F.map (multiequalizer.ι _ _) := by
   delta' diagram_comp_iso
   dsimp
   simp
 
-variable [∀ X : C, HasColimitsOfShape (J.cover Xᵒᵖ) D]
+variable [∀ X : C, HasColimitsOfShape (J.cover X)ᵒᵖ D]
 
-variable [∀ X : C, HasColimitsOfShape (J.cover Xᵒᵖ) E]
+variable [∀ X : C, HasColimitsOfShape (J.cover X)ᵒᵖ E]
 
-variable [∀ X : C, PreservesColimitsOfShape (J.cover Xᵒᵖ) F]
+variable [∀ X : C, PreservesColimitsOfShape (J.cover X)ᵒᵖ F]
 
 /-- The isomorphism between `P⁺ ⋙ F` and `(P ⋙ F)⁺`. -/
 def plusCompIso : J.plusObj P ⋙ F ≅ J.plusObj (P ⋙ F) :=
@@ -120,9 +120,9 @@ theorem ι_plus_comp_iso_hom X W :
 
 @[simp, reassoc]
 theorem plus_comp_iso_whisker_left {F G : D ⥤ E} (η : F ⟶ G) (P : Cᵒᵖ ⥤ D)
-    [∀ X : C, PreservesColimitsOfShape (J.cover Xᵒᵖ) F]
+    [∀ X : C, PreservesColimitsOfShape (J.cover X)ᵒᵖ F]
     [∀ X : C W : J.cover X P : Cᵒᵖ ⥤ D, PreservesLimit (W.index P).multicospan F]
-    [∀ X : C, PreservesColimitsOfShape (J.cover Xᵒᵖ) G]
+    [∀ X : C, PreservesColimitsOfShape (J.cover X)ᵒᵖ G]
     [∀ X : C W : J.cover X P : Cᵒᵖ ⥤ D, PreservesLimit (W.index P).multicospan G] :
     whiskerLeft _ η ≫ (J.plusCompIso G P).Hom = (J.plusCompIso F P).Hom ≫ J.plusMap (whiskerLeft _ η) := by
   ext X
@@ -139,7 +139,7 @@ theorem plus_comp_iso_whisker_left {F G : D ⥤ E} (η : F ⟶ G) (P : Cᵒᵖ �
 
 /-- The isomorphism between `P⁺ ⋙ F` and `(P ⋙ F)⁺`, functorially in `F`. -/
 @[simps hom_app inv_app]
-def plusFunctorWhiskerLeftIso (P : Cᵒᵖ ⥤ D) [∀ F : D ⥤ E X : C, PreservesColimitsOfShape (J.cover Xᵒᵖ) F]
+def plusFunctorWhiskerLeftIso (P : Cᵒᵖ ⥤ D) [∀ F : D ⥤ E X : C, PreservesColimitsOfShape (J.cover X)ᵒᵖ F]
     [∀ F : D ⥤ E X : C W : J.cover X P : Cᵒᵖ ⥤ D, PreservesLimit (W.index P).multicospan F] :
     (whiskeringLeft _ _ E).obj (J.plusObj P) ≅ (whiskeringLeft _ _ _).obj P ⋙ J.plusFunctor E :=
   (NatIso.ofComponents fun X => plusCompIso _ _ _) fun F G η => plus_comp_iso_whisker_left _ _ _

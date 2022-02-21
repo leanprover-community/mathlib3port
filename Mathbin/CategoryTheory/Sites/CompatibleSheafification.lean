@@ -37,11 +37,11 @@ variable [∀ α β : Type max v u fst snd : β → α, HasLimitsOfShape (Walkin
 
 variable [∀ α β : Type max v u fst snd : β → α, HasLimitsOfShape (WalkingMulticospan fst snd) E]
 
-variable [∀ X : C, HasColimitsOfShape (J.cover Xᵒᵖ) D]
+variable [∀ X : C, HasColimitsOfShape (J.cover X)ᵒᵖ D]
 
-variable [∀ X : C, HasColimitsOfShape (J.cover Xᵒᵖ) E]
+variable [∀ X : C, HasColimitsOfShape (J.cover X)ᵒᵖ E]
 
-variable [∀ X : C, PreservesColimitsOfShape (J.cover Xᵒᵖ) F]
+variable [∀ X : C, PreservesColimitsOfShape (J.cover X)ᵒᵖ F]
 
 variable [∀ X : C W : J.cover X P : Cᵒᵖ ⥤ D, PreservesLimit (W.index P).multicospan F]
 
@@ -59,7 +59,7 @@ def sheafifyCompIso : J.sheafify P ⋙ F ≅ J.sheafify (P ⋙ F) :=
 
 /-- The isomorphism between the sheafification of `P` composed with `F` and
 the sheafification of `P ⋙ F`, functorially in `F`. -/
-def sheafificationWhiskerLeftIso (P : Cᵒᵖ ⥤ D) [∀ F : D ⥤ E X : C, PreservesColimitsOfShape (J.cover Xᵒᵖ) F]
+def sheafificationWhiskerLeftIso (P : Cᵒᵖ ⥤ D) [∀ F : D ⥤ E X : C, PreservesColimitsOfShape (J.cover X)ᵒᵖ F]
     [∀ F : D ⥤ E X : C W : J.cover X P : Cᵒᵖ ⥤ D, PreservesLimit (W.index P).multicospan F] :
     (whiskeringLeft _ _ E).obj (J.sheafify P) ≅ (whiskeringLeft _ _ _).obj P ⋙ J.sheafification E := by
   refine' J.plus_functor_whisker_left_iso _ ≪≫ _ ≪≫ functor.associator _ _ _
@@ -68,7 +68,7 @@ def sheafificationWhiskerLeftIso (P : Cᵒᵖ ⥤ D) [∀ F : D ⥤ E X : C, Pre
 
 @[simp]
 theorem sheafification_whisker_left_iso_hom_app (P : Cᵒᵖ ⥤ D) (F : D ⥤ E)
-    [∀ F : D ⥤ E X : C, PreservesColimitsOfShape (J.cover Xᵒᵖ) F]
+    [∀ F : D ⥤ E X : C, PreservesColimitsOfShape (J.cover X)ᵒᵖ F]
     [∀ F : D ⥤ E X : C W : J.cover X P : Cᵒᵖ ⥤ D, PreservesLimit (W.index P).multicospan F] :
     (sheafificationWhiskerLeftIso J P).Hom.app F = (J.sheafifyCompIso F P).Hom := by
   dsimp [sheafification_whisker_left_iso, sheafify_comp_iso]
@@ -76,7 +76,7 @@ theorem sheafification_whisker_left_iso_hom_app (P : Cᵒᵖ ⥤ D) (F : D ⥤ E
 
 @[simp]
 theorem sheafification_whisker_left_iso_inv_app (P : Cᵒᵖ ⥤ D) (F : D ⥤ E)
-    [∀ F : D ⥤ E X : C, PreservesColimitsOfShape (J.cover Xᵒᵖ) F]
+    [∀ F : D ⥤ E X : C, PreservesColimitsOfShape (J.cover X)ᵒᵖ F]
     [∀ F : D ⥤ E X : C W : J.cover X P : Cᵒᵖ ⥤ D, PreservesLimit (W.index P).multicospan F] :
     (sheafificationWhiskerLeftIso J P).inv.app F = (J.sheafifyCompIso F P).inv := by
   dsimp [sheafification_whisker_left_iso, sheafify_comp_iso]
@@ -126,7 +126,7 @@ section
 
 -- We will sheafify `D`-valued presheaves in this section.
 variable [ConcreteCategory.{max v u} D] [PreservesLimits (forget D)]
-  [∀ X : C, PreservesColimitsOfShape (J.cover Xᵒᵖ) (forget D)] [ReflectsIsomorphisms (forget D)]
+  [∀ X : C, PreservesColimitsOfShape (J.cover X)ᵒᵖ (forget D)] [ReflectsIsomorphisms (forget D)]
 
 @[simp]
 theorem sheafify_comp_iso_inv_eq_sheafify_lift :

@@ -894,6 +894,6 @@ def posSubmonoid (R : Type _) [OrderedSemiring R] [Nontrivial R] : Submonoid R w
   mul_mem' := fun hy : 0 < y => mul_pos hx hy
 
 @[simp]
-theorem mem_pos_monoid {R : Type _} [OrderedSemiring R] [Nontrivial R] (u : (R)ˣ) : ↑u ∈ posSubmonoid R ↔ (0 : R) < u :=
+theorem mem_pos_monoid {R : Type _} [OrderedSemiring R] [Nontrivial R] (u : Rˣ) : ↑u ∈ posSubmonoid R ↔ (0 : R) < u :=
   Iff.rfl
 

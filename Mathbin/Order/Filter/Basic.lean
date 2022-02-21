@@ -217,7 +217,7 @@ The list is an optional parameter, `[]` being its default value.
 Combining both shortcuts is done by writing `filter_upwards [h₁, ⋯, hₙ] with a₁ a₂ ⋯ aₖ using e`.
 Note that in this case, the `aᵢ` terms can be used in `e`.
 -/
-unsafe def filter_upwards (s : parse (types.pexpr_list)?) (wth : parse (with_ident_list)?)
+unsafe def filter_upwards (s : parse types.pexpr_list ?) (wth : parse with_ident_list ?)
     (tgt : parse (tk "using" *> texpr)?) : tactic Unit := do
   (s []).reverse.mmap fun e => eapplyc `filter.mp_mem >> eapply e
   eapplyc `filter.univ_mem'

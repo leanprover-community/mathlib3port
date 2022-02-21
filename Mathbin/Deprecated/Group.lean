@@ -322,14 +322,14 @@ variable {M : Type _} {N : Type _} [Monoidₓ M] [Monoidₓ N]
 
 /-- The group homomorphism on units induced by a multiplicative morphism. -/
 @[reducible]
-def map' {f : M → N} (hf : IsMonoidHom f) : (M)ˣ →* (N)ˣ :=
+def map' {f : M → N} (hf : IsMonoidHom f) : Mˣ →* Nˣ :=
   map (MonoidHom.of hf)
 
 @[simp]
-theorem coe_map' {f : M → N} (hf : IsMonoidHom f) (x : (M)ˣ) : ↑((map' hf : (M)ˣ → (N)ˣ) x) = f x :=
+theorem coe_map' {f : M → N} (hf : IsMonoidHom f) (x : Mˣ) : ↑((map' hf : Mˣ → Nˣ) x) = f x :=
   rfl
 
-theorem coe_is_monoid_hom : IsMonoidHom (coe : (M)ˣ → M) :=
+theorem coe_is_monoid_hom : IsMonoidHom (coe : Mˣ → M) :=
   (coeHom M).is_monoid_hom_coe
 
 end Units

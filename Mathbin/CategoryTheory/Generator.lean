@@ -99,10 +99,10 @@ theorem is_coseparating_op_iff (𝒢 : Set C) : IsCoseparating 𝒢.op ↔ IsSep
     simpa only [op_comp, Quiver.Hom.op_unop] using hfg _ (Set.op_mem_op.2 hG) _
     
 
-theorem is_coseparating_unop_iff (𝒢 : Set (Cᵒᵖ)) : IsCoseparating 𝒢.unop ↔ IsSeparating 𝒢 := by
+theorem is_coseparating_unop_iff (𝒢 : Set Cᵒᵖ) : IsCoseparating 𝒢.unop ↔ IsSeparating 𝒢 := by
   rw [← is_separating_op_iff, Set.unop_op]
 
-theorem is_separating_unop_iff (𝒢 : Set (Cᵒᵖ)) : IsSeparating 𝒢.unop ↔ IsCoseparating 𝒢 := by
+theorem is_separating_unop_iff (𝒢 : Set Cᵒᵖ) : IsSeparating 𝒢.unop ↔ IsCoseparating 𝒢 := by
   rw [← is_coseparating_op_iff, Set.unop_op]
 
 theorem is_detecting_op_iff {𝒢 : Set C} : IsDetecting 𝒢.op ↔ IsCodetecting 𝒢 := by
@@ -135,10 +135,10 @@ theorem is_codetecting_op_iff {𝒢 : Set C} : IsCodetecting 𝒢.op ↔ IsDetec
           simpa only using hy)
     
 
-theorem is_detecting_unop_iff {𝒢 : Set (Cᵒᵖ)} : IsDetecting 𝒢.unop ↔ IsCodetecting 𝒢 := by
+theorem is_detecting_unop_iff {𝒢 : Set Cᵒᵖ} : IsDetecting 𝒢.unop ↔ IsCodetecting 𝒢 := by
   rw [← is_codetecting_op_iff, Set.unop_op]
 
-theorem is_codetecting_unop_iff {𝒢 : Set (Cᵒᵖ)} : IsCodetecting 𝒢.unop ↔ IsDetecting 𝒢 := by
+theorem is_codetecting_unop_iff {𝒢 : Set Cᵒᵖ} : IsCodetecting 𝒢.unop ↔ IsDetecting 𝒢 := by
   rw [← is_detecting_op_iff, Set.unop_op]
 
 end Dual

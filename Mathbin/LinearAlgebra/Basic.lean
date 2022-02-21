@@ -2708,8 +2708,8 @@ variable [Module R M] [Module R M₂] [Module R M₃]
 open _Root_.LinearMap
 
 /-- Multiplying by a unit `a` of the ring `R` is a linear equivalence. -/
-def smulOfUnit (a : (R)ˣ) : M ≃ₗ[R] M :=
-  ofLinear ((a : R) • 1 : M →ₗ[R] M) (((a⁻¹ : (R)ˣ) : R) • 1 : M →ₗ[R] M)
+def smulOfUnit (a : Rˣ) : M ≃ₗ[R] M :=
+  ofLinear ((a : R) • 1 : M →ₗ[R] M) (((a⁻¹ : Rˣ) : R) • 1 : M →ₗ[R] M)
     (by
       rw [smul_comp, comp_smul, smul_smul, Units.mul_inv, one_smul] <;> rfl)
     (by

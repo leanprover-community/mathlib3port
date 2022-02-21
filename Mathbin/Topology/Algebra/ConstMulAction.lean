@@ -92,7 +92,7 @@ theorem Continuous.const_smul (hg : Continuous g) (c : M) : Continuous fun x => 
   (continuous_const_smul _).comp hg
 
 /-- If a scalar is central, then its right action is continuous when its left action is. -/
-instance HasContinuousConstSmul.op [HasScalar (Mᵐᵒᵖ) α] [IsCentralScalar M α] : HasContinuousConstSmul (Mᵐᵒᵖ) α :=
+instance HasContinuousConstSmul.op [HasScalar Mᵐᵒᵖ α] [IsCentralScalar M α] : HasContinuousConstSmul Mᵐᵒᵖ α :=
   ⟨MulOpposite.rec fun c => by
       simpa only [op_smul_eq_smul] using continuous_const_smul c⟩
 
@@ -114,7 +114,7 @@ variable [TopologicalSpace α]
 variable [Monoidₓ M] [MulAction M α] [HasContinuousConstSmul M α]
 
 @[to_additive]
-instance Units.has_continuous_const_smul : HasContinuousConstSmul (M)ˣ α where
+instance Units.has_continuous_const_smul : HasContinuousConstSmul Mˣ α where
   continuous_const_smul := fun m => (continuous_const_smul (m : M) : _)
 
 @[to_additive]

@@ -254,7 +254,7 @@ theorem neg_smul_neg : -r • -x = r • x := by
   rw [neg_smul, smul_neg, neg_negₓ]
 
 @[simp]
-theorem Units.neg_smul (u : (R)ˣ) (x : M) : -u • x = -(u • x) := by
+theorem Units.neg_smul (u : Rˣ) (x : M) : -u • x = -(u • x) := by
   rw [Units.smul_def, Units.coe_neg, neg_smul, Units.smul_def]
 
 variable (R)
@@ -285,7 +285,7 @@ instance (priority := 910) Semiringₓ.toModule [Semiringₓ R] : Module R R whe
 
 /-- Like `semiring.to_module`, but multiplies on the right. -/
 -- see Note [lower instance priority]
-instance (priority := 910) Semiringₓ.toOppositeModule [Semiringₓ R] : Module (Rᵐᵒᵖ) R :=
+instance (priority := 910) Semiringₓ.toOppositeModule [Semiringₓ R] : Module Rᵐᵒᵖ R :=
   { MonoidWithZeroₓ.toOppositeMulActionWithZero R with smul_add := fun r x y => add_mulₓ _ _ _,
     add_smul := fun r x y => mul_addₓ _ _ _ }
 

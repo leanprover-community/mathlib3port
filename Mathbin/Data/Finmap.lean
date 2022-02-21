@@ -54,7 +54,7 @@ structure Finmap (β : α → Type v) : Type max u v where
 def Alist.toFinmap (s : Alist β) : Finmap β :=
   ⟨s.entries, s.Nodupkeys⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:462:9: unsupported: advanced prec syntax
+-- ././Mathport/Syntax/Translate/Basic.lean:462:9: unsupported: advanced prec syntax max
 local notation:999 "⟦" a "⟧" => Alist.toFinmap a
 
 theorem Alist.to_finmap_eq {s₁ s₂ : Alist β} : ⟦s₁⟧ = ⟦s₂⟧ ↔ s₁.entries ~ s₂.entries := by

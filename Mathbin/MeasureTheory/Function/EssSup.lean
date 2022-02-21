@@ -3,7 +3,7 @@ Copyright (c) 2021 Rémy Degenne. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne
 -/
-import Mathbin.MeasureTheory.Measure.MeasureSpace
+import Mathbin.MeasureTheory.Constructions.BorelSpace
 import Mathbin.Order.Filter.Ennreal
 
 /-!
@@ -27,7 +27,7 @@ sense). We do not define that quantity here, which is simply the supremum of a m
 -/
 
 
-open MeasureTheory Filter
+open MeasureTheory Filter TopologicalSpace
 
 open_locale Ennreal MeasureTheory
 
@@ -132,6 +132,74 @@ theorem ess_sup_smul_measure {f : α → β} {c : ℝ≥0∞} (hc : c ≠ 0) : e
   ext1
   simp_rw [mem_ae_iff]
   simp [hc]
+
+section TopologicalSpace
+
+variable {γ : Type _} {mγ : MeasurableSpace γ} {f : α → γ} {g : γ → β}
+
+include mγ
+
+theorem ess_sup_comp_le_ess_sup_map_measure (hf : Measurable f) : essSup (g ∘ f) μ ≤ essSup g (Measure.map f μ) := by
+  refine'
+    Limsup_le_Limsup_of_le (fun t => _)
+      (by
+        run_tac
+          is_bounded_default)
+      (by
+        run_tac
+          is_bounded_default)
+  simp_rw [Filter.mem_map]
+  have : g ∘ f ⁻¹' t = f ⁻¹' (g ⁻¹' t) := by
+    ext1 x
+    simp_rw [Set.mem_preimage]
+  rw [this]
+  exact fun h => mem_ae_of_mem_ae_map hf h
+
+theorem _root_.measurable_embedding.ess_sup_map_measure (hf : MeasurableEmbedding f) :
+    essSup g (Measure.map f μ) = essSup (g ∘ f) μ := by
+  refine' le_antisymmₓ _ (ess_sup_comp_le_ess_sup_map_measure hf.measurable)
+  refine'
+    Limsup_le_Limsup
+      (by
+        run_tac
+          is_bounded_default)
+      (by
+        run_tac
+          is_bounded_default)
+      fun c h_le => _
+  rw [eventually_map] at h_le⊢
+  exact hf.ae_map_iff.mpr h_le
+
+variable [MeasurableSpace β] [TopologicalSpace β] [SecondCountableTopology β] [OrderClosedTopology β]
+  [OpensMeasurableSpace β]
+
+theorem ess_sup_map_measure_of_measurable (hg : Measurable g) (hf : Measurable f) :
+    essSup g (Measure.map f μ) = essSup (g ∘ f) μ := by
+  refine' le_antisymmₓ _ (ess_sup_comp_le_ess_sup_map_measure hf)
+  refine'
+    Limsup_le_Limsup
+      (by
+        run_tac
+          is_bounded_default)
+      (by
+        run_tac
+          is_bounded_default)
+      fun c h_le => _
+  rw [eventually_map] at h_le⊢
+  rw [ae_map_iff hf (measurable_set_le hg measurable_const)]
+  exact h_le
+
+theorem ess_sup_map_measure (hg : AeMeasurable g (Measure.map f μ)) (hf : Measurable f) :
+    essSup g (Measure.map f μ) = essSup (g ∘ f) μ := by
+  rw [ess_sup_congr_ae hg.ae_eq_mk, ess_sup_map_measure_of_measurable hg.measurable_mk hf]
+  refine' ess_sup_congr_ae _
+  have h_eq := ae_of_ae_map hf hg.ae_eq_mk
+  rw [← eventually_eq] at h_eq
+  exact h_eq.symm
+
+omit mγ
+
+end TopologicalSpace
 
 end CompleteLattice
 

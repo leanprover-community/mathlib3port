@@ -46,11 +46,11 @@ def presheafToTypes (T : X → Type v) : X.Presheaf (Type v) where
   map := fun U V i g => fun x : unop V => g (i.unop x)
 
 @[simp]
-theorem presheaf_to_Types_obj {T : X → Type v} {U : Opens Xᵒᵖ} : (presheafToTypes X T).obj U = ∀ x : unop U, T x :=
+theorem presheaf_to_Types_obj {T : X → Type v} {U : (Opens X)ᵒᵖ} : (presheafToTypes X T).obj U = ∀ x : unop U, T x :=
   rfl
 
 @[simp]
-theorem presheaf_to_Types_map {T : X → Type v} {U V : Opens Xᵒᵖ} {i : U ⟶ V} {f} :
+theorem presheaf_to_Types_map {T : X → Type v} {U V : (Opens X)ᵒᵖ} {i : U ⟶ V} {f} :
     (presheafToTypes X T).map i f = fun x => f (i.unop x) :=
   rfl
 
@@ -68,11 +68,11 @@ def presheafToType (T : Type v) : X.Presheaf (Type v) where
   map := fun U V i g => g ∘ i.unop
 
 @[simp]
-theorem presheaf_to_Type_obj {T : Type v} {U : Opens Xᵒᵖ} : (presheafToType X T).obj U = (unop U → T) :=
+theorem presheaf_to_Type_obj {T : Type v} {U : (Opens X)ᵒᵖ} : (presheafToType X T).obj U = (unop U → T) :=
   rfl
 
 @[simp]
-theorem presheaf_to_Type_map {T : Type v} {U V : Opens Xᵒᵖ} {i : U ⟶ V} {f} :
+theorem presheaf_to_Type_map {T : Type v} {U V : (Opens X)ᵒᵖ} {i : U ⟶ V} {f} :
     (presheafToType X T).map i f = f ∘ i.unop :=
   rfl
 
@@ -82,7 +82,7 @@ def presheafToTop (T : Top.{v}) : X.Presheaf (Type v) :=
   (Opens.toTop X).op ⋙ yoneda.obj T
 
 @[simp]
-theorem presheaf_to_Top_obj (T : Top.{v}) (U : Opens Xᵒᵖ) :
+theorem presheaf_to_Top_obj (T : Top.{v}) (U : (Opens X)ᵒᵖ) :
     (presheafToTop X T).obj U = ((Opens.toTop X).obj (unop U) ⟶ T) :=
   rfl
 

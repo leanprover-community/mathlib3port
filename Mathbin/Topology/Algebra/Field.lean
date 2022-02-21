@@ -26,8 +26,8 @@ variable [TopologicalSpace R]
 /-- The induced topology on units of a topological ring.
 This is not a global instance since other topologies could be relevant. Instead there is a class
 `induced_units` asserting that something equivalent to this construction holds. -/
-def topologicalSpaceUnits : TopologicalSpace (R)ˣ :=
-  induced (coe : (R)ˣ → R) ‹_›
+def topologicalSpaceUnits : TopologicalSpace Rˣ :=
+  induced (coe : Rˣ → R) ‹_›
 
 /-- Asserts the topology on units is the induced topology.
 
@@ -35,24 +35,24 @@ def topologicalSpaceUnits : TopologicalSpace (R)ˣ :=
  Another good candidate is the subspace topology of $R \times R$,
  with the units embedded via $u \mapsto (u, u^{-1})$.
  These topologies are not (propositionally) equal in general. -/
-class InducedUnits [t : TopologicalSpace <| (R)ˣ] : Prop where
-  top_eq : t = induced (coe : (R)ˣ → R) ‹_›
+class InducedUnits [t : TopologicalSpace <| Rˣ] : Prop where
+  top_eq : t = induced (coe : Rˣ → R) ‹_›
 
-variable [TopologicalSpace <| (R)ˣ]
+variable [TopologicalSpace <| Rˣ]
 
-theorem units_topology_eq [InducedUnits R] : ‹TopologicalSpace (R)ˣ› = induced (coe : (R)ˣ → R) ‹_› :=
+theorem units_topology_eq [InducedUnits R] : ‹TopologicalSpace Rˣ› = induced (coe : Rˣ → R) ‹_› :=
   induced_units.top_eq
 
-theorem InducedUnits.continuous_coe [InducedUnits R] : Continuous (coe : (R)ˣ → R) :=
+theorem InducedUnits.continuous_coe [InducedUnits R] : Continuous (coe : Rˣ → R) :=
   (units_topology_eq R).symm ▸ continuous_induced_dom
 
-theorem units_embedding [InducedUnits R] : Embedding (coe : (R)ˣ → R) :=
+theorem units_embedding [InducedUnits R] : Embedding (coe : Rˣ → R) :=
   { induced := units_topology_eq R, inj := fun x y h => Units.ext h }
 
-instance top_monoid_units [TopologicalRing R] [InducedUnits R] : HasContinuousMul (R)ˣ :=
+instance top_monoid_units [TopologicalRing R] [InducedUnits R] : HasContinuousMul Rˣ :=
   ⟨by
     let mulR := fun p : R × R => p.1 * p.2
-    let mulRx := fun p : (R)ˣ × (R)ˣ => p.1 * p.2
+    let mulRx := fun p : Rˣ × Rˣ => p.1 * p.2
     have key : coe ∘ mulRx = mulR ∘ fun p => (p.1.val, p.2.val) := rfl
     rw [continuous_iff_le_induced, units_topology_eq R, prod_induced_induced, induced_compose, key, ← induced_compose]
     apply induced_mono
@@ -91,10 +91,10 @@ instance (priority := 100) induced_units : TopologicalRing.InducedUnits K :=
 
 variable [TopologicalDivisionRing K]
 
-theorem units_top_group : TopologicalGroup (K)ˣ :=
+theorem units_top_group : TopologicalGroup Kˣ :=
   { TopologicalRing.top_monoid_units K with
     continuous_inv := by
-      have : (coe : (K)ˣ → K) ∘ (fun x => x⁻¹ : (K)ˣ → (K)ˣ) = (fun x => x⁻¹ : K → K) ∘ (coe : (K)ˣ → K) :=
+      have : (coe : Kˣ → K) ∘ (fun x => x⁻¹ : Kˣ → Kˣ) = (fun x => x⁻¹ : K → K) ∘ (coe : Kˣ → K) :=
         funext Units.coe_inv'
       rw [continuous_iff_continuous_at]
       intro x
@@ -105,7 +105,7 @@ theorem units_top_group : TopologicalGroup (K)ˣ :=
 
 attribute [local instance] units_top_group
 
-theorem continuous_units_inv : Continuous fun x : (K)ˣ => (↑x⁻¹ : K) :=
+theorem continuous_units_inv : Continuous fun x : Kˣ => (↑x⁻¹ : K) :=
   (TopologicalRing.InducedUnits.continuous_coe K).comp TopologicalGroup.continuous_inv
 
 end TopologicalDivisionRing

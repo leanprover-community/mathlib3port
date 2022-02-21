@@ -112,7 +112,7 @@ theorem exists_subset_affine_independent_span_eq_top_of_open {s u : Set P} (hu :
       ne_of_gtₓ hε, true_andₓ, not_false_iff]
     exact fun y h1 h2 => h1 (h2.symm ▸ hq)
   classical
-  let w : t → (ℝ)ˣ := fun p => if hp : (p : P) ∈ s then 1 else Units.mk0 _ (hεyq (↑p) hp)
+  let w : t → ℝˣ := fun p => if hp : (p : P) ∈ s then 1 else Units.mk0 _ (hεyq (↑p) hp)
   refine' ⟨Set.Range fun p : t => line_map q p (w p : ℝ), _, _, _, _⟩
   · intro p hp
     use ⟨p, ht₁ hp⟩

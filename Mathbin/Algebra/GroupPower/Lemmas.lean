@@ -591,12 +591,12 @@ theorem Nat.cast_le_pow_div_sub {K : Type _} [LinearOrderedField K] {a : K} (H :
 
 namespace Int
 
-theorem units_sq (u : (ℤ)ˣ) : u ^ 2 = 1 :=
+theorem units_sq (u : ℤˣ) : u ^ 2 = 1 :=
   (sq u).symm ▸ units_mul_self u
 
 alias Int.units_sq ← Int.units_pow_two
 
-theorem units_pow_eq_pow_mod_two (u : (ℤ)ˣ) (n : ℕ) : u ^ n = u ^ (n % 2) := by
+theorem units_pow_eq_pow_mod_two (u : ℤˣ) (n : ℕ) : u ^ n = u ^ (n % 2) := by
   conv => lhs rw [← Nat.mod_add_divₓ n 2] <;> rw [pow_addₓ, pow_mulₓ, units_sq, one_pow, mul_oneₓ]
 
 @[simp]
@@ -840,7 +840,7 @@ end
 variable [Monoidₓ M] [Groupₓ G] [Ringₓ R]
 
 @[simp, to_additive]
-theorem units_zpow_right {a : M} {x y : (M)ˣ} (h : SemiconjBy a x y) : ∀ m : ℤ, SemiconjBy a ↑(x ^ m) ↑(y ^ m)
+theorem units_zpow_right {a : M} {x y : Mˣ} (h : SemiconjBy a x y) : ∀ m : ℤ, SemiconjBy a ↑(x ^ m) ↑(y ^ m)
   | (n : ℕ) => by
     simp only [zpow_coe_nat, Units.coe_pow, h, pow_right]
   | -[1+ n] => by
@@ -897,11 +897,11 @@ end
 variable [Monoidₓ M] [Groupₓ G] [Ringₓ R]
 
 @[simp, to_additive]
-theorem units_zpow_right {a : M} {u : (M)ˣ} (h : Commute a u) (m : ℤ) : Commute a ↑(u ^ m) :=
+theorem units_zpow_right {a : M} {u : Mˣ} (h : Commute a u) (m : ℤ) : Commute a ↑(u ^ m) :=
   h.units_zpow_right m
 
 @[simp, to_additive]
-theorem units_zpow_left {u : (M)ˣ} {a : M} (h : Commute (↑u) a) (m : ℤ) : Commute (↑(u ^ m)) a :=
+theorem units_zpow_left {u : Mˣ} {a : M} (h : Commute (↑u) a) (m : ℤ) : Commute (↑(u ^ m)) a :=
   (h.symm.units_zpow_right m).symm
 
 variable {a b : R}
@@ -982,10 +982,10 @@ namespace Units
 
 variable [Monoidₓ M]
 
-theorem conj_pow (u : (M)ˣ) (x : M) (n : ℕ) : (↑u * x * ↑u⁻¹) ^ n = u * x ^ n * ↑u⁻¹ :=
+theorem conj_pow (u : Mˣ) (x : M) (n : ℕ) : (↑u * x * ↑u⁻¹) ^ n = u * x ^ n * ↑u⁻¹ :=
   (divp_eq_iff_mul_eq.2 ((u.mk_semiconj_by x).pow_right n).Eq.symm).symm
 
-theorem conj_pow' (u : (M)ˣ) (x : M) (n : ℕ) : (↑u⁻¹ * x * u) ^ n = ↑u⁻¹ * x ^ n * u :=
+theorem conj_pow' (u : Mˣ) (x : M) (n : ℕ) : (↑u⁻¹ * x * u) ^ n = ↑u⁻¹ * x ^ n * u :=
   u⁻¹.conj_pow x n
 
 end Units

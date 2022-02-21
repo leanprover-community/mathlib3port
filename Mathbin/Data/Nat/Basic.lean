@@ -205,7 +205,7 @@ end Set
 /-! ### The units of the natural numbers as a `monoid` and `add_monoid` -/
 
 
-theorem units_eq_one (u : (ℕ)ˣ) : u = 1 :=
+theorem units_eq_one (u : ℕˣ) : u = 1 :=
   Units.ext <| Nat.eq_one_of_dvd_one ⟨u.inv, u.val_inv.symm⟩
 
 theorem add_units_eq_zero (u : AddUnits ℕ) : u = 0 :=
@@ -219,7 +219,7 @@ protected theorem is_unit_iff {n : ℕ} : IsUnit n ↔ n = 1 :=
       | _, _, rfl, rfl => rfl)
     fun h => h.symm ▸ ⟨1, rfl⟩
 
-instance uniqueUnits : Unique (ℕ)ˣ where
+instance uniqueUnits : Unique ℕˣ where
   default := 1
   uniq := Nat.units_eq_one
 

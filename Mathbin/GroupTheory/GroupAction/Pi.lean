@@ -74,7 +74,7 @@ instance smul_comm_class'' {g : I → Type _} {h : I → Type _} [∀ i, HasScal
     [∀ i, SmulCommClass (f i) (g i) (h i)] : SmulCommClass (∀ i, f i) (∀ i, g i) (∀ i, h i) :=
   ⟨fun x y z => funext fun i => smul_comm (x i) (y i) (z i)⟩
 
-instance {α : Type _} [∀ i, HasScalar α <| f i] [∀ i, HasScalar (αᵐᵒᵖ) <| f i] [∀ i, IsCentralScalar α (f i)] :
+instance {α : Type _} [∀ i, HasScalar α <| f i] [∀ i, HasScalar αᵐᵒᵖ <| f i] [∀ i, IsCentralScalar α (f i)] :
     IsCentralScalar α (∀ i, f i) :=
   ⟨fun r m => funext fun i => op_smul_eq_smul _ _⟩
 

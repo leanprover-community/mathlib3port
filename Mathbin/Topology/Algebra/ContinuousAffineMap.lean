@@ -195,7 +195,7 @@ theorem coe_smul (t : S) (f : P →A[R] W) : ⇑(t • f) = t • f :=
 theorem smul_apply (t : S) (f : P →A[R] W) (x : P) : (t • f) x = t • f x :=
   rfl
 
-instance [DistribMulAction (Sᵐᵒᵖ) W] [IsCentralScalar S W] : IsCentralScalar S (P →A[R] W) where
+instance [DistribMulAction Sᵐᵒᵖ W] [IsCentralScalar S W] : IsCentralScalar S (P →A[R] W) where
   op_smul_eq_smul := fun t f => ext fun _ => op_smul_eq_smul _ _
 
 instance : MulAction S (P →A[R] W) :=

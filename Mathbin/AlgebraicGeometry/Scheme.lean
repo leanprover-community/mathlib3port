@@ -80,7 +80,7 @@ theorem id_coe_base (X : Scheme) : (↑(𝟙 X) : X.toSheafedSpace ⟶ X.toSheaf
   rfl
 
 @[simp]
-theorem id_app {X : Scheme} (U : Opens X.Carrierᵒᵖ) :
+theorem id_app {X : Scheme} (U : (Opens X.Carrier)ᵒᵖ) :
     (Subtype.val (𝟙 X)).c.app U =
       X.Presheaf.map
         (eqToHom

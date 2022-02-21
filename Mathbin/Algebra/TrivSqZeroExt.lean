@@ -159,7 +159,7 @@ instance [HasScalar T R] [HasScalar T M] [HasScalar S R] [HasScalar S M] [SmulCo
     SmulCommClass T S (tsze R M) :=
   Prod.smul_comm_class
 
-instance [HasScalar S R] [HasScalar S M] [HasScalar (Sᵐᵒᵖ) R] [HasScalar (Sᵐᵒᵖ) M] [IsCentralScalar S R]
+instance [HasScalar S R] [HasScalar S M] [HasScalar Sᵐᵒᵖ R] [HasScalar Sᵐᵒᵖ M] [IsCentralScalar S R]
     [IsCentralScalar S M] : IsCentralScalar S (tsze R M) :=
   Prod.is_central_scalar
 

@@ -144,7 +144,7 @@ theorem is_locally_fraction_pred {U : Opens (PrimeSpectrum.top R)} (f : ∀ x : 
 
 /-- The functions satisfying `is_locally_fraction` form a subring.
 -/
-def sectionsSubring (U : Opens (PrimeSpectrum.top R)ᵒᵖ) : Subring (∀ x : unop U, Localizations R x) where
+def sectionsSubring (U : (Opens (PrimeSpectrum.top R))ᵒᵖ) : Subring (∀ x : unop U, Localizations R x) where
   Carrier := { f | (isLocallyFraction R).pred f }
   zero_mem' := by
     refine' fun x => ⟨unop U, x.2, 𝟙 _, 0, 1, fun y => ⟨_, _⟩⟩
@@ -220,7 +220,7 @@ functions satisfying `is_locally_fraction`.
 def structureSheafInType : Sheaf (Type u) (PrimeSpectrum.top R) :=
   subsheafToTypes (isLocallyFraction R)
 
-instance commRingStructureSheafInTypeObj (U : Opens (PrimeSpectrum.top R)ᵒᵖ) :
+instance commRingStructureSheafInTypeObj (U : (Opens (PrimeSpectrum.top R))ᵒᵖ) :
     CommRingₓ ((structureSheafInType R).1.obj U) :=
   (sectionsSubring R U).toCommRing
 
@@ -842,11 +842,11 @@ instance IsLocalization.to_stalk (p : PrimeSpectrum R) :
   erw [iso.eq_comp_inv]
   exact to_stalk_comp_stalk_to_fiber_ring_hom R p
 
-instance openAlgebra (U : Opens (PrimeSpectrum R)ᵒᵖ) : Algebra R ((structureSheaf R).val.obj U) :=
+instance openAlgebra (U : (Opens (PrimeSpectrum R))ᵒᵖ) : Algebra R ((structureSheaf R).val.obj U) :=
   (toOpen R (unop U)).toAlgebra
 
 @[simp]
-theorem open_algebra_map (U : Opens (PrimeSpectrum R)ᵒᵖ) (r : R) :
+theorem open_algebra_map (U : (Opens (PrimeSpectrum R))ᵒᵖ) (r : R) :
     algebraMap R ((structureSheaf R).val.obj U) r = toOpen R (unop U) r :=
   rfl
 

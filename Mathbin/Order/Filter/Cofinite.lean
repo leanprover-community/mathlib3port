@@ -21,7 +21,7 @@ Define filters for other cardinalities of the complement.
 -/
 
 
-open Set
+open Set Function
 
 open_locale Classical
 
@@ -86,7 +86,7 @@ theorem Coprod_cofinite {δ : Type _} {κ : δ → Type _} [Fintype δ] :
   · rintro ⟨t, htf, hsub⟩
     exact (finite.pi htf).Subset hsub
     
-  · exact fun hS => ⟨fun i => Function.eval i '' S, fun i => hS.Image _, subset_pi_eval_image _ _⟩
+  · exact fun hS => ⟨fun i => eval i '' S, fun i => hS.Image _, subset_pi_eval_image _ _⟩
     
 
 end Filter
@@ -108,24 +108,23 @@ theorem Set.infinite_iff_frequently_cofinite {s : Set α} : Set.Infinite s ↔ �
 theorem Filter.eventually_cofinite_ne (x : α) : ∀ᶠ a in cofinite, a ≠ x :=
   (Set.finite_singleton x).eventually_cofinite_nmem
 
+/-- If `α` is a sup-semilattice with no maximal element, then `at_top ≤ cofinite`. -/
+theorem at_top_le_cofinite [SemilatticeSup α] [NoMaxOrder α] : (atTop : Filter α) ≤ cofinite := by
+  refine' compl_surjective.forall.2 fun s hs => _
+  rcases eq_empty_or_nonempty s with (rfl | hne)
+  · simp only [compl_empty, univ_mem]
+    
+  rw [mem_cofinite, compl_compl] at hs
+  lift s to Finset α using hs
+  rcases exists_gt (s.sup' hne id) with ⟨y, hy⟩
+  filter_upwards [mem_at_top y] with x hx hxs
+  exact (Finset.le_sup' id hxs).not_lt (hy.trans_le hx)
+
 /-- For natural numbers the filters `cofinite` and `at_top` coincide. -/
 theorem Nat.cofinite_eq_at_top : @cofinite ℕ = at_top := by
-  ext s
-  simp only [mem_cofinite, mem_at_top_sets]
-  constructor
-  · intro hs
-    use hs.to_finset.sup id + 1
-    intro b hb
-    by_contra hbs
-    have := hs.to_finset.subset_range_sup_succ (hs.mem_to_finset.2 hbs)
-    exact not_lt_of_le hb (Finset.mem_range.1 this)
-    
-  · rintro ⟨N, hN⟩
-    apply (finite_lt_nat N).Subset
-    intro n hn
-    change n < N
-    exact lt_of_not_geₓ fun hn' => hn <| hN n hn'
-    
+  refine' le_antisymmₓ _ at_top_le_cofinite
+  refine' at_top_basis.ge_iff.2 fun N hN => _
+  simpa only [mem_cofinite, compl_Ici] using finite_lt_nat N
 
 theorem Nat.frequently_at_top_iff_infinite {p : ℕ → Prop} : (∃ᶠ n in at_top, p n) ↔ Set.Infinite { n | p n } := by
   simp only [← Nat.cofinite_eq_at_top, frequently_cofinite_iff_infinite]
@@ -160,6 +159,10 @@ theorem Filter.Tendsto.exists_forall_ge {α β : Type _} [Nonempty α] [LinearOr
   @Filter.Tendsto.exists_forall_le _ (OrderDual β) _ _ _ hf
 
 /-- For an injective function `f`, inverse images of finite sets are finite. -/
-theorem Function.Injective.tendsto_cofinite {α β : Type _} {f : α → β} (hf : Function.Injective f) :
+theorem Function.Injective.tendsto_cofinite {α β : Type _} {f : α → β} (hf : Injective f) :
     Tendsto f cofinite cofinite := fun s h => h.Preimage (hf.InjOn _)
+
+/-- An injective sequence `f : ℕ → ℕ` tends to infinity at infinity. -/
+theorem Function.Injective.nat_tendsto_at_top {f : ℕ → ℕ} (hf : Injective f) : Tendsto f atTop atTop :=
+  Nat.cofinite_eq_at_top ▸ hf.tendsto_cofinite
 

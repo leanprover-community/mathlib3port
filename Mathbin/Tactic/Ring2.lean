@@ -572,7 +572,7 @@ open Interactive Interactive.Types Lean.Parser
 
 open Tactic.Ring2
 
-local postfix:9001 "?" => optionalₓ
+local postfix:1024 "?" => optionalₓ
 
 -- ././Mathport/Syntax/Translate/Basic.lean:916:4: warning: unsupported (TODO): `[tacs]
 /-- `ring2` solves equations in the language of rings.

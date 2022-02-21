@@ -912,7 +912,7 @@ namespace Units
 variable [Ringₓ α] {a b : α}
 
 /-- Each element of the group of units of a ring has an additive inverse. -/
-instance : Neg (α)ˣ :=
+instance : Neg αˣ :=
   ⟨fun u =>
     ⟨-↑u, -↑u⁻¹, by
       simp , by
@@ -921,14 +921,14 @@ instance : Neg (α)ˣ :=
 /-- Representing an element of a ring's unit group as an element of the ring commutes with
     mapping this element to its additive inverse. -/
 @[simp, norm_cast]
-protected theorem coe_neg (u : (α)ˣ) : (↑(-u) : α) = -u :=
+protected theorem coe_neg (u : αˣ) : (↑(-u) : α) = -u :=
   rfl
 
 @[simp, norm_cast]
-protected theorem coe_neg_one : ((-1 : (α)ˣ) : α) = -1 :=
+protected theorem coe_neg_one : ((-1 : αˣ) : α) = -1 :=
   rfl
 
-instance : HasDistribNeg (α)ˣ where
+instance : HasDistribNeg αˣ where
   neg := Neg.neg
   neg_neg := fun u => Units.ext <| neg_negₓ _
   neg_mul := fun u₁ u₂ => Units.ext <| neg_mul _ _
@@ -1211,7 +1211,7 @@ theorem mul_self_eq_one_iff {a : α} : a * a = 1 ↔ a = 1 ∨ a = -1 := by
 
 /-- In the unit group of an integral domain, a unit is its own inverse iff the unit is one or
   one's additive inverse. -/
-theorem Units.inv_eq_self_iff (u : (α)ˣ) : u⁻¹ = u ↔ u = 1 ∨ u = -1 := by
+theorem Units.inv_eq_self_iff (u : αˣ) : u⁻¹ = u ↔ u = 1 ∨ u = -1 := by
   rw [inv_eq_iff_mul_eq_one]
   simp only [Units.ext_iff]
   push_cast

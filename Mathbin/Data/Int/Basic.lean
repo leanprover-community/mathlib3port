@@ -1379,14 +1379,14 @@ theorem to_nat_of_nonpos : ∀ {z : ℤ}, z ≤ 0 → z.toNat = 0
 
 
 @[simp]
-theorem units_nat_abs (u : (ℤ)ˣ) : natAbs u = 1 :=
+theorem units_nat_abs (u : ℤˣ) : natAbs u = 1 :=
   Units.ext_iff.1 <|
     Nat.units_eq_one
       ⟨natAbs u, natAbs ↑u⁻¹, by
         rw [← nat_abs_mul, Units.mul_inv] <;> rfl, by
         rw [← nat_abs_mul, Units.inv_mul] <;> rfl⟩
 
-theorem units_eq_one_or (u : (ℤ)ˣ) : u = 1 ∨ u = -1 := by
+theorem units_eq_one_or (u : ℤˣ) : u = 1 ∨ u = -1 := by
   simpa only [Units.ext_iff, units_nat_abs] using nat_abs_eq u
 
 theorem is_unit_eq_one_or {a : ℤ} : IsUnit a → a = 1 ∨ a = -1
@@ -1410,16 +1410,16 @@ theorem is_unit_iff_abs_eq {x : ℤ} : IsUnit x ↔ abs x = 1 := by
 theorem of_nat_is_unit {n : ℕ} : IsUnit (n : ℤ) ↔ IsUnit n := by
   rw [Nat.is_unit_iff, is_unit_iff_nat_abs_eq, nat_abs_of_nat]
 
-theorem units_inv_eq_self (u : (ℤ)ˣ) : u⁻¹ = u :=
+theorem units_inv_eq_self (u : ℤˣ) : u⁻¹ = u :=
   (units_eq_one_or u).elim (fun h => h.symm ▸ rfl) fun h => h.symm ▸ rfl
 
 @[simp]
-theorem units_mul_self (u : (ℤ)ˣ) : u * u = 1 :=
+theorem units_mul_self (u : ℤˣ) : u * u = 1 :=
   (units_eq_one_or u).elim (fun h => h.symm ▸ rfl) fun h => h.symm ▸ rfl
 
 -- `units.coe_mul` is a "wrong turn" for the simplifier, this undoes it and simplifies further
 @[simp]
-theorem units_coe_mul_self (u : (ℤ)ˣ) : (u * u : ℤ) = 1 := by
+theorem units_coe_mul_self (u : ℤˣ) : (u * u : ℤ) = 1 := by
   rw [← Units.coe_mul, units_mul_self, Units.coe_one]
 
 @[simp]

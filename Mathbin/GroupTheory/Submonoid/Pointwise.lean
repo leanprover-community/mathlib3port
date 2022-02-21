@@ -154,7 +154,7 @@ theorem smul_mem_pointwise_smul (m : M) (a : α) (S : Submonoid M) : m ∈ S →
 theorem mem_smul_pointwise_iff_exists (m : M) (a : α) (S : Submonoid M) : m ∈ a • S ↔ ∃ s : M, s ∈ S ∧ a • s = m :=
   (Set.mem_smul_set : m ∈ a • (S : Set M) ↔ _)
 
-instance pointwise_central_scalar [MulDistribMulAction (αᵐᵒᵖ) M] [IsCentralScalar α M] :
+instance pointwise_central_scalar [MulDistribMulAction αᵐᵒᵖ M] [IsCentralScalar α M] :
     IsCentralScalar α (Submonoid M) :=
   ⟨fun a S => (congr_argₓ fun f => S.map f) <| MonoidHom.ext <| op_smul_eq_smul _⟩
 
@@ -250,7 +250,7 @@ theorem coe_pointwise_smul (a : α) (S : AddSubmonoid A) : ↑(a • S) = a • 
 theorem smul_mem_pointwise_smul (m : A) (a : α) (S : AddSubmonoid A) : m ∈ S → a • m ∈ a • S :=
   (Set.smul_mem_smul_set : _ → _ ∈ a • (S : Set A))
 
-instance pointwise_central_scalar [DistribMulAction (αᵐᵒᵖ) A] [IsCentralScalar α A] :
+instance pointwise_central_scalar [DistribMulAction αᵐᵒᵖ A] [IsCentralScalar α A] :
     IsCentralScalar α (AddSubmonoid A) :=
   ⟨fun a S => (congr_argₓ fun f => S.map f) <| AddMonoidHom.ext <| op_smul_eq_smul _⟩
 

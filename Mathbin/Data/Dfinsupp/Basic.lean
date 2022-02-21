@@ -301,7 +301,7 @@ instance {δ : Type _} [Monoidₓ γ] [Monoidₓ δ] [∀ i, AddMonoidₓ (β i)
     ext fun i => by
       simp only [smul_apply, smul_assoc r s (m i)]
 
-instance [Monoidₓ γ] [∀ i, AddMonoidₓ (β i)] [∀ i, DistribMulAction γ (β i)] [∀ i, DistribMulAction (γᵐᵒᵖ) (β i)]
+instance [Monoidₓ γ] [∀ i, AddMonoidₓ (β i)] [∀ i, DistribMulAction γ (β i)] [∀ i, DistribMulAction γᵐᵒᵖ (β i)]
     [∀ i, IsCentralScalar γ (β i)] : IsCentralScalar γ (Π₀ i, β i) where
   op_smul_eq_smul := fun r m =>
     ext fun i => by

@@ -190,8 +190,8 @@ instance [HasScalar S R] [HasScalar S M] [IsScalarTower S R M] : HasScalar S p :
 instance [HasScalar S R] [HasScalar S M] [IsScalarTower S R M] : IsScalarTower S R p :=
   p.toSubMulAction.IsScalarTower
 
-instance [HasScalar S R] [HasScalar S M] [IsScalarTower S R M] [HasScalar (Sᵐᵒᵖ) R] [HasScalar (Sᵐᵒᵖ) M]
-    [IsScalarTower (Sᵐᵒᵖ) R M] [IsCentralScalar S M] : IsCentralScalar S p :=
+instance [HasScalar S R] [HasScalar S M] [IsScalarTower S R M] [HasScalar Sᵐᵒᵖ R] [HasScalar Sᵐᵒᵖ M]
+    [IsScalarTower Sᵐᵒᵖ R M] [IsCentralScalar S M] : IsCentralScalar S p :=
   p.toSubMulAction.IsCentralScalar
 
 protected theorem nonempty : (p : Set M).Nonempty :=

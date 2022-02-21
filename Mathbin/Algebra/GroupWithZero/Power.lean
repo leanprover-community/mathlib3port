@@ -243,7 +243,7 @@ theorem zpow_mul₀' (a : G₀) (m n : ℤ) : a ^ (m * n) = (a ^ n) ^ m := by
   rw [mul_comm, zpow_mul₀]
 
 @[simp, norm_cast]
-theorem Units.coe_zpow₀ (u : (G₀)ˣ) : ∀ n : ℤ, ((u ^ n : (G₀)ˣ) : G₀) = u ^ n
+theorem Units.coe_zpow₀ (u : G₀ˣ) : ∀ n : ℤ, ((u ^ n : G₀ˣ) : G₀) = u ^ n
   | (n : ℕ) => by
     rw [zpow_coe_nat, zpow_coe_nat]
     exact u.coe_pow n

@@ -112,7 +112,7 @@ open Opposite
 
 /-- The opposite of a finite category is finite.
 -/
-def finCategoryOpposite {J : Type v} [SmallCategory J] [FinCategory J] : FinCategory (Jᵒᵖ) where
+instance finCategoryOpposite {J : Type v} [SmallCategory J] [FinCategory J] : FinCategory Jᵒᵖ where
   decidableEqObj := Equivₓ.decidableEq equivToOpposite.symm
   fintypeObj := Fintype.ofEquiv _ equivToOpposite
   decidableEqHom := fun j j' => Equivₓ.decidableEq (opEquiv j j')

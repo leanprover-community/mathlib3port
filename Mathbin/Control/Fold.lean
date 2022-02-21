@@ -107,7 +107,7 @@ how the monoid of endofunctions define `foldl`.
 -/
 @[reducible]
 def Foldl (α : Type u) : Type u :=
-  End αᵐᵒᵖ
+  (End α)ᵐᵒᵖ
 
 def Foldl.mk (f : α → α) : Foldl α :=
   op f

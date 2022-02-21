@@ -63,7 +63,7 @@ theorem smul_mem_pointwise_smul (m : M) (r : R) (S : Subring R) : r ∈ S → m 
 theorem mem_smul_pointwise_iff_exists (m : M) (r : R) (S : Subring R) : r ∈ m • S ↔ ∃ s : R, s ∈ S ∧ m • s = r :=
   (Set.mem_smul_set : r ∈ m • (S : Set R) ↔ _)
 
-instance pointwise_central_scalar [MulSemiringAction (Mᵐᵒᵖ) R] [IsCentralScalar M R] : IsCentralScalar M (Subring R) :=
+instance pointwise_central_scalar [MulSemiringAction Mᵐᵒᵖ R] [IsCentralScalar M R] : IsCentralScalar M (Subring R) :=
   ⟨fun a S => (congr_argₓ fun f => S.map f) <| RingHom.ext <| op_smul_eq_smul _⟩
 
 end Monoidₓ

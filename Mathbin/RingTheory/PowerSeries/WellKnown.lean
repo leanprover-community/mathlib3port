@@ -27,19 +27,19 @@ section Ringₓ
 variable {R S : Type _} [Ringₓ R] [Ringₓ S]
 
 /-- The power series for `1 / (u - x)`. -/
-def invUnitsSub (u : (R)ˣ) : PowerSeries R :=
+def invUnitsSub (u : Rˣ) : PowerSeries R :=
   mk fun n => 1 /ₚ u ^ (n + 1)
 
 @[simp]
-theorem coeff_inv_units_sub (u : (R)ˣ) (n : ℕ) : coeff R n (invUnitsSub u) = 1 /ₚ u ^ (n + 1) :=
+theorem coeff_inv_units_sub (u : Rˣ) (n : ℕ) : coeff R n (invUnitsSub u) = 1 /ₚ u ^ (n + 1) :=
   coeff_mk _ _
 
 @[simp]
-theorem constant_coeff_inv_units_sub (u : (R)ˣ) : constantCoeff R (invUnitsSub u) = 1 /ₚ u := by
+theorem constant_coeff_inv_units_sub (u : Rˣ) : constantCoeff R (invUnitsSub u) = 1 /ₚ u := by
   rw [← coeff_zero_eq_constant_coeff_apply, coeff_inv_units_sub, zero_addₓ, pow_oneₓ]
 
 @[simp]
-theorem inv_units_sub_mul_X (u : (R)ˣ) : invUnitsSub u * X = invUnitsSub u * c R u - 1 := by
+theorem inv_units_sub_mul_X (u : Rˣ) : invUnitsSub u * X = invUnitsSub u * c R u - 1 := by
   ext (_ | n)
   · simp
     
@@ -47,11 +47,10 @@ theorem inv_units_sub_mul_X (u : (R)ˣ) : invUnitsSub u * X = invUnitsSub u * c 
     
 
 @[simp]
-theorem inv_units_sub_mul_sub (u : (R)ˣ) : invUnitsSub u * (c R u - X) = 1 := by
+theorem inv_units_sub_mul_sub (u : Rˣ) : invUnitsSub u * (c R u - X) = 1 := by
   simp [mul_sub, sub_sub_cancel]
 
-theorem map_inv_units_sub (f : R →+* S) (u : (R)ˣ) : map f (invUnitsSub u) = invUnitsSub (Units.map (f : R →* S) u) :=
-  by
+theorem map_inv_units_sub (f : R →+* S) (u : Rˣ) : map f (invUnitsSub u) = invUnitsSub (Units.map (f : R →* S) u) := by
   ext
   simp [← map_pow]
 

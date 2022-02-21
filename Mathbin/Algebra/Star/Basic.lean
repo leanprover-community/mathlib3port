@@ -361,7 +361,7 @@ namespace Units
 
 variable [Monoidₓ R] [StarMonoid R]
 
-instance : StarMonoid (R)ˣ where
+instance : StarMonoid Rˣ where
   star := fun u =>
     { val := star u, inv := star ↑u⁻¹,
       val_inv := (star_mul _ _).symm.trans <| (congr_argₓ star u.inv_val).trans <| star_one _,
@@ -370,14 +370,14 @@ instance : StarMonoid (R)ˣ where
   star_mul := fun u v => Units.ext (star_mul _ _)
 
 @[simp]
-theorem coe_star (u : (R)ˣ) : ↑(star u) = (star ↑u : R) :=
+theorem coe_star (u : Rˣ) : ↑(star u) = (star ↑u : R) :=
   rfl
 
 @[simp]
-theorem coe_star_inv (u : (R)ˣ) : ↑(star u)⁻¹ = (star ↑u⁻¹ : R) :=
+theorem coe_star_inv (u : Rˣ) : ↑(star u)⁻¹ = (star ↑u⁻¹ : R) :=
   rfl
 
-instance {A : Type _} [HasStar A] [HasScalar R A] [StarModule R A] : StarModule (R)ˣ A :=
+instance {A : Type _} [HasStar A] [HasScalar R A] [StarModule R A] : StarModule Rˣ A :=
   ⟨fun u a => (star_smul (↑u) a : _)⟩
 
 end Units
@@ -411,7 +411,7 @@ theorem star_inv_of {R : Type _} [Monoidₓ R] [StarMonoid R] (r : R) [Invertibl
 namespace MulOpposite
 
 /-- The opposite type carries the same star operation. -/
-instance [HasStar R] : HasStar (Rᵐᵒᵖ) where
+instance [HasStar R] : HasStar Rᵐᵒᵖ where
   star := fun r => op (star r.unop)
 
 @[simp]
@@ -422,22 +422,22 @@ theorem unop_star [HasStar R] (r : Rᵐᵒᵖ) : unop (star r) = star (unop r) :
 theorem op_star [HasStar R] (r : R) : op (star r) = star (op r) :=
   rfl
 
-instance [HasInvolutiveStar R] : HasInvolutiveStar (Rᵐᵒᵖ) where
+instance [HasInvolutiveStar R] : HasInvolutiveStar Rᵐᵒᵖ where
   star_involutive := fun r => unop_injective (star_star r.unop)
 
-instance [Monoidₓ R] [StarMonoid R] : StarMonoid (Rᵐᵒᵖ) where
+instance [Monoidₓ R] [StarMonoid R] : StarMonoid Rᵐᵒᵖ where
   star_mul := fun x y => unop_injective (star_mul y.unop x.unop)
 
-instance [AddMonoidₓ R] [StarAddMonoid R] : StarAddMonoid (Rᵐᵒᵖ) where
+instance [AddMonoidₓ R] [StarAddMonoid R] : StarAddMonoid Rᵐᵒᵖ where
   star_add := fun x y => unop_injective (star_add x.unop y.unop)
 
-instance [Semiringₓ R] [StarRing R] : StarRing (Rᵐᵒᵖ) :=
+instance [Semiringₓ R] [StarRing R] : StarRing Rᵐᵒᵖ :=
   { MulOpposite.starAddMonoid with }
 
 end MulOpposite
 
 /-- A commutative star monoid is a star module over its opposite via
 `monoid.to_opposite_mul_action`. -/
-instance StarMonoid.toOppositeStarModule [CommMonoidₓ R] [StarMonoid R] : StarModule (Rᵐᵒᵖ) R :=
+instance StarMonoid.toOppositeStarModule [CommMonoidₓ R] [StarMonoid R] : StarModule Rᵐᵒᵖ R :=
   ⟨fun r s => star_mul' s r.unop⟩
 

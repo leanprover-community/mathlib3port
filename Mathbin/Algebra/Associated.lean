@@ -248,7 +248,7 @@ theorem Irreducible.dvd_comm [Monoidₓ α] {p q : α} (hp : Irreducible p) (hq 
 /-- Two elements of a `monoid` are `associated` if one of them is another one
 multiplied by a unit on the right. -/
 def Associated [Monoidₓ α] (x y : α) : Prop :=
-  ∃ u : (α)ˣ, x * u = y
+  ∃ u : αˣ, x * u = y
 
 local infixl:50 " ~ᵤ " => Associated
 
@@ -280,7 +280,7 @@ end Associated
 
 attribute [local instance] Associated.setoid
 
-theorem unit_associated_one [Monoidₓ α] {u : (α)ˣ} : (u : α) ~ᵤ 1 :=
+theorem unit_associated_one [Monoidₓ α] {u : αˣ} : (u : α) ~ᵤ 1 :=
   ⟨u⁻¹, Units.mul_inv u⟩
 
 theorem associated_one_iff_is_unit [Monoidₓ α] {a : α} : (a : α) ~ᵤ 1 ↔ IsUnit a :=
@@ -427,9 +427,9 @@ protected theorem Associated.irreducible [Monoidₓ α] {p q : α} (h : p ~ᵤ q
   ⟨mt h.symm.IsUnit hp.1,
     let ⟨u, hu⟩ := h
     fun a b hab =>
-    have hpab : p = a * (b * (u⁻¹ : (α)ˣ)) :=
+    have hpab : p = a * (b * (u⁻¹ : αˣ)) :=
       calc
-        p = p * u * (u⁻¹ : (α)ˣ) := by
+        p = p * u * (u⁻¹ : αˣ) := by
           simp
         _ = _ := by
           rw [hu] <;> simp [hab, mul_assoc]
@@ -446,7 +446,7 @@ theorem Associated.of_mul_left [CancelCommMonoidWithZero α] {a b c d : α} (h :
     (ha : a ≠ 0) : b ~ᵤ d :=
   let ⟨u, hu⟩ := h
   let ⟨v, hv⟩ := Associated.symm h₁
-  ⟨u * (v : (α)ˣ),
+  ⟨u * (v : αˣ),
     mul_left_cancel₀ ha
       (by
         rw [← hv, mul_assoc c (v : α) d, mul_left_commₓ c, ← hu]
@@ -470,9 +470,9 @@ theorem Associated.of_pow_associated_of_prime' [CancelCommMonoidWithZero α] {p�
 
 section UniqueUnits
 
-variable [Monoidₓ α] [Unique (α)ˣ]
+variable [Monoidₓ α] [Unique αˣ]
 
-theorem units_eq_one (u : (α)ˣ) : u = 1 :=
+theorem units_eq_one (u : αˣ) : u = 1 :=
   Subsingleton.elimₓ u 1
 
 theorem associated_iff_eq {x y : α} : x ~ᵤ y ↔ x = y := by

@@ -60,14 +60,14 @@ theorem has_limit_of_has_colimit_left_op [HasColimit F.leftOp] : HasLimit F :=
 
 /-- If `C` has colimits of shape `Jᵒᵖ`, we can construct limits in `Cᵒᵖ` of shape `J`.
 -/
-theorem has_limits_of_shape_op_of_has_colimits_of_shape [HasColimitsOfShape (Jᵒᵖ) C] : HasLimitsOfShape J (Cᵒᵖ) :=
+theorem has_limits_of_shape_op_of_has_colimits_of_shape [HasColimitsOfShape Jᵒᵖ C] : HasLimitsOfShape J Cᵒᵖ :=
   { HasLimit := fun F => has_limit_of_has_colimit_left_op F }
 
 attribute [local instance] has_limits_of_shape_op_of_has_colimits_of_shape
 
 /-- If `C` has colimits, we can construct limits for `Cᵒᵖ`.
 -/
-theorem has_limits_op_of_has_colimits [HasColimits C] : HasLimits (Cᵒᵖ) :=
+theorem has_limits_op_of_has_colimits [HasColimits C] : HasLimits Cᵒᵖ :=
   ⟨inferInstance⟩
 
 /-- If `F.left_op : Jᵒᵖ ⥤ C` has a limit, we can construct a colimit for `F : J ⥤ Cᵒᵖ`.
@@ -94,60 +94,58 @@ theorem has_colimit_of_has_limit_left_op [HasLimit F.leftOp] : HasColimit F :=
 
 /-- If `C` has colimits of shape `Jᵒᵖ`, we can construct limits in `Cᵒᵖ` of shape `J`.
 -/
-theorem has_colimits_of_shape_op_of_has_limits_of_shape [HasLimitsOfShape (Jᵒᵖ) C] : HasColimitsOfShape J (Cᵒᵖ) :=
+theorem has_colimits_of_shape_op_of_has_limits_of_shape [HasLimitsOfShape Jᵒᵖ C] : HasColimitsOfShape J Cᵒᵖ :=
   { HasColimit := fun F => has_colimit_of_has_limit_left_op F }
 
 attribute [local instance] has_colimits_of_shape_op_of_has_limits_of_shape
 
 /-- If `C` has limits, we can construct colimits for `Cᵒᵖ`.
 -/
-theorem has_colimits_op_of_has_limits [HasLimits C] : HasColimits (Cᵒᵖ) :=
+theorem has_colimits_op_of_has_limits [HasLimits C] : HasColimits Cᵒᵖ :=
   ⟨inferInstance⟩
 
 variable (X : Type v)
 
 /-- If `C` has products indexed by `X`, then `Cᵒᵖ` has coproducts indexed by `X`.
 -/
-theorem has_coproducts_opposite [HasProductsOfShape X C] : HasCoproductsOfShape X (Cᵒᵖ) := by
-  have : has_limits_of_shape (discrete Xᵒᵖ) C := has_limits_of_shape_of_equivalence (discrete.opposite X).symm
+theorem has_coproducts_opposite [HasProductsOfShape X C] : HasCoproductsOfShape X Cᵒᵖ := by
+  have : has_limits_of_shape (discrete X)ᵒᵖ C := has_limits_of_shape_of_equivalence (discrete.opposite X).symm
   infer_instance
 
 /-- If `C` has coproducts indexed by `X`, then `Cᵒᵖ` has products indexed by `X`.
 -/
-theorem has_products_opposite [HasCoproductsOfShape X C] : HasProductsOfShape X (Cᵒᵖ) := by
-  have : has_colimits_of_shape (discrete Xᵒᵖ) C := has_colimits_of_shape_of_equivalence (discrete.opposite X).symm
+theorem has_products_opposite [HasCoproductsOfShape X C] : HasProductsOfShape X Cᵒᵖ := by
+  have : has_colimits_of_shape (discrete X)ᵒᵖ C := has_colimits_of_shape_of_equivalence (discrete.opposite X).symm
   infer_instance
 
-theorem has_finite_coproducts_opposite [HasFiniteProducts C] : HasFiniteCoproducts (Cᵒᵖ) :=
+theorem has_finite_coproducts_opposite [HasFiniteProducts C] : HasFiniteCoproducts Cᵒᵖ :=
   { out := fun J 𝒟 𝒥 => by
       skip
-      have : has_limits_of_shape (discrete Jᵒᵖ) C := has_limits_of_shape_of_equivalence (discrete.opposite J).symm
+      have : has_limits_of_shape (discrete J)ᵒᵖ C := has_limits_of_shape_of_equivalence (discrete.opposite J).symm
       infer_instance }
 
-theorem has_finite_products_opposite [HasFiniteCoproducts C] : HasFiniteProducts (Cᵒᵖ) :=
+theorem has_finite_products_opposite [HasFiniteCoproducts C] : HasFiniteProducts Cᵒᵖ :=
   { out := fun J 𝒟 𝒥 => by
       skip
-      have : has_colimits_of_shape (discrete Jᵒᵖ) C := has_colimits_of_shape_of_equivalence (discrete.opposite J).symm
+      have : has_colimits_of_shape (discrete J)ᵒᵖ C := has_colimits_of_shape_of_equivalence (discrete.opposite J).symm
       infer_instance }
 
-theorem has_equalizers_opposite [HasCoequalizers C] : HasEqualizers (Cᵒᵖ) := by
-  have : has_colimits_of_shape (walking_parallel_pair.{v}ᵒᵖ) C :=
+theorem has_equalizers_opposite [HasCoequalizers C] : HasEqualizers Cᵒᵖ := by
+  have : has_colimits_of_shape walking_parallel_pair.{v}ᵒᵖ C :=
     has_colimits_of_shape_of_equivalence walkingParallelPairOpEquiv.{v}
   infer_instance
 
-theorem has_coequalizers_opposite [HasEqualizers C] : HasCoequalizers (Cᵒᵖ) := by
-  have : has_limits_of_shape (walking_parallel_pair.{v}ᵒᵖ) C :=
+theorem has_coequalizers_opposite [HasEqualizers C] : HasCoequalizers Cᵒᵖ := by
+  have : has_limits_of_shape walking_parallel_pair.{v}ᵒᵖ C :=
     has_limits_of_shape_of_equivalence walkingParallelPairOpEquiv.{v}
   infer_instance
 
-attribute [local instance] fin_category_opposite
-
-theorem has_finite_colimits_opposite [HasFiniteLimits C] : HasFiniteColimits (Cᵒᵖ) :=
+theorem has_finite_colimits_opposite [HasFiniteLimits C] : HasFiniteColimits Cᵒᵖ :=
   { out := fun J 𝒟 𝒥 => by
       skip
       infer_instance }
 
-theorem has_finite_limits_opposite [HasFiniteColimits C] : HasFiniteLimits (Cᵒᵖ) :=
+theorem has_finite_limits_opposite [HasFiniteColimits C] : HasFiniteLimits Cᵒᵖ :=
   { out := fun J 𝒟 𝒥 => by
       skip
       infer_instance }

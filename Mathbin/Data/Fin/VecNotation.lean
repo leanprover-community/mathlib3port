@@ -58,7 +58,7 @@ The notation `![a, b, ...]` expands to `vec_cons a (vec_cons b ...)`.
 def vecCons {n : ℕ} (h : α) (t : Finₓ n → α) : Finₓ n.succ → α :=
   Finₓ.cons h t
 
--- ././Mathport/Syntax/Translate/Basic.lean:1379:9: unsupported: advanced notation (l:(foldr `, ` (h t, vec_cons h t) vec_empty `]`))
+-- ././Mathport/Syntax/Translate/Basic.lean:1387:9: unsupported: advanced notation (l:(foldr `, ` (h t, vec_cons h t) vec_empty `]`))
 notation3 "!["  => l
 
 /-- `vec_head v` gives the first entry of the vector `v` -/

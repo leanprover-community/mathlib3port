@@ -232,7 +232,7 @@ theorem smul_apply (r : S) (D : Derivation R A M) : (r • D) a = r • D a :=
 instance (priority := 100) : DistribMulAction S (Derivation R A M) :=
   Function.Injective.distribMulAction coeFnAddMonoidHom coe_injective coe_smul
 
-instance [DistribMulAction (Sᵐᵒᵖ) M] [IsCentralScalar S M] : IsCentralScalar S (Derivation R A M) where
+instance [DistribMulAction Sᵐᵒᵖ M] [IsCentralScalar S M] : IsCentralScalar S (Derivation R A M) where
   op_smul_eq_smul := fun _ _ => ext fun _ => op_smul_eq_smul _ _
 
 end Scalar

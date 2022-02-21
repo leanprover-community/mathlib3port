@@ -318,18 +318,18 @@ namespace Units
 /-- An element of the unit group of a nonzero monoid with zero represented as an element
     of the monoid is nonzero. -/
 @[simp]
-theorem ne_zero [Nontrivial M₀] (u : (M₀)ˣ) : (u : M₀) ≠ 0 :=
+theorem ne_zero [Nontrivial M₀] (u : M₀ˣ) : (u : M₀) ≠ 0 :=
   left_ne_zero_of_mul_eq_one u.mul_inv
 
 -- We can't use `mul_eq_zero` + `units.ne_zero` in the next two lemmas because we don't assume
 -- `nonzero M₀`.
 @[simp]
-theorem mul_left_eq_zero (u : (M₀)ˣ) {a : M₀} : a * u = 0 ↔ a = 0 :=
+theorem mul_left_eq_zero (u : M₀ˣ) {a : M₀} : a * u = 0 ↔ a = 0 :=
   ⟨fun h => by
     simpa using mul_eq_zero_of_left h ↑u⁻¹, fun h => mul_eq_zero_of_left h u⟩
 
 @[simp]
-theorem mul_right_eq_zero (u : (M₀)ˣ) {a : M₀} : ↑u * a = 0 ↔ a = 0 :=
+theorem mul_right_eq_zero (u : M₀ˣ) {a : M₀} : ↑u * a = 0 ↔ a = 0 :=
   ⟨fun h => by
     simpa using mul_eq_zero_of_right (↑u⁻¹) h, mul_eq_zero_of_right u⟩
 
@@ -370,11 +370,11 @@ than partially) defined inverse function for some purposes, including for calcul
 
 Note that while this is in the `ring` namespace for brevity, it requires the weaker assumption
 `monoid_with_zero M₀` instead of `ring M₀`. -/
-noncomputable def inverse : M₀ → M₀ := fun x => if h : IsUnit x then ((h.Unit⁻¹ : (M₀)ˣ) : M₀) else 0
+noncomputable def inverse : M₀ → M₀ := fun x => if h : IsUnit x then ((h.Unit⁻¹ : M₀ˣ) : M₀) else 0
 
 /-- By definition, if `x` is invertible then `inverse x = x⁻¹`. -/
 @[simp]
-theorem inverse_unit (u : (M₀)ˣ) : inverse (u : M₀) = (u⁻¹ : (M₀)ˣ) := by
+theorem inverse_unit (u : M₀ˣ) : inverse (u : M₀) = (u⁻¹ : M₀ˣ) := by
   simp only [Units.is_unit, inverse, dif_pos]
   exact Units.inv_unique rfl
 
@@ -733,7 +733,7 @@ variable {a b : G₀}
   By combining this function with the operations on units,
   or the `/ₚ` operation, it is possible to write a division
   as a partial function with three arguments. -/
-def mk0 (a : G₀) (ha : a ≠ 0) : (G₀)ˣ :=
+def mk0 (a : G₀) (ha : a ≠ 0) : G₀ˣ :=
   ⟨a, a⁻¹, mul_inv_cancel ha, inv_mul_cancel ha⟩
 
 @[simp]
@@ -746,19 +746,19 @@ theorem coe_mk0 {a : G₀} (h : a ≠ 0) : (mk0 a h : G₀) = a :=
   rfl
 
 @[simp]
-theorem mk0_coe (u : (G₀)ˣ) (h : (u : G₀) ≠ 0) : mk0 (u : G₀) h = u :=
+theorem mk0_coe (u : G₀ˣ) (h : (u : G₀) ≠ 0) : mk0 (u : G₀) h = u :=
   Units.ext rfl
 
 @[simp, norm_cast]
-theorem coe_inv' (u : (G₀)ˣ) : ((u⁻¹ : (G₀)ˣ) : G₀) = u⁻¹ :=
+theorem coe_inv' (u : G₀ˣ) : ((u⁻¹ : G₀ˣ) : G₀) = u⁻¹ :=
   eq_inv_of_mul_left_eq_one u.inv_mul
 
 @[simp]
-theorem mul_inv' (u : (G₀)ˣ) : (u : G₀) * u⁻¹ = 1 :=
+theorem mul_inv' (u : G₀ˣ) : (u : G₀) * u⁻¹ = 1 :=
   mul_inv_cancel u.ne_zero
 
 @[simp]
-theorem inv_mul' (u : (G₀)ˣ) : (u⁻¹ : G₀) * u = 1 :=
+theorem inv_mul' (u : G₀ˣ) : (u⁻¹ : G₀) * u = 1 :=
   inv_mul_cancel u.ne_zero
 
 @[simp]
@@ -767,10 +767,10 @@ theorem mk0_inj {a b : G₀} (ha : a ≠ 0) (hb : b ≠ 0) : Units.mk0 a ha = Un
     injection h, fun h => Units.ext h⟩
 
 @[simp]
-theorem exists_iff_ne_zero {x : G₀} : (∃ u : (G₀)ˣ, ↑u = x) ↔ x ≠ 0 :=
+theorem exists_iff_ne_zero {x : G₀} : (∃ u : G₀ˣ, ↑u = x) ↔ x ≠ 0 :=
   ⟨fun ⟨u, hu⟩ => hu ▸ u.ne_zero, fun hx => ⟨mk0 x hx, rfl⟩⟩
 
-theorem _root_.group_with_zero.eq_zero_or_unit (a : G₀) : a = 0 ∨ ∃ u : (G₀)ˣ, a = u := by
+theorem _root_.group_with_zero.eq_zero_or_unit (a : G₀) : a = 0 ∨ ∃ u : G₀ˣ, a = u := by
   by_cases' h : a = 0
   · left
     exact h
@@ -915,7 +915,7 @@ theorem zero_eq_inv {a : G₀} : 0 = a⁻¹ ↔ 0 = a :=
 theorem one_div_mul_one_div_rev (a b : G₀) : 1 / a * (1 / b) = 1 / (b * a) := by
   simp only [div_eq_mul_inv, one_mulₓ, mul_inv_rev₀]
 
-theorem divp_eq_div (a : G₀) (u : (G₀)ˣ) : a /ₚ u = a / u := by
+theorem divp_eq_div (a : G₀) (u : G₀ˣ) : a /ₚ u = a / u := by
   simpa only [div_eq_mul_inv] using congr_argₓ ((· * ·) a) u.coe_inv'
 
 @[simp]
@@ -1269,13 +1269,13 @@ def invMonoidWithZeroHom {G₀ : Type _} [CommGroupWithZero G₀] : G₀ →*₀
   map_mul' := fun _ _ => mul_inv₀
 
 @[simp]
-theorem MonoidHom.map_units_inv {M G₀ : Type _} [Monoidₓ M] [GroupWithZeroₓ G₀] (f : M →* G₀) (u : (M)ˣ) :
+theorem MonoidHom.map_units_inv {M G₀ : Type _} [Monoidₓ M] [GroupWithZeroₓ G₀] (f : M →* G₀) (u : Mˣ) :
     f ↑u⁻¹ = (f u)⁻¹ := by
   rw [← Units.coe_map, ← Units.coe_map, ← Units.coe_inv', MonoidHom.map_inv]
 
 @[simp]
 theorem MonoidWithZeroHom.map_units_inv {M G₀ : Type _} [MonoidWithZeroₓ M] [GroupWithZeroₓ G₀] (f : M →*₀ G₀)
-    (u : (M)ˣ) : f ↑u⁻¹ = (f u)⁻¹ :=
+    (u : Mˣ) : f ↑u⁻¹ = (f u)⁻¹ :=
   f.toMonoidHom.map_units_inv u
 
 section NoncomputableDefs

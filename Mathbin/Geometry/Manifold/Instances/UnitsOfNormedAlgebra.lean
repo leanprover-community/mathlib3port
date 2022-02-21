@@ -52,18 +52,18 @@ namespace Units
 
 variable {R : Type _} [NormedRing R] [CompleteSpace R]
 
-instance : ChartedSpace R (R)ˣ :=
+instance : ChartedSpace R Rˣ :=
   open_embedding_coe.singletonChartedSpace
 
-theorem chart_at_apply {a : (R)ˣ} {b : (R)ˣ} : chartAt R a b = b :=
+theorem chart_at_apply {a : Rˣ} {b : Rˣ} : chartAt R a b = b :=
   rfl
 
-theorem chart_at_source {a : (R)ˣ} : (chartAt R a).Source = Set.Univ :=
+theorem chart_at_source {a : Rˣ} : (chartAt R a).Source = Set.Univ :=
   rfl
 
 variable {𝕜 : Type _} [NondiscreteNormedField 𝕜] [NormedAlgebra 𝕜 R]
 
-instance : SmoothManifoldWithCorners 𝓘(𝕜, R) (R)ˣ :=
+instance : SmoothManifoldWithCorners 𝓘(𝕜, R) Rˣ :=
   open_embedding_coe.singleton_smooth_manifold_with_corners 𝓘(𝕜, R)
 
 end Units

@@ -218,7 +218,7 @@ section NormedRing
 
 variable [NormedRing α]
 
-theorem Units.norm_pos [Nontrivial α] (x : (α)ˣ) : 0 < ∥(x : α)∥ :=
+theorem Units.norm_pos [Nontrivial α] (x : αˣ) : 0 < ∥(x : α)∥ :=
   norm_pos_iff.mpr (Units.ne_zero x)
 
 /-- Normed ring structure on the product of two normed rings, using the sup norm. -/

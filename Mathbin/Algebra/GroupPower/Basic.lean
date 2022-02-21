@@ -444,9 +444,9 @@ alias sub_sq ← sub_pow_two
 -- Copies of the above comm_ring lemmas for `units R`.
 namespace Units
 
-theorem eq_or_eq_neg_of_sq_eq_sq [IsDomain R] (a b : (R)ˣ) (h : a ^ 2 = b ^ 2) : a = b ∨ a = -b := by
+theorem eq_or_eq_neg_of_sq_eq_sq [IsDomain R] (a b : Rˣ) (h : a ^ 2 = b ^ 2) : a = b ∨ a = -b := by
   refine' (eq_or_eq_neg_of_sq_eq_sq _ _ _).imp (fun h => Units.ext h) fun h => Units.ext h
-  replace h := congr_argₓ (coe : (R)ˣ → R) h
+  replace h := congr_argₓ (coe : Rˣ → R) h
   rwa [Units.coe_pow, Units.coe_pow] at h
 
 end Units

@@ -2870,7 +2870,7 @@ namespace Subgroup
 /-- A subgroup `H` of `G` determines a subgroup `H.opposite` of the opposite group `Gᵐᵒᵖ`. -/
 @[to_additive
       "An additive subgroup `H` of `G` determines an additive subgroup `H.opposite` of the\n  opposite additive group `Gᵃᵒᵖ`."]
-def opposite (H : Subgroup G) : Subgroup (Gᵐᵒᵖ) where
+def opposite (H : Subgroup G) : Subgroup Gᵐᵒᵖ where
   Carrier := MulOpposite.unop ⁻¹' (H : Set G)
   one_mem' := H.one_mem
   mul_mem' := fun a b ha hb => H.mul_mem hb ha
