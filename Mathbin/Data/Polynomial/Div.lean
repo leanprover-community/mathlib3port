@@ -112,8 +112,10 @@ def divByMonic (p q : R[X]) : R[X] :=
 def modByMonic (p q : R[X]) : R[X] :=
   if hq : Monic q then (divModByMonicAux p hq).2 else p
 
+-- mathport name: «expr /ₘ »
 infixl:70 " /ₘ " => divByMonic
 
+-- mathport name: «expr %ₘ »
 infixl:70 " %ₘ " => modByMonic
 
 theorem degree_mod_by_monic_lt [Nontrivial R] : ∀ p : R[X] {q : R[X]} hq : Monic q, degree (p %ₘ q) < degree q

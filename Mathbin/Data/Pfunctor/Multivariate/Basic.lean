@@ -34,7 +34,7 @@ variable {n m : ℕ} (P : Mvpfunctor.{u} n)
 
 /-- Applying `P` to an object of `Type` -/
 def Obj (α : Typevec.{u} n) : Type u :=
-  Σ a : P.A, P.B a ⟹ α
+  Σa : P.A, P.B a ⟹ α
 
 /-- Applying `P` to a morphism of `Type` -/
 def map {α β : Typevec n} (f : α ⟹ β) : P.Obj α → P.Obj β := fun ⟨a, g⟩ => ⟨a, Typevec.comp f g⟩
@@ -99,8 +99,8 @@ end Const
 
 /-- Functor composition on polynomial functors -/
 def comp (P : Mvpfunctor.{u} n) (Q : Fin2 n → Mvpfunctor.{u} m) : Mvpfunctor m where
-  A := Σ a₂ : P.1, ∀ i, P.2 a₂ i → (Q i).1
-  B := fun a => fun i => Σ (j) (b : P.2 a.1 j), (Q j).2 (a.snd j b) i
+  A := Σa₂ : P.1, ∀ i, P.2 a₂ i → (Q i).1
+  B := fun a => fun i => Σ(j : _)(b : P.2 a.1 j), (Q j).2 (a.snd j b) i
 
 variable {P} {Q : Fin2 n → Mvpfunctor.{u} m} {α β : Typevec.{u} m}
 

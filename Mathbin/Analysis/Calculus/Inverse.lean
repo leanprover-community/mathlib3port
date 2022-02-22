@@ -377,6 +377,7 @@ We also assume that either `E = {0}`, or `c < ∥f'⁻¹∥⁻¹`. We use `N` as
 
 variable {f' : E ≃L[𝕜] F} {s : Set E} {c : ℝ≥0 }
 
+-- mathport name: «exprN»
 local notation "N" => nnnorm (f'.symm : F →L[𝕜] E)
 
 protected theorem antilipschitz (hf : ApproximatesLinearOn f (f' : E →L[𝕜] F) s c) (hc : Subsingleton E ∨ c < N⁻¹) :

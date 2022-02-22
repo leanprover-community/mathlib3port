@@ -55,8 +55,10 @@ variable {𝕜 E F : Type _} [IsROrC 𝕜]
 
 variable [InnerProductSpace 𝕜 E] [InnerProductSpace ℝ F]
 
+-- mathport name: «expr⟪ , ⟫»
 local notation "⟪" x ", " y "⟫" => @inner 𝕜 E _ x y
 
+-- mathport name: «exprabsR»
 local notation "absR" => HasAbs.abs
 
 /-! ### Orthogonal projection in inner product spaces -/
@@ -874,6 +876,18 @@ theorem eq_sum_orthogonal_projection_self_orthogonal_complement [CompleteSpace E
     simp [hy]
     
 
+/-- The Pythagorean theorem, for an orthogonal projection.-/
+theorem norm_sq_eq_add_norm_sq_projection (x : E) (S : Submodule 𝕜 E) [CompleteSpace E] [CompleteSpace S] :
+    ∥x∥ ^ 2 = ∥orthogonalProjection S x∥ ^ 2 + ∥orthogonalProjection Sᗮ x∥ ^ 2 := by
+  let p1 := orthogonalProjection S
+  let p2 := orthogonalProjection Sᗮ
+  have x_decomp : x = p1 x + p2 x := eq_sum_orthogonal_projection_self_orthogonal_complement S x
+  have x_orth : ⟪p1 x, p2 x⟫ = 0 :=
+    Submodule.inner_right_of_mem_orthogonal (SetLike.coe_mem (p1 x)) (SetLike.coe_mem (p2 x))
+  nth_rw 0[x_decomp]
+  simp only [sq, norm_add_sq_eq_norm_sq_add_norm_sq_of_inner_eq_zero (p1 x : E) (p2 x) x_orth, add_left_injₓ,
+    mul_eq_mul_left_iff, norm_eq_zero, true_orₓ, eq_self_iff_true, Submodule.coe_norm, Submodule.coe_eq_zero]
+
 /-- In a complete space `E`, the projection maps onto a complete subspace `K` and its orthogonal
 complement sum to the identity. -/
 theorem id_eq_sum_orthogonal_projection_self_orthogonal_complement [CompleteSpace E] [CompleteSpace K] :
@@ -1056,7 +1070,7 @@ orthogonal complement. -/
 theorem OrthogonalFamily.submodule_is_internal_iff_of_is_complete [DecidableEq ι] {V : ι → Submodule 𝕜 E}
     (hV : @OrthogonalFamily 𝕜 _ _ _ _ (fun i => V i) _ fun i => (V i).subtypeₗᵢ) (hc : IsComplete (↑(supr V) : Set E)) :
     DirectSum.SubmoduleIsInternal V ↔ (supr V)ᗮ = ⊥ := by
-  have : CompleteSpace (↥supr V) := hc.complete_space_coe
+  have : CompleteSpace ↥(supr V) := hc.complete_space_coe
   simp only [DirectSum.submodule_is_internal_iff_independent_and_supr_eq_top, hV.independent, true_andₓ,
     Submodule.orthogonal_eq_bot_iff]
 
@@ -1066,7 +1080,7 @@ orthogonal complement. -/
 theorem OrthogonalFamily.submodule_is_internal_iff [DecidableEq ι] [FiniteDimensional 𝕜 E] {V : ι → Submodule 𝕜 E}
     (hV : @OrthogonalFamily 𝕜 _ _ _ _ (fun i => V i) _ fun i => (V i).subtypeₗᵢ) :
     DirectSum.SubmoduleIsInternal V ↔ (supr V)ᗮ = ⊥ :=
-  have h := FiniteDimensional.proper_is_R_or_C 𝕜 (↥supr V)
+  have h := FiniteDimensional.proper_is_R_or_C 𝕜 ↥(supr V)
   hV.submodule_is_internal_iff_of_is_complete (complete_space_coe_iff_is_complete.mp inferInstance)
 
 end OrthogonalFamily
@@ -1201,7 +1215,7 @@ theorem std_orthonormal_basis_orthonormal : Orthonormal 𝕜 (stdOrthonormalBasi
   (exists_subset_is_orthonormal_basis (orthonormal_empty 𝕜 E)).some_spec.some_spec.some_spec.1
 
 @[simp]
-theorem coe_std_orthonormal_basis : ⇑stdOrthonormalBasis 𝕜 E = coe :=
+theorem coe_std_orthonormal_basis : ⇑(stdOrthonormalBasis 𝕜 E) = coe :=
   (exists_subset_is_orthonormal_basis (orthonormal_empty 𝕜 E)).some_spec.some_spec.some_spec.2
 
 instance : Fintype (OrthonormalBasisIndex 𝕜 E) :=
@@ -1235,7 +1249,7 @@ variable {n : ℕ} (hn : finrank 𝕜 E = n) {ι : Type _} [Fintype ι] [Decidab
 /-- Exhibit a bijection between `fin n` and the index set of a certain basis of an `n`-dimensional
 inner product space `E`.  This should not be accessed directly, but only via the subsequent API. -/
 irreducible_def DirectSum.SubmoduleIsInternal.sigmaOrthonormalBasisIndexEquiv :
-  (Σ i, OrthonormalBasisIndex 𝕜 (V i)) ≃ Finₓ n :=
+  (Σi, OrthonormalBasisIndex 𝕜 (V i)) ≃ Finₓ n :=
   let b := hV.collectedBasis fun i => stdOrthonormalBasis 𝕜 (V i)
   Fintype.equivFinOfCardEq <| (FiniteDimensional.finrank_eq_card_basis b).symm.trans hn
 

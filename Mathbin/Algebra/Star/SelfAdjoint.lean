@@ -111,6 +111,15 @@ theorem conjugate {x : R} (hx : x ∈ selfAdjoint R) (z : R) : z * x * star z �
 theorem conjugate' {x : R} (hx : x ∈ selfAdjoint R) (z : R) : star z * x * z ∈ selfAdjoint R := by
   simp only [mem_iff, star_mul, star_star, mem_iff.mp hx, mul_assoc]
 
+instance : Pow (selfAdjoint R) ℕ :=
+  ⟨fun x n =>
+    ⟨(x : R) ^ n, by
+      simp only [mem_iff, star_pow, star_coe_eq]⟩⟩
+
+@[simp, norm_cast]
+theorem coe_pow (x : selfAdjoint R) (n : ℕ) : ↑(x ^ n) = (x : R) ^ n :=
+  rfl
+
 end Ringₓ
 
 section CommRingₓ
@@ -124,15 +133,6 @@ instance : Mul (selfAdjoint R) :=
 
 @[simp, norm_cast]
 theorem coe_mul (x y : selfAdjoint R) : ↑(x * y) = (x : R) * y :=
-  rfl
-
-instance : Pow (selfAdjoint R) ℕ :=
-  ⟨fun x n =>
-    ⟨(x : R) ^ n, by
-      simp only [mem_iff, star_pow, star_coe_eq]⟩⟩
-
-@[simp, norm_cast]
-theorem coe_pow (x : selfAdjoint R) (n : ℕ) : ↑(x ^ n) = (x : R) ^ n :=
   rfl
 
 instance : CommRingₓ (selfAdjoint R) :=

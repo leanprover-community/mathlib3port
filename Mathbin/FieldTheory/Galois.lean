@@ -146,7 +146,7 @@ theorem card_aut_eq_finrank [FiniteDimensional F E] [IsGalois F E] : Fintype.car
   · have p :
       iso.symm.to_alg_hom.to_ring_hom.comp (algebraMap F E) =
         algebraMap F
-          (↥«expr ⟮ , ⟯» F "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr ⟮ , ⟯»") :=
+          ↥(«expr ⟮ , ⟯» F "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr ⟮ , ⟯»") :=
       by
       ext
       simp
@@ -427,7 +427,7 @@ theorem of_separable_splitting_field_aux [hFE : FiniteDimensional F E] [sp : p.I
     ((↑(«expr ⟮ , ⟯» K "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr ⟮ , ⟯»") :
           IntermediateField F E) →ₐ[F]
         E) ≃
-      Σ f : K →ₐ[F] E,
+      Σf : K →ₐ[F] E,
         @AlgHom K («expr ⟮ , ⟯» K "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr ⟮ , ⟯»")
           E _ _ _ _ (RingHom.toAlgebra f) :=
     Equivₓ.trans

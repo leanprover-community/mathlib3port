@@ -63,9 +63,11 @@ generalized Boolean algebras, Boolean algebras, lattices, sdiff, compl
 -/
 
 
+open Function
+
 universe u v
 
-variable {α : Type u} {w x y z : α}
+variable {α : Type u} {β : Type _} {w x y z : α}
 
 /-!
 ### Generalized Boolean algebras
@@ -760,6 +762,7 @@ class HasCompl (α : Type _) where
 export HasCompl (Compl)
 
 -- ././Mathport/Syntax/Translate/Basic.lean:462:9: unsupported: advanced prec syntax «expr + »(max, 1)
+-- mathport name: «expr ᶜ»
 postfix:999 "ᶜ" => compl
 
 /-- This class contains the core axioms of a Boolean algebra. The `boolean_algebra` class extends
@@ -1024,4 +1027,60 @@ instance : BooleanAlgebra Bool :=
       le_sup_inf := by
         decide,
       Compl := bnot, inf_compl_le_bot := fun a => a.band_bnot_self.le, top_le_sup_compl := fun a => a.bor_bnot_self.Ge }
+
+section lift
+
+/-- Pullback a `generalized_boolean_algebra` along an injection. -/
+-- See note [reducible non-instances]
+@[reducible]
+protected def Function.Injective.generalizedBooleanAlgebra [HasSup α] [HasInf α] [HasBot α] [HasSdiff α]
+    [GeneralizedBooleanAlgebra β] (f : α → β) (hf : Injective f) (map_sup : ∀ a b, f (a⊔b) = f a⊔f b)
+    (map_inf : ∀ a b, f (a⊓b) = f a⊓f b) (map_bot : f ⊥ = ⊥) (map_sdiff : ∀ a b, f (a \ b) = f a \ f b) :
+    GeneralizedBooleanAlgebra α :=
+  { hf.Lattice f map_sup map_inf with sdiff := (· \ ·), bot := ⊥,
+    sup_inf_sdiff := fun a b =>
+      hf <|
+        (map_sup _ _).trans
+          (by
+            rw [map_sdiff]
+            convert sup_inf_sdiff _ _
+            exact map_inf _ _),
+    inf_inf_sdiff := fun a b =>
+      hf <|
+        (map_inf _ _).trans
+          (by
+            rw [map_sdiff]
+            convert inf_inf_sdiff _ _
+            exact map_inf _ _),
+    le_sup_inf := fun a b c =>
+      (map_inf _ _).le.trans <| by
+        convert le_sup_inf
+        exact map_sup _ _
+        exact map_sup _ _
+        convert map_sup _ _
+        exact (map_inf _ _).symm }
+
+/-- Pullback a `boolean_algebra` along an injection. -/
+-- See note [reducible non-instances]
+@[reducible]
+protected def Function.Injective.booleanAlgebra [HasSup α] [HasInf α] [HasTop α] [HasBot α] [HasCompl α] [HasSdiff α]
+    [BooleanAlgebra β] (f : α → β) (hf : Injective f) (map_sup : ∀ a b, f (a⊔b) = f a⊔f b)
+    (map_inf : ∀ a b, f (a⊓b) = f a⊓f b) (map_top : f ⊤ = ⊤) (map_bot : f ⊥ = ⊥) (map_compl : ∀ a, f (aᶜ) = f aᶜ)
+    (map_sdiff : ∀ a b, f (a \ b) = f a \ f b) : BooleanAlgebra α :=
+  { hf.GeneralizedBooleanAlgebra f map_sup map_inf map_bot map_sdiff with Compl := compl, top := ⊤,
+    le_top := fun a => (@le_top β _ _ _).trans map_top.Ge, bot_le := fun a => map_bot.le.trans bot_le,
+    inf_compl_le_bot := fun a =>
+      ((map_inf _ _).trans <| by
+          rw [map_compl, inf_compl_eq_bot, map_bot]).le,
+    top_le_sup_compl := fun a =>
+      ((map_sup _ _).trans <| by
+          rw [map_compl, sup_compl_eq_top, map_top]).Ge,
+    sdiff_eq := fun a b =>
+      hf <|
+        (map_sdiff _ _).trans <|
+          sdiff_eq.trans <| by
+            convert (map_inf _ _).symm
+            exact (map_compl _).symm }
+
+end lift
 

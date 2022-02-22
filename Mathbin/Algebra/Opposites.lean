@@ -42,8 +42,10 @@ reverses left and right in multiplication.-/
 def MulOpposite (α : Type u) : Type u :=
   α
 
+-- mathport name: «expr ᵐᵒᵖ»
 postfix:max "ᵐᵒᵖ" => MulOpposite
 
+-- mathport name: «expr ᵃᵒᵖ»
 postfix:max "ᵃᵒᵖ" => AddOpposite
 
 variable {α : Type u}

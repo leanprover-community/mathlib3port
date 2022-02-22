@@ -599,7 +599,7 @@ def coeAddHom {m : MeasurableSpace α} : Measure α →+ Set α → ℝ≥0∞ :
   ⟨coeFn, coe_zero, coe_add⟩
 
 @[simp]
-theorem coe_finset_sum {m : MeasurableSpace α} (I : Finset ι) (μ : ι → Measure α) : (⇑∑ i in I, μ i) = ∑ i in I, μ i :=
+theorem coe_finset_sum {m : MeasurableSpace α} (I : Finset ι) (μ : ι → Measure α) : ⇑(∑ i in I, μ i) = ∑ i in I, μ i :=
   (@coeAddHom α m).map_sum _ _
 
 theorem finset_sum_apply {m : MeasurableSpace α} (I : Finset ι) (μ : ι → Measure α) (s : Set α) :
@@ -1488,6 +1488,7 @@ end Count
 def AbsolutelyContinuous {m0 : MeasurableSpace α} (μ ν : Measure α) : Prop :=
   ∀ ⦃s : Set α⦄, ν s = 0 → μ s = 0
 
+-- mathport name: «expr ≪ »
 localized [MeasureTheory] infixl:50 " ≪ " => MeasureTheory.Measure.AbsolutelyContinuous
 
 theorem absolutely_continuous_of_le (h : μ ≤ ν) : μ ≪ ν := fun s hs => nonpos_iff_eq_zero.1 <| hs ▸ le_iff'.1 h s
@@ -2978,7 +2979,7 @@ theorem sum_measure [Encodable ι] {μ : ι → Measureₓ α} (h : ∀ i, AeMea
     rw [measure_to_measurable]
     exact (h i).ae_eq_mk
   have hsm : MeasurableSet (⋂ i, s i) := MeasurableSet.Inter fun i => measurable_set_to_measurable _ _
-  have hs : ∀ i x, x ∉ s i → f x = (h i).mk f x := by
+  have hs : ∀ i x, (x ∉ s i) → f x = (h i).mk f x := by
     intro i x hx
     contrapose! hx
     exact subset_to_measurable _ _ hx

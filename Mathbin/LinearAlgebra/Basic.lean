@@ -275,7 +275,7 @@ instance [Nontrivial M] : Nontrivial (Module.End R M) := by
   exact nontrivial_of_ne 1 0 fun p => Ne (LinearMap.congr_fun p m)
 
 @[simp, norm_cast]
-theorem coe_fn_sum {ι : Type _} (t : Finset ι) (f : ι → M →ₛₗ[σ₁₂] M₂) : (⇑∑ i in t, f i) = ∑ i in t, (f i : M → M₂) :=
+theorem coe_fn_sum {ι : Type _} (t : Finset ι) (f : ι → M →ₛₗ[σ₁₂] M₂) : ⇑(∑ i in t, f i) = ∑ i in t, (f i : M → M₂) :=
   AddMonoidHom.map_sum ⟨@toFun R R₂ _ _ σ₁₂ M M₂ _ _ _ _, rfl, fun x y => rfl⟩ _ _
 
 @[simp]
@@ -323,29 +323,29 @@ variable {f' : M →ₗ[R] M}
 theorem iterate_succ (n : ℕ) : f' ^ (n + 1) = comp (f' ^ n) f' := by
   rw [pow_succ'ₓ, mul_eq_comp]
 
-theorem iterate_surjective (h : Surjective f') : ∀ n : ℕ, Surjective (⇑(f' ^ n))
+theorem iterate_surjective (h : Surjective f') : ∀ n : ℕ, Surjective ⇑(f' ^ n)
   | 0 => surjective_id
   | n + 1 => by
     rw [iterate_succ]
     exact surjective.comp (iterate_surjective n) h
 
-theorem iterate_injective (h : Injective f') : ∀ n : ℕ, Injective (⇑(f' ^ n))
+theorem iterate_injective (h : Injective f') : ∀ n : ℕ, Injective ⇑(f' ^ n)
   | 0 => injective_id
   | n + 1 => by
     rw [iterate_succ]
     exact injective.comp (iterate_injective n) h
 
-theorem iterate_bijective (h : Bijective f') : ∀ n : ℕ, Bijective (⇑(f' ^ n))
+theorem iterate_bijective (h : Bijective f') : ∀ n : ℕ, Bijective ⇑(f' ^ n)
   | 0 => bijective_id
   | n + 1 => by
     rw [iterate_succ]
     exact bijective.comp (iterate_bijective n) h
 
-theorem injective_of_iterate_injective {n : ℕ} (hn : n ≠ 0) (h : Injective (⇑(f' ^ n))) : Injective f' := by
+theorem injective_of_iterate_injective {n : ℕ} (hn : n ≠ 0) (h : Injective ⇑(f' ^ n)) : Injective f' := by
   rw [← Nat.succ_pred_eq_of_posₓ (pos_iff_ne_zero.mpr hn), iterate_succ, coe_comp] at h
   exact injective.of_comp h
 
-theorem surjective_of_iterate_surjective {n : ℕ} (hn : n ≠ 0) (h : Surjective (⇑(f' ^ n))) : Surjective f' := by
+theorem surjective_of_iterate_surjective {n : ℕ} (hn : n ≠ 0) (h : Surjective ⇑(f' ^ n)) : Surjective f' := by
   rw [← Nat.succ_pred_eq_of_posₓ (pos_iff_ne_zero.mpr hn), Nat.succ_eq_add_one, add_commₓ, pow_addₓ] at h
   exact surjective.of_comp h
 
@@ -1169,6 +1169,7 @@ theorem sup_to_add_subgroup {R M : Type _} [Ringₓ R] [AddCommGroupₓ M] [Modu
 
 end
 
+-- mathport name: «expr ∙ »
 notation:1000 R "∙"
   x =>/- This is the character `∙`, with escape sequence `\.`, and is thus different from the scalar
     multiplication character `•`, with escape sequence `\bub`. -/
@@ -1637,7 +1638,7 @@ variable {γ : Type _} [Zero γ]
 theorem map_finsupp_sum (f : M →ₛₗ[σ₁₂] M₂) {t : ι →₀ γ} {g : ι → γ → M} : f (t.Sum g) = t.Sum fun i d => f (g i d) :=
   f.map_sum
 
-theorem coe_finsupp_sum (t : ι →₀ γ) (g : ι → γ → M →ₛₗ[σ₁₂] M₂) : ⇑t.Sum g = t.Sum fun i d => g i d :=
+theorem coe_finsupp_sum (t : ι →₀ γ) (g : ι → γ → M →ₛₗ[σ₁₂] M₂) : ⇑(t.Sum g) = t.Sum fun i d => g i d :=
   coe_fn_sum _ _
 
 @[simp]
@@ -1661,7 +1662,7 @@ theorem map_dfinsupp_sum (f : M →ₛₗ[σ₁₂] M₂) {t : Π₀ i, γ i} {g
     f (t.Sum g) = t.Sum fun i d => f (g i d) :=
   f.map_sum
 
-theorem coe_dfinsupp_sum (t : Π₀ i, γ i) (g : ∀ i, γ i → M →ₛₗ[σ₁₂] M₂) : ⇑t.Sum g = t.Sum fun i d => g i d :=
+theorem coe_dfinsupp_sum (t : Π₀ i, γ i) (g : ∀ i, γ i → M →ₛₗ[σ₁₂] M₂) : ⇑(t.Sum g) = t.Sum fun i d => g i d :=
   coe_fn_sum _ _
 
 @[simp]
@@ -2423,7 +2424,7 @@ protected def curry : (V × V₂ → R) ≃ₗ[R] V → V₂ → R :=
       rfl }
 
 @[simp]
-theorem coe_curry : ⇑LinearEquiv.curry R V V₂ = curry :=
+theorem coe_curry : ⇑(LinearEquiv.curry R V V₂) = curry :=
   rfl
 
 @[simp]
@@ -3130,7 +3131,7 @@ theorem general_linear_equiv_to_linear_map (f : GeneralLinearGroup R M) : (gener
   rfl
 
 @[simp]
-theorem coe_fn_general_linear_equiv (f : GeneralLinearGroup R M) : ⇑generalLinearEquiv R M f = (f : M → M) :=
+theorem coe_fn_general_linear_equiv (f : GeneralLinearGroup R M) : ⇑(generalLinearEquiv R M f) = (f : M → M) :=
   rfl
 
 end GeneralLinearGroup

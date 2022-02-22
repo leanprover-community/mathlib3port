@@ -427,6 +427,7 @@ theorem t1_space_iff_is_field [IsDomain R] : T1Space (PrimeSpectrum R) ↔ IsFie
       
     
 
+-- mathport name: «exprZ( )»
 local notation "Z(" a ")" => ZeroLocus (a : Set R)
 
 theorem is_irreducible_zero_locus_iff_of_radical (I : Ideal R) (hI : I.radical = I) :

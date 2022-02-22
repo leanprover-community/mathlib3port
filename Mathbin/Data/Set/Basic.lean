@@ -301,7 +301,7 @@ theorem eq_of_subset_of_subset {a b : Set α} : a ⊆ b → b ⊆ a → a = b :=
 theorem mem_of_subset_of_mem {s₁ s₂ : Set α} {a : α} (h : s₁ ⊆ s₂) : a ∈ s₁ → a ∈ s₂ :=
   @h _
 
-theorem not_mem_subset (h : s ⊆ t) : a ∉ t → a ∉ s :=
+theorem not_mem_subset (h : s ⊆ t) : (a ∉ t) → a ∉ s :=
   mt <| mem_of_subset_of_mem h
 
 theorem not_subset : ¬s ⊆ t ↔ ∃ a ∈ s, a ∉ t := by
@@ -343,7 +343,7 @@ theorem not_mem_empty (x : α) : ¬x ∈ (∅ : Set α) :=
   id
 
 @[simp]
-theorem not_not_mem : ¬a ∉ s ↔ a ∈ s :=
+theorem not_not_mem : (¬a ∉ s) ↔ a ∈ s :=
   not_not
 
 /-! ### Non-empty sets -/
@@ -356,7 +356,7 @@ protected def Nonempty (s : Set α) : Prop :=
   ∃ x, x ∈ s
 
 @[simp]
-theorem nonempty_coe_sort (s : Set α) : Nonempty (↥s) ↔ s.Nonempty :=
+theorem nonempty_coe_sort (s : Set α) : Nonempty ↥s ↔ s.Nonempty :=
   nonempty_subtype
 
 theorem nonempty_def : s.Nonempty ↔ ∃ x, x ∈ s :=
@@ -816,7 +816,7 @@ theorem eq_or_mem_of_mem_insert {x a : α} {s : Set α} : x ∈ insert a s → x
 theorem mem_of_mem_insert_of_ne : b ∈ insert a s → b ≠ a → b ∈ s :=
   Or.resolve_left
 
-theorem eq_of_not_mem_of_mem_insert : b ∈ insert a s → b ∉ s → b = a :=
+theorem eq_of_not_mem_of_mem_insert : b ∈ insert a s → (b ∉ s) → b = a :=
   Or.resolve_right
 
 @[simp]
@@ -827,7 +827,7 @@ theorem mem_insert_iff {x a : α} {s : Set α} : x ∈ insert a s ↔ x = a ∨ 
 theorem insert_eq_of_mem {a : α} {s : Set α} (h : a ∈ s) : insert a s = s :=
   ext fun x => or_iff_right_of_imp fun e => e.symm ▸ h
 
-theorem ne_insert_of_not_mem {s : Set α} (t : Set α) {a : α} : a ∉ s → s ≠ insert a t :=
+theorem ne_insert_of_not_mem {s : Set α} (t : Set α) {a : α} : (a ∉ s) → s ≠ insert a t :=
   mt fun e => e.symm ▸ mem_insert _ _
 
 theorem insert_subset : insert a s ⊆ t ↔ a ∈ t ∧ s ⊆ t := by
@@ -965,10 +965,10 @@ theorem singleton_inter_eq_empty : {a} ∩ s = ∅ ↔ a ∉ s :=
 theorem inter_singleton_eq_empty : s ∩ {a} = ∅ ↔ a ∉ s := by
   rw [inter_comm, singleton_inter_eq_empty]
 
-theorem nmem_singleton_empty {s : Set α} : s ∉ ({∅} : Set (Set α)) ↔ s.Nonempty :=
+theorem nmem_singleton_empty {s : Set α} : (s ∉ ({∅} : Set (Set α))) ↔ s.Nonempty :=
   ne_empty_iff_nonempty
 
-instance uniqueSingleton (a : α) : Unique (↥({a} : Set α)) :=
+instance uniqueSingleton (a : α) : Unique ↥({a} : Set α) :=
   ⟨⟨⟨a, mem_singleton a⟩⟩, fun ⟨x, h⟩ => Subtype.eq h⟩
 
 theorem eq_singleton_iff_unique_mem : s = {a} ↔ a ∈ s ∧ ∀, ∀ x ∈ s, ∀, x = a :=
@@ -976,17 +976,6 @@ theorem eq_singleton_iff_unique_mem : s = {a} ↔ a ∈ s ∧ ∀, ∀ x ∈ s, 
 
 theorem eq_singleton_iff_nonempty_unique_mem : s = {a} ↔ s.Nonempty ∧ ∀, ∀ x ∈ s, ∀, x = a :=
   eq_singleton_iff_unique_mem.trans <| and_congr_left fun H => ⟨fun h' => ⟨_, h'⟩, fun ⟨x, h⟩ => H x h ▸ h⟩
-
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (a b «expr ∈ » s)
-theorem exists_eq_singleton_iff_nonempty_unique_mem :
-    (∃ a : α, s = {a}) ↔ s.Nonempty ∧ ∀ a b _ : a ∈ s _ : b ∈ s, a = b := by
-  refine' ⟨_, fun h => _⟩
-  · rintro ⟨a, rfl⟩
-    refine' ⟨Set.singleton_nonempty a, fun b hb c hc => hb.trans hc.symm⟩
-    
-  · obtain ⟨a, ha⟩ := h.1
-    refine' ⟨a, set.eq_singleton_iff_unique_mem.mpr ⟨ha, fun b hb => h.2 b hb a ha⟩⟩
-    
 
 -- while `simp` is capable of proving this, it is not capable of turning the LHS into the RHS.
 @[simp]
@@ -1080,7 +1069,7 @@ theorem mem_compl_eq (s : Set α) (x : α) : (x ∈ sᶜ) = (x ∉ s) :=
 theorem mem_compl_iff (s : Set α) (x : α) : x ∈ sᶜ ↔ x ∉ s :=
   Iff.rfl
 
-theorem not_mem_compl_iff {x : α} : x ∉ sᶜ ↔ x ∈ s :=
+theorem not_mem_compl_iff {x : α} : (x ∉ sᶜ) ↔ x ∈ s :=
   not_not
 
 @[simp]
@@ -1167,6 +1156,7 @@ theorem subset_compl_comm {s t : Set α} : s ⊆ tᶜ ↔ t ⊆ sᶜ :=
 theorem subset_compl_iff_disjoint {s t : Set α} : s ⊆ tᶜ ↔ s ∩ t = ∅ :=
   Iff.trans (forall_congrₓ fun a => and_imp.symm) subset_empty_iff
 
+@[simp]
 theorem subset_compl_singleton_iff {a : α} {s : Set α} : s ⊆ {a}ᶜ ↔ a ∉ s :=
   subset_compl_comm.trans singleton_subset_iff
 
@@ -1385,6 +1375,9 @@ theorem insert_diff_singleton {a : α} {s : Set α} : insert a (s \ {a}) = inser
 theorem diff_self {s : Set α} : s \ s = ∅ :=
   sdiff_self
 
+theorem diff_diff_right_self (s t : Set α) : s \ (s \ t) = s ∩ t :=
+  sdiff_sdiff_right_self
+
 theorem diff_diff_cancel_left {s t : Set α} (h : s ⊆ t) : t \ (t \ s) = s :=
   sdiff_sdiff_eq_self h
 
@@ -1517,6 +1510,7 @@ theorem subset_ite {t s s' u : Set α} : u ⊆ t.ite s s' ↔ u ∩ t ⊆ s ∧ 
 def Preimage {α : Type u} {β : Type v} (f : α → β) (s : Set β) : Set α :=
   { x | f x ∈ s }
 
+-- mathport name: «expr ⁻¹' »
 infixl:80 " ⁻¹' " => Preimage
 
 section Preimage
@@ -1614,6 +1608,7 @@ end Preimage
 
 section Image
 
+-- mathport name: «expr '' »
 infixl:80 " '' " => Image
 
 theorem mem_image_iff_bex {f : α → β} {s : Set α} {y : β} : y ∈ f '' s ↔ ∃ (x : _)(_ : x ∈ s), f x = y :=
@@ -1955,6 +1950,15 @@ theorem subsingleton_is_top (α : Type _) [PartialOrderₓ α] : Set.Subsingleto
 theorem subsingleton_is_bot (α : Type _) [PartialOrderₓ α] : Set.Subsingleton { x : α | IsBot x } := fun x hx y hy =>
   hx.IsMin.eq_of_ge (hy x)
 
+theorem exists_eq_singleton_iff_nonempty_subsingleton : (∃ a : α, s = {a}) ↔ s.Nonempty ∧ s.Subsingleton := by
+  refine' ⟨_, fun h => _⟩
+  · rintro ⟨a, rfl⟩
+    exact ⟨singleton_nonempty a, subsingleton_singleton⟩
+    
+  · obtain ⟨a, ha⟩ := h.1
+    exact ⟨a, eq_singleton_iff_unique_mem.mpr ⟨ha, fun b hb => h.2 hb ha⟩⟩
+    
+
 /-- `s`, coerced to a type, is a subsingleton type if and only if `s`
 is a subsingleton set. -/
 @[simp, norm_cast]
@@ -2232,7 +2236,7 @@ theorem image_compl_preimage {f : α → β} {s : Set β} : f '' (f ⁻¹' s)ᶜ
   rw [compl_eq_univ_diff, image_diff_preimage, image_univ]
 
 @[simp]
-theorem range_sigma_mk {β : α → Type _} (a : α) : Range (Sigma.mk a : β a → Σ a, β a) = Sigma.fst ⁻¹' {a} := by
+theorem range_sigma_mk {β : α → Type _} (a : α) : Range (Sigma.mk a : β a → Σa, β a) = Sigma.fst ⁻¹' {a} := by
   apply subset.antisymm
   · rintro _ ⟨b, rfl⟩
     simp

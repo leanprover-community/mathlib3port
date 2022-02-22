@@ -90,7 +90,7 @@ theorem app_eq_coe (η : ApplicativeTransformation F G) : η.app = η :=
   rfl
 
 @[simp]
-theorem coe_mk (f : ∀ α : Type u, F α → G α) pp ps : ⇑ApplicativeTransformation.mk f pp ps = f :=
+theorem coe_mk (f : ∀ α : Type u, F α → G α) pp ps : ⇑(ApplicativeTransformation.mk f pp ps) = f :=
   rfl
 
 protected theorem congr_fun (η η' : ApplicativeTransformation F G) (h : η = η') {α : Type u} (x : F α) : η x = η' x :=

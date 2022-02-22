@@ -66,6 +66,7 @@ class EnrichedCategory (C : Type u₁) where
     run_tac
       obviously
 
+-- mathport name: «expr ⟶[ ] »
 notation X " ⟶[" V "] " Y:10 => (EnrichedCategory.hom X Y : V)
 
 variable (V) {C : Type u₁} [EnrichedCategory V C]

@@ -825,6 +825,7 @@ theorem repr_opow_aux₁ {e a} [Ne : NF e] [Na : NF a] {a' : Ordinal} (e0 : repr
 
 section
 
+-- mathport name: «expr ^ »
 local infixr:0 "^" => @pow Ordinal.{0} Ordinal Ordinal.hasPow
 
 theorem repr_opow_aux₂ {a0 a'} [N0 : NF a0] [Na' : NF a'] (m : ℕ) (d : ω ∣ repr a') (e0 : repr a0 ≠ 0)

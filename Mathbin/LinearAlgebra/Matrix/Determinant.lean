@@ -50,8 +50,8 @@ variable {m n : Type _} [DecidableEq n] [Fintype n] [DecidableEq m] [Fintype m]
 
 variable {R : Type v} [CommRingₓ R]
 
--- ././Mathport/Syntax/Translate/Basic.lean:462:9: unsupported: advanced prec syntax max
-local notation "ε" σ:999 => ((sign σ : ℤ) : R)
+-- mathport name: «exprε »
+local notation "ε" σ:arg => ((sign σ : ℤ) : R)
 
 /-- `det` is an `alternating_map` in the rows of the matrix. -/
 def detRowAlternating : AlternatingMap R (n → R) R n :=
@@ -404,7 +404,7 @@ theorem det_update_column_add_smul_self (A : Matrix n n R) {i j : n} (hij : i �
   exact det_update_row_add_smul_self Aᵀ hij c
 
 theorem det_eq_of_forall_row_eq_smul_add_const_aux {A B : Matrix n n R} {s : Finset n} :
-    ∀ c : n → R hs : ∀ i, i ∉ s → c i = 0 k : n hk : k ∉ s A_eq : ∀ i j, A i j = B i j + c i * B k j, det A = det B :=
+    ∀ c : n → R hs : ∀ i, (i ∉ s) → c i = 0 k : n hk : k ∉ s A_eq : ∀ i j, A i j = B i j + c i * B k j, det A = det B :=
   by
   revert B
   refine' s.induction_on _ _

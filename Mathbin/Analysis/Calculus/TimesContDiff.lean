@@ -161,6 +161,7 @@ noncomputable section
 
 open_locale Classical BigOperators Nnreal
 
+-- mathport name: «expr∞»
 local notation "∞" => (⊤ : WithTop ℕ)
 
 universe u v w

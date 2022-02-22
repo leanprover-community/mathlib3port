@@ -34,6 +34,7 @@ open IsROrC
 
 variable {𝕜 : Type _} [IsROrC 𝕜] {F : Type _} [SemiNormedGroup F] [NormedSpace 𝕜 F]
 
+-- mathport name: «exprabs𝕜»
 local notation "abs𝕜" => @IsROrC.abs 𝕜 _
 
 /-- Extend `fr : F →ₗ[ℝ] ℝ` to `F →ₗ[𝕜] 𝕜` in a way that will also be continuous and have its norm
@@ -111,7 +112,7 @@ theorem norm_bound [NormedSpace ℝ F] [IsScalarTower ℝ 𝕜 F] (fr : F →L[�
       
   calc ∥lm x∥ = abs𝕜 t * ∥lm x∥ := by
       rw [ht, one_mulₓ]_ = ∥t * lm x∥ := by
-      rw [← norm_eq_abs, NormedField.norm_mul]_ = ∥lm (t • x)∥ := by
+      rw [← norm_eq_abs, norm_mul]_ = ∥lm (t • x)∥ := by
       rw [← smul_eq_mul, lm.map_smul]_ = ∥(fr (t • x) : 𝕜)∥ := by
       rw [h1]_ = ∥fr (t • x)∥ := by
       rw [norm_eq_abs, abs_of_real, norm_eq_abs, abs_to_real]_ ≤ ∥fr∥ * ∥t • x∥ :=

@@ -76,6 +76,7 @@ open CategoryTheory Filter Ultrafilter TopologicalSpace CategoryTheory.Limits Ha
 
 open_locale Classical TopologicalSpace
 
+-- mathport name: «exprβ»
 local notation "β" => ofTypeMonad Ultrafilter
 
 /-- The type `Compactum` of Compacta, defined as algebras for the ultrafilter monad. -/

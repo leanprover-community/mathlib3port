@@ -29,14 +29,19 @@ inductive Preform
   | And : preform → preform → preform
   deriving has_reflect, Inhabited
 
+-- mathport name: «expr =* »
 localized [Omega.Int] notation x " =* " y => Omega.Int.Preform.eq x y
 
+-- mathport name: «expr ≤* »
 localized [Omega.Int] notation x " ≤* " y => Omega.Int.Preform.le x y
 
+-- mathport name: «expr¬* »
 localized [Omega.Int] notation "¬* " p => Omega.Int.Preform.not p
 
+-- mathport name: «expr ∨* »
 localized [Omega.Int] notation p " ∨* " q => Omega.Int.Preform.or p q
 
+-- mathport name: «expr ∧* »
 localized [Omega.Int] notation p " ∧* " q => Omega.Int.Preform.and p q
 
 namespace Preform

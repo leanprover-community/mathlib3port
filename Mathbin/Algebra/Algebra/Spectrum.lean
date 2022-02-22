@@ -89,14 +89,16 @@ variable {R : Type u} {A : Type v}
 
 variable [CommRingₓ R] [Ringₓ A] [Algebra R A]
 
+-- mathport name: «exprσ»
 local notation "σ" => Spectrum R
 
+-- mathport name: «expr↑ₐ»
 local notation "↑ₐ" => algebraMap R A
 
 theorem mem_iff {r : R} {a : A} : r ∈ σ a ↔ ¬IsUnit (↑ₐ r - a) :=
   Iff.rfl
 
-theorem not_mem_iff {r : R} {a : A} : r ∉ σ a ↔ IsUnit (↑ₐ r - a) := by
+theorem not_mem_iff {r : R} {a : A} : (r ∉ σ a) ↔ IsUnit (↑ₐ r - a) := by
   apply not_iff_not.mp
   simp [Set.not_not_mem, mem_iff]
 
@@ -194,8 +196,10 @@ variable {𝕜 : Type u} {A : Type v}
 
 variable [Field 𝕜] [Ringₓ A] [Algebra 𝕜 A]
 
+-- mathport name: «exprσ»
 local notation "σ" => Spectrum 𝕜
 
+-- mathport name: «expr↑ₐ»
 local notation "↑ₐ" => algebraMap 𝕜 A
 
 /-- Without the assumption `nontrivial A`, then `0 : A` would be invertible. -/
@@ -352,8 +356,10 @@ namespace AlgHom
 
 variable {R : Type _} {A : Type _} [CommRingₓ R] [Ringₓ A] [Algebra R A]
 
+-- mathport name: «exprσ»
 local notation "σ" => Spectrum R
 
+-- mathport name: «expr↑ₐ»
 local notation "↑ₐ" => algebraMap R A
 
 theorem apply_mem_spectrum [Nontrivial R] (φ : A →ₐ[R] R) (a : A) : φ a ∈ σ a := by

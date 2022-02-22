@@ -5,6 +5,7 @@ Authors: David Wärn
 -/
 import Mathbin.Algebra.FreeMonoid
 import Mathbin.GroupTheory.Congruence
+import Mathbin.GroupTheory.IsFreeGroup
 import Mathbin.Data.List.Chain
 
 /-!
@@ -61,7 +62,7 @@ variable {ι : Type _} (M : ∀ i : ι, Type _) [∀ i, Monoidₓ (M i)]
 
 /-- A relation on the free monoid on alphabet `Σ i, M i`, relating `⟨i, 1⟩` with `1` and
 `⟨i, x⟩ * ⟨i, y⟩` with `⟨i, x * y⟩`. -/
-inductive FreeProduct.Rel : FreeMonoid (Σ i, M i) → FreeMonoid (Σ i, M i) → Prop
+inductive FreeProduct.Rel : FreeMonoid (Σi, M i) → FreeMonoid (Σi, M i) → Prop
   | of_one (i : ι) : FreeProduct.Rel (FreeMonoid.of ⟨i, 1⟩) 1
   | of_mul {i : ι} (x y : M i) :
     FreeProduct.Rel (FreeMonoid.of ⟨i, x⟩ * FreeMonoid.of ⟨i, y⟩) (FreeMonoid.of ⟨i, x * y⟩)
@@ -76,7 +77,7 @@ namespace FreeProduct
 letters can come from the same summand. -/
 @[ext]
 structure Word where
-  toList : List (Σ i, M i)
+  toList : List (Σi, M i)
   ne_one : ∀, ∀ l ∈ to_list, ∀, Sigma.snd l ≠ 1
   chain_ne : to_list.Chain' fun l l' => Sigma.fst l ≠ Sigma.fst l'
 
@@ -105,7 +106,7 @@ universal property of the free product, charaterizing it as a categorical coprod
 @[simps symmApply]
 def lift : (∀ i, M i →* N) ≃ (FreeProduct M →* N) where
   toFun := fun fi =>
-    Con.lift _ (FreeMonoid.lift fun p : Σ i, M i => fi p.fst p.snd) <|
+    Con.lift _ (FreeMonoid.lift fun p : Σi, M i => fi p.fst p.snd) <|
       Con.con_gen_le
         (by
           simp_rw [Con.rel_eq_coe, Con.ker_rel]
@@ -144,7 +145,7 @@ theorem of_left_inverse [DecidableEq ι] (i : ι) :
     Function.LeftInverse (lift <| Function.update 1 i (MonoidHom.id (M i))) of := fun x => by
   simp only [lift_of, Function.update_same, MonoidHom.id_apply]
 
-theorem of_injective (i : ι) : Function.Injective (⇑(of : M i →* _)) := by
+theorem of_injective (i : ι) : Function.Injective ⇑(of : M i →* _) := by
   classical
   exact (of_left_inverse i).Injective
 
@@ -239,7 +240,7 @@ def rcons {i} (p : Pair M i) : Word M :=
 
 /-- Given a word of the form `⟨l :: ls, h1, h2⟩`, we can form a word of the form `⟨ls, _, _⟩`,
 dropping the first letter. -/
-private def mk_aux {l} (ls : List (Σ i, M i)) (h1 : ∀, ∀ l' ∈ l :: ls, ∀, Sigma.snd l' ≠ 1) (h2 : (l :: ls).Chain' _) :
+private def mk_aux {l} (ls : List (Σi, M i)) (h1 : ∀, ∀ l' ∈ l :: ls, ∀, Sigma.snd l' ≠ 1) (h2 : (l :: ls).Chain' _) :
     Word M :=
   ⟨ls, fun l' hl => h1 _ (List.mem_cons_of_memₓ _ hl), h2.tail⟩
 
@@ -379,6 +380,23 @@ instance : DecidableEq (FreeProduct M) :=
   Word.equiv.DecidableEq
 
 end Word
+
+/-- The free product of free groups is itself a free group -/
+@[simps]
+instance {ι : Type _} (G : ι → Type _) [∀ i, Groupₓ (G i)] [hG : ∀ i, IsFreeGroup (G i)] :
+    IsFreeGroup (FreeProduct G) where
+  Generators := Σi, IsFreeGroup.Generators (G i)
+  of := fun x => FreeProduct.of (IsFreeGroup.of x.2)
+  unique_lift' := by
+    intros X _ f
+    refine' ⟨FreeProduct.lift fun i => IsFreeGroup.lift fun x => f ⟨i, x⟩, _⟩
+    constructor
+    · simp
+      
+    · intro g hfg
+      ext i x
+      simpa using hfg ⟨i, x⟩
+      
 
 end FreeProduct
 

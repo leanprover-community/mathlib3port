@@ -232,7 +232,7 @@ def _root_.lie_module_hom.restrict_lie (f : M →ₗ⁅R,L⁆ N) (L' : LieSubalg
   { (f : M →ₗ[R] N) with map_lie' := fun x m => f.map_lie (↑x) m }
 
 @[simp]
-theorem _root_.lie_module_hom.coe_restrict_lie (f : M →ₗ⁅R,L⁆ N) : ⇑f.restrictLie L' = f :=
+theorem _root_.lie_module_hom.coe_restrict_lie (f : M →ₗ⁅R,L⁆ N) : ⇑(f.restrictLie L') = f :=
   rfl
 
 end LieModule
@@ -506,7 +506,7 @@ theorem eq_bot_iff : K = ⊥ ↔ ∀ x : L, x ∈ K → x = 0 := by
   exact Iff.rfl
 
 -- TODO[gh-6025]: make this an instance once safe to do so
-theorem subsingleton_of_bot : Subsingleton (LieSubalgebra R (↥(⊥ : LieSubalgebra R L))) := by
+theorem subsingleton_of_bot : Subsingleton (LieSubalgebra R ↥(⊥ : LieSubalgebra R L)) := by
   apply subsingleton_of_bot_eq_top
   ext ⟨x, hx⟩
   change x ∈ ⊥ at hx
@@ -514,7 +514,7 @@ theorem subsingleton_of_bot : Subsingleton (LieSubalgebra R (↥(⊥ : LieSubalg
   subst hx
   simp only [true_iffₓ, eq_self_iff_true, Submodule.mk_eq_zero, mem_bot]
 
-theorem subsingleton_bot : Subsingleton (↥(⊥ : LieSubalgebra R L)) :=
+theorem subsingleton_bot : Subsingleton ↥(⊥ : LieSubalgebra R L) :=
   show Subsingleton ((⊥ : LieSubalgebra R L) : Set L) by
     simp
 

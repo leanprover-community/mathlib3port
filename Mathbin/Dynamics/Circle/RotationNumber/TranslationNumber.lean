@@ -141,7 +141,7 @@ instance : CoeFun CircleDeg1Lift fun _ => ℝ → ℝ :=
   ⟨CircleDeg1Lift.toFun⟩
 
 @[simp]
-theorem coe_mk f h₁ h₂ : ⇑mk f h₁ h₂ = f :=
+theorem coe_mk f h₁ h₂ : ⇑(mk f h₁ h₂) = f :=
   rfl
 
 variable (f g : CircleDeg1Lift)
@@ -224,7 +224,7 @@ def toOrderIso : CircleDeg1Liftˣ →* ℝ ≃o ℝ where
   map_mul' := fun f g => rfl
 
 @[simp]
-theorem coe_to_order_iso (f : CircleDeg1Liftˣ) : ⇑toOrderIso f = f :=
+theorem coe_to_order_iso (f : CircleDeg1Liftˣ) : ⇑(toOrderIso f) = f :=
   rfl
 
 @[simp]
@@ -573,6 +573,7 @@ this way. -/
 def translationNumber : ℝ :=
   limₓ atTop f.transnumAuxSeq
 
+-- mathport name: «exprτ»
 -- TODO: choose two different symbols for `circle_deg1_lift.translation_number` and the future
 -- `circle_mono_homeo.rotation_number`, then make them `localized notation`s
 local notation "τ" => translationNumber
@@ -824,7 +825,7 @@ theorem translation_number_eq_int_iff (hf : Continuous f) {m : ℤ} : τ f = m �
   rintro ⟨x, hx⟩
   exact f.translation_number_of_eq_add_int hx
 
-theorem continuous_pow (hf : Continuous f) (n : ℕ) : Continuous (⇑(f ^ n : CircleDeg1Lift)) := by
+theorem continuous_pow (hf : Continuous f) (n : ℕ) : Continuous ⇑(f ^ n : CircleDeg1Lift) := by
   rw [coe_pow]
   exact hf.iterate n
 
@@ -859,8 +860,8 @@ theorem semiconj_of_group_action_of_forall_translation_number_eq {G : Type _} [G
   -- to `ℝ ≃o ℝ`.
   set F₁ := to_order_iso.comp f₁.to_hom_units
   set F₂ := to_order_iso.comp f₂.to_hom_units
-  have hF₁ : ∀ g, ⇑F₁ g = f₁ g := fun _ => rfl
-  have hF₂ : ∀ g, ⇑F₂ g = f₂ g := fun _ => rfl
+  have hF₁ : ∀ g, ⇑(F₁ g) = f₁ g := fun _ => rfl
+  have hF₂ : ∀ g, ⇑(F₂ g) = f₂ g := fun _ => rfl
   simp only [← hF₁, ← hF₂]
   -- Now we apply `cSup_div_semiconj` and go back to `f₁` and `f₂`.
     refine' ⟨⟨_, fun x y hxy => _, fun x => _⟩, cSup_div_semiconj F₂ F₁ fun x => _⟩ <;>

@@ -271,6 +271,36 @@ theorem Submonoid.topological_closure_minimal (s : Submonoid M) {t : Submonoid M
     (ht : IsClosed (t : Set M)) : s.topologicalClosure ≤ t :=
   closure_minimal h ht
 
+/-- If a submonoid of a topological monoid is commutative, then so is its topological closure. -/
+@[to_additive "If a submonoid of an additive topological monoid is commutative, then so is its\ntopological closure."]
+def Submonoid.commMonoidTopologicalClosure [T2Space M] (s : Submonoid M) (hs : ∀ x y : s, x * y = y * x) :
+    CommMonoidₓ s.topologicalClosure :=
+  { s.topologicalClosure.toMonoid with
+    mul_comm := by
+      intro a b
+      have h₁ : (s.topological_closure : Set M) = Closure s := rfl
+      let f₁ := fun x : M × M => x.1 * x.2
+      let f₂ := fun x : M × M => x.2 * x.1
+      let S : Set (M × M) := (s : Set M) ×ˢ (s : Set M)
+      have h₃ : Set.EqOn f₁ f₂ (Closure S) := by
+        refine'
+          Set.EqOn.closure _ continuous_mul
+            (by
+              continuity)
+        intro x hx
+        rw [Set.mem_prod] at hx
+        rcases hx with ⟨hx₁, hx₂⟩
+        change ((⟨x.1, hx₁⟩ : s) : M) * (⟨x.2, hx₂⟩ : s) = (⟨x.2, hx₂⟩ : s) * (⟨x.1, hx₁⟩ : s)
+        exact_mod_cast hs _ _
+      ext
+      change f₁ ⟨a, b⟩ = f₂ ⟨a, b⟩
+      refine' h₃ _
+      rw [closure_prod_eq, Set.mem_prod]
+      exact
+        ⟨by
+          simp [← h₁], by
+          simp [← h₁]⟩ }
+
 @[to_additive exists_open_nhds_zero_half]
 theorem exists_open_nhds_one_split {s : Set M} (hs : s ∈ 𝓝 (1 : M)) :
     ∃ V : Set M, IsOpen V ∧ (1 : M) ∈ V ∧ ∀, ∀ v ∈ V, ∀, ∀ w ∈ V, ∀, v * w ∈ s := by
@@ -332,6 +362,10 @@ theorem continuous_pow : ∀ n : ℕ, Continuous fun a : M => a ^ n
   | k + 1 => by
     simp only [pow_succₓ]
     exact continuous_id.mul (continuous_pow _)
+
+instance AddMonoidₓ.has_continuous_const_smul_nat {A} [AddMonoidₓ A] [TopologicalSpace A] [HasContinuousAdd A] :
+    HasContinuousConstSmul ℕ A :=
+  ⟨continuous_nsmul⟩
 
 @[continuity, to_additive Continuous.nsmul]
 theorem Continuous.pow {f : X → M} (h : Continuous f) (n : ℕ) : Continuous fun b => f b ^ n :=

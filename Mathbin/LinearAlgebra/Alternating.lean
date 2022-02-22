@@ -376,7 +376,7 @@ def compAlternatingMap (g : N →ₗ[R] N₂) : AlternatingMap R M N ι →+ Alt
     simp
 
 @[simp]
-theorem coe_comp_alternating_map (g : N →ₗ[R] N₂) (f : AlternatingMap R M N ι) : ⇑g.compAlternatingMap f = g ∘ f :=
+theorem coe_comp_alternating_map (g : N →ₗ[R] N₂) (f : AlternatingMap R M N ι) : ⇑(g.compAlternatingMap f) = g ∘ f :=
   rfl
 
 theorem comp_alternating_map_apply (g : N →ₗ[R] N₂) (f : AlternatingMap R M N ι) (m : ι → M) :
@@ -397,7 +397,7 @@ def compLinearMap (f : AlternatingMap R M N ι) (g : M₂ →ₗ[R] M) : Alterna
   { (f : MultilinearMap R (fun _ : ι => M) N).compLinearMap fun _ => g with
     map_eq_zero_of_eq' := fun v i j h hij => f.map_eq_zero_of_eq _ (LinearMap.congr_arg h) hij }
 
-theorem coe_comp_linear_map (f : AlternatingMap R M N ι) (g : M₂ →ₗ[R] M) : ⇑f.compLinearMap g = f ∘ (· ∘ ·) g :=
+theorem coe_comp_linear_map (f : AlternatingMap R M N ι) (g : M₂ →ₗ[R] M) : ⇑(f.compLinearMap g) = f ∘ (· ∘ ·) g :=
   rfl
 
 @[simp]
@@ -590,7 +590,7 @@ private theorem alternization_map_eq_zero_of_eq_aux (m : MultilinearMap R (fun i
 permutations. -/
 def alternatization : MultilinearMap R (fun i : ι => M) N' →+ AlternatingMap R M N' ι where
   toFun := fun m =>
-    { ∑ σ : Perm ι, σ.sign • m.domDomCongr σ with toFun := ⇑∑ σ : Perm ι, σ.sign • m.domDomCongr σ,
+    { ∑ σ : Perm ι, σ.sign • m.domDomCongr σ with toFun := ⇑(∑ σ : Perm ι, σ.sign • m.domDomCongr σ),
       map_eq_zero_of_eq' := fun v i j hvij hij => alternization_map_eq_zero_of_eq_aux m v i j hij hvij }
   map_add' := fun a b => by
     ext
@@ -602,7 +602,7 @@ def alternatization : MultilinearMap R (fun i : ι => M) N' →+ AlternatingMap 
       AlternatingMap.coe_mk, smul_apply, sum_apply]
 
 theorem alternatization_def (m : MultilinearMap R (fun i : ι => M) N') :
-    ⇑alternatization m = (∑ σ : Perm ι, σ.sign • m.domDomCongr σ : _) :=
+    ⇑(alternatization m) = (∑ σ : Perm ι, σ.sign • m.domDomCongr σ : _) :=
   rfl
 
 theorem alternatization_coe (m : MultilinearMap R (fun i : ι => M) N') :
@@ -762,7 +762,7 @@ The specialized version can be obtained by combining this definition with `fin_s
 def domCoprod (a : AlternatingMap R' Mᵢ N₁ ιa) (b : AlternatingMap R' Mᵢ N₂ ιb) :
     AlternatingMap R' Mᵢ (N₁ ⊗[R'] N₂) (Sum ιa ιb) :=
   { ∑ σ : Perm.ModSumCongr ιa ιb, DomCoprod.summand a b σ with
-    toFun := fun v => (⇑∑ σ : Perm.ModSumCongr ιa ιb, DomCoprod.summand a b σ) v,
+    toFun := fun v => (⇑(∑ σ : Perm.ModSumCongr ιa ιb, DomCoprod.summand a b σ)) v,
     map_eq_zero_of_eq' := fun v i j hv hij => by
       dsimp only
       rw [MultilinearMap.sum_apply]

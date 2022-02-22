@@ -251,7 +251,7 @@ because for `y=x` the slope equals zero due to the convention `0⁻¹=0`. -/
 theorem has_deriv_at_filter_iff_tendsto_slope {x : 𝕜} {L : Filter 𝕜} :
     HasDerivAtFilter f f' x L ↔ Tendsto (slope f x) (L⊓𝓟 ({x}ᶜ)) (𝓝 f') := by
   conv_lhs =>
-    simp only [has_deriv_at_filter_iff_tendsto, (NormedField.norm_inv _).symm, (norm_smul _ _).symm,
+    simp only [has_deriv_at_filter_iff_tendsto, (norm_inv _).symm, (norm_smul _ _).symm,
       tendsto_zero_iff_norm_tendsto_zero.symm]
   conv_rhs => rw [← nhds_translation_sub f', tendsto_comap_iff]
   refine'
@@ -1830,8 +1830,9 @@ theorem differentiable_within_at_zpow (m : ℤ) (x : 𝕜) (h : x ≠ 0 ∨ 0 �
     DifferentiableWithinAt 𝕜 (fun x => x ^ m) s x :=
   (differentiable_at_zpow.mpr h).DifferentiableWithinAt
 
-theorem differentiable_on_zpow (m : ℤ) (s : Set 𝕜) (h : (0 : 𝕜) ∉ s ∨ 0 ≤ m) : DifferentiableOn 𝕜 (fun x => x ^ m) s :=
-  fun x hxs => differentiable_within_at_zpow m x <| h.imp_left <| ne_of_mem_of_not_mem hxs
+theorem differentiable_on_zpow (m : ℤ) (s : Set 𝕜) (h : ((0 : 𝕜) ∉ s) ∨ 0 ≤ m) :
+    DifferentiableOn 𝕜 (fun x => x ^ m) s := fun x hxs =>
+  differentiable_within_at_zpow m x <| h.imp_left <| ne_of_mem_of_not_mem hxs
 
 theorem deriv_zpow (m : ℤ) (x : 𝕜) : deriv (fun x => x ^ m) x = m * x ^ (m - 1) := by
   by_cases' H : x ≠ 0 ∨ 0 ≤ m
@@ -1934,7 +1935,7 @@ theorem HasDerivWithinAt.limsup_norm_slope_le (hf : HasDerivWithinAt f f' s x) (
   have C := mem_sup.2 ⟨A, B⟩
   rw [← nhds_within_union, diff_union_self, nhds_within_union, mem_sup] at C
   filter_upwards [C.1]
-  simp only [norm_smul, mem_Iio, NormedField.norm_inv]
+  simp only [norm_smul, mem_Iio, norm_inv]
   exact fun _ => id
 
 /-- If `f` has derivative `f'` within `s` at `x`, then for any `r > ∥f'∥` the ratio

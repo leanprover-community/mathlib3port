@@ -864,10 +864,13 @@ The notation `G ≃g G'` represents the type of graph isomorphisms.
 abbrev Iso :=
   RelIso G.Adj G'.Adj
 
+-- mathport name: «expr →g »
 infixl:50 " →g " => Hom
 
+-- mathport name: «expr ↪g »
 infixl:50 " ↪g " => Embedding
 
+-- mathport name: «expr ≃g »
 infixl:50 " ≃g " => Iso
 
 namespace Hom
@@ -917,7 +920,7 @@ abbrev comp (f' : G' →g G'') (f : G →g G') : G →g G'' :=
   f'.comp f
 
 @[simp]
-theorem coe_comp (f' : G' →g G'') (f : G →g G') : ⇑f'.comp f = f' ∘ f :=
+theorem coe_comp (f' : G' →g G'') (f : G →g G') : ⇑(f'.comp f) = f' ∘ f :=
   rfl
 
 end Hom
@@ -972,7 +975,7 @@ abbrev comp (f' : G' ↪g G'') (f : G ↪g G') : G ↪g G'' :=
   f.trans f'
 
 @[simp]
-theorem coe_comp (f' : G' ↪g G'') (f : G ↪g G') : ⇑f'.comp f = f' ∘ f :=
+theorem coe_comp (f' : G' ↪g G'') (f : G ↪g G') : ⇑(f'.comp f) = f' ∘ f :=
   rfl
 
 end Embedding
@@ -1049,7 +1052,7 @@ abbrev comp (f' : G' ≃g G'') (f : G ≃g G') : G ≃g G'' :=
   f.trans f'
 
 @[simp]
-theorem coe_comp (f' : G' ≃g G'') (f : G ≃g G') : ⇑f'.comp f = f' ∘ f :=
+theorem coe_comp (f' : G' ≃g G'') (f : G ≃g G') : ⇑(f'.comp f) = f' ∘ f :=
   rfl
 
 end Iso

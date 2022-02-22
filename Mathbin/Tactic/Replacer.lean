@@ -84,7 +84,7 @@ unsafe def replacer_attr (ntac : Name) : user_attribute where
 
 /-- Define a new replaceable tactic. -/
 unsafe def def_replacer (ntac : Name) (ty : expr) : tactic Unit :=
-  let nattr := ntac <.> "attr"
+  let nattr := mkStrName ntac "attr"
   do
   add_meta_definition nattr [] (quote.1 user_attribute) (quote.1 (replacer_attr (%%ₓreflect ntac)))
   set_basic_attribute `user_attribute nattr tt

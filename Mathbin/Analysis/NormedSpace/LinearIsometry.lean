@@ -41,10 +41,13 @@ structure LinearIsometry (σ₁₂ : R →+* R₂) (E E₂ : Type _) [SemiNormed
   [Module R₂ E₂] extends E →ₛₗ[σ₁₂] E₂ where
   norm_map' : ∀ x, ∥to_linear_map x∥ = ∥x∥
 
+-- mathport name: «expr →ₛₗᵢ[ ] »
 notation:25 E " →ₛₗᵢ[" σ₁₂:25 "] " E₂:0 => LinearIsometry σ₁₂ E E₂
 
+-- mathport name: «expr →ₗᵢ[ ] »
 notation:25 E " →ₗᵢ[" R:25 "] " E₂:0 => LinearIsometry (RingHom.id R) E E₂
 
+-- mathport name: «expr →ₗᵢ⋆[ ] »
 notation:25 E " →ₗᵢ⋆[" R:25 "] " E₂:0 => LinearIsometry (starRingEnd R) E E₂
 
 namespace LinearIsometry
@@ -219,7 +222,7 @@ def comp (g : E₂ →ₛₗᵢ[σ₂₃] E₃) (f : E →ₛₗᵢ[σ₁₂] E�
 include σ₁₃
 
 @[simp]
-theorem coe_comp (g : E₂ →ₛₗᵢ[σ₂₃] E₃) (f : E →ₛₗᵢ[σ₁₂] E₂) : ⇑g.comp f = g ∘ f :=
+theorem coe_comp (g : E₂ →ₛₗᵢ[σ₂₃] E₃) (f : E →ₛₗᵢ[σ₁₂] E₂) : ⇑(g.comp f) = g ∘ f :=
   rfl
 
 omit σ₁₃
@@ -313,10 +316,13 @@ structure LinearIsometryEquiv (σ₁₂ : R →+* R₂) {σ₂₁ : R₂ →+* R
   (E E₂ : Type _) [SemiNormedGroup E] [SemiNormedGroup E₂] [Module R E] [Module R₂ E₂] extends E ≃ₛₗ[σ₁₂] E₂ where
   norm_map' : ∀ x, ∥to_linear_equiv x∥ = ∥x∥
 
+-- mathport name: «expr ≃ₛₗᵢ[ ] »
 notation:25 E " ≃ₛₗᵢ[" σ₁₂:25 "] " E₂:0 => LinearIsometryEquiv σ₁₂ E E₂
 
+-- mathport name: «expr ≃ₗᵢ[ ] »
 notation:25 E " ≃ₗᵢ[" R:25 "] " E₂:0 => LinearIsometryEquiv (RingHom.id R) E E₂
 
+-- mathport name: «expr ≃ₗᵢ⋆[ ] »
 notation:25 E " ≃ₗᵢ⋆[" R:25 "] " E₂:0 => LinearIsometryEquiv (starRingEnd R) E E₂
 
 namespace LinearIsometryEquiv
@@ -347,7 +353,7 @@ theorem coe_injective : @Function.Injective (E ≃ₛₗᵢ[σ₁₂] E₂) (E �
   FunLike.coe_injective
 
 @[simp]
-theorem coe_mk (e : E ≃ₛₗ[σ₁₂] E₂) (he : ∀ x, ∥e x∥ = ∥x∥) : ⇑mk e he = e :=
+theorem coe_mk (e : E ≃ₛₗ[σ₁₂] E₂) (he : ∀ x, ∥e x∥ = ∥x∥) : ⇑(mk e he) = e :=
   rfl
 
 @[simp]
@@ -469,7 +475,7 @@ instance : Inhabited (E ≃ₗᵢ[R] E) :=
   ⟨refl R E⟩
 
 @[simp]
-theorem coe_refl : ⇑refl R E = id :=
+theorem coe_refl : ⇑(refl R E) = id :=
   rfl
 
 /-- The inverse `linear_isometry_equiv`. -/
@@ -513,7 +519,7 @@ def trans (e' : E₂ ≃ₛₗᵢ[σ₂₃] E₃) : E ≃ₛₗᵢ[σ₁₃] E�
 include σ₁₃ σ₂₁
 
 @[simp]
-theorem coe_trans (e₁ : E ≃ₛₗᵢ[σ₁₂] E₂) (e₂ : E₂ ≃ₛₗᵢ[σ₂₃] E₃) : ⇑e₁.trans e₂ = e₂ ∘ e₁ :=
+theorem coe_trans (e₁ : E ≃ₛₗᵢ[σ₁₂] E₂) (e₂ : E₂ ≃ₛₗᵢ[σ₂₃] E₃) : ⇑(e₁.trans e₂) = e₂ ∘ e₁ :=
   rfl
 
 @[simp]
@@ -726,7 +732,7 @@ noncomputable def ofSurjective (f : F →ₛₗᵢ[σ₁₂] E₂) (hfr : Functi
 
 @[simp]
 theorem coe_of_surjective (f : F →ₛₗᵢ[σ₁₂] E₂) (hfr : Function.Surjective f) :
-    ⇑LinearIsometryEquiv.ofSurjective f hfr = f := by
+    ⇑(LinearIsometryEquiv.ofSurjective f hfr) = f := by
   ext
   rfl
 

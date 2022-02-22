@@ -87,8 +87,10 @@ You should extend this class when you extend `mul_equiv`. -/
 class MulEquivClass (F A B : Type _) [Mul A] [Mul B] extends EquivLike F A B where
   map_mul : ∀ f : F a b, f (a * b) = f a * f b
 
+-- mathport name: «expr ≃* »
 infixl:25 " ≃* " => MulEquiv
 
+-- mathport name: «expr ≃+ »
 infixl:25 " ≃+ " => AddEquiv
 
 section MulEquivClass
@@ -219,7 +221,7 @@ theorem to_equiv_symm (f : M ≃* N) : f.symm.toEquiv = f.toEquiv.symm :=
   rfl
 
 @[simp, to_additive]
-theorem coe_mk (f : M → N) g h₁ h₂ h₃ : ⇑MulEquiv.mk f g h₁ h₂ h₃ = f :=
+theorem coe_mk (f : M → N) g h₁ h₂ h₃ : ⇑(MulEquiv.mk f g h₁ h₂ h₃) = f :=
   rfl
 
 @[simp, to_additive]
@@ -266,7 +268,7 @@ theorem self_comp_symm (e : M ≃* N) : e ∘ e.symm = id :=
   funext e.apply_symm_apply
 
 @[simp, to_additive]
-theorem coe_refl : ⇑refl M = id :=
+theorem coe_refl : ⇑(refl M) = id :=
   rfl
 
 @[to_additive]
@@ -274,7 +276,7 @@ theorem refl_apply (m : M) : refl M m = m :=
   rfl
 
 @[simp, to_additive]
-theorem coe_trans (e₁ : M ≃* N) (e₂ : N ≃* P) : ⇑e₁.trans e₂ = e₂ ∘ e₁ :=
+theorem coe_trans (e₁ : M ≃* N) (e₂ : N ≃* P) : ⇑(e₁.trans e₂) = e₂ ∘ e₁ :=
   rfl
 
 @[to_additive]
@@ -580,7 +582,7 @@ protected def mulLeft (a : G) : Perm G :=
   (toUnits a).mul_left
 
 @[simp, to_additive]
-theorem coe_mul_left (a : G) : ⇑Equivₓ.mulLeft a = (· * ·) a :=
+theorem coe_mul_left (a : G) : ⇑(Equivₓ.mulLeft a) = (· * ·) a :=
   rfl
 
 /-- extra simp lemma that `dsimp` can use. `simp` will never use this. -/
@@ -602,7 +604,7 @@ protected def mulRight (a : G) : Perm G :=
   (toUnits a).mul_right
 
 @[simp, to_additive]
-theorem coe_mul_right (a : G) : ⇑Equivₓ.mulRight a = fun x => x * a :=
+theorem coe_mul_right (a : G) : ⇑(Equivₓ.mulRight a) = fun x => x * a :=
   rfl
 
 @[simp, to_additive]

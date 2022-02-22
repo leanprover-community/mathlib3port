@@ -217,7 +217,7 @@ def ofMapMidpoint (f : E → F) (h0 : f 0 = 0) (hm : ∀ x y, f (midpoint R x y)
 
 @[simp]
 theorem coe_of_map_midpoint (f : E → F) (h0 : f 0 = 0) (hm : ∀ x y, f (midpoint R x y) = midpoint R' (f x) (f y)) :
-    ⇑ofMapMidpoint R R' f h0 hm = f :=
+    ⇑(ofMapMidpoint R R' f h0 hm) = f :=
   rfl
 
 end AddMonoidHom

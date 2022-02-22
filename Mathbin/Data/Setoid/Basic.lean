@@ -271,8 +271,7 @@ theorem ker_lift_injective (f : α → β) : Injective (@Quotientₓ.lift _ _ (k
     induced map from the quotient of α to β is injective. -/
 theorem ker_eq_lift_of_injective {r : Setoidₓ α} (f : α → β) (H : ∀ x y, r.Rel x y → f x = f y)
     (h : Injective (Quotientₓ.lift f H)) : ker f = r :=
-  le_antisymmₓ (fun x y hk => Quotientₓ.exact <| h <| show Quotientₓ.lift f H (⟦x⟧) = Quotientₓ.lift f H (⟦y⟧) from hk)
-    H
+  le_antisymmₓ (fun x y hk => Quotientₓ.exact <| h <| show Quotientₓ.lift f H ⟦x⟧ = Quotientₓ.lift f H ⟦y⟧ from hk) H
 
 variable (r : Setoidₓ α) (f : α → β)
 

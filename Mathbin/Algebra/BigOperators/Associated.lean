@@ -18,6 +18,7 @@ and products of multisets, finsets, and finsupps.
 
 variable {α β γ δ : Type _}
 
+-- mathport name: «expr ~ᵤ »
 -- the same local notation used in `algebra.associated`
 local infixl:50 " ~ᵤ " => Associated
 

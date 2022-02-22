@@ -88,7 +88,7 @@ def prod (f : M →ₗ[R] M₂) (g : M →ₗ[R] M₃) : M →ₗ[R] M₂ × M�
   map_smul' := fun c x => by
     simp only [Pi.prod, Prod.smul_mk, map_smul, RingHom.id_apply]
 
-theorem coe_prod (f : M →ₗ[R] M₂) (g : M →ₗ[R] M₃) : ⇑f.Prod g = Pi.prod f g :=
+theorem coe_prod (f : M →ₗ[R] M₂) (g : M →ₗ[R] M₃) : ⇑(f.Prod g) = Pi.prod f g :=
   rfl
 
 @[simp]
@@ -724,10 +724,10 @@ open Function
 /-- An auxiliary construction for `tunnel`.
 The composition of `f`, followed by the isomorphism back to `K`,
 followed by the inclusion of this submodule back into `M`. -/
-def tunnelAux (f : M × N →ₗ[R] M) (Kφ : Σ K : Submodule R M, K ≃ₗ[R] M) : M × N →ₗ[R] M :=
+def tunnelAux (f : M × N →ₗ[R] M) (Kφ : ΣK : Submodule R M, K ≃ₗ[R] M) : M × N →ₗ[R] M :=
   (Kφ.1.Subtype.comp Kφ.2.symm.toLinearMap).comp f
 
-theorem tunnel_aux_injective (f : M × N →ₗ[R] M) (i : Injective f) (Kφ : Σ K : Submodule R M, K ≃ₗ[R] M) :
+theorem tunnel_aux_injective (f : M × N →ₗ[R] M) (i : Injective f) (Kφ : ΣK : Submodule R M, K ≃ₗ[R] M) :
     Injective (tunnelAux f Kφ) :=
   (Subtype.val_injective.comp Kφ.2.symm.Injective).comp i
 
@@ -736,7 +736,7 @@ noncomputable section
 /-- Auxiliary definition for `tunnel`. -/
 -- Even though we have `noncomputable theory`,
 -- we get an error without another `noncomputable` here.
-noncomputable def tunnel'ₓ (f : M × N →ₗ[R] M) (i : Injective f) : ℕ → Σ K : Submodule R M, K ≃ₗ[R] M
+noncomputable def tunnel'ₓ (f : M × N →ₗ[R] M) (i : Injective f) : ℕ → ΣK : Submodule R M, K ≃ₗ[R] M
   | 0 => ⟨⊤, LinearEquiv.ofTop ⊤ rfl⟩
   | n + 1 =>
     ⟨(Submodule.fst R M N).map (tunnelAux f (tunnel' n)),

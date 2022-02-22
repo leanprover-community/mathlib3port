@@ -48,6 +48,7 @@ structure Pequiv (α : Type u) (β : Type v) where
   invFun : β → Option α
   inv : ∀ a : α b : β, a ∈ inv_fun b ↔ b ∈ to_fun a
 
+-- mathport name: «expr ≃. »
 infixr:25 " ≃. " => Pequiv
 
 namespace Pequiv
@@ -137,7 +138,7 @@ theorem trans_eq_some (f : α ≃. β) (g : β ≃. γ) (a : α) (c : γ) :
     f.trans g a = some c ↔ ∃ b, f a = some b ∧ g b = some c :=
   Option.bind_eq_some'
 
-theorem trans_eq_none (f : α ≃. β) (g : β ≃. γ) (a : α) : f.trans g a = none ↔ ∀ b c, b ∉ f a ∨ c ∉ g b := by
+theorem trans_eq_none (f : α ≃. β) (g : β ≃. γ) (a : α) : f.trans g a = none ↔ ∀ b c, (b ∉ f a) ∨ c ∉ g b := by
   simp only [eq_none_iff_forall_not_mem, mem_trans, imp_iff_not_or.symm]
   push_neg
   tauto

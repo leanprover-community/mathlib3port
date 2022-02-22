@@ -464,7 +464,7 @@ theorem is_connected_univ_pi [∀ i, TopologicalSpace (π i)] {s : ∀ i, Set (�
   rw [← eval_image_univ_pi hne]
   exact hc.image _ (continuous_apply _).ContinuousOn
 
-theorem Sigma.is_connected_iff [∀ i, TopologicalSpace (π i)] {s : Set (Σ i, π i)} :
+theorem Sigma.is_connected_iff [∀ i, TopologicalSpace (π i)] {s : Set (Σi, π i)} :
     IsConnected s ↔ ∃ i t, IsConnected t ∧ s = Sigma.mk i '' t := by
   refine' ⟨fun hs => _, _⟩
   · obtain ⟨⟨i, x⟩, hx⟩ := hs.nonempty
@@ -487,7 +487,7 @@ theorem Sigma.is_connected_iff [∀ i, TopologicalSpace (π i)] {s : Set (Σ i, 
     exact ht.image _ continuous_sigma_mk.continuous_on
     
 
-theorem Sigma.is_preconnected_iff [hι : Nonempty ι] [∀ i, TopologicalSpace (π i)] {s : Set (Σ i, π i)} :
+theorem Sigma.is_preconnected_iff [hι : Nonempty ι] [∀ i, TopologicalSpace (π i)] {s : Set (Σi, π i)} :
     IsPreconnected s ↔ ∃ i t, IsPreconnected t ∧ s = Sigma.mk i '' t := by
   refine' ⟨fun hs => _, _⟩
   · obtain rfl | h := s.eq_empty_or_nonempty
@@ -1106,7 +1106,7 @@ instance [TopologicalSpace β] [TotallyDisconnectedSpace α] [TotallyDisconnecte
   · exact ht.subsingleton.image _
     
 
-instance [∀ i, TopologicalSpace (π i)] [∀ i, TotallyDisconnectedSpace (π i)] : TotallyDisconnectedSpace (Σ i, π i) := by
+instance [∀ i, TopologicalSpace (π i)] [∀ i, TotallyDisconnectedSpace (π i)] : TotallyDisconnectedSpace (Σi, π i) := by
   refine' ⟨fun s _ hs => _⟩
   obtain rfl | h := s.eq_empty_or_nonempty
   · exact subsingleton_empty

@@ -168,7 +168,7 @@ theorem List.card_to_finset : l.toFinset.card = l.eraseDup.length :=
   rfl
 
 theorem List.to_finset_card_le : l.toFinset.card ≤ l.length :=
-  Multiset.to_finset_card_le (⟦l⟧)
+  Multiset.to_finset_card_le ⟦l⟧
 
 theorem List.to_finset_card_of_nodup {l : List α} (h : l.Nodup) : l.toFinset.card = l.length :=
   Multiset.to_finset_card_of_nodup h
@@ -515,7 +515,7 @@ theorem exists_ne_of_one_lt_card (hs : 1 < s.card) (a : α) : ∃ b, b ∈ s ∧
   · exact ⟨y, hy, ha⟩
     
 
-theorem card_eq_succ [DecidableEq α] : s.card = n + 1 ↔ ∃ a t, a ∉ t ∧ insert a t = s ∧ t.card = n :=
+theorem card_eq_succ [DecidableEq α] : s.card = n + 1 ↔ ∃ a t, (a ∉ t) ∧ insert a t = s ∧ t.card = n :=
   ⟨fun h =>
     let ⟨a, has⟩ := card_pos.mp (h.symm ▸ Nat.zero_lt_succₓ _ : 0 < s.card)
     ⟨a, s.erase a, s.not_mem_erase a, insert_erase has, by
@@ -578,7 +578,7 @@ theorem strong_induction_on_eq {p : Finset α → Sort _} (s : Finset α) (H : �
 -- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (t «expr ⊆ » s)
 @[elab_as_eliminator]
 theorem case_strong_induction_on [DecidableEq α] {p : Finset α → Prop} (s : Finset α) (h₀ : p ∅)
-    (h₁ : ∀ a s, a ∉ s → (∀ t _ : t ⊆ s, p t) → p (insert a s)) : p s :=
+    (h₁ : ∀ a s, (a ∉ s) → (∀ t _ : t ⊆ s, p t) → p (insert a s)) : p s :=
   (Finset.strongInductionOn s) fun s =>
     (Finset.induction_on s fun _ => h₀) fun a s n _ ih =>
       (h₁ a s n) fun t ss => ih _ (lt_of_le_of_ltₓ ss (ssubset_insert n) : t < _)

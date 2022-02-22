@@ -117,6 +117,7 @@ which one can derive all its properties. For explicit bounds on π, see `data.re
 protected noncomputable def pi : ℝ :=
   2 * Classical.some exists_cos_eq_zero
 
+-- mathport name: «exprπ»
 localized [Real] notation "π" => Real.pi
 
 @[simp]

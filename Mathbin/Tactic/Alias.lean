@@ -90,8 +90,8 @@ unsafe def make_left_right : Name → tactic (Name × Name)
     let right := right'.reverse
     let suffix := suffix'.reverse
     pure
-        (p <.> "_".intercalate (right ++ "of" :: left ++ suffix),
-          p <.> "_".intercalate (left ++ "of" :: right ++ suffix))
+        (mkStrName p ("_".intercalate (right ++ "of" :: left ++ suffix)),
+          mkStrName p ("_".intercalate (left ++ "of" :: right ++ suffix)))
   | _ => failed
 
 /-- The `alias` command can be used to create copies

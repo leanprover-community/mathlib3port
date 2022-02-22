@@ -2608,7 +2608,7 @@ instance hasDistMetricQuot {α : Type u} [PseudoMetricSpace α] : HasDist (Pseud
             
         exact le_antisymmₓ A B)
 
-theorem pseudo_metric_quot_dist_eq {α : Type u} [PseudoMetricSpace α] (p q : α) : dist (⟦p⟧) (⟦q⟧) = dist p q :=
+theorem pseudo_metric_quot_dist_eq {α : Type u} [PseudoMetricSpace α] (p q : α) : dist ⟦p⟧ ⟦q⟧ = dist p q :=
   rfl
 
 instance metricSpaceQuot {α : Type u} [PseudoMetricSpace α] : MetricSpace (PseudoMetricQuot α) where

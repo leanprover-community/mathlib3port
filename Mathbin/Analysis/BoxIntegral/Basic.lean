@@ -64,6 +64,7 @@ variable {ι : Type u} {E : Type v} {F : Type w} [NormedGroup E] [NormedSpace �
 
 open TaggedPrepartition
 
+-- mathport name: «exprℝⁿ»
 local notation "ℝⁿ" => ι → ℝ
 
 /-!

@@ -269,8 +269,10 @@ abbrev prod (X Y : C) [HasBinaryProduct X Y] :=
 abbrev coprod (X Y : C) [HasBinaryCoproduct X Y] :=
   colimit (pair X Y)
 
+-- mathport name: «expr ⨯ »
 notation:20 X " ⨯ " Y:20 => prod X Y
 
+-- mathport name: «expr ⨿ »
 notation:20 X " ⨿ " Y:20 => coprod X Y
 
 /-- The projection map to the first component of the product. -/

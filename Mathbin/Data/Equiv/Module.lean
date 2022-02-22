@@ -60,10 +60,13 @@ attribute [nolint doc_blame] LinearEquiv.toLinearMap
 
 attribute [nolint doc_blame] LinearEquiv.toAddEquiv
 
+-- mathport name: «expr ≃ₛₗ[ ] »
 notation:50 M " ≃ₛₗ[" σ "] " M₂ => LinearEquiv σ M M₂
 
+-- mathport name: «expr ≃ₗ[ ] »
 notation:50 M " ≃ₗ[" R "] " M₂ => LinearEquiv (RingHom.id R) M M₂
 
+-- mathport name: «expr ≃ₗ⋆[ ] »
 notation:50 M " ≃ₗ⋆[" R "] " M₂ => LinearEquiv (starRingEnd R) M M₂
 
 namespace LinearEquiv
@@ -254,6 +257,7 @@ def trans : M₁ ≃ₛₗ[σ₁₃] M₃ :=
 
 omit σ₃₁
 
+-- mathport name: «expr ≪≫ₗ »
 infixl:80 " ≪≫ₗ " =>
   @LinearEquiv.trans _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ (RingHom.id _) (RingHom.id _) (RingHom.id _) (RingHom.id _)
     (RingHom.id _) (RingHom.id _) RingHomCompTriple.ids RingHomCompTriple.ids RingHomInvPair.ids RingHomInvPair.ids
@@ -457,7 +461,7 @@ def ofInvolutive {σ σ' : R →+* R} [RingHomInvPair σ σ'] [RingHomInvPair σ
 
 @[simp]
 theorem coe_of_involutive {σ σ' : R →+* R} [RingHomInvPair σ σ'] [RingHomInvPair σ' σ] {module_M : Module R M}
-    (f : M →ₛₗ[σ] M) (hf : Involutive f) : ⇑ofInvolutive f hf = f :=
+    (f : M →ₛₗ[σ] M) (hf : Involutive f) : ⇑(ofInvolutive f hf) = f :=
   rfl
 
 section RestrictScalars
@@ -584,7 +588,7 @@ def toLinearEquiv (h : ∀ c : R x, e (c • x) = c • e x) : M ≃ₗ[R] M₂ 
   { e with map_smul' := h }
 
 @[simp]
-theorem coe_to_linear_equiv (h : ∀ c : R x, e (c • x) = c • e x) : ⇑e.toLinearEquiv h = e :=
+theorem coe_to_linear_equiv (h : ∀ c : R x, e (c • x) = c • e x) : ⇑(e.toLinearEquiv h) = e :=
   rfl
 
 @[simp]

@@ -387,7 +387,7 @@ theorem exists_disjoint_covering_ae [MetricSpace α] [MeasurableSpace α] [Opens
         measure_mono (Union₂_subset fun a ha => hR a (vu ha) ha.2)_ < ∞ := μR
   -- we can obtain a finite subfamily of `v`, such that the measures of the remaining elements
   -- add up to an arbitrarily small number, say `ε / C`.
-  obtain ⟨w, hw⟩ : ∃ w : Finset (↥v), (∑' a : { a // a ∉ w }, μ a) < ε / C := by
+  obtain ⟨w, hw⟩ : ∃ w : Finset ↥v, (∑' a : { a // a ∉ w }, μ a) < ε / C := by
     have : ne_bot (at_top : Filter (Finset v)) := at_top_ne_bot
     have : 0 < ε / C := by
       simp only [Ennreal.div_pos_iff, εpos.ne', Ennreal.coe_ne_top, Ne.def, not_false_iff, and_selfₓ]

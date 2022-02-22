@@ -36,5 +36,6 @@ these are the Unicode "square with quill" brackets rather than the usual square 
 class HasBracket (L M : Type _) where
   bracket : L → M → M
 
+-- mathport name: «expr⁅ , ⁆»
 notation "⁅" x "," y "⁆" => HasBracket.bracket x y
 

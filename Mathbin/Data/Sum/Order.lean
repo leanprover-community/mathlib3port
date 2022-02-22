@@ -285,6 +285,7 @@ end Disjoint
 
 namespace Lex
 
+-- mathport name: «expr ⊕ₗ »
 notation:30 α " ⊕ₗ " β:29 => Lex (Sum α β)
 
 /-- Lexicographical `sum.inl`. Only used for pattern matching. -/

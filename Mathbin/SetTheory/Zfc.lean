@@ -269,7 +269,7 @@ theorem mem_powerset : ∀ {x y : PSet}, y ∈ powerset x ↔ y ⊆ x
 
 /-- The pre-set union operator -/
 def union : PSet → PSet
-  | ⟨α, A⟩ => ⟨Σ x, (A x).Type, fun ⟨x, y⟩ => (A x).func y⟩
+  | ⟨α, A⟩ => ⟨Σx, (A x).Type, fun ⟨x, y⟩ => (A x).func y⟩
 
 theorem mem_Union : ∀ {x y : PSet.{u}}, y ∈ union x ↔ ∃ z : PSet.{u}, ∃ _ : z ∈ x, y ∈ z
   | ⟨α, A⟩, y =>
@@ -370,7 +370,7 @@ def evalAux : ∀ {n}, { f : Resp n → Arity Setₓ.{u} n // ∀ a b : Resp n, 
 def eval n : Resp n → Arity Setₓ.{u} n :=
   evalAux.1
 
-theorem eval_val {n f x} : (@eval (n + 1) f : Setₓ → Arity Setₓ n) (⟦x⟧) = eval n (Resp.f f x) :=
+theorem eval_val {n f x} : (@eval (n + 1) f : Setₓ → Arity Setₓ n) ⟦x⟧ = eval n (Resp.f f x) :=
   rfl
 
 end Resp
@@ -407,15 +407,15 @@ noncomputable def allDefinable : ∀ {n} F : Arity Setₓ.{u} n, Definable n F
     Definable.eqMk ⟨some p, Equiv.rfl⟩ (some_spec p)
   | n + 1, (F : Arity Setₓ.{u} (n + 1)) => by
     have I := fun x => all_definable (F x)
-    refine' definable.eq_mk ⟨fun x : PSet => (@definable.resp _ _ (I (⟦x⟧))).1, _⟩ _
+    refine' definable.eq_mk ⟨fun x : PSet => (@definable.resp _ _ (I ⟦x⟧)).1, _⟩ _
     · dsimp [arity.equiv]
       intros x y h
       rw [@Quotientₓ.sound PSet _ _ _ h]
-      exact (definable.resp (F (⟦y⟧))).2
+      exact (definable.resp (F ⟦y⟧)).2
       
     refine' funext fun q => (Quotientₓ.induction_on q) fun x => _
     simp_rw [resp.eval_val, resp.f, Subtype.val_eq_coe, Subtype.coe_eta]
-    exact @definable.eq _ (F (⟦x⟧)) (I (⟦x⟧))
+    exact @definable.eq _ (F ⟦x⟧) (I ⟦x⟧)
 
 end Classical
 
@@ -428,7 +428,7 @@ def mk : PSet → Setₓ :=
   Quotientₓ.mk
 
 @[simp]
-theorem mk_eq (x : PSet) : @Eq Setₓ (⟦x⟧) (mk x) :=
+theorem mk_eq (x : PSet) : @Eq Setₓ ⟦x⟧ (mk x) :=
   rfl
 
 @[simp]
@@ -458,13 +458,13 @@ theorem subset_def {x y : Setₓ.{u}} : x ⊆ y ↔ ∀ ⦃z⦄, z ∈ x → z �
 
 theorem subset_iff : ∀ x y : PSet, mk x ⊆ mk y ↔ x ⊆ y
   | ⟨α, A⟩, ⟨β, B⟩ =>
-    ⟨fun h a => @h (⟦A a⟧) (Mem.mk A a), fun h z =>
+    ⟨fun h a => @h ⟦A a⟧ (Mem.mk A a), fun h z =>
       Quotientₓ.induction_on z fun z ⟨a, za⟩ =>
         let ⟨b, ab⟩ := h a
         ⟨b, za.trans ab⟩⟩
 
 theorem ext {x y : Setₓ.{u}} : (∀ z : Setₓ.{u}, z ∈ x ↔ z ∈ y) → x = y :=
-  Quotientₓ.induction_on₂ x y fun u v h => Quotientₓ.sound (Mem.ext fun w => h (⟦w⟧))
+  Quotientₓ.induction_on₂ x y fun u v h => Quotientₓ.sound (Mem.ext fun w => h ⟦w⟧)
 
 theorem ext_iff {x y : Setₓ.{u}} : (∀ z : Setₓ.{u}, z ∈ x ↔ z ∈ y) ↔ x = y :=
   ⟨ext, fun h => by
@@ -547,14 +547,14 @@ theorem omega_zero : ∅ ∈ omega :=
 theorem omega_succ {n} : n ∈ omega.{u} → insert n n ∈ omega.{u} :=
   Quotientₓ.induction_on n fun x ⟨⟨n⟩, h⟩ =>
     ⟨⟨n + 1⟩,
-      have : Setₓ.insert (⟦x⟧) (⟦x⟧) = Setₓ.insert (⟦ofNat n⟧) (⟦ofNat n⟧) := by
+      have : Setₓ.insert ⟦x⟧ ⟦x⟧ = Setₓ.insert ⟦ofNat n⟧ ⟦ofNat n⟧ := by
         rw [@Quotientₓ.sound PSet _ _ _ h]
       Quotientₓ.exact this⟩
 
 /-- `{x ∈ a | p x}` is the set of elements in `a` satisfying `p` -/
 protected def sep (p : Setₓ → Prop) : Setₓ → Setₓ :=
   Resp.eval 1
-    ⟨PSet.sep fun y => p (⟦y⟧), fun ⟨α, A⟩ ⟨β, B⟩ ⟨αβ, βα⟩ =>
+    ⟨PSet.sep fun y => p ⟦y⟧, fun ⟨α, A⟩ ⟨β, B⟩ ⟨αβ, βα⟩ =>
       ⟨fun ⟨a, pa⟩ =>
         let ⟨b, hb⟩ := αβ a
         ⟨⟨b, by
@@ -629,6 +629,7 @@ def union : Setₓ → Setₓ :=
         Exists.elim (Union_lem B A (fun b => Exists.elim (βα b) fun c hc => ⟨c, PSet.Equiv.symm hc⟩) a) fun b hb =>
           ⟨b, PSet.Equiv.symm hb⟩⟩⟩
 
+-- mathport name: «expr⋃»
 notation "⋃" => union
 
 @[simp]
@@ -696,7 +697,7 @@ theorem induction_on {p : Setₓ → Prop} x (h : ∀ x, (∀, ∀ y ∈ x, ∀,
   (Quotientₓ.induction_on x) fun u =>
     (PSet.recOn u) fun α A IH =>
       (h _) fun y =>
-        show @HasMem.Mem _ _ Setₓ.hasMem y (⟦⟨α, A⟩⟧) → p y from
+        show @HasMem.Mem _ _ Setₓ.hasMem y ⟦⟨α, A⟩⟧ → p y from
           Quotientₓ.induction_on y fun v ⟨a, ha⟩ => by
             rw [@Quotientₓ.sound PSet _ _ _ ha]
             exact IH a
@@ -951,6 +952,7 @@ def Powerset (x : Class) : Class :=
 def Union (x : Class) : Class :=
   Set.SUnion (ClassToCong x)
 
+-- mathport name: «expr⋃»
 notation "⋃" => Union
 
 theorem OfSet.inj {x y : Setₓ.{u}} (h : (x : Class.{u}) = y) : x = y :=
@@ -1030,6 +1032,7 @@ theorem iota_ex p : Iota.{u} p ∈ univ.{u} :=
 def Fval (F A : Class.{u}) : Class.{u} :=
   Iota fun y => ToSet (fun x => F (Setₓ.pair x y)) A
 
+-- mathport name: «expr ′ »
 infixl:100 "′" => Fval
 
 theorem fval_ex (F A : Class.{u}) : F′A ∈ univ.{u} :=

@@ -137,11 +137,13 @@ def modelWithCornersEuclideanQuadrant (n : ℕ) :
   continuous_inv_fun :=
     continuous_subtype_mk _ <| continuous_pi fun i => (continuous_id.max continuous_const).comp (continuous_apply i)
 
+-- mathport name: «expr𝓡 »
 localized [Manifold]
   notation "𝓡 " n =>
     (modelWithCornersSelf ℝ (EuclideanSpace ℝ (Finₓ n)) :
       ModelWithCorners ℝ (EuclideanSpace ℝ (Finₓ n)) (EuclideanSpace ℝ (Finₓ n)))
 
+-- mathport name: «expr𝓡∂ »
 localized [Manifold]
   notation "𝓡∂ " n =>
     (modelWithCornersEuclideanHalfSpace n : ModelWithCorners ℝ (EuclideanSpace ℝ (Finₓ n)) (EuclideanHalfSpace n))

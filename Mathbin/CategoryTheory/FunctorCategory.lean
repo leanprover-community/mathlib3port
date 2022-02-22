@@ -94,6 +94,7 @@ def hcomp {H I : D ⥤ E} (α : F ⟶ G) (β : H ⟶ I) : F ⋙ H ⟶ G ⋙ I wh
   naturality' := fun X Y f => by
     rw [functor.comp_map, functor.comp_map, ← assoc, naturality, assoc, ← map_comp I, naturality, map_comp, assoc]
 
+-- mathport name: «expr ◫ »
 infixl:80 " ◫ " => hcomp
 
 @[simp]

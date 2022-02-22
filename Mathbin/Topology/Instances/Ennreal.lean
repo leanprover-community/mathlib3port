@@ -628,7 +628,7 @@ theorem sub_supr {ι : Sort _} [Nonempty ι] {b : ι → ℝ≥0∞} (hr : a < �
         (Ennreal.tendsto_coe_sub.comp (tendsto_id' inf_le_left))
   rw [Eq, ← this] <;> simp [Inf_image, infi_range, -mem_range] <;> exact le_rfl
 
-theorem exists_countable_dense_no_zero_top : ∃ s : Set ℝ≥0∞, Countable s ∧ Dense s ∧ 0 ∉ s ∧ ∞ ∉ s := by
+theorem exists_countable_dense_no_zero_top : ∃ s : Set ℝ≥0∞, Countable s ∧ Dense s ∧ (0 ∉ s) ∧ ∞ ∉ s := by
   obtain ⟨s, s_count, s_dense, hs⟩ :
     ∃ s : Set ℝ≥0∞, countable s ∧ Dense s ∧ (∀ x, IsBot x → x ∉ s) ∧ ∀ x, IsTop x → x ∉ s :=
     exists_countable_dense_no_bot_top ℝ≥0∞
@@ -688,13 +688,11 @@ protected theorem tsum_eq_supr_sum' {ι : Type _} (s : ι → Finset α) (hs : �
   exact (Finset.sum_mono_set f).supr_comp_eq hs
 
 -- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (a b)
-protected theorem tsum_sigma {β : α → Type _} (f : ∀ a, β a → ℝ≥0∞) :
-    (∑' p : Σ a, β a, f p.1 p.2) = ∑' (a) (b), f a b :=
+protected theorem tsum_sigma {β : α → Type _} (f : ∀ a, β a → ℝ≥0∞) : (∑' p : Σa, β a, f p.1 p.2) = ∑' (a) (b), f a b :=
   tsum_sigma' (fun b => Ennreal.summable) Ennreal.summable
 
 -- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (a b)
-protected theorem tsum_sigma' {β : α → Type _} (f : (Σ a, β a) → ℝ≥0∞) :
-    (∑' p : Σ a, β a, f p) = ∑' (a) (b), f ⟨a, b⟩ :=
+protected theorem tsum_sigma' {β : α → Type _} (f : (Σa, β a) → ℝ≥0∞) : (∑' p : Σa, β a, f p) = ∑' (a) (b), f ⟨a, b⟩ :=
   tsum_sigma' (fun b => Ennreal.summable) Ennreal.summable
 
 protected theorem tsum_prod {f : α → β → ℝ≥0∞} : (∑' p : α × β, f p.1 p.2) = ∑' a, ∑' b, f a b :=
@@ -995,7 +993,7 @@ theorem tsum_comp_le_tsum_of_inj {β : Type _} {f : α → ℝ≥0 } (hf : Summa
     (∑' x, f (i x)) ≤ ∑' x, f x :=
   tsum_le_tsum_of_inj i hi (fun c hc => zero_le _) (fun b => le_rfl) (summable_comp_injective hf hi) hf
 
-theorem summable_sigma {β : ∀ x : α, Type _} {f : (Σ x, β x) → ℝ≥0 } :
+theorem summable_sigma {β : ∀ x : α, Type _} {f : (Σx, β x) → ℝ≥0 } :
     Summable f ↔ (∀ x, Summable fun y => f ⟨x, y⟩) ∧ Summable fun x => ∑' y, f ⟨x, y⟩ := by
   constructor
   · simp only [← Nnreal.summable_coe, Nnreal.coe_tsum]
@@ -1105,9 +1103,9 @@ theorem summable_iff_not_tendsto_nat_at_top_of_nonneg {f : ℕ → ℝ} (hf : �
     Summable f ↔ ¬Tendsto (fun n : ℕ => ∑ i in Finset.range n, f i) atTop atTop := by
   rw [← not_iff_not, not_not, not_summable_iff_tendsto_nat_at_top_of_nonneg hf]
 
-theorem summable_sigma_of_nonneg {β : ∀ x : α, Type _} {f : (Σ x, β x) → ℝ} (hf : ∀ x, 0 ≤ f x) :
+theorem summable_sigma_of_nonneg {β : ∀ x : α, Type _} {f : (Σx, β x) → ℝ} (hf : ∀ x, 0 ≤ f x) :
     Summable f ↔ (∀ x, Summable fun y => f ⟨x, y⟩) ∧ Summable fun x => ∑' y, f ⟨x, y⟩ := by
-  lift f to (Σ x, β x) → ℝ≥0 using hf
+  lift f to (Σx, β x) → ℝ≥0 using hf
   exact_mod_cast Nnreal.summable_sigma
 
 theorem summable_of_sum_le {ι : Type _} {f : ι → ℝ} {c : ℝ} (hf : 0 ≤ f) (h : ∀ u : Finset ι, (∑ x in u, f x) ≤ c) :

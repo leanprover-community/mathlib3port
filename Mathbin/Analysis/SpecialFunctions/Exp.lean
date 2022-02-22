@@ -34,7 +34,7 @@ theorem exp_bound_sq (x z : ℂ) (hz : ∥z∥ ≤ 1) : ∥exp (x + z) - exp x -
       congr
       rw [exp_add]
       ring
-    _ = ∥exp x∥ * ∥exp z - 1 - z∥ := NormedField.norm_mul _ _
+    _ = ∥exp x∥ * ∥exp z - 1 - z∥ := norm_mul _ _
     _ ≤ ∥exp x∥ * ∥z∥ ^ 2 := mul_le_mul_of_nonneg_left (abs_exp_sub_one_sub_id_le hz) (norm_nonneg _)
     
 

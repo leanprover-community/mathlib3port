@@ -41,6 +41,7 @@ structure OrderRingHom (α β : Type _) [OrderedSemiring α] [OrderedSemiring β
 /-- Reinterpret an ordered ring homomorphism as a ring homomorphism. -/
 add_decl_doc OrderRingHom.toRingHom
 
+-- mathport name: «expr →+*o »
 infixl:25 " →+*o " => OrderRingHom
 
 /-- `order_ring_hom_class F α β` states that `F` is a type of ordered semiring homomorphisms.
@@ -152,7 +153,7 @@ instance : Inhabited (α →+*o α) :=
   ⟨OrderRingHom.id α⟩
 
 @[simp]
-theorem coe_id : ⇑OrderRingHom.id α = id :=
+theorem coe_id : ⇑(OrderRingHom.id α) = id :=
   rfl
 
 variable {α}
@@ -178,7 +179,7 @@ protected def comp (f : β →+*o γ) (g : α →+*o β) : α →+*o γ :=
   { f.toRingHom.comp g.toRingHom, f.toOrderAddMonoidHom.comp g.toOrderAddMonoidHom with }
 
 @[simp]
-theorem coe_comp (f : β →+*o γ) (g : α →+*o β) : ⇑f.comp g = f ∘ g :=
+theorem coe_comp (f : β →+*o γ) (g : α →+*o β) : ⇑(f.comp g) = f ∘ g :=
   rfl
 
 @[simp]

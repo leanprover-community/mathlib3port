@@ -57,7 +57,7 @@ def InducedCategory : Type u₁ :=
 variable {D}
 
 instance InducedCategory.hasCoeToSort {α : Sort _} [CoeSort D α] : CoeSort (InducedCategory D F) α :=
-  ⟨fun c => ↥F c⟩
+  ⟨fun c => ↥(F c)⟩
 
 instance InducedCategory.category : Category.{v} (InducedCategory D F) where
   Hom := fun X Y => F X ⟶ F Y

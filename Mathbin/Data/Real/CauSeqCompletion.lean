@@ -32,7 +32,7 @@ def mk : CauSeq _ abv → Cauchy :=
   Quotientₓ.mk
 
 @[simp]
-theorem mk_eq_mk f : @Eq Cauchy (⟦f⟧) (mk f) :=
+theorem mk_eq_mk f : @Eq Cauchy ⟦f⟧ (mk f) :=
   rfl
 
 theorem mk_eq {f g} : mk f = mk g ↔ f ≈ g :=
@@ -142,6 +142,7 @@ parameter {α : Type _}[LinearOrderedField α]
 
 parameter {β : Type _}[Field β]{abv : β → α}[IsAbsoluteValue abv]
 
+-- mathport name: «exprCauchy»
 local notation "Cauchy" => @Cauchy _ _ _ _ abv _
 
 noncomputable instance : Inv Cauchy :=

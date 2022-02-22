@@ -65,6 +65,7 @@ open Ulift hiding Inhabited
 def RandG.next {g : Type} [RandomGen g] : RandG g ℕ :=
   ⟨Prod.map id up ∘ RandomGen.next ∘ down⟩
 
+-- mathport name: «expr .. »
 local infixl:41 " .. " => Set.Icc
 
 open Streamₓ

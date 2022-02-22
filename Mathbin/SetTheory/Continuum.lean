@@ -27,6 +27,7 @@ open_locale Cardinal
 def continuum : Cardinal.{u} :=
   2 ^ omega.{u}
 
+-- mathport name: «expr𝔠»
 localized [Cardinal] notation "𝔠" => Cardinal.continuum
 
 @[simp]

@@ -654,7 +654,7 @@ theorem LinearIndependent.union {s t : Set M} (hs : LinearIndependent R (fun x =
 
 theorem linear_independent_Union_finite_subtype {ι : Type _} {f : ι → Set M}
     (hl : ∀ i, LinearIndependent R (fun x => x : f i → M))
-    (hd : ∀ i, ∀ t : Set ι, Finite t → i ∉ t → Disjoint (span R (f i)) (⨆ i ∈ t, span R (f i))) :
+    (hd : ∀ i, ∀ t : Set ι, Finite t → (i ∉ t) → Disjoint (span R (f i)) (⨆ i ∈ t, span R (f i))) :
     LinearIndependent R (fun x => x : (⋃ i, f i) → M) := by
   rw [Union_eq_Union_finset f]
   apply linear_independent_Union_of_directed
@@ -676,8 +676,8 @@ theorem linear_independent_Union_finite_subtype {ι : Type _} {f : ι → Set M}
 
 theorem linear_independent_Union_finite {η : Type _} {ιs : η → Type _} {f : ∀ j : η, ιs j → M}
     (hindep : ∀ j, LinearIndependent R (f j))
-    (hd : ∀ i, ∀ t : Set η, Finite t → i ∉ t → Disjoint (span R (Range (f i))) (⨆ i ∈ t, span R (Range (f i)))) :
-    LinearIndependent R fun ji : Σ j, ιs j => f ji.1 ji.2 := by
+    (hd : ∀ i, ∀ t : Set η, Finite t → (i ∉ t) → Disjoint (span R (Range (f i))) (⨆ i ∈ t, span R (Range (f i)))) :
+    LinearIndependent R fun ji : Σj, ιs j => f ji.1 ji.2 := by
   nontriviality R
   apply LinearIndependent.of_subtype_range
   · rintro ⟨x₁, x₂⟩ ⟨y₁, y₂⟩ hxy
@@ -1083,7 +1083,7 @@ open Submodule
 
 /- TODO: some of the following proofs can generalized with a zero_ne_one predicate type class
    (instead of a data containing type class) -/
-theorem mem_span_insert_exchange : x ∈ span K (insert y s) → x ∉ span K s → y ∈ span K (insert x s) := by
+theorem mem_span_insert_exchange : x ∈ span K (insert y s) → (x ∉ span K s) → y ∈ span K (insert x s) := by
   simp [mem_span_insert]
   rintro a z hz rfl h
   refine' ⟨a⁻¹, -a⁻¹ • z, smul_mem _ _ hz, _⟩

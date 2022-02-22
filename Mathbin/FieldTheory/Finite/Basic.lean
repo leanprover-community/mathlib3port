@@ -47,6 +47,7 @@ diamonds, as `fintype` carries data.
 
 variable {K : Type _} {R : Type _}
 
+-- mathport name: «exprq»
 local notation "q" => Fintype.card K
 
 open_locale BigOperators Polynomial

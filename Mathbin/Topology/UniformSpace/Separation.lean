@@ -93,6 +93,7 @@ variable [UniformSpace α] [UniformSpace β] [UniformSpace γ]
 protected def SeparationRel (α : Type u) [u : UniformSpace α] :=
   ⋂₀ (𝓤 α).Sets
 
+-- mathport name: «expr𝓢»
 localized [uniformity] notation "𝓢" => SeparationRel
 
 theorem separated_equiv : Equivalenceₓ fun x y => (x, y) ∈ 𝓢 α :=
@@ -372,7 +373,7 @@ theorem uniformity_quotient : 𝓤 (Quotientₓ (separationSetoid α)) = (𝓤 �
 theorem uniform_continuous_quotient_mk : UniformContinuous (Quotientₓ.mk : α → Quotientₓ (separationSetoid α)) :=
   le_rfl
 
-theorem uniform_continuous_quotient {f : Quotientₓ (separationSetoid α) → β} (hf : UniformContinuous fun x => f (⟦x⟧)) :
+theorem uniform_continuous_quotient {f : Quotientₓ (separationSetoid α) → β} (hf : UniformContinuous fun x => f ⟦x⟧) :
     UniformContinuous f :=
   hf
 
@@ -453,7 +454,7 @@ def lift [SeparatedSpace β] (f : α → β) : SeparationQuotient α → β :=
   if h : UniformContinuous f then Quotientₓ.lift f fun x y => eq_of_separated_of_uniform_continuous h
   else fun x => f (Nonempty.some ⟨x.out⟩)
 
-theorem lift_mk [SeparatedSpace β] {f : α → β} (h : UniformContinuous f) (a : α) : lift f (⟦a⟧) = f a := by
+theorem lift_mk [SeparatedSpace β] {f : α → β} (h : UniformContinuous f) (a : α) : lift f ⟦a⟧ = f a := by
   rw [lift, dif_pos h] <;> rfl
 
 theorem uniform_continuous_lift [SeparatedSpace β] (f : α → β) : UniformContinuous (lift f) := by
@@ -469,7 +470,7 @@ theorem uniform_continuous_lift [SeparatedSpace β] (f : α → β) : UniformCon
 def map (f : α → β) : SeparationQuotient α → SeparationQuotient β :=
   lift (Quotientₓ.mk ∘ f)
 
-theorem map_mk {f : α → β} (h : UniformContinuous f) (a : α) : map f (⟦a⟧) = ⟦f a⟧ := by
+theorem map_mk {f : α → β} (h : UniformContinuous f) (a : α) : map f ⟦a⟧ = ⟦f a⟧ := by
   rw [map, lift_mk (uniform_continuous_quotient_mk.comp h)]
 
 theorem uniform_continuous_map (f : α → β) : UniformContinuous (map f) :=
@@ -477,7 +478,7 @@ theorem uniform_continuous_map (f : α → β) : UniformContinuous (map f) :=
 
 theorem map_unique {f : α → β} (hf : UniformContinuous f) {g : SeparationQuotient α → SeparationQuotient β}
     (comm : Quotientₓ.mk ∘ f = g ∘ Quotientₓ.mk) : map f = g := by
-  ext ⟨a⟩ <;> calc map f (⟦a⟧) = ⟦f a⟧ := map_mk hf a _ = g (⟦a⟧) := congr_funₓ comm a
+  ext ⟨a⟩ <;> calc map f ⟦a⟧ = ⟦f a⟧ := map_mk hf a _ = g ⟦a⟧ := congr_funₓ comm a
 
 theorem map_id : map (@id α) = id :=
   map_unique uniform_continuous_id rfl

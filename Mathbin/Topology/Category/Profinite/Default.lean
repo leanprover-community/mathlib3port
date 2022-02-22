@@ -144,7 +144,7 @@ left adjoint to the inclusion functor.
 def CompHaus.toProfinite : CompHaus ⥤ Profinite :=
   Adjunction.leftAdjointOfEquiv Profinite.toCompHausEquivalence fun _ _ _ _ _ => rfl
 
-theorem CompHaus.to_Profinite_obj' (X : CompHaus) : ↥CompHaus.toProfinite.obj X = ConnectedComponents X :=
+theorem CompHaus.to_Profinite_obj' (X : CompHaus) : ↥(CompHaus.toProfinite.obj X) = ConnectedComponents X :=
   rfl
 
 /-- Finite types are given the discrete topology. -/
@@ -174,7 +174,7 @@ def limitCone {J : Type u} [SmallCategory J] (F : J ⥤ Profinite.{u}) : Limits.
   x :=
     { toCompHaus := (CompHaus.limitCone (F ⋙ profiniteToCompHaus)).x,
       IsTotallyDisconnected := by
-        change TotallyDisconnectedSpace (↥{ u : ∀ j : J, F.obj j | _ })
+        change TotallyDisconnectedSpace ↥{ u : ∀ j : J, F.obj j | _ }
         exact Subtype.totally_disconnected_space }
   π := { app := (CompHaus.limitCone (F ⋙ profiniteToCompHaus)).π.app }
 

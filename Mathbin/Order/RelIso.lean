@@ -47,6 +47,7 @@ structure RelHom {α β : Type _} (r : α → α → Prop) (s : β → β → Pr
   toFun : α → β
   map_rel' : ∀ {a b}, r a b → s (to_fun a) (to_fun b)
 
+-- mathport name: «expr →r »
 infixl:25 " →r " => RelHom
 
 /-- `rel_hom_class F r s` asserts that `F` is a type of functions such that all `f : F`
@@ -191,6 +192,7 @@ is an embedding `f : α ↪ β` such that `r a b ↔ s (f a) (f b)`. -/
 structure RelEmbedding {α β : Type _} (r : α → α → Prop) (s : β → β → Prop) extends α ↪ β where
   map_rel_iff' : ∀ {a b}, s (to_embedding a) (to_embedding b) ↔ r a b
 
+-- mathport name: «expr ↪r »
 infixl:25 " ↪r " => RelEmbedding
 
 /-- The induced relation on a subtype is an embedding under the natural inclusion. -/
@@ -281,7 +283,7 @@ theorem trans_apply (f : r ↪r s) (g : s ↪r t) (a : α) : (f.trans g) a = g (
   rfl
 
 @[simp]
-theorem coe_trans (f : r ↪r s) (g : s ↪r t) : ⇑f.trans g = g ∘ f :=
+theorem coe_trans (f : r ↪r s) (g : s ↪r t) : ⇑(f.trans g) = g ∘ f :=
   rfl
 
 /-- A relation embedding is also a relation embedding between dual relations. -/
@@ -391,6 +393,7 @@ end RelEmbedding
 structure RelIso {α β : Type _} (r : α → α → Prop) (s : β → β → Prop) extends α ≃ β where
   map_rel_iff' : ∀ {a b}, s (to_equiv a) (to_equiv b) ↔ r a b
 
+-- mathport name: «expr ≃r »
 infixl:25 " ≃r " => RelIso
 
 namespace RelIso

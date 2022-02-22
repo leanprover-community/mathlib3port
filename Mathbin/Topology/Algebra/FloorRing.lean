@@ -143,6 +143,7 @@ theorem tendsto_fract_right [OrderClosedTopology α] [TopologicalAddGroup α] (n
   tendsto_nhds_within_of_tendsto_nhds_of_eventually_within _ (tendsto_fract_right' _)
     (eventually_of_forall fract_nonneg)
 
+-- mathport name: «exprI»
 local notation "I" => (Icc 0 1 : Set α)
 
 variable [OrderTopology α] [TopologicalAddGroup α] [TopologicalSpace β] [TopologicalSpace γ]

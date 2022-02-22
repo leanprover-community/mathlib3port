@@ -99,6 +99,7 @@ def z {n : ℕ} (k : Finₓ (n + 1)) : I :=
       simp [h₂]
       ⟩
 
+-- mathport name: «expr /ₙ»
 local postfix:90 "/ₙ" => z
 
 theorem probability (n : ℕ) (x : I) : (∑ k : Finₓ (n + 1), bernstein n k x) = 1 := by
@@ -133,6 +134,7 @@ end bernstein
 
 open bernstein
 
+-- mathport name: «expr /ₙ»
 local postfix:1024 "/ₙ" => z
 
 /-- The `n`-th approximation of a continuous function on `[0,1]` by Bernstein polynomials,

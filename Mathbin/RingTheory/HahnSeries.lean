@@ -1573,7 +1573,7 @@ def ofFinsupp (f : α →₀ HahnSeries Γ R) : SummableFamily Γ R α where
     simp [ha]
 
 @[simp]
-theorem coe_of_finsupp {f : α →₀ HahnSeries Γ R} : ⇑SummableFamily.ofFinsupp f = f :=
+theorem coe_of_finsupp {f : α →₀ HahnSeries Γ R} : ⇑(SummableFamily.ofFinsupp f) = f :=
   rfl
 
 @[simp]
@@ -1681,7 +1681,7 @@ def powers (x : HahnSeries Γ R) (hx : 0 < addVal Γ R x) : SummableFamily Γ R 
 variable {x : HahnSeries Γ R} (hx : 0 < addVal Γ R x)
 
 @[simp]
-theorem coe_powers : ⇑powers x hx = pow x :=
+theorem coe_powers : ⇑(powers x hx) = pow x :=
   rfl
 
 theorem emb_domain_succ_smul_powers :

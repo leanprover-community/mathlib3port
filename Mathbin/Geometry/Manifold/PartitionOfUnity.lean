@@ -198,7 +198,7 @@ theorem to_smooth_partition_of_unity_to_partition_of_unity (f : BumpCovering ι 
 
 @[simp]
 theorem coe_to_smooth_partition_of_unity (f : BumpCovering ι M s) (hf : ∀ i, Smooth I 𝓘(ℝ) (f i)) (i : ι) :
-    ⇑f.toSmoothPartitionOfUnity hf i = f.toPartitionOfUnity i :=
+    ⇑(f.toSmoothPartitionOfUnity hf i) = f.toPartitionOfUnity i :=
   rfl
 
 theorem IsSubordinate.to_smooth_partition_of_unity {f : BumpCovering ι M s} {U : ι → Set M} (h : f.IsSubordinate U)

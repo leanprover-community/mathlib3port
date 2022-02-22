@@ -544,7 +544,7 @@ end CancelCommMonoidWithZero
 
 section Valuation
 
-variable {R : Type _} [CommRingₓ R] [IsDomain R] {p : R} [DecidableRel (HasDvd.Dvd : R → R → Prop)]
+variable {R : Type _} [CommRingₓ R] [IsDomain R] {p : R} [DecidableRel (Dvd.Dvd : R → R → Prop)]
 
 /-- `multiplicity` of a prime inan integral domain as an additive valuation to `enat`. -/
 noncomputable def addValuation (hp : Prime p) : AddValuation R Enat :=

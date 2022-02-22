@@ -129,7 +129,7 @@ section EquivProd
 /-- The disjoint union of antidiagonals `Σ (n : ℕ), antidiagonal n` is equivalent to the product
     `ℕ × ℕ`. This is such an equivalence, obtained by mapping `(n, (k, l))` to `(k, l)`. -/
 @[simps]
-def sigmaAntidiagonalEquivProd : (Σ n : ℕ, antidiagonal n) ≃ ℕ × ℕ where
+def sigmaAntidiagonalEquivProd : (Σn : ℕ, antidiagonal n) ≃ ℕ × ℕ where
   toFun := fun x => x.2
   invFun := fun x => ⟨x.1 + x.2, x, mem_antidiagonal.mpr rfl⟩
   left_inv := by

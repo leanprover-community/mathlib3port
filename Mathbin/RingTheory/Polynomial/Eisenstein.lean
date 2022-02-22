@@ -76,6 +76,7 @@ section Principal
 
 variable {p : R}
 
+-- mathport name: «exprP»
 local notation "P" => Submodule.span R {p}
 
 theorem exists_mem_adjoin_mul_eq_pow_nat_degree {x : S} (hx : aeval x f = 0) (hmo : f.Monic)

@@ -316,7 +316,7 @@ theorem supr_apply {ι} (f : ι → OuterMeasure α) (s : Set α) : (⨆ i : ι,
   rw [supr, Sup_apply, supr_range, supr]
 
 @[norm_cast]
-theorem coe_supr {ι} (f : ι → OuterMeasure α) : (⇑⨆ i, f i) = ⨆ i, f i :=
+theorem coe_supr {ι} (f : ι → OuterMeasure α) : ⇑(⨆ i, f i) = ⨆ i, f i :=
   funext fun s => by
     rw [supr_apply, _root_.supr_apply]
 

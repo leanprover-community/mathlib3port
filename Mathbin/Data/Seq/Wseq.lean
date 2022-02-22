@@ -423,6 +423,7 @@ theorem lift_rel_destruct_iff {R : α → β → Prop} {s : Wseq α} {t : Wseq �
       intro s t
       apply Or.inl⟩⟩
 
+-- mathport name: «expr ~ »
 infixl:50 " ~ " => Equiv
 
 theorem destruct_congr {s t : Wseq α} : s ~ t → Computation.LiftRel (BisimO (· ~ ·)) (destruct s) (destruct t) :=
@@ -523,6 +524,7 @@ theorem Equiv.equivalence : Equivalenceₓ (@Equiv α) :=
 
 open Computation
 
+-- mathport name: «exprreturn»
 local notation "return" => Computation.return
 
 @[simp]

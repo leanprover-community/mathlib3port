@@ -673,10 +673,10 @@ def decidableNontrivialCoe : ∀ l : List α, Decidable (Nontrivial (l : Cycle �
           simp ⟩
 
 instance {s : Cycle α} : Decidable (Nontrivial s) :=
-  Quot.recOnSubsingletonₓ s decidableNontrivialCoe
+  Quot.recOnSubsingleton s decidableNontrivialCoe
 
 instance {s : Cycle α} : Decidable (Nodup s) :=
-  Quot.recOnSubsingletonₓ s fun l : List α => List.nodupDecidableₓ l
+  Quot.recOnSubsingleton s fun l : List α => List.nodupDecidableₓ l
 
 instance fintypeNodupCycle [Fintype α] : Fintype { s : Cycle α // s.Nodup } :=
   Fintype.ofSurjective
@@ -702,7 +702,7 @@ def toFinset (s : Cycle α) : Finset α :=
 
 /-- Given a `s : cycle α` such that `nodup s`, retrieve the next element after `x ∈ s`. -/
 def next : ∀ s : Cycle α hs : Nodup s x : α hx : x ∈ s, α := fun s =>
-  Quot.hrecOnₓ s (fun l hn x hx => next l x hx) fun h : l₁ ~r l₂ =>
+  Quot.hrecOn s (fun l hn x hx => next l x hx) fun h : l₁ ~r l₂ =>
     Function.hfunext (propext h.nodup_iff) fun h₁ h₂ he =>
       Function.hfunext rfl fun x y hxy =>
         Function.hfunext
@@ -716,7 +716,7 @@ def next : ∀ s : Cycle α hs : Nodup s x : α hx : x ∈ s, α := fun s =>
 
 /-- Given a `s : cycle α` such that `nodup s`, retrieve the previous element before `x ∈ s`. -/
 def prev : ∀ s : Cycle α hs : Nodup s x : α hx : x ∈ s, α := fun s =>
-  Quot.hrecOnₓ s (fun l hn x hx => prev l x hx) fun h : l₁ ~r l₂ =>
+  Quot.hrecOn s (fun l hn x hx => prev l x hx) fun h : l₁ ~r l₂ =>
     Function.hfunext (propext h.nodup_iff) fun h₁ h₂ he =>
       Function.hfunext rfl fun x y hxy =>
         Function.hfunext

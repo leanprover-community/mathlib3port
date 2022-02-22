@@ -100,6 +100,7 @@ namespace SlimCheck
 
 variable (α : Type u)
 
+-- mathport name: «expr ≺ »
 local infixl:50 " ≺ " => HasWellFounded.R
 
 /-- `sizeof_lt x y` compares the sizes of `x` and `y`. -/
@@ -382,7 +383,7 @@ instance Prod.sampleable : SampleableBifunctor.{u, v} Prod where
   shrink := @Prod.shrink
   pRepr := @Prod.hasRepr
 
-instance Sigma.sampleable {α β} [Sampleable α] [Sampleable β] : Sampleable (Σ _ : α, β) :=
+instance Sigma.sampleable {α β} [Sampleable α] [Sampleable β] : Sampleable (Σ_ : α, β) :=
   (Sampleable.lift (α × β) (fun ⟨x, y⟩ => ⟨x, y⟩) fun ⟨x, y⟩ => ⟨x, y⟩) fun ⟨x, y⟩ => le_rfl
 
 /-- shrinking function for sum types -/

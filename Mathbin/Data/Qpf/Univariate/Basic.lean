@@ -286,7 +286,7 @@ theorem Fix.ind_rec {α : Type u} (g₁ g₂ : Fix F → α)
   apply Quot.ind
   intro x
   induction' x with a f ih
-  change g₁ (⟦⟨a, f⟩⟧) = g₂ (⟦⟨a, f⟩⟧)
+  change g₁ ⟦⟨a, f⟩⟧ = g₂ ⟦⟨a, f⟩⟧
   rw [← fix.ind_aux a f]
   apply h
   rw [← abs_map, ← abs_map, Pfunctor.map_eq, Pfunctor.map_eq]
@@ -321,7 +321,7 @@ theorem Fix.ind (p : Fix F → Prop) (h : ∀ x : F (Fix F), Liftp p x → p (Fi
   apply Quot.ind
   intro x
   induction' x with a f ih
-  change p (⟦⟨a, f⟩⟧)
+  change p ⟦⟨a, f⟩⟧
   rw [← fix.ind_aux a f]
   apply h
   rw [liftp_iff]

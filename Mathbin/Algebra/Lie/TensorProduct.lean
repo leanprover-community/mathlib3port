@@ -109,7 +109,7 @@ def liftLie : (M →ₗ⁅R,L⁆ N →ₗ[R] P) ≃ₗ[R] M ⊗[R] N →ₗ⁅R,
     max_triv_linear_map_equiv_lie_module_hom
 
 @[simp]
-theorem coe_lift_lie_eq_lift_coe (f : M →ₗ⁅R,L⁆ N →ₗ[R] P) : ⇑liftLie R L M N P f = lift R L M N P f := by
+theorem coe_lift_lie_eq_lift_coe (f : M →ₗ⁅R,L⁆ N →ₗ[R] P) : ⇑(liftLie R L M N P f) = lift R L M N P f := by
   suffices (lift_lie R L M N P f : M ⊗[R] N →ₗ[R] P) = lift R L M N P f by
     rw [← this, LieModuleHom.coe_to_linear_map]
   ext m n

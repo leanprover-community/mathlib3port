@@ -518,7 +518,7 @@ instance fintypeBot : Fintype (⊥ : Subgroup G) :=
 /- curly brackets `{}` are used here instead of instance brackets `[]` because
   the instance in a goal is often not the same as the one inferred by type class inference.  -/
 @[simp, to_additive]
-theorem card_bot {_ : Fintype (↥(⊥ : Subgroup G))} : Fintype.card (⊥ : Subgroup G) = 1 :=
+theorem card_bot {_ : Fintype ↥(⊥ : Subgroup G)} : Fintype.card (⊥ : Subgroup G) = 1 :=
   Fintype.card_eq_one_iff.2 ⟨⟨(1 : G), Set.mem_singleton 1⟩, fun ⟨y, hy⟩ => Subtype.eq <| Subgroup.mem_bot.1 hy⟩
 
 @[to_additive]
@@ -1258,7 +1258,7 @@ theorem single_mem_pi [DecidableEq η] {I : Set η} {H : ∀ i, Subgroup (f i)} 
     
 
 theorem pi_mem_of_single_mem_aux [DecidableEq η] (I : Finset η) {H : Subgroup (∀ i, f i)} (x : ∀ i, f i)
-    (h1 : ∀ i, i ∉ I → x i = 1) (h2 : ∀ i, i ∈ I → Pi.mulSingle i (x i) ∈ H) : x ∈ H := by
+    (h1 : ∀ i, (i ∉ I) → x i = 1) (h2 : ∀ i, i ∈ I → Pi.mulSingle i (x i) ∈ H) : x ∈ H := by
   induction' I using Finset.induction_on with i I hnmem ih generalizing x
   · have : x = 1 := by
       ext i

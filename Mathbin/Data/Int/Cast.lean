@@ -139,7 +139,7 @@ def castAddHom (α : Type _) [AddGroupₓ α] [One α] : ℤ →+ α :=
   ⟨coe, cast_zero, cast_add⟩
 
 @[simp]
-theorem coe_cast_add_hom [AddGroupₓ α] [One α] : ⇑castAddHom α = coe :=
+theorem coe_cast_add_hom [AddGroupₓ α] [One α] : ⇑(castAddHom α) = coe :=
   rfl
 
 /-- `coe : ℤ → α` as a `ring_hom`. -/
@@ -147,7 +147,7 @@ def castRingHom (α : Type _) [Ringₓ α] : ℤ →+* α :=
   ⟨coe, cast_one, cast_mul, cast_zero, cast_add⟩
 
 @[simp]
-theorem coe_cast_ring_hom [Ringₓ α] : ⇑castRingHom α = coe :=
+theorem coe_cast_ring_hom [Ringₓ α] : ⇑(castRingHom α) = coe :=
   rfl
 
 theorem cast_commute [Ringₓ α] (m : ℤ) (x : α) : Commute (↑m) x :=

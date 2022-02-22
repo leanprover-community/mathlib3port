@@ -294,7 +294,7 @@ def mk' (D : A →ₗ[R] M) (h : ∀ a b, D (a * b) = a • D b + b • D a) : D
   leibniz' := h
 
 @[simp]
-theorem coe_mk' (D : A →ₗ[R] M) h : ⇑mk' D h = D :=
+theorem coe_mk' (D : A →ₗ[R] M) h : ⇑(mk' D h) = D :=
   rfl
 
 @[simp]

@@ -366,10 +366,13 @@ def IsSuffix (l₁ : List α) (l₂ : List α) : Prop :=
 def IsInfix (l₁ : List α) (l₂ : List α) : Prop :=
   ∃ s t, s ++ l₁ ++ t = l₂
 
+-- mathport name: «expr <+: »
 infixl:50 " <+: " => IsPrefix
 
+-- mathport name: «expr <:+ »
 infixl:50 " <:+ " => IsSuffix
 
+-- mathport name: «expr <:+: »
 infixl:50 " <:+: " => IsInfix
 
 /-- `inits l` is the list of initial segments of `l`.
@@ -472,9 +475,10 @@ def permutationsAux2 (t : α) (ts : List α) (r : List β) : List α → (List �
     let (us, zs) := permutations_aux2 ys fun x : List α => f (y :: x)
     (y :: us, f (t :: y :: us) :: zs)
 
-private def meas : (Σ' _ : List α, List α) → ℕ × ℕ
+private def meas : (Σ'_ : List α, List α) → ℕ × ℕ
   | ⟨l, i⟩ => (length l + length i, length l)
 
+-- mathport name: «expr ≺ »
 local infixl:50 " ≺ " => InvImage (Prod.Lex (· < ·) (· < ·)) meas
 
 /-- A recursor for pairs of lists. To have `C l₁ l₂` for all `l₁`, `l₂`, it suffices to have it for
@@ -566,7 +570,7 @@ def product (l₁ : List α) (l₂ : List β) : List (α × β) :=
 /-- `sigma l₁ l₂` is the list of dependent pairs `(a, b)` where `a ∈ l₁` and `b ∈ l₂ a`.
 
      sigma [1, 2] (λ_, [(5 : ℕ), 6]) = [(1, 5), (1, 6), (2, 5), (2, 6)] -/
-protected def sigma {σ : α → Type _} (l₁ : List α) (l₂ : ∀ a, List (σ a)) : List (Σ a, σ a) :=
+protected def sigma {σ : α → Type _} (l₁ : List α) (l₂ : ∀ a, List (σ a)) : List (Σa, σ a) :=
   l₁.bind fun a => (l₂ a).map <| Sigma.mk a
 
 /-- Auxliary definition used to define `of_fn`.

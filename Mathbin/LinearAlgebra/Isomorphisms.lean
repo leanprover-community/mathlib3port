@@ -83,7 +83,7 @@ noncomputable def quotientInfEquivSupQuotient (p p' : Submodule R M) :
 
 @[simp]
 theorem coe_quotient_inf_to_sup_quotient (p p' : Submodule R M) :
-    ⇑quotientInfToSupQuotient p p' = quotientInfEquivSupQuotient p p' :=
+    ⇑(quotientInfToSupQuotient p p') = quotientInfEquivSupQuotient p p' :=
   rfl
 
 @[simp]

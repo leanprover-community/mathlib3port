@@ -218,19 +218,6 @@ theorem nat_abs_euclidean_domain_gcd (a b : ℤ) : Int.natAbs (EuclideanDomain.g
 
 end Int
 
-theorem Nat.prime_iff_prime_int {p : ℕ} : p.Prime ↔ Prime (p : ℤ) :=
-  ⟨fun hp =>
-    ⟨Int.coe_nat_ne_zero_iff_pos.2 hp.Pos, mt Int.is_unit_iff_nat_abs_eq.1 hp.ne_one, fun a b h => by
-      rw [← Int.dvd_nat_abs, Int.coe_nat_dvd, Int.nat_abs_mul, hp.dvd_mul] at h <;>
-        rwa [← Int.dvd_nat_abs, Int.coe_nat_dvd, ← Int.dvd_nat_abs, Int.coe_nat_dvd]⟩,
-    fun hp =>
-    Nat.prime_iff.2
-      ⟨Int.coe_nat_ne_zero.1 hp.1,
-        (mt Nat.is_unit_iff.1) fun h => by
-          simpa [h, not_prime_one] using hp,
-        fun a b => by
-        simpa only [Int.coe_nat_dvd, (Int.coe_nat_mul _ _).symm] using hp.2.2 a b⟩⟩
-
 /-- Maps an associate class of integers consisting of `-n, n` to `n : ℕ` -/
 def associatesIntEquivNat : Associates ℤ ≃ ℕ := by
   refine' ⟨fun z => z.out.nat_abs, fun n => Associates.mk n, _, _⟩

@@ -103,11 +103,11 @@ theorem coe_mk f h₁ h₂ h₃ : ⇑(⟨f, h₁, h₂, h₃⟩ : NormedGroupHom
   rfl
 
 @[simp]
-theorem coe_mk_normed_group_hom (f : V₁ →+ V₂) C hC : ⇑f.mkNormedGroupHom C hC = f :=
+theorem coe_mk_normed_group_hom (f : V₁ →+ V₂) C hC : ⇑(f.mkNormedGroupHom C hC) = f :=
   rfl
 
 @[simp]
-theorem coe_mk_normed_group_hom' (f : V₁ →+ V₂) C hC : ⇑f.mkNormedGroupHom' C hC = f :=
+theorem coe_mk_normed_group_hom' (f : V₁ →+ V₂) C hC : ⇑(f.mkNormedGroupHom' C hC) = f :=
   rfl
 
 /-- The group homomorphism underlying a bounded group homomorphism. -/
@@ -464,7 +464,7 @@ def coeFnAddHom : NormedGroupHom V₁ V₂ →+ V₁ → V₂ where
   map_add' := coe_add
 
 @[simp]
-theorem coe_sum {ι : Type _} (s : Finset ι) (f : ι → NormedGroupHom V₁ V₂) : (⇑∑ i in s, f i) = ∑ i in s, f i :=
+theorem coe_sum {ι : Type _} (s : Finset ι) (f : ι → NormedGroupHom V₁ V₂) : ⇑(∑ i in s, f i) = ∑ i in s, f i :=
   (coeFnAddHom : _ →+ V₁ → V₂).map_sum f s
 
 theorem sum_apply {ι : Type _} (s : Finset ι) (f : ι → NormedGroupHom V₁ V₂) (v : V₁) :

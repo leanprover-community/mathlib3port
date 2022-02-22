@@ -84,8 +84,10 @@ variable {𝕜 : Type _} [IsROrC 𝕜] {E : Type _} [InnerProductSpace 𝕜 E] [
 
 variable {G : ι → Type _} [∀ i, InnerProductSpace 𝕜 (G i)]
 
+-- mathport name: «expr⟪ , ⟫»
 local notation "⟪" x ", " y "⟫" => @inner 𝕜 _ _ x y
 
+-- mathport name: «exprℓ²( , )»
 notation "ℓ²(" ι "," 𝕜 ")" => lp (fun i : ι => 𝕜) 2
 
 /-! ### Inner product space structure on `lp G 2` -/
@@ -395,7 +397,7 @@ protected def mk (hsp : (span 𝕜 (Set.Range v)).topologicalClosure = ⊤) : Hi
         simp [← LinearMap.span_singleton_eq_range, ← Submodule.span_Union])
 
 @[simp]
-protected theorem coe_mk (hsp : (span 𝕜 (Set.Range v)).topologicalClosure = ⊤) : ⇑HilbertBasis.mk hv hsp = v := by
+protected theorem coe_mk (hsp : (span 𝕜 (Set.Range v)).topologicalClosure = ⊤) : ⇑(HilbertBasis.mk hv hsp) = v := by
   ext i
   show (HilbertBasis.mk hv hsp).repr.symm _ = v i
   simp [HilbertBasis.mk]
@@ -409,7 +411,7 @@ protected def mkOfOrthogonalEqBot (hsp : (span 𝕜 (Set.Range v))ᗮ = ⊥) : H
 
 @[simp]
 protected theorem coe_of_orthogonal_eq_bot_mk (hsp : (span 𝕜 (Set.Range v))ᗮ = ⊥) :
-    ⇑HilbertBasis.mkOfOrthogonalEqBot hv hsp = v :=
+    ⇑(HilbertBasis.mkOfOrthogonalEqBot hv hsp) = v :=
   HilbertBasis.coe_mk hv _
 
 omit hv

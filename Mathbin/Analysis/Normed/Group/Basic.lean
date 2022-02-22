@@ -43,6 +43,7 @@ class HasNorm (E : Type _) where
 
 export HasNorm (norm)
 
+-- mathport name: «expr∥ ∥»
 notation "∥" e "∥" => norm e
 
 /-- A seminormed group is an additive group endowed with a norm for which `dist x y = ∥x - y∥`
@@ -419,7 +420,7 @@ theorem add_left_to_equiv (x : E) : (Isometric.addLeft x).toEquiv = Equivₓ.add
   rfl
 
 @[simp]
-theorem coe_add_left (x : E) : ⇑Isometric.addLeft x = (· + ·) x :=
+theorem coe_add_left (x : E) : ⇑(Isometric.addLeft x) = (· + ·) x :=
   rfl
 
 @[simp]
@@ -444,7 +445,7 @@ theorem neg_to_equiv : (Isometric.neg E).toEquiv = Equivₓ.neg E :=
   rfl
 
 @[simp]
-theorem coe_neg : ⇑Isometric.neg E = Neg.neg :=
+theorem coe_neg : ⇑(Isometric.neg E) = Neg.neg :=
   rfl
 
 end Isometric
@@ -577,6 +578,7 @@ class HasNnnorm (E : Type _) where
 
 export HasNnnorm (nnnorm)
 
+-- mathport name: «expr∥ ∥₊»
 notation "∥" e "∥₊" => nnnorm e
 
 -- see Note [lower instance priority]

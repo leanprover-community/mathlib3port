@@ -494,9 +494,9 @@ variable (e : P ⟶ Q) (zero : P.x 0 ⟶ Q.x 1) (comm_zero : e.f 0 = zero ≫ Q.
   (comm_one : e.f 1 = P.d 1 0 ≫ zero + one ≫ Q.d 2 1)
   (succ :
     ∀ n : ℕ p :
-      Σ' (f : P.x n ⟶ Q.x (n + 1)) (f' : P.x (n + 1) ⟶ Q.x (n + 2)),
+      Σ'(f : P.x n ⟶ Q.x (n + 1))(f' : P.x (n + 1) ⟶ Q.x (n + 2)),
         e.f (n + 1) = P.d (n + 1) n ≫ f + f' ≫ Q.d (n + 2) (n + 1),
-      Σ' f'' : P.x (n + 2) ⟶ Q.x (n + 3), e.f (n + 2) = P.d (n + 2) (n + 1) ≫ p.2.1 + f'' ≫ Q.d (n + 3) (n + 2))
+      Σ'f'' : P.x (n + 2) ⟶ Q.x (n + 3), e.f (n + 2) = P.d (n + 2) (n + 1) ≫ p.2.1 + f'' ≫ Q.d (n + 3) (n + 2))
 
 include comm_one comm_zero
 
@@ -514,7 +514,7 @@ which we do in `mk_inductive_aux₂`.
 @[simp, nolint unused_arguments]
 def mkInductiveAux₁ₓ :
     ∀ n,
-      Σ' (f : P.x n ⟶ Q.x (n + 1)) (f' : P.x (n + 1) ⟶ Q.x (n + 2)),
+      Σ'(f : P.x n ⟶ Q.x (n + 1))(f' : P.x (n + 1) ⟶ Q.x (n + 2)),
         e.f (n + 1) = P.d (n + 1) n ≫ f + f' ≫ Q.d (n + 2) (n + 1)
   | 0 => ⟨zero, one, comm_one⟩
   | 1 => ⟨one, (succ 0 ⟨zero, one, comm_one⟩).1, (succ 0 ⟨zero, one, comm_one⟩).2⟩
@@ -529,7 +529,7 @@ variable [HasZeroObject V]
 /-- An auxiliary construction for `mk_inductive`.
 -/
 @[simp]
-def mkInductiveAux₂ₓ : ∀ n, Σ' (f : P.xNext n ⟶ Q.x n) (f' : P.x n ⟶ Q.xPrev n), e.f n = P.dFrom n ≫ f + f' ≫ Q.dTo n
+def mkInductiveAux₂ₓ : ∀ n, Σ'(f : P.xNext n ⟶ Q.x n)(f' : P.x n ⟶ Q.xPrev n), e.f n = P.dFrom n ≫ f + f' ≫ Q.dTo n
   | 0 =>
     ⟨0, zero ≫ (Q.xPrevIso rfl).inv, by
       simpa using comm_zero⟩

@@ -472,7 +472,7 @@ unsafe def mk_psigma : List expr → tactic expr
     let α ← infer_type x
     let β ← infer_type y
     let t ← lambdas [x] β >>= instantiate_mvars
-    let r ← mk_mapp `` Psigma.mk [α, t]
+    let r ← mk_mapp `` PSigma.mk [α, t]
     pure <| r x y
   | _ => fail "mk_psigma expects a list of local constants"
 

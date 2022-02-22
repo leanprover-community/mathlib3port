@@ -60,7 +60,7 @@ variable (G : Type _) [Groupₓ G] [Fintype G]
 theorem card_comm_eq_card_conj_classes_mul_card :
     card { p : G × G // p.1 * p.2 = p.2 * p.1 } = card (ConjClasses G) * card G :=
   calc
-    card { p : G × G // p.1 * p.2 = p.2 * p.1 } = card (Σ g, { h // g * h = h * g }) :=
+    card { p : G × G // p.1 * p.2 = p.2 * p.1 } = card (Σg, { h // g * h = h * g }) :=
       card_congr (Equivₓ.subtypeProdEquivSigmaSubtype fun g h : G => g * h = h * g)
     _ = ∑ g, card { h // g * h = h * g } := card_sigma _
     _ = ∑ g, card (MulAction.FixedBy (ConjAct G) G g) :=

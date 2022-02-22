@@ -132,7 +132,7 @@ theorem mem_support_iff (x : X) (a : FreeAbelianGroup X) : x ∈ a.Support ↔ c
   rw [support, Finsupp.mem_support_iff]
   exact Iff.rfl
 
-theorem not_mem_support_iff (x : X) (a : FreeAbelianGroup X) : x ∉ a.Support ↔ coeff x a = 0 := by
+theorem not_mem_support_iff (x : X) (a : FreeAbelianGroup X) : (x ∉ a.Support) ↔ coeff x a = 0 := by
   rw [support, Finsupp.not_mem_support_iff]
   exact Iff.rfl
 

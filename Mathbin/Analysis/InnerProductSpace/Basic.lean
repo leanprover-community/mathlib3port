@@ -81,14 +81,18 @@ class HasInner (𝕜 E : Type _) where
 
 export HasInner (inner)
 
+-- mathport name: «expr⟪ , ⟫_ℝ»
 notation "⟪" x ", " y "⟫_ℝ" => @inner ℝ _ _ x y
 
+-- mathport name: «expr⟪ , ⟫_ℂ»
 notation "⟪" x ", " y "⟫_ℂ" => @inner ℂ _ _ x y
 
 section Notations
 
+-- mathport name: «expr⟪ , ⟫»
 localized [RealInnerProductSpace] notation "⟪" x ", " y "⟫" => @inner ℝ _ _ x y
 
+-- mathport name: «expr⟪ , ⟫»
 localized [ComplexInnerProductSpace] notation "⟪" x ", " y "⟫" => @inner ℂ _ _ x y
 
 end Notations
@@ -150,16 +154,22 @@ variable [AddCommGroupₓ F] [Module 𝕜 F] [c : InnerProductSpace.Core 𝕜 F]
 
 include c
 
+-- mathport name: «expr⟪ , ⟫»
 local notation "⟪" x ", " y "⟫" => @inner 𝕜 F _ x y
 
+-- mathport name: «exprnorm_sqK»
 local notation "norm_sqK" => @IsROrC.normSq 𝕜 _
 
+-- mathport name: «exprreK»
 local notation "reK" => @IsROrC.re 𝕜 _
 
+-- mathport name: «exprabsK»
 local notation "absK" => @IsROrC.abs 𝕜 _
 
+-- mathport name: «exprext_iff»
 local notation "ext_iff" => @IsROrC.ext_iff 𝕜 _
 
+-- mathport name: «expr †»
 local postfix:90 "†" => starRingEnd _
 
 /-- Inner product defined by the `inner_product_space.core` structure. -/
@@ -172,6 +182,7 @@ attribute [local instance] to_has_inner
 def normSq (x : F) :=
   reK ⟪x, x⟫
 
+-- mathport name: «exprnorm_sqF»
 local notation "norm_sqF" => @normSq 𝕜 F _ _ _ _
 
 theorem inner_conj_sym (x y : F) : ⟪y, x⟫† = ⟪x, y⟫ :=
@@ -407,14 +418,19 @@ variable [InnerProductSpace 𝕜 E] [InnerProductSpace ℝ F]
 
 variable [dec_E : DecidableEq E]
 
+-- mathport name: «expr⟪ , ⟫»
 local notation "⟪" x ", " y "⟫" => @inner 𝕜 _ _ x y
 
+-- mathport name: «exprIK»
 local notation "IK" => @IsROrC.i 𝕜 _
 
+-- mathport name: «exprabsR»
 local notation "absR" => HasAbs.abs
 
+-- mathport name: «exprabsK»
 local notation "absK" => @IsROrC.abs 𝕜 _
 
+-- mathport name: «expr †»
 local postfix:90 "†" => starRingEnd _
 
 export InnerProductSpace (norm_sq_eq_inner)
@@ -1182,7 +1198,7 @@ def LinearMap.isometryOfInner (f : E →ₗ[𝕜] E') (h : ∀ x y, ⟪f x, f y�
     simp only [norm_eq_sqrt_inner, h]⟩
 
 @[simp]
-theorem LinearMap.coe_isometry_of_inner (f : E →ₗ[𝕜] E') h : ⇑f.isometryOfInner h = f :=
+theorem LinearMap.coe_isometry_of_inner (f : E →ₗ[𝕜] E') h : ⇑(f.isometryOfInner h) = f :=
   rfl
 
 @[simp]
@@ -1194,7 +1210,7 @@ def LinearEquiv.isometryOfInner (f : E ≃ₗ[𝕜] E') (h : ∀ x y, ⟪f x, f 
   ⟨f, ((f : E →ₗ[𝕜] E').isometryOfInner h).norm_map⟩
 
 @[simp]
-theorem LinearEquiv.coe_isometry_of_inner (f : E ≃ₗ[𝕜] E') h : ⇑f.isometryOfInner h = f :=
+theorem LinearEquiv.coe_isometry_of_inner (f : E ≃ₗ[𝕜] E') h : ⇑(f.isometryOfInner h) = f :=
   rfl
 
 @[simp]
@@ -1228,7 +1244,7 @@ def LinearMap.isometryOfOrthonormal (f : E →ₗ[𝕜] E') {v : Basis ι 𝕜 E
 
 @[simp]
 theorem LinearMap.coe_isometry_of_orthonormal (f : E →ₗ[𝕜] E') {v : Basis ι 𝕜 E} (hv : Orthonormal 𝕜 v)
-    (hf : Orthonormal 𝕜 (f ∘ v)) : ⇑f.isometryOfOrthonormal hv hf = f :=
+    (hf : Orthonormal 𝕜 (f ∘ v)) : ⇑(f.isometryOfOrthonormal hv hf) = f :=
   rfl
 
 @[simp]
@@ -1247,7 +1263,7 @@ def LinearEquiv.isometryOfOrthonormal (f : E ≃ₗ[𝕜] E') {v : Basis ι 𝕜
 
 @[simp]
 theorem LinearEquiv.coe_isometry_of_orthonormal (f : E ≃ₗ[𝕜] E') {v : Basis ι 𝕜 E} (hv : Orthonormal 𝕜 v)
-    (hf : Orthonormal 𝕜 (f ∘ v)) : ⇑f.isometryOfOrthonormal hv hf = f :=
+    (hf : Orthonormal 𝕜 (f ∘ v)) : ⇑(f.isometryOfOrthonormal hv hf) = f :=
   rfl
 
 @[simp]
@@ -1894,7 +1910,7 @@ theorem OrthogonalFamily.comp {γ : Type _} {f : γ → ι} (hf : Function.Injec
     OrthogonalFamily 𝕜 fun g : γ => (V (f g) : G (f g) →ₗᵢ[𝕜] E) := fun i j hij v w => hV (hf.Ne hij) v w
 
 theorem OrthogonalFamily.orthonormal_sigma_orthonormal {α : ι → Type _} {v_family : ∀ i, α i → G i}
-    (hv_family : ∀ i, Orthonormal 𝕜 (v_family i)) : Orthonormal 𝕜 fun a : Σ i, α i => V a.1 (v_family a.1 a.2) := by
+    (hv_family : ∀ i, Orthonormal 𝕜 (v_family i)) : Orthonormal 𝕜 fun a : Σi, α i => V a.1 (v_family a.1 a.2) := by
   constructor
   · rintro ⟨i, v⟩
     simpa using (hv_family i).1 v
@@ -2136,6 +2152,7 @@ def Submodule.orthogonal : Submodule 𝕜 E where
   smul_mem' := fun c x hx u hu => by
     rw [inner_smul_right, hx u hu, mul_zero]
 
+-- mathport name: «expr ᗮ»
 notation:1200 K "ᗮ" => Submodule.orthogonal K
 
 /-- When a vector is in `Kᗮ`. -/

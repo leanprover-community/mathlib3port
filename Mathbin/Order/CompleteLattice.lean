@@ -68,8 +68,10 @@ instance (priority := 50) has_Inf_to_nonempty α [HasInfₓ α] : Nonempty α :=
 instance (priority := 50) has_Sup_to_nonempty α [HasSupₓ α] : Nonempty α :=
   ⟨sup ∅⟩
 
+-- mathport name: «expr⨆ , »
 notation3 "⨆ " (...) ", " r:(scoped f => supr f) => r
 
+-- mathport name: «expr⨅ , »
 notation3 "⨅ " (...) ", " r:(scoped f => infi f) => r
 
 instance α [HasInfₓ α] : HasSupₓ (OrderDual α) :=
@@ -1302,6 +1304,56 @@ theorem disjoint_Sup_right {a : Set α} {b : α} (d : Disjoint b (sup a)) {i} (h
   (supr_le_iff.mp (supr_le_iff.mp (supr_inf_le_inf_Sup.trans (d : _)) i : _) hi : _)
 
 end CompleteLattice
+
+section lift
+
+/-- Pullback an `order_top`. -/
+-- See note [reducible non-instances]
+@[reducible]
+def OrderTop.lift [LE α] [HasTop α] [LE β] [OrderTop β] (f : α → β) (map_le : ∀ a b, f a ≤ f b → a ≤ b)
+    (map_top : f ⊤ = ⊤) : OrderTop α :=
+  ⟨⊤, fun a =>
+    map_le _ _ <| by
+      rw [map_top]
+      exact le_top⟩
+
+/-- Pullback an `order_bot`. -/
+-- See note [reducible non-instances]
+@[reducible]
+def OrderBot.lift [LE α] [HasBot α] [LE β] [OrderBot β] (f : α → β) (map_le : ∀ a b, f a ≤ f b → a ≤ b)
+    (map_bot : f ⊥ = ⊥) : OrderBot α :=
+  ⟨⊥, fun a =>
+    map_le _ _ <| by
+      rw [map_bot]
+      exact bot_le⟩
+
+/-- Pullback a `bounded_order`. -/
+-- See note [reducible non-instances]
+@[reducible]
+def BoundedOrder.lift [LE α] [HasTop α] [HasBot α] [LE β] [BoundedOrder β] (f : α → β)
+    (map_le : ∀ a b, f a ≤ f b → a ≤ b) (map_top : f ⊤ = ⊤) (map_bot : f ⊥ = ⊥) : BoundedOrder α :=
+  { OrderTop.lift f map_le map_top, OrderBot.lift f map_le map_bot with }
+
+end lift
+
+/-- Pullback a `complete_lattice` along an injection. -/
+-- See note [reducible non-instances]
+@[reducible]
+protected def Function.Injective.completeLattice [HasSup α] [HasInf α] [HasSupₓ α] [HasInfₓ α] [HasTop α] [HasBot α]
+    [CompleteLattice β] (f : α → β) (hf : Function.Injective f) (map_sup : ∀ a b, f (a⊔b) = f a⊔f b)
+    (map_inf : ∀ a b, f (a⊓b) = f a⊓f b) (map_Sup : ∀ s, f (sup s) = sup (f '' s))
+    (map_Inf : ∀ s, f (inf s) = inf (f '' s)) (map_top : f ⊤ = ⊤) (map_bot : f ⊥ = ⊥) : CompleteLattice α :=
+  { -- we cannot use bounded_order.lift here as the `has_le` instance doesn't exist yet
+        hf.Lattice
+      f map_sup map_inf with
+    sup := sup, le_Sup := fun s a h => (le_Sup <| mem_image_of_mem f h).trans (map_Sup _).Ge,
+    Sup_le := fun s a h => (map_Sup _).le.trans <| Sup_le <| Set.ball_image_of_ball <| h, inf := inf,
+    Inf_le := fun s a h => (map_Inf _).le.trans <| Inf_le <| mem_image_of_mem f h,
+    le_Inf := fun s a h => (le_Inf <| Set.ball_image_of_ball <| h).trans (map_Inf _).Ge, top := ⊤,
+    le_top := fun a => (@le_top β _ _ _).trans map_top.Ge, bot := ⊥, bot_le := fun a => map_bot.le.trans bot_le }
+
+/-! ### Supremum independence-/
+
 
 namespace CompleteLattice
 

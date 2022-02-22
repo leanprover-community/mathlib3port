@@ -356,10 +356,13 @@ def fundamentalGroupoidFunctor : Top ⥤ CategoryTheory.Groupoidₓ where
     simp only [Quotientₓ.map_mk, Path.map_map, Quotientₓ.eq]
     rfl
 
+-- mathport name: «exprπ»
 localized [FundamentalGroupoid] notation "π" => FundamentalGroupoid.fundamentalGroupoidFunctor
 
+-- mathport name: «exprπₓ»
 localized [FundamentalGroupoid] notation "πₓ" => FundamentalGroupoid.fundamentalGroupoidFunctor.obj
 
+-- mathport name: «exprπₘ»
 localized [FundamentalGroupoid] notation "πₘ" => FundamentalGroupoid.fundamentalGroupoidFunctor.map
 
 /-- Help the typechecker by converting a point in a groupoid back to a point in

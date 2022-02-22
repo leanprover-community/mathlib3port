@@ -177,7 +177,7 @@ the `Lp` space of functions on `circle` taking values in `ℂ`. -/
 abbrev fourierLp (p : ℝ≥0∞) [Fact (1 ≤ p)] (n : ℤ) : lp ℂ p haarCircle :=
   toLp p haarCircle ℂ (fourier n)
 
-theorem coe_fn_fourier_Lp (p : ℝ≥0∞) [Fact (1 ≤ p)] (n : ℤ) : ⇑fourierLp p n =ᵐ[haarCircle] fourier n :=
+theorem coe_fn_fourier_Lp (p : ℝ≥0∞) [Fact (1 ≤ p)] (n : ℤ) : ⇑(fourierLp p n) =ᵐ[haarCircle] fourier n :=
   coe_fn_to_Lp haarCircle (fourier n)
 
 /-- For each `1 ≤ p < ∞`, the linear span of the monomials `z ^ n` is dense in

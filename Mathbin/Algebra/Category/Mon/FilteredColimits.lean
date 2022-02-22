@@ -52,11 +52,11 @@ abbrev M : Type v :=
 
 /-- The canonical projection into the colimit, as a quotient type. -/
 @[to_additive "The canonical projection into the colimit, as a quotient type."]
-abbrev M.mk : (Σ j, F.obj j) → M :=
+abbrev M.mk : (Σj, F.obj j) → M :=
   Quot.mk (Types.Quot.Rel (F ⋙ forget Mon))
 
 @[to_additive]
-theorem M.mk_eq (x y : Σ j, F.obj j) (h : ∃ (k : J)(f : x.1 ⟶ k)(g : y.1 ⟶ k), F.map f x.2 = F.map g y.2) :
+theorem M.mk_eq (x y : Σj, F.obj j) (h : ∃ (k : J)(f : x.1 ⟶ k)(g : y.1 ⟶ k), F.map f x.2 = F.map g y.2) :
     M.mk x = M.mk y :=
   Quot.eqv_gen_sound (Types.FilteredColimit.eqv_gen_quot_rel_of_rel (F ⋙ forget Mon) x y h)
 
@@ -87,13 +87,13 @@ and multiply them there.
 -/
 @[to_additive
       "The \"unlifted\" version of addition in the colimit. To add two dependent pairs\n`⟨j₁, x⟩` and `⟨j₂, y⟩`, we pass to a common successor of `j₁` and `j₂` (given by `is_filtered.max`)\nand add them there."]
-def colimitMulAux (x y : Σ j, F.obj j) : M :=
+def colimitMulAux (x y : Σj, F.obj j) : M :=
   M.mk ⟨max x.1 y.1, F.map (leftToMax x.1 y.1) x.2 * F.map (rightToMax x.1 y.1) y.2⟩
 
 /-- Multiplication in the colimit is well-defined in the left argument. -/
 @[to_additive "Addition in the colimit is well-defined in the left argument."]
-theorem colimit_mul_aux_eq_of_rel_left {x x' y : Σ j, F.obj j}
-    (hxx' : Types.FilteredColimit.Rel (F ⋙ forget Mon) x x') : colimit_mul_aux x y = colimit_mul_aux x' y := by
+theorem colimit_mul_aux_eq_of_rel_left {x x' y : Σj, F.obj j} (hxx' : Types.FilteredColimit.Rel (F ⋙ forget Mon) x x') :
+    colimit_mul_aux x y = colimit_mul_aux x' y := by
   cases' x with j₁ x
   cases' y with j₂ y
   cases' x' with j₃ x'
@@ -108,7 +108,7 @@ theorem colimit_mul_aux_eq_of_rel_left {x x' y : Σ j, F.obj j}
 
 /-- Multiplication in the colimit is well-defined in the right argument. -/
 @[to_additive "Addition in the colimit is well-defined in the right argument."]
-theorem colimit_mul_aux_eq_of_rel_right {x y y' : Σ j, F.obj j}
+theorem colimit_mul_aux_eq_of_rel_right {x y y' : Σj, F.obj j}
     (hyy' : Types.FilteredColimit.Rel (F ⋙ forget Mon) y y') : colimit_mul_aux x y = colimit_mul_aux x y' := by
   cases' y with j₁ y
   cases' x with j₂ x
@@ -144,7 +144,7 @@ using a custom object `k` and morphisms `f : x.1 ⟶ k` and `g : y.1 ⟶ k`.
 -/
 @[to_additive
       "Addition in the colimit is independent of the chosen \"maximum\" in the filtered\ncategory. In particular, this lemma allows us to \"unfold\" the definition of the addition of `x`\nand `y`, using a custom object `k` and morphisms `f : x.1 ⟶ k` and `g : y.1 ⟶ k`."]
-theorem colimit_mul_mk_eq (x y : Σ j, F.obj j) (k : J) (f : x.1 ⟶ k) (g : y.1 ⟶ k) :
+theorem colimit_mul_mk_eq (x y : Σj, F.obj j) (k : J) (f : x.1 ⟶ k) (g : y.1 ⟶ k) :
     M.mk x * M.mk y = M.mk ⟨k, F.map f x.2 * F.map g y.2⟩ := by
   cases' x with j₁ x
   cases' y with j₂ y

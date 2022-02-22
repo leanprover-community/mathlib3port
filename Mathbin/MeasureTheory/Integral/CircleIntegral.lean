@@ -294,6 +294,7 @@ variable [NormedSpace ℂ E] [CompleteSpace E] [BorelSpace E] [SecondCountableTo
 def circleIntegral (f : ℂ → E) (c : ℂ) (R : ℝ) : E :=
   ∫ θ : ℝ in 0 ..2 * π, deriv (circleMap c R) θ • f (circleMap c R θ)
 
+-- mathport name: «expr∮ inC( , ), »
 notation3 "∮ " (...) " in " "C(" c ", " R ")" ", " r:(scoped f => circleIntegral f c R) => r
 
 namespace circleIntegral

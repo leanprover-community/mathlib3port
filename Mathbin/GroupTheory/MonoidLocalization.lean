@@ -250,7 +250,7 @@ then `f` is defined on the whole `localization S`. -/
 def rec {p : Localization S → Sort u} (f : ∀ a : M b : S, p (mk a b))
     (H : ∀ {a c : M} {b d : S} h : r S (a, b) (c, d), (Eq.ndrec (f a b) (mk_eq_mk_iff.mpr h) : p (mk c d)) = f c d) x :
     p x :=
-  Quot.recₓ (fun y => Eq.ndrec (f y.1 y.2) (Prod.mk.eta : (y.1, y.2) = y))
+  Quot.rec (fun y => Eq.ndrec (f y.1 y.2) (Prod.mk.eta : (y.1, y.2) = y))
     (fun y z h => by
       cases y
       cases z

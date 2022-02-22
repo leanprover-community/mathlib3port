@@ -133,7 +133,7 @@ theorem of_arrows_pullback [HasPullbacks C] {ι : Type _} (Z : ι → C) (g : �
 theorem of_arrows_bind {ι : Type _} (Z : ι → C) (g : ∀ i : ι, Z i ⟶ X) (j : ∀ ⦃Y⦄ f : Y ⟶ X, OfArrows Z g f → Type _)
     (W : ∀ ⦃Y⦄ f : Y ⟶ X H, j f H → C) (k : ∀ ⦃Y⦄ f : Y ⟶ X H i, W f H i ⟶ Y) :
     ((OfArrows Z g).bind fun Y f H => OfArrows (W f H) (k f H)) =
-      OfArrows (fun i : Σ i, j _ (OfArrows.mk i) => W (g i.1) _ i.2) fun ij => k (g ij.1) _ ij.2 ≫ g ij.1 :=
+      OfArrows (fun i : Σi, j _ (OfArrows.mk i) => W (g i.1) _ i.2) fun ij => k (g ij.1) _ ij.2 ≫ g ij.1 :=
   by
   ext Y f
   constructor

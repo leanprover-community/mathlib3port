@@ -21,6 +21,7 @@ structure ContinuousMap (α : Type _) (β : Type _) [TopologicalSpace α] [Topol
     run_tac
       tactic.interactive.continuity'
 
+-- mathport name: «exprC( , )»
 notation "C(" α ", " β ")" => ContinuousMap α β
 
 namespace ContinuousMap
@@ -189,7 +190,7 @@ def restrict (f : C(α, β)) : C(s, β) :=
   ⟨f ∘ coe⟩
 
 @[simp]
-theorem coe_restrict (f : C(α, β)) : ⇑f.restrict s = f ∘ coe :=
+theorem coe_restrict (f : C(α, β)) : ⇑(f.restrict s) = f ∘ coe :=
   rfl
 
 end Restrict

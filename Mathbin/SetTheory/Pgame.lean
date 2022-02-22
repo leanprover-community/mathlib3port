@@ -440,6 +440,7 @@ theorem lt_of_lt_of_le {x y z : Pgame} (hxy : x < y) (hyz : y ≤ z) : x < z := 
 def Equiv (x y : Pgame) : Prop :=
   x ≤ y ∧ y ≤ x
 
+-- mathport name: «expr ≈ »
 local infixl:0 " ≈ " => Pgame.Equiv
 
 @[refl, simp]

@@ -106,6 +106,7 @@ def PiTensorProduct : Type _ :=
 
 variable {R}
 
+-- mathport name: «expr⨂[ ] , »
 -- This enables the notation `⨂[R] i : ι, s i` for the pi tensor product, given `s : ι → Type*`.
 localized [TensorProduct] notation3:100 "⨂[" R "] " (...) ", " r:(scoped f => PiTensorProduct R f) => r
 
@@ -309,6 +310,7 @@ def tprod : MultilinearMap R s (⨂[R] i, s i) where
 
 variable {R}
 
+-- mathport name: «expr⨂ₜ[ ] , »
 notation3:100 "⨂ₜ[" R "] " (...) ", " r:(scoped f => tprod R f) => r
 
 @[simp]

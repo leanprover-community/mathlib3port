@@ -110,8 +110,10 @@ theorem coev_naturality {X Y : C} (f : X ⟶ Y) :
     f ≫ (coev A).app Y = (coev A).app X ≫ (exp A).map (Limits.prod.map (𝟙 A) f) :=
   (coev A).naturality f
 
+-- mathport name: «expr ⟹ »
 notation:20 A " ⟹ " B:19 => (exp A).obj B
 
+-- mathport name: «expr ^^ »
 notation:30 B " ^^ " A:30 => (exp A).obj B
 
 @[simp, reassoc]

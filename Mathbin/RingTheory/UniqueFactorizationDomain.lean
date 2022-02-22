@@ -27,6 +27,7 @@ import Mathbin.RingTheory.Multiplicity
 
 variable {α : Type _}
 
+-- mathport name: «expr ~ᵤ »
 local infixl:50 " ~ᵤ " => Associated
 
 /-- Well-foundedness of the strict version of |, which is equivalent to the descending chain
@@ -768,7 +769,7 @@ section multiplicity
 
 variable [Nontrivial R] [NormalizationMonoid R] [DecidableEq R]
 
-variable [DecidableRel (HasDvd.Dvd : R → R → Prop)]
+variable [DecidableRel (Dvd.Dvd : R → R → Prop)]
 
 open multiplicity Multiset
 

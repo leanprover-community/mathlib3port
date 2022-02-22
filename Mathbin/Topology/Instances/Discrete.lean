@@ -31,7 +31,7 @@ instance (priority := 100) DiscreteTopology.first_countable_topology [DiscreteTo
 
 instance (priority := 100) DiscreteTopology.second_countable_topology_of_encodable [hd : DiscreteTopology α]
     [Encodable α] : SecondCountableTopology α :=
-  have : ∀ i : α, second_countable_topology (↥({i} : Set α)) := fun i =>
+  have : ∀ i : α, second_countable_topology ↥({i} : Set α) := fun i =>
     { is_open_generated_countable :=
         ⟨{univ}, countable_singleton _, by
           simp only [eq_iff_true_of_subsingleton]⟩ }

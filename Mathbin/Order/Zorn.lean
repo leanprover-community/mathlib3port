@@ -82,6 +82,7 @@ section Chain
 
 parameter {α : Type u}(r : α → α → Prop)
 
+-- mathport name: «expr ≺ »
 local infixl:50 " ≺ " => r
 
 /-- A chain is a subset `c` satisfying `x ≺ y ∨ x = y ∨ y ≺ x` for all `x y ∈ c`. -/

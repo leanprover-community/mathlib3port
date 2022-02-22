@@ -328,7 +328,7 @@ section Sum
 open_locale BigOperators
 
 @[simp]
-theorem coe_fn_sum {ι : Type _} (Q : ι → QuadraticForm R M) (s : Finset ι) : (⇑∑ i in s, Q i) = ∑ i in s, Q i :=
+theorem coe_fn_sum {ι : Type _} (Q : ι → QuadraticForm R M) (s : Finset ι) : ⇑(∑ i in s, Q i) = ∑ i in s, Q i :=
   (coeFnAddMonoidHom : _ →+ M → R).map_sum Q s
 
 @[simp]

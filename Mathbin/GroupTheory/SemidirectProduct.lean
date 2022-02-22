@@ -44,6 +44,7 @@ structure SemidirectProduct (φ : G →* MulAut N) where
 
 attribute [pp_using_anonymous_constructor] SemidirectProduct
 
+-- mathport name: «expr ⋊[ ] »
 notation:35 N " ⋊[" φ:35 "] " G:35 => SemidirectProduct N G φ
 
 namespace SemidirectProduct
@@ -124,7 +125,7 @@ theorem right_inl (n : N) : (inl n : N ⋊[φ] G).right = 1 :=
   rfl
 
 theorem inl_injective : Function.Injective (inl : N → N ⋊[φ] G) :=
-  Function.injective_iff_has_left_inverseₓ.2 ⟨left, left_inl⟩
+  Function.injective_iff_has_left_inverse.2 ⟨left, left_inl⟩
 
 @[simp]
 theorem inl_inj {n₁ n₂ : N} : (inl n₁ : N ⋊[φ] G) = inl n₂ ↔ n₁ = n₂ :=
@@ -146,7 +147,7 @@ theorem right_inr (g : G) : (inr g : N ⋊[φ] G).right = g :=
   rfl
 
 theorem inr_injective : Function.Injective (inr : G → N ⋊[φ] G) :=
-  Function.injective_iff_has_left_inverseₓ.2 ⟨right, right_inr⟩
+  Function.injective_iff_has_left_inverse.2 ⟨right, right_inr⟩
 
 @[simp]
 theorem inr_inj {g₁ g₂ : G} : (inr g₁ : N ⋊[φ] G) = inr g₂ ↔ g₁ = g₂ :=

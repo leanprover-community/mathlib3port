@@ -57,6 +57,7 @@ structure SimpleFunc.{u, v} (α : Type u) [MeasurableSpace α] (β : Type v) whe
   measurable_set_fiber' : ∀ x, MeasurableSet (to_fun ⁻¹' {x})
   finite_range' : (Set.Range to_fun).Finite
 
+-- mathport name: «expr →ₛ »
 local infixr:25 " →ₛ " => SimpleFunc
 
 namespace SimpleFunc
@@ -123,7 +124,7 @@ theorem const_apply (a : α) (b : β) : (const α b) a = b :=
   rfl
 
 @[simp]
-theorem coe_const (b : β) : ⇑const α b = Function.const α b :=
+theorem coe_const (b : β) : ⇑(const α b) = Function.const α b :=
   rfl
 
 @[simp]
@@ -172,7 +173,7 @@ def piecewise (s : Set α) (hs : MeasurableSet s) (f g : α →ₛ β) : α →�
     (f.finite_range.union g.finite_range).Subset range_ite_subset⟩
 
 @[simp]
-theorem coe_piecewise {s : Set α} (hs : MeasurableSet s) (f g : α →ₛ β) : ⇑piecewise s hs f g = s.piecewise f g :=
+theorem coe_piecewise {s : Set α} (hs : MeasurableSet s) (f g : α →ₛ β) : ⇑(piecewise s hs f g) = s.piecewise f g :=
   rfl
 
 theorem piecewise_apply {s : Set α} (hs : MeasurableSet s) (f g : α →ₛ β) a :
@@ -290,7 +291,7 @@ def comp [MeasurableSpace β] (f : β →ₛ γ) (g : α → β) (hgm : Measurab
   measurable_set_fiber' := fun z => hgm (f.measurable_set_fiber z)
 
 @[simp]
-theorem coe_comp [MeasurableSpace β] (f : β →ₛ γ) {g : α → β} (hgm : Measurable g) : ⇑f.comp g hgm = f ∘ g :=
+theorem coe_comp [MeasurableSpace β] (f : β →ₛ γ) {g : α → β} (hgm : Measurable g) : ⇑(f.comp g hgm) = f ∘ g :=
   rfl
 
 theorem range_comp_subset_range [MeasurableSpace β] (f : β →ₛ γ) {g : α → β} (hgm : Measurable g) :
@@ -536,7 +537,7 @@ theorem restrict_of_not_measurable {f : α →ₛ β} {s : Set α} (hs : ¬Measu
   dif_neg hs
 
 @[simp]
-theorem coe_restrict (f : α →ₛ β) {s : Set α} (hs : MeasurableSet s) : ⇑restrict f s = indicator s f := by
+theorem coe_restrict (f : α →ₛ β) {s : Set α} (hs : MeasurableSet s) : ⇑(restrict f s) = indicator s f := by
   rw [restrict, dif_pos hs]
   rfl
 
@@ -1066,12 +1067,16 @@ irreducible_def lintegral {m : MeasurableSpace α} (μ : Measure α) (f : α →
   `∫⁻ x, f x = 0` will be parsed incorrectly. -/
 
 
+-- mathport name: «expr∫⁻ , ∂ »
 notation3 "∫⁻ " (...) ", " r:(scoped f => f) " ∂" μ => lintegral μ r
 
+-- mathport name: «expr∫⁻ , »
 notation3 "∫⁻ " (...) ", " r:(scoped f => lintegral volume f) => r
 
+-- mathport name: «expr∫⁻ in , ∂ »
 notation3 "∫⁻ " (...) " in " s ", " r:(scoped f => f) " ∂" μ => lintegral (Measure.restrict μ s) r
 
+-- mathport name: «expr∫⁻ in , »
 notation3 "∫⁻ " (...) " in " s ", " r:(scoped f => lintegral Measure.restrict volume s f) => r
 
 theorem SimpleFunc.lintegral_eq_lintegral {m : MeasurableSpace α} (f : α →ₛ ℝ≥0∞) (μ : Measure α) :
@@ -1276,7 +1281,7 @@ theorem lintegral_supr {f : ℕ → α → ℝ≥0∞} (hf : ∀ n, Measurable (
     refine' inter_subset_inter (subset.refl _) _
     intro x hx
     exact le_transₓ hx (h_mono h x)
-  have h_meas : ∀ n, MeasurableSet { a : α | (⇑map c rs) a ≤ f n a } := fun n =>
+  have h_meas : ∀ n, MeasurableSet { a : α | (⇑(map c rs)) a ≤ f n a } := fun n =>
     measurable_set_le (simple_func.measurable _) (hf n)
   calc (r : ℝ≥0∞) * (s.map c).lintegral μ = ∑ r in (rs.map c).range, r * μ (rs.map c ⁻¹' {r}) := by
       rw [← const_mul_lintegral, eq_rs,

@@ -399,6 +399,7 @@ is injective). -/
 def Order.Preimage {α β} (f : α → β) (s : β → β → Prop) (x y : α) : Prop :=
   s (f x) (f y)
 
+-- mathport name: «expr ⁻¹'o »
 infixl:80 " ⁻¹'o " => Order.Preimage
 
 /-- The preimage of a decidable order is decidable. -/

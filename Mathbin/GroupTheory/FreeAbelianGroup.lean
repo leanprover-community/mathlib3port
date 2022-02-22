@@ -564,11 +564,11 @@ theorem lift_monoid_coe_add_monoid_hom (f : α →* R) : ↑(liftMonoid f) = lif
   rfl
 
 @[simp]
-theorem lift_monoid_coe (f : α →* R) : ⇑liftMonoid f = lift f :=
+theorem lift_monoid_coe (f : α →* R) : ⇑(liftMonoid f) = lift f :=
   rfl
 
 @[simp]
-theorem lift_monoid_symm_coe (f : FreeAbelianGroup α →+* R) : ⇑liftMonoid.symm f = lift.symm ↑f :=
+theorem lift_monoid_symm_coe (f : FreeAbelianGroup α →+* R) : ⇑(liftMonoid.symm f) = lift.symm ↑f :=
   rfl
 
 theorem one_def : (1 : FreeAbelianGroup α) = of 1 :=

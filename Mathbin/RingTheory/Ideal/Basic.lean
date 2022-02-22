@@ -210,7 +210,7 @@ theorem IsMaximal.ne_top {I : Ideal α} (h : I.IsMaximal) : I ≠ ⊤ :=
   (is_maximal_def.1 h).1
 
 theorem is_maximal_iff {I : Ideal α} :
-    I.IsMaximal ↔ (1 : α) ∉ I ∧ ∀ J : Ideal α x, I ≤ J → x ∉ I → x ∈ J → (1 : α) ∈ J :=
+    I.IsMaximal ↔ ((1 : α) ∉ I) ∧ ∀ J : Ideal α x, I ≤ J → (x ∉ I) → x ∈ J → (1 : α) ∈ J :=
   is_maximal_def.trans <|
     and_congr I.ne_top_iff_one <|
       forall_congrₓ fun J => by

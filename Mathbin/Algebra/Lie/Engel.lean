@@ -250,7 +250,8 @@ theorem LieAlgebra.is_engelian_of_is_noetherian : LieAlgebra.IsEngelian R L := b
       exact Submodule.Quotient.nontrivial_of_lt_top _ hK₂.lt_top
     have : LieModule.IsNilpotent R K (L' ⧸ K.to_lie_submodule) := by
       refine' hK₁ _ fun x => _
-      exact Module.End.IsNilpotent.mapq _ (LieAlgebra.is_nilpotent_ad_of_is_nilpotent (h x))
+      have hx := LieAlgebra.is_nilpotent_ad_of_is_nilpotent (h x)
+      exact Module.End.IsNilpotent.mapq _ hx
     exact nontrivial_max_triv_of_is_nilpotent R K (L' ⧸ K.to_lie_submodule)
   have _i5 : IsNoetherian R L' :=
     is_noetherian_of_surjective L _ (LinearMap.range_range_restrict (to_endomorphism R L M))

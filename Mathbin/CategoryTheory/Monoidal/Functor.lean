@@ -292,6 +292,7 @@ def comp : LaxMonoidalFunctor.{v₁, v₃} C E :=
       rw [F.right_unitality, map_comp, ← nat_trans.id_app, ← category.assoc, ← lax_monoidal_functor.μ_natural,
         nat_trans.id_app, map_id, ← category.assoc, map_comp] }
 
+-- mathport name: «expr ⊗⋙ »
 infixr:80 " ⊗⋙ " => comp
 
 end LaxMonoidalFunctor
@@ -311,6 +312,7 @@ def comp : MonoidalFunctor.{v₁, v₃} C E :=
       dsimp
       infer_instance }
 
+-- mathport name: «expr ⊗⋙ »
 infixr:80 " ⊗⋙ " => comp
 
 -- We overload notation; potentially dangerous, but it seems to work.

@@ -85,7 +85,7 @@ theorem le_of_inf_ne_bot' (f : Ultrafilter α) {g : Filter α} (hg : NeBot (g⊓
     rwa [inf_comm]
 
 @[simp]
-theorem compl_not_mem_iff : sᶜ ∉ f ↔ s ∈ f :=
+theorem compl_not_mem_iff : (sᶜ ∉ f) ↔ s ∈ f :=
   ⟨fun hsc =>
     le_principal_iff.1 <|
       f.le_of_inf_ne_bot
@@ -109,7 +109,7 @@ theorem diff_mem_iff (f : Ultrafilter α) : s \ t ∈ f ↔ s ∈ f ∧ t ∉ f 
 
 /-- If `sᶜ ∉ f ↔ s ∈ f`, then `f` is an ultrafilter. The other implication is given by
 `ultrafilter.compl_not_mem_iff`.  -/
-def ofComplNotMemIff (f : Filter α) (h : ∀ s, sᶜ ∉ f ↔ s ∈ f) : Ultrafilter α where
+def ofComplNotMemIff (f : Filter α) (h : ∀ s, (sᶜ ∉ f) ↔ s ∈ f) : Ultrafilter α where
   toFilter := f
   ne_bot' :=
     ⟨fun hf => by
@@ -301,7 +301,7 @@ open Ultrafilter
 
 theorem mem_iff_ultrafilter {s : Set α} {f : Filter α} : s ∈ f ↔ ∀ g : Ultrafilter α, ↑g ≤ f → s ∈ g := by
   refine' ⟨fun hf g hg => hg hf, fun H => by_contra fun hf => _⟩
-  set g : Filter (↥sᶜ) := comap coe f
+  set g : Filter ↥(sᶜ) := comap coe f
   have : ne_bot g :=
     comap_ne_bot_iff_compl_range.2
       (by

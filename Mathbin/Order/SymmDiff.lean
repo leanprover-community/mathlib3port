@@ -46,6 +46,7 @@ boolean ring, generalized boolean algebra, boolean algebra, symmetric difference
 def symmDiff {α : Type _} [HasSup α] [HasSdiff α] (A B : α) : α :=
   A \ B⊔B \ A
 
+-- mathport name: «expr Δ »
 infixl:100 " Δ " => symmDiff
 
 theorem symm_diff_def {α : Type _} [HasSup α] [HasSdiff α] (A B : α) : A Δ B = A \ B⊔B \ A :=

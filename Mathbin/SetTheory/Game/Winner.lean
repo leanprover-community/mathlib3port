@@ -16,6 +16,7 @@ These are defined by inequalities which can be unfolded with `pgame.lt_def` and 
 
 namespace Pgame
 
+-- mathport name: «expr ≈ »
 local infixl:0 " ≈ " => Equiv
 
 /-- The player who goes first loses -/

@@ -740,12 +740,12 @@ theorem subset_union_prime' {R : Type u} [CommRingₓ R] {s : Finset ι} {f : ι
     simpa only [exists_prop, Finset.not_mem_empty, false_andₓ, exists_false, or_falseₓ]
     
   classical
-  replace hn : ∃ (i : ι)(t : Finset ι), i ∉ t ∧ insert i t = s ∧ t.card = n := Finset.card_eq_succ.1 hn
+  replace hn : ∃ (i : ι)(t : Finset ι), (i ∉ t) ∧ insert i t = s ∧ t.card = n := Finset.card_eq_succ.1 hn
   rcases hn with ⟨i, t, hit, rfl, hn⟩
   replace hp : is_prime (f i) ∧ ∀, ∀ x ∈ t, ∀, is_prime (f x) := (t.forall_mem_insert _ _).1 hp
   by_cases' Ht : ∃ j ∈ t, f j ≤ f i
   · obtain ⟨j, hjt, hfji⟩ : ∃ j ∈ t, f j ≤ f i := Ht
-    obtain ⟨u, hju, rfl⟩ : ∃ u, j ∉ u ∧ insert j u = t := ⟨t.erase j, t.not_mem_erase j, Finset.insert_erase hjt⟩
+    obtain ⟨u, hju, rfl⟩ : ∃ u, (j ∉ u) ∧ insert j u = t := ⟨t.erase j, t.not_mem_erase j, Finset.insert_erase hjt⟩
     have hp' : ∀, ∀ k ∈ insert i u, ∀, is_prime (f k) := by
       rw [Finset.forall_mem_insert] at hp⊢
       exact ⟨hp.1, hp.2.2⟩
@@ -847,9 +847,10 @@ theorem subset_union_prime {R : Type u} [CommRingₓ R] {s : Finset ι} {f : ι 
   fun h : (I : Set R) ⊆ ⋃ i ∈ (↑s : Set ι), f i => by
   classical
   by_cases' has : a ∈ s
-  · obtain ⟨t, hat, rfl⟩ : ∃ t, a ∉ t ∧ insert a t = s := ⟨s.erase a, Finset.not_mem_erase a s, Finset.insert_erase has⟩
+  · obtain ⟨t, hat, rfl⟩ : ∃ t, (a ∉ t) ∧ insert a t = s :=
+      ⟨s.erase a, Finset.not_mem_erase a s, Finset.insert_erase has⟩
     by_cases' hbt : b ∈ t
-    · obtain ⟨u, hbu, rfl⟩ : ∃ u, b ∉ u ∧ insert b u = t :=
+    · obtain ⟨u, hbu, rfl⟩ : ∃ u, (b ∉ u) ∧ insert b u = t :=
         ⟨t.erase b, Finset.not_mem_erase b t, Finset.insert_erase hbt⟩
       have hp' : ∀, ∀ i ∈ u, ∀, is_prime (f i) := by
         intro i hiu
@@ -873,7 +874,7 @@ theorem subset_union_prime {R : Type u} [CommRingₓ R] {s : Finset ι} {f : ι 
       
     
   · by_cases' hbs : b ∈ s
-    · obtain ⟨t, hbt, rfl⟩ : ∃ t, b ∉ t ∧ insert b t = s :=
+    · obtain ⟨t, hbt, rfl⟩ : ∃ t, (b ∉ t) ∧ insert b t = s :=
         ⟨s.erase b, Finset.not_mem_erase b s, Finset.insert_erase hbs⟩
       have hp' : ∀, ∀ j ∈ t, ∀, is_prime (f j) := by
         intro j hj
@@ -892,7 +893,7 @@ theorem subset_union_prime {R : Type u} [CommRingₓ R] {s : Finset ι} {f : ι 
       exact absurd h this
       
     · cases' hsne.bex with i his
-      obtain ⟨t, hit, rfl⟩ : ∃ t, i ∉ t ∧ insert i t = s :=
+      obtain ⟨t, hit, rfl⟩ : ∃ t, (i ∉ t) ∧ insert i t = s :=
         ⟨s.erase i, Finset.not_mem_erase i s, Finset.insert_erase his⟩
       have hp' : ∀, ∀ j ∈ t, ∀, is_prime (f j) := by
         intro j hj
@@ -1662,7 +1663,7 @@ theorem Quotient.mkₐ_to_ring_hom (I : Ideal A) : (Quotient.mkₐ R₁ I).toRin
   rfl
 
 @[simp]
-theorem Quotient.mkₐ_eq_mk (I : Ideal A) : ⇑Quotient.mkₐ R₁ I = Ideal.Quotient.mk I :=
+theorem Quotient.mkₐ_eq_mk (I : Ideal A) : ⇑(Quotient.mkₐ R₁ I) = Ideal.Quotient.mk I :=
   rfl
 
 @[simp]

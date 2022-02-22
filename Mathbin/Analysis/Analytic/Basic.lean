@@ -263,7 +263,7 @@ theorem min_radius_le_radius_add (p q : FormalMultilinearSeries 𝕜 E F) : min 
   rw [lt_min_iff] at hr
   have := ((p.is_o_one_of_lt_radius hr.1).add (q.is_o_one_of_lt_radius hr.2)).IsO
   refine' (p + q).le_radius_of_is_O (((is_O_of_le _) fun n => _).trans this)
-  rw [← add_mulₓ, NormedField.norm_mul, NormedField.norm_mul, norm_norm]
+  rw [← add_mulₓ, norm_mul, norm_mul, norm_norm]
   exact mul_le_mul_of_nonneg_right ((norm_add_le _ _).trans (le_abs_self _)) (norm_nonneg _)
 
 @[simp]
@@ -547,8 +547,8 @@ theorem HasFpowerSeriesOnBall.image_sub_sub_deriv_le (hf : HasFpowerSeriesOnBall
       ∀ y z _ : y ∈ Emetric.Ball x r' _ : z ∈ Emetric.Ball x r',
         ∥f y - f z - p 1 fun _ => y - z∥ ≤ C * max ∥y - x∥ ∥z - x∥ * ∥y - z∥ :=
   by
-  simpa only [is_O_principal, mul_assoc, NormedField.norm_mul, norm_norm, Prod.forall, Emetric.mem_ball, Prod.edist_eq,
-    max_lt_iff, and_imp, @forall_swap (_ < _) E] using hf.is_O_image_sub_image_sub_deriv_principal hr
+  simpa only [is_O_principal, mul_assoc, norm_mul, norm_norm, Prod.forall, Emetric.mem_ball, Prod.edist_eq, max_lt_iff,
+    and_imp, @forall_swap (_ < _) E] using hf.is_O_image_sub_image_sub_deriv_principal hr
 
 /-- If `f` has formal power series `∑ n, pₙ` at `x`, then
 `f y - f z - p 1 (λ _, y - z) = O(∥(y, z) - (x, x)∥ * ∥y - z∥)` as `(y, z) → (x, x)`.
@@ -699,7 +699,7 @@ theorem Asymptotics.IsO.continuous_multilinear_map_apply_eq_zero {n : ℕ} {p : 
     have h₂ :=
       calc
         ∥p fun i => k • y∥ ≤ c * ∥k • y∥ ^ (n.succ + 1) := by
-          simpa only [NormedField.norm_pow, norm_norm] using ht (k • y) (δε (mem_ball_zero_iff.mpr h₁))
+          simpa only [norm_pow, norm_norm] using ht (k • y) (δε (mem_ball_zero_iff.mpr h₁))
         _ = ∥k∥ ^ n.succ * (∥k∥ * (c * ∥y∥ ^ (n.succ + 1))) := by
           simp only [norm_smul, mul_powₓ]
           rw [pow_succₓ]
@@ -714,7 +714,7 @@ theorem Asymptotics.IsO.continuous_multilinear_map_apply_eq_zero {n : ℕ} {p : 
               k • y)_ ≤ ∥k⁻¹ ^ n.succ∥ * (∥k∥ ^ n.succ * (∥k∥ * (c * ∥y∥ ^ (n.succ + 1)))) :=
         mul_le_mul_of_nonneg_left h₂ (norm_nonneg _)_ = ∥(k⁻¹ * k) ^ n.succ∥ * (∥k∥ * (c * ∥y∥ ^ (n.succ + 1))) := by
         rw [← mul_assoc]
-        simp [NormedField.norm_mul, mul_powₓ]_ ≤ 0 + ε := by
+        simp [norm_mul, mul_powₓ]_ ≤ 0 + ε := by
         rw [inv_mul_cancel (norm_pos_iff.mp k_pos)]
         simpa using h₃.le
     
@@ -863,8 +863,6 @@ theorem nnnorm_change_origin_series_apply_le_tsum (k l : ℕ) (x : E) :
 -/
 def changeOrigin (x : E) : FormalMultilinearSeries 𝕜 E F := fun k => (p.changeOriginSeries k).Sum x
 
--- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (k l)
--- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (k l)
 /-- An auxiliary equivalence useful in the proofs about
 `formal_multilinear_series.change_origin_series`: the set of triples `(k, l, s)`, where `s` is a
 `finset (fin (k + l))` of cardinality `l` is equivalent to the set of pairs `(n, s)`, where `s` is a
@@ -874,8 +872,7 @@ The forward map sends `(k, l, s)` to `(k + l, s)` and the inverse map sends `(n,
 `(n - finset.card s, finset.card s, s)`. The actual definition is less readable because of problems
 with non-definitional equalities. -/
 @[simps]
-def changeOriginIndexEquiv :
-    (Σ (k : ℕ) (l : ℕ), { s : Finset (Finₓ (k + l)) // s.card = l }) ≃ Σ n : ℕ, Finset (Finₓ n) where
+def changeOriginIndexEquiv : (Σk l : ℕ, { s : Finset (Finₓ (k + l)) // s.card = l }) ≃ Σn : ℕ, Finset (Finₓ n) where
   toFun := fun s => ⟨s.1 + s.2.1, s.2.2⟩
   invFun := fun s =>
     ⟨s.1 - s.2.card, s.2.card,
@@ -892,7 +889,7 @@ def changeOriginIndexEquiv :
           l' = l →
             ∀ hkl : k + l = k' + l' hs',
               (⟨k', l', ⟨Finset.map (Finₓ.cast hkl).toEquiv.toEmbedding s, hs'⟩⟩ :
-                  Σ (k : ℕ) (l : ℕ), { s : Finset (Finₓ (k + l)) // s.card = l }) =
+                  Σk l : ℕ, { s : Finset (Finₓ (k + l)) // s.card = l }) =
                 ⟨k, l, ⟨s, hs⟩⟩
       by
       apply this <;> simp only [hs, add_tsub_cancel_right]
@@ -903,9 +900,8 @@ def changeOriginIndexEquiv :
     rintro ⟨n, s⟩
     simp [tsub_add_cancel_of_le (card_finset_fin_le s), Finₓ.cast_to_equiv]
 
--- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (k l)
 theorem change_origin_series_summable_aux₁ {r r' : ℝ≥0 } (hr : (r + r' : ℝ≥0∞) < p.radius) :
-    Summable fun s : Σ (k : ℕ) (l : ℕ), { s : Finset (Finₓ (k + l)) // s.card = l } =>
+    Summable fun s : Σk l : ℕ, { s : Finset (Finₓ (k + l)) // s.card = l } =>
       ∥p (s.1 + s.2.1)∥₊ * r ^ s.2.1 * r' ^ s.1 :=
   by
   rw [← change_origin_index_equiv.symm.summable_iff]
@@ -928,7 +924,7 @@ theorem change_origin_series_summable_aux₁ {r r' : ℝ≥0 } (hr : (r + r' : �
   exact p.summable_nnnorm_mul_pow hr
 
 theorem change_origin_series_summable_aux₂ (hr : (r : ℝ≥0∞) < p.radius) (k : ℕ) :
-    Summable fun s : Σ l : ℕ, { s : Finset (Finₓ (k + l)) // s.card = l } => ∥p (k + s.1)∥₊ * r ^ s.1 := by
+    Summable fun s : Σl : ℕ, { s : Finset (Finₓ (k + l)) // s.card = l } => ∥p (k + s.1)∥₊ * r ^ s.1 := by
   rcases Ennreal.lt_iff_exists_add_pos_lt.1 hr with ⟨r', h0, hr'⟩
   simpa only [mul_inv_cancel_right₀ (pow_pos h0 _).ne'] using
     ((Nnreal.summable_sigma.1 (p.change_origin_series_summable_aux₁ hr')).1 k).mul_right (r' ^ k)⁻¹
@@ -943,7 +939,7 @@ theorem le_change_origin_series_radius (k : ℕ) : p.radius ≤ (p.changeOriginS
   Ennreal.le_of_forall_nnreal_lt fun r hr => le_radius_of_summable_nnnorm _ (p.change_origin_series_summable_aux₃ hr k)
 
 theorem nnnorm_change_origin_le (k : ℕ) (h : (∥x∥₊ : ℝ≥0∞) < p.radius) :
-    ∥p.changeOrigin x k∥₊ ≤ ∑' s : Σ l : ℕ, { s : Finset (Finₓ (k + l)) // s.card = l }, ∥p (k + s.1)∥₊ * ∥x∥₊ ^ s.1 :=
+    ∥p.changeOrigin x k∥₊ ≤ ∑' s : Σl : ℕ, { s : Finset (Finₓ (k + l)) // s.card = l }, ∥p (k + s.1)∥₊ * ∥x∥₊ ^ s.1 :=
   by
   refine' tsum_of_nnnorm_bounded _ fun l => p.nnnorm_change_origin_series_apply_le_tsum k l x
   have := p.change_origin_series_summable_aux₂ h k
@@ -961,7 +957,7 @@ theorem change_origin_radius : p.radius - ∥x∥₊ ≤ (p.changeOrigin x).radi
   have :
     ∀ k : ℕ,
       ∥p.change_origin x k∥₊ * r ^ k ≤
-        (∑' s : Σ l : ℕ, { s : Finset (Finₓ (k + l)) // s.card = l }, ∥p (k + s.1)∥₊ * ∥x∥₊ ^ s.1) * r ^ k :=
+        (∑' s : Σl : ℕ, { s : Finset (Finₓ (k + l)) // s.card = l }, ∥p (k + s.1)∥₊ * ∥x∥₊ ^ s.1) * r ^ k :=
     fun k => mul_le_mul_right' (p.nnnorm_change_origin_le k hr') (r ^ k)
   refine' Nnreal.summable_of_le this _
   simpa only [← Nnreal.tsum_mul_right] using (Nnreal.summable_sigma.1 (p.change_origin_series_summable_aux₁ hr)).2
@@ -977,7 +973,6 @@ theorem has_fpower_series_on_ball_change_origin (k : ℕ) (hr : 0 < p.radius) :
   have := p.le_change_origin_series_radius k
   ((p.changeOriginSeries k).HasFpowerSeriesOnBall (hr.trans_le this)).mono hr this
 
--- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (k l)
 /-- Summing the series `p.change_origin x` at a point `y` gives back `p (x + y)`-/
 theorem change_origin_eval (h : (∥x∥₊ + ∥y∥₊ : ℝ≥0∞) < p.radius) : (p.changeOrigin x).Sum y = p.Sum (x + y) := by
   have radius_pos : 0 < p.radius := lt_of_le_of_ltₓ (zero_le _) h
@@ -988,7 +983,7 @@ theorem change_origin_eval (h : (∥x∥₊ + ∥y∥₊ : ℝ≥0∞) < p.radiu
   have x_add_y_mem_ball : x + y ∈ Emetric.Ball (0 : E) p.radius := by
     refine' mem_emetric_ball_zero_iff.2 (lt_of_le_of_ltₓ _ h)
     exact_mod_cast nnnorm_add_le x y
-  set f : (Σ (k : ℕ) (l : ℕ), { s : Finset (Finₓ (k + l)) // s.card = l }) → F := fun s =>
+  set f : (Σk l : ℕ, { s : Finset (Finₓ (k + l)) // s.card = l }) → F := fun s =>
     p.change_origin_series_term s.1 s.2.1 s.2.2 s.2.2.2 (fun _ => x) fun _ => y
   have hsf : Summable f := by
     refine' summable_of_nnnorm_bounded _ (p.change_origin_series_summable_aux₁ h) _

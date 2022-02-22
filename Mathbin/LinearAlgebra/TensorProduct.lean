@@ -86,8 +86,10 @@ def TensorProduct : Type _ :=
 
 variable {R}
 
+-- mathport name: «expr ⊗ »
 localized [TensorProduct] infixl:100 " ⊗ " => TensorProduct _
 
+-- mathport name: «expr ⊗[ ] »
 localized [TensorProduct] notation:100 M " ⊗[" R "] " N:100 => TensorProduct R M N
 
 namespace TensorProduct
@@ -114,8 +116,10 @@ def tmul (m : M) (n : N) : M ⊗[R] N :=
 
 variable {R}
 
+-- mathport name: «expr ⊗ₜ »
 infixl:100 " ⊗ₜ " => tmul _
 
+-- mathport name: «expr ⊗ₜ[ ] »
 notation:100 x " ⊗ₜ[" R "] " y:100 => tmul R x y
 
 @[elab_as_eliminator]

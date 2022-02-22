@@ -44,6 +44,7 @@ variable {R : Type _} {S : Type _} {S' : Type _}
 /-- An equivalence between two (semi)rings that preserves the algebraic structure. -/
 structure RingEquiv (R S : Type _) [Mul R] [Add R] [Mul S] [Add S] extends R ≃ S, R ≃* S, R ≃+ S
 
+-- mathport name: «expr ≃+* »
 infixl:25 " ≃+* " => RingEquiv
 
 /-- The "plain" equivalence of types underlying an equivalence of (semi)rings. -/

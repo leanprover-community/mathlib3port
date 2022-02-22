@@ -248,6 +248,7 @@ def starRingEnd [CommSemiringₓ R] [StarRing R] : R →+* R :=
 
 variable {R}
 
+-- mathport name: «exprconj»
 localized [ComplexConjugate] notation "conj" => starRingEnd _
 
 /-- This is not a simp lemma, since we usually want simp to keep `star_ring_end` bundled.

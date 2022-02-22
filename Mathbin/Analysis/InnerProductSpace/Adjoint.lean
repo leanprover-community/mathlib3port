@@ -49,6 +49,7 @@ variable {𝕜 E F G : Type _} [IsROrC 𝕜]
 
 variable [InnerProductSpace 𝕜 E] [InnerProductSpace 𝕜 F] [InnerProductSpace 𝕜 G]
 
+-- mathport name: «expr⟪ , ⟫»
 local notation "⟪" x ", " y "⟫" => @inner 𝕜 _ _ x y
 
 namespace ContinuousLinearMap
@@ -98,6 +99,7 @@ def adjoint : (E →L[𝕜] F) ≃ₗᵢ⋆[𝕜] F →L[𝕜] E :=
   LinearIsometryEquiv.ofSurjective { adjointAux with norm_map' := adjoint_aux_norm } fun A =>
     ⟨adjointAux A, adjoint_aux_adjoint_aux A⟩
 
+-- mathport name: «expr †»
 localized [InnerProduct] postfix:1000 "†" => adjoint
 
 /-- The fundamental property of the adjoint. -/

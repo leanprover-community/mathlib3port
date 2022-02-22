@@ -231,6 +231,7 @@ def RealizeFormula (f : L.Formula α) (v : α → M) : Prop :=
 def RealizeSentence (φ : L.Sentence) : Prop :=
   RealizeFormula M φ Pempty.elimₓ
 
+-- mathport name: «expr ⊨ »
 infixl:51 " ⊨ " => RealizeSentence
 
 /-- A model of a theory is a structure in which every sentence is realized as true. -/
@@ -239,6 +240,7 @@ infixl:51 " ⊨ " => RealizeSentence
 def Theory.Model (T : L.Theory) : Prop :=
   ∀, ∀ φ ∈ T, ∀, RealizeSentence M φ
 
+-- mathport name: «expr ⊨ »
 infixl:51 " ⊨ " => Theory.Model
 
 -- input using \|= or \vDash, but not using \models
@@ -357,6 +359,7 @@ def ModelsBoundedFormula {n : ℕ} {α : Type} (T : L.Theory) (φ : L.BoundedFor
   ∀ M : Type max u v [Nonempty M] [str : L.Structure M] v : α → M xs : Finₓ n → M,
     @Theory.Model L M str T → @RealizeBoundedFormulaₓ L M str α n φ v xs
 
+-- mathport name: «expr ⊨ »
 infixl:51 " ⊨ " => ModelsBoundedFormula
 
 -- input using \|= or \vDash, but not using \models

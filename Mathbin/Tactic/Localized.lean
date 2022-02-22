@@ -125,7 +125,9 @@ localized [Classical] attribute [instance] Classical.propDecidable
 
 localized [Classical] attribute [instance] Eq.decidable decidableEqOfDecidableLe
 
+-- mathport name: «expr ?»
 localized [Parser] postfix:1024 "?" => optionalₓ
 
+-- mathport name: «expr *»
 localized [Parser] postfix:1024 "*" => lean.parser.many
 

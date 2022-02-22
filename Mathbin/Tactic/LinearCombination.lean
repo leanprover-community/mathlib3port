@@ -132,6 +132,7 @@ unsafe def sum_two_hyps_one_mul_helper (h_equality1 h_equality2 : expr) (coeff_f
   `= r_sum1 + (c_1 * r_h1) + ... + (c_n * r_hn)`
 
 * Input:
+  * `expected_tp`: the type of the terms being compared in the target equality
   * an `option (tactic expr)` : `none`, if there is no sum to add to yet, or
       `some` containing the base summation equation
   * a `list name` : a list of names, referring to equalities in the local context
@@ -141,9 +142,8 @@ unsafe def sum_two_hyps_one_mul_helper (h_equality1 h_equality2 : expr) (coeff_f
 * Output: an `expr`, which proves that the weighted sum of the given
     equalities added to the base equation holds
 -/
-unsafe def make_sum_of_hyps_helper : Option (tactic expr) → List Name → List pexpr → tactic expr
-  | none, [], [] => do
-    fail "There are no hypotheses to add"
+unsafe def make_sum_of_hyps_helper (expected_tp : expr) : Option (tactic expr) → List Name → List pexpr → tactic expr
+  | none, [], [] => to_expr (pquote.1 (rfl : (0 : %%ₓexpected_tp) = 0))
   | some tactic_hcombo, [], [] => do
     tactic_hcombo
   | none, h_equality_nam :: h_eqs_names, coeff :: coeffs => do
@@ -151,6 +151,13 @@ unsafe def make_sum_of_hyps_helper : Option (tactic expr) → List Name → List
       ←-- This is the first equality, and we do not have anything to add to it
           get_local
           h_equality_nam
+    let quote.1 (@Eq (%%ₓeqtp) _ _) ← infer_type h_equality |
+      throwError "{← h_equality_nam} is expected to be a proof of an equality"
+    is_def_eq eqtp expected_tp <|>
+        throwError
+          "{(←
+            h_equality_nam)} is an equality between terms of type {(←
+            eqtp)}, but is expected to be between terms of type {← expected_tp}"
     make_sum_of_hyps_helper (some (mul_equality_expr h_equality coeff)) h_eqs_names coeffs
   | some tactic_hcombo, h_equality_nam :: h_eqs_names, coeff :: coeffs => do
     let h_equality ← get_local h_equality_nam
@@ -169,6 +176,7 @@ unsafe def make_sum_of_hyps_helper : Option (tactic expr) → List Name → List
   (where each equation is multiplied by the corresponding coefficient) holds.
 
 * Input:
+  * `expected_tp`: the type of the terms being compared in the target equality
   * `h_eqs_names` : a list of names, referring to equalities in the local
       context
   * `coeffs` : a list of coefficients to be multiplied with the corresponding
@@ -177,8 +185,8 @@ unsafe def make_sum_of_hyps_helper : Option (tactic expr) → List Name → List
 * Output: an `expr`, which proves that the weighted sum of the equalities
     holds
 -/
-unsafe def make_sum_of_hyps (h_eqs_names : List Name) (coeffs : List pexpr) : tactic expr :=
-  make_sum_of_hyps_helper none h_eqs_names coeffs
+unsafe def make_sum_of_hyps (expected_tp : expr) (h_eqs_names : List Name) (coeffs : List pexpr) : tactic expr :=
+  make_sum_of_hyps_helper expected_tp none h_eqs_names coeffs
 
 /-! ### Part 2: Simplifying -/
 
@@ -279,7 +287,8 @@ Note: The left and right sides of all the equalities should have the same
 -/
 unsafe def linear_combination (h_eqs_names : List Name) (coeffs : List pexpr)
     (config : linear_combination_config := {  }) : tactic Unit := do
-  let hsum ← make_sum_of_hyps h_eqs_names coeffs
+  let quote.1 (@Eq (%%ₓext) _ _) ← target | fail "linear_combination can only be used to prove equality goals"
+  let hsum ← make_sum_of_hyps ext h_eqs_names coeffs
   let hsum_on_left ← move_to_left_side hsum
   move_target_to_left_side
   set_goal_to_hleft_eq_tleft hsum_on_left

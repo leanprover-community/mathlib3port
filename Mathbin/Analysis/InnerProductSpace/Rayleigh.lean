@@ -38,6 +38,7 @@ variable {𝕜 : Type _} [IsROrC 𝕜]
 
 variable {E : Type _} [InnerProductSpace 𝕜 E]
 
+-- mathport name: «expr⟪ , ⟫»
 local notation "⟪" x ", " y "⟫" => @inner 𝕜 _ _ x y
 
 open_locale Nnreal
@@ -48,6 +49,7 @@ namespace ContinuousLinearMap
 
 variable (T : E →L[𝕜] E)
 
+-- mathport name: «exprrayleigh_quotient»
 local notation "rayleigh_quotient" => fun x : E => T.reApplyInnerSelf x / ∥(x : E)∥ ^ 2
 
 theorem rayleigh_smul (x : E) {c : 𝕜} (hc : c ≠ 0) : rayleigh_quotient (c • x) = rayleigh_quotient x := by
@@ -110,6 +112,7 @@ theorem has_strict_fderiv_at_re_apply_inner_self {T : F →L[ℝ] F} (hT : IsSel
 
 variable [CompleteSpace F] {T : F →L[ℝ] F}
 
+-- mathport name: «exprrayleigh_quotient»
 local notation "rayleigh_quotient" => fun x : F => T.reApplyInnerSelf x / ∥(x : F)∥ ^ 2
 
 theorem linearly_dependent_of_is_local_extr_on (hT : IsSelfAdjoint (T : F →ₗ[ℝ] F)) {x₀ : F}
@@ -162,6 +165,7 @@ section CompleteSpace
 
 variable [CompleteSpace E] {T : E →L[𝕜] E}
 
+-- mathport name: «exprrayleigh_quotient»
 local notation "rayleigh_quotient" => fun x : E => T.reApplyInnerSelf x / ∥(x : E)∥ ^ 2
 
 theorem eq_smul_self_of_is_local_extr_on (hT : IsSelfAdjoint (T : E →ₗ[𝕜] E)) {x₀ : E}

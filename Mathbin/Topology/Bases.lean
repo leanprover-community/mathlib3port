@@ -239,7 +239,7 @@ theorem is_topological_basis_of_cover {ι} {U : ι → Set α} (Uo : ∀ i, IsOp
     
   · intro a u ha uo
     rcases Union_eq_univ_iff.1 Uc a with ⟨i, hi⟩
-    lift a to ↥U i using hi
+    lift a to ↥(U i) using hi
     rcases(hb i).exists_subset_of_mem_open ha (uo.preimage continuous_subtype_coe) with ⟨v, hvb, hav, hvu⟩
     exact ⟨coe '' v, mem_Union.2 ⟨i, mem_image_of_mem _ hvb⟩, mem_image_of_mem _ hav, image_subset_iff.2 hvu⟩
     
@@ -455,7 +455,7 @@ protected theorem IsTopologicalBasis.second_countable_topology {b : Set (Set α)
 variable (α)
 
 theorem exists_countable_basis [SecondCountableTopology α] :
-    ∃ b : Set (Set α), Countable b ∧ ∅ ∉ b ∧ IsTopologicalBasis b :=
+    ∃ b : Set (Set α), Countable b ∧ (∅ ∉ b) ∧ IsTopologicalBasis b :=
   let ⟨b, hb₁, hb₂⟩ := SecondCountableTopology.is_open_generated_countable α
   let b' := (fun s => ⋂₀ s) '' { s : Set (Set α) | Finite s ∧ s ⊆ b ∧ (⋂₀ s).Nonempty }
   ⟨b',

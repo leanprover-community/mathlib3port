@@ -29,6 +29,7 @@ open Set Metric Filter TopologicalSpace
 
 open_locale TopologicalSpace Alexandroff
 
+-- mathport name: «exprℚ∞»
 local notation "ℚ∞" => Alexandroff ℚ
 
 namespace Rat

@@ -470,7 +470,7 @@ theorem mk_eq_mk_of_basis (v : Basis ι R M) (v' : Basis ι' R M) : Cardinal.lif
   by_cases' h : # ι < ω
   · -- `v` is a finite basis, so by `basis_fintype_of_finite_spans` so is `v'`.
     have : Fintype ι := (cardinal.lt_omega_iff_fintype.mp h).some
-    have : Fintype (range v) := Set.fintypeRange (⇑v)
+    have : Fintype (range v) := Set.fintypeRange ⇑v
     have := basisFintypeOfFiniteSpans _ v.span_eq v'
     -- We clean up a little:
     rw [Cardinal.mk_fintype, Cardinal.mk_fintype]
@@ -675,7 +675,7 @@ theorem linear_independent_le_infinite_basis {ι : Type _} (b : Basis ι R M) [I
   by_contra
   rw [not_leₓ, ← Cardinal.mk_finset_eq_mk ι] at h
   let Φ := fun k : κ => (b.repr (v k)).support
-  obtain ⟨s, w : Infinite (↥(Φ ⁻¹' {s}))⟩ :=
+  obtain ⟨s, w : Infinite ↥(Φ ⁻¹' {s})⟩ :=
     Cardinal.exists_infinite_fiber Φ h
       (by
         infer_instance)
@@ -797,12 +797,12 @@ theorem Basis.finite_index_of_dim_lt_omega {ι : Type _} {s : Set ι} (b : Basis
     s.Finite :=
   finite_def.2 (b.nonempty_fintype_index_of_dim_lt_omega h)
 
-theorem dim_span {v : ι → M} (hv : LinearIndependent R v) : Module.rank R (↥span R (Range v)) = # (Range v) := by
+theorem dim_span {v : ι → M} (hv : LinearIndependent R v) : Module.rank R ↥(span R (Range v)) = # (Range v) := by
   have := nontrivial_of_invariant_basis_number R
   rw [← Cardinal.lift_inj, ← (Basis.span hv).mk_eq_dim,
     Cardinal.mk_range_eq_of_injective (@LinearIndependent.injective ι R M v _ _ _ _ hv)]
 
-theorem dim_span_set {s : Set M} (hs : LinearIndependent R (fun x => x : s → M)) : Module.rank R (↥span R s) = # s := by
+theorem dim_span_set {s : Set M} (hs : LinearIndependent R (fun x => x : s → M)) : Module.rank R ↥(span R s) = # s := by
   rw [← @set_of_mem_eq _ s, ← Subtype.range_coe_subtype]
   exact dim_span hs
 
@@ -927,7 +927,7 @@ open LinearMap
 
 theorem dim_pi : Module.rank K (∀ i, φ i) = Cardinal.sum fun i => Module.rank K (φ i) := by
   let b := fun i => Basis.ofVectorSpace K (φ i)
-  let this : Basis (Σ j, _) K (∀ j, φ j) := Pi.basis b
+  let this : Basis (Σj, _) K (∀ j, φ j) := Pi.basis b
   rw [← Cardinal.lift_inj, ← this.mk_eq_dim]
   simp [← (b _).mk_range_eq_dim]
 

@@ -399,6 +399,7 @@ variable (l l' : List α)
 def IsRotated : Prop :=
   ∃ n, l.rotate n = l'
 
+-- mathport name: «expr ~r »
 infixr:1000 " ~r " => IsRotated
 
 variable {l l'}

@@ -172,7 +172,7 @@ via Gaussian elimination.
 (This is the version of `biprod.gaussian` written in terms of components.)
 -/
 def Biprod.gaussian' [IsIso f₁₁] :
-    Σ' (L : X₁ ⊞ X₂ ≅ X₁ ⊞ X₂) (R : Y₁ ⊞ Y₂ ≅ Y₁ ⊞ Y₂) (g₂₂ : X₂ ⟶ Y₂),
+    Σ'(L : X₁ ⊞ X₂ ≅ X₁ ⊞ X₂)(R : Y₁ ⊞ Y₂ ≅ Y₁ ⊞ Y₂)(g₂₂ : X₂ ⟶ Y₂),
       L.hom ≫ Biprod.ofComponents f₁₁ f₁₂ f₂₁ f₂₂ ≫ R.hom = biprod.map f₁₁ g₂₂ :=
   ⟨Biprod.unipotentLower (-(f₂₁ ≫ inv f₁₁)), Biprod.unipotentUpper (-(inv f₁₁ ≫ f₁₂)), f₂₂ - f₂₁ ≫ inv f₁₁ ≫ f₁₂, by
     ext <;> simp <;> abel⟩
@@ -183,7 +183,7 @@ so that `L.hom ≫ g ≫ R.hom` is diagonal (with `X₁ ⟶ Y₁` component stil
 via Gaussian elimination.
 -/
 def Biprod.gaussian (f : X₁ ⊞ X₂ ⟶ Y₁ ⊞ Y₂) [IsIso (biprod.inl ≫ f ≫ biprod.fst)] :
-    Σ' (L : X₁ ⊞ X₂ ≅ X₁ ⊞ X₂) (R : Y₁ ⊞ Y₂ ≅ Y₁ ⊞ Y₂) (g₂₂ : X₂ ⟶ Y₂),
+    Σ'(L : X₁ ⊞ X₂ ≅ X₁ ⊞ X₂)(R : Y₁ ⊞ Y₂ ≅ Y₁ ⊞ Y₂)(g₂₂ : X₂ ⟶ Y₂),
       L.hom ≫ f ≫ R.hom = biprod.map (biprod.inl ≫ f ≫ biprod.fst) g₂₂ :=
   by
   let this :=
@@ -261,7 +261,7 @@ then there is some `t` in the target so that the `s, t` matrix entry of `f` is n
 -/
 def Biproduct.columnNonzeroOfIso {σ τ : Type v} [DecidableEq σ] [DecidableEq τ] [Fintype τ] {S : σ → C}
     [HasBiproduct.{v} S] {T : τ → C} [HasBiproduct.{v} T] (s : σ) (nz : 𝟙 (S s) ≠ 0) [∀ t, DecidableEq (S s ⟶ T t)]
-    (f : ⨁ S ⟶ ⨁ T) [IsIso f] : Trunc (Σ' t : τ, biproduct.ι S s ≫ f ≫ biproduct.π T t ≠ 0) := by
+    (f : ⨁ S ⟶ ⨁ T) [IsIso f] : Trunc (Σ't : τ, biproduct.ι S s ≫ f ≫ biproduct.π T t ≠ 0) := by
   apply truncSigmaOfExists
   -- Do this before we run `classical`, so we get the right `decidable_eq` instances.
   have t := Biproduct.column_nonzero_of_iso'.{v} s f

@@ -351,6 +351,7 @@ section Zeta
 def zeta : ArithmeticFunction ℕ :=
   ⟨fun x => ite (x = 0) 0 1, rfl⟩
 
+-- mathport name: «exprζ»
 localized [ArithmeticFunction] notation "ζ" => Nat.ArithmeticFunction.zeta
 
 @[simp]
@@ -671,6 +672,7 @@ def sigma (k : ℕ) : ArithmeticFunction ℕ :=
   ⟨fun n => ∑ d in divisors n, d ^ k, by
     simp ⟩
 
+-- mathport name: «exprσ»
 localized [ArithmeticFunction] notation "σ" => Nat.ArithmeticFunction.sigma
 
 @[simp]
@@ -724,6 +726,7 @@ def cardFactors : ArithmeticFunction ℕ :=
   ⟨fun n => n.factors.length, by
     simp ⟩
 
+-- mathport name: «exprΩ»
 localized [ArithmeticFunction] notation "Ω" => Nat.ArithmeticFunction.cardFactors
 
 theorem card_factors_apply {n : ℕ} : Ω n = n.factors.length :=
@@ -763,6 +766,7 @@ def cardDistinctFactors : ArithmeticFunction ℕ :=
   ⟨fun n => n.factors.eraseDup.length, by
     simp ⟩
 
+-- mathport name: «exprω»
 localized [ArithmeticFunction] notation "ω" => Nat.ArithmeticFunction.cardDistinctFactors
 
 theorem card_distinct_factors_zero : ω 0 = 0 := by
@@ -788,6 +792,7 @@ def moebius : ArithmeticFunction ℤ :=
   ⟨fun n => if Squarefree n then -1 ^ cardFactors n else 0, by
     simp ⟩
 
+-- mathport name: «exprμ»
 localized [ArithmeticFunction] notation "μ" => Nat.ArithmeticFunction.moebius
 
 @[simp]

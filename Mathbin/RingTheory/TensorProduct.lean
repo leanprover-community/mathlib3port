@@ -924,7 +924,7 @@ end TensorProduct
 end Algebra
 
 theorem Subalgebra.finite_dimensional_sup {K L : Type _} [Field K] [CommRingₓ L] [Algebra K L] (E1 E2 : Subalgebra K L)
-    [FiniteDimensional K E1] [FiniteDimensional K E2] : FiniteDimensional K (↥(E1⊔E2)) := by
+    [FiniteDimensional K E1] [FiniteDimensional K E2] : FiniteDimensional K ↥(E1⊔E2) := by
   rw [← E1.range_val, ← E2.range_val, ← Algebra.TensorProduct.product_map_range]
   exact (Algebra.TensorProduct.productMap E1.val E2.val).toLinearMap.finite_dimensional_range
 

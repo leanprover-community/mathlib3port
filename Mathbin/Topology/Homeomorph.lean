@@ -43,6 +43,7 @@ structure Homeomorph (α : Type _) (β : Type _) [TopologicalSpace α] [Topologi
     run_tac
       tactic.interactive.continuity'
 
+-- mathport name: «expr ≃ₜ »
 infixl:25 " ≃ₜ " => Homeomorph
 
 namespace Homeomorph
@@ -363,7 +364,7 @@ theorem prod_congr_symm (h₁ : α ≃ₜ β) (h₂ : γ ≃ₜ δ) : (h₁.prod
   rfl
 
 @[simp]
-theorem coe_prod_congr (h₁ : α ≃ₜ β) (h₂ : γ ≃ₜ δ) : ⇑h₁.prodCongr h₂ = Prod.map h₁ h₂ :=
+theorem coe_prod_congr (h₁ : α ≃ₜ β) (h₂ : γ ≃ₜ δ) : ⇑(h₁.prodCongr h₂) = Prod.map h₁ h₂ :=
   rfl
 
 section
@@ -381,7 +382,7 @@ theorem prod_comm_symm : (prodComm α β).symm = prodComm β α :=
   rfl
 
 @[simp]
-theorem coe_prod_comm : ⇑prodComm α β = Prod.swap :=
+theorem coe_prod_comm : ⇑(prodComm α β) = Prod.swap :=
   rfl
 
 /-- `(α × β) × γ` is homeomorphic to `α × (β × γ)`. -/
@@ -404,7 +405,7 @@ def punitProd : PUnit × α ≃ₜ α :=
   (prodComm _ _).trans (prodPunit _)
 
 @[simp]
-theorem coe_punit_prod : ⇑punitProd α = Prod.snd :=
+theorem coe_punit_prod : ⇑(punitProd α) = Prod.snd :=
   rfl
 
 end
@@ -438,7 +439,7 @@ def prodSumDistrib : α × Sum β γ ≃ₜ Sum (α × β) (α × γ) :=
 variable {ι : Type _} {σ : ι → Type _} [∀ i, TopologicalSpace (σ i)]
 
 /-- `(Σ i, σ i) × β` is homeomorphic to `Σ i, (σ i × β)`. -/
-def sigmaProdDistrib : (Σ i, σ i) × β ≃ₜ Σ i, σ i × β :=
+def sigmaProdDistrib : (Σi, σ i) × β ≃ₜ Σi, σ i × β :=
   Homeomorph.symm <|
     homeomorphOfContinuousOpen (Equivₓ.sigmaProdDistrib σ β).symm
       (continuous_sigma fun i => (continuous_sigma_mk.comp continuous_fst).prod_mk continuous_snd)

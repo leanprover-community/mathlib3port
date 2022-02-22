@@ -352,7 +352,7 @@ theorem Inf_to_setoid (S : Set (Con M)) : (inf S).toSetoid = inf (to_setoid '' S
     under the map to the underlying binary relation. -/
 @[to_additive
       "The infimum of a set of additive congruence relations is the same as the infimum\nof the set's image under the map to the underlying binary relation."]
-theorem Inf_def (S : Set (Con M)) : ⇑inf S = inf (@Set.Image (Con M) (M → M → Prop) coeFn S) := by
+theorem Inf_def (S : Set (Con M)) : ⇑(inf S) = inf (@Set.Image (Con M) (M → M → Prop) coeFn S) := by
   ext
   simp only [Inf_image, infi_apply, infi_Prop_eq]
   rfl

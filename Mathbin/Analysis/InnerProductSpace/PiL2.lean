@@ -51,6 +51,7 @@ variable {F : Type _} [InnerProductSpace ℝ F]
 
 variable {F' : Type _} [InnerProductSpace ℝ F']
 
+-- mathport name: «expr⟪ , ⟫»
 local notation "⟪" x ", " y "⟫" => @inner 𝕜 _ _ x y
 
 /-
@@ -233,7 +234,7 @@ protected def toBasis (b : OrthonormalBasis ι 𝕜 E) : Basis ι 𝕜 E :=
 
 @[simp]
 protected theorem coe_to_basis (b : OrthonormalBasis ι 𝕜 E) : (⇑b.toBasis : ι → E) = ⇑b := by
-  change ⇑Basis.ofEquivFun b.repr.to_linear_equiv = b
+  change ⇑(Basis.ofEquivFun b.repr.to_linear_equiv) = b
   ext j
   rw [Basis.coe_of_equiv_fun]
   simp only [OrthonormalBasis.repr_symm_single]
@@ -303,7 +304,7 @@ protected def mk (hon : Orthonormal 𝕜 v) (hsp : Submodule.span 𝕜 (Set.Rang
 
 @[simp]
 protected theorem coe_mk (hon : Orthonormal 𝕜 v) (hsp : Submodule.span 𝕜 (Set.Range v) = ⊤) :
-    ⇑OrthonormalBasis.mk hon hsp = v := by
+    ⇑(OrthonormalBasis.mk hon hsp) = v := by
   classical <;> rw [OrthonormalBasis.mk, _root_.basis.coe_to_orthonormal_basis, Basis.coe_mk]
 
 end OrthonormalBasis

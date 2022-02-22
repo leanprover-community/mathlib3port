@@ -316,7 +316,7 @@ if `R` is a principal ideal domain.
 See also the stronger version `submodule.smith_normal_form`.
 -/
 noncomputable def Submodule.basisOfPid {ι : Type _} [Fintype ι] (b : Basis ι R M) (N : Submodule R M) :
-    Σ n : ℕ, Basis (Finₓ n) R N :=
+    Σn : ℕ, Basis (Finₓ n) R N :=
   ⟨_, (N.nonempty_basis_of_pid b).some_spec.some⟩
 
 theorem Submodule.basis_of_pid_bot {ι : Type _} [Fintype ι] (b : Basis ι R M) :
@@ -334,14 +334,14 @@ if `R` is a principal ideal domain.
 See also the stronger version `submodule.smith_normal_form_of_le`.
 -/
 noncomputable def Submodule.basisOfPidOfLe {ι : Type _} [Fintype ι] {N O : Submodule R M} (hNO : N ≤ O)
-    (b : Basis ι R O) : Σ n : ℕ, Basis (Finₓ n) R N :=
+    (b : Basis ι R O) : Σn : ℕ, Basis (Finₓ n) R N :=
   let ⟨n, bN'⟩ := Submodule.basisOfPid b (N.comap O.Subtype)
   ⟨n, bN'.map (Submodule.comapSubtypeEquivOfLe hNO)⟩
 
 /-- A submodule inside the span of a linear independent family is a free `R`-module of finite rank,
 if `R` is a principal ideal domain. -/
 noncomputable def Submodule.basisOfPidOfLeSpan {ι : Type _} [Fintype ι] {b : ι → M} (hb : LinearIndependent R b)
-    {N : Submodule R M} (le : N ≤ Submodule.span R (Set.Range b)) : Σ n : ℕ, Basis (Finₓ n) R N :=
+    {N : Submodule R M} (le : N ≤ Submodule.span R (Set.Range b)) : Σn : ℕ, Basis (Finₓ n) R N :=
   Submodule.basisOfPidOfLe le (Basis.span hb)
 
 variable {M}
@@ -349,7 +349,7 @@ variable {M}
 -- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (i «expr ∉ » I)
 /-- A finite type torsion free module over a PID is free. -/
 noncomputable def Module.freeOfFiniteTypeTorsionFree [Fintype ι] {s : ι → M} (hs : span R (Range s) = ⊤)
-    [NoZeroSmulDivisors R M] : Σ n : ℕ, Basis (Finₓ n) R M := by
+    [NoZeroSmulDivisors R M] : Σn : ℕ, Basis (Finₓ n) R M := by
   classical
   -- We define `N` as the submodule spanned by a maximal linear independent subfamily of `s`
   have := exists_maximal_independent R s
@@ -399,7 +399,7 @@ noncomputable def Module.freeOfFiniteTypeTorsionFree [Fintype ι] {s : ι → M}
 
 /-- A finite type torsion free module over a PID is free. -/
 noncomputable def Module.freeOfFiniteTypeTorsionFree' [Module.Finite R M] [NoZeroSmulDivisors R M] :
-    Σ n : ℕ, Basis (Finₓ n) R M :=
+    Σn : ℕ, Basis (Finₓ n) R M :=
   Module.freeOfFiniteTypeTorsionFree Module.Finite.exists_fin.some_spec.some_spec
 
 section SmithNormal
@@ -444,7 +444,6 @@ theorem Submodule.exists_smith_normal_form_of_le [Fintype ι] (b : Basis ι R M)
   obtain ⟨as, has⟩ := h'' as' has'
   exact ⟨_, _, hmn, bM, bN, as, has⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (o n)
 /-- If `M` is finite free over a PID `R`, then any submodule `N` is free
 and we can find a basis for `M` and `N` such that the inclusion map is a diagonal matrix
 in Smith normal form.
@@ -455,7 +454,7 @@ need to map `N` into a submodule of `O`.
 This is a strengthening of `submodule.basis_of_pid_of_le`.
 -/
 noncomputable def Submodule.smithNormalFormOfLe [Fintype ι] (b : Basis ι R M) (N O : Submodule R M) (N_le_O : N ≤ O) :
-    Σ (o : ℕ) (n : ℕ), Basis.SmithNormalForm (N.comap O.Subtype) (Finₓ o) n := by
+    Σo n : ℕ, Basis.SmithNormalForm (N.comap O.Subtype) (Finₓ o) n := by
   choose n o hno bO bN a snf using N.exists_smith_normal_form_of_le b O N_le_O
   refine' ⟨o, n, bO, bN.map (comap_subtype_equiv_of_le N_le_O).symm, (Finₓ.castLe hno).toEmbedding, a, fun i => _⟩
   ext
@@ -472,7 +471,7 @@ See also `ideal.smith_normal_form`, which moreover proves that the dimension of
 an ideal is the same as the dimension of the whole ring.
 -/
 noncomputable def Submodule.smithNormalForm [Fintype ι] (b : Basis ι R M) (N : Submodule R M) :
-    Σ n : ℕ, Basis.SmithNormalForm N ι n :=
+    Σn : ℕ, Basis.SmithNormalForm N ι n :=
   let ⟨m, n, bM, bN, f, a, snf⟩ := N.smithNormalFormOfLe b ⊤ le_top
   let bM' := bM.map (LinearEquiv.ofTop _ rfl)
   let e := bM'.indexEquiv b

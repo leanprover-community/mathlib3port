@@ -62,12 +62,16 @@ section
 
 variable {n : ℕ}
 
+-- mathport name: «exprℝⁿ»
 local notation "ℝⁿ" => Finₓ n → ℝ
 
+-- mathport name: «exprℝⁿ⁺¹»
 local notation "ℝⁿ⁺¹" => Finₓ (n + 1) → ℝ
 
+-- mathport name: «exprEⁿ⁺¹»
 local notation "Eⁿ⁺¹" => Finₓ (n + 1) → E
 
+-- mathport name: «expre »
 local notation "e" i => Pi.single i 1
 
 section
@@ -234,10 +238,13 @@ theorem integral_divergence_of_has_fderiv_within_at_off_countable_aux₂ (I : Bo
 
 variable (a b : ℝⁿ⁺¹)
 
+-- mathport name: «exprface »
 local notation "face" i => Set.Icc (a ∘ Finₓ.succAbove i) (b ∘ Finₓ.succAbove i)
 
+-- mathport name: «exprfront_face »
 local notation "front_face" i:2000 => Finₓ.insertNth i (b i)
 
+-- mathport name: «exprback_face »
 local notation "back_face" i:2000 => Finₓ.insertNth i (a i)
 
 /-- **Divergence theorem** for Bochner integral. If `f : ℝⁿ⁺¹ → Eⁿ⁺¹` is continuous on a rectangular
@@ -351,12 +358,16 @@ open_locale Interval
 
 open continuous_linear_map (smulRight)
 
+-- mathport name: «exprℝ¹»
 local notation "ℝ¹" => Finₓ 1 → ℝ
 
+-- mathport name: «exprℝ²»
 local notation "ℝ²" => Finₓ 2 → ℝ
 
+-- mathport name: «exprE¹»
 local notation "E¹" => Finₓ 1 → E
 
+-- mathport name: «exprE²»
 local notation "E²" => Finₓ 2 → E
 
 /-- **Fundamental theorem of calculus, part 2**. This version assumes that `f` is continuous on the

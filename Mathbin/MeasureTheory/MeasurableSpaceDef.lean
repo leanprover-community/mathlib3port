@@ -65,6 +65,7 @@ section
 def MeasurableSet [MeasurableSpace α] : Set α → Prop :=
   ‹MeasurableSpace α›.MeasurableSet'
 
+-- mathport name: «exprmeasurable_set[ ]»
 localized [MeasureTheory] notation "measurable_set[" m "]" => @MeasurableSet _ m
 
 @[simp]
@@ -427,6 +428,7 @@ open MeasurableSpace
 def Measurable [MeasurableSpace α] [MeasurableSpace β] (f : α → β) : Prop :=
   ∀ ⦃t : Set β⦄, MeasurableSet t → MeasurableSet (f ⁻¹' t)
 
+-- mathport name: «exprmeasurable[ ]»
 localized [MeasureTheory] notation "measurable[" m "]" => @Measurable _ _ m _
 
 variable [MeasurableSpace α] [MeasurableSpace β] [MeasurableSpace γ]

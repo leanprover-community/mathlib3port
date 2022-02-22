@@ -146,6 +146,7 @@ theorem id_rel_subset {s : Set (α × α)} : IdRel ⊆ s ↔ ∀ a, (a, a) ∈ s
 def CompRel {α : Type u} (r₁ r₂ : Set (α × α)) :=
   { p : α × α | ∃ z : α, (p.1, z) ∈ r₁ ∧ (z, p.2) ∈ r₂ }
 
+-- mathport name: «expr ○ »
 localized [uniformity] infixl:55 " ○ " => CompRel
 
 @[simp]
@@ -310,6 +311,7 @@ variable [UniformSpace α]
 def uniformity (α : Type u) [UniformSpace α] : Filter (α × α) :=
   (@UniformSpace.toCore α _).uniformity
 
+-- mathport name: «expr𝓤»
 localized [uniformity] notation "𝓤" => uniformity
 
 theorem is_open_uniformity {s : Set α} : IsOpen s ↔ ∀, ∀ x ∈ s, ∀, { p : α × α | p.1 = x → p.2 ∈ s } ∈ 𝓤 α :=
@@ -1276,6 +1278,7 @@ open UniformSpace Function
 
 variable {δ' : Type _} [UniformSpace α] [UniformSpace β] [UniformSpace γ] [UniformSpace δ] [UniformSpace δ']
 
+-- mathport name: «expr ∘₂ »
 local notation f "∘₂" g => Function.bicompr f g
 
 /-- Uniform continuity for functions of two variables. -/

@@ -39,7 +39,7 @@ theorem not_nonempty_iff_imp_false {α : Sort _} : ¬Nonempty α ↔ α → Fals
   ⟨fun h a => h ⟨a⟩, fun h ⟨a⟩ => h a⟩
 
 @[simp]
-theorem nonempty_sigmaₓ : Nonempty (Σ a : α, γ a) ↔ ∃ a : α, Nonempty (γ a) :=
+theorem nonempty_sigmaₓ : Nonempty (Σa : α, γ a) ↔ ∃ a : α, Nonempty (γ a) :=
   Iff.intro (fun ⟨⟨a, c⟩⟩ => ⟨a, ⟨c⟩⟩) fun ⟨a, ⟨c⟩⟩ => ⟨⟨a, c⟩⟩
 
 @[simp]
@@ -79,7 +79,7 @@ theorem nonempty_psumₓ {α β} : Nonempty (Psum α β) ↔ Nonempty α ∨ Non
     | Or.inr ⟨b⟩ => ⟨Psum.inr b⟩
 
 @[simp]
-theorem nonempty_psigmaₓ {α} {β : α → Sort _} : Nonempty (Psigma β) ↔ ∃ a : α, Nonempty (β a) :=
+theorem nonempty_psigmaₓ {α} {β : α → Sort _} : Nonempty (PSigma β) ↔ ∃ a : α, Nonempty (β a) :=
   Iff.intro (fun ⟨⟨a, c⟩⟩ => ⟨a, ⟨c⟩⟩) fun ⟨a, ⟨c⟩⟩ => ⟨⟨a, c⟩⟩
 
 @[simp]

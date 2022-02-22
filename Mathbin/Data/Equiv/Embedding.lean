@@ -81,7 +81,7 @@ def codRestrict (α : Type _) {β : Type _} (bs : Set β) : { f : α ↪ β // �
 /-- Pairs of embeddings with disjoint ranges are equivalent to a dependent sum of embeddings,
 in which the second embedding cannot take values in the range of the first. -/
 def prodEmbeddingDisjointEquivSigmaEmbeddingRestricted {α β γ : Type _} :
-    { f : (α ↪ γ) × (β ↪ γ) // Disjoint (Set.Range f.1) (Set.Range f.2) } ≃ Σ f : α ↪ γ, β ↪ ↥Set.Range fᶜ :=
+    { f : (α ↪ γ) × (β ↪ γ) // Disjoint (Set.Range f.1) (Set.Range f.2) } ≃ Σf : α ↪ γ, β ↪ ↥(Set.Range fᶜ) :=
   (subtype_prod_equiv_sigma_subtype fun b : β ↪ _ => Disjoint (Set.Range a) (Set.Range b)).trans <|
     Equivₓ.sigmaCongrRight fun a =>
       (subtypeEquivProp
@@ -94,7 +94,7 @@ def prodEmbeddingDisjointEquivSigmaEmbeddingRestricted {α β γ : Type _} :
 /-- A combination of the above results, allowing us to turn one embedding over a sum type
 into two dependent embeddings, the second of which avoids any members of the range
 of the first. This is helpful for constructing larger embeddings out of smaller ones. -/
-def sumEmbeddingEquivSigmaEmbeddingRestricted {α β γ : Type _} : (Sum α β ↪ γ) ≃ Σ f : α ↪ γ, β ↪ ↥Set.Range fᶜ :=
+def sumEmbeddingEquivSigmaEmbeddingRestricted {α β γ : Type _} : (Sum α β ↪ γ) ≃ Σf : α ↪ γ, β ↪ ↥(Set.Range fᶜ) :=
   Equivₓ.trans sumEmbeddingEquivProdEmbeddingDisjoint prodEmbeddingDisjointEquivSigmaEmbeddingRestricted
 
 /-- Embeddings from a single-member type are equivalent to members of the target type. -/

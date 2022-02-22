@@ -224,7 +224,7 @@ instance : Algebra R (LocallyConstant X Y) where
     exact Algebra.smul_def' _ _
 
 @[simp]
-theorem coe_algebra_map (r : R) : ⇑algebraMap R (LocallyConstant X Y) r = algebraMap R (X → Y) r :=
+theorem coe_algebra_map (r : R) : ⇑(algebraMap R (LocallyConstant X Y) r) = algebraMap R (X → Y) r :=
   rfl
 
 end Algebra

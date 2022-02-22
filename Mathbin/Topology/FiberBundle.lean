@@ -519,7 +519,7 @@ def coordChangeHomeomorph (e₁ e₂ : Trivialization F proj) {b : B} (h₁ : b 
 
 @[simp]
 theorem coord_change_homeomorph_coe (e₁ e₂ : Trivialization F proj) {b : B} (h₁ : b ∈ e₁.BaseSet)
-    (h₂ : b ∈ e₂.BaseSet) : ⇑e₁.coordChangeHomeomorph e₂ h₁ h₂ = e₁.coordChange e₂ b :=
+    (h₂ : b ∈ e₂.BaseSet) : ⇑(e₁.coordChangeHomeomorph e₂ h₁ h₂) = e₁.coordChange e₂ b :=
   rfl
 
 end TopologicalFiberBundle.Trivialization
@@ -1071,7 +1071,7 @@ theorem continuous_const_section (v : F) (h : ∀ i j, ∀, ∀ x ∈ Z.BaseSet 
     
 
 @[simp, mfld_simps]
-theorem local_triv_as_local_equiv_coe : ⇑Z.localTrivAsLocalEquiv i = Z.localTriv i :=
+theorem local_triv_as_local_equiv_coe : ⇑(Z.localTrivAsLocalEquiv i) = Z.localTriv i :=
   rfl
 
 @[simp, mfld_simps]

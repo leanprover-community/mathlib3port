@@ -530,7 +530,7 @@ theorem count_support_take_until_eq_one {u v w : V} (p : G.Walk v w) (h : u ∈ 
 -- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:377:22: warning: unsupported simp config option: iota_eqn
 -- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:377:22: warning: unsupported simp config option: iota_eqn
 theorem count_edges_take_until_le_one {u v w : V} (p : G.Walk v w) (h : u ∈ p.Support) (x : V) :
-    (p.takeUntil u h).edges.count (⟦(u, x)⟧) ≤ 1 := by
+    (p.takeUntil u h).edges.count ⟦(u, x)⟧ ≤ 1 := by
   induction' p with u' u' v' w' ha p' ih
   · rw [mem_support_nil_iff] at h
     subst u

@@ -50,10 +50,13 @@ class HasVsub (G : outParam (Type _)) (P : Type _) where
 class HasScalar (M : Type _) (α : Type _) where
   smul : M → α → α
 
+-- mathport name: «expr +ᵥ »
 infixl:65 " +ᵥ " => HasVadd.vadd
 
+-- mathport name: «expr -ᵥ »
 infixl:65 " -ᵥ " => HasVsub.vsub
 
+-- mathport name: «expr • »
 infixr:73 " • " => HasScalar.smul
 
 attribute [to_additive_reorder 1] Pow

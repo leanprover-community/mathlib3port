@@ -123,7 +123,7 @@ theorem mem_find_carrier_iff {c : Set (PartialRefinement u s)} {i : ι} (ne : c.
   · have : i ∈ h.some.carrier ∧ i ∈ chain_Sup_carrier c := ⟨h.some_spec.snd, mem_Union₂.2 h⟩
     simp only [this]
     
-  · have : i ∉ ne.some.carrier ∧ i ∉ chain_Sup_carrier c := ⟨fun hi => h ⟨_, ne.some_spec, hi⟩, mt mem_Union₂.1 h⟩
+  · have : (i ∉ ne.some.carrier) ∧ i ∉ chain_Sup_carrier c := ⟨fun hi => h ⟨_, ne.some_spec, hi⟩, mt mem_Union₂.1 h⟩
     simp only [this]
     
 

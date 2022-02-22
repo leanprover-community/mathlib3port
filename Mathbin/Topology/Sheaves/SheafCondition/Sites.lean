@@ -50,10 +50,10 @@ variable {X : Top.{v}} (F : Presheaf C X)
 /-- Given a presieve `R` on `U`, we obtain a covering family of open sets in `X`, by taking as index
 type the type of dependent pairs `(V, f)`, where `f : V ⟶ U` is in `R`.
 -/
-def coveringOfPresieve (U : Opens X) (R : Presieve U) : (Σ V, { f : V ⟶ U // R f }) → Opens X := fun f => f.1
+def coveringOfPresieve (U : Opens X) (R : Presieve U) : (ΣV, { f : V ⟶ U // R f }) → Opens X := fun f => f.1
 
 @[simp]
-theorem covering_of_presieve_apply (U : Opens X) (R : Presieve U) (f : Σ V, { f : V ⟶ U // R f }) :
+theorem covering_of_presieve_apply (U : Opens X) (R : Presieve U) (f : ΣV, { f : V ⟶ U // R f }) :
     coveringOfPresieve U R f = f.1 :=
   rfl
 
@@ -101,7 +101,7 @@ def firstObjIsoPiOpens : Presheaf.firstObj R F ≅ piOpens F (coveringOfPresieve
 /-- The isomorphism `first_obj_iso_pi_opens` is compatible with canonical projections out of the
 product.
 -/
-theorem first_obj_iso_pi_opens_π (f : Σ V, { f : V ⟶ U // R f }) :
+theorem first_obj_iso_pi_opens_π (f : ΣV, { f : V ⟶ U // R f }) :
     (firstObjIsoPiOpens F U R).hom ≫ Pi.π _ f = Pi.π _ f :=
   Category.id_comp _
 
@@ -114,7 +114,7 @@ def secondObjIsoPiInters : Presheaf.secondObj R F ≅ piInters F (coveringOfPres
 product. Here, we have to insert an `eq_to_hom` arrow to pass from
 `F.obj (op (pullback f.2.1 g.2.1))` to `F.obj (op (f.1 ⊓ g.1))`.
 -/
-theorem second_obj_iso_pi_inters_π (f g : Σ V, { f : V ⟶ U // R f }) :
+theorem second_obj_iso_pi_inters_π (f g : ΣV, { f : V ⟶ U // R f }) :
     (secondObjIsoPiInters F U R).hom ≫ Pi.π _ (f, g) =
       Pi.π _ (f, g) ≫ F.map (eqToHom (CompleteLattice.pullback_eq_inf f.2.1 g.2.1).symm).op :=
   by
@@ -277,16 +277,16 @@ theorem mem_grothendieck_topology : Sieve.generate (PresieveOfCovering U) ∈ Op
 /-- An index `i : ι` can be turned into a dependent pair `(V, f)`, where `V` is an open set and
 `f : V ⟶ supr U` is a member of `presieve_of_covering U f`.
 -/
-def homOfIndex (i : ι) : Σ V, { f : V ⟶ supr U // PresieveOfCovering U f } :=
+def homOfIndex (i : ι) : ΣV, { f : V ⟶ supr U // PresieveOfCovering U f } :=
   ⟨U i, Opens.leSupr U i, i, rfl⟩
 
 /-- By using the axiom of choice, a dependent pair `(V, f)` where `f : V ⟶ supr U` is a member of
 `presieve_of_covering U f` can be turned into an index `i : ι`, such that `V = U i`.
 -/
-def indexOfHom (f : Σ V, { f : V ⟶ supr U // PresieveOfCovering U f }) : ι :=
+def indexOfHom (f : ΣV, { f : V ⟶ supr U // PresieveOfCovering U f }) : ι :=
   f.2.2.some
 
-theorem index_of_hom_spec (f : Σ V, { f : V ⟶ supr U // PresieveOfCovering U f }) : f.1 = U (indexOfHom U f) :=
+theorem index_of_hom_spec (f : ΣV, { f : V ⟶ supr U // PresieveOfCovering U f }) : f.1 = U (indexOfHom U f) :=
   f.2.2.some_spec
 
 /-- The canonical morphism from the first object in the sites diagram to the first object in the

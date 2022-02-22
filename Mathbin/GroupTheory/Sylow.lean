@@ -403,9 +403,9 @@ theorem exists_subgroup_card_pow_succ [Fintype G] {p : ℕ} {n : ℕ} [hp : Fact
   ⟨Subgroup.map (normalizer H).Subtype (Subgroup.comap (QuotientGroup.mk' (comap H.normalizer.Subtype H)) (zpowers x)),
     by
     show
-      card (↥map H.normalizer.subtype (comap (mk' (comap H.normalizer.subtype H)) (Subgroup.zpowers x))) = p ^ (n + 1)
+      card ↥(map H.normalizer.subtype (comap (mk' (comap H.normalizer.subtype H)) (Subgroup.zpowers x))) = p ^ (n + 1)
     suffices
-      card (↥(Subtype.val '' (Subgroup.comap (mk' (comap H.normalizer.subtype H)) (zpowers x) : Set (↥H.normalizer)))) =
+      card ↥(Subtype.val '' (Subgroup.comap (mk' (comap H.normalizer.subtype H)) (zpowers x) : Set ↥H.normalizer)) =
         p ^ (n + 1)
       by
       convert this using 2

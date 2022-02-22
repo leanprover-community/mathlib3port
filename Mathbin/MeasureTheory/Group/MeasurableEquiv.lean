@@ -86,7 +86,7 @@ def mulLeft (g : G) : G ≃ᵐ G :=
   smul g
 
 @[simp, to_additive]
-theorem coe_mul_left (g : G) : ⇑mulLeft g = (· * ·) g :=
+theorem coe_mul_left (g : G) : ⇑(mulLeft g) = (· * ·) g :=
   rfl
 
 @[simp, to_additive]
@@ -115,7 +115,7 @@ theorem _root_.measurable_embedding_mul_right (g : G) : MeasurableEmbedding fun 
   (mulRight g).MeasurableEmbedding
 
 @[simp, to_additive]
-theorem coe_mul_right (g : G) : ⇑mulRight g = fun x => x * g :=
+theorem coe_mul_right (g : G) : ⇑(mulRight g) = fun x => x * g :=
   rfl
 
 @[simp, to_additive]
@@ -135,7 +135,7 @@ theorem _root_.measurable_embedding_mul_left₀ {g : G₀} (hg : g ≠ 0) : Meas
   (mulLeft₀ g hg).MeasurableEmbedding
 
 @[simp]
-theorem coe_mul_left₀ {g : G₀} (hg : g ≠ 0) : ⇑mulLeft₀ g hg = (· * ·) g :=
+theorem coe_mul_left₀ {g : G₀} (hg : g ≠ 0) : ⇑(mulLeft₀ g hg) = (· * ·) g :=
   rfl
 
 @[simp]
@@ -157,7 +157,7 @@ theorem _root_.measurable_embedding_mul_right₀ {g : G₀} (hg : g ≠ 0) : Mea
   (mulRight₀ g hg).MeasurableEmbedding
 
 @[simp]
-theorem coe_mul_right₀ {g : G₀} (hg : g ≠ 0) : ⇑mulRight₀ g hg = fun x => x * g :=
+theorem coe_mul_right₀ {g : G₀} (hg : g ≠ 0) : ⇑(mulRight₀ g hg) = fun x => x * g :=
   rfl
 
 @[simp]

@@ -156,7 +156,7 @@ variable {C : Type u} [Category.{v} C] [ConcreteCategory.{v} C] {J : Type v} [Sm
   [PreservesColimit F (forget C)]
 
 theorem Concrete.from_union_surjective_of_is_colimit {D : Cocone F} (hD : IsColimit D) :
-    let ff : (Σ j : J, F.obj j) → D.x := fun a => D.ι.app a.1 a.2
+    let ff : (Σj : J, F.obj j) → D.x := fun a => D.ι.app a.1 a.2
     Function.Surjective ff :=
   by
   intro ff
@@ -233,7 +233,7 @@ theorem Concrete.is_colimit_exists_of_rep_eq {D : Cocone F} {i j : J} (hD : IsCo
   erw [T.hom.w, T.hom.w] at h
   replace h := Quot.exact _ h
   suffices
-    ∀ a b : Σ j, F.obj j h : EqvGen (limits.types.quot.rel (F ⋙ forget C)) a b,
+    ∀ a b : Σj, F.obj j h : EqvGen (limits.types.quot.rel (F ⋙ forget C)) a b,
       ∃ (k : _)(f : a.1 ⟶ k)(g : b.1 ⟶ k), F.map f a.2 = F.map g b.2
     by
     exact this ⟨i, x⟩ ⟨j, y⟩ h

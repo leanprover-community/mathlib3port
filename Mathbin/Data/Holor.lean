@@ -143,6 +143,7 @@ instance [Semiringₓ α] : Module α (Holor α ds) :=
 /-- The tensor product of two holors. -/
 def mul [s : Mul α] (x : Holor α ds₁) (y : Holor α ds₂) : Holor α (ds₁ ++ ds₂) := fun t => x t.take * y t.drop
 
+-- mathport name: «expr ⊗ »
 local infixl:70 " ⊗ " => mul
 
 theorem cast_type (eq : ds₁ = ds₂) (a : Holor α ds₁) :

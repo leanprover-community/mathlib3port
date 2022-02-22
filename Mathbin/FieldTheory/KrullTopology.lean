@@ -94,7 +94,7 @@ theorem top_fixed_by_finite {K L : Type _} [Field K] [Field L] [Algebra K L] : �
 /-- If `E1` and `E2` are finite-dimensional intermediate fields, then so is their compositum.
 This rephrases a result already in mathlib so that it is compatible with our type classes -/
 theorem finite_dimensional_sup {K L : Type _} [Field K] [Field L] [Algebra K L] (E1 E2 : IntermediateField K L)
-    (h1 : FiniteDimensional K E1) (h2 : FiniteDimensional K E2) : FiniteDimensional K (↥(E1⊔E2)) :=
+    (h1 : FiniteDimensional K E1) (h2 : FiniteDimensional K E2) : FiniteDimensional K ↥(E1⊔E2) :=
   IntermediateField.finite_dimensional_sup E1 E2
 
 /-- An element of `L ≃ₐ[K] L` is in `Gal(L/E)` if and only if it fixes every element of `E`-/

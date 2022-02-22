@@ -72,6 +72,7 @@ open MonoidalCategory
 
 open BraidedCategory
 
+-- mathport name: «exprβ_»
 notation "β_" => braiding
 
 section

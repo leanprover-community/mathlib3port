@@ -26,6 +26,7 @@ numbers. -/
 structure Real where of_cauchy ::
   cauchy : @CauSeq.Completion.Cauchy ℚ _ _ _ abs _
 
+-- mathport name: «exprℝ»
 notation "ℝ" => Real
 
 attribute [pp_using_anonymous_constructor] Real

@@ -305,7 +305,7 @@ theorem sup_span_singleton_apply_mk (f : LinearPmap K E F) (x : E) (y : F) (hx :
 end
 
 private theorem Sup_aux (c : Set (LinearPmap R E F)) (hc : DirectedOn (· ≤ ·) c) :
-    ∃ f : ↥sup (domain '' c) →ₗ[R] F, (⟨_, f⟩ : LinearPmap R E F) ∈ UpperBounds c := by
+    ∃ f : ↥(sup (domain '' c)) →ₗ[R] F, (⟨_, f⟩ : LinearPmap R E F) ∈ UpperBounds c := by
   cases' c.eq_empty_or_nonempty with ceq cne
   · subst c
     simp

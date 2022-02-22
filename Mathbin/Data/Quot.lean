@@ -31,8 +31,8 @@ namespace Quot
 
 variable {ra : α → α → Prop} {rb : β → β → Prop} {φ : Quot ra → Quot rb → Sort _}
 
--- ././Mathport/Syntax/Translate/Basic.lean:462:9: unsupported: advanced prec syntax max
-local notation:999 "⟦" a "⟧" => Quot.mk _ a
+-- mathport name: «expr⟦ ⟧»
+local notation:arg "⟦" a "⟧" => Quot.mk _ a
 
 instance (r : α → α → Prop) [Inhabited α] : Inhabited (Quot r) :=
   ⟨⟦default⟧⟩
@@ -41,16 +41,16 @@ instance [Subsingleton α] : Subsingleton (Quot ra) :=
   ⟨fun x => Quot.induction_on x fun y => Quot.ind fun b => congr_argₓ _ (Subsingleton.elimₓ _ _)⟩
 
 /-- Recursion on two `quotient` arguments `a` and `b`, result type depends on `⟦a⟧` and `⟦b⟧`. -/
-protected def hrecOn₂ (qa : Quot ra) (qb : Quot rb) (f : ∀ a b, φ (⟦a⟧) (⟦b⟧))
+protected def hrecOn₂ (qa : Quot ra) (qb : Quot rb) (f : ∀ a b, φ ⟦a⟧ ⟦b⟧)
     (ca : ∀ {b a₁ a₂}, ra a₁ a₂ → HEq (f a₁ b) (f a₂ b)) (cb : ∀ {a b₁ b₂}, rb b₁ b₂ → HEq (f a b₁) (f a b₂)) :
     φ qa qb :=
-  (Quot.hrecOnₓ qa fun a => Quot.hrecOnₓ qb (f a) fun b₁ b₂ pb => cb pb) fun a₁ a₂ pa =>
+  (Quot.hrecOn qa fun a => Quot.hrecOn qb (f a) fun b₁ b₂ pb => cb pb) fun a₁ a₂ pa =>
     (Quot.induction_on qb) fun b =>
       calc
-        HEq (@Quot.hrecOnₓ _ _ (φ _) (⟦b⟧) (f a₁) (@cb _)) (f a₁ b) := by
+        HEq (@Quot.hrecOn _ _ (φ _) ⟦b⟧ (f a₁) (@cb _)) (f a₁ b) := by
           simp [heq_self_iff_true]
         HEq _ (f a₂ b) := ca pa
-        HEq _ (@Quot.hrecOnₓ _ _ (φ _) (⟦b⟧) (f a₂) (@cb _)) := by
+        HEq _ (@Quot.hrecOn _ _ (φ _) ⟦b⟧ (f a₂) (@cb _)) := by
           simp [heq_self_iff_true]
         
 
@@ -144,7 +144,7 @@ instance (s : Setoidₓ α) [Subsingleton α] : Subsingleton (Quotientₓ s) :=
   Quot.subsingleton
 
 /-- Induction on two `quotient` arguments `a` and `b`, result type depends on `⟦a⟧` and `⟦b⟧`. -/
-protected def hrecOn₂ (qa : Quotientₓ sa) (qb : Quotientₓ sb) (f : ∀ a b, φ (⟦a⟧) (⟦b⟧))
+protected def hrecOn₂ (qa : Quotientₓ sa) (qb : Quotientₓ sb) (f : ∀ a b, φ ⟦a⟧ ⟦b⟧)
     (c : ∀ a₁ b₁ a₂ b₂, a₁ ≈ a₂ → b₁ ≈ b₂ → HEq (f a₁ b₁) (f a₂ b₂)) : φ qa qb :=
   Quot.hrecOn₂ qa qb f (fun _ _ _ p => c _ _ _ _ p (Setoidₓ.refl _)) fun _ _ _ p => c _ _ _ _ (Setoidₓ.refl _) p
 
@@ -181,7 +181,7 @@ theorem Quotientₓ.eq [r : Setoidₓ α] {x y : α} : ⟦x⟧ = ⟦y⟧ ↔ x �
   ⟨Quotientₓ.exact, Quotientₓ.sound⟩
 
 theorem forall_quotient_iff {α : Type _} [r : Setoidₓ α] {p : Quotientₓ r → Prop} :
-    (∀ a : Quotientₓ r, p a) ↔ ∀ a : α, p (⟦a⟧) :=
+    (∀ a : Quotientₓ r, p a) ↔ ∀ a : α, p ⟦a⟧ :=
   ⟨fun h x => h _, fun h a => a.induction_on h⟩
 
 @[simp]
@@ -368,7 +368,7 @@ variable {C : Trunc α → Sort _}
 @[reducible, elab_as_eliminator]
 protected def rec (f : ∀ a, C (mk a)) (h : ∀ a b : α, (Eq.ndrec (f a) (Trunc.eq (mk a) (mk b)) : C (mk b)) = f b)
     (q : Trunc α) : C q :=
-  Quot.recₓ f (fun a b _ => h a b) q
+  Quot.rec f (fun a b _ => h a b) q
 
 /-- A version of `trunc.rec` taking `q : trunc α` as the first argument. -/
 @[reducible, elab_as_eliminator]
@@ -471,21 +471,21 @@ protected theorem induction_on₃' {p : Quotientₓ s₁ → Quotientₓ s₂ �
 /-- A version of `quotient.rec_on_subsingleton` taking `{s₁ : setoid α}` as an implicit argument
 instead of an instance argument. -/
 @[elab_as_eliminator]
-protected def recOnSubsingleton' {φ : Quotientₓ s₁ → Sort _} [h : ∀ a, Subsingleton (φ (⟦a⟧))] (q : Quotientₓ s₁)
+protected def recOnSubsingleton' {φ : Quotientₓ s₁ → Sort _} [h : ∀ a, Subsingleton (φ ⟦a⟧)] (q : Quotientₓ s₁)
     (f : ∀ a, φ (Quotientₓ.mk' a)) : φ q :=
   Quotientₓ.recOnSubsingleton q f
 
 /-- A version of `quotient.rec_on_subsingleton₂` taking `{s₁ : setoid α} {s₂ : setoid α}`
 as implicit arguments instead of instance arguments. -/
 @[reducible, elab_as_eliminator]
-protected def recOnSubsingleton₂' {φ : Quotientₓ s₁ → Quotientₓ s₂ → Sort _} [h : ∀ a b, Subsingleton (φ (⟦a⟧) (⟦b⟧))]
+protected def recOnSubsingleton₂' {φ : Quotientₓ s₁ → Quotientₓ s₂ → Sort _} [h : ∀ a b, Subsingleton (φ ⟦a⟧ ⟦b⟧)]
     (q₁ : Quotientₓ s₁) (q₂ : Quotientₓ s₂) (f : ∀ a₁ a₂, φ (Quotientₓ.mk' a₁) (Quotientₓ.mk' a₂)) : φ q₁ q₂ :=
   Quotientₓ.recOnSubsingleton₂ q₁ q₂ f
 
 /-- Recursion on a `quotient` argument `a`, result type depends on `⟦a⟧`. -/
 protected def hrecOn' {φ : Quotientₓ s₁ → Sort _} (qa : Quotientₓ s₁) (f : ∀ a, φ (Quotientₓ.mk' a))
     (c : ∀ a₁ a₂, a₁ ≈ a₂ → HEq (f a₁) (f a₂)) : φ qa :=
-  Quot.hrecOnₓ qa f c
+  Quot.hrecOn qa f c
 
 @[simp]
 theorem hrec_on'_mk' {φ : Quotientₓ s₁ → Sort _} (f : ∀ a, φ (Quotientₓ.mk' a))

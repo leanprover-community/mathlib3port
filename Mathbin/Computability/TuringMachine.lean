@@ -1324,10 +1324,13 @@ parameter {Λ : Type _}[Inhabited Λ]
 
 parameter {σ : Type _}[Inhabited σ]
 
+-- mathport name: «exprstmt₁»
 local notation "stmt₁" => TM1.Stmt Γ Λ σ
 
+-- mathport name: «exprcfg₁»
 local notation "cfg₁" => TM1.Cfg Γ Λ σ
 
+-- mathport name: «exprstmt₀»
 local notation "stmt₀" => TM0.Stmt Γ
 
 parameter (M : Λ → stmt₁)
@@ -1363,6 +1366,7 @@ def trAux (s : Γ) : stmt₁ → σ → Λ' × stmt₀
   | TM1.stmt.goto l, v => ((some (M (l s v)), v), write s)
   | TM1.stmt.halt, v => ((none, v), write s)
 
+-- mathport name: «exprcfg₀»
 local notation "cfg₀" => TM0.Cfg Γ Λ'
 
 /-- The translated TM0 machine (given the TM1 machine input). -/
@@ -1522,14 +1526,16 @@ theorem exists_enc_dec [Fintype Γ] :
   let H := (F.to_embedding.trans G).trans (Equivₓ.vectorEquivFin _ _).symm.toEmbedding
   classical
   let enc := H.set_value default (Vector.repeat ff n)
-  exact ⟨_, enc, Function.invFun enc, H.set_value_eq _ _, Function.left_inverse_inv_funₓ enc.2⟩
+  exact ⟨_, enc, Function.invFun enc, H.set_value_eq _ _, Function.left_inverse_inv_fun enc.2⟩
 
 parameter {Λ : Type _}[Inhabited Λ]
 
 parameter {σ : Type _}[Inhabited σ]
 
+-- mathport name: «exprstmt₁»
 local notation "stmt₁" => Stmt Γ Λ σ
 
+-- mathport name: «exprcfg₁»
 local notation "cfg₁" => Cfg Γ Λ σ
 
 /-- The configuration state of the TM. -/
@@ -1540,8 +1546,10 @@ inductive Λ' : Type max u_1 u_2 u_3
 instance : Inhabited Λ' :=
   ⟨Λ'.normal default⟩
 
+-- mathport name: «exprstmt'»
 local notation "stmt'" => Stmt Bool Λ' σ
 
+-- mathport name: «exprcfg'»
 local notation "cfg'" => Cfg Bool Λ' σ
 
 /-- Read a vector of length `n` from the tape. -/
@@ -1873,10 +1881,13 @@ inductive Λ'
 instance : Inhabited Λ' :=
   ⟨Λ'.normal default⟩
 
+-- mathport name: «exprcfg₀»
 local notation "cfg₀" => TM0.Cfg Γ Λ
 
+-- mathport name: «exprstmt₁»
 local notation "stmt₁" => TM1.Stmt Γ Λ' Unit
 
+-- mathport name: «exprcfg₁»
 local notation "cfg₁" => TM1.Cfg Γ Λ' Unit
 
 parameter (M : TM0.Machine Γ Λ)
@@ -2205,8 +2216,10 @@ parameter {Λ : Type _}[Inhabited Λ]
 
 parameter {σ : Type _}[Inhabited σ]
 
+-- mathport name: «exprstmt₂»
 local notation "stmt₂" => TM2.Stmt Γ Λ σ
 
+-- mathport name: «exprcfg₂»
 local notation "cfg₂" => TM2.Cfg Γ Λ σ
 
 /-- The alphabet of the TM2 simulator on TM1 is a marker for the stack bottom,
@@ -2321,8 +2334,10 @@ open Λ'
 instance Λ'.inhabited : Inhabited Λ' :=
   ⟨normal default⟩
 
+-- mathport name: «exprstmt₁»
 local notation "stmt₁" => TM1.Stmt Γ' Λ' σ
 
+-- mathport name: «exprcfg₁»
 local notation "cfg₁" => TM1.Cfg Γ' Λ' σ
 
 open TM1.Stmt

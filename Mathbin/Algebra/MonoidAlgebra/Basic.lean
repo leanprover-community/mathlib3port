@@ -574,7 +574,7 @@ def singleOneAlgHom {A : Type _} [CommSemiringₓ k] [Semiringₓ A] [Algebra k 
 
 @[simp]
 theorem coe_algebra_map {A : Type _} [CommSemiringₓ k] [Semiringₓ A] [Algebra k A] [Monoidₓ G] :
-    ⇑algebraMap k (MonoidAlgebra A G) = single 1 ∘ algebraMap k A :=
+    ⇑(algebraMap k (MonoidAlgebra A G)) = single 1 ∘ algebraMap k A :=
   rfl
 
 theorem single_eq_algebra_map_mul_of [CommSemiringₓ k] [Monoidₓ G] (a : G) (b : k) :
@@ -642,7 +642,7 @@ theorem lift_apply' (F : G →* A) (f : MonoidAlgebra k G) : lift k G A F f = f.
 theorem lift_apply (F : G →* A) (f : MonoidAlgebra k G) : lift k G A F f = f.Sum fun a b => b • F a := by
   simp only [lift_apply', Algebra.smul_def]
 
-theorem lift_def (F : G →* A) : ⇑lift k G A F = liftNc ((algebraMap k A : k →+* A) : k →+ A) F :=
+theorem lift_def (F : G →* A) : ⇑(lift k G A F) = liftNc ((algebraMap k A : k →+* A) : k →+ A) F :=
   rfl
 
 @[simp]
@@ -1397,7 +1397,7 @@ theorem lift_apply (F : Multiplicative G →* A) (f : MonoidAlgebra k G) :
     lift k G A F f = f.Sum fun a b => b • F (Multiplicative.ofAdd a) := by
   simp only [lift_apply', Algebra.smul_def]
 
-theorem lift_def (F : Multiplicative G →* A) : ⇑lift k G A F = liftNc ((algebraMap k A : k →+* A) : k →+ A) F :=
+theorem lift_def (F : Multiplicative G →* A) : ⇑(lift k G A F) = liftNc ((algebraMap k A : k →+* A) : k →+ A) F :=
   rfl
 
 @[simp]

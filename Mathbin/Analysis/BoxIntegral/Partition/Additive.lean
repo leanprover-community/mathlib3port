@@ -48,8 +48,10 @@ structure BoxAdditiveMap (ι M : Type _) [AddCommMonoidₓ M] (I : WithTop (Box 
   sum_partition_boxes' :
     ∀ J : Box ι, ↑J ≤ I → ∀ π : Prepartition J, π.IsPartition → (∑ Ji in π.boxes, to_fun Ji) = to_fun J
 
+-- mathport name: «expr →ᵇᵃ »
 localized [BoxIntegral] notation:25 ι " →ᵇᵃ " M => BoxIntegral.BoxAdditiveMap ι M ⊤
 
+-- mathport name: «expr →ᵇᵃ[ ] »
 localized [BoxIntegral] notation:25 ι " →ᵇᵃ[" I "] " M => BoxIntegral.BoxAdditiveMap ι M I
 
 namespace BoxAdditiveMap

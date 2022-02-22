@@ -43,7 +43,7 @@ theorem continuous_Icc_extend_iff {f : Icc a b → β} : Continuous (iccExtend h
   quotient_map_proj_Icc.continuous_iff.symm
 
 /-- See Note [continuity lemma statement]. -/
-theorem Continuous.Icc_extend {f : γ → Icc a b → β} {g : γ → α} (hf : Continuous (↿f)) (hg : Continuous g) :
+theorem Continuous.Icc_extend {f : γ → Icc a b → β} {g : γ → α} (hf : Continuous ↿f) (hg : Continuous g) :
     Continuous fun a => iccExtend h (f a) (g a) :=
   hf.comp <| continuous_id.prod_mk <| continuous_proj_Icc.comp hg
 

@@ -57,6 +57,7 @@ noncomputable section
 
 namespace MeasureTheory
 
+-- mathport name: «expr →ₛ »
 local infixr:25 " →ₛ " => SimpleFunc
 
 namespace SimpleFunc
@@ -654,7 +655,7 @@ protected theorem ae_measurable (f : lp.simpleFunc E p μ) : AeMeasurable (toSim
   (simpleFunc.measurable f).AeMeasurable
 
 theorem to_simple_func_eq_to_fun (f : lp.simpleFunc E p μ) : toSimpleFunc f =ᵐ[μ] f :=
-  show ⇑toSimpleFunc f =ᵐ[μ] ⇑(f : α →ₘ[μ] E) by
+  show ⇑(toSimpleFunc f) =ᵐ[μ] ⇑(f : α →ₘ[μ] E) by
     convert (ae_eq_fun.coe_fn_mk (to_simple_func f) (simple_func.ae_measurable f)).symm using 2
     exact (Classical.some_spec f.2).symm
 
@@ -1020,6 +1021,7 @@ theorem Memℒp.induction [_i : Fact (1 ≤ p)] (hp_ne_top : p ≠ ∞) (P : (α
 
 section Integrable
 
+-- mathport name: «expr →₁ₛ[ ] »
 notation:25 α " →₁ₛ[" μ "] " E => @MeasureTheory.lp.simpleFunc α E _ _ _ _ _ 1 μ
 
 theorem L1.SimpleFunc.to_Lp_one_eq_to_L1 (f : α →ₛ E) (hf : Integrable f μ) :

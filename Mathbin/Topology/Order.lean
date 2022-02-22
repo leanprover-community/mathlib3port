@@ -585,8 +585,10 @@ theorem nhds_inf {t₁ t₂ : TopologicalSpace α} {a : α} : @nhds α (t₁⊓t
 theorem nhds_top {a : α} : @nhds α ⊤ a = ⊤ :=
   (gc_nhds a).u_top
 
+-- mathport name: «exprcont»
 local notation "cont" => @Continuous _ _
 
+-- mathport name: «exprtspace»
 local notation "tspace" => TopologicalSpace
 
 open TopologicalSpace

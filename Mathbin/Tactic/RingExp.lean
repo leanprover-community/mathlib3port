@@ -1481,6 +1481,7 @@ namespace Tactic.Interactive
 
 open Interactive Interactive.Types Lean.Parser Tactic Tactic.RingExp
 
+-- mathport name: «expr ?»
 local postfix:1024 "?" => optionalₓ
 
 /-- Tactic for solving equations of *commutative* (semi)rings,
@@ -1542,6 +1543,7 @@ open tactic.interactive (ring_exp_eq)
 
 open tactic.ring_exp (normalize)
 
+-- mathport name: «expr ?»
 local postfix:1024 "?" => optionalₓ
 
 /-- Normalises expressions in commutative (semi-)rings inside of a `conv` block using the tactic

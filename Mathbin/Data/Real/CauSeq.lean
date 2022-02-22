@@ -194,6 +194,7 @@ def const (x : β) : CauSeq β abv :=
 
 variable {abv}
 
+-- mathport name: «exprconst»
 local notation "const" => const abv
 
 @[simp]
@@ -498,6 +499,7 @@ end Field
 
 section Abs
 
+-- mathport name: «exprconst»
 local notation "const" => const abs
 
 /-- The entries of a positive Cauchy sequence eventually have a positive lower bound. -/

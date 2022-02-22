@@ -18,6 +18,7 @@ This file defines the type `ℕ+` or `pnat`, the subtype of natural numbers that
 def Pnat :=
   { n : ℕ // 0 < n }
 
+-- mathport name: «exprℕ+»
 notation "ℕ+" => Pnat
 
 instance coePnatNat : Coe ℕ+ ℕ :=

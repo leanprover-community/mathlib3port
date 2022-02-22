@@ -337,6 +337,7 @@ section UFD
 
 attribute [local instance] PrincipalIdealRing.to_unique_factorization_monoid
 
+-- mathport name: «expr ~ᵤ »
 local infixl:50 " ~ᵤ " => Associated
 
 open UniqueFactorizationMonoid Associates

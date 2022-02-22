@@ -57,6 +57,7 @@ variable {X : Type _}
 def infty : Alexandroff X :=
   none
 
+-- mathport name: «expr∞»
 localized [Alexandroff] notation "∞" => Alexandroff.infty
 
 instance : CoeTₓ X (Alexandroff X) :=
@@ -120,7 +121,7 @@ instance : CanLift (Alexandroff X) X where
   cond := fun x => x ≠ ∞
   prf := fun x => ne_infty_iff_exists.1
 
-theorem not_mem_range_coe_iff {x : Alexandroff X} : x ∉ Range (coe : X → Alexandroff X) ↔ x = ∞ := by
+theorem not_mem_range_coe_iff {x : Alexandroff X} : (x ∉ Range (coe : X → Alexandroff X)) ↔ x = ∞ := by
   rw [← mem_compl_iff, compl_range_coe, mem_singleton_iff]
 
 theorem infty_not_mem_range_coe : ∞ ∉ Range (coe : X → Alexandroff X) :=

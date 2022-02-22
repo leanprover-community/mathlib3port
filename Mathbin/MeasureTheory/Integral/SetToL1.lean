@@ -85,6 +85,7 @@ variable {α E F F' G 𝕜 : Type _} {p : ℝ≥0∞} [NormedGroup E] [Measurabl
   [NormedSpace ℝ F] [NormedGroup F'] [NormedSpace ℝ F'] [NormedGroup G] [MeasurableSpace G] {m : MeasurableSpace α}
   {μ : Measure α}
 
+-- mathport name: «expr →ₛ »
 local infixr:25 " →ₛ " => SimpleFunc
 
 open Finset
@@ -357,7 +358,7 @@ theorem set_to_simple_func_congr' (T : Set α → E →L[ℝ] F) (h_add : FinMea
       rw [Eq]
       
     · have : T (pair f g ⁻¹' {(f a, g a)}) = 0 := by
-        have h_eq : T (⇑f.pair g ⁻¹' {(f a, g a)}) = T (f ⁻¹' {f a} ∩ g ⁻¹' {g a}) := by
+        have h_eq : T (⇑(f.pair g) ⁻¹' {(f a, g a)}) = T (f ⁻¹' {f a} ∩ g ⁻¹' {g a}) := by
           congr
           rw [pair_preimage_singleton f g]
         rw [h_eq]
@@ -729,7 +730,7 @@ theorem set_to_L1s_congr_measure {μ' : Measure α} (T : Set α → E →L[ℝ] 
     (f' : α →₁ₛ[μ'] E) (h : f =ᵐ[μ] f') : setToL1s T f = setToL1s T f' := by
   refine' simple_func.set_to_simple_func_congr T h_zero h_add (simple_func.integrable f) _
   refine' (to_simple_func_eq_to_fun f).trans _
-  suffices : f' =ᵐ[μ] ⇑simple_func.to_simple_func f'
+  suffices : f' =ᵐ[μ] ⇑(simple_func.to_simple_func f')
   exact h.trans this
   have goal' : f' =ᵐ[μ'] simple_func.to_simple_func f' := (to_simple_func_eq_to_fun f').symm
   exact hμ.ae_eq goal'

@@ -416,7 +416,7 @@ theorem support_filter : (p.filter s h).Support = s ∩ p.Support := by
 theorem mem_support_filter_iff (a : α) : a ∈ (p.filter s h).Support ↔ a ∈ s ∧ a ∈ p.Support := by
   simp
 
-theorem filter_apply_eq_zero_iff (a : α) : (p.filter s h) a = 0 ↔ a ∉ s ∨ a ∉ p.Support := by
+theorem filter_apply_eq_zero_iff (a : α) : (p.filter s h) a = 0 ↔ (a ∉ s) ∨ a ∉ p.Support := by
   erw [apply_eq_zero_iff, support_filter, Set.mem_inter_iff, not_and_distrib]
 
 theorem filter_apply_ne_zero_iff (a : α) : (p.filter s h) a ≠ 0 ↔ a ∈ s ∧ a ∈ p.Support := by

@@ -88,6 +88,7 @@ namespace GlueData
 
 variable (D : GlueData.{u})
 
+-- mathport name: «expr𝖣»
 local notation "𝖣" => D.toGlueData
 
 theorem π_surjective : Function.Surjective 𝖣.π :=
@@ -106,7 +107,7 @@ theorem ι_jointly_surjective (x : 𝖣.glued) : ∃ (i : _)(y : D.U i), 𝖣.ι
 /-- An equivalence relation on `Σ i, D.U i` that holds iff `𝖣 .ι i x = 𝖣 .ι j y`.
 See `Top.glue_data.ι_eq_iff_rel`.
 -/
-def Rel (a b : Σ i, ((D.U i : Top) : Type _)) : Prop :=
+def Rel (a b : Σi, ((D.U i : Top) : Type _)) : Prop :=
   a = b ∨ ∃ x : D.V (a.1, b.1), D.f _ _ x = a.2 ∧ D.f _ _ (D.t _ _ x) = b.2
 
 theorem rel_equiv : Equivalenceₓ D.Rel :=
@@ -296,7 +297,7 @@ structure MkCore where
   V : ∀ i, J → Opens (U i)
   t : ∀ i j, (Opens.toTop _).obj (V i j) ⟶ (Opens.toTop _).obj (V j i)
   V_id : ∀ i, V i i = ⊤
-  t_id : ∀ i, ⇑t i i = id
+  t_id : ∀ i, ⇑(t i i) = id
   t_inter : ∀ ⦃i j⦄ k x : V i j, ↑x ∈ V i k → @coe (V j i) (U j) _ (t i j x) ∈ V j k
   cocycle :
     ∀ i j k x : V i j h : ↑x ∈ V i k,

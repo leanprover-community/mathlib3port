@@ -107,7 +107,7 @@ variable (α) [Fintype α] [Fintype (FixedPoints G α)]
   of the action is congruent mod `p` to the cardinality of `α` -/
 theorem card_modeq_card_fixed_points : card α ≡ card (FixedPoints G α) [MOD p] := by
   classical
-  calc card α = card (Σ y : Quotientₓ (orbit_rel G α), { x // Quotientₓ.mk' x = y }) :=
+  calc card α = card (Σy : Quotientₓ (orbit_rel G α), { x // Quotientₓ.mk' x = y }) :=
       card_congr
         (Equivₓ.sigmaPreimageEquiv
             (@Quotientₓ.mk' _

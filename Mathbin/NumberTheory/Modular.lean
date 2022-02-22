@@ -40,8 +40,10 @@ open Complex Matrix Matrix.SpecialLinearGroup UpperHalfPlane
 
 noncomputable section
 
+-- mathport name: «exprSL( , )»
 local notation "SL(" n ", " R ")" => SpecialLinearGroup (Finₓ n) R
 
+-- mathport name: «expr↑ₘ »
 local prefix:1024 "↑ₘ" => @coe _ (Matrix (Finₓ 2) (Finₓ 2) ℤ) _
 
 open_locale UpperHalfPlane ComplexConjugate
@@ -349,6 +351,7 @@ def s : SL(2, ℤ) :=
 def FundamentalDomain : Set ℍ :=
   { z | 1 ≤ Complex.normSq z ∧ abs z.re ≤ (1 : ℝ) / 2 }
 
+-- mathport name: «expr𝒟»
 localized [Modular] notation "𝒟" => ModularGroup.FundamentalDomain
 
 /-- If `|z|<1`, then applying `S` strictly decreases `im` -/

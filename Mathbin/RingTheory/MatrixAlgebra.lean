@@ -134,7 +134,7 @@ theorem inv_fun_algebra_map (M : Matrix n n R) : (invFun R A n fun i j => algebr
   simp
 
 theorem right_inv (M : Matrix n n A) : (toFunAlgHom R A n) (invFun R A n M) = M := by
-  simp only [inv_fun, AlgHom.map_sum, std_basis_matrix, apply_ite (⇑algebraMap R A), mul_boole, to_fun_alg_hom_apply,
+  simp only [inv_fun, AlgHom.map_sum, std_basis_matrix, apply_ite ⇑(algebraMap R A), mul_boole, to_fun_alg_hom_apply,
     RingHom.map_zero, RingHom.map_one]
   convert Finset.sum_product
   apply matrix_eq_sum_std_basis

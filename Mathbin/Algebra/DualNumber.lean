@@ -45,8 +45,10 @@ abbrev DualNumber (R : Type _) : Type _ :=
 def DualNumber.eps [Zero R] [One R] : DualNumber R :=
   TrivSqZeroExt.inr 1
 
+-- mathport name: «exprε»
 localized [DualNumber] notation "ε" => DualNumber.eps
 
+-- mathport name: «expr [ε]»
 localized [DualNumber] postfix:1024 "[ε]" => DualNumber
 
 open_locale DualNumber

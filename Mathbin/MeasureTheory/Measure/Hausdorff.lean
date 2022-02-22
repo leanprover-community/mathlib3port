@@ -545,6 +545,7 @@ theorem mk_metric_le_liminf_sum {β : Type _} {ι : β → Type _} [hι : ∀ n,
 def hausdorffMeasure (d : ℝ) : Measure X :=
   mkMetric fun r => r ^ d
 
+-- mathport name: «exprμH[ ]»
 localized [MeasureTheory] notation "μH[" d "]" => MeasureTheory.Measure.hausdorffMeasure d
 
 theorem le_hausdorff_measure (d : ℝ) (μ : Measure X) (ε : ℝ≥0∞) (h₀ : 0 < ε)

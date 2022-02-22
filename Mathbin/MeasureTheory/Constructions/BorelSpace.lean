@@ -46,7 +46,7 @@ noncomputable section
 
 open Classical Set Filter MeasureTheory
 
-open_locale Classical BigOperators TopologicalSpace Nnreal Ennreal Interval
+open_locale Classical BigOperators TopologicalSpace Nnreal Ennreal Interval MeasureTheory
 
 universe u v w x y
 
@@ -679,6 +679,22 @@ theorem Continuous.is_open_pos_measure_map {f : β → γ} (hf : Continuous f) (
   refine' ⟨fun U hUo hUne => _⟩
   rw [measure.map_apply hf.measurable hUo.measurable_set]
   exact (hUo.preimage hf).measure_ne_zero μ (hf_surj.nonempty_preimage.mpr hUne)
+
+/-- If a function is defined piecewise in terms of functions which are continuous on their
+respective pieces, then it is measurable. -/
+theorem ContinuousOn.measurable_piecewise {f g : α → γ} {s : Set α} [∀ j : α, Decidable (j ∈ s)] (hf : ContinuousOn f s)
+    (hg : ContinuousOn g (sᶜ)) (hs : MeasurableSet s) : Measurable (s.piecewise f g) := by
+  refine' measurable_of_is_open fun t ht => _
+  rw [piecewise_preimage, Set.Ite]
+  apply MeasurableSet.union
+  · rcases _root_.continuous_on_iff'.1 hf t ht with ⟨u, u_open, hu⟩
+    rw [hu]
+    exact u_open.measurable_set.inter hs
+    
+  · rcases _root_.continuous_on_iff'.1 hg t ht with ⟨u, u_open, hu⟩
+    rw [diff_eq_compl_inter, inter_comm, hu]
+    exact u_open.measurable_set.inter hs.compl
+    
 
 @[to_additive]
 instance (priority := 100) HasContinuousMul.has_measurable_mul [Mul γ] [HasContinuousMul γ] : HasMeasurableMul γ where

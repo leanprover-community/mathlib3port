@@ -58,7 +58,7 @@ inductive Lists'.{u} (α : Type u) : Bool → Type u
 to an element of `α`, or a "proper" ZFA list, inductively defined from the empty ZFA list and from
 appending a ZFA list to a proper ZFA list. -/
 def Lists (α : Type _) :=
-  Σ b, Lists' α b
+  Σb, Lists' α b
 
 namespace Lists'
 
@@ -122,6 +122,7 @@ mutual
       Lists.Equiv a a' → a' ∈ Lists'.toList l' → Lists'.Subset l l' → Lists'.Subset (Lists'.cons a l) l'
 end
 
+-- mathport name: «expr ~ »
 local infixl:50 " ~ " => Lists.Equiv
 
 /-- Equivalence of ZFA lists. Defined inductively. -/
@@ -338,7 +339,7 @@ section Decidable
 
 @[simp]
 def Equiv.decidableMeas :
-    (Psum (Σ' l₁ : Lists α, Lists α) <| Psum (Σ' l₁ : Lists' α true, Lists' α true) (Σ' a : Lists α, Lists' α true)) → ℕ
+    (Psum (Σ'l₁ : Lists α, Lists α) <| Psum (Σ'l₁ : Lists' α true, Lists' α true) (Σ'a : Lists α, Lists' α true)) → ℕ
   | Psum.inl ⟨l₁, l₂⟩ => sizeof l₁ + sizeof l₂
   | Psum.inr <| Psum.inl ⟨l₁, l₂⟩ => sizeof l₁ + sizeof l₂
   | Psum.inr <| Psum.inr ⟨l₁, l₂⟩ => sizeof l₁ + sizeof l₂

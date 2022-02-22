@@ -245,7 +245,7 @@ theorem algebra_map_eq_smul_one (r : R) : algebraMap R A r = r • 1 :=
     _ = r • 1 := (Algebra.smul_def r 1).symm
     
 
-theorem algebra_map_eq_smul_one' : ⇑algebraMap R A = fun r => r • (1 : A) :=
+theorem algebra_map_eq_smul_one' : ⇑(algebraMap R A) = fun r => r • (1 : A) :=
   funext algebra_map_eq_smul_one
 
 /-- `mul_comm` for `algebra`s when one element is from the base ring. -/
@@ -329,7 +329,7 @@ protected def linearMap : R →ₗ[R] A :=
 theorem linear_map_apply (r : R) : Algebra.linearMap R A r = algebraMap R A r :=
   rfl
 
-theorem coe_linear_map : ⇑Algebra.linearMap R A = algebraMap R A :=
+theorem coe_linear_map : ⇑(Algebra.linearMap R A) = algebraMap R A :=
   rfl
 
 instance id : Algebra R R :=
@@ -535,8 +535,10 @@ structure AlgHom (R : Type u) (A : Type v) (B : Type w) [CommSemiringₓ R] [Sem
 run_cmd
   tactic.add_doc_string `alg_hom.to_ring_hom "Reinterpret an `alg_hom` as a `ring_hom`"
 
+-- mathport name: «expr →ₐ »
 infixr:25 " →ₐ " => AlgHom _
 
+-- mathport name: «expr →ₐ[ ] »
 notation:25 A " →ₐ[" R "] " B => AlgHom R A B
 
 namespace AlgHom
@@ -679,7 +681,7 @@ def mk' (f : A →+* B) (h : ∀ c : R x, f (c • x) = c • f x) : A →ₐ[R]
       simp only [Algebra.algebra_map_eq_smul_one, h, f.map_one] }
 
 @[simp]
-theorem coe_mk' (f : A →+* B) (h : ∀ c : R x, f (c • x) = c • f x) : ⇑mk' f h = f :=
+theorem coe_mk' (f : A →+* B) (h : ∀ c : R x, f (c • x) = c • f x) : ⇑(mk' f h) = f :=
   rfl
 
 section
@@ -691,7 +693,7 @@ protected def id : A →ₐ[R] A :=
   { RingHom.id A with commutes' := fun _ => rfl }
 
 @[simp]
-theorem coe_id : ⇑AlgHom.id R A = id :=
+theorem coe_id : ⇑(AlgHom.id R A) = id :=
   rfl
 
 @[simp]
@@ -710,7 +712,7 @@ def comp (φ₁ : B →ₐ[R] C) (φ₂ : A →ₐ[R] B) : A →ₐ[R] C :=
       rw [← φ₁.commutes, ← φ₂.commutes] <;> rfl }
 
 @[simp]
-theorem coe_comp (φ₁ : B →ₐ[R] C) (φ₂ : A →ₐ[R] B) : ⇑φ₁.comp φ₂ = φ₁ ∘ φ₂ :=
+theorem coe_comp (φ₁ : B →ₐ[R] C) (φ₂ : A →ₐ[R] B) : ⇑(φ₁.comp φ₂) = φ₁ ∘ φ₂ :=
   rfl
 
 theorem comp_apply (φ₁ : B →ₐ[R] C) (φ₂ : A →ₐ[R] B) (p : A) : φ₁.comp φ₂ p = φ₁ (φ₂ p) :=
@@ -869,6 +871,7 @@ attribute [nolint doc_blame] AlgEquiv.toAddEquiv
 
 attribute [nolint doc_blame] AlgEquiv.toMulEquiv
 
+-- mathport name: «expr ≃ₐ[ ] »
 notation:50 A " ≃ₐ[" R "] " A' => AlgEquiv R A A'
 
 namespace AlgEquiv
@@ -1085,7 +1088,7 @@ theorem symm_trans_apply (e₁ : A₁ ≃ₐ[R] A₂) (e₂ : A₂ ≃ₐ[R] A�
   rfl
 
 @[simp]
-theorem coe_trans (e₁ : A₁ ≃ₐ[R] A₂) (e₂ : A₂ ≃ₐ[R] A₃) : ⇑e₁.trans e₂ = e₂ ∘ e₁ :=
+theorem coe_trans (e₁ : A₁ ≃ₐ[R] A₂) (e₂ : A₂ ≃ₐ[R] A₃) : ⇑(e₁.trans e₂) = e₂ ∘ e₁ :=
   rfl
 
 theorem trans_apply (e₁ : A₁ ≃ₐ[R] A₂) (e₂ : A₂ ≃ₐ[R] A₃) (x : A₁) : (e₁.trans e₂) x = e₂ (e₁ x) :=

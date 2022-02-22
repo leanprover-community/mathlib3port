@@ -230,6 +230,7 @@ structure LieHom (R : Type u) (L : Type v) (L' : Type w) [CommRingₓ R] [LieRin
 
 attribute [nolint doc_blame] LieHom.toLinearMap
 
+-- mathport name: «expr →ₗ⁅ ⁆ »
 notation:25 L " →ₗ⁅" R:25 "⁆ " L':0 => LieHom R L L'
 
 namespace LieHom
@@ -449,6 +450,7 @@ structure LieEquiv (R : Type u) (L : Type v) (L' : Type w) [CommRingₓ R] [LieR
 
 attribute [nolint doc_blame] LieEquiv.toLieHom
 
+-- mathport name: «expr ≃ₗ⁅ ⁆ »
 notation:50 L " ≃ₗ⁅" R "⁆ " L' => LieEquiv R L L'
 
 namespace LieEquiv
@@ -598,6 +600,7 @@ structure LieModuleHom extends M →ₗ[R] N where
 
 attribute [nolint doc_blame] LieModuleHom.toLinearMap
 
+-- mathport name: «expr →ₗ⁅ , ⁆ »
 notation:25 M " →ₗ⁅" R "," L:25 "⁆ " N:0 => LieModuleHom R L M N
 
 namespace LieModuleHom
@@ -816,6 +819,7 @@ structure LieModuleEquiv extends M →ₗ⁅R,L⁆ N where
 
 attribute [nolint doc_blame] LieModuleEquiv.toLieModuleHom
 
+-- mathport name: «expr ≃ₗ⁅ , ⁆ »
 notation:25 M " ≃ₗ⁅" R "," L:25 "⁆ " N:0 => LieModuleEquiv R L M N
 
 namespace LieModuleEquiv

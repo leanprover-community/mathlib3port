@@ -299,8 +299,8 @@ theorem map_bracket_le {I₁ I₂ : LieIdeal R L} : map f ⁅I₁,I₂⁆ ≤ �
   intro x hx
   obtain ⟨⟨y₁, hy₁⟩, ⟨y₂, hy₂⟩, hx⟩ := hx
   rw [← hx]
-  let fy₁ : ↥map f I₁ := ⟨f y₁, mem_map hy₁⟩
-  let fy₂ : ↥map f I₂ := ⟨f y₂, mem_map hy₂⟩
+  let fy₁ : ↥(map f I₁) := ⟨f y₁, mem_map hy₁⟩
+  let fy₂ : ↥(map f I₂) := ⟨f y₂, mem_map hy₂⟩
   change _ ∈ comap f ⁅map f I₁,map f I₂⁆
   simp only [Submodule.coe_mk, mem_comap, LieHom.map_lie]
   exact LieSubmodule.lie_coe_mem_lie _ _ fy₁ fy₂

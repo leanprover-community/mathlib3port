@@ -40,6 +40,7 @@ def SimplicialObject :=
 
 namespace SimplicialObject
 
+-- mathport name: «expr _[ ]»
 localized [Simplicial]
   notation:1000 X "_[" n "]" => (X : CategoryTheory.SimplicialObject _).obj (Opposite.op (SimplexCategory.mk n))
 
@@ -261,6 +262,7 @@ def CosimplicialObject :=
 
 namespace CosimplicialObject
 
+-- mathport name: «expr _[ ]»
 localized [Simplicial]
   notation:1000 X "_[" n "]" => (X : CategoryTheory.CosimplicialObject _).obj (SimplexCategory.mk n)
 

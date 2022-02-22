@@ -43,7 +43,7 @@ theorem mul_support_eq_preimage (f : α → M) : MulSupport f = f ⁻¹' {1}ᶜ 
   rfl
 
 @[to_additive]
-theorem nmem_mul_support {f : α → M} {x : α} : x ∉ MulSupport f ↔ f x = 1 :=
+theorem nmem_mul_support {f : α → M} {x : α} : (x ∉ MulSupport f) ↔ f x = 1 :=
   not_not
 
 @[to_additive]

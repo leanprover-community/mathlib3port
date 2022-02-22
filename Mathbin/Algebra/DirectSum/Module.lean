@@ -269,7 +269,7 @@ theorem SubmoduleIsInternal.independent (h : SubmoduleIsInternal A) : CompleteLa
 /-- Given an internal direct sum decomposition of a module `M`, and a basis for each of the
 components of the direct sum, the disjoint union of these bases is a basis for `M`. -/
 noncomputable def SubmoduleIsInternal.collectedBasis (h : SubmoduleIsInternal A) {α : ι → Type _}
-    (v : ∀ i, Basis (α i) R (A i)) : Basis (Σ i, α i) R M where
+    (v : ∀ i, Basis (α i) R (A i)) : Basis (Σi, α i) R M where
   repr :=
     ((LinearEquiv.ofBijective _ h.Injective h.Surjective).symm ≪≫ₗ
         Dfinsupp.mapRange.linearEquiv fun i => (v i).repr) ≪≫ₗ
@@ -277,7 +277,7 @@ noncomputable def SubmoduleIsInternal.collectedBasis (h : SubmoduleIsInternal A)
 
 @[simp]
 theorem SubmoduleIsInternal.collected_basis_coe (h : SubmoduleIsInternal A) {α : ι → Type _}
-    (v : ∀ i, Basis (α i) R (A i)) : ⇑h.collectedBasis v = fun a : Σ i, α i => ↑(v a.1 a.2) := by
+    (v : ∀ i, Basis (α i) R (A i)) : ⇑(h.collectedBasis v) = fun a : Σi, α i => ↑(v a.1 a.2) := by
   funext a
   simp only [submodule_is_internal.collected_basis, to_module, submodule_coe, AddEquiv.to_fun_eq_coe, Basis.coe_of_repr,
     Basis.repr_symm_apply, Dfinsupp.lsum_apply_apply, Dfinsupp.mapRange.linear_equiv_apply,
@@ -287,7 +287,7 @@ theorem SubmoduleIsInternal.collected_basis_coe (h : SubmoduleIsInternal A) {α 
   convert Dfinsupp.sum_add_hom_single (fun i => (A i).Subtype.toAddMonoidHom) a.1 (v a.1 a.2)
 
 theorem SubmoduleIsInternal.collected_basis_mem (h : SubmoduleIsInternal A) {α : ι → Type _}
-    (v : ∀ i, Basis (α i) R (A i)) (a : Σ i, α i) : h.collectedBasis v a ∈ A a.1 := by
+    (v : ∀ i, Basis (α i) R (A i)) (a : Σi, α i) : h.collectedBasis v a ∈ A a.1 := by
   simp
 
 end Semiringₓ

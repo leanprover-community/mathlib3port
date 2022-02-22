@@ -508,7 +508,7 @@ variable {α S : Type _} [SetLike S R] [Monoidₓ R] [AddMonoidₓ ι]
 coercions. -/
 @[simp]
 theorem SetLike.coe_list_dprod (A : ι → S) [SetLike.GradedMonoid A] (fι : α → ι) (fA : ∀ a, A (fι a)) (l : List α) :
-    ↑(l.dprod fι fA : (fun i => ↥A i) _) = (List.prod (l.map fun a => fA a) : R) := by
+    ↑(l.dprod fι fA : (fun i => ↥(A i)) _) = (List.prod (l.map fun a => fA a) : R) := by
   induction l
   · rw [List.dprod_nil, coe_ghas_one, List.map_nil, List.prod_nil]
     
@@ -519,7 +519,7 @@ include R
 
 /-- A version of `list.coe_dprod_set_like` with `subtype.mk`. -/
 theorem SetLike.list_dprod_eq (A : ι → S) [SetLike.GradedMonoid A] (fι : α → ι) (fA : ∀ a, A (fι a)) (l : List α) :
-    (l.dprod fι fA : (fun i => ↥A i) _) =
+    (l.dprod fι fA : (fun i => ↥(A i)) _) =
       ⟨List.prod (l.map fun a => fA a),
         (l.dprod_index_eq_map_sum fι).symm ▸ list_prod_map_mem l _ _ fun i hi => (fA i).Prop⟩ :=
   Subtype.ext <| SetLike.coe_list_dprod _ _ _ _

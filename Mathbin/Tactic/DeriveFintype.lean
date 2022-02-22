@@ -210,7 +210,7 @@ unsafe def mk_sigma : expr → tactic expr
   | expr.pi n bi d b => do
     let p ← mk_local' n bi d
     let e ← mk_sigma (expr.instantiate_var b p)
-    tactic.mk_app `` Psigma [d, bind_lambda e p]
+    tactic.mk_app `` PSigma [d, bind_lambda e p]
   | _ => pure (quote.1 Unit)
 
 /-- Prove the goal `(Σ' (a:A) (b:B a) (c:C a b), unit) → T`
@@ -221,7 +221,7 @@ to the constructor application and destructure the pi type of the constructor. W
 of `psigma.elim` applications constructed, which is the number of constructor arguments. -/
 unsafe def mk_sigma_elim : expr → expr → tactic ℕ
   | expr.pi n bi d b, c => do
-    refine (pquote.1 (@Psigma.elim (%%ₓd) _ _ _))
+    refine (pquote.1 (@PSigma.elim (%%ₓd) _ _ _))
     let i ← intro_fresh n
     (· + 1) <$> mk_sigma_elim (expr.instantiate_var b i) (c i)
   | _, c => do

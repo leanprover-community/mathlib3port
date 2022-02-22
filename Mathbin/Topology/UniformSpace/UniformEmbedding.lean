@@ -373,6 +373,7 @@ section UniformExtension
 variable {α : Type _} {β : Type _} {γ : Type _} [UniformSpace α] [UniformSpace β] [UniformSpace γ] {e : β → α}
   (h_e : UniformInducing e) (h_dense : DenseRange e) {f : β → γ} (h_f : UniformContinuous f)
 
+-- mathport name: «exprψ»
 local notation "ψ" => (h_e.DenseInducing h_dense).extend f
 
 theorem uniformly_extend_exists [CompleteSpace γ] (a : α) : ∃ c, Tendsto f (comap e (𝓝 a)) (𝓝 c) :=

@@ -55,6 +55,7 @@ def set (a : α) : List α → ℕ → List α
   | h :: as, k + 1 => h :: Set as k
   | [], k + 1 => default :: Set ([] : List α) k
 
+-- mathport name: «expr { ↦ }»
 localized [List.Func] notation as " {" m " ↦ " a "}" => List.Func.set a as m
 
 /-- Get element of a list by index. If the index is out of range, return the default element -/

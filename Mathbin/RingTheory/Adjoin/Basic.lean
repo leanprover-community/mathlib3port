@@ -270,7 +270,7 @@ theorem mem_adjoin_iff {s : Set A} {x : A} : x ∈ adjoin R s ↔ x ∈ Subring.
   ⟨fun hx =>
     Subsemiring.closure_induction hx Subring.subset_closure (Subring.zero_mem _) (Subring.one_mem _)
       (fun _ _ => Subring.add_mem _) fun _ _ => Subring.mul_mem _,
-    suffices Subring.closure (Set.Range (⇑algebraMap R A) ∪ s) ≤ (adjoin R s).toSubring from @this x
+    suffices Subring.closure (Set.Range ⇑(algebraMap R A) ∪ s) ≤ (adjoin R s).toSubring from @this x
     Subring.closure_le.2 Subsemiring.subset_closure⟩
 
 theorem adjoin_eq_ring_closure (s : Set A) :

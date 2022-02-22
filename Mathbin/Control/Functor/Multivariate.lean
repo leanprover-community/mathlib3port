@@ -29,6 +29,7 @@ and the category of Type -/
 class Mvfunctor {n : ℕ} (F : Typevec n → Type _) where
   map : ∀ {α β : Typevec n}, α ⟹ β → F α → F β
 
+-- mathport name: «expr <$$> »
 localized [Mvfunctor] infixr:100 " <$$> " => Mvfunctor.map
 
 variable {n : ℕ}

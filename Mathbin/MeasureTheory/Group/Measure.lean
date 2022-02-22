@@ -290,6 +290,15 @@ sets and positive mass to open sets. -/
 class IsHaarMeasure {G : Type _} [Groupₓ G] [TopologicalSpace G] [MeasurableSpace G] (μ : Measure G) extends
   IsFiniteMeasureOnCompacts μ, IsMulLeftInvariant μ, IsOpenPosMeasure μ : Prop
 
+/- Record that a Haar measure on a locally compact space is locally finite. This is needed as the
+fact that a measure which is finite on compacts is locally finite is not registered as an instance,
+to avoid an instance loop. -/
+-- see Note [lower instance priority]
+@[to_additive]
+instance (priority := 100) is_locally_finite_measure_of_is_haar_measure {G : Type _} [Groupₓ G] [MeasurableSpace G]
+    [TopologicalSpace G] [LocallyCompactSpace G] (μ : Measure G) [IsHaarMeasure μ] : IsLocallyFiniteMeasure μ :=
+  is_locally_finite_measure_of_is_finite_measure_on_compacts
+
 section
 
 variable [Groupₓ G] [TopologicalSpace G] (μ : Measure G) [IsHaarMeasure μ]

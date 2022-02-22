@@ -96,7 +96,7 @@ def of {f : M → N} (h : IsMonoidHom f) : M →* N where
 variable {mM mN}
 
 @[simp, to_additive]
-theorem coe_of {f : M → N} (hf : IsMonoidHom f) : ⇑MonoidHom.of hf = f :=
+theorem coe_of {f : M → N} (hf : IsMonoidHom f) : ⇑(MonoidHom.of hf) = f :=
   rfl
 
 @[to_additive]

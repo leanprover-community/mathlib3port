@@ -156,7 +156,7 @@ instance has_finite_biproducts : HasFiniteBiproducts (Mat_ C) where
   HasBiproductsOfShape := fun J 𝒟 ℱ =>
     { HasBiproduct := fun f =>
         has_biproduct_of_total
-          { x := ⟨Σ j : J, (f j).ι, fun p => (f p.1).x p.2⟩,
+          { x := ⟨Σj : J, (f j).ι, fun p => (f p.1).x p.2⟩,
             π := fun j x y => by
               dsimp  at x⊢
               refine' if h : x.1 = j then _ else 0

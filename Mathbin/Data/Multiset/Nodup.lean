@@ -33,7 +33,7 @@ theorem nodup_zero : @Nodup α 0 :=
   pairwise.nil
 
 @[simp]
-theorem nodup_cons {a : α} {s : Multiset α} : Nodup (a ::ₘ s) ↔ a ∉ s ∧ Nodup s :=
+theorem nodup_cons {a : α} {s : Multiset α} : Nodup (a ::ₘ s) ↔ (a ∉ s) ∧ Nodup s :=
   (Quot.induction_on s) fun l => nodup_cons
 
 theorem nodup_cons_of_nodup {a : α} {s : Multiset α} (m : a ∉ s) (n : Nodup s) : Nodup (a ::ₘ s) :=

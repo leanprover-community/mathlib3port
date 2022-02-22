@@ -295,6 +295,7 @@ section Bisim
 
 variable (R : Seqₓₓ α → Seqₓₓ α → Prop)
 
+-- mathport name: «expr ~ »
 local infixl:50 " ~ " => R
 
 def BisimO : Option (Seq1 α) → Option (Seq1 α) → Prop

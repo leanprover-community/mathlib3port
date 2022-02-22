@@ -71,7 +71,7 @@ unsafe def delta_instance_handler : derive_handler := fun cls new_decl_name => d
       let inst ← instantiate_mvars inst
       let inst ← replace_univ_metas_with_univ_params inst
       let tgt ← instantiate_mvars tgt
-      let nm ← get_unused_decl_name <| new_decl_name <.> delta_instance_name cls
+      let nm ← get_unused_decl_name <| mkStrName new_decl_name (delta_instance_name cls)
       add_protected_decl <| declaration.defn nm inst tgt inst new_decl new_decl
       set_basic_attribute `instance nm tt
       return tt

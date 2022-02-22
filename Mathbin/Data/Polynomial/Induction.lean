@@ -113,7 +113,7 @@ theorem mem_span_C_coeff : f ∈ span R[X] { g : R[X] | ∃ i : ℕ, g = c (coef
   simp only [monomial_mul_C, one_mulₓ, smul_eq_mul]
   rw [monomial_eq_C_mul_X]
 
-theorem exists_coeff_not_mem_C_inverse : f ∉ I → ∃ i : ℕ, coeff f i ∉ C ⁻¹' I.Carrier :=
+theorem exists_coeff_not_mem_C_inverse : (f ∉ I) → ∃ i : ℕ, coeff f i ∉ C ⁻¹' I.Carrier :=
   imp_of_not_imp_not _ _ fun cf =>
     not_not.mpr ((span_le_of_coeff_mem_C_inverse (not_exists_not.mp cf)) mem_span_C_coeff)
 

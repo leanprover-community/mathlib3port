@@ -911,18 +911,18 @@ section Mem
 
 variable {α β : Type _} [HasMem α β] {s t : β} {a b : α}
 
-theorem ne_of_mem_of_not_mem (h : a ∈ s) : b ∉ s → a ≠ b :=
+theorem ne_of_mem_of_not_mem (h : a ∈ s) : (b ∉ s) → a ≠ b :=
   mt fun e => e ▸ h
 
-theorem ne_of_mem_of_not_mem' (h : a ∈ s) : a ∉ t → s ≠ t :=
+theorem ne_of_mem_of_not_mem' (h : a ∈ s) : (a ∉ t) → s ≠ t :=
   mt fun e => e ▸ h
 
 /-- **Alias** of `ne_of_mem_of_not_mem`. -/
-theorem HasMem.Mem.ne_of_not_mem : a ∈ s → b ∉ s → a ≠ b :=
+theorem HasMem.Mem.ne_of_not_mem : a ∈ s → (b ∉ s) → a ≠ b :=
   ne_of_mem_of_not_mem
 
 /-- **Alias** of `ne_of_mem_of_not_mem'`. -/
-theorem HasMem.Mem.ne_of_not_mem' : a ∈ s → a ∉ t → s ≠ t :=
+theorem HasMem.Mem.ne_of_not_mem' : a ∈ s → (a ∉ t) → s ≠ t :=
   ne_of_mem_of_not_mem'
 
 end Mem
@@ -1421,22 +1421,22 @@ theorem forall_false_left (p : False → Prop) : (∀ x, p x) ↔ True :=
   forall_prop_of_false not_false
 
 theorem ExistsUnique.elim2 {α : Sort _} {p : α → Sort _} [∀ x, Subsingleton (p x)] {q : ∀ x h : p x, Prop} {b : Prop}
-    (h₂ : ∃! (x) (h : p x), q x h) (h₁ : ∀ x h : p x, q x h → (∀ y hy : p y, q y hy → y = x) → b) : b := by
+    (h₂ : ∃! (x : _)(h : p x), q x h) (h₁ : ∀ x h : p x, q x h → (∀ y hy : p y, q y hy → y = x) → b) : b := by
   simp only [exists_unique_iff_exists] at h₂
   apply h₂.elim
   exact fun H => h₁ x hxp hxq fun y hyp hyq => H y ⟨hyp, hyq⟩
 
 theorem ExistsUnique.intro2 {α : Sort _} {p : α → Sort _} [∀ x, Subsingleton (p x)] {q : ∀ x : α h : p x, Prop} (w : α)
-    (hp : p w) (hq : q w hp) (H : ∀ y hy : p y, q y hy → y = w) : ∃! (x) (hx : p x), q x hx := by
+    (hp : p w) (hq : q w hp) (H : ∀ y hy : p y, q y hy → y = w) : ∃! (x : _)(hx : p x), q x hx := by
   simp only [exists_unique_iff_exists]
   exact ExistsUnique.intro w ⟨hp, hq⟩ fun y ⟨hyp, hyq⟩ => H y hyp hyq
 
-theorem ExistsUnique.exists2 {α : Sort _} {p : α → Sort _} {q : ∀ x : α h : p x, Prop} (h : ∃! (x) (hx : p x), q x hx) :
-    ∃ (x : _)(hx : p x), q x hx :=
+theorem ExistsUnique.exists2 {α : Sort _} {p : α → Sort _} {q : ∀ x : α h : p x, Prop}
+    (h : ∃! (x : _)(hx : p x), q x hx) : ∃ (x : _)(hx : p x), q x hx :=
   h.exists.imp fun x hx => hx.exists
 
 theorem ExistsUnique.unique2 {α : Sort _} {p : α → Sort _} [∀ x, Subsingleton (p x)] {q : ∀ x : α hx : p x, Prop}
-    (h : ∃! (x) (hx : p x), q x hx) {y₁ y₂ : α} (hpy₁ : p y₁) (hqy₁ : q y₁ hpy₁) (hpy₂ : p y₂) (hqy₂ : q y₂ hpy₂) :
+    (h : ∃! (x : _)(hx : p x), q x hx) {y₁ y₂ : α} (hpy₁ : p y₁) (hqy₁ : q y₁ hpy₁) (hpy₂ : p y₂) (hqy₂ : q y₂ hpy₂) :
     y₁ = y₂ := by
   simp only [exists_unique_iff_exists] at h
   exact h.unique ⟨hpy₁, hqy₁⟩ ⟨hpy₂, hqy₂⟩

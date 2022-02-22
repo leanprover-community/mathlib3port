@@ -27,6 +27,7 @@ namespace Int
 def Modeq (n a b : ℤ) :=
   a % n = b % n deriving Decidable
 
+-- mathport name: «expr ≡ [ZMOD ]»
 notation:50 a " ≡ " b " [ZMOD " n "]" => Modeq n a b
 
 variable {m n a b c d : ℤ}

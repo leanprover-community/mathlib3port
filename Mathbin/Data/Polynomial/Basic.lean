@@ -55,6 +55,7 @@ The embedding from `R` is called `C`. -/
 structure Polynomial (R : Type _) [Semiringₓ R] where of_finsupp ::
   toFinsupp : AddMonoidAlgebra R ℕ
 
+-- mathport name: «expr [X]»
 localized [Polynomial] notation:9000 R "[X]" => Polynomial R
 
 open Finsupp AddMonoidAlgebra
@@ -459,7 +460,7 @@ theorem mem_support_iff : n ∈ p.Support ↔ p.coeff n ≠ 0 := by
   rcases p with ⟨⟩
   simp [support, coeff]
 
-theorem not_mem_support_iff : n ∉ p.Support ↔ p.coeff n = 0 := by
+theorem not_mem_support_iff : (n ∉ p.Support) ↔ p.coeff n = 0 := by
   simp
 
 theorem coeff_C : coeff (c a) n = ite (n = 0) a 0 := by

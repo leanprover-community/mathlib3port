@@ -455,7 +455,7 @@ variable [HasProducts A]
 of https://stacks.math.columbia.edu/tag/00VM.
 -/
 def firstObj : A :=
-  ∏ fun f : Σ V, { f : V ⟶ U // R f } => P.obj (op f.1)
+  ∏ fun f : ΣV, { f : V ⟶ U // R f } => P.obj (op f.1)
 
 /-- The left morphism of the fork diagram given in Equation (3) of [MM92], as well as the fork diagram
 of https://stacks.math.columbia.edu/tag/00VM.
@@ -469,7 +469,7 @@ variable [HasPullbacks C]
 contains the data used to check a family of elements for a presieve is compatible.
 -/
 def secondObj : A :=
-  ∏ fun fg : (Σ V, { f : V ⟶ U // R f }) × Σ W, { g : W ⟶ U // R g } => P.obj (op (pullback fg.1.2.1 fg.2.2.1))
+  ∏ fun fg : (ΣV, { f : V ⟶ U // R f }) × ΣW, { g : W ⟶ U // R g } => P.obj (op (pullback fg.1.2.1 fg.2.2.1))
 
 /-- The map `pr₀*` of https://stacks.math.columbia.edu/tag/00VM. -/
 def firstMap : firstObj R P ⟶ secondObj R P :=

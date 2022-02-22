@@ -44,7 +44,7 @@ variable {R : Type u} [CommSemiringₓ R] {S : Type v} [CommSemiringₓ S] (f : 
   [CharP R p] [PerfectRing R p] [CharP S p] [PerfectRing S p]
 
 @[simp]
-theorem coe_frobenius_equiv : ⇑frobeniusEquiv R p = frobenius R p :=
+theorem coe_frobenius_equiv : ⇑(frobeniusEquiv R p) = frobenius R p :=
   rfl
 
 @[simp]

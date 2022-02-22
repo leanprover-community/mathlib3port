@@ -24,7 +24,7 @@ variable (F : A → Typevec.{u} n → Type u)
 /-- Dependent sum of of an `n`-ary functor. The sum can range over
 data types like `ℕ` or over `Type.{u-1}` -/
 def Sigma (v : Typevec.{u} n) : Type u :=
-  Σ α : A, F α v
+  Σα : A, F α v
 
 /-- Dependent product of of an `n`-ary functor. The sum can range over
 data types like `ℕ` or over `Type.{u-1}` -/
@@ -48,7 +48,7 @@ variable [∀ α, Mvqpf <| F α]
 
 /-- polynomial functor representation of a dependent sum -/
 protected def p : Mvpfunctor n :=
-  ⟨Σ a, (p (F a)).A, fun x => (p (F x.1)).B x.2⟩
+  ⟨Σa, (p (F a)).A, fun x => (p (F x.1)).B x.2⟩
 
 /-- abstraction function for dependent sums -/
 protected def abs ⦃α⦄ : (Sigma.p F).Obj α → Sigma F α
@@ -81,7 +81,7 @@ variable [∀ α, Mvqpf <| F α]
 
 /-- polynomial functor representation of a dependent product -/
 protected def p : Mvpfunctor n :=
-  ⟨∀ a, (p (F a)).A, fun x i => Σ a : A, (p (F a)).B (x a) i⟩
+  ⟨∀ a, (p (F a)).A, fun x i => Σa : A, (p (F a)).B (x a) i⟩
 
 /-- abstraction function for dependent products -/
 protected def abs ⦃α⦄ : (Pi.p F).Obj α → Pi F α

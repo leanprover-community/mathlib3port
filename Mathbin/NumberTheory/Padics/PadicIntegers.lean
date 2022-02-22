@@ -58,6 +58,7 @@ open_locale Classical
 def PadicInt (p : ℕ) [Fact p.Prime] :=
   { x : ℚ_[p] // ∥x∥ ≤ 1 }
 
+-- mathport name: «exprℤ_[ ]»
 notation "ℤ_[" p "]" => PadicInt p
 
 namespace PadicInt

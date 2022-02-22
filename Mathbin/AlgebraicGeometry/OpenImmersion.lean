@@ -96,6 +96,7 @@ namespace PresheafedSpace.IsOpenImmersion
 
 open PresheafedSpace
 
+-- mathport name: «expris_open_immersion»
 local notation "is_open_immersion" => PresheafedSpace.IsOpenImmersion
 
 attribute [instance] is_open_immersion.c_iso
@@ -658,6 +659,7 @@ variable [H : SheafedSpace.IsOpenImmersion f]
 
 include H
 
+-- mathport name: «exprforget»
 local notation "forget" => SheafedSpace.forgetToPresheafedSpace
 
 open CategoryTheory.Limits.WalkingCospan
@@ -1152,7 +1154,7 @@ instance : Inhabited X.OpenCover :=
 open covers to form an open cover of `X`.  -/
 @[simps J obj map]
 def OpenCover.bind (f : ∀ x : 𝒰.J, OpenCover (𝒰.obj x)) : OpenCover X where
-  J := Σ i : 𝒰.J, (f i).J
+  J := Σi : 𝒰.J, (f i).J
   obj := fun x => (f x.1).obj x.2
   map := fun x => (f x.1).map x.2 ≫ 𝒰.map x.1
   f := fun x => ⟨_, (f _).f (𝒰.Covers x).some⟩
@@ -1405,6 +1407,7 @@ def isoRestrict : X ≅ (Z.restrict H.base_open : _) :=
 
 include H
 
+-- mathport name: «exprforget»
 local notation "forget" => Scheme.forgetToLocallyRingedSpace
 
 instance mono : Mono f :=

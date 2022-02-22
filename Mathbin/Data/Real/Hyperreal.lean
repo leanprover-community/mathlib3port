@@ -21,6 +21,7 @@ def Hyperreal : Type :=
 
 namespace Hyperreal
 
+-- mathport name: «exprℝ*»
 notation "ℝ*" => Hyperreal
 
 noncomputable instance : CoeTₓ ℝ ℝ* :=
@@ -115,8 +116,10 @@ noncomputable def epsilon : ℝ* :=
 noncomputable def omega : ℝ* :=
   ofSeq coe
 
+-- mathport name: «exprε»
 localized [Hyperreal] notation "ε" => Hyperreal.epsilon
 
+-- mathport name: «exprω»
 localized [Hyperreal] notation "ω" => Hyperreal.omega
 
 theorem epsilon_eq_inv_omega : ε = ω⁻¹ :=

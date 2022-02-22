@@ -78,11 +78,11 @@ def snd : R × S →+* S :=
 variable {R S}
 
 @[simp]
-theorem coe_fst : ⇑fst R S = Prod.fst :=
+theorem coe_fst : ⇑(fst R S) = Prod.fst :=
   rfl
 
 @[simp]
-theorem coe_snd : ⇑snd R S = Prod.snd :=
+theorem coe_snd : ⇑(snd R S) = Prod.snd :=
   rfl
 
 section Prod
@@ -127,7 +127,7 @@ theorem prod_map_def : prodMap f g = (f.comp (fst R S)).Prod (g.comp (snd R S)) 
   rfl
 
 @[simp]
-theorem coe_prod_map : ⇑prodMap f g = Prod.map f g :=
+theorem coe_prod_map : ⇑(prodMap f g) = Prod.map f g :=
   rfl
 
 theorem prod_comp_prod_map (f : T →* R) (g : T →* S) (f' : R →* R') (g' : S →* S') :

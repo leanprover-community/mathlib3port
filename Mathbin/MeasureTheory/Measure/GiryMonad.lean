@@ -108,8 +108,8 @@ theorem lintegral_join {m : Measure (Measure α)} {f : α → ℝ≥0∞} (hf : 
   rw [lintegral_eq_supr_eapprox_lintegral hf]
   have :
     ∀ n x,
-      join m (⇑simple_func.eapprox (fun a : α => f a) n ⁻¹' {x}) =
-        ∫⁻ μ, μ (⇑simple_func.eapprox (fun a : α => f a) n ⁻¹' {x}) ∂m :=
+      join m (⇑(simple_func.eapprox (fun a : α => f a) n) ⁻¹' {x}) =
+        ∫⁻ μ, μ (⇑(simple_func.eapprox (fun a : α => f a) n) ⁻¹' {x}) ∂m :=
     fun n x => join_apply (simple_func.measurable_set_preimage _ _)
   simp only [simple_func.lintegral, this]
   trans
@@ -139,7 +139,7 @@ theorem lintegral_join {m : Measure (Measure α)} {f : α → ℝ≥0∞} (hf : 
     apply lintegral_const_mul
     exact hf _ _
   specialize this fun n => simple_func.range (simple_func.eapprox f n)
-  specialize this fun n r μ => μ (⇑simple_func.eapprox (fun a : α => f a) n ⁻¹' {r})
+  specialize this fun n r μ => μ (⇑(simple_func.eapprox (fun a : α => f a) n) ⁻¹' {r})
   refine' this _ _ <;> clear this
   · intro n r
     apply measurable_coe

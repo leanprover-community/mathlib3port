@@ -184,7 +184,7 @@ theorem map_esymm (n : ℕ) (f : R →+* S) : map f (esymm σ R n) = esymm σ S 
   simp
 
 theorem rename_esymm (n : ℕ) (e : σ ≃ τ) : rename e (esymm σ R n) = esymm τ R n := by
-  rw [esymm_eq_sum_subtype, esymm_eq_sum_subtype, (rename (⇑e)).map_sum]
+  rw [esymm_eq_sum_subtype, esymm_eq_sum_subtype, (rename ⇑e).map_sum]
   let e' : { s : Finset σ // s.card = n } ≃ { s : Finset τ // s.card = n } :=
     Equivₓ.subtypeEquiv (Equivₓ.finsetCongr e)
       (by

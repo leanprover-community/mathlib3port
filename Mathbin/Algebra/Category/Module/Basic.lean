@@ -179,6 +179,7 @@ def ModuleCat.asHom [AddCommGroupₓ X₁] [Module R X₁] [AddCommGroupₓ X₂
     (X₁ →ₗ[R] X₂) → (ModuleCat.of R X₁ ⟶ ModuleCat.of R X₂) :=
   id
 
+-- mathport name: «expr↟ »
 localized [ModuleCat] notation "↟" f:1024 => ModuleCat.asHom f
 
 /-- Reinterpreting a linear map in the category of `R`-modules. -/
@@ -186,6 +187,7 @@ def ModuleCat.asHomRight [AddCommGroupₓ X₁] [Module R X₁] {X₂ : ModuleCa
     (X₁ →ₗ[R] X₂) → (ModuleCat.of R X₁ ⟶ X₂) :=
   id
 
+-- mathport name: «expr↾ »
 localized [ModuleCat] notation "↾" f:1024 => ModuleCat.asHomRight f
 
 /-- Reinterpreting a linear map in the category of `R`-modules. -/
@@ -193,6 +195,7 @@ def ModuleCat.asHomLeft {X₁ : ModuleCat.{v} R} [AddCommGroupₓ X₂] [Module 
     (X₁ →ₗ[R] X₂) → (X₁ ⟶ ModuleCat.of R X₂) :=
   id
 
+-- mathport name: «expr↿ »
 localized [ModuleCat] notation "↿" f:1024 => ModuleCat.asHomLeft f
 
 /-- Build an isomorphism in the category `Module R` from a `linear_equiv` between `module`s. -/

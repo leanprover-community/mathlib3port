@@ -23,6 +23,7 @@ namespace Vector
 
 variable {α : Type _}
 
+-- mathport name: «expr ::ᵥ »
 infixr:67 "::ᵥ" => Vector.cons
 
 attribute [simp] head_cons tail_cons

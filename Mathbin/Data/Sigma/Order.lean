@@ -49,17 +49,17 @@ variable {ι : Type _} {α : ι → Type _}
 
 
 /-- Disjoint sum of orders. `⟨i, a⟩ ≤ ⟨j, b⟩` iff `i = j` and `a ≤ b`. -/
-inductive Le [∀ i, LE (α i)] : ∀ a b : Σ i, α i, Prop
+inductive Le [∀ i, LE (α i)] : ∀ a b : Σi, α i, Prop
   | fiber (i : ι) (a b : α i) : a ≤ b → le ⟨i, a⟩ ⟨i, b⟩
 
 /-- Disjoint sum of orders. `⟨i, a⟩ < ⟨j, b⟩` iff `i = j` and `a < b`. -/
-inductive Lt [∀ i, LT (α i)] : ∀ a b : Σ i, α i, Prop
+inductive Lt [∀ i, LT (α i)] : ∀ a b : Σi, α i, Prop
   | fiber (i : ι) (a b : α i) : a < b → lt ⟨i, a⟩ ⟨i, b⟩
 
-instance [∀ i, LE (α i)] : LE (Σ i, α i) :=
+instance [∀ i, LE (α i)] : LE (Σi, α i) :=
   ⟨Le⟩
 
-instance [∀ i, LT (α i)] : LT (Σ i, α i) :=
+instance [∀ i, LT (α i)] : LT (Σi, α i) :=
   ⟨Lt⟩
 
 @[simp]
@@ -70,7 +70,7 @@ theorem mk_le_mk_iff [∀ i, LE (α i)] {i : ι} {a b : α i} : (⟨i, a⟩ : Si
 theorem mk_lt_mk_iff [∀ i, LT (α i)] {i : ι} {a b : α i} : (⟨i, a⟩ : Sigma α) < ⟨i, b⟩ ↔ a < b :=
   ⟨fun ⟨_, _, _, h⟩ => h, Lt.fiber _ _ _⟩
 
-theorem le_def [∀ i, LE (α i)] {a b : Σ i, α i} : a ≤ b ↔ ∃ h : a.1 = b.1, h.rec a.2 ≤ b.2 := by
+theorem le_def [∀ i, LE (α i)] {a b : Σi, α i} : a ≤ b ↔ ∃ h : a.1 = b.1, h.rec a.2 ≤ b.2 := by
   constructor
   · rintro ⟨i, a, b, h⟩
     exact ⟨rfl, h⟩
@@ -81,7 +81,7 @@ theorem le_def [∀ i, LE (α i)] {a b : Σ i, α i} : a ≤ b ↔ ∃ h : a.1 =
     exact le.fiber _ _ _ h
     
 
-theorem lt_def [∀ i, LT (α i)] {a b : Σ i, α i} : a < b ↔ ∃ h : a.1 = b.1, h.rec a.2 < b.2 := by
+theorem lt_def [∀ i, LT (α i)] {a b : Σi, α i} : a < b ↔ ∃ h : a.1 = b.1, h.rec a.2 < b.2 := by
   constructor
   · rintro ⟨i, a, b, h⟩
     exact ⟨rfl, h⟩
@@ -92,7 +92,7 @@ theorem lt_def [∀ i, LT (α i)] {a b : Σ i, α i} : a < b ↔ ∃ h : a.1 = b
     exact lt.fiber _ _ _ h
     
 
-instance [∀ i, Preorderₓ (α i)] : Preorderₓ (Σ i, α i) :=
+instance [∀ i, Preorderₓ (α i)] : Preorderₓ (Σi, α i) :=
   { Sigma.hasLe, Sigma.hasLt with le_refl := fun ⟨i, a⟩ => Le.fiber i a a le_rfl,
     le_trans := by
       rintro _ _ _ ⟨i, a, b, hab⟩ ⟨_, _, c, hbc⟩
@@ -107,7 +107,7 @@ instance [∀ i, Preorderₓ (α i)] : Preorderₓ (Σ i, α i) :=
         exact mk_lt_mk_iff.2 (hab.lt_of_not_le h)
          }
 
-instance [∀ i, PartialOrderₓ (α i)] : PartialOrderₓ (Σ i, α i) :=
+instance [∀ i, PartialOrderₓ (α i)] : PartialOrderₓ (Σi, α i) :=
   { Sigma.preorder with
     le_antisymm := by
       rintro _ _ ⟨i, a, b, hab⟩ ⟨_, _, _, hba⟩
@@ -118,6 +118,7 @@ instance [∀ i, PartialOrderₓ (α i)] : PartialOrderₓ (Σ i, α i) :=
 
 namespace Lex
 
+-- mathport name: «exprΣₗ , »
 notation3 "Σₗ " (...) ", " r:(scoped p => Lex Sigma p) => r
 
 /-- The lexicographical `≤` on a sigma type. -/

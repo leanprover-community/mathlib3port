@@ -29,6 +29,7 @@ of the ring of integers of a global field is finite.
 -/
 
 
+-- mathport name: «expr ≺ »
 local infixl:50 " ≺ " => EuclideanDomain.R
 
 namespace AbsoluteValue

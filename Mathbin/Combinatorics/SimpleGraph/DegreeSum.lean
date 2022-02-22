@@ -56,7 +56,7 @@ structure Dart where
   deriving DecidableEq
 
 instance Dart.fintype [Fintype V] [DecidableRel G.Adj] : Fintype G.Dart :=
-  Fintype.ofEquiv (Σ v, G.NeighborSet v)
+  Fintype.ofEquiv (Σv, G.NeighborSet v)
     { toFun := fun s => ⟨s.fst, s.snd, s.snd.property⟩, invFun := fun d => ⟨d.fst, d.snd, d.is_adj⟩,
       left_inv := fun s => by
         ext <;> simp ,

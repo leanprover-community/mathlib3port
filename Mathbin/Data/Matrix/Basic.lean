@@ -95,12 +95,14 @@ theorem map_map {M : Matrix m n α} {β γ : Type _} {f : α → β} {g : β →
 def transposeₓ (M : Matrix m n α) : Matrix n m α
   | x, y => M y x
 
+-- mathport name: «expr ᵀ»
 localized [Matrix] postfix:1024 "ᵀ" => Matrix.transposeₓ
 
 /-- The conjugate transpose of a matrix defined in term of `star`. -/
 def conjTranspose [HasStar α] (M : Matrix m n α) : Matrix n m α :=
   M.transpose.map star
 
+-- mathport name: «expr ᴴ»
 localized [Matrix] postfix:1024 "ᴴ" => Matrix.conjTranspose
 
 /-- `matrix.col u` is the column matrix whose entries are given by `u`. -/
@@ -374,6 +376,7 @@ variable [Fintype m]
 def dotProduct [Mul α] [AddCommMonoidₓ α] (v w : m → α) : α :=
   ∑ i, v i * w i
 
+-- mathport name: «expr ⬝ᵥ »
 /- The precedence of 72 comes immediately after ` • ` for `has_scalar.smul`,
    so that `r₁ • a ⬝ᵥ r₂ • b` is parsed as `(r₁ • a) ⬝ᵥ (r₂ • b)` here. -/
 localized [Matrix] infixl:72 " ⬝ᵥ " => Matrix.dotProduct
@@ -521,6 +524,7 @@ This is currently only defined when `m` is finite. -/
 protected def mul [Fintype m] [Mul α] [AddCommMonoidₓ α] (M : Matrix l m α) (N : Matrix m n α) : Matrix l n α :=
   fun i k => (fun j => M i j) ⬝ᵥ fun j => N j k
 
+-- mathport name: «expr ⬝ »
 localized [Matrix] infixl:75 " ⬝ " => Matrix.mul
 
 theorem mul_apply [Fintype m] [Mul α] [AddCommMonoidₓ α] {M : Matrix l m α} {N : Matrix m n α} {i k} :

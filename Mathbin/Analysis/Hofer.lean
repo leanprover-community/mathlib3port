@@ -23,6 +23,7 @@ open_locale Classical TopologicalSpace BigOperators
 
 open Filter Finset
 
+-- mathport name: «exprd»
 local notation "d" => dist
 
 theorem hofer {X : Type _} [MetricSpace X] [CompleteSpace X] (x : X) (ε : ℝ) (ε_pos : 0 < ε) {ϕ : X → ℝ}

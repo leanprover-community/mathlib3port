@@ -173,7 +173,7 @@ theorem UniformContinuousOn.tendsto_uniformly [UniformSpace α] [UniformSpace γ
     {F : α → β → γ} (hF : UniformContinuousOn (↿F) (U ×ˢ (Univ : Set β))) : TendstoUniformly F (F x) (𝓝 x) := by
   let φ := fun q : α × β => ((x, q.2), q)
   rw [tendsto_uniformly_iff_tendsto,
-    show (fun q : α × β => (F x q.2, F q.1 q.2)) = Prod.map (↿F) (↿F) ∘ φ by
+    show (fun q : α × β => (F x q.2, F q.1 q.2)) = Prod.map (↿F) ↿F ∘ φ by
       ext <;> simpa]
   apply hF.comp (tendsto_inf.mpr ⟨_, _⟩)
   · rw [uniformity_prod, tendsto_inf, tendsto_comap_iff, tendsto_comap_iff,

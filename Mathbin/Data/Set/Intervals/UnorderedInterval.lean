@@ -232,6 +232,7 @@ theorem bdd_below_bdd_above_iff_subset_interval (s : Set α) :
 /-- The open-closed interval with unordered bounds. -/
 def IntervalOc : α → α → Set α := fun a b => Ioc (min a b) (max a b)
 
+-- mathport name: «exprΙ»
 -- Below is a capital iota
 localized [Interval] notation "Ι" => Set.IntervalOc
 

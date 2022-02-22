@@ -28,6 +28,7 @@ inductive Duplicate (x : α) : List α → Prop
   | cons_mem {l : List α} : x ∈ l → duplicate (x :: l)
   | cons_duplicate {y : α} {l : List α} : duplicate l → duplicate (y :: l)
 
+-- mathport name: «expr ∈+ »
 local infixl:50 " ∈+ " => List.Duplicate
 
 variable {l : List α} {x : α}

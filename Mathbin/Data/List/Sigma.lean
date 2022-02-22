@@ -58,10 +58,10 @@ theorem exists_of_mem_keys {a} {l : List (Sigma β)} (h : a ∈ l.keys) : ∃ b 
 theorem mem_keys {a} {l : List (Sigma β)} : a ∈ l.keys ↔ ∃ b : β a, Sigma.mk a b ∈ l :=
   ⟨exists_of_mem_keys, fun ⟨b, h⟩ => mem_keys_of_mem h⟩
 
-theorem not_mem_keys {a} {l : List (Sigma β)} : a ∉ l.keys ↔ ∀ b : β a, Sigma.mk a b ∉ l :=
+theorem not_mem_keys {a} {l : List (Sigma β)} : (a ∉ l.keys) ↔ ∀ b : β a, Sigma.mk a b ∉ l :=
   (not_iff_not_of_iff mem_keys).trans not_exists
 
-theorem not_eq_key {a} {l : List (Sigma β)} : a ∉ l.keys ↔ ∀ s : Sigma β, s ∈ l → a ≠ s.1 :=
+theorem not_eq_key {a} {l : List (Sigma β)} : (a ∉ l.keys) ↔ ∀ s : Sigma β, s ∈ l → a ≠ s.1 :=
   Iff.intro
     (fun h₁ s h₂ e =>
       absurd (mem_keys_of_mem h₂)
@@ -89,7 +89,7 @@ theorem nodupkeys_nil : @Nodupkeys α β [] :=
   pairwise.nil
 
 @[simp]
-theorem nodupkeys_cons {s : Sigma β} {l : List (Sigma β)} : Nodupkeys (s :: l) ↔ s.1 ∉ l.keys ∧ Nodupkeys l := by
+theorem nodupkeys_cons {s : Sigma β} {l : List (Sigma β)} : Nodupkeys (s :: l) ↔ (s.1 ∉ l.keys) ∧ Nodupkeys l := by
   simp [keys, nodupkeys]
 
 theorem Nodupkeys.eq_of_fst_eq {l : List (Sigma β)} (nd : Nodupkeys l) {s s' : Sigma β} (h : s ∈ l) (h' : s' ∈ l) :
@@ -455,7 +455,7 @@ theorem mem_keys_of_mem_keys_kerase {a₁ a₂} {l : List (Sigma β)} : a₁ ∈
   @kerase_keys_subset _ _ _ _ _ _
 
 theorem exists_of_kerase {a : α} {l : List (Sigma β)} (h : a ∈ l.keys) :
-    ∃ (b : β a)(l₁ l₂ : List (Sigma β)), a ∉ l₁.keys ∧ l = l₁ ++ ⟨a, b⟩ :: l₂ ∧ kerase a l = l₁ ++ l₂ := by
+    ∃ (b : β a)(l₁ l₂ : List (Sigma β)), (a ∉ l₁.keys) ∧ l = l₁ ++ ⟨a, b⟩ :: l₂ ∧ kerase a l = l₁ ++ l₂ := by
   induction l
   case list.nil =>
     cases h
@@ -567,7 +567,7 @@ theorem kerase_append_left {a} : ∀ {l₁ l₂ : List (Sigma β)}, a ∈ l₁.k
     else by
       simp at h₁ <;> cases h₁ <;> [exact absurd h₁ h₂, simp [h₂, kerase_append_left h₁]]
 
-theorem kerase_append_right {a} : ∀ {l₁ l₂ : List (Sigma β)}, a ∉ l₁.keys → kerase a (l₁ ++ l₂) = l₁ ++ kerase a l₂
+theorem kerase_append_right {a} : ∀ {l₁ l₂ : List (Sigma β)}, (a ∉ l₁.keys) → kerase a (l₁ ++ l₂) = l₁ ++ kerase a l₂
   | [], _, h => rfl
   | _ :: l₁, l₂, h => by
     simp [not_or_distrib] at h <;> simp [h.1, kerase_append_right h.2]
@@ -802,7 +802,7 @@ theorem lookup_kunion_right {a} {l₁ l₂ : List (Sigma β)} (h : a ∉ l₁.ke
 
 @[simp]
 theorem mem_lookup_kunion {a} {b : β a} {l₁ l₂ : List (Sigma β)} :
-    b ∈ lookupₓ a (kunion l₁ l₂) ↔ b ∈ lookupₓ a l₁ ∨ a ∉ l₁.keys ∧ b ∈ lookupₓ a l₂ := by
+    b ∈ lookupₓ a (kunion l₁ l₂) ↔ b ∈ lookupₓ a l₁ ∨ (a ∉ l₁.keys) ∧ b ∈ lookupₓ a l₂ := by
   induction l₁ generalizing l₂
   case list.nil =>
     simp

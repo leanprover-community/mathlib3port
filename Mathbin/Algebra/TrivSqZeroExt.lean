@@ -42,6 +42,7 @@ It is a square-zero extension because `M^2 = 0`.
 def TrivSqZeroExt (R : Type u) (M : Type v) :=
   R × M
 
+-- mathport name: «exprtsze»
 local notation "tsze" => TrivSqZeroExt
 
 namespace TrivSqZeroExt
@@ -435,7 +436,7 @@ instance algebra' : Algebra S (tsze R M) :=
 instance : Algebra R (tsze R M) :=
   TrivSqZeroExt.algebra' _ _ _
 
-theorem algebra_map_eq_inl : ⇑algebraMap R (tsze R M) = inl :=
+theorem algebra_map_eq_inl : ⇑(algebraMap R (tsze R M)) = inl :=
   rfl
 
 theorem algebra_map_eq_inl_hom : algebraMap R (tsze R M) = inlHom R M :=

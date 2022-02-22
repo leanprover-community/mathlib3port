@@ -53,12 +53,16 @@ def LeftCoset [Mul α] (a : α) (s : Set α) : Set α :=
 def RightCoset [Mul α] (s : Set α) (a : α) : Set α :=
   (fun x => x * a) '' s
 
+-- mathport name: «expr *l »
 localized [Coset] infixl:70 " *l " => LeftCoset
 
+-- mathport name: «expr +l »
 localized [Coset] infixl:70 " +l " => LeftAddCoset
 
+-- mathport name: «expr *r »
 localized [Coset] infixl:70 " *r " => RightCoset
 
+-- mathport name: «expr +r »
 localized [Coset] infixl:70 " +r " => RightAddCoset
 
 section CosetMul
@@ -407,15 +411,15 @@ def rightCosetEquivSubgroup (g : α) : RightCoset (↑s) g ≃ s :=
 @[to_additive "A (non-canonical) bijection between an add_group `α` and the product `(α/s) × s`"]
 noncomputable def groupEquivQuotientTimesSubgroup : α ≃ (α ⧸ s) × s :=
   calc
-    α ≃ Σ L : α ⧸ s, { x : α // (x : α ⧸ s) = L } := (Equivₓ.sigmaPreimageEquiv QuotientGroup.mk).symm
-    _ ≃ Σ L : α ⧸ s, LeftCoset (Quotientₓ.out' L) s :=
+    α ≃ ΣL : α ⧸ s, { x : α // (x : α ⧸ s) = L } := (Equivₓ.sigmaPreimageEquiv QuotientGroup.mk).symm
+    _ ≃ ΣL : α ⧸ s, LeftCoset (Quotientₓ.out' L) s :=
       Equivₓ.sigmaCongrRight fun L => by
         rw [← eq_class_eq_left_coset]
         show
           (_root_.subtype fun x : α => Quotientₓ.mk' x = L) ≃
             _root_.subtype fun x : α => Quotientₓ.mk' x = Quotientₓ.mk' _
         simp [-Quotientₓ.eq']
-    _ ≃ Σ L : α ⧸ s, s := Equivₓ.sigmaCongrRight fun L => leftCosetEquivSubgroup _
+    _ ≃ ΣL : α ⧸ s, s := Equivₓ.sigmaCongrRight fun L => leftCosetEquivSubgroup _
     _ ≃ (α ⧸ s) × s := Equivₓ.sigmaEquivProd _ _
     
 

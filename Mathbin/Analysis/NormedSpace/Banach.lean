@@ -149,7 +149,7 @@ theorem exists_approx_preimage_norm_le (surj : Surjective f) :
           _ = ∥d⁻¹ • (f x - d • y)∥ := by
             rw [mul_smul, smul_sub]
           _ = ∥d∥⁻¹ * ∥f x - d • y∥ := by
-            rw [norm_smul, NormedField.norm_inv]
+            rw [norm_smul, norm_inv]
           _ ≤ ∥d∥⁻¹ * (2 * δ) := by
             apply mul_le_mul_of_nonneg_left I
             rw [inv_nonneg]
@@ -167,7 +167,7 @@ theorem exists_approx_preimage_norm_le (surj : Surjective f) :
       have K : ∥d⁻¹ • x∥ ≤ (ε / 2)⁻¹ * ∥c∥ * 2 * ↑n * ∥y∥ :=
         calc
           ∥d⁻¹ • x∥ = ∥d∥⁻¹ * ∥x₁ - x₂∥ := by
-            rw [norm_smul, NormedField.norm_inv]
+            rw [norm_smul, norm_inv]
           _ ≤ (ε / 2)⁻¹ * ∥c∥ * ∥y∥ * (n + n) := by
             refine' mul_le_mul dinv _ (norm_nonneg _) _
             · exact le_transₓ (norm_sub_le _ _) (add_le_add (le_of_ltₓ hx₁) (le_of_ltₓ hx₂))
@@ -353,7 +353,7 @@ def toContinuousLinearEquivOfContinuous (e : E ≃ₗ[𝕜] F) (h : Continuous e
 
 @[simp]
 theorem coe_fn_to_continuous_linear_equiv_of_continuous (e : E ≃ₗ[𝕜] F) (h : Continuous e) :
-    ⇑e.toContinuousLinearEquivOfContinuous h = e :=
+    ⇑(e.toContinuousLinearEquivOfContinuous h) = e :=
   rfl
 
 @[simp]
@@ -375,7 +375,8 @@ noncomputable def ofBijective (f : E →L[𝕜] F) (hinj : f.ker = ⊥) (hsurj :
     f.Continuous
 
 @[simp]
-theorem coe_fn_of_bijective (f : E →L[𝕜] F) (hinj : f.ker = ⊥) (hsurj : f.range = ⊤) : ⇑ofBijective f hinj hsurj = f :=
+theorem coe_fn_of_bijective (f : E →L[𝕜] F) (hinj : f.ker = ⊥) (hsurj : f.range = ⊤) :
+    ⇑(ofBijective f hinj hsurj) = f :=
   rfl
 
 theorem coe_of_bijective (f : E →L[𝕜] F) (hinj : f.ker = ⊥) (hsurj : f.range = ⊤) : ↑(ofBijective f hinj hsurj) = f :=

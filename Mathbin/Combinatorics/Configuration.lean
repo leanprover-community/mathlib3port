@@ -164,9 +164,9 @@ theorem sum_line_count_eq_sum_point_count [Fintype P] [Fintype L] :
   classical
   simp only [line_count, point_count, Nat.card_eq_fintype_card, ← Fintype.card_sigma]
   apply Fintype.card_congr
-  calc (Σ p, { l : L // p ∈ l }) ≃ { x : P × L // x.1 ∈ x.2 } :=
+  calc (Σp, { l : L // p ∈ l }) ≃ { x : P × L // x.1 ∈ x.2 } :=
       (Equivₓ.subtypeProdEquivSigmaSubtype (· ∈ ·)).symm _ ≃ { x : L × P // x.2 ∈ x.1 } :=
-      (Equivₓ.prodComm P L).subtypeEquiv fun x => Iff.rfl _ ≃ Σ l, { p // p ∈ l } :=
+      (Equivₓ.prodComm P L).subtypeEquiv fun x => Iff.rfl _ ≃ Σl, { p // p ∈ l } :=
       Equivₓ.subtypeProdEquivSigmaSubtype fun p : P => p ∈ l
 
 variable {P L}
@@ -329,7 +329,8 @@ class ProjectivePlane extends Nondegenerate P L : Type u where
   mkLine : ∀ {p₁ p₂ : P} h : p₁ ≠ p₂, L
   mk_line_ax : ∀ {p₁ p₂ : P} h : p₁ ≠ p₂, p₁ ∈ mk_line h ∧ p₂ ∈ mk_line h
   exists_config :
-    ∃ (p₁ p₂ p₃ : P)(l₁ l₂ l₃ : L), p₁ ∉ l₂ ∧ p₁ ∉ l₃ ∧ p₂ ∉ l₁ ∧ p₂ ∈ l₂ ∧ p₂ ∈ l₃ ∧ p₃ ∉ l₁ ∧ p₃ ∈ l₂ ∧ p₃ ∉ l₃
+    ∃ (p₁ p₂ p₃ : P)(l₁ l₂ l₃ : L),
+      (p₁ ∉ l₂) ∧ (p₁ ∉ l₃) ∧ (p₂ ∉ l₁) ∧ p₂ ∈ l₂ ∧ p₂ ∈ l₃ ∧ (p₃ ∉ l₁) ∧ p₃ ∈ l₂ ∧ p₃ ∉ l₃
 
 namespace ProjectivePlane
 
@@ -432,7 +433,7 @@ variable (P) (L)
 
 theorem card_points [ProjectivePlane P L] : Fintype.card P = order P L ^ 2 + order P L + 1 := by
   let p : P := Classical.some (@exists_config P L _ _)
-  let ϕ : { q // q ≠ p } ≃ Σ l : { l : L // p ∈ l }, { q // q ∈ l.1 ∧ q ≠ p } :=
+  let ϕ : { q // q ≠ p } ≃ Σl : { l : L // p ∈ l }, { q // q ∈ l.1 ∧ q ≠ p } :=
     { toFun := fun q => ⟨⟨mk_line q.2, (mk_line_ax q.2).2⟩, q, (mk_line_ax q.2).1, q.2⟩,
       invFun := fun lq => ⟨lq.2, lq.2.2.2⟩, left_inv := fun q => Subtype.ext rfl,
       right_inv := fun lq =>

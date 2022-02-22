@@ -212,6 +212,7 @@ section Bisim
 
 variable (R : Streamₓ α → Streamₓ α → Prop)
 
+-- mathport name: «expr ~ »
 local infixl:50 " ~ " => R
 
 def IsBisimulation :=

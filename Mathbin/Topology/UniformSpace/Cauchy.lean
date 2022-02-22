@@ -563,7 +563,7 @@ def setSeqAux (n : ℕ) : { s : Set α // ∃ _ : s ∈ f, s ×ˢ s ⊆ U n } :=
 /-- Given a Cauchy filter `f` and a sequence `U` of entourages, `set_seq` provides
 an antitone sequence of sets `s n ∈ f` such that `s n ×ˢ s n ⊆ U`. -/
 def SetSeq (n : ℕ) : Set α :=
-  ⋂ m ∈ Iic n, (setSeqAux hf U_mem m).val
+  ⋂ m ∈ Set.Iic n, (setSeqAux hf U_mem m).val
 
 theorem set_seq_mem (n : ℕ) : SetSeq hf U_mem n ∈ f :=
   (bInter_mem (finite_le_nat n)).2 fun m _ => (setSeqAux hf U_mem m).2.fst

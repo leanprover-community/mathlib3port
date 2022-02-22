@@ -81,8 +81,10 @@ def Ennreal :=
   WithTop ℝ≥0 deriving Zero, AddCommMonoidₓ, CanonicallyOrderedCommSemiring, CompleteLinearOrder, DenselyOrdered,
   Nontrivial, CanonicallyLinearOrderedAddMonoid, Sub, HasOrderedSub, LinearOrderedAddCommMonoidWithTop
 
+-- mathport name: «exprℝ≥0∞»
 localized [Ennreal] notation "ℝ≥0∞" => Ennreal
 
+-- mathport name: «expr∞»
 localized [Ennreal] notation "∞" => (⊤ : Ennreal)
 
 -- TODO: why are the two covariant instances necessary? why aren't they inferred?

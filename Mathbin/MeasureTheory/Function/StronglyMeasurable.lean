@@ -56,6 +56,7 @@ open_locale Ennreal TopologicalSpace MeasureTheory
 
 namespace MeasureTheory
 
+-- mathport name: «expr →ₛ »
 local infixr:25 " →ₛ " => SimpleFunc
 
 section Definitions

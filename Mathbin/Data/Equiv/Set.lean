@@ -139,7 +139,7 @@ theorem prod_assoc_symm_image {α β γ} {s : Set α} {t : Set β} {u : Set γ} 
   simpa only [Equivₓ.image_eq_preimage] using prod_assoc_preimage
 
 /-- A set `s` in `α × β` is equivalent to the sigma-type `Σ x, {y | (x, y) ∈ s}`. -/
-def setProdEquivSigma {α β : Type _} (s : Set (α × β)) : s ≃ Σ x : α, { y | (x, y) ∈ s } where
+def setProdEquivSigma {α β : Type _} (s : Set (α × β)) : s ≃ Σx : α, { y | (x, y) ∈ s } where
   toFun := fun x =>
     ⟨x.1.1, x.1.2, by
       simp ⟩
@@ -503,7 +503,7 @@ abbrev ofLeftInverse' {α β : Sort _} (f : α → β) (f_inv : β → α) (hf :
 /-- If `f : α → β` is an injective function, then domain `α` is equivalent to the range of `f`. -/
 @[simps apply]
 noncomputable def ofInjective {α β} (f : α → β) (hf : Injective f) : α ≃ Set.Range f :=
-  Equivₓ.ofLeftInverse f (fun h => Function.invFun f) fun h => Function.left_inverse_inv_funₓ hf
+  Equivₓ.ofLeftInverse f (fun h => Function.invFun f) fun h => Function.left_inverse_inv_fun hf
 
 theorem apply_of_injective_symm {α β} {f : α → β} (hf : Injective f) (b : Set.Range f) :
     f ((ofInjective f hf).symm b) = b :=

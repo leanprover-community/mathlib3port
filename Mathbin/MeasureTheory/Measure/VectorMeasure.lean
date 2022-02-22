@@ -823,6 +823,7 @@ theorem le_iff' : v ≤ w ↔ ∀ i, v i ≤ w i := by
 
 end
 
+-- mathport name: «expr ≤[ ] »
 localized [MeasureTheory]
   notation:50 v " ≤[" i:50 "] " w:50 =>
     MeasureTheory.VectorMeasure.restrict v i ≤ MeasureTheory.VectorMeasure.restrict w i
@@ -1046,6 +1047,7 @@ include m
 def AbsolutelyContinuous (v : VectorMeasure α M) (w : VectorMeasure α N) :=
   ∀ ⦃s : Set α⦄, w s = 0 → v s = 0
 
+-- mathport name: «expr ≪ᵥ »
 localized [MeasureTheory] infixl:50 " ≪ᵥ " => MeasureTheory.VectorMeasure.AbsolutelyContinuous
 
 open_locale MeasureTheory
@@ -1134,6 +1136,7 @@ to use. This is equivalent to the definition which requires measurability. To pr
 def MutuallySingular (v : VectorMeasure α M) (w : VectorMeasure α N) : Prop :=
   ∃ s : Set α, MeasurableSet s ∧ (∀ t _ : t ⊆ s, v t = 0) ∧ ∀ t _ : t ⊆ sᶜ, w t = 0
 
+-- mathport name: «expr ⊥ᵥ »
 localized [MeasureTheory] infixl:60 " ⊥ᵥ " => MeasureTheory.VectorMeasure.MutuallySingular
 
 namespace MutuallySingular

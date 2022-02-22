@@ -347,6 +347,13 @@ theorem has_basis_self {l : Filter α} {P : Set α → Prop} :
   simp only [has_basis_iff, exists_prop, id, and_assoc]
   exact forall_congrₓ fun s => ⟨fun h => h.1, fun h => ⟨h, fun ⟨t, hl, hP, hts⟩ => mem_of_superset hl hts⟩⟩
 
+theorem HasBasis.comp_of_surjective (h : l.HasBasis p s) {g : ι' → ι} (hg : Function.Surjective g) :
+    l.HasBasis (p ∘ g) (s ∘ g) :=
+  ⟨fun t => h.mem_iff.trans hg.exists⟩
+
+theorem HasBasis.comp_equiv (h : l.HasBasis p s) (e : ι' ≃ ι) : l.HasBasis (p ∘ e) (s ∘ e) :=
+  h.comp_of_surjective e.Surjective
+
 /-- If `{s i | p i}` is a basis of a filter `l` and each `s i` includes `s j` such that
 `p j ∧ q j`, then `{s j | p j ∧ q j}` is a basis of `l`. -/
 theorem HasBasis.restrict (h : l.HasBasis p s) {q : ι → Prop} (hq : ∀ i, p i → ∃ j, p j ∧ q j ∧ s j ⊆ s i) :
@@ -495,7 +502,7 @@ theorem mem_iff_inf_principal_compl {f : Filter α} {s : Set α} : s ∈ f ↔ f
       simpa [empty_not_nonempty] using h s hs, fun hs t ht =>
       inter_compl_nonempty_iff.2 fun hts => hs <| mem_of_superset ht hts⟩
 
-theorem not_mem_iff_inf_principal_compl {f : Filter α} {s : Set α} : s ∉ f ↔ NeBot (f⊓𝓟 (sᶜ)) :=
+theorem not_mem_iff_inf_principal_compl {f : Filter α} {s : Set α} : (s ∉ f) ↔ NeBot (f⊓𝓟 (sᶜ)) :=
   (not_congr mem_iff_inf_principal_compl).trans ne_bot_iff.symm
 
 @[simp]
@@ -681,6 +688,14 @@ theorem HasBasis.prod' {la : Filter α} {lb : Filter β} {ι : Type _} {p : ι �
     
 
 end TwoTypes
+
+open Equivₓ
+
+theorem prod_assoc (f : Filter α) (g : Filter β) (h : Filter γ) : map (prodAssoc α β γ) (f ×ᶠ g ×ᶠ h) = f ×ᶠ (g ×ᶠ h) :=
+  by
+  apply ((((basis_sets f).Prod <| basis_sets g).Prod <| basis_sets h).map _).eq_of_same_basis
+  simpa only [prod_assoc_image, Function.comp, and_assoc] using
+    ((basis_sets f).Prod <| (basis_sets g).Prod <| basis_sets h).comp_equiv (prod_assoc _ _ _)
 
 end Filter
 

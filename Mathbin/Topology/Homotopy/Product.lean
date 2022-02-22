@@ -137,6 +137,7 @@ namespace Path.Homotopic
 
 attribute [local instance] Path.Homotopic.setoid
 
+-- mathport name: «expr ⬝ »
 local infixl:70 " ⬝ " => Quotient.comp
 
 section Pi
@@ -214,7 +215,7 @@ def prod (q₁ : Path.Homotopic.Quotient a₁ a₂) (q₂ : Path.Homotopic.Quoti
 
 variable (p₁ p₁' p₂ p₂')
 
-theorem prod_lift : prod (⟦p₁⟧) (⟦p₂⟧) = ⟦p₁.Prod p₂⟧ :=
+theorem prod_lift : prod ⟦p₁⟧ ⟦p₂⟧ = ⟦p₁.Prod p₂⟧ :=
   rfl
 
 variable (r₁ : Path.Homotopic.Quotient a₂ a₃) (r₂ : Path.Homotopic.Quotient b₂ b₃)

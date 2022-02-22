@@ -778,7 +778,7 @@ variable (R)
 
 This is the `linear_equiv` version of `finsupp.sigma_finsupp_add_equiv_pi_finsupp`. -/
 noncomputable def sigmaFinsuppLequivPiFinsupp {M : Type _} {ιs : η → Type _} [AddCommMonoidₓ M] [Module R M] :
-    ((Σ j, ιs j) →₀ M) ≃ₗ[R] ∀ j, ιs j →₀ M :=
+    ((Σj, ιs j) →₀ M) ≃ₗ[R] ∀ j, ιs j →₀ M :=
   { sigmaFinsuppAddEquivPiFinsupp with
     map_smul' := fun c f => by
       ext
@@ -786,7 +786,7 @@ noncomputable def sigmaFinsuppLequivPiFinsupp {M : Type _} {ιs : η → Type _}
 
 @[simp]
 theorem sigma_finsupp_lequiv_pi_finsupp_apply {M : Type _} {ιs : η → Type _} [AddCommMonoidₓ M] [Module R M]
-    (f : (Σ j, ιs j) →₀ M) j i : sigmaFinsuppLequivPiFinsupp R f j i = f ⟨j, i⟩ :=
+    (f : (Σj, ιs j) →₀ M) j i : sigmaFinsuppLequivPiFinsupp R f j i = f ⟨j, i⟩ :=
   rfl
 
 @[simp]

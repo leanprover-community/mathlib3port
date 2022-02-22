@@ -44,6 +44,8 @@ if it is full, faithful and essentially surjective.
 ## Main results
 
 * `equivalence.mk`: upgrade an equivalence to a (half-)adjoint equivalence
+* `is_equivalence.equiv_of_iso`: when `F` and `G` are isomorphic functors, `F` is an equivalence
+iff `G` is.
 * `equivalence.of_fully_faithfully_ess_surj`: a fully faithful essentially surjective functor is an
   equivalence.
 
@@ -88,6 +90,7 @@ structure Equivalence (C : Type u₁) [Category.{v₁} C] (D : Type u₂) [Categ
 
 restate_axiom equivalence.functor_unit_iso_comp'
 
+-- mathport name: «expr ≌ »
 infixr:10 " ≌ " => Equivalence
 
 variable {C : Type u₁} [Category.{v₁} C] {D : Type u₂} [Category.{v₂} D]
@@ -536,6 +539,68 @@ theorem inv_fun_map (F : C ⥤ D) [IsEquivalence F] (X Y : C) (f : X ⟶ Y) :
     F.inv.map (F.map f) = F.asEquivalence.unitInv.app X ≫ f ≫ F.asEquivalence.Unit.app Y := by
   erw [nat_iso.naturality_1]
   rfl
+
+/-- When a functor `F` is an equivalence of categories, and `G` is isomorphic to `F`, then
+`G` is also an equivalence of categories. -/
+@[simps]
+def ofIso {F G : C ⥤ D} (e : F ≅ G) (hF : IsEquivalence F) : IsEquivalence G where
+  inverse := hF.inverse
+  unitIso := hF.unitIso ≪≫ NatIso.hcomp e (Iso.refl hF.inverse)
+  counitIso := NatIso.hcomp (Iso.refl hF.inverse) e.symm ≪≫ hF.counitIso
+  functor_unit_iso_comp' := fun X => by
+    dsimp [nat_iso.hcomp]
+    erw [id_comp, F.map_id, comp_id]
+    apply (cancel_epi (e.hom.app X)).mp
+    slice_lhs 1 2 => rw [← e.hom.naturality]
+    slice_lhs 2 3 => rw [← nat_trans.vcomp_app', e.hom_inv_id]
+    simp only [nat_trans.id_app, id_comp, comp_id, F.map_comp, assoc]
+    erw [hF.counit_iso.hom.naturality]
+    slice_lhs 1 2 => rw [functor_unit_iso_comp]
+    simp only [functor.id_map, id_comp]
+
+/-- Compatibility of `of_iso` with the composition of isomorphisms of functors -/
+theorem of_iso_trans {F G H : C ⥤ D} (e : F ≅ G) (e' : G ≅ H) (hF : IsEquivalence F) :
+    ofIso e' (ofIso e hF) = ofIso (e ≪≫ e') hF := by
+  dsimp [of_iso]
+  congr 1 <;> ext X <;> dsimp [nat_iso.hcomp]
+  · simp only [id_comp, assoc, functor.map_comp]
+    
+  · simp only [Functor.map_id, comp_id, id_comp, assoc]
+    
+
+/-- Compatibility of `of_iso` with identity isomorphisms of functors -/
+theorem of_iso_refl (F : C ⥤ D) (hF : IsEquivalence F) : ofIso (Iso.refl F) hF = hF := by
+  rcases hF with ⟨Finv, Funit, Fcounit, Fcomp⟩
+  dsimp [of_iso]
+  congr 1 <;> ext X <;> dsimp [nat_iso.hcomp]
+  · simp only [comp_id, map_id]
+    
+  · simp only [id_comp, map_id]
+    
+
+/-- When `F` and `G` are two isomorphic functors, then `F` is an equivalence iff `G` is. -/
+@[simps]
+def equivOfIso {F G : C ⥤ D} (e : F ≅ G) : IsEquivalence F ≃ IsEquivalence G where
+  toFun := ofIso e
+  invFun := ofIso e.symm
+  left_inv := fun hF => by
+    rw [of_iso_trans, iso.self_symm_id, of_iso_refl]
+  right_inv := fun hF => by
+    rw [of_iso_trans, iso.symm_self_id, of_iso_refl]
+
+/-- If `G` and `F ⋙ G` are equivalence of categories, then `F` is also an equivalence. -/
+@[simp]
+def cancelCompRight {E : Type _} [Category E] (F : C ⥤ D) (G : D ⥤ E) (hG : IsEquivalence G)
+    (hGF : IsEquivalence (F ⋙ G)) : IsEquivalence F :=
+  ofIso (Functor.associator F G G.inv ≪≫ NatIso.hcomp (Iso.refl F) hG.unitIso.symm ≪≫ rightUnitor F)
+    (Functor.isEquivalenceTrans (F ⋙ G) G.inv)
+
+/-- If `F` and `F ⋙ G` are equivalence of categories, then `G` is also an equivalence. -/
+@[simp]
+def cancelCompLeft {E : Type _} [Category E] (F : C ⥤ D) (G : D ⥤ E) (hF : IsEquivalence F)
+    (hGF : IsEquivalence (F ⋙ G)) : IsEquivalence G :=
+  ofIso ((Functor.associator F.inv F G).symm ≪≫ NatIso.hcomp hF.counitIso (Iso.refl G) ≪≫ leftUnitor G)
+    (Functor.isEquivalenceTrans F.inv (F ⋙ G))
 
 end IsEquivalence
 

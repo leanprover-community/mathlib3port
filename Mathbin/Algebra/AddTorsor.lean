@@ -319,7 +319,7 @@ def vaddConst (p : P) : G ≃ P where
   right_inv := fun p' => vsub_vadd _ _
 
 @[simp]
-theorem coe_vadd_const (p : P) : ⇑vaddConst p = fun v => v +ᵥ p :=
+theorem coe_vadd_const (p : P) : ⇑(vaddConst p) = fun v => v +ᵥ p :=
   rfl
 
 @[simp]
@@ -336,7 +336,7 @@ def constVsub (p : P) : P ≃ G where
     simp [vsub_vadd_eq_vsub_sub]
 
 @[simp]
-theorem coe_const_vsub (p : P) : ⇑constVsub p = (· -ᵥ ·) p :=
+theorem coe_const_vsub (p : P) : ⇑(constVsub p) = (· -ᵥ ·) p :=
   rfl
 
 @[simp]
@@ -355,7 +355,7 @@ def constVadd (v : G) : Equivₓ.Perm P where
     simp [vadd_vadd]
 
 @[simp]
-theorem coe_const_vadd (v : G) : ⇑constVadd P v = (· +ᵥ ·) v :=
+theorem coe_const_vadd (v : G) : ⇑(constVadd P v) = (· +ᵥ ·) v :=
   rfl
 
 variable (G)

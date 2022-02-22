@@ -168,7 +168,7 @@ theorem dvd_pow {x y : M} (hxy : x ∣ y) : ∀ {n : ℕ} hn : n ≠ 0, x ∣ y 
     rw [pow_succₓ]
     exact hxy.mul_right _
 
-alias dvd_pow ← HasDvd.Dvd.pow
+alias dvd_pow ← Dvd.Dvd.pow
 
 theorem dvd_pow_self (a : M) {n : ℕ} (hn : n ≠ 0) : a ∣ a ^ n :=
   dvd_rfl.pow hn

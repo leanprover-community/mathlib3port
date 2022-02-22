@@ -43,6 +43,7 @@ simultaneously. This will make for a fun and challenging project.
 
 universe u
 
+-- mathport name: «expr ≈ »
 local infixl:0 " ≈ " => Pgame.Equiv
 
 namespace Pgame

@@ -180,6 +180,7 @@ end Isometry
 structure Isometric (α : Type _) (β : Type _) [PseudoEmetricSpace α] [PseudoEmetricSpace β] extends α ≃ β where
   isometry_to_fun : Isometry to_fun
 
+-- mathport name: «expr ≃ᵢ »
 infixl:25 " ≃ᵢ " => Isometric
 
 namespace Isometric

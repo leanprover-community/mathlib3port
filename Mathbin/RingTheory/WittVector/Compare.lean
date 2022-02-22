@@ -32,6 +32,7 @@ noncomputable section
 
 variable {p : ℕ} [hp : Fact p.Prime]
 
+-- mathport name: «expr𝕎»
 local notation "𝕎" => WittVector p
 
 include hp

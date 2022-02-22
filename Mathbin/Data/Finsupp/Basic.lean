@@ -102,6 +102,7 @@ structure Finsupp (α : Type _) (M : Type _) [Zero M] where
   toFun : α → M
   mem_support_to_fun : ∀ a, a ∈ support ↔ to_fun a ≠ 0
 
+-- mathport name: «expr →₀ »
 infixr:25 " →₀ " => Finsupp
 
 namespace Finsupp
@@ -174,7 +175,7 @@ theorem mem_support_iff {f : α →₀ M} : ∀ {a : α}, a ∈ f.Support ↔ f 
 theorem fun_support_eq (f : α →₀ M) : Function.Support f = f.Support :=
   Set.ext fun x => mem_support_iff.symm
 
-theorem not_mem_support_iff {f : α →₀ M} {a} : a ∉ f.Support ↔ f a = 0 :=
+theorem not_mem_support_iff {f : α →₀ M} {a} : (a ∉ f.Support) ↔ f a = 0 :=
   not_iff_comm.1 mem_support_iff.symm
 
 @[simp, norm_cast]
@@ -262,7 +263,7 @@ def single (a : α) (b : M) : α →₀ M :=
 theorem single_apply [Decidable (a = a')] : single a b a' = if a = a' then b else 0 := by
   convert rfl
 
-theorem single_eq_indicator : ⇑single a b = Set.indicator {a} fun _ => b := by
+theorem single_eq_indicator : ⇑(single a b) = Set.indicator {a} fun _ => b := by
   ext
   simp [single_apply, Set.indicator, @eq_comm _ a]
 
@@ -274,10 +275,10 @@ theorem single_eq_same : (single a b : α →₀ M) a = b :=
 theorem single_eq_of_ne (h : a ≠ a') : (single a b : α →₀ M) a' = 0 :=
   if_neg h
 
-theorem single_eq_update [DecidableEq α] : ⇑single a b = Function.update 0 a b := by
+theorem single_eq_update [DecidableEq α] : ⇑(single a b) = Function.update 0 a b := by
   rw [single_eq_indicator, ← Set.piecewise_eq_indicator, Set.piecewise_singleton]
 
-theorem single_eq_pi_single [DecidableEq α] : ⇑single a b = Pi.single a b :=
+theorem single_eq_pi_single [DecidableEq α] : ⇑(single a b) = Pi.single a b :=
   single_eq_update
 
 @[simp]
@@ -1013,7 +1014,7 @@ def eraseAddHom (a : α) : (α →₀ M) →+ α →₀ M where
 
 @[elab_as_eliminator]
 protected theorem induction {p : (α →₀ M) → Prop} (f : α →₀ M) (h0 : p 0)
-    (ha : ∀ a b f : α →₀ M, a ∉ f.Support → b ≠ 0 → p f → p (single a b + f)) : p f :=
+    (ha : ∀ a b f : α →₀ M, (a ∉ f.Support) → b ≠ 0 → p f → p (single a b + f)) : p f :=
   suffices ∀ s f : α →₀ M, f.Support = s → p f from this _ _ rfl
   fun s =>
   (Finset.induction_on s fun f hf => by
@@ -1033,7 +1034,7 @@ protected theorem induction {p : (α →₀ M) → Prop} (f : α →₀ M) (h0 :
       
 
 theorem induction₂ {p : (α →₀ M) → Prop} (f : α →₀ M) (h0 : p 0)
-    (ha : ∀ a b f : α →₀ M, a ∉ f.Support → b ≠ 0 → p f → p (f + single a b)) : p f :=
+    (ha : ∀ a b f : α →₀ M, (a ∉ f.Support) → b ≠ 0 → p f → p (f + single a b)) : p f :=
   suffices ∀ s f : α →₀ M, f.Support = s → p f from this _ _ rfl
   fun s =>
   (Finset.induction_on s fun f hf => by
@@ -1154,7 +1155,7 @@ theorem RingHom.map_finsupp_prod [Zero M] [CommSemiringₓ R] [CommSemiringₓ S
 
 @[to_additive]
 theorem MonoidHom.coe_finsupp_prod [Zero β] [Monoidₓ N] [CommMonoidₓ P] (f : α →₀ β) (g : α → β → N →* P) :
-    ⇑f.Prod g = f.Prod fun i fi => g i fi :=
+    ⇑(f.Prod g) = f.Prod fun i fi => g i fi :=
   MonoidHom.coe_finset_prod _ _
 
 @[simp, to_additive]
@@ -1256,10 +1257,10 @@ theorem sum_apply [Zero M] [AddCommMonoidₓ N] {f : α →₀ M} {g : α → M 
     (f.Sum g) a₂ = f.Sum fun a₁ b => g a₁ b a₂ :=
   finset_sum_apply _ _ _
 
-theorem coe_finset_sum [AddCommMonoidₓ N] (S : Finset ι) (f : ι → α →₀ N) : (⇑∑ i in S, f i) = ∑ i in S, f i :=
+theorem coe_finset_sum [AddCommMonoidₓ N] (S : Finset ι) (f : ι → α →₀ N) : ⇑(∑ i in S, f i) = ∑ i in S, f i :=
   (coeFnAddHom : (α →₀ N) →+ _).map_sum _ _
 
-theorem coe_sum [Zero M] [AddCommMonoidₓ N] (f : α →₀ M) (g : α → M → β →₀ N) : ⇑f.Sum g = f.Sum fun a₁ b => g a₁ b :=
+theorem coe_sum [Zero M] [AddCommMonoidₓ N] (f : α →₀ M) (g : α → M → β →₀ N) : ⇑(f.Sum g) = f.Sum fun a₁ b => g a₁ b :=
   coe_finset_sum _ _
 
 theorem support_sum [DecidableEq β] [Zero M] [AddCommMonoidₓ N] {f : α →₀ M} {g : α → M → β →₀ N} :
@@ -1989,7 +1990,7 @@ def filter (p : α → Prop) (f : α →₀ M) : α →₀ M where
 theorem filter_apply (a : α) [D : Decidable (p a)] : f.filter p a = if p a then f a else 0 := by
   rw [Subsingleton.elimₓ D] <;> rfl
 
-theorem filter_eq_indicator : ⇑f.filter p = Set.indicator { x | p x } f :=
+theorem filter_eq_indicator : ⇑(f.filter p) = Set.indicator { x | p x } f :=
   rfl
 
 @[simp]
@@ -2287,7 +2288,7 @@ def sumElim {α β γ : Type _} [Zero γ] (f : α →₀ γ) (g : β →₀ γ) 
     cases' ab with a b <;> simp only [Sum.elim_inl, Sum.elim_inr] at h <;> simpa
 
 @[simp]
-theorem coe_sum_elim {α β γ : Type _} [Zero γ] (f : α →₀ γ) (g : β →₀ γ) : ⇑sumElim f g = Sum.elim f g :=
+theorem coe_sum_elim {α β γ : Type _} [Zero γ] (f : α →₀ γ) (g : β →₀ γ) : ⇑(sumElim f g) = Sum.elim f g :=
   rfl
 
 theorem sum_elim_apply {α β γ : Type _} [Zero γ] (f : α →₀ γ) (g : β →₀ γ) (x : Sum α β) :
@@ -2652,7 +2653,7 @@ namespace Finsupp
 
 section Sigma
 
-variable {αs : ι → Type _} [Zero M] (l : (Σ i, αs i) →₀ M)
+variable {αs : ι → Type _} [Zero M] (l : (Σi, αs i) →₀ M)
 
 /-- Given `l`, a finitely supported function from the sigma type `Σ (i : ι), αs i` to `M` and
 an index element `i : ι`, `split l i` is the `i`th component of `l`,
@@ -2693,7 +2694,7 @@ theorem sigma_support : l.Support = l.splitSupport.Sigma fun i => (l.split i).Su
   simp only [Finset.ext_iff, split_support, split, comap_domain, mem_image, mem_preimage, Sigma.forall, mem_sigma] <;>
     tauto
 
-theorem sigma_sum [AddCommMonoidₓ N] (f : (Σ i : ι, αs i) → M → N) :
+theorem sigma_sum [AddCommMonoidₓ N] (f : (Σi : ι, αs i) → M → N) :
     l.Sum f = ∑ i in splitSupport l, (split l i).Sum fun b => f ⟨i, a⟩ b := by
   simp only [Sum, sigma_support, sum_sigma, split_apply]
 
@@ -2703,7 +2704,7 @@ variable {η : Type _} [Fintype η] {ιs : η → Type _} [Zero α]
 and `Π j, (ιs j →₀ α)`.
 
 This is the `finsupp` version of `equiv.Pi_curry`. -/
-noncomputable def sigmaFinsuppEquivPiFinsupp : ((Σ j, ιs j) →₀ α) ≃ ∀ j, ιs j →₀ α where
+noncomputable def sigmaFinsuppEquivPiFinsupp : ((Σj, ιs j) →₀ α) ≃ ∀ j, ιs j →₀ α where
   toFun := split
   invFun := fun f =>
     onFinset (Finset.univ.Sigma fun j => (f j).Support) (fun ji => f ji.1 ji.2) fun g hg =>
@@ -2716,7 +2717,7 @@ noncomputable def sigmaFinsuppEquivPiFinsupp : ((Σ j, ιs j) →₀ α) ≃ ∀
     simp [split]
 
 @[simp]
-theorem sigma_finsupp_equiv_pi_finsupp_apply (f : (Σ j, ιs j) →₀ α) j i : sigmaFinsuppEquivPiFinsupp f j i = f ⟨j, i⟩ :=
+theorem sigma_finsupp_equiv_pi_finsupp_apply (f : (Σj, ιs j) →₀ α) j i : sigmaFinsuppEquivPiFinsupp f j i = f ⟨j, i⟩ :=
   rfl
 
 /-- On a `fintype η`, `finsupp.split` is an additive equivalence between
@@ -2725,14 +2726,14 @@ theorem sigma_finsupp_equiv_pi_finsupp_apply (f : (Σ j, ιs j) →₀ α) j i :
 This is the `add_equiv` version of `finsupp.sigma_finsupp_equiv_pi_finsupp`.
 -/
 noncomputable def sigmaFinsuppAddEquivPiFinsupp {α : Type _} {ιs : η → Type _} [AddMonoidₓ α] :
-    ((Σ j, ιs j) →₀ α) ≃+ ∀ j, ιs j →₀ α :=
+    ((Σj, ιs j) →₀ α) ≃+ ∀ j, ιs j →₀ α :=
   { sigmaFinsuppEquivPiFinsupp with
     map_add' := fun f g => by
       ext
       simp }
 
 @[simp]
-theorem sigma_finsupp_add_equiv_pi_finsupp_apply {α : Type _} {ιs : η → Type _} [AddMonoidₓ α] (f : (Σ j, ιs j) →₀ α)
+theorem sigma_finsupp_add_equiv_pi_finsupp_apply {α : Type _} {ιs : η → Type _} [AddMonoidₓ α] (f : (Σj, ιs j) →₀ α)
     j i : sigmaFinsuppAddEquivPiFinsupp f j i = f ⟨j, i⟩ :=
   rfl
 

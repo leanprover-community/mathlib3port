@@ -239,6 +239,7 @@ theorem weighted_smul_nonneg (s : Set α) (x : ℝ) (hx : 0 ≤ x) : 0 ≤ weigh
 
 end WeightedSmul
 
+-- mathport name: «expr →ₛ »
 local infixr:25 " →ₛ " => SimpleFunc
 
 namespace SimpleFunc
@@ -519,6 +520,7 @@ def integralClm : (α →₁ₛ[μ] E) →L[ℝ] E :=
 
 variable {α E μ 𝕜}
 
+-- mathport name: «exprIntegral»
 local notation "Integral" => integralClm α E μ
 
 open ContinuousLinearMap
@@ -590,6 +592,7 @@ end SimpleFunc
 
 open SimpleFunc
 
+-- mathport name: «exprIntegral»
 local notation "Integral" => @integralClm α E _ _ _ _ _ μ _
 
 variable [NormedSpace ℝ E] [NondiscreteNormedField 𝕜] [NormedSpace 𝕜 E] [SmulCommClass ℝ 𝕜 E] [NormedSpace ℝ F]
@@ -647,8 +650,10 @@ theorem integral_sub (f g : α →₁[μ] E) : integral (f - g) = integral f - i
 theorem integral_smul (c : 𝕜) (f : α →₁[μ] E) : integral (c • f) = c • integral f :=
   map_smul (integralClm' 𝕜) c f
 
+-- mathport name: «exprIntegral»
 local notation "Integral" => @integralClm α E _ _ _ _ _ μ _ _
 
+-- mathport name: «exprsIntegral»
 local notation "sIntegral" => @SimpleFunc.integralClm α E _ _ _ _ _ μ _
 
 theorem norm_Integral_le_one : ∥Integral∥ ≤ 1 :=
@@ -712,12 +717,16 @@ def integral {m : MeasurableSpace α} (μ : Measure α) (f : α → E) : E :=
   `∫ x, f x = 0` will be parsed incorrectly. -/
 
 
+-- mathport name: «expr∫ , ∂ »
 notation3 "∫ " (...) ", " r:(scoped f => f) " ∂" μ => integral μ r
 
+-- mathport name: «expr∫ , »
 notation3 "∫ " (...) ", " r:(scoped f => integral volume f) => r
 
+-- mathport name: «expr∫ in , ∂ »
 notation3 "∫ " (...) " in " s ", " r:(scoped f => f) " ∂" μ => integral (Measure.restrict μ s) r
 
+-- mathport name: «expr∫ in , »
 notation3 "∫ " (...) " in " s ", " r:(scoped f => integral Measure.restrict volume s f) => r
 
 section Properties
@@ -1324,7 +1333,7 @@ def SimpleFunc.toLargerSpace (hm : m ≤ m0) (f : @SimpleFunc β m γ) : SimpleF
   ⟨@SimpleFunc.toFun β m γ f, fun x => hm _ (@SimpleFunc.measurable_set_fiber β γ m f x),
     @SimpleFunc.finite_range β γ m f⟩
 
-theorem SimpleFunc.coe_to_larger_space_eq (hm : m ≤ m0) (f : @SimpleFunc β m γ) : ⇑f.toLargerSpace hm = f :=
+theorem SimpleFunc.coe_to_larger_space_eq (hm : m ≤ m0) (f : @SimpleFunc β m γ) : ⇑(f.toLargerSpace hm) = f :=
   rfl
 
 theorem integral_simple_func_larger_space (hm : m ≤ m0) (f : @SimpleFunc β m F) (hf_int : Integrable f μ) :

@@ -375,7 +375,7 @@ theorem coe_fn_add (f g : lp E p) : ⇑(f + g) = f + g :=
   rfl
 
 @[simp]
-theorem coe_fn_sum {ι : Type _} (f : ι → lp E p) (s : Finset ι) : (⇑∑ i in s, f i) = ∑ i in s, ⇑f i := by
+theorem coe_fn_sum {ι : Type _} (f : ι → lp E p) (s : Finset ι) : ⇑(∑ i in s, f i) = ∑ i in s, ⇑(f i) := by
   classical
   refine' Finset.induction _ _ s
   · simp

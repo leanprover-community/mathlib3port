@@ -19,6 +19,7 @@ bool, boolean, De Morgan
 -/
 
 
+-- mathport name: «expr! »
 prefix:90 "!" => bnot
 
 namespace Bool

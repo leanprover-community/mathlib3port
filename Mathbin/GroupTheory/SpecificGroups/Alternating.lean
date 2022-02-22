@@ -317,7 +317,7 @@ instance is_simple_group_five : IsSimpleGroup (alternatingGroup (Finₓ 5)) :=
     refine' or_not.imp id fun Hb => _
     rw [eq_bot_iff_forall] at Hb
     push_neg  at Hb
-    obtain ⟨⟨g, gA⟩, gH, g1⟩ : ∃ x : ↥alternatingGroup (Finₓ 5), x ∈ H ∧ x ≠ 1 := Hb
+    obtain ⟨⟨g, gA⟩, gH, g1⟩ : ∃ x : ↥(alternatingGroup (Finₓ 5)), x ∈ H ∧ x ≠ 1 := Hb
     -- `g` is a non-identity alternating permutation in a normal subgroup `H` of $A_5$.
     rw [← SetLike.mem_coe, ← Set.singleton_subset_iff] at gH
     refine' eq_top_iff.2 (le_transₓ (ge_of_eq _) (normal_closure_le_normal gH))

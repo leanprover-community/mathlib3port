@@ -74,6 +74,7 @@ instance : HasSupₓ (Set α) :=
 def SInter (S : Set (Set α)) : Set α :=
   inf S
 
+-- mathport name: «expr⋂₀ »
 prefix:110 "⋂₀ " => SInter
 
 @[simp]
@@ -88,8 +89,10 @@ def Unionₓ (s : ι → Set β) : Set β :=
 def Interₓ (s : ι → Set β) : Set β :=
   infi s
 
+-- mathport name: «expr⋃ , »
 notation3 "⋃ " (...) ", " r:(scoped f => Unionₓ f) => r
 
+-- mathport name: «expr⋂ , »
 notation3 "⋂ " (...) ", " r:(scoped f => Interₓ f) => r
 
 @[simp]
@@ -954,7 +957,7 @@ theorem range_sigma_eq_Union_range {γ : α → Type _} (f : Sigma γ → β) : 
   Set.ext <| by
     simp
 
-theorem Union_eq_range_sigma (s : α → Set β) : (⋃ i, s i) = Range fun a : Σ i, s i => a.2 := by
+theorem Union_eq_range_sigma (s : α → Set β) : (⋃ i, s i) = Range fun a : Σi, s i => a.2 := by
   simp [Set.ext_iff]
 
 theorem Union_image_preimage_sigma_mk_eq_self {ι : Type _} {σ : ι → Type _} (s : Set (Sigma σ)) :
@@ -970,7 +973,7 @@ theorem Union_image_preimage_sigma_mk_eq_self {ι : Type _} {σ : ι → Type _}
     exact ⟨i, a, h, rfl⟩
     
 
-theorem Sigma.univ (X : α → Type _) : (Set.Univ : Set (Σ a, X a)) = ⋃ a, Range (Sigma.mk a) :=
+theorem Sigma.univ (X : α → Type _) : (Set.Univ : Set (Σa, X a)) = ⋃ a, Range (Sigma.mk a) :=
   Set.ext fun x => iff_of_true trivialₓ ⟨Range (Sigma.mk x.1), Set.mem_range_self _, x.2, Sigma.eta x⟩
 
 theorem sUnion_mono {s t : Set (Set α)} (h : s ⊆ t) : ⋃₀s ⊆ ⋃₀t :=
@@ -1707,7 +1710,7 @@ theorem bUnion_diff_bUnion_subset (s₁ s₂ : Set α) : ((⋃ x ∈ s₁, t x) 
 
 /-- If `t` is an indexed family of sets, then there is a natural map from `Σ i, t i` to `⋃ i, t i`
 sending `⟨i, x⟩` to `x`. -/
-def sigmaToUnion (x : Σ i, t i) : ⋃ i, t i :=
+def sigmaToUnion (x : Σi, t i) : ⋃ i, t i :=
   ⟨x.2, mem_Union.2 ⟨x.1, x.2.2⟩⟩
 
 theorem sigma_to_Union_surjective : Surjective (sigmaToUnion t)
@@ -1733,7 +1736,7 @@ theorem sigma_to_Union_bijective (h : ∀ i j, i ≠ j → Disjoint (t i) (t j))
 
 /-- Equivalence between a disjoint union and a dependent sum. -/
 noncomputable def unionEqSigmaOfDisjoint {t : α → Set β} (h : ∀ i j, i ≠ j → Disjoint (t i) (t j)) :
-    (⋃ i, t i) ≃ Σ i, t i :=
+    (⋃ i, t i) ≃ Σi, t i :=
   (Equivₓ.ofBijective _ <| sigma_to_Union_bijective t h).symm
 
 end Set

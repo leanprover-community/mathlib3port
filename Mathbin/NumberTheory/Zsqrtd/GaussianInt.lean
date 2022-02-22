@@ -43,6 +43,7 @@ open Zsqrtd Complex
 def GaussianInt : Type :=
   Zsqrtd (-1)
 
+-- mathport name: «exprℤ[i]»
 local notation "ℤ[i]" => GaussianInt
 
 namespace GaussianInt

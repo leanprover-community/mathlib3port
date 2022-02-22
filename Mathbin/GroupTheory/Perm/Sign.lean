@@ -74,7 +74,7 @@ theorem perm_inv_maps_to_iff_maps_to {f : Perm α} {s : Set α} [Fintype s] :
 
 theorem perm_inv_on_of_perm_on_fintype {f : Perm α} {p : α → Prop} [Fintype { x // p x }] (h : ∀ x, p x → p (f x))
     {x : α} (hx : p x) : p (f⁻¹ x) := by
-  let this' : Fintype (↥show Set α from p) := ‹Fintype { x // p x }›
+  let this' : Fintype ↥(show Set α from p) := ‹Fintype { x // p x }›
   exact perm_inv_maps_to_of_maps_to f h hx
 
 /-- If the permutation `f` maps `{x // p x}` into itself, then this returns the permutation
@@ -272,10 +272,10 @@ theorem is_conj_swap {w x y z : α} (hwx : w ≠ x) (hyz : y ≠ z) : IsConj (sw
     else ⟨swap w y * swap x z, h hyz hwz⟩)
 
 /-- set of all pairs (⟨a, b⟩ : Σ a : fin n, fin n) such that b < a -/
-def finPairsLt (n : ℕ) : Finset (Σ a : Finₓ n, Finₓ n) :=
+def finPairsLt (n : ℕ) : Finset (Σa : Finₓ n, Finₓ n) :=
   (univ : Finset (Finₓ n)).Sigma fun a => (range a).attachFin fun m hm => (mem_range.1 hm).trans a.2
 
-theorem mem_fin_pairs_lt {n : ℕ} {a : Σ a : Finₓ n, Finₓ n} : a ∈ finPairsLt n ↔ a.2 < a.1 := by
+theorem mem_fin_pairs_lt {n : ℕ} {a : Σa : Finₓ n, Finₓ n} : a ∈ finPairsLt n ↔ a.2 < a.1 := by
   simp only [fin_pairs_lt, Finₓ.lt_iff_coe_lt_coe, true_andₓ, mem_attach_fin, mem_range, mem_univ, mem_sigma]
 
 /-- `sign_aux σ` is the sign of a permutation on `fin n`, defined as the parity of the number of
@@ -290,11 +290,11 @@ theorem sign_aux_one (n : ℕ) : signAux (1 : Perm (Finₓ n)) = 1 := by
   exact Finset.prod_congr rfl fun a ha => if_neg (mem_fin_pairs_lt.1 ha).not_le
 
 /-- `sign_bij_aux f ⟨a, b⟩` returns the pair consisting of `f a` and `f b` in decreasing order. -/
-def signBijAux {n : ℕ} (f : Perm (Finₓ n)) (a : Σ a : Finₓ n, Finₓ n) : Σ a : Finₓ n, Finₓ n :=
+def signBijAux {n : ℕ} (f : Perm (Finₓ n)) (a : Σa : Finₓ n, Finₓ n) : Σa : Finₓ n, Finₓ n :=
   if hxa : f a.2 < f a.1 then ⟨f a.1, f a.2⟩ else ⟨f a.2, f a.1⟩
 
 theorem sign_bij_aux_inj {n : ℕ} {f : Perm (Finₓ n)} :
-    ∀ a b : Σ a : Finₓ n, Finₓ n, a ∈ finPairsLt n → b ∈ finPairsLt n → signBijAux f a = signBijAux f b → a = b :=
+    ∀ a b : Σa : Finₓ n, Finₓ n, a ∈ finPairsLt n → b ∈ finPairsLt n → signBijAux f a = signBijAux f b → a = b :=
   fun ha hb h => by
   unfold sign_bij_aux  at h
   rw [mem_fin_pairs_lt] at *
@@ -317,7 +317,7 @@ theorem sign_bij_aux_surj {n : ℕ} {f : Perm (Finₓ n)} :
       rw [apply_inv_self, apply_inv_self, if_neg (mem_fin_pairs_lt.1 ha).le.not_lt]⟩
 
 theorem sign_bij_aux_mem {n : ℕ} {f : Perm (Finₓ n)} :
-    ∀ a : Σ a : Finₓ n, Finₓ n, a ∈ finPairsLt n → signBijAux f a ∈ finPairsLt n := fun ha => by
+    ∀ a : Σa : Finₓ n, Finₓ n, a ∈ finPairsLt n → signBijAux f a ∈ finPairsLt n := fun ha => by
   unfold sign_bij_aux
   split_ifs with h
   · exact mem_fin_pairs_lt.2 h
@@ -365,7 +365,7 @@ theorem sign_aux_mul {n : ℕ} (f g : Perm (Finₓ n)) : signAux (f * g) = signA
 private theorem sign_aux_swap_zero_one' (n : ℕ) : signAux (swap (0 : Finₓ (n + 2)) 1) = -1 :=
   show
     _ =
-      ∏ x : Σ a : Finₓ (n + 2), Finₓ (n + 2) in {(⟨1, 0⟩ : Σ a : Finₓ (n + 2), Finₓ (n + 2))},
+      ∏ x : Σa : Finₓ (n + 2), Finₓ (n + 2) in {(⟨1, 0⟩ : Σa : Finₓ (n + 2), Finₓ (n + 2))},
         if (Equivₓ.swap 0 1) x.1 ≤ swap 0 1 x.2 then (-1 : ℤˣ) else 1
     by
     refine'
@@ -684,7 +684,7 @@ theorem prod_prod_extend_right {α : Type _} [DecidableEq α] (σ : α → Perm 
   -- but we have to keep track of whether we already passed `a` in the list.
   suffices
     a ∈ l ∧ (l.map fun a => prod_extend_right a (σ a)).Prod (a, b) = (a, σ a b) ∨
-      a ∉ l ∧ (l.map fun a => prod_extend_right a (σ a)).Prod (a, b) = (a, b)
+      (a ∉ l) ∧ (l.map fun a => prod_extend_right a (σ a)).Prod (a, b) = (a, b)
     by
     obtain ⟨_, prod_eq⟩ := Or.resolve_right this (not_and.mpr fun h _ => h (mem_l a))
     rw [prod_eq, prod_congr_right_apply]

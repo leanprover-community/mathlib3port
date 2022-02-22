@@ -57,6 +57,7 @@ elements from any set in `𝒜`. -/
 def shadow (𝒜 : Finset (Finset α)) : Finset (Finset α) :=
   𝒜.sup fun s => s.Image (erase s)
 
+-- mathport name: «expr∂»
 localized [FinsetFamily] notation:90 "∂ " => Finset.shadow
 
 /-- The shadow of the empty set is empty. -/
@@ -160,6 +161,7 @@ variable [DecidableEq α] [Fintype α] {𝒜 : Finset (Finset α)} {s t : Finset
 def upShadow (𝒜 : Finset (Finset α)) : Finset (Finset α) :=
   𝒜.sup fun s => sᶜ.Image fun a => insert a s
 
+-- mathport name: «expr∂⁺»
 localized [FinsetFamily] notation:90 "∂⁺ " => Finset.upShadow
 
 /-- The upper shadow of the empty set is empty. -/

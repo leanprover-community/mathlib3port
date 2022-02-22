@@ -57,6 +57,7 @@ structure QuaternionAlgebra (R : Type _) (a b : R) where mk {} ::
   imJ : R
   imK : R
 
+-- mathport name: «exprℍ[ , , ]»
 localized [Quaternion] notation "ℍ[" R "," a "," b "]" => QuaternionAlgebra R a b
 
 namespace QuaternionAlgebra
@@ -271,7 +272,7 @@ theorem mul_coe_eq_smul : a * r = r • a := by
   rw [← coe_commutes, coe_mul_eq_smul]
 
 @[norm_cast, simp]
-theorem coe_algebra_map : ⇑algebraMap R ℍ[R,c₁,c₂] = coe :=
+theorem coe_algebra_map : ⇑(algebraMap R ℍ[R,c₁,c₂]) = coe :=
   rfl
 
 theorem smul_coe : x • (y : ℍ[R,c₁,c₂]) = ↑(x * y) := by
@@ -425,6 +426,7 @@ end QuaternionAlgebra
 def Quaternion (R : Type _) [One R] [Neg R] :=
   QuaternionAlgebra R (-1) (-1)
 
+-- mathport name: «exprℍ[ ]»
 localized [Quaternion] notation "ℍ[" R "]" => Quaternion R
 
 namespace Quaternion
@@ -631,7 +633,7 @@ theorem mul_coe_eq_smul : a * r = r • a :=
   QuaternionAlgebra.mul_coe_eq_smul r a
 
 @[simp]
-theorem algebra_map_def : ⇑algebraMap R ℍ[R] = coe :=
+theorem algebra_map_def : ⇑(algebraMap R ℍ[R]) = coe :=
   rfl
 
 theorem smul_coe : x • (y : ℍ[R]) = ↑(x * y) :=

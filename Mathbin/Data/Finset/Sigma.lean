@@ -36,13 +36,13 @@ section Sigma
 variable {α : ι → Type _} {β : Type _} (s s₁ s₂ : Finset ι) (t t₁ t₂ : ∀ i, Finset (α i))
 
 /-- `s.sigma t` is the finset of dependent pairs `⟨i, a⟩` such that `i ∈ s` and `a ∈ t i`. -/
-protected def sigma : Finset (Σ i, α i) :=
+protected def sigma : Finset (Σi, α i) :=
   ⟨_, nodup_sigma s.2 fun i => (t i).2⟩
 
 variable {s s₁ s₂ t t₁ t₂}
 
 @[simp]
-theorem mem_sigma {a : Σ i, α i} : a ∈ s.Sigma t ↔ a.1 ∈ s ∧ a.2 ∈ t a.1 :=
+theorem mem_sigma {a : Σi, α i} : a ∈ s.Sigma t ↔ a.1 ∈ s ∧ a.2 ∈ t a.1 :=
   mem_sigma
 
 @[simp]
@@ -58,12 +58,12 @@ theorem sigma_mono (hs : s₁ ⊆ s₂) (ht : ∀ i, t₁ i ⊆ t₂ i) : s₁.S
   let ⟨hi, ha⟩ := mem_sigma.1 h
   mem_sigma.2 ⟨hs hi, ht i ha⟩
 
-theorem sigma_eq_bUnion [DecidableEq (Σ i, α i)] (s : Finset ι) (t : ∀ i, Finset (α i)) :
+theorem sigma_eq_bUnion [DecidableEq (Σi, α i)] (s : Finset ι) (t : ∀ i, Finset (α i)) :
     s.Sigma t = s.bUnion fun i => (t i).map <| Embedding.sigmaMk i := by
   ext ⟨x, y⟩
   simp [And.left_comm]
 
-variable (s t) (f : (Σ i, α i) → β)
+variable (s t) (f : (Σi, α i) → β)
 
 theorem sup_sigma [SemilatticeSup β] [OrderBot β] : (s.Sigma t).sup f = s.sup fun i => (t i).sup fun b => f ⟨i, b⟩ := by
   refine' (sup_le _).antisymm (sup_le fun i hi => sup_le fun b hb => le_sup <| mem_sigma.2 ⟨hi, hb⟩)
@@ -124,7 +124,7 @@ theorem not_mem_sigma_lift_of_ne_right (f : ∀ ⦃i⦄, α i → β i → Finse
   rw [mem_sigma_lift]
   exact fun H => h H.snd.fst
 
-variable {f g : ∀ ⦃i⦄, α i → β i → Finset (γ i)} {a : Σ i, α i} {b : Σ i, β i}
+variable {f g : ∀ ⦃i⦄, α i → β i → Finset (γ i)} {a : Σi, α i} {b : Σi, β i}
 
 theorem sigma_lift_nonempty : (sigmaLift f a b).Nonempty ↔ ∃ h : a.1 = b.1, (f (h.rec a.2) b.2).Nonempty := by
   simp_rw [nonempty_iff_ne_empty]
@@ -137,7 +137,7 @@ theorem sigma_lift_eq_empty : sigmaLift f a b = ∅ ↔ ∀ h : a.1 = b.1, f (h.
   convert dite_eq_right_iff
   exact forall_congr_eq fun h => propext map_eq_empty.symm
 
-theorem sigma_lift_mono (h : ∀ ⦃i⦄ ⦃a : α i⦄ ⦃b : β i⦄, f a b ⊆ g a b) (a : Σ i, α i) (b : Σ i, β i) :
+theorem sigma_lift_mono (h : ∀ ⦃i⦄ ⦃a : α i⦄ ⦃b : β i⦄, f a b ⊆ g a b) (a : Σi, α i) (b : Σi, β i) :
     sigmaLift f a b ⊆ sigmaLift g a b := by
   rintro x hx
   rw [mem_sigma_lift] at hx⊢

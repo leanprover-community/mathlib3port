@@ -65,6 +65,7 @@ structure MulActionHom where
   toFun : X → Y
   map_smul' : ∀ m : M' x : X, to_fun (m • x) = m • to_fun x
 
+-- mathport name: «expr →[ ] »
 notation:25 X " →[" M:25 "] " Y:0 => MulActionHom M X Y
 
 namespace MulActionHom
@@ -163,6 +164,7 @@ add_decl_doc DistribMulActionHom.toAddMonoidHom
 /-- Reinterpret an equivariant additive monoid homomorphism as an equivariant function. -/
 add_decl_doc DistribMulActionHom.toMulActionHom
 
+-- mathport name: «expr →+[ ] »
 notation:25 A " →+[" M:25 "] " B:0 => DistribMulActionHom M A B
 
 namespace DistribMulActionHom
@@ -317,6 +319,7 @@ add_decl_doc MulSemiringActionHom.toRingHom
 /-- Reinterpret an equivariant ring homomorphism as an equivariant additive monoid homomorphism. -/
 add_decl_doc MulSemiringActionHom.toDistribMulActionHom
 
+-- mathport name: «expr →+*[ ] »
 notation:25 R " →+*[" M:25 "] " S:0 => MulSemiringActionHom M R S
 
 namespace MulSemiringActionHom

@@ -36,7 +36,7 @@ variable [Lattice α] [OrderBot α]
 /-- Supremum independence of finite sets. We avoid the "obvious" definition using `s.erase i`
 because `erase` would require decidable equality on `ι`. -/
 def SupIndep (s : Finset ι) (f : ι → α) : Prop :=
-  ∀ ⦃t⦄, t ⊆ s → ∀ ⦃i⦄, i ∈ s → i ∉ t → Disjoint (f i) (t.sup f)
+  ∀ ⦃t⦄, t ⊆ s → ∀ ⦃i⦄, i ∈ s → (i ∉ t) → Disjoint (f i) (t.sup f)
 
 variable {s t : Finset ι} {f : ι → α} {i : ι}
 

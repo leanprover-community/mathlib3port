@@ -73,7 +73,7 @@ See note [reducible non-instances]. -/
 @[reducible]
 def GradedAlgebra.ofAlgHom [SetLike.GradedMonoid 𝒜] (decompose : A →ₐ[R] ⨁ i, 𝒜 i)
     (right_inv : (DirectSum.submoduleCoeAlgHom 𝒜).comp decompose = AlgHom.id R A)
-    (left_inv : ∀ i x : 𝒜 i, decompose (x : A) = DirectSum.of (fun i => ↥𝒜 i) i x) : GradedAlgebra 𝒜 where
+    (left_inv : ∀ i x : 𝒜 i, decompose (x : A) = DirectSum.of (fun i => ↥(𝒜 i)) i x) : GradedAlgebra 𝒜 where
   decompose' := decompose
   right_inv := AlgHom.congr_fun right_inv
   left_inv := by

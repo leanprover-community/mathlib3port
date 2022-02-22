@@ -856,7 +856,7 @@ instance [CompactSpace α] [CompactSpace β] : CompactSpace (Sum α β) :=
     rw [← range_inl_union_range_inr]
     exact (is_compact_range continuous_inl).union (is_compact_range continuous_inr)⟩
 
-instance [Fintype ι] [∀ i, TopologicalSpace (π i)] [∀ i, CompactSpace (π i)] : CompactSpace (Σ i, π i) := by
+instance [Fintype ι] [∀ i, TopologicalSpace (π i)] [∀ i, CompactSpace (π i)] : CompactSpace (Σi, π i) := by
   refine' ⟨_⟩
   rw [sigma.univ]
   exact compact_Union fun i => is_compact_range continuous_sigma_mk
@@ -1398,7 +1398,7 @@ theorem is_preirreducible_of_subsingleton (s : Set α) [hs : Subsingleton s] : I
   · exact h.symm ▸ is_preirreducible_empty
     
   · obtain ⟨x, e⟩ :=
-      exists_eq_singleton_iff_nonempty_unique_mem.mpr
+      exists_eq_singleton_iff_nonempty_subsingleton.mpr
         ⟨h, fun _ ha _ hb => by
           injection @Subsingleton.elimₓ hs ⟨_, ha⟩ ⟨_, hb⟩⟩
     exact e.symm ▸ is_irreducible_singleton.2

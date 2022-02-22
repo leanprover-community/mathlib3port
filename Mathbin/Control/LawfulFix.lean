@@ -237,13 +237,13 @@ variable (α β γ)
 
 /-- `sigma.curry` as a monotone function. -/
 @[simps]
-def monotoneCurry [∀ x y, Preorderₓ <| γ x y] : (∀ x : Σ a, β a, γ x.1 x.2) →o ∀ a b : β a, γ a b where
+def monotoneCurry [∀ x y, Preorderₓ <| γ x y] : (∀ x : Σa, β a, γ x.1 x.2) →o ∀ a b : β a, γ a b where
   toFun := curry
   monotone' := fun x y h a b => h ⟨a, b⟩
 
 /-- `sigma.uncurry` as a monotone function. -/
 @[simps]
-def monotoneUncurry [∀ x y, Preorderₓ <| γ x y] : (∀ a b : β a, γ a b) →o ∀ x : Σ a, β a, γ x.1 x.2 where
+def monotoneUncurry [∀ x y, Preorderₓ <| γ x y] : (∀ a b : β a, γ a b) →o ∀ x : Σa, β a, γ x.1 x.2 where
   toFun := uncurry
   monotone' := fun x y h a => h a.1 a.2
 

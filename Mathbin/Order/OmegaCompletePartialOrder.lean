@@ -542,6 +542,7 @@ structure ContinuousHom extends OrderHom α β where
 
 attribute [nolint doc_blame] continuous_hom.to_order_hom
 
+-- mathport name: «expr →𝒄 »
 infixr:25 " →𝒄 " => ContinuousHom
 
 -- Input: \r\MIc

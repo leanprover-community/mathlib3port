@@ -29,6 +29,7 @@ namespace Matrix
 
 variable {n' : Type _} [DecidableEq n'] [Fintype n'] {R : Type _} [CommRingₓ R]
 
+-- mathport name: «exprM»
 local notation "M" => Matrix n' n' R
 
 noncomputable instance : DivInvMonoidₓ M :=

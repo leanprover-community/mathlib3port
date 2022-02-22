@@ -28,6 +28,7 @@ def factorial : ℕ → ℕ
   | 0 => 1
   | succ n => succ n * factorial n
 
+-- mathport name: «expr !»
 localized [Nat] notation:10000 n "!" => Nat.factorial n
 
 section Factorial

@@ -58,10 +58,13 @@ inductive NormalMonoidalObject : Type u
 
 end
 
+-- mathport name: «exprF»
 local notation "F" => FreeMonoidalCategory
 
+-- mathport name: «exprN»
 local notation "N" => discrete ∘ normal_monoidal_object
 
+-- mathport name: «expr ⟶ᵐ »
 local infixr:10 " ⟶ᵐ " => Hom
 
 /-- Auxiliary definition for `inclusion`. -/
@@ -234,19 +237,19 @@ def normalizeIso : tensorFunc C ≅ normalize' C :=
         simp only [category.comp_id]
         
       · dsimp  at *
-        rw [id_tensor_comp, category.assoc, f_ih_g (⟦f_g⟧), ← category.assoc, f_ih_f (⟦f_f⟧), category.assoc, ←
+        rw [id_tensor_comp, category.assoc, f_ih_g ⟦f_g⟧, ← category.assoc, f_ih_f ⟦f_f⟧, category.assoc, ←
           functor.map_comp]
         congr 2
         
       · dsimp  at *
         rw [associator_inv_naturality_assoc]
-        slice_lhs 2 3 => rw [← tensor_comp, f_ih_f (⟦f_f⟧)]
-        conv_lhs => rw [← @category.id_comp (F C) _ _ _ (⟦f_g⟧)]
+        slice_lhs 2 3 => rw [← tensor_comp, f_ih_f ⟦f_f⟧]
+        conv_lhs => rw [← @category.id_comp (F C) _ _ _ ⟦f_g⟧]
         simp only [category.comp_id, tensor_comp, category.assoc]
         congr 2
         rw [← mk_tensor, Quotientₓ.lift_mk]
         dsimp
-        rw [functor.map_comp, ← category.assoc, ← f_ih_g (⟦f_g⟧), ← @category.comp_id (F C) _ _ _ (⟦f_g⟧), ←
+        rw [functor.map_comp, ← category.assoc, ← f_ih_g ⟦f_g⟧, ← @category.comp_id (F C) _ _ _ ⟦f_g⟧, ←
           category.id_comp ((discrete.functor inclusion_obj).map _), tensor_comp]
         dsimp
         simp only [category.assoc, category.comp_id]

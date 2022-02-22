@@ -135,7 +135,7 @@ variable {α : Type _} [DecidableEq α] (s s' : Cycle α)
 where each element in the list is permuted to the next one, defined as `form_perm`.
 -/
 def formPerm : ∀ s : Cycle α h : Nodup s, Equivₓ.Perm α := fun s =>
-  Quot.hrecOnₓ s (fun l h => formPerm l) fun h : l₁ ~r l₂ => by
+  Quot.hrecOn s (fun l h => formPerm l) fun h : l₁ ~r l₂ => by
     ext
     · exact h.nodup_iff
       
@@ -500,6 +500,7 @@ def isoCycle' : { f : Perm α // IsCycle f } ≃ { s : Cycle α // s.Nodup ∧ s
     simp [Cycle.form_perm_eq_form_perm_iff, iff_not_comm.mp hs.nontrivial_iff, iff_not_comm.mp hs'.nontrivial_iff, ht]
 
 -- ././Mathport/Syntax/Translate/Basic.lean:1387:9: unsupported: advanced notation (l:(foldr `, ` (h t, list.cons h t) list.nil `]`))
+-- mathport name: «exprc[ ,]»
 notation3 "c["  =>
   Cycle.formPerm (↑l)
     (Cycle.nodup_coe_iff.mpr

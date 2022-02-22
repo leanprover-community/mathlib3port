@@ -65,8 +65,10 @@ structure FreimanHom (A : Set α) (β : Type _) [CommMonoidₓ α] [CommMonoid�
   map_prod_eq_map_prod' {s t : Multiset α} (hsA : ∀ ⦃x⦄, x ∈ s → x ∈ A) (htA : ∀ ⦃x⦄, x ∈ t → x ∈ A) (hs : s.card = n)
     (ht : t.card = n) (h : s.Prod = t.Prod) : (s.map to_fun).Prod = (t.map to_fun).Prod
 
+-- mathport name: «expr →+[ ] »
 notation:25 A " →+[" n:25 "] " β:0 => AddFreimanHom A β n
 
+-- mathport name: «expr →*[ ] »
 notation:25 A " →*[" n:25 "] " β:0 => FreimanHom A β n
 
 /-- `add_freiman_hom_class F s β n` states that `F` is a type of `n`-ary sums-preserving morphisms.
@@ -131,7 +133,7 @@ theorem coe_mk (f : α → β)
       ∀ s t : Multiset α,
         (∀ ⦃x⦄, x ∈ s → x ∈ A) →
           (∀ ⦃x⦄, x ∈ t → x ∈ A) → s.card = n → t.card = n → s.Prod = t.Prod → (s.map f).Prod = (t.map f).Prod) :
-    ⇑mk f h = f :=
+    ⇑(mk f h) = f :=
   rfl
 
 @[simp, to_additive]
@@ -160,7 +162,7 @@ protected def comp (f : B →*[n] γ) (g : A →*[n] β) (hAB : A.MapsTo g B) : 
       
 
 @[simp, to_additive]
-theorem coe_comp (f : B →*[n] γ) (g : A →*[n] β) {hfg} : ⇑f.comp g hfg = f ∘ g :=
+theorem coe_comp (f : B →*[n] γ) (g : A →*[n] β) {hfg} : ⇑(f.comp g hfg) = f ∘ g :=
   rfl
 
 @[to_additive]

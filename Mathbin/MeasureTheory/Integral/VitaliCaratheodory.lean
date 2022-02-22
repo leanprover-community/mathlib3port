@@ -78,6 +78,7 @@ variable {α : Type _} [TopologicalSpace α] [MeasurableSpace α] [BorelSpace α
 
 namespace MeasureTheory
 
+-- mathport name: «expr →ₛ »
 local infixr:25 " →ₛ " => SimpleFunc
 
 /-! ### Lower semicontinuous upper bound for nonnegative functions -/

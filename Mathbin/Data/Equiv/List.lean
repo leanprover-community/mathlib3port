@@ -106,7 +106,7 @@ def encodableOfList [DecidableEq α] (l : List α) (H : ∀ x, x ∈ l) : Encoda
   ⟨fun a => indexOfₓ a l, l.nth, fun a => index_of_nth (H _)⟩
 
 def truncEncodableOfFintype (α : Type _) [DecidableEq α] [Fintype α] : Trunc (Encodable α) :=
-  @Quot.recOnSubsingletonₓ _ (fun s : Multiset α => (∀ x : α, x ∈ s) → Trunc (Encodable α)) _ Finset.univ.1
+  @Quot.recOnSubsingleton _ (fun s : Multiset α => (∀ x : α, x ∈ s) → Trunc (Encodable α)) _ Finset.univ.1
     (fun l H => Trunc.mk <| encodableOfList l H) Finset.mem_univ
 
 /-- A noncomputable way to arbitrarily choose an ordering on a finite type.
@@ -144,7 +144,7 @@ def fintypeArrow (α : Type _) (β : Type _) [DecidableEq α] [Fintype α] [Enco
 def fintypePi (α : Type _) (π : α → Type _) [DecidableEq α] [Fintype α] [∀ a, Encodable (π a)] :
     Trunc (Encodable (∀ a, π a)) :=
   (Encodable.truncEncodableOfFintype α).bind fun a =>
-    (@fintypeArrow α (Σ a, π a) _ _ (@Encodable.sigma _ _ a _)).bind fun f =>
+    (@fintypeArrow α (Σa, π a) _ _ (@Encodable.sigma _ _ a _)).bind fun f =>
       Trunc.mk <| @Encodable.ofEquiv _ _ (@Encodable.subtype _ _ f _) (Equivₓ.piEquivSubtypeSigma α π)
 
 /-- The elements of a `fintype` as a sorted list. -/

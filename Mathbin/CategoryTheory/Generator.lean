@@ -81,7 +81,7 @@ def IsCodetecting (𝒢 : Set C) : Prop :=
 
 section Dual
 
-theorem is_separating_op_iff {𝒢 : Set C} : IsSeparating 𝒢.op ↔ IsCoseparating 𝒢 := by
+theorem is_separating_op_iff (𝒢 : Set C) : IsSeparating 𝒢.op ↔ IsCoseparating 𝒢 := by
   refine' ⟨fun h𝒢 X Y f g hfg => _, fun h𝒢 X Y f g hfg => _⟩
   · refine' Quiver.Hom.op_inj (h𝒢 _ _ fun G hG h => Quiver.Hom.unop_inj _)
     simpa only [unop_comp, Quiver.Hom.unop_op] using hfg _ (Set.mem_op.1 hG) _
@@ -105,7 +105,7 @@ theorem is_coseparating_unop_iff (𝒢 : Set Cᵒᵖ) : IsCoseparating 𝒢.unop
 theorem is_separating_unop_iff (𝒢 : Set Cᵒᵖ) : IsSeparating 𝒢.unop ↔ IsCoseparating 𝒢 := by
   rw [← is_coseparating_op_iff, Set.unop_op]
 
-theorem is_detecting_op_iff {𝒢 : Set C} : IsDetecting 𝒢.op ↔ IsCodetecting 𝒢 := by
+theorem is_detecting_op_iff (𝒢 : Set C) : IsDetecting 𝒢.op ↔ IsCodetecting 𝒢 := by
   refine' ⟨fun h𝒢 X Y f hf => _, fun h𝒢 X Y f hf => _⟩
   · refine' (is_iso_op_iff _).1 (h𝒢 _ fun G hG h => _)
     obtain ⟨t, ht, ht'⟩ := hf (unop G) (Set.mem_op.1 hG) h.unop
@@ -120,7 +120,7 @@ theorem is_detecting_op_iff {𝒢 : Set C} : IsDetecting 𝒢.op ↔ IsCodetecti
           simpa only using hy)
     
 
-theorem is_codetecting_op_iff {𝒢 : Set C} : IsCodetecting 𝒢.op ↔ IsDetecting 𝒢 := by
+theorem is_codetecting_op_iff (𝒢 : Set C) : IsCodetecting 𝒢.op ↔ IsDetecting 𝒢 := by
   refine' ⟨fun h𝒢 X Y f hf => _, fun h𝒢 X Y f hf => _⟩
   · refine' (is_iso_op_iff _).1 (h𝒢 _ fun G hG h => _)
     obtain ⟨t, ht, ht'⟩ := hf (unop G) (Set.mem_op.1 hG) h.unop
@@ -135,7 +135,7 @@ theorem is_codetecting_op_iff {𝒢 : Set C} : IsCodetecting 𝒢.op ↔ IsDetec
           simpa only using hy)
     
 
-theorem is_detecting_unop_iff {𝒢 : Set Cᵒᵖ} : IsDetecting 𝒢.unop ↔ IsCodetecting 𝒢 := by
+theorem is_detecting_unop_iff (𝒢 : Set Cᵒᵖ) : IsDetecting 𝒢.unop ↔ IsCodetecting 𝒢 := by
   rw [← is_codetecting_op_iff, Set.unop_op]
 
 theorem is_codetecting_unop_iff {𝒢 : Set Cᵒᵖ} : IsCodetecting 𝒢.unop ↔ IsDetecting 𝒢 := by
@@ -177,7 +177,7 @@ theorem IsCoseparating.is_codetecting [Balanced C] {𝒢 : Set C} : IsCoseparati
 
 end
 
-theorem is_detecting_iff_is_separating [HasEqualizers C] [Balanced C] {𝒢 : Set C} : IsDetecting 𝒢 ↔ IsSeparating 𝒢 :=
+theorem is_detecting_iff_is_separating [HasEqualizers C] [Balanced C] (𝒢 : Set C) : IsDetecting 𝒢 ↔ IsSeparating 𝒢 :=
   ⟨IsDetecting.is_separating, IsSeparating.is_detecting⟩
 
 theorem is_codetecting_iff_is_coseparating [HasCoequalizers C] [Balanced C] {𝒢 : Set C} :
@@ -284,7 +284,7 @@ theorem IsSeparator.is_detector [Balanced C] {G : C} : IsSeparator G → IsDetec
 theorem IsCospearator.is_codetector [Balanced C] {G : C} : IsCoseparator G → IsCodetector G :=
   is_coseparating.is_codetecting
 
-theorem is_separator_def {G : C} : IsSeparator G ↔ ∀ ⦃X Y : C⦄ f g : X ⟶ Y, (∀ h : G ⟶ X, h ≫ f = h ≫ g) → f = g :=
+theorem is_separator_def (G : C) : IsSeparator G ↔ ∀ ⦃X Y : C⦄ f g : X ⟶ Y, (∀ h : G ⟶ X, h ≫ f = h ≫ g) → f = g :=
   ⟨fun hG X Y f g hfg =>
     (hG _ _) fun H hH h => by
       obtain rfl := Set.mem_singleton_iff.1 hH
@@ -292,9 +292,9 @@ theorem is_separator_def {G : C} : IsSeparator G ↔ ∀ ⦃X Y : C⦄ f g : X �
     fun hG X Y f g hfg => (hG _ _) fun h => hfg _ (Set.mem_singleton _) _⟩
 
 theorem IsSeparator.def {G : C} : IsSeparator G → ∀ ⦃X Y : C⦄ f g : X ⟶ Y, (∀ h : G ⟶ X, h ≫ f = h ≫ g) → f = g :=
-  is_separator_def.1
+  (is_separator_def _).1
 
-theorem is_coseparator_def {G : C} : IsCoseparator G ↔ ∀ ⦃X Y : C⦄ f g : X ⟶ Y, (∀ h : Y ⟶ G, f ≫ h = g ≫ h) → f = g :=
+theorem is_coseparator_def (G : C) : IsCoseparator G ↔ ∀ ⦃X Y : C⦄ f g : X ⟶ Y, (∀ h : Y ⟶ G, f ≫ h = g ≫ h) → f = g :=
   ⟨fun hG X Y f g hfg =>
     (hG _ _) fun H hH h => by
       obtain rfl := Set.mem_singleton_iff.1 hH
@@ -302,9 +302,9 @@ theorem is_coseparator_def {G : C} : IsCoseparator G ↔ ∀ ⦃X Y : C⦄ f g :
     fun hG X Y f g hfg => (hG _ _) fun h => hfg _ (Set.mem_singleton _) _⟩
 
 theorem IsCoseparator.def {G : C} : IsCoseparator G → ∀ ⦃X Y : C⦄ f g : X ⟶ Y, (∀ h : Y ⟶ G, f ≫ h = g ≫ h) → f = g :=
-  is_coseparator_def.1
+  (is_coseparator_def _).1
 
-theorem is_detector_def {G : C} : IsDetector G ↔ ∀ ⦃X Y : C⦄ f : X ⟶ Y, (∀ h : G ⟶ Y, ∃! h', h' ≫ f = h) → IsIso f :=
+theorem is_detector_def (G : C) : IsDetector G ↔ ∀ ⦃X Y : C⦄ f : X ⟶ Y, (∀ h : G ⟶ Y, ∃! h', h' ≫ f = h) → IsIso f :=
   ⟨fun hG X Y f hf =>
     (hG _) fun H hH h => by
       obtain rfl := Set.mem_singleton_iff.1 hH
@@ -312,9 +312,9 @@ theorem is_detector_def {G : C} : IsDetector G ↔ ∀ ⦃X Y : C⦄ f : X ⟶ Y
     fun hG X Y f hf => (hG _) fun h => hf _ (Set.mem_singleton _) _⟩
 
 theorem IsDetector.def {G : C} : IsDetector G → ∀ ⦃X Y : C⦄ f : X ⟶ Y, (∀ h : G ⟶ Y, ∃! h', h' ≫ f = h) → IsIso f :=
-  is_detector_def.1
+  (is_detector_def _).1
 
-theorem is_codetector_def {G : C} :
+theorem is_codetector_def (G : C) :
     IsCodetector G ↔ ∀ ⦃X Y : C⦄ f : X ⟶ Y, (∀ h : X ⟶ G, ∃! h', f ≫ h' = h) → IsIso f :=
   ⟨fun hG X Y f hf =>
     (hG _) fun H hH h => by
@@ -323,19 +323,19 @@ theorem is_codetector_def {G : C} :
     fun hG X Y f hf => (hG _) fun h => hf _ (Set.mem_singleton _) _⟩
 
 theorem IsCodetector.def {G : C} : IsCodetector G → ∀ ⦃X Y : C⦄ f : X ⟶ Y, (∀ h : X ⟶ G, ∃! h', f ≫ h' = h) → IsIso f :=
-  is_codetector_def.1
+  (is_codetector_def _).1
 
-theorem is_separator_iff_faithful_coyoneda_obj {G : C} : IsSeparator G ↔ Faithful (coyoneda.obj (op G)) :=
+theorem is_separator_iff_faithful_coyoneda_obj (G : C) : IsSeparator G ↔ Faithful (coyoneda.obj (op G)) :=
   ⟨fun hG => ⟨fun X Y f g hfg => hG.def _ _ (congr_funₓ hfg)⟩, fun h =>
-    is_separator_def.2 fun X Y f g hfg => (coyoneda.obj (op G)).map_injective (funext hfg)⟩
+    (is_separator_def _).2 fun X Y f g hfg => (coyoneda.obj (op G)).map_injective (funext hfg)⟩
 
-theorem is_coseparator_iff_faithful_yoneda_obj {G : C} : IsCoseparator G ↔ Faithful (yoneda.obj G) :=
+theorem is_coseparator_iff_faithful_yoneda_obj (G : C) : IsCoseparator G ↔ Faithful (yoneda.obj G) :=
   ⟨fun hG => ⟨fun X Y f g hfg => Quiver.Hom.unop_inj (hG.def _ _ (congr_funₓ hfg))⟩, fun h =>
-    is_coseparator_def.2 fun X Y f g hfg => Quiver.Hom.op_inj <| (yoneda.obj G).map_injective (funext hfg)⟩
+    (is_coseparator_def _).2 fun X Y f g hfg => Quiver.Hom.op_inj <| (yoneda.obj G).map_injective (funext hfg)⟩
 
-theorem is_detector_iff_reflects_isomorphisms_coyoneda_obj {G : C} :
+theorem is_detector_iff_reflects_isomorphisms_coyoneda_obj (G : C) :
     IsDetector G ↔ ReflectsIsomorphisms (coyoneda.obj (op G)) := by
-  refine' ⟨fun hG => ⟨fun X Y f hf => hG.def _ fun h => _⟩, fun h => is_detector_def.2 fun X Y f hf => _⟩
+  refine' ⟨fun hG => ⟨fun X Y f hf => hG.def _ fun h => _⟩, fun h => (is_detector_def _).2 fun X Y f hf => _⟩
   · rw [is_iso_iff_bijective, Function.bijective_iff_exists_unique] at hf
     exact hf h
     
@@ -344,9 +344,9 @@ theorem is_detector_iff_reflects_isomorphisms_coyoneda_obj {G : C} :
     rwa [is_iso_iff_bijective, Function.bijective_iff_exists_unique]
     
 
-theorem is_codetector_iff_reflects_isomorphisms_yoneda_obj {G : C} :
+theorem is_codetector_iff_reflects_isomorphisms_yoneda_obj (G : C) :
     IsCodetector G ↔ ReflectsIsomorphisms (yoneda.obj G) := by
-  refine' ⟨fun hG => ⟨fun X Y f hf => _⟩, fun h => is_codetector_def.2 fun X Y f hf => _⟩
+  refine' ⟨fun hG => ⟨fun X Y f hf => _⟩, fun h => (is_codetector_def _).2 fun X Y f hf => _⟩
   · refine' (is_iso_unop_iff _).1 (hG.def _ _)
     rwa [is_iso_iff_bijective, Function.bijective_iff_exists_unique] at hf
     

@@ -259,7 +259,7 @@ def mkContinuous (C : ℝ) (H : ∀ m, ∥f m∥ ≤ C * ∏ i, ∥m i∥) : Con
   { f with cont := f.continuous_of_bound C H }
 
 @[simp]
-theorem coe_mk_continuous (C : ℝ) (H : ∀ m, ∥f m∥ ≤ C * ∏ i, ∥m i∥) : ⇑f.mkContinuous C H = f :=
+theorem coe_mk_continuous (C : ℝ) (H : ∀ m, ∥f m∥ ≤ C * ∏ i, ∥m i∥) : ⇑(f.mkContinuous C H) = f :=
   rfl
 
 /-- Given a multilinear map in `n` variables, if one restricts it to `k` variables putting `z` on
@@ -787,7 +787,7 @@ variable (𝕜 ι)
 `m i` (multiplied by a fixed reference element `z` in the target module) -/
 protected def mkPiField (z : G) : ContinuousMultilinearMap 𝕜 (fun i : ι => 𝕜) G :=
   MultilinearMap.mkContinuous (MultilinearMap.mkPiRing 𝕜 ι z) ∥z∥ fun m => by
-    simp only [MultilinearMap.mk_pi_ring_apply, norm_smul, NormedField.norm_prod, mul_comm]
+    simp only [MultilinearMap.mk_pi_ring_apply, norm_smul, norm_prod, mul_comm]
 
 variable {𝕜 ι}
 
@@ -940,7 +940,7 @@ def mkContinuousMultilinear (f : MultilinearMap 𝕜 E (MultilinearMap 𝕜 E' G
 @[simp]
 theorem mk_continuous_multilinear_apply (f : MultilinearMap 𝕜 E (MultilinearMap 𝕜 E' G)) {C : ℝ}
     (H : ∀ m₁ m₂, ∥f m₁ m₂∥ ≤ (C * ∏ i, ∥m₁ i∥) * ∏ i, ∥m₂ i∥) (m : ∀ i, E i) :
-    ⇑mkContinuousMultilinear f C H m = f m :=
+    ⇑(mkContinuousMultilinear f C H m) = f m :=
   rfl
 
 theorem mk_continuous_multilinear_norm_le' (f : MultilinearMap 𝕜 E (MultilinearMap 𝕜 E' G)) (C : ℝ)

@@ -49,6 +49,7 @@ omit V V₂
 
 variable {𝕜 P P₂}
 
+-- mathport name: «expr →ᵃⁱ[ ] »
 notation:25 P " →ᵃⁱ[" 𝕜-- `→ᵃᵢ` would be more consistent with the linear isometry notation, but it is uglier
 :25 "] " P₂:0 => AffineIsometry 𝕜 P P₂
 
@@ -207,7 +208,7 @@ def comp (g : P₂ →ᵃⁱ[𝕜] P₃) (f : P →ᵃⁱ[𝕜] P₂) : P →ᵃ
   ⟨g.toAffineMap.comp f.toAffineMap, fun x => (g.norm_map _).trans (f.norm_map _)⟩
 
 @[simp]
-theorem coe_comp (g : P₂ →ᵃⁱ[𝕜] P₃) (f : P →ᵃⁱ[𝕜] P₂) : ⇑g.comp f = g ∘ f :=
+theorem coe_comp (g : P₂ →ᵃⁱ[𝕜] P₃) (f : P →ᵃⁱ[𝕜] P₂) : ⇑(g.comp f) = g ∘ f :=
   rfl
 
 omit V V₂ V₃
@@ -259,6 +260,7 @@ variable {𝕜 P P₂}
 
 omit V V₂
 
+-- mathport name: «expr ≃ᵃⁱ[ ] »
 notation:25 P " ≃ᵃⁱ[" 𝕜-- `≃ᵃᵢ` would be more consistent with the linear isometry equiv notation, but it is uglier
 :25 "] " P₂:0 => AffineIsometryEquiv 𝕜 P P₂
 
@@ -281,7 +283,7 @@ instance : CoeFun (P ≃ᵃⁱ[𝕜] P₂) fun _ => P → P₂ :=
   ⟨fun f => f.toFun⟩
 
 @[simp]
-theorem coe_mk (e : P ≃ᵃ[𝕜] P₂) (he : ∀ x, ∥e.linear x∥ = ∥x∥) : ⇑mk e he = e :=
+theorem coe_mk (e : P ≃ᵃ[𝕜] P₂) (he : ∀ x, ∥e.linear x∥ = ∥x∥) : ⇑(mk e he) = e :=
   rfl
 
 @[simp]
@@ -313,7 +315,7 @@ def mk' (e : P₁ → P₂) (e' : V₁ ≃ₗᵢ[𝕜] V₂) (p : P₁) (h : ∀
   { AffineEquiv.mk' e e'.toLinearEquiv p h with norm_map := e'.norm_map }
 
 @[simp]
-theorem coe_mk' (e : P₁ → P₂) (e' : V₁ ≃ₗᵢ[𝕜] V₂) p h : ⇑mk' e e' p h = e :=
+theorem coe_mk' (e : P₁ → P₂) (e' : V₁ ≃ₗᵢ[𝕜] V₂) p h : ⇑(mk' e e' p h) = e :=
   rfl
 
 @[simp]
@@ -411,7 +413,7 @@ instance : Inhabited (P ≃ᵃⁱ[𝕜] P) :=
   ⟨refl 𝕜 P⟩
 
 @[simp]
-theorem coe_refl : ⇑refl 𝕜 P = id :=
+theorem coe_refl : ⇑(refl 𝕜 P) = id :=
   rfl
 
 @[simp]
@@ -465,7 +467,7 @@ def trans (e' : P₂ ≃ᵃⁱ[𝕜] P₃) : P ≃ᵃⁱ[𝕜] P₃ :=
 include V V₂
 
 @[simp]
-theorem coe_trans (e₁ : P ≃ᵃⁱ[𝕜] P₂) (e₂ : P₂ ≃ᵃⁱ[𝕜] P₃) : ⇑e₁.trans e₂ = e₂ ∘ e₁ :=
+theorem coe_trans (e₁ : P ≃ᵃⁱ[𝕜] P₂) (e₂ : P₂ ≃ᵃⁱ[𝕜] P₃) : ⇑(e₁.trans e₂) = e₂ ∘ e₁ :=
   rfl
 
 omit V V₂ V₃
@@ -593,7 +595,7 @@ variable {𝕜}
 include V
 
 @[simp]
-theorem coe_vadd_const (p : P) : ⇑vaddConst 𝕜 p = fun v => v +ᵥ p :=
+theorem coe_vadd_const (p : P) : ⇑(vaddConst 𝕜 p) = fun v => v +ᵥ p :=
   rfl
 
 @[simp]
@@ -617,7 +619,7 @@ variable {𝕜}
 include V
 
 @[simp]
-theorem coe_const_vsub (p : P) : ⇑constVsub 𝕜 p = (· -ᵥ ·) p :=
+theorem coe_const_vsub (p : P) : ⇑(constVsub 𝕜 p) = (· -ᵥ ·) p :=
   rfl
 
 @[simp]

@@ -193,7 +193,7 @@ protected def single (i : ι) (s : Set X) : BumpCovering ι X s where
       simp ⟩
 
 @[simp]
-theorem coe_single (i : ι) (s : Set X) : ⇑BumpCovering.single i s = Pi.single i 1 :=
+theorem coe_single (i : ι) (s : Set X) : ⇑(BumpCovering.single i s) = Pi.single i 1 :=
   rfl
 
 instance [Inhabited ι] : Inhabited (BumpCovering ι X s) :=

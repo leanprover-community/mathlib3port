@@ -275,7 +275,7 @@ variable {σ : α → Type _} (a : α) (s : Multiset α) (t : ∀ a, Multiset (�
 
 /-- `sigma s t` is the dependent version of `product`. It is the sum of
   `(a, b)` as `a` ranges over `s` and `b` ranges over `t a`. -/
-protected def sigma (s : Multiset α) (t : ∀ a, Multiset (σ a)) : Multiset (Σ a, σ a) :=
+protected def sigma (s : Multiset α) (t : ∀ a, Multiset (σ a)) : Multiset (Σa, σ a) :=
   s.bind fun a => (t a).map <| Sigma.mk a
 
 @[simp]
@@ -304,7 +304,7 @@ theorem sigma_add : ∀ t u : ∀ a, Multiset (σ a), (s.Sigma fun a => t a + u 
     rw [cons_sigma, IH] <;> simp <;> cc
 
 @[simp]
-theorem mem_sigma {s t} : ∀ {p : Σ a, σ a}, p ∈ @Multiset.sigma α σ s t ↔ p.1 ∈ s ∧ p.2 ∈ t p.1
+theorem mem_sigma {s t} : ∀ {p : Σa, σ a}, p ∈ @Multiset.sigma α σ s t ↔ p.1 ∈ s ∧ p.2 ∈ t p.1
   | ⟨a, b⟩ => by
     simp [Multiset.sigma, and_assoc, And.left_comm]
 

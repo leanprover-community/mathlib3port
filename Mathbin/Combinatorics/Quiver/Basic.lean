@@ -41,6 +41,7 @@ Except when constructing instances, you should rarely see this, and use the `⟶
 class Quiver (V : Type u) where
   Hom : V → V → Sort v
 
+-- mathport name: «expr ⟶ »
 infixr:10 " ⟶ " => Quiver.Hom
 
 /-- A morphism of quivers. As we will later have categorical functors extend this structure,

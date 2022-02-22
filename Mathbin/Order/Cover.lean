@@ -29,6 +29,7 @@ variable [LT α] {a b : α}
 def Covby (a b : α) : Prop :=
   a < b ∧ ∀ ⦃c⦄, a < c → ¬c < b
 
+-- mathport name: «expr ⋖ »
 infixl:50 " ⋖ " => Covby
 
 theorem Covby.lt (h : a ⋖ b) : a < b :=

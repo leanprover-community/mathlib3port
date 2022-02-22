@@ -99,7 +99,7 @@ category structure.
 This category is equivalent to `J`.
 -/
 abbrev Decomposed (J : Type u₁) [Category.{v₁} J] :=
-  Σ j : ConnectedComponents J, Component j
+  Σj : ConnectedComponents J, Component j
 
 /-- The inclusion of each component into the decomposed category. This is just `sigma.incl` but having
 this abbreviation helps guide typeclass search to get the right category instance on `decomposed J`.

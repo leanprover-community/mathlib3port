@@ -82,6 +82,7 @@ variable {R : Type u}
 
 variable [EuclideanDomain R]
 
+-- mathport name: «expr ≺ »
 local infixl:50 " ≺ " => EuclideanDomain.R
 
 -- see Note [lower instance priority]

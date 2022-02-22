@@ -36,9 +36,10 @@ are.
 
 variable {ι : Type _} {α : ι → Type _}
 
-namespace Psigma
+namespace PSigma
 
-notation3 "Σₗ' " (...) ", " r:(scoped p => Lex Psigma p) => r
+-- mathport name: «exprΣₗ' , »
+notation3 "Σₗ' " (...) ", " r:(scoped p => Lex PSigma p) => r
 
 /-- The lexicographical `≤` on a sigma type. -/
 instance Lex.hasLe [LT ι] [∀ i, LE (α i)] : LE (Σₗ' i, α i) where
@@ -117,7 +118,7 @@ instance Lex.linearOrder [LinearOrderₓ ι] [∀ i, LinearOrderₓ (α i)] : Li
         
       · exact Or.inr (lex.left _ _ hji)
         ,
-    DecidableEq := Psigma.decidableEq, decidableLe := Lex.decidable _ _, decidableLt := Lex.decidable _ _ }
+    DecidableEq := PSigma.decidableEq, decidableLe := Lex.decidable _ _, decidableLt := Lex.decidable _ _ }
 
-end Psigma
+end PSigma
 

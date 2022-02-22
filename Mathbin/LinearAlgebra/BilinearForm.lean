@@ -372,7 +372,7 @@ def toLinHom : BilinForm R M →ₗ[R₂] M →ₗ[R₂] M →ₗ[R] R where
 variable {R₂}
 
 @[simp]
-theorem to_lin'_apply (A : BilinForm R M) (x : M) : ⇑toLinHom R₂ A x = A x :=
+theorem to_lin'_apply (A : BilinForm R M) (x : M) : ⇑(toLinHom R₂ A x) = A x :=
   rfl
 
 /-- The linear map obtained from a `bilin_form` by fixing the left co-ordinate and evaluating in
@@ -403,7 +403,7 @@ def toLinHomFlip : BilinForm R M →ₗ[R₂] M →ₗ[R₂] M →ₗ[R] R :=
 variable {R₂}
 
 @[simp]
-theorem to_lin'_flip_apply (A : BilinForm R M) (x : M) : ⇑toLinHomFlip R₂ A x = fun y => A y x :=
+theorem to_lin'_flip_apply (A : BilinForm R M) (x : M) : ⇑(toLinHomFlip R₂ A x) = fun y => A y x :=
   rfl
 
 /-- The linear map obtained from a `bilin_form` by fixing the right co-ordinate and evaluating in
@@ -457,7 +457,7 @@ theorem BilinForm.to_lin_symm : (BilinForm.toLin.symm : _ ≃ₗ[R₂] BilinForm
   LinearMap.toBilin.symm_symm
 
 @[simp, norm_cast]
-theorem BilinForm.to_lin_apply (x : M₂) : ⇑BilinForm.toLin B₂ x = B₂ x :=
+theorem BilinForm.to_lin_apply (x : M₂) : ⇑(BilinForm.toLin B₂ x) = B₂ x :=
   rfl
 
 end EquivLin
@@ -1651,7 +1651,7 @@ theorem finrank_add_finrank_orthogonal {B : BilinForm K V} {W : Subspace K V} (b
     finrank_map_subtype_eq]
   conv_rhs =>
     rw [← @Subspace.finrank_add_finrank_dual_annihilator_comap_eq K V _ _ _ _ (B.to_lin.dom_restrict W).range,
-      add_commₓ, ← add_assocₓ, add_commₓ (finrank K (↥(B.to_lin.dom_restrict W).ker)),
+      add_commₓ, ← add_assocₓ, add_commₓ (finrank K ↥(B.to_lin.dom_restrict W).ker),
       LinearMap.finrank_range_add_finrank_ker]
 
 /-- A subspace is complement to its orthogonal complement with respect to some

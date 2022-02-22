@@ -241,7 +241,7 @@ def castHom [CharZero α] : ℚ →+* α :=
 variable {α}
 
 @[simp]
-theorem coe_cast_hom [CharZero α] : ⇑castHom α = coe :=
+theorem coe_cast_hom [CharZero α] : ⇑(castHom α) = coe :=
   rfl
 
 @[simp, norm_cast]

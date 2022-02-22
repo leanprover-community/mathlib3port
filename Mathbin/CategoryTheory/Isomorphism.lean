@@ -63,6 +63,7 @@ restate_axiom iso.inv_hom_id'
 
 attribute [simp, reassoc] iso.hom_inv_id iso.inv_hom_id
 
+-- mathport name: «expr ≅ »
 infixr:10 " ≅ " => Iso
 
 -- type as \cong or \iso
@@ -134,6 +135,7 @@ def trans (α : X ≅ Y) (β : Y ≅ Z) : X ≅ Z where
   Hom := α.Hom ≫ β.Hom
   inv := β.inv ≫ α.inv
 
+-- mathport name: «expr ≪≫ »
 infixr:80 " ≪≫ " => Iso.trans
 
 -- type as `\ll \gg`.

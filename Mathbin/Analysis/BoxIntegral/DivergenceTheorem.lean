@@ -53,10 +53,13 @@ variable {E : Type u} [NormedGroup E] [NormedSpace ℝ E] {n : ℕ}
 
 namespace BoxIntegral
 
+-- mathport name: «exprℝⁿ»
 local notation "ℝⁿ" => Finₓ n → ℝ
 
+-- mathport name: «exprℝⁿ⁺¹»
 local notation "ℝⁿ⁺¹" => Finₓ (n + 1) → ℝ
 
+-- mathport name: «exprEⁿ⁺¹»
 local notation "Eⁿ⁺¹" => Finₓ (n + 1) → E
 
 variable [CompleteSpace E] (I : Box (Finₓ (n + 1))) {i : Finₓ (n + 1)}

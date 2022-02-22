@@ -55,6 +55,7 @@ variable {p : ℕ} {R S T : Type _} [hp : Fact p.Prime] [CommRingₓ R] [CommRin
 
 variable {α : Type _} {β : Type _}
 
+-- mathport name: «expr𝕎»
 local notation "𝕎" => WittVector p
 
 -- type as `\bbW`

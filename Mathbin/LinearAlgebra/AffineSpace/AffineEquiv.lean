@@ -47,6 +47,7 @@ structure AffineEquiv (k P₁ P₂ : Type _) {V₁ V₂ : Type _} [Ringₓ k] [A
   linear : V₁ ≃ₗ[k] V₂
   map_vadd' : ∀ p : P₁ v : V₁, to_equiv (v +ᵥ p) = linear v +ᵥ to_equiv p
 
+-- mathport name: «expr ≃ᵃ[ ] »
 notation:25 P₁ " ≃ᵃ[" k:25 "] " P₂:0 => AffineEquiv k P₁ P₂
 
 variable {k P₁ P₂ P₃ P₄ V₁ V₂ V₃ V₄ : Type _} [Ringₓ k] [AddCommGroupₓ V₁] [Module k V₁] [AddTorsor V₁ P₁]
@@ -75,7 +76,7 @@ def refl : P₁ ≃ᵃ[k] P₁ where
   map_vadd' := fun _ _ => rfl
 
 @[simp]
-theorem coe_refl : ⇑refl k P₁ = id :=
+theorem coe_refl : ⇑(refl k P₁) = id :=
   rfl
 
 theorem refl_apply (x : P₁) : refl k P₁ x = x :=
@@ -170,7 +171,7 @@ def mk' (e : P₁ → P₂) (e' : V₁ ≃ₗ[k] V₂) (p : P₁) (h : ∀ p' : 
     simp [h p', h (v +ᵥ p'), vadd_vsub_assoc, vadd_vadd]
 
 @[simp]
-theorem coe_mk' (e : P₁ ≃ P₂) (e' : V₁ ≃ₗ[k] V₂) p h : ⇑mk' e e' p h = e :=
+theorem coe_mk' (e : P₁ ≃ P₂) (e' : V₁ ≃ₗ[k] V₂) p h : ⇑(mk' e e' p h) = e :=
   rfl
 
 @[simp]
@@ -250,7 +251,7 @@ def trans (e : P₁ ≃ᵃ[k] P₂) (e' : P₂ ≃ᵃ[k] P₃) : P₁ ≃ᵃ[k] 
     simp only [LinearEquiv.trans_apply, coe_to_equiv, (· ∘ ·), Equivₓ.coe_trans, map_vadd]
 
 @[simp]
-theorem coe_trans (e : P₁ ≃ᵃ[k] P₂) (e' : P₂ ≃ᵃ[k] P₃) : ⇑e.trans e' = e' ∘ e :=
+theorem coe_trans (e : P₁ ≃ᵃ[k] P₂) (e' : P₂ ≃ᵃ[k] P₃) : ⇑(e.trans e') = e' ∘ e :=
   rfl
 
 theorem trans_apply (e : P₁ ≃ᵃ[k] P₂) (e' : P₂ ≃ᵃ[k] P₃) (p : P₁) : e.trans e' p = e' (e p) :=
@@ -353,7 +354,7 @@ def constVsub (p : P₁) : P₁ ≃ᵃ[k] V₁ where
     simp [vsub_vadd_eq_vsub_sub, neg_add_eq_sub]
 
 @[simp]
-theorem coe_const_vsub (p : P₁) : ⇑constVsub k p = (· -ᵥ ·) p :=
+theorem coe_const_vsub (p : P₁) : ⇑(constVsub k p) = (· -ᵥ ·) p :=
   rfl
 
 @[simp]

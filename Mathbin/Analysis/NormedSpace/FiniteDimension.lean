@@ -627,7 +627,7 @@ end Riesz
 
 /-- An injective linear map with finite-dimensional domain is a closed embedding. -/
 theorem LinearEquiv.closed_embedding_of_injective {f : E →ₗ[𝕜] F} (hf : f.ker = ⊥) [FiniteDimensional 𝕜 E] :
-    ClosedEmbedding (⇑f) :=
+    ClosedEmbedding ⇑f :=
   let g := LinearEquiv.ofInjective f (LinearMap.ker_eq_bot.mp hf)
   { embedding_subtype_coe.comp g.toContinuousLinearEquiv.toHomeomorph.Embedding with
     closed_range := by

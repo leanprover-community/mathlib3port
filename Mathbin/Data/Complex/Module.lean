@@ -163,7 +163,7 @@ noncomputable def basisOneI : Basis (Finₓ 2) ℝ ℂ :=
 -- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»
 @[simp]
 theorem coe_basis_one_I_repr (z : ℂ) :
-    ⇑basisOneI.repr z =
+    ⇑(basisOneI.repr z) =
       «expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»" :=
   rfl
 

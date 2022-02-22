@@ -28,6 +28,7 @@ open_locale TopologicalSpace
 
 variable {α : Type _} {β : Type _}
 
+-- mathport name: «expr ⟶ »
 local notation f " ⟶ " limit => Tendsto f atTop (𝓝 limit)
 
 /-! ### Sequential closures, sequential continuity, and sequential spaces. -/

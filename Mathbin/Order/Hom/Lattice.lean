@@ -182,7 +182,7 @@ instance : Inhabited (SupHom α α) :=
   ⟨SupHom.id α⟩
 
 @[simp]
-theorem coe_id : ⇑SupHom.id α = id :=
+theorem coe_id : ⇑(SupHom.id α) = id :=
   rfl
 
 variable {α}
@@ -255,7 +255,7 @@ def const (b : β) : SupHom α β :=
   ⟨fun _ => b, fun _ _ => sup_idem.symm⟩
 
 @[simp]
-theorem coe_const (b : β) : ⇑const α b = Function.const α b :=
+theorem coe_const (b : β) : ⇑(const α b) = Function.const α b :=
   rfl
 
 @[simp]
@@ -310,7 +310,7 @@ instance : Inhabited (InfHom α α) :=
   ⟨InfHom.id α⟩
 
 @[simp]
-theorem coe_id : ⇑InfHom.id α = id :=
+theorem coe_id : ⇑(InfHom.id α) = id :=
   rfl
 
 variable {α}
@@ -383,7 +383,7 @@ def const (b : β) : InfHom α β :=
   ⟨fun _ => b, fun _ _ => inf_idem.symm⟩
 
 @[simp]
-theorem coe_const (b : β) : ⇑const α b = Function.const α b :=
+theorem coe_const (b : β) : ⇑(const α b) = Function.const α b :=
   rfl
 
 @[simp]
@@ -440,7 +440,7 @@ instance : Inhabited (LatticeHom α α) :=
   ⟨LatticeHom.id α⟩
 
 @[simp]
-theorem coe_id : ⇑LatticeHom.id α = id :=
+theorem coe_id : ⇑(LatticeHom.id α) = id :=
   rfl
 
 variable {α}
@@ -537,7 +537,7 @@ def toLatticeHom (f : F) : LatticeHom α β :=
   f
 
 @[simp]
-theorem coe_to_lattice_hom (f : F) : ⇑toLatticeHom α β f = f :=
+theorem coe_to_lattice_hom (f : F) : ⇑(toLatticeHom α β f) = f :=
   rfl
 
 @[simp]
@@ -595,7 +595,7 @@ instance : Inhabited (BoundedLatticeHom α α) :=
   ⟨BoundedLatticeHom.id α⟩
 
 @[simp]
-theorem coe_id : ⇑BoundedLatticeHom.id α = id :=
+theorem coe_id : ⇑(BoundedLatticeHom.id α) = id :=
   rfl
 
 variable {α}

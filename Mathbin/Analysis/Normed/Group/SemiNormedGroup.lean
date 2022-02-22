@@ -46,7 +46,7 @@ theorem coe_of (V : Type u) [SemiNormedGroup V] : (SemiNormedGroupₓ.of V : Typ
   rfl
 
 @[simp]
-theorem coe_id (V : SemiNormedGroupₓ) : ⇑𝟙 V = id :=
+theorem coe_id (V : SemiNormedGroupₓ) : ⇑(𝟙 V) = id :=
   rfl
 
 @[simp]
@@ -148,7 +148,7 @@ theorem coe_of (V : Type u) [SemiNormedGroup V] : (SemiNormedGroup₁.of V : Typ
   rfl
 
 @[simp]
-theorem coe_id (V : SemiNormedGroup₁) : ⇑𝟙 V = id :=
+theorem coe_id (V : SemiNormedGroup₁) : ⇑(𝟙 V) = id :=
   rfl
 
 @[simp]

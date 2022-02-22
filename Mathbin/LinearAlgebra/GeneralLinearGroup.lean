@@ -32,6 +32,7 @@ Defined as a subtype of matrices-/
 abbrev GeneralLinearGroup (n : Type u) (R : Type v) [DecidableEq n] [Fintype n] [CommRingₓ R] : Type _ :=
   (Matrix n n R)ˣ
 
+-- mathport name: «exprGL»
 notation "GL" => GeneralLinearGroup
 
 namespace GeneralLinearGroup

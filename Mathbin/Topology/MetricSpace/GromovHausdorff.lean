@@ -44,6 +44,7 @@ noncomputable section
 
 open_locale Classical TopologicalSpace Ennreal
 
+-- mathport name: «exprℓ_infty_ℝ»
 local notation "ℓ_infty_ℝ" => lp (fun n : ℕ => ℝ) ∞
 
 universe u v w
@@ -721,10 +722,10 @@ instance : SecondCountableTopology GHSpace := by
   let E := fun p : GH_space => e p (s p) (hs p).1
   -- A function `F` associating to `p : GH_space` the data of all distances between points
   -- in the `ε`-dense set `s p`.
-  let F : GH_space → Σ n : ℕ, Finₓ n → Finₓ n → ℤ := fun p =>
+  let F : GH_space → Σn : ℕ, Finₓ n → Finₓ n → ℤ := fun p =>
     ⟨N p, fun a b => ⌊ε⁻¹ * dist ((E p).symm a) ((E p).symm b)⌋⟩
   refine'
-    ⟨Σ n, Finₓ n → Finₓ n → ℤ, by
+    ⟨Σn, Finₓ n → Finₓ n → ℤ, by
       infer_instance, F, fun p q hpq => _⟩
   /- As the target space of F is countable, it suffices to show that two points
     `p` and `q` with `F p = F q` are at distance `≤ δ`.
@@ -886,7 +887,7 @@ theorem totally_bounded {t : Set GHSpace} {C : ℝ} {u : ℕ → ℝ} {K : ℕ �
   -- Define a function `F` taking values in a finite type and associating to `p` enough data
   -- to reconstruct it up to `ε`, namely the (discretized) distances between elements of `s p`.
   let M := ⌊ε⁻¹ * max C 0⌋₊
-  let F : GH_space → Σ k : Finₓ (K n).succ, Finₓ k → Finₓ k → Finₓ M.succ := fun p =>
+  let F : GH_space → Σk : Finₓ (K n).succ, Finₓ k → Finₓ k → Finₓ M.succ := fun p =>
     ⟨⟨N p, lt_of_le_of_ltₓ (hN p) (Nat.lt_succ_selfₓ _)⟩, fun a b =>
       ⟨min M ⌊ε⁻¹ * dist ((E p).symm a) ((E p).symm b)⌋₊, (min_le_leftₓ _ _).trans_lt (Nat.lt_succ_selfₓ _)⟩⟩
   refine' ⟨_, _, fun p => F p, _⟩

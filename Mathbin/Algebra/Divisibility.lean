@@ -37,8 +37,8 @@ variable [Monoidₓ α] {a b c : α}
 
 /-- There are two possible conventions for divisibility, which coincide in a `comm_monoid`.
     This matches the convention for ordinals. -/
-instance (priority := 100) monoidHasDvd : HasDvd α :=
-  HasDvd.mk fun a b => ∃ c, b = a * c
+instance (priority := 100) monoidHasDvd : Dvd α :=
+  Dvd.mk fun a b => ∃ c, b = a * c
 
 -- TODO: this used to not have `c` explicit, but that seems to be important
 --       for use with tactics, similar to `exists.intro`
@@ -70,7 +70,7 @@ theorem dvd_trans (h₁ : a ∣ b) (h₂ : b ∣ c) : a ∣ c :=
       show c = a * (d * e) by
         simp [h₃, h₄]⟩
 
-alias dvd_trans ← HasDvd.Dvd.trans
+alias dvd_trans ← Dvd.Dvd.trans
 
 theorem one_dvd (a : α) : 1 ∣ a :=
   Dvd.intro a (one_mulₓ _)
@@ -82,7 +82,7 @@ theorem dvd_mul_right (a b : α) : a ∣ a * b :=
 theorem dvd_mul_of_dvd_left (h : a ∣ b) (c : α) : a ∣ b * c :=
   h.trans (dvd_mul_right b c)
 
-alias dvd_mul_of_dvd_left ← HasDvd.Dvd.mul_right
+alias dvd_mul_of_dvd_left ← Dvd.Dvd.mul_right
 
 theorem dvd_of_mul_right_dvd (h : a * b ∣ c) : a ∣ c :=
   (dvd_mul_right a b).trans h
@@ -132,7 +132,7 @@ theorem dvd_mul_of_dvd_right (h : a ∣ b) (c : α) : a ∣ c * b := by
   rw [mul_comm]
   exact h.mul_right _
 
-alias dvd_mul_of_dvd_right ← HasDvd.Dvd.mul_left
+alias dvd_mul_of_dvd_right ← Dvd.Dvd.mul_left
 
 attribute [local simp] mul_assoc mul_comm mul_left_commₓ
 

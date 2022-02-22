@@ -28,6 +28,7 @@ namespace EckmannHilton
 
 variable {X : Type u}
 
+-- mathport name: «expr < > »
 local notation a "<" m ">" b => m a b
 
 /-- `is_unital m e` expresses that `e : X` is a left and right unit

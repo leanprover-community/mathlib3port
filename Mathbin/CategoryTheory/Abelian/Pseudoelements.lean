@@ -179,7 +179,7 @@ attribute [local instance] hom_to_fun
 
 localized [Pseudoelement] attribute [instance] CategoryTheory.Abelian.Pseudoelement.homToFun
 
-theorem pseudo_apply_mk {P Q : C} (f : P ⟶ Q) (a : Over P) : f (⟦a⟧) = ⟦a.Hom ≫ f⟧ :=
+theorem pseudo_apply_mk {P Q : C} (f : P ⟶ Q) (a : Over P) : f ⟦a⟧ = ⟦a.Hom ≫ f⟧ :=
   rfl
 
 /-- Applying a pseudoelement to a composition of morphisms is the same as composing

@@ -636,8 +636,10 @@ section CondexpL2
 
 variable [CompleteSpace E] {m m0 : MeasurableSpace α} {μ : Measure α} {s t : Set α}
 
+-- mathport name: «expr⟪ , ⟫»
 local notation "⟪" x ", " y "⟫" => @inner 𝕜 E _ x y
 
+-- mathport name: «expr⟪ , ⟫₂»
 local notation "⟪" x ", " y "⟫₂" => @inner 𝕜 (α →₂[μ] E) _ x y
 
 variable (𝕜)
@@ -1532,6 +1534,7 @@ irreducible_def condexp (hm : m ≤ m0) (μ : Measure α) [SigmaFinite (μ.trim 
 
 variable {m}
 
+-- mathport name: «expr [ | ]»
 -- We define notations `μ[f|hm]` and `μ[f|m,hm]` for the conditional expectation of `f` with
 -- respect to `m`. Both can be used in code but only the second one will be used by the goal view.
 -- The first notation avoids the repetition of `m`, which is already present in `hm`. The second
@@ -1539,6 +1542,7 @@ variable {m}
 -- as `_` and the measurable space would not be visible in `μ[f|_]`, but is clear in `μ[f|m,_]`.
 localized [MeasureTheory] notation μ "[" f "|" hm "]" => MeasureTheory.condexp _ hm μ f
 
+-- mathport name: «expr [ | , ]»
 localized [MeasureTheory] notation μ "[" f "|" m "," hm "]" => MeasureTheory.condexp m hm μ f
 
 theorem condexp_of_measurable {f : α → F'} (hf : measurable[m] f) (hfi : Integrable f μ) : μ[f|m,hm] = f := by

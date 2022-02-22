@@ -117,7 +117,7 @@ instance {α β} : HasVariableNames (PProd α β) :=
 instance {α} {β : α → Type _} : HasVariableNames (Sigma β) :=
   ⟨[`p]⟩
 
-instance {α} {β : α → Sort _} : HasVariableNames (Psigma β) :=
+instance {α} {β : α → Sort _} : HasVariableNames (PSigma β) :=
   ⟨[`p]⟩
 
 instance {α} [HasVariableNames α] {p : α → Prop} : HasVariableNames (Subtype p) :=

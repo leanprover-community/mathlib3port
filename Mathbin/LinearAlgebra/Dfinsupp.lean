@@ -226,7 +226,7 @@ section Basis
 /-- The direct sum of free modules is free.
 
 Note that while this is stated for `dfinsupp` not `direct_sum`, the types are defeq. -/
-noncomputable def basis {η : ι → Type _} (b : ∀ i, Basis (η i) R (M i)) : Basis (Σ i, η i) R (Π₀ i, M i) :=
+noncomputable def basis {η : ι → Type _} (b : ∀ i, Basis (η i) R (M i)) : Basis (Σi, η i) R (Π₀ i, M i) :=
   Basis.of_repr ((mapRange.linearEquiv fun i => (b i).repr).trans (sigmaFinsuppLequivDfinsupp R).symm)
 
 end Basis
@@ -318,7 +318,7 @@ This is an intermediate result used to prove
 `complete_lattice.independent_of_dfinsupp_lsum_injective` and
 `complete_lattice.independent.dfinsupp_lsum_injective`. -/
 theorem independent_iff_forall_dfinsupp (p : ι → Submodule R N) :
-    Independent p ↔ ∀ i x : p i v : Π₀ i : ι, ↥p i, lsum ℕ (fun i => (p i).Subtype) (erase i v) = x → x = 0 := by
+    Independent p ↔ ∀ i x : p i v : Π₀ i : ι, ↥(p i), lsum ℕ (fun i => (p i).Subtype) (erase i v) = x → x = 0 := by
   simp_rw [CompleteLattice.independent_def, Submodule.disjoint_def, Submodule.mem_bsupr_iff_exists_dfinsupp,
     exists_imp_distrib, filter_ne_eq_erase]
   apply forall_congrₓ fun i => _
@@ -349,7 +349,7 @@ theorem independent_of_dfinsupp_sum_add_hom_injective (p : ι → AddSubmonoid N
 theorem lsum_comp_map_range_to_span_singleton [∀ m : R, Decidable (m ≠ 0)] (p : ι → Submodule R N) {v : ι → N}
     (hv : ∀ i : ι, v i ∈ p i) :
     ((lsum ℕ) fun i => (p i).Subtype : _ →ₗ[R] _).comp
-        ((mapRange.linearMap fun i => LinearMap.toSpanSingleton R (↥p i) ⟨v i, hv i⟩ : _ →ₗ[R] _).comp
+        ((mapRange.linearMap fun i => LinearMap.toSpanSingleton R (↥(p i)) ⟨v i, hv i⟩ : _ →ₗ[R] _).comp
           (finsuppLequivDfinsupp R : (ι →₀ R) ≃ₗ[R] _).toLinearMap) =
       Finsupp.total ι N R v :=
   by

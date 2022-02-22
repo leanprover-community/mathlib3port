@@ -106,7 +106,7 @@ theorem Finset.center_mass_ite_eq (hi : i ∈ t) : t.centerMass (fun j => if i =
 
 variable {t w}
 
-theorem Finset.center_mass_subset {t' : Finset ι} (ht : t ⊆ t') (h : ∀, ∀ i ∈ t', ∀, i ∉ t → w i = 0) :
+theorem Finset.center_mass_subset {t' : Finset ι} (ht : t ⊆ t') (h : ∀, ∀ i ∈ t', ∀, (i ∉ t) → w i = 0) :
     t.centerMass w z = t'.centerMass w z := by
   rw [center_mass, sum_subset ht h, smul_sum, center_mass, smul_sum]
   apply sum_subset ht
@@ -433,7 +433,7 @@ to prove that this map is linear. -/
 theorem Set.Finite.convex_hull_eq_image {s : Set E} (hs : Finite s) :
     convexHull R s =
       have := hs.fintype
-      (⇑∑ x : s, (@LinearMap.proj R s _ (fun i => R) _ _ x).smulRight x.1) '' StdSimplex R s :=
+      ⇑(∑ x : s, (@LinearMap.proj R s _ (fun i => R) _ _ x).smulRight x.1) '' StdSimplex R s :=
   by
   rw [← convex_hull_basis_eq_std_simplex, ← LinearMap.convex_hull_image, ← Set.range_comp, (· ∘ ·)]
   apply congr_argₓ

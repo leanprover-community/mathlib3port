@@ -61,7 +61,7 @@ theorem sinh_arsinh (x : ℝ) : sinh (arsinh x) = x := by
 
 /-- `sinh` is surjective, `∀ b, ∃ a, sinh a = b`. In this case, we use `a = arsinh b`. -/
 theorem sinh_surjective : Function.Surjective sinh :=
-  Function.LeftInverse.surjective sinh_arsinh
+  Function.LeftInverse.surjectiveₓ sinh_arsinh
 
 /-- `sinh` is bijective, both injective and surjective. -/
 theorem sinh_bijective : Function.Bijective sinh :=

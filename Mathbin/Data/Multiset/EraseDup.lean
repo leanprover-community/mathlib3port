@@ -40,7 +40,7 @@ theorem erase_dup_cons_of_mem {a : α} {s : Multiset α} : a ∈ s → eraseDup 
   (Quot.induction_on s) fun l m => @congr_argₓ _ _ _ _ coe <| erase_dup_cons_of_mem m
 
 @[simp]
-theorem erase_dup_cons_of_not_mem {a : α} {s : Multiset α} : a ∉ s → eraseDup (a ::ₘ s) = a ::ₘ eraseDup s :=
+theorem erase_dup_cons_of_not_mem {a : α} {s : Multiset α} : (a ∉ s) → eraseDup (a ::ₘ s) = a ::ₘ eraseDup s :=
   (Quot.induction_on s) fun l m => congr_argₓ coe <| erase_dup_cons_of_not_mem m
 
 theorem erase_dup_le (s : Multiset α) : eraseDup s ≤ s :=

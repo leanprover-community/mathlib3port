@@ -100,8 +100,10 @@ so for most facts about `sigma_obj f`, you will just use general facts about col
 abbrev sigmaObj (f : β → C) [HasCoproduct f] :=
   colimit (Discrete.functor f)
 
+-- mathport name: «expr∏ »
 notation "∏ " f:20 => piObj f
 
+-- mathport name: «expr∐ »
 notation "∐ " f:20 => sigmaObj f
 
 /-- The `b`-th projection from the pi object over `f` has the form `∏ f ⟶ f b`. -/

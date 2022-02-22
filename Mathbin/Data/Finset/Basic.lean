@@ -304,7 +304,7 @@ theorem Superset.trans {s₁ s₂ s₃ : Finset α} : s₁ ⊇ s₂ → s₂ ⊇
 theorem mem_of_subset {s₁ s₂ : Finset α} {a : α} : s₁ ⊆ s₂ → a ∈ s₁ → a ∈ s₂ :=
   mem_of_subset
 
-theorem not_mem_mono {s t : Finset α} (h : s ⊆ t) {a : α} : a ∉ t → a ∉ s :=
+theorem not_mem_mono {s t : Finset α} (h : s ⊆ t) {a : α} : (a ∉ t) → a ∉ s :=
   mt <| @h _
 
 theorem Subset.antisymm {s₁ s₂ : Finset α} (H₁ : s₁ ⊆ s₂) (H₂ : s₂ ⊆ s₁) : s₁ = s₂ :=
@@ -395,7 +395,7 @@ theorem coe_nonempty {s : Finset α} : (s : Set α).Nonempty ↔ s.Nonempty :=
   Iff.rfl
 
 @[simp]
-theorem nonempty_coe_sort (s : Finset α) : Nonempty (↥s) ↔ s.Nonempty :=
+theorem nonempty_coe_sort (s : Finset α) : Nonempty ↥s ↔ s.Nonempty :=
   nonempty_subtype
 
 alias coe_nonempty ↔ _ Finset.Nonempty.to_set
@@ -512,7 +512,7 @@ theorem mem_singleton {a b : α} : b ∈ ({a} : Finset α) ↔ b = a :=
 theorem eq_of_mem_singleton {x y : α} (h : x ∈ ({y} : Finset α)) : x = y :=
   mem_singleton.1 h
 
-theorem not_mem_singleton {a b : α} : a ∉ ({b} : Finset α) ↔ a ≠ b :=
+theorem not_mem_singleton {a b : α} : (a ∉ ({b} : Finset α)) ↔ a ≠ b :=
   not_congr mem_singleton
 
 theorem mem_singleton_self (a : α) : a ∈ ({a} : Finset α) :=
@@ -813,7 +813,7 @@ theorem cons_induction_on {α : Type _} {p : Finset α → Prop} (s : Finset α)
 
 @[elab_as_eliminator]
 protected theorem induction {α : Type _} {p : Finset α → Prop} [DecidableEq α] (h₁ : p ∅)
-    (h₂ : ∀ ⦃a : α⦄ {s : Finset α}, a ∉ s → p s → p (insert a s)) : ∀ s, p s :=
+    (h₂ : ∀ ⦃a : α⦄ {s : Finset α}, (a ∉ s) → p s → p (insert a s)) : ∀ s, p s :=
   (cons_induction h₁) fun a s ha => (s.cons_eq_insert a ha).symm ▸ h₂ ha
 
 /-- To prove a proposition about an arbitrary `finset α`,
@@ -823,7 +823,7 @@ then it holds for the `finset` obtained by inserting a new element.
 -/
 @[elab_as_eliminator]
 protected theorem induction_on {α : Type _} {p : Finset α → Prop} [DecidableEq α] (s : Finset α) (h₁ : p ∅)
-    (h₂ : ∀ ⦃a : α⦄ {s : Finset α}, a ∉ s → p s → p (insert a s)) : p s :=
+    (h₂ : ∀ ⦃a : α⦄ {s : Finset α}, (a ∉ s) → p s → p (insert a s)) : p s :=
   Finset.induction h₁ h₂ s
 
 /-- To prove a proposition about `S : finset α`,
@@ -833,7 +833,7 @@ then it holds for the `finset` obtained by inserting a new element of `S`.
 -/
 @[elab_as_eliminator]
 theorem induction_on' {α : Type _} {p : Finset α → Prop} [DecidableEq α] (S : Finset α) (h₁ : p ∅)
-    (h₂ : ∀ {a s}, a ∈ S → s ⊆ S → a ∉ s → p s → p (insert a s)) : p S :=
+    (h₂ : ∀ {a s}, a ∈ S → s ⊆ S → (a ∉ s) → p s → p (insert a s)) : p S :=
   @Finset.induction_on α (fun T => T ⊆ S → p T) _ S (fun _ => h₁)
     (fun a s has hqs hs =>
       let ⟨hS, sS⟩ := Finset.insert_subset.1 hs
@@ -930,7 +930,7 @@ theorem forall_mem_union {p : α → Prop} : (∀, ∀ a ∈ s ∪ t, ∀, p a) 
   ⟨fun h => ⟨fun a => h a ∘ mem_union_left _, fun b => h b ∘ mem_union_right _⟩, fun h ab hab =>
     (mem_union.mp hab).elim (h.1 _) (h.2 _)⟩
 
-theorem not_mem_union : a ∉ s ∪ t ↔ a ∉ s ∧ a ∉ t := by
+theorem not_mem_union : (a ∉ s ∪ t) ↔ (a ∉ s) ∧ a ∉ t := by
   rw [mem_union, not_or_distrib]
 
 @[simp, norm_cast]
@@ -2947,11 +2947,11 @@ theorem disjoint_singleton : Disjoint ({a} : Finset α) {b} ↔ a ≠ b := by
   rw [disjoint_singleton_left, mem_singleton]
 
 @[simp]
-theorem disjoint_insert_left : Disjoint (insert a s) t ↔ a ∉ t ∧ Disjoint s t := by
+theorem disjoint_insert_left : Disjoint (insert a s) t ↔ (a ∉ t) ∧ Disjoint s t := by
   simp only [disjoint_left, mem_insert, or_imp_distrib, forall_and_distrib, forall_eq]
 
 @[simp]
-theorem disjoint_insert_right : Disjoint s (insert a t) ↔ a ∉ s ∧ Disjoint s t :=
+theorem disjoint_insert_right : Disjoint s (insert a t) ↔ (a ∉ s) ∧ Disjoint s t :=
   Disjoint.comm.trans <| by
     rw [disjoint_insert_left, Disjoint.comm]
 

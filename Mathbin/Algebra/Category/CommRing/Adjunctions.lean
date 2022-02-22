@@ -40,7 +40,7 @@ theorem free_obj_coe {α : Type u} : (free.obj α : Type u) = MvPolynomial α �
   rfl
 
 @[simp]
-theorem free_map_coe {α β : Type u} {f : α → β} : ⇑free.map f = rename f :=
+theorem free_map_coe {α β : Type u} {f : α → β} : ⇑(free.map f) = rename f :=
   rfl
 
 /-- The free-forgetful adjunction for commutative rings.

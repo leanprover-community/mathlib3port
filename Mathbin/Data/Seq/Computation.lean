@@ -238,6 +238,7 @@ section Bisim
 
 variable (R : Computation α → Computation α → Prop)
 
+-- mathport name: «expr ~ »
 local infixl:50 " ~ " => R
 
 def BisimO : Sum α (Computation α) → Sum α (Computation α) → Prop
@@ -377,6 +378,7 @@ theorem of_thinkN_terminates (s : Computation α) n : Terminates (thinkN s n) �
 def Promises (s : Computation α) (a : α) : Prop :=
   ∀ ⦃a'⦄, a' ∈ s → a = a'
 
+-- mathport name: «expr ~> »
 infixl:50 " ~> " => Promises
 
 theorem mem_promises {s : Computation α} {a : α} : a ∈ s → s ~> a := fun h a' => mem_unique h
@@ -833,6 +835,7 @@ theorem orelse_empty (c : Computation α) : (c <|> empty α) = c := by
 def Equiv (c₁ c₂ : Computation α) : Prop :=
   ∀ a, a ∈ c₁ ↔ a ∈ c₂
 
+-- mathport name: «expr ~ »
 infixl:50 " ~ " => Equiv
 
 @[refl]

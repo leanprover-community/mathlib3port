@@ -264,7 +264,7 @@ theorem continuous_stone_cech_unit : Continuous (stoneCechUnit : α → StoneCec
   continuous_iff_ultrafilter.mpr fun x g gx => by
     have : ↑(g.map pure) ≤ 𝓝 g := by
       rw [ultrafilter_converges_iff] <;> exact (bind_pureₓ _).symm
-    have : (g.map stoneCechUnit : Filter (StoneCech α)) ≤ 𝓝 (⟦g⟧) :=
+    have : (g.map stoneCechUnit : Filter (StoneCech α)) ≤ 𝓝 ⟦g⟧ :=
       continuous_at_iff_ultrafilter.mp (continuous_quotient_mk.Tendsto g) _ this
     rwa [show ⟦g⟧ = ⟦pure x⟧ from Quotientₓ.sound <| convergent_eqv_pure gx] at this
 
@@ -275,9 +275,8 @@ instance StoneCech.t2_space : T2Space (StoneCech α) := by
   intro γ tγ h₁ h₂ f hf
   skip
   let ff := stoneCechExtend hf
-  change ff (⟦x⟧) = ff (⟦y⟧)
-  have lim := fun gz : (g : Filter (StoneCech α)) ≤ 𝓝 (⟦z⟧) =>
-    ((continuous_stone_cech_extend hf).Tendsto _).mono_left gz
+  change ff ⟦x⟧ = ff ⟦y⟧
+  have lim := fun gz : (g : Filter (StoneCech α)) ≤ 𝓝 ⟦z⟧ => ((continuous_stone_cech_extend hf).Tendsto _).mono_left gz
   exact tendsto_nhds_unique (limₓ x gx) (limₓ y gy)
 
 instance StoneCech.compact_space : CompactSpace (StoneCech α) :=

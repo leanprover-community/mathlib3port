@@ -334,13 +334,13 @@ theorem induction_on' {P : MvPolynomial σ R → Prop} (p : MvPolynomial σ R) (
 
 /-- Similar to `mv_polynomial.induction_on` but only a weak form of `h_add` is required.-/
 theorem induction_on''' {M : MvPolynomial σ R → Prop} (p : MvPolynomial σ R) (h_C : ∀ a, M (c a))
-    (h_add_weak : ∀ a : σ →₀ ℕ b : R f : (σ →₀ ℕ) →₀ R, a ∉ f.support → b ≠ 0 → M f → M (monomial a b + f)) : M p :=
+    (h_add_weak : ∀ a : σ →₀ ℕ b : R f : (σ →₀ ℕ) →₀ R, (a ∉ f.support) → b ≠ 0 → M f → M (monomial a b + f)) : M p :=
   Finsupp.induction p (C_0.rec <| h_C 0) h_add_weak
 
 /-- Similar to `mv_polynomial.induction_on` but only a yet weaker form of `h_add` is required.-/
 theorem induction_on'' {M : MvPolynomial σ R → Prop} (p : MvPolynomial σ R) (h_C : ∀ a, M (c a))
     (h_add_weak :
-      ∀ a : σ →₀ ℕ b : R f : (σ →₀ ℕ) →₀ R, a ∉ f.support → b ≠ 0 → M f → M (monomial a b) → M (monomial a b + f))
+      ∀ a : σ →₀ ℕ b : R f : (σ →₀ ℕ) →₀ R, (a ∉ f.support) → b ≠ 0 → M f → M (monomial a b) → M (monomial a b + f))
     (h_X : ∀ p : MvPolynomial σ R n : σ, M p → M (p * MvPolynomial.x n)) : M p :=
   induction_on''' p h_C fun a b f ha hb hf => h_add_weak a b f ha hb hf <| induction_on_monomial h_C h_X a b
 
@@ -446,7 +446,7 @@ def coeff (m : σ →₀ ℕ) (p : MvPolynomial σ R) : R :=
 theorem mem_support_iff {p : MvPolynomial σ R} {m : σ →₀ ℕ} : m ∈ p.support ↔ p.coeff m ≠ 0 := by
   simp [support, coeff]
 
-theorem not_mem_support_iff {p : MvPolynomial σ R} {m : σ →₀ ℕ} : m ∉ p.support ↔ p.coeff m = 0 := by
+theorem not_mem_support_iff {p : MvPolynomial σ R} {m : σ →₀ ℕ} : (m ∉ p.support) ↔ p.coeff m = 0 := by
   simp
 
 theorem sum_def {A} [AddCommMonoidₓ A] {p : MvPolynomial σ R} {b : (σ →₀ ℕ) → R → A} :
@@ -819,7 +819,7 @@ def eval₂Hom (f : R →+* S₁) (g : σ → S₁) : MvPolynomial σ R →+* S�
   map_add' := fun p q => eval₂_add _ _
 
 @[simp]
-theorem coe_eval₂_hom (f : R →+* S₁) (g : σ → S₁) : ⇑eval₂Hom f g = eval₂ f g :=
+theorem coe_eval₂_hom (f : R →+* S₁) (g : σ → S₁) : ⇑(eval₂Hom f g) = eval₂ f g :=
   rfl
 
 theorem eval₂_hom_congr {f₁ f₂ : R →+* S₁} {g₁ g₂ : σ → S₁} {p₁ p₂ : MvPolynomial σ R} :

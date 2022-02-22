@@ -80,8 +80,10 @@ class HasSup (α : Type u) where
 class HasInf (α : Type u) where
   inf : α → α → α
 
+-- mathport name: «expr ⊔ »
 infixl:68 "⊔" => HasSup.sup
 
+-- mathport name: «expr ⊓ »
 infixl:69 "⊓" => HasInf.inf
 
 /-!

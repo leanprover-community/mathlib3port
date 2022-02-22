@@ -35,7 +35,6 @@ universe u
 
 variable {C : Type u} [SmallCategory C] [HasProducts C]
 
--- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (Z W)
 /-- A small category with products is a thin category.
 
 in Lean, a preorder category is one where the morphisms are in Prop, which is weaker than the usual
@@ -49,7 +48,7 @@ instance {X Y : C} : Subsingleton (X ⟶ Y) :=
     have z : (2 : Cardinal) ≤ # (X ⟶ Y) := by
       rw [Cardinal.two_le_iff]
       exact ⟨_, _, r_ne_s⟩
-    let md := Σ (Z : C) (W : C), Z ⟶ W
+    let md := ΣZ W : C, Z ⟶ W
     let α := # md
     apply not_le_of_lt (Cardinal.cantor α)
     let yp : C := ∏ fun f : md => Y

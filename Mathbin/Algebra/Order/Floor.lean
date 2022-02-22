@@ -88,8 +88,10 @@ def floor : α → ℕ :=
 def ceil : α → ℕ :=
   FloorSemiring.ceil
 
+-- mathport name: «expr⌊ ⌋₊»
 notation "⌊" a "⌋₊" => Nat.floor a
 
+-- mathport name: «expr⌈ ⌉₊»
 notation "⌈" a "⌉₊" => Nat.ceil a
 
 theorem le_floor_iff (ha : 0 ≤ a) : n ≤ ⌊a⌋₊ ↔ (n : α) ≤ a :=
@@ -457,8 +459,10 @@ def ceil : α → ℤ :=
 def fract (a : α) : α :=
   a - floor a
 
+-- mathport name: «expr⌊ ⌋»
 notation "⌊" a "⌋" => Int.floor a
 
+-- mathport name: «expr⌈ ⌉»
 notation "⌈" a "⌉" => Int.ceil a
 
 -- Mathematical notation for `fract a` is usually `{a}`. Let's not even go there.

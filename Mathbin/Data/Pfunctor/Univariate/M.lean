@@ -21,6 +21,7 @@ open List hiding head'
 
 variable (F : Pfunctor.{u})
 
+-- mathport name: «expr♯ »
 local prefix:0 "♯" =>
   cast
     (by
@@ -617,6 +618,7 @@ section Bisim
 
 variable (R : M F → M F → Prop)
 
+-- mathport name: «expr ~ »
 local infixl:50 " ~ " => R
 
 /-- Bisimulation is the standard proof technique for equality between

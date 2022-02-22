@@ -36,6 +36,7 @@ variable {α E F 𝕜 : Type _} [IsROrC 𝕜] [MeasurableSpace α] {μ : Measure
   [BorelSpace E] [SecondCountableTopology E] [NormedGroup F] [MeasurableSpace F] [BorelSpace F]
   [SecondCountableTopology F]
 
+-- mathport name: «expr⟪ , ⟫»
 local notation "⟪" x ", " y "⟫" => @inner 𝕜 _ _ x y
 
 theorem snorm_rpow_two_norm_lt_top (f : lp F 2 μ) : snorm (fun x => ∥f x∥ ^ (2 : ℝ)) 1 μ < ∞ := by
@@ -162,7 +163,7 @@ theorem inner_indicator_const_Lp_eq_set_integral_inner (f : lp E 2 μ) (hs : Mea
     congr
     exact hx hxs
   have h_right : (∫ x in sᶜ, ⟪(indicator_const_Lp 2 hs hμs c) x, f x⟫ ∂μ) = 0 := by
-    suffices h_ae_eq : ∀ᵐ x ∂μ, x ∉ s → ⟪indicator_const_Lp 2 hs hμs c x, f x⟫ = 0
+    suffices h_ae_eq : ∀ᵐ x ∂μ, (x ∉ s) → ⟪indicator_const_Lp 2 hs hμs c x, f x⟫ = 0
     · simp_rw [← Set.mem_compl_iff]  at h_ae_eq
       suffices h_int_zero : (∫ x in sᶜ, inner (indicator_const_Lp 2 hs hμs c x) (f x) ∂μ) = ∫ x in sᶜ, (0 : 𝕜) ∂μ
       · rw [h_int_zero]
@@ -170,7 +171,7 @@ theorem inner_indicator_const_Lp_eq_set_integral_inner (f : lp E 2 μ) (hs : Mea
         
       exact set_integral_congr_ae hs.compl h_ae_eq
       
-    have h_indicator : ∀ᵐ x : α ∂μ, x ∉ s → indicator_const_Lp 2 hs hμs c x = 0 := indicator_const_Lp_coe_fn_nmem
+    have h_indicator : ∀ᵐ x : α ∂μ, (x ∉ s) → indicator_const_Lp 2 hs hμs c x = 0 := indicator_const_Lp_coe_fn_nmem
     refine' h_indicator.mono fun x hx hxs => _
     rw [hx hxs]
     exact inner_zero_left
@@ -204,6 +205,7 @@ variable (μ : Measure α) [IsFiniteMeasure μ]
 
 open_locale BoundedContinuousFunction ComplexConjugate
 
+-- mathport name: «expr⟪ , ⟫»
 local notation "⟪" x ", " y "⟫" => @inner 𝕜 (α →₂[μ] 𝕜) _ x y
 
 /-- For bounded continuous functions `f`, `g` on a finite-measure topological space `α`, the L^2

@@ -28,6 +28,7 @@ value in `ℝ`, `ℝ≥0` or `ℝ≥0∞`.
 
 open MeasureTheory
 
+-- mathport name: «expr𝔼[ | ]»
 -- We define notations `𝔼[f|hm]` and `𝔼[f|m,hm]` for the conditional expectation of `f` with
 -- respect to `m`. Both can be used in code but only the second one will be used by the goal view.
 -- The first notation avoids the repetition of `m`, which is already present in `hm`. The second
@@ -35,16 +36,22 @@ open MeasureTheory
 -- as `_` and the measurable space would not be visible in `𝔼[f|_]`, but is clear in `𝔼[f|m,_]`.
 localized [ProbabilityTheory] notation "𝔼[" X "|" hm "]" => MeasureTheory.condexp _ hm MeasureTheory.Measure.volume X
 
+-- mathport name: «expr𝔼[ | , ]»
 localized [ProbabilityTheory]
   notation "𝔼[" X "|" m "," hm "]" => MeasureTheory.condexp m hm MeasureTheory.Measure.volume X
 
+-- mathport name: «expr [ ]»
 localized [ProbabilityTheory] notation P "[" X "]" => ∫ x, X x ∂P
 
+-- mathport name: «expr𝔼[ ]»
 localized [ProbabilityTheory] notation "𝔼[" X "]" => ∫ a, X a
 
+-- mathport name: «expr =ₐₛ »
 localized [ProbabilityTheory] notation:50 X "=ₐₛ" Y:50 => X =ᵐ[MeasureTheory.Measure.volume] Y
 
+-- mathport name: «expr ≤ₐₛ »
 localized [ProbabilityTheory] notation:50 X "≤ₐₛ" Y:50 => X ≤ᵐ[MeasureTheory.Measure.volume] Y
 
+-- mathport name: «expr∂ /∂ »
 localized [ProbabilityTheory] notation "∂" P "/∂" Q:50 => P.rnDeriv Q
 

@@ -66,6 +66,7 @@ class Invertible [Mul α] [One α] (a : α) : Type u where
   inv_of_mul_self : inv_of * a = 1
   mul_inv_of_self : a * inv_of = 1
 
+-- mathport name: «expr⅟»
 notation:1034
   "⅟" =>-- This notation has the same precedence as `has_inv.inv`.
   Invertible.invOf

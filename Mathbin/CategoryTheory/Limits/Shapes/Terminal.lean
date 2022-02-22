@@ -301,8 +301,10 @@ This object is characterized by having a unique morphism to any object.
 abbrev initial [HasInitial C] : C :=
   colimit (Functor.empty.{v₁} C)
 
+-- mathport name: «expr⊤_ »
 notation "⊤_ " C:20 => terminal C
 
+-- mathport name: «expr⊥_ »
 notation "⊥_ " C:20 => initial C
 
 section

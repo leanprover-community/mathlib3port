@@ -203,16 +203,22 @@ attribute [simp, reassoc] monoidal_category.triangle
 
 open MonoidalCategory
 
+-- mathport name: «expr ⊗ »
 infixr:70 " ⊗ " => tensorObj
 
+-- mathport name: «expr ⊗ »
 infixr:70 " ⊗ " => tensorHom
 
+-- mathport name: «expr𝟙_»
 notation "𝟙_" => tensorUnit
 
+-- mathport name: «exprα_»
 notation "α_" => associator
 
+-- mathport name: «exprλ_»
 notation "λ_" => leftUnitor
 
+-- mathport name: «exprρ_»
 notation "ρ_" => rightUnitor
 
 /-- The tensor product of two isomorphisms is an isomorphism. -/
@@ -226,6 +232,7 @@ def tensorIso {C : Type u} {X Y X' Y' : C} [Category.{v} C] [MonoidalCategory.{v
   inv_hom_id' := by
     rw [← tensor_comp, iso.inv_hom_id, iso.inv_hom_id, ← tensor_id]
 
+-- mathport name: «expr ⊗ »
 infixr:70 " ⊗ " => tensorIso
 
 namespace MonoidalCategory

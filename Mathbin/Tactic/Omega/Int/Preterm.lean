@@ -31,10 +31,13 @@ inductive Preterm : Type
   | add : preterm → preterm → preterm
   deriving has_reflect, Inhabited
 
+-- mathport name: «expr& »
 localized [Omega.Int] notation "&" k => Omega.Int.Preterm.cst k
 
+-- mathport name: «expr ** »
 localized [Omega.Int] infixl:300 " ** " => Omega.Int.Preterm.var
 
+-- mathport name: «expr +* »
 localized [Omega.Int] notation t "+*" s => Omega.Int.Preterm.add t s
 
 namespace Preterm

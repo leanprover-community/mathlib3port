@@ -14,6 +14,7 @@ open Filter Set
 
 open_locale Classical BigOperators TopologicalSpace Real
 
+-- mathport name: «expr| |»
 local notation "|" x "|" => abs x
 
 /-- This theorem establishes **Leibniz's series for `π`**: The alternating sum of the reciprocals

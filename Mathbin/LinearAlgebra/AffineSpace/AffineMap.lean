@@ -55,6 +55,7 @@ structure AffineMap (k : Type _) {V1 : Type _} (P1 : Type _) {V2 : Type _} (P2 :
   linear : V1 →ₗ[k] V2
   map_vadd' : ∀ p : P1 v : V1, to_fun (v +ᵥ p) = linear v +ᵥ to_fun p
 
+-- mathport name: «expr →ᵃ[ ] »
 notation:25 P1 " →ᵃ[" k:25 "] " P2:0 => AffineMap k P1 P2
 
 instance (k : Type _) {V1 : Type _} (P1 : Type _) {V2 : Type _} (P2 : Type _) [Ringₓ k] [AddCommGroupₓ V1] [Module k V1]
@@ -150,7 +151,7 @@ def const (p : P2) : P1 →ᵃ[k] P2 where
     simp
 
 @[simp]
-theorem coe_const (p : P2) : ⇑const k P1 p = Function.const P1 p :=
+theorem coe_const (p : P2) : ⇑(const k P1 p) = Function.const P1 p :=
   rfl
 
 @[simp]
@@ -182,7 +183,7 @@ def mk' (f : P1 → P2) (f' : V1 →ₗ[k] V2) (p : P1) (h : ∀ p' : P1, f p' =
     rw [h, h p', vadd_vsub_assoc, f'.map_add, vadd_vadd]
 
 @[simp]
-theorem coe_mk' (f : P1 → P2) (f' : V1 →ₗ[k] V2) p h : ⇑mk' f f' p h = f :=
+theorem coe_mk' (f : P1 → P2) (f' : V1 →ₗ[k] V2) p h : ⇑(mk' f f' p h) = f :=
   rfl
 
 @[simp]
@@ -313,7 +314,7 @@ def id : P1 →ᵃ[k] P1 where
 
 /-- The identity affine map acts as the identity. -/
 @[simp]
-theorem coe_id : ⇑id k P1 = _root_.id :=
+theorem coe_id : ⇑(id k P1) = _root_.id :=
   rfl
 
 @[simp]
@@ -344,7 +345,7 @@ def comp (f : P2 →ᵃ[k] P3) (g : P1 →ᵃ[k] P2) : P1 →ᵃ[k] P3 where
 
 /-- Composition of affine maps acts as applying the two functions. -/
 @[simp]
-theorem coe_comp (f : P2 →ᵃ[k] P3) (g : P1 →ᵃ[k] P2) : ⇑f.comp g = f ∘ g :=
+theorem coe_comp (f : P2 →ᵃ[k] P3) (g : P1 →ᵃ[k] P2) : ⇑(f.comp g) = f ∘ g :=
   rfl
 
 /-- Composition of affine maps acts as applying the two functions. -/

@@ -27,6 +27,7 @@ variable {N : Type _} [AddCommGroupₓ N] [Module R N] (V V₁ V₂ : Submodule 
 def Smodeq (x y : M) : Prop :=
   (Submodule.Quotient.mk x : M ⧸ U) = Submodule.Quotient.mk y
 
+-- mathport name: «expr ≡ [SMOD ]»
 notation:50 x " ≡ " y " [SMOD " N "]" => Smodeq N x y
 
 variable {U U₁ U₂}

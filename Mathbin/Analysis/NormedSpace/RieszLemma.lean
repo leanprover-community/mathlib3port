@@ -28,7 +28,7 @@ norms, since in general the existence of an element of norm exactly 1
 is not guaranteed. For a variant giving an element with norm in `[1, R]`, see
 `riesz_lemma_of_norm_lt`. -/
 theorem riesz_lemma {F : Subspace 𝕜 E} (hFc : IsClosed (F : Set E)) (hF : ∃ x : E, x ∉ F) {r : ℝ} (hr : r < 1) :
-    ∃ x₀ : E, x₀ ∉ F ∧ ∀, ∀ y ∈ F, ∀, r * ∥x₀∥ ≤ ∥x₀ - y∥ := by
+    ∃ x₀ : E, (x₀ ∉ F) ∧ ∀, ∀ y ∈ F, ∀, r * ∥x₀∥ ≤ ∥x₀ - y∥ := by
   classical
   obtain ⟨x, hx⟩ : ∃ x : E, x ∉ F := hF
   let d := Metric.infDist x F

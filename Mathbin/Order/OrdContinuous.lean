@@ -98,7 +98,7 @@ def toOrderEmbedding (hf : LeftOrdContinuous f) (h : Injective f) : α ↪o β :
 variable {f}
 
 @[simp]
-theorem coe_to_order_embedding (hf : LeftOrdContinuous f) (h : Injective f) : ⇑hf.toOrderEmbedding f h = f :=
+theorem coe_to_order_embedding (hf : LeftOrdContinuous f) (h : Injective f) : ⇑(hf.toOrderEmbedding f h) = f :=
   rfl
 
 end SemilatticeSup
@@ -183,7 +183,7 @@ def toOrderEmbedding (hf : RightOrdContinuous f) (h : Injective f) : α ↪o β 
 variable {f}
 
 @[simp]
-theorem coe_to_order_embedding (hf : RightOrdContinuous f) (h : Injective f) : ⇑hf.toOrderEmbedding f h = f :=
+theorem coe_to_order_embedding (hf : RightOrdContinuous f) (h : Injective f) : ⇑(hf.toOrderEmbedding f h) = f :=
   rfl
 
 end SemilatticeInf

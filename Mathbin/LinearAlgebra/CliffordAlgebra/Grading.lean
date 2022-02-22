@@ -60,12 +60,12 @@ instance evenOdd.graded_monoid : SetLike.GradedMonoid (evenOdd Q) where
 /-- A version of `clifford_algebra.ι` that maps directly into the graded structure. This is
 primarily an auxiliary construction used to provide `clifford_algebra.graded_algebra`. -/
 def GradedAlgebra.ι : M →ₗ[R] ⨁ i : Zmod 2, evenOdd Q i :=
-  DirectSum.lof R (Zmod 2) (fun i => ↥evenOdd Q i) 1 ∘ₗ
+  DirectSum.lof R (Zmod 2) (fun i => ↥(evenOdd Q i)) 1 ∘ₗ
     (ι Q).codRestrict _ fun m => range_ι_le_even_odd_one Q <| LinearMap.mem_range_self _ m
 
 theorem GradedAlgebra.ι_apply (m : M) :
     GradedAlgebra.ι Q m =
-      DirectSum.of (fun i => ↥evenOdd Q i) 1 ⟨ι Q m, range_ι_le_even_odd_one Q <| LinearMap.mem_range_self _ m⟩ :=
+      DirectSum.of (fun i => ↥(evenOdd Q i)) 1 ⟨ι Q m, range_ι_le_even_odd_one Q <| LinearMap.mem_range_self _ m⟩ :=
   rfl
 
 theorem GradedAlgebra.ι_sq_scalar (m : M) : GradedAlgebra.ι Q m * GradedAlgebra.ι Q m = algebraMap R _ (Q m) := by
@@ -118,7 +118,7 @@ theorem supr_ι_range_eq_top : (⨆ i : ℕ, (ι Q).range ^ i) = ⊤ := by
   dunfold even_odd
   calc
     (⨆ (i : Zmod 2) (j : { n // ↑n = i }), (ι Q).range ^ ↑j) =
-        ⨆ i : Σ i : Zmod 2, { n : ℕ // ↑n = i }, (ι Q).range ^ (i.2 : ℕ) :=
+        ⨆ i : Σi : Zmod 2, { n : ℕ // ↑n = i }, (ι Q).range ^ (i.2 : ℕ) :=
       by
       rw [supr_sigma]_ = ⨆ i : ℕ, (ι Q).range ^ i :=
       supr_congr (fun i => i.2) (fun i => ⟨⟨_, i, rfl⟩, rfl⟩) fun _ => rfl

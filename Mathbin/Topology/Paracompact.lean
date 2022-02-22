@@ -166,9 +166,9 @@ theorem refinement_of_locally_compact_sigma_compact_of_nhds_basis_set [LocallyCo
   have hxr : ∀ n x hx : x ∈ Kdiff (n + 1) ∩ s, B x (r n ⟨x, hx⟩) ∈ 𝓝 x := fun n x hx =>
     (hB x hx.2).mem_of_mem (hrp _ ⟨x, hx⟩)
   choose T hT using fun n => (Kdiffc (n + 1)).elim_nhds_subcover' _ (hxr n)
-  set T' : ∀ n, Set (↥(Kdiff (n + 1) ∩ s)) := fun n => T n
+  set T' : ∀ n, Set ↥(Kdiff (n + 1) ∩ s) := fun n => T n
   -- Finally, we take the union of all these coverings
-  refine' ⟨Σ n, T' n, fun a => a.2, fun a => r a.1 a.2, _, _, _⟩
+  refine' ⟨Σn, T' n, fun a => a.2, fun a => r a.1 a.2, _, _, _⟩
   · rintro ⟨n, x, hx⟩
     exact ⟨x.2.2, hrp _ _⟩
     
@@ -178,7 +178,7 @@ theorem refinement_of_locally_compact_sigma_compact_of_nhds_basis_set [LocallyCo
     
   · intro x
     refine' ⟨Interior (K (K'.find x + 3)), IsOpen.mem_nhds is_open_interior (K.subset_interior_succ _ (hKcov x).1), _⟩
-    have : (⋃ k ≤ K'.find x + 2, range <| Sigma.mk k : Set (Σ n, T' n)).Finite :=
+    have : (⋃ k ≤ K'.find x + 2, range <| Sigma.mk k : Set (Σn, T' n)).Finite :=
       (finite_le_nat _).bUnion fun k hk => finite_range _
     apply this.subset
     rintro ⟨k, c, hc⟩

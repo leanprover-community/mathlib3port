@@ -173,20 +173,20 @@ variable [DecidableEq α]
 /-- The set of derangements on `option α` is equivalent to the union over `a : α`
     of "permutations with `a` the only possible fixed point". -/
 def derangementsOptionEquivSigmaAtMostOneFixedPoint :
-    Derangements (Option α) ≃ Σ a : α, { f : Perm α | FixedPoints f ⊆ {a} } := by
+    Derangements (Option α) ≃ Σa : α, { f : Perm α | FixedPoints f ⊆ {a} } := by
   have fiber_none_is_false : equiv.remove_none.fiber (@none α) → False := by
     rw [equiv.remove_none.fiber_none]
     exact IsEmpty.false
   calc Derangements (Option α) ≃ Equivₓ.Perm.decomposeOption '' Derangements (Option α) :=
-      Equivₓ.image _ _ _ ≃ Σ a : Option α, ↥equiv.remove_none.fiber a :=
-      set_prod_equiv_sigma _ _ ≃ Σ a : α, ↥equiv.remove_none.fiber (some a) :=
-      sigma_option_equiv_of_some _ fiber_none_is_false _ ≃ Σ a : α, { f : perm α | fixed_points f ⊆ {a} } := by
+      Equivₓ.image _ _ _ ≃ Σa : Option α, ↥(equiv.remove_none.fiber a) :=
+      set_prod_equiv_sigma _ _ ≃ Σa : α, ↥(equiv.remove_none.fiber (some a)) :=
+      sigma_option_equiv_of_some _ fiber_none_is_false _ ≃ Σa : α, { f : perm α | fixed_points f ⊆ {a} } := by
       simp_rw [equiv.remove_none.fiber_some]
 
 /-- The set of derangements on `option α` is equivalent to the union over all `a : α` of
     "derangements on `α` ⊕ derangements on `{a}ᶜ`". -/
 def derangementsRecursionEquiv :
-    Derangements (Option α) ≃ Σ a : α, Sum (Derangements (({a}ᶜ : Set α) : Type _)) (Derangements α) :=
+    Derangements (Option α) ≃ Σa : α, Sum (Derangements (({a}ᶜ : Set α) : Type _)) (Derangements α) :=
   derangementsOptionEquivSigmaAtMostOneFixedPoint.trans (sigmaCongrRight atMostOneFixedPointEquivSumDerangements)
 
 end Option

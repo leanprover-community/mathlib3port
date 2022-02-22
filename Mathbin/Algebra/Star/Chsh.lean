@@ -162,6 +162,7 @@ which we hide in a namespace as they are unlikely to be useful elsewhere.
 -/
 
 
+-- mathport name: «expr√2»
 local notation "√2" => (Real.sqrt 2 : ℝ)
 
 namespace tsirelson_inequality

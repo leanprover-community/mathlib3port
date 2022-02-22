@@ -35,6 +35,7 @@ Motivated by the theory of Banach Lattices, this section introduces normed latti
 -/
 
 
+-- mathport name: «expr| |»
 local notation "|" a "|" => abs a
 
 /-- Let `α` be a normed commutative group equipped with a partial order covariant with addition, with

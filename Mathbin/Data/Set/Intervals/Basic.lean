@@ -730,10 +730,10 @@ section LinearOrderₓ
 
 variable {α : Type u} [LinearOrderₓ α] {a a₁ a₂ b b₁ b₂ c d : α}
 
-theorem not_mem_Ici : c ∉ Ici a ↔ c < a :=
+theorem not_mem_Ici : (c ∉ Ici a) ↔ c < a :=
   not_leₓ
 
-theorem not_mem_Iic : c ∉ Iic b ↔ b < c :=
+theorem not_mem_Iic : (c ∉ Iic b) ↔ b < c :=
   not_leₓ
 
 theorem not_mem_Icc_of_lt (ha : c < a) : c ∉ Icc a b :=
@@ -748,10 +748,10 @@ theorem not_mem_Ico_of_lt (ha : c < a) : c ∉ Ico a b :=
 theorem not_mem_Ioc_of_gt (hb : b < c) : c ∉ Ioc a b :=
   not_mem_subset Ioc_subset_Iic_self <| not_mem_Iic.mpr hb
 
-theorem not_mem_Ioi : c ∉ Ioi a ↔ c ≤ a :=
+theorem not_mem_Ioi : (c ∉ Ioi a) ↔ c ≤ a :=
   not_ltₓ
 
-theorem not_mem_Iio : c ∉ Iio b ↔ b ≤ c :=
+theorem not_mem_Iio : (c ∉ Iio b) ↔ b ≤ c :=
   not_ltₓ
 
 theorem not_mem_Ioc_of_le (ha : c ≤ a) : c ∉ Ioc a b :=
@@ -1607,8 +1607,8 @@ section LinearOrderedAddCommGroup
 variable {α : Type u} [LinearOrderedAddCommGroup α]
 
 /-- If we remove a smaller interval from a larger, the result is nonempty -/
-theorem nonempty_Ico_sdiff {x dx y dy : α} (h : dy < dx) (hx : 0 < dx) :
-    Nonempty (↥(Ico x (x + dx) \ Ico y (y + dy))) := by
+theorem nonempty_Ico_sdiff {x dx y dy : α} (h : dy < dx) (hx : 0 < dx) : Nonempty ↥(Ico x (x + dx) \ Ico y (y + dy)) :=
+  by
   cases' lt_or_leₓ x y with h' h'
   · use x
     simp [*, not_leₓ.2 h']

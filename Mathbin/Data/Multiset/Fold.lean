@@ -22,6 +22,7 @@ section Fold
 
 variable (op : α → α → α) [hc : IsCommutative α op] [ha : IsAssociative α op]
 
+-- mathport name: «expr * »
 local notation a "*" b => op a b
 
 include hc ha

@@ -131,6 +131,7 @@ attribute [nolint doc_blame] AddMonoidHom.toAddHom
 
 attribute [nolint doc_blame] AddMonoidHom.toZeroHom
 
+-- mathport name: «expr →+ »
 infixr:25 " →+ " => AddMonoidHom
 
 /-- `add_monoid_hom_class F M N` states that `F` is a type of `add_zero_class`-preserving
@@ -248,6 +249,7 @@ attribute [nolint doc_blame] MonoidHom.toMulHom
 
 attribute [nolint doc_blame] MonoidHom.toOneHom
 
+-- mathport name: «expr →* »
 infixr:25 " →* " => MonoidHom
 
 /-- `monoid_hom_class F M N` states that `F` is a type of `monoid`-preserving homomorphisms.
@@ -332,6 +334,7 @@ attribute [nolint doc_blame] MonoidWithZeroHom.toMonoidHom
 
 attribute [nolint doc_blame] MonoidWithZeroHom.toZeroHom
 
+-- mathport name: «expr →*₀ »
 infixr:25 " →*₀ " => MonoidWithZeroHom
 
 /-- `monoid_with_zero_hom_class F M N` states that `F` is a type of
@@ -761,21 +764,21 @@ add_decl_doc AddHom.comp
 add_decl_doc AddMonoidHom.comp
 
 @[simp, to_additive]
-theorem OneHom.coe_comp [One M] [One N] [One P] (g : OneHom N P) (f : OneHom M N) : ⇑g.comp f = g ∘ f :=
+theorem OneHom.coe_comp [One M] [One N] [One P] (g : OneHom N P) (f : OneHom M N) : ⇑(g.comp f) = g ∘ f :=
   rfl
 
 @[simp, to_additive]
-theorem MulHom.coe_comp [Mul M] [Mul N] [Mul P] (g : MulHom N P) (f : MulHom M N) : ⇑g.comp f = g ∘ f :=
+theorem MulHom.coe_comp [Mul M] [Mul N] [Mul P] (g : MulHom N P) (f : MulHom M N) : ⇑(g.comp f) = g ∘ f :=
   rfl
 
 @[simp, to_additive]
 theorem MonoidHom.coe_comp [MulOneClassₓ M] [MulOneClassₓ N] [MulOneClassₓ P] (g : N →* P) (f : M →* N) :
-    ⇑g.comp f = g ∘ f :=
+    ⇑(g.comp f) = g ∘ f :=
   rfl
 
 @[simp]
 theorem MonoidWithZeroHom.coe_comp [MulZeroOneClassₓ M] [MulZeroOneClassₓ N] [MulZeroOneClassₓ P] (g : N →*₀ P)
-    (f : M →*₀ N) : ⇑g.comp f = g ∘ f :=
+    (f : M →*₀ N) : ⇑(g.comp f) = g ∘ f :=
   rfl
 
 @[to_additive]
@@ -1187,7 +1190,7 @@ def ofMapMulInv {H : Type _} [Groupₓ H] (f : G → H) (map_div : ∀ a b : G, 
 
 @[simp, to_additive]
 theorem coe_of_map_mul_inv {H : Type _} [Groupₓ H] (f : G → H) (map_div : ∀ a b : G, f (a * b⁻¹) = f a * (f b)⁻¹) :
-    ⇑ofMapMulInv f map_div = f :=
+    ⇑(ofMapMulInv f map_div) = f :=
   rfl
 
 /-- Define a morphism of additive groups given a map which respects ratios. -/
@@ -1198,7 +1201,7 @@ def ofMapDiv {H : Type _} [Groupₓ H] (f : G → H) (hf : ∀ x y, f (x / y) = 
       simpa only [div_eq_mul_inv] using hf)
 
 @[simp, to_additive]
-theorem coe_of_map_div {H : Type _} [Groupₓ H] (f : G → H) (hf : ∀ x y, f (x / y) = f x / f y) : ⇑ofMapDiv f hf = f :=
+theorem coe_of_map_div {H : Type _} [Groupₓ H] (f : G → H) (hf : ∀ x y, f (x / y) = f x / f y) : ⇑(ofMapDiv f hf) = f :=
   rfl
 
 /-- If `f` is a monoid homomorphism to a commutative group, then `f⁻¹` is the homomorphism sending

@@ -32,6 +32,7 @@ coprime with `n`. -/
 def totient (n : ℕ) : ℕ :=
   ((range n).filter n.Coprime).card
 
+-- mathport name: «exprφ»
 localized [Nat] notation "φ" => Nat.totient
 
 @[simp]

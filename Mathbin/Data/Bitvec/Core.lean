@@ -27,6 +27,7 @@ open Nat
 
 open Vector
 
+-- mathport name: «expr ++ₜ »
 local infixl:65 "++ₜ" => Vector.append
 
 /-- Create a zero bitvector -/

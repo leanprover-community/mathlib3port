@@ -1253,6 +1253,7 @@ section InnerProduct
 variable {E' 𝕜 : Type _} [IsROrC 𝕜] [InnerProductSpace 𝕜 E'] [MeasurableSpace E'] [OpensMeasurableSpace E']
   [SecondCountableTopology E']
 
+-- mathport name: «expr⟪ , ⟫»
 local notation "⟪" x ", " y "⟫" => @inner 𝕜 E' _ x y
 
 theorem Memℒp.const_inner (c : E') {f : α → E'} (hf : Memℒp f p μ) : Memℒp (fun a => ⟪c, f a⟫) p μ :=
@@ -1295,8 +1296,10 @@ def lp {α} (E : Type _) {m : MeasurableSpace α} [MeasurableSpace E] [NormedGro
   neg_mem' := fun f hf => by
     rwa [Set.mem_set_of_eq, snorm_congr_ae (ae_eq_fun.coe_fn_neg _), snorm_neg]
 
+-- mathport name: «expr →₁[ ] »
 localized [MeasureTheory] notation:25 α " →₁[" μ "] " E => MeasureTheory.lp E 1 μ
 
+-- mathport name: «expr →₂[ ] »
 localized [MeasureTheory] notation:25 α " →₂[" μ "] " E => MeasureTheory.lp E 2 μ
 
 namespace Memℒp
@@ -1759,13 +1762,13 @@ variable {s : Set α} {hs : MeasurableSet s} {hμs : μ s ≠ ∞} {c : E} [Bore
 def indicatorConstLp (p : ℝ≥0∞) (hs : MeasurableSet s) (hμs : μ s ≠ ∞) (c : E) : lp E p μ :=
   Memℒp.toLp (s.indicator fun _ => c) (mem_ℒp_indicator_const p hs c (Or.inr hμs))
 
-theorem indicator_const_Lp_coe_fn : ⇑indicatorConstLp p hs hμs c =ᵐ[μ] s.indicator fun _ => c :=
+theorem indicator_const_Lp_coe_fn : ⇑(indicatorConstLp p hs hμs c) =ᵐ[μ] s.indicator fun _ => c :=
   Memℒp.coe_fn_to_Lp (mem_ℒp_indicator_const p hs c (Or.inr hμs))
 
 theorem indicator_const_Lp_coe_fn_mem : ∀ᵐ x : α ∂μ, x ∈ s → indicatorConstLp p hs hμs c x = c :=
   indicator_const_Lp_coe_fn.mono fun x hx hxs => hx.trans (Set.indicator_of_mem hxs _)
 
-theorem indicator_const_Lp_coe_fn_nmem : ∀ᵐ x : α ∂μ, x ∉ s → indicatorConstLp p hs hμs c x = 0 :=
+theorem indicator_const_Lp_coe_fn_nmem : ∀ᵐ x : α ∂μ, (x ∉ s) → indicatorConstLp p hs hμs c x = 0 :=
   indicator_const_Lp_coe_fn.mono fun x hx hxs => hx.trans (Set.indicator_of_not_mem hxs _)
 
 theorem norm_indicator_const_Lp (hp_ne_zero : p ≠ 0) (hp_ne_top : p ≠ ∞) :
@@ -2062,7 +2065,7 @@ def negPart (f : lp ℝ p μ) : lp ℝ p μ :=
 theorem coe_pos_part (f : lp ℝ p μ) : (posPart f : α →ₘ[μ] ℝ) = (f : α →ₘ[μ] ℝ).posPart :=
   rfl
 
-theorem coe_fn_pos_part (f : lp ℝ p μ) : ⇑posPart f =ᵐ[μ] fun a => max (f a) 0 :=
+theorem coe_fn_pos_part (f : lp ℝ p μ) : ⇑(posPart f) =ᵐ[μ] fun a => max (f a) 0 :=
   AeEqFun.coe_fn_pos_part _
 
 theorem coe_fn_neg_part_eq_max (f : lp ℝ p μ) : ∀ᵐ a ∂μ, negPart f a = max (-f a) 0 := by

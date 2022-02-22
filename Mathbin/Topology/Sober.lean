@@ -35,6 +35,7 @@ section SpecializeOrder
 def Specializes (x y : α) : Prop :=
   y ∈ Closure ({x} : Set α)
 
+-- mathport name: «expr ⤳ »
 infixl:300 " ⤳ " => Specializes
 
 theorem specializes_def (x y : α) : x ⤳ y ↔ y ∈ Closure ({x} : Set α) :=

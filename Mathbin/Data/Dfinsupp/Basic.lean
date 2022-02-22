@@ -51,8 +51,10 @@ def Dfinsupp [∀ i, Zero (β i)] : Type _ :=
 
 variable {β}
 
+-- mathport name: «exprΠ₀ , »
 notation3 "Π₀ " (...) ", " r:(scoped f => Dfinsupp f) => r
 
+-- mathport name: «expr →ₚ »
 infixl:25 " →ₚ " => Dfinsupp
 
 namespace Dfinsupp
@@ -224,7 +226,7 @@ instance [∀ i, AddCommMonoidₓ (β i)] : AddCommMonoidₓ (Π₀ i, β i) :=
 
 @[simp]
 theorem coe_finset_sum {α} [∀ i, AddCommMonoidₓ (β i)] (s : Finset α) (g : α → Π₀ i, β i) :
-    (⇑∑ a in s, g a) = ∑ a in s, g a :=
+    ⇑(∑ a in s, g a) = ∑ a in s, g a :=
   (coeFnAddMonoidHom : _ →+ ∀ i, β i).map_sum g s
 
 @[simp]
@@ -593,7 +595,7 @@ theorem single_eq_single_iff (i j : ι) (xi : β i) (xj : β j) :
     · subst hij
       exact Or.inl ⟨rfl, heq_of_eq (Dfinsupp.single_injective h)⟩
       
-    · have h_coe : ⇑Dfinsupp.single i xi = Dfinsupp.single j xj := congr_argₓ coeFn h
+    · have h_coe : ⇑(Dfinsupp.single i xi) = Dfinsupp.single j xj := congr_argₓ coeFn h
       have hci := congr_funₓ h_coe i
       have hcj := congr_funₓ h_coe j
       rw [Dfinsupp.single_eq_same] at hci hcj
@@ -873,7 +875,7 @@ protected theorem induction {p : (Π₀ i, β i) → Prop} (f : Π₀ i, β i) (
     exact (H i).resolve_left id
     
   intro i s ih f H
-  have H2 : p (erase i (⟦{ toFun := f, preSupport := i ::ₘ s, zero := H }⟧)) := by
+  have H2 : p (erase i ⟦{ toFun := f, preSupport := i ::ₘ s, zero := H }⟧) := by
     dsimp only [erase, Quotientₓ.map_mk]
     have H2 : ∀ j, j ∈ s ∨ ite (j = i) 0 (f j) = 0 := by
       intro j
@@ -1034,7 +1036,7 @@ theorem support_zero : (0 : Π₀ i, β i).support = ∅ :=
 theorem mem_support_iff {f : Π₀ i, β i} {i : ι} : i ∈ f.support ↔ f i ≠ 0 :=
   f.mem_support_to_fun _
 
-theorem not_mem_support_iff {f : Π₀ i, β i} {i : ι} : i ∉ f.support ↔ f i = 0 :=
+theorem not_mem_support_iff {f : Π₀ i, β i} {i : ι} : (i ∉ f.support) ↔ f i = 0 :=
   not_iff_comm.1 mem_support_iff.symm
 
 @[simp]
@@ -1670,7 +1672,7 @@ theorem map_dfinsupp_prod [CommMonoidₓ R] [CommMonoidₓ S] (h : R →* S) (f 
 
 @[to_additive]
 theorem coe_dfinsupp_prod [Monoidₓ R] [CommMonoidₓ S] (f : Π₀ i, β i) (g : ∀ i, β i → R →* S) :
-    ⇑f.Prod g = f.Prod fun a b => g a b :=
+    ⇑(f.Prod g) = f.Prod fun a b => g a b :=
   coe_finset_prod _ _
 
 @[simp, to_additive]
@@ -1731,7 +1733,7 @@ theorem dfinsupp_sum_add_hom_apply [AddZeroClass R] [AddCommMonoidₓ S] [∀ i,
   map_dfinsupp_sum_add_hom (eval r) f g
 
 theorem coe_dfinsupp_sum_add_hom [AddZeroClass R] [AddCommMonoidₓ S] [∀ i, AddZeroClass (β i)] (f : Π₀ i, β i)
-    (g : ∀ i, β i →+ R →+ S) : ⇑sumAddHom g f = sumAddHom (fun i => (coeFn R S).comp (g i)) f :=
+    (g : ∀ i, β i →+ R →+ S) : ⇑(sumAddHom g f) = sumAddHom (fun i => (coeFn R S).comp (g i)) f :=
   map_dfinsupp_sum_add_hom (coeFn R S) f g
 
 end AddMonoidHom

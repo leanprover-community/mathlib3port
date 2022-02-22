@@ -151,7 +151,7 @@ theorem compl_eq_univ_sdiff (s : Finset α) : sᶜ = univ \ s :=
 theorem mem_compl : a ∈ sᶜ ↔ a ∉ s := by
   simp [compl_eq_univ_sdiff]
 
-theorem not_mem_compl : a ∉ sᶜ ↔ a ∈ s := by
+theorem not_mem_compl : (a ∉ sᶜ) ↔ a ∈ s := by
   rw [mem_compl, not_not]
 
 @[simp, norm_cast]
@@ -380,7 +380,7 @@ See `fintype.trunc_fin_bijection` for a version without `[decidable_eq α]`.
 def truncEquivFin α [DecidableEq α] [Fintype α] : Trunc (α ≃ Finₓ (card α)) := by
   unfold card Finset.card
   exact
-    Quot.recOnSubsingletonₓ (@univ α _).1 (fun nd : l.Nodup => Trunc.mk (nd.nthLeEquivOfForallMemList _ h).symm)
+    Quot.recOnSubsingleton (@univ α _).1 (fun nd : l.Nodup => Trunc.mk (nd.nthLeEquivOfForallMemList _ h).symm)
       mem_univ_val univ.2
 
 /-- There is (noncomputably) an equivalence between `α` and `fin (card α)`.
@@ -405,7 +405,7 @@ given `[decidable_eq α]`.
 def truncFinBijection α [Fintype α] : Trunc { f : Finₓ (card α) → α // Bijective f } := by
   dunfold card Finset.card
   exact
-    Quot.recOnSubsingletonₓ (@univ α _).1 (fun nd : l.Nodup => Trunc.mk (nd.nthLeBijectionOfForallMemList _ h))
+    Quot.recOnSubsingleton (@univ α _).1 (fun nd : l.Nodup => Trunc.mk (nd.nthLeBijectionOfForallMemList _ h))
       mem_univ_val univ.2
 
 instance (α : Type _) : Subsingleton (Fintype α) :=
@@ -1264,7 +1264,7 @@ instance Subtype.fintype (p : α → Prop) [DecidablePred p] [Fintype α] : Fint
 it essentially infers `fintype.{v} (set.univ.{u} : set α)` with `v` and `u` distinct.
 Reported in leanprover-community/lean#672 -/
 @[simp]
-theorem Set.to_finset_univ [Fintype (↥(Set.Univ : Set α))] [Fintype α] : (Set.Univ : Set α).toFinset = Finset.univ := by
+theorem Set.to_finset_univ [Fintype ↥(Set.Univ : Set α)] [Fintype α] : (Set.Univ : Set α).toFinset = Finset.univ := by
   ext
   simp only [Set.mem_univ, mem_univ, Set.mem_to_finset]
 
@@ -1285,10 +1285,10 @@ theorem Set.to_finset_range [DecidableEq α] [Fintype β] (f : β → α) [Finty
 def setFintype [Fintype α] (s : Set α) [DecidablePred (· ∈ s)] : Fintype s :=
   Subtype.fintype fun x => x ∈ s
 
-theorem set_fintype_card_le_univ [Fintype α] (s : Set α) [Fintype (↥s)] : Fintype.card (↥s) ≤ Fintype.card α :=
+theorem set_fintype_card_le_univ [Fintype α] (s : Set α) [Fintype ↥s] : Fintype.card ↥s ≤ Fintype.card α :=
   Fintype.card_le_of_embedding (Function.Embedding.subtype s)
 
-theorem set_fintype_card_eq_univ_iff [Fintype α] (s : Set α) [Fintype (↥s)] :
+theorem set_fintype_card_eq_univ_iff [Fintype α] (s : Set α) [Fintype ↥s] :
     Fintype.card s = Fintype.card α ↔ s = Set.Univ := by
   rw [← Set.to_finset_card, Finset.card_eq_iff_eq_univ, ← Set.to_finset_univ, Set.to_finset_inj]
 
@@ -1513,17 +1513,17 @@ theorem Fintype.card_quotient_lt [Fintype α] {s : Setoidₓ α} [DecidableRel (
     (h1 : x ≠ y) (h2 : x ≈ y) : Fintype.card (Quotientₓ s) < Fintype.card α :=
   (Fintype.card_lt_of_surjective_not_injective _ (surjective_quotient_mk _)) fun w => h1 (w <| Quotientₓ.eq.mpr h2)
 
-instance Psigma.fintype {α : Type _} {β : α → Type _} [Fintype α] [∀ a, Fintype (β a)] : Fintype (Σ' a, β a) :=
+instance PSigma.fintype {α : Type _} {β : α → Type _} [Fintype α] [∀ a, Fintype (β a)] : Fintype (Σ'a, β a) :=
   Fintype.ofEquiv _ (Equivₓ.psigmaEquivSigma _).symm
 
-instance Psigma.fintypePropLeft {α : Prop} {β : α → Type _} [Decidable α] [∀ a, Fintype (β a)] : Fintype (Σ' a, β a) :=
-  if h : α then Fintype.ofEquiv (β h) ⟨fun x => ⟨h, x⟩, Psigma.snd, fun _ => rfl, fun ⟨_, _⟩ => rfl⟩
+instance PSigma.fintypePropLeft {α : Prop} {β : α → Type _} [Decidable α] [∀ a, Fintype (β a)] : Fintype (Σ'a, β a) :=
+  if h : α then Fintype.ofEquiv (β h) ⟨fun x => ⟨h, x⟩, PSigma.snd, fun _ => rfl, fun ⟨_, _⟩ => rfl⟩
   else ⟨∅, fun x => h x.1⟩
 
-instance Psigma.fintypePropRight {α : Type _} {β : α → Prop} [∀ a, Decidable (β a)] [Fintype α] : Fintype (Σ' a, β a) :=
+instance PSigma.fintypePropRight {α : Type _} {β : α → Prop} [∀ a, Decidable (β a)] [Fintype α] : Fintype (Σ'a, β a) :=
   Fintype.ofEquiv { a // β a } ⟨fun ⟨x, y⟩ => ⟨x, y⟩, fun ⟨x, y⟩ => ⟨x, y⟩, fun ⟨x, y⟩ => rfl, fun ⟨x, y⟩ => rfl⟩
 
-instance Psigma.fintypePropProp {α : Prop} {β : α → Prop} [Decidable α] [∀ a, Decidable (β a)] : Fintype (Σ' a, β a) :=
+instance PSigma.fintypePropProp {α : Prop} {β : α → Prop} [Decidable α] [∀ a, Decidable (β a)] : Fintype (Σ'a, β a) :=
   if h : ∃ a, β a then
     ⟨{⟨h.fst, h.snd⟩}, fun ⟨_, _⟩ => by
       simp ⟩
@@ -2116,8 +2116,8 @@ def truncOfCardPos {α} [Fintype α] (h : 0 < Fintype.card α) : Trunc α := by
 /-- By iterating over the elements of a fintype, we can lift an existential statement `∃ a, P a`
 to `trunc (Σ' a, P a)`, containing data.
 -/
-def truncSigmaOfExists {α} [Fintype α] {P : α → Prop} [DecidablePred P] (h : ∃ a, P a) : Trunc (Σ' a, P a) :=
-  @truncOfNonemptyFintype (Σ' a, P a) ((Exists.elim h) fun a ha => ⟨⟨a, ha⟩⟩) _
+def truncSigmaOfExists {α} [Fintype α] {P : α → Prop} [DecidablePred P] (h : ∃ a, P a) : Trunc (Σ'a, P a) :=
+  @truncOfNonemptyFintype (Σ'a, P a) ((Exists.elim h) fun a ha => ⟨⟨a, ha⟩⟩) _
 
 end Trunc
 

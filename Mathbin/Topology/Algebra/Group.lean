@@ -58,7 +58,7 @@ protected def Homeomorph.mulLeft (a : G) : G ≃ₜ G :=
     continuous_inv_fun := continuous_const.mul continuous_id }
 
 @[simp, to_additive]
-theorem Homeomorph.coe_mul_left (a : G) : ⇑Homeomorph.mulLeft a = (· * ·) a :=
+theorem Homeomorph.coe_mul_left (a : G) : ⇑(Homeomorph.mulLeft a) = (· * ·) a :=
   rfl
 
 @[to_additive]
@@ -89,7 +89,7 @@ protected def Homeomorph.mulRight (a : G) : G ≃ₜ G :=
     continuous_inv_fun := continuous_id.mul continuous_const }
 
 @[simp, to_additive]
-theorem Homeomorph.coe_mul_right (a : G) : ⇑Homeomorph.mulRight a = fun g => g * a :=
+theorem Homeomorph.coe_mul_right (a : G) : ⇑(Homeomorph.mulRight a) = fun g => g * a :=
   rfl
 
 @[to_additive]
@@ -257,6 +257,10 @@ theorem continuous_zpow : ∀ z : ℤ, Continuous fun a : G => a ^ z
   | -[1+ n] => by
     simpa using (continuous_pow (n + 1)).inv
 
+instance AddGroupₓ.has_continuous_const_smul_int {A} [AddGroupₓ A] [TopologicalSpace A] [TopologicalAddGroup A] :
+    HasContinuousConstSmul ℤ A :=
+  ⟨continuous_zsmul⟩
+
 @[continuity, to_additive]
 theorem Continuous.zpow {f : α → G} (h : Continuous f) (z : ℤ) : Continuous fun b => f b ^ z :=
   (continuous_zpow z).comp h
@@ -358,7 +362,7 @@ protected def Homeomorph.shearMulRight : G × G ≃ₜ G × G :=
     continuous_inv_fun := continuous_fst.prod_mk <| continuous_fst.inv.mul continuous_snd }
 
 @[simp, to_additive]
-theorem Homeomorph.shear_mul_right_coe : ⇑Homeomorph.shearMulRight G = fun z : G × G => (z.1, z.1 * z.2) :=
+theorem Homeomorph.shear_mul_right_coe : ⇑(Homeomorph.shearMulRight G) = fun z : G × G => (z.1, z.1 * z.2) :=
   rfl
 
 @[simp, to_additive]
@@ -432,6 +436,12 @@ theorem DenseRange.topological_closure_map_subgroup [Groupₓ H] [TopologicalSpa
   rw [SetLike.ext'_iff] at hs⊢
   simp only [Subgroup.topological_closure_coe, Subgroup.coe_top, ← dense_iff_closure_eq] at hs⊢
   exact hf'.dense_image hf hs
+
+/-- If a subgroup of a topological group is commutative, then so is its topological closure. -/
+@[to_additive "If a subgroup of an additive topological group is commutative, then so is its\ntopological closure."]
+def Subgroup.commGroupTopologicalClosure [T2Space G] (s : Subgroup G) (hs : ∀ x y : s, x * y = y * x) :
+    CommGroupₓ s.topologicalClosure :=
+  { s.topologicalClosure.toGroup, s.toSubmonoid.commMonoidTopologicalClosure hs with }
 
 @[to_additive exists_nhds_half_neg]
 theorem exists_nhds_split_inv {s : Set G} (hs : s ∈ 𝓝 (1 : G)) :
@@ -727,7 +737,7 @@ theorem compact_open_separated_mul {K U : Set G} (hK : IsCompact K) (hU : IsOpen
     simp only [mem_preimage, mul_oneₓ, hKU hx]
   choose V hV using fun x : K => exists_open_nhds_one_mul_subset ((h1W x).mem_nhds (h2W x.1 x.2))
   let X : K → Set G := fun x => (fun y => (x : G)⁻¹ * y) ⁻¹' V x
-  obtain ⟨t, ht⟩ : ∃ t : Finset (↥K), K ⊆ ⋃ i ∈ t, X i := by
+  obtain ⟨t, ht⟩ : ∃ t : Finset ↥K, K ⊆ ⋃ i ∈ t, X i := by
     refine' hK.elim_finite_subcover X (fun x => (hV x).1.Preimage (continuous_mul_left x⁻¹)) _
     intro x hx
     rw [mem_Union]
@@ -1088,6 +1098,7 @@ instance : SemilatticeInf (GroupTopology α) :=
 instance : Inhabited (GroupTopology α) :=
   ⟨⊤⟩
 
+-- mathport name: «exprcont»
 local notation "cont" => @Continuous _ _
 
 @[to_additive "Infimum of a collection of additive group topologies"]

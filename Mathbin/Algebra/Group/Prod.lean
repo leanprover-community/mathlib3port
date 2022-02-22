@@ -224,11 +224,11 @@ def inr : N →* M × N :=
 variable {M N}
 
 @[simp, to_additive]
-theorem coe_fst : ⇑fst M N = Prod.fst :=
+theorem coe_fst : ⇑(fst M N) = Prod.fst :=
   rfl
 
 @[simp, to_additive]
-theorem coe_snd : ⇑snd M N = Prod.snd :=
+theorem coe_snd : ⇑(snd M N) = Prod.snd :=
   rfl
 
 @[simp, to_additive]
@@ -269,7 +269,7 @@ protected def prod (f : M →* N) (g : M →* P) : M →* N × P where
   map_mul' := fun x y => Prod.extₓ (f.map_mul x y) (g.map_mul x y)
 
 @[to_additive coe_prod]
-theorem coe_prod (f : M →* N) (g : M →* P) : ⇑f.Prod g = Pi.prod f g :=
+theorem coe_prod (f : M →* N) (g : M →* P) : ⇑(f.Prod g) = Pi.prod f g :=
   rfl
 
 @[simp, to_additive prod_apply]
@@ -305,7 +305,7 @@ theorem prod_map_def : prodMap f g = (f.comp (fst M N)).Prod (g.comp (snd M N)) 
   rfl
 
 @[simp, to_additive coe_prod_map]
-theorem coe_prod_map : ⇑prodMap f g = Prod.map f g :=
+theorem coe_prod_map : ⇑(prodMap f g) = Prod.map f g :=
   rfl
 
 @[to_additive prod_comp_prod_map]

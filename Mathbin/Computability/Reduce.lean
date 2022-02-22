@@ -36,6 +36,7 @@ to questions about `q`.
 def ManyOneReducible {α β} [Primcodable α] [Primcodable β] (p : α → Prop) (q : β → Prop) :=
   ∃ f, Computable f ∧ ∀ a, p a ↔ q (f a)
 
+-- mathport name: «expr ≤₀ »
 infixl:1000 " ≤₀ " => ManyOneReducible
 
 theorem ManyOneReducible.mk {α β} [Primcodable α] [Primcodable β] {f : α → β} (q : β → Prop) (h : Computable f) :
@@ -68,6 +69,7 @@ about `p` to questions about `q`.
 def OneOneReducible {α β} [Primcodable α] [Primcodable β] (p : α → Prop) (q : β → Prop) :=
   ∃ f, Computable f ∧ Injective f ∧ ∀ a, p a ↔ q (f a)
 
+-- mathport name: «expr ≤₁ »
 infixl:1000 " ≤₁ " => OneOneReducible
 
 theorem OneOneReducible.mk {α β} [Primcodable α] [Primcodable β] {f : α → β} (q : β → Prop) (h : Computable f)
@@ -240,6 +242,7 @@ theorem Ulower.down_computable {α} [Primcodable α] : (Ulower.equiv α).Computa
 theorem many_one_equiv_up {α} [Primcodable α] {p : α → Prop} : ManyOneEquiv (p ∘ Ulower.up) p :=
   ManyOneEquiv.of_equiv Ulower.down_computable.symm
 
+-- mathport name: «expr ⊕' »
 local infixl:1001 " ⊕' " => Sum.elim
 
 open Nat.Primrec

@@ -53,6 +53,7 @@ attribute [local semireducible] SimplexCategory
 def mk (n : ℕ) : SimplexCategory.{u} :=
   Ulift.up n
 
+-- mathport name: «expr[ ]»
 localized [Simplicial] notation "[" n "]" => SimplexCategory.mk n
 
 /-- The length of an object of `simplex_category`. -/

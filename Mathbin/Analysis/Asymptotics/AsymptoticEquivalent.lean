@@ -65,6 +65,7 @@ variable {α β : Type _} [NormedGroup β]
 def IsEquivalent (u v : α → β) (l : Filter α) :=
   IsOₓ (u - v) v l
 
+-- mathport name: «expr ~[ ] »
 localized [Asymptotics] notation:50 u " ~[" l:50 "] " v:50 => Asymptotics.IsEquivalent u v l
 
 variable {u v w : α → β} {l : Filter α}

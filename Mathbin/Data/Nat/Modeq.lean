@@ -30,6 +30,7 @@ namespace Nat
 def Modeq (n a b : ℕ) :=
   a % n = b % n deriving Decidable
 
+-- mathport name: «expr ≡ [MOD ]»
 notation:50 a " ≡ " b " [MOD " n "]" => Modeq n a b
 
 variable {m n a b c d : ℕ}

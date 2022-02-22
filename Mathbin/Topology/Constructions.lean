@@ -1050,7 +1050,7 @@ theorem closed_embedding_sigma_mk {i : ι} : ClosedEmbedding (@Sigma.mk ι σ i)
 theorem embedding_sigma_mk {i : ι} : Embedding (@Sigma.mk ι σ i) :=
   closed_embedding_sigma_mk.1
 
-theorem is_open_sigma_fst_preimage (s : Set ι) : IsOpen (Sigma.fst ⁻¹' s : Set (Σ a, σ a)) := by
+theorem is_open_sigma_fst_preimage (s : Set ι) : IsOpen (Sigma.fst ⁻¹' s : Set (Σa, σ a)) := by
   rw [← bUnion_of_singleton s, preimage_Union₂]
   simp only [← range_sigma_mk]
   exact is_open_bUnion fun _ _ => is_open_range_sigma_mk

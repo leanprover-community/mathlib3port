@@ -175,10 +175,8 @@ theorem sup_objs_exists (O : Finset C) : ∃ S : C, ∀ {X}, X ∈ O → Nonempt
       
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (X Y)
-variable (O : Finset C) (H : Finset (Σ' (X : C) (Y : C) (mX : X ∈ O) (mY : Y ∈ O), X ⟶ Y))
+variable (O : Finset C) (H : Finset (Σ'(X Y : C)(mX : X ∈ O)(mY : Y ∈ O), X ⟶ Y))
 
--- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (X Y)
 /-- Given any `finset` of objects `{X, ...}` and
 indexed collection of `finset`s of morphisms `{f, ...}` in `C`,
 there exists an object `S`, with a morphism `T X : X ⟶ S` from each `X`,
@@ -187,7 +185,7 @@ such that the triangles commute: `f ≫ T Y = T X`, for `f : X ⟶ Y` in the `fi
 theorem sup_exists :
     ∃ (S : C)(T : ∀ {X : C}, X ∈ O → (X ⟶ S)),
       ∀ {X Y : C} mX : X ∈ O mY : Y ∈ O {f : X ⟶ Y},
-        (⟨X, Y, mX, mY, f⟩ : Σ' (X : C) (Y : C) (mX : X ∈ O) (mY : Y ∈ O), X ⟶ Y) ∈ H → f ≫ T mY = T mX :=
+        (⟨X, Y, mX, mY, f⟩ : Σ'(X Y : C)(mX : X ∈ O)(mY : Y ∈ O), X ⟶ Y) ∈ H → f ≫ T mY = T mX :=
   by
   classical
   apply Finset.induction_on H
@@ -215,7 +213,7 @@ theorem sup_exists :
       apply Finset.mem_of_mem_insert_of_ne mf'
       contrapose! h
       obtain ⟨rfl, h⟩ := h
-      rw [heq_iff_eq, Psigma.mk.inj_iff] at h
+      rw [heq_iff_eq, PSigma.mk.inj_iff] at h
       exact ⟨rfl, h.1.symm⟩
       
     
@@ -232,24 +230,21 @@ noncomputable def sup : C :=
 noncomputable def toSup {X : C} (m : X ∈ O) : X ⟶ sup O H :=
   (sup_exists O H).some_spec.some m
 
--- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (X Y)
 /-- The triangles of consisting of a morphism in `H` and the maps to `sup O H` commute.
 -/
 theorem to_sup_commutes {X Y : C} (mX : X ∈ O) (mY : Y ∈ O) {f : X ⟶ Y}
-    (mf : (⟨X, Y, mX, mY, f⟩ : Σ' (X : C) (Y : C) (mX : X ∈ O) (mY : Y ∈ O), X ⟶ Y) ∈ H) :
-    f ≫ toSup O H mY = toSup O H mX :=
+    (mf : (⟨X, Y, mX, mY, f⟩ : Σ'(X Y : C)(mX : X ∈ O)(mY : Y ∈ O), X ⟶ Y) ∈ H) : f ≫ toSup O H mY = toSup O H mX :=
   (sup_exists O H).some_spec.some_spec mX mY mf
 
 variable {J : Type v} [SmallCategory J] [FinCategory J]
 
--- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (X Y)
 /-- If we have `is_filtered C`, then for any functor `F : J ⥤ C` with `fin_category J`,
 there exists a cocone over `F`.
 -/
 theorem cocone_nonempty (F : J ⥤ C) : Nonempty (Cocone F) := by
   classical
   let O := finset.univ.image F.obj
-  let H : Finset (Σ' (X : C) (Y : C) (mX : X ∈ O) (mY : Y ∈ O), X ⟶ Y) :=
+  let H : Finset (Σ'(X Y : C)(mX : X ∈ O)(mY : Y ∈ O), X ⟶ Y) :=
     finset.univ.bUnion fun X : J =>
       finset.univ.bUnion fun Y : J =>
         finset.univ.image fun f : X ⟶ Y =>
@@ -556,10 +551,8 @@ theorem inf_objs_exists (O : Finset C) : ∃ S : C, ∀ {X}, X ∈ O → Nonempt
       
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (X Y)
-variable (O : Finset C) (H : Finset (Σ' (X : C) (Y : C) (mX : X ∈ O) (mY : Y ∈ O), X ⟶ Y))
+variable (O : Finset C) (H : Finset (Σ'(X Y : C)(mX : X ∈ O)(mY : Y ∈ O), X ⟶ Y))
 
--- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (X Y)
 /-- Given any `finset` of objects `{X, ...}` and
 indexed collection of `finset`s of morphisms `{f, ...}` in `C`,
 there exists an object `S`, with a morphism `T X : S ⟶ X` from each `X`,
@@ -568,7 +561,7 @@ such that the triangles commute: `T X ≫ f = T Y`, for `f : X ⟶ Y` in the `fi
 theorem inf_exists :
     ∃ (S : C)(T : ∀ {X : C}, X ∈ O → (S ⟶ X)),
       ∀ {X Y : C} mX : X ∈ O mY : Y ∈ O {f : X ⟶ Y},
-        (⟨X, Y, mX, mY, f⟩ : Σ' (X : C) (Y : C) (mX : X ∈ O) (mY : Y ∈ O), X ⟶ Y) ∈ H → T mX ≫ f = T mY :=
+        (⟨X, Y, mX, mY, f⟩ : Σ'(X Y : C)(mX : X ∈ O)(mY : Y ∈ O), X ⟶ Y) ∈ H → T mX ≫ f = T mY :=
   by
   classical
   apply Finset.induction_on H
@@ -596,7 +589,7 @@ theorem inf_exists :
       apply Finset.mem_of_mem_insert_of_ne mf'
       contrapose! h
       obtain ⟨rfl, h⟩ := h
-      rw [heq_iff_eq, Psigma.mk.inj_iff] at h
+      rw [heq_iff_eq, PSigma.mk.inj_iff] at h
       exact ⟨rfl, h.1.symm⟩
       
     
@@ -613,24 +606,21 @@ noncomputable def inf : C :=
 noncomputable def infTo {X : C} (m : X ∈ O) : inf O H ⟶ X :=
   (inf_exists O H).some_spec.some m
 
--- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (X Y)
 /-- The triangles consisting of a morphism in `H` and the maps from `inf O H` commute.
 -/
 theorem inf_to_commutes {X Y : C} (mX : X ∈ O) (mY : Y ∈ O) {f : X ⟶ Y}
-    (mf : (⟨X, Y, mX, mY, f⟩ : Σ' (X : C) (Y : C) (mX : X ∈ O) (mY : Y ∈ O), X ⟶ Y) ∈ H) :
-    infTo O H mX ≫ f = infTo O H mY :=
+    (mf : (⟨X, Y, mX, mY, f⟩ : Σ'(X Y : C)(mX : X ∈ O)(mY : Y ∈ O), X ⟶ Y) ∈ H) : infTo O H mX ≫ f = infTo O H mY :=
   (inf_exists O H).some_spec.some_spec mX mY mf
 
 variable {J : Type v} [SmallCategory J] [FinCategory J]
 
--- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (X Y)
 /-- If we have `is_cofiltered C`, then for any functor `F : J ⥤ C` with `fin_category J`,
 there exists a cone over `F`.
 -/
 theorem cone_nonempty (F : J ⥤ C) : Nonempty (Cone F) := by
   classical
   let O := finset.univ.image F.obj
-  let H : Finset (Σ' (X : C) (Y : C) (mX : X ∈ O) (mY : Y ∈ O), X ⟶ Y) :=
+  let H : Finset (Σ'(X Y : C)(mX : X ∈ O)(mY : Y ∈ O), X ⟶ Y) :=
     finset.univ.bUnion fun X : J =>
       finset.univ.bUnion fun Y : J =>
         finset.univ.image fun f : X ⟶ Y =>

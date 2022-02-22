@@ -91,17 +91,17 @@ def Sym2 (α : Type u) :=
 namespace Sym2
 
 @[elab_as_eliminator]
-protected theorem ind {f : Sym2 α → Prop} (h : ∀ x y, f (⟦(x, y)⟧)) : ∀ i, f i :=
+protected theorem ind {f : Sym2 α → Prop} (h : ∀ x y, f ⟦(x, y)⟧) : ∀ i, f i :=
   Quotientₓ.ind <| Prod.rec <| h
 
 @[elab_as_eliminator]
-protected theorem induction_on {f : Sym2 α → Prop} (i : Sym2 α) (hf : ∀ x y, f (⟦(x, y)⟧)) : f i :=
+protected theorem induction_on {f : Sym2 α → Prop} (i : Sym2 α) (hf : ∀ x y, f ⟦(x, y)⟧) : f i :=
   i.ind hf
 
-protected theorem exists {α : Sort _} {f : Sym2 α → Prop} : (∃ x : Sym2 α, f x) ↔ ∃ x y, f (⟦(x, y)⟧) :=
+protected theorem exists {α : Sort _} {f : Sym2 α → Prop} : (∃ x : Sym2 α, f x) ↔ ∃ x y, f ⟦(x, y)⟧ :=
   (surjective_quotient_mk _).exists.trans Prod.exists
 
-protected theorem forall {α : Sort _} {f : Sym2 α → Prop} : (∀ x : Sym2 α, f x) ↔ ∀ x y, f (⟦(x, y)⟧) :=
+protected theorem forall {α : Sort _} {f : Sym2 α → Prop} : (∀ x : Sym2 α, f x) ↔ ∀ x y, f ⟦(x, y)⟧ :=
   (surjective_quotient_mk _).forall.trans Prod.forall
 
 theorem eq_swap {a b : α} : ⟦(a, b)⟧ = ⟦(b, a)⟧ := by
@@ -145,11 +145,11 @@ def lift : { f : α → α → β // ∀ a₁ a₂, f a₁ a₂ = f a₂ a₁ } 
 
 @[simp]
 theorem lift_mk (f : { f : α → α → β // ∀ a₁ a₂, f a₁ a₂ = f a₂ a₁ }) (a₁ a₂ : α) :
-    lift f (⟦(a₁, a₂)⟧) = (f : α → α → β) a₁ a₂ :=
+    lift f ⟦(a₁, a₂)⟧ = (f : α → α → β) a₁ a₂ :=
   rfl
 
 @[simp]
-theorem coe_lift_symm_apply (F : Sym2 α → β) (a₁ a₂ : α) : (lift.symm F : α → α → β) a₁ a₂ = F (⟦(a₁, a₂)⟧) :=
+theorem coe_lift_symm_apply (F : Sym2 α → β) (a₁ a₂ : α) : (lift.symm F : α → α → β) a₁ a₂ = F ⟦(a₁, a₂)⟧ :=
   rfl
 
 /-- The functor `sym2` is functorial, and this function constructs the induced maps.
@@ -174,7 +174,7 @@ theorem map_map {g : β → γ} {f : α → β} (x : Sym2 α) : map g (map f x) 
   tidy
 
 @[simp]
-theorem map_pair_eq (f : α → β) (x y : α) : map f (⟦(x, y)⟧) = ⟦(f x, f y)⟧ :=
+theorem map_pair_eq (f : α → β) (x y : α) : map f ⟦(x, y)⟧ = ⟦(f x, f y)⟧ :=
   rfl
 
 theorem map.injective {f : α → β} (hinj : Injective f) : Injective (map f) := by
@@ -314,11 +314,11 @@ theorem diag_injective : Function.Injective (Sym2.diag : α → Sym2 α) := fun 
 def IsDiag : Sym2 α → Prop :=
   lift ⟨Eq, fun _ _ => propext eq_comm⟩
 
-theorem mk_is_diag_iff {x y : α} : IsDiag (⟦(x, y)⟧) ↔ x = y :=
+theorem mk_is_diag_iff {x y : α} : IsDiag ⟦(x, y)⟧ ↔ x = y :=
   Iff.rfl
 
 @[simp]
-theorem is_diag_iff_proj_eq (z : α × α) : IsDiag (⟦z⟧) ↔ z.1 = z.2 :=
+theorem is_diag_iff_proj_eq (z : α × α) : IsDiag ⟦z⟧ ↔ z.1 = z.2 :=
   (Prod.recOn z) fun _ _ => mk_is_diag_iff
 
 @[simp]
@@ -505,7 +505,7 @@ section Decidable
 def relBool [DecidableEq α] (x y : α × α) : Bool :=
   if x.1 = y.1 then x.2 = y.2 else if x.1 = y.2 then x.2 = y.1 else false
 
-theorem rel_bool_spec [DecidableEq α] (x y : α × α) : ↥relBool x y ↔ Rel α x y := by
+theorem rel_bool_spec [DecidableEq α] (x y : α × α) : ↥(relBool x y) ↔ Rel α x y := by
   cases' x with x₁ x₂
   cases' y with y₁ y₂
   dsimp [rel_bool]
@@ -539,14 +539,13 @@ private def pair_other [DecidableEq α] (a : α) (z : α × α) : α :=
 This is the computable version of `mem.other`.
 -/
 def Mem.other' [DecidableEq α] {a : α} {z : Sym2 α} (h : a ∈ z) : α :=
-  Quot.recₓ (fun x h' => pairOther a x)
+  Quot.rec (fun x h' => pairOther a x)
     (by
       clear h z
       intro x y h
       ext hy
       convert_to pair_other a x = _
-      · have h' : ∀ {c e h}, @Eq.ndrec _ (⟦x⟧) (fun s => a ∈ s → α) (fun _ => pair_other a x) c e h = pair_other a x :=
-          by
+      · have h' : ∀ {c e h}, @Eq.ndrec _ ⟦x⟧ (fun s => a ∈ s → α) (fun _ => pair_other a x) c e h = pair_other a x := by
           intro _ e _
           subst e
         apply h'
@@ -576,7 +575,7 @@ theorem other_spec' [DecidableEq α] {a : α} {z : Sym2 α} (h : a ∈ z) : ⟦(
   induction z
   cases' z with x y
   have h' := mem_iff.mp h
-  dsimp [mem.other', Quot.recₓ, pair_other]
+  dsimp [mem.other', Quot.rec, pair_other]
   cases h' <;> subst a
   · simp only [if_true, eq_self_iff_true]
     rfl
@@ -600,8 +599,8 @@ theorem other_mem' [DecidableEq α] {a : α} {z : Sym2 α} (h : a ∈ z) : h.oth
 theorem other_invol' [DecidableEq α] {a : α} {z : Sym2 α} (ha : a ∈ z) (hb : ha.other' ∈ z) : hb.other' = a := by
   induction z
   cases' z with x y
-  dsimp [mem.other', Quot.recₓ, pair_other]  at hb
-  split_ifs  at hb <;> dsimp [mem.other', Quot.recₓ, pair_other]
+  dsimp [mem.other', Quot.rec, pair_other]  at hb
+  split_ifs  at hb <;> dsimp [mem.other', Quot.rec, pair_other]
   simp only [h, if_true, eq_self_iff_true]
   split_ifs
   assumption

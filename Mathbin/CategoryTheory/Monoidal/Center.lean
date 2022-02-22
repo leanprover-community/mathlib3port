@@ -77,7 +77,7 @@ and `b` is a half-braiding on `X`.
 -/
 @[nolint has_inhabited_instance]
 def Center :=
-  Σ X : C, HalfBraiding X
+  ΣX : C, HalfBraiding X
 
 namespace Center
 

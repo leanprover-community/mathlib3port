@@ -98,15 +98,20 @@ namespace GlueData
 
 variable {C} (D : GlueData C)
 
+-- mathport name: «expr𝖣»
 local notation "𝖣" => D.toGlueData
 
+-- mathport name: «exprπ₁ , , »
 local notation "π₁" i "," j "," k => @pullback.fst _ _ _ _ _ (D.f i j) (D.f i k) _
 
+-- mathport name: «exprπ₂ , , »
 local notation "π₂" i "," j "," k => @pullback.snd _ _ _ _ _ (D.f i j) (D.f i k) _
 
+-- mathport name: «exprπ₁⁻¹ , , »
 local notation "π₁⁻¹" i "," j "," k =>
   (PresheafedSpace.IsOpenImmersion.pullback_fst_of_right (D.f i j) (D.f i k)).inv_app
 
+-- mathport name: «exprπ₂⁻¹ , , »
 local notation "π₂⁻¹" i "," j "," k =>
   (PresheafedSpace.IsOpenImmersion.pullback_snd_of_left (D.f i j) (D.f i k)).inv_app
 
@@ -501,6 +506,7 @@ namespace GlueData
 
 variable {C} (D : GlueData C)
 
+-- mathport name: «expr𝖣»
 local notation "𝖣" => D.toGlueData
 
 /-- The glue data of presheafed spaces associated to a family of glue data of sheafed spaces. -/
@@ -568,6 +574,7 @@ namespace GlueData
 
 variable (D : GlueData)
 
+-- mathport name: «expr𝖣»
 local notation "𝖣" => D.toGlueData
 
 /-- The glue data of ringed spaces associated to a family of glue data of locally ringed spaces. -/

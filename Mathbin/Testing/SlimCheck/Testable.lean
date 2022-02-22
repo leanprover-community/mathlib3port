@@ -494,7 +494,7 @@ The process is guaranteed to terminate because `shrink x` produces
 a proof that all the values it produces are smaller (according to `sizeof`)
 than `x`. -/
 def minimizeAux [SampleableExt α] [∀ x, Testable (β x)] (cfg : SlimCheckCfg) (var : Stringₓ) :
-    ProxyRepr α → ℕ → OptionTₓ Gen (Σ x, TestResult (β (interp α x))) :=
+    ProxyRepr α → ℕ → OptionTₓ Gen (Σx, TestResult (β (interp α x))) :=
   (WellFounded.fix HasWellFounded.wf) fun x f_rec n => do
     if cfg then
         return <|
@@ -509,7 +509,7 @@ def minimizeAux [SampleableExt α] [∀ x, Testable (β x)] (cfg : SlimCheckCfg)
           let ⟨r⟩ ←
             monadLift
                 (Uliftable.up <| Testable.run (β (interp α a)) cfg true : Gen (Ulift <| test_result <| β <| interp α a))
-          if is_failure r then pure (⟨a, r, ⟨h⟩⟩ : Σ a, test_result (β (interp α a)) × Plift (sizeof_lt a x))
+          if is_failure r then pure (⟨a, r, ⟨h⟩⟩ : Σa, test_result (β (interp α a)) × Plift (sizeof_lt a x))
             else failure
     if cfg then return <| trace ((s! "{var } := {reprₓ y}") ++ format_failure' "Shrink counter-example:" r) ()
       else pure ()
@@ -518,7 +518,7 @@ def minimizeAux [SampleableExt α] [∀ x, Testable (β x)] (cfg : SlimCheckCfg)
 /-- Once a property fails to hold on an example, look for smaller counter-examples
 to show the user. -/
 def minimize [SampleableExt α] [∀ x, Testable (β x)] (cfg : SlimCheckCfg) (var : Stringₓ) (x : ProxyRepr α)
-    (r : TestResult (β (interp α x))) : Gen (Σ x, TestResult (β (interp α x))) := do
+    (r : TestResult (β (interp α x))) : Gen (Σx, TestResult (β (interp α x))) := do
   if cfg then return <| trace ((s! "{var } := {reprₓ x}") ++ format_failure' "Shrink counter-example:" r) ()
     else pure ()
   let x' ← OptionTₓ.run <| minimizeAux α _ cfg var x 0

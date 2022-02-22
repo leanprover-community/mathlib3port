@@ -184,12 +184,14 @@ variable (A)
 abbrev shiftFunctorZero : shiftFunctor C (0 : A) ≅ 𝟭 C :=
   (shiftMonoidalFunctor C A).εIso.symm
 
+-- mathport name: «expr ⟦ ⟧»
 notation X "⟦" n "⟧" =>
   (-- Any better notational suggestions?
         shiftFunctor
         _ n).obj
     X
 
+-- mathport name: «expr ⟦ ⟧'»
 notation f "⟦" n "⟧'" => (shiftFunctor _ n).map f
 
 end Defs

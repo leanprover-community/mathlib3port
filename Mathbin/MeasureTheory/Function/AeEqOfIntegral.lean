@@ -62,6 +62,7 @@ theorem ae_eq_zero_of_forall_inner [InnerProductSpace 𝕜 E] [SecondCountableTo
     is_closed_eq (continuous_id.inner continuous_const) continuous_const
   exact @is_closed_property ℕ E _ s (fun c => inner c (f x) = (0 : 𝕜)) hs h_closed (fun n => hx n) _
 
+-- mathport name: «expr⟪ , ⟫»
 local notation "⟪" x ", " y "⟫" => y x
 
 variable (𝕜)

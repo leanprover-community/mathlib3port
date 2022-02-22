@@ -38,6 +38,7 @@ def DirectSum [∀ i, AddCommMonoidₓ (β i)] : Type _ :=
 instance [∀ i, AddCommMonoidₓ (β i)] : CoeFun (DirectSum ι β) fun _ => ∀ i : ι, β i :=
   Dfinsupp.hasCoeToFun
 
+-- mathport name: «expr⨁ , »
 localized [DirectSum] notation3 "⨁ " (...) ", " r:(scoped f => DirectSum _ f) => r
 
 namespace DirectSum

@@ -247,6 +247,7 @@ def principal (s : Set α) : Filter α where
   sets_of_superset := fun x y hx => Subset.trans hx
   inter_sets := fun x y => subset_inter
 
+-- mathport name: «expr𝓟»
 localized [Filter] notation "𝓟" => Filter.principal
 
 instance : Inhabited (Filter α) :=
@@ -954,6 +955,7 @@ means that `p` holds true for sufficiently large `x`. -/
 protected def Eventually (p : α → Prop) (f : Filter α) : Prop :=
   { x | p x } ∈ f
 
+-- mathport name: «expr∀ᶠ in , »
 notation3 "∀ᶠ " (...) " in " f ", " r:(scoped p => Filter.Eventually p f) => r
 
 theorem eventually_iff {f : Filter α} {P : α → Prop} : (∀ᶠ x in f, P x) ↔ { x | P x } ∈ f :=
@@ -1105,6 +1107,7 @@ means that there exist arbitrarily large `x` for which `p` holds true. -/
 protected def Frequently (p : α → Prop) (f : Filter α) : Prop :=
   ¬∀ᶠ x in f, ¬p x
 
+-- mathport name: «expr∃ᶠ in , »
 notation3 "∃ᶠ " (...) " in " f ", " r:(scoped p => Filter.Frequently p f) => r
 
 theorem Eventually.frequently {f : Filter α} [NeBot f] {p : α → Prop} (h : ∀ᶠ x in f, p x) : ∃ᶠ x in f, p x :=
@@ -1248,6 +1251,7 @@ theorem frequently_supr {p : α → Prop} {fs : β → Filter α} : (∃ᶠ x in
 def EventuallyEq (l : Filter α) (f g : α → β) : Prop :=
   ∀ᶠ x in l, f x = g x
 
+-- mathport name: «expr =ᶠ[ ] »
 notation:50 f " =ᶠ[" l:50 "] " g:50 => EventuallyEq l f g
 
 theorem EventuallyEq.eventually {l : Filter α} {f g : α → β} (h : f =ᶠ[l] g) : ∀ᶠ x in l, f x = g x :=
@@ -1396,6 +1400,7 @@ variable [LE β] {l : Filter α}
 def EventuallyLe (l : Filter α) (f g : α → β) : Prop :=
   ∀ᶠ x in l, f x ≤ g x
 
+-- mathport name: «expr ≤ᶠ[ ] »
 notation:50 f " ≤ᶠ[" l:50 "] " g:50 => EventuallyLe l f g
 
 theorem EventuallyLe.congr {f f' g g' : α → β} (H : f ≤ᶠ[l] g) (hf : f =ᶠ[l] f') (hg : g =ᶠ[l] g') : f' ≤ᶠ[l] g' :=
@@ -2082,6 +2087,12 @@ theorem map_eq_comap_of_inverse {f : Filter α} {m : α → β} {n : β → α} 
       show Preimage (m ∘ n) b ⊆ b by
         simp only [h₁] <;> apply subset.refl⟩
 
+theorem map_equiv_symm (e : α ≃ β) (f : Filter β) : map e.symm f = comap e f :=
+  map_eq_comap_of_inverse e.symm_comp_self e.self_comp_symm
+
+theorem comap_equiv_symm (e : α ≃ β) (f : Filter α) : comap e.symm f = map e f :=
+  (map_eq_comap_of_inverse e.self_comp_symm e.symm_comp_self).symm
+
 theorem map_swap_eq_comap_swap {f : Filter (α × β)} : Prod.swap <$> f = comap Prod.swap f :=
   map_eq_comap_of_inverse Prod.swap_swap_eqₓ Prod.swap_swap_eqₓ
 
@@ -2562,6 +2573,7 @@ variable {s : Set α} {t : Set β} {f : Filter α} {g : Filter β}
 protected def prod (f : Filter α) (g : Filter β) : Filter (α × β) :=
   f.comap Prod.fst⊓g.comap Prod.snd
 
+-- mathport name: «expr ×ᶠ »
 localized [Filter] infixl:60 " ×ᶠ " => Filter.prod
 
 theorem prod_mem_prod {s : Set α} {t : Set β} {f : Filter α} {g : Filter β} (hs : s ∈ f) (ht : t ∈ g) :

@@ -109,10 +109,13 @@ class Rack (α : Type u) extends Shelf α where
   left_inv : ∀ x, Function.LeftInverse (inv_act x) (act x)
   right_inv : ∀ x, Function.RightInverse (inv_act x) (act x)
 
+-- mathport name: «expr ◃ »
 localized [Quandles] infixr:65 " ◃ " => Shelf.act
 
+-- mathport name: «expr ◃⁻¹ »
 localized [Quandles] infixr:65 " ◃⁻¹ " => Rack.invAct
 
+-- mathport name: «expr →◃ »
 localized [Quandles] infixr:25 " →◃ " => ShelfHom
 
 open_locale Quandles
@@ -630,11 +633,11 @@ def toEnvelGroup.map {R : Type _} [Rack R] {G : Type _} [Groupₓ G] : (R →◃
   toFun := fun f =>
     { toFun := fun x => Quotientₓ.liftOn x (toEnvelGroup.mapAux f) fun a b ⟨hab⟩ => toEnvelGroup.mapAux.well_def f hab,
       map_one' := by
-        change Quotientₓ.liftOn (⟦Unit⟧) (to_envel_group.map_aux f) _ = 1
+        change Quotientₓ.liftOn ⟦Unit⟧ (to_envel_group.map_aux f) _ = 1
         simp [to_envel_group.map_aux],
       map_mul' := fun x y =>
         Quotientₓ.induction_on₂ x y fun x y => by
-          change Quotientₓ.liftOn (⟦mul x y⟧) (to_envel_group.map_aux f) _ = _
+          change Quotientₓ.liftOn ⟦mul x y⟧ (to_envel_group.map_aux f) _ = _
           simp [to_envel_group.map_aux] }
   invFun := fun F => (Quandle.Conj.map F).comp (toEnvelGroup R)
   left_inv := fun f => by
@@ -648,10 +651,10 @@ def toEnvelGroup.map {R : Type _} [Rack R] {G : Type _} [Groupₓ G] : (R →◃
           
         · rfl
           
-        · have hm : ⟦x_a.mul x_b⟧ = @Mul.mul (envel_group R) _ (⟦x_a⟧) (⟦x_b⟧) := rfl
+        · have hm : ⟦x_a.mul x_b⟧ = @Mul.mul (envel_group R) _ ⟦x_a⟧ ⟦x_b⟧ := rfl
           rw [hm, F.map_mul, MonoidHom.map_mul, ← x_ih_a, ← x_ih_b]
           
-        · have hm : ⟦x_a.inv⟧ = @Inv.inv (envel_group R) _ (⟦x_a⟧) := rfl
+        · have hm : ⟦x_a.inv⟧ = @Inv.inv (envel_group R) _ ⟦x_a⟧ := rfl
           rw [hm, F.map_inv, MonoidHom.map_inv, x_ih]
           
 

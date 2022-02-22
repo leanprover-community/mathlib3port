@@ -33,6 +33,7 @@ namespace Top
 
 variable {J : Type u} [SmallCategory J]
 
+-- mathport name: «exprforget»
 local notation "forget" => forget Top
 
 /-- A choice of limit cone for a functor `F : J ⥤ Top`.
@@ -163,13 +164,13 @@ theorem pi_iso_pi_hom_apply {ι : Type u} (α : ι → Top.{u}) (i : ι) (x : �
   exact concrete_category.congr_hom this x
 
 /-- The inclusion to the coproduct as a bundled continous map. -/
-abbrev sigmaι {ι : Type u} (α : ι → Top.{u}) (i : ι) : α i ⟶ Top.of (Σ i, α i) :=
+abbrev sigmaι {ι : Type u} (α : ι → Top.{u}) (i : ι) : α i ⟶ Top.of (Σi, α i) :=
   ⟨Sigma.mk i⟩
 
 /-- The explicit cofan of a family of topological spaces given by the sigma type. -/
 @[simps x ι_app]
 def sigmaCofan {ι : Type u} (α : ι → Top.{u}) : Cofan α :=
-  Cofan.mk (Top.of (Σ i, α i)) (sigmaι α)
+  Cofan.mk (Top.of (Σi, α i)) (sigmaι α)
 
 /-- The constructed cofan is indeed a colimit -/
 def sigmaCofanIsColimit {ι : Type u} (α : ι → Top.{u}) : IsColimit (sigmaCofan α) where
@@ -186,7 +187,7 @@ def sigmaCofanIsColimit {ι : Type u} (α : ι → Top.{u}) : IsColimit (sigmaCo
 
 /-- The coproduct is homeomorphic to the disjoint union of the topological spaces.
 -/
-def sigmaIsoSigma {ι : Type u} (α : ι → Top.{u}) : ∐ α ≅ Top.of (Σ i, α i) :=
+def sigmaIsoSigma {ι : Type u} (α : ι → Top.{u}) : ∐ α ≅ Top.of (Σi, α i) :=
   (colimit.isColimit _).coconePointUniqueUpToIso (sigmaCofanIsColimit α)
 
 @[simp, reassoc]
@@ -446,12 +447,12 @@ theorem range_pullback_to_prod {X Y Z : Top} (f : X ⟶ Z) (g : Y ⟶ Z) :
     
 
 theorem inducing_pullback_to_prod {X Y Z : Top} (f : X ⟶ Z) (g : Y ⟶ Z) :
-    Inducing (⇑(prod.lift pullback.fst pullback.snd : pullback f g ⟶ X ⨯ Y)) :=
+    Inducing ⇑(prod.lift pullback.fst pullback.snd : pullback f g ⟶ X ⨯ Y) :=
   ⟨by
     simp [prod_topology, pullback_topology, induced_compose, ← coe_comp]⟩
 
 theorem embedding_pullback_to_prod {X Y Z : Top} (f : X ⟶ Z) (g : Y ⟶ Z) :
-    Embedding (⇑(prod.lift pullback.fst pullback.snd : pullback f g ⟶ X ⨯ Y)) :=
+    Embedding ⇑(prod.lift pullback.fst pullback.snd : pullback f g ⟶ X ⨯ Y) :=
   ⟨inducing_pullback_to_prod f g, (Top.mono_iff_injective _).mp inferInstance⟩
 
 /-- If the map `S ⟶ T` is mono, then there is a description of the image of `W ×ₛ X ⟶ Y ×ₜ Z`. -/
@@ -555,7 +556,7 @@ theorem pullback_map_open_embedding_of_open_embeddings {W X Y Z S T : Top} (f₁
     
 
 theorem snd_embedding_of_left_embedding {X Y S : Top} {f : X ⟶ S} (H : Embedding f) (g : Y ⟶ S) :
-    Embedding (⇑(pullback.snd : pullback f g ⟶ Y)) := by
+    Embedding ⇑(pullback.snd : pullback f g ⟶ Y) := by
   convert
     (homeo_of_iso (as_iso (pullback.snd : pullback (𝟙 S) g ⟶ _))).Embedding.comp
       (pullback_map_embedding_of_embeddings f g (𝟙 _) g H (homeo_of_iso (iso.refl _)).Embedding (𝟙 _) rfl
@@ -565,7 +566,7 @@ theorem snd_embedding_of_left_embedding {X Y S : Top} {f : X ⟶ S} (H : Embeddi
   simp
 
 theorem fst_embedding_of_right_embedding {X Y S : Top} (f : X ⟶ S) {g : Y ⟶ S} (H : Embedding g) :
-    Embedding (⇑(pullback.fst : pullback f g ⟶ X)) := by
+    Embedding ⇑(pullback.fst : pullback f g ⟶ X) := by
   convert
     (homeo_of_iso (as_iso (pullback.fst : pullback f (𝟙 S) ⟶ _))).Embedding.comp
       (pullback_map_embedding_of_embeddings f g f (𝟙 _) (homeo_of_iso (iso.refl _)).Embedding H (𝟙 _) rfl
@@ -582,7 +583,7 @@ theorem embedding_of_pullback_embeddings {X Y S : Top} {f : X ⟶ S} {g : Y ⟶ 
   exact (limit.w _ walking_cospan.hom.inr).symm
 
 theorem snd_open_embedding_of_left_open_embedding {X Y S : Top} {f : X ⟶ S} (H : OpenEmbedding f) (g : Y ⟶ S) :
-    OpenEmbedding (⇑(pullback.snd : pullback f g ⟶ Y)) := by
+    OpenEmbedding ⇑(pullback.snd : pullback f g ⟶ Y) := by
   convert
     (homeo_of_iso (as_iso (pullback.snd : pullback (𝟙 S) g ⟶ _))).OpenEmbedding.comp
       (pullback_map_open_embedding_of_open_embeddings f g (𝟙 _) g H (homeo_of_iso (iso.refl _)).OpenEmbedding (𝟙 _) rfl
@@ -592,7 +593,7 @@ theorem snd_open_embedding_of_left_open_embedding {X Y S : Top} {f : X ⟶ S} (H
   simp
 
 theorem fst_open_embedding_of_right_open_embedding {X Y S : Top} (f : X ⟶ S) {g : Y ⟶ S} (H : OpenEmbedding g) :
-    OpenEmbedding (⇑(pullback.fst : pullback f g ⟶ X)) := by
+    OpenEmbedding ⇑(pullback.fst : pullback f g ⟶ X) := by
   convert
     (homeo_of_iso (as_iso (pullback.fst : pullback f (𝟙 S) ⟶ _))).OpenEmbedding.comp
       (pullback_map_open_embedding_of_open_embeddings f g f (𝟙 _) (homeo_of_iso (iso.refl _)).OpenEmbedding H (𝟙 _) rfl
@@ -837,12 +838,11 @@ variable {J : Type u} [SmallCategory J]
 
 variable (F : J ⥤ Top.{u})
 
--- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (X Y)
 private abbrev finite_diagram_arrow {J : Type u} [SmallCategory J] (G : Finset J) :=
-  Σ' (X : J) (Y : J) (mX : X ∈ G) (mY : Y ∈ G), X ⟶ Y
+  Σ'(X Y : J)(mX : X ∈ G)(mY : Y ∈ G), X ⟶ Y
 
 private abbrev finite_diagram (J : Type u) [SmallCategory J] :=
-  Σ G : Finset J, Finset (FiniteDiagramArrow G)
+  ΣG : Finset J, Finset (FiniteDiagramArrow G)
 
 /-- Partial sections of a cofiltered limit are sections when restricted to
 a finite subset of objects and morphisms of `J`.

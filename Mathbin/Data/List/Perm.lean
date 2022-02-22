@@ -39,6 +39,7 @@ inductive Perm : List α → List α → Prop
 
 open perm (swap)
 
+-- mathport name: «expr ~ »
 infixl:50 " ~ " => Perm
 
 @[refl]
@@ -275,6 +276,7 @@ open Relator
 
 variable {γ : Type _} {δ : Type _} {r : α → β → Prop} {p : γ → δ → Prop}
 
+-- mathport name: «expr ∘r »
 local infixr:80 " ∘r " => Relation.Comp
 
 theorem perm_comp_perm : (perm ∘r perm : List α → List α → Prop) = perm := by
@@ -339,6 +341,7 @@ section Subperm
 def Subperm (l₁ l₂ : List α) : Prop :=
   ∃ (l : _)(_ : l ~ l₁), l <+ l₂
 
+-- mathport name: «expr <+~ »
 infixl:50 " <+~ " => Subperm
 
 theorem nil_subperm {l : List α} : [] <+~ l :=
@@ -453,8 +456,10 @@ section
 
 variable {op : α → α → α} [IsAssociative α op] [IsCommutative α op]
 
+-- mathport name: «expr * »
 local notation a "*" b => op a b
 
+-- mathport name: «expr <*> »
 local notation l "<*>" a => foldlₓ op a l
 
 theorem Perm.fold_op_eq {l₁ l₂ : List α} {a : α} (h : l₁ ~ l₂) : (l₁<*>a) = l₂<*>a :=

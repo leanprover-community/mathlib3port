@@ -302,12 +302,16 @@ def Measure.ae {α} {m : MeasurableSpace α} (μ : Measure α) : Filter α where
     simp only [compl_inter, mem_set_of_eq] <;> exact measure_union_null hs ht
   sets_of_superset := fun s t hs hst => measure_mono_null (Set.compl_subset_compl.2 hst) hs
 
+-- mathport name: «expr∀ᵐ ∂ , »
 notation3 "∀ᵐ " (...) " ∂" μ ", " r:(scoped P => Filter.Eventually P Measure.ae μ) => r
 
+-- mathport name: «expr∃ᵐ ∂ , »
 notation3 "∃ᵐ " (...) " ∂" μ ", " r:(scoped P => Filter.Frequently P Measure.ae μ) => r
 
+-- mathport name: «expr =ᵐ[ ] »
 notation:50 f " =ᵐ[" μ:50 "] " g:50 => f =ᶠ[Measure.ae μ] g
 
+-- mathport name: «expr ≤ᵐ[ ] »
 notation:50 f " ≤ᵐ[" μ:50 "] " g:50 => f ≤ᶠ[Measure.ae μ] g
 
 theorem mem_ae_iff {s : Set α} : s ∈ μ.ae ↔ μ (sᶜ) = 0 :=
@@ -485,9 +489,11 @@ add_decl_doc volume
 
 section MeasureSpace
 
+-- mathport name: «expr∀ᵐ , »
 notation3 "∀ᵐ " (...) ", " r:(scoped P =>
   Filter.Eventually P MeasureTheory.Measure.ae MeasureTheory.MeasureSpace.volume) => r
 
+-- mathport name: «expr∃ᵐ , »
 notation3 "∃ᵐ " (...) ", " r:(scoped P =>
   Filter.Frequently P MeasureTheory.Measure.ae MeasureTheory.MeasureSpace.volume) => r
 

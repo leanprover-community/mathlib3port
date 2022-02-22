@@ -49,8 +49,10 @@ variable (𝕜 : Type _)
 
 variable (E : Type _) [IsROrC 𝕜] [InnerProductSpace 𝕜 E]
 
+-- mathport name: «expr⟪ , ⟫»
 local notation "⟪" x ", " y "⟫" => @inner 𝕜 E _ x y
 
+-- mathport name: «expr †»
 local postfix:90 "†" => starRingEnd _
 
 /-- An element `x` of an inner product space `E` induces an element of the dual space `dual 𝕜 E`,
@@ -185,6 +187,7 @@ and dualizing the result using `to_dual`.
 def continuousLinearMapOfBilin (B : E →L⋆[𝕜] E →L[𝕜] 𝕜) : E →L[𝕜] E :=
   comp (toDual 𝕜 E).symm.toContinuousLinearEquiv.toContinuousLinearMap B
 
+-- mathport name: «expr ♯»
 local postfix:1024 "♯" => continuousLinearMapOfBilin
 
 variable (B : E →L⋆[𝕜] E →L[𝕜] 𝕜)

@@ -183,8 +183,8 @@ theorem Convex.subset_interior_image_homothety_of_one_lt {s : Set E} (hs : Conve
   rw [mem_interior] at hz₁⊢
   obtain ⟨U, hU₁, hU₂, hU₃⟩ := hz₁
   exact
-    ⟨image (homothety x t) U, image_subset (⇑homothety x t) hU₁, homothety_is_open_map x t ht' U hU₂,
-      mem_image_of_mem (⇑homothety x t) hU₃⟩
+    ⟨image (homothety x t) U, image_subset (⇑(homothety x t)) hU₁, homothety_is_open_map x t ht' U hU₂,
+      mem_image_of_mem (⇑(homothety x t)) hU₃⟩
 
 theorem Convex.is_path_connected {s : Set E} (hconv : Convex ℝ s) (hne : s.Nonempty) : IsPathConnected s := by
   refine' is_path_connected_iff.mpr ⟨hne, _⟩

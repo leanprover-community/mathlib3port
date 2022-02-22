@@ -27,6 +27,7 @@ structure Zsqrtd (d : ℤ) where
   re : ℤ
   im : ℤ
 
+-- mathport name: «exprℤ√ »
 prefix:100 "ℤ√" => Zsqrtd
 
 namespace Zsqrtd

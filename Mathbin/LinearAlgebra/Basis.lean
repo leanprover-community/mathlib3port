@@ -110,7 +110,7 @@ instance : CoeFun (Basis ι R M) fun _ => ι → M where
   coe := fun b i => b.repr.symm (Finsupp.single i 1)
 
 @[simp]
-theorem coe_of_repr (e : M ≃ₗ[R] ι →₀ R) : ⇑of_repr e = fun i => e.symm (Finsupp.single i 1) :=
+theorem coe_of_repr (e : M ≃ₗ[R] ι →₀ R) : ⇑(of_repr e) = fun i => e.symm (Finsupp.single i 1) :=
   rfl
 
 protected theorem injective [Nontrivial R] : Injective b :=
@@ -964,7 +964,7 @@ theorem mk_apply (i : ι) : Basis.mk hli hsp i = v i :=
     simp
 
 @[simp]
-theorem coe_mk : ⇑Basis.mk hli hsp = v :=
+theorem coe_mk : ⇑(Basis.mk hli hsp) = v :=
   funext (mk_apply _ _)
 
 variable {hli hsp}
@@ -1172,7 +1172,7 @@ theorem extend_apply_self (hs : LinearIndependent K (coe : s → V)) (x : hs.ext
   Basis.mk_apply _ _ _
 
 @[simp]
-theorem coe_extend (hs : LinearIndependent K (coe : s → V)) : ⇑Basis.extend hs = coe :=
+theorem coe_extend (hs : LinearIndependent K (coe : s → V)) : ⇑(Basis.extend hs) = coe :=
   funext (extend_apply_self hs)
 
 theorem range_extend (hs : LinearIndependent K (coe : s → V)) : Range (Basis.extend hs) = hs.extend (subset_univ _) :=
@@ -1210,7 +1210,7 @@ theorem of_vector_space_apply_self (x : OfVectorSpaceIndex K V) : ofVectorSpace 
   Basis.mk_apply _ _ _
 
 @[simp]
-theorem coe_of_vector_space : ⇑ofVectorSpace K V = coe :=
+theorem coe_of_vector_space : ⇑(ofVectorSpace K V) = coe :=
   funext fun x => of_vector_space_apply_self K V x
 
 theorem OfVectorSpaceIndex.linear_independent : LinearIndependent K (coe : OfVectorSpaceIndex K V → V) := by

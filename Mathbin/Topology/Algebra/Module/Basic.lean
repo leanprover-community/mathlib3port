@@ -236,10 +236,13 @@ structure ContinuousLinearMap {R : Type _} {S : Type _} [Semiringₓ R] [Semirin
     run_tac
       tactic.interactive.continuity'
 
+-- mathport name: «expr →SL[ ] »
 notation:25 M " →SL[" σ "] " M₂ => ContinuousLinearMap σ M M₂
 
+-- mathport name: «expr →L[ ] »
 notation:25 M " →L[" R "] " M₂ => ContinuousLinearMap (RingHom.id R) M M₂
 
+-- mathport name: «expr →L⋆[ ] »
 notation:25 M " →L⋆[" R "] " M₂ => ContinuousLinearMap (starRingEnd R) M M₂
 
 /-- Continuous linear equivalences between modules. We only put the type classes that are necessary
@@ -256,10 +259,13 @@ structure ContinuousLinearEquiv {R : Type _} {S : Type _} [Semiringₓ R] [Semir
     run_tac
       tactic.interactive.continuity'
 
+-- mathport name: «expr ≃SL[ ] »
 notation:50 M " ≃SL[" σ "] " M₂ => ContinuousLinearEquiv σ M M₂
 
+-- mathport name: «expr ≃L[ ] »
 notation:50 M " ≃L[" R "] " M₂ => ContinuousLinearEquiv (RingHom.id R) M M₂
 
+-- mathport name: «expr ≃L⋆[ ] »
 notation:50 M " ≃L⋆[" R "] " M₂ => ContinuousLinearEquiv (starRingEnd R) M M₂
 
 section PointwiseLimits
@@ -564,7 +570,7 @@ theorem coe_sum {ι : Type _} (t : Finset ι) (f : ι → M₁ →SL[σ₁₂] M
   (AddMonoidHom.mk (coe : (M₁ →SL[σ₁₂] M₂) → M₁ →ₛₗ[σ₁₂] M₂) rfl fun _ _ => rfl).map_sum _ _
 
 @[simp, norm_cast]
-theorem coe_sum' {ι : Type _} (t : Finset ι) (f : ι → M₁ →SL[σ₁₂] M₂) : (⇑∑ d in t, f d) = ∑ d in t, f d := by
+theorem coe_sum' {ι : Type _} (t : Finset ι) (f : ι → M₁ →SL[σ₁₂] M₂) : ⇑(∑ d in t, f d) = ∑ d in t, f d := by
   simp only [← coe_coe, coe_sum, LinearMap.coe_fn_sum]
 
 theorem sum_apply {ι : Type _} (t : Finset ι) (f : ι → M₁ →SL[σ₁₂] M₂) (b : M₁) : (∑ d in t, f d) b = ∑ d in t, f d b :=
@@ -579,6 +585,7 @@ variable {σ₁₃ : R₁ →+* R₃} [RingHomCompTriple σ₁₂ σ₂₃ σ₁
 def comp (g : M₂ →SL[σ₂₃] M₃) (f : M₁ →SL[σ₁₂] M₂) : M₁ →SL[σ₁₃] M₃ :=
   ⟨(g : M₂ →ₛₗ[σ₂₃] M₃).comp ↑f, g.2.comp f.2⟩
 
+-- mathport name: «expr ∘L »
 infixr:80 " ∘L " =>
   @ContinuousLinearMap.comp _ _ _ _ _ _ (RingHom.id _) (RingHom.id _) _ _ _ _ _ _ _ _ _ _ _ _ (RingHom.id _)
     RingHomCompTriple.ids
@@ -831,7 +838,7 @@ theorem coe_prod_map [Module R₁ M₂] [Module R₁ M₃] [Module R₁ M₄] (f
 
 @[simp, norm_cast]
 theorem coe_prod_map' [Module R₁ M₂] [Module R₁ M₃] [Module R₁ M₄] (f₁ : M₁ →L[R₁] M₂) (f₂ : M₃ →L[R₁] M₄) :
-    ⇑f₁.prod_map f₂ = Prod.map f₁ f₂ :=
+    ⇑(f₁.prod_map f₂) = Prod.map f₁ f₂ :=
   rfl
 
 /-- The continuous linear map given by `(x, y) ↦ f₁ x + f₂ y`. -/
@@ -919,7 +926,7 @@ def pi (f : ∀ i, M →L[R] φ i) : M →L[R] ∀ i, φ i :=
   ⟨LinearMap.pi fun i => f i, continuous_pi fun i => (f i).Continuous⟩
 
 @[simp]
-theorem coe_pi' (f : ∀ i, M →L[R] φ i) : ⇑pi f = fun c i => f i c :=
+theorem coe_pi' (f : ∀ i, M →L[R] φ i) : ⇑(pi f) = fun c i => f i c :=
   rfl
 
 @[simp]
@@ -1330,7 +1337,7 @@ theorem coe_restrict_scalars (f : M →L[A] M₂) :
   rfl
 
 @[simp]
-theorem coe_restrict_scalars' (f : M →L[A] M₂) : ⇑f.restrictScalars R = f :=
+theorem coe_restrict_scalars' (f : M →L[A] M₂) : ⇑(f.restrictScalars R) = f :=
   rfl
 
 @[simp]
@@ -1371,7 +1378,7 @@ def restrictScalarsₗ : (M →L[A] M₂) →ₗ[S] M →L[R] M₂ where
 variable {A M M₂ R S}
 
 @[simp]
-theorem coe_restrict_scalarsₗ : ⇑restrictScalarsₗ A M M₂ R S = restrictScalars R :=
+theorem coe_restrict_scalarsₗ : ⇑(restrictScalarsₗ A M M₂ R S) = restrictScalars R :=
   rfl
 
 end RestrictScalars
@@ -1994,7 +2001,7 @@ def funUnique : (ι → M) ≃L[R] M :=
 variable {ι R M}
 
 @[simp]
-theorem coe_fun_unique : ⇑funUnique ι R M = Function.eval default :=
+theorem coe_fun_unique : ⇑(funUnique ι R M) = Function.eval default :=
   rfl
 
 @[simp]

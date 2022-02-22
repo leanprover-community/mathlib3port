@@ -54,21 +54,21 @@ abbrev g : Mon :=
 
 /-- The canonical projection into the colimit, as a quotient type. -/
 @[to_additive "The canonical projection into the colimit, as a quotient type."]
-abbrev g.mk : (Σ j, F.obj j) → G :=
+abbrev g.mk : (Σj, F.obj j) → G :=
   Quot.mk (Types.Quot.Rel (F ⋙ forget Groupₓₓ))
 
 @[to_additive]
-theorem g.mk_eq (x y : Σ j, F.obj j) (h : ∃ (k : J)(f : x.1 ⟶ k)(g : y.1 ⟶ k), F.map f x.2 = F.map g y.2) :
+theorem g.mk_eq (x y : Σj, F.obj j) (h : ∃ (k : J)(f : x.1 ⟶ k)(g : y.1 ⟶ k), F.map f x.2 = F.map g y.2) :
     G.mk x = G.mk y :=
   Quot.eqv_gen_sound (Types.FilteredColimit.eqv_gen_quot_rel_of_rel (F ⋙ forget Groupₓₓ) x y h)
 
 /-- The "unlifted" version of taking inverses in the colimit. -/
 @[to_additive "The \"unlifted\" version of negation in the colimit."]
-def colimitInvAux (x : Σ j, F.obj j) : G :=
+def colimitInvAux (x : Σj, F.obj j) : G :=
   G.mk ⟨x.1, x.2⁻¹⟩
 
 @[to_additive]
-theorem colimit_inv_aux_eq_of_rel (x y : Σ j, F.obj j) (h : Types.FilteredColimit.Rel (F ⋙ forget Groupₓₓ) x y) :
+theorem colimit_inv_aux_eq_of_rel (x y : Σj, F.obj j) (h : Types.FilteredColimit.Rel (F ⋙ forget Groupₓₓ) x y) :
     colimit_inv_aux x = colimit_inv_aux y := by
   apply G.mk_eq
   obtain ⟨k, f, g, hfg⟩ := h
@@ -87,7 +87,7 @@ instance colimitHasInv : Inv G where
     exact h
 
 @[simp, to_additive]
-theorem colimit_inv_mk_eq (x : Σ j, F.obj j) : (G.mk x)⁻¹ = G.mk ⟨x.1, x.2⁻¹⟩ :=
+theorem colimit_inv_mk_eq (x : Σj, F.obj j) : (G.mk x)⁻¹ = G.mk ⟨x.1, x.2⁻¹⟩ :=
   rfl
 
 @[to_additive]

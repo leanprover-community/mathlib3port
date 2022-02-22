@@ -33,7 +33,7 @@ theorem has_deriv_at_exp (x : ℂ) : HasDerivAt exp (exp x) x := by
     norm_num
   refine' (is_O.of_bound ∥exp x∥ _).trans_is_o (is_o_pow_id this)
   filter_upwards [Metric.ball_mem_nhds (0 : ℂ) zero_lt_one]
-  simp only [Metric.mem_ball, dist_zero_right, NormedField.norm_pow]
+  simp only [Metric.mem_ball, dist_zero_right, norm_pow]
   exact fun z hz => exp_bound_sq x z hz.le
 
 theorem differentiable_exp : Differentiable ℂ exp := fun x => (has_deriv_at_exp x).DifferentiableAt

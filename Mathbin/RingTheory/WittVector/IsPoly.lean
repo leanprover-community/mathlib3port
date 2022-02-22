@@ -146,7 +146,7 @@ unsafe def ghost_calc (ids' : parse ident_*) : tactic Unit := do
       | _ => get_unused_name `R
   iterate_exactly 2 apply_instance
   unfreezingI (tactic.clear' tt [R])
-  introsI <| [nm, nm <.> "_inst"] ++ ids'
+  introsI <| [nm, mkStrName nm "_inst"] ++ ids'
   skip
 
 end Interactive
@@ -159,6 +159,7 @@ universe u
 
 variable {p : ℕ} {R S : Type u} {σ idx : Type _} [hp : Fact p.Prime] [CommRingₓ R] [CommRingₓ S]
 
+-- mathport name: «expr𝕎»
 local notation "𝕎" => WittVector p
 
 -- type as `\bbW`
@@ -367,14 +368,14 @@ unsafe def mk_poly_comp_lemmas (n : Name) (vars : List expr) (p : expr) : tactic
     to_expr (pquote.1 fun [hf : IsPoly (%%ₓp) f] => IsPoly.comp (%%ₓappd) hf) >>= replace_univ_metas_with_univ_params
   let tgt_bod ← lambdas vars tgt_bod
   let tgt_tp ← infer_type tgt_bod
-  let nm := n <.> "comp_i"
+  let nm := mkStrName n "comp_i"
   add_decl <| mk_definition nm tgt_tp tgt_tp tgt_bod
   set_attribute `instance nm
   let tgt_bod ←
     to_expr (pquote.1 fun [hf : IsPoly₂ (%%ₓp) f] => IsPoly.comp₂ (%%ₓappd) hf) >>= replace_univ_metas_with_univ_params
   let tgt_bod ← lambdas vars tgt_bod
   let tgt_tp ← infer_type tgt_bod
-  let nm := n <.> "comp₂_i"
+  let nm := mkStrName n "comp₂_i"
   add_decl <| mk_definition nm tgt_tp tgt_tp tgt_bod
   set_attribute `instance nm
 
@@ -390,7 +391,7 @@ unsafe def mk_poly₂_comp_lemmas (n : Name) (vars : List expr) (p : expr) : tac
         replace_univ_metas_with_univ_params
   let tgt_bod ← lambdas vars tgt_bod
   let tgt_tp ← infer_type tgt_bod >>= simp_lemmas.mk.dsimplify
-  let nm := n <.> "comp₂_i"
+  let nm := mkStrName n "comp₂_i"
   add_decl <| mk_definition nm tgt_tp tgt_tp tgt_bod
   set_attribute `instance nm
   let tgt_bod ←
@@ -398,7 +399,7 @@ unsafe def mk_poly₂_comp_lemmas (n : Name) (vars : List expr) (p : expr) : tac
         replace_univ_metas_with_univ_params
   let tgt_bod ← lambdas vars tgt_bod
   let tgt_tp ← infer_type tgt_bod >>= simp_lemmas.mk.dsimplify
-  let nm := n <.> "comp_diag"
+  let nm := mkStrName n "comp_diag"
   add_decl <| mk_definition nm tgt_tp tgt_tp tgt_bod
   set_attribute `instance nm
 

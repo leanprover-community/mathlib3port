@@ -158,7 +158,7 @@ def productLimitCone {J : Type u} (F : J → Type u) : Limits.LimitCone (Discret
 /-- The category of types has `Σ j, f j` as the coproduct of a type family `f : J → Type`.
 -/
 def coproductColimitCocone {J : Type u} (F : J → Type u) : Limits.ColimitCocone (Discrete.functor F) where
-  Cocone := { x := Σ j, F j, ι := { app := fun j x => ⟨j, x⟩ } }
+  Cocone := { x := Σj, F j, ι := { app := fun j x => ⟨j, x⟩ } }
   IsColimit :=
     { desc := fun s x => s.ι.app x.1 x.2,
       uniq' := fun s m w => by

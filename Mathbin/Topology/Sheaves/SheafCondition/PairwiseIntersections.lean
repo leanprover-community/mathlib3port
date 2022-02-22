@@ -88,7 +88,7 @@ open SheafConditionEqualizerProducts
 
 /-- Implementation of `sheaf_condition_pairwise_intersections.cone_equiv`. -/
 @[simps]
-def coneEquivFunctorObj (F : Presheaf C X) ⦃ι : Type v⦄ (U : ι → Opens (↥X)) (c : Limits.Cone ((diagram U).op ⋙ F)) :
+def coneEquivFunctorObj (F : Presheaf C X) ⦃ι : Type v⦄ (U : ι → Opens ↥X) (c : Limits.Cone ((diagram U).op ⋙ F)) :
     Limits.Cone (SheafConditionEqualizerProducts.diagram F U) where
   x := c.x
   π :=
@@ -130,7 +130,7 @@ attribute [local tidy] tactic.case_bash
 
 /-- Implementation of `sheaf_condition_pairwise_intersections.cone_equiv`. -/
 @[simps]
-def coneEquivFunctor (F : Presheaf C X) ⦃ι : Type v⦄ (U : ι → Opens (↥X)) :
+def coneEquivFunctor (F : Presheaf C X) ⦃ι : Type v⦄ (U : ι → Opens ↥X) :
     Limits.Cone ((diagram U).op ⋙ F) ⥤ Limits.Cone (SheafConditionEqualizerProducts.diagram F U) where
   obj := fun c => coneEquivFunctorObj F U c
   map := fun c c' f =>
@@ -146,7 +146,7 @@ end
 
 /-- Implementation of `sheaf_condition_pairwise_intersections.cone_equiv`. -/
 @[simps]
-def coneEquivInverseObj (F : Presheaf C X) ⦃ι : Type v⦄ (U : ι → Opens (↥X))
+def coneEquivInverseObj (F : Presheaf C X) ⦃ι : Type v⦄ (U : ι → Opens ↥X)
     (c : Limits.Cone (SheafConditionEqualizerProducts.diagram F U)) : Limits.Cone ((diagram U).op ⋙ F) where
   x := c.x
   π :=
@@ -198,7 +198,7 @@ def coneEquivInverseObj (F : Presheaf C X) ⦃ι : Type v⦄ (U : ι → Opens (
 
 /-- Implementation of `sheaf_condition_pairwise_intersections.cone_equiv`. -/
 @[simps]
-def coneEquivInverse (F : Presheaf C X) ⦃ι : Type v⦄ (U : ι → Opens (↥X)) :
+def coneEquivInverse (F : Presheaf C X) ⦃ι : Type v⦄ (U : ι → Opens ↥X) :
     Limits.Cone (SheafConditionEqualizerProducts.diagram F U) ⥤ Limits.Cone ((diagram U).op ⋙ F) where
   obj := fun c => coneEquivInverseObj F U c
   map := fun c c' f =>
@@ -216,7 +216,7 @@ def coneEquivInverse (F : Presheaf C X) ⦃ι : Type v⦄ (U : ι → Opens (↥
 
 /-- Implementation of `sheaf_condition_pairwise_intersections.cone_equiv`. -/
 @[simps]
-def coneEquivUnitIsoApp (F : Presheaf C X) ⦃ι : Type v⦄ (U : ι → Opens (↥X)) (c : Cone ((diagram U).op ⋙ F)) :
+def coneEquivUnitIsoApp (F : Presheaf C X) ⦃ι : Type v⦄ (U : ι → Opens ↥X) (c : Cone ((diagram U).op ⋙ F)) :
     (𝟭 (Cone ((diagram U).op ⋙ F))).obj c ≅ (coneEquivFunctor F U ⋙ coneEquivInverse F U).obj c where
   hom :=
     { hom := 𝟙 _,

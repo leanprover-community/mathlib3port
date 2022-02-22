@@ -327,16 +327,16 @@ theorem lookup_union_left {a} {s₁ s₂ : Alist β} : a ∈ s₁ → lookup a (
   lookup_kunion_left
 
 @[simp]
-theorem lookup_union_right {a} {s₁ s₂ : Alist β} : a ∉ s₁ → lookup a (s₁ ∪ s₂) = lookup a s₂ :=
+theorem lookup_union_right {a} {s₁ s₂ : Alist β} : (a ∉ s₁) → lookup a (s₁ ∪ s₂) = lookup a s₂ :=
   lookup_kunion_right
 
 @[simp]
 theorem mem_lookup_union {a} {b : β a} {s₁ s₂ : Alist β} :
-    b ∈ lookup a (s₁ ∪ s₂) ↔ b ∈ lookup a s₁ ∨ a ∉ s₁ ∧ b ∈ lookup a s₂ :=
+    b ∈ lookup a (s₁ ∪ s₂) ↔ b ∈ lookup a s₁ ∨ (a ∉ s₁) ∧ b ∈ lookup a s₂ :=
   mem_lookup_kunion
 
 theorem mem_lookup_union_middle {a} {b : β a} {s₁ s₂ s₃ : Alist β} :
-    b ∈ lookup a (s₁ ∪ s₃) → a ∉ s₂ → b ∈ lookup a (s₁ ∪ s₂ ∪ s₃) :=
+    b ∈ lookup a (s₁ ∪ s₃) → (a ∉ s₂) → b ∈ lookup a (s₁ ∪ s₂ ∪ s₃) :=
   mem_lookup_kunion_middle
 
 theorem insert_union {a} {b : β a} {s₁ s₂ : Alist β} : insert a b (s₁ ∪ s₂) = insert a b s₁ ∪ s₂ := by

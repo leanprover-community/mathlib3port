@@ -253,7 +253,7 @@ instance Subtype.t0_space [T0Space α] {p : α → Prop} : T0Space (Subtype p) :
     ⟨(coe : Subtype p → α) ⁻¹' U, is_open_induced hU, hxyU⟩⟩
 
 theorem t0_space_iff_or_not_mem_closure (α : Type u) [TopologicalSpace α] :
-    T0Space α ↔ ∀ a b : α, a ≠ b → a ∉ Closure ({b} : Set α) ∨ b ∉ Closure ({a} : Set α) := by
+    T0Space α ↔ ∀ a b : α, a ≠ b → (a ∉ Closure ({b} : Set α)) ∨ b ∉ Closure ({a} : Set α) := by
   simp only [← not_and_distrib, t0_space_def, not_and]
   refine' forall₃_congrₓ fun a b _ => ⟨_, fun h => _⟩
   · rintro ⟨s, h₁, ⟨h₂, h₃ : b ∈ sᶜ⟩ | ⟨h₂, h₃ : a ∈ sᶜ⟩⟩ ha hb <;> rw [← is_closed_compl_iff] at h₁
@@ -914,7 +914,7 @@ instance Pi.t2_space {α : Type _} {β : α → Type v} [t₂ : ∀ a, Topologic
     separated_by_continuous (continuous_apply i) hi⟩
 
 instance Sigma.t2_space {ι : Type _} {α : ι → Type _} [∀ i, TopologicalSpace (α i)] [∀ a, T2Space (α a)] :
-    T2Space (Σ i, α i) := by
+    T2Space (Σi, α i) := by
   constructor
   rintro ⟨i, x⟩ ⟨j, y⟩ neq
   rcases em (i = j) with (rfl | h)
@@ -1135,7 +1135,7 @@ theorem is_preirreducible_iff_subsingleton [T2Space α] (S : Set α) : IsPreirre
 theorem is_irreducible_iff_singleton [T2Space α] (S : Set α) : IsIrreducible S ↔ ∃ x, S = {x} := by
   constructor
   · intro h
-    rw [exists_eq_singleton_iff_nonempty_unique_mem]
+    rw [exists_eq_singleton_iff_nonempty_subsingleton]
     use h.1
     intro a ha b hb
     injection @Subsingleton.elimₓ ((is_preirreducible_iff_subsingleton _).mp h.2) ⟨_, ha⟩ ⟨_, hb⟩
@@ -1152,7 +1152,7 @@ section Regularity
   omits T₂), is one in which for every closed `C` and `x ∉ C`, there exist
   disjoint open sets containing `x` and `C` respectively. -/
 class RegularSpace (α : Type u) [TopologicalSpace α] extends T0Space α : Prop where
-  regular : ∀ {s : Set α} {a}, IsClosed s → a ∉ s → ∃ t, IsOpen t ∧ s ⊆ t ∧ 𝓝[t] a = ⊥
+  regular : ∀ {s : Set α} {a}, IsClosed s → (a ∉ s) → ∃ t, IsOpen t ∧ s ⊆ t ∧ 𝓝[t] a = ⊥
 
 -- see Note [lower instance priority]
 instance (priority := 100) RegularSpace.t1_space [RegularSpace α] : T1Space α := by

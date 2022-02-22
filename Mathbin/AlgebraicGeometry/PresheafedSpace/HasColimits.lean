@@ -196,7 +196,7 @@ namespace ColimitCoconeIsColimit
 
 /-- Auxiliary definition for `PresheafedSpace.colimit_cocone_is_colimit`.
 -/
-def descCApp (F : J ⥤ PresheafedSpace C) (s : Cocone F) (U : (Opens (↥s.x.Carrier))ᵒᵖ) :
+def descCApp (F : J ⥤ PresheafedSpace C) (s : Cocone F) (U : (Opens ↥s.x.Carrier)ᵒᵖ) :
     s.x.Presheaf.obj U ⟶
       (colimit.desc (F ⋙ PresheafedSpace.forget C) ((PresheafedSpace.forget C).mapCocone s) _*
             limit (pushforwardDiagramToColimit F).leftOp).obj
@@ -226,7 +226,7 @@ def descCApp (F : J ⥤ PresheafedSpace C) (s : Cocone F) (U : (Opens (↥s.x.Ca
     simp
     
 
-theorem desc_c_naturality (F : J ⥤ PresheafedSpace C) (s : Cocone F) {U V : (Opens (↥s.x.Carrier))ᵒᵖ} (i : U ⟶ V) :
+theorem desc_c_naturality (F : J ⥤ PresheafedSpace C) (s : Cocone F) {U V : (Opens ↥s.x.Carrier)ᵒᵖ} (i : U ⟶ V) :
     s.x.Presheaf.map i ≫ descCApp F s V =
       descCApp F s U ≫ (colimit.desc (F ⋙ forget C) ((forget C).mapCocone s) _* (colimitCocone F).x.Presheaf).map i :=
   by

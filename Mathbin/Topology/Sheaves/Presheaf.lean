@@ -53,6 +53,7 @@ on `Y`. -/
 def pushforwardObj {X Y : Top.{v}} (f : X ⟶ Y) (ℱ : X.Presheaf C) : Y.Presheaf C :=
   (Opens.map f).op ⋙ ℱ
 
+-- mathport name: «expr _* »
 infixl:80 " _* " => pushforwardObj
 
 @[simp]

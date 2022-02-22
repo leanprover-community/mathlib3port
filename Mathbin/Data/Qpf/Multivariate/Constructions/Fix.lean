@@ -244,7 +244,7 @@ theorem Fix.ind_rec {β : Type _} (g₁ g₂ : Fix F α → β)
   intro x
   apply q.P.W_ind _ x
   intro a f' f ih
-  show g₁ (⟦q.P.W_mk a f' f⟧) = g₂ (⟦q.P.W_mk a f' f⟧)
+  show g₁ ⟦q.P.W_mk a f' f⟧ = g₂ ⟦q.P.W_mk a f' f⟧
   rw [← fix.ind_aux a f' f]
   apply h
   rw [← abs_map, ← abs_map, Mvpfunctor.map_eq, Mvpfunctor.map_eq]
@@ -289,7 +289,7 @@ theorem Fix.ind {α : Typevec n} (p : Fix F α → Prop)
   intro x
   apply q.P.W_ind _ x
   intro a f' f ih
-  change p (⟦q.P.W_mk a f' f⟧)
+  change p ⟦q.P.W_mk a f' f⟧
   rw [← fix.ind_aux a f' f]
   apply h
   rw [Mvqpf.liftp_iff]

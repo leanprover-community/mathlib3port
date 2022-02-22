@@ -60,10 +60,12 @@ parameter [Category.{v₁} C][Category.{v₁} D]
 
 parameter {G : D ⥤ C}[IsRightAdjoint G]
 
+-- mathport name: «exprF»
 -- An unfortunate consequence of the local notation is that it is only recognised if there is an
 -- extra space after the reference.
 local notation "F" => leftAdjoint G
 
+-- mathport name: «expradj»
 local notation "adj" => Adjunction.ofRightAdjoint G
 
 /-- The "main pair" for an algebra `(A, α)` is the pair of morphisms `(F α, ε_FA)`. It is always a

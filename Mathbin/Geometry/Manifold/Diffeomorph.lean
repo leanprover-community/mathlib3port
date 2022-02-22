@@ -68,13 +68,17 @@ structure Diffeomorph extends M ≃ M' where
 
 end Defs
 
+-- mathport name: «expr ≃ₘ^ ⟮ , ⟯ »
 localized [Manifold] notation M " ≃ₘ^" n:1000 "⟮" I "," J "⟯ " N => Diffeomorph I J M N n
 
+-- mathport name: «expr ≃ₘ⟮ , ⟯ »
 localized [Manifold] notation M " ≃ₘ⟮" I "," J "⟯ " N => Diffeomorph I J M N ⊤
 
+-- mathport name: «expr ≃ₘ^ [ ] »
 localized [Manifold]
   notation E " ≃ₘ^" n:1000 "[" 𝕜 "] " E' => Diffeomorph (modelWithCornersSelf 𝕜 E) (modelWithCornersSelf 𝕜 E') E E' n
 
+-- mathport name: «expr ≃ₘ[ ] »
 localized [Manifold]
   notation E " ≃ₘ[" 𝕜 "] " E' => Diffeomorph (modelWithCornersSelf 𝕜 E) (modelWithCornersSelf 𝕜 E') E E' ⊤
 
@@ -149,7 +153,7 @@ theorem refl_to_equiv : (Diffeomorph.refl I M n).toEquiv = Equivₓ.refl _ :=
   rfl
 
 @[simp]
-theorem coe_refl : ⇑Diffeomorph.refl I M n = id :=
+theorem coe_refl : ⇑(Diffeomorph.refl I M n) = id :=
   rfl
 
 end
@@ -169,7 +173,7 @@ theorem refl_trans (h : M ≃ₘ^n⟮I,I'⟯ M') : (Diffeomorph.refl I M n).tran
   ext fun _ => rfl
 
 @[simp]
-theorem coe_trans (h₁ : M ≃ₘ^n⟮I,I'⟯ M') (h₂ : M' ≃ₘ^n⟮I',J⟯ N) : ⇑h₁.trans h₂ = h₂ ∘ h₁ :=
+theorem coe_trans (h₁ : M ≃ₘ^n⟮I,I'⟯ M') (h₂ : M' ≃ₘ^n⟮I',J⟯ N) : ⇑(h₁.trans h₂) = h₂ ∘ h₁ :=
   rfl
 
 /-- Inverse of a diffeomorphism. -/
@@ -372,7 +376,7 @@ def transDiffeomorph (I : ModelWithCorners 𝕜 E H) (e : E ≃ₘ[𝕜] E') : M
   continuous_inv_fun := I.continuous_symm.comp e.symm.Continuous
 
 @[simp, mfld_simps]
-theorem coe_trans_diffeomorph : ⇑I.transDiffeomorph e = e ∘ I :=
+theorem coe_trans_diffeomorph : ⇑(I.transDiffeomorph e) = e ∘ I :=
   rfl
 
 @[simp, mfld_simps]
@@ -382,7 +386,7 @@ theorem coe_trans_diffeomorph_symm : ⇑(I.transDiffeomorph e).symm = I.symm ∘
 theorem trans_diffeomorph_range : Range (I.transDiffeomorph e) = e '' Range I :=
   range_comp e I
 
-theorem coe_ext_chart_at_trans_diffeomorph (x : M) : ⇑extChartAt (I.transDiffeomorph e) x = e ∘ extChartAt I x :=
+theorem coe_ext_chart_at_trans_diffeomorph (x : M) : ⇑(extChartAt (I.transDiffeomorph e) x) = e ∘ extChartAt I x :=
   rfl
 
 theorem coe_ext_chart_at_trans_diffeomorph_symm (x : M) :

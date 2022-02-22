@@ -143,7 +143,7 @@ left adjoint to the inclusion functor.
 noncomputable def topToCompHaus : Top.{u} ⥤ CompHaus.{u} :=
   Adjunction.leftAdjointOfEquiv stoneCechEquivalence.{u} fun _ _ _ _ _ => rfl
 
-theorem Top_to_CompHaus_obj (X : Top) : ↥topToCompHaus.obj X = StoneCech X :=
+theorem Top_to_CompHaus_obj (X : Top) : ↥(topToCompHaus.obj X) = StoneCech X :=
   rfl
 
 /-- The category of compact Hausdorff spaces is reflective in the category of topological spaces.
@@ -169,7 +169,7 @@ def limitCone {J : Type u} [SmallCategory J] (F : J ⥤ CompHaus.{u}) : Limits.C
   x :=
     { toTop := (Top.limitCone (F ⋙ compHausToTop)).x,
       IsCompact := by
-        show CompactSpace (↥{ u : ∀ j, F.obj j | ∀ {i j : J} f : i ⟶ j, (F.map f) (u i) = u j })
+        show CompactSpace ↥{ u : ∀ j, F.obj j | ∀ {i j : J} f : i ⟶ j, (F.map f) (u i) = u j }
         rw [← is_compact_iff_compact_space]
         apply IsClosed.is_compact
         have :
@@ -191,7 +191,7 @@ def limitCone {J : Type u} [SmallCategory J] (F : J ⥤ CompHaus.{u}) : Limits.C
         · exact continuous_apply j
           ,
       is_hausdorff :=
-        show T2Space (↥{ u : ∀ j, F.obj j | ∀ {i j : J} f : i ⟶ j, (F.map f) (u i) = u j }) from inferInstance }
+        show T2Space ↥{ u : ∀ j, F.obj j | ∀ {i j : J} f : i ⟶ j, (F.map f) (u i) = u j } from inferInstance }
   π :=
     { app := fun j => (Top.limitCone (F ⋙ compHausToTop)).π.app j,
       naturality' := by
@@ -217,7 +217,7 @@ theorem epi_iff_surjective {X Y : CompHaus.{u}} (f : X ⟶ Y) : Epi f ↔ Functi
       rw [Set.disjoint_singleton_right]
       rintro ⟨y', hy'⟩
       exact hy y' hy'
-    have : NormalSpace (↥Y.to_Top) := normal_of_compact_t2
+    have : NormalSpace ↥Y.to_Top := normal_of_compact_t2
     obtain ⟨φ, hφ0, hφ1, hφ01⟩ := exists_continuous_zero_one_of_closed hC hD hCD
     have : CompactSpace (Ulift.{u} <| Set.Icc (0 : ℝ) 1) := homeomorph.ulift.symm.compact_space
     have : T2Space (Ulift.{u} <| Set.Icc (0 : ℝ) 1) := homeomorph.ulift.symm.t2_space

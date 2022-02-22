@@ -53,7 +53,7 @@ variable [Invertible (2 : 𝕜)]
 
 @[simp]
 theorem dist_left_midpoint (p₁ p₂ : P) : dist p₁ (midpoint 𝕜 p₁ p₂) = ∥(2 : 𝕜)∥⁻¹ * dist p₁ p₂ := by
-  rw [midpoint, ← homothety_eq_line_map, dist_center_homothety, inv_of_eq_inv, ← NormedField.norm_inv]
+  rw [midpoint, ← homothety_eq_line_map, dist_center_homothety, inv_of_eq_inv, ← norm_inv]
 
 @[simp]
 theorem dist_midpoint_left (p₁ p₂ : P) : dist (midpoint 𝕜 p₁ p₂) p₁ = ∥(2 : 𝕜)∥⁻¹ * dist p₁ p₂ := by
@@ -72,7 +72,7 @@ theorem dist_midpoint_midpoint_le' (p₁ p₂ p₃ p₄ : P) :
   rw [dist_eq_norm_vsub V, dist_eq_norm_vsub V, dist_eq_norm_vsub V, midpoint_vsub_midpoint] <;>
     try
       infer_instance
-  rw [midpoint_eq_smul_add, norm_smul, inv_of_eq_inv, NormedField.norm_inv, ← div_eq_inv_mul]
+  rw [midpoint_eq_smul_add, norm_smul, inv_of_eq_inv, norm_inv, ← div_eq_inv_mul]
   exact div_le_div_of_le_of_nonneg (norm_add_le _ _) (norm_nonneg _)
 
 end NormedSpace

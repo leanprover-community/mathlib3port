@@ -113,7 +113,7 @@ def toRealLinearIsometryEquivOfMapZero (f : E ≃ᵢ F) (h0 : f 0 = 0) : E ≃�
 
 @[simp]
 theorem coe_to_real_linear_equiv_of_map_zero (f : E ≃ᵢ F) (h0 : f 0 = 0) :
-    ⇑f.toRealLinearIsometryEquivOfMapZero h0 = f :=
+    ⇑(f.toRealLinearIsometryEquivOfMapZero h0) = f :=
   rfl
 
 @[simp]

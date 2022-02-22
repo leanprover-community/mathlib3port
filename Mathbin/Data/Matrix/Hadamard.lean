@@ -44,6 +44,7 @@ open_locale Matrix BigOperators
 def hadamard [Mul α] (A : Matrix m n α) (B : Matrix m n α) : Matrix m n α
   | i, j => A i j * B i j
 
+-- mathport name: «expr ⊙ »
 localized [Matrix] infixl:100 " ⊙ " => Matrix.hadamard
 
 section BasicProperties

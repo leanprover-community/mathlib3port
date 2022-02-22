@@ -619,7 +619,7 @@ def restrictScalars (f : MultilinearMap A M₁ M₂) : MultilinearMap R M₁ M�
   map_smul' := fun m i => (f.toLinearMap m i).map_smul_of_tower
 
 @[simp]
-theorem coe_restrict_scalars (f : MultilinearMap A M₁ M₂) : ⇑f.restrictScalars R = f :=
+theorem coe_restrict_scalars (f : MultilinearMap A M₁ M₂) : ⇑(f.restrictScalars R) = f :=
   rfl
 
 end RestrictScalar
@@ -696,7 +696,7 @@ def compMultilinearMap (g : M₂ →ₗ[R] M₃) (f : MultilinearMap R M₁ M₂
     simp
 
 @[simp]
-theorem coe_comp_multilinear_map (g : M₂ →ₗ[R] M₃) (f : MultilinearMap R M₁ M₂) : ⇑g.compMultilinearMap f = g ∘ f :=
+theorem coe_comp_multilinear_map (g : M₂ →ₗ[R] M₃) (f : MultilinearMap R M₁ M₂) : ⇑(g.compMultilinearMap f) = g ∘ f :=
   rfl
 
 theorem comp_multilinear_map_apply (g : M₂ →ₗ[R] M₃) (f : MultilinearMap R M₁ M₂) (m : ∀ i, M₁ i) :
@@ -1332,7 +1332,7 @@ def currySumEquiv :
 variable {ι ι' R M₂ M'}
 
 @[simp]
-theorem coe_curry_sum_equiv : ⇑currySumEquiv R ι M₂ M' ι' = curry_sum :=
+theorem coe_curry_sum_equiv : ⇑(currySumEquiv R ι M₂ M' ι') = curry_sum :=
   rfl
 
 @[simp]

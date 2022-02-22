@@ -79,6 +79,7 @@ protected def Lex.rec {β : Lex α → Sort _} (h : ∀ a, β (toLex a)) : ∀ a
 
 namespace Prod.Lex
 
+-- mathport name: «expr ×ₗ »
 notation:35 α " ×ₗ " β:34 => Lex (Prod α β)
 
 unsafe instance [has_to_format α] [has_to_format β] : has_to_format (α ×ₗ β) :=

@@ -50,6 +50,7 @@ structure ContinuousMultilinearMap (R : Type u) {ι : Type v} (M₁ : ι → Typ
   [∀ i, TopologicalSpace (M₁ i)] [TopologicalSpace M₂] extends MultilinearMap R M₁ M₂ where
   cont : Continuous to_fun
 
+-- mathport name: «expr [× ]→L[ ] »
 notation:25 M "[×" n "]→L[" R "] " M' => ContinuousMultilinearMap R (fun i : Finₓ n => M) M'
 
 namespace ContinuousMultilinearMap
@@ -167,7 +168,7 @@ def pi {ι' : Type _} {M' : ι' → Type _} [∀ i, AddCommMonoidₓ (M' i)] [�
 
 @[simp]
 theorem coe_pi {ι' : Type _} {M' : ι' → Type _} [∀ i, AddCommMonoidₓ (M' i)] [∀ i, TopologicalSpace (M' i)]
-    [∀ i, Module R (M' i)] (f : ∀ i, ContinuousMultilinearMap R M₁ (M' i)) : ⇑pi f = fun m j => f j m :=
+    [∀ i, Module R (M' i)] (f : ∀ i, ContinuousMultilinearMap R M₁ (M' i)) : ⇑(pi f) = fun m j => f j m :=
   rfl
 
 theorem pi_apply {ι' : Type _} {M' : ι' → Type _} [∀ i, AddCommMonoidₓ (M' i)] [∀ i, TopologicalSpace (M' i)]
@@ -271,7 +272,7 @@ def restrictScalars (f : ContinuousMultilinearMap A M₁ M₂) : ContinuousMulti
   cont := f.cont
 
 @[simp]
-theorem coe_restrict_scalars (f : ContinuousMultilinearMap A M₁ M₂) : ⇑f.restrictScalars R = f :=
+theorem coe_restrict_scalars (f : ContinuousMultilinearMap A M₁ M₂) : ⇑(f.restrictScalars R) = f :=
   rfl
 
 end RestrictScalar

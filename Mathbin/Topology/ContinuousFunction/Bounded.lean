@@ -33,6 +33,7 @@ structure BoundedContinuousFunction (α : Type u) (β : Type v) [TopologicalSpac
   ContinuousMap α β : Type max u v where
   bounded' : ∃ C, ∀ x y : α, dist (to_fun x) (to_fun y) ≤ C
 
+-- mathport name: «expr →ᵇ »
 localized [BoundedContinuousFunction] infixr:25 " →ᵇ " => BoundedContinuousFunction
 
 namespace BoundedContinuousFunction
@@ -648,7 +649,7 @@ instance : AddCommMonoidₓ (α →ᵇ β) :=
 open_locale BigOperators
 
 @[simp]
-theorem coe_sum {ι : Type _} (s : Finset ι) (f : ι → α →ᵇ β) : (⇑∑ i in s, f i) = ∑ i in s, (f i : α → β) :=
+theorem coe_sum {ι : Type _} (s : Finset ι) (f : ι → α →ᵇ β) : ⇑(∑ i in s, f i) = ∑ i in s, (f i : α → β) :=
   (@coeFnAddHom α β _ _ _ _).map_sum f s
 
 theorem sum_apply {ι : Type _} (s : Finset ι) (f : ι → α →ᵇ β) (a : α) : (∑ i in s, f i) a = ∑ i in s, f i a := by
@@ -1169,7 +1170,7 @@ instance : StarAddMonoid (α →ᵇ β) where
 /-- The right-hand side of this equality can be parsed `star ∘ ⇑f` because of the
 instance `pi.has_star`. Upon inspecting the goal, one sees `⊢ ⇑(star f) = star ⇑f`.-/
 @[simp]
-theorem coe_star (f : α →ᵇ β) : ⇑star f = star f :=
+theorem coe_star (f : α →ᵇ β) : ⇑(star f) = star f :=
   rfl
 
 @[simp]
@@ -1209,7 +1210,7 @@ theorem star_apply (f : α →ᵇ β) (x : α) : star f x = star (f x) :=
             (Tactic.tacticSeq1Indented
              [(group (Tactic.simp "simp" [] [] ["only"] ["[" [(Tactic.simpLemma [] [] `norm_eq)] "]"] []) [])
               (group (Tactic.congr "congr" [] []) [])
-              (group (Tactic.ext "ext" [] []) [])
+              (group (Mathlib.Tactic.Ext.«tacticExt___:_» "ext" [] []) [])
               (group
                (Mathlib.Tactic.Conv.convLHS
                 "conv_lhs"
@@ -1275,7 +1276,7 @@ theorem star_apply (f : α →ᵇ β) (x : α) : star f x = star (f x) :=
       (Tactic.tacticSeq1Indented
        [(group (Tactic.simp "simp" [] [] ["only"] ["[" [(Tactic.simpLemma [] [] `norm_eq)] "]"] []) [])
         (group (Tactic.congr "congr" [] []) [])
-        (group (Tactic.ext "ext" [] []) [])
+        (group (Mathlib.Tactic.Ext.«tacticExt___:_» "ext" [] []) [])
         (group
          (Mathlib.Tactic.Conv.convLHS
           "conv_lhs"
@@ -1316,7 +1317,7 @@ theorem star_apply (f : α →ᵇ β) (x : α) : star f x = star (f x) :=
     (Tactic.tacticSeq1Indented
      [(group (Tactic.simp "simp" [] [] ["only"] ["[" [(Tactic.simpLemma [] [] `norm_eq)] "]"] []) [])
       (group (Tactic.congr "congr" [] []) [])
-      (group (Tactic.ext "ext" [] []) [])
+      (group (Mathlib.Tactic.Ext.«tacticExt___:_» "ext" [] []) [])
       (group
        (Mathlib.Tactic.Conv.convLHS
         "conv_lhs"
@@ -1496,7 +1497,7 @@ theorem coe_fn_sup (f g : α →ᵇ β) : ⇑(f⊔g) = f⊔g :=
   rfl
 
 @[simp]
-theorem coe_fn_abs (f : α →ᵇ β) : ⇑abs f = abs f :=
+theorem coe_fn_abs (f : α →ᵇ β) : ⇑(abs f) = abs f :=
   rfl
 
 instance : NormedLatticeAddCommGroup (α →ᵇ β) :=

@@ -24,7 +24,7 @@ predicate `S`) but are not completely determined.
   of nondeterministic functions. -/
 structure Semiquot.{u} (α : Type _) where mk' ::
   S : Set α
-  val : Trunc (↥s)
+  val : Trunc ↥s
 
 namespace Semiquot
 

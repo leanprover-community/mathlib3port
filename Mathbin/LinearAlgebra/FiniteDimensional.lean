@@ -726,8 +726,8 @@ theorem finrank_quotient_le [FiniteDimensional K V] (s : Submodule K V) : finran
 
 /-- The sum of the dimensions of s + t and s ∩ t is the sum of the dimensions of s and t -/
 theorem dim_sup_add_dim_inf_eq (s t : Submodule K V) [FiniteDimensional K s] [FiniteDimensional K t] :
-    finrank K (↥(s⊔t)) + finrank K (↥(s⊓t)) = finrank K (↥s) + finrank K (↥t) := by
-  have key : Module.rank K (↥(s⊔t)) + Module.rank K (↥(s⊓t)) = Module.rank K s + Module.rank K t :=
+    finrank K ↥(s⊔t) + finrank K ↥(s⊓t) = finrank K ↥s + finrank K ↥t := by
+  have key : Module.rank K ↥(s⊔t) + Module.rank K ↥(s⊓t) = Module.rank K s + Module.rank K t :=
     dim_sup_add_dim_inf_eq s t
   repeat'
     rw [← finrank_eq_dim] at key
@@ -736,7 +736,7 @@ theorem dim_sup_add_dim_inf_eq (s t : Submodule K V) [FiniteDimensional K s] [Fi
 
 theorem eq_top_of_disjoint [FiniteDimensional K V] (s t : Submodule K V)
     (hdim : finrank K s + finrank K t = finrank K V) (hdisjoint : Disjoint s t) : s⊔t = ⊤ := by
-  have h_finrank_inf : finrank K (↥(s⊓t)) = 0 := by
+  have h_finrank_inf : finrank K ↥(s⊓t) = 0 := by
     rw [Disjoint, le_bot_iff] at hdisjoint
     rw [hdisjoint, finrank_bot]
   apply eq_top_of_finrank_eq
@@ -921,7 +921,7 @@ noncomputable def ofInjectiveEndo (f : V →ₗ[K] V) (h_inj : Injective f) : V 
   LinearEquiv.ofBijective f h_inj <| LinearMap.injective_iff_surjective.mp h_inj
 
 @[simp]
-theorem coe_of_injective_endo (f : V →ₗ[K] V) (h_inj : Injective f) : ⇑ofInjectiveEndo f h_inj = f :=
+theorem coe_of_injective_endo (f : V →ₗ[K] V) (h_inj : Injective f) : ⇑(ofInjectiveEndo f h_inj) = f :=
   rfl
 
 @[simp]
@@ -1250,7 +1250,7 @@ noncomputable def basisOfSpanEqTopOfCardEqFinrank {ι : Type _} [Fintype ι] (b 
 @[simp]
 theorem coe_basis_of_span_eq_top_of_card_eq_finrank {ι : Type _} [Fintype ι] (b : ι → V)
     (span_eq : span K (Set.Range b) = ⊤) (card_eq : Fintype.card ι = finrank K V) :
-    ⇑basisOfSpanEqTopOfCardEqFinrank b span_eq card_eq = b :=
+    ⇑(basisOfSpanEqTopOfCardEqFinrank b span_eq card_eq) = b :=
   Basis.coe_mk _ _
 
 /-- A finset of `finrank K V` vectors forms a basis if they span the whole space. -/
@@ -1291,7 +1291,7 @@ noncomputable def basisOfLinearIndependentOfCardEqFinrank {ι : Type _} [Nonempt
 @[simp]
 theorem coe_basis_of_linear_independent_of_card_eq_finrank {ι : Type _} [Nonempty ι] [Fintype ι] {b : ι → V}
     (lin_ind : LinearIndependent K b) (card_eq : Fintype.card ι = finrank K V) :
-    ⇑basisOfLinearIndependentOfCardEqFinrank lin_ind card_eq = b :=
+    ⇑(basisOfLinearIndependentOfCardEqFinrank lin_ind card_eq) = b :=
   Basis.coe_mk _ _
 
 /-- A linear independent finset of `finrank K V` vectors forms a basis. -/
@@ -1304,7 +1304,7 @@ noncomputable def finsetBasisOfLinearIndependentOfCardEqFinrank {s : Finset V} (
 @[simp]
 theorem coe_finset_basis_of_linear_independent_of_card_eq_finrank {s : Finset V} (hs : s.Nonempty)
     (lin_ind : LinearIndependent K (coe : s → V)) (card_eq : s.card = finrank K V) :
-    ⇑finsetBasisOfLinearIndependentOfCardEqFinrank hs lin_ind card_eq = coe :=
+    ⇑(finsetBasisOfLinearIndependentOfCardEqFinrank hs lin_ind card_eq) = coe :=
   Basis.coe_mk _ _
 
 /-- A linear independent set of `finrank K V` vectors forms a basis. -/
@@ -1316,7 +1316,7 @@ noncomputable def setBasisOfLinearIndependentOfCardEqFinrank {s : Set V} [Nonemp
 @[simp]
 theorem coe_set_basis_of_linear_independent_of_card_eq_finrank {s : Set V} [Nonempty s] [Fintype s]
     (lin_ind : LinearIndependent K (coe : s → V)) (card_eq : s.toFinset.card = finrank K V) :
-    ⇑setBasisOfLinearIndependentOfCardEqFinrank lin_ind card_eq = coe :=
+    ⇑(setBasisOfLinearIndependentOfCardEqFinrank lin_ind card_eq) = coe :=
   Basis.coe_mk _ _
 
 end Basis
@@ -1529,8 +1529,8 @@ theorem exists_ker_pow_eq_ker_pow_succ [FiniteDimensional K V] (f : End K V) :
         apply LinearMap.ker_le_ker_comp
       have h_finrank_lt_finrank : finrank K (f ^ n).ker < finrank K (f ^ n.succ).ker := by
         apply Submodule.finrank_lt_finrank_of_lt h_ker_lt_ker
-      calc n.succ ≤ (finrank K (↥LinearMap.ker (f ^ n))).succ :=
-          Nat.succ_le_succₓ (ih (Nat.le_of_succ_leₓ hn))_ ≤ finrank K (↥LinearMap.ker (f ^ n.succ)) :=
+      calc n.succ ≤ (finrank K ↥(LinearMap.ker (f ^ n))).succ :=
+          Nat.succ_le_succₓ (ih (Nat.le_of_succ_leₓ hn))_ ≤ finrank K ↥(LinearMap.ker (f ^ n.succ)) :=
           Nat.succ_le_of_ltₓ h_finrank_lt_finrank
       
   have h_le_finrank_V : ∀ n, finrank K (f ^ n).ker ≤ finrank K V := fun n => Submodule.finrank_le _

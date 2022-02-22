@@ -165,7 +165,7 @@ def extend : ℝ → X :=
   iccExtend zero_le_one γ
 
 /-- See Note [continuity lemma statement]. -/
-theorem _root_.continuous.path_extend {γ : Y → Path x y} {f : Y → ℝ} (hγ : Continuous (↿γ)) (hf : Continuous f) :
+theorem _root_.continuous.path_extend {γ : Y → Path x y} {f : Y → ℝ} (hγ : Continuous ↿γ) (hf : Continuous f) :
     Continuous fun t => (γ t).extend (f t) :=
   Continuous.Icc_extend hγ hf
 
@@ -416,18 +416,18 @@ theorem cast_coe (γ : Path x y) {x' y'} (hx : x' = x) (hy : y' = y) : (γ.cast 
 
 @[continuity]
 theorem symm_continuous_family {X ι : Type _} [TopologicalSpace X] [TopologicalSpace ι] {a b : ι → X}
-    (γ : ∀ t : ι, Path (a t) (b t)) (h : Continuous (↿γ)) : Continuous (↿fun t => (γ t).symm) :=
+    (γ : ∀ t : ι, Path (a t) (b t)) (h : Continuous ↿γ) : Continuous ↿fun t => (γ t).symm :=
   h.comp (continuous_id.prod_map continuous_symm)
 
 @[continuity]
 theorem continuous_uncurry_extend_of_continuous_family {X ι : Type _} [TopologicalSpace X] [TopologicalSpace ι]
-    {a b : ι → X} (γ : ∀ t : ι, Path (a t) (b t)) (h : Continuous (↿γ)) : Continuous (↿fun t => (γ t).extend) :=
+    {a b : ι → X} (γ : ∀ t : ι, Path (a t) (b t)) (h : Continuous ↿γ) : Continuous ↿fun t => (γ t).extend :=
   h.comp (continuous_id.prod_map continuous_proj_Icc)
 
 @[continuity]
 theorem trans_continuous_family {X ι : Type _} [TopologicalSpace X] [TopologicalSpace ι] {a b c : ι → X}
-    (γ₁ : ∀ t : ι, Path (a t) (b t)) (h₁ : Continuous (↿γ₁)) (γ₂ : ∀ t : ι, Path (b t) (c t)) (h₂ : Continuous (↿γ₂)) :
-    Continuous (↿fun t => (γ₁ t).trans (γ₂ t)) := by
+    (γ₁ : ∀ t : ι, Path (a t) (b t)) (h₁ : Continuous ↿γ₁) (γ₂ : ∀ t : ι, Path (b t) (c t)) (h₂ : Continuous ↿γ₂) :
+    Continuous ↿fun t => (γ₁ t).trans (γ₂ t) := by
   have h₁' := Path.continuous_uncurry_extend_of_continuous_family γ₁ h₁
   have h₂' := Path.continuous_uncurry_extend_of_continuous_family γ₂ h₂
   simp only [has_uncurry.uncurry, CoeFun.coe, coeFn, Path.trans, (· ∘ ·)]
@@ -587,7 +587,7 @@ theorem truncate_continuous_family {X : Type _} [TopologicalSpace X] {a b : X} (
     `end` -/
 @[continuity]
 theorem truncate_const_continuous_family {X : Type _} [TopologicalSpace X] {a b : X} (γ : Path a b) (t : ℝ) :
-    Continuous (↿γ.truncate t) := by
+    Continuous ↿(γ.truncate t) := by
   have key : Continuous (fun x => (t, x) : ℝ × I → ℝ × ℝ × I) := continuous_const.prod_mk continuous_id
   convert γ.truncate_continuous_family.comp key
 
@@ -656,7 +656,7 @@ def reparam (γ : Path x y) (f : I → I) (hfcont : Continuous f) (hf₀ : f 0 =
 
 @[simp]
 theorem coe_to_fun (γ : Path x y) {f : I → I} (hfcont : Continuous f) (hf₀ : f 0 = 0) (hf₁ : f 1 = 1) :
-    ⇑γ.reparam f hfcont hf₀ hf₁ = γ ∘ f :=
+    ⇑(γ.reparam f hfcont hf₀ hf₁) = γ ∘ f :=
   rfl
 
 @[simp]
@@ -665,7 +665,7 @@ theorem reparam_id (γ : Path x y) : γ.reparam id continuous_id rfl rfl = γ :=
   rfl
 
 theorem range_reparam (γ : Path x y) {f : I → I} (hfcont : Continuous f) (hf₀ : f 0 = 0) (hf₁ : f 1 = 1) :
-    Range (⇑γ.reparam f hfcont hf₀ hf₁) = Range γ := by
+    Range ⇑(γ.reparam f hfcont hf₀ hf₁) = Range γ := by
   change range (γ ∘ f) = range γ
   have : range f = univ := by
     rw [range_iff_surjective]
@@ -1018,7 +1018,7 @@ theorem path_connected_space_iff_zeroth_homotopy :
   · unfold ZerothHomotopy
     rintro ⟨h, h'⟩
     skip
-    exact ⟨(nonempty_quotient_iff _).mp h, fun x y => Quotientₓ.exact <| Subsingleton.elimₓ (⟦x⟧) (⟦y⟧)⟩
+    exact ⟨(nonempty_quotient_iff _).mp h, fun x y => Quotientₓ.exact <| Subsingleton.elimₓ ⟦x⟧ ⟦y⟧⟩
     
 
 namespace PathConnectedSpace

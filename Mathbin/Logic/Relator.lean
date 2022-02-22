@@ -27,6 +27,7 @@ variable (R : α → β → Prop) (S : γ → δ → Prop)
 def LiftFun (f : α → γ) (g : β → δ) : Prop :=
   ∀ ⦃a b⦄, R a b → S (f a) (g b)
 
+-- mathport name: «expr ⇒ »
 infixr:40 "⇒" => LiftFun
 
 end

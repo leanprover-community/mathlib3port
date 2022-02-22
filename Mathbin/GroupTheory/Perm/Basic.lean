@@ -184,7 +184,7 @@ theorem sigma_congr_right_one {α : Type _} {β : α → Type _} : sigmaCongrRig
 This is particularly useful for its `monoid_hom.range` projection, which is the subgroup of
 permutations which do not exchange elements between fibers. -/
 @[simps]
-def sigmaCongrRightHom {α : Type _} (β : α → Type _) : (∀ a, Perm (β a)) →* Perm (Σ a, β a) where
+def sigmaCongrRightHom {α : Type _} (β : α → Type _) : (∀ a, Perm (β a)) →* Perm (Σa, β a) where
   toFun := sigmaCongrRight
   map_one' := sigma_congr_right_one
   map_mul' := fun a b => (sigma_congr_right_mul _ _).symm

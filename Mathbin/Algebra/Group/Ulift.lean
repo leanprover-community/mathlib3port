@@ -128,6 +128,9 @@ instance cancelMonoid [CancelMonoid α] : CancelMonoid (Ulift α) :=
 instance cancelCommMonoid [CancelCommMonoid α] : CancelCommMonoid (Ulift α) :=
   { Ulift.cancelMonoid, Ulift.commSemigroup with }
 
+instance nontrivial [Nontrivial α] : Nontrivial (Ulift α) :=
+  Equivₓ.ulift.symm.Injective.Nontrivial
+
 -- TODO we don't do `ordered_cancel_comm_monoid` or `ordered_comm_group`
 -- We'd need to add instances for `ulift` in `order.basic`.
 end Ulift

@@ -60,6 +60,7 @@ In the `arithmetic_function` locale, we have the notation `Λ` for this function
 noncomputable def vonMangoldt : ArithmeticFunction ℝ :=
   ⟨fun n => if IsPrimePow n then Real.log (minFac n) else 0, if_neg not_is_prime_pow_zero⟩
 
+-- mathport name: «exprΛ»
 localized [ArithmeticFunction] notation "Λ" => Nat.ArithmeticFunction.vonMangoldt
 
 theorem von_mangoldt_apply {n : ℕ} : Λ n = if IsPrimePow n then Real.log (minFac n) else 0 :=

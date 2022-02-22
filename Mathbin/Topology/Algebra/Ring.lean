@@ -79,6 +79,12 @@ theorem Subsemiring.topological_closure_minimal (s : Subsemiring α) {t : Subsem
     (ht : IsClosed (t : Set α)) : s.topologicalClosure ≤ t :=
   closure_minimal h ht
 
+/-- If a subsemiring of a topological semiring is commutative, then so is its
+topological closure. -/
+def Subsemiring.commSemiringTopologicalClosure [T2Space α] (s : Subsemiring α) (hs : ∀ x y : s, x * y = y * x) :
+    CommSemiringₓ s.topologicalClosure :=
+  { s.topologicalClosure.toSemiring, s.toSubmonoid.commMonoidTopologicalClosure hs with }
+
 /-- The product topology on the cartesian product of two topological semirings
   makes the product into a topological semiring. -/
 instance {β : Type _} [Semiringₓ β] [TopologicalSpace β] [TopologicalRing β] : TopologicalRing (α × β) :=
@@ -176,6 +182,11 @@ theorem Subring.topological_closure_minimal (s : Subring α) {t : Subring α} (h
     s.topologicalClosure ≤ t :=
   closure_minimal h ht
 
+/-- If a subring of a topological ring is commutative, then so is its topological closure. -/
+def Subring.commRingTopologicalClosure [T2Space α] (s : Subring α) (hs : ∀ x y : s, x * y = y * x) :
+    CommRingₓ s.topologicalClosure :=
+  { s.topologicalClosure.toRing, s.toSubmonoid.commMonoidTopologicalClosure hs with }
+
 end TopologicalRing
 
 section TopologicalCommRing
@@ -263,6 +274,7 @@ theorem ext' {f g : RingTopology α} (h : f.IsOpen = g.IsOpen) : f = g := by
 instance : PartialOrderₓ (RingTopology α) :=
   PartialOrderₓ.lift RingTopology.toTopologicalSpace <| ext
 
+-- mathport name: «exprcont»
 local notation "cont" => @Continuous _ _
 
 private def def_Inf (S : Set (RingTopology α)) : RingTopology α :=

@@ -118,12 +118,14 @@ universe u
 
 variable {H : Type u} {H' : Type _} {M : Type _} {M' : Type _} {M'' : Type _}
 
+-- mathport name: «expr ≫ₕ »
 /- Notational shortcut for the composition of local homeomorphisms and local equivs, i.e.,
 `local_homeomorph.trans` and `local_equiv.trans`.
 Note that, as is usual for equivs, the composition is from left to right, hence the direction of
 the arrow. -/
 localized [Manifold] infixr:100 " ≫ₕ " => LocalHomeomorph.trans
 
+-- mathport name: «expr ≫ »
 localized [Manifold] infixr:100 " ≫ " => LocalEquiv.trans
 
 /- `simp` looks for subsingleton instances at every call. This turns out to be very
@@ -921,7 +923,7 @@ def singletonChartedSpace {f : α → H} (h : OpenEmbedding f) : ChartedSpace H 
       simp )
 
 theorem singleton_charted_space_chart_at_eq {f : α → H} (h : OpenEmbedding f) {x : α} :
-    ⇑@chartAt H _ α _ h.singletonChartedSpace x = f :=
+    ⇑(@chartAt H _ α _ h.singletonChartedSpace x) = f :=
   rfl
 
 theorem singleton_has_groupoid {f : α → H} (h : OpenEmbedding f) (G : StructureGroupoid H) [ClosedUnderRestriction G] :

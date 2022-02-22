@@ -43,12 +43,9 @@ def cons (a : α) (v : Vector3 α n) : Vector3 α (succ n) := fun i => by
   exact a
   exact v
 
--- ././Mathport/Syntax/Translate/Basic.lean:1387:9: unsupported: advanced notation (l:(foldr `, ` (h t, vector3.cons h t) vector3.nil `]`))
 /- We do not want to make the following notation global, because then these expressions will be
 overloaded, and only the expected type will be able to disambiguate the meaning. Worse: Lean will
 try to insert a coercion from `vector3 α _` to `list α`, if a list is expected. -/
-localized [Vector3] notation3 "["  => l
-
 @[simp]
 theorem cons_fz (a : α) (v : Vector3 α n) : (a :: v) fz = a :=
   rfl
@@ -112,6 +109,7 @@ theorem rec_on_cons {C H0 Hs n a v} :
 def append (v : Vector3 α m) (w : Vector3 α n) : Vector3 α (n + m) :=
   Nat.recOn m (fun _ => w) (fun m IH v => v.consElim fun a t => @Fin2.cases' (n + m) (fun _ => α) a (IH t)) v
 
+-- mathport name: «expr +-+ »
 local infixl:65 " +-+ " => Vector3.append
 
 @[simp]

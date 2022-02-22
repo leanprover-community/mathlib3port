@@ -72,8 +72,10 @@ class ExactPairing (X Y : C) where
 
 open ExactPairing
 
+-- mathport name: «exprη_»
 notation "η_" => ExactPairing.coevaluation
 
+-- mathport name: «exprε_»
 notation "ε_" => ExactPairing.evaluation
 
 restate_axiom coevaluation_evaluation'
@@ -112,8 +114,10 @@ attribute [instance] has_left_dual.exact
 
 open ExactPairing HasRightDual HasLeftDual MonoidalCategory
 
+-- mathport name: «exprᘁ »
 prefix:1024 "ᘁ" => leftDual
 
+-- mathport name: «expr ᘁ»
 postfix:1024 "ᘁ" => rightDual
 
 instance hasRightDualUnit : HasRightDual (𝟙_ C) where
@@ -144,8 +148,10 @@ def rightAdjointMate {X Y : C} [HasRightDual X] [HasRightDual Y] (f : X ⟶ Y) :
 def leftAdjointMate {X Y : C} [HasLeftDual X] [HasLeftDual Y] (f : X ⟶ Y) : ᘁY ⟶ ᘁX :=
   (λ_ _).inv ≫ (η_ (ᘁX) X ⊗ 𝟙 _) ≫ ((𝟙 _ ⊗ f) ⊗ 𝟙 _) ≫ (α_ _ _ _).Hom ≫ (𝟙 _ ⊗ ε_ _ _) ≫ (ρ_ _).Hom
 
+-- mathport name: «expr ᘁ»
 notation f "ᘁ" => rightAdjointMate f
 
+-- mathport name: «exprᘁ »
 notation "ᘁ" f => leftAdjointMate f
 
 @[simp]

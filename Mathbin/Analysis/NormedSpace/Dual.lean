@@ -163,7 +163,7 @@ theorem polar_univ : Polar 𝕜 (Univ : Set E) = {(0 : dual 𝕜 E)} := by
   refine' norm_le_zero_iff.1 (le_of_forall_le_of_dense fun ε hε => _)
   rcases NormedField.exists_norm_lt 𝕜 hε with ⟨c, hc, hcε⟩
   calc ∥x' x∥ = ∥c∥ * ∥x' (c⁻¹ • x)∥ := by
-      rw [x'.map_smul, norm_smul, NormedField.norm_inv, mul_inv_cancel_left₀ hc.ne']_ ≤ ε * 1 :=
+      rw [x'.map_smul, norm_smul, norm_inv, mul_inv_cancel_left₀ hc.ne']_ ≤ ε * 1 :=
       mul_le_mul hcε.le (hx' _ trivialₓ) (norm_nonneg _) hε.le _ = ε := mul_oneₓ _
 
 theorem is_closed_polar (s : Set E) : IsClosed (Polar 𝕜 s) := by
@@ -227,7 +227,7 @@ theorem smul_mem_polar {s : Set E} {x' : Dual 𝕜 E} {c : 𝕜} (hc : ∀ z, z 
     rw [Eq z]
     apply mul_le_mul (le_of_eqₓ rfl) (hc z hzs) (norm_nonneg _) (norm_nonneg _)
   have cancel : ∥c⁻¹∥ * ∥c∥ = 1 := by
-    simp only [c_zero, norm_eq_zero, Ne.def, not_false_iff, inv_mul_cancel, NormedField.norm_inv]
+    simp only [c_zero, norm_eq_zero, Ne.def, not_false_iff, inv_mul_cancel, norm_inv]
   rwa [cancel] at le
 
 theorem polar_ball_subset_closed_ball_div {c : 𝕜} (hc : 1 < ∥c∥) {r : ℝ} (hr : 0 < r) :

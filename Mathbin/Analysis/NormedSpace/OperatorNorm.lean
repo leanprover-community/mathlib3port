@@ -349,9 +349,9 @@ theorem op_norm_le_of_shell' {f : E →SL[σ₁₂] F} {ε C : ℝ} (ε_pos : 0 
     · rwa [ball_zero_eq] at hx
       
     
-  · rw [← inv_invₓ c, NormedField.norm_inv, inv_lt_one_iff_of_pos (norm_pos_iff.2 <| inv_ne_zero h0)] at hc
+  · rw [← inv_invₓ c, norm_inv, inv_lt_one_iff_of_pos (norm_pos_iff.2 <| inv_ne_zero h0)] at hc
     refine' op_norm_le_of_shell ε_pos hC hc _
-    rwa [NormedField.norm_inv, div_eq_mul_inv, inv_invₓ]
+    rwa [norm_inv, div_eq_mul_inv, inv_invₓ]
     
 
 /-- The operator norm satisfies the triangle inequality. -/
@@ -642,7 +642,7 @@ theorem flipₗᵢ'_symm : (flipₗᵢ' E F G σ₂₃ σ₁₃).symm = flipₗ�
   rfl
 
 @[simp]
-theorem coe_flipₗᵢ' : ⇑flipₗᵢ' E F G σ₂₃ σ₁₃ = flip :=
+theorem coe_flipₗᵢ' : ⇑(flipₗᵢ' E F G σ₂₃ σ₁₃) = flip :=
   rfl
 
 variable (𝕜 E Fₗ Gₗ)
@@ -666,7 +666,7 @@ theorem flipₗᵢ_symm : (flipₗᵢ 𝕜 E Fₗ Gₗ).symm = flipₗᵢ 𝕜 F
   rfl
 
 @[simp]
-theorem coe_flipₗᵢ : ⇑flipₗᵢ 𝕜 E Fₗ Gₗ = flip :=
+theorem coe_flipₗᵢ : ⇑(flipₗᵢ 𝕜 E Fₗ Gₗ) = flip :=
   rfl
 
 variable (F σ₁₂) [RingHomIsometric σ₁₂]
@@ -759,7 +759,7 @@ theorem lmul_apply (x y : 𝕜') : lmul 𝕜 𝕜' x y = x * y :=
   rfl
 
 @[simp]
-theorem coe_lmulₗᵢ : ⇑lmulₗᵢ 𝕜 𝕜' = lmul 𝕜 𝕜' :=
+theorem coe_lmulₗᵢ : ⇑(lmulₗᵢ 𝕜 𝕜') = lmul 𝕜 𝕜' :=
   rfl
 
 @[simp]
@@ -789,7 +789,7 @@ def lmulRightₗᵢ : 𝕜' →ₗᵢ[𝕜] 𝕜' →L[𝕜] 𝕜' where
   norm_map' := op_norm_lmul_right_apply 𝕜 𝕜'
 
 @[simp]
-theorem coe_lmul_rightₗᵢ : ⇑lmulRightₗᵢ 𝕜 𝕜' = lmulRight 𝕜 𝕜' :=
+theorem coe_lmul_rightₗᵢ : ⇑(lmulRightₗᵢ 𝕜 𝕜') = lmulRight 𝕜 𝕜' :=
   rfl
 
 /-- Simultaneous left- and right-multiplication in a normed algebra, considered as a continuous
@@ -866,7 +866,7 @@ def restrictScalarsIsometry : (E →L[𝕜] Fₗ) →ₗᵢ[𝕜''] E →L[𝕜'
 variable {𝕜 E Fₗ 𝕜' 𝕜''}
 
 @[simp]
-theorem coe_restrict_scalars_isometry : ⇑restrictScalarsIsometry 𝕜 E Fₗ 𝕜' 𝕜'' = restrictScalars 𝕜' :=
+theorem coe_restrict_scalars_isometry : ⇑(restrictScalarsIsometry 𝕜 E Fₗ 𝕜' 𝕜'') = restrictScalars 𝕜' :=
   rfl
 
 @[simp]
@@ -888,7 +888,7 @@ theorem coe_restrict_scalarsL :
   rfl
 
 @[simp]
-theorem coe_restrict_scalarsL' : ⇑restrictScalarsL 𝕜 E Fₗ 𝕜' 𝕜'' = restrictScalars 𝕜' :=
+theorem coe_restrict_scalarsL' : ⇑(restrictScalarsL 𝕜 E Fₗ 𝕜' 𝕜'') = restrictScalars 𝕜' :=
   rfl
 
 end RestrictScalars
@@ -1066,7 +1066,7 @@ def deriv₂ (f : E →L[𝕜] Fₗ →L[𝕜] Gₗ) : E × Fₗ →L[𝕜] E ×
   f.bilinearComp (fst _ _ _) (snd _ _ _) + f.flip.bilinearComp (snd _ _ _) (fst _ _ _)
 
 @[simp]
-theorem coe_deriv₂ (f : E →L[𝕜] Fₗ →L[𝕜] Gₗ) (p : E × Fₗ) : ⇑f.deriv₂ p = fun q : E × Fₗ => f p.1 q.2 + f q.1 p.2 :=
+theorem coe_deriv₂ (f : E →L[𝕜] Fₗ →L[𝕜] Gₗ) (p : E × Fₗ) : ⇑(f.deriv₂ p) = fun q : E × Fₗ => f p.1 q.2 + f q.1 p.2 :=
   rfl
 
 theorem map_add₂ (f : E →L[𝕜] Fₗ →L[𝕜] Gₗ) (x x' : E) (y y' : Fₗ) :
@@ -1110,7 +1110,7 @@ theorem LinearMap.continuous_iff_is_closed_ker {f : E →ₗ[𝕜] 𝕜} : Conti
       norm_num [r]
     have : r < 1 := by
       norm_num [r]
-    obtain ⟨x₀, x₀ker, h₀⟩ : ∃ x₀ : E, x₀ ∉ f.ker ∧ ∀, ∀ y ∈ LinearMap.ker f, ∀, r * ∥x₀∥ ≤ ∥x₀ - y∥
+    obtain ⟨x₀, x₀ker, h₀⟩ : ∃ x₀ : E, (x₀ ∉ f.ker) ∧ ∀, ∀ y ∈ LinearMap.ker f, ∀, r * ∥x₀∥ ≤ ∥x₀ - y∥
     exact riesz_lemma h hf this
     have : x₀ ≠ 0 := by
       intro h
@@ -1140,7 +1140,7 @@ theorem LinearMap.continuous_iff_is_closed_ker {f : E →ₗ[𝕜] 𝕜} : Conti
               congr
               abel
             _ = ∥f x₀∥ * ∥f x∥⁻¹ * ∥x∥ := by
-              rw [norm_smul, NormedField.norm_mul, NormedField.norm_inv]
+              rw [norm_smul, norm_mul, norm_inv]
             
         calc ∥f x∥ = (r * ∥x₀∥)⁻¹ * (r * ∥x₀∥) * ∥f x∥ := by
             rwa [inv_mul_cancel, one_mulₓ]_ ≤ (r * ∥x₀∥)⁻¹ * (∥f x₀∥ * ∥f x∥⁻¹ * ∥x∥) * ∥f x∥ := by
@@ -1295,7 +1295,7 @@ theorem antilipschitz_of_uniform_embedding (f : E →L[𝕜] Fₗ) (hf : Uniform
     rw [← f.map_smul d] at dxlt
     have : ∥d • x∥ ≤ 1 := H dxlt.le
     calc ∥x∥ = ∥d∥⁻¹ * ∥d • x∥ := by
-        rwa [← NormedField.norm_inv, ← norm_smul, ← mul_smul, inv_mul_cancel, one_smul]_ ≤ ∥d∥⁻¹ * 1 :=
+        rwa [← norm_inv, ← norm_smul, ← mul_smul, inv_mul_cancel, one_smul]_ ≤ ∥d∥⁻¹ * 1 :=
         mul_le_mul_of_nonneg_left this (inv_nonneg.2 (norm_nonneg _))_ ≤ δ⁻¹ * ∥c∥ * ∥f x∥ := by
         rwa [mul_oneₓ]
     
@@ -1430,6 +1430,7 @@ section
 
 variable {N : ℝ≥0 } (h_e : ∀ x, ∥x∥ ≤ N * ∥e x∥)
 
+-- mathport name: «exprψ»
 local notation "ψ" => f.extend e h_dense (uniform_embedding_of_bound _ h_e).to_uniform_inducing
 
 /-- If a dense embedding `e : E →L[𝕜] G` expands the norm by a constant factor `N⁻¹`, then the

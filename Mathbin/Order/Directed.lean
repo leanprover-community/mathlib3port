@@ -28,6 +28,7 @@ universe u v w
 
 variable {α : Type u} {β : Type v} {ι : Sort w} (r s : α → α → Prop)
 
+-- mathport name: «expr ≼ »
 local infixl:50 " ≼ " => r
 
 /-- A family of elements of α is directed (with respect to a relation `≼` on α)

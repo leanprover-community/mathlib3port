@@ -526,7 +526,7 @@ def comp (p : Seminorm 𝕜 F) (f : E →ₗ[𝕜] F) : Seminorm 𝕜 E where
   smul' := fun _ _ => (congr_argₓ p (f.map_smul _ _)).trans (p.smul _ _)
   triangle' := fun _ _ => Eq.trans_le (congr_argₓ p (f.map_add _ _)) (p.triangle _ _)
 
-theorem coe_comp (p : Seminorm 𝕜 F) (f : E →ₗ[𝕜] F) : ⇑p.comp f = p ∘ f :=
+theorem coe_comp (p : Seminorm 𝕜 F) (f : E →ₗ[𝕜] F) : ⇑(p.comp f) = p ∘ f :=
   rfl
 
 @[simp]
@@ -859,7 +859,7 @@ def normSeminorm : Seminorm 𝕜 E :=
   ⟨norm, norm_smul, norm_add_le⟩
 
 @[simp]
-theorem coe_norm_seminorm : ⇑normSeminorm 𝕜 E = norm :=
+theorem coe_norm_seminorm : ⇑(normSeminorm 𝕜 E) = norm :=
   rfl
 
 @[simp]

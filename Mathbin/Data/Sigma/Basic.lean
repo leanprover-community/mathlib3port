@@ -55,7 +55,7 @@ theorem mk.inj_iff {a₁ a₂ : α} {b₁ : β a₁} {b₂ : β a₂} : Sigma.mk
   simp
 
 @[simp]
-theorem eta : ∀ x : Σ a, β a, Sigma.mk x.1 x.2 = x
+theorem eta : ∀ x : Σa, β a, Sigma.mk x.1 x.2 = x
   | ⟨i, x⟩ => rfl
 
 @[ext]
@@ -74,19 +74,19 @@ theorem ext_iff {x₀ x₁ : Sigma β} : x₀ = x₁ ↔ x₀.1 = x₁.1 ∧ HEq
 /-- A specialized ext lemma for equality of sigma types over an indexed subtype. -/
 @[ext]
 theorem subtype_ext {β : Type _} {p : α → β → Prop} :
-    ∀ {x₀ x₁ : Σ a, Subtype (p a)}, x₀.fst = x₁.fst → (x₀.snd : β) = x₁.snd → x₀ = x₁
+    ∀ {x₀ x₁ : Σa, Subtype (p a)}, x₀.fst = x₁.fst → (x₀.snd : β) = x₁.snd → x₀ = x₁
   | ⟨a₀, b₀, hb₀⟩, ⟨a₁, b₁, hb₁⟩, rfl, rfl => rfl
 
-theorem subtype_ext_iff {β : Type _} {p : α → β → Prop} {x₀ x₁ : Σ a, Subtype (p a)} :
+theorem subtype_ext_iff {β : Type _} {p : α → β → Prop} {x₀ x₁ : Σa, Subtype (p a)} :
     x₀ = x₁ ↔ x₀.fst = x₁.fst ∧ (x₀.snd : β) = x₁.snd :=
   ⟨fun h => h ▸ ⟨rfl, rfl⟩, fun ⟨h₁, h₂⟩ => subtype_ext h₁ h₂⟩
 
 @[simp]
-theorem forall {p : (Σ a, β a) → Prop} : (∀ x, p x) ↔ ∀ a b, p ⟨a, b⟩ :=
+theorem forall {p : (Σa, β a) → Prop} : (∀ x, p x) ↔ ∀ a b, p ⟨a, b⟩ :=
   ⟨fun h a b => h ⟨a, b⟩, fun h ⟨a, b⟩ => h a b⟩
 
 @[simp]
-theorem exists {p : (Σ a, β a) → Prop} : (∃ x, p x) ↔ ∃ a b, p ⟨a, b⟩ :=
+theorem exists {p : (Σa, β a) → Prop} : (∃ x, p x) ↔ ∃ a b, p ⟨a, b⟩ :=
   ⟨fun ⟨⟨a, b⟩, h⟩ => ⟨a, b, h⟩, fun ⟨a, b, h⟩ => ⟨⟨a, b⟩, h⟩⟩
 
 /-- Map the left and right components of a sigma -/
@@ -139,7 +139,7 @@ theorem Sigma.curry_uncurry {γ : ∀ a, β a → Type _} (f : ∀ x y : β x, �
 
 /-- Convert a product type to a Σ-type. -/
 @[simp]
-def Prod.toSigma {α β} : α × β → Σ _ : α, β
+def Prod.toSigma {α β} : α × β → Σ_ : α, β
   | ⟨x, y⟩ => ⟨x, y⟩
 
 @[simp]
@@ -152,68 +152,68 @@ theorem Prod.snd_to_sigma {α β} (x : α × β) : (Prod.toSigma x).snd = x.snd 
 
 end Sigma
 
-section Psigma
+section PSigma
 
 variable {α : Sort _} {β : α → Sort _}
 
-namespace Psigma
+namespace PSigma
 
 /-- Nondependent eliminator for `psigma`. -/
-def elim {γ} (f : ∀ a, β a → γ) (a : Psigma β) : γ :=
-  Psigma.casesOn a f
+def elim {γ} (f : ∀ a, β a → γ) (a : PSigma β) : γ :=
+  PSigma.casesOn a f
 
 @[simp]
-theorem elim_val {γ} (f : ∀ a, β a → γ) a b : Psigma.elim f ⟨a, b⟩ = f a b :=
+theorem elim_val {γ} (f : ∀ a, β a → γ) a b : PSigma.elim f ⟨a, b⟩ = f a b :=
   rfl
 
-instance [Inhabited α] [Inhabited (β default)] : Inhabited (Psigma β) :=
+instance [Inhabited α] [Inhabited (β default)] : Inhabited (PSigma β) :=
   ⟨⟨default, default⟩⟩
 
-instance [h₁ : DecidableEq α] [h₂ : ∀ a, DecidableEq (β a)] : DecidableEq (Psigma β)
+instance [h₁ : DecidableEq α] [h₂ : ∀ a, DecidableEq (β a)] : DecidableEq (PSigma β)
   | ⟨a₁, b₁⟩, ⟨a₂, b₂⟩ =>
     match a₁, b₁, a₂, b₂, h₁ a₁ a₂ with
     | _, b₁, _, b₂, is_true (Eq.refl a) =>
       match b₁, b₂, h₂ a b₁ b₂ with
       | _, _, is_true (Eq.refl b) => isTrue rfl
-      | b₁, b₂, is_false n => isFalse fun h => Psigma.noConfusion h fun e₁ e₂ => n <| eq_of_heq e₂
-    | a₁, _, a₂, _, is_false n => isFalse fun h => Psigma.noConfusion h fun e₁ e₂ => n e₁
+      | b₁, b₂, is_false n => isFalse fun h => PSigma.noConfusion h fun e₁ e₂ => n <| eq_of_heq e₂
+    | a₁, _, a₂, _, is_false n => isFalse fun h => PSigma.noConfusion h fun e₁ e₂ => n e₁
 
 theorem mk.inj_iff {a₁ a₂ : α} {b₁ : β a₁} {b₂ : β a₂} :
-    @Psigma.mk α β a₁ b₁ = @Psigma.mk α β a₂ b₂ ↔ a₁ = a₂ ∧ HEq b₁ b₂ :=
-  (Iff.intro Psigma.mk.inj) fun ⟨h₁, h₂⟩ =>
+    @PSigma.mk α β a₁ b₁ = @PSigma.mk α β a₂ b₂ ↔ a₁ = a₂ ∧ HEq b₁ b₂ :=
+  (Iff.intro PSigma.mk.inj) fun ⟨h₁, h₂⟩ =>
     match a₁, a₂, b₁, b₂, h₁, h₂ with
     | _, _, _, _, Eq.refl a, HEq.refl b => rfl
 
 @[ext]
-theorem ext {x₀ x₁ : Psigma β} (h₀ : x₀.1 = x₁.1) (h₁ : HEq x₀.2 x₁.2) : x₀ = x₁ := by
+theorem ext {x₀ x₁ : PSigma β} (h₀ : x₀.1 = x₁.1) (h₁ : HEq x₀.2 x₁.2) : x₀ = x₁ := by
   cases x₀
   cases x₁
   cases h₀
   cases h₁
   rfl
 
-theorem ext_iff {x₀ x₁ : Psigma β} : x₀ = x₁ ↔ x₀.1 = x₁.1 ∧ HEq x₀.2 x₁.2 := by
+theorem ext_iff {x₀ x₁ : PSigma β} : x₀ = x₁ ↔ x₀.1 = x₁.1 ∧ HEq x₀.2 x₁.2 := by
   cases x₀
   cases x₁
-  exact Psigma.mk.inj_iff
+  exact PSigma.mk.inj_iff
 
 /-- A specialized ext lemma for equality of psigma types over an indexed subtype. -/
 @[ext]
 theorem subtype_ext {β : Sort _} {p : α → β → Prop} :
-    ∀ {x₀ x₁ : Σ' a, Subtype (p a)}, x₀.fst = x₁.fst → (x₀.snd : β) = x₁.snd → x₀ = x₁
+    ∀ {x₀ x₁ : Σ'a, Subtype (p a)}, x₀.fst = x₁.fst → (x₀.snd : β) = x₁.snd → x₀ = x₁
   | ⟨a₀, b₀, hb₀⟩, ⟨a₁, b₁, hb₁⟩, rfl, rfl => rfl
 
-theorem subtype_ext_iff {β : Sort _} {p : α → β → Prop} {x₀ x₁ : Σ' a, Subtype (p a)} :
+theorem subtype_ext_iff {β : Sort _} {p : α → β → Prop} {x₀ x₁ : Σ'a, Subtype (p a)} :
     x₀ = x₁ ↔ x₀.fst = x₁.fst ∧ (x₀.snd : β) = x₁.snd :=
   ⟨fun h => h ▸ ⟨rfl, rfl⟩, fun ⟨h₁, h₂⟩ => subtype_ext h₁ h₂⟩
 
 variable {α₁ : Sort _} {α₂ : Sort _} {β₁ : α₁ → Sort _} {β₂ : α₂ → Sort _}
 
 /-- Map the left and right components of a sigma -/
-def map (f₁ : α₁ → α₂) (f₂ : ∀ a, β₁ a → β₂ (f₁ a)) : Psigma β₁ → Psigma β₂
+def map (f₁ : α₁ → α₂) (f₂ : ∀ a, β₁ a → β₂ (f₁ a)) : PSigma β₁ → PSigma β₂
   | ⟨a, b⟩ => ⟨f₁ a, f₂ a b⟩
 
-end Psigma
+end PSigma
 
-end Psigma
+end PSigma
 

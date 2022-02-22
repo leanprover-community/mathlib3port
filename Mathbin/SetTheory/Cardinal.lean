@@ -93,6 +93,7 @@ namespace Cardinal
 def mk : Type u → Cardinal :=
   Quotientₓ.mk
 
+-- mathport name: «expr#»
 localized [Cardinal] notation "#" => Cardinal.mk
 
 instance canLiftCardinalType : CanLift Cardinal.{u} (Type u) :=
@@ -116,7 +117,7 @@ protected theorem eq : # α = # β ↔ Nonempty (α ≃ β) :=
   Quotientₓ.eq
 
 @[simp]
-theorem mk_def (α : Type u) : @Eq Cardinal (⟦α⟧) (# α) :=
+theorem mk_def (α : Type u) : @Eq Cardinal ⟦α⟧ (# α) :=
   rfl
 
 @[simp]
@@ -378,8 +379,10 @@ protected def power (a b : Cardinal.{u}) : Cardinal.{u} :=
 instance : Pow Cardinal Cardinal :=
   ⟨Cardinal.power⟩
 
+-- mathport name: «expr ^ »
 local infixr:0 "^" => @Pow.pow Cardinal Cardinal Cardinal.hasPow
 
+-- mathport name: «expr ^ℕ »
 local infixr:80 " ^ℕ " => @Pow.pow Cardinal ℕ Monoidₓ.hasPow
 
 theorem power_def α β : (# α^# β) = # (β → α) :=
@@ -511,7 +514,7 @@ protected theorem le_iff_exists_add {a b : Cardinal} : a ≤ b ↔ ∃ c, b = a 
   ⟨(induction_on₂ a b) fun α β ⟨⟨f, hf⟩⟩ =>
       have : Sum α (Range fᶜ : Set β) ≃ β :=
         (Equivₓ.sumCongr (Equivₓ.ofInjective f hf) (Equivₓ.refl _)).trans <| Equivₓ.Set.sumCompl (Range f)
-      ⟨# (↥Range fᶜ), mk_congr this.symm⟩,
+      ⟨# ↥(Range fᶜ), mk_congr this.symm⟩,
     fun ⟨c, e⟩ => add_zeroₓ a ▸ e.symm ▸ Cardinal.add_le_add_left _ (Cardinal.zero_le _)⟩
 
 instance : OrderBot Cardinal.{u} where
@@ -650,7 +653,7 @@ theorem succ_ne_zero (c : Cardinal) : succ c ≠ 0 :=
 /-- The indexed sum of cardinals is the cardinality of the
   indexed disjoint union, i.e. sigma type. -/
 def sum {ι} (f : ι → Cardinal) : Cardinal :=
-  mk (Σ i, (f i).out)
+  mk (Σi, (f i).out)
 
 theorem le_sum {ι} (f : ι → Cardinal) i : f i ≤ sum f := by
   rw [← Quotientₓ.out_eq (f i)] <;>
@@ -660,7 +663,7 @@ theorem le_sum {ι} (f : ι → Cardinal) i : f i ≤ sum f := by
             injection h⟩⟩
 
 @[simp]
-theorem mk_sigma {ι} (f : ι → Type _) : # (Σ i, f i) = sum fun i => # (f i) :=
+theorem mk_sigma {ι} (f : ι → Type _) : # (Σi, f i) = sum fun i => # (f i) :=
   mk_congr <| Equivₓ.sigmaCongrRight fun i => outMkEquiv.symm
 
 @[simp]
@@ -668,7 +671,7 @@ theorem sum_const (ι : Type u) (a : Cardinal.{v}) : (sum fun i : ι => a) = lif
   (induction_on a) fun α =>
     mk_congr <|
       calc
-        (Σ i : ι, Quotientₓ.out (# α)) ≃ ι × Quotientₓ.out (# α) := Equivₓ.sigmaEquivProd _ _
+        (Σi : ι, Quotientₓ.out (# α)) ≃ ι × Quotientₓ.out (# α) := Equivₓ.sigmaEquivProd _ _
         _ ≃ Ulift ι × Ulift α := Equivₓ.ulift.symm.prodCongr (outMkEquiv.trans Equivₓ.ulift.symm)
         
 
@@ -846,6 +849,7 @@ theorem lift_sup_le_lift_sup' {ι : Type v} {ι' : Type v'} (f : ι → Cardinal
 def omega : Cardinal.{u} :=
   lift (# ℕ)
 
+-- mathport name: «exprω»
 localized [Cardinal] notation "ω" => Cardinal.omega
 
 theorem mk_nat : # ℕ = ω :=
@@ -1339,7 +1343,7 @@ theorem mk_vector (α : Type u) (n : ℕ) : # (Vector α n) = # α ^ℕ n :=
 
 theorem mk_list_eq_sum_pow (α : Type u) : # (List α) = sum fun n : ℕ => # α ^ℕ n :=
   calc
-    # (List α) = # (Σ n, Vector α n) := mk_congr (Equivₓ.sigmaPreimageEquiv List.length).symm
+    # (List α) = # (Σn, Vector α n) := mk_congr (Equivₓ.sigmaPreimageEquiv List.length).symm
     _ = sum fun n : ℕ => # α ^ℕ n := by
       simp
     
@@ -1402,14 +1406,14 @@ theorem mk_image_eq {α β : Type u} {f : α → β} {s : Set α} (hf : Injectiv
 
 theorem mk_Union_le_sum_mk {α ι : Type u} {f : ι → Set α} : # (⋃ i, f i) ≤ sum fun i => # (f i) :=
   calc
-    # (⋃ i, f i) ≤ # (Σ i, f i) := mk_le_of_surjective (Set.sigma_to_Union_surjective f)
+    # (⋃ i, f i) ≤ # (Σi, f i) := mk_le_of_surjective (Set.sigma_to_Union_surjective f)
     _ = sum fun i => # (f i) := mk_sigma _
     
 
 theorem mk_Union_eq_sum_mk {α ι : Type u} {f : ι → Set α} (h : ∀ i j, i ≠ j → Disjoint (f i) (f j)) :
     # (⋃ i, f i) = sum fun i => # (f i) :=
   calc
-    # (⋃ i, f i) = # (Σ i, f i) := mk_congr (Set.unionEqSigmaOfDisjoint h)
+    # (⋃ i, f i) = # (Σi, f i) := mk_congr (Set.unionEqSigmaOfDisjoint h)
     _ = sum fun i => # (f i) := mk_sigma _
     
 
@@ -1550,11 +1554,12 @@ theorem le_mk_iff_exists_subset {c : Cardinal} {α : Type u} {s : Set α} : c �
 def powerlt (α β : Cardinal.{u}) : Cardinal.{u} :=
   sup.{u, u} fun s : { s : Set β.out // # s < β } => α^mk.{u} s
 
+-- mathport name: «expr ^< »
 infixl:80 " ^< " => powerlt
 
 theorem powerlt_aux {c c' : Cardinal} (h : c < c') : ∃ s : { s : Set c'.out // # s < c' }, # s = c := by
   cases' out_embedding.mp (le_of_ltₓ h) with f
-  have : # (↥range (⇑f)) = c := by
+  have : # ↥(range ⇑f) = c := by
     rwa [mk_range_eq, mk, Quotientₓ.out_eq c]
     exact f.2
   exact

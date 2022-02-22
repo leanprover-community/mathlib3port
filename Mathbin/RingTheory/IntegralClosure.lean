@@ -275,7 +275,7 @@ theorem is_integral_of_mem_of_fg (S : Subalgebra R A) (HS : S.toSubmodule.Fg) (x
     · exact (span_le.2 (Set.insert_subset.2 ⟨(Algebra.adjoin S₀ ↑y).one_mem, Algebra.subset_adjoin⟩)) hz
       
     · rw [Subalgebra.mem_to_submodule, Algebra.mem_adjoin_iff] at hz
-      suffices Subring.closure (Set.Range (⇑algebraMap (↥S₀) A) ∪ ↑y) ≤ S₁ by
+      suffices Subring.closure (Set.Range ⇑(algebraMap (↥S₀) A) ∪ ↑y) ≤ S₁ by
         exact this hz
       refine' Subring.closure_le.2 (Set.union_subset _ fun t ht => subset_span <| Or.inr ht)
       rw [Set.range_subset_iff]
@@ -285,7 +285,7 @@ theorem is_integral_of_mem_of_fg (S : Subalgebra R A) (HS : S.toSubmodule.Fg) (x
       
   have foo : ∀ z, z ∈ S₁ ↔ z ∈ Algebra.adjoin (↥S₀) (y : Set A)
   simp [this]
-  have : IsNoetherianRing (↥S₀) := is_noetherian_subring_closure _ (Finset.finite_to_set _)
+  have : IsNoetherianRing ↥S₀ := is_noetherian_subring_closure _ (Finset.finite_to_set _)
   refine'
     is_integral_of_submodule_noetherian (Algebra.adjoin S₀ ↑y)
       (is_noetherian_of_fg_of_noetherian _
@@ -385,7 +385,7 @@ theorem le_integral_closure_iff_is_integral {S : Subalgebra R A} : S ≤ integra
       show IsIntegral R (algebraMap S A x) ↔ IsIntegral R x from is_integral_algebra_map_iff Subtype.coe_injective)
 
 theorem is_integral_sup {S T : Subalgebra R A} :
-    Algebra.IsIntegral R (↥(S⊔T)) ↔ Algebra.IsIntegral R S ∧ Algebra.IsIntegral R T := by
+    Algebra.IsIntegral R ↥(S⊔T) ↔ Algebra.IsIntegral R S ∧ Algebra.IsIntegral R T := by
   simp only [← le_integral_closure_iff_is_integral, sup_le_iff]
 
 /-- Mapping an integral closure along an `alg_equiv` gives the integral closure. -/

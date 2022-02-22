@@ -108,6 +108,7 @@ instance {G : Type _} [CommGroupₓ G] (N : Subgroup G) : CommGroupₓ (G ⧸ N)
 
 include nN
 
+-- mathport name: «exprQ»
 local notation " Q " => G ⧸ N
 
 @[simp, to_additive QuotientAddGroup.coe_zero]

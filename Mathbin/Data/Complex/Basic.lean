@@ -24,6 +24,7 @@ structure Complex : Type where
   re : ℝ
   im : ℝ
 
+-- mathport name: «exprℂ»
 notation "ℂ" => Complex
 
 namespace Complex
@@ -83,6 +84,7 @@ denoted by `s ×ℂ t`. -/
 def _root_.set.re_prod_im (s t : Set ℝ) : Set ℂ :=
   re ⁻¹' s ∩ im ⁻¹' t
 
+-- mathport name: «expr ×ℂ »
 infixl:72 " ×ℂ " => Set.ReProdIm
 
 instance : Zero ℂ :=
@@ -641,6 +643,7 @@ theorem im_eq_sub_conj (z : ℂ) : (z.im : ℂ) = (z - conj z) / (2 * I) := by
 noncomputable def abs (z : ℂ) : ℝ :=
   (normSq z).sqrt
 
+-- mathport name: «exprabs'»
 local notation "abs'" => HasAbs.abs
 
 @[simp, norm_cast]

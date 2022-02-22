@@ -28,6 +28,7 @@ theorem pred_mono_2' {c : Prop → Prop → Prop} {a1 a2 b1 b2 : Prop} : (a1 ↔
 def update (m : Nat) (a : α) (v : Nat → α) : Nat → α
   | n => if n = m then a else v n
 
+-- mathport name: «expr ⟨ ↦ ⟩»
 localized [Omega] notation v " ⟨" m " ↦ " a "⟩" => Omega.update m a v
 
 theorem update_eq (m : Nat) (a : α) (v : Nat → α) : (v ⟨m ↦ a⟩) m = a := by

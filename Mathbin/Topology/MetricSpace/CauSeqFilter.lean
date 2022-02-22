@@ -51,7 +51,7 @@ instance NormedField.is_absolute_value : IsAbsoluteValue (norm : β → ℝ) whe
   abv_nonneg := norm_nonneg
   abv_eq_zero := fun _ => norm_eq_zero
   abv_add := norm_add_le
-  abv_mul := NormedField.norm_mul
+  abv_mul := norm_mul
 
 open Metric
 

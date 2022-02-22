@@ -26,6 +26,7 @@ open Function
 class HasSetProd (α β : Type _) (γ : outParam (Type _)) where
   Prod : α → β → γ
 
+-- mathport name: «expr ×ˢ »
 infixl:72 " ×ˢ " => HasSetProd.prod
 
 namespace Set

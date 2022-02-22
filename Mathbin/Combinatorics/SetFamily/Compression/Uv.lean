@@ -85,6 +85,7 @@ reduce the cardinality, so we keep all elements whose compression is already pre
 def compression (u v : α) (s : Finset α) :=
   (s.filter fun a => compress u v a ∈ s) ∪ (s.Image <| compress u v).filter fun a => a ∉ s
 
+-- mathport name: «expr𝓒»
 localized [FinsetFamily] notation "𝓒 " => Uv.compression
 
 /-- `is_compressed u v s` expresses that `s` is UV-compressed. -/
@@ -96,7 +97,7 @@ theorem compress_of_disjoint_of_le (hua : Disjoint u a) (hva : v ≤ a) : compre
 
 /-- `a` is in the UV-compressed family iff it's in the original and its compression is in the
 original, or it's not in the original but it's the compression of something in the original. -/
-theorem mem_compression : a ∈ 𝓒 u v s ↔ a ∈ s ∧ compress u v a ∈ s ∨ a ∉ s ∧ ∃ b ∈ s, compress u v b = a := by
+theorem mem_compression : a ∈ 𝓒 u v s ↔ a ∈ s ∧ compress u v a ∈ s ∨ (a ∉ s) ∧ ∃ b ∈ s, compress u v b = a := by
   simp_rw [compression, mem_union, mem_filter, mem_image, and_comm (a ∉ s)]
 
 @[simp]

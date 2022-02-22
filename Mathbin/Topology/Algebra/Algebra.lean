@@ -94,6 +94,11 @@ theorem Subalgebra.topological_closure_minimal (s : Subalgebra R A) {t : Subalge
     (ht : IsClosed (t : Set A)) : s.topologicalClosure ≤ t :=
   closure_minimal h ht
 
+/-- If a subalgebra of a topological algebra is commutative, then so is its topological closure. -/
+def Subalgebra.commSemiringTopologicalClosure [T2Space A] (s : Subalgebra R A) (hs : ∀ x y : s, x * y = y * x) :
+    CommSemiringₓ s.topologicalClosure :=
+  { s.topologicalClosure.toSemiring, s.toSubmonoid.commMonoidTopologicalClosure hs with }
+
 /-- This is really a statement about topological algebra isomorphisms,
 but we don't have those, so we use the clunky approach of talking about
 an algebra homomorphism, and a separate homeomorphism,
@@ -109,4 +114,21 @@ theorem Subalgebra.topological_closure_comap'_homeomorph (s : Subalgebra R A) {B
   exact f'.preimage_closure _
 
 end TopologicalAlgebra
+
+section Ringₓ
+
+variable {R : Type _} [CommRingₓ R]
+
+variable {A : Type u} [TopologicalSpace A]
+
+variable [Ringₓ A]
+
+variable [Algebra R A] [TopologicalRing A]
+
+/-- If a subalgebra of a topological algebra is commutative, then so is its topological closure. -/
+def Subalgebra.commRingTopologicalClosure [T2Space A] (s : Subalgebra R A) (hs : ∀ x y : s, x * y = y * x) :
+    CommRingₓ s.topologicalClosure :=
+  { s.topologicalClosure.toRing, s.toSubmonoid.commMonoidTopologicalClosure hs with }
+
+end Ringₓ
 

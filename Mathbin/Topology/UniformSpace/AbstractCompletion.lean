@@ -68,8 +68,10 @@ namespace AbstractCompletion
 
 variable {α : Type _} [UniformSpace α] (pkg : AbstractCompletion α)
 
+-- mathport name: «exprhatα»
 local notation "hatα" => pkg.Space
 
+-- mathport name: «exprι»
 local notation "ι" => pkg.coe
 
 theorem closure_range : Closure (Range ι) = univ :=
@@ -147,14 +149,17 @@ section MapSec
 
 variable (pkg' : AbstractCompletion β)
 
+-- mathport name: «exprhatβ»
 local notation "hatβ" => pkg'.Space
 
+-- mathport name: «exprι'»
 local notation "ι'" => pkg'.coe
 
 /-- Lifting maps to completions -/
 protected def map (f : α → β) : hatα → hatβ :=
   pkg.extend (ι' ∘ f)
 
+-- mathport name: «exprmap»
 local notation "map" => pkg.map pkg'
 
 variable (f : α → β)
@@ -239,8 +244,10 @@ section Prod
 
 variable (pkg' : AbstractCompletion β)
 
+-- mathport name: «exprhatβ»
 local notation "hatβ" => pkg'.Space
 
+-- mathport name: «exprι'»
 local notation "ι'" => pkg'.coe
 
 /-- Products of completions -/
@@ -261,8 +268,10 @@ section Extension₂
 
 variable (pkg' : AbstractCompletion β)
 
+-- mathport name: «exprhatβ»
 local notation "hatβ" => pkg'.Space
 
+-- mathport name: «exprι'»
 local notation "ι'" => pkg'.coe
 
 variable {γ : Type _} [UniformSpace γ]
@@ -298,16 +307,21 @@ section Map₂
 
 variable (pkg' : AbstractCompletion β)
 
+-- mathport name: «exprhatβ»
 local notation "hatβ" => pkg'.Space
 
+-- mathport name: «exprι'»
 local notation "ι'" => pkg'.coe
 
 variable {γ : Type _} [UniformSpace γ] (pkg'' : AbstractCompletion γ)
 
+-- mathport name: «exprhatγ»
 local notation "hatγ" => pkg''.Space
 
+-- mathport name: «exprι''»
 local notation "ι''" => pkg''.coe
 
+-- mathport name: «expr ∘₂ »
 local notation f "∘₂" g => bicompr f g
 
 /-- Lift two variable maps to completions. -/

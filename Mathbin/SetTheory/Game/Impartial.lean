@@ -21,6 +21,7 @@ universe u
 
 namespace Pgame
 
+-- mathport name: «expr ≈ »
 local infixl:0 " ≈ " => Equiv
 
 /-- The definition for a impartial game, defined using Conway induction -/

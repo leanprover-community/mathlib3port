@@ -58,8 +58,10 @@ class HasTop (α : Type u) where
 class HasBot (α : Type u) where
   bot : α
 
+-- mathport name: «expr⊤»
 notation "⊤" => HasTop.top
 
+-- mathport name: «expr⊥»
 notation "⊥" => HasBot.bot
 
 instance (priority := 100) has_top_nonempty (α : Type u) [HasTop α] : Nonempty α :=

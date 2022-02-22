@@ -32,6 +32,7 @@ attribute [local instance] Fintype.card_fin_even
 abbrev UpperHalfPlane :=
   { point : ℂ // 0 < point.im }
 
+-- mathport name: «exprℍ»
 localized [UpperHalfPlane] notation "ℍ" => UpperHalfPlane
 
 namespace UpperHalfPlane

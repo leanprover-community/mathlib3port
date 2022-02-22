@@ -39,6 +39,7 @@ open Set UniformSpace UniformSpace.Completion Filter
 
 variable (K : Type _) [Field K] [UniformSpace K]
 
+-- mathport name: «exprhat»
 local notation "hat" => Completion
 
 instance (priority := 100) [SeparatedSpace K] : Nontrivial (hat K) :=

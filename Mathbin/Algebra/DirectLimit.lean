@@ -344,13 +344,13 @@ open FreeCommRing
 
 /-- The direct limit of a directed system is the rings glued together along the maps. -/
 def DirectLimit : Type max v w :=
-  FreeCommRing (Σ i, G i) ⧸
+  FreeCommRing (Σi, G i) ⧸
     Ideal.span
       { a |
-        (∃ i j H x, of (⟨j, f i j H x⟩ : Σ i, G i) - of ⟨i, x⟩ = a) ∨
-          (∃ i, of (⟨i, 1⟩ : Σ i, G i) - 1 = a) ∨
-            (∃ i x y, of (⟨i, x + y⟩ : Σ i, G i) - (of ⟨i, x⟩ + of ⟨i, y⟩) = a) ∨
-              ∃ i x y, of (⟨i, x * y⟩ : Σ i, G i) - of ⟨i, x⟩ * of ⟨i, y⟩ = a }
+        (∃ i j H x, of (⟨j, f i j H x⟩ : Σi, G i) - of ⟨i, x⟩ = a) ∨
+          (∃ i, of (⟨i, 1⟩ : Σi, G i) - 1 = a) ∨
+            (∃ i x y, of (⟨i, x + y⟩ : Σi, G i) - (of ⟨i, x⟩ + of ⟨i, y⟩) = a) ∨
+              ∃ i x y, of (⟨i, x * y⟩ : Σi, G i) - of ⟨i, x⟩ * of ⟨i, y⟩ = a }
 
 namespace DirectLimit
 
@@ -366,7 +366,7 @@ instance : Inhabited (DirectLimit G f) :=
 /-- The canonical map from a component to the direct limit. -/
 def of i : G i →+* DirectLimit G f :=
   RingHom.mk'
-    { toFun := fun x => Ideal.Quotient.mk _ (of (⟨i, x⟩ : Σ i, G i)),
+    { toFun := fun x => Ideal.Quotient.mk _ (of (⟨i, x⟩ : Σi, G i)),
       map_one' := Ideal.Quotient.eq.2 <| subset_span <| Or.inr <| Or.inl ⟨i, rfl⟩,
       map_mul' := fun x y => Ideal.Quotient.eq.2 <| subset_span <| Or.inr <| Or.inr <| Or.inr ⟨i, x, y, rfl⟩ }
     fun x y => Ideal.Quotient.eq.2 <| subset_span <| Or.inr <| Or.inr <| Or.inl ⟨i, x, y, rfl⟩
@@ -445,8 +445,8 @@ variable [DirectedSystem G fun i j h => f' i j h]
 
 variable (G f)
 
-theorem of.zero_exact_aux2 {x : FreeCommRing (Σ i, G i)} {s t} (hxs : IsSupported x s) {j k}
-    (hj : ∀ z : Σ i, G i, z ∈ s → z.1 ≤ j) (hk : ∀ z : Σ i, G i, z ∈ t → z.1 ≤ k) (hjk : j ≤ k) (hst : s ⊆ t) :
+theorem of.zero_exact_aux2 {x : FreeCommRing (Σi, G i)} {s t} (hxs : IsSupported x s) {j k}
+    (hj : ∀ z : Σi, G i, z ∈ s → z.1 ≤ j) (hk : ∀ z : Σi, G i, z ∈ t → z.1 ≤ k) (hjk : j ≤ k) (hst : s ⊆ t) :
     f' j k hjk (lift (fun ix : s => f' ix.1.1 j (hj ix ix.2) ix.1.2) (restriction s x)) =
       lift (fun ix : t => f' ix.1.1 k (hk ix ix.2) ix.1.2) (restriction t x) :=
   by
@@ -474,10 +474,10 @@ theorem of.zero_exact_aux2 {x : FreeCommRing (Σ i, G i)} {s t} (hxs : IsSupport
 
 variable {G f f'}
 
-theorem of.zero_exact_aux [Nonempty ι] [IsDirected ι (· ≤ ·)] {x : FreeCommRing (Σ i, G i)}
+theorem of.zero_exact_aux [Nonempty ι] [IsDirected ι (· ≤ ·)] {x : FreeCommRing (Σi, G i)}
     (H : Ideal.Quotient.mk _ x = (0 : DirectLimit G fun i j h => f' i j h)) :
     ∃ j s,
-      ∃ H : ∀ k : Σ i, G i, k ∈ s → k.1 ≤ j,
+      ∃ H : ∀ k : Σi, G i, k ∈ s → k.1 ≤ j,
         IsSupported x s ∧ lift (fun ix : s => f' ix.1.1 j (H ix ix.2) ix.1.2) (restriction s x) = (0 : G j) :=
   by
   refine' span_induction (Ideal.Quotient.eq_zero_iff_mem.1 H) _ _ _ _
@@ -551,7 +551,7 @@ theorem of.zero_exact_aux [Nonempty ι] [IsDirected ι (· ≤ ·)] {x : FreeCom
     
   · rintro x y ⟨i, s, hi, hxs, ihs⟩ ⟨j, t, hj, hyt, iht⟩
     obtain ⟨k, hik, hjk⟩ := exists_ge_ge i j
-    have : ∀ z : Σ i, G i, z ∈ s ∪ t → z.1 ≤ k := by
+    have : ∀ z : Σi, G i, z ∈ s ∪ t → z.1 ≤ k := by
       rintro z (hz | hz)
       exact le_transₓ (hi z hz) hik
       exact le_transₓ (hj z hz) hjk
@@ -571,7 +571,7 @@ theorem of.zero_exact_aux [Nonempty ι] [IsDirected ι (· ≤ ·)] {x : FreeCom
     rcases exists_finset_support x with ⟨s, hxs⟩
     rcases(s.image Sigma.fst).exists_le with ⟨i, hi⟩
     obtain ⟨k, hik, hjk⟩ := exists_ge_ge i j
-    have : ∀ z : Σ i, G i, z ∈ ↑s ∪ t → z.1 ≤ k := by
+    have : ∀ z : Σi, G i, z ∈ ↑s ∪ t → z.1 ≤ k := by
       rintro z (hz | hz)
       exacts[(hi z.1 <| Finset.mem_image.2 ⟨z, hz, rfl⟩).trans hik, (hj z hz).trans hjk]
     refine'
@@ -589,7 +589,7 @@ theorem of.zero_exact [IsDirected ι (· ≤ ·)] {i x} (hix : of G (fun i j h =
     ∃ (j : _)(hij : i ≤ j), f' i j hij x = 0 :=
   have : Nonempty ι := ⟨i⟩
   let ⟨j, s, H, hxs, hx⟩ := of.zero_exact_aux hix
-  have hixs : (⟨i, x⟩ : Σ i, G i) ∈ s := is_supported_of.1 hxs
+  have hixs : (⟨i, x⟩ : Σi, G i) ∈ s := is_supported_of.1 hxs
   ⟨j, H ⟨i, x⟩ hixs, by
     rw [restriction_of, dif_pos hixs, lift_of] at hx <;> exact hx⟩
 
@@ -628,9 +628,9 @@ that respect the directed system structure (i.e. make some diagram commute) give
 to a unique map out of the direct limit.
 -/
 def lift : DirectLimit G f →+* P :=
-  Ideal.Quotient.lift _ (FreeCommRing.lift fun x : Σ i, G i => g x.1 x.2)
+  Ideal.Quotient.lift _ (FreeCommRing.lift fun x : Σi, G i => g x.1 x.2)
     (by
-      suffices Ideal.span _ ≤ Ideal.comap (FreeCommRing.lift fun x : Σ i : ι, G i => g x.fst x.snd) ⊥ by
+      suffices Ideal.span _ ≤ Ideal.comap (FreeCommRing.lift fun x : Σi : ι, G i => g x.fst x.snd) ⊥ by
         intro x hx
         exact (mem_bot P).1 (this hx)
       rw [Ideal.span_le]

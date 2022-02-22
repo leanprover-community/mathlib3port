@@ -118,6 +118,7 @@ open Set Filter
 
 open_locale Manifold Filter TopologicalSpace
 
+-- mathport name: «expr∞»
 localized [Manifold] notation "∞" => (⊤ : WithTop ℕ)
 
 section ModelWithCorners
@@ -152,8 +153,10 @@ def modelWithCornersSelf (𝕜 : Type _) [NondiscreteNormedField 𝕜] (E : Type
   continuous_to_fun := continuous_id
   continuous_inv_fun := continuous_id
 
+-- mathport name: «expr𝓘( , )»
 localized [Manifold] notation "𝓘(" 𝕜 ", " E ")" => modelWithCornersSelf 𝕜 E
 
+-- mathport name: «expr𝓘( )»
 localized [Manifold] notation "𝓘(" 𝕜 ")" => modelWithCornersSelf 𝕜 𝕜
 
 section
@@ -270,7 +273,7 @@ theorem unique_diff_at_image {x : H} : UniqueDiffWithinAt 𝕜 (Range I) (I x) :
   I.unique_diff _ (mem_range_self _)
 
 protected theorem locally_compact [LocallyCompactSpace E] (I : ModelWithCorners 𝕜 E H) : LocallyCompactSpace H := by
-  have : ∀ x : H, (𝓝 x).HasBasis (fun s => s ∈ 𝓝 (I x) ∧ IsCompact s) fun s => I.symm '' (s ∩ range (⇑I)) := by
+  have : ∀ x : H, (𝓝 x).HasBasis (fun s => s ∈ 𝓝 (I x) ∧ IsCompact s) fun s => I.symm '' (s ∩ range ⇑I) := by
     intro x
     rw [← I.symm_map_nhds_within_range]
     exact ((compact_basis_nhds (I x)).inf_principal _).map _
@@ -666,7 +669,7 @@ of `x` to the model vector space. -/
 def extChartAt (x : M) : LocalEquiv M E :=
   (chartAt H x).toLocalEquiv.trans I.toLocalEquiv
 
-theorem ext_chart_at_coe : ⇑extChartAt I x = I ∘ chartAt H x :=
+theorem ext_chart_at_coe : ⇑(extChartAt I x) = I ∘ chartAt H x :=
   rfl
 
 theorem ext_chart_at_coe_symm : ⇑(extChartAt I x).symm = (chartAt H x).symm ∘ I.symm :=

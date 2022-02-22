@@ -132,7 +132,7 @@ theorem prod_le_one' (h : ∀, ∀ i ∈ s, ∀, f i ≤ 1) : (∏ i in s, f i) 
       rw [prod_const_one])
 
 @[to_additive sum_le_sum_of_subset_of_nonneg]
-theorem prod_le_prod_of_subset_of_one_le' (h : s ⊆ t) (hf : ∀, ∀ i ∈ t, ∀, i ∉ s → 1 ≤ f i) :
+theorem prod_le_prod_of_subset_of_one_le' (h : s ⊆ t) (hf : ∀, ∀ i ∈ t, ∀, (i ∉ s) → 1 ≤ f i) :
     (∏ i in s, f i) ≤ ∏ i in t, f i := by
   classical <;>
     calc (∏ i in s, f i) ≤ (∏ i in t \ s, f i) * ∏ i in s, f i :=
@@ -381,7 +381,7 @@ theorem prod_lt_prod_of_nonempty' (hs : s.Nonempty) (Hlt : ∀, ∀ i ∈ s, ∀
 
 @[to_additive sum_lt_sum_of_subset]
 theorem prod_lt_prod_of_subset' (h : s ⊆ t) {i : ι} (ht : i ∈ t) (hs : i ∉ s) (hlt : 1 < f i)
-    (hle : ∀, ∀ j ∈ t, ∀, j ∉ s → 1 ≤ f j) : (∏ j in s, f j) < ∏ j in t, f j := by
+    (hle : ∀, ∀ j ∈ t, ∀, (j ∉ s) → 1 ≤ f j) : (∏ j in s, f j) < ∏ j in t, f j := by
   classical <;>
     calc (∏ j in s, f j) < ∏ j in insert i s, f j := by
         rw [prod_insert hs]

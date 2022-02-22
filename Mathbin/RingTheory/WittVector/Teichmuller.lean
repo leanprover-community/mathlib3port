@@ -32,6 +32,7 @@ open MvPolynomial
 
 variable (p : ℕ) {R S : Type _} [hp : Fact p.Prime] [CommRingₓ R] [CommRingₓ S]
 
+-- mathport name: «expr𝕎»
 local notation "𝕎" => WittVector p
 
 /-- The underlying function of the monoid hom `witt_vector.teichmuller`.

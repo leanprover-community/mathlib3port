@@ -514,7 +514,7 @@ def optimalGHInjl (x : X) : OptimalGHCoupling X Y :=
 /-- The injection of `X` in the optimal coupling between `X` and `Y` is an isometry. -/
 theorem isometry_optimal_GH_injl : Isometry (optimalGHInjl X Y) := by
   refine' isometry_emetric_iff_metric.2 fun x y => _
-  change dist (⟦inl x⟧) (⟦inl y⟧) = dist x y
+  change dist ⟦inl x⟧ ⟦inl y⟧ = dist x y
   exact candidates_dist_inl (optimal_GH_dist_mem_candidates_b X Y) _ _
 
 /-- Injection of `Y` in the optimal coupling between `X` and `Y` -/
@@ -524,7 +524,7 @@ def optimalGHInjr (y : Y) : OptimalGHCoupling X Y :=
 /-- The injection of `Y` in the optimal coupling between `X` and `Y` is an isometry. -/
 theorem isometry_optimal_GH_injr : Isometry (optimalGHInjr X Y) := by
   refine' isometry_emetric_iff_metric.2 fun x y => _
-  change dist (⟦inr x⟧) (⟦inr y⟧) = dist x y
+  change dist ⟦inr x⟧ ⟦inr y⟧ = dist x y
   exact candidates_dist_inr (optimal_GH_dist_mem_candidates_b X Y) _ _
 
 /-- The optimal coupling between two compact spaces `X` and `Y` is still a compact space -/

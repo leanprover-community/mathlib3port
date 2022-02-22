@@ -88,6 +88,7 @@ range of `f`. -/
 structure InitialSeg {α β : Type _} (r : α → α → Prop) (s : β → β → Prop) extends r ↪r s where
   init : ∀ a b, s b (to_rel_embedding a) → ∃ a', to_rel_embedding a' = b
 
+-- mathport name: «expr ≼i »
 local infixl:25 " ≼i " => InitialSeg
 
 namespace InitialSeg
@@ -241,6 +242,7 @@ structure PrincipalSeg {α β : Type _} (r : α → α → Prop) (s : β → β 
   top : β
   down : ∀ b, s b top ↔ ∃ a, to_rel_embedding a = b
 
+-- mathport name: «expr ≺i »
 local infixl:25 " ≺i " => PrincipalSeg
 
 namespace PrincipalSeg
@@ -549,11 +551,11 @@ def type (r : α → α → Prop) [wo : IsWellOrder α r] : Ordinal :=
 def typein (r : α → α → Prop) [IsWellOrder α r] (a : α) : Ordinal :=
   type (Subrel r { b | r b a })
 
-theorem type_def (r : α → α → Prop) [wo : IsWellOrder α r] : @Eq Ordinal (⟦⟨α, r, wo⟩⟧) (type r) :=
+theorem type_def (r : α → α → Prop) [wo : IsWellOrder α r] : @Eq Ordinal ⟦⟨α, r, wo⟩⟧ (type r) :=
   rfl
 
 @[simp]
-theorem type_def' (r : α → α → Prop) [IsWellOrder α r] {wo} : @Eq Ordinal (⟦⟨α, r, wo⟩⟧) (type r) :=
+theorem type_def' (r : α → α → Prop) [IsWellOrder α r] {wo} : @Eq Ordinal ⟦⟨α, r, wo⟩⟧ (type r) :=
   rfl
 
 theorem type_eq {α β} {r : α → α → Prop} {s : β → β → Prop} [IsWellOrder α r] [IsWellOrder β s] :
@@ -711,7 +713,7 @@ theorem typein_inj (r : α → α → Prop) [IsWellOrder α r] {a b} : typein r 
   That is, `enum` maps an initial segment of the ordinals, those
   less than the order type of `r`, to the elements of `α`. -/
 def enum (r : α → α → Prop) [IsWellOrder α r] o : o < type r → α :=
-  (Quot.recOnₓ o fun h => (Classical.choice h).top) fun ⟨β, s, _⟩ ⟨γ, t, _⟩ ⟨h⟩ => by
+  (Quot.recOn o fun h => (Classical.choice h).top) fun ⟨β, s, _⟩ ⟨γ, t, _⟩ ⟨h⟩ => by
     skip
     refine' funext fun H₂ : type t < type r => _
     have H₁ : type s < type r := by
@@ -1012,6 +1014,7 @@ theorem lift.initial_seg_coe : (lift.initialSeg : Ordinal → Ordinal) = lift :=
 def omega : Ordinal.{u} :=
   lift <| @type ℕ (· < ·) _
 
+-- mathport name: «exprω»
 localized [Ordinal] notation "ω" => Ordinal.omega.{0}
 
 theorem card_omega : card omega = Cardinal.omega :=

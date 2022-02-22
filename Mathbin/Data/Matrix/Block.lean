@@ -307,7 +307,7 @@ variable [Zero α] [Zero β]
 and zero elsewhere.
 
 This is the dependently-typed version of `matrix.block_diagonal`. -/
-def blockDiagonal' : Matrix (Σ i, m' i) (Σ i, n' i) α
+def blockDiagonal' : Matrix (Σi, m' i) (Σi, n' i) α
   | ⟨k, i⟩, ⟨k', j⟩ => if h : k = k' then M k i (cast (congr_argₓ n' h.symm) j) else 0
 
 theorem block_diagonal'_eq_block_diagonal (M : o → Matrix m n α) {k k'} i j :

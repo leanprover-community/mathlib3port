@@ -1078,7 +1078,7 @@ ordered type : a predicate is true on all `s : finset α` provided that:
   `f x ≤ f a`, `p s` implies `p (insert a s)`. -/
 @[elab_as_eliminator]
 theorem induction_on_max_value [DecidableEq ι] (f : ι → α) {p : Finset ι → Prop} (s : Finset ι) (h0 : p ∅)
-    (step : ∀ a s, a ∉ s → (∀, ∀ x ∈ s, ∀, f x ≤ f a) → p s → p (insert a s)) : p s := by
+    (step : ∀ a s, (a ∉ s) → (∀, ∀ x ∈ s, ∀, f x ≤ f a) → p s → p (insert a s)) : p s := by
   induction' s using Finset.strongInductionOn with s ihs
   rcases(s.image f).eq_empty_or_nonempty with (hne | hne)
   · simp only [image_eq_empty] at hne
@@ -1101,7 +1101,7 @@ ordered type : a predicate is true on all `s : finset α` provided that:
   `f a ≤ f x`, `p s` implies `p (insert a s)`. -/
 @[elab_as_eliminator]
 theorem induction_on_min_value [DecidableEq ι] (f : ι → α) {p : Finset ι → Prop} (s : Finset ι) (h0 : p ∅)
-    (step : ∀ a s, a ∉ s → (∀, ∀ x ∈ s, ∀, f a ≤ f x) → p s → p (insert a s)) : p s :=
+    (step : ∀ a s, (a ∉ s) → (∀, ∀ x ∈ s, ∀, f a ≤ f x) → p s → p (insert a s)) : p s :=
   @induction_on_max_value (OrderDual α) ι _ _ _ _ s h0 step
 
 end MaxMinInductionValue

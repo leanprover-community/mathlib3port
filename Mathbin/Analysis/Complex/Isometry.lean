@@ -32,6 +32,7 @@ open Complex
 
 open_locale ComplexConjugate
 
+-- mathport name: «expr| |»
 local notation "|" x "|" => Complex.abs x
 
 /-- An element of the unit circle defines a `linear_isometry_equiv` from `ℂ` to itself, by

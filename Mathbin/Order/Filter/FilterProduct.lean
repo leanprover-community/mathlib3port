@@ -27,12 +27,14 @@ open_locale Classical
 
 namespace Filter
 
+-- mathport name: «expr∀* , »
 local notation3 "∀* " (...) ", " r:(scoped p => Filter.Eventually p φ) => r
 
 namespace Germ
 
 open Ultrafilter
 
+-- mathport name: «exprβ*»
 local notation "β*" => Germ (φ : Filter α) β
 
 /-- If `φ` is an ultrafilter then the ultraproduct is a division ring. -/

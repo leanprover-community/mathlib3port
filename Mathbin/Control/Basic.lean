@@ -10,6 +10,7 @@ universe u v w
 
 variable {α β γ : Type u}
 
+-- mathport name: «expr $< »
 notation:1 a " $< " f:1 => f a
 
 section Functor
@@ -94,6 +95,7 @@ theorem seq_eq_bind_mapₓ {x : m α} {f : m (α → β)} : f <*> x = f >>= (· 
 @[reducible]
 def fish {m} [Monadₓ m] {α β γ} (f : α → m β) (g : β → m γ) := fun x => f x >>= g
 
+-- mathport name: «expr >=> »
 infixl:55
   " >=> " =>-- >=> is already defined in the core library but it is unusable
   -- because of its precedence (it is defined with precedence 2) and

@@ -822,7 +822,7 @@ theorem dvd_of_mem_factors {n p : ℕ} (h : p ∈ n.factors) : p ∣ n := by
     
 
 theorem mem_factors {n p} (hn : n ≠ 0) : p ∈ factors n ↔ Prime p ∧ p ∣ n :=
-  ⟨fun h => ⟨prime_of_mem_factors h, (mem_factors_iff_dvd hn <| prime_of_mem_factors h).mp h⟩, fun ⟨hprime, hdvd⟩ =>
+  ⟨fun h => ⟨prime_of_mem_factors h, dvd_of_mem_factors h⟩, fun ⟨hprime, hdvd⟩ =>
     (mem_factors_iff_dvd hn hprime).mpr hdvd⟩
 
 theorem le_of_mem_factors {n p : ℕ} (h : p ∈ n.factors) : p ≤ n := by
@@ -924,6 +924,19 @@ theorem succ_dvd_or_succ_dvd_of_succ_sum_dvd_mul {p : ℕ} (p_prime : Prime p) {
     rwa [pow_succ'ₓ, pow_succ'ₓ]
   hpd5.elim (fun this : p ∣ m / p ^ k => Or.inl <| mul_dvd_of_dvd_div hpm this) fun this : p ∣ n / p ^ l =>
     Or.inr <| mul_dvd_of_dvd_div hpn this
+
+theorem prime_iff_prime_int {p : ℕ} : p.Prime ↔ Prime (p : ℤ) :=
+  ⟨fun hp =>
+    ⟨Int.coe_nat_ne_zero_iff_pos.2 hp.Pos, mt Int.is_unit_iff_nat_abs_eq.1 hp.ne_one, fun a b h => by
+      rw [← Int.dvd_nat_abs, Int.coe_nat_dvd, Int.nat_abs_mul, hp.dvd_mul] at h <;>
+        rwa [← Int.dvd_nat_abs, Int.coe_nat_dvd, ← Int.dvd_nat_abs, Int.coe_nat_dvd]⟩,
+    fun hp =>
+    Nat.prime_iff.2
+      ⟨Int.coe_nat_ne_zero.1 hp.1,
+        (mt Nat.is_unit_iff.1) fun h => by
+          simpa [h, not_prime_one] using hp,
+        fun a b => by
+        simpa only [Int.coe_nat_dvd, (Int.coe_nat_mul _ _).symm] using hp.2.2 a b⟩⟩
 
 /-- The type of prime numbers -/
 def Primes :=
@@ -1259,4 +1272,14 @@ theorem mem_factors_mul_right {p a b : ℕ} (hpb : p ∈ b.factors) (ha : a ≠ 
   exact mem_factors_mul_left hpb ha
 
 end Nat
+
+namespace Int
+
+theorem prime_two : Prime (2 : ℤ) :=
+  Nat.prime_iff_prime_int.mp Nat.prime_two
+
+theorem prime_three : Prime (3 : ℤ) :=
+  Nat.prime_iff_prime_int.mp Nat.prime_three
+
+end Int
 

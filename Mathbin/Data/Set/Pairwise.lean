@@ -340,7 +340,7 @@ theorem bUnion_diff_bUnion_eq {s t : Set ι} {f : ι → Set α} (h : (s ∪ t).
 
 /-- Equivalence between a disjoint bounded union and a dependent sum. -/
 noncomputable def bUnionEqSigmaOfDisjoint {s : Set ι} {f : ι → Set α} (h : s.PairwiseDisjoint f) :
-    (⋃ i ∈ s, f i) ≃ Σ i : s, f i :=
+    (⋃ i ∈ s, f i) ≃ Σi : s, f i :=
   (Equivₓ.setCongr (bUnion_eq_Union _ _)).trans <|
     Union_eq_sigma_of_disjoint fun ne => (h hi hj) fun eq => Ne <| Subtype.eq Eq
 

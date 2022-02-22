@@ -66,6 +66,7 @@ def SpecialLinearGroup :=
 
 end
 
+-- mathport name: «exprSL( , )»
 localized [MatrixGroups] notation "SL(" n "," R ")" => Matrix.SpecialLinearGroup (Finₓ n) R
 
 namespace SpecialLinearGroup
@@ -75,6 +76,7 @@ variable {n : Type u} [DecidableEq n] [Fintype n] {R : Type v} [CommRingₓ R]
 instance hasCoeToMatrix : Coe (SpecialLinearGroup n R) (Matrix n n R) :=
   ⟨fun A => A.val⟩
 
+-- mathport name: «expr↑ₘ »
 /- In this file, Lean often has a hard time working out the values of `n` and `R` for an expression
 like `det ↑A`. Rather than writing `(A : matrix n n R)` everywhere in this file which is annoyingly
 verbose, or `A.val` which is not the simp-normal form for subtypes, we create a local notation
@@ -173,8 +175,8 @@ theorem to_lin'_symm_apply (A : SpecialLinearGroup n R) (v : n → R) : A.toLin'
 theorem to_lin'_symm_to_linear_map (A : SpecialLinearGroup n R) : ↑A.toLin'.symm = Matrix.toLin' ↑ₘA⁻¹ :=
   rfl
 
-theorem to_lin'_injective : Function.Injective (⇑(toLin' : SpecialLinearGroup n R →* (n → R) ≃ₗ[R] n → R)) :=
-  fun A B h => Subtype.coe_injective <| Matrix.toLin'.Injective <| LinearEquiv.to_linear_map_injective.eq_iff.mpr h
+theorem to_lin'_injective : Function.Injective ⇑(toLin' : SpecialLinearGroup n R →* (n → R) ≃ₗ[R] n → R) := fun A B h =>
+  Subtype.coe_injective <| Matrix.toLin'.Injective <| LinearEquiv.to_linear_map_injective.eq_iff.mpr h
 
 /-- `to_GL` is the map from the special linear group to the general linear group -/
 def toGL : SpecialLinearGroup n R →* GeneralLinearGroup R (n → R) :=

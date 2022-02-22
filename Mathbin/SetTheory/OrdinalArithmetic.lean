@@ -1670,6 +1670,7 @@ def opow (a b : Ordinal) : Ordinal :=
 instance : Pow Ordinal Ordinal :=
   ⟨opow⟩
 
+-- mathport name: «expr ^ »
 local infixr:0 "^" => @pow Ordinal Ordinal Ordinal.hasPow
 
 theorem zero_opow' (a : Ordinal) : (0^a) = 1 - a := by
@@ -2314,6 +2315,7 @@ theorem is_limit_iff_omega_dvd {a : Ordinal} : IsLimit a ↔ a ≠ 0 ∧ omega �
     simp only [e, mul_zero]
     
 
+-- mathport name: «expr ^ »
 local infixr:0 "^" => @pow Ordinal Ordinal Ordinal.hasPow
 
 theorem opow_lt_omega {a b : Ordinal} (ha : a < omega) (hb : b < omega) : (a^b) < omega :=

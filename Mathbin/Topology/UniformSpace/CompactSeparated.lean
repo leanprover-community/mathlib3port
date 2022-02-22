@@ -259,6 +259,6 @@ theorem ContinuousOn.tendsto_uniformly [LocallyCompactSpace α] [CompactSpace β
 /-- A continuous family of functions `α → β → γ` tends uniformly to its value at `x` if `α` is
 locally compact and `β` is compact and separated. -/
 theorem Continuous.tendsto_uniformly [SeparatedSpace α] [LocallyCompactSpace α] [CompactSpace β] [SeparatedSpace β]
-    [UniformSpace γ] (f : α → β → γ) (h : Continuous (↿f)) (x : α) : TendstoUniformly f (f x) (𝓝 x) :=
+    [UniformSpace γ] (f : α → β → γ) (h : Continuous ↿f) (x : α) : TendstoUniformly f (f x) (𝓝 x) :=
   h.ContinuousOn.TendstoUniformly univ_mem <| is_separated_of_separated_space _
 

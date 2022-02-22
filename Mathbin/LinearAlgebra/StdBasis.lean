@@ -51,7 +51,7 @@ def stdBasis : ∀ i : ι, φ i →ₗ[R] ∀ i, φ i :=
 theorem std_basis_apply (i : ι) (b : φ i) : stdBasis R φ i b = update 0 i b :=
   rfl
 
-theorem coe_std_basis (i : ι) : ⇑stdBasis R φ i = Pi.single i :=
+theorem coe_std_basis (i : ι) : ⇑(stdBasis R φ i) = Pi.single i :=
   funext <| std_basis_apply R φ i
 
 @[simp]
@@ -167,7 +167,7 @@ variable {η : Type _} {ιs : η → Type _} {Ms : η → Type _}
 
 theorem linear_independent_std_basis [Ringₓ R] [∀ i, AddCommGroupₓ (Ms i)] [∀ i, Module R (Ms i)] [DecidableEq η]
     (v : ∀ j, ιs j → Ms j) (hs : ∀ i, LinearIndependent R (v i)) :
-    LinearIndependent R fun ji : Σ j, ιs j => stdBasis R Ms ji.1 (v ji.1 ji.2) := by
+    LinearIndependent R fun ji : Σj, ιs j => stdBasis R Ms ji.1 (v ji.1 ji.2) := by
   have hs' : ∀ j : η, LinearIndependent R fun i : ιs j => std_basis R Ms j (v j i) := by
     intro j
     exact (hs j).map' _ (ker_std_basis _ _ _)
@@ -200,7 +200,7 @@ open LinearEquiv
 
 /-- `pi.basis (s : ∀ j, basis (ιs j) R (Ms j))` is the `Σ j, ιs j`-indexed basis on `Π j, Ms j`
 given by `s j` on each component. -/
-protected noncomputable def basis (s : ∀ j, Basis (ιs j) R (Ms j)) : Basis (Σ j, ιs j) R (∀ j, Ms j) := by
+protected noncomputable def basis (s : ∀ j, Basis (ιs j) R (Ms j)) : Basis (Σj, ιs j) R (∀ j, Ms j) := by
   -- The `add_comm_monoid (Π j, Ms j)` instance was hard to find.
   -- Defining this in tactic mode seems to shake up instance search enough that it works by itself.
   refine' Basis.of_repr (_ ≪≫ₗ (Finsupp.sigmaFinsuppLequivPiFinsupp R).symm)
@@ -215,7 +215,7 @@ theorem basis_repr_std_basis [DecidableEq η] (s : ∀ j, Basis (ιs j) R (Ms j)
     simp only [Pi.basis, LinearEquiv.trans_apply, Basis.repr_self, std_basis_same, LinearEquiv.Pi_congr_right_apply,
       Finsupp.sigma_finsupp_lequiv_pi_finsupp_symm_apply]
     symm
-    exact Basis.Finsupp.single_apply_left (fun h : (⟨j, i⟩ : Σ j, ιs j) = ⟨j, i'⟩ => eq_of_heq (Sigma.mk.inj h).2) _ _ _
+    exact Basis.Finsupp.single_apply_left (fun h : (⟨j, i⟩ : Σj, ιs j) = ⟨j, i'⟩ => eq_of_heq (Sigma.mk.inj h).2) _ _ _
     
   simp only [Pi.basis, LinearEquiv.trans_apply, Finsupp.sigma_finsupp_lequiv_pi_finsupp_symm_apply,
     LinearEquiv.Pi_congr_right_apply]

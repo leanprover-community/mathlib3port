@@ -403,6 +403,7 @@ variable {f : δ →+ γ} (df : DenseInducing f)
 
 variable {φ : β →+ δ →+ G}
 
+-- mathport name: «exprΦ»
 local notation "Φ" => fun p : β × δ => φ p.1 p.2
 
 variable (hφ : Continuous Φ)

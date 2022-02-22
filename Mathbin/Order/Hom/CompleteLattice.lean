@@ -205,7 +205,7 @@ instance : Inhabited (SupHomₓ α α) :=
   ⟨SupHomₓ.id α⟩
 
 @[simp]
-theorem coe_id : ⇑SupHomₓ.id α = id :=
+theorem coe_id : ⇑(SupHomₓ.id α) = id :=
   rfl
 
 variable {α}
@@ -221,7 +221,7 @@ def comp (f : SupHomₓ β γ) (g : SupHomₓ α β) : SupHomₓ α γ where
     rw [comp_apply, map_Sup, map_Sup, Set.image_image]
 
 @[simp]
-theorem coe_comp (f : SupHomₓ β γ) (g : SupHomₓ α β) : ⇑f.comp g = f ∘ g :=
+theorem coe_comp (f : SupHomₓ β γ) (g : SupHomₓ α β) : ⇑(f.comp g) = f ∘ g :=
   rfl
 
 @[simp]
@@ -325,7 +325,7 @@ instance : Inhabited (InfHomₓ α α) :=
   ⟨InfHomₓ.id α⟩
 
 @[simp]
-theorem coe_id : ⇑InfHomₓ.id α = id :=
+theorem coe_id : ⇑(InfHomₓ.id α) = id :=
   rfl
 
 variable {α}
@@ -341,7 +341,7 @@ def comp (f : InfHomₓ β γ) (g : InfHomₓ α β) : InfHomₓ α γ where
     rw [comp_apply, map_Inf, map_Inf, Set.image_image]
 
 @[simp]
-theorem coe_comp (f : InfHomₓ β γ) (g : InfHomₓ α β) : ⇑f.comp g = f ∘ g :=
+theorem coe_comp (f : InfHomₓ β γ) (g : InfHomₓ α β) : ⇑(f.comp g) = f ∘ g :=
   rfl
 
 @[simp]
@@ -446,7 +446,7 @@ instance : Inhabited (FrameHom α α) :=
   ⟨FrameHom.id α⟩
 
 @[simp]
-theorem coe_id : ⇑FrameHom.id α = id :=
+theorem coe_id : ⇑(FrameHom.id α) = id :=
   rfl
 
 variable {α}
@@ -460,7 +460,7 @@ def comp (f : FrameHom β γ) (g : FrameHom α β) : FrameHom α γ :=
   { f.toSupHom.comp g.toSupHom, f.toLatticeHom.comp g.toLatticeHom with }
 
 @[simp]
-theorem coe_comp (f : FrameHom β γ) (g : FrameHom α β) : ⇑f.comp g = f ∘ g :=
+theorem coe_comp (f : FrameHom β γ) (g : FrameHom α β) : ⇑(f.comp g) = f ∘ g :=
   rfl
 
 @[simp]
@@ -554,7 +554,7 @@ instance : Inhabited (CompleteLatticeHom α α) :=
   ⟨CompleteLatticeHom.id α⟩
 
 @[simp]
-theorem coe_id : ⇑CompleteLatticeHom.id α = id :=
+theorem coe_id : ⇑(CompleteLatticeHom.id α) = id :=
   rfl
 
 variable {α}
@@ -568,7 +568,7 @@ def comp (f : CompleteLatticeHom β γ) (g : CompleteLatticeHom α β) : Complet
   { f.toSupHom.comp g.toSupHom, f.toInfHom.comp g.toInfHom with }
 
 @[simp]
-theorem coe_comp (f : CompleteLatticeHom β γ) (g : CompleteLatticeHom α β) : ⇑f.comp g = f ∘ g :=
+theorem coe_comp (f : CompleteLatticeHom β γ) (g : CompleteLatticeHom α β) : ⇑(f.comp g) = f ∘ g :=
   rfl
 
 @[simp]

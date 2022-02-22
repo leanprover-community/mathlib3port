@@ -92,7 +92,7 @@ variable {p q}
 
 @[simp]
 theorem coe_prod_equiv_of_closed_compl (h : IsCompl p q) (hp : IsClosed (p : Set E)) (hq : IsClosed (q : Set E)) :
-    ⇑p.prodEquivOfClosedCompl q h hp hq = p.prodEquivOfIsCompl q h :=
+    ⇑(p.prodEquivOfClosedCompl q h hp hq) = p.prodEquivOfIsCompl q h :=
   rfl
 
 @[simp]
@@ -107,7 +107,7 @@ theorem coe_continuous_linear_proj_of_closed_compl (h : IsCompl p q) (hp : IsClo
 
 @[simp]
 theorem coe_continuous_linear_proj_of_closed_compl' (h : IsCompl p q) (hp : IsClosed (p : Set E))
-    (hq : IsClosed (q : Set E)) : ⇑p.linearProjOfClosedCompl q h hp hq = p.linearProjOfIsCompl q h :=
+    (hq : IsClosed (q : Set E)) : ⇑(p.linearProjOfClosedCompl q h hp hq) = p.linearProjOfIsCompl q h :=
   rfl
 
 theorem closed_complemented_of_closed_compl (h : IsCompl p q) (hp : IsClosed (p : Set E)) (hq : IsClosed (q : Set E)) :

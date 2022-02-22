@@ -145,6 +145,7 @@ variable {K : Type _} [Field K] [Valued K]
 
 open Valued UniformSpace
 
+-- mathport name: «exprhat»
 local notation "hat " => Completion
 
 /-- A valued field is completable. -/
@@ -232,7 +233,7 @@ theorem Valued.continuous_extension : Continuous (Valued.extension : hat K → �
       rw [Valuation.map_one, mem_preimage, mem_singleton_iff, mem_set_of_eq]
     obtain ⟨V, V_in, hV⟩ : ∃ V ∈ 𝓝 (1 : hat K), ∀ x : K, (x : hat K) ∈ V → v x = 1 := by
       rwa [completion.dense_inducing_coe.nhds_eq_comap, mem_comap] at preimage_one
-    have : ∃ V' ∈ 𝓝 (1 : hat K), (0 : hat K) ∉ V' ∧ ∀ x y _ : x ∈ V' _ : y ∈ V', x * y⁻¹ ∈ V := by
+    have : ∃ V' ∈ 𝓝 (1 : hat K), ((0 : hat K) ∉ V') ∧ ∀ x y _ : x ∈ V' _ : y ∈ V', x * y⁻¹ ∈ V := by
       have : tendsto (fun p : hat K × hat K => p.1 * p.2⁻¹) ((𝓝 1).Prod (𝓝 1)) (𝓝 1) := by
         rw [← nhds_prod_eq]
         conv => congr skip skip rw [← one_mulₓ (1 : hat K)]

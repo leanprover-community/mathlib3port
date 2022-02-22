@@ -126,7 +126,7 @@ theorem AdjoinMonic.exists_root {f : k[X]} (hfm : f.Monic) (hfi : Irreducible f)
     exact le_max_ideal k (Ideal.subset_span <| ⟨_, rfl⟩)⟩
 
 /-- The `n`th step of constructing `algebraic_closure`, together with its `field` instance. -/
-def stepAux (n : ℕ) : Σ α : Type u, Field α :=
+def stepAux (n : ℕ) : Σα : Type u, Field α :=
   (Nat.recOn n ⟨k, inferInstance⟩) fun n ih => ⟨@AdjoinMonic ih.1 ih.2, @AdjoinMonic.field ih.1 ih.2⟩
 
 /-- The `n`th step of constructing `algebraic_closure`. -/

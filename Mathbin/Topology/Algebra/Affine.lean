@@ -49,7 +49,7 @@ theorem continuous_iff {f : E →ᵃ[R] F} : Continuous f ↔ Continuous f.linea
 /-- The line map is continuous. -/
 @[continuity]
 theorem line_map_continuous [TopologicalSpace R] [HasContinuousSmul R F] {p v : F} :
-    Continuous (⇑(lineMap p v : R →ᵃ[R] F)) :=
+    Continuous ⇑(lineMap p v : R →ᵃ[R] F) :=
   continuous_iff.mpr <| (continuous_id.smul continuous_const).add <| @continuous_const _ _ _ _ (0 : F)
 
 end Ringₓ
@@ -60,7 +60,7 @@ variable [CommRingₓ R] [Module R F] [HasContinuousConstSmul R F]
 
 @[continuity]
 theorem homothety_continuous (x : F) (t : R) : Continuous <| homothety x t := by
-  suffices ⇑homothety x t = fun y => t • (y - x) + x by
+  suffices ⇑(homothety x t) = fun y => t • (y - x) + x by
     rw [this]
     continuity
   ext y

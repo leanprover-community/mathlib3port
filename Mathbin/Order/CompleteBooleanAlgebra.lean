@@ -35,6 +35,8 @@ Add instances for `prod`, `filter`
 -/
 
 
+open Function Set
+
 universe u v w
 
 variable {α : Type u} {β : Type v} {ι : Sort w} {κ : ι → Sort _}
@@ -131,14 +133,14 @@ theorem infi_sup_eq (f : ι → α) (a : α) : (⨅ i, f i)⊔a = ⨅ i, f i⊔a
 theorem sup_infi_eq (a : α) (f : ι → α) : (a⊔⨅ i, f i) = ⨅ i, a⊔f i :=
   @inf_supr_eq (OrderDual α) _ _ _ _
 
--- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (i hi)
--- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (i hi)
-theorem binfi_sup_eq {p : α → Prop} {f : ∀ i hi : p i, α} (a : α) : (⨅ (i) (hi), f i hi)⊔a = ⨅ (i) (hi), f i hi⊔a :=
+-- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (i j)
+theorem binfi_sup_eq {f : ∀ i, κ i → α} (a : α) : (⨅ (i) (j), f i j)⊔a = ⨅ (i) (j), f i j⊔a :=
   @bsupr_inf_eq (OrderDual α) _ _ _ _ _
 
--- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (i hi)
--- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (i hi)
-theorem sup_binfi_eq (a : α) {p : α → Prop} {f : ∀ i hi : p i, α} : (a⊔⨅ (i) (hi), f i hi) = ⨅ (i) (hi), a⊔f i hi :=
+-- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (i j)
+theorem sup_binfi_eq {f : ∀ i, κ i → α} (a : α) : (a⊔⨅ (i) (j), f i j) = ⨅ (i) (j), a⊔f i j :=
   @inf_bsupr_eq (OrderDual α) _ _ _ _ _
 
 theorem infi_sup_infi {ι ι' : Type _} {f : ι → α} {g : ι' → α} : ((⨅ i, f i)⊔⨅ i, g i) = ⨅ i : ι × ι', f i.1⊔g i.2 :=
@@ -213,4 +215,69 @@ theorem compl_Sup : sup sᶜ = ⨅ i ∈ s, iᶜ := by
   simp only [Sup_eq_supr, compl_supr]
 
 end CompleteBooleanAlgebra
+
+section lift
+
+/-- Pullback an `order.frame` along an injection. -/
+-- See note [reducible non-instances]
+@[reducible]
+protected def Function.Injective.frame [HasSup α] [HasInf α] [HasSupₓ α] [HasInfₓ α] [HasTop α] [HasBot α] [Frame β]
+    (f : α → β) (hf : Injective f) (map_sup : ∀ a b, f (a⊔b) = f a⊔f b) (map_inf : ∀ a b, f (a⊓b) = f a⊓f b)
+    (map_Sup : ∀ s, f (sup s) = sup (f '' s)) (map_Inf : ∀ s, f (inf s) = inf (f '' s)) (map_top : f ⊤ = ⊤)
+    (map_bot : f ⊥ = ⊥) : Frame α :=
+  { hf.CompleteLattice f map_sup map_inf map_Sup map_Inf map_top map_bot with
+    inf_Sup_le_supr_inf := fun a s => by
+      change f (a⊓Sup s) ≤ f (Sup <| range fun b => Sup _)
+      rw [map_inf, map_Sup, map_Sup, Sup_image, inf_bsupr_eq, ← range_comp]
+      refine' le_of_eqₓ _
+      congr
+      ext b
+      refine' Eq.trans _ (map_Sup _).symm
+      rw [← range_comp, supr]
+      congr
+      ext h
+      exact (map_inf _ _).symm }
+
+/-- Pullback an `order.coframe` along an injection. -/
+-- See note [reducible non-instances]
+@[reducible]
+protected def Function.Injective.coframe [HasSup α] [HasInf α] [HasSupₓ α] [HasInfₓ α] [HasTop α] [HasBot α] [Coframe β]
+    (f : α → β) (hf : Injective f) (map_sup : ∀ a b, f (a⊔b) = f a⊔f b) (map_inf : ∀ a b, f (a⊓b) = f a⊓f b)
+    (map_Sup : ∀ s, f (sup s) = sup (f '' s)) (map_Inf : ∀ s, f (inf s) = inf (f '' s)) (map_top : f ⊤ = ⊤)
+    (map_bot : f ⊥ = ⊥) : Coframe α :=
+  { hf.CompleteLattice f map_sup map_inf map_Sup map_Inf map_top map_bot with
+    infi_sup_le_sup_Inf := fun a s => by
+      change f (Inf <| range fun b => Inf _) ≤ f (a⊔Inf s)
+      rw [map_sup, map_Inf s, Inf_image, map_Inf, ← range_comp]
+      refine' ((sup_binfi_eq _).trans _).Ge
+      congr
+      ext b
+      refine' Eq.trans _ (map_Inf _).symm
+      rw [← range_comp, infi]
+      congr
+      ext h
+      exact (map_sup _ _).symm }
+
+/-- Pullback a `complete_distrib_lattice` along an injection. -/
+-- See note [reducible non-instances]
+@[reducible]
+protected def Function.Injective.completeDistribLattice [HasSup α] [HasInf α] [HasSupₓ α] [HasInfₓ α] [HasTop α]
+    [HasBot α] [CompleteDistribLattice β] (f : α → β) (hf : Function.Injective f) (map_sup : ∀ a b, f (a⊔b) = f a⊔f b)
+    (map_inf : ∀ a b, f (a⊓b) = f a⊓f b) (map_Sup : ∀ s, f (sup s) = sup (f '' s))
+    (map_Inf : ∀ s, f (inf s) = inf (f '' s)) (map_top : f ⊤ = ⊤) (map_bot : f ⊥ = ⊥) : CompleteDistribLattice α :=
+  { hf.Frame f map_sup map_inf map_Sup map_Inf map_top map_bot,
+    hf.Coframe f map_sup map_inf map_Sup map_Inf map_top map_bot with }
+
+/-- Pullback a `complete_boolean_algebra` along an injection. -/
+-- See note [reducible non-instances]
+@[reducible]
+protected def Function.Injective.completeBooleanAlgebra [HasSup α] [HasInf α] [HasSupₓ α] [HasInfₓ α] [HasTop α]
+    [HasBot α] [HasCompl α] [HasSdiff α] [CompleteBooleanAlgebra β] (f : α → β) (hf : Function.Injective f)
+    (map_sup : ∀ a b, f (a⊔b) = f a⊔f b) (map_inf : ∀ a b, f (a⊓b) = f a⊓f b) (map_Sup : ∀ s, f (sup s) = sup (f '' s))
+    (map_Inf : ∀ s, f (inf s) = inf (f '' s)) (map_top : f ⊤ = ⊤) (map_bot : f ⊥ = ⊥) (map_compl : ∀ a, f (aᶜ) = f aᶜ)
+    (map_sdiff : ∀ a b, f (a \ b) = f a \ f b) : CompleteBooleanAlgebra α :=
+  { hf.CompleteDistribLattice f map_sup map_inf map_Sup map_Inf map_top map_bot,
+    hf.BooleanAlgebra f map_sup map_inf map_top map_bot map_compl map_sdiff with }
+
+end lift
 

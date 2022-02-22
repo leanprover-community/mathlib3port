@@ -688,6 +688,7 @@ import Mathbin.CategoryTheory.Preadditive.AdditiveFunctor
 import Mathbin.CategoryTheory.Preadditive.Biproducts
 import Mathbin.CategoryTheory.Preadditive.Default
 import Mathbin.CategoryTheory.Preadditive.FunctorCategory
+import Mathbin.CategoryTheory.Preadditive.Generator
 import Mathbin.CategoryTheory.Preadditive.Opposite
 import Mathbin.CategoryTheory.Preadditive.Projective
 import Mathbin.CategoryTheory.Preadditive.ProjectiveResolution
@@ -1274,6 +1275,7 @@ import Mathbin.Geometry.Euclidean.Basic
 import Mathbin.Geometry.Euclidean.Circumcenter
 import Mathbin.Geometry.Euclidean.Default
 import Mathbin.Geometry.Euclidean.MongePoint
+import Mathbin.Geometry.Euclidean.OrientedAngle
 import Mathbin.Geometry.Euclidean.Sphere
 import Mathbin.Geometry.Euclidean.Triangle
 import Mathbin.Geometry.Manifold.Algebra.LeftInvariantDerivation

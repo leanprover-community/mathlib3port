@@ -342,6 +342,7 @@ instance (priority := 900) insertNonempty {α : Type _} (s : Set α) : Insert s 
   insert := fun x => Set.Insert x s
 
 -- ././Mathport/Syntax/Translate/Basic.lean:1387:9: unsupported: advanced notation (l:(foldr `, ` (h t, insert.insert t h) «expr∅»()))
+-- mathport name: «expr ⟮ ,⟯»
 notation3:max K "⟮"  "⟯" => adjoin K l
 
 section AdjoinSimple
@@ -851,7 +852,7 @@ variable (F E K : Type _) [Field F] [Field E] [Field K] [Algebra F E] [Algebra F
 
 /-- Lifts `L → K` of `F → K` -/
 def Lifts :=
-  Σ L : IntermediateField F E, L →ₐ[F] K
+  ΣL : IntermediateField F E, L →ₐ[F] K
 
 variable {F E K}
 
@@ -1048,7 +1049,7 @@ theorem sup_to_subalgebra {K L : Type _} [Field K] [Field L] [Algebra K L] (E1 E
       (show _ ≤ (S1⊔S2).toIntermediateField _ from
         sup_le (show S1 ≤ _ from le_sup_left) (show S2 ≤ _ from le_sup_right))
       (le_sup_to_subalgebra E1 E2)
-  suffices IsField (↥(S1⊔S2)) by
+  suffices IsField ↥(S1⊔S2) by
     intro x hx
     by_cases' hx' : (⟨x, hx⟩ : S1⊔S2) = 0
     · rw [← Subtype.coe_mk x hx, hx', Subalgebra.coe_zero, inv_zero]
@@ -1063,7 +1064,7 @@ theorem sup_to_subalgebra {K L : Type _} [Field K] [Field L] [Algebra K L] (E1 E
       (Field.to_is_field K)
 
 theorem finite_dimensional_sup {K L : Type _} [Field K] [Field L] [Algebra K L] (E1 E2 : IntermediateField K L)
-    [h1 : FiniteDimensional K E1] [h2 : FiniteDimensional K E2] : FiniteDimensional K (↥(E1⊔E2)) := by
+    [h1 : FiniteDimensional K E1] [h2 : FiniteDimensional K E2] : FiniteDimensional K ↥(E1⊔E2) := by
   let g := Algebra.TensorProduct.productMap E1.val E2.val
   suffices g.range = (E1⊔E2).toSubalgebra by
     have h : FiniteDimensional K g.range.to_submodule := g.to_linear_map.finite_dimensional_range

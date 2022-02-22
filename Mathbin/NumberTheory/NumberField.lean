@@ -74,6 +74,7 @@ is the integral closure of ℤ in the number field. -/
 def ringOfIntegers :=
   integralClosure ℤ K
 
+-- mathport name: «expr𝓞»
 localized [NumberField] notation "𝓞" => NumberField.ringOfIntegers
 
 theorem mem_ring_of_integers (x : K) : x ∈ 𝓞 K ↔ IsIntegral ℤ x :=
@@ -122,7 +123,7 @@ instance [NumberField K] : CharZero (𝓞 K) :=
 
 /-- The ring of integers of a number field is not a field. -/
 theorem not_is_field [NumberField K] : ¬IsField (𝓞 K) := by
-  have h_inj : Function.Injective (⇑algebraMap ℤ (𝓞 K)) := RingHom.injective_int (algebraMap ℤ (𝓞 K))
+  have h_inj : Function.Injective ⇑(algebraMap ℤ (𝓞 K)) := RingHom.injective_int (algebraMap ℤ (𝓞 K))
   intro hf
   exact Int.not_is_field ((IsIntegral.is_field_iff_is_field (IsIntegralClosure.is_integral_algebra ℤ K) h_inj).mpr hf)
 

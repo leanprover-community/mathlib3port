@@ -149,8 +149,10 @@ open lean.parser (tk ident many)
 
 open Interactive.Loc
 
+-- mathport name: «expr ?»
 local postfix:1024 "?" => optionalₓ
 
+-- mathport name: «expr *»
 local postfix:1024 "*" => many
 
 open PushNeg

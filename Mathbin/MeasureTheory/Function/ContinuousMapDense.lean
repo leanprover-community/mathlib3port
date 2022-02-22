@@ -180,8 +180,8 @@ variable (𝕜 : Type _) [MeasurableSpace 𝕜] [NormedField 𝕜] [OpensMeasura
 
 namespace BoundedContinuousFunction
 
-theorem to_Lp_dense_range [μ.WeaklyRegular] [IsFiniteMeasure μ] :
-    DenseRange (⇑(toLp p μ 𝕜 : (α →ᵇ E) →L[𝕜] lp E p μ)) := by
+theorem to_Lp_dense_range [μ.WeaklyRegular] [IsFiniteMeasure μ] : DenseRange ⇑(toLp p μ 𝕜 : (α →ᵇ E) →L[𝕜] lp E p μ) :=
+  by
   have : NormedSpace ℝ E := RestrictScalars.normedSpace ℝ 𝕜 E
   rw [dense_range_iff_closure_range]
   suffices (to_Lp p μ 𝕜 : _ →L[𝕜] Lp E p μ).range.toAddSubgroup.topologicalClosure = ⊤ by
@@ -193,7 +193,7 @@ end BoundedContinuousFunction
 namespace ContinuousMap
 
 theorem to_Lp_dense_range [CompactSpace α] [μ.WeaklyRegular] [IsFiniteMeasure μ] :
-    DenseRange (⇑(toLp p μ 𝕜 : C(α, E) →L[𝕜] lp E p μ)) := by
+    DenseRange ⇑(toLp p μ 𝕜 : C(α, E) →L[𝕜] lp E p μ) := by
   have : NormedSpace ℝ E := RestrictScalars.normedSpace ℝ 𝕜 E
   rw [dense_range_iff_closure_range]
   suffices (to_Lp p μ 𝕜 : _ →L[𝕜] Lp E p μ).range.toAddSubgroup.topologicalClosure = ⊤ by

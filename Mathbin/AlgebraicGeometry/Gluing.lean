@@ -90,6 +90,7 @@ variable (D : GlueData)
 
 include D
 
+-- mathport name: «expr𝖣»
 local notation "𝖣" => D.toGlueData
 
 /-- The glue data of locally ringed spaces spaces associated to a family of glue data of schemes. -/
@@ -199,7 +200,7 @@ theorem ι_iso_carrier_inv (i : D.J) :
 
 /-- An equivalence relation on `Σ i, D.U i` that holds iff `𝖣 .ι i x = 𝖣 .ι j y`.
 See `Scheme.gluing_data.ι_eq_iff`. -/
-def Rel (a b : Σ i, ((D.U i).Carrier : Type _)) : Prop :=
+def Rel (a b : Σi, ((D.U i).Carrier : Type _)) : Prop :=
   a = b ∨ ∃ x : (D.V (a.1, b.1)).Carrier, (D.f _ _).1.base x = a.2 ∧ (D.t _ _ ≫ D.f _ _).1.base x = b.2
 
 theorem ι_eq_iff (i j : D.J) (x : (D.U i).Carrier) (y : (D.U j).Carrier) :

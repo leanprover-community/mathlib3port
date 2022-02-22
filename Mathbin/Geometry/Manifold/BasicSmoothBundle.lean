@@ -489,7 +489,7 @@ tangent bundle gives a second component in the tangent space. -/
 -- is empty if the base manifold is empty
 @[nolint has_inhabited_instance, reducible]
 def TangentBundle :=
-  Σ x : M, TangentSpace I x
+  Σx : M, TangentSpace I x
 
 /-- The projection from the tangent bundle of a smooth manifold to the manifold. As the tangent
 bundle is represented internally as a sigma type, the notation `p.1` also works for the projection
@@ -584,7 +584,7 @@ theorem tangent_bundle_model_space_chart_at (p : TangentBundle I H) :
 
 @[simp, mfld_simps]
 theorem tangent_bundle_model_space_coe_chart_at (p : TangentBundle I H) :
-    ⇑chartAt (ModelProd H E) p = Equivₓ.sigmaEquivProd H E := by
+    ⇑(chartAt (ModelProd H E) p) = Equivₓ.sigmaEquivProd H E := by
   unfold_coes
   simp' only with mfld_simps
 

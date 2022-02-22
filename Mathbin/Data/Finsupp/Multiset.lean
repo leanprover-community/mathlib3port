@@ -179,7 +179,7 @@ def orderIsoMultiset : (ι →₀ ℕ) ≃o Multiset ι where
     simp [Multiset.le_iff_count, le_def]
 
 @[simp]
-theorem coe_order_iso_multiset : ⇑@orderIsoMultiset ι = to_multiset :=
+theorem coe_order_iso_multiset : ⇑(@orderIsoMultiset ι) = to_multiset :=
   rfl
 
 @[simp]

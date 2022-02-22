@@ -180,7 +180,7 @@ theorem eq_zero_of_basic_open_empty {X : Scheme} [hX : IsReduced X] {U : Opens X
     exact H
     
   · rintro X Y f hf
-    have e : f.val.base ⁻¹' Set.Range (⇑f.val.base) = ⊤ := by
+    have e : f.val.base ⁻¹' Set.Range ⇑f.val.base = ⊤ := by
       rw [← Set.image_univ, Set.preimage_image_eq _ hf.base_open.inj, Set.top_eq_univ]
     refine' ⟨_, _, e, rfl, _⟩
     rintro H hX s hs ⟨_, x, rfl⟩

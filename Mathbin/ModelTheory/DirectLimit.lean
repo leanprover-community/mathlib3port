@@ -53,7 +53,7 @@ end DirectedSystem
 namespace DirectLimit
 
 /-- Raises a family of elements in the `Σ`-type to the same level along the embeddings. -/
-def unify {α : Type _} (x : α → Σ i, G i) (i : ι) (h : i ∈ UpperBounds (Range (Sigma.fst ∘ x))) (a : α) : G i :=
+def unify {α : Type _} (x : α → Σi, G i) (i : ι) (h : i ∈ UpperBounds (Range (Sigma.fst ∘ x))) (a : α) : G i :=
   f (x a).1 i (h (mem_range_self a)) (x a).2
 
 variable [DirectedSystem G fun i j h => f i j h]
@@ -64,8 +64,7 @@ theorem unify_sigma_mk_self {α : Type _} {i : ι} {x : α → G i} :
   ext a
   simp only [unify, DirectedSystem.map_self]
 
-theorem comp_unify {α : Type _} {x : α → Σ i, G i} {i j : ι} (ij : i ≤ j)
-    (h : i ∈ UpperBounds (Range (Sigma.fst ∘ x))) :
+theorem comp_unify {α : Type _} {x : α → Σi, G i} {i j : ι} (ij : i ≤ j) (h : i ∈ UpperBounds (Range (Sigma.fst ∘ x))) :
     f i j ij ∘ unify f x i h = unify f x j fun k hk => trans (mem_upper_bounds.1 h k hk) ij := by
   ext a
   simp [unify, DirectedSystem.map_map]
@@ -77,7 +76,7 @@ variable (G)
 namespace DirectLimit
 
 /-- The directed limit glues together the structures along the embeddings. -/
-def setoid [DirectedSystem G fun i j h => f i j h] [IsDirected ι (· ≤ ·)] : Setoidₓ (Σ i, G i) where
+def setoid [DirectedSystem G fun i j h => f i j h] [IsDirected ι (· ≤ ·)] : Setoidₓ (Σi, G i) where
   R := fun ⟨i, x⟩ ⟨j, y⟩ => ∃ (k : ι)(ik : i ≤ k)(jk : j ≤ k), f i k ik x = f j k jk y
   iseqv :=
     ⟨fun ⟨i, x⟩ => ⟨i, refl i, refl i, rfl⟩, fun ⟨i, x⟩ ⟨j, y⟩ ⟨k, ik, jk, h⟩ => ⟨k, jk, ik, h.symm⟩,
@@ -90,7 +89,7 @@ def setoid [DirectedSystem G fun i j h => f i j h] [IsDirected ι (· ≤ ·)] :
 
 /-- The structure on the `Σ`-type which becomes the structure on the direct limit after quotienting.
  -/
-noncomputable def sigmaStructure [IsDirected ι (· ≤ ·)] [Nonempty ι] : L.Structure (Σ i, G i) where
+noncomputable def sigmaStructure [IsDirected ι (· ≤ ·)] [Nonempty ι] : L.Structure (Σi, G i) where
   funMap := fun n F x =>
     ⟨_,
       funMap F
@@ -117,8 +116,8 @@ namespace DirectLimit
 
 variable [IsDirected ι (· ≤ ·)] [DirectedSystem G fun i j h => f i j h]
 
-theorem equiv_iff {x y : Σ i, G i} {i : ι} (hx : x.1 ≤ i) (hy : y.1 ≤ i) :
-    x ≈ y ↔ (f x.1 i hx) x.2 = (f y.1 i hy) y.2 := by
+theorem equiv_iff {x y : Σi, G i} {i : ι} (hx : x.1 ≤ i) (hy : y.1 ≤ i) : x ≈ y ↔ (f x.1 i hx) x.2 = (f y.1 i hy) y.2 :=
+  by
   cases x
   cases y
   refine' ⟨fun xy => _, fun xy => ⟨i, hx, hy, xy⟩⟩
@@ -129,14 +128,14 @@ theorem equiv_iff {x y : Σ i, G i} {i : ι} (hx : x.1 ≤ i) (hy : y.1 ≤ i) :
   rw [DirectedSystem.map_map, DirectedSystem.map_map] at *
   exact h
 
-theorem fun_map_unify_equiv {n : ℕ} (F : L.Functions n) (x : Finₓ n → Σ i, G i) (i j : ι)
+theorem fun_map_unify_equiv {n : ℕ} (F : L.Functions n) (x : Finₓ n → Σi, G i) (i j : ι)
     (hi : i ∈ UpperBounds (Range (Sigma.fst ∘ x))) (hj : j ∈ UpperBounds (Range (Sigma.fst ∘ x))) :
-    (⟨i, funMap F (unify f x i hi)⟩ : Σ i, G i) ≈ ⟨j, funMap F (unify f x j hj)⟩ := by
+    (⟨i, funMap F (unify f x i hi)⟩ : Σi, G i) ≈ ⟨j, funMap F (unify f x j hj)⟩ := by
   obtain ⟨k, ik, jk⟩ := directed_of (· ≤ ·) i j
   refine' ⟨k, ik, jk, _⟩
   rw [(f i k ik).map_fun, (f j k jk).map_fun, comp_unify, comp_unify]
 
-theorem rel_map_unify_equiv {n : ℕ} (R : L.Relations n) (x : Finₓ n → Σ i, G i) (i j : ι)
+theorem rel_map_unify_equiv {n : ℕ} (R : L.Relations n) (x : Finₓ n → Σi, G i) (i j : ι)
     (hi : i ∈ UpperBounds (Range (Sigma.fst ∘ x))) (hj : j ∈ UpperBounds (Range (Sigma.fst ∘ x))) :
     RelMap R (unify f x i hi) = RelMap R (unify f x j hj) := by
   obtain ⟨k, ik, jk⟩ := directed_of (· ≤ ·) i j
@@ -144,7 +143,7 @@ theorem rel_map_unify_equiv {n : ℕ} (R : L.Relations n) (x : Finₓ n → Σ i
 
 variable [Nonempty ι]
 
-theorem exists_unify_eq {α : Type _} [Fintype α] {x y : α → Σ i, G i} (xy : x ≈ y) :
+theorem exists_unify_eq {α : Type _} [Fintype α] {x y : α → Σi, G i} (xy : x ≈ y) :
     ∃ (i : ι)(hx : i ∈ UpperBounds (Range (Sigma.fst ∘ x)))(hy : i ∈ UpperBounds (Range (Sigma.fst ∘ y))),
       unify f x i hx = unify f y i hy :=
   by
@@ -153,12 +152,12 @@ theorem exists_unify_eq {α : Type _} [Fintype α] {x y : α → Σ i, G i} (xy 
   simp_rw [← Function.comp_applyₓ Sigma.fst _]  at hi
   exact ⟨i, hi.1, hi.2, funext fun a => (equiv_iff G f _ _).1 (xy a)⟩
 
-theorem fun_map_equiv_unify {n : ℕ} (F : L.Functions n) (x : Finₓ n → Σ i, G i) (i : ι)
+theorem fun_map_equiv_unify {n : ℕ} (F : L.Functions n) (x : Finₓ n → Σi, G i) (i : ι)
     (hi : i ∈ UpperBounds (Range (Sigma.fst ∘ x))) :
     @funMap _ _ (sigmaStructure G f) _ F x ≈ ⟨_, funMap F (unify f x i hi)⟩ :=
   fun_map_unify_equiv G f F x (Classical.some (Fintype.bdd_above_range fun a => (x a).1)) i _ hi
 
-theorem rel_map_equiv_unify {n : ℕ} (R : L.Relations n) (x : Finₓ n → Σ i, G i) (i : ι)
+theorem rel_map_equiv_unify {n : ℕ} (R : L.Relations n) (x : Finₓ n → Σi, G i) (i : ι)
     (hi : i ∈ UpperBounds (Range (Sigma.fst ∘ x))) :
     @RelMap _ _ (sigmaStructure G f) _ R x = RelMap R (unify f x i hi) :=
   rel_map_unify_equiv G f R x (Classical.some (Fintype.bdd_above_range fun a => (x a).1)) i _ hi
@@ -256,7 +255,7 @@ that respect the directed system structure (i.e. make some diagram commute) give
 to a unique map out of the direct limit. -/
 noncomputable def lift : DirectLimit G f ↪[L] P where
   toFun :=
-    Quotientₓ.lift (fun x : Σ i, G i => (g x.1) x.2) fun x y xy => by
+    Quotientₓ.lift (fun x : Σi, G i => (g x.1) x.2) fun x y xy => by
       simp only
       obtain ⟨i, hx, hy⟩ := directed_of (· ≤ ·) x.1 y.1
       rw [← Hg x.1 i hx, ← Hg y.1 i hy]
@@ -280,8 +279,8 @@ variable {L ι G f}
 omit Hg
 
 @[simp]
-theorem lift_quotient_mk_sigma_mk {i} (x : G i) : lift L ι G f g Hg (⟦⟨i, x⟩⟧) = (g i) x := by
-  change (lift L ι G f g Hg).toFun (⟦⟨i, x⟩⟧) = _
+theorem lift_quotient_mk_sigma_mk {i} (x : G i) : lift L ι G f g Hg ⟦⟨i, x⟩⟧ = (g i) x := by
+  change (lift L ι G f g Hg).toFun ⟦⟨i, x⟩⟧ = _
   simp only [lift, Quotientₓ.lift_mk]
 
 theorem lift_of {i} (x : G i) : lift L ι G f g Hg (of L ι G f i x) = g i x := by

@@ -965,6 +965,7 @@ structure MeasurableEquiv (α β : Type _) [MeasurableSpace α] [MeasurableSpace
   measurable_to_fun : Measurable to_equiv
   measurable_inv_fun : Measurable to_equiv.symm
 
+-- mathport name: «expr ≃ᵐ »
 infixl:25 " ≃ᵐ " => MeasurableEquiv
 
 namespace MeasurableEquiv

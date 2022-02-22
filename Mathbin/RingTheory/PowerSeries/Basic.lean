@@ -304,7 +304,7 @@ def c : R →+* MvPowerSeries σ R :=
 variable {σ} {R}
 
 @[simp]
-theorem monomial_zero_eq_C : ⇑monomial R (0 : σ →₀ ℕ) = c σ R :=
+theorem monomial_zero_eq_C : ⇑(monomial R (0 : σ →₀ ℕ)) = c σ R :=
   rfl
 
 theorem monomial_zero_eq_C_apply (a : R) : monomial R (0 : σ →₀ ℕ) a = c σ R a :=
@@ -381,7 +381,7 @@ def constantCoeff : MvPowerSeries σ R →+* R :=
 variable {σ} {R}
 
 @[simp]
-theorem coeff_zero_eq_constant_coeff : ⇑coeff R (0 : σ →₀ ℕ) = constantCoeff σ R :=
+theorem coeff_zero_eq_constant_coeff : ⇑(coeff R (0 : σ →₀ ℕ)) = constantCoeff σ R :=
   rfl
 
 theorem coeff_zero_eq_constant_coeff_apply (φ : MvPowerSeries σ R) : coeff R (0 : σ →₀ ℕ) φ = constantCoeff σ R φ :=
@@ -1178,7 +1178,7 @@ def x : PowerSeries R :=
   MvPowerSeries.x ()
 
 @[simp]
-theorem coeff_zero_eq_constant_coeff : ⇑coeff R 0 = constantCoeff R := by
+theorem coeff_zero_eq_constant_coeff : ⇑(coeff R 0) = constantCoeff R := by
   rw [coeff, Finsupp.single_zero]
   rfl
 
@@ -1186,7 +1186,7 @@ theorem coeff_zero_eq_constant_coeff_apply (φ : PowerSeries R) : coeff R 0 φ =
   rw [coeff_zero_eq_constant_coeff] <;> rfl
 
 @[simp]
-theorem monomial_zero_eq_C : ⇑monomial R 0 = c R := by
+theorem monomial_zero_eq_C : ⇑(monomial R 0) = c R := by
   rw [monomial, Finsupp.single_zero, MvPowerSeries.monomial_zero_eq_C, C]
 
 theorem monomial_zero_eq_C_apply (a : R) : monomial R 0 a = c R a := by

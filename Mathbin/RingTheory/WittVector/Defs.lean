@@ -50,6 +50,7 @@ structure WittVector (p : ℕ) (R : Type _) where mk {} ::
 
 variable {p : ℕ}
 
+-- mathport name: «expr𝕎»
 /- We cannot make this `localized` notation, because the `p` on the RHS doesn't occur on the left
 Hiding the `p` in the notation is very convenient, so we opt for repeating the `local notation`
 in other files that use Witt vectors. -/

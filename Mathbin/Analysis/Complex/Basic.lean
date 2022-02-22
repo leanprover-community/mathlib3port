@@ -337,14 +337,19 @@ end Complex
 
 namespace IsROrC
 
+-- mathport name: «exprreC»
 local notation "reC" => @IsROrC.re ℂ _
 
+-- mathport name: «exprimC»
 local notation "imC" => @IsROrC.im ℂ _
 
+-- mathport name: «exprIC»
 local notation "IC" => @IsROrC.i ℂ _
 
+-- mathport name: «exprabsC»
 local notation "absC" => @IsROrC.abs ℂ _
 
+-- mathport name: «exprnorm_sqC»
 local notation "norm_sqC" => @IsROrC.normSq ℂ _
 
 @[simp]

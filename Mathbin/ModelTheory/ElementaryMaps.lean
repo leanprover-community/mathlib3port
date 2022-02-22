@@ -40,6 +40,7 @@ structure ElementaryEmbedding where
     run_tac
       obviously
 
+-- mathport name: «expr ↪ₑ[ ] »
 localized [FirstOrder] notation:25 A " ↪ₑ[" L "] " B => L.ElementaryEmbedding A B
 
 variable {L} {M} {N}

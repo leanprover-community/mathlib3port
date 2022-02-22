@@ -65,7 +65,7 @@ We use `Σ` to encode mappings instead of `×` because we
 rely on the association list API defined in `data.list.sigma`.
  -/
 inductive TotalFunction (α : Type u) (β : Type v) : Type max u v
-  | with_default : List (Σ _ : α, β) → β → total_function
+  | with_default : List (Σ_ : α, β) → β → total_function
 
 instance TotalFunction.inhabited [Inhabited β] : Inhabited (TotalFunction α β) :=
   ⟨TotalFunction.with_default ∅ default⟩
@@ -81,7 +81,7 @@ def apply [DecidableEq α] : TotalFunction α β → α → β
 Creates a string for a given `finmap` and output, `x₀ ↦ y₀, .. xₙ ↦ yₙ`
 for each of the entries. The brackets are provided by the calling function.
 -/
-def reprAux [HasRepr α] [HasRepr β] (m : List (Σ _ : α, β)) : Stringₓ :=
+def reprAux [HasRepr α] [HasRepr β] (m : List (Σ_ : α, β)) : Stringₓ :=
   Stringₓ.join <| List.qsort (fun x y => x < y) (m.map fun x => s!"{(reprₓ <| Sigma.fst x)} ↦ {reprₓ <| Sigma.snd x}, ")
 
 /-- Produce a string for a given `total_function`.
@@ -94,7 +94,7 @@ instance (α : Type u) (β : Type v) [HasRepr α] [HasRepr β] : HasRepr (TotalF
   ⟨TotalFunction.repr⟩
 
 /-- Create a `finmap` from a list of pairs. -/
-def List.toFinmap' (xs : List (α × β)) : List (Σ _ : α, β) :=
+def List.toFinmap' (xs : List (α × β)) : List (Σ_ : α, β) :=
   xs.map Prod.toSigma
 
 section
@@ -234,7 +234,7 @@ We use `Σ` to encode mappings instead of `×` because we
 rely on the association list API defined in `data.list.sigma`.
 -/
 inductive InjectiveFunction (α : Type u) : Type u
-  | map_to_self (xs : List (Σ _ : α, α)) :
+  | map_to_self (xs : List (Σ_ : α, α)) :
     xs.map Sigma.fst ~ xs.map Sigma.snd → List.Nodupₓ (xs.map Sigma.snd) → injective_function
 
 instance : Inhabited (InjectiveFunction α) :=
@@ -344,8 +344,8 @@ theorem apply_id_mem_iff [DecidableEq α] {xs ys : List α} (h₀ : List.Nodup�
         
     
 
-theorem List.apply_id_eq_self [DecidableEq α] {xs ys : List α} (x : α) : x ∉ xs → List.applyId.{u} (xs.zip ys) x = x :=
-  by
+theorem List.apply_id_eq_self [DecidableEq α] {xs ys : List α} (x : α) :
+    (x ∉ xs) → List.applyId.{u} (xs.zip ys) x = x := by
   intro h
   dsimp [list.apply_id]
   rw [lookup_eq_none.2]
@@ -394,13 +394,10 @@ open total_function (list.to_finmap')
 
 open Sampleable
 
--- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (xs ys)
--- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (xs ys)
 /-- Remove a slice of length `m` at index `n` in a list and a permutation, maintaining the property
 that it is a permutation.
 -/
-def Perm.slice [DecidableEq α] (n m : ℕ) :
-    (Σ' (xs : List α) (ys : List α), xs ~ ys ∧ ys.Nodup) → Σ' (xs : List α) (ys : List α), xs ~ ys ∧ ys.Nodup
+def Perm.slice [DecidableEq α] (n m : ℕ) : (Σ'xs ys : List α, xs ~ ys ∧ ys.Nodup) → Σ'xs ys : List α, xs ~ ys ∧ ys.Nodup
   | ⟨xs, ys, h, h'⟩ =>
     let xs' := List.sliceₓ n m xs
     have h₀ : xs' ~ ys.inter xs' := Perm.slice_inter _ _ h h'
@@ -419,15 +416,13 @@ def sliceSizes : ℕ → LazyList ℕ+
       LazyList.cons ⟨_, h⟩ (slice_sizes <| n / 2)
     else LazyList.nil
 
--- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (xs ys)
 /-- Shrink a permutation of a list, slicing a segment in the middle.
 
 The sizes of the slice being removed start at `n` (with `n` the length
 of the list) and then `n / 2`, then `n / 4`, etc down to 1. The slices
 will be taken at index `0`, `n / k`, `2n / k`, `3n / k`, etc.
 -/
-protected def shrinkPerm {α : Type} [DecidableEq α] [SizeOf α] :
-    ShrinkFn (Σ' (xs : List α) (ys : List α), xs ~ ys ∧ ys.Nodup)
+protected def shrinkPerm {α : Type} [DecidableEq α] [SizeOf α] : ShrinkFn (Σ'xs ys : List α, xs ~ ys ∧ ys.Nodup)
   | xs => do
     let k := xs.1.length
     let n ← sliceSizes k
@@ -480,7 +475,7 @@ protected def mk (xs ys : List α) (h : xs ~ ys) (h' : ys.Nodup) : InjectiveFunc
 protected theorem injective [DecidableEq α] (f : InjectiveFunction α) : Injective (apply f) := by
   cases' f with xs hperm hnodup
   generalize h₀ : map Sigma.fst xs = xs₀
-  generalize h₁ : xs.map (@id ((Σ _ : α, α) → α) <| @Sigma.snd α fun _ : α => α) = xs₁
+  generalize h₁ : xs.map (@id ((Σ_ : α, α) → α) <| @Sigma.snd α fun _ : α => α) = xs₁
   dsimp [id]  at h₁
   have hxs : xs = total_function.list.to_finmap' (xs₀.zip xs₁) := by
     rw [← h₀, ← h₁, list.to_finmap']

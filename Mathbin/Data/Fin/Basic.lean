@@ -610,7 +610,7 @@ def succEmbedding (n : ℕ) : Finₓ n ↪o Finₓ (n + 1) :=
   (OrderEmbedding.ofStrictMono Finₓ.succ) fun h => succ_lt_succₓ h
 
 @[simp]
-theorem coe_succ_embedding : ⇑succEmbedding n = Finₓ.succ :=
+theorem coe_succ_embedding : ⇑(succEmbedding n) = Finₓ.succ :=
   rfl
 
 @[simp]
@@ -1342,7 +1342,7 @@ theorem succ_above_ne_zero {a : Finₓ (n + 2)} {b : Finₓ (n + 1)} (ha : a ≠
 
 /-- Embedding `fin n` into `fin (n + 1)` with a hole around zero embeds by `succ`. -/
 @[simp]
-theorem succ_above_zero : ⇑succAbove (0 : Finₓ (n + 1)) = Finₓ.succ :=
+theorem succ_above_zero : ⇑(succAbove (0 : Finₓ (n + 1))) = Finₓ.succ :=
   rfl
 
 /-- Embedding `fin n` into `fin (n + 1)` with a hole around `last n` embeds by `cast_succ`. -/

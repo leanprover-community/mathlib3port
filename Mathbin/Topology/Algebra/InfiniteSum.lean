@@ -63,6 +63,7 @@ def Summable (f : β → α) : Prop :=
 irreducible_def tsum {β} (f : β → α) :=
   if h : Summable f then Classical.some h else 0
 
+-- mathport name: «expr∑' , »
 notation3 "∑' " (...) ", " r:(scoped
   f =>-- see Note [operator precedence of big operators]
     tsum
@@ -289,7 +290,7 @@ theorem Summable.even_add_odd {f : ℕ → α} (he : Summable fun k => f (2 * k)
     Summable f :=
   (he.HasSum.even_add_odd ho.HasSum).Summable
 
-theorem HasSum.sigma [RegularSpace α] {γ : β → Type _} {f : (Σ b : β, γ b) → α} {g : β → α} {a : α} (ha : HasSum f a)
+theorem HasSum.sigma [RegularSpace α] {γ : β → Type _} {f : (Σb : β, γ b) → α} {g : β → α} {a : α} (ha : HasSum f a)
     (hf : ∀ b, HasSum (fun c => f ⟨b, c⟩) (g b)) : HasSum g a := by
   refine' (at_top_basis.tendsto_iff (closed_nhds_basis a)).mpr _
   rintro s ⟨hs, hsc⟩
@@ -297,8 +298,7 @@ theorem HasSum.sigma [RegularSpace α] {γ : β → Type _} {f : (Σ b : β, γ 
   use u.image Sigma.fst, trivialₓ
   intro bs hbs
   simp only [Set.mem_preimage, ge_iff_le, Finset.le_iff_subset] at hu
-  have : tendsto (fun t : Finset (Σ b, γ b) => ∑ p in t.filter fun p => p.1 ∈ bs, f p) at_top (𝓝 <| ∑ b in bs, g b) :=
-    by
+  have : tendsto (fun t : Finset (Σb, γ b) => ∑ p in t.filter fun p => p.1 ∈ bs, f p) at_top (𝓝 <| ∑ b in bs, g b) := by
     simp only [← sigma_preimage_mk, sum_sigma]
     refine' tendsto_finset_sum _ fun b hb => _
     change tendsto (fun t => (fun t => ∑ s in t, f ⟨b, s⟩) (preimage t (Sigma.mk b) _)) at_top (𝓝 (g b))
@@ -312,11 +312,11 @@ theorem HasSum.prod_fiberwise [RegularSpace α] {f : β × γ → α} {g : β �
     (hf : ∀ b, HasSum (fun c => f (b, c)) (g b)) : HasSum g a :=
   HasSum.sigma ((Equivₓ.sigmaEquivProd β γ).has_sum_iff.2 ha) hf
 
-theorem Summable.sigma' [RegularSpace α] {γ : β → Type _} {f : (Σ b : β, γ b) → α} (ha : Summable f)
+theorem Summable.sigma' [RegularSpace α] {γ : β → Type _} {f : (Σb : β, γ b) → α} (ha : Summable f)
     (hf : ∀ b, Summable fun c => f ⟨b, c⟩) : Summable fun b => ∑' c, f ⟨b, c⟩ :=
   (ha.HasSum.Sigma fun b => (hf b).HasSum).Summable
 
-theorem HasSum.sigma_of_has_sum [RegularSpace α] {γ : β → Type _} {f : (Σ b : β, γ b) → α} {g : β → α} {a : α}
+theorem HasSum.sigma_of_has_sum [RegularSpace α] {γ : β → Type _} {f : (Σb : β, γ b) → α} {g : β → α} {a : α}
     (ha : HasSum g a) (hf : ∀ b, HasSum (fun c => f ⟨b, c⟩) (g b)) (hf' : Summable f) : HasSum f a := by
   simpa [(hf'.has_sum.sigma hf).unique ha] using hf'.has_sum
 
@@ -419,7 +419,7 @@ theorem tsum_sum {f : γ → β → α} {s : Finset γ} (hf : ∀, ∀ i ∈ s, 
   (has_sum_sum fun i hi => (hf i hi).HasSum).tsum_eq
 
 -- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (b c)
-theorem tsum_sigma' [RegularSpace α] {γ : β → Type _} {f : (Σ b : β, γ b) → α} (h₁ : ∀ b, Summable fun c => f ⟨b, c⟩)
+theorem tsum_sigma' [RegularSpace α] {γ : β → Type _} {f : (Σb : β, γ b) → α} (h₁ : ∀ b, Summable fun c => f ⟨b, c⟩)
     (h₂ : Summable f) : (∑' p, f p) = ∑' (b) (c), f ⟨b, c⟩ :=
   (h₂.HasSum.Sigma fun b => (h₁ b).HasSum).tsum_eq.symm
 
@@ -1039,6 +1039,7 @@ section UniformGroup
 
 variable [AddCommGroupₓ α] [UniformSpace α]
 
+/-- The **Cauchy criterion** for infinite sums, also known as the **Cauchy convergence test** -/
 theorem summable_iff_cauchy_seq_finset [CompleteSpace α] {f : β → α} :
     Summable f ↔ CauchySeq fun s : Finset β => ∑ b in s, f b :=
   cauchy_map_iff_exists_tendsto.symm
@@ -1138,11 +1139,11 @@ theorem summable_subtype_and_compl {s : Set β} :
     ((Summable fun x : s => f x) ∧ Summable fun x : sᶜ => f x) ↔ Summable f :=
   ⟨and_imp.2 Summable.add_compl, fun h => ⟨h.Subtype s, h.Subtype (sᶜ)⟩⟩
 
-theorem Summable.sigma_factor {γ : β → Type _} {f : (Σ b : β, γ b) → α} (ha : Summable f) (b : β) :
+theorem Summable.sigma_factor {γ : β → Type _} {f : (Σb : β, γ b) → α} (ha : Summable f) (b : β) :
     Summable fun c => f ⟨b, c⟩ :=
   ha.comp_injective sigma_mk_injective
 
-theorem Summable.sigma [T1Space α] {γ : β → Type _} {f : (Σ b : β, γ b) → α} (ha : Summable f) :
+theorem Summable.sigma [T1Space α] {γ : β → Type _} {f : (Σb : β, γ b) → α} (ha : Summable f) :
     Summable fun b => ∑' c, f ⟨b, c⟩ :=
   ha.sigma' fun b => ha.sigma_factor b
 
@@ -1150,7 +1151,7 @@ theorem Summable.prod_factor {f : β × γ → α} (h : Summable f) (b : β) : S
   h.comp_injective fun c₁ c₂ h => (Prod.ext_iff.1 h).2
 
 -- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (b c)
-theorem tsum_sigma [T1Space α] {γ : β → Type _} {f : (Σ b : β, γ b) → α} (ha : Summable f) :
+theorem tsum_sigma [T1Space α] {γ : β → Type _} {f : (Σb : β, γ b) → α} (ha : Summable f) :
     (∑' p, f p) = ∑' (b) (c), f ⟨b, c⟩ :=
   tsum_sigma' (fun b => ha.sigma_factor b) ha
 
@@ -1384,7 +1385,7 @@ variable [TopologicalSpace α] [Semiringₓ α]
 `(n, k, l) : Σ (n : ℕ), nat.antidiagonal n ↦ f k * g l` is summable. -/
 theorem summable_mul_prod_iff_summable_mul_sigma_antidiagonal {f g : ℕ → α} :
     (Summable fun x : ℕ × ℕ => f x.1 * g x.2) ↔
-      Summable fun x : Σ n : ℕ, Nat.antidiagonal n => f (x.2 : ℕ × ℕ).1 * g (x.2 : ℕ × ℕ).2 :=
+      Summable fun x : Σn : ℕ, Nat.antidiagonal n => f (x.2 : ℕ × ℕ).1 * g (x.2 : ℕ × ℕ).2 :=
   Nat.sigmaAntidiagonalEquivProd.summable_iff.symm
 
 variable [RegularSpace α] [TopologicalRing α]

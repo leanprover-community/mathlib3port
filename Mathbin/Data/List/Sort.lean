@@ -120,6 +120,7 @@ section Sort
 
 variable {α : Type uu} (r : α → α → Prop) [DecidableRel r]
 
+-- mathport name: «expr ≼ »
 local infixl:50 " ≼ " => r
 
 /-! ### Insertion sort -/

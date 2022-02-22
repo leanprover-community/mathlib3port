@@ -48,6 +48,7 @@ variable {V : Type u} [InnerProductSpace ℝ V] [CompleteSpace V]
 
 variable {B : V →L[ℝ] V →L[ℝ] ℝ}
 
+-- mathport name: «expr ♯»
 local postfix:1024 "♯" => @continuousLinearMapOfBilin ℝ V _ _ _
 
 theorem bounded_below (coercive : IsCoercive B) : ∃ C, 0 < C ∧ ∀ v, C * ∥v∥ ≤ ∥B♯ v∥ := by

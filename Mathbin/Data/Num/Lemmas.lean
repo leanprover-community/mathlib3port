@@ -518,7 +518,7 @@ theorem succ'_pred' n : succ' (pred' n) = n :=
   to_nat_inj.1 <| by
     rw [succ'_to_nat, pred'_to_nat, Nat.add_one, Nat.succ_pred_eq_of_posₓ (to_nat_pos _)]
 
-instance : HasDvd PosNum :=
+instance : Dvd PosNum :=
   ⟨fun m n => Pos m ∣ Pos n⟩
 
 @[norm_cast]

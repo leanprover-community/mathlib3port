@@ -35,7 +35,7 @@ unsafe def find_tac : expr → Option auto_cases_tac
   | quote.1 (Prod _ _) => tac_cases
   | quote.1 (And _ _) => tac_cases
   | quote.1 (Sigma _) => tac_cases
-  | quote.1 (Psigma _) => tac_cases
+  | quote.1 (PSigma _) => tac_cases
   | quote.1 (Subtype _) => tac_cases
   | quote.1 (Exists _) => tac_cases
   | quote.1 (Finₓ 0) => tac_cases

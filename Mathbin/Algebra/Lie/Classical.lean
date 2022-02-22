@@ -114,7 +114,7 @@ theorem Eb_val (h : j ≠ i) : (eb R i j h).val = Matrix.stdBasisMatrix i j 1 :=
 
 end ElementaryBasis
 
-theorem sl_non_abelian [Fintype n] [Nontrivial R] (h : 1 < Fintype.card n) : ¬IsLieAbelian (↥sl n R) := by
+theorem sl_non_abelian [Fintype n] [Nontrivial R] (h : 1 < Fintype.card n) : ¬IsLieAbelian ↥(sl n R) := by
   rcases Fintype.exists_pair_of_one_lt_card h with ⟨j, i, hij⟩
   let A := Eb R i j hij
   let B := Eb R j i hij.symm

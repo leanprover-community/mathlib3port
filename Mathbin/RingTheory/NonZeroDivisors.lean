@@ -32,6 +32,7 @@ def nonZeroDivisors (R : Type _) [MonoidWithZeroₓ R] : Submonoid R where
       rwa [mul_assoc]
     hx₁ z <| hx₂ (z * x₁) this
 
+-- mathport name: «expr ⁰»
 localized [nonZeroDivisors] notation:9000 R "⁰" => nonZeroDivisors R
 
 variable {M M' M₁ R R' F : Type _} [MonoidWithZeroₓ M] [MonoidWithZeroₓ M'] [CommMonoidWithZero M₁] [Ringₓ R]

@@ -57,6 +57,7 @@ open Function
 def Pfun (α β : Type _) :=
   α → Part β
 
+-- mathport name: «expr →. »
 infixr:25 " →. " => Pfun
 
 namespace Pfun
@@ -102,7 +103,7 @@ def asSubtype (f : α →. β) (s : f.Dom) : β :=
 
 /-- The type of partial functions `α →. β` is equivalent to
 the type of pairs `(p : α → Prop, f : subtype p → β)`. -/
-def equivSubtype : (α →. β) ≃ Σ p : α → Prop, Subtype p → β :=
+def equivSubtype : (α →. β) ≃ Σp : α → Prop, Subtype p → β :=
   ⟨fun f => ⟨fun a => (f a).Dom, asSubtype f⟩, fun f x => ⟨f.1 x, fun h => f.2 ⟨x, h⟩⟩, fun f =>
     funext fun a => Part.eta _, fun ⟨p, f⟩ => by
     dsimp <;> congr <;> funext a <;> cases a <;> rfl⟩

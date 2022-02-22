@@ -222,7 +222,7 @@ def eval₂RingHom (f : R →+* S) (x : S) : R[X] →+* S :=
   { eval₂AddMonoidHom f x with map_one' := eval₂_one _ _, map_mul' := fun _ _ => eval₂_mul _ _ }
 
 @[simp]
-theorem coe_eval₂_ring_hom (f : R →+* S) x : ⇑eval₂RingHom f x = eval₂ f x :=
+theorem coe_eval₂_ring_hom (f : R →+* S) x : ⇑(eval₂RingHom f x) = eval₂ f x :=
   rfl
 
 theorem eval₂_pow (n : ℕ) : (p ^ n).eval₂ f x = p.eval₂ f x ^ n :=
@@ -589,7 +589,7 @@ def mapRingHom (f : R →+* S) : R[X] →+* S[X] where
   map_one' := map_one f
 
 @[simp]
-theorem coe_map_ring_hom (f : R →+* S) : ⇑mapRingHom f = map f :=
+theorem coe_map_ring_hom (f : R →+* S) : ⇑(mapRingHom f) = map f :=
   rfl
 
 -- This is protected to not clash with the global `map_nat_cast`.

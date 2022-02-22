@@ -55,7 +55,7 @@ theorem EquivFunctor.Option.sign {α : Type _} [DecidableEq α] [Fintype α] (e 
 theorem map_equiv_remove_none {α : Type _} [DecidableEq α] (σ : Perm (Option α)) :
     EquivFunctor.mapEquiv Option (removeNone σ) = swap none (σ none) * σ := by
   ext1 x
-  have : Option.map (⇑remove_none σ) x = (swap none (σ none)) (σ x) := by
+  have : Option.map (⇑(remove_none σ)) x = (swap none (σ none)) (σ x) := by
     cases x
     · simp
       

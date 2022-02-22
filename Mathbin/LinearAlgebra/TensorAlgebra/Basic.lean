@@ -86,7 +86,7 @@ of `f` to a morphism of `R`-algebras `tensor_algebra R M → A`.
 def lift {A : Type _} [Semiringₓ A] [Algebra R A] : (M →ₗ[R] A) ≃ (TensorAlgebra R M →ₐ[R] A) where
   toFun :=
     RingQuot.liftAlgHom R ∘ fun f =>
-      ⟨FreeAlgebra.lift R (⇑f), fun h : Rel R M x y => by
+      ⟨FreeAlgebra.lift R ⇑f, fun h : Rel R M x y => by
         induction h <;> simp [Algebra.smul_def]⟩
   invFun := fun F => F.toLinearMap.comp (ι R)
   left_inv := fun f => by

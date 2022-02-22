@@ -438,8 +438,10 @@ as `∫ x in Ioc a b, f x ∂μ - ∫ x in Ioc b a, f x ∂μ`. If `a ≤ b`, th
 def intervalIntegral (f : α → E) (a b : α) (μ : Measureₓ α) :=
   (∫ x in Ioc a b, f x ∂μ) - ∫ x in Ioc b a, f x ∂μ
 
+-- mathport name: «expr∫ in .. , ∂ »
 notation3 "∫ " (...) " in " a ".." b ", " r:(scoped f => f) " ∂" μ => intervalIntegral r a b μ
 
+-- mathport name: «expr∫ in .. , »
 notation3 "∫ " (...) " in " a ".." b ", " r:(scoped f => intervalIntegral f a b volume) => r
 
 namespace intervalIntegral

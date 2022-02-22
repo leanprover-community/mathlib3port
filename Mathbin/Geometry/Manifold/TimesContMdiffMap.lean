@@ -32,8 +32,10 @@ structure TimesContMdiffMap where
 def SmoothMap :=
   TimesContMdiffMap I I' M M' ⊤
 
+-- mathport name: «exprC^ ⟮ , ; , ⟯»
 localized [Manifold] notation "C^" n "⟮" I ", " M "; " I' ", " M' "⟯" => TimesContMdiffMap I I' M M' n
 
+-- mathport name: «exprC^ ⟮ , ; ⟯»
 localized [Manifold] notation "C^" n "⟮" I ", " M "; " k "⟯" => TimesContMdiffMap I (modelWithCornersSelf k k) M k n
 
 open_locale Manifold

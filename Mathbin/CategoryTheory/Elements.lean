@@ -43,7 +43,7 @@ is a pair `(X : C, x : F.obj X)`.
 -/
 @[nolint has_inhabited_instance]
 def Functor.Elements (F : C ⥤ Type w) :=
-  Σ c : C, F.obj c
+  Σc : C, F.obj c
 
 /-- The category structure on `F.elements`, for `F : C ⥤ Type`.
     A morphism `(X, x) ⟶ (Y, y)` is a morphism `f : X ⟶ Y` in `C`, so `F.map f` takes `x` to `y`.

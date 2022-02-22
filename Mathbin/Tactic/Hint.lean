@@ -38,7 +38,7 @@ unsafe def add_hint_tactic (_ : parse (tk "add_hint_tactic")) : parser Unit := d
   let t := "`[" ++ s ++ "]"
   let (t, _) ← with_input parser.pexpr t
   of_tactic <| do
-      let h := s <.> "_hint"
+      let h := mkStrName s "_hint"
       let t ←
         to_expr
             (pquote.1 do

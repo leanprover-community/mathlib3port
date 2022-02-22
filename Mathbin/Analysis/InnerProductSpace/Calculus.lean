@@ -26,6 +26,7 @@ variable {𝕜 E F : Type _} [IsROrC 𝕜]
 
 variable [InnerProductSpace 𝕜 E] [InnerProductSpace ℝ F]
 
+-- mathport name: «expr⟪ , ⟫»
 local notation "⟪" x ", " y "⟫" => @inner 𝕜 _ _ x y
 
 variable [NormedSpace ℝ E]

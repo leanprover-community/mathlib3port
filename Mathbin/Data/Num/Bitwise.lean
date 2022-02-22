@@ -220,6 +220,7 @@ def not : Nzsnum → Nzsnum
   | msb b => msb (bnot b)
   | b :: p => bnot b :: Not p
 
+-- mathport name: «expr~ »
 prefix:100 "~" => not
 
 /-- Add an inactive bit at the end of a `nzsnum`. This mimics `pos_num.bit0`. -/
@@ -258,6 +259,7 @@ def not : Snum → Snum
   | zero z => zero (bnot z)
   | nz p => ~p
 
+-- mathport name: «expr~ »
 prefix:0 "~" => not
 
 /-- Add a bit at the end of a `snum`. This mimics `nzsnum.bit`. -/

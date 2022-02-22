@@ -32,7 +32,7 @@ theorem nodup_nil : @Nodupₓ α [] :=
   pairwise.nil
 
 @[simp]
-theorem nodup_cons {a : α} {l : List α} : Nodupₓ (a :: l) ↔ a ∉ l ∧ Nodupₓ l := by
+theorem nodup_cons {a : α} {l : List α} : Nodupₓ (a :: l) ↔ (a ∉ l) ∧ Nodupₓ l := by
   simp only [nodup, pairwise_cons, forall_mem_ne]
 
 protected theorem Pairwiseₓ.nodup {l : List α} {r : α → α → Prop} [IsIrrefl α r] (h : Pairwiseₓ r l) : Nodupₓ l :=

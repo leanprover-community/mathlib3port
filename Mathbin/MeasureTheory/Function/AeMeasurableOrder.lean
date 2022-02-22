@@ -131,7 +131,7 @@ theorem Ennreal.ae_measurable_of_exist_almost_disjoint_supersets {α : Type _} {
           ∃ u v,
             MeasurableSet u ∧ MeasurableSet v ∧ { x | f x < p } ⊆ u ∧ { x | (q : ℝ≥0∞) < f x } ⊆ v ∧ μ (u ∩ v) = 0) :
     AeMeasurable f μ := by
-  obtain ⟨s, s_count, s_dense, s_zero, s_top⟩ : ∃ s : Set ℝ≥0∞, countable s ∧ Dense s ∧ 0 ∉ s ∧ ∞ ∉ s :=
+  obtain ⟨s, s_count, s_dense, s_zero, s_top⟩ : ∃ s : Set ℝ≥0∞, countable s ∧ Dense s ∧ (0 ∉ s) ∧ ∞ ∉ s :=
     Ennreal.exists_countable_dense_no_zero_top
   have I : ∀, ∀ x ∈ s, ∀, x ≠ ∞ := fun x xs hx => s_top (hx ▸ xs)
   apply MeasureTheory.ae_measurable_of_exist_almost_disjoint_supersets μ s s_count s_dense _

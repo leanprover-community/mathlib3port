@@ -102,7 +102,7 @@ theorem times_cont_diff_within_at_local_invariant_prop (n : WithTop ℕ) :
       have : I x = (I ∘ e.symm ∘ I.symm) (I (e x)) := by
         simp' only [hx] with mfld_simps
       rw [this] at h
-      have : I (e x) ∈ I.symm ⁻¹' e.target ∩ range (⇑I) := by
+      have : I (e x) ∈ I.symm ⁻¹' e.target ∩ range ⇑I := by
         simp' only [hx] with mfld_simps
       have := ((mem_groupoid_of_pregroupoid.2 he).2.TimesContDiffWithinAt this).of_le le_top
       convert h.comp' _ this using 1
@@ -1065,7 +1065,7 @@ theorem TimesContMdiffOn.continuous_on_tangent_map_within_aux {f : H → H'} {s 
   · have A := (tangentBundleModelSpaceHomeomorph H I).Continuous
     rw [continuous_iff_continuous_on_univ] at A
     have B := ((tangentBundleModelSpaceHomeomorph H' I').symm.Continuous.comp_continuous_on h).comp' A
-    have : univ ∩ ⇑tangentBundleModelSpaceHomeomorph H I ⁻¹' (Prod.fst ⁻¹' s) = TangentBundle.proj I H ⁻¹' s := by
+    have : univ ∩ ⇑(tangentBundleModelSpaceHomeomorph H I) ⁻¹' (Prod.fst ⁻¹' s) = TangentBundle.proj I H ⁻¹' s := by
       ext ⟨x, v⟩
       simp' only with mfld_simps
     rw [this] at B
@@ -1144,7 +1144,7 @@ theorem TimesContMdiffOn.times_cont_mdiff_on_tangent_map_within_aux {f : H → H
     TimesContDiffOn 𝕜 m
       (((fun p : H' × E' => (I' p.fst, p.snd)) ∘ Equivₓ.sigmaEquivProd H' E') ∘
         tangentMapWithin I I' f s ∘ (Equivₓ.sigmaEquivProd H E).symm ∘ fun p : E × E => (I.symm p.fst, p.snd))
-      ((range (⇑I) ∩ ⇑I.symm ⁻¹' s) ×ˢ (univ : Set E))
+      ((range ⇑I ∩ ⇑I.symm ⁻¹' s) ×ˢ (univ : Set E))
   · simpa [A] using h
     
   change
@@ -1560,7 +1560,7 @@ theorem tangent_map_tangent_bundle_pure (p : TangentBundle I M) :
     simp' only with mfld_simps
   have A : MdifferentiableAt I I.tangent (fun x : M => (⟨x, 0⟩ : TangentBundle I M)) x :=
     tangent_bundle.smooth_zero_section.mdifferentiable_at
-  have B : fderivWithin 𝕜 (fun x_1 : E => (x_1, (0 : E))) (Set.Range (⇑I)) (I ((chart_at H x) x)) v = (v, 0) := by
+  have B : fderivWithin 𝕜 (fun x_1 : E => (x_1, (0 : E))) (Set.Range ⇑I) (I ((chart_at H x) x)) v = (v, 0) := by
     rw [fderiv_within_eq_fderiv, DifferentiableAt.fderiv_prod]
     · simp
       

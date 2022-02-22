@@ -54,7 +54,8 @@ subgroup `G` of `G`, and `⊥` denotes the trivial subgroup `{1}`.
   `least_descending_central_series_length_eq_nilpotency_class` and
   `lower_central_series_length_eq_nilpotency_class`.
 * If `G` is nilpotent, then so are its subgroups, images, quotients and preimages.
-  Binary products of nilpotent groups are nilpotent.
+  Binary and finite products of nilpotent groups are nilpotent.
+  Infinite products are nilpotent if their nilpotent class is bounded.
   Corresponding lemmas about the `nilpotency_class` are provided.
 * The `nilpotency_class` of `G ⧸ center G` is given explicitly, and an induction principle
   is derived from that.
@@ -118,7 +119,7 @@ variable (G)
 
 /-- An auxiliary type-theoretic definition defining both the upper central series of
 a group, and a proof that it is normal, all in one go. -/
-def upperCentralSeriesAux : ℕ → Σ' H : Subgroup G, Normal H
+def upperCentralSeriesAux : ℕ → Σ'H : Subgroup G, Normal H
   | 0 => ⟨⊥, inferInstance⟩
   | n + 1 =>
     let un := upperCentralSeriesAux n
@@ -696,6 +697,74 @@ theorem nilpotency_class_prod [IsNilpotent G₁] [IsNilpotent G₂] :
     prod_eq_bot_iff]
 
 end Prod
+
+section BoundedPi
+
+-- First the case of infinite products with bounded nilpotency class
+variable {η : Type _} {Gs : η → Type _} [∀ i, Groupₓ (Gs i)]
+
+theorem lower_central_series_pi_le (n : ℕ) :
+    lowerCentralSeries (∀ i, Gs i) n ≤ Subgroup.pi Set.Univ fun i => lowerCentralSeries (Gs i) n := by
+  let pi := fun f : ∀ i, Subgroup (Gs i) => Subgroup.pi Set.Univ f
+  induction' n with n ih
+  · simp [pi_top]
+    
+  · calc lowerCentralSeries (∀ i, Gs i) n.succ = ⁅lowerCentralSeries (∀ i, Gs i) n,⊤⁆ :=
+        rfl _ ≤ ⁅pi fun i => lowerCentralSeries (Gs i) n,⊤⁆ :=
+        general_commutator_mono ih (le_reflₓ _)_ = ⁅pi fun i => lowerCentralSeries (Gs i) n,pi fun i => ⊤⁆ := by
+        simp [pi, pi_top]_ ≤ pi fun i => ⁅lowerCentralSeries (Gs i) n,⊤⁆ :=
+        general_commutator_pi_pi_le _ _ _ = pi fun i => lowerCentralSeries (Gs i) n.succ := rfl
+    
+
+/-- products of nilpotent groups are nilpotent if their nipotency class is bounded -/
+theorem is_nilpotent_pi_of_bounded_class [∀ i, IsNilpotent (Gs i)] (n : ℕ)
+    (h : ∀ i, Groupₓ.nilpotencyClass (Gs i) ≤ n) : IsNilpotent (∀ i, Gs i) := by
+  rw [nilpotent_iff_lower_central_series]
+  refine' ⟨n, _⟩
+  rw [eq_bot_iff]
+  apply le_transₓ (lower_central_series_pi_le _)
+  rw [← eq_bot_iff, pi_eq_bot_iff]
+  intro i
+  apply lower_central_series_eq_bot_iff_nilpotency_class_le.mpr (h i)
+
+end BoundedPi
+
+section FinitePi
+
+-- Now for finite products
+variable {η : Type _} [Fintype η] {Gs : η → Type _} [∀ i, Groupₓ (Gs i)]
+
+theorem lower_central_series_pi_of_fintype (n : ℕ) :
+    lowerCentralSeries (∀ i, Gs i) n = Subgroup.pi Set.Univ fun i => lowerCentralSeries (Gs i) n := by
+  let pi := fun f : ∀ i, Subgroup (Gs i) => Subgroup.pi Set.Univ f
+  induction' n with n ih
+  · simp [pi_top]
+    
+  · calc lowerCentralSeries (∀ i, Gs i) n.succ = ⁅lowerCentralSeries (∀ i, Gs i) n,⊤⁆ :=
+        rfl _ = ⁅pi fun i => lowerCentralSeries (Gs i) n,⊤⁆ := by
+        rw [ih]_ = ⁅pi fun i => lowerCentralSeries (Gs i) n,pi fun i => ⊤⁆ := by
+        simp [pi, pi_top]_ = pi fun i => ⁅lowerCentralSeries (Gs i) n,⊤⁆ :=
+        general_commutator_pi_pi_of_fintype _ _ _ = pi fun i => lowerCentralSeries (Gs i) n.succ := rfl
+    
+
+/-- n-ary products of nilpotent groups are nilpotent -/
+instance is_nilpotent_pi [∀ i, IsNilpotent (Gs i)] : IsNilpotent (∀ i, Gs i) := by
+  rw [nilpotent_iff_lower_central_series]
+  refine' ⟨finset.univ.sup fun i => Groupₓ.nilpotencyClass (Gs i), _⟩
+  rw [lower_central_series_pi_of_fintype, pi_eq_bot_iff]
+  intro i
+  apply lower_central_series_eq_bot_iff_nilpotency_class_le.mpr
+  exact @Finset.le_sup _ _ _ _ Finset.univ (fun i => Groupₓ.nilpotencyClass (Gs i)) _ (Finset.mem_univ i)
+
+/-- The nilpotency class of an n-ary product is the sup of the nilpotency classes of the factors -/
+theorem nilpotency_class_pi [∀ i, IsNilpotent (Gs i)] :
+    Groupₓ.nilpotencyClass (∀ i, Gs i) = Finset.univ.sup fun i => Groupₓ.nilpotencyClass (Gs i) := by
+  apply eq_of_forall_ge_iff
+  intro k
+  simp only [Finset.sup_le_iff, ← lower_central_series_eq_bot_iff_nilpotency_class_le,
+    lower_central_series_pi_of_fintype, pi_eq_bot_iff, Finset.mem_univ, true_implies_iff]
+
+end FinitePi
 
 /-- A nilpotent subgroup is solvable -/
 instance (priority := 100) IsNilpotent.to_is_solvable [h : IsNilpotent G] : IsSolvable G := by

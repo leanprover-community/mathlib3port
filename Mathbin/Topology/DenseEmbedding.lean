@@ -92,9 +92,11 @@ protected theorem separable_space [SeparableSpace α] : SeparableSpace β :=
 
 variable [TopologicalSpace δ] {f : γ → α} {g : γ → δ} {h : δ → β}
 
-/-- γ -f→ α
+/-- ```
+ γ -f→ α
 g↓     ↓e
  δ -h→ β
+```
 -/
 theorem tendsto_comap_nhds_nhds {d : δ} {a : α} (di : DenseInducing i) (H : Tendsto h (𝓝 d) (𝓝 (i a)))
     (comm : h ∘ g = i ∘ f) : Tendsto f (comap g (𝓝 d)) (𝓝 a) := by

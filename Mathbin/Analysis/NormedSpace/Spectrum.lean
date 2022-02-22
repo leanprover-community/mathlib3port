@@ -57,10 +57,13 @@ section SpectrumCompact
 
 variable [NormedField 𝕜] [NormedRing A] [NormedAlgebra 𝕜 A]
 
+-- mathport name: «exprσ»
 local notation "σ" => Spectrum 𝕜
 
+-- mathport name: «exprρ»
 local notation "ρ" => ResolventSet 𝕜
 
+-- mathport name: «expr↑ₐ»
 local notation "↑ₐ" => algebraMap 𝕜 A
 
 theorem mem_resolvent_set_of_spectral_radius_lt {a : A} {k : 𝕜} (h : spectralRadius 𝕜 a < ∥k∥₊) : k ∈ ρ a :=
@@ -114,8 +117,7 @@ theorem spectral_radius_le_pow_nnnorm_pow_one_div (a : A) (n : ℕ) :
       subset_polynomial_aeval a (monomial (n + 1) (1 : 𝕜)) ⟨k, hk, rfl⟩
   -- power of the norm is bounded by norm of the power
   have nnnorm_pow_le : (↑(∥k∥₊ ^ (n + 1)) : ℝ≥0∞) ≤ ↑∥a ^ (n + 1)∥₊ := by
-    simpa only [norm_to_nnreal, NormedField.nnnorm_pow k (n + 1)] using
-      coe_mono (Real.to_nnreal_mono (norm_le_norm_of_mem pow_mem))
+    simpa only [norm_to_nnreal, nnnorm_pow k (n + 1)] using coe_mono (Real.to_nnreal_mono (norm_le_norm_of_mem pow_mem))
   -- take (n + 1)ᵗʰ roots and clean up the left-hand side
   have hn : 0 < (n + 1 : ℝ) := by
     exact_mod_cast Nat.succ_pos'
@@ -128,8 +130,10 @@ section ResolventDeriv
 
 variable [NondiscreteNormedField 𝕜] [NormedRing A] [NormedAlgebra 𝕜 A] [CompleteSpace A]
 
+-- mathport name: «exprρ»
 local notation "ρ" => ResolventSet 𝕜
 
+-- mathport name: «expr↑ₐ»
 local notation "↑ₐ" => algebraMap 𝕜 A
 
 theorem has_deriv_at_resolvent {a : A} {k : 𝕜} (hk : k ∈ ρ a) : HasDerivAt (resolvent a) (-(resolvent a k ^ 2)) k := by
@@ -199,8 +203,8 @@ theorem is_unit_one_sub_smul_of_lt_inv_radius {a : A} {z : 𝕜} (h : ↑∥z∥
       
     · rw [Units.smul_def, ← Algebra.algebra_map_eq_smul_one, ← mem_resolvent_set_iff]
       refine' mem_resolvent_set_of_spectral_radius_lt _
-      rwa [Units.coe_inv', NormedField.nnnorm_inv,
-        coe_inv (nnnorm_ne_zero_iff.mpr (Units.coe_mk0 hz ▸ hz : (u : 𝕜) ≠ 0)), lt_inv_iff_lt_inv]
+      rwa [Units.coe_inv', nnnorm_inv, coe_inv (nnnorm_ne_zero_iff.mpr (Units.coe_mk0 hz ▸ hz : (u : 𝕜) ≠ 0)),
+        lt_inv_iff_lt_inv]
       
     
 
@@ -290,6 +294,7 @@ section NormedField
 
 variable [NormedField 𝕜] [NormedRing A] [NormedAlgebra 𝕜 A] [CompleteSpace A]
 
+-- mathport name: «expr↑ₐ»
 local notation "↑ₐ" => algebraMap 𝕜 A
 
 /-- An algebra homomorphism into the base field, as a continuous linear map (since it is
@@ -308,6 +313,7 @@ section NondiscreteNormedField
 
 variable [NondiscreteNormedField 𝕜] [NormedRing A] [NormedAlgebra 𝕜 A] [CompleteSpace A]
 
+-- mathport name: «expr↑ₐ»
 local notation "↑ₐ" => algebraMap 𝕜 A
 
 @[simp]

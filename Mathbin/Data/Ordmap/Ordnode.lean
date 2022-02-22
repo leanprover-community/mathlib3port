@@ -109,8 +109,8 @@ def ratio :=
 protected def singleton (a : α) : Ordnode α :=
   node 1 nil a nil
 
--- ././Mathport/Syntax/Translate/Basic.lean:462:9: unsupported: advanced prec syntax max
-local prefix:999 "ι" => Ordnode.singleton
+-- mathport name: «exprι »
+local prefix:arg "ι" => Ordnode.singleton
 
 instance : HasSingleton α (Ordnode α) :=
   ⟨Ordnode.singleton⟩
@@ -174,11 +174,11 @@ def balanceL (l : Ordnode α) (x : α) (r : Ordnode α) : Ordnode α := by
         · cases' lr with _ _ lrx
           · exact node 2 l x nil
             
-          · exact node 3 (ι lx) lrx (ι x)
+          · exact node 3 (ι lx) lrx ι x
             
           
         · cases' id lr with lrs lrl lrx lrr
-          · exact node 3 ll lx (ι x)
+          · exact node 3 ll lx ι x
             
           · exact
               if lrs < ratio * lls then node (ls + 1) ll lx (node (lrs + 1) lr x nil)
@@ -219,7 +219,7 @@ def balanceR (l : Ordnode α) (x : α) (r : Ordnode α) : Ordnode α := by
         · cases' rl with _ _ rlx
           · exact node 2 nil x r
             
-          · exact node 3 (ι x) rlx (ι rx)
+          · exact node 3 (ι x) rlx ι rx
             
           
         · cases' id rl with rls rll rlx rlr
@@ -268,7 +268,7 @@ def balance (l : Ordnode α) (x : α) (r : Ordnode α) : Ordnode α := by
             
           
         · cases' id rr with rrs
-          · exact node 3 (ι x) rlx (ι rx)
+          · exact node 3 (ι x) rlx ι rx
             
           · exact
               if rls < ratio * rrs then node (rs + 1) (node (rls + 1) nil x rl) rx rr
@@ -282,11 +282,11 @@ def balance (l : Ordnode α) (x : α) (r : Ordnode α) : Ordnode α := by
         · cases' lr with _ _ lrx
           · exact node 2 l x nil
             
-          · exact node 3 (ι lx) lrx (ι x)
+          · exact node 3 (ι lx) lrx ι x
             
           
         · cases' id lr with lrs lrl lrx lrr
-          · exact node 3 ll lx (ι x)
+          · exact node 3 ll lx ι x
             
           · exact
               if lrs < ratio * lls then node (ls + 1) ll lx (node (lrs + 1) lr x nil)

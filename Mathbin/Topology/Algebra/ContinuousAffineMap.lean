@@ -35,6 +35,7 @@ structure ContinuousAffineMap (R : Type _) {V W : Type _} (P Q : Type _) [Ring�
   P →ᵃ[R] Q where
   cont : Continuous to_fun
 
+-- mathport name: «expr →A[ ] »
 notation:25 P " →A[" R "] " Q => ContinuousAffineMap R P Q
 
 namespace ContinuousAffineMap
@@ -236,8 +237,11 @@ theorem neg_apply (f : P →A[R] W) (x : P) : (-f) x = -f x :=
   rfl
 
 instance : AddCommGroupₓ (P →A[R] W) :=
-  { (coe_injective.AddCommGroup _ coe_zero coe_add coe_neg coe_sub : AddCommGroupₓ (P →A[R] W)) with add := (· + ·),
-    zero := 0, neg := Neg.neg, sub := Sub.sub }
+  { -- note: there is no `function.injective.add_comm_group_smul` so we do this in two pieces.
+    (coe_injective.addGroupSmul _ coe_zero coe_add coe_neg coe_sub (fun _ _ => coe_smul _ _) fun _ _ => coe_smul _ _ :
+      AddGroupₓ (P →A[R] W)),
+    (coe_injective.AddCommSemigroup _ coe_add : AddCommSemigroupₓ (P →A[R] W)) with add := (· + ·), zero := 0,
+    neg := Neg.neg, sub := Sub.sub }
 
 instance [Monoidₓ S] [DistribMulAction S W] [SmulCommClass R S W] [HasContinuousConstSmul S W] :
     DistribMulAction S (P →A[R] W) :=

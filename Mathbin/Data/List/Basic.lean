@@ -101,15 +101,15 @@ theorem mem_split {a : α} {l : List α} (h : a ∈ l) : ∃ s t : List α, l = 
 theorem mem_of_ne_of_memₓ {a y : α} {l : List α} (h₁ : a ≠ y) (h₂ : a ∈ y :: l) : a ∈ l :=
   Or.elim (eq_or_mem_of_mem_consₓ h₂) (fun e => absurd e h₁) fun r => r
 
-theorem ne_of_not_mem_consₓ {a b : α} {l : List α} : a ∉ b :: l → a ≠ b := fun nin aeqb => absurd (Or.inl aeqb) nin
+theorem ne_of_not_mem_consₓ {a b : α} {l : List α} : (a ∉ b :: l) → a ≠ b := fun nin aeqb => absurd (Or.inl aeqb) nin
 
-theorem not_mem_of_not_mem_consₓ {a b : α} {l : List α} : a ∉ b :: l → a ∉ l := fun nin nainl =>
+theorem not_mem_of_not_mem_consₓ {a b : α} {l : List α} : (a ∉ b :: l) → a ∉ l := fun nin nainl =>
   absurd (Or.inr nainl) nin
 
-theorem not_mem_cons_of_ne_of_not_memₓ {a y : α} {l : List α} : a ≠ y → a ∉ l → a ∉ y :: l := fun p1 p2 =>
+theorem not_mem_cons_of_ne_of_not_memₓ {a y : α} {l : List α} : a ≠ y → (a ∉ l) → a ∉ y :: l := fun p1 p2 =>
   Not.intro fun Pain => absurd (eq_or_mem_of_mem_consₓ Pain) (not_orₓ p1 p2)
 
-theorem ne_and_not_mem_of_not_mem_consₓ {a y : α} {l : List α} : a ∉ y :: l → a ≠ y ∧ a ∉ l := fun p =>
+theorem ne_and_not_mem_of_not_mem_consₓ {a y : α} {l : List α} : (a ∉ y :: l) → a ≠ y ∧ a ∉ l := fun p =>
   And.intro (ne_of_not_mem_consₓ p) (not_mem_of_not_mem_consₓ p)
 
 @[simp]
@@ -1243,7 +1243,7 @@ theorem index_of_eq_length {a : α} {l : List α} : indexOfₓ a l = length l �
     
 
 @[simp]
-theorem index_of_of_not_mem {l : List α} {a : α} : a ∉ l → indexOfₓ a l = length l :=
+theorem index_of_of_not_mem {l : List α} {a : α} : (a ∉ l) → indexOfₓ a l = length l :=
   index_of_eq_length.2
 
 theorem index_of_le_length {a : α} {l : List α} : indexOfₓ a l ≤ length l := by
@@ -2721,8 +2721,10 @@ section
 
 variable {op : α → α → α} [ha : IsAssociative α op] [hc : IsCommutative α op]
 
+-- mathport name: «expr * »
 local notation a "*" b => op a b
 
+-- mathport name: «expr <*> »
 local notation l "<*>" a => foldlₓ op a l
 
 include ha
@@ -3636,7 +3638,7 @@ theorem erase_of_not_memₓ {a : α} {l : List α} (h : a ∉ l) : l.erase a = l
   rw [erase_eq_erasep, erasep_of_forall_not] <;> rintro b h' rfl <;> exact h h'
 
 theorem exists_erase_eqₓ {a : α} {l : List α} (h : a ∈ l) :
-    ∃ l₁ l₂, a ∉ l₁ ∧ l = l₁ ++ a :: l₂ ∧ l.erase a = l₁ ++ l₂ := by
+    ∃ l₁ l₂, (a ∉ l₁) ∧ l = l₁ ++ a :: l₂ ∧ l.erase a = l₁ ++ l₂ := by
   rcases exists_of_erasep h rfl with ⟨_, l₁, l₂, h₁, rfl, h₂, h₃⟩ <;>
     rw [erase_eq_erasep] <;> exact ⟨l₁, l₂, fun h => h₁ _ h rfl, h₂, h₃⟩
 
@@ -3764,7 +3766,7 @@ theorem diff_sublist : ∀ l₁ l₂ : List α, l₁.diff l₂ <+ l₁
 theorem diff_subset (l₁ l₂ : List α) : l₁.diff l₂ ⊆ l₁ :=
   (diff_sublist _ _).Subset
 
-theorem mem_diff_of_mem {a : α} : ∀ {l₁ l₂ : List α}, a ∈ l₁ → a ∉ l₂ → a ∈ l₁.diff l₂
+theorem mem_diff_of_mem {a : α} : ∀ {l₁ l₂ : List α}, a ∈ l₁ → (a ∉ l₂) → a ∈ l₁.diff l₂
   | l₁, [], h₁, h₂ => h₁
   | l₁, b :: l₂, h₁, h₂ => by
     rw [diff_cons] <;>

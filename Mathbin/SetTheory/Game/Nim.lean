@@ -61,6 +61,7 @@ def nim : Ordinal → Pgame
 
 namespace Pgame
 
+-- mathport name: «expr ≈ »
 local infixl:0 " ≈ " => Equiv
 
 namespace nim

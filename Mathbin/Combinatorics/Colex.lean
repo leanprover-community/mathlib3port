@@ -74,14 +74,14 @@ theorem Colex.eq_iff (A B : Finset α) : A.toColex = B.toColex ↔ A = B :=
 In other words, max (A Δ B) ∈ B (if the maximum exists).
 -/
 instance [LT α] : LT (Finset.Colex α) :=
-  ⟨fun A B : Finset α => ∃ k : α, (∀ {x}, k < x → (x ∈ A ↔ x ∈ B)) ∧ k ∉ A ∧ k ∈ B⟩
+  ⟨fun A B : Finset α => ∃ k : α, (∀ {x}, k < x → (x ∈ A ↔ x ∈ B)) ∧ (k ∉ A) ∧ k ∈ B⟩
 
 /-- We can define (≤) in the obvious way. -/
 instance [LT α] : LE (Finset.Colex α) :=
   ⟨fun A B => A < B ∨ A = B⟩
 
 theorem Colex.lt_def [LT α] (A B : Finset α) :
-    A.toColex < B.toColex ↔ ∃ k, (∀ {x}, k < x → (x ∈ A ↔ x ∈ B)) ∧ k ∉ A ∧ k ∈ B :=
+    A.toColex < B.toColex ↔ ∃ k, (∀ {x}, k < x → (x ∈ A ↔ x ∈ B)) ∧ (k ∉ A) ∧ k ∈ B :=
   Iff.rfl
 
 theorem Colex.le_def [LT α] (A B : Finset α) : A.toColex ≤ B.toColex ↔ A.toColex < B.toColex ∨ A = B :=

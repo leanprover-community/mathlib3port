@@ -93,10 +93,13 @@ end
 /-- The `add_hom` underlying a `linear_map`. -/
 add_decl_doc LinearMap.toAddHom
 
+-- mathport name: «expr →ₛₗ[ ] »
 notation:25 M " →ₛₗ[" σ:25 "] " M₂:0 => LinearMap σ M M₂
 
+-- mathport name: «expr →ₗ[ ] »
 notation:25 M " →ₗ[" R:25 "] " M₂:0 => LinearMap (RingHom.id R) M M₂
 
+-- mathport name: «expr →ₗ⋆[ ] »
 notation:25 M " →ₗ⋆[" R:25 "] " M₂:0 => LinearMap (starRingEnd R) M M₂
 
 namespace LinearMap
@@ -376,6 +379,7 @@ def comp : M₁ →ₛₗ[σ₁₃] M₃ where
 
 omit module_M₁ module_M₂ module_M₃
 
+-- mathport name: «expr ∘ₗ »
 infixr:80 " ∘ₗ " =>
   @LinearMap.comp _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ (RingHom.id _) (RingHom.id _) (RingHom.id _) RingHomCompTriple.ids
 

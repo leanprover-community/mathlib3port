@@ -37,6 +37,7 @@ such that `μ s = 0` and `ν sᶜ = 0`. -/
 def MutuallySingular {m0 : MeasurableSpace α} (μ ν : Measure α) : Prop :=
   ∃ s : Set α, MeasurableSet s ∧ μ s = 0 ∧ ν (sᶜ) = 0
 
+-- mathport name: «expr ⊥ₘ »
 localized [MeasureTheory] infixl:60 " ⊥ₘ " => MeasureTheory.Measure.MutuallySingular
 
 namespace MutuallySingular

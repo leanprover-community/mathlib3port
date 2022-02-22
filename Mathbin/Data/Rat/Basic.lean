@@ -48,6 +48,7 @@ structure Rat where mk' ::
   Pos : 0 < denom
   cop : num.natAbs.Coprime denom
 
+-- mathport name: «exprℚ»
 notation "ℚ" => Rat
 
 namespace Rat
@@ -67,7 +68,7 @@ unsafe instance : has_to_format ℚ :=
   ⟨coe ∘ Rat.repr⟩
 
 instance : Encodable ℚ :=
-  Encodable.ofEquiv (Σ n : ℤ, { d : ℕ // 0 < d ∧ n.natAbs.Coprime d })
+  Encodable.ofEquiv (Σn : ℤ, { d : ℕ // 0 < d ∧ n.natAbs.Coprime d })
     ⟨fun ⟨a, b, c, d⟩ => ⟨a, b, c, d⟩, fun ⟨a, b, c, d⟩ => ⟨a, b, c, d⟩, fun ⟨a, b, c, d⟩ => rfl, fun ⟨a, b, c, d⟩ =>
       rfl⟩
 
@@ -123,6 +124,7 @@ def mk : ℤ → ℤ → ℚ
   | n, (d : ℕ) => mkNat n d
   | n, -[1+ d] => mkPnat (-n) d.succPnat
 
+-- mathport name: «expr /. »
 localized [Rat] infixl:70 " /. " => Rat.mk
 
 theorem mk_pnat_eq n d h : mkPnat n ⟨d, h⟩ = n /. d := by

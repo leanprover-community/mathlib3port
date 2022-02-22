@@ -192,7 +192,7 @@ theorem null_of_frequently_le_of_frequently_ge {c d : ℝ≥0 } (hcd : c < d) (s
 /-- If `ρ` is absolutely continuous with respect to `μ`, then for almost every `x`,
 the ratio `ρ a / μ a` converges as `a` shrinks to `x` along a Vitali family for `μ`. -/
 theorem ae_tendsto_div : ∀ᵐ x ∂μ, ∃ c, Tendsto (fun a => ρ a / μ a) (v.filterAt x) (𝓝 c) := by
-  obtain ⟨w, w_count, w_dense, w_zero, w_top⟩ : ∃ w : Set ℝ≥0∞, countable w ∧ Dense w ∧ 0 ∉ w ∧ ∞ ∉ w :=
+  obtain ⟨w, w_count, w_dense, w_zero, w_top⟩ : ∃ w : Set ℝ≥0∞, countable w ∧ Dense w ∧ (0 ∉ w) ∧ ∞ ∉ w :=
     Ennreal.exists_countable_dense_no_zero_top
   have I : ∀, ∀ x ∈ w, ∀, x ≠ ∞ := fun x xs hx => w_top (hx ▸ xs)
   have A :

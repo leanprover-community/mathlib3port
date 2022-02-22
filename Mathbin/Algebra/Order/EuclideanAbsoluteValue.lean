@@ -21,6 +21,7 @@ absolute value is compatible with the Euclidean domain structure on its domain.
 -/
 
 
+-- mathport name: «expr ≺ »
 local infixl:50 " ≺ " => EuclideanDomain.R
 
 namespace AbsoluteValue

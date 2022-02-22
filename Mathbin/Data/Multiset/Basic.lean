@@ -29,7 +29,7 @@ instance : Coe (List α) (Multiset α) :=
   ⟨Quot.mk _⟩
 
 @[simp]
-theorem quot_mk_to_coe (l : List α) : @Eq (Multiset α) (⟦l⟧) l :=
+theorem quot_mk_to_coe (l : List α) : @Eq (Multiset α) ⟦l⟧ l :=
   rfl
 
 @[simp]
@@ -89,6 +89,7 @@ theorem coe_eq_zero (l : List α) : (l : Multiset α) = 0 ↔ l = [] :=
 def cons (a : α) (s : Multiset α) : Multiset α :=
   Quot.liftOn s (fun l => (a :: l : Multiset α)) fun l₁ l₂ p => Quot.sound (p.cons a)
 
+-- mathport name: «expr ::ₘ »
 infixr:67 " ::ₘ " => Multiset.cons
 
 instance : HasInsert α (Multiset α) :=
@@ -140,12 +141,12 @@ overflow in `whnf`.
 protected def rec (C_0 : C 0) (C_cons : ∀ a m, C m → C (a ::ₘ m))
     (C_cons_heq : ∀ a a' m b, HEq (C_cons a (a' ::ₘ m) (C_cons a' m b)) (C_cons a' (a ::ₘ m) (C_cons a m b)))
     (m : Multiset α) : C m :=
-  (Quotientₓ.hrecOn m (@List.rec α (fun l => C (⟦l⟧)) C_0 fun a l b => C_cons a (⟦l⟧) b)) fun l l' h =>
+  (Quotientₓ.hrecOn m (@List.rec α (fun l => C ⟦l⟧) C_0 fun a l b => C_cons a ⟦l⟧ b)) fun l l' h =>
     h.rec_heq
       (fun a l l' b b' hl => by
         have : ⟦l⟧ = ⟦l'⟧ := Quot.sound hl
         cc)
-      fun a a' l => C_cons_heq a a' (⟦l⟧)
+      fun a a' l => C_cons_heq a a' ⟦l⟧
 
 /-- Companion to `multiset.rec` with more convenient argument order. -/
 @[elab_as_eliminator]
@@ -181,7 +182,7 @@ theorem mem_coe {a : α} {l : List α} : a ∈ (l : Multiset α) ↔ a ∈ l :=
   Iff.rfl
 
 instance decidableMem [DecidableEq α] (a : α) (s : Multiset α) : Decidable (a ∈ s) :=
-  Quot.recOnSubsingletonₓ s <| List.decidableMem a
+  Quot.recOnSubsingleton s <| List.decidableMem a
 
 @[simp]
 theorem mem_cons {a b : α} {s : Multiset α} : a ∈ b ::ₘ s ↔ a = b ∨ a ∈ s :=
@@ -379,7 +380,7 @@ alias subset_of_le ← Multiset.Le.subset
 theorem mem_of_le (h : s ≤ t) : a ∈ s → a ∈ t :=
   mem_of_subset (subset_of_le h)
 
-theorem not_mem_mono (h : s ⊆ t) : a ∉ t → a ∉ s :=
+theorem not_mem_mono (h : s ⊆ t) : (a ∉ t) → a ∉ s :=
   mt <| @h _
 
 @[simp]
@@ -777,7 +778,7 @@ theorem erase_cons_tail {a b : α} (s : Multiset α) (h : b ≠ a) : (b ::ₘ s)
   (Quot.induction_on s) fun l => congr_argₓ coe <| erase_cons_tailₓ l h
 
 @[simp]
-theorem erase_of_not_mem {a : α} {s : Multiset α} : a ∉ s → s.erase a = s :=
+theorem erase_of_not_mem {a : α} {s : Multiset α} : (a ∉ s) → s.erase a = s :=
   (Quot.induction_on s) fun l h => congr_argₓ coe <| erase_of_not_memₓ h
 
 @[simp]
@@ -795,7 +796,7 @@ theorem erase_add_left_pos {a : α} {s : Multiset α} t : a ∈ s → (s + t).er
 theorem erase_add_right_pos {a : α} s {t : Multiset α} (h : a ∈ t) : (s + t).erase a = s + t.erase a := by
   rw [add_commₓ, erase_add_left_pos s h, add_commₓ]
 
-theorem erase_add_right_neg {a : α} {s : Multiset α} t : a ∉ s → (s + t).erase a = s + t.erase a :=
+theorem erase_add_right_neg {a : α} {s : Multiset α} t : (a ∉ s) → (s + t).erase a = s + t.erase a :=
   (Quotientₓ.induction_on₂ s t) fun l₁ l₂ h => congr_argₓ coe <| erase_append_rightₓ l₂ h
 
 theorem erase_add_left_neg {a : α} s {t : Multiset α} (h : a ∉ t) : (s + t).erase a = s.erase a + t := by
@@ -1109,7 +1110,7 @@ theorem foldl_induction (f : α → α → α) (H : RightCommutative f) (x : α)
 /-- Lift of the list `pmap` operation. Map a partial function `f` over a multiset
   `s` whose elements are all in the domain of `f`. -/
 def pmap {p : α → Prop} (f : ∀ a, p a → β) (s : Multiset α) : (∀, ∀ a ∈ s, ∀, p a) → Multiset β :=
-  (Quot.recOnₓ s fun l H => ↑(pmap f l H)) fun pp : l₁ ~ l₂ =>
+  (Quot.recOn s fun l H => ↑(pmap f l H)) fun pp : l₁ ~ l₂ =>
     funext fun H₂ : ∀, ∀ a ∈ l₂, ∀, p a =>
       have H₁ : ∀, ∀ a ∈ l₁, ∀, p a := fun a h => H₂ a (pp.Subset h)
       have :
@@ -1351,7 +1352,7 @@ theorem cons_inter_of_pos {a} (s : Multiset α) {t} : a ∈ t → (a ::ₘ s) �
   (Quotientₓ.induction_on₂ s t) fun l₁ l₂ h => congr_argₓ coe <| cons_bag_inter_of_pos _ h
 
 @[simp]
-theorem cons_inter_of_neg {a} (s : Multiset α) {t} : a ∉ t → (a ::ₘ s) ∩ t = s ∩ t :=
+theorem cons_inter_of_neg {a} (s : Multiset α) {t} : (a ∉ t) → (a ::ₘ s) ∩ t = s ∩ t :=
   (Quotientₓ.induction_on₂ s t) fun l₁ l₂ h => congr_argₓ coe <| cons_bag_inter_of_neg _ h
 
 theorem inter_le_left (s t : Multiset α) : s ∩ t ≤ s :=
@@ -2303,12 +2304,12 @@ theorem disjoint_add_right {s t u : Multiset α} : Disjoint s (t + u) ↔ Disjoi
   rw [disjoint_comm, disjoint_add_left] <;> tauto
 
 @[simp]
-theorem disjoint_cons_left {a : α} {s t : Multiset α} : Disjoint (a ::ₘ s) t ↔ a ∉ t ∧ Disjoint s t :=
+theorem disjoint_cons_left {a : α} {s t : Multiset α} : Disjoint (a ::ₘ s) t ↔ (a ∉ t) ∧ Disjoint s t :=
   (@disjoint_add_left _ {a} s t).trans <| by
     rw [singleton_disjoint]
 
 @[simp]
-theorem disjoint_cons_right {a : α} {s t : Multiset α} : Disjoint s (a ::ₘ t) ↔ a ∉ s ∧ Disjoint s t := by
+theorem disjoint_cons_right {a : α} {s t : Multiset α} : Disjoint s (a ::ₘ t) ↔ (a ∉ s) ∧ Disjoint s t := by
   rw [disjoint_comm, disjoint_cons_left] <;> tauto
 
 theorem inter_eq_zero_iff_disjoint [DecidableEq α] {s t : Multiset α} : s ∩ t = 0 ↔ Disjoint s t := by

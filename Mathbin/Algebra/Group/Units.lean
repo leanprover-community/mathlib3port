@@ -41,6 +41,7 @@ structure Units (α : Type u) [Monoidₓ α] where
   val_inv : val * inv = 1
   inv_val : inv * val = 1
 
+-- mathport name: «expr ˣ»
 postfix:1024 "ˣ" => Units
 
 /-- Units of an `add_monoid`, bundled version.
@@ -277,6 +278,7 @@ variable [Monoidₓ α] {a b c : α}
 def divp (a : α) u : α :=
   a * (u⁻¹ : αˣ)
 
+-- mathport name: «expr /ₚ »
 infixl:70 " /ₚ " => divp
 
 @[simp]

@@ -19,6 +19,7 @@ open Set Metric TopologicalSpace
 
 open_locale Ennreal
 
+-- mathport name: «exprℓ_infty_ℝ»
 local notation "ℓ_infty_ℝ" => lp (fun n : ℕ => ℝ) ∞
 
 universe u v w

@@ -880,7 +880,7 @@ theorem is_O_with_self_const_mul' (u : Rˣ) (f : α → R) (l : Filter α) : IsO
 
 theorem is_O_with_self_const_mul (c : 𝕜) (hc : c ≠ 0) (f : α → 𝕜) (l : Filter α) :
     IsOWith ∥c∥⁻¹ f (fun x => c * f x) l :=
-  (is_O_with_self_const_mul' (Units.mk0 c hc) f l).congr_const <| NormedField.norm_inv c
+  (is_O_with_self_const_mul' (Units.mk0 c hc) f l).congr_const <| norm_inv c
 
 theorem is_O_self_const_mul' {c : R} (hc : IsUnit c) (f : α → R) (l : Filter α) : IsO f (fun x => c * f x) l :=
   let ⟨u, hu⟩ := hc
@@ -956,7 +956,7 @@ theorem IsOWith.mul {f₁ f₂ : α → R} {g₁ g₂ : α → 𝕜} {c₁ c₂ 
   filter_upwards [h₁, h₂] with _ hx₁ hx₂
   apply le_transₓ (norm_mul_le _ _)
   convert mul_le_mul hx₁ hx₂ (norm_nonneg _) (le_transₓ (norm_nonneg _) hx₁) using 1
-  rw [NormedField.norm_mul]
+  rw [norm_mul]
   ac_rfl
 
 theorem IsO.mul {f₁ f₂ : α → R} {g₁ g₂ : α → 𝕜} (h₁ : IsO f₁ g₁ l) (h₂ : IsO f₂ g₂ l) :
@@ -1023,7 +1023,7 @@ theorem IsOWith.inv_rev {f : α → 𝕜} {g : α → 𝕜'} (h : IsOWith c f g 
     exact hle.trans (mul_nonpos_of_nonpos_of_nonneg hc <| norm_nonneg _)
     
   · replace hle := inv_le_inv_of_le (norm_pos_iff.2 h₀) hle
-    simpa only [NormedField.norm_inv, mul_inv₀, ← div_eq_inv_mul, div_le_iff hc] using hle
+    simpa only [norm_inv, mul_inv₀, ← div_eq_inv_mul, div_le_iff hc] using hle
     
 
 theorem IsO.inv_rev {f : α → 𝕜} {g : α → 𝕜'} (h : IsO f g l) (h₀ : ∀ᶠ x in l, f x ≠ 0) :
@@ -1160,7 +1160,7 @@ theorem IsOₓ.tendsto_div_nhds_zero {f g : α → 𝕜} {l : Filter α} (h : Is
 
 theorem IsOₓ.tendsto_inv_smul_nhds_zero [NormedSpace 𝕜 E'] {f : α → E'} {g : α → 𝕜} {l : Filter α} (h : IsOₓ f g l) :
     Tendsto (fun x => (g x)⁻¹ • f x) l (𝓝 0) := by
-  simpa only [div_eq_inv_mul, ← NormedField.norm_inv, ← norm_smul, ← tendsto_zero_iff_norm_tendsto_zero] using
+  simpa only [div_eq_inv_mul, ← norm_inv, ← norm_smul, ← tendsto_zero_iff_norm_tendsto_zero] using
     h.norm_norm.tendsto_div_nhds_zero
 
 theorem is_o_iff_tendsto' {f g : α → 𝕜} {l : Filter α} (hgf : ∀ᶠ x in l, g x = 0 → f x = 0) :
@@ -1240,7 +1240,7 @@ variable {u v : α → 𝕜}
 theorem is_O_with_of_eq_mul (φ : α → 𝕜) (hφ : ∀ᶠ x in l, ∥φ x∥ ≤ c) (h : u =ᶠ[l] φ * v) : IsOWith c u v l := by
   unfold is_O_with
   refine' h.symm.rw (fun x a => ∥a∥ ≤ c * ∥v x∥) (hφ.mono fun x hx => _)
-  simp only [NormedField.norm_mul, Pi.mul_apply]
+  simp only [norm_mul, Pi.mul_apply]
   exact mul_le_mul_of_nonneg_right hx (norm_nonneg _)
 
 theorem is_O_with_iff_exists_eq_mul (hc : 0 ≤ c) :
@@ -1294,7 +1294,7 @@ theorem div_is_bounded_under_of_is_O {α : Type _} {l : Filter α} {f g : α →
     IsBoundedUnder (· ≤ ·) l fun x => ∥f x / g x∥ := by
   obtain ⟨c, hc⟩ := is_O_iff.mp h
   refine' ⟨max c 0, eventually_map.2 (Filter.mem_of_superset hc fun x hx => _)⟩
-  simp only [mem_set_of_eq, NormedField.norm_div] at hx⊢
+  simp only [mem_set_of_eq, norm_div] at hx⊢
   by_cases' hgx : g x = 0
   · rw [hgx, norm_zero, div_zero, le_max_iff]
     exact Or.inr le_rfl
@@ -1307,7 +1307,7 @@ theorem is_O_iff_div_is_bounded_under {α : Type _} {l : Filter α} {f g : α �
   refine' ⟨div_is_bounded_under_of_is_O, fun h => _⟩
   obtain ⟨c, hc⟩ := h
   rw [Filter.eventually_iff] at hgf hc
-  simp only [mem_set_of_eq, mem_map, NormedField.norm_div] at hc
+  simp only [mem_set_of_eq, mem_map, norm_div] at hc
   refine' is_O_iff.2 ⟨c, Filter.eventually_of_mem (inter_mem hgf hc) fun x hx => _⟩
   by_cases' hgx : g x = 0
   · simp [hx.1 hgx, hgx]

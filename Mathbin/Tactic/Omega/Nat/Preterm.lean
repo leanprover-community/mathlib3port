@@ -35,12 +35,16 @@ inductive Preterm : Type
   | sub : preterm → preterm → preterm
   deriving has_reflect, DecidableEq, Inhabited
 
+-- mathport name: «expr& »
 localized [Omega.Nat] notation "&" k => Omega.Nat.Preterm.cst k
 
+-- mathport name: «expr ** »
 localized [Omega.Nat] infixl:300 " ** " => Omega.Nat.Preterm.var
 
+-- mathport name: «expr +* »
 localized [Omega.Nat] notation t " +* " s => Omega.Nat.Preterm.add t s
 
+-- mathport name: «expr -* »
 localized [Omega.Nat] notation t " -* " s => Omega.Nat.Preterm.sub t s
 
 namespace Preterm

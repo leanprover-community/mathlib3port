@@ -535,11 +535,11 @@ def completionSeparationQuotientEquiv (α : Type u) [UniformSpace α] :
     
 
 theorem uniform_continuous_completion_separation_quotient_equiv :
-    UniformContinuous (⇑completionSeparationQuotientEquiv α) :=
+    UniformContinuous ⇑(completionSeparationQuotientEquiv α) :=
   uniform_continuous_extension
 
 theorem uniform_continuous_completion_separation_quotient_equiv_symm :
-    UniformContinuous (⇑(completionSeparationQuotientEquiv α).symm) :=
+    UniformContinuous ⇑(completionSeparationQuotientEquiv α).symm :=
   uniform_continuous_map
 
 end SeparationQuotientCompletion

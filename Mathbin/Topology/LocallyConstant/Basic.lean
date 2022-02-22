@@ -324,7 +324,7 @@ def map (f : Y → Z) : LocallyConstant X Y → LocallyConstant X Z := fun g =>
     apply g.is_locally_constant⟩
 
 @[simp]
-theorem map_apply (f : Y → Z) (g : LocallyConstant X Y) : ⇑map f g = f ∘ g :=
+theorem map_apply (f : Y → Z) (g : LocallyConstant X Y) : ⇑(map f g) = f ∘ g :=
   rfl
 
 @[simp]
@@ -396,7 +396,7 @@ noncomputable def comap (f : X → Y) : LocallyConstant Y Z → LocallyConstant 
       
 
 @[simp]
-theorem coe_comap (f : X → Y) (g : LocallyConstant Y Z) (hf : Continuous f) : ⇑comap f g = g ∘ f := by
+theorem coe_comap (f : X → Y) (g : LocallyConstant Y Z) (hf : Continuous f) : ⇑(comap f g) = g ∘ f := by
   rw [comap, dif_pos hf]
   rfl
 
@@ -440,7 +440,7 @@ def desc {X α β : Type _} [TopologicalSpace X] {g : α → β} (f : X → α) 
 
 @[simp]
 theorem coe_desc {X α β : Type _} [TopologicalSpace X] (f : X → α) (g : α → β) (h : LocallyConstant X β)
-    (cond : g ∘ f = h) (inj : Function.Injective g) : ⇑desc f h cond inj = f :=
+    (cond : g ∘ f = h) (inj : Function.Injective g) : ⇑(desc f h cond inj) = f :=
   rfl
 
 end Desc

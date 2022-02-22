@@ -581,9 +581,12 @@ theorem coe_to_nnreal_ae_eq {f : α → ℝ≥0∞} (hf : ∀ᵐ x ∂μ, f x < 
   intro x hx
   simp only [hx.ne, Ne.def, not_false_iff, coe_to_nnreal]
 
-theorem integrable_with_density_iff_integrable_smul {E : Type _} [NormedGroup E] [NormedSpace ℝ E]
-    [SecondCountableTopology E] [MeasurableSpace E] [BorelSpace E] {f : α → ℝ≥0 } (hf : Measurable f) {g : α → E} :
-    Integrable g (μ.withDensity fun x => (f x : ℝ≥0∞)) ↔ Integrable (fun x => (f x : ℝ) • g x) μ := by
+section
+
+variable {E : Type _} [NormedGroup E] [NormedSpace ℝ E] [SecondCountableTopology E] [MeasurableSpace E] [BorelSpace E]
+
+theorem integrable_with_density_iff_integrable_coe_smul {f : α → ℝ≥0 } (hf : Measurable f) {g : α → E} :
+    Integrable g (μ.withDensity fun x => f x) ↔ Integrable (fun x => (f x : ℝ) • g x) μ := by
   by_cases' H : AeMeasurable (fun x : α => (f x : ℝ) • g x) μ
   · simp only [integrable, ae_measurable_with_density_iff hf, has_finite_integral, H, true_andₓ]
     rw [lintegral_with_density_eq_lintegral_mul₀' hf.coe_nnreal_ennreal.ae_measurable]
@@ -600,15 +603,39 @@ theorem integrable_with_density_iff_integrable_smul {E : Type _} [NormedGroup E]
   · simp only [integrable, ae_measurable_with_density_iff hf, H, false_andₓ]
     
 
-theorem integrable_with_density_iff_integrable_smul' {E : Type _} [NormedGroup E] [NormedSpace ℝ E]
-    [SecondCountableTopology E] [MeasurableSpace E] [BorelSpace E] {f : α → ℝ≥0∞} (hf : Measurable f)
-    (hflt : ∀ᵐ x ∂μ, f x < ∞) {g : α → E} :
-    Integrable g (μ.withDensity f) ↔ Integrable (fun x => (f x).toReal • g x) μ := by
+theorem integrable_with_density_iff_integrable_smul {f : α → ℝ≥0 } (hf : Measurable f) {g : α → E} :
+    Integrable g (μ.withDensity fun x => f x) ↔ Integrable (fun x => f x • g x) μ :=
+  integrable_with_density_iff_integrable_coe_smul hf
+
+theorem integrable_with_density_iff_integrable_smul' {f : α → ℝ≥0∞} (hf : Measurable f) (hflt : ∀ᵐ x ∂μ, f x < ∞)
+    {g : α → E} : Integrable g (μ.withDensity f) ↔ Integrable (fun x => (f x).toReal • g x) μ := by
   rw [← with_density_congr_ae (coe_to_nnreal_ae_eq hflt), integrable_with_density_iff_integrable_smul]
   · rfl
     
   · exact hf.ennreal_to_nnreal
     
+
+theorem integrable_with_density_iff_integrable_coe_smul₀ {f : α → ℝ≥0 } (hf : AeMeasurable f μ) {g : α → E} :
+    Integrable g (μ.withDensity fun x => f x) ↔ Integrable (fun x => (f x : ℝ) • g x) μ :=
+  calc
+    Integrable g (μ.withDensity fun x => f x) ↔ Integrable g (μ.withDensity fun x => hf.mk f x) := by
+      suffices (fun x => (f x : ℝ≥0∞)) =ᵐ[μ] fun x => hf.mk f x by
+        rw [with_density_congr_ae this]
+      filter_upwards [hf.ae_eq_mk] with x hx
+      simp [hx]
+    _ ↔ Integrable (fun x => (hf.mk f x : ℝ) • g x) μ :=
+      integrable_with_density_iff_integrable_coe_smul hf.measurable_mk
+    _ ↔ Integrable (fun x => (f x : ℝ) • g x) μ := by
+      apply integrable_congr
+      filter_upwards [hf.ae_eq_mk] with x hx
+      simp [hx]
+    
+
+theorem integrable_with_density_iff_integrable_smul₀ {f : α → ℝ≥0 } (hf : AeMeasurable f μ) {g : α → E} :
+    Integrable g (μ.withDensity fun x => f x) ↔ Integrable (fun x => f x • g x) μ :=
+  integrable_with_density_iff_integrable_coe_smul₀ hf
+
+end
 
 theorem integrable_with_density_iff {f : α → ℝ≥0∞} (hf : Measurable f) (hflt : ∀ᵐ x ∂μ, f x < ∞) {g : α → ℝ} :
     Integrable g (μ.withDensity f) ↔ Integrable (fun x => g x * (f x).toReal) μ := by
@@ -616,6 +643,74 @@ theorem integrable_with_density_iff {f : α → ℝ≥0∞} (hf : Measurable f) 
     simp [mul_comm]
   rw [this]
   exact integrable_with_density_iff_integrable_smul' hf hflt
+
+section
+
+variable {E : Type _} [NormedGroup E] [NormedSpace ℝ E] [SecondCountableTopology E] [MeasurableSpace E] [BorelSpace E]
+
+theorem mem_ℒ1_smul_of_L1_with_density {f : α → ℝ≥0 } (f_meas : Measurable f)
+    (u : lp E 1 (μ.withDensity fun x => f x)) : Memℒp (fun x => f x • u x) 1 μ :=
+  mem_ℒp_one_iff_integrable.2 <|
+    (integrable_with_density_iff_integrable_smul f_meas).1 <| mem_ℒp_one_iff_integrable.1 (lp.mem_ℒp u)
+
+variable (μ)
+
+/-- The map `u ↦ f • u` is an isometry between the `L^1` spaces for `μ.with_density f` and `μ`. -/
+noncomputable def withDensitySmulLi {f : α → ℝ≥0 } (f_meas : Measurable f) :
+    lp E 1 (μ.withDensity fun x => f x) →ₗᵢ[ℝ] lp E 1 μ where
+  toFun := fun u => (mem_ℒ1_smul_of_L1_with_density f_meas u).toLp _
+  map_add' := by
+    intro u v
+    ext1
+    filter_upwards [(mem_ℒ1_smul_of_L1_with_density f_meas u).coe_fn_to_Lp,
+      (mem_ℒ1_smul_of_L1_with_density f_meas v).coe_fn_to_Lp,
+      (mem_ℒ1_smul_of_L1_with_density f_meas (u + v)).coe_fn_to_Lp,
+      Lp.coe_fn_add ((mem_ℒ1_smul_of_L1_with_density f_meas u).toLp _)
+        ((mem_ℒ1_smul_of_L1_with_density f_meas v).toLp _),
+      (ae_with_density_iff f_meas.coe_nnreal_ennreal).1 (Lp.coe_fn_add u v)]
+    intro x hu hv huv h' h''
+    rw [huv, h', Pi.add_apply, hu, hv]
+    rcases eq_or_ne (f x) 0 with (hx | hx)
+    · simp only [hx, zero_smul, add_zeroₓ]
+      
+    · rw [h'' _, Pi.add_apply, smul_add]
+      simpa only [Ne.def, Ennreal.coe_eq_zero] using hx
+      
+  map_smul' := by
+    intro r u
+    ext1
+    filter_upwards [(ae_with_density_iff f_meas.coe_nnreal_ennreal).1 (Lp.coe_fn_smul r u),
+      (mem_ℒ1_smul_of_L1_with_density f_meas (r • u)).coe_fn_to_Lp,
+      Lp.coe_fn_smul r ((mem_ℒ1_smul_of_L1_with_density f_meas u).toLp _),
+      (mem_ℒ1_smul_of_L1_with_density f_meas u).coe_fn_to_Lp]
+    intro x h h' h'' h'''
+    rw [RingHom.id_apply, h', h'', Pi.smul_apply, h''']
+    rcases eq_or_ne (f x) 0 with (hx | hx)
+    · simp only [hx, zero_smul, smul_zero]
+      
+    · rw [h _, smul_comm, Pi.smul_apply]
+      simpa only [Ne.def, Ennreal.coe_eq_zero] using hx
+      
+  norm_map' := by
+    intro u
+    simp only [snorm, LinearMap.coe_mk, Lp.norm_to_Lp, one_ne_zero, Ennreal.one_ne_top, Ennreal.one_to_real, if_false,
+      snorm', Ennreal.rpow_one, _root_.div_one, Lp.norm_def]
+    rw
+      [lintegral_with_density_eq_lintegral_mul_non_measurable _ f_meas.coe_nnreal_ennreal
+        (Filter.eventually_of_forall fun x => Ennreal.coe_lt_top)]
+    congr 1
+    apply lintegral_congr_ae
+    filter_upwards [(mem_ℒ1_smul_of_L1_with_density f_meas u).coe_fn_to_Lp] with x hx
+    rw [hx, Pi.mul_apply]
+    change ↑∥(f x : ℝ) • u x∥₊ = ↑(f x) * ↑∥u x∥₊
+    simp only [nnnorm_smul, Nnreal.nnnorm_eq, Ennreal.coe_mul]
+
+@[simp]
+theorem with_density_smul_li_apply {f : α → ℝ≥0 } (f_meas : Measurable f) (u : lp E 1 (μ.withDensity fun x => f x)) :
+    withDensitySmulLi μ f_meas u = (mem_ℒ1_smul_of_L1_with_density f_meas u).toLp fun x => f x • u x :=
+  rfl
+
+end
 
 theorem mem_ℒ1_to_real_of_lintegral_ne_top {f : α → ℝ≥0∞} (hfm : AeMeasurable f μ) (hfi : (∫⁻ x, f x ∂μ) ≠ ∞) :
     Memℒp (fun x => (f x).toReal) 1 μ := by
@@ -704,6 +799,7 @@ section InnerProduct
 variable {𝕜 E : Type _} [IsROrC 𝕜] [InnerProductSpace 𝕜 E] [MeasurableSpace E] [OpensMeasurableSpace E]
   [SecondCountableTopology E] {f : α → E}
 
+-- mathport name: «expr⟪ , ⟫»
 local notation "⟪" x ", " y "⟫" => @inner 𝕜 E _ x y
 
 theorem Integrable.const_inner (c : E) (hf : Integrable f μ) : Integrable (fun x => ⟪c, f x⟫) μ := by

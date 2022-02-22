@@ -173,6 +173,7 @@ theorem of_power_basis_eq_prod' [IsSeparable K L] (e : Finₓ pb.dim ≃ (L →�
   ext j
   ring
 
+-- mathport name: «exprn»
 local notation "n" => finrank K L
 
 /-- A variation of `of_power_basis_eq_prod`. -/
@@ -281,6 +282,7 @@ section Integral
 
 variable {R : Type z} [CommRingₓ R] [Algebra R K] [Algebra R L] [IsScalarTower R K L]
 
+-- mathport name: «expris_integral»
 local notation "is_integral" => IsIntegral
 
 /-- If `K` and `L` are fields and `is_scalar_tower R K L`, and `b : ι → L` satisfies

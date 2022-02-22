@@ -31,6 +31,7 @@ open Set
 abbrev UnitInterval : Set ℝ :=
   Set.Icc 0 1
 
+-- mathport name: «exprI»
 localized [UnitInterval] notation "I" => UnitInterval
 
 namespace UnitInterval
@@ -102,6 +103,7 @@ theorem mul_le_right {x y : I} : x * y ≤ y :=
 /-- Unit interval central symmetry. -/
 def symm : I → I := fun t => ⟨1 - t.val, mem_iff_one_sub_mem.mp t.property⟩
 
+-- mathport name: «exprσ»
 localized [UnitInterval] notation "σ" => UnitInterval.symm
 
 @[simp]

@@ -41,7 +41,7 @@ variable {R : Type _} {M : Type _} {ι : Type _}
 variable [Ringₓ R] [AddCommGroupₓ M] [Module R M]
 
 theorem linear_independent_single {φ : ι → Type _} {f : ∀ ι, φ ι → M} (hf : ∀ i, LinearIndependent R (f i)) :
-    LinearIndependent R fun ix : Σ i, φ i => single ix.1 (f ix.1 ix.2) := by
+    LinearIndependent R fun ix : Σi, φ i => single ix.1 (f ix.1 ix.2) := by
   apply @linear_independent_Union_finite R _ _ _ _ ι φ fun i x => single i (f i x)
   · intro i
     have h_disjoint : Disjoint (span R (range (f i))) (ker (lsingle i)) := by
@@ -67,7 +67,7 @@ theorem linear_independent_single {φ : ι → Type _} {f : ∀ ι, φ ι → M}
 open LinearMap Submodule
 
 /-- The basis on `ι →₀ M` with basis vectors `λ ⟨i, x⟩, single i (b i x)`. -/
-protected def basis {φ : ι → Type _} (b : ∀ i, Basis (φ i) R M) : Basis (Σ i, φ i) R (ι →₀ M) :=
+protected def basis {φ : ι → Type _} (b : ∀ i, Basis (φ i) R M) : Basis (Σi, φ i) R (ι →₀ M) :=
   Basis.of_repr
     { toFun := fun g =>
         { toFun := fun ix => (b ix.1).repr (g ix.1) ix.2,
@@ -105,7 +105,7 @@ theorem basis_repr {φ : ι → Type _} (b : ∀ i, Basis (φ i) R M) (g : ι �
 
 @[simp]
 theorem coe_basis {φ : ι → Type _} (b : ∀ i, Basis (φ i) R M) :
-    ⇑Finsupp.basis b = fun ix : Σ i, φ i => single ix.1 (b ix.1 ix.2) :=
+    ⇑(Finsupp.basis b) = fun ix : Σi, φ i => single ix.1 (b ix.1 ix.2) :=
   funext fun ⟨i, x⟩ =>
     Basis.apply_eq_iff.mpr <| by
       ext ⟨j, y⟩

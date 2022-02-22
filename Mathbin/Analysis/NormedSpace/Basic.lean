@@ -212,6 +212,10 @@ theorem norm_matrix_le_iff {n m : Type _} [Fintype n] [Fintype m] {r : ℝ} (hr 
     ∥A∥ ≤ r ↔ ∀ i j, ∥A i j∥ ≤ r := by
   simp [pi_norm_le_iff hr]
 
+theorem norm_matrix_lt_iff {n m : Type _} [Fintype n] [Fintype m] {r : ℝ} (hr : 0 < r) {A : Matrix n m α} :
+    ∥A∥ < r ↔ ∀ i j, ∥A i j∥ < r := by
+  simp [pi_norm_lt_iff hr]
+
 end SemiNormedRing
 
 section NormedRing
@@ -266,8 +270,6 @@ by the powers of any element, and thus to relate algebra and topology. -/
 class NondiscreteNormedField (α : Type _) extends NormedField α where
   non_trivial : ∃ x : α, 1 < ∥x∥
 
-namespace NormedField
-
 section NormedField
 
 variable [NormedField α]
@@ -277,12 +279,14 @@ theorem norm_mul (a b : α) : ∥a * b∥ = ∥a∥ * ∥b∥ :=
   NormedField.norm_mul' a b
 
 -- see Note [lower instance priority]
-instance (priority := 100) toNormedCommRing : NormedCommRing α :=
+instance (priority := 100) NormedField.toNormedCommRing : NormedCommRing α :=
   { ‹NormedField α› with norm_mul := fun a b => (norm_mul a b).le }
 
-instance (priority := 900) to_norm_one_class : NormOneClass α :=
+instance (priority := 900) NormedField.to_norm_one_class : NormOneClass α :=
   ⟨mul_left_cancel₀ (mt norm_eq_zero.1 (@one_ne_zero α _ _)) <| by
       rw [← norm_mul, mul_oneₓ, mul_oneₓ]⟩
+
+export NormOneClass (norm_one)
 
 @[simp]
 theorem nnnorm_mul (a b : α) : ∥a * b∥₊ = ∥a∥₊ * ∥b∥₊ :=
@@ -340,7 +344,7 @@ theorem nnnorm_zpow : ∀ a : α n : ℤ, ∥a ^ n∥₊ = ∥a∥₊ ^ n :=
   (nnnormHom : α →*₀ ℝ≥0 ).map_zpow
 
 -- see Note [lower instance priority]
-instance (priority := 100) : HasContinuousInv₀ α := by
+instance (priority := 100) NormedField.hasContinuousInv₀ : HasContinuousInv₀ α := by
   refine' ⟨fun r r0 => tendsto_iff_norm_tendsto_zero.2 _⟩
   have r0' : 0 < ∥r∥ := norm_pos_iff.2 r0
   rcases exists_between r0' with ⟨ε, ε0, εr⟩
@@ -355,6 +359,8 @@ instance (priority := 100) : HasContinuousInv₀ α := by
   simp
 
 end NormedField
+
+namespace NormedField
 
 variable (α) [NondiscreteNormedField α]
 
@@ -391,7 +397,7 @@ variable {α}
 theorem punctured_nhds_ne_bot (x : α) : NeBot (𝓝[≠] x) := by
   rw [← mem_closure_iff_nhds_within_ne_bot, Metric.mem_closure_iff]
   rintro ε ε0
-  rcases NormedField.exists_norm_lt α ε0 with ⟨b, hb0, hbε⟩
+  rcases exists_norm_lt α ε0 with ⟨b, hb0, hbε⟩
   refine' ⟨x + b, mt (set.mem_singleton_iff.trans add_right_eq_selfₓ).1 <| norm_pos_iff.1 hb0, _⟩
   rwa [dist_comm, dist_eq_norm, add_sub_cancel']
 
@@ -611,7 +617,7 @@ instance (priority := 100) NormedSpace.has_bounded_smul [NormedSpace α β] : Ha
     simpa [dist_eq_norm, sub_smul] using NormedSpace.norm_smul_le (x₁ - x₂) y
 
 instance NormedField.toNormedSpace : NormedSpace α α where
-  norm_smul_le := fun a b => le_of_eqₓ (NormedField.norm_mul a b)
+  norm_smul_le := fun a b => le_of_eqₓ (norm_mul a b)
 
 theorem norm_smul [NormedSpace α β] (s : α) (x : β) : ∥s • x∥ = ∥s∥ * ∥x∥ := by
   by_cases' h : s = 0
@@ -621,7 +627,7 @@ theorem norm_smul [NormedSpace α β] (s : α) (x : β) : ∥s • x∥ = ∥s�
     calc ∥s∥ * ∥x∥ = ∥s∥ * ∥s⁻¹ • s • x∥ := by
         rw [inv_smul_smul₀ h]_ ≤ ∥s∥ * (∥s⁻¹∥ * ∥s • x∥) :=
         mul_le_mul_of_nonneg_left (NormedSpace.norm_smul_le _ _) (norm_nonneg _)_ = ∥s • x∥ := by
-        rw [NormedField.norm_inv, ← mul_assoc, mul_inv_cancel (mt norm_eq_zero.1 h), one_mulₓ]
+        rw [norm_inv, ← mul_assoc, mul_inv_cancel (mt norm_eq_zero.1 h), one_mulₓ]
     
 
 @[simp]
@@ -856,6 +862,10 @@ matrix. -/
 def Matrix.normedSpace {α : Type _} [NormedField α] {n m : Type _} [Fintype n] [Fintype m] :
     NormedSpace α (Matrix n m α) :=
   Pi.normedSpace
+
+theorem Matrix.norm_entry_le_entrywise_sup_norm {α : Type _} [NormedField α] {n m : Type _} [Fintype n] [Fintype m]
+    (M : Matrix n m α) {i : n} {j : m} : ∥M i j∥ ≤ ∥M∥ :=
+  (norm_le_pi_norm (M i) j).trans (norm_le_pi_norm M i)
 
 end
 

@@ -234,7 +234,7 @@ protected def cofinite [DecidableEq α] : (@cofinite α).Realizer :=
 
 /-- Construct a realizer for filter bind -/
 protected def bind {f : Filter α} {m : α → Filter β} (F : f.Realizer) (G : ∀ i, (m i).Realizer) : (f.bind m).Realizer :=
-  ⟨Σ s : F.σ, ∀, ∀ i ∈ F.f s, ∀, (G i).σ,
+  ⟨Σs : F.σ, ∀, ∀ i ∈ F.f s, ∀, (G i).σ,
     { f := fun ⟨s, f⟩ => ⋃ i ∈ F.f s, (G i).f (f i H), pt := ⟨F.f.pt, fun i H => (G i).f.pt⟩,
       inf := fun ⟨a, f⟩ ⟨b, f'⟩ =>
         ⟨F.f.inf a b, fun i h => (G i).f.inf (f i (F.f.inf_le_left _ _ h)) (f' i (F.f.inf_le_right _ _ h))⟩,
@@ -265,7 +265,7 @@ protected def supₓ {f : α → Filter β} (F : ∀ i, (f i).Realizer) : (⨆ i
         Set.ext <| by
           simp [Filter.bind, eq_univ_iff_forall, supr_sets_eq]
   F'.ofEquiv <|
-    show (Σ u : Unit, ∀ i : α, True → (F i).σ) ≃ ∀ i, (F i).σ from
+    show (Σu : Unit, ∀ i : α, True → (F i).σ) ≃ ∀ i, (F i).σ from
       ⟨fun i => f i ⟨⟩, fun f => ⟨(), fun i _ => f i⟩, fun ⟨⟨⟩, f⟩ => by
         dsimp <;> congr <;> simp , fun f => rfl⟩
 

@@ -474,7 +474,7 @@ variable [NormedGroup E] [MeasurableSpace E] [SecondCountableTopology E] [BorelS
 /-- For `f : Lp E p μ`, we can define an element of `Lp E p (μ.restrict s)` by
 `(Lp.mem_ℒp f).restrict s).to_Lp f`. This map is additive. -/
 theorem Lp_to_Lp_restrict_add (f g : lp E p μ) (s : Set α) :
-    ((lp.mem_ℒp (f + g)).restrict s).toLp (⇑(f + g)) =
+    ((lp.mem_ℒp (f + g)).restrict s).toLp ⇑(f + g) =
       ((lp.mem_ℒp f).restrict s).toLp f + ((lp.mem_ℒp g).restrict s).toLp g :=
   by
   ext1
@@ -488,7 +488,7 @@ theorem Lp_to_Lp_restrict_add (f g : lp E p μ) (s : Set α) :
 /-- For `f : Lp E p μ`, we can define an element of `Lp E p (μ.restrict s)` by
 `(Lp.mem_ℒp f).restrict s).to_Lp f`. This map commutes with scalar multiplication. -/
 theorem Lp_to_Lp_restrict_smul (c : 𝕜) (f : lp F p μ) (s : Set α) :
-    ((lp.mem_ℒp (c • f)).restrict s).toLp (⇑(c • f)) = c • ((lp.mem_ℒp f).restrict s).toLp f := by
+    ((lp.mem_ℒp (c • f)).restrict s).toLp ⇑(c • f) = c • ((lp.mem_ℒp f).restrict s).toLp f := by
   ext1
   refine' (ae_restrict_of_ae (Lp.coe_fn_smul c f)).mp _
   refine' (mem_ℒp.coe_fn_to_Lp ((Lp.mem_ℒp f).restrict s)).mp _
@@ -813,6 +813,7 @@ section Inner
 variable {E' : Type _} [InnerProductSpace 𝕜 E'] [MeasurableSpace E'] [BorelSpace E'] [SecondCountableTopology E']
   [CompleteSpace E'] [NormedSpace ℝ E']
 
+-- mathport name: «expr⟪ , ⟫»
 local notation "⟪" x ", " y "⟫" => @inner 𝕜 E' _ x y
 
 theorem integral_inner {f : α → E'} (hf : Integrable f μ) (c : E') : (∫ x, ⟪c, f x⟫ ∂μ) = ⟪c, ∫ x, f x ∂μ⟫ :=
@@ -824,6 +825,84 @@ theorem integral_eq_zero_of_forall_integral_inner_eq_zero (f : α → E') (hf : 
   rwa [integral_inner hf, inner_self_eq_zero] at hf_int
 
 end Inner
+
+theorem integral_with_density_eq_integral_smul {f : α → ℝ≥0 } (f_meas : Measurable f) (g : α → E) :
+    (∫ a, g a ∂μ.withDensity fun x => f x) = ∫ a, f a • g a ∂μ := by
+  by_cases' hg : integrable g (μ.with_density fun x => f x)
+  swap
+  · rw [integral_undef hg, integral_undef]
+    rwa [← integrable_with_density_iff_integrable_smul f_meas] <;> infer_instance
+    
+  refine' integrable.induction _ _ _ _ _ hg
+  · intro c s s_meas hs
+    rw [integral_indicator s_meas]
+    simp_rw [← indicator_smul_apply, integral_indicator s_meas]
+    simp only [s_meas, integral_const, measure.restrict_apply', univ_inter, with_density_apply]
+    rw [lintegral_coe_eq_integral, Ennreal.to_real_of_real, ← integral_smul_const]
+    · rfl
+      
+    · exact integral_nonneg fun x => Nnreal.coe_nonneg _
+      
+    · refine' ⟨f_meas.coe_nnreal_real.AeMeasurable, _⟩
+      rw [with_density_apply _ s_meas] at hs
+      rw [has_finite_integral]
+      convert hs
+      ext1 x
+      simp only [Nnreal.nnnorm_eq]
+      
+    
+  · intro u u' h_disj u_int u'_int h h'
+    change (∫ a : α, u a + u' a ∂μ.with_density fun x : α => ↑(f x)) = ∫ a : α, f a • (u a + u' a) ∂μ
+    simp_rw [smul_add]
+    rw [integral_add u_int u'_int, h, h', integral_add]
+    · exact (integrable_with_density_iff_integrable_smul f_meas).1 u_int
+      
+    · exact (integrable_with_density_iff_integrable_smul f_meas).1 u'_int
+      
+    
+  · have C1 : Continuous fun u : Lp E 1 (μ.with_density fun x => f x) => ∫ x, u x ∂μ.with_density fun x => f x :=
+      continuous_integral
+    have C2 : Continuous fun u : Lp E 1 (μ.with_density fun x => f x) => ∫ x, f x • u x ∂μ := by
+      have : Continuous ((fun u : Lp E 1 μ => ∫ x, u x ∂μ) ∘ with_density_smul_li μ f_meas) :=
+        continuous_integral.comp (with_density_smul_li μ f_meas).Continuous
+      convert this
+      ext1 u
+      simp only [Function.comp_app, with_density_smul_li_apply]
+      exact integral_congr_ae (mem_ℒ1_smul_of_L1_with_density f_meas u).coe_fn_to_Lp.symm
+    exact is_closed_eq C1 C2
+    
+  · intro u v huv u_int hu
+    rw [← integral_congr_ae huv, hu]
+    apply integral_congr_ae
+    filter_upwards [(ae_with_density_iff f_meas.coe_nnreal_ennreal).1 huv] with x hx
+    rcases eq_or_ne (f x) 0 with (h'x | h'x)
+    · simp only [h'x, zero_smul]
+      
+    · rw [hx _]
+      simpa only [Ne.def, Ennreal.coe_eq_zero] using h'x
+      
+    
+
+theorem integral_with_density_eq_integral_smul₀ {f : α → ℝ≥0 } (hf : AeMeasurable f μ) (g : α → E) :
+    (∫ a, g a ∂μ.withDensity fun x => f x) = ∫ a, f a • g a ∂μ := by
+  let f' := hf.mk _
+  calc (∫ a, g a ∂μ.with_density fun x => f x) = ∫ a, g a ∂μ.with_density fun x => f' x := by
+      congr 1
+      apply with_density_congr_ae
+      filter_upwards [hf.ae_eq_mk] with x hx
+      rw [hx]_ = ∫ a, f' a • g a ∂μ :=
+      integral_with_density_eq_integral_smul hf.measurable_mk _ _ = ∫ a, f a • g a ∂μ := by
+      apply integral_congr_ae
+      filter_upwards [hf.ae_eq_mk] with x hx
+      rw [hx]
+
+theorem set_integral_with_density_eq_set_integral_smul {f : α → ℝ≥0 } (f_meas : Measurable f) (g : α → E) {s : Set α}
+    (hs : MeasurableSet s) : (∫ a in s, g a ∂μ.withDensity fun x => f x) = ∫ a in s, f a • g a ∂μ := by
+  rw [restrict_with_density hs, integral_with_density_eq_integral_smul f_meas]
+
+theorem set_integral_with_density_eq_set_integral_smul₀ {f : α → ℝ≥0 } {s : Set α} (hf : AeMeasurable f (μ.restrict s))
+    (g : α → E) (hs : MeasurableSet s) : (∫ a in s, g a ∂μ.withDensity fun x => f x) = ∫ a in s, f a • g a ∂μ := by
+  rw [restrict_with_density hs, integral_with_density_eq_integral_smul₀ hf]
 
 end
 

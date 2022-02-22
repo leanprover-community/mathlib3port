@@ -69,7 +69,7 @@ theorem squarefree_of_dvd_of_squarefree [CommMonoidₓ R] {x y : R} (hdvd : x �
 
 namespace multiplicity
 
-variable [CommMonoidₓ R] [DecidableRel (HasDvd.Dvd : R → R → Prop)]
+variable [CommMonoidₓ R] [DecidableRel (Dvd.Dvd : R → R → Prop)]
 
 theorem squarefree_iff_multiplicity_le_one (r : R) : Squarefree r ↔ ∀ x : R, multiplicity x r ≤ 1 ∨ IsUnit x := by
   refine' forall_congrₓ fun a => _
@@ -132,7 +132,7 @@ variable [NormalizationMonoid R]
 
 theorem squarefree_iff_nodup_normalized_factors [DecidableEq R] {x : R} (x0 : x ≠ 0) :
     Squarefree x ↔ Multiset.Nodup (normalizedFactors x) := by
-  have drel : DecidableRel (HasDvd.Dvd : R → R → Prop) := by
+  have drel : DecidableRel (Dvd.Dvd : R → R → Prop) := by
     classical
     infer_instance
   have := drel

@@ -32,6 +32,7 @@ To get a C⋆-algebra `E` over field `𝕜`, use
 
 open_locale TopologicalSpace
 
+-- mathport name: «expr ⋆»
 local postfix:max "⋆" => star
 
 /-- A normed star ring is a star ring endowed with a norm such that `star` is isometric. -/
@@ -49,7 +50,7 @@ class CstarRing (E : Type _) [NormedRing E] [StarRing E] where
 
 noncomputable instance : CstarRing ℝ where
   norm_star_mul_self := fun x => by
-    simp only [star, id.def, NormedField.norm_mul]
+    simp only [star, id.def, norm_mul]
 
 variable {𝕜 E α : Type _}
 

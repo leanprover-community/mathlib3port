@@ -789,7 +789,7 @@ protected def pi : LocalEquiv (∀ i, αi i) (∀ i, βi i) where
 attribute [mfld_simps] pi_source pi_target
 
 @[simp, mfld_simps]
-theorem pi_coe : ⇑LocalEquiv.pi ei = fun i => ei i (f i) :=
+theorem pi_coe : ⇑(LocalEquiv.pi ei) = fun i => ei i (f i) :=
   rfl
 
 @[simp, mfld_simps]

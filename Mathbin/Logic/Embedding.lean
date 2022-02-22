@@ -25,6 +25,7 @@ structure Embedding (α : Sort _) (β : Sort _) where
   toFun : α → β
   inj' : Injective to_fun
 
+-- mathport name: «expr ↪ »
 infixr:25 " ↪ " => Embedding
 
 instance {α : Sort u} {β : Sort v} : CoeFun (α ↪ β) fun _ => α → β :=
@@ -210,7 +211,7 @@ def subtype {α} (p : α → Prop) : Subtype p ↪ α :=
   ⟨coe, fun _ _ => Subtype.ext_val⟩
 
 @[simp]
-theorem coe_subtype {α} (p : α → Prop) : ⇑subtype p = coe :=
+theorem coe_subtype {α} (p : α → Prop) : ⇑(subtype p) = coe :=
   rfl
 
 /-- Choosing an element `b : β` gives an embedding of `punit` into `β`. -/
@@ -240,7 +241,7 @@ def prodMap {α β γ δ : Type _} (e₁ : α ↪ β) (e₂ : γ ↪ δ) : α ×
   ⟨Prod.map e₁ e₂, e₁.Injective.prod_map e₂.Injective⟩
 
 @[simp]
-theorem coe_prod_map {α β γ δ : Type _} (e₁ : α ↪ β) (e₂ : γ ↪ δ) : ⇑e₁.prod_map e₂ = Prod.map e₁ e₂ :=
+theorem coe_prod_map {α β γ δ : Type _} (e₁ : α ↪ β) (e₂ : γ ↪ δ) : ⇑(e₁.prod_map e₂) = Prod.map e₁ e₂ :=
   rfl
 
 /-- If `e₁` and `e₂` are embeddings, then so is `λ ⟨a, b⟩, ⟨e₁ a, e₂ b⟩ : pprod α γ → pprod β δ`. -/
@@ -259,7 +260,7 @@ def sumMap {α β γ δ : Type _} (e₁ : α ↪ β) (e₂ : γ ↪ δ) : Sum α
     | inr b₁, inr b₂, h => congr_argₓ inr <| e₂.Injective <| inr.injₓ h⟩
 
 @[simp]
-theorem coe_sum_map {α β γ δ} (e₁ : α ↪ β) (e₂ : γ ↪ δ) : ⇑sumMap e₁ e₂ = Sum.map e₁ e₂ :=
+theorem coe_sum_map {α β γ δ} (e₁ : α ↪ β) (e₂ : γ ↪ δ) : ⇑(sumMap e₁ e₂) = Sum.map e₁ e₂ :=
   rfl
 
 /-- The embedding of `α` into the sum `α ⊕ β`. -/
@@ -280,13 +281,13 @@ variable {α α' : Type _} {β : α → Type _} {β' : α' → Type _}
 
 /-- `sigma.mk` as an `function.embedding`. -/
 @[simps apply]
-def sigmaMk (a : α) : β a ↪ Σ x, β x :=
+def sigmaMk (a : α) : β a ↪ Σx, β x :=
   ⟨Sigma.mk a, sigma_mk_injective⟩
 
 /-- If `f : α ↪ α'` is an embedding and `g : Π a, β α ↪ β' (f α)` is a family
 of embeddings, then `sigma.map f g` is an embedding. -/
 @[simps apply]
-def sigmaMap (f : α ↪ α') (g : ∀ a, β a ↪ β' (f a)) : (Σ a, β a) ↪ Σ a', β' a' :=
+def sigmaMap (f : α ↪ α') (g : ∀ a, β a ↪ β' (f a)) : (Σa, β a) ↪ Σa', β' a' :=
   ⟨Sigma.map f fun a => g a, f.Injective.sigma_map fun a => (g a).Injective⟩
 
 end Sigma

@@ -25,6 +25,7 @@ Nevertheless, the abelian group structure on games allows us to simplify many pr
 
 universe u
 
+-- mathport name: «expr ≈ »
 local infixl:0 " ≈ " => Pgame.Equiv
 
 instance Pgame.setoid : Setoidₓ Pgame :=

@@ -653,16 +653,14 @@ structure MkStruct where
 
 variable {V}
 
--- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (X₀ X₁ X₂)
 /-- Flatten to a tuple. -/
-def MkStruct.flat (t : MkStruct V) : Σ' (X₀ : V) (X₁ : V) (X₂ : V) (d₀ : X₁ ⟶ X₀) (d₁ : X₂ ⟶ X₁), d₁ ≫ d₀ = 0 :=
+def MkStruct.flat (t : MkStruct V) : Σ'(X₀ X₁ X₂ : V)(d₀ : X₁ ⟶ X₀)(d₁ : X₂ ⟶ X₁), d₁ ≫ d₀ = 0 :=
   ⟨t.x₀, t.x₁, t.x₂, t.d₀, t.d₁, t.s⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (X₀ X₁ X₂)
 variable (X₀ X₁ X₂ : V) (d₀ : X₁ ⟶ X₀) (d₁ : X₂ ⟶ X₁) (s : d₁ ≫ d₀ = 0)
   (succ :
-    ∀ t : Σ' (X₀ : V) (X₁ : V) (X₂ : V) (d₀ : X₁ ⟶ X₀) (d₁ : X₂ ⟶ X₁), d₁ ≫ d₀ = 0,
-      Σ' (X₃ : V) (d₂ : X₃ ⟶ t.2.2.1), d₂ ≫ t.2.2.2.2.1 = 0)
+    ∀ t : Σ'(X₀ X₁ X₂ : V)(d₀ : X₁ ⟶ X₀)(d₁ : X₂ ⟶ X₁), d₁ ≫ d₀ = 0,
+      Σ'(X₃ : V)(d₂ : X₃ ⟶ t.2.2.1), d₂ ≫ t.2.2.2.2.1 = 0)
 
 /-- Auxiliary definition for `mk`. -/
 def mkAuxₓ : ∀ n : ℕ, MkStruct V
@@ -705,7 +703,6 @@ theorem mk_d_2_0 : (mk X₀ X₁ X₂ d₀ d₁ s succ).d 2 1 = d₁ := by
   change ite (2 = 1 + 1) (𝟙 X₂ ≫ d₁) 0 = d₁
   rw [if_pos rfl, category.id_comp]
 
--- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (X₀ X₁)
 /-- A simpler inductive constructor for `ℕ`-indexed chain complexes.
 
 You provide explicitly the first differential,
@@ -713,13 +710,12 @@ then a function which takes a differential,
 and returns the next object, its differential, and the fact it composes appropriately to zero.
 -/
 -- TODO simp lemmas for the inductive steps? It's not entirely clear that they are needed.
-def mk' (X₀ X₁ : V) (d : X₁ ⟶ X₀)
-    (succ' : ∀ t : Σ (X₀ : V) (X₁ : V), X₁ ⟶ X₀, Σ' (X₂ : V) (d : X₂ ⟶ t.2.1), d ≫ t.2.2 = 0) : ChainComplex V ℕ :=
+def mk' (X₀ X₁ : V) (d : X₁ ⟶ X₀) (succ' : ∀ t : ΣX₀ X₁ : V, X₁ ⟶ X₀, Σ'(X₂ : V)(d : X₂ ⟶ t.2.1), d ≫ t.2.2 = 0) :
+    ChainComplex V ℕ :=
   mk X₀ X₁ (succ' ⟨X₀, X₁, d⟩).1 d (succ' ⟨X₀, X₁, d⟩).2.1 (succ' ⟨X₀, X₁, d⟩).2.2 fun t =>
     succ' ⟨t.2.1, t.2.2.1, t.2.2.2.2.1⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (X₀ X₁)
-variable (succ' : ∀ t : Σ (X₀ : V) (X₁ : V), X₁ ⟶ X₀, Σ' (X₂ : V) (d : X₂ ⟶ t.2.1), d ≫ t.2.2 = 0)
+variable (succ' : ∀ t : ΣX₀ X₁ : V, X₁ ⟶ X₀, Σ'(X₂ : V)(d : X₂ ⟶ t.2.1), d ≫ t.2.2 = 0)
 
 @[simp]
 theorem mk'_X_0 : (mk' X₀ X₁ d₀ succ').x 0 = X₀ :=
@@ -742,8 +738,8 @@ section MkHom
 variable {V} (P Q : ChainComplex V ℕ) (zero : P.x 0 ⟶ Q.x 0) (one : P.x 1 ⟶ Q.x 1)
   (one_zero_comm : one ≫ Q.d 1 0 = P.d 1 0 ≫ zero)
   (succ :
-    ∀ n : ℕ p : Σ' (f : P.x n ⟶ Q.x n) (f' : P.x (n + 1) ⟶ Q.x (n + 1)), f' ≫ Q.d (n + 1) n = P.d (n + 1) n ≫ f,
-      Σ' f'' : P.x (n + 2) ⟶ Q.x (n + 2), f'' ≫ Q.d (n + 2) (n + 1) = P.d (n + 2) (n + 1) ≫ p.2.1)
+    ∀ n : ℕ p : Σ'(f : P.x n ⟶ Q.x n)(f' : P.x (n + 1) ⟶ Q.x (n + 1)), f' ≫ Q.d (n + 1) n = P.d (n + 1) n ≫ f,
+      Σ'f'' : P.x (n + 2) ⟶ Q.x (n + 2), f'' ≫ Q.d (n + 2) (n + 1) = P.d (n + 2) (n + 1) ≫ p.2.1)
 
 /-- An auxiliary construction for `mk_hom`.
 
@@ -752,7 +748,7 @@ but don't require at the type level that these successive commutative squares ac
 They do in fact agree, and we then capture that at the type level (i.e. by constructing a chain map)
 in `mk_hom`.
 -/
-def mkHomAuxₓ : ∀ n, Σ' (f : P.x n ⟶ Q.x n) (f' : P.x (n + 1) ⟶ Q.x (n + 1)), f' ≫ Q.d (n + 1) n = P.d (n + 1) n ≫ f
+def mkHomAuxₓ : ∀ n, Σ'(f : P.x n ⟶ Q.x n)(f' : P.x (n + 1) ⟶ Q.x (n + 1)), f' ≫ Q.d (n + 1) n = P.d (n + 1) n ≫ f
   | 0 => ⟨zero, one, one_zero_comm⟩
   | n + 1 => ⟨(mk_hom_aux n).2.1, (succ n (mk_hom_aux n)).1, (succ n (mk_hom_aux n)).2⟩
 
@@ -877,16 +873,14 @@ structure MkStruct where
 
 variable {V}
 
--- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (X₀ X₁ X₂)
 /-- Flatten to a tuple. -/
-def MkStruct.flat (t : MkStruct V) : Σ' (X₀ : V) (X₁ : V) (X₂ : V) (d₀ : X₀ ⟶ X₁) (d₁ : X₁ ⟶ X₂), d₀ ≫ d₁ = 0 :=
+def MkStruct.flat (t : MkStruct V) : Σ'(X₀ X₁ X₂ : V)(d₀ : X₀ ⟶ X₁)(d₁ : X₁ ⟶ X₂), d₀ ≫ d₁ = 0 :=
   ⟨t.x₀, t.x₁, t.x₂, t.d₀, t.d₁, t.s⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (X₀ X₁ X₂)
 variable (X₀ X₁ X₂ : V) (d₀ : X₀ ⟶ X₁) (d₁ : X₁ ⟶ X₂) (s : d₀ ≫ d₁ = 0)
   (succ :
-    ∀ t : Σ' (X₀ : V) (X₁ : V) (X₂ : V) (d₀ : X₀ ⟶ X₁) (d₁ : X₁ ⟶ X₂), d₀ ≫ d₁ = 0,
-      Σ' (X₃ : V) (d₂ : t.2.2.1 ⟶ X₃), t.2.2.2.2.1 ≫ d₂ = 0)
+    ∀ t : Σ'(X₀ X₁ X₂ : V)(d₀ : X₀ ⟶ X₁)(d₁ : X₁ ⟶ X₂), d₀ ≫ d₁ = 0,
+      Σ'(X₃ : V)(d₂ : t.2.2.1 ⟶ X₃), t.2.2.2.2.1 ≫ d₂ = 0)
 
 /-- Auxiliary definition for `mk`. -/
 def mkAuxₓ : ∀ n : ℕ, MkStruct V
@@ -929,7 +923,6 @@ theorem mk_d_2_0 : (mk X₀ X₁ X₂ d₀ d₁ s succ).d 1 2 = d₁ := by
   change ite (2 = 1 + 1) (d₁ ≫ 𝟙 X₂) 0 = d₁
   rw [if_pos rfl, category.comp_id]
 
--- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (X₀ X₁)
 /-- A simpler inductive constructor for `ℕ`-indexed cochain complexes.
 
 You provide explicitly the first differential,
@@ -937,13 +930,12 @@ then a function which takes a differential,
 and returns the next object, its differential, and the fact it composes appropriately to zero.
 -/
 -- TODO simp lemmas for the inductive steps? It's not entirely clear that they are needed.
-def mk' (X₀ X₁ : V) (d : X₀ ⟶ X₁)
-    (succ' : ∀ t : Σ (X₀ : V) (X₁ : V), X₀ ⟶ X₁, Σ' (X₂ : V) (d : t.2.1 ⟶ X₂), t.2.2 ≫ d = 0) : CochainComplex V ℕ :=
+def mk' (X₀ X₁ : V) (d : X₀ ⟶ X₁) (succ' : ∀ t : ΣX₀ X₁ : V, X₀ ⟶ X₁, Σ'(X₂ : V)(d : t.2.1 ⟶ X₂), t.2.2 ≫ d = 0) :
+    CochainComplex V ℕ :=
   mk X₀ X₁ (succ' ⟨X₀, X₁, d⟩).1 d (succ' ⟨X₀, X₁, d⟩).2.1 (succ' ⟨X₀, X₁, d⟩).2.2 fun t =>
     succ' ⟨t.2.1, t.2.2.1, t.2.2.2.2.1⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (X₀ X₁)
-variable (succ' : ∀ t : Σ (X₀ : V) (X₁ : V), X₀ ⟶ X₁, Σ' (X₂ : V) (d : t.2.1 ⟶ X₂), t.2.2 ≫ d = 0)
+variable (succ' : ∀ t : ΣX₀ X₁ : V, X₀ ⟶ X₁, Σ'(X₂ : V)(d : t.2.1 ⟶ X₂), t.2.2 ≫ d = 0)
 
 @[simp]
 theorem mk'_X_0 : (mk' X₀ X₁ d₀ succ').x 0 = X₀ :=
@@ -966,8 +958,8 @@ section MkHom
 variable {V} (P Q : CochainComplex V ℕ) (zero : P.x 0 ⟶ Q.x 0) (one : P.x 1 ⟶ Q.x 1)
   (one_zero_comm : zero ≫ Q.d 0 1 = P.d 0 1 ≫ one)
   (succ :
-    ∀ n : ℕ p : Σ' (f : P.x n ⟶ Q.x n) (f' : P.x (n + 1) ⟶ Q.x (n + 1)), f ≫ Q.d n (n + 1) = P.d n (n + 1) ≫ f',
-      Σ' f'' : P.x (n + 2) ⟶ Q.x (n + 2), p.2.1 ≫ Q.d (n + 1) (n + 2) = P.d (n + 1) (n + 2) ≫ f'')
+    ∀ n : ℕ p : Σ'(f : P.x n ⟶ Q.x n)(f' : P.x (n + 1) ⟶ Q.x (n + 1)), f ≫ Q.d n (n + 1) = P.d n (n + 1) ≫ f',
+      Σ'f'' : P.x (n + 2) ⟶ Q.x (n + 2), p.2.1 ≫ Q.d (n + 1) (n + 2) = P.d (n + 1) (n + 2) ≫ f'')
 
 /-- An auxiliary construction for `mk_hom`.
 
@@ -976,7 +968,7 @@ but don't require at the type level that these successive commutative squares ac
 They do in fact agree, and we then capture that at the type level (i.e. by constructing a chain map)
 in `mk_hom`.
 -/
-def mkHomAuxₓ : ∀ n, Σ' (f : P.x n ⟶ Q.x n) (f' : P.x (n + 1) ⟶ Q.x (n + 1)), f ≫ Q.d n (n + 1) = P.d n (n + 1) ≫ f'
+def mkHomAuxₓ : ∀ n, Σ'(f : P.x n ⟶ Q.x n)(f' : P.x (n + 1) ⟶ Q.x (n + 1)), f ≫ Q.d n (n + 1) = P.d n (n + 1) ≫ f'
   | 0 => ⟨zero, one, one_zero_comm⟩
   | n + 1 => ⟨(mk_hom_aux n).2.1, (succ n (mk_hom_aux n)).1, (succ n (mk_hom_aux n)).2⟩
 

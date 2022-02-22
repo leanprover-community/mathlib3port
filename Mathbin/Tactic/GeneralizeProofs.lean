@@ -76,6 +76,7 @@ unsafe def generalize_proofs (ns : List Name) (loc : Interactive.Loc) : tactic U
   collect_proofs_in t [] (ns, hs)
   intron n <|> intros $> ()
 
+-- mathport name: «expr *»
 local postfix:1024 "*" => many
 
 namespace Interactive

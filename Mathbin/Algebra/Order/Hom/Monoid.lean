@@ -69,6 +69,7 @@ structure OrderAddMonoidHom (α β : Type _) [Preorderₓ α] [Preorderₓ β] [
   α →+ β where
   monotone' : Monotone to_fun
 
+-- mathport name: «expr →+o »
 infixr:25 " →+o " => OrderAddMonoidHom
 
 /-- `order_add_monoid_hom_class F α β` states that `F` is a type of ordered monoid homomorphisms.
@@ -98,6 +99,7 @@ structure OrderMonoidHom (α β : Type _) [Preorderₓ α] [Preorderₓ β] [Mul
   α →* β where
   monotone' : Monotone to_fun
 
+-- mathport name: «expr →*o »
 infixr:25 " →*o " => OrderMonoidHom
 
 /-- `order_monoid_hom_class F α β` states that `F` is a type of ordered monoid homomorphisms.
@@ -136,6 +138,7 @@ structure OrderMonoidWithZeroHom (α β : Type _) [Preorderₓ α] [Preorderₓ 
   [MulZeroOneClassₓ β] extends α →*₀ β where
   monotone' : Monotone to_fun
 
+-- mathport name: «expr →*₀o »
 infixr:25 " →*₀o " => OrderMonoidWithZeroHom
 
 /-- `order_monoid_with_zero_hom_class F α β` states that `F` is a type of
@@ -238,7 +241,7 @@ protected def id : α →*o α :=
   { MonoidHom.id α, OrderHom.id with }
 
 @[simp, to_additive]
-theorem coe_id : ⇑OrderMonoidHom.id α = id :=
+theorem coe_id : ⇑(OrderMonoidHom.id α) = id :=
   rfl
 
 @[to_additive]
@@ -451,7 +454,7 @@ protected def id : α →*₀o α :=
   { MonoidWithZeroHom.id α, OrderHom.id with }
 
 @[simp]
-theorem coe_id : ⇑OrderMonoidWithZeroHom.id α = id :=
+theorem coe_id : ⇑(OrderMonoidWithZeroHom.id α) = id :=
   rfl
 
 instance : Inhabited (α →*₀o α) :=

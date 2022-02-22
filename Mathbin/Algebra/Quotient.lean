@@ -54,5 +54,6 @@ to make Lean show the notation in the goal state.
 def HasQuotient.Quotient (A : outParam <| Type u) {B : Type v} [HasQuotient A B] (b : B) : Type max u v :=
   HasQuotient.Quotient' b
 
+-- mathport name: «expr ⧸ »
 notation:35 G " ⧸ " H:34 => HasQuotient.Quotient G H
 

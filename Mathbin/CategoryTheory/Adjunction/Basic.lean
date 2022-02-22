@@ -66,6 +66,7 @@ structure Adjunction (F : C ⥤ D) (G : D ⥤ C) where
     run_tac
       obviously
 
+-- mathport name: «expr ⊣ »
 infixl:15 " ⊣ " => Adjunction
 
 /-- A class giving a chosen right adjoint to the functor `left`. -/

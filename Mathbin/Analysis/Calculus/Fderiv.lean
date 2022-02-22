@@ -2260,7 +2260,7 @@ operation is the linear map `λ t, - x⁻¹ * t * x⁻¹`. -/
 theorem has_fderiv_at_ring_inverse (x : Rˣ) : HasFderivAt Ring.inverse (-lmulLeftRight 𝕜 R ↑x⁻¹ ↑x⁻¹) x := by
   have h_is_o : is_o (fun t : R => inverse (↑x + t) - ↑x⁻¹ + ↑x⁻¹ * t * ↑x⁻¹) (fun t : R => t) (𝓝 0) := by
     refine' (inverse_add_norm_diff_second_order x).trans_is_o (is_o_norm_norm.mp _)
-    simp only [NormedField.norm_pow, norm_norm]
+    simp only [norm_pow, norm_norm]
     have h12 : 1 < 2 := by
       norm_num
     convert (Asymptotics.is_o_pow_pow h12).comp_tendsto tendsto_norm_zero

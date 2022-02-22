@@ -18,8 +18,10 @@ open Interactive.Types
 
 open Tactic
 
+-- mathport name: «expr ?»
 local postfix:1024 "?" => optionalₓ
 
+-- mathport name: «expr *»
 local postfix:1024 "*" => many
 
 unsafe inductive mono_function (elab : Bool := true)

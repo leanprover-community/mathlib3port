@@ -384,7 +384,7 @@ theorem inv_embedding_comp (i : Finₓ c.length) (j : Finₓ (c.blocksFun i)) :
 
 /-- Equivalence between the disjoint union of the blocks (each of them seen as
 `fin (c.blocks_fun i)`) with `fin n`. -/
-def blocksFinEquiv : (Σ i : Finₓ c.length, Finₓ (c.blocksFun i)) ≃ Finₓ n where
+def blocksFinEquiv : (Σi : Finₓ c.length, Finₓ (c.blocksFun i)) ≃ Finₓ n where
   toFun := fun x => c.Embedding x.1 x.2
   invFun := fun j => ⟨c.index j, c.invEmbedding j⟩
   left_inv := fun x => by
@@ -411,7 +411,7 @@ theorem blocks_fun_congr {n₁ n₂ : ℕ} (c₁ : Composition n₁) (c₂ : Com
 
 /-- Two compositions (possibly of different integers) coincide if and only if they have the
 same sequence of blocks. -/
-theorem sigma_eq_iff_blocks_eq {c : Σ n, Composition n} {c' : Σ n, Composition n} : c = c' ↔ c.2.blocks = c'.2.blocks :=
+theorem sigma_eq_iff_blocks_eq {c : Σn, Composition n} {c' : Σn, Composition n} : c = c' ↔ c.2.blocks = c'.2.blocks :=
   by
   refine'
     ⟨fun H => by

@@ -1612,7 +1612,7 @@ variable {G : Type _} [Groupₓ G] [Fintype G] (S : Set G)
 
 @[to_additive]
 theorem card_pow_eq_card_pow_card_univ [∀ k : ℕ, DecidablePred (· ∈ S ^ k)] :
-    ∀ k, Fintype.card G ≤ k → Fintype.card (↥(S ^ k)) = Fintype.card (↥(S ^ Fintype.card G)) := by
+    ∀ k, Fintype.card G ≤ k → Fintype.card ↥(S ^ k) = Fintype.card ↥(S ^ Fintype.card G) := by
   have hG : 0 < Fintype.card G := fintype.card_pos_iff.mpr ⟨1⟩
   by_cases' hS : S = ∅
   · refine' fun k hk => Fintype.card_congr _
@@ -1624,7 +1624,7 @@ theorem card_pow_eq_card_pow_card_univ [∀ k : ℕ, DecidablePred (· ∈ S ^ k
     refine' fun a s t h => Fintype.card_le_of_injective (fun ⟨b, hb⟩ => ⟨a * b, h b hb⟩) _
     rintro ⟨b, hb⟩ ⟨c, hc⟩ hbc
     exact Subtype.ext (mul_left_cancelₓ (subtype.ext_iff.mp hbc))
-  have mono : Monotone (fun n => Fintype.card (↥(S ^ n)) : ℕ → ℕ) :=
+  have mono : Monotone (fun n => Fintype.card ↥(S ^ n) : ℕ → ℕ) :=
     monotone_nat_of_le_succ fun n => key a _ _ fun b hb => Set.mul_mem_mul ha hb
   convert
     card_pow_eq_card_pow_card_univ_aux mono (fun n => set_fintype_card_le_univ (S ^ n)) fun n h =>

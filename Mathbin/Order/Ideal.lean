@@ -471,7 +471,7 @@ theorem IsProper.not_mem_of_compl_mem (hI : IsProper I) (hxc : xᶜ ∈ I) : x �
   have ht : x⊔xᶜ ∈ I := sup_mem _ ‹_› _ ‹_›
   rwa [sup_compl_eq_top] at ht
 
-theorem IsProper.not_mem_or_compl_not_mem (hI : IsProper I) : x ∉ I ∨ xᶜ ∉ I := by
+theorem IsProper.not_mem_or_compl_not_mem (hI : IsProper I) : (x ∉ I) ∨ xᶜ ∉ I := by
   have h : xᶜ ∈ I → x ∉ I := hI.not_mem_of_compl_mem
   tauto
 

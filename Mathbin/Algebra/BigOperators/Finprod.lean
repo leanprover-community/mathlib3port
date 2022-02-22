@@ -100,8 +100,10 @@ noncomputable irreducible_def finprod (f : α → M) : M :=
 
 end
 
+-- mathport name: «expr∑ᶠ , »
 localized [BigOperators] notation3 "∑ᶠ " (...) ", " r:(scoped f => finsum f) => r
 
+-- mathport name: «expr∏ᶠ , »
 localized [BigOperators] notation3 "∏ᶠ " (...) ", " r:(scoped f => finprod f) => r
 
 @[to_additive]
@@ -613,7 +615,7 @@ theorem finprod_mem_insert (f : α → M) (h : a ∉ s) (hs : s.Finite) : (∏�
 /-- If `f a = 1` for all `a ∉ s`, then the product of `f i` over `i ∈ insert a s` equals the
 product of `f i` over `i ∈ s`. -/
 @[to_additive]
-theorem finprod_mem_insert_of_eq_one_if_not_mem (h : a ∉ s → f a = 1) : (∏ᶠ i ∈ insert a s, f i) = ∏ᶠ i ∈ s, f i := by
+theorem finprod_mem_insert_of_eq_one_if_not_mem (h : (a ∉ s) → f a = 1) : (∏ᶠ i ∈ insert a s, f i) = ∏ᶠ i ∈ s, f i := by
   refine' finprod_mem_inter_mul_support_eq' _ _ _ fun x hx => ⟨_, Or.inr⟩
   rintro (rfl | hxs)
   exacts[not_imp_comm.1 h hx, hxs]

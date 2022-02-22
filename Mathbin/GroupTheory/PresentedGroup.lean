@@ -52,6 +52,7 @@ from `presented_group rels` to `G`.
 -/
 variable {G : Type} [Groupₓ G] {f : α → G} {rels : Set (FreeGroup α)}
 
+-- mathport name: «exprF»
 local notation "F" => FreeGroup.lift f
 
 variable (h : ∀, ∀ r ∈ rels, ∀, F r = 1)

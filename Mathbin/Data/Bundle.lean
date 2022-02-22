@@ -27,7 +27,7 @@ variable {B : Type _} (E : B → Type _)
 conflicts with general sigma types.
 -/
 def TotalSpace :=
-  Σ x, E x
+  Σx, E x
 
 instance [Inhabited B] [Inhabited (E default)] : Inhabited (TotalSpace E) :=
   ⟨⟨default, default⟩⟩

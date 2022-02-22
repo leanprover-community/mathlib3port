@@ -41,7 +41,7 @@ theorem ndinsert_of_mem {a : α} {s : Multiset α} : a ∈ s → ndinsert a s = 
   (Quot.induction_on s) fun l h => congr_argₓ coe <| insert_of_memₓ h
 
 @[simp]
-theorem ndinsert_of_not_mem {a : α} {s : Multiset α} : a ∉ s → ndinsert a s = a ::ₘ s :=
+theorem ndinsert_of_not_mem {a : α} {s : Multiset α} : (a ∉ s) → ndinsert a s = a ::ₘ s :=
   (Quot.induction_on s) fun l h => congr_argₓ coe <| insert_of_not_memₓ h
 
 @[simp]
@@ -104,14 +104,14 @@ theorem attach_ndinsert (a : α) (s : Multiset α) :
   this _ rfl
 
 @[simp]
-theorem disjoint_ndinsert_left {a : α} {s t : Multiset α} : Disjoint (ndinsert a s) t ↔ a ∉ t ∧ Disjoint s t :=
+theorem disjoint_ndinsert_left {a : α} {s t : Multiset α} : Disjoint (ndinsert a s) t ↔ (a ∉ t) ∧ Disjoint s t :=
   Iff.trans
     (by
       simp [Disjoint])
     disjoint_cons_left
 
 @[simp]
-theorem disjoint_ndinsert_right {a : α} {s t : Multiset α} : Disjoint s (ndinsert a t) ↔ a ∉ s ∧ Disjoint s t := by
+theorem disjoint_ndinsert_right {a : α} {s t : Multiset α} : Disjoint s (ndinsert a t) ↔ (a ∉ s) ∧ Disjoint s t := by
   rw [disjoint_comm, disjoint_ndinsert_left] <;> tauto
 
 /-! ### finset union -/

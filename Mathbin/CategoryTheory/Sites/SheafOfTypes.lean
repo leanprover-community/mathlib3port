@@ -710,7 +710,7 @@ theorem is_sheaf_pretopology [HasPullbacks C] (K : Pretopology C) :
     apply PJ (sieve.generate R) ⟨_, hR, le_generate R⟩
     
   · rintro PK X S ⟨R, hR, RS⟩
-    have gRS : ⇑generate R ≤ S := by
+    have gRS : ⇑(generate R) ≤ S := by
       apply gi_generate.gc.monotone_u
       rwa [sets_iff_generate]
     apply is_sheaf_for_subsieve P gRS _
@@ -735,12 +735,12 @@ noncomputable section
 of https://stacks.math.columbia.edu/tag/00VM.
 -/
 def FirstObj : Type max v₁ u₁ :=
-  ∏ fun f : Σ Y, { f : Y ⟶ X // R f } => P.obj (op f.1)
+  ∏ fun f : ΣY, { f : Y ⟶ X // R f } => P.obj (op f.1)
 
 /-- Show that `first_obj` is isomorphic to `family_of_elements`. -/
 @[simps]
 def firstObjEqFamily : FirstObj P R ≅ R.FamilyOfElements P where
-  Hom := fun t Y f hf => Pi.π (fun f : Σ Y, { f : Y ⟶ X // R f } => P.obj (op f.1)) ⟨_, _, hf⟩ t
+  Hom := fun t Y f hf => Pi.π (fun f : ΣY, { f : Y ⟶ X // R f } => P.obj (op f.1)) ⟨_, _, hf⟩ t
   inv := Pi.lift fun f x => x _ f.2.2
   hom_inv_id' := by
     ext ⟨Y, f, hf⟩ p
@@ -766,16 +766,15 @@ the definition of `is_sheaf_for`.
 
 namespace Sieve
 
--- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (Y Z)
 /-- The rightmost object of the fork diagram of Equation (3) [MM92], which contains the data used
 to check a family is compatible.
 -/
 def SecondObj : Type max v₁ u₁ :=
-  ∏ fun f : Σ (Y) (Z) (g : Z ⟶ Y), { f' : Y ⟶ X // S f' } => P.obj (op f.2.1)
+  ∏ fun f : Σ(Y Z : _)(g : Z ⟶ Y), { f' : Y ⟶ X // S f' } => P.obj (op f.2.1)
 
 /-- The map `p` of Equations (3,4) [MM92]. -/
 def firstMap : FirstObj P S ⟶ SecondObj P S :=
-  Pi.lift fun fg => Pi.π _ (⟨_, _, S.downward_closed fg.2.2.2.2 fg.2.2.1⟩ : Σ Y, { f : Y ⟶ X // S f })
+  Pi.lift fun fg => Pi.π _ (⟨_, _, S.downward_closed fg.2.2.2.2 fg.2.2.1⟩ : ΣY, { f : Y ⟶ X // S f })
 
 instance : Inhabited (SecondObj P (⊥ : Sieve X)) :=
   ⟨firstMap _ _ default⟩
@@ -842,7 +841,7 @@ variable [HasPullbacks C]
 contains the data used to check a family of elements for a presieve is compatible.
 -/
 def SecondObj : Type max v₁ u₁ :=
-  ∏ fun fg : (Σ Y, { f : Y ⟶ X // R f }) × Σ Z, { g : Z ⟶ X // R g } => P.obj (op (pullback fg.1.2.1 fg.2.2.1))
+  ∏ fun fg : (ΣY, { f : Y ⟶ X // R f }) × ΣZ, { g : Z ⟶ X // R g } => P.obj (op (pullback fg.1.2.1 fg.2.2.1))
 
 /-- The map `pr₀*` of https://stacks.math.columbia.edu/tag/00VL. -/
 def firstMap : FirstObj P R ⟶ SecondObj P R :=

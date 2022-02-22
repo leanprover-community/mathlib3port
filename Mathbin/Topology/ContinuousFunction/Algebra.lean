@@ -79,13 +79,19 @@ instance hasNsmul [AddMonoidₓ β] [HasContinuousAdd β] : HasScalar ℕ C(α, 
 instance hasPow [Monoidₓ β] [HasContinuousMul β] : Pow C(α, β) ℕ :=
   ⟨fun f n => ⟨f ^ n, f.Continuous.pow n⟩⟩
 
-@[simp, norm_cast, to_additive coe_nsmul]
+@[norm_cast, to_additive coe_nsmul]
 theorem coe_pow [Monoidₓ β] [HasContinuousMul β] (f : C(α, β)) (n : ℕ) : ⇑(f ^ n) = f ^ n :=
   rfl
 
-@[simp, to_additive nsmul_comp]
+-- don't make `coe_nsmul` simp as the linter complains it's redundant WRT `coe_smul`
+attribute [simp] coe_pow
+
+@[to_additive nsmul_comp]
 theorem pow_comp [Monoidₓ γ] [HasContinuousMul γ] (f : C(β, γ)) (n : ℕ) (g : C(α, β)) : (f ^ n).comp g = f.comp g ^ n :=
   rfl
+
+-- don't make `nsmul_comp` simp as the linter complains it's redundant WRT `smul_comp`
+attribute [simp] pow_comp
 
 @[to_additive]
 instance [Groupₓ β] [TopologicalGroup β] : Inv C(α, β) where
@@ -118,13 +124,19 @@ instance hasZsmul [AddGroupₓ β] [TopologicalAddGroup β] : HasScalar ℤ C(α
 instance hasZpow [Groupₓ β] [TopologicalGroup β] : Pow C(α, β) ℤ where
   pow := fun f z => ⟨f ^ z, f.Continuous.zpow z⟩
 
-@[simp, norm_cast, to_additive]
+@[norm_cast, to_additive]
 theorem coe_zpow [Groupₓ β] [TopologicalGroup β] (f : C(α, β)) (z : ℤ) : ⇑(f ^ z) = f ^ z :=
   rfl
 
-@[simp, to_additive]
+-- don't make `coe_zsmul` simp as the linter complains it's redundant WRT `coe_smul`
+attribute [simp] coe_zpow
+
+@[to_additive]
 theorem zpow_comp [Groupₓ γ] [TopologicalGroup γ] (f : C(β, γ)) (z : ℤ) (g : C(α, β)) : (f ^ z).comp g = f.comp g ^ z :=
   rfl
+
+-- don't make `zsmul_comp` simp as the linter complains it's redundant WRT `smul_comp`
+attribute [simp] zpow_comp
 
 end ContinuousMap
 
@@ -227,7 +239,7 @@ open_locale BigOperators
 
 @[simp, to_additive]
 theorem coe_prod {α : Type _} {β : Type _} [CommMonoidₓ β] [TopologicalSpace α] [TopologicalSpace β]
-    [HasContinuousMul β] {ι : Type _} (s : Finset ι) (f : ι → C(α, β)) : (⇑∏ i in s, f i) = ∏ i in s, (f i : α → β) :=
+    [HasContinuousMul β] {ι : Type _} (s : Finset ι) (f : ι → C(α, β)) : ⇑(∏ i in s, f i) = ∏ i in s, (f i : α → β) :=
   (coeFnMonoidHom : C(α, β) →* _).map_prod f s
 
 @[to_additive]

@@ -125,6 +125,7 @@ structure Hom where
     run_tac
       obviously
 
+-- mathport name: «expr →[ ] »
 localized [FirstOrder] notation:25 A " →[" L "] " B => L.Hom A B
 
 /-- An embedding of first-order structures is an embedding that commutes with the
@@ -137,6 +138,7 @@ structure Embedding extends M ↪ N where
     run_tac
       obviously
 
+-- mathport name: «expr ↪[ ] »
 localized [FirstOrder] notation:25 A " ↪[" L "] " B => L.Embedding A B
 
 /-- An equivalence of first-order structures is an equivalence that commutes with the
@@ -149,6 +151,7 @@ structure Equiv extends M ≃ N where
     run_tac
       obviously
 
+-- mathport name: «expr ≃[ ] »
 localized [FirstOrder] notation:25 A " ≃[" L "] " B => L.Equiv A B
 
 variable {L M N} {P : Type _} [L.Structure P] {Q : Type _} [L.Structure Q]

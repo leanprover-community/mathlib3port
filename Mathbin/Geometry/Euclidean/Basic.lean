@@ -354,6 +354,7 @@ open InnerProductGeometry
 
 variable {V : Type _} {P : Type _} [InnerProductSpace ℝ V] [MetricSpace P] [NormedAddTorsor V P]
 
+-- mathport name: «expr⟪ , ⟫»
 local notation "⟪" x ", " y "⟫" => @inner ℝ V _ x y
 
 include V
@@ -365,6 +366,7 @@ notation. -/
 def angle (p1 p2 p3 : P) : ℝ :=
   angle (p1 -ᵥ p2 : V) (p3 -ᵥ p2)
 
+-- mathport name: «expr∠»
 localized [EuclideanGeometry] notation "∠" => EuclideanGeometry.angle
 
 /-- The angle at a point does not depend on the order of the other two

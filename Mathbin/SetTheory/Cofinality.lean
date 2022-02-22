@@ -557,6 +557,7 @@ namespace Cardinal
 
 open Ordinal
 
+-- mathport name: «expr ^ »
 local infixr:0 "^" => @pow Cardinal.{u} Cardinal Cardinal.hasPow
 
 /-- A cardinal is a limit if it is not zero or a successor

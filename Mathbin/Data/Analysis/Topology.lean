@@ -107,7 +107,7 @@ theorem is_closed_iff [TopologicalSpace α] (F : Realizer α) {s : Set α} :
   is_open_compl_iff.symm.trans <|
     F.is_open_iff.trans <|
       forall_congrₓ fun a =>
-        show (a ∉ s → ∃ b : F.σ, a ∈ F.f b ∧ ∀, ∀ z ∈ F.f b, ∀, z ∉ s) ↔ _ by
+        show ((a ∉ s) → ∃ b : F.σ, a ∈ F.f b ∧ ∀, ∀ z ∈ F.f b, ∀, z ∉ s) ↔ _ by
           have := Classical.propDecidable <;> rw [not_imp_comm] <;> simp [not_exists, not_and, not_forall, and_comm]
 
 theorem mem_interior_iff [TopologicalSpace α] (F : Realizer α) {s : Set α} {a : α} :

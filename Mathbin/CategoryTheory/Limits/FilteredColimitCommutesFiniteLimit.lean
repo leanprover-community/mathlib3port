@@ -54,9 +54,6 @@ only that there are finitely many objects.
 
 variable [Fintype J]
 
--- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (X Y)
--- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (X Y)
--- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (X Y)
 /-- This follows this proof from
 * Borceux, Handbook of categorical algebra 1, Theorem 2.13.4
 -/
@@ -102,7 +99,7 @@ theorem colimit_limit_to_limit_colimit_injective : Function.Injective (colimitLi
       (Or.inl
         (by
           simp ))
-  let H : Finset (Σ' (X : K) (Y : K) (mX : X ∈ O) (mY : Y ∈ O), X ⟶ Y) :=
+  let H : Finset (Σ'(X Y : K)(mX : X ∈ O)(mY : Y ∈ O), X ⟶ Y) :=
     (Finset.univ.Image fun j : J =>
         ⟨kx, k j, kxO,
           finset.mem_union.mpr
@@ -118,7 +115,7 @@ theorem colimit_limit_to_limit_colimit_injective : Function.Injective (colimitLi
                 simp )),
           g j⟩
   obtain ⟨S, T, W⟩ := is_filtered.sup_exists O H
-  have fH : ∀ j, (⟨kx, k j, kxO, kjO j, f j⟩ : Σ' (X : K) (Y : K) (mX : X ∈ O) (mY : Y ∈ O), X ⟶ Y) ∈ H := fun j =>
+  have fH : ∀ j, (⟨kx, k j, kxO, kjO j, f j⟩ : Σ'(X Y : K)(mX : X ∈ O)(mY : Y ∈ O), X ⟶ Y) ∈ H := fun j =>
     finset.mem_union.mpr
       (Or.inl
         (by
@@ -126,7 +123,7 @@ theorem colimit_limit_to_limit_colimit_injective : Function.Injective (colimitLi
           refine' ⟨j, rfl, _⟩
           simp only [heq_iff_eq]
           exact ⟨rfl, rfl, rfl⟩))
-  have gH : ∀ j, (⟨ky, k j, kyO, kjO j, g j⟩ : Σ' (X : K) (Y : K) (mX : X ∈ O) (mY : Y ∈ O), X ⟶ Y) ∈ H := fun j =>
+  have gH : ∀ j, (⟨ky, k j, kyO, kjO j, g j⟩ : Σ'(X Y : K)(mX : X ∈ O)(mY : Y ∈ O), X ⟶ Y) ∈ H := fun j =>
     finset.mem_union.mpr
       (Or.inr
         (by
@@ -149,7 +146,6 @@ end
 
 variable [FinCategory J]
 
--- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (X Y)
 /-- This follows this proof from
 * Borceux, Handbook of categorical algebra 1, Theorem 2.13.4
 although with different names.
@@ -233,7 +229,7 @@ theorem colimit_limit_to_limit_colimit_surjective : Function.Surjective (colimit
           refine' ⟨f, Finset.mem_univ _, _⟩
           rfl))
   have k'O : k' ∈ O := finset.mem_union.mpr (Or.inr (finset.mem_singleton.mpr rfl))
-  let H : Finset (Σ' (X : K) (Y : K) (mX : X ∈ O) (mY : Y ∈ O), X ⟶ Y) :=
+  let H : Finset (Σ'(X Y : K)(mX : X ∈ O)(mY : Y ∈ O), X ⟶ Y) :=
     finset.univ.bUnion fun j : J =>
       finset.univ.bUnion fun j' : J =>
         finset.univ.bUnion fun f : j ⟶ j' => {⟨k', kf f, k'O, kfO f, gf f⟩, ⟨k', kf f, k'O, kfO f, hf f⟩}

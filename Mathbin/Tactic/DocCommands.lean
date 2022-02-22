@@ -37,7 +37,7 @@ def Stringₓ.hash (s : Stringₓ) : ℕ :=
 /-- `mk_hashed_name nspace id` hashes the string `id` to a value `i` and returns the name
 `nspace._i` -/
 unsafe def string.mk_hashed_name (nspace : Name) (id : Stringₓ) : Name :=
-  nspace <.> ("_" ++ toString id.hash)
+  mkStrName nspace ("_" ++ toString id.hash)
 
 open Tactic
 

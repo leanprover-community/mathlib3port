@@ -24,12 +24,14 @@ namespace Lattice
 def imp [HasCompl α] [HasSup α] (a b : α) : α :=
   aᶜ⊔b
 
+-- mathport name: «expr ⇒ₒ »
 infixl:65 " ⇒ₒ " => Lattice.imp
 
 /-- Equivalence as a binary operation on a boolean algebra. -/
 def biimp [HasCompl α] [HasSup α] [HasInf α] (a b : α) : α :=
   (a ⇒ₒ b)⊓(b ⇒ₒ a)
 
+-- mathport name: «expr ⇔ₒ »
 infixl:60 " ⇔ₒ " => Lattice.biimp
 
 @[simp]

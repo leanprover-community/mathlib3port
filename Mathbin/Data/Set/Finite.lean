@@ -204,7 +204,7 @@ theorem insert_to_finset [DecidableEq α] {a : α} {s : Set α} [Fintype s] :
 
 @[elab_as_eliminator]
 theorem Finite.induction_on {C : Set α → Prop} {s : Set α} (h : Finite s) (H0 : C ∅)
-    (H1 : ∀ {a s}, a ∉ s → Finite s → C s → C (insert a s)) : C s :=
+    (H1 : ∀ {a s}, (a ∉ s) → Finite s → C s → C (insert a s)) : C s :=
   let ⟨t⟩ := h
   match s.to_finset, @mem_to_finset _ s _ with
   | ⟨l, nd⟩, al => by
@@ -231,7 +231,7 @@ theorem Finite.induction_on {C : Set α → Prop} {s : Set α} (h : Finite s) (H
 
 @[elab_as_eliminator]
 theorem Finite.dinduction_on {C : ∀ s : Set α, Finite s → Prop} {s : Set α} (h : Finite s) (H0 : C ∅ finite_empty)
-    (H1 : ∀ {a s}, a ∉ s → ∀ h : Finite s, C s h → C (insert a s) (h.insert a)) : C s h :=
+    (H1 : ∀ {a s}, (a ∉ s) → ∀ h : Finite s, C s h → C (insert a s) (h.insert a)) : C s h :=
   have : ∀ h : Finite s, C s h := Finite.induction_on h (fun h => H0) fun a s has hs ih h => H1 has hs (ih _)
   this h
 

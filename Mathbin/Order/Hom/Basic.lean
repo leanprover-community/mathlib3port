@@ -75,6 +75,7 @@ structure OrderHom (α β : Type _) [Preorderₓ α] [Preorderₓ β] where
   toFun : α → β
   monotone' : Monotone to_fun
 
+-- mathport name: «expr →o »
 infixr:25 " →o " => OrderHom
 
 /-- `order_hom_class F α b` asserts that `F` is a type of `≤`-preserving morphisms. -/
@@ -86,6 +87,7 @@ This definition is an abbreviation of `rel_embedding (≤) (≤)`. -/
 abbrev OrderEmbedding (α β : Type _) [LE α] [LE β] :=
   @RelEmbedding α β (· ≤ ·) (· ≤ ·)
 
+-- mathport name: «expr ↪o »
 infixl:25 " ↪o " => OrderEmbedding
 
 /-- An order isomorphism is an equivalence such that `a ≤ b ↔ (f a) ≤ (f b)`.
@@ -93,6 +95,7 @@ This definition is an abbreviation of `rel_iso (≤) (≤)`. -/
 abbrev OrderIso (α β : Type _) [LE α] [LE β] :=
   @RelIso α β (· ≤ ·) (· ≤ ·)
 
+-- mathport name: «expr ≃o »
 infixl:25 " ≃o " => OrderIso
 
 variable {α β γ δ : Type _}
@@ -453,7 +456,7 @@ def ofMapLeIff {α β} [PartialOrderₓ α] [Preorderₓ β] (f : α → β) (hf
   RelEmbedding.ofMapRelIff f hf
 
 @[simp]
-theorem coe_of_map_le_iff {α β} [PartialOrderₓ α] [Preorderₓ β] {f : α → β} h : ⇑ofMapLeIff f h = f :=
+theorem coe_of_map_le_iff {α β} [PartialOrderₓ α] [Preorderₓ β] {f : α → β} h : ⇑(ofMapLeIff f h) = f :=
   rfl
 
 /-- A strictly monotone map from a linear order is an order embedding. --/
@@ -462,7 +465,7 @@ def ofStrictMono {α β} [LinearOrderₓ α] [Preorderₓ β] (f : α → β) (h
 
 @[simp]
 theorem coe_of_strict_mono {α β} [LinearOrderₓ α] [Preorderₓ β] {f : α → β} (h : StrictMono f) :
-    ⇑ofStrictMono f h = f :=
+    ⇑(ofStrictMono f h) = f :=
   rfl
 
 /-- Embedding of a subtype into the ambient type as an `order_embedding`. -/
@@ -537,7 +540,7 @@ def refl (α : Type _) [LE α] : α ≃o α :=
   RelIso.refl (· ≤ ·)
 
 @[simp]
-theorem coe_refl : ⇑refl α = id :=
+theorem coe_refl : ⇑(refl α) = id :=
   rfl
 
 theorem refl_apply (x : α) : refl α x = x :=
@@ -614,7 +617,7 @@ def trans (e : α ≃o β) (e' : β ≃o γ) : α ≃o γ :=
   e.trans e'
 
 @[simp]
-theorem coe_trans (e : α ≃o β) (e' : β ≃o γ) : ⇑e.trans e' = e' ∘ e :=
+theorem coe_trans (e : α ≃o β) (e' : β ≃o γ) : ⇑(e.trans e') = e' ∘ e :=
   rfl
 
 theorem trans_apply (e : α ≃o β) (e' : β ≃o γ) (x : α) : e.trans e' x = e' (e x) :=
@@ -637,7 +640,7 @@ def dualDual : α ≃o OrderDual (OrderDual α) :=
   refl α
 
 @[simp]
-theorem coe_dual_dual : ⇑dualDual α = to_dual ∘ to_dual :=
+theorem coe_dual_dual : ⇑(dualDual α) = to_dual ∘ to_dual :=
   rfl
 
 @[simp]
@@ -739,7 +742,7 @@ def toOrderIso (e : α ≃ β) (h₁ : Monotone e) (h₂ : Monotone e.symm) : α
       simpa only [e.symm_apply_apply] using h₂ h, fun h => h₁ h⟩⟩
 
 @[simp]
-theorem coe_to_order_iso (e : α ≃ β) (h₁ : Monotone e) (h₂ : Monotone e.symm) : ⇑e.toOrderIso h₁ h₂ = e :=
+theorem coe_to_order_iso (e : α ≃ β) (h₁ : Monotone e) (h₂ : Monotone e.symm) : ⇑(e.toOrderIso h₁ h₂) = e :=
   rfl
 
 @[simp]

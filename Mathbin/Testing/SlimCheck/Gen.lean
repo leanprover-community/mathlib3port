@@ -45,6 +45,7 @@ def Gen (α : Type u) :=
 
 variable (α : Type u)
 
+-- mathport name: «expr .. »
 local infixl:41 " .. " => Set.Icc
 
 /-- Execute a `gen` inside the `io` monad using `i` as the example

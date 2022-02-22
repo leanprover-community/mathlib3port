@@ -25,7 +25,7 @@ section NormedField
 theorem Filter.IsBoundedUnder.is_o_sub_self_inv {𝕜 E : Type _} [NormedField 𝕜] [HasNorm E] {a : 𝕜} {f : 𝕜 → E}
     (h : IsBoundedUnder (· ≤ ·) (𝓝[≠] a) (norm ∘ f)) : IsOₓ f (fun x => (x - a)⁻¹) (𝓝[≠] a) := by
   refine' (h.is_O_const (@one_ne_zero ℝ _ _)).trans_is_o (is_o_const_left.2 <| Or.inr _)
-  simp only [(· ∘ ·), NormedField.norm_inv]
+  simp only [(· ∘ ·), norm_inv]
   exact (tendsto_norm_sub_self_punctured_nhds a).inv_tendsto_zero
 
 end NormedField

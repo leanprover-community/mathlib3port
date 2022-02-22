@@ -113,7 +113,7 @@ instance [CommSemiringₓ R] : Algebra (PowerSeries R) (LaurentSeries R) :=
 
 @[simp]
 theorem coe_algebra_map [CommSemiringₓ R] :
-    ⇑algebraMap (PowerSeries R) (LaurentSeries R) = HahnSeries.ofPowerSeries ℤ R :=
+    ⇑(algebraMap (PowerSeries R) (LaurentSeries R)) = HahnSeries.ofPowerSeries ℤ R :=
   rfl
 
 /-- The localization map from power series to Laurent series. -/

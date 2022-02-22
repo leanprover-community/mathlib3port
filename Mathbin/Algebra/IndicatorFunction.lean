@@ -69,7 +69,7 @@ theorem mul_indicator_eq_one_or_self (s : Set α) (f : α → M) (a : α) :
   if h : a ∈ s then Or.inr (mul_indicator_of_mem h f) else Or.inl (mul_indicator_of_not_mem h f)
 
 @[simp, to_additive]
-theorem mul_indicator_apply_eq_self : s.mulIndicator f a = f a ↔ a ∉ s → f a = 1 :=
+theorem mul_indicator_apply_eq_self : s.mulIndicator f a = f a ↔ (a ∉ s) → f a = 1 :=
   ite_eq_left_iff.trans <| by
     rw [@eq_comm _ (f a)]
 
@@ -512,7 +512,7 @@ section Order
 variable [One M] [Preorderₓ M] {s t : Set α} {f g : α → M} {a : α} {y : M}
 
 @[to_additive]
-theorem mul_indicator_apply_le' (hfg : a ∈ s → f a ≤ y) (hg : a ∉ s → 1 ≤ y) : mulIndicator s f a ≤ y :=
+theorem mul_indicator_apply_le' (hfg : a ∈ s → f a ≤ y) (hg : (a ∉ s) → 1 ≤ y) : mulIndicator s f a ≤ y :=
   if ha : a ∈ s then by
     simpa [ha] using hfg ha
   else by
@@ -524,7 +524,7 @@ theorem mul_indicator_le' (hfg : ∀, ∀ a ∈ s, ∀, f a ≤ g a) (hg : ∀ a
   fun a => mul_indicator_apply_le' (hfg _) (hg _)
 
 @[to_additive]
-theorem le_mul_indicator_apply {y} (hfg : a ∈ s → y ≤ g a) (hf : a ∉ s → y ≤ 1) : y ≤ mulIndicator s g a :=
+theorem le_mul_indicator_apply {y} (hfg : a ∈ s → y ≤ g a) (hf : (a ∉ s) → y ≤ 1) : y ≤ mulIndicator s g a :=
   @mul_indicator_apply_le' α (OrderDual M) ‹_› _ _ _ _ _ hfg hf
 
 -- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (a «expr ∉ » s)

@@ -130,7 +130,7 @@ private theorem deriv_ne_zero : F.derivative.eval a ≠ 0 :=
 
 private theorem T_def : T = ∥F.eval a∥ / ∥F.derivative.eval a∥ ^ 2 :=
   calc
-    T = ∥F.eval a∥ / ∥(F.derivative.eval a ^ 2 : ℚ_[p])∥ := NormedField.norm_div _ _
+    T = ∥F.eval a∥ / ∥(F.derivative.eval a ^ 2 : ℚ_[p])∥ := norm_div _ _
     _ = ∥F.eval a∥ / ∥F.derivative.eval a ^ 2∥ := by
       simp [norm, PadicInt.norm_def]
     _ = ∥F.eval a∥ / ∥F.derivative.eval a∥ ^ 2 := by
@@ -170,7 +170,7 @@ private theorem calc_norm_le_one {n : ℕ} {z : ℤ_[p]} (hz : ih n z) :
     ∥(↑(F.eval z) : ℚ_[p]) / ↑(F.derivative.eval z)∥ ≤ 1 :=
   calc
     ∥(↑(F.eval z) : ℚ_[p]) / ↑(F.derivative.eval z)∥ = ∥(↑(F.eval z) : ℚ_[p])∥ / ∥(↑(F.derivative.eval z) : ℚ_[p])∥ :=
-      NormedField.norm_div _ _
+      norm_div _ _
     _ = ∥F.eval z∥ / ∥F.derivative.eval a∥ := by
       simp [hz.1]
     _ ≤ ∥F.derivative.eval a∥ ^ 2 * T ^ 2 ^ n / ∥F.derivative.eval a∥ := (div_le_div_right deriv_norm_pos).2 hz.2
@@ -325,7 +325,7 @@ private theorem newton_seq_succ_dist_weak (n : ℕ) :
             norm_num))
         deriv_norm_pos
     _ = ∥F.eval a∥ / ∥F.derivative.eval a∥ := by
-      rw [T, sq, pow_oneₓ, NormedField.norm_div, ← mul_div_assoc, padicNormE.mul]
+      rw [T, sq, pow_oneₓ, norm_div, ← mul_div_assoc, padicNormE.mul]
       apply mul_div_mul_left
       apply deriv_norm_ne_zero <;> assumption
     
@@ -393,7 +393,7 @@ private theorem bound : ∀ {ε}, ε > 0 → ∃ N : ℕ, ∀ {n}, n ≥ N → �
   cases' this (ball 0 ε) (mem_ball_self hε) is_open_ball with N hN
   exists N
   intro n hn
-  simpa [NormedField.norm_mul, Real.norm_eq_abs, abs_of_nonneg (mtn n)] using hN _ hn
+  simpa [norm_mul, Real.norm_eq_abs, abs_of_nonneg (mtn n)] using hN _ hn
 
 private theorem bound'_sq : Tendsto (fun n : ℕ => ∥F.derivative.eval a∥ ^ 2 * T ^ 2 ^ n) atTop (𝓝 0) := by
   rw [← mul_zero ∥F.derivative.eval a∥, sq]

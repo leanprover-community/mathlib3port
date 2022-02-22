@@ -80,6 +80,7 @@ namespace Pretriangulated
 
 variable [Pretriangulated C]
 
+-- mathport name: «exprdist_triang »
 notation:20 "dist_triang" C => DistinguishedTriangles C
 
 -- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (T «expr ∈ » «exprdist_triang »(C))

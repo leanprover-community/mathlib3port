@@ -250,6 +250,7 @@ multiplied by a unit on the right. -/
 def Associated [Monoidₓ α] (x y : α) : Prop :=
   ∃ u : αˣ, x * u = y
 
+-- mathport name: «expr ~ᵤ »
 local infixl:50 " ~ᵤ " => Associated
 
 namespace Associated
@@ -576,7 +577,7 @@ instance : CommMonoidₓ (Associates α) where
         rw [mul_comm]
 
 instance : Preorderₓ (Associates α) where
-  le := HasDvd.Dvd
+  le := Dvd.Dvd
   le_refl := dvd_refl
   le_trans := fun a b c => dvd_trans
 

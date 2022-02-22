@@ -92,6 +92,7 @@ unsafe def var (n : ℕ) : sum :=
 /-! ### Parsing algorithms -/
 
 
+-- mathport name: «exprexmap»
 local notation "exmap" => List (expr × ℕ)
 
 /-- `linear_form_of_atom red map e` is the atomic case for `linear_form_of_expr`.

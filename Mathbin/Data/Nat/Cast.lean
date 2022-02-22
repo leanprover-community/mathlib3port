@@ -248,7 +248,7 @@ theorem abs_cast [LinearOrderedRing α] (a : ℕ) : abs (a : α) = a :=
 theorem coe_nat_dvd [Semiringₓ α] {m n : ℕ} (h : m ∣ n) : (m : α) ∣ (n : α) :=
   (Nat.castRingHom α).map_dvd h
 
-alias coe_nat_dvd ← HasDvd.Dvd.nat_cast
+alias coe_nat_dvd ← Dvd.Dvd.nat_cast
 
 section LinearOrderedField
 

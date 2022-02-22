@@ -95,5 +95,16 @@ instance commRing [CommRingₓ α] : CommRingₓ (Ulift α) := by
     run_tac
       tactic.pi_instance_derive_field
 
+instance field [Field α] : Field (Ulift α) := by
+  refine_struct
+      { zero := (0 : Ulift α), one := 1, add := (· + ·), mul := (· * ·), sub := Sub.sub, neg := Neg.neg,
+        nsmul := AddMonoidₓ.nsmul, npow := Monoidₓ.npow, zsmul := SubNegMonoidₓ.zsmul, inv := Inv.inv, div := Div.div,
+        zpow := fun n a => Ulift.up (a.down ^ n), exists_pair_ne := Ulift.nontrivial.1 } <;>
+    run_tac
+      tactic.pi_instance_derive_field
+  -- `mul_inv_cancel` requires special attention: it leaves the goal `∀ {a}, a ≠ 0 → a * a⁻¹ = 1`.
+  cases a
+  tauto
+
 end Ulift
 

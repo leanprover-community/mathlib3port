@@ -31,6 +31,7 @@ open_locale BigOperators Nat
 def primorial (n : ℕ) : ℕ :=
   ∏ p in filter Nat.Prime (range (n + 1)), p
 
+-- mathport name: «expr #»
 local notation x "#" => primorial x
 
 theorem primorial_succ {n : ℕ} (n_big : 1 < n) (r : n % 2 = 1) : (n + 1)# = n# := by

@@ -48,6 +48,7 @@ variable {𝕜 : Type _} [IsROrC 𝕜] [dec_𝕜 : DecidableEq 𝕜]
 
 variable {E : Type _} [InnerProductSpace 𝕜 E]
 
+-- mathport name: «expr⟪ , ⟫»
 local notation "⟪" x ", " y "⟫" => @inner 𝕜 E _ x y
 
 open_locale BigOperators ComplexConjugate
@@ -232,4 +233,31 @@ end Version2
 end IsSelfAdjoint
 
 end InnerProductSpace
+
+section Nonneg
+
+@[simp]
+theorem inner_product_apply_eigenvector {μ : 𝕜} {v : E} {T : E →ₗ[𝕜] E} (h : v ∈ Module.End.eigenspace T μ) :
+    ⟪v, T v⟫ = μ * ∥v∥ ^ 2 := by
+  simp only [mem_eigenspace_iff.mp h, inner_smul_right, inner_self_eq_norm_sq_to_K]
+
+theorem eigenvalue_nonneg_of_nonneg {μ : ℝ} {T : E →ₗ[𝕜] E} (hμ : HasEigenvalue T μ)
+    (hnn : ∀ x : E, 0 ≤ IsROrC.re ⟪x, T x⟫) : 0 ≤ μ := by
+  obtain ⟨v, hv⟩ := hμ.exists_has_eigenvector
+  have hpos : 0 < ∥v∥ ^ 2 := by
+    simpa only [sq_pos_iff, norm_ne_zero_iff] using hv.2
+  have : IsROrC.re ⟪v, T v⟫ = μ * ∥v∥ ^ 2 := by
+    exact_mod_cast congr_argₓ IsROrC.re (inner_product_apply_eigenvector hv.1)
+  exact (zero_le_mul_right hpos).mp (this ▸ hnn v)
+
+theorem eigenvalue_pos_of_pos {μ : ℝ} {T : E →ₗ[𝕜] E} (hμ : HasEigenvalue T μ) (hnn : ∀ x : E, 0 < IsROrC.re ⟪x, T x⟫) :
+    0 < μ := by
+  obtain ⟨v, hv⟩ := hμ.exists_has_eigenvector
+  have hpos : 0 < ∥v∥ ^ 2 := by
+    simpa only [sq_pos_iff, norm_ne_zero_iff] using hv.2
+  have : IsROrC.re ⟪v, T v⟫ = μ * ∥v∥ ^ 2 := by
+    exact_mod_cast congr_argₓ IsROrC.re (inner_product_apply_eigenvector hv.1)
+  exact (zero_lt_mul_right hpos).mp (this ▸ hnn v)
+
+end Nonneg
 

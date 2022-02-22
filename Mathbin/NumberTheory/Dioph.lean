@@ -312,6 +312,7 @@ def join {α β γ} (f : α → γ) (g : β → γ) : Sum α β → γ := by
 
 end Sum
 
+-- mathport name: «expr ⊗ »
 local infixr:65 " ⊗ " => Sum.join
 
 open Sum
@@ -626,67 +627,78 @@ theorem dioph_fn_comp {n} {f : Vector3 ℕ n → ℕ} (df : DiophFn f) (g : Vect
         ⟨proj_dioph none,
           (vector_allp_iff_forall _ _).2 fun i => reindex_dioph_fn ((vector_allp_iff_forall _ _).1 dg _) _⟩
 
+-- mathport name: «expr D∧ »
 localized [Dioph] notation:35 x " D∧ " y => Dioph.and_dioph x y
 
+-- mathport name: «expr D∨ »
 localized [Dioph] notation:35 x " D∨ " y => Dioph.or_dioph x y
 
+-- mathport name: «exprD∃»
 localized [Dioph] notation:30 "D∃" => Dioph.vec_ex1_dioph
 
--- ././Mathport/Syntax/Translate/Basic.lean:462:9: unsupported: advanced prec syntax max
-localized [Dioph] prefix:999 "&" => Fin2.ofNat'
+-- mathport name: «expr& »
+localized [Dioph] prefix:arg "&" => Fin2.ofNat'
 
-theorem proj_dioph_of_nat {n : ℕ} (m : ℕ) [IsLt m n] : DiophFn fun v : Vector3 ℕ n => v (&m) :=
-  proj_dioph (&m)
+theorem proj_dioph_of_nat {n : ℕ} (m : ℕ) [IsLt m n] : DiophFn fun v : Vector3 ℕ n => v &m :=
+  proj_dioph &m
 
+-- mathport name: «exprD& »
 localized [Dioph] prefix:100 "D&" => Dioph.proj_dioph_of_nat
 
 theorem const_dioph (n : ℕ) : DiophFn (const (α → ℕ) n) :=
   abs_poly_dioph (Poly.const n)
 
+-- mathport name: «exprD. »
 localized [Dioph] prefix:100 "D." => Dioph.const_dioph
 
 variable {f g : (α → ℕ) → ℕ} (df : DiophFn f) (dg : DiophFn g)
 
 include df dg
 
-theorem dioph_comp2 {S : ℕ → ℕ → Prop} (d : Dioph fun v : Vector3 ℕ 2 => S (v (&0)) (v (&1))) :
+theorem dioph_comp2 {S : ℕ → ℕ → Prop} (d : Dioph fun v : Vector3 ℕ 2 => S (v &0) (v &1)) :
     Dioph fun v => S (f v) (g v) :=
   dioph_comp d [f, g] ⟨df, dg⟩
 
-theorem dioph_fn_comp2 {h : ℕ → ℕ → ℕ} (d : DiophFn fun v : Vector3 ℕ 2 => h (v (&0)) (v (&1))) :
+theorem dioph_fn_comp2 {h : ℕ → ℕ → ℕ} (d : DiophFn fun v : Vector3 ℕ 2 => h (v &0) (v &1)) :
     DiophFn fun v => h (f v) (g v) :=
   dioph_fn_comp d [f, g] ⟨df, dg⟩
 
 theorem eq_dioph : Dioph fun v => f v = g v :=
   dioph_comp2 df dg <|
-    of_no_dummies _ (Poly.proj (&0) - Poly.proj (&1)) fun v =>
-      (Int.coe_nat_eq_coe_nat_iff _ _).symm.trans ⟨@sub_eq_zero_of_eq ℤ _ (v (&0)) (v (&1)), eq_of_sub_eq_zero⟩
+    of_no_dummies _ (Poly.proj &0 - Poly.proj &1) fun v =>
+      (Int.coe_nat_eq_coe_nat_iff _ _).symm.trans ⟨@sub_eq_zero_of_eq ℤ _ (v &0) (v &1), eq_of_sub_eq_zero⟩
 
+-- mathport name: «expr D= »
 localized [Dioph] infixl:50 " D= " => Dioph.eq_dioph
 
 theorem add_dioph : DiophFn fun v => f v + g v :=
-  dioph_fn_comp2 df dg <| abs_poly_dioph (Poly.proj (&0) + Poly.proj (&1))
+  dioph_fn_comp2 df dg <| abs_poly_dioph (Poly.proj &0 + Poly.proj &1)
 
+-- mathport name: «expr D+ »
 localized [Dioph] infixl:80 " D+ " => Dioph.add_dioph
 
 theorem mul_dioph : DiophFn fun v => f v * g v :=
-  dioph_fn_comp2 df dg <| abs_poly_dioph (Poly.proj (&0) * Poly.proj (&1))
+  dioph_fn_comp2 df dg <| abs_poly_dioph (Poly.proj &0 * Poly.proj &1)
 
+-- mathport name: «expr D* »
 localized [Dioph] infixl:90 " D* " => Dioph.mul_dioph
 
 theorem le_dioph : Dioph fun v => f v ≤ g v :=
   dioph_comp2 df dg <| ext ((D∃) 2 <| D&1 D+ D&0 D= D&2) fun v => ⟨fun ⟨x, hx⟩ => Le.intro hx, Le.dest⟩
 
+-- mathport name: «expr D≤ »
 localized [Dioph] infixl:50 " D≤ " => Dioph.le_dioph
 
 theorem lt_dioph : Dioph fun v => f v < g v :=
   df D+ D.1 D≤ dg
 
+-- mathport name: «expr D< »
 localized [Dioph] infixl:50 " D< " => Dioph.lt_dioph
 
 theorem ne_dioph : Dioph fun v => f v ≠ g v :=
   (ext (df D< dg D∨ dg D< df)) fun v => ne_iff_lt_or_gtₓ.symm
 
+-- mathport name: «expr D≠ »
 localized [Dioph] infixl:50 " D≠ " => Dioph.ne_dioph
 
 theorem sub_dioph : DiophFn fun v => f v - g v :=
@@ -709,15 +721,17 @@ theorem sub_dioph : DiophFn fun v => f v - g v :=
               · exact Or.inl (tsub_add_cancel_of_le zy).symm
                 ⟩
 
+-- mathport name: «expr D- »
 localized [Dioph] infixl:80 " D- " => Dioph.sub_dioph
 
 theorem dvd_dioph : Dioph fun v => f v ∣ g v :=
   dioph_comp ((D∃) 2 <| D&2 D= D&1 D* D&0) [f, g] ⟨df, dg⟩
 
+-- mathport name: «expr D∣ »
 localized [Dioph] infixl:50 " D∣ " => Dioph.dvd_dioph
 
 theorem mod_dioph : DiophFn fun v => f v % g v :=
-  have : Dioph fun v : Vector3 ℕ 3 => (v (&2) = 0 ∨ v (&0) < v (&2)) ∧ ∃ x : ℕ, v (&0) + v (&2) * x = v (&1) :=
+  have : Dioph fun v : Vector3 ℕ 3 => (v &2 = 0 ∨ v &0 < v &2) ∧ ∃ x : ℕ, v &0 + v &2 * x = v &1 :=
     (D&2 D= D.0 D∨ D&0 D< D&2) D∧ (D∃) 3 <| D&1 D+ D&3 D* D&0 D= D&2
   dioph_fn_comp2 df dg <|
     (dioph_fn_vec _).2 <|
@@ -731,16 +745,17 @@ theorem mod_dioph : DiophFn fun v => f v % g v :=
               rw [← e] <;>
                 exact ⟨or_iff_not_imp_left.2 fun h => mod_lt _ (Nat.pos_of_ne_zeroₓ h), x / y, mod_add_div _ _⟩⟩
 
+-- mathport name: «expr D% »
 localized [Dioph] infixl:80 " D% " => Dioph.mod_dioph
 
 theorem modeq_dioph {h : (α → ℕ) → ℕ} (dh : DiophFn h) : Dioph fun v => f v ≡ g v [MOD h v] :=
   df D% dh D= dg D% dh
 
+-- mathport name: «exprD≡»
 localized [Dioph] notation "D≡" => Dioph.modeq_dioph
 
 theorem div_dioph : DiophFn fun v => f v / g v :=
-  have :
-    Dioph fun v : Vector3 ℕ 3 => v (&2) = 0 ∧ v (&0) = 0 ∨ v (&0) * v (&2) ≤ v (&1) ∧ v (&1) < (v (&0) + 1) * v (&2) :=
+  have : Dioph fun v : Vector3 ℕ 3 => v &2 = 0 ∧ v &0 = 0 ∨ v &0 * v &2 ≤ v &1 ∧ v &1 < (v &0 + 1) * v &2 :=
     (D&2 D= D.0 D∧ D&0 D= D.0) D∨ D&0 D* D&2 D≤ D&1 D∧ D&1 D< (D&0 D+ D.1) D* D&2
   dioph_fn_comp2 df dg <|
     (dioph_fn_vec _).2 <|
@@ -761,27 +776,27 @@ theorem div_dioph : DiophFn fun v => f v / g v :=
                         and_congr (Nat.le_div_iff_mul_leₓ _ _ ypos) <|
                           Iff.trans ⟨lt_succ_of_le, le_of_lt_succ⟩ (div_lt_iff_lt_mul _ _ ypos)).symm
 
+-- mathport name: «expr D/ »
 localized [Dioph] infixl:80 " D/ " => Dioph.div_dioph
 
 omit df dg
 
 open Pell
 
-theorem pell_dioph : Dioph fun v : Vector3 ℕ 4 => ∃ h : 1 < v (&0), xn h (v (&1)) = v (&2) ∧ yn h (v (&1)) = v (&3) :=
+theorem pell_dioph : Dioph fun v : Vector3 ℕ 4 => ∃ h : 1 < v &0, xn h (v &1) = v &2 ∧ yn h (v &1) = v &3 :=
   have :
     Dioph
       { v : Vector3 ℕ 4 |
-        1 < v (&0) ∧
-          v (&1) ≤ v (&3) ∧
-            (v (&2) = 1 ∧ v (&3) = 0 ∨
+        1 < v &0 ∧
+          v &1 ≤ v &3 ∧
+            (v &2 = 1 ∧ v &3 = 0 ∨
               ∃ u w s t b : ℕ,
-                v (&2) * v (&2) - (v (&0) * v (&0) - 1) * v (&3) * v (&3) = 1 ∧
-                  u * u - (v (&0) * v (&0) - 1) * w * w = 1 ∧
+                v &2 * v &2 - (v &0 * v &0 - 1) * v &3 * v &3 = 1 ∧
+                  u * u - (v &0 * v &0 - 1) * w * w = 1 ∧
                     s * s - (b * b - 1) * t * t = 1 ∧
                       1 < b ∧
-                        b ≡ 1 [MOD 4 * v (&3)] ∧
-                          b ≡ v (&0) [MOD u] ∧
-                            0 < w ∧ v (&3) * v (&3) ∣ w ∧ s ≡ v (&2) [MOD u] ∧ t ≡ v (&1) [MOD 4 * v (&3)]) } :=
+                        b ≡ 1 [MOD 4 * v &3] ∧
+                          b ≡ v &0 [MOD u] ∧ 0 < w ∧ v &3 * v &3 ∣ w ∧ s ≡ v &2 [MOD u] ∧ t ≡ v &1 [MOD 4 * v &3]) } :=
     D.1 D< D&0 D∧
       D&1 D≤ D&3 D∧
         (D&2 D= D.1 D∧ D&3 D= D.0) D∨
@@ -799,8 +814,8 @@ theorem pell_dioph : Dioph fun v : Vector3 ℕ 4 => ∃ h : 1 < v (&0), xn h (v 
                                 D.0 D< D&3 D∧ D&8 D* D&8 D∣ D&3 D∧ D≡ (D&2) (D&7) (D&4) D∧ D≡ (D&1) (D&6) (D.4 D* D&8)
   (Dioph.ext this) fun v => matiyasevic.symm
 
-theorem xn_dioph : DiophPfun fun v : Vector3 ℕ 2 => ⟨1 < v (&0), fun h => xn h (v (&1))⟩ :=
-  have : Dioph fun v : Vector3 ℕ 3 => ∃ y, ∃ h : 1 < v (&1), xn h (v (&2)) = v (&0) ∧ yn h (v (&2)) = y :=
+theorem xn_dioph : DiophPfun fun v : Vector3 ℕ 2 => ⟨1 < v &0, fun h => xn h (v &1)⟩ :=
+  have : Dioph fun v : Vector3 ℕ 3 => ∃ y, ∃ h : 1 < v &1, xn h (v &2) = v &0 ∧ yn h (v &2) = y :=
     let D_pell := @reindex_dioph _ (Fin2 4) _ pell_dioph [&2, &3, &1, &0]
     (D∃) 3 D_pell
   (dioph_pfun_vec _).2 <| (Dioph.ext this) fun v => ⟨fun ⟨y, h, xe, ye⟩ => ⟨h, xe⟩, fun ⟨h, xe⟩ => ⟨_, h, xe, rfl⟩⟩
@@ -812,16 +827,15 @@ theorem pow_dioph : DiophFn fun v => f v ^ g v :=
   have :
     Dioph
       { v : Vector3 ℕ 3 |
-        v (&2) = 0 ∧ v (&0) = 1 ∨
-          0 < v (&2) ∧
-            (v (&1) = 0 ∧ v (&0) = 0 ∨
-              0 < v (&1) ∧
+        v &2 = 0 ∧ v &0 = 1 ∨
+          0 < v &2 ∧
+            (v &1 = 0 ∧ v &0 = 0 ∨
+              0 < v &1 ∧
                 ∃ w a t z x y : ℕ,
-                  (∃ a1 : 1 < a, xn a1 (v (&2)) = x ∧ yn a1 (v (&2)) = y) ∧
-                    x ≡ y * (a - v (&1)) + v (&0) [MOD t] ∧
-                      2 * a * v (&1) = t + (v (&1) * v (&1) + 1) ∧
-                        v (&0) < t ∧
-                          v (&1) ≤ w ∧ v (&2) ≤ w ∧ a * a - ((w + 1) * (w + 1) - 1) * (w * z) * (w * z) = 1) } :=
+                  (∃ a1 : 1 < a, xn a1 (v &2) = x ∧ yn a1 (v &2) = y) ∧
+                    x ≡ y * (a - v &1) + v &0 [MOD t] ∧
+                      2 * a * v &1 = t + (v &1 * v &1 + 1) ∧
+                        v &0 < t ∧ v &1 ≤ w ∧ v &2 ≤ w ∧ a * a - ((w + 1) * (w + 1) - 1) * (w * z) * (w * z) = 1) } :=
     let D_pell := @reindex_dioph _ (Fin2 9) _ pell_dioph [&4, &8, &1, &0]
     (D&2 D= D.0 D∧ D&0 D= D.1) D∨
       D.0 D< D&2 D∧

@@ -204,7 +204,7 @@ protected def mulRight₀ (c : α) (hc : c ≠ 0) : α ≃ₜ α :=
     continuous_inv_fun := continuous_mul_right _ }
 
 @[simp]
-theorem coe_mul_left₀ (c : α) (hc : c ≠ 0) : ⇑Homeomorph.mulLeft₀ c hc = (· * ·) c :=
+theorem coe_mul_left₀ (c : α) (hc : c ≠ 0) : ⇑(Homeomorph.mulLeft₀ c hc) = (· * ·) c :=
   rfl
 
 @[simp]
@@ -212,7 +212,7 @@ theorem mul_left₀_symm_apply (c : α) (hc : c ≠ 0) : ((Homeomorph.mulLeft₀
   rfl
 
 @[simp]
-theorem coe_mul_right₀ (c : α) (hc : c ≠ 0) : ⇑Homeomorph.mulRight₀ c hc = fun x => x * c :=
+theorem coe_mul_right₀ (c : α) (hc : c ≠ 0) : ⇑(Homeomorph.mulRight₀ c hc) = fun x => x * c :=
   rfl
 
 @[simp]

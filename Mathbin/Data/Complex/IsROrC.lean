@@ -41,6 +41,7 @@ open_locale BigOperators
 
 section
 
+-- mathport name: «expr𝓚»
 local notation "𝓚" => algebraMap ℝ _
 
 open_locale ComplexConjugate
@@ -85,7 +86,7 @@ noncomputable instance (priority := 900) algebraMapCoe : CoeTₓ ℝ K :=
 theorem of_real_alg (x : ℝ) : (x : K) = x • (1 : K) :=
   Algebra.algebra_map_eq_smul_one x
 
-theorem algebra_map_eq_of_real : ⇑algebraMap ℝ K = coe :=
+theorem algebra_map_eq_of_real : ⇑(algebraMap ℝ K) = coe :=
   rfl
 
 @[simp, is_R_or_C_simps]
@@ -520,7 +521,7 @@ theorem norm_conj {z : K} : ∥conj z∥ = ∥z∥ := by
   simp only [← sqrt_norm_sq_eq_norm, norm_sq_conj]
 
 instance (priority := 100) : CstarRing K where
-  norm_star_mul_self := fun x => (NormedField.norm_mul _ _).trans <| congr_argₓ (· * ∥x∥) norm_conj
+  norm_star_mul_self := fun x => (norm_mul _ _).trans <| congr_argₓ (· * ∥x∥) norm_conj
 
 /-! ### Cast lemmas -/
 
@@ -587,8 +588,10 @@ theorem im_eq_conj_sub (z : K) : ↑(im z) = I * (conj z - z) / 2 := by
 noncomputable def abs (z : K) : ℝ :=
   (normSq z).sqrt
 
+-- mathport name: «exprabs'»
 local notation "abs'" => HasAbs.abs
 
+-- mathport name: «exprabsK»
 local notation "absK" => @abs K _
 
 @[simp, norm_cast]
@@ -904,14 +907,19 @@ open_locale ComplexConjugate
 
 section CleanupLemmas
 
+-- mathport name: «exprreR»
 local notation "reR" => @IsROrC.re ℝ _
 
+-- mathport name: «exprimR»
 local notation "imR" => @IsROrC.im ℝ _
 
+-- mathport name: «exprIR»
 local notation "IR" => @IsROrC.i ℝ _
 
+-- mathport name: «exprabsR»
 local notation "absR" => @IsROrC.abs ℝ _
 
+-- mathport name: «exprnorm_sqR»
 local notation "norm_sqR" => @IsROrC.normSq ℝ _
 
 @[simp, is_R_or_C_simps]

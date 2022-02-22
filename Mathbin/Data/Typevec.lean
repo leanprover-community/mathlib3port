@@ -49,6 +49,7 @@ variable {n : ℕ}
 def Arrow (α β : Typevec n) :=
   ∀ i : Fin2 n, α i → β i
 
+-- mathport name: «expr ⟹ »
 localized [Mvfunctor] infixl:40 " ⟹ " => Typevec.Arrow
 
 instance Arrow.inhabited (α β : Typevec n) [∀ i, Inhabited (β i)] : Inhabited (α ⟹ β) :=
@@ -60,6 +61,7 @@ def id {α : Typevec n} : α ⟹ α := fun i x => x
 /-- arrow composition in the category of `typevec` -/
 def comp {α β γ : Typevec n} (g : β ⟹ γ) (f : α ⟹ β) : α ⟹ γ := fun i x => g i (f i x)
 
+-- mathport name: «expr ⊚ »
 localized [Mvfunctor] infixr:80 " ⊚ " => Typevec.comp
 
 -- type as \oo
@@ -80,6 +82,7 @@ def Append1 (α : Typevec n) (β : Type _) : Typevec (n + 1)
   | Fin2.fs i => α i
   | Fin2.fz => β
 
+-- mathport name: «expr ::: »
 infixl:67 " ::: " => Append1
 
 /-- retain only a `n-length` prefix of the argument -/
@@ -127,6 +130,7 @@ and target types / typevecs -/
 def appendFun {α α' : Typevec n} {β β' : Type _} (f : α ⟹ α') (g : β → β') : Append1 α β ⟹ Append1 α' β' :=
   splitFun f g
 
+-- mathport name: «expr ::: »
 infixl:0 " ::: " => appendFun
 
 /-- split off the prefix of an arrow -/
@@ -237,6 +241,7 @@ run_cmd
     mk_simp_attr `typevec
     tactic.add_doc_string `simp_attr.typevec "simp set for the manipulation of typevec and arrow expressions"
 
+-- mathport name: «expr♯ »
 local prefix:0 "♯" =>
   cast
     (by
@@ -329,6 +334,7 @@ def Prod : ∀ {n} α β : Typevec.{u} n, Typevec n
   | 0, α, β => Fin2.elim0
   | n + 1, α, β => Prod (Drop α) (Drop β) ::: Last α × Last β
 
+-- mathport name: «expr ⊗ »
 localized [Mvfunctor] infixl:45 " ⊗ " => Typevec.Prod
 
 /-- `const x α` is an arrow that ignores its source and constructs a `typevec` that
@@ -434,6 +440,7 @@ protected def Prod.map : ∀ {n} {α α' β β' : Typevec.{u} n}, α ⟹ β → 
     @Prod.map _ (Drop α) (Drop α') (Drop β) (Drop β') (dropFun x) (dropFun y) _ a
   | succ n, α, α', β, β', x, y, Fin2.fz, a => (x _ a.1, y _ a.2)
 
+-- mathport name: «expr ⊗' »
 localized [Mvfunctor] infixl:45 " ⊗' " => Typevec.Prod.map
 
 theorem fst_prod_mk {α α' β β' : Typevec n} (f : α ⟹ β) (g : α' ⟹ β') :

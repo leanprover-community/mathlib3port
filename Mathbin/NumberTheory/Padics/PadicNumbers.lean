@@ -457,6 +457,7 @@ end PadicSeq
 def Padic (p : ℕ) [Fact p.Prime] :=
   @CauSeq.Completion.Cauchy _ _ _ _ (padicNorm p) _
 
+-- mathport name: «exprℚ_[ ]»
 notation "ℚ_[" p "]" => Padic p
 
 namespace Padic
@@ -975,12 +976,12 @@ theorem norm_p_lt_one : ∥(p : ℚ_[p])∥ < 1 := by
 
 @[simp]
 theorem norm_p_pow (n : ℤ) : ∥(p ^ n : ℚ_[p])∥ = p ^ -n := by
-  rw [NormedField.norm_zpow, norm_p] <;> field_simp
+  rw [norm_zpow, norm_p] <;> field_simp
 
 instance : NondiscreteNormedField ℚ_[p] where
   non_trivial :=
     ⟨p⁻¹, by
-      rw [NormedField.norm_inv, norm_p, inv_invₓ]
+      rw [norm_inv, norm_p, inv_invₓ]
       exact_mod_cast hp.1.one_lt⟩
 
 protected theorem image {q : ℚ_[p]} : q ≠ 0 → ∃ n : ℤ, ∥q∥ = ↑((↑p : ℚ) ^ -n) :=

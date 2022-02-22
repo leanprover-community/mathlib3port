@@ -79,8 +79,10 @@ class CategoryStruct (obj : Type u) extends Quiver.{v + 1} obj : Type max u (v +
   id : ∀ X : obj, hom X X
   comp : ∀ {X Y Z : obj}, (X ⟶ Y) → (Y ⟶ Z) → (X ⟶ Z)
 
+-- mathport name: «expr𝟙»
 notation "𝟙" => CategoryStruct.id
 
+-- mathport name: «expr ≫ »
 infixr:80
   " ≫ " =>-- type as \b1
   CategoryStruct.comp
@@ -143,8 +145,10 @@ theorem eq_whisker {f g : X ⟶ Y} (w : f = g) (h : Y ⟶ Z) : f ≫ h = g ≫ h
 theorem whisker_eq (f : X ⟶ Y) {g h : Y ⟶ Z} (w : g = h) : f ≫ g = f ≫ h := by
   rw [w]
 
+-- mathport name: «expr =≫ »
 infixr:80 " =≫ " => eq_whisker
 
+-- mathport name: «expr ≫= »
 infixr:80 " ≫= " => whisker_eq
 
 theorem eq_of_comp_left_eq {f g : X ⟶ Y} (w : ∀ {Z : C} h : Y ⟶ Z, f ≫ h = g ≫ h) : f = g := by

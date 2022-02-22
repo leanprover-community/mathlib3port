@@ -91,6 +91,7 @@ def AeEqFun (μ : Measure α) : Type _ :=
 
 variable {α β}
 
+-- mathport name: «expr →ₘ[ ] »
 notation:25 α " →ₘ[" μ "] " β => AeEqFun α β μ
 
 end MeasurableSpace
@@ -547,7 +548,7 @@ theorem pos_part_mk (f : α → γ) hf :
     posPart (mk f hf : α →ₘ[μ] γ) = mk (fun x => max (f x) 0) (hf.max ae_measurable_const) :=
   rfl
 
-theorem coe_fn_pos_part (f : α →ₘ[μ] γ) : ⇑posPart f =ᵐ[μ] fun a => max (f a) 0 :=
+theorem coe_fn_pos_part (f : α →ₘ[μ] γ) : ⇑(posPart f) =ᵐ[μ] fun a => max (f a) 0 :=
   coe_fn_comp _ _ _
 
 end PosPart

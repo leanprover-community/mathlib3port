@@ -31,7 +31,7 @@ def toRealLinearMap (f : E →+ F) (hf : Continuous f) : E →L[ℝ] F :=
   ⟨{ toFun := f, map_add' := f.map_add, map_smul' := f.map_real_smul hf }, hf⟩
 
 @[simp]
-theorem coe_to_real_linear_map (f : E →+ F) (hf : Continuous f) : ⇑f.toRealLinearMap hf = f :=
+theorem coe_to_real_linear_map (f : E →+ F) (hf : Continuous f) : ⇑(f.toRealLinearMap hf) = f :=
   rfl
 
 end AddMonoidHom

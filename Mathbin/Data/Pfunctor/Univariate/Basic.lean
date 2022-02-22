@@ -36,7 +36,7 @@ variable (P : Pfunctor) {α β : Type u}
 
 /-- Applying `P` to an object of `Type` -/
 def Obj (α : Type _) :=
-  Σ x : P.A, P.B x → α
+  Σx : P.A, P.B x → α
 
 /-- Applying `P` to a morphism of `Type` -/
 def map {α β : Type _} (f : α → β) : P.Obj α → P.Obj β := fun ⟨a, g⟩ => ⟨a, f ∘ g⟩
@@ -102,7 +102,7 @@ variable (P)
 For `F : pfunctor`, `x : F.obj α` and `i : F.Idx`, `i` can designate
 one part of `x` or is invalid, if `i.1 ≠ x.1` -/
 def Idx :=
-  Σ x : P.A, P.B x
+  Σx : P.A, P.B x
 
 instance Idx.inhabited [Inhabited P.A] [Inhabited (P.B default)] : Inhabited P.Idx :=
   ⟨⟨default, default⟩⟩
@@ -134,7 +134,7 @@ namespace Pfunctor
 
 /-- functor composition for polynomial functors -/
 def comp (P₂ P₁ : Pfunctor.{u}) : Pfunctor.{u} :=
-  ⟨Σ a₂ : P₂.1, P₂.2 a₂ → P₁.1, fun a₂a₁ => Σ u : P₂.2 a₂a₁.1, P₁.2 (a₂a₁.2 u)⟩
+  ⟨Σa₂ : P₂.1, P₂.2 a₂ → P₁.1, fun a₂a₁ => Σu : P₂.2 a₂a₁.1, P₁.2 (a₂a₁.2 u)⟩
 
 /-- constructor for composition -/
 def comp.mk (P₂ P₁ : Pfunctor.{u}) {α : Type} (x : P₂.Obj (P₁.Obj α)) : (comp P₂ P₁).Obj α :=

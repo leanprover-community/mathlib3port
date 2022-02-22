@@ -89,9 +89,11 @@ theorem witt_polynomial_eq_sum_C_mul_X_pow (n : ℕ) :
 This allows us to simply write `W n` or `W_ ℤ n`. -/
 
 
+-- mathport name: «exprW_»
 -- Notation with ring of coefficients explicit
 localized [Witt] notation "W_" => wittPolynomial p
 
+-- mathport name: «exprW»
 -- Notation with ring of coefficients implicit
 localized [Witt] notation "W" => wittPolynomial p _
 

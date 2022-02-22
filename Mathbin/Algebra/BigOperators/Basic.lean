@@ -77,12 +77,16 @@ In practice, this means that parentheses should be placed as follows:
 -/
 
 
+-- mathport name: «expr∑ , »
 localized [BigOperators] notation3 "∑ " (...) ", " r:(scoped f => Finset.sum Finset.univ f) => r
 
+-- mathport name: «expr∏ , »
 localized [BigOperators] notation3 "∏ " (...) ", " r:(scoped f => Finset.prod Finset.univ f) => r
 
+-- mathport name: «expr∑ in , »
 localized [BigOperators] notation3 "∑ " (...) " in " s ", " r:(scoped f => Finset.sum s f) => r
 
+-- mathport name: «expr∏ in , »
 localized [BigOperators] notation3 "∏ " (...) " in " s ", " r:(scoped f => Finset.prod s f) => r
 
 open_locale BigOperators
@@ -145,7 +149,7 @@ theorem RingHom.map_sum [NonAssocSemiringₓ β] [NonAssocSemiringₓ γ] (g : �
 
 @[to_additive]
 theorem MonoidHom.coe_finset_prod [MulOneClassₓ β] [CommMonoidₓ γ] (f : α → β →* γ) (s : Finset α) :
-    (⇑∏ x in s, f x) = ∏ x in s, f x :=
+    ⇑(∏ x in s, f x) = ∏ x in s, f x :=
   (MonoidHom.coeFn β γ).map_prod _ _
 
 -- See also `finset.prod_apply`, with the same conclusion
@@ -172,7 +176,7 @@ theorem prod_cons (h : a ∉ s) : (∏ x in cons a s h, f x) = f a * ∏ x in s,
   fold_cons h
 
 @[simp, to_additive]
-theorem prod_insert [DecidableEq α] : a ∉ s → (∏ x in insert a s, f x) = f a * ∏ x in s, f x :=
+theorem prod_insert [DecidableEq α] : (a ∉ s) → (∏ x in insert a s, f x) = f a * ∏ x in s, f x :=
   fold_insert
 
 /-- The product of `f` over `insert a s` is the same as
@@ -181,7 +185,7 @@ the product over `s`, as long as `a` is in `s` or `f a = 1`.
 @[simp,
   to_additive
       "The sum of `f` over `insert a s` is the same as\nthe sum over `s`, as long as `a` is in `s` or `f a = 0`."]
-theorem prod_insert_of_eq_one_if_not_mem [DecidableEq α] (h : a ∉ s → f a = 1) :
+theorem prod_insert_of_eq_one_if_not_mem [DecidableEq α] (h : (a ∉ s) → f a = 1) :
     (∏ x in insert a s, f x) = ∏ x in s, f x := by
   by_cases' hm : a ∈ s
   · simp_rw [insert_eq_of_mem hm]
@@ -493,7 +497,7 @@ theorem prod_subset_one_on_sdiff [DecidableEq α] (h : s₁ ⊆ s₂) (hg : ∀,
   exact prod_congr rfl hfg
 
 @[to_additive]
-theorem prod_subset (h : s₁ ⊆ s₂) (hf : ∀, ∀ x ∈ s₂, ∀, x ∉ s₁ → f x = 1) : (∏ x in s₁, f x) = ∏ x in s₂, f x :=
+theorem prod_subset (h : s₁ ⊆ s₂) (hf : ∀, ∀ x ∈ s₂, ∀, (x ∉ s₁) → f x = 1) : (∏ x in s₁, f x) = ∏ x in s₂, f x :=
   have := Classical.decEq α
   prod_subset_one_on_sdiff h
     (by
@@ -541,8 +545,8 @@ theorem prod_eq_single_of_mem {s : Finset α} {f : α → β} (a : α) (h : a �
       prod_singleton
 
 @[to_additive]
-theorem prod_eq_single {s : Finset α} {f : α → β} (a : α) (h₀ : ∀, ∀ b ∈ s, ∀, b ≠ a → f b = 1) (h₁ : a ∉ s → f a = 1) :
-    (∏ x in s, f x) = f a :=
+theorem prod_eq_single {s : Finset α} {f : α → β} (a : α) (h₀ : ∀, ∀ b ∈ s, ∀, b ≠ a → f b = 1)
+    (h₁ : (a ∉ s) → f a = 1) : (∏ x in s, f x) = f a :=
   have := Classical.decEq α
   Classical.by_cases (fun this : a ∈ s => prod_eq_single_of_mem a this h₀) fun this : a ∉ s =>
     ((prod_congr rfl) fun b hb =>
@@ -558,7 +562,7 @@ theorem prod_eq_mul_of_mem {s : Finset α} {f : α → β} (a b : α) (ha : a �
     refine' insert_subset.mpr _
     apply And.intro ha
     apply singleton_subset_iff.mpr hb
-  have hf : ∀, ∀ c ∈ s, ∀, c ∉ s' → f c = 1 := by
+  have hf : ∀, ∀ c ∈ s, ∀, (c ∉ s') → f c = 1 := by
     intro c hc hcs
     apply h₀ c hc
     apply not_or_distrib.mp
@@ -572,7 +576,7 @@ theorem prod_eq_mul_of_mem {s : Finset α} {f : α → β} (a b : α) (ha : a �
 
 @[to_additive]
 theorem prod_eq_mul {s : Finset α} {f : α → β} (a b : α) (hn : a ≠ b) (h₀ : ∀, ∀ c ∈ s, ∀, c ≠ a ∧ c ≠ b → f c = 1)
-    (ha : a ∉ s → f a = 1) (hb : b ∉ s → f b = 1) : (∏ x in s, f x) = f a * f b := by
+    (ha : (a ∉ s) → f a = 1) (hb : (b ∉ s) → f b = 1) : (∏ x in s, f x) = f a * f b := by
   have := Classical.decEq α <;> by_cases' h₁ : a ∈ s <;> by_cases' h₂ : b ∈ s
   · exact prod_eq_mul_of_mem a b h₁ h₂ hn h₀
     

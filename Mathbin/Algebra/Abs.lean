@@ -47,7 +47,9 @@ class HasPosPart (α : Type _) where
 class HasNegPart (α : Type _) where
   neg : α → α
 
+-- mathport name: «expr ⁺»
 postfix:1000 "⁺" => HasPosPart.pos
 
+-- mathport name: «expr ⁻»
 postfix:1000 "⁻" => HasNegPart.neg
 

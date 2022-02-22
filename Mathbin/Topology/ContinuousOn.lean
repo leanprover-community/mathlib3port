@@ -793,7 +793,7 @@ theorem OpenEmbedding.map_nhds_within_preimage_eq {f : α → β} (hf : OpenEmbe
   rw [inter_assoc, inter_self]
 
 theorem continuous_within_at_of_not_mem_closure {f : α → β} {s : Set α} {x : α} :
-    x ∉ Closure s → ContinuousWithinAt f s x := by
+    (x ∉ Closure s) → ContinuousWithinAt f s x := by
   intro hx
   rw [mem_closure_iff_nhds_within_ne_bot, ne_bot_iff, not_not] at hx
   rw [ContinuousWithinAt, hx]

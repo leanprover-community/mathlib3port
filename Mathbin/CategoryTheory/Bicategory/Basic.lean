@@ -214,14 +214,19 @@ attribute [simp] bicategory.whisker_left_comp bicategory.whisker_right_comp
 
 attribute [instance] bicategory.hom_category
 
+-- mathport name: «expr ◁ »
 localized [Bicategory] infixr:70 " ◁ " => Bicategory.whiskerLeft
 
+-- mathport name: «expr ▷ »
 localized [Bicategory] infixr:70 " ▷ " => Bicategory.whiskerRight
 
+-- mathport name: «exprα_»
 localized [Bicategory] notation "α_" => Bicategory.associator
 
+-- mathport name: «exprλ_»
 localized [Bicategory] notation "λ_" => Bicategory.leftUnitor
 
+-- mathport name: «exprρ_»
 localized [Bicategory] notation "ρ_" => Bicategory.rightUnitor
 
 namespace Bicategory

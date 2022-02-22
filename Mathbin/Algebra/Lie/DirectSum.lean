@@ -246,11 +246,11 @@ def LieAlgebraIsInternal [DecidableEq ι] : Prop :=
 [this Zulip thread](https://leanprover.zulipchat.com/#narrow/stream/113488-general/topic/
 Typeclass.20resolution.20under.20binders/near/245151099). -/
 instance lieRingOfIdeals : LieRing (⨁ i, I i) :=
-  DirectSum.lieRing fun i => ↥I i
+  DirectSum.lieRing fun i => ↥(I i)
 
 /-- See `direct_sum.lie_ring_of_ideals` comment. -/
 instance lieAlgebraOfIdeals : LieAlgebra R (⨁ i, I i) :=
-  DirectSum.lieAlgebra fun i => ↥I i
+  DirectSum.lieAlgebra fun i => ↥(I i)
 
 end Ideals
 

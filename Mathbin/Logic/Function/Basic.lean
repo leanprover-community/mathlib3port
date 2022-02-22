@@ -249,26 +249,26 @@ theorem injective_of_partial_inv_right {α β} {f : α → β} {g} (H : IsPartia
     (h₂ : b ∈ g y) : x = y :=
   ((H _ _).1 h₁).symm.trans ((H _ _).1 h₂)
 
-theorem LeftInverse.comp_eq_id {f : α → β} {g : β → α} (h : LeftInverse f g) : f ∘ g = id :=
+theorem LeftInverse.comp_eq_idₓ {f : α → β} {g : β → α} (h : LeftInverse f g) : f ∘ g = id :=
   funext h
 
-theorem left_inverse_iff_compₓ {f : α → β} {g : β → α} : LeftInverse f g ↔ f ∘ g = id :=
-  ⟨LeftInverse.comp_eq_id, congr_funₓ⟩
+theorem left_inverse_iff_comp {f : α → β} {g : β → α} : LeftInverse f g ↔ f ∘ g = id :=
+  ⟨LeftInverse.comp_eq_idₓ, congr_funₓ⟩
 
-theorem RightInverse.comp_eq_id {f : α → β} {g : β → α} (h : RightInverse f g) : g ∘ f = id :=
+theorem RightInverse.comp_eq_idₓ {f : α → β} {g : β → α} (h : RightInverse f g) : g ∘ f = id :=
   funext h
 
-theorem right_inverse_iff_compₓ {f : α → β} {g : β → α} : RightInverse f g ↔ g ∘ f = id :=
-  ⟨RightInverse.comp_eq_id, congr_funₓ⟩
+theorem right_inverse_iff_comp {f : α → β} {g : β → α} : RightInverse f g ↔ g ∘ f = id :=
+  ⟨RightInverse.comp_eq_idₓ, congr_funₓ⟩
 
-theorem LeftInverse.comp {f : α → β} {g : β → α} {h : β → γ} {i : γ → β} (hf : LeftInverse f g) (hh : LeftInverse h i) :
-    LeftInverse (h ∘ f) (g ∘ i) := fun a =>
+theorem LeftInverse.compₓ {f : α → β} {g : β → α} {h : β → γ} {i : γ → β} (hf : LeftInverse f g)
+    (hh : LeftInverse h i) : LeftInverse (h ∘ f) (g ∘ i) := fun a =>
   show h (f (g (i a))) = a by
     rw [hf (i a), hh a]
 
-theorem RightInverse.comp {f : α → β} {g : β → α} {h : β → γ} {i : γ → β} (hf : RightInverse f g)
+theorem RightInverse.compₓ {f : α → β} {g : β → α} {h : β → γ} {i : γ → β} (hf : RightInverse f g)
     (hh : RightInverse h i) : RightInverse (h ∘ f) (g ∘ i) :=
-  LeftInverse.comp hh hf
+  LeftInverse.compₓ hh hf
 
 theorem LeftInverse.right_inverse {f : α → β} {g : β → α} (h : LeftInverse g f) : RightInverse f g :=
   h
@@ -276,10 +276,10 @@ theorem LeftInverse.right_inverse {f : α → β} {g : β → α} (h : LeftInver
 theorem RightInverse.left_inverse {f : α → β} {g : β → α} (h : RightInverse g f) : LeftInverse f g :=
   h
 
-theorem LeftInverse.surjective {f : α → β} {g : β → α} (h : LeftInverse f g) : Surjective f :=
+theorem LeftInverse.surjectiveₓ {f : α → β} {g : β → α} (h : LeftInverse f g) : Surjective f :=
   h.RightInverse.Surjective
 
-theorem RightInverse.injective {f : α → β} {g : β → α} (h : RightInverse f g) : Injective f :=
+theorem RightInverse.injectiveₓ {f : α → β} {g : β → α} (h : RightInverse f g) : Injective f :=
   h.LeftInverse.Injective
 
 theorem LeftInverse.right_inverse_of_injective {f : α → β} {g : β → α} (h : LeftInverse f g) (hf : Injective f) :
@@ -342,7 +342,7 @@ theorem inv_fun_eqₓ (h : ∃ a, f a = b) : f (invFun f b) = b := by
 theorem inv_fun_negₓ (h : ¬∃ a, f a = b) : invFun f b = Classical.choice ‹_› :=
   dif_neg h
 
-theorem inv_fun_eq_of_injective_of_right_inverseₓ {g : β → α} (hf : Injective f) (hg : RightInverse g f) :
+theorem inv_fun_eq_of_injective_of_right_inverse {g : β → α} (hf : Injective f) (hg : RightInverse g f) :
     invFun f = g :=
   funext fun b =>
     hf
@@ -350,20 +350,20 @@ theorem inv_fun_eq_of_injective_of_right_inverseₓ {g : β → α} (hf : Inject
         rw [hg b]
         exact inv_fun_eq ⟨g b, hg b⟩)
 
-theorem right_inverse_inv_funₓ (hf : Surjective f) : RightInverse (invFun f) f := fun b => inv_fun_eq <| hf b
+theorem right_inverse_inv_fun (hf : Surjective f) : RightInverse (invFun f) f := fun b => inv_fun_eq <| hf b
 
-theorem left_inverse_inv_funₓ (hf : Injective f) : LeftInverse (invFun f) f := fun b => hf <| inv_fun_eqₓ ⟨b, rfl⟩
+theorem left_inverse_inv_fun (hf : Injective f) : LeftInverse (invFun f) f := fun b => hf <| inv_fun_eqₓ ⟨b, rfl⟩
 
 theorem inv_fun_surjectiveₓ (hf : Injective f) : Surjective (invFun f) :=
-  (left_inverse_inv_funₓ hf).Surjective
+  (left_inverse_inv_fun hf).Surjective
 
 theorem inv_fun_compₓ (hf : Injective f) : invFun f ∘ f = id :=
-  funext <| left_inverse_inv_funₓ hf
+  funext <| left_inverse_inv_fun hf
 
 theorem Injective.has_left_inverse (hf : Injective f) : HasLeftInverse f :=
-  ⟨invFun f, left_inverse_inv_funₓ hf⟩
+  ⟨invFun f, left_inverse_inv_fun hf⟩
 
-theorem injective_iff_has_left_inverseₓ : Injective f ↔ HasLeftInverse f :=
+theorem injective_iff_has_left_inverse : Injective f ↔ HasLeftInverse f :=
   ⟨Injective.has_left_inverse, HasLeftInverse.injective⟩
 
 end InvFun
@@ -617,6 +617,7 @@ def bicompl (f : γ → δ → ε) (g : α → γ) (h : β → δ) a b :=
 def bicompr (f : γ → δ) (g : α → β → γ) a b :=
   f (g a b)
 
+-- mathport name: «expr ∘₂ »
 -- Suggested local notation:
 local notation f "∘₂" g => bicompr f g
 
@@ -643,15 +644,14 @@ class HasUncurry (α : Type _) (β : outParam (Type _)) (γ : outParam (Type _))
 for bundled maps.-/
 add_decl_doc has_uncurry.uncurry
 
--- ././Mathport/Syntax/Translate/Basic.lean:462:9: unsupported: advanced prec syntax max
--- ././Mathport/Syntax/Translate/Basic.lean:462:9: unsupported: advanced prec syntax max
-notation:999 "↿" x:999 => HasUncurry.uncurry x
+-- mathport name: «expr↿ »
+notation:arg "↿" x:arg => HasUncurry.uncurry x
 
 instance hasUncurryBase : HasUncurry (α → β) α β :=
   ⟨id⟩
 
 instance hasUncurryInduction [HasUncurry β γ δ] : HasUncurry (α → β) (α × γ) δ :=
-  ⟨fun f p => (↿f p.1) p.2⟩
+  ⟨fun f p => (↿(f p.1)) p.2⟩
 
 end Uncurry
 

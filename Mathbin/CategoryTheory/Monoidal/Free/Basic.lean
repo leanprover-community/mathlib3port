@@ -47,6 +47,7 @@ inductive FreeMonoidalCategory : Type u
 
 end
 
+-- mathport name: «exprF»
 local notation "F" => FreeMonoidalCategory
 
 namespace FreeMonoidalCategory
@@ -66,6 +67,7 @@ inductive Hom : F C → F C → Type u
   | comp {X Y Z} (f : hom X Y) (g : hom Y Z) : hom X Z
   | tensor {W X Y Z} (f : hom W Y) (g : hom X Z) : hom (W.tensor X) (Y.tensor Z)
 
+-- mathport name: «expr ⟶ᵐ »
 local infixr:10 " ⟶ᵐ " => Hom
 
 /-- The morphisms of the free monoidal category satisfy 21 relations ensuring that the resulting
@@ -161,12 +163,12 @@ instance : MonoidalCategory (F C) where
   triangle' := fun X Y => Quotientₓ.sound triangle
 
 @[simp]
-theorem mk_comp {X Y Z : F C} (f : X ⟶ᵐ Y) (g : Y ⟶ᵐ Z) : ⟦f.comp g⟧ = @CategoryStruct.comp (F C) _ _ _ _ (⟦f⟧) (⟦g⟧) :=
+theorem mk_comp {X Y Z : F C} (f : X ⟶ᵐ Y) (g : Y ⟶ᵐ Z) : ⟦f.comp g⟧ = @CategoryStruct.comp (F C) _ _ _ _ ⟦f⟧ ⟦g⟧ :=
   rfl
 
 @[simp]
 theorem mk_tensor {X₁ Y₁ X₂ Y₂ : F C} (f : X₁ ⟶ᵐ Y₁) (g : X₂ ⟶ᵐ Y₂) :
-    ⟦f.tensor g⟧ = @MonoidalCategory.tensorHom (F C) _ _ _ _ _ _ (⟦f⟧) (⟦g⟧) :=
+    ⟦f.tensor g⟧ = @MonoidalCategory.tensorHom (F C) _ _ _ _ _ _ ⟦f⟧ ⟦g⟧ :=
   rfl
 
 @[simp]

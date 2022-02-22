@@ -48,6 +48,7 @@ add_decl_doc functor.to_prefunctor
 
 end
 
+-- mathport name: «expr ⥤ »
 infixr:26
   " ⥤ " =>-- A functor is basically a function, so give ⥤ a similar precedence to → (25).
   -- For example, `C × D ⥤ E` should parse as `(C × D) ⥤ E` not `C × (D ⥤ E)`.
@@ -73,6 +74,7 @@ protected def id : C ⥤ C where
   obj := fun X => X
   map := fun _ _ f => f
 
+-- mathport name: «expr𝟭»
 notation "𝟭" => Functor.id
 
 -- Type this as `\sb1`
@@ -101,6 +103,7 @@ def comp (F : C ⥤ D) (G : D ⥤ E) : C ⥤ E where
   obj := fun X => G.obj (F.obj X)
   map := fun _ _ f => G.map (F.map f)
 
+-- mathport name: «expr ⋙ »
 infixr:80 " ⋙ " => comp
 
 @[simp]

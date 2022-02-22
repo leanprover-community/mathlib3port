@@ -318,7 +318,7 @@ def mulLeft {R : Type _} [NonUnitalNonAssocSemiringₓ R] (r : R) : R →+ R whe
   map_add' := mul_addₓ r
 
 @[simp]
-theorem coe_mul_left {R : Type _} [NonUnitalNonAssocSemiringₓ R] (r : R) : ⇑mulLeft r = (· * ·) r :=
+theorem coe_mul_left {R : Type _} [NonUnitalNonAssocSemiringₓ R] (r : R) : ⇑(mulLeft r) = (· * ·) r :=
   rfl
 
 /-- Right multiplication by an element of a (semi)ring is an `add_monoid_hom` -/
@@ -328,7 +328,7 @@ def mulRight {R : Type _} [NonUnitalNonAssocSemiringₓ R] (r : R) : R →+ R wh
   map_add' := fun _ _ => add_mulₓ _ _ r
 
 @[simp]
-theorem coe_mul_right {R : Type _} [NonUnitalNonAssocSemiringₓ R] (r : R) : ⇑mulRight r = (· * r) :=
+theorem coe_mul_right {R : Type _} [NonUnitalNonAssocSemiringₓ R] (r : R) : ⇑(mulRight r) = (· * r) :=
   rfl
 
 theorem mul_right_apply {R : Type _} [NonUnitalNonAssocSemiringₓ R] (a r : R) : mulRight r a = a * r :=
@@ -342,6 +342,7 @@ This extends from both `monoid_hom` and `monoid_with_zero_hom` in order to put t
 sensible order, even though `monoid_with_zero_hom` already extends `monoid_hom`. -/
 structure RingHom (α : Type _) (β : Type _) [NonAssocSemiringₓ α] [NonAssocSemiringₓ β] extends α →* β, α →+ β, α →*₀ β
 
+-- mathport name: «expr →+* »
 infixr:25 " →+* " => RingHom
 
 /-- Reinterpret a ring homomorphism `f : R →+* S` as a monoid with zero homomorphism `R →*₀ S`.
@@ -707,7 +708,7 @@ protected def Function.Surjective.commSemiring [Zero γ] [One γ] [Add γ] [Mul 
 theorem add_mul_self_eq (a b : α) : (a + b) * (a + b) = a * a + 2 * a * b + b * b := by
   simp only [two_mul, add_mulₓ, mul_addₓ, add_assocₓ, mul_comm b]
 
-theorem HasDvd.Dvd.linear_comb {d x y : α} (hdx : d ∣ x) (hdy : d ∣ y) (a b : α) : d ∣ a * x + b * y :=
+theorem Dvd.Dvd.linear_comb {d x y : α} (hdx : d ∣ x) (hdy : d ∣ y) (a b : α) : d ∣ a * x + b * y :=
   dvd_add (hdx.mul_left a) (hdy.mul_left b)
 
 end CommSemiringₓ
